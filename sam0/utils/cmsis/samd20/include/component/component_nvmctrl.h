@@ -285,9 +285,6 @@ typedef union {
 #define NVMCTRL_LOCK_LOCK(value)    ((NVMCTRL_LOCK_LOCK_Msk & ((value) << NVMCTRL_LOCK_LOCK_Pos)))
 #define NVMCTRL_LOCK_MASK           0xFFFFu      /**< \brief (NVMCTRL_LOCK) MASK Register */
 
-#define NVMCTRL_AUX_BOOTPROT_Pos    1 /** TODO: Manually Added */
-#define NVMCTRL_AUX_EEPROM_Pos      4 /** TODO: Manually Added */
-
 /** \brief NVMCTRL hardware registers */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef struct {

@@ -133,7 +133,7 @@ struct _eeprom_module {
 	uint8_t  logical_pages;
 
 	/** Mapping array from logical EEPROM pages to physical FLASH pages. */
-	uint8_t page_map[EEPROM_MAX_PAGES / 2];
+	uint8_t page_map[EEPROM_MAX_PAGES / 2 - 4];
 
 	/** Row number for the spare row (used by next write). */
 	uint8_t spare_row;
@@ -161,7 +161,7 @@ static void _eeprom_emulator_format_memory(void)
 	enum status_code error_code = STATUS_OK;
 	uint16_t logical_page = 0;
 
-	/* Set the first row as the spare row */
+	/* Set row 0 as the spare row */
 	_eeprom_instance.spare_row = 0;
 	do {
 		error_code = nvm_erase_row(EEPROM_PHYSICAL_ROW_NUMBER(0));
@@ -169,6 +169,10 @@ static void _eeprom_emulator_format_memory(void)
 
 	for (uint16_t physical_page = NVMCTRL_ROW_PAGES;
 			physical_page < _eeprom_instance.physical_pages; physical_page++) {
+
+		if (physical_page == EEPROM_MASTER_PAGE_NUMBER) {
+			continue;
+		}
 
 		/* If we are at the first page in a new row, erase the entire row */
 		if ((physical_page % NVMCTRL_ROW_PAGES) == 0) {
@@ -223,8 +227,9 @@ static void _eeprom_emulator_update_page_mapping(void)
 		/* Read in the logical page stored in the current physical page */
 		uint16_t logical_page = _eeprom_instance.flash[c].header.logical_page;
 
-		/* If the logical page number is not invalid, add it to the mapping */
-		if (logical_page != EEPROM_INVALID_PAGE_NUMBER) {
+		/* If the logical page number is valid, add it to the mapping */
+		if ((logical_page != EEPROM_INVALID_PAGE_NUMBER) &&
+				(logical_page < _eeprom_instance.logical_pages)) {
 			_eeprom_instance.page_map[logical_page] = c;
 		}
 	}
@@ -514,6 +519,8 @@ static enum status_code _eeprom_emulator_verify_master_page(void)
  *
  * \retval STATUS_OK              EEPROM emulation service was successfully
  *                                initialized
+ * \retval STATUS_ERR_NO_MEMORY   No EEPROM section has been allocated in the
+ *                                device
  * \retval STATUS_ERR_BAD_FORMAT  Emulated EEPROM memory is corrupt or not
  *                                formatted
  * \retval STATUS_ERR_IO          EEPROM data is incompatible with this version
@@ -523,6 +530,7 @@ enum status_code eeprom_emulator_init(void)
 {
 	enum status_code error_code = STATUS_OK;
 	struct nvm_config config;
+	struct nvm_parameters parameters;
 
 	/* Retrieve the NVM controller configuration - enable manual page writing
 	 * mode so that the emulator has exclusive control over page writes to
@@ -535,15 +543,25 @@ enum status_code eeprom_emulator_init(void)
 		error_code = nvm_set_config(&config);
 	} while (error_code == STATUS_BUSY);
 
+	/* Get the NVM controller configuration parameters */
+	nvm_get_parameters(&parameters);
+
+	/* Ensure the device fuses are configured for at least one master page row,
+	 * one user EEPROM data row and one spare row */
+	if (parameters.eeprom_number_of_pages < (3 * NVMCTRL_ROW_PAGES)) {
+		Assert(false);
+		return STATUS_ERR_NO_MEMORY;
+	}
+
 	/* Configure the EEPROM instance physical and logical number of pages:
 	 *  - One row is reserved for the master page
 	 *  - One row is reserved for the spare row
 	 *  - Two logical pages can be stored in one physical row
 	 */
 	_eeprom_instance.physical_pages =
-			(64 * NVMCTRL_ROW_PAGES); // TODO - Make this a config option
+			parameters.eeprom_number_of_pages;
 	_eeprom_instance.logical_pages  =
-			(_eeprom_instance.physical_pages - (2 * NVMCTRL_ROW_PAGES)) / 2;
+			(parameters.eeprom_number_of_pages - (2 * NVMCTRL_ROW_PAGES)) / 2;
 
 	/* Configure the EEPROM instance starting physical address in FLASH and
 	 * pre-compute the index of the first page in FLASH used for EEPROM */
@@ -587,11 +605,11 @@ void eeprom_emulator_erase_memory(void)
 	/* Create new EEPROM memory block in EEPROM emulation section */
 	_eeprom_emulator_format_memory();
 
-	/* Map the newly created EEPROM memory block */
-	_eeprom_emulator_update_page_mapping();
-
 	/* Write EEPROM emulation master block */
 	_eeprom_emulator_create_master_page();
+
+	/* Map the newly created EEPROM memory block */
+	_eeprom_emulator_update_page_mapping();
 }
 
 /**
@@ -630,11 +648,6 @@ enum status_code eeprom_emulator_write_page(
 	/* Make sure the write address is within the allowable address space */
 	if (logical_page >= _eeprom_instance.logical_pages) {
 		return STATUS_ERR_BAD_ADDRESS;
-	}
-
-	/* Make sure the write address is not the master EEPROM page number */
-	if (logical_page == EEPROM_MASTER_PAGE_NUMBER) {
-		return STATUS_ERR_DENIED;
 	}
 
 	/* Check if the cache is active and the currently cached page is not the
@@ -723,11 +736,6 @@ enum status_code eeprom_emulator_read_page(
 	/* Make sure the read address is within the allowable address space */
 	if (logical_page >= _eeprom_instance.logical_pages) {
 		return STATUS_ERR_BAD_ADDRESS;
-	}
-
-	/* Make sure the read address is not the master EEPROM page number */
-	if (logical_page == EEPROM_MASTER_PAGE_NUMBER) {
-		return STATUS_ERR_DENIED;
 	}
 
 	/* Check if the page to read is currently cached (and potentially out of

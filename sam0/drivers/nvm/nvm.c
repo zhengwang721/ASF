@@ -69,7 +69,28 @@ static struct _nvm_module _nvm_dev;
 /**
  * \internal Pointer to the NVM MEMORY region start address
  */
-#define NVM_MEMORY ((uint16_t *)FLASH_ADDR)
+#define NVM_MEMORY        ((volatile uint16_t *)FLASH_ADDR)
+
+/**
+ * \internal Pointer to the NVM AUX0 MEMORY region start address
+ */
+#define NVM_AUX0_MEMORY   ((volatile uint16_t *)NVMCTRL_AUX0_ADDRESS)
+
+/**
+ * \internal Pointer to the NVM AUX1 MEMORY region start address
+ */
+#define NVM_AUX1_MEMORY   ((volatile uint16_t *)NVMCTRL_AUX1_ADDRESS)
+
+/**
+ * \internal Pointer to the NVM AUX2 MEMORY region start address
+ */
+#define NVM_AUX2_MEMORY   ((volatile uint16_t *)NVMCTRL_AUX2_ADDRESS)
+
+/**
+ * \internal Pointer to the NVM AUX3 MEMORY region start address
+ */
+#define NVM_AUX3_MEMORY   ((volatile uint16_t *)NVMCTRL_AUX3_ADDRESS)
+
 
 /**
  * \brief Sets the up the NVM hardware module based on the configuration.
@@ -131,17 +152,6 @@ enum status_code nvm_set_config(
 		return STATUS_ERR_IO;
 	}
 
-	/* Create pointer to the auxiliary space */
-	uint32_t *aux_row = (uint32_t*)NVMCTRL_AUX0_ADDRESS;
-
-	/* Writing bootloader and eeprom size to the auxiliary space */
-	*aux_row =
-			(config->bootloader_size << NVMCTRL_AUX_BOOTPROT_Pos) |
-			(config->eeprom_size     << NVMCTRL_AUX_EEPROM_Pos);
-
-	/* Issue the write auxiliary space command */
-	nvm_module->CTRLA.reg = NVM_COMMAND_WRITE_AUX_ROW;
-
 	return STATUS_OK;
 }
 
@@ -155,7 +165,8 @@ enum status_code nvm_set_config(
  *       completed.
  *
  * \param[in] command    Command to issue to the NVM controller
- * \param[in] address    Address to pass to the NVM controller
+ * \param[in] address    Address to pass to the NVM controller in NVM memory
+ *                       space
  * \param[in] parameter  Parameter to pass to the NVM controller, not used
  *                       for this driver
  *
@@ -230,8 +241,7 @@ enum status_code nvm_execute_command(
 	}
 
 	/* Set command */
-	nvm_module->CTRLA.reg = (command << NVMCTRL_CTRLA_CMD_Pos) |
-			NVMCTRL_CTRLA_CMDEX_KEY;
+	nvm_module->CTRLA.reg = command | NVMCTRL_CTRLA_CMDEX_KEY;
 
 	return STATUS_OK;
 }
@@ -430,4 +440,61 @@ enum status_code nvm_erase_row(
 	nvm_module->CTRLA.reg = NVM_COMMAND_ERASE_ROW | NVMCTRL_CTRLA_CMDEX_KEY;
 
 	return STATUS_OK;
+}
+
+/**
+ * \brief Reads the parameters of the NVM controller.
+ *
+ * Retrieves the page size, number of pages and other configuration settings
+ * of the NVM region.
+ *
+ * \param[out] parameters    Parameter structure, which holds page size and
+ *                           number of pages in the NVM memory
+ */
+void nvm_get_parameters(
+		struct nvm_parameters *const parameters)
+{
+	/* Sanity check parameters */
+	Assert(parameters);
+
+	/* Get a pointer to the module hardware instance */
+	Nvmctrl *const nvm_module = NVMCTRL;
+
+	/* Clear error flags */
+	nvm_module->STATUS.reg &= ~NVMCTRL_STATUS_MASK;
+
+	/* Read out from the PARAM register */
+	uint32_t param_reg = nvm_module->PARAM.reg;
+
+	/* Mask out page size and number of pages */
+	parameters->page_size  =
+			(param_reg & NVMCTRL_PARAM_PSZ_Msk)  >> NVMCTRL_PARAM_PSZ_Pos;
+	parameters->nvm_number_of_pages =
+			(param_reg & NVMCTRL_PARAM_NVMP_Msk) >> NVMCTRL_PARAM_NVMP_Pos;
+
+	/* Read the current EEPROM fuse value from the AUX0 row */
+	uint16_t eeprom_fuse_value =
+			(NVM_AUX0_MEMORY[4 / 16] >> (4 % 16)) & 0x07;
+
+	/* Translate the EEPROM fuse byte value to a number of NVM pages */
+	if (eeprom_fuse_value == 7) {
+		parameters->eeprom_number_of_pages = 0;
+	}
+	else {
+		parameters->eeprom_number_of_pages =
+				NVMCTRL_ROW_PAGES << (6 - eeprom_fuse_value);
+	}
+
+	/* Read the current BOOTSZ fuse value from the AUX0 row */
+	uint16_t boot_fuse_value =
+			(NVM_AUX0_MEMORY[0 / 16] >> (0 % 16)) & 0x07;
+
+	/* Translate the BOOTSZ fuse byte value to a number of NVM pages */
+	if (boot_fuse_value == 7) {
+		parameters->bootloader_number_of_pages = 0;
+	}
+	else {
+		parameters->bootloader_number_of_pages =
+				NVMCTRL_ROW_PAGES << (7 - boot_fuse_value);
+	}
 }
