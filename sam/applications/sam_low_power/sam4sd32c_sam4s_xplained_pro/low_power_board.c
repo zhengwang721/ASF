@@ -84,7 +84,7 @@ uint32_t g_pll_clock_list[][4] = {
 };
 
 /**
- * \brief Initialize sam4Xplained PRO board for low power test.
+ * \brief Initialize SAM4 Xplained Pro board for low power test.
  */
 void init_specific_board(void)
 {
