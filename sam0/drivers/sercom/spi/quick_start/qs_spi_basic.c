@@ -61,16 +61,16 @@ int main(void)
 //! [main]
 	/* Structures for config and software device instances */
 //! [config]
-	struct spi_conf config;
+	struct spi_config config;
 //! [config]
 //! [dev_inst]
-	struct spi_dev_inst master;
+	struct spi_module master;
 //! [dev_inst]
 //! [slave_config]
-	struct spi_slave_dev_conf slave_dev_config;
+	struct spi_slave_inst_config slave_dev_config;
 //! [slave_config]
 //! [slave_dev_inst]
-	struct spi_slave_dev_inst slave;
+	struct spi_slave_inst slave;
 //! [slave_dev_inst]
 
 	/* Initialize system */
@@ -80,13 +80,13 @@ int main(void)
 
 	/* Configure and initialize software device instance of peripheral slave */
 //! [slave_conf_defaults]
-	spi_slave_dev_get_config_defaults(&slave_dev_config);
+	spi_slave_inst_get_config_defaults(&slave_dev_config);
 //! [slave_conf_defaults]
 //! [ss_pin]
 	slave_dev_config.ss_pin = SLAVE_SELECT_PIN;
 //! [ss_pin]
 //! [slave_init]
-	spi_slave_dev_init(&slave, &slave_dev_config);
+	spi_attach_slave(&slave, &slave_dev_config);
 //! [slave_init]
 
 	/* Configure, initialize and enable SERCOM SPI module */
@@ -120,16 +120,16 @@ int main(void)
 	spi_enable(&master);
 //! [enable]
 //! [select_slave]
-	spi_select_slave(&master, &slave);
+	spi_select_slave(&master, &slave, true);
 //! [select_slave]
 //! [write]
-	spi_write_buffer(&master, buffer, BUF_LENGTH);
+	spi_write_buffer_wait(&master, buffer, BUF_LENGTH);
 //! [write]
 //! [wait]
-	while (!spi_write_complete(&master));
+	while (!spi_is_write_complete(&master));
 //! [wait]
 //! [deselect_slave]
-	spi_deselect_slave(&master, &slave);
+	spi_select_slave(&master, &slave, false);
 //! [deselect_slave]
 
 //! [inf_loop]
