@@ -685,59 +685,8 @@ static inline bool nvm_is_ready(void)
  * @{
  */
 
-/**
- * \brief Reads the parameters of the NVM controller.
- *
- * Retrieves the page size and number of pages in the NVM memory region.
- *
- * \param[out] parameters    Parameter structure, which holds page size and
- *                           number of pages in the NVM memory
- */
-static inline void nvm_get_parameters(
-		struct nvm_parameters *const parameters)
-{
-	/* Sanity check parameters */
-	Assert(parameters);
-
-	/* Get a pointer to the module hardware instance */
-	Nvmctrl *const nvm_module = NVMCTRL;
-
-	/* Clear error flags */
-	nvm_module->STATUS.reg &= ~NVMCTRL_STATUS_MASK;
-
-	/* Read out from the PARAM register */
-	uint32_t param_reg = nvm_module->PARAM.reg;
-
-	/* Mask out page size and number of pages */
-	parameters->page_size  =
-			(param_reg & NVMCTRL_PARAM_PSZ_Msk)  >> NVMCTRL_PARAM_PSZ_Pos;
-	parameters->nvm_number_of_pages =
-			(param_reg & NVMCTRL_PARAM_NVMP_Msk) >> NVMCTRL_PARAM_NVMP_Pos;
-
-	uint16_t boot_fuse_value =
-			(((uint16_t*)NVMCTRL_AUX0_ADDRESS)[0 / 16] & 0x07) >> (0 % 16);
-
-	uint16_t eeprom_fuse_value =
-			(((uint16_t*)NVMCTRL_AUX0_ADDRESS)[4 / 16] & 0x07) >> (4 % 16);
-
-	if (eeprom_fuse_value == 7) {
-		parameters->eeprom_number_of_pages = 0;
-	}
-	else {
-		parameters->eeprom_number_of_pages = 1 << (6 - eeprom_fuse_value);
-	}
-
-	parameters->eeprom_number_of_pages *= NVMCTRL_ROW_PAGES;
-
-	if (boot_fuse_value == 7) {
-		parameters->bootloader_number_of_pages = 0;
-	}
-	else {
-		parameters->bootloader_number_of_pages = 1 << (7 - boot_fuse_value);
-	}
-
-	parameters->bootloader_number_of_pages *= NVMCTRL_ROW_PAGES;
-}
+void nvm_get_parameters(
+		struct nvm_parameters *const parameters);
 
 enum status_code nvm_write_buffer(
 		const uint16_t destination_page,

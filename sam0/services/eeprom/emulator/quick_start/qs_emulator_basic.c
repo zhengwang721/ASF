@@ -43,25 +43,12 @@
 #include <asf.h>
 
 int main(void)
-{   
+{
 //! [main]
 //! [variable]
 	uint8_t write_buffer[EEPROM_PAGE_SIZE] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf};
 	uint8_t read_buffer[EEPROM_PAGE_SIZE];
 //! [variable]
-	
-	  struct nvm_config config;
-	nvm_get_config_defaults(&config);
-	config.manual_page_write = true;
-enum status_code error_code;
-	/* Apply new NVM configuration */
-	do {
-		error_code = nvm_set_config(&config);
-	} while (error_code == STATUS_BUSY);
-	
-	for (uint16_t i = 0; i < 0xFFFF; i++) {
-	  while (nvm_erase_row(i) == STATUS_BUSY) {}
-	}
 
 	/* Setup EEPROM emulator service*/
 //! [init_eeprom_emulator]
@@ -88,9 +75,10 @@ enum status_code error_code;
 	eeprom_emulator_flush_page_buffer();
 //! [flush_cache]
 
-//! [erase_memory]
-	//eeprom_emulator_erase_memory();
-//! [erase_memory]
+	for (uint8_t i = 0; i < 10; i++) {
+		eeprom_emulator_write_page(1, write_buffer);
+		eeprom_emulator_flush_page_buffer();
+	}
 
 //! [inf_loop]
 	while (1) {
