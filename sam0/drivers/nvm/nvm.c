@@ -69,7 +69,7 @@ static struct _nvm_module _nvm_dev;
 /**
  * \internal Pointer to the NVM MEMORY region start address
  */
-#define NVM_MEMORY ((uint16_t *)FLASH_ADDR)
+#define NVM_MEMORY      ((uint16_t *)FLASH_ADDR)
 
 /**
  * \brief Sets the up the NVM hardware module based on the configuration.
@@ -131,17 +131,6 @@ enum status_code nvm_set_config(
 		return STATUS_ERR_IO;
 	}
 
-	/* Create pointer to the auxiliary space */
-	uint32_t *aux_row = (uint32_t*)NVMCTRL_AUX0_ADDRESS;
-
-	/* Writing bootloader and eeprom size to the auxiliary space */
-	*aux_row =
-			(config->bootloader_size << NVMCTRL_AUX_BOOTPROT_Pos) |
-			(config->eeprom_size     << NVMCTRL_AUX_EEPROM_Pos);
-
-	/* Issue the write auxiliary space command */
-	nvm_module->CTRLA.reg = NVM_COMMAND_WRITE_AUX_ROW;
-
 	return STATUS_OK;
 }
 
@@ -155,7 +144,8 @@ enum status_code nvm_set_config(
  *       completed.
  *
  * \param[in] command    Command to issue to the NVM controller
- * \param[in] address    Address to pass to the NVM controller
+ * \param[in] address    Address to pass to the NVM controller in NVM memory
+ *                       space
  * \param[in] parameter  Parameter to pass to the NVM controller, not used
  *                       for this driver
  *
@@ -230,8 +220,7 @@ enum status_code nvm_execute_command(
 	}
 
 	/* Set command */
-	nvm_module->CTRLA.reg = (command << NVMCTRL_CTRLA_CMD_Pos) |
-			NVMCTRL_CTRLA_CMDEX_KEY;
+	nvm_module->CTRLA.reg = command | NVMCTRL_CTRLA_CMDEX_KEY;
 
 	return STATUS_OK;
 }

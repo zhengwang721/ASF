@@ -40,8 +40,8 @@
  * \asf_license_stop
  *
  */
-#ifndef EEPROM_EMULATOR_H_INCLUDED
-#define EEPROM_EMULATOR_H_INCLUDED
+#ifndef EEPROM_H_INCLUDED
+#define EEPROM_H_INCLUDED
 
 /**
  * \defgroup asfdoc_samd20_eeprom_group SAMD20 EEPROM Emulator Service (EEPROM)
@@ -94,11 +94,11 @@
  * needed, erasing old rows ready for re-use by future page write operations.
  *
  * \subsubsection asfdoc_samd20_eeprom_module_overview_implementation_mp Master Page
- * One row, at the end of the emulated EEPROM memory space, is reserved for use
- * by the emulator to store configuration data. This includes a magic identifier
- * to indicated an initialized emulated EEPROM memory, as well as version
- * information and other relevant data. The master page is not user-accessible,
- * and is reserved solely for internal use by the emulator.
+ * One row, at the end of the emulated EEPROM memory space, is reserved for
+ * use by the emulator to store configuration data. This includes a magic
+ * identifier to indicated an initialized emulated EEPROM memory, as well as
+ * version information and other relevant data. The master page is not
+ * user-accessible, and is reserved solely for internal use by the emulator.
  *
  * \subsubsection asfdoc_samd20_eeprom_module_overview_implementation_sr Spare Row
  * As data needs to be preserved between row erasures, a spare row is tracked in
@@ -338,4 +338,4 @@ enum status_code eeprom_emulator_read_buffer(
  *  - \subpage asfdoc_samd20_eeprom_basic_use_case
  */
 
-#endif
+#endif /* EEPROM_H_INCLUDED */

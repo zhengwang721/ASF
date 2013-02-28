@@ -416,7 +416,7 @@ enum nvm_command {
 	 *   </tr>
 	 *  </table>
 	 */
-	NVM_COMMAND_ERASE_ROW         = NVMCTRL_CTRLA_CMD_ER,
+	NVM_COMMAND_ERASE_ROW                  = NVMCTRL_CTRLA_CMD_ER,
 
 	/** Write the contents of the page buffer to the addressed memory page.
 	 *
@@ -431,7 +431,7 @@ enum nvm_command {
 	 *   </tr>
 	 *  </table>
 	 */
-	NVM_COMMAND_WRITE_PAGE        = NVMCTRL_CTRLA_CMD_WP,
+	NVM_COMMAND_WRITE_PAGE                 = NVMCTRL_CTRLA_CMD_WP,
 
 	/** Erases the addressed auxiliary memory row.
 	 *
@@ -448,7 +448,7 @@ enum nvm_command {
 	 *   </tr>
 	 *  </table>
 	 */
-	NVM_COMMAND_ERASE_AUX_ROW     = NVMCTRL_CTRLA_CMD_EAR,
+	NVM_COMMAND_ERASE_AUX_ROW              = NVMCTRL_CTRLA_CMD_EAR,
 
 	/** Write the contents of the page buffer to the addressed auxiliary memory
 	 *  row.
@@ -466,7 +466,7 @@ enum nvm_command {
 	 *   </tr>
 	 *  </table>
 	 */
-	NVM_COMMAND_WRITE_AUX_ROW     = NVMCTRL_CTRLA_CMD_WAP,
+	NVM_COMMAND_WRITE_AUX_ROW              = NVMCTRL_CTRLA_CMD_WAP,
 
 	/** Locks the addressed memory region, preventing further modifications
 	 *  until the region is unlocked or the device is erased.
@@ -482,7 +482,7 @@ enum nvm_command {
 	 *   </tr>
 	 *  </table>
 	 */
-	NVM_COMMAND_LOCK_REGION       = NVMCTRL_CTRLA_CMD_LR,
+	NVM_COMMAND_LOCK_REGION                = NVMCTRL_CTRLA_CMD_LR,
 
 	/** Unlocks the addressed memory region, allowing the region contents to be
 	 *  modified.
@@ -498,7 +498,7 @@ enum nvm_command {
 	 *   </tr>
 	 *  </table>
 	 */
-	NVM_COMMAND_UNLOCK_REGION     = NVMCTRL_CTRLA_CMD_UR,
+	NVM_COMMAND_UNLOCK_REGION              = NVMCTRL_CTRLA_CMD_UR,
 
 	/** Clears the page buffer of the NVM controller, resetting the contents to
 	 *  all zero values.
@@ -514,7 +514,7 @@ enum nvm_command {
 	 *   </tr>
 	 *  </table>
 	 */
-	NVM_COMMAND_PAGE_BUFFER_CLEAR = NVMCTRL_CTRLA_CMD_PBC,
+	NVM_COMMAND_PAGE_BUFFER_CLEAR          = NVMCTRL_CTRLA_CMD_PBC,
 
 	/** Sets the device security bit, disallowing the changing of lock bits and
 	 *  auxiliary row data until a chip erase has been performed.
@@ -530,7 +530,7 @@ enum nvm_command {
 	 *   </tr>
 	 *  </table>
 	 */
-	NVM_COMMAND_SET_SECURITY_BIT  = NVMCTRL_CTRLA_CMD_SSB,
+	NVM_COMMAND_SET_SECURITY_BIT           = NVMCTRL_CTRLA_CMD_SSB,
 
 	/** Enter power reduction mode in the NVM controller to reduce the power
 	 *  consumption of the system. When in low power mode, all commands other
@@ -547,7 +547,7 @@ enum nvm_command {
 	 *   </tr>
 	 *  </table>
 	 */
-	NVM_COMMAND_SET_POWER_REDUCTION_MODE = NVMCTRL_CTRLA_CMD_SPRM,
+	NVM_COMMAND_SET_POWER_REDUCTION_MODE   = NVMCTRL_CTRLA_CMD_SPRM,
 
 	/** Exit power reduction mode in the NVM controller to allow other NVM
 	 *  commands to be issued.
@@ -602,12 +602,6 @@ struct nvm_config {
 	 *  invalid data from being read at high clock frequencies.
 	 */
 	uint8_t wait_states;
-	/** Size of the emulated EEPROM memory section configured in the NVM
-	 *  auxiliary memory space, in bytes. */
-	uint32_t eeprom_size;
-	/** Size of the Bootloader memory section configured in the NVM auxiliary
-	 *  memory space, in bytes. */
-	uint32_t bootloader_size;
 };
 
 /**
@@ -616,10 +610,16 @@ struct nvm_config {
  * Structure containing the memory layout parameters of the NVM module.
  */
 struct nvm_parameters {
-	/** Number of bytes per page */
-	uint8_t page_size;
-	/** Number of pages in the main array */
+	/** Number of bytes per page. */
+	uint8_t  page_size;
+	/** Number of pages in the main array. */
 	uint16_t nvm_number_of_pages;
+	/** Size of the emulated EEPROM memory section configured in the NVM
+	 *  auxiliary memory space. */
+	uint32_t eeprom_number_of_pages;
+	/** Size of the Bootloader memory section configured in the NVM auxiliary
+	 *  memory space. */
+	uint32_t bootloader_number_of_pages;
 };
 
 /**
@@ -639,8 +639,6 @@ struct nvm_parameters {
  *  \li Power reduction mode enabled after sleep until first NVM access
  *  \li Automatic page commit when full pages are written to
  *  \li Zero wait states when reading flash memory
- *  \li No reserved memory for the EEPROM
- *  \li No protected bootloader section
  *
  * \param[out] config  Configuration structure to initialize to default values
  *
@@ -651,12 +649,10 @@ static inline void nvm_get_config_defaults(
 	/* Sanity check the parameters */
 	Assert(config);
 
-	/* Write the default configuration for the */
+	/* Write the default configuration for the NVM configuration */
 	config->sleep_power_mode  = NVM_AUTO_WAKE_MODE_WAKEONACCESS;
 	config->manual_page_write = false;
 	config->wait_states       = 0;
-	config->eeprom_size       = 0;
-	config->bootloader_size   = 0;
 }
 
 enum status_code nvm_set_config(
@@ -717,6 +713,30 @@ static inline void nvm_get_parameters(
 			(param_reg & NVMCTRL_PARAM_PSZ_Msk)  >> NVMCTRL_PARAM_PSZ_Pos;
 	parameters->nvm_number_of_pages =
 			(param_reg & NVMCTRL_PARAM_NVMP_Msk) >> NVMCTRL_PARAM_NVMP_Pos;
+
+	uint16_t boot_fuse_value =
+			(((uint16_t*)NVMCTRL_AUX0_ADDRESS)[0 / 16] & 0x07) >> (0 % 16);
+
+	uint16_t eeprom_fuse_value =
+			(((uint16_t*)NVMCTRL_AUX0_ADDRESS)[4 / 16] & 0x07) >> (4 % 16);
+
+	if (eeprom_fuse_value == 7) {
+		parameters->eeprom_number_of_pages = 0;
+	}
+	else {
+		parameters->eeprom_number_of_pages = 1 << (6 - eeprom_fuse_value);
+	}
+
+	parameters->eeprom_number_of_pages *= NVMCTRL_ROW_PAGES;
+
+	if (boot_fuse_value == 7) {
+		parameters->bootloader_number_of_pages = 0;
+	}
+	else {
+		parameters->bootloader_number_of_pages = 1 << (7 - boot_fuse_value);
+	}
+
+	parameters->bootloader_number_of_pages *= NVMCTRL_ROW_PAGES;
 }
 
 enum status_code nvm_write_buffer(
