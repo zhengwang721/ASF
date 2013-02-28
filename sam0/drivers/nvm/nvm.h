@@ -392,11 +392,11 @@ extern "C" {
  */
 enum nvm_error {
 	/** No errors */
-	NVM_ERROR_NONE  = 0,
+	NVM_ERROR_NONE = 0,
 	/** Lock error, a locked region was attempted accessed. */
-	NVM_ERROR_LOCK  = NVMCTRL_STATUS_NVME | NVMCTRL_STATUS_LOCKE,
+	NVM_ERROR_LOCK = NVMCTRL_STATUS_NVME | NVMCTRL_STATUS_LOCKE,
 	/** Program error, invalid command was executed. */
-	NVM_ERROR_PROG  = NVMCTRL_STATUS_NVME | NVMCTRL_STATUS_PROGE,
+	NVM_ERROR_PROG = NVMCTRL_STATUS_NVME | NVMCTRL_STATUS_PROGE,
 };
 
 /**
@@ -574,11 +574,11 @@ enum nvm_command {
  */
 enum nvm_sleep_power_mode {
 	/** NVM controller exits low power mode on first access after sleep. */
-	NVM_AUTO_WAKE_MODE_WAKEONACCESS     = NVMCTRL_CTRLB_SLEEPPRM_WAKEONACCESS,
+	NVM_AUTO_WAKE_MODE_WAKEONACCESS  = NVMCTRL_CTRLB_SLEEPPRM_WAKEONACCESS,
 	/** NVM controller exits low power mode when the device exits sleep mode. */
-	NVM_AUTO_WAKE_MODE_WAKEUPINSTANT    = NVMCTRL_CTRLB_SLEEPPRM_WAKEUPINSTANT,
+	NVM_AUTO_WAKE_MODE_WAKEUPINSTANT = NVMCTRL_CTRLB_SLEEPPRM_WAKEUPINSTANT,
 	/** Power reduction mode in the NVM controller disabled. */
-	NVM_AUTO_WAKE_MODE_ALWAYS_AWAKE     = NVMCTRL_CTRLB_SLEEPPRM_DISABLED,
+	NVM_AUTO_WAKE_MODE_ALWAYS_AWAKE  = NVMCTRL_CTRLB_SLEEPPRM_DISABLED,
 };
 
 /**

@@ -43,12 +43,6 @@
 #ifndef EEPROM_EMULATOR_H_INCLUDED
 #define EEPROM_EMULATOR_H_INCLUDED
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#include <compiler.h>
-
 /**
  * \defgroup asfdoc_samd20_eeprom_group SAMD20 EEPROM Emulator Service (EEPROM)
  *
@@ -122,10 +116,10 @@ extern "C" {
  * within a physical row are updated, the new data is filled into the remaining
  * unused pages in the row. Once the entire row is full, a new write request
  * will copy the logical page not being written to in the current row to the
- * spare page with the new (updated) logical page data, before the old row is
+ * spare row with the new (updated) logical page data, before the old row is
  * erased.
  *
- * This system allow for the same logical page to be updated up to three times
+ * This system allows for the same logical page to be updated up to three times
  * into physical memory before a row erasure procedure is needed. In the case of
  * multiple versions of the same logical page being stored in the same physical
  * row, the right-most (highest physical page address) version is considered the
@@ -145,17 +139,26 @@ extern "C" {
  *
  * \section asfdoc_samd20_eeprom_special_considerations Special Considerations
  *
+ * \subsection asfdoc_samd20_eeprom_special_considerations_nvm_config NVM Controller Configuration
+ * The EEPROM Emulator service will initialize the NVM controller as part of its
+ * own initialization routine; the NVM controller will be placed in Manual Write
+ * mode, so that explicit write commands must be sent to the controller to
+ * commit a buffered page to physical memory. The manual write command must thus
+ * be issued to the NVM controller whenever the user application wishes to write
+ * to a NVM page for its own purposes.
+ *
  * \subsection asfdoc_samd20_eeprom_special_considerations_wearlevel Wear Leveling Algorithm
  * The wear leveling algorithm is tuned to achieve best performance (and minimal
- * physical flash writes) when data is written to locations within the same
- * logical EEPROM page. The user application should ensure that wherever
- * possible subsequent data writes are restricted to the same logical page
- * address to prevent premature flash write cycle exhaustion.
+ * physical flash memory writes) when data is written to locations within the
+ * same logical EEPROM page. The user application should ensure that wherever
+ * possible subsequent data writes are restricted to the same logical EEPROM
+ * page address to prevent premature flash write cycle exhaustion.
  *
  * \subsection asfdoc_samd20_eeprom_special_considerations_pagesize Logical EEPROM Page Size
- * Due to the requirement of a header before the contents of each logical EEPROM
- * page, the available data in each EEPROM page is less than the total size of
- * a single NVM memory page by several bytes.
+ * As a small amount of information needs to be stored in a header before the
+ * contents of a logical EEPROM page in memory (for use by the emulation
+ * service), the available data in each EEPROM page is less than the total size
+ * of a single NVM memory page by several bytes.
  *
  * \subsection asfdoc_samd20_eeprom_special_considerations_flushing Flushing of the Write Cache
  * A single-page write cache is used internally to buffer data written to pages
@@ -189,6 +192,12 @@ extern "C" {
  * @{
  */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#include <compiler.h>
+
 #if !defined(__DOXYGEN__)
 #  define EEPROM_MAX_PAGES            (64 * NVMCTRL_ROW_PAGES)
 #  define EEPROM_MASTER_PAGE_NUMBER   (EEPROM_MAX_PAGES - 1)
@@ -213,7 +222,7 @@ extern "C" {
 /** Emulator revision version number, identifying the emulator revision. */
 #define EEPROM_REVISION             0
 
-/** Size of each logical EEPROM page, in bytes. */
+/** Size of the user data portion of each logical EEPROM page, in bytes. */
 #define EEPROM_PAGE_SIZE            (NVMCTRL_PAGE_SIZE - EEPROM_HEADER_SIZE)
 
 /** @} */
@@ -239,7 +248,6 @@ enum status_code eeprom_emulator_flush_page_buffer(void);
 enum status_code eeprom_emulator_write_page(
 		const uint8_t logical_page,
 		const uint8_t *const data);
-
 
 enum status_code eeprom_emulator_read_page(
 		const uint8_t logical_page,
