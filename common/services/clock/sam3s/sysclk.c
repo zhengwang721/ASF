@@ -233,7 +233,7 @@ void sysclk_init(void)
 #endif
 
 #ifdef CONFIG_PLL1_SOURCE
-	else if (CONFIG_SYSCLK_SOURCE == SYSCLK_SRC_PLLBCK {
+	else if (CONFIG_SYSCLK_SOURCE == SYSCLK_SRC_PLLBCK) {
 		struct pll_config pllcfg;
 
 		pll_enable_source(CONFIG_PLL1_SOURCE);
