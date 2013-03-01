@@ -12,7 +12,7 @@
 		<!-- Required modules -->
 		<require idref="board.sam4s_wpir_rd" />
 		<require idref="sam.services.flash.read.unique.id_example" />
-		<require idref="sam.utils.cmsis.sam4s.source.template"/>
+<!--		<require idref="sam.utils.cmsis.sam4s.source.template"/> -->
 
 		<!-- Generator options -->
 		<generator value="iarewarm"/>

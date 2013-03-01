@@ -15,11 +15,6 @@
 		<build type="c-source" value="continuous_capture_without_external_sram.c"/>
 
 		<!-- Required modules -->
-		<require idref="board.sam4s_wpir_rd"/>
-		<require idref="sam.drivers.smc"/>
-		<require idref="sam.drivers.pmc"/>
-		<require idref="sam.drivers.pio"/>
-		<require idref="sam.drivers.twi"/>
 		<require idref="common.services.basic.clock"/>
 		<require idref="common.services.delay"/>
 		<require idref="sam.components.display.ili9325"/>

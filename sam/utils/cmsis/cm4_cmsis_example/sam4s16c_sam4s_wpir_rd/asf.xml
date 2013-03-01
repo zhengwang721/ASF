@@ -10,7 +10,7 @@
 
 		<!-- Required modules -->
 		<require idref="board.sam4s_wpir_rd"/>
-		<require idref="sam.utils.cmsis.cm4_cmsis_example"/>
+<!--		<require idref="sam.utils.cmsis.cm4_cmsis_example"/> -->
 
 		<!-- Generator options -->
 		<generator value="iarewarm"/>

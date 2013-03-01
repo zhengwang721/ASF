@@ -6,13 +6,13 @@
 		<build type="header-file" value="conf_clock.h"/>
 		<build type="header-file" value="conf_test.h"/>
 		<build type="header-file" value="conf_uart_serial.h"/>
-		<require idref="sam.components.cmos_image_sensor.ov7740.unit_tests"/>
 
 		<!-- Device support -->
 		<device-support value="atsam4s16c"/>
 
 		<!-- Required modules -->
 		<require idref="board.sam4s_wpir_rd"/>
+		<require idref="sam.components.cmos_image_sensor.ov7740.unit_tests"/>
 
 		<!-- Generator options -->
 		<generator value="iarewarm"/>
