@@ -689,17 +689,17 @@ void nvm_get_parameters(
 		struct nvm_parameters *const parameters);
 
 enum status_code nvm_write_buffer(
-		const uint16_t destination_page,
+		const uint32_t destination_address,
 		const uint8_t *buffer,
 		uint16_t length);
 
 enum status_code nvm_read_buffer(
-		const uint16_t source_page,
+		const uint32_t source_address,
 		uint8_t *const buffer,
 		uint16_t length);
 
 enum status_code nvm_erase_row(
-		const uint16_t row_number);
+		const uint32_t row_address);
 
 enum status_code nvm_execute_command(
 		const enum nvm_command command,
