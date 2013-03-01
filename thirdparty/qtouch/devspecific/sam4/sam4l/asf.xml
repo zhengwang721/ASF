@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="meta" id="sam.services.qtouch.devspecific.sam.sam4l" caption="QTouch Library for SAM4L">
+	<module type="service" id="sam.services.qtouch.devspecific.sam.sam4l" caption="QTouch Library for SAM4L">
 		<info type="description" value="summary">
 	
 		</info>

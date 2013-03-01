@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="meta" id="avr32.services.qtouch.devspecific.uc3.uc3l0" caption="QTouch Library for AVR UC3 L0">
+	<module type="service" id="avr32.services.qtouch.devspecific.uc3.uc3l0" caption="QTouch Library for AVR UC3 L0">
 		<info type="description" value="summary">
 		This is the QTouch Library for ARV UC3 L0 devices that consists in
 		one api header file(touch_api_at32uc3l.h) and one pre-compiled library(libuc3l-qtouch-gnu.a).
