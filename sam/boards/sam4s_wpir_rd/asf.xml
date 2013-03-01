@@ -26,9 +26,9 @@
 		</module>
 	</select-by-config>
 
-	<board id="board.sam4s_wpir_rd" caption="SAM4S_WPIR_RD">
+	<board id="board.sam4s_wpir_rd" caption="SAM4S-WPIR-RD">
 		<!-- Board name -->
-		<build type="define" name="BOARD" value="SAM4S-WPIR-RD"/>
+		<build type="define" name="BOARD" value="SAM4S_WPIR_RD"/>
 
 		<!-- Device support -->
 		<build type="define" name="__SAM4S16C__" value=""/>
