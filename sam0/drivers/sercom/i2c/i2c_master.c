@@ -77,7 +77,9 @@ static enum status_code _i2c_master_set_config(
 
 	SercomI2cm *const i2c_module = &(module->hw->I2CM);
 	Sercom *const sercom_hw = module->hw;
-
+	
+	uint8_t sercom_index = _sercom_get_sercom_inst_index(sercom_hw);
+	
 	/* Pin configuration */
 	struct system_pinmux_config pin_conf;
 	uint32_t pad0 = config->pinmux_pad0;
@@ -123,10 +125,10 @@ static enum status_code _i2c_master_set_config(
 
 	/* Set configurations in CTRLB. */
 	i2c_module->CTRLB.reg = SERCOM_I2CM_CTRLB_SMEN;
-
+	
 	/* Find and set baudrate. */
-	tmp_baud = (int32_t)(system_gclk_chan_get_hz(SERCOM_GCLK_ID)
-			/ (2*config->baud_rate)-5);
+	tmp_baud = (int32_t)((system_gclk_chan_get_hz(SERCOM0_GCLK_ID_CORE + sercom_index)
+			/ (2000*(config->baud_rate))) - 5);
 
 	/* Check that baud rate is supported at current speed. */
 	if (tmp_baud > 255 || tmp_baud < 0) {
