@@ -55,11 +55,9 @@
  *
  * \section Description
  *
- * The adc_temp_sensor is aimed to demonstrate the temperature sensor feature
- * inside the device. To use this feature, the temperature sensor should be
- * turned on by setting TSON bit in ADC_ACR. The channel 15 is connected to the
- * sensor by default. With PDC support, the Interrupt Handler of ADC is designed
- * to handle RXBUFF interrupt.
+ * The example is aimed to demonstrate the enhanced resolution feature
+ * inside the device. To use this feature, the channel 5 which is connected to 
+ * the potentiometer should be enabled. 
  *
  * \section Usage
  *
@@ -83,7 +81,7 @@
  * -# In the terminal window, the
  *    following text should appear (values depend on the board and the chip used):
  *    \code
- *     -- AFEC Enhanced Resolution xxx --
+ *     -- AFEC Enhanced Resolution Examplexxx --
  *     -- xxxxxx-xx
  *     -- Compiled: xxx xx xxxx xx:xx:xx --
  *    \endcode
@@ -101,13 +99,13 @@
 #define VOLT_REF        (3300)
 
 /** The maximal digital value */
-#define MAX_DIGITAL     (4095)
+#define MAX_DIGITAL_12_BIT     (4095)
 
 /** AFEC channel for potentiometer */
 #define AFEC_CHANNEL_POTENTIOMETER  AFEC_CHANNEL_5
 
 #define STRING_EOL    "\r"
-#define STRING_HEADER "-- AFEC Temperature Sensor Example --\r\n" \
+#define STRING_HEADER "-- AFEC Enhanced Resolution Example --\r\n" \
 		"-- "BOARD_NAME" --\r\n" \
 		"-- Compiled: "__DATE__" "__TIME__" --"STRING_EOL
 
@@ -125,13 +123,8 @@ struct {
 	bool is_done;
 } g_afec_sample_data;
 
-/**Channel list for sequence*/
-enum afec_channel_num ch_list[4] = {
-	AFEC_CHANNEL_POTENTIOMETER,
-	AFEC_CHANNEL_POTENTIOMETER,
-	AFEC_CHANNEL_POTENTIOMETER,
-	AFEC_CHANNEL_POTENTIOMETER
-};
+/** The maximal digital value */
+static uint32_t g_max_digital;
 
 /**
  * \brief Configure UART console.
@@ -171,22 +164,27 @@ static void set_afec_resolution(void)
 
 		switch (uc_key) {
 		case '0':
+			g_max_digital = MAX_DIGITAL_12_BIT;
 			afec_set_resolution(AFEC0, AFEC_12_BITS);
 			puts(" Set Resolution to 12 bit \n\r");
 			break;
 		case '1':
+			g_max_digital = MAX_DIGITAL_12_BIT * 2;
 			afec_set_resolution(AFEC0, AFEC_13_BITS);
 			puts(" Set Resolution to 13 bit \n\r");
 			break;
 		case '2':
+			g_max_digital = MAX_DIGITAL_12_BIT * 4;
 			afec_set_resolution(AFEC0, AFEC_14_BITS);
 			puts(" Set Resolution to 14 bit \n\r");
 			break;
 		case '3':
+			g_max_digital = MAX_DIGITAL_12_BIT * 8;
 			afec_set_resolution(AFEC0, AFEC_15_BITS);
 			puts(" Set Resolution to 15 bit \n\r");
 			break;
 		case '4':
+			g_max_digital = MAX_DIGITAL_12_BIT * 16;
 			afec_set_resolution(AFEC0, AFEC_16_BITS);
 			puts(" Set Resolution to 16 bit \n\r");
 			break;
@@ -230,39 +228,49 @@ int main(void)
 
 	g_afec_sample_data.us_value = 0;
 	g_afec_sample_data.is_done = false;
+	g_max_digital = MAX_DIGITAL_12_BIT;
 	
 	afec_enable(AFEC0);
 	
 	struct afec_config afec_cfg;
 	
 	afec_get_config_defaults(&afec_cfg);
-	
+	//afec_cfg.resolution = AFEC_14_BITS;
 	afec_init(AFEC0, &afec_cfg);
+
+	struct afec_ch_config afec_ch_cfg;
+	afec_ch_get_config_defaults(&afec_ch_cfg);
+	afec_ch_cfg.offset= true;
+	afec_ch_set_config(AFEC0, AFEC_CHANNEL_POTENTIOMETER, &afec_ch_cfg);
+	afec_channel_set_analog_offset(AFEC0, AFEC_CHANNEL_POTENTIOMETER, 0x800);
 
 	afec_set_trigger(AFEC0, AFEC_TRIG_SW);
 
-	/* Enable channel for temp sensor. */
+	/* Enable channel for potentiometer. */
 	afec_channel_enable(AFEC0, AFEC_CHANNEL_POTENTIOMETER);
 
 	afec_set_callback(AFEC0, AFEC_INTERRUPT_DATA_READY, afec_data_ready, 1);
 
+	afec_set_calib_mode(AFEC0);
+	while(!(afec_get_interrupt_status(AFEC0) & AFE_ISR_EOCAL) == AFE_ISR_EOCAL);
+	
 	while (1) {
 		afec_start_software_conversion(AFEC0);
 		delay_ms(1000);
 		
+		/* Check if AFEC sample is done. */
+		if (g_afec_sample_data.is_done == true) {
+			printf("Potentiometer Voltage: %04d mv.    ",
+					(int)(	g_afec_sample_data.us_value * VOLT_REF /	g_max_digital));
+			puts("\r");
+			g_afec_sample_data.is_done = false;
+		}
+
 		/* Check if the user enters a key. */
 		if (!uart_read(CONF_UART, &uc_key)) {
 			afec_disable_interrupt(AFEC0, AFEC_INTERRUPT_ALL);	/* Disable all afec interrupt. */
 			set_afec_resolution();
 			afec_enable_interrupt(AFEC0, AFEC_INTERRUPT_DATA_READY);
-		}
-
-		/* Check if AFEC sample is done. */
-		if (g_afec_sample_data.is_done == true) {
-			printf("Potentiometer Voltage: %04d mv.    ",
-					(int)(	g_afec_sample_data.us_value * VOLT_REF /	MAX_DIGITAL));
-			puts("\r");
-			g_afec_sample_data.is_done = false;
 		}
 	}
 }

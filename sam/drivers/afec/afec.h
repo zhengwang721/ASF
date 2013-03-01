@@ -78,8 +78,6 @@ enum afec_power_mode {
 enum afec_trigger {
 	/* Starting a conversion is only possible by software. */
 	AFEC_TRIG_SW = AFE_MR_TRGEN_DIS,
-	/* Hardware trigger is enabled. */
-	AFEC_TRIG_HW = AFE_MR_TRGEN,
 	/* External trigger */
 	AFEC_TRIG_EXT = AFE_MR_TRGSEL_AFE_TRIG0 | AFE_MR_TRGEN,
 	/* TIO Output of the Timer Counter Channel 0 */
@@ -226,7 +224,7 @@ struct afec_temp_sensor_config {
 };
 
 /** AFEC interrupt source type */
-typedef enum afec_interrupt_source {
+enum afec_interrupt_source {
 	AFEC_INTERRUPT_EOC_0     = AFE_IER_EOC0,
 	AFEC_INTERRUPT_EOC_1     = AFE_IER_EOC1,
 	AFEC_INTERRUPT_EOC_2     = AFE_IER_EOC2,
@@ -259,7 +257,7 @@ typedef enum afec_interrupt_source {
 	AFEC_INTERRUPT_TEMP_CHANGE     = AFE_IER_TEMPCHG,
 	AFEC_INTERRUPT_END_CAL     = AFE_IER_EOCAL,
 	AFEC_INTERRUPT_ALL                 = ~0UL
-} afec_interrupt_source_t;
+};
 
 typedef void (*afec_callback_t)(void);
 
@@ -276,7 +274,7 @@ void afec_configure_sequence(Afec *const afec,
 void afec_enable(Afec *const afec);
 void afec_disable(Afec *const afec);
 void afec_set_callback(Afec *const afec,
-		afec_interrupt_source_t source, afec_callback_t callback, uint8_t irq_level);
+		enum afec_interrupt_source source, afec_callback_t callback, uint8_t irq_level);
 
 /**
  * \brief Configure conversion trigger and free run mode.
@@ -292,6 +290,7 @@ static inline void afec_set_trigger(Afec *const afec,
 		afec->AFE_MR |= AFE_MR_FREERUN_ON;
 	} else {
 		afec->AFE_MR &= ~AFE_MR_FREERUN_ON;
+		afec->AFE_MR &= ~(AFE_MR_TRGSEL_Msk | AFE_MR_TRGEN);
 		afec->AFE_MR |= trigger;
 	}
 }
@@ -306,7 +305,8 @@ static inline void afec_set_trigger(Afec *const afec,
 static inline void afec_set_resolution(Afec *const afec,
 		const enum afec_resolution res)
 {
-	afec->AFE_MR |= res;
+	afec->AFE_EMR &= ~AFE_EMR_RES_Msk;
+	afec->AFE_EMR |= res;
 }
 
 /**
@@ -319,9 +319,12 @@ static inline void afec_set_comparison_mode(Afec *const afec,
 		const enum afec_cmp_mode mode,
 		const enum afec_channel_num channel, uint8_t cmp_filter)
 {
-	afec->AFE_EMR = mode |
-			(channel == AFEC_CHANNEL_ALL) ? AFE_EMR_CMPALL : AFE_EMR_CMPSEL(channel)
-			| AFE_EMR_CMPFILTER(cmp_filter);
+	afec->AFE_EMR &= ~(AFE_EMR_CMPSEL_Msk |
+			AFE_EMR_CMPMODE_Msk |
+			AFE_EMR_CMPFILTER_Msk);
+	afec->AFE_EMR |= mode |
+			((channel == AFEC_CHANNEL_ALL) ? AFE_EMR_CMPALL : AFE_EMR_CMPSEL(channel)) |
+			AFE_EMR_CMPFILTER(cmp_filter);
 }
 
 /**
@@ -333,7 +336,7 @@ static inline void afec_set_comparison_mode(Afec *const afec,
  */
 static inline enum afec_cmp_mode afec_get_comparison_mode(Afec *const afec)
 {
-	return afec->AFE_EMR & AFE_EMR_CMPMODE_Msk;
+	return (enum afec_cmp_mode)(afec->AFE_EMR & AFE_EMR_CMPMODE_Msk);
 }
 
 /**
@@ -354,12 +357,17 @@ static inline void afec_set_comparison_window(Afec *const afec,
  * \brief Enable or disable write protection of AFEC registers.
  *
  * \param afec  Base address of the AFEC.
- * \param ul_enable 1 to enable, 0 to disable.
+ * \param is_enable 1 to enable, 0 to disable.
  */
 static inline void afec_set_writeprotect(Afec *const afec,
-		const uint32_t ul_enable)
+		const bool is_enable)
 {
-	afec->AFE_WPMR = AFE_WPMR_WPEN | AFE_WPMR_WPKEY(ul_enable);
+	if(is_enable) {
+		afec->AFE_WPMR = AFE_WPMR_WPEN | AFE_WPMR_WPKEY(0x414443);
+	} else {
+		afec->AFE_WPMR &= ~AFE_WPMR_WPEN;
+		afec->AFE_WPMR |= AFE_WPMR_WPKEY(0x414443);
+	}
 }
 
 /**
@@ -492,7 +500,7 @@ static inline void afec_channel_set_analog_offset(Afec *const afec,
 }
 
 /**
- * \brief Read the Last Data Converted.
+ * \brief Get the Last Data Converted.
  *
  * \param afec  Base address of the AFEC.
  *
@@ -500,7 +508,19 @@ static inline void afec_channel_set_analog_offset(Afec *const afec,
  */
 static inline uint32_t afec_get_latest_value(Afec *const afec)
 {
-	return afec->AFE_LCDR;
+	return afec->AFE_LCDR & AFE_LCDR_LDATA_Msk;
+}
+
+/**
+ * \brief Get the Last Converted Channel Number.
+ *
+ * \param afec  Base address of the AFEC.
+ *
+ * \return AFEC Last Converted Channel Number.
+ */
+static inline uint32_t afec_get_latest_chan_num(Afec *const afec)
+{
+	return (afec->AFE_LCDR & AFE_LCDR_CHNB_Msk) >> AFE_LCDR_CHNB_Pos;
 }
 
 /**
@@ -510,7 +530,7 @@ static inline uint32_t afec_get_latest_value(Afec *const afec)
  * \param interrupt_source Interrupts to be enabled.
  */
 static inline void afec_enable_interrupt(Afec *const afec,
-		afec_interrupt_source_t interrupt_source)
+		enum afec_interrupt_source interrupt_source)
 {
 	afec->AFE_IER = interrupt_source;
 }
@@ -522,7 +542,7 @@ static inline void afec_enable_interrupt(Afec *const afec,
  * \param interrupt_source Interrupts to be disabled.
  */
 static inline void afec_disable_interrupt(Afec *const afec,
-		afec_interrupt_source_t interrupt_source)
+		enum afec_interrupt_source interrupt_source)
 {
 	afec->AFE_IDR = interrupt_source;
 }
@@ -595,4 +615,87 @@ static inline void afec_set_calib_mode(Afec *const afec)
 /**INDENT-ON**/
 /// @endcond
 
+/**
+ * \page sam_afec_quickstart Quickstart guide for SAM AFEC driver
+ *
+ * This is the quickstart guide for the \ref sam_drivers_afec_group "SAM AFEC driver",
+ * with step-by-step instructions on how to configure and use the driver in a
+ * selection of use cases.
+ *
+ * The use cases contain several code fragments. The code fragments in the
+ * steps for setup can be copied into a custom initialization function, while
+ * the steps for usage can be copied into, e.g., the main application function.
+ *
+ * \section afec_basic_use_case Basic use case
+ * In this basic use case, the AFEC module and single channel are configured for:
+ * - 12-bit, unsigned conversions
+ * - Internal bandgap as 3.3 V reference
+ * - AFEC clock rate of at most 20 MHz and maximum sample rate is 1 MHz
+ * - Software triggering of conversions
+ * - Interrupt-based conversion handling
+ * - Single channel measurement
+ * - ADC_CHANNEL_5 as input
+ *
+ * \subsection sam_afec_quickstart_prereq Prerequisites
+ * -# \ref sysclk_group "System Clock Management (Sysclock)"
+ *
+ * \section afec_basic_use_case_setup Setup steps
+ * \subsection afec_basic_use_case_setup_code Example code
+ * Add to application C-file:
+ * \code
+ *   void afec_data_ready(void)
+ *   {
+ *      if ((afec_get_interrupt_status(AFEC0) & AFE_ISR_DRDY) == AFE_ISR_DRDY) {
+ *           g_afec_sample_data.us_value = afec_get_latest_value(AFEC0);
+ *           g_afec_sample_data.is_done = true;
+ *       }
+ *   }
+ *   void afec_setup(void)
+ *   {
+ *        afec_enable(AFEC0);
+ *        afec_get_config_defaults(&afec_cfg);
+ *        afec_init(AFEC0, &afec_cfg);
+ *        afec_set_trigger(AFEC0, AFEC_TRIG_SW);
+ *        afec_channel_enable(AFEC0, AFEC_CHANNEL_POTENTIOMETER);
+ *        afec_set_callback(AFEC0, AFEC_INTERRUPT_DATA_READY, afec_data_ready, 1);
+ *   }
+ * \endcode
+ *
+ * \subsection afec_basic_use_case_setup_flow Workflow
+ * -# Define the interrupt service handler in the application:
+ *   - \code
+*   void afec_data_ready(void)
+ *   {
+ *       if ((afec_get_interrupt_status(AFEC0) & AFE_ISR_DRDY) == AFE_ISR_DRDY) {
+ *           g_afec_sample_data.us_value = afec_get_latest_value(AFEC0);
+ *           g_afec_sample_data.is_done = true;
+ *       }
+ *   }
+ * \endcode
+ *   - \note Get AFEC status and check if the conversion data is ready. If ready,
+ *      read the last AFEC result data.
+ * -# Enable AFEC Module:
+ *   - \code afec_enable(AFEC0); \endcode
+ * -# Get the AFEC default configurations:
+ *   - \code afec_get_config_defaults(&afec_cfg); \endcode
+ * -# Initialize the AFEC Module:
+ *   - \code  afec_init(AFEC0, &afec_cfg); \endcode
+ * -# Configure conversion trigger and free run mode:
+ *   - \code afec_set_trigger(AFEC0, AFEC_TRIG_SW); \endcode
+ * -# Enable Channel:
+ *   - \code afec_channel_enable(AFEC0, AFEC_CHANNEL_POTENTIOMETER); \endcode
+ * -# Set callback for AFEC:
+ *   - \code  afec_set_callback(AFEC0, AFEC_INTERRUPT_DATA_READY, afec_data_ready, 1); \endcode
+ *
+ * \section afec_basic_use_case_usage Usage steps
+ * \subsection afec_basic_use_case_usage_code Example code
+ * Add to, e.g., main loop in application C-file:
+ * \code
+ *    afec_start_software_conversion(AFEC0);
+ * \endcode
+ *
+ * \subsection afec_basic_use_case_usage_flow Workflow
+ * -# Start AFEC conversion on channel:
+ *   - \code afec_start_software_conversion(AFEC0); \endcode
+ */
 #endif /* AFEC_H_INCLUDED */

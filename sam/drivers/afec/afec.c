@@ -130,13 +130,13 @@ static void afec_set_config(Afec *const afec, struct afec_config *config)
 			AFE_MR_PRESCAL(config->mck / (2 * config->afec_clock) - 1) |
 			AFE_MR_TRACKTIM(config->tracktim) |
 			AFE_MR_TRANSFER(config->transfer) |
-			(config->resolution) |
 			(config->settling_time)|
 			(config->startup_time);
 
 	afec->AFE_MR = reg;
 
 	afec->AFE_EMR = (config->tag ? AFE_EMR_TAG : 0) |
+			(config->resolution) |
 			(config->stm ? AFE_EMR_STM : 0);
 
 	afec->AFE_ACR = AFE_ACR_IBCTL(config->ibctl);
@@ -182,7 +182,7 @@ void afec_temp_sensor_set_config(Afec *const afec, struct afec_temp_sensor_confi
  *
  * The default configuration is as follows:
  * - 12 -bit resolution
- * - AFEC clock frequency is 12MHz
+ * - AFEC clock frequency is 6MHz
  * - Analog Change is not allowed
  * - Normal mode
  * - Appends the channel number to the conversion result in AFE_LDCR register
@@ -197,12 +197,12 @@ void afec_get_config_defaults(struct afec_config *const cfg)
 
 	cfg->resolution = AFEC_12_BITS;
 	cfg->mck = sysclk_get_cpu_hz();
-	cfg->afec_clock = 12000000;
+	cfg->afec_clock = 6000000;
 	cfg->startup_time = AFEC_STARTUP_TIME_4;
 	cfg->settling_time = AFEC_SETTLING_TIME_0;
 	cfg->tracktim = 2;
 	cfg->transfer = 1;
-	cfg->anach = false;
+	cfg->anach = true;
 	cfg->useq = false;
 	cfg->tag = true;
 	cfg->stm = true;
@@ -228,7 +228,7 @@ void afec_ch_get_config_defaults(struct afec_ch_config *const cfg)
 
 	cfg->diff = false;
 	cfg->offset = false;
-	cfg->gain = AFEC_GAINVALUE_1;
+	cfg->gain = AFEC_GAINVALUE_0;
 }
 
 /**
@@ -281,7 +281,7 @@ enum status_code afec_init(Afec *const afec, struct afec_config *config)
  * \param callback  Callback function pointer
  * \param irq_level Interrupt level
  */
-void afec_set_callback(Afec *const afec, afec_interrupt_source_t source,
+void afec_set_callback(Afec *const afec, enum afec_interrupt_source source,
 		afec_callback_t callback, uint8_t irq_level)
 {
 	Assert(afec);
@@ -369,12 +369,18 @@ void afec_disable(Afec *const afec)
  *
  * \param afec  Base address of the AFEC.
  * \param ch_list Channel sequence list.
- * \param number Number of channels in the list.
+ * \param uc_num Number of channels in the list.
  */
 void afec_configure_sequence(Afec *const afec, const enum afec_channel_num ch_list[],
 		uint8_t uc_num)
 {
 	uint8_t uc_counter;
+
+	/* Set user sequence mode */
+	afec->AFE_MR |= AFE_MR_USEQ_REG_ORDER;
+	afec->AFE_SEQ1R = 0;
+	afec->AFE_SEQ2R = 0;
+		
 	if (uc_num < 8) {
 		for (uc_counter = 0; uc_counter < uc_num; uc_counter++) {
 			afec->AFE_SEQ1R |=

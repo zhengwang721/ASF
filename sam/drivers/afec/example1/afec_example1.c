@@ -177,6 +177,12 @@ int main(void)
 
 	afec_set_trigger(AFEC0, AFEC_TRIG_SW);
 
+	struct afec_ch_config afec_ch_cfg;
+	afec_ch_get_config_defaults(&afec_ch_cfg);
+	afec_ch_cfg.offset= true;
+	afec_ch_set_config(AFEC0, AFEC_TEMPERATURE_SENSOR, &afec_ch_cfg);
+	afec_channel_set_analog_offset(AFEC0, AFEC_TEMPERATURE_SENSOR, 0x800);
+	
 	struct afec_temp_sensor_config afec_temp_sensor_cfg;
 
 	afec_temp_sensor_get_config_defaults(&afec_temp_sensor_cfg);
@@ -186,6 +192,9 @@ int main(void)
 	afec_set_callback(AFEC0, AFEC_INTERRUPT_TEMP_CHANGE | AFEC_INTERRUPT_EOC_15,
 			afec_temp_sensor_data_ready, 1);
 
+	afec_set_calib_mode(AFEC0);
+	while(!(afec_get_interrupt_status(AFEC0) & AFE_ISR_EOCAL) == AFE_ISR_EOCAL);
+	
 	while (1) {
 	}
 }
