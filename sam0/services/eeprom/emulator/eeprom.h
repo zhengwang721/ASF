@@ -203,7 +203,7 @@ extern "C" {
 
 #if !defined(__DOXYGEN__)
 #  define EEPROM_MAX_PAGES            (64 * NVMCTRL_ROW_PAGES)
-#  define EEPROM_MASTER_PAGE_NUMBER   (EEPROM_MAX_PAGES - 1)
+#  define EEPROM_MASTER_PAGE_NUMBER   (EEPROM_MAX_PAGES - NVMCTRL_ROW_PAGES)
 #  define EEPROM_INVALID_PAGE_NUMBER  0xFF
 #  define EEPROM_HEADER_SIZE          4
 #endif

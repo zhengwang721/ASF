@@ -189,7 +189,7 @@ enum status_code nvm_execute_command(
 		const uint32_t parameter)
 {
 	/* Check that the address given is valid  */
-	if (address > (uint32_t)(_nvm_dev.page_size * _nvm_dev.number_of_pages)){
+	if (address > ((uint32_t)_nvm_dev.page_size * _nvm_dev.number_of_pages)){
 		return STATUS_ERR_BAD_ADDRESS;
 	}
 
@@ -266,24 +266,24 @@ enum status_code nvm_execute_command(
  *                                 read
  * \retval STATUS_BUSY             NVM controller was busy when the operation
  *                                 was attempted
- * \retval STATUS_ERR_BAD_ADDRESS  The requested page number was outside the
- *                                 acceptable range of the NVM memory region
- * \retval STATUS_ERR_INVALID_ARG  Write length was more than the NVM page size
+ * \retval STATUS_ERR_BAD_ADDRESS  The requested row number was outside the
+ *                                 acceptable range of the NVM memory region or
+ *                                 not aligned to the start of a page
  */
 enum status_code nvm_write_buffer(
-		const uint16_t destination_page,
+		const uint32_t destination_address,
 		const uint8_t *buffer,
 		uint16_t length)
 {
-	/* Sanity check arguments */
-	if (destination_page > (_nvm_dev.number_of_pages - 1)) {
+	/* Check if the destination address is valid */
+	if (destination_address >
+			((uint32_t)_nvm_dev.page_size * _nvm_dev.number_of_pages)) {
 		return STATUS_ERR_BAD_ADDRESS;
 	}
 
-	/* Ensure the user isn't trying to copy more than a single page worth of
-	 * data at once */
-	if (length > _nvm_dev.page_size) {
-		return STATUS_ERR_INVALID_ARG;
+	/* Check if the write address not aligned to the start of a page */
+	if (destination_address & (_nvm_dev.page_size - 1)) {
+		return STATUS_ERR_BAD_ADDRESS;
 	}
 
 	/* Get a pointer to the module hardware instance */
@@ -305,7 +305,7 @@ enum status_code nvm_write_buffer(
 	/* Clear error flags */
 	nvm_module->STATUS.reg &= ~NVMCTRL_STATUS_MASK;
 
-	uint32_t nvm_address = ((uint32_t)destination_page * _nvm_dev.page_size) / 2;
+	uint32_t nvm_address = destination_address / 2;
 
 	/* NVM _must_ be accessed as a series of 16-bit words, perform manual copy
 	 * to ensure alignment */
@@ -345,24 +345,24 @@ enum status_code nvm_write_buffer(
  *                                 read
  * \retval STATUS_BUSY             NVM controller was busy when the operation
  *                                 was attempted
- * \retval STATUS_ERR_BAD_ADDRESS  The requested page number was outside the
- *                                 acceptable range of the NVM memory region
- * \retval STATUS_ERR_INVALID_ARG  Read length was more than the NVM page size
+ * \retval STATUS_ERR_BAD_ADDRESS  The requested row number was outside the
+ *                                 acceptable range of the NVM memory region or
+ *                                 not aligned to the start of a page
  */
 enum status_code nvm_read_buffer(
-		const uint16_t source_page,
+		const uint32_t source_address,
 		uint8_t *const buffer,
 		uint16_t length)
 {
-	/* Sanity check arguments */
-	if (source_page > (_nvm_dev.number_of_pages - 1)) {
+	/* Check if the source address is valid */
+	if (source_address >
+			((uint32_t)_nvm_dev.page_size * _nvm_dev.number_of_pages)) {
 		return STATUS_ERR_BAD_ADDRESS;
 	}
 
-	/* Ensure the user isn't trying to copy more than a single page worth of
-	 * data at once */
-	if (length > _nvm_dev.page_size) {
-		return STATUS_ERR_INVALID_ARG;
+	/* Check if the read address is not aligned to the start of a page */
+	if (source_address & (_nvm_dev.page_size - 1)) {
+		return STATUS_ERR_BAD_ADDRESS;
 	}
 
 	/* Get a pointer to the module hardware instance */
@@ -376,13 +376,13 @@ enum status_code nvm_read_buffer(
 	/* Clear error flags */
 	nvm_module->STATUS.reg &= ~NVMCTRL_STATUS_MASK;
 
-	uint32_t nvm_address = ((uint32_t)source_page * _nvm_dev.page_size) / 2;
+	uint32_t page_address = source_address / 2;
 
 	/* NVM _must_ be accessed as a series of 16-bit words, perform manual copy
 	 * to ensure alignment */
 	for (uint16_t i = 0; i < length; i += 2) {
 		/* Fetch next 16-bit chunk from the NVM memory space */
-		uint16_t data = NVM_MEMORY[nvm_address++];
+		uint16_t data = NVM_MEMORY[page_address++];
 
 		/* Copy first byte of the 16-bit chunk to the destination buffer */
 		buffer[i] = (data & 0xFF);
@@ -402,7 +402,7 @@ enum status_code nvm_read_buffer(
  *
  * Erases a given row in the NVM memory region.
  *
- * \param[in] row_number  Index of the row to erase
+ * \param[in] row_address  Address of the row to erase
  *
  * \return Status of the NVM row erase attempt.
  *
@@ -411,13 +411,20 @@ enum status_code nvm_read_buffer(
  * \retval STATUS_BUSY             NVM controller was busy when the operation
  *                                 was attempted
  * \retval STATUS_ERR_BAD_ADDRESS  The requested row number was outside the
- *                                 acceptable range of the NVM memory region
+ *                                 acceptable range of the NVM memory region or
+ *                                 not aligned to the start of a row
  */
 enum status_code nvm_erase_row(
-		const uint16_t row_number)
+		const uint32_t row_address)
 {
-	/* Check if the row_number is valid */
-	if (row_number > ((_nvm_dev.number_of_pages / NVMCTRL_ROW_PAGES) - 1)) {
+	/* Check if the row address is valid */
+	if (row_address >
+			((uint32_t)_nvm_dev.page_size * _nvm_dev.number_of_pages)) {
+		return STATUS_ERR_BAD_ADDRESS;
+	}
+
+	/* Check if the address to erase is not aligned to the start of a row */
+	if (row_address & ((_nvm_dev.page_size * NVMCTRL_ROW_PAGES) - 1)) {
 		return STATUS_ERR_BAD_ADDRESS;
 	}
 
@@ -432,11 +439,8 @@ enum status_code nvm_erase_row(
 	/* Clear error flags */
 	nvm_module->STATUS.reg &= ~NVMCTRL_STATUS_MASK;
 
-	/* Convert row index to a address within NVM memory space */
-	uint32_t row_addr = ((uint32_t)row_number * (_nvm_dev.page_size * NVMCTRL_ROW_PAGES));
-
 	/* Set address and command */
-	nvm_module->ADDR.reg  = (uintptr_t)&NVM_MEMORY[row_addr / 4];
+	nvm_module->ADDR.reg  = (uintptr_t)&NVM_MEMORY[row_address / 4];
 	nvm_module->CTRLA.reg = NVM_COMMAND_ERASE_ROW | NVMCTRL_CTRLA_CMDEX_KEY;
 
 	return STATUS_OK;
