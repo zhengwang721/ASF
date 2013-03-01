@@ -276,7 +276,7 @@ static void _eeprom_emulator_update_page_mapping(void)
 
 	/* Use an invalid page number as the spare row until a valid one has been
 	 * found */
-	_eeprom_instance.spare_row = (EEPROM_MASTER_PAGE_NUMBER / NVMCTRL_ROW_PAGES);
+	_eeprom_instance.spare_row = EEPROM_INVALID_ROW_NUMBER;
 
 	/* Scan through all physical rows, to find an erased row to use as the
 	 * spare */
@@ -417,7 +417,6 @@ static enum status_code _eeprom_emulator_move_data_to_spare(
 		 * quickly flushed in the future if needed due to a low power
 		 * condition */
 		_eeprom_emulator_nvm_fill_cache(new_page, &_eeprom_instance.cache);
-		_eeprom_emulator_nvm_write_cache(new_page);
 
 		/* Update the page map with the new page location and indicate that
 		 * the cache now holds new data */
@@ -585,8 +584,7 @@ enum status_code eeprom_emulator_init(void)
 	_eeprom_emulator_update_page_mapping();
 
 	/* Could not find spare row - abort as the memory appears to be corrupt */
-	if (_eeprom_instance.spare_row ==
-			(EEPROM_MASTER_PAGE_NUMBER / NVMCTRL_ROW_PAGES)) {
+	if (_eeprom_instance.spare_row == EEPROM_INVALID_ROW_NUMBER) {
 		return STATUS_ERR_BAD_FORMAT;
 	}
 
