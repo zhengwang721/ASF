@@ -216,6 +216,9 @@ extern "C" {
 #elif BOARD == SAM4S_EK
 #  include "sam4s_ek/sam4s_ek.h"
 #  include "system_sam4s.h"
+#elif BOARD == SAM4S_WPIR_RD
+#  include "sam4s_wpir_rd/sam4s_wpir_rd.h"
+#  include "system_sam4s.h"
 #elif BOARD == SAM4S_XPLAINED
 #  include "sam4s_xplained/sam4s_xplained.h"
 #  include "system_sam4s.h"
