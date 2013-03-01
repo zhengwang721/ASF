@@ -55,12 +55,13 @@
  *
  * \section Description
  *
- * This example first configure LCD controller to display information and re200b
- * pir sensor to motion detection. After that, microcontroller enter in sleep
- * mode in order to reduce power comsumption. A motion detection will trig
- * ACC_Handler which will wake up microcontroller from sleep mode and display
- * information on LCD.Finally microcontroller will come back in sleep mode to
- * wait an others motion detection.
+ * This example first configure LCD controller to display information and RE200B
+ * PIR sensor to detect motion.
+ * After that, microcontroller enter in sleep mode in order to reduce power
+ * consumption. A motion detection will trig ACC interrupt which will wake up
+ * microcontroller from sleep mode and display information on LCD.
+ * Finally microcontroller will go back to sleep mode waiting for another
+ * motion detection.
  *
  * \section Usage
  *

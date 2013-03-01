@@ -42,14 +42,15 @@
  */
 
 /**
- * \mainpage continuous capture demonstration using external sram.
+ * \mainpage Continuous capture demonstration using external sram.
  *
  * \section Purpose
  *
  * This example demonstrates how to configure OV7740 CMOS sensor
  * in order to create a camera application which will continually take a picture
  * (in color or black and white mode), store it in external SRAM and display it
- * on the LCD by loading data image from external SRAM. The push button allows
+ * on the LCD by loading data image from external SRAM.
+ * The push button allows
  * the user to switch between color or black and white mode.
  *
  * \section Requirements
@@ -90,11 +91,11 @@
 #include "conf_clock.h"
 
 /* TWI clock frequency in Hz (400KHz) */
-#define TWI_CLK     400000
+#define TWI_CLK                 (400000UL)
 
 /* Define color mode and black and white mode */
-#define COLOR_MODE              1
-#define BLACK_AND_WHITE_MODE    0
+#define COLOR_MODE              (1UL)
+#define BLACK_AND_WHITE_MODE    (0UL)
 
 /* Define used for line size values */
 #define IMAGE_LINE_COLOR                (IMAGE_WIDTH * 2)
@@ -304,8 +305,7 @@ static void capture_init(void)
 	}
 
 	/* Init PIO capture */
-	pio_capture_init(OV7740_DATA_BUS_PIO, OV7740_DATA_BUS_ID,
-			ul_current_mode);
+	pio_capture_init(OV7740_DATA_BUS_PIO, OV7740_DATA_BUS_ID,	ul_current_mode);
 
 	/* Turn on OV7740 image sensor using power pin */
 	ov_power(true, OV_POWER_PIO, OV_POWER_MASK);

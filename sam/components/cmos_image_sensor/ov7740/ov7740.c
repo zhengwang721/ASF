@@ -47,13 +47,9 @@
 #include <assert.h>
 #include <stdlib.h>
 
-/* / @cond 0 */
-/**INDENT-OFF**/
 #ifdef __cplusplus
 extern "C" {
 #endif
-/**INDENT-ON**/
-/* / @endcond */
 
 /**
  * \defgroup ov7740_CMOS_image_sensor_group
@@ -551,10 +547,6 @@ uint32_t ov_restore_manual(volatile uint32_t *p_backup_addr, uint32_t ul_size)
 
 /* @} */
 
-/* / @cond 0 */
-/**INDENT-OFF**/
 #ifdef __cplusplus
 }
 #endif
-/**INDENT-ON**/
-/* / @endcond */

@@ -50,13 +50,9 @@
 #include "delay.h"
 #include "pio.h"
 
-/* / @cond 0 */
-/**INDENT-OFF**/
 #ifdef __cplusplus
 extern "C" {
 #endif
-/**INDENT-ON**/
-/* / @endcond */
 
 /** Slave address of OMNIVISION chip. */
 #define OV_CAPTOR_ADDRESS   (0x42 >> 1)   /* OV7740 -> 0x42 */
@@ -220,13 +216,9 @@ uint32_t ov_store_manual(Twi *p_twi, volatile uint32_t *p_backup_addr,
 		uint32_t ul_size);
 uint32_t ov_restore_manual(volatile uint32_t *p_backup_addr, uint32_t ul_size);
 
-/* / @cond 0 */
-/**INDENT-OFF**/
 #ifdef __cplusplus
 }
 #endif
-/**INDENT-ON**/
-/* / @endcond */
 
 /**
  * \page sam_component_ov7740_quick_start Quick Start Guide for the OV7740

@@ -49,13 +49,9 @@
 #include "acc.h"
 #include "pmc.h"
 
-/* / @cond 0 */
-/**INDENT-OFF**/
 #ifdef __cplusplus
 extern "C" {
 #endif
-/**INDENT-ON**/
-/* / @endcond */
 
 /**
  * enumeration of different result for acc comparison
@@ -74,12 +70,8 @@ void re200b_motion_detect_disable(void);
 E_CMP_RES re200b_motion_detect_get_compare_result(void);
 uint32_t re200b_motion_detection(void);
 
-/* / @cond 0 */
-/**INDENT-OFF**/
 #ifdef __cplusplus
 }
 #endif
-/**INDENT-ON**/
-/* / @endcond */
 
 #endif /* RE200B_H_INCLUDED */

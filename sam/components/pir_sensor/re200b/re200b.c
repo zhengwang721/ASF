@@ -56,13 +56,10 @@
 #include <assert.h>
 #include <stdlib.h>
 
-/* / @cond 0 */
-/**INDENT-OFF**/
 #ifdef __cplusplus
 extern "C" {
 #endif
-/**INDENT-ON**/
-/* / @endcond */
+
 /** indicate if there's any comparison event triggered*/
 volatile uint32_t g_ul_compare_event_flag = false;
 
@@ -161,13 +158,9 @@ uint32_t re200b_motion_detection(void)
 	return (g_ul_compare_event_flag && (g_compare_result == CMP_GREATER));
 }
 
-/* / @cond 0 */
-/**INDENT-OFF**/
 #ifdef __cplusplus
 }
 #endif
-/**INDENT-ON**/
-/* / @endcond */
 
 /**
  * \}

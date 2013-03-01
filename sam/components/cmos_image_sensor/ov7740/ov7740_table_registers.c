@@ -44,13 +44,9 @@
 #include "board.h"
 #include <ov7740.h>
 
-/* / @cond 0 */
-/**INDENT-OFF**/
 #ifdef __cplusplus
 extern "C" {
 #endif
-/**INDENT-ON**/
-/* / @endcond */
 
 /**
  * \defgroup ov7740_CMOS_image_sensor_group
@@ -1542,10 +1538,6 @@ const ov_reg OV7740_VGA_YUV422_20FPS[] = {
 
 /* @} */
 
-/* / @cond 0 */
-/**INDENT-OFF**/
 #ifdef __cplusplus
 }
 #endif
-/**INDENT-ON**/
-/* / @endcond */
