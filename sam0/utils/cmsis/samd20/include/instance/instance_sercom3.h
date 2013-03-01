@@ -54,10 +54,10 @@
 #define REG_SERCOM3_I2CS_CTRLB     (0x42001404U) /**< \brief (SERCOM3) I2CS Control Register B */
 #define REG_SERCOM3_SPI_CTRLB      (0x42001404U) /**< \brief (SERCOM3) SPI Control Register B */
 #define REG_SERCOM3_USART_CTRLB    (0x42001404U) /**< \brief (SERCOM3) USART Control Register B */
-#define REG_SERCOM3_I2CM_DEBUG     (0x42001408U) /**< \brief (SERCOM3) I2CM Debug Register */
-#define REG_SERCOM3_I2CS_DEBUG     (0x42001408U) /**< \brief (SERCOM3) I2CS Debug Register */
-#define REG_SERCOM3_SPI_DEBUG      (0x42001408U) /**< \brief (SERCOM3) SPI Debug Register */
-#define REG_SERCOM3_USART_DEBUG    (0x42001408U) /**< \brief (SERCOM3) USART Debug Register */
+#define REG_SERCOM3_I2CM_DBGCTRL   (0x42001408U) /**< \brief (SERCOM3) I2CM Debug Register */
+#define REG_SERCOM3_I2CS_DBGCTRL   (0x42001408U) /**< \brief (SERCOM3) I2CS Debug Register */
+#define REG_SERCOM3_SPI_DBGCTRL    (0x42001408U) /**< \brief (SERCOM3) SPI Debug Register */
+#define REG_SERCOM3_USART_DBGCTRL  (0x42001408U) /**< \brief (SERCOM3) USART Debug Register */
 #define REG_SERCOM3_I2CM_BAUD      (0x4200140AU) /**< \brief (SERCOM3) I2CM Baud Rate Register */
 #define REG_SERCOM3_SPI_BAUD       (0x4200140AU) /**< \brief (SERCOM3) SPI Baud Rate Register */
 #define REG_SERCOM3_USART_BAUD     (0x4200140AU) /**< \brief (SERCOM3) USART Baud Rate Register */
@@ -93,10 +93,10 @@
 #define REG_SERCOM3_I2CS_CTRLB     (*(RwReg  *)0x42001404U) /**< \brief (SERCOM3) I2CS Control Register B */
 #define REG_SERCOM3_SPI_CTRLB      (*(RwReg  *)0x42001404U) /**< \brief (SERCOM3) SPI Control Register B */
 #define REG_SERCOM3_USART_CTRLB    (*(RwReg  *)0x42001404U) /**< \brief (SERCOM3) USART Control Register B */
-#define REG_SERCOM3_I2CM_DEBUG     (*(RwReg8 *)0x42001408U) /**< \brief (SERCOM3) I2CM Debug Register */
-#define REG_SERCOM3_I2CS_DEBUG     (*(RwReg8 *)0x42001408U) /**< \brief (SERCOM3) I2CS Debug Register */
-#define REG_SERCOM3_SPI_DEBUG      (*(RwReg8 *)0x42001408U) /**< \brief (SERCOM3) SPI Debug Register */
-#define REG_SERCOM3_USART_DEBUG    (*(RwReg8 *)0x42001408U) /**< \brief (SERCOM3) USART Debug Register */
+#define REG_SERCOM3_I2CM_DBGCTRL   (*(RwReg8 *)0x42001408U) /**< \brief (SERCOM3) I2CM Debug Register */
+#define REG_SERCOM3_I2CS_DBGCTRL   (*(RwReg8 *)0x42001408U) /**< \brief (SERCOM3) I2CS Debug Register */
+#define REG_SERCOM3_SPI_DBGCTRL    (*(RwReg8 *)0x42001408U) /**< \brief (SERCOM3) SPI Debug Register */
+#define REG_SERCOM3_USART_DBGCTRL  (*(RwReg8 *)0x42001408U) /**< \brief (SERCOM3) USART Debug Register */
 #define REG_SERCOM3_I2CM_BAUD      (*(RwReg16*)0x4200140AU) /**< \brief (SERCOM3) I2CM Baud Rate Register */
 #define REG_SERCOM3_SPI_BAUD       (*(RwReg8 *)0x4200140AU) /**< \brief (SERCOM3) SPI Baud Rate Register */
 #define REG_SERCOM3_USART_BAUD     (*(RwReg16*)0x4200140AU) /**< \brief (SERCOM3) USART Baud Rate Register */

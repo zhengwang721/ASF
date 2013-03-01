@@ -58,7 +58,7 @@ struct _nvm_module {
 	uint16_t number_of_pages;
 	/** If \c false, a page write command will be issued automatically when the
 	 *  page buffer is full. */
-	bool man_page_write;
+	bool manual_page_write;
 };
 
 /**
@@ -69,7 +69,28 @@ static struct _nvm_module _nvm_dev;
 /**
  * \internal Pointer to the NVM MEMORY region start address
  */
-#define NVM_MEMORY ((uint16_t *)FLASH_ADDR)
+#define NVM_MEMORY        ((volatile uint16_t *)FLASH_ADDR)
+
+/**
+ * \internal Pointer to the NVM AUX0 MEMORY region start address
+ */
+#define NVM_AUX0_MEMORY   ((volatile uint16_t *)NVMCTRL_AUX0_ADDRESS)
+
+/**
+ * \internal Pointer to the NVM AUX1 MEMORY region start address
+ */
+#define NVM_AUX1_MEMORY   ((volatile uint16_t *)NVMCTRL_AUX1_ADDRESS)
+
+/**
+ * \internal Pointer to the NVM AUX2 MEMORY region start address
+ */
+#define NVM_AUX2_MEMORY   ((volatile uint16_t *)NVMCTRL_AUX2_ADDRESS)
+
+/**
+ * \internal Pointer to the NVM AUX3 MEMORY region start address
+ */
+#define NVM_AUX3_MEMORY   ((volatile uint16_t *)NVMCTRL_AUX3_ADDRESS)
+
 
 /**
  * \brief Sets the up the NVM hardware module based on the configuration.
@@ -122,25 +143,14 @@ enum status_code nvm_set_config(
 			(config->wait_states       << NVMCTRL_CTRLB_RWS_Pos);
 
 	/* Initialize the internal device struct */
-	_nvm_dev.page_size       = (8 << nvm_module->PARAM.bit.PSZ);
-	_nvm_dev.number_of_pages = nvm_module->PARAM.bit.NVMP;
-	_nvm_dev.man_page_write  = config->manual_page_write;
+	_nvm_dev.page_size         = (8 << nvm_module->PARAM.bit.PSZ);
+	_nvm_dev.number_of_pages   = nvm_module->PARAM.bit.NVMP;
+	_nvm_dev.manual_page_write = config->manual_page_write;
 
 	/* If the security bit is set, the auxiliary space cannot be written */
 	if (nvm_module->STATUS.reg & NVMCTRL_STATUS_SB) {
 		return STATUS_ERR_IO;
 	}
-
-	/* Create pointer to the auxiliary space */
-	uint32_t *aux_row = (uint32_t*)NVMCTRL_AUX0_ADDRESS;
-
-	/* Writing bootloader and eeprom size to the auxiliary space */
-	*aux_row =
-			(config->bootloader_size << NVMCTRL_AUX_BOOTPROT_Pos) |
-			(config->eeprom_size     << NVMCTRL_AUX_EEPROM_Pos);
-
-	/* Issue the write auxiliary space command */
-	nvm_module->CTRLA.reg = NVM_COMMAND_WRITE_AUX_ROW;
 
 	return STATUS_OK;
 }
@@ -155,7 +165,8 @@ enum status_code nvm_set_config(
  *       completed.
  *
  * \param[in] command    Command to issue to the NVM controller
- * \param[in] address    Address to pass to the NVM controller
+ * \param[in] address    Address to pass to the NVM controller in NVM memory
+ *                       space
  * \param[in] parameter  Parameter to pass to the NVM controller, not used
  *                       for this driver
  *
@@ -178,7 +189,7 @@ enum status_code nvm_execute_command(
 		const uint32_t parameter)
 {
 	/* Check that the address given is valid  */
-	if (address > (uint32_t)(_nvm_dev.page_size * _nvm_dev.number_of_pages)){
+	if (address > ((uint32_t)_nvm_dev.page_size * _nvm_dev.number_of_pages)){
 		return STATUS_ERR_BAD_ADDRESS;
 	}
 
@@ -194,27 +205,28 @@ enum status_code nvm_execute_command(
 	}
 
 	switch (command) {
-		/* Aux Row commands (row address) */
+
+		/* Commands requiring address (protected) */
 		case NVM_COMMAND_ERASE_AUX_ROW:
 		case NVM_COMMAND_WRITE_AUX_ROW:
 
-			/* Auxiliary space cannot be accessed if the security
-			 * is set */
+			/* Auxiliary space cannot be accessed if the security bit is set */
 			if(nvm_module->STATUS.reg & NVMCTRL_STATUS_SB) {
 				return STATUS_ERR_IO;
 			}
 
-			/* Set address and command */
-			nvm_module->ADDR.reg  = (uintptr_t)&NVM_MEMORY[address / 4];
+			/* Set address, command will be issued elsewhere */
+			nvm_module->ADDR.reg = (uintptr_t)&NVM_MEMORY[address / 4];
 			break;
 
+		/* Commands requiring address (unprotected) */
 		case NVM_COMMAND_ERASE_ROW:
 		case NVM_COMMAND_WRITE_PAGE:
 		case NVM_COMMAND_LOCK_REGION:
 		case NVM_COMMAND_UNLOCK_REGION:
 
-			/* Set address and command */
-			nvm_module->ADDR.reg  = (uintptr_t)&NVM_MEMORY[address / 4];
+			/* Set address, command will be issued elsewhere */
+			nvm_module->ADDR.reg = (uintptr_t)&NVM_MEMORY[address / 4];
 			break;
 
 		/* Commands not requiring address */
@@ -229,8 +241,7 @@ enum status_code nvm_execute_command(
 	}
 
 	/* Set command */
-	nvm_module->CTRLA.reg = (command << NVMCTRL_CTRLA_CMD_Pos) |
-			NVMCTRL_CTRLA_CMDEX_KEY;
+	nvm_module->CTRLA.reg = command | NVMCTRL_CTRLA_CMDEX_KEY;
 
 	return STATUS_OK;
 }
@@ -255,24 +266,24 @@ enum status_code nvm_execute_command(
  *                                 read
  * \retval STATUS_BUSY             NVM controller was busy when the operation
  *                                 was attempted
- * \retval STATUS_ERR_BAD_ADDRESS  The requested page number was outside the
- *                                 acceptable range of the NVM memory region
- * \retval STATUS_ERR_INVALID_ARG  Write length was more than the NVM page size
+ * \retval STATUS_ERR_BAD_ADDRESS  The requested row number was outside the
+ *                                 acceptable range of the NVM memory region or
+ *                                 not aligned to the start of a page
  */
 enum status_code nvm_write_buffer(
-		const uint16_t destination_page,
+		const uint32_t destination_address,
 		const uint8_t *buffer,
 		uint16_t length)
 {
-	/* Sanity check arguments */
-	if (destination_page > (_nvm_dev.number_of_pages - 1)) {
+	/* Check if the destination address is valid */
+	if (destination_address >
+			((uint32_t)_nvm_dev.page_size * _nvm_dev.number_of_pages)) {
 		return STATUS_ERR_BAD_ADDRESS;
 	}
 
-	/* Ensure the user isn't trying to copy more than a single page worth of
-	 * data at once */
-	if (length > _nvm_dev.page_size) {
-		return STATUS_ERR_INVALID_ARG;
+	/* Check if the write address not aligned to the start of a page */
+	if (destination_address & (_nvm_dev.page_size - 1)) {
+		return STATUS_ERR_BAD_ADDRESS;
 	}
 
 	/* Get a pointer to the module hardware instance */
@@ -283,13 +294,21 @@ enum status_code nvm_write_buffer(
 		return STATUS_BUSY;
 	}
 
+	/* Erase the page buffer before buffering new data */
+	nvm_module->CTRLA.reg = NVM_COMMAND_PAGE_BUFFER_CLEAR | NVMCTRL_CTRLA_CMDEX_KEY;
+
+	/* Check if the module is busy */
+	while (!nvm_is_ready()) {
+		/* Force-wait for the buffer clear to complete */
+	}
+
 	/* Clear error flags */
 	nvm_module->STATUS.reg &= ~NVMCTRL_STATUS_MASK;
 
-	uint32_t nvm_address = ((uint32_t)destination_page * _nvm_dev.page_size) / 2;
+	uint32_t nvm_address = destination_address / 2;
 
-	/* NVM *must* be accessed as a series of 16-bit words, perform manual
-	 * copy to ensure alignment */
+	/* NVM _must_ be accessed as a series of 16-bit words, perform manual copy
+	 * to ensure alignment */
 	for (uint16_t i = 0; i < length; i += 2) {
 		uint16_t data;
 
@@ -326,24 +345,24 @@ enum status_code nvm_write_buffer(
  *                                 read
  * \retval STATUS_BUSY             NVM controller was busy when the operation
  *                                 was attempted
- * \retval STATUS_ERR_BAD_ADDRESS  The requested page number was outside the
- *                                 acceptable range of the NVM memory region
- * \retval STATUS_ERR_INVALID_ARG  Read length was more than the NVM page size
+ * \retval STATUS_ERR_BAD_ADDRESS  The requested row number was outside the
+ *                                 acceptable range of the NVM memory region or
+ *                                 not aligned to the start of a page
  */
 enum status_code nvm_read_buffer(
-		const uint16_t source_page,
+		const uint32_t source_address,
 		uint8_t *const buffer,
 		uint16_t length)
 {
-	/* Sanity check arguments */
-	if (source_page > (_nvm_dev.number_of_pages - 1)) {
+	/* Check if the source address is valid */
+	if (source_address >
+			((uint32_t)_nvm_dev.page_size * _nvm_dev.number_of_pages)) {
 		return STATUS_ERR_BAD_ADDRESS;
 	}
 
-	/* Ensure the user isn't trying to copy more than a single page worth of
-	 * data at once */
-	if (length > _nvm_dev.page_size) {
-		return STATUS_ERR_INVALID_ARG;
+	/* Check if the read address is not aligned to the start of a page */
+	if (source_address & (_nvm_dev.page_size - 1)) {
+		return STATUS_ERR_BAD_ADDRESS;
 	}
 
 	/* Get a pointer to the module hardware instance */
@@ -357,13 +376,13 @@ enum status_code nvm_read_buffer(
 	/* Clear error flags */
 	nvm_module->STATUS.reg &= ~NVMCTRL_STATUS_MASK;
 
-	uint32_t nvm_address = ((uint32_t)source_page * _nvm_dev.page_size) / 2;
+	uint32_t page_address = source_address / 2;
 
-	/* NVM *must* be accessed as a series of 16-bit words, perform manual
-	 * copy to ensure alignment */
+	/* NVM _must_ be accessed as a series of 16-bit words, perform manual copy
+	 * to ensure alignment */
 	for (uint16_t i = 0; i < length; i += 2) {
 		/* Fetch next 16-bit chunk from the NVM memory space */
-		uint16_t data = NVM_MEMORY[nvm_address++];
+		uint16_t data = NVM_MEMORY[page_address++];
 
 		/* Copy first byte of the 16-bit chunk to the destination buffer */
 		buffer[i] = (data & 0xFF);
@@ -383,7 +402,7 @@ enum status_code nvm_read_buffer(
  *
  * Erases a given row in the NVM memory region.
  *
- * \param[in] row_number  Index of the row to erase
+ * \param[in] row_address  Address of the row to erase
  *
  * \return Status of the NVM row erase attempt.
  *
@@ -392,13 +411,20 @@ enum status_code nvm_read_buffer(
  * \retval STATUS_BUSY             NVM controller was busy when the operation
  *                                 was attempted
  * \retval STATUS_ERR_BAD_ADDRESS  The requested row number was outside the
- *                                 acceptable range of the NVM memory region
+ *                                 acceptable range of the NVM memory region or
+ *                                 not aligned to the start of a row
  */
 enum status_code nvm_erase_row(
-		const uint16_t row_number)
+		const uint32_t row_address)
 {
-	/* Check if the row_number is valid */
-	if (row_number > ((_nvm_dev.number_of_pages / NVMCTRL_ROW_PAGES) - 1)) {
+	/* Check if the row address is valid */
+	if (row_address >
+			((uint32_t)_nvm_dev.page_size * _nvm_dev.number_of_pages)) {
+		return STATUS_ERR_BAD_ADDRESS;
+	}
+
+	/* Check if the address to erase is not aligned to the start of a row */
+	if (row_address & ((_nvm_dev.page_size * NVMCTRL_ROW_PAGES) - 1)) {
 		return STATUS_ERR_BAD_ADDRESS;
 	}
 
@@ -413,12 +439,66 @@ enum status_code nvm_erase_row(
 	/* Clear error flags */
 	nvm_module->STATUS.reg &= ~NVMCTRL_STATUS_MASK;
 
-	/* Convert row index to a address within NVM memory space */
-	uint32_t row_addr = ((uint32_t)row_number * (_nvm_dev.page_size * NVMCTRL_ROW_PAGES));
-
 	/* Set address and command */
-	nvm_module->ADDR.reg  = (uintptr_t)&NVM_MEMORY[row_addr / 4];
+	nvm_module->ADDR.reg  = (uintptr_t)&NVM_MEMORY[row_address / 4];
 	nvm_module->CTRLA.reg = NVM_COMMAND_ERASE_ROW | NVMCTRL_CTRLA_CMDEX_KEY;
 
 	return STATUS_OK;
+}
+
+/**
+ * \brief Reads the parameters of the NVM controller.
+ *
+ * Retrieves the page size, number of pages and other configuration settings
+ * of the NVM region.
+ *
+ * \param[out] parameters    Parameter structure, which holds page size and
+ *                           number of pages in the NVM memory
+ */
+void nvm_get_parameters(
+		struct nvm_parameters *const parameters)
+{
+	/* Sanity check parameters */
+	Assert(parameters);
+
+	/* Get a pointer to the module hardware instance */
+	Nvmctrl *const nvm_module = NVMCTRL;
+
+	/* Clear error flags */
+	nvm_module->STATUS.reg &= ~NVMCTRL_STATUS_MASK;
+
+	/* Read out from the PARAM register */
+	uint32_t param_reg = nvm_module->PARAM.reg;
+
+	/* Mask out page size and number of pages */
+	parameters->page_size  =
+			(param_reg & NVMCTRL_PARAM_PSZ_Msk)  >> NVMCTRL_PARAM_PSZ_Pos;
+	parameters->nvm_number_of_pages =
+			(param_reg & NVMCTRL_PARAM_NVMP_Msk) >> NVMCTRL_PARAM_NVMP_Pos;
+
+	/* Read the current EEPROM fuse value from the AUX0 row */
+	uint16_t eeprom_fuse_value =
+			(NVM_AUX0_MEMORY[4 / 16] >> (4 % 16)) & 0x07;
+
+	/* Translate the EEPROM fuse byte value to a number of NVM pages */
+	if (eeprom_fuse_value == 7) {
+		parameters->eeprom_number_of_pages = 0;
+	}
+	else {
+		parameters->eeprom_number_of_pages =
+				NVMCTRL_ROW_PAGES << (6 - eeprom_fuse_value);
+	}
+
+	/* Read the current BOOTSZ fuse value from the AUX0 row */
+	uint16_t boot_fuse_value =
+			(NVM_AUX0_MEMORY[0 / 16] >> (0 % 16)) & 0x07;
+
+	/* Translate the BOOTSZ fuse byte value to a number of NVM pages */
+	if (boot_fuse_value == 7) {
+		parameters->bootloader_number_of_pages = 0;
+	}
+	else {
+		parameters->bootloader_number_of_pages =
+				NVMCTRL_ROW_PAGES << (7 - boot_fuse_value);
+	}
 }

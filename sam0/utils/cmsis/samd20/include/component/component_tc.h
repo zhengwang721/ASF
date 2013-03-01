@@ -211,7 +211,7 @@ typedef union {
 #define TC_CTRLC_CPTEN(value)       ((TC_CTRLC_CPTEN_Msk & ((value) << TC_CTRLC_CPTEN_Pos)))
 #define TC_CTRLC_MASK               0x33u        /**< \brief (TC_CTRLC) MASK Register */
 
-/* -------- TC_DEBUG : (TC Offset: 0x08) (R/W  8) Debug Register -------- */
+/* -------- TC_DBGCTRL : (TC Offset: 0x08) (R/W  8) Debug Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
@@ -219,15 +219,15 @@ typedef union {
     uint8_t  :7;               /*!< bit:  1.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
-} TC_DEBUG_Type;
+} TC_DBGCTRL_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
-#define TC_DEBUG_OFFSET             0x08         /**< \brief (TC_DEBUG offset) Debug Register */
-#define TC_DEBUG_RESETVALUE         0x00         /**< \brief (TC_DEBUG reset_value) Debug Register */
+#define TC_DBGCTRL_OFFSET           0x08         /**< \brief (TC_DBGCTRL offset) Debug Register */
+#define TC_DBGCTRL_RESETVALUE       0x00         /**< \brief (TC_DBGCTRL reset_value) Debug Register */
 
-#define TC_DEBUG_DBGRUN_Pos         0            /**< \brief (TC_DEBUG) Run During Debug */
-#define TC_DEBUG_DBGRUN             (0x1u << TC_DEBUG_DBGRUN_Pos)
-#define TC_DEBUG_MASK               0x01u        /**< \brief (TC_DEBUG) MASK Register */
+#define TC_DBGCTRL_DBGRUN_Pos       0            /**< \brief (TC_DBGCTRL) Run During Debug */
+#define TC_DBGCTRL_DBGRUN           (0x1u << TC_DBGCTRL_DBGRUN_Pos)
+#define TC_DBGCTRL_MASK             0x01u        /**< \brief (TC_DBGCTRL) MASK Register */
 
 /* -------- TC_EVCTRL : (TC Offset: 0x0A) (R/W 16) Event Control Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -468,7 +468,7 @@ typedef struct { /* 8-bit Counter Mode */
   __IO TC_CTRLBSET_Type          CTRLBSET;    /**< \brief Offset: 0x05 (R/W  8) Control B Set Register */
   __IO TC_CTRLC_Type             CTRLC;       /**< \brief Offset: 0x06 (R/W  8) Control C Register */
        RoReg8                    Reserved1[0x1];
-  __IO TC_DEBUG_Type             DEBUG;       /**< \brief Offset: 0x08 (R/W  8) Debug Register */
+  __IO TC_DBGCTRL_Type           DBGCTRL;     /**< \brief Offset: 0x08 (R/W  8) Debug Register */
        RoReg8                    Reserved2[0x1];
   __IO TC_EVCTRL_Type            EVCTRL;      /**< \brief Offset: 0x0A (R/W 16) Event Control Register */
   __IO TC_INTENCLR_Type          INTENCLR;    /**< \brief Offset: 0x0C (R/W  8) Interrupt Enable Clear Register */
@@ -492,7 +492,7 @@ typedef struct { /* 16-bit Counter Mode */
   __IO TC_CTRLBSET_Type          CTRLBSET;    /**< \brief Offset: 0x05 (R/W  8) Control B Set Register */
   __IO TC_CTRLC_Type             CTRLC;       /**< \brief Offset: 0x06 (R/W  8) Control C Register */
        RoReg8                    Reserved1[0x1];
-  __IO TC_DEBUG_Type             DEBUG;       /**< \brief Offset: 0x08 (R/W  8) Debug Register */
+  __IO TC_DBGCTRL_Type           DBGCTRL;     /**< \brief Offset: 0x08 (R/W  8) Debug Register */
        RoReg8                    Reserved2[0x1];
   __IO TC_EVCTRL_Type            EVCTRL;      /**< \brief Offset: 0x0A (R/W 16) Event Control Register */
   __IO TC_INTENCLR_Type          INTENCLR;    /**< \brief Offset: 0x0C (R/W  8) Interrupt Enable Clear Register */
@@ -514,7 +514,7 @@ typedef struct { /* 32-bit Counter Mode */
   __IO TC_CTRLBSET_Type          CTRLBSET;    /**< \brief Offset: 0x05 (R/W  8) Control B Set Register */
   __IO TC_CTRLC_Type             CTRLC;       /**< \brief Offset: 0x06 (R/W  8) Control C Register */
        RoReg8                    Reserved1[0x1];
-  __IO TC_DEBUG_Type             DEBUG;       /**< \brief Offset: 0x08 (R/W  8) Debug Register */
+  __IO TC_DBGCTRL_Type           DBGCTRL;     /**< \brief Offset: 0x08 (R/W  8) Debug Register */
        RoReg8                    Reserved2[0x1];
   __IO TC_EVCTRL_Type            EVCTRL;      /**< \brief Offset: 0x0A (R/W 16) Event Control Register */
   __IO TC_INTENCLR_Type          INTENCLR;    /**< \brief Offset: 0x0C (R/W  8) Interrupt Enable Clear Register */
