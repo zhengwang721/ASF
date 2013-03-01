@@ -478,10 +478,8 @@ void _i2c_master_interrupt_handler(uint8_t instance)
 
 		/* Call error callback if enabled and registered. */
 		if (callback_mask & (1 << I2C_MASTER_CALLBACK_ERROR)) {
-		if (callback_mask & (1 << I2C_MASTER_CALLBACK_ERROR)) {
 
 			module->callbacks[I2C_MASTER_CALLBACK_ERROR](module);
-
 		}
 	}
 }
