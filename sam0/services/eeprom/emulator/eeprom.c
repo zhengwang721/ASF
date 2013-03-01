@@ -57,7 +57,7 @@
  */
 #define EEPROM_MAGIC_KEY_COUNT           3
 
-
+COMPILER_PACK_SET(1);
 /**
  * \internal
  * \brief Structure describing the EEPROM Emulation master page
@@ -81,7 +81,6 @@ struct _eeprom_master_page {
 	uint8_t  reserved[45];
 };
 
-COMPILER_PACK_SET(1);
 /**
  * \internal
  * \brief Structure describing emulated pages of EEPROM data
@@ -177,7 +176,7 @@ static void _eeprom_emulator_nvm_fill_cache(
  *
  *  \param[in] physical_page  Physical page in EEPROM space to commit
  */
-static void _eeprom_emulator_nvm_write_cache(
+static void _eeprom_emulator_nvm_commit_cache(
 		const uint16_t physical_page)
 {
 	enum status_code error_code = STATUS_OK;
@@ -244,7 +243,7 @@ static void _eeprom_emulator_format_memory(void)
 
 			/* Write the page out to physical memory */
 			_eeprom_emulator_nvm_fill_cache(physical_page, &data);
-			_eeprom_emulator_nvm_write_cache(physical_page);
+			_eeprom_emulator_nvm_commit_cache(physical_page);
 
 			/* Increment the logical EEPROM page address now that the current
 			 * address' page has been initialized */
@@ -462,7 +461,7 @@ static void _eeprom_emulator_create_master_page(void)
 
 	/* Write the new master page data to physical memory */
 	_eeprom_emulator_nvm_fill_cache(EEPROM_MASTER_PAGE_NUMBER, &master_page);
-	_eeprom_emulator_nvm_write_cache(EEPROM_MASTER_PAGE_NUMBER);
+	_eeprom_emulator_nvm_commit_cache(EEPROM_MASTER_PAGE_NUMBER);
 }
 
 /**
@@ -909,7 +908,7 @@ enum status_code eeprom_emulator_flush_page_buffer(void)
 	uint8_t cached_logical_page = _eeprom_instance.cache.header.logical_page;
 
 	/* Perform the page write to commit the NVM page buffer to FLASH */
-	_eeprom_emulator_nvm_write_cache(
+	_eeprom_emulator_nvm_commit_cache(
 			_eeprom_instance.page_map[cached_logical_page]);
 
 	barrier(); // Enforce ordering to prevent incorrect cache state
