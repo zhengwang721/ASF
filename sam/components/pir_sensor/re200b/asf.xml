@@ -1,8 +1,8 @@
 ﻿<asf xmlversion="1.0">
-	<module type="component" id="sam.components.pir_sensor.re200b" caption="PIR sensor - RE200B PIR sensor">
+	<module type="component" id="sam.components.pir_sensor.re200b" caption="RE200B PIR sensor">
 		<!-- Summary description -->
 		<info type="description" value="summary">
-			Low-level driver for the re200b pir sensor.
+			Low-level driver for the RE200B PIR sensor.
 		</info>
 
 		<!-- Keywords -->

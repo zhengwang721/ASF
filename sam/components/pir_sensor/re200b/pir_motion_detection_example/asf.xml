@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="sam.components.pir_sensor.re200b.pir_motion_detection_example" caption="Re200b pir sensor example">
+	<module type="application" id="sam.components.pir_sensor.re200b.pir_motion_detection_example" caption="RE200B PIR sensor motion detection example">
 		<!-- Summary description -->
 		<info type="description" value="summary">
 			Simple example detecting a motion with the RE200B PIR sensor and displaying information on board's LCD.
