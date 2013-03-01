@@ -63,7 +63,7 @@
 #define REG_RTC_MODE1_INTFLAG      (0x40001408U) /**< \brief (RTC) MODE1 Interrupt Flag Status and Clear Register */
 #define REG_RTC_MODE2_INTFLAG      (0x40001408U) /**< \brief (RTC) MODE2 Interrupt Flag Status and Clear Register */
 #define REG_RTC_STATUS             (0x4000140AU) /**< \brief (RTC) Status Register */
-#define REG_RTC_DEBUG              (0x4000140BU) /**< \brief (RTC) Debug Register */
+#define REG_RTC_DBGCTRL            (0x4000140BU) /**< \brief (RTC) Debug Register */
 #define REG_RTC_FREQCORR           (0x4000140CU) /**< \brief (RTC) Frequency Correction Register */
 #define REG_RTC_MODE0_COUNT        (0x40001410U) /**< \brief (RTC) MODE0 Count Register */
 #define REG_RTC_MODE1_COUNT        (0x40001410U) /**< \brief (RTC) MODE1 Count Register */
@@ -92,7 +92,7 @@
 #define REG_RTC_MODE1_INTFLAG      (*(RwReg8 *)0x40001408U) /**< \brief (RTC) MODE1 Interrupt Flag Status and Clear Register */
 #define REG_RTC_MODE2_INTFLAG      (*(RwReg8 *)0x40001408U) /**< \brief (RTC) MODE2 Interrupt Flag Status and Clear Register */
 #define REG_RTC_STATUS             (*(RwReg8 *)0x4000140AU) /**< \brief (RTC) Status Register */
-#define REG_RTC_DEBUG              (*(RwReg8 *)0x4000140BU) /**< \brief (RTC) Debug Register */
+#define REG_RTC_DBGCTRL            (*(RwReg8 *)0x4000140BU) /**< \brief (RTC) Debug Register */
 #define REG_RTC_FREQCORR           (*(RwReg8 *)0x4000140CU) /**< \brief (RTC) Frequency Correction Register */
 #define REG_RTC_MODE0_COUNT        (*(RwReg  *)0x40001410U) /**< \brief (RTC) MODE0 Count Register */
 #define REG_RTC_MODE1_COUNT        (*(RwReg16*)0x40001410U) /**< \brief (RTC) MODE1 Count Register */
