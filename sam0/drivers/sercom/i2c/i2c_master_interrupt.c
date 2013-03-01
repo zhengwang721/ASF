@@ -90,8 +90,7 @@ static void _i2c_master_write(struct i2c_master_module *const module)
 	{
 		/* Set status */
 		module->status = STATUS_ERR_OVERFLOW;
-		/* End transaction */
-		module->buffer_remaining = 0;
+		/* Do not write more data */
 		return;
 	}
 
@@ -469,6 +468,7 @@ void _i2c_master_interrupt_handler(uint8_t instance)
 		/* Stop packet operation. */
 		i2c_module->INTENCLR.reg = SERCOM_I2CM_INTENCLR_WIEN | SERCOM_I2CM_INTENCLR_RIEN;
 		module->buffer_length = 0;
+		module->buffer_remaining = 0;
 
 		/* Send nack and stop command unless arbitration is lost. */
 		if (module->status != STATUS_ERR_PACKET_COLLISION && module->send_stop) {
