@@ -136,7 +136,13 @@ static struct _eeprom_module _eeprom_instance = {
 };
 
 
-static void _eeprom_emulator_nvm_erase_row(uint8_t row)
+/** \internal
+ *  \breif Erases a given row within the physical EEPROM memory space.
+ *
+ *  \param[in] row  Physical row in EEPROM space to erase
+ */
+static void _eeprom_emulator_nvm_erase_row(
+		const uint8_t row)
 {
 	enum status_code error_code = STATUS_OK;
 
@@ -146,7 +152,15 @@ static void _eeprom_emulator_nvm_erase_row(uint8_t row)
 	} while (error_code == STATUS_BUSY);
 }
 
-static void _eeprom_emulator_nvm_fill_cache(uint16_t physical_page, void* data)
+/** \internal
+ *  \breif Fills the internal NVM controller page buffer in physical EEPROM memory space.
+ *
+ *  \param[in] physical_page  Physical page in EEPROM space to fill
+ *  \param[in] data           Data to write to the physical memory page
+ */
+static void _eeprom_emulator_nvm_fill_cache(
+		const uint16_t physical_page,
+		const void* const data)
 {
 	enum status_code error_code = STATUS_OK;
 
@@ -158,7 +172,13 @@ static void _eeprom_emulator_nvm_fill_cache(uint16_t physical_page, void* data)
 	} while (error_code == STATUS_BUSY);
 }
 
-static void _eeprom_emulator_nvm_write_cache(uint16_t physical_page)
+/** \internal
+ *  \breif Commits the internal NVM controller page buffer to physical memory.
+ *
+ *  \param[in] physical_page  Physical page in EEPROM space to commit
+ */
+static void _eeprom_emulator_nvm_write_cache(
+		const uint16_t physical_page)
 {
 	enum status_code error_code = STATUS_OK;
 
@@ -169,7 +189,15 @@ static void _eeprom_emulator_nvm_write_cache(uint16_t physical_page)
 	} while (error_code == STATUS_BUSY);
 }
 
-static void _eeprom_emulator_nvm_read_page(uint16_t physical_page, void* data)
+/** \internal
+ *  \breif Reads a page of data stored in physical EEPROM memory space.
+ *
+ *  \param[in]  physical_page  Physical page in EEPROM space to read
+ *  \param[out] data           Destination buffer to fill with the read data
+ */
+static void _eeprom_emulator_nvm_read_page(
+		const uint16_t physical_page,
+		void* const data)
 {
 	enum status_code error_code = STATUS_OK;
 
@@ -180,7 +208,6 @@ static void _eeprom_emulator_nvm_read_page(uint16_t physical_page, void* data)
 				NVMCTRL_PAGE_SIZE);
 	} while (error_code == STATUS_BUSY);
 }
-
 
 /**
  * \brief Initializes the emulated EEPROM memory, destroying the current contents.
@@ -264,10 +291,8 @@ static void _eeprom_emulator_update_page_mapping(void)
 				continue;
 			}
 
-			uint8_t logical_page =
-					_eeprom_instance.flash[physical_page].header.logical_page;
-
-			if (logical_page != EEPROM_INVALID_PAGE_NUMBER) {
+			if (_eeprom_instance.flash[physical_page].header.logical_page !=
+					EEPROM_INVALID_PAGE_NUMBER) {
 				spare_row_found = false;
 			}
 		}
@@ -337,7 +362,6 @@ static enum status_code _eeprom_emulator_move_data_to_spare(
 		const uint8_t *const data)
 {
 	enum status_code error_code = STATUS_OK;
-	uint32_t new_page;
 	struct {
 		uint8_t logical_page;
 		uint8_t physical_page;
@@ -369,7 +393,8 @@ static enum status_code _eeprom_emulator_move_data_to_spare(
 	/* Need to move both saved logical pages stored in the same row */
 	for (uint8_t c = 0; c < 2; c++) {
 		/* Find the physical page index for the new spare row pages */
-		new_page = ((_eeprom_instance.spare_row * NVMCTRL_ROW_PAGES) + c);
+		uint32_t new_page =
+				((_eeprom_instance.spare_row * NVMCTRL_ROW_PAGES) + c);
 
 		/* Flush cache buffer to write any uncommitted data */
 		eeprom_emulator_flush_page_buffer();
