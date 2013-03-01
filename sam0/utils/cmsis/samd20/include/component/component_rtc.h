@@ -520,7 +520,7 @@ typedef union {
 #define RTC_STATUS_SYNCBUSY         (0x1u << RTC_STATUS_SYNCBUSY_Pos)
 #define RTC_STATUS_MASK             0x81u        /**< \brief (RTC_STATUS) MASK Register */
 
-/* -------- RTC_DEBUG : (RTC Offset: 0x0B) (R/W  8) Debug Register -------- */
+/* -------- RTC_DBGCTRL : (RTC Offset: 0x0B) (R/W  8) Debug Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
@@ -528,15 +528,15 @@ typedef union {
     uint8_t  :7;               /*!< bit:  1.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
-} RTC_DEBUG_Type;
+} RTC_DBGCTRL_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
-#define RTC_DEBUG_OFFSET            0x0B         /**< \brief (RTC_DEBUG offset) Debug Register */
-#define RTC_DEBUG_RESETVALUE        0x00         /**< \brief (RTC_DEBUG reset_value) Debug Register */
+#define RTC_DBGCTRL_OFFSET          0x0B         /**< \brief (RTC_DBGCTRL offset) Debug Register */
+#define RTC_DBGCTRL_RESETVALUE      0x00         /**< \brief (RTC_DBGCTRL reset_value) Debug Register */
 
-#define RTC_DEBUG_DBGRUN_Pos        0            /**< \brief (RTC_DEBUG) Run During Debug */
-#define RTC_DEBUG_DBGRUN            (0x1u << RTC_DEBUG_DBGRUN_Pos)
-#define RTC_DEBUG_MASK              0x01u        /**< \brief (RTC_DEBUG) MASK Register */
+#define RTC_DBGCTRL_DBGRUN_Pos      0            /**< \brief (RTC_DBGCTRL) Run During Debug */
+#define RTC_DBGCTRL_DBGRUN          (0x1u << RTC_DBGCTRL_DBGRUN_Pos)
+#define RTC_DBGCTRL_MASK            0x01u        /**< \brief (RTC_DBGCTRL) MASK Register */
 
 /* -------- RTC_FREQCORR : (RTC Offset: 0x0C) (R/W  8) Frequency Correction Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -772,7 +772,7 @@ typedef struct { /* 32-bit Counter with Single 32-bit Compare */
   __IO RTC_MODE0_INTFLAG_Type    INTFLAG;     /**< \brief Offset: 0x08 (R/W  8) MODE0 Interrupt Flag Status and Clear Register */
        RoReg8                    Reserved1[0x1];
   __IO RTC_STATUS_Type           STATUS;      /**< \brief Offset: 0x0A (R/W  8) Status Register */
-  __IO RTC_DEBUG_Type            DEBUG;       /**< \brief Offset: 0x0B (R/W  8) Debug Register */
+  __IO RTC_DBGCTRL_Type          DBGCTRL;     /**< \brief Offset: 0x0B (R/W  8) Debug Register */
   __IO RTC_FREQCORR_Type         FREQCORR;    /**< \brief Offset: 0x0C (R/W  8) Frequency Correction Register */
        RoReg8                    Reserved2[0x3];
   __IO RTC_MODE0_COUNT_Type      COUNT;       /**< \brief Offset: 0x10 (R/W 32) MODE0 Count Register */
@@ -792,7 +792,7 @@ typedef struct { /* 16-bit Counter with Two 16-bit Compares */
   __IO RTC_MODE1_INTFLAG_Type    INTFLAG;     /**< \brief Offset: 0x08 (R/W  8) MODE1 Interrupt Flag Status and Clear Register */
        RoReg8                    Reserved1[0x1];
   __IO RTC_STATUS_Type           STATUS;      /**< \brief Offset: 0x0A (R/W  8) Status Register */
-  __IO RTC_DEBUG_Type            DEBUG;       /**< \brief Offset: 0x0B (R/W  8) Debug Register */
+  __IO RTC_DBGCTRL_Type          DBGCTRL;     /**< \brief Offset: 0x0B (R/W  8) Debug Register */
   __IO RTC_FREQCORR_Type         FREQCORR;    /**< \brief Offset: 0x0C (R/W  8) Frequency Correction Register */
        RoReg8                    Reserved2[0x3];
   __IO RTC_MODE1_COUNT_Type      COUNT;       /**< \brief Offset: 0x10 (R/W 16) MODE1 Count Register */
@@ -814,7 +814,7 @@ typedef struct { /* Clock/Calendar with Alarm */
   __IO RTC_MODE2_INTFLAG_Type    INTFLAG;     /**< \brief Offset: 0x08 (R/W  8) MODE2 Interrupt Flag Status and Clear Register */
        RoReg8                    Reserved1[0x1];
   __IO RTC_STATUS_Type           STATUS;      /**< \brief Offset: 0x0A (R/W  8) Status Register */
-  __IO RTC_DEBUG_Type            DEBUG;       /**< \brief Offset: 0x0B (R/W  8) Debug Register */
+  __IO RTC_DBGCTRL_Type          DBGCTRL;     /**< \brief Offset: 0x0B (R/W  8) Debug Register */
   __IO RTC_FREQCORR_Type         FREQCORR;    /**< \brief Offset: 0x0C (R/W  8) Frequency Correction Register */
        RoReg8                    Reserved2[0x3];
   __IO RTC_MODE2_CLOCK_Type      CLOCK;       /**< \brief Offset: 0x10 (R/W 32) MODE2 Clock Register */

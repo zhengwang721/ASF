@@ -65,7 +65,7 @@
 #define REG_ADC_GAINCORR           (0x42004024U) /**< \brief (ADC) Gain Correction Register */
 #define REG_ADC_OFFSETCORR         (0x42004026U) /**< \brief (ADC) Offset Correction Register */
 #define REG_ADC_CALIB              (0x42004028U) /**< \brief (ADC) Calibration Register */
-#define REG_ADC_DEBUG              (0x4200402AU) /**< \brief (ADC) Debug Register */
+#define REG_ADC_DBGCTRL            (0x4200402AU) /**< \brief (ADC) Debug Register */
 #define REG_ADC_TEST               (0x4200402BU) /**< \brief (ADC) Test Modes Register */
 #define REG_ADC_TESTRESULT         (0x4200402CU) /**< \brief (ADC) Test Result Register */
 #define REG_ADC_DCFG               (0x42004030U) /**< \brief (ADC) Device Configuration */
@@ -89,7 +89,7 @@
 #define REG_ADC_GAINCORR           (*(RwReg16*)0x42004024U) /**< \brief (ADC) Gain Correction Register */
 #define REG_ADC_OFFSETCORR         (*(RwReg16*)0x42004026U) /**< \brief (ADC) Offset Correction Register */
 #define REG_ADC_CALIB              (*(RwReg16*)0x42004028U) /**< \brief (ADC) Calibration Register */
-#define REG_ADC_DEBUG              (*(RwReg8 *)0x4200402AU) /**< \brief (ADC) Debug Register */
+#define REG_ADC_DBGCTRL            (*(RwReg8 *)0x4200402AU) /**< \brief (ADC) Debug Register */
 #define REG_ADC_TEST               (*(RwReg8 *)0x4200402BU) /**< \brief (ADC) Test Modes Register */
 #define REG_ADC_TESTRESULT         (*(RwReg  *)0x4200402CU) /**< \brief (ADC) Test Result Register */
 #define REG_ADC_DCFG               (*(RwReg8 *)0x42004030U) /**< \brief (ADC) Device Configuration */

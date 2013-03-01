@@ -383,7 +383,7 @@ typedef union {
 #define SERCOM_USART_CTRLB_RXEN     (0x1u << SERCOM_USART_CTRLB_RXEN_Pos)
 #define SERCOM_USART_CTRLB_MASK     0x00032247u  /**< \brief (SERCOM_USART_CTRLB) MASK Register */
 
-/* -------- SERCOM_I2CM_DEBUG : (SERCOM Offset: 0x08) (R/W  8) I2CM I2CM Debug Register -------- */
+/* -------- SERCOM_I2CM_DBGCTRL : (SERCOM Offset: 0x08) (R/W  8) I2CM I2CM Debug Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
@@ -391,17 +391,17 @@ typedef union {
     uint8_t  :7;               /*!< bit:  1.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
-} SERCOM_I2CM_DEBUG_Type;
+} SERCOM_I2CM_DBGCTRL_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
-#define SERCOM_I2CM_DEBUG_OFFSET    0x08         /**< \brief (SERCOM_I2CM_DEBUG offset) I2CM Debug Register */
-#define SERCOM_I2CM_DEBUG_RESETVALUE 0x00         /**< \brief (SERCOM_I2CM_DEBUG reset_value) I2CM Debug Register */
+#define SERCOM_I2CM_DBGCTRL_OFFSET  0x08         /**< \brief (SERCOM_I2CM_DBGCTRL offset) I2CM Debug Register */
+#define SERCOM_I2CM_DBGCTRL_RESETVALUE 0x00         /**< \brief (SERCOM_I2CM_DBGCTRL reset_value) I2CM Debug Register */
 
-#define SERCOM_I2CM_DEBUG_DBGSTOP_Pos 0            /**< \brief (SERCOM_I2CM_DEBUG) Debug Mode */
-#define SERCOM_I2CM_DEBUG_DBGSTOP   (0x1u << SERCOM_I2CM_DEBUG_DBGSTOP_Pos)
-#define SERCOM_I2CM_DEBUG_MASK      0x01u        /**< \brief (SERCOM_I2CM_DEBUG) MASK Register */
+#define SERCOM_I2CM_DBGCTRL_DBGSTOP_Pos 0            /**< \brief (SERCOM_I2CM_DBGCTRL) Debug Mode */
+#define SERCOM_I2CM_DBGCTRL_DBGSTOP (0x1u << SERCOM_I2CM_DBGCTRL_DBGSTOP_Pos)
+#define SERCOM_I2CM_DBGCTRL_MASK    0x01u        /**< \brief (SERCOM_I2CM_DBGCTRL) MASK Register */
 
-/* -------- SERCOM_I2CS_DEBUG : (SERCOM Offset: 0x08) (R/W  8) I2CS I2CS Debug Register -------- */
+/* -------- SERCOM_I2CS_DBGCTRL : (SERCOM Offset: 0x08) (R/W  8) I2CS I2CS Debug Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
@@ -409,17 +409,17 @@ typedef union {
     uint8_t  :7;               /*!< bit:  1.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
-} SERCOM_I2CS_DEBUG_Type;
+} SERCOM_I2CS_DBGCTRL_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
-#define SERCOM_I2CS_DEBUG_OFFSET    0x08         /**< \brief (SERCOM_I2CS_DEBUG offset) I2CS Debug Register */
-#define SERCOM_I2CS_DEBUG_RESETVALUE 0x00         /**< \brief (SERCOM_I2CS_DEBUG reset_value) I2CS Debug Register */
+#define SERCOM_I2CS_DBGCTRL_OFFSET  0x08         /**< \brief (SERCOM_I2CS_DBGCTRL offset) I2CS Debug Register */
+#define SERCOM_I2CS_DBGCTRL_RESETVALUE 0x00         /**< \brief (SERCOM_I2CS_DBGCTRL reset_value) I2CS Debug Register */
 
-#define SERCOM_I2CS_DEBUG_DBGSTOP_Pos 0            /**< \brief (SERCOM_I2CS_DEBUG) Debug Mode */
-#define SERCOM_I2CS_DEBUG_DBGSTOP   (0x1u << SERCOM_I2CS_DEBUG_DBGSTOP_Pos)
-#define SERCOM_I2CS_DEBUG_MASK      0x01u        /**< \brief (SERCOM_I2CS_DEBUG) MASK Register */
+#define SERCOM_I2CS_DBGCTRL_DBGSTOP_Pos 0            /**< \brief (SERCOM_I2CS_DBGCTRL) Debug Mode */
+#define SERCOM_I2CS_DBGCTRL_DBGSTOP (0x1u << SERCOM_I2CS_DBGCTRL_DBGSTOP_Pos)
+#define SERCOM_I2CS_DBGCTRL_MASK    0x01u        /**< \brief (SERCOM_I2CS_DBGCTRL) MASK Register */
 
-/* -------- SERCOM_SPI_DEBUG : (SERCOM Offset: 0x08) (R/W  8) SPI SPI Debug Register -------- */
+/* -------- SERCOM_SPI_DBGCTRL : (SERCOM Offset: 0x08) (R/W  8) SPI SPI Debug Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
@@ -427,17 +427,17 @@ typedef union {
     uint8_t  :7;               /*!< bit:  1.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
-} SERCOM_SPI_DEBUG_Type;
+} SERCOM_SPI_DBGCTRL_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
-#define SERCOM_SPI_DEBUG_OFFSET     0x08         /**< \brief (SERCOM_SPI_DEBUG offset) SPI Debug Register */
-#define SERCOM_SPI_DEBUG_RESETVALUE 0x00         /**< \brief (SERCOM_SPI_DEBUG reset_value) SPI Debug Register */
+#define SERCOM_SPI_DBGCTRL_OFFSET   0x08         /**< \brief (SERCOM_SPI_DBGCTRL offset) SPI Debug Register */
+#define SERCOM_SPI_DBGCTRL_RESETVALUE 0x00         /**< \brief (SERCOM_SPI_DBGCTRL reset_value) SPI Debug Register */
 
-#define SERCOM_SPI_DEBUG_DBGSTOP_Pos 0            /**< \brief (SERCOM_SPI_DEBUG) Debug Mode */
-#define SERCOM_SPI_DEBUG_DBGSTOP    (0x1u << SERCOM_SPI_DEBUG_DBGSTOP_Pos)
-#define SERCOM_SPI_DEBUG_MASK       0x01u        /**< \brief (SERCOM_SPI_DEBUG) MASK Register */
+#define SERCOM_SPI_DBGCTRL_DBGSTOP_Pos 0            /**< \brief (SERCOM_SPI_DBGCTRL) Debug Mode */
+#define SERCOM_SPI_DBGCTRL_DBGSTOP  (0x1u << SERCOM_SPI_DBGCTRL_DBGSTOP_Pos)
+#define SERCOM_SPI_DBGCTRL_MASK     0x01u        /**< \brief (SERCOM_SPI_DBGCTRL) MASK Register */
 
-/* -------- SERCOM_USART_DEBUG : (SERCOM Offset: 0x08) (R/W  8) USART USART Debug Register -------- */
+/* -------- SERCOM_USART_DBGCTRL : (SERCOM Offset: 0x08) (R/W  8) USART USART Debug Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
@@ -445,15 +445,15 @@ typedef union {
     uint8_t  :7;               /*!< bit:  1.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
-} SERCOM_USART_DEBUG_Type;
+} SERCOM_USART_DBGCTRL_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
-#define SERCOM_USART_DEBUG_OFFSET   0x08         /**< \brief (SERCOM_USART_DEBUG offset) USART Debug Register */
-#define SERCOM_USART_DEBUG_RESETVALUE 0x00         /**< \brief (SERCOM_USART_DEBUG reset_value) USART Debug Register */
+#define SERCOM_USART_DBGCTRL_OFFSET 0x08         /**< \brief (SERCOM_USART_DBGCTRL offset) USART Debug Register */
+#define SERCOM_USART_DBGCTRL_RESETVALUE 0x00         /**< \brief (SERCOM_USART_DBGCTRL reset_value) USART Debug Register */
 
-#define SERCOM_USART_DEBUG_DBGSTOP_Pos 0            /**< \brief (SERCOM_USART_DEBUG) Debug Mode */
-#define SERCOM_USART_DEBUG_DBGSTOP  (0x1u << SERCOM_USART_DEBUG_DBGSTOP_Pos)
-#define SERCOM_USART_DEBUG_MASK     0x01u        /**< \brief (SERCOM_USART_DEBUG) MASK Register */
+#define SERCOM_USART_DBGCTRL_DBGSTOP_Pos 0            /**< \brief (SERCOM_USART_DBGCTRL) Debug Mode */
+#define SERCOM_USART_DBGCTRL_DBGSTOP (0x1u << SERCOM_USART_DBGCTRL_DBGSTOP_Pos)
+#define SERCOM_USART_DBGCTRL_MASK   0x01u        /**< \brief (SERCOM_USART_DBGCTRL) MASK Register */
 
 /* -------- SERCOM_I2CM_BAUD : (SERCOM Offset: 0x0A) (R/W 16) I2CM I2CM Baud Rate Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -1076,7 +1076,7 @@ typedef union {
 typedef struct { /* I2C Master Mode */
   __IO SERCOM_I2CM_CTRLA_Type    CTRLA;       /**< \brief Offset: 0x00 (R/W 32) I2CM Control Register A */
   __IO SERCOM_I2CM_CTRLB_Type    CTRLB;       /**< \brief Offset: 0x04 (R/W 32) I2CM Control Register B */
-  __IO SERCOM_I2CM_DEBUG_Type    DEBUG;       /**< \brief Offset: 0x08 (R/W  8) I2CM Debug Register */
+  __IO SERCOM_I2CM_DBGCTRL_Type  DBGCTRL;     /**< \brief Offset: 0x08 (R/W  8) I2CM Debug Register */
        RoReg8                    Reserved1[0x1];
   __IO SERCOM_I2CM_BAUD_Type     BAUD;        /**< \brief Offset: 0x0A (R/W 16) I2CM Baud Rate Register */
   __IO SERCOM_I2CM_INTENCLR_Type INTENCLR;    /**< \brief Offset: 0x0C (R/W  8) I2CM Interrupt Enable Clear Register */
@@ -1096,7 +1096,7 @@ typedef struct { /* I2C Master Mode */
 typedef struct { /* I2C Slave Mode */
   __IO SERCOM_I2CS_CTRLA_Type    CTRLA;       /**< \brief Offset: 0x00 (R/W 32) I2CS Control Register A */
   __IO SERCOM_I2CS_CTRLB_Type    CTRLB;       /**< \brief Offset: 0x04 (R/W 32) I2CS Control Register B */
-  __IO SERCOM_I2CS_DEBUG_Type    DEBUG;       /**< \brief Offset: 0x08 (R/W  8) I2CS Debug Register */
+  __IO SERCOM_I2CS_DBGCTRL_Type  DBGCTRL;     /**< \brief Offset: 0x08 (R/W  8) I2CS Debug Register */
        RoReg8                    Reserved1[0x3];
   __IO SERCOM_I2CS_INTENCLR_Type INTENCLR;    /**< \brief Offset: 0x0C (R/W  8) I2CS Interrupt Enable Clear Register */
   __IO SERCOM_I2CS_INTENSET_Type INTENSET;    /**< \brief Offset: 0x0D (R/W  8) I2CS Interrupt Enable Set Register */
@@ -1114,7 +1114,7 @@ typedef struct { /* I2C Slave Mode */
 typedef struct { /* SPI Mode */
   __IO SERCOM_SPI_CTRLA_Type     CTRLA;       /**< \brief Offset: 0x00 (R/W 32) SPI Control Register A */
   __IO SERCOM_SPI_CTRLB_Type     CTRLB;       /**< \brief Offset: 0x04 (R/W 32) SPI Control Register B */
-  __IO SERCOM_SPI_DEBUG_Type     DEBUG;       /**< \brief Offset: 0x08 (R/W  8) SPI Debug Register */
+  __IO SERCOM_SPI_DBGCTRL_Type   DBGCTRL;     /**< \brief Offset: 0x08 (R/W  8) SPI Debug Register */
        RoReg8                    Reserved1[0x1];
   __IO SERCOM_SPI_BAUD_Type      BAUD;        /**< \brief Offset: 0x0A (R/W  8) SPI Baud Rate Register */
        RoReg8                    Reserved2[0x1];
@@ -1134,7 +1134,7 @@ typedef struct { /* SPI Mode */
 typedef struct { /* USART Mode */
   __IO SERCOM_USART_CTRLA_Type   CTRLA;       /**< \brief Offset: 0x00 (R/W 32) USART Control Register A */
   __IO SERCOM_USART_CTRLB_Type   CTRLB;       /**< \brief Offset: 0x04 (R/W 32) USART Control Register B */
-  __IO SERCOM_USART_DEBUG_Type   DEBUG;       /**< \brief Offset: 0x08 (R/W  8) USART Debug Register */
+  __IO SERCOM_USART_DBGCTRL_Type DBGCTRL;     /**< \brief Offset: 0x08 (R/W  8) USART Debug Register */
        RoReg8                    Reserved1[0x1];
   __IO SERCOM_USART_BAUD_Type    BAUD;        /**< \brief Offset: 0x0A (R/W 16) USART Baud Rate Register */
   __IO SERCOM_USART_INTENCLR_Type INTENCLR;    /**< \brief Offset: 0x0C (R/W  8) USART Interrupt Enable Clear Register */
