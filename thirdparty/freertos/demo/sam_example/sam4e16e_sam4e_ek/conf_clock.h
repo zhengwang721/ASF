@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Board configuration.
+ * \brief SAM4E clock configuration.
  *
- * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,18 +41,34 @@
  *
  */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#ifndef CONF_CLOCK_H_INCLUDED
+#define CONF_CLOCK_H_INCLUDED
 
-/** Usart Hw ID used by the console (UART). */
-#define CONSOLE_UART_ID          ID_UART
+// ===== System Clock (MCK) Source Options
+//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_SLCK_RC
+//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_SLCK_XTAL
+//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_SLCK_BYPASS
+//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_4M_RC
+//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_8M_RC
+//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_12M_RC
+//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_XTAL
+//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_BYPASS
+#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_PLLACK
 
-/** Configure UART pins */
-#define CONF_BOARD_UART_CONSOLE
+// ===== System Clock (MCK) Prescaler Options   (Fmck = Fsys / (SYSCLK_PRES))
+//#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_1
+#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_2
+//#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_4
+//#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_8
+//#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_16
+//#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_32
+//#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_64
+//#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_3
 
-/** LED Pin definitions */
-#define LED0 LED0_GPIO
-#define LED1 LED1_GPIO
-#define LED2 LED2_GPIO
+// ===== PLL0 (A) Options   (Fpll = (Fclk * PLL_mul) / PLL_div)
+// Use mul and div effective values here.
+#define CONFIG_PLL0_SOURCE          PLL_SRC_MAINCK_XTAL
+#define CONFIG_PLL0_MUL             20
+#define CONFIG_PLL0_DIV             1
 
-#endif /* CONF_BOARD_H_INCLUDED */
+#endif /* CONF_CLOCK_H_INCLUDED */

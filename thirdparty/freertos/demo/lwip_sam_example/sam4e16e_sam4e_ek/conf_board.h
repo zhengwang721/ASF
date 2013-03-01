@@ -3,11 +3,9 @@
  *
  * \brief Board configuration.
  *
- * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
- *
- * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -41,18 +39,13 @@
  *
  */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#ifndef CONF_BOARD_H
+#define CONF_BOARD_H
 
-/** Usart Hw ID used by the console (UART). */
-#define CONSOLE_UART_ID          ID_UART
-
-/** Configure UART pins */
+/* Configure UART pins */
 #define CONF_BOARD_UART_CONSOLE
 
-/** LED Pin definitions */
-#define LED0 LED0_GPIO
-#define LED1 LED1_GPIO
-#define LED2 LED2_GPIO
+/* Enable ETH PHY: KSZ8051MNL feature */
+#define CONF_BOARD_KSZ8051MNL
 
-#endif /* CONF_BOARD_H_INCLUDED */
+#endif /* CONF_BOARD_H */

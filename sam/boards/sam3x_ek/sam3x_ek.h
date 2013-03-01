@@ -242,6 +242,8 @@
 #define PIN_LED_0_TYPE  PIO_OUTPUT_1
 #define PIN_LED_0_ATTR  PIO_DEFAULT
 
+#define LED0_INACTIVE_LEVEL  IOPORT_PIN_LEVEL_HIGH
+
 /*! LED #1 pin definition (GREEN). */
 #define LED_1_NAME      "green LED D4"
 #define LED1_GPIO       (PIO_PB13_IDX)
@@ -255,6 +257,8 @@
 #define PIN_LED_1_TYPE  PIO_OUTPUT_1
 #define PIN_LED_1_ATTR  PIO_DEFAULT
 
+#define LED1_INACTIVE_LEVEL  IOPORT_PIN_LEVEL_HIGH
+
 /*! LED #2 pin detection (AMBER). */
 #define LED2_GPIO       (PIO_PB12_IDX)
 #define LED2_FLAGS      (PIO_TYPE_PIO_OUTPUT_1 | PIO_DEFAULT)
@@ -266,6 +270,8 @@
 #define PIN_LED_2_TYPE   PIO_OUTPUT_1
 #define PIN_LED_2_ATTR   PIO_DEFAULT
 
+#define LED2_INACTIVE_LEVEL  IOPORT_PIN_LEVEL_HIGH
+
 /*! LED #3 pin detection (power) */
 #define LED3_GPIO       (PIO_PA13_IDX)
 #define LED3_FLAGS      (PIO_TYPE_PIO_OUTPUT_0 | PIO_DEFAULT)
@@ -276,6 +282,8 @@
 #define PIN_LED_3_ID     ID_PIOA
 #define PIN_LED_3_TYPE   PIO_OUTPUT_1
 #define PIN_LED_3_ATTR   PIO_DEFAULT
+
+#define LED3_INACTIVE_LEVEL  IOPORT_PIN_LEVEL_HIGH
 
 #define BOARD_NUM_OF_LED 4
 
