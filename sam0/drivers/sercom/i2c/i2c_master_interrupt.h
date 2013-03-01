@@ -102,7 +102,7 @@ static inline void i2c_master_enable_callback(
 	Assert(module->hw);
 
 	/* Mark callback as enabled. */
-	module->enabled_callback = (1 << callback_type);
+	module->enabled_callback |= (1 << callback_type);
 }
 
 
