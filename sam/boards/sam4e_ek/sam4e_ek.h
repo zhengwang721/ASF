@@ -382,6 +382,7 @@
 
 /** PCK0 pin definition (PA6) */
 #define PIN_PCK0         (PIO_PA6_IDX)
+#define PIN_PCK0_MUX     (IOPORT_MODE_MUX_B)
 #define PIN_PCK0_FLAGS   (IOPORT_MODE_MUX_B)
 #define PIN_PCK0_PORT    IOPORT_PIOA
 #define PIN_PCK0_MASK    PIO_PA6B_PCK0

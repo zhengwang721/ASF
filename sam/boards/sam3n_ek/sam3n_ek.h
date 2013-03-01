@@ -3,7 +3,7 @@
  *
  * \brief SAM3N-EK Board Definition.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -303,6 +303,7 @@
 /* =============== PCK =============== */
 /** PCK0 pin definition. */
 #define PIN_PCK0        (PIO_PA6_IDX)
+#define PIN_PCK0_MUX    (IOPORT_MODE_MUX_B)
 #define PIN_PCK0_FLAGS  (PIO_PERIPH_B | PIO_DEFAULT)
 
 #define PIN_PCK_0_MASK PIO_PA6

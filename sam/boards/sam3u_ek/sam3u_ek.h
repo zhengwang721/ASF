@@ -467,6 +467,7 @@
 
 //! PCK0
 #define PIN_PCK0        (PIO_PA21_IDX)
+#define PIN_PCK0_MUX    (IOPORT_MODE_MUX_B)
 #define PIN_PCK0_FLAGS  (PIO_PERIPH_B | PIO_DEFAULT)
 
 #define PIN_PCK_0_MASK PIO_PA21
