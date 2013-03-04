@@ -589,7 +589,7 @@ typedef union {
 #define ADC_CALIB_BIAS_CAL(value)   ((ADC_CALIB_BIAS_CAL_Msk & ((value) << ADC_CALIB_BIAS_CAL_Pos)))
 #define ADC_CALIB_MASK              0x07FFu      /**< \brief (ADC_CALIB) MASK Register */
 
-/* -------- ADC_DEBUG : (ADC Offset: 0x2A) (R/W  8) Debug Register -------- */
+/* -------- ADC_DBGCTRL : (ADC Offset: 0x2A) (R/W  8) Debug Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
@@ -597,15 +597,15 @@ typedef union {
     uint8_t  :7;               /*!< bit:  1.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
-} ADC_DEBUG_Type;
+} ADC_DBGCTRL_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
-#define ADC_DEBUG_OFFSET            0x2A         /**< \brief (ADC_DEBUG offset) Debug Register */
-#define ADC_DEBUG_RESETVALUE        0x00         /**< \brief (ADC_DEBUG reset_value) Debug Register */
+#define ADC_DBGCTRL_OFFSET          0x2A         /**< \brief (ADC_DBGCTRL offset) Debug Register */
+#define ADC_DBGCTRL_RESETVALUE      0x00         /**< \brief (ADC_DBGCTRL reset_value) Debug Register */
 
-#define ADC_DEBUG_DBGRUN_Pos        0            /**< \brief (ADC_DEBUG) Debug Run */
-#define ADC_DEBUG_DBGRUN            (0x1u << ADC_DEBUG_DBGRUN_Pos)
-#define ADC_DEBUG_MASK              0x01u        /**< \brief (ADC_DEBUG) MASK Register */
+#define ADC_DBGCTRL_DBGRUN_Pos      0            /**< \brief (ADC_DBGCTRL) Debug Run */
+#define ADC_DBGCTRL_DBGRUN          (0x1u << ADC_DBGCTRL_DBGRUN_Pos)
+#define ADC_DBGCTRL_MASK            0x01u        /**< \brief (ADC_DBGCTRL) MASK Register */
 
 /* -------- ADC_TEST : (ADC Offset: 0x2B) (R/W  8) Test Modes Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -705,7 +705,7 @@ typedef struct {
   __IO ADC_GAINCORR_Type         GAINCORR;    /**< \brief Offset: 0x24 (R/W 16) Gain Correction Register */
   __IO ADC_OFFSETCORR_Type       OFFSETCORR;  /**< \brief Offset: 0x26 (R/W 16) Offset Correction Register */
   __IO ADC_CALIB_Type            CALIB;       /**< \brief Offset: 0x28 (R/W 16) Calibration Register */
-  __IO ADC_DEBUG_Type            DEBUG;       /**< \brief Offset: 0x2A (R/W  8) Debug Register */
+  __IO ADC_DBGCTRL_Type          DBGCTRL;     /**< \brief Offset: 0x2A (R/W  8) Debug Register */
   __IO ADC_TEST_Type             TEST;        /**< \brief Offset: 0x2B (R/W  8) Test Modes Register */
   __IO ADC_TESTRESULT_Type       TESTRESULT;  /**< \brief Offset: 0x2C (R/W 32) Test Result Register */
   __IO ADC_DCFG_Type             DCFG;        /**< \brief Offset: 0x30 (R/W  8) Device Configuration */

@@ -141,6 +141,7 @@ void system_gclk_gen_set_config(
 	while (system_gclk_is_syncing()) {
 		/* Wait for synchronization */
 	};
+
 	GCLK->GENCTRL.reg = new_genctrl_config;
 }
 
@@ -155,6 +156,10 @@ void system_gclk_gen_set_config(
 void system_gclk_gen_enable(
 		const uint8_t generator)
 {
+	while (system_gclk_is_syncing()) {
+		/* Wait for synchronization */
+	};
+
 	/* Select the requested generator */
 	*((uint8_t*)&GCLK->GENCTRL.reg) = generator;
 	while (system_gclk_is_syncing()) {
@@ -176,6 +181,9 @@ void system_gclk_gen_enable(
 void system_gclk_gen_disable(
 		const uint8_t generator)
 {
+	while (system_gclk_is_syncing()) {
+		/* Wait for synchronization */
+	};
 	/* Select the requested generator */
 	*((uint8_t*)&GCLK->GENCTRL.reg) = generator;
 	while (system_gclk_is_syncing()) {
@@ -202,6 +210,9 @@ void system_gclk_gen_disable(
 uint32_t system_gclk_gen_get_hz(
 		const uint8_t generator)
 {
+	while (system_gclk_is_syncing()) {
+		/* Wait for synchronization */
+	};
 	/* Select the appropriate generator */
 	*((uint8_t*)&GCLK->GENCTRL.reg) = generator;
 	while (system_gclk_is_syncing()) {

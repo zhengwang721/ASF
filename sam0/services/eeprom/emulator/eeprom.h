@@ -40,14 +40,8 @@
  * \asf_license_stop
  *
  */
-#ifndef EEPROM_EMULATOR_H_INCLUDED
-#define EEPROM_EMULATOR_H_INCLUDED
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#include <compiler.h>
+#ifndef EEPROM_H_INCLUDED
+#define EEPROM_H_INCLUDED
 
 /**
  * \defgroup asfdoc_samd20_eeprom_group SAMD20 EEPROM Emulator Service (EEPROM)
@@ -71,7 +65,10 @@ extern "C" {
  *
  * \section asfdoc_samd20_eeprom_prerequisites Prerequisites
  *
- * There are no prerequisites for this module.
+ * The SAMD20 device fuses must be configured via an external programmer or
+ * debugger, so that an EEPROM section is allocated in the main NVM flash
+ * memory contents. If a NVM section is not allocated for the EEPROM emulator,
+ * the module will fail to initialize.
  *
  *
  * \section asfdoc_samd20_eeprom_module_overview Module Overview
@@ -100,11 +97,11 @@ extern "C" {
  * needed, erasing old rows ready for re-use by future page write operations.
  *
  * \subsubsection asfdoc_samd20_eeprom_module_overview_implementation_mp Master Page
- * One row, at the end of the emulated EEPROM memory space, is reserved for use
- * by the emulator to store configuration data. This includes a magic identifier
- * to indicated an initialized emulated EEPROM memory, as well as version
- * information and other relevant data. The master page is not user-accessible,
- * and is reserved solely for internal use by the emulator.
+ * One row, at the end of the emulated EEPROM memory space, is reserved for
+ * use by the emulator to store configuration data. This includes a magic
+ * identifier to indicated an initialized emulated EEPROM memory, as well as
+ * version information and other relevant data. The master page is not
+ * user-accessible, and is reserved solely for internal use by the emulator.
  *
  * \subsubsection asfdoc_samd20_eeprom_module_overview_implementation_sr Spare Row
  * As data needs to be preserved between row erasures, a spare row is tracked in
@@ -122,10 +119,10 @@ extern "C" {
  * within a physical row are updated, the new data is filled into the remaining
  * unused pages in the row. Once the entire row is full, a new write request
  * will copy the logical page not being written to in the current row to the
- * spare page with the new (updated) logical page data, before the old row is
+ * spare row with the new (updated) logical page data, before the old row is
  * erased.
  *
- * This system allow for the same logical page to be updated up to three times
+ * This system allows for the same logical page to be updated up to three times
  * into physical memory before a row erasure procedure is needed. In the case of
  * multiple versions of the same logical page being stored in the same physical
  * row, the right-most (highest physical page address) version is considered the
@@ -143,19 +140,58 @@ extern "C" {
  * require a full page write, reducing the system performance and significantly
  * reducing the lifespan of the non-volatile memory.
  *
+ * \subsection asfdoc_samd20_eeprom_special_considerations_memlayout Memory Layout
+ * Within the EEPROM memory reservation section at the top of the NVM memory
+ * space, this emulator will produce the layout shown below when initialized for
+ * the first time.
+ * \image html "init_layout.svg"
+ *
+ * Where a single EEPROM page is represented by the following:
+ * \image html "page_layout.svg"
+ *
+ * When a EEPROM page needs to be flushed to physical memory, the next free page
+ * in the same row will be chosen - this makes recovery simple, as the
+ * right-most version of a logical page in a row is considered the most current.
+ * With four pages to a physical NVM row, this allows for up to three updates to
+ * the same logical page to be made before an erase is needed. The figure below
+ * shows the result of the user writing an updated version of logical EEPROM
+ * page <tt>N-1</tt> to the physical memory.
+ * \image html "nm1_page_write.svg"
+ *
+ * A second write of the same logical EEPROM page results in the layout shown
+ * below.
+ * \image html "nm1_page_write2.svg"
+ *
+ * A third write of the same logical page requires that the EEPROM emulator
+ * erase the row, as it has become full. To this, the contents of the unmodified
+ * page in the same row as the page being updated will be copied into the spare
+ * row, along with the new version of the page being updated. The old (full)
+ * row is then erased, resulting in the layout below.
+ * \image html "nm1_page_write3.svg"
+ *
+ *
  * \section asfdoc_samd20_eeprom_special_considerations Special Considerations
+ *
+ * \subsection asfdoc_samd20_eeprom_special_considerations_nvm_config NVM Controller Configuration
+ * The EEPROM Emulator service will initialize the NVM controller as part of its
+ * own initialization routine; the NVM controller will be placed in Manual Write
+ * mode, so that explicit write commands must be sent to the controller to
+ * commit a buffered page to physical memory. The manual write command must thus
+ * be issued to the NVM controller whenever the user application wishes to write
+ * to a NVM page for its own purposes.
  *
  * \subsection asfdoc_samd20_eeprom_special_considerations_wearlevel Wear Leveling Algorithm
  * The wear leveling algorithm is tuned to achieve best performance (and minimal
- * physical flash writes) when data is written to locations within the same
- * logical EEPROM page. The user application should ensure that wherever
- * possible subsequent data writes are restricted to the same logical page
- * address to prevent premature flash write cycle exhaustion.
+ * physical flash memory writes) when data is written to locations within the
+ * same logical EEPROM page. The user application should ensure that wherever
+ * possible subsequent data writes are restricted to the same logical EEPROM
+ * page address to prevent premature flash write cycle exhaustion.
  *
  * \subsection asfdoc_samd20_eeprom_special_considerations_pagesize Logical EEPROM Page Size
- * Due to the requirement of a header before the contents of each logical EEPROM
- * page, the available data in each EEPROM page is less than the total size of
- * a single NVM memory page by several bytes.
+ * As a small amount of information needs to be stored in a header before the
+ * contents of a logical EEPROM page in memory (for use by the emulation
+ * service), the available data in each EEPROM page is less than the total size
+ * of a single NVM memory page by several bytes.
  *
  * \subsection asfdoc_samd20_eeprom_special_considerations_flushing Flushing of the Write Cache
  * A single-page write cache is used internally to buffer data written to pages
@@ -189,10 +225,17 @@ extern "C" {
  * @{
  */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#include <compiler.h>
+
 #if !defined(__DOXYGEN__)
 #  define EEPROM_MAX_PAGES            (64 * NVMCTRL_ROW_PAGES)
 #  define EEPROM_MASTER_PAGE_NUMBER   (EEPROM_MAX_PAGES - 1)
 #  define EEPROM_INVALID_PAGE_NUMBER  0xFF
+#  define EEPROM_INVALID_ROW_NUMBER   (EEPROM_INVALID_PAGE_NUMBER / NVMCTRL_ROW_PAGES)
 #  define EEPROM_HEADER_SIZE          4
 #endif
 
@@ -213,7 +256,7 @@ extern "C" {
 /** Emulator revision version number, identifying the emulator revision. */
 #define EEPROM_REVISION             0
 
-/** Size of each logical EEPROM page, in bytes. */
+/** Size of the user data portion of each logical EEPROM page, in bytes. */
 #define EEPROM_PAGE_SIZE            (NVMCTRL_PAGE_SIZE - EEPROM_HEADER_SIZE)
 
 /** @} */
@@ -239,7 +282,6 @@ enum status_code eeprom_emulator_flush_page_buffer(void);
 enum status_code eeprom_emulator_write_page(
 		const uint8_t logical_page,
 		const uint8_t *const data);
-
 
 enum status_code eeprom_emulator_read_page(
 		const uint8_t logical_page,
@@ -330,4 +372,4 @@ enum status_code eeprom_emulator_read_buffer(
  *  - \subpage asfdoc_samd20_eeprom_basic_use_case
  */
 
-#endif
+#endif /* EEPROM_H_INCLUDED */

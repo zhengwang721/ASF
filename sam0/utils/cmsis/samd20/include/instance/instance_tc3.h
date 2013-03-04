@@ -51,7 +51,7 @@
 #define REG_TC3_CTRLBCLR           (0x42002C04U) /**< \brief (TC3) Control B Clear Register */
 #define REG_TC3_CTRLBSET           (0x42002C05U) /**< \brief (TC3) Control B Set Register */
 #define REG_TC3_CTRLC              (0x42002C06U) /**< \brief (TC3) Control C Register */
-#define REG_TC3_DEBUG              (0x42002C08U) /**< \brief (TC3) Debug Register */
+#define REG_TC3_DBGCTRL            (0x42002C08U) /**< \brief (TC3) Debug Register */
 #define REG_TC3_EVCTRL             (0x42002C0AU) /**< \brief (TC3) Event Control Register */
 #define REG_TC3_INTENCLR           (0x42002C0CU) /**< \brief (TC3) Interrupt Enable Clear Register */
 #define REG_TC3_INTENSET           (0x42002C0DU) /**< \brief (TC3) Interrupt Enable Set Register */
@@ -73,7 +73,7 @@
 #define REG_TC3_CTRLBCLR           (*(RwReg8 *)0x42002C04U) /**< \brief (TC3) Control B Clear Register */
 #define REG_TC3_CTRLBSET           (*(RwReg8 *)0x42002C05U) /**< \brief (TC3) Control B Set Register */
 #define REG_TC3_CTRLC              (*(RwReg8 *)0x42002C06U) /**< \brief (TC3) Control C Register */
-#define REG_TC3_DEBUG              (*(RwReg8 *)0x42002C08U) /**< \brief (TC3) Debug Register */
+#define REG_TC3_DBGCTRL            (*(RwReg8 *)0x42002C08U) /**< \brief (TC3) Debug Register */
 #define REG_TC3_EVCTRL             (*(RwReg16*)0x42002C0AU) /**< \brief (TC3) Event Control Register */
 #define REG_TC3_INTENCLR           (*(RwReg8 *)0x42002C0CU) /**< \brief (TC3) Interrupt Enable Clear Register */
 #define REG_TC3_INTENSET           (*(RwReg8 *)0x42002C0DU) /**< \brief (TC3) Interrupt Enable Set Register */
