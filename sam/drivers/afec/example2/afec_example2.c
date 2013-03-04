@@ -168,15 +168,16 @@ static void set_afec_resolution(void)
 		case 'n':
 			g_max_digital = MAX_DIGITAL_12_BIT;
 			afec_set_resolution(AFEC0, AFEC_12_BITS);
-			puts(" Set Resolution to 12 bit \n\r");
+			puts(" Set Resolution to Normal \n\r");
 			break;
 		case 'e':
 			g_max_digital = MAX_DIGITAL_12_BIT * 16;
 			afec_set_resolution(AFEC0, AFEC_16_BITS);
-			puts(" Set Resolution to 16 bit \n\r");
+			puts(" Set Resolution to Enhanced \n\r");
 			break;
 		case 'q':
 			uc_done = 1;
+			puts(" Quit Configuration \n\r");
 			break;
 		default:
 			break;
