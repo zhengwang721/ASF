@@ -52,7 +52,6 @@
  * \param len    Length of data
  *
  */
-#if API_CONVENTION == 0
 status_code_t usart_serial_write_packet(usart_if usart, const uint8_t *data,
 		size_t len)
 {
@@ -83,4 +82,3 @@ status_code_t usart_serial_read_packet(usart_if usart, uint8_t *data,
 	}
 	return STATUS_OK;
 }
-#endif
