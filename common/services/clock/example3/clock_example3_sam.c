@@ -191,6 +191,8 @@ int main(void)
 		/*
 		 * Switch to internal 4 MHz RC.
 		 */
+		/* Switch to slow clock before switch main clock */
+		sysclk_set_source(SYSCLK_SRC_SLCK_RC);
 		osc_enable(OSC_MAINCK_4M_RC);
 		osc_wait_ready(OSC_MAINCK_4M_RC);
 		sysclk_set_source(SYSCLK_SRC_MAINCK_XTAL);
