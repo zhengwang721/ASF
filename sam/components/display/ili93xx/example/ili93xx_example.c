@@ -170,7 +170,7 @@ int main(void)
 
 	ili93xx_set_foreground_color(COLOR_VIOLET);
 	ili93xx_draw_line(0, 0, 240, 320);
-	
+
 	while (1) {
 	}
 }

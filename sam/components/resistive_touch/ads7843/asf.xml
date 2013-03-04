@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="component" id="sam.components.resistive_touch.ads7843#1" caption="Display - ADS7843 Touch Controller">
+	<module type="component" id="sam.components.resistive_touch.ads7843" caption="Display - ADS7843 Touch Controller">
 		<info type="description" value="summary">
 		Low-level driver for the ADS7843 LCD Touch controller.
 		</info>
