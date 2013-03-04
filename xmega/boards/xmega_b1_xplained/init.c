@@ -6,7 +6,7 @@
  *
  * This file contains board initialization function.
  *
- * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -86,6 +86,21 @@ void board_init(void)
 	// Setting PORT_USART0_bm to one will move the pin location
 	// of USARTC0 (in mode SPI) from Px[3:0] to Px[7:4].
 	PORTC.REMAP |= PORT_USART0_bm;
+#endif
+
+#ifdef CONF_BOARD_LIGHT_SENSOR
+	ioport_configure_pin(LIGHT_SENSOR_SIGNAL_PIN, IOPORT_DIR_INPUT
+			| IOPORT_INPUT_DISABLE);
+#endif
+
+#ifdef CONF_BOARD_TEMPERATURE_SENSOR
+	ioport_configure_pin(TEMPERATURE_SENSOR_SIGNAL_PIN, IOPORT_DIR_INPUT
+			| IOPORT_INPUT_DISABLE);
+#endif
+
+#ifdef CONF_BOARD_POTENTIOMETER_SENSOR
+	ioport_configure_pin(POTENTIOMETER_SIGNAL_PIN, IOPORT_DIR_INPUT
+			| IOPORT_INPUT_DISABLE);
 #endif
 
 #ifdef CONF_BOARD_ENABLE_MXT143E_XPLAINED
