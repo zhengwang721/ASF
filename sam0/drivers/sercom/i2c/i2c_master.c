@@ -228,7 +228,7 @@ enum status_code i2c_master_init(struct i2c_master_module *const module,
 }
 
 /**
- * \brief Reset the hardware module.
+ * \brief Resets the hardware module.
  *
  * This will reset the module to hardware defaults.
  *
@@ -248,6 +248,13 @@ void i2c_master_reset(struct i2c_master_module *const module)
 	/* Disable module. */
 	i2c_master_disable(module);
 
+#ifdef I2C_MASTER_ASYNC	
+	/* Clear all pending interrupts. */
+	system_interrupt_enter_critical_section();
+	system_interrupt_clear_pending(_sercom_get_interrupt_vector(module->hw));
+	system_interrupt_leave_critical_section();
+#endif
+	
 	/* Wait for sync. */
 	_i2c_master_wait_for_sync(module);
 
