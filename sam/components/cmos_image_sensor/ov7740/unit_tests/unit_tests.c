@@ -177,6 +177,9 @@ const usart_serial_options_t usart_serial_options = {
  */
 static void vsync_handler(uint32_t ul_id, uint32_t ul_mask)
 {
+	unused( ul_id ) ;
+	unused( ul_mask ) ;
+
 	g_ul_vsync_flag = true;
 }
 
