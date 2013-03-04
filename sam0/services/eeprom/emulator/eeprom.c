@@ -636,8 +636,6 @@ void eeprom_emulator_erase_memory(void)
  * \retval STATUS_ERR_NOT_INITALIZATED  If the EEPROM emulator is not initialized
  * \retval STATUS_ERR_BAD_ADDRESS       If an address outside the valid emulated
  *                                      EEPROM memory space was supplied
- * \retval STATUS_ERR_DENIED            If an attempt was made to write to the
- *                                      maser emulated EEPROM control page
  */
 enum status_code eeprom_emulator_write_page(
 		const uint8_t logical_page,
@@ -717,8 +715,6 @@ enum status_code eeprom_emulator_write_page(
  * \retval STATUS_ERR_NOT_INITALIZATED  If the EEPROM emulator is not initialized
  * \retval STATUS_ERR_BAD_ADDRESS       If an address outside the valid emulated
  *                                      EEPROM memory space was supplied
- * \retval STATUS_ERR_DENIED            If an attempt was made to read from the
- *                                      maser emulated EEPROM control page
  */
 enum status_code eeprom_emulator_read_page(
 		const uint8_t logical_page,
@@ -771,6 +767,11 @@ enum status_code eeprom_emulator_read_page(
  * \param[in] length  Length of the data to write, in bytes
  *
  * \return Status code indicating the status of the operation.
+ *
+ * \retval STATUS_OK                    If the page was successfully read
+ * \retval STATUS_ERR_NOT_INITALIZATED  If the EEPROM emulator is not initialized
+ * \retval STATUS_ERR_BAD_ADDRESS       If an address outside the valid emulated
+ *                                      EEPROM memory space was supplied
  */
 enum status_code eeprom_emulator_write_buffer(
 		const uint16_t offset,
@@ -835,6 +836,11 @@ enum status_code eeprom_emulator_write_buffer(
  * \param[in]  length  Length of the data to read, in bytes
  *
  * \return Status code indicating the status of the operation.
+ *
+ * \retval STATUS_OK                    If the page was successfully read
+ * \retval STATUS_ERR_NOT_INITALIZATED  If the EEPROM emulator is not initialized
+ * \retval STATUS_ERR_BAD_ADDRESS       If an address outside the valid emulated
+ *                                      EEPROM memory space was supplied
  */
 enum status_code eeprom_emulator_read_buffer(
 		const uint16_t offset,
