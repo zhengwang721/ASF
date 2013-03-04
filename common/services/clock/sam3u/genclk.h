@@ -170,7 +170,8 @@ static inline void genclk_config_set_divider(struct genclk_config *p_cfg,
 
 //@}
 
-static inline void genclk_enable(const struct genclk_config *p_cfg, uint32_t ul_id)
+static inline void genclk_enable(const struct genclk_config *p_cfg,
+		uint32_t ul_id)
 {
 	PMC->PMC_PCK[ul_id] = p_cfg->ctrl;
 	pmc_enable_pck(ul_id);
@@ -205,35 +206,35 @@ static inline void genclk_enable_source(enum genclk_source e_src)
 		}
 		break;
 
-    case GENCLK_PCK_SRC_MAINCK_4M_RC:
+	case GENCLK_PCK_SRC_MAINCK_4M_RC:
 		if (!osc_is_ready(OSC_MAINCK_4M_RC)) {
 			osc_enable(OSC_MAINCK_4M_RC);
 			osc_wait_ready(OSC_MAINCK_4M_RC);
 		}
 		break;
 
-    case GENCLK_PCK_SRC_MAINCK_8M_RC:
+	case GENCLK_PCK_SRC_MAINCK_8M_RC:
 		if (!osc_is_ready(OSC_MAINCK_8M_RC)) {
 			osc_enable(OSC_MAINCK_8M_RC);
 			osc_wait_ready(OSC_MAINCK_8M_RC);
 		}
 		break;
 
-    case GENCLK_PCK_SRC_MAINCK_12M_RC:
+	case GENCLK_PCK_SRC_MAINCK_12M_RC:
 		if (!osc_is_ready(OSC_MAINCK_12M_RC)) {
 			osc_enable(OSC_MAINCK_12M_RC);
 			osc_wait_ready(OSC_MAINCK_12M_RC);
 		}
 		break;
 
-    case GENCLK_PCK_SRC_MAINCK_XTAL:
+	case GENCLK_PCK_SRC_MAINCK_XTAL:
 		if (!osc_is_ready(OSC_MAINCK_XTAL)) {
 			osc_enable(OSC_MAINCK_XTAL);
 			osc_wait_ready(OSC_MAINCK_XTAL);
 		}
 		break;
 
-    case GENCLK_PCK_SRC_MAINCK_BYPASS:
+	case GENCLK_PCK_SRC_MAINCK_BYPASS:
 		if (!osc_is_ready(OSC_MAINCK_BYPASS)) {
 			osc_enable(OSC_MAINCK_BYPASS);
 			osc_wait_ready(OSC_MAINCK_BYPASS);
