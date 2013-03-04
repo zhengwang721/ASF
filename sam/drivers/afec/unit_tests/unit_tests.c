@@ -61,14 +61,14 @@
  * This is the unit test application for the AFEC driver.
  * It consists of test cases for the following functionality:
  * - TC trigger test
- * - Window mode test
+ * - Comparison window test
  *
  * \section files Main Files
  * - \ref unit_tests.c
  * - \ref conf_test.h
  * - \ref conf_board.h
  * - \ref conf_clock.h
- * - \ref conf_usart_serial.h
+ * - \ref conf_uart_serial.h
  * - \ref conf_sleepmgr.h
  *
  * \section device_info Device Info
@@ -82,14 +82,6 @@
  * For further information, visit <a href="http://www.atmel.com/">Atmel</a>.\n
  * Support and FAQ: http://support.atmel.no/
  */
-
-//! \name Unit test configuration
-//@{
-/**
- * \def CONF_TEST_AFEC
- * \brief Test the functions provided by the AFEC driver.
- */
-//@}
 
 /** Conversion data is ready flag */
 volatile bool is_data_ready = false;
@@ -147,7 +139,7 @@ static void configure_tc_trigger(void)
 	tc_start(TC0, 0);
 
 	afec_set_trigger(AFEC0, AFEC_TRIG_TIO_CH_0);
-}	
+}
 
 /**
  * \brief Test AFEC in TC trigger mode,
@@ -158,7 +150,7 @@ static void configure_tc_trigger(void)
 static void run_afec_tc_trig_test(const struct test_case *test)
 {
 	configure_tc_trigger();
-	
+
 	afec_set_callback(AFEC0, AFEC_INTERRUPT_DATA_READY, afec_set_data_ready_flag, 1);
 	delay_ms(2000);
 
@@ -178,12 +170,12 @@ static void run_afec_comp_test(const struct test_case *test)
 	afec_set_callback(AFEC0, AFEC_INTERRUPT_COMP_ERROR, afec_set_comp_flag, 1);
 	afec_start_software_conversion(AFEC0);
 	delay_ms(100);
-	
+
 	test_assert_true(test, is_comp_event_flag == true, "AFEC Comparsion Window test failed");
 }
 
 /**
- * \brief Run ADCIFE driver unit tests.
+ * \brief Run AFEC driver unit tests.
  */
 int main(void)
 {
@@ -200,14 +192,23 @@ int main(void)
 	stdio_serial_init(CONF_TEST_USART, &usart_serial_options);
 
 	afec_enable(AFEC0);
-	
+
 	struct afec_config afec_cfg;
-	
+
 	afec_get_config_defaults(&afec_cfg);
 	afec_init(AFEC0, &afec_cfg);
 
+	struct afec_ch_config afec_ch_cfg;
+	afec_ch_get_config_defaults(&afec_ch_cfg);
+	afec_ch_cfg.offset= true;
+	afec_ch_set_config(AFEC0, AFEC_TEMPERATURE_SENSOR, &afec_ch_cfg);
+	afec_channel_set_analog_offset(AFEC0, AFEC_TEMPERATURE_SENSOR, 0x800);
+
 	afec_channel_enable(AFEC0, AFEC_CHANNEL_1);
-	
+
+	afec_set_calib_mode(AFEC0);
+	while(!(afec_get_interrupt_status(AFEC0) & AFE_ISR_EOCAL) == AFE_ISR_EOCAL);
+
 #if defined(__GNUC__)
 	setbuf(stdout, NULL);
 #endif

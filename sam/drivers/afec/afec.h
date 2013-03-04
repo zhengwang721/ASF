@@ -54,7 +54,7 @@ extern "C" {
 /**INDENT-ON**/
 /// @endcond
 
-/* Definitions for AFEC resolution */
+/** Definitions for AFEC resolution */
 enum afec_resolution {
 	AFEC_10_BITS = AFE_EMR_RES_LOW_RES,        /* AFEC 10-bit resolution */
 	AFEC_12_BITS = AFE_EMR_RES_NO_AVERAGE,     /* AFEC 12-bit resolution */
@@ -64,7 +64,7 @@ enum afec_resolution {
 	AFEC_16_BITS = AFE_EMR_RES_OSR256         /* AFEC 16-bit resolution */
 };
 
-/* Definitions for AFEC power mode */
+/** Definitions for AFEC power mode */
 enum afec_power_mode {
 	/* AFEC core on and reference voltage circuitry on */
 	AFEC_POWER_MODE_0 = 0,
@@ -74,7 +74,7 @@ enum afec_power_mode {
 	AFEC_POWER_MODE_2
 };
 
-/* Definitions for AFEC trigger */
+/** Definitions for AFEC trigger */
 enum afec_trigger {
 	/* Starting a conversion is only possible by software. */
 	AFEC_TRIG_SW = AFE_MR_TRGEN_DIS,
@@ -94,7 +94,7 @@ enum afec_trigger {
 	AFEC_TRIG_FREERUN
 } ;
 
-/* Definitions for AFEC channel number */
+/** Definitions for AFEC channel number */
 enum afec_channel_num {
 	AFEC_CHANNEL_0  = 0,
 	AFEC_CHANNEL_1  = 1,
@@ -115,7 +115,7 @@ enum afec_channel_num {
 	AFEC_CHANNEL_ALL
 } ;
 
-/* Definitions for AFEC gain value */
+/** Definitions for AFEC gain value */
 enum afec_gainvalue {
 	AFEC_GAINVALUE_0 = 0,
 	AFEC_GAINVALUE_1 = 1,
@@ -123,7 +123,7 @@ enum afec_gainvalue {
 	AFEC_GAINVALUE_3 = 3
 };
 
-/* Definitions for AFEC Start Up Time */
+/** Definitions for AFEC Start Up Time */
 enum afec_startup_time {
 	AFEC_STARTUP_TIME_0 = AFE_MR_STARTUP_SUT0,
 	AFEC_STARTUP_TIME_1 = AFE_MR_STARTUP_SUT8,
@@ -143,7 +143,7 @@ enum afec_startup_time {
 	AFEC_STARTUP_TIME_15 = AFE_MR_STARTUP_SUT960
 };
 
-/* Definitions for AFEC analog settling time */
+/** Definitions for AFEC analog settling time */
 enum afec_settling_time {
 	AFEC_SETTLING_TIME_0 = AFE_MR_SETTLING_AST3,
 	AFEC_SETTLING_TIME_1 = AFE_MR_SETTLING_AST5,
@@ -151,7 +151,7 @@ enum afec_settling_time {
 	AFEC_SETTLING_TIME_3 = AFE_MR_SETTLING_AST17
 };
 
-/* Definitions for Comparison Mode */
+/** Definitions for Comparison Mode */
 enum afec_cmp_mode {
 	AFEC_CMP_MODE_0 = AFE_EMR_CMPMODE_LOW,
 	AFEC_CMP_MODE_1 = AFE_EMR_CMPMODE_HIGH,
@@ -159,7 +159,7 @@ enum afec_cmp_mode {
 	AFEC_CMP_MODE_3 = AFE_EMR_CMPMODE_OUT
 };
 
-/* Definitions for Temperature Comparison Mode */
+/** Definitions for Temperature Comparison Mode */
 enum afec_temp_cmp_mode {
 	AFEC_TEMP_CMP_MODE_0 = AFE_TEMPMR_TEMPCMPMOD_LOW,
 	AFEC_TEMP_CMP_MODE_1 = AFE_TEMPMR_TEMPCMPMOD_HIGH,
@@ -313,7 +313,9 @@ static inline void afec_set_resolution(Afec *const afec,
  * \brief Configure comparison mode.
  *
  * \param afec  Base address of the AFEC.
- * \param mode AFEC comparison mode.
+ * \param mode Comparison mode.
+ * \param channel Comparison Selected Channel.
+ * \param cmp_filter Compare Event Filtering.
  */
 static inline void afec_set_comparison_mode(Afec *const afec,
 		const enum afec_cmp_mode mode,
@@ -634,7 +636,7 @@ static inline void afec_set_calib_mode(Afec *const afec)
  * - Software triggering of conversions
  * - Interrupt-based conversion handling
  * - Single channel measurement
- * - ADC_CHANNEL_5 as input
+ * - AFEC_CHANNEL_5 as input
  *
  * \subsection sam_afec_quickstart_prereq Prerequisites
  * -# \ref sysclk_group "System Clock Management (Sysclock)"

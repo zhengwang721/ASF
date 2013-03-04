@@ -51,13 +51,14 @@
  *
  * \section Requirements
  *
- * This example can be used on sam4e-ek boards.
+ * This example can be used on SAM4E-EK boards.
  *
  * \section Description
  *
- * The example is aimed to demonstrate the enhanced resolution feature
- * inside the device. To use this feature, the channel 5 which is connected to 
- * the potentiometer should be enabled. 
+ * The example is aimed to demonstrate the enhanced resolution mode
+ * inside the microcontroller. To use this feature, the channel 5 which is connected to
+ * the potentiometer should be enabled. Users can select different resolution modes
+ * by configuration menu in the terminal.
  *
  * \section Usage
  *
@@ -84,18 +85,22 @@
  *     -- AFEC Enhanced Resolution Examplexxx --
  *     -- xxxxxx-xx
  *     -- Compiled: xxx xx xxxx xx:xx:xx --
+ *     =========================================================
+ *     Menu: press a key to change the resolution mode.
+ *     ---------------------------------------------------------
+ *     -- n: Normal Resolution Mode--
+ *     -- e: Enhanced Resolution Mode--
+ *     -- q: Quit Configuration--
  *    \endcode
  * -# The application will output current voltage of potentiometer on the terminal.
- *
  */
 
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
 #include "asf.h"
-#include "conf_board.h"
 
-/** Reference voltage for AFEC,in mv. */
+/** Reference voltage for AFEC in mv. */
 #define VOLT_REF        (3300)
 
 /** The maximal digital value */
@@ -109,13 +114,10 @@
 		"-- "BOARD_NAME" --\r\n" \
 		"-- Compiled: "__DATE__" "__TIME__" --"STRING_EOL
 
-#define MENU_HEADER "\n\r-- press a key to change the resolution--\n\r" \
-		"-- 0: 12 bit resolution--\n\r" \
-		"-- 1: 13 bit resolution--\n\r" \
-		"-- 2: 14 bit resolution--\n\r" \
-		"-- 3: 15 bit resolution--\n\r" \
-		"-- 4: 16 bit resolution--\n\r" \
-		"-- q: Quit Configuration.--\n\r"
+#define MENU_HEADER "\n\r-- press a key to change the resolution mode--\n\r" \
+		"-- n: Normal Resolution Mode--\n\r" \
+		"-- e: Enhanced Resolution Mode--\n\r" \
+		"-- q: Quit Configuration--\n\r"
 
 /** AFEC sample data */
 struct {
@@ -135,7 +137,7 @@ static void configure_console(void)
 		.baudrate = CONF_UART_BAUDRATE,
 		.paritytype = CONF_UART_PARITY
 	};
-	
+
 	/* Configure console UART. */
 	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
 	stdio_serial_init(CONF_UART, &uart_serial_options);
@@ -158,32 +160,17 @@ static void set_afec_resolution(void)
 	uint8_t uc_done = 0;
 
 	display_menu();
-	
+
 	while (!uc_done) {
 		while (uart_read(CONF_UART, &uc_key));
 
 		switch (uc_key) {
-		case '0':
+		case 'n':
 			g_max_digital = MAX_DIGITAL_12_BIT;
 			afec_set_resolution(AFEC0, AFEC_12_BITS);
 			puts(" Set Resolution to 12 bit \n\r");
 			break;
-		case '1':
-			g_max_digital = MAX_DIGITAL_12_BIT * 2;
-			afec_set_resolution(AFEC0, AFEC_13_BITS);
-			puts(" Set Resolution to 13 bit \n\r");
-			break;
-		case '2':
-			g_max_digital = MAX_DIGITAL_12_BIT * 4;
-			afec_set_resolution(AFEC0, AFEC_14_BITS);
-			puts(" Set Resolution to 14 bit \n\r");
-			break;
-		case '3':
-			g_max_digital = MAX_DIGITAL_12_BIT * 8;
-			afec_set_resolution(AFEC0, AFEC_15_BITS);
-			puts(" Set Resolution to 15 bit \n\r");
-			break;
-		case '4':
+		case 'e':
 			g_max_digital = MAX_DIGITAL_12_BIT * 16;
 			afec_set_resolution(AFEC0, AFEC_16_BITS);
 			puts(" Set Resolution to 16 bit \n\r");
@@ -192,7 +179,7 @@ static void set_afec_resolution(void)
 			uc_done = 1;
 			break;
 		default:
-			break;	
+			break;
 		}
 	}
 }
@@ -216,26 +203,25 @@ static void afec_data_ready(void)
 int main(void)
 {
 	uint8_t uc_key;
-	
+
 	/* Initialize the SAM system. */
 	sysclk_init();
 	board_init();
 
 	configure_console();
-	
+
 	/* Output example information. */
 	puts(STRING_HEADER);
 
 	g_afec_sample_data.us_value = 0;
 	g_afec_sample_data.is_done = false;
 	g_max_digital = MAX_DIGITAL_12_BIT;
-	
+
 	afec_enable(AFEC0);
-	
+
 	struct afec_config afec_cfg;
-	
+
 	afec_get_config_defaults(&afec_cfg);
-	//afec_cfg.resolution = AFEC_14_BITS;
 	afec_init(AFEC0, &afec_cfg);
 
 	struct afec_ch_config afec_ch_cfg;
@@ -253,11 +239,11 @@ int main(void)
 
 	afec_set_calib_mode(AFEC0);
 	while(!(afec_get_interrupt_status(AFEC0) & AFE_ISR_EOCAL) == AFE_ISR_EOCAL);
-	
+
 	while (1) {
 		afec_start_software_conversion(AFEC0);
 		delay_ms(1000);
-		
+
 		/* Check if AFEC sample is done. */
 		if (g_afec_sample_data.is_done == true) {
 			printf("Potentiometer Voltage: %04d mv.    ",

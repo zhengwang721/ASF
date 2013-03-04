@@ -51,23 +51,20 @@
  *
  * \section Requirements
  *
- * This example can be used on sam4e-ek boards.
+ * This example can be used on SAM4E-EK boards.
  *
  * \section Description
  *
  * The example is aimed to demonstrate the temperature sensor feature
  * inside the device. To use this feature, the temperature sensor should be automatically
  * turned on by RTC event. The channel 15 is connected to the sensor by default.
- * If set RTCT = 1, then if TRGEN is disabled and all channels are disabled (AFE_CHSR = 0),
+ * If set RTCT = 1, TRGEN is disabled and all channels are disabled (AFE_CHSR = 0),
  * then only channel 15 is converted at a rate of 1 conversion per second.
  *
  * The temperature sensor provides an output voltage (VT) that is proportional
  * to absolute temperature (PTAT). The relationship between measured voltage and
  * actual temperature could be found in Electrical Characteristics part of the
  * datasheet.
- *
- * By configuring the temp sensor register, it will work in comparison window mode and will ouput
- * information when the temperature is in the comparison window.
  *
  * \section Usage
  *
@@ -99,6 +96,9 @@
  *
  */
 
+#include <stdio.h>
+#include <string.h>
+#include <assert.h>
 #include "asf.h"
 
 /** Reference voltage for AFEC,in mv. */
@@ -111,6 +111,12 @@
 #define STRING_HEADER "-- AFEC Temperature Sensor Example --\r\n" \
 		"-- "BOARD_NAME" --\r\n" \
 		"-- Compiled: "__DATE__" "__TIME__" --"STRING_EOL
+
+/** The conversion data is done flag */
+volatile bool is_conversion_done = false;
+
+/** The conversion data value */
+volatile uint32_t g_ul_value = 0;
 
 /**
  * \brief Configure UART console.
@@ -130,24 +136,11 @@ static void configure_console(void)
 /**
  * \brief AFEC interrupt callback function.
  */
-static void afec_temp_sensor_data_ready(void)
+static void afec_temp_sensor_end_conversion(void)
 {
-	uint32_t ul_vol;
-	uint32_t ul_value = 0;
-	uint32_t ul_temp;
-
-	if ((afec_get_interrupt_status(AFEC0) & (AFE_ISR_EOC15 | AFE_ISR_TEMPCHG)) ==
-			(AFE_ISR_EOC15 | AFE_ISR_TEMPCHG)) {
-
-		ul_value = afec_channel_get_value(AFEC0, AFEC_TEMPERATURE_SENSOR);
-
-		ul_vol = ul_value * VOLT_REF / MAX_DIGITAL;
-
-		/* Using multiplication (*0.21186) instead of division (/4.72). */
-		ul_temp = (ul_vol - 1440) * 0.21186 + 27.0;
-
-		printf("Tempature:%d \n\r", (int32_t)ul_temp);
-		puts("The tempature is in comparison window \n\r");
+	if ((afec_get_interrupt_status(AFEC0) & AFE_ISR_EOC15) == AFE_ISR_EOC15) {
+		g_ul_value = afec_channel_get_value(AFEC0, AFEC_TEMPERATURE_SENSOR);
+		is_conversion_done = true;
 	}
 }
 
@@ -158,6 +151,9 @@ static void afec_temp_sensor_data_ready(void)
  */
 int main(void)
 {
+	uint32_t ul_vol;
+	uint32_t ul_temp;
+
 	/* Initialize the SAM system. */
 	sysclk_init();
 	board_init();
@@ -182,19 +178,28 @@ int main(void)
 	afec_ch_cfg.offset= true;
 	afec_ch_set_config(AFEC0, AFEC_TEMPERATURE_SENSOR, &afec_ch_cfg);
 	afec_channel_set_analog_offset(AFEC0, AFEC_TEMPERATURE_SENSOR, 0x800);
-	
+
 	struct afec_temp_sensor_config afec_temp_sensor_cfg;
 
 	afec_temp_sensor_get_config_defaults(&afec_temp_sensor_cfg);
 	afec_temp_sensor_cfg.rctc = true;
 	afec_temp_sensor_set_config(AFEC0, &afec_temp_sensor_cfg);
 
-	afec_set_callback(AFEC0, AFEC_INTERRUPT_TEMP_CHANGE | AFEC_INTERRUPT_EOC_15,
-			afec_temp_sensor_data_ready, 1);
+	afec_set_callback(AFEC0, AFEC_INTERRUPT_EOC_15,
+			afec_temp_sensor_end_conversion, 1);
 
 	afec_set_calib_mode(AFEC0);
 	while(!(afec_get_interrupt_status(AFEC0) & AFE_ISR_EOCAL) == AFE_ISR_EOCAL);
-	
+
 	while (1) {
+
+		if(is_conversion_done == true) {
+
+			ul_vol = g_ul_value * VOLT_REF / MAX_DIGITAL;
+			/* According to datasheet, the temperature slope dVT/dT = 4.7 mV/C */
+			ul_temp = (ul_vol - 1440)  * 100 / 470 + 27;
+			printf("Temperature is: %04d", (int)ul_temp);
+			is_conversion_done = false;
+		}
 	}
 }
