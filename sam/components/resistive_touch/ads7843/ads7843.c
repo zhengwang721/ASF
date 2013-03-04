@@ -216,8 +216,8 @@ uint32_t ads7843_init(void)
 	};
 
 	spi_master_init(BOARD_ADS7843_SPI_BASE);
-	spi_master_setup_device(BOARD_ADS7843_SPI_BASE, &ADS7843_SPI_DEVICE_CFG,
-										SPI_MODE_0, ADS7843_SPI_BAUDRATE, 0);
+	spi_master_setup_device(BOARD_ADS7843_SPI_BASE, &ADS7843_SPI_DEVICE_CFG, SPI_MODE_0, ADS7843_SPI_BAUDRATE, 0);
+	spi_select_device(BOARD_ADS7843_SPI_BASE, &ADS7843_SPI_DEVICE_CFG);
 	spi_enable(BOARD_ADS7843_SPI_BASE);
 
 	for (uDummy = 0; uDummy < 100000; uDummy++) {
