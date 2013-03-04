@@ -430,14 +430,16 @@ void _i2c_slave_interrupt_handler(uint8_t instance)
 
 	if (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_AIF) {
 	/* Address match */
-		/* Check if we were in the middle of a transfer */
-		if (module->buffer_length != module->buffer_remaining) {
-			module->status = STATUS_ERR_OVERFLOW;
-			if ((callback_mask & (1 << I2C_SLAVE_CALLBACK_ERROR_LAST_TRANSFER))) {
-				module->callbacks[I2C_SLAVE_CALLBACK_ERROR_LAST_TRANSFER](module);
-			}
+		/* Check if last read is done - repeated start */
+		if (module->buffer_length != module->buffer_remaining && module->transfer_direction == 0) {
+			
+			module->status = STATUS_OK;
 			module->buffer_length = 0;
 			module->buffer_remaining = 0;
+
+			if ((callback_mask & (1 << I2C_SLAVE_CALLBACK_READ_COMPLETE))) {
+				module->callbacks[I2C_SLAVE_CALLBACK_READ_COMPLETE](module);
+			}
 		}
 
 		if (i2c_hw->STATUS.reg & (SERCOM_I2CS_STATUS_BUSERR ||
@@ -505,12 +507,7 @@ void _i2c_slave_interrupt_handler(uint8_t instance)
 				&& (module->transfer_direction == 0)) {
 			/* Read from master complete */
 			module->callbacks[I2C_SLAVE_CALLBACK_READ_COMPLETE](module);
-		} else if ((callback_mask & (1 << I2C_SLAVE_CALLBACK_WRITE_COMPLETE))
-				&& (module->transfer_direction == 1)) {
-			/* Write to master complete */
-			module->callbacks[I2C_SLAVE_CALLBACK_WRITE_COMPLETE](module);
 		}
-
 	} else if (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_DIF) {
 		/* Check if buffer is full, or NACK from master. */
 		if (module->buffer_remaining <= 0 ||
@@ -540,6 +537,7 @@ void _i2c_slave_interrupt_handler(uint8_t instance)
 				/* Transfer successful. */
 				module->status = STATUS_OK;
 
+				// if pif - twice?
 				if (callback_mask & (1 << I2C_SLAVE_CALLBACK_WRITE_COMPLETE)) {
 					/* No more data to write, write complete */
 					module->callbacks[I2C_SLAVE_CALLBACK_WRITE_COMPLETE](module);
