@@ -87,6 +87,7 @@
 #include "conf_clock.h"
 #include "conf_test.h"
 
+
 /* TWI clock frequency in Hz (400KHz). */
 #define TWI_CLK     400000
 
@@ -331,7 +332,7 @@ static uint32_t test_color(uint8_t *p_uc_ref_color, uint8_t *p_uc_capture_data,
  *
  * \param test Current test case.
  */
-static void ov7740_test_initialization(const struct test_case *test)
+static void ov7740_test_initialization_run(const struct test_case *test)
 {
 	volatile uint32_t ul_error = 0;
 
@@ -352,7 +353,7 @@ static void ov7740_test_initialization(const struct test_case *test)
  * \brief Start capture process.
  *
  */
-static void capture_process(const struct test_case *test)
+static void ov7740_test_capture_process_run(const struct test_case *test)
 {
 	if (g_ul_init_error_flag == true) {
 		/* Return error if previous test about initialization failed */
@@ -393,7 +394,7 @@ static void capture_process(const struct test_case *test)
  *
  * \param test Current test case.
  */
-static void ov7740_test_color(const struct test_case *test)
+static void ov7740_test_color_run(const struct test_case *test)
 {
 	uint32_t ul_error = 0;
 	volatile uint32_t ul_index = 25600; /* put the index at the middle of
@@ -462,25 +463,27 @@ int main(void)
 
 	/* Define test for capture initialization */
 	DEFINE_TEST_CASE(ov7740_test_initialization, NULL,
-			ov7740_test_initialization, NULL,
-			"OV7740 test initialization");
+			 ov7740_test_initialization_run, NULL,
+			 "OV7740 initialization test");
 
 	/* Define function for capture process but do not test it */
-	DEFINE_TEST_CASE(ov7740capture_process, NULL, capture_process, NULL,
-			"OV7740 capture process");
+	DEFINE_TEST_CASE(ov7740_test_capture_process, NULL, ov7740_test_capture_process_run, NULL,
+			 "OV7740 capture process test");
 
 	/* Define test for color */
-	DEFINE_TEST_CASE(ov7740test_color, NULL, ov7740_test_color, NULL,
-			"OV7740 color test");
+	DEFINE_TEST_CASE(ov7740_test_color, NULL, ov7740_test_color_run, NULL,
+			 "OV7740 color test");
 
 	/* Put test case addresses in an array */
-	DEFINE_TEST_ARRAY(ov7740_test_array)
-		= {&ov7740_test_initialization, &ov7740capture_process,
-		   &ov7740test_color};
+	DEFINE_TEST_ARRAY(ov7740_test_array) = {
+          &ov7740_test_initialization,
+          &ov7740_test_capture_process,
+          &ov7740_test_color
+        };
 
 	/* Define the test suite */
 	DEFINE_TEST_SUITE(ov7740_test_suite, ov7740_test_array,
-			"OV7740 driver test suite");
+			  "OV7740 driver test suite");
 
 	/* Run all tests in the test suite */
 	test_suite_run(&ov7740_test_suite);
