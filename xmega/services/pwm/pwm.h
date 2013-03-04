@@ -161,7 +161,7 @@ static inline void pwm_set_duty_cycle_percent(struct pwm_config *config,
 		uint8_t duty_cycle_scale)
 {
 	Assert( duty_cycle_scale <= 100 );
-	tc_write_cc_buffer(config->tc, config->channel,
+	tc_write_cc_buffer(config->tc, (enum tc_cc_channel_t)config->channel,
 			(uint16_t)(((uint32_t)config->period *
 			(uint32_t)duty_cycle_scale) / 100));
 }

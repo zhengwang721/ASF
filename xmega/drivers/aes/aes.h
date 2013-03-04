@@ -179,8 +179,8 @@ static inline void aes_clear_error_flag(void)
 	AES.STATUS |= AES_ERROR_bm;
 }
 
-void aes_configure(enum aes_dec decrypt, enum aes_auto _start,
-	enum aes_xor xor);
+void aes_configure(enum aes_dec decrypt, enum aes_auto auto_start,
+	enum aes_xor xor_mode);
 
 void aes_set_key(t_key k_in);
 
