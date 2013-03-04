@@ -44,11 +44,7 @@
 #include "ads7843.h"
 #include "conf_ads7843.h"
 #include "board.h"
-#if SAM4E
 #include "ioport.h"
-#else
-#include "gpio.h"
-#endif
 #include "pio_handler.h"
 #include "pio.h"
 #include "spi_master.h"
@@ -152,12 +148,8 @@ static uint32_t ads7843_send_cmd(uint8_t uc_cmd)
 
 uint32_t ads7843_is_pressed(void)
 {
-#if SAM4E
 	return (ioport_get_pin_level(BOARD_ADS7843_IRQ_GPIO) ==
 										IOPORT_PIN_LEVEL_LOW);
-#else
-	return gpio_pin_is_low(BOARD_ADS7843_IRQ_GPIO);
-#endif
 }
 
 void ads7843_set_handler(void (*p_handler) (uint32_t, uint32_t))

@@ -51,11 +51,7 @@
  */
 
 #include "board.h"
-#if SAM4E
 #include "ioport.h"
-#else
-#include "gpio.h"
-#endif
 #include "aat31xx.h"
 #include "conf_aat31xx.h"
 
@@ -97,20 +93,12 @@ void aat31xx_set_backlight(uint32_t ul_level)
 
 	/* Set new backlight level */
 	for (i = 0; i < ul_level; i++) {
-#if SAM4E
 		ioport_set_pin_level(BOARD_AAT31XX_SET_GPIO, IOPORT_PIN_LEVEL_LOW);
-#else
-		gpio_set_pin_low(BOARD_AAT31XX_SET_GPIO);
-#endif
 		ul_delay = DELAY_PULSE;
 		while (ul_delay--) {
 		}
 
-#if SAM4E
 		ioport_set_pin_level(BOARD_AAT31XX_SET_GPIO, IOPORT_PIN_LEVEL_HIGH);
-#else
-		gpio_set_pin_high(BOARD_AAT31XX_SET_GPIO);
-#endif
 
 		ul_delay = DELAY_PULSE;
 		while (ul_delay--) {
@@ -129,11 +117,7 @@ void aat31xx_disable_backlight(void)
 {
 	volatile uint32_t ul_delay;
 
-#if SAM4E
 	ioport_set_pin_level(BOARD_AAT31XX_SET_GPIO, IOPORT_PIN_LEVEL_LOW);
-#else
-	gpio_set_pin_low(BOARD_AAT31XX_SET_GPIO);
-#endif
 
 	ul_delay = DELAY_DISABLE;
 	while (ul_delay--) {

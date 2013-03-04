@@ -1,36 +1,20 @@
 <asf xmlversion="1.0">
-	<select-by-device id="sam.services.resistive_touch" caption="Display - Generic Resistive Touch Service">
-		<module type="component" id="sam.services.resistive_touch#0" caption="Display - Generic Resistive Touch Service">
-			<info type="description" value="summary">
-				This service offers resistive touch support for all supported touch components. In addition it offers calibration and a callback function for the application.
-			</info>
-			<build type="header-file" subtype="api" value="rtouch_ads7843.h"/>
-			<build type="header-file" subtype="api" value="rtouch.h"/>
-			<build type="c-source" value="rtouch.c"/>
-			<build type="include-path" value="."/>
-			<build type="doxygen-entry-point" value="sam_services_rtouch_group"/>
-			<device-support value="sam3"/>
-			<device-support value="sam4s"/>
-			<require idref="common.services.basic.gpio"/>
-			<generator value="doxygen-module" default-mcu="unspecified-sam3s"/>
-			<require idref="sam.services.resistive_touch.controller"/>
-		</module>
-		<module type="component" id="sam.services.resistive_touch#1" caption="Display - Generic Resistive Touch Service">
-			<info type="description" value="summary">
-				This service offers resistive touch support for all supported touch components. In addition it offers calibration and a callback function for the application.
-			</info>
-			<build type="header-file" subtype="api" value="rtouch_ads7843.h"/>
-			<build type="header-file" subtype="api" value="rtouch.h"/>
-			<build type="c-source" value="rtouch.c"/>
-			<build type="include-path" value="."/>
-			<build type="doxygen-entry-point" value="sam_services_rtouch_group"/>
-			<device-support value="sam4e"/>
-			<require idref="common.services.ioport"/>
-			<generator value="doxygen-module" default-mcu="unspecified-sam3s"/>
-			<require idref="sam.services.resistive_touch.controller"/>
-		</module>
-	</select-by-device>
-
+	<module type="component" id="sam.services.resistive_touch#1" caption="Display - Generic Resistive Touch Service">
+		<info type="description" value="summary">
+			This service offers resistive touch support for all supported touch components. In addition it offers calibration and a callback function for the application.
+		</info>
+		<build type="header-file" subtype="api" value="rtouch_ads7843.h"/>
+		<build type="header-file" subtype="api" value="rtouch.h"/>
+		<build type="c-source" value="rtouch.c"/>
+		<build type="include-path" value="."/>
+		<build type="doxygen-entry-point" value="sam_services_rtouch_group"/>
+		<device-support value="sam3"/>
+		<device-support value="sam4s"/>
+		<device-support value="sam4e"/>
+		<require idref="common.services.ioport"/>
+		<generator value="doxygen-module" default-mcu="unspecified-sam3s"/>
+		<require idref="sam.services.resistive_touch.controller"/>
+	</module>
 	<select-by-config id="sam.services.resistive_touch.controller" default="ads7843" name="config.resistive_touch.controller" caption="Display - Resistive Touch Driver">
 		<info type="description" value="summary">
 			Touch driver for LCD displays.

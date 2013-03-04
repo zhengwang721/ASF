@@ -42,12 +42,7 @@
  */
 
 #include "board.h"
-#if SAM4E
 #include "ioport.h"
-#else
-#include "gpio.h"
-#include "pio.h"
-#endif
 #include "rtouch.h"
 
 /** @cond 0*/
