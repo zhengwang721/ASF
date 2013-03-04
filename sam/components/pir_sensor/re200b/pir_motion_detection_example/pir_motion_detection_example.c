@@ -100,22 +100,6 @@ void ACC_Handler(void)
 /********************************************************************/
 
 /**
- * \brief Configure microcontroller to enter in Sleep mode.
- * Enter condition: WFI + (SLEEPDEEP bit = 0) + (LPM bit = 0)
- */
-static void _enter_sleep_mode( void )
-{
-	/* enable sleep mode*/
-	PMC->PMC_FSMR &= (uint32_t) ~PMC_FSMR_LPM;
-
-	/* clear DEEPSLEEP bit*/
-	SCB->SCR &= (uint32_t) ~SCB_SCR_SLEEPDEEP_Msk;
-
-	/* Call WFI instruction to enter in sleep mode*/
-	__WFI();
-}
-
-/**
  * \brief Intialize LCD display
  */
 static void _display_init(void)
@@ -140,8 +124,7 @@ static void _display_init(void)
 			| SMC_CYCLE_NRD_CYCLE(22));
 
 	smc_set_mode(SMC, ILI9325_LCD_CS, SMC_MODE_READ_MODE
-			| SMC_MODE_WRITE_MODE
-			| SMC_MODE_DBW_8_BIT);
+			| SMC_MODE_WRITE_MODE);
 
 	/* Initialize display parameter */
 	ili9325_display_opt.ul_width = ILI9325_LCD_WIDTH;
@@ -197,7 +180,7 @@ int main(void)
 		acc_get_interrupt_status(ACC);
 
 		/* Enter sleep mode */
-		_enter_sleep_mode();
+		pmc_enable_sleepmode(0);
 
 		/* Check if a motion was detected */
 		ul_motion_detected = re200b_motion_detection();
@@ -205,9 +188,10 @@ int main(void)
 			/* Disable motion detection */
 			re200b_motion_detect_disable();
 
-			/*Display information about motion detection on LCD*/
+			/* Display information about motion detection on LCD */
 			if ((i * 20) < BOARD_LCD_HEIGHT) {
-				sprintf(uc_string_display, "Motion Detected:%d",
+				sprintf((char*)uc_string_display,
+						"Motion Detected:%lu",
 						i);
 				ili9325_draw_string(0, i * 20,
 						uc_string_display);
@@ -215,7 +199,8 @@ int main(void)
 			} else {
 				i = 0;
 				ili9325_fill(COLOR_TURQUOISE);
-				sprintf(uc_string_display, "Motion Detected:%d",
+				sprintf((char*)uc_string_display,
+						"Motion Detected:%lu",
 						i);
 				ili9325_draw_string(0, i * 20,
 						uc_string_display);

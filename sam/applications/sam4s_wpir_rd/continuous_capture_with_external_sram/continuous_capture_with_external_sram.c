@@ -125,16 +125,22 @@ static volatile uint32_t g_ul_vsync_flag = false;
 /**
  * \brief Handler for vertical synchronisation used by the OV7740 image sensor.
  */
-static void vsync_handler(uint32_t id, uint32_t mask)
+static void vsync_handler(uint32_t ul_id, uint32_t ul_mask)
 {
+	unused( ul_id ) ;
+	unused( ul_mask ) ;
+
 	g_ul_vsync_flag = true;
 }
 
 /**
  * \brief Handler for button rising edge interrupt.
  */
-static void button_handler(uint32_t id, uint32_t mask)
+static void button_handler(uint32_t ul_id, uint32_t ul_mask)
 {
+	unused( ul_id ) ;
+	unused( ul_mask ) ;
+
 	/* Change the next color mode */
 	if (ul_current_mode == COLOR_MODE) {
 		/* next mode = black and white mode */
@@ -195,7 +201,7 @@ static void pio_capture_init(Pio *p_pio, uint32_t ul_id, uint32_t ul_mode)
 	pmc_enable_periph_clk(ul_id);
 
 	/* Disable PIO capture */
-	p_pio->PIO_PCMR &= ~((uint32_t)PIO_PCMR_PCEN);
+	pio_capture_disable( p_pio ) ;
 
 	/* Disable rxbuff interrupt */
 	p_pio->PIO_PCIDR |= PIO_PCIDR_RXBUFF;
@@ -205,8 +211,7 @@ static void pio_capture_init(Pio *p_pio, uint32_t ul_id, uint32_t ul_mode)
 	p_pio->PIO_PCMR |= PIO_PCMR_DSIZE(2);
 
 	/* Only HSYNC and VSYNC enabled */
-	p_pio->PIO_PCMR &= ~((uint32_t)PIO_PCMR_ALWYS);
-	p_pio->PIO_PCMR &= ~((uint32_t)PIO_PCMR_HALFS);
+	p_pio->PIO_PCMR &= ~((uint32_t)PIO_PCMR_ALWYS|PIO_PCMR_HALFS);
 
 	/* Set configuration according to the desired color mode */
 	if (ul_mode == BLACK_AND_WHITE_MODE) {
@@ -481,7 +486,7 @@ static void draw_frame_yuv_color_int( void )
 	LCD_WD((ILI9325_ENTRY_MODE_BGR | ILI9325_ENTRY_MODE_AM |
 			ILI9325_ENTRY_MODE_DFM | ILI9325_ENTRY_MODE_TRI |
 			ILI9325_ENTRY_MODE_ORG) & 0xFF);
-	ili9325_draw_prepare(0, 0, IMAGE_HEIGHT, IMAGE_WIDTH);
+	ili9325_set_window(0, 0, IMAGE_HEIGHT, IMAGE_WIDTH);
 
 	/* OV7740 Color format is YUV422. In this format pixel has 4 bytes
 	 * length(Y1,U,Y2,V).
@@ -521,7 +526,7 @@ static void draw_frame_yuv_color_int( void )
 }
 
 /**
- * \brief Draw LCD in black and white with integral algorithm.
+ * \brief Draw LCD in black and white .
  */
 static void draw_frame_yuv_bw8( void )
 {
@@ -539,7 +544,7 @@ static void draw_frame_yuv_bw8( void )
 	LCD_WD((ILI9325_ENTRY_MODE_BGR | ILI9325_ENTRY_MODE_AM |
 			ILI9325_ENTRY_MODE_DFM | ILI9325_ENTRY_MODE_TRI |
 			ILI9325_ENTRY_MODE_ORG) & 0xFF);
-	ili9325_draw_prepare(0, 0, IMAGE_HEIGHT, IMAGE_WIDTH);
+	ili9325_set_window(0, 0, IMAGE_HEIGHT, IMAGE_WIDTH);
 
 	/* LCD pixel has 24bit data. In black and White mode data has 8bits only
 	 * so
@@ -582,7 +587,7 @@ int main(void)
 
 	/* OV7740 send image sensor data at 24 Mhz. For best performances, PCK0
 	 * which will capture OV7740 data, has to work at 24Mhz. It's easier and
-	 * optimum to use one PLL for core (PLLB) and one other for PCK0 (PLLA).
+	 * optimum to use one PLL for core (PLLB) and the other for PCK0 (PLLA).
 	 */
 	pmc_enable_pllack(7, 0x1, 1);
 

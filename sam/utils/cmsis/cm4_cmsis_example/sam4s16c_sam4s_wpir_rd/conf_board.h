@@ -46,7 +46,9 @@
 
 #include "system_sam4s.h"
 
-#define LED0_PIO		PIOC
-#define LED0_MASK		(uint32_t)(0x01 << 12)
+#define LED0  LED0_GPIO
+
+//#define LED0_PIO		PIOC
+//#define LED0_MASK		(uint32_t)(0x01 << 12)
 
 #endif /* CONF_BOARD_H_INCLUDED */

@@ -95,13 +95,13 @@ uint16_t g_us_cap_rows = IMAGE_HEIGHT;
 #ifdef DEFAULT_MODE_COLORED
 	#define _display() draw_frame_yuv_color_int()
 
-/* (IMAGE_WIDTH *2 ) because ov7740 use YUV422 format in color mode */
-/* (draw_frame_yuv_color_int for more details) */
-uint16_t g_us_cap_line = (IMAGE_WIDTH * 2);
+	/* (IMAGE_WIDTH *2 ) because ov7740 use YUV422 format in color mode */
+	/* (draw_frame_yuv_color_int for more details) */
+	uint16_t g_us_cap_line = (IMAGE_WIDTH * 2);
 #else
 	#define _display() draw_frame_yuv_bw8()
 
-uint16_t g_us_cap_line = (IMAGE_WIDTH);
+	uint16_t g_us_cap_line = (IMAGE_WIDTH);
 #endif
 
 /* Push button information (true if it's triggered and false otherwise) */
@@ -116,6 +116,9 @@ static volatile uint32_t g_ul_vsync_flag = false;
  */
 static void vsync_handler(uint32_t ul_id, uint32_t ul_mask)
 {
+	unused(ul_id);
+	unused(ul_mask);
+
 	g_ul_vsync_flag = true;
 }
 
@@ -124,6 +127,9 @@ static void vsync_handler(uint32_t ul_id, uint32_t ul_mask)
  */
 static void button_handler(uint32_t ul_id, uint32_t ul_mask)
 {
+	unused(ul_id);
+	unused(ul_mask);
+
 	g_ul_push_button_trigger = true;
 }
 
@@ -246,8 +252,7 @@ static void display_init(void)
 			| SMC_CYCLE_NRD_CYCLE(22));
 
 	smc_set_mode(SMC, ILI9325_LCD_CS, SMC_MODE_READ_MODE
-			| SMC_MODE_WRITE_MODE
-			| SMC_MODE_DBW_8_BIT);
+			| SMC_MODE_WRITE_MODE);
 
 	/* Initialize display parameter */
 	ili9325_display_opt.ul_width = ILI9325_LCD_WIDTH;
@@ -382,8 +387,7 @@ static void board_configure_sram( void )
 			| SMC_CYCLE_NRD_CYCLE(7));
 
 	smc_set_mode(SMC, SRAM_CS, SMC_MODE_READ_MODE
-			| SMC_MODE_WRITE_MODE
-			| SMC_MODE_DBW_8_BIT);
+			| SMC_MODE_WRITE_MODE);
 }
 
 #ifdef DEFAULT_MODE_COLORED
