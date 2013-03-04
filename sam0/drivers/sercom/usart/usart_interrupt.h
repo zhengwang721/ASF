@@ -45,8 +45,6 @@
 
 #include "usart.h"
 
-uint8_t _sercom_get_module_irq_index(struct usart_module *const module);
-
 #ifndef __DOXYGEN__
 void _usart_write_buffer(struct usart_module *const module,
 		uint8_t *tx_data, uint16_t length);

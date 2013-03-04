@@ -172,9 +172,14 @@
 			Core functions for the unit test framework.
 			</info>
 			<device-support value="sam0"/>
-			<require idref="common.utils.unit_test.generic"/>
-			<require idref="sam0.utils"/>
 			<build type="doxygen-entry-point" value="test_suite_group"/>
+			<build type="include-path" value="."/>
+			<build type="header-file" subtype="api" value="unit_test/suite.h"/>
+			<build type="c-source" value="unit_test/suite.c"/>
+			<build type="define" name="_ASSERT_ENABLE_" value=""/>
+			<build type="define" name="TEST_SUITE_DEFINE_ASSERT_MACRO" value=""/>
+			<require idref="sam0.utils"/>
+			<require idref="sam0.utils.stdio"/>
 		</module>
 	</select-by-device>
 	<module type="meta" id="common.utils.unit_test.generic" caption="Generic components of unit test framework">
