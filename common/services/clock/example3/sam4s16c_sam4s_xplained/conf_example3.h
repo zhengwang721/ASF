@@ -44,14 +44,7 @@
 #ifndef CONF_EXAMPLE3_H_INCLUDED
 #define CONF_EXAMPLE3_H_INCLUDED
 
-#ifdef BOARD_REV_A
-#  define GCLK_PIN      (PLEASE_FIX_ME)
-#  define GCLK_PIN_MUX  (PLEASE_FIX_ME)
-#endif
-
-#ifdef BOARD_REV_B
-#  define GCLK_PIN      (PIO_PA6_IDX)
-#  define GCLK_PIN_MUX  (IOPORT_MODE_MUX_B)
-#endif
+#define GCLK_PIN      (PIO_PA6_IDX)
+#define GCLK_PIN_MUX  (IOPORT_MODE_MUX_B)
 
 #endif /* CONF_EXAMPLE3_H_INCLUDED */

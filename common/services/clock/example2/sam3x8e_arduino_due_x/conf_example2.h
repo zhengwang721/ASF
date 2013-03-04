@@ -46,7 +46,7 @@
 
 /*! Generated output clock "A14" pin definition. */
 #define GCLK_PIN        (PIO_PA1_IDX)
-#define GCLK_PIN_FLAGS  (IOPORT_MODE_MUX_B)
+#define GCLK_PIN_MUX    (IOPORT_MODE_MUX_B)
 
 #define GCLK_SOURCE     GENCLK_PCK_SRC_MAINCK_XTAL
 #define GCLK_DIV        GENCLK_PCK_PRES_1
