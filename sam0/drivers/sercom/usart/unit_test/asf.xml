@@ -5,10 +5,9 @@
 		</info>
 		<build type="c-source" value="unit_test.c"/>
 		<build type="include-path" value="."/>
-		<build type="define" name="API_CONVENTION" value="true"/>
 		<require idref="sam0.drivers.sercom.usart"/>
 		<require idref="common.utils.unit_test"/>
-		<require idref="common.utils.stdio.stdio_serial"/>
+		<require idref="sam0.utils.stdio.stdio_serial"/>
 		<device-support value="samd20"/>
 	</module>
 </asf>
