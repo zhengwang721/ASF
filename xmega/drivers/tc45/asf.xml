@@ -7,7 +7,6 @@
 		<info type="keyword" value="technology">
 			<keyword value="Timers" />
 		</info>
-		<info type="gui-flag" value="hidden"/>
 		<build type="c-source" value="tc45.c"/>
 		<build type="header-file" subtype="api" value="tc45.h"/>
 		<build type="include-path" value="."/>

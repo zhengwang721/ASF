@@ -1,6 +1,6 @@
 <asf xmlversion="1.0">
 	<project caption="Set of unit tests for GLOC - Glue Logic Controller on SAM4L User Board" id="sam.drivers.gloc.unit_tests.sam4l_user_board_gloc" type="unit-test">
-		<build type="define" name="__ATSAM4LC4C__" value=""/>
+		<build type="define" name="__SAM4LC4C__" value=""/>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clock.h"/>

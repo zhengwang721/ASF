@@ -3,7 +3,7 @@
  *
  * \brief Standalone lwIP example for SAM.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -52,7 +52,7 @@
  *
  *  \section Requirements
  *
- *  This package can be used with SAM3X-EK. 
+ *  This package can be used with SAM3X-EK and SAM4E-EK.
  *
  *  \section Description
  *
@@ -94,10 +94,21 @@
 
 #include "ethernet_sam.h"
 #include "sysclk.h"
-#include "gpio.h"
+#include "ioport.h"
 #include "stdio_serial.h"
 
-
+/**
+ * \brief Set peripheral mode for IOPORT pins.
+ * It will configure port mode and disable pin mode (but enable peripheral).
+ * \param port IOPORT port to configure
+ * \param masks IOPORT pin masks to configure
+ * \param mode Mode masks to configure for the specified pin (\ref ioport_modes)
+ */
+#define ioport_set_port_peripheral_mode(port, masks, mode) \
+	do {\
+		ioport_set_port_mode(port, masks, mode);\
+		ioport_disable_port(port, masks);\
+	} while (0)
 /**
  *  \brief Configure board PIOs.
  */
@@ -107,7 +118,8 @@ static void init_board(void)
 	WDT->WDT_MR = WDT_MR_WDDIS;
 
 	/* Configure UART pins */
-	gpio_configure_group(PINS_UART_PIO, PINS_UART, PINS_UART_FLAGS);
+	ioport_set_port_peripheral_mode(PINS_UART0_PORT, PINS_UART0,
+			PINS_UART0_MASK);
 }
 
 /**
@@ -151,7 +163,4 @@ int main(void)
 		 * ready. That function also manages the lwIP timers */
 		ethernet_task();
 	}
-
-	/* Never reached */
-	return 0;
 }

@@ -1,0 +1,35 @@
+<asf xmlversion="1.0">
+	<select-by-config id="thirdparty.wireless.avr2102_rf4control" name="config.thirdparty.wireless.avr2102_rf4control" caption="AVR2102 - RF4CE Configuration" default="source">
+        <module type="component" id="thirdparty.wireless.avr2102_rf4control#source" caption="RF4CE-Configuration - Source">
+            <info type="description" value="summary">
+           This module will be selected when a single processor approach is implemented and when NCP is used in two processor approach
+            </info>
+            <require idref="thirdparty.wireless.avr2025_mac.source.mac"/>
+			<require idref="thirdparty.wireless.avr2025_mac.source.pal"/>
+		    <require idref="thirdparty.wireless.avr2025_mac.source.sal"/>
+		    <require idref="thirdparty.wireless.avr2025_mac.source.stb"/>
+            <require idref="thirdparty.wireless.avr2102_rf4control.include"/>
+			<build type="doxygen-entry-point" value="avr2102_rf4control_group"/>
+            <build type="distribute" subtype="license" value="../EULA.txt"/>
+            <info type="keyword" value="technology">
+                <keyword value="Wireless"/>
+                <keyword value="Communication"/>
+            </info>
+            <device-support-alias value="avr2102_rf4control_nwk_support"/>
+        </module>
+        <module type="component" id="thirdparty.wireless.avr2102_rf4control#api_parser" caption="RF4CE-Configuration - API Parser">
+            <info type="description" value="summary">
+           This module will be selected for two processor approach in Host device
+            </info>
+            <require idref="thirdparty.wireless.avr2102_rf4control.include"/>
+            <require idref="thirdparty.wireless.avr2102_rf4control.addons.api_parser"/>
+			<build type="doxygen-entry-point" value="avr2102_rf4control_group"/>
+            <build type="distribute" subtype="license" value="../EULA.txt"/>
+            <info type="keyword" value="technology">
+                <keyword value="Wireless"/>
+                <keyword value="Communication"/>
+            </info>
+            <device-support-alias value="avr2102_rf4control_api_parser_support"/>
+        </module>
+	</select-by-config>
+</asf>
