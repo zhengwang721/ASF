@@ -204,6 +204,9 @@ void i2c_slave_reset(struct i2c_slave_module *const module)
 
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
 
+	/* Disable module */
+	i2c_slave_disable(module);
+
 	/* Clear all pending interrupts. */
 	system_interrupt_enter_critical_section();
 	system_interrupt_clear_pending(_sercom_get_interrupt_vector(module->hw));
@@ -414,7 +417,6 @@ enum status_code i2c_slave_write_packet_job(
  */
 void _i2c_slave_interrupt_handler(uint8_t instance)
 {
-	system_interrupt_enter_critical_section();
 	/* Get device instance for callback handling. */
 	struct i2c_slave_module *module =
 			(struct i2c_slave_module*)_sercom_instances[instance];
@@ -428,6 +430,16 @@ void _i2c_slave_interrupt_handler(uint8_t instance)
 
 	if (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_AIF) {
 	/* Address match */
+		/* Check if we were in the middle of a transfer */
+		if (module->buffer_length != module->buffer_remaining) {
+			module->status = STATUS_ERR_OVERFLOW;
+			if ((callback_mask & (1 << I2C_SLAVE_CALLBACK_ERROR_LAST_TRANSFER))) {
+				module->callbacks[I2C_SLAVE_CALLBACK_ERROR_LAST_TRANSFER](module);
+			}
+			module->buffer_length = 0;
+			module->buffer_remaining = 0;
+		}
+
 		if (i2c_hw->STATUS.reg & (SERCOM_I2CS_STATUS_BUSERR ||
 				SERCOM_I2CS_STATUS_COLL || SERCOM_I2CS_STATUS_LOWTOUT)) {
 			/* An error occurred in last packet transfer */
@@ -479,7 +491,6 @@ void _i2c_slave_interrupt_handler(uint8_t instance)
 		i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_CMD(0x3);
 		/* ACK next incoming packet */
 		i2c_hw->CTRLB.reg &= ~SERCOM_I2CS_CTRLB_ACKACT;
-
 	} else if (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_PIF) {
 		/* Stop condition on bus - current transfer done */
 		module->status = STATUS_OK;
@@ -503,7 +514,7 @@ void _i2c_slave_interrupt_handler(uint8_t instance)
 	} else if (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_DIF) {
 		/* Check if buffer is full, or NACK from master. */
 		if (module->buffer_remaining <= 0 ||
-				((module->buffer_length > module->buffer_remaining)
+				(module->transfer_direction == 1 && (module->buffer_length > module->buffer_remaining)
 				&& (i2c_hw->STATUS.reg & SERCOM_I2CS_STATUS_RXNACK))) {
 
 			module->buffer_remaining = 0;
@@ -521,7 +532,6 @@ void _i2c_slave_interrupt_handler(uint8_t instance)
 					/* Read complete */
 					module->callbacks[I2C_SLAVE_CALLBACK_ERROR](module);
 				}
-
 			} else {
 				/* Release SCL and wait for new start condition */
 				i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_ACKACT;
@@ -546,5 +556,4 @@ void _i2c_slave_interrupt_handler(uint8_t instance)
 			}
 		}
 	}
-	system_interrupt_leave_critical_section();
 }
