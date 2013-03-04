@@ -73,6 +73,8 @@
 			This lwIP port uses FreeRTOS and is dedicated to the SAM hardware module.
 			</info>
 			<info type="gui-flag" value="hidden"/>
+			<build type="module-config" subtype="required-header-file" value="conf_lwip_threads.h"/>
+			<build type="module-config" subtype="path" value="sam/module_config"/>
 			<build type="header-file" subtype="api" value="sam/include/arch/cc.h"/>
 			<build type="header-file" subtype="api" value="sam/include/arch/perf.h"/>
 			<build type="header-file" subtype="api" value="sam/include/netif/ethernetif.h"/>
@@ -93,6 +95,8 @@
 			This lwIP port uses FreeRTOS and is dedicated to the SAM hardware module.
 			</info>
 			<info type="gui-flag" value="hidden"/>
+			<build type="module-config" subtype="required-header-file" value="conf_lwip_threads.h"/>
+			<build type="module-config" subtype="path" value="sam/module_config"/>
 			<build type="header-file" subtype="api" value="sam/include/arch/cc.h"/>
 			<build type="header-file" subtype="api" value="sam/include/arch/perf.h"/>
 			<build type="header-file" subtype="api" value="sam/include/netif/ethernetif.h"/>

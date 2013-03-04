@@ -3,7 +3,7 @@
  *
  * \brief API driver for component AT24CXX.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -51,6 +51,8 @@
  */
 
 #include "at24cxx.h"
+#include "ioport.h"
+#include "delay.h"
 
 /// @cond 0
 /**INDENT-OFF**/
@@ -59,6 +61,38 @@ extern "C" {
 #endif
 /**INDENT-ON**/
 /// @endcond
+
+/**
+ * \brief Reset AT24CXX.
+ *
+ * Send 9 clock cycles to reset memory state.
+ *
+ * \note IO mode is used in this function, so it can be used even if TWI is not
+ *       enabled.
+ */
+void at24cxx_reset(void)
+{
+	int i;
+	/* MEM reset
+	 * a) Clock up to 9 cycles (use 100K)
+	 * b) look for SDA high in each cycle while SCL is high and then
+	 * c) Create a start condition as SDA is high
+	 */
+	/* - Enable pin output mode */
+	ioport_set_pin_dir(BOARD_CLK_TWI_EEPROM, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(BOARD_CLK_TWI_EEPROM, 1);
+	ioport_enable_pin(BOARD_CLK_TWI_EEPROM);
+	for (i = 0; i < 10; i ++) {
+		delay_us(5);
+		ioport_set_pin_level(BOARD_CLK_TWI_EEPROM, 0);
+		delay_us(5);
+		ioport_set_pin_level(BOARD_CLK_TWI_EEPROM, 1);
+	}
+	/* - Restore pin peripheral mode */
+	ioport_set_pin_mode(BOARD_CLK_TWI_EEPROM, BOARD_CLK_TWI_MUX_EEPROM);
+	ioport_disable_pin(BOARD_CLK_TWI_EEPROM);
+	/* - Start condition will do on R/W start */
+}
 
 /**
  * \brief Write single byte to AT24CXX.
@@ -83,7 +117,7 @@ uint32_t at24cxx_write_byte(uint16_t us_address, uint8_t uc_value)
 	if (twi_master_write(BOARD_AT24C_TWI_INSTANCE, &twi_package) != TWI_SUCCESS) {
 		return AT24C_WRITE_FAIL;
 	}
-	
+
 	return AT24C_WRITE_SUCCESS;
 }
 
@@ -112,7 +146,7 @@ uint32_t at24cxx_write_continuous(uint16_t us_start_address,
 	if (twi_master_write(BOARD_AT24C_TWI_INSTANCE, &twi_package) != TWI_SUCCESS) {
 		return AT24C_WRITE_FAIL;
 	}
-	
+
 	return AT24C_WRITE_SUCCESS;
 }
 
@@ -135,11 +169,11 @@ uint32_t at24cxx_read_byte(uint16_t us_address, uint8_t *p_rd_byte)
 	twi_package.addr_length = AT24C_MEM_ADDR_LEN;
 	twi_package.buffer = p_rd_byte;
 	twi_package.length = 1;
-	
+
 	if (twi_master_read(BOARD_AT24C_TWI_INSTANCE, &twi_package) != TWI_SUCCESS) {
 		return AT24C_READ_FAIL;
 	}
-	
+
 	return AT24C_READ_SUCCESS;
 }
 
@@ -164,11 +198,11 @@ uint32_t at24cxx_read_continuous(uint16_t us_start_address, uint16_t us_length,
 	twi_package.addr_length = AT24C_MEM_ADDR_LEN;
 	twi_package.buffer = p_rd_buffer;
 	twi_package.length = us_length;
-	
+
 	if (twi_master_read(BOARD_AT24C_TWI_INSTANCE, &twi_package) != TWI_SUCCESS) {
 		return AT24C_READ_FAIL;
 	}
-	
+
 	return AT24C_READ_SUCCESS;
 }
 
