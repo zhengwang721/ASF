@@ -72,16 +72,21 @@ extern "C" {
 /**
  * \brief Callback types.
  *
- * The available callback types for the I2C master module.
+ * The available callback types for the I2C slave.
  */
 enum i2c_slave_callback {
 	/** Callback for packet write complete. */
 	I2C_SLAVE_CALLBACK_WRITE_COMPLETE,
 	/** Callback for packet read complete. */
 	I2C_SLAVE_CALLBACK_READ_COMPLETE,
-	/** Callback for read request from master can be usde to call write_buff */
+	/** 
+	 *Callback for read request from master - can be used to
+	 * issue a write 
+	 */
 	I2C_SLAVE_CALLBACK_READ_REQUEST,
-	/** Callback for write request from master - can be used to call read_buff */
+	/**
+	 * Callback for write request from master - can be used to issue a read
+	 */
 	I2C_SLAVE_CALLBACK_WRITE_REQUEST,
 	/** Callback for error. */
 	I2C_SLAVE_CALLBACK_ERROR,
@@ -95,9 +100,10 @@ enum i2c_slave_callback {
 };
 #if !defined(__DOXYGEN__)
 
-/* Device instance prototype */
+/** Device instance prototype */
 struct i2c_slave_module;
 
+/** Callback type */
 typedef void (*i2c_slave_callback_t)(
 		const struct i2c_slave_module *const module);
 #endif
@@ -134,8 +140,10 @@ enum i2c_slave_sda_hold_time {
 	I2C_SLAVE_ADDRESS_MODE_MASK = SERCOM_I2CS_CTRLB_AMODE(0),
 	/** Address math on both address and address_mask */
 	I2C_SLAVE_ADDRESS_MODE_TWO_ADDRESSES = SERCOM_I2CS_CTRLB_AMODE(1),
-	/** Address match on range of addresses between and including address and
-	* address_mask */
+	/** 
+	 * Address match on range of addresses between and including address and
+	 * address_mask 
+	 */
 	I2C_SLAVE_ADDRESS_MODE_RANGE = SERCOM_I2CS_CTRLB_AMODE(2),
  };
 
@@ -152,34 +160,36 @@ struct i2c_slave_module {
 	Sercom *hw;
 	/** Nack on address match */
 	bool nack_on_address;
-	/** Pointers to callback functions. */
+	/** Pointers to callback functions */
 	volatile i2c_slave_callback_t callbacks[_I2C_SLAVE_CALLBACK_N];
-	/** Mask for registered callbacks. */
+	/** Mask for registered callbacks */
 	volatile uint8_t registered_callback;
-	/** Mask for enabled callbacks. */
+	/** Mask for enabled callbacks */
 	volatile uint8_t enabled_callback;
-	/** The total number of bytes to transfer. */
+	/** The total number of bytes to transfer */
 	volatile uint16_t buffer_length;
-	/** Counter used for bytes left to send in write and to count number of
-	 * obtained bytes in read. */
+	/** 
+	 *Counter used for bytes left to send in write and to count number of
+	 * obtained bytes in read
+	 */
 	volatile uint16_t buffer_remaining;
-	/** Data buffer for packet write and read. */
+	/** Data buffer for packet write and read */
 	volatile uint8_t *buffer;
-	/** Save direction of request from master. 1 = read, 0 = write. */
+	/** Save direction of request from master. 1 = read, 0 = write */
 	volatile uint8_t transfer_direction;
-	/** Status for status read back in error callback. */
+	/** Status for status read back in error callback */
 	volatile enum status_code status;
 };
 
 /**
- * \brief Configuration structure for the I2C device.
+ * \brief Configuration structure for the I2C slave device.
  *
  * This is the configuration structure for the I2C Slave device. It is used
  * as an argument for \ref i2c_slave_init to provide the desired
  * configurations for the module. The structure should be initiated using the
  * \ref i2c_slave_get_config_defaults .
  */
-struct i2c_slave_conf {
+struct i2c_slave_config {
 	/** Set to enable the SCL low timeout */
 	bool enable_scl_low_timeout;
 	/** SDA hold time with respect to the negative edge of SCL */
@@ -277,7 +287,7 @@ static inline bool i2c_slave_is_syncing (const struct i2c_slave_module *const mo
  * \param[out] config Pointer to configuration structure to be initiated.
  */
 static inline void i2c_slave_get_config_defaults(
-		struct i2c_slave_conf *const config)
+		struct i2c_slave_config *const config)
 {
 	/*Sanity check argument. */
 	Assert(config);
@@ -296,7 +306,7 @@ static inline void i2c_slave_get_config_defaults(
 
 enum status_code i2c_slave_init(struct i2c_slave_module *const module,
 		Sercom *const hw,
-		const struct i2c_slave_conf *const config);
+		const struct i2c_slave_config *const config);
 
 /**
  * \brief Enable the I2C module.

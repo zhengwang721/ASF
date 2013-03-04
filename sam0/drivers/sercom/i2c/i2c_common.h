@@ -99,8 +99,8 @@ extern "C" {
  * connections to avoid bus drivers short-circuiting.
  *
  * A unique address is assigned to all slave devices connected to the bus. A
- * device can contain both master and slave logic, and can emulate multiple slave
- * devices by responding to more than one address.
+ * device can contain both master and slave logic, and can emulate multiple
+ * slave devices by responding to more than one address.
  *
  * \subsection asfdoc_sam0_i2c_bus_topology Bus Topology
  * The I2C bus topology is illustrated in the figure below. The pullup
@@ -218,11 +218,14 @@ extern "C" {
  * \enddot
  *
  * \subsection asfdoc_sam0_i2c_transactions Transactions
- * There are two fundamental transaction methods implemented in the driver:
+ * The I2C standard define three fundamental transaction formats:
+* There are three fundamental transaction formats:
  * \li Master Write
  *   - The master transmits data packets to the slave after addressing it.
  * \li Master Read
  *   - The slave transmits data packets to the master after being addressed.
+ * \li Combined
+ *   - A combined transaction consists of several write and read transactions.
  *
  * A data transfer starts with the master issuing a \b Start condition on the
  * bus, followed by the address of the slave together with a bit to indicate
@@ -234,9 +237,14 @@ extern "C" {
  * read/write bit. Each packet must be acknowledged (ACK) or not
  * acknowledged (NACK) by the receiver.
  *
- * If a slave responds with a NACK, the master must assume that the slave
+ * //TODO: If a slave responds with a NACK, the master must assume that the slave
  * cannot receive any more data and issue a \b Stop condition to end the
  * transaction.
+ *
+ * The master completes a transaction by issuing a \b Stop condition.
+ *
+ * A master can issue multiple \b Start conditions during a transaction; this
+ * is then called a \b Repeated \b Start condition.
  *
  * \subsubsection asfdoc_sam0_i2c_address_packets Address Packets
  * The slave address consists of seven bits. The 8th bit in the transfer
@@ -254,10 +262,10 @@ extern "C" {
  *
  * Example of a read transaction is shown below. Here, the master first issues
  * a \b Start condition and gets ownership of the bus. An address packet with
- * the direction flag set to read is then sent and acknowledged by the slave. Then the
- * slave sends one data packet which is acknowledged by the master. The slave
- * sends another packet, which is not acknowledged by the master, which
- * indicates that the master will terminate the transaction. In the end
+ * the direction flag set to read is then sent and acknowledged by the slave.
+ * Then the slave sends one data packet which is acknowledged by the master.
+ * The slave sends another packet, which is not acknowledged by the master
+ * and indicates that the master will terminate the transaction. In the end,
  * the transaction is terminated by the master issuing a \b Stop condition.
  *
  * <table>
@@ -309,7 +317,8 @@ extern "C" {
  * a \b Start condition and gets ownership of the bus. An address packet with
  * the dir flag set to write is then sent and acknowledged by the slave. Then
  * the master sends two data packets, each acknowledged by the slave. In the
- * end the transaction is terminated by the master issuing a \b Stop condition.
+ * end, the transaction is terminated by the master issuing a \b Stop
+ * condition.
  *
  * <table>
  *   <tr>
@@ -357,22 +366,29 @@ extern "C" {
  * </table>
  *
  * \subsubsection asfdoc_sam0_i2c_packet_timeout Packet Timeout
- * When sending an I2C packet, there is no way of being sure that someone will acknowledge your
- * packet. To avoid stalling the device forever while waiting for an acknowledge, a user
- * selectable timeout is provided in the configuration structure that lets the driver exit a
- * read or write operation after the specified time. The function will then return the
+ * When a master sends an I2C packet, there is no way of being sure that a
+ * slave will acknowledge the packet. To avoid stalling the device forever
+ * while waiting for an acknowledge, a user selectable timeout is provided in
+ * the \ref i2c_master_config which lets the driver exit a read or write
+ * operation after the specified time. The function will then return the
  * STATUS_ERR_TIMEOUT flag.
  *
- * The time before the timeout occurs, can be found by same formula as that provided for \ref timeout
- * "unknown bus state" timeout.
+ * The time before the timeout occurs, can be found by same formula as
+ * provided for \ref timeout "unknown bus state" timeout.
+ *
+ * \subsubsection asfdoc_sam0_i2c_repeated_start Repeated Start
+ * To issue a \b Repeated \b Start, the functions postfixed \c _no_stop must be
+ * used.
+ * These functions will not send a \b Stop condition when the transfer is done,
+ * thus the next transfer will start with a \b Repeated \b Start. To end the
+ * transaction, the functions without the \c _no_stop postfix must be used
+ * for the last read/write.
  *
  * \subsection asfdoc_sam0_i2c_multi_master Multi Master
- *
  * In a multi master environment, arbitration of the bus is important, as only
  * one master can own the bus at any point.
  *
  * \subsubsection arbitration Arbitration
- *
  *
  * \par Clock stretching
  * The serial clock line is always driven by a master device. However, all
@@ -408,8 +424,8 @@ extern "C" {
  * \li \b OWNER If the master initiates a transaction successfully
  * \li \b BUSY If another master is driving the bus
  * \li \b UNKNOWN If the master has recently been enabled or connected to
- * the bus. Is forced to \b IDLE after given \ref inactive_bus "timeout" when the
- * master module is enabled.
+ * the bus. Is forced to \b IDLE after given \ref inactive_bus "timeout" when
+ * the master module is enabled.
  *
  * The bus state diagram can be seen below.
  * \li S: Start condition
@@ -438,7 +454,7 @@ extern "C" {
  * \enddot
  *
  * \subsection asfdoc_sam0_i2c_timeout Bus Timing
- * Inactive bus timeout and sda hold time is configurable in the driver.
+ * Inactive bus timeout and SDA hold time is configurable in the driver.
  *
  * \subsubsection asfdoc_sam0_i2c_inactive_bus Unknown Bus State Timeout
  * When a master is enabled or connected to the bus, the bus state will be
@@ -454,18 +470,18 @@ extern "C" {
  * \warning Must be checked with correct toolchain!
  *
  * \subsubsection sda_hold SDA Hold Timeout
- * When using the I2C in slave mode, it will be important to set a SDA hold time that
- * assures that the master will be able to pick up the bit sent from the slave. The
- * SDA hold time makes sure that this is the case by holding the data line low for a
- * given period after the negative edge on the clock.
+ * When using the I2C in slave mode, it will be important to set a SDA hold
+ * time that assures that the master will be able to pick up the bit sent from
+ * the slave. The SDA hold time makes sure that this is the case by holding the
+ * data line low for a given period after the negative edge on the clock.
  *
  * The SDA hold time is also available for the master driver, but will not be a
  * necessity.
  *
  * \subsection asfdoc_sam0_i2c_sleep_modes Operation in Sleep Modes
  * The I2C module can operate in all sleep modes by setting the run_in_standby
- * option in the \ref i2c_master_conf or \ref i2c_slave_conf struct. The operation in Slave and Master Mode
- * is shown in the table below.
+ * option in the \ref i2c_master_conf or \ref i2c_slave_conf struct.
+ * The operation in Slave and Master Mode is shown in the table below.
  *
  * <table>
  *   <tr>
@@ -495,7 +511,8 @@ extern "C" {
  *
  * To check if another transmission can be initiated, the user can either call
  * another transfer operation, or use the
- * \ref i2c_master_get_job_status/\ref i2c_slave_get_job_status functions depending on mode.
+ * \ref i2c_master_get_job_status/\ref i2c_slave_get_job_status functions
+ * depending on mode.
  *
  * If the user would like to get callback from operations while using the
  * interrupt-driven driver, the callback must be registered and then enabled
@@ -533,7 +550,7 @@ struct i2c_packet {
 	uint8_t address;
 	/** Length of data array. */
 	uint8_t data_length;
-	/** Data array containing all data to be transfered.*/
+	/** Data array containing all data to be transferred.*/
 	uint8_t *data;
 };
 

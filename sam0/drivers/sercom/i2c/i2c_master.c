@@ -148,22 +148,21 @@ static enum status_code _i2c_master_set_config(
  * \brief Initializes the requested I2C Hardware module.
  *
  * Initializes the SERCOM I2C Master device requested and sets the provided
- * device instance struct. This will also reset the hardware module, all
- * current settings will be lost. Run this function before any further use of
+ * device instance struct. Run this function before any further use of
  * the driver.
  *
  * \param[out] module Pointer to device instance struct.
  * \param[in]  hw   Pointer to the hardware instance.
  * \param[in]  config   Pointer to the configuration struct.
  *
- * \return              Status of initialization.
- * \retval STATUS_OK Module initiated correctly.
- * \retval STATUS_ERR_DENIED If module is enabled.
- * \retval STATUS_BUSY If module is busy resetting.
- * \retval STATUS_ERR_ALREADY_INITIALIZED If setting other gclk generator than
- *                                        previously set.
- * \retval STAUS_ERR_BAUDRATE_UNAVAILABLE If given baud rate is not compatible
- *                                        with set gclk frequency.
+ * \return                                Status of initialization
+ * \retval STATUS_OK                      Module initiated correctly
+ * \retval STATUS_ERR_DENIED              If module is enabled
+ * \retval STATUS_BUSY                    If module is busy resetting
+ * \retval STATUS_ERR_ALREADY_INITIALIZED If setting other GCLK generator than
+ *                                        previously set
+ * \retval STAUS_ERR_BAUDRATE_UNAVAILABLE If given baudrate is not compatible
+ *                                        with set GCLK frequency.
  *
  */
 enum status_code i2c_master_init(struct i2c_master_module *const module,

@@ -56,7 +56,7 @@
  */
 static enum status_code _i2c_slave_set_config(
 		struct i2c_slave_module *const module,
-		const struct i2c_slave_conf *const config)
+		const struct i2c_slave_config *const config)
 {
 	/* Sanity check arguments. */
 	Assert(module);
@@ -123,7 +123,7 @@ static enum status_code _i2c_slave_set_config(
  */
 enum status_code i2c_slave_init(struct i2c_slave_module *const module,
 		Sercom *const hw,
-		const struct i2c_slave_conf *const config)
+		const struct i2c_slave_config *const config)
 {
 	/* Sanity check arguments. */
 	Assert(module);

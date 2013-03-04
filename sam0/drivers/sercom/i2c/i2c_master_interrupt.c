@@ -231,7 +231,7 @@ static enum status_code _i2c_master_read_packet(
 }
 
 /**
- * \brief Iniatiates a read packet operation
+ * \brief Initiates a read packet operation
  *
  * Reads a data packet from the specified slave address on the I2C bus. This
  * is the non-blocking equivalent of \ref i2c_master_read_packet.
@@ -264,7 +264,7 @@ enum status_code i2c_master_read_packet_job(
 }
 
 /**
- * \brief Iniatiates a read packet operation without STOP condition at the end.
+ * \brief Initiates a read packet operation without STOP condition at the end.
  *
  * Reads a data packet from the specified slave address on the I2C bus. This
  * is the non-blocking equivalent of \ref i2c_master_read_packet.
@@ -325,7 +325,7 @@ static enum status_code _i2c_master_write_packet(
 }
 
 /**
- * \brief Iniatiates a write packet operation
+ * \brief Initiates a write packet operation
  *
  * Writes a data packet to the specified slave address on the I2C bus. This
  * is the non-blocking equivalent of \ref i2c_master_write_packet.
@@ -359,7 +359,7 @@ enum status_code i2c_master_write_packet_job(
 }
 
 /**
- * \brief Iniatiates a write packet operation without sending a STOP when done
+ * \brief Initiates a write packet operation without sending a STOP when done
  *
  * Writes a data packet to the specified slave address on the I2C bus. This
  * is the non-blocking equivalent of \ref i2c_master_write_packet_no_stop.
