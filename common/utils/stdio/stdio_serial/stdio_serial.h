@@ -86,33 +86,6 @@ extern void (*ptr_get)(void volatile*, char*);
  * \param opt         Options needed to set up RS232 communication (see \ref usart_options_t).
  *
  */
-#if API_CONVENTION == 1
-static inline void stdio_serial_init(struct usart_module *const module,
-		usart_inst_t const hw, const struct usart_config *const config)
-{
-	stdio_base = (void *)module;
-	ptr_put = (int (*)(void volatile*,char))&usart_serial_putchar;
-	ptr_get = (void (*)(void volatile*,char*))&usart_serial_getchar;
-
-	usart_serial_init(module, hw, config);
-# if defined(__GNUC__)
-#  if (XMEGA || MEGA_RF)
-	// For AVR GCC libc print redirection uses fdevopen.
-	fdevopen((int (*)(char, FILE*))(_write),(int (*)(FILE*))(_read));
-#  endif
-#  if UC3 || SAM
-	// For AVR32 and SAM GCC
-	// Specify that stdout and stdin should not be buffered.
-	setbuf(stdout, NULL);
-	setbuf(stdin, NULL);
-	// Note: Already the case in IAR's Normal DLIB default configuration
-	// and AVR GCC library:
-	// - printf() emits one character at a time.
-	// - getchar() requests only 1 byte to exit.
-#  endif
-# endif
-}
-#else
 static inline void stdio_serial_init(volatile void *usart, const usart_serial_options_t *opt)
 {
 	stdio_base = (void *)usart;
@@ -145,7 +118,6 @@ static inline void stdio_serial_init(volatile void *usart, const usart_serial_op
 #  endif
 # endif
 }
-#endif
 
 /**
  * \}

@@ -112,15 +112,11 @@ static inline void usart_serial_getchar(struct usart_module *const module,
  * \param len    Length of data
  *
  */
-#if API_CONVENTION == 1
 static inline enum status_code usart_serial_write_packet(struct usart_module *const module,
 		const uint8_t *tx_data, uint16_t length)
 {
 	return usart_write_buffer_wait(module, tx_data, length);
 }
-#else
-extern status_code_t usart_serial_write_packet(usart_if usart, const uint8_t *data, size_t len);
-#endif
 
 /**
  * \brief Receive a sequence of bytes from USART device
@@ -130,15 +126,11 @@ extern status_code_t usart_serial_write_packet(usart_if usart, const uint8_t *da
  * \param len    Length of data
  *
  */
- 
-#if API_CONVENTION == 1
+
 static inline enum status_code usart_serial_read_packet(struct usart_module *const module,
 		const uint8_t *rx_data, uint16_t length)
 {
 	return usart_read_buffer_wait(module, rx_data, length);
 }
-#else
-extern status_code_t usart_serial_read_packet(usart_if usart, uint8_t *data, size_t len);
-#endif
 
 #endif  // _USART_SERIAL_H_
