@@ -41,18 +41,6 @@
 			<generator value="doxygen-module" default-mcu="unspecified-sam3s"/>
 			<info type="gui-flag" value="hidden"/>
 		</module>
-		<module type="driver" id="common.utils.stdio#sam0" caption="Standard I/O (stdio) Interface - SAM0 implementation">
-			<info type="description" value="summary">
-			Common standard I/O driver that implements the stdio
-			read and write functions on SAM devices.
-			</info>
-			<device-support value="sam0"/>
-			<require idref="common.utils.stdio.common"/>
-			<require idref="sam0.utils"/>
-			<build type="doxygen-entry-point" value="group_common_utils_stdio"/>
-			<generator value="doxygen-module" default-mcu="unspecified-samd20"/>
-			<info type="gui-flag" value="hidden"/>
-		</module>
 		<module type="driver" id="common.utils.stdio#mega" caption="Standard I/O (stdio) Interface - mega implementation">
 			<info type="description" value="summary">
 			Common standard I/O driver that implements the stdio
