@@ -49,7 +49,7 @@
  *
  * \section intro Introduction
  * This is the unit test for the MEGARF USART driver. It communicates with
- * itself using a jumper on the external USART RX/TX pins.
+ * itself by looping back using a jumper on the external USART RX/TX pins.
  *
  * \section files Main Files
  * - \ref unit_tests.c
@@ -109,6 +109,41 @@ static void run_loopback_test(const struct test_case *test)
 }
 
 /**
+ * \brief Test physical loop-back with some characters in sunc mode.
+ *
+ * This function sends a character over USART on loop back to verify that init
+ * and sending/receiving works. A jumper is connected on the USART.
+ *
+ * \param test Current test case.
+ */
+static void run_loopback_syncmode_test(const struct test_case *test)
+{
+	uint8_t out_c = 'c';
+	uint8_t in_c  = 0;
+        port_pin_t sck_pin;
+        
+        sysclk_enable_module(POWER_RED_REG0, PRUSART0_bm);
+        
+        usart_set_mode(&CONF_UNIT_USART, USART_CMODE_SYNCHRONOUS_gc);
+
+	sck_pin = IOPORT_CREATE_PIN(PORTE, 2);
+	ioport_configure_port_pin(ioport_pin_to_port(sck_pin),
+				ioport_pin_to_mask(sck_pin),
+				IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH );
+        
+        usart_spi_set_baudrate(&CONF_UNIT_USART, CONF_UNIT_BAUDRATE,
+			sysclk_get_source_clock_hz());
+	usart_tx_enable(&CONF_UNIT_USART);
+	usart_rx_enable(&CONF_UNIT_USART);
+
+	usart_putchar(&CONF_UNIT_USART, out_c);
+	in_c = usart_getchar(&CONF_UNIT_USART);
+
+	test_assert_true(test, in_c == out_c,
+	   "Read character through sync mode is not correct: %d != %d", in_c, out_c);			
+}
+
+/**
  * \brief Test setting different parameters of the USART module
  *
  * This function calls the different set functions, and verifies that the
@@ -126,6 +161,13 @@ static void run_set_functions_test(const struct test_case *test)
 			USART_CMODE_MSPI_gc;
 	test_assert_true(test, success,
 			"Trying to set USART mode to master SPI failed.");
+        
+        /* Set USART sync mode and verify that it has been correctly set. */
+	usart_set_mode(&CONF_UNIT_USART, USART_CMODE_SYNCHRONOUS_gc);
+	success = (CONF_UNIT_USART.UCSRnC & USART_UMSEL01_gm) ==
+			USART_CMODE_SYNCHRONOUS_gc;
+	test_assert_true(test, success,
+			"Trying to set USART mode to sync mode failed.");
 			
 	/* Test enabling and disabling USART double baud*/
 	usart_double_baud_enable(&CONF_UNIT_USART);
@@ -183,7 +225,7 @@ static void run_set_functions_test(const struct test_case *test)
 
 	/* Try to set format. */
 	usart_format_set(&CONF_UNIT_USART, USART_CHSIZE_8BIT_gc,
-			USART_PMODE_DISABLED_gc, false);
+			USART_PMODE_EVEN_gc, true);
 	success = !(CONF_UNIT_USART.UCSRnA & USART_FE_bm);
 	test_assert_true(test, success,
 			"Trying to set the Frame Format failed.");
@@ -286,6 +328,13 @@ static void run_baudrate_test(const struct test_case *test)
 	
 	/* Get the system cpu frequency */
 	cpu_hz = sysclk_get_cpu_hz();
+        
+        /* Test for baud rate equal to 2400 */
+	baud = 2400;
+	usart_set_baudrate(&CONF_UNIT_USART, baud, cpu_hz);
+	ubrr = calculate_baudrate(baud, cpu_hz);
+	success = CONF_UNIT_USART.UBRR == ubrr;
+	test_assert_true(test, success, "Setting baud rate to 2400 failed");
 	
 	/* Test for baud rate equal to 9600 */
 	baud = 9600;
@@ -330,6 +379,8 @@ int main(void)
 
 	DEFINE_TEST_CASE(loopback_test, NULL, run_loopback_test, NULL,
 			"Test looping back characters through USART");
+	DEFINE_TEST_CASE(sync_loopback_test, NULL, run_loopback_syncmode_test, NULL,
+			"Test looping back characters through sync mode of USART");        
 	DEFINE_TEST_CASE(set_functions_test, NULL, run_set_functions_test, NULL,
 			"Test setting of various properties");
 	DEFINE_TEST_CASE(check_registers_test, NULL, run_check_registers_test,
@@ -340,6 +391,7 @@ int main(void)
 	/* Put test case addresses in an array */
 	DEFINE_TEST_ARRAY(usart_tests) = {
 		&loopback_test,
+		&sync_loopback_test,                
 		&set_functions_test,
 		&check_registers_test,
 		&baudrate_test,

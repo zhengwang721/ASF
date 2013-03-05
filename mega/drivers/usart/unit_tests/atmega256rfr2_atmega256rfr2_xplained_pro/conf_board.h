@@ -45,7 +45,10 @@
 #define CONF_BOARD_H
 
 
+ /* USARTA0 on PORTE is used for testing purposes */
 #define CONF_BOARD_ENABLE_USARTA0
+
+ /* USARTA1 on PORTD is used for sending test results */
 #define CONF_BOARD_ENABLE_USARTA1
 
 #endif

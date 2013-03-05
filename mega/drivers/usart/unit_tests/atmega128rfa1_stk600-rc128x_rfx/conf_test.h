@@ -58,7 +58,9 @@
 //! \note No extra stopbit, i.e., use 1
 #define CONF_TEST_STOPBITS   false
 
-//! \note USART0 on PORTE is used for testing purposes with a jumper
+/*
+ * Connect a jumper between PORTE0 and PORTE1 of USARTA0 for loop-back test
+ */
 #define CONF_UNIT_USART      USARTA0
 //! \note Testing baud rate
 #define CONF_UNIT_BAUDRATE   9600
