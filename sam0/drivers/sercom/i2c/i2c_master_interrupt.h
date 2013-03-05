@@ -170,24 +170,25 @@ static inline void i2c_master_abort_job(
 }
 
 /**
- * \brief Get last error from ongoing job
+ * \brief Get status from ongoing job
  *
- * Will return the last error that occurred in a transfer operation. The
- * status will be cleared on next operation.
+ * Will return the status of a transfer operation.
  *
- * \param  module Pointer to software module structure
+ * \param[in] module Pointer to software module structure
  *
- * \return          Last status code from transfer operation
- * \retval STATUS_OK No error has occurred
- * \retval STATUS_BUSY If transfer is in progress
- * \retval STATUS_BUSY If master module is busy
- * \retval STATUS_ERR_DENIED If error on bus
+ * \return                             Last status code from transfer operation
+ * \retval STATUS_OK                   No error has occurred
+ * \retval STATUS_BUSY                 If transfer is in progress
+ * \retval STATUS_BUSY                 If master module is busy
+ * \retval STATUS_ERR_DENIED           If error on bus
  * \retval STATUS_ERR_PACKET_COLLISION If arbitration is lost
- * \retval STATUS_ERR_BAD_ADDRESS If slave is busy, or no slave acknowledged the
- *                                address
- * \retval STATUS_ERR_TIMEOUT If timeout occurred
- * \retval STATUS_ERR_OVERFLOW If slave did not acknowledge last sent data,
- *                             indicating that slave does not want more data
+ * \retval STATUS_ERR_BAD_ADDRESS      If slave is busy, or no slave
+ *                                     acknowledged the address
+ * \retval STATUS_ERR_TIMEOUT          If timeout occurred
+ * \retval STATUS_ERR_OVERFLOW         If slave did not acknowledge last sent
+ *                                     data, indicating that slave does not
+ *                                     want more data and was not able to read
+ *                                     
  */
 static inline enum status_code i2c_master_get_job_status(
 		struct i2c_master_module *const module)

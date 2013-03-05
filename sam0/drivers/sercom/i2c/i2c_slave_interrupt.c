@@ -294,7 +294,7 @@ static void _i2c_slave_write(struct i2c_slave_module *const module)
  * To enable the callback, the \ref i2c_slave_enable_callback function
  * must be used.
  *
- * \param[in,out] module    Pointer to the software module struct.
+ * \param[in,out] module    Pointer to the software module struct
  * \param[in] callback      Pointer to the function desired for the specified
  *                          callback
  * \param[in] callback_type Callback type to register
@@ -386,11 +386,11 @@ enum status_code i2c_slave_read_packet_job(
  * The I2C_SLAVE_CALLBACK_READ_REQUEST callback can be used to call this
  * function.
  *
- * \param[in,out]     module  Pointer to software module struct.
- * \param[in,out]     packet    Pointer to I2C packet to transfer.
+ * \param[in,out]     module  Pointer to software module struct
+ * \param[in,out]     packet    Pointer to I2C packet to transfer
  *
  * \return             Status of starting writing I2C packet
- * \retval STATUS_OK   If writing was started successfully.
+ * \retval STATUS_OK   If writing was started successfully
  * \retval STATUS_BUSY If module is currently busy with another transfer
  */
 enum status_code i2c_slave_write_packet_job(
@@ -418,7 +418,7 @@ enum status_code i2c_slave_write_packet_job(
 /**
  * \internal Interrupt handler for I2C slave
  *
- * \param[in] instance Sercom instance that triggered interrupt.
+ * \param[in] instance Sercom instance that triggered the interrupt
  */
 void _i2c_slave_interrupt_handler(uint8_t instance)
 {

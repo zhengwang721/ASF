@@ -639,10 +639,9 @@ enum status_code i2c_master_write_packet_wait(
  * sending a stop condition when done.
  * To end the transaction, a read or write with stop condition or sending
  * a stop with the \ref i2c_master_send_stop function must performed.
- * perfomed. 
  *
- * \note This will stall the device from any other operation. For interrupt-driven
- * operation, see \ref i2c_master_read_packet_job.
+ * \note This will stall the device from any other operation. For
+ * interrupt-driven operation, see \ref i2c_master_read_packet_job.
  *
  * \param[in,out] module    Pointer to software module struct
  * \param[in,out] packet    Pointer to I2C packet to transfer
