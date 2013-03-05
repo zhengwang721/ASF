@@ -49,7 +49,7 @@
  * defines, enums, and typedefs for the TWI master mode example.
  *
  * \section files Main Files
- * - twim_example.c: example application.
+ * - twi_master_example.c: example application.
  * - conf_board.h: board configuration
  * - conf_twi.h: TWI master configuration used in this example
  *

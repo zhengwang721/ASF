@@ -6,7 +6,7 @@
 		<info type="keyword" value="technology">
 			<keyword value="TWI_SLAVE"/>
 		</info>	
-		<build type="c-source" value="twis_example.c"/>		
+		<build type="c-source" value="twi_slave_example.c"/>		
 		<build type="module-config" subtype="required-header-file" value="conf_twi.h"/>		
 		<device-support value="megarf"/>
 		<require idref="mega.drivers.twi"/>	
