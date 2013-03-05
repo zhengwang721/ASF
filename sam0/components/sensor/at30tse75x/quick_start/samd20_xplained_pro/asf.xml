@@ -6,7 +6,6 @@
 		<build type="header-file" value="conf_at30tse75x.h"/>
 		<require idref="board.samd20_xplained_pro"/>
 		<require idref="sam0.components.sensor.at30tse75x.quick_start"/>
-		<config name="config.compiler.iarewarm.create_aux" value="yes"/>
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>

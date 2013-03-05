@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<module type="component" id="sam0.components.sensor.at30tse75x" caption="AT30TSE75X Temperature Sensor">
 		<info type="description" value="summary">
-		Low-level driver for the AT30TSE75X Series Temperature Sensor.
+		Driver for the AT30TSE75X Series Temperature Sensor.
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="Sensor" />

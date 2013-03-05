@@ -3,7 +3,7 @@
  *
  * \brief AT30TSE75X driver
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -51,13 +51,9 @@
 // Temperature sensor configuration file
 #include "conf_at30tse75x.h"
 
-/// @cond 0
-/**INDENT-OFF**/
 #ifdef __cplusplus
 extern "C" {
 #endif
-/**INDENT-ON**/
-/// @endcond
 
 #define AT30TSE_TEMPERATURE_TWI_ADDR	        0x4F //0b1001111
 #define AT30TSE758_EEPROM_TWI_ADDR		0x54 //0b1010100
@@ -116,12 +112,8 @@ uint16_t at30tse_read_register(uint8_t reg, uint8_t reg_type, uint8_t reg_size);
 void at30tse_write_register(uint8_t reg, uint8_t reg_type, uint8_t reg_size, uint16_t reg_value);
 void at30tse_set_register_pointer(uint8_t reg, uint8_t reg_type);
 
-/// @cond 0
-/**INDENT-OFF**/
 #ifdef __cplusplus
 }
 #endif
-/**INDENT-ON**/
-/// @endcond
 
 #endif /* AT30TSE75X_H_ */
