@@ -475,7 +475,7 @@ static void display_init(void)
 	aat31xx_set_backlight(AAT31XX_MAX_BACKLIGHT_LEVEL);
 
 	/* Turn on LCD */
-	ili9325display_buffer_on();
+	ili9325_display_on();
 }
 
 /**

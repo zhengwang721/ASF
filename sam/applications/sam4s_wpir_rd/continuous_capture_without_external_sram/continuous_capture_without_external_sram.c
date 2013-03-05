@@ -357,7 +357,7 @@ static void draw_frame_yuv_color_int( uint8_t *p_uc_cap_data_buffer )
 				ILI9325_ENTRY_MODE_DFM |
 				ILI9325_ENTRY_MODE_TRI |
 				ILI9325_ENTRY_MODE_ORG) & 0xFF);
-		ili9325_draw_prepare(0, 0, IMAGE_HEIGHT, IMAGE_WIDTH);
+	ili9325_draw_prepare(0, 0, IMAGE_HEIGHT, IMAGE_WIDTH);
 	}
 
 	/* OV7740 color format is YUV422. In this format pixel has 4 bytes

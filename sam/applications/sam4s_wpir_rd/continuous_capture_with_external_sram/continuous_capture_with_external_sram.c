@@ -486,7 +486,7 @@ static void draw_frame_yuv_color_int( void )
 	LCD_WD((ILI9325_ENTRY_MODE_BGR | ILI9325_ENTRY_MODE_AM |
 			ILI9325_ENTRY_MODE_DFM | ILI9325_ENTRY_MODE_TRI |
 			ILI9325_ENTRY_MODE_ORG) & 0xFF);
-	ili9325_set_window(0, 0, IMAGE_HEIGHT, IMAGE_WIDTH);
+	ili9325_draw_prepare(0, 0, IMAGE_HEIGHT, IMAGE_WIDTH);
 
 	/* OV7740 Color format is YUV422. In this format pixel has 4 bytes
 	 * length(Y1,U,Y2,V).
@@ -544,7 +544,7 @@ static void draw_frame_yuv_bw8( void )
 	LCD_WD((ILI9325_ENTRY_MODE_BGR | ILI9325_ENTRY_MODE_AM |
 			ILI9325_ENTRY_MODE_DFM | ILI9325_ENTRY_MODE_TRI |
 			ILI9325_ENTRY_MODE_ORG) & 0xFF);
-	ili9325_set_window(0, 0, IMAGE_HEIGHT, IMAGE_WIDTH);
+	ili9325_draw_prepare(0, 0, IMAGE_HEIGHT, IMAGE_WIDTH);
 
 	/* LCD pixel has 24bit data. In black and White mode data has 8bits only
 	 * so
