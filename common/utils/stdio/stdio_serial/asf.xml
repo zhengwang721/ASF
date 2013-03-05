@@ -53,21 +53,6 @@
 			<require idref="sam.utils.syscalls"/>
 			<generator value="doxygen-module" default-mcu="unspecified-sam3s"/>
 		</module>
-		<module type="driver" id="common.utils.stdio.stdio_serial#sam0" caption="Standard serial I/O (stdio) - SAM0+ implementation">
-			<info type="description" value="summary">
-			Common standard serial I/O management driver that
-			implements a stdio serial interface on SAM0+ devices.
-			</info>
-			<device-support value="samd20"/>
-			<build type="header-file" subtype="api" value="stdio_serial.h"/>
-			<build type="include-path" value="."/>
-			<build type="doxygen-entry-point" value="group_common_utils_stdio_stdio_serial"/>
-			<require idref="common.services.basic.serial"/>
-			<require idref="common.utils.stdio"/>
-			<require idref="sam0.utils"/>
-			<require idref="sam0.utils.syscalls"/>
-			<generator value="doxygen-module" default-mcu="unspecified-sam3s"/>
-		</module>
 		<module type="driver" id="common.utils.stdio.stdio_serial#megarf" caption="Standard serial I/O (stdio) - MEGARF implementation">
 			<info type="description" value="summary">
 			Common standard serial I/O management driver that

@@ -105,7 +105,6 @@
 			Common API which abstracts the user from directly accessing the register and provides a generic serial interface using USART.
 			</info>
 			<build type="include-path" value="."/>
-			<build type="c-source" value="usart_serial.c"/>
 			<build type="header-file" subtype="api" value="serial.h"/>
 			<build type="header-file" value="sam0_usart/usart_serial.h"/>
 			<build type="doxygen-entry-point" value="serial_group"/>

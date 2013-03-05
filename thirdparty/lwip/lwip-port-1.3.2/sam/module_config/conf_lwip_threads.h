@@ -6,7 +6,7 @@
  *
  * This file contains the possible external configuration of the Ethernet module.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,45 +44,45 @@
  *
  ***************************************************************************/
 
-#ifndef _CONF_LWIP_THREADS_H_
-#define _CONF_LWIP_THREADS_H_
+#ifndef CONF_LWIP_THREADS_H_INCLUDED
+#define CONF_LWIP_THREADS_H_INCLUDED
 
 #include "board.h"
 
-/*! define stack size for WEB server task */
+/** define stack size for WEB server task */
 #define lwipBASIC_WEB_SERVER_STACK_SIZE   256
 
-/*! define stack size for TFTP server task */
+/** define stack size for TFTP server task */
 #define lwipBASIC_TFTP_SERVER_STACK_SIZE  2048
 
-/*! define stack size for SMTP Client task */
+/** define stack size for SMTP Client task */
 #define lwipBASIC_SMTP_CLIENT_STACK_SIZE  256
 
-/*! define stack size for lwIP task */
+/** define stack size for lwIP task */
 #define lwipINTERFACE_STACK_SIZE         2048
 
-/*! define stack size for netif task */
+/** define stack size for netif task */
 #define netifINTERFACE_TASK_STACK_SIZE    2048
 
-/*! define WEB server priority */
+/** define WEB server priority */
 #define lwipBASIC_WEB_SERVER_PRIORITY     (tskIDLE_PRIORITY + 2)
 
-/*! define TFTP server priority */
+/** define TFTP server priority */
 #define lwipBASIC_TFTP_SERVER_PRIORITY    (tskIDLE_PRIORITY + 3)
 
-/*! define SMTP Client priority */
+/** define SMTP Client priority */
 #define lwipBASIC_SMTP_CLIENT_PRIORITY    (tskIDLE_PRIORITY + 5)
 
-/*! define lwIP task priority */
+/** define lwIP task priority */
 #define lwipINTERFACE_TASK_PRIORITY       (configMAX_PRIORITIES - 1)
 
-/*! define netif task priority */
+/** define netif task priority */
 #define netifINTERFACE_TASK_PRIORITY      (configMAX_PRIORITIES - 1)
 
-/*! Number of threads that can be started with sys_thread_new() */
+/** Number of threads that can be started with sys_thread_new() */
 #define SYS_THREAD_MAX                    8
 
-/*! LED used by the ethernet task, toggled on each activation */
+/** LED used by the ethernet task, toggled on each activation */
 #define webCONN_LED                       LED1_GPIO
 
-#endif /* #ifndef _CONF_LWIP_THREADS_H_ */
+#endif /* #ifndef CONF_LWIP_THREADS_H_INCLUDED */
