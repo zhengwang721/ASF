@@ -51,7 +51,7 @@
  *
  * \section Requirements
  *
- * This package can be used with sam4s_wpir_rd board.
+ * This module can be used with sam4s_wpir_rd board.
  *
  * \section Description
  *
@@ -191,7 +191,7 @@ int main(void)
 			/* Display information about motion detection on LCD */
 			if ((i * 20) < BOARD_LCD_HEIGHT) {
 				sprintf((char*)uc_string_display,
-						"Motion Detected:%lu",
+						"Motion Detected:%ul",
 						i);
 				ili9325_draw_string(0, i * 20,
 						uc_string_display);
@@ -200,7 +200,7 @@ int main(void)
 				i = 0;
 				ili9325_fill(COLOR_TURQUOISE);
 				sprintf((char*)uc_string_display,
-						"Motion Detected:%lu",
+						"Motion Detected:%ul",
 						i);
 				ili9325_draw_string(0, i * 20,
 						uc_string_display);
