@@ -3,7 +3,7 @@
  *
  * \brief Analog-to-Digital Converter (ADC/ADC12B) example for SAM.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -57,7 +57,7 @@
  * of the potentiometer. Please refer to the board schematics for ADVREF
  * jumper configuration.
  *
- * We use one push button for ADTGR, so please connect ADTRG to relative button pin 
+ * We use one push button for ADTGR, so please connect ADTRG to relative button pin
  *  \copydoc adc_example_pin_defs
  *
  * \section Description
@@ -127,7 +127,11 @@
  *    ADC_CHANNEL_5  (potentiometer)
  *    ADC_CHANNEL_15 (temperature sensor)
  */
-#define ADC_12B
+
+/** There are two peripherals ADC and ADC12B in SAM3U, you can select one of them. */
+#if SAM3U
+//#define ADC_12B
+#endif
 
 /** Total number of ADC channels in use */
 #if SAM3S || SAM3XA || SAM4S
@@ -398,7 +402,7 @@ static void configure_time_trigger(void)
 	adc_configure_trigger(ADC, ADC_TRIG_TIO_CH_0, 0);
 #elif SAM3U
 #ifdef ADC_12B
-	adc12b_configure_trigger(ADC12B, ADC_TRIG_TIO_CH_0);
+	adc12b_configure_trigger(ADC12B, ADC12B_TRIG_TIO_CH_0);
 #else
 	adc_configure_trigger(ADC, ADC_TRIG_TIO_CH_0);
 #endif
@@ -459,7 +463,7 @@ static void configure_pwm_trigger(void)
 	adc_configure_trigger(ADC, ADC_TRIG_PWM_EVENT_LINE_0, 0);
 #elif SAM3U
 #ifdef ADC_12B
-	adc12b_configure_trigger(ADC12B, ADC_TRIG_PWM_EVENT_LINE_0);
+	adc12b_configure_trigger(ADC12B, ADC12B_TRIG_PWM_EVENT_LINE_0);
 #else
 	adc_configure_trigger(ADC, ADC_TRIG_PWM_EVENT_LINE_0);
 #endif
@@ -658,7 +662,7 @@ static void start_adc(void)
 #if SAM3S || SAM3XA || SAM4S
 		adc_enable_anch(ADC);
 		/* gain = 2 */
-		adc_set_channel_input_gain(ADC, ADC_CHANNEL_POTENTIOMETER, ADC_GAINVALUE_2);	
+		adc_set_channel_input_gain(ADC, ADC_CHANNEL_POTENTIOMETER, ADC_GAINVALUE_2);
 #elif SAM3U
 #ifdef ADC_12B
 		adc12b_set_input_gain(ADC12B, ADC_GAINVALUE_2);
@@ -667,7 +671,7 @@ static void start_adc(void)
 	} else {
 #if SAM3S || SAM3XA || SAM4S
 		/* gain = 1 */
-		adc_set_channel_input_gain(ADC, ADC_CHANNEL_POTENTIOMETER, ADC_GAINVALUE_0);	
+		adc_set_channel_input_gain(ADC, ADC_CHANNEL_POTENTIOMETER, ADC_GAINVALUE_0);
 #elif SAM3U
 #ifdef ADC_12B
 		adc12b_set_input_gain(ADC12B, ADC_GAINVALUE_0);
@@ -774,7 +778,7 @@ static void start_adc(void)
 		adc_configure_trigger(ADC, ADC_TRIG_SW, 0);	/* Disable hardware trigger. */
 #elif SAM3U
 #ifdef ADC_12B
-		adc12b_configure_trigger(ADC12B, ADC_TRIG_SW);
+		adc12b_configure_trigger(ADC12B, ADC12B_TRIG_SW);
 #else
 		adc_configure_trigger(ADC, ADC_TRIG_SW);
 #endif
@@ -788,7 +792,7 @@ static void start_adc(void)
 #elif SAM3U
 #ifdef ADC_12B
 		gpio_configure_pin(PINS_ADC12B_TRIG, PINS_ADC12B_TRIG_FLAG);
-		adc12b_configure_trigger(ADC12B, ADC_TRIG_EXT);
+		adc12b_configure_trigger(ADC12B, ADC12B_TRIG_EXT);
 #else
 		gpio_configure_pin(PINS_ADC_TRIG, PINS_ADC_TRIG_FLAG);
 		adc_configure_trigger(ADC, ADC_TRIG_EXT);
@@ -901,7 +905,7 @@ void ADC_Handler(void)
 
 	/* With PDC transfer */
 	if (g_adc_test_mode.uc_pdc_en) {
-		if ((adc_get_status(ADC).all_status & ADC_SR_RXBUFF) ==
+		if ((adc_get_status(ADC) & ADC_SR_RXBUFF) ==
 				ADC_SR_RXBUFF) {
 			g_adc_sample_data.us_done = ADC_DONE_MASK;
 			adc_read_buffer(ADC, g_adc_sample_data.us_value, BUFFER_SIZE);
@@ -912,7 +916,7 @@ void ADC_Handler(void)
 			}
 		}
 	} else {
-		if ((adc_get_status(ADC).all_status & ADC_SR_DRDY) ==
+		if ((adc_get_status(ADC) & ADC_SR_DRDY) ==
 				ADC_SR_DRDY) {
 			ul_temp = adc_get_latest_value(ADC);
 			for (i = 0; i < NUM_CHANNELS; i++) {
@@ -934,7 +938,7 @@ static void configure_console(void)
 		.baudrate = CONF_UART_BAUDRATE,
 		.paritytype = CONF_UART_PARITY
 	};
-	
+
 	/* Configure console UART. */
 	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
 	stdio_serial_init(CONF_UART, &uart_serial_options);

@@ -3,7 +3,7 @@
  *
  * \brief Chip-specific system clock management functions.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -172,8 +172,6 @@ void sysclk_disable_usb(void)
 
 void sysclk_init(void)
 {
-	struct pll_config pllcfg;
-
 	/* Set a flash wait state depending on the new cpu frequency */
 	system_init_flash(sysclk_get_cpu_hz());
 
@@ -181,70 +179,75 @@ void sysclk_init(void)
 	switch (CONFIG_SYSCLK_SOURCE) {
 	case SYSCLK_SRC_SLCK_RC:
 		osc_enable(OSC_SLCK_32K_RC);
-		osc_wait_ready(OSC_SLCK_32K_RC);		
+		osc_wait_ready(OSC_SLCK_32K_RC);
 		pmc_switch_mck_to_sclk(CONFIG_SYSCLK_PRES);
 		break;
 	
 	case SYSCLK_SRC_SLCK_XTAL:
 		osc_enable(OSC_SLCK_32K_XTAL);
-		osc_wait_ready(OSC_SLCK_32K_XTAL);		
+		osc_wait_ready(OSC_SLCK_32K_XTAL);
 		pmc_switch_mck_to_sclk(CONFIG_SYSCLK_PRES);
 		break;
 		
 	case SYSCLK_SRC_SLCK_BYPASS:
 		osc_enable(OSC_SLCK_32K_BYPASS);
-		osc_wait_ready(OSC_SLCK_32K_BYPASS);		
+		osc_wait_ready(OSC_SLCK_32K_BYPASS);
 		pmc_switch_mck_to_sclk(CONFIG_SYSCLK_PRES);
 		break;
 	
-    case SYSCLK_SRC_MAINCK_4M_RC:
+	case SYSCLK_SRC_MAINCK_4M_RC:
 		/* Already running from SYSCLK_SRC_MAINCK_4M_RC */
 		break;
 
-    case SYSCLK_SRC_MAINCK_8M_RC:
+	case SYSCLK_SRC_MAINCK_8M_RC:
 		osc_enable(OSC_MAINCK_8M_RC);
-		osc_wait_ready(OSC_MAINCK_8M_RC);		
+		osc_wait_ready(OSC_MAINCK_8M_RC);
 		pmc_switch_mck_to_mainck(CONFIG_SYSCLK_PRES);
 		break;
 
-    case SYSCLK_SRC_MAINCK_12M_RC:
+	case SYSCLK_SRC_MAINCK_12M_RC:
 		osc_enable(OSC_MAINCK_12M_RC);
-		osc_wait_ready(OSC_MAINCK_12M_RC);		
+		osc_wait_ready(OSC_MAINCK_12M_RC);
 		pmc_switch_mck_to_mainck(CONFIG_SYSCLK_PRES);
 		break;
 
-
-    case SYSCLK_SRC_MAINCK_XTAL:
+	case SYSCLK_SRC_MAINCK_XTAL:
 		osc_enable(OSC_MAINCK_XTAL);
-		osc_wait_ready(OSC_MAINCK_XTAL);		
+		osc_wait_ready(OSC_MAINCK_XTAL);
 		pmc_switch_mck_to_mainck(CONFIG_SYSCLK_PRES);
 		break;
 
-    case SYSCLK_SRC_MAINCK_BYPASS:
+	case SYSCLK_SRC_MAINCK_BYPASS:
 		osc_enable(OSC_MAINCK_BYPASS);
-		osc_wait_ready(OSC_MAINCK_BYPASS);		
+		osc_wait_ready(OSC_MAINCK_BYPASS);
 		pmc_switch_mck_to_mainck(CONFIG_SYSCLK_PRES);
 		break;
 
 #ifdef CONFIG_PLL0_SOURCE
-	case SYSCLK_SRC_PLLACK:
+	case SYSCLK_SRC_PLLACK: {
+		struct pll_config pllcfg;
+
 		pll_enable_source(CONFIG_PLL0_SOURCE);
 		pll_config_defaults(&pllcfg, 0);
 		pll_enable(&pllcfg, 0);
 		pll_wait_for_lock(0);
 		pmc_switch_mck_to_pllack(CONFIG_SYSCLK_PRES);
-		break;	
-#endif		
+		break;
+	}
+#endif
 
 #ifdef CONFIG_PLL1_SOURCE
-	case SYSCLK_SRC_PLLBCK:
+	case SYSCLK_SRC_PLLBCK: {
+		struct pll_config pllcfg;
+
 		pll_enable_source(CONFIG_PLL1_SOURCE);
 		pll_config_defaults(&pllcfg, 1);
 		pll_enable(&pllcfg, 1);
 		pll_wait_for_lock(1);
 		pmc_switch_mck_to_pllbck(CONFIG_SYSCLK_PRES);
 		break;
-#endif	
+	}
+#endif
 	}
 
 	/* Update the SystemFrequency variable */

@@ -6,10 +6,11 @@
 		<build type="header-file" value="conf_clock.h"/>
 		<build type="header-file" value="conf_eth.h"/>
 		<build type="header-file" value="conf_uart_serial.h"/>
+		<build type="header-file" value="conf_lwip_threads.h"/>
 		<require idref="common.services.freertos.sam_lwip_dhcp_example"/>
 		<config name="config.board.sam3x_ek.init" value="no"/>
 		<require idref="board.sam3x_ek"/>
-		<config name="config.thirdparty.lwip-port.140" value="freertos_sam"/>
+		<config name="config.thirdparty.lwip-port.140" value="freertos_sam3x"/>
 		<config name="config.thirdparty.lwip.version" value="1.4.0"/>
 		<build type="define" name="FREERTOS_USED" value=""/>
 		<build type="define" name="HTTP_USED" value="1"/>

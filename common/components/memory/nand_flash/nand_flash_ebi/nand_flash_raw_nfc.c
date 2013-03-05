@@ -608,8 +608,8 @@ uint32_t nand_flash_raw_initialize(struct nand_flash_raw *raw,
  */
 void nand_flash_raw_reset(const struct nand_flash_raw *raw)
 {
-	/* Remove warnings */
-	raw = raw;
+	/* avoid Cppcheck Warning */
+	UNUSED(raw);
 
 	smc_nfc_send_command(SMC, 
 			NFCADDR_CMD_NFCCMD       | /* Command. */

@@ -45,6 +45,7 @@
 #include "board.h"
 #include "conf_board.h"
 #include "gpio.h"
+#include "ioport.h"
 
 void board_init(void)
 {
@@ -53,6 +54,7 @@ void board_init(void)
 	WDT->WDT_MR = WDT_MR_WDDIS;
 #endif
 
+	ioport_init();
 	/* Configure LED pins */
 	gpio_configure_pin(LED0_GPIO, LED0_FLAGS);
 	gpio_configure_pin(LED1_GPIO, LED1_FLAGS);
@@ -277,7 +279,7 @@ void board_init(void)
 	gpio_configure_pin(SPI_MISO_GPIO, SPI_MISO_FLAGS);
 	gpio_configure_pin(SPI_MOSI_GPIO, SPI_MOSI_FLAGS);
 	gpio_configure_pin(SPI_SPCK_GPIO, SPI_SPCK_FLAGS);
-	gpio_configure_pin(SPI_NPCS0_GPIO, SPI_NPCS0_FLAGS);
+	gpio_configure_pin(SPI_NPCS2_PC14_GPIO, SPI_NPCS2_PC14_FLAGS);
 #endif
 
 #ifdef CONF_BOARD_ISO7816_RST
