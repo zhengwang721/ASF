@@ -147,7 +147,7 @@ enum i2c_master_callback {
 #endif
 };
 #if !defined(__DOXYGEN__)
-/* Prototype for device instance. */
+/* Prototype for software module. */
 struct i2c_master_module;
 
 typedef void (*i2c_master_callback_t)(
@@ -158,7 +158,7 @@ typedef void (*i2c_master_callback_t)(
 /**
  * \brief SERCOM I2C Master driver hardware instance.
  *
- * Device instance structure for SERCOM I2C Master instance. This structure
+ * software module structure for SERCOM I2C Master instance. This structure
  * is used throughout the driver, and should be initiated using the
  * \ref i2c_master_init() function to associate the struct with a particular
  * hardware instance and configurations.
@@ -229,7 +229,7 @@ struct i2c_master_config {
 #if !defined(__DOXYGEN__)
 /**
  * \internal Wait for hardware module to sync.
- * \param[in]  module Pointer to device instance structure.
+ * \param[in]  module Pointer to software module structure.
  */
 static void _i2c_master_wait_for_sync(
 		const struct i2c_master_module *const module)
@@ -251,7 +251,7 @@ static void _i2c_master_wait_for_sync(
  *
  * Returns the synchronization status of the module.
  *
- * \param[out] module Pointer to device instance structure.
+ * \param[out] module Pointer to software module structure.
  *
  * \return       Status of the synchronization
  * \retval true  Module is busy synchronizing
@@ -313,7 +313,7 @@ enum status_code i2c_master_init(struct i2c_master_module *const module,
  * This will enable the requested I2C module and set the bus state to IDLE after the specified
  * \ref timeout "timeout" period if no stop bit is detected.
  *
- * \param[in]  module Pointer to the device instance struct.
+ * \param[in]  module Pointer to the software module struct.
  */
 static inline void i2c_master_enable(
 		const struct i2c_master_module *const module)
@@ -352,10 +352,10 @@ static inline void i2c_master_enable(
 /**
  * \brief Disable the I2C module.
  *
- * This will disable the I2C module specified in the provided device instance
+ * This will disable the I2C module specified in the provided software module
  * structure.
  *
- * \param[in]  module Pointer to the device instance struct.
+ * \param[in]  module Pointer to the software module struct.
  */
 static inline void i2c_master_disable(
 		const struct i2c_master_module *const module)

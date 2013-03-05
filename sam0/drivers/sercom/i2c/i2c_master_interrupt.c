@@ -153,13 +153,15 @@ static void _i2c_master_async_address_response(
 /**
  * \brief Register callback for the specified callback type.
  *
- * When called, the given callback function will be associated with the
+* This will associate the given callback function with the
  * specified callback type.
+ * To enable the callback, the \ref i2c_master_enable_callback function
+ * must be used.
  *
- * \param[in,out]  module      Pointer to the device instance struct.
+ * \param[in,out]  module    Pointer to the software module struct
  * \param[in]  callback      Pointer to the function desired for the specified
- *                       callback.
- * \param[in]  callback_type Specifies the callback type to register.
+ *                           callback
+ * \param[in]  callback_type Callback type to register
  */
 void i2c_master_register_callback(
 		struct i2c_master_module *const module,

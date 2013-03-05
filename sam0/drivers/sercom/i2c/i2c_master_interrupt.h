@@ -90,7 +90,7 @@ void i2c_master_unregister_callback(
  *
  * Enables the callback specified by the callback_value.
  *
- * \param[in,out]  module      Pointer to the device instance struct.
+ * \param[in,out]  module      Pointer to the software module struct.
  * \param[in]      callback_type Callback type to enable.
  */
 static inline void i2c_master_enable_callback(
@@ -111,7 +111,7 @@ static inline void i2c_master_enable_callback(
  *
  * Disables the callback specified by the callback_type.
  *
- * \param[in,out]  module      Pointer to the device instance struct.
+ * \param[in,out]  module      Pointer to the software module struct.
  * \param[in]      callback_type Callback type to disable.
  */
 static inline void i2c_master_disable_callback(
@@ -154,7 +154,7 @@ enum status_code i2c_master_write_packet_job_no_stop(
  *
  * This will terminate the running transfer operation.
  *
- * \param  module Pointer to device instance structure.
+ * \param  module Pointer to software module structure.
  */
 static inline void i2c_master_abort_job(
 		struct i2c_master_module *const module)
@@ -175,7 +175,7 @@ static inline void i2c_master_abort_job(
  * Will return the last error that occurred in a transfer operation. The
  * status will be cleared on next operation.
  *
- * \param  module Pointer to device instance structure.
+ * \param  module Pointer to software module structure.
  *
  * \return          Last status code from transfer operation.
  * \retval STATUS_OK No error has occurred.
