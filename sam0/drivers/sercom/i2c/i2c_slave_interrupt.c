@@ -379,7 +379,7 @@ enum status_code i2c_slave_read_packet_job(
 }
 
 /**
- * \brief Initates a write packet operation
+ * \brief Initiates a write packet operation
  *
  * Writes a data packet to the master. A read request must be initiated by
  * the master before the packet can be written.

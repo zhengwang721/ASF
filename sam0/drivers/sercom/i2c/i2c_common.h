@@ -237,9 +237,8 @@ extern "C" {
  * read/write bit. Each packet must be acknowledged (ACK) or not
  * acknowledged (NACK) by the receiver.
  *
- * //TODO: If a slave responds with a NACK, the master must assume that the slave
- * cannot receive any more data and issue a \b Stop condition to end the
- * transaction.
+ * If a slave responds with a NACK, the master must assume that the slave
+ * cannot receive any more data and cancel the write operation.
  *
  * The master completes a transaction by issuing a \b Stop condition.
  *
@@ -454,7 +453,8 @@ extern "C" {
  * \enddot
  *
  * \subsection asfdoc_sam0_i2c_timeout Bus Timing
- * Inactive bus timeout and SDA hold time is configurable in the driver.
+ * Inactive bus timeout for the master and SDA hold time is configurable in the
+ * drivers.
  *
  * \subsubsection asfdoc_sam0_i2c_inactive_bus Unknown Bus State Timeout
  * When a master is enabled or connected to the bus, the bus state will be
@@ -471,7 +471,7 @@ extern "C" {
  *
  * \subsubsection sda_hold SDA Hold Timeout
  * When using the I2C in slave mode, it will be important to set a SDA hold
- * time that assures that the master will be able to pick up the bit sent from
+ * time which assures that the master will be able to pick up the bit sent from
  * the slave. The SDA hold time makes sure that this is the case by holding the
  * data line low for a given period after the negative edge on the clock.
  *
@@ -480,8 +480,8 @@ extern "C" {
  *
  * \subsection asfdoc_sam0_i2c_sleep_modes Operation in Sleep Modes
  * The I2C module can operate in all sleep modes by setting the run_in_standby
- * option in the \ref i2c_master_conf or \ref i2c_slave_conf struct.
- * The operation in Slave and Master Mode is shown in the table below.
+ * boolean in the \ref i2c_master_config or \ref i2c_slave_config struct.
+ * The operation in slave and master Mode is shown in the table below.
  *
  * <table>
  *   <tr>
@@ -546,11 +546,11 @@ extern "C" {
  * slave.
  */
 struct i2c_packet {
-	/** Address to slave device.  */
+	/** Address to slave device  */
 	uint8_t address;
-	/** Length of data array. */
+	/** Length of data array */
 	uint8_t data_length;
-	/** Data array containing all data to be transferred.*/
+	/** Data array containing all data to be transferred */
 	uint8_t *data;
 };
 

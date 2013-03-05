@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 Serial Peripheral Interface Driver
+ * \brief SAM D20 I2C Master Quick Start Guide with Callbacks
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -54,7 +54,7 @@ static uint8_t buffer[DATA_LENGTH] = {
 /* Number of time to try and send packet if failed. */
 #define TIMEOUT 1000
 
-/* Init device instance. */
+/* Init software module. */
 //! [dev_inst]
 struct i2c_master_module dev_inst;
 //! [dev_inst]
@@ -62,7 +62,7 @@ struct i2c_master_module dev_inst;
 //! [initialize_i2c]
 static void configure_i2c(void)
 {
-	/* Initialize config structure and device instance. */
+	/* Initialize config structure and software module. */
 	//! [init_conf]
 	struct i2c_master_config conf;
 	i2c_master_get_config_defaults(&conf);

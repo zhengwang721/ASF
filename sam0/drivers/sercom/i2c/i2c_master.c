@@ -434,7 +434,7 @@ static enum status_code _i2c_master_read(
  * \retval STATUS_ERR_DENIED            If error on bus
  * \retval STATUS_ERR_PACKET_COLLISION  If arbitration is lost
  * \retval STATUS_ERR_BAD_ADDRESS       If slave is busy, or no slave
- *                                      acknowledged the addressd.
+ *                                      acknowledged the address
  */
 enum status_code i2c_master_read_packet_wait(
 		struct i2c_master_module *const module,
@@ -464,7 +464,7 @@ enum status_code i2c_master_read_packet_wait(
  * Reads a data packet from the specified slave address on the I2C bus without
  * sending a stop condition when done.
  * To end the transaction, a read or write with stop condition must be
- * perfomed.
+ * performed.
  *
  * \note This will stall the device from any other operation. For
  * interrupt-driven operation, see \ref i2c_master_read_packet_job.
@@ -479,7 +479,7 @@ enum status_code i2c_master_read_packet_wait(
  * \retval STATUS_ERR_DENIED            If error on bus
  * \retval STATUS_ERR_PACKET_COLLISION  If arbitration is lost
  * \retval STATUS_ERR_BAD_ADDRESS       If slave is busy, or no slave
- *                                      acknowledged the addressd.
+ *                                      acknowledged the address
  */
 enum status_code i2c_master_read_packet_wait_no_stop(
 		struct i2c_master_module *const module,
@@ -515,7 +515,7 @@ enum status_code i2c_master_read_packet_wait_no_stop(
  * \retval STATUS_ERR_DENIED            If error on bus
  * \retval STATUS_ERR_PACKET_COLLISION  If arbitration is lost
  * \retval STATUS_ERR_BAD_ADDRESS       If slave is busy, or no slave
- *                                      acknowledged the addressd.
+ *                                      acknowledged the address
  */
 static enum status_code _i2c_master_write_packet(
 		struct i2c_master_module *const module,
