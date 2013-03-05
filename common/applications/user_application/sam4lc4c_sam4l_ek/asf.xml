@@ -3,7 +3,6 @@
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clock.h"/>
-		<build type="header-file" value="touch_config_sam4l.h"/>
 		<require idref="common.applications.user_application"/>
 		<require idref="board.sam4l_ek"/>
 		<generator value="as5_arm_template"/>
