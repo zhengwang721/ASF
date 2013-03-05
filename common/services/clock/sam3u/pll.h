@@ -69,17 +69,17 @@ extern "C" {
 #define PLLA_ID             0
 #define UPLL_ID             1   //!< USB UTMI PLL.
 
-#define PLL_UPLL_HZ     480000000
+#define PLL_UPLL_HZ         480000000
 
 #define PLL_COUNT           0x3fU
 
 enum pll_source {
-	PLL_SRC_MAINCK_4M_RC        = OSC_MAINCK_4M_RC,     //!< Internal 4MHz RC oscillator.
-	PLL_SRC_MAINCK_8M_RC        = OSC_MAINCK_8M_RC,     //!< Internal 8MHz RC oscillator.
-	PLL_SRC_MAINCK_12M_RC       = OSC_MAINCK_12M_RC,    //!< Internal 12MHz RC oscillator.
-	PLL_SRC_MAINCK_XTAL         = OSC_MAINCK_XTAL,      //!< External crystal oscillator.
-	PLL_SRC_MAINCK_BYPASS       = OSC_MAINCK_BYPASS,    //!< External bypass oscillator.
-	PLL_NR_SOURCES,                                     //!< Number of PLL sources.
+	PLL_SRC_MAINCK_4M_RC  = OSC_MAINCK_4M_RC,     //!< Internal 4MHz RC oscillator.
+	PLL_SRC_MAINCK_8M_RC  = OSC_MAINCK_8M_RC,     //!< Internal 8MHz RC oscillator.
+	PLL_SRC_MAINCK_12M_RC = OSC_MAINCK_12M_RC,    //!< Internal 12MHz RC oscillator.
+	PLL_SRC_MAINCK_XTAL   = OSC_MAINCK_XTAL,      //!< External crystal oscillator.
+	PLL_SRC_MAINCK_BYPASS = OSC_MAINCK_BYPASS,    //!< External bypass oscillator.
+	PLL_NR_SOURCES,                               //!< Number of PLL sources.
 };
 
 struct pll_config {
@@ -87,8 +87,8 @@ struct pll_config {
 };
 
 #define pll_get_default_rate(pll_id)                                       \
-	((osc_get_rate(CONFIG_PLL##pll_id##_SOURCE)                            \
-			* CONFIG_PLL##pll_id##_MUL)                                    \
+	((osc_get_rate(CONFIG_PLL##pll_id##_SOURCE)                        \
+			* CONFIG_PLL##pll_id##_MUL)                        \
 			/ CONFIG_PLL##pll_id##_DIV)
 
 /* Force UTMI PLL parameters (Hardware defined) */
@@ -106,8 +106,9 @@ struct pll_config {
 #define CONFIG_PLL1_DIV     0
 
 /**
- * \note The SAM3U PLL hardware interprets mul as mul+1. For readability the hardware mul+1
- * is hidden in this implementation. Use mul as mul effective value.
+ * \note The SAM3U PLL hardware interprets mul as mul+1. For readability the
+ *       hardware mul+1 is hidden in this implementation. Use mul as mul
+ *       effective value.
  */
 static inline void pll_config_init(struct pll_config *p_cfg,
 		enum pll_source e_src, uint32_t ul_div, uint32_t ul_mul)
@@ -129,14 +130,16 @@ static inline void pll_config_init(struct pll_config *p_cfg,
 		Assert(vco_hz <= PLL_OUTPUT_MAX_HZ);
 
 		/* PMC hardware will automatically make it mul+1 */
-		p_cfg->ctrl = CKGR_PLLAR_MULA(ul_mul - 1) | CKGR_PLLAR_DIVA(ul_div) | CKGR_PLLAR_PLLACOUNT(PLL_COUNT);
+		p_cfg->ctrl = CKGR_PLLAR_MULA(ul_mul - 1) |
+			CKGR_PLLAR_DIVA(ul_div) |
+			CKGR_PLLAR_PLLACOUNT(PLL_COUNT);
 	}
 }
 
 #define pll_config_defaults(cfg, pll_id)                                   \
-	pll_config_init(cfg,                                                   \
-			CONFIG_PLL##pll_id##_SOURCE,                                   \
-			CONFIG_PLL##pll_id##_DIV,                                      \
+	pll_config_init(cfg,                                               \
+			CONFIG_PLL##pll_id##_SOURCE,                       \
+			CONFIG_PLL##pll_id##_DIV,                          \
 			CONFIG_PLL##pll_id##_MUL)
 
 static inline void pll_config_read(struct pll_config *p_cfg, uint32_t ul_pll_id)
@@ -150,7 +153,8 @@ static inline void pll_config_read(struct pll_config *p_cfg, uint32_t ul_pll_id)
 	}
 }
 
-static inline void pll_config_write(const struct pll_config *p_cfg, uint32_t ul_pll_id)
+static inline void pll_config_write(const struct pll_config *p_cfg,
+		uint32_t ul_pll_id)
 {
 	Assert(ul_pll_id < NR_PLLS);
 
@@ -162,7 +166,8 @@ static inline void pll_config_write(const struct pll_config *p_cfg, uint32_t ul_
 	}
 }
 
-static inline void pll_enable(const struct pll_config *p_cfg, uint32_t ul_pll_id)
+static inline void pll_enable(const struct pll_config *p_cfg,
+		uint32_t ul_pll_id)
 {
 	Assert(ul_pll_id < NR_PLLS);
 
@@ -175,7 +180,8 @@ static inline void pll_enable(const struct pll_config *p_cfg, uint32_t ul_pll_id
 }
 
 /**
- * \note This will only disable the selected PLL, not the underlying oscillator (mainck).
+ * \note This will only disable the selected PLL, not the underlying oscillator
+ *       (mainck).
  */
 static inline void pll_disable(uint32_t ul_pll_id)
 {
@@ -228,6 +234,20 @@ static inline void pll_enable_config_defaults(unsigned int ul_pll_id)
 #ifdef CONFIG_PLL0_SOURCE
 	case 0:
 		pll_enable_source(CONFIG_PLL0_SOURCE);
+		// Source is mainck, select source for mainck
+		if (CONFIG_PLL0_SOURCE == PLL_SRC_MAINCK_4M_RC ||
+				CONFIG_PLL0_SOURCE == PLL_SRC_MAINCK_8M_RC ||
+				CONFIG_PLL0_SOURCE == PLL_SRC_MAINCK_12M_RC) {
+			pmc_mainck_osc_select(0);
+			while(!pmc_osc_is_ready_mainck());
+#  ifndef CONFIG_PLL1_SOURCE
+			pmc_osc_disable_main_xtal();
+#  endif
+		} else if (CONFIG_PLL0_SOURCE == PLL_SRC_MAINCK_XTAL ||
+				CONFIG_PLL0_SOURCE == PLL_SRC_MAINCK_BYPASS) {
+			pmc_mainck_osc_select(CKGR_MOR_MOSCSEL);
+			while(!pmc_osc_is_ready_mainck());
+		}
 		pll_config_init(&pllcfg,
 				CONFIG_PLL0_SOURCE,
 				CONFIG_PLL0_DIV,
@@ -236,7 +256,13 @@ static inline void pll_enable_config_defaults(unsigned int ul_pll_id)
 #endif
 #ifdef CONFIG_PLL1_SOURCE
 	case 1:
-		pll_enable_source(CONFIG_PLL1_SOURCE);
+		if (pmc_osc_is_bypassed_main_xtal()) {
+			// There must be 12MHz clock source on board
+		} else {
+			// By default, enable and uses XTAL 12MHz
+			pll_enable_source(CONFIG_PLL1_SOURCE);
+		}
+		// Source is main osc
 		pll_config_init(&pllcfg,
 				CONFIG_PLL1_SOURCE,
 				CONFIG_PLL1_DIV,

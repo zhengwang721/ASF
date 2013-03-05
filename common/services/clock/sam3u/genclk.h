@@ -170,7 +170,8 @@ static inline void genclk_config_set_divider(struct genclk_config *p_cfg,
 
 //@}
 
-static inline void genclk_enable(const struct genclk_config *p_cfg, uint32_t ul_id)
+static inline void genclk_enable(const struct genclk_config *p_cfg,
+		uint32_t ul_id)
 {
 	PMC->PMC_PCK[ul_id] = p_cfg->ctrl;
 	pmc_enable_pck(ul_id);

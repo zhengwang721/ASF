@@ -144,12 +144,12 @@ extern "C" {
 #define SSD1306_CMD_SET_VERTICAL_SCROLL_AREA        0xA3
 //@}
 
-#define ssd1306_reset_clear()    ioport_set_pin_low(SSD1306_RES_PIN);
-#define ssd1306_reset_set()      ioport_set_pin_high(SSD1306_RES_PIN);
+#define ssd1306_reset_clear()    ioport_set_pin_low(SSD1306_RES_PIN)
+#define ssd1306_reset_set()      ioport_set_pin_high(SSD1306_RES_PIN)
 
 // Data/CMD select, PC21Could not add reference to assembly IronPython.wpf
-#define ssd1306_sel_data()       ioport_set_pin_high(SSD1306_DC_PIN);
-#define ssd1306_sel_cmd()        ioport_set_pin_low(SSD1306_DC_PIN);
+#define ssd1306_sel_data()       ioport_set_pin_high(SSD1306_DC_PIN)
+#define ssd1306_sel_cmd()        ioport_set_pin_low(SSD1306_DC_PIN)
 
 /**
  * \name Interface selection
@@ -202,13 +202,13 @@ static inline void ssd1306_write_command(uint8_t command)
 #if defined(SSD1306_USART_SPI_INTERFACE)
 	struct usart_spi_device device = {.id = SSD1306_CS_PIN};
 	usart_spi_select_device(SSD1306_USART_SPI, &device);
-	ssd1306_sel_cmd()
+	ssd1306_sel_cmd();
 	usart_spi_transmit(SSD1306_USART_SPI, command);
 	usart_spi_deselect_device(SSD1306_USART_SPI, &device);
 #elif defined(SSD1306_SPI_INTERFACE)
 	struct spi_device device = {.id = SSD1306_CS_PIN};
 	spi_select_device(SSD1306_SPI, &device);
-	ssd1306_sel_cmd()
+	ssd1306_sel_cmd();
 	spi_write_single(SSD1306_SPI, command);
 	delay_us(SSD1306_LATENCY); // At lest 3µs
 	spi_deselect_device(SSD1306_SPI, &device);
@@ -230,7 +230,7 @@ static inline void ssd1306_write_data(uint8_t data)
 	usart_spi_select_device(SSD1306_USART_SPI, &device);
 	ioport_set_pin_high(SSD1306_DC_PIN);
 	usart_spi_transmit(SSD1306_USART_SPI, data);
-	ssd1306_sel_cmd()
+	ssd1306_sel_cmd();
 	usart_spi_deselect_device(SSD1306_USART_SPI, &device);
 #elif defined(SSD1306_SPI_INTERFACE)
 	struct spi_device device = {.id = SSD1306_CS_PIN};
@@ -431,7 +431,7 @@ void ssd1306_init(void);
 
 //! \name Write text routine
 //@{
-void ssd1306_write_text(uint8_t * string);
+void ssd1306_write_text(const char *string);
 //@}
 
 /** @} */
