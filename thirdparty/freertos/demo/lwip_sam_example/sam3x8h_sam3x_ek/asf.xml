@@ -6,6 +6,7 @@
 		<build type="header-file" value="conf_clock.h"/>
 		<build type="header-file" value="conf_eth.h"/>
 		<build type="header-file" value="conf_uart_serial.h"/>
+		<build type="header-file" value="conf_lwip_threads.h"/>
 		<require idref="common.services.freertos.sam_lwip_dhcp_example"/>
 		<config name="config.board.sam3x_ek.init" value="no"/>
 		<require idref="board.sam3x_ek"/>
