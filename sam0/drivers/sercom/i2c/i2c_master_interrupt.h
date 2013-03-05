@@ -58,11 +58,11 @@ extern "C" {
  * driver.
  *
  * The user will still have to use the initialization from the basic use part
- * of the driver, which can be found \ref asfdoc_sam0_i2c_master_group "here". When the
- * interrupt driver is included in the project, the interrupt part of the basic driver
- * will be unlocked. This will allow the user to implement the driver in the same way as
- * for the basic polled driver, but will additionally get the interrupt functionality
- * documented below.
+ * of the driver, which can be found \ref asfdoc_sam0_i2c_master_group "here".
+ * When the interrupt driver is included in the project, the interrupt part of
+ * the basic driver will be unlocked. This will allow the user to implement
+ * the driver in the same way as for the basic polled driver, but will
+ * additionally get the interrupt functionality documented below.
  *
  * \section asfdoc_sam0_i2c_master_interrupt_api_overview I2C Master Interrupt API Overview
  *
@@ -86,12 +86,12 @@ void i2c_master_unregister_callback(
 		enum i2c_master_callback callback_type);
 
 /**
- * \brief Enable callback.
+ * \brief Enables callback
  *
- * Enables the callback specified by the callback_value.
+ * Enables the callback specified by the callback_type.
  *
- * \param[in,out]  module      Pointer to the software module struct.
- * \param[in]      callback_type Callback type to enable.
+ * \param[in,out] module        Pointer to the software module struct
+ * \param[in]     callback_type Callback type to enable
  */
 static inline void i2c_master_enable_callback(
 		struct i2c_master_module *const module,
@@ -107,12 +107,12 @@ static inline void i2c_master_enable_callback(
 
 
 /**
- * \brief Disable callback.
+ * \brief Disables callback
  *
  * Disables the callback specified by the callback_type.
  *
- * \param[in,out]  module      Pointer to the software module struct.
- * \param[in]      callback_type Callback type to disable.
+ * \param[in,out] module        Pointer to the software module struct
+ * \param[in]     callback_type Callback type to disable
  */
 static inline void i2c_master_disable_callback(
 		struct i2c_master_module *const module,
@@ -150,11 +150,11 @@ enum status_code i2c_master_write_packet_job_no_stop(
 		struct i2c_packet *const packet);
 
 /**
- * \brief Cancel the currently running operation.
+ * \brief Cancel any currently ongoing operation
  *
  * This will terminate the running transfer operation.
  *
- * \param  module Pointer to software module structure.
+ * \param  module Pointer to software module structure
  */
 static inline void i2c_master_abort_job(
 		struct i2c_master_module *const module)
@@ -170,24 +170,24 @@ static inline void i2c_master_abort_job(
 }
 
 /**
- * \brief Get last error from ongoing job.
+ * \brief Get last error from ongoing job
  *
  * Will return the last error that occurred in a transfer operation. The
  * status will be cleared on next operation.
  *
- * \param  module Pointer to software module structure.
+ * \param  module Pointer to software module structure
  *
- * \return          Last status code from transfer operation.
- * \retval STATUS_OK No error has occurred.
- * \retval STATUS_BUSY If transfer is in progress.
- * \retval STATUS_BUSY If master module is busy.
- * \retval STATUS_ERR_DENIED If error on bus.
- * \retval STATUS_ERR_PACKET_COLLISION If arbitration is lost.
+ * \return          Last status code from transfer operation
+ * \retval STATUS_OK No error has occurred
+ * \retval STATUS_BUSY If transfer is in progress
+ * \retval STATUS_BUSY If master module is busy
+ * \retval STATUS_ERR_DENIED If error on bus
+ * \retval STATUS_ERR_PACKET_COLLISION If arbitration is lost
  * \retval STATUS_ERR_BAD_ADDRESS If slave is busy, or no slave acknowledged the
- *                                address.
- * \retval STATUS_ERR_TIMEOUT If timeout occurred.
+ *                                address
+ * \retval STATUS_ERR_TIMEOUT If timeout occurred
  * \retval STATUS_ERR_OVERFLOW If slave did not acknowledge last sent data,
- *                             indicating that slave do not want more data.
+ *                             indicating that slave does not want more data
  */
 static inline enum status_code i2c_master_get_job_status(
 		struct i2c_master_module *const module)

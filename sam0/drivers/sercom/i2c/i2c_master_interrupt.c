@@ -48,7 +48,7 @@
  *
  * Used by interrupt handler to get next data byte from slave.
  *
- * \param module Pointer to device instance structure.
+ * \param module Pointer to software module structure.
  */
 static void _i2c_master_read(struct i2c_master_module *const module)
 {
@@ -79,7 +79,7 @@ static void _i2c_master_read(struct i2c_master_module *const module)
  *
  * Used by interrupt handler to send next data byte to slave.
  *
- * \param module Pointer to device instance structure.
+ * \param module Pointer to software module structure.
  */
 static void _i2c_master_write(struct i2c_master_module *const module)
 {
@@ -108,7 +108,7 @@ static void _i2c_master_write(struct i2c_master_module *const module)
  *
  * Check for errors concerning master->slave handshake.
  *
- * \param module Pointer to device instance structure.
+ * \param module Pointer to software module structure.
  */
 static void _i2c_master_async_address_response(
 		struct i2c_master_module *const module)
@@ -186,8 +186,8 @@ void i2c_master_register_callback(
  * When called, the currently registered callback for the given callback type
  * will be removed.
  *
- * \param[in,out] module         Pointer to the device instance struct.
- * \param[in]     callback_type  Specifies the callback type to unregister.
+ * \param[in,out] module         Pointer to the software module struct
+ * \param[in]     callback_type  Specifies the callback type to unregister
  */
 void i2c_master_unregister_callback(
 		struct i2c_master_module *const module,
@@ -207,9 +207,12 @@ void i2c_master_unregister_callback(
 /**
  * \internal Starts a read packet operation
  *
- * \param[in,out] module  Pointer to device instance struct.
- * \param[in,out] packet    Pointer to I2C packet to transfer.
- * \return             Status of starting asynchronously reading I2C packet.
+ * \param[in,out] module  Pointer to software module struct
+ * \param[in,out] packet  Pointer to I2C packet to transfer
+ *
+ * \return              Status of starting reading I2C packet
+  * \retval STATUS_OK   If reading was started successfully
+ * \retval STATUS_BUSY  If module is currently busy with another transfer
  */
 static enum status_code _i2c_master_read_packet(
 		struct i2c_master_module *const module,
@@ -217,7 +220,7 @@ static enum status_code _i2c_master_read_packet(
 {
 	SercomI2cm *const i2c_module = &(module->hw->I2CM);
 
-	/* Save packet to device instance. */
+	/* Save packet to software module. */
 	module->buffer = packet->data;
 	module->buffer_remaining = packet->data_length;
 	module->transfer_direction = 1;
@@ -238,12 +241,12 @@ static enum status_code _i2c_master_read_packet(
  * Reads a data packet from the specified slave address on the I2C bus. This
  * is the non-blocking equivalent of \ref i2c_master_read_packet.
  *
- * \param[in,out] module  Pointer to device instance struct.
- * \param[in,out] packet    Pointer to I2C packet to transfer.
+ * \param[in,out] module  Pointer to software module struct
+ * \param[in,out] packet  Pointer to I2C packet to transfer
  *
- * \return             Status of starting asynchronously reading I2C packet.
- * \retval STATUS_OK   If reading was started successfully.
- * \retval STATUS_BUSY If module is currently busy with transfer operation.
+ * \return             Status of starting reading I2C packet
+ * \retval STATUS_OK   If reading was started successfully
+ * \retval STATUS_BUSY If module is currently busy with another transfer
  */
 enum status_code i2c_master_read_packet_job(
 		struct i2c_master_module *const module,
@@ -266,17 +269,18 @@ enum status_code i2c_master_read_packet_job(
 }
 
 /**
- * \brief Initiates a read packet operation without STOP condition at the end.
+ * \brief Initiates a read packet operation without sending a STOP condition
+ * when done
  *
  * Reads a data packet from the specified slave address on the I2C bus. This
  * is the non-blocking equivalent of \ref i2c_master_read_packet.
  *
- * \param[in,out] module  Pointer to device instance struct.
- * \param[in,out] packet    Pointer to I2C packet to transfer.
+ * \param[in,out] module  Pointer to software module struct
+ * \param[in,out] packet  Pointer to I2C packet to transfer
  *
- * \return             Status of starting asynchronously reading I2C packet.
- * \retval STATUS_OK   If reading was started successfully.
- * \retval STATUS_BUSY If module is currently busy with transfer operation.
+ * \return             Status of starting reading I2C packet
+ * \retval STATUS_OK   If reading was started successfully
+ * \retval STATUS_BUSY If module is currently busy with another operation
  */
 enum status_code i2c_master_read_packet_job_no_stop(
 		struct i2c_master_module *const module,
@@ -299,11 +303,14 @@ enum status_code i2c_master_read_packet_job_no_stop(
 }
 
 /**
- * \internal Starts a write packet operation
+ * \internal Initiates a write packet operation
  *
- * \param[in,out]     module  Pointer to device instance struct.
- * \param[in,out]     packet    Pointer to I2C packet to transfer.
- * \return          Status of starting writing I2C packet job.
+ * \param[in,out]     module  Pointer to software module struct
+ * \param[in,out]     packet    Pointer to I2C packet to transfer
+ *
+ * \return             Status of starting writing I2C packet job
+ * \retval STATUS_OK   If writing was started successfully
+ * \retval STATUS_BUSY If module is currently busy with another transfer
  */
 static enum status_code _i2c_master_write_packet(
 		struct i2c_master_module *const module,
@@ -311,7 +318,7 @@ static enum status_code _i2c_master_write_packet(
 {
 	SercomI2cm *const i2c_module = &(module->hw->I2CM);
 
-	/* Save packet to device instance. */
+	/* Save packet to software module. */
 	module->buffer = packet->data;
 	module->buffer_remaining = packet->data_length;
 	module->transfer_direction = 0;
@@ -332,12 +339,12 @@ static enum status_code _i2c_master_write_packet(
  * Writes a data packet to the specified slave address on the I2C bus. This
  * is the non-blocking equivalent of \ref i2c_master_write_packet.
  *
- * \param[in,out]     module  Pointer to device instance struct.
- * \param[in,out]     packet    Pointer to I2C packet to transfer.
+ * \param[in,out] module  Pointer to software module struct
+ * \param[in,out] packet  Pointer to I2C packet to transfer
  *
- * \return          Status of starting writing I2C packet job.
- * \retval STATUS_OK If writing was started successfully.
- * \retval STATUS_BUSY If module is currently busy with transfer operation.
+ * \return             Status of starting writing I2C packet job
+ * \retval STATUS_OK   If writing was started successfully
+ * \retval STATUS_BUSY If module is currently busy with another transfer
  */
 enum status_code i2c_master_write_packet_job(
 		struct i2c_master_module *const module,
@@ -361,17 +368,18 @@ enum status_code i2c_master_write_packet_job(
 }
 
 /**
- * \brief Initiates a write packet operation without sending a STOP when done
+ * \brief Initiates a write packet operation without sending a STOP condition
+ * when done
  *
  * Writes a data packet to the specified slave address on the I2C bus. This
  * is the non-blocking equivalent of \ref i2c_master_write_packet_no_stop.
  *
- * \param[in,out]     module  Pointer to device instance struct.
- * \param[in,out]     packet    Pointer to I2C packet to transfer.
+ * \param[in,out] module  Pointer to software module struct
+ * \param[in,out] packet  Pointer to I2C packet to transfer
  *
- * \return          Status of starting writing I2C packet job.
- * \retval STATUS_OK If writing was started successfully.
- * \retval STATUS_BUSY If module is currently busy with transfer operation.
+ * \return             Status of starting writing I2C packet job
+ * \retval STATUS_OK   If writing was started successfully
+ * \retval STATUS_BUSY If module is currently busy with another
  */
 enum status_code i2c_master_write_packet_job_no_stop(
 		struct i2c_master_module *const module,
@@ -397,11 +405,11 @@ enum status_code i2c_master_write_packet_job_no_stop(
 /**
  * \internal Interrupt handler for I2C master
  *
- * \param[in] instance Sercom instance that triggered interrupt.
+ * \param[in] instance Sercom instance that triggered the interrupt
  */
 void _i2c_master_interrupt_handler(uint8_t instance)
 {
-	/* Get device instance for callback handling. */
+	/* Get software module for callback handling. */
 	struct i2c_master_module *module =
 			(struct i2c_master_module*)_sercom_instances[instance];
 	SercomI2cm *const i2c_module = &(module->hw->I2CM);

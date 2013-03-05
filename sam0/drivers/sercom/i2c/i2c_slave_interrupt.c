@@ -44,12 +44,12 @@
 #include "i2c_slave_interrupt.h"
 
 /**
- * \internal Sets configurations to module.
+ * \internal Sets configuration to module
  *
- * \param[out] module Pointer to software module structure.
- * \param[in]  config Configuration structure with configurations to set.
+ * \param[out] module Pointer to software module structure
+ * \param[in]  config Configuration structure with configurations to set
  *
- * \return                                Status of setting config
+ * \return                                Status of setting configuration
  * \retval STATUS_OK                      Module was configured correctly
  * \retval STATUS_ERR_ALREADY_INITIALIZED If setting other GCLK generator than
  *                                        previously set
@@ -103,15 +103,15 @@ static enum status_code _i2c_slave_set_config(
 }
 
 /**
- * \brief Initializes the requested I2C hardware module.
+ * \brief Initializes the requested I2C hardware module
  *
  * Initializes the SERCOM I2C Slave device requested and sets the provided
  * software module struct.  Run this function before any further use of
  * the driver.
  *
- * \param[out] module Pointer to software module struct.
- * \param[in]  module   Pointer to the hardware instance.
- * \param[in]  config   Pointer to the configuration struct.
+ * \param[out] module  Pointer to software module struct
+ * \param[in]  module  Pointer to the hardware instance
+ * \param[in]  config  Pointer to the configuration struct
  *
  * \return                                 Status of initialization
  * \retval STATUS_OK                       Module initiated correctly
@@ -119,7 +119,6 @@ static enum status_code _i2c_slave_set_config(
  * \retval STATUS_BUSY                     If module is busy resetting
  * \retval STATUS_ERR_ALREADY_INITIALIZED  If setting other GCLK generator than
  *                                         previously set
- *
  */
 enum status_code i2c_slave_init(struct i2c_slave_module *const module,
 		Sercom *const hw,
@@ -183,7 +182,7 @@ enum status_code i2c_slave_init(struct i2c_slave_module *const module,
 }
 
 /**
- * \brief Resets the hardware module.
+ * \brief Resets the hardware module
  *
  * This will reset the module to hardware defaults.
  *
@@ -220,7 +219,7 @@ void i2c_slave_reset(struct i2c_slave_module *const module)
 }
 
 /**
- * \brief Enables sending NACK on address match
+ * \brief Enables sending of NACK on address match
  *
  * This will enable sending of NACK on address match, thus discarding
  * any incoming transaction.
@@ -239,7 +238,7 @@ void i2c_slave_enable_nack_on_address(struct i2c_slave_module
  * \brief Disables sending NACK on address match
  *
  * This will disable sending of NACK on address match, thus
- * sending acknowledging incoming transactions.
+ * acknowledging incoming transactions.
  *
  * \param[in,out] module Pointer to software module structure
  */
@@ -252,7 +251,7 @@ void i2c_slave_disable_nack_on_address(struct i2c_slave_module
 }
 
 /**
- * \internal Reads next data.
+ * \internal Reads next data
  *
  * Used by interrupt handler to get next data byte from master.
  *
@@ -270,7 +269,7 @@ static void _i2c_slave_read(struct i2c_slave_module *const module)
 }
 
 /**
- * \internal Writes next data.
+ * \internal Writes next data
  *
  * Used by interrupt handler to send next data byte to master.
  *
@@ -288,7 +287,7 @@ static void _i2c_slave_write(struct i2c_slave_module *const module)
 }
 
 /**
- * \brief Registers callback for the specified callback type.
+ * \brief Registers callback for the specified callback type
  *
  * This will associate the given callback function with the
  * specified callback type.
@@ -318,7 +317,7 @@ void i2c_slave_register_callback(
 }
 
 /**
- * \brief Unregisters callback for the specified callback type.
+ * \brief Unregisters callback for the specified callback type
  *
  * This will remove the currently registered callback for the given callback
  * type.
@@ -342,7 +341,7 @@ void i2c_slave_unregister_callback(
 }
 
 /**
- * \brief Reads data packet from master
+ * \brief Initiates a reads packet operation
  *
  * Reads a data packet from the master. A write request must be initiated by
  * the master before the packet can be read.
@@ -380,7 +379,7 @@ enum status_code i2c_slave_read_packet_job(
 }
 
 /**
- * \brief Writes data packet to master
+ * \brief Initates a write packet operation
  *
  * Writes a data packet to the master. A read request must be initiated by
  * the master before the packet can be written.
@@ -390,9 +389,9 @@ enum status_code i2c_slave_read_packet_job(
  * \param[in,out]     module  Pointer to software module struct.
  * \param[in,out]     packet    Pointer to I2C packet to transfer.
  *
- * \return          Status of starting asynchronously writing I2C packet.
- * \retval STATUS_OK If writing was started successfully.
- * \retval STATUS_BUSY If module is currently busy with transfer operation.
+ * \return             Status of starting writing I2C packet
+ * \retval STATUS_OK   If writing was started successfully.
+ * \retval STATUS_BUSY If module is currently busy with another transfer
  */
 enum status_code i2c_slave_write_packet_job(
 		struct i2c_slave_module *const module,
