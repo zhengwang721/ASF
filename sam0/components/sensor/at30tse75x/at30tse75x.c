@@ -43,46 +43,62 @@
 
 #include <at30tse75x.h>
 
-/// @cond 0
-/**INDENT-OFF**/
 #ifdef __cplusplus
 extern "C" {
 #endif
-/**INDENT-ON**/
-/// @endcond
 
+/**
+ * \defgroup sam0_components_sensor_at30tse75x_group AT30TSE75X Temperature Sensor
+ *
+ * See \ref sam0_components_sensor_at30tse75x_quickstart.
+ *
+ * \par Purpose
+ *
+ * The module provides useful API of AT30TSE75X temperature sensor through I2C interface.
+ *
+ * \section dependencies Dependencies
+ * This driver depends on the following module:
+ * - \ref i2c_group for sam0 I2C service.
+ *
+ * @{
+ */
+ 
 struct i2c_master_module dev_inst_at30tse75x;
-volatile uint8_t resolution = AT30TSE_CONFIG_RES_9_bit;
+uint8_t resolution = AT30TSE_CONFIG_RES_9_bit;
 
-void at30tse_init(void){
-  
-        /* Initialize config structure and device instance. */
-	//! [init_conf]
+/**
+ * \brief Configures the SERCOM I2C master to be used with the AT30TSE75X device.
+ */
+void at30tse_init(void)
+{  
+    /* Initialize config structure and device instance. */
 	struct i2c_master_config conf;
 	i2c_master_get_config_defaults(&conf);
-	//! [init_conf]
 
 	/* Change buffer timeout to something longer. */
-	//! [conf_change]
 	conf.buffer_timeout = 10000;
-	//! [conf_change]
 
 	/* Initialize and enable device with config. */
-	//! [init_module]
 	i2c_master_init(&dev_inst_at30tse75x, AT30TSE_SERCOM, &conf);
-	//! [init_module]
-
-	//! [enable_module]
 	i2c_master_enable(&dev_inst_at30tse75x);
-	//! [enable_module]
 }
 
-void at30tse_eeprom_write(uint8_t *data, uint8_t length, uint8_t word_addr, uint8_t page){
-	
+/**
+ * \brief Writes the EEPROM with data provided.
+ *
+ * \param *data Pointer to the data buffer.
+ * \param length Number of data bytes.
+ * \param word_addr Word address of the EEPROM.
+ * \param page Page number of the EEPROM.
+ */
+void at30tse_eeprom_write(uint8_t *data, uint8_t length, uint8_t word_addr, uint8_t page)
+{	
 	// ACK polling for consecutive writing not implemented!
 	uint8_t buffer[17];
-	buffer[0] = word_addr & 0x0F;	 // Byte addr in page (0-15)
-	buffer[0] |= (0x0F & page) << 4; // 4 lower bits of page addr in EEPROM
+	// Byte addr in page (0-15)
+	buffer[0] = word_addr & 0x0F;	
+	// 4 lower bits of page addr in EEPROM	
+	buffer[0] |= (0x0F & page) << 4; 
 	
 	// Copy data to be sent
 	for (uint8_t i=1; i<17; i++){
@@ -90,53 +106,79 @@ void at30tse_eeprom_write(uint8_t *data, uint8_t length, uint8_t word_addr, uint
 	}
 
 	// Set up TWI transfer
-        struct i2c_packet packet = {
-                .address     = AT30TSE758_EEPROM_TWI_ADDR | ((0x30 & page)>>4),
+    struct i2c_packet packet = {
+        .address     = AT30TSE758_EEPROM_TWI_ADDR | ((0x30 & page)>>4),
 		.data_length = length+1,
 		.data        = buffer,
 	};
 	// Do the transfer
-        i2c_master_write_packet_wait(&dev_inst_at30tse75x, &packet);
+    i2c_master_write_packet_wait(&dev_inst_at30tse75x, &packet);
 }
 
-void at30tse_eeprom_read(uint8_t *data, uint8_t length, uint8_t word_addr, uint8_t page){
-
+/**
+ * \brief Reads data from the EEPROM.
+ *
+ * \param *data Pointer to the data buffer.
+ * \param length Number of data bytes.
+ * \param word_addr Word address of the EEPROM.
+ * \param page Page number of the EEPROM.
+ */
+void at30tse_eeprom_read(uint8_t *data, uint8_t length, uint8_t word_addr, uint8_t page)
+{
 	// ACK polling for consecutive reading not implemented!
 	uint8_t buffer[1];
-	buffer[0] = word_addr & 0x0F;	 // Byte addr in page (0-15)
-	buffer[0] |= (0x0F & page) << 4; // 4 lower bits of page addr in EEPROM
+	// Byte addr in page (0-15)
+	buffer[0] = word_addr & 0x0F;	
+	// 4 lower bits of page addr in EEPROM
+	buffer[0] |= (0x0F & page) << 4; 
 
 	// Set up internal EEPROM addr write
-        struct i2c_packet addr_transfer = {
+    struct i2c_packet addr_transfer = {
 		.address     = AT30TSE758_EEPROM_TWI_ADDR | ( (0x30 & page) >> 4 ),
 		.data_length = 1,
 		.data        = buffer,
 	};
 	// Reading sequence
-        struct i2c_packet read_transfer = {
+    struct i2c_packet read_transfer = {
 		.address     = AT30TSE758_EEPROM_TWI_ADDR | ( (0x30 & page) >> 4 ),
 		.data_length = length,
 		.data        = data,
 	};
-	asm("nop");
+	
 	// Do the transfer
-        i2c_master_write_packet_wait_repeated_start(&dev_inst_at30tse75x, &addr_transfer);
-        i2c_master_read_packet_wait(&dev_inst_at30tse75x, &read_transfer);
+    i2c_master_write_packet_wait_repeated_start(&dev_inst_at30tse75x, &addr_transfer);
+    i2c_master_read_packet_wait(&dev_inst_at30tse75x, &read_transfer);
 }
 
-void at30tse_set_register_pointer(uint8_t reg, uint8_t reg_type){
-        
+/**
+ * \brief Sets the register pointer with specified reg value.
+ *
+ * \param reg Register value of the pointer register.
+ * \param reg_type Register type being pointed by pointer register.
+ */
+void at30tse_set_register_pointer(uint8_t reg, uint8_t reg_type)
+{        
 	uint8_t buffer[] = {reg | reg_type};
-        struct i2c_packet transfer = {
+    struct i2c_packet transfer = {
 		.address     = AT30TSE_TEMPERATURE_TWI_ADDR,
 		.data_length = 1,
 		.data        = buffer,
 	};
-        i2c_master_write_packet_wait(&dev_inst_at30tse75x, &transfer);
+	// Do the transfer
+    i2c_master_write_packet_wait(&dev_inst_at30tse75x, &transfer);
 }
 
-uint16_t at30tse_read_register(uint8_t reg, uint8_t reg_type, uint8_t reg_size){
-
+/**
+ * \brief Reads the value from the register reg.
+ *
+ * \param reg Register to read.
+ * \param reg_type Type of the register (Volatile or Non-volatile).
+ * \param reg_size Register size.
+ *
+ * \return Register value.
+ */
+uint16_t at30tse_read_register(uint8_t reg, uint8_t reg_type, uint8_t reg_size)
+{
 	uint8_t buffer[2];
 	buffer[0] = reg | reg_type;
 	buffer[1] = 0;
@@ -153,13 +195,23 @@ uint16_t at30tse_read_register(uint8_t reg, uint8_t reg_type, uint8_t reg_size){
 		.data_length = reg_size,
 		.data        = buffer,
 	};
+	// Do the transfer
 	i2c_master_write_packet_wait_repeated_start(&dev_inst_at30tse75x, &write_transfer);
-        i2c_master_read_packet_wait(&dev_inst_at30tse75x, &read_transfer);
+    i2c_master_read_packet_wait(&dev_inst_at30tse75x, &read_transfer);
+	
 	return (buffer[0] << 8) | buffer[1];
 }
 
-void at30tse_write_register(uint8_t reg, uint8_t reg_type, uint8_t reg_size, uint16_t reg_value){
-
+/**
+ * \brief Writes the specified register reg with the reg_value passed
+ *
+ * \param reg Register to write.
+ * \param reg_type Type of the register (Volatile or Non-volatile).
+ * \param reg_size Register size.
+ * \param reg_value Value to be written to reg.
+ */
+void at30tse_write_register(uint8_t reg, uint8_t reg_type, uint8_t reg_size, uint16_t reg_value)
+{
 	uint8_t data[3];
 	data[0] = reg | reg_type;
 	data[1] = 0x00FF & (reg_value >> 8);
@@ -171,21 +223,37 @@ void at30tse_write_register(uint8_t reg, uint8_t reg_type, uint8_t reg_size, uin
 		.data_length = 1 + reg_size,
 		.data        = data,
 	};
+	// Do the transfer
 	i2c_master_write_packet_wait(&dev_inst_at30tse75x, &transfer);
 }
 
-void at30tse_write_config_register(uint16_t value){
-
-	at30tse_write_register(AT30TSE_CONFIG_REG, AT30TSE_NON_VOLATILE_REG, AT30TSE_CONFIG_REG_SIZE-1, value);
+/**
+ * \brief Writes the configuration register reg with the value passed
+ *
+ * \param value Register value to be written.
+ */
+void at30tse_write_config_register(uint16_t value)
+{
+	at30tse_write_register(AT30TSE_CONFIG_REG, 
+							AT30TSE_NON_VOLATILE_REG, 
+							AT30TSE_CONFIG_REG_SIZE-1, 
+							value);
 
 	resolution = ( value >> AT30TSE_CONFIG_RES_Pos ) & ( AT30TSE_CONFIG_RES_Msk >> AT30TSE_CONFIG_RES_Pos);
 	
 }
 
-double at30tse_read_temperature(){
-
+/**
+ * \brief Reads the temperature value.
+ *
+ * \return Temperature data.
+ */
+double at30tse_read_temperature()
+{
 	// Read the 16-bit temperature register.
-	uint16_t data = at30tse_read_register(AT30TSE_TEMPERATURE_REG, AT30TSE_NON_VOLATILE_REG, AT30TSE_TEMPERATURE_REG_SIZE);
+	uint16_t data = at30tse_read_register(AT30TSE_TEMPERATURE_REG, 
+											AT30TSE_NON_VOLATILE_REG, 
+											AT30TSE_TEMPERATURE_REG_SIZE);
 	
 	double temperature = 0;
 	int8_t sign = 1; 
@@ -221,10 +289,6 @@ double at30tse_read_temperature(){
 	return temperature;
 }
 
-/// @cond 0
-/**INDENT-OFF**/
 #ifdef __cplusplus
 }
 #endif
-/**INDENT-ON**/
-/// @endcond
