@@ -3,7 +3,7 @@
  *
  * \brief Chip-specific system clock management functions.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -241,38 +241,29 @@ static inline uint32_t sysclk_get_main_hz(void)
 #endif
 
 	/* Config system clock setting */
-	switch (CONFIG_SYSCLK_SOURCE) {
-	case SYSCLK_SRC_SLCK_RC:
+	if (CONFIG_SYSCLK_SOURCE == SYSCLK_SRC_SLCK_RC) {
 		return OSC_SLCK_32K_RC_HZ;
-
-	case SYSCLK_SRC_SLCK_XTAL:
+	} else if (CONFIG_SYSCLK_SOURCE == SYSCLK_SRC_SLCK_XTAL) {
 		return OSC_SLCK_32K_XTAL_HZ;
-
-	case SYSCLK_SRC_SLCK_BYPASS:
+	} else if (CONFIG_SYSCLK_SOURCE == SYSCLK_SRC_SLCK_BYPASS) {
 		return OSC_SLCK_32K_BYPASS_HZ;
-
-
-    case SYSCLK_SRC_MAINCK_4M_RC:
+	} else if (CONFIG_SYSCLK_SOURCE == SYSCLK_SRC_MAINCK_4M_RC) {
 		return OSC_MAINCK_4M_RC_HZ;
-
-    case SYSCLK_SRC_MAINCK_8M_RC:
+	} else if (CONFIG_SYSCLK_SOURCE == SYSCLK_SRC_MAINCK_8M_RC) {
 		return OSC_MAINCK_8M_RC_HZ;
-
-    case SYSCLK_SRC_MAINCK_12M_RC:
+	} else if (CONFIG_SYSCLK_SOURCE == SYSCLK_SRC_MAINCK_12M_RC) {
 		return OSC_MAINCK_12M_RC_HZ;
-
-    case SYSCLK_SRC_MAINCK_XTAL:
+	} else if (CONFIG_SYSCLK_SOURCE == SYSCLK_SRC_MAINCK_XTAL) {
 		return OSC_MAINCK_XTAL_HZ;
-
-    case SYSCLK_SRC_MAINCK_BYPASS:
+	} else if (CONFIG_SYSCLK_SOURCE == SYSCLK_SRC_MAINCK_BYPASS) {
 		return OSC_MAINCK_BYPASS_HZ;
-
+	}
 #ifdef CONFIG_PLL0_SOURCE
-	case SYSCLK_SRC_PLLACK:
+	else if (CONFIG_SYSCLK_SOURCE == SYSCLK_SRC_PLLACK) {
 		return pll_get_default_rate(0);
+	}
 #endif
-
-	default:
+	else {
 		/* unhandled_case(CONFIG_SYSCLK_SOURCE); */
 		return 0;
 	}
