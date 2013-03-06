@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 SERCOM I2C Common Driver
+ * \brief SAM D20 I2C Common Driver
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
