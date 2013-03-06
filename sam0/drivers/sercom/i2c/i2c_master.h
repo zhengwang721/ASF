@@ -61,13 +61,13 @@ extern "C" {
 #endif
 
 /**
- * \defgroup asfdoc_sam0_i2c_master_group I2C Master Basic
+ * \defgroup asfdoc_samd20_i2c_master_group I2C Master Basic
  *
  * This is the API overview for the basic use of I2C master. For more
  * advance use with the interrupt-driven driver, see
- * \subpage asfdoc_sam0_i2c_master_interrupt_group.
+ * \subpage asfdoc_samd20_i2c_master_interrupt_group.
  *
- * \section asfdoc_sam0_i2c_master_api_overview I2C Master API Overview
+ * \section asfdoc_samd20_i2c_master_api_overview I2C Master API Overview
  * @{
  *
  */
@@ -160,7 +160,7 @@ typedef void (*i2c_master_callback_t)(
 /**
  * \brief SERCOM I2C Master driver software module structure
  *
- * software module structure for SERCOM I2C Master instance. This structure
+ * Software module structure for SERCOM I2C Master instance. This structure
  * is used throughout the driver, and must be initialized using the
  * \ref i2c_master_init function to associate the struct with a particular
  * hardware instance and configurations.
@@ -212,7 +212,7 @@ struct i2c_master_config {
 	enum gclk_generator generator_source;
 	/** Bus hold time after start signal on data line. */
 	enum i2c_master_start_hold_time start_hold_time;
-	/** Unknown bus state timeout. */
+	/** Unknown bus state \ref asfdoc_samd20_i2c_unknown_bus_timeout "timeout". */
 	uint16_t unknown_bus_state_timeout;
 	/** Timeout for packet write to wait for slave. */
 	uint16_t buffer_timeout;
@@ -313,8 +313,8 @@ enum status_code i2c_master_init(
 /**
  * \brief Enables the I2C module
  *
- * This will enable the requested I2C module and set the bus state to IDLE
- * after the specified \ref asfdoc_sam0_i2c_timeout "timeout" period if no
+ * Enables the requested I2C module and set the bus state to IDLE
+ * after the specified \ref asfdoc_samd20_i2c_timeout "timeout" period if no
  * stop bit is detected.
  *
  * \param[in]  module Pointer to the software module struct
@@ -356,7 +356,7 @@ static inline void i2c_master_enable(
 /**
  * \brief Disable the I2C module
  *
- * This will disable the requested I2C module.
+ * Disables the requested I2C module.
  *
  * \param[in]  module Pointer to the software module struct
  */

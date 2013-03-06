@@ -42,7 +42,7 @@
  */
 
 /**
- * \page i2c_master_basic_use_case Quick Start Guide for the I2C Master module - Basic Use Case
+ * \page asfdoc_samd20_i2c_master_basic_use_case Quick Start Guide for the I2C Master module - Basic Use Case
  *
  * In this use case, the I2C will be used as follows.
  *  - Master mode

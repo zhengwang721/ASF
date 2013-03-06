@@ -184,7 +184,7 @@ enum status_code i2c_slave_init(struct i2c_slave_module *const module,
 /**
  * \brief Resets the hardware module
  *
- * This will reset the module to hardware defaults.
+ * Resets the module to hardware defaults.
  *
  * \param[in,out] module Pointer to software module structure
  */
@@ -221,7 +221,7 @@ void i2c_slave_reset(struct i2c_slave_module *const module)
 /**
  * \brief Enables sending of NACK on address match
  *
- * This will enable sending of NACK on address match, thus discarding
+ * Enables sending of NACK on address match, thus discarding
  * any incoming transaction.
  *
  * \param[in,out] module Pointer to software module structure
@@ -237,7 +237,7 @@ void i2c_slave_enable_nack_on_address(struct i2c_slave_module
 /**
  * \brief Disables sending NACK on address match
  *
- * This will disable sending of NACK on address match, thus
+ * Disables sending of NACK on address match, thus
  * acknowledging incoming transactions.
  *
  * \param[in,out] module Pointer to software module structure
@@ -289,7 +289,7 @@ static void _i2c_slave_write(struct i2c_slave_module *const module)
 /**
  * \brief Registers callback for the specified callback type
  *
- * This will associate the given callback function with the
+ * Associates the given callback function with the
  * specified callback type.
  * To enable the callback, the \ref i2c_slave_enable_callback function
  * must be used.
@@ -319,7 +319,7 @@ void i2c_slave_register_callback(
 /**
  * \brief Unregisters callback for the specified callback type
  *
- * This will remove the currently registered callback for the given callback
+ * Removes the currently registered callback for the given callback
  * type.
  *
  * \param[in,out]  module        Pointer to the software module struct

@@ -42,16 +42,14 @@
  */
 
 /**
- * \page i2c_slave_basic_use_case Quick Start Guide for the I2C Slave module - Basic Use Case (Callbacks)
+ * \page asfdoc_samd20_i2c_slave_basic_use_case Quick Start Guide for the I2C Slave module - Callback Use Case
  *
  * In this use case, the I2C will be used as follows.
  *  - Slave mode
- *  - 100 kHz operation speed
  *
  * \section i2c_slave_basic_use_case_setup Quick Start
  *
  * \subsection i2c_slave_basic_use_case_prereq Prerequisites
- * The quick start will need the system drivers to operate correctly.
  *
  * \section i2c_slave_basic_use_case_setup_code Setup
  * To set up the I2C with desired configurations, add the following:
@@ -65,11 +63,11 @@
  * \snippet qs_i2c_slave_basic_use.c initialize_i2c
  * Callback functions for read request:
  * \snippet qs_i2c_slave_basic_use.c read_request
- * and write request from a master:
+ * Function for write request from a master:
  * \snippet qs_i2c_slave_basic_use.c write_request
  * Function for setting up the callback functionality of the driver.
  * \snippet qs_i2c_slave_basic_use.c setup_i2c_callback
- * and the following to the start of main():
+ * Add the following to the start of main():
  * \snippet qs_i2c_slave_basic_use.c run_initialize_i2c
  *
  * \subsection i2c_slave_basic_use_workflow Workflow

@@ -59,13 +59,13 @@ extern "C" {
 #endif
 
 /**
- * \addtogroup asfdoc_sam0_i2c_slave_interrupt_group I2C Slave Interrupt
+ * \addtogroup asfdoc_samd20_i2c_slave_interrupt_group I2C Slave Interrupt
  * @{
  *
  * This is an overview of the API for the I2C Slave Interrupt
  * driver.
  *
- * \section asfdoc_sam0_i2c_slave_interrupt_api_overview I2C Slave Interrupt API Overview
+ * \section asfdoc_samd20_i2c_slave_interrupt_api_overview I2C Slave Interrupt API Overview
  *
  */
 
@@ -274,7 +274,7 @@ static inline bool i2c_slave_is_syncing (const struct i2c_slave_module *const mo
 /**
  * \brief Gets the I2C slave default configurations
  *
- * This will initialize the configuration structure to known default values.
+ * Initializes the configuration structure to known default values.
  *
  * The default configuration is as follows:
  * - Disable SCL low timeout
@@ -315,7 +315,7 @@ enum status_code i2c_slave_init(struct i2c_slave_module *const module,
 /**
  * \brief Enables the I2C module
  *
- * This will enable the requested I2C module.
+ * Enables the requested I2C module.
  *
  * \param[in]  module Pointer to the software module struct
  */
@@ -345,7 +345,7 @@ static inline void i2c_slave_enable(
 /**
  * \brief Disables the I2C module
  *
- * This will disable the I2C module specified in the provided software module
+ * Disables the I2C module specified in the provided software module
  * structure.
  *
  * \param[in]  module Pointer to the software module struct
@@ -460,11 +460,11 @@ enum status_code i2c_slave_write_packet_job(
 /**
  * \brief Cancels any currently ongoing operation
  *
- * This will terminate the running transfer operation.
+ * Terminates the running transfer operation.
  *
  * \param[in,out] module Pointer to software module structure
  */
-static inline void i2c_slave_abort_job(
+static inline void i2c_slave_cancel_job(
 		struct i2c_slave_module *const module)
 {
 	/* Sanity check. */

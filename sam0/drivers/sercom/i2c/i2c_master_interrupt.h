@@ -51,20 +51,20 @@ extern "C" {
 #endif
 
 /**
- * \addtogroup asfdoc_sam0_i2c_master_interrupt_group I2C Master Interrupt
+ * \addtogroup asfdoc_samd20_i2c_master_interrupt_group I2C Master Interrupt
  * @{
  *
  * This is an overview of the API for the I2C master interrupt
  * driver.
  *
  * The user will still have to use the initialization from the basic use part
- * of the driver, which can be found \ref asfdoc_sam0_i2c_master_group "here".
+ * of the driver, which can be found \ref asfdoc_samd20_i2c_master_group "here".
  * When the interrupt driver is included in the project, the interrupt part of
  * the basic driver will be unlocked. This will allow the user to implement
  * the driver in the same way as for the basic polled driver, but will
  * additionally get the interrupt functionality documented below.
  *
- * \section asfdoc_sam0_i2c_master_interrupt_api_overview I2C Master Interrupt API Overview
+ * \section asfdoc_samd20_i2c_master_interrupt_api_overview I2C Master Interrupt API Overview
  *
  */
 
@@ -151,11 +151,11 @@ enum status_code i2c_master_write_packet_job_no_stop(
 /**
  * \brief Cancel any currently ongoing operation
  *
- * This will terminate the running transfer operation.
+ * Terminates the running transfer operation.
  *
  * \param  module Pointer to software module structure
  */
-static inline void i2c_master_abort_job(
+static inline void i2c_master_cancel_job(
 		struct i2c_master_module *const module)
 {
 	/* Sanity check. */

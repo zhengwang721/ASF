@@ -104,7 +104,7 @@ static void _i2c_master_write(struct i2c_master_module *const module)
 }
 
 /**
- * \internal Act on slave address response
+ * \internal Acts on slave address response
  *
  * Check for errors concerning master->slave handshake.
  *
@@ -153,9 +153,9 @@ static void _i2c_master_async_address_response(
 }
 
 /**
- * \brief Register callback for the specified callback type
+ * \brief Registers callback for the specified callback type
  *
- * This will associate the given callback function with the
+ * Associates the given callback function with the
  * specified callback type.
  * To enable the callback, the \ref i2c_master_enable_callback function
  * must be used.
@@ -183,7 +183,7 @@ void i2c_master_register_callback(
 }
 
 /**
- * \brief Unregister callback for the specified callback type
+ * \brief Unregisters callback for the specified callback type
  *
  * When called, the currently registered callback for the given callback type
  * will be removed.
@@ -276,8 +276,12 @@ enum status_code i2c_master_read_packet_job(
  * \brief Initiates a read packet operation without sending a STOP condition
  * when done
  *
- * Reads a data packet from the specified slave address on the I2C bus. This
- * is the non-blocking equivalent of \ref i2c_master_read_packet.
+ * Reads a data packet from the specified slave address on the I2C bus without
+ * sending a stop condition, thus retaining ownership of the bus when done.
+ * To end the transaction, a \ref i2c_master_read_packet_wait "read" or \ref
+ * i2c_master_write_packet_wait "write" with stop condition must be performed.
+ *
+ * This is the non-blocking equivalent of \ref i2c_master_read_packet.
  *
  * \param[in,out] module  Pointer to software module struct
  * \param[in,out] packet  Pointer to I2C packet to transfer
@@ -377,8 +381,13 @@ enum status_code i2c_master_write_packet_job(
  * \brief Initiates a write packet operation without sending a STOP condition
  * when done
  *
- * Writes a data packet to the specified slave address on the I2C bus. This
- * is the non-blocking equivalent of \ref i2c_master_write_packet_no_stop.
+ * Writes a data packet to the specified slave address on the I2C bus without
+ * sending a stop condition, thus retaining ownership of the bus when done.
+ * To end the transaction, a \ref i2c_master_read_packet_wait "read" or \ref
+ * i2c_master_write_packet_wait "write" with stop condition or sending
+ * a stop with the \ref i2c_master_send_stop function must be performed.
+ *
+ * This is the non-blocking equivalent of \ref i2c_master_write_packet_no_stop.
  *
  * \param[in,out] module  Pointer to software module struct
  * \param[in,out] packet  Pointer to I2C packet to transfer
