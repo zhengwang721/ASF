@@ -146,10 +146,11 @@ static inline void pll_config_read(struct pll_config *p_cfg, uint32_t ul_pll_id)
 {
 	Assert(ul_pll_id < NR_PLLS);
 
-	if (ul_pll_id == PLLA_ID)
+	if (ul_pll_id == PLLA_ID) {
 		p_cfg->ctrl = PMC->CKGR_PLLAR;
-	else
+	} else {
 		p_cfg->ctrl = PMC->CKGR_UCKR;
+	}
 }
 
 static inline void pll_config_write(const struct pll_config *p_cfg,
@@ -186,20 +187,22 @@ static inline void pll_disable(uint32_t ul_pll_id)
 {
 	Assert(ul_pll_id < NR_PLLS);
 
-	if (ul_pll_id == PLLA_ID)
+	if (ul_pll_id == PLLA_ID) {
 		pmc_disable_pllack();
-	else
+	} else {
 		PMC->CKGR_UCKR &= ~CKGR_UCKR_UPLLEN;
+	}
 }
 
 static inline uint32_t pll_is_locked(uint32_t ul_pll_id)
 {
 	Assert(ul_pll_id < NR_PLLS);
 
-	if (ul_pll_id == PLLA_ID)
+	if (ul_pll_id == PLLA_ID) {
 		return pmc_is_locked_pllack();
-	else
+	} else {
 		return pmc_is_locked_upll();
+	}
 }
 
 static inline void pll_enable_source(enum pll_source e_src)
@@ -232,21 +235,18 @@ static inline void pll_enable_config_defaults(unsigned int ul_pll_id)
 	case 0:
 		pll_enable_source(CONFIG_PLL0_SOURCE);
 		// Source is mainck, select source for mainck
-		switch(CONFIG_PLL0_SOURCE) {
-		case PLL_SRC_MAINCK_4M_RC:
-		case PLL_SRC_MAINCK_8M_RC:
-		case PLL_SRC_MAINCK_12M_RC:
+		if (CONFIG_PLL0_SOURCE == PLL_SRC_MAINCK_4M_RC ||
+				CONFIG_PLL0_SOURCE == PLL_SRC_MAINCK_8M_RC ||
+				CONFIG_PLL0_SOURCE == PLL_SRC_MAINCK_12M_RC) {
 			pmc_mainck_osc_select(0);
 			while(!pmc_osc_is_ready_mainck());
 #  ifndef CONFIG_PLL1_SOURCE
 			pmc_osc_disable_main_xtal();
 #  endif
-			break;
-		case PLL_SRC_MAINCK_XTAL:
-		case PLL_SRC_MAINCK_BYPASS:
+		} else if (CONFIG_PLL0_SOURCE == PLL_SRC_MAINCK_XTAL ||
+				CONFIG_PLL0_SOURCE == PLL_SRC_MAINCK_BYPASS) {
 			pmc_mainck_osc_select(CKGR_MOR_MOSCSEL);
 			while(!pmc_osc_is_ready_mainck());
-			break;
 		}
 		pll_config_init(&pllcfg,
 				CONFIG_PLL0_SOURCE,
