@@ -56,6 +56,12 @@ extern "C" {
  *
  * This is an overview of the API for the I2C Slave Interrupt
  * driver.
+ * The user will still have to use the initialization from the basic use part
+ * of the driver, which can be found \ref asfdoc_sam0_i2c_slave_group "here".
+ * When the interrupt driver is included in the project, the interrupt part of
+ * the basic driver will be unlocked. This will allow the user to implement
+ * the driver in the same way as for the polled driver, but will
+ * additionally get the interrupt functionality documented below.
  *
  * \section asfdoc_sam0_i2c_slave_interrupt_api_overview I2C Slave Interrupt API Overview
  *
