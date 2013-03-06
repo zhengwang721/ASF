@@ -298,7 +298,7 @@ enum status_code i2c_master_read_packet_job_no_stop(
 	/* Check if the I2C module is busy with a job */
 	if (module->buffer_remaining > 0) {
 		return STATUS_BUSY;
-	
+	}
 
 	/* Make sure we don't send STOP */
 	module->send_stop = false;

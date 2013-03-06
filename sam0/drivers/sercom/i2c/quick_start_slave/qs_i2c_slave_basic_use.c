@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAMD20 Serial Peripheral Interface Driver
+ * \brief SAM D20 I2C Slave Quick Start Guide with Callbacks
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -65,7 +65,7 @@ struct i2c_slave_module sw_module;
 //! [module]
 
 //! [read_request]
-static void read_request_callback(const struct i2c_slave_module *const module)
+static void read_request_callback(struct i2c_slave_module *const module)
 {
 	/* Init i2c packet. */
 	//! [packet_write]
@@ -75,13 +75,14 @@ static void read_request_callback(const struct i2c_slave_module *const module)
 
 	/* Write buffer to master */
 	//! [write_packet]
-	i2c_slave_write_packet_job(&sw_module, &packet);
+	if (i2c_slave_write_packet_job(module, &packet) != STATUS_OK) {
+	}
 	//! [write_packet]
 }
 //! [read_request]
 
 //! [write_request]
-static void write_request_callback(const struct i2c_slave_module *const module)
+static void write_request_callback(struct i2c_slave_module *const module)
 {
 	/* Init i2c packet. */
 	//! [packet_read]
@@ -89,9 +90,10 @@ static void write_request_callback(const struct i2c_slave_module *const module)
 	packet.data        = read_buffer;
 	//! [packet_read]
 
-	/* Read buffer to master */
+	/* Read buffer from master */
 	//! [read_packet]
-	i2c_slave_read_packet_job(&sw_module, &packet);
+	if (i2c_slave_read_packet_job(module, &packet) != STATUS_OK) {
+	}
 	//! [read_packet]
 }
 //! [write_request]
@@ -101,7 +103,7 @@ static void configure_i2c(void)
 {
 	/* Initialize config structure and module instance. */
 	//! [init_conf]
-	struct i2c_slave_conf conf;
+	struct i2c_slave_config conf;
 	i2c_slave_get_config_defaults(&conf);
 	//! [init_conf]
 	/* Change address and address_mode. */
@@ -123,14 +125,13 @@ static void configure_i2c(void)
 //! [setup_i2c_callback]
 static void configure_callbacks(void)
 {
-	/* Register and enable callback functions. */
+	/* Register and enable callback functions */
 	//![reg_en_i2c_callback]
 	i2c_slave_register_callback(&sw_module, read_request_callback, I2C_SLAVE_CALLBACK_READ_REQUEST);
 	i2c_slave_enable_callback(&sw_module, I2C_SLAVE_CALLBACK_READ_REQUEST);
 
 	i2c_slave_register_callback(&sw_module, write_request_callback, I2C_SLAVE_CALLBACK_WRITE_REQUEST);
 	i2c_slave_enable_callback(&sw_module, I2C_SLAVE_CALLBACK_WRITE_REQUEST);
-
 	//![reg_en_i2c_callback]
 
 }
@@ -139,7 +140,7 @@ static void configure_callbacks(void)
 int main(void)
 {
 	//! [run_initialize_i2c]
-	/* Init system. */
+	/* Init system */
 	system_init();
 
 	/* Configure device and enable. */
@@ -148,6 +149,6 @@ int main(void)
 	//! [run_initialize_i2c]
 
 	while (1) {
-		/* Inf loop while waiting for I2C slave interaction.*/
+		/* Inf loop while waiting for I2C master interaction */
 	}
 }

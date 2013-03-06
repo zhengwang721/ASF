@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 Serial Peripheral Interface Driver
+ * \brief SAM D20 I2C Master Quick Start Guide with Callbacks
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -46,28 +46,28 @@
 #define DATA_LENGTH 8
 
 static uint8_t buffer[DATA_LENGTH] = {
-		0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
+	0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07
 };
+
 static uint8_t buffer_reversed[DATA_LENGTH] = {
-		0x07, 0x06, 0x05, 0x04, 0x03, 0x02, 0x01, 0x00
+	0x07, 0x06, 0x05, 0x04, 0x03, 0x02, 0x01, 0x00
 };
 struct i2c_packet packet;
 #define SLAVE_ADDRESS 0x12
 //! [packet_data]
 
-/* Number of time to try and send packet if failed. */
+/* Number of times to try to send packet if failed */
 #define TIMEOUT 1000
 
-/* Init device instance. */
+/* Init software module. */
 //! [dev_inst]
 struct i2c_master_module sw_module;
 //! [dev_inst]
 
-
 //! [callback_func]
-static void write_callback(const struct i2c_master_module *const module)
+static void write_callback(struct i2c_master_module *const module)
 {
-	/* Send every other packet with reversed data. */
+	/* Send every other packet with reversed data */
 	//! [revert_order]
 	if (packet.data[0] == 0x00) {
 		packet.data = &buffer_reversed[0];
@@ -76,9 +76,9 @@ static void write_callback(const struct i2c_master_module *const module)
 	}
 	//! [revert_order]
 
-	/* Initiate new packet write. */
+	/* Initiate new packet write */
 	//! [write_next]
-	i2c_master_write_packet_job(&sw_module, &packet);
+	i2c_master_read_packet_job(module, &packet);
 	//! [write_next]
 }
 //! [callback_func]
@@ -86,20 +86,20 @@ static void write_callback(const struct i2c_master_module *const module)
 //! [initialize_i2c]
 static void configure_i2c(void)
 {
-	/* Initialize config structure and device instance. */
+	/* Initialize config structure and software module */
 	//! [init_conf]
 	struct i2c_master_config conf;
 	i2c_master_get_config_defaults(&conf);
 	//! [init_conf]
 
-	/* Change buffer timeout to something longer. */
+	/* Change buffer timeout to something longer */
 	//! [conf_change]
 	conf.buffer_timeout = 10000;
 	//! [conf_change]
 
-	/* Initialize and enable device with config. */
+	/* Initialize and enable device with config */
 	//! [init_module]
-	i2c_master_init(&sw_module, SERCOM2, &conf);
+	while(i2c_master_init(&sw_module, SERCOM2, &conf) != STATUS_OK);
 	//! [init_module]
 
 	//! [enable_module]
@@ -113,9 +113,6 @@ static void configure_callbacks(void){
 	/* Register callback function. */
 	i2c_master_register_callback(&sw_module, write_callback, I2C_MASTER_CALLBACK_WRITE_COMPLETE);
 	i2c_master_enable_callback(&sw_module, I2C_MASTER_CALLBACK_WRITE_COMPLETE);
-
-	/* Enable interrupts for SERCOM instance. */
-	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_SERCOM2);
 }
 //! [setup_callback]
 
@@ -123,7 +120,8 @@ int main(void)
 {
 	//! [run_initialize_i2c]
 	/* Init system. */
-	system_init();	
+	system_init();
+
 	/* Configure device and enable. */
 	configure_i2c();
 	/* Configure callbacks and enable. */

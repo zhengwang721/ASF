@@ -107,7 +107,7 @@ struct i2c_slave_module;
 
 /** Callback type */
 typedef void (*i2c_slave_callback_t)(
-		const struct i2c_slave_module *const module);
+		struct i2c_slave_module *const module);
 #endif
 
 /**

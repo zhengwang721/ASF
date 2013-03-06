@@ -153,7 +153,7 @@ enum i2c_master_callback {
 struct i2c_master_module;
 
 typedef void (*i2c_master_callback_t)(
-		const struct i2c_master_module *const module);
+		struct i2c_master_module *const module);
 #endif
 #endif
 

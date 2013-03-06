@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 Serial Peripheral Interface Driver
+ * \brief SAM D20 I2C Slave Quick Start Guide with Callbacks
  *
  * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
