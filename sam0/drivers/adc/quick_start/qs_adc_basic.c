@@ -46,7 +46,7 @@ int main(void)
 {
 //! [main]
 //! [variable]
-	struct adc_module dev_inst;
+	struct adc_module module_inst;
 	struct adc_config config;
 //! [variable]
 //! [res_variable]
@@ -58,20 +58,20 @@ int main(void)
 	adc_get_config_defaults(&config);
 //! [get_conf]
 //! [init_adc]
-	adc_init(&dev_inst, ADC, &config);
+	adc_init(&module_inst, ADC, &config);
 //! [init_adc]
 //! [enable]
-	adc_enable(&dev_inst);
+	adc_enable(&module_inst);
 //! [enable]
 
 //! [start_conv]
-	adc_start_conversion(&dev_inst);
+	adc_start_conversion(&module_inst);
 //! [start_conv]
 
 	/* Wait for conversion to be done and read out result */
 //! [get_res]
 	do {
-	} while(adc_read(&dev_inst, &result) == STATUS_BUSY);
+	} while(adc_read(&module_inst, &result) == STATUS_BUSY);
 //! [get_res]
 
 //! [inf_loop]
