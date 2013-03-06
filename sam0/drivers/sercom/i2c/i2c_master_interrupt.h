@@ -105,7 +105,6 @@ static inline void i2c_master_enable_callback(
 	module->enabled_callback |= (1 << callback_type);
 }
 
-
 /**
  * \brief Disables callback
  *
@@ -129,9 +128,9 @@ static inline void i2c_master_disable_callback(
 /** @} */
 
 /**
-* \name Read and Write, Interrupt-Driven
-* @{
-*/
+ * \name Read and Write, Interrupt-Driven
+ * @{
+ */
 
 enum status_code i2c_master_read_packet_job(
 		struct i2c_master_module *const module,
@@ -188,7 +187,6 @@ static inline void i2c_master_abort_job(
  * \retval STATUS_ERR_OVERFLOW         If slave did not acknowledge last sent
  *                                     data, indicating that slave does not
  *                                     want more data and was not able to read
- *                                     
  */
 static inline enum status_code i2c_master_get_job_status(
 		struct i2c_master_module *const module)

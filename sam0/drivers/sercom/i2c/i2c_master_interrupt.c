@@ -44,11 +44,11 @@
 #include "i2c_master_interrupt.h"
 
 /**
- * \internal Read next data.
+ * \internal Read next data
  *
  * Used by interrupt handler to get next data byte from slave.
  *
- * \param module Pointer to software module structure.
+ * \param module Pointer to software module structure
  */
 static void _i2c_master_read(struct i2c_master_module *const module)
 {
@@ -75,17 +75,17 @@ static void _i2c_master_read(struct i2c_master_module *const module)
 }
 
 /**
- * \internal Write next data.
+ * \internal Write next data
  *
  * Used by interrupt handler to send next data byte to slave.
  *
- * \param module Pointer to software module structure.
+ * \param module Pointer to software module structure
  */
 static void _i2c_master_write(struct i2c_master_module *const module)
 {
 	SercomI2cm *const i2c_module = &(module->hw->I2CM);
 
-	/* Check for ack from slave. */
+	/* Check for ack from slave */
 	if (i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_RXNACK)
 	{
 		/* Set status */
@@ -94,40 +94,42 @@ static void _i2c_master_write(struct i2c_master_module *const module)
 		return;
 	}
 
-	/* Find index to get next byte in buffer. */
+	/* Find index to get next byte in buffer */
 	uint16_t buffer_index = module->buffer_length -
 			module->buffer_remaining--;
 
-	/* Write byte from buffer to slave. */
+	/* Write byte from buffer to slave */
 	_i2c_master_wait_for_sync(module);
 	i2c_module->DATA.reg = module->buffer[buffer_index];
 }
 
 /**
- * \internal Act on slave address response.
+ * \internal Act on slave address response
  *
  * Check for errors concerning master->slave handshake.
  *
- * \param module Pointer to software module structure.
+ * \param module Pointer to software module structure
  */
 static void _i2c_master_async_address_response(
 		struct i2c_master_module *const module)
 {
 	SercomI2cm *const i2c_module = &(module->hw->I2CM);
 
-	/* Check for error. Ignore bus-error; workaround for busstate stuck in BUSY. */
+	/* Check for error. Ignore bus-error; workaround for busstate stuck in
+	 * BUSY.
+	 */
 	if (i2c_module->INTFLAG.reg & SERCOM_I2CM_INTFLAG_WIF)
 	{
-		/* Clear write interrupt flag. */
+		/* Clear write interrupt flag */
 		i2c_module->INTFLAG.reg = SERCOM_I2CM_INTENCLR_WIEN;
 
-		/* Check arbitration. */
+		/* Check arbitration */
 		if (i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_ARBLOST) {
-			/* Return busy. */
+			/* Return busy */
 			module->status = STATUS_ERR_PACKET_COLLISION;
 		}
 	} else if (i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_RXNACK) {
-		/* Return bad address value. */
+		/* Return bad address value */
 		module->status = STATUS_ERR_BAD_ADDRESS;
 		module->buffer_remaining = 0;
 		if (module->send_stop) {
@@ -151,9 +153,9 @@ static void _i2c_master_async_address_response(
 }
 
 /**
- * \brief Register callback for the specified callback type.
+ * \brief Register callback for the specified callback type
  *
-* This will associate the given callback function with the
+ * This will associate the given callback function with the
  * specified callback type.
  * To enable the callback, the \ref i2c_master_enable_callback function
  * must be used.
@@ -168,20 +170,20 @@ void i2c_master_register_callback(
 		const i2c_master_callback_t callback,
 		enum i2c_master_callback callback_type)
 {
-	/* Sanity check. */
+	/* Sanity check */
 	Assert(module);
 	Assert(module->hw);
 	Assert(callback);
 
-	/* Register callback. */
+	/* Register callback */
 	module->callbacks[callback_type] = callback;
 
-	/* Set corresponding bit to set callback as registered. */
+	/* Set corresponding bit to set callback as registered */
 	module->registered_callback |= (1 << callback_type);
 }
 
 /**
- * \brief Unregister callback for the specified callback type.
+ * \brief Unregister callback for the specified callback type
  *
  * When called, the currently registered callback for the given callback type
  * will be removed.
@@ -193,11 +195,11 @@ void i2c_master_unregister_callback(
 		struct i2c_master_module *const module,
 		enum i2c_master_callback callback_type)
 {
-	/* Sanity check. */
+	/* Sanity check */
 	Assert(module);
 	Assert(module->hw);
 
-	/* Register callback. */
+	/* Register callback */
 	module->callbacks[callback_type] = 0;
 
 	/* Clear corresponding bit to set callback as unregistered */
@@ -211,7 +213,7 @@ void i2c_master_unregister_callback(
  * \param[in,out] packet  Pointer to I2C packet to transfer
  *
  * \return              Status of starting reading I2C packet
-  * \retval STATUS_OK   If reading was started successfully
+ * \retval STATUS_OK   If reading was started successfully
  * \retval STATUS_BUSY  If module is currently busy with another transfer
  */
 static enum status_code _i2c_master_read_packet(
@@ -220,16 +222,17 @@ static enum status_code _i2c_master_read_packet(
 {
 	SercomI2cm *const i2c_module = &(module->hw->I2CM);
 
-	/* Save packet to software module. */
+	/* Save packet to software module */
 	module->buffer = packet->data;
 	module->buffer_remaining = packet->data_length;
 	module->transfer_direction = 1;
 	module->status = STATUS_BUSY;
 
-	/* Enable interrupts. */
-	i2c_module->INTENSET.reg = SERCOM_I2CM_INTENSET_WIEN | SERCOM_I2CM_INTENSET_RIEN;
+	/* Enable interrupts */
+	i2c_module->INTENSET.reg = SERCOM_I2CM_INTENSET_WIEN |
+			SERCOM_I2CM_INTENSET_RIEN;
 
-	/* Set address and direction bit. Will send start command on bus. */
+	/* Set address and direction bit. Will send start command on bus */
 	i2c_module->ADDR.reg = (packet->address << 1) | _I2C_TRANSFER_READ;
 
 	return STATUS_OK;
@@ -257,10 +260,11 @@ enum status_code i2c_master_read_packet_job(
 	Assert(module->hw);
 	Assert(packet);
 
-	/* Check if the I2C module is busy with a job. */
+	/* Check if the I2C module is busy with a job */
 	if (module->buffer_remaining > 0) {
 		return STATUS_BUSY;
 	}
+
 	/* Make sure we send STOP */
 	module->send_stop = true;
 
@@ -291,10 +295,11 @@ enum status_code i2c_master_read_packet_job_no_stop(
 	Assert(module->hw);
 	Assert(packet);
 
-	/* Check if the I2C module is busy with a job. */
+	/* Check if the I2C module is busy with a job */
 	if (module->buffer_remaining > 0) {
 		return STATUS_BUSY;
-	}
+	
+
 	/* Make sure we don't send STOP */
 	module->send_stop = false;
 
@@ -318,16 +323,17 @@ static enum status_code _i2c_master_write_packet(
 {
 	SercomI2cm *const i2c_module = &(module->hw->I2CM);
 
-	/* Save packet to software module. */
+	/* Save packet to software module */
 	module->buffer = packet->data;
 	module->buffer_remaining = packet->data_length;
 	module->transfer_direction = 0;
 	module->status = STATUS_BUSY;
 
-	/* Enable interrupts. */
-	i2c_module->INTENSET.reg = SERCOM_I2CM_INTENSET_WIEN | SERCOM_I2CM_INTENSET_RIEN;
+	/* Enable interrupts */
+	i2c_module->INTENSET.reg = SERCOM_I2CM_INTENSET_WIEN |
+			SERCOM_I2CM_INTENSET_RIEN;
 
-	/* Set address and direction bit. Will send start command on bus. */
+	/* Set address and direction bit, will send start command on bus */
 	i2c_module->ADDR.reg = (packet->address << 1) | _I2C_TRANSFER_WRITE;
 
 	return STATUS_OK;
@@ -409,24 +415,26 @@ enum status_code i2c_master_write_packet_job_no_stop(
  */
 void _i2c_master_interrupt_handler(uint8_t instance)
 {
-	/* Get software module for callback handling. */
+	/* Get software module for callback handling */
 	struct i2c_master_module *module =
 			(struct i2c_master_module*)_sercom_instances[instance];
 	SercomI2cm *const i2c_module = &(module->hw->I2CM);
 
-	/* Combine callback registered and enabled masks. */
-	uint8_t callback_mask = module->enabled_callback & module->registered_callback;
+	/* Combine callback registered and enabled masks */
+	uint8_t callback_mask = module->enabled_callback &
+			module->registered_callback;
 
-	/* Check if the module should response to address ack. */
+	/* Check if the module should respond to address ack */
 	if (module->buffer_length <= 0 && module->buffer_remaining > 0) {
-		/* Call function for address response. */
+		/* Call function for address response */
 		_i2c_master_async_address_response(module);
 
 	/* Check if buffer write is done */
 	} else if (module->buffer_length > 0 && module->buffer_remaining <= 0 &&
 			module->status == STATUS_BUSY && module->transfer_direction == 0) {
-		/* Stop packet operation. */
-		i2c_module->INTENCLR.reg = SERCOM_I2CM_INTENCLR_WIEN | SERCOM_I2CM_INTENCLR_RIEN;
+		/* Stop packet operation */
+		i2c_module->INTENCLR.reg = SERCOM_I2CM_INTENCLR_WIEN |
+				SERCOM_I2CM_INTENCLR_RIEN;
 		module->buffer_length = 0;
 		module->status = STATUS_OK;
 		if (module->send_stop) {
@@ -434,16 +442,17 @@ void _i2c_master_interrupt_handler(uint8_t instance)
 			_i2c_master_wait_for_sync(module);
 			i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_CMD(3);
 		}
-		if 	(callback_mask & (1 << I2C_MASTER_CALLBACK_WRITE_COMPLETE)) {
+		if (callback_mask & (1 << I2C_MASTER_CALLBACK_WRITE_COMPLETE)) {
 			module->callbacks[I2C_MASTER_CALLBACK_WRITE_COMPLETE](module);
 		}
-	/* Continue buffer write/read. */
+
+	/* Continue buffer write/read */
 	} else if (module->buffer_length > 0 && module->buffer_remaining > 0){
-		/* Check that bus ownership is not lost. */
+		/* Check that bus ownership is not lost */
 		if (!(i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_BUSSTATE(2))) {
 			module->status = STATUS_ERR_PACKET_COLLISION;
 
-		/* Call function based on transfer direction. */
+		/* Call function based on transfer direction */
 		} else if (module->transfer_direction <= 0) {
 			_i2c_master_write(module);
 		} else {
@@ -451,44 +460,44 @@ void _i2c_master_interrupt_handler(uint8_t instance)
 		}
 	}
 
-	/* Check if read buffer transfer is complete. */
+	/* Check if read buffer transfer is complete */
 	if (module->buffer_length > 0 && module->buffer_remaining <= 0 &&
 			module->status == STATUS_BUSY && module->transfer_direction == 1) {
 
-		/* Stop packet operation. */
-		i2c_module->INTENCLR.reg = SERCOM_I2CM_INTENCLR_WIEN | SERCOM_I2CM_INTENCLR_RIEN;
+		/* Stop packet operation */
+		i2c_module->INTENCLR.reg = SERCOM_I2CM_INTENCLR_WIEN |
+				SERCOM_I2CM_INTENCLR_RIEN;
 		module->buffer_length = 0;
 		module->status = STATUS_OK;
 
-		/* Call appropriate callback if enabled and registered. */
+		/* Call appropriate callback if enabled and registered */
 		if ((callback_mask & (1 << I2C_MASTER_CALLBACK_READ_COMPLETE))
 				&& (module->transfer_direction == 1)) {
-
 			module->callbacks[I2C_MASTER_CALLBACK_READ_COMPLETE](module);
-
 		} else if ((callback_mask & (1 << I2C_MASTER_CALLBACK_WRITE_COMPLETE))
 				&& (module->transfer_direction == 0)) {
-
 			module->callbacks[I2C_MASTER_CALLBACK_WRITE_COMPLETE](module);
 		}
 	}
 
-	/* Check for error. */
+	/* Check for error */
 	if (module->status != STATUS_BUSY && module->status != STATUS_OK) {
-		/* Stop packet operation. */
-		i2c_module->INTENCLR.reg = SERCOM_I2CM_INTENCLR_WIEN | SERCOM_I2CM_INTENCLR_RIEN;
+		/* Stop packet operation */
+		i2c_module->INTENCLR.reg = SERCOM_I2CM_INTENCLR_WIEN |
+				SERCOM_I2CM_INTENCLR_RIEN;
 		module->buffer_length = 0;
 		module->buffer_remaining = 0;
 
-		/* Send nack and stop command unless arbitration is lost. */
-		if (module->status != STATUS_ERR_PACKET_COLLISION && module->send_stop) {
+		/* Send nack and stop command unless arbitration is lost */
+		if (module->status != STATUS_ERR_PACKET_COLLISION &&
+				module->send_stop) {
 			_i2c_master_wait_for_sync(module);
-			i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_ACKACT | SERCOM_I2CM_CTRLB_CMD(3);
+			i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_ACKACT |
+					SERCOM_I2CM_CTRLB_CMD(3);
 		}
 
-		/* Call error callback if enabled and registered. */
+		/* Call error callback if enabled and registered */
 		if (callback_mask & (1 << I2C_MASTER_CALLBACK_ERROR)) {
-
 			module->callbacks[I2C_MASTER_CALLBACK_ERROR](module);
 		}
 	}

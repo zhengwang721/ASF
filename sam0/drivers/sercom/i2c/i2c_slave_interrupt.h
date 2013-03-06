@@ -92,7 +92,7 @@ enum i2c_slave_callback {
 	I2C_SLAVE_CALLBACK_ERROR,
 	/** 
 	 * Callback for error in last transfer. Discovered on a new address
-	 * interrupt 
+	 * interrupt
 	 */
 	I2C_SLAVE_CALLBACK_ERROR_LAST_TRANSFER,
 #if !defined(__DOXYGEN__)
@@ -119,17 +119,17 @@ typedef void (*i2c_slave_callback_t)(
  */
 enum i2c_slave_sda_hold_time {
 	/** SDA hold time disabled */
-	I2C_SLAVE_SDA_HOLD_TIME_DISABLED = ((SERCOM_I2CS_CTRLA_SDAHOLD_Msk & ((0)
-			<< SERCOM_I2CS_CTRLA_SDAHOLD_Pos))),
+	I2C_SLAVE_SDA_HOLD_TIME_DISABLED = ((SERCOM_I2CS_CTRLA_SDAHOLD_Msk &
+			((0) << SERCOM_I2CS_CTRLA_SDAHOLD_Pos))),
 	/** SDA hold time 50ns-100ns */
-	I2C_SLAVE_SDA_HOLD_TIME_50NS_100NS = ((SERCOM_I2CS_CTRLA_SDAHOLD_Msk & ((1)
-			<< SERCOM_I2CS_CTRLA_SDAHOLD_Pos))),
+	I2C_SLAVE_SDA_HOLD_TIME_50NS_100NS = ((SERCOM_I2CS_CTRLA_SDAHOLD_Msk &
+			((1) << SERCOM_I2CS_CTRLA_SDAHOLD_Pos))),
 	/** SDA hold time 300ns-600ns */
-	I2C_SLAVE_SDA_HOLD_TIME_300NS_600NS = ((SERCOM_I2CS_CTRLA_SDAHOLD_Msk & ((2)
-			<< SERCOM_I2CS_CTRLA_SDAHOLD_Pos))),
+	I2C_SLAVE_SDA_HOLD_TIME_300NS_600NS = ((SERCOM_I2CS_CTRLA_SDAHOLD_Msk &
+			((2) << SERCOM_I2CS_CTRLA_SDAHOLD_Pos))),
 	/** SDA hold time 400ns-800ns */
-	I2C_SLAVE_SDA_HOLD_TIME_400NS_800NS = ((SERCOM_I2CS_CTRLA_SDAHOLD_Msk & ((3)
-			<< SERCOM_I2CS_CTRLA_SDAHOLD_Pos))),
+	I2C_SLAVE_SDA_HOLD_TIME_400NS_800NS = ((SERCOM_I2CS_CTRLA_SDAHOLD_Msk &
+		((3) << SERCOM_I2CS_CTRLA_SDAHOLD_Pos))),
 };
 
 /**
@@ -144,7 +144,7 @@ enum i2c_slave_sda_hold_time {
 	I2C_SLAVE_ADDRESS_MODE_TWO_ADDRESSES = SERCOM_I2CS_CTRLB_AMODE(1),
 	/** 
 	 * Address match on range of addresses between and including address and
-	 * address_mask 
+	 * address_mask
 	 */
 	I2C_SLAVE_ADDRESS_MODE_RANGE = SERCOM_I2CS_CTRLB_AMODE(2),
  };
@@ -370,10 +370,10 @@ static inline void i2c_slave_disable(
 	/* Enable Global interrupt for module */
 	system_interrupt_disable(_sercom_get_interrupt_vector(module->hw));
 
-	/* Wait for module to sync. */
+	/* Wait for module to sync */
 	_i2c_slave_wait_for_sync(module);
 
-	/* Disable module. */
+	/* Disable module */
 	i2c_hw->CTRLA.reg &= ~SERCOM_I2CS_CTRLA_ENABLE;
 }
 
@@ -414,14 +414,13 @@ static inline void i2c_slave_enable_callback(
 		struct i2c_slave_module *const module,
 		enum i2c_slave_callback callback_type)
 {
-	/* Sanity check. */
+	/* Sanity check */
 	Assert(module);
 	Assert(module->hw);
 
-	/* Mark callback as enabled. */
+	/* Mark callback as enabled */
 	module->enabled_callback |= (1 << callback_type);
 }
-
 
 /**
  * \brief Disables callback
@@ -435,19 +434,20 @@ static inline void i2c_slave_disable_callback(
 		struct i2c_slave_module *const module,
 		enum i2c_slave_callback callback_type)
 {
-	/* Sanity check. */
+	/* Sanity check */
 	Assert(module);
 	Assert(module->hw);
 
-	/* Mark callback as enabled. */
+	/* Mark callback as enabled */
 	module->enabled_callback &= ~(1 << callback_type);
 }
+
 /** @} */
 
 /**
-* \name Read and Write, Interrupt-Driven
-* @{
-*/
+ * \name Read and Write, Interrupt-Driven
+ * @{
+ */
 
 enum status_code i2c_slave_read_packet_job(
 		struct i2c_slave_module *const module,

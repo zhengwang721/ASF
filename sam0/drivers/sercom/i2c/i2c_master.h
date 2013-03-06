@@ -44,8 +44,8 @@
 #ifndef I2C_MASTER_H_INCLUDED
 #define I2C_MASTER_H_INCLUDED
 
-#include <sercom.h>
 #include "i2c_common.h"
+#include <sercom.h>
 #include <pinmux.h>
 
 #ifdef I2C_MASTER_ASYNC
@@ -71,6 +71,7 @@ extern "C" {
  * @{
  *
  */
+
 #if !defined(__DOXYGEN__)
 /**
  * \internal Setting direction bit in address
@@ -165,35 +166,36 @@ typedef void (*i2c_master_callback_t)(
  * hardware instance and configurations.
  */
 struct i2c_master_module {
-	/** Hardware instance initialized for the struct. */
+	/** Hardware instance initialized for the struct */
 	Sercom *hw;
-	/** Unknown bus state timeout. */
+	/** Unknown bus state timeout */
 	uint16_t unknown_bus_state_timeout;
-	/** Buffer write timeout value. */
+	/** Buffer write timeout value */
 	uint16_t buffer_timeout;
 	/** If true, stop condition will be sent after a read/write */
 	bool send_stop;
 #ifdef I2C_MASTER_ASYNC
-	/** Pointers to callback functions. */
+	/** Pointers to callback functions */
 	volatile i2c_master_callback_t callbacks[_I2C_MASTER_CALLBACK_N];
-	/** Mask for registered callbacks. */
+	/** Mask for registered callbacks */
 	volatile uint8_t registered_callback;
-	/** Mask for enabled callbacks. */
+	/** Mask for enabled callbacks */
 	volatile uint8_t enabled_callback;
-	/** The total number of bytes to transfer. */
+	/** The total number of bytes to transfer */
 	volatile uint16_t buffer_length;
-	/** Counter used for bytes left to send in write and to count number of
-	 * obtained bytes in read. */
+	/** 
+	 * Counter used for bytes left to send in write and to count number of
+	 * obtained bytes in read
+	 */
 	volatile uint16_t buffer_remaining;
-	/** Data buffer for packet write and read. */
+	/** Data buffer for packet write and read */
 	volatile uint8_t *buffer;
-	/** Save direction of async request. 1 = read, 0 = write. */
+	/** Save direction of async request. 1 = read, 0 = write */
 	volatile uint8_t transfer_direction;
-	/** Status for status read back in error callback. */
+	/** Status for status read back in error callback */
 	volatile enum status_code status;
 #endif
 };
-
 
 /**
  * \brief Configuration structure for the I2C Master device
@@ -259,7 +261,8 @@ static void _i2c_master_wait_for_sync(
  * \retval true  Module is busy synchronizing
  * \retval false Module is not synchronizing
  */
-static inline bool i2c_master_is_syncing (const struct i2c_master_module *const module)
+static inline bool i2c_master_is_syncing (
+		const struct i2c_master_module *const module)
 {
 	/* Sanity check. */
 	Assert(module);
@@ -267,7 +270,7 @@ static inline bool i2c_master_is_syncing (const struct i2c_master_module *const 
 
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
 
-	return (i2c_hw->STATUS.reg & SERCOM_I2CS_STATUS_SYNCBUSY);	
+	return (i2c_hw->STATUS.reg & SERCOM_I2CS_STATUS_SYNCBUSY);
 }
 
 /**
@@ -302,7 +305,8 @@ static inline void i2c_master_get_config_defaults(
 	config->pinmux_pad1 = PINMUX_DEFAULT;
 }
 
-enum status_code i2c_master_init(struct i2c_master_module *const module,
+enum status_code i2c_master_init(
+		struct i2c_master_module *const module,
 		Sercom *const hw,
 		const struct i2c_master_config *const config);
 
@@ -344,7 +348,7 @@ static inline void i2c_master_enable(
 			/* Timeout, force bus state to idle. */
 			i2c_module->STATUS.reg = SERCOM_I2CM_STATUS_BUSSTATE(1);
 			/* Workaround #1 */
-		return;
+			return;
 		}
 	}
 }

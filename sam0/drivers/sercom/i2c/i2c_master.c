@@ -77,9 +77,9 @@ static enum status_code _i2c_master_set_config(
 
 	SercomI2cm *const i2c_module = &(module->hw->I2CM);
 	Sercom *const sercom_hw = module->hw;
-	
+
 	uint8_t sercom_index = _sercom_get_sercom_inst_index(sercom_hw);
-	
+
 	/* Pin configuration */
 	struct system_pinmux_config pin_conf;
 	uint32_t pad0 = config->pinmux_pad0;
@@ -90,6 +90,7 @@ static enum status_code _i2c_master_set_config(
 	if (pad0 == PINMUX_DEFAULT) {
 		pad0 = _sercom_get_default_pad(sercom_hw, 0);
 	}
+
 	pin_conf.mux_position = pad0 & 0xFFFF;
 	pin_conf.direction = SYSTEM_PINMUX_PIN_DIR_OUTPUT_WITH_READBACK;
 	system_pinmux_pin_set_config(pad0 >> 16, &pin_conf);
@@ -98,6 +99,7 @@ static enum status_code _i2c_master_set_config(
 	if (pad1 == PINMUX_DEFAULT) {
 		pad1 = _sercom_get_default_pad(sercom_hw, 1);
 	}
+
 	pin_conf.mux_position = pad1 & 0xFFFF;
 	system_pinmux_pin_set_config(pad1 >> 16, &pin_conf);
 
@@ -125,16 +127,15 @@ static enum status_code _i2c_master_set_config(
 
 	/* Set configurations in CTRLB. */
 	i2c_module->CTRLB.reg = SERCOM_I2CM_CTRLB_SMEN;
-	
+
 	/* Find and set baudrate. */
-	tmp_baud = (int32_t)((system_gclk_chan_get_hz(SERCOM0_GCLK_ID_CORE + sercom_index)
-			/ (2000*(config->baud_rate))) - 5);
+	tmp_baud = (int32_t)((system_gclk_chan_get_hz(SERCOM0_GCLK_ID_CORE +
+			sercom_index) / (2000*(config->baud_rate))) - 5);
 
 	/* Check that baud rate is supported at current speed. */
 	if (tmp_baud > 255 || tmp_baud < 0) {
 		/* Baud rate not supported. */
 		tmp_status_code = STATUS_ERR_BAUDRATE_UNAVAILABLE;
-
 	} else {
 		/* Baud rate acceptable. */
 		i2c_module->BAUD.reg = (uint8_t)tmp_baud;
@@ -195,14 +196,13 @@ enum status_code i2c_master_init(struct i2c_master_module *const module,
 	system_gclk_chan_enable(gclk_index);
 	system_gclk_chan_enable(SERCOM_GCLK_ID);
 
-
 	/* Check if module is enabled. */
 	if (i2c_module->CTRLA.reg & SERCOM_I2CM_CTRLA_ENABLE) {
 		return STATUS_ERR_DENIED;
 	}
 
 	/* Check if reset is in progress. */
-	if (i2c_module->CTRLA.reg & SERCOM_I2CM_CTRLA_SWRST){
+	if (i2c_module->CTRLA.reg & SERCOM_I2CM_CTRLA_SWRST) {
 		return STATUS_BUSY;
 	}
 
@@ -219,8 +219,8 @@ enum status_code i2c_master_init(struct i2c_master_module *const module,
 #endif
 
 	/* Set sercom module to operate in I2C master mode. */
-	i2c_module->CTRLA.reg = SERCOM_I2CS_CTRLA_MODE(2)
-			| SERCOM_I2CS_CTRLA_MASTER;
+	i2c_module->CTRLA.reg = SERCOM_I2CS_CTRLA_MODE(2) |
+			SERCOM_I2CS_CTRLA_MASTER;
 
 	/* Set config and return status. */
 	return _i2c_master_set_config(module, config);
@@ -235,29 +235,29 @@ enum status_code i2c_master_init(struct i2c_master_module *const module,
  */
 void i2c_master_reset(struct i2c_master_module *const module)
 {
-	/* Sanity check arguments. */
+	/* Sanity check arguments */
 	Assert(module);
 	Assert(module->hw);
 
 	SercomI2cm *const i2c_module = &(module->hw->I2CM);
 
-	/* Wait for sync. */
+	/* Wait for sync */
 	_i2c_master_wait_for_sync(module);
 
-	/* Disable module. */
+	/* Disable module */
 	i2c_master_disable(module);
 
-#ifdef I2C_MASTER_ASYNC	
-	/* Clear all pending interrupts. */
+#ifdef I2C_MASTER_ASYNC
+	/* Clear all pending interrupts */
 	system_interrupt_enter_critical_section();
 	system_interrupt_clear_pending(_sercom_get_interrupt_vector(module->hw));
 	system_interrupt_leave_critical_section();
 #endif
 	
-	/* Wait for sync. */
+	/* Wait for sync */
 	_i2c_master_wait_for_sync(module);
 
-	/* Reset module. */
+	/* Reset module */
 	i2c_module->CTRLA.reg = SERCOM_I2CM_CTRLA_SWRST;
 }
 
@@ -281,10 +281,11 @@ static enum status_code _i2c_master_address_response(
 {
 	SercomI2cm *const i2c_module = &(module->hw->I2CM);
 
-	/* Check for error. Ignore bus-error; workaround for BUSSTATE stuck in BUSY. */
+	/* Check for error and ignore bus-error; workaround for BUSSTATE stuck in
+	* BUSY */
 	if (i2c_module->INTFLAG.reg & SERCOM_I2CM_INTFLAG_RIF) {
 
-		/* Clear write interrupt flag. */
+		/* Clear write interrupt flag */
 		i2c_module->INTFLAG.reg = SERCOM_I2CM_INTFLAG_RIF;
 
 		/* Check arbitration. */
@@ -385,6 +386,7 @@ static enum status_code _i2c_master_read(
 			if (!(i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_BUSSTATE(2))) {
 				return STATUS_ERR_PACKET_COLLISION;
 			}
+
 			if (tmp_data_length == 0) {
 				/* Set action to NACK */
 				i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_ACKACT;
@@ -521,7 +523,6 @@ static enum status_code _i2c_master_write_packet(
 		struct i2c_master_module *const module,
 		struct i2c_packet *const packet)
 {
-
 	SercomI2cm *const i2c_module = &(module->hw->I2CM);
 
 	/* Return value. */
@@ -567,11 +568,10 @@ static enum status_code _i2c_master_write_packet(
 			}
 
 			/* Check for NACK from slave. */
-			if (i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_RXNACK)
-			{
-					/* Return bad data value. */
-					tmp_status = STATUS_ERR_OVERFLOW;
-					break;				
+			if (i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_RXNACK) {
+				/* Return bad data value. */
+				tmp_status = STATUS_ERR_OVERFLOW;
+				break;
 			}
 		}
 
@@ -690,7 +690,8 @@ enum status_code i2c_master_write_packet_wait_no_stop(
  *
  * \param[in] module  Pointer to the software instance struct
  */
-void i2c_master_send_stop(struct i2c_master_module *const module) {
+void i2c_master_send_stop(struct i2c_master_module *const module)
+{
 	/* Sanity check */
 	Assert(module);
 	Assert(module->hw);

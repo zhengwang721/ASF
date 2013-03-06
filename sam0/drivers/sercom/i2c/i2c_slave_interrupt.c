@@ -505,20 +505,21 @@ void _i2c_slave_interrupt_handler(uint8_t instance)
 		module->buffer_length = 0;
 		module->buffer_remaining = 0;
 
-		/* Clear Stop interrupt. */
+		/* Clear Stop interrupt */
 		i2c_hw->INTFLAG.reg |= SERCOM_I2CS_INTFLAG_PIF;
 
-		/* Call appropriate callback if enabled and registered. */
+		/* Call appropriate callback if enabled and registered */
 		if ((callback_mask & (1 << I2C_SLAVE_CALLBACK_READ_COMPLETE))
 				&& (module->transfer_direction == 0)) {
 			/* Read from master complete */
 			module->callbacks[I2C_SLAVE_CALLBACK_READ_COMPLETE](module);
 		}
 	} else if (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_DIF) {
-		/* Check if buffer is full, or NACK from master. */
+		/* Check if buffer is full, or NACK from master */
 		if (module->buffer_remaining <= 0 ||
-				(module->transfer_direction == 1 && (module->buffer_length > module->buffer_remaining)
-				&& (i2c_hw->STATUS.reg & SERCOM_I2CS_STATUS_RXNACK))) {
+				(module->transfer_direction == 1 &&
+				(module->buffer_length > module->buffer_remaining) &&
+				(i2c_hw->STATUS.reg & SERCOM_I2CS_STATUS_RXNACK))) {
 
 			module->buffer_remaining = 0;
 			module->buffer_length = 0;
@@ -540,19 +541,18 @@ void _i2c_slave_interrupt_handler(uint8_t instance)
 				i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_ACKACT;
 				i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_CMD(0x2);
 
-				/* Transfer successful. */
+				/* Transfer successful */
 				module->status = STATUS_OK;
 
-				// if pif - twice?
 				if (callback_mask & (1 << I2C_SLAVE_CALLBACK_WRITE_COMPLETE)) {
 					/* No more data to write, write complete */
 					module->callbacks[I2C_SLAVE_CALLBACK_WRITE_COMPLETE](module);
 				}
 			}
 
-		/* Continue buffer write/read. */
+		/* Continue buffer write/read */
 		} else if (module->buffer_length > 0 && module->buffer_remaining > 0) {
-			/* Call function based on transfer direction. */
+			/* Call function based on transfer direction */
 			if (module->transfer_direction == 0) {
 				_i2c_slave_read(module);
 			} else {

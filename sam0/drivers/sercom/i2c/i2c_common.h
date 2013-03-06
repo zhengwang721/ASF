@@ -64,7 +64,6 @@ extern "C" {
  *     - \ref asfdoc_sam0_i2c_master_interrupt_group
  *   - I2C Slave Mode:
  *     - \ref asfdoc_sam0_i2c_slave_interrupt_group
- *   
  *
  * The outline of this documentation is as follows:
  * - \ref asfdoc_sam0_i2c_prerequisites
@@ -79,8 +78,8 @@ extern "C" {
  *
  * \section asfdoc_sam0_i2c_overview Module Overview
  * The outline of this section is as follows:
- * - \ref asfdoc_sam0_i2c_functional_desc 
- * - \ref asfdoc_sam0_i2c_bus_topology 
+ * - \ref asfdoc_sam0_i2c_functional_desc
+ * - \ref asfdoc_sam0_i2c_bus_topology
  * - \ref asfdoc_sam0_i2c_transactions
  * - \ref asfdoc_sam0_i2c_multi_master
  * - \ref asfdoc_sam0_i2c_bus_states
@@ -219,7 +218,7 @@ extern "C" {
  *
  * \subsection asfdoc_sam0_i2c_transactions Transactions
  * The I2C standard define three fundamental transaction formats:
-* There are three fundamental transaction formats:
+ * There are three fundamental transaction formats:
  * \li Master Write
  *   - The master transmits data packets to the slave after addressing it.
  * \li Master Read
@@ -556,7 +555,6 @@ struct i2c_packet {
 
 /** @} */
 
-
 #ifdef __cplusplus
 }
 #endif
@@ -587,20 +585,23 @@ struct i2c_packet {
  *		<td>SCL</td>
  *		<td>Serial Clock Line</td>
  *	</tr>
-  * </table>
+ * </table>
  *
  * \section asfdoc_sam0_i2c_workarounds Workarounds implemented by driver
  * Master:
  * - A bug in hardware makes the master go straigth from IDLE to BUSY bus state.
- * As a workaround the inactive timeout is enabled, which will force the bus state
- * back to IDLE. If a address is written while the bus state was in BUSY, the
- * hardware will be able to generate a start condition and enter OWNER
+ * As a workaround the inactive timeout is enabled, which will force the bus
+ * state back to IDLE. If a address is written while the bus state was in BUSY,
+ * the hardware will be able to generate a start condition and enter OWNER
  * before the hardware bug makes it go into the internal BUSY state.
  * As result of the timeout, there will be generated at BUSERR, thus the
  * workaround ignores all these errors.
  *
  * Slave:
- * - A bug in hardware makes the PIF (Stop condition) interrupt not 
+ * - A bug in hardware makes the PIF (Stop condition) interrupt only fire
+ * occasionally. This means that the callback for a read will not be called
+ * until a new address packet it received. The write callback will be called
+ * when the master nacks the data, or when the entire packet is written.
  *
  * \section module_history Module History
  * Below is an overview of the module history, detailing enhancements and fixes
