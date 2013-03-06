@@ -143,7 +143,7 @@ void ssd1306_init(void)
  * \brief Display text on OLED screen.
  * \param string String to display.
  */
-void ssd1306_write_text(uint8_t * string)
+void ssd1306_write_text(const char *string)
 {
 	uint8_t *char_ptr;
 	uint8_t i;
