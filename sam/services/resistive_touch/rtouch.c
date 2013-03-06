@@ -124,16 +124,17 @@ static uint8_t rtouch_is_calibrated(void)
  * \param p_data  Raw measurement data.
  * \param p_point  Array in which x and y will be stored.
  */
-static void rtouch_get_calibrated_point(const rtouch_point_t *p_raw, rtouch_point_t *p_point)
+static void rtouch_get_calibrated_point(const rtouch_point_t *p_raw,
+		rtouch_point_t *p_point)
 {
 	int32_t point_x,point_y;
 	point_x = calibration_point_0.panel.x
-			- (((int32_t) calibration_point_0.raw.x - (int32_t) p_raw->x) * MULTI_FACTOR)
-			/ g_l_xslope;
+			- (((int32_t) calibration_point_0.raw.x - (int32_t) p_raw->x)
+			* MULTI_FACTOR) / g_l_xslope;
 
 	point_y = calibration_point_0.panel.y
-			- (((int32_t) calibration_point_0.raw.y - (int32_t) p_raw->y) * MULTI_FACTOR)
-			/ g_l_yslope;
+			- (((int32_t) calibration_point_0.raw.y - (int32_t) p_raw->y)
+			* MULTI_FACTOR) / g_l_yslope;
 
 	p_point->x = (point_x > 0) ? point_x : 0;
 	p_point->x = (p_point->x > g_ul_width) ? g_ul_width : p_point->x;

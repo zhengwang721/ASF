@@ -78,7 +78,6 @@
 #include "conf_board.h"
 #include "conf_clock.h"
 #include "smc.h"
-#include "ili9341_regs.h"
 
 /** Chip select number to be set */
 #define ILI93XX_LCD_CS      1

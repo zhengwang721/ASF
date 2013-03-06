@@ -65,20 +65,20 @@
 
 /** Get X position command */
 #define CMD_Y_POSITION ((1 << ADS_CTRL_SWITCH_SHIFT) | ADS_CTRL_START |\
-								ADS_CTRL_PD0 | ADS_CTRL_PD1)
+		ADS_CTRL_PD0 | ADS_CTRL_PD1)
 
 /** Get Y position command */
 #define CMD_X_POSITION ((5 << ADS_CTRL_SWITCH_SHIFT) | ADS_CTRL_START |\
-								ADS_CTRL_PD0 | ADS_CTRL_PD1)
+		ADS_CTRL_PD0 | ADS_CTRL_PD1)
 
 /** Enable penIRQ */
 #define CMD_ENABLE_PENIRQ  ((1 << ADS_CTRL_SWITCH_SHIFT) | ADS_CTRL_START)
 
 #define ADS7843_TIMEOUT        5000000
-#define ADS7843_BUFSIZE           3
+#define ADS7843_BUFSIZE        3
 
 /** Frequence rate for sending one bit */
-#define ADS7843_SPI_BAUDRATE      1000000
+#define ADS7843_SPI_BAUDRATE   1000000
 
 /** 2us min (tCSS) <=> 200/100 000 000 = 2us */
 #define DELAY_BEFORE_SPCK          200
@@ -149,7 +149,7 @@ static uint32_t ads7843_send_cmd(uint8_t uc_cmd)
 uint32_t ads7843_is_pressed(void)
 {
 	return (ioport_get_pin_level(BOARD_ADS7843_IRQ_GPIO) ==
-										IOPORT_PIN_LEVEL_LOW);
+			IOPORT_PIN_LEVEL_LOW);
 }
 
 void ads7843_set_handler(void (*p_handler) (uint32_t, uint32_t))
@@ -209,7 +209,7 @@ uint32_t ads7843_init(void)
 
 	spi_master_init(BOARD_ADS7843_SPI_BASE);
 	spi_master_setup_device(BOARD_ADS7843_SPI_BASE, &ADS7843_SPI_DEVICE_CFG,
-							SPI_MODE_0, ADS7843_SPI_BAUDRATE, 0);
+			SPI_MODE_0, ADS7843_SPI_BAUDRATE, 0);
 	spi_select_device(BOARD_ADS7843_SPI_BASE, &ADS7843_SPI_DEVICE_CFG);
 	spi_enable(BOARD_ADS7843_SPI_BASE);
 

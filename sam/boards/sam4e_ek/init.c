@@ -219,20 +219,19 @@ void board_init(void)
 
 #ifdef CONF_BOARD_ILI93XX
 	/* Configure LCD EBI pins */
-        ioport_set_pin_peripheral_mode(PIN_EBI_DATA_BUS_D0,PIN_EBI_DATA_BUS_FLAGS);
-        ioport_set_pin_peripheral_mode(PIN_EBI_DATA_BUS_D1,PIN_EBI_DATA_BUS_FLAGS);
-        ioport_set_pin_peripheral_mode(PIN_EBI_DATA_BUS_D2,PIN_EBI_DATA_BUS_FLAGS);
-        ioport_set_pin_peripheral_mode(PIN_EBI_DATA_BUS_D3,PIN_EBI_DATA_BUS_FLAGS);
-        ioport_set_pin_peripheral_mode(PIN_EBI_DATA_BUS_D4,PIN_EBI_DATA_BUS_FLAGS);
-        ioport_set_pin_peripheral_mode(PIN_EBI_DATA_BUS_D5,PIN_EBI_DATA_BUS_FLAGS);
-        ioport_set_pin_peripheral_mode(PIN_EBI_DATA_BUS_D6,PIN_EBI_DATA_BUS_FLAGS);
-        ioport_set_pin_peripheral_mode(PIN_EBI_DATA_BUS_D7,PIN_EBI_DATA_BUS_FLAGS);
-
-        ioport_set_pin_peripheral_mode(PIN_EBI_NRD,PIN_EBI_NRD_FLAGS);
-        ioport_set_pin_peripheral_mode(PIN_EBI_NWE,PIN_EBI_NWE_FLAGS);
-        ioport_set_pin_peripheral_mode(PIN_EBI_NCS1,PIN_EBI_NCS1_FLAGS);
-        ioport_set_pin_peripheral_mode(PIN_EBI_LCD_RS,PIN_EBI_LCD_RS_FLAGS);
-
+	ioport_set_pin_peripheral_mode(PIN_EBI_DATA_BUS_D0,PIN_EBI_DATA_BUS_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_EBI_DATA_BUS_D1,PIN_EBI_DATA_BUS_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_EBI_DATA_BUS_D2,PIN_EBI_DATA_BUS_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_EBI_DATA_BUS_D3,PIN_EBI_DATA_BUS_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_EBI_DATA_BUS_D4,PIN_EBI_DATA_BUS_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_EBI_DATA_BUS_D5,PIN_EBI_DATA_BUS_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_EBI_DATA_BUS_D6,PIN_EBI_DATA_BUS_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_EBI_DATA_BUS_D7,PIN_EBI_DATA_BUS_FLAGS);
+	
+	ioport_set_pin_peripheral_mode(PIN_EBI_NRD,PIN_EBI_NRD_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_EBI_NWE,PIN_EBI_NWE_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_EBI_NCS1,PIN_EBI_NCS1_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_EBI_LCD_RS,PIN_EBI_LCD_RS_FLAGS);
 #endif
 
 #ifdef CONF_BOARD_AAT3155
