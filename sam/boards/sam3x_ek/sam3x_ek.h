@@ -1268,6 +1268,12 @@
 #define BOARD_ID_TWI_EEPROM         ID_TWI0
 /*! TWI Base for TWI EEPROM application to use */
 #define BOARD_BASE_TWI_EEPROM       TWI0
+/*! TWI Data pin for EEPROM */
+#define BOARD_DATA_TWI_EEPROM       TWI0_DATA_GPIO
+#define BOARD_DATA_TWI_MUX_EEPROM   IOPORT_MODE_MUX_A
+/*! TWI Clock pin for EEPROM */
+#define BOARD_CLK_TWI_EEPROM        TWI0_CLK_GPIO
+#define BOARD_CLK_TWI_MUX_EEPROM    IOPORT_MODE_MUX_A
 
 /* ------------------------------------------------------------------------ */
 #define CONSOLE_UART               UART

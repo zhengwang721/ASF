@@ -3,7 +3,7 @@
  *
  * \brief Unit tests for WM8731 module.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -56,6 +56,9 @@
 #include "ssc.h"
 #include "dmac.h"
 #include "twi_master.h"
+#ifdef BOARD_AT24C_TWI_INSTANCE
+#  include "at24cxx.h"
+#endif
 
 /**
  * \mainpage
@@ -347,6 +350,10 @@ int main(void)
 	/* Initialize the system. */
 	sysclk_init();
 	board_init();
+#ifdef BOARD_AT24C_TWI_INSTANCE
+	/* reset EEPROM state to release TWI */
+	at24cxx_reset();
+#endif
 
 	/* Configure console UART. */
 	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);

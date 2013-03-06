@@ -57,14 +57,18 @@
  * \section Description
  *
  * The demonstration program can operate in 3 different modes; temperature
- * information, light sensor information and SD card status. Each of these
- * being selectable using Button1 Button2 and Button3 from the OLED1
- * extension.
+ * information, light sensor information and SD card status.
+ * The user can switch between the various mode by pressing Button1.
+ * When running in mode 3 (SD card content), the user can browse the SD
+ * content using Button2 (previous) and Button3 (next). Filenames are directly
+ * printed on the OLED screen.
+ *
  * IO1 extension must be connected on EXT2.
  * OLED1 extension must be connected on EXT3.
  *
  */
 
+#include <string.h>
 #include "board.h"
 #include "sysclk.h"
 #include "ssd1306.h"
@@ -75,12 +79,19 @@
 #include "pio_handler.h"
 #include "sd_mmc.h"
 #include "sd_mmc_spi.h"
+#include "ff.h"
+#include "ctrl_access.h"
 
 /* These settings will force to set and refresh the temperature mode. */
-volatile uint32_t app_mode = 0;
+volatile uint32_t app_mode = 2;
 volatile uint32_t app_mode_switch = 1;
 
-volatile uint32_t sd_status_update = 0;
+volatile uint32_t sd_update = 0;
+volatile uint32_t sd_fs_found = 0;
+volatile uint32_t sd_listing_pos = 0;
+volatile uint32_t sd_num_files = 0;
+
+FATFS fs;
 
 /**
  * \brief Process Buttons Events.
@@ -89,20 +100,35 @@ volatile uint32_t sd_status_update = 0;
  */
 static void ProcessButtonEvt(uint8_t uc_button)
 {
-	/* Switch to temperature mode. */
-	if ((uc_button == 1) && (app_mode != 0))
+	/* Switch between temperature, light and SD mode. */
+	if (uc_button == 1)
 	{
 		app_mode_switch = 1;
 	}
-	/* Switch to light mode. */
-	else if ((uc_button == 2) && (app_mode != 1))
+	/* Page UP button. */
+	else if ((uc_button == 2) &&
+				(app_mode == 2) &&
+				(sd_fs_found == 1) &&
+				(sd_update == 0))
 	{
-		app_mode_switch = 2;
+		if (sd_listing_pos > 0)
+		{
+			sd_listing_pos -= 1;
+			sd_update = 1;
+		}
 	}
-	/* Switch to SD mode. */
-	else if ((uc_button == 3) && (app_mode != 2))
+	/* Page DOWN button. */
+	else if ((uc_button == 3) &&
+				(app_mode == 2) &&
+				(sd_fs_found == 1) &&
+				(sd_update == 0))
 	{
-		app_mode_switch = 3;
+		/* Lock DOWN button when showing the last file. */
+		if (sd_listing_pos < sd_num_files)
+		{
+			sd_listing_pos += 1;
+			sd_update = 1;
+		}
 	}
 }
 
@@ -147,7 +173,12 @@ static void Button3_Handler(uint32_t id, uint32_t mask)
 static void SD_Detect_Handler(uint32_t id, uint32_t mask)
 {
 	if ((SD_MMC_0_CD_ID == id) && (SD_MMC_0_CD_MASK == mask))
-		sd_status_update = 1;
+	{
+		sd_listing_pos = 0;
+		sd_num_files = 0;
+		sd_fs_found = 0;
+		sd_update = 1;
+	}
 }
 
 /* IRQ priority for PIO (The lower the value, the greater the priority) */
@@ -216,15 +247,61 @@ static void configure_adc(void)
 }
 
 /**
+ * \brief Get the number of files at the root of the SD card.
+ * Result is stored in global sd_num_files.
+ */
+static void get_num_files_on_sd(void)
+{
+	FRESULT res;
+	FILINFO fno;
+	DIR dir;
+	char *pc_fn;
+	const char *path = "0:";
+#if _USE_LFN
+	char c_lfn[_MAX_LFN + 1];
+	fno.lfname = c_lfn;
+	fno.lfsize = sizeof(c_lfn);
+#endif
+
+	sd_num_files = 0;
+
+	/* Open the directory */
+	res = f_opendir(&dir, path);
+	if (res == FR_OK)
+	{
+		for (;;)
+		{
+			res = f_readdir(&dir, &fno);
+			if (res != FR_OK || fno.fname[0] == 0)
+			{
+				break;
+			}
+
+#if _USE_LFN
+			pc_fn = *fno.lfname ? fno.lfname : fno.fname;
+#else
+			pc_fn = fno.fname;
+#endif
+			if (*pc_fn == '.')
+			{
+				continue;
+			}
+
+			sd_num_files += 1;
+		}
+	}
+}
+
+/**
  * \brief Show SD card status on the OLED screen.
  */
 static void display_sd_info(void)
 {
+	FRESULT res;
 	uint8_t card_check;
 	uint8_t sd_card_type;
-	uint8_t sd_card_version;
 	uint32_t sd_card_size;
-	uint8_t size[10];
+	char size[64];
 
 	// Is SD card present?
 	if (gpio_pin_is_low(SD_MMC_0_CD_GPIO) == false)
@@ -246,7 +323,6 @@ static void display_sd_info(void)
 		if (card_check == SD_MMC_OK)
 		{
 			sd_card_type = sd_mmc_get_type(0);
-			sd_card_version = sd_mmc_get_version(0);
 			sd_card_size = sd_mmc_get_capacity(0);
 
 			ssd1306_set_page_address(1);
@@ -274,30 +350,91 @@ static void display_sd_info(void)
 			ssd1306_set_page_address(2);
 			ssd1306_set_column_address(0);
 
-			// SD card version
-			switch(sd_card_version)
-			{
-				case CARD_VER_SD_1_0:
-				ssd1306_write_text("- Version: 1.0x");
-				break;
-				case CARD_VER_SD_1_10:
-				ssd1306_write_text("- Version: 1.10");
-				break;
-				case CARD_VER_SD_2_0:
-				ssd1306_write_text("- Version: 2.00");
-				break;
-				case CARD_VER_SD_3_0:
-				ssd1306_write_text("- Version: 3.0x");
-				break;
-				default:
-				ssd1306_write_text("- Version: unknown");
-			}
+			sprintf(size, "- Total size: %lu KB", sd_card_size);
+			ssd1306_write_text(size);
 
 			ssd1306_set_page_address(3);
 			ssd1306_set_column_address(0);
 
-			sprintf(size, "- Total size: %lu KB", sd_card_size);
-			ssd1306_write_text(size);
+			// Try to mount file system.
+			memset(&fs, 0, sizeof(FATFS));
+			res = f_mount(LUN_ID_SD_MMC_0_MEM, &fs);
+			if (FR_INVALID_DRIVE == res)
+			{
+				ssd1306_write_text("   <No FAT FS found on SD>");
+				sd_fs_found = 0;
+			}
+			else
+			{
+				get_num_files_on_sd();
+				if (sd_num_files == 0)
+				{
+					ssd1306_write_text("         <no content>");
+					sd_fs_found = 1;
+				}
+				else
+				{
+					ssd1306_write_text("  <Press B2-3 to browse SD>");
+					sd_fs_found = 1;
+				}
+			}
+		}
+	}
+}
+
+/**
+ * \brief Show SD card content on the OLED screen.
+ * \note Does not browse sub folders.
+ */
+static void display_sd_files(void)
+{
+	FRESULT res;
+	FILINFO fno;
+	DIR dir;
+	uint32_t line;
+	uint32_t pos;
+	char *pc_fn;
+	const char *path = "0:";
+#if _USE_LFN
+	char c_lfn[_MAX_LFN + 1];
+	fno.lfname = c_lfn;
+	fno.lfsize = sizeof(c_lfn);
+#endif
+
+	line = 0;
+	pos = 1;
+
+	/* Open the directory */
+	res = f_opendir(&dir, path);
+	if (res == FR_OK)
+	{
+		for (;;)
+		{
+			res = f_readdir(&dir, &fno);
+			if (res != FR_OK || fno.fname[0] == 0)
+			{
+				break;
+			}
+
+#if _USE_LFN
+			pc_fn = *fno.lfname ? fno.lfname : fno.fname;
+#else
+			pc_fn = fno.fname;
+#endif
+			if (*pc_fn == '.')
+			{
+				continue;
+			}
+
+			if ((pos >= sd_listing_pos) && (line < 4))
+			{
+				ssd1306_set_page_address(line++);
+				ssd1306_set_column_address(0);
+				ssd1306_write_text("/");
+				ssd1306_write_text(pc_fn);
+			}
+
+			pos += 1;
 		}
 	}
 }
@@ -312,11 +449,11 @@ static void display_sd_info(void)
  */
 static void ssd1306_draw_graph(uint8_t col, uint8_t page, uint8_t width, uint8_t height, uint8_t *tab)
 {
-	volatile register uint8_t page_start;
-	volatile register uint8_t i, j, k, s;
+	uint8_t page_start;
+	uint8_t i, j, k, s;
 	uint8_t scale;
 
-	for (i = 0; i < width; ++i) {
+	for (i = col; i < width; ++i) {
 		for (page_start = page; page_start <= height; ++page_start) {
 			ssd1306_write_command(SSD1306_CMD_SET_PAGE_START_ADDRESS(page_start));
 			ssd1306_set_column_address(i);
@@ -336,6 +473,20 @@ static void ssd1306_draw_graph(uint8_t col, uint8_t page, uint8_t width, uint8_t
 	}
 }
 
+/**
+ * \brief Clear one character at the cursor current position on the OLED
+ * screen.
+ */
+static void ssd1306_clear_char(void)
+{
+	ssd1306_write_data(0x00);
+	ssd1306_write_data(0x00);
+	ssd1306_write_data(0x00);
+	ssd1306_write_data(0x00);
+	ssd1306_write_data(0x00);
+	ssd1306_write_data(0x00);
+}
+
 #define BUFFER_SIZE 128
 
 int main(void)
@@ -343,8 +494,9 @@ int main(void)
 	uint8_t i;
 	uint8_t temperature[BUFFER_SIZE];
 	uint8_t light[BUFFER_SIZE];
-	uint8_t value_disp[5];
+	char value_disp[5];
 	uint32_t adc_value;
+	uint32_t light_value;
 	double temp;
 
 	// Initialize clocks.
@@ -378,7 +530,7 @@ int main(void)
 		/* Refresh page title only if necessary. */
 		if (app_mode_switch > 0)
 		{
-			app_mode = app_mode_switch - 1;
+			app_mode = (app_mode + 1) % 3;
 
 			// Clear screen.
 			ssd1306_clear();
@@ -408,8 +560,10 @@ int main(void)
 				ioport_set_pin_level(IO1_LED1_PIN, !IO1_LED1_ACTIVE);
 				ioport_set_pin_level(IO1_LED2_PIN, !IO1_LED2_ACTIVE);
 
+				sd_listing_pos = 0;
 				display_sd_info();
 			}
+
 			app_mode_switch = 0;
 		}
 
@@ -453,6 +607,9 @@ int main(void)
 			ssd1306_set_column_address(95);
 			ssd1306_write_command(SSD1306_CMD_SET_PAGE_START_ADDRESS(0));
 			ssd1306_write_text(" ");
+			// Avoid character overlapping.
+			if (temp < 10)
+				ssd1306_clear_char();
 			ssd1306_write_text(value_disp);
 			// Display degree symbol.
 			ssd1306_write_data(0x06);
@@ -464,30 +621,45 @@ int main(void)
 		}
 		else if (app_mode == 1)
 		{
-			sprintf(value_disp, "%lu", 100 - (adc_value * 100 / 4096));
+			light_value = 100 - (adc_value * 100 / 4096);
+			sprintf(value_disp, "%lu", light_value);
 			ssd1306_set_column_address(98);
 			ssd1306_write_command(SSD1306_CMD_SET_PAGE_START_ADDRESS(0));
 			ssd1306_write_text(" ");
+			// Avoid character overlapping.
+			if (light_value < 10)
+				ssd1306_clear_char();
 			ssd1306_write_text(value_disp);
 			ssd1306_write_text("%");
+			// Avoid character overlapping.
+			if (light_value < 100)
+				ssd1306_clear_char();
 
 			// Refresh graph.
 			ssd1306_draw_graph(0, 1, BUFFER_SIZE, 3, light);
 		}
 		else
 		{
-			// Is card has been inserted or removed?
-			if (sd_status_update == 1)
+			// Refresh screen if card was inserted/removed or browsing content.
+			if (sd_update == 1)
 			{
 				// Clear screen.
 				ssd1306_clear();
 				ssd1306_set_page_address(0);
 				ssd1306_set_column_address(0);
 
-				// Show SD card info.
-				display_sd_info();
+				if (sd_listing_pos == 0)
+				{
+					// Show SD card info.
+					display_sd_info();
+				}
+				else
+				{
+					// List SD card files.
+					display_sd_files();
+				}
 
-				sd_status_update = 0;
+				sd_update = 0;
 			}
 
 		}

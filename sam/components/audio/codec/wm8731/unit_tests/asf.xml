@@ -11,6 +11,7 @@
 			<device-support value="sam3x"/>
 			<require idref="sam.utils.cmsis.sam3x.source.template"/>
 			<require idref="sam.components.audio.codec.wm8731"/>
+			<require idref="common.components.memory.eeprom.at24cxx"/>
 			<require idref="common.services.basic.clock"/>
 			<require idref="sam.drivers.ssc"/>
 			<require idref="sam.drivers.dmac"/>
