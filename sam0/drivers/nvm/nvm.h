@@ -161,139 +161,6 @@
  * }
  * \enddot
  *
- * The Auxiliary space contains the User Row which is organized as shown in
- * table below:
- *
- *  <table>
- *   <tr>
- *    <th> Bit position </th>
- *    <th> Name </th>
- *    <th> Usage</th>
- *   </tr>
- *   <tr>
- *    <td> 2:0 </td>
- *    <td> BOOTPROT </td>
- *    <td> Used to set one of eight bootloader sizes.
- *         \note Cannot be changed when security bit is set.
- *         \note Rows included in bootloader section can only be erased
- *         by a chip erase.</td>
- *   </tr>
- *   <tr>
- *    <td> 3 </td>
- *    <td> Reserved </td>
- *    <td> </td>
- *   </tr>
- *   <tr>
- *    <td> 6:4 </td>
- *    <td> EEPROM </td>
- *    <td> Used to set one of eight EEPROM sizes
- *           \note Cannot be changed when security bit is set. </td>
- *   </tr>
- *   <tr>
- *    <td> 7 </td>
- *    <td> Reserved </td>
- *    <td> </td>
- *   </tr>
- *   <tr>
- *    <td> 47:8 </td>
- *    <td> Reserved </td>
- *    <td>  </td>
- *   </tr>
- *   <tr>
- *    <td> 63:48 </td>
- *    <td> LOCK </td>
- *    <td> Used to lock different regions of the NVM. See
- *         \ref asfdoc_samd20_nvm_module_overview_locking_regions
- *   </td>
- *   </tr>
- *  </table>
- *
- * The table below shows the number of NVM memory rows that are reserved for
- * use by the bootloader. The size must be configured via the \ref nvm_config
- * structure instance.
- *
- * <table>
- *  <tr>
- *   <th> BOOTPROT[2:0] </th>
- *   <th> Rows Protected by BOOTPROT </th>
- *  </tr>
- *  <tr>
- *   <td align="center"> 7 </td>
- *   <td align="center"> None </td>
- *  </tr>
- *  <tr>
- *   <td align="center"> 6 </td>
- *   <td align="center"> 2 </td>
- *  </tr>
- *  <tr>
- *   <td align="center"> 5 </td>
- *   <td align="center"> 4 </td>
- *  </tr>
- *  <tr>
- *   <td align="center"> 4 </td>
- *   <td align="center"> 8 </td>
- *  </tr>
- *  <tr>
- *   <td align="center"> 3 </td>
- *   <td align="center"> 16 </td>
- *  </tr>
- *  <tr>
- *   <td align="center"> 2 </td>
- *   <td align="center"> 32 </td>
- *  </tr>
- *  <tr>
- *   <td align="center"> 1 </td>
- *   <td align="center"> 64 </td>
- *  </tr>
- *  <tr>
- *   <td align="center"> 0 </td>
- *   <td align="center"> 128 </td>
- *  </tr>
- * </table>
- *
- * The table below shows the number of NVM memory rows that are reserved for
- * use by the emulated EEPROM. The size must be configured via the
- * \ref nvm_config structure instance.
- *
- * <table>
- *  <tr>
- *   <th> EEPROM[2:0] </th>
- *   <th> Rows Allocated by EEPROM </th>
- *  </tr>
- *  <tr>
- *   <td align="center"> 7 </td>
- *   <td align="center"> None </td>
- *  </tr>
- *  <tr>
- *   <td align="center"> 6 </td>
- *   <td align="center"> 1 </td>
- *  </tr>
- *  <tr>
- *   <td align="center"> 5 </td>
- *   <td align="center"> 2 </td>
- *  </tr>
- *  <tr>
- *   <td align="center"> 4 </td>
- *   <td align="center"> 4 </td>
- *  </tr>
- *  <tr>
- *   <td align="center"> 3 </td>
- *   <td align="center"> 8 </td>
- *  </tr>
- *  <tr>
- *   <td align="center"> 2 </td>
- *   <td align="center"> 16 </td>
- *  </tr>
- *  <tr>
- *   <td align="center"> 1 </td>
- *   <td align="center"> 32 </td>
- *  </tr>
- *  <tr>
- *   <td align="center"> 0 </td>
- *   <td align="center"> 64 </td>
- *  </tr>
- * </table>
- *
  * \subsection asfdoc_samd20_nvm_module_overview_locking_regions Region Lock Bits
  * As mentioned in \ref asfdoc_samd20_nvm_module_overview_regions, the main
  * block of the NVM memory is divided into a number of individually addressable
@@ -403,50 +270,15 @@ enum nvm_error {
  * \brief NVM controller commands.
  */
 enum nvm_command {
-	/** Erases the addressed memory row.
-	 *
-	 *  <table>
-	 *   <tr>
-	 *    <td>\b Address:</td>
-	 *    <td>Address of the memory row to erase</td>
-	 *   </tr>
-	 *   <tr>
-	 *    <td>\b Parameter:</td>
-	 *    <td>Unused</td>
-	 *   </tr>
-	 *  </table>
-	 */
+	/** Erases the addressed memory row. */
 	NVM_COMMAND_ERASE_ROW                  = NVMCTRL_CTRLA_CMD_ER,
 
-	/** Write the contents of the page buffer to the addressed memory page.
-	 *
-	 *  <table>
-	 *   <tr>
-	 *    <td>\b Address:</td>
-	 *    <td>Address of the memory row to write to</td>
-	 *   </tr>
-	 *   <tr>
-	 *    <td>\b Parameter:</td>
-	 *    <td>Unused</td>
-	 *   </tr>
-	 *  </table>
-	 */
+	/** Write the contents of the page buffer to the addressed memory page. */
 	NVM_COMMAND_WRITE_PAGE                 = NVMCTRL_CTRLA_CMD_WP,
 
 	/** Erases the addressed auxiliary memory row.
 	 *
 	 *  \note This command can only be given when the security bit is not set.
-	 *
-	 *  <table>
-	 *   <tr>
-	 *    <td>\b Address:</td>
-	 *    <td>Address of the auxiliary memory row to erase</td>
-	 *   </tr>
-	 *   <tr>
-	 *    <td>\b Parameter:</td>
-	 *    <td>Unused</td>
-	 *   </tr>
-	 *  </table>
 	 */
 	NVM_COMMAND_ERASE_AUX_ROW              = NVMCTRL_CTRLA_CMD_EAR,
 
@@ -454,116 +286,39 @@ enum nvm_command {
 	 *  row.
 	 *
 	 *  \note This command can only be given when the security bit is not set.
-	 *
-	 *  <table>
-	 *   <tr>
-	 *    <td>\b Address:</td>
-	 *    <td>Address of the auxiliary memory row to erase</td>
-	 *   </tr>
-	 *   <tr>
-	 *    <td>\b Parameter:</td>
-	 *    <td>Unused</td>
-	 *   </tr>
-	 *  </table>
 	 */
 	NVM_COMMAND_WRITE_AUX_ROW              = NVMCTRL_CTRLA_CMD_WAP,
 
 	/** Locks the addressed memory region, preventing further modifications
 	 *  until the region is unlocked or the device is erased.
-	 *
-	 *  <table>
-	 *   <tr>
-	 *    <td>\b Address:</td>
-	 *    <td>Address of the memory region to lock</td>
-	 *   </tr>
-	 *   <tr>
-	 *    <td>\b Parameter:</td>
-	 *    <td>Unused</td>
-	 *   </tr>
-	 *  </table>
 	 */
 	NVM_COMMAND_LOCK_REGION                = NVMCTRL_CTRLA_CMD_LR,
 
 	/** Unlocks the addressed memory region, allowing the region contents to be
 	 *  modified.
-	 *
-	 *  <table>
-	 *   <tr>
-	 *    <td>\b Address:</td>
-	 *    <td>Address of the memory region to unlock</td>
-	 *   </tr>
-	 *   <tr>
-	 *    <td>\b Parameter:</td>
-	 *    <td>\e Unused</td>
-	 *   </tr>
-	 *  </table>
 	 */
 	NVM_COMMAND_UNLOCK_REGION              = NVMCTRL_CTRLA_CMD_UR,
 
 	/** Clears the page buffer of the NVM controller, resetting the contents to
 	 *  all zero values.
-	 *
-	 *  <table>
-	 *   <tr>
-	 *    <td>\b Address:</td>
-	 *    <td>\e Unused</td>
-	 *   </tr>
-	 *   <tr>
-	 *    <td>\b Parameter:</td>
-	 *    <td>\e Unused</td>
-	 *   </tr>
-	 *  </table>
 	 */
 	NVM_COMMAND_PAGE_BUFFER_CLEAR          = NVMCTRL_CTRLA_CMD_PBC,
 
 	/** Sets the device security bit, disallowing the changing of lock bits and
 	 *  auxiliary row data until a chip erase has been performed.
-	 *
-	 *  <table>
-	 *   <tr>
-	 *    <td>\b Address:</td>
-	 *    <td>\e Unused</td>
-	 *   </tr>
-	 *   <tr>
-	 *    <td>\b Parameter:</td>
-	 *    <td>\e Unused</td>
-	 *   </tr>
-	 *  </table>
 	 */
 	NVM_COMMAND_SET_SECURITY_BIT           = NVMCTRL_CTRLA_CMD_SSB,
 
 	/** Enter power reduction mode in the NVM controller to reduce the power
 	 *  consumption of the system. When in low power mode, all commands other
-	 *  than \ref NVM_COMMAND_CLEAR_POWER_REDUCTION_MODE will fail.
-	 *
-	 *  <table>
-	 *   <tr>
-	 *    <td>\b Address:</td>
-	 *    <td>\e Unused</td>
-	 *   </tr>
-	 *   <tr>
-	 *    <td>\b Parameter:</td>
-	 *    <td>\e Unused</td>
-	 *   </tr>
-	 *  </table>
+	 *  than \ref NVM_COMMAND_EXIT_LOW_POWER_MODE will fail.
 	 */
-	NVM_COMMAND_SET_POWER_REDUCTION_MODE   = NVMCTRL_CTRLA_CMD_SPRM,
+	NVM_COMMAND_ENTER_LOW_POWER_MODE       = NVMCTRL_CTRLA_CMD_SPRM,
 
 	/** Exit power reduction mode in the NVM controller to allow other NVM
 	 *  commands to be issued.
-	 *
-	 *  <table>
-	 *   <tr>
-	 *    <td>\b Address:</td>
-	 *    <td>\e Unused</td>
-	 *   </tr>
-	 *   <tr>
-	 *    <td>\b Parameter:</td>
-	 *    <td>\e Unused</td>
-	 *   </tr>
-	 *  </table>
 	 */
-	NVM_COMMAND_CLEAR_POWER_REDUCTION_MODE = NVMCTRL_CTRLA_CMD_CPRM,
+	NVM_COMMAND_EXIT_LOW_POWER_MODE        = NVMCTRL_CTRLA_CMD_CPRM,
 };
 
 /**

@@ -1217,10 +1217,6 @@ static inline void tc_clear_interrupt_flag(
  *		<td>PPW</td>
  *		<td>Period Pulse Width</td>
  *	</tr>
- *	<tr>
- *		<td> - </td>
- *		<td> - </td>
- *	</tr>
  * </table>
  *
  *
