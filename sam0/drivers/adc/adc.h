@@ -797,7 +797,7 @@ struct adc_config {
  */
 struct adc_module {
 	/** Pointer to ADC hardware module */
-	Adc *hw_dev;
+	Adc *hw;
 };
 
 /**
@@ -805,12 +805,12 @@ struct adc_module {
  *
  * Blocks in a busy wait while module synchronizes.
  *
- * \param[in] hw_dev Pointer to hardware module
+ * \param[in] hw Pointer to hardware module
  */
 static inline void _adc_wait_for_sync(
-		Adc *const hw_dev)
+		Adc *const hw)
 {
-	while (hw_dev->STATUS.reg & ADC_STATUS_SYNCBUSY) {
+	while (hw->STATUS.reg & ADC_STATUS_SYNCBUSY) {
 	}
 }
 
@@ -820,7 +820,7 @@ static inline void _adc_wait_for_sync(
  */
 enum status_code adc_init(
 		struct adc_module *const module_inst,
-		Adc *hw_dev,
+		Adc *hw,
 		struct adc_config *config);
 
 /**
@@ -895,22 +895,54 @@ static inline void adc_get_config_defaults(struct adc_config *const config)
  */
 
 /**
+ * \brief Determines if the hardware module(s) are currently synchronizing to the bus.
+ *
+ * Checks to see if the underlying hardware peripheral module(s) are currently
+ * synchronizing across multiple clock domains to the hardware bus, This
+ * function can be used to delay further operations on a module until such time
+ * that it is ready, to prevent blocking delays for synchronization in the
+ * user application.
+ *
+ * \param[in] module_inst  Pointer to the ADC software instance struct
+ *
+ * \return Synchronization status of the underlying hardware module(s).
+ *
+ * \retval true if the module has completed synchronization
+ * \retval false if the module synchronization is ongoing
+ */
+static inline bool adc_is_syncing(
+	struct adc_module *const module_inst)
+{
+	/* Sanity check arguments */
+	Assert(module_inst);
+
+	Adc *const adc_module = module_inst->hw;
+
+	if (adc_module->STATUS.reg & ADC_STATUS_SYNCBUSY) {
+		return true;
+	}
+
+	return false;
+}
+
+/**
  * \brief Enables the ADC module
  *
  * This function will enable the ADC module.
  *
  * \param[in] module_inst    Pointer to the ADC software instance struct
  */
-static inline void adc_enable(
+static inline enum status_code adc_enable(
 		struct adc_module *const module_inst)
 {
 	Assert(module_inst);
-	Assert(module_inst->hw_dev);
+	Assert(module_inst->hw);
 
-	Adc *const adc_module = module_inst->hw_dev;
+	Adc *const adc_module = module_inst->hw;
 
 	_adc_wait_for_sync(adc_module);
 	adc_module->CTRLA.reg |= ADC_CTRLA_ENABLE;
+	return STATUS_OK;
 }
 
 /**
@@ -920,16 +952,17 @@ static inline void adc_enable(
  *
  * \param[in] module_inst Pointer to the ADC software instance struct
  */
-static inline void adc_disable(
+static inline enum status_code adc_disable(
 		struct adc_module *const module_inst)
 {
 	Assert(module_inst);
-	Assert(module_inst->hw_dev);
+	Assert(module_inst->hw);
 
-	Adc *const adc_module = module_inst->hw_dev;
+	Adc *const adc_module = module_inst->hw;
 
 	_adc_wait_for_sync(adc_module);
 	adc_module->CTRLA.reg &= ~ADC_CTRLA_ENABLE;
+	return STATUS_OK;
 }
 
 /**
@@ -939,14 +972,14 @@ static inline void adc_disable(
  *
  * \param[in] module_inst Pointer to the ADC software instance struct
  */
-static inline void adc_reset(
+static inline enum status_code adc_reset(
 		struct adc_module *const module_inst)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
-	Assert(module_inst->hw_dev);
+	Assert(module_inst->hw);
 
-	Adc *const adc_module = module_inst->hw_dev;
+	Adc *const adc_module = module_inst->hw;
 
 	/* Disable to make sure the pipeline is flushed before reset */
 	adc_disable(module_inst);
@@ -954,6 +987,7 @@ static inline void adc_reset(
 	/* Software reset the module */
 	_adc_wait_for_sync(adc_module);
 	adc_module->CTRLA.reg |= ADC_CTRLA_SWRST;
+	return STATUS_OK;
 }
 
 /**
@@ -967,9 +1001,9 @@ static inline void adc_start_conversion(
 		struct adc_module *const module_inst)
 {
 	Assert(module_inst);
-	Assert(module_inst->hw_dev);
+	Assert(module_inst->hw);
 
-	Adc *const adc_module = module_inst->hw_dev;
+	Adc *const adc_module = module_inst->hw;
 
 	_adc_wait_for_sync(adc_module);
 	adc_module->SWTRIG.reg |= ADC_SWTRIG_START;
@@ -1001,7 +1035,7 @@ static inline enum status_code adc_read(
 		uint16_t *result)
 {
 	Assert(module_inst);
-	Assert(module_inst->hw_dev);
+	Assert(module_inst->hw);
 	Assert(result);
 
 	if (!adc_is_interrupt_flag_set(module_inst, ADC_INTERRUPT_RESULT_READY)) {
@@ -1009,7 +1043,7 @@ static inline enum status_code adc_read(
 		return STATUS_BUSY;
 	}
 
-	Adc *const adc_module = module_inst->hw_dev;
+	Adc *const adc_module = module_inst->hw;
 
 	_adc_wait_for_sync(adc_module);
 	/* Get ADC result */
@@ -1041,9 +1075,9 @@ static inline void adc_flush(
 		struct adc_module *const module_inst)
 {
 	Assert(module_inst);
-	Assert(module_inst->hw_dev);
+	Assert(module_inst->hw);
 
-	Adc *const adc_module = module_inst->hw_dev;
+	Adc *const adc_module = module_inst->hw;
 
 	_adc_wait_for_sync(adc_module);
 	adc_module->SWTRIG.reg |= ADC_SWTRIG_FLUSH;
@@ -1067,9 +1101,9 @@ static inline void adc_set_window_mode(
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
-	Assert(module_inst->hw_dev);
+	Assert(module_inst->hw);
 
-	Adc *const adc_module = module_inst->hw_dev;
+	Adc *const adc_module = module_inst->hw;
 
 	/* Wait for synchronization to finish */
 	_adc_wait_for_sync(adc_module);
@@ -1102,9 +1136,9 @@ static inline void adc_set_gain(
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
-	Assert(module_inst->hw_dev);
+	Assert(module_inst->hw);
 
-	Adc *const adc_module = module_inst->hw_dev;
+	Adc *const adc_module = module_inst->hw;
 
 	/* Wait for synchronization to finish */
 	_adc_wait_for_sync(adc_module);
@@ -1142,9 +1176,9 @@ static inline enum status_code adc_set_pin_scan_mode(
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
-	Assert(module_inst->hw_dev);
+	Assert(module_inst->hw);
 
-	Adc *const adc_module = module_inst->hw_dev;
+	Adc *const adc_module = module_inst->hw;
 
 	if (inputs_to_scan > 0) {
 		/*
@@ -1202,9 +1236,9 @@ static inline void adc_set_positive_input(
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
-	Assert(module_inst->hw_dev);
+	Assert(module_inst->hw);
 
-	Adc *const adc_module = module_inst->hw_dev;
+	Adc *const adc_module = module_inst->hw;
 
 	/* Wait for synchronization to finish */
 	_adc_wait_for_sync(adc_module);
@@ -1231,9 +1265,9 @@ static inline void adc_set_negative_input(
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
-	Assert(module_inst->hw_dev);
+	Assert(module_inst->hw);
 
-	Adc *const adc_module = module_inst->hw_dev;
+	Adc *const adc_module = module_inst->hw;
 
 	/* Wait for synchronization to finish */
 	_adc_wait_for_sync(adc_module);
@@ -1268,9 +1302,9 @@ static inline bool adc_is_interrupt_flag_set(
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
-	Assert(module_inst->hw_dev);
+	Assert(module_inst->hw);
 
-	Adc *const adc_module = module_inst->hw_dev;
+	Adc *const adc_module = module_inst->hw;
 	return adc_module->INTFLAG.reg & interrupt_flag;
 }
 
@@ -1288,9 +1322,9 @@ static inline void adc_clear_interrupt_flag(
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
-	Assert(module_inst->hw_dev);
+	Assert(module_inst->hw);
 
-	Adc *const adc_module = module_inst->hw_dev;
+	Adc *const adc_module = module_inst->hw;
 
 	/* Clear interrupt flag */
 	adc_module->INTFLAG.reg = interrupt_flag;
