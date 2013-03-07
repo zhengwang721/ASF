@@ -61,7 +61,7 @@
  * periodic poll request from the device.
  * The results of the proper data transmission/reception are printed to a terminal program via Serial I/O (UART or USB).
  * For demonstration purposes the coordinator's configuration is limited to associate maximum of 100 devices.
- * \note For Two Processor Approach the Application needs to be flashed in the Host board(eg.SAM4L-Xplained Pro) and the Serial-if application (MAC Stack)
+ * \note For Two Processor Approach the Application needs to be flashed in the Host board(eg.SAM4L-Xplained Pro) and the Serial-if application(Beacon FFD) (MAC Stack)
  * needs to be flashed in the NCP(Network CoProcessor) board.
  * \section api_modules Application Dependent Modules
  * - \subpage api

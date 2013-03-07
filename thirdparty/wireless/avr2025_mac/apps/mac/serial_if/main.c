@@ -57,7 +57,7 @@
  * 	Following are the Four approaches by which a MAC Application can be run.
  *		- Approach-1:Running Beacon/No beacon/ No beacon Sleep application on a single processor platform(Eg.Xmega-a3bu-xplained or uc3-rz600 ,
  *    	 Xmega Zigit-usb,RFR2 Xplained Pro)
- *		- Approach 2: Running Beacon/No beacon application for 2p-approach ,with ncp image(Serial-if(MAC Stack)) flashed in NCP board(Eg.Xmega-Zigbit-Ext or RFR2-Zigbit)
+ *		- Approach 2: Running Beacon/No beacon application for 2p-approach ,with ncp image(Serial-if(Beacon FFD for Beacon App and NoBeacon FFD for NoBeacon App)(MAC Stack)) flashed in NCP board(Eg.Xmega-Zigbit-Ext or RFR2-Zigbit)
  *    	 and host image(actual application with api-parser support) flashed in Host board(Eg.SAM4L-Xplained Pro).
  *		- Approach3: Running serial-if application in Single processor for  boards  menitioned in Approach 1.This is used for performing  
  *    	 compliance and interop tests for MAC stack.

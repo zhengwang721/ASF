@@ -55,7 +55,7 @@
  * If the coordinator receives a data request frame from a particular device, it transmits the pending data frame to the device.
  * Device after receiving the data from the Coordinator sends back the same data to the Coordinator itself by direct data transmission
  * The results of the proper data transmission/reception are printed to a terminal program via Serial I/O (UART or USB).
- * \note For Two Processor Approach the Application needs to be flashed in the Host board(eg.SAM4L-Xplained Pro) and the Serial-if application (MAC Stack)
+ * \note For Two Processor Approach the Application needs to be flashed in the Host board(eg.SAM4L-Xplained Pro) and the Serial-if application(NoBeacon FFD) (MAC Stack)
  * needs to be flashed in the NCP(Network CoProcessor) board.
  *
  * For demonstration purposes the coordinator's configuration is limited to associate two devices at maximum.
