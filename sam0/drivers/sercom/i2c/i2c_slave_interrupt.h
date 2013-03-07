@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 I2C Serial Peripheral Interface Driver
+ * \brief SAM D20 I2C Slave Interrupt Driver
  *
  * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
@@ -59,99 +59,102 @@ extern "C" {
 #endif
 
 /**
- * \addtogroup sam0_i2c_slave_group I2C Slave Asynchronous
+ * \addtogroup asfdoc_samd20_i2c_slave_interrupt_group I2C Slave Interrupt
  * @{
  *
- * This is an overview of the API for the asynchronous I2C slave
+ * This is an overview of the API for the I<SUP>2</SUP>C Slave Interrupt
  * driver.
  *
- * The user will still have to use the initialization from the basic use part
- * of the driver, which can be found \ref sam0_i2c_slave_group "here". When the
- * asynchronous driver is included in the project, an asynchronous part in the basic driver
- * will be unlocked. This will allow the user to implement the driver in the same way as
- * for the basic polled driver, but will additionally get the asynchronous functions
- * documented below.
- *
- * \section i2c_slave_async_api API Overview
+ * \section asfdoc_samd20_i2c_slave_interrupt_api_overview API Overview
  *
  */
 
 /**
- * \brief Callback types.
+ * \brief Callback types
  *
- * The available callback types for the I2C master module.
+ * The available callback types for the I<SUP>2</SUP>C slave.
  */
 enum i2c_slave_callback {
-	/** Callback for packet write complete. */
+	/** Callback for packet write complete */
 	I2C_SLAVE_CALLBACK_WRITE_COMPLETE,
-	/** Callback for packet read complete. */
+	/** Callback for packet read complete */
 	I2C_SLAVE_CALLBACK_READ_COMPLETE,
-	/** Callback for read request from master can be usde to call write_buff */
+	/** 
+	 * Callback for read request from master - can be used to
+	 * issue a write
+	 */
 	I2C_SLAVE_CALLBACK_READ_REQUEST,
-	/** Callback for write request from master - can be used to call read_buff */
+	/**
+	 * Callback for write request from master - can be used to issue a read
+	 */
 	I2C_SLAVE_CALLBACK_WRITE_REQUEST,
 	/** Callback for error. */
 	I2C_SLAVE_CALLBACK_ERROR,
-	/** Callback for error in last transfer. Discovered on a new address
-	 * interrupt */
+	/** 
+	 * Callback for error in last transfer. Discovered on a new address
+	 * interrupt
+	 */
 	I2C_SLAVE_CALLBACK_ERROR_LAST_TRANSFER,
 #if !defined(__DOXYGEN__)
-	/** Total number of callbacks. */
+	/** Total number of callbacks */
 	_I2C_SLAVE_CALLBACK_N,
 #endif
 };
 #if !defined(__DOXYGEN__)
 
-/* Device instance prototype */
+/** Software module prototype */
 struct i2c_slave_module;
 
+/** Callback type */
 typedef void (*i2c_slave_callback_t)(
-		const struct i2c_slave_module *const module);
+		struct i2c_slave_module *const module);
 #endif
 
 /**
- * \brief Enum for the possible SDA hold times with respect to the negative edge
- * of SCL
+ * \brief Enum for the possible SDA hold times with respect to the negative
+ * edge of SCL
  *
  * Enum for the possible SDA hold times with respect to the negative edge
- * of SCL
+ * of SCL.
  */
 enum i2c_slave_sda_hold_time {
 	/** SDA hold time disabled */
-	I2C_SLAVE_SDA_HOLD_TIME_DISABLED = ((SERCOM_I2CS_CTRLA_SDAHOLD_Msk & ((0)
-			<< SERCOM_I2CS_CTRLA_SDAHOLD_Pos))),
+	I2C_SLAVE_SDA_HOLD_TIME_DISABLED = ((SERCOM_I2CS_CTRLA_SDAHOLD_Msk &
+			((0) << SERCOM_I2CS_CTRLA_SDAHOLD_Pos))),
 	/** SDA hold time 50ns-100ns */
-	I2C_SLAVE_SDA_HOLD_TIME_50NS_100NS = ((SERCOM_I2CS_CTRLA_SDAHOLD_Msk & ((1)
-			<< SERCOM_I2CS_CTRLA_SDAHOLD_Pos))),
+	I2C_SLAVE_SDA_HOLD_TIME_50NS_100NS = ((SERCOM_I2CS_CTRLA_SDAHOLD_Msk &
+			((1) << SERCOM_I2CS_CTRLA_SDAHOLD_Pos))),
 	/** SDA hold time 300ns-600ns */
-	I2C_SLAVE_SDA_HOLD_TIME_300NS_600NS = ((SERCOM_I2CS_CTRLA_SDAHOLD_Msk & ((2)
-			<< SERCOM_I2CS_CTRLA_SDAHOLD_Pos))),
+	I2C_SLAVE_SDA_HOLD_TIME_300NS_600NS = ((SERCOM_I2CS_CTRLA_SDAHOLD_Msk &
+			((2) << SERCOM_I2CS_CTRLA_SDAHOLD_Pos))),
 	/** SDA hold time 400ns-800ns */
-	I2C_SLAVE_SDA_HOLD_TIME_400NS_800NS = ((SERCOM_I2CS_CTRLA_SDAHOLD_Msk & ((3)
-			<< SERCOM_I2CS_CTRLA_SDAHOLD_Pos))),
+	I2C_SLAVE_SDA_HOLD_TIME_400NS_800NS = ((SERCOM_I2CS_CTRLA_SDAHOLD_Msk &
+		((3) << SERCOM_I2CS_CTRLA_SDAHOLD_Pos))),
 };
 
 /**
  * \brief Enum for the possible address modes
  *
- * Enum for the possible address modes
+ * Enum for the possible address modes.
  */
  enum i2c_slave_address_mode {
 	/** Address match on address_mask used as a mask to address */
 	I2C_SLAVE_ADDRESS_MODE_MASK = SERCOM_I2CS_CTRLB_AMODE(0),
 	/** Address math on both address and address_mask */
 	I2C_SLAVE_ADDRESS_MODE_TWO_ADDRESSES = SERCOM_I2CS_CTRLB_AMODE(1),
-	/** Address match on range of addresses between and including address and
-	* address_mask */
+	/** 
+	 * Address match on range of addresses between and including address and
+	 * address_mask
+	 */
 	I2C_SLAVE_ADDRESS_MODE_RANGE = SERCOM_I2CS_CTRLB_AMODE(2),
  };
 
  /**
- * \brief SERCOM I2C Slave driver hardware instance
+ * \brief SERCOM I<SUP>2</SUP>C Slave driver software module structure
  *
- * Device instance structure for SERCOM I2C Slave instance. This structure
- * is used throughout the driver, and should be initiated using the
- * \ref i2c_slave_init() function to associate the struct with a particular
+ * Software module structure for SERCOM I<SUP>2</SUP>C Slave instance. This structure
+ * is used throughout the driver, and must be initialized using the
+ * \ref i2c_slave_init function to associate the struct with a particular
  * hardware instance and configurations.
  */
 struct i2c_slave_module {
@@ -159,34 +162,36 @@ struct i2c_slave_module {
 	Sercom *hw;
 	/** Nack on address match */
 	bool nack_on_address;
-	/** Pointers to callback functions. */
+	/** Pointers to callback functions */
 	volatile i2c_slave_callback_t callbacks[_I2C_SLAVE_CALLBACK_N];
-	/** Mask for registered callbacks. */
+	/** Mask for registered callbacks */
 	volatile uint8_t registered_callback;
-	/** Mask for enabled callbacks. */
+	/** Mask for enabled callbacks */
 	volatile uint8_t enabled_callback;
-	/** The total number of bytes to transfer. */
+	/** The total number of bytes to transfer */
 	volatile uint16_t buffer_length;
-	/** Counter used for bytes left to send in write and to count number of
-	 * obtained bytes in read. */
+	/** 
+	 * Counter used for bytes left to send in write and to count number of
+	 * obtained bytes in read
+	 */
 	volatile uint16_t buffer_remaining;
-	/** Data buffer for packet write and read. */
+	/** Data buffer for packet write and read */
 	volatile uint8_t *buffer;
-	/** Save direction of async request. 1 = read, 0 = write. */
+	/** Save direction of request from master. 1 = read, 0 = write */
 	volatile uint8_t transfer_direction;
-	/** Status for status read back in error callback. */
+	/** Status for status read back in error callback */
 	volatile enum status_code status;
 };
 
 /**
- * \brief Configuration structure for the I2C device.
+ * \brief Configuration structure for the I<SUP>2</SUP>C Slave device
  *
- * This is the configuration structure for the I2C Slave device. It is used
+ * This is the configuration structure for the I<SUP>2</SUP>C Slave device. It is used
  * as an argument for \ref i2c_slave_init to provide the desired
- * configurations for the module. The structure should be initiated using the
+ * configurations for the module. The structure should be initialized using the
  * \ref i2c_slave_get_config_defaults .
  */
-struct i2c_slave_conf {
+struct i2c_slave_config {
 	/** Set to enable the SCL low timeout */
 	bool enable_scl_low_timeout;
 	/** SDA hold time with respect to the negative edge of SCL */
@@ -195,7 +200,7 @@ struct i2c_slave_conf {
 	enum i2c_slave_address_mode address_mode;
 	/** Address or upper limit of address range */
 	uint8_t address;
-	/** Address mask, second address or lower limit of address range*/
+	/** Address mask, second address or lower limit of address range */
 	uint8_t address_mask;
 	/**
 	 * Enable general call address recognition. General call address
@@ -217,10 +222,16 @@ struct i2c_slave_conf {
 	uint32_t pinmux_pad1;
 };
 
+/**
+ * \name Configuration and Initialization
+ * @{
+ */
+ 
 #if !defined(__DOXYGEN__)
 /**
- * \internal Wait for hardware module to sync.
- * \param[in]  module Pointer to device instance structure.
+ * \internal Wait for hardware module to sync
+ *
+ * \param[in]  module Pointer to software module structure
  */
 static void _i2c_slave_wait_for_sync(
 		const struct i2c_slave_module *const module)
@@ -231,7 +242,7 @@ static void _i2c_slave_wait_for_sync(
 
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
 
-	while(i2c_hw->STATUS.reg & SERCOM_I2CS_STATUS_SYNCBUSY) {
+	while (i2c_hw->STATUS.reg & SERCOM_I2CS_STATUS_SYNCBUSY) {
 		/* Wait for I2C module to sync. */
 	}
 }
@@ -239,11 +250,11 @@ static void _i2c_slave_wait_for_sync(
 
 
 /**
- * \brief Returns the synchronization status of the module.
+ * \brief Returns the synchronization status of the module
  *
  * Returns the synchronization status of the module.
  *
- * \param[out] module Pointer to device instance structure.
+ * \param[out] module Pointer to software module structure
  *
  * \return       Status of the synchronization
  * \retval true  Module is busy synchronizing
@@ -257,18 +268,13 @@ static inline bool i2c_slave_is_syncing (const struct i2c_slave_module *const mo
 
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
 
-	if (i2c_hw->STATUS.reg & SERCOM_I2CS_STATUS_SYNCBUSY) {
-		return true;
-	} else {
-		return false;
-	}
+	return (i2c_hw->STATUS.reg & SERCOM_I2CS_STATUS_SYNCBUSY);
 }
 
 /**
- * \brief Get the I2C slave default configurations.
+ * \brief Gets the I<SUP>2</SUP>C slave default configurations
  *
- * Use to initialize the configuration structure to known default values. This
- * function should be called at the start of any I2C initiation.
+ * Initializes the configuration structure to known default values.
  *
  * The default configuration is as follows:
  * - Disable SCL low timeout
@@ -280,11 +286,12 @@ static inline bool i2c_slave_is_syncing (const struct i2c_slave_module *const mo
  * - Address nack disabled
  * - GCLK generator 0
  * - Do not run in standby
+ * - PINMUX_DEFAULT for SERCOM pads
  *
- * \param[out] config Pointer to configuration structure to be initiated.
+ * \param[out] config Pointer to configuration structure to be initialized
  */
 static inline void i2c_slave_get_config_defaults(
-		struct i2c_slave_conf *const config)
+		struct i2c_slave_config *const config)
 {
 	/*Sanity check argument. */
 	Assert(config);
@@ -303,14 +310,14 @@ static inline void i2c_slave_get_config_defaults(
 
 enum status_code i2c_slave_init(struct i2c_slave_module *const module,
 		Sercom *const hw,
-		const struct i2c_slave_conf *const config);
+		const struct i2c_slave_config *const config);
 
 /**
- * \brief Enable the I2C module.
+ * \brief Enables the I<SUP>2</SUP>C module
  *
- * This will enable the requested I2C module.
+ * Enables the requested I<SUP>2</SUP>C module.
  *
- * \param[in]  module Pointer to the device instance struct.
+ * \param[in]  module Pointer to the software module struct
  */
 static inline void i2c_slave_enable(
 		const struct i2c_slave_module *const module)
@@ -336,12 +343,12 @@ static inline void i2c_slave_enable(
 }
 
 /**
- * \brief Disable the I2C module.
+ * \brief Disables the I<SUP>2</SUP>C module
  *
- * This will disable the I2C module specified in the provided device instance
+ * Disables the I<SUP>2</SUP>C module specified in the provided software module
  * structure.
  *
- * \param[in]  module Pointer to the device instance struct.
+ * \param[in]  module Pointer to the software module struct
  */
 static inline void i2c_slave_disable(
 		const struct i2c_slave_module *const module)
@@ -363,10 +370,10 @@ static inline void i2c_slave_disable(
 	/* Enable Global interrupt for module */
 	system_interrupt_disable(_sercom_get_interrupt_vector(module->hw));
 
-	/* Wait for module to sync. */
+	/* Wait for module to sync */
 	_i2c_slave_wait_for_sync(module);
 
-	/* Disable module. */
+	/* Disable module */
 	i2c_hw->CTRLA.reg &= ~SERCOM_I2CS_CTRLA_ENABLE;
 }
 
@@ -375,6 +382,8 @@ void i2c_slave_enable_nack_on_address(struct i2c_slave_module
 		*const module);
 void i2c_slave_disable_nack_on_address(struct i2c_slave_module
 		*const module);
+
+/** @} */
 
 /**
  * \name Callbacks
@@ -394,51 +403,51 @@ void i2c_slave_unregister_callback(
 		enum i2c_slave_callback callback_type);
 
 /**
- * \brief Enable callback.
+ * \brief Enables callback
  *
- * Enables the callback specified by the callback_value.
+ * Enables the callback specified by the callback_type.
  *
- * \param[in,out]  module      Pointer to the device instance struct.
- * \param[in]      callback_type Callback type to enable.
+ * \param[in,out]  module        Pointer to the software module struct
+ * \param[in]      callback_type Callback type to enable
  */
 static inline void i2c_slave_enable_callback(
 		struct i2c_slave_module *const module,
 		enum i2c_slave_callback callback_type)
 {
-	/* Sanity check. */
+	/* Sanity check */
 	Assert(module);
 	Assert(module->hw);
 
-	/* Mark callback as enabled. */
+	/* Mark callback as enabled */
 	module->enabled_callback |= (1 << callback_type);
 }
 
-
 /**
- * \brief Disable callback.
+ * \brief Disables callback
  *
  * Disables the callback specified by the callback_type.
  *
- * \param[in,out]  module      Pointer to the device instance struct.
- * \param[in]      callback_type Callback type to disable.
+ * \param[in,out]  module        Pointer to the software module struct
+ * \param[in]      callback_type Callback type to disable
  */
 static inline void i2c_slave_disable_callback(
 		struct i2c_slave_module *const module,
 		enum i2c_slave_callback callback_type)
 {
-	/* Sanity check. */
+	/* Sanity check */
 	Assert(module);
 	Assert(module->hw);
 
-	/* Mark callback as enabled. */
+	/* Mark callback as enabled */
 	module->enabled_callback &= ~(1 << callback_type);
 }
+
 /** @} */
 
 /**
-* \name Read and Write, Asynchronously
-* @{
-*/
+ * \name Read and Write, Interrupt-Driven
+ * @{
+ */
 
 enum status_code i2c_slave_read_packet_job(
 		struct i2c_slave_module *const module,
@@ -449,13 +458,13 @@ enum status_code i2c_slave_write_packet_job(
 		struct i2c_packet *const packet);
 
 /**
- * \brief Cancel the currently running operation.
+ * \brief Cancels any currently ongoing operation
  *
- * This will terminate the running transfer operation.
+ * Terminates the running transfer operation.
  *
- * \param[in,out] module Pointer to device instance structure.
+ * \param[in,out] module Pointer to software module structure
  */
-static inline void i2c_slave_abort_job(
+static inline void i2c_slave_cancel_job(
 		struct i2c_slave_module *const module)
 {
 	/* Sanity check. */
@@ -468,22 +477,20 @@ static inline void i2c_slave_abort_job(
 }
 
 /**
- * \brief Get last error from asynchronous operation.
+ * \brief Gets status of ongoing job
  *
- * Will return the last error that occurred in the last asynchronous transfer
- * operation. Most errors will not be set until a new start condition has been
- * detected on the bus.
- * The status will be cleared on next operation.
+ * Will return the status of the ongoing job, or the error that occurred
+ * in the last transfer operation.
+ * The status will be cleared when starting a new job.
  *
- * \param[in,out] module Pointer to device instance structure
+ * \param[in,out] module Pointer to software module structure
  *
- * \return Last status code from transfer operation
+ * \return                      Status of job
  * \retval STATUS_OK            No error has occurred
  * \retval STATUS_BUSY          Transfer is in progress
- * \retval STATUS_ERR_BAD_DATA  Master sent a NACK as response to last sent data
- * \retval STATUS_ERR_IO        A collision, timeout or bus error happened in the
- *                              last transfer
- * \retval STATUS_ERR_TIMEOUT   If timeout occurred.
+ * \retval STATUS_ERR_IO        A collision, timeout or bus error happened in
+ *                              the last transfer
+ * \retval STATUS_ERR_TIMEOUT   A timeout occurred.
  * \retval STATUS_ERR_OVERFLOW  Data from master overflows receive buffer
  */
 static inline enum status_code i2c_slave_get_job_status(

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 Serial Peripheral Interface Driver
+ * \brief SAM D20 I2C Master Quick Start Guide
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -51,10 +51,12 @@ static uint8_t buffer[DATA_LENGTH] = {
 #define SLAVE_ADDRESS 0x12
 //! [packet_data]
 
-/* Number of time to try and send packet if failed. */
+/* Number of times to try to send packet if failed. */
+//! [timeout]
 #define TIMEOUT 1000
+//! [timeout]
 
-/* Init device instance. */
+/* Init software module. */
 //! [dev_inst]
 struct i2c_master_module dev_inst;
 //! [dev_inst]
@@ -62,7 +64,7 @@ struct i2c_master_module dev_inst;
 //! [initialize_i2c]
 static void configure_i2c(void)
 {
-	/* Initialize config structure and device instance. */
+	/* Initialize config structure and software module. */
 	//! [init_conf]
 	struct i2c_master_config conf;
 	i2c_master_get_config_defaults(&conf);
@@ -86,17 +88,21 @@ static void configure_i2c(void)
 
 int main(void)
 {
-	//! [run_initialize_i2c]
+	//! [init]
 	/* Init system. */
+	//! [system_init]
 	system_init();
+	//! [system_init]
 
 	/* Configure device and enable. */
+	//! [configure_i2c]
 	configure_i2c();
-	//! [run_initialize_i2c]
+	//! [configure_i2c]
 
 	/* Timeout counter. */
+	//! [timeout]
 	uint16_t timeout = 0;
-
+	//! [timeout]
 	/* Init i2c packet. */
 	//! [packet]
 	struct i2c_packet packet = {
@@ -105,7 +111,9 @@ int main(void)
 		.data        = buffer,
 	};
 	//! [packet]
+	//! [init]
 
+	//! [main]
 	/* Write buffer to slave until success. */
 	//! [write_packet]
 	while(i2c_master_write_packet_wait(&dev_inst, &packet) != STATUS_OK) {
@@ -115,8 +123,9 @@ int main(void)
 		}
 	}
 	//! [write_packet]
-
+	//! [main]
 	while (1) {
 		/* Inf loop. */
 	}
+	
 }

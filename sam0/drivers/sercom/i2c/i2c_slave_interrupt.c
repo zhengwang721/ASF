@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 I2C Serial Peripheral Interface Driver
+ * \brief SAM D20 I2C Slave Interrupt Driver
  *
  * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
@@ -44,19 +44,19 @@
 #include "i2c_slave_interrupt.h"
 
 /**
- * \internal Set configurations to module.
+ * \internal Sets configuration to module
  *
- * \param[out] module Pointer to device instance structure.
- * \param[in]  config Configuration structure with configurations to set.
+ * \param[out] module Pointer to software module structure
+ * \param[in]  config Configuration structure with configurations to set
  *
- * \return              Status of setting config.
+ * \return                                Status of setting configuration
  * \retval STATUS_OK                      Module was configured correctly
- * \retval STATUS_ERR_ALREADY_INITIALIZED If setting other gclk generator than
+ * \retval STATUS_ERR_ALREADY_INITIALIZED If setting other GCLK generator than
  *                                        previously set
  */
 static enum status_code _i2c_slave_set_config(
 		struct i2c_slave_module *const module,
-		const struct i2c_slave_conf *const config)
+		const struct i2c_slave_config *const config)
 {
 	/* Sanity check arguments. */
 	Assert(module);
@@ -103,34 +103,33 @@ static enum status_code _i2c_slave_set_config(
 }
 
 /**
- * \brief Initializes the requested I2C Hardware module.
+ * \brief Initializes the requested I<SUP>2</SUP>C hardware module
  *
- * Initializes the SERCOM I2C Slave device requested and sets the provided
- * device instance struct.  Run this function before any further use of
+ * Initializes the SERCOM I<SUP>2</SUP>C slave device requested and sets the provided
+ * software module struct.  Run this function before any further use of
  * the driver.
  *
- * \param[out] module Pointer to device instance struct.
- * \param[in]  module   Pointer to the hardware instance.
- * \param[in]  config   Pointer to the configuration struct.
+ * \param[out] module  Pointer to software module struct
+ * \param[in]  module  Pointer to the hardware instance
+ * \param[in]  config  Pointer to the configuration struct
  *
- * \return              Status of initialization.
- * \retval STATUS_OK                       Module initiated correctly.
- * \retval STATUS_ERR_DENIED               If module is enabled.
- * \retval STATUS_BUSY                 If module is busy resetting.
- * \retval STATUS_ERR_ALREADY_INITIALIZED  If setting other gclk generator than
- *                                         previously set.
- *
+ * \return                                 Status of initialization
+ * \retval STATUS_OK                       Module initiated correctly
+ * \retval STATUS_ERR_DENIED               If module is enabled
+ * \retval STATUS_BUSY                     If module is busy resetting
+ * \retval STATUS_ERR_ALREADY_INITIALIZED  If setting other GCLK generator than
+ *                                         previously set
  */
 enum status_code i2c_slave_init(struct i2c_slave_module *const module,
 		Sercom *const hw,
-		const struct i2c_slave_conf *const config)
+		const struct i2c_slave_config *const config)
 {
 	/* Sanity check arguments. */
 	Assert(module);
 	Assert(hw);
 	Assert(config);
 
-	/* Initialize device instance */
+	/* Initialize software module */
 	module->hw = hw;
 
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
@@ -163,10 +162,10 @@ enum status_code i2c_slave_init(struct i2c_slave_module *const module,
 	/* Get sercom instance index. */
 	uint8_t instance_index = _sercom_get_sercom_inst_index(module->hw);
 
-	/* Save device instance in interrupt handler. */
+	/* Save software module in interrupt handler. */
 	_sercom_set_handler(instance_index, _i2c_slave_interrupt_handler);
 
-	/* Save device instance. */
+	/* Save software module. */
 	_sercom_instances[instance_index] = module;
 
 	/* Initialize values in module. */
@@ -183,11 +182,11 @@ enum status_code i2c_slave_init(struct i2c_slave_module *const module,
 }
 
 /**
- * \brief Resets the hardware module.
+ * \brief Resets the hardware module
  *
- * This will reset the module to hardware defaults.
+ * Resets the module to hardware defaults.
  *
- * \param[in,out] module Pointer to device instance structure.
+ * \param[in,out] module Pointer to software module structure
  */
 void i2c_slave_reset(struct i2c_slave_module *const module)
 {
@@ -204,6 +203,9 @@ void i2c_slave_reset(struct i2c_slave_module *const module)
 
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
 
+	/* Disable module */
+	i2c_slave_disable(module);
+
 	/* Clear all pending interrupts. */
 	system_interrupt_enter_critical_section();
 	system_interrupt_clear_pending(_sercom_get_interrupt_vector(module->hw));
@@ -217,39 +219,43 @@ void i2c_slave_reset(struct i2c_slave_module *const module)
 }
 
 /**
- * \brief Enables sending NACK on address match
+ * \brief Enables sending of NACK on address match
  *
- * This function will enable sending of NACK on address match, thus not
- * being ready for any transactions.
+ * Enables sending of NACK on address match, thus discarding
+ * any incoming transaction.
  *
- * \param[in,out] module Pointer to device instance structure
+ * \param[in,out] module Pointer to software module structure
  */
 void i2c_slave_enable_nack_on_address(struct i2c_slave_module
 		*const module)
 {
+	/* Sanity check arguments. */
+	Assert(module);
 	module->nack_on_address = true;
 }
 
 /**
  * \brief Disables sending NACK on address match
  *
- * This function will disable sending of NACK on address match, thus
- * sending an ACK and initiating a transaction.
+ * Disables sending of NACK on address match, thus
+ * acknowledging incoming transactions.
  *
- * \param[in,out] module Pointer to device instance structure
+ * \param[in,out] module Pointer to software module structure
  */
 void i2c_slave_disable_nack_on_address(struct i2c_slave_module
 		*const module)
 {
+	/* Sanity check arguments. */
+	Assert(module);
 	module->nack_on_address = false;
 }
 
 /**
- * \internal Read next data.
+ * \internal Reads next data
  *
  * Used by interrupt handler to get next data byte from master.
  *
- * \param[in,out] module Pointer to device instance structure.
+ * \param[in,out] module Pointer to software module structure
  */
 static void _i2c_slave_read(struct i2c_slave_module *const module)
 {
@@ -263,11 +269,11 @@ static void _i2c_slave_read(struct i2c_slave_module *const module)
 }
 
 /**
- * \internal Write next data.
+ * \internal Writes next data
  *
  * Used by interrupt handler to send next data byte to master.
  *
- * \param[in,out] module Pointer to device instance structure.
+ * \param[in,out] module Pointer to software module structure
  */
 static void _i2c_slave_write(struct i2c_slave_module *const module)
 {
@@ -281,15 +287,17 @@ static void _i2c_slave_write(struct i2c_slave_module *const module)
 }
 
 /**
- * \brief Register callback for the specified callback type.
+ * \brief Registers callback for the specified callback type
  *
- * When called, the given callback function will be associated with the
+ * Associates the given callback function with the
  * specified callback type.
+ * To enable the callback, the \ref i2c_slave_enable_callback function
+ * must be used.
  *
- * \param[in,out] module  Pointer to the device instance struct.
+ * \param[in,out] module    Pointer to the software module struct
  * \param[in] callback      Pointer to the function desired for the specified
- *                          callback.
- * \param[in] callback_type Specifies the callback type to register.
+ *                          callback
+ * \param[in] callback_type Callback type to register
  */
 void i2c_slave_register_callback(
 		struct i2c_slave_module *const module,
@@ -309,13 +317,13 @@ void i2c_slave_register_callback(
 }
 
 /**
- * \brief Unregister callback for the specified callback type.
+ * \brief Unregisters callback for the specified callback type
  *
- * When called, the currently registered callback for the given callback type
- * will be removed.
+ * Removes the currently registered callback for the given callback
+ * type.
  *
- * \param[in,out]  module      Pointer to the device instance struct.
- * \param[in]      callback_type Specifies the callback type to unregister.
+ * \param[in,out]  module        Pointer to the software module struct
+ * \param[in]      callback_type Callback type to unregister
  */
 void i2c_slave_unregister_callback(
 		struct i2c_slave_module *const module,
@@ -333,19 +341,19 @@ void i2c_slave_unregister_callback(
 }
 
 /**
- * \brief Read data packet from master asynchronous.
+ * \brief Initiates a reads packet operation
  *
  * Reads a data packet from the master. A write request must be initiated by
  * the master before the packet can be read.
  * The I2C_SLAVE_CALLBACK_WRITE_REQUEST callback can be used to call this
  * function.
  *
- * \param[in,out] module    Pointer to device instance struct.
- * \param[in,out] packet    Pointer to I2C packet to transfer.
+ * \param[in,out] module    Pointer to software module struct
+ * \param[in,out] packet    Pointer to I<SUP>2</SUP>C packet to transfer
  *
- * \return          Status of starting asynchronously reading I2C packet.
- * \retval STATUS_OK If reading was started successfully.
- * \retval STATUS_BUSY If module is currently busy with transfer operation.
+ * \return             Status of starting asynchronously reading I<SUP>2</SUP>C packet
+ * \retval STATUS_OK   If reading was started successfully
+ * \retval STATUS_BUSY If module is currently busy with another transfer
  */
 enum status_code i2c_slave_read_packet_job(
 		struct i2c_slave_module *const module,
@@ -361,7 +369,7 @@ enum status_code i2c_slave_read_packet_job(
 		return STATUS_BUSY;
 	}
 
-	/* Save packet to device instance. */
+	/* Save packet to software module. */
 	module->buffer = packet->data;
 	module->buffer_remaining = packet->data_length;
 	module->status = STATUS_BUSY;
@@ -371,19 +379,19 @@ enum status_code i2c_slave_read_packet_job(
 }
 
 /**
- * \brief Write data packet to master  asynchronous.
+ * \brief Initiates a write packet operation
  *
  * Writes a data packet to the master. A read request must be initiated by
  * the master before the packet can be written.
  * The I2C_SLAVE_CALLBACK_READ_REQUEST callback can be used to call this
  * function.
  *
- * \param[in,out]     module  Pointer to device instance struct.
- * \param[in,out]     packet    Pointer to I2C packet to transfer.
+ * \param[in,out]     module  Pointer to software module struct
+ * \param[in,out]     packet    Pointer to I<SUP>2</SUP>C packet to transfer
  *
- * \return          Status of starting asynchronously writing I2C packet.
- * \retval STATUS_OK If writing was started successfully.
- * \retval STATUS_BUSY If module is currently busy with transfer operation.
+ * \return             Status of starting writing I<SUP>2</SUP>C packet
+ * \retval STATUS_OK   If writing was started successfully
+ * \retval STATUS_BUSY If module is currently busy with another transfer
  */
 enum status_code i2c_slave_write_packet_job(
 		struct i2c_slave_module *const module,
@@ -399,7 +407,7 @@ enum status_code i2c_slave_write_packet_job(
 		return STATUS_BUSY;
 	}
 
-	/* Save packet to device instance. */
+	/* Save packet to software module. */
 	module->buffer = packet->data;
 	module->buffer_remaining = packet->data_length;
 	module->status = STATUS_BUSY;
@@ -408,14 +416,13 @@ enum status_code i2c_slave_write_packet_job(
 }
 
 /**
- * \internal Interrupt handler for I2C slave
+ * \internal Interrupt handler for I<SUP>2</SUP>C slave
  *
- * \param[in] instance Sercom instance that triggered interrupt.
+ * \param[in] instance Sercom instance that triggered the interrupt
  */
 void _i2c_slave_interrupt_handler(uint8_t instance)
 {
-	system_interrupt_enter_critical_section();
-	/* Get device instance for callback handling. */
+	/* Get software module for callback handling. */
 	struct i2c_slave_module *module =
 			(struct i2c_slave_module*)_sercom_instances[instance];
 
@@ -428,6 +435,19 @@ void _i2c_slave_interrupt_handler(uint8_t instance)
 
 	if (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_AIF) {
 	/* Address match */
+		/* Check if last read is done - repeated start */
+		if (module->buffer_length != module->buffer_remaining &&
+				module->transfer_direction == 0) {
+			
+			module->status = STATUS_OK;
+			module->buffer_length = 0;
+			module->buffer_remaining = 0;
+
+			if ((callback_mask & (1 << I2C_SLAVE_CALLBACK_READ_COMPLETE))) {
+				module->callbacks[I2C_SLAVE_CALLBACK_READ_COMPLETE](module);
+			}
+		}
+
 		if (i2c_hw->STATUS.reg & (SERCOM_I2CS_STATUS_BUSERR ||
 				SERCOM_I2CS_STATUS_COLL || SERCOM_I2CS_STATUS_LOWTOUT)) {
 			/* An error occurred in last packet transfer */
@@ -479,32 +499,27 @@ void _i2c_slave_interrupt_handler(uint8_t instance)
 		i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_CMD(0x3);
 		/* ACK next incoming packet */
 		i2c_hw->CTRLB.reg &= ~SERCOM_I2CS_CTRLB_ACKACT;
-
 	} else if (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_PIF) {
 		/* Stop condition on bus - current transfer done */
 		module->status = STATUS_OK;
 		module->buffer_length = 0;
 		module->buffer_remaining = 0;
 
-		/* Clear Stop interrupt. */
+		/* Clear Stop interrupt */
 		i2c_hw->INTFLAG.reg |= SERCOM_I2CS_INTFLAG_PIF;
 
-		/* Call appropriate callback if enabled and registered. */
+		/* Call appropriate callback if enabled and registered */
 		if ((callback_mask & (1 << I2C_SLAVE_CALLBACK_READ_COMPLETE))
 				&& (module->transfer_direction == 0)) {
 			/* Read from master complete */
 			module->callbacks[I2C_SLAVE_CALLBACK_READ_COMPLETE](module);
-		} else if ((callback_mask & (1 << I2C_SLAVE_CALLBACK_WRITE_COMPLETE))
-				&& (module->transfer_direction == 1)) {
-			/* Write to master complete */
-			module->callbacks[I2C_SLAVE_CALLBACK_WRITE_COMPLETE](module);
 		}
-
 	} else if (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_DIF) {
-		/* Check if buffer is full, or NACK from master. */
+		/* Check if buffer is full, or NACK from master */
 		if (module->buffer_remaining <= 0 ||
-				((module->buffer_length > module->buffer_remaining)
-				&& (i2c_hw->STATUS.reg & SERCOM_I2CS_STATUS_RXNACK))) {
+				(module->transfer_direction == 1 &&
+				(module->buffer_length > module->buffer_remaining) &&
+				(i2c_hw->STATUS.reg & SERCOM_I2CS_STATUS_RXNACK))) {
 
 			module->buffer_remaining = 0;
 			module->buffer_length = 0;
@@ -521,13 +536,12 @@ void _i2c_slave_interrupt_handler(uint8_t instance)
 					/* Read complete */
 					module->callbacks[I2C_SLAVE_CALLBACK_ERROR](module);
 				}
-
 			} else {
 				/* Release SCL and wait for new start condition */
 				i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_ACKACT;
 				i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_CMD(0x2);
 
-				/* Transfer successful. */
+				/* Transfer successful */
 				module->status = STATUS_OK;
 
 				if (callback_mask & (1 << I2C_SLAVE_CALLBACK_WRITE_COMPLETE)) {
@@ -536,9 +550,9 @@ void _i2c_slave_interrupt_handler(uint8_t instance)
 				}
 			}
 
-		/* Continue buffer write/read. */
+		/* Continue buffer write/read */
 		} else if (module->buffer_length > 0 && module->buffer_remaining > 0) {
-			/* Call function based on transfer direction. */
+			/* Call function based on transfer direction */
 			if (module->transfer_direction == 0) {
 				_i2c_slave_read(module);
 			} else {
@@ -546,5 +560,4 @@ void _i2c_slave_interrupt_handler(uint8_t instance)
 			}
 		}
 	}
-	system_interrupt_leave_critical_section();
 }
