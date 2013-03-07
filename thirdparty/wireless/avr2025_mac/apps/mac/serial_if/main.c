@@ -43,7 +43,7 @@
 /**
  * \mainpage
  * \section preface Preface
- * This is the reference manual for the Serial Interface Application
+ * This is the reference manual for the MAC Serial Interface Application
  * \section main_files Application Files
  * 	- main.c                 Application main file.
  * \section intro Application Introduction
