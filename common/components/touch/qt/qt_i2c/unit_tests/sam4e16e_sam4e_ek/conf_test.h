@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief QTouch Sensor example with I2C interface configuration.
+ * \brief Unit test configuration.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -41,15 +41,22 @@
  *
  */
 
-#ifndef CONF_EXAMPLE_H_INCLUDED
-#define CONF_EXAMPLE_H_INCLUDED
+#ifndef CONF_TEST_H_INCLUDED
+#define CONF_TEST_H_INCLUDED
+
+/** USART Interface */
+#define CONF_TEST_USART      CONSOLE_UART
+/** Baudrate setting */
+#define CONF_TEST_BAUDRATE   115200
+/** Parity setting */
+#define CONF_TEST_PARITY     UART_MR_PAR_NO
 
 /**
- * \brief Set QTouch parameter for the example
+ * \brief Set QTouch parameter for the unit test.
  *
  * \param setup_block Pointer to setup block buffer.
  */
-static void example_set_qt_param(struct qt_setup_block *setup_block)
+static void ut_set_qt_param(struct qt_setup_block *setup_block)
 {
 	/*
 	 * Set parameter for QT slider.
@@ -65,49 +72,33 @@ static void example_set_qt_param(struct qt_setup_block *setup_block)
 }
 
 /**
- * \brief Process QT status for the example
+ * \brief Check if any key pressed.
  *
  * \param qt_status Pointer to QT status buffer.
+ *
+ * \retval true Some keys pressed.
+ * \retval false No key pressed.
  */
-static void example_process_qt_status(struct qt_status *qt_status)
+static bool ut_is_any_key_pressed(struct qt_status *qt_status)
 {
 #define QT_LEFT_KEY_MASK     0x01
 #define QT_RIGHT_KEY_MASK    0x02
 
-	static bool key_left_pressed = false;
-	static bool key_right_pressed = false;
-	static uint8_t slide_position = 0;
+	bool key_pressed = false;
 
 	if (qt_status->key_status_2 & QT_LEFT_KEY_MASK) {
-		if (!key_left_pressed) {
-			printf("QT left key pressed.\r\n");
-			key_left_pressed = true;
-		}
-	} else {
-		if (key_left_pressed) {
-			printf("QT left key released.\r\n");
-			key_left_pressed = false;
-		}
+		key_pressed = true;
 	}
 
 	if (qt_status->key_status_2 & QT_RIGHT_KEY_MASK) {
-		if (!key_right_pressed) {
-			printf("QT right key pressed.\r\n");
-			key_right_pressed = true;
-		}
-	} else {
-		if (key_right_pressed) {
-			printf("QT right key released.\r\n");
-			key_right_pressed = false;
-		}
+		key_pressed = true;
 	}
 
 	if (qt_status->general_status & QT_GENERAL_STATUS_SDET) {
-		if (qt_status->slider_position != slide_position) {
-			slide_position = qt_status->slider_position;
-			printf("QT slider: %d\r\n", slide_position);
-		}
+		key_pressed = true;
 	}
+
+	return key_pressed;
 }
 
-#endif /* CONF_EXAMPLE_H_INCLUDED */
+#endif /* CONF_TEST_H_INCLUDED */

@@ -2,10 +2,10 @@
 	<select-by-device id="common.components.touch.qt.qt_i2c.example" caption="QTouch Sensor with I2C interface Example">
 		<module type="application" id="common.components.touch.qt.qt_i2c.example#0" caption="QTouch Sensor with I2C interface Example">
 			<info type="description" value="summary">
-			Provide an application example of TWI Master Mode Basic Services. Perform a write access to the TWI slave and read back the data written.
+				The application demonstrates how to configure a QTouch device and get device status.
 			</info>
 			<info type="keyword" value="technology">
-				<keyword value="Communication"/>
+				<keyword value="Touch"/>
 			</info>
 			<build type="include-path" value="."/>
 			<build type="module-config" subtype="required-header-file" value="conf_example.h"/>

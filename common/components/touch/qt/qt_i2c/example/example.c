@@ -146,30 +146,14 @@ int main(void)
 		}
 	}
 
-#if 0
-	/* Configure QTouch component for the example */
-	qt_write_reg(QT_REG_LP_MODE, 2);
-	delay_us(50);
-	qt_write_reg(QT_REG_BREP, 4);
-	delay_us(50);
-	qt_write_reg(QT_REG_SLIDER_CONTROL, 7);
-	delay_us(50);
-	qt_write_reg(QT_REG_NEG_DRIFT_COMP, 22);
-	delay_us(50);
-	qt_write_reg(QT_REG_SLIDER_OPTIONS, 1); /* 1-7bits, 0-8bits */
-	delay_us(50);
-	qt_write_reg(QT_REG_POS_DRIFT_COMP, 6);
-	delay_us(50);
-#else
 	/* Read setup block */
 	qt_read_setup_block(&qt_setup_block);
 	/* Modify setup block parameters for specific example */
 	example_set_qt_param(&qt_setup_block);
 	/* Write setup block */
 	qt_write_setup_block(&qt_setup_block);
-#endif
-	/* Read all status bytes to return the CHANGE line to an inactive state
-	 **/
+
+	/* Read all status bytes to return the CHANGE line to an inactive state */
 	qt_get_status(&qt_status);
 
 	while (1) {

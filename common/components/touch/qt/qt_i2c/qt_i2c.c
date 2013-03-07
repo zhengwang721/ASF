@@ -46,6 +46,12 @@
 #include "ioport.h"
 #include "string.h"
 
+/**
+ * \ingroup qt_device_i2c_group
+ *
+ * @{
+ */
+
 /** Timeout for communication with QTouch device  */
 #define QT_COMM_TIMEOUT       10000
 
@@ -187,8 +193,6 @@ bool qt_is_change_line_low(void)
 enum status_code qt_read_regs(uint8_t reg_addr, uint8_t *read_buffer,
 		uint8_t length)
 {
-	volatile uint32_t timeout = QT_COMM_TIMEOUT;
-
 	/*
 	 * Delay between each write or read cycle between TWI Stop and TWI Start.
 	 */
@@ -243,8 +247,6 @@ enum status_code qt_read_regs(uint8_t reg_addr, uint8_t *read_buffer,
 enum status_code qt_write_regs(uint8_t reg_addr, uint8_t *write_buffer,
 		uint8_t length)
 {
-	volatile uint32_t timeout = QT_COMM_TIMEOUT;
-
 	/*
 	 * Delay between each write or read cycle between TWI Stop and TWI Start.
 	 */
@@ -268,3 +270,5 @@ enum status_code qt_write_regs(uint8_t reg_addr, uint8_t *write_buffer,
 
 	return STATUS_OK;
 }
+
+/** @} */

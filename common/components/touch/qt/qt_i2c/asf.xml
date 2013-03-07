@@ -5,6 +5,7 @@
 		</info>
 		<build type="c-source" value="qt_i2c.c"/>
 		<build type="header-file" subtype ="api" value="qt_i2c.h"/>
+		<build type="header-file" subtype ="api" value="device_specific/QT2160.h"/>
 		<build type="include-path" value="./"/>
 		<build type="include-path" value="./device_specific"/>
 		<build type="module-config" subtype="required-header-file" value="conf_qt_i2c.h"/>
