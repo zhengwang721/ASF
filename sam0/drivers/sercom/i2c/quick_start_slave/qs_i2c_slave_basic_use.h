@@ -44,7 +44,7 @@
 /**
  * \page asfdoc_samd20_i2c_slave_basic_use_case Quick Start Guide for the I2C Slave module - Callback Use Case
  *
- * In this use case, the I2C will be used as follows.
+ * In this use case, the I2C&trade; will be used as follows.
  *  - Slave mode
  *
  * \section i2c_slave_basic_use_case_setup Quick Start
@@ -52,7 +52,7 @@
  * \subsection i2c_slave_basic_use_case_prereq Prerequisites
  *
  * \section i2c_slave_basic_use_case_setup_code Setup
- * To set up the I2C with desired configurations, add the following:
+ * To set up the I2C&trade; with desired configurations, add the following:
  *
  * \subsection i2c_slave_basic_use_setup_code Code
  * Add this globally accessible, i.e at the start of your code outside any functions.
@@ -84,7 +84,7 @@
  *  - \snippet qs_i2c_slave_basic_use.c reg_en_i2c_callback
  *
  * \section i2c_slave_basic_use_implementation Implementation
- * To use the I2C, you must make a packet that can be used for the reading:
+ * To use the I2C&trade;, you must make a packet that can be used for the reading:
  * \snippet qs_i2c_slave_basic_use.c packet_read
  * and writing:
  * \snippet qs_i2c_slave_basic_use.c packet_write
