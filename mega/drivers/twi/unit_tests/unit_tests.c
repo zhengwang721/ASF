@@ -167,8 +167,8 @@ const uint8_t test_pattern[] = {
 /**
  * \internal
  * \brief This test sends a packet from the master, and checks
- * that the sending happens without errors.
- *
+ * that the sending happens without errors. Master is megaRF device and the slave 
+ * is on board EEPROM.Configuring EEPROM as slave is not required.
  * \param test Current test case.
  */
 static void run_twi_master_send_test(const struct test_case *test)
@@ -216,8 +216,9 @@ static void run_twi_master_send_test(const struct test_case *test)
 /**
  * \internal
  * \brief This test requests previously sent packet to be sent from the slave,
- * and checks that the correct packet is received by the master.
- *
+ * and checks that the correct packet is received by the master. Master is 
+ * megaRF device and the slave is on board EEPROM.Configuring EEPROM as slave 
+ * is not required.
  * \param test Current test case.
  */
 static void run_twi_master_recv_test(const struct test_case *test)
