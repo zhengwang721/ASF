@@ -57,12 +57,10 @@ void config_extint_channel(void)
 //! [setup_3]
 	eint_chan_conf.gpio_pin            = BUTTON_0_EIC_PIN;
 	eint_chan_conf.gpio_pin_mux        = BUTTON_0_EIC_PIN_MUX;
-	eint_chan_conf.wake_if_sleeping    = true;
-	eint_chan_conf.filter_input_signal = false;
 	eint_chan_conf.detection_criteria  = EXTINT_DETECT_BOTH;
 //! [setup_3]
 //! [setup_4]
-	extint_chan_set_config(1, &eint_chan_conf);
+	extint_chan_set_config(BUTTON_0_EIC_LINE, &eint_chan_conf);
 //! [setup_4]
 }
 //! [setup]
@@ -70,24 +68,26 @@ void config_extint_channel(void)
 int main(void)
 {
 	//! [setup_init]
-	extint_enable();
+	system_init();
+
 	config_extint_channel();
+	extint_enable();
 	//! [setup_init]
 
 	//! [main]
 	while (true) {
 		//! [main_1]
-		if (extint_chan_is_detected(1)) {
+		if (extint_chan_is_detected(BUTTON_0_EIC_LINE)) {
 		//! [main_1]
 
 		//! [main_2]
 			// Do something in response to EXTINT 1 detection
-			bool pin_state = port_pin_get_input_level(BUTTON_0_PIN);
-			port_pin_set_output_level(LED_0_PIN, pin_state);
+			bool button_pin_state = port_pin_get_input_level(BUTTON_0_PIN);
+			port_pin_set_output_level(LED_0_PIN, button_pin_state);
 		//! [main_2]
 
 		//! [main_3]
-			extint_chan_clear_detected(1);
+			extint_chan_clear_detected(BUTTON_0_EIC_LINE);
 		//! [main_3]
 		}
 	}
