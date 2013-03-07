@@ -528,14 +528,11 @@ uint32_t ov_restore_manual(volatile uint32_t *p_backup_addr, uint32_t ul_size)
 {
 	uint32_t ul_offset = 0;
 
-	if (sizeof(regs_manual) / sizeof(ov_reg) <= ul_size *
-			sizeof(uint32_t)) {
+	if (sizeof(regs_manual) / sizeof(ov_reg) <= ul_size * sizeof(uint32_t)) {
 		while (ul_offset < ul_size) {
 			for (uint8_t i = 0; i < sizeof(uint32_t); i++) {
-				regs_manual[i + ul_offset *
-				sizeof(uint32_t)].val
-					= (((*(p_backup_addr +
-						ul_offset)) >> (i * 8)) & 0xFF);
+				regs_manual[i + ul_offset * 	sizeof(uint32_t)].val	=
+			(((*(p_backup_addr + ul_offset)) >> (i * 8)) & 0xFF);
 			}
 			ul_offset++;
 		}

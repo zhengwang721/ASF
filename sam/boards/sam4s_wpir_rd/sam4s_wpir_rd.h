@@ -506,8 +506,8 @@
 #define BOARD_LCD_ILI9325
 
 /** Backlight pin. */
-#define BOARD_BACKLIGHT_PIN            {PIO_PC13, PIOC, ID_PIOC, PIO_OUTPUT_0,	\
-                                         PIO_DEFAULT}
+#define BOARD_BACKLIGHT_PIN            {PIO_PC13, PIOC, ID_PIOC, \
+                                        PIO_OUTPUT_0, PIO_DEFAULT}
 
 /** Backlight pin definition */
 #define BOARD_AAT31XX_SET_GPIO         PIO_PC13_IDX
@@ -520,7 +520,8 @@
 
 /** LCD pins list. */
 #define BOARD_LCD_PINS                 PIN_EBI_DATA_BUS, PIN_EBI_NRD, \
-                                      PIN_EBI_NWE, PIN_EBI_NCS2, PIN_EBI_LCD_RS
+                                        PIN_EBI_NWE, PIN_EBI_NCS2, \
+                                        PIN_EBI_LCD_RS
 
 /** Define ILI9325 base address. */
 #define BOARD_ILI9325_ADDR             (0x62000000UL)
@@ -533,6 +534,29 @@
 
 /** Display height in pixels. */
 #define BOARD_LCD_HEIGHT               (320UL)
+
+/** Define ILI9325 chip select. */
+#define BOARD_LCD_SMC_CS               (2UL)
+
+/** Define ILI9325 chip select. */
+#define BOARD_LCD_SMC_SETUP            (SMC_SETUP_NWE_SETUP(2) | \
+                                        SMC_SETUP_NCS_WR_SETUP(2) | \
+                                        SMC_SETUP_NRD_SETUP(2) | \
+                                        SMC_SETUP_NCS_RD_SETUP(2))
+
+/** Define ILI9325 chip select. */
+#define BOARD_LCD_SMC_PULSE            (SMC_PULSE_NWE_PULSE(4) | \
+                                        SMC_PULSE_NCS_WR_PULSE(4) | \
+                                        SMC_PULSE_NRD_PULSE(10) | \
+                                        SMC_PULSE_NCS_RD_PULSE(10))
+
+/** Define ILI9325 chip select. */
+#define BOARD_LCD_SMC_CYCLE            (SMC_CYCLE_NWE_CYCLE(10) | \
+                                        SMC_CYCLE_NRD_CYCLE(22))
+
+/** Define ILI9325 chip select. */
+#define BOARD_LCD_SMC_MODE             (SMC_MODE_READ_MODE| \
+                                        SMC_MODE_WRITE_MODE)
 
 /******************************* SRAM definition
  *********************************/
@@ -555,6 +579,9 @@
 
 /** Define SRAM base address. */
 #define BOARD_SRAM_BASE                ((void *)0x60000000UL)
+
+/** Define SRAM chip select. */
+#define BOARD_SRAM_CS                  (0UL)
 
 /** Define SRAM length. */
 #define BOARD_SRAM_LENGTH              ((uint32_t)0x00100000UL)

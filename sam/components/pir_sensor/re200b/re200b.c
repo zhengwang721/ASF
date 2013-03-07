@@ -60,10 +60,10 @@
 extern "C" {
 #endif
 
-/** indicate if there's any comparison event triggered*/
+/** indicate if there's any comparison event triggered */
 volatile uint32_t g_ul_compare_event_flag = false;
 
-/** indicate type of comparison event(CMP_GREATER or CMP_LESS)*/
+/** indicate type of comparison event(CMP_GREATER or CMP_LESS) */
 static volatile E_CMP_RES g_compare_result = CMP_EQUAL;
 
 /**
@@ -75,7 +75,7 @@ void re200b_motion_detect_handler( void )
 	uint32_t ul_status;
 
 	ul_status = acc_get_interrupt_status(ACC);
-	/*Compare Output Interrupt*/
+	/* Compare Output Interrupt */
 	if ((ul_status & ACC_IER_CE) == ACC_IER_CE) {
 		g_ul_compare_event_flag = true;
 
@@ -94,17 +94,17 @@ void re200b_motion_detect_init(void)
 {
 	pmc_enable_periph_clk( ID_ACC );
 
-	/* Initialize ACC*/
+	/* Initialize ACC */
 	acc_init( ACC, ACC_MR_SELPLUS_AD4, ACC_MR_SELMINUS_AD0,
 			ACC_MR_EDGETYP_ANY, ACC_MR_INV_DIS);
 
-	/* select comparison pair*/
+	/* select comparison pair */
 	acc_set_input(ACC, ACC_MR_SELMINUS_AD0, ACC_MR_SELPLUS_AD4);
 
-	/*clear status*/
+	/* clear status */
 	acc_get_interrupt_status(ACC);
 
-	/* reset event flags*/
+	/* reset event flags */
 	g_compare_result = CMP_EQUAL;
 	g_ul_compare_event_flag = false;
 }
@@ -124,9 +124,9 @@ void re200b_motion_detect_reset(void)
 void re200b_motion_detect_enable(void)
 {
 	acc_enable(ACC);
-	/*Enable compasion interrupt*/
+	/* Enable compasion interrupt */
 	acc_enable_interrupt(ACC);
-	/*Enable ACC interrupt*/
+	/* Enable ACC interrupt */
 	NVIC_EnableIRQ(ACC_IRQn);
 }
 

@@ -110,21 +110,10 @@ static void _display_init(void)
 	pmc_enable_periph_clk( ID_SMC );
 
 	/* Configure SMC interface for LCD */
-	smc_set_setup_timing(SMC, ILI9325_LCD_CS, SMC_SETUP_NWE_SETUP(2)
-			| SMC_SETUP_NCS_WR_SETUP(2)
-			| SMC_SETUP_NRD_SETUP(2)
-			| SMC_SETUP_NCS_RD_SETUP(2));
-
-	smc_set_pulse_timing(SMC, ILI9325_LCD_CS, SMC_PULSE_NWE_PULSE(4)
-			| SMC_PULSE_NCS_WR_PULSE(4)
-			| SMC_PULSE_NRD_PULSE(10)
-			| SMC_PULSE_NCS_RD_PULSE(10));
-
-	smc_set_cycle_timing(SMC, ILI9325_LCD_CS, SMC_CYCLE_NWE_CYCLE(10)
-			| SMC_CYCLE_NRD_CYCLE(22));
-
-	smc_set_mode(SMC, ILI9325_LCD_CS, SMC_MODE_READ_MODE
-			| SMC_MODE_WRITE_MODE);
+	smc_set_setup_timing(SMC, ILI9325_LCD_CS, BOARD_LCD_SMC_SETUP);
+	smc_set_pulse_timing(SMC, ILI9325_LCD_CS, BOARD_LCD_SMC_PULSE);
+	smc_set_cycle_timing(SMC, ILI9325_LCD_CS, BOARD_LCD_SMC_CYCLE);
+	smc_set_mode(SMC, ILI9325_LCD_CS, BOARD_LCD_SMC_MODE);
 
 	/* Initialize display parameter */
 	ili9325_display_opt.ul_width = ILI9325_LCD_WIDTH;
@@ -156,20 +145,19 @@ static void _display_init(void)
  */
 int main(void)
 {
-	uint32_t ul_motion_detected = false;
 	uint32_t i = 0;
 	uint8_t uc_string_display[30];
 
 	sysclk_init();
 	board_init();
 
-	/* LCD display initialization*/
+	/* LCD display initialization */
 	_display_init();
 
 	/* Clear LCD */
-	ili9325_fill(COLOR_TURQUOISE);
+	ili9325_fill(COLOR_WHITE);
 
-	/* Initialize Pir sensor*/
+	/* Initialize Pir sensor */
 	re200b_motion_detect_init();
 
 	while (1) {
@@ -183,29 +171,22 @@ int main(void)
 		pmc_enable_sleepmode(0);
 
 		/* Check if a motion was detected */
-		ul_motion_detected = re200b_motion_detection();
-		if (ul_motion_detected) {
+		if (re200b_motion_detection() != 0UL) {
 			/* Disable motion detection */
 			re200b_motion_detect_disable();
 
 			/* Display information about motion detection on LCD */
-			if ((i * 20) < BOARD_LCD_HEIGHT) {
-				sprintf((char*)uc_string_display,
-						"Motion Detected:%ul",
-						i);
-				ili9325_draw_string(0, i * 20,
-						uc_string_display);
-				i++;
-			} else {
+			if ((i * 20) >= BOARD_LCD_HEIGHT) {
 				i = 0;
-				ili9325_fill(COLOR_TURQUOISE);
-				sprintf((char*)uc_string_display,
-						"Motion Detected:%ul",
-						i);
-				ili9325_draw_string(0, i * 20,
-						uc_string_display);
-				i++;
+				ili9325_fill(COLOR_WHITE);
 			}
+			sprintf((char*)uc_string_display,
+					"Motion Detected:%lu",
+					i);
+			ili9325_draw_string(0, i * 20,
+					uc_string_display);
+			i++;
+
 		}
 	}
 }
