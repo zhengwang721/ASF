@@ -64,7 +64,7 @@
  * \snippet qs_i2c_master_basic_use.c packet_data
  *
  * Number of times to try to send packet if it fails:
- * \snippet qs_i2c_master_callback.c timeout
+ * \snippet qs_i2c_master_basic_use.c timeout
  *
  * - Globally accessible module structure:
  * \snippet qs_i2c_master_basic_use.c dev_inst

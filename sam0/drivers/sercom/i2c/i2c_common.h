@@ -362,12 +362,12 @@ extern "C" {
  * </table>
  *
  * \subsubsection asfdoc_samd20_i2c_packet_timeout Packet Timeout
- * When a master sends an I<SUP>2</SUP>C&trade; packet, there is no way of being sure that a
- * slave will acknowledge the packet. To avoid stalling the device forever
- * while waiting for an acknowledge, a user selectable timeout is provided in
- * the \ref i2c_master_config which lets the driver exit a read or write
- * operation after the specified time. The function will then return the
- * STATUS_ERR_TIMEOUT flag.
+ * When a master sends an I<SUP>2</SUP>C&trade; packet, there is no way of
+ * being sure that a slave will acknowledge the packet. To avoid stalling the
+ * device forever while waiting for an acknowledge, a user selectable timeout
+ * is provided in the \ref i2c_master_config struct which
+ * lets the driver exit a read or write operation after the specified time.
+ * The function will then return the STATUS_ERR_TIMEOUT flag.
  *
  * The time before the timeout occurs, can be found by same formula as
  * provided for \ref timeout "unknown bus state" timeout.
@@ -410,8 +410,9 @@ extern "C" {
  *
  *
  * \subsection asfdoc_samd20_i2c_bus_states Bus States
- * As the I<SUP>2</SUP>C&trade; bus is limited to one transaction at the time, a master that
- * wants to perform a bus transaction must wait until the bus is free.
+ * As the I<SUP>2</SUP>C&trade; bus is limited to one transaction at the time,
+ * a master that wants to perform a bus transaction must wait until the bus is
+ * free.
  * Because of this, it is necessary for all masters in a multi-master system to
  * know the current status of the bus to be able to avoid conflicts and to
  * ensure data integrity.
@@ -420,7 +421,8 @@ extern "C" {
  * \li \b OWNER If the master initiates a transaction successfully
  * \li \b BUSY If another master is driving the bus
  * \li \b UNKNOWN If the master has recently been enabled or connected to
- * the bus. Is forced to \b IDLE after given \ref asfdoc_samd20_i2c_unknown_bus_timeout "timeout" when
+ * the bus. Is forced to \b IDLE after given
+ * \ref asfdoc_samd20_i2c_unknown_bus_timeout "timeout" when
  * the master module is enabled.
  *
  * The bus state diagram can be seen below.
@@ -456,7 +458,7 @@ extern "C" {
  * \subsubsection asfdoc_samd20_i2c_unknown_bus_timeout Unknown Bus State Timeout
  * When a master is enabled or connected to the bus, the bus state will be
  * unknown until either a given timeout or a stop command has occurred. The
- * timeout is configurable in the i2c_master_config struct.
+ * timeout is configurable in the \ref i2c_master_config struct.
  * The timeout time will depend on toolchain and optimization level used, as
  * the timeout is a loop incrementing a value until it reaches the specified
  * timeout value.
@@ -475,7 +477,7 @@ extern "C" {
  * The I<SUP>2</SUP>C&trade; module can operate in all sleep modes by setting
  * the run_in_standby boolean in the \ref i2c_master_config or
  * \ref i2c_slave_config struct.
- * The operation in slave and master Mode is shown in the table below.
+ * The operation in slave and master mode is shown in the table below.
  *
  * <table>
  *   <tr>
@@ -615,7 +617,7 @@ struct i2c_packet {
  */
 
 /**
- * \page asfdoc_samd20_i2c_quickstart Quick Start Guides for the SERCOM I2C&trade; module
+ * \page asfdoc_samd20_i2c_quickstart Quick Start Guides for the SERCOM I2C module
  *
  * This is the quick start guide list for the \ref asfdoc_samd20_i2c_group
  * "I2C" module, with
@@ -627,9 +629,9 @@ struct i2c_packet {
  * user application and run at system startup, while the steps for usage can be
  * copied into the normal user application program flow.
  *
- * \see General list of module \ref asfdoc_samd20_i2c_module_examples "examples".
+ * \see General list of module \ref asfdoc_samd20_i2c_examples "examples".
  *
- * \section use_cases IC&trade; driver use cases
+ * \section use_cases I2C Driver Use Cases
  * - \subpage asfdoc_samd20_i2c_master_basic_use_case "Quick Start Guide for the I2C&trade; Master module - Basic Use Case"
  * - \subpage asfdoc_samd20_i2c_master_callback_use_case "Quick Start Guide for the I2C&trade; Master Module - Callback Use Case"
  * - \subpage asfdoc_samd20_i2c_slave_basic_use_case "Quick Start Guide for the I2C&trade; Slave module - Callback Use Case"

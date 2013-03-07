@@ -51,7 +51,7 @@
  * \section asfdoc_samd20_i2c_master_callback_use_case_prereq Prerequisites
  * The device must be connected to an I<SUP>2</SUP>C&trade; slave.
  *
- * \section asfdoc_samd20_i2c_master_callback_use_case_setup_code Setup
+ * \section asfdoc_samd20_i2c_master_callback_use_case_setup Setup
  *
  * \subsection asfdoc_samd20_i2c_master_callback_use_case_setup_code Code
  * The following must be added to the user application:
