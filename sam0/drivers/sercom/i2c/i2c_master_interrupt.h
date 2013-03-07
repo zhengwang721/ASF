@@ -54,7 +54,7 @@ extern "C" {
  * \addtogroup asfdoc_samd20_i2c_master_interrupt_group I2C Master Interrupt
  * @{
  *
- * This is an overview of the API for the I2C master interrupt
+ * This is an overview of the API for the I2C&trade; master interrupt
  * driver.
  *
  * The user will still have to use the initialization from the basic use part

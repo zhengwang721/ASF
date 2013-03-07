@@ -146,9 +146,9 @@ static enum status_code _i2c_master_set_config(
 #endif /* __DOXYGEN__ */
 
 /**
- * \brief Initializes the requested I2C Hardware module
+ * \brief Initializes the requested I2C&trade; hardware module
  *
- * Initializes the SERCOM I2C Master device requested and sets the provided
+ * Initializes the SERCOM I2C&trade; master device requested and sets the provided
  * software module struct. Run this function before any further use of
  * the driver.
  *
@@ -338,7 +338,7 @@ static enum status_code _i2c_master_wait_for_bus(
  * \internal Starts blocking read operation
  *
  * \param[in,out]     module  Pointer to software module struct.
- * \param[in,out]     packet  Pointer to I2C packet to transfer.
+ * \param[in,out]     packet  Pointer to I2C&trade; packet to transfer.
  *
  * \return                              Status of reading packet
  * \retval STATUS_OK                    The packet was read successfully
@@ -421,14 +421,14 @@ static enum status_code _i2c_master_read(
 /**
  * \brief Reads data packet from slave
  *
- * Reads a data packet from the specified slave address on the I2C bus and
+ * Reads a data packet from the specified slave address on the I2C&trade; bus and
  * sends a stop condition when finished.
  *
  * \note This will stall the device from any other operation. For
  * interrupt-driven operation, see \ref i2c_master_read_packet_job.
  *
  * \param[in,out] module    Pointer to software module struct
- * \param[in,out] packet    Pointer to I2C packet to transfer
+ * \param[in,out] packet    Pointer to I2C&trade; packet to transfer
  * \return                              Status of reading packet.
  * \retval STATUS_OK                    The packet was read successfully
  * \retval STATUS_ERR_TIMEOUT           If no response was given within
@@ -463,7 +463,7 @@ enum status_code i2c_master_read_packet_wait(
  * \brief Reads data packet from slave without sending a stop condition when
  * done
  *
- * Reads a data packet from the specified slave address on the I2C bus without
+ * Reads a data packet from the specified slave address on the I2C&trade; bus without
  * sending a stop condition when done, thus retaining ownership of the bus when done.
  * To end the transaction, a \ref i2c_master_read_packet_wait "read" or \ref
  * i2c_master_write_packet_wait "write" with stop condition must be performed.
@@ -472,7 +472,7 @@ enum status_code i2c_master_read_packet_wait(
  * interrupt-driven operation, see \ref i2c_master_read_packet_job.
  *
  * \param[in,out] module    Pointer to software module struct
- * \param[in,out] packet    Pointer to I2C packet to transfer
+ * \param[in,out] packet    Pointer to I2C&trade; packet to transfer
  *
  * \return                              Status of reading packet.
  * \retval STATUS_OK                    The packet was read successfully
@@ -508,7 +508,7 @@ enum status_code i2c_master_read_packet_wait_no_stop(
  * \internal Starts blocking write operation.
  *
  * \param[in,out] module  Pointer to software module struct.
- * \param[in,out] packet    Pointer to I2C packet to transfer.
+ * \param[in,out] packet    Pointer to I2C&trade; packet to transfer.
  *
  * \return                              Status of reading packet.
  * \retval STATUS_OK                    The packet was read successfully
@@ -588,14 +588,14 @@ static enum status_code _i2c_master_write_packet(
 /**
  * \brief Writes data packet to slave
  *
- * Writes a data packet to the specified slave address on the I2C bus and
+ * Writes a data packet to the specified slave address on the I2C&trade; bus and
  * sends a stop condition when finished.
  *
  * \note This will stall the device from any other operation. For
  * interrupt-driven operation, see \ref i2c_master_read_packet_job.
  *
  * \param[in,out] module  Pointer to software module struct
- * \param[in,out] packet  Pointer to I2C packet to transfer
+ * \param[in,out] packet  Pointer to I2C&trade; packet to transfer
  * 
  * \return                     Status of reading packet
  * \retval STATUS_OK                   If packet was read
@@ -635,7 +635,7 @@ enum status_code i2c_master_write_packet_wait(
  * \brief Writes data packet to slave without sending a stop condition
  * when done
  *
- * Writes a data packet to the specified slave address on the I2C bus without
+ * Writes a data packet to the specified slave address on the I2C&trade; bus without
  * sending a stop condition, thus retaining ownership of the bus when done.
  * To end the transaction, a \ref i2c_master_read_packet_wait "read" or \ref
  * i2c_master_write_packet_wait "write" with stop condition or sending
@@ -645,7 +645,7 @@ enum status_code i2c_master_write_packet_wait(
  * interrupt-driven operation, see \ref i2c_master_read_packet_job.
  *
  * \param[in,out] module    Pointer to software module struct
- * \param[in,out] packet    Pointer to I2C packet to transfer
+ * \param[in,out] packet    Pointer to I2C&trade; packet to transfer
  *
  * \return                             Status of reading packet
  * \retval STATUS_OK                   If packet was read
