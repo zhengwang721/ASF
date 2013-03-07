@@ -62,7 +62,7 @@ extern "C" {
  * \addtogroup asfdoc_samd20_i2c_slave_interrupt_group I2C Slave Interrupt
  * @{
  *
- * This is an overview of the API for the I2C&trade; Slave Interrupt
+ * This is an overview of the API for the I<SUP>2</SUP>C&trade; Slave Interrupt
  * driver.
  *
  * \section asfdoc_samd20_i2c_slave_interrupt_api_overview I2C Slave Interrupt API Overview
@@ -72,7 +72,7 @@ extern "C" {
 /**
  * \brief Callback types
  *
- * The available callback types for the I2C&trade; slave.
+ * The available callback types for the I<SUP>2</SUP>C&trade; slave.
  */
 enum i2c_slave_callback {
 	/** Callback for packet write complete */
@@ -150,9 +150,9 @@ enum i2c_slave_sda_hold_time {
  };
 
  /**
- * \brief SERCOM I2C&trade; Slave driver software module structure
+ * \brief SERCOM I<SUP>2</SUP>C&trade; Slave driver software module structure
  *
- * Software module structure for SERCOM I2C&trade; Slave instance. This structure
+ * Software module structure for SERCOM I<SUP>2</SUP>C&trade; Slave instance. This structure
  * is used throughout the driver, and must be initialized using the
  * \ref i2c_slave_init function to associate the struct with a particular
  * hardware instance and configurations.
@@ -184,9 +184,9 @@ struct i2c_slave_module {
 };
 
 /**
- * \brief Configuration structure for the I2C&trade; Slave device
+ * \brief Configuration structure for the I<SUP>2</SUP>C&trade; Slave device
  *
- * This is the configuration structure for the I2C&trade; Slave device. It is used
+ * This is the configuration structure for the I<SUP>2</SUP>C&trade; Slave device. It is used
  * as an argument for \ref i2c_slave_init to provide the desired
  * configurations for the module. The structure should be initialized using the
  * \ref i2c_slave_get_config_defaults .
@@ -272,7 +272,7 @@ static inline bool i2c_slave_is_syncing (const struct i2c_slave_module *const mo
 }
 
 /**
- * \brief Gets the I2C&trade; slave default configurations
+ * \brief Gets the I<SUP>2</SUP>C&trade; slave default configurations
  *
  * Initializes the configuration structure to known default values.
  *
@@ -313,9 +313,9 @@ enum status_code i2c_slave_init(struct i2c_slave_module *const module,
 		const struct i2c_slave_config *const config);
 
 /**
- * \brief Enables the I2C&trade; module
+ * \brief Enables the I<SUP>2</SUP>C&trade; module
  *
- * Enables the requested I2C&trade; module.
+ * Enables the requested I<SUP>2</SUP>C&trade; module.
  *
  * \param[in]  module Pointer to the software module struct
  */
@@ -343,9 +343,9 @@ static inline void i2c_slave_enable(
 }
 
 /**
- * \brief Disables the I2C&trade; module
+ * \brief Disables the I<SUP>2</SUP>C&trade; module
  *
- * Disables the I2C&trade; module specified in the provided software module
+ * Disables the I<SUP>2</SUP>C&trade; module specified in the provided software module
  * structure.
  *
  * \param[in]  module Pointer to the software module struct

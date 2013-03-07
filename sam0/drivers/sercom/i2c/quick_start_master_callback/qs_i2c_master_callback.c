@@ -52,12 +52,15 @@ static uint8_t buffer[DATA_LENGTH] = {
 static uint8_t buffer_reversed[DATA_LENGTH] = {
 	0x07, 0x06, 0x05, 0x04, 0x03, 0x02, 0x01, 0x00
 };
-struct i2c_packet packet;
-#define SLAVE_ADDRESS 0x12
 //! [packet_data]
 
-/* Number of times to try to send packet if failed */
-#define TIMEOUT 1000
+//! [address]
+#define SLAVE_ADDRESS 0x12
+//! [address]
+
+//! [packet_glob]
+struct i2c_packet packet;
+//! [packet_glob]
 
 /* Init software module. */
 //! [dev_inst]
@@ -94,7 +97,7 @@ static void configure_i2c(void)
 
 	/* Change buffer timeout to something longer */
 	//! [conf_change]
-	conf.buffer_timeout = 10000;
+	conf.buffer_timeout = 65535;
 	//! [conf_change]
 
 	/* Initialize and enable device with config */
@@ -111,8 +114,12 @@ static void configure_i2c(void)
 //! [setup_callback]
 static void configure_callbacks(void){
 	/* Register callback function. */
+	//! [callback_reg]
 	i2c_master_register_callback(&sw_module, write_callback, I2C_MASTER_CALLBACK_WRITE_COMPLETE);
+	//! [callback_reg]
+	//! [callback_en]
 	i2c_master_enable_callback(&sw_module, I2C_MASTER_CALLBACK_WRITE_COMPLETE);
+	//! [callback_en]
 }
 //! [setup_callback]
 
@@ -120,12 +127,18 @@ int main(void)
 {
 	//! [run_initialize_i2c]
 	/* Init system. */
+	//! [system_init]
 	system_init();
+	//! [system_init]
 
 	/* Configure device and enable. */
+	//! [config]
 	configure_i2c();
+	//! [config]
 	/* Configure callbacks and enable. */
+	//! [config_callback]
 	configure_callbacks();
+	//! [config_callback]
 	//! [run_initialize_i2c]
 
 	/* Init i2c packet. */
@@ -140,7 +153,9 @@ int main(void)
 	i2c_master_write_packet_job(&sw_module, &packet);
 	//! [write_packet]
 
+	//! [while]
 	while (1) {
 		/* Inf loop. */
 	}
+	//! [while]
 }

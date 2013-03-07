@@ -42,54 +42,86 @@
 /**
  * \page asfdoc_samd20_i2c_master_callback_use_case Quick Start Guide for the I2C Master Module - Callback Use Case
  *
- * In this use case, the I2C&trade; will be used as follows.
+ * In this use case, the I<SUP>2</SUP>C&trade; will used and set up as follows:
  *  - Master mode
  *  - 100 kHz operation speed
  *  - Not operational in standby
- *  - 10000 packet timeout value
  *  - 65535 unknown bus state timeout value
  *
- * \section i2c_master_basic_use_case_setup Quick Start
+ * \section asfdoc_samd20_i2c_master_callback_use_case_prereq Prerequisites
+ * The device must be connected to an I<SUP>2</SUP>C&trade; slave.
  *
- * \subsection i2c_master_basic_use_case_prereq Prerequisites
- * The quick start will need the system drivers to operate correctly.
+ * \section asfdoc_samd20_i2c_master_callback_use_case_setup_code Setup
  *
- * \section i2c_master_basic_use_case_setup_code Setup
- * To set up the I2C&trade; with desired configurations, add the following:
+ * \subsection asfdoc_samd20_i2c_master_callback_use_case_setup_code Code
+ * The following must be added to the user application:
  *
- * \subsection i2c_master_basic_use_setup_code Code
- * Add this globally accessible, i.e at the start of your code outside any functions.
+ * A sample buffer to write from, a reversed buffer to write from and length of
+ * buffers.
+ * \snippet qs_i2c_master_callback.c packet_data
+ *
+ * Address of slave:
+ * \snippet qs_i2c_master_callback.c address
+ *
+ * Globally accessible module structure:
  * \snippet qs_i2c_master_callback.c dev_inst
  *
- * Function for setting up module.
+ * Globally accessible packet:
+ * \snippet qs_i2c_master_callback.c packet_glob
+ *
+ * Function for setting up module:
  * \snippet qs_i2c_master_callback.c initialize_i2c
  *
- * and the following to the start of main():
+ * Callback function for write complete:
+ * \snippet qs_i2c_master_callback.c callback_func
+ *
+ * Function for setting up the callback functionality of the driver:
+ * \snippet qs_i2c_master_callback.c setup_callback
+ *
+ * Add to user application main():
  * \snippet qs_i2c_master_callback.c run_initialize_i2c
  *
- * \subsection i2c_master_basic_use_workflow Workflow
- * When setting up the device, the correct procedure will be to:
- * -# Initialize configuration structure.
+ * \subsection asfdoc_samd20_i2c_master_callback_use_case_setup_workflow Workflow
+ * -# Initialize system.
+ *  - \snippet qs_i2c_master_callback.c system_init
+ * -# Configure and enable module.
  *  - \snippet qs_i2c_master_callback.c init_conf
- * -# Change settings in the configuration.
- *  - \snippet qs_i2c_master_callback.c conf_change
- * -# Initialize the module with the set configurations.
- *  - \snippet qs_i2c_master_callback.c init_module
+ *  -# Create and initialize configuration structure.
+ *   - \snippet qs_i2c_master_callback.c init_conf
+ *  -# Change settings in the configuration.
+ *   - \snippet qs_i2c_master_callback.c conf_change
+ *  -# Initialize the module with the set configurations.
+ *   - \snippet qs_i2c_master_callback.c init_module
+ *  -# Enable the module.
+ *   - \snippet qs_i2c_master_callback.c enable_module
  * -# Configure callback funtionality.
- *  - \snippet qs_i2c_master_callback.c setup_callback
- * -# Enable the module.
- *  - \snippet qs_i2c_master_callback.c enable_module
+ *  - \snippet qs_i2c_master_callback.c config_callback
+ *  -# Register write complete callback.
+ *   - \snippet qs_i2c_master_callback.c callback_reg
+ *  -# Enable write complete callback.
+ *   - \snippet qs_i2c_master_callback.c callback_en
+ * -# Create a packet to send to slave.
+ *  - \snippet qs_i2c_master_callback.c packet
  *
- * \section i2c_master_basic_use_implementation Implementation
- * To use the I2C&trade;, you must make a packet that can be used for the transfer.
- * \snippet qs_i2c_master_callback.c packet
- * Where the 3 values are defined and initialized as:
- * \snippet qs_i2c_master_callback.c packet_data
- * Then the first packet can be sent using i2c_master_async_write_packet function:
- * \snippet qs_i2c_master_callback.c write_packet
+ * \section asfdoc_samd20_i2c_master_callback_use_case_implementation Implementation
+ * \subsection asfdoc_samd20_i2c_master_callback_use_case_code Code
+ * Add to user application main:
+ * \snippet qs_i2c_master_callback.c while
+ * \subsection asfdoc_samd20_i2c_master_callback_use_case_implementation_workflow Workflow 
+ * -# Write packet to slave.
+ *  - \snippet qs_i2c_master_callback.c write_packet
+ * -# Infinite while loop, while waiting for interaction with slave.
+ *  - \snippet qs_i2c_master_callback.c while
  *
- * When the first packet is sent, it will enter the callback function, and continue sending
- * the same data, reverted.
+ * \section asfdoc_samd20_i2c_master_callback_use_case_callback Callback
+ * Each time a packet is sent, the callback function will be called.
+ *
+ * \subsection asfdoc_samd20_i2c_master_callback_use_case_callback_workflow Workflow
+ * - Write complete callback:
+ *  -# Send every other packet in reversed orded.
+ *   - \snippet qs_i2c_master_callback.c revert_order
+ *  -# Write new packet to slave.
+ *   - \snippet qs_i2c_master_callback.c write_next
  *
  */
 

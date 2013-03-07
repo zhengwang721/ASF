@@ -17,9 +17,9 @@
 			<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 			<require idref="sam0.utils"/>
 			<require idref="sam0.drivers.sercom"/>
-			<build type="header-file" subtype="example" value="quick_start_master_callback/qs_i2c_master_callback.h"/>
 			<build type="header-file" subtype="example" value="quick_start/qs_i2c_master_basic_use.h"/>
 			<build type="header-file" subtype="example" value="quick_start_slave/qs_i2c_slave_basic_use.h"/>
+			<build type="header-file" subtype="example" value="quick_start_master_callback/qs_i2c_master_callback.h"/>
 		</module>
 	<module type="driver" id="sam0.drivers.sercom.i2c_master" caption=
 		"I2C Master Mode">
