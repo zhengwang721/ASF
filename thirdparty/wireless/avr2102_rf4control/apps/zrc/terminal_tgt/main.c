@@ -62,7 +62,7 @@
  *
  * Terminal target can be used with the single button controller node and button controller nodes.
  * \section api_modules Application Dependent Modules
- * - \ref group_rf4control_ZRC
+ * - \ref group_rf4control
  * - \subpage api
  * \section compinfo Compilation Info
  * This software was written for the GNU GCC and IAR .

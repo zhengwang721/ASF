@@ -65,7 +65,7 @@
  *  The Application will use the ZRC Commands to send the key press events to paired devices. The Application will demonstrates the repeat key pressed event and control key pressed event.
  *
  * \section api_modules Application Dependent Modules
- * - \ref group_rf4control_ZRC
+ * - \ref group_rf4control
  * - \subpage api
  * \section compinfo Compilation Info
  * This software was written for the GNU GCC and IAR .

@@ -59,7 +59,7 @@
  *
  * In this application serial interface is used for communication, whereas serial_data_handler api will handle all the incoming bytes from the serial interface.
  * \section api_modules Application Dependent Modules
- * - \ref group_rf4control_ZRC
+ * - \ref group_rf4control
  * - \subpage api
  * \section compinfo Compilation Info
  * This software was written for the GNU GCC and IAR .
