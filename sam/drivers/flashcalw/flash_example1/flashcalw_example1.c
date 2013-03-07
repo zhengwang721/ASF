@@ -67,7 +67,7 @@
  *   -# The last page will be unlocked.
  *   -# Waiting for any key pressed in the debug console.
  *   -# Then security bit will be set. Setting the security bit will lock the chip from
- *     further access through all extendal programming and debugging interfaces.
+ *     further access through all external programming and debugging interfaces.
  *
  * \section files Main Files
  *   - flashcalw.c: FLASHCALW driver;
