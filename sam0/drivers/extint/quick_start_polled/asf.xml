@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
-	<module type="application" id="sam0.drivers.extint.quick_start" caption="EXTINT quickstart">
+	<module type="application" id="sam0.drivers.extint.quick_start_polled" caption="Quick Start for the SAMD20 EXTINT Driver (Polled)">
 		<info type="description" value="summary">
-		Quick start guide for the EXTINT driver demonstrating configuration and initialization.
+		Quick start guide for the EXTINT driver demonstrating configuration and initialization in polled mode.
 		</info>
 		<build type="c-source" value="qs_extint_basic.c"/>
 		<build type="include-path" value="."/>
