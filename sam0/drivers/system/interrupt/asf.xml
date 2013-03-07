@@ -1,5 +1,5 @@
 ﻿<asf xmlversion="1.0">
-	<module type="driver" id="sam0.drivers.system.interrupt" caption="System interrupt driver">
+	<module type="driver" id="sam0.drivers.system.interrupt" caption="System Interrupt Driver">
 		<info type="description" value="summary">
 			Interrupt management support for the ARM CM0+ core.
 		</info>
