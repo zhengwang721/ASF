@@ -58,7 +58,7 @@
  * \note For Two Processor Approach the Application needs to be flashed in the Host board(eg.SAM4L-Xplained Pro) and the Serial-if application(NoBeacon FFD) (MAC Stack)
  * needs to be flashed in the NCP(Network CoProcessor) board.
  *
- * For demonstration purposes the coordinator's configuration is limited to associate two devices at maximum.
+ * For demonstration purposes the coordinator's configuration is limited to associate six devices at maximum .
  * \section api_modules Application Dependent Modules
  * - \subpage api
  * \section compinfo Compilation Info

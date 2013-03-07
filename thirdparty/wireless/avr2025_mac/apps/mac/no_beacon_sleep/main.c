@@ -51,10 +51,8 @@
  * The first node searching for existing networks, and if no existing network is found on the default channel,
  * this nodes becomes the PAN Coodinator and creates a nonbeacon-enable network. This node has its receiver always
  * enabled.
- *
- * Other nodes that find an already existing network, associate with the PAN Coordiantor and End Devices, and go
- * to both MCU and transceiver sleep. For every 2 seconds the device wakes up and sends a data to the coordinator before going to sleep again.
- *
+ * Other nodes that find an already existing network, associate with the PAN Coordiantor and goes 
+ * to sleep(both MCU and transceiver). For every 2 seconds the device wakes up and sends a data to the coordinator before going to sleep again.
  * For demonstration purposes the coordinator's configuration is limited to associate two devices at maximum.
  * \section api_modules Application Dependent Modules
  * - \subpage api
