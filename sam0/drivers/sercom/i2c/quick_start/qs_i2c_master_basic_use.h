@@ -44,7 +44,7 @@
 /**
  * \page asfdoc_samd20_i2c_master_basic_use_case Quick Start Guide for the I2C Master module - Basic Use Case
  *
- * In this use case, the I<SUP>2</SUP>C&trade; will used and set up as follows:
+ * In this use case, the I<SUP>2</SUP>C will used and set up as follows:
  *  - Master mode
  *  - 100 kHz operation speed
  *  - Not operational in standby
@@ -53,7 +53,7 @@
  *
  *
  * \section asfdoc_samd20_i2c_master_basic_use_case_prereq Prerequisites
- * The device must be connected to an I<SUP>2</SUP>C&trade; slave.
+ * The device must be connected to an I<SUP>2</SUP>C slave.
  *
  * \section asfdoc_samd20_i2c_master_basic_use_setup Setup
  *

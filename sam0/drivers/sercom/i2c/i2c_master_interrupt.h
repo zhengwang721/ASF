@@ -54,7 +54,7 @@ extern "C" {
  * \addtogroup asfdoc_samd20_i2c_master_interrupt_group I2C Master Interrupt
  * @{
  *
- * This is an overview of the API for the I<SUP>2</SUP>C&trade; master
+ * This is an overview of the API for the I<SUP>2</SUP>C master
  * interrupt driver.
  *
  * The user will still have to use the initialization from the basic use part
@@ -65,7 +65,7 @@ extern "C" {
  * the driver in the same way as for the basic polled driver, but will
  * additionally get the interrupt functionality documented below.
  *
- * \section asfdoc_samd20_i2c_master_interrupt_api_overview I2C Master Interrupt API Overview
+ * \section asfdoc_samd20_i2c_master_interrupt_api_overview API Overview
  *
  */
 

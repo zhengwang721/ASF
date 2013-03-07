@@ -63,11 +63,11 @@ extern "C" {
 /**
  * \defgroup asfdoc_samd20_i2c_master_group I2C Master Basic
  *
- * This is the API overview for the basic use of I<SUP>2</SUP>C&trade; master. For more
+ * This is the API overview for the basic use of I<SUP>2</SUP>C master. For more
  * advance use with the interrupt-driven driver, see
  * \subpage asfdoc_samd20_i2c_master_interrupt_group.
  *
- * \section asfdoc_samd20_i2c_master_api_overview I2C Master API Overview
+ * \section asfdoc_samd20_i2c_master_api_overview API Overview
  * @{
  *
  */
@@ -96,7 +96,7 @@ enum i2c_master_interrupt_flag {
 /**
  * \brief Values for hold time after start bit.
  *
- * Values for the possible I<SUP>2</SUP>C&trade; master mode SDA internal hold times after start
+ * Values for the possible I<SUP>2</SUP>C master mode SDA internal hold times after start
  * bit has been sent.
  */
 enum i2c_master_start_hold_time {
@@ -111,9 +111,9 @@ enum i2c_master_start_hold_time {
 };
 
 /**
- * \brief I<SUP>2</SUP>C&trade; frequencies
+ * \brief I<SUP>2</SUP>C frequencies
  *
- * Values for standard I<SUP>2</SUP>C&trade; speeds supported by the module. The driver will
+ * Values for standard I<SUP>2</SUP>C speeds supported by the module. The driver will
  * also support setting any value between 10 and 100kHz, in which case set
  * the value in the \ref i2c_master_config at desired value divided by 1000.
  *
@@ -134,7 +134,7 @@ enum i2c_master_baud_rate {
 /**
  * \brief Callback types
  *
- * The available callback types for the I<SUP>2</SUP>C&trade; master module.
+ * The available callback types for the I<SUP>2</SUP>C master module.
  */
 enum i2c_master_callback {
 	/** Callback for packet write complete. */
@@ -158,9 +158,9 @@ typedef void (*i2c_master_callback_t)(
 #endif
 
 /**
- * \brief SERCOM I<SUP>2</SUP>C&trade; Master driver software module structure
+ * \brief SERCOM I<SUP>2</SUP>C Master driver software module structure
  *
- * Software module structure for SERCOM I<SUP>2</SUP>C&trade; Master instance. This structure
+ * Software module structure for SERCOM I<SUP>2</SUP>C Master instance. This structure
  * is used throughout the driver, and must be initialized using the
  * \ref i2c_master_init function to associate the struct with a particular
  * hardware instance and configurations.
@@ -198,15 +198,15 @@ struct i2c_master_module {
 };
 
 /**
- * \brief Configuration structure for the I<SUP>2</SUP>C&trade; Master device
+ * \brief Configuration structure for the I<SUP>2</SUP>C Master device
  *
- * This is the configuration structure for the I<SUP>2</SUP>C&trade; Master device. It is used
+ * This is the configuration structure for the I<SUP>2</SUP>C Master device. It is used
  * as an argument for \ref i2c_master_init to provide the desired
  * configurations for the module. The structure should be initialized using the
  * \ref i2c_master_get_config_defaults .
  */
 struct i2c_master_config {
-	/** Baud rate for I<SUP>2</SUP>C&trade; operations. */
+	/** Baud rate for I<SUP>2</SUP>C operations. */
 	enum i2c_master_baud_rate baud_rate;
 	/** GCLK generator to use as clock source. */
 	enum gclk_generator generator_source;
@@ -274,7 +274,7 @@ static inline bool i2c_master_is_syncing (
 }
 
 /**
- * \brief Gets the I<SUP>2</SUP>C&trade; master default configurations
+ * \brief Gets the I<SUP>2</SUP>C master default configurations
  *
  * Use to initialize the configuration structure to known default values.
  *
@@ -311,9 +311,9 @@ enum status_code i2c_master_init(
 		const struct i2c_master_config *const config);
 
 /**
- * \brief Enables the I<SUP>2</SUP>C&trade; module
+ * \brief Enables the I<SUP>2</SUP>C module
  *
- * Enables the requested I<SUP>2</SUP>C&trade; module and set the bus state to IDLE
+ * Enables the requested I<SUP>2</SUP>C module and set the bus state to IDLE
  * after the specified \ref asfdoc_samd20_i2c_timeout "timeout" period if no
  * stop bit is detected.
  *
@@ -354,9 +354,9 @@ static inline void i2c_master_enable(
 }
 
 /**
- * \brief Disable the I<SUP>2</SUP>C&trade; module
+ * \brief Disable the I<SUP>2</SUP>C module
  *
- * Disables the requested I<SUP>2</SUP>C&trade; module.
+ * Disables the requested I<SUP>2</SUP>C module.
  *
  * \param[in]  module Pointer to the software module struct
  */

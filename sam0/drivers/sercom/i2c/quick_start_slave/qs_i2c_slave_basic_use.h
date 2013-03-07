@@ -44,11 +44,11 @@
 /**
  * \page asfdoc_samd20_i2c_slave_basic_use_case Quick Start Guide for the I2C Slave module - Callback Use Case
  *
- * In this use case, the I<SUP>2</SUP>C&trade; will used and set up as follows:
+ * In this use case, the I<SUP>2</SUP>C will used and set up as follows:
  *  - Slave mode
  *
  * \section asfdoc_samd20_i2c_slave_basic_use_case_prereq Prerequisites
- * The device must be connected to an I<SUP>2</SUP>C&trade; master.
+ * The device must be connected to an I<SUP>2</SUP>C master.
  *
  * \section asfdoc_samd20_i2c_slave_basic_use_case_setup_code Setup
  *

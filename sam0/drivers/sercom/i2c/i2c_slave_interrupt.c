@@ -103,9 +103,9 @@ static enum status_code _i2c_slave_set_config(
 }
 
 /**
- * \brief Initializes the requested I<SUP>2</SUP>C&trade; hardware module
+ * \brief Initializes the requested I<SUP>2</SUP>C hardware module
  *
- * Initializes the SERCOM I<SUP>2</SUP>C&trade; slave device requested and sets the provided
+ * Initializes the SERCOM I<SUP>2</SUP>C slave device requested and sets the provided
  * software module struct.  Run this function before any further use of
  * the driver.
  *
@@ -349,9 +349,9 @@ void i2c_slave_unregister_callback(
  * function.
  *
  * \param[in,out] module    Pointer to software module struct
- * \param[in,out] packet    Pointer to I<SUP>2</SUP>C&trade; packet to transfer
+ * \param[in,out] packet    Pointer to I<SUP>2</SUP>C packet to transfer
  *
- * \return             Status of starting asynchronously reading I<SUP>2</SUP>C&trade; packet
+ * \return             Status of starting asynchronously reading I<SUP>2</SUP>C packet
  * \retval STATUS_OK   If reading was started successfully
  * \retval STATUS_BUSY If module is currently busy with another transfer
  */
@@ -387,9 +387,9 @@ enum status_code i2c_slave_read_packet_job(
  * function.
  *
  * \param[in,out]     module  Pointer to software module struct
- * \param[in,out]     packet    Pointer to I<SUP>2</SUP>C&trade; packet to transfer
+ * \param[in,out]     packet    Pointer to I<SUP>2</SUP>C packet to transfer
  *
- * \return             Status of starting writing I<SUP>2</SUP>C&trade; packet
+ * \return             Status of starting writing I<SUP>2</SUP>C packet
  * \retval STATUS_OK   If writing was started successfully
  * \retval STATUS_BUSY If module is currently busy with another transfer
  */
@@ -416,7 +416,7 @@ enum status_code i2c_slave_write_packet_job(
 }
 
 /**
- * \internal Interrupt handler for I<SUP>2</SUP>C&trade; slave
+ * \internal Interrupt handler for I<SUP>2</SUP>C slave
  *
  * \param[in] instance Sercom instance that triggered the interrupt
  */
