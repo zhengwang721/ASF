@@ -46,7 +46,7 @@
 #include <conf_board.h>
 #include <port.h>
 
-void board_init(void)
+void system_board_init(void)
 {
 	struct port_config pin_conf;
 	port_get_config_defaults(&pin_conf);
