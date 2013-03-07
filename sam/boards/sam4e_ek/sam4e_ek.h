@@ -560,12 +560,21 @@
  * - \ref BOARD_SD_PINS
  * - \ref BOARD_SD_PIN_CD
  *
+ * QTouch component
+ * - \ref QTOUCH_CHANGE_PIN_IDX
+ * - \ref QTOUCH_CHANGE_PIN_FLAGS
+ * - \ref QTOUCH_CHANGE_PIN_SENSE
  */
 
 /** HSMCI pins that shall be configured to access the SD card. */
 #define BOARD_SD_PINS               PINS_HSMCI
 /** HSMCI Card Detect pin. */
 #define BOARD_SD_PIN_CD             PIN_HSMCI_CD
+
+/** QTouch component pin definition */
+#define QTOUCH_CHANGE_PIN_IDX      (PIO_PE4_IDX)
+#define QTOUCH_CHANGE_PIN_FLAGS    (IOPORT_MODE_PULLUP | IOPORT_MODE_DEBOUNCE)
+#define QTOUCH_CHANGE_PIN_SENSE    (IOPORT_SENSE_FALLING)
 
 /*----------------------------------------------------------------------------*/
 /**

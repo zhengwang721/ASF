@@ -1,0 +1,19 @@
+<asf xmlversion="1.0">
+	<select-by-device id="common.components.touch.qt.qt_i2c.example" caption="QTouch Sensor with I2C interface Example">
+		<module type="application" id="common.components.touch.qt.qt_i2c.example#0" caption="QTouch Sensor with I2C interface Example">
+			<info type="description" value="summary">
+			Provide an application example of TWI Master Mode Basic Services. Perform a write access to the TWI slave and read back the data written.
+			</info>
+			<info type="keyword" value="technology">
+				<keyword value="Communication"/>
+			</info>
+			<build type="include-path" value="."/>
+			<build type="module-config" subtype="required-header-file" value="conf_example.h"/>
+			<build type="c-source" value="example.c"/>
+			<require idref="common.components.touch.qt.qt_i2c" />
+			<require idref="common.services.basic.clock" />
+			<require idref="common.utils.stdio.stdio_serial"/>
+			<device-support value="sam4e"/>
+		</module>
+	</select-by-device>
+</asf>

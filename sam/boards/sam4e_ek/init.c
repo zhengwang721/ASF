@@ -308,4 +308,10 @@ void board_init(void)
 	ioport_set_pin_peripheral_mode(PIN_USART1_TXD_IDX, PIN_USART1_TXD_FLAGS);
 	ioport_set_pin_peripheral_mode(PIN_USART1_SCK_IDX, PIN_USART1_SCK_FLAGS);
 #endif
+
+#ifdef CONF_BOARD_QTOUCH
+	/* Configure CHANGE pin for QTouch device */
+	ioport_set_pin_input_mode(QTOUCH_CHANGE_PIN_IDX, QTOUCH_CHANGE_PIN_FLAGS,
+			QTOUCH_CHANGE_PIN_SENSE);
+#endif
 }
