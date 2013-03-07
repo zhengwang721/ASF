@@ -1,0 +1,31 @@
+<asf xmlversion="1.0">
+	<select-by-config id="thirdparty.wireless.avr2025_mac" name="config.thirdparty.wireless.avr2025_mac" caption="AVR 2025 - IEEE 802.15.4 MAC Configuration" default="source">
+        <module type="component" id="thirdparty.wireless.avr2025_mac#source" caption="AVR2025 - IEEE 802.15.4 MAC Source">
+			<info type="description" value="summary">
+			AVR2025 - IEEE 802.15.4 MAC : This module is used by default in a single processor approach and by NCP(Network Co-Processor) for a two processor approach
+			</info>
+			<require idref="thirdparty.wireless.avr2025_mac.source.mac"/>
+            <device-support-alias value="avr2025_mac_pal_spi_support"/>
+            <device-support-alias value="avr2025_mac_pal_soc_support"/>
+			<build type="doxygen-entry-point" value="group_mac"/>
+            <info type="keyword" value="technology">
+                <keyword value="Wireless"/>
+                <keyword value="Communication"/>
+            </info>
+            <build type="distribute" subtype="license" value="../EULA.txt"/>
+        </module>
+        <module type="component" id="thirdparty.wireless.avr2025_mac#api_parser" caption="AVR2025 - IEEE 802.15.4 MAC - API Parser">
+            <info type="description" value="summary">
+            AVR2025 - IEEE 802.15.4 MAC : This module is used by the host for a two processor approach
+            </info>
+            <require idref="thirdparty.wireless.avr2025_mac.api_parser"/>
+            <device-support-alias value="avr2025_mac_api_parser_support"/>
+			<build type="doxygen-entry-point" value="group_mac_api_parser"/>
+            <info type="keyword" value="technology">
+                <keyword value="Wireless"/>
+                <keyword value="Communication"/>
+            </info>
+            <build type="distribute" subtype="license" value="../EULA.txt"/>
+        </module>
+	</select-by-config>
+</asf>

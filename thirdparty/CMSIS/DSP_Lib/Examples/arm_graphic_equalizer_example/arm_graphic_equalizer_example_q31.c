@@ -108,10 +108,9 @@
  
 /** \example arm_graphic_equalizer_example_q31.c 
  */  
- 
+#include <asf.h>
 #include "arm_math.h" 
 #include "math_helper.h"
-#include "asf.h"
 
 /* Length of the overall data in the test */ 
 #define TESTLENGTH 320

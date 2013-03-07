@@ -3,7 +3,7 @@
  *
  * \brief SAM toolkit demo application.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -52,7 +52,7 @@
  *
  * \section Requirements
  *
- * This package can be used with SAM4S evaluation kits.
+ * This package can be used with SAM4S-EK/SAM4S-EK2.
  *
  * \section Description
  *
@@ -72,6 +72,15 @@
  *    <a href="ftp://ftp.iar.se/WWWfiles/arm/Guides/EWARM_UserGuide.ENU.pdf">
  *    IAR EWARM User Guide</a>,
  *    depending on your chosen solution.
+ * -# Unzip the resource files in the resource directory, which is located at
+ * ./sam/applications/sam_toolkit_demo/resources/disk.
+ * -# Erase the nand flash through SAM-BA.
+ * -# Power OFF and ON the board with the USB cable always connected.
+ * -# A new Removable Disk should appear in the computer explorer.
+ * -# Copy the resource files to the root directory of this removable disk.
+ * -# When the copy operation is achieved, disconnect the USB cable, and
+ * Power OFF and ON the board. The root directory in the removable disk should
+ * be "/demo".
  * -# On the computer, open and configure a terminal application
  *    (e.g. HyperTerminal on Microsoft Windows) with these settings:
  *   - 115200 bauds
@@ -79,12 +88,9 @@
  *   - No parity
  *   - 1 stop bit
  *   - No flow control
- * -# Format a SD card with a FAT32 filesystem and extract out the contents
- *    of the sam_toolkit_demo_sdcard_resources.zip archive directly to the root
- *    folder of the card. Insert the SD Card into the SAM4S-EK board.
  * -# Start the application.
- * -# Two LEDs should start blinking on the board. In the terminal window, the
- *    following text should appear (values depend on the board and chip used):
+ * -# In the terminal window, the following text should appear (values depend
+ * on the board and chip used):
  *    \code
  *     -- SAM Toolkit Demo Example xxx --
  *     -- xxxxxx-xx

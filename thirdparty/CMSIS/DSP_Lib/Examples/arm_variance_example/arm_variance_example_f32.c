@@ -74,9 +74,9 @@
 
 /** \example arm_variance_example_f32.c
   */ 
+#include <asf.h>
 #include <math.h>    
 #include "arm_math.h"
-#include "asf.h"
 
 /* ----------------------------------------------------------------------
 * Defines each of the tests performed
