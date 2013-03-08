@@ -59,6 +59,8 @@
  *
  * \section files Main Files
  * - \ref unit_tests.c
+ * - \ref conf_qt_i2c.h
+ * - \ref conf_test.h
  *
  * \section device_info Device Info
  * This example has been tested with the following setup:

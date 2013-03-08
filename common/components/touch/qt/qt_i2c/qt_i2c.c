@@ -83,7 +83,7 @@ void qt_init_interface(void)
 /**
  * \brief Perform a hardware reset of the QT device.
  *
- * \note If RESET pin defined, it will perform a hardware reset,
+ * \note If RESET pin is defined, it will perform a hardware reset,
  *       Otherwise it will do nothing.
  */
 void qt_hardware_reset(void)

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Qtouch component example (with I2C interface).
+ * \brief Qtouch component example with I2C interface.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -75,8 +75,8 @@
  *     -- xxxxxx-xx
  *     -- Compiled: xxx xx xxxx xx:xx:xx --
  *     \endcode
- *  -# Touch the QTouch key or slide on the EK board, status will be outputted
- *     on terminal windows.
+ *  -# Touch the QTouch key or slide on the EK board, key status will be
+ *     outputted on terminal windows.
  *
  * \section contactinfo Contact Information
  * For further information, visit
@@ -106,8 +106,6 @@ static void configure_console(void)
 	stdio_serial_init(CONF_UART, &uart_serial_options);
 }
 
-extern uint8_t ReadSetupBlock_test(void);
-
 /** Storage for QT status */
 struct qt_status qt_status;
 /** Storage for QT setup block */
@@ -128,7 +126,7 @@ int main(void)
 	configure_console();
 
 	/* Output example information */
-	printf("\r\n\r\n-- Qtouch component example (with I2C interface) --\r\n");
+	printf("\r\n\r\n-- Qtouch component example with I2C interface --\r\n");
 	printf("-- %s\r\n", BOARD_NAME);
 	printf("-- Compiled: %s %s --\r\n", __DATE__, __TIME__);
 
@@ -158,19 +156,10 @@ int main(void)
 
 	while (1) {
 		if (qt_is_change_line_low()) {
-			/* Read all status-bytes */
+			/* Read all status bytes */
 			qt_get_status(&qt_status);
 
 			/* Process the received data */
-#if 0
-			printf("\r\n");
-			printf("0x%08x ", qt_status.general_status);
-			printf("0x%08x ", qt_status.key_status_1);
-			printf("0x%08x ", qt_status.key_status_2);
-			printf("0x%08x ", qt_status.slider_position);
-			printf("0x%08x ", qt_status.gpio_read);
-			printf("\r\n");
-#endif
 			example_process_qt_status(&qt_status);
 		}
 	}

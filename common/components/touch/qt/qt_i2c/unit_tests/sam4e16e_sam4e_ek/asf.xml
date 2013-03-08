@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="Qtouch component driver with I2C interface unit Test for SAM4E" id="common.components.touch.qt.qt_i2c.unit_tests.sam4e_ek" type="unit-test">
+	<project caption="Qtouch component driver with I2C interface unit test for SAM4E" id="common.components.touch.qt.qt_i2c.unit_tests.sam4e_ek" type="unit-test">
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clock.h"/>

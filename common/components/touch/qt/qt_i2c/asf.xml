@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<module type="component" id="common.components.touch.qt.qt_i2c" caption="QTouch Sensor with I2C interface">
 		<info type="description" value="summary">
-		Component for communicating with QTouch sensor devices with I2C interface, currently supporting the AT42QT2160. It provides functions for initialization and read/write operations at register level, and reading out touch events. Common implementation for UC3, XMEGA and SAM.
+		Component for communicating with QTouch sensor devices with I2C interface, currently supporting the AT42QT2160. It provides functions for initialization and read/write operations at register level, and reading out touch status. Common implementation for UC3, XMEGA and SAM.
 		</info>
 		<build type="c-source" value="qt_i2c.c"/>
 		<build type="header-file" subtype ="api" value="qt_i2c.h"/>

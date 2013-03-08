@@ -48,6 +48,18 @@
 extern "C" {
 #endif
 
+/**
+ * \ingroup qt_device_i2c_group
+ *
+ * @{
+ */
+
+/**
+ * \defgroup qt_at42qt2160_group Definitions for Atmel AT42QT2160 device
+ *
+ * @{
+ */
+
 /** AT42QT2160 Chip ID */
 #define QT_DEVICE_ID    0x11
 
@@ -298,27 +310,30 @@ struct qt_setup_block {
 /**
  * Structure for QT2160 device-status, include:
  *
+ * \verbatim
+ *
  * QtStatus[0] - General Status
- *         Bit0 - SDET : This bit is set if a touch is detected on the slider.
- *         Bit1 - CC : This Common Change bit is set if all the selected
- *             keys have a signal change of more than half the
- *             detection threshold, NTHR.
- *         bit6 - CYCLE OVERRUN : This bit is set if the cycle time more than
- *                16ms.
- *         bit7 - RESET : This bit is set after a reset
+ *     bit0 - SDET : This bit is set if a touch is detected on the slider.
+ *     bit1 - CC : This Common Change bit is set if all the selected
+ *                 keys have a signal change of more than half the
+ *                 detection threshold, NTHR.
+ *     bit6 - CYCLE OVERRUN : This bit is set if the cycle time more than 16ms.
+ *     bit7 - RESET : This bit is set after a reset
  *
  * QtStatus[1] - Key Status
- *      bits 0 - 7 : Detect status for keys 0 to 7 (Touched keys report as 1)
+ *     bits 0 - 7 : Detect status for keys 0 to 7 (Touched keys report as 1)
  *
  * QtStatus[2] - Key Status
- *      bits 0 - 7 : Detect status for keys 8 to 15 (Touched keys report as 1)
+ *     bits 0 - 7 : Detect status for keys 8 to 15 (Touched keys report as 1)
  *
  * QtStatus[3] - Slider Touch Position
- *      bits 0 - 7 : Last position of the touch on the slider
+ *     bits 0 - 7 : Last position of the touch on the slider
  *
  * QtStatus[4] - GPIO Read
- *      bits 2 - 4 : indicates the state of GPIO1 to GPIO3
- *                   that are configured as inputs
+ *     bits 2 - 4 : indicates the state of GPIO1 to GPIO3
+ *                  that are configured as inputs
+ *
+ * \endverbatim
  */
 struct qt_status {
 	uint8_t general_status;  /**< General Status */
@@ -331,6 +346,9 @@ struct qt_status {
 	uint8_t slider_position; /**< Slider Touch Position */
 	uint8_t gpio_read;       /**< GPIO Read */
 };
+
+/** @} */
+/** @} */
 
 #ifdef __cplusplus
 }

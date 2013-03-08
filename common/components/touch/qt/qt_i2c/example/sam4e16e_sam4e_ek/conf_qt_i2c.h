@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief QTouch component with I2C interface configuration.
+ * \brief Configuration for QTouch component with I2C interface.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *

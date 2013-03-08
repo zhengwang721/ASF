@@ -1,6 +1,6 @@
 <asf xmlversion="1.0">
-	<select-by-device id="common.components.touch.qt.qt_i2c.example" caption="QTouch Sensor with I2C interface Example">
-		<module type="application" id="common.components.touch.qt.qt_i2c.example#0" caption="QTouch Sensor with I2C interface Example">
+	<select-by-device id="common.components.touch.qt.qt_i2c.example" caption="QTouch Sensor Example with I2C interface">
+		<module type="application" id="common.components.touch.qt.qt_i2c.example#0" caption="QTouch Sensor Example with I2C interface">
 			<info type="description" value="summary">
 				The application demonstrates how to configure a QTouch device and get device status.
 			</info>
