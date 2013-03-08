@@ -56,9 +56,8 @@ extern "C" {
  *
  * See \ref megarf_macsc_quickstart
  *
- * This is a driver for the AVR MEGARF MAC Symbol Counter Driver(MACSC). It
- * provides functions
- * for enabling, disabling and configuring the MEGARF MAC Symbol Counter module.
+ * This is a driver for the AVR MEGARF MAC Symbol Counter Driver(MACSC). 
+ * It provides functions for enabling, disabling and configuring the module.
  *
  * \section dependencies Dependencies
  * This driver depends on the following modules:
@@ -77,7 +76,7 @@ extern "C" {
 typedef void (*macsc_callback_t)(void);
 
 /* ! MAC symbol counter compare Channel index */
-enum macsc_cc_channel_t {
+enum macsc_cc_channel {
 	/* ! Channel 1 */
 	MACSC_CC1 = 1,
 	/* ! Channel 2 */
@@ -96,15 +95,14 @@ enum macsc_cc_channel_t {
  * uses the SCCKSEL bit in SSCR register to select macsc clk src
  *
  * If the bit is one,the RTC clock from TOSC1 is selected, otherwise the symbol
- * counter
- * operates with the clock from XTAL1.
+ * counter operates with the clock from XTAL1.
  * During transceiver sleep modes the clock falls back to the RTC clock source,
  * regardless of the selected clock. After wakeup, it switches back to the
  * previosly
  * selected clock source.
  */
 
-enum macsc_xtal_t {
+enum macsc_xtal {
 	/* ! 16MHz as macsc clock */
 	MACSC_16MHz = 0,
 	MACSC_32KHz = 1,
@@ -166,8 +164,8 @@ static inline uint32_t macsc_read32(volatile uint8_t *hh,
  *
  * Enables the SC
  *
- * \param clk_src selection of clk source,avalable options in macsc_xtal_t,fixed
- *prescalar
+ * \param clk_src selection of clk source,avalable options in macsc_xtal,fixed
+ *  prescalar
  * \param sleep_enable enable RTC as clock source during sleep
  * \param auto_ts enable automatic timestamping
  *
@@ -205,31 +203,26 @@ void macsc_disable(void);
 bool is_macsc_backoff_enable(void);
 
 /**
- * \brief Absolute compare usage
+ * \brief Enables compare interrupts of the MACSC 
  *
- * \param abs_rel  0 for absoulte cmp;1 for relative cmp
- * \param cmp compare value for SCOCRx register
  * \param channel Compare channel
- * \note    This enables the corresponding compare interrupt as well
  */
-void macsc_enable_cmp_int(enum macsc_cc_channel_t channel);
+void macsc_enable_cmp_int(enum macsc_cc_channel channel);
 
 /**
- * \brief Absolute compare usage
+ * \brief Usage of Absolute compare mode of the MACSC
  *
  * \param abs_rel  0 for absoulte cmp;1 for relative cmp
  * \param cmp compare value for SCOCRx register
  * \param channel Compare channel
- * \note    This enables the corresponding compare interrupt as well
  */
-void macsc_use_cmp(bool abs_rel, uint32_t cmp,enum macsc_cc_channel_t channel);
+void macsc_use_cmp(bool abs_rel, uint32_t cmp,enum macsc_cc_channel channel);
 
 /**
  * \ingroup macsc_group
  * \defgroup macsc_interrupt_group MAC Symbol Counter (MACSC) interrupt
  * management
  * This group provides functions to configure MACSC module interrupts
- *
  *
  * @{
  */
@@ -288,6 +281,7 @@ void macsc_set_cmp3_int_cb(macsc_callback_t callback);
  * \param callback Reference to a callback function
  */
 void macsc_set_backoff_slot_cntr_int_cb(macsc_callback_t callback);
+//@}
 
 /**
  * \brief Enable 32.768KHz clk using timer 2 async register
@@ -313,11 +307,11 @@ static inline void macsc_sleep_clk_disable(void)
 /* @} */
 
 /**
- * \brief Configure MAC Symbol Counter Source
+ * \brief Configure MAC Symbol Counter Clock Source
  *
  * \param macsc macsc clk src
  */
-static inline void macsc_write_clock_source(enum macsc_xtal_t source)
+static inline void macsc_write_clock_source(enum macsc_xtal source)
 {
 	if (source == MACSC_16MHz) {
 		SCCR0 |= (source << SCCKSEL);
@@ -330,11 +324,11 @@ static inline void macsc_write_clock_source(enum macsc_xtal_t source)
  * \brief Read MAC SC Clock Source
  *
  * \param none
- * \return macsc_xtal_t enum Clock source selection
+ * \return macsc_xtal enum Clock source selection
  */
-static inline enum macsc_xtal_t macsc_read_clock_source(void)
+static inline enum macsc_xtal macsc_read_clock_source(void)
 {
-	return (enum macsc_xtal_t)(SCCR0 & (1 << SCCKSEL));
+	return (enum macsc_xtal)(SCCR0 & (1 << SCCKSEL));
 }
 
 /**
@@ -365,13 +359,15 @@ static inline uint32_t macsc_read_count(void)
  * \note This counter works only if transceiver clock is running.So check Trx
  * state in app before using this function in IEEE802.15.4 applications.
  */
-static inline void macsc_backoff_slot_cnt_enable(void)
+static inline bool macsc_backoff_slot_cnt_enable(void)
 {
 	if (!(PRR1 & (1 << PRTRX24))) {
 		SCCR1 = (1 << SCENBO);
 		SCIRQS |= (1 << IRQSBO);
 		SCIRQM |= (1 << IRQMBO);
+		return true;
 	}
+	else return false;
 }
 
 /**
@@ -393,7 +389,7 @@ static inline void macsc_backoff_slot_cnt_disable(void)
  *
  * \return  backoff slot cntr interrupt has occurred or not : IRQSBO
  */
-static inline bool macsc_is_slot_cntr_interrupt(void)
+static inline bool macsc_is_slot_cntr_interrupt_flag_set(void)
 {
 	return (SCIRQS & (1 << IRQSBO));
 }
@@ -403,7 +399,7 @@ static inline bool macsc_is_slot_cntr_interrupt(void)
  *
  * \note  IRQSBO is cleared
  */
-static inline void macsc_clear_slot_cntr_interrupt(void)
+static inline void macsc_clear_slot_cntr_interrupt_flag(void)
 {
 	SCIRQS |= (1 << IRQSBO);
 }
@@ -446,13 +442,12 @@ static inline void macsc_enable_manual_bts(void)
 }
 
 /**
- * \brief Read the MAC SC status register
+ * \brief Read the MACSC status register
  * This bit is set if a write operation to the symbol counter register is
- * pending. This bit is
- * set after writing the counter low byte (SCCNTLL) until the symbol counter is
- * updated
- * with the new value. This update process can take up to 16 ìs and during this
- * time no read or write access to the 32 bit counter register should occur.
+ * pending. This bit is set after writing the counter low byte (SCCNTLL) 
+ * until the symbol counter is updated with the new value.
+ * This update process can take up to 16 ìs and during this time,
+ * no read or write access to the 32 bit counter register should occur.
  *
  */
 static inline bool macsc_read_status(void)
@@ -490,7 +485,7 @@ static inline void macsc_enable_overflow_interrupt(void)
  *
  * \return  overflow has occurred or not : IRQSOF
  */
-static inline bool macsc_is_overflow(void)
+static inline bool macsc_is_overflow_flag_set(void)
 {
 	return (SCIRQS & (1 << IRQSOF));
 }
@@ -500,7 +495,7 @@ static inline bool macsc_is_overflow(void)
  *
  * \note  IRQSOF is cleared
  */
-static inline void macsc_clear_overflow(void)
+static inline void macsc_clear_overflow_flag(void)
 {
 	SCIRQS |= (1 << IRQSOF);
 }
@@ -510,11 +505,13 @@ static inline void macsc_clear_overflow(void)
  *
  * \note  to align macsc to within one symbol period
  */
-static inline void macsc_sync(void)
+static inline bool macsc_sync(void)
 {
 	if (!(SCCR0 & (1 << SCCKSEL))) {
 		SCCR0 |= (1 << SCRES);
+		return true;
 	}
+	else return false;
 }
 
 /**
@@ -523,7 +520,7 @@ static inline void macsc_sync(void)
  * \param channel Compare Channel
  * \return  CCx Interrupt or not
  */
-static inline bool macsc_is_cmp_interrupt(enum macsc_cc_channel_t channel)
+static inline bool macsc_is_cmp_interrupt_flag_set(enum macsc_cc_channel channel)
 {
 	switch (channel) {
 	case MACSC_CC1:
@@ -551,7 +548,7 @@ static inline bool macsc_is_cmp_interrupt(enum macsc_cc_channel_t channel)
  *
  * \param channel Compare Channel
  */
-static inline void macsc_clear_cmp_interrupt(enum macsc_cc_channel_t channel)
+static inline void macsc_clear_cmp_interrupt_flag(enum macsc_cc_channel channel)
 {
 	switch (channel) {
 	case MACSC_CC1:

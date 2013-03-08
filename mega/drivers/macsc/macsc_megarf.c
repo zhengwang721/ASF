@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief AVR MEGARF MAC Symbol Counter Driver
+ * \brief AVR MEGARF MAC Symbol Counter Driver Definitions
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -162,7 +162,7 @@ bool is_macsc_enable(void)
  */
 void macsc_disable(void)
 {
-	SCCR0 = 0;
+	SCCR0 &= ~(1<<SCEN);
 }
 
 /**
@@ -179,14 +179,10 @@ bool is_macsc_backoff_enable(void)
 }
 
 /**
- * \brief Absolute compare usage
- *
- * \param abs_rel  0 for absoulte cmp;1 for relative cmp
- * \param cmp compare value for SCOCRx register
+ * \brief Enables compare interrupts of the MACSC 
  * \param channel Compare channel
- * \note    This enables the corresponding compare interrupt as well
  */
-void macsc_enable_cmp_int(enum macsc_cc_channel_t channel)
+void macsc_enable_cmp_int(enum macsc_cc_channel channel)
 {
 	switch (channel) {
 	case MACSC_CC1:
@@ -229,7 +225,7 @@ void macsc_enable_cmp_int(enum macsc_cc_channel_t channel)
  * \param channel Compare channel
  */
 void macsc_use_cmp(bool abs_rel, uint32_t cmp,
-		enum macsc_cc_channel_t channel)
+		enum macsc_cc_channel channel)
 {
 	switch (channel) {
 	case MACSC_CC1:
