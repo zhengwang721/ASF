@@ -58,8 +58,7 @@ extern "C" {
  *
  * \section dependencies Dependencies
  * This driver depends on the following module:
- * - \ref i2c_group for sam0 I2C service.
- *
+ * - \ref i2c_group for sam0 I2C master.
  * @{
  */
  
@@ -93,25 +92,25 @@ void at30tse_init(void)
  */
 void at30tse_eeprom_write(uint8_t *data, uint8_t length, uint8_t word_addr, uint8_t page)
 {	
-	// ACK polling for consecutive writing not implemented!
+	/* ACK polling for consecutive writing not implemented! */
 	uint8_t buffer[17];
-	// Byte addr in page (0-15)
+	/* Byte addr in page (0-15) */
 	buffer[0] = word_addr & 0x0F;	
-	// 4 lower bits of page addr in EEPROM	
+	/* 4 lower bits of page addr in EEPROM	 */
 	buffer[0] |= (0x0F & page) << 4; 
 	
-	// Copy data to be sent
+	/* Copy data to be sent */
 	for (uint8_t i=1; i<17; i++){
 		buffer[i] = data[i-1];
 	}
 
-	// Set up TWI transfer
+	/* Set up TWI transfer */
     struct i2c_packet packet = {
-        .address     = AT30TSE758_EEPROM_TWI_ADDR | ((0x30 & page)>>4),
+		.address     = AT30TSE758_EEPROM_TWI_ADDR | ((0x30 & page)>>4),
 		.data_length = length+1,
 		.data        = buffer,
 	};
-	// Do the transfer
+	/* Do the transfer */
     i2c_master_write_packet_wait(&dev_inst_at30tse75x, &packet);
 }
 
@@ -125,27 +124,27 @@ void at30tse_eeprom_write(uint8_t *data, uint8_t length, uint8_t word_addr, uint
  */
 void at30tse_eeprom_read(uint8_t *data, uint8_t length, uint8_t word_addr, uint8_t page)
 {
-	// ACK polling for consecutive reading not implemented!
+	/* ACK polling for consecutive reading not implemented! */
 	uint8_t buffer[1];
-	// Byte addr in page (0-15)
+	/* Byte addr in page (0-15) */
 	buffer[0] = word_addr & 0x0F;	
-	// 4 lower bits of page addr in EEPROM
+	/* 4 lower bits of page addr in EEPROM */
 	buffer[0] |= (0x0F & page) << 4; 
 
-	// Set up internal EEPROM addr write
+	/* Set up internal EEPROM addr write */
     struct i2c_packet addr_transfer = {
 		.address     = AT30TSE758_EEPROM_TWI_ADDR | ( (0x30 & page) >> 4 ),
 		.data_length = 1,
 		.data        = buffer,
 	};
-	// Reading sequence
+	/* Reading sequence */
     struct i2c_packet read_transfer = {
 		.address     = AT30TSE758_EEPROM_TWI_ADDR | ( (0x30 & page) >> 4 ),
 		.data_length = length,
 		.data        = data,
 	};
 	
-	// Do the transfer
+	/* Do the transfer */
     i2c_master_write_packet_wait_repeated_start(&dev_inst_at30tse75x, &addr_transfer);
     i2c_master_read_packet_wait(&dev_inst_at30tse75x, &read_transfer);
 }
@@ -164,7 +163,7 @@ void at30tse_set_register_pointer(uint8_t reg, uint8_t reg_type)
 		.data_length = 1,
 		.data        = buffer,
 	};
-	// Do the transfer
+	/* Do the transfer */
     i2c_master_write_packet_wait(&dev_inst_at30tse75x, &transfer);
 }
 
@@ -183,19 +182,19 @@ uint16_t at30tse_read_register(uint8_t reg, uint8_t reg_type, uint8_t reg_size)
 	buffer[0] = reg | reg_type;
 	buffer[1] = 0;
 	
-	// Internal register pointer in AT30TSE
-        struct i2c_packet write_transfer = {
+	/* Internal register pointer in AT30TSE */
+    struct i2c_packet write_transfer = {
 		.address     = AT30TSE_TEMPERATURE_TWI_ADDR,
 		.data_length = 1,
 		.data        = buffer,
 	};
-	// Read data
-        struct i2c_packet read_transfer = {
+	/* Read data */
+    struct i2c_packet read_transfer = {
 		.address     = AT30TSE_TEMPERATURE_TWI_ADDR,
 		.data_length = reg_size,
 		.data        = buffer,
 	};
-	// Do the transfer
+	/* Do the transfer */
 	i2c_master_write_packet_wait_repeated_start(&dev_inst_at30tse75x, &write_transfer);
     i2c_master_read_packet_wait(&dev_inst_at30tse75x, &read_transfer);
 	
@@ -217,13 +216,13 @@ void at30tse_write_register(uint8_t reg, uint8_t reg_type, uint8_t reg_size, uin
 	data[1] = 0x00FF & (reg_value >> 8);
 	data[2] = 0x00FF & reg_value;
 	
-	// Internal register pointer in AT30TSE
-        struct i2c_packet transfer = {
+	/* Internal register pointer in AT30TSE */
+    struct i2c_packet transfer = {
 		.address     = AT30TSE_TEMPERATURE_TWI_ADDR,
 		.data_length = 1 + reg_size,
 		.data        = data,
 	};
-	// Do the transfer
+	/* Do the transfer */
 	i2c_master_write_packet_wait(&dev_inst_at30tse75x, &transfer);
 }
 
@@ -250,7 +249,7 @@ void at30tse_write_config_register(uint16_t value)
  */
 double at30tse_read_temperature()
 {
-	// Read the 16-bit temperature register.
+	/* Read the 16-bit temperature register. */
 	uint16_t data = at30tse_read_register(AT30TSE_TEMPERATURE_REG, 
 											AT30TSE_NON_VOLATILE_REG, 
 											AT30TSE_TEMPERATURE_REG_SIZE);
@@ -258,13 +257,13 @@ double at30tse_read_temperature()
 	double temperature = 0;
 	int8_t sign = 1; 
 	
-	//Check if negative and clear sign bit.
+	/*Check if negative and clear sign bit. */
 	if (data & (1 << 15)){
 		sign *= -1;
 		data &= ~(1 << 15);
 	}
 	
-	// Convert to temperature 
+	/* Convert to temperature  */
 	switch (resolution){
 		case AT30TSE_CONFIG_RES_9_bit:
 			data = (data >> 7);
@@ -285,7 +284,6 @@ double at30tse_read_temperature()
 		default:
 			break;
 	}
-	
 	return temperature;
 }
 
