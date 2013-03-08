@@ -205,8 +205,8 @@ enum port_pin_pull {
  *  \brief Port pin configuration structure.
  *
  *  Configuration structure for a port pin instance. This structure should be
- *  structure should be initialized by the \ref port_get_config_defaults()
- *  function before being modified by the user application.
+ *  initialized by the \ref port_get_config_defaults() function before being
+ *  modified by the user application.
  */
 struct port_config {
 	/** Port buffer input/output direction. */

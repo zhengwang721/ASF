@@ -232,8 +232,8 @@ enum status_code nvm_execute_command(
 		/* Commands not requiring address */
 		case NVM_COMMAND_PAGE_BUFFER_CLEAR:
 		case NVM_COMMAND_SET_SECURITY_BIT:
-		case NVM_COMMAND_SET_POWER_REDUCTION_MODE:
-		case NVM_COMMAND_CLEAR_POWER_REDUCTION_MODE:
+		case NVM_COMMAND_ENTER_LOW_POWER_MODE:
+		case NVM_COMMAND_EXIT_LOW_POWER_MODE:
 			break;
 
 		default:

@@ -3,7 +3,7 @@
  *
  * \brief Chip-specific system clock management functions.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -118,7 +118,7 @@ void sysclk_set_source(uint32_t ul_src)
 /**
  * \brief Enable full speed USB clock.
  *
- * \note The SAM3X UDP hardware interprets div as div+1. For readability the hardware div+1
+ * \note The SAM3X PMC hardware interprets div as div+1. For readability the hardware div+1
  * is hidden in this implementation. Use div as div effective value.
  *
  * \param pll_id Source of the USB clock.
@@ -128,9 +128,8 @@ void sysclk_enable_usb(void)
 {
 	Assert(CONFIG_USBCLK_DIV > 0);
 
-	switch (CONFIG_USBCLK_SOURCE) {
 #ifdef CONFIG_PLL0_SOURCE
-	case USBCLK_SRC_PLL0: {
+	if (CONFIG_USBCLK_SOURCE == USBCLK_SRC_PLL0) {
 		struct pll_config pllcfg;
 
 		pll_enable_source(CONFIG_PLL0_SOURCE);
@@ -139,18 +138,16 @@ void sysclk_enable_usb(void)
 		pll_wait_for_lock(0);
 		pmc_switch_udpck_to_pllack(CONFIG_USBCLK_DIV - 1);
 		pmc_enable_udpck();
-		break;
+		return;
 	}
 #endif
 
-	case USBCLK_SRC_UPLL: {
+	if (CONFIG_USBCLK_SOURCE == USBCLK_SRC_UPLL) {
 
 		pmc_enable_upll_clock();
 		pmc_switch_udpck_to_upllck(CONFIG_USBCLK_DIV - 1);
 		pmc_enable_udpck();
-		break;
-	}
-
+		return;
 	}
 }
 
@@ -161,7 +158,7 @@ void sysclk_enable_usb(void)
  */
 void sysclk_disable_usb(void)
 {
-	pll_disable(1);
+	pmc_disable_udpck();
 }
 #endif // CONFIG_USBCLK_SOURCE
 
@@ -173,71 +170,68 @@ void sysclk_init(void)
 	system_init_flash(sysclk_get_cpu_hz());
 
 	/* Config system clock setting */
-	switch (CONFIG_SYSCLK_SOURCE) {
-	case SYSCLK_SRC_SLCK_RC:
+	if (CONFIG_SYSCLK_SOURCE == SYSCLK_SRC_SLCK_RC) {
 		osc_enable(OSC_SLCK_32K_RC);
 		osc_wait_ready(OSC_SLCK_32K_RC);
 		pmc_switch_mck_to_sclk(CONFIG_SYSCLK_PRES);
-		break;
+	}
 
-	case SYSCLK_SRC_SLCK_XTAL:
+	else if (CONFIG_SYSCLK_SOURCE == SYSCLK_SRC_SLCK_XTAL) {
 		osc_enable(OSC_SLCK_32K_XTAL);
 		osc_wait_ready(OSC_SLCK_32K_XTAL);
 		pmc_switch_mck_to_sclk(CONFIG_SYSCLK_PRES);
-		break;
+	}
 
-	case SYSCLK_SRC_SLCK_BYPASS:
+	else if (CONFIG_SYSCLK_SOURCE == SYSCLK_SRC_SLCK_BYPASS) {
 		osc_enable(OSC_SLCK_32K_BYPASS);
 		osc_wait_ready(OSC_SLCK_32K_BYPASS);
 		pmc_switch_mck_to_sclk(CONFIG_SYSCLK_PRES);
-		break;
+	}
 
-	case SYSCLK_SRC_MAINCK_4M_RC:
+	else if (CONFIG_SYSCLK_SOURCE == SYSCLK_SRC_MAINCK_4M_RC) {
 		/* Already running from SYSCLK_SRC_MAINCK_4M_RC */
-		break;
+	}
 
-	case SYSCLK_SRC_MAINCK_8M_RC:
+	else if (CONFIG_SYSCLK_SOURCE == SYSCLK_SRC_MAINCK_8M_RC) {
 		osc_enable(OSC_MAINCK_8M_RC);
 		osc_wait_ready(OSC_MAINCK_8M_RC);
 		pmc_switch_mck_to_mainck(CONFIG_SYSCLK_PRES);
-		break;
+	}
 
-	case SYSCLK_SRC_MAINCK_12M_RC:
+	else if (CONFIG_SYSCLK_SOURCE == SYSCLK_SRC_MAINCK_12M_RC) {
 		osc_enable(OSC_MAINCK_12M_RC);
 		osc_wait_ready(OSC_MAINCK_12M_RC);
 		pmc_switch_mck_to_mainck(CONFIG_SYSCLK_PRES);
-		break;
+	}
 
-
-	case SYSCLK_SRC_MAINCK_XTAL:
+	else if (CONFIG_SYSCLK_SOURCE == SYSCLK_SRC_MAINCK_XTAL) {
 		osc_enable(OSC_MAINCK_XTAL);
 		osc_wait_ready(OSC_MAINCK_XTAL);
 		pmc_switch_mck_to_mainck(CONFIG_SYSCLK_PRES);
-		break;
+	}
 
-	case SYSCLK_SRC_MAINCK_BYPASS:
+	else if (CONFIG_SYSCLK_SOURCE == SYSCLK_SRC_MAINCK_BYPASS) {
 		osc_enable(OSC_MAINCK_BYPASS);
 		osc_wait_ready(OSC_MAINCK_BYPASS);
 		pmc_switch_mck_to_mainck(CONFIG_SYSCLK_PRES);
-		break;
+	}
 
 #ifdef CONFIG_PLL0_SOURCE
-	case SYSCLK_SRC_PLLACK:
+	else if (CONFIG_SYSCLK_SOURCE == SYSCLK_SRC_PLLACK) {
 		pll_enable_source(CONFIG_PLL0_SOURCE);
 		pll_config_defaults(&pllcfg, 0);
 		pll_enable(&pllcfg, 0);
 		pll_wait_for_lock(0);
 		pmc_switch_mck_to_pllack(CONFIG_SYSCLK_PRES);
-		break;
+	}
 #endif
 
-	case SYSCLK_SRC_UPLLCK:
+	else if (CONFIG_SYSCLK_SOURCE == SYSCLK_SRC_UPLLCK) {
 		pll_enable_source(CONFIG_PLL1_SOURCE);
 		pll_config_defaults(&pllcfg, 1);
 		pll_enable(&pllcfg, 1);
 		pll_wait_for_lock(1);
 		pmc_switch_mck_to_upllck(CONFIG_SYSCLK_PRES);
-		break;
 	}
 
 	/* Update the SystemFrequency variable */

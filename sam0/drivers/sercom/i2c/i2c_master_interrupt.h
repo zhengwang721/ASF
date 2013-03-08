@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 I2C Serial Peripheral Interface Driver
+ * \brief SAM D20 I2C Master Interrupt Driver
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -51,20 +51,21 @@ extern "C" {
 #endif
 
 /**
- * \addtogroup sam0_i2c_master_group I2C Master Asynchronous
+ * \addtogroup asfdoc_samd20_i2c_master_interrupt_group I2C Master Interrupt
  * @{
  *
- * This is an overview of the API for the asynchronous I2C master
- * driver.
+ * This is an overview of the API for the I<SUP>2</SUP>C master
+ * interrupt driver.
  *
  * The user will still have to use the initialization from the basic use part
- * of the driver, which can be found \ref sam0_i2c_master_group "here". When the
- * asynchronous driver is included in the project, an asynchronous part in the basic driver
- * will be unlocked. This will allow the user to implement the driver in the same way as
- * for the basic polled driver, but will additionally get the asynchronous functions
- * documented below.
+ * of the driver, which can be found \ref asfdoc_samd20_i2c_master_group
+ * "here".
+ * When the interrupt driver is included in the project, the interrupt part of
+ * the basic driver will be unlocked. This will allow the user to implement
+ * the driver in the same way as for the basic polled driver, but will
+ * additionally get the interrupt functionality documented below.
  *
- * \section i2c_master_async_api API Overview
+ * \section asfdoc_samd20_i2c_master_interrupt_api_overview API Overview
  *
  */
 
@@ -86,12 +87,12 @@ void i2c_master_unregister_callback(
 		enum i2c_master_callback callback_type);
 
 /**
- * \brief Enable callback.
+ * \brief Enables callback
  *
- * Enables the callback specified by the callback_value.
+ * Enables the callback specified by the callback_type.
  *
- * \param[in,out]  module      Pointer to the device instance struct.
- * \param[in]      callback_type Callback type to enable.
+ * \param[in,out] module        Pointer to the software module struct
+ * \param[in]     callback_type Callback type to enable
  */
 static inline void i2c_master_enable_callback(
 		struct i2c_master_module *const module,
@@ -102,17 +103,16 @@ static inline void i2c_master_enable_callback(
 	Assert(module->hw);
 
 	/* Mark callback as enabled. */
-	module->enabled_callback = (1 << callback_type);
+	module->enabled_callback |= (1 << callback_type);
 }
 
-
 /**
- * \brief Disable callback.
+ * \brief Disables callback
  *
  * Disables the callback specified by the callback_type.
  *
- * \param[in,out]  module      Pointer to the device instance struct.
- * \param[in]      callback_type Callback type to disable.
+ * \param[in,out] module        Pointer to the software module struct
+ * \param[in]     callback_type Callback type to disable
  */
 static inline void i2c_master_disable_callback(
 		struct i2c_master_module *const module,
@@ -129,15 +129,15 @@ static inline void i2c_master_disable_callback(
 /** @} */
 
 /**
-* \name Read and Write, Asynchronously
-* @{
-*/
+ * \name Read and Write, Interrupt-Driven
+ * @{
+ */
 
 enum status_code i2c_master_read_packet_job(
 		struct i2c_master_module *const module,
 		struct i2c_packet *const packet);
 
-enum status_code i2c_master_read_packet_job_repeated_start(
+enum status_code i2c_master_read_packet_job_no_stop(
 		struct i2c_master_module *const module,
 		struct i2c_packet *const packet);
 
@@ -145,18 +145,18 @@ enum status_code i2c_master_write_packet_job(
 		struct i2c_master_module *const module,
 		struct i2c_packet *const packet);
 
-enum status_code i2c_master_write_packet_job_repeated_start(
+enum status_code i2c_master_write_packet_job_no_stop(
 		struct i2c_master_module *const module,
 		struct i2c_packet *const packet);
 
 /**
- * \brief Cancel the currently running operation.
+ * \brief Cancel any currently ongoing operation
  *
- * This will terminate the running transfer operation.
+ * Terminates the running transfer operation.
  *
- * \param  module Pointer to device instance structure.
+ * \param  module Pointer to software module structure
  */
-static inline void i2c_master_abort_job(
+static inline void i2c_master_cancel_job(
 		struct i2c_master_module *const module)
 {
 	/* Sanity check. */
@@ -170,24 +170,24 @@ static inline void i2c_master_abort_job(
 }
 
 /**
- * \brief Get last error from ongoing job.
+ * \brief Get status from ongoing job
  *
- * Will return the last error that occurred in a transfer operation. The
- * status will be cleared on next operation.
+ * Will return the status of a transfer operation.
  *
- * \param  module Pointer to device instance structure.
+ * \param[in] module Pointer to software module structure
  *
- * \return          Last status code from transfer operation.
- * \retval STATUS_OK No error has occurred.
- * \retval STATUS_BUSY If transfer is in progress.
- * \retval STATUS_BUSY If master module is busy.
- * \retval STATUS_ERR_DENIED If error on bus.
- * \retval STATUS_ERR_PACKET_COLLISION If arbitration is lost.
- * \retval STATUS_ERR_BAD_ADDRESS If slave is busy, or no slave acknowledged the
- *                                address.
- * \retval STATUS_ERR_TIMEOUT If timeout occurred.
- * \retval STATUS_ERR_OVERFLOW If slave did not acknowledge last sent data,
- *                             indicating that slave do not want more data.
+ * \return                             Last status code from transfer operation
+ * \retval STATUS_OK                   No error has occurred
+ * \retval STATUS_BUSY                 If transfer is in progress
+ * \retval STATUS_BUSY                 If master module is busy
+ * \retval STATUS_ERR_DENIED           If error on bus
+ * \retval STATUS_ERR_PACKET_COLLISION If arbitration is lost
+ * \retval STATUS_ERR_BAD_ADDRESS      If slave is busy, or no slave
+ *                                     acknowledged the address
+ * \retval STATUS_ERR_TIMEOUT          If timeout occurred
+ * \retval STATUS_ERR_OVERFLOW         If slave did not acknowledge last sent
+ *                                     data, indicating that slave does not
+ *                                     want more data and was not able to read
  */
 static inline enum status_code i2c_master_get_job_status(
 		struct i2c_master_module *const module)
