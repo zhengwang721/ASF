@@ -64,10 +64,17 @@
 void qt_init_interface(void)
 {
 	/* TWI master initialization options. */
+#if SAM4L
+	twi_master_options_t twi_opt;
+
+	memset((void *)&twi_opt, 0, sizeof(twi_master_options_t));
+	twi_opt.speed = QT_I2C_SPEED;
+#else
 	twi_master_options_t twi_opt = {
 		.speed = QT_I2C_SPEED,
 		.chip  = QT_I2C_ADDRESS
 	};
+#endif
 
 	/* Initialize the TWI master driver. */
 	twi_master_setup(QT_TWI_BASE_ADDRESS, &twi_opt);
