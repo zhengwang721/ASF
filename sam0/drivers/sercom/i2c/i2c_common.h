@@ -50,7 +50,7 @@ extern "C" {
 #endif
 
 /**
- * \defgroup asfdoc_samd20_i2c_group I2C Common
+ * \defgroup asfdoc_samd20_i2c_group I2C Driver
  *
  * \section asfdoc_samd20_i2c_introduction Introduction
  *
@@ -59,10 +59,10 @@ extern "C" {
  * as well as data transfer via I<SUP>2</SUP>C.
  * The following peripheral is used by this module:
  * - SERCOM in I<SUP>2</SUP>C Master Mode:
- *     - \ref asfdoc_samd20_i2c_master_group "I2C Master"
- *     - \ref asfdoc_samd20_i2c_master_interrupt_group "I2C Master Interrupt"
+ *     - I2C Master
+ *     - I2C Master Interrupt
  * - SERCOM in I<SUP>2</SUP>C Slave Mode:
- *     - \ref asfdoc_samd20_i2c_slave_interrupt_group "I2C Slave Interrupt"
+ *     - I2C Slave Interrupt
  *
  * The outline of this documentation is as follows:
  * - \ref asfdoc_samd20_i2c_prerequisites
@@ -499,7 +499,7 @@ extern "C" {
  *
  *
  * \section asfdoc_samd20_i2c_special_considerations Special Considerations
- *
+ * \if I2C_CALLBACK_MODE
  * \subsection asfdoc_samd20_i2c_common_interrupt Interrupt-Driven Operation
  * While an interrupt-driven operation is in progress, subsequent calls to a
  * write or read operation will return the STATUS_BUSY flag, indicating that
@@ -513,10 +513,7 @@ extern "C" {
  * If the user would like to get callback from operations while using the
  * interrupt-driven driver, the callback must be registered and then enabled
  * using the "register_callback" and "enable_callback" functions.
- *
- * Documentation for the interrupt-driven drivers can be found here:
- * - \ref asfdoc_samd20_i2c_master_interrupt_group "I2C Master Interrupt"
- * - \ref asfdoc_samd20_i2c_slave_interrupt_group "I2C Slave Interrupt"
+ * \endif
  *
  * \section asfdoc_samd20_i2c_extra Extra Information
  * For extra information see \ref asfdoc_samd20_i2c_extra_info_page.
@@ -527,14 +524,6 @@ extern "C" {
  * \section asfdoc_samd20_i2c_api_overview API Overview
  * @{
  *
- * I<SUP>2</SUP>C Master\tm
- *  - \ref asfdoc_samd20_i2c_master_api_overview "I2C Master API Overview"
- *  - \ref asfdoc_samd20_i2c_master_interrupt_api_overview
- * "I2C Master Interrupt API Overview"
- *
- * I<SUP>2</SUP>C Slave
- *  - \ref asfdoc_samd20_i2c_slave_interrupt_api_overview
- * "I2C Slave Interrupt API Overview"
  */
 
 /**

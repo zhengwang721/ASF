@@ -61,13 +61,8 @@ extern "C" {
 #endif
 
 /**
- * \defgroup asfdoc_samd20_i2c_master_group I2C Master Basic
+ * \addtogroup asfdoc_samd20_i2c_group
  *
- * This is the API overview for the basic use of I<SUP>2</SUP>C master. For more
- * advance use with the interrupt-driven driver, see
- * \subpage asfdoc_samd20_i2c_master_interrupt_group.
- *
- * \section asfdoc_samd20_i2c_master_api_overview API Overview
  * @{
  *
  */
