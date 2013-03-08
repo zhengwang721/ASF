@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 I2C Serial Peripheral Interface Driver
+ * \brief SAM D20 I2C Master Driver
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -49,17 +49,17 @@
 
 #if !defined(__DOXYGEN__)
 /**
- * \internal Set configurations to module.
+ * \internal Sets configurations to module
  *
- * \param[out] module Pointer to device instance structure.
+ * \param[out] module Pointer to software module structure.
  * \param[in]  config Configuration structure with configurations to set.
  *
- * \return              Status of setting config.
- * \retval STATUS_OK If module was configured correctly.
- * \retval STATUS_ERR_ALREADY_INITIALIZED If setting other gclk generator than
- *                                        previously set.
- * \retval STAUS_ERR_BAUDRATE_UNAVAILABLE If given baud rate is not compatible
- *                                        with set gclk frequency.
+ * \return                                Status of setting configuration
+ * \retval STATUS_OK                      If module was configured correctly
+ * \retval STATUS_ERR_ALREADY_INITIALIZED If setting other GCLK generator than
+ *                                        previously set
+ * \retval STATUS_ERR_BAUDRATE_UNAVAILABLE If given baud rate is not compatible
+ *                                        with set GCLK frequency
  */
 static enum status_code _i2c_master_set_config(
 		struct i2c_master_module *const module,
@@ -78,6 +78,8 @@ static enum status_code _i2c_master_set_config(
 	SercomI2cm *const i2c_module = &(module->hw->I2CM);
 	Sercom *const sercom_hw = module->hw;
 
+	uint8_t sercom_index = _sercom_get_sercom_inst_index(sercom_hw);
+
 	/* Pin configuration */
 	struct system_pinmux_config pin_conf;
 	uint32_t pad0 = config->pinmux_pad0;
@@ -88,6 +90,7 @@ static enum status_code _i2c_master_set_config(
 	if (pad0 == PINMUX_DEFAULT) {
 		pad0 = _sercom_get_default_pad(sercom_hw, 0);
 	}
+
 	pin_conf.mux_position = pad0 & 0xFFFF;
 	pin_conf.direction = SYSTEM_PINMUX_PIN_DIR_OUTPUT_WITH_READBACK;
 	system_pinmux_pin_set_config(pad0 >> 16, &pin_conf);
@@ -96,11 +99,12 @@ static enum status_code _i2c_master_set_config(
 	if (pad1 == PINMUX_DEFAULT) {
 		pad1 = _sercom_get_default_pad(sercom_hw, 1);
 	}
+
 	pin_conf.mux_position = pad1 & 0xFFFF;
 	system_pinmux_pin_set_config(pad1 >> 16, &pin_conf);
 
-	/* Save timeout on unknown bus state in device instance. */
-	module->unkown_bus_state_timeout = config->unkown_bus_state_timeout;
+	/* Save timeout on unknown bus state in software module. */
+	module->unknown_bus_state_timeout = config->unknown_bus_state_timeout;
 
 	/* Save timeout on buffer write. */
 	module->buffer_timeout = config->buffer_timeout;
@@ -125,14 +129,13 @@ static enum status_code _i2c_master_set_config(
 	i2c_module->CTRLB.reg = SERCOM_I2CM_CTRLB_SMEN;
 
 	/* Find and set baudrate. */
-	tmp_baud = (int32_t)(system_gclk_chan_get_hz(SERCOM_GCLK_ID)
-			/ (2*config->baud_rate)-5);
+	tmp_baud = (int32_t)((system_gclk_chan_get_hz(SERCOM0_GCLK_ID_CORE +
+			sercom_index) / (2000*(config->baud_rate))) - 5);
 
 	/* Check that baud rate is supported at current speed. */
 	if (tmp_baud > 255 || tmp_baud < 0) {
 		/* Baud rate not supported. */
 		tmp_status_code = STATUS_ERR_BAUDRATE_UNAVAILABLE;
-
 	} else {
 		/* Baud rate acceptable. */
 		i2c_module->BAUD.reg = (uint8_t)tmp_baud;
@@ -143,25 +146,24 @@ static enum status_code _i2c_master_set_config(
 #endif /* __DOXYGEN__ */
 
 /**
- * \brief Initializes the requested I2C Hardware module.
+ * \brief Initializes the requested I<SUP>2</SUP>C hardware module
  *
- * Initializes the SERCOM I2C Master device requested and sets the provided
- * device instance struct. This will also reset the hardware module, all
- * current settings will be lost. Run this function before any further use of
+ * Initializes the SERCOM I<SUP>2</SUP>C master device requested and sets the provided
+ * software module struct. Run this function before any further use of
  * the driver.
  *
- * \param[out] module Pointer to device instance struct.
- * \param[in]  hw   Pointer to the hardware instance.
- * \param[in]  config   Pointer to the configuration struct.
+ * \param[out] module   Pointer to software module struct
+ * \param[in]  hw       Pointer to the hardware instance
+ * \param[in]  config   Pointer to the configuration struct
  *
- * \return              Status of initialization.
- * \retval STATUS_OK Module initiated correctly.
- * \retval STATUS_ERR_DENIED If module is enabled.
- * \retval STATUS_BUSY If module is busy resetting.
- * \retval STATUS_ERR_ALREADY_INITIALIZED If setting other gclk generator than
- *                                        previously set.
- * \retval STAUS_ERR_BAUDRATE_UNAVAILABLE If given baud rate is not compatible
- *                                        with set gclk frequency.
+ * \return                                Status of initialization
+ * \retval STATUS_OK                      Module initiated correctly
+ * \retval STATUS_ERR_DENIED              If module is enabled
+ * \retval STATUS_BUSY                    If module is busy resetting
+ * \retval STATUS_ERR_ALREADY_INITIALIZED If setting other GCLK generator than
+ *                                        previously set
+ * \retval STATUS_ERR_BAUDRATE_UNAVAILABLE If given baudrate is not compatible
+ *                                        with set GCLK frequency
  *
  */
 enum status_code i2c_master_init(struct i2c_master_module *const module,
@@ -173,7 +175,7 @@ enum status_code i2c_master_init(struct i2c_master_module *const module,
 	Assert(hw);
 	Assert(config);
 
-	/* Initialize device instance */
+	/* Initialize software module */
 	module->hw = hw;
 
 	SercomI2cm *const i2c_module = &(module->hw->I2CM);
@@ -194,14 +196,13 @@ enum status_code i2c_master_init(struct i2c_master_module *const module,
 	system_gclk_chan_enable(gclk_index);
 	system_gclk_chan_enable(SERCOM_GCLK_ID);
 
-
 	/* Check if module is enabled. */
 	if (i2c_module->CTRLA.reg & SERCOM_I2CM_CTRLA_ENABLE) {
 		return STATUS_ERR_DENIED;
 	}
 
 	/* Check if reset is in progress. */
-	if (i2c_module->CTRLA.reg & SERCOM_I2CM_CTRLA_SWRST){
+	if (i2c_module->CTRLA.reg & SERCOM_I2CM_CTRLA_SWRST) {
 		return STATUS_BUSY;
 	}
 
@@ -218,65 +219,73 @@ enum status_code i2c_master_init(struct i2c_master_module *const module,
 #endif
 
 	/* Set sercom module to operate in I2C master mode. */
-	i2c_module->CTRLA.reg = SERCOM_I2CS_CTRLA_MODE(2)
-			| SERCOM_I2CS_CTRLA_MASTER;
+	i2c_module->CTRLA.reg = SERCOM_I2CS_CTRLA_MODE(2) |
+			SERCOM_I2CS_CTRLA_MASTER;
 
 	/* Set config and return status. */
 	return _i2c_master_set_config(module, config);
 }
 
 /**
- * \brief Reset the hardware module.
+ * \brief Resets the hardware module
  *
- * This will reset the module to hardware defaults.
+ * Reset the module to hardware defaults.
  *
- * \param[in,out] module Pointer to device instance structure.
+ * \param[in,out] module Pointer to software module structure
  */
 void i2c_master_reset(struct i2c_master_module *const module)
 {
-	/* Sanity check arguments. */
+	/* Sanity check arguments */
 	Assert(module);
 	Assert(module->hw);
 
 	SercomI2cm *const i2c_module = &(module->hw->I2CM);
 
-	/* Wait for sync. */
+	/* Wait for sync */
 	_i2c_master_wait_for_sync(module);
 
-	/* Disable module. */
+	/* Disable module */
 	i2c_master_disable(module);
 
-	/* Wait for sync. */
+#ifdef I2C_MASTER_ASYNC
+	/* Clear all pending interrupts */
+	system_interrupt_enter_critical_section();
+	system_interrupt_clear_pending(_sercom_get_interrupt_vector(module->hw));
+	system_interrupt_leave_critical_section();
+#endif
+	
+	/* Wait for sync */
 	_i2c_master_wait_for_sync(module);
 
-	/* Reset module. */
+	/* Reset module */
 	i2c_module->CTRLA.reg = SERCOM_I2CM_CTRLA_SWRST;
 }
 
 #if !defined(__DOXYGEN__)
 /**
- * \internal Address respond.
+ * \internal Address response
  *
  * Called when address is answered or timed out.
  *
- * \param[in,out] module Pointer to device instance structure.
+ * \param[in,out] module Pointer to software module structure
  *
- * \return Status of address response.
- * \retval STATUS_OK No error has occurred.
- * \retval STATUS_ERR_DENIED If error on bus.
- * \retval STATUS_ERR_PACKET_COLLISION If arbitration is lost.
- * \retval STATUS_ERR_BAD_ADDRESS If slave is busy, or no slave acknowledged the
- *                                address.
+ * \return                              Status of address response
+ * \retval STATUS_OK                    No error has occurred
+ * \retval STATUS_ERR_DENIED            If error on bus
+ * \retval STATUS_ERR_PACKET_COLLISION  If arbitration is lost
+ * \retval STATUS_ERR_BAD_ADDRESS       If slave is busy, or no slave
+ *                                      acknowledged the address
  */
 static enum status_code _i2c_master_address_response(
 		struct i2c_master_module *const module)
 {
 	SercomI2cm *const i2c_module = &(module->hw->I2CM);
 
-	/* Check for error. Ignore bus-error; workaround for BUSSTATE stuck in BUSY. */
+	/* Check for error and ignore bus-error; workaround for BUSSTATE stuck in
+	* BUSY */
 	if (i2c_module->INTFLAG.reg & SERCOM_I2CM_INTFLAG_RIF) {
 
-		/* Clear write interrupt flag. */
+		/* Clear write interrupt flag */
 		i2c_module->INTFLAG.reg = SERCOM_I2CM_INTFLAG_RIF;
 
 		/* Check arbitration. */
@@ -297,14 +306,14 @@ static enum status_code _i2c_master_address_response(
 }
 
 /**
- * \internal Wait for answer on bus.
+ * \internal Waits for answer on bus
  *
- * \param[in,out] module Pointer to device instance structure.
+ * \param[in,out] module Pointer to software module structure
  *
- * \return Status of bus.
- * \retval STATUS_OK If given response from slave device.
+ * \return                    Status of bus
+ * \retval STATUS_OK          If given response from slave device
  * \retval STATUS_ERR_TIMEOUT If no response was given within specified timeout
- *                            period.
+ *                            period
  */
 static enum status_code _i2c_master_wait_for_bus(
 		struct i2c_master_module *const module)
@@ -326,11 +335,20 @@ static enum status_code _i2c_master_wait_for_bus(
 #endif /* __DOXYGEN__ */
 
 /**
- * \internal Start blocking read operation.
+ * \internal Starts blocking read operation
  *
- * \param[in,out]     module  Pointer to device instance struct.
- * \param[in,out]     packet    Pointer to I2C packet to transfer.
- * \return            Status describing progress of reading packet.
+ * \param[in,out]     module  Pointer to software module struct.
+ * \param[in,out]     packet  Pointer to I<SUP>2</SUP>C packet to transfer.
+ *
+ * \return                              Status of reading packet
+ * \retval STATUS_OK                    The packet was read successfully
+ * \retval STATUS_ERR_TIMEOUT           If no response was given within
+ *                                      specified timeout period
+ * \retval STATUS_ERR_DENIED            If error on bus
+ * \retval STATUS_ERR_PACKET_COLLISION  If arbitration is lost
+ * \retval STATUS_ERR_BAD_ADDRESS       If slave is busy, or no slave
+ *                                      acknowledged the address
+ *
  */
 static enum status_code _i2c_master_read(
 		struct i2c_master_module *const module,
@@ -369,11 +387,16 @@ static enum status_code _i2c_master_read(
 				return STATUS_ERR_PACKET_COLLISION;
 			}
 
-			/* Save data to buffer. */
-			packet->data[counter++] = i2c_module->DATA.reg;
-
-			/* Wait for response. */
-			tmp_status = _i2c_master_wait_for_bus(module);
+			if (tmp_data_length == 0) {
+				/* Set action to NACK */
+				i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_ACKACT;
+			} else {
+				/* Save data to buffer. */
+				_i2c_master_wait_for_sync(module);
+				packet->data[counter++] = i2c_module->DATA.reg;
+				/* Wait for response. */
+				tmp_status = _i2c_master_wait_for_bus(module);
+			}
 
 			/* Check for error. */
 			if (tmp_status != STATUS_OK) {
@@ -381,36 +404,39 @@ static enum status_code _i2c_master_read(
 			}
 		}
 
-		if (module->repeated_start) {
-			/* Send nack and repeated start command unless arbitration is lost. */
-			i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_ACKACT | SERCOM_I2CM_CTRLB_CMD(1);
-		} else {
-			/* Send nack and stop command unless arbitration is lost. */
-			i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_ACKACT | SERCOM_I2CM_CTRLB_CMD(3);
+		if (module->send_stop) {
+			/* Send stop command unless arbitration is lost. */
+			_i2c_master_wait_for_sync(module);
+			i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_CMD(3);
 		}
+
+		/* Save last data to buffer. */
+		_i2c_master_wait_for_sync(module);
+		packet->data[counter] = i2c_module->DATA.reg;
 	}
 
 	return tmp_status;
 }
 
 /**
- * \brief Read data packet from slave.
+ * \brief Reads data packet from slave
  *
- * Reads a data packet from the specified slave address on the I2C bus.
+ * Reads a data packet from the specified slave address on the I<SUP>2</SUP>C bus and
+ * sends a stop condition when finished.
  *
- * \note This will stall the device from any other operation. For interrupt-driven
- * operation, see \ref i2c_master_read_packet_job.
+ * \note This will stall the device from any other operation. For
+ * interrupt-driven operation, see \ref i2c_master_read_packet_job.
  *
- * \param[in,out]     module  Pointer to device instance struct.
- * \param[in,out]     packet    Pointer to I2C packet to transfer.
- * \return          Status describing progress of reading packet.
- * \retval STATUS_OK If packet was read.
- * \retval STATUS_BUSY If master module is busy.
- * \retval STATUS_ERR_DENIED If error on bus.
- * \retval STATUS_ERR_PACKET_COLLISION If arbitration is lost.
- * \retval STATUS_ERR_BAD_ADDRESS If slave is busy, or no slave acknowledged the
- *                                address.
- * \retval STATUS_ERR_TIMEOUT If timeout occurred.
+ * \param[in,out] module    Pointer to software module struct
+ * \param[in,out] packet    Pointer to I<SUP>2</SUP>C packet to transfer
+ * \return                              Status of reading packet.
+ * \retval STATUS_OK                    The packet was read successfully
+ * \retval STATUS_ERR_TIMEOUT           If no response was given within
+ *                                      specified timeout period
+ * \retval STATUS_ERR_DENIED            If error on bus
+ * \retval STATUS_ERR_PACKET_COLLISION  If arbitration is lost
+ * \retval STATUS_ERR_BAD_ADDRESS       If slave is busy, or no slave
+ *                                      acknowledged the address
  */
 enum status_code i2c_master_read_packet_wait(
 		struct i2c_master_module *const module,
@@ -428,29 +454,34 @@ enum status_code i2c_master_read_packet_wait(
 	}
 #endif
 
-	module->repeated_start = false;
+	module->send_stop = true;
 
 	return _i2c_master_read(module, packet);
 }
 
 /**
- * \brief Read data packet from slave followed by a repeated start.
+ * \brief Reads data packet from slave without sending a stop condition when
+ * done
  *
- * Reads a data packet from the specified slave address on the I2C bus.
+ * Reads a data packet from the specified slave address on the I<SUP>2</SUP>C bus without
+ * sending a stop condition when done, thus retaining ownership of the bus when done.
+ * To end the transaction, a \ref i2c_master_read_packet_wait "read" or \ref
+ * i2c_master_write_packet_wait "write" with stop condition must be performed.
  *
- * \note This will stall the device from any other operation. For interrupt-driven
- * operation, see \ref i2c_master_read_packet_job.
+ * \note This will stall the device from any other operation. For
+ * interrupt-driven operation, see \ref i2c_master_read_packet_job.
  *
- * \param[in,out]     module  Pointer to device instance struct.
- * \param[in,out]     packet    Pointer to I2C packet to transfer.
- * \return          Status describing progress of reading packet.
- * \retval STATUS_OK If packet was read.
- * \retval STATUS_BUSY If master module is busy.
- * \retval STATUS_ERR_DENIED If error on bus.
- * \retval STATUS_ERR_PACKET_COLLISION If arbitration is lost.
- * \retval STATUS_ERR_BAD_ADDRESS If slave is busy, or no slave acknowledged the
- *                                address.
- * \retval STATUS_ERR_TIMEOUT If timeout occurred.
+ * \param[in,out] module    Pointer to software module struct
+ * \param[in,out] packet    Pointer to I<SUP>2</SUP>C packet to transfer
+ *
+ * \return                              Status of reading packet.
+ * \retval STATUS_OK                    The packet was read successfully
+ * \retval STATUS_ERR_TIMEOUT           If no response was given within
+ *                                      specified timeout period
+ * \retval STATUS_ERR_DENIED            If error on bus
+ * \retval STATUS_ERR_PACKET_COLLISION  If arbitration is lost
+ * \retval STATUS_ERR_BAD_ADDRESS       If slave is busy, or no slave
+ *                                      acknowledged the address
  */
 enum status_code i2c_master_read_packet_wait_no_stop(
 		struct i2c_master_module *const module,
@@ -468,23 +499,30 @@ enum status_code i2c_master_read_packet_wait_no_stop(
 	}
 #endif
 
-	module->repeated_start = true;
+	module->send_stop = false;
 
 	return _i2c_master_read(module, packet);
 }
 
 /**
- * \internal Start blocking write operation.
+ * \internal Starts blocking write operation.
  *
- * \param[in,out]     module  Pointer to device instance struct.
- * \param[in,out]     packet    Pointer to I2C packet to transfer.
- * \return            Status describing progress of reading packet.
+ * \param[in,out] module  Pointer to software module struct.
+ * \param[in,out] packet    Pointer to I<SUP>2</SUP>C packet to transfer.
+ *
+ * \return                              Status of reading packet.
+ * \retval STATUS_OK                    The packet was read successfully
+ * \retval STATUS_ERR_TIMEOUT           If no response was given within
+ *                                      specified timeout period
+ * \retval STATUS_ERR_DENIED            If error on bus
+ * \retval STATUS_ERR_PACKET_COLLISION  If arbitration is lost
+ * \retval STATUS_ERR_BAD_ADDRESS       If slave is busy, or no slave
+ *                                      acknowledged the address
  */
 static enum status_code _i2c_master_write_packet(
 		struct i2c_master_module *const module,
 		struct i2c_packet *const packet)
 {
-
 	SercomI2cm *const i2c_module = &(module->hw->I2CM);
 
 	/* Return value. */
@@ -518,6 +556,7 @@ static enum status_code _i2c_master_write_packet(
 			}
 
 			/* Write byte to slave. */
+			_i2c_master_wait_for_sync(module);
 			i2c_module->DATA.reg = packet->data[buffer_counter++];
 
 			/* Wait for response. */
@@ -528,23 +567,17 @@ static enum status_code _i2c_master_write_packet(
 				break;
 			}
 
-			/* Check for NAK from slave. */
-			if (i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_RXNACK)
-			{
-				i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_CMD(3);
-				if(tmp_data_length) {
-					/* Return bad data value. */
-					tmp_status = STATUS_ERR_OVERFLOW;
-					break;
-				}
+			/* Check for NACK from slave. */
+			if (i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_RXNACK) {
+				/* Return bad data value. */
+				tmp_status = STATUS_ERR_OVERFLOW;
+				break;
 			}
 		}
 
-		if (module->repeated_start) {
-			/* Stop command. */
-			i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_CMD(1);
-		} else {
-			/* Repeated start. */
+		if (module->send_stop) {
+			/* Stop command */
+			_i2c_master_wait_for_sync(module);
 			i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_CMD(3);
 		}
 	}
@@ -553,25 +586,29 @@ static enum status_code _i2c_master_write_packet(
 }
 
 /**
- * \brief Write data packet to slave.
+ * \brief Writes data packet to slave
  *
- * Writes a data packet to the specified slave address on the I2C bus.
+ * Writes a data packet to the specified slave address on the I<SUP>2</SUP>C bus and
+ * sends a stop condition when finished.
  *
- * \note This will stall the device from any other operation. For interrupt-driven
- * operation, see \ref i2c_master_read_packet_job.
+ * \note This will stall the device from any other operation. For
+ * interrupt-driven operation, see \ref i2c_master_read_packet_job.
  *
- * \param[in,out]     module  Pointer to device instance struct.
- * \param[in,out]     packet    Pointer to I2C packet to transfer.
- * \return          Status describing progress of reading packet.
- * \retval STATUS_OK If packet was read.
- * \retval STATUS_BUSY If master module is busy.
- * \retval STATUS_ERR_DENIED If error on bus.
- * \retval STATUS_ERR_PACKET_COLLISION If arbitration is lost.
- * \retval STATUS_ERR_BAD_ADDRESS If slave is busy, or no slave acknowledged the
- *                                address.
- * \retval STATUS_ERR_TIMEOUT If timeout occurred.
- * \retval STATUS_ERR_OVERFLOW If slave did not acknowledge last sent data,
- *                             indicating that slave do not want more data.
+ * \param[in,out] module  Pointer to software module struct
+ * \param[in,out] packet  Pointer to I<SUP>2</SUP>C packet to transfer
+ * 
+ * \return                     Status of reading packet
+ * \retval STATUS_OK                   If packet was read
+ * \retval STATUS_BUSY                 If master module is busy with a job
+ * \retval STATUS_ERR_DENIED           If error on bus
+ * \retval STATUS_ERR_PACKET_COLLISION If arbitration is lost
+ * \retval STATUS_ERR_BAD_ADDRESS      If slave is busy, or no slave
+ *                                     acknowledged the address
+ * \retval STATUS_ERR_TIMEOUT          If timeout occurred
+ * \retval STATUS_ERR_OVERFLOW         If slave did not acknowledge last sent
+ *                                     data, indicating that slave does not
+ *                                     want more data and was not able to read
+ *                                     last data sent
  */
 enum status_code i2c_master_write_packet_wait(
 		struct i2c_master_module *const module,
@@ -589,33 +626,40 @@ enum status_code i2c_master_write_packet_wait(
 	}
 #endif
 
-	module->repeated_start = false;
+	module->send_stop = true;
 
 	return _i2c_master_write_packet(module, packet);
 }
 
 /**
- * \brief Write data packet to slave followed by a repeated start.
+ * \brief Writes data packet to slave without sending a stop condition
+ * when done
  *
- * Writes a data packet to the specified slave address on the I2C bus.
+ * Writes a data packet to the specified slave address on the I<SUP>2</SUP>C bus without
+ * sending a stop condition, thus retaining ownership of the bus when done.
+ * To end the transaction, a \ref i2c_master_read_packet_wait "read" or \ref
+ * i2c_master_write_packet_wait "write" with stop condition or sending
+ * a stop with the \ref i2c_master_send_stop function must be performed.
  *
- * \note This will stall the device from any other operation. For interrupt-driven
- * operation, see \ref i2c_master_read_packet_job.
+ * \note This will stall the device from any other operation. For
+ * interrupt-driven operation, see \ref i2c_master_read_packet_job.
  *
- * \param[in,out]     module  Pointer to device instance struct.
- * \param[in,out]     packet    Pointer to I2C packet to transfer.
- * \return          Status describing progress of reading packet.
- * \retval STATUS_OK If packet was read.
- * \retval STATUS_BUSY If master module is busy.
- * \retval STATUS_ERR_DENIED If error on bus.
- * \retval STATUS_ERR_PACKET_COLLISION If arbitration is lost.
- * \retval STATUS_ERR_BAD_ADDRESS If slave is busy, or no slave acknowledged the
- *                                address.
- * \retval STATUS_ERR_TIMEOUT If timeout occurred.
- * \retval STATUS_ERR_OVERFLOW If slave did not acknowledge last sent data,
- *                             indicating that slave do not want more data.
+ * \param[in,out] module    Pointer to software module struct
+ * \param[in,out] packet    Pointer to I<SUP>2</SUP>C packet to transfer
+ *
+ * \return                             Status of reading packet
+ * \retval STATUS_OK                   If packet was read
+ * \retval STATUS_BUSY                 If master module is busy
+ * \retval STATUS_ERR_DENIED           If error on bus
+ * \retval STATUS_ERR_PACKET_COLLISION If arbitration is lost
+ * \retval STATUS_ERR_BAD_ADDRESS      If slave is busy, or no slave
+ *                                     acknowledged the address
+ * \retval STATUS_ERR_TIMEOUT          If timeout occurred
+ * \retval STATUS_ERR_OVERFLOW         If slave did not acknowledge last sent
+ *                                     data, indicating that slave do not want
+ *                                     more data
  */
-enum status_code i2c_master_write_packet_wait_repeated_start(
+enum status_code i2c_master_write_packet_wait_no_stop(
 		struct i2c_master_module *const module,
 		struct i2c_packet *const packet)
 {
@@ -631,7 +675,33 @@ enum status_code i2c_master_write_packet_wait_repeated_start(
 	}
 #endif
 
-	module->repeated_start = true;
+	module->send_stop = false;
 
 	return _i2c_master_write_packet(module, packet);
+}
+
+/**
+ * \brief Sends stop condition on bus
+ *
+ * Sends a stop condition on bus.
+ *
+ * \note This function can only be used after the \ref
+ * i2c_master_write_packet_wait_no_stop function. If a stop condition is
+ * to be sent after a read, the \ref i2c_master_read_packet_wait function must
+ * be used.
+ *
+ * \param[in] module  Pointer to the software instance struct
+ */
+void i2c_master_send_stop(struct i2c_master_module *const module)
+{
+	/* Sanity check */
+	Assert(module);
+	Assert(module->hw);
+	Assert(packet);
+
+	SercomI2cm *const i2c_module = &(module->hw->I2CM);
+
+	/* Send stop command */
+	_i2c_master_wait_for_sync(module);
+	i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_CMD(3);
 }

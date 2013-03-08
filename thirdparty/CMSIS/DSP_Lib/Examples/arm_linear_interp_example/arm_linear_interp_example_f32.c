@@ -66,10 +66,9 @@
  
 /** \example arm_linear_interp_example_f32.c 
   */  
-     
+#include <asf.h>
 #include "arm_math.h" 
 #include "math_helper.h"
-#include "asf.h"
  
 #define SNR_THRESHOLD 			90 
 #define TEST_LENGTH_SAMPLES 	10 

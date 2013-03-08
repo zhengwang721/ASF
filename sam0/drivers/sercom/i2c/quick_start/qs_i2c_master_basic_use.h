@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 Serial Peripheral Interface Driver
+ * \brief SAMD 20 I2C Master Quick Start Guide
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -42,53 +42,66 @@
  */
 
 /**
- * \page i2c_master_basic_use_case Quick Start Guide for the I2C Master module - Basic Use Case
+ * \page asfdoc_samd20_i2c_master_basic_use_case Quick Start Guide for the I2C Master module - Basic Use Case
  *
- * In this use case, the I2C will be used as follows.
+ * In this use case, the I<SUP>2</SUP>C will used and set up as follows:
  *  - Master mode
  *  - 100 kHz operation speed
  *  - Not operational in standby
  *  - 10000 packet timeout value
  *  - 65535 unknown bus state timeout value
  *
- * \section i2c_master_basic_use_case_setup Quick Start
  *
- * \subsection i2c_master_basic_use_case_prereq Prerequisites
- * The quick start will need the system drivers to operate correctly.
+ * \section asfdoc_samd20_i2c_master_basic_use_case_prereq Prerequisites
+ * The device must be connected to an I<SUP>2</SUP>C slave.
  *
- * \section i2c_master_basic_use_case_setup_code Setup
- * To set up the I2C with desired configurations, add the following:
+ * \section asfdoc_samd20_i2c_master_basic_use_setup Setup
  *
- * \subsection i2c_master_basic_use_setup_code Code
- * Add this globally accessible, i.e at the start of your code outside any functions.
+ * \subsection asfdoc_samd20_i2c_master_basic_use_setup_code Code
+ * The following must be added to the user application:
+ *
+ * - A sample buffer to send, number of entries to send and address of slave:
+ * \snippet qs_i2c_master_basic_use.c packet_data
+ *
+ * Number of times to try to send packet if it fails:
+ * \snippet qs_i2c_master_basic_use.c timeout
+ *
+ * - Globally accessible module structure:
  * \snippet qs_i2c_master_basic_use.c dev_inst
  *
- * Function for setting up module.
+ * - Function for setting up the module:
  * \snippet qs_i2c_master_basic_use.c initialize_i2c
  *
- * and the following to the start of main():
- * \snippet qs_i2c_master_basic_use.c run_initialize_i2c
+ * - Add to user application %main():
+ * \snippet qs_i2c_master_basic_use.c init
  *
- * \subsection i2c_master_basic_use_workflow Workflow
- * When setting up the device, the correct procedure will be to:
- * -# Initialize configuration structure.
- *  - \snippet qs_i2c_master_basic_use.c init_conf
- * -# Change settings in the configuration.
- *  - \snippet qs_i2c_master_basic_use.c conf_change
- * -# Initialize the module with the set configurations.
- *  - \snippet qs_i2c_master_basic_use.c init_module
- * -# Enable the module.
- *  - \snippet qs_i2c_master_basic_use.c enable_module
+ * \subsection asfdoc_samd20_i2c_master_basic_use_setup_workflow Workflow
+ * -# Initialize system.
+ *  - \snippet qs_i2c_master_basic_use.c system_init
+ * -# Configure and enable module:
+ *  - \snippet qs_i2c_master_basic_use.c configure_i2c
+ *   -# Create and initialize configuration structure.
+ *    - \snippet qs_i2c_master_basic_use.c init_conf
+ *   -# Change settings in the configuration.
+ *    - \snippet qs_i2c_master_basic_use.c conf_change
+ *   -# Initialize the module with the set configurations.
+ *    - \snippet qs_i2c_master_basic_use.c init_module
+ *   -# Enable the module.
+ *    - \snippet qs_i2c_master_basic_use.c enable_module
+ * -# Create a variable to see when we should stop trying to send packet.
+ *  - \snippet qs_i2c_master_basic_use.c timeout
+ * -# Create a packet to send:
+ *  - \snippet qs_i2c_master_basic_use.c packet
  *
- * \section i2c_master_basic_use_implementation Implementation
- * To use the I2C, you must make a packet that can be used for the transfer.
- * \snippet qs_i2c_master_basic_use.c packet
- * Where the 3 values are defined and initialized as:
- * \snippet qs_i2c_master_basic_use.c packet_data
- * Then the packet can be sent using i2c_master_write_packet function:
- * \snippet qs_i2c_master_basic_use.c write_packet
+ * \section asfdoc_samd20_i2c_master_basic_use_implemenation Implementation
+ * \subsection asfdoc_samd20_i2c_master_basic_use_implemenation_code Code
+ * Add to user application %main():
+ * \snippet snippet qs_i2c_master_basic_use.c 
  *
- * Where it will try so send the packet TIMEOUT number of times or until is is
+ * \subsection asfdoc_samd20_i2c_master_basic_use_implemenation_workflow Workflow
+ * -# Write packet to slave.
+ *  - \snippet qs_i2c_master_basic_use.c write_packet
+ * The module will try to send the packet TIMEOUT number of times or until it is
  * successfully sent.
  *
  */
