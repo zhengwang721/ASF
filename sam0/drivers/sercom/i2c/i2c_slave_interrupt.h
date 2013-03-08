@@ -51,19 +51,8 @@ extern "C" {
 #endif
 
 /**
- * \addtogroup asfdoc_sam0_i2c_slave_interrupt_group I2C Slave Interrupt
+ * \addtogroup asfdoc_samd20_i2c_group
  * @{
- *
- * This is an overview of the API for the I2C Slave Interrupt
- * driver.
- * The user will still have to use the initialization from the basic use part
- * of the driver, which can be found \ref asfdoc_sam0_i2c_slave_group "here".
- * When the interrupt driver is included in the project, the interrupt part of
- * the basic driver will be unlocked. This will allow the user to implement
- * the driver in the same way as for the polled driver, but will
- * additionally get the interrupt functionality documented below.
- *
- * \section asfdoc_sam0_i2c_slave_interrupt_api_overview I2C Slave Interrupt API Overview
  *
  */
 
@@ -149,11 +138,11 @@ enum status_code i2c_slave_write_packet_job(
 /**
  * \brief Cancels any currently ongoing operation
  *
- * This will terminate the running transfer operation.
+ * Terminates the running transfer operation.
  *
  * \param[in,out] module Pointer to software module structure
  */
-static inline void i2c_slave_abort_job(
+static inline void i2c_slave_cancel_job(
 		struct i2c_slave_module *const module)
 {
 	/* Sanity check. */

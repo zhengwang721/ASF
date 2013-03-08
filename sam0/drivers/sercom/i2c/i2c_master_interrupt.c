@@ -104,7 +104,7 @@ static void _i2c_master_write(struct i2c_master_module *const module)
 }
 
 /**
- * \internal Act on slave address response
+ * \internal Acts on slave address response
  *
  * Check for errors concerning master->slave handshake.
  *
@@ -153,9 +153,9 @@ static void _i2c_master_async_address_response(
 }
 
 /**
- * \brief Register callback for the specified callback type
+ * \brief Registers callback for the specified callback type
  *
- * This will associate the given callback function with the
+ * Associates the given callback function with the
  * specified callback type.
  * To enable the callback, the \ref i2c_master_enable_callback function
  * must be used.
@@ -183,7 +183,7 @@ void i2c_master_register_callback(
 }
 
 /**
- * \brief Unregister callback for the specified callback type
+ * \brief Unregisters callback for the specified callback type
  *
  * When called, the currently registered callback for the given callback type
  * will be removed.
@@ -210,9 +210,9 @@ void i2c_master_unregister_callback(
  * \internal Starts a read packet operation
  *
  * \param[in,out] module  Pointer to software module struct
- * \param[in,out] packet  Pointer to I2C packet to transfer
+ * \param[in,out] packet  Pointer to I<SUP>2</SUP>C packet to transfer
  *
- * \return              Status of starting reading I2C packet
+ * \return              Status of starting reading I<SUP>2</SUP>C packet
  * \retval STATUS_OK   If reading was started successfully
  * \retval STATUS_BUSY  If module is currently busy with another transfer
  */
@@ -241,13 +241,13 @@ static enum status_code _i2c_master_read_packet(
 /**
  * \brief Initiates a read packet operation
  *
- * Reads a data packet from the specified slave address on the I2C bus. This
+ * Reads a data packet from the specified slave address on the I<SUP>2</SUP>C bus. This
  * is the non-blocking equivalent of \ref i2c_master_read_packet.
  *
  * \param[in,out] module  Pointer to software module struct
- * \param[in,out] packet  Pointer to I2C packet to transfer
+ * \param[in,out] packet  Pointer to I<SUP>2</SUP>C packet to transfer
  *
- * \return             Status of starting reading I2C packet
+ * \return             Status of starting reading I<SUP>2</SUP>C packet
  * \retval STATUS_OK   If reading was started successfully
  * \retval STATUS_BUSY If module is currently busy with another transfer
  */
@@ -276,13 +276,17 @@ enum status_code i2c_master_read_packet_job(
  * \brief Initiates a read packet operation without sending a STOP condition
  * when done
  *
- * Reads a data packet from the specified slave address on the I2C bus. This
- * is the non-blocking equivalent of \ref i2c_master_read_packet.
+ * Reads a data packet from the specified slave address on the I<SUP>2</SUP>C bus without
+ * sending a stop condition, thus retaining ownership of the bus when done.
+ * To end the transaction, a \ref i2c_master_read_packet_wait "read" or \ref
+ * i2c_master_write_packet_wait "write" with stop condition must be performed.
+ *
+ * This is the non-blocking equivalent of \ref i2c_master_read_packet.
  *
  * \param[in,out] module  Pointer to software module struct
- * \param[in,out] packet  Pointer to I2C packet to transfer
+ * \param[in,out] packet  Pointer to I<SUP>2</SUP>C packet to transfer
  *
- * \return             Status of starting reading I2C packet
+ * \return             Status of starting reading I<SUP>2</SUP>C packet
  * \retval STATUS_OK   If reading was started successfully
  * \retval STATUS_BUSY If module is currently busy with another operation
  */
@@ -311,9 +315,9 @@ enum status_code i2c_master_read_packet_job_no_stop(
  * \internal Initiates a write packet operation
  *
  * \param[in,out]     module  Pointer to software module struct
- * \param[in,out]     packet    Pointer to I2C packet to transfer
+ * \param[in,out]     packet    Pointer to I<SUP>2</SUP>C packet to transfer
  *
- * \return             Status of starting writing I2C packet job
+ * \return             Status of starting writing I<SUP>2</SUP>C packet job
  * \retval STATUS_OK   If writing was started successfully
  * \retval STATUS_BUSY If module is currently busy with another transfer
  */
@@ -342,13 +346,13 @@ static enum status_code _i2c_master_write_packet(
 /**
  * \brief Initiates a write packet operation
  *
- * Writes a data packet to the specified slave address on the I2C bus. This
+ * Writes a data packet to the specified slave address on the I<SUP>2</SUP>C bus. This
  * is the non-blocking equivalent of \ref i2c_master_write_packet.
  *
  * \param[in,out] module  Pointer to software module struct
- * \param[in,out] packet  Pointer to I2C packet to transfer
+ * \param[in,out] packet  Pointer to I<SUP>2</SUP>C packet to transfer
  *
- * \return             Status of starting writing I2C packet job
+ * \return             Status of starting writing I<SUP>2</SUP>C packet job
  * \retval STATUS_OK   If writing was started successfully
  * \retval STATUS_BUSY If module is currently busy with another transfer
  */
@@ -377,13 +381,18 @@ enum status_code i2c_master_write_packet_job(
  * \brief Initiates a write packet operation without sending a STOP condition
  * when done
  *
- * Writes a data packet to the specified slave address on the I2C bus. This
- * is the non-blocking equivalent of \ref i2c_master_write_packet_no_stop.
+ * Writes a data packet to the specified slave address on the I<SUP>2</SUP>C bus without
+ * sending a stop condition, thus retaining ownership of the bus when done.
+ * To end the transaction, a \ref i2c_master_read_packet_wait "read" or \ref
+ * i2c_master_write_packet_wait "write" with stop condition or sending
+ * a stop with the \ref i2c_master_send_stop function must be performed.
+ *
+ * This is the non-blocking equivalent of \ref i2c_master_write_packet_no_stop.
  *
  * \param[in,out] module  Pointer to software module struct
- * \param[in,out] packet  Pointer to I2C packet to transfer
+ * \param[in,out] packet  Pointer to I<SUP>2</SUP>C packet to transfer
  *
- * \return             Status of starting writing I2C packet job
+ * \return             Status of starting writing I<SUP>2</SUP>C packet job
  * \retval STATUS_OK   If writing was started successfully
  * \retval STATUS_BUSY If module is currently busy with another
  */
@@ -409,7 +418,7 @@ enum status_code i2c_master_write_packet_job_no_stop(
 }
 
 /**
- * \internal Interrupt handler for I2C master
+ * \internal Interrupt handler for I<SUP>2</SUP>C master
  *
  * \param[in] instance Sercom instance that triggered the interrupt
  */

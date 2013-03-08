@@ -601,8 +601,11 @@ enum tc_interrupt_flag {
  * Event flags for the \ref tc_enable_events() and \ref tc_disable_events().
  */
 struct tc_events {
+	/** Generate an output event on a compare channel match. */
 	bool generate_event_on_compare_channel[2];
+	/** Generate an output event on counter overflow. */
 	bool generate_event_on_overflow;
+	/** Consume events into the module. */
 	bool enable_incoming_events;
 };
 
@@ -610,7 +613,7 @@ struct tc_events {
  * \brief Configuration struct for TC module in 8-bit size counter mode.
  */
 struct tc_8bit_config {
-	/** Initial count value. */
+	/** Initial timer count value. */
 	uint8_t count;
 	/** Where to count to or from depending on the direction on the counter. */
 	uint8_t period;
@@ -622,7 +625,7 @@ struct tc_8bit_config {
  * \brief Configuration struct for TC module in 16-bit size counter mode.
  */
 struct tc_16bit_config {
-	/** Initial count value */
+	/** Initial timer count value. */
 	uint16_t count;
 	/** Value to be used for compare match on each channel. */
 	uint16_t compare_capture_channel[2];
@@ -632,7 +635,7 @@ struct tc_16bit_config {
  * \brief Configuration struct for TC module in 32-bit size counter mode.
  */
 struct tc_32bit_config {
-	/** Initial count value. */
+	/** Initial timer count value. */
 	uint32_t count;
 	/** Value to be used for compare match on each channel. */
 	uint32_t compare_capture_channel[2];
@@ -649,7 +652,7 @@ struct tc_config {
 	/** GCLK generator used to clock the peripheral. */
 	enum gclk_generator clock_source;
 
-	/** When true the module is enabled during standby. */
+	/** When \c true the module is enabled during standby. */
 	bool run_in_standby;
 	/** Specifies either 8-, 16-, or 32-bit counter counter size. */
 	enum tc_counter_size counter_size;
@@ -663,7 +666,7 @@ struct tc_config {
 	 */
 	enum tc_reload_action reload_action;
 
-	/** Specifies which channel(s) to invert the waveform on */
+	/** Specifies which channel(s) to invert the waveform on. */
 	uint8_t waveform_invert_output;
 
 	/** Specifies which channel(s) to enable channel capture
@@ -675,11 +678,11 @@ struct tc_config {
 	 */
 	uint8_t capture_enable;
 
-	/** When true, one-shot will stop the TC on next HW/SW re-trigger
+	/** When \c true, one-shot will stop the TC on next HW/SW re-trigger
 	 *  event or overflow/underflow.
 	 */
 	bool oneshot;
-	/** Specifies the direction for the TC to count */
+	/** Specifies the direction for the TC to count. */
 	enum tc_count_direction count_direction;
 
 	/** Specifies if the input event source is inverted, when used in PWP or
@@ -690,11 +693,11 @@ struct tc_config {
 	/** Specifies which event to trigger if an event is triggered. */
 	enum tc_event_action event_action;
 
-	/** When true, PWM output for the given channel is enabled */
+	/** When \c true, PWM output for the given channel is enabled. */
 	bool channel_pwm_out_enabled[2];
 	/** Specifies pin output for each channel. */
 	uint32_t channel_pwm_out_pin[2];
-	/** Specifies MUX setting for each output channel pin */
+	/** Specifies MUX setting for each output channel pin. */
 	uint32_t channel_pwm_out_mux[2];
 
 	/** This setting determines what size counter is used. */
@@ -711,17 +714,17 @@ struct tc_config {
 /**
  * \brief TC software device instance structure.
  *
- * TC software device instance structure.
+ * TC software instance structure, used to retain software state information
+ * of an associated hardware module instance.
+ *
+ * \note The fields of this structure should not be altered by the user
+ *       application; they are reserved for module-internal use only.
  */
 struct tc_module {
-	/** Pointer to the TC Hardware module */
+	/** Hardware module pointer of the associated Timer/Counter peripheral. */
 	Tc *hw;
 
-	/** Which counter size the counter should use. This value is set
-	 *  when running tc_init. Use the \ref tc_config struct to set the
-	 *  counter size. Do not alter this, it is only for internal
-	 *  checks
-	 */
+	/** Size of the initialized Timer/Counter module configuration. */
 	enum tc_counter_size counter_size;
 };
 
@@ -753,7 +756,10 @@ static inline bool tc_is_syncing(
 	Assert(module_inst);
 	Assert(module_inst->hw);
 
-	return (module_inst->hw->COUNT8.STATUS.reg & TC_STATUS_SYNCBUSY);
+	/* Get a pointer to the module's hardware instance */
+	TcCount8 *const tc_module = &(module_inst->hw->COUNT8);
+
+	return (tc_module->STATUS.reg & TC_STATUS_SYNCBUSY);
 }
 
 /**
@@ -1210,10 +1216,6 @@ static inline void tc_clear_interrupt_flag(
  *	<tr>
  *		<td>PPW</td>
  *		<td>Period Pulse Width</td>
- *	</tr>
- *	<tr>
- *		<td> - </td>
- *		<td> - </td>
  *	</tr>
  * </table>
  *

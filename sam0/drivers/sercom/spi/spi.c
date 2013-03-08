@@ -460,6 +460,8 @@ enum status_code spi_write_buffer_wait(struct spi_module
 
 	uint8_t  i = 0;
 	uint16_t j = 0;
+	/* Variable to flush receive buffer */
+	uint16_t flush;
 
 	/* Write block */
 	while (length--) {
@@ -478,7 +480,8 @@ enum status_code spi_write_buffer_wait(struct spi_module
 		/* Wait until the module is ready to write a character */
 		while (!spi_is_ready_to_write(module)) {
 		}
-
+		/* Flush read buffer */
+		spi_read(module, &flush);
 		if (module->chsize == SPI_CHARACTER_SIZE_9BIT) {
 			/* Write the 9 bit character */
 			spi_write(module, ((uint16_t*)(tx_data))[i++]);

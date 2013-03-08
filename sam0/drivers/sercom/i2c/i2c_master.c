@@ -58,7 +58,7 @@
  * \retval STATUS_OK                      If module was configured correctly
  * \retval STATUS_ERR_ALREADY_INITIALIZED If setting other GCLK generator than
  *                                        previously set
- * \retval STAUS_ERR_BAUDRATE_UNAVAILABLE If given baud rate is not compatible
+ * \retval STATUS_ERR_BAUDRATE_UNAVAILABLE If given baud rate is not compatible
  *                                        with set GCLK frequency
  */
 static enum status_code _i2c_master_set_config(
@@ -146,9 +146,9 @@ static enum status_code _i2c_master_set_config(
 #endif /* __DOXYGEN__ */
 
 /**
- * \brief Initializes the requested I2C Hardware module
+ * \brief Initializes the requested I<SUP>2</SUP>C hardware module
  *
- * Initializes the SERCOM I2C Master device requested and sets the provided
+ * Initializes the SERCOM I<SUP>2</SUP>C master device requested and sets the provided
  * software module struct. Run this function before any further use of
  * the driver.
  *
@@ -162,7 +162,7 @@ static enum status_code _i2c_master_set_config(
  * \retval STATUS_BUSY                    If module is busy resetting
  * \retval STATUS_ERR_ALREADY_INITIALIZED If setting other GCLK generator than
  *                                        previously set
- * \retval STAUS_ERR_BAUDRATE_UNAVAILABLE If given baudrate is not compatible
+ * \retval STATUS_ERR_BAUDRATE_UNAVAILABLE If given baudrate is not compatible
  *                                        with set GCLK frequency
  *
  */
@@ -229,7 +229,7 @@ enum status_code i2c_master_init(struct i2c_master_module *const module,
 /**
  * \brief Resets the hardware module
  *
- * This will reset the module to hardware defaults.
+ * Reset the module to hardware defaults.
  *
  * \param[in,out] module Pointer to software module structure
  */
@@ -338,7 +338,7 @@ static enum status_code _i2c_master_wait_for_bus(
  * \internal Starts blocking read operation
  *
  * \param[in,out]     module  Pointer to software module struct.
- * \param[in,out]     packet  Pointer to I2C packet to transfer.
+ * \param[in,out]     packet  Pointer to I<SUP>2</SUP>C packet to transfer.
  *
  * \return                              Status of reading packet
  * \retval STATUS_OK                    The packet was read successfully
@@ -421,14 +421,14 @@ static enum status_code _i2c_master_read(
 /**
  * \brief Reads data packet from slave
  *
- * Reads a data packet from the specified slave address on the I2C bus and
+ * Reads a data packet from the specified slave address on the I<SUP>2</SUP>C bus and
  * sends a stop condition when finished.
  *
  * \note This will stall the device from any other operation. For
  * interrupt-driven operation, see \ref i2c_master_read_packet_job.
  *
  * \param[in,out] module    Pointer to software module struct
- * \param[in,out] packet    Pointer to I2C packet to transfer
+ * \param[in,out] packet    Pointer to I<SUP>2</SUP>C packet to transfer
  * \return                              Status of reading packet.
  * \retval STATUS_OK                    The packet was read successfully
  * \retval STATUS_ERR_TIMEOUT           If no response was given within
@@ -463,16 +463,16 @@ enum status_code i2c_master_read_packet_wait(
  * \brief Reads data packet from slave without sending a stop condition when
  * done
  *
- * Reads a data packet from the specified slave address on the I2C bus without
- * sending a stop condition when done.
- * To end the transaction, a read or write with stop condition must be
- * performed.
+ * Reads a data packet from the specified slave address on the I<SUP>2</SUP>C bus without
+ * sending a stop condition when done, thus retaining ownership of the bus when done.
+ * To end the transaction, a \ref i2c_master_read_packet_wait "read" or \ref
+ * i2c_master_write_packet_wait "write" with stop condition must be performed.
  *
  * \note This will stall the device from any other operation. For
  * interrupt-driven operation, see \ref i2c_master_read_packet_job.
  *
  * \param[in,out] module    Pointer to software module struct
- * \param[in,out] packet    Pointer to I2C packet to transfer
+ * \param[in,out] packet    Pointer to I<SUP>2</SUP>C packet to transfer
  *
  * \return                              Status of reading packet.
  * \retval STATUS_OK                    The packet was read successfully
@@ -508,7 +508,7 @@ enum status_code i2c_master_read_packet_wait_no_stop(
  * \internal Starts blocking write operation.
  *
  * \param[in,out] module  Pointer to software module struct.
- * \param[in,out] packet    Pointer to I2C packet to transfer.
+ * \param[in,out] packet    Pointer to I<SUP>2</SUP>C packet to transfer.
  *
  * \return                              Status of reading packet.
  * \retval STATUS_OK                    The packet was read successfully
@@ -588,14 +588,14 @@ static enum status_code _i2c_master_write_packet(
 /**
  * \brief Writes data packet to slave
  *
- * Writes a data packet to the specified slave address on the I2C bus and
+ * Writes a data packet to the specified slave address on the I<SUP>2</SUP>C bus and
  * sends a stop condition when finished.
  *
  * \note This will stall the device from any other operation. For
  * interrupt-driven operation, see \ref i2c_master_read_packet_job.
  *
  * \param[in,out] module  Pointer to software module struct
- * \param[in,out] packet  Pointer to I2C packet to transfer
+ * \param[in,out] packet  Pointer to I<SUP>2</SUP>C packet to transfer
  * 
  * \return                     Status of reading packet
  * \retval STATUS_OK                   If packet was read
@@ -635,16 +635,17 @@ enum status_code i2c_master_write_packet_wait(
  * \brief Writes data packet to slave without sending a stop condition
  * when done
  *
- * Writes a data packet to the specified slave address on the I2C bus without
- * sending a stop condition when done.
- * To end the transaction, a read or write with stop condition or sending
- * a stop with the \ref i2c_master_send_stop function must performed.
+ * Writes a data packet to the specified slave address on the I<SUP>2</SUP>C bus without
+ * sending a stop condition, thus retaining ownership of the bus when done.
+ * To end the transaction, a \ref i2c_master_read_packet_wait "read" or \ref
+ * i2c_master_write_packet_wait "write" with stop condition or sending
+ * a stop with the \ref i2c_master_send_stop function must be performed.
  *
  * \note This will stall the device from any other operation. For
  * interrupt-driven operation, see \ref i2c_master_read_packet_job.
  *
  * \param[in,out] module    Pointer to software module struct
- * \param[in,out] packet    Pointer to I2C packet to transfer
+ * \param[in,out] packet    Pointer to I<SUP>2</SUP>C packet to transfer
  *
  * \return                             Status of reading packet
  * \retval STATUS_OK                   If packet was read
@@ -682,11 +683,12 @@ enum status_code i2c_master_write_packet_wait_no_stop(
 /**
  * \brief Sends stop condition on bus
  *
- * Sends stop condition on bus.
+ * Sends a stop condition on bus.
  *
  * \note This function can only be used after the \ref
- * i2c_master_write_packet_no_stop function. If the a stop condition is to be
- * send after a read, the \ref i2c_master_read_packet function must be used.
+ * i2c_master_write_packet_wait_no_stop function. If a stop condition is
+ * to be sent after a read, the \ref i2c_master_read_packet_wait function must
+ * be used.
  *
  * \param[in] module  Pointer to the software instance struct
  */

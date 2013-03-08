@@ -57,7 +57,9 @@ static uint8_t read_buffer [DATA_LENGTH];
 //! [packet_data]
 
 /* Adress of the slave */
+//! [address]
 #define SLAVE_ADDRESS 0x12
+//! [address]
 
 /* Init device instance. */
 //! [module]
@@ -75,8 +77,7 @@ static void read_request_callback(struct i2c_slave_module *const module)
 
 	/* Write buffer to master */
 	//! [write_packet]
-	if (i2c_slave_write_packet_job(module, &packet) != STATUS_OK) {
-	}
+	i2c_slave_write_packet_job(module, &packet);
 	//! [write_packet]
 }
 //! [read_request]
@@ -141,14 +142,22 @@ int main(void)
 {
 	//! [run_initialize_i2c]
 	/* Init system */
+	//! [system_init]
 	system_init();
+	//! [system_init]
 
 	/* Configure device and enable. */
+	//! [config]
 	configure_i2c();
+	//! [config]
+	//! [config_callback]
 	configure_callbacks();
+	//! [config_callback]
 	//! [run_initialize_i2c]
 
+	//! [while]
 	while (1) {
 		/* Inf loop while waiting for I2C master interaction */
 	}
+	//! [while]
 }

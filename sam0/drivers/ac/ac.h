@@ -434,13 +434,16 @@ enum ac_win_state {
 };
 
 /**
- * \brief AC device instance structure.
+ * \brief AC software device instance structure.
  *
  * AC software instance structure, used to retain software state information
  * of an associated hardware module instance.
+ *
+ * \note The fields of this structure should not be altered by the user
+ *       application; they are reserved for module-internal use only.
  */
 struct ac_module {
-	/** Hardware module point of the associated Analog Comparator peripheral. */
+	/** Hardware module pointer of the associated Analog Comparator peripheral. */
 	Ac *hw;
 };
 

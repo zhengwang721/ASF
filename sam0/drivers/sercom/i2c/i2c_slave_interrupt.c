@@ -46,7 +46,7 @@
 /**
  * \brief Enables sending of NACK on address match
  *
- * This will enable sending of NACK on address match, thus discarding
+ * Enables sending of NACK on address match, thus discarding
  * any incoming transaction.
  *
  * \param[in,out] module Pointer to software module structure
@@ -62,7 +62,7 @@ void i2c_slave_enable_nack_on_address(struct i2c_slave_module
 /**
  * \brief Disables sending NACK on address match
  *
- * This will disable sending of NACK on address match, thus
+ * Disables sending of NACK on address match, thus
  * acknowledging incoming transactions.
  *
  * \param[in,out] module Pointer to software module structure
@@ -114,7 +114,7 @@ static void _i2c_slave_write(struct i2c_slave_module *const module)
 /**
  * \brief Registers callback for the specified callback type
  *
- * This will associate the given callback function with the
+ * Associates the given callback function with the
  * specified callback type.
  * To enable the callback, the \ref i2c_slave_enable_callback function
  * must be used.
@@ -144,7 +144,7 @@ void i2c_slave_register_callback(
 /**
  * \brief Unregisters callback for the specified callback type
  *
- * This will remove the currently registered callback for the given callback
+ * Removes the currently registered callback for the given callback
  * type.
  *
  * \param[in,out]  module        Pointer to the software module struct
@@ -174,9 +174,9 @@ void i2c_slave_unregister_callback(
  * function.
  *
  * \param[in,out] module    Pointer to software module struct
- * \param[in,out] packet    Pointer to I2C packet to transfer
+ * \param[in,out] packet    Pointer to I<SUP>2</SUP>C packet to transfer
  *
- * \return             Status of starting asynchronously reading I2C packet
+ * \return             Status of starting asynchronously reading I<SUP>2</SUP>C packet
  * \retval STATUS_OK   If reading was started successfully
  * \retval STATUS_BUSY If module is currently busy with another transfer
  */
@@ -212,9 +212,9 @@ enum status_code i2c_slave_read_packet_job(
  * function.
  *
  * \param[in,out]     module  Pointer to software module struct
- * \param[in,out]     packet    Pointer to I2C packet to transfer
+ * \param[in,out]     packet    Pointer to I<SUP>2</SUP>C packet to transfer
  *
- * \return             Status of starting writing I2C packet
+ * \return             Status of starting writing I<SUP>2</SUP>C packet
  * \retval STATUS_OK   If writing was started successfully
  * \retval STATUS_BUSY If module is currently busy with another transfer
  */
@@ -241,7 +241,7 @@ enum status_code i2c_slave_write_packet_job(
 }
 
 /**
- * \internal Interrupt handler for I2C slave
+ * \internal Interrupt handler for I<SUP>2</SUP>C slave
  *
  * \param[in] instance Sercom instance that triggered the interrupt
  */

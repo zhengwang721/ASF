@@ -1012,7 +1012,7 @@ static inline enum status_code spi_write(struct spi_module *module,
 	}
 
 	/* Write the character to the DATA register */
-	spi_module->DATA.reg |= tx_data & SERCOM_SPI_DATA_MASK;
+	spi_module->DATA.reg = tx_data & SERCOM_SPI_DATA_MASK;
 
 	return STATUS_OK;
 }

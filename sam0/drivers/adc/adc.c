@@ -49,7 +49,7 @@
  * This function will write out a given configuration to the hardware module.
  * Used by \ref adc_init.
  *
- * \param[out] hw_dev Pointer to the ADC software instance struct
+ * \param[out] module Pointer to the ADC software instance struct
  * \param[in] config  Pointer to configuration struct
  *
  * \return Status of the configuration procedure
@@ -57,7 +57,7 @@
  * \retval STATUS_ERR_INVALID_ARG   Invalid argument(s) were provided
  */
 static enum status_code _adc_set_config (
-		Adc *const hw_dev,
+		Adc *const module,
 		struct adc_config *const config)
 {
 	uint8_t adjres;
@@ -75,10 +75,10 @@ static enum status_code _adc_set_config (
 	system_gclk_chan_enable(ADC_GCLK_ID);
 
 	/* Configure run in standby */
-	hw_dev->CTRLA.reg = (config->run_in_standby << ADC_CTRLA_RUNSTDBY_Pos);
+	module->CTRLA.reg = (config->run_in_standby << ADC_CTRLA_RUNSTDBY_Pos);
 
 	/* Configure reference */
-	hw_dev->REFCTRL.reg =
+	module->REFCTRL.reg =
 			(config->reference_compensation_enable << ADC_REFCTRL_REFCOMP_Pos) |
 			(config->reference);
 
@@ -114,19 +114,19 @@ static enum status_code _adc_set_config (
 		/* Unknown. Abort. */
 		return STATUS_ERR_INVALID_ARG;
 	}
-	hw_dev->AVGCTRL.reg = ADC_AVGCTRL_ADJRES(adjres) | average;
+	module->AVGCTRL.reg = ADC_AVGCTRL_ADJRES(adjres) | average;
 
 	/* Check validity of sample length value */
 	if (config->sample_length > 63) {
 		return STATUS_ERR_INVALID_ARG;
 	} else {
 		/* Configure sample length */
-		hw_dev->SAMPCTRL.reg = (config->sample_length << ADC_SAMPCTRL_SAMPLEN_Pos);
+		module->SAMPCTRL.reg = (config->sample_length << ADC_SAMPCTRL_SAMPLEN_Pos);
 	}
 
 	/* Configure CTRLB */
-	_adc_wait_for_sync(hw_dev);
-	hw_dev->CTRLB.reg =
+	_adc_wait_for_sync(module);
+	module->CTRLB.reg =
 			config->clock_prescaler |
 			config->resolution |
 			(config->correction.correction_enable << ADC_CTRLB_CORREN_Pos) |
@@ -195,19 +195,19 @@ static enum status_code _adc_set_config (
 		}
 	}
 	/* Wait for synchronization */
-	_adc_wait_for_sync(hw_dev);
+	_adc_wait_for_sync(module);
 	/* Configure window mode */
-	hw_dev->WINCTRL.reg = config->window.window_mode;
+	module->WINCTRL.reg = config->window.window_mode;
 
 	/* Wait for synchronization */
-	_adc_wait_for_sync(hw_dev);
+	_adc_wait_for_sync(module);
 	/* Configure lower threshold */
-	hw_dev->WINLT.reg = config->window.window_lower_value << ADC_WINLT_WINLT_Pos;
+	module->WINLT.reg = config->window.window_lower_value << ADC_WINLT_WINLT_Pos;
 
 	/* Wait for synchronization */
-	_adc_wait_for_sync(hw_dev);
+	_adc_wait_for_sync(module);
 	/* Configure lower threshold */
-	hw_dev->WINUT.reg = config->window.window_upper_value << ADC_WINUT_WINUT_Pos;
+	module->WINUT.reg = config->window.window_upper_value << ADC_WINUT_WINUT_Pos;
 
 	uint8_t inputs_to_scan = config->pin_scan.inputs_to_scan;
 	if (inputs_to_scan > 0) {
@@ -223,9 +223,9 @@ static enum status_code _adc_set_config (
 		return STATUS_ERR_INVALID_ARG;
 	}
 	/* Wait for synchronization */
-	_adc_wait_for_sync(hw_dev);
+	_adc_wait_for_sync(module);
 	/* Configure pin scan mode and positive and negative input pins */
-	hw_dev->INPUTCTRL.reg =
+	module->INPUTCTRL.reg =
 			config->gain_factor |
 			(config->pin_scan.offset_start_scan << ADC_INPUTCTRL_INPUTOFFSET_Pos) |
 			(inputs_to_scan << ADC_INPUTCTRL_INPUTSCAN_Pos) |
@@ -233,14 +233,14 @@ static enum status_code _adc_set_config (
 			config->positive_input;
 
 	/* Configure events */
-	hw_dev->EVCTRL.reg =
+	module->EVCTRL.reg =
 			config->event.event_action |
 			(config->event.generate_event_on_window_monitor  << ADC_EVCTRL_WINMONEO_Pos) |
 			(config->event.generate_event_on_conversion_done << ADC_EVCTRL_RESRDYEO_Pos);
 
 
 	/* Disable all interrupts */
-	hw_dev->INTENCLR.reg =
+	module->INTENCLR.reg =
 			(1 << ADC_INTENCLR_READY_Pos)   | (1 << ADC_INTENCLR_WINMON_Pos) |
 			(1 << ADC_INTENCLR_OVERRUN_Pos) | (1 << ADC_INTENCLR_RESRDY_Pos);
 
@@ -250,7 +250,7 @@ static enum status_code _adc_set_config (
 			return STATUS_ERR_INVALID_ARG;
 		} else {
 			/* Set gain correction value */
-			hw_dev->GAINCORR.reg = config->correction.gain_correction <<
+			module->GAINCORR.reg = config->correction.gain_correction <<
 					ADC_GAINCORR_GAINCORR_Pos;
 		}
 
@@ -260,7 +260,7 @@ static enum status_code _adc_set_config (
 			return STATUS_ERR_INVALID_ARG;
 		} else {
 			/* Set offset correction value */
-			hw_dev->OFFSETCORR.reg = config->correction.offset_correction <<
+			module->OFFSETCORR.reg = config->correction.offset_correction <<
 					ADC_OFFSETCORR_OFFSETCORR_Pos;
 		}
 	}
@@ -273,8 +273,8 @@ static enum status_code _adc_set_config (
  * This function will initialize the ADC device struct and the hardware module
  * based on the values of the configuration struct.
  *
- * \param[out] dev_inst Pointer to the ADC software instance struct
- * \param[in] hw_dev    Pointer to the ADC module instance
+ * \param[out] module_inst Pointer to the ADC software instance struct
+ * \param[in] module    Pointer to the ADC module instance
  * \param[in] config    Pointer to the configuration struct
  *
  * \return Status of the initialization procedure
@@ -284,23 +284,23 @@ static enum status_code _adc_set_config (
  * \retval STATUS_ERR_DENIED        The module is enabled
  */
 enum status_code adc_init(
-		struct adc_module *const dev_inst,
-		Adc *hw_dev,
+		struct adc_module *const module_inst,
+		Adc *module,
 		struct adc_config *config)
 {
 
-	dev_inst->hw_dev = hw_dev;
+	module_inst->hw = module;
 
-	if (hw_dev->CTRLA.reg & ADC_CTRLA_SWRST) {
+	if (module->CTRLA.reg & ADC_CTRLA_SWRST) {
 		/* We are in the middle of a reset. Abort. */
 		return STATUS_BUSY;
 	}
 
-	if (hw_dev->CTRLA.reg & ADC_CTRLA_ENABLE) {
+	if (module->CTRLA.reg & ADC_CTRLA_ENABLE) {
 		/* Module must be disabled before initialization. Abort. */
 		return STATUS_ERR_DENIED;
 	}
 
 	/* Write configuration to module */
-	return _adc_set_config(hw_dev, config);;
+	return _adc_set_config(module, config);;
 }
