@@ -26,7 +26,7 @@
 		</module>
 	</select-by-config>
 
-	<board id="board.sam4s_wpir_rd" caption="SAM4S-WPIR-RD">
+	<board id="board.sam4s_wpir_rd" vendor="Atmel" caption="SAM4S-WPIR-RD">
 		<!-- Board name -->
 		<build type="define" name="BOARD" value="SAM4S_WPIR_RD"/>
 
@@ -38,6 +38,8 @@
 		<build type="include-path" value="."/>
 		<build type="include-path" value=".."/>
 		<build type="header-file" value="sam4s_wpir_rd.h"/>
+		<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
+		<build type="module-config" subtype="path" value="board_config"/>
 
 		<!-- Debug scripts -->
 		<build type="macro-config" subtype="script" value="debug_scripts/gcc/sam4s_wpir_rd_flash.gdb" toolchain="armgcc"/>

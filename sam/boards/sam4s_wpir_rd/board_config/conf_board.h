@@ -1,30 +1,30 @@
 /**
  * \file
  *
- * \brief SAM4S Xplained Pro board configuration
+ * \brief SAM4S-WPIR-RD board configuration
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
  * \page License
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * 3. The name of Atmel may not be used to endorse or promote products derived
  *    from this software without specific prior written permission.
- * 
+ *
  * 4. This software may only be redistributed and used in connection with an
  *    Atmel microcontroller product.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
@@ -44,5 +44,25 @@
 #define CONF_BOARD_H
 
 //#define CONF_BOARD_KEEP_WATCHDOG_AT_INIT
+
+//#define CONF_BOARD_ADC
+
+//#define CONF_BOARD_UART_CONSOLE
+
+//#define CONF_BOARD_TWI0
+
+//#define CONF_BOARD_SPI
+
+//#define CONF_BOARD_PCK0
+
+//#define CONF_BOARD_VBUS
+
+//#define CONF_BOARD_ILI9325
+
+//#define CONF_BOARD_AAT3155
+
+//#define CONF_BOARD_SRAM
+
+//#define CONF_BOARD_OV7740_IMAGE_SENSOR
 
 #endif /* CONF_BOARD_H */

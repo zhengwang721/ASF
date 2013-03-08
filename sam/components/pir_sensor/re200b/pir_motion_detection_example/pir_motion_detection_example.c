@@ -110,10 +110,10 @@ static void _display_init(void)
 	pmc_enable_periph_clk( ID_SMC );
 
 	/* Configure SMC interface for LCD */
-	smc_set_setup_timing(SMC, ILI9325_LCD_CS, BOARD_LCD_SMC_SETUP);
-	smc_set_pulse_timing(SMC, ILI9325_LCD_CS, BOARD_LCD_SMC_PULSE);
-	smc_set_cycle_timing(SMC, ILI9325_LCD_CS, BOARD_LCD_SMC_CYCLE);
-	smc_set_mode(SMC, ILI9325_LCD_CS, BOARD_LCD_SMC_MODE);
+	smc_set_setup_timing(SMC, BOARD_LCD_SMC_CS, BOARD_LCD_SMC_SETUP);
+	smc_set_pulse_timing(SMC, BOARD_LCD_SMC_CS, BOARD_LCD_SMC_PULSE);
+	smc_set_cycle_timing(SMC, BOARD_LCD_SMC_CS, BOARD_LCD_SMC_CYCLE);
+	smc_set_mode(SMC, BOARD_LCD_SMC_CS, BOARD_LCD_SMC_MODE);
 
 	/* Initialize display parameter */
 	ili9325_display_opt.ul_width = ILI9325_LCD_WIDTH;

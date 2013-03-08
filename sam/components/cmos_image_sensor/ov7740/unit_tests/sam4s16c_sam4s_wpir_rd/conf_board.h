@@ -59,11 +59,6 @@
 /** Usart Hw ID used by the console (UART0). */
 #define CONSOLE_UART_ID		  ID_UART0
 
-/* TWI board defines. */
-#define ID_BOARD_TWI		    ID_TWI0
-#define BOARD_TWI			      TWI0
-#define BOARD_TWI_IRQn		  TWI0_IRQn
-
 /* Image sensor board defines. */
 // Image sensor Power pin.
 #define OV_POWER_PIO		    OV_SW_OVT_PIO

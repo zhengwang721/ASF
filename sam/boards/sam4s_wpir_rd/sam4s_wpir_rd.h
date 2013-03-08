@@ -451,6 +451,10 @@
 /** TWI0 pins */
 #define PINS_TWI0                      PIN_TWI_TWD0, PIN_TWI_TWCK0
 
+#define ID_BOARD_TWI		               ID_TWI0
+#define BOARD_TWI			                 TWI0
+#define BOARD_TWI_IRQn		             TWI0_IRQn
+
 /******************************* VBUS definition
  *********************************/
 /** USB VBUS pin */
