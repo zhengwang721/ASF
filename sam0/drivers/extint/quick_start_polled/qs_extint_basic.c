@@ -55,9 +55,9 @@ void config_extint_channel(void)
 //! [setup_2]
 
 //! [setup_3]
-	eint_chan_conf.gpio_pin            = BUTTON_0_EIC_PIN;
-	eint_chan_conf.gpio_pin_mux        = BUTTON_0_EIC_PIN_MUX;
-	eint_chan_conf.detection_criteria  = EXTINT_DETECT_BOTH;
+	eint_chan_conf.gpio_pin           = BUTTON_0_EIC_PIN;
+	eint_chan_conf.gpio_pin_mux       = BUTTON_0_EIC_PIN_MUX;
+	eint_chan_conf.detection_criteria = EXTINT_DETECT_BOTH;
 //! [setup_3]
 //! [setup_4]
 	extint_chan_set_config(BUTTON_0_EIC_LINE, &eint_chan_conf);
