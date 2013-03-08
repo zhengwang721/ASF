@@ -41,18 +41,9 @@
  *
  */
 #include <asf.h>
-#include <compiler.h>
-#include <stdint.h>
-#include <stdbool.h>
-#include <board.h>
-#include <sysclk.h>
-#include <string.h>
-#include <unit_test/suite.h>
-#include <stdio_serial.h>
 #include <conf_test.h>
 #include <conf_macsc.h>
-#include <macsc_megarf.h>
-
+//
 /**
  * \mainpage
  *
@@ -113,18 +104,9 @@
  */
 //@}
 
-//! Enum with index ID for all MACSC units
-enum {
-	TEST_OVF_TIMEOUT,
-	TEST_CMP1_TIMEOUT,
-	TEST_CMP2_TIMEOUT,
-	TEST_CMP3_TIMEOUT,
-	TEST_BACKOFF_TIMEOUT,	
-};
-
 //! Variable to keep track of test results
 static bool success = false;
-struct cntstatus
+static struct cntstatus
 {
   bool cmp1:1;
   bool cmp2:1;
@@ -222,7 +204,7 @@ static void test_macsc_cmp(const struct test_case *test)
 			MACSC_CC2);
 	macsc_use_cmp(COMPARE_MODE, (MACSC_READ32(SCCNT) + CONFIG_MACSC_TIMEOUT_TICK_HZ), MACSC_CC3);
 
-	delay_ms(1000);
+	delay_ms(1500);
         
         if((check.cmp1 == true)&(check.cmp2 == true) & (check.cmp3 == true))
           success = true;
@@ -251,14 +233,14 @@ static void test_macsc_backoff(const struct test_case *test)
 	if(!(is_macsc_backoff_enable()))
 		success = false;
 	
-	delay_us(320);
+	delay_us(400);
         
         if(!check.backoff)
           success = false;
         
         macsc_backoff_slot_cnt_disable();
     
-	test_assert_true(test, success,"MACSC compare channels test failed");
+	test_assert_true(test, success,"MACSC backoff slot counter test failed");
 }
 
 /**

@@ -4,6 +4,7 @@
 		Test functionality of MAC Symbol Counter
 		</info>
 		<build type="c-source" value="unit_tests.c"/>
+		<build type="module-config" subtype="required-header-file" value="conf_test.h"/>
 		<build type="include-path" value="."/>
 		<device-support value="atmega128rfa1"/>
 		<require idref="mega.drivers.macsc"/>

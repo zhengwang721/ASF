@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief TC Timeout Driver configuration
+ * \brief MACSC Driver configuration
  *
- * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
