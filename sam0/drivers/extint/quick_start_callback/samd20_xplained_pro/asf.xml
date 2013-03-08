@@ -1,0 +1,13 @@
+<asf xmlversion="1.0">
+	<project caption="Quick Start for the SAMD20 EXTINT Driver (Callback)" id="sam0.drivers.extint.quick_start_callback.atsamd20_xplained_pro">
+		<require idref="board.samd20_xplained_pro"/>
+		<require idref="sam0.drivers.extint.quick_start_callback"/>
+		<build type="include-path" value="."/>
+		<build type="header-file" value="conf_board.h"/>
+		<build type="header-file" value="conf_clocks.h"/>
+		<generator value="iarewarm"/>
+		<generator value="armgcc"/>
+		<generator value="as5_arm"/>
+		<device-support value="atsamd20j18a"/>
+	</project>
+</asf>

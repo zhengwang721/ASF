@@ -67,11 +67,11 @@ void config_extint_channel(void)
 
 int main(void)
 {
+	//! [setup_init]
 	system_init();
 
-	//! [setup_init]
-	extint_enable();
 	config_extint_channel();
+	extint_enable();
 	//! [setup_init]
 
 	//! [main]
@@ -81,7 +81,7 @@ int main(void)
 		//! [main_1]
 
 		//! [main_2]
-			// Do something in response to EXTINT edge detection
+			// Do something in response to EXTINT 1 detection
 			bool button_pin_state = port_pin_get_input_level(BUTTON_0_PIN);
 			port_pin_set_output_level(LED_0_PIN, button_pin_state);
 		//! [main_2]

@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAMD20 External Interrupt Driver Quick Start
+ * \brief SAMD20 Xplained PRO board configuration.
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,56 +40,8 @@
  * \asf_license_stop
  *
  */
-#include <asf.h>
 
-void config_extint_channel(void);
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-//! [setup]
-void config_extint_channel(void)
-{
-//! [setup_1]
-	struct extint_chan_conf eint_chan_conf;
-//! [setup_1]
-//! [setup_2]
-	extint_chan_get_config_defaults(&eint_chan_conf);
-//! [setup_2]
-
-//! [setup_3]
-	eint_chan_conf.gpio_pin            = BUTTON_0_EIC_PIN;
-	eint_chan_conf.gpio_pin_mux        = BUTTON_0_EIC_PIN_MUX;
-	eint_chan_conf.detection_criteria  = EXTINT_DETECT_BOTH;
-//! [setup_3]
-//! [setup_4]
-	extint_chan_set_config(BUTTON_0_EIC_LINE, &eint_chan_conf);
-//! [setup_4]
-}
-//! [setup]
-
-int main(void)
-{
-	system_init();
-
-	//! [setup_init]
-	extint_enable();
-	config_extint_channel();
-	//! [setup_init]
-
-	//! [main]
-	while (true) {
-		//! [main_1]
-		if (extint_chan_is_detected(BUTTON_0_EIC_LINE)) {
-		//! [main_1]
-
-		//! [main_2]
-			// Do something in response to EXTINT edge detection
-			bool button_pin_state = port_pin_get_input_level(BUTTON_0_PIN);
-			port_pin_set_output_level(LED_0_PIN, button_pin_state);
-		//! [main_2]
-
-		//! [main_3]
-			extint_chan_clear_detected(BUTTON_0_EIC_LINE);
-		//! [main_3]
-		}
-	}
-	//! [main]
-}
+#endif /* CONF_BOARD_H_INCLUDED */
