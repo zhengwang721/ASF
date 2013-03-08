@@ -59,13 +59,8 @@ extern "C" {
 #endif
 
 /**
- * \addtogroup asfdoc_samd20_i2c_slave_interrupt_group I2C Slave Interrupt
+ * \addtogroup asfdoc_samd20_i2c_group
  * @{
- *
- * This is an overview of the API for the I<SUP>2</SUP>C Slave Interrupt
- * driver.
- *
- * \section asfdoc_samd20_i2c_slave_interrupt_api_overview API Overview
  *
  */
 

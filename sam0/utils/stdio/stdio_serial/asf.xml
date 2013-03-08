@@ -12,6 +12,6 @@
 		<require idref="sam0.utils.stdio"/>
 		<require idref="sam0.utils"/>
 		<require idref="sam0.utils.syscalls"/>
-		<generator value="doxygen-module" default-mcu="unspecified-sam3s"/>
+		<generator value="doxygen-module" default-mcu="unspecified-samd20"/>
 	</module>
 </asf>
