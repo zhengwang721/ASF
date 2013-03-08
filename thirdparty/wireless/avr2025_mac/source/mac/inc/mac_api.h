@@ -158,9 +158,9 @@
 
 
 /* === Types ================================================================ */
-#ifndef UC3
+#ifdef SAM
 COMPILER_PACK_SET(1)
-#endif /* UC3 */
+#endif /* SAM */
 /**
  * MAC Address type
  */
@@ -461,9 +461,9 @@ typedef struct mac_sec_pib_tag
 
 #endif /* if !defined(__DOXYGEN___NO_MAC) */
 
-#ifndef UC3
+#ifdef SAM
 COMPILER_PACK_RESET()
-#endif /* UC3 */
+#endif /* SAM */
 //! @}
 /* === Macros =============================================================== */
 
