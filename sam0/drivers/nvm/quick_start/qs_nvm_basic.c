@@ -68,6 +68,7 @@ int main(void)
 
 //! [main]
 	//! [main_1]
+	enum status_code error_code;
 	uint8_t page_buffer[NVMCTRL_PAGE_SIZE];
 	//! [main_1]
 
@@ -78,14 +79,23 @@ int main(void)
 	//! [main_2]
 
 	//! [main_3]
-	nvm_erase_row(100 / NVMCTRL_ROW_PAGES);
+	do
+	{
+		error_code = nvm_erase_row(100 * NVMCTRL_ROW_PAGES * NVMCTRL_PAGE_SIZE);
+	} while (error_code == STATUS_BUSY);
 	//! [main_3]
 	//! [main_4]
-	nvm_write_buffer(100, page_buffer, NVMCTRL_PAGE_SIZE);
+	do
+	{
+		error_code = nvm_write_buffer(100 * NVMCTRL_ROW_PAGES * NVMCTRL_PAGE_SIZE, page_buffer, NVMCTRL_PAGE_SIZE);
+	} while (error_code == STATUS_BUSY);
 	//! [main_4]
 
 	//! [main_5]
-	nvm_read_buffer(100, page_buffer, NVMCTRL_PAGE_SIZE);
+	do
+	{
+		error_code = nvm_read_buffer(100 * NVMCTRL_ROW_PAGES * NVMCTRL_PAGE_SIZE, page_buffer, NVMCTRL_PAGE_SIZE);
+	} while (error_code == STATUS_BUSY);
 	//! [main_5]
 //! [main]
 
