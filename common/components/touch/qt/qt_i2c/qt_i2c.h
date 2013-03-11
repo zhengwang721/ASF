@@ -79,12 +79,15 @@ extern "C" {
 	#error "Device not supported"
 #endif
 
-/** TWI host base address */
-#define QT_TWI_BASE_ADDRESS  CONF_QT_TWI_BASE_ADDRESS
-/** TWI slave memory address */
-#define QT_I2C_ADDRESS       CONF_QT_I2C_ADDRESS
-/** TWI data transfer rate for QT device */
-#define QT_I2C_SPEED         CONF_QT_I2C_SPEED
+/** Checking board configuration of the QTouch device */
+#if !defined(BOARD_QT_TWI_INSTANCE)
+# warning The QTouch TWI instance has not been defined. Using default settings.
+# define BOARD_QT_TWI_INSTANCE  0    /* TWI instance */
+#endif
+#if !defined(BOARD_QT_DEVICE_ADDRESS)
+# warning The QTouch device address has not been defined. Using default settings.
+# define BOARD_QT_DEVICE_ADDRESS    0    /* QTouch device address */
+#endif
 
 /** Invalid pin index (used for RESET and CHANGE pin definition) */
 #define QT_PIN_IDX_INVALID   0xFFFFu
@@ -93,8 +96,6 @@ extern "C" {
 /** CHANGE pin index for QT device */
 #define QT_CHANGE_PIN_IDX    CONF_QT_CHANGE_PIN_IDX
 
-
-void qt_init_interface(void);
 void qt_hardware_reset(void);
 enum status_code qt_get_comm_ready(void);
 enum status_code qt_read_setup_block(struct qt_setup_block *setup_block);
@@ -144,8 +145,12 @@ enum status_code qt_write_regs(uint8_t reg_addr, uint8_t *write_buffer,
  * Add this to the main loop or a setup function:
  * \code
  *   enum status_code ret;
+ *   twi_master_options_t twi_opt;
  *
- *   qt_init_interface();
+ *   // Initialize I2C communication interface
+ *   memset((void *)&twi_opt, 0, sizeof(twi_master_options_t));
+ *   twi_opt.speed = 50000;    // 50K for I2C speed
+ *   twi_master_setup(BOARD_QT_TWI_INSTANCE, &twi_opt);
  *
  *   // Reset QT device
  *   qt_hardware_reset();
@@ -161,7 +166,7 @@ enum status_code qt_write_regs(uint8_t reg_addr, uint8_t *write_buffer,
  *   // Read setup block
  *   qt_read_setup_block(&qt_setup_block);
  *
- *   // TODO:Modify setup block parameters for specific example
+ *   // TODO:Modify setup block parameters according to application
  *
  *   // Write setup block
  *   qt_write_setup_block(&qt_setup_block);
@@ -172,7 +177,11 @@ enum status_code qt_write_regs(uint8_t reg_addr, uint8_t *write_buffer,
  *
  * -# Initialize I2C communication interface
  *  \code
- *   qt_init_interface();
+ *   twi_master_options_t twi_opt;
+ *
+ *   memset((void *)&twi_opt, 0, sizeof(twi_master_options_t));
+ *   twi_opt.speed = 50000;    // 50K for I2C speed
+ *   twi_master_setup(BOARD_QT_TWI_INSTANCE, &twi_opt);
  *  \endcode
  * -# Reset QT device (optional)
  *  \code

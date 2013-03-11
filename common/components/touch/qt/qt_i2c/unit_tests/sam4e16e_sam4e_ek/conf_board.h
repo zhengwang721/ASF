@@ -45,9 +45,6 @@
 /** Enable Com Port. */
 #define CONF_BOARD_UART_CONSOLE
 
-/** Configure TWI0 pins */
-#define CONF_BOARD_TWI0
-
 /** Configure QTouch pins */
 #define CONF_BOARD_QTOUCH
 

@@ -83,6 +83,21 @@ struct qt_setup_block qt_setup_block_0;
 struct qt_setup_block qt_setup_block_1;
 
 /**
+ * \brief Initialize TWI communication interface.
+ */
+static void qt_init_interface(void)
+{
+	/* TWI master initialization options. */
+	twi_master_options_t twi_opt;
+
+	memset((void *)&twi_opt, 0, sizeof(twi_master_options_t));
+	twi_opt.speed = 50000;    /* 50K for I2C speed */
+
+	/* Initialize the TWI master driver. */
+	twi_master_setup(BOARD_QT_TWI_INSTANCE, &twi_opt);
+}
+
+/**
  * \brief Test if communication is ready with QT device.
  *
  * \param test Current test case.

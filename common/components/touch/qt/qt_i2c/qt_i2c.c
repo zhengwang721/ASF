@@ -44,7 +44,6 @@
 #include "qt_i2c.h"
 #include "delay.h"
 #include "ioport.h"
-#include "string.h"
 
 /**
  * \ingroup qt_device_i2c_group
@@ -57,28 +56,6 @@
 
 /** Delay between two continue I2C read or write operation in microsecond */
 #define QT_CONTINUE_RW_DELAY  50
-
-/**
- * \brief Initialize I2C communication interface.
- */
-void qt_init_interface(void)
-{
-	/* TWI master initialization options. */
-#if SAM4L
-	twi_master_options_t twi_opt;
-
-	memset((void *)&twi_opt, 0, sizeof(twi_master_options_t));
-	twi_opt.speed = QT_I2C_SPEED;
-#else
-	twi_master_options_t twi_opt = {
-		.speed = QT_I2C_SPEED,
-		.chip  = QT_I2C_ADDRESS
-	};
-#endif
-
-	/* Initialize the TWI master driver. */
-	twi_master_setup(QT_TWI_BASE_ADDRESS, &twi_opt);
-}
 
 /**
  * \brief Perform a hardware reset of the QT device.
@@ -210,12 +187,12 @@ enum status_code qt_read_regs(uint8_t reg_addr, uint8_t *read_buffer,
 	 */
 	twi_package_t packet_wr = {
 		.addr_length = 0,             /* TWI slave memory address data size */
-		.chip        = QT_I2C_ADDRESS,/* TWI slave bus address */
-		.buffer      = &reg_addr,     /* transfer data destination buffer */
-		.length      = sizeof(uint8_t)/* transfer data size (bytes) */
+		.chip        = BOARD_QT_DEVICE_ADDRESS,/* TWI slave bus address */
+		.buffer      = &reg_addr,     /* Transfer data destination buffer */
+		.length      = sizeof(uint8_t)/* Transfer data size (bytes) */
 	};
 
-	if (twi_master_write(QT_TWI_BASE_ADDRESS, &packet_wr) != STATUS_OK) {
+	if (twi_master_write(BOARD_QT_TWI_INSTANCE, &packet_wr) != STATUS_OK) {
 		return ERR_IO_ERROR;
 	}
 
@@ -229,12 +206,12 @@ enum status_code qt_read_regs(uint8_t reg_addr, uint8_t *read_buffer,
 	 */
 	twi_package_t packet_rd = {
 		.addr_length = 0,             /* TWI slave memory address data size */
-		.chip        = QT_I2C_ADDRESS,/* TWI slave bus address */
+		.chip        = BOARD_QT_DEVICE_ADDRESS,/* TWI slave bus address */
 		.buffer      = (void *)read_buffer, /* Transfer data buffer */
 		.length      = length         /* Transfer data size (bytes) */
 	};
 
-	if (twi_master_read(QT_TWI_BASE_ADDRESS, &packet_rd) != STATUS_OK) {
+	if (twi_master_read(BOARD_QT_TWI_INSTANCE, &packet_rd) != STATUS_OK) {
 		return ERR_IO_ERROR;
 	}
 
@@ -265,13 +242,13 @@ enum status_code qt_write_regs(uint8_t reg_addr, uint8_t *write_buffer,
 	twi_package_t packet_wr = {
 		.addr[0]      = reg_addr,       /* TWI slave memory address */
 		.addr_length  = sizeof(uint8_t),/* TWI slave memory address data size */
-		.chip         = QT_I2C_ADDRESS, /* TWI slave bus address */
+		.chip         = BOARD_QT_DEVICE_ADDRESS, /* TWI slave bus address */
 		.buffer       = (void *)write_buffer,/* Transfer data buffer */
 		.length       = length          /* Transfer data size (bytes) */
 	};
 
 	/* Perform a write access */
-	if (twi_master_write(QT_TWI_BASE_ADDRESS, &packet_wr) != STATUS_OK) {
+	if (twi_master_write(BOARD_QT_TWI_INSTANCE, &packet_wr) != STATUS_OK) {
 		return ERR_IO_ERROR;
 	}
 

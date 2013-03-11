@@ -85,6 +85,7 @@
  */
 #include "asf.h"
 #include "conf_example.h"
+#include "string.h"
 
 /**
  * Configure serial console.
@@ -104,6 +105,21 @@ static void configure_console(void)
 
 	/* Configure console. */
 	stdio_serial_init(CONF_UART, &uart_serial_options);
+}
+
+/**
+ * \brief Initialize TWI communication interface.
+ */
+static void qt_init_interface(void)
+{
+	/* TWI master initialization options. */
+	twi_master_options_t twi_opt;
+
+	memset((void *)&twi_opt, 0, sizeof(twi_master_options_t));
+	twi_opt.speed = 50000;    /* 50K for I2C speed */
+
+	/* Initialize the TWI master driver. */
+	twi_master_setup(BOARD_QT_TWI_INSTANCE, &twi_opt);
 }
 
 /** Storage for QT status */

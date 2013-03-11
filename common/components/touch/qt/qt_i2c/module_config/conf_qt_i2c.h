@@ -49,13 +49,6 @@
  */
 #define CONF_QT_DEVICE            QT2160
 
-/** TWI host base address */
-#define CONF_QT_TWI_BASE_ADDRESS  0x0
-/** TWI slave memory address */
-#define CONF_QT_I2C_ADDRESS       0x0
-/** TWI data transfer rate for QT device */
-#define CONF_QT_I2C_SPEED         50000
-
 /** RESET pin index for QT device */
 #define CONF_QT_RESET_PIN_IDX     QT_PIN_IDX_INVALID
 
