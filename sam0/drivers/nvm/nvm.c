@@ -282,7 +282,7 @@ enum status_code nvm_page_update(
 		uint16_t length)
 {
 	enum status_code error_code = STATUS_OK;
-	uint8_t row_buffer[4][_nvm_dev.page_size];
+	uint8_t row_buffer[NVMCTRL_ROW_PAGES][_nvm_dev.page_size];
 
 	/* Ensure the read does not overflow the page size */
 	if ((offset + length) > _nvm_dev.page_size) {
@@ -290,13 +290,17 @@ enum status_code nvm_page_update(
 	}
 
 	/* Calculate the starting row address of the page to update */
-	uint32_t row_start_address = destination_address / (4 * _nvm_dev.page_size);
+	uint32_t row_start_address =
+			destination_address & ~((_nvm_dev.page_size * NVMCTRL_ROW_PAGES) - 1);
 
 	/* Read in the current row contents */
-	for (uint32_t i = 0; i < 4; i++) {
-		error_code = nvm_read_buffer(
-				row_start_address + (i * _nvm_dev.page_size),
-				row_buffer[i],_nvm_dev.page_size);
+	for (uint32_t i = 0; i < NVMCTRL_ROW_PAGES; i++) {
+		do
+		{
+			error_code = nvm_read_buffer(
+					row_start_address + (i * _nvm_dev.page_size),
+					row_buffer[i], _nvm_dev.page_size);
+		} while (error_code == STATUS_BUSY);
 
 		if (error_code != STATUS_OK) {
 			return error_code;
@@ -305,23 +309,33 @@ enum status_code nvm_page_update(
 
 	/* Calculate the starting page in the row that is to be updated */
 	uint8_t page_in_row =
-			(destination_address % (4 * _nvm_dev.page_size)) / _nvm_dev.page_size;
+			(destination_address % (_nvm_dev.page_size * NVMCTRL_ROW_PAGES)) / _nvm_dev.page_size;
 
 	/* Update the specified bytes in the page buffer */
-	for (uint16_t i = 0; i < length; i++) {
-		row_buffer[page_in_row][offset] = buffer[i];
+	for (uint32_t i = 0; i < length; i++) {
+		row_buffer[page_in_row][offset + i] = buffer[i];
 	}
 
 	system_interrupt_enter_critical_section();
 
 	/* Erase the row */
-	nvm_erase_row(row_start_address);
+	do
+	{
+		error_code = nvm_erase_row(row_start_address);
+	} while (error_code == STATUS_BUSY);
+
+	if (error_code != STATUS_OK) {
+		return error_code;
+	}
 
 	/* Write the updated row contents to the erased row */
-	for (uint32_t i = 0; i < 4; i++) {
-		error_code = nvm_write_buffer(
-				row_start_address + (i * _nvm_dev.page_size),
-				row_buffer[i], _nvm_dev.page_size);
+	for (uint32_t i = 0; i < NVMCTRL_ROW_PAGES; i++) {
+		do
+		{
+			error_code = nvm_write_buffer(
+					row_start_address + (i * _nvm_dev.page_size),
+					row_buffer[i], _nvm_dev.page_size);
+		} while (error_code == STATUS_BUSY);
 
 		if (error_code != STATUS_OK) {
 			return error_code;
