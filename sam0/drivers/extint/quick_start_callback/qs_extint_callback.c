@@ -43,6 +43,7 @@
 #include <asf.h>
 
 void config_extint_channel(void);
+void extint_handler(uint32_t channel);
 
 //! [setup]
 void config_extint_channel(void)
@@ -55,41 +56,45 @@ void config_extint_channel(void)
 //! [setup_2]
 
 //! [setup_3]
-	eint_chan_conf.gpio_pin            = BUTTON_0_EIC_PIN;
-	eint_chan_conf.gpio_pin_mux        = BUTTON_0_EIC_PIN_MUX;
-	eint_chan_conf.detection_criteria  = EXTINT_DETECT_BOTH;
+	eint_chan_conf.gpio_pin           = BUTTON_0_EIC_PIN;
+	eint_chan_conf.gpio_pin_mux       = BUTTON_0_EIC_PIN_MUX;
+	eint_chan_conf.detection_criteria = EXTINT_DETECT_BOTH;
 //! [setup_3]
 //! [setup_4]
 	extint_chan_set_config(BUTTON_0_EIC_LINE, &eint_chan_conf);
 //! [setup_4]
+
+//! [setup_5]
+	extint_register_callback(extint_handler,
+			EXTINT_CALLBACK_TYPE_DETECT);
+//! [setup_5]
+//! [setup_6]
+	extint_chan_enable_callback(BUTTON_0_EIC_LINE,
+			EXTINT_CALLBACK_TYPE_DETECT);
+//! [setup_6]
 }
 //! [setup]
 
+void extint_handler(uint32_t channel)
+{
+	bool pin_state = port_pin_get_input_level(BUTTON_0_PIN);
+	port_pin_set_output_level(LED_0_PIN, pin_state);
+}
+
 int main(void)
 {
-	//! [setup_init]
 	system_init();
 
-	config_extint_channel();
+	//! [setup_init]
 	extint_enable();
+	config_extint_channel();
+
+	cpu_irq_enable();
 	//! [setup_init]
 
 	//! [main]
 	while (true) {
-		//! [main_1]
-		if (extint_chan_is_detected(BUTTON_0_EIC_LINE)) {
-		//! [main_1]
-
-		//! [main_2]
-			// Do something in response to EXTINT 1 detection
-			bool button_pin_state = port_pin_get_input_level(BUTTON_0_PIN);
-			port_pin_set_output_level(LED_0_PIN, button_pin_state);
-		//! [main_2]
-
-		//! [main_3]
-			extint_chan_clear_detected(BUTTON_0_EIC_LINE);
-		//! [main_3]
-		}
+		/* Do nothing - EXTINT will fire callback asynchronously */
 	}
 	//! [main]
 }
