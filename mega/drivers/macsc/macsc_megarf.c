@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief AVR MEGARF MAC Symbol Counter Driver Definitions
+ * \brief AVR MEGARF MAC Symbol Counter Driver 
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *

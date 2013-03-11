@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief AVR MEGARF MAC Symbol Counter Driver
+ * \brief AVR MEGARF MAC Symbol Counter Driver Definitions
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -84,11 +84,6 @@ enum macsc_cc_channel {
 	/* ! Channel 3 */
 	MACSC_CC3 = 3,
 };
-
-/* ! compare modes */
-#define MACSC_ABSOLUTE_CMP 0
-#define MACSC_RELATIVE_CMP 1
-
 /**
  * \brief MAC SC clock source select
  *
@@ -136,6 +131,10 @@ static inline uint32_t macsc_read32(volatile uint8_t *hh,
 
 	return x.rv;
 }
+
+/* ! compare modes */
+#define MACSC_ABSOLUTE_CMP 0
+#define MACSC_RELATIVE_CMP 1
 
 /** String concatenation by preprocessor used to create proper register names.
  **/
