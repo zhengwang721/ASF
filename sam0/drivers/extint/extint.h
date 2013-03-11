@@ -228,6 +228,24 @@ enum extint_detect {
 };
 
 /**
+ * \brief External interrupt internal pull configuration enum.
+ *
+ * Enum for the possible pin internal pull configurations.
+ *
+ * \note Disabling the internal pull resistor is not recommended if the driver
+ *       is used in interrupt (callback) mode, due the possibility of floating
+ *       inputs generating continuous interrupts.
+ */
+enum extint_pull {
+	/** Internal pull-up resistor is enabled on the pin. */
+	EXTINT_PULL_UP        = SYSTEM_PINMUX_PIN_PULL_UP,
+	/** Internal pull-down resistor is enabled on the pin. */
+	EXTINT_PULL_DOWN      = SYSTEM_PINMUX_PIN_PULL_DOWN,
+	/** Internal pull resistor is disconnected from the pin. */
+	EXTINT_PULL_NONE      = SYSTEM_PINMUX_PIN_PULL_NONE,
+};
+
+/**
  * \brief External Interrupt Controller channel configuration structure.
  *
  *  Configuration structure for the edge detection mode of an external
@@ -238,6 +256,8 @@ struct extint_chan_conf {
 	uint32_t gpio_pin;
 	/** MUX position the GPIO pin should be configured to. */
 	uint32_t gpio_pin_mux;
+	/** Internal pull to enable on the input pin. */
+	enum extint_pull gpio_pin_pull;
 	/** Wake up the device if the channel interrupt fires during sleep mode. */
 	bool wake_if_sleeping;
 	/** Filter the raw input signal to prevent noise from triggering an
@@ -472,6 +492,7 @@ static inline void extint_disable_events(
  * The default configuration is as follows:
  * \li Wake the device if an edge detection occurs whilst in sleep
  * \li Input filtering disabled
+ * \li Internal pull-up enabled
  * \li Detect falling edges of a signal
  *
  * \param[out] config  Configuration structure to initialize to default values
@@ -485,6 +506,7 @@ static inline void extint_chan_get_config_defaults(
 	/* Default configuration values */
 	config->gpio_pin            = 0;
 	config->gpio_pin_mux        = 0;
+	config->gpio_pin_pull       = EXTINT_PULL_UP;
 	config->wake_if_sleeping    = true;
 	config->filter_input_signal = false;
 	config->detection_criteria  = EXTINT_DETECT_FALLING;
