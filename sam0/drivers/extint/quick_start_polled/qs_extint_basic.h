@@ -3,7 +3,7 @@
  *
  * \brief SAMD20 External Interrupt Driver Quick Start
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -45,14 +45,15 @@
  * \page asfdoc_samd20_extint_basic_use_case Quick Start - Basic Use Case
  *
  * In this use case, the EXTINT module is configured for:
- *  - Channel 1 routed to physical pin PA01
- *  - Channel 1 configured to automatically wake up the device from sleep
- *      upon detection
- *  - Channel 1 configured to detect falling input edges
+ *  - External interrupt channel connected to the board LED is used
+ *  - External interrupt channel is configured to detect both input signal edges
  *
  * This use case configures a physical I/O pin of the device so that it is
- * routed to a logical External Interrupt Controller channel to detect falling
- * edges of the incoming signal.
+ * routed to a logical External Interrupt Controller channel to detect rising
+ * and falling edges of the incoming signal.
+ *
+ * When the board button is pressed, the board LED will light up. When the board
+ * button is released, the LED will turn off.
  *
  *
  * \section asfdoc_samd20_extint_basic_use_case_setup Setup
@@ -79,11 +80,10 @@
  *
  *  - \snippet qs_extint_basic.c setup_2
  * -# Adjust the configuration struct to configure the pin MUX (to route the
- *    desired physical pin to the logical channel) and to configure the channel
- *    into auto-wake, unfiltered mode with falling edge detection.
+ *    desired physical pin to the logical channel) to the board button, and to
+ *    configure the channel to detect both rising and falling edges.
  *  - \snippet qs_extint_basic.c setup_3
- * -# Configure external interrupt channel 1 with the desired configuration
- *    settings.
+ * -# Configure external interrupt channel with the desired channel settings.
  *  - \snippet qs_extint_basic.c setup_4
  *
  *
@@ -94,10 +94,12 @@
  * \snippet qs_extint_basic.c main
  *
  * \subsection asfdoc_samd20_extint_basic_use_case_main_flow Workflow
- * -# Read in the current external interrupt channel 1 state to see if a falling
- *    edge has been detected.
+ * -# Read in the current external interrupt channel state to see if an edge
+ *    has been detected.
  *  - \snippet qs_extint_basic.c main_1
- * -# Clear the detection state of the external interrupt channel 1 so that it
- *    is ready to detect a future falling edge.
+ * -# Read in the new physical button state and mirror it on the board LED.
  *  - \snippet qs_extint_basic.c main_2
+ * -# Clear the detection state of the external interrupt channel so that it
+ *    is ready to detect a future falling edge.
+ *  - \snippet qs_extint_basic.c main_3
  */

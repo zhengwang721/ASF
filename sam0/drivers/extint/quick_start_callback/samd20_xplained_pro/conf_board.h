@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAMD20 External Interrupt Driver Quick Start
+ * \brief SAMD20 Xplained PRO board configuration.
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,50 +40,8 @@
  * \asf_license_stop
  *
  */
-#include <asf.h>
 
-void config_extint_channel(void);
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-//! [setup]
-void config_extint_channel(void)
-{
-//! [setup_1]
-	struct extint_chan_conf eint_chan_conf;
-//! [setup_1]
-//! [setup_2]
-	extint_chan_get_config_defaults(&eint_chan_conf);
-//! [setup_2]
-
-//! [setup_3]
-	eint_chan_conf.gpio_pin            = PIN_PA01A_EIC_EXTINT1;
-	eint_chan_conf.gpio_pin_mux        = MUX_PA01A_EIC_EXTINT1;
-	eint_chan_conf.wake_if_sleeping    = true;
-	eint_chan_conf.filter_input_signal = false;
-	eint_chan_conf.detection_criteria  = EXTINT_DETECT_FALLING;
-//! [setup_3]
-//! [setup_4]
-	extint_chan_set_config(1, &eint_chan_conf);
-//! [setup_4]
-}
-//! [setup]
-
-int main(void)
-{
-	//! [setup_init]
-	extint_enable();
-	config_extint_channel();
-	//! [setup_init]
-
-	//! [main]
-	while (true) {
-		//! [main_1]
-		if (extint_chan_is_detected(1)) {
-		//! [main_1]
-			// Do something in response to EXTINT 1 detection
-		//! [main_2]
-			extint_chan_clear_detected(1);
-		//! [main_2]
-		}
-	}
-	//! [main]
-}
+#endif /* CONF_BOARD_H_INCLUDED */
