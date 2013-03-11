@@ -227,3 +227,27 @@ void i2c_slave_reset(struct i2c_slave_module *const module)
 	/* Reset module. */
 	i2c_hw->CTRLA.reg = SERCOM_I2CS_CTRLA_SWRST;
 }
+
+enum status_code i2c_slave_write_packet_wait(struct i2c_slave_module *const module,
+		struct i2c_packet *const packet)
+{
+	/* Sanity check arguments. */
+	Assert(module);
+	Assert(module->hw);
+	Assert(packet);
+	// Wait for master to send address packet
+	// Send address ack if read req
+	// Write data, wait for ack and so on
+}
+
+enum status_code i2c_slave_read_packet_wait(struct i2c_slave_module *const module,
+		struct i2c_packet *const packet)
+{
+	/* Sanity check arguments. */
+	Assert(module);
+	Assert(module->hw);
+	Assert(packet);
+	// Wait for master to send address packet
+	// Send address ack if write req
+	// wait for data, send ack/nack
+}

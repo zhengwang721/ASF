@@ -404,10 +404,12 @@ void i2c_slave_reset(struct i2c_slave_module *const module);
  * @{
  */
 
-i2c_slave_write_packet_wait(struct i2c_slave_module *const module,
+enum status_code i2c_slave_write_packet_wait(struct i2c_slave_module *const module,
 		struct i2c_packet *const packet);
-i2c_slave_read_packet_wait(struct i2c_slave_module *const module,
+enum status_code i2c_slave_read_packet_wait(struct i2c_slave_module *const module,
 		struct i2c_packet *const packet);
+
+// enum transfer_dir i2c_slave_get_request, something,something
  
 /** @} */
 
