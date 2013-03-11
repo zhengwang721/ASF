@@ -480,14 +480,35 @@ enum status_code spi_write_buffer_wait(struct spi_module
 		/* Wait until the module is ready to write a character */
 		while (!spi_is_ready_to_write(module)) {
 		}
-		/* Flush read buffer */
-		spi_read(module, &flush);
+
 		if (module->chsize == SPI_CHARACTER_SIZE_9BIT) {
 			/* Write the 9 bit character */
 			spi_write(module, ((uint16_t*)(tx_data))[i++]);
 		} else {
 			/* Write 8 bit character*/
 			spi_write(module, (uint16_t)tx_data[i++]);
+		}
+
+		/* Start timeout period for slave */
+		if (module->mode == SPI_MODE_SLAVE) {
+			for (j = 0; j <= SPI_TIMEOUT; j++) {
+				if (spi_is_ready_to_read(module)) {
+					break;
+				} else if (j == SPI_TIMEOUT) {
+					/* Not ready to write data within timeout period */
+					return STATUS_ERR_TIMEOUT;
+				}
+			}
+		}
+		while(!spi_is_ready_to_read(module)) {
+		}
+		/* Flush read buffer */
+		spi_read(module, &flush);
+	}
+
+	if (module->mode == SPI_MODE_MASTER) {
+		/* Wait for last byte to be transferred */
+		while (!spi_is_write_complete(module)) {
 		}
 	}
 
@@ -535,6 +556,7 @@ enum status_code spi_tranceive_buffer_wait(struct spi_module *const module,
 
 	uint8_t i = 0;
 	uint16_t j = 0;
+	uint8_t k = 0;
 	/* Send and receive buffer */
 	while (length--) {
 		/* Start timeout period for slave */
@@ -580,13 +602,13 @@ enum status_code spi_tranceive_buffer_wait(struct spi_module *const module,
 		enum status_code retval = STATUS_OK;
 		/* Read SPI character */
 		if (module->chsize == SPI_CHARACTER_SIZE_9BIT) {
-			retval = spi_read(module, &(((uint16_t*)(rx_data))[i++]));
+			retval = spi_read(module, &(((uint16_t*)(rx_data))[k++]));
 			if (retval != STATUS_OK) {
 				/* Overflow, abort */
 				return retval;
 			}
 		} else {
-			retval = spi_read(module, ((uint16_t*)(&(rx_data)[i++])));
+			retval = spi_read(module, ((uint16_t*)(&(rx_data)[k++])));
 			if (retval != STATUS_OK) {
 				/* Overflow, abort */
 				return retval;
