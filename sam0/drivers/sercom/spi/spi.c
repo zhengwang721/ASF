@@ -616,5 +616,11 @@ enum status_code spi_tranceive_buffer_wait(struct spi_module *const module,
 		}
 	}
 
+	if (module->mode == SPI_MODE_MASTER) {
+		/* Wait for last byte to be transferred */
+		while (!spi_is_write_complete(module)) {
+		}
+	}
+
 	return STATUS_OK;
 }
