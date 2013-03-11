@@ -275,10 +275,10 @@ enum status_code nvm_execute_command(
  *                                 acceptable range of the NVM memory region
  * \retval STATUS_ERR_INVALID_ARG  The supplied length and offset was invalid
  */
-enum status_code nvm_page_update(
+enum status_code nvm_update_buffer(
 		const uint32_t destination_address,
 		uint8_t *const buffer,
-		uint8_t offset,
+		uint16_t offset,
 		uint16_t length)
 {
 	enum status_code error_code = STATUS_OK;
