@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief API driver for component ADS7843.
+ * \brief Board specific definition for resistive touch example.
  *
- * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,76 +41,51 @@
  *
  */
 
-#ifndef ADS7843_H_INCLUDED
-#define ADS7843_H_INCLUDED
+#ifndef RESISTIVE_TOUCH_BOARD_H_INCLUDED
+#define RESISTIVE_TOUCH_BOARD_H_INCLUDED
 
-#include "compiler.h"
+#include "ili93xx.h"
+#include "aat31xx.h"
 
-/** @cond 0*/
-/**INDENT-OFF**/
-#ifdef __cplusplus
-extern "C" {
-#endif
-/**INDENT-ON**/
-/** @endcond*/
+#define lcd_set_foreground_color  ili93xx_set_foreground_color
+#define lcd_draw_filled_rectangle ili93xx_draw_filled_rectangle
+#define lcd_display_on ili93xx_display_on
+#define lcd_fill  ili93xx_fill
+#define lcd_draw_string ili93xx_draw_string
 
-/**
- * \defgroup sam_component_ads7843_group Resistive Touch - ADS7843 Controller
- *
- * Low-level driver for the ADS7843 touch controller. This driver provides
- * access to the main features of the ADS7843 controller.
- *
- * \{
- */
+#define LCD_WIDTH ILI93XX_LCD_WIDTH
+#define LCD_HEIGHT ILI93XX_LCD_WIDTH
 
-/**
- * \brief Return the touch screen status, pressed or not.
- *
- * \return 1 if the touchscreen is pressed, 0 otherwise.
- */
-uint32_t ads7843_is_pressed(void);
+#define UNI_COLOR_BLACK  COLOR_BLACK
+#define UNI_COLOR_WHITE  COLOR_WHITE
+#define UNI_COLOR_RED  COLOR_RED
 
-/**
- * \brief Set the touch interrupt handler.
- *
- * \note This handler will be called whenever a touch event is detected by the
- * ADS7843 controller.
- *
- * \param p_handler Interrupt handler function pointer.
- */
-void ads7843_set_handler(void (*p_handler) (uint32_t, uint32_t));
+static inline void lcd_init(void)
+{
+	struct ili93xx_opt_t g_display_opt;
+	
+	/* Enable SMC clock */
+	pmc_enable_periph_clk(ID_SMC);
 
-/**
- * \brief Enable interrupts on touch event.
- */
-void ads7843_enable_interrupt(void);
+	smc_set_setup_timing(SMC, 1, SMC_SETUP_NWE_SETUP(2)
+			| SMC_SETUP_NCS_WR_SETUP(2)
+			| SMC_SETUP_NRD_SETUP(2)
+			| SMC_SETUP_NCS_RD_SETUP(2));
+	smc_set_pulse_timing(SMC, 1, SMC_PULSE_NWE_PULSE(4)
+			| SMC_PULSE_NCS_WR_PULSE(4)
+			| SMC_PULSE_NRD_PULSE(10)
+			| SMC_PULSE_NCS_RD_PULSE(10));
+	smc_set_cycle_timing(SMC, 1, SMC_CYCLE_NWE_CYCLE(10)
+			| SMC_CYCLE_NRD_CYCLE(22));
+	smc_set_mode(SMC, 1, SMC_MODE_READ_MODE | SMC_MODE_WRITE_MODE);
+	
+	g_display_opt.ul_width = LCD_WIDTH;
+	g_display_opt.ul_height = LCD_HEIGHT;
+	g_display_opt.foreground_color = COLOR_BLACK;
+	g_display_opt.background_color = COLOR_WHITE;
 
-/**
- * \brief Disable interrupts on touch event.
- */
-void ads7843_disable_interrupt(void);
-
-/**
- * \brief Get the touch raw coordinates.
- *
- * \param p_x Pointer to an integer representing the X value.
- * \param p_y Pointer to an integer representing the Y value.
- */
-void ads7843_get_raw_point(uint32_t *p_x, uint32_t *p_y);
-
-/**
- * \brief Initialize the SPI communication with the ADS7843 controller.
- */
-uint32_t ads7843_init(void);
-
-/**@}*/
-
-/** @cond 0*/
-/**INDENT-OFF**/
-#ifdef __cplusplus
+	/* Initialize ili93xx */
+	ili93xx_init(&g_display_opt);
 }
-#endif
-/**INDENT-ON**/
-/** @endcond*/
 
-#endif /* ADS7843_H_INCLUDED */
+#endif /* RESISTIVE_TOUCH_BOARD_H_INCLUDED */
