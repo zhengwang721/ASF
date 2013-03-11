@@ -111,7 +111,7 @@
 		<build type="distribute" subtype="file" value="tools/bitmap.py"/>
 		<build type="distribute" subtype="file" value="tools/dump_display_over_serial.py"/>
 	</module>
-	<select-by-config id="common2.services.gfx_mono.display" default="null" name="config.gfx_mono.display" caption="GFX Monochrome - Display driver">
+	<select-by-config id="common2.services.gfx_mono.display" default="null" name="common2.services.gfx_mono.display" caption="GFX Monochrome - Display driver">
 		<module type="service" id="common2.services.gfx_mono.display#ug_2832hsweg04" caption="GFX Monochrome - UG-2832HSWEG04 OLED panel support">
 			<info type="gui-flag" value="hidden"/>
 			<info type="description" value="summary">
@@ -125,6 +125,21 @@
 			<build type="doxygen-entry-point" value="gfx_mono_ug_2832hsweg04_group"/>
 			<require idref="common2.services.gfx_mono.tools"/>
 			<require idref="common2.components.display.ssd1306"/>
+			<require idref="common2.services.gfx_mono.generic"/>
+			<require idref="common2.services.gfx_mono.framebuffer"/>
+			<device-support value="samd20"/>
+			<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
+		</module>
+		<module type="service" id="common2.services.gfx_mono.display#null" caption="GFX Monochrome - NULL display driver">
+			<info type="gui-flag" value="hidden"/>
+			<info type="description" value="summary">
+			Configure the monochrome graphic library for use with a null driver, for boards without display.
+			</info>
+			<build type="header-file" value="gfx_mono_null.h"/>
+			<build type="include-path" value="."/>
+			<build type="c-source" value="gfx_mono_null.c"/>
+			<build type="doxygen-entry-point" value="gfx_mono_null"/>
+			<require idref="common2.services.gfx_mono.tools"/>
 			<require idref="common2.services.gfx_mono.generic"/>
 			<require idref="common2.services.gfx_mono.framebuffer"/>
 			<device-support value="samd20"/>
