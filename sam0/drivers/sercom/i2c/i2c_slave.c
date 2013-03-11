@@ -163,10 +163,10 @@ enum status_code i2c_slave_init(struct i2c_slave_module *const module,
 	system_gclk_chan_enable(gclk_index);
 	system_gclk_chan_enable(SERCOM_GCLK_ID);
 
+#ifdef I2C_SLAVE_ASYNC
 	/* Get sercom instance index. */
 	uint8_t instance_index = _sercom_get_sercom_inst_index(module->hw);
 
-#ifdef I2C_SLAVE_ASYNC
 	/* Save software module in interrupt handler. */
 	_sercom_set_handler(instance_index, _i2c_slave_interrupt_handler);
 
@@ -200,22 +200,26 @@ void i2c_slave_reset(struct i2c_slave_module *const module)
 	Assert(module);
 	Assert(module->hw);
 
+#ifdef I2C_SLAVE_ASYNC
 	/* Reset module instance. */
 	module->registered_callback = 0;
 	module->enabled_callback = 0;
 	module->buffer_length = 0;
 	module->buffer_remaining = 0;
 	module->buffer = NULL;
+#endif
 
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
 
 	/* Disable module */
 	i2c_slave_disable(module);
 
+#ifdef I2C_SLAVE_ASYNC
 	/* Clear all pending interrupts. */
 	system_interrupt_enter_critical_section();
 	system_interrupt_clear_pending(_sercom_get_interrupt_vector(module->hw));
 	system_interrupt_leave_critical_section();
+#endif
 
 	/* Wait for sync. */
 	_i2c_slave_wait_for_sync(module);
