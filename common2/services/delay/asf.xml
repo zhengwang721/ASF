@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="service" id="sam0.services.delay" caption="Delay routines">
+	<module type="service" id="common2.services.delay" caption="Delay routines">
 		<info type="description" value="summary">
 		Loop based delay routines. Provides microseconds, milliseconds
 		and second delays. Common API for SAMD20.

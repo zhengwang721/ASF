@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="component" id="sam0.components.display.ssd1306" caption="SSD1306 OLED controller">
+	<module type="component" id="common2.components.display.ssd1306" caption="SSD1306 OLED controller">
 		<info type="description" value="summary">
 		Low-level driver for the SSD1306 OLED controller through 4-wire SPI.
 		Note: Controller inside display UG-2832HSWEG04 OLED (128 x 32, Monochrome).
@@ -18,7 +18,7 @@
 		<require idref="sam0.drivers.port"/>
 		<require idref="sam0.drivers.system"/>
 		<require idref="sam0.drivers.sercom.spi"/>
-		<require idref="sam0.services.delay"/>
+		<require idref="common2.services.delay"/>
 		<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 	</module>
 </asf>

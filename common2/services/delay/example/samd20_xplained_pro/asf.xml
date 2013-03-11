@@ -1,10 +1,10 @@
 <asf xmlversion="1.0">
-	<project caption="SAMD20 Xplained Pro Delay Service Example" id="sam0.services.delay.example.samd20_xplained_pro">
+	<project caption="SAMD20 Xplained Pro Delay Service Example" id="common2.services.delay.example.samd20_xplained_pro">
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clocks.h"/>
 		<build type="include-path" value="."/>
-		<require idref="sam0.services.delay.example"/>
+		<require idref="common2.services.delay.example"/>
 		<require idref="board.samd20_xplained_pro"/>
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>

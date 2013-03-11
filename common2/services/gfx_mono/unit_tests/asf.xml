@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="sam0.services.gfx_mono.unit_tests" caption="Unit Tests for the sam0 Mono Graphics Library (Primitives)">
+	<module type="application" id="common2.services.gfx_mono.unit_tests" caption="Unit Tests for the sam0 Mono Graphics Library (Primitives)">
 		<device-support value="xmega"/>
 		<info type="description" value="summary">
 		Unit tests for graphical drawing primitives
@@ -9,8 +9,8 @@
 		<build type="module-config" subtype="required-header-file" value="conf_test.h"/>
 		<require idref="sam0.utils.unit_test"/>
 		<require idref="sam0.utils.stdio.stdio_serial"/>
-		<require idref="sam0.services.gfx_mono"/>
-		<require idref="sam0.services.gfx_mono.display"/>
+		<require idref="common2.services.gfx_mono"/>
+		<require idref="common2.services.gfx_mono.display"/>
 	</module>
 </asf>
 
