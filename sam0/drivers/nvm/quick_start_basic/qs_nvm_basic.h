@@ -93,16 +93,20 @@
  *  - \snippet qs_nvm_basic.c main_1
  * -# Fill the buffer with a pattern of data.
  *  - \snippet qs_nvm_basic.c main_2
- * -# Erase a page of NVM data.
+ * -# Create a variable to hold the error status from the called NVM functions.
+ *  - \snippet qs_nvm_basic.c main_3
+ * -# Erase a page of NVM data. As the NVM could be busy initializing or
+ *    completing a previous operation, a loop is used to retry the command while
+ *    the NVM controller is busy.
  *    \note This must be performed before writing new data into a NVM page.
  *
- *  - \snippet qs_nvm_basic.c main_3
+ *  - \snippet qs_nvm_basic.c main_4
  * -# Write the buffer of data to the previously erased page of the NVM.
  *    \note The new data will be written to NVM memory automatically, as the
  *          NVM controller is configured in automatic page write mode.
  *
- *  - \snippet qs_nvm_basic.c main_4
- * -# Read back the written page of page from the NVM into the buffer.
  *  - \snippet qs_nvm_basic.c main_5
+ * -# Read back the written page of page from the NVM into the buffer.
+ *  - \snippet qs_nvm_basic.c main_6
  */
 
