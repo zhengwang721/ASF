@@ -62,14 +62,8 @@ void _usart_write_buffer(struct usart_module *const module,
 	/* Get a pointer to the hardware module instance */
 	SercomUsart *const usart_hw = &(module->hw->USART);
 
-	/* Enable the Data Register Empty  and  TX Complete Interrupt */
-	#if 0
-	usart_hw->INTENSET.reg = (SERCOM_USART_INTFLAG_DREIF |
-			SERCOM_USART_INTFLAG_TXCIF);
-	#else
+	/* Enable the Data Register Empty Interrupt */
 	usart_hw->INTENSET.reg = SERCOM_USART_INTFLAG_DREIF;
-	#endif
-
 }
 
 /**
@@ -435,8 +429,6 @@ void _usart_interrupt_handler(uint8_t instance)
 	 * that the transmit buffer is empty */
 	}
 	if (interrupt_status & SERCOM_USART_INTFLAG_TXCIF) {
-
-			//!module->remaining_tx_buffer_length){
 
 		/* Disable TX Complete Interrupt, and set STATUS_OK */
 		usart_hw->INTENCLR.reg = SERCOM_USART_INTFLAG_TXCIF;
