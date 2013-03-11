@@ -49,10 +49,4 @@
  */
 #define CONF_QT_DEVICE            QT2160
 
-/** RESET pin index for QT device */
-#define CONF_QT_RESET_PIN_IDX     QT_PIN_IDX_INVALID
-
-/** CHANGE pin index for QT device */
-#define CONF_QT_CHANGE_PIN_IDX    PIO_PE4_IDX
-
 #endif /* CONF_QT_I2C_H_INCLUDED */

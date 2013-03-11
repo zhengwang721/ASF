@@ -65,7 +65,7 @@
  */
 void qt_hardware_reset(void)
 {
-#if (QT_RESET_PIN_IDX != QT_PIN_IDX_INVALID)
+#ifdef BOARD_QT_RESET_PIN_IDX
 	/* Pull the reset pin low */
 	ioport_set_pin_level(QT_RESET_PIN_IDX, IOPORT_PIN_LEVEL_LOW);
 
@@ -157,11 +157,15 @@ enum status_code qt_get_status(struct qt_status *qt_status)
  */
 bool qt_is_change_line_low(void)
 {
-	if (ioport_get_pin_level(QT_CHANGE_PIN_IDX)) {
+#ifdef BOARD_QT_CHANGE_PIN_IDX
+	if (ioport_get_pin_level(BOARD_QT_CHANGE_PIN_IDX)) {
 		return false;
 	} else {
 		return true;
 	}
+#else
+#warning The CHANGE pin is not defined. This function is not available.
+#endif
 }
 
 /**
