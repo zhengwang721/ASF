@@ -318,9 +318,9 @@ static void handle_input(uint8_t input_char)
     In case of POWER_SAVE state, we allow only reset & disabling POWER_SAVE req*/
     if (((node_status != IDLE) && (node_status != POWER_SAVE)) ||
         ((node_status == POWER_SAVE) && (!((input_char == 'Y') || (input_char == 'R') ||
-                                           (input_char == 'A') || (input_char == 'W')))))
+                                           (input_char == 'A') || (input_char == 'W')||(input_char ==0x0D)))))
     {
-        print_main_menu();
+        printf("Node is in power save mode.Press (R) to Reset/Press (Y) to Disable power save mode.\r\n");
         return;
     }
 
@@ -1258,11 +1258,11 @@ static void print_sub_mode_ch_ag_setup(void)
     {
         case 'F': /* Noise Threshold */
             {
-                char input_char2[4] = {0, 0, 0,0};
+                char input_char2[3] = {0, 0, 0};
                 uint8_t threshold;
-                printf("Enter new noise threshold (0 = -91dBm, 255 = -35 dBm).\r\n");
+                printf("Enter new noise threshold (Valid Range:0 = -91dBm to 84 = -35dBm).\r\n");
                 printf("Default: 10 = -80 dBm, new value: \r\n");
-                for (uint8_t i = 0; i < 3; i++)
+                for (uint8_t i = 0; i < 2; i++)
                 {
                     input = (char)sio2host_getchar();
                     if (isdigit(input))
@@ -1273,17 +1273,26 @@ static void print_sub_mode_ch_ag_setup(void)
                     {
                         break;
                     }
-					else
-					{
-					    printf("Invalid value. \r\n\r\n");
-                        printf("> Press Enter to return to main menu:\r\n ");
-                        return;
-					}
+		    else
+		    {
+		       printf("Invalid value. \r\n\r\n");
+                       printf("> Press Enter to return to main menu:\r\n ");
+                       return;
+		    }
                 }
                 threshold = atol(input_char2);
+                if(threshold<=84)
+                {
                 nlme_set_request(nwkPrivateChAgEdThreshold, 0, &threshold
                                  , (FUNC_PTR)nlme_set_confirm
                                 );
+                }
+                else
+                {
+                  printf("Invalid threshold value. \r\n\r\n");
+                  printf("> Press Enter to return to main menu:\r\n ");
+                  return;
+                }
             }
             break;
 
