@@ -87,10 +87,7 @@ int main(void)
 	uint8_t column_address;
 	//! store the LCD controller start draw line
 	uint8_t start_line_address = 0;
-	//! value used for delay, needs to be volatile due to compiler optimization
-	volatile uint16_t delay = 10000;
 
-	board_init();
 	system_init();
 	delay_init();
 
