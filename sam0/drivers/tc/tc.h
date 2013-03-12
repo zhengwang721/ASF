@@ -387,6 +387,24 @@
 extern "C" {
 #endif
 
+/** Enum for the possible callback types for the TC module. */
+enum tc_callback
+{
+	/** Callback for TC overflow */
+	TC_CALLBACK_OVERFLOW,
+	/** Callback for error */
+	TC_CALLBACK_ERROR,
+	/** Callback for Match/Capture channel 0 */
+	TC_CALLBACK_MC_CHANNEL0,
+	/** Callback for Match/Capture channel 1 */
+	TC_CALLBACK_MC_CHANNEL1,
+#if !defined(__DOXYGEN__)
+	/** Number of available callbacks. */
+	TC_CALLBACK_N,
+#endif
+};
+
+
 /**
  * \brief Index of the compare capture channels
  *
@@ -726,7 +744,19 @@ struct tc_module {
 
 	/** Size of the initialized Timer/Counter module configuration. */
 	enum tc_counter_size counter_size;
+	/** Array of callbacs */
+	tc_callback_t callback[TC_CALLBACK_N];
+	/** Bit mask for callbacks registered */
+	uint8_t callback_reg_mask;
+	/** Bit mask for callbacks enabled */
+	uint8_t callback_enable_mask;
 };
+
+
+#ifdef TC_ASYNC
+/* Type of the callback functions */
+typedef void (*tc_callback_t)(const struct tc_module *const module);
+#endif
 
 /**
  * \name Driver Initialization and Configuration
