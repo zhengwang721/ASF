@@ -42,9 +42,43 @@
  */
 
 /**
- * \page usart_master_basic_use_case Quick Start Guide for the USART module - Basic Use Case
+ * \page asfdoc_samd20_sercom_usart_basic_use_case Quick Start Guide for the USART module - Basic Use Case
  *
- * TODO
+ * In this use case the USART will be used and set up as follows:
+ * - Asynchronous mode
+ * - 9600 Baudrate
+ * - 8-bits, no parity and 1 stopbit
+ * - TX and RX connected to Xplained PRO embedded debugger virtual COM port
+ *
+ * \section asfdoc_samd20_sercom_usart_basic_use_case_setup Quick Start
+ *
+ * \subsection asfdoc_samd20_sercom_usart_basic_use_case_prereq Prerequisites
+ *
+ * \subsection asfdoc_samd20_sercom_usart_basic_use_case_setup_code Code
+ * The following must be added to the user application:
+ *
+ * Add to user application %main():
+ * \snippet qs_usart_basic_use.c main 
+ *
+ * \section asfdoc_samd20_sercom_usart_basic_use_case_workflow Workflow
+ * -# Initialize system
+ *  - \snippet qs_usart_basic_use.c system_init
+ * -# Create configuration struct
+ *  - \snippet qs_usart_basic_use.c config
+ * -# Create software device module instance
+ *  - \snippet qs_usart_basic_use.c module_inst
+ * -# Get default configuration values
+ *  - \snippet qs_usart_basic_use.c conf_defaults
+ * -# Modify confiuration defaults for Embedded Debugger (EDBG) pins
+ *  - \snippet qs_usart_basic_use.c conf_modify
+ * -# Initialize USART with given configuration
+ *  - \snippet qs_usart_basic_use.c init
+ * -# Enable USART
+ *  - \snippet qs_usart_basic_use.c enable
+ * -# Enable Tx and RX
+ *  - \snippet qs_usart_basic_use.c enable_transceivers
+ * -# Echo every received character back
+ *  - \snippet qs_usart_basic_use.c echo_characters
  *
  */
 

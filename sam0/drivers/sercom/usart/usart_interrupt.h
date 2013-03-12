@@ -51,10 +51,37 @@ void _usart_write_buffer(struct usart_module *const module,
 void _usart_read_buffer(struct usart_module *const module,
 		uint8_t *rx_data, uint16_t length);
 #endif
+/**
+ * \defgroup asfdoc_samd20_sercom_usart_interrupt Interrupt USART API
+ *
+ * This is the overview of the interrupt driven API for the SERCOM USART driver.
+ *
+ * Configuration of the driver is done by using the base polled init function.
+ * When the asynchronous part of the driver is included the polled API will
+ * be extended with the interrupt API listed below. All functions that are run
+ * from interrupt context (and are none-blocking) have the postfix \c _job 
+ * appended to the function name.
+ *
+ * Interrupt operations are based on callbacks that are registered with
+ * the driver using the \ref usart_register_callback function. The
+ * callback functions will be run from the SERCOM USART interrupt handler. All
+ * interrupt flags will be handled and cleared by the internal interrupt
+ * handler; making the interrupt flags transparent to the user defined
+ * callbacks.
+ *
+ * \warning Never execute large portions of code in the callbacks. These
+ * are run from the interrupt routine, and thus having long callbacks will
+ * keep the processor in the interrupt handler for an equally long time.
+ * A common way to handle this is to use global flags signalling the
+ * main application that an interrupt event has happened, and only do the
+ * minimal needed processing in the callback.
+ *
+ * @{
+ */
 
 /**
  * \name Callback Management
- * {@
+ * @{
  */
 void usart_register_callback(struct usart_module *const module,
 		usart_callback_t callback_func,
@@ -124,7 +151,7 @@ static inline void usart_disable_callback(
 
 /**
  * \name Writing and reading
- * {@
+ * @{
  */
 enum status_code usart_write_job(struct usart_module *const module,
 		const uint16_t tx_data);
@@ -150,7 +177,7 @@ enum status_code usart_get_job_status(
 
 /**
  * \name Writing and reading
- * {@
+ * @{
  */
 
 void _usart_interrupt_handler(uint8_t instance);
@@ -159,4 +186,7 @@ void _usart_interrupt_handler(uint8_t instance);
  * @}
  */
 
+/**
+ * @}
+ */
 #endif /* USART_INTERRUPT_H_INCLUDED */
