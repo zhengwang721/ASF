@@ -45,33 +45,68 @@
 #define TC_INTERRUPT_H_INCLUDED
 
 #include "tc.h"
-/** Enum for the possible callback types for the TC module. */
-enum tc_callback
-{
-	/** Callback for TC overflow */
-	TC_CALLBACK_OVERFLOW,
-	/** Callback for error */
-	TC_CALLBACK_ERROR,
-	/** Callback for Match/Capture channel 0 */
-	TC_CALLBACK_MC_CHANNEL0,
-	/** Callback for Match/Capture channel 1 */
-	TC_CALLBACK_MC_CHANNEL1,
-#if !defined(__DOXYGEN__)
-	/** Number of available callbacks. */
-	TC_CALLBACK_N,
-#endif
-};
+
+
 
 /**
  * \name Callback Management
  * {@
  */
-void tc_register_callback(struct tc_module *const module,
-		tc_callback_t callback_func,
-		enum tc_callback_type callback_type);
 
-void tc_unregister_callback(struct tc_module *const module,
-		enum tc_callback_type callback_type);
+/**
+ * \brief Registers a callback
+ *
+ * Registers a callback function which is implemented by the user.
+ *
+ * \note The callback must be enabled by \ref tc_enable_callback,
+ * in order for the interrupt handler to call it when the conditions for the
+ * callback type is met.
+ *
+ * \param[in]     module      Pointer to TC software instance struct
+ * \param[in]     callback_func Pointer to callback function
+ * \param[in]     callback_type Callback type given by an enum
+ *
+ */
+static inline void tc_register_callback(
+		struct tc_module *const module,
+		tc_callback_t callback_func,
+		const enum tc_callback callback_type)
+{
+	/* Sanity check arguments */
+	Assert(module);
+	Assert(callback_func);
+
+	/* Register callback function */
+	module->callback[callback_type] = callback_func;
+
+	/* Set the bit corresponding to the callback_type */
+	module->callback_reg_mask |= (1 << callback_type);
+}
+
+/**
+ * \brief Unregisters a callback
+ *
+ * Unregisters a callback function implemented by the user.
+ *
+ * \param[in]     module Pointer to TC software instance struct
+ * \param[in]     callback_func Pointer to callback function
+ * \param[in]     callback_type Callback type given by an enum
+ *
+ */
+static inline void tc_unregister_callback(
+		struct tc_module *const module,
+		const enum tc_callback callback_type)
+{
+	/* Sanity check arguments */
+	Assert(module);
+
+	/* Unregister callback function */
+	module->callback[callback_type] = NULL;
+	_tc_instances[_tc_get_module_irq_index(module)] = 0;
+
+	/* Clear the bit corresponding to the callback_type */
+	module->callback_reg_mask &= ~(1 << callback_type);
+}
 
 /**
  * \brief Enables callback
@@ -89,7 +124,7 @@ void tc_unregister_callback(struct tc_module *const module,
  *                                    due to invalid callback_type
  */
 static inline void tc_enable_callback(struct tc_module *const module,
-		enum tc_callback_type callback_type){
+		enum tc_callback callback_type){
 
 	/* Sanity check arguments */
 	Assert(module);
@@ -115,187 +150,32 @@ static inline void tc_enable_callback(struct tc_module *const module,
  *
  */
 static inline void tc_disable_callback(struct tc_module *const module,
-		enum tc_callback_type callback_type){
+		enum tc_callback callback_type){
 
 	/* Sanity check arguments */
 	Assert(module);
 
 	/* Disable callback */
-	//module->callback_enable_mask &= ~(1 << callback_type);
+	module->callback_enable_mask &= ~(1 << callback_type);
 }
 
 /**
  * @}
  */
 
-
-/**
- * \internal ISR handler for TC
- */
-#ifdef ID_TC0
-void TC0_Handler(void)
-{
-	/* Call appropriate interrupt handler. */
-	_tc_interrupt_handler(0);
-}
-#endif
-#ifdef ID_TC1
-void TC1_Handler(void)
-{
-	/* Call appropriate interrupt handler. */
-	_tc_interrupt_handler(1);
-}
-#endif
-#ifdef ID_TC2
-void TC2_Handler(void)
-{
-	/* Call appropriate interrupt handler. */
-	_tc_interrupt_handler(2);
-}
-#endif
-#ifdef ID_TC3
-void TC3_Handler(void)
-{
-	/* Call appropriate interrupt handler. */
-	_tc_interrupt_handler(3);
-}
-#endif
-#ifdef ID_TC4
-void TC4_Handler(void)
-{
-	/* Call appropriate interrupt handler. */
-	_tc_interrupt_handler(4);
-}
-#endif
-#ifdef ID_TC5
-void TC5_Handler(void)
-{
-	/* Call appropriate interrupt handler. */
-#ifdef CUSTOM
-	_tc_custom_handler();
-#elif
-	_tc_interrupt_handler(5);
-#endif
-}
-#endif
-#ifdef ID_TC6
-void TC6_Handler(void)
-{
-	/* Call appropriate interrupt handler. */
-	_tc_interrupt_handler(6);
-}
-#endif
-#ifdef ID_TC7
-void TC7_Handler(void)
-{
-	/* Call appropriate interrupt handler. */
-	_tc_interrupt_handler(7);
-}
-#endif
-
-/**
- * \internal Default interrupt handler
- *
- * \param[in] instance TC instance used.
-
-static void _tc_default_handler(uint8_t instance)
-{
-	Assert(false);
-}
- */
-
-/**
- * \brief Interrupt Handler for TC module
- *
- * Handles interrupts as they occur, and it will run callback functions
- * which are registered and enabled.
- *
- * \param[in]  instance  ID of the SERCOM instance calling the interrupt
- *                       handler.
- */
-void _tc_interrupt_handler(uint8_t instance)
-{
-	/* Temporary variables */
-	uint16_t interrupt_status;
-	uint16_t callback_status;
-
-	/* Get device instance from the look-up table */
-	struct tc_module *module
-		= (struct tc_module *)_tc_instances[instance];
-
-	/* Pointer to the hardware module instance */
-	if(module->counter_size == TC_COUNTER_SIZE_8BIT){
-		TcCount8 *const tc_hw = &(module->hw->COUNT8);
-	}
-	else if(module->counter_size == TC_COUNTER_SIZE_16BIT){
-		TcCount16 *const tc_hw = &(module->hw->COUNT16);
-	}
-	else{
-		TcCount32 *const tc_hw = &(module->hw->COUNT32);
-	}
-
-	/* Wait for the synchronization to complete */
-	while (tc_is_syncing(module)) {
-		/* Wait for sync */
-	}
-
-	/* Read and mask interrupt flag register */
-	interrupt_status = tc_hw->INTFLAG.reg;
-	callback_status = module->callback_reg_mask
-			&module->callback_enable_mask;
-
-	/* Check if an Overflow interrupt has occurred */
-	if (interrupt_status & TC_INTFLAG_OVF){
-		if (callback_status & (1 << TC_CALLBACK_OVERFLOW)) {
-			/* Invoke registered and enabled calback function */
-			(*(module->callback[TC_CALLBACK_OVERFLOW]))(module);
-			/* Clear interrupt flag */
-			module->hw->COUNT8->INTFLAG.reg = TC_INTFLAG_OVF;
-		}
-	}
-	/* Check if an Error interrupt has occurred */
-	if (interrupt_status & TC_INTFLAG_ERR){
-		if (callback_status & (1 << TC_CALLBACK_ERROR)) {
-			/* Invoke registered and enabled calback function */
-			(*(module->callback[TC_CALLBACK_ERROR]))(module);
-			/* Clear interrupt flag */
-			module->hw->COUNT8->INTFLAG.reg = TC_INTFLAG_ERR;
-		}
-	}
-	/* Check if an Match/Capture Channel 0 interrupt has occurred */
-	if (interrupt_status & (1<<TC_INTFLAG_MC_Pos)){
-		if (callback_status & (1 << TC_CALLBACK_MC_CHANNEL0)) {
-			/* Invoke registered and enabled calback function */
-			(*(module->callback[TC_CALLBACK_MC_CHANNEL0]))(module);
-			/* Clear interrupt flag */
-			module->hw->COUNT8->INTFLAG.reg = TC_INTFLAG_MC(1);
-		}
-	}
-	/* Check if an Match/Capture Channel 1 interrupt has occurred */
-	if (interrupt_status & (2<<TC_INTFLAG_MC_Pos)){
-		if (callback_status & (1 << TC_CALLBACK_MC_CHANNEL1)) {
-			/* Invoke registered and enabled calback function */
-			(*(module->callback[TC_CALLBACK_MC_CHANNEL1]))(module);
-			/* Clear interrupt flag */
-			module->hw->COUNT8->INTFLAG.reg = TC_INTFLAG_MC(2);
-		}
-	}
-}
-
 /**
  * \name Callbacks
  * {@
  */
-/*
-void <namespace>_error_callback(
-		struct <namespace>_module *const module_inst,
+
+void tc_error_callback(
+		struct tc_module *const module_inst,
 		enum status_code error_code);
 
-void <namespace>_callback(
-		struct <namespace_module *const module_inst,
-		enum <namespace>_channel channel);
+void tc_callback(
+		struct tc_module *const module_inst);
 
-*/
+
 /**
  * @}
  */
