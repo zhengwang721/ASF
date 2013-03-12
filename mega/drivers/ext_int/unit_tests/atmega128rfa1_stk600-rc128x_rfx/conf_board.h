@@ -44,6 +44,7 @@
 #ifndef CONF_BOARD_H
 #define CONF_BOARD_H
 
+ /* USARTA1 on PORTD(PD2 and PD3) is used for sending test results */
 #define CONF_BOARD_ENABLE_USARTA1
 
 #endif

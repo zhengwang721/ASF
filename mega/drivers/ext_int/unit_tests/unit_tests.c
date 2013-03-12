@@ -49,8 +49,11 @@
  *
  * \section intro Introduction
  * This is the unit test for the MEGARF Ext Interrupt driver. Ext interrupt is 
- * getting trigged by changing the pin status on one of IO port pin which is connected 
- * through jumper with external pin change interrupt pins.
+ * getting trigged by changing the pin status on external pin change interrupt pins.
+ * This is being simulated by connecting one of the GPIO port pin configured as output
+ * to external pin change interrupt pin using jumper wire. By outputing high or low 
+ * on GPIO pin the status of external pin change interrupt pin connected to that GPIO
+ * pin will be changing and hence interrupt will get triggered.
  *
  * \section files Main Files
  * - \ref unit_tests.c
@@ -90,6 +93,9 @@
 /* Definition for Level High */
 #define LOW    0x00
 
+/* PC_INT8_PIN Port Pin position */
+#define PC_INT8_PIN_PORT_POS    0x00
+
 /* Variable for trigger counter **/
 static volatile uint8_t trigger_count=0;
 
@@ -108,8 +114,9 @@ static void ext_pc_int_callback(void)
 /**
  * \brief Test External interrupt is getting triggered.
  *
- * This function enables the pin change interrupt and changes the status of the
- * pin by outputting high/low on GPIO pin which in turn connected to PC interrupt pin
+ * This function enables the pin change interrupt(PE0) and changes the status of the
+ * pin by outputting high/low on GPIO pin (PE1) which in turn connected to PC 
+ * interrupt pin
  *
  * \param test Current test case.
  */
@@ -185,16 +192,16 @@ static void run_set_functions_test(const struct test_case *test)
 
 	/* Test enabling and disabling ext pin change interrupt */
 	ext_int_pcint_enable(CONF_PC_INT);
-	success = (PCMSK1 & INT_PIN_MASK(0));
+	success = (PCMSK1 & INT_PIN_MASK(PC_INT8_PIN_PORT_POS));
 	test_assert_true(test, success, "Trying to enable Ext PC interrupt failed.");
 
 	ext_int_pcint_disable(CONF_PC_INT);
-	success = !(PCMSK1 & INT_PIN_MASK(0));
+	success = !(PCMSK1 & INT_PIN_MASK(PC_INT8_PIN_PORT_POS));
 	test_assert_true(test, success, "Trying to disable Ext PC interrupt failed.");
 	
 	/* Test clear ext interrupt flag */
 	ext_int_clear_flag(CONF_EXT_INT);
-	success = !(EIFR & (1 << (CONF_EXT_INT & 0x07)));
+	success = !(EIFR & (1 << (CONF_EXT_INT & EXT_INT_PORT_MASK)));
 	test_assert_true(test, success, "Trying to clear Ext interrupt flag failed.");
 
 	/* Test clear ext pin change interrupt flag */
