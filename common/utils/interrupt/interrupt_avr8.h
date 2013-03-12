@@ -3,7 +3,7 @@
  *
  * \brief Global interrupt management for 8-bit AVR
  *
- * Copyright (C) 2010-2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2010-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -88,6 +88,8 @@
  */
 #define irq_initialize_vectors() \
 	PMIC.CTRL = PMIC_LOLVLEN_bm | PMIC_MEDLVLEN_bm | PMIC_HILVLEN_bm;
+#elif MEGA_RF
+#define irq_initialize_vectors()
 #endif
 
 #ifdef __GNUC__

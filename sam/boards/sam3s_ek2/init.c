@@ -45,6 +45,7 @@
 #include "board.h"
 #include "conf_board.h"
 #include "gpio.h"
+#include "ioport.h"
 
 void board_init(void)
 {
@@ -53,6 +54,7 @@ void board_init(void)
 	WDT->WDT_MR = WDT_MR_WDDIS;
 #endif
 
+	ioport_init();
 	/* Configure LED pins */
 	gpio_configure_pin(LED0_GPIO, LED0_FLAGS);
 	gpio_configure_pin(LED1_GPIO, LED1_FLAGS);
