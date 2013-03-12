@@ -632,10 +632,10 @@ enum status_code usart_read_wait(struct usart_module *const module,
 		uint16_t *const rx_data);
 
 enum status_code usart_write_buffer_wait(struct usart_module *const module,
-		const uint8_t *tx_data, uint16_t length);
+		uint8_t *tx_data, uint16_t length);
 
 enum status_code usart_read_buffer_wait(struct usart_module *const module,
-		const uint8_t *rx_data, uint16_t length);
+		uint8_t *rx_data, uint16_t length);
 
 /** @} */
 

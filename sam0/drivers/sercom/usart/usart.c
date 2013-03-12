@@ -441,7 +441,7 @@ enum status_code usart_read_wait(struct usart_module *const module,
  *                                         due to USART module timing out
  */
 enum status_code usart_write_buffer_wait(struct usart_module *const module,
-		uint8_t *const tx_data, uint16_t length)
+		uint8_t *tx_data, uint16_t length)
 {
 	/* Sanity check arguments */
 	Assert(module);
@@ -533,7 +533,7 @@ enum status_code usart_write_buffer_wait(struct usart_module *const module,
  *                                      to data being corrupted.
  */
 enum status_code usart_read_buffer_wait(struct usart_module *const module,
-		uint8_t *const rx_data, uint16_t length)
+		uint8_t *rx_data, uint16_t length)
 {
 	/* Sanity check arguments */
 	Assert(module);
