@@ -344,19 +344,22 @@ extern "C" {
 #include <system.h>
 
 /**
- * \brief ADC interrupt flags
+ * \name ADC interrupt flags
  *
- * Enum for the possible ADC interrupt flags
+ * ADC status flags, returned by \ref adc_get_status() and cleared by
+ * \ref adc_clear_status().
  *
+ * @{
  */
-enum adc_interrupt_flag {
-	/** ADC result ready */
-	ADC_INTERRUPT_RESULT_READY = ADC_INTFLAG_RESRDY,
-	/** Window monitor match */
-	ADC_INTERRUPT_WINDOW       = ADC_INTFLAG_WINMON,
-	/** ADC result overwritten before read */
-	ADC_INTERRUPT_OVERRUN      = ADC_INTFLAG_MASK,
-};
+
+/** ADC result ready */
+#define ADC_STATUS_RESULT_READY  ADC_INTFLAG_RESRDY
+/** Window monitor match */
+#define ADC_STATUS_WINDOW        ADC_INTFLAG_WINMON
+/** ADC result overwritten before read */
+#define ADC_STATUS_OVERRUN       ADC_INTFLAG_OVERRUN
+
+/** @} */
 
 /**
  * \brief ADC reference voltage enum
@@ -876,6 +879,97 @@ static inline void adc_get_config_defaults(struct adc_config *const config)
 /** @} */
 
 /**
+ * \name Checking and clearing of status flags
+ * @{
+ */
+
+/**
+ * \brief Retrieves the current module status.
+ *
+ * Retrieves the status of the module, giving overall state information.
+ *
+ * \param[in] module_inst  Pointer to the ADC software instance struct
+ *
+ * \return Bitmask of \c ADC_STATUS_* flags
+ *
+ * \retval ADC_STATUS_RESULT_READY  ADC Result is ready to be read
+ * \retval ADC_STATUS_WINDOW        ADC has detected a value inside the set
+ *                                  window range
+ * \retval ADC_STATUS_OVERRUN       ADC result has overrun
+ */
+static inline uint32_t adc_get_status(
+		struct adc_module *const module_inst)
+{
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+
+	Adc *const adc_module = module_inst->hw;
+
+	uint32_t int_flags = adc_module->INTFLAG.reg;
+
+	uint32_t status_flags = 0;
+
+	/* Check for ADC Result Ready */
+	if (int_flags & ADC_INTFLAG_RESRDY) {
+		status_flags |= ADC_STATUS_RESULT_READY;
+	}
+
+	/* Check for ADC Window Match */
+	if (int_flags & ADC_INTFLAG_WINMON) {
+		status_flags |= ADC_STATUS_WINDOW;
+	}
+
+	/* Check for ADC Overrun */
+	if (int_flags & ADC_INTFLAG_OVERRUN) {
+		status_flags |= ADC_STATUS_OVERRUN;
+	}
+
+	return status_flags;
+}
+
+/**
+ * \brief Clears a module status flag.
+ *
+ * \param[in] module_inst  Pointer to the ADC software instance struct
+ *
+ * Clears the given status flag of the module.
+ *
+ * \param status_flags   Bitmask of \c ADC_STATUS_* flags to clear
+ */
+static inline void adc_clear_status(
+		struct adc_module *const module_inst,
+		const uint32_t status_flags)
+{
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+
+	Adc *const adc_module = module_inst->hw;
+
+	uint32_t int_flags = 0;
+
+	/* Check for ADC Result Ready */
+	if (status_flags & ADC_STATUS_RESULT_READY) {
+		int_flags |= ADC_INTFLAG_RESRDY;
+	}
+
+	/* Check for ADC Window Match */
+	if (status_flags & ADC_STATUS_WINDOW) {
+		int_flags |= ADC_INTFLAG_WINMON;
+	}
+
+	/* Check for ADC Overrun */
+	if (status_flags & ADC_STATUS_OVERRUN) {
+		int_flags |= ADC_INTFLAG_OVERRUN;
+	}
+
+	/* Clear interrupt flag */
+	adc_module->INTFLAG.reg = int_flags;
+}
+/** @} */
+
+/**
  * \name Enable, disable and reset ADC module, start conversion and read result
  * @{
  */
@@ -1007,14 +1101,6 @@ static inline void adc_start_conversion(
 	adc_module->SWTRIG.reg |= ADC_SWTRIG_START;
 }
 
-/* Prototype for adc_is_interrupt_flag_set */
-static inline bool adc_is_interrupt_flag_set(
-		struct adc_module *const module_inst,
-		enum adc_interrupt_flag interrupt_flag);
-/* Prototype for adc_clear_interrupt_flag */
-static inline void adc_clear_interrupt_flag(
-		struct adc_module *const module_inst,
-		enum adc_interrupt_flag interrupt_flag);
 /**
  * \brief Reads the ADC result
  *
@@ -1036,7 +1122,7 @@ static inline enum status_code adc_read(
 	Assert(module_inst->hw);
 	Assert(result);
 
-	if (!adc_is_interrupt_flag_set(module_inst, ADC_INTERRUPT_RESULT_READY)) {
+	if (!adc_get_status(module_inst) & ADC_STATUS_RESULT_READY) {
 		/* Result not ready */
 		return STATUS_BUSY;
 	}
@@ -1049,8 +1135,9 @@ static inline enum status_code adc_read(
 
 	/* Get ADC result */
 	*result = adc_module->RESULT.reg;
+
 	/* Reset ready flag */
-	adc_clear_interrupt_flag(module_inst, ADC_INTERRUPT_RESULT_READY);
+	adc_clear_status(module_inst, ADC_STATUS_RESULT_READY);
 
 	return STATUS_OK;
 }
@@ -1292,57 +1379,6 @@ static inline void adc_set_negative_input(
 			(negative_input << ADC_INPUTCTRL_MUXNEG_Pos);
 }
 
-/** @} */
-
-/**
- * \name Checking and clearing of interrupt flags
- * @{
- */
-/**
- * \brief Checks if a given interrupt flag is set
- *
- * This function will check if a given interrupt flag is set.
- *
- * \param[in] module_inst         Pointer to the ADC software instance struct
- * \param[in] interrupt_flag   Interrupt flag to check
- *
- * \return Boolean value to indicate if the interrupt flag is set or not.
- * \retval true   The flag is set
- * \retval false  The flag is not set
- */
-static inline bool adc_is_interrupt_flag_set(
-		struct adc_module *const module_inst,
-		enum adc_interrupt_flag interrupt_flag)
-{
-	/* Sanity check arguments */
-	Assert(module_inst);
-	Assert(module_inst->hw);
-
-	Adc *const adc_module = module_inst->hw;
-	return adc_module->INTFLAG.reg & interrupt_flag;
-}
-
-/**
- * \brief Clears a given interrupt flag
- *
- * This function will clear a given interrupt flag.
- *
- * \param[in] module_inst         Pointer to the ADC software instance struct
- * \param[in] interrupt_flag   Interrupt flag to clear
- */
-static inline void adc_clear_interrupt_flag(
-		struct adc_module *const module_inst,
-		enum adc_interrupt_flag interrupt_flag)
-{
-	/* Sanity check arguments */
-	Assert(module_inst);
-	Assert(module_inst->hw);
-
-	Adc *const adc_module = module_inst->hw;
-
-	/* Clear interrupt flag */
-	adc_module->INTFLAG.reg = interrupt_flag;
-}
 /** @} */
 
 #ifdef __cplusplus
