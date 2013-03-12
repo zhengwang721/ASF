@@ -926,7 +926,7 @@ static inline enum status_code adc_enable(
 
 	Adc *const adc_module = module_inst->hw;
 
-	while (adc_is_syncing(adc_module)) {
+	while (adc_is_syncing(module_inst)) {
 		/* Wait for synchronization */
 	}
 
@@ -949,7 +949,7 @@ static inline enum status_code adc_disable(
 
 	Adc *const adc_module = module_inst->hw;
 
-	while (adc_is_syncing(adc_module)) {
+	while (adc_is_syncing(module_inst)) {
 		/* Wait for synchronization */
 	}
 
@@ -976,7 +976,7 @@ static inline enum status_code adc_reset(
 	/* Disable to make sure the pipeline is flushed before reset */
 	adc_disable(module_inst);
 
-	while (adc_is_syncing(adc_module)) {
+	while (adc_is_syncing(module_inst)) {
 		/* Wait for synchronization */
 	}
 
@@ -1000,7 +1000,7 @@ static inline void adc_start_conversion(
 
 	Adc *const adc_module = module_inst->hw;
 
-	while (adc_is_syncing(adc_module)) {
+	while (adc_is_syncing(module_inst)) {
 		/* Wait for synchronization */
 	}
 
@@ -1043,7 +1043,7 @@ static inline enum status_code adc_read(
 
 	Adc *const adc_module = module_inst->hw;
 
-	while (adc_is_syncing(adc_module)) {
+	while (adc_is_syncing(module_inst)) {
 		/* Wait for synchronization */
 	}
 
@@ -1080,7 +1080,7 @@ static inline void adc_flush(
 
 	Adc *const adc_module = module_inst->hw;
 
-	while (adc_is_syncing(adc_module)) {
+	while (adc_is_syncing(module_inst)) {
 		/* Wait for synchronization */
 	}
 
@@ -1109,21 +1109,21 @@ static inline void adc_set_window_mode(
 
 	Adc *const adc_module = module_inst->hw;
 
-	while (adc_is_syncing(adc_module)) {
+	while (adc_is_syncing(module_inst)) {
 		/* Wait for synchronization */
 	}
 
 	/* Set window mode */
 	adc_module->WINCTRL.reg = window_mode << ADC_WINCTRL_WINMODE_Pos;
 
-	while (adc_is_syncing(adc_module)) {
+	while (adc_is_syncing(module_inst)) {
 		/* Wait for synchronization */
 	}
 
 	/* Set lower window monitor threshold value */
 	adc_module->WINLT.reg = window_lower_value << ADC_WINLT_WINLT_Pos;
 
-	while (adc_is_syncing(adc_module)) {
+	while (adc_is_syncing(module_inst)) {
 		/* Wait for synchronization */
 	}
 
@@ -1150,7 +1150,7 @@ static inline void adc_set_gain(
 
 	Adc *const adc_module = module_inst->hw;
 
-	while (adc_is_syncing(adc_module)) {
+	while (adc_is_syncing(module_inst)) {
 		/* Wait for synchronization */
 	}
 
@@ -1204,7 +1204,7 @@ static inline enum status_code adc_set_pin_scan_mode(
 		return STATUS_ERR_INVALID_ARG;
 	}
 
-	while (adc_is_syncing(adc_module)) {
+	while (adc_is_syncing(module_inst)) {
 		/* Wait for synchronization */
 	}
 
@@ -1252,7 +1252,7 @@ static inline void adc_set_positive_input(
 
 	Adc *const adc_module = module_inst->hw;
 
-	while (adc_is_syncing(adc_module)) {
+	while (adc_is_syncing(module_inst)) {
 		/* Wait for synchronization */
 	}
 
@@ -1282,7 +1282,7 @@ static inline void adc_set_negative_input(
 
 	Adc *const adc_module = module_inst->hw;
 
-	while (adc_is_syncing(adc_module)) {
+	while (adc_is_syncing(module_inst)) {
 		/* Wait for synchronization */
 	}
 

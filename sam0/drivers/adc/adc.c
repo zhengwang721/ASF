@@ -49,20 +49,23 @@
  * This function will write out a given configuration to the hardware module.
  * Used by \ref adc_init.
  *
- * \param[out] module Pointer to the ADC software instance struct
- * \param[in] config  Pointer to configuration struct
+ * \param[out] module_inst Pointer to the ADC software instance struct
+ * \param[in]  config      Pointer to configuration struct
  *
  * \return Status of the configuration procedure
  * \retval STATUS_OK                The configuration was successful
  * \retval STATUS_ERR_INVALID_ARG   Invalid argument(s) were provided
  */
-static enum status_code _adc_set_config (
-		Adc *const module,
+static enum status_code _adc_set_config(
+		struct adc_module *const module_inst,
 		struct adc_config *const config)
 {
 	uint8_t adjres;
 	enum adc_average_samples average;
 	struct system_gclk_chan_config gclk_chan_conf;
+
+	/* Get the hardware module pointer */
+	Adc *const adc_module = module_inst->hw;
 
 	/* Configure GCLK channel and enable clock */
 	gclk_chan_conf.source_generator = config->clock_source;
@@ -75,10 +78,10 @@ static enum status_code _adc_set_config (
 	system_gclk_chan_enable(ADC_GCLK_ID);
 
 	/* Configure run in standby */
-	module->CTRLA.reg = (config->run_in_standby << ADC_CTRLA_RUNSTDBY_Pos);
+	adc_module->CTRLA.reg = (config->run_in_standby << ADC_CTRLA_RUNSTDBY_Pos);
 
 	/* Configure reference */
-	module->REFCTRL.reg =
+	adc_module->REFCTRL.reg =
 			(config->reference_compensation_enable << ADC_REFCTRL_REFCOMP_Pos) |
 			(config->reference);
 
@@ -114,19 +117,23 @@ static enum status_code _adc_set_config (
 		/* Unknown. Abort. */
 		return STATUS_ERR_INVALID_ARG;
 	}
-	module->AVGCTRL.reg = ADC_AVGCTRL_ADJRES(adjres) | average;
+
+	adc_module->AVGCTRL.reg = ADC_AVGCTRL_ADJRES(adjres) | average;
 
 	/* Check validity of sample length value */
 	if (config->sample_length > 63) {
 		return STATUS_ERR_INVALID_ARG;
 	} else {
 		/* Configure sample length */
-		module->SAMPCTRL.reg = (config->sample_length << ADC_SAMPCTRL_SAMPLEN_Pos);
+		adc_module->SAMPCTRL.reg = (config->sample_length << ADC_SAMPCTRL_SAMPLEN_Pos);
+	}
+
+	while (adc_is_syncing(module_inst)) {
+		/* Wait for synchronization */
 	}
 
 	/* Configure CTRLB */
-	_adc_wait_for_sync(module);
-	module->CTRLB.reg =
+	adc_module->CTRLB.reg =
 			config->clock_prescaler |
 			config->resolution |
 			(config->correction.correction_enable << ADC_CTRLB_CORREN_Pos) |
@@ -195,26 +202,26 @@ static enum status_code _adc_set_config (
 		}
 	}
 
-	while (adc_is_syncing(adc_module)) {
+	while (adc_is_syncing(module_inst)) {
 		/* Wait for synchronization */
 	}
 
 	/* Configure window mode */
-	module->WINCTRL.reg = config->window.window_mode;
+	adc_module->WINCTRL.reg = config->window.window_mode;
 
-	while (adc_is_syncing(adc_module)) {
+	while (adc_is_syncing(module_inst)) {
 		/* Wait for synchronization */
 	}
 
 	/* Configure lower threshold */
-	module->WINLT.reg = config->window.window_lower_value << ADC_WINLT_WINLT_Pos;
+	adc_module->WINLT.reg = config->window.window_lower_value << ADC_WINLT_WINLT_Pos;
 
-	while (adc_is_syncing(adc_module)) {
+	while (adc_is_syncing(module_inst)) {
 		/* Wait for synchronization */
 	}
 
 	/* Configure lower threshold */
-	module->WINUT.reg = config->window.window_upper_value << ADC_WINUT_WINUT_Pos;
+	adc_module->WINUT.reg = config->window.window_upper_value << ADC_WINUT_WINUT_Pos;
 
 	uint8_t inputs_to_scan = config->pin_scan.inputs_to_scan;
 	if (inputs_to_scan > 0) {
@@ -230,12 +237,12 @@ static enum status_code _adc_set_config (
 		return STATUS_ERR_INVALID_ARG;
 	}
 
-	while (adc_is_syncing(adc_module)) {
+	while (adc_is_syncing(module_inst)) {
 		/* Wait for synchronization */
 	}
 
 	/* Configure pin scan mode and positive and negative input pins */
-	module->INPUTCTRL.reg =
+	adc_module->INPUTCTRL.reg =
 			config->gain_factor |
 			(config->pin_scan.offset_start_scan << ADC_INPUTCTRL_INPUTOFFSET_Pos) |
 			(inputs_to_scan << ADC_INPUTCTRL_INPUTSCAN_Pos) |
@@ -243,14 +250,14 @@ static enum status_code _adc_set_config (
 			config->positive_input;
 
 	/* Configure events */
-	module->EVCTRL.reg =
+	adc_module->EVCTRL.reg =
 			config->event.event_action |
 			(config->event.generate_event_on_window_monitor  << ADC_EVCTRL_WINMONEO_Pos) |
 			(config->event.generate_event_on_conversion_done << ADC_EVCTRL_RESRDYEO_Pos);
 
 
 	/* Disable all interrupts */
-	module->INTENCLR.reg =
+	adc_module->INTENCLR.reg =
 			(1 << ADC_INTENCLR_READY_Pos)   | (1 << ADC_INTENCLR_WINMON_Pos) |
 			(1 << ADC_INTENCLR_OVERRUN_Pos) | (1 << ADC_INTENCLR_RESRDY_Pos);
 
@@ -260,7 +267,7 @@ static enum status_code _adc_set_config (
 			return STATUS_ERR_INVALID_ARG;
 		} else {
 			/* Set gain correction value */
-			module->GAINCORR.reg = config->correction.gain_correction <<
+			adc_module->GAINCORR.reg = config->correction.gain_correction <<
 					ADC_GAINCORR_GAINCORR_Pos;
 		}
 
@@ -270,7 +277,7 @@ static enum status_code _adc_set_config (
 			return STATUS_ERR_INVALID_ARG;
 		} else {
 			/* Set offset correction value */
-			module->OFFSETCORR.reg = config->correction.offset_correction <<
+			adc_module->OFFSETCORR.reg = config->correction.offset_correction <<
 					ADC_OFFSETCORR_OFFSETCORR_Pos;
 		}
 	}
@@ -299,7 +306,7 @@ enum status_code adc_init(
 		Adc *module,
 		struct adc_config *config)
 {
-
+	/* Associate the software module instance with the hardware module */
 	module_inst->hw = module;
 
 	if (module->CTRLA.reg & ADC_CTRLA_SWRST) {
@@ -313,5 +320,5 @@ enum status_code adc_init(
 	}
 
 	/* Write configuration to module */
-	return _adc_set_config(module, config);;
+	return _adc_set_config(module_inst, config);;
 }
