@@ -50,7 +50,6 @@
 int main(void)
 {
 	system_init();
-	board_init();
 	delay_init();
 
 	struct port_config pin;
