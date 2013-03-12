@@ -3,7 +3,7 @@
  *
  * \brief Example of usage of the SPI Master Mode Basic Services.
  *
- * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -46,7 +46,7 @@
  *
  * \par intro Introduction
  * This example demonstrates how to use the SPI Master Mode Basic Services.
- * 
+ *
  * \par files Main Files
  * - spi_master_example_sam3.c: port drivers example application.
  * - conf_board.h: board initialization process configuration.
@@ -57,9 +57,9 @@
  * The spi API can be found \ref spi_master.h "here".
  *
  * \par deviceinfo Device Info
- * SAM3N EK can be used because this EK has on-board SPI dataflash. 
+ * SAM3N EK can be used because this EK has on-board SPI dataflash.
  * This example has been tested with the following setup:
- *   - Evaluation kits with a dataflash connected through an SPI interface. 
+ *   - Evaluation kits with a dataflash connected through an SPI interface.
  *   (This example works on SAM3N-EK.)
  *
  * \par exampledescription Description of the example
@@ -109,7 +109,7 @@ static bool spi_at25df_mem_check(void)
 
 	// Send the Status Register Read command followed by a dummy data.
 	spi_write_packet(SPI_EXAMPLE, data, 1);
-	
+
 	// Receive the manufacturer and device id.
 	spi_read_packet(SPI_EXAMPLE, data, DATA_BUFFER_SIZE);
 
@@ -143,21 +143,12 @@ int main(void)
 	spi_enable(SPI_EXAMPLE);
 
 	if (spi_at25df_mem_check() == false) {
-#if (SAM4L || SAM4E)
 		ioport_set_pin_level(SPI_EXAMPLE_LED_PIN_EXAMPLE_1, IOPORT_PIN_LEVEL_LOW);
 		ioport_set_pin_level(SPI_EXAMPLE_LED_PIN_EXAMPLE_2, IOPORT_PIN_LEVEL_HIGH);
 	} else {
 		ioport_set_pin_level(SPI_EXAMPLE_LED_PIN_EXAMPLE_1, IOPORT_PIN_LEVEL_LOW);
 		ioport_set_pin_level(SPI_EXAMPLE_LED_PIN_EXAMPLE_2, IOPORT_PIN_LEVEL_LOW);
 	}
-#else
-		gpio_set_pin_low(SPI_EXAMPLE_LED_PIN_EXAMPLE_1);
-		gpio_set_pin_high(SPI_EXAMPLE_LED_PIN_EXAMPLE_2);
-	} else {
-		gpio_set_pin_low(SPI_EXAMPLE_LED_PIN_EXAMPLE_1);
-		gpio_set_pin_low(SPI_EXAMPLE_LED_PIN_EXAMPLE_2);
-	}
-#endif
 	while (1) {
 	}
 }

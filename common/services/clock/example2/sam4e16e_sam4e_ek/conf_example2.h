@@ -3,7 +3,7 @@
  *
  * \brief Clock system example 2 configuration.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,6 +43,9 @@
 
 #ifndef CONF_EXAMPLE2_H_INCLUDED
 #define CONF_EXAMPLE2_H_INCLUDED
+
+#define GCLK_PIN        PIN_PCK0
+#define GCLK_PIN_MUX    PIN_PCK0_FLAGS
 
 #define GCLK_SOURCE		GENCLK_PCK_SRC_MAINCK_XTAL
 #define GCLK_DIV		GENCLK_PCK_PRES_1
