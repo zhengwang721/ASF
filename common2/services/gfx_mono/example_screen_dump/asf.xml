@@ -1,0 +1,17 @@
+<asf xmlversion="1.0">
+	<module type="application" id="common2.services.gfx_mono.example_screen_dump" caption="Monochrome graphic library example">
+		<info type="description" value="summary">
+		Monochrome graphic library example with screen dump
+		</info>
+		<info type="keyword" value="technology">
+			<keyword value="Graphics" />
+		</info>
+		<build type="c-source" value="example_screen_dump.c"/>
+		<build type="header-file" value="../gfx_mono_screen_dump.h"/>
+		<device-support value="samd20"/>
+		<require idref="sam0.boards"/>
+		<require idref="common2.services.gfx_mono"/>
+		<require idref="common2.services.basic.serial"/>
+		<require idref="common2.services.basic.clock"/>
+	</module>
+</asf>

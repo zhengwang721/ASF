@@ -42,6 +42,7 @@
  */
 #include "nvm.h"
 #include <system.h>
+#include <system_interrupt.h>
 #include <string.h>
 
 /**
@@ -247,14 +248,114 @@ enum status_code nvm_execute_command(
 }
 
 /**
+ * \brief Updates an arbitrary section of a page with new data.
+ *
+ * Writes from a buffer to a given page in the NVM memory, retaining any
+ * unmodified data already stored in the page.
+ *
+ * \warning This routine is unsafe if data integrity is critical; a system reset
+ *          during the update process will result in up to one row of data being
+ *          lost. If corruption must be avoided in all circumstances (including
+ *          power loss or system reset) this function should not be used.
+ *
+ * \param[in]  destination_address  Destination page address to write to
+ * \param[in]  buffer               Pointer to buffer where the data to write is
+ *                                  stored
+ * \param[in]  offset               Number of bytes to offset the data write in
+ *                                  the page
+ * \param[in]  length               Number of bytes in the page to update
+ *
+ * \return Status of the attempt to update a page.
+ *
+ * \retval STATUS_OK               Requested NVM memory page was successfully
+ *                                 read
+ * \retval STATUS_BUSY             NVM controller was busy when the operation
+ *                                 was attempted
+ * \retval STATUS_ERR_BAD_ADDRESS  The requested address was outside the
+ *                                 acceptable range of the NVM memory region
+ * \retval STATUS_ERR_INVALID_ARG  The supplied length and offset was invalid
+ */
+enum status_code nvm_update_buffer(
+		const uint32_t destination_address,
+		uint8_t *const buffer,
+		uint16_t offset,
+		uint16_t length)
+{
+	enum status_code error_code = STATUS_OK;
+	uint8_t row_buffer[NVMCTRL_ROW_PAGES][_nvm_dev.page_size];
+
+	/* Ensure the read does not overflow the page size */
+	if ((offset + length) > _nvm_dev.page_size) {
+		return STATUS_ERR_INVALID_ARG;
+	}
+
+	/* Calculate the starting row address of the page to update */
+	uint32_t row_start_address =
+			destination_address & ~((_nvm_dev.page_size * NVMCTRL_ROW_PAGES) - 1);
+
+	/* Read in the current row contents */
+	for (uint32_t i = 0; i < NVMCTRL_ROW_PAGES; i++) {
+		do
+		{
+			error_code = nvm_read_buffer(
+					row_start_address + (i * _nvm_dev.page_size),
+					row_buffer[i], _nvm_dev.page_size);
+		} while (error_code == STATUS_BUSY);
+
+		if (error_code != STATUS_OK) {
+			return error_code;
+		}
+	}
+
+	/* Calculate the starting page in the row that is to be updated */
+	uint8_t page_in_row =
+			(destination_address % (_nvm_dev.page_size * NVMCTRL_ROW_PAGES)) / _nvm_dev.page_size;
+
+	/* Update the specified bytes in the page buffer */
+	for (uint32_t i = 0; i < length; i++) {
+		row_buffer[page_in_row][offset + i] = buffer[i];
+	}
+
+	system_interrupt_enter_critical_section();
+
+	/* Erase the row */
+	do
+	{
+		error_code = nvm_erase_row(row_start_address);
+	} while (error_code == STATUS_BUSY);
+
+	if (error_code != STATUS_OK) {
+		return error_code;
+	}
+
+	/* Write the updated row contents to the erased row */
+	for (uint32_t i = 0; i < NVMCTRL_ROW_PAGES; i++) {
+		do
+		{
+			error_code = nvm_write_buffer(
+					row_start_address + (i * _nvm_dev.page_size),
+					row_buffer[i], _nvm_dev.page_size);
+		} while (error_code == STATUS_BUSY);
+
+		if (error_code != STATUS_OK) {
+			return error_code;
+		}
+	}
+
+	system_interrupt_leave_critical_section();
+
+	return error_code;
+}
+
+/**
  * \brief Writes a number of bytes to a page in the NVM memory region
  *
- * Writes from a buffer to a given page number in the NVM memory.
+ * Writes from a buffer to a given page address in the NVM memory.
  *
- * \param[in]  destination_page  Destination page index to write to
- * \param[in]  buffer            Pointer to buffer where the data to write is
- *                               stored
- * \param[in]  length            Number of bytes in the page to write
+ * \param[in]  destination_address  Destination page address to write to
+ * \param[in]  buffer               Pointer to buffer where the data to write is
+ *                                  stored
+ * \param[in]  length               Number of bytes in the page to write
  *
  * \note If writing to a page that has previously been written to, the page's
  *       row should be erased (via \ref nvm_erase_row()) before attempting to
@@ -266,9 +367,10 @@ enum status_code nvm_execute_command(
  *                                 read
  * \retval STATUS_BUSY             NVM controller was busy when the operation
  *                                 was attempted
- * \retval STATUS_ERR_BAD_ADDRESS  The requested row number was outside the
+ * \retval STATUS_ERR_BAD_ADDRESS  The requested address was outside the
  *                                 acceptable range of the NVM memory region or
  *                                 not aligned to the start of a page
+ * \retval STATUS_ERR_INVALID_ARG  The supplied write length was invalid
  */
 enum status_code nvm_write_buffer(
 		const uint32_t destination_address,
@@ -284,6 +386,11 @@ enum status_code nvm_write_buffer(
 	/* Check if the write address not aligned to the start of a page */
 	if (destination_address & (_nvm_dev.page_size - 1)) {
 		return STATUS_ERR_BAD_ADDRESS;
+	}
+
+	/* Check if the write length is longer than a NVM page */
+	if (length > _nvm_dev.page_size) {
+		return STATUS_ERR_INVALID_ARG;
 	}
 
 	/* Get a pointer to the module hardware instance */
@@ -331,13 +438,13 @@ enum status_code nvm_write_buffer(
 /**
  * \brief Reads a number of bytes from a page in the NVM memory region
  *
- * Reads a given number of bytes from a given page number in the NVM memory
+ * Reads a given number of bytes from a given page address in the NVM memory
  * space into a buffer.
  *
- * \param[in]  source_page  Source page index to read from
- * \param[out] buffer       Pointer to a buffer where the content of the read
- *                          page will be stored
- * \param[in]  length       Number of bytes in the page to read
+ * \param[in]  source_address  Source page address to read from
+ * \param[out] buffer          Pointer to a buffer where the content of the read
+ *                             page will be stored
+ * \param[in]  length          Number of bytes in the page to read
  *
  * \return Status of the page read attempt.
  *
@@ -345,9 +452,10 @@ enum status_code nvm_write_buffer(
  *                                 read
  * \retval STATUS_BUSY             NVM controller was busy when the operation
  *                                 was attempted
- * \retval STATUS_ERR_BAD_ADDRESS  The requested row number was outside the
+ * \retval STATUS_ERR_BAD_ADDRESS  The requested address was outside the
  *                                 acceptable range of the NVM memory region or
  *                                 not aligned to the start of a page
+ * \retval STATUS_ERR_INVALID_ARG  The supplied read length was invalid
  */
 enum status_code nvm_read_buffer(
 		const uint32_t source_address,
@@ -363,6 +471,11 @@ enum status_code nvm_read_buffer(
 	/* Check if the read address is not aligned to the start of a page */
 	if (source_address & (_nvm_dev.page_size - 1)) {
 		return STATUS_ERR_BAD_ADDRESS;
+	}
+
+	/* Check if the write length is longer than a NVM page */
+	if (length > _nvm_dev.page_size) {
+		return STATUS_ERR_INVALID_ARG;
 	}
 
 	/* Get a pointer to the module hardware instance */
@@ -410,7 +523,7 @@ enum status_code nvm_read_buffer(
  *                                 erased
  * \retval STATUS_BUSY             NVM controller was busy when the operation
  *                                 was attempted
- * \retval STATUS_ERR_BAD_ADDRESS  The requested row number was outside the
+ * \retval STATUS_ERR_BAD_ADDRESS  The requested row address was outside the
  *                                 acceptable range of the NVM memory region or
  *                                 not aligned to the start of a row
  */
