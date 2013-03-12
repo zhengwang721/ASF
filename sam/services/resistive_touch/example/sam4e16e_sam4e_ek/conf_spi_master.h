@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief API driver for component ADS7843.
+ * \brief SPI Master configuration.
  *
- * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,76 +41,24 @@
  *
  */
 
-#ifndef ADS7843_H_INCLUDED
-#define ADS7843_H_INCLUDED
+#ifndef CONF_SPI_MASTER_H_INCLUDED
+#define CONF_SPI_MASTER_H_INCLUDED
 
-#include "compiler.h"
+/** Possibility to change low-level configurations here */
 
-/** @cond 0*/
-/**INDENT-OFF**/
-#ifdef __cplusplus
-extern "C" {
-#endif
-/**INDENT-ON**/
-/** @endcond*/
+/** Default Config Spi Master Delay BCS*/
+#define CONFIG_SPI_MASTER_DELAY_BCS            0
 
-/**
- * \defgroup sam_component_ads7843_group Resistive Touch - ADS7843 Controller
- *
- * Low-level driver for the ADS7843 touch controller. This driver provides
- * access to the main features of the ADS7843 controller.
- *
- * \{
- */
+/** Default Config Spi Master Bits per Transfer Definition*/
+#define CONFIG_SPI_MASTER_BITS_PER_TRANSFER    8
 
-/**
- * \brief Return the touch screen status, pressed or not.
- *
- * \return 1 if the touchscreen is pressed, 0 otherwise.
- */
-uint32_t ads7843_is_pressed(void);
+/** Default Config Spi Master Delay BCT*/
+#define CONFIG_SPI_MASTER_DELAY_BCT            0
 
-/**
- * \brief Set the touch interrupt handler.
- *
- * \note This handler will be called whenever a touch event is detected by the
- * ADS7843 controller.
- *
- * \param p_handler Interrupt handler function pointer.
- */
-void ads7843_set_handler(void (*p_handler) (uint32_t, uint32_t));
+/** Default Config Spi Master Delay BS*/
+#define CONFIG_SPI_MASTER_DELAY_BS             0
 
-/**
- * \brief Enable interrupts on touch event.
- */
-void ads7843_enable_interrupt(void);
+/** Default Config Spi Master Dummy Field*/
+#define CONFIG_SPI_MASTER_DUMMY                0xFF
 
-/**
- * \brief Disable interrupts on touch event.
- */
-void ads7843_disable_interrupt(void);
-
-/**
- * \brief Get the touch raw coordinates.
- *
- * \param p_x Pointer to an integer representing the X value.
- * \param p_y Pointer to an integer representing the Y value.
- */
-void ads7843_get_raw_point(uint32_t *p_x, uint32_t *p_y);
-
-/**
- * \brief Initialize the SPI communication with the ADS7843 controller.
- */
-uint32_t ads7843_init(void);
-
-/**@}*/
-
-/** @cond 0*/
-/**INDENT-OFF**/
-#ifdef __cplusplus
-}
-#endif
-/**INDENT-ON**/
-/** @endcond*/
-
-#endif /* ADS7843_H_INCLUDED */
+#endif /* CONF_SPI_MASTER_H_INCLUDED */

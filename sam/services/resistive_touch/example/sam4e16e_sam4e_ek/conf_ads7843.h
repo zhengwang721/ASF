@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief API driver for component ADS7843.
+ * \brief Configuration for the ADS7843 component.
  *
- * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,76 +41,39 @@
  *
  */
 
-#ifndef ADS7843_H_INCLUDED
-#define ADS7843_H_INCLUDED
+//! Configuration of the ADS7843 touch driver
 
-#include "compiler.h"
+#ifndef CONF_ADS7843_H_INCLUDED
+#define CONF_ADS7843_H_INCLUDED
 
-/** @cond 0*/
-/**INDENT-OFF**/
-#ifdef __cplusplus
-extern "C" {
+#include "board.h"
+
+#if !defined(BOARD_ADS7843_SPI_NPCS) || \
+	!defined(BOARD_ADS7843_SPI_BASE)
+
+	#warning The ADS7843 SPI configuration does not exist in the board definition file. Using default settings.
+	/**
+	 * SPI instance, which can be SPI, SPI0 or SPI1, depends on which SPI
+	 * channel is used.
+	 */
+	#define BOARD_ADS7843_SPI_BASE    SPI
+
+	/* SPI chip select NO., depends on which SPI CS pin is used by ADS7843. */
+	#define BOARD_ADS7843_SPI_NPCS    0
 #endif
-/**INDENT-ON**/
-/** @endcond*/
 
-/**
- * \defgroup sam_component_ads7843_group Resistive Touch - ADS7843 Controller
- *
- * Low-level driver for the ADS7843 touch controller. This driver provides
- * access to the main features of the ADS7843 controller.
- *
- * \{
- */
+#if !defined(BOARD_ADS7843_IRQ_FLAGS) || \
+	!defined(BOARD_ADS7843_IRQ_GPIO)
 
-/**
- * \brief Return the touch screen status, pressed or not.
- *
- * \return 1 if the touchscreen is pressed, 0 otherwise.
- */
-uint32_t ads7843_is_pressed(void);
+	/** IRQ pin connected to nPENIRQ of ADS7843 */
+	#define BOARD_ADS7843_IRQ_GPIO    PIO_PA16_IDX
 
-/**
- * \brief Set the touch interrupt handler.
- *
- * \note This handler will be called whenever a touch event is detected by the
- * ADS7843 controller.
- *
- * \param p_handler Interrupt handler function pointer.
- */
-void ads7843_set_handler(void (*p_handler) (uint32_t, uint32_t));
+	/**
+	 * PIO type and attribute of the pin connected with nPENIRQ,
+	 * normally should be (PIO_INPUT | PIO_PULLUP)
+	 */
+	#define BOARD_ADS7843_IRQ_FLAGS    IOPORT_MODE_PULLUP
 
-/**
- * \brief Enable interrupts on touch event.
- */
-void ads7843_enable_interrupt(void);
-
-/**
- * \brief Disable interrupts on touch event.
- */
-void ads7843_disable_interrupt(void);
-
-/**
- * \brief Get the touch raw coordinates.
- *
- * \param p_x Pointer to an integer representing the X value.
- * \param p_y Pointer to an integer representing the Y value.
- */
-void ads7843_get_raw_point(uint32_t *p_x, uint32_t *p_y);
-
-/**
- * \brief Initialize the SPI communication with the ADS7843 controller.
- */
-uint32_t ads7843_init(void);
-
-/**@}*/
-
-/** @cond 0*/
-/**INDENT-OFF**/
-#ifdef __cplusplus
-}
 #endif
-/**INDENT-ON**/
-/** @endcond*/
 
-#endif /* ADS7843_H_INCLUDED */
+#endif /* CONF_ADS7843_H_INCLUDED */
