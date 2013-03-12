@@ -46,6 +46,13 @@
 #include <conf_board.h>
 #include <port.h>
 
+#if defined(__GNUC__)
+void board_init(void) WEAK __attribute__((alias("system_board_init")));
+#elif defined(__ICCARM__)
+void board_init(void);
+#  pragma weak board_init=system_board_init
+#endif
+
 void system_board_init(void)
 {
 	struct port_config pin_conf;

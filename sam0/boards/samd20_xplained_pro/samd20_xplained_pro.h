@@ -54,6 +54,8 @@
  * @{
  */
 
+void system_board_init(void);
+
 /**
  * \defgroup samd20_xplained_pro_features_group Features
  *
