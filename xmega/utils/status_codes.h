@@ -6,7 +6,7 @@
  * This file defines various status codes returned by functions,
  * indicating success or failure as well as what kind of failure.
  *
- * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -89,6 +89,9 @@ enum status_code {
 	ERR_BAD_ADDRESS         =  -9, //!< Bad address
 	ERR_BUSY                =  -10, //!< Resource is busy
 	ERR_BAD_FORMAT          =  -11, //!< Data format not recognized
+	ERR_NO_TIMER            =  -12, //!< No timer available
+	ERR_TIMER_ALREADY_RUNNING   =  -13, //!< Timer already running
+	ERR_TIMER_NOT_RUNNING   =  -14, //!< Timer not running
 
 	/**
 	 * \brief Operation in progress

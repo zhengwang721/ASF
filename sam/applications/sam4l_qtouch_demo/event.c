@@ -3,7 +3,7 @@
  *
  * \brief Event Manager.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -59,7 +59,7 @@ static void ast_per_callback(void)
 {
 	touch_sensors_update_time();
 	event_qtouch_sensors_idle_count++;
-	ast_clear_interrupt_flag(AST, ast_interrupt_per);
+	ast_clear_interrupt_flag(AST, AST_INTERRUPT_PER);
 	wdt_clear();
 }
 
@@ -124,10 +124,10 @@ void event_qtouch_init(void)
 	ast_conf.counter = 0;
 	ast_set_config(AST, &ast_conf);
 
-	ast_clear_interrupt_flag(AST, ast_interrupt_per);
+	ast_clear_interrupt_flag(AST, AST_INTERRUPT_PER);
 	ast_write_periodic0_value(AST, 9);
 
-	ast_set_callback(AST, ast_interrupt_per, ast_per_callback,
+	ast_set_callback(AST, AST_INTERRUPT_PER, ast_per_callback,
 		AST_PER_IRQn, 0);
 
 	//CATB & Related clocks - for QTouch Sensors
