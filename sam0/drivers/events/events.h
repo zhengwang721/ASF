@@ -381,6 +381,26 @@ void events_init(void);
  */
 
 /**
+ * \brief Determines if the hardware module(s) are currently synchronizing to the bus.
+ *
+ * Checks to see if the underlying hardware peripheral module(s) are currently
+ * synchronizing across multiple clock domains to the hardware bus, This
+ * function can be used to delay further operations on a module until such time
+ * that it is ready, to prevent blocking delays for synchronization in the
+ * user application.
+ *
+ * \return Synchronization status of the underlying hardware module(s).
+ *
+ * \retval true  if the module has completed synchronization
+ * \retval false if the module synchronization is ongoing
+ */
+static inline bool events_is_syncing(void)
+{
+	/* No synchronization on this architecture */
+	return false;
+}
+
+/**
  * \brief Initializes an Event System configuration structure to defaults.
  *
  * Initializes a given Event System channel configuration structure to a

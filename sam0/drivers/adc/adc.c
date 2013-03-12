@@ -194,18 +194,25 @@ static enum status_code _adc_set_config (
 			break;
 		}
 	}
-	/* Wait for synchronization */
-	_adc_wait_for_sync(module);
+
+	while (adc_is_syncing(adc_module)) {
+		/* Wait for synchronization */
+	}
+
 	/* Configure window mode */
 	module->WINCTRL.reg = config->window.window_mode;
 
-	/* Wait for synchronization */
-	_adc_wait_for_sync(module);
+	while (adc_is_syncing(adc_module)) {
+		/* Wait for synchronization */
+	}
+
 	/* Configure lower threshold */
 	module->WINLT.reg = config->window.window_lower_value << ADC_WINLT_WINLT_Pos;
 
-	/* Wait for synchronization */
-	_adc_wait_for_sync(module);
+	while (adc_is_syncing(adc_module)) {
+		/* Wait for synchronization */
+	}
+
 	/* Configure lower threshold */
 	module->WINUT.reg = config->window.window_upper_value << ADC_WINUT_WINUT_Pos;
 
@@ -222,8 +229,11 @@ static enum status_code _adc_set_config (
 		/* Invalid number of input pins or input offset */
 		return STATUS_ERR_INVALID_ARG;
 	}
-	/* Wait for synchronization */
-	_adc_wait_for_sync(module);
+
+	while (adc_is_syncing(adc_module)) {
+		/* Wait for synchronization */
+	}
+
 	/* Configure pin scan mode and positive and negative input pins */
 	module->INPUTCTRL.reg =
 			config->gain_factor |
@@ -264,6 +274,7 @@ static enum status_code _adc_set_config (
 					ADC_OFFSETCORR_OFFSETCORR_Pos;
 		}
 	}
+
 	return STATUS_OK;
 }
 
