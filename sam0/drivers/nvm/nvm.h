@@ -453,6 +453,12 @@ enum status_code nvm_read_buffer(
 		uint8_t *const buffer,
 		uint16_t length);
 
+enum status_code nvm_update_buffer(
+		const uint32_t destination_address,
+		uint8_t *const buffer,
+		uint16_t offset,
+		uint16_t length);
+
 enum status_code nvm_erase_row(
 		const uint32_t row_address);
 

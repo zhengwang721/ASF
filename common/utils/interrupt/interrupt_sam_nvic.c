@@ -71,7 +71,7 @@ void cpu_irq_leave_critical(void)
 
 	/* Only enable global interrupts when the counter reaches 0 and the state of the global interrupt flag
 	   was enabled when entering critical state */
-	if ((cpu_irq_critical_section_counter == 0) & (cpu_irq_prev_interrupt_state)) {
+	if ((cpu_irq_critical_section_counter == 0) && (cpu_irq_prev_interrupt_state)) {
 		cpu_irq_enable();
 	}
 }

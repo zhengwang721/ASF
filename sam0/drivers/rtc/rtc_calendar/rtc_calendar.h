@@ -387,17 +387,30 @@ struct rtc_calendar_config {
  * @{
  */
 
-#if !defined(__DOXYGEN__)
 /**
- * \internal Function to wait for sync busy flag to clear.
+ * \brief Determines if the hardware module(s) are currently synchronizing to the bus.
+ *
+ * Checks to see if the underlying hardware peripheral module(s) are currently
+ * synchronizing across multiple clock domains to the hardware bus, This
+ * function can be used to delay further operations on a module until such time
+ * that it is ready, to prevent blocking delays for synchronization in the
+ * user application.
+ *
+ * \return Synchronization status of the underlying hardware module(s).
+ *
+ * \retval true  if the module has completed synchronization
+ * \retval false if the module synchronization is ongoing
  */
-static inline void _rtc_calendar_wait_for_sync(void)
+static inline bool rtc_count_is_syncing(void)
 {
-	while (RTC->MODE2.STATUS.reg & RTC_STATUS_SYNCBUSY){
-		/* Wait for RTC to sync. */
-	}
+        Rtc *const rtc_module = RTC;
+
+        if (rtc_module->MODE0.STATUS.reg & RTC_STATUS_SYNCBUSY) {
+                return true;
+        }
+
+        return false;
 }
-#endif
 
 /**
  * \brief Initialize a \c time structure.
@@ -469,8 +482,9 @@ static inline void rtc_calendar_enable(void)
 	/* Initialize module pointer. */
 	Rtc *const rtc_module = RTC;
 
-	/* Sync. */
-	_rtc_calendar_wait_for_sync();
+	while (rtc_count_is_syncing()) {
+		/* Wait for synchronization */
+	}
 
 	/* Enable RTC module. */
 	rtc_module->MODE2.CTRL.reg |= RTC_MODE2_CTRL_ENABLE;
@@ -486,8 +500,9 @@ static inline void rtc_calendar_disable(void)
 	/* Initialize module pointer. */
 	Rtc *const rtc_module = RTC;
 
-	/* Sync: */
-	_rtc_calendar_wait_for_sync();
+	while (rtc_count_is_syncing()) {
+		/* Wait for synchronization */
+	}
 
 	/* Disable RTC module. */
 	rtc_module->MODE2.CTRL.reg &= ~RTC_MODE2_CTRL_ENABLE;

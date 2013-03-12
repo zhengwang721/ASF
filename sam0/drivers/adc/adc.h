@@ -801,20 +801,6 @@ struct adc_module {
 };
 
 /**
- * \internal Wait for synchronization to finish
- *
- * Blocks in a busy wait while module synchronizes.
- *
- * \param[in] hw Pointer to hardware module
- */
-static inline void _adc_wait_for_sync(
-		Adc *const hw)
-{
-	while (hw->STATUS.reg & ADC_STATUS_SYNCBUSY) {
-	}
-}
-
-/**
  * \name Driver initialization and configuration
  * @{
  */
@@ -940,7 +926,10 @@ static inline enum status_code adc_enable(
 
 	Adc *const adc_module = module_inst->hw;
 
-	_adc_wait_for_sync(adc_module);
+	while (adc_is_syncing(module_inst)) {
+		/* Wait for synchronization */
+	}
+
 	adc_module->CTRLA.reg |= ADC_CTRLA_ENABLE;
 	return STATUS_OK;
 }
@@ -960,7 +949,10 @@ static inline enum status_code adc_disable(
 
 	Adc *const adc_module = module_inst->hw;
 
-	_adc_wait_for_sync(adc_module);
+	while (adc_is_syncing(module_inst)) {
+		/* Wait for synchronization */
+	}
+
 	adc_module->CTRLA.reg &= ~ADC_CTRLA_ENABLE;
 	return STATUS_OK;
 }
@@ -984,8 +976,11 @@ static inline enum status_code adc_reset(
 	/* Disable to make sure the pipeline is flushed before reset */
 	adc_disable(module_inst);
 
+	while (adc_is_syncing(module_inst)) {
+		/* Wait for synchronization */
+	}
+
 	/* Software reset the module */
-	_adc_wait_for_sync(adc_module);
 	adc_module->CTRLA.reg |= ADC_CTRLA_SWRST;
 	return STATUS_OK;
 }
@@ -1005,7 +1000,10 @@ static inline void adc_start_conversion(
 
 	Adc *const adc_module = module_inst->hw;
 
-	_adc_wait_for_sync(adc_module);
+	while (adc_is_syncing(module_inst)) {
+		/* Wait for synchronization */
+	}
+
 	adc_module->SWTRIG.reg |= ADC_SWTRIG_START;
 }
 
@@ -1045,7 +1043,10 @@ static inline enum status_code adc_read(
 
 	Adc *const adc_module = module_inst->hw;
 
-	_adc_wait_for_sync(adc_module);
+	while (adc_is_syncing(module_inst)) {
+		/* Wait for synchronization */
+	}
+
 	/* Get ADC result */
 	*result = adc_module->RESULT.reg;
 	/* Reset ready flag */
@@ -1079,7 +1080,10 @@ static inline void adc_flush(
 
 	Adc *const adc_module = module_inst->hw;
 
-	_adc_wait_for_sync(adc_module);
+	while (adc_is_syncing(module_inst)) {
+		/* Wait for synchronization */
+	}
+
 	adc_module->SWTRIG.reg |= ADC_SWTRIG_FLUSH;
 }
 
@@ -1105,18 +1109,24 @@ static inline void adc_set_window_mode(
 
 	Adc *const adc_module = module_inst->hw;
 
-	/* Wait for synchronization to finish */
-	_adc_wait_for_sync(adc_module);
+	while (adc_is_syncing(module_inst)) {
+		/* Wait for synchronization */
+	}
+
 	/* Set window mode */
 	adc_module->WINCTRL.reg = window_mode << ADC_WINCTRL_WINMODE_Pos;
 
-	/* Wait for synchronization to finish */
-	_adc_wait_for_sync(adc_module);
+	while (adc_is_syncing(module_inst)) {
+		/* Wait for synchronization */
+	}
+
 	/* Set lower window monitor threshold value */
 	adc_module->WINLT.reg = window_lower_value << ADC_WINLT_WINLT_Pos;
 
-	/* Wait for synchronization to finish */
-	_adc_wait_for_sync(adc_module);
+	while (adc_is_syncing(module_inst)) {
+		/* Wait for synchronization */
+	}
+
 	/* Set upper window monitor threshold value */
 	adc_module->WINUT.reg = window_upper_value << ADC_WINUT_WINUT_Pos;
 }
@@ -1140,8 +1150,9 @@ static inline void adc_set_gain(
 
 	Adc *const adc_module = module_inst->hw;
 
-	/* Wait for synchronization to finish */
-	_adc_wait_for_sync(adc_module);
+	while (adc_is_syncing(module_inst)) {
+		/* Wait for synchronization */
+	}
 
 	/* Set gain factor */
 	adc_module->INPUTCTRL.reg =
@@ -1193,8 +1204,9 @@ static inline enum status_code adc_set_pin_scan_mode(
 		return STATUS_ERR_INVALID_ARG;
 	}
 
-	/* Wait for synchronization to finish */
-	_adc_wait_for_sync(adc_module);
+	while (adc_is_syncing(module_inst)) {
+		/* Wait for synchronization */
+	}
 
 	/* Set pin scan mode */
 	adc_module->INPUTCTRL.reg =
@@ -1240,8 +1252,9 @@ static inline void adc_set_positive_input(
 
 	Adc *const adc_module = module_inst->hw;
 
-	/* Wait for synchronization to finish */
-	_adc_wait_for_sync(adc_module);
+	while (adc_is_syncing(module_inst)) {
+		/* Wait for synchronization */
+	}
 
 	/* Set positive input pin */
 	adc_module->INPUTCTRL.reg =
@@ -1269,8 +1282,9 @@ static inline void adc_set_negative_input(
 
 	Adc *const adc_module = module_inst->hw;
 
-	/* Wait for synchronization to finish */
-	_adc_wait_for_sync(adc_module);
+	while (adc_is_syncing(module_inst)) {
+		/* Wait for synchronization */
+	}
 
 	/* Set negative input pin */
 	adc_module->INPUTCTRL.reg =

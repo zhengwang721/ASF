@@ -436,8 +436,10 @@ void spi_interrupt_handler(uint8_t instance)
 			/* Transaction ended by master, stop ongoing transmissions */
 			spi_hw->INTENCLR.reg = SPI_INTERRUPT_FLAG_TX_COMPLETE | SPI_INTERRUPT_FLAG_RX_COMPLETE |
 					SPI_INTERRUPT_FLAG_DATA_REGISTER_EMPTY;
+			spi_hw->INTFLAG.reg = SPI_INTERRUPT_FLAG_TX_COMPLETE;
 			module->tx_status = STATUS_OK;
 			module->rx_status = STATUS_OK;
+			module->dir = SPI_DIRECTION_IDLE;
 			module->remaining_tx_buffer_length = 0;
 			module->remaining_rx_buffer_length = 0;
 			/* Run callback if registered and enabled */
@@ -465,13 +467,16 @@ void spi_interrupt_handler(uint8_t instance)
 			/* Flush data register when writing */
 			uint16_t flush = spi_hw->DATA.reg;
 			if (module->remaining_tx_buffer_length == 0) {
+				/* Write complete */
+				module->dir = SPI_DIRECTION_IDLE;
+				module->tx_status = STATUS_OK;
 				spi_hw->INTENCLR.reg = SPI_INTERRUPT_FLAG_RX_COMPLETE;
 				if (module->mode == SPI_MODE_SLAVE &&
 						(callback_mask & (1 << SPI_CALLBACK_BUFFER_TRANSMITTED))) {
+
 					/* Run callback for slave if registered and enabled */
-					port_pin_toggle_output_level(PIN_PB05);
 					(module->callback[SPI_CALLBACK_BUFFER_TRANSMITTED])(module);
-					port_pin_toggle_output_level(PIN_PB05);
+
 				}
 			}
 		} else if (module->rx_status != STATUS_ABORTED) {

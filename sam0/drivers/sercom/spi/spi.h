@@ -898,16 +898,20 @@ void spi_reset(struct spi_module *const module);
  */
 
  /**
- * \brief Checks if the SPI module has shifted out last data
+ * \brief Checks if the SPI in master mode has shifted out last data, or
+ * if the master has ended the transfer in slave mode.
  *
- * This function will check if the SPI module has shifted out last data.
+ * This function will check if the SPI master module has shifted out last data,
+ * or if the slave select pin has been drawn high by the master for the SPI
+ * slave module. 
  *
  * \param[in] module      Pointer to the software instance struct
  *
  * \return Boolean value to tell whether the module has shifted out last data or
  * not
- * \retval true  If the SPI module has shifted out data
- * \retval false If the SPI module has not shifter out data
+ * \retval true  If the SPI master module has shifted out data, or slave select
+ *               has been drawn high for SPI slave
+ * \retval false If the SPI master module has not shifted out data
  */
 static inline bool spi_is_write_complete(struct spi_module *const module)
 {
