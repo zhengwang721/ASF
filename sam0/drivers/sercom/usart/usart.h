@@ -45,13 +45,13 @@
 #define USART_H_INCLUDED
 
 #ifndef PINMUX_DEFAULT
-#define PINMUX_DEFAULT 0xFFFFFFFF
+#  define PINMUX_DEFAULT 0xFFFFFFFF
 #endif
 
 #include <sercom.h>
 
-#ifdef USART_ASYNC
-#include <sercom_interrupt.h>
+#ifdef USART_CALLBACK_MODE
+#  include <sercom_interrupt.h>
 #endif
 
 #define USART_DEFAULT_TIMEOUT  0xFFFF
@@ -61,7 +61,13 @@
  *
  * This driver for the SAM D20 provides an interface to configure
  * and use the SERCOM in its USART mode to transfer or receive
- * USART dataframes.
+ * USART data frames. The following driver API modes are covered by this
+ * manual:
+ *
+ *  - Polled APIs
+ * \if USART_CALLBACK_MODE
+ *  - Callback APIs
+ * \endif
  *
  * The following peripherals are used by this module:
  *
@@ -172,10 +178,21 @@
  * multiplexing scheme on the SAM D20.
  *
  * \section asfdoc_samd20_sercom_usart_special_considerations Special considerations
- * No special considerations
+ *
+ * \if USART_CALLBACK_MODE
+ * Never execute large portions of code in the callbacks. These
+ * are run from the interrupt routine, and thus having long callbacks will
+ * keep the processor in the interrupt handler for an equally long time.
+ * A common way to handle this is to use global flags signalling the
+ * main application that an interrupt event has happened, and only do the
+ * minimal needed processing in the callback.
+ * \else
+ * No special considerations.
+ * \endif
+ *
  * \section asfdoc_samd20_sercom_usart_extra_info Extra Information
  *
- * For extra information see \ref asfdoc_samd20_sercom_usart_extra . This includes:
+ * For extra information see \ref asfdoc_samd20_sercom_usart_extra. This includes:
  * - \ref asfdoc_samd20_sercom_usart_extra_acronyms
  * - \ref asfdoc_samd20_sercom_usart_extra_dependencies
  * - \ref asfdoc_samd20_sercom_usart_extra_errata
@@ -185,12 +202,15 @@
  *
  * The following Quick Start guides and application examples are available for this driver:
  * - \ref asfdoc_samd20_sercom_usart_basic_use_case
+ * \if USART_CALLBACK_MODE
+ * - \ref asfdoc_samd20_sercom_usart_callback_use_case
+ * \endif
  *
  * \section asfdoc_samd20_sercom_usart_api_overview API Overview
  * @{
  */
 
-#ifdef USART_ASYNC
+#ifdef USART_CALLBACK_MODE
 /**
  * \brief USART Callback enum
  *
@@ -387,13 +407,12 @@ struct usart_config {
 	uint32_t pinout_pad3;
 };
 
-#ifdef USART_ASYNC
-/* Prototype for the device instance */
+#ifdef USART_CALLBACK_MODE
+/* Forward Declaration for the device instance */
 struct usart_module;
 
 /* Type of the callback functions */
-typedef void (*usart_callback_t)(const struct usart_module *const
-		module);
+typedef void (*usart_callback_t)(const struct usart_module *const module);
 #endif
 
 /**
@@ -405,7 +424,7 @@ struct usart_module {
 	Sercom *hw;
 	/** Character size of the data being transferred */
 	enum usart_char_size char_size;
-#ifdef USART_ASYNC
+#ifdef USART_CALLBACK_MODE
 	/** Array to store callback function pointers in */
 	usart_callback_t callback[USART_CALLBACK_N];
 	/** Buffer pointer to where the next received character will be put */
@@ -759,6 +778,21 @@ static inline void usart_disable_transceiver(const struct usart_module
 */
 
 /**
+ * \page asfdoc_samd20_sercom_exqsg Examples for USART Driver
+ *
+ * This is a list of the available Quick Start guides (QSGs) and example
+ * applications for \ref asfdoc_samd20_sercom_usart_group. QSGs are simple
+ * examples with step-by-step instructions to configure and use this driver in
+ * a selection of use cases. Note that QSGs can be compiled as a standalone
+ * application or be added to the user application.
+ *
+ * - \ref asfdoc_samd20_sercom_usart_basic_use_case
+ * \if USART_CALLBACK_MODE
+ * - \ref asfdoc_samd20_sercom_usart_callback_use_case
+ * \endif
+ */
+
+/**
  * \page asfdoc_samd20_sercom_usart_mux_settings SERCOM USART MUX Settings
  *
  * The different options for functionality of the SERCOM pads.
@@ -836,7 +870,7 @@ static inline void usart_disable_transceiver(const struct usart_module
  *      <td> x </td>
  *   </tr>
  * </table>
- * 
+ *
  * \section asfdoc_samd20_sercom_usart_mux_setting_c MUX Setting C
  *
  * Enum: \ref USART_RX_1_TX_0_XCK_1
@@ -873,7 +907,7 @@ static inline void usart_disable_transceiver(const struct usart_module
  *      <td>  </td>
  *   </tr>
  * </table>
- * 
+ *
  * \section asfdoc_samd20_sercom_usart_mux_setting_d MUX Setting D
  *
  * Enum: \ref USART_RX_1_TX_2_XCK_3
