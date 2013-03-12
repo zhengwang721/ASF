@@ -353,11 +353,11 @@ extern "C" {
  */
 
 /** ADC result ready */
-#define ADC_STATUS_RESULT_READY  ADC_INTFLAG_RESRDY
+#define ADC_STATUS_RESULT_READY  (1UL << 0)
 /** Window monitor match */
-#define ADC_STATUS_WINDOW        ADC_INTFLAG_WINMON
+#define ADC_STATUS_WINDOW        (1UL << 1)
 /** ADC result overwritten before read */
-#define ADC_STATUS_OVERRUN       ADC_INTFLAG_OVERRUN
+#define ADC_STATUS_OVERRUN       (1UL << 2)
 
 /** @} */
 
