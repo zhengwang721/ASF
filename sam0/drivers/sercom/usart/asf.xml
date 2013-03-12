@@ -29,7 +29,7 @@
 			<info type="description" value="summary">
 				Driver for the SAMD20 SERCOM in USART mode driven by interrupts.
 				Provides a unified interface for the configuration and use of
-				the SERCON USART INTERFACE.
+				the SERCOM USART INTERFACE.
 			</info>
 			<info type="keyword" value="technology">
 				<keyword value="USART"/>
