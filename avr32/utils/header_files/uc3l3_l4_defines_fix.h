@@ -3,7 +3,7 @@
  *
  * \brief Missing Toolchain Definition for UC3 L3 and UC3 L4 header files
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  * 
  * \asf_license_start
  *
@@ -73,11 +73,11 @@
 #warning "Duplicate define(s) to remove from the ASF"
 #endif  // AVR32_PM_PBB_MAX_FREQ
 
-#ifndef AVR32_PM_MCSEL_DFLL0
-#define AVR32_PM_MCSEL_DFLL0 2
+#ifndef AVR32_PM_MCSEL_SLOW
+#define AVR32_PM_MCSEL_SLOW 0
 #else
 #warning "Duplicate define(s) to remove from the ASF"
-#endif  // AVR32_PM_MCSEL_DFLL0
+#endif // AVR32_PM_MCSEL_SLOW
 
 #ifndef AVR32_PM_MCSEL_OSC0
 #define AVR32_PM_MCSEL_OSC0 1
@@ -85,17 +85,23 @@
 #warning "Duplicate define(s) to remove from the ASF"
 #endif  // AVR32_PM_MCSEL_OSC0
 
+#ifndef AVR32_PM_MCSEL_DFLL0
+#define AVR32_PM_MCSEL_DFLL0 2
+#else
+#warning "Duplicate define(s) to remove from the ASF"
+#endif  // AVR32_PM_MCSEL_DFLL0
+
 #ifndef AVR32_PM_MCSEL_RC120M
 #define AVR32_PM_MCSEL_RC120M 3
 #else
 #warning "Duplicate define(s) to remove from the ASF"
 #endif  // AVR32_PM_MCSEL_RC120M
 
-#ifndef AVR32_PM_MCSEL_SLOW
-#define AVR32_PM_MCSEL_SLOW 0
+#ifndef AVR32_PM_MCSEL_PLL0
+#define AVR32_PM_MCSEL_PLL0 5
 #else
 #warning "Duplicate define(s) to remove from the ASF"
-#endif // AVR32_PM_MCSEL_SLOW
+#endif // AVR32_PM_MCSEL_PLL0
 
 #endif // end UC3L3_L4
 

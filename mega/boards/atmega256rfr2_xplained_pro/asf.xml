@@ -5,7 +5,7 @@
 		<build type="header-file" value="led.h"/>
 		<build type="include-path" value="."/>
 		<build type="include-path" value=".."/>
-		<build type="c-source" value="init.c"/>		
+		<build type="c-source" value="init.c"/>
 		<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
 		<build type="module-config" subtype="path" value="board_config"/>
 		<require idref="common.services.basic.gpio"/>

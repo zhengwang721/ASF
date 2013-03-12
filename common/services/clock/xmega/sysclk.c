@@ -3,7 +3,7 @@
  *
  * \brief Chip-specific system clock management functions
  *
- * Copyright (c) 2010-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -58,6 +58,8 @@ void sysclk_init(void)
 	uint8_t i;
 #ifdef CONFIG_OSC_RC32_CAL
 	uint16_t cal;
+	/* avoid Cppcheck Warning */
+	UNUSED(cal);
 #endif
 	bool need_rc2mhz = false;
 
@@ -213,6 +215,11 @@ void sysclk_enable_usb(uint8_t frequency)
 			osc_enable(OSC_ID_RC32MHZ);
 			osc_wait_ready(OSC_ID_RC32MHZ);
 #ifdef CONFIG_OSC_AUTOCAL_RC32MHZ_REF_OSC
+			if (CONFIG_OSC_AUTOCAL_RC32MHZ_REF_OSC
+					!= OSC_ID_USBSOF) {
+				osc_enable(CONFIG_OSC_AUTOCAL_RC32MHZ_REF_OSC);
+				osc_wait_ready(CONFIG_OSC_AUTOCAL_RC32MHZ_REF_OSC);
+			}
 			osc_enable_autocalibration(OSC_ID_RC32MHZ,
 					CONFIG_OSC_AUTOCAL_RC32MHZ_REF_OSC);
 #endif

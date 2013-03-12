@@ -19,7 +19,7 @@
  * - Support email:      touch@atmel.com
  *
  *
- * Copyright (c) 2010-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -593,7 +593,7 @@ touch_qta_measure_complete_callback (touch_measure_data_t * p_measure_data)
   p_qta_measure_data = p_measure_data;
 
   /* Dummy. To avoid compiler warning. */
-  p_qta_measure_data = p_qta_measure_data;
+  UNUSED(p_qta_measure_data);
 
   /* Set QTouch Group A measurement done flag to true. */
   qta_measurement_done_touch = 1u;

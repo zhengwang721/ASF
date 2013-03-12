@@ -3,7 +3,7 @@
  *
  * \brief Bitmap path for SAM toolkit demo application.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -50,7 +50,7 @@
 #define DEMO_BMP_LOGO_ATMEL                      (void*)DEMO_BMP_PATH"bmp_logo_atmel"DEMO_BMP_EXT
 #define DEMO_BMP_BTN_BACK                        (void*)DEMO_BMP_PATH"btn_back"DEMO_BMP_EXT
 #define DEMO_BMP_CLOCK                           (void*)DEMO_BMP_PATH"bmp_clock"DEMO_BMP_EXT
-#define DEMO_BMP_INTRO_SAM4S                     (void*)DEMO_BMP_PATH"Chip_SAM4S16"DEMO_BMP_EXT
+#define DEMO_BMP_INTRO_SAM4S                     (void*)DEMO_BMP_PATH"Chip_SAM4S"DEMO_BMP_EXT
 #define DEMO_BMP_BTN_AUDIO                       (void*)DEMO_BMP_PATH"btn_audio"DEMO_BMP_EXT
 #define DEMO_BMP_BTN_VIDEO                       (void*)DEMO_BMP_PATH"btn_video"DEMO_BMP_EXT
 #define DEMO_BMP_BTN_GFX_DEMO                    (void*)DEMO_BMP_PATH"btn_gfx_demo"DEMO_BMP_EXT
