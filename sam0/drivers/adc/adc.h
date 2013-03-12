@@ -659,8 +659,7 @@ enum adc_oversampling_and_decimation {
 /**
  * \brief Window monitor configuration structure
  *
- * Window monitor configuration structure. Part of the \ref adc_config struct
- * and will be initialized by \ref adc_get_config_defaults .
+ * Window monitor configuration structure.
  */
 struct adc_window_config {
 	/** Selected window mode */
@@ -674,8 +673,7 @@ struct adc_window_config {
 /**
  * \brief Event configuration structure
  *
- * Event configuration structure. Part of the \ref adc_config struct and will
- * be initialized by \ref adc_get_config_defaults .
+ * Event configuration structure.
  */
 struct adc_event_config {
 	/** Event action to take on incoming event */
@@ -687,9 +685,9 @@ struct adc_event_config {
 };
 
 /**
- * \brief Gain and offsett correction configuration structure
+ * \brief Gain and offset correction configuration structure
  *
- * Gain and offsett correction configuration structure.
+ * Gain and offset correction configuration structure.
  * Part of the \ref adc_config struct and will  be initialized by
  * \ref adc_get_config_defaults .
  */
@@ -815,31 +813,30 @@ enum status_code adc_init(
 /**
  * \brief Initializes an ADC configuration structure to defaults
  *
- *  This function will initialize a given ADC configuration struct to a set of
- *  known default values. This function should be called on any new
- *  instance of the configuration struct before being modified by the
- *  user application.
+ * Initializes a given ADC configuration struct to a set of known default
+ * values. This function should be called on any new instance of the
+ * configuration struct before being modified by the user application.
  *
- *  The default configuration is as follows:
-  *   \li GCLK generator 0 (GCLK main) clock source
- *   \li 1V from internal bandgap reference
- *   \li Div 4 clock prescaler
- *   \li 12 bit resolution
- *   \li Window monitor disabled
- *   \li No gain
- *   \li Positive input on ADC PIN 0
- *   \li Negative input on ADC PIN 1
- *   \li Averaging disabled
- *   \li Oversampling disabled
- *   \li Right adjust data
- *   \li Single-ended mode
- *   \li Free running disabled
- *   \li All events (input and generation) disabled
- *   \li Sleep operation disabled
- *   \li No reference compensation
- *   \li No gain/offset correction
- *   \li No added sampling time
- *   \li Pin scan mode disabled
+ * The default configuration is as follows:
+ *  \li GCLK generator 0 (GCLK main) clock source
+ *  \li 1V from internal bandgap reference
+ *  \li Div 4 clock prescaler
+ *  \li 12 bit resolution
+ *  \li Window monitor disabled
+ *  \li No gain
+ *  \li Positive input on ADC PIN 0
+ *  \li Negative input on ADC PIN 1
+ *  \li Averaging disabled
+ *  \li Oversampling disabled
+ *  \li Right adjust data
+ *  \li Single-ended mode
+ *  \li Free running disabled
+ *  \li All events (input and generation) disabled
+ *  \li Sleep operation disabled
+ *  \li No reference compensation
+ *  \li No gain/offset correction
+ *  \li No added sampling time
+ *  \li Pin scan mode disabled
  *
  * \param[out] config  Pointer to configuration struct to initialize to
  *                     default values
@@ -931,11 +928,10 @@ static inline uint32_t adc_get_status(
 /**
  * \brief Clears a module status flag.
  *
- * \param[in] module_inst  Pointer to the ADC software instance struct
- *
  * Clears the given status flag of the module.
  *
- * \param status_flags   Bitmask of \c ADC_STATUS_* flags to clear
+ * \param[in] module_inst   Pointer to the ADC software instance struct
+ * \param[in] status_flags  Bitmask of \c ADC_STATUS_* flags to clear
  */
 static inline void adc_clear_status(
 		struct adc_module *const module_inst,
@@ -1008,9 +1004,9 @@ static inline bool adc_is_syncing(
 /**
  * \brief Enables the ADC module
  *
- * This function will enable the ADC module.
+ * Enables an ADC module that has previously been configured.
  *
- * \param[in] module_inst    Pointer to the ADC software instance struct
+ * \param[in] module_inst  Pointer to the ADC software instance struct
  */
 static inline enum status_code adc_enable(
 		struct adc_module *const module_inst)
@@ -1031,7 +1027,7 @@ static inline enum status_code adc_enable(
 /**
  * \brief Disables the ADC module
  *
- * This function will disable the ADC module.
+ * Disables an ADC module that was previously enabled.
  *
  * \param[in] module_inst Pointer to the ADC software instance struct
  */
@@ -1054,9 +1050,10 @@ static inline enum status_code adc_disable(
 /**
  * \brief Resets the ADC module
  *
- * This function will reset the ADC module.
+ * Resets an ADC module, clearing all module state and registers to their
+ * default values.
  *
- * \param[in] module_inst Pointer to the ADC software instance struct
+ * \param[in] module_inst  Pointer to the ADC software instance struct
  */
 static inline enum status_code adc_reset(
 		struct adc_module *const module_inst)
@@ -1082,9 +1079,9 @@ static inline enum status_code adc_reset(
 /**
  * \brief Starts an ADC conversion
  *
- * This function will start an ADC conversion
+ * Starts a new ADC conversion.
  *
- * \param[in] module_inst      Pointer to the ADC software instance struct
+ * \param[in] module_inst  Pointer to the ADC software instance struct
  */
 static inline void adc_start_conversion(
 		struct adc_module *const module_inst)
@@ -1104,15 +1101,14 @@ static inline void adc_start_conversion(
 /**
  * \brief Reads the ADC result
  *
- * This function will read the result from an ADC conversion. It will clear
- * the ADC_INTERRUPT_RESULT_READY flag after reading.
+ * Reads the result from an ADC conversion that was previously started.
  *
- * \param[in] module_inst      Pointer to the ADC software instance struct
+ * \param[in]  module_inst  Pointer to the ADC software instance struct
  * \param[out] result       Pointer to store the result value in
  *
- * \return Status of the procedure
- * \retval STATUS_OK                The result was retrieved successfully
- * \retval STATUS_BUSY          The result is not ready
+ * \return Status of the ADC read request.
+ * \retval STATUS_OK    The result was retrieved successfully
+ * \retval STATUS_BUSY  A conversion result was not ready
  */
 static inline enum status_code adc_read(
 		struct adc_module *const module_inst,
@@ -1152,12 +1148,11 @@ static inline enum status_code adc_read(
 /**
  * \brief Flushes the ADC pipeline
  *
- * This function will flush the pipeline and restart the ADC clock on the next
- * peripheral clock edge.
- * All conversions in progress will be lost.
- * When flush is complete, the module will resume where it left off.
+ * Flushes the pipeline and restart the ADC clock on the next peripheral clock
+ * edge. All conversions in progress will be lost. When flush is complete, the
+ * module will resume where it left off.
  *
- * \param[in] module_inst    Pointer to the ADC software instance struct
+ * \param[in] module_inst  Pointer to the ADC software instance struct
  */
 static inline void adc_flush(
 		struct adc_module *const module_inst)
@@ -1177,18 +1172,18 @@ static inline void adc_flush(
 /**
  * \brief Sets the ADC window mode
  *
- * This function will set the ADC window mode.
+ * Sets the ADC window mode to a given mode and value range.
  *
- * \param[in] module_inst           Pointer to the ADC software instance struct
+ * \param[in] module_inst        Pointer to the ADC software instance struct
  * \param[in] adc_window_mode    Window monitor mode to set
  * \param[in] window_lower_value Lower window monitor threshold value
  * \param[in] window_upper_value Upper window monitor threshold value
   */
 static inline void adc_set_window_mode(
 		struct adc_module *const module_inst,
-		enum adc_window_mode window_mode,
-		int16_t window_lower_value,
-		int16_t window_upper_value)
+		const enum adc_window_mode window_mode,
+		const int16_t window_lower_value,
+		const int16_t window_upper_value)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
@@ -1222,14 +1217,14 @@ static inline void adc_set_window_mode(
 /**
  * \brief Sets ADC gain factor
  *
- * This function will set the ADC gain factor.
+ * Sets the ADC gain factor to a specified gain setting.
  *
- * \param[in] module_inst       Pointer to the ADC software instance struct
- * \param[in] gain_factor    Gain factor value to set
+ * \param[in] module_inst  Pointer to the ADC software instance struct
+ * \param[in] gain_factor  Gain factor value to set
  */
 static inline void adc_set_gain(
 		struct adc_module *const module_inst,
-		enum adc_gain_factor gain_factor)
+		const enum adc_gain_factor gain_factor)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
@@ -1241,35 +1236,36 @@ static inline void adc_set_gain(
 		/* Wait for synchronization */
 	}
 
-	/* Set gain factor */
+	/* Set new gain factor */
 	adc_module->INPUTCTRL.reg =
 			(adc_module->INPUTCTRL.reg & ~ADC_INPUTCTRL_GAIN_Msk) |
 			(gain_factor << ADC_INPUTCTRL_GAIN_Pos);
 }
 
 /**
- * \brief Sets pin scan mode
+ * \brief Sets the ADC pin scan mode
  *
- * This function will set up the pin scan mode.
- * In pin scan mode, the first conversion will start at the configured
- * positive input + start_offset. When a conversion is done, a conversion will
- * start on the next input, until inputs_to_scan conversions are made.
+ * Configures the pin scan mode of the ADC module. In pin scan mode, the first
+ * conversion will start at the configured positive input + start_offset. When
+ * a conversion is done, a conversion will start on the next input, until
+ * \c inputs_to_scan number of conversions are made.
  *
- * \param[in] module_inst          Pointer to the ADC software instance struct
- * \param[in] inputs_to_scan    Number of input pins to do conversion on
- *                              (must be two or more)
- * \param[in] start_offset      Offset of first pin to scan (relative to
- *                               configured positive input)
+ * \param[in] module_inst     Pointer to the ADC software instance struct
+ * \param[in] inputs_to_scan  Number of input pins to perform a conversion on
+ *                            (must be two or more)
+ * \param[in] start_offset    Offset of first pin to scan (relative to
+ *                            configured positive input)
  *
- * \return Status of the procedure
- * \retval STATUS_OK              Pin scan mode has been set successfully
- * \retval STATUS_ERR_INVALID_ARG Number of input pins to scan or offset
- *                                has an invalid value
+ * \return Status of the pin scan configuration set request.
+ *
+ * \retval STATUS_OK               Pin scan mode has been set successfully
+ * \retval STATUS_ERR_INVALID_ARG  Number of input pins to scan or offset has
+ *                                 an invalid value
  */
 static inline enum status_code adc_set_pin_scan_mode(
 		struct adc_module *const module_inst,
 		uint8_t inputs_to_scan,
-		uint8_t start_offset)
+		const uint8_t start_offset)
 
 {
 	/* Sanity check arguments */
@@ -1285,6 +1281,7 @@ static inline enum status_code adc_set_pin_scan_mode(
 		*/
 		inputs_to_scan--;
 	}
+
 	if (inputs_to_scan > ADC_INPUTCTRL_INPUTSCAN_Msk ||
 			start_offset > ADC_INPUTCTRL_INPUTOFFSET_Msk) {
 		/* Invalid number of input pins */
@@ -1308,10 +1305,10 @@ static inline enum status_code adc_set_pin_scan_mode(
 /**
  * \brief Disables pin scan mode
  *
- * This function will disable pin scan mode. Next conversion will be done
- * on only one pin.
+ * Disables pin scan mode. The next conversion will be made on only one pin
+ * (the configured positive input pin).
  *
- * \param[in] module_inst     Pointer to the ADC software instance struct
+ * \param[in] module_inst  Pointer to the ADC software instance struct
  */
 static inline void adc_disable_pin_scan_mode(
 		struct adc_module *const module_inst)
@@ -1324,14 +1321,14 @@ static inline void adc_disable_pin_scan_mode(
 /**
  * \brief Sets positive ADC input pin
  *
- * This function will set the positive ADC input pin.
+ * Sets the positive ADC input pin selection.
  *
- * \param[in] module_inst        Pointer to the ADC software instance struct
+ * \param[in] module_inst     Pointer to the ADC software instance struct
  * \param[in] positive_input  Positive input pin
  */
 static inline void adc_set_positive_input(
 		struct adc_module *const module_inst,
-		enum adc_positive_input positive_input)
+		const enum adc_positive_input positive_input)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
@@ -1353,15 +1350,15 @@ static inline void adc_set_positive_input(
 /**
  * \brief Sets negative ADC input pin for differential mode
  *
- * This function will set the negative ADC input pin to be used in
- * differential mode.
+ * Sets the negative ADC input pin, when the ADC is configured in differential
+ * mode.
  *
- * \param[in] module_inst        Pointer to the ADC software instance struct
+ * \param[in] module_inst     Pointer to the ADC software instance struct
  * \param[in] negative_input  Negative input pin
  */
 static inline void adc_set_negative_input(
 		struct adc_module *const module_inst,
-		enum adc_negative_input negative_input)
+		const enum adc_negative_input negative_input)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
