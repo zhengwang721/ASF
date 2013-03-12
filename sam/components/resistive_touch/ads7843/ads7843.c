@@ -44,43 +44,54 @@
 #include "ads7843.h"
 #include "conf_ads7843.h"
 #include "board.h"
-#include "gpio.h"
+#include "ioport.h"
 #include "pio_handler.h"
+#include "pio.h"
 #include "spi_master.h"
 #include "conf_spi_master.h"
 
-#define ADS_CTRL_PD0              (1 << 0)  /* PD0 */
-#define ADS_CTRL_PD1              (1 << 1)  /* PD1 */
-#define ADS_CTRL_DFR              (1 << 2)  /* SER/DFR */
-#define ADS_CTRL_EIGHT_BITS_MOD   (1 << 3)  /* Mode */
-#define ADS_CTRL_START            (1 << 7)  /* Start Bit */
-#define ADS_CTRL_SWITCH_SHIFT     4  /* Address setting */
+/** PD0 */
+#define ADS_CTRL_PD0              (1 << 0)
+/** PD1 */
+#define ADS_CTRL_PD1              (1 << 1)
+/** SER/DFR */
+#define ADS_CTRL_DFR              (1 << 2)
+/** Mode */
+#define ADS_CTRL_EIGHT_BITS_MOD   (1 << 3)
+/** Start Bit */
+#define ADS_CTRL_START            (1 << 7)
+/** Address setting */
+#define ADS_CTRL_SWITCH_SHIFT     4
 
-/* Get X position command */
-#define CMD_Y_POSITION ((1 << ADS_CTRL_SWITCH_SHIFT) | ADS_CTRL_START | ADS_CTRL_PD0 | ADS_CTRL_PD1)
+/** Get X position command */
+#define CMD_Y_POSITION ((1 << ADS_CTRL_SWITCH_SHIFT) | ADS_CTRL_START |\
+		ADS_CTRL_PD0 | ADS_CTRL_PD1)
 
-/* Get Y position command */
-#define CMD_X_POSITION ((5 << ADS_CTRL_SWITCH_SHIFT) | ADS_CTRL_START | ADS_CTRL_PD0 | ADS_CTRL_PD1)
+/** Get Y position command */
+#define CMD_X_POSITION ((5 << ADS_CTRL_SWITCH_SHIFT) | ADS_CTRL_START |\
+		ADS_CTRL_PD0 | ADS_CTRL_PD1)
 
-/* Enable penIRQ */
+/** Enable penIRQ */
 #define CMD_ENABLE_PENIRQ  ((1 << ADS_CTRL_SWITCH_SHIFT) | ADS_CTRL_START)
 
 #define ADS7843_TIMEOUT        5000000
-#define ADS7843_BUFSIZE           3
+#define ADS7843_BUFSIZE        3
 
-/* Frequence rate for sending one bit */
-#define ADS7843_SPI_BAUDRATE      1000000
+/** Frequence rate for sending one bit */
+#define ADS7843_SPI_BAUDRATE   1000000
 
-#define DELAY_BEFORE_SPCK          200  /* 2us min (tCSS) <=> 200/100 000 000 = 2us */
-#define DELAY_BETWEEN_CONS_COM     0xf  /* 5us min (tCSH) <=> (32 * 15) / (100 000 000) = 5us */
+/** 2us min (tCSS) <=> 200/100 000 000 = 2us */
+#define DELAY_BEFORE_SPCK          200
+/** 5us min (tCSH) <=> (32 * 15) / (100 000 000) = 5us */
+#define DELAY_BETWEEN_CONS_COM     0xf
 
-/// @cond 0
+/** @cond 0*/
 /**INDENT-OFF**/
 #ifdef __cplusplus
 extern "C" {
 #endif
 /**INDENT-ON**/
-/// @endcond
+/** @endcond*/
 
 /**
  * \brief Send a command to the ADS7843 touch controller.
@@ -96,7 +107,7 @@ static uint32_t ads7843_send_cmd(uint8_t uc_cmd)
 	uint8_t data;
 	uint32_t timeout = SPI_TIMEOUT;
 
-	/* (volatile declaration needed for code optimisation by compiler) */
+	/** (volatile declaration needed for code optimisation by compiler) */
 	volatile uint8_t bufferRX[ADS7843_BUFSIZE];
 	volatile uint8_t bufferTX[ADS7843_BUFSIZE];
 
@@ -137,48 +148,49 @@ static uint32_t ads7843_send_cmd(uint8_t uc_cmd)
 
 uint32_t ads7843_is_pressed(void)
 {
-	return gpio_pin_is_low(BOARD_ADS7843_IRQ_GPIO);
+	return (ioport_get_pin_level(BOARD_ADS7843_IRQ_GPIO) ==
+			IOPORT_PIN_LEVEL_LOW);
 }
 
 void ads7843_set_handler(void (*p_handler) (uint32_t, uint32_t))
 {
-	/* Initialize interrupts */
+	/** Initialize interrupts */
 	pio_handler_set_pin(BOARD_ADS7843_IRQ_GPIO,
 			BOARD_ADS7843_IRQ_FLAGS,
 			(void (*)(uint32_t, uint32_t)) p_handler
 			);
 
-	/* Enable the interrupt */
+	/** Enable the interrupt */
 	pio_enable_pin_interrupt(BOARD_ADS7843_IRQ_GPIO);
 }
 
 void ads7843_enable_interrupt(void)
 {
-	/* Enable the interrupt */
+	/** Enable the interrupt */
 	pio_enable_pin_interrupt(BOARD_ADS7843_IRQ_GPIO);
 }
 
 void ads7843_disable_interrupt(void)
 {
-	/* Disable the interrupt */
+	/** Disable the interrupt */
 	pio_disable_pin_interrupt(BOARD_ADS7843_IRQ_GPIO);
 }
 
 void ads7843_get_raw_point(uint32_t *p_x, uint32_t *p_y)
 {
-	/* Disable interrupt to quickly evaluate the coordinates */
+	/** Disable interrupt to quickly evaluate the coordinates */
 	pio_disable_pin_interrupt(BOARD_ADS7843_IRQ_GPIO);
-	
-	/* Get X position */
+
+	/** Get X position */
 	*p_x = ads7843_send_cmd(CMD_X_POSITION);
 
-	/* Get Y position */
+	/** Get Y position */
 	*p_y = ads7843_send_cmd(CMD_Y_POSITION);
 
-	/* Switch to full power mode */
+	/** Switch to full power mode */
 	ads7843_send_cmd(CMD_ENABLE_PENIRQ);
 
-	/* Re-enable interrupt */
+	/** Re-enable interrupt */
 	pio_enable_pin_interrupt(BOARD_ADS7843_IRQ_GPIO);
 }
 
@@ -186,7 +198,7 @@ uint32_t ads7843_init(void)
 {
 	volatile uint32_t uDummy;
 	struct spi_device ADS7843_SPI_DEVICE_CFG = {
-		// Board specific chip select configuration
+		/** Board specific chip select configuration*/
 #ifdef BOARD_ADS7843_SPI_NPCS
 		.id = BOARD_ADS7843_SPI_NPCS
 #else
@@ -196,7 +208,8 @@ uint32_t ads7843_init(void)
 	};
 
 	spi_master_init(BOARD_ADS7843_SPI_BASE);
-	spi_master_setup_device(BOARD_ADS7843_SPI_BASE, &ADS7843_SPI_DEVICE_CFG, SPI_MODE_0, ADS7843_SPI_BAUDRATE, 0);
+	spi_master_setup_device(BOARD_ADS7843_SPI_BASE, &ADS7843_SPI_DEVICE_CFG,
+			SPI_MODE_0, ADS7843_SPI_BAUDRATE, 0);
 	spi_select_device(BOARD_ADS7843_SPI_BASE, &ADS7843_SPI_DEVICE_CFG);
 	spi_enable(BOARD_ADS7843_SPI_BASE);
 
@@ -208,13 +221,13 @@ uint32_t ads7843_init(void)
 	return 0;
 }
 
-/// @cond 0
+/** @cond 0*/
 /**INDENT-OFF**/
 #ifdef __cplusplus
 }
 #endif
 /**INDENT-ON**/
-/// @endcond
+/** @endcond*/
 
 /**
  * \}

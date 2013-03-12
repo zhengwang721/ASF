@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="driver" id="sam0.drivers.rtc_count" caption="Real Time Counter">
+	<module type="driver" id="sam0.drivers.rtc_count" caption="Real Time Counter (Count Mode) Driver">
 		<info type="description" value="summary">
 			Driver for the SAMD20 RTC. Provides a unified interface
 			for the configuration and management of the RTC module.
