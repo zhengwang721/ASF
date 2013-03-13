@@ -50,7 +50,8 @@
  *
  * \param[in,out] module Pointer to the software instance struct
  */
-void spi_reset(struct spi_module *const module)
+void spi_reset(
+		struct spi_module *const module)
 {
 	/* Sanity check arguments */
 	Assert(module);
@@ -82,7 +83,8 @@ void spi_reset(struct spi_module *const module)
  * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) were provided.
  * \retval STATUS_OK              If the configuration was written
  */
-static enum status_code _spi_set_config(struct spi_module *const module,
+static enum status_code _spi_set_config(
+		struct spi_module *const module,
 		struct spi_config *config)
 {
 	/* Sanity check arguments */
@@ -216,7 +218,9 @@ static enum status_code _spi_set_config(struct spi_module *const module,
  * \retval STATUS_BUSY               If module is busy resetting.
  * \retval STATUS_ERR_INVALID_ARG        If invalid argument(s) were provided.
  */
-enum status_code spi_init(struct spi_module *const module, Sercom *hw,
+enum status_code spi_init(
+		struct spi_module *const module,
+		Sercom *hw,
 		struct spi_config *config)
 {
 
@@ -296,7 +300,7 @@ enum status_code spi_init(struct spi_module *const module, Sercom *hw,
  * dummy SPI character if in master mode, or by waiting for data in slave mode.
  *
  * \note Data buffer for received data must be uint16_t and cast to uint8_t if
- * SPI character size is 9 bit.
+ *       SPI character size is 9 bit.
  *
  * \param[in] module  Pointer to the software instance struct
  * \param[out] rx_data  Data buffer for received data
@@ -310,8 +314,11 @@ enum status_code spi_init(struct spi_module *const module, Sercom *hw,
  *                                timeout in slave mode.
  * \retval STATUS_ERR_OVERFLOW    If the data is overflown
  */
-enum status_code spi_read_buffer_wait(struct spi_module *const module,
-		uint8_t *rx_data, uint8_t length, uint16_t dummy)
+enum status_code spi_read_buffer_wait(
+		struct spi_module *const module,
+		uint8_t *rx_data,
+		uint8_t length,
+		uint16_t dummy)
 {
 	/* Sanity check arguments */
 	Assert(module);
@@ -360,6 +367,7 @@ enum status_code spi_read_buffer_wait(struct spi_module *const module,
 			}
 		} else {
 			retval = spi_read(module, ((uint16_t*)(&(rx_data)[i++])));
+
 			if (retval != STATUS_OK) {
 				/* Overflow, abort */
 				return retval;
@@ -389,8 +397,10 @@ enum status_code spi_read_buffer_wait(struct spi_module *const module,
  * \retval STATUS_BUSY                If the SPI module is not ready to write
  *                                    the slave address
  */
-enum status_code spi_select_slave(struct spi_module *module,
-		struct spi_slave_inst *slave, bool select)
+enum status_code spi_select_slave(
+		struct spi_module *module,
+		struct spi_slave_inst *slave,
+		bool select)
 {
 	/* Sanity check arguments */
 	Assert(module);
@@ -414,6 +424,7 @@ enum status_code spi_select_slave(struct spi_module *module,
 				port_pin_set_output_level(slave->ss_pin, true);
 				return STATUS_BUSY;
 			}
+
 			/* Write address to slave */
 			spi_write(module, slave->address);
 		}
@@ -448,8 +459,10 @@ enum status_code spi_select_slave(struct spi_module *module,
  * \retval STATUS_ERR_TIMEOUT     If the operation was not completed within the
  *                                timeout in slave mode.
  */
-enum status_code spi_write_buffer_wait(struct spi_module
-		*const module, const uint8_t *tx_data, uint8_t length)
+enum status_code spi_write_buffer_wait(
+		struct spi_module *const module,
+		const uint8_t *tx_data,
+		uint8_t length)
 {
 	/* Sanity check arguments */
 	Assert(module);
@@ -543,8 +556,11 @@ enum status_code spi_write_buffer_wait(struct spi_module
  *                                timeout in slave mode.
  * \retval STATUS_ERR_OVERFLOW    If the data is overflown
  */
-enum status_code spi_tranceive_buffer_wait(struct spi_module *const module,
-		uint8_t *tx_data, uint8_t *rx_data, uint8_t length)
+enum status_code spi_tranceive_buffer_wait(
+		struct spi_module *const module,
+		uint8_t *tx_data,
+		uint8_t *rx_data,
+		uint8_t length)
 {
 	/* Sanity check arguments */
 	Assert(module);

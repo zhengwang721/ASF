@@ -683,7 +683,8 @@ struct spi_config {
 /**
  * \internal Wait until the synchronization is complete
  */
-static inline void _spi_wait_for_sync(struct spi_module *const module)
+static inline void _spi_wait_for_sync(
+		struct spi_module *const module)
 {
 	SercomSpi *const spi_module = &(module->hw->SPI);
 
@@ -707,7 +708,8 @@ static inline void _spi_wait_for_sync(struct spi_module *const module)
  * \retval false  Module synchronization is not ongoing
  *
  */
-static inline bool spi_is_syncing(struct spi_module *const module)
+static inline bool spi_is_syncing(
+		struct spi_module *const module)
 {
 	/* Sanity check arguments */
 	Assert(module);
@@ -746,7 +748,8 @@ static inline bool spi_is_syncing(struct spi_module *const module)
  *
  * \param[out] config  Configuration structure to initialize to default values
  */
-static inline void spi_get_config_defaults(struct spi_config *const config)
+static inline void spi_get_config_defaults(
+		struct spi_config *const config)
 {
 	/* Sanity check arguments */
 	Assert(config);
@@ -787,8 +790,8 @@ static inline void spi_get_config_defaults(struct spi_config *const config)
  *
  * \param[out] config  Configuration structure to initialize to default values
  */
-static inline void spi_slave_inst_get_config_defaults(struct spi_slave_inst_config
-		*const config)
+static inline void spi_slave_inst_get_config_defaults(
+		struct spi_slave_inst_config *const config)
 {
 	Assert(config);
 
@@ -808,8 +811,10 @@ static inline void spi_slave_inst_get_config_defaults(struct spi_slave_inst_conf
  * \param[in] config      Pointer to the config struct
  *
  */
-static inline void spi_attach_slave(struct spi_slave_inst *const slave,
-		struct spi_slave_inst_config *const config) {
+static inline void spi_attach_slave(
+		struct spi_slave_inst *const slave,
+		struct spi_slave_inst_config *const config)
+{
 	Assert(slave);
 	Assert(config);
 
@@ -847,7 +852,8 @@ enum status_code spi_init(struct spi_module *const module, Sercom *hw,
  *
  * \param[in,out] module    Pointer to the software instance struct
  */
-static inline void spi_enable(struct spi_module *const module)
+static inline void spi_enable(
+		struct spi_module *const module)
 {
 	/* Sanity check arguments */
 	Assert(module);
@@ -862,6 +868,7 @@ static inline void spi_enable(struct spi_module *const module)
 	while (spi_is_syncing(module)) {
 		/* Wait until the synchronization is complete */
 	}
+
 	/* Enable SPI */
 	spi_module->CTRLA.reg |= SERCOM_SPI_CTRLA_ENABLE;
 }
@@ -873,7 +880,8 @@ static inline void spi_enable(struct spi_module *const module)
  *
  * \param[in,out] module    Pointer to the software instance struct
  */
-static inline void spi_disable(struct spi_module *const module)
+static inline void spi_disable(
+		struct spi_module *const module)
 {
 	/* Sanity check arguments */
 	Assert(module);
@@ -893,7 +901,8 @@ static inline void spi_disable(struct spi_module *const module)
 	spi_module->CTRLA.reg &= ~SERCOM_SPI_CTRLA_ENABLE;
 }
 
-void spi_reset(struct spi_module *const module);
+void spi_reset(
+		struct spi_module *const module);
 
 /** @} */
 
@@ -918,7 +927,8 @@ void spi_reset(struct spi_module *const module);
  *               has been drawn high for SPI slave
  * \retval false If the SPI master module has not shifted out data
  */
-static inline bool spi_is_write_complete(struct spi_module *const module)
+static inline bool spi_is_write_complete(
+		struct spi_module *const module)
 {
 	/* Sanity check arguments */
 	Assert(module);
@@ -942,7 +952,8 @@ static inline bool spi_is_write_complete(struct spi_module *const module)
  * \retval true  If the SPI module is ready to write data
  * \retval false If the SPI module is not ready to write data
  */
-static inline bool spi_is_ready_to_write(struct spi_module *const module)
+static inline bool spi_is_ready_to_write(
+		struct spi_module *const module)
 {
 	/* Sanity check arguments */
 	Assert(module);
@@ -966,7 +977,8 @@ static inline bool spi_is_ready_to_write(struct spi_module *const module)
  * \retval true  If the SPI module is ready to read data
  * \retval false If the SPI module is not ready to read data
  */
-static inline bool spi_is_ready_to_read(struct spi_module *const module)
+static inline bool spi_is_ready_to_read(
+		struct spi_module *const module)
 {
 	/* Sanity check arguments */
 	Assert(module);
@@ -1005,7 +1017,8 @@ static inline bool spi_is_ready_to_read(struct spi_module *const module)
  * \retval STATUS_BUSY If the last write was not completed
  *
  */
-static inline enum status_code spi_write(struct spi_module *module,
+static inline enum status_code spi_write(
+		struct spi_module *module,
 		uint16_t tx_data)
 {
 	/* Sanity check arguments */
@@ -1046,7 +1059,8 @@ enum status_code spi_write_buffer_wait(struct spi_module
  * \retval STATUS_ERR_IO       If no data is available
  * \retval STATUS_ERR_OVERFLOW If the data is overflown
  */
-static inline enum status_code spi_read(struct spi_module *const module,
+static inline enum status_code spi_read(
+		struct spi_module *const module,
 		uint16_t *rx_data)
 {
 	/* Sanity check arguments */
@@ -1077,8 +1091,11 @@ static inline enum status_code spi_read(struct spi_module *const module,
 	return retval;
 }
 
-enum status_code spi_read_buffer_wait(struct spi_module *const module,
-		uint8_t *rx_data, uint8_t length, uint16_t dummy);
+enum status_code spi_read_buffer_wait(
+		struct spi_module *const module,
+		uint8_t *rx_data,
+		uint8_t length,
+		uint16_t dummy);
 
 /**
  * \brief Sends and reads a single SPI character
@@ -1106,8 +1123,10 @@ enum status_code spi_read_buffer_wait(struct spi_module *const module,
  *                             timeout in slave mode.
  * \retval STATUS_ERR_OVERFLOW If the incoming data is overflown
  */
-static inline enum status_code spi_tranceive_wait(struct spi_module *const module,
-		uint16_t tx_data, uint16_t *rx_data)
+static inline enum status_code spi_tranceive_wait(
+		struct spi_module *const module,
+		uint16_t tx_data,
+		uint16_t *rx_data)
 {
 	/* Sanity check arguments */
 	Assert(module);
@@ -1129,6 +1148,7 @@ static inline enum status_code spi_tranceive_wait(struct spi_module *const modul
 	/* Wait until the module is ready to write the character */
 	while (!spi_is_ready_to_write(module)) {
 	}
+
 	/* Write data */
 	spi_write(module, tx_data);
 
@@ -1147,17 +1167,23 @@ static inline enum status_code spi_tranceive_wait(struct spi_module *const modul
 	/* Wait until the module is ready to read the character */
 	while (!spi_is_ready_to_read(module)) {
 	}
+
 	/* Read data */
 	retval = spi_read(module, rx_data);
 
 	return retval;
 }
 
-enum status_code spi_tranceive_buffer_wait(struct spi_module *const module,
-		uint8_t *tx_data, uint8_t *rx_data, uint8_t length);
+enum status_code spi_tranceive_buffer_wait(
+		struct spi_module *const module,
+		uint8_t *tx_data,
+		uint8_t *rx_data,
+		uint8_t length);
 
-enum status_code spi_select_slave(struct spi_module *module,
-		struct spi_slave_inst *slave, bool select);
+enum status_code spi_select_slave(
+		struct spi_module *module,
+		struct spi_slave_inst *slave,
+		bool select);
 
 /** @} */
 
