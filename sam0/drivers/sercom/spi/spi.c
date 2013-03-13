@@ -353,13 +353,13 @@ enum status_code spi_read_buffer_wait(struct spi_module *const module,
 		enum status_code retval = STATUS_OK;
 		/* Read SPI character */
 		if (module->chsize == SPI_CHARACTER_SIZE_9BIT) {
-			retval = spi_read(module, &(((uint16_t*)(rx_data))[i++]));
+			retval = spi_read(module, &(((uint16_t*)(void*)(rx_data))[i++]));
 			if (retval != STATUS_OK) {
 				/* Overflow, abort */
 				return retval;
 			}
 		} else {
-			retval = spi_read(module, ((uint16_t*)(&(rx_data)[i++])));
+			retval = spi_read(module, ((uint16_t*)(void*)(&(rx_data)[i++])));
 			if (retval != STATUS_OK) {
 				/* Overflow, abort */
 				return retval;
@@ -483,7 +483,7 @@ enum status_code spi_write_buffer_wait(struct spi_module
 
 		if (module->chsize == SPI_CHARACTER_SIZE_9BIT) {
 			/* Write the 9 bit character */
-			spi_write(module, ((uint16_t*)(tx_data))[i++]);
+			spi_write(module, ((uint16_t*)(void*)(tx_data))[i++]);
 		} else {
 			/* Write 8 bit character*/
 			spi_write(module, (uint16_t)tx_data[i++]);
@@ -577,7 +577,7 @@ enum status_code spi_tranceive_buffer_wait(struct spi_module *const module,
 
 		if (module->chsize == SPI_CHARACTER_SIZE_9BIT) {
 			/* Write the 9 bit character */
-			spi_write(module, ((uint16_t*)(tx_data))[i++]);
+			spi_write(module, ((uint16_t*)(void*)(tx_data))[i++]);
 		} else {
 			/* Write character */
 			spi_write(module, (uint16_t)tx_data[i++]);
@@ -602,13 +602,13 @@ enum status_code spi_tranceive_buffer_wait(struct spi_module *const module,
 		enum status_code retval = STATUS_OK;
 		/* Read SPI character */
 		if (module->chsize == SPI_CHARACTER_SIZE_9BIT) {
-			retval = spi_read(module, &(((uint16_t*)(rx_data))[k++]));
+			retval = spi_read(module, &(((uint16_t*)(void*)(rx_data))[i++]));
 			if (retval != STATUS_OK) {
 				/* Overflow, abort */
 				return retval;
 			}
 		} else {
-			retval = spi_read(module, ((uint16_t*)(&(rx_data)[k++])));
+			retval = spi_read(module, ((uint16_t*)(void*)(&(rx_data)[i++])));
 			if (retval != STATUS_OK) {
 				/* Overflow, abort */
 				return retval;

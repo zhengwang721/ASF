@@ -466,6 +466,8 @@ void spi_interrupt_handler(uint8_t instance)
 		if (module->dir == SPI_DIRECTION_WRITE) {
 			/* Flush data register when writing */
 			uint16_t flush = spi_hw->DATA.reg;
+			/* Use variable to avoid warning */
+			(void)flush;
 			if (module->remaining_tx_buffer_length == 0) {
 				/* Write complete */
 				module->dir = SPI_DIRECTION_IDLE;
