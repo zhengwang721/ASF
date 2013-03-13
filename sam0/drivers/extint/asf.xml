@@ -16,9 +16,6 @@
 
 			<build type="define" name="EXTINT_CALLBACK_MODE" value="false"/>
 
-			<build type="module-config" subtype="required-header-file" value="conf_extint.h"/>
-			<build type="module-config" subtype="path" value="module_config"/>
-
 			<build type="header-file" subtype="example" value="quick_start_polled/qs_extint_basic.h"/>
 			<build type="doxygen-entry-point" value="asfdoc_samd20_extint_group"/>
 			<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
@@ -35,6 +32,9 @@
 			<build type="header-file" subtype="api" value="extint_callback.h"/>
 			<build type="c-source" value="extint.c"/>
 			<build type="c-source" value="extint_callback.c"/>
+
+			<build type="module-config" subtype="required-header-file" value="conf_extint.h"/>
+			<build type="module-config" subtype="path" value="module_config"/>
 
 			<build type="define" name="EXTINT_CALLBACK_MODE" value="true"/>
 			<build type="doxygen-enable-section" value="EXTINT_CALLBACK_MODE"/>
