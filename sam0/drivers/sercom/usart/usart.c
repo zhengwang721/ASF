@@ -62,12 +62,12 @@ enum status_code _usart_set_config(
 	uint32_t usart_freq;
 	enum status_code status_code = STATUS_OK;
 
+	/* Get a pointer to the hardware module instance */
+	SercomUsart *const usart_hw = &(module->hw->USART);
+
 	/* Temporary registers. */
 	uint32_t ctrla = 0;
 	uint32_t ctrlb = 0;
-
-	/* Get a pointer to the hardware module instance */
-	SercomUsart *const usart_hw = &(module->hw->USART);
 
 	/* Set data order, internal muxing, and clock polarity */
 	ctrla = (config->data_order) | (config->mux_settings) |
@@ -405,17 +405,20 @@ enum status_code usart_read_wait(
 		if (error_code & SERCOM_USART_STATUS_FERR) {
 			/* Clear flag by writing a 1 to it and
 			 * return with an error code */
-			usart_hw->STATUS.reg &= SERCOM_USART_STATUS_FERR;
+			usart_hw->STATUS.reg = SERCOM_USART_STATUS_FERR;
+
 			return STATUS_ERR_BAD_FORMAT;
 		} else if (error_code & SERCOM_USART_STATUS_BUFOVF) {
 			/* Clear flag by writing a 1 to it and
 			 * return with an error code */
-			usart_hw->STATUS.reg &= SERCOM_USART_STATUS_BUFOVF;
+			usart_hw->STATUS.reg = SERCOM_USART_STATUS_BUFOVF;
+
 			return STATUS_ERR_OVERFLOW;
 		} else if (error_code & SERCOM_USART_STATUS_PERR) {
 			/* Clear flag by writing a 1 to it and
 			 * return with an error code */
-			usart_hw->STATUS.reg &= SERCOM_USART_STATUS_PERR;
+			usart_hw->STATUS.reg = SERCOM_USART_STATUS_PERR;
+
 			return STATUS_ERR_BAD_DATA;
 		}
 	}

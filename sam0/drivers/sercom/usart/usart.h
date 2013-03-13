@@ -225,10 +225,10 @@ enum usart_callback {
 	USART_CALLBACK_BUFFER_RECEIVED,
 	/** Callback for error */
 	USART_CALLBACK_ERROR,
-#if !defined(__DOXYGEN__)
+#  if !defined(__DOXYGEN__)
 	/** Number of available callbacks. */
 	USART_CALLBACK_N,
-#endif
+#  endif
 };
 #endif
 
