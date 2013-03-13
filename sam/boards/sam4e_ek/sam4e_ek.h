@@ -284,9 +284,11 @@
 		PIN_PUSHBUTTON_3, PIN_PUSHBUTTON_4}
 
 #define PIN_TC0_TIOA0        (PIO_PA0_IDX)
+#define PIN_TC0_TIOA0_MUX    (IOPORT_MODE_MUX_B)
 #define PIN_TC0_TIOA0_FLAGS  (IOPORT_MODE_MUX_B)
 
 #define PIN_TC0_TIOA1        (PIO_PA15_IDX)
+#define PIN_TC0_TIOA1_MUX    (IOPORT_MODE_MUX_B)
 #define PIN_TC0_TIOA1_FLAGS  (IOPORT_MODE_MUX_B)
 
 #define PIN_TC0_TIOA1_PIO    PIOA
@@ -296,6 +298,7 @@
 #define PIN_TC0_TIOA1_ATTR   PIO_DEFAULT
 
 #define PIN_TC0_TIOA2        (PIO_PA26_IDX)
+#define PIN_TC0_TIOA2_MUX    (IOPORT_MODE_MUX_B)
 #define PIN_TC0_TIOA2_FLAGS  (IOPORT_MODE_MUX_B)
 
 #define PIN_TC0_TIOA2_PIO    PIOA
@@ -368,6 +371,19 @@
 /* Chip select used by AT25DFx components on the SPI module instance */
 #define AT25DFX_CS      3
 
+/* Touch screen IRQ & Busy pin definition */
+#define BOARD_ADS7843_IRQ_GPIO  (PIO_PA16_IDX)
+#define BOARD_ADS7843_IRQ_FLAGS  IOPORT_MODE_PULLUP
+#define BOARD_ADS7843_BUSY_GPIO  (PIO_PA17_IDX)
+#define BOARD_ADS7843_BUSY_FLAGS  IOPORT_MODE_PULLUP
+/**
+* SPI instance, which can be SPI, SPI0 or SPI1, depends on which SPI
+* channel is used.
+*/
+#define BOARD_ADS7843_SPI_BASE    SPI
+/* SPI chip select NO., depends on which SPI CS pin is used by ADS7843. */
+#define BOARD_ADS7843_SPI_NPCS    0
+
 /** TWI0 pins definition */
 #define TWI0_DATA_GPIO   PIO_PA3_IDX
 #define TWI0_DATA_FLAGS  (IOPORT_MODE_MUX_A)
@@ -382,6 +398,7 @@
 
 /** PCK0 pin definition (PA6) */
 #define PIN_PCK0         (PIO_PA6_IDX)
+#define PIN_PCK0_MUX     (IOPORT_MODE_MUX_B)
 #define PIN_PCK0_FLAGS   (IOPORT_MODE_MUX_B)
 #define PIN_PCK0_PORT    IOPORT_PIOA
 #define PIN_PCK0_MASK    PIO_PA6B_PCK0
@@ -463,6 +480,42 @@
 #define PIN_USB_DM      {PIO_PB10}
 /** USB D+ pin (System function) */
 #define PIN_USB_DP      {PIO_PB11}
+
+/** EBI Data Bus pins */
+#define PIN_EBI_DATA_BUS_D0        PIO_PC0_IDX
+#define PIN_EBI_DATA_BUS_D1        PIO_PC1_IDX
+#define PIN_EBI_DATA_BUS_D2        PIO_PC2_IDX
+#define PIN_EBI_DATA_BUS_D3        PIO_PC3_IDX
+#define PIN_EBI_DATA_BUS_D4        PIO_PC4_IDX
+#define PIN_EBI_DATA_BUS_D5        PIO_PC5_IDX
+#define PIN_EBI_DATA_BUS_D6        PIO_PC6_IDX
+#define PIN_EBI_DATA_BUS_D7        PIO_PC7_IDX
+#define PIN_EBI_DATA_BUS_FLAGS     (IOPORT_MODE_MUX_A | IOPORT_MODE_PULLUP)
+
+#define PIN_EBI_NRD                PIO_PC11_IDX
+#define PIN_EBI_NRD_FLAGS          (IOPORT_MODE_MUX_A | IOPORT_MODE_PULLUP)
+#define PIN_EBI_NWE                PIO_PC8_IDX
+#define PIN_EBI_NWE_FLAGS          (IOPORT_MODE_MUX_A | IOPORT_MODE_PULLUP)
+
+/** EBI pin for LCD CS and RS **/
+#define PIN_EBI_NCS1               PIO_PD18_IDX
+#define PIN_EBI_NCS1_FLAGS         (IOPORT_MODE_MUX_A | IOPORT_MODE_PULLUP)
+#define PIN_EBI_LCD_RS             PIO_PC19_IDX
+#define PIN_EBI_LCD_RS_FLAGS       (IOPORT_MODE_MUX_A | IOPORT_MODE_PULLUP)
+
+/** Indicates board has an ILI9325 external component to manage LCD. */
+#define BOARD_LCD_ILI93XX
+
+/** Backlight pin definition. */
+#define BOARD_AAT31XX_SET_GPIO      PIO_PC13_IDX
+/** Define ILI93xx base address. */
+#define BOARD_ILI93XX_ADDR          0x61000000
+/** Define ILI9325 register select signal. */
+#define BOARD_ILI93XX_RS            (1 << 1)
+/** Display width in pixels. */
+#define BOARD_LCD_WIDTH             240
+/** Display height in pixels. */
+#define BOARD_LCD_HEIGHT            320
 
 /* KSZ8051MNL relate PIN definition */
 #define PIN_KSZ8051MNL_RXC_IDX                PIO_PD14_IDX

@@ -56,19 +56,22 @@ void board_init(void)
 	wdt_disable(WDT);
 #endif
 
-	// Must initialize IOPORT before setting up IO
+	/* GPIO has been deprecated, the old code just keeps it for compatibility.
+	 * In new designs IOPORT is used instead.
+	 * Here IOPORT must be initialized for others to use before setting up IO.
+	 */
 	ioport_init();
 
-	// Initialize LED0, turned off
+	/* Initialize LED0, turned off */
 	ioport_set_pin_level(LED_0_PIN, !LED_0_ACTIVE);
 	ioport_set_pin_dir(LED_0_PIN, IOPORT_DIR_OUTPUT);
 
-	// Initialize SW0
+	/* Initialize SW0 */
 	ioport_set_pin_dir(BUTTON_0_PIN, IOPORT_DIR_INPUT);
 	ioport_set_pin_mode(BUTTON_0_PIN, (BUTTON_0_ACTIVE ?
 				IOPORT_MODE_PULLDOWN : IOPORT_MODE_PULLUP));
 
-	// Initialize EXT3 LED0, LED1 & LED2, turned off
+	/* Initialize EXT3 LED0, LED1 & LED2, turned off */
 	ioport_set_pin_level(IO1_LED1_PIN, !IO1_LED1_ACTIVE);
 	ioport_set_pin_dir(IO1_LED1_PIN, IOPORT_DIR_OUTPUT);
 	ioport_set_pin_level(IO1_LED2_PIN, !IO1_LED2_ACTIVE);
