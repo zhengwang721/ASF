@@ -53,8 +53,14 @@ void _usart_read_buffer(struct usart_module *const module,
 #endif
 
 /**
+ * \addtogroup asfdoc_samd20_sercom_usart_group
+ *
+ * @{
+ */
+
+/**
  * \name Callback Management
- * {@
+ * @{
  */
 void usart_register_callback(struct usart_module *const module,
 		usart_callback_t callback_func,
@@ -124,7 +130,7 @@ static inline void usart_disable_callback(
 
 /**
  * \name Writing and reading
- * {@
+ * @{
  */
 enum status_code usart_write_job(struct usart_module *const module,
 		const uint16_t tx_data);
@@ -150,7 +156,7 @@ enum status_code usart_get_job_status(
 
 /**
  * \name Writing and reading
- * {@
+ * @{
  */
 
 void _usart_interrupt_handler(uint8_t instance);
@@ -159,4 +165,7 @@ void _usart_interrupt_handler(uint8_t instance);
  * @}
  */
 
+/**
+ * @}
+ */
 #endif /* USART_INTERRUPT_H_INCLUDED */
