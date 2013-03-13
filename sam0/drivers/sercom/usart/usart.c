@@ -470,6 +470,8 @@ enum status_code usart_write_buffer_wait(
 	/* Wait until synchronization is complete */
 	_usart_wait_for_sync(module);
 
+	uint16_t tx_pos = 0;
+
 	/* Blocks while buffer is being transferred */
 	while (length--) {
 		/* Wait for the USART to be ready for new data and abort
@@ -482,15 +484,16 @@ enum status_code usart_write_buffer_wait(
 			}
 		}
 
+		/* Data to send is at least 8 bits long */
+		uint16_t data_to_send = tx_data[tx_pos++];
+
 		/* Check if the character size exceeds 8 bit */
 		if (module->char_size == USART_CHAR_SIZE_9BIT) {
-			/* Increment 8 bit pointer by two */
-			usart_write_wait(module, (uint16_t)*(tx_data));
-			tx_data += 2;
-		} else {
-			/* Increment 8 bit pointer by one */
-			usart_write_wait(module, (uint16_t)*(tx_data++));
+			data_to_send |= (tx_data[tx_pos++] << 8);
 		}
+
+		/* Send the data through the USART module */
+		usart_write_wait(module, data_to_send);
 	}
 
 	/* Wait until Transmit is complete or timeout */
@@ -560,6 +563,8 @@ enum status_code usart_read_buffer_wait(
 	/* Get a pointer to the hardware module instance */
 	SercomUsart *const usart_hw = &(module->hw->USART);
 
+	uint16_t rx_pos = 0;
+
 	/* Blocks while buffer is being received */
 	while (length--) {
 		/* Wait for the USART to have new data and abort operation if it
@@ -572,14 +577,22 @@ enum status_code usart_read_buffer_wait(
 			}
 		}
 
-		/* Check if the character size exceeds 8 bit */
+		enum status_code retval;
+		uint16_t received_data = 0;
+
+		retval = usart_read_wait(module, &received_data);
+
+		if (retval != STATUS_OK) {
+			/* Overflow, abort */
+			return retval;
+		}
+
+		/* Read value will be at least 8-bits long */
+		rx_data[rx_pos++] = received_data;
+
+		/* If 9-bit data, write next received byte to the buffer */
 		if (module->char_size == USART_CHAR_SIZE_9BIT) {
-			/* Increment the 8 bit data pointer by two */
-			usart_read_wait(module, (void*)rx_data);
-			rx_data += 2;
-		} else {
-			/* Increment the 8 bit data pointer by one */
-			usart_read_wait(module, (void*)(rx_data++));
+			rx_data[rx_pos++] = (received_data >> 8);
 		}
 	}
 
