@@ -876,7 +876,7 @@ static inline void adc_get_config_defaults(struct adc_config *const config)
 /** @} */
 
 /**
- * \name Checking and clearing of status flags
+ * \name Status Management
  * @{
  */
 
