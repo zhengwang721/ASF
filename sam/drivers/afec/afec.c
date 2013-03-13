@@ -66,7 +66,9 @@ extern "C" {
  * @{
  */
 
-afec_callback_t afec_callback_pointer[2];
+afec_callback_t afec_callback_pointer[2][23];
+
+uint32_t g_interrupt_source[2][23];
 
 /**
  * \internal
@@ -152,6 +154,12 @@ static void afec_set_config(Afec *const afec, struct afec_config *config)
 void afec_ch_set_config(Afec *const afec, const enum afec_channel_num channel,
 		struct afec_ch_config *config)
 {
+	if(afec == AFEC0) {
+		Assert(channel < 16);
+	} else if(afec == AFEC1)	{
+		Assert(channel < 8);
+	}
+
 	afec->AFE_CDOR = (config->offset) ? (0x1u << channel) : 0;
 	afec->AFE_DIFFR = (config->diff) ? (0x1u << channel) : 0;
 	afec->AFE_CGR = (0x03u << (2 * channel)) & ((config->gain) << (2 * channel));
@@ -165,6 +173,8 @@ void afec_ch_set_config(Afec *const afec, const enum afec_channel_num channel,
  */
 void afec_temp_sensor_set_config(Afec *const afec, struct afec_temp_sensor_config *config)
 {
+	Assert(afec == AFEC0);
+
 	uint32_t reg = 0;
 
 	reg = ((config->rctc) ? AFE_TEMPMR_RTCT : 0) | (config->mode);
@@ -183,10 +193,15 @@ void afec_temp_sensor_set_config(Afec *const afec, struct afec_temp_sensor_confi
  * The default configuration is as follows:
  * - 12 -bit resolution
  * - AFEC clock frequency is 6MHz
- * - Analog Change is not allowed
- * - Normal mode
+ * - Start Up Time is 64 periods AFEClock
+ * - Analog Settling Time is 3 periods of AFEClock
+ * - Tracking Time is 3 periods of AFEClock
+ * - Transfer Period is 5 periods AFEClock
+ * - Allows different analog settings for each channel
+ * - The controller converts channels in a simple numeric order
  * - Appends the channel number to the conversion result in AFE_LDCR register
  * - Only a Single Trigger is required to get an averaged value
+ * - AFE Bias Current Control value is 1
  *
  * \param cfg Pointer to configuration structure to be initiated.
  */
@@ -239,6 +254,7 @@ void afec_ch_get_config_defaults(struct afec_ch_config *const cfg)
  * The default configuration is as follows:
  * - The temperature sensor measure is not triggered by RTC event
  * - Generates an event when the converted data is in the comparison window
+ * - The window range is 0xFF ~ 0xFFF
  *
  * \param cfg Pointer to temperature sensor configuration structure to be initiated.
  */
@@ -266,6 +282,10 @@ enum status_code afec_init(Afec *const afec, struct afec_config *config)
 	Assert(afec);
 	Assert(config);
 
+	if ((afec_get_interrupt_status(afec) & AFE_ISR_DRDY) == AFE_ISR_DRDY) {
+		return STATUS_ERR_BUSY;
+	}
+
 	/* Reset the AFEC module */
 	afec->AFE_CR = AFE_CR_SWRST;
 	afec_set_config(afec, config);
@@ -278,17 +298,18 @@ enum status_code afec_init(Afec *const afec, struct afec_config *config)
  *
  * \param afec  Base address of the AFEC
  * \param source    Interrupt source
+ * \param src_num Interrupt source number
  * \param callback  Callback function pointer
  * \param irq_level Interrupt level
  */
 void afec_set_callback(Afec *const afec, enum afec_interrupt_source source,
-		afec_callback_t callback, uint8_t irq_level)
+		uint8_t src_num, afec_callback_t callback, uint8_t irq_level)
 {
 	Assert(afec);
 	Assert(callback);
 
 	uint32_t i = afec_find_inst_num(afec);
-	afec_callback_pointer[i] = callback;
+	afec_callback_pointer[i][src_num] = callback;
 	if (!i) {
 		irq_register_handler(AFEC0_IRQn, irq_level);
 	} else if (i == 1) {
@@ -296,6 +317,8 @@ void afec_set_callback(Afec *const afec, enum afec_interrupt_source source,
 	}
 	/* Enable the specified interrupt source */
 	afec_enable_interrupt(afec, source);
+
+	g_interrupt_source[i][src_num] = source;
 }
 
 /**
@@ -306,11 +329,12 @@ void afec_set_callback(Afec *const afec, enum afec_interrupt_source source,
  * afec_set_callback() function.
  *
  * \param inst_num AFEC instance number to handle interrupt for
+ * \param src_num Interrupt source number
  */
-static void afec_interrupt(uint8_t inst_num)
+static void afec_interrupt(uint8_t inst_num, uint8_t src_num)
 {
-	if (afec_callback_pointer[inst_num]) {
-		afec_callback_pointer[inst_num]();
+	if (afec_callback_pointer[inst_num][src_num]) {
+		afec_callback_pointer[inst_num][src_num]();
 	} else {
 		Assert(false); /* Catch unexpected interrupt */
 	}
@@ -321,7 +345,125 @@ static void afec_interrupt(uint8_t inst_num)
  */
 void AFEC0_Handler(void)
 {
-	afec_interrupt(0);
+	volatile uint32_t status;
+
+	status = afec_get_interrupt_status(AFEC0);
+
+	if ((status & AFE_ISR_EOC0) == AFE_ISR_EOC0) {
+		if(g_interrupt_source[0][0]) {
+			afec_interrupt(0, 0);
+		}
+	}
+	if ((status & AFE_ISR_EOC1) == AFE_ISR_EOC1) {
+		if(g_interrupt_source[0][1]) {
+			afec_interrupt(0, 1);
+		}
+	}
+	if ((status & AFE_ISR_EOC2) == AFE_ISR_EOC2) {
+		if(g_interrupt_source[0][2]) {
+			afec_interrupt(0, 2);
+		}
+	}
+	if ((status & AFE_ISR_EOC3) == AFE_ISR_EOC3) {
+		if(g_interrupt_source[0][3]) {
+			afec_interrupt(0, 3);
+		}
+	}
+	if ((status & AFE_ISR_EOC4) == AFE_ISR_EOC4) {
+		if(g_interrupt_source[0][4]) {
+			afec_interrupt(0, 4);
+		}
+	}
+	if ((status & AFE_ISR_EOC5) == AFE_ISR_EOC5) {
+		if(g_interrupt_source[0][5]) {
+			afec_interrupt(0, 5);
+		}
+	}
+	if ((status & AFE_ISR_EOC6) == AFE_ISR_EOC6) {
+		if(g_interrupt_source[0][6]) {
+			afec_interrupt(0, 6);
+		}
+	}
+	if ((status & AFE_ISR_EOC7) == AFE_ISR_EOC7) {
+		if(g_interrupt_source[0][7]) {
+			afec_interrupt(0, 7);
+		}
+	}
+	if ((status & AFE_ISR_EOC8) == AFE_ISR_EOC8) {
+		if(g_interrupt_source[0][8]) {
+			afec_interrupt(0, 8);
+		}
+	}
+	if ((status & AFE_ISR_EOC9) == AFE_ISR_EOC9) {
+		if(g_interrupt_source[0][9]) {
+			afec_interrupt(0, 9);
+		}
+	}
+	if ((status & AFE_ISR_EOC10) == AFE_ISR_EOC10) {
+		if(g_interrupt_source[0][10]) {
+			afec_interrupt(0, 10);
+		}
+	}
+	if ((status & AFE_ISR_EOC11) == AFE_ISR_EOC11) {
+		if(g_interrupt_source[0][11]) {
+			afec_interrupt(0, 11);
+		}
+	}
+	if ((status & AFE_ISR_EOC12) == AFE_ISR_EOC12) {
+		if(g_interrupt_source[0][12]) {
+			afec_interrupt(0, 12);
+		}
+	}
+	if ((status & AFE_ISR_EOC13) == AFE_ISR_EOC13) {
+		if(g_interrupt_source[0][13]) {
+			afec_interrupt(0, 13);
+		}
+	}
+	if ((status & AFE_ISR_EOC14) == AFE_ISR_EOC14) {
+		if(g_interrupt_source[0][14]) {
+			afec_interrupt(0, 14);
+		}
+	}
+	if ((status & AFE_ISR_EOC15) == AFE_ISR_EOC15) {
+		if(g_interrupt_source[0][15]) {
+			afec_interrupt(0, 15);
+		}
+	}
+	if ((status & AFE_ISR_DRDY) == (AFE_ISR_DRDY)) {
+		if(g_interrupt_source[0][16]) {
+			afec_interrupt(0, 16);
+		}
+	}
+	if ((status & AFE_ISR_GOVRE) == AFE_ISR_GOVRE) {
+		if(g_interrupt_source[0][17]) {
+			afec_interrupt(0, 17);
+		}
+	}
+	if ((status & AFE_ISR_COMPE) == AFE_ISR_COMPE) {
+		if(g_interrupt_source[0][18]) {
+			afec_interrupt(0, 18);
+		}
+	}
+	if ((status & AFE_ISR_ENDRX) == AFE_ISR_ENDRX) {
+		if(g_interrupt_source[0][19]) {
+			afec_interrupt(0, 19);
+		}
+	}
+	if ((status & AFE_ISR_RXBUFF) == AFE_ISR_RXBUFF) {
+		if(g_interrupt_source[0][20]) {
+			afec_interrupt(0, 20);
+		}
+	}
+	if ((status & AFE_ISR_TEMPCHG) == AFE_ISR_TEMPCHG) {
+		if(g_interrupt_source[0][21]) {
+			afec_interrupt(0, 21);
+		}
+	}
+	if ((status & AFE_ISR_EOCAL) == AFE_ISR_EOCAL) {
+		if(g_interrupt_source[0][22]) {
+			afec_interrupt(0, 22);
+		}
+	}
 }
 
 /**
@@ -329,7 +471,85 @@ void AFEC0_Handler(void)
  */
 void AFEC1_Handler(void)
 {
-	afec_interrupt(1);
+	volatile uint32_t status;
+
+	status = afec_get_interrupt_status(AFEC1);
+
+	if ((status & AFE_ISR_EOC0) == AFE_ISR_EOC0) {
+		if(g_interrupt_source[1][0]) {
+			afec_interrupt(1, 0);
+		}
+	}
+	if ((status & AFE_ISR_EOC1) == AFE_ISR_EOC1) {
+		if(g_interrupt_source[1][1]) {
+			afec_interrupt(1, 1);
+		}
+	}
+	if ((status & AFE_ISR_EOC2) == AFE_ISR_EOC2) {
+		if(g_interrupt_source[1][2]) {
+			afec_interrupt(1, 2);
+		}
+	}
+	if ((status & AFE_ISR_EOC3) == AFE_ISR_EOC3) {
+		if(g_interrupt_source[1][3]) {
+			afec_interrupt(1, 3);
+		}
+	}
+	if ((status & AFE_ISR_EOC4) == AFE_ISR_EOC4) {
+		if(g_interrupt_source[1][4]) {
+			afec_interrupt(1, 4);
+		}
+	}
+	if ((status & AFE_ISR_EOC5) == AFE_ISR_EOC5) {
+		if(g_interrupt_source[1][5]) {
+			afec_interrupt(1, 5);
+		}
+	}
+	if ((status & AFE_ISR_EOC6) == AFE_ISR_EOC6) {
+		if(g_interrupt_source[1][6]) {
+			afec_interrupt(1, 6);
+		}
+	}
+	if ((status & AFE_ISR_EOC7) == AFE_ISR_EOC7) {
+		if(g_interrupt_source[1][7]) {
+			afec_interrupt(1, 7);
+		}
+	}
+	if ((status & AFE_ISR_DRDY) == (AFE_ISR_DRDY)) {
+		if(g_interrupt_source[1][16]) {
+			afec_interrupt(1, 16);
+		}
+	}
+	if ((status & AFE_ISR_GOVRE) == AFE_ISR_GOVRE) {
+		if(g_interrupt_source[1][17]) {
+			afec_interrupt(1, 17);
+		}
+	}
+	if ((status & AFE_ISR_COMPE) == AFE_ISR_COMPE) {
+		if(g_interrupt_source[1][18]) {
+			afec_interrupt(1, 18);
+		}
+	}
+	if ((status & AFE_ISR_ENDRX) == AFE_ISR_ENDRX) {
+		if(g_interrupt_source[1][19]) {
+			afec_interrupt(1, 19);
+		}
+	}
+	if ((status & AFE_ISR_RXBUFF) == AFE_ISR_RXBUFF) {
+		if(g_interrupt_source[1][20]) {
+			afec_interrupt(1, 20);
+		}
+	}
+	if ((status & AFE_ISR_TEMPCHG) == AFE_ISR_TEMPCHG) {
+		if(g_interrupt_source[1][21]) {
+			afec_interrupt(1, 21);
+		}
+	}
+	if ((status & AFE_ISR_EOCAL) == AFE_ISR_EOCAL) {
+		if(g_interrupt_source[1][22]) {
+			afec_interrupt(1, 22);
+		}
+	}
 }
 
 /**
@@ -380,7 +600,7 @@ void afec_configure_sequence(Afec *const afec, const enum afec_channel_num ch_li
 	afec->AFE_MR |= AFE_MR_USEQ_REG_ORDER;
 	afec->AFE_SEQ1R = 0;
 	afec->AFE_SEQ2R = 0;
-		
+
 	if (uc_num < 8) {
 		for (uc_counter = 0; uc_counter < uc_num; uc_counter++) {
 			afec->AFE_SEQ1R |=

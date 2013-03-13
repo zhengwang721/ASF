@@ -106,9 +106,6 @@
 /** The maximal digital value */
 #define MAX_DIGITAL_12_BIT     (4095)
 
-/** AFEC channel for potentiometer */
-#define AFEC_CHANNEL_POTENTIOMETER  AFEC_CHANNEL_5
-
 #define STRING_EOL    "\r"
 #define STRING_HEADER "-- AFEC Enhanced Resolution Example --\r\n" \
 		"-- "BOARD_NAME" --\r\n" \
@@ -190,10 +187,8 @@ static void set_afec_resolution(void)
  */
 static void afec_data_ready(void)
 {
-	if ((afec_get_interrupt_status(AFEC0) & AFE_ISR_DRDY) == AFE_ISR_DRDY) {
-		g_afec_sample_data.us_value = afec_get_latest_value(AFEC0);
-		g_afec_sample_data.is_done = true;
-	}
+	g_afec_sample_data.us_value = afec_get_latest_value(AFEC0);
+	g_afec_sample_data.is_done = true;
 }
 
 /**
@@ -227,8 +222,9 @@ int main(void)
 
 	struct afec_ch_config afec_ch_cfg;
 	afec_ch_get_config_defaults(&afec_ch_cfg);
-	afec_ch_cfg.offset= true;
 	afec_ch_set_config(AFEC0, AFEC_CHANNEL_POTENTIOMETER, &afec_ch_cfg);
+
+	/* Because the internal ADC offset is 0x800, it should cancel it and shift down to 0.*/
 	afec_channel_set_analog_offset(AFEC0, AFEC_CHANNEL_POTENTIOMETER, 0x800);
 
 	afec_set_trigger(AFEC0, AFEC_TRIG_SW);
@@ -236,10 +232,9 @@ int main(void)
 	/* Enable channel for potentiometer. */
 	afec_channel_enable(AFEC0, AFEC_CHANNEL_POTENTIOMETER);
 
-	afec_set_callback(AFEC0, AFEC_INTERRUPT_DATA_READY, afec_data_ready, 1);
+	afec_set_callback(AFEC0, AFEC_INTERRUPT_DATA_READY, 16, afec_data_ready, 1);
 
-	afec_set_calib_mode(AFEC0);
-	while(!(afec_get_interrupt_status(AFEC0) & AFE_ISR_EOCAL) == AFE_ISR_EOCAL);
+	display_menu();
 
 	while (1) {
 		afec_start_software_conversion(AFEC0);

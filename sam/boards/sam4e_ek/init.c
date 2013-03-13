@@ -308,10 +308,4 @@ void board_init(void)
 	ioport_set_pin_peripheral_mode(PIN_USART1_TXD_IDX, PIN_USART1_TXD_FLAGS);
 	ioport_set_pin_peripheral_mode(PIN_USART1_SCK_IDX, PIN_USART1_SCK_FLAGS);
 #endif
-
-#ifdef CONF_BOARD_AFEC_CHANNEL
-	/* Configure AFEC Channel */
-	ioport_set_pin_peripheral_mode(PIN_AFEC0_AD5_IDX, PIN_AFEC0_AD5_FLAGS);
-#endif
-
 }

@@ -45,6 +45,7 @@
 #define AFEC_H_INCLUDED
 
 #include "compiler.h"
+#include "status_codes.h"
 
 /// @cond 0
 /**INDENT-OFF**/
@@ -241,14 +242,6 @@ enum afec_interrupt_source {
 	AFEC_INTERRUPT_EOC_13     = AFE_IER_EOC13,
 	AFEC_INTERRUPT_EOC_14     = AFE_IER_EOC14,
 	AFEC_INTERRUPT_EOC_15     = AFE_IER_EOC15,
-	AFEC_INTERRUPT_EOC_16     = AFE_IER_EOC16,
-	AFEC_INTERRUPT_EOC_17     = AFE_IER_EOC17,
-	AFEC_INTERRUPT_EOC_18     = AFE_IER_EOC18,
-	AFEC_INTERRUPT_EOC_19     = AFE_IER_EOC19,
-	AFEC_INTERRUPT_EOC_20     = AFE_IER_EOC20,
-	AFEC_INTERRUPT_EOC_21     = AFE_IER_EOC21,
-	AFEC_INTERRUPT_EOC_22     = AFE_IER_EOC22,
-	AFEC_INTERRUPT_EOC_23     = AFE_IER_EOC23,
 	AFEC_INTERRUPT_DATA_READY     = AFE_IER_DRDY,
 	AFEC_INTERRUPT_OVERRUN_ERROR     = AFE_IER_GOVRE,
 	AFEC_INTERRUPT_COMP_ERROR     = AFE_IER_COMPE,
@@ -260,6 +253,8 @@ enum afec_interrupt_source {
 };
 
 typedef void (*afec_callback_t)(void);
+
+#define WP_KEY_VALUE          0x414443
 
 void afec_get_config_defaults(struct afec_config *const cfg);
 void afec_ch_get_config_defaults(struct afec_ch_config *const cfg);
@@ -273,8 +268,8 @@ void afec_configure_sequence(Afec *const afec,
 		const enum afec_channel_num ch_list[], const uint8_t uc_num);
 void afec_enable(Afec *const afec);
 void afec_disable(Afec *const afec);
-void afec_set_callback(Afec *const afec,
-		enum afec_interrupt_source source, afec_callback_t callback, uint8_t irq_level);
+void afec_set_callback(Afec *const afec, enum afec_interrupt_source source,
+		uint8_t src_num, afec_callback_t callback, uint8_t irq_level);
 
 /**
  * \brief Configure conversion trigger and free run mode.
@@ -286,13 +281,19 @@ void afec_set_callback(Afec *const afec,
 static inline void afec_set_trigger(Afec *const afec,
 		const enum afec_trigger trigger)
 {
+	uint32_t reg;
+
+	reg = afec->AFE_MR;
+
 	if(trigger == AFEC_TRIG_FREERUN) {
-		afec->AFE_MR |= AFE_MR_FREERUN_ON;
+		reg |= AFE_MR_FREERUN_ON;
 	} else {
-		afec->AFE_MR &= ~AFE_MR_FREERUN_ON;
-		afec->AFE_MR &= ~(AFE_MR_TRGSEL_Msk | AFE_MR_TRGEN);
-		afec->AFE_MR |= trigger;
+		reg &= ~AFE_MR_FREERUN_ON;
+		reg &= ~(AFE_MR_TRGSEL_Msk | AFE_MR_TRGEN);
+		reg |= trigger;
 	}
+
+	afec->AFE_MR = reg;
 }
 
 /**
@@ -305,8 +306,14 @@ static inline void afec_set_trigger(Afec *const afec,
 static inline void afec_set_resolution(Afec *const afec,
 		const enum afec_resolution res)
 {
-	afec->AFE_EMR &= ~AFE_EMR_RES_Msk;
-	afec->AFE_EMR |= res;
+	uint32_t reg;
+
+	reg = afec->AFE_EMR;
+
+	reg &= ~AFE_EMR_RES_Msk;
+	reg |= res;
+
+	afec->AFE_EMR = reg;
 }
 
 /**
@@ -321,12 +328,23 @@ static inline void afec_set_comparison_mode(Afec *const afec,
 		const enum afec_cmp_mode mode,
 		const enum afec_channel_num channel, uint8_t cmp_filter)
 {
-	afec->AFE_EMR &= ~(AFE_EMR_CMPSEL_Msk |
+	if(afec == AFEC0) {
+		Assert(channel < 17);
+	} else if(afec == AFEC1) {
+		Assert(channel < 9);
+	}
+	uint32_t reg;
+
+	reg = afec->AFE_EMR;
+
+	reg &= ~(AFE_EMR_CMPSEL_Msk |
 			AFE_EMR_CMPMODE_Msk |
 			AFE_EMR_CMPFILTER_Msk);
-	afec->AFE_EMR |= mode |
+	reg |= mode |
 			((channel == AFEC_CHANNEL_ALL) ? AFE_EMR_CMPALL : AFE_EMR_CMPSEL(channel)) |
 			AFE_EMR_CMPFILTER(cmp_filter);
+
+	afec->AFE_EMR = reg;
 }
 
 /**
@@ -365,10 +383,10 @@ static inline void afec_set_writeprotect(Afec *const afec,
 		const bool is_enable)
 {
 	if(is_enable) {
-		afec->AFE_WPMR = AFE_WPMR_WPEN | AFE_WPMR_WPKEY(0x414443);
+		afec->AFE_WPMR = AFE_WPMR_WPEN | AFE_WPMR_WPKEY(WP_KEY_VALUE);
 	} else {
 		afec->AFE_WPMR &= ~AFE_WPMR_WPEN;
-		afec->AFE_WPMR |= AFE_WPMR_WPKEY(0x414443);
+		afec->AFE_WPMR |= AFE_WPMR_WPKEY(WP_KEY_VALUE);
 	}
 }
 
@@ -419,19 +437,25 @@ static inline void afec_start_software_conversion(Afec *const afec)
 static inline void afec_configure_power_mode(Afec *const afec,
 		const enum afec_power_mode mode)
 {
+	uint32_t reg;
+
+	reg = afec->AFE_MR;
+
 	switch(mode) {
 		case AFEC_POWER_MODE_0:
-			afec->AFE_MR &= ~ AFE_MR_SLEEP_SLEEP;
+			reg &= ~ AFE_MR_SLEEP_SLEEP;
+			reg &= ~AFE_MR_FWUP_ON;
 			break;
 		case AFEC_POWER_MODE_1:
-			afec->AFE_MR |= AFE_MR_SLEEP_SLEEP;
-			afec->AFE_MR &= ~AFE_MR_FWUP_ON;
+			reg |= AFE_MR_FWUP_ON;
 			break;
 		case AFEC_POWER_MODE_2:
-			afec->AFE_MR |= AFE_MR_SLEEP_SLEEP;
-			afec->AFE_MR |= AFE_MR_FWUP_ON;
+			reg |= AFE_MR_SLEEP_SLEEP;
+			reg &= ~AFE_MR_FWUP_ON;
 			break;
 	}
+
+	afec->AFE_MR = reg;
 }
 
 /**
@@ -443,6 +467,12 @@ static inline void afec_configure_power_mode(Afec *const afec,
 static inline void afec_channel_enable(Afec *const afec,
 		const enum afec_channel_num afec_ch)
 {
+	if(afec == AFEC0) {
+		Assert(afec_ch < 17);
+	} else if(afec == AFEC1) {
+		Assert(afec_ch < 9);
+	}
+
 	afec->AFE_CHER = (afec_ch == AFEC_CHANNEL_ALL) ? 0xFFFF : 1 << afec_ch;
 }
 
@@ -455,6 +485,12 @@ static inline void afec_channel_enable(Afec *const afec,
 static inline void afec_channel_disable(Afec *const afec,
 		const enum afec_channel_num afec_ch)
 {
+	if(afec == AFEC0) {
+		Assert(afec_ch < 17);
+	} else if(afec == AFEC1) {
+		Assert(afec_ch < 9);
+	}
+
 	afec->AFE_CHDR = (afec_ch == AFEC_CHANNEL_ALL) ? 0xFFFF : 1 << afec_ch;
 }
 
@@ -470,6 +506,12 @@ static inline void afec_channel_disable(Afec *const afec,
 static inline uint32_t afec_channel_get_status(Afec *const afec,
 		const enum afec_channel_num afec_ch)
 {
+	if(afec == AFEC0) {
+		Assert(afec_ch < 16);
+	} else if(afec == AFEC1) {
+		Assert(afec_ch < 8);
+	}
+
 	return afec->AFE_CHSR & (1 << afec_ch);
 }
 /**
@@ -483,6 +525,12 @@ static inline uint32_t afec_channel_get_status(Afec *const afec,
 static inline uint32_t afec_channel_get_value(Afec *const afec,
 		enum afec_channel_num afec_ch)
 {
+	if(afec == AFEC0) {
+		Assert(afec_ch < 16);
+	} else if(afec == AFEC1) {
+		Assert(afec_ch < 8);
+	}
+
 	afec->AFE_CSELR = afec_ch;
 	return afec->AFE_CDR;
 }
@@ -497,6 +545,12 @@ static inline uint32_t afec_channel_get_value(Afec *const afec,
 static inline void afec_channel_set_analog_offset(Afec *const afec,
 		enum afec_channel_num afec_ch, uint16_t aoffset)
 {
+	if(afec == AFEC0) {
+		Assert(afec_ch < 16);
+	} else if(afec == AFEC1) {
+		Assert(afec_ch < 8);
+	}
+
 	afec->AFE_CSELR = afec_ch;
 	afec->AFE_COCR = (aoffset & AFE_COCR_AOFF_Msk);
 }
@@ -604,9 +658,13 @@ static inline Pdc *afec_get_pdc_base(Afec *const afec)
  *
  * \param afec  Base address of the AFEC.
  */
-static inline void afec_set_calib_mode(Afec *const afec)
+static inline enum status_code afec_start_calibration(Afec *const afec)
 {
+	if((afec->AFE_MR & AFE_MR_FREERUN) == AFE_MR_FREERUN_ON) {
+		return STATUS_ERR_BUSY;
+	}
 	afec->AFE_CR = AFE_CR_AUTOCAL;
+	return STATUS_OK;
 }
 
 /// @cond 0

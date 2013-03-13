@@ -50,7 +50,4 @@
 /** Usart Hw ID used by the console (UART0). */
 #define CONSOLE_UART_ID          ID_UART0
 
-/** Enable AFEC Channel. */
-#define CONF_BOARD_AFEC_CHANNEL
-
 #endif /* CONF_BOARD_H_INCLUDED */

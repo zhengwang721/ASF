@@ -138,10 +138,8 @@ static void configure_console(void)
  */
 static void afec_temp_sensor_end_conversion(void)
 {
-	if ((afec_get_interrupt_status(AFEC0) & AFE_ISR_EOC15) == AFE_ISR_EOC15) {
-		g_ul_value = afec_channel_get_value(AFEC0, AFEC_TEMPERATURE_SENSOR);
-		is_conversion_done = true;
-	}
+	g_ul_value = afec_channel_get_value(AFEC0, AFEC_TEMPERATURE_SENSOR);
+	is_conversion_done = true;
 }
 
 /**
@@ -151,8 +149,8 @@ static void afec_temp_sensor_end_conversion(void)
  */
 int main(void)
 {
-	uint32_t ul_vol;
-	uint32_t ul_temp;
+	int32_t ul_vol;
+	int32_t ul_temp;
 
 	/* Initialize the SAM system. */
 	sysclk_init();
@@ -175,8 +173,9 @@ int main(void)
 
 	struct afec_ch_config afec_ch_cfg;
 	afec_ch_get_config_defaults(&afec_ch_cfg);
-	afec_ch_cfg.offset= true;
 	afec_ch_set_config(AFEC0, AFEC_TEMPERATURE_SENSOR, &afec_ch_cfg);
+
+	/* Because the internal ADC offset is 0x800, it should cancel it and shift down to 0.*/
 	afec_channel_set_analog_offset(AFEC0, AFEC_TEMPERATURE_SENSOR, 0x800);
 
 	struct afec_temp_sensor_config afec_temp_sensor_cfg;
@@ -185,19 +184,19 @@ int main(void)
 	afec_temp_sensor_cfg.rctc = true;
 	afec_temp_sensor_set_config(AFEC0, &afec_temp_sensor_cfg);
 
-	afec_set_callback(AFEC0, AFEC_INTERRUPT_EOC_15,
+	afec_set_callback(AFEC0, AFEC_INTERRUPT_EOC_15, 15,
 			afec_temp_sensor_end_conversion, 1);
-
-	afec_set_calib_mode(AFEC0);
-	while(!(afec_get_interrupt_status(AFEC0) & AFE_ISR_EOCAL) == AFE_ISR_EOCAL);
 
 	while (1) {
 
 		if(is_conversion_done == true) {
 
 			ul_vol = g_ul_value * VOLT_REF / MAX_DIGITAL;
-			/* According to datasheet, the temperature slope dVT/dT = 4.7 mV/C */
+
+			/* According to datasheet, The output voltage VT = 1.44V at 27C
+			and the temperature slope dVT/dT = 4.7 mV/C */
 			ul_temp = (ul_vol - 1440)  * 100 / 470 + 27;
+
 			printf("Temperature is: %04d", (int)ul_temp);
 			is_conversion_done = false;
 		}
