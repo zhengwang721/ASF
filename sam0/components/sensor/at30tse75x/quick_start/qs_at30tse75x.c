@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 External Interrupt Driver
+ * \brief SAMD20 AT30TSE75X Temperature Sensor Driver Quick Start
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -40,76 +40,29 @@
  * \asf_license_stop
  *
  */
-#ifndef EXTINT_CALLBACK_H_INCLUDED
-#define EXTINT_CALLBACK_H_INCLUDED
 
-#include <compiler.h>
-#include "extint.h"
+#include <asf.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+double temp_res;
 
-/**
- * \addtogroup asfdoc_samd20_extint_group
- *
- * @{
- */
-
-#if !defined(EXTINT_CALLBACKS_MAX) || defined(__DOXYGEN__)
-#  warning  EXTINT_CALLBACKS_MAX is not defined, assuming a default value.
-
-/** Configuration option, setting the maximum number of callbacks which can be
- *  registered with the driver. This option may be overridden in the module
- *  configuration header file \c conf_extint.h.
- */
-#  define EXTINT_CALLBACKS_MAX 10
-#endif
-
-/** \name Callback configuration and initialization
- * @{
- */
-
-/** Type definition for an EXTINT module callback function. */
-typedef void (*extint_callback_t)(uint32_t channel);
-
-/** Enum for the possible callback types for the EXTINT module. */
-enum extint_callback_type
+int main(void)
 {
-	/** Callback type for when an external interrupt detects the configured
-	 *  channel criteria (i.e. edge or level detection)
-	 */
-	EXTINT_CALLBACK_TYPE_DETECT,
-};
+	/* Init system. */
+	system_init();
 
-enum status_code extint_register_callback(
-	const extint_callback_t callback,
-	const enum extint_callback_type type);
+	/* Configure device and enable. */
+	at30tse_init();
 
-enum status_code extint_unregister_callback(
-	const extint_callback_t callback,
-	const enum extint_callback_type type);
+    /* Read thigh and tlow */
+	volatile uint16_t thigh = 0;
+	thigh = at30tse_read_register(AT30TSE_THIGH_REG, AT30TSE_NON_VOLATILE_REG, AT30TSE_THIGH_REG_SIZE);
+	volatile uint16_t tlow = 0;
+	tlow = at30tse_read_register(AT30TSE_TLOW_REG, AT30TSE_NON_VOLATILE_REG, AT30TSE_TLOW_REG_SIZE);
+	
+	/* Set 12-bit resolution mode. */
+	at30tse_write_config_register(AT30TSE_CONFIG_RES(AT30TSE_CONFIG_RES_12_bit));
 
-/** @} */
-
-/** \name Callback enabling and disabling (channel)
- * @{
- */
-
-enum status_code extint_chan_enable_callback(
-	const uint32_t channel,
-	const enum extint_callback_type type);
-
-enum status_code extint_chan_disable_callback(
-	const uint32_t channel,
-	const enum extint_callback_type type);
-
-/** @} */
-
-/** @} */
-
-#ifdef __cplusplus
+	while (1) {
+		temp_res = at30tse_read_temperature();
+	}
 }
-#endif
-
-#endif
