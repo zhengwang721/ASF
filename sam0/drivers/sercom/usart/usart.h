@@ -416,10 +416,16 @@ typedef void (*usart_callback_t)(const struct usart_module *const module);
 #endif
 
 /**
- * \brief USART module struct
- * USART software instance
+ * \brief SERCOM USART driver software device instance structure.
+ *
+ * SERCOM USART driver software instance structure, used to retain software
+ * state information of an associated hardware module instance.
+ *
+ * \note The fields of this structure should not be altered by the user
+ *       application; they are reserved for module-internal use only.
  */
 struct usart_module {
+#if !defined(__DOXYGEN__)
 	/** Pointer to the hardware instance */
 	Sercom *hw;
 	/** Character size of the data being transferred */
@@ -445,6 +451,7 @@ struct usart_module {
 	volatile enum status_code rx_status;
 	/** Holds the status of the ongoing or last write operation */
 	volatile enum status_code tx_status;
+#endif
 #endif
 };
 

@@ -536,12 +536,16 @@ extern void spi_interrupt_handler(uint8_t instance);
 #endif
 
 /**
- * \brief SPI software device instance structure
+ * \brief SERCOM SPI driver software device instance structure.
  *
- * SPI software device instance structure
+ * SERCOM SPI driver software instance structure, used to retain software state
+ * information of an associated hardware module instance.
  *
+ * \note The fields of this structure should not be altered by the user
+ *       application; they are reserved for module-internal use only.
  */
 struct spi_module {
+#if !defined(__DOXYGEN__)
 	/** SERCOM hardware module */
 	Sercom *hw;
 	/** SPI mode */
@@ -571,6 +575,7 @@ struct spi_module {
 	volatile enum status_code rx_status;
 	/** Holds the status of the ongoing or last write operation */
 	volatile enum status_code tx_status;
+#endif
 #endif
 };
 
@@ -903,7 +908,7 @@ void spi_reset(struct spi_module *const module);
  *
  * This function will check if the SPI master module has shifted out last data,
  * or if the slave select pin has been drawn high by the master for the SPI
- * slave module. 
+ * slave module.
  *
  * \param[in] module      Pointer to the software instance struct
  *
