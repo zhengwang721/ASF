@@ -68,8 +68,9 @@ static inline void _rtc_calendar_reset(void)
 	/* Disable module before reset. */
 	rtc_calendar_disable();
 
-	/* Sync. */
-	_rtc_calendar_wait_for_sync();
+	while (rtc_count_is_syncing()) {
+		/* Wait for synchronization */
+	}
 
 	/* Initiate software reset. */
 	rtc_module->MODE2.CTRL.reg |= RTC_MODE2_CTRL_SWRST;
@@ -336,8 +337,9 @@ void rtc_calendar_set_time(
 
 	uint32_t register_value = _rtc_calendar_time_to_register_value(time);
 
-	/* Sync. */
-	_rtc_calendar_wait_for_sync();
+	while (rtc_count_is_syncing()) {
+		/* Wait for synchronization */
+	}
 
 	/* Write value to register. */
 	rtc_module->MODE2.CLOCK.reg = register_value;
@@ -362,8 +364,9 @@ void rtc_calendar_get_time(
 		/* Request read on CLOCK register. */
 		rtc_module->MODE2.READREQ.reg = RTC_READREQ_RREQ;
 
-		/* Sync. */
-		_rtc_calendar_wait_for_sync();
+		while (rtc_count_is_syncing()) {
+			/* Wait for synchronization */
+		}
 	}
 
 	/* Read value. */
@@ -400,8 +403,9 @@ enum status_code rtc_calendar_set_alarm(
 	/* Get register_value from time. */
 	uint32_t register_value = _rtc_calendar_time_to_register_value(&(alarm->time));
 
-	/* Sync. */
-	_rtc_calendar_wait_for_sync();
+	while (rtc_count_is_syncing()) {
+		/* Wait for synchronization */
+	}
 
 	/* Set alarm value. */
 	rtc_module->MODE2.Mode2Alarm[alarm_index].ALARM.reg = register_value;
@@ -491,8 +495,9 @@ enum status_code rtc_calendar_frequency_correction(
 		new_correction_value |= RTC_FREQCORR_SIGN;
 	}
 
-	/* Sync. */
-	_rtc_calendar_wait_for_sync();
+	while (rtc_count_is_syncing()) {
+		/* Wait for synchronization */
+	}
 
 	/* Set value. */
 	rtc_module->MODE2.FREQCORR.reg = new_correction_value;

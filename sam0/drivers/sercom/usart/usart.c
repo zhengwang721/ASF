@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 SERCOM USART Driver
+ * \brief SAM D20 SERCOM USART Driver
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -142,8 +142,7 @@ enum status_code _usart_set_config(struct usart_module *const module,
  * \brief Initializes the device
  *
  * Initializes the USART device based on the setting specified in the
- * configuration struct. This will leave the device in an enabled state
- * after initialization.
+ * configuration struct.
  *
  * \param[out] module Pointer to USART device
  * \param[in]  hw   Pointer to USART hardware instance
@@ -152,20 +151,19 @@ enum status_code _usart_set_config(struct usart_module *const module,
  * \return Status of the initialization
  *
  * \retval STATUS_OK                       The initialization was successful
- * \retval STATUS_BUSY                 The USART module is occupied with
- *                                         resetting itself
+ * \retval STATUS_BUSY                     The USART module is busy
+ *                                         resetting
  * \retval STATUS_ERR_DENIED               The USART have not been disabled in
  *                                         advance of initialization
  * \retval STATUS_ERR_INVALID_ARG          The configuration struct contains
- *                                         invalid configuration for the
- * sample_mode
+ *                                         invalid configuration
  * \retval STATUS_ERR_ALREADY_INITIALIZED  The SERCOM instance has already been
  *                                         initialized with different clock
- * configuration
+ *                                         configuration
  * \retval STATUS_ERR_BAUD_UNAVAILABLE     The BAUD rate given by the
- * configuration
- *                                         struct due to sample_mode or clock
- * frequency
+ *                                         configuration
+ *                                         struct cannot be reached with
+ *                                         the current clock configuration
  */
 enum status_code usart_init(struct usart_module *const module,
 		Sercom *const hw, const struct usart_config *const config)
@@ -290,11 +288,11 @@ enum status_code usart_init(struct usart_module *const module,
 /**
  * \brief Transmit a character via the USART
  *
- * This non-blocking function will receive a character via the
+ * This blocking function will transmit a single character via the
  * USART.
  *
- * param[in]   module Pointer to the software instance struct
- * param[out]  tx_data  Data to transfer
+ * \param[in]   module Pointer to the software instance struct
+ * \param[in]  tx_data  Data to transfer
  *
  * \return     Status of the operation
  * \retval     STATUS_OK           If the operation was completed
@@ -340,18 +338,18 @@ enum status_code usart_write_wait(struct usart_module *const module,
 /**
  * \brief Receive a character via the USART
  *
- * This non-blocking function will receive a character via the
+ * This blocking function will receive a character via the
  * USART.
  *
- * param[in]   module Pointer to the software instance struct
- * param[out]  rx_data  Pointer to received data
+ * \param[in]   module Pointer to the software instance struct
+ * \param[out]  rx_data  Pointer to received data
  *
  * \return     Status of the operation
  * \retval     STATUS_OK                If the operation was completed
  * \retval     STATUS_BUSY          If the operation was not completed,
  *                                      due to the USART module being busy.
  * \retval     STATUS_ERR_BAD_FORMAT    If the operation was not completed,
- *                                      due to mismatch configuration mismatch
+ *                                      due to configuration mismatch
  *                                      between USART and the sender.
  * \retval     STATUS_ERR_BAD_OVERFLOW  If the operation was not completed,
  *                                      due to the baud rate being to low or the
@@ -422,18 +420,18 @@ enum status_code usart_read_wait(struct usart_module *const module,
 }
 
 /**
- * \brief Transmit a buffer of \ref length length characters via USART
+ * \brief Transmit a buffer of \c length characters via the USART
  *
- * This blocking function will transmit a block of \ref length length characters
+ * This blocking function will transmit a block of \c length characters
  * via the USART
  *
- * \note Using this function in combination with the asynchronous functions is
+ * \note Using this function in combination with the interrupt (\c _job) functions is
  *       not recommended as it has no functionality to check if there is an
- *       ongoing asynchronous operation running or not.
+ *       ongoing interrupt driven operation running or not.
  *
  * \param[in]     module Pointer to USART software instance struct
- * \param[out]    tx_data  Pointer to data to transmit
- * \param[length] number   Number of characters to transmit
+ * \param[in]     tx_data  Pointer to data to transmit
+ * \param[in]     length   Number of characters to transmit
  *
  * \return        Status of the operation
  * \retval        STATUS_OK                If operation was completed
@@ -443,7 +441,7 @@ enum status_code usart_read_wait(struct usart_module *const module,
  *                                         due to USART module timing out
  */
 enum status_code usart_write_buffer_wait(struct usart_module *const module,
-		const uint8_t *tx_data, uint16_t length)
+		uint8_t *tx_data, uint16_t length)
 {
 	/* Sanity check arguments */
 	Assert(module);
@@ -506,18 +504,18 @@ enum status_code usart_write_buffer_wait(struct usart_module *const module,
 }
 
 /**
- * \brief Receive a buffer of \ref length length characters via USART
+ * \brief Receive a buffer of \c length characters via the USART
  *
- * This blocking function will receive a block of \ref length length characters
+ * This blocking function will receive a block of \c length characters
  * via the USART.
  *
- * \note Using this function in combination with the asynchronous functions is
+ * \note Using this function in combination with the interrupt (\c _job) functions is
  *       not recommended as it has no functionality to check if there is an
- *       ongoing asynchronous operation running or not.
+ *       ongoing interrupt driven operation running or not.
  *
  * \param[in]     module Pointer to USART software instance struct
- * \param[out]    tx_data  Pointer to data to transmit
- * \param[length] number   Number of characters to transmit
+ * \param[out]    rx_data  Pointer to receive buffer
+ * \param[in]     length   Number of characters to receive
  *
  * \return     Status of the operation
  * \retval     STATUS_OK                If operation was completed
@@ -526,7 +524,7 @@ enum status_code usart_write_buffer_wait(struct usart_module *const module,
  * \retval     STATUS_ERR_TIMEOUT       If operation was not completed, due
  *                                      to USART module timing out
  * \retval     STATUS_ERR_BAD_FORMAT    If the operation was not completed,
- *                                      due to mismatch configuration mismatch
+ *                                      due to a configuration mismatch
  *                                      between USART and the sender.
  * \retval     STATUS_ERR_BAD_OVERFLOW  If the operation was not completed,
  *                                      due to the baud rate being to low or the
@@ -535,7 +533,7 @@ enum status_code usart_write_buffer_wait(struct usart_module *const module,
  *                                      to data being corrupted.
  */
 enum status_code usart_read_buffer_wait(struct usart_module *const module,
-		const uint8_t *rx_data, uint16_t length)
+		uint8_t *rx_data, uint16_t length)
 {
 	/* Sanity check arguments */
 	Assert(module);

@@ -76,7 +76,7 @@ extern "C" {
 
 /**
  * @def delay_cycles
- * @brief Delay in at least specified number of cycles.
+ * @brief Delay in at least specified number of cycles. Will have a minimum of about 3us.
  * @param delay Delay in cycles
  */
 #define delay_cycles(delay)     cpu_delay_cycles(delay)

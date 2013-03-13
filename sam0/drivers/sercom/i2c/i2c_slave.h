@@ -142,7 +142,7 @@ enum i2c_slave_address_mode {
 	I2C_SLAVE_ADDRESS_MODE_MASK = SERCOM_I2CS_CTRLB_AMODE(0),
 	/** Address math on both address and address_mask */
 	I2C_SLAVE_ADDRESS_MODE_TWO_ADDRESSES = SERCOM_I2CS_CTRLB_AMODE(1),
-	/** 
+	/**
 	 * Address match on range of addresses between and including address and
 	 * address_mask
 	 */
@@ -164,7 +164,7 @@ enum i2c_slave_direction {
 };
 
 /**
- * \brief SERCOM I<SUP>2</SUP>C Slave driver software device instance structure
+ * \brief SERCOM I<SUP>2</SUP>C Slave driver software device instance structure.
  *
  * SERCOM I<SUP>2</SUP>C Slave driver software instance structure, used to
  * retain software state information of an associated hardware module instance.
@@ -172,6 +172,7 @@ enum i2c_slave_direction {
  *       application; they are reserved for module-internal use only.
  */
 struct i2c_slave_module {
+#if !defined(__DOXYGEN__)
 	/** Hardware instance initialized for the struct */
 	Sercom *hw;
 	/** Timeout value for polled functions */
@@ -187,7 +188,7 @@ struct i2c_slave_module {
 	volatile uint8_t enabled_callback;
 	/** The total number of bytes to transfer */
 	volatile uint16_t buffer_length;
-	/** 
+	/**
 	 * Counter used for bytes left to send in write and to count number of
 	 * obtained bytes in read
 	 */
@@ -198,6 +199,7 @@ struct i2c_slave_module {
 	volatile uint8_t transfer_direction;
 	/** Status for status read back in error callback */
 	volatile enum status_code status;
+#endif
 #endif
 };
 
@@ -249,7 +251,7 @@ struct i2c_slave_config {
  * \name Configuration and Initialization
  * @{
  */
- 
+
 #if !defined(__DOXYGEN__)
 /**
  * \internal Wait for hardware module to sync

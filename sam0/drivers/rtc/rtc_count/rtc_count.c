@@ -66,8 +66,9 @@ static inline void _rtc_count_reset(void)
 	/* Disable module before reset. */
 	rtc_count_disable();
 
-	/* Sync. */
-	_rtc_count_wait_for_sync();
+	while (rtc_count_is_syncing()) {
+		/* Wait for synchronization */
+	}
 
 	/* Initiate software reset. */
 	rtc_module->MODE0.CTRL.reg |= RTC_MODE0_CTRL_SWRST;
@@ -104,7 +105,10 @@ static enum status_code _rtc_count_set_config(
 			}
 			/* Set compare values. */
 			for (uint8_t i = 0; i < RTC_NUM_OF_ALARMS; i++) {
-				_rtc_count_wait_for_sync();
+				while (rtc_count_is_syncing()) {
+					/* Wait for synchronization */
+				}
+
 				rtc_count_set_compare(config->compare_values[i], i);
 			}
 			break;
@@ -121,7 +125,10 @@ static enum status_code _rtc_count_set_config(
 			}
 			/* Set compare values. */
 			for (uint8_t i = 0; i < RTC_NUM_OF_COMP16; i++) {
-				_rtc_count_wait_for_sync();
+				while (rtc_count_is_syncing()) {
+					/* Wait for synchronization */
+				}
+
 				rtc_count_set_compare(config->compare_values[i], i);
 			}
 			break;
@@ -205,8 +212,9 @@ enum status_code rtc_count_set_count(
 	/* Initialize module pointer. */
 	Rtc *const rtc_module = RTC;
 
-	/* Sync. */
-	_rtc_count_wait_for_sync();
+	while (rtc_count_is_syncing()) {
+		/* Wait for synchronization */
+	}
 
 	/* Set count according to mode */
 	switch(_rtc_dev.mode){
@@ -257,8 +265,9 @@ uint32_t rtc_count_get_count(void)
 		/* Request read on count register. */
 		rtc_module->MODE0.READREQ.reg = RTC_READREQ_RCONT;
 
-		/* Sync. */
-		_rtc_count_wait_for_sync();
+		while (rtc_count_is_syncing()) {
+			/* Wait for synchronization */
+		}
 	}
 
 	/* Read value based on mode. */
@@ -308,8 +317,9 @@ enum status_code rtc_count_set_compare(
 	/* Initialize module pointer. */
 	Rtc *const rtc_module = RTC;
 
-	/* Sync. */
-	_rtc_count_wait_for_sync();
+	while (rtc_count_is_syncing()) {
+		/* Wait for synchronization */
+	}
 
 	/* Set compare values based on operation mode. */
 	switch (_rtc_dev.mode) {
@@ -460,8 +470,9 @@ enum status_code rtc_count_set_period(
 		return STATUS_ERR_UNSUPPORTED_DEV;
 	}
 
-	/* Sync. */
-	_rtc_count_wait_for_sync();
+	while (rtc_count_is_syncing()) {
+		/* Wait for synchronization */
+	}
 
 	/* Write value to register. */
 	rtc_module->MODE1.PER.reg = period_value;
@@ -602,8 +613,9 @@ enum status_code rtc_count_frequency_correction(
 		new_correction_value |= RTC_FREQCORR_SIGN;
 	}
 
-	/* Sync. */
-	_rtc_count_wait_for_sync();
+	while (rtc_count_is_syncing()) {
+		/* Wait for synchronization */
+	}
 
 	/* Set value. */
 	rtc_module->MODE0.FREQCORR.reg = new_correction_value;

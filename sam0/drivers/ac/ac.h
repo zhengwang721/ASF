@@ -443,8 +443,10 @@ enum ac_win_state {
  *       application; they are reserved for module-internal use only.
  */
 struct ac_module {
+#if !defined(__DOXYGEN__)
 	/** Hardware module pointer of the associated Analog Comparator peripheral. */
 	Ac *hw;
+#endif
 };
 
 /**
