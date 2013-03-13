@@ -43,47 +43,100 @@
 
 #include <asf.h>
 
+//! [packet]
+static struct i2c_packet packet;
+//! [packet]
+
+
+//! [packet_data]
+#define DATA_LENGTH 10
+static uint8_t write_buffer[DATA_LENGTH] = {
+		0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09,
+};
+static uint8_t read_buffer [DATA_LENGTH];
+//! [packet_data]
+
+/* Adress of the slave */
 //! [address]
 #define SLAVE_ADDRESS 0x12
 //! [address]
-//! [packet_data]
-#define DATA_LENGTH 10
 
-uint8_t write_buffer[DATA_LENGTH] = {
-	0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09
-};
-uint8_t read_buffer[DATA_LENGTH];
-//! [packet_data]
+/* Init device instance. */
+//! [module]
+struct i2c_slave_module sw_module;
+//! [module]
 
-//! [module]
-struct i2c_slave_module slave;
-//! [module]
+//! [read_request]
+static void read_request_callback(struct i2c_slave_module *const module)
+{
+	/* Init i2c packet. */
+	//! [packet_write]
+	packet.data_length = DATA_LENGTH;
+	packet.data        = write_buffer;
+	//! [packet_write]
+
+	/* Write buffer to master */
+	//! [write_packet]
+	i2c_slave_write_packet_job(module, &packet);
+	//! [write_packet]
+}
+//! [read_request]
+
+//! [write_request]
+static void write_request_callback(struct i2c_slave_module *const module)
+{
+	/* Init i2c packet. */
+	//! [packet_read]
+	packet.data_length = DATA_LENGTH;
+	packet.data        = read_buffer;
+	//! [packet_read]
+
+	/* Read buffer from master */
+	//! [read_packet]
+	if (i2c_slave_read_packet_job(module, &packet) != STATUS_OK) {
+	}
+	//! [read_packet]
+}
+//! [write_request]
 
 //! [initialize_i2c]
 static void configure_i2c(void)
 {
-	/* Create and initialize config structure */
+	/* Initialize config structure and module instance. */
 	//! [init_conf]
-	struct i2c_slave_config config;
-	i2c_slave_get_config_defaults(&config);
+	struct i2c_slave_config conf;
+	i2c_slave_get_config_defaults(&conf);
 	//! [init_conf]
-
-	/* Change address and address_mode */
+	/* Change address and address_mode. */
 	//! [conf_changes]
-	config.address = SLAVE_ADDRESS;
-	config.address_mode = I2C_SLAVE_ADDRESS_MODE_MASK;
-	config.buffer_timeout = 1000;
+	conf.address = SLAVE_ADDRESS;
+	conf.address_mode = I2C_SLAVE_ADDRESS_MODE_MASK;
 	//! [conf_changes]
-	/* Initialize and enable device with config */
+	/* Initialize and enable device with config. */
 	//! [init_module]
-	i2c_slave_init(&slave, SERCOM1, &config);
+	i2c_slave_init(&sw_module, SERCOM2, &conf);
 	//! [init_module]
 
 	//! [enable_module]
-	i2c_slave_enable(&slave);
+	i2c_slave_enable(&sw_module);
 	//! [enable_module]
 }
 //! [initialize_i2c]
+
+//! [setup_i2c_callback]
+static void configure_callbacks(void)
+{
+	/* Register and enable callback functions */
+	//![reg_en_i2c_callback]
+	i2c_slave_register_callback(&sw_module, read_request_callback, I2C_SLAVE_CALLBACK_READ_REQUEST);
+	i2c_slave_enable_callback(&sw_module, I2C_SLAVE_CALLBACK_READ_REQUEST);
+
+	i2c_slave_register_callback(&sw_module, write_request_callback, I2C_SLAVE_CALLBACK_WRITE_REQUEST);
+	i2c_slave_enable_callback(&sw_module, I2C_SLAVE_CALLBACK_WRITE_REQUEST);
+	//![reg_en_i2c_callback]
+
+}
+//! [setup_i2c_callback]
 
 int main(void)
 {
@@ -93,39 +146,18 @@ int main(void)
 	system_init();
 	//! [system_init]
 
+	/* Configure device and enable. */
 	//! [config]
 	configure_i2c();
 	//! [config]
-
-	//! [dir]
-	enum i2c_slave_direction dir;
-	//! [dir]
-	//! [pack]
-	struct i2c_packet packet = {
-		.address     = SLAVE_ADDRESS,
-		.data_length = DATA_LENGTH,
-		.data        = write_buffer,
-	};
-	//! [pack]
+	//! [config_callback]
+	configure_callbacks();
+	//! [config_callback]
 	//! [run_initialize_i2c]
 
 	//! [while]
 	while (1) {
-		/* Wait for direction from master */
-		//! [get_dir]
-		dir = i2c_slave_get_direction_wait(&slave);
-		//! [get_dir]
-
-		/* Transfer packet in direction requested by master */
-		//! [transfer]
-		if (dir == I2C_SLAVE_DIRECTION_READ) {
-			packet.data = read_buffer;
-			i2c_slave_read_packet_wait(&slave, &packet);
-		} else if (dir == I2C_SLAVE_DIRECTION_WRITE) {
-			packet.data = write_buffer;
-			i2c_slave_write_packet_wait(&slave, &packet);
-		}
-		//! [transfer]
+		/* Inf loop while waiting for I2C master interaction */
 	}
 	//! [while]
 }
