@@ -125,7 +125,6 @@ void usart_register_callback(struct usart_module *const module,
  * Unregisters a callback function which is implemented by the user.
  *
  * \param[in]     module Pointer to USART software instance struct
- * \param[in]     callback_func Pointer to callback function
  * \param[in]     callback_type Callback type given by an enum
  *
  */
@@ -213,8 +212,9 @@ enum status_code usart_read_job(struct usart_module *const module,
  * Sets up the driver to write a given buffer over the USART. If registered and
  * enabled, a callback function will be called.
  *
- * \param[in]     module Pointer to USART software instance struct
+ * \param[in]     module   Pointer to USART software instance struct
  * \param[in]     tx_data  Pointer do data buffer to transmit
+ * \param[in]     length   Length of the data to transmit
  *
  * \returns    Status of the operation
  * \retval     STATUS_OK              If operation was completed
@@ -321,7 +321,8 @@ void usart_abort_job(struct usart_module *const module,
  * Either from a read or write transfer.
  *
  * \param[in] module    Pointer to USART software instance struct
- *
+ * \param[in] transceiver_type  Transfer type to check
+  *
  * \return
  * \retval STATUS_OK                No error occurred during the last transfer
  * \retval STATUS_BUSY       A transfer is ongoing

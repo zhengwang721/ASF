@@ -3,7 +3,7 @@
  *
  * \brief Unit tests for PMC driver.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -432,12 +432,8 @@ int main(void)
 
 	/* Configure PCK0 */
 #ifdef CONF_TEST_PCK_OUTPUT_ENABLE
-#if SAM4E
-	ioport_set_port_mode(PIN_PCK0_PORT, PIN_PCK0_MASK, PIN_PCK0_FLAGS);
-	ioport_disable_port(PIN_PCK0_PORT, PIN_PCK0_MASK);
-#else
-	gpio_configure_pin(PIN_PCK0, PIN_PCK0_FLAGS);
-#endif
+	ioport_set_pin_mode(PIN_PCK0, PIN_PCK0_MUX);
+	ioport_disable_pin(PIN_PCK0);
 #endif
 	pmc_disable_pck(PMC_PCK_0);
 	pmc_switch_pck_to_mainck(PMC_PCK_0, PMC_PCK_PRES_CLK_1);
