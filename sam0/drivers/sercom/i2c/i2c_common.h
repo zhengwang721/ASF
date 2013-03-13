@@ -52,8 +52,6 @@ extern "C" {
 /**
  * \defgroup asfdoc_samd20_i2c_group I2C Driver
  *
- * \section asfdoc_samd20_i2c_introduction Introduction
- *
  * This is a driver for the SAM D20 devices. This driver provides an
  * interface for configuration and management of the SERCOM I<SUP>2</SUP>C module,
  * as well as data transfer via I<SUP>2</SUP>C.
@@ -625,10 +623,18 @@ struct i2c_packet {
  * \see General list of module \ref asfdoc_samd20_i2c_examples "examples".
  *
  * \section use_cases I2C Driver Use Cases
+ * \if I2C_MASTER_MODE
  * - \subpage asfdoc_samd20_i2c_master_basic_use_case "Quick Start Guide for the I2C Master module - Basic Use Case"
+ *  \if I2C_CALLBACK_MODE
  * - \subpage asfdoc_samd20_i2c_master_callback_use_case "Quick Start Guide for the I2C Master module - Callback Use Case"
+ *  \endif
+ * \endif
+ * \if I2C_MASTER_SLAVE
  * - \subpage asfdoc_samd20_i2c_slave_basic_use_case "Quick Start Guide for the I2C Slave module - Basic Use Case"
+ *  \if I2C_CALLBACK_MODE
  * - \subpage asfdoc_samd20_i2c_slave_callback_use_case "Quick Start Guide for the I2C Slave module - Callback Use Case"
+ *  \endif
+ * \endif
  */
 
 #endif /* I2C_COMMON_H_INCLUDED */
