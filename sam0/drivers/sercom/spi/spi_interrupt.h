@@ -55,11 +55,13 @@ enum spi_job_type {
  * \name Callback Management
  * {@
  */
-void spi_register_callback(struct spi_module *const module,
+void spi_register_callback(
+		struct spi_module *const module,
 		spi_callback_t callback_func,
 		enum spi_callback callback_type);
 
-void spi_unregister_callback(struct spi_module *module,
+void spi_unregister_callback(
+		struct spi_module *module,
 		enum spi_callback callback_type);
 
 /**
@@ -121,18 +123,23 @@ static inline void spi_disable_callback(
  * @}
  */
 
- 
+
 /**
  * \name Writing and reading
  * {@
  */
-enum status_code spi_write_buffer_job(struct spi_module *const module,
-		uint8_t *tx_data, uint16_t length);
+enum status_code spi_write_buffer_job(
+		struct spi_module *const module,
+		uint8_t *tx_data,
+		uint16_t length);
 
-enum status_code spi_read_buffer_job(struct spi_module *const module,
-		uint8_t *rx_data, uint16_t length);
+enum status_code spi_read_buffer_job(
+		struct spi_module *const module,
+		uint8_t *rx_data,
+		uint16_t length);
 
-void spi_abort_job(struct spi_module *const module,
+void spi_abort_job(
+		struct spi_module *const module,
 		enum spi_job_type job_type);
 
 enum status_code spi_get_job_status(

@@ -50,7 +50,8 @@
  *
  * \param[in,out] module Pointer to the software instance struct
  */
-void spi_reset(struct spi_module *const module)
+void spi_reset(
+		struct spi_module *const module)
 {
 	/* Sanity check arguments */
 	Assert(module);
@@ -82,7 +83,8 @@ void spi_reset(struct spi_module *const module)
  * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) were provided.
  * \retval STATUS_OK              If the configuration was written
  */
-static enum status_code _spi_set_config(struct spi_module *const module,
+static enum status_code _spi_set_config(
+		struct spi_module *const module,
 		struct spi_config *config)
 {
 	/* Sanity check arguments */
@@ -160,12 +162,14 @@ static enum status_code _spi_set_config(struct spi_module *const module,
 	} else {
 		/* Set frame format */
 		ctrla = config->slave.frame_format;
+
 		/* Set address mode */
 		spi_module->CTRLB.reg |= config->slave.addr_mode;
 		/* Set address and address mask*/
-		spi_module->ADDR.reg |= (config->slave.address
-				<< SERCOM_SPI_ADDR_ADDR_Pos) | (config->slave.address_mask
-				<< SERCOM_SPI_ADDR_ADDRMASK_Pos);
+		spi_module->ADDR.reg |=
+				(config->slave.address      << SERCOM_SPI_ADDR_ADDR_Pos) |
+				(config->slave.address_mask << SERCOM_SPI_ADDR_ADDRMASK_Pos);
+
 		if (config->slave.preload_enable) {
 			/* Enable pre-loading of shift register */
 			spi_module->CTRLB.reg |= SERCOM_SPI_CTRLB_PLOADEN;
@@ -216,7 +220,9 @@ static enum status_code _spi_set_config(struct spi_module *const module,
  * \retval STATUS_BUSY               If module is busy resetting.
  * \retval STATUS_ERR_INVALID_ARG        If invalid argument(s) were provided.
  */
-enum status_code spi_init(struct spi_module *const module, Sercom *hw,
+enum status_code spi_init(
+		struct spi_module *const module,
+		Sercom *hw,
 		struct spi_config *config)
 {
 
@@ -296,7 +302,7 @@ enum status_code spi_init(struct spi_module *const module, Sercom *hw,
  * dummy SPI character if in master mode, or by waiting for data in slave mode.
  *
  * \note Data buffer for received data must be uint16_t and cast to uint8_t if
- * SPI character size is 9 bit.
+ *       SPI character size is 9 bit.
  *
  * \param[in] module  Pointer to the software instance struct
  * \param[out] rx_data  Data buffer for received data
@@ -310,8 +316,11 @@ enum status_code spi_init(struct spi_module *const module, Sercom *hw,
  *                                timeout in slave mode.
  * \retval STATUS_ERR_OVERFLOW    If the data is overflown
  */
-enum status_code spi_read_buffer_wait(struct spi_module *const module,
-		uint8_t *rx_data, uint8_t length, uint16_t dummy)
+enum status_code spi_read_buffer_wait(
+		struct spi_module *const module,
+		uint8_t *rx_data,
+		uint8_t length,
+		uint16_t dummy)
 {
 	/* Sanity check arguments */
 	Assert(module);
@@ -322,48 +331,52 @@ enum status_code spi_read_buffer_wait(struct spi_module *const module,
 		return STATUS_ERR_INVALID_ARG;
 	}
 
-	uint8_t i = 0;
-	uint16_t j = 0;
+	uint8_t rx_pos = 0;
+
 	while (length--) {
 		if (module->mode == SPI_MODE_MASTER) {
 			/* Wait until the module is ready to write a character */
 			while (!spi_is_ready_to_write(module)) {
 			}
+
 			/* Send dummy SPI character to read in master mode */
 			spi_write(module, dummy);
 		}
 
 		/* Start timeout period for slave */
 		if (module->mode == SPI_MODE_SLAVE) {
-			for (j = 0; j <= SPI_TIMEOUT; j++) {
+			for (uint32_t i = 0; i <= SPI_TIMEOUT; i++) {
 				if (spi_is_ready_to_read(module)) {
 					break;
-				} else if (j == SPI_TIMEOUT) {
-					/* Not ready to read data within timeout period */
-					return STATUS_ERR_TIMEOUT;
 				}
+			}
+
+			if (!spi_is_ready_to_read(module)) {
+				/* Not ready to read data within timeout period */
+				return STATUS_ERR_TIMEOUT;
 			}
 		}
 
 		/* Wait until the module is ready to read a character */
-
 		while (!spi_is_ready_to_read(module)) {
 		}
 
-		enum status_code retval = STATUS_OK;
-		/* Read SPI character */
+		enum status_code retval;
+		uint16_t received_data = 0;
+
+		retval = spi_read(module, &received_data);
+
+		if (retval != STATUS_OK) {
+			/* Overflow, abort */
+			return retval;
+		}
+
+		/* Read value will be at least 8-bits long */
+		rx_data[rx_pos++] = received_data;
+
+		/* If 9-bit data, write next received byte to the buffer */
 		if (module->chsize == SPI_CHARACTER_SIZE_9BIT) {
-			retval = spi_read(module, &(((uint16_t*)(rx_data))[i++]));
-			if (retval != STATUS_OK) {
-				/* Overflow, abort */
-				return retval;
-			}
-		} else {
-			retval = spi_read(module, ((uint16_t*)(&(rx_data)[i++])));
-			if (retval != STATUS_OK) {
-				/* Overflow, abort */
-				return retval;
-			}
+			rx_data[rx_pos++] = (received_data >> 8);
 		}
 	}
 	return STATUS_OK;
@@ -389,8 +402,10 @@ enum status_code spi_read_buffer_wait(struct spi_module *const module,
  * \retval STATUS_BUSY                If the SPI module is not ready to write
  *                                    the slave address
  */
-enum status_code spi_select_slave(struct spi_module *module,
-		struct spi_slave_inst *slave, bool select)
+enum status_code spi_select_slave(
+		struct spi_module *module,
+		struct spi_slave_inst *slave,
+		bool select)
 {
 	/* Sanity check arguments */
 	Assert(module);
@@ -414,6 +429,7 @@ enum status_code spi_select_slave(struct spi_module *module,
 				port_pin_set_output_level(slave->ss_pin, true);
 				return STATUS_BUSY;
 			}
+
 			/* Write address to slave */
 			spi_write(module, slave->address);
 		}
@@ -448,8 +464,10 @@ enum status_code spi_select_slave(struct spi_module *module,
  * \retval STATUS_ERR_TIMEOUT     If the operation was not completed within the
  *                                timeout in slave mode.
  */
-enum status_code spi_write_buffer_wait(struct spi_module
-		*const module, const uint8_t *tx_data, uint8_t length)
+enum status_code spi_write_buffer_wait(
+		struct spi_module *const module,
+		const uint8_t *tx_data,
+		uint8_t length)
 {
 	/* Sanity check arguments */
 	Assert(module);
@@ -458,22 +476,21 @@ enum status_code spi_write_buffer_wait(struct spi_module
 		return STATUS_ERR_INVALID_ARG;
 	}
 
-	uint8_t  i = 0;
-	uint16_t j = 0;
-	/* Variable to flush receive buffer */
-	uint16_t flush;
+	uint8_t tx_pos = 0;
 
 	/* Write block */
 	while (length--) {
 		/* Start timeout period for slave */
 		if (module->mode == SPI_MODE_SLAVE) {
-			for (j = 0; j <= SPI_TIMEOUT; j++) {
+			for (uint32_t i = 0; i <= SPI_TIMEOUT; i++) {
 				if (spi_is_ready_to_write(module)) {
 					break;
-				} else if (j == SPI_TIMEOUT) {
-					/* Not ready to write data within timeout period */
-					return STATUS_ERR_TIMEOUT;
 				}
+			}
+
+			if (!spi_is_ready_to_write(module)) {
+				/* Not ready to write data within timeout period */
+				return STATUS_ERR_TIMEOUT;
 			}
 		}
 
@@ -481,28 +498,36 @@ enum status_code spi_write_buffer_wait(struct spi_module
 		while (!spi_is_ready_to_write(module)) {
 		}
 
+		/* Write value will be at least 8-bits long */
+		uint16_t data_to_send = tx_data[tx_pos++];
+
+		/* If 9-bit data, get next byte to send from the buffer */
 		if (module->chsize == SPI_CHARACTER_SIZE_9BIT) {
-			/* Write the 9 bit character */
-			spi_write(module, ((uint16_t*)(tx_data))[i++]);
-		} else {
-			/* Write 8 bit character*/
-			spi_write(module, (uint16_t)tx_data[i++]);
+			data_to_send |= (tx_data[tx_pos++] << 8);
 		}
+
+		/* Write the data to send */
+		spi_write(module, data_to_send);
 
 		/* Start timeout period for slave */
 		if (module->mode == SPI_MODE_SLAVE) {
-			for (j = 0; j <= SPI_TIMEOUT; j++) {
+			for (uint32_t i = 0; i <= SPI_TIMEOUT; i++) {
 				if (spi_is_ready_to_read(module)) {
 					break;
-				} else if (j == SPI_TIMEOUT) {
-					/* Not ready to write data within timeout period */
-					return STATUS_ERR_TIMEOUT;
 				}
 			}
+
+			if (!spi_is_ready_to_read(module)) {
+				/* Not ready to read data within timeout period */
+				return STATUS_ERR_TIMEOUT;
+			}
 		}
+
 		while(!spi_is_ready_to_read(module)) {
 		}
+
 		/* Flush read buffer */
+		uint16_t flush;
 		spi_read(module, &flush);
 	}
 
@@ -543,8 +568,11 @@ enum status_code spi_write_buffer_wait(struct spi_module
  *                                timeout in slave mode.
  * \retval STATUS_ERR_OVERFLOW    If the data is overflown
  */
-enum status_code spi_tranceive_buffer_wait(struct spi_module *const module,
-		uint8_t *tx_data, uint8_t *rx_data, uint8_t length)
+enum status_code spi_tranceive_buffer_wait(
+		struct spi_module *const module,
+		uint8_t *tx_data,
+		uint8_t *rx_data,
+		uint8_t length)
 {
 	/* Sanity check arguments */
 	Assert(module);
@@ -554,20 +582,22 @@ enum status_code spi_tranceive_buffer_wait(struct spi_module *const module,
 		return STATUS_ERR_INVALID_ARG;
 	}
 
-	uint8_t i = 0;
-	uint16_t j = 0;
-	uint8_t k = 0;
+	uint8_t tx_pos = 0;
+	uint8_t rx_pos = 0;
+
 	/* Send and receive buffer */
 	while (length--) {
 		/* Start timeout period for slave */
 		if (module->mode == SPI_MODE_SLAVE) {
-			for (j = 0; j <= SPI_TIMEOUT; j++) {
+			for (uint32_t i = 0; i <= SPI_TIMEOUT; i++) {
 				if (spi_is_ready_to_write(module)) {
 					break;
-				} else if (j == SPI_TIMEOUT) {
-					/* Not ready to write data within timeout period */
-					return STATUS_ERR_TIMEOUT;
 				}
+			}
+
+			if (!spi_is_ready_to_write(module)) {
+				/* Not ready to write data within timeout period */
+				return STATUS_ERR_TIMEOUT;
 			}
 		}
 
@@ -575,23 +605,28 @@ enum status_code spi_tranceive_buffer_wait(struct spi_module *const module,
 		while (!spi_is_ready_to_write(module)) {
 		}
 
+		/* Write value will be at least 8-bits long */
+		uint16_t data_to_send = tx_data[tx_pos++];
+
+		/* If 9-bit data, get next byte to send from the buffer */
 		if (module->chsize == SPI_CHARACTER_SIZE_9BIT) {
-			/* Write the 9 bit character */
-			spi_write(module, ((uint16_t*)(tx_data))[i++]);
-		} else {
-			/* Write character */
-			spi_write(module, (uint16_t)tx_data[i++]);
+			data_to_send |= (tx_data[tx_pos++] << 8);
 		}
+
+		/* Write the data to send */
+		spi_write(module, data_to_send);
 
 		/* Start timeout period for slave */
 		if (module->mode == SPI_MODE_SLAVE) {
-			for (j = 0; j <= SPI_TIMEOUT; j++) {
+			for (uint32_t i = 0; i <= SPI_TIMEOUT; i++) {
 				if (spi_is_ready_to_read(module)) {
 					break;
-				} else if (j == SPI_TIMEOUT) {
-					/* Not ready to read data within timeout period */
-					return STATUS_ERR_TIMEOUT;
 				}
+			}
+
+			if (!spi_is_ready_to_read(module)) {
+				/* Not ready to read data within timeout period */
+				return STATUS_ERR_TIMEOUT;
 			}
 		}
 
@@ -599,20 +634,22 @@ enum status_code spi_tranceive_buffer_wait(struct spi_module *const module,
 		while (!spi_is_ready_to_read(module)) {
 		}
 
-		enum status_code retval = STATUS_OK;
-		/* Read SPI character */
+		enum status_code retval;
+		uint16_t received_data = 0;
+
+		retval = spi_read(module, &received_data);
+
+		if (retval != STATUS_OK) {
+			/* Overflow, abort */
+			return retval;
+		}
+
+		/* Read value will be at least 8-bits long */
+		rx_data[rx_pos++] = received_data;
+
+		/* If 9-bit data, write next received byte to the buffer */
 		if (module->chsize == SPI_CHARACTER_SIZE_9BIT) {
-			retval = spi_read(module, &(((uint16_t*)(rx_data))[k++]));
-			if (retval != STATUS_OK) {
-				/* Overflow, abort */
-				return retval;
-			}
-		} else {
-			retval = spi_read(module, ((uint16_t*)(&(rx_data)[k++])));
-			if (retval != STATUS_OK) {
-				/* Overflow, abort */
-				return retval;
-			}
+			rx_data[rx_pos++] = (received_data >> 8);
 		}
 	}
 
