@@ -74,7 +74,7 @@ enum i2c_slave_callback {
 	I2C_SLAVE_CALLBACK_WRITE_COMPLETE,
 	/** Callback for packet read complete */
 	I2C_SLAVE_CALLBACK_READ_COMPLETE,
-	/** 
+	/**
 	 * Callback for read request from master - can be used to
 	 * issue a write
 	 */
@@ -85,7 +85,7 @@ enum i2c_slave_callback {
 	I2C_SLAVE_CALLBACK_WRITE_REQUEST,
 	/** Callback for error. */
 	I2C_SLAVE_CALLBACK_ERROR,
-	/** 
+	/**
 	 * Callback for error in last transfer. Discovered on a new address
 	 * interrupt
 	 */
@@ -137,22 +137,24 @@ enum i2c_slave_sda_hold_time {
 	I2C_SLAVE_ADDRESS_MODE_MASK = SERCOM_I2CS_CTRLB_AMODE(0),
 	/** Address math on both address and address_mask */
 	I2C_SLAVE_ADDRESS_MODE_TWO_ADDRESSES = SERCOM_I2CS_CTRLB_AMODE(1),
-	/** 
+	/**
 	 * Address match on range of addresses between and including address and
 	 * address_mask
 	 */
 	I2C_SLAVE_ADDRESS_MODE_RANGE = SERCOM_I2CS_CTRLB_AMODE(2),
  };
 
- /**
- * \brief SERCOM I<SUP>2</SUP>C Slave driver software module structure
+/**
+ * \brief SERCOM I<SUP>2</SUP>C Slave driver software device instance structure.
  *
- * Software module structure for SERCOM I<SUP>2</SUP>C Slave instance. This structure
- * is used throughout the driver, and must be initialized using the
- * \ref i2c_slave_init function to associate the struct with a particular
- * hardware instance and configurations.
+ * SERCOM I<SUP>2</SUP>C Slave driver software instance structure, used to
+ * retain software state information of an associated hardware module instance.
+ *
+ * \note The fields of this structure should not be altered by the user
+ *       application; they are reserved for module-internal use only.
  */
 struct i2c_slave_module {
+#if !defined(__DOXYGEN__)
 	/** Hardware instance initialized for the struct. */
 	Sercom *hw;
 	/** Nack on address match */
@@ -165,7 +167,7 @@ struct i2c_slave_module {
 	volatile uint8_t enabled_callback;
 	/** The total number of bytes to transfer */
 	volatile uint16_t buffer_length;
-	/** 
+	/**
 	 * Counter used for bytes left to send in write and to count number of
 	 * obtained bytes in read
 	 */
@@ -176,6 +178,7 @@ struct i2c_slave_module {
 	volatile uint8_t transfer_direction;
 	/** Status for status read back in error callback */
 	volatile enum status_code status;
+#endif
 };
 
 /**
@@ -221,7 +224,7 @@ struct i2c_slave_config {
  * \name Configuration and Initialization
  * @{
  */
- 
+
 #if !defined(__DOXYGEN__)
 /**
  * \internal Wait for hardware module to sync

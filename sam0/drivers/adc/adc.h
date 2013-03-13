@@ -790,14 +790,19 @@ struct adc_config {
 };
 
 /**
- * \brief ADC software instance structure
+ * \brief ADC software device instance structure.
  *
- * ADC software instance structure.
+ * ADC software instance structure, used to retain software state information
+ * of an associated hardware module instance.
  *
+ * \note The fields of this structure should not be altered by the user
+ *       application; they are reserved for module-internal use only.
  */
 struct adc_module {
+#if !defined(__DOXYGEN__)
 	/** Pointer to ADC hardware module */
 	Adc *hw;
+#endif
 };
 
 /**

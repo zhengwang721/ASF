@@ -374,15 +374,21 @@ enum dac_channel {
 };
 
 /**
- * \brief DAC device instance structure.
- * DAC software instance structure.
+ * \brief DAC software device instance structure.
  *
+ * DAC software instance structure, used to retain software state information
+ * of an associated hardware module instance.
+ *
+ * \note The fields of this structure should not be altered by the user
+ *       application; they are reserved for module-internal use only.
  */
 struct dac_module {
+#if !defined(__DOXYGEN__)
 	/** DAC hardware module */
 	Dac *hw_dev;
 	/** DAC output selection */
 	enum dac_output output;
+#endif
 };
 
 /**

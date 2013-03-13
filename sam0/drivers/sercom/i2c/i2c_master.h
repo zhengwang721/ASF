@@ -153,14 +153,16 @@ typedef void (*i2c_master_callback_t)(
 #endif
 
 /**
- * \brief SERCOM I<SUP>2</SUP>C Master driver software module structure
+ * \brief SERCOM I<SUP>2</SUP>C Master driver software device instance structure.
  *
- * Software module structure for SERCOM I<SUP>2</SUP>C Master instance. This structure
- * is used throughout the driver, and must be initialized using the
- * \ref i2c_master_init function to associate the struct with a particular
- * hardware instance and configurations.
+ * SERCOM I<SUP>2</SUP>C Master driver software instance structure, used to
+ * retain software state information of an associated hardware module instance.
+ *
+ * \note The fields of this structure should not be altered by the user
+ *       application; they are reserved for module-internal use only.
  */
 struct i2c_master_module {
+#if !defined(__DOXYGEN__)
 	/** Hardware instance initialized for the struct */
 	Sercom *hw;
 	/** Unknown bus state timeout */
@@ -178,7 +180,7 @@ struct i2c_master_module {
 	volatile uint8_t enabled_callback;
 	/** The total number of bytes to transfer */
 	volatile uint16_t buffer_length;
-	/** 
+	/**
 	 * Counter used for bytes left to send in write and to count number of
 	 * obtained bytes in read
 	 */
@@ -189,6 +191,7 @@ struct i2c_master_module {
 	volatile uint8_t transfer_direction;
 	/** Status for status read back in error callback */
 	volatile enum status_code status;
+#endif
 #endif
 };
 

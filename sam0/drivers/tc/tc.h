@@ -721,11 +721,13 @@ struct tc_config {
  *       application; they are reserved for module-internal use only.
  */
 struct tc_module {
+#if !defined(__DOXYGEN__)
 	/** Hardware module pointer of the associated Timer/Counter peripheral. */
 	Tc *hw;
 
 	/** Size of the initialized Timer/Counter module configuration. */
 	enum tc_counter_size counter_size;
+#endif
 };
 
 /**
