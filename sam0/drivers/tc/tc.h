@@ -729,6 +729,15 @@ struct tc_config {
 	} size_specific;
 };
 
+
+#ifdef TC_ASYNC
+/* Forward Declaration for the device instance */
+struct tc_module;
+
+/* Type of the callback functions */
+typedef void (*tc_callback_t)(const struct tc_module *const module);
+#endif
+
 /**
  * \brief TC software device instance structure.
  *
@@ -745,18 +754,15 @@ struct tc_module {
 	/** Size of the initialized Timer/Counter module configuration. */
 	enum tc_counter_size counter_size;
 	/** Array of callbacs */
+#ifdef TC_ASYNC
 	tc_callback_t callback[TC_CALLBACK_N];
 	/** Bit mask for callbacks registered */
 	uint8_t callback_reg_mask;
 	/** Bit mask for callbacks enabled */
 	uint8_t callback_enable_mask;
+#endif
 };
 
-
-#ifdef TC_ASYNC
-/* Type of the callback functions */
-typedef void (*tc_callback_t)(const struct tc_module *const module);
-#endif
 
 /**
  * \name Driver Initialization and Configuration
