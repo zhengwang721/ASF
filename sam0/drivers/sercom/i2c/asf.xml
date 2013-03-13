@@ -18,7 +18,7 @@
 			<build type="doxygen-enable-section" value="I2C_CALLBACK_MODE"/>
 			<build type="define" name="I2C_CALLBACK_MODE" value="false"/>
 
-			<build type="header-file" subtype="example" value="quick_start/qs_i2c_master_basic_use.h"/>
+			<build type="header-file" subtype="example" value="quick_start_master/qs_i2c_master_basic_use.h"/>
 			<build type="doxygen-entry-point" value="sam0_i2c_group"/>
 			<device-support value="samd20"/>
 			<require idref="sam0.utils"/>
