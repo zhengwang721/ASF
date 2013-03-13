@@ -3,7 +3,7 @@
  *
  * \brief USB host Mass Storage Class interface.
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -602,7 +602,7 @@ static bool uhi_cdc_rx_update(uhi_cdc_line_t *line)
 		true,
 		buf_nosel->ptr,
 		line->buffer_size,
-		100,
+		0,
 		uhi_cdc_rx_received);
 }
 
