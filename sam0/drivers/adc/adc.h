@@ -344,7 +344,7 @@ extern "C" {
 #include <system.h>
 
 /**
- * \name ADC interrupt flags
+ * \name Module status flags
  *
  * ADC status flags, returned by \ref adc_get_status() and cleared by
  * \ref adc_clear_status().

@@ -388,7 +388,7 @@ extern "C" {
 #endif
 
 /**
- * \name TC interrupt flags
+ * \name Module status flags
  *
  * TC status flags, returned by \ref tc_get_status() and cleared by
  * \ref tc_clear_status().
