@@ -59,10 +59,11 @@ extern "C" {
  * as well as data transfer via I<SUP>2</SUP>C.
  * The following peripheral is used by this module:
  * - SERCOM in I<SUP>2</SUP>C Master Mode:
- *     - I2C Master
- *     - I2C Master Interrupt
+ *     - I<SUP>2</SUP>C Master
+ *     - I<SUP>2</SUP>C Master Interrupt
  * - SERCOM in I<SUP>2</SUP>C Slave Mode:
- *     - I2C Slave Interrupt
+ *     - I<SUP>2</SUP>C Slave
+ *     - I<SUP>2</SUP>C Slave Interrupt
  *
  * The outline of this documentation is as follows:
  * - \ref asfdoc_samd20_i2c_prerequisites
@@ -369,8 +370,11 @@ extern "C" {
  * lets the driver exit a read or write operation after the specified time.
  * The function will then return the STATUS_ERR_TIMEOUT flag.
  *
- * The time before the timeout occurs, can be found by same formula as
- * provided for \ref timeout "unknown bus state" timeout.
+ * This is also the case for the slave when using the functions postfixed
+ * \c _wait.
+ *
+ * The time before the timeout occurs, will be the same as
+ * for \ref timeout "unknown bus state" timeout.
  *
  * \subsubsection asfdoc_samd20_i2c_repeated_start Repeated Start
  * To issue a \b Repeated \b Start, the functions postfixed \c _no_stop must be
@@ -622,8 +626,9 @@ struct i2c_packet {
  *
  * \section use_cases I2C Driver Use Cases
  * - \subpage asfdoc_samd20_i2c_master_basic_use_case "Quick Start Guide for the I2C Master module - Basic Use Case"
- * - \subpage asfdoc_samd20_i2c_master_callback_use_case "Quick Start Guide for the I2C Master Module - Callback Use Case"
- * - \subpage asfdoc_samd20_i2c_slave_basic_use_case "Quick Start Guide for the I2C Slave module - Callback Use Case"
+ * - \subpage asfdoc_samd20_i2c_master_callback_use_case "Quick Start Guide for the I2C Master module - Callback Use Case"
+ * - \subpage asfdoc_samd20_i2c_slave_basic_use_case "Quick Start Guide for the I2C Slave module - Basic Use Case"
+ * - \subpage asfdoc_samd20_i2c_slave_callback_use_case "Quick Start Guide for the I2C Slave module - Callback Use Case"
  */
 
 #endif /* I2C_COMMON_H_INCLUDED */

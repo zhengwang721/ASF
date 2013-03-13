@@ -43,17 +43,89 @@
 
 #include <asf.h>
 
+//! [address]
+#define SLAVE_ADDRESS 0x12
+//! [address]
+//! [packet_data]
+#define DATA_LENGTH 10
+
+uint8_t write_buffer[DATA_LENGTH] = {
+	0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09
+};
+uint8_t read_buffer[DATA_LENGTH];
+//! [packet_data]
+
+//! [module]
+struct i2c_slave_module slave;
+//! [module]
+
+//! [initialize_i2c]
+static void configure_i2c(void)
+{
+	/* Create and initialize config structure */
+	//! [init_conf]
+	struct i2c_slave_config config;
+	i2c_slave_get_config_defaults(&config);
+	//! [init_conf]
+
+	/* Change address and address_mode */
+	//! [conf_changes]
+	config.address = SLAVE_ADDRESS;
+	config.address_mode = I2C_SLAVE_ADDRESS_MODE_MASK;
+	config.buffer_timeout = 1000;
+	//! [conf_changes]
+	/* Initialize and enable device with config */
+	//! [init_module]
+	i2c_slave_init(&slave, SERCOM1, &config);
+	//! [init_module]
+
+	//! [enable_module]
+	i2c_slave_enable(&slave);
+	//! [enable_module]
+}
+//! [initialize_i2c]
+
 int main(void)
 {
+	//! [run_initialize_i2c]
 	/* Init system */
 	//! [system_init]
 	system_init();
 	//! [system_init]
 
+	//! [config]
+	configure_i2c();
+	//! [config]
+
+	//! [dir]
+	enum i2c_slave_direction dir;
+	//! [dir]
+	//! [pack]
+	struct i2c_packet packet = {
+		.address     = SLAVE_ADDRESS,
+		.data_length = DATA_LENGTH,
+		.data        = write_buffer,
+	};
+	//! [pack]
+	//! [run_initialize_i2c]
 
 	//! [while]
 	while (1) {
-		/* Inf loop while waiting for I2C master interaction */
+		/* Wait for direction from master */
+		//! [get_dir]
+		dir = i2c_slave_get_direction_wait(&slave);
+		//! [get_dir]
+
+		/* Transfer packet in direction requested by master */
+		//! [transfer]
+		if (dir == I2C_SLAVE_DIRECTION_READ) {
+			packet.data = read_buffer;
+			i2c_slave_read_packet_wait(&slave, &packet);
+		} else if (dir == I2C_SLAVE_DIRECTION_WRITE) {
+			packet.data = write_buffer;
+			i2c_slave_write_packet_wait(&slave, &packet);
+		}
+		//! [transfer]
 	}
 	//! [while]
 }

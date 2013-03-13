@@ -61,14 +61,9 @@ extern "C" {
 #endif
 
 /**
- * \addtogroup asfdoc_sam0_i2c_slave_group I2C Slave Basic
+ * \addtogroup asfdoc_samd20_i2c_group
+ *
  * @{
- *
- * This is an overview of the API for the I2C Slave driver. For more advanced
- * use with the interrupt driver, see \ref
- * asfdoc_sam0_i2c_slave_interrupt_group.
- *
- * \section asfdoc_sam0_i2c_slave_api_overview I2C Slave API Overview
  *
  */
 
@@ -83,7 +78,7 @@ enum i2c_slave_callback {
 	I2C_SLAVE_CALLBACK_WRITE_COMPLETE,
 	/** Callback for packet read complete */
 	I2C_SLAVE_CALLBACK_READ_COMPLETE,
-	/** 
+	/**
 	 * Callback for read request from master - can be used to
 	 * issue a write
 	 */
@@ -94,7 +89,7 @@ enum i2c_slave_callback {
 	I2C_SLAVE_CALLBACK_WRITE_REQUEST,
 	/** Callback for error. */
 	I2C_SLAVE_CALLBACK_ERROR,
-	/** 
+	/**
 	 * Callback for error in last transfer. Discovered on a new address
 	 * interrupt
 	 */
@@ -142,7 +137,7 @@ enum i2c_slave_sda_hold_time {
  *
  * Enum for the possible address modes.
  */
- enum i2c_slave_address_mode {
+enum i2c_slave_address_mode {
 	/** Address match on address_mask used as a mask to address */
 	I2C_SLAVE_ADDRESS_MODE_MASK = SERCOM_I2CS_CTRLB_AMODE(0),
 	/** Address math on both address and address_mask */
@@ -152,19 +147,35 @@ enum i2c_slave_sda_hold_time {
 	 * address_mask
 	 */
 	I2C_SLAVE_ADDRESS_MODE_RANGE = SERCOM_I2CS_CTRLB_AMODE(2),
- };
-
- /**
- * \brief SERCOM I2C Slave driver software module structure
+};
+ 
+/**
+ * \brief Enum for the direction of a request
  *
- * Software module structure for SERCOM I2C Slave instance. This structure
- * is used throughout the driver, and must be initialized using the
- * \ref i2c_slave_init function to associate the struct with a particular
- * hardware instance and configurations.
+ * Enum for the direction of a request.
+ */
+enum i2c_slave_direction {
+	/** Read */
+	I2C_SLAVE_DIRECTION_READ,
+	/** Write */
+	I2C_SLAVE_DIRECTION_WRITE,
+	/** No direction */
+	I2C_SLAVE_DIRECTION_NONE,
+};
+
+/**
+ * \brief SERCOM I<SUP>2</SUP>C Slave driver software device instance structure
+ *
+ * SERCOM I<SUP>2</SUP>C Slave driver software instance structure, used to
+ * retain software state information of an associated hardware module instance.
+ * \note The fields of this structure should not be altered by the user
+ *       application; they are reserved for module-internal use only.
  */
 struct i2c_slave_module {
-	/** Hardware instance initialized for the struct. */
+	/** Hardware instance initialized for the struct */
 	Sercom *hw;
+	/** Timeout value for polled functions */
+	uint16_t buffer_timeout;
 #ifdef I2C_SLAVE_ASYNC
 	/** Nack on address match */
 	bool nack_on_address;
@@ -203,6 +214,8 @@ struct i2c_slave_config {
 	bool enable_scl_low_timeout;
 	/** SDA hold time with respect to the negative edge of SCL */
 	enum i2c_slave_sda_hold_time sda_hold_time;
+	/** Timeout to wait for master in polled functions */
+	uint16_t buffer_timeout;
 	/** Addressing mode */
 	enum i2c_slave_address_mode address_mode;
 	/** Address or upper limit of address range */
@@ -290,6 +303,7 @@ static inline bool i2c_slave_is_syncing (const struct i2c_slave_module *const mo
  * The default configuration is as follows:
  * - Disable SCL low timeout
  * - 300ns - 600ns SDA hold time
+ * - Buffer timeout = 65535
  * - Address with mask
  * - Address = 0
  * - Address mask = 0 (one single address)
@@ -308,6 +322,7 @@ static inline void i2c_slave_get_config_defaults(
 	Assert(config);
 	config->enable_scl_low_timeout = false;
 	config->sda_hold_time = I2C_SLAVE_SDA_HOLD_TIME_300NS_600NS;
+	config->buffer_timeout = 65535;
 	config->address_mode = I2C_SLAVE_ADDRESS_MODE_MASK;
 	config->address = 0;
 	config->address_mask = 0;
@@ -408,9 +423,10 @@ enum status_code i2c_slave_write_packet_wait(struct i2c_slave_module *const modu
 		struct i2c_packet *const packet);
 enum status_code i2c_slave_read_packet_wait(struct i2c_slave_module *const module,
 		struct i2c_packet *const packet);
+enum i2c_slave_direction i2c_slave_get_direction_wait(
+		struct i2c_slave_module *const module);
 
-// enum transfer_dir i2c_slave_get_request, something,something
- 
+/** @} */
 /** @} */
 
 #endif /* I2C_SLAVE_H_INCLUDED */

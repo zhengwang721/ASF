@@ -42,7 +42,6 @@
  */
  
 #include "i2c_slave.h"
-
 #ifdef I2C_SLAVE_ASYNC
 # include "i2c_slave_interrupt.h"
 #endif
@@ -69,6 +68,8 @@ static enum status_code _i2c_slave_set_config(
 
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
 	Sercom *const sercom_hw = module->hw;
+
+	module->buffer_timeout = config->buffer_timeout;
 
 	struct system_pinmux_config pin_conf;
 	uint32_t pad0 = config->pinmux_pad0;
@@ -228,6 +229,53 @@ void i2c_slave_reset(struct i2c_slave_module *const module)
 	i2c_hw->CTRLA.reg = SERCOM_I2CS_CTRLA_SWRST;
 }
 
+/**
+ * \internal Waits for answer on bus
+ *
+ * \param[in] module Pointer to software module structure
+ *
+ * \return                    Status of bus
+ * \retval STATUS_OK          If given response from slave device
+ * \retval STATUS_ERR_TIMEOUT If no response was given within specified timeout
+ *                            period
+ */
+static enum status_code _i2c_slave_wait_for_bus(
+		struct i2c_slave_module *const module)
+{
+	SercomI2cm *const i2c_module = &(module->hw->I2CM);
+
+	/* Wait for reply. */
+	uint16_t timeout_counter = 0;
+	while ((!(i2c_module->INTFLAG.reg & SERCOM_I2CS_INTFLAG_DIF)) &&
+			(!(i2c_module->INTFLAG.reg & SERCOM_I2CS_INTFLAG_PIF)) && 
+			(!(i2c_module->INTFLAG.reg & SERCOM_I2CS_INTFLAG_AIF))) {
+
+		/* Check timeout condition. */
+		if (++timeout_counter >= module->buffer_timeout) {
+			return STATUS_ERR_TIMEOUT;
+		}
+	}
+	return STATUS_OK;
+}
+
+/**
+ * \brief Writes a packet to the master
+ *
+ * Writes a packet to the master. This will wait for the master to issue
+ * a request.
+ *
+ * \param[in] module Pointer to software module structure
+ * \param[in] packet Packet to write to master
+ * 
+ * \return Status of packet write
+ * \retval STATUS_OK               Packet was written successfully
+ * \retval STATUS_ERR_IO           There was an error in the previous transfer
+ * \retval STATUS_ERR_BAD_FORMAT   Master wants to write data
+ * \retval STATUS_ERR_ERR_OVERFLOW Master nacked before entire packet was
+ *                                 transferred
+ * \retval STATUS_ERR_TIMEOUT      No response was given within the timeout
+ *                                 period
+ */
 enum status_code i2c_slave_write_packet_wait(struct i2c_slave_module *const module,
 		struct i2c_packet *const packet)
 {
@@ -235,11 +283,97 @@ enum status_code i2c_slave_write_packet_wait(struct i2c_slave_module *const modu
 	Assert(module);
 	Assert(module->hw);
 	Assert(packet);
-	// Wait for master to send address packet
-	// Send address ack if read req
-	// Write data, wait for ack and so on
+
+	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
+	
+	uint8_t length = packet->data_length;
+	enum status_code status;
+	/* Wait for master to send address packet */
+	status = _i2c_slave_wait_for_bus(module);
+
+	if (status != STATUS_OK) {
+			/* Timeout, return */
+			return status;
+	}
+	if (!(i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_AIF)) {
+		/* Not address interrupt, something is wrong */
+		return STATUS_ERR_DENIED;
+	}
+
+	/* Check if there was an error in last transfer */
+	if (i2c_hw->STATUS.reg & (SERCOM_I2CS_STATUS_BUSERR ||
+			SERCOM_I2CS_STATUS_COLL || SERCOM_I2CS_STATUS_LOWTOUT)) {
+		return STATUS_ERR_IO;
+	}
+
+	/* Check direction */
+	if (!(i2c_hw->STATUS.reg & SERCOM_I2CS_STATUS_DIR)) {
+		/* Write request from master, send NACK and return */
+		i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_ACKACT;
+		i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_CMD(0x3);
+		return STATUS_ERR_BAD_FORMAT;
+	}
+
+	/* Read request from master, ACK address */
+	i2c_hw->CTRLB.reg &= ~SERCOM_I2CS_CTRLB_ACKACT;
+	i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_CMD(0x3);
+
+	uint8_t i = 0;
+
+	/* Wait for data interrupt */
+	status = _i2c_slave_wait_for_bus(module);
+	if (status != STATUS_OK) {
+			/* Timeout, return */
+			return status;
+	}
+
+	while (length--) {
+		/* Write data */
+		_i2c_slave_wait_for_sync(module);
+		i2c_hw->DATA.reg = packet->data[i++];
+
+		/* Wait for response from master */
+		status = _i2c_slave_wait_for_bus(module);
+		if (status != STATUS_OK) {
+			/* Timeout, return */
+			return status;
+		}
+
+		if (i2c_hw->STATUS.reg & SERCOM_I2CS_STATUS_RXNACK &&
+				length !=0) {
+			/* NACK from master, abort */
+			/* Release line */
+			i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_CMD(0x02);
+			return STATUS_ERR_OVERFLOW;
+			/* Workaround: PIF will probably not be set, ignore */
+		}
+		/* ACK from master, continue writing */
+	}
+
+	/* Release line */
+	i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_CMD(0x02);
+
+	return STATUS_OK;
 }
 
+/**
+ * \brief Reads a packet from the master
+ *
+ * Reads a packet from the master. This will wait for the master to
+ * issue a request.
+ * 
+ * \param[in]  module Pointer to software module structure
+ * \param[out] packet Packet to read from master
+ *
+ * \return Status of packet read
+ * \retval STATUS_OK               Packet was read successfully
+ * \retval STATUS_ABORTED          Master sent stop condition or repeated
+ *                                 start before specified length of bytes
+ *                                 was received
+ * \retval STATUS_ERR_IO           There was an error in the previous transfer
+ * \retval STATUS_ERR_BAD_FORMAT   Master wants to read data
+ * \retval STATUS_ERR_ERR_OVERFLOW Last byte received overflows buffer
+ */
 enum status_code i2c_slave_read_packet_wait(struct i2c_slave_module *const module,
 		struct i2c_packet *const packet)
 {
@@ -247,7 +381,125 @@ enum status_code i2c_slave_read_packet_wait(struct i2c_slave_module *const modul
 	Assert(module);
 	Assert(module->hw);
 	Assert(packet);
-	// Wait for master to send address packet
-	// Send address ack if write req
-	// wait for data, send ack/nack
+
+	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
+
+	uint8_t length = packet->data_length;
+	
+	enum status_code status;
+
+	/* Wait for master to send address packet */
+	status = _i2c_slave_wait_for_bus(module);
+	if (status != STATUS_OK) {
+		/* Timeout, return */
+		return status;
+	}	
+	/* Check if there was an error in the last transfer */
+	if (i2c_hw->STATUS.reg & (SERCOM_I2CS_STATUS_BUSERR ||
+			SERCOM_I2CS_STATUS_COLL || SERCOM_I2CS_STATUS_LOWTOUT)) {
+		// TODO: NACK?
+		return STATUS_ERR_IO;
+	}
+	/* Check direction */
+	if ((i2c_hw->STATUS.reg & SERCOM_I2CS_STATUS_DIR)) {
+		/* Read request from master, send NACK and return */
+		i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_ACKACT;
+		i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_CMD(0x3);
+		return STATUS_ERR_BAD_FORMAT;
+	}
+
+	/* Write request from master, ACK address */
+	i2c_hw->CTRLB.reg &= ~SERCOM_I2CS_CTRLB_ACKACT;
+	i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_CMD(0x3);
+
+	uint8_t i = 0;
+	while (length--) {
+
+		/* Wait for next byte or stop condition */
+		status = _i2c_slave_wait_for_bus(module);
+		if (status != STATUS_OK) {
+			/* Timeout, return */
+			return status;
+		}
+
+		if ((i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_PIF) || 
+				i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_AIF) {
+			/* Master sent stop condition, or repeated start, read done */
+			/* Clear stop flag */
+			i2c_hw->INTFLAG.reg = SERCOM_I2CS_INTFLAG_PIF;
+			return STATUS_ABORTED;
+		}
+
+		/* Read data */
+		_i2c_slave_wait_for_sync(module);
+		packet->data[i++] = i2c_hw->DATA.reg;
+	}
+
+	/* Packet read done, wait for packet to NACK, Stop or repeated start */
+	status = _i2c_slave_wait_for_bus(module);
+
+	if (status != STATUS_OK) {
+		/* Workaround: Do nothing, as the stop interrupt flag is
+		 * not always set when it should.
+		 */
+	}
+
+	if (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_DIF) {
+		/* Buffer is full, send NACK */
+		i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_ACKACT;
+		i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_CMD(0x2);
+	} else if (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_PIF) {
+		/* Clear stop flag */
+		i2c_hw->INTFLAG.reg = SERCOM_I2CS_INTFLAG_PIF;
+	}
+	return STATUS_OK;
+}
+
+/**
+ * \brief Waits for a start condition on the bus
+ *
+ * Waits for the master to issue a star condition on the bus.
+ * Note that this function does not check for errors in the last transfer,
+ * this will be discovered when reading or writing.
+ *
+ * \param[in] module Pointer to software module structure
+ *
+ * \return
+ * \retval I2C_SLAVE_DIRECTION_NONE  No request from master within timeout
+ *                                   period
+ * \retval I2C_SLAVE_DIRECTION_READ  Write request from master
+ * \retval I2C_SLAVE_DIRECTION_WRITE Read request from master
+ */
+enum i2c_slave_direction i2c_slave_get_direction_wait(
+		struct i2c_slave_module *const module)
+{
+	/* Sanity check arguments. */
+	Assert(module);
+	Assert(module->hw);
+	Assert(packet);
+
+	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
+	
+	enum status_code status;
+	
+	/* Wait for address interrupt */
+	status = _i2c_slave_wait_for_bus(module);
+	
+	if (status != STATUS_OK) {
+			/* Timeout, return */
+			return I2C_SLAVE_DIRECTION_NONE;
+	}
+	if (!(i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_AIF)) {
+		/* Not address interrupt, something is wrong */
+		return I2C_SLAVE_DIRECTION_NONE;
+	}
+
+	/* Check direction */
+	if ((i2c_hw->STATUS.reg & SERCOM_I2CS_STATUS_DIR)) {
+		/* Read request from master */
+		return I2C_SLAVE_DIRECTION_WRITE;
+	} else {
+		/* Write request from master */
+		return I2C_SLAVE_DIRECTION_READ;
+	}
 }

@@ -37,7 +37,6 @@
 
 			<build type="header-file" subtype="example" value="quick_start_master_callback/qs_i2c_master_callback.h"/>
 			<build type="doxygen-entry-point" value="asfdoc_samd20_i2c_group"/>
-			<build type="doxygen-entry-point" value="asfdoc_samd20_i2c_master_interrupt_group"/>
 			<device-support value="samd20"/>
 			<require idref="sam0.utils"/>
 			<require idref="sam0.drivers.sercom"/>

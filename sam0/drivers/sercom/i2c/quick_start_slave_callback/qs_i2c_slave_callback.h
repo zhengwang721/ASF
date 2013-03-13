@@ -58,7 +58,7 @@
  * A sample buffer to write from, a sample buffer to read to and length of buffers:
  * \snippet qs_i2c_slave_callback.c packet_data
  *
- * Addres to respond to:
+ * Address to respond to:
  * \snippet qs_i2c_slave_callback.c address
  *
  * Globally accessible module structure:
