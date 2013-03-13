@@ -53,60 +53,14 @@
  * {@
  */
 
-/**
- * \brief Registers a callback
- *
- * Registers a callback function which is implemented by the user.
- *
- * \note The callback must be enabled by \ref tc_enable_callback,
- * in order for the interrupt handler to call it when the conditions for the
- * callback type is met.
- *
- * \param[in]     module      Pointer to TC software instance struct
- * \param[in]     callback_func Pointer to callback function
- * \param[in]     callback_type Callback type given by an enum
- *
- */
-static inline void tc_register_callback(
+void tc_register_callback(
 		struct tc_module *const module,
 		tc_callback_t callback_func,
-		const enum tc_callback callback_type)
-{
-	/* Sanity check arguments */
-	Assert(module);
-	Assert(callback_func);
+		const enum tc_callback callback_type);
 
-	/* Register callback function */
-	module->callback[callback_type] = callback_func;
-
-	/* Set the bit corresponding to the callback_type */
-	module->callback_reg_mask |= (1 << callback_type);
-}
-
-/**
- * \brief Unregisters a callback
- *
- * Unregisters a callback function implemented by the user.
- *
- * \param[in]     module Pointer to TC software instance struct
- * \param[in]     callback_func Pointer to callback function
- * \param[in]     callback_type Callback type given by an enum
- *
- */
-static inline void tc_unregister_callback(
+void tc_unregister_callback(
 		struct tc_module *const module,
-		const enum tc_callback callback_type)
-{
-	/* Sanity check arguments */
-	Assert(module);
-
-	/* Unregister callback function */
-	module->callback[callback_type] = NULL;
-	_tc_instances[_tc_get_module_irq_index(module)] = 0;
-
-	/* Clear the bit corresponding to the callback_type */
-	module->callback_reg_mask &= ~(1 << callback_type);
-}
+		const enum tc_callback callback_type);
 
 /**
  * \brief Enables callback
@@ -117,11 +71,6 @@ static inline void tc_unregister_callback(
  *
  * \param[in]     module Pointer to TC software instance struct
  * \param[in]     callback_type Callback type given by an enum
- *
- * \returns    Status of the operation
- * \retval     STATUS_OK              If operation was completed
- * \retval     STATUS_ERR_INVALID     If operation was not completed,
- *                                    due to invalid callback_type
  */
 static inline void tc_enable_callback(struct tc_module *const module,
 		enum tc_callback callback_type){
@@ -143,11 +92,6 @@ static inline void tc_enable_callback(struct tc_module *const module,
  * \param[in]     module Pointer to TC software instance struct
  * \param[in]     callback_type Callback type given by an enum
  *
- * \returns    Status of the operation
- * \retval     STATUS_OK              If operation was completed
- * \retval     STATUS_ERR_INVALID     If operation was not completed,
- *                                    due to invalid callback_type
- *
  */
 static inline void tc_disable_callback(struct tc_module *const module,
 		enum tc_callback callback_type){
@@ -167,14 +111,14 @@ static inline void tc_disable_callback(struct tc_module *const module,
  * \name Callbacks
  * {@
  */
-
+/*
 void tc_error_callback(
 		struct tc_module *const module_inst,
 		enum status_code error_code);
 
 void tc_callback(
 		struct tc_module *const module_inst);
-
+*/
 
 /**
  * @}

@@ -38,7 +38,7 @@
  * \asf_license_stop
  *
  */
-#include <conf_quick_start.h>
+#include <conf_quick_start_callback.h>
 #include <asf.h>
 
 int main(void)
