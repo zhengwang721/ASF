@@ -48,12 +48,8 @@
 
 /**
  * \internal Set Configuration of the USART module
- *
  */
-enum status_code _usart_set_config(
-		struct usart_module *const module,
-		const struct usart_config const *config);
-enum status_code _usart_set_config(
+static enum status_code _usart_set_config(
 		struct usart_module *const module,
 		const struct usart_config const *config)
 {
@@ -259,14 +255,11 @@ enum status_code usart_init(
 	}
 
 #ifdef USART_ASYNC
-	/* Temporary variables */
-	uint8_t i;
-	uint8_t instance_index;
-
 	/* Initialize parameters */
-	for (i = 0; i < USART_CALLBACK_N; i++) {
-		module->callback[i]        = NULL;
+	for (uint32_t i = 0; i < USART_CALLBACK_N; i++) {
+		module->callback[i]            = NULL;
 	}
+
 	module->tx_buffer_ptr              = NULL;
 	module->rx_buffer_ptr              = NULL;
 	module->remaining_tx_buffer_length = 0x0000;
@@ -278,7 +271,7 @@ enum status_code usart_init(
 
 	/* Set interrupt handler and register USART software module struct in
 	 * look-up table */
-	instance_index = _sercom_get_sercom_inst_index(module->hw);
+	uint8_t instance_index = _sercom_get_sercom_inst_index(module->hw);
 	_sercom_set_handler(instance_index, _usart_interrupt_handler);
 	_sercom_instances[instance_index] = module;
 #endif
@@ -372,7 +365,7 @@ enum status_code usart_read_wait(
 	Assert(module->hw);
 
 	/* Error variable */
-	uint16_t error_code;
+	uint8_t error_code;
 
 	/* Get a pointer to the hardware module instance */
 	SercomUsart *const usart_hw = &(module->hw->USART);
@@ -395,9 +388,7 @@ enum status_code usart_read_wait(
 	_usart_wait_for_sync(module);
 
 	/* Read out the status code and mask away all but the 4 LSBs*/
-	error_code
-		= (uint8_t)(usart_hw->STATUS.reg &
-			SERCOM_USART_STATUS_MASK);
+	error_code = (uint8_t)(usart_hw->STATUS.reg & SERCOM_USART_STATUS_MASK);
 
 	/* Check if an error has occurred during the receiving */
 	if (error_code) {
@@ -460,7 +451,6 @@ enum status_code usart_write_buffer_wait(
 	Assert(module->hw);
 
 	/* Timeout variables */
-	uint16_t i = 0;
 	uint16_t timeout;
 
 #ifdef USART_CUSTOM_TIMEOUT
@@ -484,7 +474,7 @@ enum status_code usart_write_buffer_wait(
 	while (length--) {
 		/* Wait for the USART to be ready for new data and abort
 		* operation if it doesn't get ready within the timeout*/
-		for (i = 0; i < timeout; i++) {
+		for (uint32_t i = 0; i < timeout; i++) {
 			if (usart_hw->INTFLAG.reg & SERCOM_USART_INTFLAG_DREIF) {
 				break;
 			} else if (i == timeout) {
@@ -504,8 +494,7 @@ enum status_code usart_write_buffer_wait(
 	}
 
 	/* Wait until Transmit is complete or timeout */
-	i = 0;
-	for (i = 0; i < timeout; i++) {
+	for (uint32_t i = 0; i < timeout; i++) {
 		if (usart_hw->INTFLAG.reg & SERCOM_USART_INTFLAG_TXCIF) {
 			break;
 		} else if (i == timeout) {
@@ -555,7 +544,6 @@ enum status_code usart_read_buffer_wait(
 	Assert(module->hw);
 
 	/* Timeout variables */
-	uint16_t i = 0;
 	uint16_t timeout;
 
 #ifdef USART_CUSTOM_TIMEOUT
@@ -576,7 +564,7 @@ enum status_code usart_read_buffer_wait(
 	while (length--) {
 		/* Wait for the USART to have new data and abort operation if it
 		 * doesn't get ready within the timeout*/
-		for (i = 0; i < timeout; i++) {
+		for (uint32_t i = 0; i < timeout; i++) {
 			if (!(usart_hw->INTFLAG.reg & SERCOM_USART_INTFLAG_RXCIF)) {
 				break;
 			} else if (i == timeout) {
