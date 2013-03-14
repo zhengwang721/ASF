@@ -56,6 +56,7 @@ uint8_t _sercom_get_sercom_inst_index(
 
 enum system_interrupt_vector _sercom_get_interrupt_vector(
 		Sercom *const sercom_instance);
+
 void _sercom_set_handler(
 		const uint8_t instance,
 		const sercom_handler_t interrupt_handler);

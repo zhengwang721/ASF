@@ -1,22 +1,30 @@
 <asf xmlversion="1.0">
 	<module type="driver" id="sam0.drivers.nvm" caption="NVM Driver">
 		<info type="description" value="summary">
-			Driver for the SAMD20 Non-volatile Memory controller. Provides a
+			Driver for the SAMD20 Non-Volatile Memory controller. Provides a
 			unified interface for the erasing, reading and writing of data to
 			and from the various non-volatile memories of the device, including
 			executable FLASH memory and user configuration pages.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="I/O" />
+			<keyword value="NVM" />
+			<keyword value="Memory" />
 		</info>
+
 		<build type="include-path" value="."/>
-		<build type="header-file" subtype="api" value="nvm.h"/>
 		<build type="c-source" value="nvm.c"/>
+
+		<build type="header-file" subtype="api" value="nvm.h"/>
+
 		<build type="header-file" subtype="example" value="quick_start_basic/qs_nvm_basic.h"/>
+
 		<build type="doxygen-entry-point" value="sam0_nvm_group"/>
+
 		<device-support value="samd20"/>
+
 		<require idref="sam0.utils"/>
 		<require idref="sam0.drivers.system"/>
+
 		<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 	</module>
 </asf>

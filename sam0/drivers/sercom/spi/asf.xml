@@ -1,13 +1,13 @@
 <asf xmlversion="1.0">
 	<select-by-config id="sam0.drivers.sercom.spi" name="config.sam0.drivers.sercom.spi" caption="SERCOM SPI - Serial Peripheral Interface" default="callback">
 		<info type="description" value="summary">
-		Driver for the SAMD20 SPI.
+			Driver for the SAMD20 SERCOM SPI module. Provides a unified interface for the configuration and management of the SERCOM module in SPI mode.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="Security"/>
+			<keyword value="Communication"/>
 		</info>
 
-		<module type="driver" id="sam0.drivers.sercom.spi#polled" caption="SPI - Serial Peripheral Interface Driver (Polled Mode)">
+		<module type="driver" id="sam0.drivers.sercom.spi#polled" caption="SERCOM SPI - Serial Peripheral Interface (Polled Mode)">
 			<build type="c-source" value="spi.c"/>
 			<build type="header-file" subtype="api" value="spi.h"/>
 			<build type="header-file" value="quick_start/qs_spi_basic.h" subtype="example"/>
@@ -25,7 +25,7 @@
 			<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 		</module>
 
-		<module type="driver" id="sam0.drivers.sercom.spi#callback" caption="SPI - Serial Peripheral Interface Driver (Callback Mode)">
+		<module type="driver" id="sam0.drivers.sercom.spi#callback" caption="SERCOM SPI - Serial Peripheral Interface (Callback Mode)">
 			<build type="c-source" value="spi.c"/>
 			<build type="c-source" value="spi_interrupt.c"/>
 			<build type="header-file" subtype="api" value="spi.h"/>

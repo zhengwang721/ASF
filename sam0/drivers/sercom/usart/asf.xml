@@ -1,16 +1,13 @@
 <asf xmlversion="1.0">
 	<select-by-config id="sam0.drivers.sercom.usart" name="sam0.drivers.sercom.usart" caption="SERCOM USART - Serial Communications" default="polled">
-		<module type="driver" id="sam0.drivers.sercom.usart#polled" caption=
-			"USART Driver">
-			<info type="description" value="summary">
-				Driver for the SAMD20 USART. Provides a unified
-				interface for the configuration and management of the
-				SERCOM USART interface.
-			</info>
-			<info type="keyword" value="technology">
-				<keyword value="USART" />
-			</info>
+		<info type="description" value="summary">
+			Driver for the SAMD20 SERCOM USART module. Provides a unified interface for the configuration and management of the SERCOM module in USART mode.
+		</info>
+		<info type="keyword" value="technology">
+			<keyword value="Communication"/>
+		</info>
 
+		<module type="driver" id="sam0.drivers.sercom.usart#polled" caption="SERCOM USART - Serial Communications (Polled APIs)">
 			<build type="header-file" subtype="example" value="quick_start/qs_usart_basic_use.h"/>
 
 			<build type="include-path" value="." />
@@ -29,17 +26,7 @@
 
 			<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 		</module>
-		<module type="driver" id="sam0.drivers.sercom.usart#callback" caption=
-			"USART interrupt driven driver">
-			<info type="description" value="summary">
-				Driver for the SAMD20 SERCOM in USART mode driven by interrupts.
-				Provides a unified interface for the configuration and use of
-				the SERCOM USART INTERFACE.
-			</info>
-			<info type="keyword" value="technology">
-				<keyword value="USART"/>
-			</info>
-
+		<module type="driver" id="sam0.drivers.sercom.usart#callback" caption="SERCOM USART - Serial Communications (Callback APIs)">
 			<build type="define" name="USART_CALLBACK_MODE" value=""/>
 			<build type="doxygen-enable-section" value="USART_CALLBACK_MODE"/>
 
