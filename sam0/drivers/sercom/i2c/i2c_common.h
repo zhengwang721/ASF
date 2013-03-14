@@ -50,18 +50,29 @@ extern "C" {
 #endif
 
 /**
- * \defgroup asfdoc_samd20_i2c_group I2C Driver
+ * \defgroup asfdoc_samd20_i2c_group SAMD20 I2C Bus Driver (SERCOM I2C)
  *
- * This is a driver for the SAM D20 devices. This driver provides an
- * interface for configuration and management of the SERCOM I<SUP>2</SUP>C module,
- * as well as data transfer via I<SUP>2</SUP>C.
+ * This driver for SAMD20 devices provides an interface for the configuration
+ * and management of the device's SERCOM I<SUP>2</SUP>C module, for the transfer
+ * of data via an I<SUP>2</SUP>C bus. The following driver API modes are covered
+ * by this manual:
+ *
+ * \if I2C_MASTER_MODE
+ * - Master Mode Polled APIs
+ *  \if I2C_CALLBACK_MODE
+ * - Master Mode Callback APIs
+ *  \endif
+ * \endif
+ * \if I2C_SLAVE_MODE
+ * - SLave Mode Polled APIs
+ *  \if I2C_CALLBACK_MODE
+ * - Slave Mode Callback APIs
+ *  \endif
+ * \endif
+ *
  * The following peripheral is used by this module:
- * - SERCOM in I<SUP>2</SUP>C Master Mode:
- *     - I<SUP>2</SUP>C Master
- *     - I<SUP>2</SUP>C Master Interrupt
- * - SERCOM in I<SUP>2</SUP>C Slave Mode:
- *     - I<SUP>2</SUP>C Slave
- *     - I<SUP>2</SUP>C Slave Interrupt
+ *
+ * - SERCOM in I<SUP>2</SUP>C Mode
  *
  * The outline of this documentation is as follows:
  * - \ref asfdoc_samd20_i2c_prerequisites
@@ -629,7 +640,7 @@ struct i2c_packet {
  * - \subpage asfdoc_samd20_i2c_master_callback_use_case "Quick Start Guide for the I2C Master module - Callback Use Case"
  *  \endif
  * \endif
- * \if I2C_MASTER_SLAVE
+ * \if I2C_SLAVE_MODE
  * - \subpage asfdoc_samd20_i2c_slave_basic_use_case "Quick Start Guide for the I2C Slave module - Basic Use Case"
  *  \if I2C_CALLBACK_MODE
  * - \subpage asfdoc_samd20_i2c_slave_callback_use_case "Quick Start Guide for the I2C Slave module - Callback Use Case"
