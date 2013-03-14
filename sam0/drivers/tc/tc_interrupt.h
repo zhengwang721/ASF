@@ -46,19 +46,19 @@
 
 #include "tc.h"
 
-
+extern void *_tc_instances[TC_INST_NUM];
 
 /**
  * \name Callback Management
  * {@
  */
 
-void tc_register_callback(
+enum status_code tc_register_callback(
 		struct tc_module *const module,
 		tc_callback_t callback_func,
 		const enum tc_callback callback_type);
 
-void tc_unregister_callback(
+enum status_code tc_unregister_callback(
 		struct tc_module *const module,
 		const enum tc_callback callback_type);
 
@@ -73,13 +73,24 @@ void tc_unregister_callback(
  * \param[in]     callback_type Callback type given by an enum
  */
 static inline void tc_enable_callback(struct tc_module *const module,
-		enum tc_callback callback_type){
-
+		const enum tc_callback callback_type)
+{
 	/* Sanity check arguments */
 	Assert(module);
 
 	/* Enable callback */
-	module->callback_enable_mask |= (1 << callback_type);
+	if (callback_type == TC_CALLBACK_CC_CHANNEL0) {
+		module->enable_callback_mask |= TC_INTFLAG_MC(1);
+		module->hw->COUNT8.INTENSET.reg = TC_INTFLAG_MC(1);
+	}
+	else if (callback_type == TC_CALLBACK_CC_CHANNEL1) {
+		module->enable_callback_mask |= TC_INTFLAG_MC(2);
+		module->hw->COUNT8.INTENSET.reg = TC_INTFLAG_MC(2);
+	}
+	else {
+		module->enable_callback_mask |= (1 << callback_type);
+		module->hw->COUNT8.INTENSET.reg = (1 << callback_type);
+	}
 }
 
 /**
@@ -91,34 +102,26 @@ static inline void tc_enable_callback(struct tc_module *const module,
  *
  * \param[in]     module Pointer to TC software instance struct
  * \param[in]     callback_type Callback type given by an enum
- *
  */
 static inline void tc_disable_callback(struct tc_module *const module,
-		enum tc_callback callback_type){
-
+		const enum tc_callback callback_type){
 	/* Sanity check arguments */
 	Assert(module);
 
 	/* Disable callback */
-	module->callback_enable_mask &= ~(1 << callback_type);
+	if (callback_type == TC_CALLBACK_CC_CHANNEL0) {
+		module->hw->COUNT8.INTENCLR.reg = TC_INTFLAG_MC(1);
+		module->enable_callback_mask &= ~TC_INTFLAG_MC(1);
+	}
+	else if (callback_type == TC_CALLBACK_CC_CHANNEL1) {
+		module->hw->COUNT8.INTENCLR.reg = TC_INTFLAG_MC(2);
+		module->enable_callback_mask &= ~TC_INTFLAG_MC(2);
+	}
+	else {
+		module->hw->COUNT8.INTENCLR.reg = (1 << callback_type);
+		module->enable_callback_mask &= ~(1 << callback_type);
+	}
 }
-
-/**
- * @}
- */
-
-/**
- * \name Callbacks
- * {@
- */
-/*
-void tc_error_callback(
-		struct tc_module *const module_inst,
-		enum status_code error_code);
-
-void tc_callback(
-		struct tc_module *const module_inst);
-*/
 
 /**
  * @}
