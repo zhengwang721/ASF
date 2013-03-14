@@ -57,10 +57,10 @@
 #define USART_DEFAULT_TIMEOUT  0xFFFF
 
 /**
- * \defgroup asfdoc_samd20_sercom_usart_group SAM D20 USART driver
+ * \defgroup asfdoc_samd20_sercom_usart_group SAMD20 Serial USART Driver (SERCOM USART)
  *
- * This driver for the SAM D20 provides an interface to configure
- * and use the SERCOM in its USART mode to transfer or receive
+ * This driver for SAMD20 devices provides an interface for the configuration
+ * and management of the SERCOM module in its USART mode to transfer or receive
  * USART data frames. The following driver API modes are covered by this
  * manual:
  *

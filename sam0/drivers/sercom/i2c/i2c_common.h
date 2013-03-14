@@ -72,7 +72,7 @@ extern "C" {
  *
  * The following peripheral is used by this module:
  *
- * - SERCOM in I<SUP>2</SUP>C Mode
+ * - SERCOM (Serial Communication Interface)
  *
  * The outline of this documentation is as follows:
  * - \ref asfdoc_samd20_i2c_prerequisites

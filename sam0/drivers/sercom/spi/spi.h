@@ -61,15 +61,20 @@ extern "C" {
 #endif
 
 /**
- * \defgroup asfdoc_samd20_spi SAMD20 Serial Peripheral Interface Driver (SPI)
+ * \defgroup asfdoc_samd20_spi SAMD20 Serial Peripheral Interface Driver (SERCOM SPI)
  *
- * \section asfdoc_samd20_spi_introduction Introduction
- * This driver for SAMD20 devices provides a unified interface for
- * configuration and management of the SERCOM SPI module, as well
- * as data transfer via SPI.
+ * This driver for SAMD20 devices provides an interface for the configuration
+ * and management of the SERCOM module in its SPI mode to transfer SPI  data
+ * frames. The following driver API modes are covered by this manual:
+ *
+ * - Polled APIs
+ * \if SPI_CALLBACK_MODE
+ * - Callback APIs
+ * \endif
  *
  * The following peripherals are used by this module:
- * - SERCOM SPI (Serial Peripheral Interface)
+ *
+ * - SERCOM (Serial Communication Interface)
  *
  * The outline of this documentation is as follows:
  * - \ref asfdoc_samd20_spi_prerequisites

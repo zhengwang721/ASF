@@ -95,6 +95,7 @@
 			<build type="define" name="I2C_SLAVE_ASYNC" value="true"/>
 			<build type="define" name="I2C_CALLBACK_MODE" value="true"/>
 
+			<build type="header-file" subtype="example" value="quick_start_slave/qs_i2c_slave_basic_use.h"/>
 			<build type="header-file" subtype="example" value="quick_start_slave_callback/qs_i2c_slave_callback.h"/>
 			<build type="doxygen-entry-point" value="asfdoc_samd20_i2c_group"/>
 
