@@ -512,7 +512,7 @@ extern "C" {
  *
  * \section asfdoc_samd20_i2c_special_considerations Special Considerations
  *
- * \if I2C_MASTER_CALLBACK_MODE || I2C_SLAVE_CALLBACK_MODE
+ * \if (I2C_MASTER_CALLBACK_MODE || I2C_SLAVE_CALLBACK_MODE)
  * \subsection asfdoc_samd20_i2c_common_interrupt Interrupt-Driven Operation
  * While an interrupt-driven operation is in progress, subsequent calls to a
  * write or read operation will return the STATUS_BUSY flag, indicating that
