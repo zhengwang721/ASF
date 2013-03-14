@@ -50,8 +50,10 @@
  * \param[in]     length   Length of data buffer
  *
  */
-static void _spi_write_buffer(struct spi_module *const module,
-		uint8_t *tx_data, uint16_t length)
+static void _spi_write_buffer(
+		struct spi_module *const module,
+		uint8_t *tx_data,
+		uint16_t length)
 {
 	/* Write parameters to the device instance */
 	module->remaining_tx_buffer_length = length;
@@ -80,8 +82,10 @@ static void _spi_write_buffer(struct spi_module *const module,
  * \param[in]     length   Length of data buffer
  *
  */
-static void _spi_read_buffer(struct spi_module *const module,
-		uint8_t *rx_data, uint16_t length)
+static void _spi_read_buffer(
+		struct spi_module *const module,
+		uint8_t *rx_data,
+		uint16_t length)
 {
 	/* Set length for the buffer and the pointer, and let
 	 * the interrupt handler do the rest */
@@ -121,7 +125,8 @@ static void _spi_read_buffer(struct spi_module *const module,
  * \param[in]     callback_type Callback type given by an enum
  *
  */
-void spi_register_callback(struct spi_module *const module,
+void spi_register_callback(
+		struct spi_module *const module,
 		spi_callback_t callback_func,
 		enum spi_callback callback_type)
 {
@@ -146,7 +151,8 @@ void spi_register_callback(struct spi_module *const module,
  * \param[in]     callback_type Callback type given by an enum
  *
  */
-void spi_unregister_callback(struct spi_module *const module,
+void spi_unregister_callback(
+		struct spi_module *const module,
 		enum spi_callback callback_type)
 {
 	/* Sanity check arguments */
@@ -175,8 +181,10 @@ void spi_unregister_callback(struct spi_module *const module,
  *                                     operation
  * \retval     STATUS_ERR_INVALID_ARG If length is zero
  */
-enum status_code spi_write_buffer_job(struct spi_module *const module,
-		uint8_t *tx_data, uint16_t length)
+enum status_code spi_write_buffer_job(
+		struct spi_module *const module,
+		uint8_t *tx_data,
+		uint16_t length)
 {
 	Assert(module);
 
@@ -211,8 +219,10 @@ enum status_code spi_write_buffer_job(struct spi_module *const module,
  *                                     operation
  * \retval     STATUS_ERR_INVALID_ARG  If length is zero
  */
-enum status_code spi_read_buffer_job(struct spi_module *const module,
-		uint8_t *rx_data, uint16_t length)
+enum status_code spi_read_buffer_job(
+		struct spi_module *const module,
+		uint8_t *rx_data,
+		uint16_t length)
 {
 	/* Sanity check arguments */
 	Assert(module);
@@ -238,7 +248,8 @@ enum status_code spi_read_buffer_job(struct spi_module *const module,
  * \param[in]     module    Pointer to SPI software instance struct
  * \param[in]     job_type  Type of job to abort
  */
-void spi_abort_job(struct spi_module *const module,
+void spi_abort_job(
+		struct spi_module *const module,
 		enum spi_job_type job_type)
 {
 	/* Pointer to the hardware module instance */
@@ -284,7 +295,8 @@ enum status_code spi_get_job_status(
 /** \internal Write a character from the TX buffer to the Data register
  *
  */
-static void _spi_write(struct spi_module *const module)
+static void _spi_write(
+		struct spi_module *const module)
 {
 	/* Pointer to the hardware module instance */
 	SercomSpi *const spi_hw
@@ -312,7 +324,8 @@ static void _spi_write(struct spi_module *const module)
 /** \internal Write a dummy character from the to the Data register
  *
  */
-static void _spi_write_dummy(struct spi_module *const module)
+static void _spi_write_dummy(
+		struct spi_module *const module)
 {
 	/* Pointer to the hardware module instance */
 	SercomSpi *const spi_hw
@@ -328,7 +341,8 @@ static void _spi_write_dummy(struct spi_module *const module)
 /** \internal Reads a character from the Data register to the RX buffer
  *
  */
-static void _spi_read(struct spi_module *const module)
+static void _spi_read(
+		struct spi_module *const module)
 {
 	/* Pointer to the hardware module instance */
 	SercomSpi *const spi_hw
@@ -360,7 +374,8 @@ static void _spi_read(struct spi_module *const module)
  * \param[in]  instance  ID of the SERCOM instance calling the interrupt
  *                       handler.
  */
-void spi_interrupt_handler(uint8_t instance)
+void spi_interrupt_handler(
+		uint8_t instance)
 {
 	/* Get device instance from the look-up table */
 	struct spi_module *module
@@ -381,6 +396,7 @@ void spi_interrupt_handler(uint8_t instance)
 			if (module->dir == SPI_DIRECTION_READ) {
 				/* Send dummy byte when reading */
 				_spi_write_dummy(module);
+
 				/* Check if more dummy bytes should be sent */
 				if (module->remaining_dummy_buffer_length == 0) {
 					/* Disable the Data Register Empty Interrupt */
@@ -390,6 +406,7 @@ void spi_interrupt_handler(uint8_t instance)
 			} else if (module->remaining_tx_buffer_length) {
 				/* Send next byte from buffer */
 				_spi_write(module);
+
 				if (module->remaining_dummy_buffer_length) {
 					/* Decrement dummy buffer length if needed */
 					(module->remaining_dummy_buffer_length)--;
@@ -417,6 +434,7 @@ void spi_interrupt_handler(uint8_t instance)
 			/* Disable interrupt */
 			spi_hw->INTENCLR.reg = SPI_INTERRUPT_FLAG_TX_COMPLETE;
 			module->tx_status = STATUS_OK;
+
 			/* Change direction*/
 			if (module->dir == SPI_DIRECTION_BOTH) {
 				module->dir = SPI_DIRECTION_READ;
@@ -442,6 +460,7 @@ void spi_interrupt_handler(uint8_t instance)
 			module->dir = SPI_DIRECTION_IDLE;
 			module->remaining_tx_buffer_length = 0;
 			module->remaining_rx_buffer_length = 0;
+
 			/* Run callback if registered and enabled */
 			if (callback_mask & (1 << SPI_CALLBACK_SLAVE_TRANSMISSION_COMPLETE)){
 				(module->callback[SPI_CALLBACK_SLAVE_TRANSMISSION_COMPLETE])(module);
@@ -450,8 +469,6 @@ void spi_interrupt_handler(uint8_t instance)
 	} else if (interrupt_status & SPI_INTERRUPT_FLAG_RX_COMPLETE) {
 		/* Check for overflow */
 		if (spi_hw->STATUS.reg & SERCOM_SPI_STATUS_BUFOVF) {
-
-
 			if (module->dir == SPI_DIRECTION_READ || module->dir == SPI_DIRECTION_BOTH) {
 				/* Store the error code */
 				module->rx_status = STATUS_ERR_OVERFLOW;
@@ -466,6 +483,8 @@ void spi_interrupt_handler(uint8_t instance)
 		if (module->dir == SPI_DIRECTION_WRITE) {
 			/* Flush data register when writing */
 			uint16_t flush = spi_hw->DATA.reg;
+			UNUSED(flush);
+
 			if (module->remaining_tx_buffer_length == 0) {
 				/* Write complete */
 				module->dir = SPI_DIRECTION_IDLE;
@@ -482,6 +501,7 @@ void spi_interrupt_handler(uint8_t instance)
 		} else if (module->rx_status != STATUS_ABORTED) {
 			/* Read data register */
 			_spi_read(module);
+
 			/* Check if the last character have been received */
 			if(module->remaining_rx_buffer_length == 0 &&
 					!(module->dir == SPI_DIRECTION_WRITE)) {

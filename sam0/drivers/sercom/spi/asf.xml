@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<select-by-config id="sam0.drivers.sercom.spi" name="config.sam0.drivers.sercom.spi" caption="SPI - Serial Peripheral Interface Driver" default="callback">
+	<select-by-config id="sam0.drivers.sercom.spi" name="config.sam0.drivers.sercom.spi" caption="SERCOM SPI - Serial Peripheral Interface" default="callback">
 		<info type="description" value="summary">
 		Driver for the SAMD20 SPI.
 		</info>
@@ -35,6 +35,8 @@
 			<build type="doxygen-entry-point" value="sam0_spi_group"/>
 			<build type="define" name="SPI_ASYNC" value="true"/>
 			<device-support value="samd20"/>
+
+			<build type="doxygen-enable-section" value="SPI_CALLBACK_MODE"/>
 
 			<require idref="sam0.utils"/>
 			<require idref="sam0.drivers.sercom"/>

@@ -407,6 +407,39 @@ enum tc_callback
 #endif
 
 /**
+ * \name Module status flags
+ *
+ * TC status flags, returned by \ref tc_get_status() and cleared by
+ * \ref tc_clear_status().
+ *
+ * @{
+ */
+
+/** Timer channel 0 has matched against its compare value, or a has captured a
+ *  new value.
+ */
+#define TC_STATUS_CHANNEL_0_MATCH    (1UL << 0)
+/** Timer channel 1 has matched against its compare value, or a has captured a
+ *  new value.
+ */
+#define TC_STATUS_CHANNEL_1_MATCH    (1UL << 1)
+/** Timer register synchronization has completed, and the synchronized count
+ *  value may be read.
+ */
+#define TC_STATUS_SYNC_READY         (1UL << 2)
+/** A new value was captured before the previous value was read, resulting in
+ *  lost data.
+ */
+#define TC_STATUS_CAPTURE_OVERFLOW   (1UL << 3)
+/** The timer count value has overflowed from its maximum value to its minimum
+ *  when counting upwards, or from its minimum value to its maximum when
+ *  counting downwards.
+ */
+#define TC_STATUS_COUNT_OVERFLOW     (1UL << 4)
+
+/** @} */
+
+/**
  * \brief Index of the compare capture channels
  *
  * This enum is used to specify which capture/compare channel to do
@@ -543,9 +576,9 @@ enum tc_capture_enable {
 	/** No channels are enabled for capture. */
 	TC_CAPTURE_ENABLE_NONE                 = 0,
 	/** Enable channel 0 for capture. */
-	TC_CAPTURE_ENABLE_CHANNEL_0               = TC_CTRLC_CPTEN(1),
+	TC_CAPTURE_ENABLE_CHANNEL_0            = TC_CTRLC_CPTEN(1),
 	/** Enable channel 1 for capture. */
-	TC_CAPTURE_ENABLE_CHANNEL_1               = TC_CTRLC_CPTEN(2),
+	TC_CAPTURE_ENABLE_CHANNEL_1            = TC_CTRLC_CPTEN(2),
 };
 
 /**
@@ -557,9 +590,9 @@ enum tc_waveform_invert_output {
 	/** No inversion of the waveform output. */
 	TC_WAVEFORM_INVERT_OUTPUT_NONE      = 0,
 	/** Invert output from compare channel 0. */
-	TC_WAVEFORM_INVERT_OUTPUT_CHANNEL_0    = TC_CTRLC_INVEN(1),
+	TC_WAVEFORM_INVERT_OUTPUT_CHANNEL_0 = TC_CTRLC_INVEN(1),
 	/** Invert output from compare channel 1. */
-	TC_WAVEFORM_INVERT_OUTPUT_CHANNEL_1    = TC_CTRLC_INVEN(2),
+	TC_WAVEFORM_INVERT_OUTPUT_CHANNEL_1 = TC_CTRLC_INVEN(2),
 };
 
 /**
@@ -749,11 +782,13 @@ typedef void (*tc_callback_t)(const struct tc_module *const module);
  *       application; they are reserved for module-internal use only.
  */
 struct tc_module {
+#if !defined(__DOXYGEN__)
 	/** Hardware module pointer of the associated Timer/Counter peripheral. */
 	Tc *hw;
 
 	/** Size of the initialized Timer/Counter module configuration. */
 	enum tc_counter_size counter_size;
+#endif
 	/** Array of callbacs */
 #ifdef TC_ASYNC
 	tc_callback_t callback[TC_CALLBACK_N];
@@ -1160,6 +1195,115 @@ enum status_code tc_set_top_value (
 /** @} */
 
 /**
+ * \name Status Management
+ * @{
+ */
+
+/**
+ * \brief Retrieves the current module status.
+ *
+ * Retrieves the status of the module, giving overall state information.
+ *
+ * \param[in] module_inst  Pointer to the TC software instance struct
+ *
+ * \return Bitmask of \c TC_STATUS_* flags
+ *
+ * \retval TC_STATUS_CHANNEL_0_MATCH   Timer channel 0 compare/capture match
+ * \retval TC_STATUS_CHANNEL_1_MATCH   Timer channel 1 compare/capture match
+ * \retval TC_STATUS_SYNC_READY        Timer read synchronization has completed
+ * \retval TC_STATUS_CAPTURE_OVERFLOW  Timer capture data has overflowed
+ * \retval TC_STATUS_COUNT_OVERFLOW    Timer count value has overflowed
+ */
+static inline uint32_t tc_get_status(
+		struct tc_module *const module_inst)
+{
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+
+	/* Get a pointer to the module's hardware instance */
+	TcCount8 *const tc_module = &(module_inst->hw->COUNT8);
+
+	uint32_t int_flags = tc_module->INTFLAG.reg;
+
+	uint32_t status_flags = 0;
+
+	/* Check for TC channel 0 match */
+	if (int_flags & TC_INTFLAG_MC(1)) {
+		status_flags |= TC_STATUS_CHANNEL_0_MATCH;
+	}
+
+	/* Check for TC channel 1 match */
+	if (int_flags & TC_INTFLAG_MC(2)) {
+		status_flags |= TC_STATUS_CHANNEL_1_MATCH;
+	}
+
+	/* Check for TC read synchronization ready */
+	if (int_flags & TC_INTFLAG_READY) {
+		status_flags |= TC_STATUS_SYNC_READY;
+	}
+
+	/* Check for TC capture overflow */
+	if (int_flags & TC_INTFLAG_ERR) {
+		status_flags |= TC_STATUS_CAPTURE_OVERFLOW;
+	}
+
+	/* Check for TC count overflow */
+	if (int_flags & TC_INTFLAG_OVF) {
+		status_flags |= TC_STATUS_COUNT_OVERFLOW;
+	}
+
+	return status_flags;
+}
+
+/**
+ * \brief Clears a module status flag.
+ *
+ * Clears the given status flag of the module.
+ *
+ * \param[in] module_inst   Pointer to the TC software instance struct
+ * \param[in] status_flags  Bitmask of \c TC_STATUS_* flags to clear
+ */
+static inline void tc_clear_status(
+		struct tc_module *const module_inst,
+		const uint32_t status_flags)
+{
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+
+	/* Get a pointer to the module's hardware instance */
+	TcCount8 *const tc_module = &(module_inst->hw->COUNT8);
+
+	uint32_t int_flags = 0;
+
+	/* Check for TC channel 0 match */
+	if (status_flags & TC_STATUS_CHANNEL_0_MATCH) {
+		int_flags |= TC_INTFLAG_MC(1);
+	}
+
+	/* Check for TC channel 1 match */
+	if (status_flags & TC_STATUS_CHANNEL_1_MATCH) {
+		int_flags |= TC_INTFLAG_MC(2);
+	}
+
+	/* Check for TC read synchronization ready */
+	if (status_flags & TC_STATUS_SYNC_READY) {
+		int_flags |= TC_INTFLAG_READY;
+	}
+
+	/* Check for TC capture overflow */
+	if (status_flags & TC_STATUS_CAPTURE_OVERFLOW) {
+		int_flags |= TC_INTFLAG_ERR;
+	}
+
+	/* Check for TC count overflow */
+	if (status_flags & TC_STATUS_COUNT_OVERFLOW) {
+		int_flags |= TC_INTFLAG_OVF;
+	}
+
+	/* Clear interrupt flag */
+	tc_module->INTFLAG.reg = int_flags;
  * \name Check/Clear Interrupt Flags
  * @{
  */
@@ -1218,7 +1362,6 @@ static inline void tc_clear_interrupt_flag(
 
 	tc_module->INTFLAG.reg |= interrupt_flag;
 }
-
 /** @} */
 
 /** @} */

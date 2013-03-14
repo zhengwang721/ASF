@@ -207,6 +207,7 @@
 #include <pinmux.h>
 
 #if EXTINT_CALLBACK_MODE == true
+#  include <conf_extint.h>
 #  include "extint_callback.h"
 #endif
 

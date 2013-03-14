@@ -61,15 +61,20 @@ extern "C" {
 #endif
 
 /**
- * \defgroup asfdoc_samd20_spi SAMD20 Serial Peripheral Interface Driver (SPI)
+ * \defgroup asfdoc_samd20_spi SAMD20 Serial Peripheral Interface Driver (SERCOM SPI)
  *
- * \section asfdoc_samd20_spi_introduction Introduction
- * This driver for SAMD20 devices provides a unified interface for
- * configuration and management of the SERCOM SPI module, as well
- * as data transfer via SPI.
+ * This driver for SAMD20 devices provides an interface for the configuration
+ * and management of the SERCOM module in its SPI mode to transfer SPI  data
+ * frames. The following driver API modes are covered by this manual:
+ *
+ * - Polled APIs
+ * \if SPI_CALLBACK_MODE
+ * - Callback APIs
+ * \endif
  *
  * The following peripherals are used by this module:
- * - SERCOM SPI (Serial Peripheral Interface)
+ *
+ * - SERCOM (Serial Communication Interface)
  *
  * The outline of this documentation is as follows:
  * - \ref asfdoc_samd20_spi_prerequisites
@@ -87,7 +92,7 @@ extern "C" {
  * The Serial Peripheral Interface (SPI) is a high-speed synchronous data
  * transfer interface using three or four pins. It allows fast communication
  * between a master device and one or more peripheral devices.
- * \n\n
+ *
  * A device connected to the bus must act as a master or a slave. The master
  * initiates and controls all data transactions.
  * The SPI master initiates a communication cycle by pulling low the Slave
@@ -148,7 +153,7 @@ extern "C" {
  * If the bus consists of several SPI slaves, they can be connected in parallel
  * and the SPI master can use general I/O pins to control separate SS lines to
  * each slave on the bus.
- * \n\n
+ *
  * It is also possible to connect all slaves in series. In this configuration,
  * a common SS is provided to \c N slaves, enabling them simultaneously. The
  * MISO from the \c N-1 slaves is connected to the MOSI on the next slave. The
@@ -180,7 +185,7 @@ extern "C" {
  * cycles are needed from the time new data is written, until the character is
  * ready to be shifted out. If the shift register has not been loaded with
  * data, the current contents will be transmitted.
- * \n\n
+ *
  * If constant transmission of data is needed in SPI slave mode, the system
  * clock should be faster than SCK.
  * If the receiver is enabled, the received character can be read from the.
@@ -196,8 +201,8 @@ extern "C" {
  * to process the transaction.
  *
  * \note In master mode, an address packet is written by the
- * \ref spi_select_slave function if the address_enabled configuration is set
- * in the \ref spi_slave_inst_config struct.
+ *       \ref spi_select_slave function if the address_enabled configuration is
+ *       set in the \ref spi_slave_inst_config struct.
  *
  * \subsection asfdoc_samd20_spi_data_modes Data Modes
  * There are four combinations of SCK phase and polarity with respect to
@@ -205,6 +210,7 @@ extern "C" {
  * clock phase (CPHA) in the different modes.
  * Leading edge is the first clock edge in a clock cycle and trailing edge is
  * the last clock edge in a clock cycle.
+ *
  * <table>
  *   <tr>
  *      <th>Mode</th>
@@ -309,7 +315,7 @@ extern "C" {
  * the SPI shift register.
  *
  * \section asfdoc_samd20_spi_special_considerations Special Considerations
- * \subsection pin_mux Pin Mux Settings
+ * \subsection pin_mux Pin MUX Settings
  * The pin mux settings must be configured properly, as not all settings
  * can be used in different modes of operation.
  *
@@ -536,12 +542,16 @@ extern void spi_interrupt_handler(uint8_t instance);
 #endif
 
 /**
- * \brief SPI software device instance structure
+ * \brief SERCOM SPI driver software device instance structure.
  *
- * SPI software device instance structure
+ * SERCOM SPI driver software instance structure, used to retain software state
+ * information of an associated hardware module instance.
  *
+ * \note The fields of this structure should not be altered by the user
+ *       application; they are reserved for module-internal use only.
  */
 struct spi_module {
+#if !defined(__DOXYGEN__)
 	/** SERCOM hardware module */
 	Sercom *hw;
 	/** SPI mode */
@@ -571,6 +581,7 @@ struct spi_module {
 	volatile enum status_code rx_status;
 	/** Holds the status of the ongoing or last write operation */
 	volatile enum status_code tx_status;
+#endif
 #endif
 };
 
@@ -678,7 +689,8 @@ struct spi_config {
 /**
  * \internal Wait until the synchronization is complete
  */
-static inline void _spi_wait_for_sync(struct spi_module *const module)
+static inline void _spi_wait_for_sync(
+		struct spi_module *const module)
 {
 	SercomSpi *const spi_module = &(module->hw->SPI);
 
@@ -702,7 +714,8 @@ static inline void _spi_wait_for_sync(struct spi_module *const module)
  * \retval false  Module synchronization is not ongoing
  *
  */
-static inline bool spi_is_syncing(struct spi_module *const module)
+static inline bool spi_is_syncing(
+		struct spi_module *const module)
 {
 	/* Sanity check arguments */
 	Assert(module);
@@ -741,7 +754,8 @@ static inline bool spi_is_syncing(struct spi_module *const module)
  *
  * \param[out] config  Configuration structure to initialize to default values
  */
-static inline void spi_get_config_defaults(struct spi_config *const config)
+static inline void spi_get_config_defaults(
+		struct spi_config *const config)
 {
 	/* Sanity check arguments */
 	Assert(config);
@@ -782,8 +796,8 @@ static inline void spi_get_config_defaults(struct spi_config *const config)
  *
  * \param[out] config  Configuration structure to initialize to default values
  */
-static inline void spi_slave_inst_get_config_defaults(struct spi_slave_inst_config
-		*const config)
+static inline void spi_slave_inst_get_config_defaults(
+		struct spi_slave_inst_config *const config)
 {
 	Assert(config);
 
@@ -803,8 +817,10 @@ static inline void spi_slave_inst_get_config_defaults(struct spi_slave_inst_conf
  * \param[in] config      Pointer to the config struct
  *
  */
-static inline void spi_attach_slave(struct spi_slave_inst *const slave,
-		struct spi_slave_inst_config *const config) {
+static inline void spi_attach_slave(
+		struct spi_slave_inst *const slave,
+		struct spi_slave_inst_config *const config)
+{
 	Assert(slave);
 	Assert(config);
 
@@ -842,7 +858,8 @@ enum status_code spi_init(struct spi_module *const module, Sercom *hw,
  *
  * \param[in,out] module    Pointer to the software instance struct
  */
-static inline void spi_enable(struct spi_module *const module)
+static inline void spi_enable(
+		struct spi_module *const module)
 {
 	/* Sanity check arguments */
 	Assert(module);
@@ -857,6 +874,7 @@ static inline void spi_enable(struct spi_module *const module)
 	while (spi_is_syncing(module)) {
 		/* Wait until the synchronization is complete */
 	}
+
 	/* Enable SPI */
 	spi_module->CTRLA.reg |= SERCOM_SPI_CTRLA_ENABLE;
 }
@@ -868,7 +886,8 @@ static inline void spi_enable(struct spi_module *const module)
  *
  * \param[in,out] module    Pointer to the software instance struct
  */
-static inline void spi_disable(struct spi_module *const module)
+static inline void spi_disable(
+		struct spi_module *const module)
 {
 	/* Sanity check arguments */
 	Assert(module);
@@ -888,7 +907,8 @@ static inline void spi_disable(struct spi_module *const module)
 	spi_module->CTRLA.reg &= ~SERCOM_SPI_CTRLA_ENABLE;
 }
 
-void spi_reset(struct spi_module *const module);
+void spi_reset(
+		struct spi_module *const module);
 
 /** @} */
 
@@ -903,7 +923,7 @@ void spi_reset(struct spi_module *const module);
  *
  * This function will check if the SPI master module has shifted out last data,
  * or if the slave select pin has been drawn high by the master for the SPI
- * slave module. 
+ * slave module.
  *
  * \param[in] module      Pointer to the software instance struct
  *
@@ -913,7 +933,8 @@ void spi_reset(struct spi_module *const module);
  *               has been drawn high for SPI slave
  * \retval false If the SPI master module has not shifted out data
  */
-static inline bool spi_is_write_complete(struct spi_module *const module)
+static inline bool spi_is_write_complete(
+		struct spi_module *const module)
 {
 	/* Sanity check arguments */
 	Assert(module);
@@ -937,7 +958,8 @@ static inline bool spi_is_write_complete(struct spi_module *const module)
  * \retval true  If the SPI module is ready to write data
  * \retval false If the SPI module is not ready to write data
  */
-static inline bool spi_is_ready_to_write(struct spi_module *const module)
+static inline bool spi_is_ready_to_write(
+		struct spi_module *const module)
 {
 	/* Sanity check arguments */
 	Assert(module);
@@ -961,7 +983,8 @@ static inline bool spi_is_ready_to_write(struct spi_module *const module)
  * \retval true  If the SPI module is ready to read data
  * \retval false If the SPI module is not ready to read data
  */
-static inline bool spi_is_ready_to_read(struct spi_module *const module)
+static inline bool spi_is_ready_to_read(
+		struct spi_module *const module)
 {
 	/* Sanity check arguments */
 	Assert(module);
@@ -1000,7 +1023,8 @@ static inline bool spi_is_ready_to_read(struct spi_module *const module)
  * \retval STATUS_BUSY If the last write was not completed
  *
  */
-static inline enum status_code spi_write(struct spi_module *module,
+static inline enum status_code spi_write(
+		struct spi_module *module,
 		uint16_t tx_data)
 {
 	/* Sanity check arguments */
@@ -1041,7 +1065,8 @@ enum status_code spi_write_buffer_wait(struct spi_module
  * \retval STATUS_ERR_IO       If no data is available
  * \retval STATUS_ERR_OVERFLOW If the data is overflown
  */
-static inline enum status_code spi_read(struct spi_module *const module,
+static inline enum status_code spi_read(
+		struct spi_module *const module,
 		uint16_t *rx_data)
 {
 	/* Sanity check arguments */
@@ -1072,8 +1097,11 @@ static inline enum status_code spi_read(struct spi_module *const module,
 	return retval;
 }
 
-enum status_code spi_read_buffer_wait(struct spi_module *const module,
-		uint8_t *rx_data, uint8_t length, uint16_t dummy);
+enum status_code spi_read_buffer_wait(
+		struct spi_module *const module,
+		uint8_t *rx_data,
+		uint8_t length,
+		uint16_t dummy);
 
 /**
  * \brief Sends and reads a single SPI character
@@ -1101,8 +1129,10 @@ enum status_code spi_read_buffer_wait(struct spi_module *const module,
  *                             timeout in slave mode.
  * \retval STATUS_ERR_OVERFLOW If the incoming data is overflown
  */
-static inline enum status_code spi_tranceive_wait(struct spi_module *const module,
-		uint16_t tx_data, uint16_t *rx_data)
+static inline enum status_code spi_tranceive_wait(
+		struct spi_module *const module,
+		uint16_t tx_data,
+		uint16_t *rx_data)
 {
 	/* Sanity check arguments */
 	Assert(module);
@@ -1124,6 +1154,7 @@ static inline enum status_code spi_tranceive_wait(struct spi_module *const modul
 	/* Wait until the module is ready to write the character */
 	while (!spi_is_ready_to_write(module)) {
 	}
+
 	/* Write data */
 	spi_write(module, tx_data);
 
@@ -1142,17 +1173,23 @@ static inline enum status_code spi_tranceive_wait(struct spi_module *const modul
 	/* Wait until the module is ready to read the character */
 	while (!spi_is_ready_to_read(module)) {
 	}
+
 	/* Read data */
 	retval = spi_read(module, rx_data);
 
 	return retval;
 }
 
-enum status_code spi_tranceive_buffer_wait(struct spi_module *const module,
-		uint8_t *tx_data, uint8_t *rx_data, uint8_t length);
+enum status_code spi_tranceive_buffer_wait(
+		struct spi_module *const module,
+		uint8_t *tx_data,
+		uint8_t *rx_data,
+		uint8_t length);
 
-enum status_code spi_select_slave(struct spi_module *module,
-		struct spi_slave_inst *slave, bool select);
+enum status_code spi_select_slave(
+		struct spi_module *module,
+		struct spi_slave_inst *slave,
+		bool select);
 
 /** @} */
 
