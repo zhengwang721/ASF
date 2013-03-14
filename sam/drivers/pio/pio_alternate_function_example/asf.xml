@@ -1,12 +1,12 @@
 <asf xmlversion="1.0">
-	<select-by-device id="sam.drivers.pio.alternate_function_example" caption="PIO Alternate Function Example"> 
+	<select-by-device id="sam.drivers.pio.alternate_function_example" caption="PIO Alternate Function Example">
 		<module type="application" id="sam.drivers.pio.alternate_function_example#0" caption="PIO Alternate Function Example">
 			<info type="description" value="summary">
 			This example is aimed to demonstrate the usage of PIO peripheral.
 			</info>
 			<info type="keyword" value="technology">
-				<keyword value="I/O" />
-			</info>				
+				<keyword value="I/O"/>
+			</info>
 			<build type="c-source" value="pio_alternate_function_example.c"/>
 			<build type="include-path" value="."/>
 			<device-support value="sam3s"/>
@@ -19,14 +19,15 @@
 			<require idref="common.services.basic.gpio"/>
 			<require idref="common.services.basic.clock"/>
 			<require idref="common.utils.stdio.stdio_serial"/>
+			<info type="gui-flag" value="move-to-root"/>
 		</module>
 		<module type="application" id="sam.drivers.pio.alternate_function_example#1" caption="PIO Alternate Function Example">
 			<info type="description" value="summary">
 			This example is aimed to demonstrate the usage of PIO peripheral.
 			</info>
 			<info type="keyword" value="technology">
-				<keyword value="I/O" />
-			</info>	
+				<keyword value="I/O"/>
+			</info>
 			<build type="c-source" value="pio_alternate_function_example.c"/>
 			<build type="include-path" value="."/>
 			<device-support value="sam3n"/>
@@ -39,14 +40,15 @@
 			<require idref="common.services.basic.gpio"/>
 			<require idref="common.services.basic.clock"/>
 			<require idref="common.utils.stdio.stdio_serial"/>
+			<info type="gui-flag" value="move-to-root"/>
 		</module>
 		<module type="application" id="sam.drivers.pio.alternate_function_example#3" caption="PIO Alternate Function Example">
 			<info type="description" value="summary">
 			This example is aimed to demonstrate the usage of PIO peripheral.
 			</info>
 			<info type="keyword" value="technology">
-				<keyword value="I/O" />
-			</info>	
+				<keyword value="I/O"/>
+			</info>
 			<build type="c-source" value="pio_alternate_function_example.c"/>
 			<build type="include-path" value="."/>
 			<device-support value="sam3x"/>
@@ -59,14 +61,15 @@
 			<require idref="common.services.basic.gpio"/>
 			<require idref="common.services.basic.clock"/>
 			<require idref="common.utils.stdio.stdio_serial"/>
+			<info type="gui-flag" value="move-to-root"/>
 		</module>
 		<module type="application" id="sam.drivers.pio.alternate_function_example#4" caption="PIO Alternate Function Example">
 			<info type="description" value="summary">
 			This example is aimed to demonstrate the usage of PIO peripheral.
 			</info>
 			<info type="keyword" value="technology">
-				<keyword value="I/O" />
-			</info>	
+				<keyword value="I/O"/>
+			</info>
 			<build type="c-source" value="pio_alternate_function_example.c"/>
 			<build type="include-path" value="."/>
 			<device-support value="sam3sd8"/>
@@ -79,6 +82,7 @@
 			<require idref="common.services.basic.gpio"/>
 			<require idref="common.services.basic.clock"/>
 			<require idref="common.utils.stdio.stdio_serial"/>
+			<info type="gui-flag" value="move-to-root"/>
 		</module>
-	</select-by-device>	
+	</select-by-device>
 </asf>

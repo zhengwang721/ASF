@@ -15,5 +15,6 @@
 		<require idref="common.components.crypto.sha204.example_utilities_led"/>
 		<require idref="common.components.crypto.sha204.example_utilities_log"/>
 		<device-support value="xmegaa1"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>
