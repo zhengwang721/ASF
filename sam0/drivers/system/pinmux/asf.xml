@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="driver" id="sam0.drivers.system.pinmux" caption="Pin Multiplexer Driver">
+	<module type="driver" id="sam0.drivers.system.pinmux" caption="System Pin Multiplexer Driver">
 		<build type="include-path" value="."/>
 		<build type="header-file" subtype="api" value="pinmux.h"/>
 		<build type="c-source" value="pinmux.c"/>
