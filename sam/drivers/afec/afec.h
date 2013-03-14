@@ -57,11 +57,11 @@ extern "C" {
 
 /** Definitions for AFEC resolution */
 enum afec_resolution {
-	AFEC_10_BITS = AFE_EMR_RES_LOW_RES,        /* AFEC 10-bit resolution */
-	AFEC_12_BITS = AFE_EMR_RES_NO_AVERAGE,     /* AFEC 12-bit resolution */
-	AFEC_13_BITS = AFE_EMR_RES_OSR4,           /* AFEC 13-bit resolution */
-	AFEC_14_BITS = AFE_EMR_RES_OSR16,          /* AFEC 14-bit resolution */
-	AFEC_15_BITS = AFE_EMR_RES_OSR64,          /* AFEC 15-bit resolution */
+	AFEC_10_BITS = AFE_EMR_RES_LOW_RES,       /* AFEC 10-bit resolution */
+	AFEC_12_BITS = AFE_EMR_RES_NO_AVERAGE,    /* AFEC 12-bit resolution */
+	AFEC_13_BITS = AFE_EMR_RES_OSR4,          /* AFEC 13-bit resolution */
+	AFEC_14_BITS = AFE_EMR_RES_OSR16,         /* AFEC 14-bit resolution */
+	AFEC_15_BITS = AFE_EMR_RES_OSR64,         /* AFEC 15-bit resolution */
 	AFEC_16_BITS = AFE_EMR_RES_OSR256         /* AFEC 16-bit resolution */
 };
 
@@ -93,27 +93,28 @@ enum afec_trigger {
 	AFEC_TRIG_PWM_EVENT_LINE_1 = AFE_MR_TRGSEL_AFE_TRIG5 | AFE_MR_TRGEN,
 	/* Freerun mode conversion. */
 	AFEC_TRIG_FREERUN
-} ;
+};
 
 /** Definitions for AFEC channel number */
 enum afec_channel_num {
-	AFEC_CHANNEL_0  = 0,
-	AFEC_CHANNEL_1  = 1,
-	AFEC_CHANNEL_2  = 2,
-	AFEC_CHANNEL_3  = 3,
-	AFEC_CHANNEL_4  = 4,
-	AFEC_CHANNEL_5  = 5,
-	AFEC_CHANNEL_6  = 6,
-	AFEC_CHANNEL_7  = 7,
-	AFEC_CHANNEL_8  = 8,
-	AFEC_CHANNEL_9  = 9,
-	AFEC_CHANNEL_10 = 10,
-	AFEC_CHANNEL_11 = 11,
-	AFEC_CHANNEL_12 = 12,
-	AFEC_CHANNEL_13 = 13,
-	AFEC_CHANNEL_14 = 14,
-	AFEC_TEMPERATURE_SENSOR = 15,
-	AFEC_CHANNEL_ALL
+	AFEC_CHANNEL_0 = 0,
+	AFEC_CHANNEL_1, 
+	AFEC_CHANNEL_2, 
+	AFEC_CHANNEL_3, 
+	AFEC_CHANNEL_4, 
+	AFEC_CHANNEL_5, 
+	AFEC_CHANNEL_6, 
+	AFEC_CHANNEL_7, 
+	AFEC_CHANNEL_8, 
+	AFEC_CHANNEL_9, 
+	AFEC_CHANNEL_10,
+	AFEC_CHANNEL_11,
+	AFEC_CHANNEL_12,
+	AFEC_CHANNEL_13,
+	AFEC_CHANNEL_14,
+	AFEC_TEMPERATURE_SENSOR,
+	_AFEC_NUM_OF_CH,
+	AFEC_CHANNEL_ALL = 0xFFFF,
 } ;
 
 /** Definitions for AFEC gain value */
@@ -226,30 +227,31 @@ struct afec_temp_sensor_config {
 
 /** AFEC interrupt source type */
 enum afec_interrupt_source {
-	AFEC_INTERRUPT_EOC_0     = AFE_IER_EOC0,
-	AFEC_INTERRUPT_EOC_1     = AFE_IER_EOC1,
-	AFEC_INTERRUPT_EOC_2     = AFE_IER_EOC2,
-	AFEC_INTERRUPT_EOC_3     = AFE_IER_EOC3,
-	AFEC_INTERRUPT_EOC_4     = AFE_IER_EOC4,
-	AFEC_INTERRUPT_EOC_5     = AFE_IER_EOC5,
-	AFEC_INTERRUPT_EOC_6     = AFE_IER_EOC6,
-	AFEC_INTERRUPT_EOC_7     = AFE_IER_EOC7,
-	AFEC_INTERRUPT_EOC_8     = AFE_IER_EOC8,
-	AFEC_INTERRUPT_EOC_9     = AFE_IER_EOC9,
-	AFEC_INTERRUPT_EOC_10     = AFE_IER_EOC10,
-	AFEC_INTERRUPT_EOC_11     = AFE_IER_EOC11,
-	AFEC_INTERRUPT_EOC_12     = AFE_IER_EOC12,
-	AFEC_INTERRUPT_EOC_13     = AFE_IER_EOC13,
-	AFEC_INTERRUPT_EOC_14     = AFE_IER_EOC14,
-	AFEC_INTERRUPT_EOC_15     = AFE_IER_EOC15,
-	AFEC_INTERRUPT_DATA_READY     = AFE_IER_DRDY,
-	AFEC_INTERRUPT_OVERRUN_ERROR     = AFE_IER_GOVRE,
-	AFEC_INTERRUPT_COMP_ERROR     = AFE_IER_COMPE,
-	AFEC_INTERRUPT_END_RXBUF     = AFE_IER_ENDRX,
-	AFEC_INTERRUPT_RXBUF_FULL     = AFE_IER_RXBUFF,
-	AFEC_INTERRUPT_TEMP_CHANGE     = AFE_IER_TEMPCHG,
-	AFEC_INTERRUPT_END_CAL     = AFE_IER_EOCAL,
-	AFEC_INTERRUPT_ALL                 = ~0UL
+	AFEC_INTERRUPT_EOC_0 = 0,
+	AFEC_INTERRUPT_EOC_1,
+	AFEC_INTERRUPT_EOC_2,
+	AFEC_INTERRUPT_EOC_3,
+	AFEC_INTERRUPT_EOC_4,
+	AFEC_INTERRUPT_EOC_5,
+	AFEC_INTERRUPT_EOC_6,
+	AFEC_INTERRUPT_EOC_7,
+	AFEC_INTERRUPT_EOC_8,
+	AFEC_INTERRUPT_EOC_9,
+	AFEC_INTERRUPT_EOC_10,
+	AFEC_INTERRUPT_EOC_11,
+	AFEC_INTERRUPT_EOC_12,
+	AFEC_INTERRUPT_EOC_13,
+	AFEC_INTERRUPT_EOC_14,
+	AFEC_INTERRUPT_EOC_15,
+	AFEC_INTERRUPT_DATA_READY,
+	AFEC_INTERRUPT_OVERRUN_ERROR,
+	AFEC_INTERRUPT_COMP_ERROR,
+	AFEC_INTERRUPT_END_RXBUF,
+	AFEC_INTERRUPT_RXBUF_FULL,
+	AFEC_INTERRUPT_TEMP_CHANGE,
+	AFEC_INTERRUPT_END_CAL,
+	_AFEC_NUM_OF_INTERRUPT_SOURCE,
+	AFEC_INTERRUPT_ALL = 0xFFFFFFFF,
 };
 
 typedef void (*afec_callback_t)(void);
@@ -258,7 +260,8 @@ typedef void (*afec_callback_t)(void);
 
 void afec_get_config_defaults(struct afec_config *const cfg);
 void afec_ch_get_config_defaults(struct afec_ch_config *const cfg);
-void afec_temp_sensor_get_config_defaults(struct afec_temp_sensor_config *const cfg);
+void afec_temp_sensor_get_config_defaults(
+		struct afec_temp_sensor_config *const cfg);
 enum status_code afec_init(Afec *const afec, struct afec_config *const config);
 void afec_temp_sensor_set_config(Afec *const afec,
 		struct afec_temp_sensor_config *config);
@@ -269,7 +272,26 @@ void afec_configure_sequence(Afec *const afec,
 void afec_enable(Afec *const afec);
 void afec_disable(Afec *const afec);
 void afec_set_callback(Afec *const afec, enum afec_interrupt_source source,
-		uint8_t src_num, afec_callback_t callback, uint8_t irq_level);
+		afec_callback_t callback, uint8_t irq_level);
+
+/**
+ * \internal
+ * \brief AFEC channel sanity check
+ *
+ * \param afec  Base address of the AFEC.
+ * \param channel  AFEC channel number.
+ *
+ */
+static inline void afec_ch_sanity_check(Afec *const afec,
+		const enum afec_channel_num channel)
+{
+	if (afec == AFEC0) {
+		Assert(channel < _AFEC_NUM_OF_CH);
+	} else if (afec == AFEC1) {
+		Assert(channel < AFEC_CHANNEL_8);
+	}
+	UNUSED(channel);
+}
 
 /**
  * \brief Configure conversion trigger and free run mode.
@@ -285,11 +307,10 @@ static inline void afec_set_trigger(Afec *const afec,
 
 	reg = afec->AFE_MR;
 
-	if(trigger == AFEC_TRIG_FREERUN) {
+	if (trigger == AFEC_TRIG_FREERUN) {
 		reg |= AFE_MR_FREERUN_ON;
 	} else {
-		reg &= ~AFE_MR_FREERUN_ON;
-		reg &= ~(AFE_MR_TRGSEL_Msk | AFE_MR_TRGEN);
+		reg &= ~(AFE_MR_TRGSEL_Msk | AFE_MR_TRGEN | AFE_MR_FREERUN_ON);
 		reg |= trigger;
 	}
 
@@ -316,36 +337,9 @@ static inline void afec_set_resolution(Afec *const afec,
 	afec->AFE_EMR = reg;
 }
 
-/**
- * \brief Configure comparison mode.
- *
- * \param afec  Base address of the AFEC.
- * \param mode Comparison mode.
- * \param channel Comparison Selected Channel.
- * \param cmp_filter Compare Event Filtering.
- */
-static inline void afec_set_comparison_mode(Afec *const afec,
-		const enum afec_cmp_mode mode,
-		const enum afec_channel_num channel, uint8_t cmp_filter)
-{
-	if(afec == AFEC0) {
-		Assert(channel < 17);
-	} else if(afec == AFEC1) {
-		Assert(channel < 9);
-	}
-	uint32_t reg;
-
-	reg = afec->AFE_EMR;
-
-	reg &= ~(AFE_EMR_CMPSEL_Msk |
-			AFE_EMR_CMPMODE_Msk |
-			AFE_EMR_CMPFILTER_Msk);
-	reg |= mode |
-			((channel == AFEC_CHANNEL_ALL) ? AFE_EMR_CMPALL : AFE_EMR_CMPSEL(channel)) |
-			AFE_EMR_CMPFILTER(cmp_filter);
-
-	afec->AFE_EMR = reg;
-}
+void afec_set_comparison_mode(Afec *const afec,
+		const enum afec_cmp_mode mode, const enum afec_channel_num channel,
+		uint8_t cmp_filter);
 
 /**
  * \brief Get comparison mode.
@@ -382,7 +376,7 @@ static inline void afec_set_comparison_window(Afec *const afec,
 static inline void afec_set_writeprotect(Afec *const afec,
 		const bool is_enable)
 {
-	if(is_enable) {
+	if (is_enable) {
 		afec->AFE_WPMR = AFE_WPMR_WPEN | AFE_WPMR_WPKEY(WP_KEY_VALUE);
 	} else {
 		afec->AFE_WPMR &= ~AFE_WPMR_WPEN;
@@ -400,7 +394,8 @@ static inline void afec_set_writeprotect(Afec *const afec,
  */
 static inline uint32_t afec_get_writeprotect_status(Afec *const afec)
 {
-	return (afec->AFE_WPSR & AFE_WPSR_WPVS) ? (afec->AFE_WPSR & AFE_WPMR_WPKEY_Msk) : 0;
+	return (afec->AFE_WPSR & AFE_WPSR_WPVS) ?
+			(afec->AFE_WPSR & AFE_WPMR_WPKEY_Msk) : 0;
 }
 
 /**
@@ -428,35 +423,8 @@ static inline void afec_start_software_conversion(Afec *const afec)
 	afec->AFE_CR = AFE_CR_START;
 }
 
-/**
- * \brief Configures AFEC power mode.
- *
- * \param afec  Base address of the AFEC.
- * \param mode   AFEC power mode value.
- */
-static inline void afec_configure_power_mode(Afec *const afec,
-		const enum afec_power_mode mode)
-{
-	uint32_t reg;
-
-	reg = afec->AFE_MR;
-
-	switch(mode) {
-		case AFEC_POWER_MODE_0:
-			reg &= ~ AFE_MR_SLEEP_SLEEP;
-			reg &= ~AFE_MR_FWUP_ON;
-			break;
-		case AFEC_POWER_MODE_1:
-			reg |= AFE_MR_FWUP_ON;
-			break;
-		case AFEC_POWER_MODE_2:
-			reg |= AFE_MR_SLEEP_SLEEP;
-			reg &= ~AFE_MR_FWUP_ON;
-			break;
-	}
-
-	afec->AFE_MR = reg;
-}
+void afec_set_power_mode(Afec *const afec,
+		const enum afec_power_mode mode);
 
 /**
  * \brief Enable the specified AFEC channel.
@@ -467,10 +435,8 @@ static inline void afec_configure_power_mode(Afec *const afec,
 static inline void afec_channel_enable(Afec *const afec,
 		const enum afec_channel_num afec_ch)
 {
-	if(afec == AFEC0) {
-		Assert(afec_ch < 17);
-	} else if(afec == AFEC1) {
-		Assert(afec_ch < 9);
+	if (afec_ch != AFEC_CHANNEL_ALL) {
+		afec_ch_sanity_check(afec, afec_ch);
 	}
 
 	afec->AFE_CHER = (afec_ch == AFEC_CHANNEL_ALL) ? 0xFFFF : 1 << afec_ch;
@@ -485,10 +451,8 @@ static inline void afec_channel_enable(Afec *const afec,
 static inline void afec_channel_disable(Afec *const afec,
 		const enum afec_channel_num afec_ch)
 {
-	if(afec == AFEC0) {
-		Assert(afec_ch < 17);
-	} else if(afec == AFEC1) {
-		Assert(afec_ch < 9);
+	if (afec_ch != AFEC_CHANNEL_ALL) {
+		afec_ch_sanity_check(afec, afec_ch);
 	}
 
 	afec->AFE_CHDR = (afec_ch == AFEC_CHANNEL_ALL) ? 0xFFFF : 1 << afec_ch;
@@ -506,14 +470,11 @@ static inline void afec_channel_disable(Afec *const afec,
 static inline uint32_t afec_channel_get_status(Afec *const afec,
 		const enum afec_channel_num afec_ch)
 {
-	if(afec == AFEC0) {
-		Assert(afec_ch < 16);
-	} else if(afec == AFEC1) {
-		Assert(afec_ch < 8);
-	}
+	afec_ch_sanity_check(afec, afec_ch);
 
 	return afec->AFE_CHSR & (1 << afec_ch);
 }
+
 /**
  * \brief Read the Converted Data of the selected channel.
  *
@@ -525,11 +486,7 @@ static inline uint32_t afec_channel_get_status(Afec *const afec,
 static inline uint32_t afec_channel_get_value(Afec *const afec,
 		enum afec_channel_num afec_ch)
 {
-	if(afec == AFEC0) {
-		Assert(afec_ch < 16);
-	} else if(afec == AFEC1) {
-		Assert(afec_ch < 8);
-	}
+	afec_ch_sanity_check(afec, afec_ch);
 
 	afec->AFE_CSELR = afec_ch;
 	return afec->AFE_CDR;
@@ -545,11 +502,7 @@ static inline uint32_t afec_channel_get_value(Afec *const afec,
 static inline void afec_channel_set_analog_offset(Afec *const afec,
 		enum afec_channel_num afec_ch, uint16_t aoffset)
 {
-	if(afec == AFEC0) {
-		Assert(afec_ch < 16);
-	} else if(afec == AFEC1) {
-		Assert(afec_ch < 8);
-	}
+	afec_ch_sanity_check(afec, afec_ch);
 
 	afec->AFE_CSELR = afec_ch;
 	afec->AFE_COCR = (aoffset & AFE_COCR_AOFF_Msk);
@@ -579,29 +532,11 @@ static inline uint32_t afec_get_latest_chan_num(Afec *const afec)
 	return (afec->AFE_LCDR & AFE_LCDR_CHNB_Msk) >> AFE_LCDR_CHNB_Pos;
 }
 
-/**
- * \brief Enable AFEC interrupts.
- *
- * \param afec  Base address of the AFEC.
- * \param interrupt_source Interrupts to be enabled.
- */
-static inline void afec_enable_interrupt(Afec *const afec,
-		enum afec_interrupt_source interrupt_source)
-{
-	afec->AFE_IER = interrupt_source;
-}
+void afec_enable_interrupt(Afec *const afec,
+		enum afec_interrupt_source interrupt_source);
 
-/**
- * \brief Disable AFEC interrupts.
- *
- * \param afec  Base address of the AFEC.
- * \param interrupt_source Interrupts to be disabled.
- */
-static inline void afec_disable_interrupt(Afec *const afec,
-		enum afec_interrupt_source interrupt_source)
-{
-	afec->AFE_IDR = interrupt_source;
-}
+void afec_disable_interrupt(Afec *const afec,
+		enum afec_interrupt_source interrupt_source);
 
 /**
  * \brief Get AFEC interrupt status.
@@ -654,13 +589,17 @@ static inline Pdc *afec_get_pdc_base(Afec *const afec)
 }
 
 /**
- * \brief Set AFEC auto calibration mode.
+ * \brief Launch an automatic calibration of the AFEC on next sequence.
  *
  * \param afec  Base address of the AFEC.
+ *
+ * \retval STATUS_OK  An automatic calibration is launched.
+ * \retval STATUS_ERR_BUSY  Automatic calibration can not be launched because
+ *         the AFEC is in freerun mode.
  */
 static inline enum status_code afec_start_calibration(Afec *const afec)
 {
-	if((afec->AFE_MR & AFE_MR_FREERUN) == AFE_MR_FREERUN_ON) {
+	if ((afec->AFE_MR & AFE_MR_FREERUN) == AFE_MR_FREERUN_ON) {
 		return STATUS_ERR_BUSY;
 	}
 	afec->AFE_CR = AFE_CR_AUTOCAL;
@@ -678,9 +617,9 @@ static inline enum status_code afec_start_calibration(Afec *const afec)
 /**
  * \page sam_afec_quickstart Quickstart guide for SAM AFEC driver
  *
- * This is the quickstart guide for the \ref sam_drivers_afec_group "SAM AFEC driver",
- * with step-by-step instructions on how to configure and use the driver in a
- * selection of use cases.
+ * This is the quickstart guide for the \ref sam_drivers_afec_group
+ * "SAM AFEC driver" with step-by-step instructions on how to configure and use
+ * the driver in a selection of use cases.
  *
  * The use cases contain several code fragments. The code fragments in the
  * steps for setup can be copied into a custom initialization function, while
@@ -688,13 +627,20 @@ static inline enum status_code afec_start_calibration(Afec *const afec)
  *
  * \section afec_basic_use_case Basic use case
  * In this basic use case, the AFEC module and single channel are configured for:
- * - 12-bit, unsigned conversions
- * - Internal bandgap as 3.3 V reference
- * - AFEC clock rate of at most 20 MHz and maximum sample rate is 1 MHz
+ * - 12 -bit resolution
+ * - AFEC clock frequency is 6MHz
+ * - Start Up Time is 64 periods AFEC clock
+ * - Analog Settling Time is 3 periods of AFEC clock
+ * - Tracking Time is 3 periods of AFEC clock
+ * - Transfer Period is 5 periods AFEC clock
+ * - Allows different analog settings for each channel
+ * - The controller converts channels in a simple numeric order
+ * - Appends the channel number to the conversion result in AFE_LDCR register
+ * - Only a Single Trigger is required to get an averaged value
+ * - AFE Bias Current Control value is 1
  * - Software triggering of conversions
- * - Interrupt-based conversion handling
  * - Single channel measurement
- * - AFEC_CHANNEL_5 as input
+ * - AFEC_CHANNEL_5 of AFEC0 as input
  *
  * \subsection sam_afec_quickstart_prereq Prerequisites
  * -# \ref sysclk_group "System Clock Management (Sysclock)"
@@ -703,37 +649,14 @@ static inline enum status_code afec_start_calibration(Afec *const afec)
  * \subsection afec_basic_use_case_setup_code Example code
  * Add to application C-file:
  * \code
- *   void afec_data_ready(void)
- *   {
- *      if ((afec_get_interrupt_status(AFEC0) & AFE_ISR_DRDY) == AFE_ISR_DRDY) {
- *           g_afec_sample_data.us_value = afec_get_latest_value(AFEC0);
- *           g_afec_sample_data.is_done = true;
- *       }
- *   }
- *   void afec_setup(void)
- *   {
- *        afec_enable(AFEC0);
- *        afec_get_config_defaults(&afec_cfg);
- *        afec_init(AFEC0, &afec_cfg);
- *        afec_set_trigger(AFEC0, AFEC_TRIG_SW);
- *        afec_channel_enable(AFEC0, AFEC_CHANNEL_POTENTIOMETER);
- *        afec_set_callback(AFEC0, AFEC_INTERRUPT_DATA_READY, afec_data_ready, 1);
- *   }
+ *  afec_enable(AFEC0);
+ *  afec_get_config_defaults(&afec_cfg);
+ *  afec_init(AFEC0, &afec_cfg);
+ *  afec_set_trigger(AFEC0, AFEC_TRIG_SW);
+ *  afec_channel_enable(AFEC0, AFEC_CHANNEL_5);
  * \endcode
  *
  * \subsection afec_basic_use_case_setup_flow Workflow
- * -# Define the interrupt service handler in the application:
- *   - \code
-*   void afec_data_ready(void)
- *   {
- *       if ((afec_get_interrupt_status(AFEC0) & AFE_ISR_DRDY) == AFE_ISR_DRDY) {
- *           g_afec_sample_data.us_value = afec_get_latest_value(AFEC0);
- *           g_afec_sample_data.is_done = true;
- *       }
- *   }
- * \endcode
- *   - \note Get AFEC status and check if the conversion data is ready. If ready,
- *      read the last AFEC result data.
  * -# Enable AFEC Module:
  *   - \code afec_enable(AFEC0); \endcode
  * -# Get the AFEC default configurations:
@@ -743,19 +666,23 @@ static inline enum status_code afec_start_calibration(Afec *const afec)
  * -# Configure conversion trigger and free run mode:
  *   - \code afec_set_trigger(AFEC0, AFEC_TRIG_SW); \endcode
  * -# Enable Channel:
- *   - \code afec_channel_enable(AFEC0, AFEC_CHANNEL_POTENTIOMETER); \endcode
- * -# Set callback for AFEC:
- *   - \code  afec_set_callback(AFEC0, AFEC_INTERRUPT_DATA_READY, afec_data_ready, 1); \endcode
+ *   - \code afec_channel_enable(AFEC0, AFEC_CHANNEL_5); \endcode
  *
  * \section afec_basic_use_case_usage Usage steps
  * \subsection afec_basic_use_case_usage_code Example code
  * Add to, e.g., main loop in application C-file:
  * \code
- *    afec_start_software_conversion(AFEC0);
+ *  afec_start_software_conversion(AFEC0);
+ *  while (afec_get_interrupt_status(AFEC0) & (1 << AFEC_CHANNEL_5));
+ *  uint32_t result = afec_channel_get_value(AFEC0, AFEC_CHANNEL_5);
  * \endcode
  *
  * \subsection afec_basic_use_case_usage_flow Workflow
  * -# Start AFEC conversion on channel:
  *   - \code afec_start_software_conversion(AFEC0); \endcode
+ * -# Wait for the conversion over:
+ *   - \code while (afec_get_interrupt_status(AFEC0) & (1 << AFEC_CHANNEL_5)); \endcode
+ * -# Get the conversion result:
+ *   - \code uint32_t result = afec_channel_get_value(AFEC0, AFEC_CHANNEL_5); \endcode
  */
 #endif /* AFEC_H_INCLUDED */

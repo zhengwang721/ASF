@@ -148,10 +148,12 @@ static void run_afec_tc_trig_test(const struct test_case *test)
 {
 	configure_tc_trigger();
 
-	afec_set_callback(AFEC0, AFEC_INTERRUPT_DATA_READY, 16, afec_set_data_ready_flag, 1);
+	afec_set_callback(AFEC0, AFEC_INTERRUPT_DATA_READY,
+			afec_set_data_ready_flag, 1);
 	delay_ms(2000);
 
-	test_assert_true(test, is_data_ready == true, "AFEC using TC trigger test failed");
+	test_assert_true(test, is_data_ready == true,
+			"AFEC using TC trigger test failed");
 }
 
 /**
@@ -164,11 +166,13 @@ static void run_afec_comp_test(const struct test_case *test)
 	afec_set_trigger(AFEC0, AFEC_TRIG_SW);
 	afec_set_comparison_mode(AFEC0, AFEC_CMP_MODE_2, AFEC_CHANNEL_1, 0);
 	afec_set_comparison_window(AFEC0, 0, 0xFFF);
-	afec_set_callback(AFEC0, AFEC_INTERRUPT_COMP_ERROR, 18, afec_set_comp_flag, 1);
+	afec_set_callback(AFEC0, AFEC_INTERRUPT_COMP_ERROR,
+			afec_set_comp_flag, 1);
 	afec_start_software_conversion(AFEC0);
 	delay_ms(100);
 
-	test_assert_true(test, is_comp_event_flag == true, "AFEC Comparsion Window test failed");
+	test_assert_true(test, is_comp_event_flag == true,
+			"AFEC Comparsion Window test failed");
 }
 
 /**
@@ -195,7 +199,10 @@ int main(void)
 	afec_get_config_defaults(&afec_cfg);
 	afec_init(AFEC0, &afec_cfg);
 
-	/* Because the internal ADC offset is 0x800, it should cancel it and shift down to 0.*/
+	/* 
+	 * Because the internal ADC offset is 0x800, it should cancel it and shift
+	 * down to 0.
+	 */
 	afec_channel_set_analog_offset(AFEC0, AFEC_CHANNEL_1, 0x800);
 
 	afec_channel_enable(AFEC0, AFEC_CHANNEL_1);
@@ -212,8 +219,8 @@ int main(void)
 
 	/* Put test case addresses in an array */
 	DEFINE_TEST_ARRAY(afec_tests) = {
-	&afec_tc_trig_test,
-	&afec_comp_test,
+		&afec_tc_trig_test,
+		&afec_comp_test,
 	};
 
 	/* Define the test suite */

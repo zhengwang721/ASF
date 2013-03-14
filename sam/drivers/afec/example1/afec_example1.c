@@ -175,7 +175,10 @@ int main(void)
 	afec_ch_get_config_defaults(&afec_ch_cfg);
 	afec_ch_set_config(AFEC0, AFEC_TEMPERATURE_SENSOR, &afec_ch_cfg);
 
-	/* Because the internal ADC offset is 0x800, it should cancel it and shift down to 0.*/
+	/* 
+	 * Because the internal ADC offset is 0x800, it should cancel it and shift
+	 * down to 0.
+	 */
 	afec_channel_set_analog_offset(AFEC0, AFEC_TEMPERATURE_SENSOR, 0x800);
 
 	struct afec_temp_sensor_config afec_temp_sensor_cfg;
@@ -184,7 +187,7 @@ int main(void)
 	afec_temp_sensor_cfg.rctc = true;
 	afec_temp_sensor_set_config(AFEC0, &afec_temp_sensor_cfg);
 
-	afec_set_callback(AFEC0, AFEC_INTERRUPT_EOC_15, 15,
+	afec_set_callback(AFEC0, AFEC_INTERRUPT_EOC_15,
 			afec_temp_sensor_end_conversion, 1);
 
 	while (1) {
@@ -193,11 +196,13 @@ int main(void)
 
 			ul_vol = g_ul_value * VOLT_REF / MAX_DIGITAL;
 
-			/* According to datasheet, The output voltage VT = 1.44V at 27C
-			and the temperature slope dVT/dT = 4.7 mV/C */
+			/* 
+			 * According to datasheet, The output voltage VT = 1.44V at 27C
+			 * and the temperature slope dVT/dT = 4.7 mV/C
+			 */
 			ul_temp = (ul_vol - 1440)  * 100 / 470 + 27;
 
-			printf("Temperature is: %04d", (int)ul_temp);
+			printf("Temperature is: %04d\r", (int)ul_temp);
 			is_conversion_done = false;
 		}
 	}

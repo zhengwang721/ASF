@@ -224,7 +224,10 @@ int main(void)
 	afec_ch_get_config_defaults(&afec_ch_cfg);
 	afec_ch_set_config(AFEC0, AFEC_CHANNEL_POTENTIOMETER, &afec_ch_cfg);
 
-	/* Because the internal ADC offset is 0x800, it should cancel it and shift down to 0.*/
+	/*
+	 * Because the internal ADC offset is 0x800, it should cancel it and shift
+	 * down to 0.
+	 */
 	afec_channel_set_analog_offset(AFEC0, AFEC_CHANNEL_POTENTIOMETER, 0x800);
 
 	afec_set_trigger(AFEC0, AFEC_TRIG_SW);
@@ -232,7 +235,7 @@ int main(void)
 	/* Enable channel for potentiometer. */
 	afec_channel_enable(AFEC0, AFEC_CHANNEL_POTENTIOMETER);
 
-	afec_set_callback(AFEC0, AFEC_INTERRUPT_DATA_READY, 16, afec_data_ready, 1);
+	afec_set_callback(AFEC0, AFEC_INTERRUPT_DATA_READY, afec_data_ready, 1);
 
 	display_menu();
 
@@ -242,15 +245,17 @@ int main(void)
 
 		/* Check if AFEC sample is done. */
 		if (g_afec_sample_data.is_done == true) {
-			printf("Potentiometer Voltage: %04d mv.    ",
-					(int)(	g_afec_sample_data.us_value * VOLT_REF /	g_max_digital));
+			printf("Potentiometer Voltage: %04d mv.",
+					(int)(g_afec_sample_data.us_value * VOLT_REF
+					/ g_max_digital));
 			puts("\r");
 			g_afec_sample_data.is_done = false;
 		}
 
 		/* Check if the user enters a key. */
 		if (!uart_read(CONF_UART, &uc_key)) {
-			afec_disable_interrupt(AFEC0, AFEC_INTERRUPT_ALL);	/* Disable all afec interrupt. */
+			/* Disable all afec interrupt. */
+			afec_disable_interrupt(AFEC0, AFEC_INTERRUPT_ALL);
 			set_afec_resolution();
 			afec_enable_interrupt(AFEC0, AFEC_INTERRUPT_DATA_READY);
 		}

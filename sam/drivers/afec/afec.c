@@ -60,15 +60,19 @@ extern "C" {
  *
  * See \ref sam_afec_quickstart.
  *
- * Driver for the Analog-Front-End Controller. This driver provides access to the main
- * features of the AFEC controller.
+ * Driver for the Analog-Front-End Controller. This driver provides access to
+ * the main features of the AFEC controller.
  *
  * @{
  */
+#if defined(AFEC1)
+#define NUM_OF_AFEC 2
+#else
+#define NUM_OF_AFEC 1
+#endif
 
-afec_callback_t afec_callback_pointer[2][23];
+afec_callback_t afec_callback_pointer[NUM_OF_AFEC][_AFEC_NUM_OF_INTERRUPT_SOURCE];
 
-uint32_t g_interrupt_source[2][23];
 
 /**
  * \internal
@@ -127,12 +131,12 @@ static void afec_set_config(Afec *const afec, struct afec_config *config)
 {
 	uint32_t reg = 0;
 
-	reg = (config->anach? AFE_MR_ANACH_ALLOWED : 0) |
+	reg = (config->anach ? AFE_MR_ANACH_ALLOWED : 0) |
 			(config->useq ? AFE_MR_USEQ_REG_ORDER : 0) |
 			AFE_MR_PRESCAL(config->mck / (2 * config->afec_clock) - 1) |
 			AFE_MR_TRACKTIM(config->tracktim) |
 			AFE_MR_TRANSFER(config->transfer) |
-			(config->settling_time)|
+			(config->settling_time) |
 			(config->startup_time);
 
 	afec->AFE_MR = reg;
@@ -154,15 +158,12 @@ static void afec_set_config(Afec *const afec, struct afec_config *config)
 void afec_ch_set_config(Afec *const afec, const enum afec_channel_num channel,
 		struct afec_ch_config *config)
 {
-	if(afec == AFEC0) {
-		Assert(channel < 16);
-	} else if(afec == AFEC1)	{
-		Assert(channel < 8);
-	}
+	afec_ch_sanity_check(afec, channel);
 
 	afec->AFE_CDOR = (config->offset) ? (0x1u << channel) : 0;
 	afec->AFE_DIFFR = (config->diff) ? (0x1u << channel) : 0;
-	afec->AFE_CGR = (0x03u << (2 * channel)) & ((config->gain) << (2 * channel));
+	afec->AFE_CGR = (0x03u << (2 * channel))
+			& ((config->gain) << (2 * channel));
 }
 
 /**
@@ -171,7 +172,8 @@ void afec_ch_set_config(Afec *const afec, const enum afec_channel_num channel,
  * \param afec  Base address of the AFEC
  * \param config   Configuration for the AFEC temperature sensor
  */
-void afec_temp_sensor_set_config(Afec *const afec, struct afec_temp_sensor_config *config)
+void afec_temp_sensor_set_config(Afec *const afec,
+		struct afec_temp_sensor_config *config)
 {
 	Assert(afec == AFEC0);
 
@@ -193,10 +195,10 @@ void afec_temp_sensor_set_config(Afec *const afec, struct afec_temp_sensor_confi
  * The default configuration is as follows:
  * - 12 -bit resolution
  * - AFEC clock frequency is 6MHz
- * - Start Up Time is 64 periods AFEClock
- * - Analog Settling Time is 3 periods of AFEClock
- * - Tracking Time is 3 periods of AFEClock
- * - Transfer Period is 5 periods AFEClock
+ * - Start Up Time is 64 periods AFEC clock
+ * - Analog Settling Time is 3 periods of AFEC clock
+ * - Tracking Time is 3 periods of AFEC clock
+ * - Transfer Period is 5 periods AFEC clock
  * - Allows different analog settings for each channel
  * - The controller converts channels in a simple numeric order
  * - Appends the channel number to the conversion result in AFE_LDCR register
@@ -207,7 +209,7 @@ void afec_temp_sensor_set_config(Afec *const afec, struct afec_temp_sensor_confi
  */
 void afec_get_config_defaults(struct afec_config *const cfg)
 {
-	/*Sanity check argument. */
+	/* Sanity check argument. */
 	Assert(cfg);
 
 	cfg->resolution = AFEC_12_BITS;
@@ -258,7 +260,8 @@ void afec_ch_get_config_defaults(struct afec_ch_config *const cfg)
  *
  * \param cfg Pointer to temperature sensor configuration structure to be initiated.
  */
-void afec_temp_sensor_get_config_defaults(struct afec_temp_sensor_config *const cfg)
+void afec_temp_sensor_get_config_defaults(
+		struct afec_temp_sensor_config *const cfg)
 {
 	/*Sanity check argument. */
 	Assert(cfg);
@@ -275,7 +278,8 @@ void afec_temp_sensor_get_config_defaults(struct afec_temp_sensor_config *const 
  * \param afec  Base address of the AFEC
  * \param config   Configuration for the AFEC
  *
- * \return Status of module initialization.
+ * \retval STATUS_OK  Initialization is finished.
+ * \retval STATUS_ERR_BUSY  Initialization failed.
  */
 enum status_code afec_init(Afec *const afec, struct afec_config *config)
 {
@@ -286,11 +290,78 @@ enum status_code afec_init(Afec *const afec, struct afec_config *config)
 		return STATUS_ERR_BUSY;
 	}
 
-	/* Reset the AFEC module */
+	/* Reset and configure the AFEC module */
 	afec->AFE_CR = AFE_CR_SWRST;
 	afec_set_config(afec, config);
 
+	uint32_t i, j;
+	for (i = 0; i < NUM_OF_AFEC; i++) {
+		for (j = 0; j < _AFEC_NUM_OF_INTERRUPT_SOURCE; j++) {
+			afec_callback_pointer[i][j] = 0;
+		}
+	}
+
 	return STATUS_OK;
+}
+
+/**
+ * \brief Configure comparison mode.
+ *
+ * \param afec  Base address of the AFEC.
+ * \param mode Comparison mode.
+ * \param channel Comparison Selected Channel.
+ * \param cmp_filter Compare Event Filtering.
+ */
+void afec_set_comparison_mode(Afec *const afec,
+		const enum afec_cmp_mode mode,
+		const enum afec_channel_num channel, uint8_t cmp_filter)
+{
+	if (channel != AFEC_CHANNEL_ALL) {
+		afec_ch_sanity_check(afec, channel);
+	}
+
+	uint32_t reg;
+
+	reg = afec->AFE_EMR;
+
+	reg &= ~(AFE_EMR_CMPSEL_Msk |
+			AFE_EMR_CMPMODE_Msk |
+			AFE_EMR_CMPFILTER_Msk);
+	reg |= mode |
+			((channel == AFEC_CHANNEL_ALL) ? AFE_EMR_CMPALL
+			: AFE_EMR_CMPSEL(channel)) |
+			AFE_EMR_CMPFILTER(cmp_filter);
+
+	afec->AFE_EMR = reg;
+}
+
+/**
+ * \brief Configure AFEC power mode.
+ *
+ * \param afec  Base address of the AFEC.
+ * \param mode   AFEC power mode value.
+ */
+void afec_set_power_mode(Afec *const afec,
+		const enum afec_power_mode mode)
+{
+	uint32_t reg;
+
+	reg = afec->AFE_MR;
+
+	switch(mode) {
+		case AFEC_POWER_MODE_0:
+			reg &= ~(AFE_MR_FWUP_ON | AFE_MR_SLEEP_SLEEP);
+			break;
+		case AFEC_POWER_MODE_1:
+			reg |= AFE_MR_FWUP_ON;
+			break;
+		case AFEC_POWER_MODE_2:
+			reg |= AFE_MR_SLEEP_SLEEP;
+			reg &= ~AFE_MR_FWUP_ON;
+			break;
+	}
+
+	afec->AFE_MR = reg;
 }
 
 /**
@@ -298,18 +369,17 @@ enum status_code afec_init(Afec *const afec, struct afec_config *config)
  *
  * \param afec  Base address of the AFEC
  * \param source    Interrupt source
- * \param src_num Interrupt source number
  * \param callback  Callback function pointer
  * \param irq_level Interrupt level
  */
 void afec_set_callback(Afec *const afec, enum afec_interrupt_source source,
-		uint8_t src_num, afec_callback_t callback, uint8_t irq_level)
+		afec_callback_t callback, uint8_t irq_level)
 {
 	Assert(afec);
 	Assert(callback);
 
 	uint32_t i = afec_find_inst_num(afec);
-	afec_callback_pointer[i][src_num] = callback;
+	afec_callback_pointer[i][source] = callback;
 	if (!i) {
 		irq_register_handler(AFEC0_IRQn, irq_level);
 	} else if (i == 1) {
@@ -317,8 +387,42 @@ void afec_set_callback(Afec *const afec, enum afec_interrupt_source source,
 	}
 	/* Enable the specified interrupt source */
 	afec_enable_interrupt(afec, source);
+}
 
-	g_interrupt_source[i][src_num] = source;
+/**
+ * \brief Enable AFEC interrupts.
+ *
+ * \param afec  Base address of the AFEC.
+ * \param interrupt_source Interrupts to be enabled.
+ */
+void afec_enable_interrupt(Afec *const afec,
+		enum afec_interrupt_source interrupt_source)
+{
+	if (interrupt_source < AFEC_INTERRUPT_DATA_READY) {
+		afec->AFE_IER = 1 << interrupt_source;
+	} else if (interrupt_source < AFEC_INTERRUPT_TEMP_CHANGE) {
+		afec->AFE_IER = 1 << (interrupt_source + 8);
+	} else {
+		afec->AFE_IER = 1 << (interrupt_source + 9);
+	}
+}
+
+/**
+ * \brief Disable AFEC interrupts.
+ *
+ * \param afec  Base address of the AFEC.
+ * \param interrupt_source Interrupts to be disabled.
+ */
+void afec_disable_interrupt(Afec *const afec,
+		enum afec_interrupt_source interrupt_source)
+{
+	if (interrupt_source < AFEC_INTERRUPT_DATA_READY) {
+		afec->AFE_IDR = 1 << interrupt_source;
+	} else if (interrupt_source < AFEC_INTERRUPT_TEMP_CHANGE) {
+		afec->AFE_IDR = 1 << (interrupt_source + 8);
+	} else {
+		afec->AFE_IDR = 1 << (interrupt_source + 9);
+	}
 }
 
 /**
@@ -329,14 +433,44 @@ void afec_set_callback(Afec *const afec, enum afec_interrupt_source source,
  * afec_set_callback() function.
  *
  * \param inst_num AFEC instance number to handle interrupt for
- * \param src_num Interrupt source number
+ * \param source   Interrupt source number
  */
-static void afec_interrupt(uint8_t inst_num, uint8_t src_num)
+static void afec_interrupt(uint8_t inst_num,
+		enum afec_interrupt_source source)
 {
-	if (afec_callback_pointer[inst_num][src_num]) {
-		afec_callback_pointer[inst_num][src_num]();
-	} else {
-		Assert(false); /* Catch unexpected interrupt */
+	if (afec_callback_pointer[inst_num][source]) {
+		afec_callback_pointer[inst_num][source]();
+	}
+}
+
+/**
+ * \internal
+ * \brief Call the callback function if the corresponding interrupt is asserted
+ *
+ * \param afec  Base address of the AFEC.
+ */
+static void afec_process_callback(Afec *const afec)
+{
+	volatile uint32_t status;
+	uint32_t cnt, inst_num;
+
+	status = afec_get_interrupt_status(afec);
+	inst_num = afec_find_inst_num(afec);
+
+	for (cnt = 0; cnt < _AFEC_NUM_OF_INTERRUPT_SOURCE; cnt++) {
+		if (cnt < AFEC_INTERRUPT_DATA_READY) {
+			if (status & (1 << cnt)) {
+				afec_interrupt(inst_num, (enum afec_interrupt_source)cnt);
+			}
+		} else if (cnt < AFEC_INTERRUPT_TEMP_CHANGE) {
+			if (status & (1 << (cnt + 8))) {
+				afec_interrupt(inst_num, (enum afec_interrupt_source)cnt);
+			}
+		} else {
+			if (status & (1 << (cnt + 9))) {
+				afec_interrupt(inst_num, (enum afec_interrupt_source)cnt);
+			}
+		}
 	}
 }
 
@@ -345,125 +479,7 @@ static void afec_interrupt(uint8_t inst_num, uint8_t src_num)
  */
 void AFEC0_Handler(void)
 {
-	volatile uint32_t status;
-
-	status = afec_get_interrupt_status(AFEC0);
-
-	if ((status & AFE_ISR_EOC0) == AFE_ISR_EOC0) {
-		if(g_interrupt_source[0][0]) {
-			afec_interrupt(0, 0);
-		}
-	}
-	if ((status & AFE_ISR_EOC1) == AFE_ISR_EOC1) {
-		if(g_interrupt_source[0][1]) {
-			afec_interrupt(0, 1);
-		}
-	}
-	if ((status & AFE_ISR_EOC2) == AFE_ISR_EOC2) {
-		if(g_interrupt_source[0][2]) {
-			afec_interrupt(0, 2);
-		}
-	}
-	if ((status & AFE_ISR_EOC3) == AFE_ISR_EOC3) {
-		if(g_interrupt_source[0][3]) {
-			afec_interrupt(0, 3);
-		}
-	}
-	if ((status & AFE_ISR_EOC4) == AFE_ISR_EOC4) {
-		if(g_interrupt_source[0][4]) {
-			afec_interrupt(0, 4);
-		}
-	}
-	if ((status & AFE_ISR_EOC5) == AFE_ISR_EOC5) {
-		if(g_interrupt_source[0][5]) {
-			afec_interrupt(0, 5);
-		}
-	}
-	if ((status & AFE_ISR_EOC6) == AFE_ISR_EOC6) {
-		if(g_interrupt_source[0][6]) {
-			afec_interrupt(0, 6);
-		}
-	}
-	if ((status & AFE_ISR_EOC7) == AFE_ISR_EOC7) {
-		if(g_interrupt_source[0][7]) {
-			afec_interrupt(0, 7);
-		}
-	}
-	if ((status & AFE_ISR_EOC8) == AFE_ISR_EOC8) {
-		if(g_interrupt_source[0][8]) {
-			afec_interrupt(0, 8);
-		}
-	}
-	if ((status & AFE_ISR_EOC9) == AFE_ISR_EOC9) {
-		if(g_interrupt_source[0][9]) {
-			afec_interrupt(0, 9);
-		}
-	}
-	if ((status & AFE_ISR_EOC10) == AFE_ISR_EOC10) {
-		if(g_interrupt_source[0][10]) {
-			afec_interrupt(0, 10);
-		}
-	}
-	if ((status & AFE_ISR_EOC11) == AFE_ISR_EOC11) {
-		if(g_interrupt_source[0][11]) {
-			afec_interrupt(0, 11);
-		}
-	}
-	if ((status & AFE_ISR_EOC12) == AFE_ISR_EOC12) {
-		if(g_interrupt_source[0][12]) {
-			afec_interrupt(0, 12);
-		}
-	}
-	if ((status & AFE_ISR_EOC13) == AFE_ISR_EOC13) {
-		if(g_interrupt_source[0][13]) {
-			afec_interrupt(0, 13);
-		}
-	}
-	if ((status & AFE_ISR_EOC14) == AFE_ISR_EOC14) {
-		if(g_interrupt_source[0][14]) {
-			afec_interrupt(0, 14);
-		}
-	}
-	if ((status & AFE_ISR_EOC15) == AFE_ISR_EOC15) {
-		if(g_interrupt_source[0][15]) {
-			afec_interrupt(0, 15);
-		}
-	}
-	if ((status & AFE_ISR_DRDY) == (AFE_ISR_DRDY)) {
-		if(g_interrupt_source[0][16]) {
-			afec_interrupt(0, 16);
-		}
-	}
-	if ((status & AFE_ISR_GOVRE) == AFE_ISR_GOVRE) {
-		if(g_interrupt_source[0][17]) {
-			afec_interrupt(0, 17);
-		}
-	}
-	if ((status & AFE_ISR_COMPE) == AFE_ISR_COMPE) {
-		if(g_interrupt_source[0][18]) {
-			afec_interrupt(0, 18);
-		}
-	}
-	if ((status & AFE_ISR_ENDRX) == AFE_ISR_ENDRX) {
-		if(g_interrupt_source[0][19]) {
-			afec_interrupt(0, 19);
-		}
-	}
-	if ((status & AFE_ISR_RXBUFF) == AFE_ISR_RXBUFF) {
-		if(g_interrupt_source[0][20]) {
-			afec_interrupt(0, 20);
-		}
-	}
-	if ((status & AFE_ISR_TEMPCHG) == AFE_ISR_TEMPCHG) {
-		if(g_interrupt_source[0][21]) {
-			afec_interrupt(0, 21);
-		}
-	}
-	if ((status & AFE_ISR_EOCAL) == AFE_ISR_EOCAL) {
-		if(g_interrupt_source[0][22]) {
-			afec_interrupt(0, 22);
-		}
-	}
+	afec_process_callback(AFEC0);
 }
 
 /**
@@ -471,85 +487,7 @@ void AFEC0_Handler(void)
  */
 void AFEC1_Handler(void)
 {
-	volatile uint32_t status;
-
-	status = afec_get_interrupt_status(AFEC1);
-
-	if ((status & AFE_ISR_EOC0) == AFE_ISR_EOC0) {
-		if(g_interrupt_source[1][0]) {
-			afec_interrupt(1, 0);
-		}
-	}
-	if ((status & AFE_ISR_EOC1) == AFE_ISR_EOC1) {
-		if(g_interrupt_source[1][1]) {
-			afec_interrupt(1, 1);
-		}
-	}
-	if ((status & AFE_ISR_EOC2) == AFE_ISR_EOC2) {
-		if(g_interrupt_source[1][2]) {
-			afec_interrupt(1, 2);
-		}
-	}
-	if ((status & AFE_ISR_EOC3) == AFE_ISR_EOC3) {
-		if(g_interrupt_source[1][3]) {
-			afec_interrupt(1, 3);
-		}
-	}
-	if ((status & AFE_ISR_EOC4) == AFE_ISR_EOC4) {
-		if(g_interrupt_source[1][4]) {
-			afec_interrupt(1, 4);
-		}
-	}
-	if ((status & AFE_ISR_EOC5) == AFE_ISR_EOC5) {
-		if(g_interrupt_source[1][5]) {
-			afec_interrupt(1, 5);
-		}
-	}
-	if ((status & AFE_ISR_EOC6) == AFE_ISR_EOC6) {
-		if(g_interrupt_source[1][6]) {
-			afec_interrupt(1, 6);
-		}
-	}
-	if ((status & AFE_ISR_EOC7) == AFE_ISR_EOC7) {
-		if(g_interrupt_source[1][7]) {
-			afec_interrupt(1, 7);
-		}
-	}
-	if ((status & AFE_ISR_DRDY) == (AFE_ISR_DRDY)) {
-		if(g_interrupt_source[1][16]) {
-			afec_interrupt(1, 16);
-		}
-	}
-	if ((status & AFE_ISR_GOVRE) == AFE_ISR_GOVRE) {
-		if(g_interrupt_source[1][17]) {
-			afec_interrupt(1, 17);
-		}
-	}
-	if ((status & AFE_ISR_COMPE) == AFE_ISR_COMPE) {
-		if(g_interrupt_source[1][18]) {
-			afec_interrupt(1, 18);
-		}
-	}
-	if ((status & AFE_ISR_ENDRX) == AFE_ISR_ENDRX) {
-		if(g_interrupt_source[1][19]) {
-			afec_interrupt(1, 19);
-		}
-	}
-	if ((status & AFE_ISR_RXBUFF) == AFE_ISR_RXBUFF) {
-		if(g_interrupt_source[1][20]) {
-			afec_interrupt(1, 20);
-		}
-	}
-	if ((status & AFE_ISR_TEMPCHG) == AFE_ISR_TEMPCHG) {
-		if(g_interrupt_source[1][21]) {
-			afec_interrupt(1, 21);
-		}
-	}
-	if ((status & AFE_ISR_EOCAL) == AFE_ISR_EOCAL) {
-		if(g_interrupt_source[1][22]) {
-			afec_interrupt(1, 22);
-		}
-	}
+	afec_process_callback(AFEC1);
 }
 
 /**
@@ -579,7 +517,7 @@ void afec_disable(Afec *const afec)
 	uint32_t pid;
 
 	pid = afec_find_pid(afec);
-	/* Enable peripheral clock. */
+	/* Disable peripheral clock. */
 	pmc_disable_periph_clk(pid);
 	sleepmgr_unlock_mode(SLEEPMGR_SLEEP_WFI);
 }
@@ -591,8 +529,8 @@ void afec_disable(Afec *const afec)
  * \param ch_list Channel sequence list.
  * \param uc_num Number of channels in the list.
  */
-void afec_configure_sequence(Afec *const afec, const enum afec_channel_num ch_list[],
-		uint8_t uc_num)
+void afec_configure_sequence(Afec *const afec,
+		const enum afec_channel_num ch_list[], uint8_t uc_num)
 {
 	uint8_t uc_counter;
 
