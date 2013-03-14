@@ -637,7 +637,7 @@ enum status_code usart_read_wait(
 
 enum status_code usart_write_buffer_wait(
 		struct usart_module *const module,
-		uint8_t *tx_data,
+		const uint8_t *tx_data,
 		uint16_t length);
 
 enum status_code usart_read_buffer_wait(
