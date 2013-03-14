@@ -265,7 +265,7 @@ enum status_code spi_init(
 	/* Set the SERCOM in SPI mode */
 	spi_module->CTRLA.reg |= SERCOM_SPI_CTRLA_MODE(0x1);
 
-#if SPI_ASYNC == true
+#if SPI_CALLBACK_MODE == true
 	/* Temporary variables */
 	uint8_t i;
 	uint8_t instance_index;

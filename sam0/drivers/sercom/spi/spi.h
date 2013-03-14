@@ -47,7 +47,7 @@
 #include <compiler.h>
 #include <port.h>
 #include <sercom.h>
-#if SPI_ASYNC == true
+#if SPI_CALLBACK_MODE == true
 #include <sercom_interrupt.h>
 #include <system_interrupt.h>
 #endif
@@ -340,7 +340,7 @@ extern "C" {
 #  define SPI_TIMEOUT 10000
 #endif
 
-#if SPI_ASYNC == true
+#if SPI_CALLBACK_MODE == true
 /**
  * \brief SPI Callback enum
  *
@@ -363,7 +363,7 @@ enum spi_callback {
 };
 #endif
 
-#if SPI_ASYNC == true
+#if SPI_CALLBACK_MODE == true
 #  if !defined(__DOXYGEN__)
 /**
  * \internal SPI transfer directions
@@ -531,7 +531,7 @@ enum spi_character_size {
 	SPI_CHARACTER_SIZE_9BIT = SERCOM_SPI_CTRLB_CHSIZE,
 };
 
-#if SPI_ASYNC == true
+#if SPI_CALLBACK_MODE == true
 /** Prototype for the device instance */
 struct spi_module;
 
@@ -558,7 +558,7 @@ struct spi_module {
 	enum spi_mode mode;
 	/** SPI character size */
 	enum spi_character_size character_size;
-#  if SPI_ASYNC == true
+#  if SPI_CALLBACK_MODE == true
 	volatile enum spi_direction dir;
 	/** Array to store callback function pointers in */
 	spi_callback_t callback[SPI_CALLBACK_N];
@@ -867,7 +867,7 @@ static inline void spi_enable(
 
 	SercomSpi *const spi_module = &(module->hw->SPI);
 
-#if SPI_ASYNC == true
+#if SPI_CALLBACK_MODE == true
 	system_interrupt_enable(_sercom_get_interrupt_vector(module->hw));
 #endif
 
@@ -895,7 +895,7 @@ static inline void spi_disable(
 
 	SercomSpi *const spi_module = &(module->hw->SPI);
 
-#if SPI_ASYNC == true
+#if SPI_CALLBACK_MODE == true
 	system_interrupt_disable(_sercom_get_interrupt_vector(module->hw));
 #endif
 

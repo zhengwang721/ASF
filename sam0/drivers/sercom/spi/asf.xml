@@ -13,7 +13,9 @@
 			<build type="header-file" value="quick_start/qs_spi_basic.h" subtype="example"/>
 			<build type="include-path" value="."/>
 			<build type="doxygen-entry-point" value="sam0_spi_group"/>
-			<build type="define" name="SPI_ASYNC" value="false"/>
+
+			<build type="define" name="SPI_CALLBACK_MODE" value="false"/>
+
 			<device-support value="samd20"/>
 
 			<require idref="sam0.utils"/>
@@ -33,10 +35,11 @@
 			<build type="header-file" value="quick_start/qs_spi_basic.h" subtype="example"/>
 			<build type="include-path" value="."/>
 			<build type="doxygen-entry-point" value="sam0_spi_group"/>
-			<build type="define" name="SPI_ASYNC" value="true"/>
-			<device-support value="samd20"/>
 
+			<build type="define" name="SPI_CALLBACK_MODE" value="true"/>
 			<build type="doxygen-enable-section" value="SPI_CALLBACK_MODE"/>
+
+			<device-support value="samd20"/>
 
 			<require idref="sam0.utils"/>
 			<require idref="sam0.drivers.sercom"/>
