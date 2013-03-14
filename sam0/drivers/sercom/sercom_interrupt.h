@@ -40,8 +40,8 @@
  * \asf_license_stops
  *
  */
-#ifndef SERCOM_INTERRUPTS_H_INCLUDED
-#define SERCOM_INTERRUPTS_H_INCLUDED
+#ifndef SERCOM_INTERRUPT_H_INCLUDED
+#define SERCOM_INTERRUPT_H_INCLUDED
 
 #include "sercom.h"
 #include <system_interrupt.h>
@@ -51,10 +51,13 @@ extern void *_sercom_instances[SERCOM_INST_NUM];
 
 typedef void (*sercom_handler_t)(uint8_t instance);
 
-uint8_t _sercom_get_sercom_inst_index(Sercom *sercom_instance);
+uint8_t _sercom_get_sercom_inst_index(
+		Sercom *const sercom_instance);
 
-enum system_interrupt_vector _sercom_get_interrupt_vector(Sercom *sercom_instance);
-void _sercom_set_handler(uint8_t instance,
-		sercom_handler_t interrupt_handler);
+enum system_interrupt_vector _sercom_get_interrupt_vector(
+		Sercom *const sercom_instance);
+void _sercom_set_handler(
+		const uint8_t instance,
+		const sercom_handler_t interrupt_handler);
 
-#endif /* SERCOM_INTERRUPTS_H_INCLUDED */
+#endif /* SERCOM_INTERRUPT_H_INCLUDED */
