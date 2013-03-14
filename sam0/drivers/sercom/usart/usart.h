@@ -330,17 +330,17 @@ enum usart_stopbits {
  * Number of bits for the character sent in a frame.
  *
  */
-enum usart_char_size {
+enum usart_character_size {
 	/** The char being sent in a frame is 5 bits long */
-	USART_CHAR_SIZE_5BIT = SERCOM_USART_CTRLB_CHSIZE(5),
+	USART_CHARACTER_SIZE_5BIT = SERCOM_USART_CTRLB_CHSIZE(5),
 	/** The char being sent in a frame is 6 bits long */
-	USART_CHAR_SIZE_6BIT = SERCOM_USART_CTRLB_CHSIZE(6),
+	USART_CHARACTER_SIZE_6BIT = SERCOM_USART_CTRLB_CHSIZE(6),
 	/** The char being sent in a frame is 7 bits long */
-	USART_CHAR_SIZE_7BIT = SERCOM_USART_CTRLB_CHSIZE(7),
+	USART_CHARACTER_SIZE_7BIT = SERCOM_USART_CTRLB_CHSIZE(7),
 	/** The char being sent in a frame is 8 bits long */
-	USART_CHAR_SIZE_8BIT = SERCOM_USART_CTRLB_CHSIZE(0),
+	USART_CHARACTER_SIZE_8BIT = SERCOM_USART_CTRLB_CHSIZE(0),
 	/** The char being sent in a frame is 9 bits long */
-	USART_CHAR_SIZE_9BIT = SERCOM_USART_CTRLB_CHSIZE(1),
+	USART_CHARACTER_SIZE_9BIT = SERCOM_USART_CTRLB_CHSIZE(1),
 };
 
 
@@ -371,7 +371,7 @@ struct usart_config {
 	/** Number of stop bits */
 	enum usart_stopbits stopbits;
 	/** USART character size */
-	enum usart_char_size char_size;
+	enum usart_character_size character_size;
 	/** USART pin out */
 	enum usart_signal_mux_settings mux_settings;
 	/** USART baud rate */
@@ -429,7 +429,7 @@ struct usart_module {
 	/** Pointer to the hardware instance */
 	Sercom *hw;
 	/** Character size of the data being transferred */
-	enum usart_char_size char_size;
+	enum usart_character_size character_size;
 #  ifdef USART_CALLBACK_MODE
 	/** Array to store callback function pointers in */
 	usart_callback_t callback[USART_CALLBACK_N];
@@ -456,7 +456,6 @@ struct usart_module {
 };
 
 #if !defined (__DOXYGEN__)
-
 /**
  * \internal Wait until synchronization is complete
  */
@@ -470,7 +469,6 @@ static inline void _usart_wait_for_sync(
 		/* Wait until the synchronization is complete */
 	}
 }
-
 #endif
 
 /**
@@ -532,7 +530,7 @@ static inline void usart_get_config_defaults(
 	config->transfer_mode = USART_TRANSFER_ASYNCHRONOUSLY;
 	config->parity = USART_PARITY_NONE;
 	config->stopbits = USART_STOPBITS_1;
-	config->char_size = USART_CHAR_SIZE_8BIT;
+	config->character_size = USART_CHARACTER_SIZE_8BIT;
 	config->baudrate = 9600;
 	config->clock_polarity_inverted = false;
 	config->use_external_clock = false;
@@ -654,7 +652,6 @@ enum status_code usart_read_buffer_wait(
 		struct usart_module *const module,
 		uint8_t *rx_data,
 		uint16_t length);
-
 /** @} */
 
 /**
@@ -685,24 +682,24 @@ static inline void usart_enable_transceiver(
 	_usart_wait_for_sync(module);
 
 	switch (transceiver_type) {
-	case USART_TRANSCEIVER_RX:
-		/* Enable RX */
-		usart_hw->CTRLB.reg |= SERCOM_USART_CTRLB_RXEN;
-		break;
+		case USART_TRANSCEIVER_RX:
+			/* Enable RX */
+			usart_hw->CTRLB.reg |= SERCOM_USART_CTRLB_RXEN;
+			break;
 
-	case USART_TRANSCEIVER_TX:
-		/* Enable TX */
-		usart_hw->CTRLB.reg |= SERCOM_USART_CTRLB_TXEN;
-		break;
+		case USART_TRANSCEIVER_TX:
+			/* Enable TX */
+			usart_hw->CTRLB.reg |= SERCOM_USART_CTRLB_TXEN;
+			break;
 	}
 }
 
 /**
  * \brief Disable Transceiver
  *
- * Disable the given transceiver. Either RX or TX.
+ * Disable the given transceiver (RX or TX).
  *
- * \param[in] module          Pointer to USART software instance struct
+ * \param[in] module             Pointer to USART software instance struct
  * \param[in] transceiver_type  Transceiver type.
  */
 static inline void usart_disable_transceiver(
@@ -720,18 +717,17 @@ static inline void usart_disable_transceiver(
 	_usart_wait_for_sync(module);
 
 	switch (transceiver_type) {
-	case USART_TRANSCEIVER_RX:
-		/* Disable RX */
-		usart_hw->CTRLB.reg &= ~SERCOM_USART_CTRLB_RXEN;
-		break;
+		case USART_TRANSCEIVER_RX:
+			/* Disable RX */
+			usart_hw->CTRLB.reg &= ~SERCOM_USART_CTRLB_RXEN;
+			break;
 
-	case USART_TRANSCEIVER_TX:
-		/* Disable TX */
-		usart_hw->CTRLB.reg &= ~SERCOM_USART_CTRLB_TXEN;
-		break;
+		case USART_TRANSCEIVER_TX:
+			/* Disable TX */
+			usart_hw->CTRLB.reg &= ~SERCOM_USART_CTRLB_TXEN;
+			break;
 	}
 }
-
 /** @} */
 
 /** @} */

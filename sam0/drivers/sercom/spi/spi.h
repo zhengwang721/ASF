@@ -337,7 +337,7 @@ extern "C" {
  */
 
 #ifndef SPI_TIMEOUT
- #define SPI_TIMEOUT 10000
+#  define SPI_TIMEOUT 10000
 #endif
 
 #if SPI_ASYNC == true
@@ -356,15 +356,15 @@ enum spi_callback {
 	SPI_CALLBACK_ERROR,
 	/** Callback for transmission complete for slave */
 	SPI_CALLBACK_SLAVE_TRANSMISSION_COMPLETE,
-#if !defined(__DOXYGEN__)
+#  if !defined(__DOXYGEN__)
 	/** Number of available callbacks. */
 	SPI_CALLBACK_N,
-#endif
+#  endif
 };
 #endif
 
 #if SPI_ASYNC == true
-#if !defined(__DOXYGEN__)
+#  if !defined(__DOXYGEN__)
 /**
  * \internal SPI transfer directions
  *
@@ -375,7 +375,7 @@ enum spi_direction {
 	SPI_DIRECTION_BOTH,
 	SPI_DIRECTION_IDLE,
 };
-#endif
+#  endif
 #endif
 
 /**
@@ -557,7 +557,7 @@ struct spi_module {
 	/** SPI mode */
 	enum spi_mode mode;
 	/** SPI character size */
-	enum spi_character_size chsize;
+	enum spi_character_size character_size;
 #  if SPI_ASYNC == true
 	volatile enum spi_direction dir;
 	/** Array to store callback function pointers in */
@@ -635,7 +635,7 @@ struct spi_slave_config {
 	/** Frame format */
 	enum spi_frame_format frame_format;
 	/** Address mode */
-	enum spi_addr_mode addr_mode;
+	enum spi_addr_mode address_mode;
 	/** Address */
 	uint8_t address;
 	/** Address mask */
@@ -661,7 +661,7 @@ struct spi_config {
 	/** Mux setting */
 	enum spi_signal_mux_setting mux_setting;
 	/** SPI character size */
-	enum spi_character_size chsize;
+	enum spi_character_size character_size;
 	/** Enabled in sleep modes */
 	bool run_in_standby;
 	/** Enable receiver */
@@ -765,7 +765,7 @@ static inline void spi_get_config_defaults(
 	config->data_order = SPI_DATA_ORDER_MSB;
 	config->transfer_mode = SPI_TRANSFER_MODE_0;
 	config->mux_setting = SPI_SIGNAL_MUX_SETTING_D;
-	config->chsize = SPI_CHARACTER_SIZE_8BIT;
+	config->character_size = SPI_CHARACTER_SIZE_8BIT;
 	config->run_in_standby = false;
 	config->receiver_enable = true;
 	config->generator_source = GCLK_GENERATOR_0;
@@ -1088,7 +1088,7 @@ static inline enum status_code spi_read(
 		retval = STATUS_ERR_OVERFLOW;
 	}
 	/* Read the character from the DATA register */
-	if (module->chsize == SPI_CHARACTER_SIZE_9BIT) {
+	if (module->character_size == SPI_CHARACTER_SIZE_9BIT) {
 		*rx_data = (spi_module->DATA.reg & SERCOM_SPI_DATA_MASK);
 	} else {
 		*(uint8_t*)rx_data = (uint8_t)spi_module->DATA.reg;

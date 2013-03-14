@@ -113,7 +113,7 @@ static enum status_code _usart_set_config(
 	}
 
 	/* Set stopbits and character size */
-	ctrlb = config->stopbits | config->char_size;
+	ctrlb = config->stopbits | config->character_size;
 
 	/* set parity mode */
 	if (config->parity != USART_PARITY_NONE) {
@@ -492,7 +492,7 @@ enum status_code usart_write_buffer_wait(
 		uint16_t data_to_send = tx_data[tx_pos++];
 
 		/* Check if the character size exceeds 8 bit */
-		if (module->char_size == USART_CHAR_SIZE_9BIT) {
+		if (module->character_size == USART_CHARACTER_SIZE_9BIT) {
 			data_to_send |= (tx_data[tx_pos++] << 8);
 		}
 
@@ -595,7 +595,7 @@ enum status_code usart_read_buffer_wait(
 		rx_data[rx_pos++] = received_data;
 
 		/* If 9-bit data, write next received byte to the buffer */
-		if (module->char_size == USART_CHAR_SIZE_9BIT) {
+		if (module->character_size == USART_CHARACTER_SIZE_9BIT) {
 			rx_data[rx_pos++] = (received_data >> 8);
 		}
 	}
