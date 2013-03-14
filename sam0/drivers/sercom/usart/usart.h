@@ -422,7 +422,7 @@ struct usart_module {
 	Sercom *hw;
 	/** Character size of the data being transferred */
 	enum usart_character_size character_size;
-#  ifdef USART_CALLBACK_MODE
+#  if USART_CALLBACK_MODE == true
 	/** Array to store callback function pointers in */
 	usart_callback_t callback[USART_CALLBACK_N];
 	/** Buffer pointer to where the next received character will be put */
