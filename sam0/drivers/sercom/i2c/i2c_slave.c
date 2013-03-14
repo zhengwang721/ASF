@@ -40,12 +40,12 @@
  * \asf_license_stop
  *
  */
- 
+
 #include "i2c_slave.h"
-#ifdef I2C_SLAVE_ASYNC
+#if I2C_SLAVE_ASYNC == true
 # include "i2c_slave_interrupt.h"
 #endif
- 
+
 /**
  * \internal Sets configuration to module
  *
@@ -164,7 +164,7 @@ enum status_code i2c_slave_init(struct i2c_slave_module *const module,
 	system_gclk_chan_enable(gclk_index);
 	system_gclk_chan_enable(SERCOM_GCLK_ID);
 
-#ifdef I2C_SLAVE_ASYNC
+#if I2C_SLAVE_ASYNC == true
 	/* Get sercom instance index. */
 	uint8_t instance_index = _sercom_get_sercom_inst_index(module->hw);
 
@@ -201,7 +201,7 @@ void i2c_slave_reset(struct i2c_slave_module *const module)
 	Assert(module);
 	Assert(module->hw);
 
-#ifdef I2C_SLAVE_ASYNC
+#if I2C_SLAVE_ASYNC == true
 	/* Reset module instance. */
 	module->registered_callback = 0;
 	module->enabled_callback = 0;
@@ -215,7 +215,7 @@ void i2c_slave_reset(struct i2c_slave_module *const module)
 	/* Disable module */
 	i2c_slave_disable(module);
 
-#ifdef I2C_SLAVE_ASYNC
+#if I2C_SLAVE_ASYNC == true
 	/* Clear all pending interrupts. */
 	system_interrupt_enter_critical_section();
 	system_interrupt_clear_pending(_sercom_get_interrupt_vector(module->hw));
@@ -247,7 +247,7 @@ static enum status_code _i2c_slave_wait_for_bus(
 	/* Wait for reply. */
 	uint16_t timeout_counter = 0;
 	while ((!(i2c_module->INTFLAG.reg & SERCOM_I2CS_INTFLAG_DIF)) &&
-			(!(i2c_module->INTFLAG.reg & SERCOM_I2CS_INTFLAG_PIF)) && 
+			(!(i2c_module->INTFLAG.reg & SERCOM_I2CS_INTFLAG_PIF)) &&
 			(!(i2c_module->INTFLAG.reg & SERCOM_I2CS_INTFLAG_AIF))) {
 
 		/* Check timeout condition. */
@@ -266,7 +266,7 @@ static enum status_code _i2c_slave_wait_for_bus(
  *
  * \param[in] module Pointer to software module structure
  * \param[in] packet Packet to write to master
- * 
+ *
  * \return Status of packet write
  * \retval STATUS_OK               Packet was written successfully
  * \retval STATUS_ERR_IO           There was an error in the previous transfer
@@ -285,7 +285,7 @@ enum status_code i2c_slave_write_packet_wait(struct i2c_slave_module *const modu
 	Assert(packet);
 
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
-	
+
 	uint8_t length = packet->data_length;
 	enum status_code status;
 	/* Wait for master to send address packet */
@@ -361,7 +361,7 @@ enum status_code i2c_slave_write_packet_wait(struct i2c_slave_module *const modu
  *
  * Reads a packet from the master. This will wait for the master to
  * issue a request.
- * 
+ *
  * \param[in]  module Pointer to software module structure
  * \param[out] packet Packet to read from master
  *
@@ -385,7 +385,7 @@ enum status_code i2c_slave_read_packet_wait(struct i2c_slave_module *const modul
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
 
 	uint8_t length = packet->data_length;
-	
+
 	enum status_code status;
 
 	/* Wait for master to send address packet */
@@ -393,7 +393,7 @@ enum status_code i2c_slave_read_packet_wait(struct i2c_slave_module *const modul
 	if (status != STATUS_OK) {
 		/* Timeout, return */
 		return status;
-	}	
+	}
 	/* Check if there was an error in the last transfer */
 	if (i2c_hw->STATUS.reg & (SERCOM_I2CS_STATUS_BUSERR ||
 			SERCOM_I2CS_STATUS_COLL || SERCOM_I2CS_STATUS_LOWTOUT)) {
@@ -422,7 +422,7 @@ enum status_code i2c_slave_read_packet_wait(struct i2c_slave_module *const modul
 			return status;
 		}
 
-		if ((i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_PIF) || 
+		if ((i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_PIF) ||
 				i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_AIF) {
 			/* Master sent stop condition, or repeated start, read done */
 			/* Clear stop flag */
@@ -479,12 +479,12 @@ enum i2c_slave_direction i2c_slave_get_direction_wait(
 	Assert(packet);
 
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
-	
+
 	enum status_code status;
-	
+
 	/* Wait for address interrupt */
 	status = _i2c_slave_wait_for_bus(module);
-	
+
 	if (status != STATUS_OK) {
 			/* Timeout, return */
 			return I2C_SLAVE_DIRECTION_NONE;

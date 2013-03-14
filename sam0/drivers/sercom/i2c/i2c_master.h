@@ -48,7 +48,7 @@
 #include <sercom.h>
 #include <pinmux.h>
 
-#ifdef I2C_MASTER_ASYNC
+#if I2C_MASTER_ASYNC == true
 # include <sercom_interrupt.h>
 #endif
 
@@ -125,7 +125,7 @@ enum i2c_master_baud_rate {
 	I2C_MASTER_BAUD_RATE_400KHZ = 400,
 };
 
-#ifdef I2C_MASTER_ASYNC
+#if I2C_MASTER_ASYNC == true
 /**
  * \brief Callback types
  *
@@ -138,18 +138,19 @@ enum i2c_master_callback {
 	I2C_MASTER_CALLBACK_READ_COMPLETE  = 1,
 	/** Callback for error. */
 	I2C_MASTER_CALLBACK_ERROR          = 2,
-#if !defined(__DOXYGEN__)
+#  if !defined(__DOXYGEN__)
 	/** Total number of callbacks. */
 	_I2C_MASTER_CALLBACK_N             = 3,
-#endif
+#  endif
 };
-#if !defined(__DOXYGEN__)
+
+#  if !defined(__DOXYGEN__)
 /* Prototype for software module. */
 struct i2c_master_module;
 
 typedef void (*i2c_master_callback_t)(
 		struct i2c_master_module *const module);
-#endif
+#  endif
 #endif
 
 /**
@@ -171,7 +172,7 @@ struct i2c_master_module {
 	uint16_t buffer_timeout;
 	/** If true, stop condition will be sent after a read/write */
 	bool send_stop;
-#ifdef I2C_MASTER_ASYNC
+#  if I2C_MASTER_ASYNC == true
 	/** Pointers to callback functions */
 	volatile i2c_master_callback_t callbacks[_I2C_MASTER_CALLBACK_N];
 	/** Mask for registered callbacks */
@@ -191,7 +192,7 @@ struct i2c_master_module {
 	volatile uint8_t transfer_direction;
 	/** Status for status read back in error callback */
 	volatile enum status_code status;
-#endif
+#  endif
 #endif
 };
 
@@ -335,7 +336,7 @@ static inline void i2c_master_enable(
 	/* Enable module. */
 	i2c_module->CTRLA.reg |= SERCOM_I2CM_CTRLA_ENABLE;
 
-#ifdef I2C_ASYNC
+#if I2C_MASTER_ASYNC == true
 	/* Enable module interrupts */
 	system_interrupt_enable(_sercom_get_interrupt_vector(module->hw));
 #endif
@@ -373,7 +374,7 @@ static inline void i2c_master_disable(
 	/* Disable module. */
 	i2c_module->CTRLA.reg &= ~SERCOM_I2CM_CTRLA_ENABLE;
 
-#ifdef I2C_ASYNC
+#if I2C_MASTER_ASYNC == true
 	/* Disable module interrupts */
 	system_interrupt_disable(_sercom_get_interrupt_vector(module->hw));
 #endif
