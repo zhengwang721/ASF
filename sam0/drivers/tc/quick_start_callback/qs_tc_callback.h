@@ -42,9 +42,46 @@
  */
 
 /**
- * \page usart_callback Quick Start Guide for the TC module - Callback
+ * \page tc_callback Quick Start Guide for the TC module - Callback
  *
+ * In this usecase, one TC instance will be used to... The TC module will be
+ * set up as follows:
+ *
+ * -
+ * -
+ * -
+ *
+ * \section asfdoc_samd20_tc_basic_use_case_setup Quick Start
+ *
+ * \subsection asfdoc_samd20_tc_basic_use_case_prereq Prerequisites
+ *
+ * \subsection asfdoc_samd20_tc_basic_use_case_setup_code Code
+ * The following must be added to the user application:
+ *
+ * Add to user application %main():
+ * \snippet qs_tc_callback.c main
+ *
+ * -# Initialize system.
+ *  - \snippet qs_tc_callback.c system_init
+ * -# Create configuration struct.
+ *  - \snippet qs_tc_callback.c config
+ * -# Create software device instance struct.
+ *  - \snippet qs_tc_callback.c dev_inst
+ * -# Get default configuration values.
+ *  - \snippet qs_tc_callback.c tc_get_config_defaults
+ * -# Set up PWM output on channel 0.
+ *   - \snippet qs_tc_callback.c pwm_channel_0
+ * -# Set counter size, wave generation mode and compare capture value.
+ *  - \snippet qs_tc_callback.c setup
+ * -# Initialize the TC module based on given configuration values.
+ *  - \snippet qs_tc_callback.c tc_init
+ * -# Enable and start the TC module.
+ *  - \snippet qs_tc_callback.c tc_enable
+ * -# Loop infinitly. Let the module generate PWM signal.
+ *  - \snippet qs_tc_callback.c inf_loop
+ * \section asfdoc_samd20_tc_basic_use_case_workflow Workflow
  */
+
 
 #include <asf.h>
 #include <conf_clocks.h>
