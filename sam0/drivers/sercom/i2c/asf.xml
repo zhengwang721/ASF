@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<select-by-config id="sam0.drivers.sercom.i2c.master" name="config.sam0.drivers.sercom.i2c.master" caption="I2C Master Mode Driver" default="callback">
+	<select-by-config id="sam0.drivers.sercom.i2c.master" name="config.sam0.drivers.sercom.i2c.master" caption="SERCOM I2C - Master Mode I2C" default="callback">
 		<info type="description" value="summary">
 		Driver for the SAM D20 I2C in Master Mode.
 		</info>
@@ -58,7 +58,7 @@
 		</module>
 	</select-by-config>
 
-	<select-by-config id="sam0.drivers.sercom.i2c.slave" name="config.sam0.drivers.sercom.i2c.slave" caption="I2C Slave Mode Driver" default="callback">
+	<select-by-config id="sam0.drivers.sercom.i2c.slave" name="config.sam0.drivers.sercom.i2c.slave" caption="SERCOM I2C - Slave Mode I2C" default="callback">
 		<info type="description" value="summary">
 		Driver for the SAM D20 I2C in Slave Mode.
 		</info>

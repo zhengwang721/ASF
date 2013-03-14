@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<select-by-config id="sam0.drivers.sercom.usart" name="sam0.drivers.sercom.usart" caption="USART driver" default="polled">
+	<select-by-config id="sam0.drivers.sercom.usart" name="sam0.drivers.sercom.usart" caption="SERCOM USART - Serial Communications" default="polled">
 		<module type="driver" id="sam0.drivers.sercom.usart#polled" caption=
 			"USART Driver">
 			<info type="description" value="summary">
@@ -29,7 +29,7 @@
 
 			<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 		</module>
-		<module type="driver" id="sam0.drivers.sercom.usart#interrupt" caption=
+		<module type="driver" id="sam0.drivers.sercom.usart#callback" caption=
 			"USART interrupt driven driver">
 			<info type="description" value="summary">
 				Driver for the SAMD20 SERCOM in USART mode driven by interrupts.
