@@ -130,7 +130,7 @@ static enum status_code _spi_set_config(
 	system_pinmux_pin_set_config(pad3 >> 16, &pin_conf);
 
 	module->mode = config->mode;
-	module->chsize = config->chsize;
+	module->character_size = config->character_size;
 
 	/* Value to write to BAUD register */
 	uint16_t baud;
@@ -164,7 +164,8 @@ static enum status_code _spi_set_config(
 		ctrla = config->slave.frame_format;
 
 		/* Set address mode */
-		spi_module->CTRLB.reg |= config->slave.addr_mode;
+		spi_module->CTRLB.reg |= config->slave.address_mode;
+
 		/* Set address and address mask*/
 		spi_module->ADDR.reg |=
 				(config->slave.address      << SERCOM_SPI_ADDR_ADDR_Pos) |
@@ -186,7 +187,7 @@ static enum status_code _spi_set_config(
 	ctrla |= config->mux_setting;
 
 	/* Set SPI character size */
-	spi_module->CTRLB.reg |= config->chsize;
+	spi_module->CTRLB.reg |= config->character_size;
 
 	if (config->run_in_standby) {
 		/* Enable in sleep mode */
@@ -264,7 +265,7 @@ enum status_code spi_init(
 	/* Set the SERCOM in SPI mode */
 	spi_module->CTRLA.reg |= SERCOM_SPI_CTRLA_MODE(0x1);
 
-#ifdef SPI_ASYNC
+#if SPI_CALLBACK_MODE == true
 	/* Temporary variables */
 	uint8_t i;
 	uint8_t instance_index;
@@ -375,7 +376,7 @@ enum status_code spi_read_buffer_wait(
 		rx_data[rx_pos++] = received_data;
 
 		/* If 9-bit data, write next received byte to the buffer */
-		if (module->chsize == SPI_CHARACTER_SIZE_9BIT) {
+		if (module->character_size == SPI_CHARACTER_SIZE_9BIT) {
 			rx_data[rx_pos++] = (received_data >> 8);
 		}
 	}
@@ -502,7 +503,7 @@ enum status_code spi_write_buffer_wait(
 		uint16_t data_to_send = tx_data[tx_pos++];
 
 		/* If 9-bit data, get next byte to send from the buffer */
-		if (module->chsize == SPI_CHARACTER_SIZE_9BIT) {
+		if (module->character_size == SPI_CHARACTER_SIZE_9BIT) {
 			data_to_send |= (tx_data[tx_pos++] << 8);
 		}
 
@@ -609,7 +610,7 @@ enum status_code spi_tranceive_buffer_wait(
 		uint16_t data_to_send = tx_data[tx_pos++];
 
 		/* If 9-bit data, get next byte to send from the buffer */
-		if (module->chsize == SPI_CHARACTER_SIZE_9BIT) {
+		if (module->character_size == SPI_CHARACTER_SIZE_9BIT) {
 			data_to_send |= (tx_data[tx_pos++] << 8);
 		}
 
@@ -648,7 +649,7 @@ enum status_code spi_tranceive_buffer_wait(
 		rx_data[rx_pos++] = received_data;
 
 		/* If 9-bit data, write next received byte to the buffer */
-		if (module->chsize == SPI_CHARACTER_SIZE_9BIT) {
+		if (module->character_size == SPI_CHARACTER_SIZE_9BIT) {
 			rx_data[rx_pos++] = (received_data >> 8);
 		}
 	}

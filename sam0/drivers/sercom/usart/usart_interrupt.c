@@ -422,7 +422,7 @@ void _usart_interrupt_handler(
 		if (module->remaining_tx_buffer_length) {
 			/* Write current packet from transmission buffer
 			 * and increment buffer pointer */
-			if (module->char_size == USART_CHAR_SIZE_9BIT) {
+			if (module->character_size == USART_CHARACTER_SIZE_9BIT) {
 				usart_hw->DATA.reg |= *(module->tx_buffer_ptr)
 						& SERCOM_USART_DATA_MASK;
 				module->tx_buffer_ptr += 2;
@@ -497,7 +497,7 @@ void _usart_interrupt_handler(
 
 				/* Read current packet from DATA register,
 				 * increment buffer pointer and decrement buffer length */
-				if(module->char_size == USART_CHAR_SIZE_9BIT) {
+				if(module->character_size == USART_CHARACTER_SIZE_9BIT) {
 					/* Read out from DATA and increment 8bit ptr by two */
 					*(module->rx_buffer_ptr) = (usart_hw->DATA.reg & SERCOM_USART_DATA_MASK);
 					module->rx_buffer_ptr += 2;

@@ -6,13 +6,18 @@
 		<info type="keyword" value="technology">
 			<keyword value="Sensor" />
 		</info>
-		<device-support value="sam0"/>
-		<build type="c-source" value="at30tse75x.c"/>
+
+		<build type="include-path" value="."/>
 		<build type="header-file" subtype="api" value="at30tse75x.h"/>
+		<build type="c-source" value="at30tse75x.c"/>
+
 		<build type="module-config" subtype="path" value="module_config"/>
 		<build type="module-config" subtype="required-header-file" value="conf_at30tse75x.h"/>
-		<build type="include-path" value="."/>
+
 		<build type="doxygen-entry-point" value="asfdoc_samd20_at30tse75x_group"/>
+
+		<device-support value="sam0"/>
+
 		<require idref="sam0.drivers.sercom.i2c.master"/>
 	</module>
 </asf>

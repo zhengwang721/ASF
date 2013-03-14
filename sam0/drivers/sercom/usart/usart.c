@@ -42,7 +42,7 @@
  */
 #include "usart.h"
 #include <pinmux.h>
-#ifdef USART_ASYNC
+#if USART_CALLBACK_MODE == true
 #  include "usart_interrupt.h"
 #endif
 
@@ -53,39 +53,43 @@ static enum status_code _usart_set_config(
 		struct usart_module *const module,
 		const struct usart_config const *config)
 {
-	/* Temporary registers. */
-	uint16_t baud_val = 0;
-	uint32_t usart_freq;
-	enum status_code status_code = STATUS_OK;
-
 	/* Get a pointer to the hardware module instance */
 	SercomUsart *const usart_hw = &(module->hw->USART);
 
-	/* Temporary registers. */
+	/* Cache new register values to minimize the number of register writes */
 	uint32_t ctrla = 0;
 	uint32_t ctrlb = 0;
+	uint16_t baud  = 0;
 
 	/* Set data order, internal muxing, and clock polarity */
 	ctrla = (config->data_order) | (config->mux_settings) |
 			(config->clock_polarity_inverted << SERCOM_USART_CTRLA_CPOL_Pos);
 
+	enum status_code status_code = STATUS_OK;
+
 	/* Get baud value from mode and clock */
-	if (config->transfer_mode == USART_TRANSFER_SYNCHRONOUSLY &&
-			!config->use_external_clock) {
-		/* Calculate baud value */
-		usart_freq  = system_gclk_chan_get_hz(SERCOM_GCLK_ID);
-		status_code = _sercom_get_sync_baud_val(config->baudrate,
-				usart_freq, &baud_val);
-	}
-	if (config->transfer_mode == USART_TRANSFER_ASYNCHRONOUSLY) {
-		if (config->use_external_clock) {
-			status_code = _sercom_get_async_baud_val(config->baudrate,
-					config->ext_clock_freq, &baud_val);
-		} else {
-			usart_freq = system_gclk_chan_get_hz(SERCOM_GCLK_ID);
-			status_code = _sercom_get_async_baud_val(config->baudrate,
-					usart_freq, &baud_val);
-		}
+	switch (config->transfer_mode)
+	{
+		case USART_TRANSFER_SYNCHRONOUSLY:
+			if (!config->use_external_clock) {
+				status_code = _sercom_get_sync_baud_val(config->baudrate,
+						system_gclk_chan_get_hz(SERCOM_GCLK_ID), &baud);
+			}
+
+			break;
+
+		case USART_TRANSFER_ASYNCHRONOUSLY:
+			if (config->use_external_clock) {
+				status_code =
+						_sercom_get_async_baud_val(config->baudrate,
+							config->ext_clock_freq, &baud);
+			} else {
+				status_code =
+						_sercom_get_async_baud_val(config->baudrate,
+							system_gclk_chan_get_hz(SERCOM_GCLK_ID), &baud);
+			}
+
+			break;
 	}
 
 	/* Check if calculating the baud rate failed */
@@ -98,7 +102,7 @@ static enum status_code _usart_set_config(
 	_usart_wait_for_sync(module);
 
 	/*Set baud val */
-	usart_hw->BAUD.reg = baud_val;
+	usart_hw->BAUD.reg = baud;
 
 	/* Set sample mode */
 	ctrla |= config->transfer_mode;
@@ -109,7 +113,7 @@ static enum status_code _usart_set_config(
 	}
 
 	/* Set stopbits and character size */
-	ctrlb = config->stopbits | config->char_size;
+	ctrlb = config->stopbits | config->character_size;
 
 	/* set parity mode */
 	if (config->parity != USART_PARITY_NONE) {
@@ -254,7 +258,7 @@ enum status_code usart_init(
 		return STATUS_ERR_DENIED;
 	}
 
-#ifdef USART_ASYNC
+#if USART_CALLBACK_MODE == true
 	/* Initialize parameters */
 	for (uint32_t i = 0; i < USART_CALLBACK_N; i++) {
 		module->callback[i]            = NULL;
@@ -307,7 +311,7 @@ enum status_code usart_write_wait(
 	/* Get a pointer to the hardware module instance */
 	SercomUsart *const usart_hw = &(module->hw->USART);
 
-#ifdef USART_ASYNC
+#if USART_CALLBACK_MODE == true
 	/* Check if the USART is busy doing asynchronous operation. */
 	if (module->remaining_tx_buffer_length > 0) {
 		return STATUS_BUSY;
@@ -370,7 +374,7 @@ enum status_code usart_read_wait(
 	/* Get a pointer to the hardware module instance */
 	SercomUsart *const usart_hw = &(module->hw->USART);
 
-#ifdef USART_ASYNC
+#if USART_CALLBACK_MODE == true
 	/* Check if the USART is busy doing asynchronous operation. */
 	if (module->remaining_rx_buffer_length > 0) {
 		return STATUS_BUSY;
@@ -443,7 +447,7 @@ enum status_code usart_read_wait(
  */
 enum status_code usart_write_buffer_wait(
 		struct usart_module *const module,
-		uint8_t *tx_data,
+		const uint8_t *tx_data,
 		uint16_t length)
 {
 	/* Sanity check arguments */
@@ -488,7 +492,7 @@ enum status_code usart_write_buffer_wait(
 		uint16_t data_to_send = tx_data[tx_pos++];
 
 		/* Check if the character size exceeds 8 bit */
-		if (module->char_size == USART_CHAR_SIZE_9BIT) {
+		if (module->character_size == USART_CHARACTER_SIZE_9BIT) {
 			data_to_send |= (tx_data[tx_pos++] << 8);
 		}
 
@@ -591,7 +595,7 @@ enum status_code usart_read_buffer_wait(
 		rx_data[rx_pos++] = received_data;
 
 		/* If 9-bit data, write next received byte to the buffer */
-		if (module->char_size == USART_CHAR_SIZE_9BIT) {
+		if (module->character_size == USART_CHARACTER_SIZE_9BIT) {
 			rx_data[rx_pos++] = (received_data >> 8);
 		}
 	}

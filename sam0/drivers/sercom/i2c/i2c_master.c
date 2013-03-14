@@ -43,7 +43,7 @@
 
 #include "i2c_master.h"
 
-#ifdef I2C_MASTER_ASYNC
+#if I2C_MASTER_CALLBACK_MODE == true
 # include "i2c_master_interrupt.h"
 #endif
 
@@ -206,7 +206,7 @@ enum status_code i2c_master_init(struct i2c_master_module *const module,
 		return STATUS_BUSY;
 	}
 
-#ifdef I2C_MASTER_ASYNC
+#if I2C_MASTER_CALLBACK_MODE == true
 	/* Get sercom instance index and register callback. */
 	uint8_t instance_index = _sercom_get_sercom_inst_index(module->hw);
 	_sercom_set_handler(instance_index, _i2c_master_interrupt_handler);
@@ -247,13 +247,13 @@ void i2c_master_reset(struct i2c_master_module *const module)
 	/* Disable module */
 	i2c_master_disable(module);
 
-#ifdef I2C_MASTER_ASYNC
+#if I2C_MASTER_CALLBACK_MODE == true
 	/* Clear all pending interrupts */
 	system_interrupt_enter_critical_section();
 	system_interrupt_clear_pending(_sercom_get_interrupt_vector(module->hw));
 	system_interrupt_leave_critical_section();
 #endif
-	
+
 	/* Wait for sync */
 	_i2c_master_wait_for_sync(module);
 
@@ -447,7 +447,7 @@ enum status_code i2c_master_read_packet_wait(
 	Assert(module->hw);
 	Assert(packet);
 
-#ifdef I2C_MASTER_ASYNC
+#if I2C_MASTER_CALLBACK_MODE == true
 	/* Check if the I2C module is busy with a job. */
 	if (module->buffer_remaining > 0) {
 		return STATUS_BUSY;
@@ -492,7 +492,7 @@ enum status_code i2c_master_read_packet_wait_no_stop(
 	Assert(module->hw);
 	Assert(packet);
 
-#ifdef I2C_MASTER_ASYNC
+#if I2C_MASTER_CALLBACK_MODE == true
 	/* Check if the I2C module is busy with a job. */
 	if (module->buffer_remaining > 0) {
 		return STATUS_BUSY;
@@ -596,7 +596,7 @@ static enum status_code _i2c_master_write_packet(
  *
  * \param[in,out] module  Pointer to software module struct
  * \param[in,out] packet  Pointer to I<SUP>2</SUP>C packet to transfer
- * 
+ *
  * \return                     Status of reading packet
  * \retval STATUS_OK                   If packet was read
  * \retval STATUS_BUSY                 If master module is busy with a job
@@ -619,7 +619,7 @@ enum status_code i2c_master_write_packet_wait(
 	Assert(module->hw);
 	Assert(packet);
 
-#ifdef I2C_MASTER_ASYNC
+#if I2C_MASTER_CALLBACK_MODE == true
 	/* Check if the I2C module is busy with a job */
 	if (module->buffer_remaining > 0) {
 		return STATUS_BUSY;
@@ -668,7 +668,7 @@ enum status_code i2c_master_write_packet_wait_no_stop(
 	Assert(module->hw);
 	Assert(packet);
 
-#ifdef I2C_MASTER_ASYNC
+#if I2C_MASTER_CALLBACK_MODE == true
 	/* Check if the I2C module is busy with a job */
 	if (module->buffer_remaining > 0) {
 		return STATUS_BUSY;

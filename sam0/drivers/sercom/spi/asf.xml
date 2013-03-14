@@ -1,19 +1,21 @@
 <asf xmlversion="1.0">
 	<select-by-config id="sam0.drivers.sercom.spi" name="config.sam0.drivers.sercom.spi" caption="SERCOM SPI - Serial Peripheral Interface" default="callback">
 		<info type="description" value="summary">
-		Driver for the SAMD20 SPI.
+			Driver for the SAMD20 SERCOM SPI module. Provides a unified interface for the configuration and management of the SERCOM module in SPI mode.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="Security"/>
+			<keyword value="Communication"/>
 		</info>
 
-		<module type="driver" id="sam0.drivers.sercom.spi#polled" caption="SPI - Serial Peripheral Interface Driver (Polled Mode)">
+		<module type="driver" id="sam0.drivers.sercom.spi#polled" caption="SERCOM SPI - Serial Peripheral Interface (Polled Mode)">
 			<build type="c-source" value="spi.c"/>
 			<build type="header-file" subtype="api" value="spi.h"/>
 			<build type="header-file" value="quick_start/qs_spi_basic.h" subtype="example"/>
 			<build type="include-path" value="."/>
 			<build type="doxygen-entry-point" value="sam0_spi_group"/>
-			<build type="define" name="SPI_ASYNC" value="false"/>
+
+			<build type="define" name="SPI_CALLBACK_MODE" value="false"/>
+
 			<device-support value="samd20"/>
 
 			<require idref="sam0.utils"/>
@@ -25,7 +27,7 @@
 			<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 		</module>
 
-		<module type="driver" id="sam0.drivers.sercom.spi#callback" caption="SPI - Serial Peripheral Interface Driver (Callback Mode)">
+		<module type="driver" id="sam0.drivers.sercom.spi#callback" caption="SERCOM SPI - Serial Peripheral Interface (Callback Mode)">
 			<build type="c-source" value="spi.c"/>
 			<build type="c-source" value="spi_interrupt.c"/>
 			<build type="header-file" subtype="api" value="spi.h"/>
@@ -33,10 +35,11 @@
 			<build type="header-file" value="quick_start/qs_spi_basic.h" subtype="example"/>
 			<build type="include-path" value="."/>
 			<build type="doxygen-entry-point" value="sam0_spi_group"/>
-			<build type="define" name="SPI_ASYNC" value="true"/>
-			<device-support value="samd20"/>
 
+			<build type="define" name="SPI_CALLBACK_MODE" value="true"/>
 			<build type="doxygen-enable-section" value="SPI_CALLBACK_MODE"/>
+
+			<device-support value="samd20"/>
 
 			<require idref="sam0.utils"/>
 			<require idref="sam0.drivers.sercom"/>

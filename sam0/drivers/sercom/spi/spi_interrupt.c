@@ -306,7 +306,7 @@ static void _spi_write(
 	 * Write current packet from transmission buffer and increment buffer
 	 * pointer
 	 */
-	if (module->chsize == SPI_CHARACTER_SIZE_9BIT) {
+	if (module->character_size == SPI_CHARACTER_SIZE_9BIT) {
 		spi_hw->DATA.reg |= *(module->tx_buffer_ptr)
 				& SERCOM_SPI_DATA_MASK;
 		module->tx_buffer_ptr += 2;
@@ -348,7 +348,7 @@ static void _spi_read(
 	SercomSpi *const spi_hw
 		= &(module->hw->SPI);
 
-	if(module->chsize == SPI_CHARACTER_SIZE_9BIT) {
+	if(module->character_size == SPI_CHARACTER_SIZE_9BIT) {
 		/* Read out from DATA and increment 8bit ptr by two */
 		*(module->rx_buffer_ptr) = (spi_hw->DATA.reg & SERCOM_SPI_DATA_MASK);
 		module->rx_buffer_ptr += 2;

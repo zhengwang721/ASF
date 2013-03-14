@@ -47,13 +47,13 @@
 #include "i2c_common.h"
 #include <pinmux.h>
 
-#ifdef I2C_SLAVE_ASYNC
-#include <sercom.h>
-#include <sercom_interrupt.h>
+#if I2C_SLAVE_CALLBACK_MODE == true
+#  include <sercom.h>
+#  include <sercom_interrupt.h>
 #endif
 
 #ifndef PINMUX_DEFAULT
-#define PINMUX_DEFAULT 0
+#  define PINMUX_DEFAULT 0
 #endif
 
 #ifdef __cplusplus
@@ -67,7 +67,7 @@ extern "C" {
  *
  */
 
-#ifdef I2C_SLAVE_ASYNC
+#if I2C_SLAVE_CALLBACK_MODE == true
  /**
  * \brief Callback types
  *
@@ -94,20 +94,20 @@ enum i2c_slave_callback {
 	 * interrupt
 	 */
 	I2C_SLAVE_CALLBACK_ERROR_LAST_TRANSFER,
-#if !defined(__DOXYGEN__)
+#  if !defined(__DOXYGEN__)
 	/** Total number of callbacks */
 	_I2C_SLAVE_CALLBACK_N,
-#endif
+#  endif
 };
 
-#if !defined(__DOXYGEN__)
+#  if !defined(__DOXYGEN__)
 /** Software module prototype */
 struct i2c_slave_module;
 
 /** Callback type */
 typedef void (*i2c_slave_callback_t)(
 		struct i2c_slave_module *const module);
-#endif
+#  endif
 #endif
 
 /**
@@ -148,7 +148,7 @@ enum i2c_slave_address_mode {
 	 */
 	I2C_SLAVE_ADDRESS_MODE_RANGE = SERCOM_I2CS_CTRLB_AMODE(2),
 };
- 
+
 /**
  * \brief Enum for the direction of a request
  *
@@ -177,7 +177,7 @@ struct i2c_slave_module {
 	Sercom *hw;
 	/** Timeout value for polled functions */
 	uint16_t buffer_timeout;
-#ifdef I2C_SLAVE_ASYNC
+#  if I2C_SLAVE_CALLBACK_MODE == true
 	/** Nack on address match */
 	bool nack_on_address;
 	/** Pointers to callback functions */
@@ -199,7 +199,7 @@ struct i2c_slave_module {
 	volatile uint8_t transfer_direction;
 	/** Status for status read back in error callback */
 	volatile enum status_code status;
-#endif
+#  endif
 #endif
 };
 
@@ -229,13 +229,13 @@ struct i2c_slave_config {
 	 * is defined as 0000000 with dir bit 0
 	 */
 	bool enable_general_call_address;
-#ifdef I2C_SLAVE_ASYNC
+#  if I2C_SLAVE_CALLBACK_MODE == true
 	/**
 	 * Enable nack on address match. Can be changed with \ref
 	 * enable_address_nack and \ref disable_address_nack functions.
 	 */
 	bool enable_nack_on_address;
-#endif
+#  endif
 	/** GCLK generator to use as clock source. */
 	enum gclk_generator generator_source;
 	/** Set to keep module active in sleep modes. */
@@ -329,7 +329,7 @@ static inline void i2c_slave_get_config_defaults(
 	config->address = 0;
 	config->address_mask = 0;
 	config->enable_general_call_address = false;
-#ifdef I2C_SLAVE_ASYNC
+#if I2C_SLAVE_CALLBACK_MODE == true
 	config->enable_nack_on_address = false;
 #endif
 	config->generator_source = GCLK_GENERATOR_0;
@@ -358,7 +358,7 @@ static inline void i2c_slave_enable(
 
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
 
-#ifdef I2C_SLAVE_ASYNC
+#if I2C_SLAVE_CALLBACK_MODE == true
 	/* Enable interrupts */
 	i2c_hw->INTENSET.reg = SERCOM_I2CS_INTENSET_PIEN |
 			SERCOM_I2CS_INTENSET_AIEN | SERCOM_I2CS_INTENSET_DIEN;
@@ -392,7 +392,7 @@ static inline void i2c_slave_disable(
 
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
 
-#ifdef I2C_SLAVE_ASYNC
+#if I2C_SLAVE_CALLBACK_MODE == true
 	/* Disable interrupts */
 	i2c_hw->INTENCLR.reg = SERCOM_I2CS_INTENSET_PIEN |
 			SERCOM_I2CS_INTENSET_AIEN | SERCOM_I2CS_INTENSET_DIEN;
@@ -430,5 +430,9 @@ enum i2c_slave_direction i2c_slave_get_direction_wait(
 
 /** @} */
 /** @} */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* I2C_SLAVE_H_INCLUDED */

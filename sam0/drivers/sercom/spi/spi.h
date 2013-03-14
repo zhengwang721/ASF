@@ -47,7 +47,7 @@
 #include <compiler.h>
 #include <port.h>
 #include <sercom.h>
-#ifdef SPI_ASYNC
+#if SPI_CALLBACK_MODE == true
 #include <sercom_interrupt.h>
 #include <system_interrupt.h>
 #endif
@@ -337,10 +337,10 @@ extern "C" {
  */
 
 #ifndef SPI_TIMEOUT
- #define SPI_TIMEOUT 10000
+#  define SPI_TIMEOUT 10000
 #endif
 
-#ifdef SPI_ASYNC
+#if SPI_CALLBACK_MODE == true
 /**
  * \brief SPI Callback enum
  *
@@ -356,15 +356,15 @@ enum spi_callback {
 	SPI_CALLBACK_ERROR,
 	/** Callback for transmission complete for slave */
 	SPI_CALLBACK_SLAVE_TRANSMISSION_COMPLETE,
-#if !defined(__DOXYGEN__)
+#  if !defined(__DOXYGEN__)
 	/** Number of available callbacks. */
 	SPI_CALLBACK_N,
-#endif
+#  endif
 };
 #endif
 
-#ifdef SPI_ASYNC
-#if !defined(__DOXYGEN__)
+#if SPI_CALLBACK_MODE == true
+#  if !defined(__DOXYGEN__)
 /**
  * \internal SPI transfer directions
  *
@@ -375,7 +375,7 @@ enum spi_direction {
 	SPI_DIRECTION_BOTH,
 	SPI_DIRECTION_IDLE,
 };
-#endif
+#  endif
 #endif
 
 /**
@@ -531,7 +531,7 @@ enum spi_character_size {
 	SPI_CHARACTER_SIZE_9BIT = SERCOM_SPI_CTRLB_CHSIZE,
 };
 
-#ifdef SPI_ASYNC
+#if SPI_CALLBACK_MODE == true
 /** Prototype for the device instance */
 struct spi_module;
 
@@ -557,8 +557,8 @@ struct spi_module {
 	/** SPI mode */
 	enum spi_mode mode;
 	/** SPI character size */
-	enum spi_character_size chsize;
-#ifdef SPI_ASYNC
+	enum spi_character_size character_size;
+#  if SPI_CALLBACK_MODE == true
 	volatile enum spi_direction dir;
 	/** Array to store callback function pointers in */
 	spi_callback_t callback[SPI_CALLBACK_N];
@@ -581,7 +581,7 @@ struct spi_module {
 	volatile enum status_code rx_status;
 	/** Holds the status of the ongoing or last write operation */
 	volatile enum status_code tx_status;
-#endif
+#  endif
 #endif
 };
 
@@ -635,7 +635,7 @@ struct spi_slave_config {
 	/** Frame format */
 	enum spi_frame_format frame_format;
 	/** Address mode */
-	enum spi_addr_mode addr_mode;
+	enum spi_addr_mode address_mode;
 	/** Address */
 	uint8_t address;
 	/** Address mask */
@@ -661,7 +661,7 @@ struct spi_config {
 	/** Mux setting */
 	enum spi_signal_mux_setting mux_setting;
 	/** SPI character size */
-	enum spi_character_size chsize;
+	enum spi_character_size character_size;
 	/** Enabled in sleep modes */
 	bool run_in_standby;
 	/** Enable receiver */
@@ -765,7 +765,7 @@ static inline void spi_get_config_defaults(
 	config->data_order = SPI_DATA_ORDER_MSB;
 	config->transfer_mode = SPI_TRANSFER_MODE_0;
 	config->mux_setting = SPI_SIGNAL_MUX_SETTING_D;
-	config->chsize = SPI_CHARACTER_SIZE_8BIT;
+	config->character_size = SPI_CHARACTER_SIZE_8BIT;
 	config->run_in_standby = false;
 	config->receiver_enable = true;
 	config->generator_source = GCLK_GENERATOR_0;
@@ -867,7 +867,7 @@ static inline void spi_enable(
 
 	SercomSpi *const spi_module = &(module->hw->SPI);
 
-#ifdef SPI_ASYNC
+#if SPI_CALLBACK_MODE == true
 	system_interrupt_enable(_sercom_get_interrupt_vector(module->hw));
 #endif
 
@@ -895,7 +895,7 @@ static inline void spi_disable(
 
 	SercomSpi *const spi_module = &(module->hw->SPI);
 
-#ifdef SPI_ASYNC
+#if SPI_CALLBACK_MODE == true
 	system_interrupt_disable(_sercom_get_interrupt_vector(module->hw));
 #endif
 
@@ -1088,7 +1088,7 @@ static inline enum status_code spi_read(
 		retval = STATUS_ERR_OVERFLOW;
 	}
 	/* Read the character from the DATA register */
-	if (module->chsize == SPI_CHARACTER_SIZE_9BIT) {
+	if (module->character_size == SPI_CHARACTER_SIZE_9BIT) {
 		*rx_data = (spi_module->DATA.reg & SERCOM_SPI_DATA_MASK);
 	} else {
 		*(uint8_t*)rx_data = (uint8_t)spi_module->DATA.reg;
