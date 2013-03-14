@@ -48,8 +48,6 @@ void *_tc_instances[TC_INST_NUM];
 
 void _tc_interrupt_handler(uint8_t instance);
 
-//uint8_t _tc_get_module_irq_index(struct tc_module *const module);
-
 /**
  * \brief Registers a callback
  *
@@ -62,9 +60,8 @@ void _tc_interrupt_handler(uint8_t instance);
  * \param[in]     module      Pointer to TC software instance struct
  * \param[in]     callback_func Pointer to callback function
  * \param[in]     callback_type Callback type given by an enum
- *
  */
-void tc_register_callback(
+enum status_code tc_register_callback(
 		struct tc_module *const module,
 		tc_callback_t callback_func,
 		const enum tc_callback callback_type)
@@ -77,7 +74,16 @@ void tc_register_callback(
 	module->callback[callback_type] = callback_func;
 
 	/* Set the bit corresponding to the callback_type */
-	module->callback_reg_mask |= (1 << callback_type);
+	if (callback_type == TC_CALLBACK_CC_CHANNEL0) {
+		module->register_callback_mask |= TC_INTFLAG_MC(1);
+	}
+	else if (callback_type == TC_CALLBACK_CC_CHANNEL1) {
+		module->register_callback_mask |= TC_INTFLAG_MC(2);
+	}
+	else {
+		module->register_callback_mask |= (1 << callback_type);
+	}
+	return STATUS_OK;
 }
 
 /**
@@ -88,9 +94,8 @@ void tc_register_callback(
  * \param[in]     module Pointer to TC software instance struct
  * \param[in]     callback_func Pointer to callback function
  * \param[in]     callback_type Callback type given by an enum
- *
  */
-void tc_unregister_callback(
+enum status_code tc_unregister_callback(
 		struct tc_module *const module,
 		const enum tc_callback callback_type)
 {
@@ -99,10 +104,19 @@ void tc_unregister_callback(
 
 	/* Unregister callback function */
 	module->callback[callback_type] = NULL;
-	//_tc_instances[_tc_get_module_irq_index(module)] = 0;
 
 	/* Clear the bit corresponding to the callback_type */
-	module->callback_reg_mask &= ~(1 << callback_type);
+	/* Set the bit corresponding to the callback_type */
+	if (callback_type == TC_CALLBACK_CC_CHANNEL0) {
+		module->register_callback_mask &= ~TC_INTFLAG_MC(1);
+	}
+	else if (callback_type == TC_CALLBACK_CC_CHANNEL1) {
+		module->register_callback_mask &= ~TC_INTFLAG_MC(2);
+	}
+	else {
+		module->register_callback_mask &= ~(1 << callback_type);
+	}
+	return STATUS_OK;
 }
 
 /**
@@ -166,17 +180,6 @@ void TC7_Handler(void)
 #endif
 
 /**
- * \internal Default interrupt handler
- *
- * \param[in] instance TC instance used.
-
-static void _tc_default_handler(uint8_t instance)
-{
-	Assert(false);
-}
- */
-
-/**
  * \brief Interrupt Handler for TC module
  *
  * Handles interrupts as they occur, and it will run callback functions
@@ -187,27 +190,20 @@ static void _tc_default_handler(uint8_t instance)
  */
 void _tc_interrupt_handler(uint8_t instance)
 {
-	/* Temporary variables */
-	uint16_t interrupt_status;
-	uint16_t callback_status;
+	/* Temporary variable */
+	uint8_t interrupt_and_callback_status_mask;
 
 	/* Get device instance from the look-up table */
 	struct tc_module *module
-		= (struct tc_module *)_tc_instances[instance];
-
-	/* Wait for the synchronization to complete */
-	while (tc_is_syncing(module)) {
-		/* Wait for sync */
-	}
+			= (struct tc_module *)_tc_instances[instance];
 
 	/* Read and mask interrupt flag register */
-	interrupt_status = module->hw->COUNT8.INTFLAG.reg;
-	callback_status = module->callback_reg_mask
-			&module->callback_enable_mask;
+	interrupt_and_callback_status_mask = module->hw->COUNT8.INTFLAG.reg &
+			module->register_callback_mask &
+			module->enable_callback_mask;
 
 	/* Check if an Overflow interrupt has occurred */
-	if ((interrupt_status & TC_INTFLAG_OVF) &&
-			(callback_status & (1 << TC_CALLBACK_OVERFLOW))){
+	if (interrupt_and_callback_status_mask & TC_INTFLAG_OVF) {
 		/* Invoke registered and enabled calback function */
 		(*(module->callback[TC_CALLBACK_OVERFLOW]))(module);
 		/* Clear interrupt flag */
@@ -215,8 +211,7 @@ void _tc_interrupt_handler(uint8_t instance)
 	}
 
 	/* Check if an Error interrupt has occurred */
-	if ((interrupt_status & TC_INTFLAG_ERR) &&
-			(callback_status & (1 << TC_CALLBACK_ERROR))){
+	if (interrupt_and_callback_status_mask & TC_INTFLAG_ERR) {
 		/* Invoke registered and enabled calback function */
 		(*(module->callback[TC_CALLBACK_ERROR]))(module);
 		/* Clear interrupt flag */
@@ -224,19 +219,17 @@ void _tc_interrupt_handler(uint8_t instance)
 	}
 
 	/* Check if an Match/Capture Channel 0 interrupt has occurred */
-	if ((interrupt_status & (1<<TC_INTFLAG_MC_Pos)) &&
-			(callback_status & (1 << TC_CALLBACK_MC_CHANNEL0))){
+	if (interrupt_and_callback_status_mask & TC_INTFLAG_MC(2)) {
 		/* Invoke registered and enabled calback function */
-		(*(module->callback[TC_CALLBACK_MC_CHANNEL0]))(module);
+		(*(module->callback[TC_CALLBACK_CC_CHANNEL0]))(module);
 		/* Clear interrupt flag */
 		module->hw->COUNT8.INTFLAG.reg = TC_INTFLAG_MC(1);
 	}
 
 	/* Check if an Match/Capture Channel 1 interrupt has occurred */
-	if ((interrupt_status & (2<<TC_INTFLAG_MC_Pos)) &&
-			(callback_status & (1 << TC_CALLBACK_MC_CHANNEL1))){
+	if (interrupt_and_callback_status_mask & TC_INTFLAG_MC(2)) {
 		/* Invoke registered and enabled calback function */
-		(*(module->callback[TC_CALLBACK_MC_CHANNEL1]))(module);
+		(*(module->callback[TC_CALLBACK_CC_CHANNEL1]))(module);
 		/* Clear interrupt flag */
 		module->hw->COUNT8.INTFLAG.reg = TC_INTFLAG_MC(2);
 	}
