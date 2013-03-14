@@ -53,39 +53,43 @@ static enum status_code _usart_set_config(
 		struct usart_module *const module,
 		const struct usart_config const *config)
 {
-	/* Temporary registers. */
-	uint16_t baud_val = 0;
-	uint32_t usart_freq;
-	enum status_code status_code = STATUS_OK;
-
 	/* Get a pointer to the hardware module instance */
 	SercomUsart *const usart_hw = &(module->hw->USART);
 
-	/* Temporary registers. */
+	/* Cache new register values to minimize the number of register writes */
 	uint32_t ctrla = 0;
 	uint32_t ctrlb = 0;
+	uint16_t baud  = 0;
 
 	/* Set data order, internal muxing, and clock polarity */
 	ctrla = (config->data_order) | (config->mux_settings) |
 			(config->clock_polarity_inverted << SERCOM_USART_CTRLA_CPOL_Pos);
 
+	enum status_code status_code = STATUS_OK;
+
 	/* Get baud value from mode and clock */
-	if (config->transfer_mode == USART_TRANSFER_SYNCHRONOUSLY &&
-			!config->use_external_clock) {
-		/* Calculate baud value */
-		usart_freq  = system_gclk_chan_get_hz(SERCOM_GCLK_ID);
-		status_code = _sercom_get_sync_baud_val(config->baudrate,
-				usart_freq, &baud_val);
-	}
-	if (config->transfer_mode == USART_TRANSFER_ASYNCHRONOUSLY) {
-		if (config->use_external_clock) {
-			status_code = _sercom_get_async_baud_val(config->baudrate,
-					config->ext_clock_freq, &baud_val);
-		} else {
-			usart_freq = system_gclk_chan_get_hz(SERCOM_GCLK_ID);
-			status_code = _sercom_get_async_baud_val(config->baudrate,
-					usart_freq, &baud_val);
-		}
+	switch (config->transfer_mode)
+	{
+		case USART_TRANSFER_SYNCHRONOUSLY:
+			if (!config->use_external_clock) {
+				status_code = _sercom_get_sync_baud_val(config->baudrate,
+						system_gclk_chan_get_hz(SERCOM_GCLK_ID), &baud);
+			}
+
+			break;
+
+		case USART_TRANSFER_ASYNCHRONOUSLY:
+			if (config->use_external_clock) {
+				status_code =
+						_sercom_get_async_baud_val(config->baudrate,
+							config->ext_clock_freq, &baud);
+			} else {
+				status_code =
+						_sercom_get_async_baud_val(config->baudrate,
+							system_gclk_chan_get_hz(SERCOM_GCLK_ID), &baud);
+			}
+
+			break;
 	}
 
 	/* Check if calculating the baud rate failed */
@@ -98,7 +102,7 @@ static enum status_code _usart_set_config(
 	_usart_wait_for_sync(module);
 
 	/*Set baud val */
-	usart_hw->BAUD.reg = baud_val;
+	usart_hw->BAUD.reg = baud;
 
 	/* Set sample mode */
 	ctrla |= config->transfer_mode;
