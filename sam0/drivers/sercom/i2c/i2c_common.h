@@ -59,13 +59,13 @@ extern "C" {
  *
  * \if I2C_MASTER_MODE
  * - Master Mode Polled APIs
- *  \if I2C_CALLBACK_MODE
+ *  \if I2C_MASTER_CALLBACK_MODE
  * - Master Mode Callback APIs
  *  \endif
  * \endif
  * \if I2C_SLAVE_MODE
  * - Slave Mode Polled APIs
- *  \if I2C_CALLBACK_MODE
+ *  \if I2C_SLAVE_CALLBACK_MODE
  * - Slave Mode Callback APIs
  *  \endif
  * \endif
@@ -512,7 +512,7 @@ extern "C" {
  *
  * \section asfdoc_samd20_i2c_special_considerations Special Considerations
  *
- * \if I2C_CALLBACK_MODE
+ * \if I2C_MASTER_CALLBACK_MODE || I2C_SLAVE_CALLBACK_MODE
  * \subsection asfdoc_samd20_i2c_common_interrupt Interrupt-Driven Operation
  * While an interrupt-driven operation is in progress, subsequent calls to a
  * write or read operation will return the STATUS_BUSY flag, indicating that
@@ -636,13 +636,13 @@ struct i2c_packet {
  * \section use_cases I2C Driver Use Cases
  * \if I2C_MASTER_MODE
  * - \subpage asfdoc_samd20_i2c_master_basic_use_case "Quick Start Guide for the I2C Master module - Basic Use Case"
- *  \if I2C_CALLBACK_MODE
+ *  \if I2C_MASTER_CALLBACK_MODE
  * - \subpage asfdoc_samd20_i2c_master_callback_use_case "Quick Start Guide for the I2C Master module - Callback Use Case"
  *  \endif
  * \endif
  * \if I2C_SLAVE_MODE
  * - \subpage asfdoc_samd20_i2c_slave_basic_use_case "Quick Start Guide for the I2C Slave module - Basic Use Case"
- *  \if I2C_CALLBACK_MODE
+ *  \if I2C_SLAVE_CALLBACK_MODE
  * - \subpage asfdoc_samd20_i2c_slave_callback_use_case "Quick Start Guide for the I2C Slave module - Callback Use Case"
  *  \endif
  * \endif

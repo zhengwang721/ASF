@@ -42,8 +42,8 @@
  */
 
 #include "i2c_slave.h"
-#if I2C_SLAVE_ASYNC == true
-# include "i2c_slave_interrupt.h"
+#if I2C_SLAVE_CALLBACK_MODE == true
+#  include "i2c_slave_interrupt.h"
 #endif
 
 /**
@@ -164,7 +164,7 @@ enum status_code i2c_slave_init(struct i2c_slave_module *const module,
 	system_gclk_chan_enable(gclk_index);
 	system_gclk_chan_enable(SERCOM_GCLK_ID);
 
-#if I2C_SLAVE_ASYNC == true
+#if I2C_SLAVE_CALLBACK_MODE == true
 	/* Get sercom instance index. */
 	uint8_t instance_index = _sercom_get_sercom_inst_index(module->hw);
 
@@ -201,7 +201,7 @@ void i2c_slave_reset(struct i2c_slave_module *const module)
 	Assert(module);
 	Assert(module->hw);
 
-#if I2C_SLAVE_ASYNC == true
+#if I2C_SLAVE_CALLBACK_MODE == true
 	/* Reset module instance. */
 	module->registered_callback = 0;
 	module->enabled_callback = 0;
@@ -215,7 +215,7 @@ void i2c_slave_reset(struct i2c_slave_module *const module)
 	/* Disable module */
 	i2c_slave_disable(module);
 
-#if I2C_SLAVE_ASYNC == true
+#if I2C_SLAVE_CALLBACK_MODE == true
 	/* Clear all pending interrupts. */
 	system_interrupt_enter_critical_section();
 	system_interrupt_clear_pending(_sercom_get_interrupt_vector(module->hw));

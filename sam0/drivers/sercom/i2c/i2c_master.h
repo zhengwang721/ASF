@@ -48,7 +48,7 @@
 #include <sercom.h>
 #include <pinmux.h>
 
-#if I2C_MASTER_ASYNC == true
+#if I2C_MASTER_CALLBACK_MODE == true
 # include <sercom_interrupt.h>
 #endif
 
@@ -125,7 +125,7 @@ enum i2c_master_baud_rate {
 	I2C_MASTER_BAUD_RATE_400KHZ = 400,
 };
 
-#if I2C_MASTER_ASYNC == true
+#if I2C_MASTER_CALLBACK_MODE == true
 /**
  * \brief Callback types
  *
@@ -172,7 +172,7 @@ struct i2c_master_module {
 	uint16_t buffer_timeout;
 	/** If true, stop condition will be sent after a read/write */
 	bool send_stop;
-#  if I2C_MASTER_ASYNC == true
+#  if I2C_MASTER_CALLBACK_MODE == true
 	/** Pointers to callback functions */
 	volatile i2c_master_callback_t callbacks[_I2C_MASTER_CALLBACK_N];
 	/** Mask for registered callbacks */
@@ -336,7 +336,7 @@ static inline void i2c_master_enable(
 	/* Enable module. */
 	i2c_module->CTRLA.reg |= SERCOM_I2CM_CTRLA_ENABLE;
 
-#if I2C_MASTER_ASYNC == true
+#if I2C_MASTER_CALLBACK_MODE == true
 	/* Enable module interrupts */
 	system_interrupt_enable(_sercom_get_interrupt_vector(module->hw));
 #endif
@@ -374,7 +374,7 @@ static inline void i2c_master_disable(
 	/* Disable module. */
 	i2c_module->CTRLA.reg &= ~SERCOM_I2CM_CTRLA_ENABLE;
 
-#if I2C_MASTER_ASYNC == true
+#if I2C_MASTER_CALLBACK_MODE == true
 	/* Disable module interrupts */
 	system_interrupt_disable(_sercom_get_interrupt_vector(module->hw));
 #endif

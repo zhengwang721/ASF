@@ -43,7 +43,7 @@
 
 #include "i2c_master.h"
 
-#if I2C_MASTER_ASYNC == true
+#if I2C_MASTER_CALLBACK_MODE == true
 # include "i2c_master_interrupt.h"
 #endif
 
@@ -206,7 +206,7 @@ enum status_code i2c_master_init(struct i2c_master_module *const module,
 		return STATUS_BUSY;
 	}
 
-#if I2C_MASTER_ASYNC == true
+#if I2C_MASTER_CALLBACK_MODE == true
 	/* Get sercom instance index and register callback. */
 	uint8_t instance_index = _sercom_get_sercom_inst_index(module->hw);
 	_sercom_set_handler(instance_index, _i2c_master_interrupt_handler);
@@ -247,7 +247,7 @@ void i2c_master_reset(struct i2c_master_module *const module)
 	/* Disable module */
 	i2c_master_disable(module);
 
-#if I2C_MASTER_ASYNC == true
+#if I2C_MASTER_CALLBACK_MODE == true
 	/* Clear all pending interrupts */
 	system_interrupt_enter_critical_section();
 	system_interrupt_clear_pending(_sercom_get_interrupt_vector(module->hw));
@@ -447,7 +447,7 @@ enum status_code i2c_master_read_packet_wait(
 	Assert(module->hw);
 	Assert(packet);
 
-#if I2C_MASTER_ASYNC == true
+#if I2C_MASTER_CALLBACK_MODE == true
 	/* Check if the I2C module is busy with a job. */
 	if (module->buffer_remaining > 0) {
 		return STATUS_BUSY;
@@ -492,7 +492,7 @@ enum status_code i2c_master_read_packet_wait_no_stop(
 	Assert(module->hw);
 	Assert(packet);
 
-#if I2C_MASTER_ASYNC == true
+#if I2C_MASTER_CALLBACK_MODE == true
 	/* Check if the I2C module is busy with a job. */
 	if (module->buffer_remaining > 0) {
 		return STATUS_BUSY;
@@ -619,7 +619,7 @@ enum status_code i2c_master_write_packet_wait(
 	Assert(module->hw);
 	Assert(packet);
 
-#if I2C_MASTER_ASYNC == true
+#if I2C_MASTER_CALLBACK_MODE == true
 	/* Check if the I2C module is busy with a job */
 	if (module->buffer_remaining > 0) {
 		return STATUS_BUSY;
@@ -668,7 +668,7 @@ enum status_code i2c_master_write_packet_wait_no_stop(
 	Assert(module->hw);
 	Assert(packet);
 
-#if I2C_MASTER_ASYNC == true
+#if I2C_MASTER_CALLBACK_MODE == true
 	/* Check if the I2C module is busy with a job */
 	if (module->buffer_remaining > 0) {
 		return STATUS_BUSY;
