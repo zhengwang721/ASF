@@ -13,6 +13,6 @@
 		<build type="module-config" subtype="required-header-file" value="conf_at30tse75x.h"/>
 		<build type="include-path" value="."/>
 		<build type="doxygen-entry-point" value="asfdoc_samd20_at30tse75x_group"/>
-		<require idref="sam0.drivers.sercom.i2c_master"/>
+		<require idref="sam0.drivers.sercom.i2c"/>
 	</module>
 </asf>

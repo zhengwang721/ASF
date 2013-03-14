@@ -145,7 +145,7 @@ void at30tse_eeprom_read(uint8_t *data, uint8_t length, uint8_t word_addr, uint8
 	};
 	
 	/* Do the transfer */
-    i2c_master_write_packet_wait_repeated_start(&dev_inst_at30tse75x, &addr_transfer);
+    i2c_master_write_packet_wait_no_stop(&dev_inst_at30tse75x, &addr_transfer);
     i2c_master_read_packet_wait(&dev_inst_at30tse75x, &read_transfer);
 }
 
@@ -195,7 +195,7 @@ uint16_t at30tse_read_register(uint8_t reg, uint8_t reg_type, uint8_t reg_size)
 		.data        = buffer,
 	};
 	/* Do the transfer */
-	i2c_master_write_packet_wait_repeated_start(&dev_inst_at30tse75x, &write_transfer);
+	i2c_master_write_packet_wait_no_stop(&dev_inst_at30tse75x, &write_transfer);
     i2c_master_read_packet_wait(&dev_inst_at30tse75x, &read_transfer);
 	
 	return (buffer[0] << 8) | buffer[1];
