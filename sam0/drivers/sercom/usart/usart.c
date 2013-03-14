@@ -42,7 +42,7 @@
  */
 #include "usart.h"
 #include <pinmux.h>
-#ifdef USART_ASYNC
+#if USART_CALLBACK_MODE == true
 #  include "usart_interrupt.h"
 #endif
 
@@ -258,7 +258,7 @@ enum status_code usart_init(
 		return STATUS_ERR_DENIED;
 	}
 
-#ifdef USART_ASYNC
+#if USART_CALLBACK_MODE == true
 	/* Initialize parameters */
 	for (uint32_t i = 0; i < USART_CALLBACK_N; i++) {
 		module->callback[i]            = NULL;
@@ -311,7 +311,7 @@ enum status_code usart_write_wait(
 	/* Get a pointer to the hardware module instance */
 	SercomUsart *const usart_hw = &(module->hw->USART);
 
-#ifdef USART_ASYNC
+#if USART_CALLBACK_MODE == true
 	/* Check if the USART is busy doing asynchronous operation. */
 	if (module->remaining_tx_buffer_length > 0) {
 		return STATUS_BUSY;
@@ -374,7 +374,7 @@ enum status_code usart_read_wait(
 	/* Get a pointer to the hardware module instance */
 	SercomUsart *const usart_hw = &(module->hw->USART);
 
-#ifdef USART_ASYNC
+#if USART_CALLBACK_MODE == true
 	/* Check if the USART is busy doing asynchronous operation. */
 	if (module->remaining_rx_buffer_length > 0) {
 		return STATUS_BUSY;

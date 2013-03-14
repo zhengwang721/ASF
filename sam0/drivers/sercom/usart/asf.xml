@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<select-by-config id="sam0.drivers.sercom.usart" name="sam0.drivers.sercom.usart" caption="SERCOM USART - Serial Communications" default="polled">
+	<select-by-config id="sam0.drivers.sercom.usart" name="sam0.drivers.sercom.usart" caption="SERCOM USART - Serial Communications" default="callback">
 		<info type="description" value="summary">
 			Driver for the SAMD20 SERCOM USART module. Provides a unified interface for the configuration and management of the SERCOM module in USART mode.
 		</info>
@@ -15,6 +15,8 @@
 			<build type="header-file" subtype="api" value="usart.h"/>
 			<build type="c-source" value="usart.c"/>
 
+			<build type="define" name="USART_CALLBACK_MODE" value="false"/>
+
 			<build type="doxygen-entry-point" value="sam0_usart_group"/>
 			<build type="doxygen-image-path" value="docimg"/>
 
@@ -26,10 +28,8 @@
 
 			<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 		</module>
-		<module type="driver" id="sam0.drivers.sercom.usart#callback" caption="SERCOM USART - Serial Communications (Callback APIs)">
-			<build type="define" name="USART_CALLBACK_MODE" value=""/>
-			<build type="doxygen-enable-section" value="USART_CALLBACK_MODE"/>
 
+		<module type="driver" id="sam0.drivers.sercom.usart#callback" caption="SERCOM USART - Serial Communications (Callback APIs)">
 			<build type="include-path" value="." />
 
 			<build type="header-file" subtype="example" value="quick_start/qs_usart_basic_use.h"/>
@@ -39,6 +39,9 @@
 			<build type="header-file" subtype="api" value="usart_interrupt.h"/>
 			<build type="c-source" value="usart.c"/>
 			<build type="c-source" value="usart_interrupt.c"/>
+
+			<build type="define" name="USART_CALLBACK_MODE" value="true"/>
+			<build type="doxygen-enable-section" value="USART_CALLBACK_MODE"/>
 
 			<build type="doxygen-entry-point" value="sam0_usart_group"/>
 			<build type="doxygen-image-path" value="docimg"/>

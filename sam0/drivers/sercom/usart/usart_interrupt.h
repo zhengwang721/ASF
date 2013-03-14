@@ -45,7 +45,7 @@
 
 #include "usart.h"
 
-#ifndef __DOXYGEN__
+#if !defined(__DOXYGEN__)
 void _usart_write_buffer(
 		struct usart_module *const module,
 		uint8_t *tx_data,
