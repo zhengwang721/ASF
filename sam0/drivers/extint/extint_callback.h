@@ -40,8 +40,8 @@
  * \asf_license_stop
  *
  */
-#ifndef EXTINT_ASYNC_H_INCLUDED
-#define EXTINT_ASYNC_H_INCLUDED
+#ifndef EXTINT_CALLBACK_H_INCLUDED
+#define EXTINT_CALLBACK_H_INCLUDED
 
 #include <compiler.h>
 #include "extint.h"
@@ -56,8 +56,13 @@ extern "C" {
  * @{
  */
 
-#if !defined(EXTINT_CALLBACKS_MAX)
+#if !defined(EXTINT_CALLBACKS_MAX) || defined(__DOXYGEN__)
 #  warning  EXTINT_CALLBACKS_MAX is not defined, assuming a default value.
+
+/** Configuration option, setting the maximum number of callbacks which can be
+ *  registered with the driver. This option may be overridden in the module
+ *  configuration header file \c conf_extint.h.
+ */
 #  define EXTINT_CALLBACKS_MAX 10
 #endif
 
