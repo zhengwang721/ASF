@@ -48,52 +48,46 @@
 
 /**
  * \internal Set Configuration of the USART module
- *
  */
-enum status_code _usart_set_config(struct usart_module *const module,
-		const struct usart_config const *config);
-enum status_code _usart_set_config(struct usart_module *const module,
+static enum status_code _usart_set_config(
+		struct usart_module *const module,
 		const struct usart_config const *config)
 {
 	/* Temporary registers. */
-
 	uint16_t baud_val = 0;
 	uint32_t usart_freq;
 	enum status_code status_code = STATUS_OK;
+
+	/* Get a pointer to the hardware module instance */
+	SercomUsart *const usart_hw = &(module->hw->USART);
 
 	/* Temporary registers. */
 	uint32_t ctrla = 0;
 	uint32_t ctrlb = 0;
 
-	/* Get a pointer to the hardware module instance */
-	SercomUsart *const usart_hw = &(module->hw->USART);
-
-	/* TODO: change clock_polarity to enum if we don't get bp's in the
-	 * header-file */
 	/* Set data order, internal muxing, and clock polarity */
-	ctrla = (config->data_order) | (config->mux_settings)
-			| (config->clock_polarity_inverted <<
-			SERCOM_USART_CTRLA_CPOL_Pos);
+	ctrla = (config->data_order) | (config->mux_settings) |
+			(config->clock_polarity_inverted << SERCOM_USART_CTRLA_CPOL_Pos);
 
 	/* Get baud value from mode and clock */
 	if (config->transfer_mode == USART_TRANSFER_SYNCHRONOUSLY &&
 			!config->use_external_clock) {
 		/* Calculate baud value */
-		usart_freq = system_gclk_chan_get_hz(SERCOM_GCLK_ID);
+		usart_freq  = system_gclk_chan_get_hz(SERCOM_GCLK_ID);
 		status_code = _sercom_get_sync_baud_val(config->baudrate,
 				usart_freq, &baud_val);
 	}
 	if (config->transfer_mode == USART_TRANSFER_ASYNCHRONOUSLY) {
 		if (config->use_external_clock) {
 			status_code = _sercom_get_async_baud_val(config->baudrate,
-					config->ext_clock_freq,
-					&baud_val);
+					config->ext_clock_freq, &baud_val);
 		} else {
 			usart_freq = system_gclk_chan_get_hz(SERCOM_GCLK_ID);
 			status_code = _sercom_get_async_baud_val(config->baudrate,
 					usart_freq, &baud_val);
 		}
 	}
+
 	/* Check if calculating the baud rate failed */
 	if (status_code != STATUS_OK) {
 		/* Abort */
@@ -131,7 +125,9 @@ enum status_code _usart_set_config(struct usart_module *const module,
 	/* Write configuration to CTRLB */
 	usart_hw->CTRLB.reg = ctrlb;
 
+	/* Wait until synchronization is complete */
 	_usart_wait_for_sync(module);
+
 	/* Write configuration to CTRLA */
 	usart_hw->CTRLA.reg = ctrla;
 
@@ -165,8 +161,10 @@ enum status_code _usart_set_config(struct usart_module *const module,
  *                                         struct cannot be reached with
  *                                         the current clock configuration
  */
-enum status_code usart_init(struct usart_module *const module,
-		Sercom *const hw, const struct usart_config *const config)
+enum status_code usart_init(
+		struct usart_module *const module,
+		Sercom *const hw,
+		const struct usart_config *const config)
 {
 	/* Sanity check arguments */
 	Assert(module);
@@ -186,6 +184,7 @@ enum status_code usart_init(struct usart_module *const module,
 
 	/* Assign module pointer to software instance struct */
 	module->hw = hw;
+
 	/* Get a pointer to the hardware module instance */
 	SercomUsart *const usart_hw = &(module->hw->USART);
 
@@ -256,14 +255,11 @@ enum status_code usart_init(struct usart_module *const module,
 	}
 
 #ifdef USART_ASYNC
-	/* Temporary variables */
-	uint8_t i;
-	uint8_t instance_index;
-
 	/* Initialize parameters */
-	for (i = 0; i < USART_CALLBACK_N; i++) {
-		module->callback[i]        = NULL;
+	for (uint32_t i = 0; i < USART_CALLBACK_N; i++) {
+		module->callback[i]            = NULL;
 	}
+
 	module->tx_buffer_ptr              = NULL;
 	module->rx_buffer_ptr              = NULL;
 	module->remaining_tx_buffer_length = 0x0000;
@@ -275,10 +271,11 @@ enum status_code usart_init(struct usart_module *const module,
 
 	/* Set interrupt handler and register USART software module struct in
 	 * look-up table */
-	instance_index = _sercom_get_sercom_inst_index(module->hw);
+	uint8_t instance_index = _sercom_get_sercom_inst_index(module->hw);
 	_sercom_set_handler(instance_index, _usart_interrupt_handler);
 	_sercom_instances[instance_index] = module;
-	#endif
+#endif
+
 	/* Set configuration according to the config struct */
 	status_code = _usart_set_config(module, config);
 
@@ -299,7 +296,8 @@ enum status_code usart_init(struct usart_module *const module,
  * \retval     STATUS_BUSY     If the operation was not completed,
  *                                 due to the USART module being busy.
  */
-enum status_code usart_write_wait(struct usart_module *const module,
+enum status_code usart_write_wait(
+		struct usart_module *const module,
 		const uint16_t tx_data)
 {
 	/* Sanity check arguments */
@@ -322,14 +320,15 @@ enum status_code usart_write_wait(struct usart_module *const module,
 		return STATUS_BUSY;
 	}
 #endif
+
 	/* Wait until synchronization is complete */
 	_usart_wait_for_sync(module);
 
 	/* Write data to USART module */
 	usart_hw->DATA.reg = tx_data;
 
-	/* Wait until data is sent */
-	while(!(usart_hw->INTFLAG.reg & SERCOM_USART_INTFLAG_TXCIF)) {
+	while (!(usart_hw->INTFLAG.reg & SERCOM_USART_INTFLAG_TXCIF)) {
+		/* Wait until data is sent */
 	}
 
 	return STATUS_OK;
@@ -357,7 +356,8 @@ enum status_code usart_write_wait(struct usart_module *const module,
  * \retval     STATUS_ERR_BAD_DATA      If the operation was not completed, due
  *                                      to data being corrupted.
  */
-enum status_code usart_read_wait(struct usart_module *const module,
+enum status_code usart_read_wait(
+		struct usart_module *const module,
 		uint16_t *const rx_data)
 {
 	/* Sanity check arguments */
@@ -365,7 +365,7 @@ enum status_code usart_read_wait(struct usart_module *const module,
 	Assert(module->hw);
 
 	/* Error variable */
-	uint16_t error_code;
+	uint8_t error_code;
 
 	/* Get a pointer to the hardware module instance */
 	SercomUsart *const usart_hw = &(module->hw->USART);
@@ -388,9 +388,7 @@ enum status_code usart_read_wait(struct usart_module *const module,
 	_usart_wait_for_sync(module);
 
 	/* Read out the status code and mask away all but the 4 LSBs*/
-	error_code
-		= (uint8_t)(usart_hw->STATUS.reg &
-			SERCOM_USART_STATUS_MASK);
+	error_code = (uint8_t)(usart_hw->STATUS.reg & SERCOM_USART_STATUS_MASK);
 
 	/* Check if an error has occurred during the receiving */
 	if (error_code) {
@@ -398,17 +396,20 @@ enum status_code usart_read_wait(struct usart_module *const module,
 		if (error_code & SERCOM_USART_STATUS_FERR) {
 			/* Clear flag by writing a 1 to it and
 			 * return with an error code */
-			usart_hw->STATUS.reg &= SERCOM_USART_STATUS_FERR;
+			usart_hw->STATUS.reg = SERCOM_USART_STATUS_FERR;
+
 			return STATUS_ERR_BAD_FORMAT;
 		} else if (error_code & SERCOM_USART_STATUS_BUFOVF) {
 			/* Clear flag by writing a 1 to it and
 			 * return with an error code */
-			usart_hw->STATUS.reg &= SERCOM_USART_STATUS_BUFOVF;
+			usart_hw->STATUS.reg = SERCOM_USART_STATUS_BUFOVF;
+
 			return STATUS_ERR_OVERFLOW;
 		} else if (error_code & SERCOM_USART_STATUS_PERR) {
 			/* Clear flag by writing a 1 to it and
 			 * return with an error code */
-			usart_hw->STATUS.reg &= SERCOM_USART_STATUS_PERR;
+			usart_hw->STATUS.reg = SERCOM_USART_STATUS_PERR;
+
 			return STATUS_ERR_BAD_DATA;
 		}
 	}
@@ -440,16 +441,18 @@ enum status_code usart_read_wait(struct usart_module *const module,
  * \retval        STATUS_ERR_TIMEOUT       If operation was not completed,
  *                                         due to USART module timing out
  */
-enum status_code usart_write_buffer_wait(struct usart_module *const module,
-		uint8_t *tx_data, uint16_t length)
+enum status_code usart_write_buffer_wait(
+		struct usart_module *const module,
+		uint8_t *tx_data,
+		uint16_t length)
 {
 	/* Sanity check arguments */
 	Assert(module);
 	Assert(module->hw);
 
 	/* Timeout variables */
-	uint16_t i = 0;
 	uint16_t timeout;
+
 #ifdef USART_CUSTOM_TIMEOUT
 	timeout = USART_CUSTOM_TIMEOUT;
 #else
@@ -467,11 +470,13 @@ enum status_code usart_write_buffer_wait(struct usart_module *const module,
 	/* Wait until synchronization is complete */
 	_usart_wait_for_sync(module);
 
+	uint16_t tx_pos = 0;
+
 	/* Blocks while buffer is being transferred */
 	while (length--) {
 		/* Wait for the USART to be ready for new data and abort
 		* operation if it doesn't get ready within the timeout*/
-		for (i = 0; i < timeout; i++) {
+		for (uint32_t i = 0; i < timeout; i++) {
 			if (usart_hw->INTFLAG.reg & SERCOM_USART_INTFLAG_DREIF) {
 				break;
 			} else if (i == timeout) {
@@ -479,20 +484,20 @@ enum status_code usart_write_buffer_wait(struct usart_module *const module,
 			}
 		}
 
+		/* Data to send is at least 8 bits long */
+		uint16_t data_to_send = tx_data[tx_pos++];
+
 		/* Check if the character size exceeds 8 bit */
 		if (module->char_size == USART_CHAR_SIZE_9BIT) {
-			/* Increment 8 bit pointer by two */
-			usart_write_wait(module, (uint16_t)*(tx_data));
-			tx_data += 2;
-		} else {
-			/* Increment 8 bit pointer by one */
-			usart_write_wait(module, (uint16_t)*(tx_data++));
+			data_to_send |= (tx_data[tx_pos++] << 8);
 		}
+
+		/* Send the data through the USART module */
+		usart_write_wait(module, data_to_send);
 	}
 
 	/* Wait until Transmit is complete or timeout */
-	i = 0;
-	for (i = 0; i < timeout; i++) {
+	for (uint32_t i = 0; i < timeout; i++) {
 		if (usart_hw->INTFLAG.reg & SERCOM_USART_INTFLAG_TXCIF) {
 			break;
 		} else if (i == timeout) {
@@ -532,15 +537,16 @@ enum status_code usart_write_buffer_wait(struct usart_module *const module,
  * \retval     STATUS_ERR_BAD_DATA      If the operation was not completed, due
  *                                      to data being corrupted.
  */
-enum status_code usart_read_buffer_wait(struct usart_module *const module,
-		uint8_t *rx_data, uint16_t length)
+enum status_code usart_read_buffer_wait(
+		struct usart_module *const module,
+		uint8_t *rx_data,
+		uint16_t length)
 {
 	/* Sanity check arguments */
 	Assert(module);
 	Assert(module->hw);
 
 	/* Timeout variables */
-	uint16_t i = 0;
 	uint16_t timeout;
 
 #ifdef USART_CUSTOM_TIMEOUT
@@ -548,6 +554,7 @@ enum status_code usart_read_buffer_wait(struct usart_module *const module,
 #else
 	timeout = USART_DEFAULT_TIMEOUT;
 #endif
+
 	/* Check if the buffer length is valid */
 	if (length == 0) {
 		return STATUS_ERR_INVALID_ARG;
@@ -556,11 +563,13 @@ enum status_code usart_read_buffer_wait(struct usart_module *const module,
 	/* Get a pointer to the hardware module instance */
 	SercomUsart *const usart_hw = &(module->hw->USART);
 
+	uint16_t rx_pos = 0;
+
 	/* Blocks while buffer is being received */
 	while (length--) {
 		/* Wait for the USART to have new data and abort operation if it
 		 * doesn't get ready within the timeout*/
-		for (i = 0; i < timeout; i++) {
+		for (uint32_t i = 0; i < timeout; i++) {
 			if (!(usart_hw->INTFLAG.reg & SERCOM_USART_INTFLAG_RXCIF)) {
 				break;
 			} else if (i == timeout) {
@@ -568,14 +577,22 @@ enum status_code usart_read_buffer_wait(struct usart_module *const module,
 			}
 		}
 
-		/* Check if the character size exceeds 8 bit */
+		enum status_code retval;
+		uint16_t received_data = 0;
+
+		retval = usart_read_wait(module, &received_data);
+
+		if (retval != STATUS_OK) {
+			/* Overflow, abort */
+			return retval;
+		}
+
+		/* Read value will be at least 8-bits long */
+		rx_data[rx_pos++] = received_data;
+
+		/* If 9-bit data, write next received byte to the buffer */
 		if (module->char_size == USART_CHAR_SIZE_9BIT) {
-			/* Increment the 8 bit data pointer by two */
-			usart_read_wait(module, (void*)rx_data);
-			rx_data += 2;
-		} else {
-			/* Increment the 8 bit data pointer by one */
-			usart_read_wait(module, (void*)(rx_data++));
+			rx_data[rx_pos++] = (received_data >> 8);
 		}
 	}
 

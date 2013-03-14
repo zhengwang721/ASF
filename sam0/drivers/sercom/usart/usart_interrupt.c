@@ -51,8 +51,10 @@
  * \param[in]     length   Length of data buffer
  *
  */
-void _usart_write_buffer(struct usart_module *const module,
-		uint8_t *tx_data, uint16_t length)
+void _usart_write_buffer(
+		struct usart_module *const module,
+		uint8_t *tx_data,
+		uint16_t length)
 {
 	/* Write parameters to the device instance */
 	module->remaining_tx_buffer_length = length;
@@ -74,8 +76,10 @@ void _usart_write_buffer(struct usart_module *const module,
  * \param[in]     length   Length of data buffer
  *
  */
-void _usart_read_buffer(struct usart_module *const module,
-		uint8_t *rx_data, uint16_t length)
+void _usart_read_buffer(
+		struct usart_module *const module,
+		uint8_t *rx_data,
+		uint16_t length)
 {
 	/* Set length for the buffer and the pointer, and let
 	 * the interrupt handler do the rest */
@@ -104,7 +108,8 @@ void _usart_read_buffer(struct usart_module *const module,
  * \param[in]     callback_type Callback type given by an enum
  *
  */
-void usart_register_callback(struct usart_module *const module,
+void usart_register_callback(
+		struct usart_module *const module,
 		usart_callback_t callback_func,
 		enum usart_callback callback_type)
 {
@@ -128,7 +133,8 @@ void usart_register_callback(struct usart_module *const module,
  * \param[in]     callback_type Callback type given by an enum
  *
  */
-void usart_unregister_callback(struct usart_module *const module,
+void usart_unregister_callback(
+		struct usart_module *const module,
 		enum usart_callback callback_type)
 {
 	/* Sanity check arguments */
@@ -156,7 +162,8 @@ void usart_unregister_callback(struct usart_module *const module,
  * \retval     STATUS_BUSY            If operation was not completed,
  *                                    due to the USART module being busy.
  */
-enum status_code usart_write_job(struct usart_module *const module,
+enum status_code usart_write_job(
+		struct usart_module *const module,
 		const uint16_t tx_data)
 {
 	/* Sanity check arguments */
@@ -189,7 +196,8 @@ enum status_code usart_write_job(struct usart_module *const module,
  * \retval     STATUS_BUSY            If operation was not completed,
  *                                    due to the USART module being busy.
  */
-enum status_code usart_read_job(struct usart_module *const module,
+enum status_code usart_read_job(
+		struct usart_module *const module,
 		uint16_t *const rx_data)
 {
 	/* Sanity check arguments */
@@ -221,11 +229,14 @@ enum status_code usart_read_job(struct usart_module *const module,
  * \retval     STATUS_BUSY            If operation was not completed,
  *                                    due to the USART module being busy.
  */
-enum status_code usart_write_buffer_job(struct usart_module *const module,
-		uint8_t *tx_data, uint16_t length)
+enum status_code usart_write_buffer_job(
+		struct usart_module *const module,
+		uint8_t *tx_data,
+		uint16_t length)
 {
 	/* Sanity check arguments */
 	Assert(module);
+
 	if (length == 0) {
 		return STATUS_ERR_INVALID_ARG;
 	}
@@ -256,11 +267,14 @@ enum status_code usart_write_buffer_job(struct usart_module *const module,
  * \retval     STATUS_BUSY            If operation was not completed,
  *                                    due to the USART module being busy.
  */
-enum status_code usart_read_buffer_job(struct usart_module *const module,
-		uint8_t *rx_data, uint16_t length)
+enum status_code usart_read_buffer_job(
+		struct usart_module *const module,
+		uint8_t *rx_data,
+		uint16_t length)
 {
 	/* Sanity check arguments */
 	Assert(module);
+
 	if (length == 0) {
 		return STATUS_ERR_INVALID_ARG;
 	}
@@ -285,7 +299,8 @@ enum status_code usart_read_buffer_job(struct usart_module *const module,
  * \param[in]     module          Pointer to USART software instance struct
  * \param[in]     transceiver_type  Transfer type to cancel
  */
-void usart_abort_job(struct usart_module *const module,
+void usart_abort_job(
+		struct usart_module *const module,
 		enum usart_transceiver_type transceiver_type)
 {
 	/* Sanity check arguments */
@@ -376,7 +391,8 @@ enum status_code usart_get_job_status(
  * \param[in]  instance  ID of the SERCOM instance calling the interrupt
  *                       handler.
  */
-void _usart_interrupt_handler(uint8_t instance)
+void _usart_interrupt_handler(
+		uint8_t instance)
 {
 	/* Temporary variables */
 	uint16_t interrupt_status;

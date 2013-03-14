@@ -42,10 +42,11 @@
  */
 
 /**
- * \page asfdoc_samd20_i2c_slave_basic_use_case Quick Start Guide for the I2C Slave module - Callback Use Case
+ * \page asfdoc_samd20_i2c_slave_basic_use_case Quick Start Guide for the I2C Slave Module - Basic Use Case
  *
  * In this use case, the I<SUP>2</SUP>C will used and set up as follows:
- *  - Slave mode
+ *  - SERCOM1 in I2C slave mode
+ *  - Timeout = 1000
  *
  * \section asfdoc_samd20_i2c_slave_basic_use_case_prereq Prerequisites
  * The device must be connected to an I<SUP>2</SUP>C master.
@@ -57,27 +58,15 @@
  *
  * A sample buffer to write from, a sample buffer to read to and length of buffers:
  * \snippet qs_i2c_slave_basic_use.c packet_data
- *
- * Addres to respond to:
+ * 
+ * Address to respond to:
  * \snippet qs_i2c_slave_basic_use.c address
  *
  * Globally accessible module structure:
  * \snippet qs_i2c_slave_basic_use.c module
  *
- * Globally accessible packet:
- * \snippet qs_i2c_slave_basic_use.c packet
- *
  * Function for setting up the module.
  * \snippet qs_i2c_slave_basic_use.c initialize_i2c
- *
- * Callback function for read request from a master:
- * \snippet qs_i2c_slave_basic_use.c read_request
- *
- * Callback function for write request from a master:
- * \snippet qs_i2c_slave_basic_use.c write_request
- *
- * Function for setting up the callback functionality of the driver:
- * \snippet qs_i2c_slave_basic_use.c setup_i2c_callback
  *
  * Add to user application main():
  * \snippet qs_i2c_slave_basic_use.c run_initialize_i2c
@@ -95,35 +84,21 @@
  *     - \snippet qs_i2c_slave_basic_use.c init_module
  *   -# Enable the module.
  *    - \snippet qs_i2c_slave_basic_use.c enable_module
- * -# Register and enable callback functions.
- *  - \snippet qs_i2c_slave_basic_use.c config_callback
- *   -# Register and enable callbacks for read and write requests from master.
- *    - \snippet qs_i2c_slave_basic_use.c reg_en_i2c_callback
+ * -# Create variable to hold transfer direction
+ *  - \snippet qs_i2c_slave_basic_use.c dir
+ * -# Create packet variable to transfer
+ *  - \snippet qs_i2c_slave_basic_use.c pack
  *
  * \section asfdoc_samd20_i2c_slave_basic_use_implementation Implementation
  * \subsection asfdoc_samd20_i2c_slave_basic_use_implementation_code Code
  * Add to user application main:
  * \snippet qs_i2c_slave_basic_use.c while
  * \subsection i2c_slave_basic_use_implementation_workflow Workflow 
- * -# Infinite while loop, while waiting for interaction from master.
- *  - \snippet qs_i2c_slave_basic_use.c while
- *
- * \section asfdoc_samd20_i2c_slave_basic_use_callback Callback
- * When an address packet is received, one of the callback functions will be
-  * called, depending on the DIR bit in the received packet.
- *
- * \subsection asfdoc_samd20_i2c_slave_basic_use_callback_workflow Workflow
- * - Read request callback:
- *  -# Length of buffer and buffer to be sent to master is initalized.
- *   - \snippet qs_i2c_slave_basic_use.c packet_write
- *  -# Write packet to master.
- *   - \snippet qs_i2c_slave_basic_use.c write_packet
- *
- * - Write request callback:
- *  -# Length of buffer and buffer to be read from master is initalized.
- *   - \snippet qs_i2c_slave_basic_use.c packet_read
- *  -# Read packet from master.
- *   - \snippet qs_i2c_slave_basic_use.c read_packet
+ * -# Wait for start condition from master and get transfer direction.
+ *  - \snippet qs_i2c_slave_basic_use.c get_dir
+ * -# Depending on transfer direction, set up buffer to read to or write from,
+ * and write or read from master.
+ *  - \snippet qs_i2c_slave_basic_use.c transfer
  */
 
 #include <asf.h>

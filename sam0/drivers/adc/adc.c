@@ -46,15 +46,14 @@
 /**
  * \internal Writes an ADC configuration to the hardware module
  *
- * This function will write out a given configuration to the hardware module.
- * Used by \ref adc_init.
+ * Writes out a given ADC module configuration to the hardware module.
  *
- * \param[out] module_inst Pointer to the ADC software instance struct
- * \param[in]  config      Pointer to configuration struct
+ * \param[out] module_inst  Pointer to the ADC software instance struct
+ * \param[in]  config       Pointer to configuration struct
  *
  * \return Status of the configuration procedure
- * \retval STATUS_OK                The configuration was successful
- * \retval STATUS_ERR_INVALID_ARG   Invalid argument(s) were provided
+ * \retval STATUS_OK               The configuration was successful
+ * \retval STATUS_ERR_INVALID_ARG  Invalid argument(s) were provided
  */
 static enum status_code _adc_set_config(
 		struct adc_module *const module_inst,
@@ -288,12 +287,12 @@ static enum status_code _adc_set_config(
 /**
  * \brief Initializes the ADC
  *
- * This function will initialize the ADC device struct and the hardware module
- * based on the values of the configuration struct.
+ * Initializes the ADC device struct and the hardware module based on the
+ * given configuration struct values.
  *
  * \param[out] module_inst Pointer to the ADC software instance struct
- * \param[in] module    Pointer to the ADC module instance
- * \param[in] config    Pointer to the configuration struct
+ * \param[in]  module      Pointer to the ADC module instance
+ * \param[in]  config      Pointer to the configuration struct
  *
  * \return Status of the initialization procedure
  * \retval STATUS_OK                The initialization was successful

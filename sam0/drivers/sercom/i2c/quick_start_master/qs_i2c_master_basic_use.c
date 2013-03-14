@@ -95,9 +95,9 @@ int main(void)
 	//! [system_init]
 
 	/* Configure device and enable. */
-	//! [configure_i2c]
+	//! [config]
 	configure_i2c();
-	//! [configure_i2c]
+	//! [config]
 
 	/* Timeout counter. */
 	//! [timeout]

@@ -57,10 +57,10 @@
 #define USART_DEFAULT_TIMEOUT  0xFFFF
 
 /**
- * \defgroup asfdoc_samd20_sercom_usart_group SAM D20 USART driver
+ * \defgroup asfdoc_samd20_sercom_usart_group SAMD20 Serial USART Driver (SERCOM USART)
  *
- * This driver for the SAM D20 provides an interface to configure
- * and use the SERCOM in its USART mode to transfer or receive
+ * This driver for SAMD20 devices provides an interface for the configuration
+ * and management of the SERCOM module in its USART mode to transfer or receive
  * USART data frames. The following driver API modes are covered by this
  * manual:
  *
@@ -225,10 +225,10 @@ enum usart_callback {
 	USART_CALLBACK_BUFFER_RECEIVED,
 	/** Callback for error */
 	USART_CALLBACK_ERROR,
-#if !defined(__DOXYGEN__)
+#  if !defined(__DOXYGEN__)
 	/** Number of available callbacks. */
 	USART_CALLBACK_N,
-#endif
+#  endif
 };
 #endif
 
@@ -430,7 +430,7 @@ struct usart_module {
 	Sercom *hw;
 	/** Character size of the data being transferred */
 	enum usart_char_size char_size;
-#ifdef USART_CALLBACK_MODE
+#  ifdef USART_CALLBACK_MODE
 	/** Array to store callback function pointers in */
 	usart_callback_t callback[USART_CALLBACK_N];
 	/** Buffer pointer to where the next received character will be put */
@@ -451,7 +451,7 @@ struct usart_module {
 	volatile enum status_code rx_status;
 	/** Holds the status of the ongoing or last write operation */
 	volatile enum status_code tx_status;
-#endif
+#  endif
 #endif
 };
 
@@ -460,15 +460,14 @@ struct usart_module {
 /**
  * \internal Wait until synchronization is complete
  */
-static inline void _usart_wait_for_sync(const struct usart_module
-		*const module)
+static inline void _usart_wait_for_sync(
+		const struct usart_module *const module)
 {
 	/* Get a pointer to the hardware module instance */
 	SercomUsart *const usart_hw = &(module->hw->USART);
 
-	/* Wait until the synchronization is complete */
 	while (usart_hw->STATUS.reg & SERCOM_USART_STATUS_SYNCBUSY) {
-		/* Intentionally left empty */
+		/* Wait until the synchronization is complete */
 	}
 }
 
@@ -489,7 +488,8 @@ static inline void _usart_wait_for_sync(const struct usart_module
  *  \retval     false               Peripheral is not busy syncing and can be
  *                                  read/written without stalling the bus.
  */
-static inline bool usart_is_syncing(const struct usart_module *const module)
+static inline bool usart_is_syncing(
+		const struct usart_module *const module)
 {
 	/* Sanity check arguments */
 	Assert(module);
@@ -521,7 +521,8 @@ static inline bool usart_is_syncing(const struct usart_module *const module)
  * \param[in,out] config Pointer to configuration struct
  *
  */
-static inline void usart_get_config_defaults(struct usart_config *const config)
+static inline void usart_get_config_defaults(
+		struct usart_config *const config)
 {
 	/* Sanity check arguments */
 	Assert(config);
@@ -545,8 +546,10 @@ static inline void usart_get_config_defaults(struct usart_config *const config)
 	config->pinout_pad3 = PINMUX_DEFAULT;
 }
 
-enum status_code usart_init(struct usart_module *const module,
-		Sercom *const hw, const struct usart_config *const config);
+enum status_code usart_init(
+		struct usart_module *const module,
+		Sercom *const hw,
+		const struct usart_config *const config);
 
 /**
  * \brief Enable the module
@@ -556,7 +559,8 @@ enum status_code usart_init(struct usart_module *const module,
  * \param[in] module Pointer to USART software instance struct
  *
  */
-static inline void usart_enable(const struct usart_module *const module)
+static inline void usart_enable(
+		const struct usart_module *const module)
 {
 	/* Sanity check arguments */
 	Assert(module);
@@ -582,7 +586,8 @@ static inline void usart_enable(const struct usart_module *const module)
  *
  * \param[in] module Pointer to USART software instance struct
  */
-static inline void usart_disable(const struct usart_module *const module)
+static inline void usart_disable(
+		const struct usart_module *const module)
 {
 	/* Sanity check arguments */
 	Assert(module);
@@ -609,7 +614,8 @@ static inline void usart_disable(const struct usart_module *const module)
  * \param[in] module Pointer to the USART software instance struct
  *
  */
-static inline void usart_reset(const struct usart_module *const module)
+static inline void usart_reset(
+		const struct usart_module *const module)
 {
 	/* Sanity check arguments */
 	Assert(module);
@@ -631,18 +637,23 @@ static inline void usart_reset(const struct usart_module *const module)
  * \name Writing and reading
  * @{
  */
-/* TODO: Would it be enough with write/read_buffer? */
-enum status_code usart_write_wait(struct usart_module *const module,
+enum status_code usart_write_wait(
+		struct usart_module *const module,
 		const uint16_t tx_data);
 
-enum status_code usart_read_wait(struct usart_module *const module,
+enum status_code usart_read_wait(
+		struct usart_module *const module,
 		uint16_t *const rx_data);
 
-enum status_code usart_write_buffer_wait(struct usart_module *const module,
-		uint8_t *tx_data, uint16_t length);
+enum status_code usart_write_buffer_wait(
+		struct usart_module *const module,
+		uint8_t *tx_data,
+		uint16_t length);
 
-enum status_code usart_read_buffer_wait(struct usart_module *const module,
-		uint8_t *rx_data, uint16_t length);
+enum status_code usart_read_buffer_wait(
+		struct usart_module *const module,
+		uint8_t *rx_data,
+		uint16_t length);
 
 /** @} */
 
@@ -659,8 +670,8 @@ enum status_code usart_read_buffer_wait(struct usart_module *const module,
  * \param[in] module   Pointer to USART software instance struct
  * \param[in] transceiver_type  Transceiver type.
  */
-static inline void usart_enable_transceiver(const struct usart_module
-		*const module,
+static inline void usart_enable_transceiver(
+		const struct usart_module *const module,
 		enum usart_transceiver_type transceiver_type)
 {
 	/* Sanity check arguments */
@@ -694,8 +705,8 @@ static inline void usart_enable_transceiver(const struct usart_module
  * \param[in] module          Pointer to USART software instance struct
  * \param[in] transceiver_type  Transceiver type.
  */
-static inline void usart_disable_transceiver(const struct usart_module
-		*const module,
+static inline void usart_disable_transceiver(
+		const struct usart_module *const module,
 		enum usart_transceiver_type transceiver_type)
 {
 	/* Sanity check arguments */
