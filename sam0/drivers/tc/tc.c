@@ -42,6 +42,7 @@
  */
 
 #include "tc.h"
+#include "tc_interrupt.h"
 
 #if !defined(__DOXYGEN__)
 #  define _TC_GCLK_ID(n, unused)       TC##n##_GCLK_ID   ,
@@ -132,6 +133,17 @@ enum status_code tc_init(
 
 	struct system_pinmux_config pin_config;
 	struct system_gclk_chan_config gclk_chan_config;
+
+#ifdef TC_ASYNC
+	/* Initialize parameters */
+	for (uint8_t i = 0; i < TC_CALLBACK_N; i++) {
+		module_inst->callback[i]        = NULL;
+	}
+	module_inst->register_callback_mask     = 0x00;
+	module_inst->enable_callback_mask       = 0x00;
+
+	_tc_instances[instance] = module_inst;
+#endif
 
 	/* Associate the given device instance with the hardware module */
 	module_inst->hw = hw;
