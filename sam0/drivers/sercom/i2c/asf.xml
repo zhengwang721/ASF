@@ -1,13 +1,13 @@
 <asf xmlversion="1.0">
-	<select-by-config id="sam0.drivers.sercom.i2c" name="config.sam0.drivers.sercom.i2c" caption="I2C Driver" default="master_polled">
+	<select-by-config id="sam0.drivers.sercom.i2c.master" name="config.sam0.drivers.sercom.i2c.master" caption="I2C Master Mode Driver" default="callback">
 		<info type="description" value="summary">
-		Driver for the SAM D20 I2C.
+		Driver for the SAM D20 I2C in Master Mode.
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="Communication"/>
 		</info>
 
-		<module type="driver" id="sam0.drivers.sercom.i2c#master_polled" caption=
+		<module type="driver" id="sam0.drivers.sercom.i2c.master#polled" caption=
 			"I2C Master Mode">
 			<build type="include-path" value="." />
 			<build type="header-file" subtype="api" value="i2c_master.h"/>
@@ -29,7 +29,7 @@
 			<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 		</module>
 
-		<module type="driver" id="sam0.drivers.sercom.i2c#master_interrupt" caption=
+		<module type="driver" id="sam0.drivers.sercom.i2c.master#callback" caption=
 			"I2C Master Mode Interrupt">
 			<build type="include-path" value="." />
 			<build type="header-file" subtype="api" value="i2c_master.h"/>
@@ -56,8 +56,17 @@
 
 			<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 		</module>
+	</select-by-config>
 
-		<module type="driver" id="sam0.drivers.sercom.i2c#slave_polled" caption=
+	<select-by-config id="sam0.drivers.sercom.i2c.slave" name="config.sam0.drivers.sercom.i2c.slave" caption="I2C Slave Mode Driver" default="callback">
+		<info type="description" value="summary">
+		Driver for the SAM D20 I2C in Slave Mode.
+		</info>
+		<info type="keyword" value="technology">
+			<keyword value="Communication"/>
+		</info>
+
+		<module type="driver" id="sam0.drivers.sercom.i2c.slave#polled" caption=
 			"I2C Slave Mode">
 			<build type="include-path" value="." />
 			<build type="header-file" subtype="api" value="i2c_slave.h"/>
@@ -80,7 +89,7 @@
 			<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 		</module>
 
-		<module type="driver" id="sam0.drivers.sercom.i2c#slave_interrupt" caption=
+		<module type="driver" id="sam0.drivers.sercom.i2c.slave#callback" caption=
 			"I2C Slave Mode Interrupt">
 			<build type="include-path" value="." />
 			<build type="header-file" subtype="api" value="i2c_slave_interrupt.h"/>
