@@ -3,7 +3,7 @@
  *
  * \brief Board configuration.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,7 +44,6 @@
 #ifndef CONF_BOARD_H_INCLUDED
 #define CONF_BOARD_H_INCLUDED
 
-
 /** Enable Com Port. */
 #define CONF_BOARD_UART_CONSOLE
 
@@ -60,15 +59,15 @@
 
 /** Configure TC0 channel 1 as waveform output. **/
 #define TC_CHANNEL_WAVEFORM 1
-#define ID_TC_WAVEFORM ID_TC1
-#define PIN_TC_WAVEFORM PIN_TC0_TIOA1
-#define PIN_TC_WAVEFORM_FLAGS PIN_TC0_TIOA1_FLAGS
+#define ID_TC_WAVEFORM      ID_TC1
+#define PIN_TC_WAVEFORM     PIN_TC0_TIOA1
+#define PIN_TC_WAVEFORM_MUX PIN_TC0_TIOA1_MUX
 
 /** Configure TC0 channel 2 as capture input. **/
 #define TC_CHANNEL_CAPTURE 2
-#define ID_TC_CAPTURE ID_TC2
-#define PIN_TC_CAPTURE PIN_TC0_TIOA2
-#define PIN_TC_CAPTURE_FLAGS PIN_TC0_TIOA2_FLAGS
+#define ID_TC_CAPTURE      ID_TC2
+#define PIN_TC_CAPTURE     PIN_TC0_TIOA2
+#define PIN_TC_CAPTURE_MUX PIN_TC0_TIOA2_MUX
 
 /** Use TC2_Handler for TC capture interrupt**/
 #define TC_Handler  TC2_Handler
