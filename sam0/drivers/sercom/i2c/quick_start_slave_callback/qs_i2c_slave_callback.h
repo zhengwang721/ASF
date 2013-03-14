@@ -104,7 +104,7 @@
  * \subsection asfdoc_samd20_i2c_slave_callback_use_implementation_code Code
  * Add to user application main:
  * \snippet qs_i2c_slave_callback.c while
- * \subsection i2c_slave_basic_use_implementation_workflow Workflow 
+ * \subsection i2c_slave_callback_use_implementation_workflow Workflow
  * -# Infinite while loop, while waiting for interaction from master.
  *  - \snippet qs_i2c_slave_callback.c while
  *

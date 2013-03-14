@@ -64,7 +64,7 @@ extern "C" {
  *  \endif
  * \endif
  * \if I2C_SLAVE_MODE
- * - SLave Mode Polled APIs
+ * - Slave Mode Polled APIs
  *  \if I2C_CALLBACK_MODE
  * - Slave Mode Callback APIs
  *  \endif
@@ -227,12 +227,11 @@ extern "C" {
  *
  * \subsection asfdoc_samd20_i2c_transactions Transactions
  * The I<SUP>2</SUP>C standard defines three fundamental transaction formats:
- * There are three fundamental transaction formats:
- * \li Master Write
+ * - Master Write
  *   - The master transmits data packets to the slave after addressing it.
- * \li Master Read
+ * - Master Read
  *   - The slave transmits data packets to the master after being addressed.
- * \li Combined
+ * - Combined
  *   - A combined transaction consists of several write and read transactions.
  *
  * A data transfer starts with the master issuing a \b Start condition on the
@@ -397,7 +396,7 @@ extern "C" {
  * In a multi master environment, arbitration of the bus is important, as only
  * one master can own the bus at any point.
  *
- * \subsubsection arbitration Arbitration
+ * \subsubsection asfdoc_samd20_i2c_arbitration Arbitration
  *
  * \par Clock stretching
  * The serial clock line is always driven by a master device. However, all
@@ -416,7 +415,7 @@ extern "C" {
  * will get the bus ownership, this will create an arbitration scheme always
  * prioritizing the slaves with the lowest address in case of a bus collision.
  *
- * \subsubsection clock_sync Clock Synchronization
+ * \subsubsection asfdoc_samd20_i2c_clock_sync Clock Synchronization
  * In situations where more than one master is trying to control the bus clock
  * line at the same time, a clock synchronization algorithm based on the same
  * principles used for clock stretching is necessary.
@@ -512,6 +511,7 @@ extern "C" {
  *
  *
  * \section asfdoc_samd20_i2c_special_considerations Special Considerations
+ *
  * \if I2C_CALLBACK_MODE
  * \subsection asfdoc_samd20_i2c_common_interrupt Interrupt-Driven Operation
  * While an interrupt-driven operation is in progress, subsequent calls to a

@@ -92,7 +92,7 @@ extern "C" {
  * The Serial Peripheral Interface (SPI) is a high-speed synchronous data
  * transfer interface using three or four pins. It allows fast communication
  * between a master device and one or more peripheral devices.
- * \n\n
+ *
  * A device connected to the bus must act as a master or a slave. The master
  * initiates and controls all data transactions.
  * The SPI master initiates a communication cycle by pulling low the Slave
@@ -153,7 +153,7 @@ extern "C" {
  * If the bus consists of several SPI slaves, they can be connected in parallel
  * and the SPI master can use general I/O pins to control separate SS lines to
  * each slave on the bus.
- * \n\n
+ *
  * It is also possible to connect all slaves in series. In this configuration,
  * a common SS is provided to \c N slaves, enabling them simultaneously. The
  * MISO from the \c N-1 slaves is connected to the MOSI on the next slave. The
@@ -185,7 +185,7 @@ extern "C" {
  * cycles are needed from the time new data is written, until the character is
  * ready to be shifted out. If the shift register has not been loaded with
  * data, the current contents will be transmitted.
- * \n\n
+ *
  * If constant transmission of data is needed in SPI slave mode, the system
  * clock should be faster than SCK.
  * If the receiver is enabled, the received character can be read from the.
@@ -201,8 +201,8 @@ extern "C" {
  * to process the transaction.
  *
  * \note In master mode, an address packet is written by the
- * \ref spi_select_slave function if the address_enabled configuration is set
- * in the \ref spi_slave_inst_config struct.
+ *       \ref spi_select_slave function if the address_enabled configuration is
+ *       set in the \ref spi_slave_inst_config struct.
  *
  * \subsection asfdoc_samd20_spi_data_modes Data Modes
  * There are four combinations of SCK phase and polarity with respect to
@@ -210,6 +210,7 @@ extern "C" {
  * clock phase (CPHA) in the different modes.
  * Leading edge is the first clock edge in a clock cycle and trailing edge is
  * the last clock edge in a clock cycle.
+ *
  * <table>
  *   <tr>
  *      <th>Mode</th>
@@ -314,7 +315,7 @@ extern "C" {
  * the SPI shift register.
  *
  * \section asfdoc_samd20_spi_special_considerations Special Considerations
- * \subsection pin_mux Pin Mux Settings
+ * \subsection pin_mux Pin MUX Settings
  * The pin mux settings must be configured properly, as not all settings
  * can be used in different modes of operation.
  *
