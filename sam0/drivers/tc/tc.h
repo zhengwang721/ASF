@@ -40,6 +40,7 @@
  * \asf_license_stop
  *
  */
+
 #ifndef TC_H_INCLUDED
 #define TC_H_INCLUDED
 
@@ -1304,63 +1305,6 @@ static inline void tc_clear_status(
 
 	/* Clear interrupt flag */
 	tc_module->INTFLAG.reg = int_flags;
- * \name Check/Clear Interrupt Flags
- * @{
- */
-
-/** TODO
- * \brief Checks an interrupt flag is set.
- *
- * This function checks if the interrupt flag indicated by the
- * interrupt flag parameter is set.
- *
- * \param[in] module_inst       Pointer to the device instance
- * \param[in] interrupt_flag  Enum that tells what interrupt flag to check
- *
- * \return Bool value telling if the flag is set
- * \retval True   If the flag is set
- * \retval False  If the flag is not set
- */
-static inline bool tc_is_interrupt_flag_set(
-		const struct tc_module *const module_inst,
-		const enum tc_interrupt_flag interrupt_flag)
-{
-	/* Sanity check arguments */
-	Assert(module_inst);
-	Assert(module_inst->hw);
-	Assert(interrupt_flag);
-
-	TcCount8 *tc_module = &(module_inst->hw->COUNT8);
-
-	if (tc_module->INTFLAG.reg & interrupt_flag) {
-		return true;
-	} else {
-		return false;
-	}
-}
-
-/** TODO
- * \brief Clears an interrupt flag
- *
- * This function can be used to clear the interrupt flag specified by
- * the interrupt_flag parameter. Using the function when the flag is not set
- * has no effect.
- *
- * \param[in] module_inst       Pointer to the device instance
- * \param[in] interrupt_flag Enum telling what flag to check
- */
-static inline void tc_clear_interrupt_flag(
-		const struct tc_module *const module_inst,
-		const enum tc_interrupt_flag interrupt_flag)
-{
-	/* Sanity check arguments */
-	Assert(module_inst);
-	Assert(module_inst->hw);
-	Assert(interrupt_flag);
-
-	TcCount8 *const tc_module = &(module_inst->hw->COUNT8);
-
-	tc_module->INTFLAG.reg |= interrupt_flag;
 }
 /** @} */
 

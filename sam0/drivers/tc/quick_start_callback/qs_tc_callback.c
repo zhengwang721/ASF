@@ -41,6 +41,22 @@
 #include <conf_quick_start_callback.h>
 #include <asf.h>
 
+void qs_tc_callback_to_change_duty_cycle(
+		struct tc_module *const module_inst)
+{
+	static uint32_t pases = 0;
+	pases += 1;
+	if (pases == 3) {
+		config.size_specific.size_16_bit.compare_capture_channel[0] =
+				0x0000;
+	}
+	if (pases == 4) {
+		pases = 0;
+		config.size_specific.size_16_bit.compare_capture_channel[0] =
+				0x7FFF;
+	}
+}
+
 int main(void)
 {
 	//! [main]
@@ -69,7 +85,7 @@ int main(void)
 
 	//! [setup]
 	config.counter_size = TC_COUNTER_SIZE_16BIT;
-	config.wave_generation = TC_WAVE_GENERATION_MATCH_FREQ;
+	config.wave_generation = TC_WAVE_GENERATION_NORMAL_PWM;
 	config.size_specific.size_16_bit.compare_capture_channel[0] = 0x7FFF;
 	//! [setup]
 
