@@ -113,7 +113,7 @@ static void run_cache_data_hit_test(const struct test_case *test)
 }
 
 /**
- * \brief Run AES driver unit tests.
+ * \brief Run CMCC driver unit tests.
  */
 int main(void)
 {
