@@ -36,6 +36,8 @@
 			<build type="define" name="SPI_ASYNC" value="true"/>
 			<device-support value="samd20"/>
 
+			<build type="doxygen-enable-section" value="SPI_CALLBACK_MODE"/>
+
 			<require idref="sam0.utils"/>
 			<require idref="sam0.drivers.sercom"/>
 			<require idref="sam0.drivers.port"/>
