@@ -122,14 +122,14 @@ static void run_transfer_single_9bit_char_test(const struct test_case *test)
 
 	/* Re-configure RX USART to operate with 9 bit character size */
 	usart_disable(&usart_rx_module);
-	usart_rx_config.char_size = USART_CHAR_SIZE_9BIT;
+	usart_rx_config.character_size = USART_CHARACTER_SIZE_9BIT;
 	usart_init(&usart_rx_module, RX_USART,	&usart_rx_config);
 	usart_enable(&usart_rx_module);
 	usart_enable_transceiver(&usart_rx_module, USART_TRANSCEIVER_RX);
 
 	/* Re-configure TX USART to operate with 9 bit character size */
 	usart_disable(&usart_tx_module);
-	usart_tx_config.char_size = USART_CHAR_SIZE_9BIT;
+	usart_tx_config.character_size = USART_CHARACTER_SIZE_9BIT;
 	usart_init(&usart_tx_module, TX_USART,	&usart_tx_config);
 	usart_enable(&usart_tx_module);
 	usart_enable_transceiver(&usart_tx_module, USART_TRANSCEIVER_TX);
@@ -144,14 +144,14 @@ static void run_transfer_single_9bit_char_test(const struct test_case *test)
 
 	/* Put RX USART back in 8 bit mode */
 	usart_disable(&usart_rx_module);
-	usart_rx_config.char_size = USART_CHAR_SIZE_8BIT;
+	usart_rx_config.character_size = USART_CHARACTER_SIZE_8BIT;
 	usart_init(&usart_rx_module, RX_USART,	&usart_rx_config);
 	usart_enable(&usart_rx_module);
 	usart_enable_transceiver(&usart_rx_module, USART_TRANSCEIVER_RX);
 
 	/* Put TX USART back in 8 bit mode */
 	usart_disable(&usart_tx_module);
-	usart_tx_config.char_size = USART_CHAR_SIZE_8BIT;
+	usart_tx_config.character_size = USART_CHARACTER_SIZE_8BIT;
 	usart_init(&usart_tx_module, TX_USART,	&usart_tx_config);
 	usart_enable(&usart_tx_module);
 	usart_enable_transceiver(&usart_tx_module, USART_TRANSCEIVER_TX);

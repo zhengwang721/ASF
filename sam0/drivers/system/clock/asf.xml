@@ -1,7 +1,9 @@
 <asf xmlversion="1.0">
-	<module type="driver" id="sam0.drivers.system.clock" caption="System Clock Driver">
+	<module type="driver" id="sam0.drivers.system.clock" caption="SYSTEM - Clock Management">
 		<info type="description" value="summary">
-			TODO
+			Driver for the SAMD20 Clock management units. Provides a unified
+			interface for the configuration and management of the various clocks
+			in the device, including the bus and generic peripheral clocks.
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="Clocks" />

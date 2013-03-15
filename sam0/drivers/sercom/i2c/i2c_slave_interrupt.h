@@ -2,7 +2,7 @@
  * \file
  *
  * \brief SAM D20 I2C Slave Interrupt Driver
- * 	
+ *
  * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
@@ -61,10 +61,10 @@ extern "C" {
  * @{
  */
 
-void i2c_slave_enable_nack_on_address(struct i2c_slave_module
-		*const module);
-void i2c_slave_disable_nack_on_address(struct i2c_slave_module
-		*const module);
+void i2c_slave_enable_nack_on_address(
+		struct i2c_slave_module *const module);
+void i2c_slave_disable_nack_on_address(
+		struct i2c_slave_module *const module);
 
 /** @} */
 
@@ -90,8 +90,8 @@ void i2c_slave_unregister_callback(
  *
  * Enables the callback specified by the callback_type.
  *
- * \param[in,out]  module        Pointer to the software module struct
- * \param[in]      callback_type Callback type to enable
+ * \param[in,out]  module         Pointer to the software module struct
+ * \param[in]      callback_type  Callback type to enable
  */
 static inline void i2c_slave_enable_callback(
 		struct i2c_slave_module *const module,
@@ -110,8 +110,8 @@ static inline void i2c_slave_enable_callback(
  *
  * Disables the callback specified by the callback_type.
  *
- * \param[in,out]  module        Pointer to the software module struct
- * \param[in]      callback_type Callback type to disable
+ * \param[in,out]  module         Pointer to the software module struct
+ * \param[in]      callback_type  Callback type to disable
  */
 static inline void i2c_slave_disable_callback(
 		struct i2c_slave_module *const module,
@@ -145,7 +145,7 @@ enum status_code i2c_slave_write_packet_job(
  *
  * Terminates the running transfer operation.
  *
- * \param[in,out] module Pointer to software module structure
+ * \param[in,out] module  Pointer to software module structure
  */
 static inline void i2c_slave_cancel_job(
 		struct i2c_slave_module *const module)
@@ -188,6 +188,7 @@ static inline enum status_code i2c_slave_get_job_status(
 }
 
 /** @} */
+
 /** @} */
 
 #ifdef __cplusplus

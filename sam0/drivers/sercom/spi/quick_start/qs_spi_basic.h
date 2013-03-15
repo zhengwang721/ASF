@@ -42,13 +42,13 @@
  */
 
 /**
- * \page spi_basic_use_case Quick Start Guide for the SPI module - Basic Use Case
+ * \page asfdoc_samd20_sercom_spi_basic_use_case Quick Start Guide for the SPI module - Basic Use Case
  *
  * In this use case, the SPI will be used  The SPI will be set up as follows:
  * - Master Mode enabled
  * - MSB of the data is transmitted first
  * - Transfer mode 0
- * - \ref mux_setting_e
+ * - \ref asfdoc_samd20_sercom_spi_mux_setting_e
  * - MOSI on pad 2, pin PA12
  * - MISO on pad 0, pin PA14
  * - SCK on pad 3, pin PA13
@@ -59,11 +59,11 @@
  * - GLCK generator 0
  *
  *
- * \section spi_basic_use_case_setup Quick Start
+ * \section asfdoc_samd20_sercom_spi_basic_use_case_setup Quick Start
  *
- * \subsection spi_basic_use_case_prereq Prerequisites
+ * \subsection asfdoc_samd20_sercom_spi_basic_use_case_prereq Prerequisites
  *
- * \subsection spi_basic_use_case_setup_code Code
+ * \subsection asfdoc_samd20_sercom_spi_basic_use_case_setup_code Code
  * The following must be added to the user application:
  *
  * A sample buffer to send via SPI:
@@ -76,7 +76,7 @@
  * Add to user application %main():
  * \snippet qs_spi_basic.c main
  *
- * \section spi_basic_use_case_workflow Workflow
+ * \section asfdoc_samd20_sercom_spi_basic_use_case_workflow Workflow
  * -# Create configuration struct.
  *  - \snippet qs_spi_basic.c config
  * -# Create software device instance struct.
@@ -110,13 +110,13 @@
  * -# Enable SPI module.
  *  - \snippet qs_spi_basic.c config
  * -# Select slave.
- *  - \snippet qs_spi_basic.c slave_select
+ *  - \snippet qs_spi_basic.c select_slave
  * -# Write buffer to SPI slave.
  *  - \snippet qs_spi_basic.c write
  * -# Wait for last character to be shifted to the slave.
  *  - \snippet qs_spi_basic.c wait
  * -# Deselect slave.
- *  - \snippet qs_spi_basic.c slave_unselect
+ *  - \snippet qs_spi_basic.c deselect_slave
  * -# Infinite loop.
  *  - \snippet qs_spi_basic.c inf_loop
  */
