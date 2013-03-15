@@ -382,7 +382,7 @@ extern "C" {
  * \c _wait.
  *
  * The time before the timeout occurs, will be the same as
- * for \ref timeout "unknown bus state" timeout.
+ * for \ref asfdoc_samd20_i2c_unknown_bus_timeout "unknown bus state" timeout.
  *
  * \subsubsection asfdoc_samd20_i2c_repeated_start Repeated Start
  * To issue a \b Repeated \b Start, the functions postfixed \c _no_stop must be
@@ -541,8 +541,8 @@ extern "C" {
 /**
  * \brief I<SUP>2</SUP>C packet for read/write
  *
- * Structure to be used when transferring I<SUP>2</SUP>C packets. Used both for master and
- * slave.
+ * Structure to be used when transferring I<SUP>2</SUP>C packets. Used both for
+ * master and slave driver modes.
  */
 struct i2c_packet {
 	/** Address to slave device  */
@@ -583,7 +583,7 @@ struct i2c_packet {
  *
  * \section asfdoc_samd20_i2c_extra_dependencies Dependencies
  * The I<SUP>2</SUP>C driver has the following dependencies:
- * \li \ref asfdoc_samd20_pinmux "System Pin Multiplexer Driver"
+ * \li \ref asfdoc_samd20_pinmux_group "System Pin Multiplexer Driver"
  *
  *
  * \section asfdoc_samd20_i2c_extra_workarounds Workarounds implemented by driver

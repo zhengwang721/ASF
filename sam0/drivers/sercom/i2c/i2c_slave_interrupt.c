@@ -49,13 +49,14 @@
  * Enables sending of NACK on address match, thus discarding
  * any incoming transaction.
  *
- * \param[in,out] module Pointer to software module structure
+ * \param[in,out] module  Pointer to software module structure
  */
-void i2c_slave_enable_nack_on_address(struct i2c_slave_module
-		*const module)
+void i2c_slave_enable_nack_on_address(
+		struct i2c_slave_module *const module)
 {
 	/* Sanity check arguments. */
 	Assert(module);
+
 	module->nack_on_address = true;
 }
 
@@ -65,24 +66,25 @@ void i2c_slave_enable_nack_on_address(struct i2c_slave_module
  * Disables sending of NACK on address match, thus
  * acknowledging incoming transactions.
  *
- * \param[in,out] module Pointer to software module structure
+ * \param[in,out] module  Pointer to software module structure
  */
-void i2c_slave_disable_nack_on_address(struct i2c_slave_module
-		*const module)
+void i2c_slave_disable_nack_on_address(
+		struct i2c_slave_module *const module)
 {
 	/* Sanity check arguments. */
 	Assert(module);
+
 	module->nack_on_address = false;
 }
 
 /**
- * \internal Reads next data
+ * \internal
+ * Reads next data. Used by interrupt handler to get next data byte from master.
  *
- * Used by interrupt handler to get next data byte from master.
- *
- * \param[in,out] module Pointer to software module structure
+ * \param[in,out] module  Pointer to software module structure
  */
-static void _i2c_slave_read(struct i2c_slave_module *const module)
+static void _i2c_slave_read(
+		struct i2c_slave_module *const module)
 {
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
 
@@ -94,13 +96,13 @@ static void _i2c_slave_read(struct i2c_slave_module *const module)
 }
 
 /**
- * \internal Writes next data
+ * \internal
+ * Writes next data. Used by interrupt handler to send next data byte to master.
  *
- * Used by interrupt handler to send next data byte to master.
- *
- * \param[in,out] module Pointer to software module structure
+ * \param[in,out] module  Pointer to software module structure
  */
-static void _i2c_slave_write(struct i2c_slave_module *const module)
+static void _i2c_slave_write(
+		struct i2c_slave_module *const module)
 {
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
 
@@ -115,14 +117,13 @@ static void _i2c_slave_write(struct i2c_slave_module *const module)
  * \brief Registers callback for the specified callback type
  *
  * Associates the given callback function with the
- * specified callback type.
- * To enable the callback, the \ref i2c_slave_enable_callback function
- * must be used.
+ * specified callback type. To enable the callback, the
+ * \ref i2c_slave_enable_callback function must be used.
  *
- * \param[in,out] module    Pointer to the software module struct
- * \param[in] callback      Pointer to the function desired for the specified
- *                          callback
- * \param[in] callback_type Callback type to register
+ * \param[in,out] module         Pointer to the software module struct
+ * \param[in]     callback       Pointer to the function desired for the
+ *                               specified callback
+ * \param[in]     callback_type  Callback type to register
  */
 void i2c_slave_register_callback(
 		struct i2c_slave_module *const module,
@@ -147,8 +148,8 @@ void i2c_slave_register_callback(
  * Removes the currently registered callback for the given callback
  * type.
  *
- * \param[in,out]  module        Pointer to the software module struct
- * \param[in]      callback_type Callback type to unregister
+ * \param[in,out]  module         Pointer to the software module struct
+ * \param[in]      callback_type  Callback type to unregister
  */
 void i2c_slave_unregister_callback(
 		struct i2c_slave_module *const module,
@@ -170,15 +171,16 @@ void i2c_slave_unregister_callback(
  *
  * Reads a data packet from the master. A write request must be initiated by
  * the master before the packet can be read.
- * The I2C_SLAVE_CALLBACK_WRITE_REQUEST callback can be used to call this
+ *
+ * The \ref I2C_SLAVE_CALLBACK_WRITE_REQUEST callback can be used to call this
  * function.
  *
- * \param[in,out] module    Pointer to software module struct
- * \param[in,out] packet    Pointer to I<SUP>2</SUP>C packet to transfer
+ * \param[in,out] module  Pointer to software module struct
+ * \param[in,out] packet  Pointer to I<SUP>2</SUP>C packet to transfer
  *
- * \return             Status of starting asynchronously reading I<SUP>2</SUP>C packet
- * \retval STATUS_OK   If reading was started successfully
- * \retval STATUS_BUSY If module is currently busy with another transfer
+ * \return Status of starting asynchronously reading I<SUP>2</SUP>C packet
+ * \retval STATUS_OK    If reading was started successfully
+ * \retval STATUS_BUSY  If module is currently busy with another transfer
  */
 enum status_code i2c_slave_read_packet_job(
 		struct i2c_slave_module *const module,
@@ -195,9 +197,9 @@ enum status_code i2c_slave_read_packet_job(
 	}
 
 	/* Save packet to software module. */
-	module->buffer = packet->data;
+	module->buffer           = packet->data;
 	module->buffer_remaining = packet->data_length;
-	module->status = STATUS_BUSY;
+	module->status           = STATUS_BUSY;
 
 	/* Read will begin when master initiates the transfer */
 	return STATUS_OK;
@@ -208,13 +210,14 @@ enum status_code i2c_slave_read_packet_job(
  *
  * Writes a data packet to the master. A read request must be initiated by
  * the master before the packet can be written.
- * The I2C_SLAVE_CALLBACK_READ_REQUEST callback can be used to call this
+ *
+ * The \ref I2C_SLAVE_CALLBACK_READ_REQUEST callback can be used to call this
  * function.
  *
- * \param[in,out]     module  Pointer to software module struct
- * \param[in,out]     packet    Pointer to I<SUP>2</SUP>C packet to transfer
+ * \param[in,out] module  Pointer to software module struct
+ * \param[in,out] packet  Pointer to I<SUP>2</SUP>C packet to transfer
  *
- * \return             Status of starting writing I<SUP>2</SUP>C packet
+ * \return Status of starting writing I<SUP>2</SUP>C packet.
  * \retval STATUS_OK   If writing was started successfully
  * \retval STATUS_BUSY If module is currently busy with another transfer
  */
@@ -233,9 +236,9 @@ enum status_code i2c_slave_write_packet_job(
 	}
 
 	/* Save packet to software module. */
-	module->buffer = packet->data;
+	module->buffer           = packet->data;
 	module->buffer_remaining = packet->data_length;
-	module->status = STATUS_BUSY;
+	module->status           = STATUS_BUSY;
 
 	return STATUS_OK;
 }
@@ -245,11 +248,14 @@ enum status_code i2c_slave_write_packet_job(
  *
  * \param[in] instance Sercom instance that triggered the interrupt
  */
-void _i2c_slave_interrupt_handler(uint8_t instance)
+void _i2c_slave_interrupt_handler(
+		uint8_t instance)
 {
 	/* Get software module for callback handling. */
 	struct i2c_slave_module *module =
 			(struct i2c_slave_module*)_sercom_instances[instance];
+
+	Assert(module);
 
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
 
@@ -263,7 +269,7 @@ void _i2c_slave_interrupt_handler(uint8_t instance)
 		/* Check if last read is done - repeated start */
 		if (module->buffer_length != module->buffer_remaining &&
 				module->transfer_direction == 0) {
-			
+
 			module->status = STATUS_OK;
 			module->buffer_length = 0;
 			module->buffer_remaining = 0;
@@ -277,6 +283,7 @@ void _i2c_slave_interrupt_handler(uint8_t instance)
 				SERCOM_I2CS_STATUS_COLL || SERCOM_I2CS_STATUS_LOWTOUT)) {
 			/* An error occurred in last packet transfer */
 			module->status = STATUS_ERR_IO;
+
 			if ((callback_mask & (1 << I2C_SLAVE_CALLBACK_ERROR_LAST_TRANSFER))) {
 				module->callbacks[I2C_SLAVE_CALLBACK_ERROR_LAST_TRANSFER](module);
 			}
@@ -287,6 +294,7 @@ void _i2c_slave_interrupt_handler(uint8_t instance)
 		} else if (i2c_hw->STATUS.reg & SERCOM_I2CS_STATUS_DIR) {
 			/* Set transfer direction in dev inst */
 			module->transfer_direction = 1;
+
 			/* Read request from master */
 			if (callback_mask & (1 << I2C_SLAVE_CALLBACK_READ_REQUEST)) {
 				module->callbacks[I2C_SLAVE_CALLBACK_READ_REQUEST](module);
@@ -304,6 +312,7 @@ void _i2c_slave_interrupt_handler(uint8_t instance)
 		} else {
 			/* Set transfer direction in dev inst */
 			module->transfer_direction = 0;
+
 			/* Write request from master */
 			if (callback_mask & (1 << I2C_SLAVE_CALLBACK_WRITE_REQUEST)) {
 				module->callbacks[I2C_SLAVE_CALLBACK_WRITE_REQUEST](module);
@@ -353,8 +362,9 @@ void _i2c_slave_interrupt_handler(uint8_t instance)
 				/* Buffer is full, send NACK */
 				i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_ACKACT;
 				i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_CMD(0x2);
+
 				/* Set status, new character in DATA register will overflow
-				buffer */
+				 * buffer */
 				module->status = STATUS_ERR_OVERFLOW;
 
 				if (callback_mask & (1 << I2C_SLAVE_CALLBACK_ERROR)) {
