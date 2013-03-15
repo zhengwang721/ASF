@@ -384,6 +384,10 @@
 #include <gclk.h>
 #include <pinmux.h>
 
+#ifdef TC_ASYNC
+#include <system_interrupt.h>
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -1055,7 +1059,9 @@ static inline void tc_enable(
 	while (tc_is_syncing(module_inst)) {
 		/* Wait for sync */
 	}
-
+#ifdef TC_ASYNC
+	//system_interrupt_enable(_tc_get_interrupt_vector(module->hw));
+#endif
 	/* Enable TC module */
 	tc_module->CTRLA.reg |= TC_CTRLA_ENABLE;
 }

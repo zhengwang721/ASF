@@ -41,6 +41,16 @@
 #include <conf_quick_start.h>
 #include <asf.h>
 
+static void configure_led(void)
+{
+	struct port_config pin_conf;
+	port_get_config_defaults(&pin_conf);
+
+	pin_conf.direction = PORT_PIN_DIR_OUTPUT;
+	port_pin_set_config(LED_0_PIN, &pin_conf);
+}
+
+
 int main(void)
 {
 	//! [main]
@@ -49,6 +59,9 @@ int main(void)
 	system_init();
 	//! [system_init]
 
+
+	configure_led();
+	port_pin_set_output_level(LED_0_PIN, false);
 	/* Structures for config and software device instance */
 	//! [config]
 	struct tc_config config;
@@ -69,7 +82,7 @@ int main(void)
 
 	//! [setup]
 	config.counter_size = TC_COUNTER_SIZE_16BIT;
-	config.wave_generation = TC_WAVE_GENERATION_MATCH_FREQ;
+	config.wave_generation = TC_WAVE_GENERATION_NORMAL_FREQ;
 	config.size_specific.size_16_bit.compare_capture_channel[0] = 0x7FFF;
 	//! [setup]
 
@@ -80,6 +93,8 @@ int main(void)
 	//! [tc_enable]
 	tc_enable(&module_inst);
 	//! [tc_enable]
+
+	
 
 	//! [inf_loop]
 	while (1) {

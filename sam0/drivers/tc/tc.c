@@ -42,7 +42,10 @@
  */
 
 #include "tc.h"
+
+#ifdef TC_ASYNC
 #include "tc_interrupt.h"
+#endif
 
 #if !defined(__DOXYGEN__)
 #  define _TC_GCLK_ID(n, unused)       TC##n##_GCLK_ID   ,

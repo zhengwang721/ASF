@@ -43,7 +43,6 @@
 
 #include "tc_interrupt.h"
 
-
 void *_tc_instances[TC_INST_NUM];
 
 void _tc_interrupt_handler(uint8_t instance);
@@ -192,7 +191,7 @@ void _tc_interrupt_handler(uint8_t instance)
 {
 	/* Temporary variable */
 	uint8_t interrupt_and_callback_status_mask;
-
+	
 	/* Get device instance from the look-up table */
 	struct tc_module *module
 			= (struct tc_module *)_tc_instances[instance];
@@ -219,7 +218,7 @@ void _tc_interrupt_handler(uint8_t instance)
 	}
 
 	/* Check if an Match/Capture Channel 0 interrupt has occurred */
-	if (interrupt_and_callback_status_mask & TC_INTFLAG_MC(2)) {
+	if (interrupt_and_callback_status_mask & TC_INTFLAG_MC(1)) {
 		/* Invoke registered and enabled calback function */
 		(*(module->callback[TC_CALLBACK_CC_CHANNEL0]))(module);
 		/* Clear interrupt flag */
