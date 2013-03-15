@@ -439,42 +439,50 @@ enum spi_signal_mux_setting {
 	/**
 	 * See \ref asfdoc_samd20_sercom_spi_mux_setting_a
 	 */
-	SPI_SIGNAL_MUX_SETTING_A = (0x0 << SERCOM_SPI_CTRLA_DOPO_Pos) |
+	SPI_SIGNAL_MUX_SETTING_A =
+			(0x0 << SERCOM_SPI_CTRLA_DOPO_Pos) |
 			(0x0 << SERCOM_SPI_CTRLA_DIPO_Pos),
 	/**
 	 * See \ref asfdoc_samd20_sercom_spi_mux_setting_b
 	 */
-	SPI_SIGNAL_MUX_SETTING_B = (0x0 << SERCOM_SPI_CTRLA_DOPO_Pos) |
+	SPI_SIGNAL_MUX_SETTING_B =
+			(0x0 << SERCOM_SPI_CTRLA_DOPO_Pos) |
 			(0x1 << SERCOM_SPI_CTRLA_DIPO_Pos),
 	/**
 	 * See \ref asfdoc_samd20_sercom_spi_mux_setting_c
 	 */
-	SPI_SIGNAL_MUX_SETTING_C = (0x0 << SERCOM_SPI_CTRLA_DOPO_Pos) |
+	SPI_SIGNAL_MUX_SETTING_C =
+			(0x0 << SERCOM_SPI_CTRLA_DOPO_Pos) |
 			(0x2 << SERCOM_SPI_CTRLA_DIPO_Pos),
 	/**
 	 * See \ref asfdoc_samd20_sercom_spi_mux_setting_d
 	 */
-	SPI_SIGNAL_MUX_SETTING_D = (0x0 << SERCOM_SPI_CTRLA_DOPO_Pos) |
+	SPI_SIGNAL_MUX_SETTING_D =
+			(0x0 << SERCOM_SPI_CTRLA_DOPO_Pos) |
 			(0x3 << SERCOM_SPI_CTRLA_DIPO_Pos),
 	/**
 	 * See \ref asfdoc_samd20_sercom_spi_mux_setting_e
 	 */
-	SPI_SIGNAL_MUX_SETTING_E = (0x1 << SERCOM_SPI_CTRLA_DOPO_Pos) |
+	SPI_SIGNAL_MUX_SETTING_E =
+			(0x1 << SERCOM_SPI_CTRLA_DOPO_Pos) |
 			(0x0 << SERCOM_SPI_CTRLA_DIPO_Pos),
 	/**
 	 * See \ref asfdoc_samd20_sercom_spi_mux_setting_f
 	 */
-	SPI_SIGNAL_MUX_SETTING_F = (0x1 << SERCOM_SPI_CTRLA_DOPO_Pos) |
+	SPI_SIGNAL_MUX_SETTING_F =
+			(0x1 << SERCOM_SPI_CTRLA_DOPO_Pos) |
 			(0x1 << SERCOM_SPI_CTRLA_DIPO_Pos),
 	/**
 	 * See \ref asfdoc_samd20_sercom_spi_mux_setting_g
 	 */
-	SPI_SIGNAL_MUX_SETTING_G = (0x1 << SERCOM_SPI_CTRLA_DOPO_Pos) |
+	SPI_SIGNAL_MUX_SETTING_G =
+			(0x1 << SERCOM_SPI_CTRLA_DOPO_Pos) |
 			(0x2 << SERCOM_SPI_CTRLA_DIPO_Pos),
 	/**
 	 * See \ref asfdoc_samd20_sercom_spi_mux_setting_h
 	 */
-	SPI_SIGNAL_MUX_SETTING_H = (0x1 << SERCOM_SPI_CTRLA_DOPO_Pos) |
+	SPI_SIGNAL_MUX_SETTING_H =
+			(0x1 << SERCOM_SPI_CTRLA_DOPO_Pos) |
 			(0x3 << SERCOM_SPI_CTRLA_DIPO_Pos),
 };
 
@@ -591,7 +599,6 @@ struct spi_module {
  * SPI peripheral slave software instance structure, used to configure the
  * correct SPI transfer mode settings for an attached slave. See
  * \ref spi_select_slave.
- *
  */
 struct spi_slave_inst {
 	/** Pin to use as Slave Select */
@@ -707,7 +714,7 @@ static inline void _spi_wait_for_sync(
  * This function can be used to delay further operations on the module until it
  * is ready.
  *
- * \param[in] module  SPI hardware module
+ * \param[in]  module  SPI hardware module
  *
  * \return Synchronization status of the underlying hardware module
  * \retval true   Module synchronization is ongoing
@@ -735,22 +742,22 @@ static inline bool spi_is_syncing(
 /**
  * \brief Initializes an SPI configuration structure to default values
  *
- *  This function will initialize a given SPI configuration structure to a set
+ * This function will initialize a given SPI configuration structure to a set
  * of known default values. This function should be called on any new
- *  instance of the configuration structures before being modified by the
- *  user application.
+ * instance of the configuration structures before being modified by the
+ * user application.
  *
- *  The default configuration is as follows:
- *   \li Master mode enabled
- *   \li MSB of the data is transmitted first
- *   \li Transfer mode 0
- *   \li \ref asfdoc_samd20_sercom_spi_mux_setting_d
- *   \li Character size 8 bit
- *   \li Not enabled in sleep mode
- *   \li Receiver enabled
- *   \li Baudrate 9600
- *   \li Default pinmux settings for all pads
- *   \li GLCK generator 0
+ * The default configuration is as follows:
+ *  \li Master mode enabled
+ *  \li MSB of the data is transmitted first
+ *  \li Transfer mode 0
+ *  \li \ref asfdoc_samd20_sercom_spi_mux_setting_d
+ *  \li Character size 8 bit
+ *  \li Not enabled in sleep mode
+ *  \li Receiver enabled
+ *  \li Baudrate 9600
+ *  \li Default pinmux settings for all pads
+ *  \li GCLK generator 0
  *
  * \param[out] config  Configuration structure to initialize to default values
  */
@@ -761,13 +768,13 @@ static inline void spi_get_config_defaults(
 	Assert(config);
 
 	/* Default configuration values */
-	config->mode = SPI_MODE_MASTER;
-	config->data_order = SPI_DATA_ORDER_MSB;
-	config->transfer_mode = SPI_TRANSFER_MODE_0;
-	config->mux_setting = SPI_SIGNAL_MUX_SETTING_D;
-	config->character_size = SPI_CHARACTER_SIZE_8BIT;
-	config->run_in_standby = false;
-	config->receiver_enable = true;
+	config->mode             = SPI_MODE_MASTER;
+	config->data_order       = SPI_DATA_ORDER_MSB;
+	config->transfer_mode    = SPI_TRANSFER_MODE_0;
+	config->mux_setting      = SPI_SIGNAL_MUX_SETTING_D;
+	config->character_size   = SPI_CHARACTER_SIZE_8BIT;
+	config->run_in_standby   = false;
+	config->receiver_enable  = true;
 	config->generator_source = GCLK_GENERATOR_0;
 
 	/* Master config defaults */
@@ -782,17 +789,16 @@ static inline void spi_get_config_defaults(
 };
 
 /**
- * \brief Initializes an SPI perhipheral slave device configuration structure
- * to default values
+ * \brief Initializes an SPI peripheral slave device configuration structure to default values
  *
- *  This function will initialize a given SPI slave device configuration
+ * This function will initialize a given SPI slave device configuration
  * structure to a set of known default values. This function should be called
  * on any new instance of the configuration structures before being modified by
  * the user application.
  *
- *  The default configuration is as follows:
- *   \li Slave Select on pin 10
- *   \li Addressing not enabled
+ * The default configuration is as follows:
+ *  \li Slave Select on GPIO pin 10
+ *  \li Addressing not enabled
  *
  * \param[out] config  Configuration structure to initialize to default values
  */
@@ -801,9 +807,9 @@ static inline void spi_slave_inst_get_config_defaults(
 {
 	Assert(config);
 
-	config->ss_pin = 10;
+	config->ss_pin          = 10;
 	config->address_enabled = false;
-	config->address = 0;
+	config->address         = 0;
 }
 
 /**
@@ -824,13 +830,12 @@ static inline void spi_attach_slave(
 	Assert(slave);
 	Assert(config);
 
-	slave->ss_pin = config->ss_pin;
+	slave->ss_pin          = config->ss_pin;
 	slave->address_enabled = config->address_enabled;
-	slave->address = config->address;
-
-	struct port_config pin_conf;
+	slave->address         = config->address;
 
 	/* Get default config for pin */
+	struct port_config pin_conf;
 	port_get_config_defaults(&pin_conf);
 
 	/* Edit config to set the pin as output */
@@ -857,7 +862,7 @@ enum status_code spi_init(
  *
  * This function will enable the SERCOM SPI module.
  *
- * \param[in,out] module    Pointer to the software instance struct
+ * \param[in,out] module  Pointer to the software instance struct
  */
 static inline void spi_enable(
 		struct spi_module *const module)
@@ -885,7 +890,7 @@ static inline void spi_enable(
  *
  * This function will disable the SERCOM SPI module.
  *
- * \param[in,out] module    Pointer to the software instance struct
+ * \param[in,out] module  Pointer to the software instance struct
  */
 static inline void spi_disable(
 		struct spi_module *const module)
@@ -919,20 +924,18 @@ void spi_reset(
  */
 
  /**
- * \brief Checks if the SPI in master mode has shifted out last data, or
- * if the master has ended the transfer in slave mode.
+ * \brief Checks if the SPI in master mode has shifted out last data, or if the master has ended the transfer in slave mode.
  *
  * This function will check if the SPI master module has shifted out last data,
  * or if the slave select pin has been drawn high by the master for the SPI
  * slave module.
  *
- * \param[in] module      Pointer to the software instance struct
+ * \param[in]  module  Pointer to the software instance struct
  *
- * \return Boolean value to tell whether the module has shifted out last data or
- * not
- * \retval true  If the SPI master module has shifted out data, or slave select
- *               has been drawn high for SPI slave
- * \retval false If the SPI master module has not shifted out data
+ * \return Indication of whether any writes are ongoing
+ * \retval true   If the SPI master module has shifted out data, or slave select
+ *                has been drawn high for SPI slave
+ * \retval false  If the SPI master module has not shifted out data
  */
 static inline bool spi_is_write_complete(
 		struct spi_module *const module)
@@ -952,12 +955,11 @@ static inline bool spi_is_write_complete(
  *
  * This function will check if the SPI module is ready to write data.
  *
- * \param[in] module      Pointer to the software instance struct
+ * \param[in]  module  Pointer to the software instance struct
  *
- * \return Boolean value to tell whether the module is ready to read data or
- * not
- * \retval true  If the SPI module is ready to write data
- * \retval false If the SPI module is not ready to write data
+ * \return Indication of whether the module is ready to read data or not
+ * \retval true   If the SPI module is ready to write data
+ * \retval false  If the SPI module is not ready to write data
  */
 static inline bool spi_is_ready_to_write(
 		struct spi_module *const module)
@@ -977,12 +979,11 @@ static inline bool spi_is_ready_to_write(
  *
  * This function will check if the SPI module is ready to read data.
  *
- * \param[in] module      Pointer to the software instance struct
+ * \param[in]  module Pointer to the software instance struct
  *
- * \return Boolean value to tell whether the module is ready to read data or
- * not
- * \retval true  If the SPI module is ready to read data
- * \retval false If the SPI module is not ready to read data
+ * \return Indication of whether the module is ready to read data or not
+ * \retval true   If the SPI module is ready to read data
+ * \retval false  If the SPI module is not ready to read data
  */
 static inline bool spi_is_ready_to_read(
 		struct spi_module *const module)
@@ -1017,13 +1018,12 @@ static inline bool spi_is_ready_to_read(
  * \note In slave mode, the data will not be transferred before a master
  *       initiates a transaction.
  *
- * \param[in] module    Pointer to the software instance struct
- * \param[in] tx_data     Data to transmit
+ * \param[in] module   Pointer to the software instance struct
+ * \param[in] tx_data  Data to transmit
  *
  * \return Status of the procedure
- * \retval STATUS_OK       If the data was written
- * \retval STATUS_BUSY If the last write was not completed
- *
+ * \retval STATUS_OK    If the data was written
+ * \retval STATUS_BUSY  If the last write was not completed
  */
 static inline enum status_code spi_write(
 		struct spi_module *module,
@@ -1047,25 +1047,29 @@ static inline enum status_code spi_write(
 	return STATUS_OK;
 }
 
-enum status_code spi_write_buffer_wait(struct spi_module
-		*const module, const uint8_t *tx_data, uint8_t length);
+enum status_code spi_write_buffer_wait(
+		struct spi_module *const module,
+		const uint8_t *tx_data,
+		uint8_t length);
 
 /**
  * \brief Reads last received SPI character
  *
  * This function will return the last SPI character shifted into the receive
  * register.
- * The \ref spi_is_ready_to_read function should
- * be called before calling this funtion.
+ *
+ * \note The \ref spi_is_ready_to_read function should be called before calling
+ *       this function.
  *
  * \note Receiver must be enabled in the configuration
  *
- * \param[in] module   Pointer to the software instance struct
- * \param[out] rx_data      Pointer to store the received data
+ * \param[in] module    Pointer to the software instance struct
+ * \param[out] rx_data  Pointer to store the received data
  *
- * \retval STATUS_OK           If data was read
- * \retval STATUS_ERR_IO       If no data is available
- * \retval STATUS_ERR_OVERFLOW If the data is overflown
+ * \returns Status of the read operation.
+ * \retval STATUS_OK            If data was read
+ * \retval STATUS_ERR_IO        If no data is available
+ * \retval STATUS_ERR_OVERFLOW  If the data is overflown
  */
 static inline enum status_code spi_read(
 		struct spi_module *const module,
@@ -1093,7 +1097,7 @@ static inline enum status_code spi_read(
 	if (module->character_size == SPI_CHARACTER_SIZE_9BIT) {
 		*rx_data = (spi_module->DATA.reg & SERCOM_SPI_DATA_MASK);
 	} else {
-		*(uint8_t*)rx_data = (uint8_t)spi_module->DATA.reg;
+		*rx_data = (uint8_t)spi_module->DATA.reg;
 	}
 
 	return retval;
@@ -1118,18 +1122,19 @@ enum status_code spi_read_buffer_wait(
  * In slave mode this function will place the data to be sent into the transmit
  * buffer. It will then block until an SPI master has shifted a complete
  * SPI character, and the received data is available.
+ *
  * \note The data to be sent might not be sent before the next transfer, as
- * loading of the shift register is dependent on SCK.
+ *       loading of the shift register is dependent on SCK.
  *
- * \param[in] module      Pointer to the software instance struct
- * \param[in] tx_data     SPI character to transmit
- * \param[out] rx_data    Pointer to store the received SPI character
+ * \param[in]  module   Pointer to the software instance struct
+ * \param[in]  tx_data  SPI character to transmit
+ * \param[out] rx_data  Pointer to store the received SPI character
  *
- * \return Status of the operation
- * \retval STATUS_OK           If the operation was completed
- * \retval STATUS_ERR_TIMEOUT  If the operation was not completed within the
- *                             timeout in slave mode.
- * \retval STATUS_ERR_OVERFLOW If the incoming data is overflown
+ * \return Status of the operation.
+ * \retval STATUS_OK            If the operation was completed
+ * \retval STATUS_ERR_TIMEOUT   If the operation was not completed within the
+ *                              timeout in slave mode.
+ * \retval STATUS_ERR_OVERFLOW  If the incoming data is overflown
  */
 static inline enum status_code spi_tranceive_wait(
 		struct spi_module *const module,
@@ -1141,6 +1146,7 @@ static inline enum status_code spi_tranceive_wait(
 
 	uint16_t j;
 	enum status_code retval = STATUS_OK;
+
 	/* Start timeout period for slave */
 	if (module->mode == SPI_MODE_SLAVE) {
 		for (j = 0; j <= SPI_TIMEOUT; j++) {

@@ -52,8 +52,14 @@
 
 #include "spi.h"
 
+/**
+ * Enum for the possible types of SPI asynchronous jobs that may be issued to
+ * the driver.
+ */
 enum spi_job_type {
+	/** Asynchronous SPI read into a user provided buffer */
 	SPI_JOB_READ_BUFFER,
+	/** Asynchronous SPI write from a user provided buffer */
 	SPI_JOB_WRITE_BUFFER,
 };
 
@@ -61,6 +67,7 @@ enum spi_job_type {
  * \name Callback Management
  * @{
  */
+
 void spi_register_callback(
 		struct spi_module *const module,
 		spi_callback_t callback_func,
@@ -71,20 +78,14 @@ void spi_unregister_callback(
 		enum spi_callback callback_type);
 
 /**
- * \brief Enables callback
+ * \brief Enables a SPI callback of a given type
  *
  * Enables the callback function registered by the \ref spi_register_callback.
  * The callback function will be called from the interrupt handler when the
  * conditions for the callback type are met.
  *
- * \param[in]     module Pointer to spi software instance struct
- * \param[in]     callback_type Callback type given by an enum
- *
- * \returns    Status of the operation
- * \retval     STATUS_OK              If operation was completed
- * \retval     STATUS_ERR_INVALID     If operation was not completed,
- *                                    due to invalid callback_type
- *
+ * \param[in] module         Pointer to spi software instance struct
+ * \param[in] callback_type  Callback type given by an enum
  */
 static inline void spi_enable_callback(
 		struct spi_module *const module,
@@ -95,7 +96,6 @@ static inline void spi_enable_callback(
 
 	/* Enable callback */
 	module->enabled_callback |= (1 << callback_type);
-
 }
 
 /**
@@ -104,14 +104,8 @@ static inline void spi_enable_callback(
  * Disables the callback function registered by the \ref spi_register_callback,
  * and the callback will not be called from the interrupt routine.
  *
- * \param[in]     module Pointer to SPI software instance struct
- * \param[in]     callback_type Callback type given by an enum
- *
- * \returns    Status of the operation
- * \retval     STATUS_OK              If operation was completed
- * \retval     STATUS_ERR_INVALID     If operation was not completed,
- *                                    due to invalid callback_type
- *
+ * \param[in] module         Pointer to SPI software instance struct
+ * \param[in] callback_type  Callback type given by an enum
  */
 static inline void spi_disable_callback(
 		struct spi_module *const module,
@@ -129,7 +123,7 @@ static inline void spi_disable_callback(
 
 /**
  * \name Writing and Reading
- * {@
+ * @{
  */
 enum status_code spi_write_buffer_job(
 		struct spi_module *const module,
