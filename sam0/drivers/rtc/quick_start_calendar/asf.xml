@@ -1,11 +1,11 @@
 <asf xmlversion="1.0">
-	<module type="application" id="sam0.drivers.rtc_count.quick_start" caption="RTC Count quickstart">
+	<module type="application" id="sam0.drivers.rtc.quick_start_calendar_polled" caption="RTC Count quickstart">
 		<info type="description" value="summary">
 		Quick start guide for the Real Time Clock (Counter Mode) driver demonstrating configuration and initialization.
 		</info>
-		<build type="c-source" value="qs_rtc_count_basic.c"/>
+		<build type="c-source" value="qs_rtc_calendar_basic.c"/>
 		<build type="include-path" value="."/>
-		<require idref="sam0.drivers.rtc_count"/>
+		<require idref="sam0.drivers.rtc"/>
 		<device-support value="samd20"/>
 	</module>
 </asf>

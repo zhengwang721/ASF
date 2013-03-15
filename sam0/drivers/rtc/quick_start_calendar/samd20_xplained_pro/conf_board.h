@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAMD20 RTC Basic Usage Example
+ * \brief SAMD20 Xplained PRO board configuration.
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,61 +40,8 @@
  * \asf_license_stop
  *
  */
-#include <asf.h>
 
-//! [initiate]
-static void config_rtc_count(void)
-{
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-//! [set_conf]
-	struct rtc_count_config config;
-//! [set_conf]
-
-//! [get_default]
-	rtc_count_get_config_defaults(&config);
-//! [get_default]
-
-//! [set_config]
-	config.mode = RTC_COUNT_MODE_16BIT;
-	config.continuously_update = true;
-	config.compare_values[0] = 10;
-//! [set_config]
-//! [init_rtc]
-	rtc_count_init(&config);
-
-//! [init_rtc]
-
-//! [enable]
-	rtc_count_enable();
-//! [enable]
-}
-//! [initiate]
-
-int main(void)
-{
-	/* Initialize system. Must configure conf_clocks.h first. */
-//! [system]
-	system_init();
-//! [system]
-
-//! [add_main]
-
-	config_rtc_count();
-//! [add_main]
-
-//! [implementation_code]
-//! [period]
-	rtc_count_set_period(20);
-//! [period]
-
-	while(1) {
-//! [poll]
-		if (rtc_count_is_compare_match(RTC_COUNT_COMPARE_0)) {
-			rtc_count_clear_compare_match(RTC_COUNT_COMPARE_0);
-			/* Do something */
-		}
-//! [poll]
-	}
-//! [implementation_code]
-
-}
+#endif /* CONF_BOARD_H_INCLUDED */
