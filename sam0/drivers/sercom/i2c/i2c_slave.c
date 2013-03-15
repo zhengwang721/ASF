@@ -49,13 +49,13 @@
 /**
  * \internal Sets configuration to module
  *
- * \param[out] module Pointer to software module structure
- * \param[in]  config Configuration structure with configurations to set
+ * \param[out] module  Pointer to software module structure
+ * \param[in]  config  Configuration structure with configurations to set
  *
- * \return                                Status of setting configuration
- * \retval STATUS_OK                      Module was configured correctly
- * \retval STATUS_ERR_ALREADY_INITIALIZED If setting other GCLK generator than
- *                                        previously set
+ * \return Status of setting configuration.
+ * \retval STATUS_OK                       Module was configured correctly
+ * \retval STATUS_ERR_ALREADY_INITIALIZED  If setting other GCLK generator than
+ *                                         previously set
  */
 static enum status_code _i2c_slave_set_config(
 		struct i2c_slave_module *const module,
@@ -115,17 +115,18 @@ static enum status_code _i2c_slave_set_config(
  * the driver.
  *
  * \param[out] module  Pointer to software module struct
- * \param[in]  module  Pointer to the hardware instance
+ * \param[in]  hw      Pointer to the hardware instance
  * \param[in]  config  Pointer to the configuration struct
  *
- * \return                                 Status of initialization
+ * \return Status of initialization.
  * \retval STATUS_OK                       Module initiated correctly
  * \retval STATUS_ERR_DENIED               If module is enabled
  * \retval STATUS_BUSY                     If module is busy resetting
  * \retval STATUS_ERR_ALREADY_INITIALIZED  If setting other GCLK generator than
  *                                         previously set
  */
-enum status_code i2c_slave_init(struct i2c_slave_module *const module,
+enum status_code i2c_slave_init(
+		struct i2c_slave_module *const module,
 		Sercom *const hw,
 		const struct i2c_slave_config *const config)
 {
@@ -181,8 +182,8 @@ enum status_code i2c_slave_init(struct i2c_slave_module *const module,
 #endif
 
 	/* Set SERCOM module to operate in I2C slave mode. */
-	i2c_hw->CTRLA.reg = SERCOM_I2CS_CTRLA_MODE(2)
-			& ~SERCOM_I2CS_CTRLA_MASTER;
+	i2c_hw->CTRLA.reg =
+			(SERCOM_I2CS_CTRLA_MODE(2) & ~SERCOM_I2CS_CTRLA_MASTER);
 
 	/* Set config and return status. */
 	return _i2c_slave_set_config(module, config);
@@ -193,13 +194,16 @@ enum status_code i2c_slave_init(struct i2c_slave_module *const module,
  *
  * This will reset the module to hardware defaults.
  *
- * \param[in,out] module Pointer to software module structure
+ * \param[in,out] module  Pointer to software module structure
  */
-void i2c_slave_reset(struct i2c_slave_module *const module)
+void i2c_slave_reset(
+		struct i2c_slave_module *const module)
 {
 	/* Sanity check arguments. */
 	Assert(module);
 	Assert(module->hw);
+
+	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
 
 #if I2C_SLAVE_CALLBACK_MODE == true
 	/* Reset module instance. */
@@ -209,8 +213,6 @@ void i2c_slave_reset(struct i2c_slave_module *const module)
 	module->buffer_remaining = 0;
 	module->buffer = NULL;
 #endif
-
-	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
 
 	/* Disable module */
 	i2c_slave_disable(module);
@@ -232,16 +234,20 @@ void i2c_slave_reset(struct i2c_slave_module *const module)
 /**
  * \internal Waits for answer on bus
  *
- * \param[in] module Pointer to software module structure
+ * \param[in]  module  Pointer to software module structure
  *
- * \return                    Status of bus
- * \retval STATUS_OK          If given response from slave device
- * \retval STATUS_ERR_TIMEOUT If no response was given within specified timeout
- *                            period
+ * \return Status of bus.
+ * \retval STATUS_OK           If given response from slave device
+ * \retval STATUS_ERR_TIMEOUT  If no response was given within specified timeout
+ *                             period
  */
 static enum status_code _i2c_slave_wait_for_bus(
 		struct i2c_slave_module *const module)
 {
+	/* Sanity check arguments. */
+	Assert(module);
+	Assert(module->hw);
+
 	SercomI2cm *const i2c_module = &(module->hw->I2CM);
 
 	/* Wait for reply. */
@@ -264,19 +270,20 @@ static enum status_code _i2c_slave_wait_for_bus(
  * Writes a packet to the master. This will wait for the master to issue
  * a request.
  *
- * \param[in] module Pointer to software module structure
- * \param[in] packet Packet to write to master
+ * \param[in]  module  Pointer to software module structure
+ * \param[in]  packet  Packet to write to master
  *
- * \return Status of packet write
- * \retval STATUS_OK               Packet was written successfully
- * \retval STATUS_ERR_IO           There was an error in the previous transfer
- * \retval STATUS_ERR_BAD_FORMAT   Master wants to write data
- * \retval STATUS_ERR_ERR_OVERFLOW Master nacked before entire packet was
- *                                 transferred
- * \retval STATUS_ERR_TIMEOUT      No response was given within the timeout
- *                                 period
+ * \return Status of packet write.
+ * \retval STATUS_OK                Packet was written successfully
+ * \retval STATUS_ERR_IO            There was an error in the previous transfer
+ * \retval STATUS_ERR_BAD_FORMAT    Master wants to write data
+ * \retval STATUS_ERR_ERR_OVERFLOW  Master NAKed before entire packet was
+ *                                  transferred
+ * \retval STATUS_ERR_TIMEOUT       No response was given within the timeout
+ *                                  period
  */
-enum status_code i2c_slave_write_packet_wait(struct i2c_slave_module *const module,
+enum status_code i2c_slave_write_packet_wait(
+		struct i2c_slave_module *const module,
 		struct i2c_packet *const packet)
 {
 	/* Sanity check arguments. */
@@ -334,6 +341,7 @@ enum status_code i2c_slave_write_packet_wait(struct i2c_slave_module *const modu
 
 		/* Wait for response from master */
 		status = _i2c_slave_wait_for_bus(module);
+
 		if (status != STATUS_OK) {
 			/* Timeout, return */
 			return status;
@@ -344,6 +352,7 @@ enum status_code i2c_slave_write_packet_wait(struct i2c_slave_module *const modu
 			/* NACK from master, abort */
 			/* Release line */
 			i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_CMD(0x02);
+
 			return STATUS_ERR_OVERFLOW;
 			/* Workaround: PIF will probably not be set, ignore */
 		}
@@ -359,22 +368,23 @@ enum status_code i2c_slave_write_packet_wait(struct i2c_slave_module *const modu
 /**
  * \brief Reads a packet from the master
  *
- * Reads a packet from the master. This will wait for the master to
- * issue a request.
+ * Reads a packet from the master. This will wait for the master to issue a
+ * request.
  *
- * \param[in]  module Pointer to software module structure
- * \param[out] packet Packet to read from master
+ * \param[in]  module  Pointer to software module structure
+ * \param[out] packet  Packet to read from master
  *
- * \return Status of packet read
- * \retval STATUS_OK               Packet was read successfully
- * \retval STATUS_ABORTED          Master sent stop condition or repeated
- *                                 start before specified length of bytes
- *                                 was received
- * \retval STATUS_ERR_IO           There was an error in the previous transfer
- * \retval STATUS_ERR_BAD_FORMAT   Master wants to read data
- * \retval STATUS_ERR_ERR_OVERFLOW Last byte received overflows buffer
+ * \return Status of packet read.
+ * \retval STATUS_OK                Packet was read successfully
+ * \retval STATUS_ABORTED           Master sent stop condition or repeated
+ *                                  start before specified length of bytes
+ *                                  was received
+ * \retval STATUS_ERR_IO            There was an error in the previous transfer
+ * \retval STATUS_ERR_BAD_FORMAT    Master wants to read data
+ * \retval STATUS_ERR_ERR_OVERFLOW  Last byte received overflows buffer
  */
-enum status_code i2c_slave_read_packet_wait(struct i2c_slave_module *const module,
+enum status_code i2c_slave_read_packet_wait(
+		struct i2c_slave_module *const module,
 		struct i2c_packet *const packet)
 {
 	/* Sanity check arguments. */
@@ -462,13 +472,13 @@ enum status_code i2c_slave_read_packet_wait(struct i2c_slave_module *const modul
  * Note that this function does not check for errors in the last transfer,
  * this will be discovered when reading or writing.
  *
- * \param[in] module Pointer to software module structure
+ * \param[in]  module  Pointer to software module structure
  *
- * \return
- * \retval I2C_SLAVE_DIRECTION_NONE  No request from master within timeout
- *                                   period
- * \retval I2C_SLAVE_DIRECTION_READ  Write request from master
- * \retval I2C_SLAVE_DIRECTION_WRITE Read request from master
+ * \return Direction of the current transfer, when in slave mode.
+ * \retval I2C_SLAVE_DIRECTION_NONE   No request from master within timeout
+ *                                    period
+ * \retval I2C_SLAVE_DIRECTION_READ   Write request from master
+ * \retval I2C_SLAVE_DIRECTION_WRITE  Read request from master
  */
 enum i2c_slave_direction i2c_slave_get_direction_wait(
 		struct i2c_slave_module *const module)
@@ -486,9 +496,10 @@ enum i2c_slave_direction i2c_slave_get_direction_wait(
 	status = _i2c_slave_wait_for_bus(module);
 
 	if (status != STATUS_OK) {
-			/* Timeout, return */
-			return I2C_SLAVE_DIRECTION_NONE;
+		/* Timeout, return */
+		return I2C_SLAVE_DIRECTION_NONE;
 	}
+
 	if (!(i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_AIF)) {
 		/* Not address interrupt, something is wrong */
 		return I2C_SLAVE_DIRECTION_NONE;

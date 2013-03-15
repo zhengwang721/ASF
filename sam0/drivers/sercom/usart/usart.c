@@ -47,12 +47,17 @@
 #endif
 
 /**
- * \internal Set Configuration of the USART module
+ * \internal
+ * Set Configuration of the USART module
  */
 static enum status_code _usart_set_config(
 		struct usart_module *const module,
 		const struct usart_config const *config)
 {
+	/* Sanity check arguments */
+	Assert(module);
+	Assert(module->hw);
+
 	/* Get a pointer to the hardware module instance */
 	SercomUsart *const usart_hw = &(module->hw->USART);
 
@@ -144,9 +149,9 @@ static enum status_code _usart_set_config(
  * Initializes the USART device based on the setting specified in the
  * configuration struct.
  *
- * \param[out] module Pointer to USART device
- * \param[in]  hw   Pointer to USART hardware instance
- * \param[in]  config   Pointer to configuration struct
+ * \param[out] module  Pointer to USART device
+ * \param[in]  hw      Pointer to USART hardware instance
+ * \param[in]  config  Pointer to configuration struct
  *
  * \return Status of the initialization
  *
@@ -292,13 +297,13 @@ enum status_code usart_init(
  * This blocking function will transmit a single character via the
  * USART.
  *
- * \param[in]   module Pointer to the software instance struct
+ * \param[in]  module   Pointer to the software instance struct
  * \param[in]  tx_data  Data to transfer
  *
- * \return     Status of the operation
- * \retval     STATUS_OK           If the operation was completed
- * \retval     STATUS_BUSY     If the operation was not completed,
- *                                 due to the USART module being busy.
+ * \return Status of the operation
+ * \retval STATUS_OK    If the operation was completed
+ * \retval STATUS_BUSY  If the operation was not completed, due to the USART
+ *                      module being busy.
  */
 enum status_code usart_write_wait(
 		struct usart_module *const module,
@@ -341,24 +346,23 @@ enum status_code usart_write_wait(
 /**
  * \brief Receive a character via the USART
  *
- * This blocking function will receive a character via the
- * USART.
+ * This blocking function will receive a character via the USART.
  *
- * \param[in]   module Pointer to the software instance struct
+ * \param[in]   module   Pointer to the software instance struct
  * \param[out]  rx_data  Pointer to received data
  *
- * \return     Status of the operation
- * \retval     STATUS_OK                If the operation was completed
- * \retval     STATUS_BUSY          If the operation was not completed,
- *                                      due to the USART module being busy.
- * \retval     STATUS_ERR_BAD_FORMAT    If the operation was not completed,
- *                                      due to configuration mismatch
- *                                      between USART and the sender.
- * \retval     STATUS_ERR_BAD_OVERFLOW  If the operation was not completed,
- *                                      due to the baud rate being to low or the
- *                                      system frequency being to high.
- * \retval     STATUS_ERR_BAD_DATA      If the operation was not completed, due
- *                                      to data being corrupted.
+ * \return Status of the operation
+ * \retval STATUS_OK                If the operation was completed
+ * \retval STATUS_BUSY              If the operation was not completed,
+ *                                  due to the USART module being busy
+ * \retval STATUS_ERR_BAD_FORMAT    If the operation was not completed,
+ *                                  due to configuration mismatch between USART
+ *                                  and the sender
+ * \retval STATUS_ERR_BAD_OVERFLOW  If the operation was not completed,
+ *                                  due to the baud rate being to low or the
+ *                                  system frequency being to high
+ * \retval STATUS_ERR_BAD_DATA      If the operation was not completed, due to
+ *                                  data being corrupted
  */
 enum status_code usart_read_wait(
 		struct usart_module *const module,
@@ -425,7 +429,7 @@ enum status_code usart_read_wait(
 }
 
 /**
- * \brief Transmit a buffer of \c length characters via the USART
+ * \brief Transmit a buffer of characters via the USART
  *
  * This blocking function will transmit a block of \c length characters
  * via the USART
@@ -434,16 +438,16 @@ enum status_code usart_read_wait(
  *       not recommended as it has no functionality to check if there is an
  *       ongoing interrupt driven operation running or not.
  *
- * \param[in]     module Pointer to USART software instance struct
- * \param[in]     tx_data  Pointer to data to transmit
- * \param[in]     length   Number of characters to transmit
+ * \param[in]  module   Pointer to USART software instance struct
+ * \param[in]  tx_data  Pointer to data to transmit
+ * \param[in]  length   Number of characters to transmit
  *
- * \return        Status of the operation
- * \retval        STATUS_OK                If operation was completed
- * \retval        STATUS_ERR_INVALID_ARG   If operation was not completed,
- *                                         due to invalid arguments
- * \retval        STATUS_ERR_TIMEOUT       If operation was not completed,
- *                                         due to USART module timing out
+ * \return Status of the operation
+ * \retval STATUS_OK              If operation was completed
+ * \retval STATUS_ERR_INVALID_ARG If operation was not completed, due to invalid
+ *                                arguments
+ * \retval STATUS_ERR_TIMEOUT     If operation was not completed, due to USART
+ *                                module timing out
  */
 enum status_code usart_write_buffer_wait(
 		struct usart_module *const module,
@@ -453,15 +457,6 @@ enum status_code usart_write_buffer_wait(
 	/* Sanity check arguments */
 	Assert(module);
 	Assert(module->hw);
-
-	/* Timeout variables */
-	uint16_t timeout;
-
-#ifdef USART_CUSTOM_TIMEOUT
-	timeout = USART_CUSTOM_TIMEOUT;
-#else
-	timeout = USART_DEFAULT_TIMEOUT;
-#endif
 
 	/* Check if the buffer length is valid */
 	if (length == 0) {
@@ -480,10 +475,10 @@ enum status_code usart_write_buffer_wait(
 	while (length--) {
 		/* Wait for the USART to be ready for new data and abort
 		* operation if it doesn't get ready within the timeout*/
-		for (uint32_t i = 0; i < timeout; i++) {
+		for (uint32_t i = 0; i < USART_TIMEOUT; i++) {
 			if (usart_hw->INTFLAG.reg & SERCOM_USART_INTFLAG_DREIF) {
 				break;
-			} else if (i == timeout) {
+			} else if (i == USART_TIMEOUT) {
 				return STATUS_ERR_TIMEOUT;
 			}
 		}
@@ -501,10 +496,10 @@ enum status_code usart_write_buffer_wait(
 	}
 
 	/* Wait until Transmit is complete or timeout */
-	for (uint32_t i = 0; i < timeout; i++) {
+	for (uint32_t i = 0; i < USART_TIMEOUT; i++) {
 		if (usart_hw->INTFLAG.reg & SERCOM_USART_INTFLAG_TXCIF) {
 			break;
-		} else if (i == timeout) {
+		} else if (i == USART_TIMEOUT) {
 			return STATUS_ERR_TIMEOUT;
 		}
 	}
@@ -518,28 +513,28 @@ enum status_code usart_write_buffer_wait(
  * This blocking function will receive a block of \c length characters
  * via the USART.
  *
- * \note Using this function in combination with the interrupt (\c _job) functions is
- *       not recommended as it has no functionality to check if there is an
- *       ongoing interrupt driven operation running or not.
+ * \note Using this function in combination with the interrupt (\c *_job)
+ *       functions is not recommended as it has no functionality to check if
+ *       there is an ongoing interrupt driven operation running or not.
  *
- * \param[in]     module Pointer to USART software instance struct
- * \param[out]    rx_data  Pointer to receive buffer
- * \param[in]     length   Number of characters to receive
+ * \param[in]  module   Pointer to USART software instance struct
+ * \param[out] rx_data  Pointer to receive buffer
+ * \param[in]  length   Number of characters to receive
  *
- * \return     Status of the operation
- * \retval     STATUS_OK                If operation was completed
- * \retval     STATUS_ERR_INVALID_ARG   If operation was not completed, due
- *                                     to invalid arguments
- * \retval     STATUS_ERR_TIMEOUT       If operation was not completed, due
- *                                      to USART module timing out
- * \retval     STATUS_ERR_BAD_FORMAT    If the operation was not completed,
- *                                      due to a configuration mismatch
- *                                      between USART and the sender.
- * \retval     STATUS_ERR_BAD_OVERFLOW  If the operation was not completed,
- *                                      due to the baud rate being to low or the
- *                                      system frequency being to high.
- * \retval     STATUS_ERR_BAD_DATA      If the operation was not completed, due
- *                                      to data being corrupted.
+ * \return Status of the operation.
+ * \retval STATUS_OK                If operation was completed
+ * \retval STATUS_ERR_INVALID_ARG   If operation was not completed, due to an
+ *                                  invalid argument being supplied
+ * \retval STATUS_ERR_TIMEOUT       If operation was not completed, due
+ *                                  to USART module timing out
+ * \retval STATUS_ERR_BAD_FORMAT    If the operation was not completed,
+ *                                  due to a configuration mismatch
+ *                                  between USART and the sender
+ * \retval STATUS_ERR_BAD_OVERFLOW  If the operation was not completed,
+ *                                  due to the baud rate being to low or the
+ *                                  system frequency being to high
+ * \retval STATUS_ERR_BAD_DATA      If the operation was not completed, due
+ *                                  to data being corrupted
  */
 enum status_code usart_read_buffer_wait(
 		struct usart_module *const module,
@@ -549,15 +544,6 @@ enum status_code usart_read_buffer_wait(
 	/* Sanity check arguments */
 	Assert(module);
 	Assert(module->hw);
-
-	/* Timeout variables */
-	uint16_t timeout;
-
-#ifdef USART_CUSTOM_TIMEOUT
-	timeout = USART_CUSTOM_TIMEOUT;
-#else
-	timeout = USART_DEFAULT_TIMEOUT;
-#endif
 
 	/* Check if the buffer length is valid */
 	if (length == 0) {
@@ -573,10 +559,10 @@ enum status_code usart_read_buffer_wait(
 	while (length--) {
 		/* Wait for the USART to have new data and abort operation if it
 		 * doesn't get ready within the timeout*/
-		for (uint32_t i = 0; i < timeout; i++) {
+		for (uint32_t i = 0; i < USART_TIMEOUT; i++) {
 			if (!(usart_hw->INTFLAG.reg & SERCOM_USART_INTFLAG_RXCIF)) {
 				break;
-			} else if (i == timeout) {
+			} else if (i == USART_TIMEOUT) {
 				return STATUS_ERR_TIMEOUT;
 			}
 		}

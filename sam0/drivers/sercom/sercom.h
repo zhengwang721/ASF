@@ -57,37 +57,10 @@ extern "C" {
 #if (SERCOM0_GCLK_ID_SLOW == SERCOM1_GCLK_ID_SLOW && \
      SERCOM0_GCLK_ID_SLOW == SERCOM2_GCLK_ID_SLOW && \
      SERCOM0_GCLK_ID_SLOW == SERCOM3_GCLK_ID_SLOW)
-# define SERCOM_GCLK_ID SERCOM0_GCLK_ID_SLOW
+#  define SERCOM_GCLK_ID SERCOM0_GCLK_ID_SLOW
 #else
-# error "SERCOM GCLK id changed."
+#  error "SERCOM modules must share the same slow GCLK channel ID."
 #endif
-
-/**
- * \defgroup sam0_sercom_group SAMD20 SERCOM
- *
- * Driver for the SAMD20 architecture devices.
- * This driver encompasses the following module within the SAMD20 devices:
- * \li \b SERCOM
- *
- * \section module_introduction Introduction
- *
- * \subsection module_overview SERCOM Overview
- *
- * \section dependencies Dependencies
- * The SERCOM driver has the following dependencies:
- * \li \ref clock_group "\b Clock" (System Clock Management)
- *
- * \section special_cons Special Considerations
- *
- * \section extra_info Extra Information
- * For extra information see \ref sercom_extra_info.
- *
- * \section module_examples Examples
- * - \ref quickstart
- *
- * \section api_overview API Overview
- * @{
- */
 
 enum status_code sercom_set_gclk_generator(
 		enum gclk_generator generator_source,
@@ -102,68 +75,8 @@ enum status_code _sercom_get_async_baud_val(uint32_t baudrate,
 
 uint32_t _sercom_get_default_pad(Sercom *sercom_module, uint8_t pad);
 
-/** @} */
-
-
 #ifdef __cplusplus
 }
 #endif
-
-/** @} */
-
-
-/**
- * \page sercom_extra_info Extra Information
- *
- * \section acronyms Acronyms
- * Below is a table listing the acronyms used in this module, along with their
- * intended meanings.
- *
- * <table>
- *	<tr>
- *		<th>Acronym</th>
- *		<th>Description</th>
- *	</tr>
- *  <tr>
- *  	<td>...</td>
- *  	<td>...</td>
- *  </tr>
- * </table>
- *
- * \section workarounds Workarounds implemented by driver
- * No workarounds in driver.
- *
- * \section module_history Module History
- * Below is an overview of the module history, detailing enhancements and fixes
- * made to the module since its first release. The current version of this
- * corresponds to the newest version listed in the table below.
- *
- * <table>
- *	<tr>
- *		<th>Changelog</th>
- *	</tr>
- *	<tr>
- *		<td>Initial Release</td>
- *	</tr>
- * </table>
- */
-
-/**
- * \page quickstart Quick Start Guides for the SERCOM module
- *
- * This is the quick start guide list for the \ref sam0_sercom_group module, with
- * step-by-step instructions on how to configure and use the driver in a
- * selection of use cases.
- *
- * The use cases contain several code fragments. The code fragments in the
- * steps for setup can be copied into a custom initialization function of the
- * user application and run at system startup, while the steps for usage can be
- * copied into the normal user application program flow.
- *
- * \see General list of module \ref module_examples "examples".
- *
- * \section sercom_use_cases SERCOM driver use cases
- * - \subpage sercom_basic_use_case
- */
 
 #endif //__SERCOM_H_INCLUDED

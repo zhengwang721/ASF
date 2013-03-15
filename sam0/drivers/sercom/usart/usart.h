@@ -44,18 +44,6 @@
 #ifndef USART_H_INCLUDED
 #define USART_H_INCLUDED
 
-#ifndef PINMUX_DEFAULT
-#  define PINMUX_DEFAULT 0xFFFFFFFF
-#endif
-
-#include <sercom.h>
-
-#if USART_CALLBACK_MODE == true
-#  include <sercom_interrupt.h>
-#endif
-
-#define USART_DEFAULT_TIMEOUT  0xFFFF
-
 /**
  * \defgroup asfdoc_samd20_sercom_usart_group SAMD20 Serial USART Driver (SERCOM USART)
  *
@@ -169,7 +157,6 @@
  * When receiving a character the receiver will count the number of "1"s in the
  * frame and give an error if the received frame and parity bit disagree.
  *
- *
  * \subsection asfdoc_samd20_sercom_usart_overview_pin_configuration GPIO configuration
  *
  * the SERCOM module have four internal PADS where the RX pin can be placed at all
@@ -210,12 +197,30 @@
  * @{
  */
 
+#include <sercom.h>
+#include <pinmux.h>
+
+#if USART_CALLBACK_MODE == true
+#  include <sercom_interrupt.h>
+#endif
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#ifndef PINMUX_DEFAULT
+#  define PINMUX_DEFAULT 0
+#endif
+
+#ifndef USART_TIMEOUT
+#  define USART_TIMEOUT 0xFFFF
+#endif
+
 #if USART_CALLBACK_MODE == true
 /**
  * \brief USART Callback enum
  *
  * Callbacks for the Asynchronous USART driver
- *
  */
 /* TODO: Add support for RX started interrupt. */
 enum usart_callback {
@@ -233,10 +238,10 @@ enum usart_callback {
 #endif
 
 /**
- * \brief USART Dataorder enum
+ * \brief USART Data Order enum
  *
- * The dataorder decides which of MSB or LSB
- * is shifted out first when data is transferred
+ * The data order decides which of MSB or LSB is shifted out first when data is
+ * transferred
  */
 enum usart_dataorder {
 	/** The MSB will be shifted out first during transmission,
@@ -282,7 +287,6 @@ enum usart_parity {
  * \brief USART signal mux settings
  *
  * Set the functionality of the SERCOM pins.
- *
  */
 enum usart_signal_mux_settings {
 	/** See \ref asfdoc_samd20_sercom_usart_mux_setting_a */
@@ -307,7 +311,6 @@ enum usart_signal_mux_settings {
  * \brief USART Stop Bits enum
  *
  * Number of stop bits for a frame.
- *
  */
 enum usart_stopbits {
 	/** Each transferred frame contains 1 stop bit */
@@ -320,7 +323,6 @@ enum usart_stopbits {
  * \brief USART Character Size
  *
  * Number of bits for the character sent in a frame.
- *
  */
 enum usart_character_size {
 	/** The char being sent in a frame is 5 bits long */
@@ -340,7 +342,6 @@ enum usart_character_size {
  * \brief USART Transceiver
  *
  * Select Receiver or Transmitter
- *
  */
 enum usart_transceiver_type {
 	/** The parameter is for the Receiver */
@@ -351,6 +352,7 @@ enum usart_transceiver_type {
 
 /**
  * \brief USART configuration struct
+ *
  * Configuration options for USART
  */
 struct usart_config {
@@ -449,7 +451,8 @@ struct usart_module {
 
 #if !defined (__DOXYGEN__)
 /**
- * \internal Wait until synchronization is complete
+ * \internal
+ * Waits until synchronization is complete
  */
 static inline void _usart_wait_for_sync(
 		const struct usart_module *const module)
@@ -471,12 +474,13 @@ static inline void _usart_wait_for_sync(
  * any new actions until sync is complete.If this functions is not run; the
  * functions will block until the sync has completed.
  *
- *  \param[in] module Pointer to peripheral module
- *  \return     Peripheral sync status
+ * \param[in]  module  Pointer to peripheral module
  *
- *  \retval     true                Peripheral is busy syncing
- *  \retval     false               Peripheral is not busy syncing and can be
- *                                  read/written without stalling the bus.
+ * \return Peripheral sync status
+ *
+ * \retval true   Peripheral is busy syncing
+ * \retval false  Peripheral is not busy syncing and can be read/written without
+ *                stalling the bus.
  */
 static inline bool usart_is_syncing(
 		const struct usart_module *const module)
@@ -499,7 +503,7 @@ static inline bool usart_is_syncing(
  *
  * Initialize the USART device to predefined defaults:
  * - 8-bit asynchronous USART
- * - no parity
+ * - No parity
  * - 1 stop bit
  * - 9600 baud
  * - GCLK generator 0 as clock source
@@ -508,8 +512,7 @@ static inline bool usart_is_syncing(
  * The configuration struct will be updated with the default
  * configuration.
  *
- * \param[in,out] config Pointer to configuration struct
- *
+ * \param[in,out] config  Pointer to configuration struct
  */
 static inline void usart_get_config_defaults(
 		struct usart_config *const config)
@@ -546,8 +549,7 @@ enum status_code usart_init(
  *
  * Enables the USART module
  *
- * \param[in] module Pointer to USART software instance struct
- *
+ * \param[in]  module  Pointer to USART software instance struct
  */
 static inline void usart_enable(
 		const struct usart_module *const module)
@@ -574,7 +576,7 @@ static inline void usart_enable(
  *
  * Disables the USART module
  *
- * \param[in] module Pointer to USART software instance struct
+ * \param[in]  module  Pointer to USART software instance struct
  */
 static inline void usart_disable(
 		const struct usart_module *const module)
@@ -601,8 +603,7 @@ static inline void usart_disable(
  *
  * Disables and resets the USART module.
  *
- * \param[in] module Pointer to the USART software instance struct
- *
+ * \param[in]  module  Pointer to the USART software instance struct
  */
 static inline void usart_reset(
 		const struct usart_module *const module)
@@ -656,8 +657,8 @@ enum status_code usart_read_buffer_wait(
  *
  * Enable the given transceiver. Either RX or TX.
  *
- * \param[in] module   Pointer to USART software instance struct
- * \param[in] transceiver_type  Transceiver type.
+ * \param[in]  module            Pointer to USART software instance struct
+ * \param[in]  transceiver_type  Transceiver type.
  */
 static inline void usart_enable_transceiver(
 		const struct usart_module *const module,
@@ -691,8 +692,8 @@ static inline void usart_enable_transceiver(
  *
  * Disable the given transceiver (RX or TX).
  *
- * \param[in] module             Pointer to USART software instance struct
- * \param[in] transceiver_type  Transceiver type.
+ * \param[in]  module            Pointer to USART software instance struct
+ * \param[in]  transceiver_type  Transceiver type.
  */
 static inline void usart_disable_transceiver(
 		const struct usart_module *const module,
@@ -720,7 +721,12 @@ static inline void usart_disable_transceiver(
 			break;
 	}
 }
+
 /** @} */
+
+#ifdef __cplusplus
+}
+#endif
 
 /** @} */
 
