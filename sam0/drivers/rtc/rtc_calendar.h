@@ -245,8 +245,10 @@
  * \section asfdoc_samd20_rtc_calendar_examples Examples
  *
  * The following Quick Start guides and application examples are available for this driver:
- * - \ref asfdoc_samd20_rtc_calendar_basic_use_case "Quick Start Guide for RTC Calendar - Basic"
- * - \ref asfdoc_samd20_rtc_calendar_callback_use_case "Quick Start Guide for RTC Calendar - Callback"
+ * - \ref asfdoc_samd20_rtc_calendar_basic_use_case
+ * \if RTC_CALENDAR_CALLBACK_MODE
+ * - \subpage asfdoc_samd20_rtc_calendar_callback_use_case
+ * \endif
  *
  *
  * \section asfdoc_samd20_rtc_calendar_api_overview API Overview
@@ -881,6 +883,9 @@ static inline void rtc_calendar_disable_events(
  * application or be added to the user application.
  *
  *  - \subpage asfdoc_samd20_rtc_calendar_basic_use_case
+ * \if RTC_CALENDAR_CALLBACK_MODE
+ *  - \subpage asfdoc_samd20_rtc_calendar_callback_use_case
+ * \endif
  */
 
 #endif /* RTC_CALENDAR_H_INCLUDED */

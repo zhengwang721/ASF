@@ -240,8 +240,10 @@
  * \section asfdoc_samd20_rtc_count_examples Examples
  *
  * The following Quick Start guides and application examples are available for this driver:
- * - \ref asfdoc_samd20_rtc_count_basic_use_case "Quick Start Guide for RTC Count - Basic"
- * - \ref asfdoc_samd20_rtc_count_callback_use_case "Quick Start Guide for RTC Count - Interrupt"
+ * - \ref asfdoc_samd20_rtc_count_basic_use_case
+ * \if RTC_COUNT_CALLBACK_MODE
+ * - \ref asfdoc_samd20_rtc_count_callback_use_case
+ * \endif
  *
  *
  * \section asfdoc_samd20_rtc_count_api_overview API Overview
@@ -759,7 +761,9 @@ static inline void rtc_count_disable_events(
  * application or be added to the user application.
  *
  *  - \subpage asfdoc_samd20_rtc_count_basic_use_case
+ * \if RTC_COUNT_CALLBACK_MODE
  *  - \subpage asfdoc_samd20_rtc_count_callback_use_case
+ * \endif
  */
 
 #endif /* RTC_COUNT_H_INCLUDED */
