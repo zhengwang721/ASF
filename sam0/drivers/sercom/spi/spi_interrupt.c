@@ -116,9 +116,9 @@ static void _spi_read_buffer(
  *
  * Registers a callback function which is implemented by the user.
  *
- * \note The callback must be enabled by \ref usart_async_register_callback,
- * in order for the interrupt handler to call it when the conditions for the
- * callback type is met.
+ * \note The callback must be enabled by \ref spi_register_callback, in order
+ *       for the interrupt handler to call it when the conditions for the
+ *       callback type is met.
  *
  * \param[in]     module      Pointer to USART software instance struct
  * \param[in]     callback_func Pointer to callback function
@@ -147,7 +147,6 @@ void spi_register_callback(
  * Unregisters a callback function which is implemented by the user.
  *
  * \param[in]     module Pointer to SPI software instance struct
- * \param[in]     callback_func Pointer to callback function
  * \param[in]     callback_type Callback type given by an enum
  *
  */
@@ -172,7 +171,7 @@ void spi_unregister_callback(
  * and enabled, a callback function will be called.
  *
  * \param[in]     module Pointer to USART software instance struct
- * \param[out]    rx_data  Pointer to data buffer to receive
+ * \param[out]    tx_data  Pointer to data buffer to receive
  * \param[in]     length   Data buffer length
  *
  * \returns    Status of the operation

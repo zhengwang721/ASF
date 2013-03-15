@@ -44,6 +44,12 @@
 #ifndef SPI_INTERRUPT_H_INCLUDED
 #define SPI_INTERRUPT_H_INCLUDED
 
+/**
+ * \addtogroup asfdoc_samd20_sercom_spi_group
+ *
+ * @{
+ */
+
 #include "spi.h"
 
 enum spi_job_type {
@@ -53,7 +59,7 @@ enum spi_job_type {
 
 /**
  * \name Callback Management
- * {@
+ * @{
  */
 void spi_register_callback(
 		struct spi_module *const module,
@@ -67,9 +73,9 @@ void spi_unregister_callback(
 /**
  * \brief Enables callback
  *
- * Enables the callback function registered by the \ref
- * spi_async_register_callback. The callback function will be called from the
- * interrupt handler when the conditions for the callback type are met.
+ * Enables the callback function registered by the \ref spi_register_callback.
+ * The callback function will be called from the interrupt handler when the
+ * conditions for the callback type are met.
  *
  * \param[in]     module Pointer to spi software instance struct
  * \param[in]     callback_type Callback type given by an enum
@@ -95,9 +101,8 @@ static inline void spi_enable_callback(
 /**
  * \brief Disables callback
  *
- * Disables the callback function registered by the \ref
- * spi_async_register_callback, and the callback will not be called
- * from the interrupt routine.
+ * Disables the callback function registered by the \ref spi_register_callback,
+ * and the callback will not be called from the interrupt routine.
  *
  * \param[in]     module Pointer to SPI software instance struct
  * \param[in]     callback_type Callback type given by an enum
@@ -116,16 +121,14 @@ static inline void spi_disable_callback(
 	Assert(module);
 
 	/* Disable callback */
-	module->enabled_callback &= ~(0 << callback_type);
+	module->enabled_callback &= ~(1 << callback_type);
 }
 
-/**
- * @}
- */
+/** @} */
 
 
 /**
- * \name Writing and reading
+ * \name Writing and Reading
  * {@
  */
 enum status_code spi_write_buffer_job(
@@ -145,6 +148,9 @@ void spi_abort_job(
 enum status_code spi_get_job_status(
 		const struct spi_module *const module,
 		enum spi_job_type job_type);
+
+/** @} */
+
 /**
  * @}
  */

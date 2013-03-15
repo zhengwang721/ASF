@@ -212,14 +212,14 @@ static enum status_code _spi_set_config(
  * of the config struct.
  *
  * \param[out] module   Pointer to the software instance struct
- * \param[in] module      Pointer to hardware instance
- * \param[in] config      Pointer to the config struct
+ * \param[in]  hw       Pointer to hardware instance
+ * \param[in]  config   Pointer to the config struct
  *
  * \return Status of the initialization
- * \retval STATUS_OK                     Module initiated correctly.
- * \retval STATUS_ERR_DENIED             If module is enabled.
- * \retval STATUS_BUSY               If module is busy resetting.
- * \retval STATUS_ERR_INVALID_ARG        If invalid argument(s) were provided.
+ * \retval STATUS_OK               Module initiated correctly.
+ * \retval STATUS_ERR_DENIED       If module is enabled.
+ * \retval STATUS_BUSY             If module is busy resetting.
+ * \retval STATUS_ERR_INVALID_ARG  If invalid argument(s) were provided.
  */
 enum status_code spi_init(
 		struct spi_module *const module,
@@ -447,7 +447,7 @@ enum status_code spi_select_slave(
  *
  * This function will send a buffer of SPI characters via the SPI
  * and discard any data that is received. To both send and receive a buffer of
- * data, use the \ref spi_tranceive_buffer function.
+ * data, use the \ref spi_tranceive_buffer_wait function.
  *
  * Note that this function does not handle the _SS (slave select) pin(s) in
  * master mode; this must be handled by the user application.
@@ -455,8 +455,8 @@ enum status_code spi_select_slave(
  * \note Data buffer to send must be of type uint16_t and cast to uint8_t if
  * SPI character size is 9 bit.
  *
- * \param[in] module  Pointer to the software instance struct
- * \param[in] data      Pointer to the buffer to transmit
+ * \param[in] module    Pointer to the software instance struct
+ * \param[in] tx_data   Pointer to the buffer to transmit
  * \param[in] length    Number of SPI characters to transfer
  *
  * \return Status of the write operation
