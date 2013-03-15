@@ -39,8 +39,8 @@
  *
  */
 
-#ifndef _SAM4E8E_PIO_
-#define _SAM4E8E_PIO_
+#ifndef _SAM4E8C_PIO_
+#define _SAM4E8C_PIO_
 
 #define PIO_PA0              (1u << 0)  /**< \brief Pin Controlled by PA0 */
 #define PIO_PA1              (1u << 1)  /**< \brief Pin Controlled by PA1 */
@@ -200,52 +200,6 @@
 #define PIO_PB13X1_DAC0      (1u << 13) /**< \brief Dacc signal: DAC0 */
 #define PIO_PB14X1_DAC1      (1u << 14) /**< \brief Dacc signal: DAC1 */
 #define PIO_PA2C_DATRG       (1u << 2)  /**< \brief Dacc signal: DATRG */
-/* ========== Pio definition for EBI peripheral ========== */
-#define PIO_PC18A_A0         (1u << 18) /**< \brief Ebi signal: A0 */
-#define PIO_PC19A_A1         (1u << 19) /**< \brief Ebi signal: A1 */
-#define PIO_PC28A_A10        (1u << 28) /**< \brief Ebi signal: A10 */
-#define PIO_PC29A_A11        (1u << 29) /**< \brief Ebi signal: A11 */
-#define PIO_PC30A_A12        (1u << 30) /**< \brief Ebi signal: A12 */
-#define PIO_PC31A_A13        (1u << 31) /**< \brief Ebi signal: A13 */
-#define PIO_PA18C_A14        (1u << 18) /**< \brief Ebi signal: A14 */
-#define PIO_PA19C_A15        (1u << 19) /**< \brief Ebi signal: A15 */
-#define PIO_PA20C_A16        (1u << 20) /**< \brief Ebi signal: A16 */
-#define PIO_PA0C_A17         (1u << 0)  /**< \brief Ebi signal: A17 */
-#define PIO_PA1C_A18         (1u << 1)  /**< \brief Ebi signal: A18 */
-#define PIO_PA23C_A19        (1u << 23) /**< \brief Ebi signal: A19 */
-#define PIO_PC20A_A2         (1u << 20) /**< \brief Ebi signal: A2 */
-#define PIO_PA24C_A20        (1u << 24) /**< \brief Ebi signal: A20 */
-#define PIO_PC16A_A21        (1u << 16) /**< \brief Ebi signal: A21/NANDALE */
-#define PIO_PC16A_NANDALE    (1u << 16) /**< \brief Ebi signal: A21/NANDALE */
-#define PIO_PC17A_A22        (1u << 17) /**< \brief Ebi signal: A22/NANDCLE */
-#define PIO_PC17A_NANDCLE    (1u << 17) /**< \brief Ebi signal: A22/NANDCLE */
-#define PIO_PA25C_A23        (1u << 25) /**< \brief Ebi signal: A23 */
-#define PIO_PC21A_A3         (1u << 21) /**< \brief Ebi signal: A3 */
-#define PIO_PC22A_A4         (1u << 22) /**< \brief Ebi signal: A4 */
-#define PIO_PC23A_A5         (1u << 23) /**< \brief Ebi signal: A5 */
-#define PIO_PC24A_A6         (1u << 24) /**< \brief Ebi signal: A6 */
-#define PIO_PC25A_A7         (1u << 25) /**< \brief Ebi signal: A7 */
-#define PIO_PC26A_A8         (1u << 26) /**< \brief Ebi signal: A8 */
-#define PIO_PC27A_A9         (1u << 27) /**< \brief Ebi signal: A9 */
-#define PIO_PC0A_D0          (1u << 0)  /**< \brief Ebi signal: D0 */
-#define PIO_PC1A_D1          (1u << 1)  /**< \brief Ebi signal: D1 */
-#define PIO_PC2A_D2          (1u << 2)  /**< \brief Ebi signal: D2 */
-#define PIO_PC3A_D3          (1u << 3)  /**< \brief Ebi signal: D3 */
-#define PIO_PC4A_D4          (1u << 4)  /**< \brief Ebi signal: D4 */
-#define PIO_PC5A_D5          (1u << 5)  /**< \brief Ebi signal: D5 */
-#define PIO_PC6A_D6          (1u << 6)  /**< \brief Ebi signal: D6 */
-#define PIO_PC7A_D7          (1u << 7)  /**< \brief Ebi signal: D7 */
-#define PIO_PC9A_NANDOE      (1u << 9)  /**< \brief Ebi signal: NANDOE */
-#define PIO_PC10A_NANDWE     (1u << 10) /**< \brief Ebi signal: NANDWE */
-#define PIO_PC14A_NCS0       (1u << 14) /**< \brief Ebi signal: NCS0 */
-#define PIO_PC15A_NCS1       (1u << 15) /**< \brief Ebi signal: NCS1 */
-#define PIO_PD18A_NCS1       (1u << 18) /**< \brief Ebi signal: NCS1 */
-#define PIO_PA22C_NCS2       (1u << 22) /**< \brief Ebi signal: NCS2 */
-#define PIO_PC12A_NCS3       (1u << 12) /**< \brief Ebi signal: NCS3 */
-#define PIO_PD19A_NCS3       (1u << 19) /**< \brief Ebi signal: NCS3 */
-#define PIO_PC11A_NRD        (1u << 11) /**< \brief Ebi signal: NRD */
-#define PIO_PC13A_NWAIT      (1u << 13) /**< \brief Ebi signal: NWAIT */
-#define PIO_PC8A_NWE         (1u << 8)  /**< \brief Ebi signal: NWE */
 /* ========== Pio definition for GMAC peripheral ========== */
 #define PIO_PD13A_GCOL       (1u << 13) /**< \brief Gmac signal: GCOL */
 #define PIO_PD10A_GCRS       (1u << 10) /**< \brief Gmac signal: GCRS */
@@ -534,4 +488,4 @@
 #define PIO_PE4_IDX          132
 #define PIO_PE5_IDX          133
 
-#endif /* _SAM4E8E_PIO_ */
+#endif /* _SAM4E8C_PIO_ */
