@@ -86,7 +86,7 @@ const intvec_elem __vector_table[] = {
 	{PMC_Handler},    /* 5  Power Management Controller */
 	{EFC_Handler},    /* 6  Enhanced Embedded Flash Controller */
 	{UART0_Handler},  /* 7  UART 0 */
-	{SMC_Handler},    /* 8  Static Memory Controller */
+	{Dummy_Handler},
 	{PIOA_Handler},   /* 9  Parallel I/O Controller A */
 	{PIOB_Handler},   /* 10 Parallel I/O Controller B */
 	{PIOC_Handler},   /* 11 Parallel I/O Controller C */

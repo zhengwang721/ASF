@@ -97,7 +97,7 @@ const DeviceVectors exception_table = {
 	(void*) PMC_Handler,    /* 5  Power Management Controller */
 	(void*) EFC_Handler,    /* 6  Enhanced Embedded Flash Controller */
 	(void*) UART0_Handler,  /* 7  UART 0 */
-	(void*) SMC_Handler,    /* 8  Static Memory Controller */
+	(void*) Dummy_Handler,
 	(void*) PIOA_Handler,   /* 9  Parallel I/O Controller A */
 	(void*) PIOB_Handler,   /* 10 Parallel I/O Controller B */
 	(void*) PIOC_Handler,   /* 11 Parallel I/O Controller C */
