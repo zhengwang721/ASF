@@ -49,7 +49,13 @@
  * This driver for SAMD20 devices provides an interface for the configuration
  * and management of the device's Real Time Clock functionality in Calendar
  * operating mode, for the configuration and retrieval of the current time and
- * date as maintained by the RTC module.
+ * date as maintained by the RTC module. The following driver API modes are
+ * covered by this manual:
+ *
+ *  - Polled APIs
+ * \if RTC_CALENDAR_CALLBACK_MODE
+ *  - Callback APIs
+ * \endif
  *
  * The following peripherals are used by this module:
  *
@@ -239,8 +245,10 @@
  * \section asfdoc_samd20_rtc_calendar_examples Examples
  *
  * The following Quick Start guides and application examples are available for this driver:
- * - \ref asfdoc_samd20_rtc_calendar_basic_use_case "Quick Start Guide for RTC Calendar - Basic"
- * - \ref asfdoc_samd20_rtc_calendar_callback_use_case "Quick Start Guide for RTC Calendar - Callback"
+ * - \ref asfdoc_samd20_rtc_calendar_basic_use_case
+ * \if RTC_CALENDAR_CALLBACK_MODE
+ * - \subpage asfdoc_samd20_rtc_calendar_callback_use_case
+ * \endif
  *
  *
  * \section asfdoc_samd20_rtc_calendar_api_overview API Overview
@@ -875,6 +883,9 @@ static inline void rtc_calendar_disable_events(
  * application or be added to the user application.
  *
  *  - \subpage asfdoc_samd20_rtc_calendar_basic_use_case
+ * \if RTC_CALENDAR_CALLBACK_MODE
+ *  - \subpage asfdoc_samd20_rtc_calendar_callback_use_case
+ * \endif
  */
 
 #endif /* RTC_CALENDAR_H_INCLUDED */
