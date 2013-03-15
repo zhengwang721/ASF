@@ -104,8 +104,6 @@ _STD_END
 
 #elif (defined(__GNUC__))
 
-int _write (int file, char * ptr, int len); // Remove GCC compiler warning
-
 int __attribute__((weak))
 _write (int file, char * ptr, int len);
 

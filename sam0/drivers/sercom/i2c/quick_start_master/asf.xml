@@ -5,7 +5,7 @@
 		</info>
 		<build type="c-source" value="qs_i2c_master_basic_use.c"/>
 		<build type="include-path" value="."/>
-		<require idref="sam0.drivers.sercom.i2c"/>
+		<require idref="sam0.drivers.sercom.i2c.master"/>
 		<device-support value="samd20"/>
 	</module>
 </asf>

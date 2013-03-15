@@ -61,7 +61,8 @@ extern "C" {
  * @{
  */
 #if !defined(__DOXYGEN__)
-void _i2c_master_interrupt_handler(uint8_t instance);
+void _i2c_master_interrupt_handler(
+		uint8_t instance);
 #endif
 
 void i2c_master_register_callback(
@@ -78,8 +79,8 @@ void i2c_master_unregister_callback(
  *
  * Enables the callback specified by the callback_type.
  *
- * \param[in,out] module        Pointer to the software module struct
- * \param[in]     callback_type Callback type to enable
+ * \param[in,out] module         Pointer to the software module struct
+ * \param[in]     callback_type  Callback type to enable
  */
 static inline void i2c_master_enable_callback(
 		struct i2c_master_module *const module,
@@ -98,8 +99,8 @@ static inline void i2c_master_enable_callback(
  *
  * Disables the callback specified by the callback_type.
  *
- * \param[in,out] module        Pointer to the software module struct
- * \param[in]     callback_type Callback type to disable
+ * \param[in,out] module         Pointer to the software module struct
+ * \param[in]     callback_type  Callback type to disable
  */
 static inline void i2c_master_disable_callback(
 		struct i2c_master_module *const module,
@@ -141,7 +142,7 @@ enum status_code i2c_master_write_packet_job_no_stop(
  *
  * Terminates the running transfer operation.
  *
- * \param  module Pointer to software module structure
+ * \param[in,out] module  Pointer to software module structure
  */
 static inline void i2c_master_cancel_job(
 		struct i2c_master_module *const module)
@@ -161,20 +162,20 @@ static inline void i2c_master_cancel_job(
  *
  * Will return the status of a transfer operation.
  *
- * \param[in] module Pointer to software module structure
+ * \param[in] module  Pointer to software module structure
  *
- * \return                             Last status code from transfer operation
- * \retval STATUS_OK                   No error has occurred
- * \retval STATUS_BUSY                 If transfer is in progress
- * \retval STATUS_BUSY                 If master module is busy
- * \retval STATUS_ERR_DENIED           If error on bus
- * \retval STATUS_ERR_PACKET_COLLISION If arbitration is lost
- * \retval STATUS_ERR_BAD_ADDRESS      If slave is busy, or no slave
- *                                     acknowledged the address
- * \retval STATUS_ERR_TIMEOUT          If timeout occurred
- * \retval STATUS_ERR_OVERFLOW         If slave did not acknowledge last sent
- *                                     data, indicating that slave does not
- *                                     want more data and was not able to read
+ * \return Last status code from transfer operation
+ * \retval STATUS_OK                    No error has occurred
+ * \retval STATUS_BUSY                  If transfer is in progress
+ * \retval STATUS_BUSY                  If master module is busy
+ * \retval STATUS_ERR_DENIED            If error on bus
+ * \retval STATUS_ERR_PACKET_COLLISION  If arbitration is lost
+ * \retval STATUS_ERR_BAD_ADDRESS       If slave is busy, or no slave
+ *                                      acknowledged the address
+ * \retval STATUS_ERR_TIMEOUT           If timeout occurred
+ * \retval STATUS_ERR_OVERFLOW          If slave did not acknowledge last sent
+ *                                      data, indicating that slave does not
+ *                                      want more data and was not able to read
  */
 static inline enum status_code i2c_master_get_job_status(
 		struct i2c_master_module *const module)
@@ -188,6 +189,7 @@ static inline enum status_code i2c_master_get_job_status(
 }
 
 /** @} */
+
 /** @} */
 
 #ifdef __cplusplus

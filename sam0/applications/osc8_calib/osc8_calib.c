@@ -165,13 +165,14 @@ uint32_t debug_get_freq(struct tc_module *calib_chan, struct tc_module *comp_cha
 {
 	uint64_t tmp;
 
-	tc_clear_interrupt_flag(comp_chan, TC_INTERRUPT_FLAG_CHANNEL_0);
+	tc_clear_status(comp_chan, TC_STATUS_CHANNEL_0_MATCH);
 
 	tc_start_counter(calib_chan);
 	tc_start_counter(comp_chan);
 
-
-	while(!tc_is_interrupt_flag_set(comp_chan, TC_INTERRUPT_FLAG_CHANNEL_0));
+	while (!(tc_get_status(comp_chan) & TC_STATUS_CHANNEL_0_MATCH)) {
+		/* Wait for channel 0 match */
+	}
 
 	tmp = (uint64_t)tc_get_capture_value(calib_chan, TC_COMPARE_CAPTURE_CHANNEL_0);
 	tmp = tmp * CAL_CLOCK_HZ;

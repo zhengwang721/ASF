@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAMD20 Serial Peripheral Interface Driver
+ * \brief SSD1306 display controller driver configuration file.
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -37,28 +37,63 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * \asf_license_stops
+ * \asf_license_stop
  *
  */
-#ifndef SERCOM_INTERRUPT_H_INCLUDED
-#define SERCOM_INTERRUPT_H_INCLUDED
+#ifndef CONF_SSD1306_H_INCLUDED
+#define CONF_SSD1306_H_INCLUDED
 
-#include "sercom.h"
-#include <system_interrupt.h>
+#include <board.h>
 
-/* Look-up table for device instances. */
-extern void *_sercom_instances[SERCOM_INST_NUM];
+#if (BOARD == XMEGA_C3_XPLAINED) || (BOARD == XMEGA_E5_XPLAINED)
+// Interface configuration for XMEGA-C3 Xplained
 
-typedef void (*sercom_handler_t)(uint8_t instance);
+#  define SSD1306_USART_SPI_INTERFACE
+#  define SSD1306_USART_SPI    UG_2832HSWEG04_SPI
 
-uint8_t _sercom_get_sercom_inst_index(
-		Sercom *const sercom_instance);
+#  define SSD1306_DC_PIN       UG_2832HSWEG04_DATA_CMD
+#  define SSD1306_RES_PIN      UG_2832HSWEG04_RESET
+#  define SSD1306_CS_PIN       UG_2832HSWEG04_SS
 
-enum system_interrupt_vector _sercom_get_interrupt_vector(
-		Sercom *const sercom_instance);
+#else
+// Interface configuration for other boards
+#  warning SSD1306 driver must be configured. Please see conf_ssd1306.h.
 
-void _sercom_set_handler(
-		const uint8_t instance,
-		const sercom_handler_t interrupt_handler);
+// Interface possibilities:
+// 1) Regular SPI interface
+// #define SSD1306_SPI_INTERFACE
+// #define SSD1306_SPI &SPID
 
-#endif /* SERCOM_INTERRUPT_H_INCLUDED */
+// 2) USART SPI interface
+// #define SSD1306_USART_SPI_INTERFACE
+// #define SSD1306_USART_SPI &USARTD0
+
+// Pin mapping:
+// - Register select
+// #define SSD1306_DC_PIN       0
+// - Chip select
+// #define SSD1306_CS_PIN       1
+// - Reset
+// #define SSD1306_RES_PIN      2
+
+
+// Placeholder setup
+
+#  define SSD1306_SPI_INTERFACE
+#  define SSD1306_SPI          0
+
+#  define SSD1306_DC_PIN       0
+#  define SSD1306_CS_PIN       1
+#  define SSD1306_RES_PIN      2
+
+#  define UG_2832HSWEG04_BAUDRATE  12000000
+#endif // BOARD
+
+// Board independent configuration
+
+// Minimum clock period is 50ns@3.3V -> max frequency is 20MHz
+#define SSD1306_CLOCK_SPEED          UG_2832HSWEG04_BAUDRATE
+#define SSD1306_DISPLAY_CONTRAST_MAX 40
+#define SSD1306_DISPLAY_CONTRAST_MIN 30
+
+#endif /* CONF_SSD1306_H_INCLUDED */
