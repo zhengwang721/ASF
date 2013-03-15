@@ -43,28 +43,21 @@
 #include "rtc_count.h"
 
 /**
- * \internal Internal device structure.
+ * \brief Resets the RTC module.
+ * Resets the RTC to hardware defaults.
  */
-struct _rtc_device {
-	/** Operation mode of count. */
-	enum rtc_count_mode mode;
-	/** Set if counter value should be continuously updated. */
-	bool continuously_update;
-};
-
-static struct _rtc_device _rtc_dev;
-
-
-/**
- * \internal Reset the RTC module.
- */
-static inline void _rtc_count_reset(void)
+void rtc_count_reset(void)
 {
 	/* Initialize module pointer. */
 	Rtc *const rtc_module = RTC;
 
 	/* Disable module before reset. */
 	rtc_count_disable();
+
+#if RTC_COUNT_ASYNC == true
+	_rtc_dev.registered_callback = 0;
+	_rtc_dev.enabled_callback = 0;
+#endif
 
 	while (rtc_count_is_syncing()) {
 		/* Wait for synchronization */
@@ -178,7 +171,7 @@ enum status_code rtc_count_init(
 	system_gclk_chan_enable(RTC_GCLK_ID);
 
 	/* Reset module to hardware defaults. */
-	_rtc_count_reset();
+	rtc_count_reset();
 
 	//TODO: Get tools to add in alias names for other RTC modes
 	/* Set the prescaler according to settings in conf_clocks.h */
@@ -568,7 +561,7 @@ enum status_code rtc_count_clear_compare_match(
 	}
 
 	/* Clear INTFLAG. */
-	rtc_module->MODE0.INTFLAG.reg = RTC_MODE0_INTFLAG_CMP(comp_index);
+	rtc_module->MODE0.INTFLAG.reg = RTC_MODE1_INTFLAG_CMP(1 << comp_index);
 
 	return STATUS_OK;
 }

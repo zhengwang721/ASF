@@ -43,24 +43,10 @@
 #include "rtc_calendar.h"
 
 /**
- * \internal Device structure
+ * \brief Resets the RTC module
+ * Resets the RTC module to hardware defaults.
  */
-struct _rtc_device {
-	/** If clock mode 24h. */
-	bool clock_24h;
-	/** If continuously update clock register. */
-	bool continuously_update;
-	/** Initial year for counter value 0. */
-	uint16_t year_init_value;
-};
-
-static struct _rtc_device _rtc_dev;
-
-
-/**
- * \internal Reset the RTC module.
- */
-static inline void _rtc_calendar_reset(void)
+void rtc_calendar_reset(void)
 {
 	/* Initialize module pointer. */
 	Rtc *const rtc_module = RTC;
@@ -68,7 +54,12 @@ static inline void _rtc_calendar_reset(void)
 	/* Disable module before reset. */
 	rtc_calendar_disable();
 
-	while (rtc_count_is_syncing()) {
+#if RTC_CALENDAR_ASYNC == true
+	_rtc_dev.registered_callback = 0;
+	_rtc_dev.enabled_callback = 0;
+#endif
+
+	while (rtc_calendar_is_syncing()) {
 		/* Wait for synchronization */
 	}
 
@@ -234,7 +225,7 @@ void rtc_calendar_init(
 	system_gclk_chan_enable(RTC_GCLK_ID);
 
 	/* Reset module to hardware defaults. */
-	_rtc_calendar_reset();
+	rtc_calendar_reset();
 
 	/* Save conf_struct internally for continued use. */
 	_rtc_dev.clock_24h = config->clock_24h;
@@ -273,12 +264,18 @@ void rtc_calendar_swap_time_mode(void)
 
 		/* Set 12h clock hour value. */
 		time.hour = time.hour % 12;
+		if (time.hour == 0) {
+			time.hour = 12;
+		}
 
 		/* Update alarms */
 		for (uint8_t i = 0; i < RTC_NUM_OF_ALARMS; i++) {
 			rtc_calendar_get_alarm(&alarm, i);
 			alarm.time.pm = (uint8_t)(alarm.time.hour / 12);
 			alarm.time.hour = alarm.time.hour % 12;
+			if (alarm.time.hour == 0) {
+				alarm.time.hour = 12;
+			}
 			_rtc_dev.clock_24h = false;
 			rtc_calendar_set_alarm(&alarm, i);
 			_rtc_dev.clock_24h = true;
@@ -290,7 +287,10 @@ void rtc_calendar_swap_time_mode(void)
 		/* Set hour value based on pm flag. */
 		if (time.pm == 1) {
 			time.hour = time.hour + 12;
+			
 			time.pm = 0;
+		} else if (time.hour == 12) {
+			time.hour = 0;
 		}
 
 		/* Update alarms */
@@ -302,6 +302,8 @@ void rtc_calendar_swap_time_mode(void)
 				_rtc_dev.clock_24h = true;
 				rtc_calendar_set_alarm(&alarm, i);
 				_rtc_dev.clock_24h = false;
+			} else if (alarm.time.hour == 12) {
+				alarm.time.hour = 0;
 			}
 		}
 
@@ -337,7 +339,7 @@ void rtc_calendar_set_time(
 
 	uint32_t register_value = _rtc_calendar_time_to_register_value(time);
 
-	while (rtc_count_is_syncing()) {
+	while (rtc_calendar_is_syncing()) {
 		/* Wait for synchronization */
 	}
 
@@ -364,7 +366,7 @@ void rtc_calendar_get_time(
 		/* Request read on CLOCK register. */
 		rtc_module->MODE2.READREQ.reg = RTC_READREQ_RREQ;
 
-		while (rtc_count_is_syncing()) {
+		while (rtc_calendar_is_syncing()) {
 			/* Wait for synchronization */
 		}
 	}
@@ -403,7 +405,7 @@ enum status_code rtc_calendar_set_alarm(
 	/* Get register_value from time. */
 	uint32_t register_value = _rtc_calendar_time_to_register_value(&(alarm->time));
 
-	while (rtc_count_is_syncing()) {
+	while (rtc_calendar_is_syncing()) {
 		/* Wait for synchronization */
 	}
 
@@ -495,7 +497,7 @@ enum status_code rtc_calendar_frequency_correction(
 		new_correction_value |= RTC_FREQCORR_SIGN;
 	}
 
-	while (rtc_count_is_syncing()) {
+	while (rtc_calendar_is_syncing()) {
 		/* Wait for synchronization */
 	}
 

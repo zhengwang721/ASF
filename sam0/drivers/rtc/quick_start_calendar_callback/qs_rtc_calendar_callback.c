@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAMD20 RTC Basic Usage Example
+ * \brief SAMD20 RTC Calendar Callback Quick Start
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,19 +42,48 @@
  */
 #include <asf.h>
 
-void config_rtc_calendar(void);
+//! [callback]
+static void callback(void)
+{
+	/* Set new alarm in 5 seconds */
+	//! [alarm_struct]
+	struct rtc_calendar_alarm_time alarm;
+	rtc_calendar_get_time(&alarm.time);
+	//! [alarm_struct]
+	//! [alarm_mask]
+	alarm.mask = RTC_CALENDAR_ALARM_MASK_SEC;
+	//! [alarm_mask]
 
-//! [initiate]
-void config_rtc_calendar(void)
+	//! [set_alarm]
+	alarm.time.second+= 5;
+	alarm.time.second = alarm.time.second % 60;
+
+	rtc_calendar_set_alarm(&alarm, RTC_CALENDAR_ALARM_0);
+	//! [set_alarm]
+}
+//! [callback]
+
+//! [setup_callback]
+static void configure_callbacks(void)
+{
+	//! [reg_callback]
+	rtc_calendar_register_callback(callback, RTC_CALENDAR_CALLBACK_ALARM_0);
+	//! [reg_callback]
+	//! [en_callback]
+	rtc_calendar_enable_callback(RTC_CALENDAR_CALLBACK_ALARM_0);
+	//! [en_callback]
+}
+//! [setup_callback]
+
+//! [initialize_rtc]
+static void configure_rtc_calendar(void)
 {
 
 	/* Initialize RTC in calendar mode. */
-//! [set_conf]
+//! [init_conf]
 	struct rtc_calendar_config config;
-//! [set_conf]
-//! [get_default]
 	rtc_calendar_get_config_defaults(&config);
-//! [get_default]
+//! [init_conf]
 
 //! [time_struct]
 	struct rtc_calendar_time alarm;
@@ -81,35 +110,47 @@ void config_rtc_calendar(void)
 	rtc_calendar_enable();
 //! [enable]
 }
-//! [initiate]
+//! [initialize_rtc]
 
 int main(void)
 {
-//! [add_main]
+//! [run_initialize_rtc]
+//! [system_init]
 	system_init();
+//! [system_init]
 
+//! [time]
 	struct rtc_calendar_time time;
+	rtc_calendar_get_time_defaults(&time);
 	time.year      = 2012;
 	time.month     = 12;
 	time.day       = 31;
-	time.hour      = 22;
-	time.minute    = 0;
+	time.hour      = 23;
+	time.minute    = 59;
 	time.second    = 0;
-	config_rtc_calendar();
+//! [time]
+
+	/* Configure and enable RTC */
+//! [run_conf]
+	configure_rtc_calendar();
+//! [run_conf]
+
+	/* Configure and enable callback */
+//! [run_callback]
+	configure_callbacks();
+//! [run_callback]
 
 	/* Set current time. */
+//! [set_time]
 	rtc_calendar_set_time(&time);
+//! [set_time]
 
-	rtc_calendar_swap_time_mode();
+//! [run_initialize_rtc]
 
-//! [add_main]
+//! [while]
 	while(1){
 		/* Inf loop. */
-		if (rtc_calendar_is_alarm_match(RTC_CALENDAR_ALARM_0)) {
-			/* Do something */
-			rtc_calendar_clear_alarm_match(RTC_CALENDAR_ALARM_0);
-		}
 	}
+//! [while]
 
-	return 0;
 }

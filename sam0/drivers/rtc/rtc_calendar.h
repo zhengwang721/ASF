@@ -239,7 +239,8 @@
  * \section asfdoc_samd20_rtc_calendar_examples Examples
  *
  * The following Quick Start guides and application examples are available for this driver:
- * - \ref asfdoc_samd20_rtc_calendar_basic_use_case
+ * - \ref asfdoc_samd20_rtc_calendar_basic_use_case "Quick Start Guide for RTC Calendar - Basic"
+ * - \ref asfdoc_samd20_rtc_calendar_callback_use_case "Quick Start Guide for RTC Calendar - Callback"
  *
  *
  * \section asfdoc_samd20_rtc_calendar_api_overview API Overview
@@ -247,6 +248,10 @@
  */
 
 #include <conf_clocks.h>
+
+#if RTC_CALENDAR_ASYNC == true
+#include <system_interrupt.h>
+#endif
 
 #if CONF_CLOCK_GCLK_2_RTC == false
 #  error "Application conf_clocks.h configuration header has invalid settings for the RTC module."
@@ -280,6 +285,65 @@ enum rtc_calendar_alarm {
 	RTC_CALENDAR_ALARM_3 = 3,
 #endif
 };
+
+#if RTC_CALENDAR_ASYNC == true
+/**
+ * \brief Callback types
+ *
+ * The available callback types for the RTC calendar module.
+ */
+enum rtc_calendar_callback {
+	/** Callback for alarm 0 */
+	RTC_CALENDAR_CALLBACK_ALARM_0 = 0,
+#if (RTC_NUM_OF_ALARMS > 1) || defined(__DOXYGEN__)
+	/** Callback for alarm 1 */
+	RTC_CALENDAR_CALLBACK_ALARM_1,
+#endif
+#if (RTC_NUM_OF_ALARMS > 2) || defined(__DOXYGEN__)
+	/** Callback for alarm 2 */
+	RTC_CALENDAR_CALLBACK_ALARM_2,
+#endif
+#if (RTC_NUM_OF_ALARMS > 3)	|| defined(__DOXYGEN__)
+	/** Callback for alarm 3 */
+	RTC_CALENDAR_CALLBACK_ALARM_3,
+#endif
+	/** Callback for  overflow */
+	RTC_CALENDAR_CALLBACK_OVERFLOW,
+#if !defined(__DOXYGEN__)
+	/** Total number of callbacks */
+	_RTC_CALENDAR_CALLBACK_N
+#endif
+};
+
+#if !defined(__DOXYGEN__)
+
+typedef void (*rtc_calendar_callback_t)(void);
+#endif
+#endif
+
+#if !defined(__DOXYGEN__)
+/**
+ * \internal Device structure
+ */
+struct _rtc_device {
+	/** If clock mode 24h. */
+	bool clock_24h;
+	/** If continuously update clock register. */
+	bool continuously_update;
+	/** Initial year for counter value 0. */
+	uint16_t year_init_value;
+#if RTC_CALENDAR_ASYNC == true
+	/** Pointers to callback functions */
+	volatile rtc_calendar_callback_t callbacks[_RTC_CALENDAR_CALLBACK_N];
+	/** Mask for registered callbacks */
+	volatile uint8_t registered_callback;
+	/** Mask for enabled callbacks */
+	volatile uint8_t enabled_callback;
+#endif
+};
+
+volatile struct _rtc_device _rtc_dev;
+#endif
 
 /**
  * \brief Available mask options for alarms.
@@ -401,7 +465,7 @@ struct rtc_calendar_config {
  * \retval true  if the module has completed synchronization
  * \retval false if the module synchronization is ongoing
  */
-static inline bool rtc_count_is_syncing(void)
+static inline bool rtc_calendar_is_syncing(void)
 {
         Rtc *const rtc_module = RTC;
 
@@ -471,6 +535,8 @@ static inline void rtc_calendar_get_config_defaults(
 	}
 }
 
+void rtc_calendar_reset(void);
+
 /**
  * \brief Enables the RTC module.
  *
@@ -482,7 +548,11 @@ static inline void rtc_calendar_enable(void)
 	/* Initialize module pointer. */
 	Rtc *const rtc_module = RTC;
 
-	while (rtc_count_is_syncing()) {
+#if RTC_CALENDAR_ASYNC == true
+	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_RTC);
+#endif
+
+	while (rtc_calendar_is_syncing()) {
 		/* Wait for synchronization */
 	}
 
@@ -500,7 +570,11 @@ static inline void rtc_calendar_disable(void)
 	/* Initialize module pointer. */
 	Rtc *const rtc_module = RTC;
 
-	while (rtc_count_is_syncing()) {
+#if RTC_CALENDAR_ASYNC == true
+	system_interrupt_disable(SYSTEM_INTERRUPT_MODULE_RTC);
+#endif
+
+	while (rtc_calendar_is_syncing()) {
 		/* Wait for synchronization */
 	}
 
@@ -605,7 +679,7 @@ static inline bool rtc_calendar_is_alarm_match(
 	}
 
 	/* Return int flag status. */
-	return (rtc_module->MODE2.INTFLAG.reg & RTC_MODE2_INTFLAG_ALARM(alarm_index));
+	return (rtc_module->MODE2.INTFLAG.reg & RTC_MODE2_INTFLAG_ALARM(1 << alarm_index));
 }
 
 /**
@@ -634,7 +708,7 @@ static inline enum status_code rtc_calendar_clear_alarm_match(
 	}
 
 	/* Clear flag. */
-	rtc_module->MODE2.INTFLAG.reg = RTC_MODE2_INTFLAG_ALARM(alarm_index);
+	rtc_module->MODE2.INTFLAG.reg = RTC_MODE2_INTFLAG_ALARM(1 << alarm_index);
 
 	return STATUS_OK;
 }
