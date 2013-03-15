@@ -442,4 +442,3 @@ void wdt_reset_mcu(void);
  *   - \code wdt_reset(); \endcode
  */
 #endif // _WDT_MEGARF_H_
-
