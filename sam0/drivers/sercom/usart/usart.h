@@ -561,8 +561,10 @@ static inline void usart_enable(
 	/* Get a pointer to the hardware module instance */
 	SercomUsart *const usart_hw = &(module->hw->USART);
 
+#ifdef USART_CALLBACK_MODE
 	/* Enable Global interrupt for module */
 	system_interrupt_enable(_sercom_get_interrupt_vector(module->hw));
+#endif
 
 	/* Wait until synchronization is complete */
 	_usart_wait_for_sync(module);
