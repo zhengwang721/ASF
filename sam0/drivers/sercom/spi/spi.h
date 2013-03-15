@@ -1283,7 +1283,6 @@ enum status_code spi_select_slave(
  *
  * \see General list of module \ref module_examples "examples".
  *
- * \section spi_use_cases SPI driver use cases
  * - \subpage spi_basic_use_case
  */
 

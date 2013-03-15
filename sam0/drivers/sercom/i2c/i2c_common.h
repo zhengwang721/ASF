@@ -59,15 +59,15 @@ extern "C" {
  *
  * \if I2C_MASTER_MODE
  * - Master Mode Polled APIs
- *  \if I2C_MASTER_CALLBACK_MODE
+ * \endif
+ * \if I2C_MASTER_CALLBACK_MODE
  * - Master Mode Callback APIs
- *  \endif
  * \endif
  * \if I2C_SLAVE_MODE
  * - Slave Mode Polled APIs
- *  \if I2C_SLAVE_CALLBACK_MODE
+ * \endif
+ * \if I2C_SLAVE_CALLBACK_MODE
  * - Slave Mode Callback APIs
- *  \endif
  * \endif
  *
  * The following peripheral is used by this module:
@@ -231,7 +231,7 @@ extern "C" {
  *   - The master transmits data packets to the slave after addressing it.
  * - Master Read
  *   - The slave transmits data packets to the master after being addressed.
- * - Combined
+ * - Combined Read/Write
  *   - A combined transaction consists of several write and read transactions.
  *
  * A data transfer starts with the master issuing a \b Start condition on the
@@ -513,19 +513,19 @@ extern "C" {
  * \section asfdoc_samd20_i2c_special_considerations Special Considerations
  *
  * \if (I2C_MASTER_CALLBACK_MODE || I2C_SLAVE_CALLBACK_MODE)
- * \subsection asfdoc_samd20_i2c_common_interrupt Interrupt-Driven Operation
- * While an interrupt-driven operation is in progress, subsequent calls to a
- * write or read operation will return the STATUS_BUSY flag, indicating that
- * only one operation is allowed at any given time.
+ *   \subsection asfdoc_samd20_i2c_common_interrupt Interrupt-Driven Operation
+ *   While an interrupt-driven operation is in progress, subsequent calls to a
+ *   write or read operation will return the STATUS_BUSY flag, indicating that
+ *   only one operation is allowed at any given time.
  *
- * To check if another transmission can be initiated, the user can either call
- * another transfer operation, or use the
- * \ref i2c_master_get_job_status/\ref i2c_slave_get_job_status functions
- * depending on mode.
+ *   To check if another transmission can be initiated, the user can either call
+ *   another transfer operation, or use the
+ *   \ref i2c_master_get_job_status/\ref i2c_slave_get_job_status functions
+ *   depending on mode.
  *
- * If the user would like to get callback from operations while using the
- * interrupt-driven driver, the callback must be registered and then enabled
- * using the "register_callback" and "enable_callback" functions.
+ *   If the user would like to get callback from operations while using the
+ *   interrupt-driven driver, the callback must be registered and then enabled
+ *   using the "register_callback" and "enable_callback" functions.
  * \endif
  *
  * \section asfdoc_samd20_i2c_extra Extra Information
@@ -536,7 +536,6 @@ extern "C" {
  *
  * \section asfdoc_samd20_i2c_api_overview API Overview
  * @{
- *
  */
 
 /**
@@ -563,11 +562,6 @@ struct i2c_packet {
 /**
  * \page asfdoc_samd20_i2c_extra_info_page Extra Information
  *
- * \section asfdoc_samd20_i2c_dependencies Dependencies
- * The I<SUP>2</SUP>C driver has the following dependencies:
- * \li \b SERCOM
- * \li \b SYSTEM
- *
  * \section asfdoc_samd20_i2c_acronyms Acronyms
  * Below is a table listing the acronyms used in this module, along with their
  * intended meanings.
@@ -587,7 +581,13 @@ struct i2c_packet {
  *	</tr>
  * </table>
  *
- * \section asfdoc_samd20_i2c_workarounds Workarounds implemented by driver
+ * \section asfdoc_samd20_i2c_extra_dependencies Dependencies
+ * The I<SUP>2</SUP>C driver has the following dependencies:
+ * \li \ref asfdoc_samd20_pinmux "System Pin Multiplexer Driver"
+ *
+ *
+ * \section asfdoc_samd20_i2c_extra_workarounds Workarounds implemented by driver
+ * \if I2C_MASTER_MODE
  * Master:
  * - A bug in hardware makes the master go straight from IDLE to BUSY bus state.
  * As a workaround the inactive timeout is enabled, which will force the bus
@@ -596,14 +596,18 @@ struct i2c_packet {
  * before the hardware bug makes it go into the internal BUSY state.
  * As result of the timeout, there will be generated at BUSERR, thus the
  * workaround ignores all these errors.
+ * \endif
  *
+ * \if I2C_SLAVE_MODE
  * Slave:
  * - A bug in hardware makes the Stop interrupt only fire
  * occasionally. This means that the callback for a read will not be called
  * until a new address packet it received. The write callback will be called
  * when the master nacks the data, or when the entire packet is written.
+ * \endif
  *
- * \section module_history Module History
+ *
+ * \section asfdoc_samd20_i2c_extra_history Module History
  * Below is an overview of the module history, detailing enhancements and fixes
  * made to the module since its first release. The current version of this
  * corresponds to the newest version listed in the table below.
@@ -622,9 +626,8 @@ struct i2c_packet {
  * \page asfdoc_samd20_i2c_quickstart Quick Start Guides for the SERCOM I2C module
  *
  * This is the quick start guide list for the \ref asfdoc_samd20_i2c_group
- * "I2C" module, with
- * step-by-step instructions on how to configure and use the driver in a
- * selection of use cases.
+ * "I2C" module, with step-by-step instructions on how to configure and use the
+ * driver in a selection of use cases.
  *
  * The use cases contain several code fragments. The code fragments in the
  * steps for setup can be copied into a custom initialization function of the
@@ -633,18 +636,17 @@ struct i2c_packet {
  *
  * \see General list of module \ref asfdoc_samd20_i2c_examples "examples".
  *
- * \section use_cases I2C Driver Use Cases
  * \if I2C_MASTER_MODE
  * - \subpage asfdoc_samd20_i2c_master_basic_use_case "Quick Start Guide for the I2C Master module - Basic Use Case"
- *  \if I2C_MASTER_CALLBACK_MODE
+ * \endif
+ * \if I2C_MASTER_CALLBACK_MODE
  * - \subpage asfdoc_samd20_i2c_master_callback_use_case "Quick Start Guide for the I2C Master module - Callback Use Case"
- *  \endif
  * \endif
  * \if I2C_SLAVE_MODE
  * - \subpage asfdoc_samd20_i2c_slave_basic_use_case "Quick Start Guide for the I2C Slave module - Basic Use Case"
- *  \if I2C_SLAVE_CALLBACK_MODE
+ * \endif
+ * \if I2C_SLAVE_CALLBACK_MODE
  * - \subpage asfdoc_samd20_i2c_slave_callback_use_case "Quick Start Guide for the I2C Slave module - Callback Use Case"
- *  \endif
  * \endif
  */
 
