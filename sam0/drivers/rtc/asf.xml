@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<select-by-config id="sam0.drivers.rtc" name="config.sam0.drivers.rtc" caption="Real Time Counter Driver" default="count_polled">
+	<select-by-config id="sam0.drivers.rtc" name="config.sam0.drivers.rtc" caption="Real Time Counter Driver" default="count_callback">
 		<info type="description" value="summary">
 			Driver for the SAMD20 RTC. Provides a unified interface
 			for the configuration and management of the RTC module.
@@ -19,13 +19,15 @@
 			<require idref="sam0.drivers.system"/>
 			<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 		</module>
-		<module type="driver" id="sam0.drivers.rtc#count_interrupt" caption="Real Time Counter (Count Mode) Interrupt Driver">
+		<module type="driver" id="sam0.drivers.rtc#count_callback" caption="Real Time Counter (Count Mode) Interrupt Driver">
 			<build type="include-path" value="." />
 			<build type="header-file" subtype="api" value="rtc_count.h"/>
 			<build type="c-source" value="rtc_count.c"/>
 			<build type="header-file" subtype="api" value="rtc_count_interrupt.h"/>
 			<build type="c-source" value="rtc_count_interrupt.c"/>
 			<build type="define" name="RTC_COUNT_ASYNC" value="true"/>
+			<build type="doxygen-enable-section" value="RTC_COUNT_CALLBACK_MODE"/>
+
 			<build type="header-file" subtype="example" value="quick_start_count_callback/qs_rtc_count_callback.h"/>
 			<build type="doxygen-entry-point" value="asfdoc_samd20_rtc_count_group"/>
 			<device-support value="samd20"/>
@@ -45,13 +47,14 @@
 			<require idref="sam0.drivers.system"/>
 			<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 		</module>
-		<module type="driver" id="sam0.drivers.rtc#calendar_interrupt" caption="Real Time Counter (Calendar Mode) Interrupt Driver">
+		<module type="driver" id="sam0.drivers.rtc#calendar_callback" caption="Real Time Counter (Calendar Mode) Interrupt Driver">
 			<build type="include-path" value="." />
 			<build type="header-file" subtype="api" value="rtc_calendar.h"/>
 			<build type="c-source" value="rtc_calendar.c"/>
 			<build type="header-file" subtype="api" value="rtc_calendar_interrupt.h"/>
 			<build type="c-source" value="rtc_calendar_interrupt.c"/>
 			<build type="define" name="RTC_CALENDAR_ASYNC" value="true"/>
+			<build type="doxygen-enable-section" value="RTC_CALENDAR_CALLBACK_MODE"/>
 			<build type="header-file" subtype="example" value="quick_start_calendar_callback/qs_rtc_calendar_callback.h"/>
 			<build type="doxygen-entry-point" value="asfdoc_samd20_rtc_calendar_group"/>
 			<device-support value="samd20"/>
