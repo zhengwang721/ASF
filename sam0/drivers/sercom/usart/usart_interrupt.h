@@ -45,15 +45,19 @@
 
 #include "usart.h"
 
-#ifndef __DOXYGEN__
+#if !defined(__DOXYGEN__)
 void _usart_write_buffer(
 		struct usart_module *const module,
 		uint8_t *tx_data,
 		uint16_t length);
+
 void _usart_read_buffer(
 		struct usart_module *const module,
 		uint8_t *rx_data,
 		uint16_t length);
+
+void _usart_interrupt_handler(
+		uint8_t instance);
 #endif
 
 /**
@@ -78,18 +82,12 @@ void usart_unregister_callback(
 /**
  * \brief Enables callback
  *
- * Enables the callback function registered by the \ref
- * usart_register_callback. The callback function will be called from the
- * interrupt handler when the conditions for the callback type are met.
+ * Enables the callback function registered by the \ref usart_register_callback.
+ * The callback function will be called from the interrupt handler when the
+ * conditions for the callback type are met.
  *
- * \param[in]     module Pointer to USART software instance struct
- * \param[in]     callback_type Callback type given by an enum
- *
- * \returns    Status of the operation
- * \retval     STATUS_OK              If operation was completed
- * \retval     STATUS_ERR_INVALID     If operation was not completed,
- *                                    due to invalid callback_type
- *
+ * \param[in]  module         Pointer to USART software instance struct
+ * \param[in]  callback_type  Callback type given by an enum
  */
 static inline void usart_enable_callback(
 		struct usart_module *const module,
@@ -106,18 +104,11 @@ static inline void usart_enable_callback(
 /**
  * \brief Disable callback
  *
- * Disables the callback function registered by the \ref
- * usart_register_callback, and the callback will not be called
- * from the interrupt routine.
+ * Disables the callback function registered by the \ref usart_register_callback,
+ * and the callback will not be called from the interrupt routine.
  *
- * \param[in]     module Pointer to USART software instance struct
- * \param[in]     callback_type Callback type given by an enum
- *
- * \returns    Status of the operation
- * \retval     STATUS_OK              If operation was completed
- * \retval     STATUS_ERR_INVALID     If operation was not completed,
- *                                    due to invalid callback_type
- *
+ * \param[in]  module         Pointer to USART software instance struct
+ * \param[in]  callback_type  Callback type given by an enum
  */
 static inline void usart_disable_callback(
 		struct usart_module *const module,
@@ -162,18 +153,6 @@ void usart_abort_job(
 enum status_code usart_get_job_status(
 		struct usart_module *const module,
 		enum usart_transceiver_type transceiver_type);
-/**
- * @}
- */
-
-/**
- * \name Writing and reading
- * @{
- */
-
-void _usart_interrupt_handler(
-		uint8_t instance);
-
 /**
  * @}
  */

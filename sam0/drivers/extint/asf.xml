@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<select-by-config id="sam0.drivers.extint" name="config.sam0.drivers.extint" caption="External Interrupt Driver" default="callback">
+	<select-by-config id="sam0.drivers.extint" name="config.sam0.drivers.extint" caption="EXTINT - External Interrupt" default="callback">
 		<info type="description" value="summary">
 			Driver for the SAMD20 external interrupts. Provides a unified
 			interface for the configuration and management of external
@@ -7,9 +7,10 @@
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="I/O" />
+			<keyword value="Interrupt" />
 		</info>
 
-		<module type="driver" id="sam0.drivers.extint#polled" caption="External Interrupt Driver (Polled Mode)">
+		<module type="driver" id="sam0.drivers.extint#polled" caption="EXTINT - External Interrupt (Polled APIs)">
 			<build type="include-path" value="."/>
 			<build type="header-file" subtype="api" value="extint.h"/>
 			<build type="c-source" value="extint.c"/>
@@ -17,16 +18,18 @@
 			<build type="define" name="EXTINT_CALLBACK_MODE" value="false"/>
 
 			<build type="header-file" subtype="example" value="quick_start_polled/qs_extint_basic.h"/>
+
 			<build type="doxygen-entry-point" value="asfdoc_samd20_extint_group"/>
-			<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 
 			<require idref="sam0.utils"/>
 			<require idref="sam0.drivers.system"/>
 
 			<device-support value="samd20"/>
+
+			<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 		</module>
 
-		<module type="driver" id="sam0.drivers.extint#callback" caption="External Interrupt Driver (Callback Mode)">
+		<module type="driver" id="sam0.drivers.extint#callback" caption="EXTINT - External Interrupt (Callback APIs)">
 			<build type="include-path" value="."/>
 			<build type="header-file" subtype="api" value="extint.h"/>
 			<build type="header-file" subtype="api" value="extint_callback.h"/>
@@ -42,12 +45,13 @@
 			<build type="header-file" subtype="example" value="quick_start_polled/qs_extint_basic.h"/>
 			<build type="header-file" subtype="example" value="quick_start_callback/qs_extint_callback.h"/>
 			<build type="doxygen-entry-point" value="asfdoc_samd20_extint_group"/>
-			<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 
 			<require idref="sam0.utils"/>
 			<require idref="sam0.drivers.system"/>
 
 			<device-support value="samd20"/>
+
+			<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 		</module>
 	</select-by-config>
 </asf>
