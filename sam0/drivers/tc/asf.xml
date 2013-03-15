@@ -1,82 +1,55 @@
 <asf xmlversion="1.0">
-	<module type="meta" id="sam0.drivers.tc.common" caption="Common for TC polled and interrupt driven driver">
-		<build type="include-path" value="." />
-		<build type="header-file" subtype="api" value="tc.h"/>
-	<module type="driver" id="sam0.drivers.tc" caption="TC - Timer Counter">
-		<info type="description" value="summary">
-			Driver for the SAMD20 Timer/Counter module. Provides a unified
-			interface for the configuration and management of the device's
-			hardware timers.
-		</info>
-		<info type="keyword" value="technology">
-			<keyword value="I/O" />
-			<keyword value="Timers" />
-			<keyword value="Clocks" />
-		</info>
-
-		<build type="include-path" value="."/>
-		<build type="c-source" value="tc.c"/>
-		<build type="header-file" subtype="api" value="tc.h"/>
-		<build type="header-file" subtype="example" value="quick_start/qs_tc_basic.h"/>
-		<build type="include-path" value="."/>
-		<build type="doxygen-image-path" value="docimg"/>
-		<build type="doxygen-entry-point" value="asfdoc_samd20_tc_group"/>
-		<device-support value="samd20"/>
-		<build type="header-file" subtype="api" value="tc.h"/>
-		<build type="header-file" subtype="example" value="quick_start/qs_tc_basic.h"/>
-		<build type="include-path" value="."/>
-		<build type="doxygen-image-path" value="docimg"/>
-		<build type="doxygen-entry-point" value="asfdoc_samd20_tc_group"/>
-		<device-support value="samd20"/>
-		<build type="header-file" subtype="api" value="tc.h"/>
-		<build type="header-file" subtype="example" value="quick_start/qs_tc_basic.h"/>
-
-		<build type="doxygen-image-path" value="docimg"/>
-		<build type="doxygen-entry-point" value="asfdoc_samd20_tc_group"/>
-
-		<device-support value="samd20"/>
-
-		<require idref="sam0.utils"/>
-		<require idref="sam0.drivers.system"/>
-		<require idref="sam0.drivers.port"/>
-
-		<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
-	</module>
-	<select-by-config id="sam0.drivers.tc" name="sam0.drivers.tc" caption="TC driver" default="polled">
-		<module type="driver" id="sam0.drivers.tc#polled" caption=
-		"TC Driver">
+	<select-by-config caption="TC driver" default="polled" id="sam0.drivers.tc" name="sam0.drivers.tc">
+		<module caption="TC Driver" id="sam0.drivers.tc#polled" type="driver">
 			<info type="description" value="summary">
-				Driver for the SAMD20 TC. Provides a unified
-				interface for the configuration and management of the
-				TC interface.
+			  Driver for the SAMD20 Timer/Counter module. Provides a unified
+			  interface for the configuration and management of the device's
+			  hardware timers.
 			</info>
 			<info type="keyword" value="technology">
+				<keyword value="I/O" />
 				<keyword value="Timers" />
+				<keyword value="Clocks" />
 			</info>
-			<build type="header-file" subtype="example" value="quick_start/qs_tc_basic.h"/>
-					<build type="doxygen-entry-point" value="asfdoc_samd2_tc_group"/>
-			<require idref="sam0.drivers.tc.common"/>
-			<device-support value="samd20"/>
+			<build subtype="example" type="header-file" value="quick_start/qs_tc_basic.h" />
+			<build type="doxygen-entry-point" value="asfdoc_samd2_tc_group" />
+			<require idref="sam0.utils" />
+			<require idref="sam0.drivers.system" />
+			<require idref="sam0.drivers.port" />
+			<device-support value="samd20" />
+			<build type="c-source" value="tc.c" />
+			<build subtype="api" type="header-file" value="tc.h" />
+			<build subtype="example" type="header-file" value="quick_start/qs_tc_basic.h" />
+			<build type="include-path" value="." />
+			<build type="doxygen-image-path" value="docimg" />
+			<build type="doxygen-entry-point" value="asfdoc_samd20_tc_group" />
+			<require idref="sam0.drivers.port" />
+			<generator default-mcu="unspecified-samd20" value="doxygen-module-v2" />
 		</module>
-		<module type="driver" id="sam0.drivers.tc#interrupt" caption=
-			"TC interrupt driven driver">
+		<module caption="TC callback driven driver" id="sam0.drivers.tc#callback" type="driver">
 			<info type="description" value="summary">
-				Driver for the SAMD20 TC driven by interrupts.
-				Provides a unified interface for the configuration and use of
-				the TC INTERFACE.
-			</info>
-			<info type="keyword" value="technology">
-				<keyword value="Timers"/>
+			  Driver for the SAMD20 Timer/Counter module. Provides a unified
+			  interface for the configuration and management of the device's
+			  hardware timers.
 			</info>
 			<build type="include-path" value="." />
-			<build type="header-file" subtype="api" value="tc_interrupt.h"/>
-			<build type="c-source" value="tc_interrupt.c"/>
-			<build type="define" name="TC_ASYNC" value=""/>
-			<build type="doxygen-entry-point" value="asfdoc_samd20_tc_group"/>
-			<build type="doxygen-entry-point" value="asfdoc_samd20_tc_async_group"/>
-			<build type="header-file" subtype="example" value="quick_start_callback/qs_tc_callback.h"/>
-			<require idref="sam0.drivers.tc.common"/>
-			<device-support value="samd20"/>
+			<build subtype="api" type="header-file" value="tc_interrupt.h" />
+			<build type="c-source" value="tc_interrupt.c" />
+			<build name="TC_ASYNC" type="define" value="" />
+			<build type="doxygen-entry-point" value="asfdoc_samd20_tc_group" />
+			<build type="doxygen-entry-point" value="asfdoc_samd20_tc_async_group" />
+			<build subtype="example" type="header-file" value="quick_start_callback/qs_tc_callback.h" />
+			<require idref="sam0.utils" />
+			<require idref="sam0.drivers.system" />
+			<require idref="sam0.drivers.port" />
+			<device-support value="samd20" />
+			<build type="c-source" value="tc.c" />
+			<build subtype="api" type="header-file" value="tc.h" />
+			<build subtype="example" type="header-file" value="quick_start/qs_tc_basic.h" />
+			<build type="include-path" value="." />
+			<build type="doxygen-image-path" value="docimg" />
+			<build type="doxygen-entry-point" value="asfdoc_samd20_tc_group" />
+			<generator default-mcu="unspecified-samd20" value="doxygen-module-v2" />
 		</module>
 	</select-by-config>
 </asf>
