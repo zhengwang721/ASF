@@ -44,18 +44,6 @@
 #ifndef USART_H_INCLUDED
 #define USART_H_INCLUDED
 
-#ifndef PINMUX_DEFAULT
-#  define PINMUX_DEFAULT 0xFFFFFFFF
-#endif
-
-#include <sercom.h>
-
-#if USART_CALLBACK_MODE == true
-#  include <sercom_interrupt.h>
-#endif
-
-#define USART_DEFAULT_TIMEOUT  0xFFFF
-
 /**
  * \defgroup asfdoc_samd20_sercom_usart_group SAMD20 Serial USART Driver (SERCOM USART)
  *
@@ -208,6 +196,25 @@
  * \section asfdoc_samd20_sercom_usart_api_overview API Overview
  * @{
  */
+
+#include <sercom.h>
+#include <pinmux.h>
+
+#if USART_CALLBACK_MODE == true
+#  include <sercom_interrupt.h>
+#endif
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#ifndef PINMUX_DEFAULT
+#  define PINMUX_DEFAULT 0
+#endif
+
+#ifndef USART_TIMEOUT
+#  define USART_TIMEOUT 0xFFFF
+#endif
 
 #if USART_CALLBACK_MODE == true
 /**
@@ -714,7 +721,12 @@ static inline void usart_disable_transceiver(
 			break;
 	}
 }
+
 /** @} */
+
+#ifdef __cplusplus
+}
+#endif
 
 /** @} */
 

@@ -45,10 +45,10 @@
 #define I2C_SLAVE_H_INCLUDED
 
 #include "i2c_common.h"
+#include <sercom.h>
 #include <pinmux.h>
 
 #if I2C_SLAVE_CALLBACK_MODE == true
-#  include <sercom.h>
 #  include <sercom_interrupt.h>
 #endif
 

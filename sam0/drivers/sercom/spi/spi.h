@@ -44,22 +44,6 @@
 #ifndef SPI_H_INCLUDED
 #define SPI_H_INCLUDED
 
-#include <compiler.h>
-#include <port.h>
-#include <sercom.h>
-#if SPI_CALLBACK_MODE == true
-#include <sercom_interrupt.h>
-#include <system_interrupt.h>
-#endif
-
-#ifndef PINMUX_DEFAULT
-#define PINMUX_DEFAULT 0
-#endif
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /**
  * \defgroup asfdoc_samd20_sercom_spi_group SAMD20 Serial Peripheral Interface Driver (SERCOM SPI)
  *
@@ -336,6 +320,22 @@ extern "C" {
  * @{
  */
 
+#include <port.h>
+#include <sercom.h>
+#include <pinmux.h>
+
+#if SPI_CALLBACK_MODE == true
+#  include <sercom_interrupt.h>
+#endif
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#ifndef PINMUX_DEFAULT
+#  define PINMUX_DEFAULT 0
+#endif
+
 #ifndef SPI_TIMEOUT
 #  define SPI_TIMEOUT 10000
 #endif
@@ -545,8 +545,11 @@ struct spi_module;
 
 /** Type of the callback functions */
 typedef void (*spi_callback_t)(const struct spi_module *const module);
+
+#  if !defined(__DOXYGEN__)
 /** Prototype for the interrupt handler */
-extern void spi_interrupt_handler(uint8_t instance);
+extern void _spi_interrupt_handler(uint8_t instance);
+#  endif
 #endif
 
 /**

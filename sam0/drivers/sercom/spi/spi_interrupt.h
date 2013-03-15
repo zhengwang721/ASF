@@ -63,6 +63,7 @@ enum spi_job_type {
 	SPI_JOB_WRITE_BUFFER,
 };
 
+
 /**
  * \name Callback Management
  * @{

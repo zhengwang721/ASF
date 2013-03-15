@@ -52,12 +52,12 @@
 #  include <sercom_interrupt.h>
 #endif
 
-#ifndef PINMUX_DEFAULT
-#  define PINMUX_DEFAULT 0
-#endif
-
 #ifdef __cplusplus
 extern "C" {
+#endif
+
+#ifndef PINMUX_DEFAULT
+#  define PINMUX_DEFAULT 0
 #endif
 
 /**

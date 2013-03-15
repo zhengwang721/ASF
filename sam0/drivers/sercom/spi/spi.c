@@ -292,7 +292,7 @@ enum status_code spi_init(
 	 * look-up table
 	 */
 	instance_index = _sercom_get_sercom_inst_index(module->hw);
-	_sercom_set_handler(instance_index, spi_interrupt_handler);
+	_sercom_set_handler(instance_index, _spi_interrupt_handler);
 	_sercom_instances[instance_index] = module;
 #endif
 

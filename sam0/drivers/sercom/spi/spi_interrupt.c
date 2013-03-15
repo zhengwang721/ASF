@@ -390,7 +390,7 @@ static void _spi_read(
 
 
 /**
- * \brief Interrupt Handler for SPI module
+ * \internal
  *
  * Handles interrupts as they occur, and it will run callback functions
  * which are registered and enabled.
@@ -401,7 +401,7 @@ static void _spi_read(
  * \param[in]  instance  ID of the SERCOM instance calling the interrupt
  *                       handler.
  */
-void spi_interrupt_handler(
+void _spi_interrupt_handler(
 		uint8_t instance)
 {
 	/* Get device instance from the look-up table */
