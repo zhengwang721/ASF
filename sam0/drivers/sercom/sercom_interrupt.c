@@ -51,7 +51,8 @@ static bool _handler_table_initialized = false;
 static void (*_sercom_interrupt_handlers[SERCOM_INST_NUM])(const uint8_t instance);
 
 /**
- * \internal Default interrupt handler
+ * \internal
+ * Default interrupt handler.
  *
  * \param[in] instance SERCOM instance used.
  */
@@ -62,7 +63,8 @@ static void _sercom_default_handler(
 }
 
 /**
- * \internal Find index of given instance.
+ * \internal
+ * Find index of given instance.
  *
  * \param[in] Instance pointer.
  *
@@ -71,15 +73,12 @@ static void _sercom_default_handler(
 uint8_t _sercom_get_sercom_inst_index(
 		Sercom *const sercom_instance)
 {
-	/* Save address of sercom instance. */
-	uintptr_t hw_dev = (uintptr_t)sercom_instance;
-
 	/* Save all available SERCOM instances for compare. */
 	Sercom *sercom_instances[SERCOM_INST_NUM] = SERCOM_INSTS;
 
 	/* Find index for sercom instance. */
 	for (uint32_t i = 0; i < SERCOM_INST_NUM; i++) {
-		if (hw_dev == (uintptr_t)sercom_instances[i]) {
+		if ((uintptr_t)sercom_instance == (uintptr_t)sercom_instances[i]) {
 			return i;
 		}
 	}
@@ -90,11 +89,11 @@ uint8_t _sercom_get_sercom_inst_index(
 }
 
 /**
- * \internal Saves the given callback handler.
+ * \internal
+ * Saves the given callback handler.
  *
- * \param[in] instance Instance index.
- * \param[in] interrupt_handler Pointer to instance callback handler.
- *
+ * \param[in]  instance           Instance index.
+ * \param[in]  interrupt_handler  Pointer to instance callback handler.
  */
 void _sercom_set_handler(
 		const uint8_t instance,
@@ -114,10 +113,27 @@ void _sercom_set_handler(
 	_sercom_interrupt_handlers[instance] = interrupt_handler;
 }
 
+
+/** \internal
+ * Converts a given SERCOM index to its interrupt vector index.
+ */
+#define _SERCOM_INTERRUPT_VECT_NUM(n, unused) \
+		SYSTEM_INTERRUPT_MODULE_SERCOM##n,
+
+/** \internal
+ * Generates a SERCOM interrupt handler function for a given SERCOM index.
+ */
+#define _SERCOM_INTERRUPT_HANDLER(n, unused) \
+		void SERCOM##n##_Handler(void) \
+		{ \
+			_sercom_interrupt_handlers[n](n); \
+		}
+
 /**
- * \internal Returns the system interrupt vector.
+ * \internal
+ * Returns the system interrupt vector.
  *
- * \param[in] sercom_instance Instance pointer
+ * \param[in]  sercom_instance  Instance pointer
  *
  * \return Enum of system interrupt vector
  * \retval SYSTEM_INTERRUPT_MODULE_SERCOM0
@@ -126,86 +142,23 @@ void _sercom_set_handler(
  * \retval SYSTEM_INTERRUPT_MODULE_SERCOM3
  * \retval SYSTEM_INTERRUPT_MODULE_SERCOM4
  * \retval SYSTEM_INTERRUPT_MODULE_SERCOM5
+ * \retval SYSTEM_INTERRUPT_MODULE_SERCOM6
+ * \retval SYSTEM_INTERRUPT_MODULE_SERCOM7
  */
 enum system_interrupt_vector _sercom_get_interrupt_vector(
 		Sercom *const sercom_instance)
 {
+	const uint8_t sercom_int_vectors[SERCOM_INST_NUM] =
+		{
+			MREPEAT(SERCOM_INST_NUM, _SERCOM_INTERRUPT_VECT_NUM, ~)
+		};
+
+	/* Retrieve the index of the SERCOM being requested */
 	uint8_t instance_index = _sercom_get_sercom_inst_index(sercom_instance);
 
-	switch (instance_index) {
-#ifdef ID_SERCOM0
-	case 0:
-		return SYSTEM_INTERRUPT_MODULE_SERCOM0;
-#endif
-#ifdef ID_SERCOM1
-	case 1:
-		return SYSTEM_INTERRUPT_MODULE_SERCOM1;
-#endif
-#ifdef ID_SERCOM2
-	case 2:
-		return SYSTEM_INTERRUPT_MODULE_SERCOM2;
-#endif
-#ifdef ID_SERCOM3
-	case 3:
-		return SYSTEM_INTERRUPT_MODULE_SERCOM3;
-#endif
-#ifdef ID_SERCOM4
-	case 4:
-		return SYSTEM_INTERRUPT_MODULE_SERCOM4;
-#endif
-#ifdef ID_SERCOM5
-	case 5:
-		return SYSTEM_INTERRUPT_MODULE_SERCOM5;
-#endif
-	default:
-		/* Invalid data given. */
-		Assert(false);
-		return 0;
-	}
+	/* Get the vector number from the lookup table for the requested SERCOM */
+	return sercom_int_vectors[instance_index];
 }
 
-/**
- * \internal ISR handler for SERCOM
- */
-#ifdef ID_SERCOM0
-void SERCOM0_Handler(void)
-{
-	/* Call appropriate interrupt handler. */
-	_sercom_interrupt_handlers[0](0);
-}
-#endif
-#ifdef ID_SERCOM1
-void SERCOM1_Handler(void)
-{
-	/* Call appropriate interrupthandler. */
-	_sercom_interrupt_handlers[1](1);
-}
-#endif
-#ifdef ID_SERCOM2
-void SERCOM2_Handler(void)
-{
-	/* Call appropriate interrupthandler. */
-	_sercom_interrupt_handlers[2](2);
-}
-#endif
-#ifdef ID_SERCOM3
-void SERCOM3_Handler(void)
-{
-	/* Call appropriate interrupthandler. */
-	_sercom_interrupt_handlers[3](3);
-}
-#endif
-#ifdef ID_SERCOM4
-void SERCOM4_Handler(void)
-{
-	/* Call appropriate interrupthandler. */
-	_sercom_interrupt_handlers[4](4);
-}
-#endif
-#ifdef ID_SERCOM5
-void SERCOM5_Handler(void)
-{
-	/* Call appropriate interrupthandler. */
-	_sercom_interrupt_handlers[5](5);
-}
-#endif
+/** Auto-generate a set of interrupt handlers for each SERCOM in the device */
+MREPEAT(SERCOM_INST_NUM, _SERCOM_INTERRUPT_HANDLER, ~)
