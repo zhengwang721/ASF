@@ -249,20 +249,20 @@ enum status_code spi_init(
 		return STATUS_BUSY;
 	}
 
+	uint32_t sercom_index = _sercom_get_sercom_inst_index(module->hw);
+
 	/* Turn on module in PM */
-	uint32_t pm_index = _sercom_get_sercom_inst_index(module->hw)
-			+ PM_APBCMASK_SERCOM0_Pos;
+	uint32_t pm_index = sercom_index + PM_APBCMASK_SERCOM0_Pos;
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, 1 << pm_index);
 
-	/* Set up GCLK */
+	/* Set up the GCLK for the module */
+	uint32_t gclk_index = sercom_index + SERCOM0_GCLK_ID_CORE;
 	struct system_gclk_chan_config gclk_chan_conf;
 	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
-	uint32_t gclk_index = _sercom_get_sercom_inst_index(module->hw) + 13;
 	gclk_chan_conf.source_generator = config->generator_source;
 	system_gclk_chan_set_config(gclk_index, &gclk_chan_conf);
-	system_gclk_chan_set_config(SERCOM_GCLK_ID, &gclk_chan_conf);
 	system_gclk_chan_enable(gclk_index);
-	system_gclk_chan_enable(SERCOM_GCLK_ID);
+	sercom_set_gclk_generator(config->generator_source, true, false);
 
 	/* Set the SERCOM in SPI mode */
 	spi_module->CTRLA.reg |= SERCOM_SPI_CTRLA_MODE(0x1);
