@@ -63,17 +63,23 @@ extern "C" {
 #endif
 
 enum status_code sercom_set_gclk_generator(
-		enum gclk_generator generator_source,
-		bool run_in_standby,
-		bool force_change);
+		const enum gclk_generator generator_source,
+		const bool run_in_standby,
+		const bool force_change);
 
-enum status_code _sercom_get_sync_baud_val(uint32_t baudrate,
-		uint32_t external_clock, uint16_t *baudval);
+enum status_code _sercom_get_sync_baud_val(
+		const uint32_t baudrate,
+		const uint32_t external_clock,
+		uint16_t *const baudval);
 
-enum status_code _sercom_get_async_baud_val(uint32_t baudrate,
-		uint32_t peripheral_clock, uint16_t *baudval);
+enum status_code _sercom_get_async_baud_val(
+		const uint32_t baudrate,
+		const uint32_t peripheral_clock,
+		uint16_t *const baudval);
 
-uint32_t _sercom_get_default_pad(Sercom *sercom_module, uint8_t pad);
+uint32_t _sercom_get_default_pad(
+		Sercom *const sercom_module,
+		const uint8_t pad);
 
 #ifdef __cplusplus
 }
