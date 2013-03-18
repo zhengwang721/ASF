@@ -42,9 +42,6 @@
  */
 #include <asf.h>
 
-/* SERCOM 4 is the Embedded debugger */
-#define QUICKSTART_USART SERCOM4
-
 int main(void)
 {
 //! [main]

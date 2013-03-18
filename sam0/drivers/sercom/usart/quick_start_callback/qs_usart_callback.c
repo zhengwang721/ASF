@@ -42,8 +42,8 @@
  */
 #include <asf.h>
 #include <stdio.h>
-/* SERCOM 4 is the Embedded debugger */
-#define QUICKSTART_USART SERCOM4
+
+
 struct usart_module usart_edbg;
 
 volatile uint8_t rx_buffer[5];
