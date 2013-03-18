@@ -182,11 +182,6 @@ enum status_code usart_init(
 
 	enum status_code status_code = STATUS_OK;
 
-	uint32_t pad0 = config->pinout_pad0;
-	uint32_t pad1 = config->pinout_pad1;
-	uint32_t pad2 = config->pinout_pad2;
-	uint32_t pad3 = config->pinout_pad3;
-
 	/* Assign module pointer to software instance struct */
 	module->hw = hw;
 
@@ -194,13 +189,13 @@ enum status_code usart_init(
 	SercomUsart *const usart_hw = &(module->hw->USART);
 
 	uint32_t sercom_index = _sercom_get_sercom_inst_index(module->hw);
+	uint32_t pm_index     = sercom_index + PM_APBCMASK_SERCOM0_Pos;
+	uint32_t gclk_index   = sercom_index + SERCOM0_GCLK_ID_CORE;
 
 	/* Turn on module in PM */
-	uint32_t pm_index = sercom_index + PM_APBCMASK_SERCOM0_Pos;
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, 1 << pm_index);
 
 	/* Set up the GCLK for the module */
-	uint32_t gclk_index = sercom_index + SERCOM0_GCLK_ID_CORE;
 	struct system_gclk_chan_config gclk_chan_conf;
 	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
 	gclk_chan_conf.source_generator = config->generator_source;
@@ -208,17 +203,20 @@ enum status_code usart_init(
 	system_gclk_chan_enable(gclk_index);
 	sercom_set_gclk_generator(config->generator_source, true, false);
 
-	struct system_pinmux_config pin_conf;
-
 	/* Configure Pins */
+	struct system_pinmux_config pin_conf;
 	system_pinmux_get_config_defaults(&pin_conf);
-	pin_conf.direction    = SYSTEM_PINMUX_PIN_DIR_INPUT;
+	pin_conf.direction = SYSTEM_PINMUX_PIN_DIR_INPUT;
+
+	uint32_t pad0 = config->pinout_pad0;
+	uint32_t pad1 = config->pinout_pad1;
+	uint32_t pad2 = config->pinout_pad2;
+	uint32_t pad3 = config->pinout_pad3;
 
 	/* SERCOM PAD0 */
 	if (pad0 == PINMUX_DEFAULT) {
 		pad0 = _sercom_get_default_pad(hw, 0);
 	}
-
 	pin_conf.mux_position = pad0 & 0xFFFF;
 	system_pinmux_pin_set_config(pad0 >> 16, &pin_conf);
 
@@ -226,7 +224,6 @@ enum status_code usart_init(
 	if (pad1 == PINMUX_DEFAULT) {
 		pad1 = _sercom_get_default_pad(hw, 1);
 	}
-
 	pin_conf.mux_position = pad1 & 0xFFFF;
 	system_pinmux_pin_set_config(pad1 >> 16, &pin_conf);
 
@@ -234,16 +231,13 @@ enum status_code usart_init(
 	if (pad2 == PINMUX_DEFAULT) {
 		pad2 = _sercom_get_default_pad(hw, 2);
 	}
-
 	pin_conf.mux_position = pad2 & 0xFFFF;
-
 	system_pinmux_pin_set_config(pad2 >> 16, &pin_conf);
 
 	/* SERCOM PAD3 */
 	if (pad3 == PINMUX_DEFAULT) {
 		pad3 = _sercom_get_default_pad(hw, 3);
 	}
-
 	pin_conf.mux_position = pad3 & 0xFFFF;
 	system_pinmux_pin_set_config(pad3 >> 16, &pin_conf);
 

@@ -97,6 +97,7 @@ static enum status_code _spi_set_config(
 
 	struct system_pinmux_config pin_conf;
 	system_pinmux_get_config_defaults(&pin_conf);
+	pin_conf.direction = SYSTEM_PINMUX_PIN_DIR_INPUT;
 
 	uint32_t pad0 = config->pinmux_pad0;
 	uint32_t pad1 = config->pinmux_pad1;
@@ -250,13 +251,13 @@ enum status_code spi_init(
 	}
 
 	uint32_t sercom_index = _sercom_get_sercom_inst_index(module->hw);
+	uint32_t pm_index     = sercom_index + PM_APBCMASK_SERCOM0_Pos;
+	uint32_t gclk_index   = sercom_index + SERCOM0_GCLK_ID_CORE;
 
 	/* Turn on module in PM */
-	uint32_t pm_index = sercom_index + PM_APBCMASK_SERCOM0_Pos;
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, 1 << pm_index);
 
 	/* Set up the GCLK for the module */
-	uint32_t gclk_index = sercom_index + SERCOM0_GCLK_ID_CORE;
 	struct system_gclk_chan_config gclk_chan_conf;
 	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
 	gclk_chan_conf.source_generator = config->generator_source;
