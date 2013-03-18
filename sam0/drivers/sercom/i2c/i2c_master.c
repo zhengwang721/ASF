@@ -82,25 +82,25 @@ static enum status_code _i2c_master_set_config(
 
 	/* Pin configuration */
 	struct system_pinmux_config pin_conf;
+	system_pinmux_get_config_defaults(&pin_conf);
+
 	uint32_t pad0 = config->pinmux_pad0;
 	uint32_t pad1 = config->pinmux_pad1;
 
-	system_pinmux_get_config_defaults(&pin_conf);
 	/* SERCOM PAD0 - SDA */
 	if (pad0 == PINMUX_DEFAULT) {
 		pad0 = _sercom_get_default_pad(sercom_hw, 0);
 	}
-
 	pin_conf.mux_position = pad0 & 0xFFFF;
-	pin_conf.direction = SYSTEM_PINMUX_PIN_DIR_OUTPUT_WITH_READBACK;
+	pin_conf.direction    = SYSTEM_PINMUX_PIN_DIR_OUTPUT_WITH_READBACK;
 	system_pinmux_pin_set_config(pad0 >> 16, &pin_conf);
 
 	/* SERCOM PAD1 - SCL */
 	if (pad1 == PINMUX_DEFAULT) {
 		pad1 = _sercom_get_default_pad(sercom_hw, 1);
 	}
-
 	pin_conf.mux_position = pad1 & 0xFFFF;
+	pin_conf.direction    = SYSTEM_PINMUX_PIN_DIR_OUTPUT_WITH_READBACK;
 	system_pinmux_pin_set_config(pad1 >> 16, &pin_conf);
 
 	/* Save timeout on unknown bus state in software module. */
@@ -181,21 +181,20 @@ enum status_code i2c_master_init(
 
 	SercomI2cm *const i2c_module = &(module->hw->I2CM);
 
+	uint32_t sercom_index = _sercom_get_sercom_inst_index(module->hw);
+	uint32_t pm_index     = sercom_index + PM_APBCMASK_SERCOM0_Pos;
+	uint32_t gclk_index   = sercom_index + SERCOM0_GCLK_ID_CORE;
+
 	/* Turn on module in PM */
-	uint32_t pm_index = _sercom_get_sercom_inst_index(module->hw)
-			+ PM_APBCMASK_SERCOM0_Pos;
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, 1 << pm_index);
 
-	/* Set up GCLK */
+	/* Set up the GCLK for the module */
 	struct system_gclk_chan_config gclk_chan_conf;
 	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
-	uint32_t gclk_index = _sercom_get_sercom_inst_index(module->hw) + 13;
 	gclk_chan_conf.source_generator = config->generator_source;
 	system_gclk_chan_set_config(gclk_index, &gclk_chan_conf);
-	gclk_chan_conf.source_generator = GCLK_GENERATOR_1;
-	system_gclk_chan_set_config(SERCOM_GCLK_ID, &gclk_chan_conf);
 	system_gclk_chan_enable(gclk_index);
-	system_gclk_chan_enable(SERCOM_GCLK_ID);
+	sercom_set_gclk_generator(config->generator_source, true, false);
 
 	/* Check if module is enabled. */
 	if (i2c_module->CTRLA.reg & SERCOM_I2CM_CTRLA_ENABLE) {

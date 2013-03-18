@@ -85,7 +85,7 @@ void spi_reset(
  */
 static enum status_code _spi_set_config(
 		struct spi_module *const module,
-		struct spi_config *config)
+		const struct spi_config *const config)
 {
 	/* Sanity check arguments */
 	Assert(module);
@@ -97,6 +97,7 @@ static enum status_code _spi_set_config(
 
 	struct system_pinmux_config pin_conf;
 	system_pinmux_get_config_defaults(&pin_conf);
+	pin_conf.direction = SYSTEM_PINMUX_PIN_DIR_INPUT;
 
 	uint32_t pad0 = config->pinmux_pad0;
 	uint32_t pad1 = config->pinmux_pad1;
@@ -131,15 +132,13 @@ static enum status_code _spi_set_config(
 	pin_conf.mux_position = pad3 & 0xFFFF;
 	system_pinmux_pin_set_config(pad3 >> 16, &pin_conf);
 
-	module->mode = config->mode;
+	module->mode           = config->mode;
 	module->character_size = config->character_size;
 
 	/* Value to write to BAUD register */
 	uint16_t baud;
 	/* Value to write to CTRLA register */
 	uint32_t ctrla;
-	/* Status code */
-	enum status_code err = STATUS_OK;
 
 	/**
 	 * \todo need to get reference clockspeed from conf struct and gclk_get_hz
@@ -148,11 +147,11 @@ static enum status_code _spi_set_config(
 
 	/* Find baud value and write it */
 	if (config->mode == SPI_MODE_MASTER) {
-		err = _sercom_get_sync_baud_val(
+		enum status_code error_code = _sercom_get_sync_baud_val(
 				config->master.baudrate,
 				external_clock, &baud);
 
-		if (err != STATUS_OK) {
+		if (error_code != STATUS_OK) {
 			/* Baud rate calculation error, return status code */
 			return STATUS_ERR_INVALID_ARG;
 		}
@@ -227,8 +226,8 @@ static enum status_code _spi_set_config(
  */
 enum status_code spi_init(
 		struct spi_module *const module,
-		Sercom *hw,
-		struct spi_config *config)
+		Sercom *const hw,
+		const struct spi_config *const config)
 {
 
 	/* Sanity check arguments */
@@ -241,7 +240,7 @@ enum status_code spi_init(
 
 	SercomSpi *const spi_module = &(module->hw->SPI);
 
-		/* Check if module is enabled. */
+	/* Check if module is enabled. */
 	if (spi_module->CTRLA.reg & SERCOM_SPI_CTRLA_ENABLE) {
 		return STATUS_ERR_DENIED;
 	}
@@ -251,20 +250,20 @@ enum status_code spi_init(
 		return STATUS_BUSY;
 	}
 
+	uint32_t sercom_index = _sercom_get_sercom_inst_index(module->hw);
+	uint32_t pm_index     = sercom_index + PM_APBCMASK_SERCOM0_Pos;
+	uint32_t gclk_index   = sercom_index + SERCOM0_GCLK_ID_CORE;
+
 	/* Turn on module in PM */
-	uint32_t pm_index = _sercom_get_sercom_inst_index(module->hw)
-			+ PM_APBCMASK_SERCOM0_Pos;
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, 1 << pm_index);
 
-	/* Set up GCLK */
+	/* Set up the GCLK for the module */
 	struct system_gclk_chan_config gclk_chan_conf;
 	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
-	uint32_t gclk_index = _sercom_get_sercom_inst_index(module->hw) + 13;
 	gclk_chan_conf.source_generator = config->generator_source;
 	system_gclk_chan_set_config(gclk_index, &gclk_chan_conf);
-	system_gclk_chan_set_config(SERCOM_GCLK_ID, &gclk_chan_conf);
 	system_gclk_chan_enable(gclk_index);
-	system_gclk_chan_enable(SERCOM_GCLK_ID);
+	sercom_set_gclk_generator(config->generator_source, true, false);
 
 	/* Set the SERCOM in SPI mode */
 	spi_module->CTRLA.reg |= SERCOM_SPI_CTRLA_MODE(0x1);
@@ -403,9 +402,9 @@ enum status_code spi_read_buffer_wait(
  *                                     the slave address
  */
 enum status_code spi_select_slave(
-		struct spi_module *module,
-		struct spi_slave_inst *slave,
-		bool select)
+		struct spi_module *const module,
+		struct spi_slave_inst *const slave,
+		const bool select)
 {
 	/* Sanity check arguments */
 	Assert(module);
