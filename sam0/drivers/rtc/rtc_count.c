@@ -168,14 +168,14 @@ enum status_code rtc_count_init(
 	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
 	gclk_chan_conf.source_generator = GCLK_GENERATOR_2;
 	system_gclk_chan_set_config(RTC_GCLK_ID, &gclk_chan_conf);
-	system_gclk_chan_enable(RTC_GCLK_ID);
+	system_gclk_chan_enable(RTC_GCLK_ID);git gui
 
 	/* Reset module to hardware defaults. */
 	rtc_count_reset();
 
 	//TODO: Get tools to add in alias names for other RTC modes
 	/* Set the prescaler according to settings in conf_clocks.h */
-#if CONF_CLOCK_RTC_FREQ == CONF_CLOCK_RTC_FREQ_1HZ
+#if CONF_CLOCK_RTC_FREQ != CONF_CLOCK_RTC_FREQ_32KHZ
 	rtc_module->MODE0.CTRL.reg = RTC_MODE2_CTRL_PRESCALER_DIV1024;
 #else
 	rtc_module->MODE0.CTRL.reg = RTC_MODE2_CTRL_PRESCALER_DIV1;
