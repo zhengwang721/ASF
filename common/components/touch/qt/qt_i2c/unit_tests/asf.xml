@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
-	<module type="application" id="common.components.touch.qt.qt_i2c.unit_tests" caption="Unit Tests for Qtouch component driver with I2C interface">
+	<module type="application" id="common.components.touch.qt.qt_i2c.unit_tests" caption="Unit Tests for QTouch component driver with I2C interface">
 		<info type="description" value="summary">
-			Unit test application for Qtouch component driver with I2C interface.
+			Unit test application for QTouch component driver with I2C interface.
 		</info>
 		<build type="c-source" value="unit_tests.c"/>
 		<build type="module-config" subtype="required-header-file" value="conf_test.h"/>

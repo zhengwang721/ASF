@@ -70,6 +70,7 @@ extern "C" {
  *  \defgroup qt_device_i2c_support_list QT Device list support by the driver
  *  @{
  */
+
 #define QT2160    1    /**< AT42QT2160 device support */
 /** @}  */
 
@@ -88,13 +89,6 @@ extern "C" {
 # warning The QTouch device address has not been defined. Using default settings.
 # define BOARD_QT_DEVICE_ADDRESS    0    /* QTouch device address */
 #endif
-
-/** Invalid pin index (used for RESET and CHANGE pin definition) */
-#define QT_PIN_IDX_INVALID   0xFFFFu
-/** RESET pin index for QT device */
-#define QT_RESET_PIN_IDX     CONF_QT_RESET_PIN_IDX
-/** CHANGE pin index for QT device */
-#define QT_CHANGE_PIN_IDX    CONF_QT_CHANGE_PIN_IDX
 
 void qt_hardware_reset(void);
 enum status_code qt_get_comm_ready(void);
@@ -144,6 +138,8 @@ enum status_code qt_write_regs(uint8_t reg_addr, uint8_t *write_buffer,
  *
  * Add this to the main loop or a setup function:
  * \code
+ *   struct qt_status status;
+ *   struct qt_setup_block setup_block;
  *   enum status_code ret;
  *   twi_master_options_t twi_opt;
  *
@@ -164,12 +160,12 @@ enum status_code qt_write_regs(uint8_t reg_addr, uint8_t *write_buffer,
  *   }
  *
  *   // Read setup block
- *   qt_read_setup_block(&qt_setup_block);
+ *   qt_read_setup_block(&setup_block);
  *
  *   // TODO:Modify setup block parameters according to application
  *
  *   // Write setup block
- *   qt_write_setup_block(&qt_setup_block);
+ *   qt_write_setup_block(&setup_block);
  *
  * \endcode
  *
@@ -198,16 +194,16 @@ enum status_code qt_write_regs(uint8_t reg_addr, uint8_t *write_buffer,
  *  \endcode
  * -# Read setup block from QT device
  *  \code
- *   qt_read_setup_block(&qt_setup_block);
+ *   qt_read_setup_block(&setup_block);
  *  \endcode
  * -# Modify parameters in setup block if desired
  *  \code
  *   // For example, to set Detect Integrator to 5.
- *   qt_setup_block.detect_integrator = 5;
+ *   setup_block.detect_integrator = 5;
  *  \endcode
  * -# Wrtie setup block to QT device
  *  \code
- *   qt_write_setup_block(&qt_setup_block);
+ *   qt_write_setup_block(&setup_block);
  *  \endcode
  *
  * \section qt_i2c_basic_usage Basic Usage Steps
@@ -217,7 +213,7 @@ enum status_code qt_write_regs(uint8_t reg_addr, uint8_t *write_buffer,
  *       // Read Qtouch status if CHANGE pin is asserted
  *       if (qt_is_change_line_low()) {
  *           // Read all status bytes
- *           qt_get_status(&qt_status);
+ *           qt_get_status(&status);
  *
  *           // TODO: process the received data by application
  *           // Add application code here

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Qtouch component example with I2C interface.
+ * \brief QTouch component example with I2C interface.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -54,7 +54,7 @@
  *
  * \section compilinfo Compilation Information
  * This software is written for GNU GCC and IAR Embedded Workbench
- * for Atmel. Other compilers may or may not work.
+ * for ARM. Other compilers may or may not work.
  *
  * \section deviceinfo Device Information
  * AT42QT2160 on SAM4E-EK can be used.
@@ -68,10 +68,10 @@
  *        - 8 data bits
  *        - No parity
  *        - 1 stop bit
- *        - Hardware flow control (RTS/CTS)
+ *        - No flow control
  *  -# Start the application. The following traces shall appear on the terminal:
  *     \code
- *     -- Qtouch component example (with I2C interface) --
+ *     -- QTouch component example (with I2C interface) --
  *     -- xxxxxx-xx
  *     -- Compiled: xxx xx xxxx xx:xx:xx --
  *     \endcode
@@ -110,22 +110,22 @@ static void configure_console(void)
 /**
  * \brief Initialize TWI communication interface.
  */
-static void qt_init_interface(void)
+static void init_interface(void)
 {
 	/* TWI master initialization options. */
 	twi_master_options_t twi_opt;
 
 	memset((void *)&twi_opt, 0, sizeof(twi_master_options_t));
-	twi_opt.speed = 50000;    /* 50K for I2C speed */
+	twi_opt.speed = 100000;    /* 100KHz for I2C speed */
 
 	/* Initialize the TWI master driver. */
 	twi_master_setup(BOARD_QT_TWI_INSTANCE, &twi_opt);
 }
 
 /** Storage for QT status */
-struct qt_status qt_status;
+struct qt_status status;
 /** Storage for QT setup block */
-struct qt_setup_block qt_setup_block;
+struct qt_setup_block setup_block;
 
 /**
  * \brief Main entry point for QTouch component example.
@@ -142,12 +142,12 @@ int main(void)
 	configure_console();
 
 	/* Output example information */
-	printf("\r\n\r\n-- Qtouch component example with I2C interface --\r\n");
+	printf("\r\n\r\n-- QTouch component example with I2C interface --\r\n");
 	printf("-- %s\r\n", BOARD_NAME);
 	printf("-- Compiled: %s %s --\r\n", __DATE__, __TIME__);
 
 	/* Initialize communication interface */
-	qt_init_interface();
+	init_interface();
 
 	/* Reset QT device */
 	qt_hardware_reset();
@@ -155,28 +155,29 @@ int main(void)
 	/* Check communication is ready and able to read Chip ID */
 	ret = qt_get_comm_ready();
 	if (ret != STATUS_OK) {
+		printf("Communication failed. Abort!\r\n");
 		while (1) {
 			/* Infinite loop here */
 		}
 	}
 
 	/* Read setup block */
-	qt_read_setup_block(&qt_setup_block);
+	qt_read_setup_block(&setup_block);
 	/* Modify setup block parameters for specific example */
-	example_set_qt_param(&qt_setup_block);
+	example_set_qt_param(&setup_block);
 	/* Write setup block */
-	qt_write_setup_block(&qt_setup_block);
+	qt_write_setup_block(&setup_block);
 
 	/* Read all status bytes to return the CHANGE line to an inactive state */
-	qt_get_status(&qt_status);
+	qt_get_status(&status);
 
 	while (1) {
 		if (qt_is_change_line_low()) {
 			/* Read all status bytes */
-			qt_get_status(&qt_status);
+			qt_get_status(&status);
 
 			/* Process the received data */
-			example_process_qt_status(&qt_status);
+			example_process_qt_status(&status);
 		}
 	}
 }

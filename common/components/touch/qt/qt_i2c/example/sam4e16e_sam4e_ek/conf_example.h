@@ -44,6 +44,9 @@
 #ifndef CONF_EXAMPLE_H_INCLUDED
 #define CONF_EXAMPLE_H_INCLUDED
 
+#define QT_SLIDER_RESOLUTION  QT_SLIDER_RESOLUTION_7_BIT
+#define QT_SLIDER_MAX         ((0x01 << (8 - QT_SLIDER_RESOLUTION)) - 1)
+
 /**
  * \brief Set QTouch parameter for the example
  *
@@ -55,7 +58,7 @@ static void example_set_qt_param(struct qt_setup_block *setup_block)
 	 * Set parameter for QT slider.
 	 */
 	setup_block->slider_num_keys = 7; /* X0~X6 are for slider, total 7  */
-	setup_block->slider_resolution = QT_SLIDER_RESOLUTION_7_BIT;
+	setup_block->slider_resolution = QT_SLIDER_RESOLUTION;
 
 	/*
 	 * Set all GPIO as output with low level.
@@ -105,7 +108,7 @@ static void example_process_qt_status(struct qt_status *qt_status)
 	if (qt_status->general_status & QT_GENERAL_STATUS_SDET) {
 		if (qt_status->slider_position != slide_position) {
 			slide_position = qt_status->slider_position;
-			printf("QT slider: %d\r\n", slide_position);
+			printf("QT slider: %d\r\n", QT_SLIDER_MAX - slide_position);
 		}
 	}
 }

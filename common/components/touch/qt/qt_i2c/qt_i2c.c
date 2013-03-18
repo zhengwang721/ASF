@@ -118,7 +118,7 @@ enum status_code qt_get_comm_ready(void)
 enum status_code qt_read_setup_block(struct qt_setup_block *setup_block)
 {
 	return (qt_read_regs(QT_SETUPS_BLOCK_ADDR, (uint8_t *)setup_block,
-				sizeof(struct qt_setup_block)));
+			sizeof(struct qt_setup_block)));
 }
 
 /**

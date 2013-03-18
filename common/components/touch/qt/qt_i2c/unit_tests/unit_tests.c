@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Unit tests for Qtouch component driver with I2C interface.
+ * \brief Unit tests for QTouch component driver with I2C interface.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -49,7 +49,7 @@
  * \mainpage
  *
  * \section intro Introduction
- * This is the unit test application for Qtouch component driver
+ * This is the unit test application for QTouch component driver
  * with I2C interface.
  *
  * It consists of test cases for the following functionalities:
@@ -76,22 +76,22 @@
  */
 
 /** Storage for QT status */
-struct qt_status qt_status;
+struct qt_status status;
 /** Storage for QT setup block 0 */
-struct qt_setup_block qt_setup_block_0;
+struct qt_setup_block setup_block_0;
 /** Storage for QT setup block 1 */
-struct qt_setup_block qt_setup_block_1;
+struct qt_setup_block setup_block_1;
 
 /**
  * \brief Initialize TWI communication interface.
  */
-static void qt_init_interface(void)
+static void init_interface(void)
 {
 	/* TWI master initialization options. */
 	twi_master_options_t twi_opt;
 
 	memset((void *)&twi_opt, 0, sizeof(twi_master_options_t));
-	twi_opt.speed = 50000;    /* 50K for I2C speed */
+	twi_opt.speed = 100000;    /* 100KHz for I2C speed */
 
 	/* Initialize the TWI master driver. */
 	twi_master_setup(BOARD_QT_TWI_INSTANCE, &twi_opt);
@@ -107,7 +107,7 @@ static void run_qt_test_comm_ready(const struct test_case *test)
 	enum status_code ret;
 
 	/* Initialize communication interface */
-	qt_init_interface();
+	init_interface();
 
 	/* Reset QT device */
 	qt_hardware_reset();
@@ -128,24 +128,24 @@ static void run_qt_test_comm_ready(const struct test_case *test)
 static void run_qt_test_setup_block(const struct test_case *test)
 {
 	uint32_t i;
-	uint8_t *ptr_block_0 = (uint8_t *)&qt_setup_block_0;
-	uint8_t *ptr_block_1 = (uint8_t *)&qt_setup_block_1;
+	uint8_t *ptr_block_0 = (uint8_t *)&setup_block_0;
+	uint8_t *ptr_block_1 = (uint8_t *)&setup_block_1;
 	enum status_code ret;
 
 	/* Read setup block */
-	ret = qt_read_setup_block(&qt_setup_block_0);
+	ret = qt_read_setup_block(&setup_block_0);
 	test_assert_true(test, ret == STATUS_OK, "Fail to read setup block");
 
 	/* Modify setup block parameters */
-	ut_set_qt_param(&qt_setup_block_0);
+	ut_set_qt_param(&setup_block_0);
 
 	/* Write setup block */
-	ret = qt_write_setup_block(&qt_setup_block_0);
+	ret = qt_write_setup_block(&setup_block_0);
 	test_assert_true(test, ret == STATUS_OK, "Fail to write setup block");
 
 	/* Read setup block back and check */
-	memset((uint8_t *)&qt_setup_block_1, 0, sizeof(struct qt_setup_block));
-	qt_read_setup_block(&qt_setup_block_1);
+	memset((uint8_t *)&setup_block_1, 0, sizeof(struct qt_setup_block));
+	qt_read_setup_block(&setup_block_1);
 	for (i = 0; i < sizeof(struct qt_setup_block); i++) {
 		if (*ptr_block_0++ != *ptr_block_1++) {
 			test_assert_true(test, false, "Fail to check setup block: %d", i);
@@ -168,10 +168,10 @@ static void run_qt_test_get_status(const struct test_case *test)
 	/* Test if any key pressed in 2 second (2000 * 1ms) */
 	for (i = 0; i < 2000; i++) {
 		if (qt_is_change_line_low()) {
-			ret = qt_get_status(&qt_status);
+			ret = qt_get_status(&status);
 			test_assert_true(test, ret == STATUS_OK, "Fail to get QT status");
 
-			test_assert_false(test, ut_is_any_key_pressed(&qt_status),
+			test_assert_false(test, ut_is_any_key_pressed(&status),
 					"Unexpect key pressed happen");
 		}
 
@@ -180,7 +180,7 @@ static void run_qt_test_get_status(const struct test_case *test)
 }
 
 /**
- * \brief Run Qtouch component driver with I2C interface unit tests.
+ * \brief Run QTouch component driver with I2C interface unit tests.
  */
 int main(void)
 {
