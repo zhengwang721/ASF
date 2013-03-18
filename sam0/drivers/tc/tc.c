@@ -51,17 +51,6 @@
  */
 #define _TC_INTERRUPT_VECT_NUM(n, unused) \
 		SYSTEM_INTERRUPT_MODULE_TC##n,
-
-enum system_interrupt_vector _tc_interrupt_get_interrupt_vector(
-		uint32_t inst_num)
-{
-	static uint8_t tc_interrupt_vectors[TC_INST_NUM] =
-		{
-			MREPEAT(TC_INST_NUM, _TC_INTERRUPT_VECT_NUM, ~)
-		};
-
-	return tc_interrupt_vectors[inst_num];
-}
 #endif
 
 #if !defined(__DOXYGEN__)
@@ -99,6 +88,26 @@ static uint8_t _tc_get_inst_index(
 	Assert(false);
 	return 0;
 }
+
+#ifdef TC_ASYNC
+/**
+ * \internal Get the interrupt vector for the given device instance
+ *
+ * \param[in] TC module instance number.
+ *
+ * \return Interrupt vector for of the given TC module instance.
+ */
+enum system_interrupt_vector _tc_interrupt_get_interrupt_vector(
+		uint32_t inst_num)
+{
+	static uint8_t tc_interrupt_vectors[TC_INST_NUM] =
+		{
+			MREPEAT(TC_INST_NUM, _TC_INTERRUPT_VECT_NUM, ~)
+		};
+
+	return tc_interrupt_vectors[inst_num];
+}
+#endif
 
 /**
  * \brief Initializes a hardware TC module instance.
