@@ -1,19 +1,27 @@
 <asf xmlversion="1.0">
-	<module type="driver" id="sam0.drivers.adc" caption="ADC - Analog-to-Digital Converter Driver">
+	<module type="driver" id="sam0.drivers.adc" caption="ADC - Analog-to-Digital Converter">
 		<info type="description" value="summary">
-		Driver for the SAMD20 ADC.
+			Driver for the SAMD20 Analog to Digital Converter. Provides a unified
+			interface for the configuration and management of the ADC module,
+			including the channel input selections, windowd detections, channel
+			conversions and event generation.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="Analog"/>
+			<keyword value="Analog Conversion" />
 		</info>
-		<build type="c-source" value="adc.c"/>
-		<build type="header-file" subtype="api" value="adc.h"/>
-		<build type="header-file" value="quick_start/qs_adc_basic.h" subtype="example"/>
+
 		<build type="include-path" value="."/>
+		<build type="header-file" subtype="api" value="adc.h"/>
+		<build type="header-file" subtype="example" value="quick_start/qs_adc_basic.h"/>
+		<build type="c-source" value="adc.c"/>
+
 		<build type="doxygen-entry-point" value="asfdoc_samd20_adc_group"/>
+
 		<device-support value="samd20"/>
+
 		<require idref="sam0.utils"/>
 		<require idref="sam0.drivers.system"/>
+
 		<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 	</module>
 </asf>

@@ -50,7 +50,13 @@
  * This driver for SAMD20 devices provides an interface for the configuration
  * and management of the device's Real Time Clock functionality in Count
  * operating mode, for the configuration and retrieval of the current RTC
- * counter value.
+ * counter value. The following driver API modes are covered by this
+ * manual:
+ *
+ *  - Polled APIs
+ * \if RTC_COUNT_CALLBACK_MODE
+ *  - Callback APIs
+ * \endif
  *
  * The following peripherals are used by this module:
  *
@@ -235,6 +241,9 @@
  *
  * The following Quick Start guides and application examples are available for this driver:
  * - \ref asfdoc_samd20_rtc_count_basic_use_case
+ * \if RTC_COUNT_CALLBACK_MODE
+ * - \ref asfdoc_samd20_rtc_count_callback_use_case
+ * \endif
  *
  *
  * \section asfdoc_samd20_rtc_count_api_overview API Overview
@@ -243,6 +252,10 @@
 
 #include <compiler.h>
 #include <conf_clocks.h>
+
+#if RTC_COUNT_ASYNC == true
+#include <system_interrupt.h>
+#endif
 
 #if CONF_CLOCK_GCLK_2_RTC == false
 #  error "Application conf_clocks.h configuration header has invalid settings for the RTC module."
@@ -295,6 +308,49 @@ enum rtc_count_compare {
 #endif
 };
 
+#if RTC_COUNT_ASYNC == true
+/**
+ * \brief Callback types
+ *
+ * The available callback types for the RTC count module.
+ */
+enum rtc_count_callback {
+	/** Callback for compare channel 0 */
+	RTC_COUNT_CALLBACK_COMPARE_0 = 0,
+#if (RTC_NUM_OF_COMP16 > 1) || defined(__DOXYGEN__)
+	/** Callback for compare channel 1 */
+	RTC_COUNT_CALLBACK_COMPARE_1,
+#endif
+#if (RTC_NUM_OF_COMP16 > 2) || defined(__DOXYGEN__)
+	/** Callback for compare channel 2 */
+	RTC_COUNT_CALLBACK_COMPARE_2,
+#endif
+#if (RTC_NUM_OF_COMP16 > 3)	|| defined(__DOXYGEN__)
+	/** Callback for compare channel 3 */
+	RTC_COUNT_CALLBACK_COMPARE_3,
+#endif
+#if (RTC_NUM_OF_COMP16 > 4) || defined(__DOXYGEN__)
+	/** Callback for compare channel 4 */
+	RTC_COUNT_CALLBACK_COMPARE_4,
+#endif
+#if (RTC_NUM_OF_COMP16 > 5) || defined(__DOXYGEN__)
+	/** Callback for compare channel 5 */
+	RTC_COUNT_CALLBACK_COMPARE_5,
+#endif
+	/** Callback for  overflow */
+	RTC_COUNT_CALLBACK_OVERFLOW,
+#if !defined(__DOXYGEN__)
+	/** Total number of callbacks */
+	_RTC_COUNT_CALLBACK_N
+#endif
+};
+
+#if !defined(__DOXYGEN__)
+
+typedef void (*rtc_count_callback_t)(void);
+#endif
+#endif
+
 /**
  * \brief RTC Count event enable/disable structure.
  *
@@ -312,6 +368,28 @@ struct rtc_count_events {
 	 * \ref asfdoc_samd20_rtc_count_module_overview_periodic). */
 	bool generate_event_on_periodic[8];
 };
+
+#if !defined(__DOXYGEN__)
+/**
+ * \internal Internal device structure.
+ */
+struct _rtc_device {
+	/** Operation mode of count. */
+	enum rtc_count_mode mode;
+	/** Set if counter value should be continuously updated. */
+	bool continuously_update;
+#if RTC_COUNT_ASYNC == true
+	/** Pointers to callback functions */
+	volatile rtc_count_callback_t callbacks[_RTC_COUNT_CALLBACK_N];
+	/** Mask for registered callbacks */
+	volatile uint8_t registered_callback;
+	/** Mask for enabled callbacks */
+	volatile uint8_t enabled_callback;
+#endif
+};
+
+volatile struct _rtc_device _rtc_dev;
+#endif
 
 /**
  * \brief RTC Count configuration structure
@@ -396,6 +474,8 @@ static inline void rtc_count_get_config_defaults(
 	}
 }
 
+void rtc_count_reset(void);
+
 /**
  * \brief Enables the RTC module.
  *
@@ -406,6 +486,10 @@ static inline void rtc_count_enable(void)
 {
 	/* Initialize module pointer. */
 	Rtc *const rtc_module = RTC;
+
+#if RTC_COUNT_ASYNC == true
+	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_RTC);
+#endif
 
 	while (rtc_count_is_syncing()) {
 		/* Wait for synchronization */
@@ -424,6 +508,10 @@ static inline void rtc_count_disable(void)
 {
 	/* Initialize module pointer. */
 	Rtc *const rtc_module = RTC;
+
+#if RTC_COUNT_ASYNC == true
+	system_interrupt_disable(SYSTEM_INTERRUPT_MODULE_RTC);
+#endif
 
 	while (rtc_count_is_syncing()) {
 		/* Wait for synchronization */
@@ -673,6 +761,9 @@ static inline void rtc_count_disable_events(
  * application or be added to the user application.
  *
  *  - \subpage asfdoc_samd20_rtc_count_basic_use_case
+ * \if RTC_COUNT_CALLBACK_MODE
+ *  - \subpage asfdoc_samd20_rtc_count_callback_use_case
+ * \endif
  */
 
 #endif /* RTC_COUNT_H_INCLUDED */

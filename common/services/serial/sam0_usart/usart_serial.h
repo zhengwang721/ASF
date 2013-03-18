@@ -99,9 +99,13 @@ static inline enum status_code usart_serial_putchar(struct usart_module *const m
  *
  */
 static inline void usart_serial_getchar(struct usart_module *const module,
-		uint8_t c)
+		uint8_t *c)
 {
-	usart_read_wait(module, (uint16_t *const)&c);
+	uint16_t temp;
+
+	usart_read_wait(module, &temp);
+
+	*c = temp;
 }
 
 /**
@@ -126,9 +130,8 @@ static inline enum status_code usart_serial_write_packet(struct usart_module *co
  * \param len    Length of data
  *
  */
-
 static inline enum status_code usart_serial_read_packet(struct usart_module *const module,
-		const uint8_t *rx_data, uint16_t length)
+		uint8_t *rx_data, uint16_t length)
 {
 	return usart_read_buffer_wait(module, rx_data, length);
 }

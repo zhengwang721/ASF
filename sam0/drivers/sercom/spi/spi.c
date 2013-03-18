@@ -76,16 +76,16 @@ void spi_reset(
  * This function will write out a given configuration to the hardware module.
  * Can only be done when the module is disabled.
  *
- * \param[in] module  Pointer to the software instance struct
- * \param[in] config    Pointer to the configuration struct
+ * \param[in]  module  Pointer to the software instance struct
+ * \param[in]  config  Pointer to the configuration struct
  *
  * \return The status of the configuration
- * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) were provided.
- * \retval STATUS_OK              If the configuration was written
+ * \retval STATUS_ERR_INVALID_ARG  If invalid argument(s) were provided.
+ * \retval STATUS_OK               If the configuration was written
  */
 static enum status_code _spi_set_config(
 		struct spi_module *const module,
-		struct spi_config *config)
+		const struct spi_config *const config)
 {
 	/* Sanity check arguments */
 	Assert(module);
@@ -94,13 +94,16 @@ static enum status_code _spi_set_config(
 
 	SercomSpi *const spi_module = &(module->hw->SPI);
 	Sercom *const sercom_module = module->hw;
+
 	struct system_pinmux_config pin_conf;
+	system_pinmux_get_config_defaults(&pin_conf);
+	pin_conf.direction = SYSTEM_PINMUX_PIN_DIR_INPUT;
+
 	uint32_t pad0 = config->pinmux_pad0;
 	uint32_t pad1 = config->pinmux_pad1;
 	uint32_t pad2 = config->pinmux_pad2;
 	uint32_t pad3 = config->pinmux_pad3;
 
-	system_pinmux_get_config_defaults(&pin_conf);
 	/* SERCOM PAD0 */
 	if (pad0 == PINMUX_DEFAULT) {
 		pad0 = _sercom_get_default_pad(sercom_module, 0);
@@ -129,15 +132,13 @@ static enum status_code _spi_set_config(
 	pin_conf.mux_position = pad3 & 0xFFFF;
 	system_pinmux_pin_set_config(pad3 >> 16, &pin_conf);
 
-	module->mode = config->mode;
-	module->chsize = config->chsize;
+	module->mode           = config->mode;
+	module->character_size = config->character_size;
 
 	/* Value to write to BAUD register */
 	uint16_t baud;
 	/* Value to write to CTRLA register */
 	uint32_t ctrla;
-	/* Status code */
-	enum status_code err = STATUS_OK;
 
 	/**
 	 * \todo need to get reference clockspeed from conf struct and gclk_get_hz
@@ -146,13 +147,15 @@ static enum status_code _spi_set_config(
 
 	/* Find baud value and write it */
 	if (config->mode == SPI_MODE_MASTER) {
-		err = _sercom_get_sync_baud_val(
+		enum status_code error_code = _sercom_get_sync_baud_val(
 				config->master.baudrate,
 				external_clock, &baud);
-		if (err != STATUS_OK) {
+
+		if (error_code != STATUS_OK) {
 			/* Baud rate calculation error, return status code */
 			return STATUS_ERR_INVALID_ARG;
 		}
+
 		spi_module->BAUD.reg = (uint8_t)baud;
 	}
 
@@ -164,7 +167,8 @@ static enum status_code _spi_set_config(
 		ctrla = config->slave.frame_format;
 
 		/* Set address mode */
-		spi_module->CTRLB.reg |= config->slave.addr_mode;
+		spi_module->CTRLB.reg |= config->slave.address_mode;
+
 		/* Set address and address mask*/
 		spi_module->ADDR.reg |=
 				(config->slave.address      << SERCOM_SPI_ADDR_ADDR_Pos) |
@@ -186,7 +190,7 @@ static enum status_code _spi_set_config(
 	ctrla |= config->mux_setting;
 
 	/* Set SPI character size */
-	spi_module->CTRLB.reg |= config->chsize;
+	spi_module->CTRLB.reg |= config->character_size;
 
 	if (config->run_in_standby) {
 		/* Enable in sleep mode */
@@ -210,20 +214,20 @@ static enum status_code _spi_set_config(
  * This function will initialize the SERCOM SPI module, based on the values
  * of the config struct.
  *
- * \param[out] module   Pointer to the software instance struct
- * \param[in] module      Pointer to hardware instance
- * \param[in] config      Pointer to the config struct
+ * \param[out]  module  Pointer to the software instance struct
+ * \param[in]   hw      Pointer to hardware instance
+ * \param[in]   config  Pointer to the config struct
  *
  * \return Status of the initialization
- * \retval STATUS_OK                     Module initiated correctly.
- * \retval STATUS_ERR_DENIED             If module is enabled.
- * \retval STATUS_BUSY               If module is busy resetting.
- * \retval STATUS_ERR_INVALID_ARG        If invalid argument(s) were provided.
+ * \retval STATUS_OK               Module initiated correctly.
+ * \retval STATUS_ERR_DENIED       If module is enabled.
+ * \retval STATUS_BUSY             If module is busy resetting.
+ * \retval STATUS_ERR_INVALID_ARG  If invalid argument(s) were provided.
  */
 enum status_code spi_init(
 		struct spi_module *const module,
-		Sercom *hw,
-		struct spi_config *config)
+		Sercom *const hw,
+		const struct spi_config *const config)
 {
 
 	/* Sanity check arguments */
@@ -236,7 +240,7 @@ enum status_code spi_init(
 
 	SercomSpi *const spi_module = &(module->hw->SPI);
 
-		/* Check if module is enabled. */
+	/* Check if module is enabled. */
 	if (spi_module->CTRLA.reg & SERCOM_SPI_CTRLA_ENABLE) {
 		return STATUS_ERR_DENIED;
 	}
@@ -246,25 +250,25 @@ enum status_code spi_init(
 		return STATUS_BUSY;
 	}
 
+	uint32_t sercom_index = _sercom_get_sercom_inst_index(module->hw);
+	uint32_t pm_index     = sercom_index + PM_APBCMASK_SERCOM0_Pos;
+	uint32_t gclk_index   = sercom_index + SERCOM0_GCLK_ID_CORE;
+
 	/* Turn on module in PM */
-	uint32_t pm_index = _sercom_get_sercom_inst_index(module->hw)
-			+ PM_APBCMASK_SERCOM0_Pos;
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, 1 << pm_index);
 
-	/* Set up GCLK */
+	/* Set up the GCLK for the module */
 	struct system_gclk_chan_config gclk_chan_conf;
 	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
-	uint32_t gclk_index = _sercom_get_sercom_inst_index(module->hw) + 13;
 	gclk_chan_conf.source_generator = config->generator_source;
 	system_gclk_chan_set_config(gclk_index, &gclk_chan_conf);
-	system_gclk_chan_set_config(SERCOM_GCLK_ID, &gclk_chan_conf);
 	system_gclk_chan_enable(gclk_index);
-	system_gclk_chan_enable(SERCOM_GCLK_ID);
+	sercom_set_gclk_generator(config->generator_source, true, false);
 
 	/* Set the SERCOM in SPI mode */
 	spi_module->CTRLA.reg |= SERCOM_SPI_CTRLA_MODE(0x1);
 
-#ifdef SPI_ASYNC
+#if SPI_CALLBACK_MODE == true
 	/* Temporary variables */
 	uint8_t i;
 	uint8_t instance_index;
@@ -287,7 +291,7 @@ enum status_code spi_init(
 	 * look-up table
 	 */
 	instance_index = _sercom_get_sercom_inst_index(module->hw);
-	_sercom_set_handler(instance_index, spi_interrupt_handler);
+	_sercom_set_handler(instance_index, _spi_interrupt_handler);
 	_sercom_instances[instance_index] = module;
 #endif
 
@@ -301,13 +305,10 @@ enum status_code spi_init(
  * This function will read a buffer of data from an SPI peripheral by sending
  * dummy SPI character if in master mode, or by waiting for data in slave mode.
  *
- * \note Data buffer for received data must be uint16_t and cast to uint8_t if
- *       SPI character size is 9 bit.
- *
- * \param[in] module  Pointer to the software instance struct
+ * \param[in]  module   Pointer to the software instance struct
  * \param[out] rx_data  Data buffer for received data
- * \param[in] length    Length of data to receive
- * \param[in] dummy     8- or 9-bit dummy byte to shift out in master mode
+ * \param[in]  length   Length of data to receive
+ * \param[in]  dummy    8- or 9-bit dummy byte to shift out in master mode
  *
  * \return Status of the read operation
  * \retval STATUS_OK              If the read was completed
@@ -361,10 +362,8 @@ enum status_code spi_read_buffer_wait(
 		while (!spi_is_ready_to_read(module)) {
 		}
 
-		enum status_code retval;
 		uint16_t received_data = 0;
-
-		retval = spi_read(module, &received_data);
+		enum status_code retval = spi_read(module, &received_data);
 
 		if (retval != STATUS_OK) {
 			/* Overflow, abort */
@@ -375,7 +374,7 @@ enum status_code spi_read_buffer_wait(
 		rx_data[rx_pos++] = received_data;
 
 		/* If 9-bit data, write next received byte to the buffer */
-		if (module->chsize == SPI_CHARACTER_SIZE_9BIT) {
+		if (module->character_size == SPI_CHARACTER_SIZE_9BIT) {
 			rx_data[rx_pos++] = (received_data >> 8);
 		}
 	}
@@ -390,22 +389,22 @@ enum status_code spi_read_buffer_wait(
  * If slave address recognition is enabled, the address will be sent to the
  * slave when selecting it.
  *
- * \param[in] module      Pointer to the software module struct
- * \param[in] slave       Pointer to the attached slave
- * \param[in] select      Boolean stating if the slave should be selected or
- *                        deselected
+ * \param[in] module  Pointer to the software module struct
+ * \param[in] slave   Pointer to the attached slave
+ * \param[in] select  Boolean stating if the slave should be selected or
+ *                    deselected
  *
  * \return Status of the operation
- * \retval STATUS_OK                  If the slave device was selected
- * \retval STATUS_ERR_UNSUPPORTED_DEV If the SPI module is operating in slave
- *                                    mode
- * \retval STATUS_BUSY                If the SPI module is not ready to write
- *                                    the slave address
+ * \retval STATUS_OK                   If the slave device was selected
+ * \retval STATUS_ERR_UNSUPPORTED_DEV  If the SPI module is operating in slave
+ *                                     mode
+ * \retval STATUS_BUSY                 If the SPI module is not ready to write
+ *                                     the slave address
  */
 enum status_code spi_select_slave(
-		struct spi_module *module,
-		struct spi_slave_inst *slave,
-		bool select)
+		struct spi_module *const module,
+		struct spi_slave_inst *const slave,
+		const bool select)
 {
 	/* Sanity check arguments */
 	Assert(module);
@@ -446,23 +445,20 @@ enum status_code spi_select_slave(
  *
  * This function will send a buffer of SPI characters via the SPI
  * and discard any data that is received. To both send and receive a buffer of
- * data, use the \ref spi_tranceive_buffer function.
+ * data, use the \ref spi_tranceive_buffer_wait function.
  *
  * Note that this function does not handle the _SS (slave select) pin(s) in
  * master mode; this must be handled by the user application.
  *
- * \note Data buffer to send must be of type uint16_t and cast to uint8_t if
- * SPI character size is 9 bit.
- *
- * \param[in] module  Pointer to the software instance struct
- * \param[in] data      Pointer to the buffer to transmit
- * \param[in] length    Number of SPI characters to transfer
+ * \param[in] module   Pointer to the software instance struct
+ * \param[in] tx_data  Pointer to the buffer to transmit
+ * \param[in] length   Number of SPI characters to transfer
  *
  * \return Status of the write operation
- * \retval STATUS_OK              If the write was completed
- * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) were provided.
- * \retval STATUS_ERR_TIMEOUT     If the operation was not completed within the
- *                                timeout in slave mode.
+ * \retval STATUS_OK               If the write was completed
+ * \retval STATUS_ERR_INVALID_ARG  If invalid argument(s) were provided.
+ * \retval STATUS_ERR_TIMEOUT      If the operation was not completed within the
+ *                                 timeout in slave mode.
  */
 enum status_code spi_write_buffer_wait(
 		struct spi_module *const module,
@@ -502,7 +498,7 @@ enum status_code spi_write_buffer_wait(
 		uint16_t data_to_send = tx_data[tx_pos++];
 
 		/* If 9-bit data, get next byte to send from the buffer */
-		if (module->chsize == SPI_CHARACTER_SIZE_9BIT) {
+		if (module->character_size == SPI_CHARACTER_SIZE_9BIT) {
 			data_to_send |= (tx_data[tx_pos++] << 8);
 		}
 
@@ -553,20 +549,17 @@ enum status_code spi_write_buffer_wait(
  * buffer. It will then block until an SPI master has shifted the complete
  * buffer and the received data is available.
  *
- * \note Data buffer for receive data and data buffer to send must be of type
- * uint16_t and cast to uint8_t if SPI character size is 9 bit.
- *
- * \param[in] module Pointer to the software instance struct
- * \param[in] tx_data  Pointer to the buffer to transmit
- * \param[out] rx_data Pointer to the buffer where received data will be stored
- * \param[in] length   Number of SPI characters to transfer
+ * \param[in]  module   Pointer to the software instance struct
+ * \param[in]  tx_data  Pointer to the buffer to transmit
+ * \param[out] rx_data  Pointer to the buffer where received data will be stored
+ * \param[in]  length   Number of SPI characters to transfer
  *
  * \return Status of the operation
- * \retval STATUS_OK              If the operation was completed
- * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) were provided.
- * \retval STATUS_ERR_TIMEOUT     If the operation was not completed within the
- *                                timeout in slave mode.
- * \retval STATUS_ERR_OVERFLOW    If the data is overflown
+ * \retval STATUS_OK               If the operation was completed
+ * \retval STATUS_ERR_INVALID_ARG  If invalid argument(s) were provided.
+ * \retval STATUS_ERR_TIMEOUT      If the operation was not completed within the
+ *                                 timeout in slave mode.
+ * \retval STATUS_ERR_OVERFLOW     If the data is overflown
  */
 enum status_code spi_tranceive_buffer_wait(
 		struct spi_module *const module,
@@ -609,7 +602,7 @@ enum status_code spi_tranceive_buffer_wait(
 		uint16_t data_to_send = tx_data[tx_pos++];
 
 		/* If 9-bit data, get next byte to send from the buffer */
-		if (module->chsize == SPI_CHARACTER_SIZE_9BIT) {
+		if (module->character_size == SPI_CHARACTER_SIZE_9BIT) {
 			data_to_send |= (tx_data[tx_pos++] << 8);
 		}
 
@@ -648,7 +641,7 @@ enum status_code spi_tranceive_buffer_wait(
 		rx_data[rx_pos++] = received_data;
 
 		/* If 9-bit data, write next received byte to the buffer */
-		if (module->chsize == SPI_CHARACTER_SIZE_9BIT) {
+		if (module->character_size == SPI_CHARACTER_SIZE_9BIT) {
 			rx_data[rx_pos++] = (received_data >> 8);
 		}
 	}

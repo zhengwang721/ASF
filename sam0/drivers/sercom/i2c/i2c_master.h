@@ -48,23 +48,22 @@
 #include <sercom.h>
 #include <pinmux.h>
 
-#ifdef I2C_MASTER_ASYNC
-# include <sercom_interrupt.h>
-#endif
-
-#ifndef PINMUX_DEFAULT
-# define PINMUX_DEFAULT 0
+#if I2C_MASTER_CALLBACK_MODE == true
+#  include <sercom_interrupt.h>
 #endif
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+#ifndef PINMUX_DEFAULT
+#  define PINMUX_DEFAULT 0
+#endif
+
 /**
  * \addtogroup asfdoc_samd20_i2c_group
  *
  * @{
- *
  */
 
 #if !defined(__DOXYGEN__)
@@ -108,15 +107,15 @@ enum i2c_master_start_hold_time {
 /**
  * \brief I<SUP>2</SUP>C frequencies
  *
- * Values for standard I<SUP>2</SUP>C speeds supported by the module. The driver will
- * also support setting any value between 10 and 100kHz, in which case set
+ * Values for standard I<SUP>2</SUP>C speeds supported by the module. The driver
+ * will also support setting any value between 10 and 100kHz, in which case set
  * the value in the \ref i2c_master_config at desired value divided by 1000.
  *
  * Example: If 10kHz operation is required, give baud_rate in the configuration
  * structure the value 10.
  *
  * \note Max speed is given by GCLK-frequency divided by 10, and lowest is
- * given by GCLK-frequency divided by 510.
+ *       given by GCLK-frequency divided by 510.
  */
 enum i2c_master_baud_rate {
 	/** Baud rate at 100kHz. */
@@ -125,7 +124,7 @@ enum i2c_master_baud_rate {
 	I2C_MASTER_BAUD_RATE_400KHZ = 400,
 };
 
-#ifdef I2C_MASTER_ASYNC
+#if I2C_MASTER_CALLBACK_MODE == true
 /**
  * \brief Callback types
  *
@@ -138,18 +137,19 @@ enum i2c_master_callback {
 	I2C_MASTER_CALLBACK_READ_COMPLETE  = 1,
 	/** Callback for error. */
 	I2C_MASTER_CALLBACK_ERROR          = 2,
-#if !defined(__DOXYGEN__)
+#  if !defined(__DOXYGEN__)
 	/** Total number of callbacks. */
 	_I2C_MASTER_CALLBACK_N             = 3,
-#endif
+#  endif
 };
-#if !defined(__DOXYGEN__)
+
+#  if !defined(__DOXYGEN__)
 /* Prototype for software module. */
 struct i2c_master_module;
 
 typedef void (*i2c_master_callback_t)(
 		struct i2c_master_module *const module);
-#endif
+#  endif
 #endif
 
 /**
@@ -171,7 +171,7 @@ struct i2c_master_module {
 	uint16_t buffer_timeout;
 	/** If true, stop condition will be sent after a read/write */
 	bool send_stop;
-#ifdef I2C_MASTER_ASYNC
+#  if I2C_MASTER_CALLBACK_MODE == true
 	/** Pointers to callback functions */
 	volatile i2c_master_callback_t callbacks[_I2C_MASTER_CALLBACK_N];
 	/** Mask for registered callbacks */
@@ -191,15 +191,15 @@ struct i2c_master_module {
 	volatile uint8_t transfer_direction;
 	/** Status for status read back in error callback */
 	volatile enum status_code status;
-#endif
+#  endif
 #endif
 };
 
 /**
  * \brief Configuration structure for the I<SUP>2</SUP>C Master device
  *
- * This is the configuration structure for the I<SUP>2</SUP>C Master device. It is used
- * as an argument for \ref i2c_master_init to provide the desired
+ * This is the configuration structure for the I<SUP>2</SUP>C Master device. It
+ * is used as an argument for \ref i2c_master_init to provide the desired
  * configurations for the module. The structure should be initialized using the
  * \ref i2c_master_get_config_defaults .
  */
@@ -229,9 +229,10 @@ struct i2c_master_config {
 
 #if !defined(__DOXYGEN__)
 /**
- * \internal Wait for hardware module to sync
+ * \internal
+ * Wait for hardware module to sync
  *
- * \param[in]  module Pointer to software module structure
+ * \param[in]  module  Pointer to software module structure
  */
 static void _i2c_master_wait_for_sync(
 		const struct i2c_master_module *const module)
@@ -253,11 +254,11 @@ static void _i2c_master_wait_for_sync(
  *
  * Returns the synchronization status of the module.
  *
- * \param[in] module Pointer to software module structure
+ * \param[in]  module  Pointer to software module structure
  *
- * \return       Status of the synchronization
- * \retval true  Module is busy synchronizing
- * \retval false Module is not synchronizing
+ * \return Status of the synchronization.
+ * \retval true   Module is busy synchronizing
+ * \retval false  Module is not synchronizing
  */
 static inline bool i2c_master_is_syncing (
 		const struct i2c_master_module *const module)
@@ -286,21 +287,21 @@ static inline bool i2c_master_is_syncing (
  * - Do not run in standby
  * - PINMUX_DEFAULT for SERCOM pads
  *
- * \param[out] config Pointer to configuration structure to be initiated
+ * \param[out] config  Pointer to configuration structure to be initiated
  */
 static inline void i2c_master_get_config_defaults(
 		struct i2c_master_config *const config)
 {
 	/*Sanity check argument. */
 	Assert(config);
-	config->baud_rate = I2C_MASTER_BAUD_RATE_100KHZ;
+	config->baud_rate        = I2C_MASTER_BAUD_RATE_100KHZ;
 	config->generator_source = GCLK_GENERATOR_0;
-	config->run_in_standby = false;
-	config->start_hold_time = I2C_MASTER_START_HOLD_TIME_300NS_600NS;
-	config->buffer_timeout = 65535;
+	config->run_in_standby   = false;
+	config->start_hold_time  = I2C_MASTER_START_HOLD_TIME_300NS_600NS;
+	config->buffer_timeout   = 65535;
 	config->unknown_bus_state_timeout = 65535;
-	config->pinmux_pad0 = PINMUX_DEFAULT;
-	config->pinmux_pad1 = PINMUX_DEFAULT;
+	config->pinmux_pad0      = PINMUX_DEFAULT;
+	config->pinmux_pad1      = PINMUX_DEFAULT;
 }
 
 enum status_code i2c_master_init(
@@ -315,7 +316,7 @@ enum status_code i2c_master_init(
  * after the specified \ref asfdoc_samd20_i2c_timeout "timeout" period if no
  * stop bit is detected.
  *
- * \param[in]  module Pointer to the software module struct
+ * \param[in]  module  Pointer to the software module struct
  */
 static inline void i2c_master_enable(
 		const struct i2c_master_module *const module)
@@ -335,7 +336,7 @@ static inline void i2c_master_enable(
 	/* Enable module. */
 	i2c_module->CTRLA.reg |= SERCOM_I2CM_CTRLA_ENABLE;
 
-#ifdef I2C_ASYNC
+#if I2C_MASTER_CALLBACK_MODE == true
 	/* Enable module interrupts */
 	system_interrupt_enable(_sercom_get_interrupt_vector(module->hw));
 #endif
@@ -356,7 +357,7 @@ static inline void i2c_master_enable(
  *
  * Disables the requested I<SUP>2</SUP>C module.
  *
- * \param[in]  module Pointer to the software module struct
+ * \param[in]  module  Pointer to the software module struct
  */
 static inline void i2c_master_disable(
 		const struct i2c_master_module *const module)
@@ -373,7 +374,7 @@ static inline void i2c_master_disable(
 	/* Disable module. */
 	i2c_module->CTRLA.reg &= ~SERCOM_I2CM_CTRLA_ENABLE;
 
-#ifdef I2C_ASYNC
+#if I2C_MASTER_CALLBACK_MODE == true
 	/* Disable module interrupts */
 	system_interrupt_disable(_sercom_get_interrupt_vector(module->hw));
 #endif
@@ -407,6 +408,7 @@ enum status_code i2c_master_write_packet_wait_no_stop(
 void i2c_master_send_stop(struct i2c_master_module *const module);
 
 /** @} */
+
 /** @} */
 
 #ifdef __cplusplus
