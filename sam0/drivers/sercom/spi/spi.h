@@ -770,6 +770,8 @@ static inline void spi_get_config_defaults(
 	/* Sanity check arguments */
 	Assert(config);
 
+	memset(&(config->slave), 0, sizeof(struct spi_slave_config));
+
 	/* Default configuration values */
 	config->mode             = SPI_MODE_MASTER;
 	config->data_order       = SPI_DATA_ORDER_MSB;
