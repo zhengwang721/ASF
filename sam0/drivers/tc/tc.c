@@ -136,6 +136,17 @@ enum status_code tc_init(
 	/* Associate the given device instance with the hardware module */
 	module_inst->hw = hw;
 
+	/* Check if odd numbered TC modules are being configured in 32-bit
+	 * counter size. Only even numbered counters are allowed to be configured
+	 * in 32-bit counter size.
+	 */
+	if ((config->counter_size == TC_COUNTER_SIZE_32BIT) &&
+			((instance == 1) || (instance == 3) ||
+			(instance == 5) || (instance == 7))) {
+		Assert(false);
+		return STATUS_ERR_INVALID_ARG;
+	}
+
 	/* Make the counter size variable in the module_inst struct reflect
 	 * the counter size in the module
 	 */
@@ -155,6 +166,7 @@ enum status_code tc_init(
 		/* Module must be disabled before initialization. Abort. */
 		return STATUS_ERR_DENIED;
 	}
+
 
 	/* Set up the TC PWM out pin for channel 0 */
 	if (config->channel_pwm_out_enabled[0]) {
