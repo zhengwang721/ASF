@@ -45,6 +45,23 @@
 
 #ifdef TC_ASYNC
 #include "tc_interrupt.h"
+#include <system_interrupt.h>
+/** \internal
+ * Converts a given TC index to its interrupt vector index.
+ */
+#define _TC_INTERRUPT_VECT_NUM(n, unused) \
+		SYSTEM_INTERRUPT_MODULE_TC##n,
+
+enum system_interrupt_vector _tc_interrupt_get_interrupt_vector(
+		uint32_t inst_num)
+{
+	static uint8_t tc_interrupt_vectors[TC_INST_NUM] =
+		{
+			MREPEAT(TC_INST_NUM, _TC_INTERRUPT_VECT_NUM, ~)
+		};
+
+	return tc_interrupt_vectors[inst_num];
+}
 #endif
 
 #if !defined(__DOXYGEN__)
@@ -145,7 +162,11 @@ enum status_code tc_init(
 	module_inst->register_callback_mask     = 0x00;
 	module_inst->enable_callback_mask       = 0x00;
 
+	/* register this instance for callbacks*/
 	_tc_instances[instance] = module_inst;
+
+	/* enable interupts for this TC module */
+	system_interrupt_enable(_tc_interrupt_get_interrupt_vector(instance));
 #endif
 
 	/* Associate the given device instance with the hardware module */

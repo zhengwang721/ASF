@@ -385,7 +385,7 @@
 #include <pinmux.h>
 
 #ifdef TC_ASYNC
-#include <system_interrupt.h>
+//#include <system_interrupt.h>
 #endif
 
 #ifdef __cplusplus

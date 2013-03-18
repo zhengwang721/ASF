@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 SERCOM USART Asynchronous Driver
+ * \brief SAMD20 TC Asynchronous Driver
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -45,8 +45,11 @@
 #define TC_INTERRUPT_H_INCLUDED
 
 #include "tc.h"
+//#include <system_interrupt.h>
+
 
 extern void *_tc_instances[TC_INST_NUM];
+
 
 /**
  * \name Callback Management
@@ -72,7 +75,8 @@ enum status_code tc_unregister_callback(
  * \param[in]     module Pointer to TC software instance struct
  * \param[in]     callback_type Callback type given by an enum
  */
-static inline void tc_enable_callback(struct tc_module *const module,
+static inline void tc_enable_callback(
+		struct tc_module *const module,
 		const enum tc_callback callback_type)
 {
 	/* Sanity check arguments */
@@ -103,7 +107,8 @@ static inline void tc_enable_callback(struct tc_module *const module,
  * \param[in]     module Pointer to TC software instance struct
  * \param[in]     callback_type Callback type given by an enum
  */
-static inline void tc_disable_callback(struct tc_module *const module,
+static inline void tc_disable_callback(
+		struct tc_module *const module,
 		const enum tc_callback callback_type){
 	/* Sanity check arguments */
 	Assert(module);
@@ -127,4 +132,4 @@ static inline void tc_disable_callback(struct tc_module *const module,
  * @}
  */
 
-#endif /* USART_INTERRUPT_H_INCLUDED */
+#endif /* TC_INTERRUPT_H_INCLUDED */

@@ -121,62 +121,18 @@ enum status_code tc_unregister_callback(
 /**
  * \internal ISR handler for TC
  */
-#ifdef ID_TC0
-void TC0_Handler(void)
-{
-	/* Call appropriate interrupt handler. */
-	_tc_interrupt_handler(0);
-}
-#endif
-#ifdef ID_TC1
-void TC1_Handler(void)
-{
-	/* Call appropriate interrupt handler. */
-	_tc_interrupt_handler(1);
-}
-#endif
-#ifdef ID_TC2
-void TC2_Handler(void)
-{
-	/* Call appropriate interrupt handler. */
-	_tc_interrupt_handler(2);
-}
-#endif
-#ifdef ID_TC3
-void TC3_Handler(void)
-{
-	/* Call appropriate interrupt handler. */
-	_tc_interrupt_handler(3);
-}
-#endif
-#ifdef ID_TC4
-void TC4_Handler(void)
-{
-	/* Call appropriate interrupt handler. */
-	_tc_interrupt_handler(4);
-}
-#endif
-#ifdef ID_TC5
-void TC5_Handler(void)
-{
-	/* Call appropriate interrupt handler. */
-	_tc_interrupt_handler(5);
-}
-#endif
-#ifdef ID_TC6
-void TC6_Handler(void)
-{
-	/* Call appropriate interrupt handler. */
-	_tc_interrupt_handler(6);
-}
-#endif
-#ifdef ID_TC7
-void TC7_Handler(void)
-{
-	/* Call appropriate interrupt handler. */
-	_tc_interrupt_handler(7);
-}
-#endif
+/** Auto-generate a set of interrupt handlers for each TC in the device */
+
+/** \internal
+ * Generates a TC interrupt handler function for a given TC index.
+ */
+#define _TC_INTERRUPT_HANDLER(n, unused) \
+		void TC##n##_Handler(void) \
+		{ \
+			_tc_interrupt_handler(n); \
+		}
+
+MREPEAT(TC_INST_NUM, _TC_INTERRUPT_HANDLER, ~)
 
 /**
  * \brief Interrupt Handler for TC module
@@ -187,11 +143,12 @@ void TC7_Handler(void)
  * \param[in]  instance  ID of the TC instance calling the interrupt
  *                       handler.
  */
-void _tc_interrupt_handler(uint8_t instance)
+void _tc_interrupt_handler(
+		uint8_t instance)
 {
 	/* Temporary variable */
 	uint8_t interrupt_and_callback_status_mask;
-	
+
 	/* Get device instance from the look-up table */
 	struct tc_module *module
 			= (struct tc_module *)_tc_instances[instance];
