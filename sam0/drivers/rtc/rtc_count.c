@@ -168,7 +168,7 @@ enum status_code rtc_count_init(
 	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
 	gclk_chan_conf.source_generator = GCLK_GENERATOR_2;
 	system_gclk_chan_set_config(RTC_GCLK_ID, &gclk_chan_conf);
-	system_gclk_chan_enable(RTC_GCLK_ID);git gui
+	system_gclk_chan_enable(RTC_GCLK_ID);
 
 	/* Reset module to hardware defaults. */
 	rtc_count_reset();
