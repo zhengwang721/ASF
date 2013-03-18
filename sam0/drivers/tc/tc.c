@@ -141,8 +141,7 @@ enum status_code tc_init(
 	 * in 32-bit counter size.
 	 */
 	if ((config->counter_size == TC_COUNTER_SIZE_32BIT) &&
-			((instance == 1) || (instance == 3) ||
-			(instance == 5) || (instance == 7))) {
+			(instance & 0x01)) {
 		Assert(false);
 		return STATUS_ERR_INVALID_ARG;
 	}
