@@ -62,8 +62,10 @@ static struct _sercom_conf _sercom_config;
 /**
  * \internal Calculate synchronous baudrate value (SPI/UART)
  */
-enum status_code _sercom_get_sync_baud_val(uint32_t baudrate,
-		uint32_t external_clock, uint16_t *baudvalue)
+enum status_code _sercom_get_sync_baud_val(
+		const uint32_t baudrate,
+		const uint32_t external_clock,
+		uint16_t *const baudvalue)
 {
 	/* Baud value variable */
 	uint16_t baud_calculated = 0;
@@ -91,8 +93,10 @@ enum status_code _sercom_get_sync_baud_val(uint32_t baudrate,
 /**
  * \internal Calculate asynchronous baudrate value (UART)
 */
-enum status_code _sercom_get_async_baud_val(uint32_t baudrate,
-		uint32_t peripheral_clock, uint16_t *baudval)
+enum status_code _sercom_get_async_baud_val(
+		const uint32_t baudrate,
+		const uint32_t peripheral_clock,
+		uint16_t *const baudval)
 {
 	/* Temporary variables  */
 	uint64_t ratio = 0;
@@ -120,66 +124,53 @@ enum status_code _sercom_get_async_baud_val(uint32_t baudrate,
  * \brief Set GCLK channel to generator.
  *
  * This will set the appropriate GCLK channel to the requested GCLK generator.
- * This will set the generator for all sercom instances, and the user will thus
+ * This will set the generator for all SERCOM instances, and the user will thus
  * only be able to set the same generator that has previously been set, if any.
  *
  * After the generator has been set the first time, the generator can be changed
- * using the force_change flag.
+ * using the \c force_change flag.
  *
  * \param[in]  generator_source The generator to use for SERCOM.
  * \param[in]  run_in_standby   If the generator should stay on in standby.
  * \param[in]  force_change     Force change the generator.
  *
- * \return                  status_code of changing generator.
- * \retval STATUS_OK If changes has been set, or same setting where set before.
- * \retval STATUS_ERR_ALREADY_INITIALIZED If new configuration was given without
- *                                        force flag.
+ * \return Status code indicating the GCLK generator change operation.
+ * \retval STATUS_OK                       If the generator update request was
+ *                                         successful.
+ * \retval STATUS_ERR_ALREADY_INITIALIZED  If a generator was already configured
+ *                                         and the new configuration was not
+ *                                         forced.
  */
 enum status_code sercom_set_gclk_generator(
-		enum gclk_generator generator_source,
-		bool run_in_standby,
-		bool force_change)
+		const enum gclk_generator generator_source,
+		const bool run_in_standby,
+		const bool force_change)
 {
-	/* Configuration structure for the gclk channel. */
-	struct system_gclk_chan_config gclk_chan_conf;
-
-	/* Pointer to internal sercom configuration. */
-	struct _sercom_conf *sercom_config_ptr = &_sercom_config;
-
-	/* Return argument. */
-	enum status_code ret_val;
-
 	/* Check if valid option. */
-	if(!sercom_config_ptr->generator_is_set || force_change) {
-		sercom_config_ptr->generator_is_set = true;
-
-		/* Configure GCLK channel and enable clock */
+	if(!_sercom_config.generator_is_set || force_change) {
+		/* Create and fill a GCLK configuration structure for the new config. */
+		struct system_gclk_chan_config gclk_chan_conf;
 		gclk_chan_conf.source_generator = generator_source;
-
-		/* Set the GCLK channel to run in standby mode */
-		gclk_chan_conf.run_in_standby = run_in_standby;
+		gclk_chan_conf.run_in_standby   = run_in_standby;
 
 		/* Apply configuration and enable the GCLK channel */
 		system_gclk_chan_set_config(SERCOM_GCLK_ID, &gclk_chan_conf);
 		system_gclk_chan_enable(SERCOM_GCLK_ID);
 
 		/* Save config. */
-		sercom_config_ptr->generator_source = generator_source;
-		sercom_config_ptr->run_in_standby = run_in_standby;
+		_sercom_config.generator_source = generator_source;
+		_sercom_config.run_in_standby   = run_in_standby;
+		_sercom_config.generator_is_set = true;
 
-		ret_val = STATUS_OK;
-
-	} else if (generator_source == sercom_config_ptr->generator_source &&
-			run_in_standby == sercom_config_ptr->run_in_standby) {
+		return STATUS_OK;
+	} else if (generator_source == _sercom_config.generator_source &&
+			run_in_standby == _sercom_config.run_in_standby) {
 		/* Return status OK if same config. */
-		ret_val = STATUS_OK;
-
-	} else {
-		/* Return invalid config to already initialized GCLK. */
-		ret_val = STATUS_ERR_ALREADY_INITIALIZED;
+		return STATUS_OK;
 	}
 
-	return ret_val;
+	/* Return invalid config to already initialized GCLK. */
+	return STATUS_ERR_ALREADY_INITIALIZED;
 }
 
 /**
@@ -194,10 +185,12 @@ enum status_code sercom_set_gclk_generator(
  * \returns The default PINMUX for the given SERCOM instance and PAD
  *
  */
-uint32_t _sercom_get_default_pad(Sercom *sercom_module, uint8_t pad)
+uint32_t _sercom_get_default_pad(
+		Sercom *const sercom_module,
+		const uint8_t pad)
 {
-	switch ((uint32_t)sercom_module) {
-	case (uint32_t)SERCOM0:
+	switch ((uintptr_t)sercom_module) {
+	case (uintptr_t)SERCOM0:
 		switch (pad) {
 		case 0:
 			return SERCOM0_PAD0_DEFAULT;
@@ -209,7 +202,7 @@ uint32_t _sercom_get_default_pad(Sercom *sercom_module, uint8_t pad)
 			return SERCOM0_PAD3_DEFAULT;
 		}
 #if defined (SERCOM1)
-	case (uint32_t)SERCOM1:
+	case (uintptr_t)SERCOM1:
 		switch (pad) {
 		case 0:
 			return SERCOM1_PAD0_DEFAULT;
@@ -222,7 +215,7 @@ uint32_t _sercom_get_default_pad(Sercom *sercom_module, uint8_t pad)
 		}
 #endif
 #if defined (SERCOM2)
-	case (uint32_t)SERCOM2:
+	case (uintptr_t)SERCOM2:
 		switch (pad) {
 		case 0:
 			return SERCOM2_PAD0_DEFAULT;
@@ -235,7 +228,7 @@ uint32_t _sercom_get_default_pad(Sercom *sercom_module, uint8_t pad)
 		}
 #endif
 #if defined (SERCOM3)
-	case (uint32_t)SERCOM3:
+	case (uintptr_t)SERCOM3:
 		switch (pad) {
 		case 0:
 			return SERCOM3_PAD0_DEFAULT;
@@ -249,7 +242,7 @@ uint32_t _sercom_get_default_pad(Sercom *sercom_module, uint8_t pad)
 #endif
 #if defined (SERCOM4)
 
-	case (uint32_t)SERCOM4:
+	case (uintptr_t)SERCOM4:
 		switch (pad) {
 		case 0:
 			return SERCOM4_PAD0_DEFAULT;
@@ -262,7 +255,7 @@ uint32_t _sercom_get_default_pad(Sercom *sercom_module, uint8_t pad)
 		}
 #endif
 #if defined (SERCOM5)
-	case (uint32_t)SERCOM5:
+	case (uintptr_t)SERCOM5:
 		switch (pad) {
 		case 0:
 			return SERCOM5_PAD0_DEFAULT;
@@ -275,7 +268,7 @@ uint32_t _sercom_get_default_pad(Sercom *sercom_module, uint8_t pad)
 		}
 #endif
 #if defined (SERCOM6)
-	case (uint32_t)SERCOM6:
+	case (uintptr_t)SERCOM6:
 		switch (pad) {
 		case 0:
 			return SERCOM6_PAD0_DEFAULT;
@@ -288,7 +281,7 @@ uint32_t _sercom_get_default_pad(Sercom *sercom_module, uint8_t pad)
 		}
 #endif
 #if defined (SERCOM7)
-	case (uint32_t)SERCOM7:
+	case (uintptr_t)SERCOM7:
 		switch (pad) {
 		case 0:
 			return SERCOM7_PAD0_DEFAULT;

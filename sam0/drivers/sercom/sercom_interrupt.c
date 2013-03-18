@@ -51,7 +51,8 @@ static bool _handler_table_initialized = false;
 static void (*_sercom_interrupt_handlers[SERCOM_INST_NUM])(const uint8_t instance);
 
 /**
- * \internal Default interrupt handler
+ * \internal
+ * Default interrupt handler.
  *
  * \param[in] instance SERCOM instance used.
  */
@@ -62,7 +63,8 @@ static void _sercom_default_handler(
 }
 
 /**
- * \internal Find index of given instance.
+ * \internal
+ * Find index of given instance.
  *
  * \param[in] Instance pointer.
  *
@@ -71,15 +73,12 @@ static void _sercom_default_handler(
 uint8_t _sercom_get_sercom_inst_index(
 		Sercom *const sercom_instance)
 {
-	/* Save address of sercom instance. */
-	uintptr_t hw_dev = (uintptr_t)sercom_instance;
-
 	/* Save all available SERCOM instances for compare. */
 	Sercom *sercom_instances[SERCOM_INST_NUM] = SERCOM_INSTS;
 
 	/* Find index for sercom instance. */
 	for (uint32_t i = 0; i < SERCOM_INST_NUM; i++) {
-		if (hw_dev == (uintptr_t)sercom_instances[i]) {
+		if ((uintptr_t)sercom_instance == (uintptr_t)sercom_instances[i]) {
 			return i;
 		}
 	}
@@ -90,11 +89,11 @@ uint8_t _sercom_get_sercom_inst_index(
 }
 
 /**
- * \internal Saves the given callback handler.
+ * \internal
+ * Saves the given callback handler.
  *
- * \param[in] instance Instance index.
- * \param[in] interrupt_handler Pointer to instance callback handler.
- *
+ * \param[in]  instance           Instance index.
+ * \param[in]  interrupt_handler  Pointer to instance callback handler.
  */
 void _sercom_set_handler(
 		const uint8_t instance,
@@ -115,9 +114,10 @@ void _sercom_set_handler(
 }
 
 /**
- * \internal Returns the system interrupt vector.
+ * \internal
+ * Returns the system interrupt vector.
  *
- * \param[in] sercom_instance Instance pointer
+ * \param[in]  sercom_instance  Instance pointer
  *
  * \return Enum of system interrupt vector
  * \retval SYSTEM_INTERRUPT_MODULE_SERCOM0
@@ -126,6 +126,8 @@ void _sercom_set_handler(
  * \retval SYSTEM_INTERRUPT_MODULE_SERCOM3
  * \retval SYSTEM_INTERRUPT_MODULE_SERCOM4
  * \retval SYSTEM_INTERRUPT_MODULE_SERCOM5
+ * \retval SYSTEM_INTERRUPT_MODULE_SERCOM6
+ * \retval SYSTEM_INTERRUPT_MODULE_SERCOM7
  */
 enum system_interrupt_vector _sercom_get_interrupt_vector(
 		Sercom *const sercom_instance)
@@ -157,6 +159,14 @@ enum system_interrupt_vector _sercom_get_interrupt_vector(
 	case 5:
 		return SYSTEM_INTERRUPT_MODULE_SERCOM5;
 #endif
+#ifdef ID_SERCOM6
+	case 6:
+		return SYSTEM_INTERRUPT_MODULE_SERCOM6;
+#endif
+#ifdef ID_SERCOM7
+	case 7:
+		return SYSTEM_INTERRUPT_MODULE_SERCOM7;
+#endif
 	default:
 		/* Invalid data given. */
 		Assert(false);
@@ -164,9 +174,6 @@ enum system_interrupt_vector _sercom_get_interrupt_vector(
 	}
 }
 
-/**
- * \internal ISR handler for SERCOM
- */
 #ifdef ID_SERCOM0
 void SERCOM0_Handler(void)
 {
@@ -207,5 +214,19 @@ void SERCOM5_Handler(void)
 {
 	/* Call appropriate interrupthandler. */
 	_sercom_interrupt_handlers[5](5);
+}
+#endif
+#ifdef ID_SERCOM6
+void SERCOM6_Handler(void)
+{
+	/* Call appropriate interrupthandler. */
+	_sercom_interrupt_handlers[6](6);
+}
+#endif
+#ifdef ID_SERCOM7
+void SERCOM7_Handler(void)
+{
+	/* Call appropriate interrupthandler. */
+	_sercom_interrupt_handlers[7](7);
 }
 #endif
