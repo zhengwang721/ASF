@@ -97,8 +97,6 @@ typedef enum IRQn
   PIOA_IRQn            =  9, /**<  9 SAM4E16C Parallel I/O Controller A (PIOA) */
   PIOB_IRQn            = 10, /**< 10 SAM4E16C Parallel I/O Controller B (PIOB) */
   PIOC_IRQn            = 11, /**< 11 SAM4E16C Parallel I/O Controller C (PIOC) */
-  PIOD_IRQn            = 12, /**< 12 SAM4E16C Parallel I/O Controller D (PIOD) */
-  PIOE_IRQn            = 13, /**< 13 SAM4E16C Parallel I/O Controller E (PIOE) */
   USART0_IRQn          = 14, /**< 14 SAM4E16C USART 0 (USART0) */
   USART1_IRQn          = 15, /**< 15 SAM4E16C USART 1 (USART1) */
   HSMCI_IRQn           = 16, /**< 16 SAM4E16C Multimedia Card Interface (HSMCI) */
@@ -125,7 +123,6 @@ typedef enum IRQn
   CAN0_IRQn            = 37, /**< 37 SAM4E16C CAN0 (CAN0) */
   CAN1_IRQn            = 38, /**< 38 SAM4E16C CAN1 (CAN1) */
   AES_IRQn             = 39, /**< 39 SAM4E16C AES (AES) */
-  GMAC_IRQn            = 44, /**< 44 SAM4E16C EMAC (GMAC) */
   UART1_IRQn           = 45, /**< 45 SAM4E16C UART (UART1) */
 
   PERIPH_COUNT_IRQn    = 46  /**< Number of peripheral IDs */
@@ -166,8 +163,8 @@ typedef struct _DeviceVectors
   void* pfnPIOA_Handler;   /*  9 Parallel I/O Controller A */
   void* pfnPIOB_Handler;   /* 10 Parallel I/O Controller B */
   void* pfnPIOC_Handler;   /* 11 Parallel I/O Controller C */
-  void* pfnPIOD_Handler;   /* 12 Parallel I/O Controller D */
-  void* pfnPIOE_Handler;   /* 13 Parallel I/O Controller E */
+  void* pvReserved12;
+  void* pvReserved13;
   void* pfnUSART0_Handler; /* 14 USART 0 */
   void* pfnUSART1_Handler; /* 15 USART 1 */
   void* pfnHSMCI_Handler;  /* 16 Multimedia Card Interface */
@@ -198,7 +195,7 @@ typedef struct _DeviceVectors
   void* pvReserved41;
   void* pvReserved42;
   void* pvReserved43;
-  void* pfnGMAC_Handler;   /* 44 EMAC */
+  void* pvReserved44;
   void* pfnUART1_Handler;  /* 45 UART */
 } DeviceVectors;
 
@@ -225,13 +222,10 @@ void CAN1_Handler       ( void );
 void DACC_Handler       ( void );
 void DMAC_Handler       ( void );
 void EFC_Handler        ( void );
-void GMAC_Handler       ( void );
 void HSMCI_Handler      ( void );
 void PIOA_Handler       ( void );
 void PIOB_Handler       ( void );
 void PIOC_Handler       ( void );
-void PIOD_Handler       ( void );
-void PIOE_Handler       ( void );
 void PMC_Handler        ( void );
 void PWM_Handler        ( void );
 void RSTC_Handler       ( void );
@@ -294,7 +288,6 @@ void WDT_Handler        ( void );
 #include "component/dacc.h"
 #include "component/dmac.h"
 #include "component/efc.h"
-#include "component/gmac.h"
 #include "component/gpbr.h"
 #include "component/hsmci.h"
 #include "component/matrix.h"
@@ -303,6 +296,7 @@ void WDT_Handler        ( void );
 #include "component/pmc.h"
 #include "component/pwm.h"
 #include "component/rstc.h"
+#include "component/rswdt.h"
 #include "component/rtc.h"
 #include "component/rtt.h"
 #include "component/spi.h"
@@ -325,7 +319,6 @@ void WDT_Handler        ( void );
 #include "instance/aes.h"
 #include "instance/can0.h"
 #include "instance/can1.h"
-#include "instance/gmac.h"
 #include "instance/crccu.h"
 #include "instance/uart1.h"
 #include "instance/hsmci.h"
@@ -352,14 +345,13 @@ void WDT_Handler        ( void );
 #include "instance/pioa.h"
 #include "instance/piob.h"
 #include "instance/pioc.h"
-#include "instance/piod.h"
-#include "instance/pioe.h"
 #include "instance/rstc.h"
 #include "instance/supc.h"
 #include "instance/rtt.h"
 #include "instance/wdt.h"
 #include "instance/rtc.h"
 #include "instance/gpbr.h"
+#include "instance/rswdt.h"
 /*@}*/
 
 /* ************************************************************************** */
@@ -379,8 +371,6 @@ void WDT_Handler        ( void );
 #define ID_PIOA   ( 9) /**< \brief Parallel I/O Controller A (PIOA) */
 #define ID_PIOB   (10) /**< \brief Parallel I/O Controller B (PIOB) */
 #define ID_PIOC   (11) /**< \brief Parallel I/O Controller C (PIOC) */
-#define ID_PIOD   (12) /**< \brief Parallel I/O Controller D (PIOD) */
-#define ID_PIOE   (13) /**< \brief Parallel I/O Controller E (PIOE) */
 #define ID_USART0 (14) /**< \brief USART 0 (USART0) */
 #define ID_USART1 (15) /**< \brief USART 1 (USART1) */
 #define ID_HSMCI  (16) /**< \brief Multimedia Card Interface (HSMCI) */
@@ -407,7 +397,6 @@ void WDT_Handler        ( void );
 #define ID_CAN0   (37) /**< \brief CAN0 (CAN0) */
 #define ID_CAN1   (38) /**< \brief CAN1 (CAN1) */
 #define ID_AES    (39) /**< \brief AES (AES) */
-#define ID_GMAC   (44) /**< \brief EMAC (GMAC) */
 #define ID_UART1  (45) /**< \brief UART (UART1) */
 
 #define ID_PERIPH_COUNT (46) /**< \brief Number of peripheral IDs */
@@ -425,7 +414,6 @@ void WDT_Handler        ( void );
 #define AES        (0x40004000U) /**< \brief (AES       ) Base Address */
 #define CAN0       (0x40010000U) /**< \brief (CAN0      ) Base Address */
 #define CAN1       (0x40014000U) /**< \brief (CAN1      ) Base Address */
-#define GMAC       (0x40034000U) /**< \brief (GMAC      ) Base Address */
 #define CRCCU      (0x40044000U) /**< \brief (CRCCU     ) Base Address */
 #define UART1      (0x40060600U) /**< \brief (UART1     ) Base Address */
 #define PDC_UART1  (0x40060700U) /**< \brief (PDC_UART1 ) Base Address */
@@ -466,21 +454,19 @@ void WDT_Handler        ( void );
 #define PDC_PIOA   (0x400E0F68U) /**< \brief (PDC_PIOA  ) Base Address */
 #define PIOB       (0x400E1000U) /**< \brief (PIOB      ) Base Address */
 #define PIOC       (0x400E1200U) /**< \brief (PIOC      ) Base Address */
-#define PIOD       (0x400E1400U) /**< \brief (PIOD      ) Base Address */
-#define PIOE       (0x400E1600U) /**< \brief (PIOE      ) Base Address */
 #define RSTC       (0x400E1800U) /**< \brief (RSTC      ) Base Address */
 #define SUPC       (0x400E1810U) /**< \brief (SUPC      ) Base Address */
 #define RTT        (0x400E1830U) /**< \brief (RTT       ) Base Address */
 #define WDT        (0x400E1850U) /**< \brief (WDT       ) Base Address */
 #define RTC        (0x400E1860U) /**< \brief (RTC       ) Base Address */
 #define GPBR       (0x400E1890U) /**< \brief (GPBR      ) Base Address */
+#define RSWDT      (0x400E1900U) /**< \brief (RSWDT     ) Base Address */
 #else
 #define PWM        ((Pwm    *)0x40000000U) /**< \brief (PWM       ) Base Address */
 #define PDC_PWM    ((Pdc    *)0x40000100U) /**< \brief (PDC_PWM   ) Base Address */
 #define AES        ((Aes    *)0x40004000U) /**< \brief (AES       ) Base Address */
 #define CAN0       ((Can    *)0x40010000U) /**< \brief (CAN0      ) Base Address */
 #define CAN1       ((Can    *)0x40014000U) /**< \brief (CAN1      ) Base Address */
-#define GMAC       ((Gmac   *)0x40034000U) /**< \brief (GMAC      ) Base Address */
 #define CRCCU      ((Crccu  *)0x40044000U) /**< \brief (CRCCU     ) Base Address */
 #define UART1      ((Uart   *)0x40060600U) /**< \brief (UART1     ) Base Address */
 #define PDC_UART1  ((Pdc    *)0x40060700U) /**< \brief (PDC_UART1 ) Base Address */
@@ -521,14 +507,13 @@ void WDT_Handler        ( void );
 #define PDC_PIOA   ((Pdc    *)0x400E0F68U) /**< \brief (PDC_PIOA  ) Base Address */
 #define PIOB       ((Pio    *)0x400E1000U) /**< \brief (PIOB      ) Base Address */
 #define PIOC       ((Pio    *)0x400E1200U) /**< \brief (PIOC      ) Base Address */
-#define PIOD       ((Pio    *)0x400E1400U) /**< \brief (PIOD      ) Base Address */
-#define PIOE       ((Pio    *)0x400E1600U) /**< \brief (PIOE      ) Base Address */
 #define RSTC       ((Rstc   *)0x400E1800U) /**< \brief (RSTC      ) Base Address */
 #define SUPC       ((Supc   *)0x400E1810U) /**< \brief (SUPC      ) Base Address */
 #define RTT        ((Rtt    *)0x400E1830U) /**< \brief (RTT       ) Base Address */
 #define WDT        ((Wdt    *)0x400E1850U) /**< \brief (WDT       ) Base Address */
 #define RTC        ((Rtc    *)0x400E1860U) /**< \brief (RTC       ) Base Address */
 #define GPBR       ((Gpbr   *)0x400E1890U) /**< \brief (GPBR      ) Base Address */
+#define RSWDT      ((Rswdt  *)0x400E1900U) /**< \brief (RSWDT     ) Base Address */
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 /*@}*/
 
@@ -565,8 +550,10 @@ void WDT_Handler        ( void );
 /* ************************************************************************** */
 
 #define CHIP_JTAGID (0x05B3703FUL)
-#define CHIP_CIDR (0xA3CC0CE0UL)
-#define CHIP_EXID (0x00110201UL)
+#define CHIP_CIDR   (0xA3CC0CE0UL)
+#define CHIP_EXID   (0x00110201UL)
+#define NB_CH_AFE0  (6UL)
+#define NB_CH_AFE1  (4UL)
 
 /* ************************************************************************** */
 /*   ELECTRICAL DEFINITIONS FOR SAM4E16C */

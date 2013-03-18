@@ -60,7 +60,7 @@
 #define REG_AFEC1_OVER             (0x400B404CU) /**< \brief (AFEC1) Overrun Status Register */
 #define REG_AFEC1_CWR              (0x400B4050U) /**< \brief (AFEC1) Compare Window Register */
 #define REG_AFEC1_CGR              (0x400B4054U) /**< \brief (AFEC1) Channel Gain Register */
-#define REG_AFEC1_CDOR             (0x400B405CU) /**< \brief (AFEC1) Channel DC Offset Register */
+#define REG_AFEC1_CDOR             (0x400B405CU) /**< \brief (AFEC1) Channel Calibration DC Offset Register */
 #define REG_AFEC1_DIFFR            (0x400B4060U) /**< \brief (AFEC1) Channel Differential Register */
 #define REG_AFEC1_CSELR            (0x400B4064U) /**< \brief (AFEC1) Channel Register Selection */
 #define REG_AFEC1_CDR              (0x400B4068U) /**< \brief (AFEC1) Channel Data Register */
@@ -93,11 +93,11 @@
 #define REG_AFEC1_OVER    (*(RoReg*)0x400B404CU) /**< \brief (AFEC1) Overrun Status Register */
 #define REG_AFEC1_CWR     (*(RwReg*)0x400B4050U) /**< \brief (AFEC1) Compare Window Register */
 #define REG_AFEC1_CGR     (*(RwReg*)0x400B4054U) /**< \brief (AFEC1) Channel Gain Register */
-#define REG_AFEC1_CDOR    (*(RwReg*)0x400B405CU) /**< \brief (AFEC1) Channel DC Offset Register */
+#define REG_AFEC1_CDOR    (*(RwReg*)0x400B405CU) /**< \brief (AFEC1) Channel Calibration DC Offset Register */
 #define REG_AFEC1_DIFFR   (*(RwReg*)0x400B4060U) /**< \brief (AFEC1) Channel Differential Register */
-#define REG_AFEC1_CSELR   (*(RoReg*)0x400B4064U) /**< \brief (AFEC1) Channel Register Selection */
+#define REG_AFEC1_CSELR   (*(RwReg*)0x400B4064U) /**< \brief (AFEC1) Channel Register Selection */
 #define REG_AFEC1_CDR     (*(RoReg*)0x400B4068U) /**< \brief (AFEC1) Channel Data Register */
-#define REG_AFEC1_COCR    (*(RoReg*)0x400B406CU) /**< \brief (AFEC1) Channel Offset Compensation Register */
+#define REG_AFEC1_COCR    (*(RwReg*)0x400B406CU) /**< \brief (AFEC1) Channel Offset Compensation Register */
 #define REG_AFEC1_TEMPMR  (*(RwReg*)0x400B4070U) /**< \brief (AFEC1) Temperature Sensor Mode Register */
 #define REG_AFEC1_TEMPCWR (*(RwReg*)0x400B4074U) /**< \brief (AFEC1) Temperature Compare Window Register */
 #define REG_AFEC1_ACR     (*(RwReg*)0x400B4094U) /**< \brief (AFEC1) Analog Control Register */

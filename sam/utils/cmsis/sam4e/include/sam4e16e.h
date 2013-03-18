@@ -303,6 +303,7 @@ void WDT_Handler        ( void );
 #include "component/pmc.h"
 #include "component/pwm.h"
 #include "component/rstc.h"
+#include "component/rswdt.h"
 #include "component/rtc.h"
 #include "component/rtt.h"
 #include "component/smc.h"
@@ -362,6 +363,7 @@ void WDT_Handler        ( void );
 #include "instance/wdt.h"
 #include "instance/rtc.h"
 #include "instance/gpbr.h"
+#include "instance/rswdt.h"
 /*@}*/
 
 /* ************************************************************************** */
@@ -478,6 +480,7 @@ void WDT_Handler        ( void );
 #define WDT        (0x400E1850U) /**< \brief (WDT       ) Base Address */
 #define RTC        (0x400E1860U) /**< \brief (RTC       ) Base Address */
 #define GPBR       (0x400E1890U) /**< \brief (GPBR      ) Base Address */
+#define RSWDT      (0x400E1900U) /**< \brief (RSWDT     ) Base Address */
 #else
 #define PWM        ((Pwm    *)0x40000000U) /**< \brief (PWM       ) Base Address */
 #define PDC_PWM    ((Pdc    *)0x40000100U) /**< \brief (PDC_PWM   ) Base Address */
@@ -534,6 +537,7 @@ void WDT_Handler        ( void );
 #define WDT        ((Wdt    *)0x400E1850U) /**< \brief (WDT       ) Base Address */
 #define RTC        ((Rtc    *)0x400E1860U) /**< \brief (RTC       ) Base Address */
 #define GPBR       ((Gpbr   *)0x400E1890U) /**< \brief (GPBR      ) Base Address */
+#define RSWDT      ((Rswdt  *)0x400E1900U) /**< \brief (RSWDT     ) Base Address */
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 /*@}*/
 
@@ -570,8 +574,10 @@ void WDT_Handler        ( void );
 /* ************************************************************************** */
 
 #define CHIP_JTAGID (0x05B3703FUL)
-#define CHIP_CIDR (0xA3CC0CE0UL)
-#define CHIP_EXID (0x00120200UL)
+#define CHIP_CIDR   (0xA3CC0CE0UL)
+#define CHIP_EXID   (0x00120200UL)
+#define NB_CH_AFE0  (16UL)
+#define NB_CH_AFE1  (8UL)
 
 /* ************************************************************************** */
 /*   ELECTRICAL DEFINITIONS FOR SAM4E16E */

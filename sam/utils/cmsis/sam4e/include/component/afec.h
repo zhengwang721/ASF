@@ -69,7 +69,7 @@ typedef struct {
   RwReg AFEC_CWR;      /**< \brief (Afec Offset: 0x50) Compare Window Register */
   RwReg AFEC_CGR;      /**< \brief (Afec Offset: 0x54) Channel Gain Register */
   RoReg Reserved2[1];
-  RwReg AFEC_CDOR;     /**< \brief (Afec Offset: 0x5C) Channel DC Offset Register */
+  RwReg AFEC_CDOR;     /**< \brief (Afec Offset: 0x5C) Channel Calibration DC Offset Register */
   RwReg AFEC_DIFFR;    /**< \brief (Afec Offset: 0x60) Channel Differential Register */
   RwReg AFEC_CSELR;    /**< \brief (Afec Offset: 0x64) Channel Register Selection */
   RoReg AFEC_CDR;      /**< \brief (Afec Offset: 0x68) Channel Data Register */
@@ -145,8 +145,8 @@ typedef struct {
 #define   AFEC_MR_SETTLING_AST9 (0x2u << 20) /**< \brief (AFEC_MR) 9 periods of AFEClock */
 #define   AFEC_MR_SETTLING_AST17 (0x3u << 20) /**< \brief (AFEC_MR) 17 periods of AFEClock */
 #define AFEC_MR_ANACH (0x1u << 23) /**< \brief (AFEC_MR) Analog Change */
-#define   AFEC_MR_ANACH_NONE (0x0u << 23) /**< \brief (AFEC_MR) No analog change on channel switching: DIFF0, GAIN0 and OFF0 are used for all channels */
-#define   AFEC_MR_ANACH_ALLOWED (0x1u << 23) /**< \brief (AFEC_MR) Allows different analog settings for each channel. See AFEC_CGR and AFEC_CDOR Registers */
+#define   AFEC_MR_ANACH_NONE (0x0u << 23) /**< \brief (AFEC_MR) No analog change on channel switching: DIFF0, GAIN0 are used for all channels */
+#define   AFEC_MR_ANACH_ALLOWED (0x1u << 23) /**< \brief (AFEC_MR) Allows different analog settings for each channel. See AFEC_CGR Register. */
 #define AFEC_MR_TRACKTIM_Pos 24
 #define AFEC_MR_TRACKTIM_Msk (0xfu << AFEC_MR_TRACKTIM_Pos) /**< \brief (AFEC_MR) Tracking Time */
 #define AFEC_MR_TRACKTIM(value) ((AFEC_MR_TRACKTIM_Msk & ((value) << AFEC_MR_TRACKTIM_Pos)))
@@ -455,23 +455,23 @@ typedef struct {
 #define AFEC_CGR_GAIN15_Pos 30
 #define AFEC_CGR_GAIN15_Msk (0x3u << AFEC_CGR_GAIN15_Pos) /**< \brief (AFEC_CGR) Gain for channel 15 */
 #define AFEC_CGR_GAIN15(value) ((AFEC_CGR_GAIN15_Msk & ((value) << AFEC_CGR_GAIN15_Pos)))
-/* -------- AFEC_CDOR : (AFEC Offset: 0x5C) Channel DC Offset Register -------- */
-#define AFEC_CDOR_OFF0 (0x1u << 0) /**< \brief (AFEC_CDOR) Offset for channel 0 */
-#define AFEC_CDOR_OFF1 (0x1u << 1) /**< \brief (AFEC_CDOR) Offset for channel 1 */
-#define AFEC_CDOR_OFF2 (0x1u << 2) /**< \brief (AFEC_CDOR) Offset for channel 2 */
-#define AFEC_CDOR_OFF3 (0x1u << 3) /**< \brief (AFEC_CDOR) Offset for channel 3 */
-#define AFEC_CDOR_OFF4 (0x1u << 4) /**< \brief (AFEC_CDOR) Offset for channel 4 */
-#define AFEC_CDOR_OFF5 (0x1u << 5) /**< \brief (AFEC_CDOR) Offset for channel 5 */
-#define AFEC_CDOR_OFF6 (0x1u << 6) /**< \brief (AFEC_CDOR) Offset for channel 6 */
-#define AFEC_CDOR_OFF7 (0x1u << 7) /**< \brief (AFEC_CDOR) Offset for channel 7 */
-#define AFEC_CDOR_OFF8 (0x1u << 8) /**< \brief (AFEC_CDOR) Offset for channel 8 */
-#define AFEC_CDOR_OFF9 (0x1u << 9) /**< \brief (AFEC_CDOR) Offset for channel 9 */
-#define AFEC_CDOR_OFF10 (0x1u << 10) /**< \brief (AFEC_CDOR) Offset for channel 10 */
-#define AFEC_CDOR_OFF11 (0x1u << 11) /**< \brief (AFEC_CDOR) Offset for channel 11 */
-#define AFEC_CDOR_OFF12 (0x1u << 12) /**< \brief (AFEC_CDOR) Offset for channel 12 */
-#define AFEC_CDOR_OFF13 (0x1u << 13) /**< \brief (AFEC_CDOR) Offset for channel 13 */
-#define AFEC_CDOR_OFF14 (0x1u << 14) /**< \brief (AFEC_CDOR) Offset for channel 14 */
-#define AFEC_CDOR_OFF15 (0x1u << 15) /**< \brief (AFEC_CDOR) Offset for channel 15 */
+/* -------- AFEC_CDOR : (AFEC Offset: 0x5C) Channel Calibration DC Offset Register -------- */
+#define AFEC_CDOR_OFF0 (0x1u << 0) /**< \brief (AFEC_CDOR) Offset for channel 0, used in automatic calibration procedure */
+#define AFEC_CDOR_OFF1 (0x1u << 1) /**< \brief (AFEC_CDOR) Offset for channel 1, used in automatic calibration procedure */
+#define AFEC_CDOR_OFF2 (0x1u << 2) /**< \brief (AFEC_CDOR) Offset for channel 2, used in automatic calibration procedure */
+#define AFEC_CDOR_OFF3 (0x1u << 3) /**< \brief (AFEC_CDOR) Offset for channel 3, used in automatic calibration procedure */
+#define AFEC_CDOR_OFF4 (0x1u << 4) /**< \brief (AFEC_CDOR) Offset for channel 4, used in automatic calibration procedure */
+#define AFEC_CDOR_OFF5 (0x1u << 5) /**< \brief (AFEC_CDOR) Offset for channel 5, used in automatic calibration procedure */
+#define AFEC_CDOR_OFF6 (0x1u << 6) /**< \brief (AFEC_CDOR) Offset for channel 6, used in automatic calibration procedure */
+#define AFEC_CDOR_OFF7 (0x1u << 7) /**< \brief (AFEC_CDOR) Offset for channel 7, used in automatic calibration procedure */
+#define AFEC_CDOR_OFF8 (0x1u << 8) /**< \brief (AFEC_CDOR) Offset for channel 8, used in automatic calibration procedure */
+#define AFEC_CDOR_OFF9 (0x1u << 9) /**< \brief (AFEC_CDOR) Offset for channel 9, used in automatic calibration procedure */
+#define AFEC_CDOR_OFF10 (0x1u << 10) /**< \brief (AFEC_CDOR) Offset for channel 10, used in automatic calibration procedure */
+#define AFEC_CDOR_OFF11 (0x1u << 11) /**< \brief (AFEC_CDOR) Offset for channel 11, used in automatic calibration procedure */
+#define AFEC_CDOR_OFF12 (0x1u << 12) /**< \brief (AFEC_CDOR) Offset for channel 12, used in automatic calibration procedure */
+#define AFEC_CDOR_OFF13 (0x1u << 13) /**< \brief (AFEC_CDOR) Offset for channel 13, used in automatic calibration procedure */
+#define AFEC_CDOR_OFF14 (0x1u << 14) /**< \brief (AFEC_CDOR) Offset for channel 14, used in automatic calibration procedure */
+#define AFEC_CDOR_OFF15 (0x1u << 15) /**< \brief (AFEC_CDOR) Offset for channel 15, used in automatic calibration procedure */
 /* -------- AFEC_DIFFR : (AFEC Offset: 0x60) Channel Differential Register -------- */
 #define AFEC_DIFFR_DIFF0 (0x1u << 0) /**< \brief (AFEC_DIFFR) Differential inputs for channel 0 */
 #define AFEC_DIFFR_DIFF1 (0x1u << 1) /**< \brief (AFEC_DIFFR) Differential inputs for channel 1 */
@@ -492,12 +492,14 @@ typedef struct {
 /* -------- AFEC_CSELR : (AFEC Offset: 0x64) Channel Register Selection -------- */
 #define AFEC_CSELR_CSEL_Pos 0
 #define AFEC_CSELR_CSEL_Msk (0xfu << AFEC_CSELR_CSEL_Pos) /**< \brief (AFEC_CSELR) Channel Selection */
+#define AFEC_CSELR_CSEL(value) ((AFEC_CSELR_CSEL_Msk & ((value) << AFEC_CSELR_CSEL_Pos)))
 /* -------- AFEC_CDR : (AFEC Offset: 0x68) Channel Data Register -------- */
 #define AFEC_CDR_DATA_Pos 0
 #define AFEC_CDR_DATA_Msk (0xfffu << AFEC_CDR_DATA_Pos) /**< \brief (AFEC_CDR) Converted Data */
 /* -------- AFEC_COCR : (AFEC Offset: 0x6C) Channel Offset Compensation Register -------- */
 #define AFEC_COCR_AOFF_Pos 0
 #define AFEC_COCR_AOFF_Msk (0xfffu << AFEC_COCR_AOFF_Pos) /**< \brief (AFEC_COCR) Analog Offset */
+#define AFEC_COCR_AOFF(value) ((AFEC_COCR_AOFF_Msk & ((value) << AFEC_COCR_AOFF_Pos)))
 /* -------- AFEC_TEMPMR : (AFEC Offset: 0x70) Temperature Sensor Mode Register -------- */
 #define AFEC_TEMPMR_RTCT (0x1u << 0) /**< \brief (AFEC_TEMPMR) Temperature Sensor RTC Trigger mode */
 #define AFEC_TEMPMR_TEMPCMPMOD_Pos 4
@@ -521,7 +523,7 @@ typedef struct {
 #define AFEC_WPMR_WPEN (0x1u << 0) /**< \brief (AFEC_WPMR) Write Protect Enable */
 #define AFEC_WPMR_WPKEY_Pos 8
 #define AFEC_WPMR_WPKEY_Msk (0xffffffu << AFEC_WPMR_WPKEY_Pos) /**< \brief (AFEC_WPMR) Write Protect KEY */
-#define AFEC_WPMR_WPKEY(value) ((AFEC_WPMR_WPKEY_Msk & ((value) << AFEC_WPMR_WPKEY_Pos)))
+#define   AFEC_WPMR_WPKEY_ADC (0x414443u << 8) /**< \brief (AFEC_WPMR) Should be written at value 0x414443 ("ADC" in ASCII). Writing any other value in this field aborts the write operation of the WPEN bit. Always reads as 0. */
 /* -------- AFEC_WPSR : (AFEC Offset: 0xE8) Write Protect Status Register -------- */
 #define AFEC_WPSR_WPVS (0x1u << 0) /**< \brief (AFEC_WPSR) Write Protect Violation Status */
 #define AFEC_WPSR_WPVSRC_Pos 8
