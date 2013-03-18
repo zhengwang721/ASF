@@ -94,8 +94,6 @@ int main(void)
 	tc_enable(&module_inst);
 	//! [tc_enable]
 
-	
-
 	//! [inf_loop]
 	while (1) {
 	}
