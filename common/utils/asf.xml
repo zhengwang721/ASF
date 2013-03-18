@@ -144,6 +144,15 @@
 			<require idref="xmega.utils"/>
 			<build type="doxygen-entry-point" value="test_suite_group"/>
 		</module>
+		<module type="driver" id="common.utils.unit_test#mega" caption="Unit test framework - MEGA implementation">
+			<info type="description" value="summary">
+			Core functions for the unit test framework.
+			</info>
+			<device-support value="mega"/>
+			<require idref="common.utils.unit_test.generic"/>
+			<require idref="mega.utils"/>
+			<build type="doxygen-entry-point" value="test_suite_group"/>
+		</module>		
 		<module type="driver" id="common.utils.unit_test#sam" caption="Unit test framework - SAM implementation">
 			<info type="description" value="summary">
 			Core functions for the unit test framework.

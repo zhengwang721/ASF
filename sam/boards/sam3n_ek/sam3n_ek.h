@@ -3,7 +3,7 @@
  *
  * \brief SAM3N-EK Board Definition.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -256,9 +256,11 @@
 #define PIN_MMA7341L_Z_AXIS_FLAG       PIO_INPUT | PIO_DEFAULT
 
 #define PIN_TC0_TIOA0         (PIO_PA0_IDX)
+#define PIN_TC0_TIOA0_MUX     (IOPORT_MODE_MUX_B)
 #define PIN_TC0_TIOA0_FLAGS   (PIO_PERIPH_B | PIO_DEFAULT)
 
 #define PIN_TC0_TIOA1         (PIO_PA15_IDX)
+#define PIN_TC0_TIOA1_MUX     (IOPORT_MODE_MUX_B)
 #define PIN_TC0_TIOA1_FLAGS   (PIO_PERIPH_B | PIO_DEFAULT)
 
 #define PIN_TC0_TIOA1_PIO     PIOA
@@ -268,7 +270,8 @@
 #define PIN_TC0_TIOA1_ATTR    PIO_DEFAULT
 
 #define PIN_TC0_TIOA2         (PIO_PA26_IDX)
-#define PIN_TC0_TIOA2_FLAGS   (PIO_INPUT | PIO_DEFAULT)
+#define PIN_TC0_TIOA2_MUX     (IOPORT_MODE_MUX_B)
+#define PIN_TC0_TIOA2_FLAGS   (PIO_PERIPH_B | PIO_DEFAULT)
 
 #define PIN_TC0_TIOA2_PIO     PIOA
 #define PIN_TC0_TIOA2_MASK    PIO_PA26
@@ -303,6 +306,7 @@
 /* =============== PCK =============== */
 /** PCK0 pin definition. */
 #define PIN_PCK0        (PIO_PA6_IDX)
+#define PIN_PCK0_MUX    (IOPORT_MODE_MUX_B)
 #define PIN_PCK0_FLAGS  (PIO_PERIPH_B | PIO_DEFAULT)
 
 #define PIN_PCK_0_MASK PIO_PA6

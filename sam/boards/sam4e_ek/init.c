@@ -181,6 +181,18 @@ void board_init(void)
 #endif
 #endif
 
+#ifdef CONF_BOARD_ADS7843
+	/* Configure Touchscreen SPI pins */
+	ioport_set_pin_dir(BOARD_ADS7843_IRQ_GPIO, IOPORT_DIR_INPUT);
+	ioport_set_pin_mode(BOARD_ADS7843_IRQ_GPIO, BOARD_ADS7843_IRQ_FLAGS);
+	ioport_set_pin_dir(BOARD_ADS7843_BUSY_GPIO, IOPORT_DIR_INPUT);
+	ioport_set_pin_mode(BOARD_ADS7843_BUSY_GPIO, BOARD_ADS7843_BUSY_FLAGS);
+	ioport_set_pin_peripheral_mode(SPI_MISO_GPIO, SPI_MISO_FLAGS);
+	ioport_set_pin_peripheral_mode(SPI_MOSI_GPIO, SPI_MOSI_FLAGS);
+	ioport_set_pin_peripheral_mode(SPI_SPCK_GPIO, SPI_SPCK_FLAGS);
+	ioport_set_pin_peripheral_mode(SPI_NPCS0_GPIO, SPI_NPCS0_FLAGS);
+#endif
+
 #ifdef CONF_BOARD_CAN0
 	/* Configure the CAN0 TX and RX pins. */
 	ioport_set_pin_peripheral_mode(PIN_CAN0_RX_IDX, PIN_CAN0_RX_FLAGS);
@@ -203,6 +215,28 @@ void board_init(void)
 #  if defined(CONF_BOARD_USB_VBUS_DETECT)
 	gpio_configure_pin(USB_VBUS_PIN, USB_VBUS_FLAGS);
 #  endif
+#endif
+
+#ifdef CONF_BOARD_ILI93XX
+	/* Configure LCD EBI pins */
+	ioport_set_pin_peripheral_mode(PIN_EBI_DATA_BUS_D0,PIN_EBI_DATA_BUS_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_EBI_DATA_BUS_D1,PIN_EBI_DATA_BUS_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_EBI_DATA_BUS_D2,PIN_EBI_DATA_BUS_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_EBI_DATA_BUS_D3,PIN_EBI_DATA_BUS_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_EBI_DATA_BUS_D4,PIN_EBI_DATA_BUS_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_EBI_DATA_BUS_D5,PIN_EBI_DATA_BUS_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_EBI_DATA_BUS_D6,PIN_EBI_DATA_BUS_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_EBI_DATA_BUS_D7,PIN_EBI_DATA_BUS_FLAGS);
+	
+	ioport_set_pin_peripheral_mode(PIN_EBI_NRD,PIN_EBI_NRD_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_EBI_NWE,PIN_EBI_NWE_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_EBI_NCS1,PIN_EBI_NCS1_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_EBI_LCD_RS,PIN_EBI_LCD_RS_FLAGS);
+#endif
+
+#ifdef CONF_BOARD_AAT3155
+	/* Configure Backlight control pin */
+	ioport_set_pin_dir(BOARD_AAT31XX_SET_GPIO, IOPORT_DIR_OUTPUT);
 #endif
 
 #ifdef CONF_BOARD_SPI
