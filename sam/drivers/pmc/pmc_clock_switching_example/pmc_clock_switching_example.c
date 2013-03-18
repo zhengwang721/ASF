@@ -3,7 +3,7 @@
  *
  * \brief PMC Clock Switching example for SAM.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -281,12 +281,8 @@ int main(void)
 	puts(STRING_HEADER);
 
 	/* Configure PCK0 */
-#if SAM4E
-	ioport_set_port_mode(PIN_PCK0_PORT, PIN_PCK0_MASK, PIN_PCK0_FLAGS);
-	ioport_disable_port(PIN_PCK0_PORT, PIN_PCK0_MASK);
-#else
-	gpio_configure_pin(PIN_PCK0, PIN_PCK0_FLAGS);
-#endif
+	ioport_set_pin_mode(PIN_PCK0, PIN_PCK0_MUX);
+	ioport_disable_pin(PIN_PCK0);
 
 	/* Configure the push button */
 	configure_buttons();
