@@ -147,7 +147,7 @@ enum status_code sercom_set_gclk_generator(
 		const bool force_change)
 {
 	/* Check if valid option. */
-	if(!_sercom_config.generator_is_set || force_change) {
+	if (!_sercom_config.generator_is_set || force_change) {
 		/* Create and fill a GCLK configuration structure for the new config. */
 		struct system_gclk_chan_config gclk_chan_conf;
 		gclk_chan_conf.source_generator = generator_source;

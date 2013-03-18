@@ -850,8 +850,9 @@ static inline void spi_attach_slave(
 }
 
 enum status_code spi_init(
-		struct spi_module *const module, Sercom *hw,
-		struct spi_config *config);
+		struct spi_module *const module,
+		Sercom *const hw,
+		const struct spi_config *const config);
 
 /** @} */
 
@@ -1198,8 +1199,8 @@ enum status_code spi_tranceive_buffer_wait(
 		uint8_t length);
 
 enum status_code spi_select_slave(
-		struct spi_module *module,
-		struct spi_slave_inst *slave,
+		struct spi_module *const module,
+		struct spi_slave_inst *const slave,
 		bool select);
 
 /** @} */

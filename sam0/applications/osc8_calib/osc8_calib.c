@@ -45,20 +45,8 @@
 
 static struct usart_module usart_edbg;
 
-void debug_write_string(struct usart_module *const dev, uint8_t const *string);
-
-void debug_int_to_string(uint8_t *ret_val, uint8_t size, uint32_t integer);
-
-void setup_tc_channels(struct tc_module *const calib_chan, struct tc_module *const comp_chan);
-
-void setup_usart_channel(void);
-
-uint32_t debug_get_freq(struct tc_module *calib_chan, struct tc_module *comp_chan);
-
-void debug_wait(uint16_t ticks);
-
 /* Write string to usart. */
-void debug_write_string(struct usart_module *const dev, uint8_t const *string)
+static void debug_write_string(struct usart_module *const dev, uint8_t const *string)
 
 {
 	do {
@@ -68,7 +56,7 @@ void debug_write_string(struct usart_module *const dev, uint8_t const *string)
 }
 
 /* Convert number to string */
-void debug_int_to_string(uint8_t *ret_val, uint8_t size, uint32_t integer)
+static void debug_int_to_string(uint8_t *ret_val, uint8_t size, uint32_t integer)
 {
 	uint8_t i = 0;
 	uint32_t temp_int = integer;
@@ -89,7 +77,7 @@ void debug_int_to_string(uint8_t *ret_val, uint8_t size, uint32_t integer)
 }
 
 /* Set up tc and events */
-void setup_tc_channels(struct tc_module *const calib_chan, struct tc_module *const comp_chan)
+static void setup_tc_channels(struct tc_module *const calib_chan, struct tc_module *const comp_chan)
 {
 	events_init();
 
@@ -141,7 +129,7 @@ void setup_tc_channels(struct tc_module *const calib_chan, struct tc_module *con
 }
 
 /* Setup and initialize USART device. */
-void setup_usart_channel(void)
+static void setup_usart_channel(void)
 {
 	struct usart_config config_struct;
 
@@ -161,7 +149,7 @@ void setup_usart_channel(void)
 }
 
 /* Get current frequency */
-uint32_t debug_get_freq(struct tc_module *calib_chan, struct tc_module *comp_chan)
+static uint32_t debug_get_freq(struct tc_module *calib_chan, struct tc_module *comp_chan)
 {
 	uint64_t tmp;
 
@@ -181,8 +169,8 @@ uint32_t debug_get_freq(struct tc_module *calib_chan, struct tc_module *comp_cha
 }
 
 /* Wait loop */
-void debug_wait(uint16_t ticks) {
-	while(ticks--) {
+static void debug_wait(uint16_t ticks) {
+	while (ticks--) {
 		__asm__("NOP");
 	}
 }
