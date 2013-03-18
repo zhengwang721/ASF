@@ -44,12 +44,27 @@
 /**
  * \page tc_callback Quick Start Guide for the TC module - Callback
  *
- * In this usecase, one TC instance will be used to... The TC module will be
- * set up as follows:
+ * In this use case, one TC instance will be used to generate a PWM
+ * signal. The duty cycle of the PWM will be changed during runtime by
+ * a callback function. The duty cycle will be 0.5 in one cycle and
+ * 0.3 in the next and continue changing in this manner. The TC module
+ * will be set up as follows:
  *
- * -
- * -
- * -
+ * - GCLK generator 0 (GCLK main) clock source
+ * - 16 bit resolution on the counter
+ * - No prescaler
+ * - Normal frequency wave generation
+ * - GCLK reload action
+ * - Don't run in standby
+ * - No inversion of waveform output
+ * - No capture enabled
+ * - Count upward
+ * - Don't perform oneshot operations
+ * - No event input enabled
+ * - No event action
+ * - No event generation enabled
+ * - Counter starts on 0
+ * - Capture compare channel 0 set to 0x7FFF
  *
  * \section asfdoc_samd20_tc_basic_use_case_setup Quick Start
  *
@@ -70,14 +85,20 @@
  * -# Get default configuration values.
  *  - \snippet qs_tc_callback.c tc_get_config_defaults
  * -# Set up PWM output on channel 0.
- *   - \snippet qs_tc_callback.c pwm_channel_0
+ *  - \snippet qs_tc_callback.c pwm_channel_0
  * -# Set counter size, wave generation mode and compare capture value.
  *  - \snippet qs_tc_callback.c setup
  * -# Initialize the TC module based on given configuration values.
  *  - \snippet qs_tc_callback.c tc_init
+ * -# Register the callback function to be used when a compare match occur.
+ *  - \snippet qs_tc_callback.c register_callback
+ * -# Enable callbacks for the given interrupt.
+ *  - \snippet qs_tc_callback.c enable_callback
+ * -# Enable global interrupts.
+ *  - \snippet qs_tc_callback.c enable global interrupts
  * -# Enable and start the TC module.
  *  - \snippet qs_tc_callback.c tc_enable
- * -# Loop infinitly. Let the module generate PWM signal.
+ * -# Loop infinitely. Let the module generate PWM signal.
  *  - \snippet qs_tc_callback.c inf_loop
  * \section asfdoc_samd20_tc_basic_use_case_workflow Workflow
  */
@@ -85,4 +106,3 @@
 
 #include <asf.h>
 #include <conf_clocks.h>
-

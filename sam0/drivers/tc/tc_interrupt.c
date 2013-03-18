@@ -91,7 +91,6 @@ enum status_code tc_register_callback(
  * Unregisters a callback function implemented by the user.
  *
  * \param[in]     module Pointer to TC software instance struct
- * \param[in]     callback_func Pointer to callback function
  * \param[in]     callback_type Callback type given by an enum
  */
 enum status_code tc_unregister_callback(
@@ -137,8 +136,8 @@ MREPEAT(TC_INST_NUM, _TC_INTERRUPT_HANDLER, ~)
 /**
  * \brief Interrupt Handler for TC module
  *
- * Handles interrupts as they occur, and it will run callback functions
- * which are registered and enabled.
+ * Handles interrupts as they occur, it will run the callback functions
+ * that are registered and enabled.
  *
  * \param[in]  instance  ID of the TC instance calling the interrupt
  *                       handler.
@@ -160,7 +159,7 @@ void _tc_interrupt_handler(
 
 	/* Check if an Overflow interrupt has occurred */
 	if (interrupt_and_callback_status_mask & TC_INTFLAG_OVF) {
-		/* Invoke registered and enabled calback function */
+		/* Invoke registered and enabled callback function */
 		(*(module->callback[TC_CALLBACK_OVERFLOW]))(module);
 		/* Clear interrupt flag */
 		module->hw->COUNT8.INTFLAG.reg = TC_INTFLAG_OVF;
@@ -168,7 +167,7 @@ void _tc_interrupt_handler(
 
 	/* Check if an Error interrupt has occurred */
 	if (interrupt_and_callback_status_mask & TC_INTFLAG_ERR) {
-		/* Invoke registered and enabled calback function */
+		/* Invoke registered and enabled callback function */
 		(*(module->callback[TC_CALLBACK_ERROR]))(module);
 		/* Clear interrupt flag */
 		module->hw->COUNT8.INTFLAG.reg = TC_INTFLAG_ERR;
@@ -176,7 +175,7 @@ void _tc_interrupt_handler(
 
 	/* Check if an Match/Capture Channel 0 interrupt has occurred */
 	if (interrupt_and_callback_status_mask & TC_INTFLAG_MC(1)) {
-		/* Invoke registered and enabled calback function */
+		/* Invoke registered and enabled callback function */
 		(*(module->callback[TC_CALLBACK_CC_CHANNEL0]))(module);
 		/* Clear interrupt flag */
 		module->hw->COUNT8.INTFLAG.reg = TC_INTFLAG_MC(1);
@@ -184,7 +183,7 @@ void _tc_interrupt_handler(
 
 	/* Check if an Match/Capture Channel 1 interrupt has occurred */
 	if (interrupt_and_callback_status_mask & TC_INTFLAG_MC(2)) {
-		/* Invoke registered and enabled calback function */
+		/* Invoke registered and enabled callback function */
 		(*(module->callback[TC_CALLBACK_CC_CHANNEL1]))(module);
 		/* Clear interrupt flag */
 		module->hw->COUNT8.INTFLAG.reg = TC_INTFLAG_MC(2);

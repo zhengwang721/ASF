@@ -41,24 +41,12 @@
 #include <conf_quick_start_callback.h>
 #include <asf.h>
 
-uint32_t pases = 0;
-
-static void configure_led(void)
-{
-	struct port_config pin_conf;
-	port_get_config_defaults(&pin_conf);
-
-	pin_conf.direction = PORT_PIN_DIR_OUTPUT;
-	port_pin_set_config(LED_0_PIN, &pin_conf);
-}
 
 
-static void qs_tc_callback_to_change_duty_cycle(
-		struct tc_module *const module_inst);
 static void qs_tc_callback_to_change_duty_cycle(
 		struct tc_module *const module_inst)
 {
-	port_pin_set_output_level(LED_0_PIN, true);
+	static uint32_t pases = 0;
 	pases = pases + 1;
 	if (pases == 2) {
 		while (tc_is_syncing(module_inst)) {
@@ -111,25 +99,24 @@ int main(void)
 	tc_init(&module_inst, PWM_MODULE, &config);
 	//! [tc_init]
 
-	//! [callback_reg]
+	//! [register_callback]
 	tc_register_callback(
 			&module_inst,
 			(tc_callback_t)qs_tc_callback_to_change_duty_cycle,
 			TC_CALLBACK_CC_CHANNEL0);
-	//! [callback_reg]
+	//! [register_callback]
 
 	//! [enable_callback
 	tc_enable_callback(&module_inst, TC_CALLBACK_CC_CHANNEL0);
 	//! [enable_callback]
 
+	//! [enable_global_interrupts]
 	cpu_irq_enable();
+	//! [enable_global_interrupts]
 
 	//! [tc_enable]
 	tc_enable(&module_inst);
 	//! [tc_enable]
-
-	configure_led();
-	port_pin_set_output_level(LED_0_PIN, false);
 
 	//! [inf_loop]
 	while (1) {

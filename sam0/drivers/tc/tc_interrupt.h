@@ -45,8 +45,6 @@
 #define TC_INTERRUPT_H_INCLUDED
 
 #include "tc.h"
-//#include <system_interrupt.h>
-
 
 extern void *_tc_instances[TC_INST_NUM];
 
@@ -70,7 +68,8 @@ enum status_code tc_unregister_callback(
  *
  * Enables the callback function registered by the \ref
  * tc_register_callback. The callback function will be called from the
- * interrupt handler when the conditions for the callback type are met.
+ * interrupt handler when the conditions for the callback type are
+ * met. This function will also enable the appropriate interrupts.
  *
  * \param[in]     module Pointer to TC software instance struct
  * \param[in]     callback_type Callback type given by an enum
@@ -101,8 +100,9 @@ static inline void tc_enable_callback(
  * \brief Disable callback
  *
  * Disables the callback function registered by the \ref
- * tc_register_callback, and the callback will not be called
- * from the interrupt routine.
+ * tc_register_callback, and the callback will not be called from the
+ * interrupt routine. The function will also disable the appropriate
+ * interrupts.
  *
  * \param[in]     module Pointer to TC software instance struct
  * \param[in]     callback_type Callback type given by an enum
