@@ -47,7 +47,7 @@
  * In this use case, one TC instance will be used to generate a PWM
  * signal. The duty cycle of the PWM will be changed during runtime by
  * a callback function. The duty cycle will be 0.5 in one cycle and
- * 0.3 in the next and continue changing in this manner. The TC module
+ * 0.3 in the next and continue in this manner. The TC module
  * will be set up as follows:
  *
  * - GCLK generator 0 (GCLK main) clock source
