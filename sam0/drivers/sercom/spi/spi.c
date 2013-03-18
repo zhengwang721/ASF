@@ -85,7 +85,7 @@ void spi_reset(
  */
 static enum status_code _spi_set_config(
 		struct spi_module *const module,
-		struct spi_config *config)
+		const struct spi_config *const config)
 {
 	/* Sanity check arguments */
 	Assert(module);
@@ -131,15 +131,13 @@ static enum status_code _spi_set_config(
 	pin_conf.mux_position = pad3 & 0xFFFF;
 	system_pinmux_pin_set_config(pad3 >> 16, &pin_conf);
 
-	module->mode = config->mode;
+	module->mode           = config->mode;
 	module->character_size = config->character_size;
 
 	/* Value to write to BAUD register */
 	uint16_t baud;
 	/* Value to write to CTRLA register */
 	uint32_t ctrla;
-	/* Status code */
-	enum status_code err = STATUS_OK;
 
 	/**
 	 * \todo need to get reference clockspeed from conf struct and gclk_get_hz
@@ -148,11 +146,11 @@ static enum status_code _spi_set_config(
 
 	/* Find baud value and write it */
 	if (config->mode == SPI_MODE_MASTER) {
-		err = _sercom_get_sync_baud_val(
+		enum status_code error_code = _sercom_get_sync_baud_val(
 				config->master.baudrate,
 				external_clock, &baud);
 
-		if (err != STATUS_OK) {
+		if (error_code != STATUS_OK) {
 			/* Baud rate calculation error, return status code */
 			return STATUS_ERR_INVALID_ARG;
 		}
@@ -227,8 +225,8 @@ static enum status_code _spi_set_config(
  */
 enum status_code spi_init(
 		struct spi_module *const module,
-		Sercom *hw,
-		struct spi_config *config)
+		Sercom *const hw,
+		const struct spi_config *const config)
 {
 
 	/* Sanity check arguments */
@@ -241,7 +239,7 @@ enum status_code spi_init(
 
 	SercomSpi *const spi_module = &(module->hw->SPI);
 
-		/* Check if module is enabled. */
+	/* Check if module is enabled. */
 	if (spi_module->CTRLA.reg & SERCOM_SPI_CTRLA_ENABLE) {
 		return STATUS_ERR_DENIED;
 	}
@@ -403,9 +401,9 @@ enum status_code spi_read_buffer_wait(
  *                                     the slave address
  */
 enum status_code spi_select_slave(
-		struct spi_module *module,
-		struct spi_slave_inst *slave,
-		bool select)
+		struct spi_module *const module,
+		struct spi_slave_inst *const slave,
+		const bool select)
 {
 	/* Sanity check arguments */
 	Assert(module);
