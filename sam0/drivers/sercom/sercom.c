@@ -173,6 +173,24 @@ enum status_code sercom_set_gclk_generator(
 	return STATUS_ERR_ALREADY_INITIALIZED;
 }
 
+/** \internal
+ * Creates a switch statement case entry to convert a SERCOM instance and pad
+ * index to the default SERCOM pad MUX setting.
+ */
+#define _SERCOM_PAD_DEFAULTS_CASE(n, pad) \
+		case (uintptr_t)SERCOM##n: \
+			switch (pad) { \
+				case 0: \
+					return SERCOM##n##_PAD0_DEFAULT; \
+				case 1: \
+					return SERCOM##n##_PAD1_DEFAULT; \
+				case 2: \
+					return SERCOM##n##_PAD2_DEFAULT; \
+				case 3: \
+					return SERCOM##n##_PAD3_DEFAULT; \
+			} \
+			break;
+
 /**
  * \internal Gets the default PAD pinout for a given SERCOM.
  *
@@ -190,110 +208,10 @@ uint32_t _sercom_get_default_pad(
 		const uint8_t pad)
 {
 	switch ((uintptr_t)sercom_module) {
-	case (uintptr_t)SERCOM0:
-		switch (pad) {
-		case 0:
-			return SERCOM0_PAD0_DEFAULT;
-		case 1:
-			return SERCOM0_PAD1_DEFAULT;
-		case 2:
-			return SERCOM0_PAD2_DEFAULT;
-		case 3:
-			return SERCOM0_PAD3_DEFAULT;
-		}
-#if defined (SERCOM1)
-	case (uintptr_t)SERCOM1:
-		switch (pad) {
-		case 0:
-			return SERCOM1_PAD0_DEFAULT;
-		case 1:
-			return SERCOM1_PAD1_DEFAULT;
-		case 2:
-			return SERCOM1_PAD2_DEFAULT;
-		case 3:
-			return SERCOM1_PAD3_DEFAULT;
-		}
-#endif
-#if defined (SERCOM2)
-	case (uintptr_t)SERCOM2:
-		switch (pad) {
-		case 0:
-			return SERCOM2_PAD0_DEFAULT;
-		case 1:
-			return SERCOM2_PAD1_DEFAULT;
-		case 2:
-			return SERCOM2_PAD2_DEFAULT;
-		case 3:
-			return SERCOM2_PAD3_DEFAULT;
-		}
-#endif
-#if defined (SERCOM3)
-	case (uintptr_t)SERCOM3:
-		switch (pad) {
-		case 0:
-			return SERCOM3_PAD0_DEFAULT;
-		case 1:
-			return SERCOM3_PAD1_DEFAULT;
-		case 2:
-			return SERCOM3_PAD2_DEFAULT;
-		case 3:
-			return SERCOM3_PAD3_DEFAULT;
-		}
-#endif
-#if defined (SERCOM4)
-
-	case (uintptr_t)SERCOM4:
-		switch (pad) {
-		case 0:
-			return SERCOM4_PAD0_DEFAULT;
-		case 1:
-			return SERCOM4_PAD1_DEFAULT;
-		case 2:
-			return SERCOM4_PAD2_DEFAULT;
-		case 3:
-			return SERCOM4_PAD3_DEFAULT;
-		}
-#endif
-#if defined (SERCOM5)
-	case (uintptr_t)SERCOM5:
-		switch (pad) {
-		case 0:
-			return SERCOM5_PAD0_DEFAULT;
-		case 1:
-			return SERCOM5_PAD1_DEFAULT;
-		case 2:
-			return SERCOM5_PAD2_DEFAULT;
-		case 3:
-			return SERCOM5_PAD3_DEFAULT;
-		}
-#endif
-#if defined (SERCOM6)
-	case (uintptr_t)SERCOM6:
-		switch (pad) {
-		case 0:
-			return SERCOM6_PAD0_DEFAULT;
-		case 1:
-			return SERCOM6_PAD1_DEFAULT;
-		case 2:
-			return SERCOM6_PAD2_DEFAULT;
-		case 3:
-			return SERCOM6_PAD3_DEFAULT;
-		}
-#endif
-#if defined (SERCOM7)
-	case (uintptr_t)SERCOM7:
-		switch (pad) {
-		case 0:
-			return SERCOM7_PAD0_DEFAULT;
-		case 1:
-			return SERCOM7_PAD1_DEFAULT;
-		case 2:
-			return SERCOM7_PAD2_DEFAULT;
-		case 3:
-			return SERCOM7_PAD3_DEFAULT;
-		}
-#endif
-	default:
-		return 0;
+		/* Auto-generate a lookup table for the default SERCOM pad defaults */
+		MREPEAT(SERCOM_INST_NUM, _SERCOM_PAD_DEFAULTS_CASE, pad)
 	}
+
+	Assert(false);
+	return 0;
 }
