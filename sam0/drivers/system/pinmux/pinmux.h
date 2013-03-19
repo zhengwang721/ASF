@@ -405,7 +405,7 @@ static uint8_t system_pinmux_pin_get_mux_position(
 
 	uint32_t pmux_reg = port->PMUX[pin_index / 2];
 
-	if (gpio_pin & 1) {
+	if (pin_index & 1) {
 		return (pmux_reg >> PORT_PMUX_PMUXO_Pos) & PORT_PMUX_MASK;
 	}
 	else {
