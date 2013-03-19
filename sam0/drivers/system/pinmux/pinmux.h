@@ -385,6 +385,35 @@ void system_pinmux_group_set_output_drive(
  */
 
 /**
+ * \brief Retrieves the currently selected MUX position of a logical pin.
+ *
+ * Retrieves the selected MUX peripheral on a given logical GPIO pin.
+ *
+ * \param[in]  gpio_pin  Index of the GPIO pin to configure.
+ *
+ * \return Currently selected peripheral index on the specified pin.
+ */
+static uint8_t system_pinmux_pin_get_mux_position(
+		const uint8_t gpio_pin)
+{
+	PortGroup *const port = system_pinmux_get_group_from_gpio_pin(gpio_pin);
+	uint32_t pin_index = (gpio_pin % 32);
+
+	if (!(port->PINCFG[pin_index] & PORT_PINCFG_PMUXEN)) {
+		return SYSTEM_PINMUX_GPIO;
+	}
+
+	uint32_t pmux_reg = port->PMUX[pin_index / 2];
+
+	if (gpio_pin & 1) {
+		return (pmux_reg >> PORT_PMUX_PMUXO_Pos) & PORT_PMUX_MASK;
+	}
+	else {
+		return (pmux_reg >> PORT_PMUX_PMUXE_Pos) & PORT_PMUX_MASK;
+	}
+}
+
+/**
  * \brief Configures the input sampling mode for a GPIO pin.
  *
  * Configures the input sampling mode for a GPIO input, to
