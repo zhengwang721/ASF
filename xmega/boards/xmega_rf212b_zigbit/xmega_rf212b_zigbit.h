@@ -125,11 +125,6 @@
 
 //@}
 
-
-
-
-
-
 /*! \name Connections of the AT86RFX transceiver
  */
 //! @{
@@ -170,8 +165,6 @@
 #define LEAVE_TRX_REGION()   PORTC.INTCTRL = irq_mask; }
 
 //! @}
-
-
 
 /**
  * @}
