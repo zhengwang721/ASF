@@ -3,7 +3,7 @@
  *
  * \brief Digital-to-Analog Converter Controller (DACC) driver for SAM.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -92,7 +92,7 @@ uint32_t dacc_set_timing(Dacc *p_dacc, uint32_t ul_startup,
 		uint32_t ul_clock_divider);
 #endif
 
-#if (SAM3S) || (SAM3XA) || (SAM4S) || defined(__DOXYGEN__)
+#if (SAM3S) || (SAM3XA) || (SAM4S) || (SAM4E) || defined(__DOXYGEN__)
 uint32_t dacc_set_channel_selection(Dacc *p_dacc, uint32_t ul_channel);
 void dacc_enable_flexible_selection(Dacc *p_dacc);
 
