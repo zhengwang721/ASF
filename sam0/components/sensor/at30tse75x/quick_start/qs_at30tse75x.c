@@ -43,6 +43,7 @@
 
 #include <asf.h>
 
+//! [qs]
 double temp_res;
 
 int main(void)
@@ -66,3 +67,4 @@ int main(void)
 		temp_res = at30tse_read_temperature();
 	}
 }
+//! [qs]
