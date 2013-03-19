@@ -8,7 +8,7 @@
 		</info>
 
 		<module type="driver" id="sam0.drivers.sercom.usart#polled" caption="SERCOM USART - Serial Communications (Polled APIs)">
-			<build type="header-file" subtype="example" value="quick_start/qs_usart_basic_use.h"/>
+			<build type="header-file" value="quick_start/qs_usart_basic_use.h"/>
 
 			<build type="include-path" value="." />
 
@@ -19,6 +19,7 @@
 
 			<build type="doxygen-entry-point" value="sam0_usart_group"/>
 			<build type="doxygen-image-path" value="docimg"/>
+			<build type="doxygen-example-path" value="quick_start"/>
 
 			<require idref="sam0.utils"/>
 			<require idref="sam0.drivers.sercom"/>
@@ -32,8 +33,8 @@
 		<module type="driver" id="sam0.drivers.sercom.usart#callback" caption="SERCOM USART - Serial Communications (Callback APIs)">
 			<build type="include-path" value="." />
 
-			<build type="header-file" subtype="example" value="quick_start/qs_usart_basic_use.h"/>
-			<build type="header-file" subtype="example" value="quick_start_callback/qs_usart_callback.h"/>
+			<build type="header-file" value="quick_start/qs_usart_basic_use.h"/>
+			<build type="header-file" value="quick_start_callback/qs_usart_callback.h"/>
 
 			<build type="header-file" subtype="api" value="usart.h"/>
 			<build type="header-file" subtype="api" value="usart_interrupt.h"/>
@@ -45,6 +46,8 @@
 
 			<build type="doxygen-entry-point" value="sam0_usart_group"/>
 			<build type="doxygen-image-path" value="docimg"/>
+			<build type="doxygen-example-path" value="quick_start"/>
+			<build type="doxygen-example-path" value="quick_start_callback"/>
 
 			<require idref="sam0.utils"/>
 			<require idref="sam0.drivers.sercom"/>

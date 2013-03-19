@@ -583,7 +583,7 @@ struct i2c_packet {
  *
  * \section asfdoc_samd20_i2c_extra_dependencies Dependencies
  * The I<SUP>2</SUP>C driver has the following dependencies:
- * \li \ref asfdoc_samd20_pinmux_group "System Pin Multiplexer Driver"
+ * \li \ref asfdoc_samd20_system_pinmux_group "System Pin Multiplexer Driver"
  *
  *
  * \section asfdoc_samd20_i2c_extra_workarounds Workarounds implemented by driver

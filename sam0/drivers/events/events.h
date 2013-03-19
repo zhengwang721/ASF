@@ -147,7 +147,7 @@
  * \subsubsection asfdoc_samd20_events_module_overview_path_selection_async Asynchronous Paths
  * Asynchronous event paths allow for an asynchronous connection between the
  * event generator and event user(s), when the source and destination
- * peripherals share the same \ref asfdoc_samd20_gclk_group "generic clock"
+ * peripherals share the same \ref asfdoc_samd20_system_clock_group "Generic Clock"
  * channel. In this mode the event is propagated between the source and
  * destination directly to reduce the event latency, thus no edge detection is
  * possible.
@@ -613,7 +613,7 @@ static inline void events_chan_software_trigger(
  * \section asfdoc_samd20_events_extra_dependencies Dependencies
  * This driver has the following dependencies:
  *
- *  - \ref asfdoc_samd20_gclk_group "Generic Clock Driver"
+ *  - \ref asfdoc_samd20_system_clock_group "System Clock Driver"
  *
  *
  * \section asfdoc_samd20_events_extra_errata Errata

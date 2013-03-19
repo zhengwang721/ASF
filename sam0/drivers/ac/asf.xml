@@ -12,10 +12,11 @@
 
 		<build type="include-path" value="."/>
 		<build type="header-file" subtype="api" value="ac.h"/>
-		<build type="header-file" subtype="example" value="quick_start/qs_ac_basic.h"/>
+		<build type="header-file" value="quick_start/qs_ac_basic.h"/>
 		<build type="c-source" value="ac.c"/>
 
 		<build type="doxygen-entry-point" value="asfdoc_samd20_ac_group"/>
+		<build type="doxygen-example-path" value="quick_start"/>
 
 		<device-support value="samd20"/>
 

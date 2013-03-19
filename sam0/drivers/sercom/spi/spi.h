@@ -1263,7 +1263,7 @@ enum status_code spi_select_slave(
  *
  * \section asfdoc_samd20_sercom_spi_extra_dependencies Dependencies
  * The SPI driver has the following dependencies:
- * \li \ref asfdoc_samd20_pinmux_group "System Pin Multiplexer Driver"
+ * \li \ref asfdoc_samd20_system_pinmux_group "System Pin Multiplexer Driver"
  *
  *
  * \section asfdoc_samd20_sercom_spi_extra_workarounds Workarounds Implemented by Driver

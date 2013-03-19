@@ -16,9 +16,10 @@
 
 		<build type="header-file" subtype="api" value="nvm.h"/>
 
-		<build type="header-file" subtype="example" value="quick_start_basic/qs_nvm_basic.h"/>
+		<build type="header-file" value="quick_start_basic/qs_nvm_basic.h"/>
 
 		<build type="doxygen-entry-point" value="sam0_nvm_group"/>
+		<build type="doxygen-example-path" value="quick_start_basic"/>
 
 		<device-support value="samd20"/>
 

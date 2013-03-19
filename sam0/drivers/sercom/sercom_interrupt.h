@@ -37,7 +37,7 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * \asf_license_stops
+ * \asf_license_stop
  *
  */
 #ifndef SERCOM_INTERRUPT_H_INCLUDED

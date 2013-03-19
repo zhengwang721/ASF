@@ -1428,7 +1428,7 @@ static inline void adc_set_negative_input(
  * \section asfdoc_samd20_adc_extra_dependencies Dependencies
  * This driver has the following dependencies:
  *
- *  - \ref asfdoc_samd20_pinmux_group "System Pin Multiplexer Driver"
+ *  - \ref asfdoc_samd20_system_pinmux_group "System Pin Multiplexer Driver"
  *
  *
  * \section asfdoc_samd20_adc_extra_errata Errata
