@@ -323,6 +323,7 @@
 #include <port.h>
 #include <sercom.h>
 #include <pinmux.h>
+#include <string.h>
 
 #if SPI_CALLBACK_MODE == true
 #  include <sercom_interrupt.h>
@@ -769,6 +770,8 @@ static inline void spi_get_config_defaults(
 {
 	/* Sanity check arguments */
 	Assert(config);
+
+	memset(&(config->slave), 0, sizeof(struct spi_slave_config));
 
 	/* Default configuration values */
 	config->mode             = SPI_MODE_MASTER;
