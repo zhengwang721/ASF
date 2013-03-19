@@ -10,9 +10,10 @@
 		<module type="driver" id="sam0.drivers.sercom.spi#polled" caption="SERCOM SPI - Serial Peripheral Interface (Polled Mode)">
 			<build type="c-source" value="spi.c"/>
 			<build type="header-file" subtype="api" value="spi.h"/>
-			<build type="header-file" value="quick_start/qs_spi_basic.h" subtype="example"/>
+			<build type="header-file" value="quick_start/qs_spi_basic.h"/>
 			<build type="include-path" value="."/>
 			<build type="doxygen-entry-point" value="asfdoc_samd20_sercom_spi_group"/>
+			<build type="doxygen-example-path" value="quick_start"/>
 
 			<build type="define" name="SPI_CALLBACK_MODE" value="false"/>
 
@@ -32,9 +33,10 @@
 			<build type="c-source" value="spi_interrupt.c"/>
 			<build type="header-file" subtype="api" value="spi.h"/>
 			<build type="header-file" subtype="api" value="spi_interrupt.h"/>
-			<build type="header-file" value="quick_start/qs_spi_basic.h" subtype="example"/>
+			<build type="header-file" value="quick_start/qs_spi_basic.h"/>
 			<build type="include-path" value="."/>
 			<build type="doxygen-entry-point" value="asfdoc_samd20_sercom_spi_group"/>
+			<build type="doxygen-example-path" value="quick_start"/>
 
 			<build type="define" name="SPI_CALLBACK_MODE" value="true"/>
 			<build type="doxygen-enable-section" value="SPI_CALLBACK_MODE"/>

@@ -17,9 +17,10 @@
 
 			<build type="define" name="EXTINT_CALLBACK_MODE" value="false"/>
 
-			<build type="header-file" subtype="example" value="quick_start_polled/qs_extint_basic.h"/>
+			<build type="header-file" value="quick_start_polled/qs_extint_basic.h"/>
 
 			<build type="doxygen-entry-point" value="asfdoc_samd20_extint_group"/>
+			<build type="doxygen-example-path" value="quick_start_polled"/>
 
 			<require idref="sam0.utils"/>
 			<require idref="sam0.drivers.system"/>
@@ -42,9 +43,12 @@
 			<build type="define" name="EXTINT_CALLBACK_MODE" value="true"/>
 			<build type="doxygen-enable-section" value="EXTINT_CALLBACK_MODE"/>
 
-			<build type="header-file" subtype="example" value="quick_start_polled/qs_extint_basic.h"/>
-			<build type="header-file" subtype="example" value="quick_start_callback/qs_extint_callback.h"/>
+			<build type="header-file" value="quick_start_polled/qs_extint_basic.h"/>
+			<build type="header-file" value="quick_start_callback/qs_extint_callback.h"/>
+
 			<build type="doxygen-entry-point" value="asfdoc_samd20_extint_group"/>
+			<build type="doxygen-example-path" value="quick_start_polled"/>
+			<build type="doxygen-example-path" value="quick_start_callback"/>
 
 			<require idref="sam0.utils"/>
 			<require idref="sam0.drivers.system"/>
