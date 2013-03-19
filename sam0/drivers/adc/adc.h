@@ -343,6 +343,37 @@ extern "C" {
 #include <compiler.h>
 #include <system.h>
 
+#if ADC_CALLBACK_MODE == true
+#include <system_interrupt.h>
+
+extern struct adc_module *_adc_instances[ADC_INST_NUM];
+/** Prototype for the device instance */
+struct adc_module;
+/** Type of the callback functions */
+typedef void (*adc_callback_t)(const struct adc_module *const module);
+
+/**
+ * \brief ADC Callback enum
+ *
+ * Callback types for ADC callback driver
+ *
+ */
+enum adc_callback {
+	/** Callback for buffer received */
+	ADC_CALLBACK_READ_BUFFER,
+	/** Callback when window is hit */
+	ADC_CALLBACK_WINDOW,
+	/** Callback for error */
+	ADC_CALLBACK_ERROR,
+#if !defined(__DOXYGEN__)
+	/** Number of available callbacks. */
+	ADC_CALLBACK_N,
+#endif
+};
+
+
+#endif
+
 /**
  * \name Module status flags
  *
@@ -636,6 +667,20 @@ enum adc_average_samples {
 	ADC_AVERAGE_SAMPLES_1024 = ADC_AVGCTRL_SAMPLENUM_1024,
 };
 
+#if ADC_CALLBACK_MODE == true
+/**
+ * Enum for the possible ADC interrupt flags
+ */
+enum adc_interrupt_flag {
+	/** ADC result ready */
+	ADC_INTERRUPT_RESULT_READY = ADC_INTFLAG_RESRDY,
+	/** Window monitor match */
+	ADC_INTERRUPT_WINDOW       = ADC_INTFLAG_WINMON,
+	/** ADC result overwritten before read */
+	ADC_INTERRUPT_OVERRUN      = ADC_INTFLAG_MASK,
+};
+#endif
+
 /**
  * \brief ADC oversampling and decimation enum
  *
@@ -803,6 +848,22 @@ struct adc_module {
 #if !defined(__DOXYGEN__)
 	/** Pointer to ADC hardware module */
 	Adc *hw;
+#if ADC_CALLBACK_MODE == true
+	/** Array to store callback functions */
+	adc_callback_t callback[ADC_CALLBACK_N];
+	/** Pointer to buffer used for ADC results */
+	volatile uint16_t *job_buffer;
+	/** Remaining number of conversions in current job */
+	volatile uint16_t remaining_conversions;
+	/** Bit mask for callbacks registered */
+	uint8_t registered_callback_mask;
+	/** Bit mask for callbacks enabled */
+	uint8_t enabled_callback_mask;
+	/** Holds the status of the ongoing or last conversion job */
+	volatile enum status_code job_status;
+	/** If osftware triggering is needed */
+	bool software_trigger;
+#endif
 #endif
 };
 
@@ -850,15 +911,15 @@ static inline void adc_get_config_defaults(struct adc_config *const config)
 {
 	Assert(config);
 	config->clock_source                  = GCLK_GENERATOR_0;
-	config->reference                     = ADC_REFERENCE_INT1V;
+	config->reference                     = ADC_REFERENCE_INTVCC1;
 	config->clock_prescaler               = ADC_CLOCK_PRESCALER_DIV4;
 	config->resolution                    = ADC_RESOLUTION_12BIT;
 	config->window.window_mode            = ADC_WINDOW_MODE_DISABLE;
 	config->window.window_upper_value     = 0;
 	config->window.window_lower_value     = 0;
-	config->gain_factor                   = ADC_GAIN_FACTOR_1X;
+	config->gain_factor                   = ADC_GAIN_FACTOR_DIV2;
 	config->positive_input                = ADC_POSITIVE_INPUT_PIN0 ;
-	config->negative_input                = ADC_NEGATIVE_INPUT_PIN1 ;
+	config->negative_input                = ADC_NEGATIVE_INPUT_GND ;
 	config->average_samples               = ADC_AVERAGE_DISABLE;
 	config->oversampling_and_decimation   =
 			ADC_OVERSAMPLING_AND_DECIMATION_DISABLE;
@@ -1025,6 +1086,10 @@ static inline enum status_code adc_enable(
 		/* Wait for synchronization */
 	}
 
+#if ADC_CALLBACK_MODE == true
+	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_ADC);
+#endif
+
 	adc_module->CTRLA.reg |= ADC_CTRLA_ENABLE;
 	return STATUS_OK;
 }
@@ -1043,6 +1108,10 @@ static inline enum status_code adc_disable(
 	Assert(module_inst->hw);
 
 	Adc *const adc_module = module_inst->hw;
+
+#if ADC_CALLBACK_MODE == true
+	system_interrupt_disable(SYSTEM_INTERRUPT_MODULE_ADC);
+#endif
 
 	while (adc_is_syncing(module_inst)) {
 		/* Wait for synchronization */
@@ -1382,6 +1451,55 @@ static inline void adc_set_negative_input(
 }
 
 /** @} */
+
+#if ADC_CALLBACK_MODE == true
+/**
+ * \name Enable and disable interrupts
+ * @{
+ */
+
+/**
+ * \brief Enable interrupt
+ *
+ * Enable the given interrupt request from the ADC module.
+ *
+ * \param[in] module_inst Pointer to the ADC software instance struct
+ * \param[in] interrupt Interrupt to enable
+ */
+static inline void adc_enable_interrupt(struct adc_module *const module_inst,
+		enum adc_interrupt_flag interrupt)
+{
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+
+	Adc *const adc_module = module_inst->hw;
+	/* Enable interrupt */
+	adc_module->INTENSET.reg = interrupt;
+}
+
+/**
+ * \brief Disable interrupt
+ *
+ * Disable the given interrupt request from the ADC module.
+ *
+ * \param[in] module_inst Pointer to the ADC software instance struct
+ * \param[in] interrupt Interrupt to disable
+ */
+static inline void adc_disable_interrupt(struct adc_module *const module_inst,
+		enum adc_interrupt_flag interrupt)
+{
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+
+	Adc *const adc_module = module_inst->hw;
+	/* Enable interrupt */
+	adc_module->INTENCLR.reg = interrupt;
+}
+
+/** @} */
+#endif /* ADC_CALLBACK_MODE == true */
 
 #ifdef __cplusplus
 }
