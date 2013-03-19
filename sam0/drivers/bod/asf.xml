@@ -14,8 +14,9 @@
 		<build type="c-source" value="bod.c"/>
 
 		<build type="doxygen-entry-point" value="asfdoc_samd20_bod"/>
+		<build type="doxygen-example-path" value="quick_start"/>
 
-		<build type="header-file" subtype="example" value="quick_start/qs_bod_basic_use.h"/>
+		<build type="header-file" value="quick_start/qs_bod_basic_use.h"/>
 
 		<device-support value="samd20"/>
 

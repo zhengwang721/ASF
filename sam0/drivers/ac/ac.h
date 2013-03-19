@@ -1104,7 +1104,7 @@ static inline void ac_win_clear_detected(
  * \section asfdoc_samd20_ac_extra_dependencies Dependencies
  * This driver has the following dependencies:
  *
- *  - \ref asfdoc_samd20_pinmux_group "System Pin Multiplexer Driver"
+ *  - \ref asfdoc_samd20_system_pinmux_group "System Pin Multiplexer Driver"
  *
  *
  * \section asfdoc_samd20_ac_extra_errata Errata

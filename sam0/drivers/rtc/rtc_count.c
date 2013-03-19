@@ -175,7 +175,7 @@ enum status_code rtc_count_init(
 
 	//TODO: Get tools to add in alias names for other RTC modes
 	/* Set the prescaler according to settings in conf_clocks.h */
-#if CONF_CLOCK_RTC_FREQ == CONF_CLOCK_RTC_FREQ_1HZ
+#if CONF_CLOCK_RTC_FREQ != CONF_CLOCK_RTC_FREQ_32KHZ
 	rtc_module->MODE0.CTRL.reg = RTC_MODE2_CTRL_PRESCALER_DIV1024;
 #else
 	rtc_module->MODE0.CTRL.reg = RTC_MODE2_CTRL_PRESCALER_DIV1;

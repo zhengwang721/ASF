@@ -176,7 +176,7 @@
  * (Generic Clock) channel. The GCLK channel connects to any of the GCLK
  * generators. The GCLK generators are configured to use one of the available
  * clock sources on the system such as internal oscillator, external crystals
- * etc. - see the \ref asfdoc_samd20_gclk_group "Generic Clock Driver" for
+ * etc. - see the \ref asfdoc_samd20_system_clock_group "Generic Clock driver" for
  * more information.
  *
  * \subsubsection asfdoc_samd20_tc_module_overview_clock_prescaler Prescaler
@@ -1353,7 +1353,7 @@ static inline void tc_clear_status(
  * \section asfdoc_samd20_tc_extra_dependencies Dependencies
  * This driver has the following dependencies:
  *
- *  - \ref asfdoc_samd20_pinmux_group "System Pin Multiplexer Driver"
+ *  - \ref asfdoc_samd20_system_pinmux_group "System Pin Multiplexer Driver"
  *
  *
  * \section asfdoc_samd20_tc_extra_errata Errata

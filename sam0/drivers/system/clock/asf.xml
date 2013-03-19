@@ -12,6 +12,8 @@
 		<device-support value="samd20"/>
 
 		<build type="doxygen-entry-point" value="asfdoc_samd20_system_clock_group"/>
+		<build type="doxygen-example-path" value="quick_start_gclk"/>
+		<build type="doxygen-example-path" value="quick_start_clock"/>
 
 		<build type="include-path" value="."/>
 
@@ -20,8 +22,8 @@
 		<build type="c-source" value="clock.c"/>
 		<build type="c-source" value="gclk.c"/>
 
-		<build type="header-file" subtype="example" value="quick_start_gclk/qs_gclk_basic.h"/>
-		<build type="header-file" subtype="example" value="quick_start_clock/qs_clock_source.h"/>
+		<build type="header-file" value="quick_start_gclk/qs_gclk_basic.h"/>
+		<build type="header-file" value="quick_start_clock/qs_clock_source.h"/>
 
 		<build type="module-config" subtype="path" value="module_config"/>
 		<build type="module-config" subtype="required-header-file" value="conf_clocks.h"/>
