@@ -62,7 +62,7 @@ typedef enum {
 	CMP_LESS /*!< equal comparison ( inp<inn) */
 } E_CMP_RES;
 
-void re200b_motion_detect_handler( void );
+void re200b_motion_detect_handler(void);
 void re200b_motion_detect_init(void);
 void re200b_motion_detect_reset(void);
 void re200b_motion_detect_enable(void);

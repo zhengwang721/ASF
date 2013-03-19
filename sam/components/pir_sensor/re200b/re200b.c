@@ -70,7 +70,7 @@ static volatile E_CMP_RES g_compare_result = CMP_EQUAL;
  * \brief re200b_motion_detect_handler which allow to know comparison result
  * (CMP_GREATER or CMP_LESS)
  */
-void re200b_motion_detect_handler( void )
+void re200b_motion_detect_handler(void)
 {
 	uint32_t ul_status;
 
@@ -92,7 +92,7 @@ void re200b_motion_detect_handler( void )
  */
 void re200b_motion_detect_init(void)
 {
-	pmc_enable_periph_clk( ID_ACC );
+	pmc_enable_periph_clk(ID_ACC);
 
 	/* Initialize ACC */
 	acc_init( ACC, ACC_MR_SELPLUS_AD4, ACC_MR_SELMINUS_AD0,

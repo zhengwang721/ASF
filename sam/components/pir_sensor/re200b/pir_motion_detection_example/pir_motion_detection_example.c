@@ -76,16 +76,12 @@
  * -# Some text, image and basic shapes should be displayed on the LCD.
  *
  */
-/********************************************************************/
-/*                      Headers                                     */
-/********************************************************************/
+
 #include "asf.h"
 #include "conf_board.h"
 #include "conf_clock.h"
 
-/********************************************************************/
-/*                      Local Handler functions                     */
-/********************************************************************/
+#define LCD_LINE_HEIGHT (20UL)
 
 /**
  * \brief Handler for acc comparison event
@@ -95,10 +91,6 @@ void ACC_Handler(void)
 	re200b_motion_detect_handler();
 }
 
-/********************************************************************/
-/*                       Local functions                            */
-/********************************************************************/
-
 /**
  * \brief Intialize LCD display
  */
@@ -107,7 +99,7 @@ static void _display_init(void)
 	struct ili9325_opt_t ili9325_display_opt;
 
 	/* Enable peripheral clock */
-	pmc_enable_periph_clk( ID_SMC );
+	pmc_enable_periph_clk(ID_SMC);
 
 	/* Configure SMC interface for LCD */
 	smc_set_setup_timing(SMC, BOARD_LCD_SMC_CS, BOARD_LCD_SMC_SETUP);
@@ -133,10 +125,6 @@ static void _display_init(void)
 	/* Turn on LCD */
 	ili9325_display_on();
 }
-
-/********************************************************************/
-/*                      Exported functins                           */
-/********************************************************************/
 
 /**
  * \brief Application entry point for smc_lcd example.
@@ -176,17 +164,14 @@ int main(void)
 			re200b_motion_detect_disable();
 
 			/* Display information about motion detection on LCD */
-			if ((i * 20) >= BOARD_LCD_HEIGHT) {
+			if ((i*LCD_LINE_HEIGHT) >= BOARD_LCD_HEIGHT) {
 				i = 0;
 				ili9325_fill(COLOR_WHITE);
 			}
-			sprintf((char*)uc_string_display,
-					"Motion Detected:%lu",
-					i);
-			ili9325_draw_string(0, i * 20,
-					uc_string_display);
-			i++;
 
+			sprintf((char*)uc_string_display, "Motion Detected:%lu", i);
+			ili9325_draw_string(0, i*LCD_LINE_HEIGHT, uc_string_display);
+			i++;
 		}
 	}
 }
