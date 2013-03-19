@@ -106,7 +106,6 @@ static void run_cache_data_hit_test(const struct test_case *test)
 		flag = false;
 	} else {
 		flag = true;
-		printf("Cache Data hit: %ul \r\n", cmcc_get_monitor_cnt(CMCC));
 	}
 
 	test_assert_true(test, flag == true, "CMCC mode monitor not work!");
