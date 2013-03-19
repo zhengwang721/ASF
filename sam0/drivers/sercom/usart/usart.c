@@ -192,6 +192,17 @@ enum status_code usart_init(
 	uint32_t pm_index     = sercom_index + PM_APBCMASK_SERCOM0_Pos;
 	uint32_t gclk_index   = sercom_index + SERCOM0_GCLK_ID_CORE;
 
+	/* Wait for synchronization to be complete*/
+	_usart_wait_for_sync(module);
+
+	while (usart_hw->CTRLA.reg & SERCOM_USART_CTRLA_SWRST) {
+	}
+
+	if (usart_hw->CTRLA.reg & SERCOM_USART_CTRLA_ENABLE) {
+		/* Module have to be disabled before initialization. Abort. */
+		return STATUS_ERR_DENIED;
+	}
+
 	/* Turn on module in PM */
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, 1 << pm_index);
 
@@ -240,17 +251,6 @@ enum status_code usart_init(
 	}
 	pin_conf.mux_position = pad3 & 0xFFFF;
 	system_pinmux_pin_set_config(pad3 >> 16, &pin_conf);
-
-	/* Wait for synchronization to be complete*/
-	_usart_wait_for_sync(module);
-
-	while (usart_hw->CTRLA.reg & SERCOM_USART_CTRLA_SWRST) {
-	}
-
-	if (usart_hw->CTRLA.reg & SERCOM_USART_CTRLA_ENABLE) {
-		/* Module have to be disabled before initialization. Abort. */
-		return STATUS_ERR_DENIED;
-	}
 
 #if USART_CALLBACK_MODE == true
 	/* Initialize parameters */
