@@ -3,7 +3,7 @@
  *
  * \brief Board configuration.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -49,5 +49,10 @@
 
 /** Configure UART pins */
 #define CONF_BOARD_UART_CONSOLE
+
+/** LED Pin definitions */
+#define LED0 LED0_GPIO
+#define LED1 LED1_GPIO
+#define LED2 LED2_GPIO
 
 #endif /* CONF_BOARD_H_INCLUDED */

@@ -3,7 +3,7 @@
  *
  * \brief Arduino Due/X board init.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -45,6 +45,7 @@
 #include "board.h"
 #include "conf_board.h"
 #include "gpio.h"
+#include "ioport.h"
 
 void board_init(void)
 {
@@ -53,6 +54,11 @@ void board_init(void)
 	WDT->WDT_MR = WDT_MR_WDDIS;
 #endif
 
+	/* GPIO has been deprecated, the old code just keeps it for compatibility.
+	 * In new designs IOPORT is used instead.
+	 * Here IOPORT must be initialized for others to use before setting up IO.
+	 */
+	ioport_init();
 	/* Configure LED pins */
 	gpio_configure_pin(LED0_GPIO, LED0_FLAGS);
 	gpio_configure_pin(LED1_GPIO, LED1_FLAGS);

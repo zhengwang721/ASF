@@ -104,13 +104,11 @@ _STD_END
 
 #elif (defined(__GNUC__) && !XMEGA && !MEGA)
 
-int _write (int file, char * ptr, int len); // Remove GCC compiler warning
+int __attribute__((weak))
+_write (int file, const char *ptr, int len);
 
 int __attribute__((weak))
-_write (int file, char * ptr, int len);
-
-int __attribute__((weak))
-_write (int file, char * ptr, int len)
+_write (int file, const char *ptr, int len)
 {
 	int nChars = 0;
 

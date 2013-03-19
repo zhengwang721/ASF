@@ -3,7 +3,7 @@
  *
  * \brief FreeRTOS with lwIP example.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -55,7 +55,7 @@
  *
  * \section Requirements
  *
- * This package can be used with SAM3X evaluation kits.
+ * This package can be used with SAM3X-EK and SAM4E-EK.
  *
  * \section Description
  *
@@ -108,13 +108,28 @@
 #include "netif/etharp.h"
 #include "flash.h"
 #include "sysclk.h"
-#include "gpio.h"
+#include "ioport.h"
 #include "uart_serial.h"
 #include "stdio_serial.h"
 #include <compiler.h>
+#include "led.h"
+#include "conf_board.h"
 
 #define TASK_LED_STACK_SIZE                (128 / sizeof(portSTACK_TYPE))
 #define TASK_LED_STACK_PRIORITY            (tskIDLE_PRIORITY)
+
+/**
+ * \brief Set peripheral mode for IOPORT pins.
+ * It will configure port mode and disable pin mode (but enable peripheral).
+ * \param port IOPORT port to configure
+ * \param masks IOPORT pin masks to configure
+ * \param mode Mode masks to configure for the specified pin (\ref ioport_modes)
+ */
+#define ioport_set_port_peripheral_mode(port, masks, mode) \
+	do {\
+		ioport_set_port_mode(port, masks, mode);\
+		ioport_disable_port(port, masks);\
+	} while (0)
 
 extern void vApplicationStackOverflowHook(xTaskHandle *pxTask,
 		signed char *pcTaskName);
@@ -167,7 +182,7 @@ extern void vApplicationTickHook(void)
 static void task_led(void *pvParameters)
 {
 	for (;;) {
-		gpio_toggle_pin(LED0_GPIO);
+		LED_Toggle(LED0);
 		vTaskDelay(1000);
 	}
 }
@@ -183,7 +198,8 @@ static void configure_console(void)
 	};
 
 	/* Configure UART pins */
-	gpio_configure_group(PINS_UART_PIO, PINS_UART, PINS_UART_FLAGS);
+	ioport_set_port_peripheral_mode(PINS_UART0_PORT, PINS_UART0,
+			PINS_UART0_MASK);
 
 	/* Configure console UART. */
 	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
@@ -215,7 +231,17 @@ int main(void)
 
 	/* Initialize the console uart */
 	configure_console();
-	gpio_configure_pin(LED0_GPIO, LED0_FLAGS);
+
+	/* Configure the pins connected to LEDs as output and set their
+	 * default initial state to high (LEDs off).
+	 */
+	ioport_set_pin_dir(LED0_GPIO, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(LED0_GPIO, LED0_INACTIVE_LEVEL);
+	ioport_set_pin_dir(LED1_GPIO, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(LED1_GPIO, LED1_INACTIVE_LEVEL);
+	ioport_set_pin_dir(LED2_GPIO, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(LED2_GPIO, LED2_INACTIVE_LEVEL);
+
 	/* Output demo infomation. */
 	printf("-- FreeRTOS with lwIP Example --\n\r");
 	printf("-- %s\n\r", BOARD_NAME);

@@ -17,6 +17,7 @@
 		<module type="meta" id="config.board.arduino_due_x.init#yes" caption="Arduino Due/X initialization support enabled">
 			<build type="c-source" value="init.c"/>
 			<require idref="common.services.basic.gpio"/>
+			<require idref="common.services.ioport"/>
 			<require idref="sam.drivers.pio"/>
 		</module>
 	</select-by-config>
