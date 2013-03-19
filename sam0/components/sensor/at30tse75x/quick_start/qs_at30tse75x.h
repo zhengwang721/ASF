@@ -41,6 +41,9 @@
  *
  */
 
-#include <asf.h>
-#include <conf_clocks.h>
-
+/**
+ * \page asfdoc_samd20_at30tse75x_qs Quick Start Guide for the SAMD20 AT30TSE75X Temperature Sensor Driver
+ *
+ * \snippet qs_at30tse75x.c qs
+ *
+ */
