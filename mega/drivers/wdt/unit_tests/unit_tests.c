@@ -143,12 +143,10 @@ static void run_interrupt_reset_test(const struct test_case *test)
   
   cpu_irq_disable();
   
-  /* Wait for WDT Timeout interrupt to get triggered */
-  delay_ms(300);
-  
   /* Check the interrupt flag is triggered after the timeout */
-  if(wdt_timeout_interrupt_flag_is_set())
-    wdt_int = true;
+  while(!wdt_timeout_interrupt_flag_is_set());
+  
+  wdt_int = true;
   
   /* Clear the interrupt flag */  
   wdt_timeout_interrupt_flag_clear();
