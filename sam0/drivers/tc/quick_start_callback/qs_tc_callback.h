@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 USART Interface Driver
+ * \brief SAMD20 TC Driver
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *

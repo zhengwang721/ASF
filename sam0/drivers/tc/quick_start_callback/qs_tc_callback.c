@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ TC Interrupt Driver
+ * \brief SAMD20 TC Callbac Driver
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
