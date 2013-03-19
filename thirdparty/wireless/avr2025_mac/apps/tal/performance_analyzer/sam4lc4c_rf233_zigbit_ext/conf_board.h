@@ -47,9 +47,8 @@
 /** Enable Com Port. */
 #define CONF_BOARD_COM_PORT
 #define CONF_BOARD_AT86RFX
-#define TRANSCEIVER_NAME    "AT86RF233"
 #define IC_TYPE             (0x00)
-#define MCU_SOC_NAME        "ATSAM4LC4C"
+
 
 
 #endif  /* CONF_BOARD_H_INCLUDED */
