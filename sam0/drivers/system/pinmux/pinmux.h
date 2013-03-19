@@ -393,7 +393,7 @@ void system_pinmux_group_set_output_drive(
  *
  * \return Currently selected peripheral index on the specified pin.
  */
-static uint8_t system_pinmux_pin_get_mux_position(
+static inline uint8_t system_pinmux_pin_get_mux_position(
 		const uint8_t gpio_pin)
 {
 	PortGroup *const port = system_pinmux_get_group_from_gpio_pin(gpio_pin);
