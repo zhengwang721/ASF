@@ -435,7 +435,7 @@ static inline void port_pin_toggle_output_level(
  * \section asfdoc_samd20_port_extra_dependencies Dependencies
  * This driver has the following dependencies:
  *
- *  - \ref asfdoc_samd20_pinmux_group "System Pin Multiplexer Driver"
+ *  - \ref asfdoc_samd20_system_pinmux_group "System Pin Multiplexer Driver"
  *
  *
  * \section asfdoc_samd20_port_extra_errata Errata

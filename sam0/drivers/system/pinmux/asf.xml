@@ -14,8 +14,9 @@
 		<build type="c-source" value="pinmux.c"/>
 
 		<build type="doxygen-entry-point" value="asfdoc_samd20_system_pinmux_group"/>
+		<build type="doxygen-example-path" value="quick_start"/>
 
-		<build type="header-file" subtype="example" value="quick_start/qs_pinmux_basic.h"/>
+		<build type="header-file" value="quick_start/qs_pinmux_basic.h"/>
 
 		<device-support value="samd20"/>
 

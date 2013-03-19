@@ -542,10 +542,10 @@ static inline void system_pinmux_pin_set_output_drive(
  * \page asfdoc_samd20_system_pinmux_exqsg Examples for PINMUX Driver
  *
  * This is a list of the available Quick Start guides (QSGs) and example
- * applications for \ref asfdoc_samd20_pinmux. QSGs are simple examples with
- * step-by-step instructions to configure and use this driver in a selection of
- * use cases. Note that QSGs can be compiled as a standalone application or be
- * added to the user application.
+ * applications for \ref asfdoc_samd20_system_pinmux_group. QSGs are simple
+ * examples with step-by-step instructions to configure and use this driver in a
+ * selection of use cases. Note that QSGs can be compiled as a standalone
+ * application or be added to the user application.
  *
  *  - \subpage asfdoc_samd20_system_pinmux_basic_use_case
  */

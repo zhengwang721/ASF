@@ -767,7 +767,7 @@ static inline void usart_disable_transceiver(
 * \section asfdoc_samd20_sercom_usart_extra_dependencies Dependencies
 * This driver has the following dependencies:
 *
-* - \ref asfdoc_samd20_pinmux_group "System Pin Multiplexer Driver"
+* - \ref asfdoc_samd20_system_pinmux_group "System Pin Multiplexer Driver"
 * - \ref asfdoc_samd20_system_clock_group "System clock configuration"
 *
 *

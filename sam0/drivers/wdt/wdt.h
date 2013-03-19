@@ -378,7 +378,7 @@ void wdt_reset_count(void);
  * \section asfdoc_samd20_wdt_extra_dependencies Dependencies
  * This driver has the following dependencies:
  *
- *  - \ref asfdoc_samd20_gclk_group "Generic Clock Driver"
+ *  - \ref asfdoc_samd20_system_clock_group "System Clock Driver"
  *
  *
  * \section asfdoc_samd20_wdt_extra_errata Errata
