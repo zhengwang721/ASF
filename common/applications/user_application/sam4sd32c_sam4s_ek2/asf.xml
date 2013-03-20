@@ -2,6 +2,7 @@
 	<project id="common.applications.user_application.sam4s_ek2" caption="SAM4S-EK2 template project" type="template">
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
+		<build type="header-file" value="conf_clock.h"/>
 		<require idref="common.applications.user_application"/>
 		<require idref="board.sam4s_ek2"/>
 		<generator value="as5_arm_template"/>

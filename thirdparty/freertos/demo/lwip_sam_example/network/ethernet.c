@@ -3,7 +3,7 @@
  *
  * \brief Ethernet management for the FreeRTOS with lwIP example.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -46,7 +46,6 @@
 /* Have to include gpio.h before FreeRTOS.h as long as FreeRTO redefines
  * the inline keyword to empty.
  */
-#include "gpio.h"
 
 /* Scheduler include files. */
 #include "FreeRTOS.h"
@@ -61,7 +60,12 @@
 #include "netif/ethernetif.h"
 #include "conf_eth.h"
 
+#if SAM3XA
 #include "emac.h"
+#else
+#include "gmac.h"
+#endif
+
 #include "ethernet_phy.h"
 
 #if (HTTP_USED == 1)

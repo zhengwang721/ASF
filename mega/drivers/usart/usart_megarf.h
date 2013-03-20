@@ -475,15 +475,7 @@ static inline bool usart_tx_is_complete(USART_t *usart)
  */
 static inline void usart_clear_tx_complete(USART_t *usart)
 {
-}
-
-/**
- * \brief Clear RX complete interrupt flag.
- * RX complete flag is clear after reading data data buffer.
- * \param usart The USART module.
- */
-static inline void usart_clear_rx_complete(USART_t *usart)
-{
+         usart->UCSRnA |=  USART_TXC_bm;
 }
 
 /**

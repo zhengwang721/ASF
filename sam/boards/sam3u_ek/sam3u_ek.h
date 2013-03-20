@@ -347,25 +347,28 @@
 #define JOYSTICK_RIGHT   1
 
 #define PIN_TC0_TIOA0       (PIO_PA1_IDX)
+#define PIN_TC0_TIOA0_MUX   (IOPORT_MODE_MUX_A)
 #define PIN_TC0_TIOA0_FLAGS (PIO_PERIPH_A | PIO_DEFAULT)
 
 #define PIN_TC0_TIOA1       (PIO_PB5_IDX)
+#define PIN_TC0_TIOA1_MUX   (IOPORT_MODE_MUX_A)
 #define PIN_TC0_TIOA1_FLAGS (PIO_PERIPH_A | PIO_DEFAULT)
 
-#define PIN_TC0_TIOA1_PIO     PIOB
+#define PIN_TC0_TIOA1_PIO   PIOB
 #define PIN_TC0_TIOA1_MASK  PIO_PB5
-#define PIN_TC0_TIOA1_ID      ID_PIOB
-#define PIN_TC0_TIOA1_TYPE   PIO_PERIPH_A
-#define PIN_TC0_TIOA1_ATTR   PIO_DEFAULT
+#define PIN_TC0_TIOA1_ID    ID_PIOB
+#define PIN_TC0_TIOA1_TYPE  PIO_PERIPH_A
+#define PIN_TC0_TIOA1_ATTR  PIO_DEFAULT
 
 #define PIN_TC0_TIOA2       (PIO_PA30_IDX)
+#define PIN_TC0_TIOA2_MUX   (IOPORT_MODE_MUX_B)
 #define PIN_TC0_TIOA2_FLAGS (PIO_INPUT | PIO_DEFAULT)
 
-#define PIN_TC0_TIOA2_PIO     PIOA
+#define PIN_TC0_TIOA2_PIO   PIOA
 #define PIN_TC0_TIOA2_MASK  PIO_PA30
-#define PIN_TC0_TIOA2_ID      ID_PIOA
-#define PIN_TC0_TIOA2_TYPE   PIO_INPUT
-#define PIN_TC0_TIOA2_ATTR   PIO_DEFAULT
+#define PIN_TC0_TIOA2_ID    ID_PIOA
+#define PIN_TC0_TIOA2_TYPE  PIO_INPUT
+#define PIN_TC0_TIOA2_ATTR  PIO_DEFAULT
 
 //! PWMC PWM0 pin definition.
 #define PIN_PWMC_PWMH0  {1 << 0, PIOB, ID_PIOB, PIO_PERIPH_A, PIO_DEFAULT}
@@ -443,7 +446,7 @@
 /** Identifier of SPI peripheral connected to the touchscreen controller. */
 #define BOARD_ADS7843_SPI_ID        ID_SPI
 /** Chip select connected to the touchscreen controller. */
-#define BOARD_ADS7843_SPI_NPCS      0
+#define BOARD_ADS7843_SPI_NPCS      2
 
 //! SSC pins definition.
 /** SSC pin Transmitter Data (TD) */
@@ -467,6 +470,7 @@
 
 //! PCK0
 #define PIN_PCK0        (PIO_PA21_IDX)
+#define PIN_PCK0_MUX    (IOPORT_MODE_MUX_B)
 #define PIN_PCK0_FLAGS  (PIO_PERIPH_B | PIO_DEFAULT)
 
 #define PIN_PCK_0_MASK PIO_PA21

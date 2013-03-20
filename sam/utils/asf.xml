@@ -27,15 +27,6 @@
 		</module>
 	</select-by-config>
 
-	<select-by-config id="sam.utils.fpu_used" name="config.compiler.armgcc.fpu_used" caption="SAM FPU usage" default="yes">
-		<module type="meta" id="sam.utils.fpu_used#no" caption="SAM with FPU used"/>
-		<module type="meta" id="sam.utils.fpu_used#yes" caption="SAM with FPU but not used">
-			<build type="build-config" subtype="assembler-flags" value="-mfloat-abi=softfp" toolchain="armgcc"/>
-			<build type="build-config" subtype="c-compiler-flags" value="-mfloat-abi=softfp" toolchain="armgcc"/>
-			<build type="build-config" subtype="c++-compiler-flags" value="-mfloat-abi=softfp" toolchain="armgcc"/>
-		</module>
-	</select-by-config>
-
 	<select-by-device id="sam.utils.fpu" caption="SAM FPU driver">
 		<!-- No FPU -->
 		<module type="driver" id="sam.utils.fpu#no_fpu" caption="SAM FPU driver">

@@ -16,6 +16,7 @@
 		</module>
 		<module type="meta" id="config.board.sam4s_xplained.init#yes" caption="SAM4S Xplained initialization support enabled">
 			<build type="c-source" value="init.c"/>
+			<require idref="common.services.ioport"/>
 			<require idref="common.services.basic.gpio"/>
 			<require idref="sam.drivers.pio"/>
 			<require idref="sam.drivers.pmc"/>

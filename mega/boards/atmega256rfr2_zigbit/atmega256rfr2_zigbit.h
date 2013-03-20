@@ -51,6 +51,9 @@
 
 # include "led.h"
 
+#define MCU_SOC_NAME        "ATMEGA256RFR2"
+#define BOARD_NAME          "ATZB-256RFR2-XPRO"
+
 #ifdef ZIGBIT_EXT
 
 #define LED0_GPIO                       IOPORT_CREATE_PIN(PORTD, 6)
