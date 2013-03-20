@@ -43,7 +43,7 @@
 #include "gfx_mono_null.h"
 
 /**
- * \ingroup gfx_mono_null
+ * \ingroup asfdoc_common2_gfx_mono_null
  * @{
  */
 

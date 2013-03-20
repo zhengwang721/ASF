@@ -47,7 +47,7 @@
 #include "gfx_mono_menu.h"
 
 /**
- * \ingroup gfx_mono_menu
+ * \ingroup asfdoc_common2_gfx_mono_menu
  * @{
  */
 

@@ -48,8 +48,8 @@
 #include "compiler.h"
 
 /**
- * \ingroup sam0_gfx_mono
- * \defgroup sam0_gfx_mono_font GFX Mono Font Library
+ * \ingroup asfdoc_common2_gfx_mono
+ * \defgroup asfdoc_common2_gfx_mono_font GFX Mono Font Library
  * This modules provides functionality for outputting a monochrome font
  * to a display.
  *
@@ -118,23 +118,23 @@ void gfx_mono_get_progmem_string_bounding_box(char PROGMEM_PTR_T str,
 /** @} */
 
 /**
- * \page sam0_gfx_mono_font_quickstart Quick Start Guide for the mono font service
+ * \page asfdoc_common2_gfx_mono_font_quickstart Quick Start Guide for the mono font service
  *
- * This is the quick start guide for the \ref sam0_gfx_mono_font
+ * This is the quick start guide for the \ref asfdoc_common2_gfx_mono_font
  * with step-by-step instructions on how to configure and use it for a specific
  * use case.
  *
- * \section sam0_gfx_mono_font_quickstart_basic Basic usage of the graphics service
+ * \section asfdoc_common2_gfx_mono_font_quickstart_basic Basic usage of the graphics service
  * This use case will demonstrate initializing the mono graphics service and
  * then draw a "Hello world!" sting on the display.
  *
- * \section sam0_gfx_mono_font_quickstart_depend Dependencies
+ * \section asfdoc_common2_gfx_mono_font_quickstart_depend Dependencies
  * In order to use this quick start, the following dependencies are needed:
  * - \ref asfdoc_samd20_system_group
- * - \ref sam0_gfx_mono_font
+ * - \ref asfdoc_common2_gfx_mono_font
  * - \ref conf_sysfont.h Containing the actual font.
  *
- * \section sam0_gfx_mono_font_basic_usage Usage steps
+ * \section asfdoc_common2_gfx_mono_font_basic_usage Usage steps
  * \subsection gfx_mono_font_basic_usage_code Example code
  * Add to, e.g., the main function in the application C-file:
  * \code
@@ -149,7 +149,7 @@ void gfx_mono_get_progmem_string_bounding_box(char PROGMEM_PTR_T str,
  *     }
  * \endcode
  *
- * \subsection sam0_gfx_mono_font_basic_usage Workflow
+ * \subsection asfdoc_common2_gfx_mono_font_basic_usage_workflow Workflow
  * -# Initialize system:
  *  - \code system_init(); \endcode
  * -# Initialize monochrome graphics service

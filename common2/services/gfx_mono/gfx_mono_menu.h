@@ -47,8 +47,8 @@
 #include "conf_menu.h"
 
 /**
- * \ingroup gfx_mono
- * \defgroup gfx_mono_menu Menu system for monochrome graphical displays
+ * \ingroup asfdoc_common2_gfx_mono
+ * \defgroup asfdoc_common2_gfx_mono_menu Menu system for monochrome graphical displays
  *
  * This module provides a simple menu system for monochrome graphical
  * displays.
@@ -56,7 +56,7 @@
  * Typical flow of an application using the menu system:
  *
  * 1) Define menu structure.\n
- * 2) Call gfx_mono_menu_init.\n
+ * 2) Call asfdoc_common2_gfx_mono_menu_init.\n
  * 3) Get user input.\n
  * 4) Update menu with user input using function \ref
  *    gfx_mono_menu_process_key.\n

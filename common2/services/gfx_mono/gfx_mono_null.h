@@ -48,8 +48,8 @@
 #include "gfx_mono_framebuffer.h"
 
 /**
- * \ingroup gfx_mono
- * \defgroup gfx_mono_null NULL display device
+ * \ingroup asfdoc_common2_gfx_mono
+ * \defgroup asfdoc_common2_gfx_mono_null NULL display device
  *
  * This module provides empty read/write functions to a null device
  * (framebuffer in RAM), removing the need for an actual display or
