@@ -1043,11 +1043,11 @@ static inline void gmac_select_mii_mode(Gmac* p_gmac, gmac_mii_mode_t mode)
 	switch (mode) {
 		case GMAC_PHY_MII:
 		case GMAC_PHY_RMII:
-			p_gmac->GMAC_UR |= GMAC_UR_RGMII;
+			p_gmac->GMAC_UR |= GMAC_UR_RMIIMII;
 		break;
 
 		default:
-			p_gmac->GMAC_UR &= ~GMAC_UR_RGMII;
+			p_gmac->GMAC_UR &= ~GMAC_UR_RMIIMII;
 		break;
 	}
 }
