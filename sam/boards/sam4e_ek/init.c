@@ -258,7 +258,7 @@ void board_init(void)
 #endif
 #endif
 
-#ifdef CONF_BOARD_TWI0
+#if (defined(CONF_BOARD_TWI0) || defined(CONF_BOARD_QTOUCH))
 	ioport_set_pin_peripheral_mode(TWI0_DATA_GPIO, TWI0_DATA_FLAGS);
 	ioport_set_pin_peripheral_mode(TWI0_CLK_GPIO, TWI0_CLK_FLAGS);
 #endif
@@ -341,5 +341,11 @@ void board_init(void)
 	/* Configure ISO7816 interface TXD & SCK pin */
 	ioport_set_pin_peripheral_mode(PIN_USART1_TXD_IDX, PIN_USART1_TXD_FLAGS);
 	ioport_set_pin_peripheral_mode(PIN_USART1_SCK_IDX, PIN_USART1_SCK_FLAGS);
+#endif
+
+#ifdef CONF_BOARD_QTOUCH
+	/* Configure CHANGE pin for QTouch device */
+	ioport_set_pin_input_mode(BOARD_QT_CHANGE_PIN_IDX, BOARD_QT_CHANGE_PIN_FLAGS,
+			BOARD_QT_CHANGE_PIN_SENSE);
 #endif
 }
