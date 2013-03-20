@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAMD20 GPIO Port Driver Quick Start
+ * \brief SAMD20 Xplained PRO board configuration.
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,52 +40,8 @@
  * \asf_license_stop
  *
  */
-#include <asf.h>
 
-void config_port_pins(void);
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-//! [setup]
-void config_port_pins(void)
-{
-//! [setup_1]
-	struct port_config pin_conf;
-//! [setup_1]
-//! [setup_2]
-	port_get_config_defaults(&pin_conf);
-//! [setup_2]
-
-//! [setup_3]
-	pin_conf.direction  = PORT_PIN_DIR_INPUT;
-	pin_conf.input_pull = PORT_PIN_PULL_UP;
-//! [setup_3]
-//! [setup_4]
-	port_pin_set_config(41, &pin_conf);
-//! [setup_4]
-
-//! [setup_5]
-	pin_conf.direction = PORT_PIN_DIR_OUTPUT;
-//! [setup_5]
-//! [setup_6]
-	port_pin_set_config(40, &pin_conf);
-//! [setup_6]
-}
-//! [setup]
-
-int main(void)
-{
-	//! [setup_init]
-	config_port_pins();
-	//! [setup_init]
-
-	//! [main]
-	while (true) {
-		//! [main_1]
-		bool pin_state = port_pin_get_input_level(41);
-		//! [main_1]
-
-		//! [main_2]
-		port_pin_set_output_level(40, !pin_state);
-		//! [main_2]
-	}
-	//! [main]
-}
+#endif /* CONF_BOARD_H_INCLUDED */
