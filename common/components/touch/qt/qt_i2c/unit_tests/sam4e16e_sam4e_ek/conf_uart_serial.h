@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief ARM functions for busy-wait delay loops
+ * \brief Serial USART service configuration.
  *
- * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,18 +41,9 @@
  *
  */
 
-#include "cycle_counter.h"
+#ifndef CONF_USART_SERIAL_H
+#define CONF_USART_SERIAL_H
 
-// Delay loop is put to SRAM so that FWS will not affect delay time
-OPTIMIZE_HIGH
-RAMFUNC
-void portable_delay_cycles(unsigned long n)
-{
-	UNUSED(n);
+/* Intentionally empty */
 
-	__asm (
-		"loop: DMB	\n"
-		"SUBS R0, R0, #1  \n"
-		"BNE.N loop         "
-	);
-}
+#endif/* CONF_USART_SERIAL_H_INCLUDED */

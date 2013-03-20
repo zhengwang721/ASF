@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief ARM functions for busy-wait delay loops
+ * \brief Configuration for QTouch component with I2C interface.
  *
- * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,19 +40,13 @@
  * \asf_license_stop
  *
  */
+#ifndef CONF_QT_I2C_H_INCLUDED
+#define CONF_QT_I2C_H_INCLUDED
 
-#include "cycle_counter.h"
+/**
+ * Select one of the QT device from support list,
+ * \ref qt_device_i2c_support_list (eg: QT2160)
+ */
+#define CONF_QT_DEVICE            QT2160
 
-// Delay loop is put to SRAM so that FWS will not affect delay time
-OPTIMIZE_HIGH
-RAMFUNC
-void portable_delay_cycles(unsigned long n)
-{
-	UNUSED(n);
-
-	__asm (
-		"loop: DMB	\n"
-		"SUBS R0, R0, #1  \n"
-		"BNE.N loop         "
-	);
-}
+#endif /* CONF_QT_I2C_H_INCLUDED */

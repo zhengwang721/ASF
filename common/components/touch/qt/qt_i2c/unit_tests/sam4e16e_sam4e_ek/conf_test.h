@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief ARM functions for busy-wait delay loops
+ * \brief Unit test configuration.
  *
- * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,18 +41,64 @@
  *
  */
 
-#include "cycle_counter.h"
+#ifndef CONF_TEST_H_INCLUDED
+#define CONF_TEST_H_INCLUDED
 
-// Delay loop is put to SRAM so that FWS will not affect delay time
-OPTIMIZE_HIGH
-RAMFUNC
-void portable_delay_cycles(unsigned long n)
+/** USART Interface */
+#define CONF_TEST_USART      CONSOLE_UART
+/** Baudrate setting */
+#define CONF_TEST_BAUDRATE   115200
+/** Parity setting */
+#define CONF_TEST_PARITY     UART_MR_PAR_NO
+
+/**
+ * \brief Set QTouch parameter for the unit test.
+ *
+ * \param setup_block Pointer to setup block buffer.
+ */
+static void ut_set_qt_param(struct qt_setup_block *setup_block)
 {
-	UNUSED(n);
+	/*
+	 * Set parameter for QT slider.
+	 */
+	setup_block->slider_num_keys = 7; /* X0~X6 are for slider, total 7  */
+	setup_block->slider_resolution = QT_SLIDER_RESOLUTION_7_BIT;
 
-	__asm (
-		"loop: DMB	\n"
-		"SUBS R0, R0, #1  \n"
-		"BNE.N loop         "
-	);
+	/*
+	 * Set all GPIO as output with low level.
+	 */
+	setup_block->gpio_direction = 0x1C; /* 0x1C is for GPIO1~GPIO3 */
+	setup_block->gpio_gpo_drive2 = 0x0;
 }
+
+/**
+ * \brief Check if any key pressed.
+ *
+ * \param qt_status Pointer to QT status buffer.
+ *
+ * \retval true Some keys pressed.
+ * \retval false No key pressed.
+ */
+static bool ut_is_any_key_pressed(struct qt_status *qt_status)
+{
+#define QT_LEFT_KEY_MASK     0x01
+#define QT_RIGHT_KEY_MASK    0x02
+
+	bool key_pressed = false;
+
+	if (qt_status->key_status_2 & QT_LEFT_KEY_MASK) {
+		key_pressed = true;
+	}
+
+	if (qt_status->key_status_2 & QT_RIGHT_KEY_MASK) {
+		key_pressed = true;
+	}
+
+	if (qt_status->general_status & QT_GENERAL_STATUS_SDET) {
+		key_pressed = true;
+	}
+
+	return key_pressed;
+}
+
+#endif /* CONF_TEST_H_INCLUDED */
