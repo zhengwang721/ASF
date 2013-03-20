@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -51,123 +51,103 @@
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 /** \brief GmacSa hardware registers */
 typedef struct {
-  RwReg   GMAC_SAB;        /**< \brief (GmacSa Offset: 0x0) Specific Address 1 Bottom [31:0] Register */
-  RwReg   GMAC_SAT;        /**< \brief (GmacSa Offset: 0x4) Specific Address 1 Top [47:32] Register */
+  RwReg   GMAC_SAB;       /**< \brief (GmacSa Offset: 0x0) Specific Address 1 Bottom [31:0] Register */
+  RwReg   GMAC_SAT;       /**< \brief (GmacSa Offset: 0x4) Specific Address 1 Top [47:32] Register */
 } GmacSa;
 /** \brief Gmac hardware registers */
 #define GMACSA_NUMBER 4
 typedef struct {
-  RwReg   GMAC_NCR;        /**< \brief (Gmac Offset: 0x000) Network Control Register */
-  RwReg   GMAC_NCFGR;      /**< \brief (Gmac Offset: 0x004) Network Configuration Register */
-  RoReg   GMAC_NSR;        /**< \brief (Gmac Offset: 0x008) Network Status Register */
-  RwReg   GMAC_UR;         /**< \brief (Gmac Offset: 0x00C) User Register */
-  RwReg   GMAC_DCFGR;      /**< \brief (Gmac Offset: 0x010) DMA Configuration Register */
-  RwReg   GMAC_TSR;        /**< \brief (Gmac Offset: 0x014) Transmit Status Register */
-  RwReg   GMAC_RBQB;       /**< \brief (Gmac Offset: 0x018) Receive Buffer Queue Base Address */
-  RwReg   GMAC_TBQB;       /**< \brief (Gmac Offset: 0x01C) Transmit Buffer Queue Base Address */
-  RwReg   GMAC_RSR;        /**< \brief (Gmac Offset: 0x020) Receive Status Register */
-  RoReg   GMAC_ISR;        /**< \brief (Gmac Offset: 0x024) Interrupt Status Register */
-  WoReg   GMAC_IER;        /**< \brief (Gmac Offset: 0x028) Interrupt Enable Register */
-  WoReg   GMAC_IDR;        /**< \brief (Gmac Offset: 0x02C) Interrupt Disable Register */
-  RoReg   GMAC_IMR;        /**< \brief (Gmac Offset: 0x030) Interrupt Mask Register */
-  RwReg   GMAC_MAN;        /**< \brief (Gmac Offset: 0x034) PHY Maintenance Register */
-  RoReg   GMAC_RPQ;        /**< \brief (Gmac Offset: 0x038) Received Pause Quantum Register */
-  RwReg   GMAC_TPQ;        /**< \brief (Gmac Offset: 0x03C) Transmit Pause Quantum Register */
-  RwReg   GMAC_TPSF;       /**< \brief (Gmac Offset: 0x040) TX Partial Store and Forward Register */
-  RwReg   GMAC_RPSF;       /**< \brief (Gmac Offset: 0x044) RX Partial Store and Forward Register */
-  RoReg   Reserved1[14];
-  RwReg   GMAC_HRB;        /**< \brief (Gmac Offset: 0x080) Hash Register Bottom [31:0] */
-  RwReg   GMAC_HRT;        /**< \brief (Gmac Offset: 0x084) Hash Register Top [63:32] */
+  RwReg   GMAC_NCR;       /**< \brief (Gmac Offset: 0x000) Network Control Register */
+  RwReg   GMAC_NCFGR;     /**< \brief (Gmac Offset: 0x004) Network Configuration Register */
+  RoReg   GMAC_NSR;       /**< \brief (Gmac Offset: 0x008) Network Status Register */
+  RwReg   GMAC_UR;        /**< \brief (Gmac Offset: 0x00C) User Register */
+  RwReg   GMAC_DCFGR;     /**< \brief (Gmac Offset: 0x010) DMA Configuration Register */
+  RwReg   GMAC_TSR;       /**< \brief (Gmac Offset: 0x014) Transmit Status Register */
+  RwReg   GMAC_RBQB;      /**< \brief (Gmac Offset: 0x018) Receive Buffer Queue Base Address */
+  RwReg   GMAC_TBQB;      /**< \brief (Gmac Offset: 0x01C) Transmit Buffer Queue Base Address */
+  RwReg   GMAC_RSR;       /**< \brief (Gmac Offset: 0x020) Receive Status Register */
+  RoReg   GMAC_ISR;       /**< \brief (Gmac Offset: 0x024) Interrupt Status Register */
+  WoReg   GMAC_IER;       /**< \brief (Gmac Offset: 0x028) Interrupt Enable Register */
+  WoReg   GMAC_IDR;       /**< \brief (Gmac Offset: 0x02C) Interrupt Disable Register */
+  RoReg   GMAC_IMR;       /**< \brief (Gmac Offset: 0x030) Interrupt Mask Register */
+  RwReg   GMAC_MAN;       /**< \brief (Gmac Offset: 0x034) PHY Maintenance Register */
+  RoReg   GMAC_RPQ;       /**< \brief (Gmac Offset: 0x038) Received Pause Quantum Register */
+  RwReg   GMAC_TPQ;       /**< \brief (Gmac Offset: 0x03C) Transmit Pause Quantum Register */
+  RoReg   Reserved1[16];
+  RwReg   GMAC_HRB;       /**< \brief (Gmac Offset: 0x080) Hash Register Bottom [31:0] */
+  RwReg   GMAC_HRT;       /**< \brief (Gmac Offset: 0x084) Hash Register Top [63:32] */
   GmacSa  GMAC_SA[GMACSA_NUMBER]; /**< \brief (Gmac Offset: 0x088) 1 .. 4 */
-  RwReg   GMAC_TIDM[4];    /**< \brief (Gmac Offset: 0x0A8) Type ID Match 1 Register */
-  RwReg   GMAC_WOL;        /**< \brief (Gmac Offset: 0x0B8) Wake on LAN Register */
-  RwReg   GMAC_IPGS;       /**< \brief (Gmac Offset: 0x0BC) IPG Stretch Register */
-  RwReg   GMAC_SVLAN;      /**< \brief (Gmac Offset: 0x0C0) Stacked VLAN Register */
-  RwReg   GMAC_TPFCP;      /**< \brief (Gmac Offset: 0x0C4) Transmit PFC Pause Register */
-  RwReg   GMAC_SAMB1;      /**< \brief (Gmac Offset: 0x0C8) Specific Address 1 Mask Bottom [31:0] Register */
-  RwReg   GMAC_SAMT1;      /**< \brief (Gmac Offset: 0x0CC) Specific Address 1 Mask Top [47:32] Register */
-  RoReg   Reserved2[12];
-  RoReg   GMAC_OTLO;       /**< \brief (Gmac Offset: 0x100) Octets Transmitted [31:0] Register */
-  RoReg   GMAC_OTHI;       /**< \brief (Gmac Offset: 0x104) Octets Transmitted [47:32] Register */
-  RoReg   GMAC_FT;         /**< \brief (Gmac Offset: 0x108) Frames Transmitted Register */
-  RoReg   GMAC_BCFT;       /**< \brief (Gmac Offset: 0x10C) Broadcast Frames Transmitted Register */
-  RoReg   GMAC_MFT;        /**< \brief (Gmac Offset: 0x110) Multicast Frames Transmitted Register */
-  RoReg   GMAC_PFT;        /**< \brief (Gmac Offset: 0x114) Pause Frames Transmitted Register */
-  RoReg   GMAC_BFT64;      /**< \brief (Gmac Offset: 0x118) 64 Byte Frames Transmitted Register */
-  RoReg   GMAC_TBFT127;    /**< \brief (Gmac Offset: 0x11C) 65 to 127 Byte Frames Transmitted Register */
-  RoReg   GMAC_TBFT255;    /**< \brief (Gmac Offset: 0x120) 128 to 255 Byte Frames Transmitted Register */
-  RoReg   GMAC_TBFT511;    /**< \brief (Gmac Offset: 0x124) 256 to 511 Byte Frames Transmitted Register */
-  RoReg   GMAC_TBFT1023;   /**< \brief (Gmac Offset: 0x128) 512 to 1023 Byte Frames Transmitted Register */
-  RoReg   GMAC_TBFT1518;   /**< \brief (Gmac Offset: 0x12C) 1024 to 1518 Byte Frames Transmitted Register */
-  RoReg   GMAC_GTBFT1518;  /**< \brief (Gmac Offset: 0x130) Greater Than 1518 Byte Frames Transmitted Register */
-  RoReg   GMAC_TUR;        /**< \brief (Gmac Offset: 0x134) Transmit Under Runs Register */
-  RoReg   GMAC_SCF;        /**< \brief (Gmac Offset: 0x138) Single Collision Frames Register */
-  RoReg   GMAC_MCF;        /**< \brief (Gmac Offset: 0x13C) Multiple Collision Frames Register */
-  RoReg   GMAC_EC;         /**< \brief (Gmac Offset: 0x140) Excessive Collisions Register */
-  RoReg   GMAC_LC;         /**< \brief (Gmac Offset: 0x144) Late Collisions Register */
-  RoReg   GMAC_DTF;        /**< \brief (Gmac Offset: 0x148) Deferred Transmission Frames Register */
-  RoReg   GMAC_CSE;        /**< \brief (Gmac Offset: 0x14C) Carrier Sense Errors Register */
-  RoReg   GMAC_ORLO;       /**< \brief (Gmac Offset: 0x150) Octets Received [31:0] Received */
-  RoReg   GMAC_ORHI;       /**< \brief (Gmac Offset: 0x154) Octets Received [47:32] Received */
-  RoReg   GMAC_FR;         /**< \brief (Gmac Offset: 0x158) Frames Received Register */
-  RoReg   GMAC_BCFR;       /**< \brief (Gmac Offset: 0x15C) Broadcast Frames Received Register */
-  RoReg   GMAC_MFR;        /**< \brief (Gmac Offset: 0x160) Multicast Frames Received Register */
-  RoReg   GMAC_PFR;        /**< \brief (Gmac Offset: 0x164) Pause Frames Received Register */
-  RoReg   GMAC_BFR64;      /**< \brief (Gmac Offset: 0x168) 64 Byte Frames Received Register */
-  RoReg   GMAC_TBFR127;    /**< \brief (Gmac Offset: 0x16C) 65 to 127 Byte Frames Received Register */
-  RoReg   GMAC_TBFR255;    /**< \brief (Gmac Offset: 0x170) 128 to 255 Byte Frames Received Register */
-  RoReg   GMAC_TBFR511;    /**< \brief (Gmac Offset: 0x174) 256 to 511Byte Frames Received Register */
-  RoReg   GMAC_TBFR1023;   /**< \brief (Gmac Offset: 0x178) 512 to 1023 Byte Frames Received Register */
-  RoReg   GMAC_TBFR1518;   /**< \brief (Gmac Offset: 0x17C) 1024 to 1518 Byte Frames Received Register */
-  RoReg   GMAC_TMXBFR;     /**< \brief (Gmac Offset: 0x180) 1519 to Maximum Byte Frames Received Register */
-  RoReg   GMAC_UFR;        /**< \brief (Gmac Offset: 0x184) Undersize Frames Received Register */
-  RoReg   GMAC_OFR;        /**< \brief (Gmac Offset: 0x188) Oversize Frames Received Register */
-  RoReg   GMAC_JR;         /**< \brief (Gmac Offset: 0x18C) Jabbers Received Register */
-  RoReg   GMAC_FCSE;       /**< \brief (Gmac Offset: 0x190) Frame Check Sequence Errors Register */
-  RoReg   GMAC_LFFE;       /**< \brief (Gmac Offset: 0x194) Length Field Frame Errors Register */
-  RoReg   GMAC_RSE;        /**< \brief (Gmac Offset: 0x198) Receive Symbol Errors Register */
-  RoReg   GMAC_AE;         /**< \brief (Gmac Offset: 0x19C) Alignment Errors Register */
-  RoReg   GMAC_RRE;        /**< \brief (Gmac Offset: 0x1A0) Receive Resource Errors Register */
-  RoReg   GMAC_ROE;        /**< \brief (Gmac Offset: 0x1A4) Receive Overrun Register */
-  RoReg   GMAC_IHCE;       /**< \brief (Gmac Offset: 0x1A8) IP Header Checksum Errors Register */
-  RoReg   GMAC_TCE;        /**< \brief (Gmac Offset: 0x1AC) TCP Checksum Errors Register */
-  RoReg   GMAC_UCE;        /**< \brief (Gmac Offset: 0x1B0) UDP Checksum Errors Register */
-  RoReg   Reserved3[5];
-  RwReg   GMAC_TSSS;       /**< \brief (Gmac Offset: 0x1C8) 1588 Timer Sync Strobe Seconds Register */
-  RwReg   GMAC_TSSN;       /**< \brief (Gmac Offset: 0x1CC) 1588 Timer Sync Strobe Nanoseconds Register */
-  RwReg   GMAC_TS;         /**< \brief (Gmac Offset: 0x1D0) 1588 Timer Seconds Register */
-  RwReg   GMAC_TN;         /**< \brief (Gmac Offset: 0x1D4) 1588 Timer Nanoseconds Register */
-  WoReg   GMAC_TA;         /**< \brief (Gmac Offset: 0x1D8) 1588 Timer Adjust Register */
-  RwReg   GMAC_TI;         /**< \brief (Gmac Offset: 0x1DC) 1588 Timer Increment Register */
-  RoReg   GMAC_EFTS;       /**< \brief (Gmac Offset: 0x1E0) PTP Event Frame Transmitted Seconds */
-  RoReg   GMAC_EFTN;       /**< \brief (Gmac Offset: 0x1E4) PTP Event Frame Transmitted Nanoseconds */
-  RoReg   GMAC_EFRS;       /**< \brief (Gmac Offset: 0x1E8) PTP Event Frame Received Seconds */
-  RoReg   GMAC_EFRN;       /**< \brief (Gmac Offset: 0x1EC) PTP Event Frame Received Nanoseconds */
-  RoReg   GMAC_PEFTS;      /**< \brief (Gmac Offset: 0x1F0) PTP Peer Event Frame Transmitted Seconds */
-  RoReg   GMAC_PEFTN;      /**< \brief (Gmac Offset: 0x1F4) PTP Peer Event Frame Transmitted Nanoseconds */
-  RoReg   GMAC_PEFRS;      /**< \brief (Gmac Offset: 0x1F8) PTP Peer Event Frame Received Seconds */
-  RoReg   GMAC_PEFRN;      /**< \brief (Gmac Offset: 0x1FC) PTP Peer Event Frame Received Nanoseconds */
-  RoReg   Reserved4[128];
-  RoReg   GMAC_ISRPQ[7];   /**< \brief (Gmac Offset: 0x400) Interrupt Status Register Priority Queue */
-  RoReg   Reserved5[9];
-  RwReg   GMAC_TBQBAPQ[7]; /**< \brief (Gmac Offset: 0x440) Transmit Buffer Queue Base Address Priority Queue */
-  RoReg   Reserved6[9];
-  RwReg   GMAC_RBQBAPQ[7]; /**< \brief (Gmac Offset: 0x480) Receive Buffer Queue Base Address Priority Queue */
-  RoReg   Reserved7[1];
-  RwReg   GMAC_RBSRPQ[7];  /**< \brief (Gmac Offset: 0x4A0) Receive Buffer Size Register Priority Queue */
-  RoReg   Reserved8[17];
-  RwReg   GMAC_ST1RPQ[16]; /**< \brief (Gmac Offset: 0x500) Screening Type1 Register Priority Queue */
-  RwReg   GMAC_ST2RPQ[16]; /**< \brief (Gmac Offset: 0x540) Screening Type2 Register Priority Queue */
-  RoReg   Reserved9[32];
-  WoReg   GMAC_IERPQ[7];   /**< \brief (Gmac Offset: 0x600) Interrupt Enable Register Priority Queue */
-  RoReg   Reserved10[1];
-  WoReg   GMAC_IDRPQ[7];   /**< \brief (Gmac Offset: 0x620) Interrupt Disable Register Priority Queue */
-  RoReg   Reserved11[1];
-  RwReg   GMAC_IMRPQ[7];   /**< \brief (Gmac Offset: 0x640) Interrupt Mask Register Priority Queue */
+  RwReg   GMAC_TIDM[4];   /**< \brief (Gmac Offset: 0x0A8) Type ID Match 1 Register */
+  RoReg   Reserved2[1];
+  RwReg   GMAC_IPGS;      /**< \brief (Gmac Offset: 0x0BC) IPG Stretch Register */
+  RwReg   GMAC_SVLAN;     /**< \brief (Gmac Offset: 0x0C0) Stacked VLAN Register */
+  RwReg   GMAC_TPFCP;     /**< \brief (Gmac Offset: 0x0C4) Transmit PFC Pause Register */
+  RwReg   GMAC_SAMB1;     /**< \brief (Gmac Offset: 0x0C8) Specific Address 1 Mask Bottom [31:0] Register */
+  RwReg   GMAC_SAMT1;     /**< \brief (Gmac Offset: 0x0CC) Specific Address 1 Mask Top [47:32] Register */
+  RoReg   Reserved3[12];
+  RoReg   GMAC_OTLO;      /**< \brief (Gmac Offset: 0x100) Octets Transmitted [31:0] Register */
+  RoReg   GMAC_OTHI;      /**< \brief (Gmac Offset: 0x104) Octets Transmitted [47:32] Register */
+  RoReg   GMAC_FT;        /**< \brief (Gmac Offset: 0x108) Frames Transmitted Register */
+  RoReg   GMAC_BCFT;      /**< \brief (Gmac Offset: 0x10C) Broadcast Frames Transmitted Register */
+  RoReg   GMAC_MFT;       /**< \brief (Gmac Offset: 0x110) Multicast Frames Transmitted Register */
+  RoReg   GMAC_PFT;       /**< \brief (Gmac Offset: 0x114) Pause Frames Transmitted Register */
+  RoReg   GMAC_BFT64;     /**< \brief (Gmac Offset: 0x118) 64 Byte Frames Transmitted Register */
+  RoReg   GMAC_TBFT127;   /**< \brief (Gmac Offset: 0x11C) 65 to 127 Byte Frames Transmitted Register */
+  RoReg   GMAC_TBFT255;   /**< \brief (Gmac Offset: 0x120) 128 to 255 Byte Frames Transmitted Register */
+  RoReg   GMAC_TBFT511;   /**< \brief (Gmac Offset: 0x124) 256 to 511 Byte Frames Transmitted Register */
+  RoReg   GMAC_TBFT1023;  /**< \brief (Gmac Offset: 0x128) 512 to 1023 Byte Frames Transmitted Register */
+  RoReg   GMAC_TBFT1518;  /**< \brief (Gmac Offset: 0x12C) 1024 to 1518 Byte Frames Transmitted Register */
+  RoReg   GMAC_GTBFT1518; /**< \brief (Gmac Offset: 0x130) Greater Than 1518 Byte Frames Transmitted Register */
+  RoReg   GMAC_TUR;       /**< \brief (Gmac Offset: 0x134) Transmit Under Runs Register */
+  RoReg   GMAC_SCF;       /**< \brief (Gmac Offset: 0x138) Single Collision Frames Register */
+  RoReg   GMAC_MCF;       /**< \brief (Gmac Offset: 0x13C) Multiple Collision Frames Register */
+  RoReg   GMAC_EC;        /**< \brief (Gmac Offset: 0x140) Excessive Collisions Register */
+  RoReg   GMAC_LC;        /**< \brief (Gmac Offset: 0x144) Late Collisions Register */
+  RoReg   GMAC_DTF;       /**< \brief (Gmac Offset: 0x148) Deferred Transmission Frames Register */
+  RoReg   GMAC_CSE;       /**< \brief (Gmac Offset: 0x14C) Carrier Sense Errors Register */
+  RoReg   GMAC_ORLO;      /**< \brief (Gmac Offset: 0x150) Octets Received [31:0] Received */
+  RoReg   GMAC_ORHI;      /**< \brief (Gmac Offset: 0x154) Octets Received [47:32] Received */
+  RoReg   GMAC_FR;        /**< \brief (Gmac Offset: 0x158) Frames Received Register */
+  RoReg   GMAC_BCFR;      /**< \brief (Gmac Offset: 0x15C) Broadcast Frames Received Register */
+  RoReg   GMAC_MFR;       /**< \brief (Gmac Offset: 0x160) Multicast Frames Received Register */
+  RoReg   GMAC_PFR;       /**< \brief (Gmac Offset: 0x164) Pause Frames Received Register */
+  RoReg   GMAC_BFR64;     /**< \brief (Gmac Offset: 0x168) 64 Byte Frames Received Register */
+  RoReg   GMAC_TBFR127;   /**< \brief (Gmac Offset: 0x16C) 65 to 127 Byte Frames Received Register */
+  RoReg   GMAC_TBFR255;   /**< \brief (Gmac Offset: 0x170) 128 to 255 Byte Frames Received Register */
+  RoReg   GMAC_TBFR511;   /**< \brief (Gmac Offset: 0x174) 256 to 511Byte Frames Received Register */
+  RoReg   GMAC_TBFR1023;  /**< \brief (Gmac Offset: 0x178) 512 to 1023 Byte Frames Received Register */
+  RoReg   GMAC_TBFR1518;  /**< \brief (Gmac Offset: 0x17C) 1024 to 1518 Byte Frames Received Register */
+  RoReg   GMAC_TMXBFR;    /**< \brief (Gmac Offset: 0x180) 1519 to Maximum Byte Frames Received Register */
+  RoReg   GMAC_UFR;       /**< \brief (Gmac Offset: 0x184) Undersize Frames Received Register */
+  RoReg   GMAC_OFR;       /**< \brief (Gmac Offset: 0x188) Oversize Frames Received Register */
+  RoReg   GMAC_JR;        /**< \brief (Gmac Offset: 0x18C) Jabbers Received Register */
+  RoReg   GMAC_FCSE;      /**< \brief (Gmac Offset: 0x190) Frame Check Sequence Errors Register */
+  RoReg   GMAC_LFFE;      /**< \brief (Gmac Offset: 0x194) Length Field Frame Errors Register */
+  RoReg   GMAC_RSE;       /**< \brief (Gmac Offset: 0x198) Receive Symbol Errors Register */
+  RoReg   GMAC_AE;        /**< \brief (Gmac Offset: 0x19C) Alignment Errors Register */
+  RoReg   GMAC_RRE;       /**< \brief (Gmac Offset: 0x1A0) Receive Resource Errors Register */
+  RoReg   GMAC_ROE;       /**< \brief (Gmac Offset: 0x1A4) Receive Overrun Register */
+  RoReg   GMAC_IHCE;      /**< \brief (Gmac Offset: 0x1A8) IP Header Checksum Errors Register */
+  RoReg   GMAC_TCE;       /**< \brief (Gmac Offset: 0x1AC) TCP Checksum Errors Register */
+  RoReg   GMAC_UCE;       /**< \brief (Gmac Offset: 0x1B0) UDP Checksum Errors Register */
+  RoReg   Reserved4[5];
+  RwReg   GMAC_TSSS;      /**< \brief (Gmac Offset: 0x1C8) 1588 Timer Sync Strobe Seconds Register */
+  RwReg   GMAC_TSSN;      /**< \brief (Gmac Offset: 0x1CC) 1588 Timer Sync Strobe Nanoseconds Register */
+  RwReg   GMAC_TS;        /**< \brief (Gmac Offset: 0x1D0) 1588 Timer Seconds Register */
+  RwReg   GMAC_TN;        /**< \brief (Gmac Offset: 0x1D4) 1588 Timer Nanoseconds Register */
+  WoReg   GMAC_TA;        /**< \brief (Gmac Offset: 0x1D8) 1588 Timer Adjust Register */
+  RwReg   GMAC_TI;        /**< \brief (Gmac Offset: 0x1DC) 1588 Timer Increment Register */
+  RoReg   GMAC_EFTS;      /**< \brief (Gmac Offset: 0x1E0) PTP Event Frame Transmitted Seconds */
+  RoReg   GMAC_EFTN;      /**< \brief (Gmac Offset: 0x1E4) PTP Event Frame Transmitted Nanoseconds */
+  RoReg   GMAC_EFRS;      /**< \brief (Gmac Offset: 0x1E8) PTP Event Frame Received Seconds */
+  RoReg   GMAC_EFRN;      /**< \brief (Gmac Offset: 0x1EC) PTP Event Frame Received Nanoseconds */
+  RoReg   GMAC_PEFTS;     /**< \brief (Gmac Offset: 0x1F0) PTP Peer Event Frame Transmitted Seconds */
+  RoReg   GMAC_PEFTN;     /**< \brief (Gmac Offset: 0x1F4) PTP Peer Event Frame Transmitted Nanoseconds */
+  RoReg   GMAC_PEFRS;     /**< \brief (Gmac Offset: 0x1F8) PTP Peer Event Frame Received Seconds */
+  RoReg   GMAC_PEFRN;     /**< \brief (Gmac Offset: 0x1FC) PTP Peer Event Frame Received Nanoseconds */
 } Gmac;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 /* -------- GMAC_NCR : (GMAC Offset: 0x000) Network Control Register -------- */
-#define GMAC_NCR_LB (0x1u << 0) /**< \brief (GMAC_NCR) Loop Back */
 #define GMAC_NCR_LBL (0x1u << 1) /**< \brief (GMAC_NCR) Loop Back Local */
 #define GMAC_NCR_RXEN (0x1u << 2) /**< \brief (GMAC_NCR) Receive Enable */
 #define GMAC_NCR_TXEN (0x1u << 3) /**< \brief (GMAC_NCR) Transmit Enable */
@@ -195,8 +175,6 @@ typedef struct {
 #define GMAC_NCFGR_MTIHEN (0x1u << 6) /**< \brief (GMAC_NCFGR) Multicast Hash Enable */
 #define GMAC_NCFGR_UNIHEN (0x1u << 7) /**< \brief (GMAC_NCFGR) Unicast Hash Enable */
 #define GMAC_NCFGR_MAXFS (0x1u << 8) /**< \brief (GMAC_NCFGR) 1536 Maximum Frame Size */
-#define GMAC_NCFGR_GBE (0x1u << 10) /**< \brief (GMAC_NCFGR) Gigabit Mode Enable */
-#define GMAC_NCFGR_PIS (0x1u << 11) /**< \brief (GMAC_NCFGR) Physical Interface Select */
 #define GMAC_NCFGR_RTY (0x1u << 12) /**< \brief (GMAC_NCFGR) Retry Test */
 #define GMAC_NCFGR_PEN (0x1u << 13) /**< \brief (GMAC_NCFGR) Pause Enable */
 #define GMAC_NCFGR_RXBUFO_Pos 14
@@ -212,26 +190,21 @@ typedef struct {
 #define   GMAC_NCFGR_CLK_MCK_48 (0x3u << 18) /**< \brief (GMAC_NCFGR) MCK divided by 48 (MCK up to 120MHz) */
 #define   GMAC_NCFGR_CLK_MCK_64 (0x4u << 18) /**< \brief (GMAC_NCFGR) MCK divided by 64 (MCK up to 160 MHz) */
 #define   GMAC_NCFGR_CLK_MCK_96 (0x5u << 18) /**< \brief (GMAC_NCFGR) MCK divided by 96 (MCK up to 240 MHz) */
-#define   GMAC_NCFGR_CLK_MCK_128 (0x6u << 18) /**< \brief (GMAC_NCFGR) MCK divided by 128 (MCK up to 320 MHz) */
-#define   GMAC_NCFGR_CLK_MCK_224 (0x7u << 18) /**< \brief (GMAC_NCFGR) MCK divided by 224 (MCK up to 540 MHz) */
 #define GMAC_NCFGR_DBW_Pos 21
 #define GMAC_NCFGR_DBW_Msk (0x3u << GMAC_NCFGR_DBW_Pos) /**< \brief (GMAC_NCFGR) Data Bus Width */
-#define   GMAC_NCFGR_DBW_DBW32 (0x0u << 21) /**< \brief (GMAC_NCFGR) 32-bit data bus width */
-#define   GMAC_NCFGR_DBW_DBW64 (0x1u << 21) /**< \brief (GMAC_NCFGR) 64-bit data bus width */
+#define GMAC_NCFGR_DBW(value) ((GMAC_NCFGR_DBW_Msk & ((value) << GMAC_NCFGR_DBW_Pos)))
 #define GMAC_NCFGR_DCPF (0x1u << 23) /**< \brief (GMAC_NCFGR) Disable Copy of Pause Frames */
 #define GMAC_NCFGR_RXCOEN (0x1u << 24) /**< \brief (GMAC_NCFGR) Receive Checksum Offload Enable */
 #define GMAC_NCFGR_EFRHD (0x1u << 25) /**< \brief (GMAC_NCFGR) Enable Frames Received in Half Duplex */
 #define GMAC_NCFGR_IRXFCS (0x1u << 26) /**< \brief (GMAC_NCFGR) Ignore RX FCS */
 #define GMAC_NCFGR_IPGSEN (0x1u << 28) /**< \brief (GMAC_NCFGR) IP Stretch Enable */
 #define GMAC_NCFGR_RXBP (0x1u << 29) /**< \brief (GMAC_NCFGR) Receive Bad Preamble */
-#define GMAC_NCFGR_IRXER (0x1u << 30) /**< \brief (GMAC_NCFGR) Ignore IPG rx_er */
+#define GMAC_NCFGR_IRXER (0x1u << 30) /**< \brief (GMAC_NCFGR) Ignore IPG GRXER */
 /* -------- GMAC_NSR : (GMAC Offset: 0x008) Network Status Register -------- */
 #define GMAC_NSR_MDIO (0x1u << 1) /**< \brief (GMAC_NSR) MDIO Input Status */
 #define GMAC_NSR_IDLE (0x1u << 2) /**< \brief (GMAC_NSR) PHY Management Logic Idle */
 /* -------- GMAC_UR : (GMAC Offset: 0x00C) User Register -------- */
-#define GMAC_UR_RGMII (0x1u << 0) /**< \brief (GMAC_UR) RGMII Mode */
-#define GMAC_UR_HDFC (0x1u << 6) /**< \brief (GMAC_UR) Half Duplex Flow Control */
-#define GMAC_UR_BPDG (0x1u << 7) /**< \brief (GMAC_UR) BPDG Bypass Deglitchers */
+#define GMAC_UR_RMIIMII (0x1u << 0) /**< \brief (GMAC_UR)  */
 /* -------- GMAC_DCFGR : (GMAC Offset: 0x010) DMA Configuration Register -------- */
 #define GMAC_DCFGR_FBLDO_Pos 0
 #define GMAC_DCFGR_FBLDO_Msk (0x1fu << GMAC_DCFGR_FBLDO_Pos) /**< \brief (GMAC_DCFGR) Fixed Burst Length for DMA Data Operations: */
@@ -241,18 +214,10 @@ typedef struct {
 #define   GMAC_DCFGR_FBLDO_INCR16 (0x10u << 0) /**< \brief (GMAC_DCFGR) 1xxxx: Attempt to use INCR16 AHB bursts */
 #define GMAC_DCFGR_ESMA (0x1u << 6) /**< \brief (GMAC_DCFGR) Endian Swap Mode Enable for Management Descriptor Accesses */
 #define GMAC_DCFGR_ESPA (0x1u << 7) /**< \brief (GMAC_DCFGR) Endian Swap Mode Enable for Packet Data Accesses */
-#define GMAC_DCFGR_RXBMS_Pos 8
-#define GMAC_DCFGR_RXBMS_Msk (0x3u << GMAC_DCFGR_RXBMS_Pos) /**< \brief (GMAC_DCFGR) Receiver Packet Buffer Memory Size Select */
-#define   GMAC_DCFGR_RXBMS_EIGHTH (0x0u << 8) /**< \brief (GMAC_DCFGR) 1 Kbyte Memory Size */
-#define   GMAC_DCFGR_RXBMS_QUARTER (0x1u << 8) /**< \brief (GMAC_DCFGR) 2 Kbytes Memory Size */
-#define   GMAC_DCFGR_RXBMS_HALF (0x2u << 8) /**< \brief (GMAC_DCFGR) 4 Kbytes Memory Size */
-#define   GMAC_DCFGR_RXBMS_FULL (0x3u << 8) /**< \brief (GMAC_DCFGR) 8 Kbytes Memory Size */
-#define GMAC_DCFGR_TXPBMS (0x1u << 10) /**< \brief (GMAC_DCFGR) Transmitter Packet Buffer Memory Size Select */
 #define GMAC_DCFGR_TXCOEN (0x1u << 11) /**< \brief (GMAC_DCFGR) Transmitter Checksum Generation Offload Enable */
 #define GMAC_DCFGR_DRBS_Pos 16
 #define GMAC_DCFGR_DRBS_Msk (0xffu << GMAC_DCFGR_DRBS_Pos) /**< \brief (GMAC_DCFGR) DMA Receive Buffer Size */
 #define GMAC_DCFGR_DRBS(value) ((GMAC_DCFGR_DRBS_Msk & ((value) << GMAC_DCFGR_DRBS_Pos)))
-#define GMAC_DCFGR_DDRP (0x1u << 24) /**< \brief (GMAC_DCFGR) DMA Discard Receive Packets */
 /* -------- GMAC_TSR : (GMAC Offset: 0x014) Transmit Status Register -------- */
 #define GMAC_TSR_UBR (0x1u << 0) /**< \brief (GMAC_TSR) Used Bit Read */
 #define GMAC_TSR_COL (0x1u << 1) /**< \brief (GMAC_TSR) Collision Occurred */
@@ -261,7 +226,6 @@ typedef struct {
 #define GMAC_TSR_TFC (0x1u << 4) /**< \brief (GMAC_TSR) Transmit Frame Corruption due to AHB error */
 #define GMAC_TSR_TXCOMP (0x1u << 5) /**< \brief (GMAC_TSR) Transmit Complete */
 #define GMAC_TSR_UND (0x1u << 6) /**< \brief (GMAC_TSR) Transmit Under Run */
-#define GMAC_TSR_LCO (0x1u << 7) /**< \brief (GMAC_TSR) Late Collision Occurred */
 #define GMAC_TSR_HRESP (0x1u << 8) /**< \brief (GMAC_TSR) HRESP Not OK */
 /* -------- GMAC_RBQB : (GMAC Offset: 0x018) Receive Buffer Queue Base Address -------- */
 #define GMAC_RBQB_ADDR_Pos 2
@@ -282,7 +246,7 @@ typedef struct {
 #define GMAC_ISR_RXUBR (0x1u << 2) /**< \brief (GMAC_ISR) RX Used Bit Read */
 #define GMAC_ISR_TXUBR (0x1u << 3) /**< \brief (GMAC_ISR) TX Used Bit Read */
 #define GMAC_ISR_TUR (0x1u << 4) /**< \brief (GMAC_ISR) Transmit Under Run */
-#define GMAC_ISR_RLEX (0x1u << 5) /**< \brief (GMAC_ISR) Retry Limit Exceeded or Late Collision */
+#define GMAC_ISR_RLEX (0x1u << 5) /**< \brief (GMAC_ISR) Retry Limit Exceeded */
 #define GMAC_ISR_TFC (0x1u << 6) /**< \brief (GMAC_ISR) Transmit Frame Corruption due to AHB error */
 #define GMAC_ISR_TCOMP (0x1u << 7) /**< \brief (GMAC_ISR) Transmit Complete */
 #define GMAC_ISR_ROVR (0x1u << 10) /**< \brief (GMAC_ISR) Receive Overrun */
@@ -290,7 +254,6 @@ typedef struct {
 #define GMAC_ISR_PFNZ (0x1u << 12) /**< \brief (GMAC_ISR) Pause Frame with Non-zero Pause Quantum Received */
 #define GMAC_ISR_PTZ (0x1u << 13) /**< \brief (GMAC_ISR) Pause Time Zero */
 #define GMAC_ISR_PFTR (0x1u << 14) /**< \brief (GMAC_ISR) Pause Frame Transmitted */
-#define GMAC_ISR_EXINT (0x1u << 15) /**< \brief (GMAC_ISR) External Interrupt */
 #define GMAC_ISR_DRQFR (0x1u << 18) /**< \brief (GMAC_ISR) PTP Delay Request Frame Received */
 #define GMAC_ISR_SFR (0x1u << 19) /**< \brief (GMAC_ISR) PTP Sync Frame Received */
 #define GMAC_ISR_DRQFT (0x1u << 20) /**< \brief (GMAC_ISR) PTP Delay Request Frame Transmitted */
@@ -357,7 +320,7 @@ typedef struct {
 #define GMAC_IMR_RXUBR (0x1u << 2) /**< \brief (GMAC_IMR) RX Used Bit Read */
 #define GMAC_IMR_TXUBR (0x1u << 3) /**< \brief (GMAC_IMR) TX Used Bit Read */
 #define GMAC_IMR_TUR (0x1u << 4) /**< \brief (GMAC_IMR) Transmit Under Run */
-#define GMAC_IMR_RLEX (0x1u << 5) /**< \brief (GMAC_IMR) Retry Limit Exceeded or Late Collision */
+#define GMAC_IMR_RLEX (0x1u << 5) /**< \brief (GMAC_IMR) Retry Limit Exceeded */
 #define GMAC_IMR_TFC (0x1u << 6) /**< \brief (GMAC_IMR) Transmit Frame Corruption due to AHB error */
 #define GMAC_IMR_TCOMP (0x1u << 7) /**< \brief (GMAC_IMR) Transmit Complete */
 #define GMAC_IMR_ROVR (0x1u << 10) /**< \brief (GMAC_IMR) Receive Overrun */
@@ -399,16 +362,6 @@ typedef struct {
 #define GMAC_TPQ_TPQ_Pos 0
 #define GMAC_TPQ_TPQ_Msk (0xffffu << GMAC_TPQ_TPQ_Pos) /**< \brief (GMAC_TPQ) Transmit Pause Quantum */
 #define GMAC_TPQ_TPQ(value) ((GMAC_TPQ_TPQ_Msk & ((value) << GMAC_TPQ_TPQ_Pos)))
-/* -------- GMAC_TPSF : (GMAC Offset: 0x040) TX Partial Store and Forward Register -------- */
-#define GMAC_TPSF_TPB1ADR_Pos 0
-#define GMAC_TPSF_TPB1ADR_Msk (0xfffu << GMAC_TPSF_TPB1ADR_Pos) /**< \brief (GMAC_TPSF) tx_pbuf_addr-1:0 */
-#define GMAC_TPSF_TPB1ADR(value) ((GMAC_TPSF_TPB1ADR_Msk & ((value) << GMAC_TPSF_TPB1ADR_Pos)))
-#define GMAC_TPSF_ENTXP (0x1u << 31) /**< \brief (GMAC_TPSF) Enable TX Partial Store and Forward Operation */
-/* -------- GMAC_RPSF : (GMAC Offset: 0x044) RX Partial Store and Forward Register -------- */
-#define GMAC_RPSF_RPB1ADR_Pos 0
-#define GMAC_RPSF_RPB1ADR_Msk (0xfffu << GMAC_RPSF_RPB1ADR_Pos) /**< \brief (GMAC_RPSF) rx_pbuf_addr-1:0 */
-#define GMAC_RPSF_RPB1ADR(value) ((GMAC_RPSF_RPB1ADR_Msk & ((value) << GMAC_RPSF_RPB1ADR_Pos)))
-#define GMAC_RPSF_ENRXP (0x1u << 31) /**< \brief (GMAC_RPSF) Enable RX Partial Store and Forward Operation */
 /* -------- GMAC_HRB : (GMAC Offset: 0x080) Hash Register Bottom [31:0] -------- */
 #define GMAC_HRB_ADDR_Pos 0
 #define GMAC_HRB_ADDR_Msk (0xffffffffu << GMAC_HRB_ADDR_Pos) /**< \brief (GMAC_HRB) Hash Address */
@@ -453,14 +406,6 @@ typedef struct {
 #define GMAC_TIDM_TID_Pos 0
 #define GMAC_TIDM_TID_Msk (0xffffu << GMAC_TIDM_TID_Pos) /**< \brief (GMAC_TIDM[4]) Type ID Match 1 */
 #define GMAC_TIDM_TID(value) ((GMAC_TIDM_TID_Msk & ((value) << GMAC_TIDM_TID_Pos)))
-/* -------- GMAC_WOL : (GMAC Offset: 0x0B8) Wake on LAN Register -------- */
-#define GMAC_WOL_IP_Pos 0
-#define GMAC_WOL_IP_Msk (0xffffu << GMAC_WOL_IP_Pos) /**< \brief (GMAC_WOL) ARP Request IP Address */
-#define GMAC_WOL_IP(value) ((GMAC_WOL_IP_Msk & ((value) << GMAC_WOL_IP_Pos)))
-#define GMAC_WOL_MAG (0x1u << 16) /**< \brief (GMAC_WOL) Magic Packet Event Enable */
-#define GMAC_WOL_ARP (0x1u << 17) /**< \brief (GMAC_WOL) ARP Request IP Address */
-#define GMAC_WOL_SA1 (0x1u << 18) /**< \brief (GMAC_WOL) Specific Address Register 1 Event Enable */
-#define GMAC_WOL_MTI (0x1u << 19) /**< \brief (GMAC_WOL) Multicast Hash Event Enable */
 /* -------- GMAC_IPGS : (GMAC Offset: 0x0BC) IPG Stretch Register -------- */
 #define GMAC_IPGS_FL_Pos 0
 #define GMAC_IPGS_FL_Msk (0xffffu << GMAC_IPGS_FL_Pos) /**< \brief (GMAC_IPGS) Frame Length */
@@ -675,70 +620,6 @@ typedef struct {
 /* -------- GMAC_PEFRN : (GMAC Offset: 0x1FC) PTP Peer Event Frame Received Nanoseconds -------- */
 #define GMAC_PEFRN_RUD_Pos 0
 #define GMAC_PEFRN_RUD_Msk (0x3fffffffu << GMAC_PEFRN_RUD_Pos) /**< \brief (GMAC_PEFRN) Register Update */
-/* -------- GMAC_ISRPQ[7] : (GMAC Offset: 0x400) Interrupt Status Register Priority Queue -------- */
-#define GMAC_ISRPQ_RCOMP (0x1u << 1) /**< \brief (GMAC_ISRPQ[7]) Receive Complete */
-#define GMAC_ISRPQ_RXUBR (0x1u << 2) /**< \brief (GMAC_ISRPQ[7]) RX Used Bit Read */
-#define GMAC_ISRPQ_RLEX (0x1u << 5) /**< \brief (GMAC_ISRPQ[7]) Retry Limit Exceeded or Late Collision */
-#define GMAC_ISRPQ_TFC (0x1u << 6) /**< \brief (GMAC_ISRPQ[7]) Transmit Frame Corruption due to AHB error */
-#define GMAC_ISRPQ_TCOMP (0x1u << 7) /**< \brief (GMAC_ISRPQ[7]) Transmit Complete */
-#define GMAC_ISRPQ_ROVR (0x1u << 10) /**< \brief (GMAC_ISRPQ[7]) Receive Overrun */
-#define GMAC_ISRPQ_HRESP (0x1u << 11) /**< \brief (GMAC_ISRPQ[7]) HRESP Not OK */
-/* -------- GMAC_TBQBAPQ[7] : (GMAC Offset: 0x440) Transmit Buffer Queue Base Address Priority Queue -------- */
-#define GMAC_TBQBAPQ_TXBQBA_Pos 2
-#define GMAC_TBQBAPQ_TXBQBA_Msk (0x3fu << GMAC_TBQBAPQ_TXBQBA_Pos) /**< \brief (GMAC_TBQBAPQ[7]) Transmit Buffer Queue Base Address */
-#define GMAC_TBQBAPQ_TXBQBA(value) ((GMAC_TBQBAPQ_TXBQBA_Msk & ((value) << GMAC_TBQBAPQ_TXBQBA_Pos)))
-/* -------- GMAC_RBQBAPQ[7] : (GMAC Offset: 0x480) Receive Buffer Queue Base Address Priority Queue -------- */
-#define GMAC_RBQBAPQ_RXBQBA_Pos 2
-#define GMAC_RBQBAPQ_RXBQBA_Msk (0x3fu << GMAC_RBQBAPQ_RXBQBA_Pos) /**< \brief (GMAC_RBQBAPQ[7]) Receive Buffer Queue Base Address */
-#define GMAC_RBQBAPQ_RXBQBA(value) ((GMAC_RBQBAPQ_RXBQBA_Msk & ((value) << GMAC_RBQBAPQ_RXBQBA_Pos)))
-/* -------- GMAC_RBSRPQ[7] : (GMAC Offset: 0x4A0) Receive Buffer Size Register Priority Queue -------- */
-#define GMAC_RBSRPQ_RBS_Pos 0
-#define GMAC_RBSRPQ_RBS_Msk (0xffffu << GMAC_RBSRPQ_RBS_Pos) /**< \brief (GMAC_RBSRPQ[7]) Receive Buffer Size */
-#define GMAC_RBSRPQ_RBS(value) ((GMAC_RBSRPQ_RBS_Msk & ((value) << GMAC_RBSRPQ_RBS_Pos)))
-/* -------- GMAC_ST1RPQ[16] : (GMAC Offset: 0x500) Screening Type1 Register Priority Queue -------- */
-#define GMAC_ST1RPQ_QNB_Pos 0
-#define GMAC_ST1RPQ_QNB_Msk (0xfu << GMAC_ST1RPQ_QNB_Pos) /**< \brief (GMAC_ST1RPQ[16]) Que Number (0->7) */
-#define GMAC_ST1RPQ_QNB(value) ((GMAC_ST1RPQ_QNB_Msk & ((value) << GMAC_ST1RPQ_QNB_Pos)))
-#define GMAC_ST1RPQ_DSTCM_Pos 4
-#define GMAC_ST1RPQ_DSTCM_Msk (0xffu << GMAC_ST1RPQ_DSTCM_Pos) /**< \brief (GMAC_ST1RPQ[16]) Differentiated Services or Traffic Class Match */
-#define GMAC_ST1RPQ_DSTCM(value) ((GMAC_ST1RPQ_DSTCM_Msk & ((value) << GMAC_ST1RPQ_DSTCM_Pos)))
-#define GMAC_ST1RPQ_UDPM_Pos 12
-#define GMAC_ST1RPQ_UDPM_Msk (0xffffu << GMAC_ST1RPQ_UDPM_Pos) /**< \brief (GMAC_ST1RPQ[16]) UDP Port Match */
-#define GMAC_ST1RPQ_UDPM(value) ((GMAC_ST1RPQ_UDPM_Msk & ((value) << GMAC_ST1RPQ_UDPM_Pos)))
-#define GMAC_ST1RPQ_DSTCE (0x1u << 28) /**< \brief (GMAC_ST1RPQ[16]) Differentiated Services or Traffic Class Match Enable */
-#define GMAC_ST1RPQ_UDPE (0x1u << 29) /**< \brief (GMAC_ST1RPQ[16]) UDP Port Match Enable */
-/* -------- GMAC_ST2RPQ[16] : (GMAC Offset: 0x540) Screening Type2 Register Priority Queue -------- */
-#define GMAC_ST2RPQ_QNB_Pos 0
-#define GMAC_ST2RPQ_QNB_Msk (0xfu << GMAC_ST2RPQ_QNB_Pos) /**< \brief (GMAC_ST2RPQ[16]) Que Number (0->7) */
-#define GMAC_ST2RPQ_QNB(value) ((GMAC_ST2RPQ_QNB_Msk & ((value) << GMAC_ST2RPQ_QNB_Pos)))
-#define GMAC_ST2RPQ_VLANP_Pos 4
-#define GMAC_ST2RPQ_VLANP_Msk (0xfu << GMAC_ST2RPQ_VLANP_Pos) /**< \brief (GMAC_ST2RPQ[16]) VLAN Priority */
-#define GMAC_ST2RPQ_VLANP(value) ((GMAC_ST2RPQ_VLANP_Msk & ((value) << GMAC_ST2RPQ_VLANP_Pos)))
-#define GMAC_ST2RPQ_VLANE (0x1u << 8) /**< \brief (GMAC_ST2RPQ[16]) VLAN Enable */
-/* -------- GMAC_IERPQ[7] : (GMAC Offset: 0x600) Interrupt Enable Register Priority Queue -------- */
-#define GMAC_IERPQ_RCOMP (0x1u << 1) /**< \brief (GMAC_IERPQ[7]) Receive Complete */
-#define GMAC_IERPQ_RXUBR (0x1u << 2) /**< \brief (GMAC_IERPQ[7]) RX Used Bit Read */
-#define GMAC_IERPQ_RLEX (0x1u << 5) /**< \brief (GMAC_IERPQ[7]) Retry Limit Exceeded or Late Collision */
-#define GMAC_IERPQ_TFC (0x1u << 6) /**< \brief (GMAC_IERPQ[7]) Transmit Frame Corruption due to AHB error */
-#define GMAC_IERPQ_TCOMP (0x1u << 7) /**< \brief (GMAC_IERPQ[7]) Transmit Complete */
-#define GMAC_IERPQ_ROVR (0x1u << 10) /**< \brief (GMAC_IERPQ[7]) Receive Overrun */
-#define GMAC_IERPQ_HRESP (0x1u << 11) /**< \brief (GMAC_IERPQ[7]) HRESP Not OK */
-/* -------- GMAC_IDRPQ[7] : (GMAC Offset: 0x620) Interrupt Disable Register Priority Queue -------- */
-#define GMAC_IDRPQ_RCOMP (0x1u << 1) /**< \brief (GMAC_IDRPQ[7]) Receive Complete */
-#define GMAC_IDRPQ_RXUBR (0x1u << 2) /**< \brief (GMAC_IDRPQ[7]) RX Used Bit Read */
-#define GMAC_IDRPQ_RLEX (0x1u << 5) /**< \brief (GMAC_IDRPQ[7]) Retry Limit Exceeded or Late Collision */
-#define GMAC_IDRPQ_TFC (0x1u << 6) /**< \brief (GMAC_IDRPQ[7]) Transmit Frame Corruption due to AHB error */
-#define GMAC_IDRPQ_TCOMP (0x1u << 7) /**< \brief (GMAC_IDRPQ[7]) Transmit Complete */
-#define GMAC_IDRPQ_ROVR (0x1u << 10) /**< \brief (GMAC_IDRPQ[7]) Receive Overrun */
-#define GMAC_IDRPQ_HRESP (0x1u << 11) /**< \brief (GMAC_IDRPQ[7]) HRESP Not OK */
-/* -------- GMAC_IMRPQ[7] : (GMAC Offset: 0x640) Interrupt Mask Register Priority Queue -------- */
-#define GMAC_IMRPQ_RCOMP (0x1u << 1) /**< \brief (GMAC_IMRPQ[7]) Receive Complete */
-#define GMAC_IMRPQ_RXUBR (0x1u << 2) /**< \brief (GMAC_IMRPQ[7]) RX Used Bit Read */
-#define GMAC_IMRPQ_RLEX (0x1u << 5) /**< \brief (GMAC_IMRPQ[7]) Retry Limit Exceeded or Late Collision */
-#define GMAC_IMRPQ_AHB (0x1u << 6) /**< \brief (GMAC_IMRPQ[7]) AHB Error */
-#define GMAC_IMRPQ_TCOMP (0x1u << 7) /**< \brief (GMAC_IMRPQ[7]) Transmit Complete */
-#define GMAC_IMRPQ_ROVR (0x1u << 10) /**< \brief (GMAC_IMRPQ[7]) Receive Overrun */
-#define GMAC_IMRPQ_HRESP (0x1u << 11) /**< \brief (GMAC_IMRPQ[7]) HRESP Not OK */
 
 /*@}*/
 

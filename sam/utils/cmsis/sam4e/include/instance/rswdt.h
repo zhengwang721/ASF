@@ -39,27 +39,18 @@
  *
  */
 
-#ifndef _SAM4E_GPBR_COMPONENT_
-#define _SAM4E_GPBR_COMPONENT_
+#ifndef _SAM4E_RSWDT_INSTANCE_
+#define _SAM4E_RSWDT_INSTANCE_
 
-/* ============================================================================= */
-/**  SOFTWARE API DEFINITION FOR General Purpose Backup Register */
-/* ============================================================================= */
-/** \addtogroup SAM4E_GPBR General Purpose Backup Register */
-/*@{*/
+/* ========== Register definition for RSWDT peripheral ========== */
+#if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
+#define REG_RSWDT_CR          (0x400E1900U) /**< \brief (RSWDT) Control Register */
+#define REG_RSWDT_MR          (0x400E1904U) /**< \brief (RSWDT) Mode Register */
+#define REG_RSWDT_SR          (0x400E1908U) /**< \brief (RSWDT) Status Register */
+#else
+#define REG_RSWDT_CR (*(WoReg*)0x400E1900U) /**< \brief (RSWDT) Control Register */
+#define REG_RSWDT_MR (*(RwReg*)0x400E1904U) /**< \brief (RSWDT) Mode Register */
+#define REG_RSWDT_SR (*(RoReg*)0x400E1908U) /**< \brief (RSWDT) Status Register */
+#endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
-#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-/** \brief Gpbr hardware registers */
-typedef struct {
-  RwReg SYS_GPBR[20]; /**< \brief (Gpbr Offset: 0x0) General Purpose Backup Register */
-} Gpbr;
-#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
-/* -------- SYS_GPBR[20] : (GPBR Offset: 0x0) General Purpose Backup Register -------- */
-#define SYS_GPBR_GPBR_VALUE_Pos 0
-#define SYS_GPBR_GPBR_VALUE_Msk (0xffffffffu << SYS_GPBR_GPBR_VALUE_Pos) /**< \brief (SYS_GPBR[20]) Value of GPBR x */
-#define SYS_GPBR_GPBR_VALUE(value) ((SYS_GPBR_GPBR_VALUE_Msk & ((value) << SYS_GPBR_GPBR_VALUE_Pos)))
-
-/*@}*/
-
-
-#endif /* _SAM4E_GPBR_COMPONENT_ */
+#endif /* _SAM4E_RSWDT_INSTANCE_ */

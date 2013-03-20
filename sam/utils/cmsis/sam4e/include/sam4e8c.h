@@ -39,11 +39,11 @@
  *
  */
 
-#ifndef _SAM4E8E_
-#define _SAM4E8E_
+#ifndef _SAM4E8C_
+#define _SAM4E8C_
 
-/** \addtogroup SAM4E8E_definitions SAM4E8E definitions
-  This file defines all structures and symbols for SAM4E8E:
+/** \addtogroup SAM4E8C_definitions SAM4E8C definitions
+  This file defines all structures and symbols for SAM4E8C:
     - registers and bitfields
     - peripheral base address
     - peripheral ID
@@ -67,9 +67,9 @@ typedef volatile       uint32_t RwReg; /**< Read-Write 32-bit register (volatile
 #endif
 
 /* ************************************************************************** */
-/*   CMSIS DEFINITIONS FOR SAM4E8E */
+/*   CMSIS DEFINITIONS FOR SAM4E8C */
 /* ************************************************************************** */
-/** \addtogroup SAM4E8E_cmsis CMSIS Definitions */
+/** \addtogroup SAM4E8C_cmsis CMSIS Definitions */
 /*@{*/
 
 /**< Interrupt Number Definition */
@@ -84,49 +84,46 @@ typedef enum IRQn
   DebugMonitor_IRQn     = -4,  /**< 12 Cortex-M4 Debug Monitor Interrupt     */
   PendSV_IRQn           = -2,  /**< 14 Cortex-M4 Pend SV Interrupt           */
   SysTick_IRQn          = -1,  /**< 15 Cortex-M4 System Tick Interrupt       */
-/******  SAM4E8E specific Interrupt Numbers *********************************/
+/******  SAM4E8C specific Interrupt Numbers *********************************/
 
-  SUPC_IRQn            =  0, /**<  0 SAM4E8E Supply Controller (SUPC) */
-  RSTC_IRQn            =  1, /**<  1 SAM4E8E Reset Controller (RSTC) */
-  RTC_IRQn             =  2, /**<  2 SAM4E8E Real Time Clock (RTC) */
-  RTT_IRQn             =  3, /**<  3 SAM4E8E Real Time Timer (RTT) */
-  WDT_IRQn             =  4, /**<  4 SAM4E8E Watchdog/Dual Watchdog Timer (WDT) */
-  PMC_IRQn             =  5, /**<  5 SAM4E8E Power Management Controller (PMC) */
-  EFC_IRQn             =  6, /**<  6 SAM4E8E Enhanced Embedded Flash Controller (EFC) */
-  UART0_IRQn           =  7, /**<  7 SAM4E8E UART 0 (UART0) */
-  PIOA_IRQn            =  9, /**<  9 SAM4E8E Parallel I/O Controller A (PIOA) */
-  PIOB_IRQn            = 10, /**< 10 SAM4E8E Parallel I/O Controller B (PIOB) */
-  PIOC_IRQn            = 11, /**< 11 SAM4E8E Parallel I/O Controller C (PIOC) */
-  PIOD_IRQn            = 12, /**< 12 SAM4E8E Parallel I/O Controller D (PIOD) */
-  PIOE_IRQn            = 13, /**< 13 SAM4E8E Parallel I/O Controller E (PIOE) */
-  USART0_IRQn          = 14, /**< 14 SAM4E8E USART 0 (USART0) */
-  USART1_IRQn          = 15, /**< 15 SAM4E8E USART 1 (USART1) */
-  HSMCI_IRQn           = 16, /**< 16 SAM4E8E Multimedia Card Interface (HSMCI) */
-  TWI0_IRQn            = 17, /**< 17 SAM4E8E Two Wire Interface 0 (TWI0) */
-  TWI1_IRQn            = 18, /**< 18 SAM4E8E Two Wire Interface 1 (TWI1) */
-  SPI_IRQn             = 19, /**< 19 SAM4E8E Serial Peripheral Interface (SPI) */
-  DMAC_IRQn            = 20, /**< 20 SAM4E8E DMAC (DMAC) */
-  TC0_IRQn             = 21, /**< 21 SAM4E8E Timer/Counter 0 (TC0) */
-  TC1_IRQn             = 22, /**< 22 SAM4E8E Timer/Counter 1 (TC1) */
-  TC2_IRQn             = 23, /**< 23 SAM4E8E Timer/Counter 2 (TC2) */
-  TC3_IRQn             = 24, /**< 24 SAM4E8E Timer/Counter 3 (TC3) */
-  TC4_IRQn             = 25, /**< 25 SAM4E8E Timer/Counter 4 (TC4) */
-  TC5_IRQn             = 26, /**< 26 SAM4E8E Timer/Counter 5 (TC5) */
-  TC6_IRQn             = 27, /**< 27 SAM4E8E Timer/Counter 6 (TC6) */
-  TC7_IRQn             = 28, /**< 28 SAM4E8E Timer/Counter 7 (TC7) */
-  TC8_IRQn             = 29, /**< 29 SAM4E8E Timer/Counter 8 (TC8) */
-  AFEC0_IRQn           = 30, /**< 30 SAM4E8E Analog Front End 0 (AFEC0) */
-  AFEC1_IRQn           = 31, /**< 31 SAM4E8E Analog Front End 1 (AFEC1) */
-  DACC_IRQn            = 32, /**< 32 SAM4E8E Digital To Analog Converter (DACC) */
-  ACC_IRQn             = 33, /**< 33 SAM4E8E Analog Comparator (ACC) */
-  ARM_IRQn             = 34, /**< 34 SAM4E8E FPU signals : FPIXC, FPOFC, FPUFC, FPIOC, FPDZC, FPIDC, FPIXC (ARM) */
-  UDP_IRQn             = 35, /**< 35 SAM4E8E USB DEVICE (UDP) */
-  PWM_IRQn             = 36, /**< 36 SAM4E8E PWM (PWM) */
-  CAN0_IRQn            = 37, /**< 37 SAM4E8E CAN0 (CAN0) */
-  CAN1_IRQn            = 38, /**< 38 SAM4E8E CAN1 (CAN1) */
-  AES_IRQn             = 39, /**< 39 SAM4E8E AES (AES) */
-  GMAC_IRQn            = 44, /**< 44 SAM4E8E EMAC (GMAC) */
-  UART1_IRQn           = 45, /**< 45 SAM4E8E UART (UART1) */
+  SUPC_IRQn            =  0, /**<  0 SAM4E8C Supply Controller (SUPC) */
+  RSTC_IRQn            =  1, /**<  1 SAM4E8C Reset Controller (RSTC) */
+  RTC_IRQn             =  2, /**<  2 SAM4E8C Real Time Clock (RTC) */
+  RTT_IRQn             =  3, /**<  3 SAM4E8C Real Time Timer (RTT) */
+  WDT_IRQn             =  4, /**<  4 SAM4E8C Watchdog/Dual Watchdog Timer (WDT) */
+  PMC_IRQn             =  5, /**<  5 SAM4E8C Power Management Controller (PMC) */
+  EFC_IRQn             =  6, /**<  6 SAM4E8C Enhanced Embedded Flash Controller (EFC) */
+  UART0_IRQn           =  7, /**<  7 SAM4E8C UART 0 (UART0) */
+  PIOA_IRQn            =  9, /**<  9 SAM4E8C Parallel I/O Controller A (PIOA) */
+  PIOB_IRQn            = 10, /**< 10 SAM4E8C Parallel I/O Controller B (PIOB) */
+  PIOC_IRQn            = 11, /**< 11 SAM4E8C Parallel I/O Controller C (PIOC) */
+  USART0_IRQn          = 14, /**< 14 SAM4E8C USART 0 (USART0) */
+  USART1_IRQn          = 15, /**< 15 SAM4E8C USART 1 (USART1) */
+  HSMCI_IRQn           = 16, /**< 16 SAM4E8C Multimedia Card Interface (HSMCI) */
+  TWI0_IRQn            = 17, /**< 17 SAM4E8C Two Wire Interface 0 (TWI0) */
+  TWI1_IRQn            = 18, /**< 18 SAM4E8C Two Wire Interface 1 (TWI1) */
+  SPI_IRQn             = 19, /**< 19 SAM4E8C Serial Peripheral Interface (SPI) */
+  DMAC_IRQn            = 20, /**< 20 SAM4E8C DMAC (DMAC) */
+  TC0_IRQn             = 21, /**< 21 SAM4E8C Timer/Counter 0 (TC0) */
+  TC1_IRQn             = 22, /**< 22 SAM4E8C Timer/Counter 1 (TC1) */
+  TC2_IRQn             = 23, /**< 23 SAM4E8C Timer/Counter 2 (TC2) */
+  TC3_IRQn             = 24, /**< 24 SAM4E8C Timer/Counter 3 (TC3) */
+  TC4_IRQn             = 25, /**< 25 SAM4E8C Timer/Counter 4 (TC4) */
+  TC5_IRQn             = 26, /**< 26 SAM4E8C Timer/Counter 5 (TC5) */
+  TC6_IRQn             = 27, /**< 27 SAM4E8C Timer/Counter 6 (TC6) */
+  TC7_IRQn             = 28, /**< 28 SAM4E8C Timer/Counter 7 (TC7) */
+  TC8_IRQn             = 29, /**< 29 SAM4E8C Timer/Counter 8 (TC8) */
+  AFEC0_IRQn           = 30, /**< 30 SAM4E8C Analog Front End 0 (AFEC0) */
+  AFEC1_IRQn           = 31, /**< 31 SAM4E8C Analog Front End 1 (AFEC1) */
+  DACC_IRQn            = 32, /**< 32 SAM4E8C Digital To Analog Converter (DACC) */
+  ACC_IRQn             = 33, /**< 33 SAM4E8C Analog Comparator (ACC) */
+  ARM_IRQn             = 34, /**< 34 SAM4E8C FPU signals : FPIXC, FPOFC, FPUFC, FPIOC, FPDZC, FPIDC, FPIXC (ARM) */
+  UDP_IRQn             = 35, /**< 35 SAM4E8C USB DEVICE (UDP) */
+  PWM_IRQn             = 36, /**< 36 SAM4E8C PWM (PWM) */
+  CAN0_IRQn            = 37, /**< 37 SAM4E8C CAN0 (CAN0) */
+  CAN1_IRQn            = 38, /**< 38 SAM4E8C CAN1 (CAN1) */
+  AES_IRQn             = 39, /**< 39 SAM4E8C AES (AES) */
+  UART1_IRQn           = 45, /**< 45 SAM4E8C UART (UART1) */
 
   PERIPH_COUNT_IRQn    = 46  /**< Number of peripheral IDs */
 } IRQn_Type;
@@ -166,8 +163,8 @@ typedef struct _DeviceVectors
   void* pfnPIOA_Handler;   /*  9 Parallel I/O Controller A */
   void* pfnPIOB_Handler;   /* 10 Parallel I/O Controller B */
   void* pfnPIOC_Handler;   /* 11 Parallel I/O Controller C */
-  void* pfnPIOD_Handler;   /* 12 Parallel I/O Controller D */
-  void* pfnPIOE_Handler;   /* 13 Parallel I/O Controller E */
+  void* pvReserved12;
+  void* pvReserved13;
   void* pfnUSART0_Handler; /* 14 USART 0 */
   void* pfnUSART1_Handler; /* 15 USART 1 */
   void* pfnHSMCI_Handler;  /* 16 Multimedia Card Interface */
@@ -198,7 +195,7 @@ typedef struct _DeviceVectors
   void* pvReserved41;
   void* pvReserved42;
   void* pvReserved43;
-  void* pfnGMAC_Handler;   /* 44 EMAC */
+  void* pvReserved44;
   void* pfnUART1_Handler;  /* 45 UART */
 } DeviceVectors;
 
@@ -225,13 +222,10 @@ void CAN1_Handler       ( void );
 void DACC_Handler       ( void );
 void DMAC_Handler       ( void );
 void EFC_Handler        ( void );
-void GMAC_Handler       ( void );
 void HSMCI_Handler      ( void );
 void PIOA_Handler       ( void );
 void PIOB_Handler       ( void );
 void PIOC_Handler       ( void );
-void PIOD_Handler       ( void );
-void PIOE_Handler       ( void );
 void PMC_Handler        ( void );
 void PWM_Handler        ( void );
 void RSTC_Handler       ( void );
@@ -261,10 +255,10 @@ void WDT_Handler        ( void );
  * \brief Configuration of the Cortex-M4 Processor and Core Peripherals
  */
 
-#define __CM4_REV              0x0000 /**< SAM4E8E core revision number ([15:8] revision number, [7:0] patch number) */
-#define __MPU_PRESENT          0      /**< SAM4E8E does not provide a MPU */
-#define __FPU_PRESENT          1      /**< SAM4E8E does provide a FPU */
-#define __NVIC_PRIO_BITS       4      /**< SAM4E8E uses 4 Bits for the Priority Levels */
+#define __CM4_REV              0x0000 /**< SAM4E8C core revision number ([15:8] revision number, [7:0] patch number) */
+#define __MPU_PRESENT          0      /**< SAM4E8C does not provide a MPU */
+#define __FPU_PRESENT          1      /**< SAM4E8C does provide a FPU */
+#define __NVIC_PRIO_BITS       4      /**< SAM4E8C uses 4 Bits for the Priority Levels */
 #define __Vendor_SysTickConfig 0      /**< Set to 1 if different SysTick Config is used */
 
 /*
@@ -279,9 +273,9 @@ void WDT_Handler        ( void );
 /*@}*/
 
 /* ************************************************************************** */
-/**  SOFTWARE PERIPHERAL API DEFINITION FOR SAM4E8E */
+/**  SOFTWARE PERIPHERAL API DEFINITION FOR SAM4E8C */
 /* ************************************************************************** */
-/** \addtogroup SAM4E8E_api Peripheral Software API */
+/** \addtogroup SAM4E8C_api Peripheral Software API */
 /*@{*/
 
 #include "component/acc.h"
@@ -294,7 +288,6 @@ void WDT_Handler        ( void );
 #include "component/dacc.h"
 #include "component/dmac.h"
 #include "component/efc.h"
-#include "component/gmac.h"
 #include "component/gpbr.h"
 #include "component/hsmci.h"
 #include "component/matrix.h"
@@ -306,7 +299,6 @@ void WDT_Handler        ( void );
 #include "component/rswdt.h"
 #include "component/rtc.h"
 #include "component/rtt.h"
-#include "component/smc.h"
 #include "component/spi.h"
 #include "component/supc.h"
 #include "component/tc.h"
@@ -318,18 +310,16 @@ void WDT_Handler        ( void );
 /*@}*/
 
 /* ************************************************************************** */
-/*   REGISTER ACCESS DEFINITIONS FOR SAM4E8E */
+/*   REGISTER ACCESS DEFINITIONS FOR SAM4E8C */
 /* ************************************************************************** */
-/** \addtogroup SAM4E8E_reg Registers Access Definitions */
+/** \addtogroup SAM4E8C_reg Registers Access Definitions */
 /*@{*/
 
 #include "instance/pwm.h"
 #include "instance/aes.h"
 #include "instance/can0.h"
 #include "instance/can1.h"
-#include "instance/gmac.h"
 #include "instance/crccu.h"
-#include "instance/smc.h"
 #include "instance/uart1.h"
 #include "instance/hsmci.h"
 #include "instance/udp.h"
@@ -355,8 +345,6 @@ void WDT_Handler        ( void );
 #include "instance/pioa.h"
 #include "instance/piob.h"
 #include "instance/pioc.h"
-#include "instance/piod.h"
-#include "instance/pioe.h"
 #include "instance/rstc.h"
 #include "instance/supc.h"
 #include "instance/rtt.h"
@@ -367,9 +355,9 @@ void WDT_Handler        ( void );
 /*@}*/
 
 /* ************************************************************************** */
-/*   PERIPHERAL ID DEFINITIONS FOR SAM4E8E */
+/*   PERIPHERAL ID DEFINITIONS FOR SAM4E8C */
 /* ************************************************************************** */
-/** \addtogroup SAM4E8E_id Peripheral Ids Definitions */
+/** \addtogroup SAM4E8C_id Peripheral Ids Definitions */
 /*@{*/
 
 #define ID_SUPC   ( 0) /**< \brief Supply Controller (SUPC) */
@@ -380,12 +368,9 @@ void WDT_Handler        ( void );
 #define ID_PMC    ( 5) /**< \brief Power Management Controller (PMC) */
 #define ID_EFC    ( 6) /**< \brief Enhanced Embedded Flash Controller (EFC) */
 #define ID_UART0  ( 7) /**< \brief UART 0 (UART0) */
-#define ID_SMC    ( 8) /**< \brief Static Memory Controller (SMC) */
 #define ID_PIOA   ( 9) /**< \brief Parallel I/O Controller A (PIOA) */
 #define ID_PIOB   (10) /**< \brief Parallel I/O Controller B (PIOB) */
 #define ID_PIOC   (11) /**< \brief Parallel I/O Controller C (PIOC) */
-#define ID_PIOD   (12) /**< \brief Parallel I/O Controller D (PIOD) */
-#define ID_PIOE   (13) /**< \brief Parallel I/O Controller E (PIOE) */
 #define ID_USART0 (14) /**< \brief USART 0 (USART0) */
 #define ID_USART1 (15) /**< \brief USART 1 (USART1) */
 #define ID_HSMCI  (16) /**< \brief Multimedia Card Interface (HSMCI) */
@@ -412,16 +397,15 @@ void WDT_Handler        ( void );
 #define ID_CAN0   (37) /**< \brief CAN0 (CAN0) */
 #define ID_CAN1   (38) /**< \brief CAN1 (CAN1) */
 #define ID_AES    (39) /**< \brief AES (AES) */
-#define ID_GMAC   (44) /**< \brief EMAC (GMAC) */
 #define ID_UART1  (45) /**< \brief UART (UART1) */
 
 #define ID_PERIPH_COUNT (46) /**< \brief Number of peripheral IDs */
 /*@}*/
 
 /* ************************************************************************** */
-/*   BASE ADDRESS DEFINITIONS FOR SAM4E8E */
+/*   BASE ADDRESS DEFINITIONS FOR SAM4E8C */
 /* ************************************************************************** */
-/** \addtogroup SAM4E8E_base Peripheral Base Address Definitions */
+/** \addtogroup SAM4E8C_base Peripheral Base Address Definitions */
 /*@{*/
 
 #if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -430,9 +414,7 @@ void WDT_Handler        ( void );
 #define AES        (0x40004000U) /**< \brief (AES       ) Base Address */
 #define CAN0       (0x40010000U) /**< \brief (CAN0      ) Base Address */
 #define CAN1       (0x40014000U) /**< \brief (CAN1      ) Base Address */
-#define GMAC       (0x40034000U) /**< \brief (GMAC      ) Base Address */
 #define CRCCU      (0x40044000U) /**< \brief (CRCCU     ) Base Address */
-#define SMC        (0x40060000U) /**< \brief (SMC       ) Base Address */
 #define UART1      (0x40060600U) /**< \brief (UART1     ) Base Address */
 #define PDC_UART1  (0x40060700U) /**< \brief (PDC_UART1 ) Base Address */
 #define HSMCI      (0x40080000U) /**< \brief (HSMCI     ) Base Address */
@@ -472,8 +454,6 @@ void WDT_Handler        ( void );
 #define PDC_PIOA   (0x400E0F68U) /**< \brief (PDC_PIOA  ) Base Address */
 #define PIOB       (0x400E1000U) /**< \brief (PIOB      ) Base Address */
 #define PIOC       (0x400E1200U) /**< \brief (PIOC      ) Base Address */
-#define PIOD       (0x400E1400U) /**< \brief (PIOD      ) Base Address */
-#define PIOE       (0x400E1600U) /**< \brief (PIOE      ) Base Address */
 #define RSTC       (0x400E1800U) /**< \brief (RSTC      ) Base Address */
 #define SUPC       (0x400E1810U) /**< \brief (SUPC      ) Base Address */
 #define RTT        (0x400E1830U) /**< \brief (RTT       ) Base Address */
@@ -487,9 +467,7 @@ void WDT_Handler        ( void );
 #define AES        ((Aes    *)0x40004000U) /**< \brief (AES       ) Base Address */
 #define CAN0       ((Can    *)0x40010000U) /**< \brief (CAN0      ) Base Address */
 #define CAN1       ((Can    *)0x40014000U) /**< \brief (CAN1      ) Base Address */
-#define GMAC       ((Gmac   *)0x40034000U) /**< \brief (GMAC      ) Base Address */
 #define CRCCU      ((Crccu  *)0x40044000U) /**< \brief (CRCCU     ) Base Address */
-#define SMC        ((Smc    *)0x40060000U) /**< \brief (SMC       ) Base Address */
 #define UART1      ((Uart   *)0x40060600U) /**< \brief (UART1     ) Base Address */
 #define PDC_UART1  ((Pdc    *)0x40060700U) /**< \brief (PDC_UART1 ) Base Address */
 #define HSMCI      ((Hsmci  *)0x40080000U) /**< \brief (HSMCI     ) Base Address */
@@ -529,8 +507,6 @@ void WDT_Handler        ( void );
 #define PDC_PIOA   ((Pdc    *)0x400E0F68U) /**< \brief (PDC_PIOA  ) Base Address */
 #define PIOB       ((Pio    *)0x400E1000U) /**< \brief (PIOB      ) Base Address */
 #define PIOC       ((Pio    *)0x400E1200U) /**< \brief (PIOC      ) Base Address */
-#define PIOD       ((Pio    *)0x400E1400U) /**< \brief (PIOD      ) Base Address */
-#define PIOE       ((Pio    *)0x400E1600U) /**< \brief (PIOE      ) Base Address */
 #define RSTC       ((Rstc   *)0x400E1800U) /**< \brief (RSTC      ) Base Address */
 #define SUPC       ((Supc   *)0x400E1810U) /**< \brief (SUPC      ) Base Address */
 #define RTT        ((Rtt    *)0x400E1830U) /**< \brief (RTT       ) Base Address */
@@ -542,16 +518,16 @@ void WDT_Handler        ( void );
 /*@}*/
 
 /* ************************************************************************** */
-/*   PIO DEFINITIONS FOR SAM4E8E */
+/*   PIO DEFINITIONS FOR SAM4E8C */
 /* ************************************************************************** */
-/** \addtogroup SAM4E8E_pio Peripheral Pio Definitions */
+/** \addtogroup SAM4E8C_pio Peripheral Pio Definitions */
 /*@{*/
 
-#include "pio/sam4e8e.h"
+#include "pio/sam4e8c.h"
 /*@}*/
 
 /* ************************************************************************** */
-/*   MEMORY MAPPING DEFINITIONS FOR SAM4E8E */
+/*   MEMORY MAPPING DEFINITIONS FOR SAM4E8C */
 /* ************************************************************************** */
 
 #define IFLASH_SIZE             (0x80000u)
@@ -570,17 +546,17 @@ void WDT_Handler        ( void );
 #define EBI_CS3_ADDR (0x63000000u) /**< EBI Chip Select 3 base address */
 
 /* ************************************************************************** */
-/*   MISCELLANEOUS DEFINITIONS FOR SAM4E8E */
+/*   MISCELLANEOUS DEFINITIONS FOR SAM4E8C */
 /* ************************************************************************** */
 
 #define CHIP_JTAGID (0x05B3703FUL)
 #define CHIP_CIDR   (0xA3CC0CE0UL)
-#define CHIP_EXID   (0x00120208UL)
-#define NB_CH_AFE0  (16UL)
-#define NB_CH_AFE1  (8UL)
+#define CHIP_EXID   (0x00110209UL)
+#define NB_CH_AFE0  (6UL)
+#define NB_CH_AFE1  (4UL)
 
 /* ************************************************************************** */
-/*   ELECTRICAL DEFINITIONS FOR SAM4E8E */
+/*   ELECTRICAL DEFINITIONS FOR SAM4E8C */
 /* ************************************************************************** */
 
 /* Device characteristics */
@@ -611,4 +587,4 @@ void WDT_Handler        ( void );
 
 /*@}*/
 
-#endif /* _SAM4E8E_ */
+#endif /* _SAM4E8C_ */
