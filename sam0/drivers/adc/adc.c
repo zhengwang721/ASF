@@ -43,6 +43,36 @@
 
 #include "adc.h"
 
+
+/**
+* \internal Configure MUX settings for the analog pins
+*
+* This function will set the given ADC input pins
+* to the analog function in the pin mux, giving
+* the ADC access to the analog signal
+*
+* \param [in] pin pin number to configure
+*/
+static inline void _adc_configure_ain_pin(uint32_t pin)
+{
+	struct system_pinmux_config config;
+	system_pinmux_get_config_defaults(&config);
+	config.input_pull = SYSTEM_PINMUX_PIN_PULL_NONE;
+
+	/* Analog functions are at mux setting 7 */
+	config.mux_position = 7;
+	/* Pins above Pin23 are internal signals */
+	if (pin <= ADC_INPUTCTRL_MUXPOS_PIN23) {
+		if (pin < ADC_INPUTCTRL_MUXPOS_PIN8) {
+			/* PORT A */
+			system_pinmux_pin_set_config(pin, &config);
+		} else {
+			/* PORT B */
+			system_pinmux_pin_set_config(pin + 32, &config);
+		}
+	}
+}
+
 /**
  * \internal Writes an ADC configuration to the hardware module
  *
@@ -75,6 +105,10 @@ static enum status_code _adc_set_config(
 	/* Apply configuration and enable the GCLK channel */
 	system_gclk_chan_set_config(ADC_GCLK_ID, &gclk_chan_conf);
 	system_gclk_chan_enable(ADC_GCLK_ID);
+
+	/* Configure analog input pins */
+	_adc_configure_ain_pin(config->positive_input);
+	_adc_configure_ain_pin(config->negative_input);
 
 	/* Configure run in standby */
 	adc_module->CTRLA.reg = (config->run_in_standby << ADC_CTRLA_RUNSTDBY_Pos);
@@ -317,6 +351,24 @@ enum status_code adc_init(
 		/* Module must be disabled before initialization. Abort. */
 		return STATUS_ERR_DENIED;
 	}
+#if ADC_CALLBACK_MODE == true
+	for (uint8_t i = 0; i < ADC_CALLBACK_N; i++) {
+		module_inst->callback[i] = NULL;
+	};
+
+	module_inst->registered_callback_mask = 0;
+	module_inst->enabled_callback_mask = 0;
+	module_inst->remaining_conversions = 0;
+	module_inst->job_status = STATUS_OK;
+
+	_adc_instances[0] = module_inst;
+
+	if(config->event.event_action == ADC_EVENT_ACTION_DISABLED) {
+		module_inst->software_trigger = true;
+	} else {
+		module_inst->software_trigger = false;
+	}
+#endif
 
 	/* Write configuration to module */
 	return _adc_set_config(module_inst, config);;
