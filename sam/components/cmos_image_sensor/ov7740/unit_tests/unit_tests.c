@@ -92,7 +92,7 @@
 #define TWI_CLK     400000
 
 /* Buffer which contains data of one third of the picture. */
-uint8_t uc_capture_buffer[51200];
+uint8_t g_auc_capture_buffer[51200];
 
 /* Vsync signal information (true if it's triggered and false otherwise). */
 static volatile uint32_t g_ul_vsync_flag = false;
@@ -101,7 +101,7 @@ static volatile uint32_t g_ul_vsync_flag = false;
 static volatile uint32_t g_ul_init_error_flag = false;
 
 /* Value in YUV format for black color. */
-const uint8_t uc_data_black_color[4] = {
+const uint8_t g_auc_data_black_color[4] = {
 	0xFF, /* Y1 value */
 	0x80, /* U value */
 	0xFF, /* Y2 value */
@@ -109,7 +109,7 @@ const uint8_t uc_data_black_color[4] = {
 };
 
 /* Value in YUV format for blue color. */
-const uint8_t uc_data_blue_color[4] = {
+const uint8_t g_auc_data_blue_color[4] = {
 	0xE5, /* Y1 value */
 	0x04, /* U value */
 	0xE5, /* Y2 value */
@@ -117,7 +117,7 @@ const uint8_t uc_data_blue_color[4] = {
 };
 
 /* Value in YUV format for red color. */
-const uint8_t uc_data_red_color[4] = {
+const uint8_t g_auc_data_red_color[4] = {
 	0xBD, /* Y1 value */
 	0x94, /* U value */
 	0xBD, /* Y2 value */
@@ -125,7 +125,7 @@ const uint8_t uc_data_red_color[4] = {
 };
 
 /* Value in YUV format for purple color. */
-const uint8_t uc_data_purple_color[4] = {
+const uint8_t g_auc_data_purple_color[4] = {
 	0xA3, /* Y1 value */
 	0x04, /* U value */
 	0xA3, /* Y2 value */
@@ -133,7 +133,7 @@ const uint8_t uc_data_purple_color[4] = {
 };
 
 /* Value in YUV format for green color. */
-const uint8_t uc_data_green_color[4] = {
+const uint8_t g_auc_data_green_color[4] = {
 	0x88, /* Y1 value */
 	0xFB, /* U value */
 	0x88, /* Y2 value */
@@ -141,7 +141,7 @@ const uint8_t uc_data_green_color[4] = {
 };
 
 /* Value in YUV format for cyan color. */
-const uint8_t uc_data_cyan_color[4] = {
+const uint8_t g_auc_data_cyan_color[4] = {
 	0x6F, /* Y1 value */
 	0x6F, /* U value */
 	0x6F, /* Y2 value */
@@ -149,7 +149,7 @@ const uint8_t uc_data_cyan_color[4] = {
 };
 
 /* Value in YUV format for yellow color. */
-const uint8_t uc_data_yellow_color[4] = {
+const uint8_t g_auc_data_yellow_color[4] = {
 	0x49, /* Y1 value */
 	0xFB, /* U value */
 	0x49, /* Y2 value */
@@ -157,7 +157,7 @@ const uint8_t uc_data_yellow_color[4] = {
 };
 
 /* Value in YUV format for white color. */
-const uint8_t uc_data_white_color[4] = {
+const uint8_t g_auc_data_white_color[4] = {
 	0x33, /* Y1 value */
 	0x80, /* U value */
 	0x33, /* Y2 value */
@@ -177,10 +177,10 @@ const usart_serial_options_t usart_serial_options = {
  */
 static void vsync_handler(uint32_t ul_id, uint32_t ul_mask)
 {
-	unused( ul_id ) ;
-	unused( ul_mask ) ;
+	UNUSED(ul_id) ;
+	UNUSED(ul_mask) ;
 
-	g_ul_vsync_flag = true;
+	g_ul_vsync_flag=true;
 }
 
 /**
@@ -203,7 +203,7 @@ static void init_vsync_interrupts(void)
  * \param p_pio PIO instance to be configured in PIO capture mode.
  * \param ul_id Corresponding PIO ID.
  */
-static void pio_capture_init(Pio *p_pio, uint32_t ul_id)
+static void pio_capture_init(Pio* const p_pio, uint32_t ul_id)
 {
 	/* Enable peripheral clock */
 	pmc_enable_periph_clk(ul_id);
@@ -230,7 +230,7 @@ static void pio_capture_init(Pio *p_pio, uint32_t ul_id)
  * \param p_uc_buf Buffer address where captured data must be stored.
  * \param ul_size Data frame size.
  */
-static void pio_capture_to_buffer(Pio *p_pio, uint8_t *p_uc_buf,
+static void pio_capture_to_buffer(Pio* const p_pio, uint8_t *p_uc_buf,
 		uint32_t ul_size)
 {
 	/* Link the current PDC buffer to the buffer which contains the first
@@ -335,7 +335,7 @@ static uint32_t test_color(uint8_t *p_uc_ref_color, uint8_t *p_uc_capture_data,
  *
  * \param test Current test case.
  */
-static void ov7740_test_initialization_run(const struct test_case *test)
+static void ov7740_test_initialization_run(const struct test_case* const test)
 {
 	volatile uint32_t ul_error = 0;
 
@@ -356,7 +356,7 @@ static void ov7740_test_initialization_run(const struct test_case *test)
  * \brief Start capture process.
  *
  */
-static void ov7740_test_capture_process_run(const struct test_case *test)
+static void ov7740_test_capture_process_run(const struct test_case* const test)
 {
 	if (g_ul_init_error_flag == true) {
 		/* Return error if previous test about initialization failed */
@@ -379,13 +379,13 @@ static void ov7740_test_capture_process_run(const struct test_case *test)
 		g_ul_vsync_flag = false;
 
 		/* Configure the PDC Buffer and next Buffer for image capture */
-		pio_capture_to_buffer(OV7740_VSYNC_PIO, uc_capture_buffer,
-				sizeof(uc_capture_buffer));
+		pio_capture_to_buffer(OV7740_VSYNC_PIO, g_auc_capture_buffer,
+				sizeof(g_auc_capture_buffer));
 
 		/* Enable PIO capture */
 		pio_capture_enable(OV7740_DATA_BUS_PIO);
 
-		/* Wait for the end of capture of the uc_capture_buffer */
+		/* Wait for the end of capture of the g_auc_capture_buffer */
 		while (!((OV7740_DATA_BUS_PIO->PIO_PCISR & PIO_PCIMR_ENDRX) ==
 				PIO_PCIMR_ENDRX)) {
 		}
@@ -397,11 +397,11 @@ static void ov7740_test_capture_process_run(const struct test_case *test)
  *
  * \param test Current test case.
  */
-static void ov7740_test_color_run(const struct test_case *test)
+static void ov7740_test_color_run(const struct test_case* const test)
 {
 	uint32_t ul_error = 0;
-	volatile uint32_t ul_index = 25600; /* put the index at the middle of
-	                                     * data buffer */
+	volatile uint32_t ul_index = 25600UL; /* put the index at the middle of
+																					* data buffer */
 
 	/* Check if picture color is similar to reference color. There are 8
 	 * reference colors
@@ -411,35 +411,35 @@ static void ov7740_test_color_run(const struct test_case *test)
 	 * and test this color.
 	 */
 	/* Test black color */
-	ul_error += test_color((uint8_t *)uc_data_black_color,
-			uc_capture_buffer, ul_index + 40 );
+	ul_error += test_color((uint8_t *)g_auc_data_black_color,
+			g_auc_capture_buffer, ul_index + 40 );
 	/* Test blue color */
-	ul_error += test_color((uint8_t *)uc_data_blue_color, uc_capture_buffer,
+	ul_error += test_color((uint8_t *)g_auc_data_blue_color, g_auc_capture_buffer,
 			ul_index + 120);
 
 	/* Test red color */
-	ul_error += test_color((uint8_t *)uc_data_red_color, uc_capture_buffer,
+	ul_error += test_color((uint8_t *)g_auc_data_red_color, g_auc_capture_buffer,
 			ul_index + 200);
 
 	/* Test purple color */
-	ul_error += test_color((uint8_t *)uc_data_purple_color,
-			uc_capture_buffer, ul_index + 280);
+	ul_error += test_color((uint8_t *)g_auc_data_purple_color,
+			g_auc_capture_buffer, ul_index + 280);
 
 	/* Test green color */
-	ul_error += test_color((uint8_t *)uc_data_green_color,
-			uc_capture_buffer, ul_index + 360);
+	ul_error += test_color((uint8_t *)g_auc_data_green_color,
+			g_auc_capture_buffer, ul_index + 360);
 
 	/* Test cyan color */
-	ul_error += test_color((uint8_t *)uc_data_cyan_color, uc_capture_buffer,
+	ul_error += test_color((uint8_t *)g_auc_data_cyan_color, g_auc_capture_buffer,
 			ul_index + 440);
 
 	/* Test yellow color */
-	ul_error += test_color((uint8_t *)uc_data_yellow_color,
-			uc_capture_buffer, ul_index + 520 );
+	ul_error += test_color((uint8_t *)g_auc_data_yellow_color,
+			g_auc_capture_buffer, ul_index + 520 );
 
 	/* Test white color */
-	ul_error += test_color((uint8_t *)uc_data_white_color,
-			uc_capture_buffer, ul_index + 600);
+	ul_error += test_color((uint8_t *)g_auc_data_white_color,
+			g_auc_capture_buffer, ul_index + 600);
 	/* Check Result of previous test */
 	test_assert_true(test, ul_error == 0, "OV7740 color test failed!");
 }

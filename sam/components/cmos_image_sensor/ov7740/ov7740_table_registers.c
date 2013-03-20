@@ -51,19 +51,19 @@ extern "C" {
 /**
  * \defgroup ov7740_CMOS_image_sensor_group
  *
- *
- * This file define several array .Each of these array contain adress of ov7740
+ * This file defines several arrays. Each of them contain adress of ov7740
  * register and corresponding value for a specific configuration.
  * There are seven different configuration:
  *       -  OV7740_QVGA_YUV422_10FPS[]
- *       -  OV7740_QVGA_YUV422_15FPS[]=
- *       -  OV7740_QVGA_YUV422_20FPS[]=
- *       -  OV7740_QVGA_YUV422_30FPS[]=
- *       -  OV7740_QVGA_RGB888[]=
- *       -  OV7740_QQVGA_YUV422[]=
- *       -  OV7740_QQVGA_RGB888[]=
- *       -  OV7740_TEST_PATTERN[]=
- *       -  OV7740_VGA_YUV422_20FPS[]=
+ *       -  OV7740_QVGA_YUV422_15FPS[]
+ *       -  OV7740_QVGA_YUV422_20FPS[]
+ *       -  OV7740_QVGA_YUV422_30FPS[]
+ *       -  OV7740_QVGA_RGB888[]
+ *       -  OV7740_QQVGA_YUV422[]
+ *       -  OV7740_QQVGA_RGB888[]
+ *       -  OV7740_TEST_PATTERN[]
+ *       -  OV7740_VGA_YUV422_20FPS[]
+ * These values have been obtained from OV7740 datasheet and OmniVision Developer Kit.
  * @{
  */
 

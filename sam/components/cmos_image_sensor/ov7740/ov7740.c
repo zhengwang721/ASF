@@ -66,7 +66,7 @@ extern "C" {
  * \param p_twi TWI interface.
  * \return PID and VER.
  */
-static uint32_t ov_id( Twi *p_twi )
+static uint32_t ov_id( Twi* const p_twi )
 {
 	twi_packet_t packet_pid;
 	twi_packet_t packet_ver;
@@ -99,7 +99,7 @@ static uint32_t ov_id( Twi *p_twi )
  * \param p_twi TWI interface.
  * \return 0 if the sensor is present, 1 otherwise.
  */
-static uint32_t ov_manufacturer( Twi *p_twi )
+static uint32_t ov_manufacturer( Twi* const p_twi )
 {
 	twi_packet_t twi_packet;
 	uint32_t ul_midh = 0;
@@ -136,7 +136,7 @@ static uint32_t ov_manufacturer( Twi *p_twi )
  * \param p_twi TWI interface.
  * \return 0 on success, 1 otherwise.
  */
-static uint32_t ov_test_write( Twi *p_twi )
+static uint32_t ov_test_write( Twi* const p_twi )
 {
 	twi_packet_t twi_packet;
 	uint32_t ul_value = 0;
@@ -178,7 +178,8 @@ static uint32_t ov_test_write( Twi *p_twi )
 }
 
 /**
- * \brief Register array for manual operation.
+ * \brief Register array for manual operation
+ * (given by OmniVision toolkit).
  */
 static ov_reg regs_manual[] = {
 	{0x13, 0x0},
@@ -196,7 +197,7 @@ static ov_reg regs_manual[] = {
  *
  * \param p_twi TWI interface.
  */
-static void ov_retrieve_manual( Twi *p_twi )
+static void ov_retrieve_manual( Twi* const p_twi )
 {
 	uint8_t i = 0;
 	twi_packet_t twi_packet;
@@ -236,7 +237,7 @@ static void ov_retrieve_manual( Twi *p_twi )
  * \param p_pio Pointer to the PIO instance which control OV7740 sensor power.
  * \param ul_mask Bitmask of OV7740 sensor power pin.
  */
-void ov_power(uint32_t ul_on_off, Pio *p_pio, const uint32_t ul_mask)
+void ov_power(uint32_t ul_on_off, Pio* const p_pio, const uint32_t ul_mask)
 {
 	if (ul_on_off) {
 		pio_clear(p_pio, ul_mask);
@@ -252,7 +253,7 @@ void ov_power(uint32_t ul_on_off, Pio *p_pio, const uint32_t ul_mask)
  * power pin.
  * \param ul_mask Bitmask of the OV7740 sensor power pin.
  */
-void ov_reset(Pio *p_pio, uint32_t ul_mask)
+void ov_reset(Pio* const p_pio, const uint32_t ul_mask)
 {
 	pio_clear(p_pio, ul_mask);
 	delay_ms( 2 );
@@ -268,7 +269,7 @@ void ov_reset(Pio *p_pio, uint32_t ul_mask)
  * \param p_packet TWI packet.
  * \return 0 on success, TWID_ERROR_BUSY otherwise.
  */
-uint32_t ov_read_reg(Twi *p_twi, twi_packet_t *p_packet)
+uint32_t ov_read_reg(Twi* const p_twi, twi_packet_t* const p_packet)
 {
 	uint32_t ul_status;
 
@@ -284,7 +285,7 @@ uint32_t ov_read_reg(Twi *p_twi, twi_packet_t *p_packet)
  * \param p_packet TWI packet.
  * \return 0 on success, TWID_ERROR_BUSY otherwise.
  */
-uint32_t ov_write_reg(Twi *p_twi, twi_packet_t *p_packet)
+uint32_t ov_write_reg(Twi* const p_twi, twi_packet_t* const p_packet)
 {
 	uint32_t ul_status;
 
@@ -302,7 +303,7 @@ uint32_t ov_write_reg(Twi *p_twi, twi_packet_t *p_packet)
  * \param p_reg_list Register list to be written.
  * \return 0 on success, TWID_ERROR_BUSY otherwise.
  */
-uint32_t ov_write_regs( Twi *p_twi, const ov_reg *p_reg_list )
+uint32_t ov_write_regs( Twi* const p_twi, const ov_reg *p_reg_list )
 {
 	uint32_t ul_err;
 	uint32_t ul_size = 0;
@@ -339,7 +340,7 @@ uint32_t ov_write_regs( Twi *p_twi, const ov_reg *p_reg_list )
  * \param p_twi TWI interface.
  * \param p_regs Register list to be dumped.
  */
-void ov_dump_registers( Twi *p_twi, ov_reg *p_regs )
+void ov_dump_registers( Twi* const p_twi, ov_reg *p_regs )
 {
 	uint32_t i;
 	uint32_t ul_value;
@@ -371,7 +372,7 @@ void ov_dump_registers( Twi *p_twi, ov_reg *p_regs )
  * \param p_twi TWI interface.
  * \return 0 on success, 1 otherwise.
  */
-uint32_t ov_init( Twi *p_twi )
+uint32_t ov_init( Twi* const p_twi )
 {
 	uint32_t ul_id = 0;
 
@@ -395,7 +396,7 @@ uint32_t ov_init( Twi *p_twi )
  * \param format Specific format to configure.
  * \return 0 on success, 1 otherwise.
  */
-uint32_t ov_configure( Twi *p_twi, const EOV7740_Format format )
+uint32_t ov_configure( Twi* const p_twi, const ov7740_format format )
 {
 	const ov_reg *p_regs_conf = NULL;
 
@@ -454,7 +455,7 @@ uint32_t ov_configure( Twi *p_twi, const EOV7740_Format format )
  *
  * \param p_twi TWI interface.
  */
-uint32_t ov_configure_finish( Twi *p_twi )
+uint32_t ov_configure_finish( Twi* const p_twi )
 {
 	twi_packet_t twi_packet;
 	uint32_t ul_value = 0xff;
@@ -476,7 +477,7 @@ uint32_t ov_configure_finish( Twi *p_twi )
  *
  * \param p_twi TWI interface.
  */
-uint32_t ov_configure_manual( Twi *p_twi )
+uint32_t ov_configure_manual( Twi* const p_twi )
 {
 	ov_write_regs(p_twi, regs_manual);
 
@@ -491,7 +492,7 @@ uint32_t ov_configure_manual( Twi *p_twi )
  *
  * \return ul_size on success, 0 otherwise.
  */
-uint32_t ov_store_manual(Twi *p_twi, volatile uint32_t *p_backup_addr,
+uint32_t ov_store_manual(Twi* const p_twi, volatile uint32_t *p_backup_addr,
 		uint32_t ul_size)
 {
 	uint32_t ul_offset = 0;

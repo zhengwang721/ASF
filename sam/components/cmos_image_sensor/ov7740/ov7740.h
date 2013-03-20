@@ -180,7 +180,7 @@ typedef struct _ov_reg {
  * These enumeration allow to configure the OV7740 registers using
  * the ov7740_table_registre.c Array.
  */
-typedef enum _EOV7740_Format {
+typedef enum _ov7740_format {
 	QVGA_YUV422_10FPS, /*!< Register to be written  */
 	QVGA_YUV422_15FPS, /*!< Register to be written */
 	QVGA_YUV422_20FPS, /*!< Register to be written */
@@ -190,7 +190,7 @@ typedef enum _EOV7740_Format {
 	QQVGA_RGB888, /*!< Register to be written */
 	TEST_PATTERN, /*!< Register to be written */
 	VGA_YUV422_20FPS /*!< Register to be written */
-} EOV7740_Format;
+} ov7740_format;
 
 extern const ov_reg OV7740_QVGA_YUV422_10FPS[];
 extern const ov_reg OV7740_QVGA_YUV422_15FPS[];
@@ -202,17 +202,17 @@ extern const ov_reg OV7740_QQVGA_RGB888[];
 extern const ov_reg OV7740_TEST_PATTERN[];
 extern const ov_reg OV7740_VGA_YUV422_20FPS[];
 
-void ov_power(uint32_t on_off, Pio *p_pio, const uint32_t ul_mask);
-void ov_reset(Pio *p_pio, uint32_t ul_mask);
-uint32_t ov_read_reg(Twi *p_twi, twi_packet_t *p_packet);
-uint32_t ov_write_reg(Twi *p_twi, twi_packet_t *p_packet);
-uint32_t ov_write_regs( Twi *p_twi, const ov_reg *p_reg_list );
-void ov_dump_registers( Twi *p_twi, ov_reg *p_regs );
-uint32_t ov_init( Twi *p_twi );
-uint32_t ov_configure( Twi *p_twi, const EOV7740_Format format );
-uint32_t ov_configure_finish( Twi *p_twi );
-uint32_t ov_configure_manual( Twi *p_twi );
-uint32_t ov_store_manual(Twi *p_twi, volatile uint32_t *p_backup_addr,
+void ov_power(uint32_t on_off, Pio* const p_pio, const uint32_t ul_mask);
+void ov_reset(Pio* const p_pio, const uint32_t ul_mask);
+uint32_t ov_read_reg(Twi* const p_twi, twi_packet_t *p_packet);
+uint32_t ov_write_reg(Twi* const p_twi, twi_packet_t* const p_packet);
+uint32_t ov_write_regs( Twi* const p_twi, const ov_reg *p_reg_list );
+void ov_dump_registers( Twi* const p_twi, ov_reg *p_regs );
+uint32_t ov_init( Twi* const p_twi );
+uint32_t ov_configure( Twi* const p_twi, const ov7740_format format );
+uint32_t ov_configure_finish( Twi* const p_twi );
+uint32_t ov_configure_manual( Twi* const p_twi );
+uint32_t ov_store_manual(Twi* const p_twi, volatile uint32_t *p_backup_addr,
 		uint32_t ul_size);
 uint32_t ov_restore_manual(volatile uint32_t *p_backup_addr, uint32_t ul_size);
 
@@ -245,16 +245,18 @@ uint32_t ov_restore_manual(volatile uint32_t *p_backup_addr, uint32_t ul_size);
  * This module requires the following driver
  * - \ref group_sam_pio_capture
  *
- * \subsection c42364a_basic_usage_code
+ * \subsection ov7740_basic_usage_code
  *
- * First set the PLLB to the system core clock and PLLA to clock PCK0
- * (used to get data from image sensor).
- * The next step is to configure the LCD controller and display information
- * to the user.
- * Then external SRAM, which is used to store data after acquisition, is
- * configured.
- * Finally this exemple configures the OV740 CMOS image sensor and the PIO
- * capture mode.
+ * If the OV7740 is clocked using Peripheral Clock, the according PLL must be
+ * configured to ouput the right frequency on the given PCK pin.
+ * If the microcontroller has at least two PLL, another PLL can be used to
+ * clock the system at different frequency.
+ * Then the OV7740 can be configured according to the system requirements.
+ *
+ * Other external components, like SRAM/SDRAM have to be configured also with
+ * correct SMC settings.
+ *
+ * Finally, the PIO capture mode has to be configured for acquisition.
  *
  * \endcode
  */
