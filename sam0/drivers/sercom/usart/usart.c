@@ -47,6 +47,98 @@
 #endif
 
 /**
+ * \internal Checks a USART config against current set config
+ *
+ * This function will check that the config does not alter the
+ * configuration of the module. If the new config changes any
+ * setting, the initialization will be discarded.
+ *
+ * \param[in]  module  Pointer to the software instance struct
+ * \param[in]  config  Pointer to the configuration struct
+ *
+ * \return The status of the configuration
+ * \retval STATUS_ERR_INVALID_ARG  If invalid argument(s) were provided.
+ * \retval STATUS_ERR_DENIED       If configuration was different from previous
+ * \retval STATUS_OK               If the configuration was written
+ */
+static enum status_code _usart_check_config(
+		struct spi_module *const module,
+		const struct spi_config *const config)
+{
+		/* Sanity check arguments */
+	Assert(module);
+	Assert(module->hw);
+
+	SercomUsart *const usart_hw = &(module->hw->USART);
+
+	uint32_t pad0 = config->pinmux_pad0;
+	uint32_t pad1 = config->pinmux_pad1;
+	uint32_t pad2 = config->pinmux_pad2;
+	uint32_t pad3 = config->pinmux_pad3;
+
+	/* SERCOM PAD0 */
+	if (pad0 == PINMUX_DEFAULT) {
+		pad0 = _sercom_get_default_pad(usart_hw, 0);
+	}
+	if ((pad0 & 0xFFFF) != system_pinmux_pin_get_mux_position(pad0 >> 16)) {
+		return STATUS_ERR_DENIED;
+	}
+
+	/* SERCOM PAD1 */
+	if (pad1 == PINMUX_DEFAULT) {
+		pad1 = _sercom_get_default_pad(usart_hw, 1);
+	}
+	if ((pad1 & 0xFFFF) != system_pinmux_pin_get_mux_position(pad1 >> 16)) {
+		return STATUS_ERR_DENIED;
+	}
+
+	/* SERCOM PAD2 */
+	if (pad2 == PINMUX_DEFAULT) {
+		pad2 = _sercom_get_default_pad(usart_hw, 2);
+	}
+	if ((pad2 & 0xFFFF) != system_pinmux_pin_get_mux_position(pad2 >> 16)) {
+		return STATUS_ERR_DENIED;
+	}
+
+	/* SERCOM PAD3 */
+	if (pad3 == PINMUX_DEFAULT) {
+		pad3 = _sercom_get_default_pad(usart_hw, 3);
+	}
+	if ((pad3 & 0xFFFF) != system_pinmux_pin_get_mux_position(pad3 >> 16)) {
+		return STATUS_ERR_DENIED;
+	}
+
+	uint32_t ctrla = 0;
+	uint32_t ctrlb = 0;
+	uint16_t baud  = 0;
+
+	/* Set data order, internal muxing, and clock polarity */
+	ctrla = (config->data_order) | (config->mux_settings) |
+			(config->clock_polarity_inverted << SERCOM_USART_CTRLA_CPOL_Pos);
+
+	enum status_code status_code = STATUS_OK;
+
+	/* Set sample mode */
+	ctrla |= config->transfer_mode;
+	ctrla |= SERCOM_USART_CTRLA_MODE(0);
+	/* Set stopbits and character size */
+	ctrlb = config->stopbits | config->character_size;
+
+	/* set parity mode */
+	if (config->parity != USART_PARITY_NONE) {
+		ctrla |= SERCOM_USART_CTRLA_FORM(1);
+		ctrlb |= config->parity;
+	} else {
+		ctrla |= SERCOM_USART_CTRLA_FORM(0);
+	}
+
+
+//TODO: config->generator_source;
+//TODO: 	sercom_set_gclk_generator(config->generator_source, true, false);
+
+}
+
+/**
  * \internal
  * Set Configuration of the USART module
  */
