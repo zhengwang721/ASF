@@ -205,12 +205,15 @@ static enum status_code _spi_check_config(
 	ctrla |= SERCOM_SPI_CTRLA_MODE(0x1);
 	ctrla |= SERCOM_SPI_CTRLA_ENABLE;
 
+	/* Check that same config is set */
 	if (spi_module->CTRLA.reg == ctrla &&
 			spi_module->CTRLB.reg == ctrlb) {
 		module->mode           = config->mode;
 		module->character_size = config->character_size;
 		return STATUS_OK;
 	}
+	/* Not same config, wipe module pointer and return */
+	module->hw = NULL;
 
 	return STATUS_ERR_DENIED;
 }
@@ -386,12 +389,12 @@ enum status_code spi_init(
 
 	/* Check if module is enabled. */
 	if (spi_module->CTRLA.reg & SERCOM_SPI_CTRLA_ENABLE) {
+#  if SPI_CALLBACK_MODE == false
 		/* Check if config is valid */
-		enum status_code ret_status = _spi_check_config(module, config);
-		if (ret_status != STATUS_OK) {
-			module->hw = NULL;
-		}
-		return ret_status;
+		return _spi_check_config(module, config);
+#  else
+		return STATUS_ERR_DENIED;
+#  endif
 	}
 
 	/* Check if reset is in progress. */
