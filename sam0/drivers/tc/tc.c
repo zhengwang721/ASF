@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM0+ TC Driver
+ * \brief SAM D20 TC - Timer Counter Driver
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -59,7 +59,6 @@
 
 /** TODO: Remove once present in device header file */
 #  define TC_INST_GCLK_ID              { MREPEAT(TC_INST_NUM, _TC_GCLK_ID    , ~) }
-
 /** TODO: Remove once present in device header file */
 #  define TC_INST_PM_APBCMASK          { MREPEAT(TC_INST_NUM, _TC_PM_APBCMASK, ~) }
 #endif

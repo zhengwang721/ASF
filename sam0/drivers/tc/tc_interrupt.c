@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAMD20 Timer/Counter Interrupt Driver
+ * \brief SAM D20 Timer Counter Callback Driver
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -160,7 +160,7 @@ void _tc_interrupt_handler(
 	/* Check if an Overflow interrupt has occurred */
 	if (interrupt_and_callback_status_mask & TC_INTFLAG_OVF) {
 		/* Invoke registered and enabled callback function */
-		(*(module->callback[TC_CALLBACK_OVERFLOW]))(module);
+		(module->callback[TC_CALLBACK_OVERFLOW])(module);
 		/* Clear interrupt flag */
 		module->hw->COUNT8.INTFLAG.reg = TC_INTFLAG_OVF;
 	}
@@ -168,7 +168,7 @@ void _tc_interrupt_handler(
 	/* Check if an Error interrupt has occurred */
 	if (interrupt_and_callback_status_mask & TC_INTFLAG_ERR) {
 		/* Invoke registered and enabled callback function */
-		(*(module->callback[TC_CALLBACK_ERROR]))(module);
+		(module->callback[TC_CALLBACK_ERROR])(module);
 		/* Clear interrupt flag */
 		module->hw->COUNT8.INTFLAG.reg = TC_INTFLAG_ERR;
 	}
@@ -176,7 +176,7 @@ void _tc_interrupt_handler(
 	/* Check if an Match/Capture Channel 0 interrupt has occurred */
 	if (interrupt_and_callback_status_mask & TC_INTFLAG_MC(1)) {
 		/* Invoke registered and enabled callback function */
-		(*(module->callback[TC_CALLBACK_CC_CHANNEL0]))(module);
+		(module->callback[TC_CALLBACK_CC_CHANNEL0])(module);
 		/* Clear interrupt flag */
 		module->hw->COUNT8.INTFLAG.reg = TC_INTFLAG_MC(1);
 	}
@@ -184,7 +184,7 @@ void _tc_interrupt_handler(
 	/* Check if an Match/Capture Channel 1 interrupt has occurred */
 	if (interrupt_and_callback_status_mask & TC_INTFLAG_MC(2)) {
 		/* Invoke registered and enabled callback function */
-		(*(module->callback[TC_CALLBACK_CC_CHANNEL1]))(module);
+		(module->callback[TC_CALLBACK_CC_CHANNEL1])(module);
 		/* Clear interrupt flag */
 		module->hw->COUNT8.INTFLAG.reg = TC_INTFLAG_MC(2);
 	}

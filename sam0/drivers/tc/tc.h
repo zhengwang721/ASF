@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAMD20 TC Driver
+ * \brief SAM D20 TC - Timer Counter Driver
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -384,10 +384,6 @@
 #include <gclk.h>
 #include <pinmux.h>
 
-#ifdef TC_ASYNC
-//#include <system_interrupt.h>
-#endif
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -624,7 +620,7 @@ enum tc_event_action {
 	TC_EVENT_ACTION_PWP               = TC_EVCTRL_EVACT_PWP,
 };
 
-/** TODO
+/**
  * \brief Enum to be used to check interrupt flags
  *
  * This enum defines the different interrupt flags for the TC module.
@@ -794,8 +790,8 @@ struct tc_module {
 	/** Size of the initialized Timer/Counter module configuration. */
 	enum tc_counter_size counter_size;
 #endif
-	/** Array of callbacs */
 #ifdef TC_ASYNC
+	/** Array of callbacs */
 	tc_callback_t callback[TC_CALLBACK_N];
 	/** Bit mask for callbacks registered */
 	uint8_t register_callback_mask;
