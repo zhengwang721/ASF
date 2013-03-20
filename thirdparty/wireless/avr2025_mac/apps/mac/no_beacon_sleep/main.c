@@ -162,9 +162,9 @@ static uint8_t TIMER_LED_OFF;
 static uint8_t WAKE_TIMER;
 
 #ifdef SAM
-enum sleepmgr_mode mode = SLEEPMGR_IDLE;
-#else
 enum sleepmgr_mode mode = SLEEPMGR_ACTIVE;
+#else
+enum sleepmgr_mode mode = SLEEPMGR_IDLE;
 #endif
 /* === PROTOTYPES ========================================================== */
 
