@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Example specific board configuration file
+ * \brief Serial USART service configuration.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,13 +40,9 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_BOARD_H
-#define CONF_BOARD_H
+
+#ifndef CONF_USART_SERIAL_H
+#define CONF_USART_SERIAL_H
 
 
-#define IC_TYPE             (0x01)
-
-
-#define CONF_BOARD_ENABLE_USARTA1
-
-#endif /* CONF_BOARD_H */
+#endif/* CONF_USART_SERIAL_H_INCLUDED */

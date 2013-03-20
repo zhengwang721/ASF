@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Example specific board configuration file
+ * \brief Spi Master configuration
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -40,13 +40,26 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_BOARD_H
-#define CONF_BOARD_H
+#ifndef CONF_SPI_MASTER_H_INCLUDED
+#define CONF_SPI_MASTER_H_INCLUDED
 
+/* Possibility to change low-level configurations here */
 
-#define IC_TYPE             (0x01)
+#define AT86RFX_SPI_BAUDRATE 3000000
 
+//! Default Config Spi Master Delay BCS
+// #define CONFIG_SPI_MASTER_DELAY_BCS            0
 
-#define CONF_BOARD_ENABLE_USARTA1
+//! Default Config Spi Master Bits per Transfer Definition
+// #define CONFIG_SPI_MASTER_BITS_PER_TRANSFER    8
 
-#endif /* CONF_BOARD_H */
+//! Default Config Spi Master Delay BCT
+// #define CONFIG_SPI_MASTER_DELAY_BCT            0
+
+//! Default Config Spi Master Delay BS
+// #define CONFIG_SPI_MASTER_DELAY_BS             0
+
+//! Default Config Spi Master Dummy Field
+// #define CONFIG_SPI_MASTER_DUMMY                0xFF
+
+#endif /* CONF_SPI_MASTER_H_INCLUDED */

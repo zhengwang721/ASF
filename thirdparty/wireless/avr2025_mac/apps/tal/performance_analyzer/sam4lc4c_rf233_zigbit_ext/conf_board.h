@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Example specific board configuration file
+ * \brief  Configuration File for SAM4L-EK Board.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -40,13 +40,15 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_BOARD_H
-#define CONF_BOARD_H
+
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
+
+/** Enable Com Port. */
+#define CONF_BOARD_COM_PORT
+#define CONF_BOARD_AT86RFX
+#define IC_TYPE             (0x00)
 
 
-#define IC_TYPE             (0x01)
 
-
-#define CONF_BOARD_ENABLE_USARTA1
-
-#endif /* CONF_BOARD_H */
+#endif  /* CONF_BOARD_H_INCLUDED */

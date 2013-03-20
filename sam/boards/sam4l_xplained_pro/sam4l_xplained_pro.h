@@ -90,7 +90,8 @@
  */
 
 //! Name string macro
-#define BOARD_NAME "SAM4L_XPLAINED_PRO"
+#define BOARD_NAME "SAM4L Xplained Pro"
+#define MCU_SOC_NAME        "ATSAM4LC4C"
 
 //! \name Board oscillator definitions
 //@{

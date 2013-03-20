@@ -1,7 +1,7 @@
 /**
- * \file
+ * \file *********************************************************************
  *
- * \brief Example specific board configuration file
+ * \brief Serial Input & Output configuration
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -38,15 +38,29 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- *
  */
-#ifndef CONF_BOARD_H
-#define CONF_BOARD_H
+
+#ifndef CONF_SIO2HOST_H_INCLUDED
+#define CONF_SIO2HOST_H_INCLUDED
 
 
-#define IC_TYPE             (0x01)
+/** USART Interface */
+#define USART_HOST                 USART1
+/** Baudrate setting */
+#define USART_HOST_BAUDRATE        9600
+/** Character length setting */
+#define USART_HOST_CHAR_LENGTH     US_MR_CHRL_8_BIT
+/** Parity setting */
+#define USART_HOST_PARITY          US_MR_PAR_NO
+/** Stop bits setting */
+#define USART_HOST_STOP_BITS       US_MR_NBSTOP_1_BIT
+
+#define USART_HOST_ISR_VECT()      ISR(USART1_Handler)
+
+#define USART_HOST_IRQn            USART1_IRQn
+
+#define USART_HOST_RX_ISR_ENABLE() usart_enable_interrupt(USART_HOST, US_IER_RXRDY);\
+								   NVIC_EnableIRQ(USART_HOST_IRQn);
 
 
-#define CONF_BOARD_ENABLE_USARTA1
-
-#endif /* CONF_BOARD_H */
+#endif /* CONF_SIO2HOST_H_INCLUDED */

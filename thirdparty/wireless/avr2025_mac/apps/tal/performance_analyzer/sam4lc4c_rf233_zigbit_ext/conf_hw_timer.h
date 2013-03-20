@@ -1,7 +1,7 @@
 /**
- * \file
+ * \file *********************************************************************
  *
- * \brief Example specific board configuration file
+ * \brief USART Serial configuration
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -38,15 +38,18 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- *
  */
-#ifndef CONF_BOARD_H
-#define CONF_BOARD_H
+
+#ifndef CONF_HW_TIMER_H_INCLUDED
+#define CONF_HW_TIMER_H_INCLUDED
 
 
-#define IC_TYPE             (0x01)
+/*! \name Configuration
+ */
+//! @{
+#define TIMER                (TC0)
+#define TIMER_CHANNEL_ID     0
+//! @}
 
 
-#define CONF_BOARD_ENABLE_USARTA1
-
-#endif /* CONF_BOARD_H */
+#endif /* CONF_HW_TIMER_H_INCLUDED */
