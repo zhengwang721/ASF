@@ -57,12 +57,16 @@
  * \param[in]  config  Pointer to the configuration struct
  *
  * \return The status of the configuration
- * \retval STATUS_ERR_INVALID_ARG  If invalid argument(s) were provided.
- * \retval STATUS_ERR_DENIED       If configuration was different from previous
- * \retval STATUS_OK               If the configuration was written
+ * \retval STATUS_ERR_INVALID_ARG       If invalid argument(s) were provided.
+ * \retval STATUS_ERR_DENIED            If configuration was different from previous
+ * \retval STATUS_OK                    If the configuration was written
+ * \retval STATUS_ERR_BAUD_UNAVAILABLE  The BAUD rate given by the
+ *                                      configuration
+ *                                      struct cannot be reached with
+ *                                      the current clock configuration
  */
 static enum status_code _usart_check_config(
-		struct spi_module *const module,
+		struct usart_module *const module,
 		const struct spi_config *const config)
 {
 		/* Sanity check arguments */
@@ -108,23 +112,55 @@ static enum status_code _usart_check_config(
 		return STATUS_ERR_DENIED;
 	}
 
-	uint32_t ctrla = 0;
-	uint32_t ctrlb = 0;
+	/* Find baud value and compare it */
 	uint16_t baud  = 0;
-
-	/* Set data order, internal muxing, and clock polarity */
-	ctrla = (config->data_order) | (config->mux_settings) |
-			(config->clock_polarity_inverted << SERCOM_USART_CTRLA_CPOL_Pos);
-
 	enum status_code status_code = STATUS_OK;
 
-	/* Set sample mode */
-	ctrla |= config->transfer_mode;
-	ctrla |= SERCOM_USART_CTRLA_MODE(0);
-	/* Set stopbits and character size */
+	switch (config->transfer_mode)
+	{
+		case USART_TRANSFER_SYNCHRONOUSLY:
+			if (!config->use_external_clock) {
+				status_code = _sercom_get_sync_baud_val(config->baudrate,
+						system_gclk_chan_get_hz(SERCOM_GCLK_ID), &baud);
+			}
+
+			break;
+
+		case USART_TRANSFER_ASYNCHRONOUSLY:
+			if (config->use_external_clock) {
+				status_code =
+						_sercom_get_async_baud_val(config->baudrate,
+							config->ext_clock_freq, &baud);
+			} else {
+				status_code =
+						_sercom_get_async_baud_val(config->baudrate,
+							system_gclk_chan_get_hz(SERCOM_GCLK_ID), &baud);
+			}
+
+			break;
+	}
+
+	if (status_code != STATUS_OK) {
+		/* Baud rate calculation error, return status code */
+		return status_code;
+	}
+
+	if (usart_hw->BAUD.reg !=  baud) {
+		return STATUS_ERR_DENIED;
+	}
+
+	uint32_t ctrla = 0;
+	uint32_t ctrlb = 0;
+
+	/* Check sample mode, data order, internal muxing, and clock polarity */
+	ctrla = (config->data_order) | (config->mux_settings) |
+			(config->transfer_mode) | (SERCOM_USART_CTRLA_MODE(0)) |
+			(config->clock_polarity_inverted << SERCOM_USART_CTRLA_CPOL_Pos);
+
+	/* Check stopbits and character size */
 	ctrlb = config->stopbits | config->character_size;
 
-	/* set parity mode */
+	/* Check parity mode bits */
 	if (config->parity != USART_PARITY_NONE) {
 		ctrla |= SERCOM_USART_CTRLA_FORM(1);
 		ctrlb |= config->parity;
@@ -132,10 +168,13 @@ static enum status_code _usart_check_config(
 		ctrla |= SERCOM_USART_CTRLA_FORM(0);
 	}
 
-
-//TODO: config->generator_source;
-//TODO: 	sercom_set_gclk_generator(config->generator_source, true, false);
-
+	if (usart_hw->CTRLA.reg == ctrla && usart_hw->CTRLB.reg == ctrlb) {
+		return STATUS_OK;
+	}
+	else {
+		module->hw = NULL;
+		return STATUS_ERR_DENIED;
+	}
 }
 
 /**
