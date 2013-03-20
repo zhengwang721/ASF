@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="driver" id="sam0.drivers.adc" caption="ADC - Analog-to-Digital Converter">
+	<select-by-config id="sam0.drivers.adc" name="config.sam0.drivers.adc" caption="ADC - Analog-to-Digital Converter" default="callback">
 		<info type="description" value="summary">
 			Driver for the SAMD20 Analog to Digital Converter. Provides a unified
 			interface for the configuration and management of the ADC module,
@@ -7,22 +7,47 @@
 			conversions and event generation.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="Analog Conversion" />
+			<keyword value="Analog Conversion"/>
 		</info>
 
-		<build type="include-path" value="."/>
-		<build type="header-file" subtype="api" value="adc.h"/>
-		<build type="header-file" value="quick_start/qs_adc_basic.h"/>
-		<build type="c-source" value="adc.c"/>
 
-		<build type="doxygen-entry-point" value="asfdoc_samd20_adc_group"/>
-		<build type="doxygen-example-path" value="quick_start"/>
+		<module type="driver" id="sam0.drivers.adc#polled" caption="ADC - Analog-to-Digital Converter (Polled Mode)">
+			<build type="c-source" value="adc.c"/>
+			<build type="header-file" subtype="api" value="adc.h"/>
+			<build type="include-path" value="."/>
 
-		<device-support value="samd20"/>
+			<build type="doxygen-example-path" value ="quick_start"/>
+			<build type="doxygen-entry-point" value="asfdoc_samd20_adc_group"/>
 
-		<require idref="sam0.utils"/>
-		<require idref="sam0.drivers.system"/>
+			<build type="define" name="ADC_CALLBACK_MODE" value="false"/>
 
-		<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
-	</module>
+			<device-support value="samd20"/>
+
+			<require idref="sam0.utils"/>
+			<require idref="sam0.drivers.system"/>
+
+			<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
+		</module>
+		<module type="driver" id="sam0.drivers.adc#callback" caption="ADC - Analog-to-Digital Converter (Callback Mode)">
+			<build type="c-source" value="adc_callback.c"/>
+			<build type="c-source" value="adc.c"/>
+			<build type="header-file" subtype="api" value="adc.h"/>
+			<build type="header-file" subtype="api" value="adc_callback.h"/>
+
+			<build type="include-path" value="."/>
+
+			<build type="doxygen-example-path" value ="quick_start_callback"/>
+			<build type="doxygen-entry-point" value="asfdoc_samd20_adc_group"/>
+
+			<build type="define" name="ADC_CALLBACK_MODE" value="true"/>
+			<build type="doxygen-enable-section" value="ADC_CALLBACK_MODE"/>
+
+			<device-support value="samd20"/>
+
+			<require idref="sam0.utils"/>
+			<require idref="sam0.drivers.system"/>
+
+			<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
+		</module>
+	</select-by-config>
 </asf>
