@@ -424,17 +424,19 @@ void _usart_interrupt_handler(
 	 * and if there is more to transfer */
 	if (interrupt_status & SERCOM_USART_INTFLAG_DREIF) {
 		if (module->remaining_tx_buffer_length) {
-			/* Write current packet from transmission buffer
-			 * and increment buffer pointer */
+			/* Write value will be at least 8-bits long */
+			uint16_t data_to_send = *(module->tx_buffer_ptr);
+			/* Increment 8-bit pointer */
+			(module->tx_buffer_ptr)++;
+			
 			if (module->character_size == USART_CHARACTER_SIZE_9BIT) {
-				usart_hw->DATA.reg |= *(module->tx_buffer_ptr)
-						& SERCOM_USART_DATA_MASK;
-				module->tx_buffer_ptr += 2;
-
-			} else {
-				usart_hw->DATA.reg |= (*(module->tx_buffer_ptr++)
-					& SERCOM_USART_DATA_MASK);
+				data_to_send = ((*(module->tx_buffer_ptr)) << 8);
+				/* Increment 8-bit pointer */
+				(module->tx_buffer_ptr)++;
 			}
+			/* Write the data to send */
+			usart_hw->DATA.reg = (data_to_send & SERCOM_USART_DATA_MASK);
+
 			if (--(module->remaining_tx_buffer_length) == 0) {
 				/* Disable the Data Register Empty Interrupt */
 				usart_hw->INTENCLR.reg	= SERCOM_USART_INTFLAG_DREIF;
@@ -501,13 +503,18 @@ void _usart_interrupt_handler(
 
 				/* Read current packet from DATA register,
 				 * increment buffer pointer and decrement buffer length */
-				if(module->character_size == USART_CHARACTER_SIZE_9BIT) {
-					/* Read out from DATA and increment 8bit ptr by two */
-					*(module->rx_buffer_ptr) = (usart_hw->DATA.reg & SERCOM_USART_DATA_MASK);
-					module->rx_buffer_ptr += 2;
-				} else {
-					/* Read out from DATA and increment 8bit ptr by one */
-					*(module->rx_buffer_ptr++) = (usart_hw->DATA.reg & SERCOM_USART_DATA_MASK);
+				uint16_t received_data = (usart_hw->DATA.reg & SERCOM_USART_DATA_MASK);
+
+				/* Read value will be at least 8-bits long */
+				*(module->rx_buffer_ptr) = received_data;
+				/* Increment 8-bit pointer */
+				module->rx_buffer_ptr += 1;
+
+				if (module->character_size == USART_CHARACTER_SIZE_9BIT) {
+					/* 9-bit data, write next received byte to the buffer */
+					*(module->rx_buffer_ptr) = (received_data >> 8);
+					/* Increment 8-bit pointer */
+					module->rx_buffer_ptr += 1;
 				}
 
 				/* Check if the last character have been received */
