@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
-	<module type="application" id="sam0.drivers.rtc.quick_start_calendar_interrupt" caption="RTC Calendar quickstart">
+	<module type="application" id="sam0.drivers.rtc.quick_start_calendar_interrupt" caption="RTC Calendar Callback Quickstart">
 		<info type="description" value="summary">
-		Quick start guide for the Real Time Clock (Counter Mode) driver demonstrating configuration and initialization.
+		Quick start guide for the RTC Calendar (Callback Mode) driver demonstrating configuration and initialization.
 		</info>
 		<build type="c-source" value="qs_rtc_calendar_callback.c"/>
 		<build type="include-path" value="."/>
