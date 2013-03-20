@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAMD20 AT30TSE75X Temperature Sensor Driver Quick Start
+ * \brief MACSC Driver configuration
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,31 +40,44 @@
  * \asf_license_stop
  *
  */
+#ifndef CONF_EXAMPLE_H
+#define CONF_EXAMPLE_H
 
-#include <asf.h>
+#include "ioport.h"
 
-//! [qs]
-double temp_res;
+#define SYS_CLK_SRC                        MACSC_16MHz
+#define RTC_CLK_SRC                                        MACSC_32KHz
 
-int main(void)
-{
-	/* Init system. */
-	system_init();
+#define ENABLE_SLEEP                               0
+#define ENABLE_AUTO_TIMESTAMP              0
+#define ENABLE_BACKOFF_SLOT_CNTR           1
 
-	/* Configure device and enable. */
-	at30tse_init();
+#define COMPARE_MODE                               MACSC_ABSOLUTE_CMP
 
-    /* Read thigh and tlow */
-	volatile uint16_t thigh = 0;
-	thigh = at30tse_read_register(AT30TSE_THIGH_REG, AT30TSE_NON_VOLATILE_REG, AT30TSE_THIGH_REG_SIZE);
-	volatile uint16_t tlow = 0;
-	tlow = at30tse_read_register(AT30TSE_TLOW_REG, AT30TSE_NON_VOLATILE_REG, AT30TSE_TLOW_REG_SIZE);
-	
-	/* Set 12-bit resolution mode. */
-	at30tse_write_config_register(AT30TSE_CONFIG_RES(AT30TSE_CONFIG_RES_12_bit));
+/* We request a tick of 1Hz */
+#define CONFIG_MACSC_TIMEOUT_TICK_HZ   62500
 
-	while (1) {
-		temp_res = at30tse_read_temperature();
-	}
-}
-//! [qs]
+/*
+ * These pins(output) can be probed to check the timing duration of the
+ * functionalities of the MACSC. 
+ */
+enum macsc_cb_pins {
+	OVF_INT_CHK_PIN     = IOPORT_CREATE_PIN(PORTB,0),       /*!< overflow interrupt toggle  */
+	CMP1_INT_CHK_PIN    = IOPORT_CREATE_PIN(PORTB,1),      /*!< cmp1 int toggle */
+	CMP2_INT_CHK_PIN    = IOPORT_CREATE_PIN(PORTB,2),     /*!< cmp2 int toggle */
+	CMP3_INT_CHK_PIN    = IOPORT_CREATE_PIN(PORTB,3),    /*!< cmp3 int toggle */
+	BACKOFF_INT_CHK_PIN = IOPORT_CREATE_PIN(PORTB,4),    /*!< back-off int toggle */
+};
+
+/*
+ * For USARTA1 connect a two wire cable for PORTD2 to connect with RXD
+ * For USARTA1 connect a two wire cable for PORTD3 to connect with TXD
+ */
+#define USART_SERIAL_PORT            &USARTA1
+
+#define USART_SERIAL_BAUDRATE   9600
+#define USART_SERIAL_CHAR_LENGTH        USART_CHSIZE_8BIT_gc
+#define USART_SERIAL_PARITY             USART_PMODE_DISABLED_gc
+#define USART_SERIAL_STOP_BIT           false
+
+#endif /* CONF_EXAMPLE_H */

@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAMD20 AT30TSE75X Temperature Sensor Driver Quick Start
+ * \brief Sleep controller driver for megaRF devices
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,31 +40,61 @@
  * \asf_license_stop
  *
  */
+#ifndef SLEEP_MEGARF_H
+#define SLEEP_MEGARF_H
 
-#include <asf.h>
+/**
+ * \defgroup sleep_group Sleep controller driver
+ *
+ * This is a low-level driver implementation for the MEGA RF sleep controller.
+ *
+ * \note To minimize the code overhead, these functions do not feature
+ * interrupt-protected access since they are likely to be called inside
+ * interrupt handlers or in applications where such protection is not
+ * necessary. If such protection is needed, it must be ensured by the calling
+ * code.
+ *
+ * @{
+ */
 
-//! [qs]
-double temp_res;
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-int main(void)
+#if defined(__ICCAVR__) || defined(__DOXYGEN__)
+
+/**
+ * \brief Enable sleep
+ */
+static inline void sleep_enable(void)
 {
-	/* Init system. */
-	system_init();
-
-	/* Configure device and enable. */
-	at30tse_init();
-
-    /* Read thigh and tlow */
-	volatile uint16_t thigh = 0;
-	thigh = at30tse_read_register(AT30TSE_THIGH_REG, AT30TSE_NON_VOLATILE_REG, AT30TSE_THIGH_REG_SIZE);
-	volatile uint16_t tlow = 0;
-	tlow = at30tse_read_register(AT30TSE_TLOW_REG, AT30TSE_NON_VOLATILE_REG, AT30TSE_TLOW_REG_SIZE);
-	
-	/* Set 12-bit resolution mode. */
-	at30tse_write_config_register(AT30TSE_CONFIG_RES(AT30TSE_CONFIG_RES_12_bit));
-
-	while (1) {
-		temp_res = at30tse_read_temperature();
-	}
+	SMCR |= (1 << SE);
 }
-//! [qs]
+
+/**
+ * \brief Disable sleep
+ */
+static inline void sleep_disable(void)
+{
+	SMCR &= ~(1 << SE);
+}
+
+#endif
+
+/**
+ * \brief Set new sleep mode
+ *
+ * \param mode Sleep mode, from the device IO header file.
+ */
+static inline void sleep_set_mode(enum SLEEP_SMODE_enum mode)
+{
+	SMCR = mode | (SMCR & ~((1 << SM0) | (1 << SM1) | (1 << SM2)));
+}
+
+#ifdef __cplusplus
+}
+#endif
+
+/*! @} */
+
+#endif /* SLEEP_MEGARF_H */

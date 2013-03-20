@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAMD20 AT30TSE75X Temperature Sensor Driver Quick Start
+ * \brief Chip-specific system clock manager configuration
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,31 +40,24 @@
  * \asf_license_stop
  *
  */
+#ifndef CONF_CLOCK_H_INCLUDED
+#define CONF_CLOCK_H_INCLUDED
 
-#include <asf.h>
+/* ===== System Clock Source Options */
+#define SYSCLK_SRC_RC16MHZ    0
+#define SYSCLK_SRC_RC128KHZ   1
+#define SYSCLK_SRC_TRS16MHZ   2
+#define SYSCLK_SRC_RC32KHZ    3
+#define SYSCLK_SRC_XOC16MHZ   4
+#define SYSCLK_SRC_EXTERNAL   5
 
-//! [qs]
-double temp_res;
+#define  SYSCLK_SOURCE         SYSCLK_SRC_RC16MHZ
+/* #define SYSCLK_SOURCE        SYSCLK_SRC_RC128KHZ */
+/* #define SYSCLK_SOURCE        SYSCLK_SRC_TRS16MHZ */
+/* #define SYSCLK_SOURCE        SYSCLK_SRC_XOC16MHZ */
 
-int main(void)
-{
-	/* Init system. */
-	system_init();
+/* ===== System Clock Bus Division Options */
 
-	/* Configure device and enable. */
-	at30tse_init();
+#define CONFIG_SYSCLK_PSDIV         SYSCLK_PSDIV_1
 
-    /* Read thigh and tlow */
-	volatile uint16_t thigh = 0;
-	thigh = at30tse_read_register(AT30TSE_THIGH_REG, AT30TSE_NON_VOLATILE_REG, AT30TSE_THIGH_REG_SIZE);
-	volatile uint16_t tlow = 0;
-	tlow = at30tse_read_register(AT30TSE_TLOW_REG, AT30TSE_NON_VOLATILE_REG, AT30TSE_TLOW_REG_SIZE);
-	
-	/* Set 12-bit resolution mode. */
-	at30tse_write_config_register(AT30TSE_CONFIG_RES(AT30TSE_CONFIG_RES_12_bit));
-
-	while (1) {
-		temp_res = at30tse_read_temperature();
-	}
-}
-//! [qs]
+#endif /* CONF_CLOCK_H_INCLUDED */

@@ -46,21 +46,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-/**
- * \defgroup sam0_components_sensor_at30tse75x_group AT30TSE75X Temperature Sensor
- *
- * See \ref sam0_components_sensor_at30tse75x_quickstart.
- *
- * \par Purpose
- *
- * The module provides useful API of AT30TSE75X temperature sensor through I2C interface.
- *
- * \section dependencies Dependencies
- * This driver depends on the following module:
- * - \ref i2c_group for sam0 I2C master.
- * @{
- */
  
 struct i2c_master_module dev_inst_at30tse75x;
 uint8_t resolution = AT30TSE_CONFIG_RES_9_bit;

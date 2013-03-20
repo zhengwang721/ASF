@@ -51,6 +51,21 @@
 /* Temperature sensor configuration file */
 #include "conf_at30tse75x.h"
 
+/**
+ * \defgroup asfdoc_samd20_at30tse75x_group AT30TSE75X Temperature Sensor
+ *
+ * See \ref asfdoc_samd20_at30tse75x_qs.
+ *
+ * \par Purpose
+ *
+ * The module provides useful API of AT30TSE75X temperature sensor through I2C interface.
+ *
+ * \section asfdoc_samd20_at30tse75x_dependencies Dependencies
+ * This driver depends on the following module:
+ * - \ref asfdoc_samd20_i2c_group for SAM D20 I2C master.
+ * @{
+ */
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -115,5 +130,7 @@ void at30tse_set_register_pointer(uint8_t reg, uint8_t reg_type);
 #ifdef __cplusplus
 }
 #endif
+
+/** @} */
 
 #endif /* AT30TSE75X_H_ */

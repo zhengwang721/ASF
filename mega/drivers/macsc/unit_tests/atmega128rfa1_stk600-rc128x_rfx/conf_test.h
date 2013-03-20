@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAMD20 AT30TSE75X Temperature Sensor Driver Quick Start
+ * \brief Unit test configuration
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,31 +40,22 @@
  * \asf_license_stop
  *
  */
+#ifndef CONF_TEST_H
+#define CONF_TEST_H
 
-#include <asf.h>
+/*
+ * For USARTA1 use a two wire cable for PORTD2 to connect with RXD
+ * For USARTA1 use a two wire cable for PORTD3 to connect with TXD
+ */
+#define CONF_TEST_USART      &USARTA1
+//! \note 38400 baud
+#define CONF_TEST_BAUDRATE   38400
+//! \note 8-bit character length
+#define CONF_TEST_CHARLENGTH USART_CHSIZE_8BIT_gc
+//! \note No parity check
+#define CONF_TEST_PARITY     USART_PMODE_DISABLED_gc
+//! \note No extra stopbit, i.e., use 1
+#define CONF_TEST_STOPBITS   false
 
-//! [qs]
-double temp_res;
 
-int main(void)
-{
-	/* Init system. */
-	system_init();
-
-	/* Configure device and enable. */
-	at30tse_init();
-
-    /* Read thigh and tlow */
-	volatile uint16_t thigh = 0;
-	thigh = at30tse_read_register(AT30TSE_THIGH_REG, AT30TSE_NON_VOLATILE_REG, AT30TSE_THIGH_REG_SIZE);
-	volatile uint16_t tlow = 0;
-	tlow = at30tse_read_register(AT30TSE_TLOW_REG, AT30TSE_NON_VOLATILE_REG, AT30TSE_TLOW_REG_SIZE);
-	
-	/* Set 12-bit resolution mode. */
-	at30tse_write_config_register(AT30TSE_CONFIG_RES(AT30TSE_CONFIG_RES_12_bit));
-
-	while (1) {
-		temp_res = at30tse_read_temperature();
-	}
-}
-//! [qs]
+#endif
