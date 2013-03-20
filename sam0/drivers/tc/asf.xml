@@ -19,7 +19,8 @@
 			<device-support value="samd20" />
 			<build type="c-source" value="tc.c" />
 			<build subtype="api" type="header-file" value="tc.h" />
-			<build subtype="example" type="header-file" value="quick_start/qs_tc_basic.h" />
+			<build type="header-file" value="quick_start/qs_tc_basic.h" />
+			<build type="doxygen-example-path" value="quick_start"/>
 			<build type="include-path" value="." />
 			<build type="doxygen-image-path" value="docimg" />
 			<build type="doxygen-entry-point" value="asfdoc_samd20_tc_group" />
@@ -50,7 +51,8 @@
 			<device-support value="samd20" />
 			<build type="c-source" value="tc.c" />
 			<build subtype="api" type="header-file" value="tc.h" />
-			<build subtype="example" type="header-file" value="quick_start/qs_tc_basic.h" />
+			<build type="header-file" value="quick_start/qs_tc_basic.h" />
+			<build type="doxygen-example-path" value="quick_start"/>
 			<build type="include-path" value="." />
 			<build type="doxygen-image-path" value="docimg" />
 			<build type="doxygen-entry-point" value="asfdoc_samd20_tc_group" />
