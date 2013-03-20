@@ -71,6 +71,151 @@ void spi_reset(
 }
 
 /**
+ * \internal Checks an SPI config against current set config
+ *
+ * This function will check that the config does not alter the
+ * configuration of the module. If the new config changes any
+ * setting, the initialization will be discarded.
+ *
+ * \param[in]  module  Pointer to the software instance struct
+ * \param[in]  config  Pointer to the configuration struct
+ *
+ * \return The status of the configuration
+ * \retval STATUS_ERR_INVALID_ARG  If invalid argument(s) were provided.
+ * \retval STATUS_ERR_DENIED       If configuration was different from previous
+ * \retval STATUS_OK               If the configuration was written
+ */
+static enum status_code _spi_check_config(
+		struct spi_module *const module,
+		const struct spi_config *const config)
+{
+	/* Sanity check arguments */
+	Assert(module);
+	Assert(config);
+	Assert(module->hw);
+
+	SercomSpi *const spi_module = &(module->hw->SPI);
+	Sercom *const sercom_module = module->hw;
+
+	uint32_t pad0 = config->pinmux_pad0;
+	uint32_t pad1 = config->pinmux_pad1;
+	uint32_t pad2 = config->pinmux_pad2;
+	uint32_t pad3 = config->pinmux_pad3;
+
+	/* SERCOM PAD0 */
+	if (pad0 == PINMUX_DEFAULT) {
+		pad0 = _sercom_get_default_pad(sercom_module, 0);
+	}
+	if ((pad0 & 0xFFFF) != system_pinmux_pin_get_mux_position(pad0 >> 16)) {
+		return STATUS_ERR_DENIED;
+	}
+
+	/* SERCOM PAD1 */
+	if (pad1 == PINMUX_DEFAULT) {
+		pad1 = _sercom_get_default_pad(sercom_module, 1);
+	}
+	if ((pad1 & 0xFFFF) != system_pinmux_pin_get_mux_position(pad1 >> 16)) {
+		return STATUS_ERR_DENIED;
+	}
+
+	/* SERCOM PAD2 */
+	if (pad2 == PINMUX_DEFAULT) {
+		pad2 = _sercom_get_default_pad(sercom_module, 2);
+	}
+	if ((pad2 & 0xFFFF) != system_pinmux_pin_get_mux_position(pad2 >> 16)) {
+		return STATUS_ERR_DENIED;
+	}
+
+	/* SERCOM PAD3 */
+	if (pad3 == PINMUX_DEFAULT) {
+		pad3 = _sercom_get_default_pad(sercom_module, 3);
+	}
+	if ((pad3 & 0xFFFF) != system_pinmux_pin_get_mux_position(pad3 >> 16)) {
+		return STATUS_ERR_DENIED;
+	}
+
+
+
+	/* Value to read BAUD register */
+	uint16_t baud;
+	/* Value to read CTRLA, CTRLB and ADDR register */
+	uint32_t ctrla = 0;
+	uint32_t ctrlb = 0;
+	uint32_t addr = 0;
+
+	uint32_t external_clock = system_gclk_chan_get_hz(SERCOM_GCLK_ID);
+
+	/* Find baud value and compare it */
+	if (config->mode == SPI_MODE_MASTER) {
+		enum status_code error_code = _sercom_get_sync_baud_val(
+				config->master.baudrate,
+				external_clock, &baud);
+
+		if (error_code != STATUS_OK) {
+			/* Baud rate calculation error, return status code */
+			return STATUS_ERR_INVALID_ARG;
+		}
+
+		if (spi_module->BAUD.reg !=  (uint8_t)baud) {
+			return STATUS_ERR_DENIED;
+		}
+		ctrla |= SERCOM_SPI_CTRLA_MASTER;
+	} else {
+		/* Set frame format */
+		ctrla |= config->slave.frame_format;
+
+		/* Set address mode */
+		ctrlb |= config->slave.address_mode;
+
+		/* Set address and address mask*/
+		addr |= (config->slave.address      << SERCOM_SPI_ADDR_ADDR_Pos) |
+				(config->slave.address_mask << SERCOM_SPI_ADDR_ADDRMASK_Pos);
+		if (spi_module->CTRLA.reg != addr) {
+			return STATUS_ERR_DENIED;
+		}
+
+		if (config->slave.preload_enable) {
+			/* Enable pre-loading of shift register */
+			ctrlb |= SERCOM_SPI_CTRLB_PLOADEN;
+		}
+	}
+
+	/* Set data order */
+	ctrla |= config->data_order;
+
+	/* Set clock polarity and clock phase */
+	ctrla |= config->transfer_mode;
+
+	/* Set mux setting */
+	ctrla |= config->mux_setting;
+
+	/* Set SPI character size */
+	ctrlb |= config->character_size;
+
+	if (config->run_in_standby) {
+		/* Enable in sleep mode */
+		ctrla |= SERCOM_SPI_CTRLA_RUNSTDBY;
+	}
+
+	if (config->receiver_enable) {
+		/* Enable receiver */
+		ctrlb |= SERCOM_SPI_CTRLB_RXEN;
+	}
+
+	ctrla |= SERCOM_SPI_CTRLA_MODE(0x1);
+	ctrla |= SERCOM_SPI_CTRLA_ENABLE;
+
+	if (spi_module->CTRLA.reg == ctrla &&
+			spi_module->CTRLB.reg == ctrlb) {
+		module->mode           = config->mode;
+		module->character_size = config->character_size;
+		return STATUS_OK;
+	}
+
+	return STATUS_ERR_DENIED;
+}
+
+/**
  * \internal Writes an SPI SERCOM configuration to the hardware module.
  *
  * This function will write out a given configuration to the hardware module.
@@ -97,7 +242,6 @@ static enum status_code _spi_set_config(
 
 	struct system_pinmux_config pin_conf;
 	system_pinmux_get_config_defaults(&pin_conf);
-	pin_conf.direction = SYSTEM_PINMUX_PIN_DIR_INPUT;
 
 	uint32_t pad0 = config->pinmux_pad0;
 	uint32_t pad1 = config->pinmux_pad1;
@@ -242,7 +386,12 @@ enum status_code spi_init(
 
 	/* Check if module is enabled. */
 	if (spi_module->CTRLA.reg & SERCOM_SPI_CTRLA_ENABLE) {
-		return STATUS_ERR_DENIED;
+		/* Check if config is valid */
+		enum status_code ret_status = _spi_check_config(module, config);
+		if (ret_status != STATUS_OK) {
+			module->hw = NULL;
+		}
+		return ret_status;
 	}
 
 	/* Check if reset is in progress. */
