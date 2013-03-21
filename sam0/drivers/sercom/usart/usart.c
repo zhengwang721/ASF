@@ -60,13 +60,10 @@
  * \retval STATUS_ERR_INVALID_ARG       If invalid argument(s) were provided.
  * \retval STATUS_ERR_DENIED            If configuration was different from previous
  * \retval STATUS_OK                    If the configuration was written
- * \retval STATUS_ERR_BAUD_UNAVAILABLE  The BAUD rate given by the
- *                                      configuration
- *                                      struct cannot be reached with
- *                                      the current clock configuration
  */
 static enum status_code _usart_check_config(
 		struct usart_module *const module,
+		Sercom *const hw,
 		const struct usart_config *const config)
 {
 		/* Sanity check arguments */
@@ -82,7 +79,7 @@ static enum status_code _usart_check_config(
 
 	/* SERCOM PAD0 */
 	if (pad0 == PINMUX_DEFAULT) {
-		pad0 = _sercom_get_default_pad(usart_hw, 0);
+		pad0 = _sercom_get_default_pad(hw, 0);
 	}
 	if ((pad0 & 0xFFFF) != system_pinmux_pin_get_mux_position(pad0 >> 16)) {
 		return STATUS_ERR_DENIED;
@@ -90,7 +87,7 @@ static enum status_code _usart_check_config(
 
 	/* SERCOM PAD1 */
 	if (pad1 == PINMUX_DEFAULT) {
-		pad1 = _sercom_get_default_pad(usart_hw, 1);
+		pad1 = _sercom_get_default_pad(hw, 1);
 	}
 	if ((pad1 & 0xFFFF) != system_pinmux_pin_get_mux_position(pad1 >> 16)) {
 		return STATUS_ERR_DENIED;
@@ -98,7 +95,7 @@ static enum status_code _usart_check_config(
 
 	/* SERCOM PAD2 */
 	if (pad2 == PINMUX_DEFAULT) {
-		pad2 = _sercom_get_default_pad(usart_hw, 2);
+		pad2 = _sercom_get_default_pad(hw, 2);
 	}
 	if ((pad2 & 0xFFFF) != system_pinmux_pin_get_mux_position(pad2 >> 16)) {
 		return STATUS_ERR_DENIED;
@@ -106,7 +103,7 @@ static enum status_code _usart_check_config(
 
 	/* SERCOM PAD3 */
 	if (pad3 == PINMUX_DEFAULT) {
-		pad3 = _sercom_get_default_pad(usart_hw, 3);
+		pad3 = _sercom_get_default_pad(hw, 3);
 	}
 	if ((pad3 & 0xFFFF) != system_pinmux_pin_get_mux_position(pad3 >> 16)) {
 		return STATUS_ERR_DENIED;
@@ -142,7 +139,7 @@ static enum status_code _usart_check_config(
 
 	if (status_code != STATUS_OK) {
 		/* Baud rate calculation error, return status code */
-		return status_code;
+		return STATUS_ERR_DENIED;
 	}
 
 	if (usart_hw->BAUD.reg !=  baud) {
@@ -329,8 +326,9 @@ enum status_code usart_init(
 	}
 
 	if (usart_hw->CTRLA.reg & SERCOM_USART_CTRLA_ENABLE) {
+		enum status_code ret_status = _usart_check_config(module, hw, config);
 		/* Module have to be disabled before initialization. Abort. */
-		return STATUS_ERR_DENIED;
+		return ret_status;
 	}
 
 	/* Turn on module in PM */
