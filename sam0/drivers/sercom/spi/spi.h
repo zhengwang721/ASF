@@ -507,7 +507,7 @@ enum spi_addr_mode {
 	 * The slave responds to the range of addresses between and including addr
 	 * and addrmask in the \ref spi_config struct. addr is the upper limit.
 	 */
-	SPI_ADDR_MODE_RANGE  = SERCOM_SPI_CTRLB_AMODE(3),
+	SPI_ADDR_MODE_RANGE  = SERCOM_SPI_CTRLB_AMODE(2),
 };
 
 /**
