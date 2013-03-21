@@ -67,7 +67,7 @@
  */
 static enum status_code _usart_check_config(
 		struct usart_module *const module,
-		const struct spi_config *const config)
+		const struct usart_config *const config)
 {
 		/* Sanity check arguments */
 	Assert(module);
@@ -75,10 +75,10 @@ static enum status_code _usart_check_config(
 
 	SercomUsart *const usart_hw = &(module->hw->USART);
 
-	uint32_t pad0 = config->pinmux_pad0;
-	uint32_t pad1 = config->pinmux_pad1;
-	uint32_t pad2 = config->pinmux_pad2;
-	uint32_t pad3 = config->pinmux_pad3;
+	uint32_t pad0 = config->pinout_pad0;
+	uint32_t pad1 = config->pinout_pad1;
+	uint32_t pad2 = config->pinout_pad2;
+	uint32_t pad3 = config->pinout_pad3;
 
 	/* SERCOM PAD0 */
 	if (pad0 == PINMUX_DEFAULT) {
