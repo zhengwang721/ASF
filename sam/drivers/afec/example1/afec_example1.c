@@ -175,7 +175,7 @@ int main(void)
 	afec_ch_get_config_defaults(&afec_ch_cfg);
 	afec_ch_set_config(AFEC0, AFEC_TEMPERATURE_SENSOR, &afec_ch_cfg);
 
-	/* 
+	/*
 	 * Because the internal ADC offset is 0x800, it should cancel it and shift
 	 * down to 0.
 	 */
@@ -196,7 +196,7 @@ int main(void)
 
 			ul_vol = g_ul_value * VOLT_REF / MAX_DIGITAL;
 
-			/* 
+			/*
 			 * According to datasheet, The output voltage VT = 1.44V at 27C
 			 * and the temperature slope dVT/dT = 4.7 mV/C
 			 */

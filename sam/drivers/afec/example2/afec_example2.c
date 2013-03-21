@@ -199,7 +199,7 @@ static void afec_data_ready(void)
 int main(void)
 {
 	uint8_t uc_key;
-	
+
 	/* Initialize the SAM system. */
 	sysclk_init();
 	board_init();
@@ -222,15 +222,13 @@ int main(void)
 
 	struct afec_ch_config afec_ch_cfg;
 	afec_ch_get_config_defaults(&afec_ch_cfg);
-	afec_ch_cfg.gain = AFEC_GAINVALUE_3;
-	afec_ch_cfg.offset = true;
 	afec_ch_set_config(AFEC0, AFEC_CHANNEL_POTENTIOMETER, &afec_ch_cfg);
 
 	/*
 	 * Because the internal ADC offset is 0x800, it should cancel it and shift
 	 * down to 0.
 	 */
-	afec_channel_set_analog_offset(AFEC0, AFEC_CHANNEL_POTENTIOMETER, 0x200);
+	afec_channel_set_analog_offset(AFEC0, AFEC_CHANNEL_POTENTIOMETER, 0x800);
 
 	afec_set_trigger(AFEC0, AFEC_TRIG_SW);
 
@@ -242,8 +240,8 @@ int main(void)
 	display_menu();
 
 	afec_start_calibration(AFEC0);
-	while((afec_get_interrupt_status(AFEC0) & AFE_ISR_EOCAL) != AFE_ISR_EOCAL);
-	
+	while((afec_get_interrupt_status(AFEC0) & AFEC_ISR_EOCAL) != AFEC_ISR_EOCAL);
+
 	while (1) {
 		afec_start_software_conversion(AFEC0);
 		delay_ms(1000);

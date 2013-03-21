@@ -199,7 +199,7 @@ int main(void)
 	afec_get_config_defaults(&afec_cfg);
 	afec_init(AFEC0, &afec_cfg);
 
-	/* 
+	/*
 	 * Because the internal ADC offset is 0x800, it should cancel it and shift
 	 * down to 0.
 	 */

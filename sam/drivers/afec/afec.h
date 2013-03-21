@@ -49,12 +49,12 @@
 
 /** Definitions for AFEC resolution */
 enum afec_resolution {
-	AFEC_10_BITS = AFE_EMR_RES_LOW_RES,       /* AFEC 10-bit resolution */
-	AFEC_12_BITS = AFE_EMR_RES_NO_AVERAGE,    /* AFEC 12-bit resolution */
-	AFEC_13_BITS = AFE_EMR_RES_OSR4,          /* AFEC 13-bit resolution */
-	AFEC_14_BITS = AFE_EMR_RES_OSR16,         /* AFEC 14-bit resolution */
-	AFEC_15_BITS = AFE_EMR_RES_OSR64,         /* AFEC 15-bit resolution */
-	AFEC_16_BITS = AFE_EMR_RES_OSR256         /* AFEC 16-bit resolution */
+	AFEC_10_BITS = AFEC_EMR_RES_LOW_RES,       /* AFEC 10-bit resolution */
+	AFEC_12_BITS = AFEC_EMR_RES_NO_AVERAGE,    /* AFEC 12-bit resolution */
+	AFEC_13_BITS = AFEC_EMR_RES_OSR4,          /* AFEC 13-bit resolution */
+	AFEC_14_BITS = AFEC_EMR_RES_OSR16,         /* AFEC 14-bit resolution */
+	AFEC_15_BITS = AFEC_EMR_RES_OSR64,         /* AFEC 15-bit resolution */
+	AFEC_16_BITS = AFEC_EMR_RES_OSR256         /* AFEC 16-bit resolution */
 };
 
 /** Definitions for AFEC power mode */
@@ -70,19 +70,19 @@ enum afec_power_mode {
 /** Definitions for AFEC trigger */
 enum afec_trigger {
 	/* Starting a conversion is only possible by software. */
-	AFEC_TRIG_SW = AFE_MR_TRGEN_DIS,
+	AFEC_TRIG_SW = AFEC_MR_TRGEN_DIS,
 	/* External trigger */
-	AFEC_TRIG_EXT = AFE_MR_TRGSEL_AFE_TRIG0 | AFE_MR_TRGEN,
+	AFEC_TRIG_EXT = AFEC_MR_TRGSEL_AFEC_TRIG0 | AFEC_MR_TRGEN,
 	/* TIO Output of the Timer Counter Channel 0 */
-	AFEC_TRIG_TIO_CH_0 = AFE_MR_TRGSEL_AFE_TRIG1 | AFE_MR_TRGEN,
+	AFEC_TRIG_TIO_CH_0 = AFEC_MR_TRGSEL_AFEC_TRIG1 | AFEC_MR_TRGEN,
 	/* TIO Output of the Timer Counter Channel 1 */
-	AFEC_TRIG_TIO_CH_1 = AFE_MR_TRGSEL_AFE_TRIG2 | AFE_MR_TRGEN,
+	AFEC_TRIG_TIO_CH_1 = AFEC_MR_TRGSEL_AFEC_TRIG2 | AFEC_MR_TRGEN,
 	/* TIO Output of the Timer Counter Channel 2 */
-	AFEC_TRIG_TIO_CH_2 = AFE_MR_TRGSEL_AFE_TRIG3 | AFE_MR_TRGEN,
+	AFEC_TRIG_TIO_CH_2 = AFEC_MR_TRGSEL_AFEC_TRIG3 | AFEC_MR_TRGEN,
 	/* PWM Event Line 0 */
-	AFEC_TRIG_PWM_EVENT_LINE_0 = AFE_MR_TRGSEL_AFE_TRIG4 | AFE_MR_TRGEN,
+	AFEC_TRIG_PWM_EVENT_LINE_0 = AFEC_MR_TRGSEL_AFEC_TRIG4 | AFEC_MR_TRGEN,
 	/* PWM Event Line 1 */
-	AFEC_TRIG_PWM_EVENT_LINE_1 = AFE_MR_TRGSEL_AFE_TRIG5 | AFE_MR_TRGEN,
+	AFEC_TRIG_PWM_EVENT_LINE_1 = AFEC_MR_TRGSEL_AFEC_TRIG5 | AFEC_MR_TRGEN,
 	/* Freerun mode conversion. */
 	AFEC_TRIG_FREERUN
 };
@@ -91,11 +91,11 @@ enum afec_trigger {
 /** Definitions for AFEC channel number */
 enum afec_channel_num {
 	AFEC_CHANNEL_0 = 0,
-	AFEC_CHANNEL_1, 
-	AFEC_CHANNEL_2, 
-	AFEC_CHANNEL_3, 
-	AFEC_CHANNEL_4, 
-	AFEC_CHANNEL_5, 
+	AFEC_CHANNEL_1,
+	AFEC_CHANNEL_2,
+	AFEC_CHANNEL_3,
+	AFEC_CHANNEL_4,
+	AFEC_CHANNEL_5,
 	_AFEC_NUM_OF_CH,
 	AFEC_CHANNEL_ALL = 0x3F,
 } ;
@@ -103,15 +103,15 @@ enum afec_channel_num {
 /** Definitions for AFEC channel number */
 enum afec_channel_num {
 	AFEC_CHANNEL_0 = 0,
-	AFEC_CHANNEL_1, 
-	AFEC_CHANNEL_2, 
-	AFEC_CHANNEL_3, 
-	AFEC_CHANNEL_4, 
-	AFEC_CHANNEL_5, 
-	AFEC_CHANNEL_6, 
-	AFEC_CHANNEL_7, 
-	AFEC_CHANNEL_8, 
-	AFEC_CHANNEL_9, 
+	AFEC_CHANNEL_1,
+	AFEC_CHANNEL_2,
+	AFEC_CHANNEL_3,
+	AFEC_CHANNEL_4,
+	AFEC_CHANNEL_5,
+	AFEC_CHANNEL_6,
+	AFEC_CHANNEL_7,
+	AFEC_CHANNEL_8,
+	AFEC_CHANNEL_9,
 	AFEC_CHANNEL_10,
 	AFEC_CHANNEL_11,
 	AFEC_CHANNEL_12,
@@ -133,46 +133,46 @@ enum afec_gainvalue {
 
 /** Definitions for AFEC Start Up Time */
 enum afec_startup_time {
-	AFEC_STARTUP_TIME_0 = AFE_MR_STARTUP_SUT0,
-	AFEC_STARTUP_TIME_1 = AFE_MR_STARTUP_SUT8,
-	AFEC_STARTUP_TIME_2 = AFE_MR_STARTUP_SUT16,
-	AFEC_STARTUP_TIME_3 = AFE_MR_STARTUP_SUT24,
-	AFEC_STARTUP_TIME_4 = AFE_MR_STARTUP_SUT64,
-	AFEC_STARTUP_TIME_5 = AFE_MR_STARTUP_SUT80,
-	AFEC_STARTUP_TIME_6 = AFE_MR_STARTUP_SUT96,
-	AFEC_STARTUP_TIME_7 = AFE_MR_STARTUP_SUT112,
-	AFEC_STARTUP_TIME_8 = AFE_MR_STARTUP_SUT512,
-	AFEC_STARTUP_TIME_9 = AFE_MR_STARTUP_SUT576,
-	AFEC_STARTUP_TIME_10 = AFE_MR_STARTUP_SUT640,
-	AFEC_STARTUP_TIME_11 = AFE_MR_STARTUP_SUT704,
-	AFEC_STARTUP_TIME_12 = AFE_MR_STARTUP_SUT768,
-	AFEC_STARTUP_TIME_13 = AFE_MR_STARTUP_SUT832,
-	AFEC_STARTUP_TIME_14 = AFE_MR_STARTUP_SUT896,
-	AFEC_STARTUP_TIME_15 = AFE_MR_STARTUP_SUT960
+	AFEC_STARTUP_TIME_0 = AFEC_MR_STARTUP_SUT0,
+	AFEC_STARTUP_TIME_1 = AFEC_MR_STARTUP_SUT8,
+	AFEC_STARTUP_TIME_2 = AFEC_MR_STARTUP_SUT16,
+	AFEC_STARTUP_TIME_3 = AFEC_MR_STARTUP_SUT24,
+	AFEC_STARTUP_TIME_4 = AFEC_MR_STARTUP_SUT64,
+	AFEC_STARTUP_TIME_5 = AFEC_MR_STARTUP_SUT80,
+	AFEC_STARTUP_TIME_6 = AFEC_MR_STARTUP_SUT96,
+	AFEC_STARTUP_TIME_7 = AFEC_MR_STARTUP_SUT112,
+	AFEC_STARTUP_TIME_8 = AFEC_MR_STARTUP_SUT512,
+	AFEC_STARTUP_TIME_9 = AFEC_MR_STARTUP_SUT576,
+	AFEC_STARTUP_TIME_10 = AFEC_MR_STARTUP_SUT640,
+	AFEC_STARTUP_TIME_11 = AFEC_MR_STARTUP_SUT704,
+	AFEC_STARTUP_TIME_12 = AFEC_MR_STARTUP_SUT768,
+	AFEC_STARTUP_TIME_13 = AFEC_MR_STARTUP_SUT832,
+	AFEC_STARTUP_TIME_14 = AFEC_MR_STARTUP_SUT896,
+	AFEC_STARTUP_TIME_15 = AFEC_MR_STARTUP_SUT960
 };
 
 /** Definitions for AFEC analog settling time */
 enum afec_settling_time {
-	AFEC_SETTLING_TIME_0 = AFE_MR_SETTLING_AST3,
-	AFEC_SETTLING_TIME_1 = AFE_MR_SETTLING_AST5,
-	AFEC_SETTLING_TIME_2 = AFE_MR_SETTLING_AST9,
-	AFEC_SETTLING_TIME_3 = AFE_MR_SETTLING_AST17
+	AFEC_SETTLING_TIME_0 = AFEC_MR_SETTLING_AST3,
+	AFEC_SETTLING_TIME_1 = AFEC_MR_SETTLING_AST5,
+	AFEC_SETTLING_TIME_2 = AFEC_MR_SETTLING_AST9,
+	AFEC_SETTLING_TIME_3 = AFEC_MR_SETTLING_AST17
 };
 
 /** Definitions for Comparison Mode */
 enum afec_cmp_mode {
-	AFEC_CMP_MODE_0 = AFE_EMR_CMPMODE_LOW,
-	AFEC_CMP_MODE_1 = AFE_EMR_CMPMODE_HIGH,
-	AFEC_CMP_MODE_2 = AFE_EMR_CMPMODE_IN,
-	AFEC_CMP_MODE_3 = AFE_EMR_CMPMODE_OUT
+	AFEC_CMP_MODE_0 = AFEC_EMR_CMPMODE_LOW,
+	AFEC_CMP_MODE_1 = AFEC_EMR_CMPMODE_HIGH,
+	AFEC_CMP_MODE_2 = AFEC_EMR_CMPMODE_IN,
+	AFEC_CMP_MODE_3 = AFEC_EMR_CMPMODE_OUT
 };
 
 /** Definitions for Temperature Comparison Mode */
 enum afec_temp_cmp_mode {
-	AFEC_TEMP_CMP_MODE_0 = AFE_TEMPMR_TEMPCMPMOD_LOW,
-	AFEC_TEMP_CMP_MODE_1 = AFE_TEMPMR_TEMPCMPMOD_HIGH,
-	AFEC_TEMP_CMP_MODE_2 = AFE_TEMPMR_TEMPCMPMOD_IN,
-	AFEC_TEMP_CMP_MODE_3 = AFE_TEMPMR_TEMPCMPMOD_OUT
+	AFEC_TEMP_CMP_MODE_0 = AFEC_TEMPMR_TEMPCMPMOD_LOW,
+	AFEC_TEMP_CMP_MODE_1 = AFEC_TEMPMR_TEMPCMPMOD_HIGH,
+	AFEC_TEMP_CMP_MODE_2 = AFEC_TEMPMR_TEMPCMPMOD_IN,
+	AFEC_TEMP_CMP_MODE_3 = AFEC_TEMPMR_TEMPCMPMOD_OUT
 };
 
 /**
@@ -283,8 +283,6 @@ enum afec_interrupt_source {
 
 typedef void (*afec_callback_t)(void);
 
-#define WP_KEY_VALUE          0x414443
-
 void afec_get_config_defaults(struct afec_config *const cfg);
 void afec_ch_get_config_defaults(struct afec_ch_config *const cfg);
 void afec_temp_sensor_get_config_defaults(
@@ -313,9 +311,9 @@ static inline void afec_ch_sanity_check(Afec *const afec,
 		const enum afec_channel_num channel)
 {
 	if (afec == AFEC0) {
-		Assert(channel < _AFEC_NUM_OF_CH);
+		Assert(channel < NB_CH_AFE0);
 	} else if (afec == AFEC1) {
-		Assert(channel < AFEC_CHANNEL_8);
+		Assert(channel < NB_CH_AFE1);
 	}
 	UNUSED(channel);
 }
@@ -332,16 +330,16 @@ static inline void afec_set_trigger(Afec *const afec,
 {
 	uint32_t reg;
 
-	reg = afec->AFE_MR;
+	reg = afec->AFEC_MR;
 
 	if (trigger == AFEC_TRIG_FREERUN) {
-		reg |= AFE_MR_FREERUN_ON;
+		reg |= AFEC_MR_FREERUN_ON;
 	} else {
-		reg &= ~(AFE_MR_TRGSEL_Msk | AFE_MR_TRGEN | AFE_MR_FREERUN_ON);
+		reg &= ~(AFEC_MR_TRGSEL_Msk | AFEC_MR_TRGEN | AFEC_MR_FREERUN_ON);
 		reg |= trigger;
 	}
 
-	afec->AFE_MR = reg;
+	afec->AFEC_MR = reg;
 }
 
 /**
@@ -356,12 +354,12 @@ static inline void afec_set_resolution(Afec *const afec,
 {
 	uint32_t reg;
 
-	reg = afec->AFE_EMR;
+	reg = afec->AFEC_EMR;
 
-	reg &= ~AFE_EMR_RES_Msk;
+	reg &= ~AFEC_EMR_RES_Msk;
 	reg |= res;
 
-	afec->AFE_EMR = reg;
+	afec->AFEC_EMR = reg;
 }
 
 void afec_set_comparison_mode(Afec *const afec,
@@ -377,7 +375,7 @@ void afec_set_comparison_mode(Afec *const afec,
  */
 static inline enum afec_cmp_mode afec_get_comparison_mode(Afec *const afec)
 {
-	return (enum afec_cmp_mode)(afec->AFE_EMR & AFE_EMR_CMPMODE_Msk);
+	return (enum afec_cmp_mode)(afec->AFEC_EMR & AFEC_EMR_CMPMODE_Msk);
 }
 
 /**
@@ -390,8 +388,8 @@ static inline enum afec_cmp_mode afec_get_comparison_mode(Afec *const afec)
 static inline void afec_set_comparison_window(Afec *const afec,
 		const uint16_t us_low_threshold, const uint16_t us_high_threshold)
 {
-	afec->AFE_CWR = AFE_CWR_LOWTHRES(us_low_threshold) |
-			AFE_CWR_HIGHTHRES(us_high_threshold);
+	afec->AFEC_CWR = AFEC_CWR_LOWTHRES(us_low_threshold) |
+			AFEC_CWR_HIGHTHRES(us_high_threshold);
 }
 
 /**
@@ -404,10 +402,10 @@ static inline void afec_set_writeprotect(Afec *const afec,
 		const bool is_enable)
 {
 	if (is_enable) {
-		afec->AFE_WPMR = AFE_WPMR_WPEN | AFE_WPMR_WPKEY(WP_KEY_VALUE);
+		afec->AFEC_WPMR = AFEC_WPMR_WPEN | AFEC_WPMR_WPKEY_ADC;
 	} else {
-		afec->AFE_WPMR &= ~AFE_WPMR_WPEN;
-		afec->AFE_WPMR |= AFE_WPMR_WPKEY(WP_KEY_VALUE);
+		afec->AFEC_WPMR &= ~AFEC_WPMR_WPEN;
+		afec->AFEC_WPMR |= AFEC_WPMR_WPKEY_ADC;
 	}
 }
 
@@ -421,8 +419,8 @@ static inline void afec_set_writeprotect(Afec *const afec,
  */
 static inline uint32_t afec_get_writeprotect_status(Afec *const afec)
 {
-	return (afec->AFE_WPSR & AFE_WPSR_WPVS) ?
-			(afec->AFE_WPSR & AFE_WPMR_WPKEY_Msk) : 0;
+	return (afec->AFEC_WPSR & AFEC_WPSR_WPVS) ?
+			(afec->AFEC_WPSR & AFEC_WPMR_WPKEY_Msk) : 0;
 }
 
 /**
@@ -434,7 +432,7 @@ static inline uint32_t afec_get_writeprotect_status(Afec *const afec)
  */
 static inline uint32_t afec_get_overrun_status(Afec *const afec)
 {
-	return afec->AFE_OVER;
+	return afec->AFEC_OVER;
 }
 
 /**
@@ -447,7 +445,7 @@ static inline uint32_t afec_get_overrun_status(Afec *const afec)
  */
 static inline void afec_start_software_conversion(Afec *const afec)
 {
-	afec->AFE_CR = AFE_CR_START;
+	afec->AFEC_CR = AFEC_CR_START;
 }
 
 void afec_set_power_mode(Afec *const afec,
@@ -466,7 +464,7 @@ static inline void afec_channel_enable(Afec *const afec,
 		afec_ch_sanity_check(afec, afec_ch);
 	}
 
-	afec->AFE_CHER = (afec_ch == AFEC_CHANNEL_ALL) ? 0xFFFF : 1 << afec_ch;
+	afec->AFEC_CHER = (afec_ch == AFEC_CHANNEL_ALL) ? 0xFFFF : 1 << afec_ch;
 }
 
 /**
@@ -482,7 +480,7 @@ static inline void afec_channel_disable(Afec *const afec,
 		afec_ch_sanity_check(afec, afec_ch);
 	}
 
-	afec->AFE_CHDR = (afec_ch == AFEC_CHANNEL_ALL) ? 0xFFFF : 1 << afec_ch;
+	afec->AFEC_CHDR = (afec_ch == AFEC_CHANNEL_ALL) ? 0xFFFF : 1 << afec_ch;
 }
 
 /**
@@ -499,7 +497,7 @@ static inline uint32_t afec_channel_get_status(Afec *const afec,
 {
 	afec_ch_sanity_check(afec, afec_ch);
 
-	return afec->AFE_CHSR & (1 << afec_ch);
+	return afec->AFEC_CHSR & (1 << afec_ch);
 }
 
 /**
@@ -515,8 +513,8 @@ static inline uint32_t afec_channel_get_value(Afec *const afec,
 {
 	afec_ch_sanity_check(afec, afec_ch);
 
-	afec->AFE_CSELR = afec_ch;
-	return afec->AFE_CDR;
+	afec->AFEC_CSELR = afec_ch;
+	return afec->AFEC_CDR;
 }
 
 /**
@@ -531,8 +529,8 @@ static inline void afec_channel_set_analog_offset(Afec *const afec,
 {
 	afec_ch_sanity_check(afec, afec_ch);
 
-	afec->AFE_CSELR = afec_ch;
-	afec->AFE_COCR = (aoffset & AFE_COCR_AOFF_Msk);
+	afec->AFEC_CSELR = afec_ch;
+	afec->AFEC_COCR = (aoffset & AFEC_COCR_AOFF_Msk);
 }
 
 /**
@@ -544,7 +542,7 @@ static inline void afec_channel_set_analog_offset(Afec *const afec,
  */
 static inline uint32_t afec_get_latest_value(Afec *const afec)
 {
-	return afec->AFE_LCDR & AFE_LCDR_LDATA_Msk;
+	return afec->AFEC_LCDR & AFEC_LCDR_LDATA_Msk;
 }
 
 /**
@@ -556,7 +554,7 @@ static inline uint32_t afec_get_latest_value(Afec *const afec)
  */
 static inline uint32_t afec_get_latest_chan_num(Afec *const afec)
 {
-	return (afec->AFE_LCDR & AFE_LCDR_CHNB_Msk) >> AFE_LCDR_CHNB_Pos;
+	return (afec->AFEC_LCDR & AFEC_LCDR_CHNB_Msk) >> AFEC_LCDR_CHNB_Pos;
 }
 
 void afec_enable_interrupt(Afec *const afec,
@@ -574,7 +572,7 @@ void afec_disable_interrupt(Afec *const afec,
  */
 static inline uint32_t afec_get_interrupt_status(Afec *const afec)
 {
-	return afec->AFE_ISR;
+	return afec->AFEC_ISR;
 }
 
 /**
@@ -586,7 +584,7 @@ static inline uint32_t afec_get_interrupt_status(Afec *const afec)
  */
 static inline uint32_t afec_get_interrupt_mask(Afec *const afec)
 {
-	return afec->AFE_IMR;
+	return afec->AFEC_IMR;
 }
 
 /**
@@ -626,10 +624,10 @@ static inline Pdc *afec_get_pdc_base(Afec *const afec)
  */
 static inline enum status_code afec_start_calibration(Afec *const afec)
 {
-	if ((afec->AFE_MR & AFE_MR_FREERUN) == AFE_MR_FREERUN_ON) {
+	if ((afec->AFEC_MR & AFEC_MR_FREERUN) == AFEC_MR_FREERUN_ON) {
 		return STATUS_ERR_BUSY;
 	}
-	afec->AFE_CR = AFE_CR_AUTOCAL;
+	afec->AFEC_CR = AFEC_CR_AUTOCAL;
 	return STATUS_OK;
 }
 

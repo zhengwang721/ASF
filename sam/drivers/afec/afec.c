@@ -65,16 +65,16 @@
 
 /* The gap between bit EOC15 and DRDY in interrupt register */
 #if defined __SAM4E8C__  || defined __SAM4E16C__
-#define AFEC_INTERRUPT_GAP1     18
+#define AFEC_INTERRUPT_GAP1                 (18)
 #elif defined __SAM4E8E__  || defined __SAM4E16E__
-#define AFEC_INTERRUPT_GAP1     8
+#define AFEC_INTERRUPT_GAP1                  (8)
 #endif
 
 /* The gap between bit RXBUFF and TEMPCHG in interrupt register */
-#define AFEC_INTERRUPT_GAP2     1
+#define AFEC_INTERRUPT_GAP2                    (1)
 
 /* The number of channel in channel sequence1 register */
-#define AFEC_SEQ1_CHANNEL_NUM                 8
+#define AFEC_SEQ1_CHANNEL_NUM                (8)
 
 afec_callback_t afec_callback_pointer[NUM_OF_AFEC][_AFEC_NUM_OF_INTERRUPT_SOURCE];
 
@@ -136,21 +136,21 @@ static void afec_set_config(Afec *const afec, struct afec_config *config)
 {
 	uint32_t reg = 0;
 
-	reg = (config->anach ? AFE_MR_ANACH_ALLOWED : 0) |
-			(config->useq ? AFE_MR_USEQ_REG_ORDER : 0) |
-			AFE_MR_PRESCAL(config->mck / (2 * config->afec_clock) - 1) |
-			AFE_MR_TRACKTIM(config->tracktim) |
-			AFE_MR_TRANSFER(config->transfer) |
+	reg = (config->anach ? AFEC_MR_ANACH_ALLOWED : 0) |
+			(config->useq ? AFEC_MR_USEQ_REG_ORDER : 0) |
+			AFEC_MR_PRESCAL(config->mck / (2 * config->afec_clock) - 1) |
+			AFEC_MR_TRACKTIM(config->tracktim) |
+			AFEC_MR_TRANSFER(config->transfer) |
 			(config->settling_time) |
 			(config->startup_time);
 
-	afec->AFE_MR = reg;
+	afec->AFEC_MR = reg;
 
-	afec->AFE_EMR = (config->tag ? AFE_EMR_TAG : 0) |
+	afec->AFEC_EMR = (config->tag ? AFEC_EMR_TAG : 0) |
 			(config->resolution) |
-			(config->stm ? AFE_EMR_STM : 0);
+			(config->stm ? AFEC_EMR_STM : 0);
 
-	afec->AFE_ACR = AFE_ACR_IBCTL(config->ibctl);
+	afec->AFEC_ACR = AFEC_ACR_IBCTL(config->ibctl);
 }
 
 /**
@@ -165,9 +165,9 @@ void afec_ch_set_config(Afec *const afec, const enum afec_channel_num channel,
 {
 	afec_ch_sanity_check(afec, channel);
 
-	afec->AFE_CDOR = (config->offset) ? (0x1u << channel) : 0;
-	afec->AFE_DIFFR = (config->diff) ? (0x1u << channel) : 0;
-	afec->AFE_CGR = (0x03u << (2 * channel))
+	afec->AFEC_CDOR = (config->offset) ? (0x1u << channel) : 0;
+	afec->AFEC_DIFFR = (config->diff) ? (0x1u << channel) : 0;
+	afec->AFEC_CGR = (0x03u << (2 * channel))
 			& ((config->gain) << (2 * channel));
 }
 
@@ -184,11 +184,11 @@ void afec_temp_sensor_set_config(Afec *const afec,
 
 	uint32_t reg = 0;
 
-	reg = ((config->rctc) ? AFE_TEMPMR_RTCT : 0) | (config->mode);
-	afec->AFE_TEMPMR = reg;
+	reg = ((config->rctc) ? AFEC_TEMPMR_RTCT : 0) | (config->mode);
+	afec->AFEC_TEMPMR = reg;
 
-	afec->AFE_TEMPCWR = AFE_TEMPCWR_TLOWTHRES(config->low_threshold) |
-			AFE_TEMPCWR_THIGHTHRES(config->high_threshold);
+	afec->AFEC_TEMPCWR = AFEC_TEMPCWR_TLOWTHRES(config->low_threshold) |
+			AFEC_TEMPCWR_THIGHTHRES(config->high_threshold);
 }
 
 /**
@@ -291,12 +291,12 @@ enum status_code afec_init(Afec *const afec, struct afec_config *config)
 	Assert(afec);
 	Assert(config);
 
-	if ((afec_get_interrupt_status(afec) & AFE_ISR_DRDY) == AFE_ISR_DRDY) {
+	if ((afec_get_interrupt_status(afec) & AFEC_ISR_DRDY) == AFEC_ISR_DRDY) {
 		return STATUS_ERR_BUSY;
 	}
 
 	/* Reset and configure the AFEC module */
-	afec->AFE_CR = AFE_CR_SWRST;
+	afec->AFEC_CR = AFEC_CR_SWRST;
 	afec_set_config(afec, config);
 
 	uint32_t i, j;
@@ -327,17 +327,17 @@ void afec_set_comparison_mode(Afec *const afec,
 
 	uint32_t reg;
 
-	reg = afec->AFE_EMR;
+	reg = afec->AFEC_EMR;
 
-	reg &= ~(AFE_EMR_CMPSEL_Msk |
-			AFE_EMR_CMPMODE_Msk |
-			AFE_EMR_CMPFILTER_Msk);
+	reg &= ~(AFEC_EMR_CMPSEL_Msk |
+			AFEC_EMR_CMPMODE_Msk |
+			AFEC_EMR_CMPFILTER_Msk);
 	reg |= mode |
-			((channel == AFEC_CHANNEL_ALL) ? AFE_EMR_CMPALL
-			: AFE_EMR_CMPSEL(channel)) |
-			AFE_EMR_CMPFILTER(cmp_filter);
+			((channel == AFEC_CHANNEL_ALL) ? AFEC_EMR_CMPALL
+			: AFEC_EMR_CMPSEL(channel)) |
+			AFEC_EMR_CMPFILTER(cmp_filter);
 
-	afec->AFE_EMR = reg;
+	afec->AFEC_EMR = reg;
 }
 
 /**
@@ -351,22 +351,22 @@ void afec_set_power_mode(Afec *const afec,
 {
 	uint32_t reg;
 
-	reg = afec->AFE_MR;
+	reg = afec->AFEC_MR;
 
 	switch(mode) {
 		case AFEC_POWER_MODE_0:
-			reg &= ~(AFE_MR_FWUP_ON | AFE_MR_SLEEP_SLEEP);
+			reg &= ~(AFEC_MR_FWUP_ON | AFEC_MR_SLEEP_SLEEP);
 			break;
 		case AFEC_POWER_MODE_1:
-			reg |= AFE_MR_FWUP_ON;
+			reg |= AFEC_MR_FWUP_ON;
 			break;
 		case AFEC_POWER_MODE_2:
-			reg |= AFE_MR_SLEEP_SLEEP;
-			reg &= ~AFE_MR_FWUP_ON;
+			reg |= AFEC_MR_SLEEP_SLEEP;
+			reg &= ~AFEC_MR_FWUP_ON;
 			break;
 	}
 
-	afec->AFE_MR = reg;
+	afec->AFEC_MR = reg;
 }
 
 /**
@@ -404,11 +404,11 @@ void afec_enable_interrupt(Afec *const afec,
 		enum afec_interrupt_source interrupt_source)
 {
 	if (interrupt_source < AFEC_INTERRUPT_DATA_READY) {
-		afec->AFE_IER = 1 << interrupt_source;
+		afec->AFEC_IER = 1 << interrupt_source;
 	} else if (interrupt_source < AFEC_INTERRUPT_TEMP_CHANGE) {
-		afec->AFE_IER = 1 << (interrupt_source + AFEC_INTERRUPT_GAP1);
+		afec->AFEC_IER = 1 << (interrupt_source + AFEC_INTERRUPT_GAP1);
 	} else {
-		afec->AFE_IER = 1 << (interrupt_source + AFEC_INTERRUPT_GAP1 + AFEC_INTERRUPT_GAP2);
+		afec->AFEC_IER = 1 << (interrupt_source + AFEC_INTERRUPT_GAP1 + AFEC_INTERRUPT_GAP2);
 	}
 }
 
@@ -422,11 +422,11 @@ void afec_disable_interrupt(Afec *const afec,
 		enum afec_interrupt_source interrupt_source)
 {
 	if (interrupt_source < AFEC_INTERRUPT_DATA_READY) {
-		afec->AFE_IDR = 1 << interrupt_source;
+		afec->AFEC_IDR = 1 << interrupt_source;
 	} else if (interrupt_source < AFEC_INTERRUPT_TEMP_CHANGE) {
-		afec->AFE_IDR = 1 << (interrupt_source + AFEC_INTERRUPT_GAP1);
+		afec->AFEC_IDR = 1 << (interrupt_source + AFEC_INTERRUPT_GAP1);
 	} else {
-		afec->AFE_IDR = 1 << (interrupt_source + AFEC_INTERRUPT_GAP1 + AFEC_INTERRUPT_GAP2);
+		afec->AFEC_IDR = 1 << (interrupt_source + AFEC_INTERRUPT_GAP1 + AFEC_INTERRUPT_GAP2);
 	}
 }
 
@@ -540,22 +540,22 @@ void afec_configure_sequence(Afec *const afec,
 	uint8_t uc_counter;
 
 	/* Set user sequence mode */
-	afec->AFE_MR |= AFE_MR_USEQ_REG_ORDER;
-	afec->AFE_SEQ1R = 0;
-	afec->AFE_SEQ2R = 0;
+	afec->AFEC_MR |= AFEC_MR_USEQ_REG_ORDER;
+	afec->AFEC_SEQ1R = 0;
+	afec->AFEC_SEQ2R = 0;
 
 	if (uc_num < AFEC_SEQ1_CHANNEL_NUM) {
 		for (uc_counter = 0; uc_counter < uc_num; uc_counter++) {
-			afec->AFE_SEQ1R |=
+			afec->AFEC_SEQ1R |=
 					ch_list[uc_counter] << (4 * uc_counter);
 		}
 	} else {
 		for (uc_counter = 0; uc_counter < AFEC_SEQ1_CHANNEL_NUM; uc_counter++) {
-			afec->AFE_SEQ1R |=
+			afec->AFEC_SEQ1R |=
 					ch_list[uc_counter] << (4 * uc_counter);
 		}
 		for (uc_counter = 0; uc_counter < uc_num - AFEC_SEQ1_CHANNEL_NUM; uc_counter++) {
-			afec->AFE_SEQ2R |=
+			afec->AFEC_SEQ2R |=
 					ch_list[uc_counter] << (4 * uc_counter);
 		}
 	}
