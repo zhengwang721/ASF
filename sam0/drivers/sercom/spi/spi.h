@@ -1132,6 +1132,8 @@ enum status_code spi_read_buffer_wait(
  *
  * \note The data to be sent might not be sent before the next transfer, as
  *       loading of the shift register is dependent on SCK.
+ * \note If address matching is enabled for the slave, the first character
+ *       received and placed in the buffer will be the address.
  *
  * \param[in]  module   Pointer to the software instance struct
  * \param[in]  tx_data  SPI character to transmit

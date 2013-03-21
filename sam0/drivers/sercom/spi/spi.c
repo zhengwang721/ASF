@@ -457,6 +457,9 @@ enum status_code spi_init(
  * This function will read a buffer of data from an SPI peripheral by sending
  * dummy SPI character if in master mode, or by waiting for data in slave mode.
  *
+ * \note If address matching is enabled for the slave, the first character
+ *       received and placed in the buffer will be the address.
+ *
  * \param[in]  module   Pointer to the software instance struct
  * \param[out] rx_data  Data buffer for received data
  * \param[in]  length   Length of data to receive

@@ -217,6 +217,9 @@ enum status_code spi_write_buffer_job(
  * Sets up the driver to read from the SPI to a given buffer. If registered
  * and enabled, a callback function will be called when the read is finished.
  *
+ * \note If address matching is enabled for the slave, the first character
+ *       received and placed in the buffer will be the address.
+ *
  * \param[in]  module   Pointer to SPI software instance struct
  * \param[out] rx_data  Pointer to data buffer to receive
  * \param[in]  length   Data buffer length
