@@ -43,15 +43,16 @@
 
 #include "tc.h"
 
-#ifdef TC_ASYNC
-#include "tc_interrupt.h"
-#include <system_interrupt.h>
+#if TC_ASYNC == true
+#  include "tc_interrupt.h"
+#  include <system_interrupt.h>
+
 /** \internal
  * Converts a given TC index to its interrupt vector index.
  */
-#define _TC_INTERRUPT_VECT_NUM(n, unused) \
+#  define _TC_INTERRUPT_VECT_NUM(n, unused) \
 		SYSTEM_INTERRUPT_MODULE_TC##n,
-#endif
+#  endif
 
 #if !defined(__DOXYGEN__)
 #  define _TC_GCLK_ID(n, unused)       TC##n##_GCLK_ID   ,
@@ -88,7 +89,7 @@ static uint8_t _tc_get_inst_index(
 	return 0;
 }
 
-#ifdef TC_ASYNC
+#if TC_ASYNC == true
 /**
  * \internal Get the interrupt vector for the given device instance
  *
@@ -96,7 +97,7 @@ static uint8_t _tc_get_inst_index(
  *
  * \return Interrupt vector for of the given TC module instance.
  */
-enum system_interrupt_vector _tc_interrupt_get_interrupt_vector(
+static enum system_interrupt_vector _tc_interrupt_get_interrupt_vector(
 		uint32_t inst_num)
 {
 	static uint8_t tc_interrupt_vectors[TC_INST_NUM] =
@@ -162,7 +163,7 @@ enum status_code tc_init(
 	struct system_pinmux_config pin_config;
 	struct system_gclk_chan_config gclk_chan_config;
 
-#ifdef TC_ASYNC
+#if TC_ASYNC == true
 	/* Initialize parameters */
 	for (uint8_t i = 0; i < TC_CALLBACK_N; i++) {
 		module_inst->callback[i]        = NULL;

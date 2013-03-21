@@ -14,6 +14,8 @@
 
 			<build type="include-path" value="." />
 
+			<build name="TC_ASYNC" type="define" value="false" />
+
 			<build subtype="api" type="header-file" value="tc.h" />
 			<build type="c-source" value="tc.c" />
 
@@ -45,7 +47,7 @@
 
 			<build type="include-path" value="." />
 
-			<build name="TC_ASYNC" type="define" value="" />
+			<build name="TC_ASYNC" type="define" value="true" />
 			<build type="doxygen-enable-section" value="TC_CALLBACK_MODE"/>
 
 			<build subtype="api" type="header-file" value="tc.h" />
