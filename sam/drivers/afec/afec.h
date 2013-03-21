@@ -47,14 +47,6 @@
 #include "compiler.h"
 #include "status_codes.h"
 
-/// @cond 0
-/**INDENT-OFF**/
-#ifdef __cplusplus
-extern "C" {
-#endif
-/**INDENT-ON**/
-/// @endcond
-
 /** Definitions for AFEC resolution */
 enum afec_resolution {
 	AFEC_10_BITS = AFE_EMR_RES_LOW_RES,       /* AFEC 10-bit resolution */
@@ -95,6 +87,19 @@ enum afec_trigger {
 	AFEC_TRIG_FREERUN
 };
 
+#if defined __SAM4E8C__  || defined __SAM4E16C__
+/** Definitions for AFEC channel number */
+enum afec_channel_num {
+	AFEC_CHANNEL_0 = 0,
+	AFEC_CHANNEL_1, 
+	AFEC_CHANNEL_2, 
+	AFEC_CHANNEL_3, 
+	AFEC_CHANNEL_4, 
+	AFEC_CHANNEL_5, 
+	_AFEC_NUM_OF_CH,
+	AFEC_CHANNEL_ALL = 0x3F,
+} ;
+#elif defined __SAM4E8E__  || defined __SAM4E16E__
 /** Definitions for AFEC channel number */
 enum afec_channel_num {
 	AFEC_CHANNEL_0 = 0,
@@ -116,6 +121,7 @@ enum afec_channel_num {
 	_AFEC_NUM_OF_CH,
 	AFEC_CHANNEL_ALL = 0xFFFF,
 } ;
+#endif
 
 /** Definitions for AFEC gain value */
 enum afec_gainvalue {
@@ -225,6 +231,26 @@ struct afec_temp_sensor_config {
 	uint16_t high_threshold;
 };
 
+#if defined __SAM4E8C__  || defined __SAM4E16C__
+/** AFEC interrupt source type */
+enum afec_interrupt_source {
+	AFEC_INTERRUPT_EOC_0 = 0,
+	AFEC_INTERRUPT_EOC_1,
+	AFEC_INTERRUPT_EOC_2,
+	AFEC_INTERRUPT_EOC_3,
+	AFEC_INTERRUPT_EOC_4,
+	AFEC_INTERRUPT_EOC_5,
+	AFEC_INTERRUPT_DATA_READY,
+	AFEC_INTERRUPT_OVERRUN_ERROR,
+	AFEC_INTERRUPT_COMP_ERROR,
+	AFEC_INTERRUPT_END_RXBUF,
+	AFEC_INTERRUPT_RXBUF_FULL,
+	AFEC_INTERRUPT_TEMP_CHANGE,
+	AFEC_INTERRUPT_END_CAL,
+	_AFEC_NUM_OF_INTERRUPT_SOURCE,
+	AFEC_INTERRUPT_ALL = 0xFFFFFFFF,
+};
+#elif defined __SAM4E8E__  || defined __SAM4E16E__
 /** AFEC interrupt source type */
 enum afec_interrupt_source {
 	AFEC_INTERRUPT_EOC_0 = 0,
@@ -253,6 +279,7 @@ enum afec_interrupt_source {
 	_AFEC_NUM_OF_INTERRUPT_SOURCE,
 	AFEC_INTERRUPT_ALL = 0xFFFFFFFF,
 };
+#endif
 
 typedef void (*afec_callback_t)(void);
 
@@ -605,14 +632,6 @@ static inline enum status_code afec_start_calibration(Afec *const afec)
 	afec->AFE_CR = AFE_CR_AUTOCAL;
 	return STATUS_OK;
 }
-
-/// @cond 0
-/**INDENT-OFF**/
-#ifdef __cplusplus
-}
-#endif
-/**INDENT-ON**/
-/// @endcond
 
 /**
  * \page sam_afec_quickstart Quickstart guide for SAM AFEC driver

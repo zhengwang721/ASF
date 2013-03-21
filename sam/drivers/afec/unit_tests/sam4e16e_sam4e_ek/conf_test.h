@@ -47,7 +47,7 @@
 /** USART Interface */
 #define CONF_TEST_USART      CONSOLE_UART
 /** Baudrate setting */
-#define CONF_TEST_BAUDRATE   115200
+#define CONF_TEST_BAUDRATE   (115200UL)
 /** Parity setting */
 #define CONF_TEST_PARITY     UART_MR_PAR_NO
 

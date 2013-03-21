@@ -105,7 +105,7 @@
 #define VOLT_REF        (3300)
 
 /** The maximal digital value */
-#define MAX_DIGITAL     (4095)
+#define MAX_DIGITAL     (4095UL)
 
 #define STRING_EOL    "\r"
 #define STRING_HEADER "-- AFEC Temperature Sensor Example --\r\n" \
@@ -202,7 +202,7 @@ int main(void)
 			 */
 			ul_temp = (ul_vol - 1440)  * 100 / 470 + 27;
 
-			printf("Temperature is: %04d\r", (int)ul_temp);
+			printf("Temperature is: %4d\r", (int)ul_temp);
 			is_conversion_done = false;
 		}
 	}

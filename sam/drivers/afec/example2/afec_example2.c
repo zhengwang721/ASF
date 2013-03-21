@@ -104,7 +104,7 @@
 #define VOLT_REF        (3300)
 
 /** The maximal digital value */
-#define MAX_DIGITAL_12_BIT     (4095)
+#define MAX_DIGITAL_12_BIT     (4095UL)
 
 #define STRING_EOL    "\r"
 #define STRING_HEADER "-- AFEC Enhanced Resolution Example --\r\n" \
@@ -118,7 +118,7 @@
 
 /** AFEC sample data */
 struct {
-	uint16_t us_value;
+	uint32_t value;
 	bool is_done;
 } g_afec_sample_data;
 
@@ -187,7 +187,7 @@ static void set_afec_resolution(void)
  */
 static void afec_data_ready(void)
 {
-	g_afec_sample_data.us_value = afec_get_latest_value(AFEC0);
+	g_afec_sample_data.value = afec_get_latest_value(AFEC0);
 	g_afec_sample_data.is_done = true;
 }
 
@@ -199,7 +199,7 @@ static void afec_data_ready(void)
 int main(void)
 {
 	uint8_t uc_key;
-
+	
 	/* Initialize the SAM system. */
 	sysclk_init();
 	board_init();
@@ -209,7 +209,7 @@ int main(void)
 	/* Output example information. */
 	puts(STRING_HEADER);
 
-	g_afec_sample_data.us_value = 0;
+	g_afec_sample_data.value = 0;
 	g_afec_sample_data.is_done = false;
 	g_max_digital = MAX_DIGITAL_12_BIT;
 
@@ -222,13 +222,15 @@ int main(void)
 
 	struct afec_ch_config afec_ch_cfg;
 	afec_ch_get_config_defaults(&afec_ch_cfg);
+	afec_ch_cfg.gain = AFEC_GAINVALUE_3;
+	afec_ch_cfg.offset = true;
 	afec_ch_set_config(AFEC0, AFEC_CHANNEL_POTENTIOMETER, &afec_ch_cfg);
 
 	/*
 	 * Because the internal ADC offset is 0x800, it should cancel it and shift
 	 * down to 0.
 	 */
-	afec_channel_set_analog_offset(AFEC0, AFEC_CHANNEL_POTENTIOMETER, 0x800);
+	afec_channel_set_analog_offset(AFEC0, AFEC_CHANNEL_POTENTIOMETER, 0x200);
 
 	afec_set_trigger(AFEC0, AFEC_TRIG_SW);
 
@@ -239,14 +241,17 @@ int main(void)
 
 	display_menu();
 
+	afec_start_calibration(AFEC0);
+	while((afec_get_interrupt_status(AFEC0) & AFE_ISR_EOCAL) != AFE_ISR_EOCAL);
+	
 	while (1) {
 		afec_start_software_conversion(AFEC0);
 		delay_ms(1000);
 
 		/* Check if AFEC sample is done. */
 		if (g_afec_sample_data.is_done == true) {
-			printf("Potentiometer Voltage: %04d mv.",
-					(int)(g_afec_sample_data.us_value * VOLT_REF
+			printf("Potentiometer Voltage: %4d mv.",
+					(int)(g_afec_sample_data.value * VOLT_REF
 					/ g_max_digital));
 			puts("\r");
 			g_afec_sample_data.is_done = false;

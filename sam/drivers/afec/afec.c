@@ -47,14 +47,6 @@
 #include "sysclk.h"
 #include "pmc.h"
 
-/// @cond 0
-/**INDENT-OFF**/
-#ifdef __cplusplus
-extern "C" {
-#endif
-/**INDENT-ON**/
-/// @endcond
-
 /**
  * \defgroup sam_drivers_afec_group Analog-Front-End Controller
  *
@@ -66,10 +58,23 @@ extern "C" {
  * @{
  */
 #if defined(AFEC1)
-#define NUM_OF_AFEC 2
+#define NUM_OF_AFEC    (2)
 #else
-#define NUM_OF_AFEC 1
+#define NUM_OF_AFEC    (1)
 #endif
+
+/* The gap between bit EOC15 and DRDY in interrupt register */
+#if defined __SAM4E8C__  || defined __SAM4E16C__
+#define AFEC_INTERRUPT_GAP1     18
+#elif defined __SAM4E8E__  || defined __SAM4E16E__
+#define AFEC_INTERRUPT_GAP1     8
+#endif
+
+/* The gap between bit RXBUFF and TEMPCHG in interrupt register */
+#define AFEC_INTERRUPT_GAP2     1
+
+/* The number of channel in channel sequence1 register */
+#define AFEC_SEQ1_CHANNEL_NUM                 8
 
 afec_callback_t afec_callback_pointer[NUM_OF_AFEC][_AFEC_NUM_OF_INTERRUPT_SOURCE];
 
@@ -214,7 +219,7 @@ void afec_get_config_defaults(struct afec_config *const cfg)
 
 	cfg->resolution = AFEC_12_BITS;
 	cfg->mck = sysclk_get_cpu_hz();
-	cfg->afec_clock = 6000000;
+	cfg->afec_clock = 6000000UL;
 	cfg->startup_time = AFEC_STARTUP_TIME_4;
 	cfg->settling_time = AFEC_SETTLING_TIME_0;
 	cfg->tracktim = 2;
@@ -401,9 +406,9 @@ void afec_enable_interrupt(Afec *const afec,
 	if (interrupt_source < AFEC_INTERRUPT_DATA_READY) {
 		afec->AFE_IER = 1 << interrupt_source;
 	} else if (interrupt_source < AFEC_INTERRUPT_TEMP_CHANGE) {
-		afec->AFE_IER = 1 << (interrupt_source + 8);
+		afec->AFE_IER = 1 << (interrupt_source + AFEC_INTERRUPT_GAP1);
 	} else {
-		afec->AFE_IER = 1 << (interrupt_source + 9);
+		afec->AFE_IER = 1 << (interrupt_source + AFEC_INTERRUPT_GAP1 + AFEC_INTERRUPT_GAP2);
 	}
 }
 
@@ -419,9 +424,9 @@ void afec_disable_interrupt(Afec *const afec,
 	if (interrupt_source < AFEC_INTERRUPT_DATA_READY) {
 		afec->AFE_IDR = 1 << interrupt_source;
 	} else if (interrupt_source < AFEC_INTERRUPT_TEMP_CHANGE) {
-		afec->AFE_IDR = 1 << (interrupt_source + 8);
+		afec->AFE_IDR = 1 << (interrupt_source + AFEC_INTERRUPT_GAP1);
 	} else {
-		afec->AFE_IDR = 1 << (interrupt_source + 9);
+		afec->AFE_IDR = 1 << (interrupt_source + AFEC_INTERRUPT_GAP1 + AFEC_INTERRUPT_GAP2);
 	}
 }
 
@@ -463,11 +468,11 @@ static void afec_process_callback(Afec *const afec)
 				afec_interrupt(inst_num, (enum afec_interrupt_source)cnt);
 			}
 		} else if (cnt < AFEC_INTERRUPT_TEMP_CHANGE) {
-			if (status & (1 << (cnt + 8))) {
+			if (status & (1 << (cnt + AFEC_INTERRUPT_GAP1))) {
 				afec_interrupt(inst_num, (enum afec_interrupt_source)cnt);
 			}
 		} else {
-			if (status & (1 << (cnt + 9))) {
+			if (status & (1 << (cnt + AFEC_INTERRUPT_GAP1 + AFEC_INTERRUPT_GAP2))) {
 				afec_interrupt(inst_num, (enum afec_interrupt_source)cnt);
 			}
 		}
@@ -539,17 +544,17 @@ void afec_configure_sequence(Afec *const afec,
 	afec->AFE_SEQ1R = 0;
 	afec->AFE_SEQ2R = 0;
 
-	if (uc_num < 8) {
+	if (uc_num < AFEC_SEQ1_CHANNEL_NUM) {
 		for (uc_counter = 0; uc_counter < uc_num; uc_counter++) {
 			afec->AFE_SEQ1R |=
 					ch_list[uc_counter] << (4 * uc_counter);
 		}
 	} else {
-		for (uc_counter = 0; uc_counter < 8; uc_counter++) {
+		for (uc_counter = 0; uc_counter < AFEC_SEQ1_CHANNEL_NUM; uc_counter++) {
 			afec->AFE_SEQ1R |=
 					ch_list[uc_counter] << (4 * uc_counter);
 		}
-		for (uc_counter = 0; uc_counter < uc_num - 8; uc_counter++) {
+		for (uc_counter = 0; uc_counter < uc_num - AFEC_SEQ1_CHANNEL_NUM; uc_counter++) {
 			afec->AFE_SEQ2R |=
 					ch_list[uc_counter] << (4 * uc_counter);
 		}
@@ -557,12 +562,3 @@ void afec_configure_sequence(Afec *const afec,
 }
 
 //@}
-
-/// @cond 0
-/**INDENT-OFF**/
-#ifdef __cplusplus
-}
-#endif
-/**INDENT-ON**/
-/// @endcond
-
