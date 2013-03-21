@@ -49,7 +49,14 @@
  *
  * This driver for SAMD20 devices provides an interface for the configuration
  * and management of the timer modules within the device, for waveform
- * generation and timing operations.
+ * generation and timing operations. The following driver API modes are covered
+ * by this manual:
+ *
+ *  - Polled APIs
+ * \if TC_CALLBACK_MODE
+ *  - Callback APIs
+ * \endif
+ *
  *
  * The following peripherals are used by this module:
  *
@@ -373,6 +380,9 @@
  *
  * The following Quick Start guides and application examples are available for this driver:
  * - \ref asfdoc_samd20_tc_basic_use_case
+ * \if TC_CALLBACK_MODE
+ * - \ref asfdoc_samd20_tc_callback_use_case
+ * \endif
  *
  *
  * \section asfdoc_samd20_tc_api_overview API Overview
@@ -1382,6 +1392,9 @@ static inline void tc_clear_status(
  * added to the user application.
  *
  *  - \subpage asfdoc_samd20_tc_basic_use_case
+ * \if TC_CALLBACK_MODE
+ *  - \subpage asfdoc_samd20_tc_callback_use_case
+ * \endif
  */
 
 #endif /* TC_H_INCLUDED */

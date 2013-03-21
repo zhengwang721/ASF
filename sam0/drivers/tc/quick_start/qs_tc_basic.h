@@ -71,6 +71,7 @@
  * \section asfdoc_samd20_tc_basic_use_case_setup Quick Start
  *
  * \subsection asfdoc_samd20_tc_basic_use_case_prereq Prerequisites
+ * There are no prerequisites for this use case.
  *
  * \subsection asfdoc_samd20_tc_basic_use_case_setup_code Code
  * The following must be added to the user application:
@@ -78,6 +79,7 @@
  * Add to user application %main():
  * \snippet qs_tc_basic.c main
  *
+ * \section asfdoc_samd20_tc_basic_use_case_workflow Workflow
  * -# Initialize system.
  *  - \snippet qs_tc_basic.c system_init
  * -# Create configuration struct.
@@ -96,5 +98,4 @@
  *  - \snippet qs_tc_basic.c tc_enable
  * -# Loop infinitly. Let the module generate PWM signal.
  *  - \snippet qs_tc_basic.c inf_loop
- * \section asfdoc_samd20_tc_basic_use_case_workflow Workflow
  */
