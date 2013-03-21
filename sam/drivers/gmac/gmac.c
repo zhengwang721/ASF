@@ -728,10 +728,6 @@ void gmac_handler(gmac_device_t* p_gmac_dev)
 		if (ul_tsr & GMAC_TSR_COL) {
 			ul_tx_status_flag |= GMAC_TSR_COL;
 		}
-		/* Check BEX */
-		if (ul_tsr & GMAC_TSR_LCO) {
-			ul_tx_status_flag |= GMAC_TSR_LCO;
-		}
 		/* Check UND */
 		if (ul_tsr & GMAC_TSR_UND) {
 			ul_tx_status_flag |= GMAC_TSR_UND;

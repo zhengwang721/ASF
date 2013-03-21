@@ -130,12 +130,6 @@ typedef struct _slave_device_t {
 
 slave_device_t emulate_driver;
 
-#if SAM4E
-#define REG_CCFG_SYSIO MATRIX->MATRIX_SFR[1]
-#define CCFG_SYSIO_SYSIO4 (0x1u << 4)
-#define CCFG_SYSIO_SYSIO5 (0x1u << 5)
-#endif
-
 void BOARD_TWI_Handler(void)
 {
 	uint32_t status;
