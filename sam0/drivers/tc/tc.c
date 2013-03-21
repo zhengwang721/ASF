@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM0+ TC Driver
+ * \brief SAM D20 TC - Timer Counter Driver
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,13 +43,22 @@
 
 #include "tc.h"
 
+#ifdef TC_ASYNC
+#include "tc_interrupt.h"
+#include <system_interrupt.h>
+/** \internal
+ * Converts a given TC index to its interrupt vector index.
+ */
+#define _TC_INTERRUPT_VECT_NUM(n, unused) \
+		SYSTEM_INTERRUPT_MODULE_TC##n,
+#endif
+
 #if !defined(__DOXYGEN__)
 #  define _TC_GCLK_ID(n, unused)       TC##n##_GCLK_ID   ,
 #  define _TC_PM_APBCMASK(n, unused)   PM_APBCMASK_TC##n ,
 
 /** TODO: Remove once present in device header file */
 #  define TC_INST_GCLK_ID              { MREPEAT(TC_INST_NUM, _TC_GCLK_ID    , ~) }
-
 /** TODO: Remove once present in device header file */
 #  define TC_INST_PM_APBCMASK          { MREPEAT(TC_INST_NUM, _TC_PM_APBCMASK, ~) }
 #endif
@@ -78,6 +87,26 @@ static uint8_t _tc_get_inst_index(
 	Assert(false);
 	return 0;
 }
+
+#ifdef TC_ASYNC
+/**
+ * \internal Get the interrupt vector for the given device instance
+ *
+ * \param[in] TC module instance number.
+ *
+ * \return Interrupt vector for of the given TC module instance.
+ */
+enum system_interrupt_vector _tc_interrupt_get_interrupt_vector(
+		uint32_t inst_num)
+{
+	static uint8_t tc_interrupt_vectors[TC_INST_NUM] =
+		{
+			MREPEAT(TC_INST_NUM, _TC_INTERRUPT_VECT_NUM, ~)
+		};
+
+	return tc_interrupt_vectors[inst_num];
+}
+#endif
 
 /**
  * \brief Initializes a hardware TC module instance.
@@ -133,8 +162,33 @@ enum status_code tc_init(
 	struct system_pinmux_config pin_config;
 	struct system_gclk_chan_config gclk_chan_config;
 
+#ifdef TC_ASYNC
+	/* Initialize parameters */
+	for (uint8_t i = 0; i < TC_CALLBACK_N; i++) {
+		module_inst->callback[i]        = NULL;
+	}
+	module_inst->register_callback_mask     = 0x00;
+	module_inst->enable_callback_mask       = 0x00;
+
+	/* register this instance for callbacks*/
+	_tc_instances[instance] = module_inst;
+
+	/* enable interupts for this TC module */
+	system_interrupt_enable(_tc_interrupt_get_interrupt_vector(instance));
+#endif
+
 	/* Associate the given device instance with the hardware module */
 	module_inst->hw = hw;
+
+	/* Check if odd numbered TC modules are being configured in 32-bit
+	 * counter size. Only even numbered counters are allowed to be configured
+	 * in 32-bit counter size.
+	 */
+	if ((config->counter_size == TC_COUNTER_SIZE_32BIT) &&
+			(instance & 0x01)) {
+		Assert(false);
+		return STATUS_ERR_INVALID_ARG;
+	}
 
 	/* Make the counter size variable in the module_inst struct reflect
 	 * the counter size in the module
@@ -155,6 +209,7 @@ enum status_code tc_init(
 		/* Module must be disabled before initialization. Abort. */
 		return STATUS_ERR_DENIED;
 	}
+
 
 	/* Set up the TC PWM out pin for channel 0 */
 	if (config->channel_pwm_out_enabled[0]) {

@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAMD20 TC Driver
+ * \brief SAM D20 TC - Timer Counter Driver
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,6 +40,7 @@
  * \asf_license_stop
  *
  */
+
 #ifndef TC_H_INCLUDED
 #define TC_H_INCLUDED
 
@@ -387,6 +388,25 @@
 extern "C" {
 #endif
 
+#ifdef TC_ASYNC
+/** Enum for the possible callback types for the TC module. */
+enum tc_callback
+{
+	/** Callback for TC overflow */
+	TC_CALLBACK_OVERFLOW,
+	/** Callback for capture overflow error */
+	TC_CALLBACK_ERROR,
+	/** Callback for capture compare channel 0 */
+	TC_CALLBACK_CC_CHANNEL0,
+	/** Callback for capture compare channel 1 */
+	TC_CALLBACK_CC_CHANNEL1,
+#if !defined(__DOXYGEN__)
+	/** Number of available callbacks. */
+	TC_CALLBACK_N,
+#endif
+};
+#endif
+
 /**
  * \name Module status flags
  *
@@ -601,6 +621,34 @@ enum tc_event_action {
 };
 
 /**
+ * \brief Enum to be used to check interrupt flags
+ *
+ * This enum defines the different interrupt flags for the TC module.
+ */
+enum tc_interrupt_flag {
+	/** Interrupt flag for channel 0 */
+	TC_INTERRUPT_FLAG_CHANNEL_0    =  TC_INTFLAG_MC(1),
+	/** Interrupt flag for channel 1 */
+	TC_INTERRUPT_FLAG_CHANNEL_1    =  TC_INTFLAG_MC(2),
+	/** Interrupt flag for generating interrupts when
+	 *  synchronization is done. This is flag is meant for the
+	 *  async driver. */
+	TC_INTERRUPT_FLAG_READY     =  TC_INTFLAG_READY,
+
+	/** Interrupt flag used to test for capture overflow in capture
+	 *  mode
+	 */
+	TC_INTERRUPT_FLAG_ERROR     =  TC_INTFLAG_ERR,
+
+	/** Interrupt flag used to check for a counter overflow in
+	 *  compare mode
+	 */
+	TC_INTERRUPT_FLAG_OVERFLOW  =  TC_INTFLAG_OVF,
+	/** Number of interrupts */
+	TC_INTERRUPT_FLAG_N,
+};
+
+/**
  * \brief TC event enable/disable structure.
  *
  * Event flags for the \ref tc_enable_events() and \ref tc_disable_events().
@@ -716,6 +764,15 @@ struct tc_config {
 	} size_specific;
 };
 
+
+#ifdef TC_ASYNC
+/* Forward Declaration for the device instance */
+struct tc_module;
+
+/* Type of the callback functions */
+typedef void (*tc_callback_t)(const struct tc_module *const module);
+#endif
+
 /**
  * \brief TC software device instance structure.
  *
@@ -733,7 +790,16 @@ struct tc_module {
 	/** Size of the initialized Timer/Counter module configuration. */
 	enum tc_counter_size counter_size;
 #endif
+#ifdef TC_ASYNC
+	/** Array of callbacs */
+	tc_callback_t callback[TC_CALLBACK_N];
+	/** Bit mask for callbacks registered */
+	uint8_t register_callback_mask;
+	/** Bit mask for callbacks enabled */
+	uint8_t enable_callback_mask;
+#endif
 };
+
 
 /**
  * \name Driver Initialization and Configuration
@@ -989,7 +1055,9 @@ static inline void tc_enable(
 	while (tc_is_syncing(module_inst)) {
 		/* Wait for sync */
 	}
-
+#ifdef TC_ASYNC
+	//system_interrupt_enable(_tc_get_interrupt_vector(module->hw));
+#endif
 	/* Enable TC module */
 	tc_module->CTRLA.reg |= TC_CTRLA_ENABLE;
 }

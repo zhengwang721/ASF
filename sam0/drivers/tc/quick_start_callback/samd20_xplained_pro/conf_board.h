@@ -1,11 +1,13 @@
 /**
  * \file
  *
- * \brief SAM D20 Timer/Counter Driver Basic Quickstart
+ * \brief SAM D20 Xplained PRO board configuration.
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -38,52 +40,8 @@
  * \asf_license_stop
  *
  */
-#include <conf_quick_start.h>
-#include <asf.h>
 
-int main(void)
-{
-	//! [main]
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-	//! [system_init]
-	system_init();
-	//! [system_init]
-
-	/* Structures for config and software device instance */
-	//! [config]
-	struct tc_config config;
-	//! [config]
-	//! [dev_inst]
-	struct tc_module module_inst;
-	//! [dev_inst]
-
-	//! [tc_get_config_defaults]
-	tc_get_config_defaults(&config);
-	//! [tc_get_config_defaults]
-
-	//! [pwm_channel_0]
-	config.channel_pwm_out_enabled[0] = true;
-	config.channel_pwm_out_pin[0] = PWM_OUT_PIN;
-	config.channel_pwm_out_mux[0] = PWM_OUT_PIN_MUX;
-	//! [pwm_channel_0]
-
-	//! [setup]
-	config.counter_size = TC_COUNTER_SIZE_16BIT;
-	config.wave_generation = TC_WAVE_GENERATION_NORMAL_FREQ;
-	config.size_specific.size_16_bit.compare_capture_channel[0] = 0x7FFF;
-	//! [setup]
-
-	//! [tc_init]
-	tc_init(&module_inst, PWM_MODULE, &config);
-	//! [tc_init]
-
-	//! [tc_enable]
-	tc_enable(&module_inst);
-	//! [tc_enable]
-
-	//! [inf_loop]
-	while (1) {
-	}
-	//! [inf_loop]
-	//! [main]
-}
+#endif /* CONF_BOARD_H_INCLUDED */
