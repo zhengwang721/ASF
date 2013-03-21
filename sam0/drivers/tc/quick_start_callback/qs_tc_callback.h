@@ -42,7 +42,7 @@
  */
 
 /**
- * \page tc_callback Quick Start Guide for the TC module - Callback
+ * \page asfdoc_samd20_tc_callback_use_case Quick Start Guide for the TC module - Callback
  *
  * In this use case, one TC instance will be used to generate a PWM
  * signal. The duty cycle of the PWM will be changed during runtime by
@@ -66,16 +66,18 @@
  * - Counter starts on 0
  * - Capture compare channel 0 set to 0x7FFF
  *
- * \section asfdoc_samd20_tc_basic_use_case_setup Quick Start
+ * \section asfdoc_samd20_tc_callback_use_case_setup Quick Start
  *
- * \subsection asfdoc_samd20_tc_basic_use_case_prereq Prerequisites
+ * \subsection asfdoc_samd20_tc_callback_use_case_prereq Prerequisites
+ * There are no prerequisites for this use case.
  *
- * \subsection asfdoc_samd20_tc_basic_use_case_setup_code Code
+ * \subsection asfdoc_samd20_tc_callback_use_case_setup_code Code
  * The following must be added to the user application:
  *
  * Add to user application %main():
  * \snippet qs_tc_callback.c main
  *
+ * \section asfdoc_samd20_tc_callback_use_case_workflow Workflow
  * -# Initialize system.
  *  - \snippet qs_tc_callback.c system_init
  * -# Create configuration struct.
@@ -100,7 +102,6 @@
  *  - \snippet qs_tc_callback.c tc_enable
  * -# Loop infinitely. Let the module generate PWM signal.
  *  - \snippet qs_tc_callback.c inf_loop
- * \section asfdoc_samd20_tc_basic_use_case_workflow Workflow
  */
 
 

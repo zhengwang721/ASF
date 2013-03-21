@@ -49,7 +49,14 @@
  *
  * This driver for SAMD20 devices provides an interface for the configuration
  * and management of the timer modules within the device, for waveform
- * generation and timing operations.
+ * generation and timing operations. The following driver API modes are covered
+ * by this manual:
+ *
+ *  - Polled APIs
+ * \if TC_CALLBACK_MODE
+ *  - Callback APIs
+ * \endif
+ *
  *
  * The following peripherals are used by this module:
  *
@@ -373,6 +380,9 @@
  *
  * The following Quick Start guides and application examples are available for this driver:
  * - \ref asfdoc_samd20_tc_basic_use_case
+ * \if TC_CALLBACK_MODE
+ * - \ref asfdoc_samd20_tc_callback_use_case
+ * \endif
  *
  *
  * \section asfdoc_samd20_tc_api_overview API Overview
@@ -384,11 +394,15 @@
 #include <gclk.h>
 #include <pinmux.h>
 
+#if TC_ASYNC == true
+#  include <system_interrupt.h>
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#ifdef TC_ASYNC
+#if TC_ASYNC == true
 /** Enum for the possible callback types for the TC module. */
 enum tc_callback
 {
@@ -400,10 +414,10 @@ enum tc_callback
 	TC_CALLBACK_CC_CHANNEL0,
 	/** Callback for capture compare channel 1 */
 	TC_CALLBACK_CC_CHANNEL1,
-#if !defined(__DOXYGEN__)
+#  if !defined(__DOXYGEN__)
 	/** Number of available callbacks. */
 	TC_CALLBACK_N,
-#endif
+#  endif
 };
 #endif
 
@@ -765,7 +779,7 @@ struct tc_config {
 };
 
 
-#ifdef TC_ASYNC
+#if TC_ASYNC == true
 /* Forward Declaration for the device instance */
 struct tc_module;
 
@@ -789,14 +803,14 @@ struct tc_module {
 
 	/** Size of the initialized Timer/Counter module configuration. */
 	enum tc_counter_size counter_size;
-#endif
-#ifdef TC_ASYNC
+#  if TC_ASYNC == true
 	/** Array of callbacs */
 	tc_callback_t callback[TC_CALLBACK_N];
 	/** Bit mask for callbacks registered */
 	uint8_t register_callback_mask;
 	/** Bit mask for callbacks enabled */
 	uint8_t enable_callback_mask;
+#  endif
 #endif
 };
 
@@ -1055,9 +1069,7 @@ static inline void tc_enable(
 	while (tc_is_syncing(module_inst)) {
 		/* Wait for sync */
 	}
-#ifdef TC_ASYNC
-	//system_interrupt_enable(_tc_get_interrupt_vector(module->hw));
-#endif
+
 	/* Enable TC module */
 	tc_module->CTRLA.reg |= TC_CTRLA_ENABLE;
 }
@@ -1382,6 +1394,9 @@ static inline void tc_clear_status(
  * added to the user application.
  *
  *  - \subpage asfdoc_samd20_tc_basic_use_case
+ * \if TC_CALLBACK_MODE
+ *  - \subpage asfdoc_samd20_tc_callback_use_case
+ * \endif
  */
 
 #endif /* TC_H_INCLUDED */

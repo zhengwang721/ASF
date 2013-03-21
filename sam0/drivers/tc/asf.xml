@@ -11,20 +11,26 @@
 				<keyword value="Timers" />
 				<keyword value="Clocks" />
 			</info>
+
+			<build type="include-path" value="." />
+
+			<build name="TC_ASYNC" type="define" value="false" />
+
+			<build subtype="api" type="header-file" value="tc.h" />
+			<build type="c-source" value="tc.c" />
+
 			<build type="header-file" value="quick_start/qs_tc_basic.h" />
+
 			<build type="doxygen-example-path" value="quick_start"/>
+			<build type="doxygen-image-path" value="docimg" />
+			<build type="doxygen-entry-point" value="asfdoc_samd20_tc_group" />
+
+			<device-support value="samd20" />
+
 			<require idref="sam0.utils" />
 			<require idref="sam0.drivers.system" />
 			<require idref="sam0.drivers.port" />
-			<device-support value="samd20" />
-			<build type="c-source" value="tc.c" />
-			<build subtype="api" type="header-file" value="tc.h" />
-			<build type="header-file" value="quick_start/qs_tc_basic.h" />
-			<build type="doxygen-example-path" value="quick_start"/>
-			<build type="include-path" value="." />
-			<build type="doxygen-image-path" value="docimg" />
-			<build type="doxygen-entry-point" value="asfdoc_samd20_tc_group" />
-			<require idref="sam0.drivers.port" />
+
 			<generator default-mcu="unspecified-samd20" value="doxygen-module-v2" />
 		</module>
 		<module caption="TC - Timer Counter" id="sam0.drivers.tc#callback" type="driver">
@@ -38,24 +44,30 @@
 				<keyword value="Timers" />
 				<keyword value="Clocks" />
 			</info>
+
 			<build type="include-path" value="." />
+
+			<build name="TC_ASYNC" type="define" value="true" />
+			<build type="doxygen-enable-section" value="TC_CALLBACK_MODE"/>
+
+			<build subtype="api" type="header-file" value="tc.h" />
 			<build subtype="api" type="header-file" value="tc_interrupt.h" />
 			<build type="c-source" value="tc_interrupt.c" />
-			<build name="TC_ASYNC" type="define" value="" />
-			<build type="doxygen-entry-point" value="asfdoc_samd20_tc_async_group" />
+			<build type="c-source" value="tc.c" />
 			<build type="header-file" value="quick_start_callback/qs_tc_callback.h" />
+			<build type="header-file" value="quick_start/qs_tc_basic.h" />
+
 			<build type="doxygen-example-path" value="quick_start"/>
+			<build type="doxygen-example-path" value="quick_start_callback"/>
+			<build type="doxygen-image-path" value="docimg" />
+			<build type="doxygen-entry-point" value="asfdoc_samd20_tc_group" />
+
+			<device-support value="samd20" />
+
 			<require idref="sam0.utils" />
 			<require idref="sam0.drivers.system" />
 			<require idref="sam0.drivers.port" />
-			<device-support value="samd20" />
-			<build type="c-source" value="tc.c" />
-			<build subtype="api" type="header-file" value="tc.h" />
-			<build type="header-file" value="quick_start/qs_tc_basic.h" />
-			<build type="doxygen-example-path" value="quick_start"/>
-			<build type="include-path" value="." />
-			<build type="doxygen-image-path" value="docimg" />
-			<build type="doxygen-entry-point" value="asfdoc_samd20_tc_group" />
+
 			<generator default-mcu="unspecified-samd20" value="doxygen-module-v2" />
 		</module>
 	</select-by-config>
