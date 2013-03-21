@@ -145,25 +145,25 @@ extern "C" {
 /** Convenience definition for GPIO module group A on the device (if
  *  available). */
 #if (PORT_GROUPS > 0) || defined(__DOXYGEN__)
-#  define PORTA             PORT.Group[0]
+#  define PORTA             PORT->Group[0]
 #endif
 
 #if (PORT_GROUPS > 1) || defined(__DOXYGEN__)
 /** Convenience definition for GPIO module group B on the device (if
  *  available). */
-#  define PORTB             PORT.Group[1]
+#  define PORTB             PORT->Group[1]
 #endif
 
 #if (PORT_GROUPS > 2) || defined(__DOXYGEN__)
 /** Convenience definition for GPIO module group C on the device (if
  *  available). */
-#  define PORTC             PORT.Group[2]
+#  define PORTC             PORT->Group[2]
 #endif
 
 #if (PORT_GROUPS > 3) || defined(__DOXYGEN__)
 /** Convenience definition for GPIO module group D on the device (if
  *  available). */
-#  define PORTD             PORT.Group[3]
+#  define PORTD             PORT->Group[3]
 #endif
 
 /** @} */

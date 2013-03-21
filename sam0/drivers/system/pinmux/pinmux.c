@@ -69,7 +69,7 @@ static void _system_pinmux_config(
 	/* Enable the pin peripheral mux flag if non-GPIO selected (pin mux will
 	 * be written later) and store the new mux mask */
 	if (config->mux_position != SYSTEM_PINMUX_GPIO) {
-		pin_cfg    |= PORT_PINCFG_PMUXEN;
+		pin_cfg    |= PORT_WRCONFIG_PMUXEN;
 		pin_cfg_mux = (config->mux_position << PORT_WRCONFIG_PMUX_Pos);
 	}
 
@@ -77,11 +77,11 @@ static void _system_pinmux_config(
 	if ((config->direction == SYSTEM_PINMUX_PIN_DIR_INPUT) ||
 			(config->direction == SYSTEM_PINMUX_PIN_DIR_OUTPUT_WITH_READBACK)) {
 		/* Enable input buffer flag */
-		pin_cfg |= PORT_PINCFG_INEN;
+		pin_cfg |= PORT_WRCONFIG_INEN;
 
 		/* Enable pull-up/pull-down control flag if requested */
 		if (config->input_pull != SYSTEM_PINMUX_PIN_PULL_NONE) {
-			pin_cfg |= PORT_PINCFG_PULLEN;
+			pin_cfg |= PORT_WRCONFIG_PULLEN;
 		}
 
 		/* Clear the port DIR bits to disable the output buffer */
@@ -94,7 +94,7 @@ static void _system_pinmux_config(
 		/* Cannot use a pullup if the output driver is enabled,
 		 * if requested the input buffer can only sample the current
 		 * output state */
-		pin_cfg &= ~PORT_PINCFG_PULLEN;
+		pin_cfg &= ~PORT_WRCONFIG_PULLEN;
 
 		/* Set the port DIR bits to enable the output buffer */
 		port->DIRSET.reg = pin_mask;
@@ -125,7 +125,7 @@ static void _system_pinmux_config(
 	/* Set the pull-up state once the port pins are configured if one was
 	 * requested and it does not violate the valid set of port
 	 * configurations */
-	if (pin_cfg & PORT_PINCFG_PULLEN) {
+	if (pin_cfg & PORT_WRCONFIG_PULLEN) {
 		/* Set the OUT register bits to enable the pullup if requested,
 		 * clear to enable pull-down */
 		if (config->input_pull == SYSTEM_PINMUX_PIN_PULL_UP) {
