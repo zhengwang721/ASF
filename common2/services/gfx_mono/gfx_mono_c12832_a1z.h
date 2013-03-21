@@ -50,17 +50,17 @@
 #include "gfx_mono_framebuffer.h"
 
 /**
- * \ingroup gfx_mono
- * \defgroup gfx_mono_C12832_A1Z_group C12832_A1Z graphic library abstraction
+ * \ingroup asfdoc_common2_gfx_mono
+ * \defgroup asfdoc_common2_gfx_mono_C12832_A1Z_group C12832_A1Z graphic library abstraction
  *
  * This module is an abstraction layer between the graphic library and the
  * C12832_A1Z monochrome LCD display connected to a ST7565R LCD controller.
  *
  * As the controller does not provide any hardware accelerated graphic, all the
- * graphic primitives are provided by the \ref gfx_mono_generic_group service.
+ * graphic primitives are provided by the \ref asfdoc_common2_gfx_mono_generic_group service.
  *
  * \note Do not call the gfx_mono_st7565r_ functions directly. use the gfx_mono
- * names that are defined in this header and documented in \ref gfx_mono .
+ * names that are defined in this header and documented in \ref asfdoc_common2_gfx_mono .
  * Ie. gfx_mono_draw_pixel() should be used, not gfx_mono_st7565r_draw_pixel()
  * @{
  */

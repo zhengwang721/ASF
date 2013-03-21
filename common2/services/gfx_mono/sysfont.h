@@ -49,8 +49,8 @@
 #include "gfx_mono_text.h"
 
 /**
- * \ingroup gfx_mono_font
- * \defgroup gfx_mono_sysfont System font
+ * \ingroup asfdoc_common2_gfx_mono_font
+ * \defgroup asfdoc_common2_gfx_mono_sysfont System font
  *
  * The system font objects are globally available for a graphical application.
  * System fonts are by design read only, hence there are not any functions to

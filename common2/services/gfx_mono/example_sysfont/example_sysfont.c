@@ -42,10 +42,10 @@
  */
 #include <asf.h>
 /**
- * \page sam0_gfx_mono_sysfont_example GFX Mono Font Example
+ * \page asfdoc_common2_gfx_mono_sysfont_example GFX Mono Font Example
  *
- * \section intro Introduction
- * This is an example application for the \ref sam0_gfx_mono_font. It will print a
+ * \section asfdoc_common2_sysfont_example_intro Introduction
+ * This is an example application for the \ref asfdoc_common2_gfx_mono_font. It will print a
  * string, with line break, on the screen and scroll it.
  *
  * \section files Main Files
@@ -55,23 +55,23 @@
  * - \ref conf_ssd1306.h
  * - \ref conf_sysfont.h
  *
- * \section device_info Device Info
+ * \section asfdoc_common2_sysfont_example_device_info Device Info
  * This example has been tested with the following setup:
  * - SAM D20 Xplained Pro
  *
- * \section description Description of the example application
+ * \section asfdoc_common2_sysfont_example_description Description of the example application
  * The example application will upon power up display two text strings on the
  * display; "PASSION...".
  *
- * \section dependencies Dependencies
+ * \section asfdoc_common2_sysfont_example_dependencies Dependencies
  * Relevant module dependencies for this application are:
- * - \ref sam0_gfx_mono_font
+ * - \ref asfdoc_common2_gfx_mono_font
  *
- * \section compinfo Compilation info
+ * \section asfdoc_common2_sysfont_example_compinfo Compilation info
  * This software was written for the GNU GCC and IAR for AVR. Other compilers
  * may or may not work.
  *
- * \section contactinfo Contact Information
+ * \section asfdoc_common2_sysfont_example_contactinfo Contact Information
  * For further information, visit <a href="http://www.atmel.com/">Atmel</a>.\n
  */
 

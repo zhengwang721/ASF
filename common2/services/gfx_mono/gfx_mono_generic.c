@@ -42,7 +42,7 @@
  */
 
 /**
- * \ingroup gfx_mono_generic_group
+ * \ingroup asfdoc_common2_gfx_mono_generic_group
  * @{
  */
 #include "gfx_mono_generic.h"

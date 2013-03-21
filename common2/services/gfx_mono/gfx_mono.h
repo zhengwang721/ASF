@@ -56,9 +56,9 @@
 #endif
 
 /**
- * \defgroup sam0_gfx_mono Monochrome graphical display system
+ * \defgroup asfdoc_common2_gfx_mono Monochrome graphical display system
  *
- * See \ref sam0_gfx_mono_quickstart.
+ * See \ref asfdoc_common2_gfx_mono_quickstart.
  *
  * This library provides an interface to drawing graphics on monochrome
  * graphical displays
@@ -82,13 +82,13 @@
  * graphics primitives might be handled by the generic graphics drawing
  * primitives rather than the display driver itself.
  *
- * \section sam0_gfx_mono_examples Examples
+ * \section asfdoc_common2_gfx_mono_examples Examples
  * The following examples are available for the driver:
- * - \ref sam0_gfx_mono_quickstart
- * - \ref sam0_gfx_mono_sysfont_example
- * - \ref sam0_gfx_mono_spinner_example
+ * - \ref asfdoc_common2_gfx_mono_quickstart
+ * - \ref asfdoc_common2_gfx_mono_sysfont_example
+ * - \ref asfdoc_common2_gfx_mono_spinner_example
  *
- * \section sam0_gfx_mono_api_overview API Overview
+ * \section asfdoc_common2_gfx_mono_api_overview API Overview
  *
  * \note The functions in the library are not interrupt safe.
  * @{
@@ -276,19 +276,19 @@ enum gfx_mono_bitmap_type {
 /** @} */
 
 /**
- * \page sam0_gfx_mono_quickstart Quick Start Guide for the mono graphics service
+ * \page asfdoc_common2_gfx_mono_quickstart Quick Start Guide for the mono graphics service
  *
- * This is the quick start guide for the \ref sam0_gfx_mono "Monochrome Graphics service",
+ * This is the quick start guide for the \ref asfdoc_common2_gfx_mono "Monochrome Graphics service",
  * with step-by-step instructions on how to configure and use it for a specific
  * use case.
  *
- * \section gfx_mono_quickstart_basic Basic usage of the graphics service
+ * \section asfdoc_common2_gfx_mono_quickstart_basic Basic usage of the graphics service
  * This use case will demonstrate initializing the mono graphics service and
  * then draw a black line on the screen from coordinates X=10, Y=10 to X=20,
  * Y=20.
  *
- * \section gfx_mono_basic_usage Usage steps
- * \subsection gfx_mono_basic_usage_code Example code
+ * \section asfdoc_common2_gfx_mono_basic_usage Usage steps
+ * \subsection asfdoc_common2_gfx_mono_basic_usage_code Example code
  * Add to, e.g., the main function in the application C-file:
  * \code
  * system_init();
@@ -296,7 +296,7 @@ enum gfx_mono_bitmap_type {
  * gfx_mono_draw_line(10, 10, 20, 20, GFX_PIXEL_SET);
  * \endcode
  *
- * \subsection gfx_mono_basic_usage Workflow
+ * \subsection gfx_mono_basic_usage_workflow Workflow
  * -# Initialize system:
  *  - \code system_init(); \endcode
  * -# Initialize monochrome graphics service
@@ -310,16 +310,16 @@ enum gfx_mono_bitmap_type {
  */
 
 /**
- * \page sam0_gfx_mono_exqsg Examples for GFX Mono Library
+ * \page asfdoc_common2_gfx_mono_exqsg Examples for GFX Mono Library
  *
  * This is a list of the available Quick Start guides (QSGs) and example applications
- * for \ref sam0_gfx_mono. QSGs are simple examples with step-by-step instructions
+ * for \ref asfdoc_common2_gfx_mono. QSGs are simple examples with step-by-step instructions
  * to configure and use this driver in a selection of use cases. Note that QSGs can be compiled as
  * a standalone application or be added to the user application.
- *  - \subpage sam0_gfx_mono_quickstart
- *  - \subpage sam0_gfx_mono_font_quickstart
- *  - \subpage sam0_gfx_mono_sysfont_example
- *  - \subpage sam0_gfx_mono_spinner_example
+ *  - \subpage asfdoc_common2_gfx_mono_quickstart
+ *  - \subpage asfdoc_common2_gfx_mono_font_quickstart
+ *  - \subpage asfdoc_common2_gfx_mono_sysfont_example
+ *  - \subpage asfdoc_common2_gfx_mono_spinner_example
  *
  */
 

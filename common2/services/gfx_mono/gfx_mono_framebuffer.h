@@ -46,8 +46,8 @@
 #include "gfx_mono.h"
 
 /**
- * \ingroup gfx_mono
- * \defgroup gfx_mono_framebuffer_group Framebuffer
+ * \ingroup asfdoc_common2_gfx_mono
+ * \defgroup asfdoc_common2_gfx_mono_framebuffer_group Framebuffer
  *
  * This module provides read/write from and to a framebuffer in RAM. This is
  * needed when using a controller that does not provide a way to read back data

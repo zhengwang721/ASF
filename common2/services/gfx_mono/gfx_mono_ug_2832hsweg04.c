@@ -273,6 +273,7 @@ void gfx_mono_ssd1306_get_page(gfx_mono_color_t *data, gfx_coord_t page,
  * \param page Page address
  * \param column Page offset (x coordinate)
  * \param data Data to be written
+ * \param force Forces the write
  *
  * This example will put the value 0xFF to the first byte in the display memory
  * setting a 8 pixel high column of pixels in the upper left corner of the
@@ -280,8 +281,8 @@ void gfx_mono_ssd1306_get_page(gfx_mono_color_t *data, gfx_coord_t page,
  * \code
  * gfx_mono_ssd1306_put_byte(0, 0, 0xFF, false);
  * \endcode
- */
-void gfx_mono_ssd1306_put_byte(gfx_coord_t page, gfx_coord_t column,
+  */
+ void gfx_mono_ssd1306_put_byte(gfx_coord_t page, gfx_coord_t column,
 		uint8_t data, bool force)
 {
 #ifdef CONFIG_SSD1306_FRAMEBUFFER

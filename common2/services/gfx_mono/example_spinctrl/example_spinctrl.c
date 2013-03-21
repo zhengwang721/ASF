@@ -46,13 +46,13 @@
 #include <conf_sysfont.h>
 
 /**
- * \page sam0_gfx_mono_spinner_example GFX Mono Spinner Example
+ * \page asfdoc_common2_gfx_mono_spinner_example GFX Mono Spinner Example
  *
- * \section intro Introduction
+ * \section asfdoc_common2_spinctrl_example_intro Introduction
  * This simple example shows how to set up a collection of spinners and display
  * them on the screen.
  *
- * \section files Main files:
+ * \section asfdoc_common2_spinctrl_example_files Main files:
  * - \ref example_spinctrl.c : the example itself.
  * - \ref conf_ssd1306.h
  * - \ref conf_board.h
@@ -60,27 +60,27 @@
  * - \ref conf_sysfont.h
  * - \ref conf_spinctrl.h
  *
- * \section deviceinfo Device Info
+ * \section asfdoc_common2_spinctrl_example_deviceinfo Device Info
  * All AVR devices can be used.
  * This example has been tested with the following setup:
  * - SAMD20 Xplained Pro
  *
- * \section description Description of the example application
+ * \section asfdoc_common2_spinctrl_example_description Description of the example application
  * This example application will initialize string spinner and two integer
  * spinners, set up a spincollection with the spinners and display them on
  * the screen.
  *
- * \section dependencies Dependencies
+ * \section asfdoc_common2_spinctrl_example_dependencies Dependencies
  * Relevant module dependencies for this application are:
- * - \ref sam0_gfx_mono
- * - \ref sam0_gfx_mono_font
- * - \ref sam0_gfx_mono_spinctrl
+ * - \ref asfdoc_common2_gfx_mono
+ * - \ref asfdoc_common2_gfx_mono_font
+ * - \ref asfdoc_common2_gfx_mono_spinctrl
  *
- * \section compinfo Compilation Info
+ * \section asfdoc_common2_spinctrl_example_compinfo Compilation Info
  * This software was written for the GNU GCC and IAR for AVR.
  * Other compilers may or may not work.
  *
- * \section contactinfo Contact Information
+ * \section asfdoc_common2_spinctrl_example_contactinfo Contact Information
  * For further information, visit
  * <A href="http://www.atmel.com/">Atmel</A>.\n
  */
