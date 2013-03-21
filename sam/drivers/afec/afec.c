@@ -58,23 +58,23 @@
  * @{
  */
 #if defined(AFEC1)
-#define NUM_OF_AFEC    (2)
+#define NUM_OF_AFEC    (2UL)
 #else
-#define NUM_OF_AFEC    (1)
+#define NUM_OF_AFEC    (1UL)
 #endif
 
 /* The gap between bit EOC15 and DRDY in interrupt register */
 #if defined __SAM4E8C__  || defined __SAM4E16C__
-#define AFEC_INTERRUPT_GAP1                 (18)
+#define AFEC_INTERRUPT_GAP1                 (18UL)
 #elif defined __SAM4E8E__  || defined __SAM4E16E__
-#define AFEC_INTERRUPT_GAP1                  (8)
+#define AFEC_INTERRUPT_GAP1                  (8UL)
 #endif
 
 /* The gap between bit RXBUFF and TEMPCHG in interrupt register */
-#define AFEC_INTERRUPT_GAP2                    (1)
+#define AFEC_INTERRUPT_GAP2                    (1UL)
 
 /* The number of channel in channel sequence1 register */
-#define AFEC_SEQ1_CHANNEL_NUM                (8)
+#define AFEC_SEQ1_CHANNEL_NUM                (8UL)
 
 afec_callback_t afec_callback_pointer[NUM_OF_AFEC][_AFEC_NUM_OF_INTERRUPT_SOURCE];
 
