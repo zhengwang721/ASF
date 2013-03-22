@@ -475,7 +475,7 @@ enum status_code spi_init(
 enum status_code spi_read_buffer_wait(
 		struct spi_module *const module,
 		uint8_t *rx_data,
-		uint8_t length,
+		uint16_t length,
 		uint16_t dummy)
 {
 	/* Sanity check arguments */
@@ -487,7 +487,7 @@ enum status_code spi_read_buffer_wait(
 		return STATUS_ERR_INVALID_ARG;
 	}
 
-	uint8_t rx_pos = 0;
+	uint16_t rx_pos = 0;
 
 	while (length--) {
 		if (module->mode == SPI_MODE_MASTER) {
@@ -618,7 +618,7 @@ enum status_code spi_select_slave(
 enum status_code spi_write_buffer_wait(
 		struct spi_module *const module,
 		const uint8_t *tx_data,
-		uint8_t length)
+		uint16_t length)
 {
 	/* Sanity check arguments */
 	Assert(module);
@@ -627,7 +627,7 @@ enum status_code spi_write_buffer_wait(
 		return STATUS_ERR_INVALID_ARG;
 	}
 
-	uint8_t tx_pos = 0;
+	uint16_t tx_pos = 0;
 
 	/* Write block */
 	while (length--) {
@@ -720,7 +720,7 @@ enum status_code spi_tranceive_buffer_wait(
 		struct spi_module *const module,
 		uint8_t *tx_data,
 		uint8_t *rx_data,
-		uint8_t length)
+		uint16_t length)
 {
 	/* Sanity check arguments */
 	Assert(module);
@@ -730,8 +730,8 @@ enum status_code spi_tranceive_buffer_wait(
 		return STATUS_ERR_INVALID_ARG;
 	}
 
-	uint8_t tx_pos = 0;
-	uint8_t rx_pos = 0;
+	uint16_t tx_pos = 0;
+	uint16_t rx_pos = 0;
 
 	/* Send and receive buffer */
 	while (length--) {

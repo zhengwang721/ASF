@@ -381,7 +381,7 @@ enum status_code i2c_slave_write_packet_wait(
 
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
 
-	uint8_t length = packet->data_length;
+	uint16_t length = packet->data_length;
 	enum status_code status;
 	/* Wait for master to send address packet */
 	status = _i2c_slave_wait_for_bus(module);
@@ -413,7 +413,7 @@ enum status_code i2c_slave_write_packet_wait(
 	i2c_hw->CTRLB.reg &= ~SERCOM_I2CS_CTRLB_ACKACT;
 	i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_CMD(0x3);
 
-	uint8_t i = 0;
+	uint16_t i = 0;
 
 	/* Wait for data interrupt */
 	status = _i2c_slave_wait_for_bus(module);
@@ -482,7 +482,7 @@ enum status_code i2c_slave_read_packet_wait(
 
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
 
-	uint8_t length = packet->data_length;
+	uint16_t length = packet->data_length;
 
 	enum status_code status;
 
@@ -510,7 +510,7 @@ enum status_code i2c_slave_read_packet_wait(
 	i2c_hw->CTRLB.reg &= ~SERCOM_I2CS_CTRLB_ACKACT;
 	i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_CMD(0x3);
 
-	uint8_t i = 0;
+	uint16_t i = 0;
 	while (length--) {
 
 		/* Wait for next byte or stop condition */

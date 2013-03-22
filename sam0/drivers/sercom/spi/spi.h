@@ -1057,7 +1057,7 @@ static inline enum status_code spi_write(
 enum status_code spi_write_buffer_wait(
 		struct spi_module *const module,
 		const uint8_t *tx_data,
-		uint8_t length);
+		uint16_t length);
 
 /**
  * \brief Reads last received SPI character
@@ -1113,7 +1113,7 @@ static inline enum status_code spi_read(
 enum status_code spi_read_buffer_wait(
 		struct spi_module *const module,
 		uint8_t *rx_data,
-		uint8_t length,
+		uint16_t length,
 		uint16_t dummy);
 
 /**
@@ -1201,7 +1201,7 @@ enum status_code spi_tranceive_buffer_wait(
 		struct spi_module *const module,
 		uint8_t *tx_data,
 		uint8_t *rx_data,
-		uint8_t length);
+		uint16_t length);
 
 enum status_code spi_select_slave(
 		struct spi_module *const module,

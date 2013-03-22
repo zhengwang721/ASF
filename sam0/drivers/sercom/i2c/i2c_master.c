@@ -475,7 +475,7 @@ static enum status_code _i2c_master_read(
 
 	/* Return value. */
 	enum status_code tmp_status;
-	uint8_t tmp_data_length = packet->data_length;
+	uint16_t tmp_data_length = packet->data_length;
 
 	/* Written buffer counter. */
 	uint16_t counter = 0;
@@ -647,7 +647,7 @@ static enum status_code _i2c_master_write_packet(
 
 	/* Return value. */
 	enum status_code tmp_status;
-	uint8_t tmp_data_length = packet->data_length;
+	uint16_t tmp_data_length = packet->data_length;
 
 	_i2c_master_wait_for_sync(module);
 
