@@ -548,7 +548,7 @@ struct i2c_packet {
 	/** Address to slave device  */
 	uint8_t address;
 	/** Length of data array */
-	uint8_t data_length;
+	uint16_t data_length;
 	/** Data array containing all data to be transferred */
 	uint8_t *data;
 };
