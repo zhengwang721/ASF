@@ -51,8 +51,8 @@ extern "C" {
 #endif
 
 /**
- * \ingroup gfx_mono
- * \defgroup gfx_mono_screen_dump XPM USART Screendump functions
+ * \ingroup asfdoc_common2_gfx_mono
+ * \defgroup asfdoc_common2_gfx_mono_screen_dump XPM USART Screendump functions
  *
  * This service will add the possibility to dump the LCD screen to the USART
  * using the XPM file format.
@@ -64,9 +64,9 @@ extern "C" {
  * \ref gfx_mono_init() which will produce the screen buffer that is dumped
  * trough the USART.
  *
- * \section dependencies Dependencies
+ * \section asfdoc_common2_screen_dump_dependencies Dependencies
  * This driver depends on the following modules:
- * - \ref serial_group
+ * - asfdoc_samd20_sercom_spi_group
  * @{
  */
 
@@ -100,8 +100,8 @@ static const uint8_t xpm_header[] = XPM_HEADER;
  * \brief Init the framebuffer dump function
  *
  * \param usart   pointer to the USART to use for dumping the image
- * \param options pointer to the USART options, for documentation see
- *                \ref usart_serial_options_t
+ * \param options pointer to the USART options, see documentation
+ *
  */
 static inline void gfx_mono_screen_dump_init(dump_usart_t *usart,
 		const usart_serial_options_t *options)

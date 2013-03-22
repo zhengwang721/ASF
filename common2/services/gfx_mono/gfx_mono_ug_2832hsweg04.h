@@ -50,17 +50,17 @@
 #include "gfx_mono_framebuffer.h"
 
 /**
- * \ingroup gfx_mono
- * \defgroup gfx_mono_2832hsweg04_group 2832HSWEG04 graphic library abstraction
+ * \ingroup asfdoc_common2_gfx_mono
+ * \defgroup asfdoc_common2_gfx_mono_2832hsweg04_group 2832HSWEG04 graphic library abstraction
  *
  * This module is an abstraction layer between the graphic library and the
  * 2832HSWEG04 monochrome LCD display connected to a SSD1306 LCD controller.
  *
  * As the controller does not provide any hardware accelerated graphic, all the
- * graphic primitives are provided by the \ref gfx_mono_generic_group service.
+ * graphic primitives are provided by the \ref asfdoc_common2_gfx_mono_generic_group service.
  *
  * \note Do not call the gfx_mono_ssd1306_ functions directly. use the gfx_mono
- * names that are defined in this header and documented in \ref gfx_mono .
+ * names that are defined in this header and documented in \ref asfdoc_common2_gfx_mono .
  * Ie. gfx_mono_draw_pixel() should be used, not gfx_mono_ssd1306_draw_pixel()
  * @{
  */

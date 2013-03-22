@@ -45,8 +45,8 @@
 #include "gfx_mono.h"
 
 /**
- * \ingroup gfx_mono
- * \defgroup gfx_mono_generic_group Generic monochrome graphic primitives
+ * \ingroup asfdoc_common2_gfx_mono
+ * \defgroup asfdoc_common2_gfx_mono_generic_group Generic monochrome graphic primitives
  *
  * This is a service providing generic implementations of graphic primitives
  * - Horizontal line
@@ -62,7 +62,7 @@
  *
  * This service is included as a requirement for a
  * hardware specific component that uses these functions, and provides a
- * gfx_draw_pixel function.
+ * asfdoc_common2_draw_pixel function.
  *
  * @{
  */

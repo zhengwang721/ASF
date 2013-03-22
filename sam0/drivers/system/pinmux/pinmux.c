@@ -110,7 +110,7 @@ static void _system_pinmux_config(
 	port->WRCONFIG.reg
 		= (lower_pin_mask << PORT_WRCONFIG_PINMASK_Pos) |
 			/* Shift to upper 16 bits. */
-			(pin_cfg << 16) | pin_cfg_mux |
+			pin_cfg | pin_cfg_mux |
 			PORT_WRCONFIG_WRPMUX | PORT_WRCONFIG_WRPINCFG;
 
 	/* Configure the upper 16-bits of the port to the desired configuration,
@@ -118,7 +118,7 @@ static void _system_pinmux_config(
 	port->WRCONFIG.reg
 		= (upper_pin_mask << PORT_WRCONFIG_PINMASK_Pos) |
 			/* Shift to upper 16 bits. */
-			(pin_cfg << 16) | pin_cfg_mux |
+			pin_cfg | pin_cfg_mux |
 			PORT_WRCONFIG_WRPMUX | PORT_WRCONFIG_WRPINCFG |
 			PORT_WRCONFIG_HWSEL;
 

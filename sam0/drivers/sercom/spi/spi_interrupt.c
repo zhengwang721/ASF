@@ -217,6 +217,9 @@ enum status_code spi_write_buffer_job(
  * Sets up the driver to read from the SPI to a given buffer. If registered
  * and enabled, a callback function will be called when the read is finished.
  *
+ * \note If address matching is enabled for the slave, the first character
+ *       received and placed in the buffer will be the address.
+ *
  * \param[in]  module   Pointer to SPI software instance struct
  * \param[out] rx_data  Pointer to data buffer to receive
  * \param[in]  length   Data buffer length
@@ -324,21 +327,20 @@ static void _spi_write(
 	/* Pointer to the hardware module instance */
 	SercomSpi *const spi_hw = &(module->hw->SPI);
 
-	/*
-	 * Write current packet from transmission buffer and increment buffer
-	 * pointer
-	 */
+	/* Write value will be at least 8-bits long */
+	uint16_t data_to_send = *(module->tx_buffer_ptr);
+	/* Increment 8-bit pointer */
+	(module->tx_buffer_ptr)++;
+
 	if (module->character_size == SPI_CHARACTER_SIZE_9BIT) {
-		spi_hw->DATA.reg |= *(module->tx_buffer_ptr)
-				& SERCOM_SPI_DATA_MASK;
-		module->tx_buffer_ptr += 2;
-
-	} else {
-		spi_hw->DATA.reg = (*(module->tx_buffer_ptr)
-				& SERCOM_SPI_DATA_MASK);
+		data_to_send |= ((*(module->tx_buffer_ptr)) << 8);
+		/* Increment 8-bit pointer */
 		(module->tx_buffer_ptr)++;
-
 	}
+
+	/* Write the data to send*/
+	spi_hw->DATA.reg = data_to_send & SERCOM_SPI_DATA_MASK;
+
 	/* Decrement remaining buffer length */
 	(module->remaining_tx_buffer_length)--;
 }
@@ -374,20 +376,23 @@ static void _spi_read(
 	/* Pointer to the hardware module instance */
 	SercomSpi *const spi_hw = &(module->hw->SPI);
 
+	uint16_t received_data = (spi_hw->DATA.reg & SERCOM_SPI_DATA_MASK);
+
+	/* Read value will be at least 8-bits long */
+	*(module->rx_buffer_ptr) = received_data;
+	/* Increment 8-bit pointer */
+	module->rx_buffer_ptr += 1;
+
 	if(module->character_size == SPI_CHARACTER_SIZE_9BIT) {
-		/* Read out from DATA and increment 8bit ptr by two */
-		*(module->rx_buffer_ptr) = (spi_hw->DATA.reg & SERCOM_SPI_DATA_MASK);
-		module->rx_buffer_ptr += 2;
-	} else {
-		/* Read out from DATA and increment 8bit ptr by one */
-		*(module->rx_buffer_ptr) = (spi_hw->DATA.reg & SERCOM_SPI_DATA_MASK);
+		/* 9-bit data, write next received byte to the buffer */
+		*(module->rx_buffer_ptr) = (received_data >> 8);
+		/* Increment 8-bit pointer */
 		module->rx_buffer_ptr += 1;
 	}
 
 	/* Decrement length of the remaining buffer */
 	module->remaining_rx_buffer_length--;
 }
-
 
 /**
  * \internal

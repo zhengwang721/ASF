@@ -47,8 +47,8 @@
 #include "conf_spinctrl.h"
 
 /**
- * \ingroup gfx_mono
- * \defgroup sam0_gfx_mono_spinctrl Spinner widget for monochrome graphical displays
+ * \ingroup asfdoc_common2_gfx_mono
+ * \defgroup asfdoc_common2_gfx_mono_spinctrl Spinner widget for monochrome graphical displays
  *
  * This module provides a spinner widget system for monochrome graphical
  * displays.

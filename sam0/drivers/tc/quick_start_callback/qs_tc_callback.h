@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 TC Callback Driver Quick Start
+ * \brief SAM D20 TC - Timer Counter Callback Driver Quick Start
  *
  * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
@@ -42,11 +42,13 @@
  */
 
 /**
- * \page asfdoc_samd20_tc_basic_use_case Quick Start Guide for the TC module - Basic Use Case
+ * \page asfdoc_samd20_tc_callback_use_case Quick Start Guide for the TC module - Callback
  *
- * In this use case, the TC will be used to generate a PWM signal. Here
- * the pulse width is set to half the period. The TC module will be set up as
- * follows:
+ * In this use case, one TC instance will be used to generate a PWM
+ * signal. The duty cycle of the PWM will be changed during runtime by
+ * a callback function. The duty cycle will be 0.5 in one cycle and
+ * 0.3 in the next and continue in this manner. The TC module
+ * will be set up as follows:
  *
  * - GCLK generator 0 (GCLK main) clock source
  * - 16 bit resolution on the counter
@@ -64,38 +66,44 @@
  * - Counter starts on 0
  * - Capture compare channel 0 set to 0x7FFF
  *
- * Looking at the configuration returned from the function
- * tc_get_config_defaults the only difference is that capture compare
- * channel 0 is set to 0x7FFF not zero.
+ * \section asfdoc_samd20_tc_callback_use_case_setup Quick Start
  *
- * \section asfdoc_samd20_tc_basic_use_case_setup Quick Start
- *
- * \subsection asfdoc_samd20_tc_basic_use_case_prereq Prerequisites
+ * \subsection asfdoc_samd20_tc_callback_use_case_prereq Prerequisites
  * There are no prerequisites for this use case.
  *
- * \subsection asfdoc_samd20_tc_basic_use_case_setup_code Code
+ * \subsection asfdoc_samd20_tc_callback_use_case_setup_code Code
  * The following must be added to the user application:
  *
  * Add to user application %main():
- * \snippet qs_tc_basic.c main
+ * \snippet qs_tc_callback.c main
  *
- * \section asfdoc_samd20_tc_basic_use_case_workflow Workflow
+ * \section asfdoc_samd20_tc_callback_use_case_workflow Workflow
  * -# Initialize system.
- *  - \snippet qs_tc_basic.c system_init
+ *  - \snippet qs_tc_callback.c system_init
  * -# Create configuration struct.
- *  - \snippet qs_tc_basic.c config
+ *  - \snippet qs_tc_callback.c config
  * -# Create software device instance struct.
- *  - \snippet qs_tc_basic.c dev_inst
+ *  - \snippet qs_tc_callback.c dev_inst
  * -# Get default configuration values.
- *  - \snippet qs_tc_basic.c tc_get_config_defaults
+ *  - \snippet qs_tc_callback.c tc_get_config_defaults
  * -# Set up PWM output on channel 0.
- *   - \snippet qs_tc_basic.c pwm_channel_0
+ *  - \snippet qs_tc_callback.c pwm_channel_0
  * -# Set counter size, wave generation mode and compare capture value.
- *  - \snippet qs_tc_basic.c setup
+ *  - \snippet qs_tc_callback.c setup
  * -# Initialize the TC module based on given configuration values.
- *  - \snippet qs_tc_basic.c tc_init
+ *  - \snippet qs_tc_callback.c tc_init
+ * -# Register the callback function to be used when a compare match occur.
+ *  - \snippet qs_tc_callback.c register_callback
+ * -# Enable callbacks for the given interrupt.
+ *  - \snippet qs_tc_callback.c enable_callback
+ * -# Enable global interrupts.
+ *  - \snippet qs_tc_callback.c enable global interrupts
  * -# Enable and start the TC module.
- *  - \snippet qs_tc_basic.c tc_enable
- * -# Loop infinitly. Let the module generate PWM signal.
- *  - \snippet qs_tc_basic.c inf_loop
+ *  - \snippet qs_tc_callback.c tc_enable
+ * -# Loop infinitely. Let the module generate PWM signal.
+ *  - \snippet qs_tc_callback.c inf_loop
  */
+
+
+#include <asf.h>
+#include <conf_clocks.h>

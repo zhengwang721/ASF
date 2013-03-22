@@ -43,7 +43,40 @@
 
 /**
  * \page asfdoc_samd20_at30tse75x_qs Quick Start Guide for the SAMD20 AT30TSE75X Temperature Sensor Driver
+ * In this use case we will interface the temperature sensor, set a resolution and read
+ * the temperature.
+ * 
+ \section asfdoc_samd20_at30tse75x_qs_prereq Prerequisites
+ * The temperature sensor must be connected to the device.
  *
- * \snippet qs_at30tse75x.c qs
+ * \section asfdoc_samd20_at30tse75x_qs_setup Setup
+ *
+ * \subsection asfdoc_samd20_at30tse75x_qs_init_code Initialization Code
+ * Add a global variable to store the temperature:
+ * \snippet qs_at30tse75x.c temp_res
+ * Copy-paste the following setup code to your application main function:
+ * \snippet qs_at30tse75x.c init
+ *
+ * \subsection asfdoc_samd20_at30tse75x_qs_workflow Workflow
+ * -# Initalize system
+ *  - \snippet qs_at30tse75x.c system_init
+ * -# Initialize I2C interface
+ *  - \snippet qs_at30tse75x.c temp_init
+ *
+ * \section asfdoc_samd20_at30tse75x_qs_implement Implementation
+ *
+ * \subsection asfdoc_samd20_at30tse75x_qs_imp_code Code
+ * Add after initialization in main.
+ * \snippet qs_at30tse75x.c impl
+ *
+ * \subsection asfdoc_samd20_at30tse75x_qs_imp_workflow Workflow
+ * -# Read THIGH register from temperature sensor:
+ *  - \snippet qs_at30tse75x.c read_thigh
+ * -# Read TLOW register from temperature sensor:
+ *  - \snippet qs_at30tse75x.c read_tlow
+ * -# Set temperature sensor resolution to 12-bit:
+ *  - \snippet qs_at30tse75x.c write_conf
+ * -# Continously read the temperature:
+ *  - \snippet qs_at30tse75x.c read_temp
  *
  */

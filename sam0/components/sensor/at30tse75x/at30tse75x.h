@@ -53,16 +53,17 @@
 
 /**
  * \defgroup asfdoc_samd20_at30tse75x_group AT30TSE75X Temperature Sensor
+ * This driver provides API for AT30TSE75X temperature sensor through
+ * I2C interface.
  *
  * See \ref asfdoc_samd20_at30tse75x_qs.
  *
- * \par Purpose
- *
- * The module provides useful API of AT30TSE75X temperature sensor through I2C interface.
  *
  * \section asfdoc_samd20_at30tse75x_dependencies Dependencies
  * This driver depends on the following module:
- * - \ref asfdoc_samd20_i2c_group for SAM D20 I2C master.
+ * - \ref asfdoc_samd20_i2c_group "SAM D20 I2C master"
+ *
+ * \section asfdoc_samd20_at30tse75x_api_overview API Overview
  * @{
  */
 
