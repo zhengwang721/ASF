@@ -70,10 +70,10 @@ void at30tse_init(void)
 /**
  * \brief Writes the EEPROM with data provided.
  *
- * \param *data Pointer to the data buffer.
- * \param length Number of data bytes.
- * \param word_addr Word address of the EEPROM.
- * \param page Page number of the EEPROM.
+ * \param[out] *data Pointer to the data buffer.
+ * \param[in]  length Number of data bytes.
+ * \param[in]  word_addr Word address of the EEPROM.
+ * \param[in]  page Page number of the EEPROM.
  */
 void at30tse_eeprom_write(uint8_t *data, uint8_t length, uint8_t word_addr, uint8_t page)
 {	
@@ -102,10 +102,10 @@ void at30tse_eeprom_write(uint8_t *data, uint8_t length, uint8_t word_addr, uint
 /**
  * \brief Reads data from the EEPROM.
  *
- * \param *data Pointer to the data buffer.
- * \param length Number of data bytes.
- * \param word_addr Word address of the EEPROM.
- * \param page Page number of the EEPROM.
+ * \param[out] *data Pointer to the data buffer.
+ * \param[in]  length Number of data bytes.
+ * \param[in]  word_addr Word address of the EEPROM.
+ * \param[in]  page Page number of the EEPROM.
  */
 void at30tse_eeprom_read(uint8_t *data, uint8_t length, uint8_t word_addr, uint8_t page)
 {
@@ -137,8 +137,8 @@ void at30tse_eeprom_read(uint8_t *data, uint8_t length, uint8_t word_addr, uint8
 /**
  * \brief Sets the register pointer with specified reg value.
  *
- * \param reg Register value of the pointer register.
- * \param reg_type Register type being pointed by pointer register.
+ * \param[in] reg Register value of the pointer register.
+ * \param[in] reg_type Register type being pointed by pointer register.
  */
 void at30tse_set_register_pointer(uint8_t reg, uint8_t reg_type)
 {        
@@ -155,9 +155,9 @@ void at30tse_set_register_pointer(uint8_t reg, uint8_t reg_type)
 /**
  * \brief Reads the value from the register reg.
  *
- * \param reg Register to read.
- * \param reg_type Type of the register (Volatile or Non-volatile).
- * \param reg_size Register size.
+ * \param[in] reg Register to read.
+ * \param[in] reg_type Type of the register (Volatile or Non-volatile).
+ * \param[in] reg_size Register size.
  *
  * \return Register value.
  */
@@ -189,10 +189,10 @@ uint16_t at30tse_read_register(uint8_t reg, uint8_t reg_type, uint8_t reg_size)
 /**
  * \brief Writes the specified register reg with the reg_value passed
  *
- * \param reg Register to write.
- * \param reg_type Type of the register (Volatile or Non-volatile).
- * \param reg_size Register size.
- * \param reg_value Value to be written to reg.
+ * \param[in] reg Register to write.
+ * \param[in] reg_type Type of the register (Volatile or Non-volatile).
+ * \param[in] reg_size Register size.
+ * \param[in] reg_value Value to be written to reg.
  */
 void at30tse_write_register(uint8_t reg, uint8_t reg_type, uint8_t reg_size, uint16_t reg_value)
 {
@@ -214,7 +214,7 @@ void at30tse_write_register(uint8_t reg, uint8_t reg_type, uint8_t reg_size, uin
 /**
  * \brief Writes the configuration register reg with the value passed
  *
- * \param value Register value to be written.
+ * \param[in] value Register value to be written.
  */
 void at30tse_write_config_register(uint16_t value)
 {
