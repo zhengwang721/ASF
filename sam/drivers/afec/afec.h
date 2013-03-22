@@ -84,7 +84,7 @@ enum afec_trigger {
 	/* PWM Event Line 1 */
 	AFEC_TRIG_PWM_EVENT_LINE_1 = AFEC_MR_TRGSEL_AFEC_TRIG5 | AFEC_MR_TRGEN,
 	/* Freerun mode conversion. */
-	AFEC_TRIG_FREERUN
+	AFEC_TRIG_FREERUN = 0xFF,
 };
 
 #if defined __SAM4E8C__  || defined __SAM4E16C__
