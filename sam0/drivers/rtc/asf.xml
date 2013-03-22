@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<select-by-config id="sam0.drivers.rtc" name="config.sam0.drivers.rtc" caption="Real Time Counter Driver" default="count_callback">
+	<select-by-config id="sam0.drivers.rtc" name="config.sam0.drivers.rtc" caption="Real Time Clock Driver" default="count_callback">
 		<info type="description" value="summary">
 			Driver for the SAMD20 RTC. Provides a unified interface
 			for the configuration and management of the RTC module.
@@ -8,7 +8,7 @@
 			<keyword value="RTC" />
 		</info>
 
-		<module type="driver" id="sam0.drivers.rtc#count_polled" caption="Real Time Counter (Count Mode) Polled Driver">
+		<module type="driver" id="sam0.drivers.rtc#count_polled" caption="Real Time Clock (Count Mode) Polled Driver">
 			<build type="include-path" value="." />
 			<build type="header-file" subtype="api" value="rtc_count.h"/>
 			<build type="c-source" value="rtc_count.c"/>
@@ -28,7 +28,7 @@
 			<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 		</module>
 
-		<module type="driver" id="sam0.drivers.rtc#count_callback" caption="Real Time Counter (Count Mode) Interrupt Driver">
+		<module type="driver" id="sam0.drivers.rtc#count_callback" caption="Real Time Clock (Count Mode) Interrupt Driver">
 			<build type="include-path" value="." />
 			<build type="header-file" subtype="api" value="rtc_count.h"/>
 			<build type="header-file" subtype="api" value="rtc_count_interrupt.h"/>
@@ -53,7 +53,7 @@
 			<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 		</module>
 
-		<module type="driver" id="sam0.drivers.rtc#calendar_polled" caption="Real Time Counter (Calendar Mode) Polled Driver">
+		<module type="driver" id="sam0.drivers.rtc#calendar_polled" caption="Real Time Clock (Calendar Mode) Polled Driver">
 			<build type="include-path" value="." />
 			<build type="header-file" subtype="api" value="rtc_calendar.h"/>
 			<build type="c-source" value="rtc_calendar.c"/>
@@ -73,7 +73,7 @@
 			<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 		</module>
 
-		<module type="driver" id="sam0.drivers.rtc#calendar_callback" caption="Real Time Counter (Calendar Mode) Interrupt Driver">
+		<module type="driver" id="sam0.drivers.rtc#calendar_callback" caption="Real Time Clock (Calendar Mode) Interrupt Driver">
 			<build type="include-path" value="." />
 			<build type="header-file" subtype="api" value="rtc_calendar.h"/>
 			<build type="header-file" subtype="api" value="rtc_calendar_interrupt.h"/>
