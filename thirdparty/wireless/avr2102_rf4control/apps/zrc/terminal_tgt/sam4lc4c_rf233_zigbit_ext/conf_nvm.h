@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Example specific board configuration file
+ * \brief Non volatile memories management for SAM devices
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,10 +38,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
+ *
  */
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
 
-#define CONF_BOARD_AT86RFX
-#define ZIGBIT_USB
-#endif /* CONF_BOARD_H_INCLUDED */
+#ifndef CONF_NVM_H_INCLUDED
+#define CONF_NVM_H_INCLUDED
+#define INT_FLASH_END   (0x003FFFF)
+#endif /* CONF_NVM_H_INCLUDED */

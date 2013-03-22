@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Example specific board configuration file
+ * \brief Flash Driver configuration
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -38,10 +38,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
+ *
  */
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#ifndef CONF_FLASH_H
+#define CONF_FLASH_H
 
-#define CONF_BOARD_AT86RFX
-#define ZIGBIT_USB
-#endif /* CONF_BOARD_H_INCLUDED */
+#endif /* CONF_FLASH_H */

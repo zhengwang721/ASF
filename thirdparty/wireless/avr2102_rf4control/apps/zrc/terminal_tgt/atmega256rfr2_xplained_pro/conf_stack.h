@@ -39,9 +39,9 @@
  *
  * \asf_license_stop
  */
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#ifndef CONF_STACK_H_INCLUDED
+#define CONF_STACK_H_INCLUDED
 
-#define CONF_BOARD_AT86RFX
-#define ZIGBIT_USB
+
+
 #endif /* CONF_BOARD_H_INCLUDED */

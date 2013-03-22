@@ -1,7 +1,7 @@
 /**
- * \file
+ * \file *********************************************************************
  *
- * \brief Example specific board configuration file
+ * \brief Serial Input & Output configuration
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -39,9 +39,21 @@
  *
  * \asf_license_stop
  */
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
 
-#define CONF_BOARD_AT86RFX
-#define ZIGBIT_USB
-#endif /* CONF_BOARD_H_INCLUDED */
+#ifndef CONF_SIO2HOST_H_INCLUDED
+#define CONF_SIO2HOST_H_INCLUDED
+
+/*! \name Configuration
+ */
+//! @{
+#define USART_HOST                (&USARTA1)
+#define USART_HOST_BAUDRATE       9600
+#define USART_HOST_CHAR_LENGTH    USART_CHSIZE_8BIT_gc
+#define USART_HOST_PARITY         USART_PMODE_DISABLED_gc
+#define USART_HOST_STOP_BITS       1
+//! @}
+
+#define USART_HOST_RX_ISR_ENABLE() usart_rx_complete_interrupt_enable(USART_HOST)
+#define USART_HOST_ISR_VECT()       ISR(USART1_RX_vect)
+
+#endif /* CONF_SIO2HOST_H_INCLUDED */

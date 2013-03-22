@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Example specific board configuration file
+ * \brief  Configuration File for SAM4L-EK Board.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -38,10 +38,15 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
+ *
  */
+
 #ifndef CONF_BOARD_H_INCLUDED
 #define CONF_BOARD_H_INCLUDED
 
+/** Enable Com Port. */
+#define CONF_BOARD_COM_PORT
 #define CONF_BOARD_AT86RFX
-#define ZIGBIT_USB
-#endif /* CONF_BOARD_H_INCLUDED */
+/* Taking the battery voltage for TFA */
+#define GET_BATTERY_VOLTAGE()    tfa_get_batmon_voltage()  
+#endif  /* CONF_BOARD_H_INCLUDED */

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Example specific board configuration file
+ * \brief Sleep manager configuration
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -38,10 +38,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
+ *
  */
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#ifndef CONF_SLEEPMGR_H
+#define CONF_SLEEPMGR_H
 
-#define CONF_BOARD_AT86RFX
-#define ZIGBIT_USB
-#endif /* CONF_BOARD_H_INCLUDED */
+#define CONFIG_SLEEPMGR_ENABLE
+
+#endif /* CONF_SLEEPMGR_H */

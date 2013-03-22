@@ -38,10 +38,14 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
+ *
  */
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#ifndef CONF_BOARD_H
+#define CONF_BOARD_H
 
-#define CONF_BOARD_AT86RFX
-#define ZIGBIT_USB
-#endif /* CONF_BOARD_H_INCLUDED */
+#define CONF_BOARD_ENABLE_USARTA1
+
+/* Taking the battery voltage for TFA */
+#define GET_BATTERY_VOLTAGE()    tfa_get_batmon_voltage()  
+
+#endif /* CONF_BOARD_H */

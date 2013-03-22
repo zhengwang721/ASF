@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Example specific board configuration file
+ * \brief USART Serial Configuration 
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -38,10 +38,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
+ *
  */
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
 
-#define CONF_BOARD_AT86RFX
-#define ZIGBIT_USB
-#endif /* CONF_BOARD_H_INCLUDED */
+#ifndef CONF_USART_SERIAL_H_INCLUDED
+#define CONF_USART_SERIAL_H_INCLUDED
+#include "sio2host.h"
+#endif /* CONF_USART_SERIAL_H_INCLUDED */

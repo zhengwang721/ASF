@@ -1,7 +1,7 @@
 /**
- * \file
+ * \file *********************************************************************
  *
- * \brief Example specific board configuration file
+ * \brief USART Serial configuration
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -39,9 +39,17 @@
  *
  * \asf_license_stop
  */
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
 
-#define CONF_BOARD_AT86RFX
-#define ZIGBIT_USB
-#endif /* CONF_BOARD_H_INCLUDED */
+#ifndef CONF_HW_TIMER_H_INCLUDED
+#define CONF_HW_TIMER_H_INCLUDED
+
+
+
+/*! \name Configuration
+ */
+//! @{
+#define TIMER     (&TCCR1A)
+//! @}
+
+
+#endif /* CONF_HW_TIMER_H_INCLUDED */
