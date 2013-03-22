@@ -47,134 +47,6 @@
 #endif
 
 /**
- * \internal Checks a USART config against current set config
- *
- * This function will check that the config does not alter the
- * configuration of the module. If the new config changes any
- * setting, the initialization will be discarded.
- *
- * \param[in]  module  Pointer to the software instance struct
- * \param[in]  config  Pointer to the configuration struct
- *
- * \return The status of the configuration
- * \retval STATUS_ERR_INVALID_ARG       If invalid argument(s) were provided.
- * \retval STATUS_ERR_DENIED            If configuration was different from previous
- * \retval STATUS_OK                    If the configuration was written
- */
-static enum status_code _usart_check_config(
-		struct usart_module *const module,
-		Sercom *const hw,
-		const struct usart_config *const config)
-{
-		/* Sanity check arguments */
-	Assert(module);
-	Assert(module->hw);
-
-	SercomUsart *const usart_hw = &(module->hw->USART);
-
-	uint32_t pad0 = config->pinout_pad0;
-	uint32_t pad1 = config->pinout_pad1;
-	uint32_t pad2 = config->pinout_pad2;
-	uint32_t pad3 = config->pinout_pad3;
-
-	/* SERCOM PAD0 */
-	if (pad0 == PINMUX_DEFAULT) {
-		pad0 = _sercom_get_default_pad(hw, 0);
-	}
-	if ((pad0 & 0xFFFF) != system_pinmux_pin_get_mux_position(pad0 >> 16)) {
-		return STATUS_ERR_DENIED;
-	}
-
-	/* SERCOM PAD1 */
-	if (pad1 == PINMUX_DEFAULT) {
-		pad1 = _sercom_get_default_pad(hw, 1);
-	}
-	if ((pad1 & 0xFFFF) != system_pinmux_pin_get_mux_position(pad1 >> 16)) {
-		return STATUS_ERR_DENIED;
-	}
-
-	/* SERCOM PAD2 */
-	if (pad2 == PINMUX_DEFAULT) {
-		pad2 = _sercom_get_default_pad(hw, 2);
-	}
-	if ((pad2 & 0xFFFF) != system_pinmux_pin_get_mux_position(pad2 >> 16)) {
-		return STATUS_ERR_DENIED;
-	}
-
-	/* SERCOM PAD3 */
-	if (pad3 == PINMUX_DEFAULT) {
-		pad3 = _sercom_get_default_pad(hw, 3);
-	}
-	if ((pad3 & 0xFFFF) != system_pinmux_pin_get_mux_position(pad3 >> 16)) {
-		return STATUS_ERR_DENIED;
-	}
-
-	/* Find baud value and compare it */
-	uint16_t baud  = 0;
-	enum status_code status_code = STATUS_OK;
-
-	switch (config->transfer_mode)
-	{
-		case USART_TRANSFER_SYNCHRONOUSLY:
-			if (!config->use_external_clock) {
-				status_code = _sercom_get_sync_baud_val(config->baudrate,
-						system_gclk_chan_get_hz(SERCOM_GCLK_ID), &baud);
-			}
-
-			break;
-
-		case USART_TRANSFER_ASYNCHRONOUSLY:
-			if (config->use_external_clock) {
-				status_code =
-						_sercom_get_async_baud_val(config->baudrate,
-							config->ext_clock_freq, &baud);
-			} else {
-				status_code =
-						_sercom_get_async_baud_val(config->baudrate,
-							system_gclk_chan_get_hz(SERCOM_GCLK_ID), &baud);
-			}
-
-			break;
-	}
-
-	if (status_code != STATUS_OK) {
-		/* Baud rate calculation error, return status code */
-		return STATUS_ERR_DENIED;
-	}
-
-	if (usart_hw->BAUD.reg !=  baud) {
-		return STATUS_ERR_DENIED;
-	}
-
-	uint32_t ctrla = 0;
-	uint32_t ctrlb = 0;
-
-	/* Check sample mode, data order, internal muxing, and clock polarity */
-	ctrla = (config->data_order) | (config->mux_settings) |
-			(config->transfer_mode) | (SERCOM_USART_CTRLA_MODE(0)) |
-			(config->clock_polarity_inverted << SERCOM_USART_CTRLA_CPOL_Pos);
-
-	/* Check stopbits and character size */
-	ctrlb = config->stopbits | config->character_size;
-
-	/* Check parity mode bits */
-	if (config->parity != USART_PARITY_NONE) {
-		ctrla |= SERCOM_USART_CTRLA_FORM(1);
-		ctrlb |= config->parity;
-	} else {
-		ctrla |= SERCOM_USART_CTRLA_FORM(0);
-	}
-
-	if (usart_hw->CTRLA.reg == ctrla && usart_hw->CTRLB.reg == ctrlb) {
-		return STATUS_OK;
-	}
-	else {
-		module->hw = NULL;
-		return STATUS_ERR_DENIED;
-	}
-}
-
-/**
  * \internal
  * Set Configuration of the USART module
  */
@@ -320,17 +192,6 @@ enum status_code usart_init(
 	uint32_t pm_index     = sercom_index + PM_APBCMASK_SERCOM0_Pos;
 	uint32_t gclk_index   = sercom_index + SERCOM0_GCLK_ID_CORE;
 
-	if (usart_hw->CTRLA.reg & SERCOM_USART_CTRLA_SWRST) {
-		/* The module is busy resetting it self */
-		return STATUS_BUSY;
-	}
-
-	if (usart_hw->CTRLA.reg & SERCOM_USART_CTRLA_ENABLE) {
-		enum status_code ret_status = _usart_check_config(module, hw, config);
-		/* Module have to be disabled before initialization. Abort. */
-		return ret_status;
-	}
-
 	/* Turn on module in PM */
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, 1 << pm_index);
 
@@ -379,6 +240,17 @@ enum status_code usart_init(
 	}
 	pin_conf.mux_position = pad3 & 0xFFFF;
 	system_pinmux_pin_set_config(pad3 >> 16, &pin_conf);
+
+	/* Wait for synchronization to be complete*/
+	_usart_wait_for_sync(module);
+
+	while (usart_hw->CTRLA.reg & SERCOM_USART_CTRLA_SWRST) {
+	}
+
+	if (usart_hw->CTRLA.reg & SERCOM_USART_CTRLA_ENABLE) {
+		/* Module have to be disabled before initialization. Abort. */
+		return STATUS_ERR_DENIED;
+	}
 
 #if USART_CALLBACK_MODE == true
 	/* Initialize parameters */
