@@ -55,10 +55,10 @@
  * x- or y-coordinate outside the display the behaviour is undefined,
  * and you risk overwriting portions of internal SRAM.
  *
- * \param  x          X coordinate of leftmost pixel.
- * \param  y          Y coordinate of the line.
- * \param  length     Length of the line in pixels.
- * \param  color      Pixel operation of the line.
+ * \param[in]  x          X coordinate of leftmost pixel.
+ * \param[in]  y          Y coordinate of the line.
+ * \param[in]  length     Length of the line in pixels.
+ * \param[in]  color      Pixel operation of the line.
  */
 void gfx_mono_generic_draw_horizontal_line(gfx_coord_t x, gfx_coord_t y,
 		gfx_coord_t length, enum gfx_mono_color color)
@@ -118,10 +118,10 @@ void gfx_mono_generic_draw_horizontal_line(gfx_coord_t x, gfx_coord_t y,
  * x- or y-coordinate outside the display the behaviour is undefined,
  * and you risk overwriting portions of internal SRAM.
  *
- * \param  x          X coordinate of the line.
- * \param  y          Y coordinate of the topmost pixel.
- * \param  length     Length of the line in pixels.
- * \param  color      Pixel operation of the line.
+ * \param[in]  x          X coordinate of the line.
+ * \param[in]  y          Y coordinate of the topmost pixel.
+ * \param[in]  length     Length of the line in pixels.
+ * \param[in]  color      Pixel operation of the line.
  */
 void gfx_mono_generic_draw_vertical_line(gfx_coord_t x, gfx_coord_t y,
 		gfx_coord_t length, enum gfx_mono_color color)
@@ -168,11 +168,11 @@ void gfx_mono_generic_draw_vertical_line(gfx_coord_t x, gfx_coord_t y,
 /**
  * \brief Draw a line between two arbitrary points (generic implementation).
  *
- * \param  x1          Start X coordinate.
- * \param  y1          Start Y coordinate.
- * \param  x2          End X coordinate.
- * \param  y2          End Y coordinate.
- * \param  color       Pixel operation of the line.
+ * \param[in]  x1          Start X coordinate.
+ * \param[in]  y1          Start Y coordinate.
+ * \param[in]  x2          End X coordinate.
+ * \param[in]  y2          End Y coordinate.
+ * \param[in]  color       Pixel operation of the line.
  */
 void gfx_mono_generic_draw_line(gfx_coord_t x1, gfx_coord_t y1,
 		gfx_coord_t x2, gfx_coord_t y2,
@@ -247,11 +247,11 @@ void gfx_mono_generic_draw_line(gfx_coord_t x1, gfx_coord_t y1,
 /**
  * \brief Draw an outline of a rectangle (generic implementation).
  *
- * \param  x           X coordinate of the left side.
- * \param  y           Y coordinate of the top side.
- * \param  width       Width of the rectangle.
- * \param  height      Height of the rectangle.
- * \param  color       Pixel operation of the line.
+ * \param[in]  x           X coordinate of the left side.
+ * \param[in]  y           Y coordinate of the top side.
+ * \param[in]  width       Width of the rectangle.
+ * \param[in]  height      Height of the rectangle.
+ * \param[in] color       Pixel operation of the line.
  */
 void gfx_mono_generic_draw_rect(gfx_coord_t x, gfx_coord_t y,
 		gfx_coord_t width, gfx_coord_t height,
@@ -267,11 +267,11 @@ void gfx_mono_generic_draw_rect(gfx_coord_t x, gfx_coord_t y,
 /**
  * \brief Draw a filled rectangle (generic implementation).
  *
- * \param  x           X coordinate of the left side.
- * \param  y           Y coordinate of the top side.
- * \param  width       Width of the rectangle.
- * \param  height      Height of the rectangle.
- * \param  color       Pixel operation of the line
+ * \param[in]  x           X coordinate of the left side.
+ * \param[in]  y           Y coordinate of the top side.
+ * \param[in]  width       Width of the rectangle.
+ * \param[in]  height      Height of the rectangle.
+ * \param[in]  color       Pixel operation of the line
  */
 void gfx_mono_generic_draw_filled_rect(gfx_coord_t x, gfx_coord_t y,
 		gfx_coord_t width, gfx_coord_t height,
@@ -299,11 +299,11 @@ void gfx_mono_generic_draw_filled_rect(gfx_coord_t x, gfx_coord_t y,
  * GFX_WHOLE constants and OR them together if required. Radius equal to
  * zero gives a single pixel.
  *
- * \param  x           X coordinate of center.
- * \param  y           Y coordinate of center.
- * \param  radius      Circle radius in pixels.
- * \param  color       Pixel operation.
- * \param  octant_mask Bitmask indicating which octants to draw.
+ * \param[in]  x           X coordinate of center.
+ * \param[in]  y           Y coordinate of center.
+ * \param[in]  radius      Circle radius in pixels.
+ * \param[in]  color       Pixel operation.
+ * \param[in][in]  octant_mask Bitmask indicating which octants to draw.
  */
 void gfx_mono_generic_draw_circle(gfx_coord_t x, gfx_coord_t y,
 		gfx_coord_t radius, enum gfx_mono_color color,
@@ -388,11 +388,11 @@ void gfx_mono_generic_draw_circle(gfx_coord_t x, gfx_coord_t y,
  *       supports octants. This is to improve performance on drawing
  *       filled circles.
  *
- * \param  x           X coordinate of center.
- * \param  y           Y coordinate of center.
- * \param  radius      Circle radius in pixels.
- * \param  color       Pixel operation.
- * \param  quadrant_mask Bitmask indicating which quadrants to draw.
+ * \param[in]  x           X coordinate of center.
+ * \param[in]  y           Y coordinate of center.
+ * \param[in]  radius      Circle radius in pixels.
+ * \param[in]  color       Pixel operation.
+ * \param[in]  quadrant_mask Bitmask indicating which quadrants to draw.
  */
 void gfx_mono_generic_draw_filled_circle(gfx_coord_t x, gfx_coord_t y,
 		gfx_coord_t radius, enum gfx_mono_color color,

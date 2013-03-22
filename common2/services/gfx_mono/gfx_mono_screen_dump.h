@@ -99,8 +99,8 @@ static const uint8_t xpm_header[] = XPM_HEADER;
 /**
  * \brief Init the framebuffer dump function
  *
- * \param usart   pointer to the USART to use for dumping the image
- * \param options pointer to the USART options, see documentation
+ * \param[in] usart   pointer to the USART to use for dumping the image
+ * \param[in] options pointer to the USART options, see documentation
  *
  */
 static inline void gfx_mono_screen_dump_init(dump_usart_t *usart,

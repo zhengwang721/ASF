@@ -70,8 +70,8 @@ struct gfx_mono_bitmap gfx_mono_spinctrl_bitmap_indicator = {
 /**
  * \brief Draw or delete indicator arrow in front of spinner
  *
- * \param *spinner initialized gfx_mono_spinctrl struct
- * \param draw     true on draw, false on delete
+ * \param[in] *spinner initialized gfx_mono_spinctrl struct
+ * \param[in] draw     true on draw, false on delete
  */
 static void gfx_mono_spinctrl_draw_indicator(struct gfx_mono_spinctrl *spinner,
 		bool draw)
@@ -90,8 +90,8 @@ static void gfx_mono_spinctrl_draw_indicator(struct gfx_mono_spinctrl *spinner,
 /**
  * \brief Draw or delete indicator in front of spinner data
  *
- * \param spinner  pointer to initialized gfx_mono_spinctrl struct
- * \param draw     true on draw, false on delete
+ * \param[in] spinner  pointer to initialized gfx_mono_spinctrl struct
+ * \param[in] draw     true on draw, false on delete
  */
 static void gfx_mono_spinctrl_draw_spin_indicator(struct gfx_mono_spinctrl
 		*spinner, bool draw)
@@ -118,8 +118,8 @@ static void gfx_mono_spinctrl_draw_spin_indicator(struct gfx_mono_spinctrl
  * is true. If the draw bool is false, the OK button will be deleted, and if
  * the indicator bool is false, the indicator will be deleted.
  *
- * \param draw       true on draw, false on delete
- * \param indicator  true on draw indicator, false on delete
+ * \param[in] draw       true on draw, false on delete
+ * \param[in] indicator  true on draw indicator, false on delete
  */
 static void gfx_mono_spinctrl_draw_button(bool draw, bool indicator)
 {
@@ -178,8 +178,8 @@ static void gfx_mono_spinctrl_draw_button(bool draw, bool indicator)
  * If the spinner is in focus, arrows will be drawn next to the spinner value
  * to indicate that it is spinnable.
  *
- * \param spinner  pointer to initialized gfx_mono_spinctrl struct
- * \param redraw   true if title of spinner should be drawn
+ * \param[in] spinner  pointer to initialized gfx_mono_spinctrl struct
+ * \param[in] redraw   true if title of spinner should be drawn
  */
 void gfx_mono_spinctrl_draw(struct gfx_mono_spinctrl *spinner, bool redraw)
 {
@@ -253,14 +253,14 @@ void gfx_mono_spinctrl_draw(struct gfx_mono_spinctrl *spinner, bool redraw)
  * The y parameter specifies where to place the spinner on the screen, but is
  * overwritten if the spinner is put in a spincollection.
  *
- * \param spinner      pointer to initialized gfx_mono_spinctrl struct
- * \param datatype     typer of spinner, integer or string
- * \param title        title of spinner
- * \param data         pointer to progmem string array if datatype is string.
+ * \param[out] spinner      pointer to initialized gfx_mono_spinctrl struct
+ * \param[in] datatype     typer of spinner, integer or string
+ * \param[in] title        title of spinner
+ * \param[in] data         pointer to progmem string array if datatype is string.
  *                     NULL if datatype is integer.
- * \param lower_limit  lower limit and start value of spinner's data
- * \param upper_limit  upper limit of spinner's data
- * \param y            y position of spinner
+ * \param[in] lower_limit  lower limit and start value of spinner's data
+ * \param[in] upper_limit  upper limit of spinner's data
+ * \param[in] y            y position of spinner
  */
 void gfx_mono_spinctrl_init(struct gfx_mono_spinctrl *spinner,
 		gfx_mono_spinctrl_type_t datatype, PROGMEM_STRING_T title,
@@ -290,7 +290,7 @@ void gfx_mono_spinctrl_init(struct gfx_mono_spinctrl *spinner,
  *
  * This function initializes a spincollection to which spinners can be added.
  *
- * \param collection pointer to gfx_mono_spinctrl_spincollection to Initialize
+ * \param[out] collection pointer to gfx_mono_spinctrl_spincollection to Initialize
  */
 void gfx_mono_spinctrl_spincollection_init(struct
 		gfx_mono_spinctrl_spincollection *collection)
@@ -312,9 +312,9 @@ void gfx_mono_spinctrl_spincollection_init(struct
  * \ref GFX_MONO_SPINCTRL_MAX_ELEMENTS_IN_SPINCOLLECTION "maximum number of
  * spinners in a spincollection".
  *
- * \param spinner       pointer to initialized gfx_mono_spinctrl struct to add
+ * \param[in] spinner   pointer to initialized gfx_mono_spinctrl struct to add
  *                      to collection
- * \param spinners      pointer to initialized gfx_mono_spinctrl_spincollection
+ * \param[in] spinners  pointer to initialized gfx_mono_spinctrl_spincollection
  *                      struct
  *
  */
@@ -363,7 +363,7 @@ void gfx_mono_spinctrl_spincollection_add_spinner(struct
  * together with an OK button at the bottom. It also draws an indicator arrow
  * in front of the top spinner.
  *
- * \param spinners pointer to initialized spincollection to display
+ * \param[in] spinners pointer to initialized spincollection to display
  */
 void gfx_mono_spinctrl_spincollection_show(struct
 		gfx_mono_spinctrl_spincollection *spinners)
@@ -398,7 +398,7 @@ void gfx_mono_spinctrl_spincollection_show(struct
  * This function steps up the data, making sure it does not go
  * beyond the upper limit. Wraps around if it does.
  *
- * \param spinner pointer to initialized spinner.
+ * \param[in] spinner pointer to initialized spinner.
  */
 static void gfx_mono_spinctrl_step_up(struct gfx_mono_spinctrl *spinner)
 {
@@ -426,7 +426,7 @@ static void gfx_mono_spinctrl_step_up(struct gfx_mono_spinctrl *spinner)
  * * This function steps down the data, making sure it does not go
  * below the lower limit. Wraps around if it does.
  *
- * \param spinner pointer to initialized spinner.
+ * \param[in] spinner pointer to initialized spinner.
  */
 static void gfx_mono_spinctrl_step_down(struct gfx_mono_spinctrl *spinner)
 {
@@ -451,8 +451,8 @@ static void gfx_mono_spinctrl_step_down(struct gfx_mono_spinctrl *spinner)
 /**
  * \brief Update single spinner depending on input.
  *
- * \param spinner pointer to initialized spinner.
- * \param keycode  keycode to process
+ * \param[in] spinner pointer to initialized spinner.
+ * \param[in] keycode  keycode to process
  *
  * \retval selected            selected spinner value
  * \retval GFX_MONO_SPINCTRL_EVENT_IDLE spinner spinning
@@ -542,10 +542,10 @@ int16_t gfx_mono_spinctrl_process_key(struct gfx_mono_spinctrl *spinner,
  * If user has pressed the back button, \ref GFX_MONO_SPINCTRL_EVENT_BACK is
  * returned, signalling that the application should be cancelled.
  *
- * \param spinners       pointer to initialized
+ * \param[in] spinners       pointer to initialized
  *                       gfx_mono_spinctrl_spincollection
- * \param keycode        keycode to process
- * \param results        array to store results from the spinners, must be of
+ * \param[in] keycode        keycode to process
+ * \param[in] results        array to store results from the spinners, must be of
  *                       same length as number of spinners
  *
  * \retval GFX_MONO_SPINCTRL_EVENT_FINISH  user pressed ok button
