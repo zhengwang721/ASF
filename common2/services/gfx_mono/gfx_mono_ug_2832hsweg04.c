@@ -111,9 +111,9 @@ void gfx_mono_ssd1306_put_framebuffer(void)
 /**
  * \brief Draw pixel to screen
  *
- * \param x         X coordinate of the pixel
- * \param y         Y coordinate of the pixel
- * \param color     Pixel operation
+ * \param[in] x         X coordinate of the pixel
+ * \param[in] y         Y coordinate of the pixel
+ * \param[in] color     Pixel operation
  *
  * The following will set the pixel at x=10,y=10:
  * \code
@@ -173,8 +173,8 @@ void gfx_mono_ssd1306_draw_pixel(gfx_coord_t x, gfx_coord_t y,
 /**
  * \brief Get the pixel value at x,y
  *
- * \param x      X coordinate of pixel
- * \param y      Y coordinate of pixel
+ * \param[in] x      X coordinate of pixel
+ * \param[in] y      Y coordinate of pixel
  * \return Non zero value if pixel is set.
  *
  * The following example will read the pixel value from x=10,y=10:
@@ -205,10 +205,10 @@ uint8_t gfx_mono_ssd1306_get_pixel(gfx_coord_t x, gfx_coord_t y)
  * written to the LCD controller in this mode is also written to a framebuffer
  * in MCU RAM.
  *
- * \param data Pointer to data to be written
- * \param page Page address
- * \param column Offset into page (x coordinate)
- * \param width Number of bytes to be written.
+ * \param[in] data Pointer to data to be written
+ * \param[in] page Page address
+ * \param[in] column Offset into page (x coordinate)
+ * \param[in] width Number of bytes to be written.
  *
  * The following example will write 32 bytes from data_buf to the page 0,
  * column 10. This will place data_buf in the rectangle x1=10,y1=0,x2=42,y2=8
@@ -238,10 +238,10 @@ void gfx_mono_ssd1306_put_page(gfx_mono_color_t *data, gfx_coord_t page,
  * data directly from the controller. In that case we will read the data from
  * the local framebuffer instead.
  *
- * \param data   Pointer where to store the read data
- * \param page   Page address
- * \param column Offset into page (x coordinate)
- * \param width  Number of bytes to be read
+ * \param[in] data   Pointer where to store the read data
+ * \param[in] page   Page address
+ * \param[in] column Offset into page (x coordinate)
+ * \param[in] width  Number of bytes to be read
  *
  * The following example will read back the first 128 bytes (first page) from
  * the display memory:
@@ -270,10 +270,10 @@ void gfx_mono_ssd1306_get_page(gfx_mono_color_t *data, gfx_coord_t page,
  * If the LCD controller is accessed by the SPI interface we will also put the
  * data to the local framebuffer.
  *
- * \param page Page address
- * \param column Page offset (x coordinate)
- * \param data Data to be written
- * \param force Forces the write
+ * \param[in] page Page address
+ * \param[in] column Page offset (x coordinate)
+ * \param[in] data Data to be written
+ * \param[in] force Forces the write
  *
  * This example will put the value 0xFF to the first byte in the display memory
  * setting a 8 pixel high column of pixels in the upper left corner of the
@@ -304,8 +304,8 @@ void gfx_mono_ssd1306_get_page(gfx_mono_color_t *data, gfx_coord_t page,
  * If the LCD controller is accessed by the SPI interface we cannot read the
  * data. In this case return the data from the local framebuffer instead.
  *
- * \param page Page address
- * \param column Page offset (x coordinate)
+ * \param[in] page Page address
+ * \param[in] column Page offset (x coordinate)
  * \return data from LCD controller or framebuffer.
  *
  * The following code will read the first byte from the display memory or the
@@ -337,10 +337,10 @@ uint8_t gfx_mono_ssd1306_get_byte(gfx_coord_t page, gfx_coord_t column)
  * do a mask operation on the byte according to the pixel operation selected
  * by the color argument and the pixel mask provided.
  *
- * \param page Page address
- * \param column Page offset (x coordinate)
- * \param pixel_mask Mask for pixel operation
- * \param color Pixel operation
+ * \param[in] page Page address
+ * \param[in] column Page offset (x coordinate)
+ * \param[in] pixel_mask Mask for pixel operation
+ * \param[in] color Pixel operation
  *
  * A small example that will XOR the first byte of display memory with 0xAA
  * \code

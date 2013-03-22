@@ -53,6 +53,7 @@
  * This modules provides functionality for outputting a monochrome font
  * to a display.
  *
+ * \section asfdoc_common2_gfx_mono_font_api_overview API Overview
  * @{
  */
 
