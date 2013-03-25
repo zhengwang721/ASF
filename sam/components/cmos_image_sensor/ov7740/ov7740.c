@@ -66,7 +66,7 @@ extern "C" {
  * \param p_twi TWI interface.
  * \return PID and VER.
  */
-static uint32_t ov_id( Twi* const p_twi )
+static uint32_t ov_id(Twi* const p_twi)
 {
 	twi_packet_t packet_pid;
 	twi_packet_t packet_ver;
@@ -74,7 +74,7 @@ static uint32_t ov_id( Twi* const p_twi )
 	uint32_t ul_ver = 0;
 
 	/* OV_PID */
-	packet_pid.chip = OV_CAPTOR_ADDRESS;
+	packet_pid.chip = OV_I2C_SENSOR_ADDRESS;
 	packet_pid.addr[0] = OV7740_PIDH;
 	packet_pid.addr_length = 1;
 	packet_pid.buffer = &ul_id;
@@ -83,7 +83,7 @@ static uint32_t ov_id( Twi* const p_twi )
 	ov_read_reg(p_twi, &packet_pid);
 
 	/* OV_VER */
-	packet_ver.chip = OV_CAPTOR_ADDRESS;
+	packet_ver.chip = OV_I2C_SENSOR_ADDRESS;
 	packet_ver.addr[0] = OV7740_PIDL;
 	packet_ver.addr_length = 1;
 	packet_ver.buffer = &ul_ver;
@@ -99,7 +99,7 @@ static uint32_t ov_id( Twi* const p_twi )
  * \param p_twi TWI interface.
  * \return 0 if the sensor is present, 1 otherwise.
  */
-static uint32_t ov_manufacturer( Twi* const p_twi )
+static uint32_t ov_manufacturer(Twi* const p_twi)
 {
 	twi_packet_t twi_packet;
 	uint32_t ul_midh = 0;
@@ -108,7 +108,7 @@ static uint32_t ov_manufacturer( Twi* const p_twi )
 	/* OV_MIDH */
 	twi_packet.addr[0] = OV7740_MIDH;
 	twi_packet.addr_length = 1;
-	twi_packet.chip = OV_CAPTOR_ADDRESS;
+	twi_packet.chip = OV_I2C_SENSOR_ADDRESS;
 	twi_packet.buffer = &ul_midh;
 	twi_packet.length = 1;
 
@@ -117,13 +117,13 @@ static uint32_t ov_manufacturer( Twi* const p_twi )
 	/* OV_MIDL */
 	twi_packet.addr[0] = OV7740_MIDL;
 	twi_packet.addr_length = 1;
-	twi_packet.chip = OV_CAPTOR_ADDRESS;
+	twi_packet.chip = OV_I2C_SENSOR_ADDRESS;
 	twi_packet.buffer = &ul_midl;
 	twi_packet.length = 1;
 
 	ov_read_reg(p_twi, &twi_packet);
 
-	if ((ul_midh == 0x7F) && (ul_midl == 0xA2)) {
+	if ((ul_midh == OV7740_MIDH_DEFAULT) && (ul_midl == OV7740_MIDL_DEFAULT)) {
 		return 0;
 	}
 
@@ -136,7 +136,7 @@ static uint32_t ov_manufacturer( Twi* const p_twi )
  * \param p_twi TWI interface.
  * \return 0 on success, 1 otherwise.
  */
-static uint32_t ov_test_write( Twi* const p_twi )
+static uint32_t ov_test_write(Twi* const p_twi)
 {
 	twi_packet_t twi_packet;
 	uint32_t ul_value = 0;
@@ -146,7 +146,7 @@ static uint32_t ov_test_write( Twi* const p_twi )
 	/* OV_BLUE_GAIN */
 	twi_packet.addr[0] = 0x01;
 	twi_packet.addr_length = 1;
-	twi_packet.chip = OV_CAPTOR_ADDRESS;
+	twi_packet.chip = OV_I2C_SENSOR_ADDRESS;
 	twi_packet.length = 1;
 
 	twi_packet.buffer = &ul_oldvalue;
@@ -197,13 +197,13 @@ static ov_reg regs_manual[] = {
  *
  * \param p_twi TWI interface.
  */
-static void ov_retrieve_manual( Twi* const p_twi )
+static void ov_retrieve_manual(Twi* const p_twi)
 {
 	uint8_t i = 0;
 	twi_packet_t twi_packet;
 
 	twi_packet.addr_length = 1;
-	twi_packet.chip = OV_CAPTOR_ADDRESS;
+	twi_packet.chip = OV_I2C_SENSOR_ADDRESS;
 	twi_packet.length = 1;
 
 	for (; i < sizeof(regs_manual) / sizeof(ov_reg); i++) {
@@ -303,7 +303,7 @@ uint32_t ov_write_reg(Twi* const p_twi, twi_packet_t* const p_packet)
  * \param p_reg_list Register list to be written.
  * \return 0 on success, TWID_ERROR_BUSY otherwise.
  */
-uint32_t ov_write_regs( Twi* const p_twi, const ov_reg *p_reg_list )
+uint32_t ov_write_regs(Twi* const p_twi, const ov_reg *p_reg_list)
 {
 	uint32_t ul_err;
 	uint32_t ul_size = 0;
@@ -317,7 +317,7 @@ uint32_t ov_write_regs( Twi* const p_twi, const ov_reg *p_reg_list )
 		} else {
 			twi_packet_regs.addr[0] = p_next->reg;
 			twi_packet_regs.addr_length = 1;
-			twi_packet_regs.chip = OV_CAPTOR_ADDRESS;
+			twi_packet_regs.chip = OV_I2C_SENSOR_ADDRESS;
 			twi_packet_regs.length = 1;
 			twi_packet_regs.buffer = &(p_next->val);
 
@@ -340,17 +340,17 @@ uint32_t ov_write_regs( Twi* const p_twi, const ov_reg *p_reg_list )
  * \param p_twi TWI interface.
  * \param p_regs Register list to be dumped.
  */
-void ov_dump_registers( Twi* const p_twi, ov_reg *p_regs )
+void ov_dump_registers(Twi* const p_twi, ov_reg *p_regs)
 {
 	uint32_t i;
 	uint32_t ul_value;
 	twi_packet_t twi_packet;
 	uint32_t ul_reg_num;
 
-	ul_reg_num = 0xd9;
+	ul_reg_num = OV7740_YUV422CTRL;
 
 	twi_packet.addr_length = 1;
-	twi_packet.chip = OV_CAPTOR_ADDRESS;
+	twi_packet.chip = OV_I2C_SENSOR_ADDRESS;
 	twi_packet.length = 1;
 	twi_packet.buffer = &ul_value;
 
@@ -372,13 +372,13 @@ void ov_dump_registers( Twi* const p_twi, ov_reg *p_regs )
  * \param p_twi TWI interface.
  * \return 0 on success, 1 otherwise.
  */
-uint32_t ov_init( Twi* const p_twi )
+uint32_t ov_init(Twi* const p_twi)
 {
 	uint32_t ul_id = 0;
 
 	ul_id = ov_id( p_twi );
 
-	if ((ul_id >> 8)  == 0x77) {
+	if (((ul_id >> 8)&0xff)  == OV7740_PIDH_DEFAULT) {
 		if (ov_manufacturer( p_twi ) == 0) {
 			if (ov_test_write( p_twi ) == 0) {
 				return 0;
@@ -396,7 +396,7 @@ uint32_t ov_init( Twi* const p_twi )
  * \param format Specific format to configure.
  * \return 0 on success, 1 otherwise.
  */
-uint32_t ov_configure( Twi* const p_twi, const ov7740_format format )
+uint32_t ov_configure(Twi* const p_twi, const ov7740_format format)
 {
 	const ov_reg *p_regs_conf = NULL;
 
@@ -455,7 +455,7 @@ uint32_t ov_configure( Twi* const p_twi, const ov7740_format format )
  *
  * \param p_twi TWI interface.
  */
-uint32_t ov_configure_finish( Twi* const p_twi )
+uint32_t ov_configure_finish(Twi* const p_twi)
 {
 	twi_packet_t twi_packet;
 	uint32_t ul_value = 0xff;
@@ -463,7 +463,7 @@ uint32_t ov_configure_finish( Twi* const p_twi )
 	/* OV_MIDH */
 	twi_packet.addr[0] = 0xff;
 	twi_packet.addr_length = 1;
-	twi_packet.chip = OV_CAPTOR_ADDRESS;
+	twi_packet.chip = OV_I2C_SENSOR_ADDRESS;
 	twi_packet.buffer = &ul_value;
 	twi_packet.length = 1;
 
@@ -477,7 +477,7 @@ uint32_t ov_configure_finish( Twi* const p_twi )
  *
  * \param p_twi TWI interface.
  */
-uint32_t ov_configure_manual( Twi* const p_twi )
+uint32_t ov_configure_manual(Twi* const p_twi)
 {
 	ov_write_regs(p_twi, regs_manual);
 
@@ -504,11 +504,8 @@ uint32_t ov_store_manual(Twi* const p_twi, volatile uint32_t *p_backup_addr,
 		while (ul_offset < ul_size) {
 			*(p_backup_addr + ul_offset) = 0x0;
 			for (uint8_t i = 0; i < sizeof(uint32_t); i++) {
-				*(p_backup_addr +
-				ul_offset)
-					|= ((regs_manual[i + ul_offset *
-						sizeof(uint32_t)].val &
-						0xff) << (i * 8));
+				*(p_backup_addr+ul_offset) |= ((regs_manual[i+ul_offset*
+						sizeof(uint32_t)].val&0xff) << (i*8));
 			}
 			ul_offset++;
 		}
@@ -533,7 +530,7 @@ uint32_t ov_restore_manual(volatile uint32_t *p_backup_addr, uint32_t ul_size)
 		while (ul_offset < ul_size) {
 			for (uint8_t i = 0; i < sizeof(uint32_t); i++) {
 				regs_manual[i + ul_offset * 	sizeof(uint32_t)].val	=
-			(((*(p_backup_addr + ul_offset)) >> (i * 8)) & 0xFF);
+						(((*(p_backup_addr + ul_offset)) >> (i * 8)) & 0xFF);
 			}
 			ul_offset++;
 		}
