@@ -1034,6 +1034,28 @@ void system_clock_init(void);
  * @}
  */
 
+/**
+ * \name System Flash Wait States
+ * @{
+ */
+
+/**
+ * \brief Set flash controller waitstates
+ *
+ * Will set the number of waitstates that are used by the onboard
+ * flash memory. The number of waitstates depend on both device
+ * supply voltage and CPU speed. The required number of waitstates
+ * can be found in the electrical characteristics of the device.
+ *
+ * \param[in] wait_states Number of wait states to use for internal flash
+ */
+static inline void system_flash_set_waitstates(uint8_t wait_states)
+{
+	NVMCTRL->CTRLB.bit.RWS = wait_states;
+}
+/**
+ * @}
+ */
 
 /**
  * @}
