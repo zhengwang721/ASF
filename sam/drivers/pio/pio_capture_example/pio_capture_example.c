@@ -3,7 +3,7 @@
  *
  * \brief PIO Capture Example.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -147,7 +147,7 @@
  */
 
 #include <asf.h>
-#include "pio_handler_with_capture.h"
+#include "pio_handler.h"
 
 /** Buffer size. */
 #define SIZE_BUFF_RECEPT               64
@@ -188,11 +188,11 @@ Pdc *p_pdc;
  *  \brief Handler for capture function interrupt.
  *
  */
-void capture_handler(void)
+static void capture_handler(Pio *p_pio)
 {
 	uint8_t uc_i;
 
-	pio_capture_disable_interrupt(PIOA, (PIO_PCIDR_ENDRX | PIO_PCIDR_RXBUFF));
+	pio_capture_disable_interrupt(p_pio, (PIO_PCIDR_ENDRX | PIO_PCIDR_RXBUFF));
 
 	puts("End of receive.\r\n");
 	for (uc_i = 0; uc_i < SIZE_BUFF_RECEPT; uc_i++) {
@@ -252,6 +252,9 @@ int main(void)
 	/* Configure PIOA clock. */
 	pmc_enable_periph_clk(ID_PIOA);
 
+	/* Configure PIO Capture handler */
+	pio_capture_handler_set(capture_handler);
+
 	/* Output example information. */
 	puts(STRING_HEADER);
 
@@ -267,32 +270,6 @@ int main(void)
 	if (uc_key == 'r') {
 		puts("** RECEIVE mode **\r\n");
 
-		/* Set up PDC receive buffer, waiting for 64 bytes. */
-		packet_t.ul_addr = (uint32_t) pio_rx_buffer;
-		packet_t.ul_size = SIZE_BUFF_RECEPT;
-		p_pdc = pio_capture_get_pdc_base(PIOA);
-		pdc_rx_init(p_pdc, &packet_t, NULL);
-
-		/* Disable all PIOA I/O line interrupt. */
-		pio_disable_interrupt(PIOA, 0xFFFFFFFF);
-
-		/* Configure and enable interrupt of PIO. */
-		NVIC_DisableIRQ(PIOA_IRQn);
-		NVIC_ClearPendingIRQ(PIOA_IRQn);
-		NVIC_SetPriority(PIOA_IRQn, PIO_IRQ_PRI);
-		NVIC_EnableIRQ(PIOA_IRQn);
-
-		/* Configure the PIO capture interrupt mask. */
-		pio_capture_enable_interrupt(PIOA,
-				(PIO_PCIER_ENDRX | PIO_PCIER_RXBUFF));
-
-		/* Enable PDC transfer. */
-		pdc_enable_transfer(p_pdc, PERIPH_PTCR_RXTEN);
-
-		/* Clear Receive buffer. */
-		for (uc_i = 0; uc_i < SIZE_BUFF_RECEPT; uc_i++) {
-			pio_rx_buffer[uc_i] = 0;
-		}
 		/* Initialize PIO capture mode value. */
 		ul_mode = 0;
 		/* Set up the parallel capture mode data size as 8 bits. */
@@ -331,11 +308,40 @@ int main(void)
 			puts("Only one out of two data is sampled, with an even index.\r\n");
 		}
 
+		/* Initialize PIO Parallel Capture function. */
+		pio_capture_set_mode(PIOA, ul_mode);
+		pio_capture_enable(PIOA);
+
+		/* Disable all PIOA I/O line interrupt. */
+		pio_disable_interrupt(PIOA, 0xFFFFFFFF);
+
+		/* Configure and enable interrupt of PIO. */
+		NVIC_DisableIRQ(PIOA_IRQn);
+		NVIC_ClearPendingIRQ(PIOA_IRQn);
+		NVIC_SetPriority(PIOA_IRQn, PIO_IRQ_PRI);
+		NVIC_EnableIRQ(PIOA_IRQn);
+
 		while (1) {
-			/* Initialize PIO Parallel Capture function. */
 			g_uc_cbk_received = 0;
-			pio_capture_set_mode(PIOA, ul_mode);
-			pio_capture_enable(PIOA);
+
+			/* Set up PDC receive buffer, waiting for 64 bytes. */
+			packet_t.ul_addr = (uint32_t) pio_rx_buffer;
+			packet_t.ul_size = SIZE_BUFF_RECEPT;
+			p_pdc = pio_capture_get_pdc_base(PIOA);
+			pdc_rx_init(p_pdc, &packet_t, NULL);
+
+			/* Enable PDC transfer. */
+			pdc_enable_transfer(p_pdc, PERIPH_PTCR_RXTEN);
+
+			/* Configure the PIO capture interrupt mask. */
+			pio_capture_enable_interrupt(PIOA,
+					(PIO_PCIER_ENDRX | PIO_PCIER_RXBUFF));
+
+			/* Clear Receive buffer. */
+			for (uc_i = 0; uc_i < SIZE_BUFF_RECEPT; uc_i++) {
+				pio_rx_buffer[uc_i] = 0;
+			}
+
 			puts("Waiting...\r\n");
 			while (g_uc_cbk_received == 0) {
 			}
@@ -388,8 +394,8 @@ int main(void)
 			puts("Receiver samples data with an even index.\r\n");
 		}
 
-		uc_flag = 0;
 		while (1) {
+			uc_flag = 0;
 			if (uc_tx_without_en) {
 				puts("\r\nSend data without enabling the data enable pins.\r\n");
 			} else {
