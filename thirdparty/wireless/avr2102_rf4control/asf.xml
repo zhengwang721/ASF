@@ -9,7 +9,7 @@
 		    <require idref="thirdparty.wireless.avr2025_mac.source.sal"/>
 		    <require idref="thirdparty.wireless.avr2025_mac.source.stb"/>
             <require idref="thirdparty.wireless.avr2102_rf4control.include"/>
-			<build type="doxygen-entry-point" value="avr2102_rf4control_group"/>
+			<build type="doxygen-entry-point" value="group_rf4control"/>
             <build type="distribute" subtype="license" value="../EULA.txt"/>
             <info type="keyword" value="technology">
                 <keyword value="Wireless"/>
@@ -23,7 +23,7 @@
             </info>
             <require idref="thirdparty.wireless.avr2102_rf4control.include"/>
             <require idref="thirdparty.wireless.avr2102_rf4control.addons.api_parser"/>
-			<build type="doxygen-entry-point" value="avr2102_rf4control_group"/>
+			<build type="doxygen-entry-point" value="group_rf4control"/>
             <build type="distribute" subtype="license" value="../EULA.txt"/>
             <info type="keyword" value="technology">
                 <keyword value="Wireless"/>

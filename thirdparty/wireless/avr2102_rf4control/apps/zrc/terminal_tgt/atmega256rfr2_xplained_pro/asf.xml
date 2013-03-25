@@ -22,7 +22,8 @@
 		<config name="config.thirdparty.wireless.addons.sio2host" value="uart"/>
 		<config name="config.common.drivers.nvm.mem_type" value="no_extmem"/>
 
-
+        <build type="linker-config" subtype="flags" value="--section-start=.bootloader=0x3f000" toolchain="avrgcc"/>
+		<build type="linker-config" subtype="script" value="link_iar.xcl" toolchain="iarew"/>
 		<require idref="thirdparty.wireless.avr2102_rf4control.apps.zrc.terminal_tgt"/>
 		<require idref="board.atmega256rfr2_xplained_pro"/>
 		<config name="config.compiler.iarew.dlib" value="full"/>
