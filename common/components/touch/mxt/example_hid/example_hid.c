@@ -230,9 +230,6 @@ int main(void)
 	/* Initialize the graphical library */
 	gfx_init();
 
-	/* Set correct landscape orientation */
-	gfx_set_orientation(GFX_SWITCH_XY | GFX_FLIP_Y);
-
 	/* Set background color */
 	gfx_draw_filled_rect(0, 0, gfx_get_width(), gfx_get_height(),
 			COLOR_BACKGROUND);

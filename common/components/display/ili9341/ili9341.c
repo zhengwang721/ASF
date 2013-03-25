@@ -812,6 +812,9 @@ void ili9341_set_orientation(uint8_t flags)
 {
 	uint8_t madctl = 0x48;
 
+	/* Pretend the display is in landscape mode by default to match other display drivers */
+	flags ^= ILI9341_SWITCH_XY | ILI9341_FLIP_X;
+
 	if (flags & ILI9341_FLIP_X) {
 		madctl &= ~(1 << 6);
 	}
