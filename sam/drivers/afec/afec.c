@@ -182,6 +182,7 @@ void afec_ch_set_config(Afec *const afec, const enum afec_channel_num channel,
 	afec->AFEC_CGR = reg;
 }
 
+#if defined __SAM4E8E__  || defined __SAM4E16E__
 /**
  * \brief Configure the AFEC temperature sensor.
  *
@@ -201,6 +202,7 @@ void afec_temp_sensor_set_config(Afec *const afec,
 	afec->AFEC_TEMPCWR = AFEC_TEMPCWR_TLOWTHRES(config->low_threshold) |
 			AFEC_TEMPCWR_THIGHTHRES(config->high_threshold);
 }
+#endif
 
 /**
  * \brief Get the AFEC default configurations.
@@ -264,6 +266,7 @@ void afec_ch_get_config_defaults(struct afec_ch_config *const cfg)
 	cfg->gain = AFEC_GAINVALUE_1;
 }
 
+#if defined __SAM4E8E__  || defined __SAM4E16E__
 /**
  * \brief Get the AFEC Temperature Sensor default configurations.
  *
@@ -287,6 +290,7 @@ void afec_temp_sensor_get_config_defaults(
 	cfg->low_threshold= 0xFF;
 	cfg->high_threshold= 0xFFF;
 }
+#endif
 
 /**
  * \brief Initialize the AFEC Module.

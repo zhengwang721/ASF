@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="sam.drivers.afec.example1" caption="AFEC Example1">
+	<module type="application" id="sam.drivers.afec.example1" caption="AFEC Temperature Sensor Example">
 		<info type="description" value="summary">
 		This example demonstrates how to configure the temperature sensor feature inside the microcontroller.
 		</info>
@@ -8,7 +8,8 @@
 		</info>
 		<build type="c-source" value="afec_example1.c"/>
 		<build type="include-path" value="."/>
-		<device-support value="sam4e"/>
+		<device-support value="atsam4e16e"/>
+		<device-support value="atsam4e8e"/>
 		<require idref="sam.drivers.afec"/>
 		<require idref="sam.drivers.pmc"/>
 		<require idref="common.utils.stdio.stdio_serial"/>

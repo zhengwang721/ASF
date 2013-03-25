@@ -167,6 +167,7 @@ enum afec_cmp_mode {
 	AFEC_CMP_MODE_3 = AFEC_EMR_CMPMODE_OUT
 };
 
+#if defined __SAM4E8E__  || defined __SAM4E16E__
 /** Definitions for Temperature Comparison Mode */
 enum afec_temp_cmp_mode {
 	AFEC_TEMP_CMP_MODE_0 = AFEC_TEMPMR_TEMPCMPMOD_LOW,
@@ -174,6 +175,7 @@ enum afec_temp_cmp_mode {
 	AFEC_TEMP_CMP_MODE_2 = AFEC_TEMPMR_TEMPCMPMOD_IN,
 	AFEC_TEMP_CMP_MODE_3 = AFEC_TEMPMR_TEMPCMPMOD_OUT
 };
+#endif
 
 /**
  * \brief Analog-Front-End Controller configuration structure.
@@ -219,6 +221,7 @@ struct afec_ch_config {
 	enum afec_gainvalue gain;
 };
 
+#if defined __SAM4E8E__  || defined __SAM4E16E__
 /** AFEC Temperature Sensor configuration structure.*/
 struct afec_temp_sensor_config {
 	/** RTC Trigger mode */
@@ -230,6 +233,7 @@ struct afec_temp_sensor_config {
 	/** Temperature High Threshold */
 	uint16_t high_threshold;
 };
+#endif
 
 #if defined __SAM4E8C__  || defined __SAM4E16C__
 /** AFEC interrupt source type */
@@ -285,11 +289,15 @@ typedef void (*afec_callback_t)(void);
 
 void afec_get_config_defaults(struct afec_config *const cfg);
 void afec_ch_get_config_defaults(struct afec_ch_config *const cfg);
+#if defined __SAM4E8E__  || defined __SAM4E16E__
 void afec_temp_sensor_get_config_defaults(
 		struct afec_temp_sensor_config *const cfg);
+#endif
 enum status_code afec_init(Afec *const afec, struct afec_config *const config);
+#if defined __SAM4E8E__  || defined __SAM4E16E__
 void afec_temp_sensor_set_config(Afec *const afec,
 		struct afec_temp_sensor_config *config);
+#endif
 void afec_ch_set_config(Afec *const afec, const enum afec_channel_num channel,
 		struct afec_ch_config *config);
 void afec_configure_sequence(Afec *const afec,
