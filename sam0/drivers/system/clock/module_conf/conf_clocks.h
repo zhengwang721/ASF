@@ -53,6 +53,16 @@
 #define CONF_CLOCK_APBB_DIVIDER SYSTEM_MAIN_CLOCK_DIV_1
 
 /*
+ * Configure onboard flash wait states.
+ * This needs to be modified according to VCC and
+ * CPU clock speed according to the device datasheet
+ * This setting will be applied before modifying the
+ * CPU clock speed
+ */
+#define CONF_CLOCK_CONFIGURE_FLASH_WAIT_STATES true
+#define CONF_CLOCK_FLASH_WAIT_STATES 2
+
+/*
  * Configure clock sources when running clocks_init. If this is false none
  * of the settings below will be applied, and the hardware defaults will be used
  */
