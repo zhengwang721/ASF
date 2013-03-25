@@ -416,7 +416,7 @@ __attribute__(( naked )) void PendSV_Handler( void ) /* ATMEL */
 /*-----------------------------------------------------------*/
 
 /*void xPortSysTickHandler( void )*/
-void SysTick_Handler( void ) /* ATMEL */
+void xPortSysTickHandler( void ) /* ATMEL */
 {
 	/* If using preemption, also force a context switch. */
 	#if configUSE_PREEMPTION == 1
