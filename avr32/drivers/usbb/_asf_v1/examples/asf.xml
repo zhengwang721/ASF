@@ -5,7 +5,7 @@
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="USB"/>
-			<keyword value="Communication" />
+			<keyword value="Communication"/>
 		</info>
 		<build type="c-source" value="device_template_task.c"/>
 		<build type="header-file" value="device_template_task.h"/>
@@ -31,5 +31,6 @@
 		<require idref="avr32.drivers.usbb._asf_v1.enum.device"/>
 		<require idref="avr32.drivers.usbb._asf_v1.enum.host"/>
 		<require idref="avr32.utils.print_funcs"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

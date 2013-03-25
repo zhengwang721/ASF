@@ -4,7 +4,7 @@
 			A simple example for drawing pictures and strings on the C42364A LCD Glass.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="Display" />
+			<keyword value="Display"/>
 		</info>
 		<build type="c-source" value="c42364a_example.c"/>
 		<build type="include-path" value="."/>
@@ -12,5 +12,6 @@
 		<require idref="common.services.basic.clock"/>
 		<require idref="sam.components.display.c42364a"/>
 		<require idref="common.utils.stdio.stdio_serial"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

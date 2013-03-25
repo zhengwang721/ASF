@@ -4,7 +4,7 @@
 		Example application. It demonstrates how to perform a 32-bit fixed-point FFT using the DSP library.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="Digital signal processing" />
+			<keyword value="Digital signal processing"/>
 		</info>
 		<build type="c-source" value="complex_fft_example.c"/>
 		<build type="doxygen-entry-point" value="group_avr32_services_dsplib_simulator_example_dsp32_complex_fft"/>
@@ -13,5 +13,6 @@
 		<require idref="avr32.drivers.cpu.cycle_counter"/>
 		<require idref="avr32.services.dsplib.transforms"/>
 		<require idref="avr32.services.dsplib.vectors"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

@@ -13,6 +13,6 @@
 		<require idref="xmega.drivers.adc"/>
 		<require idref="xmega.drivers.dac"/>
 		<device-support value="xmegae"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>
-
