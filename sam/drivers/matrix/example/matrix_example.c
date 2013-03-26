@@ -151,9 +151,10 @@ static uint32_t toggle_led_test(uint32_t ul_dly_ticks)
 	ul_cur_ticks = g_ul_ms_ticks;
 	do {
 		ul_cnt++;
-		gpio_toggle_pin(LED0_GPIO);
+		ioport_toggle_pin_level(LED0_GPIO);
+                
 	} while ((g_ul_ms_ticks - ul_cur_ticks) < ul_dly_ticks);
-
+        
 	return ul_cnt;
 }
 
