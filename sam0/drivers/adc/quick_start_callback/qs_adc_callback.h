@@ -70,7 +70,7 @@
  *
  * \section asfdoc_samd20_adc_callback_basic_use_case_callback_setup Quick Start
  *
- * \subsection asfdoc_samd20_adc_basic_use_case_prereq Prerequisites
+ * \subsection asfdoc_samd20_adc_callback_basic_use_case_prereq Prerequisites
  * There are no special setup requirements for this use-case.
  *
  * \subsection asfdoc_samd20_adc_callback_basic_use_case_callback_code Code
