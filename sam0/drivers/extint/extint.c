@@ -217,6 +217,7 @@ enum status_code extint_nmi_set_config(
 	pinmux_config.mux_position = config->gpio_pin_mux;
 	pinmux_config.direction    = SYSTEM_PINMUX_PIN_DIR_INPUT;
 	pinmux_config.input_pull   = SYSTEM_PINMUX_PIN_PULL_UP;
+	pinmux_config.input_pull   = (enum system_pinmux_pin_pull)config->gpio_pin_pull;
 	system_pinmux_pin_set_config(config->gpio_pin, &pinmux_config);
 
 	/* Get a pointer to the module hardware instance */
