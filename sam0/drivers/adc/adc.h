@@ -1579,6 +1579,9 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
  * added to the user application.
  *
  *  - \subpage asfdoc_samd20_adc_basic_use_case
+ * \if ADC_CALLBACK_MODE
+ *  - \subpage asfdoc_samd20_adc_basic_use_case_callback
+ * \endif
  */
 
 #endif /* ADC_H_INCLUDED */

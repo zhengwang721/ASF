@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_samd20_adc_basic_use_case Quick Start Guide for the ADC module with callback support - Basic Use Case
+ * \page asfdoc_samd20_adc_basic_use_case_callback Quick Start Guide for the ADC module with callback support - Basic Use Case
  *
  * In this use case, the ADC will be convert 128 samples using interrupt driven conversion.
  * When all samples have been sampled, a callback will be called that signals the main
@@ -68,12 +68,12 @@
  * - No added sampling time
  * - Pin scan mode disabled
  *
- * \section asfdoc_samd20_adc_callback_basic_use_case_setup Quick Start
+ * \section asfdoc_samd20_adc_callback_basic_use_case_callback_setup Quick Start
  *
  * \subsection asfdoc_samd20_adc_basic_use_case_prereq Prerequisites
  * There are no special setup requirements for this use-case.
  *
- * \subsection asfdoc_samd20_adc_callback_basic_use_case_code Code
+ * \subsection asfdoc_samd20_adc_callback_basic_use_case_callback_code Code
  * Add to user application %main():
  * \snippet qs_adc_callback.c main
  * Add in same file as your %main():
@@ -81,7 +81,7 @@
  * \snippet qs_adc_callback.c job_complete_callback
  *
  *
- * \section asfdoc_samd20_adc_basic_use_case_workflow Workflow
+ * \section asfdoc_samd20_adc_basic_use_case_callback_workflow Workflow
  * -# Create variables for device software instance, config and channel config.
  *  - \snippet qs_adc_callback.c variable
  * -# Initialize system (clock system)
