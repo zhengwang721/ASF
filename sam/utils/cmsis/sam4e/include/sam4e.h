@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,10 +42,16 @@
 #ifndef _SAM4E_
 #define _SAM4E_
 
-#if defined (__SAM4E8E__)
-#include "sam4e8e.h"
-#elif defined (__SAM4E16E__)
-#include "sam4e16e.h"
+#if defined __SAM4E8C__
+  #include "sam4e8c.h"
+#elif defined __SAM4E8E__
+  #include "sam4e8e.h"
+#elif defined __SAM4E16C__
+  #include "sam4e16c.h"
+#elif defined __SAM4E16E__
+  #include "sam4e16e.h"
+#else
+  #error Library does not support the specified device.
 #endif
 
 #endif /* _SAM4E_ */

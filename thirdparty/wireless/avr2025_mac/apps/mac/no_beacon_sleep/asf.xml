@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type ="application" caption="MAC No-Beacon Sleep Application " id="thirdparty.wireless.avr2025_mac.apps.mac.no_beacon_sleep">
+	<module type="application" caption="MAC No-Beacon Sleep Application " id="thirdparty.wireless.avr2025_mac.apps.mac.no_beacon_sleep">
 		<info type="description" value="summary">
 		The MAC No-Beacon Sleep  Application Demonstrates Transceiver Sleep Feature .The device wakes from sleep every 2 seconds and transmits data before going to sleep again.
 		</info>
@@ -9,12 +9,12 @@
 		<build type="header-file" value="conf_common_sw_timer.h"/>
 		<build type="header-file" value="conf_pal.h"/>
 		<build type="include-path" value="."/>
-		<build type="define" name="HIGHEST_STACK_LAYER" value ="MAC"/>
-		<build type="define" name="FFD" value =""/>
-		<build type="define" name="ENABLE_TSTAMP" value =""/>
-
+		<build type="define" name="HIGHEST_STACK_LAYER" value="MAC"/>
+		<build type="define" name="FFD" value=""/>
+		<build type="define" name="ENABLE_TSTAMP" value=""/>
 		<require idref="thirdparty.wireless.avr2025_mac"/>
 		<require idref="common.services.basic.sleepmgr"/>
-        <device-support-alias value="avr2025_mac_pal_spi_support"/>
+		<device-support-alias value="avr2025_mac_pal_spi_support"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

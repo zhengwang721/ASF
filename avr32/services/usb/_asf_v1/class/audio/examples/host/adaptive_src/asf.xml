@@ -8,5 +8,6 @@
 		<device-support value="uc3a"/>
 		<require idref="avr32.services.usb.audio.host.example"/>
 		<require idref="avr32.utils.libs.dsplib"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

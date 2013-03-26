@@ -18,5 +18,6 @@
 		<require idref="common.boards"/>
 		<require idref="xmega.drivers.pmic"/>
 		<require idref="xmega.drivers.rtc"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>
