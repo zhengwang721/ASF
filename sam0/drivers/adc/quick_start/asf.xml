@@ -4,6 +4,7 @@
 		Quick start guide for the Analog-to-Digital Converter module demonstrating module configuration.
 		</info>
 		<build type="c-source" value="qs_adc_basic.c"/>
+		<build type="header-file" value="qs_adc_basic.h"/>
 		<build type="include-path" value="."/>
 		<require idref="sam0.drivers.adc"/>
 		<device-support value="samd20"/>
