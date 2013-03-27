@@ -557,6 +557,7 @@ static inline void extint_nmi_get_config_defaults(
 	/* Default configuration values */
 	config->gpio_pin            = 0;
 	config->gpio_pin_mux        = 0;
+	config->gpio_pin_pull       = EXTINT_PULL_UP;
 	config->filter_input_signal = false;
 	config->detection_criteria  = EXTINT_DETECT_FALLING;
 }
