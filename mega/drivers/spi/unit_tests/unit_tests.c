@@ -153,7 +153,7 @@ const uint8_t manufac_id[] = {ATMEL_MANUFACTURER_ID,DEVICE_ID_1,DEVICE_ID_2,EXT_
  */
 static uint8_t get_spi_divisor(void)
 {
-	uint8_t divisor;
+	uint8_t divisor=0;
 
 	switch (SPCR & SPI_PRESCALER_gm) {
 	case SPI_PRESCALER_DIV4_gc:
@@ -264,7 +264,7 @@ static void spi_deselect_device(void)
  *
  * \pre SPI device must be selected with spi_select_device() first
  */
-status_code_t spi_write(volatile void *spi, const uint8_t *data, size_t len)
+static status_code_t spi_write(volatile void *spi, const uint8_t *data, size_t len)
 {
 	while (len) {
 		
@@ -290,7 +290,7 @@ status_code_t spi_write(volatile void *spi, const uint8_t *data, size_t len)
  *
  * \pre SPI device must be selected with spi_select_device() first
  */
-status_code_t spi_read(volatile void *spi, uint8_t *data, size_t len)
+static status_code_t spi_read(volatile void *spi, uint8_t *data, size_t len)
 {
 	while (len) {
 		
@@ -320,12 +320,12 @@ static void run_spi_transfer_test(const struct test_case *test)
 {
         /* Enable SPI peripheral clock */
   	sysclk_enable_peripheral_clock(&CONF_TEST_SPI);
-        
-        /* Enable SPI is master mode */
-        spi_enable_master_mode(&CONF_TEST_SPI);
-        
-        /* Set the baud rate */
-        spi_set_baud_div(&CONF_TEST_SPI,CONF_TEST_SPI_BAUDRATE, sysclk_get_cpu_hz());
+	  
+	  /* Enable SPI is master mode */
+	  spi_enable_master_mode(&CONF_TEST_SPI);
+	  
+	   /* Set the baud rate */
+	   spi_set_baud_div(&CONF_TEST_SPI,CONF_TEST_SPI_BAUDRATE, sysclk_get_cpu_hz());
 
         /* Set the clock mode */        
 	spi_set_clock_mode(&CONF_TEST_SPI,CONF_TEST_SPI_MODE);
