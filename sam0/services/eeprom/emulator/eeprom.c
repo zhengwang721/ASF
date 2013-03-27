@@ -511,6 +511,34 @@ static enum status_code _eeprom_emulator_verify_master_page(void)
 	return STATUS_OK;
 }
 
+
+/**
+ * \brief Retrieves the parameters of the EEPROM Emulator memory layout.
+ *
+ * Retrives the configuration parameters of the EEPROM Emulator, after it has
+ * been initialized.
+ *
+ * \param[out] parameters  EEPROM Emulator parameter struct to fill
+ *
+ * \return Status of the operation.
+ *
+ * \retval STATUS_OK                    If the emulator parameters were retrieved
+ *                                      successfully
+ * \retval STATUS_ERR_NOT_INITALIZATED  If the EEPROM Emulator is not initialized
+ */
+enum status_code eeprom_emulator_get_parameters(
+	struct eeprom_emulator_parameters *const parameters)
+{
+	if (_eeprom_instance.initialized == false) {
+		return STATUS_ERR_NOT_INITALIZATED;
+	}
+
+	parameters->page_size              = EEPROM_PAGE_SIZE;
+	parameters->eeprom_number_of_pages = _eeprom_instance.logical_pages;
+
+	return STATUS_OK;
+}
+
 /**
  * \brief Initializes the EEPROM Emulator service
  *
