@@ -82,7 +82,7 @@
 #define DEFAULT_MODE_COLORED
 
 /* TWI clock frequency in Hz (400KHz) */
-#define TWI_CLK     400000
+#define TWI_CLK     (400000UL)
 
 /* Pointer to the image data destination buffer */
 uint8_t *g_p_uc_cap_dest_buf;

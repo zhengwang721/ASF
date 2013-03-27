@@ -69,20 +69,20 @@
 // ===== PLL0 (A) Options   (Fpll = (Fclk * PLL_mul) / PLL_div)
 // Use mul and div effective values here.
 #define CONFIG_PLL0_SOURCE          PLL_SRC_MAINCK_XTAL
-#define CONFIG_PLL0_MUL             20
-#define CONFIG_PLL0_DIV             1
+#define CONFIG_PLL0_MUL             (20UL)
+#define CONFIG_PLL0_DIV             (1UL)
 
 // ===== PLL1 (B) Options   (Fpll = (Fclk * PLL_mul) / PLL_div)
 // Use mul and div effective values here.
 //#define CONFIG_PLL1_SOURCE          PLL_SRC_MAINCK_XTAL
-//#define CONFIG_PLL1_MUL             20
-//#define CONFIG_PLL1_DIV             1
+//#define CONFIG_PLL1_MUL             (20UL)
+//#define CONFIG_PLL1_DIV             (1UL)
 
 // ===== USB Clock Source Options   (Fusb = FpllX / USB_div)
 // Use div effective value here.
 //#define CONFIG_USBCLK_SOURCE        USBCLK_SRC_PLL0
 //#define CONFIG_USBCLK_SOURCE        USBCLK_SRC_PLL1
-//#define CONFIG_USBCLK_DIV           2
+//#define CONFIG_USBCLK_DIV           (2UL)
 
 // ===== Target frequency (System clock)
 // - XTAL frequency: 12MHz

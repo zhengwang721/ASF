@@ -89,7 +89,7 @@
 
 
 /* TWI clock frequency in Hz (400KHz). */
-#define TWI_CLK     400000
+#define TWI_CLK     (400000UL)
 
 /* Buffer which contains data of one third of the picture. */
 uint8_t g_auc_capture_buffer[51200];
