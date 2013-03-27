@@ -56,12 +56,12 @@
  *
  *  \par Description
  *
- *  The PIO Controller integrates an interface that is able to read data from a CMOS
- *  digital image sensor, a high-speed parallel ADC, a DSP synchronous port in
- *  synchronous mode, etc.
+ *  The PIO Controller integrates an interface that is able to read data from
+ *  a CMOS digital image sensor, a high-speed parallel ADC, a DSP synchronous
+ *  port in synchronous mode, etc.
  *
  *  The application is composed of 2 softwares:
- *  - one for using the PIO Parallel Capture in send mode.
+ *  - one for using the PIO simulate as a sensor in send mode.
  *  - one for using the PIO Parallel Capture in receive mode.
  *
  *  Two boards are required to use. Connect one to the other, and at first put
@@ -70,17 +70,17 @@
  *  Different choices can be selected to use the data enable pins or not, and
  *  to sample all the data or only one out of two.
  *  Pins to be connected between the 2 boards:<br />
- *    PA15 PIODCEN1<br />
- *    PA16 PIODCEN2<br />
- *    PA23 PIODCCLK<br />
- *    PA24 PIODC0<br />
- *    PA25 PIODC1<br />
- *    PA26 PIODC2<br />
- *    PA27 PIODC3<br />
- *    PA28 PIODC4<br />
- *    PA29 PIODC5<br />
- *    PA30 PIODC6<br />
- *    PA31 PIODC7<br />
+ *    PA15 - PA15<br />
+ *    PA16 - PA16<br />
+ *    PA23 - PA23<br />
+ *    PA24 - PC0<br />
+ *    PA25 - PC1 <br />
+ *    PA26 - PC2<br />
+ *    PA27 - PC3<br />
+ *    PA28 - PC4<br />
+ *    PA29 - PC5<br />
+ *    PA30 - PC6<br />
+ *    PA31 - PC7<br />
  *    And, of course: GND<br />
  *
  *  \par Usage
@@ -93,8 +93,7 @@
  *    - No parity
  *    - 1 stop bit
  *    - No flow control
- *  -# Connect the first board to the second board by connecting:
- *     PIODCCLK, PIODC[7:0], PIODCEN1, PIODCEN2 and GND.
+ *  -# Connect the first board to the second board.
  *  -# Start the application of the first board.
  *  -# Put the software in send mode.
  *  -# In the terminal window, the
@@ -157,13 +156,12 @@
 #define PIO_CAPTURE_CCLK_IDX           PIO_PA23_IDX
 #define PIO_CAPTURE_EN1_IDX            PIO_PA15_IDX
 #define PIO_CAPTURE_EN2_IDX            PIO_PA16_IDX
-#define PIO_CAPTURE_PIN_FLAGS          (PIO_OUTPUT_0 | PIO_DEFAULT)
-#define PIO_CAPTURE_DATA_PINS_MASK     0xFF000000
-#define PIO_CAPTURE_ALL_PIN_MSK        ((1 << 15) | (1 << 16) | (1 << 23) | \
-										PIO_CAPTURE_DATA_PINS_MASK)
+#define PIO_CAPTURE_OUTPUT_PIN_FLAGS   (PIO_OUTPUT_0 | PIO_DEFAULT)
+#define PIO_CAPTURE_DATA_PINS_MASK     0x000000FF
+#define PIO_CAPTURE_CONTROL_PIN_MSK    ((1 << 15) | (1 << 16) | (1 << 23))
 
 /** Data offset position. */
-#define PIO_CAPTURE_DATA_POS           24
+#define PIO_CAPTURE_DATA_POS           0
 
 /** PIOA interrupt priority. */
 #define PIO_IRQ_PRI                    4
@@ -200,11 +198,11 @@ static void capture_handler(Pio *p_pio)
 	/* Clear any unwanted data */
 	pio_capture_read(PIOA, &dummy_data);
 
-	puts("End of receive.\r\n");
+	printf("End of receive.\r\n");
 	for (uc_i = 0; uc_i < SIZE_BUFF_RECEPT; uc_i++) {
 		printf("0x%X ", pio_rx_buffer[uc_i]);
 	}
-	puts("\r\n");
+	printf("\r\n");
 	g_uc_cbk_received = 1;
 }
 
@@ -247,6 +245,7 @@ int main(void)
 
 	/* Configure PIOA clock. */
 	pmc_enable_periph_clk(ID_PIOA);
+	pmc_enable_periph_clk(ID_PIOC);
 
 	/* Configure PIO Capture handler */
 	pio_capture_handler_set(capture_handler);
@@ -257,22 +256,22 @@ int main(void)
 	printf("Frequency: %d MHz.\r\n",
 			(uint8_t) (sysclk_get_cpu_hz() / 1000000));
 
-	puts("Press r to Receive data on PIO Parallel Capture.\r\n");
-	puts("Press s to Send data on PIO Parallel Capture.\r\n");
+	printf("Press r to Receive data on PIO Parallel Capture.\r\n");
+	printf("Press s to Send data on PIO Parallel Capture.\r\n");
 	uc_key = 0;
 	while ((uc_key != 'r') && (uc_key != 's')) {
 		uart_read(CONSOLE_UART, &uc_key);
 	}
 	if (uc_key == 'r') {
-		puts("** RECEIVE mode **\r\n");
+		printf("** RECEIVE mode **\r\n");
 
 		/* Initialize PIO capture mode value. */
 		ul_mode = 0;
 		/* Set up the parallel capture mode data size as 8 bits. */
 		ul_mode |= 0 << PIO_PCMR_DSIZE_Pos;
 
-		puts("Press y to sample the data when both data enable pins are enabled.\r\n");
-		puts("Press n to sample the data, don't care the status of the data enable pins.\r\n");
+		printf("Press y to sample the data when both data enable pins are enabled.\r\n");
+		printf("Press n to sample the data, don't care the status of the data enable pins.\r\n");
 		uc_key = 0;
 		while ((uc_key != 'y') && (uc_key != 'n')) {
 			uart_read(CONSOLE_UART, &uc_key);
@@ -280,14 +279,14 @@ int main(void)
 		if (uc_key == 'y') {
 			/* Sample the data when both data enable pins are enabled. */
 			ul_mode &= ~PIO_PCMR_ALWYS;
-			puts("Receive data when both data enable pins are enabled.\r\n");
+			printf("Receive data when both data enable pins are enabled.\r\n");
 		} else {
 			/* Sample the data, don't care the status of the data enable pins. */
 			ul_mode |= PIO_PCMR_ALWYS;
-			puts("Receive data, don't care the status of the data enable pins.\r\n");
+			printf("Receive data, don't care the status of the data enable pins.\r\n");
 		}
-		puts("Press y to sample all the data\r\n");
-		puts("Press n to sample the data only one out of two.\r\n");
+		printf("Press y to sample all the data\r\n");
+		printf("Press n to sample the data only one out of two.\r\n");
 		uc_key = 0;
 		while ((uc_key != 'y') && (uc_key != 'n')) {
 			uart_read(CONSOLE_UART, &uc_key);
@@ -295,13 +294,13 @@ int main(void)
 		if (uc_key == 'y') {
 			/* Sample all the data. */
 			ul_mode &= ~PIO_PCMR_HALFS;
-			puts("All data are sampled.\r\n");
+			printf("All data are sampled.\r\n");
 		} else {
 			/* Sample the data only one out of two. */
 			ul_mode |= PIO_PCMR_HALFS;
 			/* Only if half-Sampling is set, data with an even index are sampled. */
 			ul_mode &= ~PIO_PCMR_FRSTS;
-			puts("Only one out of two data is sampled, with an even index.\r\n");
+			printf("Only one out of two data is sampled, with an even index.\r\n");
 		}
 
 		/* Initialize PIO Parallel Capture function. */
@@ -338,34 +337,36 @@ int main(void)
 			pio_capture_enable_interrupt(PIOA,
 					(PIO_PCIER_ENDRX | PIO_PCIER_RXBUFF));
 
-			puts("Waiting...\r\n");
+			printf("Waiting...\r\n");
 			while (g_uc_cbk_received == 0) {
 			}
 		}
 	} else if (uc_key == 's') {
-		puts("** SEND mode **\r\n");
-		puts("This is for debug purpose only !\r\n");
-		puts("Frequency of PIO controller clock must be strictly superior");
-		puts("to 2 times the frequency of the clock of the device which");
-		puts(" generates the parallel data.\r\n");
-		puts("\r\nPlease connect the second board, ");
-		puts("and put it in receive mode.\r\n");
+		printf("** SEND mode **\r\n");
+		printf("This is for debug purpose only !\r\n");
+		printf("Frequency of PIO controller clock must be strictly superior");
+		printf("to 2 times the frequency of the clock of the device which");
+		printf(" generates the parallel data.\r\n");
+		printf("\r\nPlease connect the second board, ");
+		printf("and put it in receive mode.\r\n");
 
-		/* Configure PIO Parallel Capture pins which simulate as a sensor. */
-		pio_configure_pin_group(PIOA, PIO_CAPTURE_ALL_PIN_MSK,
-			PIO_CAPTURE_PIN_FLAGS);
+		/* Configure PIO pins which simulate as a sensor. */
+		pio_configure_pin_group(PIOA, PIO_CAPTURE_CONTROL_PIN_MSK,
+			PIO_CAPTURE_OUTPUT_PIN_FLAGS);
+		pio_configure_pin_group(PIOC, PIO_CAPTURE_DATA_PINS_MASK,
+			PIO_CAPTURE_OUTPUT_PIN_FLAGS);
 		pio_set_pin_low(PIO_CAPTURE_EN1_IDX);
 		pio_set_pin_low(PIO_CAPTURE_EN2_IDX);
 		pio_set_pin_low(PIO_CAPTURE_CCLK_IDX);
 
 		/* Enable sync. output data. */
-		pio_enable_output_write(PIOA, PIO_CAPTURE_DATA_PINS_MASK);
+		pio_enable_output_write(PIOC, PIO_CAPTURE_DATA_PINS_MASK);
 
 		/* Initialize the capture data line. */
-		pio_sync_output_write(PIOA, 0);
+		pio_sync_output_write(PIOC, 0);
 
-		puts("Press y to send data with data enable pins.\r\n");
-		puts("Press n to send data without data enable pins.\r\n");
+		printf("Press y to send data with data enable pins.\r\n");
+		printf("Press n to send data without data enable pins.\r\n");
 
 		uc_key = 0;
 		while ((uc_key != 'y') && (uc_key != 'n')) {
@@ -373,32 +374,32 @@ int main(void)
 		}
 		if (uc_key == 'y') {
 			uc_tx_without_en = 0;
-			puts("Send data with both data enable pins enabled.\r\n");
+			printf("Send data with both data enable pins enabled.\r\n");
 		} else {
 			uc_tx_without_en = 1;
-			puts("Send data without enabling the data enable pins.\r\n");
+			printf("Send data without enabling the data enable pins.\r\n");
 		}
 
-		puts("Press y to indicate that receiver samples all data.\r\n");
-		puts("Press n to indicate that receiver samples data with an even index.\r\n");
+		printf("Press y to indicate that receiver samples all data.\r\n");
+		printf("Press n to indicate that receiver samples data with an even index.\r\n");
 		uc_key = 0;
 		while ((uc_key != 'y') && (uc_key != 'n')) {
 			uart_read(CONSOLE_UART, &uc_key);
 		}
 		if (uc_key == 'y') {
 			uc_rx_even_only = 0;
-			puts("Receiver samples all data.\r\n");
+			printf("Receiver samples all data.\r\n");
 		} else {
 			uc_rx_even_only = 1;
-			puts("Receiver samples data with an even index.\r\n");
+			printf("Receiver samples data with an even index.\r\n");
 		}
 
 		ul_length = SIZE_BUFF_RECEPT * (1 + uc_rx_even_only);
 		while (1) {
 			if (uc_tx_without_en) {
-				puts("\r\nSend data without enabling the data enable pins.\r\n");
+				printf("\r\nSend data without enabling the data enable pins.\r\n");
 			} else {
-				puts("\r\nSend data with both data enable pins enabled.\r\n");
+				printf("\r\nSend data with both data enable pins enabled.\r\n");
 			}
 			if (!uc_tx_without_en) {
 				/* Set enable pins. */
@@ -407,7 +408,7 @@ int main(void)
 			}
 			for (uc_i = 0; uc_i < ul_length;) {
 				/* Send data. */
-				pio_sync_output_write(PIOA,
+				pio_sync_output_write(PIOC,
 						(uc_i << PIO_CAPTURE_DATA_POS));
 				/* Set clock. */
 				pio_set_pin_high(PIO_CAPTURE_CCLK_IDX);
@@ -422,7 +423,7 @@ int main(void)
 				pio_set_pin_low(PIO_CAPTURE_EN1_IDX);
 				pio_set_pin_low(PIO_CAPTURE_EN2_IDX);
 			}
-			puts("Press a key.\r\n");
+			printf("Press a key.\r\n");
 			while (uart_read(CONSOLE_UART, &uc_key)) {
 			}
 		}
