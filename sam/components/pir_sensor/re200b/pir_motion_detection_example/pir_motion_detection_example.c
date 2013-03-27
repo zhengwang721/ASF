@@ -146,7 +146,7 @@ int main(void)
 	ili9325_fill(COLOR_WHITE);
 
 	/* Initialize Pir sensor */
-	re200b_motion_detect_init();
+	re200b_motion_detect_init(ACC_MR_SELMINUS_AD0, ACC_MR_SELPLUS_AD4);
 
 	while (1) {
 		/* Reset motion detection (enable interrupt, clear variable,
@@ -169,7 +169,7 @@ int main(void)
 				ili9325_fill(COLOR_WHITE);
 			}
 
-			sprintf((char*)uc_string_display, "Motion Detected:%lu", i);
+			sprintf((char*)uc_string_display, "Motion Detected:%ul", i);
 			ili9325_draw_string(0, i*LCD_LINE_HEIGHT, uc_string_display);
 			i++;
 		}
