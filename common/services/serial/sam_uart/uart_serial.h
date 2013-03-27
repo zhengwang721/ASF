@@ -334,8 +334,9 @@ static inline int usart_serial_putchar(usart_if p_usart, const uint8_t c)
  */
 static inline void usart_serial_getchar(usart_if p_usart, uint8_t *data)
 {
-	uint32_t val;
-	/* avoid Cppcheck Warning */
+	uint32_t val = 0;
+
+	/* Avoid Cppcheck Warning */
 	UNUSED(val);
 
 #ifdef UART

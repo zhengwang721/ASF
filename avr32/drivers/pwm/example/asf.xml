@@ -4,7 +4,7 @@
 		Output a periodic(22.5Hz) waveform on pin using the PWM module.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="Clocks" />
+			<keyword value="Clocks"/>
 		</info>
 		<build type="c-source" value="pwm_example.c"/>
 		<device-support value="uc3a"/>
@@ -12,5 +12,6 @@
 		<require idref="avr32.drivers.gpio"/>
 		<require idref="avr32.drivers.intc"/>
 		<require idref="avr32.drivers.pwm"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

@@ -9,5 +9,6 @@
 		<build type="c-source" value="adc_example1.c"/>
 		<device-support value="mega"/>
 		<require idref="mega.drivers.adc"/>
-</module>
+		<info type="gui-flag" value="move-to-root"/>
+	</module>
 </asf>

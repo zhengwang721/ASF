@@ -14,5 +14,6 @@
 		<require idref="common.services.basic.gpio"/>
 		<require idref="common.services.basic.cpu"/>
 		<require idref="xmega.drivers.wdt"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

@@ -38,5 +38,6 @@
 		<require idref="common.services.os.freertos"/>
 		<require idref="thirdparty.lwip.version"/>
 		<require idref="common.services.basic.clock"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>
