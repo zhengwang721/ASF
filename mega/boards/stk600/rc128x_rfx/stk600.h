@@ -8,7 +8,7 @@
  *
  * To use this board, define BOARD= STK600_MEGA.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -104,6 +104,23 @@
 
 /* ! PUSH BUTTON ON STK600-ATMEGA128RFA1 EVK. */
 #define GPIO_PUSH_BUTTON_ON_BOARD    IOPORT_CREATE_PIN(PORTE, 5)
+
+/*! \name SPI Connections of the AT45DBX Data Flash Memory. To use these defines,
+ * connect :
+ * - PB0 to /CS pin on DataFlash connector
+ * - PB1 to SCK pin on DataFlash connector
+ * - PB3 to SO pin on DataFlash connector
+ * - PB2 to SI pin on DataFlash connector
+ */
+//! @{
+#define AT45DBX_SPI           &SPCR
+#define AT45DBX_CS            IOPORT_CREATE_PIN(PORTB,0)  // CS as output
+#define AT45DBX_MASTER_SS     IOPORT_CREATE_PIN(PORTB,0)  // SS as output and overlayed with CS
+#define AT45DBX_MASTER_SCK    IOPORT_CREATE_PIN(PORTB,1)  // SCK as output
+#define AT45DBX_MASTER_MOSI   IOPORT_CREATE_PIN(PORTB,2)  // MOSI as output
+#define AT45DBX_MASTER_MISO   IOPORT_CREATE_PIN(PORTB,3)  // MISO as input
+//! @}
+
 #endif
 
 #endif  /* _STK600_H_ */

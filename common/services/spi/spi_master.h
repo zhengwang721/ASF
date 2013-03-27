@@ -3,7 +3,7 @@
  *
  * \brief SPI Master Mode management
  *
- * Copyright (c) 2010-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -47,6 +47,8 @@
 
 #if XMEGA
 # include "xmega_spi/spi_master.h"
+#elif MEGA_RF
+# include "megarf_spi/spi_master.h"
 #elif UC3
 # include "uc3_spi/spi_master.h"
 #elif SAM

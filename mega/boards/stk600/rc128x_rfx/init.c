@@ -5,7 +5,7 @@
  *
  * To use this board, define BOARD=STK600_MEGA.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -82,7 +82,7 @@ void board_init(void)
 	gpio_configure_pin(GPIO_PUSH_BUTTON_6, IOPORT_DIR_INPUT |
 			IOPORT_PULL_UP);
 	gpio_configure_pin(GPIO_PUSH_BUTTON_7, IOPORT_DIR_INPUT |
-			IOPORT_PULL_UP);
+			IOPORT_PULL_UP);			
 
 #if MEGA_RF
 	/*RED, GREEN and YELLOW Led configuration*/
@@ -96,5 +96,15 @@ void board_init(void)
 
 	gpio_configure_pin(GPIO_PUSH_BUTTON_ON_BOARD,
 			IOPORT_DIR_INPUT | IOPORT_PULL_UP);
+			
+#ifdef CONF_BOARD_AT45DBX
+	gpio_configure_pin(AT45DBX_MASTER_SCK, IOPORT_DIR_OUTPUT |
+		IOPORT_INIT_HIGH);
+	gpio_configure_pin(AT45DBX_MASTER_MOSI, IOPORT_DIR_OUTPUT |
+		IOPORT_INIT_HIGH);
+	gpio_configure_pin(AT45DBX_MASTER_MISO, IOPORT_DIR_INPUT);
+	gpio_configure_pin(AT45DBX_CS, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
+#endif	
+		
 #endif
 }
