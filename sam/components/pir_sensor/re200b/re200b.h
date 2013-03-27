@@ -56,7 +56,7 @@ extern "C" {
 /**
  * enumeration of different result for acc comparison
  */
-typedef enum {
+typedef enum _e_cmp_res {
 	CMP_EQUAL, /*!< equal comparison ( inp=inn) */
 	CMP_GREATER, /*!< greater comparison ( inp>inn) */
 	CMP_LESS /*!< equal comparison ( inp<inn) */
