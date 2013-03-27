@@ -8,5 +8,6 @@
 		<device-support value="xmega"/>
 		<require idref="common.components.display_controller.hx8347a"/>
 		<require idref="common.services.basic.clock"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

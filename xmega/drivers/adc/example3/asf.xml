@@ -15,5 +15,6 @@
 		<require idref="xmega.drivers.adc"/>
 		<require idref="common.services.basic.clock"/>
 		<require idref="common.services.basic.sleepmgr"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

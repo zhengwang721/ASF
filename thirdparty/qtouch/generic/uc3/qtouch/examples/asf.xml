@@ -12,7 +12,8 @@
 		<require idref="avr32.drivers.tc"/>
 		<require idref="common.services.basic.clock"/>
 		<info type="keyword" value="technology">
-		<keyword value="Touch"/>
+			<keyword value="Touch"/>
 		</info>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>
