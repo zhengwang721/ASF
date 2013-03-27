@@ -48,8 +48,8 @@
  *  - <b> ATMEGA128RFA1-EK-STK600  --  AT45DBX component </b>
  *   - SS(PB0)   -- CS
  *   - SCK(PB1)  -- SCK
- *   - MISO(PE3) -- MISO
- *   - MOSI(PE2) -- MOSI
+ *   - MISO(PB3) -- SO
+ *   - MOSI(PB2) -- SI
  */
 
 //! \note Perform unit tests using SPI 
