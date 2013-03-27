@@ -19,7 +19,7 @@
 		<build type="header-file" value="date_time.h"/>
 		<build type="c-source" value="timezone.c"/>
 		<build type="header-file" value="timezone.h"/>
-		<build type="c-source"    value="qtouch/touch.c"/>
+		<build type="c-source" value="qtouch/touch.c"/>
 		<build type="header-file" value="qtouch/touch_qt_config.h"/>
 		<build type="header-file" value="qtouch/touch_api.h"/>
 		<build type="library" subtype="user" value="qtouch/libavrxmega6g1-4qt-k-0rs.a" toolchain="avrgcc"/>
@@ -46,5 +46,6 @@
 		<require idref="common.services.gfx_mono.menu"/>
 		<require idref="common.services.gfx_mono.spinctrl"/>
 		<require idref="common.services.usb.class.device"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

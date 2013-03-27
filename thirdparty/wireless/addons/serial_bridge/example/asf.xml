@@ -4,13 +4,14 @@
 		<info type="description" value="summary">
 			Serial Bridge Application
 		</info>
-	<!-- +++++++++++++++++++++++++++++++++++++++++++++++BUILD+++++++++++++++++++++++++++++++++++++++++++++++. -->
-		<build type="c-source"      value="main.c"/>
+		<!-- +++++++++++++++++++++++++++++++++++++++++++++++BUILD+++++++++++++++++++++++++++++++++++++++++++++++. -->
+		<build type="c-source" value="main.c"/>
 		<require idref="thirdparty.wireless.addons.serial_bridge"/>
 		<device-support value="sam4l"/>
-        <info type="keyword" value="technology">
-            <keyword value="Wireless"/>
-            <keyword value="Communication"/>
+		<info type="keyword" value="technology">
+			<keyword value="Wireless"/>
+			<keyword value="Communication"/>
 		</info>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

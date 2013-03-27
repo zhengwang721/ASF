@@ -22,8 +22,9 @@
 		<require idref="common.services.basic.clock"/>
 		<require idref="common.services.basic.sleepmgr"/>
 		<require idref="common.utils.stdio"/>
-		<require idref="config.common.services.qtouch.qdebug.qt600.sam4l" />
-		<require idref="sam.services.qtouch.devspecific.sam.sam4l" />
+		<require idref="config.common.services.qtouch.qdebug.qt600.sam4l"/>
+		<require idref="sam.services.qtouch.devspecific.sam.sam4l"/>
 		<device-support value="sam4l"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

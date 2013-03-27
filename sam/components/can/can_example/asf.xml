@@ -4,7 +4,7 @@
 		This example demostrate basic functions of CAN controller.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="Communication" />
+			<keyword value="Communication"/>
 		</info>
 		<build type="c-source" value="can_example.c"/>
 		<build type="include-path" value="."/>
@@ -18,6 +18,6 @@
 		<require idref="common.services.basic.gpio"/>
 		<require idref="common.services.basic.clock"/>
 		<require idref="common.utils.stdio.stdio_serial"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>
-
