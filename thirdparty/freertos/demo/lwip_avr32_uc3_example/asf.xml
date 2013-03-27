@@ -33,5 +33,6 @@
 		<require idref="avr32.drivers.pm"/>
 		<require idref="common.services.os.freertos"/>
 		<require idref="thirdparty.lwip.version"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

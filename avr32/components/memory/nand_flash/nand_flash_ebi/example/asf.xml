@@ -4,7 +4,7 @@
 		Read and write data to an external Nand flash memory through the EBI.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="Memory" />
+			<keyword value="Memory"/>
 		</info>
 		<build type="c-source" value="nf_example.c"/>
 		<build type="include-path" value="."/>
@@ -24,5 +24,6 @@
 		<require idref="avr32.drivers.intc"/>
 		<require idref="avr32.utils.print_funcs"/>
 		<require idref="common.utils.stdio.stdio_serial"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

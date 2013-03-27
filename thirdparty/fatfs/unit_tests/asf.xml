@@ -17,6 +17,7 @@
 			<require idref="sam.drivers.pio"/>
 			<require idref="sam.drivers.pmc"/>
 			<require idref="sam.drivers.uart"/>
+			<info type="gui-flag" value="move-to-root"/>
 		</module>
 		<module type="application" id="common.services.fs.fatfs.unit_tests#1" caption="Unit Tests for the Common FatFS Service">
 			<info type="description" value="summary">
@@ -34,6 +35,7 @@
 			<require idref="common.utils.stdio.stdio_serial"/>
 			<require idref="common.utils.unit_test"/>
 			<require idref="xmega.drivers.ebi"/>
+			<info type="gui-flag" value="move-to-root"/>
 		</module>
 	</select-by-device>
 </asf>

@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<select-by-device id="common.components.memory.nand_flash.example1" caption="NAND Flash on EBI Example 1">	
+	<select-by-device id="common.components.memory.nand_flash.example1" caption="NAND Flash on EBI Example 1">
 		<module type="application" id="common.components.memory.nand_flash.example1#0" caption="NAND Flash on EBI Example 1">
 			<info type="description" value="summary">
 			Read and write raw data to an external NAND Flash memory through the EBI.
@@ -21,7 +21,7 @@
 			<require idref="common.services.basic.clock"/>
 			<require idref="common.utils.stdio.stdio_serial"/>
 			<require idref="common.components.memory.nand_flash"/>
+			<info type="gui-flag" value="move-to-root"/>
 		</module>
 	</select-by-device>
 </asf>
-

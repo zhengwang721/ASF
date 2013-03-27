@@ -4,7 +4,7 @@
 		Wireless-USB bridge, using the USB CDC class (Virtual Communication Port). This application is used on RZ600 kits with UC3 A3 MCU (USB VCP port). 
 		</info>
 		<build type="include-path" value="."/>
-		<build type="c-source"    value="main.c"/>
+		<build type="c-source" value="main.c"/>
 		<build type="header-file" value="main.h"/>
 		<build type="include-path" value="conf/"/>
 		<build type="header-file" value="conf/conf_sleepmgr.h"/>
@@ -29,5 +29,6 @@
 			<keyword value="Wireless"/>
 			<keyword value="Communication"/>
 		</info>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

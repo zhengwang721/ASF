@@ -15,5 +15,6 @@
 		<require idref="common.services.fs.fatfs"/>
 		<device-support value="avr"/>
 		<device-support value="sam"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>
