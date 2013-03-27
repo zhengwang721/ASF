@@ -821,7 +821,7 @@ static inline void rtc_calendar_disable_events(
 
 
 /**
- * \page asfdoc_samd20_rtc_calendar_extra  Extra Information for RTC (CAL) Driver
+ * \page asfdoc_samd20_rtc_calendar_extra Extra Information for RTC (CAL) Driver
  *
  * \section asfdoc_samd20_rtc_calendar_extra_acronyms Acronyms
  * Below is a table listing the acronyms used in this module, along with their
