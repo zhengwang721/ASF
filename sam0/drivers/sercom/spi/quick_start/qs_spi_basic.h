@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_samd20_sercom_spi_basic_use_case Quick Start Guide for the SPI module - Basic Use Case
+ * \page asfdoc_samd20_sercom_spi_basic_use_case Quick Start Guide for SERCOM SPI Master - Basic
  *
  * In this use case, the SPI will be used  The SPI will be set up as follows:
  * - Master Mode enabled

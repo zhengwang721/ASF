@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_samd20_rtc_count_basic_use_case Quick Start Guide for the RTC count - Basic
+ * \page asfdoc_samd20_rtc_count_basic_use_case Quick Start Guide for RTC (COUNT) - Basic
  * In this use case, the RTC is set up in count mode. The quick start
  * implements the RTC in 16 bit mode and to continuously update COUNT register,
  * together with a set compare register value. The rest according to the

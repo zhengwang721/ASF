@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_samd20_rtc_calendar_callback_use_case Quick Start Guide for RTC Calendar - Basic
+ * \page asfdoc_samd20_rtc_calendar_callback_use_case Quick Start Guide for RTC (CAL) - Callback
  * In this use case, the RTC is set up in calendar mode. The time is set and an
  * alarm is enabled, as well as a callback for when the alarm time is hit.
  *
@@ -57,7 +57,7 @@
  *
  * Function for setting up the module:
  * \snippet qs_rtc_calendar_callback.c initialize_rtc
- * 
+ *
  * Callback function:
  * \snippet qs_rtc_calendar_callback.c callback
  *
@@ -84,7 +84,7 @@
  *   - \snippet qs_rtc_calendar_callback.c init_rtc
  *  -# Enable the module.
  *   - \snippet qs_rtc_calendar_callback.c enable
- * -# Configure callback funtionality.
+ * -# Configure callback functionality.
  *  - \snippet qs_rtc_calendar_callback.c run_callback
  *  -# Register overflow callback.
  *   - \snippet qs_rtc_calendar_callback.c reg_callback

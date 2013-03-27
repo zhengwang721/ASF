@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_samd20_i2c_slave_basic_use_case Quick Start Guide for the I2C Slave Module - Basic Use Case
+ * \page asfdoc_samd20_i2c_slave_basic_use_case Quick Start Guide for SERCOM I2C Slave - Basic
  *
  * In this use case, the I<SUP>2</SUP>C will used and set up as follows:
  *  - SERCOM1 in I2C slave mode
@@ -58,7 +58,7 @@
  *
  * A sample buffer to write from, a sample buffer to read to and length of buffers:
  * \snippet qs_i2c_slave_basic_use.c packet_data
- * 
+ *
  * Address to respond to:
  * \snippet qs_i2c_slave_basic_use.c address
  *
@@ -93,7 +93,7 @@
  * \subsection asfdoc_samd20_i2c_slave_basic_use_implementation_code Code
  * Add to user application main:
  * \snippet qs_i2c_slave_basic_use.c while
- * \subsection i2c_slave_basic_use_implementation_workflow Workflow 
+ * \subsection i2c_slave_basic_use_implementation_workflow Workflow
  * -# Wait for start condition from master and get transfer direction.
  *  - \snippet qs_i2c_slave_basic_use.c get_dir
  * -# Depending on transfer direction, set up buffer to read to or write from,

@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_samd20_adc_basic_use_case Quick Start Guide for the ADC module - Basic Use Case
+ * \page asfdoc_samd20_adc_basic_use_case Quick Start Guide for ADC - Basic
  *
  * In this use case, the ADC will be used for..
  * The ADC will be set up as follows:

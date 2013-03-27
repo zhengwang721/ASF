@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_samd20_port_basic_use_case Quick Start - Basic Use Case
+ * \page asfdoc_samd20_port_basic_use_case Quick Start Guide for PORT - Basic
  *
  * In this use case, the PORT module is configured for:
  *  \li One pin in input mode, with pull-up enabled

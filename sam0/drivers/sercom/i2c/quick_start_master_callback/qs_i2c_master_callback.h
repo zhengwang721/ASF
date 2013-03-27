@@ -40,7 +40,7 @@
  */
 
 /**
- * \page asfdoc_samd20_i2c_master_callback_use_case Quick Start Guide for the I2C Master Module - Callback Use Case
+ * \page asfdoc_samd20_i2c_master_callback_use_case Quick Start Guide for SERCOM I2C Master - Callback
  *
  * In this use case, the I<SUP>2</SUP>C will used and set up as follows:
  *  - Master mode
@@ -107,7 +107,7 @@
  * \subsection asfdoc_samd20_i2c_master_callback_use_case_code Code
  * Add to user application main:
  * \snippet qs_i2c_master_callback.c while
- * \subsection asfdoc_samd20_i2c_master_callback_use_case_implementation_workflow Workflow 
+ * \subsection asfdoc_samd20_i2c_master_callback_use_case_implementation_workflow Workflow
  * -# Write packet to slave.
  *  - \snippet qs_i2c_master_callback.c write_packet
  * -# Infinite while loop, while waiting for interaction with slave.

@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_samd20_i2c_master_basic_use_case Quick Start Guide for the I2C Master module - Basic Use Case
+ * \page asfdoc_samd20_i2c_master_basic_use_case Quick Start Guide for SERCOM I2C Master - Basic
  *
  * In this use case, the I<SUP>2</SUP>C will used and set up as follows:
  *  - Master mode
@@ -96,7 +96,7 @@
  * \section asfdoc_samd20_i2c_master_basic_use_implemenation Implementation
  * \subsection asfdoc_samd20_i2c_master_basic_use_implemenation_code Code
  * Add to user application %main():
- * \snippet snippet qs_i2c_master_basic_use.c 
+ * \snippet snippet qs_i2c_master_basic_use.c
  *
  * \subsection asfdoc_samd20_i2c_master_basic_use_implemenation_workflow Workflow
  * -# Write packet to slave.

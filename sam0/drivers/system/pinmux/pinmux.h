@@ -520,7 +520,7 @@ static inline void system_pinmux_pin_set_output_drive(
 /** @} */
 
 /**
- * \page asfdoc_samd20_system_pinmux_extra Extra Information for PINMUX Driver
+ * \page asfdoc_samd20_system_pinmux_extra Extra Information for SYSTEM PINMUX Driver
  *
  * \section asfdoc_samd20_system_pinmux_extra_acronyms Acronyms
  * The table below presents the acronyms used in this module:
@@ -568,7 +568,7 @@ static inline void system_pinmux_pin_set_output_drive(
  */
 
 /**
- * \page asfdoc_samd20_system_pinmux_exqsg Examples for PINMUX Driver
+ * \page asfdoc_samd20_system_pinmux_exqsg Examples for SYSTEM PINMUX Driver
  *
  * This is a list of the available Quick Start guides (QSGs) and example
  * applications for \ref asfdoc_samd20_system_pinmux_group. QSGs are simple

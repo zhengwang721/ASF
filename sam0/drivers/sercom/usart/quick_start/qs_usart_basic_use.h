@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_samd20_sercom_usart_basic_use_case Quick Start Guide for the USART module - Basic Use Case
+ * \page asfdoc_samd20_sercom_usart_basic_use_case Quick Start Guide for SERCOM USART - Basic
  *
  * In this use case the USART will be used and set up as follows:
  * - Asynchronous mode
@@ -58,7 +58,7 @@
  * The following must be added to the user application:
  *
  * Add to user application %main():
- * \snippet qs_usart_basic_use.c main 
+ * \snippet qs_usart_basic_use.c main
  *
  * \section asfdoc_samd20_sercom_usart_basic_use_case_workflow Workflow
  * -# Initialize system

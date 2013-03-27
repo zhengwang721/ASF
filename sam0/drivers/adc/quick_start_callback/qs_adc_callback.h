@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_samd20_adc_basic_use_case_callback Quick Start Guide for the ADC module with callback support - Basic Use Case
+ * \page asfdoc_samd20_adc_basic_use_case_callback Quick Start Guide for ADC - Callback
  *
  * In this use case, the ADC will be convert 128 samples using interrupt driven conversion.
  * When all samples have been sampled, a callback will be called that signals the main
