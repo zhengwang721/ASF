@@ -64,8 +64,9 @@
  *  - one for using the PIO Parallel Capture in send mode.
  *  - one for using the PIO Parallel Capture in receive mode.
  *
- *  Two boards are required to use. Connect one to the other, and put one board
- *  in send mode and the second in receive mode.
+ *  Two boards are required to use. Connect one to the other, and at first put
+ *  one board in send mode(to avoid unexpected signal to slave) and then
+ *  the second in receive mode.
  *  Different choices can be selected to use the data enable pins or not, and
  *  to sample all the data or only one out of two.
  *  Pins to be connected between the 2 boards:<br />
@@ -191,8 +192,13 @@ Pdc *p_pdc;
 static void capture_handler(Pio *p_pio)
 {
 	uint8_t uc_i;
+	uint32_t dummy_data;
 
 	pio_capture_disable_interrupt(p_pio, (PIO_PCIDR_ENDRX | PIO_PCIDR_RXBUFF));
+	/* Disable PDC transfer. */
+	pdc_disable_transfer(p_pdc, PERIPH_PTCR_RXTEN);
+	/* Clear any unwanted data */
+	pio_capture_read(PIOA, &dummy_data);
 
 	puts("End of receive.\r\n");
 	for (uc_i = 0; uc_i < SIZE_BUFF_RECEPT; uc_i++) {
@@ -200,16 +206,6 @@ static void capture_handler(Pio *p_pio)
 	}
 	puts("\r\n");
 	g_uc_cbk_received = 1;
-}
-
-/**
- *  \brief Wait for some time.
- *
- */
-static void wait(uint32_t ul_time)
-{
-	while (ul_time--) {
-	}
 }
 
 /**
@@ -236,7 +232,7 @@ static void configure_console(void)
 int main(void)
 {
 	uint8_t uc_i;
-	uint8_t uc_flag;
+	uint32_t ul_length;
 	uint32_t ul_mode;
 	uint8_t uc_key;
 	static uint8_t uc_rx_even_only;
@@ -324,6 +320,11 @@ int main(void)
 		while (1) {
 			g_uc_cbk_received = 0;
 
+			/* Clear Receive buffer. */
+			for (uc_i = 0; uc_i < SIZE_BUFF_RECEPT; uc_i++) {
+				pio_rx_buffer[uc_i] = 0;
+			}
+
 			/* Set up PDC receive buffer, waiting for 64 bytes. */
 			packet_t.ul_addr = (uint32_t) pio_rx_buffer;
 			packet_t.ul_size = SIZE_BUFF_RECEPT;
@@ -336,11 +337,6 @@ int main(void)
 			/* Configure the PIO capture interrupt mask. */
 			pio_capture_enable_interrupt(PIOA,
 					(PIO_PCIER_ENDRX | PIO_PCIER_RXBUFF));
-
-			/* Clear Receive buffer. */
-			for (uc_i = 0; uc_i < SIZE_BUFF_RECEPT; uc_i++) {
-				pio_rx_buffer[uc_i] = 0;
-			}
 
 			puts("Waiting...\r\n");
 			while (g_uc_cbk_received == 0) {
@@ -358,6 +354,9 @@ int main(void)
 		/* Configure PIO Parallel Capture pins which simulate as a sensor. */
 		pio_configure_pin_group(PIOA, PIO_CAPTURE_ALL_PIN_MSK,
 			PIO_CAPTURE_PIN_FLAGS);
+		pio_set_pin_low(PIO_CAPTURE_EN1_IDX);
+		pio_set_pin_low(PIO_CAPTURE_EN2_IDX);
+		pio_set_pin_low(PIO_CAPTURE_CCLK_IDX);
 
 		/* Enable sync. output data. */
 		pio_enable_output_write(PIOA, PIO_CAPTURE_DATA_PINS_MASK);
@@ -394,8 +393,8 @@ int main(void)
 			puts("Receiver samples data with an even index.\r\n");
 		}
 
+		ul_length = SIZE_BUFF_RECEPT * (1 + uc_rx_even_only);
 		while (1) {
-			uc_flag = 0;
 			if (uc_tx_without_en) {
 				puts("\r\nSend data without enabling the data enable pins.\r\n");
 			} else {
@@ -406,26 +405,17 @@ int main(void)
 				pio_set_pin_high(PIO_CAPTURE_EN1_IDX);
 				pio_set_pin_high(PIO_CAPTURE_EN2_IDX);
 			}
-			for (uc_i = 0; uc_i < SIZE_BUFF_RECEPT;) {
+			for (uc_i = 0; uc_i < ul_length;) {
 				/* Send data. */
 				pio_sync_output_write(PIOA,
 						(uc_i << PIO_CAPTURE_DATA_POS));
 				/* Set clock. */
 				pio_set_pin_high(PIO_CAPTURE_CCLK_IDX);
-				wait(50);
+				delay_us(20);
 				/* Clear clock. */
 				pio_set_pin_low(PIO_CAPTURE_CCLK_IDX);
-				wait(50);
-				if (uc_rx_even_only) {
-					if (!uc_flag) {
-						uc_flag = 1;
-					} else {
-						uc_i++;
-						uc_flag = 0;
-					}
-				} else {
-					uc_i++;
-				}
+				delay_us(20);
+				uc_i++;
 			}
 			if (!uc_tx_without_en) {
 				/* Clear enable pins. */
