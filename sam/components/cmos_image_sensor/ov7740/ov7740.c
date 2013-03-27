@@ -396,7 +396,7 @@ uint32_t ov_init(Twi* const p_twi)
  * \param format Specific format to configure.
  * \return 0 on success, 1 otherwise.
  */
-uint32_t ov_configure(Twi* const p_twi, const ov7740_format format)
+uint32_t ov_configure(Twi* const p_twi, const e_ov7740_format format)
 {
 	const ov_reg *p_regs_conf = NULL;
 

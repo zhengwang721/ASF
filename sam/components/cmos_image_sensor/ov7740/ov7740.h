@@ -55,7 +55,7 @@ extern "C" {
 #endif
 
 /** Slave address of OMNIVISION chip. */
-#define OV7740_REG0C_MAX_EXPOSURE          (0x42u >> 1)   /* OV7740 -> 0x42 */
+#define OV_I2C_SENSOR_ADDRESS          (0x42u >> 1)   /* OV7740 -> 0x42 */
 
 /** Terminating list entry for register in configuration file. */
 #define OV_REG_TERM                    (0xffu)
@@ -307,7 +307,7 @@ typedef struct _ov_reg {
  * These enumeration allow to configure the OV7740 registers using
  * the ov7740_table_registre.c Array.
  */
-typedef enum _ov7740_format {
+typedef enum _e_ov7740_format {
 	QVGA_YUV422_10FPS, /*!< Register to be written  */
 	QVGA_YUV422_15FPS, /*!< Register to be written */
 	QVGA_YUV422_20FPS, /*!< Register to be written */
@@ -317,7 +317,7 @@ typedef enum _ov7740_format {
 	QQVGA_RGB888, /*!< Register to be written */
 	TEST_PATTERN, /*!< Register to be written */
 	VGA_YUV422_20FPS /*!< Register to be written */
-} ov7740_format;
+} e_ov7740_format;
 
 extern const ov_reg OV7740_QVGA_YUV422_10FPS[];
 extern const ov_reg OV7740_QVGA_YUV422_15FPS[];
@@ -336,7 +336,7 @@ uint32_t ov_write_reg(Twi* const p_twi, twi_packet_t* const p_packet);
 uint32_t ov_write_regs(Twi* const p_twi, const ov_reg *p_reg_list);
 void ov_dump_registers(Twi* const p_twi, ov_reg *p_regs);
 uint32_t ov_init(Twi* const p_twi );
-uint32_t ov_configure(Twi* const p_twi, const ov7740_format format);
+uint32_t ov_configure(Twi* const p_twi, const e_ov7740_format format);
 uint32_t ov_configure_finish(Twi* const p_twi);
 uint32_t ov_configure_manual(Twi* const p_twi);
 uint32_t ov_store_manual(Twi* const p_twi, volatile uint32_t *p_backup_addr,
