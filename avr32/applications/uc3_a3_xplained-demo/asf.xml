@@ -1,4 +1,3 @@
-<?xml version="1.0"?>
 <asf xmlversion="1.0">
 	<module type="application" id="avr32.applications.uc3-a3_xplained_demo_application" caption="UC3-A3 Xplained demo application">
 		<info type="description" value="summary">
@@ -31,5 +30,6 @@
 		<require idref="avr32.utils.print_funcs"/>
 		<require idref="common.services.basic.clock"/>
 		<device-support value="at32uc3a3256"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

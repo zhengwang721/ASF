@@ -11,5 +11,6 @@
 		<require idref="xmega.drivers.qdec"/>
 		<require idref="common.utils.stdio.stdio_serial"/>
 		<device-support value="xmegae"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

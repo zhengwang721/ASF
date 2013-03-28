@@ -6,14 +6,15 @@
 		<info type="keyword" value="technology">
 			<keyword value="MAC Symbol Counter"/>
 		</info>
-		<build type="include-path" value="." />
+		<build type="include-path" value="."/>
 		<build type="c-source" value="macsc_megarf_example1.c"/>
 		<build type="module-config" subtype="required-header-file" value="conf_example.h"/>
 		<device-support value="mega"/>
 		<require idref="mega.drivers.macsc"/>
-		<require idref="common.utils" />
-		<require idref="common.boards" />	
-		<require idref="common.services.ioport"/>	
+		<require idref="common.utils"/>
+		<require idref="common.boards"/>
+		<require idref="common.services.ioport"/>
 		<require idref="mega.drivers.usart"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

@@ -1,10 +1,8 @@
 <asf xmlversion="1.0">
 	<module type="application" id="avr32.services.qtouch.devspecific.uc3.uc3l0.examples.example_qt" caption="QTouch Method Example Application">
-
 		<info type="description" value="summary">
 		This application is a demonstration of AT32UC3L0 QTouch Capacitive Touch method on the STK600 board. External Touch Sensors can be connected to the STK600 GPIO pins for testing. QT600 USB Bridge can be used to interface with QTouch Studio to display Touch debug data.
 		</info>
-
 		<build type="c-source" value="main.c"/>
 		<build type="header-file" value="QDebugSettings.h"/>
 		<build type="header-file" value="touch_config_at32uc3l.h"/>
@@ -22,5 +20,6 @@
 		<info type="keyword" value="technology">
 			<keyword value="Touch"/>
 		</info>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>
