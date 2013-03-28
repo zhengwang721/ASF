@@ -17,6 +17,7 @@
 			<require idref="sam.drivers.pdc"/>
 			<require idref="common.services.basic.clock"/>
 			<require idref="common.utils.stdio.stdio_serial"/>
+			<info type="gui-flag" value="move-to-root"/>
 		</module>
 		<module type="application" id="sam.drivers.usart.usart_rs485_example#1" caption="USART RS485 Example">
 			<info type="description" value="summary">
@@ -33,6 +34,7 @@
 			<require idref="common.services.ioport"/>
 			<require idref="common.services.basic.clock"/>
 			<require idref="common.utils.stdio.stdio_serial"/>
+			<info type="gui-flag" value="move-to-root"/>
 		</module>
 	</select-by-device>
 </asf>

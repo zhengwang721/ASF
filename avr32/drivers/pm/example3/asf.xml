@@ -5,7 +5,7 @@
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="Clocks"/>
-			<keyword value="Power Management" />
+			<keyword value="Power Management"/>
 		</info>
 		<build type="c-source" value="pm_example3.c"/>
 		<device-support value="uc3c"/>
@@ -13,5 +13,6 @@
 		<device-support value="uc3l"/>
 		<require idref="avr32.drivers.gpio"/>
 		<require idref="avr32.drivers.pm"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

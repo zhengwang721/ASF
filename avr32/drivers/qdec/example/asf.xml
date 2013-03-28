@@ -11,5 +11,6 @@
 		<require idref="avr32.drivers.pm"/>
 		<require idref="avr32.drivers.qdec"/>
 		<require idref="avr32.drivers.scif"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

@@ -5,12 +5,13 @@
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="Timers"/>
-		</info>			
+		</info>
 		<build type="c-source" value="tc_event_example4_uc3l.c"/>
 		<device-support value="uc3l"/>
 		<require idref="avr32.drivers.gpio"/>
 		<require idref="avr32.drivers.pm"/>
 		<require idref="avr32.drivers.tc"/>
 		<require idref="avr32.drivers.usart"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

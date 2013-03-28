@@ -5,14 +5,12 @@
 		<build type="header-file" value="init.h"/>
 		<device-support value="atmega1284p"/>
 	</module>
-
 	<module type="driver" id="mega.mega_1284p_xplained.driver.usart" caption="MEGA-1284P Xplained board support - USART">
 		<info type="gui-flag" value="hidden"/>
 		<build type="c-source" value="usart.c"/>
 		<build type="header-file" value="usart.h"/>
 		<device-support value="atmega1284p"/>
 	</module>
-
 	<module type="driver" id="mega.mega_1284p_xplained.driver.qt" caption="MEGA-1284P Xplained board support - QTouch">
 		<info type="gui-flag" value="hidden"/>
 		<build type="asm-source" value="qt_asm_tiny_mega.s"/>
@@ -29,7 +27,6 @@
 		<build type="distribute" subtype="license" value="license.txt"/>
 		<device-support value="atmega1284p"/>
 	</module>
-
 	<module type="application" id="mega.applications.mega_1284p_xplained" caption="MEGA-1284P Xplained demo application">
 		<info type="description" value="summary">
 		This example application demonstrates some of the basic features of the MEGA-1284P Xplained kit. This includes sleep modes, reading the light sensor and the ntc sensor.
@@ -40,8 +37,8 @@
 		<require idref="mega.mega_1284p_xplained.driver.qt"/>
 		<require idref="mega.mega_1284p_xplained.driver.init"/>
 		<require idref="mega.mega_1284p_xplained.driver.usart"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
-
 	<project caption="MEGA-128P Xplained example" id="mega.applications.mega_1284p_xplained.example">
 		<info type="description" value="summary">
 		MEGA-1284P Xplained demo application
