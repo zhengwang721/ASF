@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="Common API for Sleep Management / Example for ATmega128RFA1-EK1" id="common.services.basic.sleepmgr.example.atmega128rfa1_stk600">
+	<project caption="Common API for Sleep Management / Example for ATmega128RFA1-EK1" id="common.services.basic.sleepmgr.example.atmega128rfa1_stk600-rc128x_rfx">
 		<info type="description" value="summary">
 		This example shows how to use the Common API for Sleep Management on Atmega128RFA1 devices.
 		</info>
