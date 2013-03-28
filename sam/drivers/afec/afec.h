@@ -96,8 +96,8 @@ enum afec_channel_num {
 	AFEC_CHANNEL_3,
 	AFEC_CHANNEL_4,
 	AFEC_CHANNEL_5,
-	_AFEC_NUM_OF_CH,
-	AFEC_CHANNEL_ALL = 0x3F,
+	AFEC_TEMPERATURE_SENSOR = 15,
+	AFEC_CHANNEL_ALL = 0x803F,
 } ;
 #elif defined __SAM4E8E__  || defined __SAM4E16E__
 /** Definitions for AFEC channel number */
@@ -118,7 +118,6 @@ enum afec_channel_num {
 	AFEC_CHANNEL_13,
 	AFEC_CHANNEL_14,
 	AFEC_TEMPERATURE_SENSOR,
-	_AFEC_NUM_OF_CH,
 	AFEC_CHANNEL_ALL = 0xFFFF,
 } ;
 #endif
@@ -167,7 +166,6 @@ enum afec_cmp_mode {
 	AFEC_CMP_MODE_3 = AFEC_EMR_CMPMODE_OUT
 };
 
-#if defined __SAM4E8E__  || defined __SAM4E16E__
 /** Definitions for Temperature Comparison Mode */
 enum afec_temp_cmp_mode {
 	AFEC_TEMP_CMP_MODE_0 = AFEC_TEMPMR_TEMPCMPMOD_LOW,
@@ -175,7 +173,6 @@ enum afec_temp_cmp_mode {
 	AFEC_TEMP_CMP_MODE_2 = AFEC_TEMPMR_TEMPCMPMOD_IN,
 	AFEC_TEMP_CMP_MODE_3 = AFEC_TEMPMR_TEMPCMPMOD_OUT
 };
-#endif
 
 /**
  * \brief Analog-Front-End Controller configuration structure.
@@ -221,7 +218,6 @@ struct afec_ch_config {
 	enum afec_gainvalue gain;
 };
 
-#if defined __SAM4E8E__  || defined __SAM4E16E__
 /** AFEC Temperature Sensor configuration structure.*/
 struct afec_temp_sensor_config {
 	/** RTC Trigger mode */
@@ -233,7 +229,6 @@ struct afec_temp_sensor_config {
 	/** Temperature High Threshold */
 	uint16_t high_threshold;
 };
-#endif
 
 #if defined __SAM4E8C__  || defined __SAM4E16C__
 /** AFEC interrupt source type */
@@ -244,6 +239,7 @@ enum afec_interrupt_source {
 	AFEC_INTERRUPT_EOC_3,
 	AFEC_INTERRUPT_EOC_4,
 	AFEC_INTERRUPT_EOC_5,
+	AFEC_INTERRUPT_EOC_15,
 	AFEC_INTERRUPT_DATA_READY,
 	AFEC_INTERRUPT_OVERRUN_ERROR,
 	AFEC_INTERRUPT_COMP_ERROR,
@@ -289,15 +285,11 @@ typedef void (*afec_callback_t)(void);
 
 void afec_get_config_defaults(struct afec_config *const cfg);
 void afec_ch_get_config_defaults(struct afec_ch_config *const cfg);
-#if defined __SAM4E8E__  || defined __SAM4E16E__
 void afec_temp_sensor_get_config_defaults(
 		struct afec_temp_sensor_config *const cfg);
-#endif
 enum status_code afec_init(Afec *const afec, struct afec_config *const config);
-#if defined __SAM4E8E__  || defined __SAM4E16E__
 void afec_temp_sensor_set_config(Afec *const afec,
 		struct afec_temp_sensor_config *config);
-#endif
 void afec_ch_set_config(Afec *const afec, const enum afec_channel_num channel,
 		struct afec_ch_config *config);
 void afec_configure_sequence(Afec *const afec,
@@ -319,7 +311,11 @@ static inline void afec_ch_sanity_check(Afec *const afec,
 		const enum afec_channel_num channel)
 {
 	if (afec == AFEC0) {
+	#if defined __SAM4E8C__  || defined __SAM4E16C__
+		Assert((channel < NB_CH_AFE0) || (channel == AFEC_TEMPERATURE_SENSOR));
+	#elif defined __SAM4E8E__  || defined __SAM4E16E__
 		Assert(channel < NB_CH_AFE0);
+	#endif
 	} else if (afec == AFEC1) {
 		Assert(channel < NB_CH_AFE1);
 	}
@@ -472,7 +468,7 @@ static inline void afec_channel_enable(Afec *const afec,
 		afec_ch_sanity_check(afec, afec_ch);
 	}
 
-	afec->AFEC_CHER = (afec_ch == AFEC_CHANNEL_ALL) ? 0xFFFF : 1 << afec_ch;
+	afec->AFEC_CHER = (afec_ch == AFEC_CHANNEL_ALL) ? AFEC_CHANNEL_ALL : 1 << afec_ch;
 }
 
 /**
@@ -488,7 +484,7 @@ static inline void afec_channel_disable(Afec *const afec,
 		afec_ch_sanity_check(afec, afec_ch);
 	}
 
-	afec->AFEC_CHDR = (afec_ch == AFEC_CHANNEL_ALL) ? 0xFFFF : 1 << afec_ch;
+	afec->AFEC_CHDR = (afec_ch == AFEC_CHANNEL_ALL) ? AFEC_CHANNEL_ALL : 1 << afec_ch;
 }
 
 /**

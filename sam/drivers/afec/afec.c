@@ -65,7 +65,7 @@
 
 /* The gap between bit EOC15 and DRDY in interrupt register */
 #if defined __SAM4E8C__  || defined __SAM4E16C__
-#define AFEC_INTERRUPT_GAP1                 (18UL)
+#define AFEC_INTERRUPT_GAP1                 (17UL)
 #elif defined __SAM4E8E__  || defined __SAM4E16E__
 #define AFEC_INTERRUPT_GAP1                  (8UL)
 #endif
@@ -75,6 +75,9 @@
 
 /* The number of channel in channel sequence1 register */
 #define AFEC_SEQ1_CHANNEL_NUM                (8UL)
+
+/* The interrupt source number of temperature sensor */
+#define AFEC_TEMP_INT_SOURCE_NUM           (15UL)
 
 afec_callback_t afec_callback_pointer[NUM_OF_AFEC][_AFEC_NUM_OF_INTERRUPT_SOURCE];
 
@@ -182,7 +185,6 @@ void afec_ch_set_config(Afec *const afec, const enum afec_channel_num channel,
 	afec->AFEC_CGR = reg;
 }
 
-#if defined __SAM4E8E__  || defined __SAM4E16E__
 /**
  * \brief Configure the AFEC temperature sensor.
  *
@@ -202,7 +204,6 @@ void afec_temp_sensor_set_config(Afec *const afec,
 	afec->AFEC_TEMPCWR = AFEC_TEMPCWR_TLOWTHRES(config->low_threshold) |
 			AFEC_TEMPCWR_THIGHTHRES(config->high_threshold);
 }
-#endif
 
 /**
  * \brief Get the AFEC default configurations.
@@ -266,7 +267,6 @@ void afec_ch_get_config_defaults(struct afec_ch_config *const cfg)
 	cfg->gain = AFEC_GAINVALUE_1;
 }
 
-#if defined __SAM4E8E__  || defined __SAM4E16E__
 /**
  * \brief Get the AFEC Temperature Sensor default configurations.
  *
@@ -290,7 +290,6 @@ void afec_temp_sensor_get_config_defaults(
 	cfg->low_threshold= 0xFF;
 	cfg->high_threshold= 0xFFF;
 }
-#endif
 
 /**
  * \brief Initialize the AFEC Module.
@@ -419,7 +418,11 @@ void afec_enable_interrupt(Afec *const afec,
 		enum afec_interrupt_source interrupt_source)
 {
 	if (interrupt_source < AFEC_INTERRUPT_DATA_READY) {
-		afec->AFEC_IER = 1 << interrupt_source;
+		if(interrupt_source == AFEC_INTERRUPT_EOC_15) {
+			afec->AFEC_IER = 1 << AFEC_TEMP_INT_SOURCE_NUM;
+		} else {
+			afec->AFEC_IER = 1 << interrupt_source;
+		}
 	} else if (interrupt_source < AFEC_INTERRUPT_TEMP_CHANGE) {
 		afec->AFEC_IER = 1 << (interrupt_source + AFEC_INTERRUPT_GAP1);
 	} else {
@@ -437,7 +440,11 @@ void afec_disable_interrupt(Afec *const afec,
 		enum afec_interrupt_source interrupt_source)
 {
 	if (interrupt_source < AFEC_INTERRUPT_DATA_READY) {
-		afec->AFEC_IDR = 1 << interrupt_source;
+		if(interrupt_source == AFEC_INTERRUPT_EOC_15) {
+			afec->AFEC_IDR = 1 << AFEC_TEMP_INT_SOURCE_NUM;
+		} else {
+			afec->AFEC_IDR = 1 << interrupt_source;
+		}
 	} else if (interrupt_source < AFEC_INTERRUPT_TEMP_CHANGE) {
 		afec->AFEC_IDR = 1 << (interrupt_source + AFEC_INTERRUPT_GAP1);
 	} else {
