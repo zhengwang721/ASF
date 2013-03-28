@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief AVR MEGA Sleep manager implementation
+ * \brief Board Initialisation configuration file
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -40,83 +40,10 @@
  * \asf_license_stop
  *
  */
-#ifndef MEGA_SLEEPMGR_H
-#define MEGA_SLEEPMGR_H
 
-#ifdef __cplusplus
-extern "C" {
+#ifndef CONF_BOARD_H
+#define CONF_BOARD_H
+
+// Intentionally left empty.
+	
 #endif
-
-#include <compiler.h>
-#include <conf_sleepmgr.h>
-#include <sleep.h>
-# include <sleep_megarf.h>
-
-/**
- * \weakgroup sleepmgr_group
- * @{
- */
-
-enum sleepmgr_mode {
-	/* Active mode. */
-	SLEEPMGR_ACTIVE = 0,
-	/* Idle mode. */
-	SLEEPMGR_IDLE,
-	/* ADC Noise reduction mode. */
-	SLEEPMGR_ADC_NOISE_REDUCTION,
-	/* Extended Standby mode. */
-	SLEEPMGR_ESTDBY,
-	/* Power Save mode. */
-	SLEEPMGR_PSAVE,
-	/* Standby mode. */
-	SLEEPMGR_STDBY,
-	/* Power Down mode. */
-	SLEEPMGR_PDOWN,
-	SLEEPMGR_NR_OF_MODES,
-};
-
-/**
- * \internal
- * \name Internal arrays
- * @{
- */
-#if defined(CONFIG_SLEEPMGR_ENABLE) || defined(__DOXYGEN__)
-/* ! Sleep mode lock counters */
-extern uint8_t sleepmgr_locks[];
-
-/**
- * \brief Look-up table with sleep mode configurations
- * \note This is located in program memory (Flash) as it is constant.
- */
-extern enum SLEEP_SMODE_enum sleepmgr_configs[];
-#endif /* CONFIG_SLEEPMGR_ENABLE */
-/* ! @} */
-
-/**
- * \brief Enter the sleep with interrupt enabled
- *
- * \param mode Sleep mode to be entered
- */
-static inline void sleepmgr_sleep(const enum sleepmgr_mode sleep_mode)
-{
-	Assert(sleep_mode != SLEEPMGR_ACTIVE);
-#ifdef CONFIG_SLEEPMGR_ENABLE
-	sleep_set_mode(sleepmgr_configs[sleep_mode - 1]);
-	sleep_enable();
-
-	cpu_irq_enable();
-	sleep_enter();
-
-	sleep_disable();
-#else
-	cpu_irq_enable();
-#endif /* CONFIG_SLEEPMGR_ENABLE */
-}
-
-/* ! @} */
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* MEGA_SLEEPMGR_H */
