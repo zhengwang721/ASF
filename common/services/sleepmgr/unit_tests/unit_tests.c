@@ -48,12 +48,14 @@
  * \mainpage
  *
  * \section intro Introduction
- * This is the unit test for the MEGARF Ext Interrupt driver. Ext interrupt is 
- * getting trigged by changing the pin status on external pin change interrupt pins.
- * This is being simulated by connecting one of the GPIO port pin configured as output
- * to external pin change interrupt pin using jumper wire. By outputing high or low 
- * on GPIO pin the status of external pin change interrupt pin connected to that GPIO
- * pin will be changing and hence interrupt will get triggered.
+ * This is the unit test for the MEGARF Sleep Manager. After setting the lock
+ * mode, the device is put into sleep and check whether the device has slept in
+ * the deepest allowable sleep mode. This is checked by enabling ADC and
+ * Timer/Counter2 and verify device is waked up by the interrupts.
+ * First the device is put to idle sleep and check whether ADC conversion
+ * complete interrupt is waking the device from sleep. Then the device is set
+ * into Power Save mode and check only Timer/Counter2 is only able to wake the
+ * device from sleep.
  *
  * \section files Main Files
  * - \ref unit_tests.c
@@ -85,69 +87,78 @@
  * \section contactinfo Contact Information
  * For further information, visit <a href="http://www.atmel.com/">Atmel</a>.\n
  */
- 
+
 /* Timer/Counter2 Initialization */
 static void timer2_initialisation(void);
+
 /* ADC Initialization */
 static void adc_initialisation(void);
+
 /* Variable for trigger counter **/
-static volatile uint8_t trigger_count=0;
+static volatile uint8_t trigger_count = 0;
 
 /* Initialize ADC */
-static void adc_initialisation() 
+static void adc_initialisation()
 {
-	/* Enable a peripherals clock */ 
+	/* Enable a peripherals clock */
 	sysclk_enable_peripheral_clock(&ADC);
-	// set prescaler and enable ADC
+	/* set prescaler and enable ADC */
 	adc_init(ADC_PRESCALER_DIV128);
-	// set voltage reference, mux input and right adjustment
+	/* set voltage reference, mux input and right adjustment */
 	adc_set_admux(ADC_VREF_AVCC | ADC_MUX_ADC0 | ADC_ADJUSTMENT_RIGHT);
 	adc_enable_interrupt();
 }
+
 /* ADC Conversion complete ISR */
 ISR(ADC_vect)
 {
 	/* Clear ADC conversion interrupt flag */
-	ADCSRA = (1<<ADIF);
+	ADCSRA = (1 << ADIF);
+	/* Increment trigger count */
 	trigger_count++;
 }
 
 /* Timer/Counter2 Initialization */
-static void timer2_initialisation() 
+static void timer2_initialisation()
 {
-    sysclk_enable_peripheral_clock(&TCCR2A);
+	sysclk_enable_peripheral_clock(&TCCR2A);
 	/* Set TC2 in Asynchronous mode */
-    TIMSK2 =  0x00;
-    ASSR   =  (1 << AS2);
-    TCNT2  =  0x00;
-    TCCR2A =  0x00;
-    TCCR2B =  0x00;
-    OCR2A  =  0x00;
-    TIMSK2 |= (1 << TOIE2); 
+	TIMSK2 =  0x00;
+	ASSR   =  (1 << AS2);
+	TCNT2  =  0x00;
+	TCCR2A =  0x00;
+	TCCR2B =  0x00;
+	OCR2A  =  0x00;
+	TIMSK2 |= (1 << TOIE2);
 	/* divide clock by 128 to get 1s interrupt */
-    TCCR2B |= ((1<<CS20) | (1<<CS22));
+	TCCR2B |= ((1 << CS20) | (1 << CS22));
 	/* wait for TCCR2B to update */
-    while(ASSR & (1<<TCR2BUB)); 
-}    
-    
+	while (ASSR & (1 << TCR2BUB)) {
+	}
+}
+
 /* Timer/Counter2 Overflow ISR */
 ISR(TIMER2_OVF_vect)
 {
 	/* Clear Timer Overflow flag */
-	TIFR2 |= (1<<TOV2);
+	TIFR2 |= (1 << TOV2);
+	/* Increment trigger count */
+	trigger_count++;
 }
 
 /**
  * \brief Test interrupt is getting triggered in various Sleep mode.
  *
- * This function put the device in Idle and Power Save sleep mode and check whether
- * the ADC conversion complete interrupt is executed only in Idle sleep mode.
- * The device will wakeup from power save mode when Timer/Counter2 overflow occur
+ * This function put the device in Idle and Power Save sleep mode and check
+ * whether the ADC conversion complete interrupt is executed only in Idle sleep
+ * mode.
+ * The device will wakeup from power save mode when Timer/Counter2 overflow
+ * occur.
  *
  * \param test Current test case.
  */
 static void run_sleep_trigger_test(const struct test_case *test)
-{	
+{
 	/* Disable Global interrupt */
 	cpu_irq_disable();
 	/* Initialize the lock counts */
@@ -156,95 +167,102 @@ static void run_sleep_trigger_test(const struct test_case *test)
 	adc_initialisation();
 	/* Initialize the Timer/Counter2 */
 	timer2_initialisation();
-	/* Lock Idle Sleep mode */	
+	/* Lock Idle Sleep mode */
 	sleepmgr_lock_mode(SLEEPMGR_IDLE);
-    /* Clear Timer/Counter2 Register */
+	/* Clear Timer/Counter2 Register */
 	TCNT2 = 0;
 	/* Wait for TCNT2 register to get updated */
-	while(ASSR & (1<<TCN2UB));
+	while (ASSR & (1 << TCN2UB)) {
+	}
 	/* Start ADC Conversion */
 	adc_start_conversion();
-    /* Enable Global interrupt */
+	/* Enable Global interrupt */
 	cpu_irq_enable();
 	/* Go to sleep in the deepest allowed mode */
 	sleepmgr_enter_sleep();
-	/* Unlock Idle Sleep mode */	
+	/* Unlock Idle Sleep mode */
 	sleepmgr_unlock_mode(SLEEPMGR_IDLE);
-    /* Lock Power Save mode */	
-    sleepmgr_lock_mode(SLEEPMGR_PSAVE);
-    /* Clear Timer/Counter2 Register */
-    TCNT2 = 0;
-    /* Wait for TCNT2 register to get updated */
-    while(ASSR & (1<<TCN2UB));
-    /* Start ADC Conversion */
-    adc_start_conversion();
-    /* Enable Global interrupt */
-    cpu_irq_enable();
-    /* Go to sleep in the deepest allowed mode */
-    sleepmgr_enter_sleep();
+	/* Lock Power Save mode */
+	sleepmgr_lock_mode(SLEEPMGR_PSAVE);
+	/* Clear Timer/Counter2 Register */
+	TCNT2 = 0;
+	/* Wait for TCNT2 register to get updated */
+	while (ASSR & (1 << TCN2UB)) {
+	}
+	/* Start ADC Conversion */
+	adc_start_conversion();
+	/* Enable Global interrupt */
+	cpu_irq_enable();
+	/* Go to sleep in the deepest allowed mode */
+	sleepmgr_enter_sleep();
 	/* Disable ADC */
 	adc_disable();
-    /* Unlock Power Save mode */
+	/* Unlock Power Save mode */
 	sleepmgr_unlock_mode(SLEEPMGR_PSAVE);
-	
+
 	/* Disable Global interrupt */
 	cpu_irq_disable();
 
-	test_assert_true(test, trigger_count == 1,
-	"ADC interrupt trigger failed.");
+	test_assert_true(test, trigger_count == 2,
+			"ADC interrupt trigger failed.");
 }
 
 /**
  * \brief Test setting different parameters of the Sleep Manager module
  *
- * This function locks & unlocks the different sleep modes, and verifies that the
- * correct values are being set.
+ * This function locks & unlocks the different sleep modes, and verifies that
+ * the correct values are being set.
  *
  * \param test Current test case.
  */
 static void run_set_functions_test(const struct test_case *test)
 {
 	volatile enum sleepmgr_mode sleep_mode;
-	
-    /* Initialize the lock counts */
-	sleepmgr_init(); 
-	
+
+	/* Initialize the lock counts */
+	sleepmgr_init();
+
 	/* Lock Power Down mode */
 	sleepmgr_lock_mode(SLEEPMGR_PDOWN);
 	/* get the deepest allowable sleep mode */
 	sleep_mode = sleepmgr_get_sleep_mode();
-	test_assert_true(test, sleep_mode == SLEEPMGR_PDOWN, "Trying to lock Power Down mode failed.");	
-	
+	test_assert_true(test, sleep_mode == SLEEPMGR_PDOWN,
+			"Trying to lock Power Down mode failed.");
+
 	/* Lock Power Save mode */
 	sleepmgr_lock_mode(SLEEPMGR_PSAVE);
 	/* get the deepest allowable sleep mode */
 	sleep_mode = sleepmgr_get_sleep_mode();
-	test_assert_true(test, sleep_mode == SLEEPMGR_PSAVE, "Trying to lock Power Save mode failed.");
-
+	test_assert_true(test, sleep_mode == SLEEPMGR_PSAVE,
+			"Trying to lock Power Save mode failed.");
 
 	/* Lock Idle Sleep mode */
 	sleepmgr_lock_mode(SLEEPMGR_IDLE);
-    /* get the deepest allowable sleep mode */
+	/* get the deepest allowable sleep mode */
 	sleep_mode = sleepmgr_get_sleep_mode();
-    test_assert_true(test, sleep_mode == SLEEPMGR_IDLE, "Trying to lock Idle Sleep mode failed.");
-    
+	test_assert_true(test, sleep_mode == SLEEPMGR_IDLE,
+			"Trying to lock Idle Sleep mode failed.");
+
 	/* Unlock Idle Sleep mode */
 	sleepmgr_unlock_mode(SLEEPMGR_IDLE);
 	/* get the deepest allowable sleep mode */
 	sleep_mode = sleepmgr_get_sleep_mode();
-	test_assert_true(test, sleep_mode == SLEEPMGR_PSAVE, "Trying to unlock Idle Sleep mode failed.");
- 	
+	test_assert_true(test, sleep_mode == SLEEPMGR_PSAVE,
+			"Trying to unlock Idle Sleep mode failed.");
+
 	/* Unlock Power Save mode */
 	sleepmgr_unlock_mode(SLEEPMGR_PSAVE);
 	/* get the deepest allowable sleep mode */
 	sleep_mode = sleepmgr_get_sleep_mode();
-	test_assert_true(test, sleep_mode == SLEEPMGR_PDOWN, "Trying to unlock Power Down mode failed.");
-	
+	test_assert_true(test, sleep_mode == SLEEPMGR_PDOWN,
+			"Trying to unlock Power Down mode failed.");
+
 	/* Unlock Power Down mode */
 	sleepmgr_unlock_mode(SLEEPMGR_PDOWN);
 	/* get the deepest allowable sleep mode */
 	sleep_mode = sleepmgr_get_sleep_mode();
-	test_assert_true(test, sleep_mode == (SLEEPMGR_NR_OF_MODES - 1), "Trying to unlock Power Save Sleep mode failed.");		
+	test_assert_true(test, sleep_mode == (SLEEPMGR_NR_OF_MODES - 1),
+			"Trying to unlock Power Save Sleep mode failed.");
 }
 
 /**
@@ -264,17 +282,17 @@ int main(void)
 
 	board_init();
 	sysclk_init();
-    stdio_serial_init(CONF_TEST_USART, &usart_serial_options);
+	stdio_serial_init(CONF_TEST_USART, &usart_serial_options);
 
 	DEFINE_TEST_CASE(sleep_trigger_test, NULL, run_sleep_trigger_test, NULL,
 			"Test sleep interrupt is getting triggered");
 	DEFINE_TEST_CASE(set_functions_test, NULL, run_set_functions_test, NULL,
 			"Test setting of various lock modes");
-			
+
 	/* Put test case addresses in an array */
 	DEFINE_TEST_ARRAY(sleep_manager_tests) = {
 		&set_functions_test,
-        &sleep_trigger_test,
+		&sleep_trigger_test,
 	};
 
 	/* Define the test suite */
