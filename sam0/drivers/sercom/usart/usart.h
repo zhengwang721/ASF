@@ -733,7 +733,7 @@ static inline void usart_disable_transceiver(
 /** @} */
 
 /**
-* \page asfdoc_samd20_sercom_usart_extra Extra Information
+* \page asfdoc_samd20_sercom_usart_extra Extra Information for SERCOM USART Driver
 *
 * \section asfdoc_samd20_sercom_usart_extra_acronyms Acronyms
 *

@@ -1509,7 +1509,7 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
 
 
 /**
- * \page asfdoc_samd20_adc_extra Extra Information
+ * \page asfdoc_samd20_adc_extra Extra Information for ADC Driver
  *
  * \section asfdoc_samd20_adc_extra_acronyms Acronyms
  * Below is a table listing the acronyms used in this module, along with their

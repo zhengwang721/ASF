@@ -699,7 +699,7 @@ static inline void rtc_count_disable_events(
 #endif
 
 /**
- * \page asfdoc_samd20_rtc_count_extra Extra Information
+ * \page asfdoc_samd20_rtc_count_extra Extra Information for RTC (COUNT) Driver
  *
  * \section asfdoc_samd20_rtc_count_extra_acronyms Acronyms
  * Below is a table listing the acronyms used in this module, along with their
@@ -752,7 +752,7 @@ static inline void rtc_count_disable_events(
  */
 
 /**
- * \page asfdoc_samd20_rtc_count_exqsg Examples for RTC Count Driver
+ * \page asfdoc_samd20_rtc_count_exqsg Examples for RTC (COUNT) Driver
  *
  * This is a list of the available Quick Start guides (QSGs) and example
  * applications for \ref asfdoc_samd20_rtc_count_group. QSGs are simple

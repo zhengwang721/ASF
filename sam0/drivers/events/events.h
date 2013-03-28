@@ -587,7 +587,7 @@ static inline void events_chan_software_trigger(
 /** @} */
 
 /**
- * \page asfdoc_samd20_events_extra Extra Information
+ * \page asfdoc_samd20_events_extra  Extra Information for EVENTS Driver
  *
  * \section asfdoc_samd20_events_extra_acronyms Acronyms
  * Below is a table listing the acronyms used in this module, along with their

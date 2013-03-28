@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_samd20_system_gclk_basic_use_case Quick Start Guide for the GCLK module - Basic Use Case
+ * \page asfdoc_samd20_system_gclk_basic_use_case Quick Start Guide for SYSTEM CLOCK - GCLK Configuration
  *
  * In this use case, the GCLK module is configured for:
  *  \li One generator attached to source channel 0

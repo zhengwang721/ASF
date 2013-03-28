@@ -1218,7 +1218,7 @@ enum status_code spi_select_slave(
 
 
 /**
- * \page asfdoc_samd20_sercom_spi_extra Extra Information
+ * \page asfdoc_samd20_sercom_spi_extra Extra Information for SERCOM SPI Driver
  *
  * \section asfdoc_samd20_sercom_spi_extra_acronyms Acronyms
  * Below is a table listing the acronyms used in this module, along with their

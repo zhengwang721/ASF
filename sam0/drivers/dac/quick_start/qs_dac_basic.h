@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_samd20_dac_basic_use_case Quick Start Guide for the DAC module - Basic Use Case
+ * \page asfdoc_samd20_dac_basic_use_case Quick Start Guide for DAC - Basic
  *
  * In this use case, the DAC will be used  The DAC will be set up as follows:
  * - Analog VCC as reference

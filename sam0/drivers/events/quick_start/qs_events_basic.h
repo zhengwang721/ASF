@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_samd20_events_basic_use_case Quick Start Guide for the EVENT module - Basic Use Case
+ * \page asfdoc_samd20_events_basic_use_case Quick Start Guide for EVENTS - Basic
  *
  * In this use case, the EVENT module is configured for:
  *  \li One generator attached to event channel 0

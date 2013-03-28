@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_samd20_extint_callback_use_case Quick Start - Callback Use Case
+ * \page asfdoc_samd20_extint_callback_use_case Quick Start Guide for EXTINT - Callback
  *
  * In this use case, the EXTINT module is configured for:
  *  - External interrupt channel connected to the board LED is used

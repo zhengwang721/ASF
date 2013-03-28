@@ -368,7 +368,7 @@ enum system_interrupt_priority_level system_interrupt_get_priority(
 /** @} */
 
 /**
- * \page asfdoc_samd20_system_interrupt_extra Extra Information for System Interrupt Driver
+ * \page asfdoc_samd20_system_interrupt_extra Extra Information for SYSTEM INTERRUPT Driver
  *
  * \section asfdoc_samd20_system_interrupt_extra_acronyms Acronyms
  * The table below presents the acronyms used in this module:
@@ -412,7 +412,7 @@ enum system_interrupt_priority_level system_interrupt_get_priority(
  */
 
 /**
- * \page asfdoc_samd20_system_interrupt_exqsg Examples for System Interrupt Driver
+ * \page asfdoc_samd20_system_interrupt_exqsg Examples for SYSTEM INTERRUPT Driver
  *
  * This is a list of the available Quick Start guides (QSGs) and example
  * applications for \ref asfdoc_samd20_system_interrupt_group. QSGs are simple examples with

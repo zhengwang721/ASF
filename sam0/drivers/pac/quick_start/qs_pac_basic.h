@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_samd20_pac_basic_use_case Quick Start Guide for the PAC module - Basic Use Case
+ * \page asfdoc_samd20_pac_basic_use_case Quick Start Guide for PAC - Basic
  *
  * In this use case, the peripheral-lock will be used to lock and unlock the
  * PORT peripheral access, and show how to implement the PAC module when the

@@ -42,10 +42,11 @@
  */
 
 /**
- * \page asfdoc_samd20_rtc_count_callback_use_case Quick Start Guide for RTC Count - Interrupt
+ * \page asfdoc_samd20_rtc_count_callback_use_case Quick Start Guide for RTC (COUNT) - Callback
+ *
  * In this use case, the RTC is set up in count mode. The quick start
  * configures the RTC in 16 bit mode and to continuously update COUNT register.
- * The rest of the configuration is aaccording to the
+ * The rest of the configuration is according to the
  * \ref rtc_count_get_config_defaults "default".
  * A callback is implemented for when the RTC overflows.
  *
@@ -60,7 +61,7 @@
  *
  * Function for setting up the module:
  * \snippet qs_rtc_count_callback.c initialize_rtc
- * 
+ *
  * Callback function:
  * \snippet qs_rtc_count_callback.c callback
  *

@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_samd20_ac_basic_use_case Quick Start Guide for the Analog Comparator module - Basic Use Case
+ * \page asfdoc_samd20_ac_basic_use_case Quick Start Guide for AC - Basic
  *
  * In this use case, the Analog Comparator module is configured for:
  *  \li Comparator peripheral in manually triggered (i.e. "Single Shot" mode)

@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_samd20_nvm_basic_use_case Quick Start Guide for the NVM module - Basic Use Case
+ * \page asfdoc_samd20_nvm_basic_use_case Quick Start Guide for NVM - Basic
  *
  * In this use case, the NVM module is configured for:
  *  \li Power reduction mode enabled after sleep until first NVM access

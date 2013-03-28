@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_samd20_rtc_calendar_basic_use_case Quick Start Guide for the RTC calendar - Basic
+ * \page asfdoc_samd20_rtc_calendar_basic_use_case Quick Start Guide for RTC (CAL) - Basic
  * In this use case, the RTC is set up in calendar mode. The time is set and
  * also a alarm is set to show a general use of the RTC in calendar mode. Also
  * the clock is swapped from 24h to 12h mode after initialization.

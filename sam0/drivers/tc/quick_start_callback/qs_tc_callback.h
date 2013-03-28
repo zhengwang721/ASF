@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_samd20_tc_callback_use_case Quick Start Guide for the TC module - Callback
+ * \page asfdoc_samd20_tc_callback_use_case Quick Start Guide for TC - Callback
  *
  * In this use case, one TC instance will be used to generate a PWM
  * signal. The duty cycle of the PWM will be changed during runtime by

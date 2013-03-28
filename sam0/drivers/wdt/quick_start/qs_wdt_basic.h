@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_samd20_wdt_basic_use_case Quick Start Guide for the Watchdog module - Basic Use Case
+ * \page asfdoc_samd20_wdt_basic_use_case Quick Start Guide for WDT - Basic
  *
  * In this use case, the Watchdog module is configured for:
  *  \li System reset after 4096 clocks of the Watchdog generic clock

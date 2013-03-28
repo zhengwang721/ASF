@@ -423,7 +423,7 @@ void system_init(void);
  */
 
 /**
- * \page asfdoc_samd20_system_extra Extra Information
+ * \page asfdoc_samd20_system_extra Extra Information for SYSTEM Driver
  *
  * \section asfdoc_samd20_system_extra_acronyms Acronyms
  * Below is a table listing the acronyms used in this module, along with their

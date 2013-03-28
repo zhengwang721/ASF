@@ -560,7 +560,7 @@ struct i2c_packet {
 #endif
 
 /**
- * \page asfdoc_samd20_i2c_extra_info_page Extra Information
+ * \page asfdoc_samd20_i2c_extra_info_page  Extra Information for SERCOM I2C Driver
  *
  * \section asfdoc_samd20_i2c_acronyms Acronyms
  * Below is a table listing the acronyms used in this module, along with their

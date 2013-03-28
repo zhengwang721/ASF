@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_samd20_tc_basic_use_case Quick Start Guide for the TC module - Basic Use Case
+ * \page asfdoc_samd20_tc_basic_use_case Quick Start Guide for TC - Basic
  *
  * In this use case, the TC will be used to generate a PWM signal. Here
  * the pulse width is set to half the period. The TC module will be set up as

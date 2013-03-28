@@ -41,7 +41,7 @@
  */
 
 /**
- * \page asfdoc_samd20_system_clock_basic_use_case Quick Start Guide for the System Clock module - Basic Use Case
+ * \page asfdoc_samd20_system_clock_basic_use_case Quick Start Guide for SYSTEM CLOCK - Basic
  *
  * In this case we apply the following configuration:
  * - RC8MHz (internal 8MHz RC oscillator)
