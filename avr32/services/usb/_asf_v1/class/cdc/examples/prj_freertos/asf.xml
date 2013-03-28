@@ -10,5 +10,6 @@
 		<device-support value="uc3a3"/>
 		<require idref="common.services.os.freertos"/>
 		<require idref="avr32.services.usb.cdc.example.main"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

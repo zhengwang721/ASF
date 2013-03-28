@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -88,7 +88,7 @@ typedef struct {
 #define RTC_MR_CORRECTION(value) ((RTC_MR_CORRECTION_Msk & ((value) << RTC_MR_CORRECTION_Pos)))
 #define RTC_MR_HIGHPPM (0x1u << 15) /**< \brief (RTC_MR) HIGH PPM Correction */
 #define RTC_MR_OUT0_Pos 16
-#define RTC_MR_OUT0_Msk (0x7u << RTC_MR_OUT0_Pos) /**< \brief (RTC_MR) RTCOUT0 Output Source Selection */
+#define RTC_MR_OUT0_Msk (0x7u << RTC_MR_OUT0_Pos) /**< \brief (RTC_MR) RTCOUT0 OutputSource Selection */
 #define   RTC_MR_OUT0_NO_WAVE (0x0u << 16) /**< \brief (RTC_MR) no waveform, stuck at '0' */
 #define   RTC_MR_OUT0_FREQ1HZ (0x1u << 16) /**< \brief (RTC_MR) 1 Hz square wave */
 #define   RTC_MR_OUT0_FREQ32HZ (0x2u << 16) /**< \brief (RTC_MR) 32 Hz square wave */
@@ -111,7 +111,7 @@ typedef struct {
 #define RTC_MR_THIGH_Msk (0x7u << RTC_MR_THIGH_Pos) /**< \brief (RTC_MR) High Duration of the Output Pulse */
 #define   RTC_MR_THIGH_H_31MS (0x0u << 24) /**< \brief (RTC_MR) 31.2 ms */
 #define   RTC_MR_THIGH_H_16MS (0x1u << 24) /**< \brief (RTC_MR) 15.6 ms */
-#define   RTC_MR_THIGH_H_4MS (0x2u << 24) /**< \brief (RTC_MR) 3.91 Lms */
+#define   RTC_MR_THIGH_H_4MS (0x2u << 24) /**< \brief (RTC_MR) 3.91 Mms */
 #define   RTC_MR_THIGH_H_976US (0x3u << 24) /**< \brief (RTC_MR) 976 us */
 #define   RTC_MR_THIGH_H_488US (0x4u << 24) /**< \brief (RTC_MR) 488 us */
 #define   RTC_MR_THIGH_H_122US (0x5u << 24) /**< \brief (RTC_MR) 122 us */

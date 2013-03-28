@@ -2,7 +2,7 @@
 	<module type="application" id="avr32.applications.evk1101-demo" caption="EVK1101 Control Panel">
 		<info type="description" value="summary">
 		Demonstration application. Its purpose is to scan onboard sensors and actuators data and events (data acquisition through ADC channels) and make these available to a PC application (known as AVR UC3B Series Control Panel) through a simple USB cable.
-		</info>	
+		</info>
 		<build type="distribute" subtype="directory" value="./docsrc"/>
 		<build type="include-path" value="."/>
 		<build type="c-source" value="device_ctrl_panel_task.c"/>
@@ -58,10 +58,10 @@
 		<device-support value="uc3b"/>
 		<build type="distribute" subtype="file" value="./pc_appli/AVR32 UC3B Control Panel PC Demo Installer.exe"/>
 		<build type="distribute" subtype="file" value="./pc_appli/readme.txt"/>
-		
 		<info type="keyword" value="technology">
 			<keyword value="USB"/>
 			<keyword value="Communication"/>
 		</info>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

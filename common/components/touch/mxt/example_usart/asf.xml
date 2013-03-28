@@ -3,19 +3,20 @@
 		<info type="description" value="summary">
 		This example will read the status of the maXTouch device and send it on USART
 		</info>
-		<build type="c-source" value="example_usart.c" />
+		<build type="c-source" value="example_usart.c"/>
 		<build type="module-config" subtype="required-header-file" value="conf_example.h"/>
-		<require idref="common.boards" />
+		<require idref="common.boards"/>
 		<require idref="common.services.basic.serial"/>
 		<require idref="common.services.delay"/>
-		<require idref="common.components.touch.mxt" />
-		<require idref="common.utils.stdio.stdio_serial" />
+		<require idref="common.components.touch.mxt"/>
+		<require idref="common.utils.stdio.stdio_serial"/>
 		<info type="keyword" value="technology">
 			<keyword value="Communication"/>
 			<keyword value="Touch"/>
 		</info>
-		<device-support value="xmega" />
-		<device-support value="uc3" />
-		<generator value="doxygen-module" default-mcu="unspecified-xmegaa1" />
+		<device-support value="xmega"/>
+		<device-support value="uc3"/>
+		<generator value="doxygen-module" default-mcu="unspecified-xmegaa1"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>
