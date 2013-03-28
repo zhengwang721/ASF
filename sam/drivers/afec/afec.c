@@ -65,19 +65,19 @@
 
 /* The gap between bit EOC15 and DRDY in interrupt register */
 #if defined __SAM4E8C__  || defined __SAM4E16C__
-#define AFEC_INTERRUPT_GAP1                 (17UL)
+#define AFEC_INTERRUPT_GAP1                  (17UL)
 #elif defined __SAM4E8E__  || defined __SAM4E16E__
 #define AFEC_INTERRUPT_GAP1                  (8UL)
 #endif
 
 /* The gap between bit RXBUFF and TEMPCHG in interrupt register */
-#define AFEC_INTERRUPT_GAP2                    (1UL)
+#define AFEC_INTERRUPT_GAP2                  (1UL)
 
 /* The number of channel in channel sequence1 register */
 #define AFEC_SEQ1_CHANNEL_NUM                (8UL)
 
 /* The interrupt source number of temperature sensor */
-#define AFEC_TEMP_INT_SOURCE_NUM           (15UL)
+#define AFEC_TEMP_INT_SOURCE_NUM             (15UL)
 
 afec_callback_t afec_callback_pointer[NUM_OF_AFEC][_AFEC_NUM_OF_INTERRUPT_SOURCE];
 
@@ -277,7 +277,8 @@ void afec_ch_get_config_defaults(struct afec_ch_config *const cfg)
  * - Generates an event when the converted data is in the comparison window
  * - The window range is 0xFF ~ 0xFFF
  *
- * \param cfg Pointer to temperature sensor configuration structure to be initiated.
+ * \param cfg Pointer to temperature sensor configuration structure
+ *        to be initiated.
  */
 void afec_temp_sensor_get_config_defaults(
 		struct afec_temp_sensor_config *const cfg)
@@ -426,7 +427,8 @@ void afec_enable_interrupt(Afec *const afec,
 	} else if (interrupt_source < AFEC_INTERRUPT_TEMP_CHANGE) {
 		afec->AFEC_IER = 1 << (interrupt_source + AFEC_INTERRUPT_GAP1);
 	} else {
-		afec->AFEC_IER = 1 << (interrupt_source + AFEC_INTERRUPT_GAP1 + AFEC_INTERRUPT_GAP2);
+		afec->AFEC_IER = 1 << (interrupt_source + AFEC_INTERRUPT_GAP1
+				+ AFEC_INTERRUPT_GAP2);
 	}
 }
 
@@ -448,7 +450,8 @@ void afec_disable_interrupt(Afec *const afec,
 	} else if (interrupt_source < AFEC_INTERRUPT_TEMP_CHANGE) {
 		afec->AFEC_IDR = 1 << (interrupt_source + AFEC_INTERRUPT_GAP1);
 	} else {
-		afec->AFEC_IDR = 1 << (interrupt_source + AFEC_INTERRUPT_GAP1 + AFEC_INTERRUPT_GAP2);
+		afec->AFEC_IDR = 1 << (interrupt_source + AFEC_INTERRUPT_GAP1
+				+ AFEC_INTERRUPT_GAP2);
 	}
 }
 
@@ -486,9 +489,21 @@ static void afec_process_callback(Afec *const afec)
 
 	for (cnt = 0; cnt < _AFEC_NUM_OF_INTERRUPT_SOURCE; cnt++) {
 		if (cnt < AFEC_INTERRUPT_DATA_READY) {
+		#if defined __SAM4E8C__  || defined __SAM4E16C__
+			if(cnt == AFEC_INTERRUPT_EOC_15) {
+				if (status & (1 << AFEC_TEMP_INT_SOURCE_NUM)) {
+					afec_interrupt(inst_num, (enum afec_interrupt_source)cnt);
+				}
+			} else {
+				if (status & (1 << cnt)) {
+					afec_interrupt(inst_num, (enum afec_interrupt_source)cnt);
+				}
+			}
+		#elif defined __SAM4E8E__  || defined __SAM4E16E__
 			if (status & (1 << cnt)) {
 				afec_interrupt(inst_num, (enum afec_interrupt_source)cnt);
 			}
+		#endif
 		} else if (cnt < AFEC_INTERRUPT_TEMP_CHANGE) {
 			if (status & (1 << (cnt + AFEC_INTERRUPT_GAP1))) {
 				afec_interrupt(inst_num, (enum afec_interrupt_source)cnt);
@@ -576,7 +591,8 @@ void afec_configure_sequence(Afec *const afec,
 			afec->AFEC_SEQ1R |=
 					ch_list[uc_counter] << (4 * uc_counter);
 		}
-		for (uc_counter = 0; uc_counter < uc_num - AFEC_SEQ1_CHANNEL_NUM; uc_counter++) {
+		for (uc_counter = 0; uc_counter < uc_num - AFEC_SEQ1_CHANNEL_NUM;
+				uc_counter++) {
 			afec->AFEC_SEQ2R |=
 					ch_list[uc_counter] << (4 * uc_counter);
 		}

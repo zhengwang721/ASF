@@ -468,7 +468,8 @@ static inline void afec_channel_enable(Afec *const afec,
 		afec_ch_sanity_check(afec, afec_ch);
 	}
 
-	afec->AFEC_CHER = (afec_ch == AFEC_CHANNEL_ALL) ? AFEC_CHANNEL_ALL : 1 << afec_ch;
+	afec->AFEC_CHER = (afec_ch == AFEC_CHANNEL_ALL) ?
+			AFEC_CHANNEL_ALL : 1 << afec_ch;
 }
 
 /**
@@ -484,7 +485,8 @@ static inline void afec_channel_disable(Afec *const afec,
 		afec_ch_sanity_check(afec, afec_ch);
 	}
 
-	afec->AFEC_CHDR = (afec_ch == AFEC_CHANNEL_ALL) ? AFEC_CHANNEL_ALL : 1 << afec_ch;
+	afec->AFEC_CHDR = (afec_ch == AFEC_CHANNEL_ALL) ?
+			AFEC_CHANNEL_ALL : 1 << afec_ch;
 }
 
 /**
@@ -702,8 +704,10 @@ static inline enum status_code afec_start_calibration(Afec *const afec)
  * -# Start AFEC conversion on channel:
  *   - \code afec_start_software_conversion(AFEC0); \endcode
  * -# Wait for the conversion over:
- *   - \code while (afec_get_interrupt_status(AFEC0) & (1 << AFEC_CHANNEL_5)); \endcode
+ *   - \code while (afec_get_interrupt_status(AFEC0) & (1 << AFEC_CHANNEL_5));
+ *     \endcode
  * -# Get the conversion result:
- *   - \code uint32_t result = afec_channel_get_value(AFEC0, AFEC_CHANNEL_5); \endcode
+ *   - \code uint32_t result = afec_channel_get_value(AFEC0, AFEC_CHANNEL_5);
+ *     \endcode
  */
 #endif /* AFEC_H_INCLUDED */
