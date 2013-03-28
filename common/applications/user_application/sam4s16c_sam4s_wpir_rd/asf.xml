@@ -3,6 +3,7 @@
 		<!-- Files -->
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
+		<build type="header-file" value="conf_clock.h"/>
 
 		<!-- Device support -->
 		<device-support value="atsam4s16c"/>

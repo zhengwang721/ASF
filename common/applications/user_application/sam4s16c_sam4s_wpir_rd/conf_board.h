@@ -7,6 +7,8 @@
  *
  * \asf_license_start
  *
+ * \page License
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -39,8 +41,8 @@
  *
  */
 
-#ifndef CONF_BOARD_H
-#define CONF_BOARD_H
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
 /* Configure UART pins */
 #define CONF_BOARD_UART_CONSOLE
@@ -64,4 +66,4 @@
 //#define CONF_BOARD_SRAM
 
 
-#endif // CONF_BOARD_H
+#endif /* CONF_BOARD_H_INCLUDED */
