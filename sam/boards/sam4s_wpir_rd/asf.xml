@@ -8,6 +8,7 @@
 			<build type="header-file" subtype="api" value="led.h"/>
 
 			<!-- Required modules -->
+			<require idref="common.services.ioport"/>
 			<require idref="common.services.basic.gpio"/>
 			<require idref="sam.drivers.pio"/>
 		</module>
@@ -21,6 +22,7 @@
 			<build type="c-source" value="init.c"/>
 
 			<!-- Required modules -->
+			<require idref="common.services.ioport"/>
 			<require idref="common.services.basic.gpio"/>
 			<require idref="sam.drivers.pio"/>
 		</module>
