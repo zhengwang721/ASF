@@ -27,5 +27,8 @@
 		<require idref="sam.components.display.ili9325"/>
 		<require idref="sam.components.cmos_image_sensor.ov7740"/>
 		<require idref="sam.components.display.aat31xx"/>
+
+		<!-- Specific information -->
+    <info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

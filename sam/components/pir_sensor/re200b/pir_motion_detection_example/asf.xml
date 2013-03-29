@@ -24,5 +24,8 @@
 		<require idref="sam.components.display.ili9325"/>
 		<require idref="sam.components.pir_sensor.re200b"/>
 		<require idref="sam.components.display.aat31xx"/>
+
+		<!-- Specific information -->
+    <info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>
