@@ -26,5 +26,6 @@
 		<device-support value="xmega"/>
 		<require idref="common.services.sensors"/>
 		<require idref="common.services.sensors.math"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

@@ -5,8 +5,8 @@
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="DMA Controller"/>
-			<keyword value="Memory" />
-		</info>	
+			<keyword value="Memory"/>
+		</info>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="ascii_anim1.h"/>
 		<build type="header-file" value="ascii_anim2.h"/>
@@ -24,5 +24,6 @@
 		<require idref="avr32.drivers.usart"/>
 		<require idref="common.services.basic.sleepmgr"/>
 		<require idref="common.services.basic.clock"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

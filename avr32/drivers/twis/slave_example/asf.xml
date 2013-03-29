@@ -4,7 +4,7 @@
 		Using the TWIS module, process read and write operations from/to a virtual memory space pre-allocated in internal RAM. To be used with two boards with the corresponding TWIM module example.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="Communication" />
+			<keyword value="Communication"/>
 		</info>
 		<build type="c-source" value="twis_example.c"/>
 		<device-support value="uc3a3_a4"/>
@@ -15,5 +15,6 @@
 		<require idref="avr32.drivers.pm"/>
 		<require idref="avr32.drivers.twis"/>
 		<require idref="avr32.utils.print_funcs"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

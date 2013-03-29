@@ -153,7 +153,7 @@ static inline void cmcc_disable_monitor(Cmcc *const p_cmcc)
  */
 static inline void cmcc_reset_monitor(Cmcc *const p_cmcc)
 {
-	p_cmcc->CMCC_MCTRL |= CMCC_MCTRL_SWRST;
+	p_cmcc->CMCC_MCTRL = CMCC_MCTRL_SWRST;
 }
 
 /**
@@ -190,7 +190,7 @@ static inline uint32_t cmcc_get_monitor_cnt(Cmcc *const p_cmcc)
  */
 static inline void cmcc_disable(Cmcc *const p_cmcc)
 {
-	p_cmcc->CMCC_CTRL &= ~CMCC_CTRL_CEN;
+	p_cmcc->CMCC_CTRL = 0;
 }
 
 /**
@@ -201,7 +201,7 @@ static inline void cmcc_disable(Cmcc *const p_cmcc)
  */
 static inline void cmcc_invalidate_all(Cmcc *const p_cmcc)
 {
-	p_cmcc->CMCC_MAINT0 |= CMCC_MAINT0_INVALL;
+	p_cmcc->CMCC_MAINT0 = CMCC_MAINT0_INVALL;
 }
 
 /** @} */
@@ -233,22 +233,24 @@ static inline void cmcc_invalidate_all(Cmcc *const p_cmcc)
  *
  * Add this to the main loop or a setup function:
  * \code
- * struct cmcc_config   g_cmcc_cfg;
- * cmcc_get_config_defaults(&g_cmcc_cfg);
- * cmcc_init(CMCC, &g_cmcc_cfg);
- * cmcc_enable(CMCC);
+ *  struct cmcc_config   g_cmcc_cfg;
+ *  cmcc_get_config_defaults(&g_cmcc_cfg);
+ *  cmcc_init(CMCC, &g_cmcc_cfg);
+ *  cmcc_enable(CMCC);
  * \endcode
  *
  * \subsection cmcc_basic_setup_workflow
  *
  * -# Enable the CMCC module
- *  - \code cmcc_enable(CMCC); \endcode
+ * \code 
+ *  cmcc_enable(CMCC); 
+ * \endcode
  *
  * -# Initialize the CMCC to Data hit counter mode
  * \code
- * g_cmcc_cfg->cmcc_mcfg_mode = CMCC_DHIT_COUNT_MODE;
- * cmcc_set_config(CMCC,&g_cmcc_cfg);
- * cmcc_enable_monitor(CMCC);
+ *  g_cmcc_cfg->cmcc_mcfg_mode = CMCC_DHIT_COUNT_MODE;
+ *  cmcc_set_config(CMCC,&g_cmcc_cfg);
+ *  cmcc_enable_monitor(CMCC);
  * \endcode
  *
  * \section cmcc_basic_usage Usage steps
@@ -257,7 +259,7 @@ static inline void cmcc_invalidate_all(Cmcc *const p_cmcc)
  *
  * We can then get the count of Cache Monitor Event by
  * \code
- * cmcc_get_monitor_cnt(CMCC);
+ *  cmcc_get_monitor_cnt(CMCC);
  * \endcode
  */
 
