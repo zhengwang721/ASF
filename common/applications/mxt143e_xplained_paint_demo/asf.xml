@@ -17,5 +17,6 @@
 		<require idref="common.services.gfx"/>
 		<require idref="common.services.gfx.font"/>
 		<require idref="common.services.basic.clock"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

@@ -4,7 +4,7 @@
 			Pulse Width Modulation software example with led fade in/out functions.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="Clocks" />
+			<keyword value="Clocks"/>
 		</info>
 		<build type="c-source" value="pwm_led_example.c"/>
 		<build type="include-path" value="."/>
@@ -13,5 +13,6 @@
 		<require idref="common.services.basic.gpio"/>
 		<require idref="common.services.basic.clock"/>
 		<require idref="common.utils.stdio.stdio_serial"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

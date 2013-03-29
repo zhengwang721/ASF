@@ -9,5 +9,6 @@
 		<require idref="xmega.components.display.c42048a"/>
 		<require idref="common.services.basic.sleepmgr"/>
 		<require idref="xmega.drivers.pmic"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

@@ -11,6 +11,6 @@
 		<require idref="common.utils.stdio.stdio_serial"/>
 		<require idref="common.services.gfx_mono"/>
 		<require idref="common.services.gfx_mono.display"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>
-

@@ -6,10 +6,11 @@
 		<build type="c-source" value="unit_tests.c"/>
 		<build type="module-config" subtype="required-header-file" value="conf_test.h"/>
 		<build type="include-path" value="."/>
-		<require idref="common.components.touch.qt.qt_i2c" />
-		<require idref="common.services.basic.clock" />
+		<require idref="common.components.touch.qt.qt_i2c"/>
+		<require idref="common.services.basic.clock"/>
 		<require idref="common.utils.stdio.stdio_serial"/>
 		<require idref="common.utils.unit_test"/>
 		<device-support value="sam4e"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

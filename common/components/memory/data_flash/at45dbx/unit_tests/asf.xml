@@ -8,6 +8,7 @@
 			<require idref="common.components.memory.data_flash.at45dbx.unit_tests.common"/>
 			<require idref="avr32.drivers.gpio"/>
 			<require idref="avr32.utils"/>
+			<info type="gui-flag" value="move-to-root"/>
 		</module>
 		<module type="application" id="common.components.memory.data_flash.at45dbx.unit_tests#xmega" caption="Unit Tests for the Common AT45DBX DataFlash Component">
 			<device-support value="xmega"/>
@@ -17,6 +18,7 @@
 			<require idref="common.components.memory.data_flash.at45dbx.unit_tests.common"/>
 			<require idref="common.services.basic.gpio"/>
 			<require idref="xmega.utils"/>
+			<info type="gui-flag" value="move-to-root"/>
 		</module>
 	</select-by-device>
 	<module type="meta" id="common.components.memory.data_flash.at45dbx.unit_tests.common" caption="AT45DBX DataFlash Unit Tests Common Part">
@@ -28,5 +30,6 @@
 		<require idref="common.services.basic.clock"/>
 		<require idref="common.utils.unit_test"/>
 		<require idref="common.utils.stdio.stdio_serial"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>
