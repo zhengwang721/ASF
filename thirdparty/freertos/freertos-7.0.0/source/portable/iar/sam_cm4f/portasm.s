@@ -107,7 +107,19 @@
     the SafeRTOS brand: http://www.SafeRTOS.com.
 */
 
-#include <FreeRTOSConfig.h>
+/* Priority 15, or 255 as only the top four bits are implemented.
+ This is the lowest priority. */
+#define configKERNEL_INTERRUPT_PRIORITY            (0x0f << 4)
+
+/* Priority 5, or 80 as only the top four bits are implemented. */
+#define configMAX_SYSCALL_INTERRUPT_PRIORITY       (0x05 << 4)
+
+/* For backward compatibility, ensure configKERNEL_INTERRUPT_PRIORITY is
+defined.  The value zero should also ensure backward compatibility.
+FreeRTOS.org versions prior to V4.3.0 did not include this definition. */
+#ifndef configKERNEL_INTERRUPT_PRIORITY
+	#define configKERNEL_INTERRUPT_PRIORITY 0
+#endif
 
 	RSEG    CODE:CODE(2)
 	thumb
