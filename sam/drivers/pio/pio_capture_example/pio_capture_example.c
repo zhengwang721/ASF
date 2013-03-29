@@ -61,7 +61,7 @@
  *  port in synchronous mode, etc.
  *
  *  The application is composed of 2 softwares:
- *  - one for using the PIO simulate as a sensor in send mode.
+ *  - one for using the PIO to simulate a sensor in send mode.
  *  - one for using the PIO Parallel Capture in receive mode.
  *
  *  Two boards are required to use. Connect one to the other, and at first put
@@ -150,21 +150,21 @@
 #include "pio_handler.h"
 
 /** Buffer size. */
-#define SIZE_BUFF_RECEPT               64
+#define SIZE_BUFF_RECEPT               (64)
 
 /** Configure the PIO capture pins that send out data simulating as a sensor. */
 #define PIO_CAPTURE_CCLK_IDX           PIO_PA23_IDX
 #define PIO_CAPTURE_EN1_IDX            PIO_PA15_IDX
 #define PIO_CAPTURE_EN2_IDX            PIO_PA16_IDX
 #define PIO_CAPTURE_OUTPUT_PIN_FLAGS   (PIO_OUTPUT_0 | PIO_DEFAULT)
-#define PIO_CAPTURE_DATA_PINS_MASK     0x000000FF
+#define PIO_CAPTURE_DATA_PINS_MASK     (0x000000FF)
 #define PIO_CAPTURE_CONTROL_PIN_MSK    ((1 << 15) | (1 << 16) | (1 << 23))
 
 /** Data offset position. */
-#define PIO_CAPTURE_DATA_POS           0
+#define PIO_CAPTURE_DATA_POS           (0)
 
 /** PIOA interrupt priority. */
-#define PIO_IRQ_PRI                    4
+#define PIO_IRQ_PRI                    (4)
 
 #define STRING_EOL    "\r"
 #define STRING_HEADER "-- PIO Parallel Capture example --\r\n" \
