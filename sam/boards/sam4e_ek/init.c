@@ -3,7 +3,7 @@
  *
  * \brief SAM4E-EK board init.
  *
- * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -359,6 +359,7 @@ void board_init(void)
 	ioport_set_pin_peripheral_mode(PIN_NF_CE_IDX, PIN_NF_CE_FLAGS);
 	ioport_set_pin_peripheral_mode(PIN_NF_RB_IDX, PIN_NF_RB_FLAGS);
 #endif
+
 
 #ifdef CONF_BOARD_QTOUCH
 	/* Configure CHANGE pin for QTouch device */
