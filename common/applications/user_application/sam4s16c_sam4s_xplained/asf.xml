@@ -2,6 +2,7 @@
 	<project id="common.applications.user_application.sam4s_xplained" caption="SAM4S Xplained template project" type="template">
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
+		<build type="header-file" value="conf_clock.h"/>
 		<require idref="common.applications.user_application"/>
 		<require idref="board.sam4s_xplained"/>
 		<generator value="as5_arm_template"/>

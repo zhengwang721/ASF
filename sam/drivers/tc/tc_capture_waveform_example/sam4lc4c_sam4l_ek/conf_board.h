@@ -3,7 +3,7 @@
  *
  * \brief  Configuration File for SAM4L-EK Board.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -47,23 +47,30 @@
 /** Enable Com Port. */
 #define CONF_BOARD_COM_PORT
 
-#define TC  TC0
-#define TC_PERIPHERAL  0
+/**
+ * \note For test the example in SAM4L-EK, we need:
+ * 1. Connect pin 3 and pin 7 on J4.
+ * 2. Remove jumper on J600, J601 (disconnect from board monitor)
+ * 3. Remove jumper on J200, J203 (disconnect from RS485)
+ */
 
-/** Configure TC0 channel 1 as waveform output. **/
-#define TC_CHANNEL_WAVEFORM 1
-#define ID_TC_WAVEFORM TC0
-#define PIN_TC_WAVEFORM PIN_PA10B_TC0_A1
-#define PIN_TC_WAVEFORM_FLAGS MUX_PA10B_TC0_A1
+#define TC  TC1
+#define TC_PERIPHERAL  1
 
-/** Configure TC0 channel 2 as capture input. **/
-#define TC_CHANNEL_CAPTURE 2
-#define ID_TC_CAPTURE TC0
-#define PIN_TC_CAPTURE PIN_PA12B_TC0_A2
-#define PIN_TC_CAPTURE_FLAGS (MUX_PA12B_TC0_A2)
+/** Configure TC1 channel 2 as waveform output. **/
+#define TC_CHANNEL_WAVEFORM 2
+#define ID_TC_WAVEFORM TC1
+#define PIN_TC_WAVEFORM PIN_PC04D_TC1_A2
+#define PIN_TC_WAVEFORM_MUX MUX_PC04D_TC1_A2
 
-/** Use TC2_Handler for TC capture interrupt**/
-#define TC_Handler  TC02_Handler
-#define TC_IRQn     TC02_IRQn
+/** Configure TC1 channel 1 as capture input. **/
+#define TC_CHANNEL_CAPTURE 1
+#define ID_TC_CAPTURE TC1
+#define PIN_TC_CAPTURE PIN_PC02D_TC1_A1
+#define PIN_TC_CAPTURE_MUX (MUX_PC02D_TC1_A1)
+
+/** Use TC11_Handler for TC capture interrupt**/
+#define TC_Handler  TC11_Handler
+#define TC_IRQn     TC11_IRQn
 
 #endif  /* CONF_BOARD_H_INCLUDED */

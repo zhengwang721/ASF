@@ -62,6 +62,7 @@
 				<require idref="avr32.drivers.flashc"/>
 				<device-support value="uc3a"/>
 				<device-support value="uc3a3"/>
+				<device-support value="uc3a3s"/>
 				<device-support value="uc3a4"/>
 				<device-support value="uc3b"/>
 				<device-support value="uc3c"/>
@@ -85,6 +86,19 @@
 				<device-support value="sam3"/>
 				<device-support value="sam4s"/>
 				<generator value="doxygen-module" default-mcu="unspecified-sam3s"/>
+			</module>
+			<module type="driver" id="common.drivers.nvm#no_extmem#4" caption="NVM - Non volatile memory access">
+				<info type="description" value="summary">
+				Driver for NVM access. Provides functions for initializing, reading, writing, erasing NVM and getting configuration parameters. Common API.
+				</info>
+				<info type="keyword" value="technology">
+					<keyword value="NVM"/>
+				</info>
+				<build type="doxygen-entry-point" value="nvm_group"/>
+				<build type="doxygen-quick-start" value="nvm_quickstart"/>
+				<require idref="thirdparty.wireless.avr2025_mac.source.pal.common.drivers.nvm"/>
+				<require idref="thirdparty.wireless.avr2025_mac.source.pal.mega.drivers.flash"/>
+				<device-support value="megarf"/>
 			</module>
 		</select-by-device>
 		<select-by-device id="common.drivers.nvm#extmem">

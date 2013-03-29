@@ -3,7 +3,7 @@
  *
  * \brief CAN example for SAM.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -50,8 +50,9 @@
  *
  *  \par Requirements
  *
- *  This package can be used with SAM3X evaluation kits. CAN0 and CAN1
- *  should be hooked-up externally before running the example.
+ *  This package can be used with SAM3X or SAM4E evaluation kits.
+ *  CAN0 and CAN1 should be hooked-up externally before running
+ *  the example.
  *
  *  \par Description
  *
@@ -59,13 +60,15 @@
  *  the LED on the board and display CAN message on the terminal window.
  *  There are four basic tests:
  *  - test1: Test the transmission from CAN0 Mailbox 0 to CAN1 Mailbox 0.
- *  - test2: Test the transmission from CAN0 Mailboxes 1 & 2 to CAN1 Mailbox 7 without overwrite.
- *  - test3: Test the transmission from CAN0 Mailboxes 1 & 2 to CAN1 Mailbox 7 with overwrite.
+ *  - test2: Test the transmission from CAN0 Mailboxes 1 & 2 to CAN1 Mailbox 7
+ *    without overwrite.
+ *  - test3: Test the transmission from CAN0 Mailboxes 1 & 2 to CAN1 Mailbox 7
+ *    with overwrite.
  *  - test4: Test the communication between CAN1 Mailbox 3 and CAN0 Mailbox 3.
  *
  *  \par Usage
  *
- *  -# Build the program and download it into the evaluation board. 
+ *  -# Build the program and download it into the evaluation board.
  *  -# On the computer, open and configure a terminal application
  *     (e.g., HyperTerminal on Microsoft Windows) with these settings:
  *    - 115200 bauds
@@ -73,16 +76,18 @@
  *    - No parity
  *    - 1 stop bit
  *    - No flow control
- *  -# Connect CAN0 (J17) and CAN1 (J20) CAN in loop.
+ *  -# Connect CAN0 (J17 on SAM3X-EK or J13 on SAM4E-EK) and CAN1 (J20
+ *     on SAM3X-EK or J14 on SAM4E-EK) in loop.
  *  -# Start the application.
- *  -# Upon startup, the application will output the following lines on the terminal window.
+ *  -# Upon startup, the application will output the following lines
+ *     on the terminal window.
  *      \code
  *      -- CAN Example --
- *      -- SAM3X-EK --
+ *      -- SAMxx-EK --
  *      -- Compiled: xxx xx xxxx xx:xx:xx --
  *      \endcode
- *  -# Press a key in the terminal window to run the tests. CAN messages will be
- *     displayed on the terminal window and LED0 or LED1 will toggle
+ *  -# Press a key in the terminal window to run the tests. CAN messages
+ *     will be displayed on the terminal window and LED0 or LED1 will toggle
  *     according to the messages.
  */
 
@@ -93,7 +98,7 @@
 #include "exceptions.h"
 #include "uart.h"
 #include "pmc.h"
-#include "gpio.h"
+#include "ioport.h"
 #include "can.h"
 #include "stdio_serial.h"
 #include "sn65hvd234.h"
@@ -162,10 +167,10 @@ static void decode_can_msg(can_mb_conf_t *p_mailbox)
 	puts("CAN message:" STRING_EOL);
 	if (ul_led_Ctrl == CAN_MSG_TOGGLE_LED_0) {
 		puts("  Toggle LED 0" STRING_EOL);
-		gpio_toggle_pin(LED0_GPIO);
+		ioport_toggle_pin_level(LED0_GPIO);
 	} else if (ul_led_Ctrl == CAN_MSG_TOGGLE_LED_1) {
 		puts("  Toggle LED 1" STRING_EOL);
-		gpio_toggle_pin(LED1_GPIO);
+		ioport_toggle_pin_level(LED1_GPIO);
 	}
 }
 
@@ -231,7 +236,7 @@ static void test_1(void)
 
 	/* Send out the information in the mailbox. */
 	can_global_send_transfer_cmd(CAN0, CAN_TCR_MB0);
-	
+
 	while (!g_ul_recv_status) {
 	}
 
@@ -262,7 +267,7 @@ static void test_2(void)
 
 	puts("\n\rTest2: CAN0 Mailboxes 1 & 2 transmitting to ");
 	puts("CAN1 Mailbox 7 without overwrite" STRING_EOL);
-	
+
 	/* Init CAN1 Mailbox 7 to Reception Mailbox. */
 	reset_mailbox_conf(&can1_mailbox);
 	can1_mailbox.ul_mb_idx = TEST2_CAN1_RX_MB_IDX;
@@ -467,7 +472,7 @@ static void configure_console(void)
 		.baudrate = CONF_UART_BAUDRATE,
 		.paritytype = CONF_UART_PARITY
 	};
-	
+
 	/* Configure console UART. */
 	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
 	stdio_serial_init(CONF_UART, &uart_serial_options);

@@ -11,11 +11,10 @@
 		<build type="include-path" value="."/>
 		<device-support value="sam"/>
 		<require idref="sam.drivers.pwm"/>
-		<require idref="sam.drivers.pio"/>
 		<require idref="sam.drivers.pdc"/>
-		<require idref="sam.drivers.uart"/>
 		<require idref="common.services.basic.gpio"/>
 		<require idref="common.services.basic.clock"/>
 		<require idref="common.utils.stdio.stdio_serial"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

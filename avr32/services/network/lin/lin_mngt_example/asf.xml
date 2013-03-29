@@ -17,5 +17,6 @@
 		<require idref="avr32.drivers.tc"/>
 		<require idref="avr32.drivers.usart"/>
 		<require idref="avr32.services.network.lin"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

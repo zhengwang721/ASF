@@ -4,7 +4,7 @@
  * \brief Default Vendor class configuration for a USB Device
  * with a single interface
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -58,7 +58,7 @@
 //! Endpoint numbers used by vendor interface.
 //! Note: The order of endpoint can depend on USB hardware capability
 //! when a specific mapping is used on USB DPRAM.
-#if SAM3S || SAM4S
+#if SAM3S || SAM4S || SAM4E
 #  define  UDI_VENDOR_EP_INTERRUPT_IN  (3 | USB_EP_DIR_IN)
 #  define  UDI_VENDOR_EP_INTERRUPT_OUT (6 | USB_EP_DIR_OUT)
 #  define  UDI_VENDOR_EP_BULK_IN       (1 | USB_EP_DIR_IN)

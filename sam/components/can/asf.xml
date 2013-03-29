@@ -9,9 +9,8 @@
 		<build type="c-source" value="sn65hvd234.c"/>
 		<build type="header-file" subtype="api" value="sn65hvd234.h"/>
 		<build type="include-path" value="."/>
-		<device-support value="sam3"/>
-		<device-support value="sam4s"/>
-		<require idref="common.services.basic.gpio"/>
+		<device-support value="sam"/>
+		<require idref="common.services.ioport"/>
 		<generator value="doxygen-module" default-mcu="unspecified-sam3x"/>
 		<build type="doxygen-entry-point" value="sam_component_sn65hvd234_transceiver_group"/>
 	</module>

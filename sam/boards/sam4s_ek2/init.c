@@ -3,7 +3,7 @@
  *
  * \brief SAM4S-EK2 board init.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -45,6 +45,7 @@
 #include "board.h"
 #include "conf_board.h"
 #include "gpio.h"
+#include "ioport.h"
 
 void board_init(void)
 {
@@ -52,6 +53,12 @@ void board_init(void)
 	/* Disable the watchdog */
 	WDT->WDT_MR = WDT_MR_WDDIS;
 #endif
+
+	/* GPIO has been deprecated, the old code just keeps it for compatibility.
+	 * In new designs IOPORT is used instead.
+	 * Here IOPORT must be initialized for others to use before setting up IO.
+	 */
+	ioport_init();
 
 	/* Configure LED pins */
 	gpio_configure_pin(LED0_GPIO, LED0_FLAGS);
@@ -116,34 +123,34 @@ void board_init(void)
 	 * CONF_BOARD_SPI_NPCS_FLAGS macros.
 	 */
 
-	#ifdef CONF_BOARD_SPI_NPCS0
-		gpio_configure_pin(SPI_NPCS0_GPIO, SPI_NPCS0_FLAGS);
-	#endif
+#  ifdef CONF_BOARD_SPI_NPCS0
+	gpio_configure_pin(SPI_NPCS0_GPIO, SPI_NPCS0_FLAGS);
+#  endif
 
-	#ifdef CONF_BOARD_SPI_NPCS1
-		#if defined(CONF_BOARD_SPI_NPCS1_GPIO) && defined(CONF_BOARD_SPI_NPCS1_FLAGS)
-			gpio_configure_pin(CONF_BOARD_SPI_NPCS1_GPIO, CONF_BOARD_SPI_NPCS1_FLAGS);
-		#else
-			gpio_configure_pin(SPI_NPCS1_PA31_GPIO, SPI_NPCS1_PA31_FLAGS);
-		#endif
-	#endif
+#  ifdef CONF_BOARD_SPI_NPCS1
+#    if defined(CONF_BOARD_SPI_NPCS1_GPIO) && defined(CONF_BOARD_SPI_NPCS1_FLAGS)
+	gpio_configure_pin(CONF_BOARD_SPI_NPCS1_GPIO, CONF_BOARD_SPI_NPCS1_FLAGS);
+#    else
+	gpio_configure_pin(SPI_NPCS1_PA31_GPIO, SPI_NPCS1_PA31_FLAGS);
+#    endif
+#  endif
 
-	#ifdef CONF_BOARD_SPI_NPCS2
-		#if defined(CONF_BOARD_SPI_NPCS2_GPIO) && defined(CONF_BOARD_SPI_NPCS2_FLAGS)
-			gpio_configure_pin(CONF_BOARD_SPI_NPCS2_GPIO, CONF_BOARD_SPI_NPCS2_FLAGS);
-		#else
-			gpio_configure_pin(SPI_NPCS2_PA30_GPIO, SPI_NPCS2_PA30_FLAGS);
-		#endif
-	#endif
+#  ifdef CONF_BOARD_SPI_NPCS2
+#    if defined(CONF_BOARD_SPI_NPCS2_GPIO) && defined(CONF_BOARD_SPI_NPCS2_FLAGS)
+	gpio_configure_pin(CONF_BOARD_SPI_NPCS2_GPIO, CONF_BOARD_SPI_NPCS2_FLAGS);
+#    else
+	gpio_configure_pin(SPI_NPCS2_PA30_GPIO, SPI_NPCS2_PA30_FLAGS);
+#    endif
+#  endif
 
-	#ifdef CONF_BOARD_SPI_NPCS3
-		#if defined(CONF_BOARD_SPI_NPCS3_GPIO) && defined(CONF_BOARD_SPI_NPCS3_FLAGS)
-			gpio_configure_pin(CONF_BOARD_SPI_NPCS3_GPIO, CONF_BOARD_SPI_NPCS3_FLAGS);
-		#else
-			gpio_configure_pin(SPI_NPCS3_PA22_GPIO, SPI_NPCS3_PA22_FLAGS);
-		#endif
-	#endif
-#endif
+#  ifdef CONF_BOARD_SPI_NPCS3
+#    if defined(CONF_BOARD_SPI_NPCS3_GPIO) && defined(CONF_BOARD_SPI_NPCS3_FLAGS)
+	gpio_configure_pin(CONF_BOARD_SPI_NPCS3_GPIO, CONF_BOARD_SPI_NPCS3_FLAGS);
+#    else
+	gpio_configure_pin(SPI_NPCS3_PA22_GPIO, SPI_NPCS3_PA22_FLAGS);
+#    endif
+#  endif
+#endif /* CONF_BOARD_SPI */
 
 #ifdef CONF_BOARD_USART_RXD
 	/* Configure USART RXD pin */
@@ -184,7 +191,7 @@ void board_init(void)
 
 #ifdef CONF_BOARD_ADM3485_RE
 	/* Configure RS485 transceiver RE pin */
-    gpio_configure_pin(PIN_RE_IDX, PIN_RE_FLAGS);
+	gpio_configure_pin(PIN_RE_IDX, PIN_RE_FLAGS);
 	gpio_set_pin_low(PIN_RE_IDX);
 #endif
 
@@ -267,5 +274,11 @@ void board_init(void)
 
 	/* Configure SD/MMC card detect pin */
 	gpio_configure_pin(SD_MMC_0_CD_GPIO, SD_MMC_0_CD_FLAGS);
+#endif
+
+#if defined(CONF_BOARD_USB_PORT)
+# if defined(CONF_BOARD_USB_VBUS_DETECT)
+	gpio_configure_pin(USB_VBUS_PIN, USB_VBUS_FLAGS);
+# endif
 #endif
 }

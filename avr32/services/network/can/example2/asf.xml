@@ -14,5 +14,6 @@
 		<require idref="avr32.utils.print_funcs"/>
 		<require idref="avr32.services.network.can"/>
 		<require idref="common.services.basic.clock"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

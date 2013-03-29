@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-  <!-- Clock Settings //-->
+	<!-- Clock Settings //-->
 	<select-by-config id="avr32.applications.uc3-audio-player.common.clock" name="config.app.audio_player.clock" caption="USB Audio player application clocks" default="12.00_and_11.28">
 		<module type="meta" id="avr32.applications.uc3-audio-player.common.clock#12.00_and_11.28" caption="USB Audio player application clocks">
 			<build type="c-source" value="clocks/clocks_fosc0_12000000_fosc1_11289600.c"/>
@@ -103,6 +103,7 @@
 			<require idref="avr32.applications.uc3-audio-player.fs"/>
 			<build type="c-source" value="user_interface/gui/sdram_loader.c"/>
 			<build type="header-file" value="user_interface/gui/sdram_loader.h"/>
+			<build type="include-path" value="./user_interface/gui/."/>
 			<build type="header-file" value="conf/conf_dlmalloc.h"/>
 			<require idref="avr32.services.storage.dlmalloc"/>
 			<device-support value="uc3a"/>
@@ -116,7 +117,7 @@
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="Audio"/>
-		</info>		
+		</info>
 		<build type="c-source" value="com_task.c"/>
 		<build type="header-file" value="com_task.h"/>
 		<build type="header-file" value="com_task_struct.h"/>
@@ -152,6 +153,7 @@
 		<!-- Device supported //-->
 		<device-support value="uc3a"/>
 		<device-support value="uc3a3"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 	<!-- Device Specific //-->
 	<select-by-device id="avr32.applications.uc3-audio-player.common" caption="USB Audio player">
@@ -162,7 +164,7 @@
 			</info>
 			<info type="keyword" value="technology">
 				<keyword value="Audio"/>
-			</info>				
+			</info>
 			<build type="header-file" value="conf/conf_twi.h"/>
 			<require idref="avr32.applications.uc3-audio-player.common.base"/>
 			<build type="header-file" value="conf/conf_ebi.h"/>
@@ -179,7 +181,7 @@
 			</info>
 			<info type="keyword" value="technology">
 				<keyword value="Audio"/>
-			</info>			
+			</info>
 			<build type="c-source" value="user_interface/controller/qt60168_controller.c"/>
 			<build type="include-path" value="./user_interface/controller/"/>
 			<build type="header-file" value="conf/conf_qt60168.h"/>
@@ -192,7 +194,7 @@
 			<build type="linker-config" subtype="script" value="linker_scripts/at32uc3a3/256/gcc/link_uc3a3256_sdram.lds" toolchain="avr32gcc"/>
 			<device-support value="uc3a3"/>
 			<build type="distribute" subtype="file" value="docsrc/documentation_evk1104_software.h"/>
-                        <build type="distribute" subtype="file" value="docsrc/documentation_evk1104_hardware.h"/>
+			<build type="distribute" subtype="file" value="docsrc/documentation_evk1104_hardware.h"/>
 		</module>
 	</select-by-device>
 	<!-- USB //-->
@@ -224,6 +226,7 @@
 		<build type="header-file" value="usb_host_task.h"/>
 		<build type="c-source" value="usb_host_enum.c"/>
 		<build type="header-file" value="usb_host_enum.h"/>
+		<build type="include-path" value="."/>
 		<require idref="avr32.applications.uc3-audio-player.usb_common"/>
 		<device-support value="uc3"/>
 	</module>
@@ -275,7 +278,7 @@
 		<device-support value="uc3a"/>
 		<device-support value="uc3a3"/>
 		<build type="distribute" subtype="file" value="docsrc/documentation_mp3.h"/>
-        </module>
+	</module>
 	<!-- WAV Support //-->
 	<module type="meta" id="avr32.applications.uc3-audio-player.wav" caption="USB Audio player application: WAV">
 		<info type="description" value="summary">

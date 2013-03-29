@@ -1,35 +1,16 @@
 <asf xmlversion="1.0">
-	<select-by-device id="sam.utils.cmsis.dsp_lib.examples.arm_matrix_example" caption="Cortex-M4 CMSIS DSP Matrix Example">
+	<module type="application" id="sam.utils.cmsis.dsp_lib.examples.arm_matrix_example" caption="Cortex-M4 CMSIS DSP Matrix Example on SAM4">
 		<info type="description" value="summary">
-			Example code demonstrating least square fit to data using matrix functions.
+			Example code demonstrating least square fit to data using matrix functions on SAM4.
 		</info>
-		<module type="application" id="sam.utils.cmsis.dsp_lib.examples.arm_matrix_example#0" caption="Cortex-M4 CMSIS DSP Matrix Example on SAM4S">
-			<info type="description" value="summary">
-				Example code demonstrating least square fit to data using matrix functions on SAM4S.
-			</info>
-			<build type="c-source" value="arm_matrix_example_f32.c"/>
-			<build type="c-source" value="../Common/Source/math_helper.c"/>
-			<build type="header-file" value="../Common/Include/math_helper.h"/>
-			<build type="header-file" value="documentation.h"/>
-			<build type="include-path" value="."/>
-			<build type="include-path" value="../Common/Include"/>
-			<device-support value="sam4s"/>
-			<require idref="sam.utils.cmsis.sam4s.source.template"/>
-			<build type="distribute" subtype="license" value="../../../license.txt"/>
-		</module>
-		<module type="application" id="sam.utils.cmsis.dsp_lib.examples.arm_matrix_example#1" caption="Cortex-M4 CMSIS DSP Matrix Example on SAM4L">
-			<info type="description" value="summary">
-				Example code demonstrating least square fit to data using matrix functions on SAM4L.
-			</info>
-			<build type="c-source" value="arm_matrix_example_f32.c"/>
-			<build type="c-source" value="../Common/Source/math_helper.c"/>
-			<build type="header-file" value="../Common/Include/math_helper.h"/>
-			<build type="header-file" value="documentation.h"/>
-			<build type="include-path" value="."/>
-			<build type="include-path" value="../Common/Include"/>
-			<device-support value="sam4l"/>
-			<require idref="sam.utils.cmsis.sam4l.source.template"/>
-			<build type="distribute" subtype="license" value="../../../license.txt"/>
-		</module>
-	</select-by-device>
+		<build type="c-source" value="arm_matrix_example_f32.c"/>
+		<build type="c-source" value="../Common/Source/math_helper.c"/>
+		<build type="header-file" value="../Common/Include/math_helper.h"/>
+		<build type="header-file" value="documentation.h"/>
+		<build type="include-path" value="."/>
+		<build type="include-path" value="../Common/Include"/>
+		<device-support value="sam4"/>
+		<build type="distribute" subtype="license" value="../../../license.txt"/>
+		<info type="gui-flag" value="move-to-root"/>
+	</module>
 </asf>

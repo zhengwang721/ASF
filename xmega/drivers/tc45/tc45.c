@@ -3,7 +3,7 @@
  *
  * \brief AVR XMEGA TC4/5 Driver
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -55,9 +55,9 @@ static tc45_callback_t tc45_tcc4_ccd_callback;
 
 /**
  * \internal
- * \brief Interrupt handler for Timer Counter C0 overflow
+ * \brief Interrupt handler for Timer Counter C4 overflow
  *
- * This function will handle interrupt on Timer Counter CO overflow and
+ * This function will handle interrupt on Timer Counter C4 overflow and
  * call the callback function.
  */
 ISR(TCC4_OVF_vect)
@@ -69,9 +69,9 @@ ISR(TCC4_OVF_vect)
 
 /**
  * \internal
- * \brief Interrupt handler for Timer Counter C0 error
+ * \brief Interrupt handler for Timer Counter C4 error
  *
- * This function will handle interrupt on Timer Counter CO error and
+ * This function will handle interrupt on Timer Counter C4 error and
  * call the callback function.
  */
 ISR(TCC4_ERR_vect)
@@ -83,9 +83,9 @@ ISR(TCC4_ERR_vect)
 
 /**
  * \internal
- * \brief Interrupt handler for Timer Counter C0 Compare/CaptureA
+ * \brief Interrupt handler for Timer Counter C4 Compare/CaptureA
  *
- * This function will handle interrupt on Timer Counter CO Compare/CaptureA and
+ * This function will handle interrupt on Timer Counter C4 Compare/CaptureA and
  * call the callback function.
  */
 ISR(TCC4_CCA_vect)
@@ -97,9 +97,9 @@ ISR(TCC4_CCA_vect)
 
 /**
  * \internal
- * \brief Interrupt handler for Timer Counter C0 Compare/CaptureB
+ * \brief Interrupt handler for Timer Counter C4 Compare/CaptureB
  *
- * This function will handle interrupt on Timer Counter CO Compare/CaptureB and
+ * This function will handle interrupt on Timer Counter C4 Compare/CaptureB and
  * call the callback function.
  */
 ISR(TCC4_CCB_vect)
@@ -111,9 +111,9 @@ ISR(TCC4_CCB_vect)
 
 /**
  * \internal
- * \brief Interrupt handler for Timer Counter C0 Compare/CaptureC
+ * \brief Interrupt handler for Timer Counter C4 Compare/CaptureC
  *
- * This function will handle interrupt on Timer Counter CO Compare/CaptureC and
+ * This function will handle interrupt on Timer Counter C4 Compare/CaptureC and
  * call the callback function.
  */
 ISR(TCC4_CCC_vect)
@@ -125,9 +125,9 @@ ISR(TCC4_CCC_vect)
 
 /**
  * \internal
- * \brief Interrupt handler for Timer Counter C0 Compare/CaptureD
+ * \brief Interrupt handler for Timer Counter C4 Compare/CaptureD
  *
- * This function will handle interrupt on Timer Counter CO Compare/CaptureD and
+ * This function will handle interrupt on Timer Counter C4 Compare/CaptureD and
  * call the callback function.
  */
 ISR(TCC4_CCD_vect)
@@ -148,9 +148,9 @@ static tc45_callback_t tc45_tcc5_ccb_callback;
 
 /**
  * \internal
- * \brief Interrupt handler for Timer Counter C1 overflow
+ * \brief Interrupt handler for Timer Counter C5 overflow
  *
- * This function will handle interrupt on Timer Counter C1 overflow and
+ * This function will handle interrupt on Timer Counter C5 overflow and
  * call the callback function.
  */
 ISR(TCC5_OVF_vect)
@@ -162,9 +162,9 @@ ISR(TCC5_OVF_vect)
 
 /**
  * \internal
- * \brief Interrupt handler for Timer Counter C1 error
+ * \brief Interrupt handler for Timer Counter C5 error
  *
- * This function will handle interrupt on Timer Counter C1 error and
+ * This function will handle interrupt on Timer Counter C5 error and
  * call the callback function.
  */
 ISR(TCC5_ERR_vect)
@@ -176,9 +176,9 @@ ISR(TCC5_ERR_vect)
 
 /**
  * \internal
- * \brief Interrupt handler for Timer Counter C1 Compare/CaptureA
+ * \brief Interrupt handler for Timer Counter C5 Compare/CaptureA
  *
- * This function will handle interrupt on Timer Counter C1 Compare/CaptureA and
+ * This function will handle interrupt on Timer Counter C5 Compare/CaptureA and
  * call the callback function.
  */
 ISR(TCC5_CCA_vect)
@@ -190,9 +190,9 @@ ISR(TCC5_CCA_vect)
 
 /**
  * \internal
- * \brief Interrupt handler for Timer Counter C1 Compare/CaptureB
+ * \brief Interrupt handler for Timer Counter C5 Compare/CaptureB
  *
- * This function will handle interrupt on Timer Counter C1 Compare/CaptureB and
+ * This function will handle interrupt on Timer Counter C5 Compare/CaptureB and
  * call the callback function.
  */
 ISR(TCC5_CCB_vect)
@@ -210,14 +210,12 @@ static tc45_callback_t tc45_tcd5_ovf_callback;
 static tc45_callback_t tc45_tcd5_err_callback;
 static tc45_callback_t tc45_tcd5_cca_callback;
 static tc45_callback_t tc45_tcd5_ccb_callback;
-static tc45_callback_t tc45_tcd5_ccc_callback;
-static tc45_callback_t tc45_tcd5_ccd_callback;
 
 /**
  * \internal
- * \brief Interrupt handler for Timer Counter D0 overflow
+ * \brief Interrupt handler for Timer Counter D5 overflow
  *
- * This function will handle interrupt on Timer Counter D0 overflow and
+ * This function will handle interrupt on Timer Counter D5 overflow and
  * call the callback function.
  */
 ISR(TCD5_OVF_vect)
@@ -229,9 +227,9 @@ ISR(TCD5_OVF_vect)
 
 /**
  * \internal
- * \brief Interrupt handler for Timer Counter D0 error
+ * \brief Interrupt handler for Timer Counter D5 error
  *
- * This function will handle interrupt on Timer Counter D0 error and
+ * This function will handle interrupt on Timer Counter D5 error and
  * call the callback function.
  */
 ISR(TCD5_ERR_vect)
@@ -243,9 +241,9 @@ ISR(TCD5_ERR_vect)
 
 /**
  * \internal
- * \brief Interrupt handler for Timer Counter D0 Compare/CaptureA
+ * \brief Interrupt handler for Timer Counter D5 Compare/CaptureA
  *
- * This function will handle interrupt on Timer Counter D0 Compare/CaptureA and
+ * This function will handle interrupt on Timer Counter D5 Compare/CaptureA and
  * call the callback function.
  */
 ISR(TCD5_CCA_vect)
@@ -257,9 +255,9 @@ ISR(TCD5_CCA_vect)
 
 /**
  * \internal
- * \brief Interrupt handler for Timer Counter D0 Compare/CaptureB
+ * \brief Interrupt handler for Timer Counter D5 Compare/CaptureB
  *
- * This function will handle interrupt on Timer Counter D0 Compare/CaptureB and
+ * This function will handle interrupt on Timer Counter D5 Compare/CaptureB and
  * call the callback function.
  */
 ISR(TCD5_CCB_vect)
@@ -268,18 +266,17 @@ ISR(TCD5_CCB_vect)
 		tc45_tcd5_ccb_callback();
 	}
 }
-
 #endif
 
 /**
- * \brief Enable TC
+ * \brief Enable TC45
  *
- * Enables the TC.
+ * Enables the TC45.
  *
- * \param tc Pointer to TC module
+ * \param tc Pointer to TC45 module
  *
  * \note
- * unmask TC clock (sysclk), but does not configure the TC clock source.
+ * unmask TC45 clock (sysclk), but does not configure the TC45 clock source.
  */
 void tc45_enable(volatile void *tc)
 {
@@ -308,7 +305,6 @@ void tc45_enable(volatile void *tc)
 		cpu_irq_restore(iflags);
 		return;
 	}
-
 	sleepmgr_lock_mode(SLEEPMGR_IDLE);
 	cpu_irq_restore(iflags);
 }
@@ -347,15 +343,23 @@ void tc45_disable(volatile void *tc)
 		sysclk_disable_module(SYSCLK_PORT_D, SYSCLK_HIRES);
 	} else
 #endif
-
 	{
 		cpu_irq_restore(iflags);
 		return;
 	}
-
 	cpu_irq_restore(iflags);
 }
-
+/**
+ * \brief Calls the interrupt function if Overflow 
+ *
+ * Timer Counter tc45 overflow interrupt callback function
+ *
+ * \param tc Pointer to TC45 module
+ * \param callback  interrupt function which will be called 
+ * 
+ * \note
+ * unmask TC45 clock (sysclk), but does not configure the TC45 clock source.
+ */
 void tc45_set_overflow_interrupt_callback(volatile void *tc,
 		tc45_callback_t callback)
 {
@@ -376,7 +380,17 @@ void tc45_set_overflow_interrupt_callback(volatile void *tc,
 #endif
 	{}
 }
-
+/**
+ * \brief Calls the interrupt function if Error
+ *
+ * Timer Counter tc45 Error interrupt callback function
+ *
+ * \param tc Pointer to TC45 module
+ * \param callback  interrupt function which will be called 
+ * 
+ * \note
+ * unmask TC45 clock (sysclk), but does not configure the TC45 clock source.
+ */
 void tc45_set_error_interrupt_callback(volatile void *tc,
 		tc45_callback_t callback)
 {
@@ -397,7 +411,17 @@ void tc45_set_error_interrupt_callback(volatile void *tc,
 #endif
 	{}
 }
-
+/**
+ * \brief Calls the interrupt function if Compare/Capture A 
+ *
+ * Timer Counter tc45 Compare/Capture A interrupt callback function
+ *
+ * \param tc Pointer to TC45 module
+ * \param callback  interrupt function which will be called 
+ * 
+ * \note
+ * unmask TC45 clock (sysclk), but does not configure the TC45 clock source.
+ */
 void tc45_set_cca_interrupt_callback(volatile void *tc,
 		tc45_callback_t callback)
 {
@@ -418,7 +442,17 @@ void tc45_set_cca_interrupt_callback(volatile void *tc,
 #endif
 	{}
 }
-
+/**
+ * \brief Calls the interrupt function if Compare/Capture B 
+ *
+ * Timer Counter tc45 Compare/Capture B interrupt callback function
+ *
+ * \param tc Pointer to TC45 module
+ * \param callback  interrupt function which will be called 
+ * 
+ * \note
+ * unmask TC45 clock (sysclk), but does not configure the TC45 clock source.
+ */
 void tc45_set_ccb_interrupt_callback(volatile void *tc,
 		tc45_callback_t callback)
 {
@@ -439,7 +473,17 @@ void tc45_set_ccb_interrupt_callback(volatile void *tc,
 #endif
 	{}
 }
-
+/**
+ * \brief Calls the interrupt function if Compare/Capture C 
+ *
+ * Timer Counter tc45 Compare/Capture C interrupt callback function
+ *
+ * \param tc Pointer to TC45 module
+ * \param callback  interrupt function which will be called 
+ * 
+ * \note
+ * unmask TC45 clock (sysclk), but does not configure the TC45 clock source.
+ */
 void tc45_set_ccc_interrupt_callback(volatile void *tc,
 		tc45_callback_t callback)
 {
@@ -448,27 +492,25 @@ void tc45_set_ccc_interrupt_callback(volatile void *tc,
 		tc45_tcc4_ccc_callback = callback;
 	} else
 #endif
-
-#ifdef TCD5
-	if ((uintptr_t)tc == (uintptr_t)&TCD5) {
-		tc45_tcd5_ccc_callback = callback;
-	} else
-#endif
 	{}
 }
-
+/**
+ * \brief Calls the interrupt function if Compare/Capture D 
+ *
+ * Timer Counter tc45 Compare/Capture D interrupt callback function
+ *
+ * \param tc Pointer to TC45 module
+ * \param callback  interrupt function which will be called 
+ * 
+ * \note
+ * unmask TC45 clock (sysclk), but does not configure the TC45 clock source.
+ */
 void tc45_set_ccd_interrupt_callback(volatile void *tc,
 		tc45_callback_t callback)
 {
 #ifdef TCC4
 	if ((uintptr_t)tc == (uintptr_t)&TCC4) {
 		tc45_tcc4_ccd_callback = callback;
-	} else
-#endif
-
-#ifdef TCD5
-	if ((uintptr_t)tc == (uintptr_t)&TCD5) {
-		tc45_tcd5_ccd_callback = callback;
 	} else
 #endif
 	{}

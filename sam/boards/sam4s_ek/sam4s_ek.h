@@ -3,7 +3,7 @@
  *
  * \brief SAM4S-EK Board Definition.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -64,13 +64,13 @@
  */
 
 /** Board oscillator settings */
-#define BOARD_FREQ_SLCK_XTAL		(32768U)
-#define BOARD_FREQ_SLCK_BYPASS		(32768U)
-#define BOARD_FREQ_MAINCK_XTAL		(12000000U)
-#define BOARD_FREQ_MAINCK_BYPASS	(12000000U)
+#define BOARD_FREQ_SLCK_XTAL        (32768U)
+#define BOARD_FREQ_SLCK_BYPASS      (32768U)
+#define BOARD_FREQ_MAINCK_XTAL      (12000000U)
+#define BOARD_FREQ_MAINCK_BYPASS    (12000000U)
 
 /** Master clock frequency */
-#define BOARD_MCK					CHIP_FREQ_CPU_MAX
+#define BOARD_MCK                   CHIP_FREQ_CPU_MAX
 
 /** board main clock xtal statup time */
 #define BOARD_OSC_STARTUP_US   15625
@@ -99,8 +99,8 @@
 #define PINS_ADC_TRIG_FLAG  (PIO_PERIPH_B | PIO_DEFAULT)
 
 /** UART0 pins (UTXD0 and URXD0) definitions, PA9,10. */
-#define PINS_UART0		(PIO_PA9A_URXD0 | PIO_PA10A_UTXD0)
-#define PINS_UART0_FLAGS	(PIO_PERIPH_A | PIO_DEFAULT)
+#define PINS_UART0      (PIO_PA9A_URXD0 | PIO_PA10A_UTXD0)
+#define PINS_UART0_FLAGS    (PIO_PERIPH_A | PIO_DEFAULT)
 
 #define PINS_UART0_MASK PIO_PA9A_URXD0|PIO_PA10A_UTXD0
 #define PINS_UART0_PIO PIOA
@@ -306,26 +306,29 @@
 /** List of all push button definitions. */
 #define PINS_PUSHBUTTONS    PIN_PUSHBUTTON_1, PIN_PUSHBUTTON_2
 
-#define PIN_TC0_TIOA0		(PIO_PA0_IDX)
-#define PIN_TC0_TIOA0_FLAGS	(PIO_PERIPH_B | PIO_DEFAULT)
+#define PIN_TC0_TIOA0       (PIO_PA0_IDX)
+#define PIN_TC0_TIOA0_MUX   (IOPORT_MODE_MUX_B)
+#define PIN_TC0_TIOA0_FLAGS (PIO_PERIPH_B | PIO_DEFAULT)
 
-#define PIN_TC0_TIOA1		(PIO_PA15_IDX)
-#define PIN_TC0_TIOA1_FLAGS	(PIO_PERIPH_B | PIO_DEFAULT)
+#define PIN_TC0_TIOA1       (PIO_PA15_IDX)
+#define PIN_TC0_TIOA1_MUX   (IOPORT_MODE_MUX_B)
+#define PIN_TC0_TIOA1_FLAGS (PIO_PERIPH_B | PIO_DEFAULT)
 
-#define PIN_TC0_TIOA1_PIO     PIOA
+#define PIN_TC0_TIOA1_PIO   PIOA
 #define PIN_TC0_TIOA1_MASK  PIO_PA15
-#define PIN_TC0_TIOA1_ID      ID_PIOA
-#define PIN_TC0_TIOA1_TYPE   PIO_PERIPH_B
-#define PIN_TC0_TIOA1_ATTR   PIO_DEFAULT
+#define PIN_TC0_TIOA1_ID    ID_PIOA
+#define PIN_TC0_TIOA1_TYPE  PIO_PERIPH_B
+#define PIN_TC0_TIOA1_ATTR  PIO_DEFAULT
 
-#define PIN_TC0_TIOA2		(PIO_PA26_IDX)
-#define PIN_TC0_TIOA2_FLAGS	(PIO_INPUT | PIO_DEFAULT)
+#define PIN_TC0_TIOA2       (PIO_PA26_IDX)
+#define PIN_TC0_TIOA2_MUX   (IOPORT_MODE_MUX_B)
+#define PIN_TC0_TIOA2_FLAGS (PIO_PERIPH_B | PIO_DEFAULT)
 
-#define PIN_TC0_TIOA2_PIO     PIOA
+#define PIN_TC0_TIOA2_PIO   PIOA
 #define PIN_TC0_TIOA2_MASK  PIO_PA26
-#define PIN_TC0_TIOA2_ID      ID_PIOA
-#define PIN_TC0_TIOA2_TYPE   PIO_INPUT
-#define PIN_TC0_TIOA2_ATTR   PIO_DEFAULT
+#define PIN_TC0_TIOA2_ID    ID_PIOA
+#define PIN_TC0_TIOA2_TYPE  PIO_INPUT
+#define PIN_TC0_TIOA2_ATTR  PIO_DEFAULT
 
 /** PWMC PWM0 pin definition: Output High. */
 #define PIN_PWMC_PWMH0  {PIO_PC18B_PWMH0, PIOC, ID_PIOC, PIO_PERIPH_B, PIO_DEFAULT}
@@ -367,40 +370,40 @@
 #define PIN_PWM_LED2_FLAGS   (PIO_PERIPH_B | PIO_DEFAULT)
 
 /** SPI MISO pin definition. */
-#define SPI_MISO_GPIO 		      (PIO_PA12_IDX)
+#define SPI_MISO_GPIO             (PIO_PA12_IDX)
 #define SPI_MISO_FLAGS       (PIO_PERIPH_A | PIO_DEFAULT)
 /** SPI MOSI pin definition. */
-#define SPI_MOSI_GPIO 		      (PIO_PA13_IDX)
+#define SPI_MOSI_GPIO             (PIO_PA13_IDX)
 #define SPI_MOSI_FLAGS       (PIO_PERIPH_A | PIO_DEFAULT)
 /** SPI SPCK pin definition. */
-#define SPI_SPCK_GPIO 		      (PIO_PA14_IDX)
+#define SPI_SPCK_GPIO             (PIO_PA14_IDX)
 #define SPI_SPCK_FLAGS       (PIO_PERIPH_A | PIO_DEFAULT)
 
 /** SPI chip select 0 pin definition. (Only one configuration is possible) */
-#define SPI_NPCS0_GPIO 		      (PIO_PA11_IDX)
+#define SPI_NPCS0_GPIO            (PIO_PA11_IDX)
 #define SPI_NPCS0_FLAGS           (PIO_PERIPH_A | PIO_DEFAULT)
 /** SPI chip select 1 pin definition. (multiple configurations are possible) */
-#define SPI_NPCS1_PA9_GPIO 		  (PIO_PA9_IDX)
+#define SPI_NPCS1_PA9_GPIO        (PIO_PA9_IDX)
 #define SPI_NPCS1_PA9_FLAGS       (PIO_PERIPH_B | PIO_DEFAULT)
-#define SPI_NPCS1_PA31_GPIO 	  (PIO_PA31_IDX)
+#define SPI_NPCS1_PA31_GPIO       (PIO_PA31_IDX)
 #define SPI_NPCS1_PA31_FLAGS      (PIO_PERIPH_A | PIO_DEFAULT)
-#define SPI_NPCS1_PB14_GPIO 	  (PIO_PB14_IDX)
+#define SPI_NPCS1_PB14_GPIO       (PIO_PB14_IDX)
 #define SPI_NPCS1_PB14_FLAGS      (PIO_PERIPH_A | PIO_DEFAULT)
-#define SPI_NPCS1_PC4_GPIO 		  (PIO_PC4_IDX)
+#define SPI_NPCS1_PC4_GPIO        (PIO_PC4_IDX)
 #define SPI_NPCS1_PC4_FLAGS       (PIO_PERIPH_B | PIO_DEFAULT)
 /** SPI chip select 2 pin definition. (multiple configurations are possible) */
-#define SPI_NPCS2_PA10_GPIO 	  (PIO_PA10_IDX)
+#define SPI_NPCS2_PA10_GPIO       (PIO_PA10_IDX)
 #define SPI_NPCS2_PA10_FLAGS      (PIO_PERIPH_B | PIO_DEFAULT)
-#define SPI_NPCS2_PA30_GPIO 	  (PIO_PA30_IDX)
+#define SPI_NPCS2_PA30_GPIO       (PIO_PA30_IDX)
 #define SPI_NPCS2_PA30_FLAGS      (PIO_PERIPH_B | PIO_DEFAULT)
-#define SPI_NPCS2_PB2_GPIO 		  (PIO_PB2_IDX)
+#define SPI_NPCS2_PB2_GPIO        (PIO_PB2_IDX)
 #define SPI_NPCS2_PB2_FLAGS       (PIO_PERIPH_B | PIO_DEFAULT)
 /** SPI chip select 3 pin definition. (multiple configurations are possible) */
-#define SPI_NPCS3_PA3_GPIO 		  (PIO_PA3_IDX)
+#define SPI_NPCS3_PA3_GPIO        (PIO_PA3_IDX)
 #define SPI_NPCS3_PA3_FLAGS       (PIO_PERIPH_B | PIO_DEFAULT)
-#define SPI_NPCS3_PA5_GPIO 		  (PIO_PA5_IDX)
+#define SPI_NPCS3_PA5_GPIO        (PIO_PA5_IDX)
 #define SPI_NPCS3_PA5_FLAGS       (PIO_PERIPH_B | PIO_DEFAULT)
-#define SPI_NPCS3_PA22_GPIO 	  (PIO_PA22_IDX)
+#define SPI_NPCS3_PA22_GPIO       (PIO_PA22_IDX)
 #define SPI_NPCS3_PA22_FLAGS      (PIO_PERIPH_B | PIO_DEFAULT)
 
 /** SSC pin Transmitter Data (TD) */
@@ -414,8 +417,9 @@
 #define PIN_SSC_TF_FLAGS  (PIO_PERIPH_A | PIO_DEFAULT)
 
 /** PCK0 */
-#define PIN_PCK0		(PIO_PA6_IDX)
-#define PIN_PCK0_FLAGS	(PIO_PERIPH_B | PIO_DEFAULT)
+#define PIN_PCK0        (PIO_PA6_IDX)
+#define PIN_PCK0_MUX    (IOPORT_MODE_MUX_B)
+#define PIN_PCK0_FLAGS  (PIO_PERIPH_B | PIO_DEFAULT)
 
 #define PIN_PCK_0_MASK PIO_PA6
 #define PIN_PCK_0_PIO PIOA
@@ -423,8 +427,8 @@
 #define PIN_PCK_0_TYPE PIO_PERIPH_B
 #define PIN_PCK_0_ATTR PIO_DEFAULT
 
-#define PIN_PCK1		(PIO_PA17_IDX)
-#define PIN_PCK1_FLAGS	(PIO_PERIPH_B | PIO_DEFAULT)
+#define PIN_PCK1        (PIO_PA17_IDX)
+#define PIN_PCK1_FLAGS  (PIO_PERIPH_B | PIO_DEFAULT)
 
 #define PIN_PCK_1_MASK PIO_PA17
 #define PIN_PCK_1_PIO PIOA
@@ -461,9 +465,9 @@
 #define PIN_USART0_RTS_IDX        (PIO_PA7_IDX)
 #define PIN_USART0_RTS_FLAGS      (PIO_PERIPH_A | PIO_DEFAULT)
 /** USART0 pin SCK */
-#define PIN_USART0_SCK    {PIO_PA2B_SCK0, PIOA, ID_PIOA, PIO_PERIPH_A, PIO_DEFAULT}
+#define PIN_USART0_SCK    {PIO_PA2B_SCK0, PIOA, ID_PIOA, PIO_PERIPH_B, PIO_DEFAULT}
 #define PIN_USART0_SCK_IDX        (PIO_PA2_IDX)
-#define PIN_USART0_SCK_FLAGS      (PIO_PERIPH_A | PIO_DEFAULT)
+#define PIN_USART0_SCK_FLAGS      (PIO_PERIPH_B | PIO_DEFAULT)
 
 /** USART1 pin RX */
 #define PIN_USART1_RXD    {PIO_PA21A_RXD1, PIOA, ID_PIOA, PIO_PERIPH_A, PIO_DEFAULT}
@@ -491,13 +495,14 @@
 #define PIN_USART1_SCK_FLAGS      (PIO_PERIPH_A | PIO_DEFAULT)
 
 /** USB VBus monitoring pin definition. */
-#ifdef BOARD_REV_A
-#define PIN_USB_VBUS    {PIO_PC23, PIOC, ID_PIOC, PIO_INPUT, PIO_PULLUP}
-#endif
-
-#ifdef BOARD_REV_B
 #define PIN_USB_VBUS    {PIO_PC21, PIOC, ID_PIOC, PIO_INPUT, PIO_PULLUP}
-#endif
+#define USB_VBUS_FLAGS    (PIO_INPUT | PIO_DEBOUNCE | PIO_IT_EDGE)
+#define USB_VBUS_PIN_IRQn (PIOC_IRQn)
+#define USB_VBUS_PIN      (PIO_PC21_IDX)
+#define USB_VBUS_PIO_ID   (ID_PIOC)
+#define USB_VBUS_PIO_MASK (PIO_PC21)
+/* This pin can not be used as fast wakeup source such as
+ * USB_VBUS_WKUP PMC_FSMR_FSTT7 */
 
 /** NandFlash pins definition: OE. */
 #define PIN_EBI_NANDOE    (PIO_PC9_IDX)

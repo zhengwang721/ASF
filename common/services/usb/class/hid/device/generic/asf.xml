@@ -36,6 +36,7 @@
 			<device-support value="sam3a"/>
 			<device-support value="sam4s"/>
 			<device-support value="sam4l"/>
+			<device-support value="sam4e"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
 		<module type="service" id="common.services.usb.class.hid.device.generic.composite#disable" caption="USB Device HID Generic disabled">
@@ -82,6 +83,7 @@
 		<device-support value="sam3a"/>
 		<device-support value="sam4s"/>
 		<device-support value="sam4l"/>
+		<device-support value="sam4e"/>
 		<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 	</module>
 </asf>
