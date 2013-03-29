@@ -3,8 +3,6 @@
 		<info type="description" value="summary">
 		This example demonstrates the bus matrix provided on SAM microcontrollers.
 		</info>
-		<info type="gui-flag" value="move-to-root"/>
-		</info>
 		<build type="c-source" value="matrix_example.c"/>
 		<build type="include-path" value="."/>
 		<device-support value="sam"/>
