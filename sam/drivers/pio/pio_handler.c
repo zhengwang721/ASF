@@ -75,7 +75,7 @@ static uint32_t gs_ul_nb_sources = 0;
 #if (SAM3S || SAM4S || SAM4E)
 /* PIO Capture handler */
 static void (*pio_capture_handler)(Pio *) = NULL;
-extern uint32_t capture_enable_flag;
+extern uint32_t pio_capture_enable_flag;
 #endif
 
 /**
@@ -113,7 +113,7 @@ void pio_handler_process(Pio *p_pio, uint32_t ul_id)
 
 	/* Check capture events */
 #if (SAM3S || SAM4S || SAM4E)
-	if (capture_enable_flag) {
+	if (pio_capture_enable_flag) {
 		if (pio_capture_handler) {
 			pio_capture_handler(p_pio);
 		}

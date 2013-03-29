@@ -984,7 +984,7 @@ uint32_t pio_get_pin_group_mask(uint32_t ul_pin)
 
 #if (SAM3S || SAM4S || SAM4E)
 /* Capture mode enable flag */
-uint32_t capture_enable_flag;
+uint32_t pio_capture_enable_flag;
 
 /**
  * \brief Configure PIO capture mode.
@@ -1007,7 +1007,7 @@ void pio_capture_set_mode(Pio *p_pio, uint32_t ul_mode)
 void pio_capture_enable(Pio *p_pio)
 {
 	p_pio->PIO_PCMR |= PIO_PCMR_PCEN;
-	capture_enable_flag = true;
+	pio_capture_enable_flag = true;
 }
 
 /**
@@ -1018,7 +1018,7 @@ void pio_capture_enable(Pio *p_pio)
 void pio_capture_disable(Pio *p_pio)
 {
 	p_pio->PIO_PCMR &= (~PIO_PCMR_PCEN);
-	capture_enable_flag = false;
+	pio_capture_enable_flag = false;
 }
 
 /**
