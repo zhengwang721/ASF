@@ -169,7 +169,7 @@ void spi_unregister_callback(
 	module->callback[callback_type] = NULL;
 
 	/* Clear the bit corresponding to the callback_type */
-	module->registered_callback &= ~(0 << callback_type);
+	module->registered_callback &= ~(1 << callback_type);
 }
 
 /**
