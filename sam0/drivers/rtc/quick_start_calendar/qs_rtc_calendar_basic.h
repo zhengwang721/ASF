@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_samd20_rtc_calendar_basic_use_case Quick Start Guide for the RTC calendar - Basic
+ * \page asfdoc_samd20_rtc_calendar_basic_use_case Quick Start Guide for RTC (CAL) - Basic
  * In this use case, the RTC is set up in calendar mode. The time is set and
  * also a alarm is set to show a general use of the RTC in calendar mode. Also
  * the clock is swapped from 24h to 12h mode after initialization.
@@ -64,17 +64,17 @@
  *
  * \subsection asfdoc_samd20_rtc_calendar_basic_use_case_cal_basic_use_workflow Workflow
  * -# Make configuration structure.
- *  - \snippet qs_rtc_calendar_basic.c set_conf
+ *  \snippet qs_rtc_calendar_basic.c set_conf
  * -# Set default in configuration structure.
- *  - \snippet qs_rtc_calendar_basic.c get_default
+ *  \snippet qs_rtc_calendar_basic.c get_default
  * -# Make time structure for alarm and set with default and desired values.
- *  - \snippet qs_rtc_calendar_basic.c time_struct
+ *  \snippet qs_rtc_calendar_basic.c time_struct
  * -# Change configurations as desired.
- *  - \snippet qs_rtc_calendar_basic.c set_config
+ *  \snippet qs_rtc_calendar_basic.c set_config
  * -# Initialize module.
- *  - \snippet qs_rtc_calendar_basic.c init_rtc
+ *  \snippet qs_rtc_calendar_basic.c init_rtc
  * -# Enable module
- *  - \snippet qs_rtc_calendar_basic.c enable
+ *  \snippet qs_rtc_calendar_basic.c enable
  *
  * \section asfdoc_samd20_rtc_calendar_basic_use_case_count_basic_implement Implementation
  * There is no implementation for this quick start.

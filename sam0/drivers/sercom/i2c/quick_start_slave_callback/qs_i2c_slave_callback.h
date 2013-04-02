@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_samd20_i2c_slave_callback_use_case Quick Start Guide for the I2C Slave module - Callback Use Case
+ * \page asfdoc_samd20_i2c_slave_callback_use_case Quick Start Guide for SERCOM I2C Slave - Callback
  *
  * In this use case, the I<SUP>2</SUP>C will used and set up as follows:
  *  - Slave mode
@@ -84,21 +84,21 @@
  *
  * \subsection asfdoc_samd20_i2c_slave_callback_use_setup_workflow Workflow
  * -# Initialize system.
- *  - \snippet qs_i2c_slave_callback.c system_init
+ *  \snippet qs_i2c_slave_callback.c system_init
  * -# Configure and enable module:
- *  - \snippet qs_i2c_slave_callback.c config
+ *  \snippet qs_i2c_slave_callback.c config
  *   -# Create and initialize configuration structure.
- *    - \snippet qs_i2c_slave_callback.c init_conf
+ *    \snippet qs_i2c_slave_callback.c init_conf
  *   -# Change address and address mode settings in the configuration.
- *    - \snippet qs_i2c_slave_callback.c conf_changes
+ *    \snippet qs_i2c_slave_callback.c conf_changes
  *   -# Initialize the module with the set configurations.
- *     - \snippet qs_i2c_slave_callback.c init_module
+ *     \snippet qs_i2c_slave_callback.c init_module
  *   -# Enable the module.
- *    - \snippet qs_i2c_slave_callback.c enable_module
+ *    \snippet qs_i2c_slave_callback.c enable_module
  * -# Register and enable callback functions.
- *  - \snippet qs_i2c_slave_callback.c config_callback
+ *  \snippet qs_i2c_slave_callback.c config_callback
  *   -# Register and enable callbacks for read and write requests from master.
- *    - \snippet qs_i2c_slave_callback.c reg_en_i2c_callback
+ *    \snippet qs_i2c_slave_callback.c reg_en_i2c_callback
  *
  * \section asfdoc_samd20_i2c_slave_callback_use_implementation Implementation
  * \subsection asfdoc_samd20_i2c_slave_callback_use_implementation_code Code
@@ -106,7 +106,7 @@
  * \snippet qs_i2c_slave_callback.c while
  * \subsection i2c_slave_callback_use_implementation_workflow Workflow
  * -# Infinite while loop, while waiting for interaction from master.
- *  - \snippet qs_i2c_slave_callback.c while
+ *  \snippet qs_i2c_slave_callback.c while
  *
  * \section asfdoc_samd20_i2c_slave_callback_use_callback Callback
  * When an address packet is received, one of the callback functions will be
@@ -115,15 +115,15 @@
  * \subsection asfdoc_samd20_i2c_slave_callback_use_callback_workflow Workflow
  * - Read request callback:
  *  -# Length of buffer and buffer to be sent to master is initalized.
- *   - \snippet qs_i2c_slave_callback.c packet_write
+ *   \snippet qs_i2c_slave_callback.c packet_write
  *  -# Write packet to master.
- *   - \snippet qs_i2c_slave_callback.c write_packet
+ *   \snippet qs_i2c_slave_callback.c write_packet
  *
  * - Write request callback:
  *  -# Length of buffer and buffer to be read from master is initalized.
- *   - \snippet qs_i2c_slave_callback.c packet_read
+ *   \snippet qs_i2c_slave_callback.c packet_read
  *  -# Read packet from master.
- *   - \snippet qs_i2c_slave_callback.c read_packet
+ *   \snippet qs_i2c_slave_callback.c read_packet
  */
 
 #include <asf.h>

@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_samd20_adc_basic_use_case Quick Start Guide for the ADC module with callback support - Basic Use Case
+ * \page asfdoc_samd20_adc_basic_use_case_callback Quick Start Guide for ADC - Callback
  *
  * In this use case, the ADC will be convert 128 samples using interrupt driven conversion.
  * When all samples have been sampled, a callback will be called that signals the main
@@ -68,12 +68,12 @@
  * - No added sampling time
  * - Pin scan mode disabled
  *
- * \section asfdoc_samd20_adc_callback_basic_use_case_setup Quick Start
+ * \section asfdoc_samd20_adc_callback_basic_use_case_callback_setup Quick Start
  *
- * \subsection asfdoc_samd20_adc_basic_use_case_prereq Prerequisites
+ * \subsection asfdoc_samd20_adc_callback_basic_use_case_prereq Prerequisites
  * There are no special setup requirements for this use-case.
  *
- * \subsection asfdoc_samd20_adc_callback_basic_use_case_code Code
+ * \subsection asfdoc_samd20_adc_callback_basic_use_case_callback_code Code
  * Add to user application %main():
  * \snippet qs_adc_callback.c main
  * Add in same file as your %main():
@@ -81,26 +81,26 @@
  * \snippet qs_adc_callback.c job_complete_callback
  *
  *
- * \section asfdoc_samd20_adc_basic_use_case_workflow Workflow
+ * \section asfdoc_samd20_adc_basic_use_case_callback_workflow Workflow
  * -# Create variables for device software instance, config and channel config.
- *  - \snippet qs_adc_callback.c variable
+ *  \snippet qs_adc_callback.c variable
  * -# Initialize system (clock system)
- *  - \snippet qs_adc_callback.c system_init
+ *  \snippet qs_adc_callback.c system_init
  * -# Get ADC config defaults.
- *  - \snippet qs_adc_callback.c get_conf
+ *  \snippet qs_adc_callback.c get_conf
  * -# Modify ADC default configuration.
- *  - \snippet qs_adc_callback.c modify_conf
+ *  \snippet qs_adc_callback.c modify_conf
  * -# Initialize software instance with hardware module and write configuration
  * to the module.
- *  - \snippet qs_adc_callback.c init_adc
+ *  \snippet qs_adc_callback.c init_adc
  * -# Enable the ADC.
- *  - \snippet qs_adc_callback.c enable
+ *  \snippet qs_adc_callback.c enable
  * -# Configure and enable a conversion complete callback
- *  - \snippet qs_adc_callback.c setup_callback
+ *  \snippet qs_adc_callback.c setup_callback
  * -# Start an ADC conversion job of ADC_SAMPLES number of samples
- *  - \snippet qs_adc_callback.c start_adc_job
+ *  \snippet qs_adc_callback.c start_adc_job
  * -# Wait until job is complete
- *  - \snippet qs_adc_callback.c job_complete_poll
+ *  \snippet qs_adc_callback.c job_complete_poll
  * -# Hang in infinite loop.
- *  - \snippet qs_adc_callback.c inf_loop
+ *  \snippet qs_adc_callback.c inf_loop
  */

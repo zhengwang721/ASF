@@ -68,10 +68,10 @@
  * This is done by the gfx_mono_draw_string() and
  * gfx_mono_draw_progmem_string() functions.
  *
- * \param ch       Character to be drawn
- * \param x        X coordinate on screen.
- * \param y        Y coordinate on screen.
- * \param font     Font to draw character in
+ * \param[in] ch       Character to be drawn
+ * \param[in] x        X coordinate on screen.
+ * \param[in] y        Y coordinate on screen.
+ * \param[in] font     Font to draw character in
  */
 static void gfx_mono_draw_char_hugemem(const char ch, const gfx_coord_t x,
 		const gfx_coord_t y, const struct font *font)
@@ -155,10 +155,10 @@ static void gfx_mono_draw_char_hugemem(const char ch, const gfx_coord_t x,
  * This is done by the gfx_mono_draw_string() and
  * gfx_mono_draw_progmem_string() functions.
  *
- * \param ch       Character to be drawn
- * \param x        X coordinate on screen.
- * \param y        Y coordinate on screen.
- * \param font     Font to draw character in
+ * \param[in] ch       Character to be drawn
+ * \param[in] x        X coordinate on screen.
+ * \param[in] y        Y coordinate on screen.
+ * \param[in] font     Font to draw character in
  */
 static void gfx_mono_draw_char_progmem(const char ch, const gfx_coord_t x,
 		const gfx_coord_t y, const struct font *font)
@@ -213,10 +213,10 @@ static void gfx_mono_draw_char_progmem(const char ch, const gfx_coord_t x,
 /**
  * \brief Draws a character to the display
  *
- * \param c        Character to be drawn
- * \param x        X coordinate on screen.
- * \param y        Y coordinate on screen.
- * \param font     Font to draw character in
+ * \param[in] c        Character to be drawn
+ * \param[in] x        X coordinate on screen.
+ * \param[in] y        Y coordinate on screen.
+ * \param[in] font     Font to draw character in
  */
 void gfx_mono_draw_char(const char c, const gfx_coord_t x, const gfx_coord_t y,
 		const struct font *font)
@@ -247,10 +247,10 @@ void gfx_mono_draw_char(const char c, const gfx_coord_t x, const gfx_coord_t y,
  *
  * This function will draw a string located in memory to the display.
  *
- * \param str       Pointer to string
- * \param x         X coordinate on screen.
- * \param y         Y coordinate on screen.
- * \param font      Font to draw string in
+ * \param[in] str       Pointer to string
+ * \param[in] x         X coordinate on screen.
+ * \param[in] y         Y coordinate on screen.
+ * \param[in] font      Font to draw string in
  */
 void gfx_mono_draw_string(const char *str, gfx_coord_t x, gfx_coord_t y,
 		const struct font *font)
@@ -287,10 +287,10 @@ void gfx_mono_draw_string(const char *str, gfx_coord_t x, gfx_coord_t y,
  * Using program memory for constant strings will reduce the applications need
  * for RAM, and thus lower the overall size footprint.
  *
- * \param str       Pointer to string located in program memory
- * \param x         X coordinate on screen.
- * \param y         Y coordinate on screen.
- * \param font      Font to draw string in
+ * \param[in] str       Pointer to string located in program memory
+ * \param[in] x         X coordinate on screen.
+ * \param[in] y         Y coordinate on screen.
+ * \param[in] font      Font to draw string in
  */
 void gfx_mono_draw_progmem_string(char PROGMEM_PTR_T str, gfx_coord_t x,
 		gfx_coord_t y, const struct font *font)
@@ -329,10 +329,10 @@ void gfx_mono_draw_progmem_string(char PROGMEM_PTR_T str, gfx_coord_t x,
  * \note If string is empty the returned width will be 1 pixel and the height
  * equal to the font height.
  *
- * \param str      String to calculate bounding box for
- * \param font     Font used
- * \param width    Pointer to width result
- * \param height   Pointer to height result
+ * \param[in] str      String to calculate bounding box for
+ * \param[in] font     Font used
+ * \param[in] width    Pointer to width result
+ * \param[in] height   Pointer to height result
  */
 void gfx_mono_get_string_bounding_box(const char *str, const struct font *font,
 		gfx_coord_t *width, gfx_coord_t *height)
@@ -375,10 +375,10 @@ void gfx_mono_get_string_bounding_box(const char *str, const struct font *font,
  * \note If string is empty the returned width will be 1 pixel and the height
  * equal to the font height.
  *
- * \param str      String in program memory to calculate bounding box for
- * \param font     Font used
- * \param width    Pointer to width result
- * \param height   Pointer to height result
+ * \param[in] str      String in program memory to calculate bounding box for
+ * \param[in] font     Font used
+ * \param[in] width    Pointer to width result
+ * \param[in] height   Pointer to height result
  */
 void gfx_mono_get_progmem_string_bounding_box(char PROGMEM_PTR_T str,
 		const struct font *font, gfx_coord_t *width,

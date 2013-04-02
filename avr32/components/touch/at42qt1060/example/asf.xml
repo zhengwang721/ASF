@@ -4,7 +4,7 @@
 		Use the AT42QT1060 component to detect key touch and light LEDs.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="Touch" />
+			<keyword value="Touch"/>
 		</info>
 		<build type="c-source" value="at42qt1060_example.c"/>
 		<build type="header-file" value="conf_at42qt1060.h"/>
@@ -14,5 +14,6 @@
 		<require idref="avr32.components.touch.at42qt1060"/>
 		<require idref="avr32.drivers.pm"/>
 		<require idref="avr32.utils.print_funcs"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

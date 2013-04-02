@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_samd20_events_basic_use_case Quick Start Guide for the EVENT module - Basic Use Case
+ * \page asfdoc_samd20_events_basic_use_case Quick Start Guide for EVENTS - Basic
  *
  * In this use case, the EVENT module is configured for:
  *  \li One generator attached to event channel 0
@@ -68,44 +68,44 @@
  * \subsection asfdoc_samd20_events_basic_use_casesetup_flow Workflow
  * -# Create an event channel configuration struct, which can be filled out to
  *    adjust the configuration of a single event channel.
- *  - \snippet qs_events_basic.c setup_1
+ *  \snippet qs_events_basic.c setup_1
  * -# Initialize the event channel configuration struct with the module's
  *    default values.
  *    \note This should always be performed before using the configuration
  *          struct to ensure that all values are initialized to known default
  *          settings.
  *
- *  - \snippet qs_events_basic.c setup_2
+ *  \snippet qs_events_basic.c setup_2
  * -# Adjust the configuration struct to request that the channel be attached
  *    to the specified event generator, that rising edges of the event signal
  *    be detected on the channel and that the synchronous event path be used.
- *  - \snippet qs_events_basic.c setup_3
+ *  \snippet qs_events_basic.c setup_3
  * -# Configure the channel using the configuration structure.
  *    \note The existing configuration struct may be re-used, as long as any
  *          values that have been altered from the default settings are taken
  *          into account by the user application.
  *
- *  - \snippet qs_events_basic.c setup_4
+ *  \snippet qs_events_basic.c setup_4
  *
  * -# Create an event user configuration struct, which can be filled out to
  *    adjust the configuration of a single event user.
- *  - \snippet qs_events_basic.c setup_5
+ *  \snippet qs_events_basic.c setup_5
  * -# Initialize the event user configuration struct with the module's default
  *    values.
  *    \note This should always be performed before using the configuration
  *          struct to ensure that all values are initialized to known default
  *          settings.
  *
- *  - \snippet qs_events_basic.c setup_6
+ *  \snippet qs_events_basic.c setup_6
  * -# Adjust the configuration struct to request that the previously configured
  *    event channel be used as the event source for the user.
- *  - \snippet qs_events_basic.c setup_7
+ *  \snippet qs_events_basic.c setup_7
  * -# Configure the event user using the configuration structure.
  *    \note The existing configuration struct may be re-used, as long as any
  *          values that have been altered from the default settings are taken
  *          into account by the user application.
  *
- *  - \snippet qs_events_basic.c setup_8
+ *  \snippet qs_events_basic.c setup_8
  *
  * \section asfdoc_samd20_events_basic_use_case_main Use Case
  *
@@ -115,7 +115,7 @@
  *
  * \subsection events_basic_use_case_code_flow Workflow
  * -# Wait for the even channel to become ready to accept a new event trigger.
- *  - \snippet qs_events_basic.c main_1
+ *  \snippet qs_events_basic.c main_1
  * -# Perform a software event trigger on the configured event channel.
- *  - \snippet qs_events_basic.c main_2
+ *  \snippet qs_events_basic.c main_2
  */

@@ -526,6 +526,15 @@ void system_clock_init(void)
 {
 	struct system_gclk_gen_config gclk_generator_conf;
 
+#ifndef CONF_CLOCK_FLASH_WAIT_STATES
+	system_flash_set_waitstates(2);
+#else
+#   if CONF_CLOCK_CONFIGURE_FLASH_WAIT_STATES == true
+	system_flash_set_waitstates(CONF_CLOCK_FLASH_WAIT_STATES);
+#   endif
+
+#endif
+
 	/* XOSC */
 #if CONF_CLOCK_XOSC_ENABLE == true
 	struct system_clock_source_xosc_config xosc_conf;

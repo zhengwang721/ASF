@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_samd20_i2c_master_basic_use_case Quick Start Guide for the I2C Master module - Basic Use Case
+ * \page asfdoc_samd20_i2c_master_basic_use_case Quick Start Guide for SERCOM I2C Master - Basic
  *
  * In this use case, the I<SUP>2</SUP>C will used and set up as follows:
  *  - Master mode
@@ -77,30 +77,30 @@
  *
  * \subsection asfdoc_samd20_i2c_master_basic_use_setup_workflow Workflow
  * -# Initialize system.
- *  - \snippet qs_i2c_master_basic_use.c system_init
+ *  \snippet qs_i2c_master_basic_use.c system_init
  * -# Configure and enable module:
- *  - \snippet qs_i2c_master_basic_use.c configure_i2c
+ *  \snippet qs_i2c_master_basic_use.c configure_i2c
  *   -# Create and initialize configuration structure.
- *    - \snippet qs_i2c_master_basic_use.c init_conf
+ *    \snippet qs_i2c_master_basic_use.c init_conf
  *   -# Change settings in the configuration.
- *    - \snippet qs_i2c_master_basic_use.c conf_change
+ *    \snippet qs_i2c_master_basic_use.c conf_change
  *   -# Initialize the module with the set configurations.
- *    - \snippet qs_i2c_master_basic_use.c init_module
+ *    \snippet qs_i2c_master_basic_use.c init_module
  *   -# Enable the module.
- *    - \snippet qs_i2c_master_basic_use.c enable_module
+ *    \snippet qs_i2c_master_basic_use.c enable_module
  * -# Create a variable to see when we should stop trying to send packet.
- *  - \snippet qs_i2c_master_basic_use.c timeout
+ *  \snippet qs_i2c_master_basic_use.c timeout
  * -# Create a packet to send:
- *  - \snippet qs_i2c_master_basic_use.c packet
+ *  \snippet qs_i2c_master_basic_use.c packet
  *
  * \section asfdoc_samd20_i2c_master_basic_use_implemenation Implementation
  * \subsection asfdoc_samd20_i2c_master_basic_use_implemenation_code Code
  * Add to user application %main():
- * \snippet snippet qs_i2c_master_basic_use.c 
+ * \snippet snippet qs_i2c_master_basic_use.c
  *
  * \subsection asfdoc_samd20_i2c_master_basic_use_implemenation_workflow Workflow
  * -# Write packet to slave.
- *  - \snippet qs_i2c_master_basic_use.c write_packet
+ *  \snippet qs_i2c_master_basic_use.c write_packet
  * The module will try to send the packet TIMEOUT number of times or until it is
  * successfully sent.
  *

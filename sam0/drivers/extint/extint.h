@@ -300,6 +300,8 @@ struct extint_nmi_conf {
 	uint32_t gpio_pin;
 	/** MUX position the GPIO pin should be configured to. */
 	uint32_t gpio_pin_mux;
+	/** Internal pull to enable on the input pin. */
+	enum extint_pull gpio_pin_pull;
 	/** Filter the raw input signal to prevent noise from triggering an
 	 *  interrupt accidentally, using a 3 sample majority filter. */
 	bool filter_input_signal;
@@ -555,6 +557,7 @@ static inline void extint_nmi_get_config_defaults(
 	/* Default configuration values */
 	config->gpio_pin            = 0;
 	config->gpio_pin_mux        = 0;
+	config->gpio_pin_pull       = EXTINT_PULL_UP;
 	config->filter_input_signal = false;
 	config->detection_criteria  = EXTINT_DETECT_FALLING;
 }

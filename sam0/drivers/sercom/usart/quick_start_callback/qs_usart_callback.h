@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_samd20_sercom_usart_callback_use_case Quick Start Guide for the USART module - Callback
+ * \page asfdoc_samd20_sercom_usart_callback_use_case Quick Start Guide for SERCOM USART - Callback
  *
  * TODO
  *

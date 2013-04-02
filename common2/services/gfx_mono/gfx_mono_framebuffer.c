@@ -46,9 +46,10 @@
 /* Pointer to the framebuffer; updated by the gfx_mono_set_framebuffer function */
 static uint8_t *fbpointer;
 
-/* \brief Set the LCD framebuffer.
+/**
+ * \brief Set the LCD framebuffer.
  *
- * \param framebuffer A pointer to an allocated area of RAM that can hold the
+ * \param[in] framebuffer A pointer to an allocated area of RAM that can hold the
  * framebuffer.
  *
  * A small example:
@@ -65,10 +66,10 @@ void gfx_mono_set_framebuffer(uint8_t *framebuffer)
 /**
  * \brief Put a page from RAM to the framebuffer
  *
- * \param data Pointer to data to be written
- * \param page Page address
- * \param column Offset into page (x coordinate)
- * \param width Number of bytes to be written.
+ * \param[in] data Pointer to data to be written
+ * \param[in] page Page address
+ * \param[in] column Offset into page (x coordinate)
+ * \param[in] width Number of bytes to be written.
  *
  * The following example will write 32 bytes from data_buf to the page 0,
  * column 10 (byte 10 to 42 in the framebuffer).
@@ -91,10 +92,10 @@ void gfx_mono_framebuffer_put_page(gfx_mono_color_t *data, gfx_coord_t page,
 /**
  * \brief Read a page from the framebuffer
  *
- * \param data   Pointer where to store the read data
- * \param page   Page address
- * \param column Offset into page (x coordinate)
- * \param width  Number of bytes to be read
+ * \param[in] data   Pointer where to store the read data
+ * \param[in] page   Page address
+ * \param[in] column Offset into page (x coordinate)
+ * \param[in] width  Number of bytes to be read
  *
  * The following example will read back the first 128 bytes (first page) from
  * the framebuffer:
@@ -115,9 +116,9 @@ void gfx_mono_framebuffer_get_page(gfx_mono_color_t *data, gfx_coord_t page, \
 /**
  * \brief Draw pixel to framebuffer
  *
- * \param x         X coordinate of the pixel
- * \param y         Y coordinate of the pixel
- * \param color     Pixel operation
+ * \param[in] x         X coordinate of the pixel
+ * \param[in] y         Y coordinate of the pixel
+ * \param[in] color     Pixel operation
  *
  */
 void gfx_mono_framebuffer_draw_pixel(gfx_coord_t x, gfx_coord_t y,
@@ -165,8 +166,8 @@ void gfx_mono_framebuffer_draw_pixel(gfx_coord_t x, gfx_coord_t y,
 /**
  * \brief Get the pixel value at x,y in framebuffer
  *
- * \param x      X coordinate of pixel
- * \param y      Y coordinate of pixel
+ * \param[in] x      X coordinate of pixel
+ * \param[in] y      Y coordinate of pixel
  * \return Non zero value if pixel is set.
  *
  */
@@ -188,9 +189,9 @@ uint8_t gfx_mono_framebuffer_get_pixel(gfx_coord_t x, gfx_coord_t y)
 /**
  * \brief Put a byte to the framebuffer
  *
- * \param page   Page address
- * \param column Page offset (x coordinate)
- * \param data   Data to be written
+ * \param[in] page   Page address
+ * \param[in] column Page offset (x coordinate)
+ * \param[in] data   Data to be written
  *
  * This example will put the value 0xFF to the first byte in the framebuffer
  * \code
@@ -206,8 +207,8 @@ void gfx_mono_framebuffer_put_byte(gfx_coord_t page, gfx_coord_t column,
 /**
  * \brief Get a byte from the framebuffer
  *
- * \param page   Page address
- * \param column Page offset (x coordinate)
+ * \param[in] page   Page address
+ * \param[in] column Page offset (x coordinate)
  * \return       data from LCD controller or framebuffer.
  *
  * The following code will read the first byte of the framebuffer
@@ -227,10 +228,10 @@ uint8_t gfx_mono_framebuffer_get_byte(gfx_coord_t page, gfx_coord_t column)
  * do a mask operation on the byte according to the pixel operation selected
  * by the color argument and the pixel mask provided.
  *
- * \param page       Page address
- * \param column     Page offset (x coordinate)
- * \param pixel_mask Mask for pixel operation
- * \param color      Pixel operation
+ * \param[in] page       Page address
+ * \param[in] column     Page offset (x coordinate)
+ * \param[in] pixel_mask Mask for pixel operation
+ * \param[in] color      Pixel operation
  *
  * A small example that will XOR the first byte of the framebuffer with 0xAA
  * \code

@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_samd20_wdt_basic_use_case Quick Start Guide for the Watchdog module - Basic Use Case
+ * \page asfdoc_samd20_wdt_basic_use_case Quick Start Guide for WDT - Basic
  *
  * In this use case, the Watchdog module is configured for:
  *  \li System reset after 4096 clocks of the Watchdog generic clock
@@ -69,22 +69,22 @@
  * \subsection asfdoc_samd20_wdt_basic_use_case_setup_flow Workflow
  * -# Create a Watchdog module configuration struct, which can be filled out to
  *    adjust the configuration of the Watchdog.
- *  - \snippet qs_wdt_basic.c setup_1
+ *  \snippet qs_wdt_basic.c setup_1
  * -# Initialize the Watchdog configuration struct with the module's default
  *    values.
  *    \note This should always be performed before using the configuration
  *          struct to ensure that all values are initialized to known default
  *          settings.
  *
- *  - \snippet qs_wdt_basic.c setup_2
+ *  \snippet qs_wdt_basic.c setup_2
  * -# Adjust the configuration struct to set the timeout period and lock mode
  *    of the Watchdog.
- *  - \snippet qs_wdt_basic.c setup_3
+ *  \snippet qs_wdt_basic.c setup_3
  * -# Initialize the Watchdog to configure the module with the requested
  *    settings.
- *  - \snippet qs_wdt_basic.c setup_4
+ *  \snippet qs_wdt_basic.c setup_4
  * -# Enable the Watchdog to start the module.
- *  - \snippet qs_wdt_basic.c setup_5
+ *  \snippet qs_wdt_basic.c setup_5
  *
  * \section asfdoc_samd20_wdt_basic_use_case Use Case
  *
@@ -95,13 +95,13 @@
  * \subsection asfdoc_samd20_wdt_basic_use_case_main Workflow
  * -# Retrieve the cause of the system reset to determine if the watchdog module
  *    was the cause of the last reset.
- *  - \snippet qs_wdt_basic.c main_1
+ *  \snippet qs_wdt_basic.c main_1
  * -# Turn on or off the board LED based on whether the watchdog reset the device.
- *  - \snippet qs_wdt_basic.c main_2
+ *  \snippet qs_wdt_basic.c main_2
  * -# Enter an infinite loop to hold the main program logic.
- *  - \snippet qs_wdt_basic.c main_3
+ *  \snippet qs_wdt_basic.c main_3
  * -# Test to see if the board button is currently being pressed.
- *  - \snippet qs_wdt_basic.c main_4
+ *  \snippet qs_wdt_basic.c main_4
  * -# If the button is pressed, turn off board LED and reset the Watchdog timer.
- *  - \snippet qs_wdt_basic.c main_5
+ *  \snippet qs_wdt_basic.c main_5
  */

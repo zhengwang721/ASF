@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_samd20_nvm_basic_use_case Quick Start Guide for the NVM module - Basic Use Case
+ * \page asfdoc_samd20_nvm_basic_use_case Quick Start Guide for NVM - Basic
  *
  * In this use case, the NVM module is configured for:
  *  \li Power reduction mode enabled after sleep until first NVM access
@@ -70,16 +70,16 @@
  * \subsection asfdoc_samd20_nvm_basic_use_case_setup_flow Workflow
  * -# Create an NVM module configuration struct, which can be filled
  *    out to adjust the configuration of the NVM controller.
- *  - \snippet qs_nvm_basic.c setup_1
+ *  \snippet qs_nvm_basic.c setup_1
  * -# Initialize the NVM configuration struct with the module's default
  *    values.
  *    \note This should always be performed before using the configuration
  *          struct to ensure that all values are initialized to known default
  *          settings.
  *
- *  - \snippet qs_nvm_basic.c setup_2
+ *  \snippet qs_nvm_basic.c setup_2
  * -# Configure NVM controller with the created configuration struct settings.
- *  - \snippet qs_nvm_basic.c setup_3
+ *  \snippet qs_nvm_basic.c setup_3
  *
  * \section asfdoc_samd20_nvm_basic_use_case_main Use Case
  *
@@ -90,23 +90,23 @@
  * \subsection asfdoc_samd20_nvm_basic_use_case_main_flow Workflow
  * -# Set up a buffer one NVM page in size to hold data to read or write into
  *    NVM memory.
- *  - \snippet qs_nvm_basic.c main_1
+ *  \snippet qs_nvm_basic.c main_1
  * -# Fill the buffer with a pattern of data.
- *  - \snippet qs_nvm_basic.c main_2
+ *  \snippet qs_nvm_basic.c main_2
  * -# Create a variable to hold the error status from the called NVM functions.
- *  - \snippet qs_nvm_basic.c main_3
+ *  \snippet qs_nvm_basic.c main_3
  * -# Erase a page of NVM data. As the NVM could be busy initializing or
  *    completing a previous operation, a loop is used to retry the command while
  *    the NVM controller is busy.
  *    \note This must be performed before writing new data into a NVM page.
  *
- *  - \snippet qs_nvm_basic.c main_4
+ *  \snippet qs_nvm_basic.c main_4
  * -# Write the buffer of data to the previously erased page of the NVM.
  *    \note The new data will be written to NVM memory automatically, as the
  *          NVM controller is configured in automatic page write mode.
  *
- *  - \snippet qs_nvm_basic.c main_5
+ *  \snippet qs_nvm_basic.c main_5
  * -# Read back the written page of page from the NVM into the buffer.
- *  - \snippet qs_nvm_basic.c main_6
+ *  \snippet qs_nvm_basic.c main_6
  */
 

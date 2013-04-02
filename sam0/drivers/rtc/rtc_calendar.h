@@ -821,7 +821,7 @@ static inline void rtc_calendar_disable_events(
 
 
 /**
- * \page asfdoc_samd20_rtc_calendar_extra Extra Information
+ * \page asfdoc_samd20_rtc_calendar_extra Extra Information for RTC (CAL) Driver
  *
  * \section asfdoc_samd20_rtc_calendar_extra_acronyms Acronyms
  * Below is a table listing the acronyms used in this module, along with their
@@ -874,7 +874,7 @@ static inline void rtc_calendar_disable_events(
  */
 
 /**
- * \page asfdoc_samd20_rtc_calendar_exqsg Examples for RTC Calendar Driver
+ * \page asfdoc_samd20_rtc_calendar_exqsg Examples for RTC (CAL) Driver
  *
  * This is a list of the available Quick Start guides (QSGs) and example
  * applications for \ref asfdoc_samd20_rtc_calendar_group. QSGs are simple

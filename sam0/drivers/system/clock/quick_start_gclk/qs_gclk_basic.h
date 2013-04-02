@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_samd20_system_gclk_basic_use_case Quick Start Guide for the GCLK module - Basic Use Case
+ * \page asfdoc_samd20_system_gclk_basic_use_case Quick Start Guide for SYSTEM CLOCK - GCLK Configuration
  *
  * In this use case, the GCLK module is configured for:
  *  \li One generator attached to source channel 0
@@ -69,50 +69,50 @@
  * \subsection asfdoc_samd20_system_gclk_basic_use_case_setup_flow Workflow
  * -# Create a GCLK generator configuration struct, which can be filled out to
  *    adjust the configuration of a single clock generator.
- *  - \snippet qs_gclk_basic.c setup_1
+ *  \snippet qs_gclk_basic.c setup_1
  * -# Initialize the generator configuration struct with the module's default
  *    values.
  *    \note This should always be performed before using the configuration
  *          struct to ensure that all values are initialized to known default
  *          settings.
  *
- *  - \snippet qs_gclk_basic.c setup_2
+ *  \snippet qs_gclk_basic.c setup_2
  * -# Adjust the configuration struct to request that the master clock source
  *    channel 0 be used as the source of the generator, and set the generator
  *    output prescaler to divide the input clock by a factor of 128.
- *  - \snippet qs_gclk_basic.c setup_3
+ *  \snippet qs_gclk_basic.c setup_3
  * -# Configure the generator using the configuration structure.
  *    \note The existing configuration struct may be re-used, as long as any
  *          values that have been altered from the default settings are taken
  *          into account by the user application.
  *
- *  - \snippet qs_gclk_basic.c setup_4
+ *  \snippet qs_gclk_basic.c setup_4
  * -# Enable the generator once it has been properly configured, to begin clock
  *    generation.
- *  - \snippet qs_gclk_basic.c setup_5
+ *  \snippet qs_gclk_basic.c setup_5
  *
  * -# Create a GCLK channel configuration struct, which can be filled out to
  *    adjust the configuration of a single generic clock channel.
- *  - \snippet qs_gclk_basic.c setup_6
+ *  \snippet qs_gclk_basic.c setup_6
  * -# Initialize the channel configuration struct with the module's default
  *    values.
  *    \note This should always be performed before using the configuration
  *          struct to ensure that all values are initialized to known default
  *          settings.
  *
- *  - \snippet qs_gclk_basic.c setup_7
+ *  \snippet qs_gclk_basic.c setup_7
  * -# Adjust the configuration struct to request that the previously configured
  *    and enabled clock generator be used as the clock source for the channel.
- *  - \snippet qs_gclk_basic.c setup_8
+ *  \snippet qs_gclk_basic.c setup_8
  * -# Configure the channel using the configuration structure.
  *    \note The existing configuration struct may be re-used, as long as any
  *          values that have been altered from the default settings are taken
  *          into account by the user application.
  *
- *  - \snippet qs_gclk_basic.c setup_9
+ *  \snippet qs_gclk_basic.c setup_9
  * -# Enable the channel once it has been properly configured, to output the
  *    clock to the channel's peripheral module consumers.
- *  - \snippet qs_gclk_basic.c setup_10
+ *  \snippet qs_gclk_basic.c setup_10
  *
  * \section asfdoc_samd20_system_gclk_basic_use_case_main Use Case
  *

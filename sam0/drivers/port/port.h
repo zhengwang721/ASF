@@ -410,7 +410,7 @@ static inline void port_pin_toggle_output_level(
 /** @} */
 
 /**
- * \page asfdoc_samd20_port_extra Extra Information
+ * \page asfdoc_samd20_port_extra Extra Information for PORT Driver
  *
  * \section asfdoc_samd20_port_extra_acronyms Acronyms
  * Below is a table listing the acronyms used in this module, along with their

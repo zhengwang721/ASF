@@ -56,7 +56,7 @@
  * System fonts are by design read only, hence there are not any functions to
  * change them during runtime. If the application needs additional fonts it
  * should add additional font objects.
- *
+ * \section asfdoc_common2_gfx_mono_sysfont_api_overview API Overview
  * @{
  */
 

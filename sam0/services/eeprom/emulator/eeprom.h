@@ -259,8 +259,19 @@ extern "C" {
 /** Size of the user data portion of each logical EEPROM page, in bytes. */
 #define EEPROM_PAGE_SIZE            (NVMCTRL_PAGE_SIZE - EEPROM_HEADER_SIZE)
 
-/** @} */
+/**
+ * \brief EEPROM memory parameter structure.
+ *
+ * Structure containing the memory layout parameters of the EEPROM emulator module.
+ */
+struct eeprom_emulator_parameters {
+	/** Number of bytes per emulated EEPROM page. */
+	uint8_t  page_size;
+	/** Number of emulated pages of EEPROM. */
+	uint16_t eeprom_number_of_pages;
+};
 
+/** @} */
 
 /** \name Configuration and initialization
  * @{
@@ -269,6 +280,9 @@ extern "C" {
 enum status_code eeprom_emulator_init(void);
 
 void eeprom_emulator_erase_memory(void);
+
+enum status_code eeprom_emulator_get_parameters(
+		struct eeprom_emulator_parameters *const parameters);
 
 /** @} */
 

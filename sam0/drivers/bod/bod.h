@@ -257,7 +257,7 @@ static inline enum status_code bod_disable(
 
 
 /**
- * \page asfdoc_samd20_bod_extra Extra Information
+ * \page asfdoc_samd20_bod_extra Extra Information for BOD Driver
  *
  * \section asfdoc_samd20_bod_extra_acronyms Acronyms
  * Below is a table listing the acronyms used in this module, along with their

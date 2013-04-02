@@ -12,5 +12,6 @@
 		<device-support value="xmegaau"/>
 		<require idref="xmega.drivers.des"/>
 		<require idref="common.services.basic.sleepmgr"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

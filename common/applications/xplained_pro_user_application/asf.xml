@@ -11,5 +11,6 @@
 			start a project which works with the ASF application builder wizard, and
 			demonstrates basic usage of LED and buttons on the Xplained Pro series.
 		</info>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

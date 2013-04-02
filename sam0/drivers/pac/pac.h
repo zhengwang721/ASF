@@ -672,7 +672,7 @@ __no_inline enum status_code system_peripheral_unlock(
 /** @}  */
 
 /**
- * \page asfdoc_samd20_pac_extra Extra Information
+ * \page asfdoc_samd20_pac_extra Extra Information for PAC Driver
  *
  * \section asfdoc_samd20_pac_extra_acronyms Acronyms
  * Below is a table listing the acronyms used in this module, along with their

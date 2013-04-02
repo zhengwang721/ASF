@@ -16,6 +16,7 @@
 		<require idref="common.services.basic.clock"/>
 		<require idref="common.services.ioport"/>
 		<require idref="xmega.drivers.pmic"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 	<module type="application" id="xmega.drivers.pmic.example_xmegae" caption="PMIC Example">
 		<info type="description" value="summary">
@@ -30,5 +31,6 @@
 		<require idref="common.services.basic.clock"/>
 		<require idref="common.services.ioport"/>
 		<require idref="xmega.drivers.pmic"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

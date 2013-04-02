@@ -1075,7 +1075,7 @@ static inline void ac_win_clear_detected(
 
 
 /**
- * \page asfdoc_samd20_ac_extra Extra Information
+ * \page asfdoc_samd20_ac_extra Extra Information for AC Driver
  *
  * \section asfdoc_samd20_ac_extra_acronyms Acronyms
  * Below is a table listing the acronyms used in this module, along with their

@@ -65,8 +65,8 @@ struct gfx_mono_bitmap menu_bitmap_indicator = {
 /**
  * \brief Draw menu strings and an icon by the current selection.
  *
- * \param menu     a menu struct with menu settings
- * \param redraw   clear screen before drawing menu
+ * \param[in] menu     a menu struct with menu settings
+ * \param[in] redraw   clear screen before drawing menu
  */
 static void menu_draw(struct gfx_mono_menu *menu, bool redraw)
 {
@@ -118,7 +118,7 @@ static void menu_draw(struct gfx_mono_menu *menu, bool redraw)
 /**
  * *\brief Initialize the menu handling. Clear screen and draw menu.
  *
- * \param menu  menu struct with menu options
+ * \param[in] menu  menu struct with menu options
  *
  */
 void gfx_mono_menu_init(struct gfx_mono_menu *menu)
@@ -138,8 +138,8 @@ void gfx_mono_menu_init(struct gfx_mono_menu *menu)
 /**
  * \brief Update menu depending on input.
  *
- * \param menu  menu struct with menu options
- * \param keycode  keycode to process
+ * \param[in] menu  menu struct with menu options
+ * \param[in] keycode  keycode to process
  *
  * \retval selected menu option or status code
  */
