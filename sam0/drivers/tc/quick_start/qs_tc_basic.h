@@ -81,21 +81,21 @@
  *
  * \section asfdoc_samd20_tc_basic_use_case_workflow Workflow
  * -# Initialize system.
- *  - \snippet qs_tc_basic.c system_init
+ *  \snippet qs_tc_basic.c system_init
  * -# Create configuration struct.
- *  - \snippet qs_tc_basic.c config
+ *  \snippet qs_tc_basic.c config
  * -# Create software device instance struct.
- *  - \snippet qs_tc_basic.c dev_inst
+ *  \snippet qs_tc_basic.c dev_inst
  * -# Get default configuration values.
- *  - \snippet qs_tc_basic.c tc_get_config_defaults
+ *  \snippet qs_tc_basic.c tc_get_config_defaults
  * -# Set up PWM output on channel 0.
- *   - \snippet qs_tc_basic.c pwm_channel_0
+ *   \snippet qs_tc_basic.c pwm_channel_0
  * -# Set counter size, wave generation mode and compare capture value.
- *  - \snippet qs_tc_basic.c setup
+ *  \snippet qs_tc_basic.c setup
  * -# Initialize the TC module based on given configuration values.
- *  - \snippet qs_tc_basic.c tc_init
+ *  \snippet qs_tc_basic.c tc_init
  * -# Enable and start the TC module.
- *  - \snippet qs_tc_basic.c tc_enable
+ *  \snippet qs_tc_basic.c tc_enable
  * -# Loop infinitly. Let the module generate PWM signal.
- *  - \snippet qs_tc_basic.c inf_loop
+ *  \snippet qs_tc_basic.c inf_loop
  */

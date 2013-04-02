@@ -78,45 +78,45 @@
  *
  * \section asfdoc_samd20_sercom_spi_basic_use_case_workflow Workflow
  * -# Create configuration struct.
- *  - \snippet qs_spi_basic.c config
+ *  \snippet qs_spi_basic.c config
  * -# Create software device instance struct.
- *  - \snippet qs_spi_basic.c dev_inst
+ *  \snippet qs_spi_basic.c dev_inst
  * -# Create peripheral slave configuration struct.
- *  - \snippet qs_spi_basic.c slave_config
+ *  \snippet qs_spi_basic.c slave_config
  * -# Create peripheral slave software device instance struct.
- *  - \snippet qs_spi_basic.c slave_dev_inst
+ *  \snippet qs_spi_basic.c slave_dev_inst
  * -# Initialize system.
- *  - \snippet qs_spi_basic.c system_init
+ *  \snippet qs_spi_basic.c system_init
  * -# Get default peripheral slave configuration.
- *  - \snippet qs_spi_basic.c slave_conf_defaults
+ *  \snippet qs_spi_basic.c slave_conf_defaults
  * -# Set Slave Select pin.
- *  - \snippet qs_spi_basic.c ss_pin
+ *  \snippet qs_spi_basic.c ss_pin
   * -# Initialize peripheral slave software instance with configuration.
- *  - \snippet qs_spi_basic.c slave_init
+ *  \snippet qs_spi_basic.c slave_init
  * -# Get default configuration to edit.
- *  - \snippet qs_spi_basic.c conf_defaults
+ *  \snippet qs_spi_basic.c conf_defaults
  * -# Set mux setting E.
- *  - \snippet qs_spi_basic.c mux_setting
+ *  \snippet qs_spi_basic.c mux_setting
  * -# Set pinmux for pad 0 (data in on pin PA14).
- *  - \snippet qs_spi_basic.c di
+ *  \snippet qs_spi_basic.c di
  * -# Set pinmux for pad 1 (slave select on pin PA15). Not necessary in master mode, shown as an example.
- *  - \snippet qs_spi_basic.c ss
+ *  \snippet qs_spi_basic.c ss
  * -# Set pinmux for pad 2 (data out on pin PA12).
- *  - \snippet qs_spi_basic.c do
+ *  \snippet qs_spi_basic.c do
  * -# Set pinmux for pad 3 (SCK on pin PA13).
- *  - \snippet qs_spi_basic.c sck
+ *  \snippet qs_spi_basic.c sck
  * -# Initialize SPI module with configuration.
- *  - \snippet qs_spi_basic.c init
+ *  \snippet qs_spi_basic.c init
  * -# Enable SPI module.
- *  - \snippet qs_spi_basic.c config
+ *  \snippet qs_spi_basic.c config
  * -# Select slave.
- *  - \snippet qs_spi_basic.c select_slave
+ *  \snippet qs_spi_basic.c select_slave
  * -# Write buffer to SPI slave.
- *  - \snippet qs_spi_basic.c write
+ *  \snippet qs_spi_basic.c write
  * -# Wait for last character to be shifted to the slave.
- *  - \snippet qs_spi_basic.c wait
+ *  \snippet qs_spi_basic.c wait
  * -# Deselect slave.
- *  - \snippet qs_spi_basic.c deselect_slave
+ *  \snippet qs_spi_basic.c deselect_slave
  * -# Infinite loop.
- *  - \snippet qs_spi_basic.c inf_loop
+ *  \snippet qs_spi_basic.c inf_loop
  */

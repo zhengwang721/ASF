@@ -62,26 +62,26 @@
  *
  * \section asfdoc_samd20_dac_basic_use_case_workflow Workflow
  * -# Create variables for device software instance, config and channel config.
- *  - \snippet qs_dac_basic.c variable
+ *  \snippet qs_dac_basic.c variable
  * -# Get DAC config defaults.
- *  - \snippet qs_dac_basic.c get_conf
+ *  \snippet qs_dac_basic.c get_conf
  * -# Initialize software instance with hardware module and write configuration
  * to the module.
- *  - \snippet qs_dac_basic.c init_dac
+ *  \snippet qs_dac_basic.c init_dac
  * -# Enable the DAC.
- *  - \snippet qs_dac_basic.c enable
+ *  \snippet qs_dac_basic.c enable
  * -# Get DAC channel config defaults.
- *  - \snippet qs_dac_basic.c get_ch_conf
+ *  \snippet qs_dac_basic.c get_ch_conf
  * -# Disable event triggered conversion.
- *  - \snippet qs_dac_basic.c edit_ch_conf
+ *  \snippet qs_dac_basic.c edit_ch_conf
  * -# Write the channel configuration to the DAC.
- *  - \snippet qs_dac_basic.c set_ch_conf
+ *  \snippet qs_dac_basic.c set_ch_conf
   * -# Enable the DAC channel.
- *  - \snippet qs_dac_basic.c enable_ch
+ *  \snippet qs_dac_basic.c enable_ch
  * -# Write and convert a value.
- *  - \snippet qs_dac_basic.c write
+ *  \snippet qs_dac_basic.c write
  * -# Disable the DAC
- *  - \snippet qs_dac_basic.c disable
+ *  \snippet qs_dac_basic.c disable
  * -# Start infinite loop.
- *  - \snippet qs_dac_basic.c inf_loop
+ *  \snippet qs_dac_basic.c inf_loop
  */
