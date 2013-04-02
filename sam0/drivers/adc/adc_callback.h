@@ -114,7 +114,7 @@ static inline void adc_disable_callback(
 		Assert(module);
 
 		/* Disable callback */
-		module->enabled_callback_mask &= ~(0 << callback_type);
+		module->enabled_callback_mask &= ~(1 << callback_type);
 }
 
 /** @} */

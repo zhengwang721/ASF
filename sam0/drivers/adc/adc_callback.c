@@ -148,7 +148,7 @@ void adc_unregister_callback(
 	module->callback[callback_type] = NULL;
 
 	/* Clear the bit corresponding to the callback_type */
-	module->registered_callback_mask &= ~(0 << callback_type);
+	module->registered_callback_mask &= ~(1 << callback_type);
 }
 
 /**
