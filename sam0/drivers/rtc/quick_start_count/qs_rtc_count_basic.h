@@ -66,15 +66,15 @@
  *
  * \subsection rtc_count_basic_use_workflow Workflow
  * -# Make configuration structure.
- *  - \snippet qs_rtc_count_basic.c set_conf
+ *  \snippet qs_rtc_count_basic.c set_conf
  * -# Set default in configuration structure.
- *  - \snippet qs_rtc_count_basic.c get_default
+ *  \snippet qs_rtc_count_basic.c get_default
  * -# Change configurations as desired.
- *  - \snippet qs_rtc_count_basic.c set_config
+ *  \snippet qs_rtc_count_basic.c set_config
  * -# Initialize module.
- *  - \snippet qs_rtc_count_basic.c init_rtc
+ *  \snippet qs_rtc_count_basic.c init_rtc
  * -# Enable module
- *  - \snippet qs_rtc_count_basic.c enable
+ *  \snippet qs_rtc_count_basic.c enable
  *
  * \section asfdoc_samd20_rtc_count_basic_use_case_implement Implementation
  * Code used to implement the initialized module.
@@ -85,9 +85,9 @@
  *
  * \subsection asfdoc_samd20_rtc_count_basic_use_case_imp_workflow Workflow
  * -# Set RTC period to 20
- *  - \snippet qs_rtc_count_basic.c period
+ *  \snippet qs_rtc_count_basic.c period
  * -# Poll on compare match flag. Clear compare match flag when set.
- *  - \snippet qs_rtc_count_basic.c poll
+ *  \snippet qs_rtc_count_basic.c poll
  * -# Repeat
  *
  */

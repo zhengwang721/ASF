@@ -62,23 +62,23 @@
  *
  * \section asfdoc_samd20_sercom_usart_basic_use_case_workflow Workflow
  * -# Initialize system
- *  - \snippet qs_usart_basic_use.c system_init
+ *  \snippet qs_usart_basic_use.c system_init
  * -# Create configuration struct
- *  - \snippet qs_usart_basic_use.c config
+ *  \snippet qs_usart_basic_use.c config
  * -# Create software device module instance
- *  - \snippet qs_usart_basic_use.c module_inst
+ *  \snippet qs_usart_basic_use.c module_inst
  * -# Get default configuration values
- *  - \snippet qs_usart_basic_use.c conf_defaults
+ *  \snippet qs_usart_basic_use.c conf_defaults
  * -# Modify confiuration defaults for Embedded Debugger (EDBG) pins
- *  - \snippet qs_usart_basic_use.c conf_modify
+ *  \snippet qs_usart_basic_use.c conf_modify
  * -# Initialize USART with given configuration
- *  - \snippet qs_usart_basic_use.c init
+ *  \snippet qs_usart_basic_use.c init
  * -# Enable USART
- *  - \snippet qs_usart_basic_use.c enable
+ *  \snippet qs_usart_basic_use.c enable
  * -# Enable Tx and RX
- *  - \snippet qs_usart_basic_use.c enable_transceivers
+ *  \snippet qs_usart_basic_use.c enable_transceivers
  * -# Echo every received character back
- *  - \snippet qs_usart_basic_use.c echo_characters
+ *  \snippet qs_usart_basic_use.c echo_characters
  *
  */
 

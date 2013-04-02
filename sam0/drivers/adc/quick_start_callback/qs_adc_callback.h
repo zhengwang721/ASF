@@ -83,24 +83,24 @@
  *
  * \section asfdoc_samd20_adc_basic_use_case_callback_workflow Workflow
  * -# Create variables for device software instance, config and channel config.
- *  - \snippet qs_adc_callback.c variable
+ *  \snippet qs_adc_callback.c variable
  * -# Initialize system (clock system)
- *  - \snippet qs_adc_callback.c system_init
+ *  \snippet qs_adc_callback.c system_init
  * -# Get ADC config defaults.
- *  - \snippet qs_adc_callback.c get_conf
+ *  \snippet qs_adc_callback.c get_conf
  * -# Modify ADC default configuration.
- *  - \snippet qs_adc_callback.c modify_conf
+ *  \snippet qs_adc_callback.c modify_conf
  * -# Initialize software instance with hardware module and write configuration
  * to the module.
- *  - \snippet qs_adc_callback.c init_adc
+ *  \snippet qs_adc_callback.c init_adc
  * -# Enable the ADC.
- *  - \snippet qs_adc_callback.c enable
+ *  \snippet qs_adc_callback.c enable
  * -# Configure and enable a conversion complete callback
- *  - \snippet qs_adc_callback.c setup_callback
+ *  \snippet qs_adc_callback.c setup_callback
  * -# Start an ADC conversion job of ADC_SAMPLES number of samples
- *  - \snippet qs_adc_callback.c start_adc_job
+ *  \snippet qs_adc_callback.c start_adc_job
  * -# Wait until job is complete
- *  - \snippet qs_adc_callback.c job_complete_poll
+ *  \snippet qs_adc_callback.c job_complete_poll
  * -# Hang in infinite loop.
- *  - \snippet qs_adc_callback.c inf_loop
+ *  \snippet qs_adc_callback.c inf_loop
  */

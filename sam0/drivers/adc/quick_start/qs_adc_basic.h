@@ -76,20 +76,20 @@
  *
  * \section asfdoc_samd20_adc_basic_use_case_workflow Workflow
  * -# Create variables for device software instance, config and channel config.
- *  - \snippet qs_adc_basic.c variable
+ *  \snippet qs_adc_basic.c variable
  * -# Create variable for storing the ADC result.
- *  - \snippet qs_adc_basic.c res_variable
+ *  \snippet qs_adc_basic.c res_variable
  * -# Get ADC config defaults.
- *  - \snippet qs_adc_basic.c get_conf
+ *  \snippet qs_adc_basic.c get_conf
  * -# Initialize software instance with hardware module and write configuration
  * to the module.
- *  - \snippet qs_adc_basic.c init_adc
+ *  \snippet qs_adc_basic.c init_adc
  * -# Enable the ADC.
- *  - \snippet qs_adc_basic.c enable
+ *  \snippet qs_adc_basic.c enable
  * -# Start conversion.
- *  - \snippet qs_adc_basic.c start_conv
+ *  \snippet qs_adc_basic.c start_conv
  * -# Wait until conversion is done and read result.
- *  - \snippet qs_adc_basic.c get_res
+ *  \snippet qs_adc_basic.c get_res
  * -# Start infinite loop.
- *  - \snippet qs_adc_basic.c inf_loop
+ *  \snippet qs_adc_basic.c inf_loop
  */

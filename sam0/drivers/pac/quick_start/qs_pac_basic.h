@@ -64,27 +64,27 @@
  *
  * \section asfdoc_samd20_pac_basic_use_case_main Workflow
  * -# Make function to set up PORT module.
- *  - \snippet qs_pac_basic.c pin_setup
+ *  \snippet qs_pac_basic.c pin_setup
  * -# Initialize the system peripherals and set up some GPIO port pins.
- *  - \snippet qs_pac_basic.c init
+ *  \snippet qs_pac_basic.c init
  * -# Lock peripheral access for PORT
- *  - \snippet qs_pac_basic.c init_lock
+ *  \snippet qs_pac_basic.c init_lock
  * -# Enable global interrupts.
- *  - \snippet qs_pac_basic.c enable_interrupts
+ *  \snippet qs_pac_basic.c enable_interrupts
  * -# Loop to wait for edge detect.
- *  - \snippet qs_pac_basic.c button_press
+ *  \snippet qs_pac_basic.c button_press
  * -# Disable interrupts globally
- *  - \snippet qs_pac_basic.c disable_interrupts
+ *  \snippet qs_pac_basic.c disable_interrupts
  * -# Unlock the peripheral registers.
- *  - \snippet qs_pac_basic.c unlock_perph
+ *  \snippet qs_pac_basic.c unlock_perph
  * -# Toggle pin 11, and clear edge detect flag.
- *  - \snippet qs_pac_basic.c alter_config
+ *  \snippet qs_pac_basic.c alter_config
  * -# Lock the peripheral registers.
- *  - \snippet qs_pac_basic.c lock_perph
+ *  \snippet qs_pac_basic.c lock_perph
  * -# Re-enable global interrupts.
- *  - \snippet qs_pac_basic.c enable_interrupts_2
+ *  \snippet qs_pac_basic.c enable_interrupts_2
  * -# Start inf wait loop.
- *  - \snippet qs_pac_basic.c inf_loop
+ *  \snippet qs_pac_basic.c inf_loop
  */
 
 
