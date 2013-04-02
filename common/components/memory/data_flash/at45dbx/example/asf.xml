@@ -8,6 +8,7 @@
 			<require idref="common.components.memory.data_flash.at45dbx.example.common"/>
 			<require idref="avr32.drivers.gpio"/>
 			<require idref="avr32.utils"/>
+			<info type="gui-flag" value="move-to-root"/>
 		</module>
 		<module type="application" id="common.components.memory.data_flash.at45dbx.example#xmega" caption="AT45DBX DataFlash Example">
 			<device-support value="xmega"/>
@@ -17,6 +18,7 @@
 			<require idref="common.components.memory.data_flash.at45dbx.example.common"/>
 			<require idref="common.services.basic.gpio"/>
 			<require idref="xmega.utils"/>
+			<info type="gui-flag" value="move-to-root"/>
 		</module>
 		<module type="application" id="common.components.memory.data_flash.at45dbx.example#sam" caption="AT45DBX DataFlash Example">
 			<device-support value="sam"/>
@@ -26,9 +28,9 @@
 			<require idref="common.components.memory.data_flash.at45dbx.example.common"/>
 			<require idref="common.services.basic.gpio"/>
 			<require idref="sam.utils"/>
+			<info type="gui-flag" value="move-to-root"/>
 		</module>
 	</select-by-device>
-
 	<module type="meta" id="common.components.memory.data_flash.at45dbx.example.common" caption="AT45DBX DataFlash Example Common Part">
 		<info type="description" value="summary">
 		Provide an application example using the Atmel DataFlash AT45DBx component. The DataFlash requires an SPI bus as a low level communication interface. This interface can be implemented using SPI or USART in SPI mode for AVR devices.
@@ -38,5 +40,6 @@
 		<require idref="common.boards"/>
 		<require idref="common.components.memory.data_flash.at45dbx"/>
 		<require idref="common.services.basic.clock"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

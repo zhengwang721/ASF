@@ -5,7 +5,7 @@
 			Use the ET024006DHU TFT display, display text messages and draw a square.
 			</info>
 			<info type="keyword" value="technology">
-				<keyword value="Graphics" />
+				<keyword value="Graphics"/>
 			</info>
 			<build type="c-source" value="avr32_logo.c"/>
 			<build type="header-file" value="avr32_logo.h"/>
@@ -20,13 +20,14 @@
 			<require idref="avr32.drivers.pm"/>
 			<require idref="avr32.drivers.pwm"/>
 			<require idref="common.services.delay"/>
+			<info type="gui-flag" value="move-to-root"/>
 		</module>
 		<module type="application" id="avr32.components.display.et024006dhu.example#1" caption="ET024006DHU Panel Display Controller Example 1">
 			<info type="description" value="summary">
 			Use the ET024006DHU TFT display, display text messages and draw a square.
 			</info>
 			<info type="keyword" value="technology">
-				<keyword value="Graphics" />
+				<keyword value="Graphics"/>
 			</info>
 			<build type="c-source" value="avr32_logo.c"/>
 			<build type="header-file" value="avr32_logo.h"/>
@@ -41,6 +42,7 @@
 			<require idref="avr32.drivers.intc"/>
 			<require idref="avr32.drivers.pm"/>
 			<require idref="common.services.delay"/>
+			<info type="gui-flag" value="move-to-root"/>
 		</module>
 	</select-by-device>
 </asf>

@@ -5,7 +5,7 @@
 				This example demonstrates how to trigger a watchdog interrupt if the software becomes trapped in a deadlock.
 			</info>
 			<info type="keyword" value="technology">
-				<keyword value="Timers" />
+				<keyword value="Timers"/>
 			</info>
 			<build type="c-source" value="wdt_example.c"/>
 			<build type="include-path" value="."/>
@@ -18,13 +18,14 @@
 			<require idref="sam.drivers.uart"/>
 			<require idref="common.services.basic.gpio"/>
 			<require idref="common.utils.stdio.stdio_serial"/>
+			<info type="gui-flag" value="move-to-root"/>
 		</module>
 		<module type="application" id="sam.drivers.wdt.example#sam4l" caption="WDT Example">
 			<info type="description" value="summary">
 				This example demonstrates how to trigger a watchdog interrupt if the software becomes trapped in a deadlock.
 			</info>
 			<info type="keyword" value="technology">
-				<keyword value="Timers" />
+				<keyword value="Timers"/>
 			</info>
 			<build type="c-source" value="wdt_example_sam4l.c"/>
 			<build type="include-path" value="."/>
@@ -34,7 +35,7 @@
 			<require idref="common.services.ioport"/>
 			<require idref="common.services.basic.clock"/>
 			<require idref="common.utils.stdio.stdio_serial"/>
+			<info type="gui-flag" value="move-to-root"/>
 		</module>
 	</select-by-device>
 </asf>
-

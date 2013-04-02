@@ -17,7 +17,8 @@
 				<keyword value="USB"/>
 				<keyword value="Communication"/>
 			</info>
-			<device-support value="uc3"/> 
+			<device-support value="uc3"/>
+			<info type="gui-flag" value="move-to-root"/>
 		</module>
 		<module type="application" id="common.services.usb.class.msc.device.example.freertos#1" caption="USB Device MSC Example with FreeRTOS">
 			<info type="description" value="summary">
@@ -38,7 +39,8 @@
 				<keyword value="USB"/>
 				<keyword value="Communication"/>
 			</info>
-			<device-support value="sam"/> 
+			<device-support value="sam"/>
+			<info type="gui-flag" value="move-to-root"/>
 		</module>
 	</select-by-device>
 </asf>

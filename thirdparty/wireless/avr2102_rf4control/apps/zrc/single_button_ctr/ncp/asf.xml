@@ -13,6 +13,6 @@
 		<require idref="thirdparty.wireless.avr2102_rf4control.apps.zrc.single_button_ctr"/>
 		<require idref="thirdparty.wireless.avr2102_rf4control.lib.zrc.ctr"/>
 		<build type="doxygen-entry-point" value="zrc_group"/>
-        <device-support value="atmega256rfr2"/>
+        <device-support-alias value="avr2102_rf4control_zrc_ctr_support"/>
 	</module>
 </asf>

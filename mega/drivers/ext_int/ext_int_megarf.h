@@ -100,6 +100,9 @@ enum ext_pcint_pins {
 	PC_INT8_PIN = IOPORT_CREATE_PIN(PORTE,0),    /*!< External PC Interrupt PCINT8 */				
 };
 
+/* Mask EXT_INT Port Pin position  */
+#define EXT_INT_PORT_MASK    0x07
+
 /**
  * \internal
  * \def CLEAR_PCINT_FLAGx
@@ -116,14 +119,14 @@ enum ext_pcint_pins {
  * \def CLEAR_INT_FLAG
  * \brief Clears the int flag
  */
-#define CLEAR_INT_FLAG(pin) EIFR |= (1 << (pin & 0x07))
+#define CLEAR_INT_FLAG(pin) EIFR |= (1 << (pin & EXT_INT_PORT_MASK))
 
 /**
  * \internal
  * \def INT_PIN_MASK
  * \brief Masks the required interrupt pin
  */
-#define INT_PIN_MASK(pin) (1 << (pin & 0x07))
+#define INT_PIN_MASK(pin) (1 << (pin & EXT_INT_PORT_MASK))
 
 /**
  * \brief Interrupt event callback function type
