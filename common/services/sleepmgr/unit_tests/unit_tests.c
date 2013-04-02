@@ -208,7 +208,7 @@ static void run_sleep_trigger_test(const struct test_case *test)
 }
 
 /**
- * \brief Test setting different parameters of the Sleep Manager module
+ * \brief Test different parameters of the Sleep Manager module
  *
  * This function locks & unlocks the different sleep modes, and verifies that
  * the correct values are being set.
@@ -266,10 +266,10 @@ static void run_set_functions_test(const struct test_case *test)
 }
 
 /**
- * \brief Run Ext Interrupt unit tests
+ * \brief Run Sleep Manager unit tests
  *
  * Initializes the clock system, board and serial output, then sets up the
- * Ext Interrupt unit test suite and runs it.
+ * Sleep Manager unit test suite and runs it.
  */
 int main(void)
 {
