@@ -556,52 +556,50 @@
 
 /** NandFlash pins definition: OE. */
 #define PIN_EBI_NANDOE    (PIO_PC9_IDX)
-#define PIN_EBI_NANDOE_FLAGS    (PIO_PERIPH_A | PIO_PULLUP)
+#define PIN_EBI_NANDOE_FLAGS    (IOPORT_MODE_MUX_A)
 
 /** NandFlash pins definition: WE. */
 #define PIN_EBI_NANDWE    (PIO_PC10_IDX)
-#define PIN_EBI_NANDWE_FLAGS    (PIO_PERIPH_A | PIO_PULLUP)
+#define PIN_EBI_NANDWE_FLAGS    (IOPORT_MODE_MUX_A)
 
 /** NandFlash pins definition: CLE. */
 #define PIN_EBI_NANDCLE    (PIO_PC17_IDX)
-#define PIN_EBI_NANDCLE_FLAGS    (PIO_PERIPH_A | PIO_PULLUP)
+#define PIN_EBI_NANDCLE_FLAGS    (IOPORT_MODE_MUX_A)
 
 /** NandFlash pins definition: ALE. */
 #define PIN_EBI_NANDALE    (PIO_PC16_IDX)
-#define PIN_EBI_NANDALE_FLAGS    (PIO_PERIPH_A | PIO_PULLUP)
+#define PIN_EBI_NANDALE_FLAGS    (IOPORT_MODE_MUX_A)
 
 /** NandFlash pins definition: DATA. */
 #define PIN_EBI_NANDIO_0    (PIO_PC0_IDX)
-#define PIN_EBI_NANDIO_0_FLAGS    (PIO_PERIPH_A | PIO_PULLUP)
+#define PIN_EBI_NANDIO_0_FLAGS    (IOPORT_MODE_MUX_A)
 
 #define PIN_EBI_NANDIO_1    (PIO_PC1_IDX)
-#define PIN_EBI_NANDIO_1_FLAGS    (PIO_PERIPH_A | PIO_PULLUP)
+#define PIN_EBI_NANDIO_1_FLAGS    (IOPORT_MODE_MUX_A)
 
 #define PIN_EBI_NANDIO_2    (PIO_PC2_IDX)
-#define PIN_EBI_NANDIO_2_FLAGS    (PIO_PERIPH_A | PIO_PULLUP)
+#define PIN_EBI_NANDIO_2_FLAGS    (IOPORT_MODE_MUX_A)
 
 #define PIN_EBI_NANDIO_3    (PIO_PC3_IDX)
-#define PIN_EBI_NANDIO_3_FLAGS    (PIO_PERIPH_A | PIO_PULLUP)
+#define PIN_EBI_NANDIO_3_FLAGS    (IOPORT_MODE_MUX_A)
 
 #define PIN_EBI_NANDIO_4    (PIO_PC4_IDX)
-#define PIN_EBI_NANDIO_4_FLAGS    (PIO_PERIPH_A | PIO_PULLUP)
+#define PIN_EBI_NANDIO_4_FLAGS    (IOPORT_MODE_MUX_A)
 
 #define PIN_EBI_NANDIO_5    (PIO_PC5_IDX)
-#define PIN_EBI_NANDIO_5_FLAGS    (PIO_PERIPH_A | PIO_PULLUP)
+#define PIN_EBI_NANDIO_5_FLAGS    (IOPORT_MODE_MUX_A)
 
 #define PIN_EBI_NANDIO_6    (PIO_PC6_IDX)
-#define PIN_EBI_NANDIO_6_FLAGS    (PIO_PERIPH_A | PIO_PULLUP)
+#define PIN_EBI_NANDIO_6_FLAGS    (IOPORT_MODE_MUX_A)
 
 #define PIN_EBI_NANDIO_7    (PIO_PC7_IDX)
-#define PIN_EBI_NANDIO_7_FLAGS    (PIO_PERIPH_A | PIO_PULLUP)
+#define PIN_EBI_NANDIO_7_FLAGS    (IOPORT_MODE_MUX_A)
 
 /** Nandflash chip enable pin definition. */
 #define PIN_NF_CE_IDX    (PIO_PC14_IDX)
-#define PIN_NF_CE_FLAGS    (PIO_TYPE_PIO_OUTPUT_1 | PIO_DEFAULT)
 
 /** Nandflash ready/busy pin definition. */
 #define PIN_NF_RB_IDX    (PIO_PC18_IDX)
-#define PIN_NF_RB_FLAGS    (PIO_INPUT | PIO_PULLUP)
 
 /* Chip select number for nand */
 #define BOARD_NAND_CS    0

@@ -44,6 +44,7 @@
 #include "compiler.h"
 #include "board.h"
 #include "conf_board.h"
+#include "gpio.h"
 #include "ioport.h"
 
 /**
@@ -344,10 +345,10 @@ void board_init(void)
 #endif
 
 #ifdef CONF_BOARD_NAND
-	ioport_set_pin_peripheral_mode(PIN_EBI_NANDOE, PIN_EBI_NANDOE_FLAGS);
-	ioport_set_pin_peripheral_mode(PIN_EBI_NANDWE, PIN_EBI_NANDWE_FLAGS);
-	ioport_set_pin_peripheral_mode(PIN_EBI_NANDCLE, PIN_EBI_NANDCLE_FLAGS);
-	ioport_set_pin_peripheral_mode(PIN_EBI_NANDALE, PIN_EBI_NANDALE_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_EBI_NANDOE,   PIN_EBI_NANDOE_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_EBI_NANDWE,   PIN_EBI_NANDWE_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_EBI_NANDCLE,  PIN_EBI_NANDCLE_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_EBI_NANDALE,  PIN_EBI_NANDALE_FLAGS);
 	ioport_set_pin_peripheral_mode(PIN_EBI_NANDIO_0, PIN_EBI_NANDIO_0_FLAGS);
 	ioport_set_pin_peripheral_mode(PIN_EBI_NANDIO_1, PIN_EBI_NANDIO_1_FLAGS);
 	ioport_set_pin_peripheral_mode(PIN_EBI_NANDIO_2, PIN_EBI_NANDIO_2_FLAGS);
@@ -356,8 +357,9 @@ void board_init(void)
 	ioport_set_pin_peripheral_mode(PIN_EBI_NANDIO_5, PIN_EBI_NANDIO_5_FLAGS);
 	ioport_set_pin_peripheral_mode(PIN_EBI_NANDIO_6, PIN_EBI_NANDIO_6_FLAGS);
 	ioport_set_pin_peripheral_mode(PIN_EBI_NANDIO_7, PIN_EBI_NANDIO_7_FLAGS);
-	ioport_set_pin_peripheral_mode(PIN_NF_CE_IDX, PIN_NF_CE_FLAGS);
-	ioport_set_pin_peripheral_mode(PIN_NF_RB_IDX, PIN_NF_RB_FLAGS);
+        ioport_set_pin_dir(PIN_NF_CE_IDX, IOPORT_DIR_OUTPUT);
+        ioport_set_pin_dir(PIN_NF_RB_IDX, IOPORT_DIR_INPUT);
+	ioport_set_pin_mode(PIN_NF_RB_IDX, IOPORT_MODE_PULLUP);
 #endif
 
 
