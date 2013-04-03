@@ -356,8 +356,8 @@ void board_init(void)
 	ioport_set_pin_peripheral_mode(PIN_EBI_NANDIO_5, PIN_EBI_NANDIO_5_FLAGS);
 	ioport_set_pin_peripheral_mode(PIN_EBI_NANDIO_6, PIN_EBI_NANDIO_6_FLAGS);
 	ioport_set_pin_peripheral_mode(PIN_EBI_NANDIO_7, PIN_EBI_NANDIO_7_FLAGS);
-        ioport_set_pin_dir(PIN_NF_CE_IDX, IOPORT_DIR_OUTPUT);
-        ioport_set_pin_dir(PIN_NF_RB_IDX, IOPORT_DIR_INPUT);
+    ioport_set_pin_dir(PIN_NF_CE_IDX, IOPORT_DIR_OUTPUT);
+    ioport_set_pin_dir(PIN_NF_RB_IDX, IOPORT_DIR_INPUT);
 	ioport_set_pin_mode(PIN_NF_RB_IDX, IOPORT_MODE_PULLUP);
 #endif
 
