@@ -44,7 +44,6 @@
 #include "compiler.h"
 #include "board.h"
 #include "conf_board.h"
-#include "gpio.h"
 #include "ioport.h"
 
 /**
