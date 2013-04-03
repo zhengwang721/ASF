@@ -337,6 +337,10 @@ extern "C" {
 #  define PINMUX_DEFAULT 0
 #endif
 
+#ifndef PINMUX_UNUSED
+#  define PINMUX_UNUSED 0xFFFFFFFF
+#endif
+
 #ifndef SPI_TIMEOUT
 #  define SPI_TIMEOUT 10000
 #endif
