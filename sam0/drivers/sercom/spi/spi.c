@@ -262,22 +262,28 @@ static enum status_code _spi_set_config(
 	if (pad1 == PINMUX_DEFAULT) {
 		pad1 = _sercom_get_default_pad(sercom_module, 1);
 	}
-	pin_conf.mux_position = pad1 & 0xFFFF;
-	system_pinmux_pin_set_config(pad1 >> 16, &pin_conf);
+	if (pad1 != PINMUX_UNUSED) {
+		pin_conf.mux_position = pad1 & 0xFFFF;
+		system_pinmux_pin_set_config(pad1 >> 16, &pin_conf);
+	}
 
 	/* SERCOM PAD2 */
 	if (pad2 == PINMUX_DEFAULT) {
 		pad2 = _sercom_get_default_pad(sercom_module, 2);
 	}
-	pin_conf.mux_position = pad2 & 0xFFFF;
-	system_pinmux_pin_set_config(pad2 >> 16, &pin_conf);
+	if (pad2 != PINMUX_UNUSED) {
+		pin_conf.mux_position = pad2 & 0xFFFF;
+		system_pinmux_pin_set_config(pad2 >> 16, &pin_conf);
+	}
 
 	/* SERCOM PAD3 */
 	if (pad3 == PINMUX_DEFAULT) {
 		pad3 = _sercom_get_default_pad(sercom_module, 3);
 	}
-	pin_conf.mux_position = pad3 & 0xFFFF;
-	system_pinmux_pin_set_config(pad3 >> 16, &pin_conf);
+	if (pad3 != PINMUX_UNUSED) {
+		pin_conf.mux_position = pad3 & 0xFFFF;
+		system_pinmux_pin_set_config(pad3 >> 16, &pin_conf);
+	}
 
 	module->mode           = config->mode;
 	module->character_size = config->character_size;

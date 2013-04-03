@@ -124,7 +124,7 @@ static void _spi_read_buffer(
  *
  * Registers a callback function which is implemented by the user.
  *
- * \note The callback must be enabled by \ref spi_register_callback, in order
+ * \note The callback must be enabled by \ref spi_enable_callback, in order
  *       for the interrupt handler to call it when the conditions for the
  *       callback type is met.
  *

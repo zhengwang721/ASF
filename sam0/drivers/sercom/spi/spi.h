@@ -337,6 +337,10 @@ extern "C" {
 #  define PINMUX_DEFAULT 0
 #endif
 
+#ifndef PINMUX_UNUSED
+#  define PINMUX_UNUSED 0xFFFFFFFF
+#endif
+
 #ifndef SPI_TIMEOUT
 #  define SPI_TIMEOUT 10000
 #endif
@@ -1016,7 +1020,8 @@ static inline bool spi_is_ready_to_read(
  *
  * This function will send a single SPI character via SPI and ignore any data
  * shifted in by the connected device. To both send and receive data, use the
- * \ref spi_tranceive_wait function. The \ref spi_is_ready_to_write function
+ * \ref spi_tranceive_wait function or use the \ref spi_read function after
+ * writing a character. The \ref spi_is_ready_to_write function
  * should be called before calling this function.
  *
  * Note that this function does not handle the SS (Slave Select)
@@ -1063,7 +1068,7 @@ enum status_code spi_write_buffer_wait(
  * \brief Reads last received SPI character
  *
  * This function will return the last SPI character shifted into the receive
- * register.
+ * register by the \ref spi_write function
  *
  * \note The \ref spi_is_ready_to_read function should be called before calling
  *       this function.

@@ -212,6 +212,10 @@ extern "C" {
 #  define PINMUX_DEFAULT 0
 #endif
 
+#ifndef PINMUX_UNUSED
+#  define PINMUX_UNUSED 0xFFFFFFFF
+#endif
+
 #ifndef USART_TIMEOUT
 #  define USART_TIMEOUT 0xFFFF
 #endif
