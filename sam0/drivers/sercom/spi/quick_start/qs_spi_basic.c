@@ -100,9 +100,9 @@ int main(void)
 //! [di]
 	config.pinmux_pad0 = PINMUX_PA14B_SERCOM2_PAD0;
 //! [di]
-	/* Configure pad 1 for slave select, not necessary in master mode */
+	/* Configure pad 1 as unused */
 //! [ss]
-	config.pinmux_pad1 = PINMUX_PA15B_SERCOM2_PAD1;
+	config.pinmux_pad1 = PINMUX_UNUSED;
 //! [ss]
 	/* Configure pad 2 for data out */
 //! [do]

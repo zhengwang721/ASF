@@ -99,7 +99,8 @@
  *  \snippet qs_spi_basic.c mux_setting
  * -# Set pinmux for pad 0 (data in on pin PA14).
  *  \snippet qs_spi_basic.c di
- * -# Set pinmux for pad 1 (slave select on pin PA15). Not necessary in master mode, shown as an example.
+ * -# Set pinmux for pad 1 (slave select on pin PA15). We set this as unused,
+      so the pin could be used for other purposes.
  *  \snippet qs_spi_basic.c ss
  * -# Set pinmux for pad 2 (data out on pin PA12).
  *  \snippet qs_spi_basic.c do
