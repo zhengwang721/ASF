@@ -165,6 +165,7 @@ bool nand_flash_unload(bool unload)
 {
 	if (!unload && nand_flash_status == NAND_FLASH_UNLOADED) {
 			nand_flash_status = NAND_FLASH_NOT_INIT;
+                        return false;
 	} else {
 		switch (nand_flash_status) {
 		case NAND_FLASH_NOT_INIT:
