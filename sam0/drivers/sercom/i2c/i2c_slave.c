@@ -574,7 +574,6 @@ enum i2c_slave_direction i2c_slave_get_direction_wait(
 	/* Sanity check arguments. */
 	Assert(module);
 	Assert(module->hw);
-	Assert(packet);
 
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
 

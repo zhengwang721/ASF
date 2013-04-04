@@ -113,13 +113,13 @@ enum status_code ac_reset(
  *        Analog Comparator call \ref ac_enable() after configuring the module.
  *
  * \param[out] module_inst  Pointer to the AC software instance struct
- * \param[in]  module    Pointer to the AC module instance
- * \param[in]  config    Pointer to the config struct, created by the user
- *                       application
+ * \param[in]  hw           Pointer to the AC module instance
+ * \param[in]  config       Pointer to the config struct, created by the user
+ *                          application
  */
 enum status_code ac_init(
 		struct ac_module *const module_inst,
-		Ac *const module,
+		Ac *const hw,
 		struct ac_config *const config)
 {
 	struct system_gclk_chan_config gclk_chan_conf;
@@ -130,7 +130,7 @@ enum status_code ac_init(
 	Assert(config);
 
 	/* Initialize device instance */
-	module_inst->hw = module;
+	module_inst->hw = hw;
 
 	/* Set up GCLK */
 	gclk_chan_conf.source_generator = config->source_generator;

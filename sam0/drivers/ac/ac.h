@@ -538,7 +538,7 @@ enum status_code ac_reset(
 
 enum status_code ac_init(
 		struct ac_module *const module_inst,
-		Ac *const module,
+		Ac *const hw,
 		struct ac_config *const config);
 
 /**

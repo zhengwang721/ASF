@@ -667,7 +667,7 @@ enum status_code tc_set_top_value (
 {
 	Assert(module_inst);
 	Assert(module_inst->hw);
-	Assert(compare);
+	Assert(top_value);
 
 	Tc *const tc_module = module_inst->hw;
 

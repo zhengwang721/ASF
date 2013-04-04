@@ -173,9 +173,9 @@ enum status_code adc_read_buffer_job(
 		uint16_t samples,
 		uint16_t *buffer)
 {
-	Assert(module);
-	Assert(buffer);
+	Assert(module_inst);
 	Assert(samples);
+	Assert(buffer);
 
 	if(module_inst->remaining_conversions != 0 ||
 			module_inst->job_status == STATUS_BUSY){
