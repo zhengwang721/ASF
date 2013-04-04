@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="sam0.applications.osc8_calib" caption="Calibrate OSC8MHz">
+	<module type="application" id="sam0.applications.osc8_calib" caption="8MHz Oscillator Calibration Application">
 		<info type="description" value="summary">
 		Example application to calibrate osc8MHz clock source and set up usart for embedded debugger
 		</info>
