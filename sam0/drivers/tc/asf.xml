@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<select-by-config caption="TC - Timer Counter" default="callback" id="sam0.drivers.tc" name="sam0.drivers.tc">
+	<select-by-config id="sam0.drivers.tc" name="config.sam0.drivers.tc" caption="TC - Timer Counter" default="callback">
 		<module caption="TC - Timer Counter" id="sam0.drivers.tc#polled" type="driver">
 			<info type="description" value="summary">
 			  Driver for the SAMD20 Timer/Counter module. Provides a unified
