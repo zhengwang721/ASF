@@ -160,8 +160,7 @@ void ssd1306_write_command(uint8_t command)
 {
 	spi_select_slave(&ssd1306_master, &ssd1306_slave, true);
 	port_pin_set_output_level(SSD1306_DC_PIN, false);
-	spi_write(&ssd1306_master, command);
-	while(!spi_is_write_complete(&ssd1306_master));
+	spi_write_buffer_wait(&ssd1306_master, &command, 1);
 	spi_select_slave(&ssd1306_master, &ssd1306_slave, false);
 }
 
@@ -177,7 +176,6 @@ void ssd1306_write_data(uint8_t data)
 {
 	spi_select_slave(&ssd1306_master, &ssd1306_slave, true);
 	port_pin_set_output_level(SSD1306_DC_PIN, true);
-	spi_write(&ssd1306_master, data);
-	while(!spi_is_write_complete(&ssd1306_master));
+	spi_write_buffer_wait(&ssd1306_master, &data, 1);
 	spi_select_slave(&ssd1306_master, &ssd1306_slave, false);
 }
