@@ -58,7 +58,7 @@
 #  define SSD1306_SPI_PINMUX_PAD3 PINMUX_PA13B_SERCOM2_PAD3
 
 // Minimum clock period is 50ns@3.3V -> max frequency is 20MHz
-#define SSD1306_CLOCK_SPEED          100000
+#define SSD1306_CLOCK_SPEED          1000000UL
 #define SSD1306_DISPLAY_CONTRAST_MAX 40
 #define SSD1306_DISPLAY_CONTRAST_MIN 30
 
