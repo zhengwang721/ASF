@@ -385,7 +385,7 @@ enum status_code spi_init(
 
 	/* Sanity check arguments */
 	Assert(module);
-	Assert(module);
+	Assert(hw);
 	Assert(config);
 
 	/* Initialize device instance */
