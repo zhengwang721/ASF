@@ -98,7 +98,7 @@
  *  evctrl [label="EVCTRL", shape=box, style=filled, fillcolor=lightblue];
  *  eventcontrol [label="EVENT CONTROL", shape=box, style=filled, fillcolor=darkolivegreen1];
  *  dac [label="DAC", shape=polygon, sides=5, orientation=-90, distortion=-0.6, style=filled, fillcolor=darkolivegreen1, height=1, width=1];
- *  outputdriver [label="output\n driver", shape=polygon, sides=3, orientation=-90, style=filled, fillcolor=darkolivegreen1];
+ *  outputdriver [label="Output\n Driver", shape=polygon, sides=3, orientation=-90, style=filled, fillcolor=darkolivegreen1];
  *  vout [label="VOUT", shape=box];
  *  aref [label="AREF", shape=box];
  *  avcc [label="AVCC", shape=none];
@@ -123,7 +123,7 @@
  *  evctrl -> databuf;
  *  edge [dir="back"];
  *  mux:se -> aref;
- *  mux:ec -> avcc;
+ *  mux:e -> avcc;
  *  mux:ne -> int1v;
  *  {rank=same; evctrl databuf data }
  *  {rank=same; vout aref }
@@ -226,7 +226,7 @@
  *          </tr>
  *        </table>
  *      >];
- *      msbl -> reg_left:msb:nc;
+ *      msbl -> reg_left:msb:n;
  *      lsbl -> reg_left:lsb;
  *      label ="Left adjusted.\n";
  *   }
@@ -268,7 +268,7 @@
  *        </table>
  *      >];
  *      msb -> reg_right:msg;
- *      lsb -> reg_right:lsb:nc;
+ *      lsb -> reg_right:lsb:n;
  *      label = "Right adjusted.\n";
  *      graph [shape=none];
  *  }

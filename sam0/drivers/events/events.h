@@ -156,7 +156,7 @@
  * digraph overview {
  *   rankdir=LR;
  *   node [label="Source\nPeripheral" shape=ellipse style=filled fillcolor=lightgray] src_peripheral;
- *   node [label="<f0> EVSYS | <f1> Event\nChannel/User" style="dashed" shape=record] events_chan;
+ *   node [label="<f0> EVSYS | <f1> Event\nChannel/User" fillcolor=white style="dashed" shape=record] events_chan;
  *   node [label="Destination\nPeripheral" shape=ellipse style=filled fillcolor=lightgray] dst_peripheral;
  *
  *   src_peripheral -> events_chan;
@@ -164,7 +164,7 @@
  *
  * }
  * \enddot
- * \note Note: identically shaped borders in the diagram indicate a shared generic clock channel
+ * \note Identically shaped borders in the diagram indicate a shared generic clock channel
  *
  * \subsubsection asfdoc_samd20_events_module_overview_path_selection_sync Synchronous Paths
  * Synchronous event paths can be used when the source and destination
@@ -178,7 +178,7 @@
  * digraph overview {
  *   rankdir=LR;
  *   node [label="Source\nPeripheral" shape=ellipse style="filled, dashed" fillcolor=lightgray] src_peripheral;
- *   node [label="<f0> EVSYS | <f1> Event\nChannel/User" shape=record] events_chan;
+ *   node [label="<f0> EVSYS | <f1> Event\nChannel/User" fillcolor=white shape=record] events_chan;
  *   node [label="Destination\nPeripheral" shape=ellipse style="filled, dotted" fillcolor=lightgray] dst_peripheral;
  *
  *   src_peripheral -> events_chan;
@@ -186,7 +186,7 @@
  *
  * }
  * \enddot
- * \note Note: identically shaped borders in the diagram indicate a shared generic clock channel
+ * \note Identically shaped borders in the diagram indicate a shared generic clock channel
  *
  * \subsubsection asfdoc_samd20_events_module_overview_path_selection_resync Re-synchronous Paths
  * Re-synchronous event paths are a special form of synchronous events, where
@@ -199,7 +199,7 @@
  * digraph overview {
  *   rankdir=LR;
  *   node [label="Source\nPeripheral" shape=ellipse style="filled, dashed" fillcolor=lightgray] src_peripheral;
- *   node [label="<f0> EVSYS | <f1> Event\nChannel/User" shape=record] events_chan;
+ *   node [label="<f0> EVSYS | <f1> Event\nChannel/User" fillcolor=white shape=record] events_chan;
  *   node [label="Destination\nPeripheral" shape=ellipse style=filled fillcolor=lightgray] dst_peripheral;
  *
  *   src_peripheral -> events_chan;
@@ -207,7 +207,7 @@
  *
  * }
  * \enddot
- * \note Note: identically shaped borders in the diagram indicate a shared generic clock channel
+ * \note Identically shaped borders in the diagram indicate a shared generic clock channel
  *
  * \subsection asfdoc_samd20_events_module_overview_physical Physical Connection
  *
@@ -219,8 +219,8 @@
  *   node [label="Source\nPeripherals" shape=ellipse style=filled fillcolor=lightgray] src_peripheral;
  *
  *   subgraph driver {
- *     node [label="<f0> EVSYS | <f1> Event Channels" shape=record] events_chan;
- *     node [label="<f0> EVSYS | <f1> Event Users" shape=record] events_user;
+ *     node [label="<f0> EVSYS | <f1> Event Channels" fillcolor=white shape=record] events_chan;
+ *     node [label="<f0> EVSYS | <f1> Event Users" fillcolor=white shape=record] events_user;
  *   }
  *
  *   node [label="Destination\nPeripherals" shape=ellipse style=filled fillcolor=lightgray] dst_peripheral;
