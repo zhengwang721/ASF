@@ -50,9 +50,9 @@ extern "C" {
 #endif
 
 /**
- * \defgroup asfdoc_samd20_i2c_group SAM D29 I2C Bus Driver (SERCOM I2C)
+ * \defgroup asfdoc_samd20_i2c_group SAM D20 I2C Bus Driver (SERCOM I2C)
  *
- * This driver for SAM D29 devices provides an interface for the configuration
+ * This driver for SAM D20 devices provides an interface for the configuration
  * and management of the device's SERCOM I<SUP>2</SUP>C module, for the transfer
  * of data via an I<SUP>2</SUP>C bus. The following driver API modes are covered
  * by this manual:

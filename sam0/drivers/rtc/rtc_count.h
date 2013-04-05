@@ -45,9 +45,9 @@
 #define RTC_COUNT_H_INCLUDED
 
 /**
- * \defgroup asfdoc_samd20_rtc_count_group SAM D29 RTC Count Driver (RTC COUNT)
+ * \defgroup asfdoc_samd20_rtc_count_group SAM D20 RTC Count Driver (RTC COUNT)
  *
- * This driver for SAM D29 devices provides an interface for the configuration
+ * This driver for SAM D20 devices provides an interface for the configuration
  * and management of the device's Real Time Clock functionality in Count
  * operating mode, for the configuration and retrieval of the current RTC
  * counter value. The following driver API modes are covered by this
@@ -78,7 +78,7 @@
  *
  * \section asfdoc_samd20_rtc_count_module_overview Module Overview
  *
- * The RTC module in the SAM D29 devices is a 32-bit counter, with a 10-bit
+ * The RTC module in the SAM D20 devices is a 32-bit counter, with a 10-bit
  * programmable prescaler. Typically, the RTC clock is run continuously,
  * including in the device's low-power sleep modes, to track the current time
  * and date information. The RTC can be used as a source to wake up the system

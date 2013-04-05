@@ -44,9 +44,9 @@
 #define RTC_CALENDAR_H_INCLUDED
 
 /**
- * \defgroup asfdoc_samd20_rtc_calendar_group SAM D29 RTC Calendar Driver (RTC CAL)
+ * \defgroup asfdoc_samd20_rtc_calendar_group SAM D20 RTC Calendar Driver (RTC CAL)
  *
- * This driver for SAM D29 devices provides an interface for the configuration
+ * This driver for SAM D20 devices provides an interface for the configuration
  * and management of the device's Real Time Clock functionality in Calendar
  * operating mode, for the configuration and retrieval of the current time and
  * date as maintained by the RTC module. The following driver API modes are
@@ -77,7 +77,7 @@
  *
  * \section asfdoc_samd20_rtc_calendar_module_overview Module Overview
  *
- * The RTC module in the SAM D29 devices is a 32-bit counter, with a 10-bit
+ * The RTC module in the SAM D20 devices is a 32-bit counter, with a 10-bit
  * programmable prescaler. Typically, the RTC clock is run continuously,
  * including in the device's low-power sleep modes, to track the current time
  * and date information. The RTC can be used as a source to wake up the system

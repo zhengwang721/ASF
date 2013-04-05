@@ -187,7 +187,7 @@
  * more information.
  *
  * \subsubsection asfdoc_samd20_tc_module_overview_clock_prescaler Prescaler
- * Each TC module in the SAM D29 has its own individual clock prescaler, which
+ * Each TC module in the SAM D20 has its own individual clock prescaler, which
  * can be used to divide the input clock frequency used in the counter. This
  * prescaler only scales the clock used to provide clock pulses for the counter
  * to count, and does not affect the digital register interface portion of
@@ -361,7 +361,7 @@
  * \section asfdoc_samd20_tc_special_considerations Special Considerations
  *
  * The number of capture compare registers in each TC module is dependent on
- * the specific SAM D29 device being used, and in some cases the counter size.
+ * the specific SAM D20 device being used, and in some cases the counter size.
  *
  * The maximum amount of capture compare registers available in any SAMD20
  * device is two when running in 32-bit mode and four in 8-, and 16-bit modes.
