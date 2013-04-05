@@ -56,18 +56,11 @@ void configure_wdt(void)
 	wdt_get_config_defaults(&wdt_conf);
 	//! [setup_2]
 
-	// TODO: Move into driver once scheme to select clock is determined
-	struct system_gclk_chan_config gclk_chan_conf;
-	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
-	gclk_chan_conf.source_generator = GCLK_GENERATOR_4;
-	gclk_chan_conf.run_in_standby   = false;
-	system_gclk_chan_set_config(WDT_GCLK_ID, &gclk_chan_conf);
-	system_gclk_chan_enable(WDT_GCLK_ID);
-
 	/* Set the Watchdog configuration settings */
 	//! [setup_3]
 	wdt_conf.always_on      = true;
-	wdt_conf.timeout_period = WDT_PERIOD_4096CLK;
+	wdt_conf.clock_source   = GCLK_GENERATOR_4;
+	wdt_conf.timeout_period = WDT_PERIOD_2048CLK;
 	//! [setup_3]
 
 	/* Initialize and enable the Watchdog with the user settings */

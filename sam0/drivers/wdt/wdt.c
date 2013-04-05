@@ -100,6 +100,13 @@ enum status_code wdt_init(
 		return STATUS_ERR_INVALID_ARG;
 	}
 
+	/* Configure GCLK channel and enable clock */
+	struct system_gclk_chan_config gclk_chan_conf;
+	gclk_chan_conf.source_generator = config->clock_source;
+	gclk_chan_conf.run_in_standby   = false;
+	system_gclk_chan_set_config(WDT_GCLK_ID, &gclk_chan_conf);
+	system_gclk_chan_enable(WDT_GCLK_ID);
+
 	while (wdt_is_syncing()) {
 		/* Wait for all hardware modules to complete synchronization */
 	}
