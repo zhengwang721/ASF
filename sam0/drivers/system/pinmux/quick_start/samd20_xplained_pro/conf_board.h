@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D20 GPIO PINMUX Driver Quick Start
+ * \brief SAM D20 Xplained PRO board configuration.
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,37 +40,8 @@
  * \asf_license_stop
  *
  */
-#include <asf.h>
 
-int main(void)
-{
-	system_init();
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-//! [main]
-//! [pinmux_config]
-	struct system_pinmux_config pin_conf;
-//! [pinmux_config]
-//! [pinmux_config_defaults]
-	system_pinmux_get_config_defaults(&pin_conf);
-//! [pinmux_config_defaults]
-
-//! [pinmux_update_config_values]
-	pin_conf.mux_position = SYSTEM_PINMUX_GPIO;
-	pin_conf.direction    = SYSTEM_PINMUX_PIN_DIR_INPUT;
-	pin_conf.input_pull   = SYSTEM_PINMUX_PIN_PULL_UP;
-//! [pinmux_update_config_values]
-
-//! [pinmux_set_config]
-	system_pinmux_pin_set_config(10, &pin_conf);
-//! [pinmux_set_config]
-
-//! [pinmux_change_input_sampling]
-	system_pinmux_pin_set_input_sample_mode(10,
-			SYSTEM_PINMUX_PIN_SAMPLE_ONDEMAND);
-//! [pinmux_change_input_sampling]
-
-	while (true) {
-		// Do nothing
-	}
-//! [main]
-}
+#endif /* CONF_BOARD_H_INCLUDED */
