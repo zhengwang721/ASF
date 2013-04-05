@@ -56,13 +56,21 @@
 #warning "Using a default at45dbx configuration: edit and modify the file conf_at45dbx.h depending on the application."
 
 //! Select the SPI module AT45DBX is connected to
-#define AT45DBX_SPI                 0
+#define AT45DBX_SPI                 SERCOM2
 
 //! Size of AT45DBX data flash memories to manage.
 #define AT45DBX_MEM_SIZE            AT45DBX_8MB
 
 //! Number of AT45DBX components to manage.
 #define AT45DBX_MEM_CNT             1
+
+#define AT45DBX_SPI_PINMUX_SETTING  SPI_SIGNAL_MUX_SETTING_E
+#define AT45DBX_SPI_PINMUX_PAD0     PINMUX_PA14B_SERCOM2_PAD0
+#define AT45DBX_SPI_PINMUX_PAD1     PINMUX_PA15B_SERCOM2_PAD1
+#define AT45DBX_SPI_PINMUX_PAD2     PINMUX_PA12B_SERCOM2_PAD2
+#define AT45DBX_SPI_PINMUX_PAD3     PINMUX_PA13B_SERCOM2_PAD3
+
+#define AT45DBX_CS                  PIN_PA16
 
 //! SPI master speed in Hz.
 #define AT45DBX_SPI_MASTER_SPEED    9600

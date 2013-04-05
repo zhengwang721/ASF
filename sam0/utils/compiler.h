@@ -172,7 +172,7 @@
 #    undef TEST_SUITE_DEFINE_ASSERT_MACRO
 #    define Assert(expr) \
         {\
-           if (!(expr)) asm("BKPT #0");\
+                asm("BKPT #0");\
         }
 #  endif
 #else
@@ -915,7 +915,240 @@ typedef struct
 #define div_ceil(a, b)      (((a) + (b) - 1) / (b))
 
 #endif  /* #ifndef __ASSEMBLY__ */
+#ifdef __ICCARM__
+/*! \name Compiler Keywords
+ *
+ * Port of some keywords from GCC to IAR Embedded Workbench.
+ */
+//! @{
+#define __asm__             asm
+#define __inline__          inline
+#define __volatile__
+//! @}
 
+#endif
+
+#define FUNC_PTR                            void *
+/**
+ * \def unused
+ * \brief Marking \a v as a unused parameter or value.
+ */
+#define unused(v)          do { (void)(v); } while(0)
+
+/* Define RAMFUNC attribute */
+#if defined   ( __CC_ARM   ) /* Keil µVision 4 */
+#   define RAMFUNC __attribute__ ((section(".ramfunc")))
+#elif defined ( __ICCARM__ ) /* IAR Ewarm 5.41+ */
+#   define RAMFUNC __ramfunc
+#elif defined (  __GNUC__  ) /* GCC CS3 2009q3-68 */
+#   define RAMFUNC __attribute__ ((section(".ramfunc")))
+#endif
+
+/* Define OPTIMIZE_HIGH attribute */
+#if defined   ( __CC_ARM   ) /* Keil µVision 4 */
+#   define OPTIMIZE_HIGH _Pragma("O3") 
+#elif defined ( __ICCARM__ ) /* IAR Ewarm 5.41+ */
+#   define OPTIMIZE_HIGH _Pragma("optimize=high")
+#elif defined (  __GNUC__  ) /* GCC CS3 2009q3-68 */
+#   define OPTIMIZE_HIGH __attribute__((optimize(s)))
+#endif
+#define PASS      0
+#define FAIL      1
+#define LOW       0
+#define HIGH      1
+
+typedef int8_t                  S8 ;  //!< 8-bit signed integer.
+typedef uint8_t                 U8 ;  //!< 8-bit unsigned integer.
+typedef int16_t                 S16;  //!< 16-bit signed integer.
+typedef uint16_t                U16;  //!< 16-bit unsigned integer.
+typedef int32_t                 S32;  //!< 32-bit signed integer.
+typedef uint32_t                U32;  //!< 32-bit unsigned integer.
+typedef int64_t                 S64;  //!< 64-bit signed integer.
+typedef uint64_t                U64;  //!< 64-bit unsigned integer.
+typedef float                   F32;  //!< 32-bit floating-point number.
+typedef double                  F64;  //!< 64-bit floating-point number.
+
+#define  MSB(u16)       (((U8  *)&(u16))[1]) //!< Most significant byte of \a u16.
+#define  LSB(u16)       (((U8  *)&(u16))[0]) //!< Least significant byte of \a u16.
+
+#define  MSH(u32)       (((U16 *)&(u32))[1]) //!< Most significant half-word of \a u32.
+#define  LSH(u32)       (((U16 *)&(u32))[0]) //!< Least significant half-word of \a u32.
+#define  MSB0W(u32)     (((U8  *)&(u32))[3]) //!< Most significant byte of 1st rank of \a u32.
+#define  MSB1W(u32)     (((U8  *)&(u32))[2]) //!< Most significant byte of 2nd rank of \a u32.
+#define  MSB2W(u32)     (((U8  *)&(u32))[1]) //!< Most significant byte of 3rd rank of \a u32.
+#define  MSB3W(u32)     (((U8  *)&(u32))[0]) //!< Most significant byte of 4th rank of \a u32.
+#define  LSB3W(u32)     MSB0W(u32)           //!< Least significant byte of 4th rank of \a u32.
+#define  LSB2W(u32)     MSB1W(u32)           //!< Least significant byte of 3rd rank of \a u32.
+#define  LSB1W(u32)     MSB2W(u32)           //!< Least significant byte of 2nd rank of \a u32.
+#define  LSB0W(u32)     MSB3W(u32)           //!< Least significant byte of 1st rank of \a u32.
+        
+#define  MSW(u64)       (((U32 *)&(u64))[1]) //!< Most significant word of \a u64.
+#define  LSW(u64)       (((U32 *)&(u64))[0]) //!< Least significant word of \a u64.
+#define  MSH0(u64)      (((U16 *)&(u64))[3]) //!< Most significant half-word of 1st rank of \a u64.
+#define  MSH1(u64)      (((U16 *)&(u64))[2]) //!< Most significant half-word of 2nd rank of \a u64.
+#define  MSH2(u64)      (((U16 *)&(u64))[1]) //!< Most significant half-word of 3rd rank of \a u64.
+#define  MSH3(u64)      (((U16 *)&(u64))[0]) //!< Most significant half-word of 4th rank of \a u64.
+#define  LSH3(u64)      MSH0(u64)            //!< Least significant half-word of 4th rank of \a u64.
+#define  LSH2(u64)      MSH1(u64)            //!< Least significant half-word of 3rd rank of \a u64.
+#define  LSH1(u64)      MSH2(u64)            //!< Least significant half-word of 2nd rank of \a u64.
+#define  LSH0(u64)      MSH3(u64)            //!< Least significant half-word of 1st rank of \a u64.
+#define  MSB0D(u64)     (((U8  *)&(u64))[7]) //!< Most significant byte of 1st rank of \a u64.
+#define  MSB1D(u64)     (((U8  *)&(u64))[6]) //!< Most significant byte of 2nd rank of \a u64.
+#define  MSB2D(u64)     (((U8  *)&(u64))[5]) //!< Most significant byte of 3rd rank of \a u64.
+#define  MSB3D(u64)     (((U8  *)&(u64))[4]) //!< Most significant byte of 4th rank of \a u64.
+#define  MSB4D(u64)     (((U8  *)&(u64))[3]) //!< Most significant byte of 5th rank of \a u64.
+#define  MSB5D(u64)     (((U8  *)&(u64))[2]) //!< Most significant byte of 6th rank of \a u64.
+#define  MSB6D(u64)     (((U8  *)&(u64))[1]) //!< Most significant byte of 7th rank of \a u64.
+#define  MSB7D(u64)     (((U8  *)&(u64))[0]) //!< Most significant byte of 8th rank of \a u64.
+#define  LSB7D(u64)     MSB0D(u64)           //!< Least significant byte of 8th rank of \a u64.
+#define  LSB6D(u64)     MSB1D(u64)           //!< Least significant byte of 7th rank of \a u64.
+#define  LSB5D(u64)     MSB2D(u64)           //!< Least significant byte of 6th rank of \a u64.
+#define  LSB4D(u64)     MSB3D(u64)           //!< Least significant byte of 5th rank of \a u64.
+#define  LSB3D(u64)     MSB4D(u64)           //!< Least significant byte of 4th rank of \a u64.
+#define  LSB2D(u64)     MSB5D(u64)           //!< Least significant byte of 3rd rank of \a u64.
+#define  LSB1D(u64)     MSB6D(u64)           //!< Least significant byte of 2nd rank of \a u64.
+#define  LSB0D(u64)     MSB7D(u64)           //!< Least significant byte of 1st rank of \a u64.
+
+#define LSB0(u32)           LSB0W(u32)  //!< Least significant byte of 1st rank of \a u32.
+#define LSB1(u32)           LSB1W(u32)  //!< Least significant byte of 2nd rank of \a u32.
+#define LSB2(u32)           LSB2W(u32)  //!< Least significant byte of 3rd rank of \a u32.
+#define LSB3(u32)           LSB3W(u32)  //!< Least significant byte of 4th rank of \a u32.
+#define MSB3(u32)           MSB3W(u32)  //!< Most significant byte of 4th rank of \a u32.
+#define MSB2(u32)           MSB2W(u32)  //!< Most significant byte of 3rd rank of \a u32.
+#define MSB1(u32)           MSB1W(u32)  //!< Most significant byte of 2nd rank of \a u32.
+#define MSB0(u32)           MSB0W(u32)  //!< Most significant byte of 1st rank of \a u32.
+
+#if defined(__ICCARM__)
+#define SHORTENUM           __packed
+#elif defined(__GNUC__)
+#define SHORTENUM           __attribute__((packed))
+#endif
+
+/* No operation */
+#if defined(__ICCARM__)
+#define nop()               __no_operation()
+#elif defined(__GNUC__)
+#define nop()               (__NOP())
+#endif
+
+#define FLASH_DECLARE(x)  const x
+#define FLASH_EXTERN(x) extern const x
+#define PGM_READ_BYTE(x) *(x)
+#define PGM_READ_WORD(x) *(x)
+#define MEMCPY_ENDIAN memcpy
+#define PGM_READ_BLOCK(dst, src, len) memcpy((dst), (src), (len))
+
+/*Defines the Flash Storage for the request and response of MAC*/
+#define CMD_ID_OCTET    (0)
+
+/* Converting of values from CPU endian to little endian. */
+#define CPU_ENDIAN_TO_LE16(x)   (x)
+#define CPU_ENDIAN_TO_LE32(x)   (x)
+#define CPU_ENDIAN_TO_LE64(x)   (x)
+
+/* Converting of values from little endian to CPU endian. */
+#define LE16_TO_CPU_ENDIAN(x)   (x)
+#define LE32_TO_CPU_ENDIAN(x)   (x)
+#define LE64_TO_CPU_ENDIAN(x)   (x)
+
+/* Converting of constants from little endian to CPU endian. */
+#define CLE16_TO_CPU_ENDIAN(x)  (x)
+#define CLE32_TO_CPU_ENDIAN(x)  (x)
+#define CLE64_TO_CPU_ENDIAN(x)  (x)
+
+/* Converting of constants from CPU endian to little endian. */
+#define CCPU_ENDIAN_TO_LE16(x)  (x)
+#define CCPU_ENDIAN_TO_LE32(x)  (x)
+#define CCPU_ENDIAN_TO_LE64(x)  (x)
+
+#define ADDR_COPY_DST_SRC_16(dst, src)  ((dst) = (src))
+#define ADDR_COPY_DST_SRC_64(dst, src)  ((dst) = (src))
+
+/**
+ * @brief Converts a 64-Bit value into  a 8 Byte array
+ *
+ * @param[in] value 64-Bit value
+ * @param[out] data Pointer to the 8 Byte array to be updated with 64-Bit value
+ * @ingroup apiPalApi
+ */
+static inline void convert_64_bit_to_byte_array(uint64_t value, uint8_t *data)
+{
+    uint8_t index = 0;
+
+    while (index < 8)
+    {
+        data[index++] = value & 0xFF;
+        value = value >> 8;
+    }
+}
+
+/**
+ * @brief Converts a 16-Bit value into  a 2 Byte array
+ *
+ * @param[in] value 16-Bit value
+ * @param[out] data Pointer to the 2 Byte array to be updated with 16-Bit value
+ * @ingroup apiPalApi
+ */
+static inline void convert_16_bit_to_byte_array(uint16_t value, uint8_t *data)
+{
+    data[0] = value & 0xFF;
+    data[1] = (value >> 8) & 0xFF;
+}
+
+/* Converts a 16-Bit value into a 2 Byte array */
+static inline void convert_spec_16_bit_to_byte_array(uint16_t value, uint8_t *data)
+{
+    data[0] = value & 0xFF;
+    data[1] = (value >> 8) & 0xFF;
+}
+
+/* Converts a 16-Bit value into a 2 Byte array */
+static inline void convert_16_bit_to_byte_address(uint16_t value, uint8_t *data)
+{
+    data[0] = value & 0xFF;
+    data[1] = (value >> 8) & 0xFF;
+}
+
+/*
+ * @brief Converts a 2 Byte array into a 16-Bit value
+ *
+ * @param data Specifies the pointer to the 2 Byte array
+ *
+ * @return 16-Bit value
+ * @ingroup apiPalApi
+ */
+static inline uint16_t convert_byte_array_to_16_bit(uint8_t *data)
+{
+    return (data[0] | ((uint16_t)data[1] << 8));
+}
+
+/**
+ * @brief Converts a 8 Byte array into a 64-Bit value
+ *
+ * @param data Specifies the pointer to the 8 Byte array
+ *
+ * @return 64-Bit value
+ * @ingroup apiPalApi
+ */
+static inline uint64_t convert_byte_array_to_64_bit(uint8_t *data)
+{
+    union
+    {
+        uint64_t u64;
+        uint8_t u8[8];
+    } long_addr;
+
+    uint8_t index;
+
+    for (index = 0; index < 8; index++)
+    {
+        long_addr.u8[index] = *data++;
+    }
+
+    return long_addr.u64;
+}
+
+#define delay_us(x) delay_cycles(x*48)
 /** @} */
 
 #endif /* UTILS_COMPILER_H_INCLUDED */
