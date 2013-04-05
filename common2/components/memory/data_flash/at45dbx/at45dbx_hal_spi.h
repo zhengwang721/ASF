@@ -65,7 +65,7 @@ struct spi_slave_inst at45dbx_slave;
 
 #define DUMMY          0xFF
 
-// Create as many slave instances as required...
+/* Create as many slave instances as required... */
 #define AT45DBX_CS0    AT45DBX_CS  // To keep compliance
 
 struct spi_slave_inst_config slave_configs[AT45DBX_MEM_CNT];

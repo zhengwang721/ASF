@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<module type="component" id="common2.components.memory.data_flash.at45dbx" caption="AT45DBX DataFlash">
 		<info type="description" value="summary">
-		Driver for the AT45dbX series SPI DataFlash memories. It provides functions for initialization and read/write operations at byte or sector level. Common implementation for UC3, XMEGA and SAM.
+		Driver for the AT45DBX series SPI DataFlash memories. It provides functions for initialization and read/write operations at byte or sector level.
 		</info>
 		<info type="gui-flag" value="hidden"/>
 		<build type="c-source" value="at45dbx.c"/>

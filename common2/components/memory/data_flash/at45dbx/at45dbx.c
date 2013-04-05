@@ -287,7 +287,9 @@ bool at45dbx_read_byte_open(uint32_t ad)
 	at45dbx_gl_ptr_mem = ad;
 
 	// If the DF memory is busy, wait until it's ready.
-	if (at45dbx_busy) at45dbx_wait_ready();
+	if (at45dbx_busy) {
+		at45dbx_wait_ready();
+	}
 	at45dbx_busy = false;
 
 	// Select the DF memory at45dbx_gl_ptr_mem points to.
