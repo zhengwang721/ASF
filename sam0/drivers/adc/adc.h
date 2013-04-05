@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 Peripheral Analog-to-Digital Converter Driver
+ * \brief SAM D20 Peripheral Analog-to-Digital Converter Driver
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -45,9 +45,9 @@
 #define ADC_H_INCLUDED
 
 /**
- * \defgroup asfdoc_samd20_adc_group SAMD20 Analog to Digital Converter Driver (ADC)
+ * \defgroup asfdoc_samd20_adc_group SAM D29 Analog to Digital Converter Driver (ADC)
  *
- * This driver for SAMD20 devices provides an interface for the configuration
+ * This driver for SAM D29 devices provides an interface for the configuration
  * and management of the device's Analog to Digital Converter functionality, for
  * the conversion of analog voltages into a corresponding digital form.
  *

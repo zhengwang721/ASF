@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<module type="driver" id="sam0.drivers.system.clock" caption="SYSTEM - Clock Management">
 		<info type="description" value="summary">
-			Driver for the SAMD20 Clock management units. Provides a unified
+			Driver for the SAM D29 Clock management units. Provides a unified
 			interface for the configuration and management of the various clocks
 			in the device, including the bus and generic peripheral clocks.
 		</info>

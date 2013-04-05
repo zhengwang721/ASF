@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 USART Unit test
+ * \brief SAM D20 USART Unit test
  *
  * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
@@ -257,8 +257,8 @@ static void run_buffer_read_write_interrupt_test(const struct test_case *test)
  * outputting the results (using embedded debugger) and two for
  * the actual unit tests (one for RX and one for TX).
  *
- * The RX USART used is the one connected to EXT1 on the SAMD20 Xplained Pro.
- * The TX USART used is the one connected to EXT2 on the SAMD20 Xplained Pro.
+ * The RX USART used is the one connected to EXT1 on the SAM D29 Xplained Pro.
+ * The TX USART used is the one connected to EXT2 on the SAM D29 Xplained Pro.
  * RX is on pin 13 while TX is on pin 14. So for this unit test pin 13 on EXT1
  * should be connected to pin 14 on EXT2.
  *

@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<select-by-config id="sam0.drivers.sercom.i2c.master" name="config.sam0.drivers.sercom.i2c.master" caption="SERCOM I2C - Master Mode I2C" default="callback">
 		<info type="description" value="summary">
-			Driver for the SAMD20 SERCOM I2C module in Master Mode. Provides a unified interface for the configuration and management of the SERCOM module in I2C mode.
+			Driver for the SAM D29 SERCOM I2C module in Master Mode. Provides a unified interface for the configuration and management of the SERCOM module in I2C mode.
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="Communication"/>
@@ -61,7 +61,7 @@
 
 	<select-by-config id="sam0.drivers.sercom.i2c.slave" name="config.sam0.drivers.sercom.i2c.slave" caption="SERCOM I2C - Slave Mode I2C" default="callback">
 		<info type="description" value="summary">
-			Driver for the SAMD20 SERCOM I2C module in Slave Mode. Provides a unified interface for the configuration and management of the SERCOM module in I2C mode.
+			Driver for the SAM D29 SERCOM I2C module in Slave Mode. Provides a unified interface for the configuration and management of the SERCOM module in I2C mode.
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="Communication"/>

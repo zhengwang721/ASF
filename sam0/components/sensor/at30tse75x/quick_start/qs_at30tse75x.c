@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 AT30TSE75X Temperature Sensor Driver Quick Start
+ * \brief SAM D20 AT30TSE75X Temperature Sensor Driver Quick Start
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -64,7 +64,7 @@ int main(void)
     /* Read thigh and tlow */
 //! [read_thigh]
 	volatile uint16_t thigh = 0;
-	thigh = at30tse_read_register(AT30TSE_THIGH_REG, 
+	thigh = at30tse_read_register(AT30TSE_THIGH_REG,
 			AT30TSE_NON_VOLATILE_REG, AT30TSE_THIGH_REG_SIZE);
 //! [read_thigh]
 //! [read_tlow]
@@ -72,7 +72,7 @@ int main(void)
 	tlow = at30tse_read_register(AT30TSE_TLOW_REG,
 			AT30TSE_NON_VOLATILE_REG, AT30TSE_TLOW_REG_SIZE);
 //! [read_tlow]
-	
+
 	/* Set 12-bit resolution mode. */
 //! [write_conf]
 	at30tse_write_config_register(

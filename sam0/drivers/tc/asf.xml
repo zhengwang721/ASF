@@ -2,7 +2,7 @@
 	<select-by-config id="sam0.drivers.tc" name="config.sam0.drivers.tc" caption="TC - Timer Counter" default="callback">
 		<module caption="TC - Timer Counter" id="sam0.drivers.tc#polled" type="driver">
 			<info type="description" value="summary">
-			  Driver for the SAMD20 Timer/Counter module. Provides a unified
+			  Driver for the SAM D29 Timer/Counter module. Provides a unified
 			  interface for the configuration and management of the device's
 			  hardware timers in polled mode.
 			</info>
@@ -35,7 +35,7 @@
 		</module>
 		<module caption="TC - Timer Counter" id="sam0.drivers.tc#callback" type="driver">
 			<info type="description" value="summary">
-			  Driver for the SAMD20 Timer/Counter module. Provides a unified
+			  Driver for the SAM D29 Timer/Counter module. Provides a unified
 			  interface for the configuration and management of the device's
 			  hardware timers in callback and/or polled mode.
 			</info>

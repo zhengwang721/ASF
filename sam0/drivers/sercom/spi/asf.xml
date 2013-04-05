@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<select-by-config id="sam0.drivers.sercom.spi" name="config.sam0.drivers.sercom.spi" caption="SERCOM SPI - Serial Peripheral Interface" default="callback">
 		<info type="description" value="summary">
-			Driver for the SAMD20 SERCOM SPI module. Provides a unified interface for the configuration and management of the SERCOM module in SPI mode.
+			Driver for the SAM D29 SERCOM SPI module. Provides a unified interface for the configuration and management of the SERCOM module in SPI mode.
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="Communication"/>

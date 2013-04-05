@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<select-by-config id="sam0.drivers.sercom.usart" name="config.sam0.drivers.sercom.usart" caption="SERCOM USART - Serial Communications" default="callback">
 		<info type="description" value="summary">
-			Driver for the SAMD20 SERCOM USART module. Provides a unified interface for the configuration and management of the SERCOM module in USART mode.
+			Driver for the SAM D29 SERCOM USART module. Provides a unified interface for the configuration and management of the SERCOM module in USART mode.
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="Communication"/>

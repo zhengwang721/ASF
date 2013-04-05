@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 Brown Out Detector Driver
+ * \brief SAM D20 Brown Out Detector Driver
  *
  * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
@@ -46,9 +46,9 @@
 #include <compiler.h>
 
 /**
- * \defgroup asfdoc_samd20_bod_group SAMD20 Brown Out Detector Driver (BOD)
+ * \defgroup asfdoc_samd20_bod_group SAM D29 Brown Out Detector Driver (BOD)
  *
- * This driver for SAMD20 devices provides an interface for the configuration
+ * This driver for SAM D29 devices provides an interface for the configuration
  * and management of the device's Brown Out Detector (BOD) modules, to detect
  * and respond to under-voltage events and take an appropriate action.
  *
@@ -72,7 +72,7 @@
  *
  * \section asfdoc_samd20_bod_module_overview Module Overview
  *
- * The SAMD20 devices contain a number of Brown Out Detector (BOD) modules. Each
+ * The SAM D29 devices contain a number of Brown Out Detector (BOD) modules. Each
  * BOD monitors the supply voltage for any dips that go below the set threshold
  * for the module. In case of a BOD detection the BOD will either reset the
  * system or raise a hardware interrupt so that a safe power-down sequence can

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 RTC Calendar Quick Start
+ * \brief SAM D20 RTC Calendar Quick Start
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *

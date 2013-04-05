@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 Peripheral Digital to Analog Converter Driver
+ * \brief SAM D20 Peripheral Digital to Analog Converter Driver
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -44,9 +44,9 @@
 #define DAC_H_INCLUDED
 
 /**
- * \defgroup asfdoc_samd20_dac_group SAMD20 Digital-to-Analog Driver (DAC)
+ * \defgroup asfdoc_samd20_dac_group SAM D29 Digital-to-Analog Driver (DAC)
  *
- * This driver for SAMD20 devices provides an interface for the conversion of
+ * This driver for SAM D29 devices provides an interface for the conversion of
  * digital values to analog voltage.
  *
  * The following peripherals are used by this module:
@@ -70,7 +70,7 @@
  * \section asfdoc_samd20_dac_module_overview Module Overview
  *
  * The Digital-to-Analog converter converts a digital value to analog voltage.
- * The SAMD20 DAC module has one channel with 10-bit resolution, and is capable
+ * The SAM D29 DAC module has one channel with 10-bit resolution, and is capable
  * of converting up to 350k samples per second (ksps).
  *
  * A common use of DAC is to generate audio signals by connecting the DAC
@@ -267,7 +267,7 @@
  *          </tr>
  *        </table>
  *      >];
- *      msb -> reg_right:msg;
+ *      msb -> reg_right:msb;
  *      lsb -> reg_right:lsb:n;
  *      label = "Right adjusted.\n";
  *      graph [shape=none];

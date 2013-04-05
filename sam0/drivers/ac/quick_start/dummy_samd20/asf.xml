@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="Quick Start for the SAMD20 AC Driver (Polled)" id="sam0.drivers.ac.quick_start.dummy.atsamd20">
+	<project caption="Quick Start for the SAM D29 AC Driver (Polled)" id="sam0.drivers.ac.quick_start.dummy.atsamd20">
 		<require idref="board.dummy.samd20"/>
 		<build type="include-path" value="."/>
 		<require idref="sam0.drivers.ac.quick_start"/>

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 Non Volatile Memory driver
+ * \brief SAM D20 Non Volatile Memory driver
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *

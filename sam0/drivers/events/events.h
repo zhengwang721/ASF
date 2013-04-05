@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 Event System Driver
+ * \brief SAM D20 Event System Driver
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -44,9 +44,9 @@
 #define EVENTS_H_INCLUDED
 
 /**
- * \defgroup asfdoc_samd20_events_group SAMD20 Event System Driver
+ * \defgroup asfdoc_samd20_events_group SAM D29 Event System Driver
  *
- * This driver for SAMD20 devices provides an interface for the configuration
+ * This driver for SAM D29 devices provides an interface for the configuration
  * and management of the device's peripheral event channels and users within
  * the device, including the enabling and disabling of peripheral source selection
  * and synchronization of clock domains between various modules.
@@ -71,7 +71,7 @@
  *
  * \section asfdoc_samd20_events_module_overview Module Overview
  *
- * Peripherals within the SAMD20 devices are capable of generating two types of
+ * Peripherals within the SAM D29 devices are capable of generating two types of
  * actions in response to given stimulus; they can set a register flag for later
  * intervention by the CPU (using interrupt or polling methods), or they can
  * generate event signals which can be internally routed directly to other

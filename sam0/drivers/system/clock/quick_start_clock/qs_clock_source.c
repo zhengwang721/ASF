@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 GPIO Port Driver Quick Start
+ * \brief SAM D20 GPIO Port Driver Quick Start
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -64,7 +64,7 @@ int main(void)
 	enum status_code retval;
 
 
-	/* Configure the external 32K oscillator */	
+	/* Configure the external 32K oscillator */
 	configure_extosc32k();
 
 	/* Enable the external 32k oscillator */

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 System related functionality
+ * \brief SAM D20 System related functionality
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *

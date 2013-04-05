@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 RTC Driver (Calendar Mode)
+ * \brief SAM D20 RTC Driver (Calendar Mode)
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -287,7 +287,7 @@ void rtc_calendar_swap_time_mode(void)
 		/* Set hour value based on pm flag. */
 		if (time.pm == 1) {
 			time.hour = time.hour + 12;
-			
+
 			time.pm = 0;
 		} else if (time.hour == 12) {
 			time.hour = 0;

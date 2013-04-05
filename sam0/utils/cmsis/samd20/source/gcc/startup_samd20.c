@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief gcc starttup file for SAMD20
+ * \brief GCC start-up implementation for the SAM D20
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *

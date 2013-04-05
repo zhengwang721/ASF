@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 Serial Peripheral Interface Driver
+ * \brief SAM D20 Serial Peripheral Interface Driver
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -45,9 +45,9 @@
 #define SPI_H_INCLUDED
 
 /**
- * \defgroup asfdoc_samd20_sercom_spi_group SAMD20 Serial Peripheral Interface Driver (SERCOM SPI)
+ * \defgroup asfdoc_samd20_sercom_spi_group SAM D29 Serial Peripheral Interface Driver (SERCOM SPI)
  *
- * This driver for SAMD20 devices provides an interface for the configuration
+ * This driver for SAM D29 devices provides an interface for the configuration
  * and management of the SERCOM module in its SPI mode to transfer SPI  data
  * frames. The following driver API modes are covered by this manual:
  *

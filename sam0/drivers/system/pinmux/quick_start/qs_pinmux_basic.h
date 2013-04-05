@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 PINMUX Driver Quick Start
+ * \brief SAM D20 PINMUX Driver Quick Start
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
