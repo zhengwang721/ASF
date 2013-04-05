@@ -58,6 +58,7 @@ void config_extint_channel(void)
 //! [setup_3]
 	eint_chan_conf.gpio_pin           = BUTTON_0_EIC_PIN;
 	eint_chan_conf.gpio_pin_mux       = BUTTON_0_EIC_PIN_MUX;
+	eint_chan_conf.gpio_pin_pull      = EXTINT_PULL_UP;
 	eint_chan_conf.detection_criteria = EXTINT_DETECT_BOTH;
 //! [setup_3]
 //! [setup_4]
@@ -73,13 +74,15 @@ void config_extint_channel(void)
 			EXTINT_CALLBACK_TYPE_DETECT);
 //! [setup_6]
 }
-//! [setup]
 
+//! [setup_7]
 void extint_handler(uint32_t channel)
 {
 	bool pin_state = port_pin_get_input_level(BUTTON_0_PIN);
 	port_pin_set_output_level(LED_0_PIN, pin_state);
 }
+//! [setup_7]
+//! [setup]
 
 int main(void)
 {
