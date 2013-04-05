@@ -3,6 +3,7 @@
 		<info type="description" value="summary">
 	Quick start guide for the PAC module demonstrating clock source configuration.
 		</info>
+		<info type="gui-flag" value="move-to-root"/>
 		<build type="c-source" value="qs_pac_basic.c"/>
 		<build type="include-path" value="."/>
 		<require idref="sam0.drivers.pac"/>

@@ -3,6 +3,7 @@
 		<info type="description" value="summary">
 		Quick start guide for the Timer/Counter module demonstrating module configuration and basic use.
 		</info>
+		<info type="gui-flag" value="move-to-root"/>
 		<build type="c-source" value="qs_tc_callback.c"/>
 		<build type="module-config" subtype="required-header-file" value="conf_quick_start_callback.h"/>
 		<build type="include-path" value="."/>

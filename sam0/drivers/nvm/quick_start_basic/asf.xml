@@ -3,6 +3,7 @@
 		<info type="description" value="summary">
 		Quick start guide for the NVM module demonstrating basic reading and writing of Non-Volatile memories.
 		</info>
+		<info type="gui-flag" value="move-to-root"/>
 		<build type="c-source" value="qs_nvm_basic.c"/>
 		<build type="include-path" value="."/>
 		<require idref="sam0.drivers.nvm"/>
