@@ -43,20 +43,6 @@
 #include <asf.h>
 
 void configure_wdt(void);
-void configure_led(void);
-
-void configure_led(void)
-{
-	struct port_config pin_conf;
-	port_get_config_defaults(&pin_conf);
-
-	pin_conf.direction  = PORT_PIN_DIR_INPUT;
-	pin_conf.input_pull = PORT_PIN_PULL_UP;
-	port_pin_set_config(PIN_PB09, &pin_conf);
-
-	pin_conf.direction = PORT_PIN_DIR_OUTPUT;
-	port_pin_set_config(PIN_PB08, &pin_conf);
-}
 
 //! [setup]
 void configure_wdt(void)
@@ -96,9 +82,9 @@ void configure_wdt(void)
 
 int main(void)
 {
-	//! [setup_init]
 	system_init();
-	configure_led();
+
+	//! [setup_init]
 	configure_wdt();
 	//! [setup_init]
 
@@ -109,10 +95,10 @@ int main(void)
 
 	//! [main_2]
 	if (reset_cause == SYSTEM_RESET_CAUSE_WDT) {
-		port_pin_set_output_level(PIN_PB08, false);
+		port_pin_set_output_level(LED_0_PIN, false);
 	}
 	else {
-		port_pin_set_output_level(PIN_PB08, true);
+		port_pin_set_output_level(LED_0_PIN, true);
 	}
 	//! [main_2]
 
@@ -120,10 +106,10 @@ int main(void)
 	while (true) {
 	//! [main_3]
 		//! [main_4]
-		if (port_pin_get_input_level(PIN_PB09) == false) {
+		if (port_pin_get_input_level(BUTTON_0_PIN) == false) {
 		//! [main_4]
 		//! [main_5]
-			port_pin_set_output_level(PIN_PB08, true);
+			port_pin_set_output_level(LED_0_PIN, true);
 
 			wdt_reset_count();
 		//! [main_5]
