@@ -6,6 +6,7 @@
 		<info type="keyword" value="technology">
 			<keyword value="Analog Conversion"/>
 		</info>
+		<info type="gui-flag" value="move-to-root"/>
 
 		<build type="c-source" value="dac_sound_player.c"/>
 

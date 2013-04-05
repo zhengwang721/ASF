@@ -8,6 +8,7 @@
 			<keyword value="I/O" />
 			<keyword value="CPU" />
 		</info>
+		<info type="gui-flag" value="move-to-root"/>
 
 		<build type="c-source" value="led_toggle.c"/>
 

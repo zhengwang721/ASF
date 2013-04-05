@@ -3,6 +3,7 @@
 		<info type="description" value="summary">
 		Quick start guide for the Peripheral Events module demonstrating event routing configuration.
 		</info>
+		<info type="gui-flag" value="move-to-root"/>
 		<build type="c-source" value="qs_events_basic.c"/>
 		<build type="include-path" value="."/>
 		<require idref="sam0.drivers.events"/>
