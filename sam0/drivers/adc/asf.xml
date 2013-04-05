@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<select-by-config id="sam0.drivers.adc" name="config.sam0.drivers.adc" caption="ADC - Analog-to-Digital Converter" default="callback">
 		<info type="description" value="summary">
-			Driver for the SAM D29 Analog to Digital Converter. Provides a unified
+			Driver for the SAM D20 Analog to Digital Converter. Provides a unified
 			interface for the configuration and management of the ADC module,
 			including the channel input selections, windowd detections, channel
 			conversions and event generation.

@@ -44,9 +44,9 @@
 #define NVM_H_INCLUDED
 
 /**
- * \defgroup asfdoc_samd20_nvm_group SAM D29 Non-Volatile Memory Driver (NVM)
+ * \defgroup asfdoc_samd20_nvm_group SAM D20 Non-Volatile Memory Driver (NVM)
  *
- * This driver for SAM D29 devices provides an interface for the configuration
+ * This driver for SAM D20 devices provides an interface for the configuration
  * and management of non-volatile memories within the device, for partitioning,
  * erasing, reading and writing of data.
  *
@@ -75,7 +75,7 @@
  * erased and reconfigured in a standardized manner.
  *
  * \subsection asfdoc_samd20_nvm_module_overview_regions Memory Regions
- * The NVM memory space of the SAM D29 devices is divided into two sections:
+ * The NVM memory space of the SAM D20 devices is divided into two sections:
  * a Main Array section, and an Auxiliary space section. The Main Array space
  * can be configured to have an (emulated) EEPROM and/or boot loader section.
  * The memory layout with the EEPROM and bootloader partitions is shown in the
