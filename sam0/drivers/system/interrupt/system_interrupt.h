@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 System Interrupt Driver
+ * \brief SAM D20 System Interrupt Driver
  *
  * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
@@ -44,9 +44,9 @@
 #define SYSTEM_INTERRUPT_H_INCLUDED
 
 /**
- * \defgroup asfdoc_samd20_system_interrupt_group SAMD20 System Interrupt Driver
+ * \defgroup asfdoc_samd20_system_interrupt_group SAM D20 System Interrupt Driver
  *
- * This driver for SAMD20 devices provides an interface for the configuration
+ * This driver for SAM D20 devices provides an interface for the configuration
  * and management of internal software and hardware interrupts/exceptions.
  *
  * The following peripherals are used by this module:
@@ -94,7 +94,7 @@
  *
  * \section asfdoc_samd20_system_interrupt_special_considerations Special Considerations
  *
- * Interrupts from peripherals in the SAMD20 devices are on a per-module basis;
+ * Interrupts from peripherals in the SAM D20 devices are on a per-module basis;
  * an interrupt raised from any source within a module will cause a single,
  * module-common handler to execute. It is the user application or driver's
  * responsibility to de-multiplex the module-common interrupt to determine the

@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<module type="driver" id="sam0.drivers.pac" caption="PAC - Peripheral Access Controller">
 		<info type="description" value="summary">
-			Driver for the SAMD20 Peripheral Access Controller. Provides a
+			Driver for the SAM D20 Peripheral Access Controller. Provides a
 			unified interface for the locking and unlocking of peripherals on
 			the device peripheral busses, to protect them against inadvertent
 			writes due to application errors.

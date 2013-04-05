@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 Watchdog Driver
+ * \brief SAM D20 Watchdog Driver
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -44,9 +44,9 @@
 #define WDT_H_INCLUDED
 
 /**
- * \defgroup asfdoc_samd20_wdt_group SAMD20 Watchdog Driver (WDT)
+ * \defgroup asfdoc_samd20_wdt_group SAM D20 Watchdog Driver (WDT)
  *
- * This driver for SAMD20 devices provides an interface for the configuration
+ * This driver for SAM D20 devices provides an interface for the configuration
  * and management of the device's Watchdog Timer module, including the enabling,
  * disabling and kicking within the device.
  *

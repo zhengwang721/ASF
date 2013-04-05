@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="sam0.drivers.pac.quick_start" caption="Quick Start for the SAMD20 PAC Driver (Polled)">
+	<module type="application" id="sam0.drivers.pac.quick_start" caption="Quick Start for the SAM D20 PAC Driver (Polled)">
 		<info type="description" value="summary">
 	Quick start guide for the PAC module demonstrating clock source configuration.
 		</info>

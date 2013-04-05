@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 Peripheral Access Controller Driver
+ * \brief SAM D20 Peripheral Access Controller Driver
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -44,9 +44,9 @@
 #define PAC_H_INCLUDED
 
 /**
- * \defgroup asfdoc_samd20_pac_group  SAMD20 PAC Driver (PAC)
+ * \defgroup asfdoc_samd20_pac_group  SAM D20 PAC Driver (PAC)
  *
- * This driver for SAMD20 devices provides an interface for the locking and
+ * This driver for SAM D20 devices provides an interface for the locking and
  * unlocking of peripheral registers within the device. When a peripheral is
  * locked, accidental writes to the peripheral will be blocked and a CPU
  * exception will be raised.
@@ -71,7 +71,7 @@
  *
  * \section asfdoc_samd20_pac_module_overview Module Overview
  *
- * The SAMD20 devices are fitted with a Peripheral Access Controller (PAC)
+ * The SAM D20 devices are fitted with a Peripheral Access Controller (PAC)
  * that can be used to lock and unlock write access to a peripheral's
  * registers (see \ref asfdoc_samd20_pac_non_write_protected). Locking a
  * peripheral minimizes the risk of unintended configuration changes to a

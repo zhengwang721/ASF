@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Top header file for SAMD20
+ * \brief Top header file for SAM D20
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *

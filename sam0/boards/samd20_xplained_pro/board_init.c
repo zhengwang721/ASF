@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 Xplained Pro board initialization
+ * \brief SAM D20 Xplained Pro board initialization
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *

@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="Quick Start for the SAMD20 SERCOM SPI Driver (Polled)" id="sam0.drivers.sercom.spi.quick_start.dummy.atsamd20">
+	<project caption="Quick Start for the SAM D20 SERCOM SPI Driver (Polled)" id="sam0.drivers.sercom.spi.quick_start.dummy.atsamd20">
 		<require idref="board.dummy.samd20"/>
 		<require idref="sam0.drivers.sercom.spi.quick_start"/>
 		<config name="config.sam0.drivers.sercom.spi" value="polled"/>

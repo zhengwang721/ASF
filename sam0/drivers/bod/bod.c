@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 Brown Out Detector Driver
+ * \brief SAM D20 Brown Out Detector Driver
  *
  * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *

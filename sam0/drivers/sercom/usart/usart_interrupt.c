@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 SERCOM USART Asynchronous Driver
+ * \brief SAM D20 SERCOM USART Asynchronous Driver
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -428,7 +428,7 @@ void _usart_interrupt_handler(
 			uint16_t data_to_send = *(module->tx_buffer_ptr);
 			/* Increment 8-bit pointer */
 			(module->tx_buffer_ptr)++;
-			
+
 			if (module->character_size == USART_CHARACTER_SIZE_9BIT) {
 				data_to_send = ((*(module->tx_buffer_ptr)) << 8);
 				/* Increment 8-bit pointer */
