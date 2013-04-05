@@ -42,43 +42,35 @@
  */
 #include <asf.h>
 
-void config_port_pins(void);
-
-//! [setup]
-void config_port_pins(void)
+int main(void)
 {
-//! [setup_1]
-	struct system_pinmux_config pin_conf;
-//! [setup_1]
-//! [setup_2]
-	system_pinmux_get_config_defaults(&pin_conf);
-//! [setup_2]
+	system_init();
 
-//! [setup_3]
+//! [main]
+//! [pinmux_config]
+	struct system_pinmux_config pin_conf;
+//! [pinmux_config]
+//! [pinmux_config_defaults]
+	system_pinmux_get_config_defaults(&pin_conf);
+//! [pinmux_config_defaults]
+
+//! [pinmux_update_config_values]
 	pin_conf.mux_position = SYSTEM_PINMUX_GPIO;
 	pin_conf.direction    = SYSTEM_PINMUX_PIN_DIR_INPUT;
 	pin_conf.input_pull   = SYSTEM_PINMUX_PIN_PULL_UP;
-//! [setup_3]
-//! [setup_4]
-	system_pinmux_pin_set_config(10, &pin_conf);
-//! [setup_4]
+//! [pinmux_update_config_values]
 
-//! [setup_5]
+//! [pinmux_set_config]
+	system_pinmux_pin_set_config(10, &pin_conf);
+//! [pinmux_set_config]
+
+//! [pinmux_change_input_sampling]
 	system_pinmux_pin_set_input_sample_mode(10,
 			SYSTEM_PINMUX_PIN_SAMPLE_ONDEMAND);
-//! [setup_5]
-}
-//! [setup]
+//! [pinmux_change_input_sampling]
 
-int main(void)
-{
-	//! [setup_init]
-	config_port_pins();
-	//! [setup_init]
-
-	//! [main]
 	while (true) {
 		// Do nothing
 	}
-	//! [main]
+//! [main]
 }
