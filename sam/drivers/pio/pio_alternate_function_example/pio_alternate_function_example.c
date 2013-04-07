@@ -184,7 +184,7 @@ int main(void)
 	volatile uint32_t *p_last_page_data;
 	uint32_t p_buffer[BUFFER_SIZE];
 
-	/* Initialize the SAM3 system. */
+	/* Initialize the system. */
 	sysclk_init();
 	board_init();
 
