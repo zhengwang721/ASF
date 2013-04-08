@@ -218,6 +218,17 @@ void rtouch_disable(void)
 	g_ul_is_rtouch_enabled = 0;
 }
 
+void rtouch_default_calibration(void)
+{
+	/* Force calibration using default settings. */
+	/* Warning these settings may not be accurate. */
+	g_l_xslope = 7432;
+	g_l_yslope = -5637;
+	calibration_point_0.raw.x = 318;
+	calibration_point_0.raw.y = 1845;
+	g_ul_is_calibrated = 1;
+}
+
 uint32_t rtouch_compute_calibration(rtouch_calibration_point_t *points)
 {
 	int32_t slope1, slope2;

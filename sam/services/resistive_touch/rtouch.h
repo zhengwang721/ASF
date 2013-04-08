@@ -3,7 +3,7 @@
  *
  * \brief Resistive Touch Service.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -168,6 +168,12 @@ void rtouch_enable(void);
  * disabled as well.
  */
 void rtouch_disable(void);
+
+/**
+ * \brief Force touch screen calibration using default settings. These settings
+ * may not be accurate.
+ */
+void rtouch_default_calibration(void);
 
 /**
  * \brief Perform the calibration process using the provided points.
