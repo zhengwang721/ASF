@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D20 External Interrupt Driver Quick Start
+ * \brief SAM D20 Xplained PRO board configuration.
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,64 +40,8 @@
  * \asf_license_stop
  *
  */
-#include <asf.h>
 
-void config_extint_channel(void);
-void extint_handler(uint32_t channel);
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-//! [setup]
-void config_extint_channel(void)
-{
-//! [setup_1]
-	struct extint_chan_conf eint_chan_conf;
-//! [setup_1]
-//! [setup_2]
-	extint_chan_get_config_defaults(&eint_chan_conf);
-//! [setup_2]
-
-//! [setup_3]
-	eint_chan_conf.gpio_pin           = BUTTON_0_EIC_PIN;
-	eint_chan_conf.gpio_pin_mux       = BUTTON_0_EIC_PIN_MUX;
-	eint_chan_conf.gpio_pin_pull      = EXTINT_PULL_UP;
-	eint_chan_conf.detection_criteria = EXTINT_DETECT_BOTH;
-//! [setup_3]
-//! [setup_4]
-	extint_chan_set_config(BUTTON_0_EIC_LINE, &eint_chan_conf);
-//! [setup_4]
-
-//! [setup_5]
-	extint_register_callback(extint_handler,
-			EXTINT_CALLBACK_TYPE_DETECT);
-//! [setup_5]
-//! [setup_6]
-	extint_chan_enable_callback(BUTTON_0_EIC_LINE,
-			EXTINT_CALLBACK_TYPE_DETECT);
-//! [setup_6]
-}
-
-//! [setup_7]
-void extint_handler(uint32_t channel)
-{
-	bool pin_state = port_pin_get_input_level(BUTTON_0_PIN);
-	port_pin_set_output_level(LED_0_PIN, pin_state);
-}
-//! [setup_7]
-//! [setup]
-
-int main(void)
-{
-	system_init();
-
-	//! [setup_init]
-	extint_enable();
-	config_extint_channel();
-
-	cpu_irq_enable();
-	//! [setup_init]
-
-	//! [main]
-	while (true) {
-		/* Do nothing - EXTINT will fire callback asynchronously */
-	}
-	//! [main]
-}
+#endif /* CONF_BOARD_H_INCLUDED */

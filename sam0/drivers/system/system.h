@@ -206,8 +206,8 @@
  *
  * \section asfdoc_samd20_system_examples Examples
  *
- * The following Quick Start guides and application examples are available for this driver:
- * - TODO
+ * For SYSTEM module related examples, please refer to the sub-modules listed in
+ * the \ref asfdoc_samd20_system_module_overview "system module overview".
  *
  *
  * \section asfdoc_samd20_system_api_overview API Overview
@@ -231,7 +231,7 @@ enum system_voltage_reference {
  * \brief Device sleep modes.
  *
  * List of available sleep modes in the device. A table of clocks available in
- * different sleep modes can be found in \ref asfdoc_samd20_system_module_sleep_mode.
+ * different sleep modes can be found in \ref asfdoc_samd20_system_module_overview_sleep_mode.
  */
 enum system_sleepmode {
 	/** IDLE 0 sleep mode. */
@@ -336,7 +336,7 @@ static inline void system_vref_disable(
  * function.
  *
  * For an overview of what are being disabled in sleep for the different sleep
- * modes, see \ref asfdoc_samd20_system_module_sleep_mode.
+ * modes, see \ref asfdoc_samd20_system_module_overview_sleep_mode.
  *
  * \param[in] sleep_mode  Sleep mode to configure for the next sleep operation
  *
@@ -469,18 +469,6 @@ void system_init(void);
  *		<td>Initial Release</td>
  *	</tr>
  * </table>
- */
-
-/**
- * \page asfdoc_samd20_system_exqsg Examples for SYSTEM Driver
- *
- * This is a list of the available Quick Start guides (QSGs) and example
- * applications for \ref asfdoc_samd20_system_group. QSGs are simple examples with
- * step-by-step instructions to configure and use this driver in a selection of
- * use cases. Note that QSGs can be compiled as a standalone application or be
- * added to the user application.
- *
- *  - TODO
  */
 
 #endif /* SYSTEM_H_INCLUDED */
