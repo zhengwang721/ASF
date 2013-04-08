@@ -1,3 +1,49 @@
+/**
+ * \file
+ *
+ * \brief etc/js/jquery.js virtual file for the FreeRTOS Web/DSP Demo.
+ *
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ *
+ * \asf_license_start
+ *
+ * \page License
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * 3. The name of Atmel may not be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * 4. This software may only be redistributed and used in connection with an
+ *    Atmel microcontroller product.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+ * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
+ *
+ */
+ 
+ #ifndef __JQUERY_JS_H__
+#define __JQUERY_JS_H__
+
 const unsigned int jquery_size=94404;
 const unsigned char jquery[] = {
 0x2f,0x2a,0x0a,0x20,0x2a,0x20,0x6a,0x51,0x75,0x65,0x72,0x79,0x20,0x4a,0x61,
@@ -6295,3 +6341,4 @@ const unsigned char jquery[] = {
 0x6a,0x51,0x75,0x65,0x72,0x79,0x3d,0x61,0x59,0x2e,0x24,0x3d,0x61,0x7d,0x29,
 0x28,0x77,0x69,0x6e,0x64,0x6f,0x77,0x29,0x3b
 };
+#endif /* __JQUERY_JS_H__ */
