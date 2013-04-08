@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="xmega.applications.xmega_rtc_calibration_demo" caption="RTC Calibration Demo application" >
+	<module type="application" id="xmega.applications.xmega_rtc_calibration_demo" caption="RTC Calibration Demo application">
 		<info type="description" value="summary">
 		RTC Calibration Demo application for XMEGA E.It shows how to calibrate the RTC clock source by using an external accurate clock
 		source.In this project, the calibration value will be calculated and this value will be stored in configured EEPROM address.
@@ -16,5 +16,6 @@
 		<require idref="xmega.drivers.nvm"/>
 		<require idref="xmega.drivers.tc45"/>
 		<require idref="common.services.basic.clock"/>
-		</module>
+		<info type="gui-flag" value="move-to-root"/>
+	</module>
 </asf>

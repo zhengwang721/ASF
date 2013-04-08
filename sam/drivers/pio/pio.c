@@ -3,7 +3,7 @@
  *
  * \brief Parallel Input/Output (PIO) Controller driver for SAM.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -983,6 +983,9 @@ uint32_t pio_get_pin_group_mask(uint32_t ul_pin)
 }
 
 #if (SAM3S || SAM4S || SAM4E)
+/* Capture mode enable flag */
+uint32_t pio_capture_enable_flag;
+
 /**
  * \brief Configure PIO capture mode.
  * \note PIO capture mode will be disabled automatically.
@@ -1004,6 +1007,7 @@ void pio_capture_set_mode(Pio *p_pio, uint32_t ul_mode)
 void pio_capture_enable(Pio *p_pio)
 {
 	p_pio->PIO_PCMR |= PIO_PCMR_PCEN;
+	pio_capture_enable_flag = true;
 }
 
 /**
@@ -1014,6 +1018,7 @@ void pio_capture_enable(Pio *p_pio)
 void pio_capture_disable(Pio *p_pio)
 {
 	p_pio->PIO_PCMR &= (~PIO_PCMR_PCEN);
+	pio_capture_enable_flag = false;
 }
 
 /**

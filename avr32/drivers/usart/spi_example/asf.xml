@@ -12,6 +12,7 @@
 		<require idref="avr32.drivers.usart"/>
 		<info type="keyword" value="technology">
 			<keyword value="Communication"/>
-		</info>	
+		</info>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Parallel Input/Output (PIO) interrupt handler for SAM.
+ * \brief SAM4S-WPIR-RD LEDs support package.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,29 +41,33 @@
  *
  */
 
-#ifndef PIO_HANDLER_WITH_CAPTURE_H_INCLUDED
-#define PIO_HANDLER_WITH_CAPTURE_H_INCLUDED
+#ifndef _LED_H_
+#define _LED_H_
 
-/// @cond 0
-/**INDENT-OFF**/
-#ifdef __cplusplus
-extern "C" {
-#endif
-/**INDENT-ON**/
-/// @endcond
+#include "gpio.h"
 
-void pio_handler_process(Pio *p_pio, uint32_t ul_id);
-void pio_handler_set_priority(Pio *p_pio, IRQn_Type ul_irqn, uint32_t ul_priority);
-uint32_t pio_handler_set(Pio *p_pio, uint32_t ul_id, uint32_t ul_mask,
-		uint32_t ul_attr, void (*p_handler) (uint32_t, uint32_t));
+/*! \brief Turns off the specified LEDs.
+ *
+ * \param led_gpio LED to turn off (LEDx_GPIO).
+ *
+ * \note The pins of the specified LEDs are set to GPIO output mode.
+ */
+#define LED_Off(led_gpio)     gpio_set_pin_high(led_gpio)
 
-extern void capture_handler(void);
-/// @cond 0
-/**INDENT-OFF**/
-#ifdef __cplusplus
-}
-#endif
-/**INDENT-ON**/
-/// @endcond
+/*! \brief Turns on the specified LEDs.
+ *
+ * \param led_gpio LED to turn on (LEDx_GPIO).
+ *
+ * \note The pins of the specified LEDs are set to GPIO output mode.
+ */
+#define LED_On(led_gpio)      gpio_set_pin_low(led_gpio)
 
-#endif /* PIO_HANDLER_WITH_CAPTURE_H_INCLUDED */
+/*! \brief Toggles the specified LEDs.
+ *
+ * \param led_gpio LED to toggle (LEDx_GPIO).
+ *
+ * \note The pins of the specified LEDs are set to GPIO output mode.
+ */
+#define LED_Toggle(led_gpio)  gpio_toggle_pin(led_gpio)
+
+#endif  /* _LED_H_ */

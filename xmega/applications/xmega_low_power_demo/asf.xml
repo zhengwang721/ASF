@@ -14,5 +14,6 @@
 		<require idref="xmega.drivers.wdt"/>
 		<require idref="xmega.drivers.pmic"/>
 		<require idref="xmega.utils"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

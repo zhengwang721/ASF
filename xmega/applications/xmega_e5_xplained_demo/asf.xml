@@ -20,10 +20,11 @@
 		<require idref="common.services.delay"/>
 		<require idref="common.services.gfx_mono.font"/>
 		<require idref="common.utils.stdio.stdio_serial"/>
-		<require idref="xmega.drivers.qdec" />
-		<require idref="xmega.drivers.tc45" />
-		<require idref="xmega.drivers.rtc" />
+		<require idref="xmega.drivers.qdec"/>
+		<require idref="xmega.drivers.tc45"/>
+		<require idref="xmega.drivers.rtc"/>
 		<require idref="xmega.drivers.adc"/>
 		<device-support value="xmegae"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

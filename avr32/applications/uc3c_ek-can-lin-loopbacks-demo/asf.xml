@@ -1,13 +1,11 @@
 <asf xmlversion="1.0">
 	<module type="application" id="avr32.applications.can-lin-loopbacks-demo" caption="UC3C CAN and LIN Loopbacks Application">
-
 		<info type="keyword" value="technology">
 			<keyword value="Communication"/>
 		</info>
 		<info type="description" value="summary">
 		This application is aimed to demonstrate the 32-bit AVR UC3 C series CAN and LIN capabilities.
-		</info>			
-	
+		</info>
 		<build type="c-source" value="background_image.c"/>
 		<build type="header-file" value="background_image.h"/>
 		<build type="c-source" value="can_task.c"/>
@@ -48,6 +46,6 @@
 		<require idref="avr32.services.network.lin"/>
 		<require idref="avr32.utils.print_funcs"/>
 		<require idref="avr32.utils.libs.dsplib"/>
-
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>
