@@ -43,7 +43,7 @@
 
 #include "task_demo.h"
 #include "stdio_serial.h"
-#include "ethernet.h"
+#include "ethernet_sam.h"
 #include "sysclk.h"
 
 static void webserver_task(void *pvParameters);

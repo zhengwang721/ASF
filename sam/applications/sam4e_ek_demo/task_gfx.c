@@ -63,7 +63,7 @@
 #include "aat31xx.h"
 #include "pio_handler.h"
 #include "smc.h"
-#include "ethernet.h"
+#include "ethernet_sam.h"
 #include "rtouch.h"
 
 static void gfx_task(void *pvParameters);

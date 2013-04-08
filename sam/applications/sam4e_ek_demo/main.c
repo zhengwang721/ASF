@@ -98,7 +98,7 @@
  * Please refer to the datasheet for the temperature sensor accuracy.
  *
  */
-#include "ethernet.h"
+#include "ethernet_sam.h"
 #include "status_codes.h"
 #include "conf_uart_serial.h"
 #include "uart_serial.h"
