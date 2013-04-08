@@ -11,7 +11,6 @@
 		<generator value="armgcc"/>
 		<generator value="doxygen"/>
 		<generator value="as5_arm"/>
-		<config name="config.sam.pio.pio_handler" value="no"/>
 		<device-support value="atsam3s4c"/>
 	</project>
 </asf>

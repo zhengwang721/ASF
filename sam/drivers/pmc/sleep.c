@@ -49,6 +49,12 @@
 # include "pmc.h"
 # include "board.h"
 
+/* Checking board configuration of main clock xtal statup time */
+#if !defined(BOARD_OSC_STARTUP_US)
+# warning The board main clock xtal statup time has not been defined. Using default settings.
+# define BOARD_OSC_STARTUP_US    (15625UL)
+#endif
+
 /**
  * Save clock settings and shutdown PLLs
  */
