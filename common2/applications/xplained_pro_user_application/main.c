@@ -18,7 +18,7 @@
  * \par Content
  *
  * -# Include the ASF header files (through asf.h)
- * -# Minimal main function that starts with a call to board_init()
+ * -# Minimal main function that starts with a call to system_init()
  * -# Basic usage of on-board LED and button
  * -# "Insert application code here" comment
  *
