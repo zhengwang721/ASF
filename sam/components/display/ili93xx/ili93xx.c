@@ -540,7 +540,7 @@ uint8_t ili93xx_device_type_identify(void)
  */
 uint32_t ili93xx_init(struct ili93xx_opt_t *p_opt)
 {
-	uint8_t paratable[6];
+	uint8_t paratable[15];
 
 	/** Identify the LCD driver device*/
 	if (ili93xx_device_type_identify() != 0) {
@@ -785,8 +785,52 @@ uint32_t ili93xx_init(struct ili93xx_opt_t *p_opt)
 		paratable[1] = 0x82;
 		paratable[2] = 0x27;
 		paratable[3] = 0x00;
-		ili93xx_write_register(ILI9341_CMD_DISPLAY_FUNCTION_CTL, paratable, 4);
-
+		ili93xx_write_register(ILI9341_CMD_DISPLAY_FUNCTION_CTL,
+				      paratable, 4);
+				
+		paratable[0] = 0x00;
+		ili93xx_write_register(ILI9341_CMD_ENABLE_3_GAMMA_CONTROL,
+				      paratable,1);
+		
+		paratable[0] = 0x01;
+		ili93xx_write_register(ILI9341_CMD_GAMMA_SET, paratable,1);
+		
+		/** set gamma curve parameters*/
+		paratable[0]=0x0F;
+		paratable[1]=0x31;
+		paratable[2]=0x2B;
+		paratable[3]=0x0C;
+		paratable[4]=0x0E;
+		paratable[5]=0x08;
+		paratable[6]=0x4E;
+		paratable[7]=0xF1;
+		paratable[8]=0x37;
+		paratable[9]=0x07;
+		paratable[10]=0x10;
+		paratable[11]=0x03;
+		paratable[12]=0x0E;
+		paratable[13]=0x09;
+		paratable[14]=0x00;
+		ili93xx_write_register(ILI9341_CMD_POSITIVE_GAMMA_CORRECTION,
+				      paratable, 15);
+		paratable[0]=0x00;
+		paratable[1]=0x0E;
+		paratable[2]=0x14;
+		paratable[3]=0x03;
+		paratable[4]=0x11;
+		paratable[5]=0x07;
+		paratable[6]=0x31;
+		paratable[7]=0xC1;
+		paratable[8]=0x48;
+		paratable[9]=0x08;
+		paratable[10]=0x0F;
+		paratable[11]=0x0C;
+		paratable[12]=0x31;
+		paratable[13]=0x36;
+		paratable[14]=0x0F;
+		ili93xx_write_register(ILI9341_CMD_NEGATIVE_GAMMA_CORRECTION,
+				      paratable, 15);
+		
 		/** set window area*/
 		ili93xx_set_window(0, 0, p_opt->ul_width, p_opt->ul_height);
 		ili93xx_set_foreground_color(p_opt->foreground_color);
