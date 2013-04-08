@@ -94,7 +94,8 @@
  * - Graph of the FFT input signal magnitude (range from 0 to 10 khz).
  *
  * The web page is periodically refreshed to keep the board status up-to-date.
- *
+ * With Chrome browser (V25), sometimes two http webpage requests are needed to
+ * get correct status periodical update on browser. This is a known issue.
  * Please refer to the datasheet for the temperature sensor accuracy.
  *
  */
