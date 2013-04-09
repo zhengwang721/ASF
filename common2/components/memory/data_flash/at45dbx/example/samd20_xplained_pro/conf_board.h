@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SSD1306 display controller driver configuration file.
+ * \brief Board configuration for the AT45DBX example
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,26 +40,9 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_SSD1306_H_INCLUDED
-#define CONF_SSD1306_H_INCLUDED
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-// Interface configuration for SAM D20 Xplained Pro
-#  define SSD1306_SPI SERCOM2
-#  define CONFIG_SSD1306_FRAMEBUFFER
+#include "samd20_xplained_pro.h"
 
-#  define SSD1306_DC_PIN       PIN_PB24
-#  define SSD1306_RES_PIN      PIN_PB27
-#  define SSD1306_CS_PIN       PIN_PA17
-
-#  define SSD1306_SPI_PINMUX_SETTING SPI_SIGNAL_MUX_SETTING_E
-#  define SSD1306_SPI_PINMUX_PAD0 PINMUX_PA14B_SERCOM2_PAD0
-#  define SSD1306_SPI_PINMUX_PAD1 PINMUX_UNUSED
-#  define SSD1306_SPI_PINMUX_PAD2 PINMUX_PA12B_SERCOM2_PAD2
-#  define SSD1306_SPI_PINMUX_PAD3 PINMUX_PA13B_SERCOM2_PAD3
-
-// Minimum clock period is 50ns@3.3V -> max frequency is 20MHz
-#define SSD1306_CLOCK_SPEED          100000
-#define SSD1306_DISPLAY_CONTRAST_MAX 40
-#define SSD1306_DISPLAY_CONTRAST_MIN 30
-
-#endif /* CONF_SSD1306_H_INCLUDED */
+#endif /* CONF_BOARD_H_INCLUDED */

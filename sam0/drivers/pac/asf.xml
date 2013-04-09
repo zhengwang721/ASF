@@ -11,6 +11,8 @@
 			<keyword value="Security"/>
 		</info>
 
+		<info type="appnote" value="AT03229"/>
+
 		<build type="include-path" value="."/>
 		<build type="c-source" value="pac.c"/>
 

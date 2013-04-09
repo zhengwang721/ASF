@@ -45,6 +45,8 @@
 				<keyword value="Clocks" />
 			</info>
 
+			<info type="appnote" value="AT03263"/>
+
 			<build type="include-path" value="." />
 
 			<build name="TC_ASYNC" type="define" value="true" />

@@ -9,6 +9,8 @@
 			<keyword value="Clocks" />
 		</info>
 
+		<info type="appnote" value="AT03259"/>
+
 		<device-support value="samd20"/>
 
 		<build type="doxygen-entry-point" value="asfdoc_samd20_system_clock_group"/>

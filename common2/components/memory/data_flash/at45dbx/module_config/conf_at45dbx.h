@@ -1,9 +1,12 @@
-/**
+/*****************************************************************************
+ *
  * \file
  *
- * \brief SSD1306 display controller driver configuration file.
+ * \brief AT45DBX configuration file.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * This file contains the possible external configuration of the AT45DBX.
+ *
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -39,27 +42,37 @@
  *
  * \asf_license_stop
  *
- */
-#ifndef CONF_SSD1306_H_INCLUDED
-#define CONF_SSD1306_H_INCLUDED
+ ******************************************************************************/
 
-// Interface configuration for SAM D20 Xplained Pro
-#  define SSD1306_SPI SERCOM2
-#  define CONFIG_SSD1306_FRAMEBUFFER
 
-#  define SSD1306_DC_PIN       PIN_PB24
-#  define SSD1306_RES_PIN      PIN_PB27
-#  define SSD1306_CS_PIN       PIN_PA17
+#ifndef _CONF_AT45DBX_H_
+#define _CONF_AT45DBX_H_
 
-#  define SSD1306_SPI_PINMUX_SETTING SPI_SIGNAL_MUX_SETTING_E
-#  define SSD1306_SPI_PINMUX_PAD0 PINMUX_PA14B_SERCOM2_PAD0
-#  define SSD1306_SPI_PINMUX_PAD1 PINMUX_UNUSED
-#  define SSD1306_SPI_PINMUX_PAD2 PINMUX_PA12B_SERCOM2_PAD2
-#  define SSD1306_SPI_PINMUX_PAD3 PINMUX_PA13B_SERCOM2_PAD3
+#include "at45dbx.h"
+#include "board.h"
 
-// Minimum clock period is 50ns@3.3V -> max frequency is 20MHz
-#define SSD1306_CLOCK_SPEED          100000
-#define SSD1306_DISPLAY_CONTRAST_MAX 40
-#define SSD1306_DISPLAY_CONTRAST_MIN 30
+//_____ D E F I N I T I O N S ______________________________________________
 
-#endif /* CONF_SSD1306_H_INCLUDED */
+#warning "Using a default at45dbx configuration: edit and modify the file conf_at45dbx.h depending on the application."
+
+//! Select the SPI module AT45DBX is connected to
+#define AT45DBX_SPI                 SERCOM2
+
+//! Size of AT45DBX data flash memories to manage.
+#define AT45DBX_MEM_SIZE            AT45DBX_8MB
+
+//! Number of AT45DBX components to manage.
+#define AT45DBX_MEM_CNT             1
+
+#define AT45DBX_SPI_PINMUX_SETTING  SPI_SIGNAL_MUX_SETTING_E
+#define AT45DBX_SPI_PINMUX_PAD0     PINMUX_PA14B_SERCOM2_PAD0
+#define AT45DBX_SPI_PINMUX_PAD1     PINMUX_PA15B_SERCOM2_PAD1
+#define AT45DBX_SPI_PINMUX_PAD2     PINMUX_PA12B_SERCOM2_PAD2
+#define AT45DBX_SPI_PINMUX_PAD3     PINMUX_PA13B_SERCOM2_PAD3
+
+#define AT45DBX_CS                  PIN_PA16
+
+//! SPI master speed in Hz.
+#define AT45DBX_SPI_MASTER_SPEED    9600
+
+#endif  // _CONF_AT45DBX_H_

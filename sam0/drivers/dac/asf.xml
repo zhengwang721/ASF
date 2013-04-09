@@ -9,6 +9,8 @@
 			<keyword value="Analog Conversion"/>
 		</info>
 
+		<info type="appnote" value="AT03244"/>
+
 		<build type="include-path" value="."/>
 		<build type="header-file" subtype="api" value="dac.h"/>
 		<build type="c-source" value="dac.c"/>
