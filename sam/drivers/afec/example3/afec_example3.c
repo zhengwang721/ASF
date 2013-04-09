@@ -56,9 +56,10 @@
  * \section Description
  *
  * The example is aimed to demonstrate the automatic comparison feature
- * inside the microcontroller. To use this feature, the channel 5 which is 
- * connected to the potentiometer should be enabled. Users can change the 
- * potentiometer voltage to compare with threshold value.
+ * inside the microcontroller. To use this feature, the channel 5 which is
+ * connected to the potentiometer should be enabled. Users can change the
+ * potentiometer voltage to compare with threshold value.The terminal will
+ * output current potentiometer voltage and configured window value.
  *
  * \section Usage
  *
@@ -94,13 +95,21 @@
 #include <assert.h>
 #include "asf.h"
 
+/** Reference voltage for AFEC in mv. */
+#define VOLT_REF        (3300)
+
+/** The maximal digital value */
+#define MAX_DIGITAL     (4095UL)
+
 #define STRING_EOL    "\r"
 #define STRING_HEADER "-- AFEC Automatic Comparison Example --\r\n" \
 		"-- "BOARD_NAME" --\r\n" \
 		"-- Compiled: "__DATE__" "__TIME__" --"STRING_EOL
 
-/** Enter comparison window flag */
-volatile bool is_comp_event_flag = false;
+/** Low threshold */
+static uint16_t gs_us_low_threshold = 0;
+/** High threshold */
+static uint16_t gs_us_high_threshold = 0;
 
 /**
  * \brief Configure UART console.
@@ -120,9 +129,20 @@ static void configure_console(void)
 /**
  * \brief Callback function for AFEC enter compasion window interrupt.
  */
-static void afec_set_comp_flag(void)
+static void afec_print_comp_result(void)
 {
-	is_comp_event_flag = true;
+	uint16_t us_adc;
+
+	/* Disable Compare Interrupt. */
+	afec_disable_interrupt(AFEC0, AFEC_INTERRUPT_COMP_ERROR);
+
+	us_adc = afec_channel_get_value(AFEC0, AFEC_CHANNEL_POTENTIOMETER);
+
+	printf("-ISR-:Potentiometer voltage %d mv is in the comparison "
+			"window:%d -%d mv!\n\r",
+			(int)(us_adc * VOLT_REF / MAX_DIGITAL),
+			(int)(gs_us_low_threshold * VOLT_REF / MAX_DIGITAL),
+			(int)(gs_us_high_threshold * VOLT_REF / MAX_DIGITAL));
 }
 
 /**
@@ -140,6 +160,9 @@ int main(void)
 
 	/* Output example information. */
 	puts(STRING_HEADER);
+
+	gs_us_low_threshold = 0x0;
+	gs_us_high_threshold = 0x7FF;
 
 	afec_enable(AFEC0);
 
@@ -161,22 +184,16 @@ int main(void)
 	afec_set_trigger(AFEC0, AFEC_TRIG_SW);
 
 	afec_set_comparison_mode(AFEC0, AFEC_CMP_MODE_2, AFEC_CHANNEL_POTENTIOMETER, 0);
-	afec_set_comparison_window(AFEC0, 0x800, 0xFFF);
+	afec_set_comparison_window(AFEC0, gs_us_low_threshold, gs_us_high_threshold);
 
 	/* Enable channel for potentiometer. */
 	afec_channel_enable(AFEC0, AFEC_CHANNEL_POTENTIOMETER);
 
-	afec_set_callback(AFEC0, AFEC_INTERRUPT_COMP_ERROR, afec_set_comp_flag, 1);
+	afec_set_callback(AFEC0, AFEC_INTERRUPT_COMP_ERROR, afec_print_comp_result, 1);
 
 	while (1) {
 		afec_start_software_conversion(AFEC0);
 		delay_ms(1000);
 
-		if (is_comp_event_flag == true) {
-			puts("Potentiometer voltage is in the comparion window");
-			is_comp_event_flag = false;
-		} else {
-			puts("Potentiometer voltage is out the comparion window");
-		}
 	}
 }

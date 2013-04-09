@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
-	<module type="application" id="sam.drivers.afec.example4" caption="AFEC Test Example">
+	<module type="application" id="sam.drivers.afec.example4" caption="AFEC Feature Test Example">
 		<info type="description" value="summary">
-		This example demonstrates how to use the enhanced resolution feature inside the microcontroller.
+		This example demonstrates how to use some features inside the microcontroller.
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="Analog Conversion"/>

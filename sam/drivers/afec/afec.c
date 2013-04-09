@@ -419,12 +419,12 @@ void afec_enable_interrupt(Afec *const afec,
 		enum afec_interrupt_source interrupt_source)
 {
 	if (interrupt_source == AFEC_INTERRUPT_ALL) {
-		afec->AFEC_IER = 0xFFFFFFFF;
+		afec->AFEC_IER = AFEC_INTERRUPT_ALL;
 		return;
 	}
 
 	if (interrupt_source < AFEC_INTERRUPT_DATA_READY) {
-		if(interrupt_source == AFEC_INTERRUPT_EOC_15) {
+		if (interrupt_source == AFEC_INTERRUPT_EOC_15) {
 			afec->AFEC_IER = 1 << AFEC_TEMP_INT_SOURCE_NUM;
 		} else {
 			afec->AFEC_IER = 1 << interrupt_source;
@@ -447,12 +447,12 @@ void afec_disable_interrupt(Afec *const afec,
 		enum afec_interrupt_source interrupt_source)
 {
 	if (interrupt_source == AFEC_INTERRUPT_ALL) {
-		afec->AFEC_IDR = 0xFFFFFFFF;
+		afec->AFEC_IDR = AFEC_INTERRUPT_ALL;
 		return;
 	}
 
 	if (interrupt_source < AFEC_INTERRUPT_DATA_READY) {
-		if(interrupt_source == AFEC_INTERRUPT_EOC_15) {
+		if (interrupt_source == AFEC_INTERRUPT_EOC_15) {
 			afec->AFEC_IDR = 1 << AFEC_TEMP_INT_SOURCE_NUM;
 		} else {
 			afec->AFEC_IDR = 1 << interrupt_source;

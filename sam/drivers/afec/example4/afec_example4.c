@@ -83,7 +83,7 @@
  *     -- xxxxxx-xx
  *     -- Compiled: xxx xx xxxx xx:xx:xx --
  *     =========================================================
- *     Menu: press a key to set test feature.
+ *     Menu: press a key to test feature.
  *     ---------------------------------------------------------
  *     -- 0: Gain and Offset Test --
  *     -- 1: Dual AFEC Conversion Test --
@@ -91,7 +91,6 @@
  *     -- 3: User Sequence Test --
  *     -- 4: Typical Application Test--
  *    \endcode
- * -# The application will output current voltage of potentiometer on the terminal.
  */
 
 #include <stdio.h>
@@ -130,8 +129,8 @@ enum afec_channel_num ch_list[] =
 {
 	AFEC_CHANNEL_1,
 	AFEC_CHANNEL_0,
-}
-;
+};
+
 /**
  * \brief Configure UART console.
  */
@@ -168,13 +167,13 @@ static void print_float(float temp)
 
 	j = (int32_t)f;
 
-	if(temp > 0) {
+	if (temp > 0) {
 		i = j - (int32_t)temp * 100;
 	} else {
 		i = (int32_t)temp * 100 - j;
 	}
 
-	j = j /100;
+	j = j / 100;
 
 	printf("%d.%d mv \n\r", (int32_t)j, (int32_t)i);
 }
@@ -217,6 +216,16 @@ static void afec_eoc_1(void)
 	g_afec1_sample_data = afec_channel_get_value(AFEC0, AFEC_CHANNEL_1);
 	puts("AFEC0 Channel 1 Voltage:");
 	print_float(g_afec1_sample_data * VOLT_REF / g_max_digital);
+}
+
+/**
+ * \brief AFEC0 DRDY interrupt callback function.
+ */
+static void afec0_diff_data_ready(void)
+{
+	g_afec0_sample_data = afec_get_latest_value(AFEC0);
+	puts("AFEC0 Channel Differential Voltage:");
+	print_float(g_afec0_sample_data * VOLT_REF / g_max_digital - 1650);
 }
 
 /**
@@ -264,6 +273,11 @@ static void set_afec_test(void)
 
 	switch (uc_key) {
 	case '0':
+		/*
+		* This test will use AFEC0 channel4 to connect with external input.
+		* Setting gain = 4 and offset = 1, if external input voltage is 100mv,
+		* the ouput result should be 1650 + 10 * 4 = 1690mv .
+		*/
 		puts("Gain and Offset Test \n\r");
 		g_delay_cnt = 1000;
 		afec_init(AFEC0, &afec_cfg);
@@ -277,6 +291,12 @@ static void set_afec_test(void)
 		while((afec_get_interrupt_status(AFEC0) & AFEC_ISR_EOCAL) != AFEC_ISR_EOCAL);
 		break;
 	case '1':
+		/*
+		 *  This test will use AFEC0 channel5 to connect with potentiometer and
+		 * AFEC1 channel0 to connect with external input. The AFEC0 conversion
+		 * is triggered by software every 3s and AFEC1 conversion is triggered
+		 * by TC every 1s.
+		 */
 		puts("Dual AFEC Conversion Test \n\r");
 		g_delay_cnt = 3000;
 		afec_enable(AFEC1);
@@ -302,6 +322,11 @@ static void set_afec_test(void)
 		while((afec_get_interrupt_status(AFEC1) & AFEC_ISR_EOCAL) != AFEC_ISR_EOCAL);
 		break;
 	case '2':
+		/*
+		 * This test will use AFEC0 channl4 and channel5 as positive and
+		 * negative input, so the output result is external input voltage subtracting
+		 * potentiometer voltage. The differential voltage range is -1.65v~ +1.65v.
+		 */
 		puts("Differential Input Test \n\r");
 		g_delay_cnt = 1000;
 		afec_init(AFEC0, &afec_cfg);
@@ -311,11 +336,16 @@ static void set_afec_test(void)
 		afec_set_trigger(AFEC0, AFEC_TRIG_SW);
 		afec_channel_enable(AFEC0, AFEC_CHANNEL_4);
 		afec_channel_enable(AFEC0, AFEC_CHANNEL_POTENTIOMETER);
-		afec_set_callback(AFEC0, AFEC_INTERRUPT_DATA_READY, afec0_data_ready, 1);
+		afec_set_callback(AFEC0, AFEC_INTERRUPT_DATA_READY, afec0_diff_data_ready, 1);
 		afec_start_calibration(AFEC0);
 		while((afec_get_interrupt_status(AFEC0) & AFEC_ISR_EOCAL) != AFEC_ISR_EOCAL);
 		break;
 	case '3':
+		/*
+		 * This test will configure user sequence channel1, channel0,
+		 * so the first conversion is is channel1 and next is channel0.
+		 * The output information will show this.
+		 */
 		puts("User Sequence Test \n\r");
 		g_delay_cnt = 1000;
 		afec_init(AFEC0, &afec_cfg);
@@ -330,6 +360,10 @@ static void set_afec_test(void)
 		while((afec_get_interrupt_status(AFEC0) & AFEC_ISR_EOCAL) != AFEC_ISR_EOCAL);
 		break;
 	case '4':
+		/*
+		 * This test use AFEC0 channel4 to connect with external input.
+		 * It integrate the enhanced resolution test and gain and offset test.
+		 */
 		puts("Typical Application Test \n\r");
 		g_delay_cnt = 1000;
 		g_max_digital = MAX_DIGITAL_12_BIT * 16;
@@ -345,15 +379,7 @@ static void set_afec_test(void)
 		while((afec_get_interrupt_status(AFEC0) & AFEC_ISR_EOCAL) != AFEC_ISR_EOCAL);
 		break;
 	default:
-		puts("Default Mode Test \n\r");
-		g_delay_cnt = 1000;
-		afec_init(AFEC0, &afec_cfg);
-		afec_ch_set_config(AFEC0, AFEC_CHANNEL_POTENTIOMETER, &afec_ch_cfg);
-		afec_set_trigger(AFEC0, AFEC_TRIG_SW);
-		afec_channel_enable(AFEC0, AFEC_CHANNEL_POTENTIOMETER);
-		afec_set_callback(AFEC0, AFEC_INTERRUPT_DATA_READY, afec0_data_ready, 1);
-		afec_start_calibration(AFEC0);
-		while((afec_get_interrupt_status(AFEC0) & AFEC_ISR_EOCAL) != AFEC_ISR_EOCAL);
+		puts("Please select feature test correctly! \n\r");
 		break;
 	}
 }

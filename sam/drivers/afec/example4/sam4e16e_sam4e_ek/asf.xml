@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
-	<project caption="AFEC Test Example on SAM4E-EK" id="sam.drivers.afec.example4.sam4e_ek">
+	<project caption="AFEC Feature Test Example on SAM4E-EK" id="sam.drivers.afec.example4.sam4e_ek">
 		<info type="description" value="summary">
-		Enhanced Resolution Mode example of AFEC on SAM4E-EK.
+		This example demonstrates how to use some features inside the microcontroller.
 		</info>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
