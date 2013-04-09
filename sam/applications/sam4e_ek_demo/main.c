@@ -192,7 +192,7 @@ int main(void)
 	create_qtouch_task(mainQTOUCH_TASK_STACK_SIZE, mainQTOUCH_TASK_PRIORITY);
 
 	/** Create WebServer task. */
-	create_webserver_task(mainWEBSERVER_TASK_STACK_SIZE, mainWEBSERVER_TASK_PRIORITY+10);
+	create_webserver_task(mainWEBSERVER_TASK_STACK_SIZE, mainWEBSERVER_TASK_PRIORITY);
 
 	/** Start the RTOS scheduler. */
 	vTaskStartScheduler();

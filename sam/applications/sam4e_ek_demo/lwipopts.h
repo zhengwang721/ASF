@@ -162,10 +162,10 @@ a lot of data that needs to be copied, this should be set high. */
 /* TCP_SND_QUEUELEN: replace TCP_SND_BUF=3000 by 2150. 3000 don't work */
 #define TCP_SND_QUEUELEN        ((6 * (2150/*TCP_SND_BUF*/) + (TCP_MSS - 1))/(TCP_MSS))
 /* Maximum number of retransmissions of data segments. */
- #define TCP_MAXRTX              12
+#define TCP_MAXRTX              12
 /* Maximum number of retransmissions of SYN segments. */
- #define TCP_SYNMAXRTX           4
-
+#define TCP_SYNMAXRTX           4
+#define TCP_TMR_INTERVAL        500
 /* -------- MEM ---------- */
 /* MEMP_NUM_TCP_PCB: the number of simultaneously active TCP connections. */
 #define MEMP_NUM_TCP_PCB        8

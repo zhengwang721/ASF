@@ -88,17 +88,16 @@ typedef struct timers_info {
 
 /** LwIP tmr functions list */
 static timers_info_t gs_timers_table[] = {
-
 	{0, TCP_TMR_INTERVAL, tcp_tmr},
 	{0, IP_TMR_INTERVAL, ip_reass_tmr},
-#if LWIP_TCP
-	/** LWIP_TCP */
+#if 0
+	/* LWIP_TCP */
 	{0, TCP_FAST_INTERVAL, tcp_fasttmr},
 	{0, TCP_SLOW_INTERVAL, tcp_slowtmr},
 #endif
-	/** LWIP_ARP */
+	/* LWIP_ARP */
 	{0, ARP_TMR_INTERVAL, etharp_tmr},
-	/** LWIP_DHCP */
+	/* LWIP_DHCP */
 #if LWIP_DHCP
 	{0, DHCP_COARSE_TIMER_SECS, dhcp_coarse_tmr},
 	{0, DHCP_FINE_TIMER_MSECS, dhcp_fine_tmr},
@@ -243,5 +242,5 @@ void ethernet_task(void)
 
 	/** Run periodic tasks */
 	timers_update();
-	vTaskDelay(30);
+	vTaskDelay(10);
 }
