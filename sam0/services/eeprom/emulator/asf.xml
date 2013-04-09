@@ -9,6 +9,7 @@
 			<keyword value="Memory" />
 			<keyword value="NVM" />
 		</info>
+		<info type="appnote" value="AT03265"/>
 		<build type="include-path" value="."/>
 		<build type="header-file" subtype="api" value="eeprom.h"/>
 		<build type="c-source" value="eeprom.c"/>
