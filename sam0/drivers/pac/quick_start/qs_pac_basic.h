@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 PAC Quick Start
+ * \brief SAM D20 PAC Quick Start
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -50,40 +50,48 @@
  * - One pin in input mode, with pull-up and falling edge-detect.
  * - One pin in output mode.
  *
- * \section asfdoc_samd20_pac_basic_use_case_setup Quick Start
+ * \section asfdoc_samd20_pac_basic_use_case_setup Setup
  *
- * \subsection asfdoc_samd20_pac_basic_use_case_prereq Prerequisites
- * Needs to include and set up the PORT driver. A suggested set up for the PORT
- * in the quick start, but the drivers for the PORT will need to be included.
+ * \subsection asfdoc_samd20_pac_basic_use_case_setup_prereq Prerequisites
+ * There are no special setup requirements for this use-case.
  *
- * \subsection asfdoc_samd20_pac_basic_use_case_code Code
+ * \subsection asfdoc_samd20_pac_basic_use_case_setup_code Code
  * Copy-paste the following setup code to your user application:
  * \snippet qs_pac_basic.c pin_setup
- * Add to user application %main():
+ *
+ * Add to user application initialization (typically the start of \c main()):
+ * \snippet qs_pac_basic.c init
+ *
+ * \section asfdoc_samd20_pac_basic_use_case_use_main Use Case
+ *
+ * \subsection asfdoc_samd20_pac_basic_use_case_code Code
+ * Copy-paste the following code to your user application:
  * \snippet qs_pac_basic.c main
  *
- * \section asfdoc_samd20_pac_basic_use_case_main Workflow
- * -# Make function to set up PORT module.
- *  \snippet qs_pac_basic.c pin_setup
- * -# Initialize the system peripherals and set up some GPIO port pins.
+ * \subsection asfdoc_samd20_pac_basic_use_case_flow Workflow
+ * -# Configure some GPIO port pins for input and output.
  *  \snippet qs_pac_basic.c init
- * -# Lock peripheral access for PORT
+ * -# Lock peripheral access for the PORT module; attempting to update the
+ *    module while it is in a protected state will cause a Hard Fault exception.
  *  \snippet qs_pac_basic.c init_lock
  * -# Enable global interrupts.
  *  \snippet qs_pac_basic.c enable_interrupts
- * -# Loop to wait for edge detect.
+ * -# Loop to wait for a button press before continuing.
  *  \snippet qs_pac_basic.c button_press
- * -# Disable interrupts globally
+ * -# Enter a critical section, so that the PAC module can be unlocked safely
+ *    and the peripheral manipulated without the possibility of an interrupt
+ *    modifying the protected module's state.
  *  \snippet qs_pac_basic.c disable_interrupts
- * -# Unlock the peripheral registers.
+ * -# Unlock the PORT peripheral registers.
  *  \snippet qs_pac_basic.c unlock_perph
  * -# Toggle pin 11, and clear edge detect flag.
  *  \snippet qs_pac_basic.c alter_config
- * -# Lock the peripheral registers.
+ * -# Lock the PORT peripheral registers.
  *  \snippet qs_pac_basic.c lock_perph
- * -# Re-enable global interrupts.
+ * -# Exit the critical section to allow interrupts to function normally again.
  *  \snippet qs_pac_basic.c enable_interrupts_2
- * -# Start inf wait loop.
+ * -# Enter an infinite while loop once the module state has been modified
+ *    successfully.
  *  \snippet qs_pac_basic.c inf_loop
  */
 

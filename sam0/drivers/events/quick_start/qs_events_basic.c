@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 Event System Driver Quick Start
+ * \brief SAM D20 Event System Driver Quick Start
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *

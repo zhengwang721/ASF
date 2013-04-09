@@ -50,7 +50,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-/* SAMD20 family */
+/* SAM D20 family */
 #if (SAMD20)
 #  include "samd20.h"
 #endif

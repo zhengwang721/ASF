@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<module type="driver" id="sam0.drivers.bod" caption="BOD - Brown Out Detector">
 		<info type="description" value="summary">
-			Driver for the SAMD20 Brown Out Detector(s). Provides a unified
+			Driver for the SAM D20 Brown Out Detector(s). Provides a unified
 			interface for the configuration and management of the BOD modules,
 			including the threshold voltages and desired hardware actions.
 		</info>

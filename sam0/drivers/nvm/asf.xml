@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<module type="driver" id="sam0.drivers.nvm" caption="NVM - Non-Volatile Memory">
 		<info type="description" value="summary">
-			Driver for the SAMD20 Non-Volatile Memory controller. Provides a
+			Driver for the SAM D20 Non-Volatile Memory controller. Provides a
 			unified interface for the erasing, reading and writing of data to
 			and from the various non-volatile memories of the device, including
 			executable FLASH memory and user configuration pages.

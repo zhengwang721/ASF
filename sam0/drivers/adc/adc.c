@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 Peripheral Analog-to-Digital Converter Driver
+ * \brief SAM D20 Peripheral Analog-to-Digital Converter Driver
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -363,7 +363,8 @@ enum status_code adc_init(
 
 	_adc_instances[0] = module_inst;
 
-	if(config->event.event_action == ADC_EVENT_ACTION_DISABLED) {
+	if(config->event.event_action == ADC_EVENT_ACTION_DISABLED &&
+			!config->freerunning) {
 		module_inst->software_trigger = true;
 	} else {
 		module_inst->software_trigger = false;

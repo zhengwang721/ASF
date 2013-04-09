@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<select-by-config id="sam0.drivers.rtc" name="config.sam0.drivers.rtc" caption="RTC - Real Time Clock Driver" default="count_callback">
 		<info type="description" value="summary">
-			Driver for the SAMD20 RTC. Provides a unified interface
+			Driver for the SAM D20 RTC. Provides a unified interface
 			for the configuration and management of the RTC module.
 		</info>
 		<info type="keyword" value="technology">

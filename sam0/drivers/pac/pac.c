@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 Peripheral Access Controller Driver
+ * \brief SAM D20 Peripheral Access Controller Driver
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *

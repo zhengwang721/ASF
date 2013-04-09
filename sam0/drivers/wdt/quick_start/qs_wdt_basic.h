@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 Watchdog Driver Quick Start
+ * \brief SAM D20 Watchdog Driver Quick Start
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -45,14 +45,15 @@
  * \page asfdoc_samd20_wdt_basic_use_case Quick Start Guide for WDT - Basic
  *
  * In this use case, the Watchdog module is configured for:
- *  \li System reset after 4096 clocks of the Watchdog generic clock
+ *  \li System reset after 2048 clocks of the Watchdog generic clock
  *  \li Always on mode, so that it is lock-enabled until the system power is
  *      cycled
  *  \li Basic mode, with no window or early warning periods
  *
- * This use case sets up the Watchdog to force a system reset after every 4096
+ * This use case sets up the Watchdog to force a system reset after every 2048
  * clocks of the Watchdog's Generic Clock channel, unless the user periodically
- * resets the Watchdog counter via a button before the timer expires.
+ * resets the Watchdog counter via a button before the timer expires. If the
+ * watchdog resets the device, a LED on the board is turned on.
  *
  * \section asfdoc_samd20_wdt_basic_use_case_setup Setup
  *

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 Clock Driver
+ * \brief SAM D20 Clock Driver
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -44,9 +44,9 @@
 #define SYSTEM_CLOCK_H_INCLUDED
 
 /**
- * \defgroup asfdoc_samd20_system_clock_group SAMD20 Clock Management Driver (CLOCK)
+ * \defgroup asfdoc_samd20_system_clock_group SAM D20 Clock Management Driver (CLOCK)
  *
- * This driver for SAMD20 devices provides an interface for the configuration
+ * This driver for SAM D20 devices provides an interface for the configuration
  * and management of the device's clocking related functions. This includes
  * the various clock sources, bus clocks and generic clocks within the device,
  * with functions to manage the enabling, disabling, source selection and
@@ -73,7 +73,7 @@
  *
  *
  * \section asfdoc_samd20_system_clock_module_overview Module Overview
- * The SAMD20 devices contain a sophisticated clocking system, which is designed
+ * The SAM D20 devices contain a sophisticated clocking system, which is designed
  * to give the maximum flexibility to the user application. This system allows
  * a system designer to tune the performance and power consumption of the device
  * in a dynamic manner, to achieve the best trade-off between the two for a
@@ -83,7 +83,7 @@
  * of the various clock related functionality within the device.
  *
  * \subsection asfdoc_samd20_system_clock_module_overview_clock_sources Clock Sources
- * The SAMD20 devices have a number of master clock source modules, each of
+ * The SAM D20 devices have a number of master clock source modules, each of
  * which being capable of producing a stabilized output frquency which can then
  * be fed into the various peripherals and modules within the device.
  *
@@ -132,7 +132,7 @@
  * module, but will reduce the overall device power consumption.
  *
  * \subsection asfdoc_samd20_system_clock_module_overview_gclk Generic Clocks
- * Within the SAMD20 devices are a number of Generic Clocks; these are used to
+ * Within the SAM D20 devices are a number of Generic Clocks; these are used to
  * provide clocks to the various peripheral clock domains in the device in a
  * standardized manner. One or more master source clocks can be selected as the
  * input clock to a Generic Clock Generator, which can prescale down the input

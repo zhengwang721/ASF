@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<module type="driver" id="sam0.drivers.ac" caption="AC - Analog Comparator">
 		<info type="description" value="summary">
-			Driver for the SAMD20 Analog Comparator. Provides a unified interface
+			Driver for the SAM D20 Analog Comparator. Provides a unified interface
 			for the configuration and management of the Analog Comparator
 			module, including the channel comparator input selections, window
 			modes and event generation.
