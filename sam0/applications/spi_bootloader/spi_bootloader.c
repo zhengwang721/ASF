@@ -222,17 +222,20 @@ void check_boot_mode(void)
  */
 int main(void)
 {
-	/* Data to be programmed is available from sector 1 of AT45DBX,
-	 * -> curr_sector = 1
-	 * Application to be programmed from APP_START_ADDRESS defined in
-	 * conf_bootloader.h
-	 */
-	uint32_t len = 0, curr_sector = 1, curr_prog_addr = APP_START_ADDRESS;
+	uint32_t len = 0, curr_sector, curr_prog_addr;
 	uint8_t buff[AT45DBX_SECTOR_SIZE] = {0};
 	struct nvm_config config;
 
 	/* Check switch state to enter boot mode or application mode */
 	check_boot_mode();
+
+	/* Data to be programmed is available from sector 1 of AT45DBX */
+	curr_sector = 1;
+	/* 
+	 * Application to be programmed from APP_START_ADDRESS defined in
+	 * conf_bootloader.h
+	 */
+	curr_prog_addr = APP_START_ADDRESS;
 
 	/* Initialize system */
 	system_init();
