@@ -12,7 +12,7 @@
 		User board project template for SAMD20J18A devices.
 		</info>
 		<require idref="common.applications.user_application.sam0_system.user_board.common"/>
-		<require idref="board.user_board.samd20j"/>
+		<require idref="board.user_board.samd20ja"/>
 		<generator value="as5_arm_template"/>
 		<generator value="doxygen"/>
 		<device-support value="atsamd20j18a"/>
