@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 SPI Bootloader
+ * \brief SAMD20 Master SPI Bootloader
  *
  * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
@@ -110,11 +110,9 @@ void fetch_data(uint32_t sector, uint8_t *buffer, uint16_t len)
 void program_mem(uint32_t ad, uint8_t *buffer, uint16_t len)
 {
 	/* Check if length is greater than Flash page size */
-	if (len > NVMCTRL_PAGE_SIZE)
-	{
+	if (len > NVMCTRL_PAGE_SIZE) {
 		uint32_t offset = 0;
-		while(len > NVMCTRL_PAGE_SIZE)
-		{
+		while(len > NVMCTRL_PAGE_SIZE) {
 			/* Check if it is first page of a row */
 			if((ad & 0xFF) == 0) {
 				/* Erase row */
@@ -130,8 +128,7 @@ void program_mem(uint32_t ad, uint8_t *buffer, uint16_t len)
 			len -= NVMCTRL_PAGE_SIZE;
 		}
 		/* Check if there is data remaining to be programmed*/
-		if(len > 0)
-		{
+		if(len > 0) {
 			/* Write the data to flash */
 			nvm_write_buffer(ad, buffer+offset, len);
 		}
@@ -156,7 +153,7 @@ void start_application(void)
 {
 	struct wdt_conf wdt_config;
 
-	/*Turn off LED */
+	/* Turn off LED */
 	port_pin_set_output_level(BOOT_LED, true);
 
 	/* Get WDT default configuration */
@@ -171,8 +168,7 @@ void start_application(void)
 
 	wdt_enable();
 
-	while(1)
-	{
+	while(1) {
 		port_pin_toggle_output_level(BOOT_LED);
 	}
 }
@@ -186,37 +182,44 @@ void start_application(void)
  */
 void check_boot_mode(void)
 {
-			/* Disable the Watchdog module */
-			WDT->CTRL.reg &= ~WDT_CTRL_ENABLE;
+	/* Disable the Watchdog module */
+	WDT->CTRL.reg &= ~WDT_CTRL_ENABLE;
 
-			volatile PortGroup *boot_port = (volatile PortGroup *)(&(PORT->Group[BOOT_LOAD_PIN/32]));
-			volatile uint32_t boot_en;
+	volatile PortGroup *boot_port = (volatile PortGroup *)
+			(&(PORT->Group[BOOT_LOAD_PIN/32]));
+	volatile uint32_t boot_en;
 
-			/* Enable the input mode in Boot GPIO Pin */
-			boot_port->DIRCLR.reg = GPIO_BOOT_PIN_MASK;
-			boot_port->PINCFG[BOOT_LOAD_PIN & 0x1F].reg = PORT_PINCFG_INEN | PORT_PINCFG_PULLEN;
-			boot_port->OUTSET.reg = GPIO_BOOT_PIN_MASK;
+	/* Enable the input mode in Boot GPIO Pin */
+	boot_port->DIRCLR.reg = GPIO_BOOT_PIN_MASK;
+	boot_port->PINCFG[BOOT_LOAD_PIN & 0x1F].reg = 
+			PORT_PINCFG_INEN | PORT_PINCFG_PULLEN;
+	boot_port->OUTSET.reg = GPIO_BOOT_PIN_MASK;
 
-			boot_en = (boot_port->IN.reg);
+	boot_en = (boot_port->IN.reg);
 
-			/* Check the BOOT pin or the reset cause is Watchdog */
-			if ((boot_en) || (PM->RCAUSE.reg & PM_RCAUSE_WDT)) {
-				/* Pointer to the Application Section */
-				void (*application_code_entry)(void);
+	/* Check the BOOT pin or the reset cause is Watchdog */
+	if ((boot_en) || (PM->RCAUSE.reg & PM_RCAUSE_WDT)) {
+		/* Pointer to the Application Section */
+		void (*application_code_entry)(void);
 
-				/* Rebase the Stack Pointer */
-				__set_MSP(*(uint32_t *) APP_START_ADDRESS);
+		/* Rebase the Stack Pointer */
+		__set_MSP(*(uint32_t *) APP_START_ADDRESS);
 
-				/* Rebase the vector table base address */
-				SCB->VTOR = ((uint32_t) APP_START_ADDRESS & SCB_VTOR_TBLOFF_Msk);
+		/* Rebase the vector table base address */
+		SCB->VTOR = ((uint32_t) APP_START_ADDRESS & SCB_VTOR_TBLOFF_Msk);
 
-				/* Load the Reset Handler address of the application */
-				application_code_entry = (void (*)(void))(unsigned *)(*(unsigned *)(APP_START_ADDRESS + 4));
+		/* Load the Reset Handler address of the application */
+		application_code_entry = (void (*)(void))(unsigned *)(*(unsigned *)
+				(APP_START_ADDRESS + 4));
 
-				/* Jump to user Reset Handler in the application */
-				application_code_entry();
-			}
+		/* Jump to user Reset Handler in the application */
+		application_code_entry();
+	}
 }
+
+/**
+ * \brief Main application
+ */
 int main(void)
 {
 	/* Data to be programmed is available from sector 1 of AT45DBX,
@@ -249,8 +252,7 @@ int main(void)
 		/* Get the length to be programmed */
 		len = get_len();
 
-		do 
-		{
+		do {
 			/* Read data of AT45DBX_SECTOR_SIZE */
 			fetch_data(curr_sector, buff, min(AT45DBX_SECTOR_SIZE, len));
 
@@ -267,11 +269,13 @@ int main(void)
 			len -= min(AT45DBX_SECTOR_SIZE, len);
 
 			/* Do this for entire length */
-		} while (len!=0);
+		} while (len != 0);
 
 		start_application();
 	}
 
-	while (1);
+	while (1) {
+		/* Inf loop */
+	}
 
 }
