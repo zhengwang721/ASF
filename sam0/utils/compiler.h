@@ -1037,9 +1037,6 @@ typedef double                  F64;  //!< 64-bit floating-point number.
 #define MEMCPY_ENDIAN memcpy
 #define PGM_READ_BLOCK(dst, src, len) memcpy((dst), (src), (len))
 
-/*Defines the Flash Storage for the request and response of MAC*/
-#define CMD_ID_OCTET    (0)
-
 /* Converting of values from CPU endian to little endian. */
 #define CPU_ENDIAN_TO_LE16(x)   (x)
 #define CPU_ENDIAN_TO_LE32(x)   (x)
