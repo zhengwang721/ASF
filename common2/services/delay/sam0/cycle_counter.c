@@ -75,7 +75,7 @@ void delay_cycles_us(uint32_t n)
 {
 	while (n--) {
 		/* Devide up to blocks of 10ms */
-		delay_cycles(cycles_per_ms);
+		delay_cycles(cycles_per_us);
 	}
 }
 
