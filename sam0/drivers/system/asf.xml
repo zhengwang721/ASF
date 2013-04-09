@@ -11,6 +11,8 @@
 			<keyword value="Clocks" />
 		</info>
 
+		<info type="appnote" value="AT03260"/>
+
 		<build type="include-path" value="."/>
 		<build type="header-file" subtype="api" value="system.h"/>
 		<build type="c-source" value="system.c"/>

@@ -7,6 +7,8 @@
 			<keyword value="Communication"/>
 		</info>
 
+
+
 		<module type="driver" id="sam0.drivers.sercom.i2c.master#polled" caption="SERCOM I2C - Master Mode I2C (Polled APIs)">
 			<build type="include-path" value="." />
 			<build type="header-file" subtype="api" value="i2c_master.h"/>
@@ -31,6 +33,7 @@
 		</module>
 
 		<module type="driver" id="sam0.drivers.sercom.i2c.master#callback" caption="SERCOM I2C - Master Mode I2C (Callback APIs)">
+			<info type="appnote" value="AT03250"/>
 			<build type="include-path" value="." />
 			<build type="header-file" subtype="api" value="i2c_master.h"/>
 			<build type="header-file" subtype="api" value="i2c_master_interrupt.h"/>
@@ -91,6 +94,7 @@
 		</module>
 
 		<module type="driver" id="sam0.drivers.sercom.i2c.slave#callback" caption="SERCOM I2C - Slave Mode I2C (Callback APIs)">
+			<info type="appnote" value="AT03254"/>
 			<build type="include-path" value="." />
 			<build type="header-file" subtype="api" value="i2c_slave_interrupt.h"/>
 			<build type="header-file" subtype="api" value="i2c_slave.h"/>

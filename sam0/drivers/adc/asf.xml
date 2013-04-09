@@ -31,6 +31,7 @@
 			<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 		</module>
 		<module type="driver" id="sam0.drivers.adc#callback" caption="ADC - Analog-to-Digital Converter (Callback Mode)">
+			<info type="appnote" value="AT03243"/>
 			<build type="c-source" value="adc_callback.c"/>
 			<build type="c-source" value="adc.c"/>
 			<build type="header-file" subtype="api" value="adc.h"/>

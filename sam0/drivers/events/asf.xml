@@ -11,6 +11,8 @@
 			<keyword value="Peripheral Event System" />
 		</info>
 
+		<info type="appnote" value="AT03245"/>
+
 		<build type="include-path" value="."/>
 		<build type="header-file" subtype="api" value="events.h"/>
 		<build type="c-source" value="events.c"/>
