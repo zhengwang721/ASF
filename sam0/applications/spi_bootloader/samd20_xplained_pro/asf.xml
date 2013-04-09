@@ -1,0 +1,16 @@
+<asf xmlversion="1.0">
+	<project caption="SAM-BA bootloader for SAMD20" id="sam0.applications.spi_bootloader.samd20_xplained_pro">
+		<info type="gui-flag" value="move-to-root"/>
+		<build type="include-path" value="."/>
+		<build type="header-file" value="config/conf_board.h"/>
+		<build type="header-file" value="config/conf_clocks.h"/>
+		<build type="header-file" value="config/conf_at45dbx.h"/>
+		<build type="header-file" value="config/conf_bootloader.h"/>
+		<require idref="board.samd20_xplained_pro"/>
+		<require idref ="sam0.applications.spi_bootloader"/>
+		<generator value="iarewarm"/>
+		<generator value="armgcc"/>
+		<generator value="as5_arm"/>
+		<device-support value="atsamd20j18a"/>
+	</project>
+</asf>
