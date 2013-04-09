@@ -45,9 +45,9 @@
 #include "conf_bootloader.h"
 
 /* Function prototypes */
-uint32_t get_len(void);
+uint32_t get_length(void);
 void fetch_data(uint32_t sector, uint8_t *buffer, uint16_t len);
-void program_mem(uint32_t ad, uint8_t *buffer, uint16_t len);
+void program_memory(uint32_t address, uint8_t *buffer, uint16_t len);
 void start_application(void);
 void check_boot_mode(void);
 
@@ -58,7 +58,7 @@ void check_boot_mode(void);
  * first 4 bytes which contain the length of the file to be programmed. It
  * closes the sector after reading
  */
-uint32_t get_len(void)
+uint32_t get_length(void)
 {
 	uint32_t len = 0;
 
@@ -103,43 +103,43 @@ void fetch_data(uint32_t sector, uint8_t *buffer, uint16_t len)
  * This function will check whether the data is greater than Flash page size.
  * If it is greater, it splits and writes pagewise.
  *
- * \param ad     address of the Flash page to be programmed
- * \param buffer pointer to the buffer containing data to be programmed
- * \param len    length of the data to be programmed to Flash
+ * \param address address of the Flash page to be programmed
+ * \param buffer  pointer to the buffer containing data to be programmed
+ * \param len     length of the data to be programmed to Flash
  */
-void program_mem(uint32_t ad, uint8_t *buffer, uint16_t len)
+void program_memory(uint32_t address, uint8_t *buffer, uint16_t len)
 {
 	/* Check if length is greater than Flash page size */
 	if (len > NVMCTRL_PAGE_SIZE) {
 		uint32_t offset = 0;
-		while(len > NVMCTRL_PAGE_SIZE) {
+		while (len > NVMCTRL_PAGE_SIZE) {
 			/* Check if it is first page of a row */
-			if((ad & 0xFF) == 0) {
+			if ((address & 0xFF) == 0) {
 				/* Erase row */
-				nvm_erase_row(ad);
+				nvm_erase_row(address);
 			}
 			/* Write one page data to flash */
-			nvm_write_buffer(ad, buffer+offset, NVMCTRL_PAGE_SIZE);
+			nvm_write_buffer(address, buffer + offset, NVMCTRL_PAGE_SIZE);
 			/* Increment the address to be programmed */
-			ad += NVMCTRL_PAGE_SIZE;
+			address += NVMCTRL_PAGE_SIZE;
 			/* Increment the offset of the buffer containing data */
 			offset += NVMCTRL_PAGE_SIZE;
 			/* Decrement the length */
 			len -= NVMCTRL_PAGE_SIZE;
 		}
 		/* Check if there is data remaining to be programmed*/
-		if(len > 0) {
+		if (len > 0) {
 			/* Write the data to flash */
-			nvm_write_buffer(ad, buffer+offset, len);
+			nvm_write_buffer(address, buffer + offset, len);
 		}
 	} else {
 		/* Check if it is first page of a row) */
-		if ((ad & 0xFF) == 0) {
+		if ((address & 0xFF) == 0) {
 			/* Erase row */
-			nvm_erase_row(ad);
+			nvm_erase_row(address);
 		}
 		/* Write the data to flash */
-		nvm_write_buffer(ad, buffer, len);
+		nvm_write_buffer(address, buffer, len);
 	}
 }
 
@@ -168,7 +168,7 @@ void start_application(void)
 
 	wdt_enable();
 
-	while(1) {
+	while (1) {
 		port_pin_toggle_output_level(BOOT_LED);
 	}
 }
@@ -186,7 +186,7 @@ void check_boot_mode(void)
 	WDT->CTRL.reg &= ~WDT_CTRL_ENABLE;
 
 	volatile PortGroup *boot_port = (volatile PortGroup *)
-			(&(PORT->Group[BOOT_LOAD_PIN/32]));
+			(&(PORT->Group[BOOT_LOAD_PIN / 32]));
 	volatile uint32_t boot_en;
 
 	/* Enable the input mode in Boot GPIO Pin */
@@ -248,16 +248,16 @@ int main(void)
 	port_pin_set_output_level(BOOT_LED, false);
 
 	/* Check the dataflash component */
-	if(at45dbx_mem_check() == true) {
+	if (at45dbx_mem_check() == true) {
 		/* Get the length to be programmed */
-		len = get_len();
+		len = get_length();
 
 		do {
 			/* Read data of AT45DBX_SECTOR_SIZE */
 			fetch_data(curr_sector, buff, min(AT45DBX_SECTOR_SIZE, len));
 
 			/* Program the read data into Flash */
-			program_mem(curr_prog_addr, buff, min(AT45DBX_SECTOR_SIZE, len));
+			program_memory(curr_prog_addr, buff, min(AT45DBX_SECTOR_SIZE, len));
 
 			/* Increment the dataflash sector */
 			curr_sector++;
