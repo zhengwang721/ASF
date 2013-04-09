@@ -3,7 +3,7 @@
  *
  * \brief API driver for ILI9325 TFT display component.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -614,6 +614,8 @@ void ili9325_draw_filled_rectangle(uint32_t ul_x1, uint32_t ul_y1,
 		uint32_t ul_x2, uint32_t ul_y2);
 uint32_t ili9325_draw_circle(uint32_t ul_x, uint32_t ul_y, uint32_t ul_r);
 uint32_t ili9325_draw_filled_circle(uint32_t ul_x, uint32_t ul_y, uint32_t ul_r);
+void ili9325_draw_prepare(uint32_t ul_x, uint32_t ul_y, uint32_t ul_width,
+		    uint32_t ul_height);
 void ili9325_draw_string(uint32_t ul_x, uint32_t ul_y, const uint8_t *p_str);
 void ili9325_draw_pixmap(uint32_t ul_x, uint32_t ul_y, uint32_t ul_width,
 		uint32_t ul_height, const ili9325_color_t *p_ul_pixmap);
