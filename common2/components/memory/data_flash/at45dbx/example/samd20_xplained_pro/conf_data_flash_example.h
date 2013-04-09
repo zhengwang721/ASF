@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Common Delay Service
+ * \brief Example specific DataFlash configuration file
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,61 +40,15 @@
  * \asf_license_stop
  *
  */
-#ifndef _DELAY_H_
-#define _DELAY_H_
+#ifndef _CONF_DATA_FLASH_EXAMPLE_H
+#define _CONF_DATA_FLASH_EXAMPLE_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "conf_board.h"
 
-#include "sam0/cycle_counter.h"
-
-
-/**
- * @defgroup group_common_services_delay Busy-Wait Delay Routines
- *
- * This module provides simple loop-based delay routines for those
- * applications requiring a brief wait during execution. Common for
- * API ver. 2.
- *
- * @{
+/*! \name Configuration
  */
+//! @{
+#define DATA_FLASH_LED_EXAMPLE_0 LED0_PIN
+//! @}
 
-/**
- * @def delay_s
- * @brief Delay in at least specified number of seconds.
- * @param delay Delay in seconds
- */
-#define delay_s(delay)      cpu_delay_s(delay)
-
-/**
- * @def delay_ms
- * @brief Delay in at least specified number of milliseconds.
- * @param delay Delay in milliseconds
- */
-#define delay_ms(delay)     cpu_delay_ms(delay)
-
-/**
- * @def delay_us
- * @brief Delay in at least specified number of microseconds.
- * @param delay Delay in microseconds
- */
-#define delay_us(delay)     cpu_delay_us(delay)
-
-
-/**
- * @def delay_cycles
- * @brief Delay in at least specified number of cycles. Will have a minimum of about 3us.
- * @param delay Delay in cycles
- */
-#define delay_cycles(delay)     cpu_delay_cycles(delay)
-
-#ifdef __cplusplus
-}
-#endif
-
-/**
- * @}
- */
-
-#endif /* _DELAY_H_ */
+#endif  // _CONF_DATA_FLASH_EXAMPLE_H

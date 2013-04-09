@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Common Delay Service
+ * \brief Example specific AT45DBX configuration file
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,61 +40,33 @@
  * \asf_license_stop
  *
  */
-#ifndef _DELAY_H_
-#define _DELAY_H_
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#include "sam0/cycle_counter.h"
 
 
-/**
- * @defgroup group_common_services_delay Busy-Wait Delay Routines
- *
- * This module provides simple loop-based delay routines for those
- * applications requiring a brief wait during execution. Common for
- * API ver. 2.
- *
- * @{
- */
+#ifndef _CONF_AT45DBX_H_
+#define _CONF_AT45DBX_H_
 
-/**
- * @def delay_s
- * @brief Delay in at least specified number of seconds.
- * @param delay Delay in seconds
- */
-#define delay_s(delay)      cpu_delay_s(delay)
+#include "board.h"
 
-/**
- * @def delay_ms
- * @brief Delay in at least specified number of milliseconds.
- * @param delay Delay in milliseconds
- */
-#define delay_ms(delay)     cpu_delay_ms(delay)
+//_____ D E F I N I T I O N S ______________________________________________
 
-/**
- * @def delay_us
- * @brief Delay in at least specified number of microseconds.
- * @param delay Delay in microseconds
- */
-#define delay_us(delay)     cpu_delay_us(delay)
+//! SERCOM module to be used
+#define AT45DBX_SPI                 SERCOM2
 
+//! Size of AT45DBX data flash memories to manage.
+#define AT45DBX_MEM_SIZE            AT45DBX_500KB
 
-/**
- * @def delay_cycles
- * @brief Delay in at least specified number of cycles. Will have a minimum of about 3us.
- * @param delay Delay in cycles
- */
-#define delay_cycles(delay)     cpu_delay_cycles(delay)
+//! Number of AT45DBX components to manage.
+#define AT45DBX_MEM_CNT             1
 
-#ifdef __cplusplus
-}
-#endif
+#define AT45DBX_SPI_PINMUX_SETTING  SPI_SIGNAL_MUX_SETTING_E
+#define AT45DBX_SPI_PINMUX_PAD0     PINMUX_PA14B_SERCOM2_PAD0
+#define AT45DBX_SPI_PINMUX_PAD1     PINMUX_PA15B_SERCOM2_PAD1
+#define AT45DBX_SPI_PINMUX_PAD2     PINMUX_PA12B_SERCOM2_PAD2
+#define AT45DBX_SPI_PINMUX_PAD3     PINMUX_PA13B_SERCOM2_PAD3
 
-/**
- * @}
- */
+#define AT45DBX_CS                  PIN_PA16
 
-#endif /* _DELAY_H_ */
+//! SPI master speed in Hz.
+#define AT45DBX_CLOCK_SPEED         9600
+
+#endif  // _CONF_AT45DBX_H_
