@@ -94,7 +94,7 @@ int main(void)
 	extint_enable();
 	configure_extint_channel();
 
-	cpu_irq_enable();
+	system_interrupt_enable_global();
 	//! [setup_init]
 
 	//! [main]

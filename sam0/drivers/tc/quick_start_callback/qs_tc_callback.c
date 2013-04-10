@@ -114,7 +114,7 @@ int main(void)
 	//! [enable_callback]
 
 	//! [enable_global_interrupts]
-	cpu_irq_enable();
+	system_interrupt_enable_global();
 	//! [enable_global_interrupts]
 
 	//! [tc_enable]

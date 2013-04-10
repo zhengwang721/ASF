@@ -275,6 +275,27 @@ static inline bool system_interrupt_is_global_enabled(void)
 }
 
 /**
+ * \brief Enables global interrupts
+ *
+ * Enables global interrupts in the device to fire any enabled interrupt handlers.
+ */
+static inline void system_interrupt_enable_global(void)
+{
+	cpu_irq_enable();
+}
+
+/**
+ * \brief Disables global interrupts
+ *
+ * Disabled global interrupts in the device, preventing any enabled interrupt
+ * handlers from executing.
+ */
+static inline void system_interrupt_disable_global(void)
+{
+	cpu_irq_disable();
+}
+
+/**
  * \brief Checks if an interrupt vector is enabled or not
  *
  * Checks if a specific interrupt vector is currently enabled.

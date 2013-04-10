@@ -96,7 +96,7 @@ int main(void)
 
 
 //! [start_adc_job]
-	cpu_irq_enable();
+	system_interrupt_enable_global();
 	adc_read_buffer_job(&module_inst, ADC_SAMPLES, adc_result_buffer);
 //! [start_adc_job]
 
