@@ -56,7 +56,7 @@
  * Configure clock sources when running clocks_init. If this is false none
  * of the settings below will be applied, and the hardware defaults will be used
  */
-#define CONF_CLOCK_CONFIGURE_CLOCK_SOURCES true
+#define CONF_CLOCK_CONFIGURE_CLOCK_SOURCES false
 
 
  /* SYSTEM_CLOCK_SOURCE_OSC8M configuration */
@@ -88,7 +88,7 @@
 
 /* Set up GCLK generator 2 for RTC */
 
-#define CONF_CLOCK_GCLK_2_RTC false
+#define CONF_CLOCK_GCLK_2_RTC true
 #define CONF_CLOCK_RTC_CLOCK_SOURCE SYSTEM_CLOCK_SOURCE_OSC32K
 #define CONF_CLOCK_RTC_FREQ CONF_CLOCK_RTC_FREQ_1HZ
 
@@ -124,7 +124,7 @@
 
 #define CONF_CLOCK_GCLK_0_ENABLE true
 #define CONF_CLOCK_GCLK_0_CLOCK_SOURCE SYSTEM_CLOCK_SOURCE_OSC8M
-#define CONF_CLOCK_GCLK_0_PRESCALER 1
+#define CONF_CLOCK_GCLK_0_PRESCALER 3
 
 /* Configure GCLK generator 1 */
 

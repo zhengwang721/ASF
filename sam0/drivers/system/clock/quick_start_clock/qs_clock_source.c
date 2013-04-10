@@ -42,43 +42,79 @@
 void configure_extosc32k(void);
 void configure_dfll_open_loop(void);
 
-volatile uint32_t frequency;
-
+//! [setup]
+//! [config_extosc32k]
 void configure_extosc32k(void)
 {
+//! [config_extosc32k_config]
 	struct system_clock_source_xosc32k_config ext32k_conf;
+//! [config_extosc32k_config]
+//! [config_extosc32k_get_defaults]
 	system_clock_source_xosc32k_get_default_config(&ext32k_conf);
-	ext32k_conf.startup_time = SYSTEM_XOSC32K_STARTUP_4096;
-	system_clock_source_xosc32k_set_config(&ext32k_conf);
-}
+//! [config_extosc32k_get_defaults]
 
+//! [config_extosc32k_change_defaults]
+	ext32k_conf.startup_time = SYSTEM_XOSC32K_STARTUP_4096;
+//! [config_extosc32k_change_defaults]
+
+//! [config_extosc32k_set_config]
+	system_clock_source_xosc32k_set_config(&ext32k_conf);
+//! [config_extosc32k_set_config]
+}
+//! [config_extosc32k]
+
+//! [config_dfll]
 void configure_dfll_open_loop(void)
 {
+//! [config_dfll_config]
 	struct system_clock_source_dfll_config dfll_conf;
+//! [config_dfll_config]
+//! [config_dfll_get_defaults]
 	system_clock_source_dfll_get_default_config(&dfll_conf);
+//! [config_dfll_get_defaults]
+//! [config_dfll_set_config]
 	system_clock_source_dfll_set_config(&dfll_conf);
+//! [config_dfll_set_config]
 }
+//! [config_dfll]
+//! [setup]
 
 int main(void)
 {
-	enum status_code retval;
-
-	/* Configure the external 32K oscillator */
+//! [main]
+	/* Configure the external 32KHz oscillator */
+//! [config_extosc32k_main]
 	configure_extosc32k();
+//! [config_extosc32k_main]
 
-	/* Enable the external 32k oscillator */
-	retval = system_clock_source_enable(SYSTEM_CLOCK_SOURCE_XOSC32K, false);
-
-	if (retval != STATUS_OK) {
+	/* Enable the external 32KHz oscillator */
+//! [enable_extosc32k_main]
+	enum status_code osc32k_status = system_clock_source_enable(
+			SYSTEM_CLOCK_SOURCE_XOSC32K, false);
+	if (osc32k_status != STATUS_OK) {
 		/* Error enabling the clock source */
 	}
+//! [enable_extosc32k_main]
 
 	/* Configure the DFLL in open loop mode using default values */
+//! [config_dfll_main]
 	configure_dfll_open_loop();
+//! [config_dfll_main]
+
+	/* Enable the DFLL oscillator */
+//! [enable_dfll_main]
+	enum status_code dfll_status = system_clock_source_enable(
+			SYSTEM_CLOCK_SOURCE_DFLL, false);
+	if (dfll_status != STATUS_OK) {
+		/* Error enabling the clock source */
+	}
+//! [enable_dfll_main]
 
 	/* Change system clock to DFLL */
+//! [set_sys_clk_src]
 	system_main_clock_set_source(SYSTEM_MAIN_CLOCK_DFLL);
-
+//! [set_sys_clk_src]
+//! [main]
 
 	while (true) {
 
