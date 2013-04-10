@@ -185,53 +185,65 @@ uhc_enum_status_t uhi_aoa_install(uhc_device_t *dev)
 	
 	while(conf_desc_lgt) {
 		switch (ptr_iface->bDescriptorType) {
-
 		case USB_DT_INTERFACE:
-			if (ptr_iface->bInterfaceClass == CLASS_VENDOR_SPECIFIC) { 
+			if (ptr_iface->bInterfaceClass ==
+					CLASS_VENDOR_SPECIFIC) {
 				/* Possibly an AOA interface */
 				/* Start allocation endpoint(s) */
-				b_iface_supported = true; 
-			} else { 
+				b_iface_supported = true;
+			} else {
 				/* Stop allocation endpoint(s) */
 				b_iface_supported = false; 
 			}
+			
 			break;
+		
 		case USB_DT_ENDPOINT:
 			/* Allocation of the endpoint */
-			if (!b_iface_supported) { 
+			if (!b_iface_supported) {
 				break; 
 			}
+			
 			usb_ep_desc_t *ptr_ep = (usb_ep_desc_t *) ptr_iface;
-			if (!uhd_ep_alloc(dev->address, (usb_ep_desc_t*)ptr_iface)) { 
-				return UHC_ENUM_HARDWARE_LIMIT; /* Endpoint allocation fail */
+			if (!uhd_ep_alloc(dev->address, (usb_ep_desc_t*)ptr_iface)) {
+				/* Endpoint allocation fail */
+				return UHC_ENUM_HARDWARE_LIMIT;
 			}
-			if (ptr_ep->bEndpointAddress & USB_EP_DIR_IN) { 
-				uhi_aoa_dev.ep_in = ptr_ep->bEndpointAddress; 
+			
+			if (ptr_ep->bEndpointAddress & USB_EP_DIR_IN) {
+				uhi_aoa_dev.ep_in = ptr_ep->bEndpointAddress;
 			} else { 
-				uhi_aoa_dev.ep_out = ptr_ep->bEndpointAddress; 
+				uhi_aoa_dev.ep_out = ptr_ep->bEndpointAddress;
 			}
-			if (uhi_aoa_dev.ep_out && uhi_aoa_dev.ep_in) { 
-				/* All Endpoints allocated */ 
-				uhi_aoa_dev.dev = dev; 
-				return UHC_ENUM_SUCCESS; 
+			
+			if (uhi_aoa_dev.ep_out && uhi_aoa_dev.ep_in) {
+				/* All Endpoints allocated */
+				uhi_aoa_dev.dev = dev;
+				return UHC_ENUM_SUCCESS;
 			}
+			
 			break;
+			
 		default:
 			/* Ignore descriptor */
 			break;
 		}
 		Assert(conf_desc_lgt>=ptr_iface->bLength);
 		conf_desc_lgt = ptr_iface->bLength;
-		ptr_iface = (usb_iface_desc_t*)((uint8_t*)ptr_iface + ptr_iface->bLength);
+		ptr_iface = 
+				(usb_iface_desc_t*)((uint8_t*)ptr_iface +
+				ptr_iface->bLength);
 	}
 	
-	if (uhi_aoa_dev.ep_in) { 
-		uhd_ep_free(0,uhi_aoa_dev.ep_in); 
+	if (uhi_aoa_dev.ep_in) {
+		uhd_ep_free(0,uhi_aoa_dev.ep_in);
 	}
+	
 	if (uhi_aoa_dev.ep_out) { 
-		uhd_ep_free(0,uhi_aoa_dev.ep_out); 
+		uhd_ep_free(0,uhi_aoa_dev.ep_out);
 	}
-	return UHC_ENUM_UNSUPPORTED; // No interface supported
+	
+	return UHC_ENUM_UNSUPPORTED; /* No interface supported */
 }
 
 void uhi_aoa_enable(uhc_device_t *dev)
@@ -239,9 +251,11 @@ void uhi_aoa_enable(uhc_device_t *dev)
 	if (uhi_aoa_dev.dev != dev) {
 		return; /* No interface to enable */
 	}
-	if (uhi_aoa_enable_stage == AOA_ENABLE_STAGE_PROCESSING) { 
-		uhi_aoa_mode_enable_step1(dev); 
+
+	if (uhi_aoa_enable_stage == AOA_ENABLE_STAGE_PROCESSING) {
+		uhi_aoa_mode_enable_step1(dev);
 	}
+
 	/* Init value */
 	UHI_AOA_CHANGE(dev, true);
 }
