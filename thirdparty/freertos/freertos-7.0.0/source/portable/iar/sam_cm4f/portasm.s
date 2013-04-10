@@ -147,10 +147,12 @@ PendSV_Handler: /* ATMEL */
 	ldr	r3, =pxCurrentTCB
 	ldr	r2, [r3]
 
+#if defined __ARMVFP__
 	/* Is the task using the FPU context?  If so, push high vfp registers. */
 	tst r14, #0x10
 	it eq
 	vstmdbeq r0!, {s16-s31}
+#endif
 
 	/* Save the core registers. */
 	stmdb r0!, {r4-r11, r14}
@@ -173,11 +175,13 @@ PendSV_Handler: /* ATMEL */
 	/* Pop the core registers. */
 	ldmia r0!, {r4-r11, r14}
 
+#if defined __ARMVFP__
 	/* Is the task using the FPU context?  If so, pop the high vfp registers 
 	too. */
 	tst r14, #0x10
 	it eq
 	vldmiaeq r0!, {s16-s31}
+#endif
 
 	msr psp, r0
 	bx r14
@@ -234,6 +238,7 @@ vPortEnableVFP:
 	/* Enable CP10 and CP11 coprocessors, then save back. */
 	orr	r1, r1, #( 0xf << 20 )
 	str r1, [r0]
+
 	bx	r14	
 
 	END
