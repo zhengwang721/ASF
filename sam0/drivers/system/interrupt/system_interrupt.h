@@ -112,8 +112,8 @@
  * \section asfdoc_samd20_system_interrupt_examples Examples
  *
  * The following Quick Start guides and application examples are available for this driver:
- * - \ref asfdoc_samd20_system_interrupt_basic_use_case
- *
+ * - \ref asfdoc_samd20_system_interrupt_critsec_use_case
+ * - \ref asfdoc_samd20_system_interrupt_enablemodint_use_case
  *
  * \section asfdoc_samd20_system_interrupt_api_overview API Overview
  * @{
@@ -441,7 +441,8 @@ enum system_interrupt_priority_level system_interrupt_get_priority(
  * use cases. Note that QSGs can be compiled as a standalone application or be
  * added to the user application.
  *
- *  - \subpage asfdoc_samd20_system_interrupt_basic_use_case
+ *  - \subpage asfdoc_samd20_system_interrupt_critsec_use_case
+ *  - \subpage asfdoc_samd20_system_interrupt_enablemodint_use_case
  */
 
 #endif
