@@ -57,8 +57,9 @@ int main(void)
 	error_code = eeprom_emulator_init();
 
 	if (error_code == STATUS_ERR_NO_MEMORY) {
-		/* No EEPROM section has been set in the device's fuses */
-		for (;;);
+		while (true) {
+			/* No EEPROM section has been set in the device's fuses */
+		}
 	}
 	else if (error_code != STATUS_OK) {
 		eeprom_emulator_erase_memory();
@@ -90,7 +91,7 @@ int main(void)
 	}
 
 //! [inf_loop]
-	while (1) {
+	while (true) {
 	}
 //! [inf_loop]
 //! [main]
