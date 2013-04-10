@@ -1,17 +1,17 @@
 <asf xmlversion="1.0">
 	<select-by-config id="sam0.drivers.tc" name="config.sam0.drivers.tc" caption="TC - Timer Counter" default="callback">
-		<module caption="TC - Timer Counter" id="sam0.drivers.tc#polled" type="driver">
-			<info type="description" value="summary">
-			  Driver for the SAM D20 Timer/Counter module. Provides a unified
-			  interface for the configuration and management of the device's
-			  hardware timers in polled mode.
-			</info>
-			<info type="keyword" value="technology">
-				<keyword value="I/O" />
-				<keyword value="Timers" />
-				<keyword value="Clocks" />
-			</info>
+		<info type="description" value="summary">
+		  Driver for the SAM D20 Timer/Counter module. Provides a unified
+		  interface for the configuration and management of the device's
+		  hardware timers.
+		</info>
+		<info type="keyword" value="technology">
+			<keyword value="I/O" />
+			<keyword value="Timers" />
+			<keyword value="Clocks" />
+		</info>
 
+		<module caption="TC - Timer Counter" id="sam0.drivers.tc#polled" type="driver">
 			<build type="include-path" value="." />
 
 			<build name="TC_ASYNC" type="define" value="false" />
@@ -34,17 +34,6 @@
 			<generator default-mcu="unspecified-samd20" value="doxygen-module-v2" />
 		</module>
 		<module caption="TC - Timer Counter" id="sam0.drivers.tc#callback" type="driver">
-			<info type="description" value="summary">
-			  Driver for the SAM D20 Timer/Counter module. Provides a unified
-			  interface for the configuration and management of the device's
-			  hardware timers in callback and/or polled mode.
-			</info>
-			<info type="keyword" value="technology">
-				<keyword value="I/O" />
-				<keyword value="Timers" />
-				<keyword value="Clocks" />
-			</info>
-
 			<info type="appnote" value="AT03263"/>
 
 			<build type="include-path" value="." />
