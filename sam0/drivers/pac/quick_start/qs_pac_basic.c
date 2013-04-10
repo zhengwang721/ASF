@@ -73,7 +73,7 @@ int main (void)
 //! [init_lock]
 
 //! [enable_interrupts]
-	cpu_irq_enable();
+	system_interrupt_enable_global();
 //! [enable_interrupts]
 
 //! [button_press]

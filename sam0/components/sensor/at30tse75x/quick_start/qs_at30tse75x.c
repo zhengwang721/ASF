@@ -81,7 +81,6 @@ int main(void)
 
 //! [read_temp]
 	while (1) {
-
 		temp_res = at30tse_read_temperature();
 	}
 //! [read_temp]
