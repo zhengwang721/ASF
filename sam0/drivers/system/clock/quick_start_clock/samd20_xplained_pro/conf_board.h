@@ -1,11 +1,13 @@
 /**
  * \file
  *
- * \brief SAM D20 GPIO Port Driver Quick Start
+ * \brief SAM D20 Xplained PRO board configuration.
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -36,62 +38,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
+ *
  */
-#include <asf.h>
 
-void configure_extosc32k(void);
-void configure_dfll_open_loop(void);
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-//! [setup]
-//! [config_extosc32k]
-void configure_extosc32k(void)
-{
-	struct system_clock_source_xosc32k_config ext32k_conf;
-	system_clock_source_xosc32k_get_default_config(&ext32k_conf);
-	ext32k_conf.startup_time = SYSTEM_XOSC32K_STARTUP_4096;
-	system_clock_source_xosc32k_set_config(&ext32k_conf);
-}
-//! [config_extosc32k]
-
-//! [config_dfll]
-void configure_dfll_open_loop(void)
-{
-	struct system_clock_source_dfll_config dfll_conf;
-	system_clock_source_dfll_get_default_config(&dfll_conf);
-	system_clock_source_dfll_set_config(&dfll_conf);
-}
-//! [config_dfll]
-//! [setup]
-
-int main(void)
-{
-//! [main]
-//! [config_extosc32k_main]
-	/* Configure the external 32K oscillator */
-	configure_extosc32k();
-//! [config_extosc32k_main]
-
-//! [enable_extosc32k_main]
-	/* Enable the external 32k oscillator */
-	enum status_code retval = system_clock_source_enable(SYSTEM_CLOCK_SOURCE_XOSC32K, false);
-	if (retval != STATUS_OK) {
-		/* Error enabling the clock source */
-	}
-//! [enable_extosc32k_main]
-
-//! [config_dfll_main]
-	/* Configure the DFLL in open loop mode using default values */
-	configure_dfll_open_loop();
-//! [config_dfll_main]
-
-//! [set_sys_clk_src]
-	/* Change system clock to DFLL */
-	system_main_clock_set_source(SYSTEM_MAIN_CLOCK_DFLL);
-//! [set_sys_clk_src]
-//! [main]
-
-	while (true) {
-
-	}
-
-}
+#endif /* CONF_BOARD_H_INCLUDED */

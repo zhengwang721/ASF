@@ -53,4 +53,21 @@
  *  - External crystal
  * - CPU clock
  *  - Use the DFLL, configured to xx MHz
+ *
+ * \section asfdoc_samd20_system_clock_basic_use_case_setup Setup
+ *
+ * \subsection asfdoc_samd20_system_clock_basic_use_case_setup_prereq Prerequisites
+ * There are no special setup requirements for this use-case.
+ *
+ * \section asfdoc_samd20_system_clock_basic_use_case_use_main Use Case
+ *
+ * \subsection asfdoc_samd20_system_clock_basic_use_case_code Code
+ * Copy-paste the following setup code to your application:
+ * \snippet qs_clock_source.c setup
+ *
+ * Copy-paste the following code to your user application:
+ * \snippet qs_clock_source.c main
+ *
+ * \subsection asfdoc_samd20_system_clock_basic_use_case_flow Workflow
+ * -# TODO
  */
