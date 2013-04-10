@@ -5,7 +5,7 @@
 		by enabling the Peripheral Event System in PWMA.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="Clocks" />
+			<keyword value="Clocks"/>
 		</info>
 		<build type="c-source" value="pwma_example2.c"/>
 		<device-support value="uc3l"/>
@@ -17,5 +17,6 @@
 		<require idref="avr32.drivers.acifb"/>
 		<require idref="avr32.drivers.pm"/>
 		<require idref="avr32.drivers.intc"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

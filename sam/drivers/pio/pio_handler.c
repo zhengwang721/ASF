@@ -3,7 +3,7 @@
  *
  * \brief Parallel Input/Output (PIO) interrupt handler for SAM.
  *
- * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -72,6 +72,12 @@ static struct s_interrupt_source gs_interrupt_sources[MAX_INTERRUPT_SOURCES];
 /* Number of currently defined interrupt sources. */
 static uint32_t gs_ul_nb_sources = 0;
 
+#if (SAM3S || SAM4S || SAM4E)
+/* PIO Capture handler */
+static void (*pio_capture_handler)(Pio *) = NULL;
+extern uint32_t pio_capture_enable_flag;
+#endif
+
 /**
  * \brief Process an interrupt request on the given PIO controller.
  *
@@ -104,6 +110,15 @@ void pio_handler_process(Pio *p_pio, uint32_t ul_id)
 			i++;
 		}
 	}
+
+	/* Check capture events */
+#if (SAM3S || SAM4S || SAM4E)
+	if (pio_capture_enable_flag) {
+		if (pio_capture_handler) {
+			pio_capture_handler(p_pio);
+		}
+	}
+#endif
 }
 
 /**
@@ -140,6 +155,22 @@ uint32_t pio_handler_set(Pio *p_pio, uint32_t ul_id, uint32_t ul_mask,
 
 	return 0;
 }
+
+#if (SAM3S || SAM4S || SAM4E)
+/**
+ * \brief Set a capture interrupt handler for all PIO.
+ *
+ * The handler will be called with the triggering PIO as its parameter
+ * as soon as an interrupt is detected.
+ *
+ * \param p_handler Interrupt handler function pointer.
+ *
+ */
+void pio_capture_handler_set(void (*p_handler)(Pio *))
+{
+	pio_capture_handler = p_handler;
+}
+#endif
 
 #ifdef ID_PIOA
 /**

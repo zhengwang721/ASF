@@ -10,5 +10,6 @@
 		<info type="keyword" value="technology">
 			<keyword value="USB"/>
 		</info>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

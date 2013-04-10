@@ -5,7 +5,7 @@
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="CPU"/>
-		</info>	
+		</info>
 		<build type="c-source" value="cycle_counter_example.c"/>
 		<device-support value="uc3a"/>
 		<device-support value="uc3a3_a4"/>
@@ -18,5 +18,6 @@
 		<require idref="avr32.drivers.intc"/>
 		<require idref="avr32.drivers.pm"/>
 		<require idref="avr32.utils.print_funcs"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

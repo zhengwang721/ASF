@@ -5,7 +5,7 @@
 			Using the LodePNG PNG Decoder and the external SDRAM for buffering, decode a png image pre-stored in internal Flash and display it on the LCD screen.
 			</info>
 			<info type="keyword" value="technology">
-				<keyword value="Graphics" />
+				<keyword value="Graphics"/>
 			</info>
 			<build type="header-file" value="conf_clock.h"/>
 			<build type="header-file" value="conf_ebi.h"/>
@@ -28,13 +28,14 @@
 			<require idref="avr32.services.graphics.codec.png.lodepng"/>
 			<require idref="avr32.utils.print_funcs"/>
 			<require idref="common.services.delay"/>
+			<info type="gui-flag" value="move-to-root"/>
 		</module>
 		<module type="application" id="avr32.services.picture.png.example#1" caption="LodePNG PNG Decoder Example">
 			<info type="description" value="summary">
 			Using the LodePNG PNG Decoder and the external SDRAM for buffering, decode a png image pre-stored in internal Flash and display it on the LCD screen.
 			</info>
 			<info type="keyword" value="technology">
-				<keyword value="Graphics" />
+				<keyword value="Graphics"/>
 			</info>
 			<build type="header-file" value="conf_clock.h"/>
 			<build type="header-file" value="conf_ebi.h"/>
@@ -56,13 +57,14 @@
 			<require idref="avr32.services.graphics.codec.png.lodepng"/>
 			<require idref="avr32.utils.print_funcs"/>
 			<require idref="common.services.delay"/>
+			<info type="gui-flag" value="move-to-root"/>
 		</module>
 		<module type="application" id="avr32.services.picture.png.example#2" caption="LodePNG PNG Decoder Example">
 			<info type="description" value="summary">
 			Using the LodePNG PNG Decoder and the external SDRAM for buffering, decode a png image pre-stored in internal Flash and display it on the LCD screen.
 			</info>
 			<info type="keyword" value="technology">
-				<keyword value="Graphics" />
+				<keyword value="Graphics"/>
 			</info>
 			<build type="header-file" value="conf_clock.h"/>
 			<build type="header-file" value="conf_ebi.h"/>
@@ -86,6 +88,7 @@
 			<require idref="avr32.services.graphics.codec.png.lodepng"/>
 			<require idref="avr32.utils.print_funcs"/>
 			<require idref="common.services.delay"/>
+			<info type="gui-flag" value="move-to-root"/>
 		</module>
 	</select-by-device>
 </asf>

@@ -2,7 +2,7 @@
 	<module type="application" id="avr32.components.clock_synthesizer.cs2200.example" caption="Clock Synthesizer CS2200 Example">
 		<info type="description" value="summary">
 		Use the CS2200 to change the main CPU/HSB clock frequency.
-		</info>		
+		</info>
 		<build type="header-file" value="conf_cs2200.h"/>
 		<build type="include-path" value="."/>
 		<build type="c-source" value="main.c"/>
@@ -16,5 +16,6 @@
 		<require idref="common.utils.stdio.stdio_serial"/>
 		<require idref="common.boards"/>
 		<require idref="common.services.basic.twi"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>
