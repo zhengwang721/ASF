@@ -68,14 +68,14 @@ int main(void)
 //! [conf_defaults]
 //! [conf_modify]
 	config_struct.mux_settings = USART_RX_3_TX_2_XCK_3;
-	config_struct.pinout_pad3 = EDBG_CDC_RX_PINMUX;
-	config_struct.pinout_pad2 = EDBG_CDC_TX_PINMUX;
+	config_struct.pinout_pad3  = EDBG_CDC_RX_PINMUX;
+	config_struct.pinout_pad2  = EDBG_CDC_TX_PINMUX;
 //! [conf_modify]
 
 	/* Apply configuration */
 //! [init]
-	while (usart_init(&usart_edbg, EDBG_CDC_MODULE,
-			&config_struct) != STATUS_OK) {
+	while (usart_init(&usart_edbg,
+			EDBG_CDC_MODULE, &config_struct) != STATUS_OK) {
 	}
 //! [init]
 
@@ -91,7 +91,7 @@ int main(void)
 
 	/* Echo back characters received */
 //! [echo_characters]
-	while (1) {
+	while (true) {
 		if (usart_read_wait(&usart_edbg, &temp) == STATUS_OK) {
 			while (usart_write_wait(&usart_edbg, temp) != STATUS_OK) {
 			}

@@ -42,8 +42,10 @@
  */
 #include <asf.h>
 
+void configure_rtc_count(void);
+
 //! [initiate]
-static void config_rtc_count(void)
+void configure_rtc_count(void)
 {
 
 //! [set_conf]
@@ -55,9 +57,9 @@ static void config_rtc_count(void)
 //! [get_default]
 
 //! [set_config]
-	config.mode = RTC_COUNT_MODE_16BIT;
+	config.mode                = RTC_COUNT_MODE_16BIT;
 	config.continuously_update = true;
-	config.compare_values[0] = 10;
+	config.compare_values[0]   = 10;
 //! [set_config]
 //! [init_rtc]
 	rtc_count_init(&config);
@@ -78,8 +80,7 @@ int main(void)
 //! [system]
 
 //! [add_main]
-
-	config_rtc_count();
+	configure_rtc_count();
 //! [add_main]
 
 //! [implementation_code]
@@ -87,7 +88,7 @@ int main(void)
 	rtc_count_set_period(20);
 //! [period]
 
-	while(1) {
+	while (true) {
 //! [poll]
 		if (rtc_count_is_compare_match(RTC_COUNT_COMPARE_0)) {
 			rtc_count_clear_compare_match(RTC_COUNT_COMPARE_0);

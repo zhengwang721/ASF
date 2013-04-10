@@ -41,19 +41,23 @@
 #include <conf_quick_start_callback.h>
 #include <asf.h>
 
+void tc_callback_to_change_duty_cycle(
+		struct tc_module *const module_inst);
 
-
-static void qs_tc_callback_to_change_duty_cycle(
+void tc_callback_to_change_duty_cycle(
 		struct tc_module *const module_inst)
 {
 	static uint32_t pases = 0;
+
 	pases = pases + 1;
+
 	if (pases == 2) {
 		while (tc_is_syncing(module_inst)) {
 			/* Wait for sync */
 		}
 		module_inst->hw->COUNT16.CC[0].reg = 0x5555;
 	}
+
 	if (pases == 3) {
 		pases = 0;
 		while (tc_is_syncing(module_inst)) {
@@ -66,7 +70,6 @@ static void qs_tc_callback_to_change_duty_cycle(
 int main(void)
 {
 	//! [main]
-
 	//! [system_init]
 	system_init();
 	//! [system_init]
@@ -85,12 +88,12 @@ int main(void)
 
 	//! [pwm_channel_0]
 	config.channel_pwm_out_enabled[0] = true;
-	config.channel_pwm_out_pin[0] = PWM_OUT_PIN;
-	config.channel_pwm_out_mux[0] = PWM_OUT_PIN_MUX;
+	config.channel_pwm_out_pin[0]     = PWM_OUT_PIN;
+	config.channel_pwm_out_mux[0]     = PWM_OUT_PIN_MUX;
 	//! [pwm_channel_0]
 
 	//! [setup]
-	config.counter_size = TC_COUNTER_SIZE_16BIT;
+	config.counter_size    = TC_COUNTER_SIZE_16BIT;
 	config.wave_generation = TC_WAVE_GENERATION_NORMAL_PWM;
 	config.size_specific.size_16_bit.compare_capture_channel[0] = 0x7FFF;
 	//! [setup]
@@ -102,7 +105,7 @@ int main(void)
 	//! [register_callback]
 	tc_register_callback(
 			&module_inst,
-			(tc_callback_t)qs_tc_callback_to_change_duty_cycle,
+			tc_callback_to_change_duty_cycle,
 			TC_CALLBACK_CC_CHANNEL0);
 	//! [register_callback]
 
@@ -119,7 +122,7 @@ int main(void)
 	//! [tc_enable]
 
 	//! [inf_loop]
-	while (1) {
+	while (true) {
 	}
 	//! [inf_loop]
 	//! [main]

@@ -247,7 +247,6 @@ static void run_buffer_read_write_interrupt_test(const struct test_case *test)
 
 	test_assert_false(test, result,
 			"Failed receiving string. TX='%s', RX='%s'", tx_string, rx_string);
-
 }
 
 /**
@@ -270,13 +269,14 @@ static void test_system_init(void)
 
 	/* Configure USART for unit test output */
 	usart_get_config_defaults(&usart_conf);
-	usart_conf.mux_settings = USART_RX_3_TX_2_XCK_3;
-	usart_conf.pinout_pad3 = EDBG_CDC_RX_PINMUX;
-	usart_conf.pinout_pad2 = EDBG_CDC_TX_PINMUX;
-	usart_conf.baudrate = 38400;
+	usart_conf.mux_settings     = USART_RX_3_TX_2_XCK_3;
+	usart_conf.pinout_pad3      = EDBG_CDC_RX_PINMUX;
+	usart_conf.pinout_pad2      = EDBG_CDC_TX_PINMUX;
+	usart_conf.baudrate         = 38400;
 
 	stdio_serial_init(&unit_test_output, CONF_RX_USART, &usart_conf);
 	usart_enable(&unit_test_output);
+
 	/* Enable transceivers */
 	usart_enable_transceiver(&unit_test_output, USART_TRANSCEIVER_TX);
 	usart_enable_transceiver(&unit_test_output, USART_TRANSCEIVER_RX);
@@ -284,8 +284,8 @@ static void test_system_init(void)
 	/* Configure RX USART */
 	usart_get_config_defaults(&usart_rx_config);
 	usart_rx_config.mux_settings = USART_RX_1_TX_0_XCK_1;
-	usart_rx_config.pinout_pad1 = PINMUX_PA11B_SERCOM0_PAD1;
-	usart_rx_config.baudrate = TEST_USART_SPEED;
+	usart_rx_config.pinout_pad1  = PINMUX_PA11B_SERCOM0_PAD1;
+	usart_rx_config.baudrate     = TEST_USART_SPEED;
 	/* Apply configuration */
 	usart_init(&usart_rx_module, RX_USART, &usart_rx_config);
 	/* Enable USART */
@@ -294,8 +294,8 @@ static void test_system_init(void)
 	/* Configure TX USART */
 	usart_get_config_defaults(&usart_tx_config);
 	usart_tx_config.mux_settings = USART_RX_1_TX_0_XCK_1;
-	usart_tx_config.pinout_pad0 = PINMUX_PA24B_SERCOM3_PAD0;
-	usart_tx_config.baudrate = TEST_USART_SPEED;
+	usart_tx_config.pinout_pad0  = PINMUX_PA24B_SERCOM3_PAD0;
+	usart_tx_config.baudrate     = TEST_USART_SPEED;
 	/* Apply configuration */
 	usart_init(&usart_tx_module, TX_USART, &usart_tx_config);
 	/* Enable USART */
@@ -350,7 +350,7 @@ int main(void)
 	/* Run all tests in the suite*/
 	test_suite_run(&usart_suite);
 
-	while(1) {
+	while (true) {
 		/* Intentionally left empty */
 	}
 

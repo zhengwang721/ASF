@@ -68,10 +68,10 @@ int main(void)
 	adc_start_conversion(&module_inst);
 //! [start_conv]
 
-	/* Wait for conversion to be done and read out result */
 //! [get_res]
 	do {
-	} while(adc_read(&module_inst, &result) == STATUS_BUSY);
+		/* Wait for conversion to be done and read out result */
+	} while (adc_read(&module_inst, &result) == STATUS_BUSY);
 //! [get_res]
 
 //! [inf_loop]

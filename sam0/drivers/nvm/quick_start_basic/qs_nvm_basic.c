@@ -54,6 +54,7 @@ void configure_nvm(void)
 //! [setup_2]
 	nvm_get_config_defaults(&config);
 //! [setup_2]
+
 //! [setup_3]
 	nvm_set_config(&config);
 //! [setup_3]

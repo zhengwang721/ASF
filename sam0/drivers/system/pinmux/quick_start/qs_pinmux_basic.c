@@ -70,7 +70,7 @@ int main(void)
 //! [pinmux_change_input_sampling]
 
 	while (true) {
-		// Do nothing
+		/* Infinite loop */
 	}
 //! [main]
 }

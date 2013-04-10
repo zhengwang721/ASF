@@ -63,7 +63,6 @@ int main(void)
 {
 	enum status_code retval;
 
-
 	/* Configure the external 32K oscillator */
 	configure_extosc32k();
 

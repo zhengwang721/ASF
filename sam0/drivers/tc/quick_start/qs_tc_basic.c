@@ -38,13 +38,12 @@
  * \asf_license_stop
  *
  */
-#include <conf_quick_start.h>
 #include <asf.h>
+#include <conf_quick_start.h>
 
 int main(void)
 {
 	//! [main]
-
 	//! [system_init]
 	system_init();
 	//! [system_init]
@@ -82,7 +81,8 @@ int main(void)
 	//! [tc_enable]
 
 	//! [inf_loop]
-	while (1) {
+	while (true) {
+		/* Infinite loop */
 	}
 	//! [inf_loop]
 	//! [main]
