@@ -64,6 +64,7 @@
 #include "pio_handler.h"
 #include "smc.h"
 #include "ethernet_sam.h"
+#include "timer_mgt_sam.h"
 #include "rtouch.h"
 
 static void gfx_task(void *pvParameters);
@@ -336,7 +337,7 @@ static void gfx_task(void *pvParameters)
 		rtouch_process();
 		vTaskDelay(touch_delay);
 	}
-
+	
 	/** Bring up the ethernet interface & initializes timer0, channel0 */
 	ili93xx_draw_string(30, 290, (uint8_t *)"Please wait...");
 	init_ethernet();

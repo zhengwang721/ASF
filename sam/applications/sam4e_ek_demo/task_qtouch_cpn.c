@@ -54,6 +54,8 @@ static void qtouch_task(void *pvParameters);
 /** Slider position. */
 uint8_t slider_pos = 0;
 
+const portTickType qtouch_delay = 200UL / portTICK_RATE_MS;
+
 /** Storage for QT status */
 struct qt_status qtstatus;
 
@@ -178,7 +180,7 @@ static void qtouch_task(void *pvParameters)
 	/** Wait for user to read instructions. */
 	WAIT_FOR_TOUCH_EVENT;
 		while (g_ip_mode != 3) {
-		vTaskDelay(100);
+		vTaskDelay(qtouch_delay);
 	}
 
 	/** QTouch task Loop. */
@@ -191,7 +193,7 @@ static void qtouch_task(void *pvParameters)
 			/** Process the received data */
 			demo_process_qt_status(&qtstatus);
 		}
-		vTaskDelay(100);
+		vTaskDelay(qtouch_delay);
 	}
 }
 

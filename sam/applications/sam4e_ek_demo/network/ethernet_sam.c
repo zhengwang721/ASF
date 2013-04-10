@@ -78,6 +78,7 @@
 struct netif gs_net_if;
 extern uint32_t g_ip_mode;
 extern int8_t g_c_ipconfig[];
+const portTickType task_delay = 50UL / portTICK_RATE_MS;
 
 /** Timer for calling lwIP tmr functions without system */
 typedef struct timers_info {
@@ -201,11 +202,11 @@ void init_ethernet(void)
 	/** Initialize lwIP */
 	lwip_init();
 
-	/** Set hw and IP parameters, initialize MAC too */
-	ethernet_configure_interface();
-
 	/** Init timer service */
 	sys_init_timing();
+	
+	/** Set hw and IP parameters, initialize MAC too */
+	ethernet_configure_interface();
 
 #if defined(HTTP_RAW_USED)
 	/** Bring up the web server */
@@ -237,10 +238,7 @@ void status_callback(struct netif *netif)
  */
 void ethernet_task(void)
 {
-	/** Run polling tasks */
-//	ethernetif_input(&gs_net_if);
-
 	/** Run periodic tasks */
 	timers_update();
-	vTaskDelay(10);
+	vTaskDelay(task_delay);
 }

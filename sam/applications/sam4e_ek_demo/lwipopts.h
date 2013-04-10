@@ -165,7 +165,7 @@ a lot of data that needs to be copied, this should be set high. */
 #define TCP_MAXRTX              12
 /* Maximum number of retransmissions of SYN segments. */
 #define TCP_SYNMAXRTX           4
-#define TCP_TMR_INTERVAL        500
+#define TCP_SLOW_INTERVAL       800
 /* -------- MEM ---------- */
 /* MEMP_NUM_TCP_PCB: the number of simultaneously active TCP connections. */
 #define MEMP_NUM_TCP_PCB        8
