@@ -97,6 +97,7 @@ uint32_t nand_flash_ecc_read_page(const struct nand_flash_ecc *ecc,
 
 	uint16_t page_data_size
 		= nand_flash_model_get_page_data_size(MODEL(ecc));
+		
 	/* if no buffer provided, use a temp one */
 	if (!spare) {
 		spare = spare_buffer;
