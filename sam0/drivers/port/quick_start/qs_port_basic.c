@@ -42,10 +42,10 @@
  */
 #include <asf.h>
 
-void config_port_pins(void);
+void configure_port_pins(void);
 
 //! [setup]
-void config_port_pins(void)
+void configure_port_pins(void)
 {
 //! [setup_1]
 	struct port_config pin_conf;
@@ -76,7 +76,7 @@ int main(void)
 	system_init();
 
 	//! [setup_init]
-	config_port_pins();
+	configure_port_pins();
 	//! [setup_init]
 
 	//! [main]

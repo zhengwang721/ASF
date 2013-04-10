@@ -42,8 +42,12 @@
  */
 #include <asf.h>
 
+void rtc_overflow_callback(void);
+void rtc_overflow_callback(void);
+void configure_rtc_callbacks(void);
+
 //! [callback]
-static void callback(void)
+void rtc_overflow_callback(void)
 {
 	/* Change period */
 	//! [set_per]
@@ -53,9 +57,8 @@ static void callback(void)
 //! [callback]
 
 //! [initialize_rtc]
-static void configure_rtc_count(void)
+void configure_rtc_count(void)
 {
-
 //! [init_conf]
 	struct rtc_count_config config;
 	rtc_count_get_config_defaults(&config);
@@ -76,10 +79,11 @@ static void configure_rtc_count(void)
 //! [initialize_rtc]
 
 //! [setup_callback]
-static void configure_callbacks(void)
+void configure_rtc_callbacks(void)
 {
 	//! [reg_callback]
-	rtc_count_register_callback(callback, RTC_COUNT_CALLBACK_OVERFLOW);
+	rtc_count_register_callback(
+			rtc_overflow_callback, RTC_COUNT_CALLBACK_OVERFLOW);
 	//! [reg_callback]
 	//! [en_callback]
 	rtc_count_enable_callback(RTC_COUNT_CALLBACK_OVERFLOW);
@@ -89,7 +93,6 @@ static void configure_callbacks(void)
 
 int main(void)
 {
-
 //! [run_initialize_rtc]
 	/* Initialize system. Must configure conf_clocks.h first. */
 //! [system_init]
@@ -103,7 +106,7 @@ int main(void)
 
 	/* Configure and enable callback */
 //! [run_callback]
-	configure_callbacks();
+	configure_rtc_callbacks();
 //! [run_callback]
 
 	/* Set period */
@@ -113,9 +116,8 @@ int main(void)
 //! [run_initialize_rtc]
 
 //! [while]
-	while(1) {
+	while (true) {
 		/* Infinite while loop */
 	}
 //! [while]
-
 }

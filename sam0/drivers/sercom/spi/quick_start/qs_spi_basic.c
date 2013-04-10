@@ -56,6 +56,7 @@ static const uint8_t buffer[20] = {
 };
 //! [buffer]
 //! [setup]
+
 int main(void)
 {
 //! [main]
@@ -126,14 +127,18 @@ int main(void)
 	spi_write_buffer_wait(&master, buffer, BUF_LENGTH);
 //! [write]
 //! [wait]
-	while (!spi_is_write_complete(&master));
+	while (spi_is_write_complete(&master) == false) {
+		/* Wait for write complete */
+	}
 //! [wait]
 //! [deselect_slave]
 	spi_select_slave(&master, &slave, false);
 //! [deselect_slave]
 
 //! [inf_loop]
-	while (1);
+	while (true) {
+		/* Infinite loop */
+	}
 //! [inf_loop]
 //! [main]
 }

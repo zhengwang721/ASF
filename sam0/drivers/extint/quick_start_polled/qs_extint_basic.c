@@ -42,10 +42,10 @@
  */
 #include <asf.h>
 
-void config_extint_channel(void);
+void configure_extint_channel(void);
 
 //! [setup]
-void config_extint_channel(void)
+void configure_extint_channel(void)
 {
 //! [setup_1]
 	struct extint_chan_conf eint_chan_conf;
@@ -72,7 +72,7 @@ int main(void)
 
 	//! [setup_init]
 	extint_enable();
-	config_extint_channel();
+	configure_extint_channel();
 	//! [setup_init]
 
 	//! [main]
