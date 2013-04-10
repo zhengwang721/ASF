@@ -96,7 +96,6 @@ int main(void)
 	}
 //! [enable_extosc32k_main]
 
-//! [config_dfll_main]
 	/* Configure the DFLL in open loop mode using default values */
 //! [config_dfll_main]
 	configure_dfll_open_loop();
@@ -111,7 +110,6 @@ int main(void)
 	}
 //! [enable_dfll_main]
 
-//! [set_sys_clk_src]
 	/* Change system clock to DFLL */
 //! [set_sys_clk_src]
 	system_main_clock_set_source(SYSTEM_MAIN_CLOCK_DFLL);
