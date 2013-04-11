@@ -43,7 +43,7 @@
 #include <asf.h>
 
 void rtc_overflow_callback(void);
-void rtc_overflow_callback(void);
+void configure_rtc_count(void);
 void configure_rtc_callbacks(void);
 
 //! [callback]
