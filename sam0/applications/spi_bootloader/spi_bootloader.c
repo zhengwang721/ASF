@@ -45,11 +45,11 @@
 #include "conf_bootloader.h"
 
 /* Function prototypes */
-uint32_t get_length(void);
-void fetch_data(uint32_t sector, uint8_t *buffer, uint16_t len);
-void program_memory(uint32_t address, uint8_t *buffer, uint16_t len);
-void start_application(void);
-void check_boot_mode(void);
+static uint32_t get_length(void);
+static void fetch_data(uint32_t sector, uint8_t *buffer, uint16_t len);
+static void program_memory(uint32_t address, uint8_t *buffer, uint16_t len);
+static void start_application(void);
+static void check_boot_mode(void);
 
 /**
  * \brief Function for fetching length of file to be programmed
@@ -58,7 +58,7 @@ void check_boot_mode(void);
  * first 4 bytes which contain the length of the file to be programmed. It
  * closes the sector after reading
  */
-uint32_t get_length(void)
+static uint32_t get_length(void)
 {
 	uint32_t len = 0;
 
@@ -87,7 +87,7 @@ uint32_t get_length(void)
  * \param buffer pointer to the buffer to store data from AT45DBX
  * \param len    length of the data to be read from AT45DBX
  */
-void fetch_data(uint32_t sector, uint8_t *buffer, uint16_t len)
+static void fetch_data(uint32_t sector, uint8_t *buffer, uint16_t len)
 {
 	/* Open the dataflash sector */
 	at45dbx_read_sector_open(sector);
@@ -107,7 +107,7 @@ void fetch_data(uint32_t sector, uint8_t *buffer, uint16_t len)
  * \param buffer  pointer to the buffer containing data to be programmed
  * \param len     length of the data to be programmed to Flash
  */
-void program_memory(uint32_t address, uint8_t *buffer, uint16_t len)
+static void program_memory(uint32_t address, uint8_t *buffer, uint16_t len)
 {
 	/* Check if length is greater than Flash page size */
 	if (len > NVMCTRL_PAGE_SIZE) {
@@ -149,7 +149,7 @@ void program_memory(uint32_t address, uint8_t *buffer, uint16_t len)
  * This function will configure the WDT module and enable it. The LED is
  * kept toggling till WDT reset occurs.
  */
-void start_application(void)
+static void start_application(void)
 {
 	struct wdt_conf wdt_config;
 
@@ -180,14 +180,17 @@ void start_application(void)
  * continues execution in bootloader mode. Else, it jumps to the application
  * starts executing it
  */
-void check_boot_mode(void)
+static void check_boot_mode(void)
 {
-	/* Disable the Watchdog module */
-	WDT->CTRL.reg &= ~WDT_CTRL_ENABLE;
+	/* Check if WDT is locked */
+	if (!(WDT->CTRL.reg & WDT_CTRL_ALWAYSON)) {
+		/* Disable the Watchdog module */
+		WDT->CTRL.reg &= ~WDT_CTRL_ENABLE;
+	}
 
 	volatile PortGroup *boot_port = (volatile PortGroup *)
 			(&(PORT->Group[BOOT_LOAD_PIN / 32]));
-	volatile uint32_t boot_en;
+	volatile bool boot_en;
 
 	/* Enable the input mode in Boot GPIO Pin */
 	boot_port->DIRCLR.reg = GPIO_BOOT_PIN_MASK;
@@ -195,7 +198,8 @@ void check_boot_mode(void)
 			PORT_PINCFG_INEN | PORT_PINCFG_PULLEN;
 	boot_port->OUTSET.reg = GPIO_BOOT_PIN_MASK;
 
-	boot_en = (boot_port->IN.reg);
+	/* Read the BOOT_LOAD_PIN status */
+	boot_en = (boot_port->IN.reg) & GPIO_BOOT_PIN_MASK;
 
 	/* Check the BOOT pin or the reset cause is Watchdog */
 	if ((boot_en) || (PM->RCAUSE.reg & PM_RCAUSE_WDT)) {
@@ -222,7 +226,9 @@ void check_boot_mode(void)
  */
 int main(void)
 {
-	uint32_t len = 0, curr_sector, curr_prog_addr;
+	uint32_t len = 0;
+	uint32_t curr_sector;
+	uint32_t curr_prog_addr;
 	uint8_t buff[AT45DBX_SECTOR_SIZE] = {0};
 	struct nvm_config config;
 

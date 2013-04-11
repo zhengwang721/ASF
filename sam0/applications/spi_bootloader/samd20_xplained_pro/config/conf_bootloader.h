@@ -49,6 +49,6 @@
 #define APP_START_ADDRESS          0x00004000
 #define BOOT_LED                   LED0_PIN
 #define BOOT_LOAD_PIN              SW0_PIN
-#define GPIO_BOOT_PIN_MASK        (1U << (BOOT_LOAD_PIN & 0x1F))
+#define GPIO_BOOT_PIN_MASK         (1U << (BOOT_LOAD_PIN & 0x1F))
 
 #endif /* CONF_BOARD_H_INCLUDED */
