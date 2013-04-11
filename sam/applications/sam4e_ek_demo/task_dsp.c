@@ -216,9 +216,9 @@ static void dsp_task(void *pvParameters)
 	float32_t bin;
 	float32_t tmp;
 
-	/* Get rid of this compiler warning. */
-	pvParameters = pvParameters;
-
+	/* Just to avoid compiler warnings. */
+	( void ) pvParameters;
+	
 	/* Wait for user to read instructions. */
 	WAIT_FOR_TOUCH_EVENT;
 

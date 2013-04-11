@@ -70,8 +70,8 @@ void create_webserver_task(uint16_t stack_depth_words,
  */
 static void webserver_task(void *pvParameters)
 {
-	/** Get rid of this compiler warning. */
-	pvParameters = pvParameters;
+	/* Just to avoid compiler warnings. */
+	( void ) pvParameters;
 
 	/** Wait for user to read instructions. */
 	WAIT_FOR_TOUCH_EVENT;

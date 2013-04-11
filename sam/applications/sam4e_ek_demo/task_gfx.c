@@ -281,8 +281,8 @@ void create_gfx_task(uint16_t stack_depth_words,
  */
 static void gfx_task(void *pvParameters)
 {
-	/** Get rid of this compiler warning. */
-	pvParameters = pvParameters;
+	/* Just to avoid compiler warnings. */
+	( void ) pvParameters;
 
 	/** Draw IP config menu. */
 	ili93xx_set_foreground_color(COLOR_WHITE);

@@ -57,11 +57,8 @@ static volatile uint32_t gs_ul_clk_tick;
  */
 void TC0_Handler(void)
 {
-	/** Remove warnings */
-	volatile uint32_t ul_dummy;
-
 	/** Clear status bit to acknowledge interrupt */
-	ul_dummy = TC0->TC_CHANNEL[0].TC_SR;
+	TC0->TC_CHANNEL[0].TC_SR;
 
 	/** Increase tick */
 	gs_ul_clk_tick++;
