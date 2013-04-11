@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<module type="driver" id="sam0.drivers.wdt" caption="WDT - Watchdog Timer">
 		<info type="description" value="summary">
-			Driver for the SAMD20 WDT module. Provides a unified interface for
+			Driver for the SAM D20 WDT module. Provides a unified interface for
 			the configuration and management of the Watchdog module, including
 			timeout period, window period and early warning indications.
 		</info>

@@ -720,5 +720,8 @@
 #define PIN_CAN1_TX_IDX           PIO_PC15_IDX
 #define PIN_CAN1_TX_FLAGS         IOPORT_MODE_MUX_C
 
+/** AFEC channel for potentiometer */
+#define AFEC_CHANNEL_POTENTIOMETER  AFEC_CHANNEL_5
+
 /*----------------------------------------------------------------------------*/
 #endif  /* _SAM4E_EK_H_ */

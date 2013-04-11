@@ -45,9 +45,9 @@
 #define USART_H_INCLUDED
 
 /**
- * \defgroup asfdoc_samd20_sercom_usart_group SAMD20 Serial USART Driver (SERCOM USART)
+ * \defgroup asfdoc_samd20_sercom_usart_group SAM D20 Serial USART Driver (SERCOM USART)
  *
- * This driver for SAMD20 devices provides an interface for the configuration
+ * This driver for SAM D20 devices provides an interface for the configuration
  * and management of the SERCOM module in its USART mode to transfer or receive
  * USART data frames. The following driver API modes are covered by this
  * manual:
@@ -210,6 +210,10 @@ extern "C" {
 
 #ifndef PINMUX_DEFAULT
 #  define PINMUX_DEFAULT 0
+#endif
+
+#ifndef PINMUX_UNUSED
+#  define PINMUX_UNUSED 0xFFFFFFFF
 #endif
 
 #ifndef USART_TIMEOUT

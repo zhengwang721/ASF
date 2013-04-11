@@ -172,7 +172,7 @@
 #    undef TEST_SUITE_DEFINE_ASSERT_MACRO
 #    define Assert(expr) \
         {\
-                asm("BKPT #0");\
+           if (!(expr)) asm("BKPT #0");\
         }
 #  endif
 #else

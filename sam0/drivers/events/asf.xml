@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<module type="driver" id="sam0.drivers.events" caption="EVSYS - Event System">
 		<info type="description" value="summary">
-			Driver for the SAMD20 Event System. Provides a unified interface
+			Driver for the SAM D20 Event System. Provides a unified interface
 			for the configuration and management of the Event channels within
 			the device, including the enabling, disabling and routing to and
 			from various modules within the device.

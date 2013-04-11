@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 Watchdog Driver Quick Start
+ * \brief SAM D20 Watchdog Driver Quick Start
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -43,20 +43,6 @@
 #include <asf.h>
 
 void configure_wdt(void);
-void configure_led(void);
-
-void configure_led(void)
-{
-	struct port_config pin_conf;
-	port_get_config_defaults(&pin_conf);
-
-	pin_conf.direction  = PORT_PIN_DIR_INPUT;
-	pin_conf.input_pull = PORT_PIN_PULL_UP;
-	port_pin_set_config(PIN_PB09, &pin_conf);
-
-	pin_conf.direction = PORT_PIN_DIR_OUTPUT;
-	port_pin_set_config(PIN_PB08, &pin_conf);
-}
 
 //! [setup]
 void configure_wdt(void)
@@ -70,18 +56,11 @@ void configure_wdt(void)
 	wdt_get_config_defaults(&wdt_conf);
 	//! [setup_2]
 
-	// TODO: Move into driver once scheme to select clock is determined
-	struct system_gclk_chan_config gclk_chan_conf;
-	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
-	gclk_chan_conf.source_generator = GCLK_GENERATOR_4;
-	gclk_chan_conf.run_in_standby   = false;
-	system_gclk_chan_set_config(WDT_GCLK_ID, &gclk_chan_conf);
-	system_gclk_chan_enable(WDT_GCLK_ID);
-
 	/* Set the Watchdog configuration settings */
 	//! [setup_3]
 	wdt_conf.always_on      = true;
-	wdt_conf.timeout_period = WDT_PERIOD_4096CLK;
+	wdt_conf.clock_source   = GCLK_GENERATOR_4;
+	wdt_conf.timeout_period = WDT_PERIOD_2048CLK;
 	//! [setup_3]
 
 	/* Initialize and enable the Watchdog with the user settings */
@@ -96,9 +75,9 @@ void configure_wdt(void)
 
 int main(void)
 {
-	//! [setup_init]
 	system_init();
-	configure_led();
+
+	//! [setup_init]
 	configure_wdt();
 	//! [setup_init]
 
@@ -109,10 +88,10 @@ int main(void)
 
 	//! [main_2]
 	if (reset_cause == SYSTEM_RESET_CAUSE_WDT) {
-		port_pin_set_output_level(PIN_PB08, false);
+		port_pin_set_output_level(LED_0_PIN, false);
 	}
 	else {
-		port_pin_set_output_level(PIN_PB08, true);
+		port_pin_set_output_level(LED_0_PIN, true);
 	}
 	//! [main_2]
 
@@ -120,10 +99,10 @@ int main(void)
 	while (true) {
 	//! [main_3]
 		//! [main_4]
-		if (port_pin_get_input_level(PIN_PB09) == false) {
+		if (port_pin_get_input_level(BUTTON_0_PIN) == false) {
 		//! [main_4]
 		//! [main_5]
-			port_pin_set_output_level(PIN_PB08, true);
+			port_pin_set_output_level(LED_0_PIN, true);
 
 			wdt_reset_count();
 		//! [main_5]

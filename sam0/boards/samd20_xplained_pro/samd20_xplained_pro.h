@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 Xplained Pro board definition
+ * \brief SAM D20 Xplained Pro board definition
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -49,7 +49,7 @@
 
 /**
  * \ingroup group_common_boards
- * \defgroup samd20_xplained_pro_group SAMD20 Xplained Pro board
+ * \defgroup samd20_xplained_pro_group SAM D20 Xplained Pro board
  *
  * @{
  */

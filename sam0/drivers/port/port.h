@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 GPIO Port Driver
+ * \brief SAM D20 GPIO Port Driver
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -44,9 +44,9 @@
 #define PORT_H_INCLUDED
 
 /**
- * \defgroup asfdoc_samd20_port_group SAMD20 Port Driver (PORT)
+ * \defgroup asfdoc_samd20_port_group SAM D20 Port Driver (PORT)
  *
- * This driver for SAMD20 devices provides an interface for the configuration
+ * This driver for SAM D20 devices provides an interface for the configuration
  * and management of the device's General Purpose Input/Output (GPIO) pin
  * functionality, for manual pin state reading and writing.
  *
@@ -77,7 +77,7 @@
  * from or written to for general purpose external hardware control.
  *
  * \subsection asfdoc_samd20_port_module_overview_pin_numbering Physical and Logical GPIO Pins
- * SAMD20 devices use two naming conventions for the I/O pins in the device; one
+ * SAM D20 devices use two naming conventions for the I/O pins in the device; one
  * physical, and one logical. Each physical pin on a device package is assigned
  * both a physical port and pin identifier (e.g. "PORTA.0") as well as a
  * monotonically incrementing logical GPIO number (e.g. "GPIO0"). While the
@@ -108,7 +108,7 @@
  *
  * \section asfdoc_samd20_port_special_considerations Special Considerations
  *
- * The SAMD20 port pin input sampler can be disabled when the pin is configured
+ * The SAM D20 port pin input sampler can be disabled when the pin is configured
  * in pure output mode to save power; reading the pin state of a pin configured
  * in output-only mode will read the logical output state that was last set.
  *

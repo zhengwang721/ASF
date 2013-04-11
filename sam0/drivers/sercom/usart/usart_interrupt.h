@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 SERCOM USART Asynchronous Driver
+ * \brief SAM D20 SERCOM USART Asynchronous Driver
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 Serial Peripheral Interface Driver
+ * \brief SAM D20 Serial Peripheral Interface Driver
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -45,9 +45,9 @@
 #define SPI_H_INCLUDED
 
 /**
- * \defgroup asfdoc_samd20_sercom_spi_group SAMD20 Serial Peripheral Interface Driver (SERCOM SPI)
+ * \defgroup asfdoc_samd20_sercom_spi_group SAM D20 Serial Peripheral Interface Driver (SERCOM SPI)
  *
- * This driver for SAMD20 devices provides an interface for the configuration
+ * This driver for SAM D20 devices provides an interface for the configuration
  * and management of the SERCOM module in its SPI mode to transfer SPI  data
  * frames. The following driver API modes are covered by this manual:
  *
@@ -335,6 +335,10 @@ extern "C" {
 
 #ifndef PINMUX_DEFAULT
 #  define PINMUX_DEFAULT 0
+#endif
+
+#ifndef PINMUX_UNUSED
+#  define PINMUX_UNUSED 0xFFFFFFFF
 #endif
 
 #ifndef SPI_TIMEOUT
@@ -1016,7 +1020,8 @@ static inline bool spi_is_ready_to_read(
  *
  * This function will send a single SPI character via SPI and ignore any data
  * shifted in by the connected device. To both send and receive data, use the
- * \ref spi_tranceive_wait function. The \ref spi_is_ready_to_write function
+ * \ref spi_tranceive_wait function or use the \ref spi_read function after
+ * writing a character. The \ref spi_is_ready_to_write function
  * should be called before calling this function.
  *
  * Note that this function does not handle the SS (Slave Select)
@@ -1063,7 +1068,7 @@ enum status_code spi_write_buffer_wait(
  * \brief Reads last received SPI character
  *
  * This function will return the last SPI character shifted into the receive
- * register.
+ * register by the \ref spi_write function
  *
  * \note The \ref spi_is_ready_to_read function should be called before calling
  *       this function.

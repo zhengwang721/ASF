@@ -45,9 +45,9 @@
 #define TC_H_INCLUDED
 
 /**
- * \defgroup asfdoc_samd20_tc_group SAMD20 Timer/Counter Driver (TC)
+ * \defgroup asfdoc_samd20_tc_group SAM D20 Timer/Counter Driver (TC)
  *
- * This driver for SAMD20 devices provides an interface for the configuration
+ * This driver for SAM D20 devices provides an interface for the configuration
  * and management of the timer modules within the device, for waveform
  * generation and timing operations. The following driver API modes are covered
  * by this manual:
@@ -84,7 +84,7 @@
  * periodic operations. TC modules can be configured to use an 8-, 16-, or
  * 32-bit counter size.
  *
- * This TC module for the SAMD20 is capable of the following functions:
+ * This TC module for the SAM D20 is capable of the following functions:
  *
  * - Generation of PWM signals
  * - Generation of timestamps for events
@@ -187,7 +187,7 @@
  * more information.
  *
  * \subsubsection asfdoc_samd20_tc_module_overview_clock_prescaler Prescaler
- * Each TC module in the SAMD20 has its own individual clock prescaler, which
+ * Each TC module in the SAM D20 has its own individual clock prescaler, which
  * can be used to divide the input clock frequency used in the counter. This
  * prescaler only scales the clock used to provide clock pulses for the counter
  * to count, and does not affect the digital register interface portion of
@@ -361,7 +361,7 @@
  * \section asfdoc_samd20_tc_special_considerations Special Considerations
  *
  * The number of capture compare registers in each TC module is dependent on
- * the specific SAMD20 device being used, and in some cases the counter size.
+ * the specific SAM D20 device being used, and in some cases the counter size.
  *
  * The maximum amount of capture compare registers available in any SAMD20
  * device is two when running in 32-bit mode and four in 8-, and 16-bit modes.

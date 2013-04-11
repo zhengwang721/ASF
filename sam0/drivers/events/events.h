@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 Event System Driver
+ * \brief SAM D20 Event System Driver
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -44,9 +44,9 @@
 #define EVENTS_H_INCLUDED
 
 /**
- * \defgroup asfdoc_samd20_events_group SAMD20 Event System Driver
+ * \defgroup asfdoc_samd20_events_group SAM D20 Event System Driver
  *
- * This driver for SAMD20 devices provides an interface for the configuration
+ * This driver for SAM D20 devices provides an interface for the configuration
  * and management of the device's peripheral event channels and users within
  * the device, including the enabling and disabling of peripheral source selection
  * and synchronization of clock domains between various modules.
@@ -71,7 +71,7 @@
  *
  * \section asfdoc_samd20_events_module_overview Module Overview
  *
- * Peripherals within the SAMD20 devices are capable of generating two types of
+ * Peripherals within the SAM D20 devices are capable of generating two types of
  * actions in response to given stimulus; they can set a register flag for later
  * intervention by the CPU (using interrupt or polling methods), or they can
  * generate event signals which can be internally routed directly to other
@@ -156,7 +156,7 @@
  * digraph overview {
  *   rankdir=LR;
  *   node [label="Source\nPeripheral" shape=ellipse style=filled fillcolor=lightgray] src_peripheral;
- *   node [label="<f0> EVSYS | <f1> Event\nChannel/User" style="dashed" shape=record] events_chan;
+ *   node [label="<f0> EVSYS | <f1> Event\nChannel/User" fillcolor=white style="dashed" shape=record] events_chan;
  *   node [label="Destination\nPeripheral" shape=ellipse style=filled fillcolor=lightgray] dst_peripheral;
  *
  *   src_peripheral -> events_chan;
@@ -164,7 +164,7 @@
  *
  * }
  * \enddot
- * \note Note: identically shaped borders in the diagram indicate a shared generic clock channel
+ * \note Identically shaped borders in the diagram indicate a shared generic clock channel
  *
  * \subsubsection asfdoc_samd20_events_module_overview_path_selection_sync Synchronous Paths
  * Synchronous event paths can be used when the source and destination
@@ -178,7 +178,7 @@
  * digraph overview {
  *   rankdir=LR;
  *   node [label="Source\nPeripheral" shape=ellipse style="filled, dashed" fillcolor=lightgray] src_peripheral;
- *   node [label="<f0> EVSYS | <f1> Event\nChannel/User" shape=record] events_chan;
+ *   node [label="<f0> EVSYS | <f1> Event\nChannel/User" fillcolor=white shape=record] events_chan;
  *   node [label="Destination\nPeripheral" shape=ellipse style="filled, dotted" fillcolor=lightgray] dst_peripheral;
  *
  *   src_peripheral -> events_chan;
@@ -186,7 +186,7 @@
  *
  * }
  * \enddot
- * \note Note: identically shaped borders in the diagram indicate a shared generic clock channel
+ * \note Identically shaped borders in the diagram indicate a shared generic clock channel
  *
  * \subsubsection asfdoc_samd20_events_module_overview_path_selection_resync Re-synchronous Paths
  * Re-synchronous event paths are a special form of synchronous events, where
@@ -199,7 +199,7 @@
  * digraph overview {
  *   rankdir=LR;
  *   node [label="Source\nPeripheral" shape=ellipse style="filled, dashed" fillcolor=lightgray] src_peripheral;
- *   node [label="<f0> EVSYS | <f1> Event\nChannel/User" shape=record] events_chan;
+ *   node [label="<f0> EVSYS | <f1> Event\nChannel/User" fillcolor=white shape=record] events_chan;
  *   node [label="Destination\nPeripheral" shape=ellipse style=filled fillcolor=lightgray] dst_peripheral;
  *
  *   src_peripheral -> events_chan;
@@ -207,7 +207,7 @@
  *
  * }
  * \enddot
- * \note Note: identically shaped borders in the diagram indicate a shared generic clock channel
+ * \note Identically shaped borders in the diagram indicate a shared generic clock channel
  *
  * \subsection asfdoc_samd20_events_module_overview_physical Physical Connection
  *
@@ -219,8 +219,8 @@
  *   node [label="Source\nPeripherals" shape=ellipse style=filled fillcolor=lightgray] src_peripheral;
  *
  *   subgraph driver {
- *     node [label="<f0> EVSYS | <f1> Event Channels" shape=record] events_chan;
- *     node [label="<f0> EVSYS | <f1> Event Users" shape=record] events_user;
+ *     node [label="<f0> EVSYS | <f1> Event Channels" fillcolor=white shape=record] events_chan;
+ *     node [label="<f0> EVSYS | <f1> Event Users" fillcolor=white shape=record] events_user;
  *   }
  *
  *   node [label="Destination\nPeripherals" shape=ellipse style=filled fillcolor=lightgray] dst_peripheral;

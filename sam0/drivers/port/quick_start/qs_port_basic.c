@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 GPIO Port Driver Quick Start
+ * \brief SAM D20 GPIO Port Driver Quick Start
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -59,20 +59,22 @@ void config_port_pins(void)
 	pin_conf.input_pull = PORT_PIN_PULL_UP;
 //! [setup_3]
 //! [setup_4]
-	port_pin_set_config(41, &pin_conf);
+	port_pin_set_config(BUTTON_0_PIN, &pin_conf);
 //! [setup_4]
 
 //! [setup_5]
 	pin_conf.direction = PORT_PIN_DIR_OUTPUT;
 //! [setup_5]
 //! [setup_6]
-	port_pin_set_config(40, &pin_conf);
+	port_pin_set_config(LED_0_PIN, &pin_conf);
 //! [setup_6]
 }
 //! [setup]
 
 int main(void)
 {
+	system_init();
+
 	//! [setup_init]
 	config_port_pins();
 	//! [setup_init]
@@ -80,11 +82,11 @@ int main(void)
 	//! [main]
 	while (true) {
 		//! [main_1]
-		bool pin_state = port_pin_get_input_level(41);
+		bool pin_state = port_pin_get_input_level(BUTTON_0_PIN);
 		//! [main_1]
 
 		//! [main_2]
-		port_pin_set_output_level(40, !pin_state);
+		port_pin_set_output_level(LED_0_PIN, !pin_state);
 		//! [main_2]
 	}
 	//! [main]

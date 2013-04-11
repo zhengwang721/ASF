@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 External Interrupt Driver Quick Start
+ * \brief SAM D20 External Interrupt Driver Quick Start
  *
  * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
@@ -93,6 +93,10 @@
  *    Interrupt channel, so that it will be called by the module when the
  *    channel detects an edge.
  *  \snippet qs_extint_callback.c setup_6
+ * -# Define the EXTINT callback that will be fired when a detection event
+ *    occurs. For this example, a LED will mirror the new button state on each
+ *    detection edge.
+ *  \snippet qs_extint_callback.c setup_7
  *
  *
  * \section asfdoc_samd20_extint_callback_main Use Case

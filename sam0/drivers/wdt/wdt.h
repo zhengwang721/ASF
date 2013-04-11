@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 Watchdog Driver
+ * \brief SAM D20 Watchdog Driver
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -44,9 +44,9 @@
 #define WDT_H_INCLUDED
 
 /**
- * \defgroup asfdoc_samd20_wdt_group SAMD20 Watchdog Driver (WDT)
+ * \defgroup asfdoc_samd20_wdt_group SAM D20 Watchdog Driver (WDT)
  *
- * This driver for SAMD20 devices provides an interface for the configuration
+ * This driver for SAM D20 devices provides an interface for the configuration
  * and management of the device's Watchdog Timer module, including the enabling,
  * disabling and kicking within the device.
  *
@@ -172,6 +172,8 @@
  */
 
 #include <compiler.h>
+#include <clock.h>
+#include <gclk.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -225,6 +227,8 @@ struct wdt_conf {
 	/** If \c true, the Watchdog will be locked to the current configuration
 	 *  settings when the Watchdog is enabled. */
 	bool always_on;
+	/** GCLK generator used to clock the peripheral */
+	enum gclk_generator clock_source;
 	/** Number of Watchdog timer clock ticks until the Watchdog expires. */
 	enum wdt_period timeout_period;
 	/** Number of Watchdog timer clock ticks until the reset window opens. */
@@ -273,6 +277,7 @@ static inline bool wdt_is_syncing(void)
  *
  *  The default configuration is as follows:
  *   \li Not locked, to allow for further (re-)configuration
+ *   \li Watchdog timer sourced from Generic Clock Channel 4
  *   \li A timeout period of 16384 clocks of the Watchdog module clock
  *   \li No window period, so that the Watchdog count can be reset at any time
  *   \li No early warning period to indicate the Watchdog will soon expire
@@ -287,6 +292,7 @@ static inline void wdt_get_config_defaults(
 
 	/* Default configuration values */
 	config->always_on            = false;
+	config->clock_source         = GCLK_GENERATOR_4;
 	config->timeout_period       = WDT_PERIOD_16384CLK;
 	config->window_period        = WDT_PERIOD_NONE;
 	config->early_warning_period = WDT_PERIOD_NONE;

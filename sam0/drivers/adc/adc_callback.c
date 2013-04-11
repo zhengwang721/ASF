@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 Peripheral Analog-to-Digital Converter Driver
+ * \brief SAM D20 Peripheral Analog-to-Digital Converter Driver
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -173,9 +173,9 @@ enum status_code adc_read_buffer_job(
 		uint16_t samples,
 		uint16_t *buffer)
 {
-	Assert(module);
-	Assert(buffer);
+	Assert(module_inst);
 	Assert(samples);
+	Assert(buffer);
 
 	if(module_inst->remaining_conversions != 0 ||
 			module_inst->job_status == STATUS_BUSY){

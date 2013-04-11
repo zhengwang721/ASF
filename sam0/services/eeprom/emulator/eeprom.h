@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 EEPROM Emulator
+ * \brief SAM D20 EEPROM Emulator
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -44,9 +44,9 @@
 #define EEPROM_H_INCLUDED
 
 /**
- * \defgroup asfdoc_samd20_eeprom_group SAMD20 EEPROM Emulator Service (EEPROM)
+ * \defgroup asfdoc_samd20_eeprom_group SAM D20 EEPROM Emulator Service (EEPROM)
  *
- * This driver for SAMD20 devices provides a en emulated EEPROM memory space,
+ * This driver for SAM D20 devices provides a en emulated EEPROM memory space,
  * for the storage and retrieval of configuration data into and out of
  * non-volatile memory.
  *
@@ -65,7 +65,7 @@
  *
  * \section asfdoc_samd20_eeprom_prerequisites Prerequisites
  *
- * The SAMD20 device fuses must be configured via an external programmer or
+ * The SAM D20 device fuses must be configured via an external programmer or
  * debugger, so that an EEPROM section is allocated in the main NVM flash
  * memory contents. If a NVM section is not allocated for the EEPROM emulator,
  * the module will fail to initialize.
@@ -87,7 +87,7 @@
  * 1.0.0 as implemented by this module. Other revisions or emulation schemes may
  * vary in their implementation details.
  *
- * The SAMD20 non-volatile FLASH is divided into a number of rows, each
+ * The SAM D20 non-volatile FLASH is divided into a number of rows, each
  * containing four identically sized flash pages. Pages may be read or written
  * to individually, however pages must be erased before being reprogrammed and
  * the smallest granularity available for erasure is one single row.

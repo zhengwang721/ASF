@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 Peripheral Digital to Analog Converter Driver
+ * \brief SAM D20 Peripheral Digital to Analog Converter Driver
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -44,9 +44,9 @@
 #define DAC_H_INCLUDED
 
 /**
- * \defgroup asfdoc_samd20_dac_group SAMD20 Digital-to-Analog Driver (DAC)
+ * \defgroup asfdoc_samd20_dac_group SAM D20 Digital-to-Analog Driver (DAC)
  *
- * This driver for SAMD20 devices provides an interface for the conversion of
+ * This driver for SAM D20 devices provides an interface for the conversion of
  * digital values to analog voltage.
  *
  * The following peripherals are used by this module:
@@ -70,7 +70,7 @@
  * \section asfdoc_samd20_dac_module_overview Module Overview
  *
  * The Digital-to-Analog converter converts a digital value to analog voltage.
- * The SAMD20 DAC module has one channel with 10-bit resolution, and is capable
+ * The SAM D20 DAC module has one channel with 10-bit resolution, and is capable
  * of converting up to 350k samples per second (ksps).
  *
  * A common use of DAC is to generate audio signals by connecting the DAC
@@ -98,7 +98,7 @@
  *  evctrl [label="EVCTRL", shape=box, style=filled, fillcolor=lightblue];
  *  eventcontrol [label="EVENT CONTROL", shape=box, style=filled, fillcolor=darkolivegreen1];
  *  dac [label="DAC", shape=polygon, sides=5, orientation=-90, distortion=-0.6, style=filled, fillcolor=darkolivegreen1, height=1, width=1];
- *  outputdriver [label="output\n driver", shape=polygon, sides=3, orientation=-90, style=filled, fillcolor=darkolivegreen1];
+ *  outputdriver [label="Output\n Driver", shape=polygon, sides=3, orientation=-90, style=filled, fillcolor=darkolivegreen1];
  *  vout [label="VOUT", shape=box];
  *  aref [label="AREF", shape=box];
  *  avcc [label="AVCC", shape=none];
@@ -123,7 +123,7 @@
  *  evctrl -> databuf;
  *  edge [dir="back"];
  *  mux:se -> aref;
- *  mux:ec -> avcc;
+ *  mux:e -> avcc;
  *  mux:ne -> int1v;
  *  {rank=same; evctrl databuf data }
  *  {rank=same; vout aref }
@@ -226,7 +226,7 @@
  *          </tr>
  *        </table>
  *      >];
- *      msbl -> reg_left:msb:nc;
+ *      msbl -> reg_left:msb:n;
  *      lsbl -> reg_left:lsb;
  *      label ="Left adjusted.\n";
  *   }
@@ -267,8 +267,8 @@
  *          </tr>
  *        </table>
  *      >];
- *      msb -> reg_right:msg;
- *      lsb -> reg_right:lsb:nc;
+ *      msb -> reg_right:msb;
+ *      lsb -> reg_right:lsb:n;
  *      label = "Right adjusted.\n";
  *      graph [shape=none];
  *  }

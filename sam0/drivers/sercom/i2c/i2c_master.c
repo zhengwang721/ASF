@@ -816,7 +816,6 @@ void i2c_master_send_stop(struct i2c_master_module *const module)
 	/* Sanity check */
 	Assert(module);
 	Assert(module->hw);
-	Assert(packet);
 
 	SercomI2cm *const i2c_module = &(module->hw->I2CM);
 

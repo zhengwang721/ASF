@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 Analog Comparator Driver
+ * \brief SAM D20 Analog Comparator Driver
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -44,9 +44,9 @@
 #define AC_H_INCLUDED
 
 /**
- * \defgroup asfdoc_samd20_ac_group SAMD20 Analog Comparator Driver (AC)
+ * \defgroup asfdoc_samd20_ac_group SAM D20 Analog Comparator Driver (AC)
  *
- * This driver for SAMD20 devices provides an interface for the configuration
+ * This driver for SAM D20 devices provides an interface for the configuration
  * and management of the device's Analog Comparator functionality, for the
  * comparison of analog voltages against a known reference voltage to determine
  * its relative level.
@@ -538,7 +538,7 @@ enum status_code ac_reset(
 
 enum status_code ac_init(
 		struct ac_module *const module_inst,
-		Ac *const module,
+		Ac *const hw,
 		struct ac_config *const config);
 
 /**

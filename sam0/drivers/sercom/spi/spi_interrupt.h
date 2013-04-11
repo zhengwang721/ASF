@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 Serial Peripheral Interface Driver (Callback Mode)
+ * \brief SAM D20 Serial Peripheral Interface Driver (Callback Mode)
  *
  * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
