@@ -96,7 +96,7 @@
  * The web page is periodically refreshed to keep the board status up-to-date.
  * With Chrome browser (V25), sometimes two http webpage requests are needed to
  * get correct status periodical update on browser. This is a known issue.
- * Please refer to the datasheet for the temperature sensor accuracy.
+ * And please refer to the datasheet for the temperature sensor accuracy.
  *
  */
 #include "ethernet_sam.h"
@@ -204,9 +204,6 @@ int main(void)
 	 * and/or timer tasks to be created.  See the memory management section
 	 * on the FreeRTOS web site for more details.
 	 */
-	for (;;) {
-	}
-
 	return 0;
 }
 /**
@@ -284,66 +281,6 @@ static void prvSetupHardware(void)
 			PINS_UART0_MASK);
 #endif
 
-//#ifdef CONF_BOARD_PWM_LED0
-//	/* Configure PWM LED0 pin */
-//	ioport_set_pin_peripheral_mode(PIN_PWM_LED0_GPIO, PIN_PWM_LED0_FLAGS);
-//#endif
-//
-//#ifdef CONF_BOARD_PWM_LED1
-//	/* Configure PWM LED1 pin */
-//	ioport_set_pin_peripheral_mode(PIN_PWM_LED1_GPIO, PIN_PWM_LED1_FLAGS);
-//#endif
-//
-//#ifdef CONF_BOARD_PWM_LED2
-//	/* Configure PWM LED2 pin */
-//	ioport_set_pin_peripheral_mode(PIN_PWM_LED2_GPIO, PIN_PWM_LED2_FLAGS);
-//#endif
-//
-//#ifdef CONF_BOARD_PWM_LED3
-//	/* Configure PWM LED3 pin */
-//	ioport_set_pin_peripheral_mode(PIN_PWM_LED3_GPIO, PIN_PWM_LED3_FLAGS);
-//#endif
-
-//#ifdef CONF_BOARD_USART_RXD
-//	/* Configure USART RXD pin */
-//	ioport_set_pin_peripheral_mode(PIN_USART1_RXD_IDX,
-//			PIN_USART1_RXD_FLAGS);
-//#endif
-//
-//#ifdef CONF_BOARD_USART_TXD
-//	/* Configure USART TXD pin */
-//	ioport_set_pin_peripheral_mode(PIN_USART1_TXD_IDX,
-//			PIN_USART1_TXD_FLAGS);
-//#endif
-//
-//#ifdef CONF_BOARD_USART_CTS
-//	/* Configure USART CTS pin */
-//	ioport_set_pin_peripheral_mode(PIN_USART1_CTS_IDX,
-//			PIN_USART1_CTS_FLAGS);
-//#endif
-//
-//#ifdef CONF_BOARD_USART_RTS
-//	/* Configure USART RTS pin */
-//	ioport_set_pin_peripheral_mode(PIN_USART1_RTS_IDX,
-//			PIN_USART1_RTS_FLAGS);
-//#endif
-//
-//#ifdef CONF_BOARD_USART_SCK
-//	/* Configure USART synchronous communication SCK pin */
-//	ioport_set_pin_peripheral_mode(PIN_USART1_SCK_IDX,
-//			PIN_USART1_SCK_FLAGS);
-//#endif
-//
-//#ifdef CONF_BOARD_ADM3312_EN
-//	/* Configure ADM3312 enable pin */
-//	ioport_set_pin_dir(PIN_USART1_EN_IDX, IOPORT_DIR_OUTPUT);
-//#ifdef CONF_BOARD_ADM3312_EN_DISABLE_AT_INIT
-//	ioport_set_pin_level(PIN_USART1_EN_IDX, PIN_USART1_EN_INACTIVE_LEVEL);
-//#else
-//	ioport_set_pin_level(PIN_USART1_EN_IDX, PIN_USART1_EN_ACTIVE_LEVEL);
-//#endif
-//#endif
-
 #ifdef CONF_BOARD_ADS7843
 	/* Configure Touchscreen SPI pins */
 	ioport_set_pin_dir(BOARD_ADS7843_IRQ_GPIO, IOPORT_DIR_INPUT);
@@ -355,30 +292,6 @@ static void prvSetupHardware(void)
 	ioport_set_pin_peripheral_mode(SPI_SPCK_GPIO, SPI_SPCK_FLAGS);
 	ioport_set_pin_peripheral_mode(SPI_NPCS0_GPIO, SPI_NPCS0_FLAGS);
 #endif
-//
-//#ifdef CONF_BOARD_CAN0
-//	/* Configure the CAN0 TX and RX pins. */
-//	ioport_set_pin_peripheral_mode(PIN_CAN0_RX_IDX, PIN_CAN0_RX_FLAGS);
-//	ioport_set_pin_peripheral_mode(PIN_CAN0_TX_IDX, PIN_CAN0_TX_FLAGS);
-//	/* Configure the transiver0 RS & EN pins. */
-//	ioport_set_pin_dir(PIN_CAN0_TR_RS_IDX, IOPORT_DIR_OUTPUT);
-//	ioport_set_pin_dir(PIN_CAN0_TR_EN_IDX, IOPORT_DIR_OUTPUT);
-//#endif
-//
-//#ifdef CONF_BOARD_CAN1
-//	/* Configure the CAN1 TX and RX pin. */
-//	ioport_set_pin_peripheral_mode(PIN_CAN1_RX_IDX, PIN_CAN1_RX_FLAGS);
-//	ioport_set_pin_peripheral_mode(PIN_CAN1_TX_IDX, PIN_CAN1_TX_FLAGS);
-//	/* Configure the transiver1 RS & EN pins. */
-//	ioport_set_pin_dir(PIN_CAN1_TR_RS_IDX, IOPORT_DIR_OUTPUT);
-//	ioport_set_pin_dir(PIN_CAN1_TR_EN_IDX, IOPORT_DIR_OUTPUT);
-//#endif
-//
-//#if defined(CONF_BOARD_USB_PORT)
-//#  if defined(CONF_BOARD_USB_VBUS_DETECT)
-//	gpio_configure_pin(USB_VBUS_PIN, USB_VBUS_FLAGS);
-//#  endif
-//#endif
 
 #ifdef CONF_BOARD_ILI93XX
 	/* Configure LCD EBI pins */
@@ -426,24 +339,6 @@ static void prvSetupHardware(void)
 	ioport_set_pin_peripheral_mode(TWI0_CLK_GPIO, TWI0_CLK_FLAGS);
 #endif
 
-//#if defined (CONF_BOARD_SD_MMC_HSMCI)
-//	/* Configure HSMCI pins */
-//	ioport_set_pin_peripheral_mode(PIN_HSMCI_MCCDA_GPIO, PIN_HSMCI_MCCDA_FLAGS);
-//	ioport_set_pin_peripheral_mode(PIN_HSMCI_MCCK_GPIO, PIN_HSMCI_MCCK_FLAGS);
-//	ioport_set_pin_peripheral_mode(PIN_HSMCI_MCDA0_GPIO, PIN_HSMCI_MCDA0_FLAGS);
-//	ioport_set_pin_peripheral_mode(PIN_HSMCI_MCDA1_GPIO, PIN_HSMCI_MCDA1_FLAGS);
-//	ioport_set_pin_peripheral_mode(PIN_HSMCI_MCDA2_GPIO, PIN_HSMCI_MCDA2_FLAGS);
-//	ioport_set_pin_peripheral_mode(PIN_HSMCI_MCDA3_GPIO, PIN_HSMCI_MCDA3_FLAGS);
-//
-//	/* Configure SD/MMC card detect pin */
-//	ioport_set_pin_peripheral_mode(SD_MMC_0_CD_GPIO, SD_MMC_0_CD_FLAGS);
-//#endif
-//
-//#ifdef CONF_BOARD_TWI1
-//	ioport_set_pin_peripheral_mode(TWI1_DATA_GPIO, TWI1_DATA_FLAGS);
-//	ioport_set_pin_peripheral_mode(TWI1_CLK_GPIO, TWI1_CLK_FLAGS);
-//#endif
-
 #ifdef CONF_BOARD_KSZ8051MNL
 	ioport_set_pin_peripheral_mode(PIN_KSZ8051MNL_RXC_IDX,
 			PIN_KSZ8051MNL_RXC_FLAGS);
@@ -481,30 +376,6 @@ static void prvSetupHardware(void)
 			PIN_KSZ8051MNL_MDIO_FLAGS);
 	ioport_set_pin_dir(PIN_KSZ8051MNL_INTRP_IDX, IOPORT_DIR_INPUT);
 #endif
-
-//#ifdef CONF_BOARD_TFDU4300_SD
-//	/* Configure IrDA transceiver shutdown pin */
-//	ioport_set_pin_dir(PIN_IRDA_SD_IDX, IOPORT_DIR_OUTPUT);
-//	ioport_set_pin_level(PIN_IRDA_SD_IDX, IOPORT_PIN_LEVEL_HIGH);
-//#endif
-//
-//#ifdef CONF_BOARD_ADM3485_RE
-//	/* Configure RS485 transceiver RE pin */
-//	ioport_set_pin_dir(PIN_RE_IDX, IOPORT_DIR_OUTPUT);
-//	ioport_set_pin_level(PIN_RE_IDX, IOPORT_PIN_LEVEL_LOW);
-//#endif
-//
-//#ifdef CONF_BOARD_ISO7816_RST
-//	/* Configure ISO7816 card reset pin */
-//	ioport_set_pin_dir(PIN_ISO7816_RST_IDX, IOPORT_DIR_OUTPUT);
-//	ioport_set_pin_level(PIN_ISO7816_RST_IDX, IOPORT_PIN_LEVEL_LOW);
-//#endif
-//
-//#ifdef CONF_BOARD_ISO7816
-//	/* Configure ISO7816 interface TXD & SCK pin */
-//	ioport_set_pin_peripheral_mode(PIN_USART1_TXD_IDX, PIN_USART1_TXD_FLAGS);
-//	ioport_set_pin_peripheral_mode(PIN_USART1_SCK_IDX, PIN_USART1_SCK_FLAGS);
-//#endif
 
 #ifdef CONF_BOARD_QTOUCH
 	/* Configure CHANGE pin for QTouch device */

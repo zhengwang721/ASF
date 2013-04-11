@@ -145,7 +145,7 @@ static void timers_update(void)
 static void ethernet_configure_interface(void)
 {
 	struct ip_addr x_ip_addr, x_net_mask, x_gateway;
-	extern err_t ethernetif_init(struct netif *netif);
+//	extern err_t ethernetif_init(struct netif *netif);
 
 	if (g_ip_mode == 2)
 	{

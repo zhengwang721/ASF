@@ -86,19 +86,19 @@ static void init_interface(void)
  *
  * \param setup_block Pointer to setup block buffer.
  */
-static void demo_set_qt_param(struct qt_setup_block *setup_block)
+static void demo_set_qt_param(struct qt_setup_block *psetup_block)
 {
 	/*
 	 * Set parameter for QT slider.
 	 */
-	setup_block->slider_num_keys = 7;
-	setup_block->slider_resolution = QT_SLIDER_RESOLUTION;
+	psetup_block->slider_num_keys = 7;
+	psetup_block->slider_resolution = QT_SLIDER_RESOLUTION;
 
 	/*
 	 * Set all GPIO as output with low level.
 	 */
-	setup_block->gpio_direction = 0x1C;
-	setup_block->gpio_gpo_drive2 = 0x0;
+	psetup_block->gpio_direction = 0x1C;
+	psetup_block->gpio_gpo_drive2 = 0x0;
 }
 
 /**

@@ -492,7 +492,6 @@ static void dsp_sin_init(void)
 
 	freq = SAMPLING_FREQUENCY;
 
-
 	for (j = 0; j < SLIDER_SELECTOR_NB; ++j) {
 
 		/* Generate a sinus based on sampling freq with a delta. */
@@ -500,7 +499,7 @@ static void dsp_sin_init(void)
 
 		for (i = 0 ; i < SAMPLE_BLOCK_SIZE; i++) {
 			/* Amplification is set to 1. */
-			if (ratio == 1.0){
+			if (ratio <= 1.0){
 				/* It won't change anything. */
 				sin_buffer[j][i] = 1;
 			}else{
@@ -525,7 +524,7 @@ static void dsp_sin_input(float32_t freq)
 	uint32_t y;
 	float32_t ratio;
 
-	if (freq == 0)
+	if (freq < 1)
 		freq = 1;
 
 	ratio = freq / SAMPLING_FREQUENCY;
