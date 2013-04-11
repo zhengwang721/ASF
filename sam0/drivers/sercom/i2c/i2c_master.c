@@ -48,8 +48,12 @@
 #endif
 
 #if !defined(__DOXYGEN__)
+
+#if I2C_MASTER_CALLBACK_MODE == false
 /**
- * \internal Sets configurations to module
+ * \internal Check the current configuration for the module
+ *
+ * This function is not used in callback mode.
  *
  * \param[out] module  Pointer to software module structure.
  * \param[in]  config  Configuration structure with configurations to set.
@@ -146,6 +150,7 @@ static enum status_code _i2c_master_check_config(
 
 	return tmp_status_code;
 }
+#endif
 
 /**
  * \internal Sets configurations to module
