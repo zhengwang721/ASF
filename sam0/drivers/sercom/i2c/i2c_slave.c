@@ -46,8 +46,11 @@
 #  include "i2c_slave_interrupt.h"
 #endif
 
+#if I2C_SLAVE_CALLBACK_MODE == false
 /**
- * \internal Sets configuration to module
+ * \internal Check the current configuration for the module
+ *
+ * This function is not used in callback mode.
  *
  * \param[out] module  Pointer to software module structure
  * \param[in]  config  Configuration structure with configurations to set
@@ -129,6 +132,7 @@ static enum status_code _i2c_slave_check_config(
 	module->buffer_timeout = config->buffer_timeout;
 	return STATUS_OK;
 }
+#endif
 
 /**
  * \internal Sets configuration to module
