@@ -12,6 +12,7 @@
 		<device-support value="xmegaau"/>
 		<device-support value="xmegab"/>
 		<require idref="xmega.drivers.dma"/>
-		<require idref="common.services.ioport" />
+		<require idref="common.services.ioport"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

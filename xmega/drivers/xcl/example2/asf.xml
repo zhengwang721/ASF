@@ -5,12 +5,13 @@
 		 </info>
 		<info type="keyword" value="technology">
 			<keyword value="Timers"/>
-		</info>	
+		</info>
 		<build type="c-source" value="xcl_example2.c"/>
 		<device-support value="xmegae"/>
 		<require idref="common.services.basic.gpio"/>
 		<require idref="common.services.basic.sleepmgr"/>
 		<require idref="common.boards"/>
 		<require idref="xmega.drivers.xcl"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

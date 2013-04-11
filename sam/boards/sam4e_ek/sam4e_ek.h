@@ -613,12 +613,27 @@
  * - \ref BOARD_SD_PINS
  * - \ref BOARD_SD_PIN_CD
  *
+ * QTouch component (QT2160)
+ * - \ref BOARD_QT_TWI_INSTANCE
+ * - \ref BOARD_QT_DEVICE_ADDRESS
+ * - \ref BOARD_QT_CHANGE_PIN_IDX
+ * - \ref BOARD_QT_CHANGE_PIN_FLAGS
+ * - \ref BOARD_QT_CHANGE_PIN_SENSE
  */
 
 /** HSMCI pins that shall be configured to access the SD card. */
 #define BOARD_SD_PINS               PINS_HSMCI
 /** HSMCI Card Detect pin. */
 #define BOARD_SD_PIN_CD             PIN_HSMCI_CD
+
+/** TWI instance for QTouch device */
+#define BOARD_QT_TWI_INSTANCE       TWI0
+/* QTouch device address (I2CA1 = I2CA0 = 0) */
+#define BOARD_QT_DEVICE_ADDRESS     0x0D
+/** QTouch component pin definition */
+#define BOARD_QT_CHANGE_PIN_IDX     (PIO_PE4_IDX)
+#define BOARD_QT_CHANGE_PIN_FLAGS   (IOPORT_MODE_PULLUP | IOPORT_MODE_DEBOUNCE)
+#define BOARD_QT_CHANGE_PIN_SENSE   (IOPORT_SENSE_FALLING)
 
 /*----------------------------------------------------------------------------*/
 /**
@@ -704,6 +719,9 @@
 /** CAN1 PIN TX. */
 #define PIN_CAN1_TX_IDX           PIO_PC15_IDX
 #define PIN_CAN1_TX_FLAGS         IOPORT_MODE_MUX_C
+
+/** AFEC channel for potentiometer */
+#define AFEC_CHANNEL_POTENTIOMETER  AFEC_CHANNEL_5
 
 /*----------------------------------------------------------------------------*/
 #endif  /* _SAM4E_EK_H_ */

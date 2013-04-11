@@ -2,7 +2,7 @@
 	<module type="application" id="common.services.usb.class.aoa.host.example" caption="USB Host Android Accessory Application">
 		<info type="description" value="summary">
 		This application is aimed to demonstrate the USB Accessory with Android Devices.
-		</info>	
+		</info>
 		<build type="header-file" value="conf_usb_host.h"/>
 		<build type="header-file" value="ui.h"/>
 		<build type="header-file" value="main.h"/>
@@ -16,5 +16,6 @@
 			<keyword value="Communication"/>
 		</info>
 		<device-support value="uc3"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

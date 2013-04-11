@@ -167,7 +167,7 @@ void main_cdc_set_dtr(bool b_enable)
 				NULL, "AVR2025_MAC - TFA Initialization");
 		DEFINE_TEST_CASE(tfa_pib_set_test, NULL,
 				run_tfa_pib_set_test, NULL,
-				"AVR2025_MAC - TFA PIB Set RX Sensitivity (this covers all ASF drivers/services used)");
+				"AVR2025_MAC - TFA PIB Set RX Sensitivity ");
 
 		// Put test case addresses in an array.
 		DEFINE_TEST_ARRAY(tfa_tests) = {

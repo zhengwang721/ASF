@@ -9,6 +9,7 @@
 		<build type="c-source" value="ac_example2.c"/>
 		<device-support value="xmegae"/>
 		<require idref="xmega.drivers.ac"/>
-		<require idref="common.services.basic.gpio" />
+		<require idref="common.services.basic.gpio"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

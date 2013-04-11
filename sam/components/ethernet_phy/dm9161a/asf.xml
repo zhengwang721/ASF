@@ -14,7 +14,6 @@
 		<require idref="sam.components.ethernet_phy"/>
 		<require idref="sam.drivers.emac"/>
 		<device-support value="sam3x"/>
-		<info type="gui-flag" value="hidden"/>
 		<generator value="doxygen-module" default-mcu="unspecified-sam3x"/>
 	</module>
 </asf>

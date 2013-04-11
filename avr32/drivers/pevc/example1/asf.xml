@@ -19,5 +19,6 @@
 		<require idref="avr32.drivers.pm"/>
 		<require idref="common.services.delay"/>
 		<require idref="avr32.utils.print_funcs"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

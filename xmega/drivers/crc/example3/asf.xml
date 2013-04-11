@@ -12,5 +12,6 @@
 		<require idref="xmega.drivers.dma"/>
 		<require idref="common.services.basic.clock"/>
 		<require idref="common.boards"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>
