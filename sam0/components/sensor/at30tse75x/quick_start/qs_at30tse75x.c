@@ -85,5 +85,7 @@ int main(void)
 	}
 //! [read_temp]
 //! [impl]
+	UNUSED(tlow);
+	UNUSED(thigh);
 }
 //! [qs]
