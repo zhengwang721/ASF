@@ -784,7 +784,7 @@ struct tc_config {
 struct tc_module;
 
 /* Type of the callback functions */
-typedef void (*tc_callback_t)(const struct tc_module *const module);
+typedef void (*tc_callback_t)(struct tc_module *const module);
 #endif
 
 /**
