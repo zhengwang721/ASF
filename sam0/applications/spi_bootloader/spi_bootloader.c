@@ -178,7 +178,9 @@ static void start_application(void)
  *
  * This function will check the state of BOOT_LOAD_PIN. If it is pressed, it
  * continues execution in bootloader mode. Else, it jumps to the application
- * starts executing it
+ * and starts execution from there
+ * Access to direct peripheral registers are made in this routine to enable
+ * quick decision on application or bootloader mode.
  */
 static void check_boot_mode(void)
 {

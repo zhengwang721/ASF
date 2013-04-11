@@ -80,7 +80,7 @@
 #define CONF_CLOCK_XOSC32K_ENABLE_32KHZ_OUTPUT true
 
 /* SYSTEM_CLOCK_SOURCE_OSC32K Configuration - Internal 32KHz Oscillator */
-
+/* This is enabled for the Watchdog timer */
 #define CONF_CLOCK_OSC32K_ENABLE true
 #define CONF_CLOCK_OSC32K_STARTUP_TIME  SYSTEM_OSC32K_STARTUP_128
 #define CONF_CLOCK_OSC32K_ENABLE_1KHZ_OUTPUT true
