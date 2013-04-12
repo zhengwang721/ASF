@@ -214,8 +214,7 @@ void main_cdc_set_dtr(bool b_enable)
 		// Put test case addresses in an array.
 		DEFINE_TEST_ARRAY(wpan_tests) = {
 			&wpan_init_test,
-			&wpan_reset_test,
-			&wpan_scan_test};
+			&wpan_reset_test};
 
 		// Define the test suite.
 		DEFINE_TEST_SUITE(wpan_suite, wpan_tests,
