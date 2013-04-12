@@ -3,7 +3,7 @@
  *
  * \brief ILI9341 Display Controller Component Driver
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -129,16 +129,16 @@ typedef int16_t ili9341_coord_t;
 /** @} */
 
 /** Height of display using default orientation */
-#define ILI9341_DEFAULT_HEIGHT   320
+#define ILI9341_DEFAULT_HEIGHT   240
 
 /** Width of display using default orientation */
-#define ILI9341_DEFAULT_WIDTH    240
+#define ILI9341_DEFAULT_WIDTH    320
 
 /** Height of display using swapped X/Y orientation */
-#define ILI9341_SWITCH_XY_HEIGHT 240
+#define ILI9341_SWITCH_XY_HEIGHT 320
 
 /** Width of display using swapped X/Y orientation */
-#define ILI9341_SWITCH_XY_WIDTH  320
+#define ILI9341_SWITCH_XY_WIDTH  240
 
 /**
  * \name Controller primitive graphical functions
