@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Analog Comparator Controller (ACC) driver for SAM.
+ * \brief Serial USART service configuration.
  *
- * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,41 +41,14 @@
  *
  */
 
-#ifndef ACC_H_INCLUDED
-#define ACC_H_INCLUDED
+#ifndef CONF_USART_SERIAL_H
+#define CONF_USART_SERIAL_H
 
-#include "compiler.h"
+/** UART Interface */
+#define CONF_UART            CONSOLE_UART
+/** Baudrate setting */
+#define CONF_UART_BAUDRATE   115200
+/** Parity setting */
+#define CONF_UART_PARITY     UART_MR_PAR_NO
 
-/// @cond 0
-/**INDENT-OFF**/
-#ifdef __cplusplus
-extern "C" {
-#endif
-/**INDENT-ON**/
-/// @endcond
-
-void acc_init(Acc *p_acc, uint32_t ul_select_plus, uint32_t ul_select_minus,
-		uint32_t ul_edge_type, uint32_t ul_invert);
-void acc_enable(Acc *p_acc);
-void acc_disable(Acc *p_acc);
-void acc_reset(Acc *p_acc);
-void acc_set_input(Acc *p_acc, uint32_t ul_select_minus,
-		uint32_t ul_select_plus);
-void acc_set_output(Acc *p_acc, uint32_t ul_invert,
-		uint32_t ul_fault_enable, uint32_t ul_fault_source);
-uint32_t acc_get_comparison_result(Acc *p_acc);
-void acc_enable_interrupt(Acc *p_acc);
-void acc_disable_interrupt(Acc *p_acc);
-uint32_t acc_get_interrupt_status(Acc *p_acc);
-void acc_set_writeprotect(Acc *p_acc, uint32_t ul_enable);
-uint32_t acc_get_writeprotect_status(Acc *p_acc);
-
-/// @cond 0
-/**INDENT-OFF**/
-#ifdef __cplusplus
-}
-#endif
-/**INDENT-ON**/
-/// @endcond
-
-#endif /* ACC_H_INCLUDED */
+#endif/* CONF_USART_SERIAL_H_INCLUDED */

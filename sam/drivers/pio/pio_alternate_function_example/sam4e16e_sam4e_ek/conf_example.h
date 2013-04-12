@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Analog Comparator Controller (ACC) driver for SAM.
+ * \brief Configuration for PIO example.
  *
- * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,41 +41,23 @@
  *
  */
 
-#ifndef ACC_H_INCLUDED
-#define ACC_H_INCLUDED
+#ifndef CONF_PIO_EXAMPLE_H_INCLUDED
+#define CONF_PIO_EXAMPLE_H_INCLUDED
 
-#include "compiler.h"
+/** Button name. */
+#define BUTTON_STRING            "BP2 WAKU"
 
-/// @cond 0
-/**INDENT-OFF**/
-#ifdef __cplusplus
-extern "C" {
-#endif
-/**INDENT-ON**/
-/// @endcond
+/** Push button pin definition. */
+#define PUSH_BUTTON_PIO          PIOA
+#define PUSH_BUTTON_ID           ID_PIOA
+#define PUSH_BUTTON_PIN_MSK      (1 << 19)
+#define PUSH_BUTTON_ATTR         (PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE)
 
-void acc_init(Acc *p_acc, uint32_t ul_select_plus, uint32_t ul_select_minus,
-		uint32_t ul_edge_type, uint32_t ul_invert);
-void acc_enable(Acc *p_acc);
-void acc_disable(Acc *p_acc);
-void acc_reset(Acc *p_acc);
-void acc_set_input(Acc *p_acc, uint32_t ul_select_minus,
-		uint32_t ul_select_plus);
-void acc_set_output(Acc *p_acc, uint32_t ul_invert,
-		uint32_t ul_fault_enable, uint32_t ul_fault_source);
-uint32_t acc_get_comparison_result(Acc *p_acc);
-void acc_enable_interrupt(Acc *p_acc);
-void acc_disable_interrupt(Acc *p_acc);
-uint32_t acc_get_interrupt_status(Acc *p_acc);
-void acc_set_writeprotect(Acc *p_acc, uint32_t ul_enable);
-uint32_t acc_get_writeprotect_status(Acc *p_acc);
+/** The erase pin mask value in the PIO mode and erase mode. */
+#define PIN_PIO_MODE_MSK         CCFG_SYSIO_SYSIO12
+#define PIN_ERASE_MODE_MSK       (0)
 
-/// @cond 0
-/**INDENT-OFF**/
-#ifdef __cplusplus
-}
-#endif
-/**INDENT-ON**/
-/// @endcond
+/** Last page start address. */
+#define LAST_PAGE_ADDRESS        (IFLASH_ADDR + IFLASH_SIZE - IFLASH_PAGE_SIZE * 4)
 
-#endif /* ACC_H_INCLUDED */
+#endif /* CONF_PIO_EXAMPLE_H_INCLUDED */
