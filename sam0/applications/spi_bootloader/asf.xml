@@ -11,5 +11,6 @@
 		<require idref="common2.components.memory.data_flash.at45dbx"/>
 		<require idref="sam0.drivers.wdt"/>
 		<device-support value="samd20"/>
+		<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 	</module>
 </asf>

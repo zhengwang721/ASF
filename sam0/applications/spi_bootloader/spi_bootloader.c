@@ -40,6 +40,48 @@
  * \asf_license_stop
  *
  */
+
+/*! \mainpage
+ * \section intro Introduction
+ * This application implements a SPI Master bootloader.
+ * AT45DBX DataFlash is used as the SPI slave to store the binary file
+ * to be programmed to the device.
+ *
+ * \section files Main Files
+ * - spi_bootloader.c: SPI Master bootloader implementation
+ * - conf_board.h: board initialization process configuration
+ * - conf_clocks.h: clock specific initialization
+ * - conf_at45dbx.h: DataFlash driver configuration (including SPI service selection)
+ * - conf_bootloader.h: Bootloader specific configuration
+ *
+ * \section deviceinfo Device Info
+ * All devices with SPI can be used. This application has been tested
+ * with the following setup:
+ *   - SAM0+D Xplained Pro kit connected with IO1-Xplained Pro wing
+ *     on External header EXT3.
+ *
+ * \section applicationdescription Description of the application
+ *   - Check the status of BOOT_LOAD_PIN to continue executing bootloader or
+ *     start executing application
+ *   - Initialize board, NVM, system clock, AT45DBX dataflash
+ *   - Read the length of the data to be programmed from sector 0
+ *   - Read the binary file contents in blocks of AT45DBX_SECTOR_SIZE from
+ *     sector 1 onwards
+ *   - Program the read data to flash from APP_START_ADDRESS
+ *   - Repeat till entire length of data has been programmed to the device
+ *   - Enable watchdog timer with timeout of 256 clock cycles and wait
+ *     for watchdog reset
+ *   - BOOT_LED is 'on' until the bootloader is executing
+ *
+ * \section compinfo Compilation Info
+ * This software was written for the GNU GCC and IAR for ARM.
+ * Other compilers may or may not work.
+ *
+ * \section contactinfo Contact Information
+ * For further information, visit
+ * <A href="http://www.atmel.com/">Atmel</A>.\n
+ */
+
 #include <asf.h>
 #include <at45dbx.h>
 #include "conf_bootloader.h"
