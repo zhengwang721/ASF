@@ -3,9 +3,10 @@
 		<device-support value="atsam4lc4c"/>
 		<require idref="common.applications.user_application.xplained_pro"/>
 		<require idref="board.sam4l_xplained_pro"/>
-		<build type="include-path" value="."/>
-		<build type="header-file" value="conf_board.h"/>
-		<build type="header-file" value="conf_clock.h"/>
+		<info type="gui-flag" value="move-to-root"/>
+		<build type="include-path" value="config"/>
+		<build type="header-file" value="config/conf_board.h"/>
+		<build type="header-file" value="config/conf_clock.h"/>
 		<generator value="as5_arm_template"/>
 		<generator value="doxygen"/>
 	</project>
