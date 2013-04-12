@@ -81,7 +81,8 @@ static enum status_code _usart_check_config(
 	if (pad0 == PINMUX_DEFAULT) {
 		pad0 = _sercom_get_default_pad(hw, 0);
 	}
-	if ((pad0 & 0xFFFF) != system_pinmux_pin_get_mux_position(pad0 >> 16)) {
+	if ((pad0 != PINMUX_UNUSED) && ((pad0 & 0xFFFF)!=
+			system_pinmux_pin_get_mux_position(pad0 >> 16))) {
 		return STATUS_ERR_DENIED;
 	}
 
@@ -89,7 +90,8 @@ static enum status_code _usart_check_config(
 	if (pad1 == PINMUX_DEFAULT) {
 		pad1 = _sercom_get_default_pad(hw, 1);
 	}
-	if ((pad1 & 0xFFFF) != system_pinmux_pin_get_mux_position(pad1 >> 16)) {
+	if ((pad1 != PINMUX_UNUSED) && ((pad1 & 0xFFFF) !=
+			system_pinmux_pin_get_mux_position(pad1 >> 16))) {
 		return STATUS_ERR_DENIED;
 	}
 
@@ -97,7 +99,8 @@ static enum status_code _usart_check_config(
 	if (pad2 == PINMUX_DEFAULT) {
 		pad2 = _sercom_get_default_pad(hw, 2);
 	}
-	if ((pad2 & 0xFFFF) != system_pinmux_pin_get_mux_position(pad2 >> 16)) {
+	if ((pad2 != PINMUX_UNUSED) && ((pad2 & 0xFFFF) !=
+			system_pinmux_pin_get_mux_position(pad2 >> 16))) {
 		return STATUS_ERR_DENIED;
 	}
 
@@ -105,7 +108,8 @@ static enum status_code _usart_check_config(
 	if (pad3 == PINMUX_DEFAULT) {
 		pad3 = _sercom_get_default_pad(hw, 3);
 	}
-	if ((pad3 & 0xFFFF) != system_pinmux_pin_get_mux_position(pad3 >> 16)) {
+	if ((pad3 != PINMUX_UNUSED) && ((pad3 & 0xFFFF) !=
+			system_pinmux_pin_get_mux_position(pad3 >> 16))) {
 		return STATUS_ERR_DENIED;
 	}
 
@@ -364,6 +368,7 @@ enum status_code usart_init(
 
 	/* SERCOM PAD0 */
 	if (pad0 == PINMUX_DEFAULT) {
+		pad0 = _sercom_get_default_pad(hw, 0);
 	}
 	if (pad0 != PINMUX_UNUSED) {
 		pin_conf.mux_position = pad0 & 0xFFFF;
@@ -372,7 +377,7 @@ enum status_code usart_init(
 
 	/* SERCOM PAD1 */
 	if (pad1 == PINMUX_DEFAULT) {
-		pad1 = _sercom_get_default_pad(usart_hw, 1);
+		pad1 = _sercom_get_default_pad(hw, 1);
 	}
 	if (pad1 != PINMUX_UNUSED) {
 		pin_conf.mux_position = pad1 & 0xFFFF;
@@ -381,7 +386,7 @@ enum status_code usart_init(
 
 	/* SERCOM PAD2 */
 	if (pad2 == PINMUX_DEFAULT) {
-		pad2 = _sercom_get_default_pad(usart_hw, 2);
+		pad2 = _sercom_get_default_pad(hw, 2);
 	}
 	if (pad2 != PINMUX_UNUSED) {
 		pin_conf.mux_position = pad2 & 0xFFFF;
@@ -390,7 +395,7 @@ enum status_code usart_init(
 
 	/* SERCOM PAD3 */
 	if (pad3 == PINMUX_DEFAULT) {
-		pad3 = _sercom_get_default_pad(usart_hw, 3);
+		pad3 = _sercom_get_default_pad(hw, 3);
 	}
 	if (pad3 != PINMUX_UNUSED) {
 		pin_conf.mux_position = pad3 & 0xFFFF;
