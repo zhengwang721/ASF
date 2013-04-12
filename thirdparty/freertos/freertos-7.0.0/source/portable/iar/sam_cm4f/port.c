@@ -121,7 +121,7 @@
 #include "sysclk.h" /* ATMEL */
 
 #ifndef __ARMVFP__
-	#error This port can only be used when the project options are configured to enable hardware floating point support.
+	#warning hardware floating point not enabled.
 #endif
 
 #if configMAX_SYSCALL_INTERRUPT_PRIORITY == 0
@@ -235,8 +235,10 @@ portBASE_TYPE xPortStartScheduler( void )
 	/* Initialise the critical nesting count ready for the first task. */
 	uxCriticalNesting = 0;
 
+#ifdef __ARMVFP__
 	/* Ensure the VFP is enabled - it should be anyway. */
 	vPortEnableVFP();
+#endif
 
 	/* Lazy save always. */
 	*( portFPCCR ) |= portASPEN_AND_LSPEN_BITS;
