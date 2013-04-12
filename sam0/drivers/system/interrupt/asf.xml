@@ -10,6 +10,8 @@
 			<keyword value="Interrupt" />
 		</info>
 
+		<info type="appnote" value="AT03261"/>
+
 		<build type="include-path" value="." />
 		<build type="c-source" value="system_interrupt.c"/>
 

@@ -31,6 +31,7 @@
 		</module>
 
 		<module type="driver" id="sam0.drivers.extint#callback" caption="EXTINT - External Interrupt (Callback APIs)">
+			<info type="appnote" value="AT03246"/>
 			<build type="include-path" value="."/>
 			<build type="header-file" subtype="api" value="extint.h"/>
 			<build type="header-file" subtype="api" value="extint_callback.h"/>

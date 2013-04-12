@@ -43,10 +43,16 @@
 
 #include <asf.h>
 
+void i2c_read_request_callback(
+		struct i2c_slave_module *const module);
+void i2c_write_request_callback(
+		struct i2c_slave_module *const module);
+void configure_i2c(void);
+void configure_i2c_callbacks(void);
+
 //! [packet]
 static struct i2c_packet packet;
 //! [packet]
-
 
 //! [packet_data]
 #define DATA_LENGTH 10
@@ -63,11 +69,12 @@ static uint8_t read_buffer [DATA_LENGTH];
 
 /* Init device instance. */
 //! [module]
-struct i2c_slave_module sw_module;
+struct i2c_slave_module i2c_sw_instance;
 //! [module]
 
 //! [read_request]
-static void read_request_callback(struct i2c_slave_module *const module)
+void i2c_read_request_callback(
+		struct i2c_slave_module *const module)
 {
 	/* Init i2c packet. */
 	//! [packet_write]
@@ -83,7 +90,8 @@ static void read_request_callback(struct i2c_slave_module *const module)
 //! [read_request]
 
 //! [write_request]
-static void write_request_callback(struct i2c_slave_module *const module)
+void i2c_write_request_callback(
+		struct i2c_slave_module *const module)
 {
 	/* Init i2c packet. */
 	//! [packet_read]
@@ -100,7 +108,7 @@ static void write_request_callback(struct i2c_slave_module *const module)
 //! [write_request]
 
 //! [initialize_i2c]
-static void configure_i2c(void)
+void configure_i2c(void)
 {
 	/* Initialize config structure and module instance. */
 	//! [init_conf]
@@ -109,39 +117,41 @@ static void configure_i2c(void)
 	//! [init_conf]
 	/* Change address and address_mode. */
 	//! [conf_changes]
-	conf.address = SLAVE_ADDRESS;
+	conf.address      = SLAVE_ADDRESS;
 	conf.address_mode = I2C_SLAVE_ADDRESS_MODE_MASK;
 	//! [conf_changes]
 	/* Initialize and enable device with config. */
 	//! [init_module]
-	i2c_slave_init(&sw_module, SERCOM2, &conf);
+	i2c_slave_init(&i2c_sw_instance, SERCOM2, &conf);
 	//! [init_module]
 
 	//! [enable_module]
-	i2c_slave_enable(&sw_module);
+	i2c_slave_enable(&i2c_sw_instance);
 	//! [enable_module]
 }
 //! [initialize_i2c]
 
 //! [setup_i2c_callback]
-static void configure_callbacks(void)
+void configure_i2c_callbacks(void)
 {
 	/* Register and enable callback functions */
 	//![reg_en_i2c_callback]
-	i2c_slave_register_callback(&sw_module, read_request_callback, I2C_SLAVE_CALLBACK_READ_REQUEST);
-	i2c_slave_enable_callback(&sw_module, I2C_SLAVE_CALLBACK_READ_REQUEST);
+	i2c_slave_register_callback(&i2c_sw_instance, i2c_read_request_callback,
+			I2C_SLAVE_CALLBACK_READ_REQUEST);
+	i2c_slave_enable_callback(&i2c_sw_instance,
+			I2C_SLAVE_CALLBACK_READ_REQUEST);
 
-	i2c_slave_register_callback(&sw_module, write_request_callback, I2C_SLAVE_CALLBACK_WRITE_REQUEST);
-	i2c_slave_enable_callback(&sw_module, I2C_SLAVE_CALLBACK_WRITE_REQUEST);
+	i2c_slave_register_callback(&i2c_sw_instance, i2c_write_request_callback,
+			I2C_SLAVE_CALLBACK_WRITE_REQUEST);
+	i2c_slave_enable_callback(&i2c_sw_instance,
+			I2C_SLAVE_CALLBACK_WRITE_REQUEST);
 	//![reg_en_i2c_callback]
-
 }
 //! [setup_i2c_callback]
 
 int main(void)
 {
 	//! [run_initialize_i2c]
-	/* Init system */
 	//! [system_init]
 	system_init();
 	//! [system_init]
@@ -151,13 +161,13 @@ int main(void)
 	configure_i2c();
 	//! [config]
 	//! [config_callback]
-	configure_callbacks();
+	configure_i2c_callbacks();
 	//! [config_callback]
 	//! [run_initialize_i2c]
 
 	//! [while]
-	while (1) {
-		/* Inf loop while waiting for I2C master interaction */
+	while (true) {
+		/* Infinite loop while waiting for I2C master interaction */
 	}
 	//! [while]
 }

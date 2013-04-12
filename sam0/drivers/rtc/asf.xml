@@ -29,6 +29,7 @@
 		</module>
 
 		<module type="driver" id="sam0.drivers.rtc#count_callback" caption="RTC - Real Time Clock (Count Mode) Interrupt Driver">
+			<info type="appnote" value="AT03249"/>
 			<build type="include-path" value="." />
 			<build type="header-file" subtype="api" value="rtc_count.h"/>
 			<build type="header-file" subtype="api" value="rtc_count_interrupt.h"/>
@@ -74,6 +75,7 @@
 		</module>
 
 		<module type="driver" id="sam0.drivers.rtc#calendar_callback" caption="RTC - Real Time Clock (Calendar Mode) Interrupt Driver">
+			<info type="appnote" value="AT03266"/>
 			<build type="include-path" value="." />
 			<build type="header-file" subtype="api" value="rtc_calendar.h"/>
 			<build type="header-file" subtype="api" value="rtc_calendar_interrupt.h"/>

@@ -80,12 +80,14 @@ static inline void delay_cycles(uint32_t n)
 	while(!(SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk));
 }
 
+void delay_cycles_us(uint32_t n);
+
 void delay_cycles_ms(uint32_t n);
 
 void delay_init(void);
 
-
 #define cpu_delay_cycles(delay) delay_cycles(delay)
+#define cpu_delay_us(delay) delay_cycles_us(delay)
 #define cpu_delay_ms(delay) delay_cycles_ms(delay)
 #define cpu_delay_s(delay) delay_cycles_ms(1000 * delay)
 //! @}

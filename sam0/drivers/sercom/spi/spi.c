@@ -250,32 +250,44 @@ static enum status_code _spi_check_config(
 	if (pad0 == PINMUX_DEFAULT) {
 		pad0 = _sercom_get_default_pad(sercom_module, 0);
 	}
-	if ((pad0 & 0xFFFF) != system_pinmux_pin_get_mux_position(pad0 >> 16)) {
-		return STATUS_ERR_DENIED;
+	if (pad0 != PINMUX_UNUSED) {
+		if ((pad0 & 0xFFFF) != system_pinmux_pin_get_mux_position(pad0 >> 16)) {
+			module->hw = NULL;
+			return STATUS_ERR_DENIED;
+		}
 	}
 
 	/* SERCOM PAD1 */
 	if (pad1 == PINMUX_DEFAULT) {
 		pad1 = _sercom_get_default_pad(sercom_module, 1);
 	}
-	if ((pad1 & 0xFFFF) != system_pinmux_pin_get_mux_position(pad1 >> 16)) {
-		return STATUS_ERR_DENIED;
+	if (pad1 != PINMUX_UNUSED) {
+		if ((pad1 & 0xFFFF) != system_pinmux_pin_get_mux_position(pad1 >> 16)) {
+			module->hw = NULL;
+			return STATUS_ERR_DENIED;
+		}
 	}
 
 	/* SERCOM PAD2 */
 	if (pad2 == PINMUX_DEFAULT) {
 		pad2 = _sercom_get_default_pad(sercom_module, 2);
 	}
-	if ((pad2 & 0xFFFF) != system_pinmux_pin_get_mux_position(pad2 >> 16)) {
-		return STATUS_ERR_DENIED;
+	if (pad2 != PINMUX_UNUSED) {
+		if ((pad2 & 0xFFFF) != system_pinmux_pin_get_mux_position(pad2 >> 16)) {
+			module->hw = NULL;
+			return STATUS_ERR_DENIED;
+		}
 	}
 
 	/* SERCOM PAD3 */
 	if (pad3 == PINMUX_DEFAULT) {
 		pad3 = _sercom_get_default_pad(sercom_module, 3);
 	}
-	if ((pad3 & 0xFFFF) != system_pinmux_pin_get_mux_position(pad3 >> 16)) {
-		return STATUS_ERR_DENIED;
+	if (pad3 != PINMUX_UNUSED) {
+		if ((pad3 & 0xFFFF) != system_pinmux_pin_get_mux_position(pad3 >> 16)) {
+			module->hw = NULL;
+			return STATUS_ERR_DENIED;
+		}
 	}
 
 	/* Value to read BAUD register */

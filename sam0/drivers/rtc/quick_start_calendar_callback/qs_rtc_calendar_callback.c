@@ -42,20 +42,25 @@
  */
 #include <asf.h>
 
+void rtc_match_callback(void);
+void configure_rtc_callbacks(void);
+void configure_rtc_calendar(void);
+
 //! [callback]
-static void callback(void)
+void rtc_match_callback(void)
 {
 	/* Set new alarm in 5 seconds */
 	//! [alarm_struct]
 	struct rtc_calendar_alarm_time alarm;
 	rtc_calendar_get_time(&alarm.time);
 	//! [alarm_struct]
+
 	//! [alarm_mask]
 	alarm.mask = RTC_CALENDAR_ALARM_MASK_SEC;
 	//! [alarm_mask]
 
 	//! [set_alarm]
-	alarm.time.second+= 5;
+	alarm.time.second += 5;
 	alarm.time.second = alarm.time.second % 60;
 
 	rtc_calendar_set_alarm(&alarm, RTC_CALENDAR_ALARM_0);
@@ -64,10 +69,11 @@ static void callback(void)
 //! [callback]
 
 //! [setup_callback]
-static void configure_callbacks(void)
+void configure_rtc_callbacks(void)
 {
 	//! [reg_callback]
-	rtc_calendar_register_callback(callback, RTC_CALENDAR_CALLBACK_ALARM_0);
+	rtc_calendar_register_callback(
+			rtc_match_callback, RTC_CALENDAR_CALLBACK_ALARM_0);
 	//! [reg_callback]
 	//! [en_callback]
 	rtc_calendar_enable_callback(RTC_CALENDAR_CALLBACK_ALARM_0);
@@ -76,7 +82,7 @@ static void configure_callbacks(void)
 //! [setup_callback]
 
 //! [initialize_rtc]
-static void configure_rtc_calendar(void)
+void configure_rtc_calendar(void)
 {
 
 	/* Initialize RTC in calendar mode. */
@@ -122,12 +128,12 @@ int main(void)
 //! [time]
 	struct rtc_calendar_time time;
 	rtc_calendar_get_time_defaults(&time);
-	time.year      = 2012;
-	time.month     = 12;
-	time.day       = 31;
-	time.hour      = 23;
-	time.minute    = 59;
-	time.second    = 0;
+	time.year   = 2012;
+	time.month  = 12;
+	time.day    = 31;
+	time.hour   = 23;
+	time.minute = 59;
+	time.second = 0;
 //! [time]
 
 	/* Configure and enable RTC */
@@ -137,7 +143,7 @@ int main(void)
 
 	/* Configure and enable callback */
 //! [run_callback]
-	configure_callbacks();
+	configure_rtc_callbacks();
 //! [run_callback]
 
 	/* Set current time. */
@@ -148,9 +154,8 @@ int main(void)
 //! [run_initialize_rtc]
 
 //! [while]
-	while(1){
-		/* Inf loop. */
+	while (true) {
+		/* Infinite loop */
 	}
 //! [while]
-
 }

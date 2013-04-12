@@ -120,7 +120,7 @@ int main(void)
 	SysTick->CTRL = SysTick_CTRL_CLKSOURCE_Msk | SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_ENABLE_Msk;
 #  endif
 
-	cpu_irq_enable();
+	system_interrupt_enable_global();
 
 	while (true) {
 		/* Do nothing - use interrupts */

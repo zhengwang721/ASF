@@ -48,6 +48,7 @@
 static uint8_t buffer[DATA_LENGTH] = {
 		0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09,
 };
+
 #define SLAVE_ADDRESS 0x12
 //! [packet_data]
 
@@ -61,8 +62,10 @@ static uint8_t buffer[DATA_LENGTH] = {
 struct i2c_master_module dev_inst;
 //! [dev_inst]
 
+void configure_i2c(void);
+
 //! [initialize_i2c]
-static void configure_i2c(void)
+void configure_i2c(void)
 {
 	/* Initialize config structure and software module. */
 	//! [init_conf]
@@ -89,7 +92,6 @@ static void configure_i2c(void)
 int main(void)
 {
 	//! [init]
-	/* Init system. */
 	//! [system_init]
 	system_init();
 	//! [system_init]
@@ -103,6 +105,7 @@ int main(void)
 	//! [timeout]
 	uint16_t timeout = 0;
 	//! [timeout]
+
 	/* Init i2c packet. */
 	//! [packet]
 	struct i2c_packet packet = {
@@ -116,16 +119,17 @@ int main(void)
 	//! [main]
 	/* Write buffer to slave until success. */
 	//! [write_packet]
-	while(i2c_master_write_packet_wait(&dev_inst, &packet) != STATUS_OK) {
+	while (i2c_master_write_packet_wait(&dev_inst, &packet) != STATUS_OK) {
 		/* Increment timeout counter and check if timed out. */
-		if (timeout++ >= TIMEOUT) {
+		if (timeout++ == TIMEOUT) {
 			break;
 		}
 	}
 	//! [write_packet]
+
 	//! [main]
-	while (1) {
-		/* Inf loop. */
+	while (true) {
+		/* Infinite loop */
 	}
-	
+
 }

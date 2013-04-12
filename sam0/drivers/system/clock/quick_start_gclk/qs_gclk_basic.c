@@ -42,14 +42,14 @@
  */
 #include <asf.h>
 
-void config_gclock_generator(void);
-void config_gclock_channel(void);
+void configure_gclock_generator(void);
+void configure_gclock_channel(void);
 
 //! [setup]
 #define EXAMPLE_GCLOCK_GENERATOR    0
 #define EXAMPLE_GCLOCK_CHANNEL      0
 
-void config_gclock_generator(void)
+void configure_gclock_generator(void)
 {
 //! [setup_1]
 	struct system_gclk_gen_config gclock_gen_conf;
@@ -71,7 +71,7 @@ void config_gclock_generator(void)
 //! [setup_5]
 }
 
-void config_gclock_channel(void)
+void configure_gclock_channel(void)
 {
 //! [setup_6]
 	struct system_gclk_chan_config gclk_chan_conf;
@@ -97,8 +97,8 @@ void config_gclock_channel(void)
 int main(void)
 {
 	//! [setup_init]
-	config_gclock_generator();
-	config_gclock_channel();
+	configure_gclock_generator();
+	configure_gclock_channel();
 	//! [setup_init]
 
 	//! [main]

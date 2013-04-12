@@ -44,7 +44,7 @@
 #define PAC_H_INCLUDED
 
 /**
- * \defgroup asfdoc_samd20_pac_group  SAM D20 PAC Driver (PAC)
+ * \defgroup asfdoc_samd20_pac_group  SAM D20 Peripheral Access Controller Driver (PAC)
  *
  * This driver for SAM D20 devices provides an interface for the locking and
  * unlocking of peripheral registers within the device. When a peripheral is

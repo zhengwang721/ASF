@@ -41,22 +41,23 @@
  *
  */
 #include <asf.h>
-#define ADC_SAMPLES 128
 
-
+void adc_complete_callback(
+		const struct adc_module *const module);
 
 //! [result_buffer]
+#define ADC_SAMPLES 128
 uint16_t adc_result_buffer[ADC_SAMPLES];
 //! [result_buffer]
 
 //! [job_complete_callback]
-volatile bool done = false;
-static void adc_complete_callback(const struct adc_module *const module) {
-	done = true;
+volatile bool adc_read_done = false;
+
+void adc_complete_callback(
+		const struct adc_module *const module) {
+	adc_read_done = true;
 }
 //! [job_complete_callback]
-
-
 
 int main(void)
 {
@@ -74,11 +75,11 @@ int main(void)
 //! [get_conf]
 
 //! [modify_conf]
-	config.gain_factor = ADC_GAIN_FACTOR_DIV2;
+	config.gain_factor     = ADC_GAIN_FACTOR_DIV2;
 	config.clock_prescaler = ADC_CLOCK_PRESCALER_DIV8;
-	config.reference = ADC_REFERENCE_INTVCC1;
-	config.positive_input = ADC_POSITIVE_INPUT_PIN4;
-	config.resolution =  ADC_RESOLUTION_12BIT;
+	config.reference       = ADC_REFERENCE_INTVCC1;
+	config.positive_input  = ADC_POSITIVE_INPUT_PIN4;
+	config.resolution      =  ADC_RESOLUTION_12BIT;
 //! [modify_conf]
 
 //! [init_adc]
@@ -95,12 +96,14 @@ int main(void)
 
 
 //! [start_adc_job]
-	cpu_irq_enable();
+	system_interrupt_enable_global();
 	adc_read_buffer_job(&module_inst, ADC_SAMPLES, adc_result_buffer);
 //! [start_adc_job]
 
 //! [job_complete_poll]
-	while(done != true);
+	while (adc_read_done == false) {
+		/* Wait for asynchronous ADC read to complete */
+	}
 //! [job_complete_poll]
 
 //! [inf_loop]

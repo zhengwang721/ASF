@@ -110,7 +110,6 @@ int main(void)
 	struct gfx_mono_spinctrl spinner2;
 	struct gfx_mono_spinctrl spinner3;
 	struct gfx_mono_spinctrl_spincollection spinners;
-	int16_t results[GFX_MONO_SPINCTRL_MAX_ELEMENTS_IN_SPINCOLLECTION];
 
 	/**
 	 * Starts off by initializing the system clock before configuring the

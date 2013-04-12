@@ -42,11 +42,12 @@
  */
 #include <asf.h>
 
-void config_extint_channel(void);
-void extint_handler(uint32_t channel);
+void configure_extint_channel(void);
+void extint_detection_callback(
+		uint32_t channel);
 
 //! [setup]
-void config_extint_channel(void)
+void configure_extint_channel(void)
 {
 //! [setup_1]
 	struct extint_chan_conf eint_chan_conf;
@@ -66,7 +67,7 @@ void config_extint_channel(void)
 //! [setup_4]
 
 //! [setup_5]
-	extint_register_callback(extint_handler,
+	extint_register_callback(extint_detection_callback,
 			EXTINT_CALLBACK_TYPE_DETECT);
 //! [setup_5]
 //! [setup_6]
@@ -76,7 +77,8 @@ void config_extint_channel(void)
 }
 
 //! [setup_7]
-void extint_handler(uint32_t channel)
+void extint_detection_callback(
+		uint32_t channel)
 {
 	bool pin_state = port_pin_get_input_level(BUTTON_0_PIN);
 	port_pin_set_output_level(LED_0_PIN, pin_state);
@@ -90,9 +92,9 @@ int main(void)
 
 	//! [setup_init]
 	extint_enable();
-	config_extint_channel();
+	configure_extint_channel();
 
-	cpu_irq_enable();
+	system_interrupt_enable_global();
 	//! [setup_init]
 
 	//! [main]
