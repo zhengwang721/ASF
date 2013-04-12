@@ -165,8 +165,8 @@ static void run_tal_pib_set_test(const struct test_case *test)
 
 	test_assert_true(test, status == MAC_SUCCESS,
 					"AVR2025_MAC - TAL Setting Current Channel failed");
-
-	status = tal_pib_set(phyCurrentPage, DEFAULT_CHANNEL_PAGE);
+    temp = DEFAULT_CHANNEL_PAGE;
+	status = tal_pib_set(phyCurrentPage, (pib_value_t *)&temp);
 	test_assert_true(test, status == MAC_SUCCESS,
 					"AVR2025_MAC - TAL Setting Current Page failed");
 }
@@ -181,7 +181,7 @@ void main_cdc_set_dtr(bool b_enable)
 				NULL, "AVR2025_MAC - TAL Reset request");
 		DEFINE_TEST_CASE(tal_pib_set_test, NULL,
 				run_tal_pib_set_test, NULL,
-				"AVR2025_MAC - TAL PIB Set test (this covers all ASF drivers/services used)");
+				"AVR2025_MAC - TAL PIB Set test");
 
 		// Put test case addresses in an array.
 		DEFINE_TEST_ARRAY(tal_tests) = {

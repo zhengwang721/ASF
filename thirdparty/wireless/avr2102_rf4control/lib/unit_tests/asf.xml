@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="thirdparty.wireless.avr2102_rf4control.lib.unit_tests" caption="Unit Tests for RF4Control">
+	<module type="application" id="thirdparty.wireless.avr2102_rf4control.zrc.unit_tests" caption="Unit Tests for RF4Control">
 		<info type="description" value="summary">
 		Unit Tests for RF4Control ensure the good functionality of this module by testing one by one the main features of the  component.
 		</info>

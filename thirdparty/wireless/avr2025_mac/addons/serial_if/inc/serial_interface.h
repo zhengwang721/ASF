@@ -51,7 +51,7 @@
 
  /**
   * \defgroup group_mac_serial_if Serial Interface Module
-  * Serial Interface Module acts as a interface for  converting stream of command bytes to corresponding MAC Api's
+  * This module is responsible for encoding and decoding the serial bytes to/from Host into corresponding MAC APIs .
   * @{
   */
 
