@@ -478,7 +478,7 @@ struct ac_events {
 struct ac_config {
 	/** If \c true, the comparator pairs will continue to sample during sleep
 	 *  mode when triggered. */
-	bool run_in_standby;
+	bool run_in_standby[AC_PAIRS];
 
 	/** Event generation and reception configuration for the AC module; event
 	 *  flags set to true are enabled when the module is configured. */
@@ -594,7 +594,10 @@ static inline void ac_get_config_defaults(
 	Assert(config);
 
 	/* Default configuration values */
-	config->run_in_standby = false;
+	for (uint32_t i = 0; i < AC_PAIRS; i++) {
+		config->run_in_standby[i] = false;
+	}
+	config->run_in_standby[1] = false;
 	memset(&config->events, 0x00, sizeof(config->events));
 	config->source_generator = GCLK_GENERATOR_0;
 }
