@@ -258,7 +258,7 @@ int main(void)
 		default:
 			LED_On(LED_PIN);
 			while (true) {
-                        }			
+            }			
 			// No break is needed
 		}
 	}
