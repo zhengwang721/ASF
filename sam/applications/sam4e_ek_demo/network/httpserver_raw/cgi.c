@@ -54,11 +54,11 @@
 
 #define CGI_MATCH_NONE   0
 /** Select item in table only if string match */
-#define CGI_MATCH_WORD   1  
+#define CGI_MATCH_WORD   1
 /** Select item in table if the extention match */
-#define CGI_MATCH_EXT    2  
+#define CGI_MATCH_EXT    2
 /** Select item in table if the string is content */
-#define CGI_MATCH_NAME   3  
+#define CGI_MATCH_NAME   3
 
 #define CGI_LED_ID_KEY    "n"
 #define CGI_LED_CMD_KEY   "set"
@@ -188,7 +188,7 @@ static const char *const chip_id_nvptype[] = {
 static char key_value[80];
 
 /** FIFO tx buffer. */
-#define CONFIG_AFSK_TX_BUFLEN			1024
+#define CONFIG_AFSK_TX_BUFLEN                   1024
 u8_t tx_buf[CONFIG_AFSK_TX_BUFLEN];
 
 /** Function declarations */
@@ -257,7 +257,7 @@ static int cgi_temp(const char *name, char *recv_buf, size_t recv_len)
 			status.internal_temp % 100);
 
 	http_sendOk(HTTP_CONTENT_JSON);
-	http_write((const char*)tx_buf, strlen((char *)tx_buf));
+	http_write((const char *)tx_buf, strlen((char *)tx_buf));
 
 	return 0;
 }
@@ -282,7 +282,8 @@ static int sec_to_strDhms(u32_t sec_time, char *str, size_t len)
 		return -1;
 	}
 
-	sprintf(str, "%ldd %ldh %ldm %lds", (long)d, (h >= 24) ? (long)(h - 24) : (long)h, (long)m, (long)s);
+	sprintf(str, "%ldd %ldh %ldm %lds", (long)d, (h >= 24) ? (long)(h - 24)
+			: (long)h, (long)m, (long)s);
 
 	return 0;
 }
@@ -305,7 +306,7 @@ static int cgi_uptime(const char *name, char *recv_buf, size_t recv_len)
 	sec_to_strDhms(status.up_time, (char *)tx_buf, sizeof(tx_buf));
 
 	http_sendOk(HTTP_CONTENT_JSON);
-	http_write((const char*)tx_buf, strlen((char *)tx_buf));
+	http_write((const char *)tx_buf, strlen((char *)tx_buf));
 
 	return 0;
 }
@@ -332,7 +333,7 @@ static int cgi_resistor(const char *name, char *recv_buf, size_t recv_len)
 	sprintf((char *)tx_buf, "[ \"%d.%dV\" ]", volt / 1000, volt % 1000);
 
 	http_sendOk(HTTP_CONTENT_JSON);
-	http_write((const char*)tx_buf, strlen((char *)tx_buf));
+	http_write((const char *)tx_buf, strlen((char *)tx_buf));
 
 	return 0;
 }
@@ -395,7 +396,7 @@ static int cgi_led(const char *name, char *recv_buf, size_t recv_len)
 	sprintf((char *)tx_buf, "{\"n\":%d, \"set\":,%d}", led_id, led_cmd);
 
 	http_sendOk(HTTP_CONTENT_JSON);
-	http_write((const char*)tx_buf, strlen((char *)tx_buf));
+	http_write((const char *)tx_buf, strlen((char *)tx_buf));
 	return 0;
 
 error:
@@ -424,7 +425,7 @@ static int cgi_ledStatus(const char *name, char *recv_buf, size_t recv_len)
 			GET_LED_STATUS(status.led_status, 2));
 
 	http_sendOk(HTTP_CONTENT_JSON);
-	http_write((const char*)tx_buf, strlen((char *)tx_buf));
+	http_write((const char *)tx_buf, strlen((char *)tx_buf));
 
 	return 0;
 }
@@ -473,30 +474,33 @@ static int cgi_status(const char *name, char *recv_buf, size_t recv_len)
 	/* Update board status. */
 	sprintf(status.last_connected_ip, "%d.%d.%d.%d",
 			IP_ADDR_TO_INT_TUPLE(g_pcb->remote_ip.addr));
-	sprintf(status.local_ip, "%d.%d.%d.%d", 
+	sprintf(status.local_ip, "%d.%d.%d.%d",
 			IP_ADDR_TO_INT_TUPLE(g_pcb->local_ip.addr));
-	length += sprintf((char *)tx_buf, 
-	"{\"local_ip\":\"%s\",\"last_connected_ip\":\"%s\", \"temp\":%d.%d, \"mag\":\"",
-								status.local_ip, status.last_connected_ip,
-								status.internal_temp / 100, status.internal_temp % 100);
+	length += sprintf((char *)tx_buf,
+			"{\"local_ip\":\"%s\",\"last_connected_ip\":\"%s\", \"temp\":%d.%d, \"mag\":\"",
+			status.local_ip, status.last_connected_ip,
+			status.internal_temp / 100, status.internal_temp % 100);
 
 	/* Update magnitude graph (98 + 1). */
 	for (i = 0; i < 98; ++i) {
-		length += sprintf((char *)tx_buf + length, "%d|", mag_in_buffer_int[i]);
+		length += sprintf((char *)tx_buf + length, "%d|",
+				mag_in_buffer_int[i]);
 	}
-	length += sprintf((char *)tx_buf + length, "%d\"", mag_in_buffer_int[i]);
+	length
+		+= sprintf((char *)tx_buf + length, "%d\"",
+			mag_in_buffer_int[i]);
 
 	/* Remaining board status. */
 	length += sprintf((char *)tx_buf + length,
-	",\"volt\":%d,\"up_time\":%ld,\"tot_req\":%d, \"leds\":{ \"0\":\"%d\", \"1\":\"%d\", \"2\":\"%d\"}}",
-								volt, status.up_time, status.tot_req,
-								GET_LED_STATUS(status.led_status, 0),
-								GET_LED_STATUS(status.led_status, 1),
-								GET_LED_STATUS(status.led_status, 2));
+			",\"volt\":%d,\"up_time\":%ld,\"tot_req\":%d, \"leds\":{ \"0\":\"%d\", \"1\":\"%d\", \"2\":\"%d\"}}",
+			volt, status.up_time, status.tot_req,
+			GET_LED_STATUS(status.led_status, 0),
+			GET_LED_STATUS(status.led_status, 1),
+			GET_LED_STATUS(status.led_status, 2));
 
 	/* Send answer. */
 	http_sendOk(HTTP_CONTENT_JSON);
-	http_write((char const*)tx_buf, strlen((char *)tx_buf));
+	http_write((char const *)tx_buf, strlen((char *)tx_buf));
 
 	return 0;
 }
@@ -607,7 +611,7 @@ static int cgi_chipInfo(const char *name, char *recv_buf, size_t recv_len)
 			chipid_nvptype(CHIPID_NVTYP));
 
 	http_sendOk(HTTP_CONTENT_JSON);
-	http_write((const char*)tx_buf, strlen((char *)tx_buf));
+	http_write((const char *)tx_buf, strlen((char *)tx_buf));
 
 	return 0;
 }
@@ -647,7 +651,9 @@ static int cgi_displayMsg(const char *name, char *recv_buf, size_t recv_len)
  *
  * \param name CGI request name.
  * \param table CGI handler table.
- * \return A valid function handler for the specified CGI request, NULL otherwise.
+ *
+ * \return A valid function handler for the specified CGI request, NULL
+ * otherwise.
  */
 http_handler_t cgi_search(const char *name, HttpCGI *table)
 {

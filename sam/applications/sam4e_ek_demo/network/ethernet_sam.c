@@ -48,7 +48,7 @@
 #include "ethernet_phy.h"
 #include "timer_mgt_sam.h"
 #include "sysclk.h"
-/** lwIP includes */
+/* lwIP includes */
 #include "lwip/sys.h"
 #include "lwip/api.h"
 #include "lwip/tcp.h"
@@ -140,12 +140,11 @@ static void timers_update(void)
 }
 
 /**
- *  \brief Set ethernet config.
+ * \brief Set ethernet config.
  */
 static void ethernet_configure_interface(void)
 {
 	struct ip_addr x_ip_addr, x_net_mask, x_gateway;
-//	extern err_t ethernetif_init(struct netif *netif);
 
 	if (g_ip_mode == 2)
 	{
@@ -194,8 +193,8 @@ static void ethernet_configure_interface(void)
 	}
 }
 
-/** \brief Create ethernet task, for ethernet management.
- *
+/**
+ * \brief Create ethernet task, for ethernet management.
  */
 void init_ethernet(void)
 {
@@ -204,7 +203,7 @@ void init_ethernet(void)
 
 	/** Init timer service */
 	sys_init_timing();
-	
+
 	/** Set hw and IP parameters, initialize MAC too */
 	ethernet_configure_interface();
 
@@ -233,8 +232,8 @@ void status_callback(struct netif *netif)
 }
 
 /**
- *  \brief Manage the Ethernet packets, if any received process them.
- *  After processing any packets, manage the lwIP timers.
+ *  \brief Periodically retrigger timeout process.
+ *  After managing the lwIP timers. trigger corresponding ethernet process.
  */
 void ethernet_task(void)
 {

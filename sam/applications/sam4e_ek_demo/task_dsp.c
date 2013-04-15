@@ -63,8 +63,8 @@
 #define ADC_POTENTIOMETER_NOISE		10
 
 /** DACC related definitions. */
-#define SPEAKER_CHANNEL_R       	DACC_MR_USER_SEL_CHANNEL0
-#define SPEAKER_CHANNEL_L       	DACC_MR_USER_SEL_CHANNEL1
+#define SPEAKER_CHANNEL_R			DACC_MR_USER_SEL_CHANNEL0
+#define SPEAKER_CHANNEL_L			DACC_MR_USER_SEL_CHANNEL1
 #define DACC_REFRESH			1
 
 /** TC related definitions */
@@ -218,7 +218,7 @@ static void dsp_task(void *pvParameters)
 
 	/* Just to avoid compiler warnings. */
 	( void ) pvParameters;
-	
+
 	/* Wait for user to read instructions. */
 	WAIT_FOR_TOUCH_EVENT;
 
@@ -253,14 +253,7 @@ static void dsp_task(void *pvParameters)
 				for (i = 0, j = 0; i < 512; ++j) {
 					tmp = (((dsp_sfx[offset] - (float) 128)) / 100);
 
-					/*
-					 * Store Audio sample real part in memory. ADC is
-					 * 12 bits, meaning that values range from 0 to 4096.
-					 * -2048 is done to get the actual 0 at the middle of
-					 * the sinusoidale * signal. 200 is the maximum amplitude
-					 * of the sin from the mic. We * * divide here to get in
-					 * the ]-1;1[ range for Q15 conversion.
-					 */
+					/* Store Audio sample real part in memory. */
 					wav_in_buffer[i++] = tmp;
 
 					/* Store Audio sample imaginary part in memory. */
@@ -268,7 +261,7 @@ static void dsp_task(void *pvParameters)
 
 					/* Prepare buffer for DACC. */
 					dacc_out_buffer[cur_dac_buffer][j] = (uint16_t)((tmp * 100
-											* sin_buffer[slider_pos][j]) + 128);
+										* sin_buffer[slider_pos][j]) + 128);
 
 					/* Update the wave file offset pointer. */
 					if(offset < dsp_sfx_size - 1)
@@ -314,8 +307,8 @@ static void dsp_task(void *pvParameters)
 					 * 2048 is the 0 position for DACC.
 					 * 50 is an amplification factor.
 					 */
-					dacc_out_buffer[cur_dac_buffer][j] = 
-					(uint16_t)((wav_in_buffer[i] * sin_buffer[slider_pos][j]) 
+					dacc_out_buffer[cur_dac_buffer][j] =
+					(uint16_t)((wav_in_buffer[i] * sin_buffer[slider_pos][j])
 							* 50 + 2048);
 				}
 

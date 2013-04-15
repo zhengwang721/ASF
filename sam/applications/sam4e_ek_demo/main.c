@@ -98,6 +98,12 @@
  * get correct status periodical update on browser. This is a known issue.
  * And please refer to the datasheet for the temperature sensor accuracy.
  *
+ * For IAR Embedded Workbench IDE project, the source supports both FPU on
+ * and FPU off cases. FPU on or FPU off can be configured in
+ * IAR project "General Options" by selecting "VFPv4" or "None" respectively.
+ * With FPU on, hardware floating-point instruction is used, which can improve
+ * the performance of floating-point arithmetic in the DSP task.
+ *
  */
 #include "ethernet_sam.h"
 #include "status_codes.h"

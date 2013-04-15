@@ -74,10 +74,10 @@ static void gfx_refresh_mag(void);
 static void gfx_draw_bmpfile(const uint8_t *bmpImage);
 
 /** Chip select number to be set */
-#define ILI93XX_LCD_CS	1
+#define ILI93XX_LCD_CS			1
 
 /** IRQ priority for PIO (The lower the value, the greater the priority) */
-#define IRQ_PRIOR_PIO    9
+#define IRQ_PRIOR_PIO			9
 
 const portTickType instructions_delay = 50UL / portTICK_RATE_MS;
 static const portTickType presentation_delay = 2000UL / portTICK_RATE_MS;
@@ -105,11 +105,11 @@ extern xSemaphoreHandle gfx_notification_semaphore;
 static uint32_t button1_filter_cnt = 0;
 static uint32_t button2_filter_cnt = 0;
 static uint32_t touch_sel = 0;
-#define COLOR_CUSTOM_GREY    0xE4E4E4u
+#define COLOR_CUSTOM_GREY			0xE4E4E4u
 
 /** The Y value to determine which button is pressed*/
 /* this value can be changed according to touch screen calibration status */
-#define BUTTON_DETECT_Y      110
+#define BUTTON_DETECT_Y				110
 
 /** BMP (Windows) Header Format. */
 COMPILER_PACK_SET(1)
@@ -337,7 +337,7 @@ static void gfx_task(void *pvParameters)
 		rtouch_process();
 		vTaskDelay(touch_delay);
 	}
-	
+
 	/** Bring up the ethernet interface & initializes timer0, channel0 */
 	ili93xx_draw_string(30, 290, (uint8_t *)"Please wait...");
 	init_ethernet();
