@@ -9,6 +9,6 @@
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>
 		<generator value="iarewarm"/>
-		<device-support value="atsamd20j18a"/>
+		<device-support value="atsamd20j18"/>
 	</project>
 </asf>

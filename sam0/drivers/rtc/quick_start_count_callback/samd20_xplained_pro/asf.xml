@@ -8,7 +8,7 @@
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>
-		<device-support value="atsamd20j18a"/>
+		<device-support value="atsamd20j18"/>
 		<config name="config.sam0.drivers.rtc" value="count_callback"/>
 	</project>
 </asf>
