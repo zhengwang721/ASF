@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Header file for SAM4L
+ * \brief Instance description for PICOUART
  *
- * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,45 +40,24 @@
  * \asf_license_stop
  *
  */
-#ifndef _SAM4L_
-#define _SAM4L_
 
-#if defined (__ATSAM4LC2A__) || defined (__SAM4LC2A__)
-#include "sam4lc2a.h"
-#elif defined (__ATSAM4LC2B__) || defined (__SAM4LC2B__)
-#include "sam4lc2b.h"
-#elif defined (__ATSAM4LC2C__) || defined (__SAM4LC2C__)
-#include "sam4lc2c.h"
-#elif defined (__ATSAM4LC4A__) || defined (__SAM4LC4A__)
-#include "sam4lc4a.h"
-#elif defined (__ATSAM4LC4B__) || defined (__SAM4LC4B__)
-#include "sam4lc4b.h"
-#elif defined (__ATSAM4LC4C__) || defined (__SAM4LC4C__)
-#include "sam4lc4c.h"
-#elif defined (__ATSAM4LC8A__) || defined (__SAM4LC8A__)
-#include "sam4lc8a.h"
-#elif defined (__ATSAM4LC8B__) || defined (__SAM4LC8B__)
-#include "sam4lc8b.h"
-#elif defined (__ATSAM4LC8C__) || defined (__SAM4LC8C__)
-#include "sam4lc8c.h"
-#elif defined (__ATSAM4LS2A__) || defined (__SAM4LS2A__)
-#include "sam4ls2a.h"
-#elif defined (__ATSAM4LS2B__) || defined (__SAM4LS2B__)
-#include "sam4ls2b.h"
-#elif defined (__ATSAM4LS2C__) || defined (__SAM4LS2C__)
-#include "sam4ls2c.h"
-#elif defined (__ATSAM4LS4A__) || defined (__SAM4LS4A__)
-#include "sam4ls4a.h"
-#elif defined (__ATSAM4LS4B__) || defined (__SAM4LS4B__)
-#include "sam4ls4b.h"
-#elif defined (__ATSAM4LS4C__) || defined (__SAM4LS4C__)
-#include "sam4ls4c.h"
-#elif defined (__ATSAM4LS8A__) || defined (__SAM4LS8A__)
-#include "sam4ls8a.h"
-#elif defined (__ATSAM4LS8B__) || defined (__SAM4LS8B__)
-#include "sam4ls8b.h"
-#elif defined (__ATSAM4LS8C__) || defined (__SAM4LS8C__)
-#include "sam4ls8c.h"
-#endif
+#ifndef _SAM4L_PICOUART_INSTANCE_
+#define _SAM4L_PICOUART_INSTANCE_
 
-#endif /* _SAM4L_ */
+/* ========== Register definition for PICOUART peripheral ========== */
+#if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
+#define REG_PICOUART_CR            (0x400F1400U) /**< \brief (PICOUART) Control Register */
+#define REG_PICOUART_CFG           (0x400F1404U) /**< \brief (PICOUART) Configuration Register */
+#define REG_PICOUART_SR            (0x400F1408U) /**< \brief (PICOUART) Status Register */
+#define REG_PICOUART_RHR           (0x400F140CU) /**< \brief (PICOUART) Receive Holding Register */
+#define REG_PICOUART_VERSION       (0x400F1420U) /**< \brief (PICOUART) Version Register */
+#else
+#define REG_PICOUART_CR            (*(WoReg  *)0x400F1400U) /**< \brief (PICOUART) Control Register */
+#define REG_PICOUART_CFG           (*(RwReg  *)0x400F1404U) /**< \brief (PICOUART) Configuration Register */
+#define REG_PICOUART_SR            (*(RoReg  *)0x400F1408U) /**< \brief (PICOUART) Status Register */
+#define REG_PICOUART_RHR           (*(RoReg  *)0x400F140CU) /**< \brief (PICOUART) Receive Holding Register */
+#define REG_PICOUART_VERSION       (*(RoReg  *)0x400F1420U) /**< \brief (PICOUART) Version Register */
+#endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
+
+
+#endif /* _SAM4L_PICOUART_INSTANCE_ */
