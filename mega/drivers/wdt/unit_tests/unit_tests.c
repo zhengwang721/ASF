@@ -250,62 +250,62 @@ int main(void)
 	 * the board initialization.
 	 */
 	 
-	 sysclk_init();
-	 board_init();
+	sysclk_init();
+	board_init();
 	 
-	 // USART init values
-	 const usart_serial_options_t usart_serial_options = {
+	// USART init values
+	const usart_serial_options_t usart_serial_options = {
 		.baudrate     = CONF_TEST_BAUDRATE,
 		.charlength   = CONF_TEST_CHARLENGTH,
 		.paritytype   = CONF_TEST_PARITY,
 		.stopbits     = CONF_TEST_STOPBITS,
 	   };
-         
-         stdio_serial_init(CONF_TEST_USART, &usart_serial_options);
+    
+	stdio_serial_init(CONF_TEST_USART, &usart_serial_options);
 		
-        /* Detection of all RESET except WDT RESET. */
-        if ((reset_cause_get_causes() & CHIP_RESET_CAUSE_WDT)
+	/* Detection of all RESET except WDT RESET. */
+	if ((reset_cause_get_causes() & CHIP_RESET_CAUSE_WDT)
 			!= CHIP_RESET_CAUSE_WDT) {
               reset_cause_clear_causes(CHIP_RESET_CAUSE_POR |
 				CHIP_RESET_CAUSE_EXTRST |
 				CHIP_RESET_CAUSE_BOD_CPU);
               
               wdt_rc = false;
-	     } 
-        else {
+	     }
+	else {
           
 	    reset_cause_clear_causes(CHIP_RESET_CAUSE_WDT);
             wdt_rc = true;
-        }
+	}
         
-        wdt_disable();		
+	wdt_disable();		
         
-        // Enbale WDT in reset mode
-        wdt_reset_mode_enable();
-       
-       // Define all the test cases
-        DEFINE_TEST_CASE(rc_test, NULL, run_reset_cause_test, NULL,
+	// Enbale WDT in reset mode
+	wdt_reset_mode_enable();
+	
+	// Define all the test cases
+	DEFINE_TEST_CASE(rc_test, NULL, run_reset_cause_test, NULL,
 			"Confirming watchdog reset");
-        DEFINE_TEST_CASE(interrupt_mode_test, NULL, run_wdt_interrupt_test, NULL,
+	DEFINE_TEST_CASE(interrupt_mode_test, NULL, run_wdt_interrupt_test, NULL,
 			"Running WDT Interrupt mode test");
-        DEFINE_TEST_CASE(int_rst_mode_test, NULL, run_interrupt_reset_test, NULL,
+	DEFINE_TEST_CASE(int_rst_mode_test, NULL, run_interrupt_reset_test, NULL,
 			"Running WDT Interrupt Reset mode test");        
         
-        // Put test case addresses in an array
-        DEFINE_TEST_ARRAY(wdt_tests) = {
+	// Put test case addresses in an array
+	DEFINE_TEST_ARRAY(wdt_tests) = {
                 &rc_test,
                 &interrupt_mode_test,
                 &int_rst_mode_test,
 	    };
         
-        // Define the test suite
-        DEFINE_TEST_SUITE(wdt_suite, wdt_tests, "MEGARF WDT driver test suite");
-        
-        // Run all tests in the test suite
-        test_suite_run(&wdt_suite);   
+	// Define the test suite
+	DEFINE_TEST_SUITE(wdt_suite, wdt_tests, "MEGARF WDT driver test suite");
+    
+	// Run all tests in the test suite
+	test_suite_run(&wdt_suite);   
          
         
-        while (1) {
+    while (1) {
 		/* Intentionally left empty. */
         }
 }
