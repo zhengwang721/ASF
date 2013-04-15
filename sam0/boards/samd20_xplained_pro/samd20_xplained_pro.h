@@ -528,13 +528,13 @@ void system_board_init(void);
 /** \name Embedded debugger USART interface definitions
  * @{
  */
-#define EDBG_UART_MODULE          /* Not available on this board */
-#define EDBG_UART_RX_PIN          /* Not available on this board */
-#define EDBG_UART_RX_MUX          /* Not available on this board */
-#define EDBG_UART_RX_SERCOM_PAD   /* Not available on this board */
-#define EDBG_UART_TX_PIN          /* Not available on this board */
-#define EDBG_UART_TX_MUX          /* Not available on this board */
-#define EDBG_UART_TX_SERCOM_PAD   /* Not available on this board */
+#define EDBG_UART_MODULE          -1 /* Not available on this board */
+#define EDBG_UART_RX_PIN          -1 /* Not available on this board */
+#define EDBG_UART_RX_MUX          -1 /* Not available on this board */
+#define EDBG_UART_RX_SERCOM_PAD   -1 /* Not available on this board */
+#define EDBG_UART_TX_PIN          -1 /* Not available on this board */
+#define EDBG_UART_TX_MUX          -1 /* Not available on this board */
+#define EDBG_UART_TX_SERCOM_PAD   -1 /* Not available on this board */
 /** @} */
 
 /** \name Embedded debugger TWI interface definitions
@@ -576,8 +576,8 @@ void system_board_init(void);
 #define EDBG_SPI_SCK_MUX          MUX_PB23D_SERCOM5_PAD3
 #define EDBG_SPI_SCK_SERCOM_PAD   3
 #define EDBG_SPI_SS_PIN           PIN_PA25
-#define EDBG_SPI_SS_MUX           -1
-#define EDBG_SPI_SS_SERCOM_PAD    /* Not available on this board */
+#define EDBG_SPI_SS_MUX           -1 /* Not available on this board */
+#define EDBG_SPI_SS_SERCOM_PAD    -1 /* Not available on this board */
 /** @} */
 
 /** \name Embedded debugger CDC Gateway USART interface definitions
