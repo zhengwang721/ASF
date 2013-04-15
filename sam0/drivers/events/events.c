@@ -87,7 +87,6 @@ void events_chan_set_config(
 	/* Setting up GCLK for the event channel only takes effect for the
 	 * synchronous and re-synchronous paths */
 	if (config->path != EVENT_PATH_ASYNCHRONOUS) {
-
 		/* Set up a GLCK channel to use with the specific channel */
 		struct system_gclk_chan_config gclk_chan_conf;
 
@@ -133,6 +132,6 @@ void events_user_set_config(
 
 	/* Select and configure the user MUX channel (must be done in one
 	 * word-access write as specified in the module datasheet */
-	EVSYS->USERMUX.reg = (user << EVSYS_USERMUX_UMUXSEL_Pos) |
-			(channel << EVSYS_USERMUX_CHANNELEVENT_Pos);
+	EVSYS->USER.reg = (user << EVSYS_USER_USER_Pos) |
+			(channel << EVSYS_USER_CHANNEL_Pos);
 }
