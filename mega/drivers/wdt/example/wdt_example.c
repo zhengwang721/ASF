@@ -133,9 +133,6 @@ int main(void)
 	/* Detection of all RESET except WDT RESET. */
 	if ((reset_cause_get_causes() & CHIP_RESET_CAUSE_WDT)
 			!= CHIP_RESET_CAUSE_WDT) {
-		/* Wait for 2 s. */
-		delay = 2000;
-		delay_ms(delay);
 		state_flag = START_OF_PROG;
 		reset_cause_clear_causes(CHIP_RESET_CAUSE_POR |
 				CHIP_RESET_CAUSE_EXTRST |
@@ -163,8 +160,8 @@ int main(void)
 				break;
 			}
 			/* Wait for 2 s. */
-                        delay = 2000;
-                        delay_ms(delay);
+			delay = 2000;
+			delay_ms(delay);
 			state_flag = WDT_MCU_RESET;
 			break;
 
@@ -259,11 +256,10 @@ int main(void)
 
 		case END_OF_PROG:
 		default:
-			/* Wait for 2 s. */
-			delay = 200;
-			delay_ms(delay);
 			LED_On(LED_PIN);
-			break;
+			while (true) {
+                        }			
+			// No break is needed
 		}
 	}
 		

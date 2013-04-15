@@ -81,6 +81,10 @@
  * visit <a href="http://www.atmel.com/">Atmel</a>.\n
  */
 
+/* Macros for success/fail indication */
+#define SUCCESS    1
+#define FAIL       0
+
 //! \brief Flag to indicate watchdog timeout
 static volatile bool wdt_rc,wdt_int;
 
@@ -91,8 +95,35 @@ static volatile bool wdt_rc,wdt_int;
  */
 static void wdt_timer_callback(void)
 {
-   wdt_int = true;
+   wdt_int = SUCCESS;
 }
+
+
+/**
+ * \brief Configure WDT in reset mode 
+ *
+ * \param none.
+ */
+static void wdt_reset_mode_enable(void)
+{
+    // Check if we are reset by WDT. If not, do a WDT reset
+    if (!wdt_rc){
+      
+      /* Disable WDT */
+      wdt_disable();
+      
+      /* Enable WDT 250 ms. */
+      wdt_set_timeout_period(WDT_TIMEOUT_PERIOD_32KCLK);
+      
+      /* Enable wdt in reset mode */
+      wdt_enable(SYSTEM_RESET_MODE);
+      
+      while(1)
+      {
+      }
+    }
+}
+
 
 /**
  * \brief Run test to check last reset cause
@@ -116,7 +147,7 @@ static void run_interrupt_reset_test(const struct test_case *test)
 {
   volatile bool status;
   
-  status = true;
+  status = SUCCESS;
   
   /* Disable WDT */
   wdt_disable();
@@ -126,7 +157,9 @@ static void run_interrupt_reset_test(const struct test_case *test)
   
   /* Check for timeout period is set properly */
   if (wdt_get_timeout_period() != WDT_TIMEOUT_PERIOD_32KCLK)
-    status = false;
+    status = FAIL;
+  
+  test_assert_true(test, status, "Watchdog period setting failed");
   
   /* Put the interrupt callback */
   wdt_set_interrupt_callback(wdt_timer_callback);
@@ -136,17 +169,19 @@ static void run_interrupt_reset_test(const struct test_case *test)
   
   /* Check for wdt interrupt mode is enabled */
   if( wdt_reset_interrupt_mode_enabled() == false)
-    status = false;
+    status = FAIL;
+  
+  test_assert_true(test, status, "Watchdog interrupt enable failed");
 
   /* Clear the status flag */
-  wdt_int = false;
+  wdt_int = FAIL;
   
   cpu_irq_disable();
   
   /* Check the interrupt flag is triggered after the timeout */
   while(!wdt_timeout_interrupt_flag_is_set());
   
-  wdt_int = true;
+  wdt_int = SUCCESS;
   
   /* Clear the interrupt flag */  
   wdt_timeout_interrupt_flag_clear();
@@ -156,7 +191,7 @@ static void run_interrupt_reset_test(const struct test_case *test)
   
   wdt_disable();
   
-  test_assert_true(test, wdt_int & status, "Watchdog interrupt reset mode failed");
+  test_assert_true(test, wdt_int, "Watchdog interrupt reset mode failed");
   
 }
 /**
@@ -169,7 +204,7 @@ static void run_interrupt_reset_test(const struct test_case *test)
  */
 static void run_wdt_interrupt_test(const struct test_case *test)
 {
-  volatile bool status = true;
+  volatile bool status = SUCCESS;
   
   /* Enable WDT 125 ms. */
   wdt_set_timeout_period(WDT_TIMEOUT_PERIOD_16KCLK);
@@ -182,14 +217,18 @@ static void run_wdt_interrupt_test(const struct test_case *test)
   
   /* Check for timeout period is set properly */
   if (wdt_get_timeout_period() != WDT_TIMEOUT_PERIOD_16KCLK)
-     status = false;
+     status = FAIL;
+  
+  test_assert_true(test, status, "Watchdog period setting failed");  
   
   /* Check for wdt interrupt mode is enabled */
   if( wdt_interrupt_mode_enabled() == false)
-     status = false;
-
+     status = FAIL;
+  
+  test_assert_true(test, status, "Watchdog interrupt enable failed");
+  
   /* Clear the status flag */
-  wdt_int = false;
+  wdt_int = FAIL;
   
   cpu_irq_enable();
   
@@ -199,7 +238,7 @@ static void run_wdt_interrupt_test(const struct test_case *test)
   /* Disable WDT */
   wdt_disable();
   
-  test_assert_true(test, wdt_int & status, "Watchdog interrupt timeout failed");
+  test_assert_true(test, wdt_int, "Watchdog interrupt timeout failed");
 }
 
 //! \brief Set up and run test suite
@@ -209,10 +248,21 @@ int main(void)
 	/* Initialize the board.
 	 * The board-specific conf_board.h file contains the configuration of
 	 * the board initialization.
-	 */       	
-        sysclk_init();
-        board_init();
-        
+	 */
+	 
+	 sysclk_init();
+	 board_init();
+	 
+	 // USART init values
+	 const usart_serial_options_t usart_serial_options = {
+		.baudrate     = CONF_TEST_BAUDRATE,
+		.charlength   = CONF_TEST_CHARLENGTH,
+		.paritytype   = CONF_TEST_PARITY,
+		.stopbits     = CONF_TEST_STOPBITS,
+	   };
+         
+         stdio_serial_init(CONF_TEST_USART, &usart_serial_options);
+		
         /* Detection of all RESET except WDT RESET. */
         if ((reset_cause_get_causes() & CHIP_RESET_CAUSE_WDT)
 			!= CHIP_RESET_CAUSE_WDT) {
@@ -227,30 +277,11 @@ int main(void)
 	    reset_cause_clear_causes(CHIP_RESET_CAUSE_WDT);
             wdt_rc = true;
         }
-
         
-        wdt_disable();
+        wdt_disable();		
         
-        // USART init values
-        const usart_serial_options_t usart_serial_options = {
-		.baudrate     = CONF_TEST_BAUDRATE,
-		.charlength   = CONF_TEST_CHARLENGTH,
-		.paritytype   = CONF_TEST_PARITY,
-		.stopbits     = CONF_TEST_STOPBITS,
-	   };
-        
-        stdio_serial_init(CONF_TEST_USART, &usart_serial_options);
-        
-        // Check if we are reset by WDT. If not, do a WDT reset
-        if (!wdt_rc){
-  
-          /* Enable WDT in system reset mode */
-          wdt_reset_mcu();
-  
-          while(1)
-          {
-          }
-       }
+        // Enbale WDT in reset mode
+        wdt_reset_mode_enable();
        
        // Define all the test cases
         DEFINE_TEST_CASE(rc_test, NULL, run_reset_cause_test, NULL,
@@ -266,14 +297,15 @@ int main(void)
                 &interrupt_mode_test,
                 &int_rst_mode_test,
 	    };
-
-	// Define the test suite
-	DEFINE_TEST_SUITE(wdt_suite, wdt_tests, "MEGARF WDT driver test suite");
-
-	// Run all tests in the test suite
-	test_suite_run(&wdt_suite);   
         
-	while (1) {
+        // Define the test suite
+        DEFINE_TEST_SUITE(wdt_suite, wdt_tests, "MEGARF WDT driver test suite");
+        
+        // Run all tests in the test suite
+        test_suite_run(&wdt_suite);   
+         
+        
+        while (1) {
 		/* Intentionally left empty. */
-	}
+        }
 }
