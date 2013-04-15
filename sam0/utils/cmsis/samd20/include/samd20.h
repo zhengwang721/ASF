@@ -44,35 +44,35 @@
 #ifndef _SAMD20_
 #define _SAMD20_
 
-#if   defined(__SAMD20E14__) || defined(__ATSAMD20E14A__)
+#if   defined(__SAMD20E14__) || defined(__ATSAMD20E14__)
   #include "samd20e14.h"
-#elif defined(__SAMD20E15__) || defined(__ATSAMD20E15A__)
+#elif defined(__SAMD20E15__) || defined(__ATSAMD20E15__)
   #include "samd20e15.h"
-#elif defined(__SAMD20E16__) || defined(__ATSAMD20E16A__)
+#elif defined(__SAMD20E16__) || defined(__ATSAMD20E16__)
   #include "samd20e16.h"
-#elif defined(__SAMD20E17__) || defined(__ATSAMD20E17A__)
+#elif defined(__SAMD20E17__) || defined(__ATSAMD20E17__)
   #include "samd20e17.h"
-#elif defined(__SAMD20E18__) || defined(__ATSAMD20E18A__)
+#elif defined(__SAMD20E18__) || defined(__ATSAMD20E18__)
   #include "samd20e18.h"
-#elif defined(__SAMD20G14__) || defined(__ATSAMD20G14A__)
+#elif defined(__SAMD20G14__) || defined(__ATSAMD20G14__)
   #include "samd20g14.h"
-#elif defined(__SAMD20G15__) || defined(__ATSAMD20G15A__)
+#elif defined(__SAMD20G15__) || defined(__ATSAMD20G15__)
   #include "samd20g15.h"
-#elif defined(__SAMD20G16__) || defined(__ATSAMD20G16A__)
+#elif defined(__SAMD20G16__) || defined(__ATSAMD20G16__)
   #include "samd20g16.h"
-#elif defined(__SAMD20G17__) || defined(__ATSAMD20G17A__)
+#elif defined(__SAMD20G17__) || defined(__ATSAMD20G17__)
   #include "samd20g17.h"
-#elif defined(__SAMD20G18__) || defined(__ATSAMD20G18A__)
+#elif defined(__SAMD20G18__) || defined(__ATSAMD20G18__)
   #include "samd20g18.h"
-#elif defined(__SAMD20J14__) || defined(__ATSAMD20J14A__)
+#elif defined(__SAMD20J14__) || defined(__ATSAMD20J14__)
   #include "samd20j14.h"
-#elif defined(__SAMD20J15__) || defined(__ATSAMD20J15A__)
+#elif defined(__SAMD20J15__) || defined(__ATSAMD20J15__)
   #include "samd20j15.h"
-#elif defined(__SAMD20J16__) || defined(__ATSAMD20J16A__)
+#elif defined(__SAMD20J16__) || defined(__ATSAMD20J16__)
   #include "samd20j16.h"
-#elif defined(__SAMD20J17__) || defined(__ATSAMD20J17A__)
+#elif defined(__SAMD20J17__) || defined(__ATSAMD20J17__)
   #include "samd20j17.h"
-#elif defined(__SAMD20J18__) || defined(__ATSAMD20J18A__)
+#elif defined(__SAMD20J18__) || defined(__ATSAMD20J18__)
   #include "samd20j18.h"
 #else
   #error Library does not support the specified device.

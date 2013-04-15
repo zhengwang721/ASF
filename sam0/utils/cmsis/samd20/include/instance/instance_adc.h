@@ -96,7 +96,8 @@
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 /* ========== Instance parameters for ADC peripheral ========== */
-#define ADC_ADC_RESULT_MSB          15
+#define ADC_EXTCHANNEL_MSB          19
 #define ADC_GCLK_ID                 23
+#define ADC_RESULT_MSB              15
 
 #endif /* _SAMD20_ADC_INSTANCE_ */

@@ -48,7 +48,7 @@
 #if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 #define REG_EVSYS_CTRL             (0x42000400U) /**< \brief (EVSYS) Control Register */
 #define REG_EVSYS_CHANNEL          (0x42000404U) /**< \brief (EVSYS) Channel Register */
-#define REG_EVSYS_USERMUX          (0x42000408U) /**< \brief (EVSYS) User Mux Register */
+#define REG_EVSYS_USER             (0x42000408U) /**< \brief (EVSYS) User Mux Register */
 #define REG_EVSYS_CHSTATUS         (0x4200040CU) /**< \brief (EVSYS) Channel Status Register */
 #define REG_EVSYS_INTENCLR         (0x42000410U) /**< \brief (EVSYS) Interrupt Enable Clear Register */
 #define REG_EVSYS_INTENSET         (0x42000414U) /**< \brief (EVSYS) Interrupt Enable Set Register */
@@ -56,7 +56,7 @@
 #else
 #define REG_EVSYS_CTRL             (*(WoReg8 *)0x42000400U) /**< \brief (EVSYS) Control Register */
 #define REG_EVSYS_CHANNEL          (*(RwReg  *)0x42000404U) /**< \brief (EVSYS) Channel Register */
-#define REG_EVSYS_USERMUX          (*(RwReg16*)0x42000408U) /**< \brief (EVSYS) User Mux Register */
+#define REG_EVSYS_USER             (*(RwReg16*)0x42000408U) /**< \brief (EVSYS) User Mux Register */
 #define REG_EVSYS_CHSTATUS         (*(RoReg  *)0x4200040CU) /**< \brief (EVSYS) Channel Status Register */
 #define REG_EVSYS_INTENCLR         (*(RwReg  *)0x42000410U) /**< \brief (EVSYS) Interrupt Enable Clear Register */
 #define REG_EVSYS_INTENSET         (*(RwReg  *)0x42000414U) /**< \brief (EVSYS) Interrupt Enable Set Register */

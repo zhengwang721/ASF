@@ -50,7 +50,7 @@
 /** \addtogroup SAMD20_WDT Watchdog Timer */
 /*@{*/
 
-#define REV_WDT                     0x100
+#define REV_WDT                     0x200
 
 /* -------- WDT_CTRL : (WDT Offset: 0x0) (R/W  8) Control Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -58,8 +58,8 @@ typedef union {
   struct {
     uint8_t  :1;               /*!< bit:      0  Reserved                           */
     uint8_t  ENABLE:1;         /*!< bit:      1  Enable                             */
-    uint8_t  PER:4;            /*!< bit:  2.. 5  Timeout Period                     */
-    uint8_t  :1;               /*!< bit:      6  Reserved                           */
+    uint8_t  WEN:1;            /*!< bit:      2  Watchdog Timer Window Mode Enable  */
+    uint8_t  :4;               /*!< bit:  3.. 6  Reserved                           */
     uint8_t  ALWAYSON:1;       /*!< bit:      7  Watchdog Timer Always-On Enable    */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
@@ -67,59 +67,56 @@ typedef union {
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #define WDT_CTRL_OFFSET             0x0          /**< \brief (WDT_CTRL offset) Control Register */
-#define WDT_CTRL_RESETVALUE         0x2C         /**< \brief (WDT_CTRL reset_value) Control Register */
+#define WDT_CTRL_RESETVALUE         0x00         /**< \brief (WDT_CTRL reset_value) Control Register */
 
 #define WDT_CTRL_ENABLE_Pos         1            /**< \brief (WDT_CTRL) Enable */
 #define WDT_CTRL_ENABLE             (0x1u << WDT_CTRL_ENABLE_Pos)
-#define WDT_CTRL_PER_Pos            2            /**< \brief (WDT_CTRL) Timeout Period */
-#define WDT_CTRL_PER_Msk            (0xFu << WDT_CTRL_PER_Pos)
-#define WDT_CTRL_PER(value)         ((WDT_CTRL_PER_Msk & ((value) << WDT_CTRL_PER_Pos)))
+#define WDT_CTRL_WEN_Pos            2            /**< \brief (WDT_CTRL) Watchdog Timer Window Mode Enable */
+#define WDT_CTRL_WEN                (0x1u << WDT_CTRL_WEN_Pos)
 #define WDT_CTRL_ALWAYSON_Pos       7            /**< \brief (WDT_CTRL) Watchdog Timer Always-On Enable */
 #define WDT_CTRL_ALWAYSON           (0x1u << WDT_CTRL_ALWAYSON_Pos)
-#define WDT_CTRL_MASK               0xBEu        /**< \brief (WDT_CTRL) MASK Register */
+#define WDT_CTRL_MASK               0x86u        /**< \brief (WDT_CTRL) MASK Register */
 
-/* -------- WDT_WINCTRL : (WDT Offset: 0x1) (R/W  8) Window Control Register -------- */
+/* -------- WDT_CONFIG : (WDT Offset: 0x1) (R/W  8) Configuration Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint8_t  :1;               /*!< bit:      0  Reserved                           */
-    uint8_t  WEN:1;            /*!< bit:      1  Watchdog Timer Window Mode Enable  */
-    uint8_t  WINDOW:4;         /*!< bit:  2.. 5  Watchdow Timer Window Timeout Period */
-    uint8_t  :2;               /*!< bit:  6.. 7  Reserved                           */
+    uint8_t  PER:4;            /*!< bit:  0.. 3  Timeout Period                     */
+    uint8_t  WINDOW:4;         /*!< bit:  4.. 7  Watchdow Timer Window Timeout Period */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
-} WDT_WINCTRL_Type;
+} WDT_CONFIG_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
-#define WDT_WINCTRL_OFFSET          0x1          /**< \brief (WDT_WINCTRL offset) Window Control Register */
-#define WDT_WINCTRL_RESETVALUE      0x2C         /**< \brief (WDT_WINCTRL reset_value) Window Control Register */
+#define WDT_CONFIG_OFFSET           0x1          /**< \brief (WDT_CONFIG offset) Configuration Register */
+#define WDT_CONFIG_RESETVALUE       0xBB         /**< \brief (WDT_CONFIG reset_value) Configuration Register */
 
-#define WDT_WINCTRL_WEN_Pos         1            /**< \brief (WDT_WINCTRL) Watchdog Timer Window Mode Enable */
-#define WDT_WINCTRL_WEN             (0x1u << WDT_WINCTRL_WEN_Pos)
-#define WDT_WINCTRL_WINDOW_Pos      2            /**< \brief (WDT_WINCTRL) Watchdow Timer Window Timeout Period */
-#define WDT_WINCTRL_WINDOW_Msk      (0xFu << WDT_WINCTRL_WINDOW_Pos)
-#define WDT_WINCTRL_WINDOW(value)   ((WDT_WINCTRL_WINDOW_Msk & ((value) << WDT_WINCTRL_WINDOW_Pos)))
-#define WDT_WINCTRL_MASK            0x3Eu        /**< \brief (WDT_WINCTRL) MASK Register */
+#define WDT_CONFIG_PER_Pos          0            /**< \brief (WDT_CONFIG) Timeout Period */
+#define WDT_CONFIG_PER_Msk          (0xFu << WDT_CONFIG_PER_Pos)
+#define WDT_CONFIG_PER(value)       ((WDT_CONFIG_PER_Msk & ((value) << WDT_CONFIG_PER_Pos)))
+#define WDT_CONFIG_WINDOW_Pos       4            /**< \brief (WDT_CONFIG) Watchdow Timer Window Timeout Period */
+#define WDT_CONFIG_WINDOW_Msk       (0xFu << WDT_CONFIG_WINDOW_Pos)
+#define WDT_CONFIG_WINDOW(value)    ((WDT_CONFIG_WINDOW_Msk & ((value) << WDT_CONFIG_WINDOW_Pos)))
+#define WDT_CONFIG_MASK             0xFFu        /**< \brief (WDT_CONFIG) MASK Register */
 
 /* -------- WDT_EWCTRL : (WDT Offset: 0x2) (R/W  8) Early Warning Control Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint8_t  :2;               /*!< bit:  0.. 1  Reserved                           */
-    uint8_t  EWOFFSET:4;       /*!< bit:  2.. 5  Early Warning Interrupt Time Offset */
-    uint8_t  :2;               /*!< bit:  6.. 7  Reserved                           */
+    uint8_t  EWOFFSET:4;       /*!< bit:  0.. 3  Early Warning Interrupt Time Offset */
+    uint8_t  :4;               /*!< bit:  4.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } WDT_EWCTRL_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #define WDT_EWCTRL_OFFSET           0x2          /**< \brief (WDT_EWCTRL offset) Early Warning Control Register */
-#define WDT_EWCTRL_RESETVALUE       0x00         /**< \brief (WDT_EWCTRL reset_value) Early Warning Control Register */
+#define WDT_EWCTRL_RESETVALUE       0x0B         /**< \brief (WDT_EWCTRL reset_value) Early Warning Control Register */
 
-#define WDT_EWCTRL_EWOFFSET_Pos     2            /**< \brief (WDT_EWCTRL) Early Warning Interrupt Time Offset */
+#define WDT_EWCTRL_EWOFFSET_Pos     0            /**< \brief (WDT_EWCTRL) Early Warning Interrupt Time Offset */
 #define WDT_EWCTRL_EWOFFSET_Msk     (0xFu << WDT_EWCTRL_EWOFFSET_Pos)
 #define WDT_EWCTRL_EWOFFSET(value)  ((WDT_EWCTRL_EWOFFSET_Msk & ((value) << WDT_EWCTRL_EWOFFSET_Pos)))
-#define WDT_EWCTRL_MASK             0x3Cu        /**< \brief (WDT_EWCTRL) MASK Register */
+#define WDT_EWCTRL_MASK             0x0Fu        /**< \brief (WDT_EWCTRL) MASK Register */
 
 /* -------- WDT_INTENCLR : (WDT Offset: 0x4) (R/W  8) Interrupt Enable Clear Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -216,7 +213,7 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef struct {
   __IO WDT_CTRL_Type             CTRL;        /**< \brief Offset: 0x0 (R/W  8) Control Register */
-  __IO WDT_WINCTRL_Type          WINCTRL;     /**< \brief Offset: 0x1 (R/W  8) Window Control Register */
+  __IO WDT_CONFIG_Type           CONFIG;      /**< \brief Offset: 0x1 (R/W  8) Configuration Register */
   __IO WDT_EWCTRL_Type           EWCTRL;      /**< \brief Offset: 0x2 (R/W  8) Early Warning Control Register */
        RoReg8                    Reserved1[0x1];
   __IO WDT_INTENCLR_Type         INTENCLR;    /**< \brief Offset: 0x4 (R/W  8) Interrupt Enable Clear Register */

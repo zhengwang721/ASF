@@ -50,7 +50,7 @@
 /** \addtogroup SAMD20_NVMCTRL Non-Volatile Memory Controller */
 /*@{*/
 
-#define REV_NVMCTRL                 0x100
+#define REV_NVMCTRL                 0x102
 
 /* -------- NVMCTRL_CTRLA : (NVMCTRL Offset: 0x00) (R/W 16) NVM Control Register A -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -100,7 +100,8 @@ typedef union {
     uint32_t SLEEPPRM:2;       /*!< bit:  8.. 9  Power Reduction Mode during Sleep  */
     uint32_t :6;               /*!< bit: 10..15  Reserved                           */
     uint32_t READMODE:2;       /*!< bit: 16..17  NVMCTRL Read Mode                  */
-    uint32_t :14;              /*!< bit: 18..31  Reserved                           */
+    uint32_t CACHEDIS:1;       /*!< bit:     18  Cache Disable                      */
+    uint32_t :13;              /*!< bit: 19..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } NVMCTRL_CTRLB_Type;
@@ -126,7 +127,9 @@ typedef union {
 #define NVMCTRL_CTRLB_READMODE_Pos  16           /**< \brief (NVMCTRL_CTRLB) NVMCTRL Read Mode */
 #define NVMCTRL_CTRLB_READMODE_Msk  (0x3u << NVMCTRL_CTRLB_READMODE_Pos)
 #define NVMCTRL_CTRLB_READMODE(value) ((NVMCTRL_CTRLB_READMODE_Msk & ((value) << NVMCTRL_CTRLB_READMODE_Pos)))
-#define NVMCTRL_CTRLB_MASK          0x0003039Eu  /**< \brief (NVMCTRL_CTRLB) MASK Register */
+#define NVMCTRL_CTRLB_CACHEDIS_Pos  18           /**< \brief (NVMCTRL_CTRLB) Cache Disable */
+#define NVMCTRL_CTRLB_CACHEDIS      (0x1u << NVMCTRL_CTRLB_CACHEDIS_Pos)
+#define NVMCTRL_CTRLB_MASK          0x0007039Eu  /**< \brief (NVMCTRL_CTRLB) MASK Register */
 
 /* -------- NVMCTRL_PARAM : (NVMCTRL Offset: 0x08) (R/W 32) Parameter Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))

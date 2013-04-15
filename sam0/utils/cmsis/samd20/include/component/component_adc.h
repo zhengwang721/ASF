@@ -50,7 +50,7 @@
 /** \addtogroup SAMD20_ADC Analog Digital Converter */
 /*@{*/
 
-#define REV_ADC                     0x100
+#define REV_ADC                     0x110
 
 /* -------- ADC_CTRLA : (ADC Offset: 0x00) (R/W  8) Control Register A -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -382,7 +382,7 @@ typedef union {
     uint8_t  RESRDY:1;         /*!< bit:      0  Result Ready Interrupt Disable     */
     uint8_t  OVERRUN:1;        /*!< bit:      1  Overrun Interrupt Disable          */
     uint8_t  WINMON:1;         /*!< bit:      2  Window Monitor Interrupt Disable   */
-    uint8_t  READY:1;          /*!< bit:      3  Ready Interrupt Disable            */
+    uint8_t  SYNCRDY:1;        /*!< bit:      3  Synchronisation Ready Interrupt Disable */
     uint8_t  :4;               /*!< bit:  4.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
@@ -398,8 +398,8 @@ typedef union {
 #define ADC_INTENCLR_OVERRUN        (0x1u << ADC_INTENCLR_OVERRUN_Pos)
 #define ADC_INTENCLR_WINMON_Pos     2            /**< \brief (ADC_INTENCLR) Window Monitor Interrupt Disable */
 #define ADC_INTENCLR_WINMON         (0x1u << ADC_INTENCLR_WINMON_Pos)
-#define ADC_INTENCLR_READY_Pos      3            /**< \brief (ADC_INTENCLR) Ready Interrupt Disable */
-#define ADC_INTENCLR_READY          (0x1u << ADC_INTENCLR_READY_Pos)
+#define ADC_INTENCLR_SYNCRDY_Pos    3            /**< \brief (ADC_INTENCLR) Synchronisation Ready Interrupt Disable */
+#define ADC_INTENCLR_SYNCRDY        (0x1u << ADC_INTENCLR_SYNCRDY_Pos)
 #define ADC_INTENCLR_MASK           0x0Fu        /**< \brief (ADC_INTENCLR) MASK Register */
 
 /* -------- ADC_INTENSET : (ADC Offset: 0x17) (R/W  8) Interrupt Enable Set Register -------- */
@@ -409,7 +409,7 @@ typedef union {
     uint8_t  RESRDY:1;         /*!< bit:      0  Result Ready Interrupt Enable      */
     uint8_t  OVERRUN:1;        /*!< bit:      1  Overrun Interrupt Enable           */
     uint8_t  WINMON:1;         /*!< bit:      2  Window Monitor Interrupt Enable    */
-    uint8_t  READY:1;          /*!< bit:      3  Ready Interrupt Enable             */
+    uint8_t  SYNCRDY:1;        /*!< bit:      3  Synchronisation Ready Interrupt Enable */
     uint8_t  :4;               /*!< bit:  4.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
@@ -425,8 +425,8 @@ typedef union {
 #define ADC_INTENSET_OVERRUN        (0x1u << ADC_INTENSET_OVERRUN_Pos)
 #define ADC_INTENSET_WINMON_Pos     2            /**< \brief (ADC_INTENSET) Window Monitor Interrupt Enable */
 #define ADC_INTENSET_WINMON         (0x1u << ADC_INTENSET_WINMON_Pos)
-#define ADC_INTENSET_READY_Pos      3            /**< \brief (ADC_INTENSET) Ready Interrupt Enable */
-#define ADC_INTENSET_READY          (0x1u << ADC_INTENSET_READY_Pos)
+#define ADC_INTENSET_SYNCRDY_Pos    3            /**< \brief (ADC_INTENSET) Synchronisation Ready Interrupt Enable */
+#define ADC_INTENSET_SYNCRDY        (0x1u << ADC_INTENSET_SYNCRDY_Pos)
 #define ADC_INTENSET_MASK           0x0Fu        /**< \brief (ADC_INTENSET) MASK Register */
 
 /* -------- ADC_INTFLAG : (ADC Offset: 0x18) (R/W  8) Interrupt Flag Status and Clear Register -------- */
@@ -436,7 +436,7 @@ typedef union {
     uint8_t  RESRDY:1;         /*!< bit:      0  Result Ready Interrupt Flag        */
     uint8_t  OVERRUN:1;        /*!< bit:      1  Overrun Interrupt Flag             */
     uint8_t  WINMON:1;         /*!< bit:      2  Window Monitor Interrupt Flag      */
-    uint8_t  READY:1;          /*!< bit:      3  Ready Interrupt Flag               */
+    uint8_t  SYNCRDY:1;        /*!< bit:      3  Synchronisation Ready Interrupt Flag */
     uint8_t  :4;               /*!< bit:  4.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
@@ -452,8 +452,8 @@ typedef union {
 #define ADC_INTFLAG_OVERRUN         (0x1u << ADC_INTFLAG_OVERRUN_Pos)
 #define ADC_INTFLAG_WINMON_Pos      2            /**< \brief (ADC_INTFLAG) Window Monitor Interrupt Flag */
 #define ADC_INTFLAG_WINMON          (0x1u << ADC_INTFLAG_WINMON_Pos)
-#define ADC_INTFLAG_READY_Pos       3            /**< \brief (ADC_INTFLAG) Ready Interrupt Flag */
-#define ADC_INTFLAG_READY           (0x1u << ADC_INTFLAG_READY_Pos)
+#define ADC_INTFLAG_SYNCRDY_Pos     3            /**< \brief (ADC_INTFLAG) Synchronisation Ready Interrupt Flag */
+#define ADC_INTFLAG_SYNCRDY         (0x1u << ADC_INTFLAG_SYNCRDY_Pos)
 #define ADC_INTFLAG_MASK            0x0Fu        /**< \brief (ADC_INTFLAG) MASK Register */
 
 /* -------- ADC_STATUS : (ADC Offset: 0x19) (R/   8) Status Register -------- */
