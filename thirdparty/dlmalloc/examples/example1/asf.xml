@@ -4,7 +4,7 @@
 		Using the dlmalloc memory manager service, dynamically allocate memory from different memory areas.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="Memory" />
+			<keyword value="Memory"/>
 		</info>
 		<build type="include-path" value="conf/"/>
 		<build type="header-file" value="conf/conf_ebi.h"/>
@@ -24,5 +24,6 @@
 		<require idref="avr32.drivers.intc"/>
 		<require idref="avr32.drivers.pm"/>
 		<require idref="avr32.utils.libs.newlib_addons"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

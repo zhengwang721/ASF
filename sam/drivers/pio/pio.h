@@ -3,7 +3,7 @@
  *
  * \brief Parallel Input/Output (PIO) Controller driver for SAM.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -46,13 +46,9 @@
 
 #include "compiler.h"
 
-/// @cond 0
-/**INDENT-OFF**/
 #ifdef __cplusplus
 extern "C" {
 #endif
-/**INDENT-ON**/
-/// @endcond
 
 /* Compute PIO register length */
 #define PIO_DELTA   ((uint32_t) PIOB - (uint32_t) PIOA)
@@ -337,12 +333,8 @@ uint32_t pio_configure_pin_group(Pio *p_pio, uint32_t ul_mask,
  *     \endcode
  */
 
-/// @cond 0
-/**INDENT-OFF**/
 #ifdef __cplusplus
 }
 #endif
-/**INDENT-ON**/
-/// @endcond
 
 #endif /* PIO_H_INCLUDED */

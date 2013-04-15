@@ -3,7 +3,6 @@
 		<info type="description" value="summary">
 		Provide an application example (from ASF V1) using the Atmel DataFlash AT25DBx component. The DataFlash requires an SPI bus as a low level communication interface.
 		</info>
-		
 		<build type="c-source" value="at45dbx_example.c"/>
 		<build type="header-file" value="conf_access.h"/>
 		<build type="header-file" value="conf_at45dbx.h"/>
@@ -21,5 +20,6 @@
 		<require idref="avr32.utils.print_funcs"/>
 		<require idref="common.components.memory.data_flash.at45dbx._asf_v1"/>
 		<require idref="common.services.storage.ctrl_access"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

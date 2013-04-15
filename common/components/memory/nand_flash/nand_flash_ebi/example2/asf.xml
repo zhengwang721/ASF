@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<select-by-device id="common.components.memory.nand_flash.example2" caption="NAND Flash on EBI Example 2">	
+	<select-by-device id="common.components.memory.nand_flash.example2" caption="NAND Flash on EBI Example 2">
 		<module type="application" id="common.components.memory.nand_flash.example2#0" caption="NAND Flash on EBI Example 2">
 			<info type="description" value="summary">
 			Read and write data with software ECC to an external NAND Flash memory through the EBI.
@@ -13,15 +13,15 @@
 			<device-support value="sam3u"/>
 			<device-support value="sam3x"/>
 			<device-support value="sam4s"/>
+			<device-support value="sam4e"/>
 			<require idref="sam.drivers.pmc"/>
 			<require idref="sam.drivers.pio"/>
 			<require idref="sam.drivers.uart"/>
 			<require idref="sam.utils.syscalls"/>
-			<require idref="common.services.basic.gpio"/>
 			<require idref="common.services.basic.clock"/>
-			<require idref="common.utils.stdio.stdio_serial"/>	
+			<require idref="common.utils.stdio.stdio_serial"/>
 			<require idref="common.components.memory.nand_flash"/>
+			<info type="gui-flag" value="move-to-root"/>
 		</module>
 	</select-by-device>
 </asf>
-
