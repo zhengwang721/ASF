@@ -132,7 +132,7 @@ typedef struct _DeviceVectors
 
   /* Cortex-M handlers */
   void* pfnReset_Handler;
-  void* pfnNonMaskableInt_Handler;
+  void* pfnNMI_Handler;
   void* pfnHardFault_Handler;
   void* pfnReservedM12;
   void* pfnReservedM11;
@@ -141,7 +141,7 @@ typedef struct _DeviceVectors
   void* pfnReservedM8;
   void* pfnReservedM7;
   void* pfnReservedM6;
-  void* pfnSVCall_Handler;
+  void* pfnSVC_Handler;
   void* pfnReservedM4;
   void* pfnReservedM3;
   void* pfnPendSV_Handler;
@@ -176,9 +176,9 @@ typedef struct _DeviceVectors
 
 /* Cortex-M0+ processor handlers */
 void Reset_Handler               ( void );
-void NonMaskableInt_Handler      ( void );
+void NMI_Handler                 ( void );
 void HardFault_Handler           ( void );
-void SVCall_Handler              ( void );
+void SVC_Handler                 ( void );
 void PendSV_Handler              ( void );
 void SysTick_Handler             ( void );
 

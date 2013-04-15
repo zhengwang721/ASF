@@ -349,28 +349,6 @@ typedef union {
 #define SYSCTRL_XOSC32K_STARTUP(value) ((SYSCTRL_XOSC32K_STARTUP_Msk & ((value) << SYSCTRL_XOSC32K_STARTUP_Pos)))
 #define SYSCTRL_XOSC32K_MASK        0x073Eu      /**< \brief (SYSCTRL_XOSC32K) MASK Register */
 
-/* -------- SYSCTRL_XOSC32KTEST : (SYSCTRL Offset: 0x16) (R/W  8) XOSC32K Test Register -------- */
-#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
-  struct {
-    uint8_t  MCALIBEN:1;       /*!< bit:      0  Manual Amplitude Calibration Enable */
-    uint8_t  MCALIB:6;         /*!< bit:  1.. 6  Manual Amplitude Calibration Value */
-    uint8_t  :1;               /*!< bit:      7  Reserved                           */
-  } bit;                       /*!< Structure used for bit  access                  */
-  uint8_t reg;                 /*!< Type      used for register access              */
-} SYSCTRL_XOSC32KTEST_Type;
-#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
-
-#define SYSCTRL_XOSC32KTEST_OFFSET  0x16         /**< \brief (SYSCTRL_XOSC32KTEST offset) XOSC32K Test Register */
-#define SYSCTRL_XOSC32KTEST_RESETVALUE 0x00         /**< \brief (SYSCTRL_XOSC32KTEST reset_value) XOSC32K Test Register */
-
-#define SYSCTRL_XOSC32KTEST_MCALIBEN_Pos 0            /**< \brief (SYSCTRL_XOSC32KTEST) Manual Amplitude Calibration Enable */
-#define SYSCTRL_XOSC32KTEST_MCALIBEN (0x1u << SYSCTRL_XOSC32KTEST_MCALIBEN_Pos)
-#define SYSCTRL_XOSC32KTEST_MCALIB_Pos 1            /**< \brief (SYSCTRL_XOSC32KTEST) Manual Amplitude Calibration Value */
-#define SYSCTRL_XOSC32KTEST_MCALIB_Msk (0x3Fu << SYSCTRL_XOSC32KTEST_MCALIB_Pos)
-#define SYSCTRL_XOSC32KTEST_MCALIB(value) ((SYSCTRL_XOSC32KTEST_MCALIB_Msk & ((value) << SYSCTRL_XOSC32KTEST_MCALIB_Pos)))
-#define SYSCTRL_XOSC32KTEST_MASK    0x7Fu        /**< \brief (SYSCTRL_XOSC32KTEST) MASK Register */
-
 /* -------- SYSCTRL_DFLLCTRL : (SYSCTRL Offset: 0x18) (R/W 16) DFLL Config Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
@@ -616,30 +594,6 @@ typedef union {
 #define SYSCTRL_OSCULP32K_CALIB(value) ((SYSCTRL_OSCULP32K_CALIB_Msk & ((value) << SYSCTRL_OSCULP32K_CALIB_Pos)))
 #define SYSCTRL_OSCULP32K_MASK      0x1Fu        /**< \brief (SYSCTRL_OSCULP32K) MASK Register */
 
-/* -------- SYSCTRL_OSCULP32KTEST : (SYSCTRL Offset: 0x38) (R/W  8) OSCULP32K Test Register -------- */
-#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
-  struct {
-    uint8_t  DISABLE:1;        /*!< bit:      0  Disable Test Mode                  */
-    uint8_t  BIASOUTEN:1;      /*!< bit:      1  Bias Output Enable                 */
-    uint8_t  CONTREF:1;        /*!< bit:      2  Reference Forced to Continuous Mode */
-    uint8_t  :5;               /*!< bit:  3.. 7  Reserved                           */
-  } bit;                       /*!< Structure used for bit  access                  */
-  uint8_t reg;                 /*!< Type      used for register access              */
-} SYSCTRL_OSCULP32KTEST_Type;
-#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
-
-#define SYSCTRL_OSCULP32KTEST_OFFSET 0x38         /**< \brief (SYSCTRL_OSCULP32KTEST offset) OSCULP32K Test Register */
-#define SYSCTRL_OSCULP32KTEST_RESETVALUE 0x00         /**< \brief (SYSCTRL_OSCULP32KTEST reset_value) OSCULP32K Test Register */
-
-#define SYSCTRL_OSCULP32KTEST_DISABLE_Pos 0            /**< \brief (SYSCTRL_OSCULP32KTEST) Disable Test Mode */
-#define SYSCTRL_OSCULP32KTEST_DISABLE (0x1u << SYSCTRL_OSCULP32KTEST_DISABLE_Pos)
-#define SYSCTRL_OSCULP32KTEST_BIASOUTEN_Pos 1            /**< \brief (SYSCTRL_OSCULP32KTEST) Bias Output Enable */
-#define SYSCTRL_OSCULP32KTEST_BIASOUTEN (0x1u << SYSCTRL_OSCULP32KTEST_BIASOUTEN_Pos)
-#define SYSCTRL_OSCULP32KTEST_CONTREF_Pos 2            /**< \brief (SYSCTRL_OSCULP32KTEST) Reference Forced to Continuous Mode */
-#define SYSCTRL_OSCULP32KTEST_CONTREF (0x1u << SYSCTRL_OSCULP32KTEST_CONTREF_Pos)
-#define SYSCTRL_OSCULP32KTEST_MASK  0x07u        /**< \brief (SYSCTRL_OSCULP32KTEST) MASK Register */
-
 /* -------- SYSCTRL_OSC8M : (SYSCTRL Offset: 0x3C) (R/W 32) OSC8M Control Register A -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
@@ -701,61 +655,6 @@ typedef union {
 #define SYSCTRL_VREG_CALIB(value)   ((SYSCTRL_VREG_CALIB_Msk & ((value) << SYSCTRL_VREG_CALIB_Pos)))
 #define SYSCTRL_VREG_MASK           0xF702u      /**< \brief (SYSCTRL_VREG) MASK Register */
 
-/* -------- SYSCTRL_VREGTEST : (SYSCTRL Offset: 0x44) (R/W 32) VREG Test Register -------- */
-#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
-  struct {
-    uint32_t ULPENABLE:1;      /*!< bit:      0  Force ULP VREG Enable              */
-    uint32_t BODIENABLE:1;     /*!< bit:      1  ULP VREG BOD I Enable              */
-    uint32_t BODIIENABLE:1;    /*!< bit:      2  ULP VREG BOD II Enable             */
-    uint32_t OSCENABLE:1;      /*!< bit:      3  ULP VREG Oscillator Enable         */
-    uint32_t LDOENABLE:1;      /*!< bit:      4  ULP VREG LDO Enable                */
-    uint32_t REFSEL:1;         /*!< bit:      5  Voltage Reference Select           */
-    uint32_t :2;               /*!< bit:  6.. 7  Reserved                           */
-    uint32_t FORCEGAIN:2;      /*!< bit:  8.. 9  ULP VREG External Gain Mode        */
-    uint32_t RAMREFSEL:3;      /*!< bit: 10..12  RAM Reference Voltage Select       */
-    uint32_t :3;               /*!< bit: 13..15  Reserved                           */
-    uint32_t REQBIAS:1;        /*!< bit:     16  Force ULP VREG Bias Generator      */
-    uint32_t REQHELPI:1;       /*!< bit:     17  ULP VREG BOD I Output              */
-    uint32_t REQHELPII:1;      /*!< bit:     18  ULP VREG BOD II Output             */
-    uint32_t :12;              /*!< bit: 19..30  Reserved                           */
-    uint32_t TESTEN:1;         /*!< bit:     31  Test Enable                        */
-  } bit;                       /*!< Structure used for bit  access                  */
-  uint32_t reg;                /*!< Type      used for register access              */
-} SYSCTRL_VREGTEST_Type;
-#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
-
-#define SYSCTRL_VREGTEST_OFFSET     0x44         /**< \brief (SYSCTRL_VREGTEST offset) VREG Test Register */
-#define SYSCTRL_VREGTEST_RESETVALUE 0x00000000   /**< \brief (SYSCTRL_VREGTEST reset_value) VREG Test Register */
-
-#define SYSCTRL_VREGTEST_ULPENABLE_Pos 0            /**< \brief (SYSCTRL_VREGTEST) Force ULP VREG Enable */
-#define SYSCTRL_VREGTEST_ULPENABLE  (0x1u << SYSCTRL_VREGTEST_ULPENABLE_Pos)
-#define SYSCTRL_VREGTEST_BODIENABLE_Pos 1            /**< \brief (SYSCTRL_VREGTEST) ULP VREG BOD I Enable */
-#define SYSCTRL_VREGTEST_BODIENABLE (0x1u << SYSCTRL_VREGTEST_BODIENABLE_Pos)
-#define SYSCTRL_VREGTEST_BODIIENABLE_Pos 2            /**< \brief (SYSCTRL_VREGTEST) ULP VREG BOD II Enable */
-#define SYSCTRL_VREGTEST_BODIIENABLE (0x1u << SYSCTRL_VREGTEST_BODIIENABLE_Pos)
-#define SYSCTRL_VREGTEST_OSCENABLE_Pos 3            /**< \brief (SYSCTRL_VREGTEST) ULP VREG Oscillator Enable */
-#define SYSCTRL_VREGTEST_OSCENABLE  (0x1u << SYSCTRL_VREGTEST_OSCENABLE_Pos)
-#define SYSCTRL_VREGTEST_LDOENABLE_Pos 4            /**< \brief (SYSCTRL_VREGTEST) ULP VREG LDO Enable */
-#define SYSCTRL_VREGTEST_LDOENABLE  (0x1u << SYSCTRL_VREGTEST_LDOENABLE_Pos)
-#define SYSCTRL_VREGTEST_REFSEL_Pos 5            /**< \brief (SYSCTRL_VREGTEST) Voltage Reference Select */
-#define SYSCTRL_VREGTEST_REFSEL     (0x1u << SYSCTRL_VREGTEST_REFSEL_Pos)
-#define SYSCTRL_VREGTEST_FORCEGAIN_Pos 8            /**< \brief (SYSCTRL_VREGTEST) ULP VREG External Gain Mode */
-#define SYSCTRL_VREGTEST_FORCEGAIN_Msk (0x3u << SYSCTRL_VREGTEST_FORCEGAIN_Pos)
-#define SYSCTRL_VREGTEST_FORCEGAIN(value) ((SYSCTRL_VREGTEST_FORCEGAIN_Msk & ((value) << SYSCTRL_VREGTEST_FORCEGAIN_Pos)))
-#define SYSCTRL_VREGTEST_RAMREFSEL_Pos 10           /**< \brief (SYSCTRL_VREGTEST) RAM Reference Voltage Select */
-#define SYSCTRL_VREGTEST_RAMREFSEL_Msk (0x7u << SYSCTRL_VREGTEST_RAMREFSEL_Pos)
-#define SYSCTRL_VREGTEST_RAMREFSEL(value) ((SYSCTRL_VREGTEST_RAMREFSEL_Msk & ((value) << SYSCTRL_VREGTEST_RAMREFSEL_Pos)))
-#define SYSCTRL_VREGTEST_REQBIAS_Pos 16           /**< \brief (SYSCTRL_VREGTEST) Force ULP VREG Bias Generator */
-#define SYSCTRL_VREGTEST_REQBIAS    (0x1u << SYSCTRL_VREGTEST_REQBIAS_Pos)
-#define SYSCTRL_VREGTEST_REQHELPI_Pos 17           /**< \brief (SYSCTRL_VREGTEST) ULP VREG BOD I Output */
-#define SYSCTRL_VREGTEST_REQHELPI   (0x1u << SYSCTRL_VREGTEST_REQHELPI_Pos)
-#define SYSCTRL_VREGTEST_REQHELPII_Pos 18           /**< \brief (SYSCTRL_VREGTEST) ULP VREG BOD II Output */
-#define SYSCTRL_VREGTEST_REQHELPII  (0x1u << SYSCTRL_VREGTEST_REQHELPII_Pos)
-#define SYSCTRL_VREGTEST_TESTEN_Pos 31           /**< \brief (SYSCTRL_VREGTEST) Test Enable */
-#define SYSCTRL_VREGTEST_TESTEN     (0x1u << SYSCTRL_VREGTEST_TESTEN_Pos)
-#define SYSCTRL_VREGTEST_MASK       0x80071F3Fu  /**< \brief (SYSCTRL_VREGTEST) MASK Register */
-
 /* -------- SYSCTRL_VREF : (SYSCTRL Offset: 0x48) (R/W 32) VREF Control Register A -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
@@ -783,109 +682,15 @@ typedef union {
 #define SYSCTRL_VREF_CALIB(value)   ((SYSCTRL_VREF_CALIB_Msk & ((value) << SYSCTRL_VREF_CALIB_Pos)))
 #define SYSCTRL_VREF_MASK           0x07FF0006u  /**< \brief (SYSCTRL_VREF) MASK Register */
 
-/* -------- SYSCTRL_VREFTESTA : (SYSCTRL Offset: 0x4C) (R/W 32) VREF Test Register A -------- */
-#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
-  struct {
-    uint32_t BIASEN:1;         /*!< bit:      0  Bias Current Generator Enable      */
-    uint32_t BGEN:1;           /*!< bit:      1  Bandgap Voltage Reference Enable   */
-    uint32_t :6;               /*!< bit:  2.. 7  Reserved                           */
-    uint32_t BGBUFEN:8;        /*!< bit:  8..15  Bandgap Buffers Enable             */
-    uint32_t BGRDY:1;          /*!< bit:     16  Bandgap Voltage Reference Ready    */
-    uint32_t BIASRDY:1;        /*!< bit:     17  PTAT Bias Ready                    */
-    uint32_t ACBUFRDY:1;       /*!< bit:     18  AC Bandgap Buffer Ready            */
-    uint32_t ADCBUFRDY:1;      /*!< bit:     19  ADC Bandgap Buffer Ready           */
-    uint32_t DACBUFRDY:1;      /*!< bit:     20  DAC Bandgap Buffer Ready           */
-    uint32_t VDOUBBUFRDY:1;    /*!< bit:     21  Voltage Doubler Bandgap Buffer Ready */
-    uint32_t BUFRRRDY:1;       /*!< bit:     22  Rail-to-Rail Buffer Ready          */
-    uint32_t DIV2BUFRDY:1;     /*!< bit:     23  Divide-by-2 Buffer Ready           */
-    uint32_t BUFRRSEL:2;       /*!< bit: 24..25  Rail-to-Rail Buffer Input Select   */
-    uint32_t :5;               /*!< bit: 26..30  Reserved                           */
-    uint32_t TESTEN:1;         /*!< bit:     31  Test Enable                        */
-  } bit;                       /*!< Structure used for bit  access                  */
-  uint32_t reg;                /*!< Type      used for register access              */
-} SYSCTRL_VREFTESTA_Type;
-#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
-
-#define SYSCTRL_VREFTESTA_OFFSET    0x4C         /**< \brief (SYSCTRL_VREFTESTA offset) VREF Test Register A */
-#define SYSCTRL_VREFTESTA_RESETVALUE 0x00000000   /**< \brief (SYSCTRL_VREFTESTA reset_value) VREF Test Register A */
-
-#define SYSCTRL_VREFTESTA_BIASEN_Pos 0            /**< \brief (SYSCTRL_VREFTESTA) Bias Current Generator Enable */
-#define SYSCTRL_VREFTESTA_BIASEN    (0x1u << SYSCTRL_VREFTESTA_BIASEN_Pos)
-#define SYSCTRL_VREFTESTA_BGEN_Pos  1            /**< \brief (SYSCTRL_VREFTESTA) Bandgap Voltage Reference Enable */
-#define SYSCTRL_VREFTESTA_BGEN      (0x1u << SYSCTRL_VREFTESTA_BGEN_Pos)
-#define SYSCTRL_VREFTESTA_BGBUFEN_Pos 8            /**< \brief (SYSCTRL_VREFTESTA) Bandgap Buffers Enable */
-#define SYSCTRL_VREFTESTA_BGBUFEN_Msk (0xFFu << SYSCTRL_VREFTESTA_BGBUFEN_Pos)
-#define SYSCTRL_VREFTESTA_BGBUFEN(value) ((SYSCTRL_VREFTESTA_BGBUFEN_Msk & ((value) << SYSCTRL_VREFTESTA_BGBUFEN_Pos)))
-#define SYSCTRL_VREFTESTA_BGRDY_Pos 16           /**< \brief (SYSCTRL_VREFTESTA) Bandgap Voltage Reference Ready */
-#define SYSCTRL_VREFTESTA_BGRDY     (0x1u << SYSCTRL_VREFTESTA_BGRDY_Pos)
-#define SYSCTRL_VREFTESTA_BIASRDY_Pos 17           /**< \brief (SYSCTRL_VREFTESTA) PTAT Bias Ready */
-#define SYSCTRL_VREFTESTA_BIASRDY   (0x1u << SYSCTRL_VREFTESTA_BIASRDY_Pos)
-#define SYSCTRL_VREFTESTA_ACBUFRDY_Pos 18           /**< \brief (SYSCTRL_VREFTESTA) AC Bandgap Buffer Ready */
-#define SYSCTRL_VREFTESTA_ACBUFRDY  (0x1u << SYSCTRL_VREFTESTA_ACBUFRDY_Pos)
-#define SYSCTRL_VREFTESTA_ADCBUFRDY_Pos 19           /**< \brief (SYSCTRL_VREFTESTA) ADC Bandgap Buffer Ready */
-#define SYSCTRL_VREFTESTA_ADCBUFRDY (0x1u << SYSCTRL_VREFTESTA_ADCBUFRDY_Pos)
-#define SYSCTRL_VREFTESTA_DACBUFRDY_Pos 20           /**< \brief (SYSCTRL_VREFTESTA) DAC Bandgap Buffer Ready */
-#define SYSCTRL_VREFTESTA_DACBUFRDY (0x1u << SYSCTRL_VREFTESTA_DACBUFRDY_Pos)
-#define SYSCTRL_VREFTESTA_VDOUBBUFRDY_Pos 21           /**< \brief (SYSCTRL_VREFTESTA) Voltage Doubler Bandgap Buffer Ready */
-#define SYSCTRL_VREFTESTA_VDOUBBUFRDY (0x1u << SYSCTRL_VREFTESTA_VDOUBBUFRDY_Pos)
-#define SYSCTRL_VREFTESTA_BUFRRRDY_Pos 22           /**< \brief (SYSCTRL_VREFTESTA) Rail-to-Rail Buffer Ready */
-#define SYSCTRL_VREFTESTA_BUFRRRDY  (0x1u << SYSCTRL_VREFTESTA_BUFRRRDY_Pos)
-#define SYSCTRL_VREFTESTA_DIV2BUFRDY_Pos 23           /**< \brief (SYSCTRL_VREFTESTA) Divide-by-2 Buffer Ready */
-#define SYSCTRL_VREFTESTA_DIV2BUFRDY (0x1u << SYSCTRL_VREFTESTA_DIV2BUFRDY_Pos)
-#define SYSCTRL_VREFTESTA_BUFRRSEL_Pos 24           /**< \brief (SYSCTRL_VREFTESTA) Rail-to-Rail Buffer Input Select */
-#define SYSCTRL_VREFTESTA_BUFRRSEL_Msk (0x3u << SYSCTRL_VREFTESTA_BUFRRSEL_Pos)
-#define SYSCTRL_VREFTESTA_BUFRRSEL(value) ((SYSCTRL_VREFTESTA_BUFRRSEL_Msk & ((value) << SYSCTRL_VREFTESTA_BUFRRSEL_Pos)))
-#define SYSCTRL_VREFTESTA_TESTEN_Pos 31           /**< \brief (SYSCTRL_VREFTESTA) Test Enable */
-#define SYSCTRL_VREFTESTA_TESTEN    (0x1u << SYSCTRL_VREFTESTA_TESTEN_Pos)
-#define SYSCTRL_VREFTESTA_MASK      0x83FFFF03u  /**< \brief (SYSCTRL_VREFTESTA) MASK Register */
-
-/* -------- SYSCTRL_VREFTESTB : (SYSCTRL Offset: 0x50) (R/W 16) VREF Test Register B -------- */
-#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
-  struct {
-    uint16_t SAMPLECLK:2;      /*!< bit:  0.. 1  Sample Clock Division Factor       */
-    uint16_t DIVLEV0:3;        /*!< bit:  2.. 4  ULP VREG Reference Division Level  */
-    uint16_t DIVLEV1:3;        /*!< bit:  5.. 7  ULP VREG Gain Reference Division Level */
-    uint16_t DIVLEV2:3;        /*!< bit:  8..10  XOSC Reference Division Level      */
-    uint16_t DIVLEV3:3;        /*!< bit: 11..13  VREG Reference Division Level      */
-    uint16_t :1;               /*!< bit:     14  Reserved                           */
-    uint16_t TESTEN:1;         /*!< bit:     15  Test Enable                        */
-  } bit;                       /*!< Structure used for bit  access                  */
-  uint16_t reg;                /*!< Type      used for register access              */
-} SYSCTRL_VREFTESTB_Type;
-#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
-
-#define SYSCTRL_VREFTESTB_OFFSET    0x50         /**< \brief (SYSCTRL_VREFTESTB offset) VREF Test Register B */
-
-#define SYSCTRL_VREFTESTB_SAMPLECLK_Pos 0            /**< \brief (SYSCTRL_VREFTESTB) Sample Clock Division Factor */
-#define SYSCTRL_VREFTESTB_SAMPLECLK_Msk (0x3u << SYSCTRL_VREFTESTB_SAMPLECLK_Pos)
-#define SYSCTRL_VREFTESTB_SAMPLECLK(value) ((SYSCTRL_VREFTESTB_SAMPLECLK_Msk & ((value) << SYSCTRL_VREFTESTB_SAMPLECLK_Pos)))
-#define SYSCTRL_VREFTESTB_DIVLEV0_Pos 2            /**< \brief (SYSCTRL_VREFTESTB) ULP VREG Reference Division Level */
-#define SYSCTRL_VREFTESTB_DIVLEV0_Msk (0x7u << SYSCTRL_VREFTESTB_DIVLEV0_Pos)
-#define SYSCTRL_VREFTESTB_DIVLEV0(value) ((SYSCTRL_VREFTESTB_DIVLEV0_Msk & ((value) << SYSCTRL_VREFTESTB_DIVLEV0_Pos)))
-#define SYSCTRL_VREFTESTB_DIVLEV1_Pos 5            /**< \brief (SYSCTRL_VREFTESTB) ULP VREG Gain Reference Division Level */
-#define SYSCTRL_VREFTESTB_DIVLEV1_Msk (0x7u << SYSCTRL_VREFTESTB_DIVLEV1_Pos)
-#define SYSCTRL_VREFTESTB_DIVLEV1(value) ((SYSCTRL_VREFTESTB_DIVLEV1_Msk & ((value) << SYSCTRL_VREFTESTB_DIVLEV1_Pos)))
-#define SYSCTRL_VREFTESTB_DIVLEV2_Pos 8            /**< \brief (SYSCTRL_VREFTESTB) XOSC Reference Division Level */
-#define SYSCTRL_VREFTESTB_DIVLEV2_Msk (0x7u << SYSCTRL_VREFTESTB_DIVLEV2_Pos)
-#define SYSCTRL_VREFTESTB_DIVLEV2(value) ((SYSCTRL_VREFTESTB_DIVLEV2_Msk & ((value) << SYSCTRL_VREFTESTB_DIVLEV2_Pos)))
-#define SYSCTRL_VREFTESTB_DIVLEV3_Pos 11           /**< \brief (SYSCTRL_VREFTESTB) VREG Reference Division Level */
-#define SYSCTRL_VREFTESTB_DIVLEV3_Msk (0x7u << SYSCTRL_VREFTESTB_DIVLEV3_Pos)
-#define SYSCTRL_VREFTESTB_DIVLEV3(value) ((SYSCTRL_VREFTESTB_DIVLEV3_Msk & ((value) << SYSCTRL_VREFTESTB_DIVLEV3_Pos)))
-#define SYSCTRL_VREFTESTB_TESTEN_Pos 15           /**< \brief (SYSCTRL_VREFTESTB) Test Enable */
-#define SYSCTRL_VREFTESTB_TESTEN    (0x1u << SYSCTRL_VREFTESTB_TESTEN_Pos)
-#define SYSCTRL_VREFTESTB_MASK      0xBFFFu      /**< \brief (SYSCTRL_VREFTESTB) MASK Register */
-
 /* -------- SYSCTRL_FORCECLKON : (SYSCTRL Offset: 0x54) (R/W 32) Force Clock On Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint32_t XOSCON:1;         /*!< bit:      0                                     */
-    uint32_t XOSC32KON:1;      /*!< bit:      1                                     */
-    uint32_t DFLLON:1;         /*!< bit:      2                                     */
-    uint32_t OSC32KON:1;       /*!< bit:      3                                     */
-    uint32_t OSC8MON:1;        /*!< bit:      4                                     */
+    uint32_t XOSCON:1;         /*!< bit:      0  XOSC Forced On                     */
+    uint32_t XOSC32KON:1;      /*!< bit:      1  XOSC32K Forced On                  */
+    uint32_t DFLLON:1;         /*!< bit:      2  DFLL Forced On                     */
+    uint32_t OSC32KON:1;       /*!< bit:      3  OSC32K Forced On                   */
+    uint32_t OSC8MON:1;        /*!< bit:      4  OSC8M Forced On                    */
     uint32_t :27;              /*!< bit:  5..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
@@ -894,67 +699,17 @@ typedef union {
 
 #define SYSCTRL_FORCECLKON_OFFSET   0x54         /**< \brief (SYSCTRL_FORCECLKON offset) Force Clock On Register */
 
-#define SYSCTRL_FORCECLKON_XOSCON_Pos 0            /**< \brief (SYSCTRL_FORCECLKON)  */
+#define SYSCTRL_FORCECLKON_XOSCON_Pos 0            /**< \brief (SYSCTRL_FORCECLKON) XOSC Forced On */
 #define SYSCTRL_FORCECLKON_XOSCON   (0x1u << SYSCTRL_FORCECLKON_XOSCON_Pos)
-#define SYSCTRL_FORCECLKON_XOSC32KON_Pos 1            /**< \brief (SYSCTRL_FORCECLKON)  */
+#define SYSCTRL_FORCECLKON_XOSC32KON_Pos 1            /**< \brief (SYSCTRL_FORCECLKON) XOSC32K Forced On */
 #define SYSCTRL_FORCECLKON_XOSC32KON (0x1u << SYSCTRL_FORCECLKON_XOSC32KON_Pos)
-#define SYSCTRL_FORCECLKON_DFLLON_Pos 2            /**< \brief (SYSCTRL_FORCECLKON)  */
+#define SYSCTRL_FORCECLKON_DFLLON_Pos 2            /**< \brief (SYSCTRL_FORCECLKON) DFLL Forced On */
 #define SYSCTRL_FORCECLKON_DFLLON   (0x1u << SYSCTRL_FORCECLKON_DFLLON_Pos)
-#define SYSCTRL_FORCECLKON_OSC32KON_Pos 3            /**< \brief (SYSCTRL_FORCECLKON)  */
+#define SYSCTRL_FORCECLKON_OSC32KON_Pos 3            /**< \brief (SYSCTRL_FORCECLKON) OSC32K Forced On */
 #define SYSCTRL_FORCECLKON_OSC32KON (0x1u << SYSCTRL_FORCECLKON_OSC32KON_Pos)
-#define SYSCTRL_FORCECLKON_OSC8MON_Pos 4            /**< \brief (SYSCTRL_FORCECLKON)  */
+#define SYSCTRL_FORCECLKON_OSC8MON_Pos 4            /**< \brief (SYSCTRL_FORCECLKON) OSC8M Forced On */
 #define SYSCTRL_FORCECLKON_OSC8MON  (0x1u << SYSCTRL_FORCECLKON_OSC8MON_Pos)
 #define SYSCTRL_FORCECLKON_MASK     0x0000001Fu  /**< \brief (SYSCTRL_FORCECLKON) MASK Register */
-
-/* -------- SYSCTRL_TESTMODE : (SYSCTRL Offset: 0x58) (R/W 32) Test Mode Register -------- */
-#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
-  struct {
-    uint32_t XOSC:1;           /*!< bit:      0  XOSC Test Mode Enable              */
-    uint32_t XOSC32:1;         /*!< bit:      1  XOSC32 Test Mode Enable            */
-    uint32_t DFLL:1;           /*!< bit:      2  DFLL Test Mode Enable              */
-    uint32_t BOD33:1;          /*!< bit:      3  BOD33 Test Mode Enable             */
-    uint32_t BOD12:1;          /*!< bit:      4  BOD12 Test Mode Enable             */
-    uint32_t OSC32K:1;         /*!< bit:      5  OSC32K Test Mode Enable            */
-    uint32_t OSCULP32K:1;      /*!< bit:      6  OSCULP32K Test Mode Enable         */
-    uint32_t OSC8M:1;          /*!< bit:      7  OSC8M Test Mode Enable             */
-    uint32_t VREG:1;           /*!< bit:      8  VREG Test Mode Enable              */
-    uint32_t VREF:1;           /*!< bit:      9  VREF Test Mode Enable              */
-    uint32_t ALLCLK:1;         /*!< bit:     10  All Clocks Test Mode Enable        */
-    uint32_t POR33:1;          /*!< bit:     11  POR33 Test Mode Enable             */
-    uint32_t :20;              /*!< bit: 12..31  Reserved                           */
-  } bit;                       /*!< Structure used for bit  access                  */
-  uint32_t reg;                /*!< Type      used for register access              */
-} SYSCTRL_TESTMODE_Type;
-#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
-
-#define SYSCTRL_TESTMODE_OFFSET     0x58         /**< \brief (SYSCTRL_TESTMODE offset) Test Mode Register */
-
-#define SYSCTRL_TESTMODE_XOSC_Pos   0            /**< \brief (SYSCTRL_TESTMODE) XOSC Test Mode Enable */
-#define SYSCTRL_TESTMODE_XOSC       (0x1u << SYSCTRL_TESTMODE_XOSC_Pos)
-#define SYSCTRL_TESTMODE_XOSC32_Pos 1            /**< \brief (SYSCTRL_TESTMODE) XOSC32 Test Mode Enable */
-#define SYSCTRL_TESTMODE_XOSC32     (0x1u << SYSCTRL_TESTMODE_XOSC32_Pos)
-#define SYSCTRL_TESTMODE_DFLL_Pos   2            /**< \brief (SYSCTRL_TESTMODE) DFLL Test Mode Enable */
-#define SYSCTRL_TESTMODE_DFLL       (0x1u << SYSCTRL_TESTMODE_DFLL_Pos)
-#define SYSCTRL_TESTMODE_BOD33_Pos  3            /**< \brief (SYSCTRL_TESTMODE) BOD33 Test Mode Enable */
-#define SYSCTRL_TESTMODE_BOD33      (0x1u << SYSCTRL_TESTMODE_BOD33_Pos)
-#define SYSCTRL_TESTMODE_BOD12_Pos  4            /**< \brief (SYSCTRL_TESTMODE) BOD12 Test Mode Enable */
-#define SYSCTRL_TESTMODE_BOD12      (0x1u << SYSCTRL_TESTMODE_BOD12_Pos)
-#define SYSCTRL_TESTMODE_OSC32K_Pos 5            /**< \brief (SYSCTRL_TESTMODE) OSC32K Test Mode Enable */
-#define SYSCTRL_TESTMODE_OSC32K     (0x1u << SYSCTRL_TESTMODE_OSC32K_Pos)
-#define SYSCTRL_TESTMODE_OSCULP32K_Pos 6            /**< \brief (SYSCTRL_TESTMODE) OSCULP32K Test Mode Enable */
-#define SYSCTRL_TESTMODE_OSCULP32K  (0x1u << SYSCTRL_TESTMODE_OSCULP32K_Pos)
-#define SYSCTRL_TESTMODE_OSC8M_Pos  7            /**< \brief (SYSCTRL_TESTMODE) OSC8M Test Mode Enable */
-#define SYSCTRL_TESTMODE_OSC8M      (0x1u << SYSCTRL_TESTMODE_OSC8M_Pos)
-#define SYSCTRL_TESTMODE_VREG_Pos   8            /**< \brief (SYSCTRL_TESTMODE) VREG Test Mode Enable */
-#define SYSCTRL_TESTMODE_VREG       (0x1u << SYSCTRL_TESTMODE_VREG_Pos)
-#define SYSCTRL_TESTMODE_VREF_Pos   9            /**< \brief (SYSCTRL_TESTMODE) VREF Test Mode Enable */
-#define SYSCTRL_TESTMODE_VREF       (0x1u << SYSCTRL_TESTMODE_VREF_Pos)
-#define SYSCTRL_TESTMODE_ALLCLK_Pos 10           /**< \brief (SYSCTRL_TESTMODE) All Clocks Test Mode Enable */
-#define SYSCTRL_TESTMODE_ALLCLK     (0x1u << SYSCTRL_TESTMODE_ALLCLK_Pos)
-#define SYSCTRL_TESTMODE_POR33_Pos  11           /**< \brief (SYSCTRL_TESTMODE) POR33 Test Mode Enable */
-#define SYSCTRL_TESTMODE_POR33      (0x1u << SYSCTRL_TESTMODE_POR33_Pos)
-#define SYSCTRL_TESTMODE_MASK       0x00000FFFu  /**< \brief (SYSCTRL_TESTMODE) MASK Register */
 
 /** \brief SYSCTRL hardware registers */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -966,8 +721,7 @@ typedef struct {
   __IO SYSCTRL_XOSC_Type         XOSC;        /**< \brief Offset: 0x10 (R/W 16) XOSC Control Register */
        RoReg8                    Reserved1[0x2];
   __IO SYSCTRL_XOSC32K_Type      XOSC32K;     /**< \brief Offset: 0x14 (R/W 16) XOSC32K Control Register */
-  __IO SYSCTRL_XOSC32KTEST_Type  XOSC32KTEST; /**< \brief Offset: 0x16 (R/W  8) XOSC32K Test Register */
-       RoReg8                    Reserved2[0x1];
+       RoReg8                    Reserved2[0x2];
   __IO SYSCTRL_DFLLCTRL_Type     DFLLCTRL;    /**< \brief Offset: 0x18 (R/W 16) DFLL Config Register */
        RoReg8                    Reserved3[0x2];
   __IO SYSCTRL_DFLLVAL_Type      DFLLVAL;     /**< \brief Offset: 0x1C (R/W 32) DFLL Calibration Value Register */
@@ -978,19 +732,13 @@ typedef struct {
   __IO SYSCTRL_BOD12_Type        BOD12;       /**< \brief Offset: 0x2C (R/W 32) BOD12 Control Register */
   __IO SYSCTRL_OSC32K_Type       OSC32K;      /**< \brief Offset: 0x30 (R/W 32) OSC32K Control Register */
   __IO SYSCTRL_OSCULP32K_Type    OSCULP32K;   /**< \brief Offset: 0x34 (R/W  8) OSCULP32K Control Register */
-       RoReg8                    Reserved5[0x3];
-  __IO SYSCTRL_OSCULP32KTEST_Type OSCULP32KTEST; /**< \brief Offset: 0x38 (R/W  8) OSCULP32K Test Register */
-       RoReg8                    Reserved6[0x3];
+       RoReg8                    Reserved5[0x7];
   __IO SYSCTRL_OSC8M_Type        OSC8M;       /**< \brief Offset: 0x3C (R/W 32) OSC8M Control Register A */
   __IO SYSCTRL_VREG_Type         VREG;        /**< \brief Offset: 0x40 (R/W 16) VREG Control Register */
-       RoReg8                    Reserved7[0x2];
-  __IO SYSCTRL_VREGTEST_Type     VREGTEST;    /**< \brief Offset: 0x44 (R/W 32) VREG Test Register */
+       RoReg8                    Reserved6[0x6];
   __IO SYSCTRL_VREF_Type         VREF;        /**< \brief Offset: 0x48 (R/W 32) VREF Control Register A */
-  __IO SYSCTRL_VREFTESTA_Type    VREFTESTA;   /**< \brief Offset: 0x4C (R/W 32) VREF Test Register A */
-  __IO SYSCTRL_VREFTESTB_Type    VREFTESTB;   /**< \brief Offset: 0x50 (R/W 16) VREF Test Register B */
-       RoReg8                    Reserved8[0x2];
+       RoReg8                    Reserved7[0x8];
   __IO SYSCTRL_FORCECLKON_Type   FORCECLKON;  /**< \brief Offset: 0x54 (R/W 32) Force Clock On Register */
-  __IO SYSCTRL_TESTMODE_Type     TESTMODE;    /**< \brief Offset: 0x58 (R/W 32) Test Mode Register */
 } Sysctrl;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
