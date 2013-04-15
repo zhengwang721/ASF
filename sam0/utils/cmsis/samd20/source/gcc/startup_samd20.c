@@ -64,9 +64,9 @@ void __libc_init_array(void);
 void Dummy_Handler(void);
 
 /* Cortex-M0+ core handlers */
-void NonMaskableInt_Handler  ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void NMI_Handler             ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void HardFault_Handler       ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void SVCall_Handler          ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void SVC_Handler             ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void PendSV_Handler          ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void SysTick_Handler         ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 
@@ -104,7 +104,7 @@ const DeviceVectors exception_table = {
         (void*) (&_estack),
 
         (void*) Reset_Handler,
-        (void*) NonMaskableInt_Handler,
+        (void*) NMI_Handler,
         (void*) HardFault_Handler,
         (void*) (0UL), /* Reserved */
         (void*) (0UL), /* Reserved */
@@ -113,7 +113,7 @@ const DeviceVectors exception_table = {
         (void*) (0UL), /* Reserved */
         (void*) (0UL), /* Reserved */
         (void*) (0UL), /* Reserved */
-        (void*) SVCall_Handler,
+        (void*) SVC_Handler,
         (void*) (0UL), /* Reserved */
         (void*) (0UL), /* Reserved */
         (void*) PendSV_Handler,

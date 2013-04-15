@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Top header file for SAM D20
+ * \brief Linker script for running in internal FLASH on the SAMD20G17
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -41,41 +41,35 @@
  *
  */
 
-#ifndef _SAMD20_
-#define _SAMD20_
+/*###ICF### Section handled by ICF editor, don't touch! ****/
+/*-Editor annotation file-*/
+/* IcfEditorFile="$TOOLKIT_DIR$\config\ide\IcfEditor\cortex_v1_0.xml" */
+/*-Specials-*/
+define symbol __ICFEDIT_intvec_start__     = 0x00000000;
+/*-Memory Regions-*/
+define symbol __ICFEDIT_region_RAM_start__ = 0x20000000;
+define symbol __ICFEDIT_region_RAM_end__   = 0x20004000;
+define symbol __ICFEDIT_region_ROM_start__ = 0x00000000;
+define symbol __ICFEDIT_region_ROM_end__   = 0x00020000;
+/*-Sizes-*/
+if (!isdefinedsymbol(__ICFEDIT_size_cstack__)) {
+  define symbol __ICFEDIT_size_cstack__    = 0x1000;
+}
+if (!isdefinedsymbol(__ICFEDIT_size_heap__)) {
+  define symbol __ICFEDIT_size_heap__      = 0x200;
+}
+/**** End of ICF editor section. ###ICF###*/
 
-#if   defined(__SAMD20E14__) || defined(__ATSAMD20E14A__)
-  #include "samd20e14.h"
-#elif defined(__SAMD20E15__) || defined(__ATSAMD20E15A__)
-  #include "samd20e15.h"
-#elif defined(__SAMD20E16__) || defined(__ATSAMD20E16A__)
-  #include "samd20e16.h"
-#elif defined(__SAMD20E17__) || defined(__ATSAMD20E17A__)
-  #include "samd20e17.h"
-#elif defined(__SAMD20E18__) || defined(__ATSAMD20E18A__)
-  #include "samd20e18.h"
-#elif defined(__SAMD20G14__) || defined(__ATSAMD20G14A__)
-  #include "samd20g14.h"
-#elif defined(__SAMD20G15__) || defined(__ATSAMD20G15A__)
-  #include "samd20g15.h"
-#elif defined(__SAMD20G16__) || defined(__ATSAMD20G16A__)
-  #include "samd20g16.h"
-#elif defined(__SAMD20G17__) || defined(__ATSAMD20G17A__)
-  #include "samd20g17.h"
-#elif defined(__SAMD20G18__) || defined(__ATSAMD20G18A__)
-  #include "samd20g18.h"
-#elif defined(__SAMD20J14__) || defined(__ATSAMD20J14A__)
-  #include "samd20j14.h"
-#elif defined(__SAMD20J15__) || defined(__ATSAMD20J15A__)
-  #include "samd20j15.h"
-#elif defined(__SAMD20J16__) || defined(__ATSAMD20J16A__)
-  #include "samd20j16.h"
-#elif defined(__SAMD20J17__) || defined(__ATSAMD20J17A__)
-  #include "samd20j17.h"
-#elif defined(__SAMD20J18__) || defined(__ATSAMD20J18A__)
-  #include "samd20j18.h"
-#else
-  #error Library does not support the specified device.
-#endif
+define memory mem with size = 4G;
+define region RAM_region    = mem:[from __ICFEDIT_region_RAM_start__ to __ICFEDIT_region_RAM_end__];
+define region ROM_region    = mem:[from __ICFEDIT_region_ROM_start__ to __ICFEDIT_region_ROM_end__];
 
-#endif /* _SAMD20_ */
+define block CSTACK with alignment = 8, size = __ICFEDIT_size_cstack__ { };
+define block HEAP   with alignment = 8, size = __ICFEDIT_size_heap__   { };
+
+initialize by copy { readwrite };
+do not initialize  { section .noinit };
+
+place at address mem:__ICFEDIT_intvec_start__ { readonly section .intvec };
+place in ROM_region                           { readonly };
+place in RAM_region                           { readwrite, block CSTACK, block HEAP };
