@@ -108,8 +108,8 @@
 */
 
 /*-----------------------------------------------------------
- * Implementation of functions defined in portable.h for the ARM CM4F port.
- *----------------------------------------------------------*/
+* Implementation of functions defined in portable.h for the ARM CM4F port.
+*----------------------------------------------------------*/
 
 /* Compiler includes. */
 #include <intrinsics.h>
@@ -125,7 +125,7 @@
 #endif
 
 #if configMAX_SYSCALL_INTERRUPT_PRIORITY == 0
-	#error configMAX_SYSCALL_INTERRUPT_PRIORITY must not be set to 0.  See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html
+	#error configMAX_SYSCALL_INTERRUPT_PRIORITY must not be set to 0.  See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html */
 #endif
 
 #ifndef configSYSTICK_CLOCK_HZ
@@ -133,33 +133,36 @@
 #endif
 
 /* Constants required to manipulate the core.  Registers first... */
-#define portNVIC_SYSTICK_CTRL_REG            ( * ( ( volatile unsigned long * ) 0xe000e010 ) )
-#define portNVIC_SYSTICK_LOAD_REG            ( * ( ( volatile unsigned long * ) 0xe000e014 ) )
-#define portNVIC_SYSTICK_CURRENT_VALUE_REG    ( * ( ( volatile unsigned long * ) 0xe000e018 ) )
-#define portNVIC_INT_CTRL_REG                ( * ( ( volatile unsigned long * ) 0xe000ed04 ) )
-#define portNVIC_SYSPRI2_REG                ( * ( ( volatile unsigned long * ) 0xe000ed20 ) )
+#define portNVIC_SYSTICK_CTRL_REG          (*((volatile unsigned long *) 0xe000e010))
+#define portNVIC_SYSTICK_LOAD_REG          (*((volatile unsigned long *) 0xe000e014))
+#define portNVIC_SYSTICK_CURRENT_VALUE_REG (*((volatile unsigned long *) 0xe000e018))
+#define portNVIC_INT_CTRL_REG              (*((volatile unsigned long *) 0xe000ed04))
+#define portNVIC_SYSPRI2_REG               (*((volatile unsigned long *) 0xe000ed20))
 /* ...then bits in the registers. */
-#define portNVIC_SYSTICK_CLK_BIT            ( 1UL << 2UL )
-#define portNVIC_SYSTICK_INT_BIT            ( 1UL << 1UL )
-#define portNVIC_SYSTICK_ENABLE_BIT            ( 1UL << 0UL )
-#define portNVIC_SYSTICK_COUNT_FLAG_BIT            ( 1UL << 16UL )
-#define portNVIC_PENDSVSET_BIT            ( 1UL << 28UL )
-#define portNVIC_PENDSVCLEAR_BIT             ( 1UL << 27UL )
-#define portNVIC_PEND_SYSTICK_CLEAR_BIT            ( 1UL << 25UL )
+#define portNVIC_SYSTICK_CLK_BIT            (1UL << 2UL)
+#define portNVIC_SYSTICK_INT_BIT            (1UL << 1UL)
+#define portNVIC_SYSTICK_ENABLE_BIT         (1UL << 0UL)
+#define portNVIC_SYSTICK_COUNT_FLAG_BIT     (1UL << 16UL)
+#define portNVIC_PENDSVSET_BIT              (1UL << 28UL)
+#define portNVIC_PENDSVCLEAR_BIT            (1UL << 27UL)
+#define portNVIC_PEND_SYSTICK_CLEAR_BIT     (1UL << 25UL)
 
-#define portNVIC_PENDSV_PRI            ( ( ( unsigned long ) configKERNEL_INTERRUPT_PRIORITY ) << 16 )
-#define portNVIC_SYSTICK_PRI            ( ( ( unsigned long ) configKERNEL_INTERRUPT_PRIORITY ) << 24 )
+#define portNVIC_PENDSV_PRI            (((unsigned long) \
+	configKERNEL_INTERRUPT_PRIORITY) << 16)
+#define portNVIC_SYSTICK_PRI            (((unsigned long) \
+	configKERNEL_INTERRUPT_PRIORITY) << 24)
 
 /* Constants required to manipulate the VFP. */
-#define portFPCCR            ( ( volatile unsigned long * ) 0xe000ef34 ) /* Floating point context control register. */
-#define portASPEN_AND_LSPEN_BITS    ( 0x3UL << 30UL )
+/* Floating point context control register. */
+#define portFPCCR  ((volatile unsigned long *)0xe000ef34)
+#define portASPEN_AND_LSPEN_BITS    (0x3UL << 30UL)
 
 /* Constants required to set up the initial stack. */
-#define portINITIAL_XPSR            ( 0x01000000 )
-#define portINITIAL_EXEC_RETURN     ( 0xfffffffd )
+#define portINITIAL_XPSR            (0x01000000)
+#define portINITIAL_EXEC_RETURN     (0xfffffffd)
 
 /* Each task maintains its own interrupt status in the critical nesting
-variable. */
+ * variable. */
 static unsigned portBASE_TYPE uxCriticalNesting = 0xaaaaaaaa;
 
 /*
@@ -189,34 +192,36 @@ extern void vPortEnableVFP( void );
 /*
  * See header file for description.
  */
-portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
+portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack,
+		pdTASK_CODE pxCode, void *pvParameters )
 {
 	/* Simulate the stack frame as it would be created by a context switch
-	interrupt. */
+	* interrupt. */
 
-	/* Offset added to account for the way the MCU uses the stack on entry/exit
-	of interrupts, and to ensure alignment. */
+	/* Offset added to account for the way the MCU uses the stack on
+	* entry/exit of interrupts, and to ensure alignment. */
 	pxTopOfStack--;
 
-	*pxTopOfStack = portINITIAL_XPSR;	/* xPSR */
+	*pxTopOfStack = portINITIAL_XPSR;       /* xPSR */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) pxCode;	/* PC */
+	*pxTopOfStack = (portSTACK_TYPE)pxCode;         /* PC */
 	pxTopOfStack--;
-	*pxTopOfStack = 0;	/* LR */
+	*pxTopOfStack = 0;      /* LR */
 
 	/* Save code space by skipping register initialisation. */
-	pxTopOfStack -= 5;	/* R12, R3, R2 and R1. */
-	*pxTopOfStack = ( portSTACK_TYPE ) pvParameters;	/* R0 */
+	pxTopOfStack -= 5;      /* R12, R3, R2 and R1. */
+	*pxTopOfStack = (portSTACK_TYPE)pvParameters;           /* R0 */
 
 	/* A save method is being used that requires each task to maintain its
-	own exec return value. */
+	* own exec return value. */
 	pxTopOfStack--;
 	*pxTopOfStack = portINITIAL_EXEC_RETURN;
 
-	pxTopOfStack -= 8;	/* R11, R10, R9, R8, R7, R6, R5 and R4. */
+	pxTopOfStack -= 8;      /* R11, R10, R9, R8, R7, R6, R5 and R4. */
 
 	return pxTopOfStack;
 }
+
 /*-----------------------------------------------------------*/
 
 /*
@@ -229,7 +234,7 @@ portBASE_TYPE xPortStartScheduler( void )
 	portNVIC_SYSPRI2_REG |= portNVIC_SYSTICK_PRI;
 
 	/* Start the timer that generates the tick ISR.  Interrupts are disabled
-	here already. */
+	* here already. */
 	vPortSetupTimerInterrupt();
 
 	/* Initialise the critical nesting count ready for the first task. */
@@ -241,7 +246,7 @@ portBASE_TYPE xPortStartScheduler( void )
 #endif
 
 	/* Lazy save always. */
-	*( portFPCCR ) |= portASPEN_AND_LSPEN_BITS;
+	*(portFPCCR) |= portASPEN_AND_LSPEN_BITS;
 
 	/* Start the first task. */
 	vPortStartFirstTask();
@@ -249,13 +254,15 @@ portBASE_TYPE xPortStartScheduler( void )
 	/* Should not get here! */
 	return 0;
 }
+
 /*-----------------------------------------------------------*/
 
 void vPortEndScheduler( void )
 {
 	/* It is unlikely that the CM4F port will require this function as there
-	is nothing to return to.  */
+	* is nothing to return to.  */
 }
+
 /*-----------------------------------------------------------*/
 
 void vPortYieldFromISR( void )
@@ -263,6 +270,7 @@ void vPortYieldFromISR( void )
 	/* Set a PendSV to request a context switch. */
 	portNVIC_INT_CTRL_REG = portNVIC_PENDSVSET_BIT;
 }
+
 /*-----------------------------------------------------------*/
 
 void vPortEnterCritical( void )
@@ -270,27 +278,28 @@ void vPortEnterCritical( void )
 	portDISABLE_INTERRUPTS();
 	uxCriticalNesting++;
 }
+
 /*-----------------------------------------------------------*/
 
 void vPortExitCritical( void )
 {
 	uxCriticalNesting--;
-	if( uxCriticalNesting == 0 )
-	{
+	if (uxCriticalNesting == 0) {
 		portENABLE_INTERRUPTS();
 	}
 }
+
 /*-----------------------------------------------------------*/
 
-//void xPortSysTickHandler( void )
+/* void xPortSysTickHandler( void ) */
 void xPortSysTickHandler( void ) /* ATMEL */
 {
 	/* If using preemption, also force a context switch. */
 	#if configUSE_PREEMPTION == 1
-		portNVIC_INT_CTRL_REG = portNVIC_PENDSVSET_BIT;
+	portNVIC_INT_CTRL_REG = portNVIC_PENDSVSET_BIT;
 	#endif
 
-	( void ) portSET_INTERRUPT_MASK_FROM_ISR();
+	(void)portSET_INTERRUPT_MASK_FROM_ISR();
 	{
 		vTaskIncrementTick();
 	}
@@ -306,8 +315,10 @@ void xPortSysTickHandler( void ) /* ATMEL */
 __weak void vPortSetupTimerInterrupt( void )
 {
 	/* Configure SysTick to interrupt at the requested rate. */
-	portNVIC_SYSTICK_LOAD_REG = ( configSYSTICK_CLOCK_HZ / configTICK_RATE_HZ ) - 1UL;;
-	portNVIC_SYSTICK_CTRL_REG = portNVIC_SYSTICK_CLK_BIT | portNVIC_SYSTICK_INT_BIT | portNVIC_SYSTICK_ENABLE_BIT;
+	portNVIC_SYSTICK_LOAD_REG
+		= (configSYSTICK_CLOCK_HZ / configTICK_RATE_HZ) - 1UL;
+	portNVIC_SYSTICK_CTRL_REG = portNVIC_SYSTICK_CLK_BIT |
+			portNVIC_SYSTICK_INT_BIT | portNVIC_SYSTICK_ENABLE_BIT;
 }
-/*-----------------------------------------------------------*/
 
+/*-----------------------------------------------------------*/

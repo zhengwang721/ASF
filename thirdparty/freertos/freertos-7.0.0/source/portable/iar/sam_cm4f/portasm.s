@@ -108,15 +108,15 @@
 */
 
 /* Priority 15, or 255 as only the top four bits are implemented.
- This is the lowest priority. */
+ * This is the lowest priority. */
 #define configKERNEL_INTERRUPT_PRIORITY            (0x0f << 4)
 
 /* Priority 5, or 80 as only the top four bits are implemented. */
 #define configMAX_SYSCALL_INTERRUPT_PRIORITY       (0x05 << 4)
 
 /* For backward compatibility, ensure configKERNEL_INTERRUPT_PRIORITY is
-defined.  The value zero should also ensure backward compatibility.
-FreeRTOS.org versions prior to V4.3.0 did not include this definition. */
+ * defined.  The value zero should also ensure backward compatibility.
+ * FreeRTOS.org versions prior to V4.3.0 did not include this definition. */
 #ifndef configKERNEL_INTERRUPT_PRIORITY
 	#define configKERNEL_INTERRUPT_PRIORITY 0
 #endif
@@ -144,8 +144,8 @@ PendSV_Handler: /* ATMEL */
 	mrs r0, psp
 
 	/* Get the location of the current TCB. */
-	ldr	r3, =pxCurrentTCB
-	ldr	r2, [r3]
+	ldr r3, =pxCurrentTCB
+	ldr r2, [r3]
 
 #if defined __ARMVFP__
 	/* Is the task using the FPU context?  If so, push high vfp registers. */
@@ -205,14 +205,14 @@ vPortClearInterruptMask:
 /*vPortSVCHandler:*/
 SVC_Handler: /* ATMEL */
 	/* Get the location of the current TCB. */
-	ldr	r3, =pxCurrentTCB
+	ldr r3, =pxCurrentTCB
 	ldr r1, [r3]
 	ldr r0, [r1]
 	/* Pop the core registers. */
 	ldmia r0!, {r4-r11, r14}
 	msr psp, r0
 	mov r0, #0
-	msr	basepri, r0	
+	msr basepri, r0	
 	bx r14
 
 /*-----------------------------------------------------------*/
@@ -233,12 +233,12 @@ vPortStartFirstTask
 vPortEnableVFP:
 	/* The FPU enable bits are in the CPACR. */
 	ldr.w r0, =0xE000ED88
-	ldr	r1, [r0]
+	ldr r1, [r0]
 
 	/* Enable CP10 and CP11 coprocessors, then save back. */
-	orr	r1, r1, #( 0xf << 20 )
+	orr r1, r1, #( 0xf << 20 )
 	str r1, [r0]
 
-	bx	r14	
+	bx r14	
 
 	END
