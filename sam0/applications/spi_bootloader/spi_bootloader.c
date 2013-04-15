@@ -271,6 +271,7 @@ static void check_boot_mode(void)
 int main(void)
 {
 	uint32_t len = 0;
+	uint32_t remaining_length = 0;
 	uint32_t curr_sector;
 	uint32_t curr_prog_addr;
 	uint8_t buff[AT45DBX_SECTOR_SIZE] = {0};
@@ -304,6 +305,7 @@ int main(void)
 	if (at45dbx_mem_check() == true) {
 		/* Get the length to be programmed */
 		len = get_length();
+		remaining_length = len;
 
 		do {
 			/* Read data of AT45DBX_SECTOR_SIZE */
@@ -318,8 +320,11 @@ int main(void)
 			/* Increment the current programming address */
 			curr_prog_addr += min(AT45DBX_SECTOR_SIZE, len);
 
+			/* Calculate remaining length */
+			remaining_length -= min(AT45DBX_SECTOR_SIZE, len);
+
 			/* Update the length to remaining length to be programmed */
-			len -= min(AT45DBX_SECTOR_SIZE, len);
+			len = remaining_length;
 
 			/* Do this for entire length */
 		} while (len != 0);
