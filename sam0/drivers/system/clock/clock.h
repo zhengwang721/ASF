@@ -437,24 +437,6 @@ enum system_dfll_quick_lock {
 	SYSTEM_CLOCK_DFLL_QUICK_LOCK_DISABLE = SYSCTRL_DFLLCTRL_QLDIS,
 };
 
-#if !defined (REVB)
-/**
- * \brief Clock sources for the CPU and APB/AHB buses (main clock)
- *
- * Possible clock source inputs that can be used as the main CPU core clock.
- */
-enum system_main_clock {
-	/** Internal 8MHz oscillator */
-	SYSTEM_MAIN_CLOCK_OSC8M,
-	/** External oscillator */
-	SYSTEM_MAIN_CLOCK_XOSC,
-	/** Digital Frequency Locked Loop (DFLL) */
-	SYSTEM_MAIN_CLOCK_DFLL,
-	/** GCLK channel 0 */
-	SYSTEM_MAIN_CLOCK_GCLK, /* GCLK0 ?*/
-};
-#endif
-
 /**
  * \brief Main CPU and APB/AHB bus clock source prescaler values
  *
@@ -510,7 +492,7 @@ enum system_clock_source {
 	/** Digital Frequency Locked Loop (DFLL) */
 	SYSTEM_CLOCK_SOURCE_DFLL     = GCLK_SOURCE_DFLL48M,
 	/** Internal Ultra Low Power 32kHz oscillator */
-	SYSTEM_CLOCK_SOURCE_ULP32KHZ = GCLK_SOURCE_OSCULP32K,
+	SYSTEM_CLOCK_SOURCE_ULP32K   = GCLK_SOURCE_OSCULP32K,
 };
 
 /**
@@ -836,22 +818,6 @@ static inline void system_main_clock_set_failure_detect(
 		PM->CTRL.reg &= ~PM_CTRL_CFDEN;
 	}
 }
-
-#if !defined (REVB)
-/**
- *\brief Set the main clock
- *
- * This sets the clock source for the main clock that will be used to generate
- * the CPU and synchronous bus clocks
- *
- * \param[in] clock CPU clock source
- */
-static inline void system_main_clock_set_source(
-		const enum system_main_clock clock)
-{
-	PM->CTRL.reg = (PM->CTRL.reg & ~PM_CTRL_MCSEL_Msk) | PM_CTRL_MCSEL(clock);
-}
-#endif
 
 /**
  * \brief Set main CPU clock divider.

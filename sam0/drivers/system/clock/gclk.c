@@ -123,12 +123,10 @@ void system_gclk_gen_set_config(
 		new_genctrl_config |= GCLK_GENCTRL_DIVSEL;
 	}
 
-	#if defined (REVB)
 	/* Enable or disable the clock in standby mode */
 	if (config->run_in_standby) {
 		new_genctrl_config |= GCLK_GENCTRL_RUNSTDBY;
 	}
-	#endif
 
 	/* Disable generator before updating it */
 	system_gclk_gen_disable(generator);
@@ -138,10 +136,10 @@ void system_gclk_gen_set_config(
 		/* Wait for synchronization */
 	};
 	GCLK->GENDIV.reg  = new_gendiv_config;
+
 	while (system_gclk_is_syncing()) {
 		/* Wait for synchronization */
 	};
-
 	GCLK->GENCTRL.reg = new_genctrl_config;
 }
 
@@ -268,12 +266,10 @@ void system_gclk_chan_set_config(
 	/* Select the desired generic clock generator */
 	new_clkctrl_config |= config->source_generator << GCLK_CLKCTRL_GEN_Pos;
 
-	#if !defined (REVB)
-	/* Enable or disable the clock in standby mode */
-	if (config->run_in_standby) {
-		new_clkctrl_config |= GCLK_CLKCTRL_RUNSTDBY;
+	/* Enable write lock if requested to prevent further modification */
+	if (config->write_lock) {
+		new_clkctrl_config |= GCLK_CLKCTRL_WRTLOCK;
 	}
-	#endif
 
 	/* Disable generic clock channel */
 	system_gclk_chan_disable(channel);
