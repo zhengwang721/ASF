@@ -579,13 +579,14 @@ enum status_code tc_set_compare_value(
  * accessible while the reset is being performed.
  *
  * \note When resetting a 32-bit counter only the master TC module's instance
- *       structure should be used.
+ *       structure should be passed to the function.
  *
  * \param[in]  module_inst    Pointer to the software module instance struct
  *
  * \return Status of the procedure
  * \retval STATUS_OK                   The module was reset successfully
- * \retval STATUS_ERR_UNSUPPORTED_DEV  A 32-bit slave TC module was supplied
+ * \retval STATUS_ERR_UNSUPPORTED_DEV  A 32-bit slave TC module was passed to the
+ *                                     function. Only use reset on master tc.
  */
 enum status_code tc_reset(
 		const struct tc_module *const module_inst)
@@ -597,41 +598,20 @@ enum status_code tc_reset(
 	/* Get a pointer to the module hardware instance */
 	TcCount8 *const tc_module = &(module_inst->hw->COUNT8);
 
-	/* Disable this module */
-	tc_disable(module_inst);
-
 	if (tc_module->STATUS.reg & TC_STATUS_SLAVE) {
 		return STATUS_ERR_UNSUPPORTED_DEV;
 	}
 
-	/* Reset TC slave if one exists */
-	if (tc_module->CTRLA.reg & TC_COUNTER_SIZE_32BIT) {
+	/* Disable this module if it is running */
+	if (tc_module->CTRLA.reg & TC_CTRLA_ENABLE) {
+		tc_disable(module_inst);
 		while (tc_is_syncing(module_inst)) {
-			/* Wait for sync */
+			/* wait while module is disabling */
 		}
-
-		/* Reset this TC module */
-		tc_module->CTRLA.reg  |= TC_CTRLA_SWRST;
-
-		/* Get the slave hw pointer */
-		Tc *const tc_modules[TC_INST_NUM] = TC_INSTS;
-		Tc *const slave = tc_modules[_tc_get_inst_index(module_inst->hw) + 1];
-
-		while (slave->COUNT8.STATUS.reg & TC_STATUS_SYNCBUSY) {
-			/* Wait for sync */
-		}
-
-		/* Reset slave */
-		slave->COUNT8.CTRLA.reg |= TC_CTRLA_SWRST;
 	}
-	else {
-		while (tc_is_syncing(module_inst)) {
-			/* Wait for sync */
-		}
 
-		/* Reset this TC module */
-		tc_module->CTRLA.reg  |= TC_CTRLA_SWRST;
-	}
+	/* Reset this TC module */
+	tc_module->CTRLA.reg  |= TC_CTRLA_SWRST;
 
 	return STATUS_OK;
 }
