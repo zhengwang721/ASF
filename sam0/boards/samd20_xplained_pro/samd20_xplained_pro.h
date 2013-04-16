@@ -327,10 +327,10 @@ void system_board_init(void);
 /** \name Extension header #2 IRQ/External interrupt definitions
  *  @{
  */
-#define EXT1_IRQ_MODULE           EIC
-#define EXT1_IRQ_INPUT            14
-#define EXT1_IRQ_PIN              PIN_PB14A_EIC_EXTINT14
-#define EXT1_IRQ_PIN_MUX          MUX_PB14A_EIC_EXTINT14
+#define EXT2_IRQ_MODULE           EIC
+#define EXT2_IRQ_INPUT            14
+#define EXT2_IRQ_PIN              PIN_PB14A_EIC_EXTINT14
+#define EXT2_IRQ_PIN_MUX          MUX_PB14A_EIC_EXTINT14
 /** @} */
 
 /** \name Extension header #2 TWI definitions
