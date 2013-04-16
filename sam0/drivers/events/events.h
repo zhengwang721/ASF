@@ -346,8 +346,6 @@ struct events_chan_config {
 	uint8_t generator_id;
 	/** GCLK generator used to clock the specific event channel */
 	enum gclk_generator clock_source;
-	/** Keep GLCK running in standby */
-	bool run_in_standby;
 };
 
 /**
@@ -428,7 +426,6 @@ static inline void events_chan_get_config_defaults(
 	config->path           = EVENT_PATH_SYNCHRONOUS;
 	config->generator_id   = 0;
 	config->clock_source   = GCLK_GENERATOR_0;
-	config->run_in_standby = false;
 }
 
 void events_chan_set_config(

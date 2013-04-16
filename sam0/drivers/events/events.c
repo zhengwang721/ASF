@@ -89,12 +89,8 @@ void events_chan_set_config(
 	if (config->path != EVENT_PATH_ASYNCHRONOUS) {
 		/* Set up a GLCK channel to use with the specific channel */
 		struct system_gclk_chan_config gclk_chan_conf;
-
 		system_gclk_chan_get_config_defaults(&gclk_chan_conf);
-
 		gclk_chan_conf.source_generator = config->clock_source;
-		gclk_chan_conf.run_in_standby = config->run_in_standby;
-
 		system_gclk_chan_set_config(EVSYS_GCLK_ID_0 + channel, &gclk_chan_conf);
 		system_gclk_chan_enable(EVSYS_GCLK_ID_0 + channel);
 	}
