@@ -865,6 +865,8 @@ void LCDCA_Handler               ( void );
 // These defines are used to keep compatibility with existing 
 // sam/drivers/spi implementation from SAM3/4 products with SAM4L product. 
 #define SPI_CSR_BITS_8_BIT    SPI_CSR_BITS_8_BPT
+#define SPI_WPCR_SPIWPKEY_VALUE SPI_WPCR_WPKEY_VALUE
+#define SPI_WPCR_SPIWPEN      SPI_WPCR_WPEN
 
 // These defines are used to keep compatibility with existing 
 // sam/drivers/crccu implementation from SAM3/4 products with SAM4L product. 
