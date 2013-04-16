@@ -333,10 +333,10 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint32_t PRES:1;           /*!< bit:      0                                     */
-    uint32_t FMT:1;            /*!< bit:      1                                     */
+    uint32_t PRES:1;           /*!< bit:      0  Entry Present                      */
+    uint32_t FMT:1;            /*!< bit:      1  Format                             */
     uint32_t :10;              /*!< bit:  2..11  Reserved                           */
-    uint32_t ADDOFF:20;        /*!< bit: 12..31                                     */
+    uint32_t ADDOFF:20;        /*!< bit: 12..31  Address Offset                     */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } DSU_ENTRY_Type;
@@ -344,11 +344,11 @@ typedef union {
 
 #define DSU_ENTRY_OFFSET            0x1000       /**< \brief (DSU_ENTRY offset) CoreSight ROM Table Entry Register */
 
-#define DSU_ENTRY_PRES_Pos          0            /**< \brief (DSU_ENTRY)  */
+#define DSU_ENTRY_PRES_Pos          0            /**< \brief (DSU_ENTRY) Entry Present */
 #define DSU_ENTRY_PRES              (0x1u << DSU_ENTRY_PRES_Pos)
-#define DSU_ENTRY_FMT_Pos           1            /**< \brief (DSU_ENTRY)  */
+#define DSU_ENTRY_FMT_Pos           1            /**< \brief (DSU_ENTRY) Format */
 #define DSU_ENTRY_FMT               (0x1u << DSU_ENTRY_FMT_Pos)
-#define DSU_ENTRY_ADDOFF_Pos        12           /**< \brief (DSU_ENTRY)  */
+#define DSU_ENTRY_ADDOFF_Pos        12           /**< \brief (DSU_ENTRY) Address Offset */
 #define DSU_ENTRY_ADDOFF_Msk        (0xFFFFFu << DSU_ENTRY_ADDOFF_Pos)
 #define DSU_ENTRY_ADDOFF(value)     ((DSU_ENTRY_ADDOFF_Msk & ((value) << DSU_ENTRY_ADDOFF_Pos)))
 #define DSU_ENTRY_MASK              0xFFFFF003u  /**< \brief (DSU_ENTRY) MASK Register */

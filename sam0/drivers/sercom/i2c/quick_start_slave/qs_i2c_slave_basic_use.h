@@ -45,8 +45,10 @@
  * \page asfdoc_samd20_i2c_slave_basic_use_case Quick Start Guide for SERCOM I2C Slave - Basic
  *
  * In this use case, the I<SUP>2</SUP>C will used and set up as follows:
- *  - SERCOM1 in I2C slave mode
- *  - Timeout = 1000
+ *  - Slave mode
+ *  - 100kHz operation speed
+ *  - Not operational in standby
+ *  - 10000 packet timeout value
  *
  * \section asfdoc_samd20_i2c_slave_basic_use_case_prereq Prerequisites
  * The device must be connected to an I<SUP>2</SUP>C master.
