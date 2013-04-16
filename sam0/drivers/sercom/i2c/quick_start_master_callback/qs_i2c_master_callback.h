@@ -44,7 +44,7 @@
  *
  * In this use case, the I<SUP>2</SUP>C will used and set up as follows:
  *  - Master mode
- *  - 100 kHz operation speed
+ *  - 100kHz operation speed
  *  - Not operational in standby
  *  - 65535 unknown bus state timeout value
  *

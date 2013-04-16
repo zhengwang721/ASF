@@ -102,9 +102,9 @@ int main(void)
 	//! [config]
 
 	/* Timeout counter. */
-	//! [timeout]
+	//! [timeout_counter]
 	uint16_t timeout = 0;
-	//! [timeout]
+	//! [timeout_counter]
 
 	/* Init i2c packet. */
 	//! [packet]
@@ -126,8 +126,8 @@ int main(void)
 		}
 	}
 	//! [write_packet]
-
 	//! [main]
+
 	while (true) {
 		/* Infinite loop */
 	}
