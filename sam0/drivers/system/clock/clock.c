@@ -688,16 +688,17 @@ void system_clock_init(void)
 	system_gclk_gen_enable(7);
 #  endif
 
-	if ((CONF_CLOCK_DFLL_LOOP_MODE == SYSTEM_CLOCK_DFLL_CLOSED_LOOP)
-			&& (CONF_CLOCK_DFLL_ENABLE == true)) {
-	struct system_gclk_chan_config dfll_gclk_chan_conf;
-
+#  if CONF_CLOCK_DFLL_ENABLE == true
+	if (CONF_CLOCK_DFLL_LOOP_MODE == SYSTEM_CLOCK_DFLL_CLOSED_LOOP) {
+		struct system_gclk_chan_config dfll_gclk_chan_conf;
 		system_gclk_chan_get_config_defaults(&dfll_gclk_chan_conf);
 		dfll_gclk_chan_conf.source_generator = CONF_CLOCK_DFLL_SOURCE_GCLK_GENERATOR;
 		system_gclk_chan_set_config(0, &dfll_gclk_chan_conf);
 		system_gclk_chan_enable(0);
+
 		system_clock_source_dfll_set_config(&dfll_conf);
 	}
+#endif
 
 #endif /* Configure GCLK */
 
