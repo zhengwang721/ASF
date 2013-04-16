@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 Clock configuration
+ * \brief SAM D20 Clock configuration
  *
  * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *

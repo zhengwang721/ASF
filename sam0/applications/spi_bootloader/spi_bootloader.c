@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 Master SPI Bootloader
+ * \brief SAM D20 Master SPI Bootloader
  *
  * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
@@ -57,7 +57,7 @@
  * \section deviceinfo Device Info
  * All devices with SPI can be used. This application has been tested
  * with the following setup:
- *   - SAM0+D Xplained Pro kit connected with IO1-Xplained Pro wing
+ *   - SAM D20 Xplained Pro kit connected with IO1-Xplained Pro wing
  *     on External header EXT3.
  *
  * \section applicationdescription Description of the application
@@ -219,13 +219,18 @@ static void start_application(void)
  * \brief Function for checking whether to enter boot mode or application mode
  *
  * This function will check the state of BOOT_LOAD_PIN. If it is pressed, it
- * continues execution in bootloader mode. Else, it jumps to the application
- * and starts execution from there
+ * continues execution in bootloader mode. Else, it reads the first location 
+ * from the application section and checks whether it is 0xFFFFFFFF. If yes,
+ * then the application section is empty and it waits indefinitely there. If
+ * not, it jumps to the application and starts execution from there.
  * Access to direct peripheral registers are made in this routine to enable
  * quick decision on application or bootloader mode.
  */
 static void check_boot_mode(void)
 {
+	uint32_t app_check_address;
+	uint32_t *app_check_address_ptr;
+
 	/* Check if WDT is locked */
 	if (!(WDT->CTRL.reg & WDT_CTRL_ALWAYSON)) {
 		/* Disable the Watchdog module */
@@ -247,6 +252,19 @@ static void check_boot_mode(void)
 
 	/* Check the BOOT pin or the reset cause is Watchdog */
 	if ((boot_en) || (PM->RCAUSE.reg & PM_RCAUSE_WDT)) {
+		app_check_address = APP_START_ADDRESS;
+		app_check_address_ptr = (uint32_t *) app_check_address;
+
+		/* 
+		 * Read the first location of application section
+		 * which contains the address of stack pointer.
+		 * If it is 0xFFFFFFFF then the application section is empty.
+		 */
+		if (*app_check_address_ptr == 0xFFFFFFFF) {
+			while (1) {
+				/* Wait indefinitely */
+			}
+		}
 		/* Pointer to the Application Section */
 		void (*application_code_entry)(void);
 

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 Xplained PRO board configuration.
+ * \brief Bootloader specific configuration.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
