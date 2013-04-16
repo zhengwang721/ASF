@@ -235,7 +235,6 @@ enum status_code tc_init(
 	/* Setup clock for module */
 	system_gclk_chan_get_config_defaults(&gclk_chan_config);
 	gclk_chan_config.source_generator = config->clock_source;
-	gclk_chan_config.run_in_standby   = config->run_in_standby;
 	system_gclk_chan_set_config(inst_gclk_id[instance], &gclk_chan_config);
 	system_gclk_chan_enable(inst_gclk_id[instance]);
 
