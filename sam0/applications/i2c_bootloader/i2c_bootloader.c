@@ -90,7 +90,6 @@ struct i2c_slave_module slave;
 struct i2c_packet packet = {
 	.address     = SLAVE_ADDRESS,
 	.data_length = DATA_LENGTH,
-	.data        = read_buffer,
 };
 
 /* Function prototypes */
@@ -99,6 +98,7 @@ static void fetch_data(uint8_t *buffer, uint16_t len);
 static void program_memory(uint32_t address, uint8_t *buffer, uint16_t len);
 static void start_application(void);
 static void check_boot_mode(void);
+static void configure_i2c(void);
 static void send_ack(void);
 
 /**
@@ -270,9 +270,34 @@ static void check_boot_mode(void)
 }
 
 /**
+ * \brief Function for configuring I2C slave module
+ *
+ * This function will configure the I2C slave module with
+ * the SERCOM module to be used, required slave address, address mode mask
+ * and pinmux settings
+ */
+static void configure_i2c(void)
+{
+	/* Create and initialize config structure */
+	struct i2c_slave_config config_i2c;
+	i2c_slave_get_config_defaults(&config_i2c);
+
+	/* Change address and address_mode */
+	config_i2c.address = SLAVE_ADDRESS;
+	config_i2c.address_mode = I2C_SLAVE_ADDRESS_MODE_MASK;
+	config_i2c.pinmux_pad0 = BOOT_I2C_PAD0;
+	config_i2c.pinmux_pad1 = BOOT_I2C_PAD1;
+
+	/* Initialize and enable device with config */
+	i2c_slave_init(&slave, BOOT_SERCOM, &config_i2c);
+
+	i2c_slave_enable(&slave);
+}
+
+/**
  * \brief Function for sending acknowledgment to I2C Master
  *
- * This function will write an acknowledgement byte 's' on I2C bus to
+ * This function will write an acknowledgment byte 's' on I2C bus to
  * indicate the master that it has received and programmed the data.
  */
 static void send_ack(void)
@@ -290,7 +315,6 @@ int main(void)
 {
 	static volatile uint32_t len = 0;
 	uint32_t remaining_len = 0;
-	uint32_t curr_sector;
 	uint32_t curr_prog_addr;
 	uint8_t buff[NVMCTRL_PAGE_SIZE];
 	struct nvm_config config;
@@ -298,8 +322,6 @@ int main(void)
 	/* Check switch state to enter boot mode or application mode */
 	check_boot_mode();
 
-	/* Data to be programmed is available from sector 1 of AT45DBX */
-	curr_sector = 1;
 	/* 
 	 * Application to be programmed from APP_START_ADDRESS defined in
 	 * conf_bootloader.h
@@ -309,20 +331,8 @@ int main(void)
 	/* Initialize system */
 	system_init();
 
-	/* Create and initialize config structure */
-	struct i2c_slave_config config_i2c;
-	i2c_slave_get_config_defaults(&config_i2c);
-
-	/* Change address and address_mode */
-	config_i2c.address = SLAVE_ADDRESS;
-	config_i2c.address_mode = I2C_SLAVE_ADDRESS_MODE_MASK;
-	config_i2c.pinmux_pad0 = BOOT_I2C_PAD0;
-	config_i2c.pinmux_pad1 = BOOT_I2C_PAD1;
-
-	/* Initialize and enable device with config */
-	i2c_slave_init(&slave, BOOT_SERCOM, &config_i2c);
-
-	i2c_slave_enable(&slave);
+	/* Configure the I2C slave module */
+	configure_i2c();
 
 	/* Get NVM default configuration and load the same */
 	nvm_get_config_defaults(&config);
