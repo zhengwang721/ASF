@@ -83,7 +83,7 @@ static void configure_button(void)
 	extint_chan_get_config_defaults(&eint_chan_conf);
 
 	eint_chan_conf.gpio_pin           = BUTTON_0_EIC_PIN;
-	eint_chan_conf.gpio_pin_mux       = BUTTON_0_EIC_PIN_MUX;
+	eint_chan_conf.gpio_pin_mux       = BUTTON_0_EIC_MUX;
 	eint_chan_conf.detection_criteria = EXTINT_DETECT_BOTH;
 	extint_chan_set_config(BUTTON_0_EIC_LINE, &eint_chan_conf);
 
