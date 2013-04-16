@@ -64,7 +64,6 @@ extern "C" {
 
 enum status_code sercom_set_gclk_generator(
 		const enum gclk_generator generator_source,
-		const bool run_in_standby,
 		const bool force_change);
 
 enum status_code _sercom_get_sync_baud_val(

@@ -119,6 +119,7 @@
  * -# Enable the configured DFLL oscillator source.
  * \snippet qs_clock_source.c enable_dfll_main
  *
- * -# Switch the system clock source to the DFLL.
+ * -# Switch the system clock source to the DFLL, by reconfiguring the main
+ *    clock generator.
  * \snippet qs_clock_source.c set_sys_clk_src
  */

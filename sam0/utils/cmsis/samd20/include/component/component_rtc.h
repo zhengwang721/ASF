@@ -50,7 +50,7 @@
 /** \addtogroup SAMD20_RTC Real-Time Counter */
 /*@{*/
 
-#define REV_RTC                     0x100
+#define REV_RTC                     0x101
 
 /* -------- RTC_MODE0_CTRL : (RTC Offset: 0x00) (R/W 16) MODE0 MODE0 Control Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -227,7 +227,7 @@ typedef union {
 typedef union {
   struct {
     uint16_t PEREO:8;          /*!< bit:  0.. 7  Periodic Interval Event Output Enables */
-    uint16_t CMP0EO:2;         /*!< bit:  8.. 9  Compare Event Output Enables [NUM_OF_COMP16] */
+    uint16_t CMPEO:2;          /*!< bit:  8.. 9  Compare Event Output Enables [NUM_OF_COMP16] */
     uint16_t :5;               /*!< bit: 10..14  Reserved                           */
     uint16_t OVFEO:1;          /*!< bit:     15  Overflow Event Output Enable       */
   } bit;                       /*!< Structure used for bit  access                  */
@@ -241,9 +241,9 @@ typedef union {
 #define RTC_MODE1_EVCTRL_PEREO_Pos  0            /**< \brief (RTC_MODE1_EVCTRL) Periodic Interval Event Output Enables */
 #define RTC_MODE1_EVCTRL_PEREO_Msk  (0xFFu << RTC_MODE1_EVCTRL_PEREO_Pos)
 #define RTC_MODE1_EVCTRL_PEREO(value) ((RTC_MODE1_EVCTRL_PEREO_Msk & ((value) << RTC_MODE1_EVCTRL_PEREO_Pos)))
-#define RTC_MODE1_EVCTRL_CMP0EO_Pos 8            /**< \brief (RTC_MODE1_EVCTRL) Compare Event Output Enables */
-#define RTC_MODE1_EVCTRL_CMP0EO_Msk (0x3u << RTC_MODE1_EVCTRL_CMP0EO_Pos)
-#define RTC_MODE1_EVCTRL_CMP0EO(value) ((RTC_MODE1_EVCTRL_CMP0EO_Msk & ((value) << RTC_MODE1_EVCTRL_CMP0EO_Pos)))
+#define RTC_MODE1_EVCTRL_CMPEO_Pos  8            /**< \brief (RTC_MODE1_EVCTRL) Compare Event Output Enables */
+#define RTC_MODE1_EVCTRL_CMPEO_Msk  (0x3u << RTC_MODE1_EVCTRL_CMPEO_Pos)
+#define RTC_MODE1_EVCTRL_CMPEO(value) ((RTC_MODE1_EVCTRL_CMPEO_Msk & ((value) << RTC_MODE1_EVCTRL_CMPEO_Pos)))
 #define RTC_MODE1_EVCTRL_OVFEO_Pos  15           /**< \brief (RTC_MODE1_EVCTRL) Overflow Event Output Enable */
 #define RTC_MODE1_EVCTRL_OVFEO      (0x1u << RTC_MODE1_EVCTRL_OVFEO_Pos)
 #define RTC_MODE1_EVCTRL_MASK       0x83FFu      /**< \brief (RTC_MODE1_EVCTRL) MASK Register */
@@ -280,7 +280,7 @@ typedef union {
   struct {
     uint8_t  CMP:1;            /*!< bit:      0  Comparator Interrupt Disables [NUM_OF_COMP32] */
     uint8_t  :5;               /*!< bit:  1.. 5  Reserved                           */
-    uint8_t  READY:1;          /*!< bit:      6  Ready Interrupt Disable            */
+    uint8_t  SYNCRDY:1;        /*!< bit:      6  Synchronization Ready Interrupt Disable */
     uint8_t  OVF:1;            /*!< bit:      7  Overflow Interrupt Disable         */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
@@ -293,8 +293,8 @@ typedef union {
 #define RTC_MODE0_INTENCLR_CMP_Pos  0            /**< \brief (RTC_MODE0_INTENCLR) Comparator Interrupt Disables */
 #define RTC_MODE0_INTENCLR_CMP_Msk  (0x1u << RTC_MODE0_INTENCLR_CMP_Pos)
 #define RTC_MODE0_INTENCLR_CMP(value) ((RTC_MODE0_INTENCLR_CMP_Msk & ((value) << RTC_MODE0_INTENCLR_CMP_Pos)))
-#define RTC_MODE0_INTENCLR_READY_Pos 6            /**< \brief (RTC_MODE0_INTENCLR) Ready Interrupt Disable */
-#define RTC_MODE0_INTENCLR_READY    (0x1u << RTC_MODE0_INTENCLR_READY_Pos)
+#define RTC_MODE0_INTENCLR_SYNCRDY_Pos 6            /**< \brief (RTC_MODE0_INTENCLR) Synchronization Ready Interrupt Disable */
+#define RTC_MODE0_INTENCLR_SYNCRDY  (0x1u << RTC_MODE0_INTENCLR_SYNCRDY_Pos)
 #define RTC_MODE0_INTENCLR_OVF_Pos  7            /**< \brief (RTC_MODE0_INTENCLR) Overflow Interrupt Disable */
 #define RTC_MODE0_INTENCLR_OVF      (0x1u << RTC_MODE0_INTENCLR_OVF_Pos)
 #define RTC_MODE0_INTENCLR_MASK     0xC1u        /**< \brief (RTC_MODE0_INTENCLR) MASK Register */
@@ -305,7 +305,7 @@ typedef union {
   struct {
     uint8_t  CMP:2;            /*!< bit:  0.. 1  Comparator Interrupt Disables [NUM_OF_COMP16] */
     uint8_t  :4;               /*!< bit:  2.. 5  Reserved                           */
-    uint8_t  READY:1;          /*!< bit:      6  Ready Interrupt Disable            */
+    uint8_t  SYNCRDY:1;        /*!< bit:      6  Synchronization Ready Interrupt Disable */
     uint8_t  OVF:1;            /*!< bit:      7  Overflow Interrupt Disable         */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
@@ -318,8 +318,8 @@ typedef union {
 #define RTC_MODE1_INTENCLR_CMP_Pos  0            /**< \brief (RTC_MODE1_INTENCLR) Comparator Interrupt Disables */
 #define RTC_MODE1_INTENCLR_CMP_Msk  (0x3u << RTC_MODE1_INTENCLR_CMP_Pos)
 #define RTC_MODE1_INTENCLR_CMP(value) ((RTC_MODE1_INTENCLR_CMP_Msk & ((value) << RTC_MODE1_INTENCLR_CMP_Pos)))
-#define RTC_MODE1_INTENCLR_READY_Pos 6            /**< \brief (RTC_MODE1_INTENCLR) Ready Interrupt Disable */
-#define RTC_MODE1_INTENCLR_READY    (0x1u << RTC_MODE1_INTENCLR_READY_Pos)
+#define RTC_MODE1_INTENCLR_SYNCRDY_Pos 6            /**< \brief (RTC_MODE1_INTENCLR) Synchronization Ready Interrupt Disable */
+#define RTC_MODE1_INTENCLR_SYNCRDY  (0x1u << RTC_MODE1_INTENCLR_SYNCRDY_Pos)
 #define RTC_MODE1_INTENCLR_OVF_Pos  7            /**< \brief (RTC_MODE1_INTENCLR) Overflow Interrupt Disable */
 #define RTC_MODE1_INTENCLR_OVF      (0x1u << RTC_MODE1_INTENCLR_OVF_Pos)
 #define RTC_MODE1_INTENCLR_MASK     0xC3u        /**< \brief (RTC_MODE1_INTENCLR) MASK Register */
@@ -330,7 +330,7 @@ typedef union {
   struct {
     uint8_t  ALARM:1;          /*!< bit:      0  Alarm Interrupt Disables [NUM_OF_ALARMS] */
     uint8_t  :5;               /*!< bit:  1.. 5  Reserved                           */
-    uint8_t  READY:1;          /*!< bit:      6  Ready Interrupt Disable            */
+    uint8_t  SYNCRDY:1;        /*!< bit:      6  Synchronization Ready Interrupt Disable */
     uint8_t  OVF:1;            /*!< bit:      7  Overflow Interrupt Disable         */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
@@ -343,8 +343,8 @@ typedef union {
 #define RTC_MODE2_INTENCLR_ALARM_Pos 0            /**< \brief (RTC_MODE2_INTENCLR) Alarm Interrupt Disables */
 #define RTC_MODE2_INTENCLR_ALARM_Msk (0x1u << RTC_MODE2_INTENCLR_ALARM_Pos)
 #define RTC_MODE2_INTENCLR_ALARM(value) ((RTC_MODE2_INTENCLR_ALARM_Msk & ((value) << RTC_MODE2_INTENCLR_ALARM_Pos)))
-#define RTC_MODE2_INTENCLR_READY_Pos 6            /**< \brief (RTC_MODE2_INTENCLR) Ready Interrupt Disable */
-#define RTC_MODE2_INTENCLR_READY    (0x1u << RTC_MODE2_INTENCLR_READY_Pos)
+#define RTC_MODE2_INTENCLR_SYNCRDY_Pos 6            /**< \brief (RTC_MODE2_INTENCLR) Synchronization Ready Interrupt Disable */
+#define RTC_MODE2_INTENCLR_SYNCRDY  (0x1u << RTC_MODE2_INTENCLR_SYNCRDY_Pos)
 #define RTC_MODE2_INTENCLR_OVF_Pos  7            /**< \brief (RTC_MODE2_INTENCLR) Overflow Interrupt Disable */
 #define RTC_MODE2_INTENCLR_OVF      (0x1u << RTC_MODE2_INTENCLR_OVF_Pos)
 #define RTC_MODE2_INTENCLR_MASK     0xC1u        /**< \brief (RTC_MODE2_INTENCLR) MASK Register */
@@ -355,7 +355,7 @@ typedef union {
   struct {
     uint8_t  CMP:1;            /*!< bit:      0  Comparator Interrupt Enables [NUM_OF_COMP32] */
     uint8_t  :5;               /*!< bit:  1.. 5  Reserved                           */
-    uint8_t  READY:1;          /*!< bit:      6  Ready Interrupt Enable             */
+    uint8_t  SYNCRDY:1;        /*!< bit:      6  Synchronization Ready Interrupt Enable */
     uint8_t  OVF:1;            /*!< bit:      7  Overflow Interrupt Enable          */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
@@ -368,8 +368,8 @@ typedef union {
 #define RTC_MODE0_INTENSET_CMP_Pos  0            /**< \brief (RTC_MODE0_INTENSET) Comparator Interrupt Enables */
 #define RTC_MODE0_INTENSET_CMP_Msk  (0x1u << RTC_MODE0_INTENSET_CMP_Pos)
 #define RTC_MODE0_INTENSET_CMP(value) ((RTC_MODE0_INTENSET_CMP_Msk & ((value) << RTC_MODE0_INTENSET_CMP_Pos)))
-#define RTC_MODE0_INTENSET_READY_Pos 6            /**< \brief (RTC_MODE0_INTENSET) Ready Interrupt Enable */
-#define RTC_MODE0_INTENSET_READY    (0x1u << RTC_MODE0_INTENSET_READY_Pos)
+#define RTC_MODE0_INTENSET_SYNCRDY_Pos 6            /**< \brief (RTC_MODE0_INTENSET) Synchronization Ready Interrupt Enable */
+#define RTC_MODE0_INTENSET_SYNCRDY  (0x1u << RTC_MODE0_INTENSET_SYNCRDY_Pos)
 #define RTC_MODE0_INTENSET_OVF_Pos  7            /**< \brief (RTC_MODE0_INTENSET) Overflow Interrupt Enable */
 #define RTC_MODE0_INTENSET_OVF      (0x1u << RTC_MODE0_INTENSET_OVF_Pos)
 #define RTC_MODE0_INTENSET_MASK     0xC1u        /**< \brief (RTC_MODE0_INTENSET) MASK Register */
@@ -380,7 +380,7 @@ typedef union {
   struct {
     uint8_t  CMP:2;            /*!< bit:  0.. 1  Comparator Interrupt Enables [NUM_OF_COMP16] */
     uint8_t  :4;               /*!< bit:  2.. 5  Reserved                           */
-    uint8_t  READY:1;          /*!< bit:      6  Ready Interrupt Enable             */
+    uint8_t  SYNCRDY:1;        /*!< bit:      6  Synchronization Ready Interrupt Enable */
     uint8_t  OVF:1;            /*!< bit:      7  Overflow Interrupt Enable          */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
@@ -393,8 +393,8 @@ typedef union {
 #define RTC_MODE1_INTENSET_CMP_Pos  0            /**< \brief (RTC_MODE1_INTENSET) Comparator Interrupt Enables */
 #define RTC_MODE1_INTENSET_CMP_Msk  (0x3u << RTC_MODE1_INTENSET_CMP_Pos)
 #define RTC_MODE1_INTENSET_CMP(value) ((RTC_MODE1_INTENSET_CMP_Msk & ((value) << RTC_MODE1_INTENSET_CMP_Pos)))
-#define RTC_MODE1_INTENSET_READY_Pos 6            /**< \brief (RTC_MODE1_INTENSET) Ready Interrupt Enable */
-#define RTC_MODE1_INTENSET_READY    (0x1u << RTC_MODE1_INTENSET_READY_Pos)
+#define RTC_MODE1_INTENSET_SYNCRDY_Pos 6            /**< \brief (RTC_MODE1_INTENSET) Synchronization Ready Interrupt Enable */
+#define RTC_MODE1_INTENSET_SYNCRDY  (0x1u << RTC_MODE1_INTENSET_SYNCRDY_Pos)
 #define RTC_MODE1_INTENSET_OVF_Pos  7            /**< \brief (RTC_MODE1_INTENSET) Overflow Interrupt Enable */
 #define RTC_MODE1_INTENSET_OVF      (0x1u << RTC_MODE1_INTENSET_OVF_Pos)
 #define RTC_MODE1_INTENSET_MASK     0xC3u        /**< \brief (RTC_MODE1_INTENSET) MASK Register */
@@ -405,7 +405,7 @@ typedef union {
   struct {
     uint8_t  ALARM:1;          /*!< bit:      0  Alarm Interrupt Enables [NUM_OF_ALARMS] */
     uint8_t  :5;               /*!< bit:  1.. 5  Reserved                           */
-    uint8_t  READY:1;          /*!< bit:      6  Ready Interrupt Enable             */
+    uint8_t  SYNCRDY:1;        /*!< bit:      6  Synchronization Ready Interrupt Enable */
     uint8_t  OVF:1;            /*!< bit:      7  Overflow Interrupt Enable          */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
@@ -418,8 +418,8 @@ typedef union {
 #define RTC_MODE2_INTENSET_ALARM_Pos 0            /**< \brief (RTC_MODE2_INTENSET) Alarm Interrupt Enables */
 #define RTC_MODE2_INTENSET_ALARM_Msk (0x1u << RTC_MODE2_INTENSET_ALARM_Pos)
 #define RTC_MODE2_INTENSET_ALARM(value) ((RTC_MODE2_INTENSET_ALARM_Msk & ((value) << RTC_MODE2_INTENSET_ALARM_Pos)))
-#define RTC_MODE2_INTENSET_READY_Pos 6            /**< \brief (RTC_MODE2_INTENSET) Ready Interrupt Enable */
-#define RTC_MODE2_INTENSET_READY    (0x1u << RTC_MODE2_INTENSET_READY_Pos)
+#define RTC_MODE2_INTENSET_SYNCRDY_Pos 6            /**< \brief (RTC_MODE2_INTENSET) Synchronization Ready Interrupt Enable */
+#define RTC_MODE2_INTENSET_SYNCRDY  (0x1u << RTC_MODE2_INTENSET_SYNCRDY_Pos)
 #define RTC_MODE2_INTENSET_OVF_Pos  7            /**< \brief (RTC_MODE2_INTENSET) Overflow Interrupt Enable */
 #define RTC_MODE2_INTENSET_OVF      (0x1u << RTC_MODE2_INTENSET_OVF_Pos)
 #define RTC_MODE2_INTENSET_MASK     0xC1u        /**< \brief (RTC_MODE2_INTENSET) MASK Register */
@@ -430,7 +430,7 @@ typedef union {
   struct {
     uint8_t  CMP:1;            /*!< bit:      0  Comparator Interrupt Flags [NUM_OF_COMP32] */
     uint8_t  :5;               /*!< bit:  1.. 5  Reserved                           */
-    uint8_t  READY:1;          /*!< bit:      6  Ready Interrupt Flag               */
+    uint8_t  SYNCRDY:1;        /*!< bit:      6  Synchronization Ready Interrupt Flag */
     uint8_t  OVF:1;            /*!< bit:      7  Overflow Interrupt Flag            */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
@@ -443,8 +443,8 @@ typedef union {
 #define RTC_MODE0_INTFLAG_CMP_Pos   0            /**< \brief (RTC_MODE0_INTFLAG) Comparator Interrupt Flags */
 #define RTC_MODE0_INTFLAG_CMP_Msk   (0x1u << RTC_MODE0_INTFLAG_CMP_Pos)
 #define RTC_MODE0_INTFLAG_CMP(value) ((RTC_MODE0_INTFLAG_CMP_Msk & ((value) << RTC_MODE0_INTFLAG_CMP_Pos)))
-#define RTC_MODE0_INTFLAG_READY_Pos 6            /**< \brief (RTC_MODE0_INTFLAG) Ready Interrupt Flag */
-#define RTC_MODE0_INTFLAG_READY     (0x1u << RTC_MODE0_INTFLAG_READY_Pos)
+#define RTC_MODE0_INTFLAG_SYNCRDY_Pos 6            /**< \brief (RTC_MODE0_INTFLAG) Synchronization Ready Interrupt Flag */
+#define RTC_MODE0_INTFLAG_SYNCRDY   (0x1u << RTC_MODE0_INTFLAG_SYNCRDY_Pos)
 #define RTC_MODE0_INTFLAG_OVF_Pos   7            /**< \brief (RTC_MODE0_INTFLAG) Overflow Interrupt Flag */
 #define RTC_MODE0_INTFLAG_OVF       (0x1u << RTC_MODE0_INTFLAG_OVF_Pos)
 #define RTC_MODE0_INTFLAG_MASK      0xC1u        /**< \brief (RTC_MODE0_INTFLAG) MASK Register */
@@ -455,7 +455,7 @@ typedef union {
   struct {
     uint8_t  CMP:2;            /*!< bit:  0.. 1  Comparator Interrupt Flags [NUM_OF_COMP16] */
     uint8_t  :4;               /*!< bit:  2.. 5  Reserved                           */
-    uint8_t  READY:1;          /*!< bit:      6  Ready Interrupt Flag               */
+    uint8_t  SYNCRDY:1;        /*!< bit:      6  Synchronization Ready Interrupt Flag */
     uint8_t  OVF:1;            /*!< bit:      7  Overflow Interrupt Flag            */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
@@ -468,8 +468,8 @@ typedef union {
 #define RTC_MODE1_INTFLAG_CMP_Pos   0            /**< \brief (RTC_MODE1_INTFLAG) Comparator Interrupt Flags */
 #define RTC_MODE1_INTFLAG_CMP_Msk   (0x3u << RTC_MODE1_INTFLAG_CMP_Pos)
 #define RTC_MODE1_INTFLAG_CMP(value) ((RTC_MODE1_INTFLAG_CMP_Msk & ((value) << RTC_MODE1_INTFLAG_CMP_Pos)))
-#define RTC_MODE1_INTFLAG_READY_Pos 6            /**< \brief (RTC_MODE1_INTFLAG) Ready Interrupt Flag */
-#define RTC_MODE1_INTFLAG_READY     (0x1u << RTC_MODE1_INTFLAG_READY_Pos)
+#define RTC_MODE1_INTFLAG_SYNCRDY_Pos 6            /**< \brief (RTC_MODE1_INTFLAG) Synchronization Ready Interrupt Flag */
+#define RTC_MODE1_INTFLAG_SYNCRDY   (0x1u << RTC_MODE1_INTFLAG_SYNCRDY_Pos)
 #define RTC_MODE1_INTFLAG_OVF_Pos   7            /**< \brief (RTC_MODE1_INTFLAG) Overflow Interrupt Flag */
 #define RTC_MODE1_INTFLAG_OVF       (0x1u << RTC_MODE1_INTFLAG_OVF_Pos)
 #define RTC_MODE1_INTFLAG_MASK      0xC3u        /**< \brief (RTC_MODE1_INTFLAG) MASK Register */
@@ -480,7 +480,7 @@ typedef union {
   struct {
     uint8_t  ALARM:1;          /*!< bit:      0  Alarm Interrupt Flags [NUM_OF_ALARMS] */
     uint8_t  :5;               /*!< bit:  1.. 5  Reserved                           */
-    uint8_t  READY:1;          /*!< bit:      6  Ready Interrupt Flag               */
+    uint8_t  SYNCRDY:1;        /*!< bit:      6  Synchronization Ready Interrupt Flag */
     uint8_t  OVF:1;            /*!< bit:      7  Overflow Interrupt Flag            */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
@@ -493,8 +493,8 @@ typedef union {
 #define RTC_MODE2_INTFLAG_ALARM_Pos 0            /**< \brief (RTC_MODE2_INTFLAG) Alarm Interrupt Flags */
 #define RTC_MODE2_INTFLAG_ALARM_Msk (0x1u << RTC_MODE2_INTFLAG_ALARM_Pos)
 #define RTC_MODE2_INTFLAG_ALARM(value) ((RTC_MODE2_INTFLAG_ALARM_Msk & ((value) << RTC_MODE2_INTFLAG_ALARM_Pos)))
-#define RTC_MODE2_INTFLAG_READY_Pos 6            /**< \brief (RTC_MODE2_INTFLAG) Ready Interrupt Flag */
-#define RTC_MODE2_INTFLAG_READY     (0x1u << RTC_MODE2_INTFLAG_READY_Pos)
+#define RTC_MODE2_INTFLAG_SYNCRDY_Pos 6            /**< \brief (RTC_MODE2_INTFLAG) Synchronization Ready Interrupt Flag */
+#define RTC_MODE2_INTFLAG_SYNCRDY   (0x1u << RTC_MODE2_INTFLAG_SYNCRDY_Pos)
 #define RTC_MODE2_INTFLAG_OVF_Pos   7            /**< \brief (RTC_MODE2_INTFLAG) Overflow Interrupt Flag */
 #define RTC_MODE2_INTFLAG_OVF       (0x1u << RTC_MODE2_INTFLAG_OVF_Pos)
 #define RTC_MODE2_INTFLAG_MASK      0xC1u        /**< \brief (RTC_MODE2_INTFLAG) MASK Register */
@@ -503,8 +503,7 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint8_t  RESET:1;          /*!< bit:      0  Reset Status                       */
-    uint8_t  :6;               /*!< bit:  1.. 6  Reserved                           */
+    uint8_t  :7;               /*!< bit:  0.. 6  Reserved                           */
     uint8_t  SYNCBUSY:1;       /*!< bit:      7  Synchronization Busy Status        */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
@@ -514,11 +513,9 @@ typedef union {
 #define RTC_STATUS_OFFSET           0x0A         /**< \brief (RTC_STATUS offset) Status Register */
 #define RTC_STATUS_RESETVALUE       0x00         /**< \brief (RTC_STATUS reset_value) Status Register */
 
-#define RTC_STATUS_RESET_Pos        0            /**< \brief (RTC_STATUS) Reset Status */
-#define RTC_STATUS_RESET            (0x1u << RTC_STATUS_RESET_Pos)
 #define RTC_STATUS_SYNCBUSY_Pos     7            /**< \brief (RTC_STATUS) Synchronization Busy Status */
 #define RTC_STATUS_SYNCBUSY         (0x1u << RTC_STATUS_SYNCBUSY_Pos)
-#define RTC_STATUS_MASK             0x81u        /**< \brief (RTC_STATUS) MASK Register */
+#define RTC_STATUS_MASK             0x80u        /**< \brief (RTC_STATUS) MASK Register */
 
 /* -------- RTC_DBGCTRL : (RTC Offset: 0x0B) (R/W  8) Debug Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))

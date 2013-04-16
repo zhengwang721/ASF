@@ -50,7 +50,7 @@
 /** \addtogroup SAMD20_DAC Digital Analog Converter */
 /*@{*/
 
-#define REV_DAC                     0x100
+#define REV_DAC                     0x101
 
 /* -------- DAC_CTRLA : (DAC Offset: 0x0) (R/W  8) Control Register A -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -81,7 +81,7 @@ typedef union {
 typedef union {
   struct {
     uint8_t  EOEN:1;           /*!< bit:      0  Output Buffer Enable               */
-    uint8_t  IOEN:1;           /*!< bit:      1  Internal DAC Output Channel Enabled for AC or ADC */
+    uint8_t  IOEN:1;           /*!< bit:      1  Internal DAC Output Channel Enabled for AC */
     uint8_t  LEFTADJ:1;        /*!< bit:      2  Left-Adjusted Value                */
     uint8_t  VPD:1;            /*!< bit:      3  Voltage Pump Disable               */
     uint8_t  :2;               /*!< bit:  4.. 5  Reserved                           */
@@ -96,7 +96,7 @@ typedef union {
 
 #define DAC_CTRLB_EOEN_Pos          0            /**< \brief (DAC_CTRLB) Output Buffer Enable */
 #define DAC_CTRLB_EOEN              (0x1u << DAC_CTRLB_EOEN_Pos)
-#define DAC_CTRLB_IOEN_Pos          1            /**< \brief (DAC_CTRLB) Internal DAC Output Channel Enabled for AC or ADC */
+#define DAC_CTRLB_IOEN_Pos          1            /**< \brief (DAC_CTRLB) Internal DAC Output Channel Enabled for AC */
 #define DAC_CTRLB_IOEN              (0x1u << DAC_CTRLB_IOEN_Pos)
 #define DAC_CTRLB_LEFTADJ_Pos       2            /**< \brief (DAC_CTRLB) Left-Adjusted Value */
 #define DAC_CTRLB_LEFTADJ           (0x1u << DAC_CTRLB_LEFTADJ_Pos)
@@ -152,7 +152,7 @@ typedef union {
   struct {
     uint8_t  UNDERRUN:1;       /*!< bit:      0  Underrun Interrupt Disable         */
     uint8_t  EMPTY:1;          /*!< bit:      1  Empty Interrupt Disable            */
-    uint8_t  READY:1;          /*!< bit:      2  Ready Interrupt Disable            */
+    uint8_t  SYNCRDY:1;        /*!< bit:      2  Synchronization Ready Interrupt Disable */
     uint8_t  :5;               /*!< bit:  3.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
@@ -166,8 +166,8 @@ typedef union {
 #define DAC_INTENCLR_UNDERRUN       (0x1u << DAC_INTENCLR_UNDERRUN_Pos)
 #define DAC_INTENCLR_EMPTY_Pos      1            /**< \brief (DAC_INTENCLR) Empty Interrupt Disable */
 #define DAC_INTENCLR_EMPTY          (0x1u << DAC_INTENCLR_EMPTY_Pos)
-#define DAC_INTENCLR_READY_Pos      2            /**< \brief (DAC_INTENCLR) Ready Interrupt Disable */
-#define DAC_INTENCLR_READY          (0x1u << DAC_INTENCLR_READY_Pos)
+#define DAC_INTENCLR_SYNCRDY_Pos    2            /**< \brief (DAC_INTENCLR) Synchronization Ready Interrupt Disable */
+#define DAC_INTENCLR_SYNCRDY        (0x1u << DAC_INTENCLR_SYNCRDY_Pos)
 #define DAC_INTENCLR_MASK           0x07u        /**< \brief (DAC_INTENCLR) MASK Register */
 
 /* -------- DAC_INTENSET : (DAC Offset: 0x5) (R/W  8) Interrupt Enable Set Register -------- */
@@ -176,7 +176,7 @@ typedef union {
   struct {
     uint8_t  UNDERRUN:1;       /*!< bit:      0  Underrun Interrupt Enable          */
     uint8_t  EMPTY:1;          /*!< bit:      1  Empty Interrupt Enable             */
-    uint8_t  READY:1;          /*!< bit:      2  Ready Interrupt Enable             */
+    uint8_t  SYNCRDY:1;        /*!< bit:      2  Synchronization Ready Interrupt Enable */
     uint8_t  :5;               /*!< bit:  3.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
@@ -190,8 +190,8 @@ typedef union {
 #define DAC_INTENSET_UNDERRUN       (0x1u << DAC_INTENSET_UNDERRUN_Pos)
 #define DAC_INTENSET_EMPTY_Pos      1            /**< \brief (DAC_INTENSET) Empty Interrupt Enable */
 #define DAC_INTENSET_EMPTY          (0x1u << DAC_INTENSET_EMPTY_Pos)
-#define DAC_INTENSET_READY_Pos      2            /**< \brief (DAC_INTENSET) Ready Interrupt Enable */
-#define DAC_INTENSET_READY          (0x1u << DAC_INTENSET_READY_Pos)
+#define DAC_INTENSET_SYNCRDY_Pos    2            /**< \brief (DAC_INTENSET) Synchronization Ready Interrupt Enable */
+#define DAC_INTENSET_SYNCRDY        (0x1u << DAC_INTENSET_SYNCRDY_Pos)
 #define DAC_INTENSET_MASK           0x07u        /**< \brief (DAC_INTENSET) MASK Register */
 
 /* -------- DAC_INTFLAG : (DAC Offset: 0x6) (R/W  8) Interrupt Flag Status and Clear Register -------- */
@@ -200,7 +200,7 @@ typedef union {
   struct {
     uint8_t  UNDERRUN:1;       /*!< bit:      0  Underrun Interrupt Flag            */
     uint8_t  EMPTY:1;          /*!< bit:      1  Empty Interrupt Flag               */
-    uint8_t  READY:1;          /*!< bit:      2  Ready Interrupt Flag               */
+    uint8_t  SYNCRDY:1;        /*!< bit:      2  Synchronization Ready Interrupt Flag */
     uint8_t  :5;               /*!< bit:  3.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
@@ -214,17 +214,15 @@ typedef union {
 #define DAC_INTFLAG_UNDERRUN        (0x1u << DAC_INTFLAG_UNDERRUN_Pos)
 #define DAC_INTFLAG_EMPTY_Pos       1            /**< \brief (DAC_INTFLAG) Empty Interrupt Flag */
 #define DAC_INTFLAG_EMPTY           (0x1u << DAC_INTFLAG_EMPTY_Pos)
-#define DAC_INTFLAG_READY_Pos       2            /**< \brief (DAC_INTFLAG) Ready Interrupt Flag */
-#define DAC_INTFLAG_READY           (0x1u << DAC_INTFLAG_READY_Pos)
+#define DAC_INTFLAG_SYNCRDY_Pos     2            /**< \brief (DAC_INTFLAG) Synchronization Ready Interrupt Flag */
+#define DAC_INTFLAG_SYNCRDY         (0x1u << DAC_INTFLAG_SYNCRDY_Pos)
 #define DAC_INTFLAG_MASK            0x07u        /**< \brief (DAC_INTFLAG) MASK Register */
 
 /* -------- DAC_STATUS : (DAC Offset: 0x7) (R/   8) Status Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint8_t  SWRST:1;          /*!< bit:      0  Software Reset Status              */
-    uint8_t  ENABLE:1;         /*!< bit:      1  Enable Status                      */
-    uint8_t  :5;               /*!< bit:  2.. 6  Reserved                           */
+    uint8_t  :7;               /*!< bit:  0.. 6  Reserved                           */
     uint8_t  SYNCBUSY:1;       /*!< bit:      7  Synchronization Busy               */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
@@ -234,13 +232,9 @@ typedef union {
 #define DAC_STATUS_OFFSET           0x7          /**< \brief (DAC_STATUS offset) Status Register */
 #define DAC_STATUS_RESETVALUE       0x00         /**< \brief (DAC_STATUS reset_value) Status Register */
 
-#define DAC_STATUS_SWRST_Pos        0            /**< \brief (DAC_STATUS) Software Reset Status */
-#define DAC_STATUS_SWRST            (0x1u << DAC_STATUS_SWRST_Pos)
-#define DAC_STATUS_ENABLE_Pos       1            /**< \brief (DAC_STATUS) Enable Status */
-#define DAC_STATUS_ENABLE           (0x1u << DAC_STATUS_ENABLE_Pos)
 #define DAC_STATUS_SYNCBUSY_Pos     7            /**< \brief (DAC_STATUS) Synchronization Busy */
 #define DAC_STATUS_SYNCBUSY         (0x1u << DAC_STATUS_SYNCBUSY_Pos)
-#define DAC_STATUS_MASK             0x83u        /**< \brief (DAC_STATUS) MASK Register */
+#define DAC_STATUS_MASK             0x80u        /**< \brief (DAC_STATUS) MASK Register */
 
 /* -------- DAC_DATA : (DAC Offset: 0x8) (R/W 16) Data Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))

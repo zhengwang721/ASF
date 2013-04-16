@@ -61,6 +61,7 @@
 #define REG_TC4_COUNT16_COUNT      (0x42003010U) /**< \brief (TC4) COUNT16 Count Register */
 #define REG_TC4_COUNT32_COUNT      (0x42003010U) /**< \brief (TC4) COUNT32 Count Register */
 #define REG_TC4_COUNT8_PER         (0x42003014U) /**< \brief (TC4) COUNT8 Period Register */
+#define REG_TC4_COUNT32_PER        (0x42003014U) /**< \brief (TC4) COUNT32 Period Register */
 #define REG_TC4_COUNT8_CC0         (0x42003018U) /**< \brief (TC4) COUNT8 Compare and Capture Register 0 */
 #define REG_TC4_COUNT8_CC1         (0x42003019U) /**< \brief (TC4) COUNT8 Compare and Capture Register 1 */
 #define REG_TC4_COUNT16_CC0        (0x42003018U) /**< \brief (TC4) COUNT16 Compare and Capture Register 0 */
@@ -83,6 +84,7 @@
 #define REG_TC4_COUNT16_COUNT      (*(RwReg16*)0x42003010U) /**< \brief (TC4) COUNT16 Count Register */
 #define REG_TC4_COUNT32_COUNT      (*(RwReg  *)0x42003010U) /**< \brief (TC4) COUNT32 Count Register */
 #define REG_TC4_COUNT8_PER         (*(RwReg8 *)0x42003014U) /**< \brief (TC4) COUNT8 Period Register */
+#define REG_TC4_COUNT32_PER        (*(RwReg  *)0x42003014U) /**< \brief (TC4) COUNT32 Period Register */
 #define REG_TC4_COUNT8_CC0         (*(RwReg8 *)0x42003018U) /**< \brief (TC4) COUNT8 Compare and Capture Register 0 */
 #define REG_TC4_COUNT8_CC1         (*(RwReg8 *)0x42003019U) /**< \brief (TC4) COUNT8 Compare and Capture Register 1 */
 #define REG_TC4_COUNT16_CC0        (*(RwReg16*)0x42003018U) /**< \brief (TC4) COUNT16 Compare and Capture Register 0 */
@@ -95,7 +97,10 @@
 #define TC4_CC8_NUM                 2
 #define TC4_CC16_NUM                2
 #define TC4_CC32_NUM                2
+#define TC4_DITHERING_EXT           0
 #define TC4_GCLK_ID                 21
 #define TC4_OW_NUM                  2
+#define TC4_PERIOD_EXT              0
+#define TC4_SHADOW_EXT              0
 
 #endif /* _SAMD20_TC4_INSTANCE_ */

@@ -99,7 +99,7 @@ int main(void)
 //! [mux_setting]
 	/* Configure pad 0 for data in */
 //! [di]
-	config.pinmux_pad0 = PINMUX_PA14B_SERCOM2_PAD0;
+	config.pinmux_pad0 = PINMUX_PA08D_SERCOM2_PAD0;
 //! [di]
 	/* Configure pad 1 as unused */
 //! [ss]
@@ -107,11 +107,11 @@ int main(void)
 //! [ss]
 	/* Configure pad 2 for data out */
 //! [do]
-	config.pinmux_pad2 = PINMUX_PA12B_SERCOM2_PAD2;
+	config.pinmux_pad2 = PINMUX_PA10D_SERCOM2_PAD2;
 //! [do]
 	/* Configure pad 3 for SCK */
 //! [sck]
-	config.pinmux_pad3 = PINMUX_PA13B_SERCOM2_PAD3;
+	config.pinmux_pad3 = PINMUX_PA19D_SERCOM3_PAD3;
 //! [sck]
 //! [init]
 	spi_init(&master, SERCOM2, &config);

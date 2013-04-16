@@ -53,8 +53,6 @@ struct _sercom_conf {
 	bool generator_is_set;
 	/* Sercom gclk generator used. */
 	enum gclk_generator generator_source;
-	/* Will generator be operational in standby. */
-	bool run_in_standby;
 };
 
 static struct _sercom_conf _sercom_config;
@@ -143,28 +141,23 @@ enum status_code _sercom_get_async_baud_val(
  */
 enum status_code sercom_set_gclk_generator(
 		const enum gclk_generator generator_source,
-		const bool run_in_standby,
 		const bool force_change)
 {
 	/* Check if valid option. */
 	if (!_sercom_config.generator_is_set || force_change) {
 		/* Create and fill a GCLK configuration structure for the new config. */
 		struct system_gclk_chan_config gclk_chan_conf;
+		system_gclk_chan_get_config_defaults(&gclk_chan_conf);
 		gclk_chan_conf.source_generator = generator_source;
-		gclk_chan_conf.run_in_standby   = run_in_standby;
-
-		/* Apply configuration and enable the GCLK channel */
 		system_gclk_chan_set_config(SERCOM_GCLK_ID, &gclk_chan_conf);
 		system_gclk_chan_enable(SERCOM_GCLK_ID);
 
 		/* Save config. */
 		_sercom_config.generator_source = generator_source;
-		_sercom_config.run_in_standby   = run_in_standby;
 		_sercom_config.generator_is_set = true;
 
 		return STATUS_OK;
-	} else if (generator_source == _sercom_config.generator_source &&
-			run_in_standby == _sercom_config.run_in_standby) {
+	} else if (generator_source == _sercom_config.generator_source) {
 		/* Return status OK if same config. */
 		return STATUS_OK;
 	}

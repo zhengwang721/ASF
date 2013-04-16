@@ -104,7 +104,7 @@ uint32_t system_clock_source_get_hz(
 		case SYSTEM_CLOCK_SOURCE_OSC32K:
 			return 32768UL;
 
-		case SYSTEM_CLOCK_SOURCE_ULP32KHZ:
+		case SYSTEM_CLOCK_SOURCE_ULP32K:
 			return 32768UL;
 
 		case SYSTEM_CLOCK_SOURCE_XOSC32K:
@@ -327,7 +327,7 @@ enum status_code system_clock_source_write_calibration(
 			SYSCTRL->OSC32K.bit.CALIB = calibration_value;
 			break;
 
-		case SYSTEM_CLOCK_SOURCE_ULP32KHZ:
+		case SYSTEM_CLOCK_SOURCE_ULP32K:
 
 			if (calibration_value > 32) {
 				return STATUS_ERR_INVALID_ARG;
@@ -367,38 +367,33 @@ enum status_code system_clock_source_enable(
 
 	switch (clock_source) {
 		case SYSTEM_CLOCK_SOURCE_OSC8M:
-			SYSCTRL->FORCECLKON.bit.OSC8MON = 1;
 			SYSCTRL->OSC8M.reg |= SYSCTRL_OSC8M_ENABLE;
 			/* Not possible to wait for ready, so we return */
 			return STATUS_OK;
 
 		case SYSTEM_CLOCK_SOURCE_OSC32K:
-			SYSCTRL->FORCECLKON.bit.OSC32KON = 1;
 			SYSCTRL->OSC32K.reg |= SYSCTRL_OSC32K_ENABLE;
 			waitmask = SYSCTRL_PCLKSR_OSC32KRDY;
 			break;
 
 		case SYSTEM_CLOCK_SOURCE_XOSC:
-			SYSCTRL->FORCECLKON.bit.XOSCON = 1;
 			SYSCTRL->XOSC.reg |= SYSCTRL_XOSC_ENABLE;
 			waitmask = SYSCTRL_PCLKSR_XOSCRDY;
 			break;
 
 		case SYSTEM_CLOCK_SOURCE_XOSC32K:
-			SYSCTRL->FORCECLKON.bit.XOSC32KON = 1;
 			SYSCTRL->XOSC32K.reg |= SYSCTRL_XOSC32K_ENABLE;
 			waitmask = SYSCTRL_PCLKSR_XOSC32KRDY;
 			break;
 
 		case SYSTEM_CLOCK_SOURCE_DFLL:
-			SYSCTRL->FORCECLKON.bit.DFLLON = 1;
 			SYSCTRL->DFLLSYNC.bit.READREQ = 1;
 			_system_dfll_wait_for_sync();
 
 			SYSCTRL->DFLLCTRL.reg |= SYSCTRL_DFLLCTRL_ENABLE;
 			waitmask = SYSCTRL_PCLKSR_DFLLRDY;
 			break;
-		case SYSTEM_CLOCK_SOURCE_ULP32KHZ:
+		case SYSTEM_CLOCK_SOURCE_ULP32K:
 			/* Always enabled */
 			return STATUS_OK;
 
@@ -456,7 +451,7 @@ enum status_code system_clock_source_disable(
 			SYSCTRL->DFLLCTRL.reg &= ~SYSCTRL_DFLLCTRL_ENABLE;
 			break;
 
-		case SYSTEM_CLOCK_SOURCE_ULP32KHZ:
+		case SYSTEM_CLOCK_SOURCE_ULP32K:
 			/* Not possible to disable */
 			return STATUS_ERR_INVALID_ARG;
 
@@ -504,7 +499,7 @@ bool system_clock_source_is_ready(
 			mask = SYSCTRL_PCLKSR_DFLLRDY;
 			break;
 
-		case SYSTEM_CLOCK_SOURCE_ULP32KHZ:
+		case SYSTEM_CLOCK_SOURCE_ULP32K:
 			/* Not possible to disable */
 			return false;
 
@@ -525,15 +520,14 @@ bool system_clock_source_is_ready(
 void system_clock_init(void)
 {
 	struct system_gclk_gen_config gclk_generator_conf;
+	UNUSED(gclk_generator_conf);
 
-#ifndef CONF_CLOCK_FLASH_WAIT_STATES
-	system_flash_set_waitstates(2);
-#else
-#   if CONF_CLOCK_CONFIGURE_FLASH_WAIT_STATES == true
+#if CONF_CLOCK_CONFIGURE_FLASH_WAIT_STATES == true
 	system_flash_set_waitstates(CONF_CLOCK_FLASH_WAIT_STATES);
-#   endif
-
+#else
+	system_flash_set_waitstates(2);
 #endif
+
 
 	/* XOSC */
 #if CONF_CLOCK_XOSC_ENABLE == true
@@ -708,12 +702,10 @@ void system_clock_init(void)
 
 #endif /* Configure GCLK */
 
-
 	/* CPU and BUS clocks */
-	system_main_clock_set_source(CONF_CLOCK_CPU_CLOCK_SOURCE);
 	system_cpu_clock_set_divider(CONF_CLOCK_CPU_DIVIDER);
 
-#if CONF_CLOCK_ENABLE_CPU_CLOCK_FAILURE_DETECT == true
+#if CONF_CLOCK_CPU_CLOCK_FAILURE_DETECT == true
 	system_main_clock_set_failure_detect(true);
 #else
 	system_main_clock_set_failure_detect(false);

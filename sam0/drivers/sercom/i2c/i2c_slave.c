@@ -103,7 +103,7 @@ static enum status_code _i2c_slave_check_config(
 	/* Write config to register CTRLA */
 	tmp_ctrla |= config->sda_hold_time |
 			(config->run_in_standby << SERCOM_I2CS_CTRLA_RUNSTDBY_Pos) |
-			(SERCOM_I2CS_CTRLA_MODE(2) & ~SERCOM_I2CS_CTRLA_MASTER) |
+			SERCOM_I2CS_CTRLA_MODE(4) |
 			SERCOM_I2CS_CTRLA_ENABLE;
 
 	/* Set CTRLB configuration */
@@ -255,7 +255,7 @@ enum status_code i2c_slave_init(
 	gclk_chan_conf.source_generator = config->generator_source;
 	system_gclk_chan_set_config(gclk_index, &gclk_chan_conf);
 	system_gclk_chan_enable(gclk_index);
-	sercom_set_gclk_generator(config->generator_source, true, false);
+	sercom_set_gclk_generator(config->generator_source, false);
 
 #if I2C_SLAVE_CALLBACK_MODE == true
 	/* Get sercom instance index. */
@@ -274,8 +274,7 @@ enum status_code i2c_slave_init(
 #endif
 
 	/* Set SERCOM module to operate in I2C slave mode. */
-	i2c_hw->CTRLA.reg =
-			(SERCOM_I2CS_CTRLA_MODE(2) & ~SERCOM_I2CS_CTRLA_MASTER);
+	i2c_hw->CTRLA.reg = SERCOM_I2CS_CTRLA_MODE(4);
 
 	/* Set config and return status. */
 	return _i2c_slave_set_config(module, config);
@@ -344,9 +343,9 @@ static enum status_code _i2c_slave_wait_for_bus(
 
 	/* Wait for reply. */
 	uint16_t timeout_counter = 0;
-	while ((!(i2c_module->INTFLAG.reg & SERCOM_I2CS_INTFLAG_DIF)) &&
-			(!(i2c_module->INTFLAG.reg & SERCOM_I2CS_INTFLAG_PIF)) &&
-			(!(i2c_module->INTFLAG.reg & SERCOM_I2CS_INTFLAG_AIF))) {
+	while ((!(i2c_module->INTFLAG.reg & SERCOM_I2CS_INTFLAG_DRDY)) &&
+			(!(i2c_module->INTFLAG.reg & SERCOM_I2CS_INTFLAG_PREC)) &&
+			(!(i2c_module->INTFLAG.reg & SERCOM_I2CS_INTFLAG_AMATCH))) {
 
 		/* Check timeout condition. */
 		if (++timeout_counter >= module->buffer_timeout) {
@@ -394,7 +393,7 @@ enum status_code i2c_slave_write_packet_wait(
 			/* Timeout, return */
 			return status;
 	}
-	if (!(i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_AIF)) {
+	if (!(i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_AMATCH)) {
 		/* Not address interrupt, something is wrong */
 		return STATUS_ERR_DENIED;
 	}
@@ -524,11 +523,11 @@ enum status_code i2c_slave_read_packet_wait(
 			return status;
 		}
 
-		if ((i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_PIF) ||
-				i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_AIF) {
+		if ((i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_PREC) ||
+				i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_AMATCH) {
 			/* Master sent stop condition, or repeated start, read done */
 			/* Clear stop flag */
-			i2c_hw->INTFLAG.reg = SERCOM_I2CS_INTFLAG_PIF;
+			i2c_hw->INTFLAG.reg = SERCOM_I2CS_INTFLAG_PREC;
 			return STATUS_ABORTED;
 		}
 
@@ -546,13 +545,13 @@ enum status_code i2c_slave_read_packet_wait(
 		 */
 	}
 
-	if (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_DIF) {
+	if (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_DRDY) {
 		/* Buffer is full, send NACK */
 		i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_ACKACT;
 		i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_CMD(0x2);
-	} else if (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_PIF) {
+	} else if (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_PREC) {
 		/* Clear stop flag */
-		i2c_hw->INTFLAG.reg = SERCOM_I2CS_INTFLAG_PIF;
+		i2c_hw->INTFLAG.reg = SERCOM_I2CS_INTFLAG_PREC;
 	}
 	return STATUS_OK;
 }
@@ -591,7 +590,7 @@ enum i2c_slave_direction i2c_slave_get_direction_wait(
 		return I2C_SLAVE_DIRECTION_NONE;
 	}
 
-	if (!(i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_AIF)) {
+	if (!(i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_AMATCH)) {
 		/* Not address interrupt, something is wrong */
 		return I2C_SLAVE_DIRECTION_NONE;
 	}
