@@ -9,12 +9,12 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="4671.2886"
-   height="172.31013"
+   width="1062.9977"
+   height="39.199993"
    id="svg2"
    version="1.1"
    inkscape:version="0.48.4 r9939"
-   sodipodi:docname="i2c_m_read.svg">
+   sodipodi:docname="i2c_write.svg">
   <defs
      id="defs4" />
   <sodipodi:namedview
@@ -24,9 +24,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.49497475"
-     inkscape:cx="1196.1287"
-     inkscape:cy="-119.19316"
+     inkscape:zoom="0.9899495"
+     inkscape:cx="-488.42509"
+     inkscape:cy="-132.2365"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -38,7 +38,8 @@
      fit-margin-top="0"
      fit-margin-left="0"
      fit-margin-right="0"
-     fit-margin-bottom="0" />
+     fit-margin-bottom="0"
+     units="cm" />
   <metadata
      id="metadata7">
     <rdf:RDF>
@@ -47,7 +48,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -55,16 +56,18 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-14.147212,-114.35134)">
+     transform="translate(-994.63325,-178.88436)">
     <g
-       id="g3367" />
+       id="g3367"
+       transform="matrix(0.22739325,0,0,0.22304957,991.80606,153.76187)" />
     <g
-       id="g3651">
+       id="g3651"
+       transform="matrix(0.22739325,0,0,0.22304957,991.80606,153.76187)">
       <g
          transform="translate(-15.152288,-49.497478)"
          id="g3025">
         <rect
-           style="fill:#cccccc;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           style="fill:#cccccc;fill-rule:evenodd;stroke:#000000;stroke-width:4.4402833px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            id="rect2985"
            width="160.10918"
            height="84.852814"
@@ -91,7 +94,7 @@
            height="84.852814"
            width="160.10918"
            id="rect2985-3"
-           style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+           style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:4.4402833px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
         <g
            id="g3363">
           <text
@@ -109,12 +112,13 @@
       </g>
     </g>
     <g
-       id="g3600">
+       id="g3600"
+       transform="matrix(0.22739325,0,0,0.22304957,991.80606,153.76187)">
       <g
          transform="translate(146.18369,-49.528111)"
          id="g3025-0">
         <rect
-           style="fill:#cccccc;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           style="fill:#cccccc;fill-rule:evenodd;stroke:#000000;stroke-width:4.4402833px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            id="rect2985-9"
            width="1126"
            height="84.852814"
@@ -138,7 +142,7 @@
            id="g3371-3"
            transform="translate(161.20365,0.3799057)">
           <rect
-             style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+             style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:4.4402833px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
              id="rect2985-3-8"
              width="160.10918"
              height="84.852814"
@@ -163,7 +167,7 @@
            id="g3371-3-9"
            transform="translate(322.34682,0.36425801)">
           <rect
-             style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+             style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:4.4402833px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
              id="rect2985-3-8-8"
              width="160.10918"
              height="84.852814"
@@ -188,7 +192,7 @@
            id="g3371-3-2"
            transform="translate(483.53819,0.33959304)">
           <rect
-             style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+             style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:4.4402833px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
              id="rect2985-3-8-86"
              width="160.10918"
              height="84.852814"
@@ -213,7 +217,7 @@
            id="g3371-3-9-8"
            transform="translate(644.68136,0.32394304)">
           <rect
-             style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+             style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:4.4402833px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
              id="rect2985-3-8-8-6"
              width="160.10918"
              height="84.852814"
@@ -238,7 +242,7 @@
            id="g3371-3-0"
            transform="translate(805.87366,0.28165828)">
           <rect
-             style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+             style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:4.4402833px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
              id="rect2985-3-8-0"
              width="160.10918"
              height="84.852814"
@@ -263,7 +267,7 @@
            id="g3371-3-9-9"
            transform="translate(967.01682,0.26600828)">
           <rect
-             style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+             style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:4.4402833px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
              id="rect2985-3-8-8-3"
              width="160.10918"
              height="84.852814"
@@ -288,7 +292,7 @@
            id="g3371-3-2-0"
            transform="translate(1128.2082,0.24133828)">
           <rect
-             style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+             style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:4.4402833px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
              id="rect2985-3-8-86-6"
              width="160.10918"
              height="84.852814"
@@ -312,7 +316,8 @@
       </g>
     </g>
     <g
-       id="g3588">
+       id="g3588"
+       transform="matrix(0.22739325,0,0,0.22304957,991.80606,153.76187)">
       <g
          transform="translate(1273.3602,-49.605043)"
          id="g3025-8">
@@ -324,7 +329,7 @@
              height="84.852814"
              width="160.10918"
              id="rect2985-2"
-             style="fill:#cccccc;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+             style="fill:#cccccc;fill-rule:evenodd;stroke:#000000;stroke-width:4.4402833px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
           <text
              sodipodi:linespacing="125%"
              id="text2987-45"
@@ -347,7 +352,7 @@
            height="84.852814"
            width="160.10918"
            id="rect2985-3-8-8-6-9"
-           style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+           style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:4.4402833px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
         <g
            id="g3363-7-6-5-6">
           <text
@@ -365,7 +370,8 @@
       </g>
     </g>
     <g
-       id="g3575">
+       id="g3575"
+       transform="matrix(0.22739325,0,0,0.22304957,991.80606,153.76187)">
       <g
          transform="translate(1434.7887,-49.605043)"
          id="g3025-8-1">
@@ -374,7 +380,7 @@
           <g
              id="g3137">
             <rect
-               style="fill:#ffffff;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+               style="fill:#ffffff;fill-rule:evenodd;stroke:#000000;stroke-width:4.4402833px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
                id="rect2985-2-1"
                width="160.10918"
                height="84.852814"
@@ -403,7 +409,7 @@
            height="84.852814"
            width="160.10918"
            id="rect2985-3-8-8-6-9-8"
-           style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+           style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:4.4402833px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
         <g
            id="g3363-7-6-5-6-2">
           <text
@@ -421,14 +427,15 @@
       </g>
     </g>
     <g
-       id="g4012">
+       id="g4012"
+       transform="matrix(0.22739325,0,0,0.22304957,991.80606,153.76187)">
       <rect
          y="201.2011"
          x="1625.876"
          height="84.852814"
          width="1287"
          id="rect2985-2-1-1"
-         style="fill:#cccccc;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+         style="fill:#cccccc;fill-rule:evenodd;stroke:#000000;stroke-width:4.4402833px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
       <text
          sodipodi:linespacing="125%"
          id="text2987-45-1-4"
@@ -446,7 +453,7 @@
            id="g3371-3-5"
            transform="translate(1611.2553,0.1918423)">
           <rect
-             style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+             style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:4.4402833px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
              id="rect2985-3-8-9"
              width="160.10918"
              height="84.852814"
@@ -471,7 +478,7 @@
            id="g3371-3-9-6"
            transform="translate(1772.3984,0.17619461)">
           <rect
-             style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+             style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:4.4402833px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
              id="rect2985-3-8-8-36"
              width="160.10918"
              height="84.852814"
@@ -496,7 +503,7 @@
            id="g3371-3-2-2"
            transform="translate(1933.5898,0.15152964)">
           <rect
-             style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+             style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:4.4402833px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
              id="rect2985-3-8-86-0"
              width="160.10918"
              height="84.852814"
@@ -521,7 +528,7 @@
            id="g3371-3-9-8-7"
            transform="translate(2094.733,0.13587964)">
           <rect
-             style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+             style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:4.4402833px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
              id="rect2985-3-8-8-6-2"
              width="160.10918"
              height="84.852814"
@@ -546,7 +553,7 @@
            id="g3371-3-0-5"
            transform="translate(2255.9253,0.09359488)">
           <rect
-             style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+             style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:4.4402833px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
              id="rect2985-3-8-0-7"
              width="160.10918"
              height="84.852814"
@@ -571,7 +578,7 @@
            id="g3371-3-9-9-2"
            transform="translate(2417.0684,0.07794488)">
           <rect
-             style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+             style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:4.4402833px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
              id="rect2985-3-8-8-3-0"
              width="160.10918"
              height="84.852814"
@@ -596,7 +603,7 @@
            id="g3371-3-2-0-6"
            transform="translate(2578.1601,0.05327488)">
           <rect
-             style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+             style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:4.4402833px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
              id="rect2985-3-8-86-6-0"
              width="160.10918"
              height="84.852814"
@@ -621,7 +628,7 @@
            id="g3371-3-2-0-6-7"
            transform="translate(2739.1003,0.03811784)">
           <rect
-             style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+             style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:4.4402833px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
              id="rect2985-3-8-86-6-0-7"
              width="160.10918"
              height="84.852814"
@@ -645,7 +652,8 @@
       </g>
     </g>
     <g
-       id="g3564">
+       id="g3564"
+       transform="matrix(0.22739325,0,0,0.22304957,991.80606,153.76187)">
       <g
          id="g3559">
         <rect
@@ -654,7 +662,7 @@
            height="84.852814"
            width="160.10918"
            id="rect2985-2-1-16"
-           style="fill:#ffffff;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+           style="fill:#ffffff;fill-rule:evenodd;stroke:#000000;stroke-width:4.4402833px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
         <text
            sodipodi:linespacing="125%"
            id="text2987-45-1-8"
@@ -678,7 +686,7 @@
              height="84.852814"
              width="160.10918"
              id="rect2985-3-8-8-6-9-9"
-             style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+             style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:4.4402833px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
              transform="translate(-2899.4747,-0.12740393)" />
           <text
              sodipodi:linespacing="125%"
@@ -695,18 +703,19 @@
       </g>
     </g>
     <rect
-       y="115.04451"
-       x="3236.47"
-       height="84.852814"
-       width="160.10918"
+       y="179.42236"
+       x="1727.759"
+       height="18.926369"
+       width="36.407738"
        id="rect2985-3-8-8-36-7"
-       style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+       style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:0.99999994px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
     <g
-       id="g3498">
+       id="g3498"
+       transform="matrix(0.22739325,0,0,0.22304957,991.80606,153.76187)">
       <g
          id="g3361">
         <rect
-           style="fill:#cccccc;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           style="fill:#cccccc;fill-rule:evenodd;stroke:#000000;stroke-width:4.4402833px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            id="rect2985-2-1-1-0"
            width="1287"
            height="84.852814"
@@ -730,7 +739,7 @@
            id="g3371-3-5-1"
            transform="translate(3060.7641,0.24694231)">
           <rect
-             style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+             style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:4.4402833px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
              id="rect2985-3-8-9-2"
              width="160.10918"
              height="84.852814"
@@ -770,7 +779,7 @@
            id="g3371-3-2-2-1"
            transform="translate(3383.0986,0.20662965)">
           <rect
-             style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+             style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:4.4402833px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
              id="rect2985-3-8-86-0-2"
              width="160.10918"
              height="84.852814"
@@ -795,7 +804,7 @@
            id="g3371-3-9-8-7-4"
            transform="translate(3544.2418,0.19097965)">
           <rect
-             style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+             style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:4.4402833px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
              id="rect2985-3-8-8-6-2-0"
              width="160.10918"
              height="84.852814"
@@ -820,7 +829,7 @@
            id="g3371-3-0-5-9"
            transform="translate(3705.4341,0.14869489)">
           <rect
-             style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+             style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:4.4402833px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
              id="rect2985-3-8-0-7-8"
              width="160.10918"
              height="84.852814"
@@ -845,7 +854,7 @@
            id="g3371-3-9-9-2-3"
            transform="translate(3866.5772,0.13304489)">
           <rect
-             style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+             style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:4.4402833px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
              id="rect2985-3-8-8-3-0-9"
              width="160.10918"
              height="84.852814"
@@ -870,7 +879,7 @@
            id="g3371-3-2-0-6-8"
            transform="translate(4027.6689,0.10837489)">
           <rect
-             style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+             style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:4.4402833px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
              id="rect2985-3-8-86-6-0-77"
              width="160.10918"
              height="84.852814"
@@ -895,7 +904,7 @@
            id="g3371-3-2-0-6-7-1"
            transform="translate(4188.6091,0.09321785)">
           <rect
-             style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+             style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:4.4402833px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
              id="rect2985-3-8-86-6-0-7-0"
              width="160.10918"
              height="84.852814"
@@ -919,11 +928,12 @@
       </g>
     </g>
     <g
-       id="g3351">
+       id="g3351"
+       transform="matrix(0.22739325,0,0,0.22304957,991.80606,153.76187)">
       <g
          id="g3346">
         <rect
-           style="fill:#ffffff;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           style="fill:#ffffff;fill-rule:evenodd;stroke:#000000;stroke-width:4.4402833px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            id="rect2985-2-1-16-7"
            width="160.10918"
            height="84.852814"
@@ -950,7 +960,7 @@
            height="84.852814"
            width="160.10918"
            id="rect2985-3-8-8-6-9-9-9"
-           style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:4.4402833px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            transform="translate(-2899.4747,-0.12740393)" />
         <text
            sodipodi:linespacing="125%"
@@ -966,7 +976,8 @@
       </g>
     </g>
     <g
-       id="g4571">
+       id="g4571"
+       transform="matrix(0.22739325,0,0,0.22304957,991.80606,153.76187)">
       <g
          transform="translate(1610.7689,-0.16325573)"
          id="g3296-4">
@@ -978,7 +989,7 @@
              height="84.852814"
              width="160.10918"
              id="rect2985-2-1-16-7-3"
-             style="fill:#cccccc;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+             style="fill:#cccccc;fill-rule:evenodd;stroke:#000000;stroke-width:4.4402833px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
           <text
              sodipodi:linespacing="125%"
              id="text2987-45-1-8-9-1"
@@ -997,7 +1008,7 @@
          id="g4454-8">
         <rect
            transform="translate(-2899.4747,-0.12740393)"
-           style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           style="fill:#333333;fill-rule:evenodd;stroke:#000000;stroke-width:4.4402833px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            id="rect2985-3-8-8-6-9-9-3"
            width="160.10918"
            height="84.852814"
