@@ -7,8 +7,6 @@
 			<keyword value="Communication"/>
 		</info>
 
-
-
 		<module type="driver" id="sam0.drivers.sercom.i2c.master#polled" caption="SERCOM I2C - Master Mode I2C (Polled APIs)">
 			<build type="include-path" value="." />
 			<build type="header-file" subtype="api" value="i2c_master.h"/>
@@ -22,6 +20,7 @@
 			<build type="header-file" value="quick_start_master/qs_i2c_master_basic_use.h"/>
 			<build type="doxygen-entry-point" value="asfdoc_samd20_i2c_group"/>
 			<build type="doxygen-example-path" value="quick_start_master"/>
+			<build type="doxygen-image-path" value="docimg"/>
 
 			<device-support value="samd20"/>
 
@@ -51,6 +50,7 @@
 			<build type="doxygen-entry-point" value="asfdoc_samd20_i2c_group"/>
 			<build type="doxygen-example-path" value="quick_start_master"/>
 			<build type="doxygen-example-path" value="quick_start_master_callback"/>
+			<build type="doxygen-image-path" value="docimg"/>
 
 			<device-support value="samd20"/>
 
@@ -83,6 +83,7 @@
 			<build type="header-file" value="quick_start_slave/qs_i2c_slave_basic_use.h"/>
 			<build type="doxygen-entry-point" value="asfdoc_samd20_i2c_group"/>
 			<build type="doxygen-example-path" value="quick_start_slave"/>
+			<build type="doxygen-image-path" value="docimg"/>
 
 			<device-support value="samd20"/>
 
@@ -112,6 +113,7 @@
 			<build type="doxygen-entry-point" value="asfdoc_samd20_i2c_group"/>
 			<build type="doxygen-example-path" value="quick_start_slave"/>
 			<build type="doxygen-example-path" value="quick_start_slave_callback"/>
+			<build type="doxygen-image-path" value="docimg"/>
 
 			<device-support value="samd20"/>
 

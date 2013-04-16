@@ -46,6 +46,9 @@
  *
  * In this use case, the I<SUP>2</SUP>C will used and set up as follows:
  *  - Slave mode
+ *  - 100kHz operation speed
+ *  - Not operational in standby
+ *  - 10000 packet timeout value
  *
  * \section asfdoc_samd20_i2c_slave_callback_use_case_prereq Prerequisites
  * The device must be connected to an I<SUP>2</SUP>C master.
