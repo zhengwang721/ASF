@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 Master I2C Slave Bootloader
+ * \brief SAM D20 Master I2C Slave Bootloader
  *
  * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
@@ -55,7 +55,7 @@
  * \section deviceinfo Device Info
  * All devices with I2C can be used. This application has been tested
  * with the following setup:
- *   - SAM0+D Xplained Pro kit connected with I2C Master on PA14 and PA15.
+ *   - SAM D20 Xplained Pro kit connected with I2C Master on PA14 and PA15.
  *
  * \section applicationdescription Description of the application
  *   - Check the status of BOOT_LOAD_PIN to continue executing bootloader or
@@ -89,7 +89,7 @@ struct i2c_slave_module slave;
 
 struct i2c_packet packet = {
 	.address     = SLAVE_ADDRESS,
-	.data_length = DATA_LENGTH,
+	.data_length = NVMCTRL_PAGE_SIZE,
 };
 
 /* Function prototypes */
@@ -214,8 +214,11 @@ static void start_application(void)
 
 	wdt_enable();
 
+	/* Turn ON LED after watchdog has initialized */
+	port_pin_set_output_level(BOOT_LED, false);
+
 	while (1) {
-		port_pin_toggle_output_level(BOOT_LED);
+		/* Wait for watchdog reset */
 	}
 }
 
@@ -223,13 +226,18 @@ static void start_application(void)
  * \brief Function for checking whether to enter boot mode or application mode
  *
  * This function will check the state of BOOT_LOAD_PIN. If it is pressed, it
- * continues execution in bootloader mode. Else, it jumps to the application
- * and starts execution from there
+ * continues execution in bootloader mode. Else, it reads the first location 
+ * from the application section and checks whether it is 0xFFFFFFFF. If yes,
+ * then the application section is empty and it waits indefinitely there. If
+ * not, it jumps to the application and starts execution from there.
  * Access to direct peripheral registers are made in this routine to enable
  * quick decision on application or bootloader mode.
  */
 static void check_boot_mode(void)
 {
+	uint32_t app_check_address;
+	uint32_t *app_check_address_ptr;
+
 	/* Check if WDT is locked */
 	if (!(WDT->CTRL.reg & WDT_CTRL_ALWAYSON)) {
 		/* Disable the Watchdog module */
@@ -251,6 +259,19 @@ static void check_boot_mode(void)
 
 	/* Check the BOOT pin or the reset cause is Watchdog */
 	if ((boot_en) || (PM->RCAUSE.reg & PM_RCAUSE_WDT)) {
+		app_check_address = APP_START_ADDRESS;
+		app_check_address_ptr = (uint32_t *) app_check_address;
+
+		/* 
+		 * Read the first location of application section
+		 * which contains the address of stack pointer.
+		 * If it is 0xFFFFFFFF then the application section is empty.
+		 */
+		if (*app_check_address_ptr == 0xFFFFFFFF) {
+			while (1) {
+				/* Wait indefinitely */
+			}
+		}
 		/* Pointer to the Application Section */
 		void (*application_code_entry)(void);
 
@@ -347,16 +368,16 @@ int main(void)
 
 	do {
 		/* Read data of AT45DBX_SECTOR_SIZE */
-		fetch_data(buff, min(DATA_LENGTH, len));
+		fetch_data(buff, min(NVMCTRL_PAGE_SIZE, len));
 
 		/* Program the read data into Flash */
-		program_memory(curr_prog_addr, buff, min(DATA_LENGTH, len));
+		program_memory(curr_prog_addr, buff, min(NVMCTRL_PAGE_SIZE, len));
 
 		/* Increment the current programming address */
-		curr_prog_addr += min(DATA_LENGTH, len);
+		curr_prog_addr += min(NVMCTRL_PAGE_SIZE, len);
 
 		/* Calculate the remaining length */
-		remaining_len -= min(DATA_LENGTH, len);
+		remaining_len -= min(NVMCTRL_PAGE_SIZE, len);
 
 		/* Update the length to remaining length to be programmed */
 		len = remaining_len;

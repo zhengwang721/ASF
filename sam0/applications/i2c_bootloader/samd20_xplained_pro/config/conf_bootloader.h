@@ -54,7 +54,6 @@
 /* I2C Slave configurations */
 #define BOOT_SERCOM                SERCOM2
 #define SLAVE_ADDRESS              0x15
-#define DATA_LENGTH                NVMCTRL_PAGE_SIZE
 #define BOOT_I2C_PAD0              PINMUX_PA14B_SERCOM2_PAD0
 #define BOOT_I2C_PAD1              PINMUX_PA15B_SERCOM2_PAD1
 
