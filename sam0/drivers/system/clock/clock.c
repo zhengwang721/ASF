@@ -577,14 +577,10 @@ void system_clock_init(void)
 	system_clock_source_dfll_get_default_config(&dfll_conf);
 	dfll_conf.loop = CONF_CLOCK_DFLL_LOOP_MODE;
 
-#  if (CONF_CLOCK_DFLL_MODE == SYSTEM_CLOCK_DFLL_OPEN_LOOP)
-#    if CONF_CLOCK_DFLL_48MHZ_CALIBRATE == true
-		// TODO: Add 48MHz calibration value here
-#    else
-	dfll_conf.coarse_value = CONF_CLOCK_DFLL_COARSE_VALUE;
-	dfll_conf.fine_value   = CONF_CLOCK_DFLL_FINE_VALUE;
-#    endif
-#  endif
+	if (CONF_CLOCK_DFLL_LOOP_MODE == SYSTEM_CLOCK_DFLL_OPEN_LOOP) {
+		dfll_conf.coarse_value = CONF_CLOCK_DFLL_COARSE_VALUE;
+		dfll_conf.fine_value   = CONF_CLOCK_DFLL_FINE_VALUE;
+	}
 
 #  if CONF_CLOCK_DFLL_QUICK_LOCK == true
 	dfll_conf.quick_lock = SYSTEM_CLOCK_DFLL_QUICK_LOCK_ENABLE;
@@ -610,16 +606,17 @@ void system_clock_init(void)
 	dfll_conf.chill_cycle = SYSTEM_CLOCK_DFLL_CHILL_CYCLE_DISABLE;
 #  endif
 
-#  if (CONF_CLOCK_DFLL_MODE == SYSTEM_CLOCK_DFLL_CLOSED_LOOP)
-	dfll_conf.multiply_factor = CONF_CLOCK_DFLL_MULTIPLY_FACTOR;
-#  endif
+	if (CONF_CLOCK_DFLL_LOOP_MODE == SYSTEM_CLOCK_DFLL_CLOSED_LOOP) {
+		dfll_conf.multiply_factor = CONF_CLOCK_DFLL_MULTIPLY_FACTOR;
+	}
 
 	dfll_conf.coarse_max_step = CONF_CLOCK_DFLL_MAX_COARSE_STEP_SIZE;
 	dfll_conf.fine_max_step   = CONF_CLOCK_DFLL_MAX_FINE_STEP_SIZE;
 
-#  if CONF_CLOCK_DFLL_MODE == SYSTEM_CLOCK_DFLL_OPEN_LOOP
-	system_clock_source_dfll_set_config(&dfll_conf);
-#  endif
+	if (CONF_CLOCK_DFLL_LOOP_MODE == SYSTEM_CLOCK_DFLL_OPEN_LOOP) {
+		system_clock_source_dfll_set_config(&dfll_conf);
+	}
+
 #endif /* CONF_CLOCK_DFLL_ENABLE */
 
 
@@ -691,15 +688,16 @@ void system_clock_init(void)
 	system_gclk_gen_enable(7);
 #  endif
 
-#  if (CONF_CLOCK_DFLL_ENABLE == true) && (CONF_CLOCK_DFLL_MODE == SYSTEM_CLOCK_DFLL_CLOSED_LOOP)
+	if ((CONF_CLOCK_DFLL_LOOP_MODE == SYSTEM_CLOCK_DFLL_CLOSED_LOOP)
+			&& (CONF_CLOCK_DFLL_ENABLE == true)) {
 	struct system_gclk_chan_config dfll_gclk_chan_conf;
 
-	system_gclk_chan_get_config_defaults(&dfll_gclk_chan_conf);
-	dfll_gclk_chan_conf.source_generator = CONF_CLOCK_DFLL_SOURCE_GCLK_GENERATOR;
-	system_gclk_chan_set_config(0, &dfll_gclk_chan_conf);
-	system_gclk_chan_enable(0);
-	system_clock_source_dfll_set_config(&dfll_conf);
-#  endif
+		system_gclk_chan_get_config_defaults(&dfll_gclk_chan_conf);
+		dfll_gclk_chan_conf.source_generator = CONF_CLOCK_DFLL_SOURCE_GCLK_GENERATOR;
+		system_gclk_chan_set_config(0, &dfll_gclk_chan_conf);
+		system_gclk_chan_enable(0);
+		system_clock_source_dfll_set_config(&dfll_conf);
+	}
 
 #endif /* Configure GCLK */
 
