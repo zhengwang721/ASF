@@ -261,7 +261,7 @@
 #include <system_interrupt.h>
 #endif
 
-#if CONF_CLOCK_GCLK_2_RTC == false
+#if CONF_CLOCK_GCLK_2_ENABLE == false
 #  error "Application conf_clocks.h configuration header has invalid settings for the RTC module."
 #endif
 
