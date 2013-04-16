@@ -87,7 +87,7 @@
 
 /* DFLL Closed loop mode configuration */
 #  define CONF_CLOCK_DFLL_SOURCE_GCLK_GENERATOR  GCLK_GENERATOR_6
-#  define CONF_CLOCK_DFLL_MULTIPLY_FACTOR        7
+#  define CONF_CLOCK_DFLL_MULTIPLY_FACTOR        6
 #  define CONF_CLOCK_DFLL_QUICK_LOCK             true
 #  define CONF_CLOCK_DFLL_TRACK_AFTER_FINE_LOCK  true
 #  define CONF_CLOCK_DFLL_KEEP_LOCK_ON_WAKEUP    true
