@@ -46,7 +46,7 @@
  *
  * In this use case, the I<SUP>2</SUP>C will used and set up as follows:
  *  - Master mode
- *  - 100 kHz operation speed
+ *  - 100kHz operation speed
  *  - Not operational in standby
  *  - 10000 packet timeout value
  *  - 65535 unknown bus state timeout value
@@ -72,14 +72,14 @@
  * - Function for setting up the module:
  * \snippet qs_i2c_master_basic_use.c initialize_i2c
  *
- * - Add to user application %main():
+ * - Add to user application \c main():
  * \snippet qs_i2c_master_basic_use.c init
  *
  * \subsection asfdoc_samd20_i2c_master_basic_use_setup_workflow Workflow
  * -# Initialize system.
  *  \snippet qs_i2c_master_basic_use.c system_init
  * -# Configure and enable module:
- *  \snippet qs_i2c_master_basic_use.c configure_i2c
+ *  \snippet qs_i2c_master_basic_use.c initialize_i2c
  *   -# Create and initialize configuration structure.
  *    \snippet qs_i2c_master_basic_use.c init_conf
  *   -# Change settings in the configuration.
@@ -89,14 +89,14 @@
  *   -# Enable the module.
  *    \snippet qs_i2c_master_basic_use.c enable_module
  * -# Create a variable to see when we should stop trying to send packet.
- *  \snippet qs_i2c_master_basic_use.c timeout
+ *  \snippet qs_i2c_master_basic_use.c timeout_counter
  * -# Create a packet to send:
  *  \snippet qs_i2c_master_basic_use.c packet
  *
  * \section asfdoc_samd20_i2c_master_basic_use_implemenation Implementation
  * \subsection asfdoc_samd20_i2c_master_basic_use_implemenation_code Code
- * Add to user application %main():
- * \snippet snippet qs_i2c_master_basic_use.c
+ * Add to user application \c main():
+ * \snippet qs_i2c_master_basic_use.c main
  *
  * \subsection asfdoc_samd20_i2c_master_basic_use_implemenation_workflow Workflow
  * -# Write packet to slave.

@@ -187,8 +187,8 @@ int main(void)
 	/* Set up to clock out osc 8 on pin */
 	struct system_pinmux_config pin_mux;
 	system_pinmux_get_config_defaults(&pin_mux);
-	pin_mux.mux_position = MUX_PA31G_GCLK_IO0;
-	system_pinmux_pin_set_config(PIN_PA31, &pin_mux);
+	pin_mux.mux_position = MUX_PA30H_GCLK_IO0;
+	system_pinmux_pin_set_config(PIN_PA30H_GCLK_IO0, &pin_mux);
 
 	/* Structures for config and software device instance */
 	struct tc_module calib_chan;

@@ -112,7 +112,11 @@ int main(void)
 
 	/* Change system clock to DFLL */
 //! [set_sys_clk_src]
-	system_main_clock_set_source(SYSTEM_MAIN_CLOCK_DFLL);
+	struct system_gclk_gen_config gclock_gen_conf;
+	system_gclk_gen_get_config_defaults(&gclock_gen_conf);
+	gclock_gen_conf.source_clock    = SYSTEM_CLOCK_SOURCE_DFLL;
+	gclock_gen_conf.division_factor = 1;
+	system_gclk_gen_set_config(GCLK_GENERATOR_0, &gclock_gen_conf);
 //! [set_sys_clk_src]
 //! [main]
 

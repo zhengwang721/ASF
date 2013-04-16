@@ -57,8 +57,10 @@ static enum status_code _ac_set_config(
 	uint32_t ctrla_temp = 0;
 
 	/* Check if the comparators should be enabled during sleep */
-	if (config->run_in_standby == true) {
-		ctrla_temp |= AC_CTRLA_RUNSTDBY;
+	for (uint32_t i = 0; i < AC_PAIRS; i++) {
+		if (config->run_in_standby[i] == true) {
+			ctrla_temp |= (i << AC_CTRLA_RUNSTDBY_Pos);
+		}
 	}
 
 	while (ac_is_syncing(module_inst)) {

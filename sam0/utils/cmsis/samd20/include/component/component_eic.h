@@ -50,7 +50,7 @@
 /** \addtogroup SAMD20_EIC External Interrupt Controller */
 /*@{*/
 
-#define REV_EIC                     0x100
+#define REV_EIC                     0x101
 
 /* -------- EIC_CTRL : (EIC Offset: 0x00) (R/W  8) Control Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -109,6 +109,12 @@ typedef union {
 #define EIC_NMICTRL_NMISENSE_Pos    0            /**< \brief (EIC_NMICTRL) NMI Input Sense Configuration */
 #define EIC_NMICTRL_NMISENSE_Msk    (0x7u << EIC_NMICTRL_NMISENSE_Pos)
 #define EIC_NMICTRL_NMISENSE(value) ((EIC_NMICTRL_NMISENSE_Msk & ((value) << EIC_NMICTRL_NMISENSE_Pos)))
+#define   EIC_NMICTRL_NMISENSE_NONE (0x0u <<  0) /**< \brief (EIC_NMICTRL) No detection */
+#define   EIC_NMICTRL_NMISENSE_RISE (0x1u <<  0) /**< \brief (EIC_NMICTRL) Rising edge detection */
+#define   EIC_NMICTRL_NMISENSE_FALL (0x2u <<  0) /**< \brief (EIC_NMICTRL) Falling edge detection */
+#define   EIC_NMICTRL_NMISENSE_BOTH (0x3u <<  0) /**< \brief (EIC_NMICTRL) Both edges detection */
+#define   EIC_NMICTRL_NMISENSE_HIGH (0x4u <<  0) /**< \brief (EIC_NMICTRL) High level detection */
+#define   EIC_NMICTRL_NMISENSE_LOW  (0x5u <<  0) /**< \brief (EIC_NMICTRL) Low level detection */
 #define EIC_NMICTRL_NMIFILTEN_Pos   3            /**< \brief (EIC_NMICTRL) NMI Filter Enable */
 #define EIC_NMICTRL_NMIFILTEN       (0x1u << EIC_NMICTRL_NMIFILTEN_Pos)
 #define EIC_NMICTRL_MASK            0x0Fu        /**< \brief (EIC_NMICTRL) MASK Register */
@@ -135,8 +141,7 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint32_t EXTINTEO:16;      /*!< bit:  0..15  External Interrupt Event Output Enable [NUMBER_OF_INTERRUPTS] */
-    uint32_t :16;              /*!< bit: 16..31  Reserved                           */
+    uint32_t EXTINTEO:32;      /*!< bit:  0..31  External Interrupt Event Output Enable */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } EIC_EVCTRL_Type;
@@ -146,9 +151,9 @@ typedef union {
 #define EIC_EVCTRL_RESETVALUE       0x00000000   /**< \brief (EIC_EVCTRL reset_value) Event Control Register */
 
 #define EIC_EVCTRL_EXTINTEO_Pos     0            /**< \brief (EIC_EVCTRL) External Interrupt Event Output Enable */
-#define EIC_EVCTRL_EXTINTEO_Msk     (0xFFFFu << EIC_EVCTRL_EXTINTEO_Pos)
+#define EIC_EVCTRL_EXTINTEO_Msk     (0xFFFFFFFFu << EIC_EVCTRL_EXTINTEO_Pos)
 #define EIC_EVCTRL_EXTINTEO(value)  ((EIC_EVCTRL_EXTINTEO_Msk & ((value) << EIC_EVCTRL_EXTINTEO_Pos)))
-#define EIC_EVCTRL_MASK             0x0000FFFFu  /**< \brief (EIC_EVCTRL) MASK Register */
+#define EIC_EVCTRL_MASK             0xFFFFFFFFu  /**< \brief (EIC_EVCTRL) MASK Register */
 
 /* -------- EIC_INTENCLR : (EIC Offset: 0x08) (R/W 32) Interrupt Enable Clear Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -173,7 +178,7 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint32_t EXTINT:16;        /*!< bit:  0..15  External Interrupt Enable [NUMBER_OF_INTERRUPTS] */
+    uint32_t EXTINT:16;        /*!< bit:  0..15  External Interrupt Disable [NUMBER_OF_INTERRUPTS] */
     uint32_t :16;              /*!< bit: 16..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
@@ -183,7 +188,7 @@ typedef union {
 #define EIC_INTENSET_OFFSET         0x0C         /**< \brief (EIC_INTENSET offset) Interrupt Enable Set Register */
 #define EIC_INTENSET_RESETVALUE     0x00000000   /**< \brief (EIC_INTENSET reset_value) Interrupt Enable Set Register */
 
-#define EIC_INTENSET_EXTINT_Pos     0            /**< \brief (EIC_INTENSET) External Interrupt Enable */
+#define EIC_INTENSET_EXTINT_Pos     0            /**< \brief (EIC_INTENSET) External Interrupt Disable */
 #define EIC_INTENSET_EXTINT_Msk     (0xFFFFu << EIC_INTENSET_EXTINT_Pos)
 #define EIC_INTENSET_EXTINT(value)  ((EIC_INTENSET_EXTINT_Msk & ((value) << EIC_INTENSET_EXTINT_Pos)))
 #define EIC_INTENSET_MASK           0x0000FFFFu  /**< \brief (EIC_INTENSET) MASK Register */
@@ -356,7 +361,7 @@ typedef struct {
   __IO EIC_INTENSET_Type         INTENSET;    /**< \brief Offset: 0x0C (R/W 32) Interrupt Enable Set Register */
   __IO EIC_INTFLAG_Type          INTFLAG;     /**< \brief Offset: 0x10 (R/W 32) Interrupt Flag Status and Clear Register */
   __IO EIC_WAKEUP_Type           WAKEUP;      /**< \brief Offset: 0x14 (R/W 32) Wake-up Enable Register */
-  __IO EIC_CONFIG_Type           CONFIG[4];   /**< \brief Offset: 0x18 (R/W 32) Config Register [NUMBER_OF_CONFIG_REGS] */ /* TODO: Manually updated to match datasheet */
+  __IO EIC_CONFIG_Type           CONFIG[2];   /**< \brief Offset: 0x18 (R/W 32) Config Register [NUMBER_OF_CONFIG_REGS] */
 } Eic;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 

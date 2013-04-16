@@ -50,7 +50,7 @@
 /** \addtogroup SAMD20_DSU Device Service Unit */
 /*@{*/
 
-#define REV_DSU                     0x100
+#define REV_DSU                     0x101
 
 /* -------- DSU_CTRL : (DSU Offset: 0x0000) ( /W  8) Control Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -333,7 +333,7 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint32_t PRES:1;           /*!< bit:      0  Entry Present                      */
+    uint32_t EPRES:1;          /*!< bit:      0  Entry Present                      */
     uint32_t FMT:1;            /*!< bit:      1  Format                             */
     uint32_t :10;              /*!< bit:  2..11  Reserved                           */
     uint32_t ADDOFF:20;        /*!< bit: 12..31  Address Offset                     */
@@ -344,8 +344,8 @@ typedef union {
 
 #define DSU_ENTRY_OFFSET            0x1000       /**< \brief (DSU_ENTRY offset) CoreSight ROM Table Entry Register */
 
-#define DSU_ENTRY_PRES_Pos          0            /**< \brief (DSU_ENTRY) Entry Present */
-#define DSU_ENTRY_PRES              (0x1u << DSU_ENTRY_PRES_Pos)
+#define DSU_ENTRY_EPRES_Pos         0            /**< \brief (DSU_ENTRY) Entry Present */
+#define DSU_ENTRY_EPRES             (0x1u << DSU_ENTRY_EPRES_Pos)
 #define DSU_ENTRY_FMT_Pos           1            /**< \brief (DSU_ENTRY) Format */
 #define DSU_ENTRY_FMT               (0x1u << DSU_ENTRY_FMT_Pos)
 #define DSU_ENTRY_ADDOFF_Pos        12           /**< \brief (DSU_ENTRY) Address Offset */
