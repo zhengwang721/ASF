@@ -76,6 +76,10 @@ enum status_code bod_set_config(
 		temp |= SYSCTRL_BOD33_HYST;
 	}
 
+	if (conf->run_in_standby == true) {
+		temp |= SYSCTRL_BOD33_RUNSTDBY;
+	}
+
 	switch (bod) {
 		case BOD_BOD33:
 			if (conf->level > 0x3F) {
