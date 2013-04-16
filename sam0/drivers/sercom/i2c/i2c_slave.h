@@ -363,8 +363,8 @@ static inline void i2c_slave_enable(
 
 #if I2C_SLAVE_CALLBACK_MODE == true
 	/* Enable interrupts */
-	i2c_hw->INTENSET.reg = SERCOM_I2CS_INTENSET_PIEN |
-			SERCOM_I2CS_INTENSET_AIEN | SERCOM_I2CS_INTENSET_DIEN;
+	i2c_hw->INTENSET.reg = SERCOM_I2CS_INTENSET_PREC |
+			SERCOM_I2CS_INTENSET_AMATCH | SERCOM_I2CS_INTENSET_DRDY;
 
 	/* Enable global interrupt for module */
 	system_interrupt_enable(_sercom_get_interrupt_vector(module->hw));
@@ -397,12 +397,12 @@ static inline void i2c_slave_disable(
 
 #if I2C_SLAVE_CALLBACK_MODE == true
 	/* Disable interrupts */
-	i2c_hw->INTENCLR.reg = SERCOM_I2CS_INTENSET_PIEN |
-			SERCOM_I2CS_INTENSET_AIEN | SERCOM_I2CS_INTENSET_DIEN;
+	i2c_hw->INTENCLR.reg = SERCOM_I2CS_INTENSET_PREC |
+			SERCOM_I2CS_INTENSET_AMATCH | SERCOM_I2CS_INTENSET_DRDY;
 
 	/* Clear interrupt flags */
-	i2c_hw->INTFLAG.reg = SERCOM_I2CS_INTFLAG_PIF | SERCOM_I2CS_INTFLAG_AIF |
-			SERCOM_I2CS_INTFLAG_DIF;
+	i2c_hw->INTFLAG.reg = SERCOM_I2CS_INTFLAG_PREC | SERCOM_I2CS_INTFLAG_AMATCH |
+			SERCOM_I2CS_INTFLAG_DRDY;
 
 	/* Disable global interrupt for module */
 	system_interrupt_disable(_sercom_get_interrupt_vector(module->hw));
