@@ -274,7 +274,7 @@ extern "C" {
  * and indicates that the master will terminate the transaction. In the end,
  * the transaction is terminated by the master issuing a \b Stop condition.
  *
- * \image html i2c_read.svg
+ * \image html i2c_read.svg "I2C Packet Read" width=100%
  *
  * Example of a write transaction is shown below. Here, the master first issues
  * a \b Start condition and gets ownership of the bus. An address packet with
@@ -283,7 +283,7 @@ extern "C" {
  * end, the transaction is terminated by the master issuing a \b Stop
  * condition.
  *
- * \image html i2c_write.svg
+ * \image html i2c_write.svg "I2C Packet Write" width=100%
  *
  * \subsubsection asfdoc_samd20_i2c_packet_timeout Packet Timeout
  * When a master sends an I<SUP>2</SUP>C packet, there is no way of
