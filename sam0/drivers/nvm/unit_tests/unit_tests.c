@@ -60,6 +60,9 @@
 /* Test page is set to 8th from last */
 #define TEST_PAGE_ADDR     (NVMCTRL_PAGES - 8) * NVMCTRL_PAGE_SIZE
 
+/* Flag to indicate NVM initialization status */
+static volatile bool nvm_init_success = false;
+
 /**
  * \brief Test get flash parameter function
  *
@@ -115,6 +118,10 @@ static void run_nvm_init_test(const struct test_case *test)
 	/* Validate the initialization */
 	test_assert_true(test, status == STATUS_OK,
 			"NVM Initialization error");
+	
+	if (status == STATUS_OK) {
+		nvm_init_success = true;
+	}
 }
 
 /**
@@ -126,25 +133,27 @@ static void run_nvm_init_test(const struct test_case *test)
  */
 static void run_nvm_erase_test(const struct test_case *test)
 {
-	uint16_t offset = 0;
-	volatile uint32_t test_page_address;
-	test_page_address = TEST_PAGE_ADDR;
-	volatile uint32_t *test_address;
-	test_address = (uint32_t *) test_page_address;
-	enum status_code status;
+	if (nvm_init_success == true) {
+		uint16_t offset = 0;
+		volatile uint32_t test_page_address;
+		test_page_address = TEST_PAGE_ADDR;
+		volatile uint32_t *test_address;
+		test_address = (uint32_t *) test_page_address;
+		enum status_code status;
 
-	/* Erase the row at test address */
-	status = nvm_erase_row(test_page_address);
+		/* Erase the row at test address */
+		status = nvm_erase_row(test_page_address);
 
-	/* Validate erase operation is complete */
-	test_assert_true(test, status == STATUS_OK,
-			"Erase operation not completed");
+		/* Validate erase operation is complete */
+		test_assert_true(test, status == STATUS_OK,
+				"Erase operation not completed");
 
-	/* Validate whether the data in NVM is 0xff after erasing */
-	for (offset  = 0; offset < ((NVMCTRL_ROW_PAGES * NVMCTRL_PAGE_SIZE) / 4);
-			offset++) {
-		test_assert_true(test, ((uint32_t)test_address[offset]) == 0xffffffff,
-				"Flash erase error @ %d offset", offset);
+		/* Validate whether the data in NVM is 0xff after erasing */
+		for (offset  = 0; offset < ((NVMCTRL_ROW_PAGES * NVMCTRL_PAGE_SIZE) / 4);
+				offset++) {
+			test_assert_true(test, ((uint32_t)test_address[offset]) == 0xffffffff,
+					"Flash erase error @ %d offset", offset);
+		}
 	}
 }
 
@@ -156,40 +165,42 @@ static void run_nvm_erase_test(const struct test_case *test)
  *
  * \param test Current test case.
  */
- static void run_nvm_write_test(const struct test_case *test)
+ static void run_nvm_read_and_write_test(const struct test_case *test)
  {
-	uint8_t buffer[NVMCTRL_PAGE_SIZE], i;
-	enum status_code status;
+	if (nvm_init_success == true) {
+		uint8_t buffer[NVMCTRL_PAGE_SIZE], i;
+		enum status_code status;
 
-	/* Fill the buffer with Pattern 1 */
-	for (i = 0; i < NVMCTRL_PAGE_SIZE; i++) {
-		buffer[i] = BYTE_PATTERN1(i);
-	}
+		/* Fill the buffer with Pattern 1 */
+		for (i = 0; i < NVMCTRL_PAGE_SIZE; i++) {
+			buffer[i] = BYTE_PATTERN1(i);
+		}
 
-	/* Write the buffer to Test address in NVM */
-	status = nvm_write_buffer(TEST_PAGE_ADDR, buffer, NVMCTRL_PAGE_SIZE);
+		/* Write the buffer to Test address in NVM */
+		status = nvm_write_buffer(TEST_PAGE_ADDR, buffer, NVMCTRL_PAGE_SIZE);
 
-	/* Validate whether write operation is complete */
-	test_assert_true(test, status == STATUS_OK,
-			"Write operation error");
+		/* Validate whether write operation is complete */
+		test_assert_true(test, status == STATUS_OK,
+				"Write operation error");
 
-	/* Flush the buffer */
-	for (i = 0; i < NVMCTRL_PAGE_SIZE; i++) {
-		buffer[i] = 0;
-	}
+		/* Flush the buffer */
+		for (i = 0; i < NVMCTRL_PAGE_SIZE; i++) {
+			buffer[i] = 0;
+		}
 
-	/* Read the NVM contents at test address to buffer */
-	status = nvm_read_buffer(TEST_PAGE_ADDR, buffer, NVMCTRL_PAGE_SIZE);
+		/* Read the NVM contents at test address to buffer */
+		status = nvm_read_buffer(TEST_PAGE_ADDR, buffer, NVMCTRL_PAGE_SIZE);
 
-	/* Validate whether read operation is complete */
-	test_assert_true(test, status == STATUS_OK,
-			"Read operation error");
+		/* Validate whether read operation is complete */
+		test_assert_true(test, status == STATUS_OK,
+				"Read operation error");
 
-	/* Check the integrity of data in NVM */
-	for (i = 0; i < NVMCTRL_PAGE_SIZE; i++) {
-		test_assert_true(test, buffer[i] == BYTE_PATTERN1(i),
-			"Value not expected @ byte %d (read: 0x%02x,"
-			" expected: 0x%02x)", i, buffer[i], BYTE_PATTERN1(i));
+		/* Check the integrity of data in NVM */
+		for (i = 0; i < NVMCTRL_PAGE_SIZE; i++) {
+			test_assert_true(test, buffer[i] == BYTE_PATTERN1(i),
+				"Value not expected @ byte %d (read: 0x%02x,"
+				" expected: 0x%02x)", i, buffer[i], BYTE_PATTERN1(i));
+		}
 	}
  }
 
@@ -203,52 +214,54 @@ static void run_nvm_erase_test(const struct test_case *test)
  */
  static void run_nvm_update_test(const struct test_case *test)
  {
-	uint8_t buffer[NVMCTRL_PAGE_SIZE], i;
-	enum status_code status;
+	if (nvm_init_success == true) {
+		uint8_t buffer[NVMCTRL_PAGE_SIZE], i;
+		enum status_code status;
 
-	/* Fill half of the buffer with pattern 2 */
-	for (i = 0; i < (NVMCTRL_PAGE_SIZE / 2); i++) {
-		buffer[i] = BYTE_PATTERN2(i);
-	}
+		/* Fill half of the buffer with pattern 2 */
+		for (i = 0; i < (NVMCTRL_PAGE_SIZE / 2); i++) {
+			buffer[i] = BYTE_PATTERN2(i);
+		}
 
-	/* Update first half of the test page with new data */
-	status = nvm_update_buffer(TEST_PAGE_ADDR, buffer, 0,
-		(NVMCTRL_PAGE_SIZE / 2));
+		/* Update first half of the test page with new data */
+		status = nvm_update_buffer(TEST_PAGE_ADDR, buffer, 0,
+			(NVMCTRL_PAGE_SIZE / 2));
 
-	/* Validate whether the update operation is complete */
-	test_assert_true(test, status == STATUS_OK,
-			"Update operation error");
+		/* Validate whether the update operation is complete */
+		test_assert_true(test, status == STATUS_OK,
+				"Update operation error");
 
-	/* Flush the buffer */
-	for (i = 0; i < NVMCTRL_PAGE_SIZE; i++) {
-		buffer[i] = 0;
-	}
+		/* Flush the buffer */
+		for (i = 0; i < NVMCTRL_PAGE_SIZE; i++) {
+			buffer[i] = 0;
+		}
 
-	/* Read the NVM contents at test address to buffer */
-	status = nvm_read_buffer(TEST_PAGE_ADDR, buffer, NVMCTRL_PAGE_SIZE);
+		/* Read the NVM contents at test address to buffer */
+		status = nvm_read_buffer(TEST_PAGE_ADDR, buffer, NVMCTRL_PAGE_SIZE);
 
-	/* Validate whether the read operation is complete */
-	test_assert_true(test, status == STATUS_OK,
-			"Read operation error");
+		/* Validate whether the read operation is complete */
+		test_assert_true(test, status == STATUS_OK,
+				"Read operation error");
 
-	/* Check the integrity of data in NVM */
-	for (i = 0; i < (NVMCTRL_PAGE_SIZE / 2); i++) {
-		test_assert_true(test, buffer[i] == BYTE_PATTERN2(i),
-				"Value not expected @ byte %d (read: 0x%02x,"
-				" expected: 0x%02x)", i, buffer[i], BYTE_PATTERN2(i));
-	}
-	for (i = (NVMCTRL_PAGE_SIZE / 2); i < NVMCTRL_PAGE_SIZE; i++) {
-		test_assert_true(test, buffer[i] == BYTE_PATTERN1(i),
-				"Value not expected @ byte %d (read: 0x%02x,"
-				" expected: 0x%02x)", i, buffer[i], BYTE_PATTERN1(i));
+		/* Check the integrity of data in NVM */
+		for (i = 0; i < (NVMCTRL_PAGE_SIZE / 2); i++) {
+			test_assert_true(test, buffer[i] == BYTE_PATTERN2(i),
+					"Value not expected @ byte %d (read: 0x%02x,"
+					" expected: 0x%02x)", i, buffer[i], BYTE_PATTERN2(i));
+		}
+		for (i = (NVMCTRL_PAGE_SIZE / 2); i < NVMCTRL_PAGE_SIZE; i++) {
+			test_assert_true(test, buffer[i] == BYTE_PATTERN1(i),
+					"Value not expected @ byte %d (read: 0x%02x,"
+					" expected: 0x%02x)", i, buffer[i], BYTE_PATTERN1(i));
+		}
 	}
  }
  
 /**
  * \brief Initialize USART for unit tests
  *
- * Initializes the USART used by the unit test. The embedded debugger
- * is used for outputting the results (using embedded debugger)
+ * Initializes the USART used by the unit test. The USART connected to
+ * embedded debugger is used for outputting the results.
  *
  */
 static void configure_stdio_serial(void)
@@ -294,9 +307,9 @@ int main(void)
 			run_nvm_erase_test, NULL,
 			"NVM erase row");
 
-	DEFINE_TEST_CASE(nvm_write_test, NULL,
-			run_nvm_write_test, NULL,
-			"NVM page write");
+	DEFINE_TEST_CASE(nvm_read_and_write_test, NULL,
+			run_nvm_read_and_write_test, NULL,
+			"NVM page read and write");
 
 	DEFINE_TEST_CASE(nvm_update_test, NULL,
 			run_nvm_update_test, NULL,
@@ -307,13 +320,13 @@ int main(void)
 			&nvm_paramter_test,
 			&nvm_init_test,
 			&nvm_erase_test,
-			&nvm_write_test,
+			&nvm_read_and_write_test,
 			&nvm_update_test,
 			};
 
 	/* Define the test suite */
 	DEFINE_TEST_SUITE(nvm_suite, nvm_tests,
-			"SAM0 NVM driver test suite");
+			"SAM D20 NVM driver test suite");
 
 	/* Run all tests in the suite*/
 	test_suite_run(&nvm_suite);
