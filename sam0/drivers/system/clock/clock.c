@@ -504,7 +504,7 @@ bool system_clock_source_is_ready(
 
 		case SYSTEM_CLOCK_SOURCE_ULP32K:
 			/* Not possible to disable */
-			return false;
+			return true;
 
 		default:
 			return false;
