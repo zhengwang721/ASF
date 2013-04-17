@@ -167,7 +167,7 @@ static void run_nlme_auto_discovery_test(const struct test_case *test)
 	nlme_auto_discovery_request( 0x13,
                             RecDevTypeList,
                            RecProfileIdList,
-                            0x06,
+                            0x08,
 #ifdef RF4CE_CALLBACK_PARAM
                 (FUNC_PTR)nlme_auto_discovery_confirm
 #endif
@@ -207,7 +207,8 @@ void main_cdc_set_dtr(bool b_enable)
 		// Put test case addresses in an array.
 		DEFINE_TEST_ARRAY(nwk_tests) = {
 			&nlme_reset_test,
-			&nlme_auto_discovery_test};
+			&nlme_auto_discovery_test
+                };
 
 		// Define the test suite.
 		DEFINE_TEST_SUITE(nwk_suite, nwk_tests,
