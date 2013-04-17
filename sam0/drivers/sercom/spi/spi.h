@@ -89,9 +89,10 @@
  * synchronize to the slave by pulling the SS line high.
  *
  * \subsection asfdoc_samd20_sercom_spi_bus SPI Bus Connection
- * In the figure below, the connection between one master and one slave is
- * shown.
+ * In \ref asfdoc_samd20_spi_connection_example "the figure below", the
+ * connection between one master and one slave is shown.
  *
+ * \anchor asfdoc_samd20_spi_connection_example
  * \dot
  * digraph spi_slaves_par {
  *   subgraph cluster_spi_master {
@@ -190,12 +191,14 @@
  *
  * \subsection asfdoc_samd20_sercom_spi_data_modes Data Modes
  * There are four combinations of SCK phase and polarity with respect to
- * serial data. The table below shows the clock polarity (CPOL) and
- * clock phase (CPHA) in the different modes.
- * Leading edge is the first clock edge in a clock cycle and trailing edge is
- * the last clock edge in a clock cycle.
+ * serial data. \ref asfdoc_samd20_spi_mode_table "The table below" shows the
+ * clock polarity (CPOL) and clock phase (CPHA) in the different modes.
+ * <i>Leading edge</i> is the first clock edge in a clock cycle and
+ * <i>trailing edge</i> is the last clock edge in a clock cycle.
  *
+ * \anchor asfdoc_samd20_spi_mode_table
  * <table>
+ *   <caption>SPI Data Modes</caption>
  *   <tr>
  *      <th>Mode</th>
  *      <th>CPOL</th>
@@ -235,14 +238,17 @@
  *
  *
  * \subsection asfdoc_samd20_sercom_spi_pads SERCOM Pads
- * The SERCOM pads are automatically configured as seen in the table below.
- * If the receiver is disabled, the data input (MISO for master, MOSI for
- * slave) can be used for other purposes.
+ * The SERCOM pads are automatically configured as seen in
+ * \ref asfdoc_samd20_spi_sercom_pad_table "the table below". If the receiver
+ * is disabled, the data input (MISO for master, MOSI for slave) can be used
+ * for other purposes.
  *
  * In master mode, the SS pin(s) must be configured using the \ref spi_slave_inst
  * struct.
  *
+ * \anchor asfdoc_samd20_spi_sercom_pad_table
  * <table>
+ *   <caption>SERCOM SPI Pad Usages</caption>
  *   <tr>
  *      <th> Pin </th>
  *      <th> Master SPI </th>
