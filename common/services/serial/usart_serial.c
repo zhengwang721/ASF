@@ -63,6 +63,7 @@ status_code_t usart_serial_write_packet(usart_if usart, const uint8_t *data,
 	return STATUS_OK;
 }
 
+
 /**
  * \brief Receive a sequence of bytes from USART device
  *

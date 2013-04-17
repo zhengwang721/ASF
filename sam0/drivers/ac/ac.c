@@ -1,0 +1,429 @@
+/**
+ * \file
+ *
+ * \brief SAM D20 Analog Comparator Driver
+ *
+ * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ *
+ * \asf_license_start
+ *
+ * \page License
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * 3. The name of Atmel may not be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * 4. This software may only be redistributed and used in connection with an
+ *    Atmel microcontroller product.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+ * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
+ *
+ */
+#include "ac.h"
+
+static enum status_code _ac_set_config(
+		struct ac_module *const module_inst,
+		struct ac_config *const config)
+{
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+	Assert(config);
+
+	Ac *const ac_module = module_inst->hw;
+
+	/* Use a temporary register for computing the control bits */
+	uint32_t ctrla_temp = 0;
+
+	/* Check if the comparators should be enabled during sleep */
+	if (config->run_in_standby == true) {
+		ctrla_temp |= AC_CTRLA_RUNSTDBY;
+	}
+
+	while (ac_is_syncing(module_inst)) {
+		/* Wait until synchronization is complete */
+	}
+
+	/* Write the new comparator module control configuration */
+	ac_module->CTRLA.reg = ctrla_temp;
+
+	/* Enable any requested user events */
+	ac_enable_events(module_inst, &config->events);
+
+	return STATUS_OK;
+}
+
+/** \brief Resets and disables the Analog Comparator driver.
+ *
+ *  Resets and disables the Analog Comparator driver, resetting the hardware
+ *  module registers to their power-on defaults.
+ *
+ * \param[out] module_inst  Pointer to the AC software instance struct
+ */
+enum status_code ac_reset(
+		struct ac_module *const module_inst)
+{
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+
+	Ac *const ac_module = module_inst->hw;
+
+	/* Disable the hardware module */
+	ac_disable(module_inst);
+
+	while (ac_is_syncing(module_inst)) {
+		/* Wait until synchronization is complete */
+	}
+
+	/* Software reset the module */
+	ac_module->CTRLA.reg |= AC_CTRLA_SWRST;
+
+	return STATUS_OK;
+}
+
+/** \brief Initializes and configures the Analog Comparator driver.
+ *
+ *  Initializes the Analog Comparator driver, configuring it to the user
+ *  supplied configuration parameters, ready for use. This function should be
+ *  called before enabling the Analog Comparator.
+ *
+ *  \note Once called the Analog Comparator will not be running; to start the
+ *        Analog Comparator call \ref ac_enable() after configuring the module.
+ *
+ * \param[out] module_inst  Pointer to the AC software instance struct
+ * \param[in]  hw           Pointer to the AC module instance
+ * \param[in]  config       Pointer to the config struct, created by the user
+ *                          application
+ */
+enum status_code ac_init(
+		struct ac_module *const module_inst,
+		Ac *const hw,
+		struct ac_config *const config)
+{
+	struct system_gclk_chan_config gclk_chan_conf;
+
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(hw);
+	Assert(config);
+
+	/* Initialize device instance */
+	module_inst->hw = hw;
+
+	/* Set up GCLK */
+	gclk_chan_conf.source_generator = config->source_generator;
+	system_gclk_chan_set_config(AC_GCLK_ID_DIG, &gclk_chan_conf);
+	system_gclk_chan_enable(AC_GCLK_ID_DIG);
+
+	/* Write configuration to module */
+	return _ac_set_config(module_inst, config);
+}
+
+/** \brief Writes an Analog Comparator channel configuration to the hardware module.
+ *
+ *  Writes a given Analog Comparator channel configuration to the hardware
+ *  module.
+ *
+ *  \param[in] module_inst  Software instance for the Analog Comparator peripheral
+ *  \param[in] channel   Analog Comparator channel to configure
+ *  \param[in] config    Pointer to the channel configuration struct
+ */
+enum status_code ac_chan_set_config(
+		struct ac_module *const module_inst,
+		const enum ac_chan_channel channel,
+		struct ac_chan_config *const config)
+{
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+	Assert(config);
+
+	Ac *const ac_module = module_inst->hw;
+
+	/* Use a temporary variable to compute the comparator configuration */
+	uint32_t compctrl_temp = 0;
+
+	/* Enable output filter mode */
+	compctrl_temp |= config->filter;
+
+	/* Enable output hysteresis if required */
+	if (config->enable_hysteresis == true) {
+		compctrl_temp |= AC_COMPCTRL_HYST;
+	}
+
+	/* Set output signal routing mode */
+	compctrl_temp |= config->output_mode;
+
+	/* Configure comparator positive and negative pin MUX configurations */
+	compctrl_temp |=
+			(uint32_t)config->positive_input | (uint32_t)config->negative_input;
+
+	/* Set sampling mode (single shot or continuous) */
+	compctrl_temp |= config->sample_mode;
+
+	while (ac_is_syncing(module_inst)) {
+		/* Wait until synchronization is complete */
+	}
+
+	/* Write the final configuration to the module's control register */
+	ac_module->COMPCTRL[(uint8_t)channel].reg = compctrl_temp;
+
+	/* Configure VCC voltage scaling for the comparator */
+	ac_module->SCALER[(uint8_t)channel].reg = config->vcc_scale_factor;
+
+	return STATUS_OK;
+}
+
+/** \brief Writes an Analog Comparator Window channel configuration to the hardware module.
+ *
+ *  Writes a given Analog Comparator Window channel configuration to the hardware
+ *  module.
+ *
+ *  \param[in] module_inst     Software instance for the Analog Comparator peripheral
+ *  \param[in] win_channel  Analog Comparator window channel to configure
+ *  \param[in] config       Pointer to the window channel configuration struct
+ */
+enum status_code ac_win_set_config(
+		struct ac_module *const module_inst,
+		const enum ac_win_channel win_channel,
+		struct ac_win_config *const config)
+{
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+	Assert(config);
+
+	Ac *const ac_module = module_inst->hw;
+
+	while (ac_is_syncing(module_inst)) {
+		/* Wait until synchronization is complete */
+	}
+
+	uint32_t win_ctrl_mask = 0;
+
+	switch (config->window_detection)
+	{
+		case AC_WIN_DETECT_ABOVE:
+			win_ctrl_mask =
+					AC_WINCTRL_WINTSEL0_ABOVE >> AC_WINCTRL_WINTSEL0_Pos;
+			break;
+		case AC_WIN_DETECT_BELOW:
+			win_ctrl_mask =
+					AC_WINCTRL_WINTSEL0_BELOW >> AC_WINCTRL_WINTSEL0_Pos;
+			break;
+		case AC_WIN_DETECT_INSIDE:
+			win_ctrl_mask =
+					AC_WINCTRL_WINTSEL0_INSIDE >> AC_WINCTRL_WINTSEL0_Pos;
+			break;
+		case AC_WIN_DETECT_OUTSIDE:
+			win_ctrl_mask =
+					AC_WINCTRL_WINTSEL0_OUTSIDE >> AC_WINCTRL_WINTSEL0_Pos;
+			break;
+		default:
+			break;
+	}
+
+
+	switch (win_channel)
+	{
+		case AC_WIN_CHANNEL_0:
+			ac_module->WINCTRL.reg =
+				(ac_module->WINCTRL.reg & ~AC_WINCTRL_WINTSEL0_Msk) |
+				(win_ctrl_mask << AC_WINCTRL_WINTSEL0_Pos);
+			break;
+
+#if (AC_PAIRS > 1)
+		case AC_WIN_CHANNEL_1:
+			ac_module->WINCTRL.reg =
+				(ac_module->WINCTRL.reg & ~AC_WINCTRL_WINTSEL1_Msk) |
+				(win_ctrl_mask << AC_WINCTRL_WINTSEL1_Pos);
+			break;
+#endif
+	}
+
+	return STATUS_OK;
+}
+
+
+/** \brief Enables an Analog Comparator window channel that was previously configured.
+ *
+ *  Enables and starts an Analog Comparator window channel that was previously
+ *  configured via a call to \ref ac_win_set_config().
+ *
+ *  \note The comparator channels used by the window channel must be configured
+ *        and enabled before calling this function. The two comparator channels
+ *        forming each window comparator pair must have identical configurations
+ *        other than the negative pin multiplexer setting.
+ *
+ *  \param[in] module_inst     Software instance for the Analog Comparator peripheral
+ *  \param[in] win_channel  Comparator window channel to enable
+ *
+ *  \return Status of the window enable procedure.
+ *
+ *  \retval STATUS_OK              The window comparator was enabled
+ *  \retval STATUS_ERR_IO          One or both comparators in the window
+ *                                 comparator pair is disabled
+ *  \retval STATUS_ERR_BAD_FORMAT  The comparator channels in the window pair
+ *                                 were not configured correctly
+ */
+enum status_code ac_win_enable(
+		struct ac_module *const module_inst,
+		const enum ac_win_channel win_channel)
+{
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+
+	Ac *const ac_module = module_inst->hw;
+
+	/* Load the configurations of the two comparators used in the window */
+	uint32_t win_pair_comp0_conf = ac_module->COMPCTRL[win_channel * 2].reg;
+	uint32_t win_pair_comp1_conf = ac_module->COMPCTRL[win_channel * 2 + 1].reg;
+
+	/* Make sure both comparators in the window comparator pair are enabled */
+	if (!(win_pair_comp0_conf & AC_COMPCTRL_ENABLE) ||
+			!(win_pair_comp1_conf & AC_COMPCTRL_ENABLE)) {
+		return STATUS_ERR_IO;
+	}
+
+	/* Make sure the comparators are configured in the same way, other than the
+	 * negative pin multiplexers */
+	if ((win_pair_comp0_conf & ~AC_COMPCTRL_MUXNEG_Msk) !=
+			(win_pair_comp1_conf & ~AC_COMPCTRL_MUXNEG_Msk)) {
+		return STATUS_ERR_BAD_FORMAT;
+	}
+
+	while (ac_is_syncing(module_inst)) {
+		/* Wait until synchronization is complete */
+	}
+
+	/* Enable the requested window comparator */
+	switch (win_channel)
+	{
+		case AC_WIN_CHANNEL_0:
+			ac_module->WINCTRL.reg |= AC_WINCTRL_WEN0;
+			break;
+
+#if (AC_PAIRS > 1)
+		case AC_WIN_CHANNEL_1:
+			ac_module->WINCTRL.reg |= AC_WINCTRL_WEN1;
+			break;
+#endif
+	}
+
+	return STATUS_OK;
+}
+
+/** \brief Disables an Analog Comparator window channel that was previously enabled.
+ *
+ *  Stops an Analog Comparator window channel that was previously started via a
+ *  call to \ref ac_win_enable().
+ *
+ *  \param[in] module_inst     Software instance for the Analog Comparator peripheral
+ *  \param[in] win_channel  Comparator window channel to disable
+ */
+void ac_win_disable(
+		struct ac_module *const module_inst,
+		const enum ac_win_channel win_channel)
+{
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+
+	Ac *const ac_module = module_inst->hw;
+
+	while (ac_is_syncing(module_inst)) {
+		/* Wait until synchronization is complete */
+	}
+
+	/* Disable the requested window comparator */
+	switch (win_channel)
+	{
+		case AC_WIN_CHANNEL_0:
+			ac_module->WINCTRL.reg &= ~AC_WINCTRL_WEN0;
+			break;
+
+#if (AC_PAIRS > 1)
+		case AC_WIN_CHANNEL_1:
+			ac_module->WINCTRL.reg &= ~AC_WINCTRL_WEN1;
+			break;
+#endif
+	}
+}
+
+/** \brief Determines the state of a specified Window Comparator.
+ *
+ *  Retrieves the current window detection state, indicating what the input
+ *  signal is currently comparing to relative to the window boundaries.
+ *
+ *  \param[in] module_inst     Software instance for the Analog Comparator peripheral
+ *  \param[in] win_channel  Comparator Window channel to test
+ *
+ *  \return Current window comparison state.
+ */
+enum ac_win_state ac_win_get_state(
+		struct ac_module *const module_inst,
+		const enum ac_win_channel win_channel)
+{
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+
+	Ac *const ac_module = module_inst->hw;
+
+	/* If one or both window comparators not ready, return unknown result */
+	if (ac_win_is_ready(module_inst, win_channel) == false) {
+		return AC_WIN_STATE_UNKNOWN;
+	}
+
+	uint32_t win_state = 0;
+
+	/* Extract window comparison state bits */
+	switch (win_channel)
+	{
+		case AC_WIN_CHANNEL_0:
+			win_state = ac_module->STATUSA.bit.WSTATE0;
+			break;
+
+#if (AC_PAIRS > 1)
+		case AC_WIN_CHANNEL_1:
+			win_state = ac_module->STATUSA.bit.WSTATE1;
+			break;
+#endif
+	}
+
+	/* Map hardware comparison states to logical window states */
+	switch (win_state)
+	{
+		case (AC_STATUSA_WSTATE0_ABOVE >> AC_STATUSA_WSTATE0_Pos):
+			return AC_WIN_STATE_ABOVE;
+		case (AC_STATUSA_WSTATE0_BELOW >> AC_STATUSA_WSTATE0_Pos):
+			return AC_WIN_STATE_BELOW;
+		case (AC_STATUSA_WSTATE0_INSIDE >> AC_STATUSA_WSTATE0_Pos):
+			return AC_WIN_STATE_INSIDE;
+		default:
+			return AC_WIN_STATE_UNKNOWN;
+	}
+}

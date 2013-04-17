@@ -1,0 +1,30 @@
+<asf xmlversion="1.0">
+	<module type="driver" id="sam0.drivers.ac" caption="AC - Analog Comparator">
+		<info type="description" value="summary">
+			Driver for the SAM D20 Analog Comparator. Provides a unified interface
+			for the configuration and management of the Analog Comparator
+			module, including the channel comparator input selections, window
+			modes and event generation.
+		</info>
+		<info type="keyword" value="technology">
+			<keyword value="Analog Conversion" />
+		</info>
+
+		<info type="appnote" value="AT03242"/>
+
+		<build type="include-path" value="."/>
+		<build type="header-file" subtype="api" value="ac.h"/>
+		<build type="header-file" value="quick_start/qs_ac_basic.h"/>
+		<build type="c-source" value="ac.c"/>
+
+		<build type="doxygen-entry-point" value="asfdoc_samd20_ac_group"/>
+		<build type="doxygen-example-path" value="quick_start"/>
+
+		<device-support value="samd20"/>
+
+		<require idref="sam0.utils"/>
+		<require idref="sam0.drivers.system"/>
+
+		<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
+	</module>
+</asf>
