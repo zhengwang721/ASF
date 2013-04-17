@@ -245,10 +245,12 @@ void system_clock_source_dfll_set_config(
 {
 	uint32_t temp;
 
+	/* Enable the DFLL, as all the DFLL core registers are clocked
+	 * by the DFLL output */
+	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_DFLL, false);
+
 	SYSCTRL->DFLLCTRL.reg = 0;
 
-	/* TODO: REV A bug ? not documented */
-	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_DFLL, false);
 
 	/* Write Fine and Coarse values for open loop mode */
 	_system_dfll_wait_for_sync();
@@ -350,6 +352,7 @@ enum status_code system_clock_source_write_calibration(
  * Enables a clock source which has been previously configured.
  *
  * \param[in] block_until_ready  Block until the clock source has been enabled
+ *                               or until timeout
  * \param[in] clock_source       Clock source to enable
  *
  * \retval STATUS_OK               Clock source was enabled successfully and
@@ -501,13 +504,16 @@ bool system_clock_source_is_ready(
 
 		case SYSTEM_CLOCK_SOURCE_ULP32K:
 			/* Not possible to disable */
-			return false;
+			return true;
 
 		default:
 			return false;
 		}
-
-	return (SYSCTRL->PCLKSR.reg & mask);
+	if ((SYSCTRL->PCLKSR.reg & mask) != 0) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
 /**
