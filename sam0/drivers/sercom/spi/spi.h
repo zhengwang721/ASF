@@ -1204,7 +1204,7 @@ static inline enum status_code spi_transceive_wait(
 	return retval;
 }
 
-enum status_code spi_tranceive_buffer_wait(
+enum status_code spi_transceive_buffer_wait(
 		struct spi_module *const module,
 		uint8_t *tx_data,
 		uint8_t *rx_data,
