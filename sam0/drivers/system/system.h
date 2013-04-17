@@ -110,10 +110,13 @@
  * \subsection asfdoc_samd20_system_module_overview_sleep_mode Sleep Modes
  * The SAM D20 devices have several sleep modes, where the sleep mode controls
  * which clock systems on the device will remain enabled or disabled when the
- * device enters a low power sleep mode. The table below lists the clock
- * settings of the different sleep modes.
+ * device enters a low power sleep mode.
+ * \ref asfdoc_samd20_system_module_sleep_mode_table "The table below" lists the
+ * clock settings of the different sleep modes.
  *
+ * \anchor asfdoc_samd20_system_module_sleep_mode_table
  * <table>
+ *  <caption>SAM D20 Device Sleep Modes</caption>
  * 	<tr>
  * 		<th>Sleep mode</th>
  * 		<th>IDLE</th>
@@ -122,8 +125,8 @@
  * 		<th>APB clocks</th>
  * 		<th>Clock sources</th>
  * 		<th>System clock</th>
- * 		<th>32kHz</th>
- * 		<th>Regulator mode</th>
+ * 		<th>32KHz</th>
+ * 		<th>Reg mode</th>
  * 		<th>RAM mode</th>
  * 	</tr>
  * 	<tr>
@@ -166,7 +169,7 @@
  * 		<td>Run</td>
  *	</tr>
  * 	<tr>
- * 		<td>STANDBY</td>
+ * 		<td>STDBY</td>
  * 		<td> </td>
  * 		<td>Stop</td>
  * 		<td>Stop</td>
