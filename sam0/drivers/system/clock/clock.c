@@ -519,15 +519,7 @@ bool system_clock_source_is_ready(
  */
 void system_clock_init(void)
 {
-	struct system_gclk_gen_config gclk_generator_conf;
-	UNUSED(gclk_generator_conf);
-
-#if CONF_CLOCK_CONFIGURE_FLASH_WAIT_STATES == true
 	system_flash_set_waitstates(CONF_CLOCK_FLASH_WAIT_STATES);
-#else
-	system_flash_set_waitstates(2);
-#endif
-
 
 	/* XOSC */
 #if CONF_CLOCK_XOSC_ENABLE == true
@@ -630,6 +622,9 @@ void system_clock_init(void)
 #if CONF_CLOCK_CONFIGURE_GCLK == true
 	system_gclk_init();
 
+	struct system_gclk_gen_config gclk_generator_conf;
+	system_gclk_gen_get_config_defaults(&gclk_generator_conf);
+
 #  if CONF_CLOCK_GCLK_0_ENABLE == true
 	gclk_generator_conf.source_clock    = CONF_CLOCK_GCLK_0_CLOCK_SOURCE;
 	gclk_generator_conf.division_factor = CONF_CLOCK_GCLK_0_PRESCALER;
@@ -698,8 +693,7 @@ void system_clock_init(void)
 
 		system_clock_source_dfll_set_config(&dfll_conf);
 	}
-#endif
-
+#  endif
 #endif /* Configure GCLK */
 
 	/* CPU and BUS clocks */
