@@ -228,11 +228,11 @@ extern "C" {
  * \subsection asfdoc_samd20_i2c_transactions Transactions
  * The I<SUP>2</SUP>C standard defines three fundamental transaction formats:
  * - Master Write
- *   - The master transmits data packets to the slave after addressing it.
+ *   - The master transmits data packets to the slave after addressing it
  * - Master Read
- *   - The slave transmits data packets to the master after being addressed.
+ *   - The slave transmits data packets to the master after being addressed
  * - Combined Read/Write
- *   - A combined transaction consists of several write and read transactions.
+ *   - A combined transaction consists of several write and read transactions
  *
  * A data transfer starts with the master issuing a \b Start condition on the
  * bus, followed by the address of the slave together with a bit to indicate
@@ -259,8 +259,9 @@ extern "C" {
  * in the driver, and the user will only have to provide the 7 bit address.
  *
  * \subsubsection asfdoc_samd20_i2c_data_packets Data Packets
- * 9 bits long, consists of one data byte and an acknowledgment bit.
- * Data packets succeed either an address packet or another data packet.
+ * Data packets are nine bits long, consisting of one 8-bit data byte, and an
+ * acknowledgment bit. Data packets follow either an address packet or another
+ * data packet on the bus.
  *
  * \subsubsection asfdoc_samd20_i2c_trans_examples Transaction Examples
  * The gray bits in the following examples are sent from master to slave, and
@@ -273,50 +274,7 @@ extern "C" {
  * and indicates that the master will terminate the transaction. In the end,
  * the transaction is terminated by the master issuing a \b Stop condition.
  *
- * <table>
- *   <tr>
- *      <td>0</td>
- *      <td>1</td>
- *      <td>2</td>
- *      <td>3</td>
- *      <td>4</td>
- *      <td>5</td>
- *      <td>6</td>
- *      <td>7</td>
- *      <td>8</td>
- *      <td>9</td>
- *      <td>10</td>
- *      <td>11</td>
- *      <td>12</td>
- *      <td>13</td>
- *      <td>14</td>
- *      <td>15</td>
- *      <td>16</td>
- *      <td>17</td>
- *      <td>18</td>
- *      <td>19</td>
- *      <td>20</td>
- *      <td>21</td>
- *      <td>22</td>
- *      <td>23</td>
- *      <td>24</td>
- *      <td>25</td>
- *      <td>26</td>
- *      <td>27</td>
- *      <td>28</td>
- *   </tr>
- *   <tr>
- *      <td BGCOLOR="lightgray">START</td>
- *      <td COLSPAN="7" BGCOLOR="lightgray">ADDRESS</td>
- *      <td BGCOLOR="lightgray">READ</td>
- *      <td>ACK</td>
- *      <td COLSPAN="8" BGCOLOR="">DATA</td>
- *      <td BGCOLOR="lightgray">ACK</td>
- *      <td COLSPAN="8" BGCOLOR="">DATA</td>
- *      <td BGCOLOR="lightgray">NACK</td>
- *      <td BGCOLOR="lightgray">STOP</td>
- *   </tr>
- * </table>
+ * \image html i2c_read.svg "I2C Packet Read" width=100%
  *
  * Example of a write transaction is shown below. Here, the master first issues
  * a \b Start condition and gets ownership of the bus. An address packet with
@@ -325,50 +283,7 @@ extern "C" {
  * end, the transaction is terminated by the master issuing a \b Stop
  * condition.
  *
- * <table>
- *   <tr>
- *      <td>0</td>
- *      <td>1</td>
- *      <td>2</td>
- *      <td>3</td>
- *      <td>4</td>
- *      <td>5</td>
- *      <td>6</td>
- *      <td>7</td>
- *      <td>8</td>
- *      <td>9</td>
- *      <td>10</td>
- *      <td>11</td>
- *      <td>12</td>
- *      <td>13</td>
- *      <td>14</td>
- *      <td>15</td>
- *      <td>16</td>
- *      <td>17</td>
- *      <td>18</td>
- *      <td>19</td>
- *      <td>20</td>
- *      <td>21</td>
- *      <td>22</td>
- *      <td>23</td>
- *      <td>24</td>
- *      <td>25</td>
- *      <td>26</td>
- *      <td>27</td>
- *      <td>28</td>
- *   </tr>
- *   <tr>
- *      <td BGCOLOR="lightgray">START</td>
- *      <td COLSPAN="7" BGCOLOR="lightgray">ADDRESS</td>
- *      <td BGCOLOR="lightgray">WRITE</td>
- *      <td>ACK</td>
- *      <td COLSPAN="8" BGCOLOR="lightgray">DATA</td>
- *      <td>ACK</td>
- *      <td COLSPAN="8" BGCOLOR="lightgray">DATA</td>
- *      <td>ACK</td>
- *      <td BGCOLOR="lightgray">STOP</td>
- *   </tr>
- * </table>
+ * \image html i2c_write.svg "I2C Packet Write" width=100%
  *
  * \subsubsection asfdoc_samd20_i2c_packet_timeout Packet Timeout
  * When a master sends an I<SUP>2</SUP>C packet, there is no way of

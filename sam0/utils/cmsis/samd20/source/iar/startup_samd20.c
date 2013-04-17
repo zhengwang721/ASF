@@ -57,9 +57,9 @@ void Dummy_Handler(void)
 }
 
 /* Cortex-M0+ core handlers */
-void NonMaskableInt_Handler   ( void );
+void NMI_Handler              ( void );
 void HardFault_Handler        ( void );
-void SVCall_Handler           ( void );
+void SVC_Handler              ( void );
 void PendSV_Handler           ( void );
 void SysTick_Handler          ( void );
 
@@ -90,9 +90,9 @@ void AC_Handler               ( void );
 void DAC_Handler              ( void );
 
 /* Cortex-M0+ core handlers */
-#pragma weak NonMaskableInt_Handler   = Dummy_Handler
+#pragma weak NMI_Handler              = Dummy_Handler
 #pragma weak HardFault_Handler        = Dummy_Handler
-#pragma weak SVCall_Handler           = Dummy_Handler
+#pragma weak SVC_Handler              = Dummy_Handler
 #pragma weak PendSV_Handler           = Dummy_Handler
 #pragma weak SysTick_Handler          = Dummy_Handler
 
@@ -135,7 +135,7 @@ void DAC_Handler              ( void );
 const DeviceVectors __vector_table[] = {
         __sfe("CSTACK"),
         (void*) Reset_Handler,
-        (void*) NonMaskableInt_Handler,
+        (void*) NMI_Handler,
         (void*) HardFault_Handler,
         (void*) (0UL), /* Reserved */
         (void*) (0UL), /* Reserved */
@@ -144,7 +144,7 @@ const DeviceVectors __vector_table[] = {
         (void*) (0UL), /* Reserved */
         (void*) (0UL), /* Reserved */
         (void*) (0UL), /* Reserved */
-        (void*) SVCall_Handler,
+        (void*) SVC_Handler,
         (void*) (0UL), /* Reserved */
         (void*) (0UL), /* Reserved */
         (void*) PendSV_Handler,
