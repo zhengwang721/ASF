@@ -41,43 +41,99 @@
  *
  */
 
-/*! \mainpage
- * \section intro Introduction
- * This application implements a SPI Master bootloader.
- * AT45DBX DataFlash is used as the SPI slave to store the binary file
- * to be programmed to the device.
+/**
+ * \mainpage SPI Master Bootloader for SAM D20
+ * Overview:
+ * - \ref appdoc_samd20_spi_bootloader_features
+ * - \ref appdoc_samd20_spi_bootloader_intro
+ * - \ref appdoc_samd20_spi_bootloader_mem_org
+ * - \ref appdoc_samd20_spi_bootloader_prereq
+ * - \ref appdoc_samd20_spi_bootloader_hw
+ * - \ref appdoc_samd20_spi_bootloader_process
+ *    - \ref appdoc_samd20_spi_bootloader_process_boot_check
+ *    - \ref appdoc_samd20_spi_bootloader_process_init
+ *    - \ref appdoc_samd20_spi_bootloader_boot_protocol
+ *    - \ref appdoc_samd20_spi_bootloader_start_app
+ * - \ref appdoc_samd20_spi_bootloader_compinfo
+ * - \ref appdoc_samd20_spi_bootloader_contactinfo
  *
- * \section files Main Files
- * - spi_bootloader.c: SPI Master bootloader implementation
- * - conf_board.h: board initialization process configuration
- * - conf_clocks.h: clock specific initialization
- * - conf_at45dbx.h: DataFlash driver configuration (including SPI service selection)
- * - conf_bootloader.h: Bootloader specific configuration
+ * \section appdoc_samd20_spi_bootloader_features Features
+ * \li Application for self programming
+ * \li Uses SPI Master interface
+ * \li The binary file stored in AT45DBX dataflash is programmed
+ * \li Resets the device after programming and starts executing application
  *
- * \section deviceinfo Device Info
- * All devices with SPI can be used. This application has been tested
- * with the following setup:
- *   - SAM D20 Xplained Pro kit connected with IO1-Xplained Pro wing
- *     on External header EXT3.
+ * \section appdoc_samd20_spi_bootloader_intro Introduction
+ * As many electronic designs evolve rapidly there is a growing need for being
+ * able to update products, which have already been shipped or sold.
+ * Microcontrollers that support boot loader facilitates updating the
+ * application flash section without the need of an external programmer, are of
+ * great use in situations where the application has to be updated on the field.
+ * The boot loader may use various interfaces like SPI, UART, TWI, Ethernet etc.
+ * \n
+ * This application implements a SPI Master bootloader for SAM D20. AT45DBX 
+ * DataFlash is used as the SPI slave to store the binary file to be programmed
+ * to the device.
  *
- * \section applicationdescription Description of the application
- *   - Check the status of BOOT_LOAD_PIN to continue executing bootloader or
- *     start executing application
- *   - Initialize board, NVM, system clock, AT45DBX dataflash
- *   - Read the length of the data to be programmed from sector 0
- *   - Read the binary file contents in blocks of AT45DBX_SECTOR_SIZE from
- *     sector 1 onwards
- *   - Program the read data to flash from APP_START_ADDRESS
+ * \section appdoc_samd20_spi_bootloader_mem_org Program Memory Organization
+ * This bootloader implementation consumes around 8000 bytes (approximately),
+ * which is 32 rows of Program Memory space starting from 0x00000000. BOOTPROT
+ * fuses on the device can be set to protect first 32 rows of the program
+ * memory which are allocated for the BOOT section. So, the end user application
+ * should be generated with starting address as 0x00002000.
+ *
+ * \section appdoc_samd20_spi_bootloader_prereq Prerequisites
+ * The end user application to be programmed to the Program Memory of SAM D20
+ * using bootloader should be generated with starting address as 0x00002000.
+ * Length of this binary file should be stored in the first 4 bytes of sector 0
+ * in AT45DBX dataflash. The binary file contents should be stored from 
+ * sector 1 onwards.
+ *
+ * \section appdoc_samd20_spi_bootloader_hw Hardware Setup
+ * SAM D20 in SAM D20 Xplained Pro kit is used as the SPI master.
+ * The IO1-Xplained Pro wing containing the AT45DBX dataflash should be
+ * connected to External header 3 (EXT3) of SAM D20 Xplained Pro.
+ *
+ * \section appdoc_samd20_spi_bootloader_process Bootloader Process
+ *
+ * \subsection appdoc_samd20_spi_bootloader_process_boot_check Boot Check
+ * The bootloader is located at the start of the program memory and is
+ * executed at each reset/power-on sequence. Initially check the
+ * status of a user configurable BOOT_LOAD_PIN.
+ * - If the pin is pulled low continue execution in bootloader mode.
+ * - Else read the first location of application section (0x00002000) which
+ *   contains the stack pointer address and check whether it is 0xFFFFFFFF.
+ *    - If yes, application section is empty and wait indefinitely there.
+ *    - If not, jump to the application section and start execution from there.
+ * \note Configuring the BOOT_LOAD_PIN and disabling watchdog in this boot mode
+ * check routine are made with direct peripheral register access to enable quick
+ * decision on application or bootloader mode.
+ *
+ * \subsection appdoc_samd20_spi_bootloader_process_init Initialization
+ * Initialize the following
+ *   - Board
+ *   - System clock
+ *   - AT45DBX Dataflash
+ *   - NVM module
+ *
+ * \subsection appdoc_samd20_spi_bootloader_boot_protocol Boot Protocol
+ * Status of AT45DBX dataflash component is checked. If the check succeeds,
+ *   - Read first 4 bytes of sector 0 which contains the length of the data to
+ *     be programmed
+ *   - Read a block from AT45DBX of size AT45DBX_SECTOR_SIZE
+ *   - Program the data to Program memory starting APP_START_ADDRESS
  *   - Repeat till entire length of data has been programmed to the device
- *   - Enable watchdog timer with timeout of 256 clock cycles and wait
- *     for watchdog reset
- *   - BOOT_LED is 'on' until the bootloader is executing
  *
- * \section compinfo Compilation Info
+ * \subsection appdoc_samd20_spi_bootloader_start_app Start Application
+ * Once the programming is completed, enable Watchdog Timer with a timeout
+ * period of 256 clock cyles and wait in a loop for Watchdog to reset 
+ * the device.
+ *
+ * \section appdoc_samd20_spi_bootloader_compinfo Compilation Info
  * This software was written for the GNU GCC and IAR for ARM.
  * Other compilers may or may not work.
  *
- * \section contactinfo Contact Information
+ * \section appdoc_samd20_spi_bootloader_contactinfo Contact Information
  * For further information, visit
  * <A href="http://www.atmel.com/">Atmel</A>.\n
  */
