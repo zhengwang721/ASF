@@ -357,6 +357,8 @@ enum spi_callback {
 	SPI_CALLBACK_BUFFER_TRANSMITTED,
 	/** Callback for buffer received */
 	SPI_CALLBACK_BUFFER_RECEIVED,
+	/** Callback for buffers transceived */
+	SPI_CALLBACK_BUFFER_TRANSCEIVED,
 	/** Callback for error */
 	SPI_CALLBACK_ERROR,
 	/** Callback for transmission complete for slave */
@@ -1150,7 +1152,7 @@ enum status_code spi_read_buffer_wait(
  *                              timeout in slave mode.
  * \retval STATUS_ERR_OVERFLOW  If the incoming data is overflown
  */
-static inline enum status_code spi_tranceive_wait(
+static inline enum status_code spi_transceive_wait(
 		struct spi_module *const module,
 		uint16_t tx_data,
 		uint16_t *rx_data)

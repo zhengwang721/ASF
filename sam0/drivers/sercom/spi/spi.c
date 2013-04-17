@@ -620,7 +620,7 @@ enum status_code spi_select_slave(
  *
  * This function will send a buffer of SPI characters via the SPI
  * and discard any data that is received. To both send and receive a buffer of
- * data, use the \ref spi_tranceive_buffer_wait function.
+ * data, use the \ref spi_transceive_buffer_wait function.
  *
  * Note that this function does not handle the _SS (slave select) pin(s) in
  * master mode; this must be handled by the user application.
@@ -736,7 +736,7 @@ enum status_code spi_write_buffer_wait(
  *                                 timeout in slave mode.
  * \retval STATUS_ERR_OVERFLOW     If the data is overflown
  */
-enum status_code spi_tranceive_buffer_wait(
+enum status_code spi_transceive_buffer_wait(
 		struct spi_module *const module,
 		uint8_t *tx_data,
 		uint8_t *rx_data,
