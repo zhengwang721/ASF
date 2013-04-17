@@ -519,7 +519,11 @@ bool system_clock_source_is_ready(
  */
 void system_clock_init(void)
 {
+#ifndef CONF_CLOCK_FLASH_WAIT_STATES
+	system_flash_set_waitstates(2);
+#else
 	system_flash_set_waitstates(CONF_CLOCK_FLASH_WAIT_STATES);
+#endif
 
 	/* XOSC */
 #if CONF_CLOCK_XOSC_ENABLE == true
@@ -532,7 +536,7 @@ void system_clock_init(void)
 	xosc_conf.frequency            = CONF_CLOCK_XOSC_EXTERNAL_FREQUENCY;
 
 	system_clock_source_xosc_set_config(&xosc_conf);
-#endif /* CONF_CLOCK_XOSC_ENABLE */
+#endif
 
 
 	/* XOSC32K */
@@ -547,7 +551,7 @@ void system_clock_init(void)
 
 	system_clock_source_xosc32k_set_config(&xosc32k_conf);
 	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_XOSC32K, true);
-#endif /* CONF_CLOCK_XOSC32K_ENABLE */
+#endif
 
 
 	/* OSCK32K */
@@ -560,14 +564,14 @@ void system_clock_init(void)
 
 	system_clock_source_osc32k_set_config(&osc32k_conf);
 	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_OSC32K, true);
-#endif /* CONF_CLOCK_OSC32K_ENABLE */
+#endif
 
 
-	/* DFLL */
+	/* DFLL (Open and Closed Loop) */
 #if CONF_CLOCK_DFLL_ENABLE == true
 	struct system_clock_source_dfll_config dfll_conf;
 	system_clock_source_dfll_get_default_config(&dfll_conf);
-	dfll_conf.loop = CONF_CLOCK_DFLL_LOOP_MODE;
+	dfll_conf.loop = SYSTEM_CLOCK_DFLL_OPEN_LOOP;
 
 	if (CONF_CLOCK_DFLL_LOOP_MODE == SYSTEM_CLOCK_DFLL_OPEN_LOOP) {
 		dfll_conf.coarse_value = CONF_CLOCK_DFLL_COARSE_VALUE;
@@ -605,11 +609,8 @@ void system_clock_init(void)
 	dfll_conf.coarse_max_step = CONF_CLOCK_DFLL_MAX_COARSE_STEP_SIZE;
 	dfll_conf.fine_max_step   = CONF_CLOCK_DFLL_MAX_FINE_STEP_SIZE;
 
-	if (CONF_CLOCK_DFLL_LOOP_MODE == SYSTEM_CLOCK_DFLL_OPEN_LOOP) {
-		system_clock_source_dfll_set_config(&dfll_conf);
-	}
-
-#endif /* CONF_CLOCK_DFLL_ENABLE */
+	system_clock_source_dfll_set_config(&dfll_conf);
+#endif
 
 
 	/* OSC8M */
@@ -619,6 +620,7 @@ void system_clock_init(void)
 	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_OSC8M, false);
 
 
+	/* GCLK */
 #if CONF_CLOCK_CONFIGURE_GCLK == true
 	system_gclk_init();
 
@@ -628,7 +630,6 @@ void system_clock_init(void)
 #  if CONF_CLOCK_GCLK_0_ENABLE == true
 	gclk_generator_conf.source_clock    = CONF_CLOCK_GCLK_0_CLOCK_SOURCE;
 	gclk_generator_conf.division_factor = CONF_CLOCK_GCLK_0_PRESCALER;
-	gclk_generator_conf.output_enable   = true;
 	system_gclk_gen_set_config(0, &gclk_generator_conf);
 	system_gclk_gen_enable(0);
 #  endif
@@ -682,30 +683,32 @@ void system_clock_init(void)
 	system_gclk_gen_set_config(7, &gclk_generator_conf);
 	system_gclk_gen_enable(7);
 #  endif
+#endif
 
+
+	/* DFLL (Closed Loop) */
 #  if CONF_CLOCK_DFLL_ENABLE == true
 	if (CONF_CLOCK_DFLL_LOOP_MODE == SYSTEM_CLOCK_DFLL_CLOSED_LOOP) {
 		struct system_gclk_chan_config dfll_gclk_chan_conf;
+
 		system_gclk_chan_get_config_defaults(&dfll_gclk_chan_conf);
 		dfll_gclk_chan_conf.source_generator = CONF_CLOCK_DFLL_SOURCE_GCLK_GENERATOR;
 		system_gclk_chan_set_config(0, &dfll_gclk_chan_conf);
 		system_gclk_chan_enable(0);
 
+		dfll_conf.loop = SYSTEM_CLOCK_DFLL_CLOSED_LOOP;
 		system_clock_source_dfll_set_config(&dfll_conf);
 	}
 #  endif
-#endif /* Configure GCLK */
+
 
 	/* CPU and BUS clocks */
 	system_cpu_clock_set_divider(CONF_CLOCK_CPU_DIVIDER);
-
 #if CONF_CLOCK_CPU_CLOCK_FAILURE_DETECT == true
 	system_main_clock_set_failure_detect(true);
 #else
 	system_main_clock_set_failure_detect(false);
 #endif
-
-	/* Bus dividers */
 	system_apb_clock_set_divider(SYSTEM_CLOCK_APB_APBA, CONF_CLOCK_APBA_DIVIDER);
 	system_apb_clock_set_divider(SYSTEM_CLOCK_APB_APBB, CONF_CLOCK_APBB_DIVIDER);
 }
