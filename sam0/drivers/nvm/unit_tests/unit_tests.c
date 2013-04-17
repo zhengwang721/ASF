@@ -133,15 +133,16 @@ static void run_nvm_init_test(const struct test_case *test)
  */
 static void run_nvm_erase_test(const struct test_case *test)
 {
-		test_assert_true(test, nvm_init_success == true,
-			"NVM initialization failed, skipping test");
-
 	uint16_t offset = 0;
 	volatile uint32_t test_page_address;
 	test_page_address = TEST_PAGE_ADDR;
 	volatile uint32_t *test_address;
 	test_address = (uint32_t *) test_page_address;
 	enum status_code status;
+
+	/* Skip test if NVM initialization failed */
+	test_assert_true(test, nvm_init_success == true,
+			"NVM initialization failed, skipping test");
 
 	/* Erase the row at test address */
 	status = nvm_erase_row(test_page_address);
@@ -168,11 +169,12 @@ static void run_nvm_erase_test(const struct test_case *test)
  */
 static void run_nvm_read_and_write_test(const struct test_case *test)
 {
-	test_assert_true(test, nvm_init_success == true,
-			"NVM initialization failed, skipping test");
-
 	uint8_t buffer[NVMCTRL_PAGE_SIZE], i;
 	enum status_code status;
+
+	/* Skip test if NVM initialization failed */
+	test_assert_true(test, nvm_init_success == true,
+			"NVM initialization failed, skipping test");
 
 	/* Fill the buffer with Pattern 1 */
 	for (i = 0; i < NVMCTRL_PAGE_SIZE; i++) {
@@ -216,13 +218,14 @@ static void run_nvm_read_and_write_test(const struct test_case *test)
  */
 static void run_nvm_update_test(const struct test_case *test)
 {
-	test_assert_true(test, nvm_init_success == true,
-			"NVM initialization failed, skipping test");
-
 	uint8_t buffer[NVMCTRL_PAGE_SIZE], i;
 	enum status_code status;
 
-	/* Fill half of the buffer with pattern 2 */
+	/* Skip test if NVM initialization failed */
+	test_assert_true(test, nvm_init_success == true,
+			"NVM initialization failed, skipping test");
+
+			/* Fill half of the buffer with pattern 2 */
 	for (i = 0; i < (NVMCTRL_PAGE_SIZE / 2); i++) {
 		buffer[i] = BYTE_PATTERN2(i);
 	}
