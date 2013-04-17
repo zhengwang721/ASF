@@ -185,6 +185,8 @@
 
 /* Field positions - ED_SCAN_START_REQ */
 #define SCAN_DURATION_POS                 (3)
+#define CHANNELS_SELECT_POS               (4)
+#define MSG_LEN_ED_SCAN_REQ               (7)
 
 //! \}
 /* === Types ================================================================ */

@@ -97,7 +97,7 @@ void initiate_per_test(void);
  * \param scan_duration paramter which is used to calculate the scan time
  *        on each channel
  */
-void start_ed_scan(uint8_t scan_duration);
+void start_ed_scan(uint8_t scan_duration,uint32_t channel_sel_mask);
 
 /**
  * \brief Function to get the Sensor data like Battery volatge

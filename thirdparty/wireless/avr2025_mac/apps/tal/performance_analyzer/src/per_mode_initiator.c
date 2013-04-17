@@ -1289,7 +1289,7 @@ void get_board_details(void)
 {
 
 
-    float fw_version = reverse_float(2.0);     
+    float fw_version = reverse_float(2.1);     
     /* Send the Confirmation with the status as SUCCESS */
     usr_identify_board_confirm(MAC_SUCCESS,
                                IC_TYPE,
@@ -2524,7 +2524,7 @@ static void set_tx_power(uint8_t tx_power_format, int8_t power_value)
  * \param ed_scan_duration  Scan duration parameter which is used to calculate
  *                          the scan time on each channel
  */
-void start_ed_scan(uint8_t ed_scan_duration)
+void start_ed_scan(uint8_t ed_scan_duration,uint32_t channel_sel_mask)
 {
     uint8_t first_channel;
     uint8_t ch_cnt;
@@ -2535,6 +2535,7 @@ void start_ed_scan(uint8_t ed_scan_duration)
     num_channels = 0;
 
     scan_duration = ed_scan_duration;
+    scan_channel_mask = (channel_sel_mask & VALID_CHANNEL_MASK);
 
 #if( (TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B) )
     /* saving the current transmit power to restore after scan*/
@@ -2549,7 +2550,6 @@ void start_ed_scan(uint8_t ed_scan_duration)
     }
 
     scanning = true;
-    tal_pib_get(phyChannelsSupported, (uint8_t *)&scan_channel_mask);
     for ( ch_cnt = MIN_CHANNEL; ch_cnt <= MAX_CHANNEL; ch_cnt++ )
     {
         num_channels += ( scan_channel_mask & ((uint32_t)1 << ch_cnt) ) ? 1 : 0;

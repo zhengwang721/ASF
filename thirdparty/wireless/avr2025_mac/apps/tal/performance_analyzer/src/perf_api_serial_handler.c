@@ -156,7 +156,10 @@ static uint8_t head = 0;
  * This is buffer count to keep track of the available bufer for transmission
  */
 static uint8_t buf_count = 0;
-
+/**
+ * This variable is to save the selected channels mask, which is a 4byte value received through serial interface
+ */
+static uint32_t rcvd_channel_mask = 0;
 /* === Prototypes ========================================================== */
 
 static inline void process_incoming_sio_data(void);
@@ -795,14 +798,13 @@ static inline void handle_incoming_msg(void)
                    msg_id;
                    scan_duration;
                  */
-
                 /* Check any ongoing transaction in place */
                 if (error_code)
                 {
                     /* Send the confirmation with status as Failure
                      * with error code as the reason for failure
                      */
-                    usr_ed_scan_start_confirm(error_code, NUL_VAL, NUL_VAL);;
+                    usr_ed_scan_start_confirm(error_code, NUL_VAL, NUL_VAL);
                     return;
                 }
 
@@ -813,7 +815,13 @@ static inline void handle_incoming_msg(void)
                     (SINGLE_NODE_TESTS == node_info.main_state)
                    )
                 {
-                    start_ed_scan(sio_rx_buf[SCAN_DURATION_POS]); /* scan_duration */
+                    /* Extract the 4bytes of selected channel mask from the sio_rx_buf */
+                    rcvd_channel_mask |= (((uint32_t )sio_rx_buf[CHANNELS_SELECT_POS]<<24)&0xFF000000);
+                    rcvd_channel_mask |= (((uint32_t )sio_rx_buf[CHANNELS_SELECT_POS+1]<<16)&0x00FF0000);
+                    rcvd_channel_mask |= (((uint32_t )sio_rx_buf[CHANNELS_SELECT_POS+2]<<8)&0x0000FF00);
+                    rcvd_channel_mask |= (((uint32_t )sio_rx_buf[CHANNELS_SELECT_POS+3])&0x000000FF);
+                    
+                    start_ed_scan(sio_rx_buf[SCAN_DURATION_POS],rcvd_channel_mask); /* scan_duration */
                 }
                 else
                 {
