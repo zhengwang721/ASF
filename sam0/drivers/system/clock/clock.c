@@ -509,8 +509,11 @@ bool system_clock_source_is_ready(
 		default:
 			return false;
 		}
-
-	return (SYSCTRL->PCLKSR.reg & mask);
+	if ((SYSCTRL->PCLKSR.reg & mask) != 0) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
 /**
