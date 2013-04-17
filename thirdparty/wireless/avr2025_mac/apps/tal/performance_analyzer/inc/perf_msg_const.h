@@ -72,7 +72,7 @@
 #define PROTOCOL_ID_LEN                 (1)
 #define OCTET_STR_LEN_BYTE_LEN          (1)
 
-#define IDENTIFY_BOARD_CONFIRM_LEN      (15)
+#define IDENTIFY_BOARD_CONFIRM_LEN      (19)
 #define PERF_START_CONFIRM_LEN          (21)
 #define PERF_SET_CONFIRM_LEN            (3)
 #define PERF_GET_CONFIRM_LEN            (3)
@@ -143,6 +143,16 @@
 //! \}
 
 /**
+ * \name MACROS to set the specific features supported
+ * \{
+ */
+
+/* MACROS to set the specific features supported */
+#define MULTI_CHANNEL_SELECT              ((uint32_t)(1) << 0)
+
+//! \}
+
+/**
  * \name Generic
  * \{
  */
@@ -185,6 +195,8 @@
 
 /* Field positions - ED_SCAN_START_REQ */
 #define SCAN_DURATION_POS                 (3)
+#define CHANNELS_SELECT_POS               (4)
+#define MSG_LEN_ED_SCAN_REQ               (7)
 
 //! \}
 /* === Types ================================================================ */

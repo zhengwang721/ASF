@@ -352,7 +352,7 @@ volatile node_ib_t node_info;
  */
 int main(void)
 {
-        irq_initialize_vectors();
+    irq_initialize_vectors();
 
 	/* Initialize the board.
 	 * The board-specific conf_board.h file contains the configuration of

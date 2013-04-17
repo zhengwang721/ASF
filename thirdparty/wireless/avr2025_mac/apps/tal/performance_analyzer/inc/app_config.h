@@ -61,10 +61,7 @@
 /* === Macros =============================================================== */
 
 /* Version of the software */
-#define MAJOR_NUMBER        4
-#define MINOR_NUMBER        0
-
-
+#define FIRMWARE_VERSION    2.1f
 
 #if ((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B))
 #define DEFAULT_CHANNEL         (1)

@@ -156,7 +156,10 @@ static uint8_t head = 0;
  * This is buffer count to keep track of the available bufer for transmission
  */
 static uint8_t buf_count = 0;
-
+/**
+ * This variable is to save the selected channels mask, which is a 4byte value received through serial interface
+ */
+static uint32_t rcvd_channel_mask = 0;
 /* === Prototypes ========================================================== */
 
 static inline void process_incoming_sio_data(void);
@@ -537,12 +540,12 @@ static inline void handle_incoming_msg(void)
                 }
             }
             break;
-           
+
             /* Proces Continuous Pulse transmission req command */
         case CONT_PULSE_TX_REQ:
             {
-              
-#if ((TAL_TYPE != AT86RF230B) || ((TAL_TYPE == AT86RF230B) && (defined CW_SUPPORTED)))               
+
+#if ((TAL_TYPE != AT86RF230B) || ((TAL_TYPE == AT86RF230B) && (defined CW_SUPPORTED)))
                 /* Order of reception:
                    size;
                    protocol_id;
@@ -569,25 +572,25 @@ static inline void handle_incoming_msg(void)
                     pulse_cw_transmission();
                 }
                 else
-                   
+
                 {
-                
+
                     /* Send the confirmation with status as INVALID_CMD as
                      * this command is not allowed in this state
                      */
                     usr_cont_pulse_tx_confirm(INVALID_CMD);
                 }
-#else       
-                
+#else
+
                 usr_cont_pulse_tx_confirm(INVALID_CMD);
-                
-#endif //((TAL_TYPE != AT86RF230B) || ((TAL_TYPE == AT86RF230B) && (defined CW_SUPPORTED)))               
+
+#endif //((TAL_TYPE != AT86RF230B) || ((TAL_TYPE == AT86RF230B) && (defined CW_SUPPORTED)))
             }
             break;
             /* Process Continuous wave transmission req command */
         case CONT_WAVE_TX_REQ:
             {
-#if ((TAL_TYPE != AT86RF230B) || ((TAL_TYPE == AT86RF230B) && (defined CW_SUPPORTED)))               
+#if ((TAL_TYPE != AT86RF230B) || ((TAL_TYPE == AT86RF230B) && (defined CW_SUPPORTED)))
                 /* Order of reception:
                    size;
                    protocol_id;
@@ -640,7 +643,7 @@ static inline void handle_incoming_msg(void)
                     cont_tx_mode = sio_rx_buf[TX_MODE_POS];
                 }
                 else
-                 
+
                 {
                     /* Send the confirmation with status as INVALID_CMD
                      * as this command is not allowed in this state
@@ -649,12 +652,12 @@ static inline void handle_incoming_msg(void)
                                              sio_rx_buf[START_STOP_POS],
                                              sio_rx_buf[TX_MODE_POS]);
                 }
-                
-#else     
+
+#else
                 usr_cont_wave_tx_confirm(INVALID_CMD,
                                              sio_rx_buf[START_STOP_POS],
                                              sio_rx_buf[TX_MODE_POS]);
-#endif //((TAL_TYPE != AT86RF230B) || ((TAL_TYPE == AT86RF230B) && (defined CW_SUPPORTED)))               
+#endif //((TAL_TYPE != AT86RF230B) || ((TAL_TYPE == AT86RF230B) && (defined CW_SUPPORTED)))
             }
             break;
 
@@ -795,14 +798,13 @@ static inline void handle_incoming_msg(void)
                    msg_id;
                    scan_duration;
                  */
-
                 /* Check any ongoing transaction in place */
                 if (error_code)
                 {
                     /* Send the confirmation with status as Failure
                      * with error code as the reason for failure
                      */
-                    usr_ed_scan_start_confirm(error_code, NUL_VAL, NUL_VAL);;
+                    usr_ed_scan_start_confirm(error_code, NUL_VAL, NUL_VAL);
                     return;
                 }
 
@@ -813,7 +815,14 @@ static inline void handle_incoming_msg(void)
                     (SINGLE_NODE_TESTS == node_info.main_state)
                    )
                 {
-                    start_ed_scan(sio_rx_buf[SCAN_DURATION_POS]); /* scan_duration */
+                    rcvd_channel_mask = 0; /* Clear for every ED SCAN REQ MSG */                  
+                    /* Extract the 4bytes of selected channel mask from the sio_rx_buf */
+                    rcvd_channel_mask |= (((uint32_t )sio_rx_buf[CHANNELS_SELECT_POS])&0x000000FF);
+                    rcvd_channel_mask |= (((uint32_t )sio_rx_buf[CHANNELS_SELECT_POS+1]<<8)&0x0000FF00);
+                    rcvd_channel_mask |= (((uint32_t )sio_rx_buf[CHANNELS_SELECT_POS+2]<<16)&0x00FF0000);
+                    rcvd_channel_mask |= (((uint32_t )sio_rx_buf[CHANNELS_SELECT_POS+3]<<24)&0xFF000000);
+
+                    start_ed_scan(sio_rx_buf[SCAN_DURATION_POS],rcvd_channel_mask); /* scan_duration */
                 }
                 else
                 {
@@ -989,7 +998,7 @@ static inline void handle_incoming_msg(void)
             break;
 
         default:
-            
+
             break;
     }
 }
@@ -1085,13 +1094,13 @@ void usr_perf_start_confirm(uint8_t status,
 #else
     *msg_buf++ = FIELD_DOES_NOT_EXIST;
 #endif
-    
+
 #ifdef CRC_SETTING_ON_REMOTE_NODE
     *msg_buf++ = trx_config_params->crc_settings_on_peer;
 #else
     *msg_buf++ = FIELD_DOES_NOT_EXIST;
 #endif
-    
+
     if (START_MODE_PER == start_mode)
     {
         *msg_buf++ = peer_ic_type;
@@ -1468,8 +1477,8 @@ void usr_register_dump_confirm(uint8_t status, uint16_t start_reg_addr, uint16_t
     *msg_buf++ = (uint8_t)(end_reg_addr >> BYTE_LEN);
     if(reg_val != NULL)
     {
-   
-    
+
+
     *msg_buf++ = reg_val[0];
     /* Update the length field with length field of the octet string */
     *ptr_to_msg_size += 1;
@@ -1483,7 +1492,7 @@ void usr_register_dump_confirm(uint8_t status, uint16_t start_reg_addr, uint16_t
     else
     {
     *msg_buf++ = NUL_VAL;
-    *ptr_to_msg_size += 1;    
+    *ptr_to_msg_size += 1;
     }
     *msg_buf = EOT;
 }
@@ -1815,7 +1824,8 @@ void usr_identify_board_confirm(uint8_t status,
                                 char *trx_name,
                                 char *board_name,
                                 uint64_t mac_address,
-                                float fw_version)
+                                float fw_version,
+                                uint32_t fw_feature_mask)
 {
 
     uint8_t *msg_buf;
@@ -1890,6 +1900,11 @@ void usr_identify_board_confirm(uint8_t status,
     /* copy fw version */
     memcpy(msg_buf, &fw_version, sizeof(fw_version));
     msg_buf += sizeof(fw_version);
+
+    /* copy fw_feature_mask value */
+    fw_feature_mask = CCPU_ENDIAN_TO_LE32(fw_feature_mask);
+    memcpy(msg_buf, &fw_feature_mask, sizeof(fw_feature_mask));
+    msg_buf += sizeof(fw_feature_mask);
 
     *msg_buf = EOT;
 }

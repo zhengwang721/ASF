@@ -58,7 +58,7 @@
 #include "tal_helper.h"
 #include "tal_constants.h"
 #include "app_frame_format.h"
-# include "sio2host.h"
+#include "sio2host.h"
 #include "perf_api.h"
 #include "conf_board.h"
 /* === TYPES =============================================================== */
@@ -233,6 +233,11 @@ static uint32_t frames_to_transmit;
 static set_param_cb_t set_param_cb;
 static uint8_t num_channels;
 
+/**
+ * This is variable is to keep track of the specific features supported
+ */
+static uint32_t fw_feature_mask = 0;
+
 #if ((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B))
 static uint8_t phy_tx_power;
 #endif
@@ -258,7 +263,7 @@ static uint8_t last_tx_power_format_set;
 static float reverse_float( const float float_val )
 {
 
-  
+
    float retuVal;
    char* floatToConvert = ( char* ) & float_val;
    char* returnFloat = ( char* ) & retuVal;
@@ -269,7 +274,7 @@ static float reverse_float( const float float_val )
    returnFloat[2] = floatToConvert[1];
    returnFloat[3] = floatToConvert[0];
 #else
-      returnFloat[0] = floatToConvert[0];
+   returnFloat[0] = floatToConvert[0];
    returnFloat[1] = floatToConvert[1];
    returnFloat[2] = floatToConvert[2];
    returnFloat[3] = floatToConvert[3];
@@ -761,7 +766,7 @@ void per_mode_initiator_tx_done_cb(retval_t status, frame_info_t *frame)
                     app_led_event(LED_EVENT_PEER_SEARCH_DONE);
                     /* For Boards with two leds LED0 is used as both status and TX LED,hence the timer may switch off TX_LED after per test
                      * hence this timer should be stopped */
-                    sw_timer_stop(APP_TIMER_TO_TX_LED_OFF); 
+                    sw_timer_stop(APP_TIMER_TO_TX_LED_OFF);
                 }
                 break;
             }
@@ -883,7 +888,7 @@ static void set_parameter_on_transmitter_node(retval_t status)
             {
 #if((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B))
                 uint8_t channel;
-                int8_t dbm_val =0; 
+                int8_t dbm_val =0;
                 uint8_t tx_pwr =0;
 #endif
                 tal_pib_set(phyCurrentPage, (pib_value_t *)&set_param_cb.param_value);
@@ -1037,7 +1042,7 @@ void per_mode_initiator_rx_cb(frame_info_t *mac_frame_info)
 #ifdef CRC_SETTING_ON_REMOTE_NODE
                         frames_with_wrong_crc = (msg->payload.test_result_rsp_data.frames_with_wrong_crc);
                         /* Value of 0xffffffff means that CRC errors were not counted */
-                        
+
 #else
                         frames_with_wrong_crc = 0XFFFFFFFF;
 #endif /* #ifdef CRC_SETTING_ON_REMOTE_NODE */
@@ -1045,7 +1050,7 @@ void per_mode_initiator_rx_cb(frame_info_t *mac_frame_info)
                         per_test_duration_sec = calculate_time_duration();
                         /* Calculate the net data rate */
                         net_data_rate = (calculate_net_data_rate(per_test_duration_sec));
-                        
+
                         net_data_rate = reverse_float(net_data_rate);
                         per_test_duration_sec = reverse_float(per_test_duration_sec);
                         usr_per_test_end_indication(MAC_SUCCESS,
@@ -1192,7 +1197,7 @@ static void config_per_test_parameters(void)
     /* Disable antenna diversity by default */
     /* Enable A1/X2 */
      tal_ant_div_config(ANT_DIVERSITY_DISABLE,ANT_CTRL_1);/* Enable A1/X2 */
-   
+
 #else
     curr_trx_config_params.antenna_diversity = default_trx_config_params.antenna_diversity = true;
     curr_trx_config_params.antenna_selected = default_trx_config_params.antenna_selected = ANT_CTRL_0;
@@ -1288,8 +1293,13 @@ static void config_per_test_parameters(void)
 void get_board_details(void)
 {
 
+    float fw_version = reverse_float(FIRMWARE_VERSION);
 
-    float fw_version = reverse_float(2.0);     
+    /* Enable the mask bit for single/multi channel selection
+     * feature is available in the firmware
+     */
+    fw_feature_mask |= MULTI_CHANNEL_SELECT;
+
     /* Send the Confirmation with the status as SUCCESS */
     usr_identify_board_confirm(MAC_SUCCESS,
                                IC_TYPE,
@@ -1297,7 +1307,8 @@ void get_board_details(void)
                                TRANSCEIVER_NAME,
                                BOARD_NAME,
                                (uint64_t)tal_pib.IeeeAddress,
-                               fw_version);
+                               fw_version,
+                               fw_feature_mask);
 }
 
 
@@ -1350,7 +1361,7 @@ static void set_transceiver_state(uint8_t trx_state)
         }
 
         /* Send Set confirmation with status SUCCESS */
-        trx_state = tal_get_trx_status() ; 
+        trx_state = tal_get_trx_status() ;
         curr_trx_config_params.trx_state = trx_state;
         usr_perf_set_confirm(MAC_SUCCESS,
                              PARAM_TRX_STATE,
@@ -1385,7 +1396,7 @@ static void set_transceiver_state(uint8_t trx_state)
                 *  avoid leakage current of an external RF switch during SLEEP.
                 */
               tal_ant_div_config(ANT_DIVERSITY_DISABLE,ANTENNA_DEFAULT);
-              
+
 #endif
                 /* Set the state to TRX_OFF */
                 set_trx_state(CMD_TRX_OFF);
@@ -1531,7 +1542,7 @@ static void recover_all_settings(void)
 {
     int8_t tx_pwr_dbm;
     uint8_t temp_var;
-    
+
 #if( ANTENNA_DIVERSITY == 1)
     if ( ANT_DIV_DISABLE == ant_div_before_ct)
     {
@@ -1555,25 +1566,25 @@ static void recover_all_settings(void)
        tal_set_rx_sensitivity_level(RX_DESENSITIZE_LEVEL);
     }
 #endif
-    
-#if( (TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B) )   
+
+#if( (TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B) )
     if(last_tx_power_format_set == 0)
-    {    
+    {
         uint8_t tx_pwr_reg = curr_trx_config_params.tx_power_reg;
-        tal_set_tx_pwr(REGISTER_VALUE,tx_pwr_reg);    
+        tal_set_tx_pwr(REGISTER_VALUE,tx_pwr_reg);
     }
     else
 #endif
-    {       
+    {
         tx_pwr_dbm = curr_trx_config_params.tx_power_dbm;
-  
+
         temp_var = CONV_DBM_TO_phyTransmitPower(tx_pwr_dbm);
         tal_pib_set(phyTransmitPower, (pib_value_t *)&temp_var);
-    
+
     }
-    
-   
-    
+
+
+
 
 }
 #endif /* End of #if ((TAL_TYPE != AT86RF230B) || ((TAL_TYPE == AT86RF230B) && (defined CW_SUPPORTED))) */
@@ -1593,7 +1604,7 @@ void pulse_cw_transmission(void)
     save_all_settings();
 
     tal_reset(false);
- 
+
 
 #if(TAL_TYPE == AT86RF233)
     /* Set the frequency back to already set value after tal_reset */
@@ -1650,12 +1661,12 @@ void start_cw_transmission(uint8_t tx_mode)
 
     /* Added to ensure CW transmission happen in every attempt */
     tal_reset(false);
-    
+
 #if( ANTENNA_DIVERSITY == 1)
     if ( ANT_DIV_DISABLE == ant_div_before_ct)
     {
             tal_ant_div_config(ANT_DIVERSITY_DISABLE,ant_sel_before_ct);
-    
+
     }
 #endif
     switch (tx_mode)
@@ -1721,7 +1732,7 @@ void read_trx_registers(uint16_t reg_addr)
         return;
     }
 #if (TAL_TYPE != ATMEGARFR2)
-        tal_trx_reg_read((uint8_t)reg_addr,&reg_val); 
+        tal_trx_reg_read((uint8_t)reg_addr,&reg_val);
 #else
 		tal_trx_reg_read(reg_addr,&reg_val);
 #endif
@@ -1761,10 +1772,10 @@ void write_trx_registers(uint16_t reg_addr, uint8_t reg_val)
  */
 void dump_trx_register_values(uint16_t start_reg_addr, uint16_t end_reg_addr)
 {
-  
+
   uint8_t status;
    int8_t num_of_reg_to_read;
-   
+
   uint8_t reg_val[NO_OF_REGISTERS] = {NUL_VAL};
   num_of_reg_to_read = ((end_reg_addr - start_reg_addr));
   if (num_of_reg_to_read < 0)
@@ -1776,11 +1787,11 @@ void dump_trx_register_values(uint16_t start_reg_addr, uint16_t end_reg_addr)
                                   reg_val);
         return;
     }
-  
+
   status = tal_dump_registers(start_reg_addr,end_reg_addr,(reg_val+1));
-  
+
   reg_val[0] = num_of_reg_to_read+1;
-  
+
     if(status==MAC_SUCCESS)
     {
     /* Send the confirmation with status as MAC_SUCCESS register address */
@@ -1788,8 +1799,8 @@ void dump_trx_register_values(uint16_t start_reg_addr, uint16_t end_reg_addr)
                               start_reg_addr,
                               end_reg_addr,
                               reg_val);
-    
-    
+
+
     }
   else
   {
@@ -1797,7 +1808,7 @@ void dump_trx_register_values(uint16_t start_reg_addr, uint16_t end_reg_addr)
                                   start_reg_addr,
                                   end_reg_addr,
                                   reg_val);
-  
+
   }
 
 }
@@ -1937,7 +1948,7 @@ void perf_set_req(uint8_t param_type, param_value_t *param_value)
         case PARAM_TX_POWER_DBM: /* TX power in dBm value Set request  */
             {
                 set_tx_power(1, (int8_t)param_value->param_value_8bit);
-#if( (TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B) )                
+#if( (TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B) )
                 last_tx_power_format_set = 1;
 #endif /* End of (TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B) */
             }
@@ -1975,13 +1986,13 @@ void perf_set_req(uint8_t param_type, param_value_t *param_value)
                 config_rx_desensitization(param_value->param_value_bool);
             }
             break;
-#endif //(TAL_TYPE != AT86RF230B)      
-#ifdef CRC_SETTING_ON_REMOTE_NODE           
+#endif //(TAL_TYPE != AT86RF230B)
+#ifdef CRC_SETTING_ON_REMOTE_NODE
         case PARAM_CRC_ON_PEER: /* Set CRC settings on Peer node request */
             {
                 config_crc_peer_node(param_value->param_value_bool);
             }
-            break;            
+            break;
 #endif
         case PARAM_TRX_STATE: /* Set Transceiver state request */
             {
@@ -1994,13 +2005,13 @@ void perf_set_req(uint8_t param_type, param_value_t *param_value)
 
                 uint32_t no_of_test_frames ;
                 MEMCPY_ENDIAN(&(no_of_test_frames),&(param_value->param_value_32bit),4);
-               
+
                 if((no_of_test_frames)== NUL_VAL)
                 {
                    usr_perf_set_confirm(VALUE_OUT_OF_RANGE,
                              PARAM_NO_OF_TEST_FRAMES,
                              (param_value_t*)(&no_of_test_frames));
-                 
+
                 }
                 else
                 {
@@ -2012,7 +2023,7 @@ void perf_set_req(uint8_t param_type, param_value_t *param_value)
             break;
         case PARAM_PHY_FRAME_LENGTH:  /* Set PHY frame length for PER test request */
             {
-              
+
                 set_phy_frame_length(param_value->param_value_8bit);
             }
             break;
@@ -2149,11 +2160,11 @@ void perf_get_req(uint8_t param_type)
                 get_crc_settings_peer_node();
             }
             break;
-#endif 
+#endif
         case PARAM_TRX_STATE: /* Set Transceiver state request */
             {
                 uint8_t trx_state;
-                trx_state = tal_get_trx_status() ; 
+                trx_state = tal_get_trx_status() ;
 
                 /* Send Get confirmation with status SUCCESS */
                 usr_perf_get_confirm(MAC_SUCCESS,
@@ -2524,7 +2535,7 @@ static void set_tx_power(uint8_t tx_power_format, int8_t power_value)
  * \param ed_scan_duration  Scan duration parameter which is used to calculate
  *                          the scan time on each channel
  */
-void start_ed_scan(uint8_t ed_scan_duration)
+void start_ed_scan(uint8_t ed_scan_duration,uint32_t channel_sel_mask)
 {
     uint8_t first_channel;
     uint8_t ch_cnt;
@@ -2535,6 +2546,7 @@ void start_ed_scan(uint8_t ed_scan_duration)
     num_channels = 0;
 
     scan_duration = ed_scan_duration;
+    scan_channel_mask = (channel_sel_mask & VALID_CHANNEL_MASK);
 
 #if( (TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B) )
     /* saving the current transmit power to restore after scan*/
@@ -2549,13 +2561,12 @@ void start_ed_scan(uint8_t ed_scan_duration)
     }
 
     scanning = true;
-    tal_pib_get(phyChannelsSupported, (uint8_t *)&scan_channel_mask);
     for ( ch_cnt = MIN_CHANNEL; ch_cnt <= MAX_CHANNEL; ch_cnt++ )
     {
         num_channels += ( scan_channel_mask & ((uint32_t)1 << ch_cnt) ) ? 1 : 0;
     }
 
-    
+
     scan_time = (float)aBaseSuperframeDuration * ( (1 << scan_duration) + 1 ) *
                 (TAL_CONVERT_SYMBOLS_TO_US(1)) * num_channels / (1e6);
 
@@ -2600,14 +2611,14 @@ void get_sensor_data(void)
 
     bat_mon = tfa_get_batmon_voltage();
     bat_voltage = reverse_float((double)(bat_mon * MILLI_VOLT_MULTIPLIER));
-    
+
 
 #if (TAL_TYPE == ATMEGARFR2)
     temperature = tfa_get_temperature();
 temperature = reverse_float(temperature);
 #else
-    temperature = reverse_float(0.0); 
-    
+    temperature = reverse_float(0.0);
+
 #endif /* End of #if (TAL_TYPE == ATMEGARFR2) */
     /* Send the confirmation with status as SUCCESS */
     usr_sensor_data_get_confirm(MAC_SUCCESS, bat_voltage, temperature);
@@ -2819,7 +2830,7 @@ static void set_antenna_diversity_settings(uint8_t config_value)
         /* To avoid the transition time from antenna diversity enabled to disabled
          * during receiver on state,switch off the transceiver and restore the
          * state after the antenna diversity settings are done */
-        curr_state = tal_get_trx_status() ; 
+        curr_state = tal_get_trx_status() ;
 
         if ( (RX_ON == curr_state) || (RX_AACK_ON == curr_state) )
         {
@@ -2858,7 +2869,7 @@ static void set_antenna_diversity_settings(uint8_t config_value)
 
                 }
         }
-        tal_ant_div_config(ANT_DIVERSITY_DISABLE,config_value); 
+        tal_ant_div_config(ANT_DIVERSITY_DISABLE,config_value);
 
 
         /* Restore the current state back again */
@@ -2997,14 +3008,14 @@ static void config_rx_desensitization(bool config_value)
     {
         curr_trx_config_params.rx_desensitize = false;
         tal_set_rx_sensitivity_level(NO_RX_DESENSITIZE_LEVEL);
-       
+
     }
     /* Receiver desensitization is disabled, enable it */
     else
     {
         curr_trx_config_params.rx_desensitize = true;
         tal_set_rx_sensitivity_level(RX_DESENSITIZE_LEVEL);
-   
+
     }
     /* Send confirmation with status MAC_SUCCESS */
     usr_perf_set_confirm(MAC_SUCCESS,
@@ -3097,10 +3108,10 @@ static void start_test(void)
         {
             frame_no_ack = CCPU_ENDIAN_TO_LE32((uint32_t)(-1));
         }
- //CSMA/CA is enabled by default in 230B       
-        
+ //CSMA/CA is enabled by default in 230B
+
 #if (TAL_TYPE != AT86RF230B)
-        if (true == curr_trx_config_params.csma_enabled ) 
+        if (true == curr_trx_config_params.csma_enabled )
         {
             frame_access_failure = 0;
         }
@@ -3788,7 +3799,7 @@ static void config_rpc_mode(bool config_value)
 #if (ANTENNA_DIVERSITY == 1)
         /*  Enable antenna diversity */
         tal_ant_div_config(ANT_DIVERSITY_ENABLE,ANTENNA_DEFAULT)
-       
+
         /* Update this changes in the data base */
         curr_trx_config_params.antenna_diversity = true;;
         curr_trx_config_params.antenna_selected = ANT_CTRL_0;

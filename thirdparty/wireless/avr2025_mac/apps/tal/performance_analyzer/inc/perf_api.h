@@ -97,7 +97,7 @@ void initiate_per_test(void);
  * \param scan_duration paramter which is used to calculate the scan time
  *        on each channel
  */
-void start_ed_scan(uint8_t scan_duration);
+void start_ed_scan(uint8_t scan_duration,uint32_t channel_sel_mask);
 
 /**
  * \brief Function to get the Sensor data like Battery volatge
@@ -309,7 +309,7 @@ void usr_sensor_data_get_confirm(uint8_t status, float bat_voltage, float temper
  *
  * \return void
  */
-void usr_identify_board_confirm(uint8_t status, uint8_t ic_type, char *mcu_soc_name, char *trx_name, char *board_name, uint64_t mac_address, float fw_version);
+void usr_identify_board_confirm(uint8_t status, uint8_t ic_type, char *mcu_soc_name, char *trx_name, char *board_name, uint64_t mac_address, float fw_version, uint32_t fw_feature_mask);
 
 /**
  * Function to generate Perf Set confirmation frame that must be sent to
