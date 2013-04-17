@@ -44,7 +44,13 @@
 
 /**
  * \internal
- * Writes of a buffer with a given length
+ * Dummy byte to send when reading in master mode
+ */
+uint16_t dummy_write;
+
+/**
+ * \internal
+ * Starts write of a buffer with a given length
  *
  * \param[in]  module   Pointer to SPI software instance struct
  * \param[in]  tx_data  Pointer to data to be transmitted
@@ -62,20 +68,16 @@ static void _spi_write_buffer(
 	/* Write parameters to the device instance */
 	module->remaining_tx_buffer_length = length;
 	module->tx_buffer_ptr = tx_data;
-	module->tx_status = STATUS_BUSY;
+	module->status = STATUS_BUSY;
 
-	if (module->dir == SPI_DIRECTION_IDLE) {
-		module->dir = SPI_DIRECTION_WRITE;
-	} else {
-		module->dir = SPI_DIRECTION_BOTH;
-	}
+	module->dir = SPI_DIRECTION_WRITE;
 
 	/* Get a pointer to the hardware module instance */
 	SercomSpi *const hw = &(module->hw->SPI);
 
-	/* Enable the Data Register Empty, TX and RX Complete Interrupt */
+	/* Enable the Data Register Empty and RX Complete Interrupt */
 	hw->INTENSET.reg = (SPI_INTERRUPT_FLAG_DATA_REGISTER_EMPTY |
-			SPI_INTERRUPT_FLAG_TX_COMPLETE | SPI_INTERRUPT_FLAG_RX_COMPLETE);
+			SPI_INTERRUPT_FLAG_RX_COMPLETE);
 }
 
 /**
@@ -100,13 +102,10 @@ static void _spi_read_buffer(
 	module->remaining_rx_buffer_length = length;
 	module->remaining_dummy_buffer_length = length;
 	module->rx_buffer_ptr = rx_data;
-	module->rx_status = STATUS_BUSY;
+	module->status = STATUS_BUSY;
 
-	if (module->dir == SPI_DIRECTION_IDLE) {
-		module->dir = SPI_DIRECTION_READ;
-	} else {
-		module->dir = SPI_DIRECTION_BOTH;
-	}
+	module->dir = SPI_DIRECTION_READ;
+
 	/* Get a pointer to the hardware module instance */
 	SercomSpi *const hw = &(module->hw->SPI);
 
@@ -201,7 +200,7 @@ enum status_code spi_write_buffer_job(
 	}
 
 	/* Check if the SPI is busy transmitting */
-	if (module->remaining_tx_buffer_length > 0 || (module->tx_status == STATUS_BUSY)) {
+	if (module->status == STATUS_BUSY) {
 		return STATUS_BUSY;
 	}
 
@@ -223,6 +222,7 @@ enum status_code spi_write_buffer_job(
  * \param[in]  module   Pointer to SPI software instance struct
  * \param[out] rx_data  Pointer to data buffer to receive
  * \param[in]  length   Data buffer length
+ * \param[in]  dummy    Dummy character to send when reading in master mode.
  *
  * \returns Status of the operation
  * \retval  STATUS_OK               If the operation completed successfully
@@ -232,6 +232,52 @@ enum status_code spi_write_buffer_job(
  */
 enum status_code spi_read_buffer_job(
 		struct spi_module *const module,
+		uint8_t *rx_data,
+		uint16_t length,
+		uint16_t dummy)
+{
+	/* Sanity check arguments */
+	Assert(module);
+	Assert(rx_data);
+
+	if (length == 0) {
+		return STATUS_ERR_INVALID_ARG;
+	}
+
+	/* Check if the SPI is busy */
+	if (module->status == STATUS_BUSY) {
+		return STATUS_BUSY;
+	}
+	
+	dummy_write = dummy;
+	/* Issue internal read */
+	_spi_read_buffer(module, rx_data, length);
+	return STATUS_OK;
+}
+
+/**
+ * \brief Asynchronous buffer write and read
+ *
+ * Sets up the driver to write and read to and from given buffers. If registered
+ * and enabled, a callback function will be called when the tranfer is finished.
+ *
+ * \note If address matching is enabled for the slave, the first character
+ *       received and placed in the buffer will be the address.
+ *
+ * \param[in]  module   Pointer to SPI software instance struct
+ * \param[in] tx_data   Pointer to data buffer to send
+ * \param[out] rx_data  Pointer to data buffer to receive
+ * \param[in]  length   Data buffer length
+ *
+ * \returns Status of the operation
+ * \retval  STATUS_OK               If the operation completed successfully
+ * \retval  STATUS_ERR_BUSY         If the SPI was already busy with a read
+ *                                  operation
+ * \retval  STATUS_ERR_INVALID_ARG  If requested read length was zero
+ */
+enum status_code spi_transceive_buffer_job(
+		struct spi_module *const module,
+		uint8_t *tx_data,
 		uint8_t *rx_data,
 		uint16_t length)
 {
@@ -244,15 +290,15 @@ enum status_code spi_read_buffer_job(
 	}
 
 	/* Check if the SPI is busy */
-	if (module->remaining_rx_buffer_length > 0 || (module->rx_status == STATUS_BUSY)) {
+	if (module->status == STATUS_BUSY) {
 		return STATUS_BUSY;
 	}
-
-	/* Issue internal read */
-	_spi_read_buffer(module, rx_data, length);
+	
+	/* Issue internal transceive */
+	_spi_transceive_buffer(module, tx_data, rx_data, length);
+	return STATUS_OK;
 	return STATUS_OK;
 }
-
 /**
  * \brief Aborts an ongoing job
  *
@@ -269,29 +315,19 @@ void spi_abort_job(
 	SercomSpi *const spi_hw
 		= &(module->hw->SPI);
 
-	if (job_type == SPI_JOB_READ_BUFFER) {
-		/* Abort read buffer job */
-		module->rx_status = STATUS_ABORTED;
-		module->remaining_rx_buffer_length = 0;
-		module->remaining_dummy_buffer_length = 0;
-		if (module->dir == SPI_DIRECTION_READ) {
-			spi_hw->INTENCLR.reg = SPI_INTERRUPT_FLAG_RX_COMPLETE;
-			module->dir = SPI_DIRECTION_IDLE;
-		} else if (module->dir == SPI_DIRECTION_BOTH) {
-			module->dir = SPI_DIRECTION_WRITE;
-		}
-	} else {
-		/* Abort write buffer job */
-		module->tx_status = STATUS_ABORTED;
-		module->remaining_tx_buffer_length = 0;
-                if (module->dir == SPI_DIRECTION_WRITE) {
-                  spi_hw->INTENCLR.reg = SPI_INTERRUPT_FLAG_DATA_REGISTER_EMPTY
-                        | SPI_INTERRUPT_FLAG_TX_COMPLETE;
-                    module->dir = SPI_DIRECTION_IDLE;
-                } else if (module->dir == SPI_DIRECTION_BOTH) {
-                  module->dir = SPI_DIRECTION_READ;
-                }
-	}
+	/* Abort ongoing job */
+	
+	/* Disable interrupts */
+	spi_hw->INTENCLR.reg = SPI_INTERRUPT_FLAG_RX_COMPLETE | 
+			SPI_INTERRUPT_FLAG_DATA_REGISTER_EMPTY |
+			SPI_INTERRUPT_FLAG_TX_COMPLETE;
+
+	module->status = STATUS_ABORTED;
+	module->remaining_rx_buffer_length = 0;
+	module->remaining_dummy_buffer_length = 0;
+	module->remaining_tx_buffer_length = 0;
+
+	module->dir = SPI_DIRECTION_IDLE;
 }
 
 /**
@@ -310,7 +346,168 @@ enum status_code spi_get_job_status(
 {
 	if (job_type == SPI_JOB_READ_BUFFER) {
 		return module->rx_status;
-	} else {
+	/**
+ * \file
+ *
+ * \brief SAM D20 Serial Peripheral Interface Driver (Callback Mode)
+ *
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ *
+ * \asf_license_start
+ *
+ * \page License
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * 3. The name of Atmel may not be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * 4. This software may only be redistributed and used in connection with an
+ *    Atmel microcontroller product.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+ * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
+ *
+ */
+
+#ifndef SPI_INTERRUPT_H_INCLUDED
+#define SPI_INTERRUPT_H_INCLUDED
+
+/**
+ * \addtogroup asfdoc_samd20_sercom_spi_group
+ *
+ * @{
+ */
+
+#include "spi.h"
+
+/**
+ * Enum for the possible types of SPI asynchronous jobs that may be issued to
+ * the driver.
+ */
+enum spi_job_type {
+	/** Asynchronous SPI read into a user provided buffer */
+	SPI_JOB_READ_BUFFER,
+	/** Asynchronous SPI write from a user provided buffer */
+	SPI_JOB_WRITE_BUFFER,
+	/** Asynchronous SPI transceive from user provided buffers */
+	SPI_JOB_TRANSCEIVE_BUFFER,
+};
+
+
+/**
+ * \name Callback Management
+ * @{
+ */
+
+void spi_register_callback(
+		struct spi_module *const module,
+		spi_callback_t callback_func,
+		enum spi_callback callback_type);
+
+void spi_unregister_callback(
+		struct spi_module *module,
+		enum spi_callback callback_type);
+
+/**
+ * \brief Enables a SPI callback of a given type
+ *
+ * Enables the callback function registered by the \ref spi_register_callback.
+ * The callback function will be called from the interrupt handler when the
+ * conditions for the callback type are met.
+ *
+ * \param[in] module         Pointer to spi software instance struct
+ * \param[in] callback_type  Callback type given by an enum
+ */
+static inline void spi_enable_callback(
+		struct spi_module *const module,
+		enum spi_callback callback_type)
+{
+	/* Sanity check arguments */
+	Assert(module);
+
+	/* Enable callback */
+	module->enabled_callback |= (1 << callback_type);
+}
+
+/**
+ * \brief Disables callback
+ *
+ * Disables the callback function registered by the \ref spi_register_callback,
+ * and the callback will not be called from the interrupt routine.
+ *
+ * \param[in] module         Pointer to SPI software instance struct
+ * \param[in] callback_type  Callback type given by an enum
+ */
+static inline void spi_disable_callback(
+		struct spi_module *const module,
+		enum spi_callback callback_type)
+{
+	/* Sanity check arguments */
+	Assert(module);
+
+	/* Disable callback */
+	module->enabled_callback &= ~(1 << callback_type);
+}
+
+/** @} */
+
+
+/**
+ * \name Writing and Reading
+ * @{
+ */
+enum status_code spi_write_buffer_job(
+		struct spi_module *const module,
+		uint8_t *tx_data,
+		uint16_t length);
+
+enum status_code spi_read_buffer_job(
+		struct spi_module *const module,
+		uint8_t *rx_data,
+		uint16_t length,
+		uint16_t dummy);
+		
+enum status_code spi_transceive_buffer_job(
+		struct spi_module *const module,
+		uint8_t *tx_data,
+		uint16_t length);
+
+void spi_abort_job(
+		struct spi_module *const module,
+		enum spi_job_type job_type);
+
+enum status_code spi_get_job_status(
+		const struct spi_module *const module,
+		enum spi_job_type job_type);
+
+/** @} */
+
+/**
+ * @}
+ */
+
+#endif /* SPI_INTERRUPT_H_INCLUDED */
+
 		return module->tx_status;
 	}
 }
@@ -358,7 +555,7 @@ static void _spi_write_dummy(
 	SercomSpi *const spi_hw = &(module->hw->SPI);
 
 	/* Write dummy byte */
-	spi_hw->DATA.reg = 0xAA;
+	spi_hw->DATA.reg = dummy_write;
 
 	/* Decrement remaining dummy buffer length */
 	module->remaining_dummy_buffer_length--;
@@ -407,6 +604,145 @@ static void _spi_read(
  *                       handler.
  */
 void _spi_interrupt_handler(
+		uint8_t instance)
+{
+	/* Get device instance from the look-up table */
+	struct spi_module *module
+		= (struct spi_module *)_sercom_instances[instance];
+
+	/* Pointer to the hardware module instance */
+	SercomSpi *const spi_hw = &(module->hw->SPI);
+
+	/* Combine callback registered and enabled masks. */
+	uint8_t callback_mask =
+			module->enabled_callback & module->registered_callback;
+
+	/* Read and mask interrupt flag register */
+	uint16_t interrupt_status = (spi_hw->INTFLAG.reg & spi_hw->INTENSET.reg);
+
+	/* Data register empty */
+	if (interrupt_status & SPI_INTERRUPT_FLAG_DATA_REGISTER_EMPTY) {
+		if (module->mode == SPI_MODE_MASTER &&
+			module->dir == SPI_DIRECTION_READ) {
+			/* Send dummy byte when reading in master mode */
+			_spi_write_dummy(module);
+			if (module->remaining_dummy_buffer_length == 0) {
+				/* Disable the Data Register Empty Interrupt */
+				spi_hw->INTENCLR.reg
+						= SPI_INTERRUPT_FLAG_DATA_REGISTER_EMPTY;
+			}
+		} else {
+			/* Write next byte from buffer */
+			_spi_write(module);
+			if (module->remaining_tx_buffer_length == 0) {
+				/* Disable the Data Register Empty Interrupt */
+				spi_hw->INTENCLR.reg
+						= SPI_INTERRUPT_FLAG_DATA_REGISTER_EMPTY;
+			}
+		}
+	}
+	/* Transmit complete */
+	if (interrupt_status & SPI_INTERRUPT_FLAG_TX_COMPLETE) {
+		if (module->mode == SPI_MODE_MASTER &&
+				module->remaining_dummy_buffer_length == 0) {
+			// IF dummy buffer length != 0, we need to read once more
+
+			/* Disable interrupt */
+			spi_hw->INTENCLR.reg = SPI_INTERRUPT_FLAG_TX_COMPLETE;
+			module->tx_status = STATUS_OK;
+
+			/* Run callback if registered and enabled */
+			if (callback_mask & (1 << SPI_CALLBACK_BUFFER_TRANSMITTED)){
+				(module->callback[SPI_CALLBACK_BUFFER_TRANSMITTED])(module);
+			}
+		} else {
+			// TODO: FLUSH RECEIVE BUFFER
+			/* Transaction ended by master, stop ongoing transmission */
+			spi_hw->INTENCLR.reg =
+					SPI_INTERRUPT_FLAG_TX_COMPLETE |
+					SPI_INTERRUPT_FLAG_RX_COMPLETE |
+					SPI_INTERRUPT_FLAG_DATA_REGISTER_EMPTY;
+			spi_hw->INTFLAG.reg = SPI_INTERRUPT_FLAG_TX_COMPLETE;
+
+			module->tx_status = STATUS_OK;
+			module->rx_status = STATUS_OK;
+			module->dir = SPI_DIRECTION_IDLE;
+			module->remaining_tx_buffer_length = 0;
+			module->remaining_rx_buffer_length = 0;
+
+			/* Run callback if registered and enabled */
+			if (callback_mask &
+					(1 << SPI_CALLBACK_SLAVE_TRANSMISSION_COMPLETE)) {
+				(module->callback[SPI_CALLBACK_SLAVE_TRANSMISSION_COMPLETE])
+						(module);
+			}
+		}
+	}
+
+	/* Receive complete */
+	if (interrupt_status & SPI_INTERRUPT_FLAG_RX_COMPLETE) {
+		/* Check for overflow */
+		if (spi_hw->STATUS.reg & SERCOM_SPI_STATUS_BUFOVF) {
+			if (module->dir =! SPI_DIRECTION_WRITE) {
+				/* Store the error code */
+				module->rx_status = STATUS_ERR_OVERFLOW;
+
+				/* Run callback if registered and enabled */
+				if (callback_mask & (1 << SPI_CALLBACK_ERROR)) {
+					(module->callback[SPI_CALLBACK_ERROR])(module);
+				}
+			}
+			/* Clear overflow flag */
+			spi_hw->STATUS.reg |= SERCOM_SPI_STATUS_BUFOVF;
+		}
+	}
+
+	if (module->rx_status != STATUS_ABORTED) {
+			/* Read data register */
+			_spi_read(module);
+
+			/* Check if the last character have been received */
+			if(module->remaining_rx_buffer_length == 0) {
+				/* Disable RX Complete Interrupt and set status */
+				spi_hw->INTENCLR.reg = SPI_INTERRUPT_FLAG_RX_COMPLETE;
+				module->rx_status = STATUS_OK;
+	
+				switch (module->dir) {
+				case SPI_DIRECTION_WRITE:
+					break;
+				case SPI_DIRECTION_READ:
+					/* Run callback if registered and enabled */
+					if (callback_mask & (1 << SPI_CALLBACK_BUFFER_RECEIVED)) {
+						(module->callback[SPI_CALLBACK_BUFFER_RECEIVED])(module);
+					}
+					break;
+				case SPI_DIRECTION_BOTH:
+					/* Run callback if registered and enabled */
+					if (callback_mask & (1 << SPI_CALLBACK_BUFFER_TRANSCEIVED)) {
+						(module->callback[SPI_CALLBACK_BUFFER_TRANSCEIVED])(module);
+					}
+					break;
+				default:
+					break;
+				}
+				module->dir = SPI_DIRECTION_IDLE;
+			}
+		}
+}
+
+/**
+ * \internal
+ *
+ * Handles interrupts as they occur, and it will run callback functions
+ * which are registered and enabled.
+ *
+ * \note This function will be called by the Sercom_Handler, and should
+ *       not be called directly from any application code.
+ *
+ * \param[in]  instance  ID of the SERCOM instance calling the interrupt
+ *                       handler.
+ */
+void _spi_interrupt_handler2(
 		uint8_t instance)
 {
 	/* Get device instance from the look-up table */
