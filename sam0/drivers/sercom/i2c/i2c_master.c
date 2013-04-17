@@ -259,7 +259,7 @@ static enum status_code _i2c_master_set_config(
  * \param[in]  hw      Pointer to the hardware instance
  * \param[in]  config  Pointer to the configuration struct
  *
- * \return Status of initialization
+ * \return Status of initialization.
  * \retval STATUS_OK                        Module initiated correctly
  * \retval STATUS_ERR_DENIED                If module is enabled
  * \retval STATUS_BUSY                      If module is busy resetting
@@ -455,7 +455,7 @@ static enum status_code _i2c_master_wait_for_bus(
  * \param[in,out] module  Pointer to software module struct.
  * \param[in,out] packet  Pointer to I<SUP>2</SUP>C packet to transfer.
  *
- * \return Status of reading packet
+ * \return Status of reading packet.
  * \retval STATUS_OK                    The packet was read successfully
  * \retval STATUS_ERR_TIMEOUT           If no response was given within
  *                                      specified timeout period

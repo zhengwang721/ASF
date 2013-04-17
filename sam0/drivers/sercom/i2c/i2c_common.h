@@ -388,7 +388,7 @@ struct i2c_packet {
  * \li \ref asfdoc_samd20_system_pinmux_group "System Pin Multiplexer Driver"
  *
  *
- * \section asfdoc_samd20_i2c_extra_workarounds Workarounds implemented by driver
+ * \section asfdoc_samd20_i2c_extra_workarounds Workarounds Implemented by Driver
  * \if I2C_MASTER_MODE
  * Master:
  * - A bug in hardware makes the master go straight from IDLE to BUSY bus state.
