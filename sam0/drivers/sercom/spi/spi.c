@@ -137,8 +137,9 @@ static enum status_code _spi_set_config(
 		system_pinmux_pin_set_config(pad3 >> 16, &pin_conf);
 	}
 
-	module->mode           = config->mode;
-	module->character_size = config->character_size;
+	module->mode             = config->mode;
+	module->character_size   = config->character_size;
+	module->receiver_enabled = config->receiver_enable;
 
 	/* Value to write to BAUD register */
 	uint16_t baud;
@@ -455,8 +456,7 @@ enum status_code spi_init(
 	module->remaining_rx_buffer_length = 0x0000;
 	module->registered_callback        = 0x00;
 	module->enabled_callback           = 0x00;
-	module->rx_status                  = STATUS_OK;
-	module->tx_status                  = STATUS_OK;
+	module->status                     = STATUS_OK;
 	module->dir                        = SPI_DIRECTION_IDLE;
 	/*
 	 * Set interrupt handler and register SPI software module struct in
@@ -490,6 +490,7 @@ enum status_code spi_init(
  * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) were provided.
  * \retval STATUS_ERR_TIMEOUT     If the operation was not completed within the
  *                                timeout in slave mode.
+ * \retval STATUS_ERR_DENIED      If the receiver is not enabled
  * \retval STATUS_ERR_OVERFLOW    If the data is overflown
  */
 enum status_code spi_read_buffer_wait(
@@ -502,9 +503,20 @@ enum status_code spi_read_buffer_wait(
 	Assert(module);
 	Assert(module->hw);
 
+#  if SPI_CALLBACK_MODE == true
+	if (module->status == STATUS_BUSY) {
+		/* Check if the SPI module is busy with a job */
+		return STATUS_BUSY;
+	}
+#  endif
+
 	/* Sanity check arguments */
 	if (length == 0) {
 		return STATUS_ERR_INVALID_ARG;
+	}
+
+	if (!(module->receiver_enabled)) {
+		return STATUS_ERR_DENIED;
 	}
 
 	uint16_t rx_pos = 0;
@@ -606,6 +618,7 @@ enum status_code spi_select_slave(
 
 			/* Write address to slave */
 			spi_write(module, slave->address);
+			// TODO: WAIT FOR RETURN VALUE
 		}
 	} else {
 		/* Drive Slave Select high */
@@ -642,6 +655,13 @@ enum status_code spi_write_buffer_wait(
 {
 	/* Sanity check arguments */
 	Assert(module);
+
+	#  if SPI_CALLBACK_MODE == true
+	if (module->status == STATUS_BUSY) {
+		/* Check if the SPI module is busy with a job */
+		return STATUS_BUSY;
+	}
+#  endif
 
 	if (length == 0) {
 		return STATUS_ERR_INVALID_ARG;
@@ -680,26 +700,29 @@ enum status_code spi_write_buffer_wait(
 		/* Write the data to send */
 		spi_write(module, data_to_send);
 
-		/* Start timeout period for slave */
-		if (module->mode == SPI_MODE_SLAVE) {
-			for (uint32_t i = 0; i <= SPI_TIMEOUT; i++) {
-				if (spi_is_ready_to_read(module)) {
-					break;
+		if (module->reciever_enabled) {
+
+			/* Start timeout period for slave */
+			if (module->mode == SPI_MODE_SLAVE) {
+				for (uint32_t i = 0; i <= SPI_TIMEOUT; i++) {
+					if (spi_is_ready_to_read(module)) {
+						break;
+					}
+				}
+
+				if (!spi_is_ready_to_read(module)) {
+					/* Not ready to read data within timeout period */
+					return STATUS_ERR_TIMEOUT;
 				}
 			}
 
-			if (!spi_is_ready_to_read(module)) {
-				/* Not ready to read data within timeout period */
-				return STATUS_ERR_TIMEOUT;
+			while(!spi_is_ready_to_read(module)) {
 			}
-		}
 
-		while(!spi_is_ready_to_read(module)) {
+			/* Flush read buffer */
+			uint16_t flush;
+			spi_read(module, &flush);
 		}
-
-		/* Flush read buffer */
-		uint16_t flush;
-		spi_read(module, &flush);
 	}
 
 	if (module->mode == SPI_MODE_MASTER) {
@@ -734,6 +757,7 @@ enum status_code spi_write_buffer_wait(
  * \retval STATUS_ERR_INVALID_ARG  If invalid argument(s) were provided.
  * \retval STATUS_ERR_TIMEOUT      If the operation was not completed within the
  *                                 timeout in slave mode.
+ * \retval STATUS_ERR_DENIED       If the receiver is not enabled
  * \retval STATUS_ERR_OVERFLOW     If the data is overflown
  */
 enum status_code spi_transceive_buffer_wait(
@@ -745,9 +769,20 @@ enum status_code spi_transceive_buffer_wait(
 	/* Sanity check arguments */
 	Assert(module);
 
+	#  if SPI_CALLBACK_MODE == true
+	if (module->status == STATUS_BUSY) {
+		/* Check if the SPI module is busy with a job */
+		return STATUS_BUSY;
+	}
+#  endif
+
 	/* Sanity check arguments */
 	if (length == 0) {
 		return STATUS_ERR_INVALID_ARG;
+	}
+	
+	if (!(module->receiver_enabled)) {
+		return STATUS_ERR_DENIED;
 	}
 
 	uint16_t tx_pos = 0;

@@ -576,6 +576,8 @@ struct spi_module {
 	enum spi_mode mode;
 	/** SPI character size */
 	enum spi_character_size character_size;
+	/** Receiver enabled */
+	bool receiver_enabled;
 #  if SPI_CALLBACK_MODE == true
 	volatile enum spi_direction dir;
 	/** Array to store callback function pointers in */
@@ -595,10 +597,8 @@ struct spi_module {
 	uint8_t registered_callback;
 	/** Bit mask for callbacks enabled */
 	uint8_t enabled_callback;
-	/** Holds the status of the ongoing or last read operation */
-	volatile enum status_code rx_status;
-	/** Holds the status of the ongoing or last write operation */
-	volatile enum status_code tx_status;
+	/** Holds the status of the ongoing or last operation */
+	volatile enum status_code status;
 #  endif
 #endif
 };

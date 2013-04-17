@@ -141,6 +141,7 @@ enum status_code spi_read_buffer_job(
 enum status_code spi_transceive_buffer_job(
 		struct spi_module *const module,
 		uint8_t *tx_data,
+		uint8_t *rx_data,
 		uint16_t length);
 
 void spi_abort_job(
