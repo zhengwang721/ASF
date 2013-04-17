@@ -118,115 +118,7 @@ extern "C" {
  * replaced with a constant current source.
  *
  * \anchor asfdoc_samd20_i2c_bus_topology_figure
- * \dot
- * digraph bus_topology{
- *
- * splines = false;
- *
- * vcc [label="VCC", shape=none];
- * vcc_end [label="", style=invisible];
- * sda [label="SDA", shape=none];
- * sda_end [label="", style=invisible];
- * scl [label="SCL", shape=none];
- * scl_end [label="", style=invisible];
- *
- * res1 [label="Rp", shape=box, height=1, width=0.1];
- * res2 [label="Rp", shape=box, height=1, width=0.1];
- * res1dev1 [label="Rs", shape=box, style=dotted, height=1, width=0.1];
- * res2dev1 [label="Rs", shape=box, style=dotted, height=1, width=0.1];
- * res1dev2 [label="Rs", shape=box, style=dotted, height=1, width=0.1];
- * res2dev2 [label="Rs", shape=box, style=dotted, height=1, width=0.1];
- * res1devn [label="Rs", shape=box, style=dotted, height=1, width=0.1];
- * res2devn [label="Rs", shape=box, style=dotted, height=1, width=0.1];
- *
- * i2c1 [label="I2C DEVICE 1", shape=box, height=1.5];
- * i2c2 [label="I2C DEVICE 2", shape=box, height=1.5];
- * i2cn [label="I2C DEVICE N", shape=box, height=1.5];
- * dev_invis [label="", style=invisible];
- * dev_invis_end [label="", style="invis"];
- *
- * vcc_res1 [label="", style="invis", height=0];
- * vcc_res2 [label="", style="invis", height=0];
- * vcc_dev1 [label="", style="invis", height=0];
- * vcc_dev2 [label="", style="invis", height=0];
- * vcc_devn [label="", style="invis", height=0];
- *
- * scl_res1 [label="", style="invis", height=0];
- * sda_res2 [label="", style="invis", height=0];
- * scl_res1dev1 [label="", style="invis", height=0];
- * sda_res2dev1 [label="", style="invis", height=0];
- * scl_res1dev2 [label="", style="invis", height=0];
- * sda_res2dev2 [label="", style="invis", height=0];
- * scl_res1devn [label="", style="invis", height=0];
- * sda_res2devn [label="", style="invis", height=0];
- * vcc_devn [label="", style="invis", height=0];
- *
- * {rank=same; dev_invis res1 res2 i2c1 i2c2 i2cn dev_invis_end}
- * {rank=same; res1dev1 res2dev1 res1dev2 res2dev2 res1devn res2devn}
- * {rank=same; vcc vcc_res1 vcc_res2 vcc_dev1 vcc_dev2 vcc_devn vcc_end}
- * {rank=same; sda sda_res2 sda_res2dev1 sda_res2dev2 sda_res2devn sda_end}
- * {rank=same; scl scl_res1 scl_res1dev1 scl_res1dev2 scl_res1devn scl_end}
- *
- * edge [dir=none];
- * vcc->vcc_res1:e;
- * vcc_res1->vcc_res2:e [constraint=true];
- * vcc_res1->res1 [constraint=true];
- * vcc_res2->vcc_dev1:e [constraint=true];
- * vcc_res2->res2 [constraint=true];
- * vcc_dev1->vcc_dev2:e [constraint=true];
- * vcc_dev2->vcc_devn:e [constraint=true];
- * vcc_dev2->i2c2 [constraint=true];
- * vcc_devn->vcc_end [constraint=true];
- * vcc_devn:c->i2cn [constraint=true];
- * vcc_dev1:c->i2c1 [constraint=true];
- *
- * vcc_end->sda_end [constraint=true, style="invis"];
- *
- * vcc->dev_invis [constraint=true, style="invis"];
- * dev_invis->sda [constraint=true, style="invis"];
- *
- * sda->sda_res2:e;
- * sda_res2->sda_res2dev1:e;
- * sda_res2dev1->sda_res2dev2:e;
- * sda_res2dev2->sda_res2devn:e;
- * sda_res2devn->sda_end;
- *
- * sda->scl [constraint=true, style="invis"];
- * scl->scl_res1:e;
- * scl_res1->scl_res1dev1:e;
- * scl_res1dev1->scl_res1dev2:e;
- * scl_res1dev2->scl_res1devn:e;
- * scl_res1devn->scl_end;
- *
- * res1->res2 [constraint=true, style="invis"];
- * res2->i2c1 [constraint=true, style="invis"];
- * i2c1->i2c2 [constraint=true, style="invis"];
- * i2c2->i2cn [constraint=true, style="dotted"];
- *
- * res1->scl_res1;
- * res2->sda_res2;
- *
- * i2c1->res1dev1;
- * i2c1->res2dev1;
- * res1dev1->scl_res1dev1;
- * res2dev1->sda_res2dev1;
- *
- * i2c2->res1dev2;
- * i2c2->res2dev2;
- * res1dev2->scl_res1dev2;
- * res2dev2->sda_res2dev2;
- *
- * i2cn->res1devn;
- * i2cn->res2devn;
- * res1devn->scl_res1devn;
- * res2devn->sda_res2devn;
- *
- * i2cn->dev_invis_end [constraint=true, style="invis"];
- * vcc_end->dev_invis_end [constraint=true, style="invis"];
- * dev_invis_end->sda_end [constraint=true, style="invis"];
- * sda_end->scl_end [constraint=true, style="invis"];
- * }
- * \enddot
+ * \image html bus_topology.svg "I2C bus topology" width=100%
  *
  * \subsection asfdoc_samd20_i2c_transactions Transactions
  * The I<SUP>2</SUP>C standard defines three fundamental transaction formats:
@@ -366,27 +258,7 @@ extern "C" {
  * \li P: Stop condition
  * \li Sr: Repeated start condition
  * \anchor asfdoc_samd20_i2c_bus_states_figure
- * \dot
- * digraph bus_states{
- *   reset [label="", style=invisible];
- *   unknown [label="UNKNOWN", shape=circle, height=1.5];
- *   idle [label="IDLE", shape=circle, height=1.5];
- *   owner [label="OWNER", shape=circle, height=1.5];
- *   busy [label="BUSY", shape=circle, height=1.5];
- *
- *  {rank=same; idle busy}
- *
- *   reset->unknown [label="RESET"];
- *   unknown->idle [label="P + Timeout"];
- *   idle->owner [label="Write ADDR \n(S)"];
- *   idle->busy [label="S"];
- *   owner->owner [label="Write ADDR (Sr)"];
- *   owner->idle [label="Command P"];
- *   owner->busy [label="Arbitration \nLost"];
- *   busy->busy [label="Sr"];
- *   busy->idle [label="P + Timeout"];
- * }
- * \enddot
+ * \image html bus_state_diagram.svg "I2C bus state diagram" width=100%
  *
  * \subsection asfdoc_samd20_i2c_timeout Bus Timing
  * Inactive bus timeout for the master and SDA hold time is configurable in the
