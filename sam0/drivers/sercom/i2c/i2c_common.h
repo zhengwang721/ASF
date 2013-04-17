@@ -111,10 +111,13 @@ extern "C" {
  * slave devices by responding to more than one address.
  *
  * \subsection asfdoc_samd20_i2c_bus_topology Bus Topology
- * The I<SUP>2</SUP>C bus topology is illustrated in the figure below. The pullup
+ * The I<SUP>2</SUP>C bus topology is illustrated in
+ * \ref asfdoc_samd20_i2c_bus_topology_figure "the figure below". The pullup
  * resistors (Rs) will provide a high level on the bus lines when none of the
- * I<SUP>2</SUP>C devices are driving the bus. These are optional, and can be replaced
- * with a constant current source.
+ * I<SUP>2</SUP>C devices are driving the bus. These are optional, and can be
+ * replaced with a constant current source.
+ *
+ * \anchor asfdoc_samd20_i2c_bus_topology_figure
  * \dot
  * digraph bus_topology{
  *
@@ -266,23 +269,28 @@ extern "C" {
  * \subsubsection asfdoc_samd20_i2c_trans_examples Transaction Examples
  * The gray bits in the following examples are sent from master to slave, and
  * the white bits are sent from slave to master.
- * Example of a read transaction is shown below. Here, the master first issues
- * a \b Start condition and gets ownership of the bus. An address packet with
- * the direction flag set to read is then sent and acknowledged by the slave.
- * Then the slave sends one data packet which is acknowledged by the master.
- * The slave sends another packet, which is not acknowledged by the master
- * and indicates that the master will terminate the transaction. In the end,
- * the transaction is terminated by the master issuing a \b Stop condition.
+ * Example of a read transaction is shown in
+ * \ref asfdoc_samd20_i2c_trans_examples_i2c_read "the figure below". Here, the
+ * master first issues a \b Start condition and gets ownership of the bus. An
+ * address packet with the direction flag set to read is then sent and
+ * acknowledged by the slave. Then the slave sends one data packet which is
+ * acknowledged by the master. The slave sends another packet, which is not
+ * acknowledged by the master and indicates that the master will terminate the
+ * transaction. In the end, the transaction is terminated by the master issuing
+ * a \b Stop condition.
  *
+ * \anchor asfdoc_samd20_i2c_trans_examples_i2c_read
  * \image html i2c_read.svg "I2C Packet Read" width=100%
  *
- * Example of a write transaction is shown below. Here, the master first issues
- * a \b Start condition and gets ownership of the bus. An address packet with
- * the dir flag set to write is then sent and acknowledged by the slave. Then
- * the master sends two data packets, each acknowledged by the slave. In the
- * end, the transaction is terminated by the master issuing a \b Stop
- * condition.
+ * Example of a write transaction is shown in
+ * \ref asfdoc_samd20_i2c_trans_examples_i2c_write "the figure below". Here, the
+ * master first issues a \b Start condition and gets ownership of the bus. An
+ * address packet with the dir flag set to write is then sent and acknowledged
+ * by the slave. Then the master sends two data packets, each acknowledged by
+ * the slave. In the end, the transaction is terminated by the master issuing
+ * a \b Stop condition.
  *
+ * \anchor asfdoc_samd20_i2c_trans_examples_i2c_write
  * \image html i2c_write.svg "I2C Packet Write" width=100%
  *
  * \subsubsection asfdoc_samd20_i2c_packet_timeout Packet Timeout
@@ -352,10 +360,12 @@ extern "C" {
  * \ref asfdoc_samd20_i2c_unknown_bus_timeout "timeout" when
  * the master module is enabled.
  *
- * The bus state diagram can be seen below.
+ * The bus state diagram can be seen in
+ * \ref asfdoc_samd20_i2c_bus_states_figure "the figure below".
  * \li S: Start condition
  * \li P: Stop condition
  * \li Sr: Repeated start condition
+ * \anchor asfdoc_samd20_i2c_bus_states_figure
  * \dot
  * digraph bus_states{
  *   reset [label="", style=invisible];
@@ -404,9 +414,12 @@ extern "C" {
  * The I<SUP>2</SUP>C module can operate in all sleep modes by setting
  * the run_in_standby boolean in the \ref i2c_master_config or
  * \ref i2c_slave_config struct.
- * The operation in slave and master mode is shown in the table below.
+ * The operation in slave and master mode is shown in
+ * \ref asfdoc_samd20_i2c_sleep_modes_table "the table below".
  *
+ * \anchor asfdoc_samd20_i2c_sleep_modes_table
  * <table>
+ *   <caption>I2C standby operations</caption>
  *   <tr>
  *      <th>Run in standby</th>
  *      <th>Slave</th>
@@ -478,10 +491,12 @@ struct i2c_packet {
  * \page asfdoc_samd20_i2c_extra_info_page  Extra Information for SERCOM I2C Driver
  *
  * \section asfdoc_samd20_i2c_acronyms Acronyms
- * Below is a table listing the acronyms used in this module, along with their
- * intended meanings.
+ * \ref asfdoc_samd20_i2c_acronyms_table "Below" is a table listing the acronyms
+ * used in this module, along with their intended meanings.
  *
+ * \anchor asfdoc_samd20_i2c_acronyms_table
  * <table>
+ *  <caption>Acronyms</caption>
  *	<tr>
  *		<th>Acronym</th>
  *		<th>Description</th>
@@ -523,11 +538,15 @@ struct i2c_packet {
  *
  *
  * \section asfdoc_samd20_i2c_extra_history Module History
- * Below is an overview of the module history, detailing enhancements and fixes
- * made to the module since its first release. The current version of this
- * corresponds to the newest version listed in the table below.
+ * \ref asfdoc_samd20_i2c_extra_history_table "Below" is an overview of the
+ * module history, detailing enhancements and fixes made to the module since
+ * its first release. The current version of this corresponds to the newest
+ * version listed in
+ * \ref asfdoc_samd20_i2c_extra_history_table "the table below".
  *
+ * \anchor asfdoc_samd20_i2c_extra_history_table
  * <table>
+ *  <caption>Module History</caption>
  *	<tr>
  *		<th>Changelog</th>
  *	</tr>
