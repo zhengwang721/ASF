@@ -8,9 +8,7 @@
 		<build type="header-file" value="conf_clock.h"/>
 		<build type="header-file" value="conf_example.h"/>
 		<require idref="common.services.ioport.example2"/>
-
 		<require idref="board.sam4l8_xplained_pro"/>
-
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>
