@@ -93,6 +93,9 @@
  * SAM D20 in SAM D20 Xplained Pro kit is used as the SPI master.
  * The IO1-Xplained Pro wing containing the AT45DBX dataflash should be
  * connected to External header 3 (EXT3) of SAM D20 Xplained Pro.
+ * SW0 on this kit will be configured as BOOT_LOAD_PIN and LED0 will be used
+ * to display the bootloader status. LED0 will be ON when the device is in
+ * bootloader mode.
  *
  * \section appdoc_samd20_spi_bootloader_process Bootloader Process
  *
