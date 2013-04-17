@@ -231,7 +231,7 @@ static inline void system_gclk_gen_get_config_defaults(
 	/* Default configuration values */
 	config->division_factor    = 1;
 	config->high_when_disabled = false;
-	config->source_clock       = SYSTEM_CLOCK_SOURCE_OSC8M;
+	config->source_clock       = GCLK_SOURCE_OSC8M;
 	config->run_in_standby     = false;
 	config->output_enable      = false;
 }
