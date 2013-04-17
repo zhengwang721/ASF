@@ -375,32 +375,6 @@
 #define MUX_PA25C_SERCOM3_PAD3             2
 #define PINMUX_PA25C_SERCOM3_PAD3  ((PIN_PA25C_SERCOM3_PAD3 << 16) | MUX_PA25C_SERCOM3_PAD3)
 #define PORT_PA25C_SERCOM3_PAD3    (1u << 25)
-/* ========== PORT definition for SERCOM4 peripheral ========== */
-#define PIN_PA14D_SERCOM4_PAD2            14  /**< \brief SERCOM4 signal: PAD2 on PA14 mux D */
-#define MUX_PA14D_SERCOM4_PAD2             3
-#define PINMUX_PA14D_SERCOM4_PAD2  ((PIN_PA14D_SERCOM4_PAD2 << 16) | MUX_PA14D_SERCOM4_PAD2)
-#define PORT_PA14D_SERCOM4_PAD2    (1u << 14)
-#define PIN_PA15D_SERCOM4_PAD3            15  /**< \brief SERCOM4 signal: PAD3 on PA15 mux D */
-#define MUX_PA15D_SERCOM4_PAD3             3
-#define PINMUX_PA15D_SERCOM4_PAD3  ((PIN_PA15D_SERCOM4_PAD3 << 16) | MUX_PA15D_SERCOM4_PAD3)
-#define PORT_PA15D_SERCOM4_PAD3    (1u << 15)
-/* ========== PORT definition for SERCOM5 peripheral ========== */
-#define PIN_PA22D_SERCOM5_PAD0            22  /**< \brief SERCOM5 signal: PAD0 on PA22 mux D */
-#define MUX_PA22D_SERCOM5_PAD0             3
-#define PINMUX_PA22D_SERCOM5_PAD0  ((PIN_PA22D_SERCOM5_PAD0 << 16) | MUX_PA22D_SERCOM5_PAD0)
-#define PORT_PA22D_SERCOM5_PAD0    (1u << 22)
-#define PIN_PA23D_SERCOM5_PAD1            23  /**< \brief SERCOM5 signal: PAD1 on PA23 mux D */
-#define MUX_PA23D_SERCOM5_PAD1             3
-#define PINMUX_PA23D_SERCOM5_PAD1  ((PIN_PA23D_SERCOM5_PAD1 << 16) | MUX_PA23D_SERCOM5_PAD1)
-#define PORT_PA23D_SERCOM5_PAD1    (1u << 23)
-#define PIN_PA24D_SERCOM5_PAD2            24  /**< \brief SERCOM5 signal: PAD2 on PA24 mux D */
-#define MUX_PA24D_SERCOM5_PAD2             3
-#define PINMUX_PA24D_SERCOM5_PAD2  ((PIN_PA24D_SERCOM5_PAD2 << 16) | MUX_PA24D_SERCOM5_PAD2)
-#define PORT_PA24D_SERCOM5_PAD2    (1u << 24)
-#define PIN_PA25D_SERCOM5_PAD3            25  /**< \brief SERCOM5 signal: PAD3 on PA25 mux D */
-#define MUX_PA25D_SERCOM5_PAD3             3
-#define PINMUX_PA25D_SERCOM5_PAD3  ((PIN_PA25D_SERCOM5_PAD3 << 16) | MUX_PA25D_SERCOM5_PAD3)
-#define PORT_PA25D_SERCOM5_PAD3    (1u << 25)
 /* ========== PORT definition for TC0 peripheral ========== */
 #define PIN_PA04F_TC0_WO0                  4  /**< \brief TC0 signal: WO0 on PA04 mux F */
 #define MUX_PA04F_TC0_WO0                  5
