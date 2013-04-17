@@ -1149,7 +1149,8 @@ enum status_code spi_read_buffer_wait(
  * \return Status of the operation.
  * \retval STATUS_OK            If the operation was completed
  * \retval STATUS_ERR_TIMEOUT   If the operation was not completed within the
- *                              timeout in slave mode.
+ *                              timeout in slave mode
+ * \retval STATUS_ERR_DENIED    If the receiver is not enabled
  * \retval STATUS_ERR_OVERFLOW  If the incoming data is overflown
  */
 static inline enum status_code spi_transceive_wait(
@@ -1159,6 +1160,17 @@ static inline enum status_code spi_transceive_wait(
 {
 	/* Sanity check arguments */
 	Assert(module);
+
+	if (!(module->receiver_enabled)) {
+		return STATUS_ERR_DENIED;
+	}
+
+#  if SPI_CALLBACK_MODE == true
+	if (module->status == STATUS_BUSY) {
+		/* Check if the SPI module is busy with a job */
+		return STATUS_BUSY;
+	}
+#  endif
 
 	uint16_t j;
 	enum status_code retval = STATUS_OK;

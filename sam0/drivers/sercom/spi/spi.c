@@ -656,7 +656,7 @@ enum status_code spi_write_buffer_wait(
 	/* Sanity check arguments */
 	Assert(module);
 
-	#  if SPI_CALLBACK_MODE == true
+#  if SPI_CALLBACK_MODE == true
 	if (module->status == STATUS_BUSY) {
 		/* Check if the SPI module is busy with a job */
 		return STATUS_BUSY;
@@ -769,7 +769,7 @@ enum status_code spi_transceive_buffer_wait(
 	/* Sanity check arguments */
 	Assert(module);
 
-	#  if SPI_CALLBACK_MODE == true
+#  if SPI_CALLBACK_MODE == true
 	if (module->status == STATUS_BUSY) {
 		/* Check if the SPI module is busy with a job */
 		return STATUS_BUSY;
