@@ -108,16 +108,12 @@ typedef enum IRQn
   SERCOM1_IRQn             =  8, /**<  8 SAMD20E15 Serial Communication Interface 1 (SERCOM1) */
   SERCOM2_IRQn             =  9, /**<  9 SAMD20E15 Serial Communication Interface 2 (SERCOM2) */
   SERCOM3_IRQn             = 10, /**< 10 SAMD20E15 Serial Communication Interface 3 (SERCOM3) */
-  SERCOM4_IRQn             = 11, /**< 11 SAMD20E15 Serial Communication Interface 4 (SERCOM4) */
-  SERCOM5_IRQn             = 12, /**< 12 SAMD20E15 Serial Communication Interface 5 (SERCOM5) */
   TC0_IRQn                 = 13, /**< 13 SAMD20E15 Basic Timer Counter 0 (TC0) */
   TC1_IRQn                 = 14, /**< 14 SAMD20E15 Basic Timer Counter 1 (TC1) */
   TC2_IRQn                 = 15, /**< 15 SAMD20E15 Basic Timer Counter 2 (TC2) */
   TC3_IRQn                 = 16, /**< 16 SAMD20E15 Basic Timer Counter 3 (TC3) */
   TC4_IRQn                 = 17, /**< 17 SAMD20E15 Basic Timer Counter 4 (TC4) */
   TC5_IRQn                 = 18, /**< 18 SAMD20E15 Basic Timer Counter 5 (TC5) */
-  TC6_IRQn                 = 19, /**< 19 SAMD20E15 Basic Timer Counter 6 (TC6) */
-  TC7_IRQn                 = 20, /**< 20 SAMD20E15 Basic Timer Counter 7 (TC7) */
   ADC_IRQn                 = 21, /**< 21 SAMD20E15 Analog Digital Converter (ADC) */
   AC_IRQn                  = 22, /**< 22 SAMD20E15 Analog Comparators (AC) */
   DAC_IRQn                 = 23, /**< 23 SAMD20E15 Digital Analog Converter (DAC) */
@@ -159,16 +155,16 @@ typedef struct _DeviceVectors
   void* pfnSERCOM1_Handler;               /*  8 Serial Communication Interface 1 */
   void* pfnSERCOM2_Handler;               /*  9 Serial Communication Interface 2 */
   void* pfnSERCOM3_Handler;               /* 10 Serial Communication Interface 3 */
-  void* pfnSERCOM4_Handler;               /* 11 Serial Communication Interface 4 */
-  void* pfnSERCOM5_Handler;               /* 12 Serial Communication Interface 5 */
+  void* pfnReserved11;
+  void* pfnReserved12;
   void* pfnTC0_Handler;                   /* 13 Basic Timer Counter 0 */
   void* pfnTC1_Handler;                   /* 14 Basic Timer Counter 1 */
   void* pfnTC2_Handler;                   /* 15 Basic Timer Counter 2 */
   void* pfnTC3_Handler;                   /* 16 Basic Timer Counter 3 */
   void* pfnTC4_Handler;                   /* 17 Basic Timer Counter 4 */
   void* pfnTC5_Handler;                   /* 18 Basic Timer Counter 5 */
-  void* pfnTC6_Handler;                   /* 19 Basic Timer Counter 6 */
-  void* pfnTC7_Handler;                   /* 20 Basic Timer Counter 7 */
+  void* pfnReserved19;
+  void* pfnReserved20;
   void* pfnADC_Handler;                   /* 21 Analog Digital Converter */
   void* pfnAC_Handler;                    /* 22 Analog Comparators */
   void* pfnDAC_Handler;                   /* 23 Digital Analog Converter */
@@ -194,16 +190,12 @@ void SERCOM0_Handler             ( void );
 void SERCOM1_Handler             ( void );
 void SERCOM2_Handler             ( void );
 void SERCOM3_Handler             ( void );
-void SERCOM4_Handler             ( void );
-void SERCOM5_Handler             ( void );
 void TC0_Handler                 ( void );
 void TC1_Handler                 ( void );
 void TC2_Handler                 ( void );
 void TC3_Handler                 ( void );
 void TC4_Handler                 ( void );
 void TC5_Handler                 ( void );
-void TC6_Handler                 ( void );
-void TC7_Handler                 ( void );
 void ADC_Handler                 ( void );
 void AC_Handler                  ( void );
 void DAC_Handler                 ( void );
@@ -280,8 +272,6 @@ void DAC_Handler                 ( void );
 #include "instance/instance_sercom1.h"
 #include "instance/instance_sercom2.h"
 #include "instance/instance_sercom3.h"
-#include "instance/instance_sercom4.h"
-#include "instance/instance_sercom5.h"
 #include "instance/instance_sysctrl.h"
 #include "instance/instance_tc0.h"
 #include "instance/instance_tc1.h"
@@ -289,8 +279,6 @@ void DAC_Handler                 ( void );
 #include "instance/instance_tc3.h"
 #include "instance/instance_tc4.h"
 #include "instance/instance_tc5.h"
-#include "instance/instance_tc6.h"
-#include "instance/instance_tc7.h"
 #include "instance/instance_wdt.h"
 /*@}*/
 
@@ -323,16 +311,12 @@ void DAC_Handler                 ( void );
 #define ID_SERCOM1       67 /**< \brief Serial Communication Interface SERCOM (SERCOM1) */
 #define ID_SERCOM2       68 /**< \brief Serial Communication Interface SERCOM (SERCOM2) */
 #define ID_SERCOM3       69 /**< \brief Serial Communication Interface SERCOM (SERCOM3) */
-#define ID_SERCOM4       70 /**< \brief Serial Communication Interface SERCOM (SERCOM4) */
-#define ID_SERCOM5       71 /**< \brief Serial Communication Interface SERCOM (SERCOM5) */
 #define ID_TC0           72 /**< \brief Basic Timer Counter TC (TC0) */
 #define ID_TC1           73 /**< \brief Basic Timer Counter TC (TC1) */
 #define ID_TC2           74 /**< \brief Basic Timer Counter TC (TC2) */
 #define ID_TC3           75 /**< \brief Basic Timer Counter TC (TC3) */
 #define ID_TC4           76 /**< \brief Basic Timer Counter TC (TC4) */
 #define ID_TC5           77 /**< \brief Basic Timer Counter TC (TC5) */
-#define ID_TC6           78 /**< \brief Basic Timer Counter TC (TC6) */
-#define ID_TC7           79 /**< \brief Basic Timer Counter TC (TC7) */
 #define ID_ADC           80 /**< \brief Analog Digital Converter (ADC) */
 #define ID_AC            81 /**< \brief Analog Comparators (AC) */
 #define ID_DAC           82 /**< \brief Digital Analog Converter (DAC) */
@@ -373,8 +357,6 @@ void DAC_Handler                 ( void );
 #define SERCOM1                       (0x42000C00U) /**< \brief (SERCOM1) APB Base Address */
 #define SERCOM2                       (0x42001000U) /**< \brief (SERCOM2) APB Base Address */
 #define SERCOM3                       (0x42001400U) /**< \brief (SERCOM3) APB Base Address */
-#define SERCOM4                       (0x42001800U) /**< \brief (SERCOM4) APB Base Address */
-#define SERCOM5                       (0x42001C00U) /**< \brief (SERCOM5) APB Base Address */
 #define SYSCTRL                       (0x40000800U) /**< \brief (SYSCTRL) APB Base Address */
 #define TC0                           (0x42002000U) /**< \brief (TC0) APB Base Address */
 #define TC1                           (0x42002400U) /**< \brief (TC1) APB Base Address */
@@ -382,8 +364,6 @@ void DAC_Handler                 ( void );
 #define TC3                           (0x42002C00U) /**< \brief (TC3) APB Base Address */
 #define TC4                           (0x42003000U) /**< \brief (TC4) APB Base Address */
 #define TC5                           (0x42003400U) /**< \brief (TC5) APB Base Address */
-#define TC6                           (0x42003800U) /**< \brief (TC6) APB Base Address */
-#define TC7                           (0x42003C00U) /**< \brief (TC7) APB Base Address */
 #define WDT                           (0x40001000U) /**< \brief (WDT) APB Base Address */
 #else
 #define AC                ((Ac       *)0x42004400U) /**< \brief (AC) APB Base Address */
@@ -451,10 +431,8 @@ void DAC_Handler                 ( void );
 #define SERCOM1           ((Sercom   *)0x42000C00U) /**< \brief (SERCOM1) APB Base Address */
 #define SERCOM2           ((Sercom   *)0x42001000U) /**< \brief (SERCOM2) APB Base Address */
 #define SERCOM3           ((Sercom   *)0x42001400U) /**< \brief (SERCOM3) APB Base Address */
-#define SERCOM4           ((Sercom   *)0x42001800U) /**< \brief (SERCOM4) APB Base Address */
-#define SERCOM5           ((Sercom   *)0x42001C00U) /**< \brief (SERCOM5) APB Base Address */
-#define SERCOM_INST_NUM   6                         /**< \brief (SERCOM) Number of instances */
-#define SERCOM_INSTS      { SERCOM0, SERCOM1, SERCOM2, SERCOM3, SERCOM4, SERCOM5 } /**< \brief (SERCOM) Instances List */
+#define SERCOM_INST_NUM   4                         /**< \brief (SERCOM) Number of instances */
+#define SERCOM_INSTS      { SERCOM0, SERCOM1, SERCOM2, SERCOM3 } /**< \brief (SERCOM) Instances List */
 
 #define SYSCTRL           ((Sysctrl  *)0x40000800U) /**< \brief (SYSCTRL) APB Base Address */
 #define SYSCTRL_INST_NUM  1                         /**< \brief (SYSCTRL) Number of instances */
@@ -466,10 +444,8 @@ void DAC_Handler                 ( void );
 #define TC3               ((Tc       *)0x42002C00U) /**< \brief (TC3) APB Base Address */
 #define TC4               ((Tc       *)0x42003000U) /**< \brief (TC4) APB Base Address */
 #define TC5               ((Tc       *)0x42003400U) /**< \brief (TC5) APB Base Address */
-#define TC6               ((Tc       *)0x42003800U) /**< \brief (TC6) APB Base Address */
-#define TC7               ((Tc       *)0x42003C00U) /**< \brief (TC7) APB Base Address */
-#define TC_INST_NUM       8                         /**< \brief (TC) Number of instances */
-#define TC_INSTS          { TC0, TC1, TC2, TC3, TC4, TC5, TC6, TC7 } /**< \brief (TC) Instances List */
+#define TC_INST_NUM       6                         /**< \brief (TC) Number of instances */
+#define TC_INSTS          { TC0, TC1, TC2, TC3, TC4, TC5 } /**< \brief (TC) Instances List */
 
 #define WDT               ((Wdt      *)0x40001000U) /**< \brief (WDT) APB Base Address */
 #define WDT_INST_NUM      1                         /**< \brief (WDT) Number of instances */
