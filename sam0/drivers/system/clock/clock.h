@@ -96,7 +96,10 @@
  * have additional prescaler division ratios set to give each peripheral bus a
  * different clock speed.
  *
- * The general main clock tree for the CPU and associated buses is shown below.
+ * The general main clock tree for the CPU and associated buses is shown in
+ * \ref asfdoc_samd20_system_clock_module_clock_tree "the figure below".
+ *
+ * \anchor asfdoc_samd20_system_clock_module_clock_tree
  * \dot
  * digraph overview {
  *   rankdir=LR;
@@ -144,6 +147,7 @@
  * generator to feed one or more channels, which can then be enabled or disabled
  * individually as required.
  *
+ * \anchor asfdoc_samd20_system_clock_module_chain_overview
  * \dot
  * digraph overview {
  *   rankdir=LR;
@@ -162,8 +166,10 @@
  * }
  * \enddot
  *
- * An example setup of a complete clock chain within the device is shown below.
+ * An example setup of a complete clock chain within the device is shown in
+ * \ref asfdoc_samd20_system_clock_module_chain_example "the figure below".
  *
+ * \anchor asfdoc_samd20_system_clock_module_chain_example
  * \dot
  * digraph overview {
  *   rankdir=LR;

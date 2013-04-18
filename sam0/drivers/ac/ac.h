@@ -160,9 +160,10 @@
  * another without requiring software intervention.
  *
  * \subsection asfdoc_samd20_ac_module_overview_physical Physical Connection
- * Physically, the modules are interconnected within the device as shown in the
- * following diagram:
+ * Physically, the modules are interconnected within the device as shown in
+ * \ref asfdoc_samd20_ac_module_int_connections "the diagram below".
  *
+ * \anchor asfdoc_samd20_ac_module_int_connections
  * \dot
  * digraph overview {
  *  rankdir = LR;
@@ -597,7 +598,7 @@ static inline void ac_get_config_defaults(
 	for (uint32_t i = 0; i < AC_PAIRS; i++) {
 		config->run_in_standby[i] = false;
 	}
-	config->run_in_standby[1] = false;
+	config->run_in_standby[0] = false;
 	memset(&config->events, 0x00, sizeof(config->events));
 	config->source_generator = GCLK_GENERATOR_0;
 }

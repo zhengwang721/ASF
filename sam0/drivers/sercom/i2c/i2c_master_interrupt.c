@@ -230,7 +230,7 @@ void i2c_master_unregister_callback(
  * \param[in,out] module  Pointer to software module struct
  * \param[in,out] packet  Pointer to I<SUP>2</SUP>C packet to transfer
  *
- * \return Status of starting reading I<SUP>2</SUP>C packet
+ * \return Status of starting reading I<SUP>2</SUP>C packet.
  * \retval STATUS_OK    If reading was started successfully
  * \retval STATUS_BUSY  If module is currently busy with another transfer
  */
@@ -339,7 +339,7 @@ enum status_code i2c_master_read_packet_job_no_stop(
  * \param[in,out] module  Pointer to software module struct
  * \param[in,out] packet  Pointer to I<SUP>2</SUP>C packet to transfer
  *
- * \return Status of starting writing I<SUP>2</SUP>C packet job
+ * \return Status of starting writing I<SUP>2</SUP>C packet job.
  * \retval STATUS_OK   If writing was started successfully
  * \retval STATUS_BUSY If module is currently busy with another transfer
  */
@@ -378,7 +378,7 @@ static enum status_code _i2c_master_write_packet(
  * \param[in,out] module  Pointer to software module struct
  * \param[in,out] packet  Pointer to I<SUP>2</SUP>C packet to transfer
  *
- * \return Status of starting writing I<SUP>2</SUP>C packet job
+ * \return Status of starting writing I<SUP>2</SUP>C packet job.
  * \retval STATUS_OK    If writing was started successfully
  * \retval STATUS_BUSY  If module is currently busy with another transfer
  */
@@ -417,7 +417,7 @@ enum status_code i2c_master_write_packet_job(
  * \param[in,out] module  Pointer to software module struct
  * \param[in,out] packet  Pointer to I<SUP>2</SUP>C packet to transfer
  *
- * \return Status of starting writing I<SUP>2</SUP>C packet job
+ * \return Status of starting writing I<SUP>2</SUP>C packet job.
  * \retval STATUS_OK    If writing was started successfully
  * \retval STATUS_BUSY  If module is currently busy with another
  */
