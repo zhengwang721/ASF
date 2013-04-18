@@ -139,8 +139,14 @@ uint32_t system_clock_source_get_hz(
 void system_clock_source_osc8m_set_config(
 		struct system_clock_source_osc8m_config *const config)
 {
-	/* Set the prescaler of the 8MHz RC oscillator */
-	SYSCTRL->OSC8M.bit.PRESC = config->prescaler;
+	SYSCTRL_OSC8M_Type temp = SYSCTRL->OSC8M;
+
+	/* Use temporary struct to reduce register access */
+	temp.bit.PRESC = config->prescaler;
+	temp.bit.ONDEMAND = config->on_demand;
+	temp.bit.RUNSTDBY = config->run_in_standby;
+
+	SYSCTRL->OSC8M = temp;
 }
 
 /**
@@ -157,9 +163,11 @@ void system_clock_source_osc32k_set_config(
 	SYSCTRL_OSC32K_Type temp = SYSCTRL->OSC32K;
 
 	/* Update settings via a temporary struct to reduce register access */
-	temp.bit.EN1K    = config->enable_1khz_output;
-	temp.bit.EN32K   = config->enable_32khz_output;
-	temp.bit.STARTUP = config->startup_time;
+	temp.bit.EN1K     = config->enable_1khz_output;
+	temp.bit.EN32K    = config->enable_32khz_output;
+	temp.bit.STARTUP  = config->startup_time;
+	temp.bit.ONDEMAND = config->on_demand;
+	temp.bit.RUNSTDBY = config->run_in_standby;
 
 	SYSCTRL->OSC32K  = temp;
 }
@@ -176,19 +184,41 @@ void system_clock_source_osc32k_set_config(
 void system_clock_source_xosc_set_config(
 		struct system_clock_source_xosc_config *const config)
 {
-	uint32_t temp;
+	SYSCTRL_XOSC_Type temp = SYSCTRL->XOSC;
 
-	temp = config->startup_time;
+	temp.bit.STARTUP = config->startup_time;
 
 	if (config->external_clock == SYSTEM_CLOCK_EXTERNAL_CRYSTAL) {
-		temp |= SYSCTRL_XOSC_XTALEN;
-
-		if (config->auto_gain_control) {
-			temp |= SYSCTRL_XOSC_AMPGC;
-		}
+		temp.bit.XTALEN = 1;
+	} else {
+		temp.bit.XTALEN = 0;
 	}
 
-	SYSCTRL->XOSC.reg = temp;
+	temp.bit.AMPGC = config->auto_gain_control;
+
+	/* Set gain if automatic gain control is not selected */
+	if (!config->auto_gain_control) {
+		if (config->frequency <= 2000000) {
+			temp.bit.GAIN = 0;
+		} else if (config->frequency <= 4000000) {
+			temp.bit.GAIN = 1;
+		} else if (config->frequency <= 8000000) {
+			temp.bit.GAIN = 2;
+		} else if (config->frequency <= 16000000) {
+			temp.bit.GAIN = 3;
+		} else if (config->frequency <= 30000000) {
+			temp.bit.GAIN = 4;
+		}
+
+	}
+
+	temp.bit.ONDEMAND = config->on_demand;
+	temp.bit.RUNSTDBY = config->run_in_standby;
+
+	/* Store XOSC frequency for internal use */
+	xosc_frequency = config->frequency;
+
+	SYSCTRL->XOSC = temp;
 }
 
 /**
@@ -202,31 +232,29 @@ void system_clock_source_xosc_set_config(
 void system_clock_source_xosc32k_set_config(
 		struct system_clock_source_xosc32k_config *const config)
 {
-	uint32_t temp;
 
-	temp = config->startup_time;
+	SYSCTRL_XOSC32K_Type temp = SYSCTRL->XOSC32K;
+
+	temp.bit.STARTUP = config->startup_time;
 
 	if (config->external_clock == SYSTEM_CLOCK_EXTERNAL_CRYSTAL) {
-		temp |= SYSCTRL_XOSC32K_XTALEN;
-
-		if (config->auto_gain_control) {
-			temp |= SYSCTRL_XOSC32K_AAMPEN;
-		}
+		temp.bit.XTALEN = 1;
+	} else {
+		temp.bit.XTALEN = 0;
 	}
 
-	if (config->enable_1khz_output) {
-		temp |= SYSCTRL_XOSC32K_EN1K;
-	}
+	temp.bit.AAMPEN = config->auto_gain_control;
+	temp.bit.EN1K = config->enable_1khz_output;
+	temp.bit.EN32K = config->enable_32khz_output;
 
-	if (config->enable_32khz_output) {
-		temp |= SYSCTRL_XOSC32K_EN32K;
-	}
+	temp.bit.ONDEMAND = config->on_demand;
+	temp.bit.RUNSTDBY = config->run_in_standby;
 
 	/* Cache the new frequency in case the user needs to check the current
 	 * operating frequency later */
 	xosc32k_frequency = config->frequency;
 
-	SYSCTRL->XOSC32K.reg = temp;
+	SYSCTRL->XOSC32K = temp;
 }
 
 /**
@@ -262,7 +290,10 @@ void system_clock_source_dfll_set_config(
 			(uint32_t)config->wakeup_lock     |
 			(uint32_t)config->stable_tracking |
 			(uint32_t)config->quick_lock      |
-			(uint32_t)config->chill_cycle;
+			(uint32_t)config->chill_cycle     |
+			(uint32_t)config->run_in_standby << SYSCTRL_DFLLCTRL_RUNSTDBY_Pos |
+			(uint32_t)config->on_demand << SYSCTRL_DFLLCTRL_ONDEMAND_Pos;
+
 
 	_system_dfll_wait_for_sync();
 	SYSCTRL->DFLLCTRL.reg |= temp;
