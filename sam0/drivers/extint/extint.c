@@ -236,3 +236,73 @@ enum status_code extint_nmi_set_config(
 
 	return STATUS_OK;
 }
+
+/**
+ * \brief Enables an External Interrupt event output.
+ *
+ *  Enables one or more output events from the External Interrupt module. See
+ *  \ref extint_events "here" for a list of events this module supports.
+ *
+ *  \note Events cannot be altered while the module is enabled.
+ *
+ *  \param[in] events    Struct containing flags of events to enable
+ */
+void extint_enable_events(
+		struct extint_events *const events)
+{
+	/* Sanity check arguments */
+	Assert(events);
+
+	/* Array of available EICs. */
+	Eic *const eics[EIC_INST_NUM] = EIC_INSTS;
+
+	/* Update the event control register for each physical EIC instance */
+	for (uint32_t i = 0; i < EIC_INST_NUM; i++) {
+		uint32_t event_mask = 0;
+
+		/* Create an enable mask for the current EIC module */
+		for (uint32_t j = 0; j < 32; j++) {
+			if (events->generate_event_on_detect[(32 * i) + j]) {
+				event_mask |= (1UL << j);
+			}
+		}
+
+		/* Enable the masked events */
+		eics[i]->EVCTRL.reg |= event_mask;
+	}
+}
+
+/**
+ * \brief Disables an External Interrupt event output.
+ *
+ *  Disables one or more output events from the External Interrupt module. See
+ *  \ref extint_events "here" for a list of events this module supports.
+ *
+ *  \note Events cannot be altered while the module is enabled.
+ *
+ *  \param[in] events    Struct containing flags of events to disable
+ */
+void extint_disable_events(
+		struct extint_events *const events)
+{
+	/* Sanity check arguments */
+	Assert(events);
+
+	/* Array of available EICs. */
+	Eic *const eics[EIC_INST_NUM] = EIC_INSTS;
+
+	/* Update the event control register for each physical EIC instance */
+	for (uint32_t i = 0; i < EIC_INST_NUM; i++) {
+		uint32_t event_mask = 0;
+
+		/* Create a disable mask for the current EIC module */
+		for (uint32_t j = 0; j < 32; j++) {
+			if (events->generate_event_on_detect[(32 * i) + j]) {
+				event_mask |= (1UL << j);
+			}
+		}
+
+		/* Disable the masked events */
+		eics[i]->EVCTRL.reg &= ~event_mask;
+	}
+}

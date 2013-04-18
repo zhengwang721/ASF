@@ -282,7 +282,7 @@ enum system_reset_cause {
  *
  * \param[in] vref  Voltage reference to enable
  */
-static inline void system_vref_enable(
+static inline void system_voltage_reference_enable(
 		const enum system_voltage_reference vref)
 {
 	switch (vref) {
@@ -305,7 +305,7 @@ static inline void system_vref_enable(
  *
  * \param[in] vref  Voltage reference to disable
  */
-static inline void system_vref_disable(
+static inline void system_voltage_reference_disable(
 		const enum system_voltage_reference vref)
 {
 	switch (vref) {
