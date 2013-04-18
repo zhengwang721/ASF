@@ -160,9 +160,10 @@
  * another without requiring software intervention.
  *
  * \subsection asfdoc_samd20_ac_module_overview_physical Physical Connection
- * Physically, the modules are interconnected within the device as shown in the
- * following diagram:
+ * Physically, the modules are interconnected within the device as shown in
+ * \ref asfdoc_samd20_ac_module_int_connections "the diagram below".
  *
+ * \anchor asfdoc_samd20_ac_module_int_connections
  * \dot
  * digraph overview {
  *  rankdir = LR;
