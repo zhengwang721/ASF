@@ -78,9 +78,10 @@
  * The NVM memory space of the SAM D20 devices is divided into two sections:
  * a Main Array section, and an Auxiliary space section. The Main Array space
  * can be configured to have an (emulated) EEPROM and/or boot loader section.
- * The memory layout with the EEPROM and bootloader partitions is shown in the
- * figure below.
+ * The memory layout with the EEPROM and bootloader partitions is shown in
+ * \ref asfdoc_samd20_nvm_module_mem_layout "the figure below".
  *
+ * \anchor asfdoc_samd20_nvm_module_mem_layout
  * \dot
  * digraph memory_layout {
  *  size="5,5"
@@ -133,9 +134,11 @@
  * \f[ PageNum = (RowNum \times 4) + PagePosInRow \f]
  * \f[ PageAddr = PageNum \times PageSize \f]
  *
- * The figure below shows an example of the memory page and address values
- * associated with logical row 7 of the NVM memory space.
+ * \ref asfdoc_samd20_nvm_module_row_layout "The figure below" shows an example
+ * of the memory page and address values associated with logical row 7 of the
+ * NVM memory space.
  *
+ * \anchor asfdoc_samd20_nvm_module_row_layout
  * \dot
  * digraph row_layout {
  *  size="4,4"
