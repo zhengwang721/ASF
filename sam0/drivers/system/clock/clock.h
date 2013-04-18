@@ -356,7 +356,7 @@ enum system_osc32k_startup {
  */
 enum system_osc8m_div {
 	/** Do not divide the 8MHz RC oscillator output */
-	SYSTEM_OSC8M_DIV_0,
+	SYSTEM_OSC8M_DIV_1,
 	/** Divide the 8MHz RC oscillator output by 2 */
 	SYSTEM_OSC8M_DIV_2,
 	/** Divide the 8MHz RC oscillator output by 4 */
