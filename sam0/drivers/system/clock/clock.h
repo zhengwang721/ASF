@@ -155,8 +155,8 @@
  *   node [label="Generator 1" shape=square] clock_gen;
  *   node [label="Channel x" shape=square] clock_chan0;
  *   node [label="Channel y" shape=square] clock_chan1;
- *   node [label="Peripheral x" shape=ellipse  style=filled fillcolor=lightgray] peripheral0;
- *   node [label="Peripheral y" shape=ellipse  style=filled fillcolor=lightgray] peripheral1;
+ *   node [label="Peripheral x" shape=ellipse style=filled fillcolor=lightgray] peripheral0;
+ *   node [label="Peripheral y" shape=ellipse style=filled fillcolor=lightgray] peripheral1;
  *
  *   system_clock_source -> clock_gen;
  *   clock_gen   -> clock_chan0;
@@ -180,7 +180,7 @@
  *
  *   system_clock_source0 -> clock_gen0;
  *   clock_gen0    -> clock_chan0;
- *   clock_chan0   -> peripheral0;*
+ *   clock_chan0   -> peripheral0;
  *   node [label="8MHz R/C\nOscillator (OSC8M)" shape=square fillcolor=white] system_clock_source1;
  *   node [label="Generator 1" shape=square] clock_gen1;
  *   node [label="Channel y" shape=square] clock_chan1;
@@ -356,7 +356,7 @@ enum system_osc32k_startup {
  */
 enum system_osc8m_div {
 	/** Do not divide the 8MHz RC oscillator output */
-	SYSTEM_OSC8M_DIV_0,
+	SYSTEM_OSC8M_DIV_1,
 	/** Divide the 8MHz RC oscillator output by 2 */
 	SYSTEM_OSC8M_DIV_2,
 	/** Divide the 8MHz RC oscillator output by 4 */
