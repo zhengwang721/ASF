@@ -10,6 +10,5 @@
 		<require idref="sam0.drivers.nvm"/>
 		<require idref="sam0.drivers.wdt"/>
 		<device-support value="samd20"/>
-		<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 	</module>
 </asf>
