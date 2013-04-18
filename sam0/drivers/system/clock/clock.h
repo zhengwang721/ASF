@@ -155,8 +155,8 @@
  *   node [label="Generator 1" shape=square] clock_gen;
  *   node [label="Channel x" shape=square] clock_chan0;
  *   node [label="Channel y" shape=square] clock_chan1;
- *   node [label="Peripheral x" shape=ellipse  style=filled fillcolor=lightgray] peripheral0;
- *   node [label="Peripheral y" shape=ellipse  style=filled fillcolor=lightgray] peripheral1;
+ *   node [label="Peripheral x" shape=ellipse style=filled fillcolor=lightgray] peripheral0;
+ *   node [label="Peripheral y" shape=ellipse style=filled fillcolor=lightgray] peripheral1;
  *
  *   system_clock_source -> clock_gen;
  *   clock_gen   -> clock_chan0;
@@ -180,7 +180,7 @@
  *
  *   system_clock_source0 -> clock_gen0;
  *   clock_gen0    -> clock_chan0;
- *   clock_chan0   -> peripheral0;*
+ *   clock_chan0   -> peripheral0;
  *   node [label="8MHz R/C\nOscillator (OSC8M)" shape=square fillcolor=white] system_clock_source1;
  *   node [label="Generator 1" shape=square] clock_gen1;
  *   node [label="Channel y" shape=square] clock_chan1;
