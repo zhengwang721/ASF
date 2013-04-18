@@ -168,7 +168,7 @@ static void _spi_read_buffer(
 	tmp_intenset = SPI_INTERRUPT_FLAG_RX_COMPLETE;
 
 	if (module->mode == SPI_MODE_MASTER && module->dir == SPI_DIRECTION_READ) {
-		/* Enable Data Register Empty interrupt if needed */
+		/* Enable Data Register Empty interrupt for master */
 		tmp_intenset |= SPI_INTERRUPT_FLAG_DATA_REGISTER_EMPTY;
 	}
 	if (module->mode == SPI_MODE_SLAVE) {
@@ -549,8 +549,9 @@ void _spi_interrupt_handler(
 	/* Read and mask interrupt flag register */
 	uint16_t interrupt_status = (spi_hw->INTFLAG.reg & spi_hw->INTENSET.reg);
 
-	/* Data register empty */
+	/* Data register empty interrupt */
 	if (interrupt_status & SPI_INTERRUPT_FLAG_DATA_REGISTER_EMPTY) {
+
 		if (module->mode == SPI_MODE_MASTER &&
 			module->dir == SPI_DIRECTION_READ) {
 			/* Send dummy byte when reading in master mode */
@@ -560,6 +561,7 @@ void _spi_interrupt_handler(
 				spi_hw->INTENCLR.reg
 						= SPI_INTERRUPT_FLAG_DATA_REGISTER_EMPTY;
 			}
+
 		} else if (module->dir != SPI_DIRECTION_READ) {
 			/* Write next byte from buffer */
 			_spi_write(module);
@@ -567,63 +569,37 @@ void _spi_interrupt_handler(
 				/* Disable the Data Register Empty Interrupt */
 				spi_hw->INTENCLR.reg
 						= SPI_INTERRUPT_FLAG_DATA_REGISTER_EMPTY;
+				
 				if (!(module->receiver_enabled) &&
-						module->dir == SPI_DIRECTION_WRITE) {
+						module->dir == SPI_DIRECTION_WRITE && 
+						module->mode == SPI_MODE_MASTER) {
+					/* Buffer sent in master mode */
 					module->dir = SPI_DIRECTION_IDLE;
 					module->status = STATUS_OK;
 					/* Run callback if registered and enabled */
 					if (callback_mask & (1 << SPI_CALLBACK_BUFFER_TRANSMITTED)){
 							(module->callback[SPI_CALLBACK_BUFFER_TRANSMITTED])
 									(module);
-						}
+					}
 				}
 			}
 		}
 	}
-	/* Transmit complete */
-	if (interrupt_status & SPI_INTERRUPT_FLAG_TX_COMPLETE) {
-		if (module->mode == SPI_MODE_SLAVE) {
-			/* Transaction ended by master, stop ongoing transmission */
-			
-			if (spi_hw->INTFLAG.reg & SPI_INTERRUPT_FLAG_RX_COMPLETE) {
-				/* Flush */ 
-				uint16_t flush = spi_hw->DATA.reg;
-				UNUSED(flush);
-			}
-			spi_hw->INTENCLR.reg =
-					SPI_INTERRUPT_FLAG_TX_COMPLETE |
-					SPI_INTERRUPT_FLAG_RX_COMPLETE |
-					SPI_INTERRUPT_FLAG_DATA_REGISTER_EMPTY;
-			spi_hw->INTFLAG.reg = SPI_INTERRUPT_FLAG_TX_COMPLETE;
 
-			module->status = STATUS_OK;
-			module->dir = SPI_DIRECTION_IDLE;
-			module->remaining_tx_buffer_length = 0;
-			module->remaining_rx_buffer_length = 0;
-
-			if (spi_hw->INTFLAG.reg & SPI_INTERRUPT_FLAG_RX_COMPLETE) {
-				/* Flush again if necessary */
-				uint16_t flush = spi_hw->DATA.reg;
-				UNUSED(flush);
-			}
-			
-			/* Run callback if registered and enabled */
-			if (callback_mask &
-					(1 << SPI_CALLBACK_SLAVE_TRANSMISSION_COMPLETE)) {
-				(module->callback[SPI_CALLBACK_SLAVE_TRANSMISSION_COMPLETE])
-						(module);
-			}
-		}
-	}
-
-	/* Receive complete */
+	/* Receive complete interrupt*/
 	if (interrupt_status & SPI_INTERRUPT_FLAG_RX_COMPLETE) {
 		/* Check for overflow */
 		if (spi_hw->STATUS.reg & SERCOM_SPI_STATUS_BUFOVF) {
 			if (module->dir != SPI_DIRECTION_WRITE) {
 				/* Store the error code */
 				module->status = STATUS_ERR_OVERFLOW;
-
+				/* TODO: end transaction? */
+				//module->dir = SPI_DIRECTION_IDLE;
+				//spi_hw->INTENCLR.reg =
+					//SPI_INTERRUPT_FLAG_TX_COMPLETE | <- Not for slave, not
+					//enabled for master, can be removed.
+					//SPI_INTERRUPT_FLAG_RX_COMPLETE |
+					//SPI_INTERRUPT_FLAG_DATA_REGISTER_EMPTY;
 				/* Run callback if registered and enabled */
 				if (callback_mask & (1 << SPI_CALLBACK_ERROR)) {
 					(module->callback[SPI_CALLBACK_ERROR])(module);
@@ -636,52 +612,116 @@ void _spi_interrupt_handler(
 
 			/* Clear overflow flag */
 			spi_hw->STATUS.reg |= SERCOM_SPI_STATUS_BUFOVF;
-		}
-
+		} // else?
 		if (module->status != STATUS_ABORTED) {
-				/* Read data register */
 				if (module->dir == SPI_DIRECTION_WRITE) {
-					/* Flush receive buffer */
+					/* Flush receive buffer when writing */
 					_spi_read_dummy(module);
 					if (module->remaining_dummy_buffer_length == 0) {
-
-						spi_hw->INTENCLR.reg = SPI_INTERRUPT_FLAG_RX_COMPLETE;
-						module->status = STATUS_OK;
-						module->dir = SPI_DIRECTION_IDLE;
-
-						/* Run callback if registered and enabled */
-						if (callback_mask & (1 << SPI_CALLBACK_BUFFER_TRANSMITTED)){
-							(module->callback[SPI_CALLBACK_BUFFER_TRANSMITTED])(module);
+						if (module->mode == SPI_MODE_MASTER {
+							spi_hw->INTENCLR.reg = SPI_INTERRUPT_FLAG_RX_COMPLETE;
+							module->status = STATUS_OK;
+							module->dir = SPI_DIRECTION_IDLE;
+							/* Run callback if registered and enabled */
+							if (callback_mask &
+									(1 << SPI_CALLBACK_BUFFER_TRANSMITTED)){
+								(module->callback[SPI_CALLBACK_BUFFER_TRANSMITTED])(module);
+							}
+						} else {
+							/* Slave must wait for TXC interrupt before callback */
+							module->dir = SPI_DIRECTION_IDLE;
 						}
 					}
 				
-				} else {
+				} else if (!(module->dir == SPI_DIRECTION_IDLE)) {
+					/* Read data register */
 					_spi_read(module);
 
 					/* Check if the last character have been received */
 					if (module->remaining_rx_buffer_length == 0) {
-						/* Disable RX Complete Interrupt and set status */
-						spi_hw->INTENCLR.reg = SPI_INTERRUPT_FLAG_RX_COMPLETE;
-						module->status = STATUS_OK;
-
-						switch (module->dir) {
-						case SPI_DIRECTION_READ:
-							/* Run callback if registered and enabled */
-							if (callback_mask & (1 << SPI_CALLBACK_BUFFER_RECEIVED)) {
-								(module->callback[SPI_CALLBACK_BUFFER_RECEIVED])(module);
+						if (module->mode == SPI_MODE_SLAVE) {
+							/* Slave must wait for TXC interrupt before callback */
+							module->dir = SPI_DIRECTION_IDLE; // TODO: rename to not idle?
+						} else {
+							module->status = STATUS_OK;
+							/* Disable RX Complete Interrupt and set status */
+							spi_hw->INTENCLR.reg = SPI_INTERRUPT_FLAG_RX_COMPLETE;
+							if(module->dir == SPI_DIRECTION_BOTH) {
+								if (callback_mask & (1 << SPI_CALLBACK_BUFFER_TRANSCEIVED)) {
+									(module->callback[SPI_CALLBACK_BUFFER_TRANSCEIVED])(module);
+								}
+							} else if (module->dir == SPI_DIRECTION_READ) {
+								if (callback_mask & (1 << SPI_CALLBACK_BUFFER_RECEIVED)) {
+									(module->callback[SPI_CALLBACK_BUFFER_RECEIVED])(module);
+								}
 							}
-							break;
-						case SPI_DIRECTION_BOTH:
-							/* Run callback if registered and enabled */
-							if (callback_mask & (1 << SPI_CALLBACK_BUFFER_TRANSCEIVED)) {
-								(module->callback[SPI_CALLBACK_BUFFER_TRANSCEIVED])(module);
-							}
-							break;
-						default:
-							break;
 						}
-						module->dir = SPI_DIRECTION_IDLE;
 					}
+				} else {
+					/* Flush, slave waiting for Transfer Complete interrupt */
+					uint16_t flush = spi_hw->DATA.reg;
+					UNUSED(flush);
+				}
+		}
+	}
+
+	/* Transmit complete */
+	if (interrupt_status & SPI_INTERRUPT_FLAG_TX_COMPLETE) {
+		if (module->mode == SPI_MODE_SLAVE) {
+			/* Transaction ended by master */
+
+			/* Disable interrupts */
+			spi_hw->INTENCLR.reg =
+					SPI_INTERRUPT_FLAG_TX_COMPLETE |
+					SPI_INTERRUPT_FLAG_RX_COMPLETE |
+					SPI_INTERRUPT_FLAG_DATA_REGISTER_EMPTY;
+			/* Clear interrupt flag */
+			spi_hw->INTFLAG.reg = SPI_INTERRUPT_FLAG_TX_COMPLETE;
+
+			enum spi_direction dir = module->dir;
+
+			/* Reset all status information */
+			module->status = STATUS_OK;
+			module->dir = SPI_DIRECTION_IDLE;
+			module->remaining_tx_buffer_length = 0;
+			module->remaining_rx_buffer_length = 0;
+
+			// TODO: CALLBACK BASED ON dir before idle
+			switch (dir) {
+			case SPI_DIRECTION_READ:
+				/* Run callback if registered and enabled */
+				if (callback_mask &
+						(1 << SPI_CALLBACK_BUFFER_RECEIVED)) {
+				(module->callback[SPI_CALLBACK_BUFFER_RECEIVED])
+						(module);
+				}
+				break;
+			case SPI_DIRECTION_WRITE:
+				/* Run callback if registered and enabled */
+				if (callback_mask &
+						(1 << SPI_CALLBACK_BUFFER_TRANSMITTED)) {
+				(module->callback[SPI_CALLBACK_BUFFER_TRANSMITTED])
+						(module);
+				}
+				break;
+			case SPI_DIRECTION_BOTH:
+				/* Run callback if registered and enabled */
+				if (callback_mask &
+						(1 << SPI_CALLBACK_BUFFER_TRANSCEIVED)) {
+				(module->callback[SPI_CALLBACK_BUFFER_TRANSCEIVED])
+						(module);
+				}
+				break;
+			case SPI_DIRECTION_IDLE:
+				/* Run callback if registered and enabled */
+				if (callback_mask &
+						(1 << SPI_CALLBACK_SLAVE_TRANSMISSION_COMPLETE)) {
+				(module->callback[SPI_CALLBACK_SLAVE_TRANSMISSION_COMPLETE])
+						(module);
+				}
+				break;
+			default:
+				break;
 			}
 		}
 	}
