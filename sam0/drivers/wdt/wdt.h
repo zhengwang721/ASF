@@ -127,8 +127,10 @@
  *
  * \subsection asfdoc_samd20_wdt_module_overview_physical Physical Connection
  *
- * The following diagram shows how this module is interconnected within the device:
+ * \ref asfdoc_samd20_wdt_module_int_connections "The figure below" shows how
+ * this module is interconnected within the device.
  *
+ * \anchor asfdoc_samd20_wdt_module_int_connections
  * \dot
  * digraph overview {
  *   rankdir=LR;
