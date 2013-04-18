@@ -44,11 +44,6 @@
 #ifndef CONF_UART_SERIAL_H
 #define CONF_UART_SERIAL_H
 
-/** USART Interface */
-
-/** Baudrate setting */
-
-/** Parity setting */
 
 /* Intentionally empty */
 	
