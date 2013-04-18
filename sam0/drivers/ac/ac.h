@@ -598,7 +598,7 @@ static inline void ac_get_config_defaults(
 	for (uint32_t i = 0; i < AC_PAIRS; i++) {
 		config->run_in_standby[i] = false;
 	}
-	config->run_in_standby[1] = false;
+	config->run_in_standby[0] = false;
 	memset(&config->events, 0x00, sizeof(config->events));
 	config->source_generator = GCLK_GENERATOR_0;
 }
