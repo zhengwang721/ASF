@@ -74,6 +74,7 @@
  * - sam4s16c_sam4s_ek
  * - sam4s16c_sam4s_xplained
  * - XMEGA-A1 Xplained
+ * - sam4e16e_sam4e_ek
  *
  * \section compinfo Compilation info
  * This software was written for the GNU GCC and IAR for ARM. Other compilers
