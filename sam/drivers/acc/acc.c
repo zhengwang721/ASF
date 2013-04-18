@@ -3,7 +3,7 @@
  *
  * \brief Analog Comparator Controller (ACC) driver for SAM.
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -63,8 +63,6 @@ extern "C" {
  *
  * @{
  */
-
-#if (SAM3S || SAM4S)
 
 #define ACC_MR_INV_Pos			12	/* ACC invert output (register offset) */
 
@@ -247,8 +245,6 @@ uint32_t acc_get_writeprotect_status(Acc *p_acc)
 {
 	return p_acc->ACC_WPSR & ACC_WPSR_WPROTERR;
 }
-
-#endif
 
 //@}
 
