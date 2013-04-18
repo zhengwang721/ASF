@@ -92,8 +92,10 @@
  * - Waveform period capture
  * - Waveform frequency capture
  *
- * The diagram below shows the overview of the TC module design.
+ * \ref asfdoc_samd20_tc_block_diagram "The diagram below" shows the overview
+ * of the TC module design.
  *
+ * \anchor asfdoc_samd20_tc_block_diagram
  * \image html overview.svg "Basic overview of the TC module"
  *
  *
@@ -116,10 +118,12 @@
  * Each timer module can be configured in one of three different counter
  * sizes; 8-, 16-, and 32-bits. The size of the counter determines the maximum
  * value it can count to before an overflow occurs and the count is reset back
- * to zero. The table below shows the maximum values for each of the possible
- * counter sizes.
+ * to zero. \ref asfdoc_samd20_tc_count_size_vs_top "The table below" shows the
+ * maximum values for each of the possible counter sizes.
  *
+ * \anchor asfdoc_samd20_tc_count_size_vs_top
  * <table>
+ *  <caption>Timer counter sizes and their maximum count values</caption>
  *  <tr>
  *    <th>Counter Size</th>
  *    <th>Max (Hexadecimal)</th>
@@ -151,9 +155,11 @@
  * configured as 32-bit counters. The odd numbered counters will act as slaves
  * to the even numbered masters, and will not be reconfigurable until the
  * master timer is disabled. The pairing of timer modules for 32-bit mode is
- * shown in the table below.
+ * shown in \ref asfdoc_samd20_tc_module_ms_pairs "the table below".
  *
+ * \anchor asfdoc_samd20_tc_module_ms_pairs
  * <table>
+ *   <caption>TC master and slave module pairings</caption>
  *   <tr>
  *     <th>Master TC Module</th>
  *     <th>Slave TC Module</th>
@@ -209,10 +215,12 @@
  * system tells the counter to re-trigger. The reload action determines if the
  * prescaler should be reset, and when this should happen. The counter will
  * always be reloaded with the value it is set to start counting from. The user
- * can choose between three different reload actions, described in the
- * following table.
+ * can choose between three different reload actions, described in
+ * \ref asfdoc_samd20_tc_module_reload_act "the table below".
  *
+ * \anchor asfdoc_samd20_tc_module_reload_act
  * <table>
+ *   <caption>TC module reload actions</caption>
  *   <tr>
  *     <th>Reload Action</th>
  *     <th>Description</th>
@@ -277,21 +285,25 @@
  * using an analog voltage value, as noise will not generally affect the
  * signal's integrity to a meaningful extent.
  *
- * The figure below illustrates operations and different states of the counter
- * and its output when running the counter in PWM normal mode. As can be seen,
- * the TOP value is unchanged and is set to MAX. The compare match value is
- * changed at several points to illustrate the resulting waveform output
- * changes. The PWM output is set to normal (i.e non-inverted) output mode.
+ * \ref asfdoc_samd20_tc_module_pwm_normal_diag "The figure below" illustrates
+ * operations and different states of the counter and its output when running
+ * the counter in PWM normal mode. As can be seen, the TOP value is unchanged
+ * and is set to MAX. The compare match value is changed at several points to
+ * illustrate the resulting waveform output changes. The PWM output is set to
+ * normal (i.e non-inverted) output mode.
  *
+ * \anchor asfdoc_samd20_tc_module_pwm_normal_diag
  * \image html pwm_normal_ex.svg "Example of PWM in normal mode, and different counter operations"
  *
  *
- * In the figure below, the counter is set to generate PWM in Match mode. The
- * PWM output is inverted via the appropriate configuration option in the TC
- * driver configuration structure. In this example, the counter value is
- * changed once, but the compare match value is kept unchanged. As can be seen,
- * it is possible to change the TOP value when running in PWM match mode.
+ * In \ref asfdoc_samd20_tc_module_pwm_match_diag "the figure below", the
+ * counter is set to generate PWM in Match mode. The PWM output is inverted via
+ * the appropriate configuration option in the TC driver configuration
+ * structure. In this example, the counter value is changed once, but the
+ * compare match value is kept unchanged. As can be seen, it is possible to
+ * change the TOP value when running in PWM match mode.
  *
+ * \anchor asfdoc_samd20_tc_module_pwm_match_diag
  * \image html pwm_match_ex.svg "Example of PWM in match mode, and different counter operations"
  *
  * \subsubsection asfdoc_samd20_tc_module_overview_compare_match_wg_freq Waveform Generation - Frequency

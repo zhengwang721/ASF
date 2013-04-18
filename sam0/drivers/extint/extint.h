@@ -112,9 +112,13 @@
  * channel, a hardware signal filter can be enabled on individual channels. This
  * filter provides a Majority-of-Three voter filter on the incoming signal, so
  * that the input state is considered to be the majority vote of three
- * subsequent samples of the pin input buffer:
+ * subsequent samples of the pin input buffer. The possible sampled input and
+ * resulting filtered output when the filter is enabled is shown in
+ * \ref asfdoc_samd20_extint_filter_table "the table below".
  *
+ * \anchor asfdoc_samd20_extint_filter_table
  * <table>
+ *  <caption>Sampled input and resulting filtered output</caption>
  *	<tr>
  *		<th>Input Sample 1</th>
  *		<th>Input Sample 2</th>
@@ -157,8 +161,10 @@
  *
  * \subsection asfdoc_samd20_extint_module_overview_physical Physical Connection
  *
- * The following diagram shows how this module is interconnected within the device:
+ * \ref asfdoc_samd20_extint_int_connections "The diagram below" shows how this
+ * module is interconnected within the device.
  *
+ * \anchor asfdoc_samd20_extint_int_connections
  * \dot
  * digraph overview {
  *   node [label="Port Pad" shape=square] pad;
