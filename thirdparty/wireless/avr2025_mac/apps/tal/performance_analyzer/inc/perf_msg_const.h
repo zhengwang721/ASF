@@ -194,6 +194,7 @@
 #define END_REG_ADDR_POS                  (5)
 
 /* Field positions - ED_SCAN_START_REQ */
+#define MSG_LEN_ED_SCAN_POS               (0)
 #define SCAN_DURATION_POS                 (3)
 #define CHANNELS_SELECT_POS               (4)
 #define MSG_LEN_ED_SCAN_REQ               (7)

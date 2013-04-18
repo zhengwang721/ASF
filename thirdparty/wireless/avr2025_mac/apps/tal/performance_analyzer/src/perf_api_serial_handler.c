@@ -156,10 +156,7 @@ static uint8_t head = 0;
  * This is buffer count to keep track of the available bufer for transmission
  */
 static uint8_t buf_count = 0;
-/**
- * This variable is to save the selected channels mask, which is a 4byte value received through serial interface
- */
-static uint32_t rcvd_channel_mask = 0;
+
 /* === Prototypes ========================================================== */
 
 static inline void process_incoming_sio_data(void);
@@ -798,6 +795,11 @@ static inline void handle_incoming_msg(void)
                    msg_id;
                    scan_duration;
                  */
+
+                /* This variable is to save the selected channels mask,
+                 * which is a 4byte value received through serial interface
+                 */
+                uint32_t rcvd_channel_mask = 0; /* Clear for every ED SCAN REQ MSG */
                 /* Check any ongoing transaction in place */
                 if (error_code)
                 {
@@ -814,14 +816,20 @@ static inline void handle_incoming_msg(void)
                 if ((PER_TEST_INITIATOR == node_info.main_state) ||
                     (SINGLE_NODE_TESTS == node_info.main_state)
                    )
-                {
-                    rcvd_channel_mask = 0; /* Clear for every ED SCAN REQ MSG */                  
-                    /* Extract the 4bytes of selected channel mask from the sio_rx_buf */
-                    rcvd_channel_mask |= (((uint32_t )sio_rx_buf[CHANNELS_SELECT_POS])&0x000000FF);
-                    rcvd_channel_mask |= (((uint32_t )sio_rx_buf[CHANNELS_SELECT_POS+1]<<8)&0x0000FF00);
-                    rcvd_channel_mask |= (((uint32_t )sio_rx_buf[CHANNELS_SELECT_POS+2]<<16)&0x00FF0000);
-                    rcvd_channel_mask |= (((uint32_t )sio_rx_buf[CHANNELS_SELECT_POS+3]<<24)&0xFF000000);
-
+                {   
+                    if (sio_rx_buf[MSG_LEN_ED_SCAN_POS] == MSG_LEN_ED_SCAN_REQ)
+                    {
+                        /* Extract the 4bytes of selected channel mask from the sio_rx_buf */
+                        rcvd_channel_mask |= (((uint32_t )sio_rx_buf[CHANNELS_SELECT_POS])&0x000000FF);
+                        rcvd_channel_mask |= (((uint32_t )sio_rx_buf[CHANNELS_SELECT_POS+1]<<8)&0x0000FF00);
+                        rcvd_channel_mask |= (((uint32_t )sio_rx_buf[CHANNELS_SELECT_POS+2]<<16)&0x00FF0000);
+                        rcvd_channel_mask |= (((uint32_t )sio_rx_buf[CHANNELS_SELECT_POS+3]<<24)&0xFF000000);
+                    }
+                    else
+                    {
+                        rcvd_channel_mask = TRX_SUPPORTED_CHANNELS;
+                    }
+                    
                     start_ed_scan(sio_rx_buf[SCAN_DURATION_POS],rcvd_channel_mask); /* scan_duration */
                 }
                 else
