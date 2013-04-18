@@ -175,7 +175,7 @@ int main(void)
 	system_init();
 
 	/* Enable the internal bandgap to use as reference to the DAC */
-	system_vref_enable(SYSTEM_VOLTAGE_REFERENCE_BANDGAP);
+	system_voltage_reference_enable(SYSTEM_VOLTAGE_REFERENCE_BANDGAP);
 
 	configure_tc(&tc_module);
 
