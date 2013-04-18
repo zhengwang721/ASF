@@ -63,11 +63,18 @@ void system_gclk_init(void)
  * \brief Writes a Generic Clock Generator configuration to the hardware module.
  *
  * Writes out a given configuration of a Generic Clock Generator configuration
- * to the hardware module. If the generator is currently running, it will be
- * stopped.
+ * to the hardware module.
  *
- * \note Once called the generator will not be running; to start the generator,
- *       call \ref system_gclk_gen_enable() after configuring a generator.
+ * \note Changing the clock source on the fly (on a running
+ *       generator) can take additional time if the clock source is configured
+ *       to only run on-demand (ONDEMAND bit is set) and it is not currently
+ *       running (no peripheral is requesting the clock source). In this case
+ *       the GCLK will request the new clock while still keeping a request to
+ *       the old clock source until the new clock source is ready.
+ *
+ * \note This function will not start a generator that is not already running;
+ *       to start the generator, call \ref system_gclk_gen_enable()
+ *       after configuring a generator.
  *
  * \param[in] generator  Generic Clock Generator index to configure
  * \param[in] config     Configuration settings for the generator
@@ -105,7 +112,8 @@ void system_gclk_gen_set_config(
 			 * register */
 			uint32_t div2_count = 0;
 			uint32_t mask;
-			for (mask = (1UL << 1); mask < config->division_factor; mask <<= 1) {
+			for (mask = (1UL << 1); mask < config->division_factor;
+						mask <<= 1) {
 				div2_count++;
 			}
 
@@ -113,7 +121,8 @@ void system_gclk_gen_set_config(
 			new_gendiv_config  |= div2_count << GCLK_GENDIV_DIV_Pos;
 		} else {
 			/* Set integer division factor */
-			new_gendiv_config  |= config->division_factor << GCLK_GENDIV_DIV_Pos;
+			new_gendiv_config  |=
+					config->division_factor << GCLK_GENDIV_DIV_Pos;
 
 			/* Enable non-binary division with increased duty cycle accuracy */
 			new_genctrl_config |= GCLK_GENCTRL_DIVSEL;
@@ -127,9 +136,6 @@ void system_gclk_gen_set_config(
 	if (config->run_in_standby) {
 		new_genctrl_config |= GCLK_GENCTRL_RUNSTDBY;
 	}
-
-	/* Disable generator before updating it */
-	system_gclk_gen_disable(generator);
 
 	/* Write the new generator configuration */
 	while (system_gclk_is_syncing()) {
