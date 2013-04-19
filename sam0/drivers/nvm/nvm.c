@@ -575,7 +575,8 @@ void nvm_get_parameters(
 
 	/* Read the current EEPROM fuse value from the USER row */
 	uint16_t eeprom_fuse_value =
-			(NVM_USER_MEMORY[NVMCTRL_EEPROM_SIZE_Pos / 16] & NVMCTRL_EEPROM_SIZE_Msk) >> NVMCTRL_EEPROM_SIZE_Pos;
+			(NVM_USER_MEMORY[NVMCTRL_FUSES_EEPROM_SIZE_Pos / 16] &
+			NVMCTRL_FUSES_EEPROM_SIZE_Msk) >> NVMCTRL_FUSES_EEPROM_SIZE_Pos;
 
 	/* Translate the EEPROM fuse byte value to a number of NVM pages */
 	if (eeprom_fuse_value == 7) {
@@ -588,7 +589,8 @@ void nvm_get_parameters(
 
 	/* Read the current BOOTSZ fuse value from the USER row */
 	uint16_t boot_fuse_value =
-			(NVM_USER_MEMORY[NVMCTRL_BOOTPROT_Pos / 16] & NVMCTRL_BOOTPROT_Msk) >> NVMCTRL_BOOTPROT_Pos;
+			(NVM_USER_MEMORY[NVMCTRL_FUSES_BOOTPROT_Pos / 16] &
+			NVMCTRL_FUSES_BOOTPROT_Msk) >> NVMCTRL_FUSES_BOOTPROT_Pos;
 
 	/* Translate the BOOTSZ fuse byte value to a number of NVM pages */
 	if (boot_fuse_value == 7) {
