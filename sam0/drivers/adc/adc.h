@@ -1192,7 +1192,7 @@ static inline enum status_code adc_read(
 	Assert(module_inst->hw);
 	Assert(result);
 
-	if (!adc_get_status(module_inst) & ADC_STATUS_RESULT_READY) {
+	if (!(adc_get_status(module_inst) & ADC_STATUS_RESULT_READY)) {
 		/* Result not ready */
 		return STATUS_BUSY;
 	}
