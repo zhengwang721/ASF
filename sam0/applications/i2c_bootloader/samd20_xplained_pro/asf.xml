@@ -6,7 +6,7 @@
 		<build type="header-file" value="conf_clocks.h"/>
 		<build type="header-file" value="conf_bootloader.h"/>
 		<require idref="board.samd20_xplained_pro"/>
-		<require idref ="sam0.applications.i2c_bootloader"/>
+		<require idref="sam0.applications.i2c_bootloader"/>
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>
