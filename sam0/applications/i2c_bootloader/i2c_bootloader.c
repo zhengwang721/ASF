@@ -123,7 +123,7 @@
  *
  * \subsection appdoc_samd20_i2c_bootloader_start_app Start Application
  * Once the programming is completed, enable Watchdog Timer with a timeout
- * period of 256 clock cyles and wait in a loop for Watchdog to reset 
+ * period of 256 clock cyles and wait in a loop for Watchdog to reset
  * the device.
  *
  * \section appdoc_samd20_i2c_bootloader_compinfo Compilation Info
@@ -211,6 +211,7 @@ static void program_memory(uint32_t address, uint8_t *buffer, uint16_t len)
 	/* Check if length is greater than Flash page size */
 	if (len > NVMCTRL_PAGE_SIZE) {
 		uint32_t offset = 0;
+
 		while (len > NVMCTRL_PAGE_SIZE) {
 			/* Check if it is first page of a row */
 			if ((address & 0xFF) == 0) {
@@ -226,6 +227,7 @@ static void program_memory(uint32_t address, uint8_t *buffer, uint16_t len)
 			/* Decrement the length */
 			len -= NVMCTRL_PAGE_SIZE;
 		}
+
 		/* Check if there is data remaining to be programmed*/
 		if (len > 0) {
 			/* Write the data to flash */
@@ -259,7 +261,7 @@ static void start_application(void)
 	wdt_get_config_defaults(&wdt_config);
 
 	/* Set the required clock source and timeout period */
-	wdt_config.clock_source = GCLK_GENERATOR_4;
+	wdt_config.clock_source   = GCLK_GENERATOR_4;
 	wdt_config.timeout_period = WDT_PERIOD_256CLK;
 
 	/* Initialize WDT */
@@ -279,7 +281,7 @@ static void start_application(void)
  * \brief Function for checking whether to enter boot mode or application mode
  *
  * This function will check the state of BOOT_LOAD_PIN. If it is pressed, it
- * continues execution in bootloader mode. Else, it reads the first location 
+ * continues execution in bootloader mode. Else, it reads the first location
  * from the application section and checks whether it is 0xFFFFFFFF. If yes,
  * then the application section is empty and it waits indefinitely there. If
  * not, it jumps to the application and starts execution from there.
@@ -303,7 +305,7 @@ static void check_boot_mode(void)
 
 	/* Enable the input mode in Boot GPIO Pin */
 	boot_port->DIRCLR.reg = GPIO_BOOT_PIN_MASK;
-	boot_port->PINCFG[BOOT_LOAD_PIN & 0x1F].reg = 
+	boot_port->PINCFG[BOOT_LOAD_PIN & 0x1F].reg =
 			PORT_PINCFG_INEN | PORT_PINCFG_PULLEN;
 	boot_port->OUTSET.reg = GPIO_BOOT_PIN_MASK;
 
@@ -315,7 +317,7 @@ static void check_boot_mode(void)
 		app_check_address = APP_START_ADDRESS;
 		app_check_address_ptr = (uint32_t *) app_check_address;
 
-		/* 
+		/*
 		 * Read the first location of application section
 		 * which contains the address of stack pointer.
 		 * If it is 0xFFFFFFFF then the application section is empty.
@@ -357,10 +359,10 @@ static void configure_i2c(void)
 	i2c_slave_get_config_defaults(&config_i2c);
 
 	/* Change address and address_mode */
-	config_i2c.address = SLAVE_ADDRESS;
+	config_i2c.address      = SLAVE_ADDRESS;
 	config_i2c.address_mode = I2C_SLAVE_ADDRESS_MODE_MASK;
-	config_i2c.pinmux_pad0 = BOOT_I2C_PAD0;
-	config_i2c.pinmux_pad1 = BOOT_I2C_PAD1;
+	config_i2c.pinmux_pad0  = BOOT_I2C_PAD0;
+	config_i2c.pinmux_pad1  = BOOT_I2C_PAD1;
 
 	/* Initialize and enable device with config */
 	i2c_slave_init(&slave, BOOT_SERCOM, &config_i2c);
@@ -396,7 +398,7 @@ int main(void)
 	/* Check switch state to enter boot mode or application mode */
 	check_boot_mode();
 
-	/* 
+	/*
 	 * Application to be programmed from APP_START_ADDRESS defined in
 	 * conf_bootloader.h
 	 */
