@@ -11,7 +11,7 @@
 		<build type="doxygen-entry-point" value="sam0_gfx_mono"/>
 		<build type="doxygen-quick-start" value="gfx_mono_quickstart"/>
 		<device-support value="samd20"/>
-		<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
+		<generator value="doxygen-module" default-mcu="unspecified-samd20"/>
 		<require idref="common2.services.gfx_mono.display"/>
 	</module>
 
@@ -25,7 +25,7 @@
 		<build type="c-source" value="gfx_mono_generic.c"/>
 		<build type="doxygen-entry-point" value="gfx_mono_generic_group"/>
 		<device-support value="samd20"/>
-		<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
+		<generator value="doxygen-module" default-mcu="unspecified-samd20"/>
 	</module>
 
 	<module type="service" id="common2.services.gfx_mono.framebuffer" caption="GFX Monochrome - Framebuffer Device">
@@ -42,7 +42,7 @@
 		<build type="c-source" value="gfx_mono_framebuffer.c"/>
 		<build type="doxygen-entry-point" value="gfx_mono_framebuffer_group"/>
 		<device-support value="samd20"/>
-		<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
+		<generator value="doxygen-module" default-mcu="unspecified-samd20"/>
 	</module>
 
 	<module type="service" id="common2.services.gfx_mono.font" caption="GFX Monochrome - System Font">
@@ -65,7 +65,7 @@
 		<require idref="common2.services.gfx_mono"/>
 		<require idref="common2.services.gfx_mono.generic"/>
 		<device-support value="samd20"/>
-		<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
+		<generator value="doxygen-module" default-mcu="unspecified-samd20"/>
 	</module>
 
 	<module type="service" id="common2.services.gfx_mono.menu" caption="GFX Monochrome - Menu System">
@@ -84,7 +84,7 @@
 		<require idref="common2.services.gfx_mono"/>
 		<require idref="common2.services.gfx_mono.font"/>
 		<device-support value="samd20"/>
-		<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
+		<generator value="doxygen-module" default-mcu="unspecified-samd20"/>
 	</module>
 
 	<module type="service" id="common2.services.gfx_mono.spinctrl" caption="GFX Monochrome - Spinner/Spin control widget">
@@ -103,7 +103,7 @@
 		<require idref="common2.services.gfx_mono"/>
 		<require idref="common2.services.gfx_mono.font"/>
 		<device-support value="samd20"/>
-		<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
+		<generator value="doxygen-module" default-mcu="unspecified-samd20"/>
 	</module>
 
 	<module type="meta" id="common2.services.gfx_mono.tools" caption="GFX Monochrome - Tools">
@@ -128,7 +128,7 @@
 			<require idref="common2.services.gfx_mono.generic"/>
 			<require idref="common2.services.gfx_mono.framebuffer"/>
 			<device-support value="samd20"/>
-			<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
+			<generator value="doxygen-module" default-mcu="unspecified-samd20"/>
 		</module>
 		<module type="service" id="common2.services.gfx_mono.display#null" caption="GFX Monochrome - NULL display driver">
 			<info type="gui-flag" value="hidden"/>
@@ -143,7 +143,7 @@
 			<require idref="common2.services.gfx_mono.generic"/>
 			<require idref="common2.services.gfx_mono.framebuffer"/>
 			<device-support value="samd20"/>
-			<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
+			<generator value="doxygen-module" default-mcu="unspecified-samd20"/>
 		</module>
 	</select-by-config>
 </asf>
