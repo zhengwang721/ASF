@@ -84,6 +84,12 @@ typedef union {
 #define SERCOM_I2CM_CTRLA_MODE_Pos  2            /**< \brief (SERCOM_I2CM_CTRLA) Operating Mode */
 #define SERCOM_I2CM_CTRLA_MODE_Msk  (0x7u << SERCOM_I2CM_CTRLA_MODE_Pos)
 #define SERCOM_I2CM_CTRLA_MODE(value) ((SERCOM_I2CM_CTRLA_MODE_Msk & ((value) << SERCOM_I2CM_CTRLA_MODE_Pos)))
+#define   SERCOM_I2CM_CTRLA_MODE_USART_EXT_CLK (0x0u <<  2) /**< \brief (SERCOM_I2CM_CTRLA) USART mode with external clock */
+#define   SERCOM_I2CM_CTRLA_MODE_USART_INT_CLK (0x1u <<  2) /**< \brief (SERCOM_I2CM_CTRLA) USART mode with internal clock */
+#define   SERCOM_I2CM_CTRLA_MODE_SPI_SLAVE (0x2u <<  2) /**< \brief (SERCOM_I2CM_CTRLA) SPI mode with external clock */
+#define   SERCOM_I2CM_CTRLA_MODE_SPI_MASTER (0x3u <<  2) /**< \brief (SERCOM_I2CM_CTRLA) SPI mode with internal clock */
+#define   SERCOM_I2CM_CTRLA_MODE_I2C_SLAVE (0x4u <<  2) /**< \brief (SERCOM_I2CM_CTRLA) I2C mode with external clock */
+#define   SERCOM_I2CM_CTRLA_MODE_I2C_MASTER (0x5u <<  2) /**< \brief (SERCOM_I2CM_CTRLA) I2C mode with internal clock */
 #define SERCOM_I2CM_CTRLA_RUNSTDBY_Pos 7            /**< \brief (SERCOM_I2CM_CTRLA) Run during Standby */
 #define SERCOM_I2CM_CTRLA_RUNSTDBY  (0x1u << SERCOM_I2CM_CTRLA_RUNSTDBY_Pos)
 #define SERCOM_I2CM_CTRLA_PINOUT_Pos 16           /**< \brief (SERCOM_I2CM_CTRLA) Pin Usage */
@@ -129,6 +135,12 @@ typedef union {
 #define SERCOM_I2CS_CTRLA_MODE_Pos  2            /**< \brief (SERCOM_I2CS_CTRLA) Operating Mode */
 #define SERCOM_I2CS_CTRLA_MODE_Msk  (0x7u << SERCOM_I2CS_CTRLA_MODE_Pos)
 #define SERCOM_I2CS_CTRLA_MODE(value) ((SERCOM_I2CS_CTRLA_MODE_Msk & ((value) << SERCOM_I2CS_CTRLA_MODE_Pos)))
+#define   SERCOM_I2CS_CTRLA_MODE_USART_EXT_CLK (0x0u <<  2) /**< \brief (SERCOM_I2CS_CTRLA) USART mode with external clock */
+#define   SERCOM_I2CS_CTRLA_MODE_USART_INT_CLK (0x1u <<  2) /**< \brief (SERCOM_I2CS_CTRLA) USART mode with internal clock */
+#define   SERCOM_I2CS_CTRLA_MODE_SPI_SLAVE (0x2u <<  2) /**< \brief (SERCOM_I2CS_CTRLA) SPI mode with external clock */
+#define   SERCOM_I2CS_CTRLA_MODE_SPI_MASTER (0x3u <<  2) /**< \brief (SERCOM_I2CS_CTRLA) SPI mode with internal clock */
+#define   SERCOM_I2CS_CTRLA_MODE_I2C_SLAVE (0x4u <<  2) /**< \brief (SERCOM_I2CS_CTRLA) I2C mode with external clock */
+#define   SERCOM_I2CS_CTRLA_MODE_I2C_MASTER (0x5u <<  2) /**< \brief (SERCOM_I2CS_CTRLA) I2C mode with internal clock */
 #define SERCOM_I2CS_CTRLA_RUNSTDBY_Pos 7            /**< \brief (SERCOM_I2CS_CTRLA) Run during Standby */
 #define SERCOM_I2CS_CTRLA_RUNSTDBY  (0x1u << SERCOM_I2CS_CTRLA_RUNSTDBY_Pos)
 #define SERCOM_I2CS_CTRLA_PINOUT_Pos 16           /**< \brief (SERCOM_I2CS_CTRLA) Pin Usage */
@@ -174,6 +186,12 @@ typedef union {
 #define SERCOM_SPI_CTRLA_MODE_Pos   2            /**< \brief (SERCOM_SPI_CTRLA) Operating Mode */
 #define SERCOM_SPI_CTRLA_MODE_Msk   (0x7u << SERCOM_SPI_CTRLA_MODE_Pos)
 #define SERCOM_SPI_CTRLA_MODE(value) ((SERCOM_SPI_CTRLA_MODE_Msk & ((value) << SERCOM_SPI_CTRLA_MODE_Pos)))
+#define   SERCOM_SPI_CTRLA_MODE_USART_EXT_CLK (0x0u <<  2) /**< \brief (SERCOM_SPI_CTRLA) USART mode with external clock */
+#define   SERCOM_SPI_CTRLA_MODE_USART_INT_CLK (0x1u <<  2) /**< \brief (SERCOM_SPI_CTRLA) USART mode with internal clock */
+#define   SERCOM_SPI_CTRLA_MODE_SPI_SLAVE (0x2u <<  2) /**< \brief (SERCOM_SPI_CTRLA) SPI mode with external clock */
+#define   SERCOM_SPI_CTRLA_MODE_SPI_MASTER (0x3u <<  2) /**< \brief (SERCOM_SPI_CTRLA) SPI mode with internal clock */
+#define   SERCOM_SPI_CTRLA_MODE_I2C_SLAVE (0x4u <<  2) /**< \brief (SERCOM_SPI_CTRLA) I2C mode with external clock */
+#define   SERCOM_SPI_CTRLA_MODE_I2C_MASTER (0x5u <<  2) /**< \brief (SERCOM_SPI_CTRLA) I2C mode with internal clock */
 #define SERCOM_SPI_CTRLA_RUNSTDBY_Pos 7            /**< \brief (SERCOM_SPI_CTRLA) Run during Standby */
 #define SERCOM_SPI_CTRLA_RUNSTDBY   (0x1u << SERCOM_SPI_CTRLA_RUNSTDBY_Pos)
 #define SERCOM_SPI_CTRLA_DOPO_Pos   16           /**< \brief (SERCOM_SPI_CTRLA) Data Out Pinout */
@@ -226,6 +244,12 @@ typedef union {
 #define SERCOM_USART_CTRLA_MODE_Pos 2            /**< \brief (SERCOM_USART_CTRLA) Operating Mode */
 #define SERCOM_USART_CTRLA_MODE_Msk (0x7u << SERCOM_USART_CTRLA_MODE_Pos)
 #define SERCOM_USART_CTRLA_MODE(value) ((SERCOM_USART_CTRLA_MODE_Msk & ((value) << SERCOM_USART_CTRLA_MODE_Pos)))
+#define   SERCOM_USART_CTRLA_MODE_USART_EXT_CLK (0x0u <<  2) /**< \brief (SERCOM_USART_CTRLA) USART mode with external clock */
+#define   SERCOM_USART_CTRLA_MODE_USART_INT_CLK (0x1u <<  2) /**< \brief (SERCOM_USART_CTRLA) USART mode with internal clock */
+#define   SERCOM_USART_CTRLA_MODE_SPI_SLAVE (0x2u <<  2) /**< \brief (SERCOM_USART_CTRLA) SPI mode with external clock */
+#define   SERCOM_USART_CTRLA_MODE_SPI_MASTER (0x3u <<  2) /**< \brief (SERCOM_USART_CTRLA) SPI mode with internal clock */
+#define   SERCOM_USART_CTRLA_MODE_I2C_SLAVE (0x4u <<  2) /**< \brief (SERCOM_USART_CTRLA) I2C mode with external clock */
+#define   SERCOM_USART_CTRLA_MODE_I2C_MASTER (0x5u <<  2) /**< \brief (SERCOM_USART_CTRLA) I2C mode with internal clock */
 #define SERCOM_USART_CTRLA_RUNSTDBY_Pos 7            /**< \brief (SERCOM_USART_CTRLA) Run during Standby */
 #define SERCOM_USART_CTRLA_RUNSTDBY (0x1u << SERCOM_USART_CTRLA_RUNSTDBY_Pos)
 #define SERCOM_USART_CTRLA_TXPO_Pos 16           /**< \brief (SERCOM_USART_CTRLA) Transmit Data Pinout */

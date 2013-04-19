@@ -310,4 +310,193 @@ typedef struct {
 
 /*@}*/
 
+/* ************************************************************************** */
+/**  SOFTWARE PERIPHERAL API DEFINITION FOR NON-VOLATILE FUSES */
+/* ************************************************************************** */
+/** \addtogroup fuses_api Peripheral Software API */
+/*@{*/
+
+
+#define ADC_BIASCAL_ADDR            (NVMCTRL_OTP4 + 4)
+#define ADC_BIASCAL_Pos             3            /**< \brief (NVMCTRL_OTP4) ADC Bias Calibration */
+#define ADC_BIASCAL_Msk             (0x7u << ADC_BIASCAL_Pos)
+#define ADC_BIASCAL(value)          ((ADC_BIASCAL_Msk & ((value) << ADC_BIASCAL_Pos)))
+
+#define ADC_BIAS_OPA_ADDR           (NVMCTRL_OTP2 + 4)
+#define ADC_BIAS_OPA_Pos            19           /**< \brief (NVMCTRL_OTP2) ADC OPA Bias */
+#define ADC_BIAS_OPA_Msk            (0x1u << ADC_BIAS_OPA_Pos)
+
+#define ADC_BOOSTEN_ADDR            (NVMCTRL_OTP2 + 4)
+#define ADC_BOOSTEN_Pos             17           /**< \brief (NVMCTRL_OTP2) ADC Boost Enable */
+#define ADC_BOOSTEN_Msk             (0x1u << ADC_BOOSTEN_Pos)
+
+#define ADC_CMPDELAY_ADDR           (NVMCTRL_OTP2 + 4)
+#define ADC_CMPDELAY_Pos            16           /**< \brief (NVMCTRL_OTP2) ADC Comparator Delay */
+#define ADC_CMPDELAY_Msk            (0x1u << ADC_CMPDELAY_Pos)
+
+#define ADC_DCFG_ADDR               (NVMCTRL_OTP2 + 4)
+#define ADC_DCFG_Pos                16           /**< \brief (NVMCTRL_OTP2) ADC Device Configuration */
+#define ADC_DCFG_Msk                (0xFu << ADC_DCFG_Pos)
+#define ADC_DCFG(value)             ((ADC_DCFG_Msk & ((value) << ADC_DCFG_Pos)))
+
+#define ADC_GAINCORR_ADDR           NVMCTRL_OTP4
+#define ADC_GAINCORR_Pos            3            /**< \brief (NVMCTRL_OTP4) ADC Gain Correction */
+#define ADC_GAINCORR_Msk            (0xFFFu << ADC_GAINCORR_Pos)
+#define ADC_GAINCORR(value)         ((ADC_GAINCORR_Msk & ((value) << ADC_GAINCORR_Pos)))
+
+#define ADC_LINEARITY_0_ADDR        NVMCTRL_OTP4
+#define ADC_LINEARITY_0_Pos         27           /**< \brief (NVMCTRL_OTP4) ADC Linearity bits 4:0 */
+#define ADC_LINEARITY_0_Msk         (0x1Fu << ADC_LINEARITY_0_Pos)
+#define ADC_LINEARITY_0(value)      ((ADC_LINEARITY_0_Msk & ((value) << ADC_LINEARITY_0_Pos)))
+
+#define ADC_LINEARITY_1_ADDR        (NVMCTRL_OTP4 + 4)
+#define ADC_LINEARITY_1_Pos         0            /**< \brief (NVMCTRL_OTP4) ADC Linearity bits 7:5 */
+#define ADC_LINEARITY_1_Msk         (0x7u << ADC_LINEARITY_1_Pos)
+#define ADC_LINEARITY_1(value)      ((ADC_LINEARITY_1_Msk & ((value) << ADC_LINEARITY_1_Pos)))
+
+#define ADC_OFFSETCORR_ADDR         NVMCTRL_OTP4
+#define ADC_OFFSETCORR_Pos          15           /**< \brief (NVMCTRL_OTP4) ADC Offset Correction */
+#define ADC_OFFSETCORR_Msk          (0xFFFu << ADC_OFFSETCORR_Pos)
+#define ADC_OFFSETCORR(value)       ((ADC_OFFSETCORR_Msk & ((value) << ADC_OFFSETCORR_Pos)))
+
+#define ADC_VCMPULSE_ADDR           (NVMCTRL_OTP2 + 4)
+#define ADC_VCMPULSE_Pos            18           /**< \brief (NVMCTRL_OTP2) ADC VCM Pulse */
+#define ADC_VCMPULSE_Msk            (0x1u << ADC_VCMPULSE_Pos)
+
+#define BOD12USERLEVEL_ADDR         NVMCTRL_USER
+#define BOD12USERLEVEL_Pos          17           /**< \brief (NVMCTRL_USER) BOD12 User Level */
+#define BOD12USERLEVEL_Msk          (0x1Fu << BOD12USERLEVEL_Pos)
+#define BOD12USERLEVEL(value)       ((BOD12USERLEVEL_Msk & ((value) << BOD12USERLEVEL_Pos)))
+
+#define BOD12_ACTION_ADDR           NVMCTRL_USER
+#define BOD12_ACTION_Pos            23           /**< \brief (NVMCTRL_USER) BOD12 Action */
+#define BOD12_ACTION_Msk            (0x3u << BOD12_ACTION_Pos)
+#define BOD12_ACTION(value)         ((BOD12_ACTION_Msk & ((value) << BOD12_ACTION_Pos)))
+
+#define BOD12_EN_ADDR               NVMCTRL_USER
+#define BOD12_EN_Pos                22           /**< \brief (NVMCTRL_USER) BOD12 Enable */
+#define BOD12_EN_Msk                (0x1u << BOD12_EN_Pos)
+
+#define BOD33USERLEVEL_ADDR         NVMCTRL_USER
+#define BOD33USERLEVEL_Pos          8            /**< \brief (NVMCTRL_USER) BOD33 User Level */
+#define BOD33USERLEVEL_Msk          (0x3Fu << BOD33USERLEVEL_Pos)
+#define BOD33USERLEVEL(value)       ((BOD33USERLEVEL_Msk & ((value) << BOD33USERLEVEL_Pos)))
+
+#define BOD33_ACTION_ADDR           NVMCTRL_USER
+#define BOD33_ACTION_Pos            15           /**< \brief (NVMCTRL_USER) BOD33 Action */
+#define BOD33_ACTION_Msk            (0x3u << BOD33_ACTION_Pos)
+#define BOD33_ACTION(value)         ((BOD33_ACTION_Msk & ((value) << BOD33_ACTION_Pos)))
+
+#define BOD33_EN_ADDR               NVMCTRL_USER
+#define BOD33_EN_Pos                14           /**< \brief (NVMCTRL_USER) BOD33 Enable */
+#define BOD33_EN_Msk                (0x1u << BOD33_EN_Pos)
+
+#define DSU_DCFG0_ADDR              NVMCTRL_OTP2
+#define DSU_DCFG0_Pos               0            /**< \brief (NVMCTRL_OTP2) Device Configuration 0 */
+#define DSU_DCFG0_Msk               (0xFFFFFFFFu << DSU_DCFG0_Pos)
+#define DSU_DCFG0(value)            ((DSU_DCFG0_Msk & ((value) << DSU_DCFG0_Pos)))
+
+#define DSU_DCFG1_ADDR              (NVMCTRL_OTP2 + 4)
+#define DSU_DCFG1_Pos               0            /**< \brief (NVMCTRL_OTP2) Device Configuration 1 */
+#define DSU_DCFG1_Msk               (0xFFFFFFFFu << DSU_DCFG1_Pos)
+#define DSU_DCFG1(value)            ((DSU_DCFG1_Msk & ((value) << DSU_DCFG1_Pos)))
+
+#define DSU_DEV_FAMILY_CFG_0_ADDR   NVMCTRL_OTP2
+#define DSU_DEV_FAMILY_CFG_0_Pos    5            /**< \brief (NVMCTRL_OTP2) Device Family Configuration bits 26:0 */
+#define DSU_DEV_FAMILY_CFG_0_Msk    (0x7FFFFFFu << DSU_DEV_FAMILY_CFG_0_Pos)
+#define DSU_DEV_FAMILY_CFG_0(value) ((DSU_DEV_FAMILY_CFG_0_Msk & ((value) << DSU_DEV_FAMILY_CFG_0_Pos)))
+
+#define DSU_DEV_FAMILY_CFG_1_ADDR   (NVMCTRL_OTP2 + 4)
+#define DSU_DEV_FAMILY_CFG_1_Pos    0            /**< \brief (NVMCTRL_OTP2) Device Family Configuration bits 42:27 */
+#define DSU_DEV_FAMILY_CFG_1_Msk    (0xFFFFu << DSU_DEV_FAMILY_CFG_1_Pos)
+#define DSU_DEV_FAMILY_CFG_1(value) ((DSU_DEV_FAMILY_CFG_1_Msk & ((value) << DSU_DEV_FAMILY_CFG_1_Pos)))
+
+#define DSU_DID_DEVSEL_ADDR         NVMCTRL_OTP2
+#define DSU_DID_DEVSEL_Pos          0            /**< \brief (NVMCTRL_OTP2) Device Number */
+#define DSU_DID_DEVSEL_Msk          (0x1Fu << DSU_DID_DEVSEL_Pos)
+#define DSU_DID_DEVSEL(value)       ((DSU_DID_DEVSEL_Msk & ((value) << DSU_DID_DEVSEL_Pos)))
+
+#define DSU_RAM_BIAS_ADDR           (NVMCTRL_OTP2 + 4)
+#define DSU_RAM_BIAS_Pos            20           /**< \brief (NVMCTRL_OTP2) RAM Bias */
+#define DSU_RAM_BIAS_Msk            (0x3u << DSU_RAM_BIAS_Pos)
+#define DSU_RAM_BIAS(value)         ((DSU_RAM_BIAS_Msk & ((value) << DSU_RAM_BIAS_Pos)))
+
+#define DSU_RAM_READ_MARGIN_ADDR    (NVMCTRL_OTP2 + 4)
+#define DSU_RAM_READ_MARGIN_Pos     22           /**< \brief (NVMCTRL_OTP2) RAM Read Margin */
+#define DSU_RAM_READ_MARGIN_Msk     (0xFu << DSU_RAM_READ_MARGIN_Pos)
+#define DSU_RAM_READ_MARGIN(value)  ((DSU_RAM_READ_MARGIN_Msk & ((value) << DSU_RAM_READ_MARGIN_Pos)))
+
+#define NVMCTRL_BOOTPROT_ADDR       NVMCTRL_USER
+#define NVMCTRL_BOOTPROT_Pos        0            /**< \brief (NVMCTRL_USER) Bootloader Size */
+#define NVMCTRL_BOOTPROT_Msk        (0x7u << NVMCTRL_BOOTPROT_Pos)
+#define NVMCTRL_BOOTPROT(value)     ((NVMCTRL_BOOTPROT_Msk & ((value) << NVMCTRL_BOOTPROT_Pos)))
+
+#define NVMCTRL_EEPROM_SIZE_ADDR    NVMCTRL_USER
+#define NVMCTRL_EEPROM_SIZE_Pos     4            /**< \brief (NVMCTRL_USER) EEPROM Size */
+#define NVMCTRL_EEPROM_SIZE_Msk     (0x7u << NVMCTRL_EEPROM_SIZE_Pos)
+#define NVMCTRL_EEPROM_SIZE(value)  ((NVMCTRL_EEPROM_SIZE_Msk & ((value) << NVMCTRL_EEPROM_SIZE_Pos)))
+
+#define NVMCTRL_LOCKFIELD_ADDR      NVMCTRL_LOCKBIT
+#define NVMCTRL_LOCKFIELD_Pos       0            /**< \brief (NVMCTRL_LOCKBIT) LOCK Region */
+#define NVMCTRL_LOCKFIELD_Msk       (0xFFu << NVMCTRL_LOCKFIELD_Pos)
+#define NVMCTRL_LOCKFIELD(value)    ((NVMCTRL_LOCKFIELD_Msk & ((value) << NVMCTRL_LOCKFIELD_Pos)))
+
+#define NVMCTRL_NVMP_ADDR           NVMCTRL_OTP1
+#define NVMCTRL_NVMP_Pos            16           /**< \brief (NVMCTRL_OTP1) Number of NVM Pages */
+#define NVMCTRL_NVMP_Msk            (0xFFFFu << NVMCTRL_NVMP_Pos)
+#define NVMCTRL_NVMP(value)         ((NVMCTRL_NVMP_Msk & ((value) << NVMCTRL_NVMP_Pos)))
+
+#define NVMCTRL_NVM_LOCK_ADDR       NVMCTRL_OTP1
+#define NVMCTRL_NVM_LOCK_Pos        0            /**< \brief (NVMCTRL_OTP1) NVM Lock */
+#define NVMCTRL_NVM_LOCK_Msk        (0xFFu << NVMCTRL_NVM_LOCK_Pos)
+#define NVMCTRL_NVM_LOCK(value)     ((NVMCTRL_NVM_LOCK_Msk & ((value) << NVMCTRL_NVM_LOCK_Pos)))
+
+#define NVMCTRL_PSZ_ADDR            NVMCTRL_OTP1
+#define NVMCTRL_PSZ_Pos             8            /**< \brief (NVMCTRL_OTP1) NVM Page Size */
+#define NVMCTRL_PSZ_Msk             (0xFu << NVMCTRL_PSZ_Pos)
+#define NVMCTRL_PSZ(value)          ((NVMCTRL_PSZ_Msk & ((value) << NVMCTRL_PSZ_Pos)))
+
+#define NVMCTRL_REGION_LOCKS_ADDR   (NVMCTRL_USER + 4)
+#define NVMCTRL_REGION_LOCKS_Pos    16           /**< \brief (NVMCTRL_USER) NVM Region Locks */
+#define NVMCTRL_REGION_LOCKS_Msk    (0xFFFFu << NVMCTRL_REGION_LOCKS_Pos)
+#define NVMCTRL_REGION_LOCKS(value) ((NVMCTRL_REGION_LOCKS_Msk & ((value) << NVMCTRL_REGION_LOCKS_Pos)))
+
+#define ULPVREG_ADDR                NVMCTRL_OTP4
+#define ULPVREG_Pos                 0            /**< \brief (NVMCTRL_OTP4) ULP Regulator Fallback Mode */
+#define ULPVREG_Msk                 (0x7u << ULPVREG_Pos)
+#define ULPVREG(value)              ((ULPVREG_Msk & ((value) << ULPVREG_Pos)))
+
+#define WDT_ALWAYSON_ADDR           NVMCTRL_USER
+#define WDT_ALWAYSON_Pos            26           /**< \brief (NVMCTRL_USER) WDT Always On */
+#define WDT_ALWAYSON_Msk            (0x1u << WDT_ALWAYSON_Pos)
+
+#define WDT_ENABLE_ADDR             NVMCTRL_USER
+#define WDT_ENABLE_Pos              25           /**< \brief (NVMCTRL_USER) WDT Enable */
+#define WDT_ENABLE_Msk              (0x1u << WDT_ENABLE_Pos)
+
+#define WDT_EWOFFSET_ADDR           (NVMCTRL_USER + 4)
+#define WDT_EWOFFSET_Pos            3            /**< \brief (NVMCTRL_USER) WDT Early Warning Offset */
+#define WDT_EWOFFSET_Msk            (0xFu << WDT_EWOFFSET_Pos)
+#define WDT_EWOFFSET(value)         ((WDT_EWOFFSET_Msk & ((value) << WDT_EWOFFSET_Pos)))
+
+#define WDT_PER_ADDR                NVMCTRL_USER
+#define WDT_PER_Pos                 27           /**< \brief (NVMCTRL_USER) WDT Period */
+#define WDT_PER_Msk                 (0xFu << WDT_PER_Pos)
+#define WDT_PER(value)              ((WDT_PER_Msk & ((value) << WDT_PER_Pos)))
+
+#define WDT_WEN_ADDR                (NVMCTRL_USER + 4)
+#define WDT_WEN_Pos                 7            /**< \brief (NVMCTRL_USER) WDT Window Mode Enable */
+#define WDT_WEN_Msk                 (0x1u << WDT_WEN_Pos)
+
+#define WDT_WINDOW_0_ADDR           NVMCTRL_USER
+#define WDT_WINDOW_0_Pos            31           /**< \brief (NVMCTRL_USER) WDT Window bit 0 */
+#define WDT_WINDOW_0_Msk            (0x1u << WDT_WINDOW_0_Pos)
+
+#define WDT_WINDOW_1_ADDR           (NVMCTRL_USER + 4)
+#define WDT_WINDOW_1_Pos            0            /**< \brief (NVMCTRL_USER) WDT Window bits 3:1 */
+#define WDT_WINDOW_1_Msk            (0x7u << WDT_WINDOW_1_Pos)
+#define WDT_WINDOW_1(value)         ((WDT_WINDOW_1_Msk & ((value) << WDT_WINDOW_1_Pos)))
+
+/*@}*/
+
 #endif /* _SAMD20_NVMCTRL_COMPONENT_ */

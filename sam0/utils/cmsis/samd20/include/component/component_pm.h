@@ -247,8 +247,7 @@ typedef union {
     uint32_t DSU:1;            /*!< bit:      1  DSU APB Clock Mask                 */
     uint32_t NVMCTRL:1;        /*!< bit:      2  NVMCTRL APB Clock Mask             */
     uint32_t PORT:1;           /*!< bit:      3  PORT APB Clock Mask                */
-    uint32_t HMATRIX:1;        /*!< bit:      4  HMATRIX APB Clock Mask             */
-    uint32_t :27;              /*!< bit:  5..31  Reserved                           */
+    uint32_t :28;              /*!< bit:  4..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } PM_APBBMASK_Type;
@@ -265,9 +264,7 @@ typedef union {
 #define PM_APBBMASK_NVMCTRL         (0x1u << PM_APBBMASK_NVMCTRL_Pos)
 #define PM_APBBMASK_PORT_Pos        3            /**< \brief (PM_APBBMASK) PORT APB Clock Mask */
 #define PM_APBBMASK_PORT            (0x1u << PM_APBBMASK_PORT_Pos)
-#define PM_APBBMASK_HMATRIX_Pos     4            /**< \brief (PM_APBBMASK) HMATRIX APB Clock Mask */
-#define PM_APBBMASK_HMATRIX         (0x1u << PM_APBBMASK_HMATRIX_Pos)
-#define PM_APBBMASK_MASK            0x0000001Fu  /**< \brief (PM_APBBMASK) MASK Register */
+#define PM_APBBMASK_MASK            0x0000000Fu  /**< \brief (PM_APBBMASK) MASK Register */
 
 /* -------- PM_APBCMASK : (PM Offset: 0x20) (R/W 32) APBC Mask -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))

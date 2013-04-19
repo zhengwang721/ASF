@@ -319,7 +319,7 @@ typedef union {
 #define ADC_INPUTCTRL_MUXNEG_PIN12  (0xCu << ADC_INPUTCTRL_MUXNEG_Pos) /** TODO: Manually added */
 #define ADC_INPUTCTRL_MUXNEG_PIN13  (0xDu << ADC_INPUTCTRL_MUXNEG_Pos) /** TODO: Manually added */
 #define ADC_INPUTCTRL_MUXNEG_PIN14  (0xEu << ADC_INPUTCTRL_MUXNEG_Pos) /** TODO: Manually added */
-#define ADC_INPUTCTRL_MUXNEG_PIN15  (0xDu << ADC_INPUTCTRL_MUXNEG_Pos) /** TODO: Manually added */
+#define ADC_INPUTCTRL_MUXNEG_PIN15  (0xFu << ADC_INPUTCTRL_MUXNEG_Pos) /** TODO: Manually added */
 #define ADC_INPUTCTRL_MUXNEG_PIN16  (0x10u << ADC_INPUTCTRL_MUXNEG_Pos) /** TODO: Manually added */
 #define ADC_INPUTCTRL_MUXNEG_PIN17  (0x11u << ADC_INPUTCTRL_MUXNEG_Pos) /** TODO: Manually added */
 #define ADC_INPUTCTRL_MUXNEG_PIN18  (0x12u << ADC_INPUTCTRL_MUXNEG_Pos) /** TODO: Manually added */
