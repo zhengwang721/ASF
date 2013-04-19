@@ -52,9 +52,9 @@
 #define GPIO_BOOT_PIN_MASK         (1U << (BOOT_LOAD_PIN & 0x1F))
 
 /* I2C Slave configurations */
-#define BOOT_SERCOM                SERCOM2
+#define BOOT_SERCOM                EXT2_I2C_MODULE
 #define SLAVE_ADDRESS              0x15
-#define BOOT_I2C_PAD0              PINMUX_PA14B_SERCOM2_PAD0
-#define BOOT_I2C_PAD1              PINMUX_PA15B_SERCOM2_PAD1
+#define BOOT_I2C_PAD0              EXT2_I2C_SDA_PINMUX
+#define BOOT_I2C_PAD1              EXT2_I2C_SCL_PINMUX
 
 #endif /* CONF_BOARD_H_INCLUDED */
