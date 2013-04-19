@@ -73,24 +73,9 @@ static struct _nvm_module _nvm_dev;
 #define NVM_MEMORY        ((volatile uint16_t *)FLASH_ADDR)
 
 /**
- * \internal Pointer to the NVM AUX0 MEMORY region start address
+ * \internal Pointer to the NVM USER MEMORY region start address
  */
-#define NVM_AUX0_MEMORY   ((volatile uint16_t *)NVMCTRL_AUX0_ADDRESS)
-
-/**
- * \internal Pointer to the NVM AUX1 MEMORY region start address
- */
-#define NVM_AUX1_MEMORY   ((volatile uint16_t *)NVMCTRL_AUX1_ADDRESS)
-
-/**
- * \internal Pointer to the NVM AUX2 MEMORY region start address
- */
-#define NVM_AUX2_MEMORY   ((volatile uint16_t *)NVMCTRL_AUX2_ADDRESS)
-
-/**
- * \internal Pointer to the NVM AUX3 MEMORY region start address
- */
-#define NVM_AUX3_MEMORY   ((volatile uint16_t *)NVMCTRL_AUX3_ADDRESS)
+#define NVM_USER_MEMORY   ((volatile uint16_t *)NVMCTRL_USER)
 
 
 /**
@@ -588,9 +573,9 @@ void nvm_get_parameters(
 	parameters->nvm_number_of_pages =
 			(param_reg & NVMCTRL_PARAM_NVMP_Msk) >> NVMCTRL_PARAM_NVMP_Pos;
 
-	/* Read the current EEPROM fuse value from the AUX0 row */
+	/* Read the current EEPROM fuse value from the USER row */
 	uint16_t eeprom_fuse_value =
-			(NVM_AUX0_MEMORY[4 / 16] >> (4 % 16)) & 0x07;
+			(NVM_USER_MEMORY[NVMCTRL_EEPROM_SIZE_Pos / 16] & NVMCTRL_EEPROM_SIZE_Msk) >> NVMCTRL_EEPROM_SIZE_Pos;
 
 	/* Translate the EEPROM fuse byte value to a number of NVM pages */
 	if (eeprom_fuse_value == 7) {
@@ -601,9 +586,9 @@ void nvm_get_parameters(
 				NVMCTRL_ROW_PAGES << (6 - eeprom_fuse_value);
 	}
 
-	/* Read the current BOOTSZ fuse value from the AUX0 row */
+	/* Read the current BOOTSZ fuse value from the USER row */
 	uint16_t boot_fuse_value =
-			(NVM_AUX0_MEMORY[0 / 16] >> (0 % 16)) & 0x07;
+			(NVM_USER_MEMORY[NVMCTRL_BOOTPROT_Pos / 16] & NVMCTRL_BOOTPROT_Msk) >> NVMCTRL_BOOTPROT_Pos;
 
 	/* Translate the BOOTSZ fuse byte value to a number of NVM pages */
 	if (boot_fuse_value == 7) {
