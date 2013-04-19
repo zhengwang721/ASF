@@ -1,13 +1,15 @@
 <asf xmlversion="1.0">
-	<project caption="Common API for Sleep Management  / Example for SAM4L-EK" id="common.services.basic.sleepmgr.example.sam4l_ek">
+	<project caption="Common API for Sleep Management  / Example for SAM4L-XPLAINEDPRO" id="common.services.basic.sleepmgr.example.sam4l_xplained_pro">
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clock.h"/>
 		<build type="header-file" value="conf_example.h"/>
 		<build type="header-file" value="conf_sleepmgr.h"/>
 		<build type="header-file" value="conf_ast.h"/>
+		<!--<build type="header-file" value="ast.h"/>
+		<build type="c-source" value="ast.c"/>-->
 		<require idref="common.services.basic.sleepmgr.example"/>
-		<require idref="board.sam4l_ek"/>
+		<require idref="board.sam4l_xplained_pro"/>
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
 		<generator value="doxygen"/>
