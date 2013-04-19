@@ -1,0 +1,677 @@
+/**
+ * \file
+ *
+ * \brief Application to generate firmware for USB Host Mass Storage Bootloader
+ *
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ *
+ * \asf_license_start
+ *
+ * \page License
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * 3. The name of Atmel may not be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * 4. This software may only be redistributed and used in connection with an
+ *    Atmel microcontroller product.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+ * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
+ *
+ */
+
+#include <asf.h>
+#include <string.h>
+#include "conf_usb_host.h"
+#include "conf_bootloader.h"
+#include "main.h"
+#include "uhc.h"
+#include "uhi_msc.h"
+#include "uhi_msc_mem.h"
+#include "ff.h"
+#include "crccu.h"
+
+#if FIRMWARE_AES_ENABLED
+#include "aesa.h"
+#endif
+
+/* Small delay to ensure that the MSC device is ready */
+#define MSC_DELAY_SOF_COUNT     100  // 100ms
+
+/*****************************************************************************/
+/*                              GLOBAL VARIABLES                             */
+/*****************************************************************************/
+/* Flag to track connected LUNs */
+volatile bool lun_connected = false;
+
+/* File System Management object */
+static FATFS fs; // Re-use fs for LUNs to reduce memory footprint
+
+/* Directory management */
+static DIR file_dir;
+
+/* File object management */
+static FIL file_object1, file_object2;
+
+/* Input file name */
+static char input_file_name[] = {
+	FIRMWARE_IN_FILE_NAME
+};
+
+/* Output file name */
+static char output_file_name[] = {
+	FIRMWARE_OUT_FILE_NAME
+};
+
+/* CRC32 Value of the firmware */
+static uint32_t firmware_crc = 0;
+
+/* CRC descriptor - Should be 512 byte aligned */
+COMPILER_ALIGNED(512)
+static crccu_dscr_type_t crc_dscr;
+
+/* File Data Buffer */
+COMPILER_WORD_ALIGNED
+volatile uint8_t buffer[FLASH_BUFFER_SIZE];
+
+#if FIRMWARE_AES_ENABLED
+/** AES instance */
+struct aes_dev_inst g_aes_inst;
+
+/** AES configuration */
+struct aes_config   g_aes_cfg;
+
+/* AES Output Buffer */
+COMPILER_WORD_ALIGNED
+volatile uint32_t aes_output[FLASH_BUFFER_SIZE/4];
+#endif
+
+static uint32_t sof_count = 0;
+/*****************************************************************************/
+/*                             FUNCTION DECLARATIONS                         */
+/*****************************************************************************/
+
+static void firmware_gen_system_init(void);
+
+static bool generate_firmware(void);
+
+static void generate_crc(void);
+
+
+#if FIRMWARE_AES_ENABLED
+
+static void init_aes(void);
+
+static void aes_encrypt(uint32_t *input_data, uint32_t size);
+
+#endif
+
+#if CONSOLE_OUTPUT_ENABLED
+
+static void console_init(void);
+
+#endif
+
+/*****************************************************************************/
+/*                             FUNCTION DEFINITIONS                          */
+/*****************************************************************************/
+/**
+ * \brief Function to generate the final firmware
+ */
+static bool generate_firmware(void)
+{
+	uint32_t address_offset = 0;
+	void *buf = NULL;
+	uint32_t buffer_size = 0;
+	uint8_t signature_bytes[] = APP_SIGNATURE;
+	uint8_t *temp = (uint8_t *) buffer;
+	FRESULT res;
+
+	/* Store the CRC32 value */
+	*(uint32_t *)temp = firmware_crc;
+	address_offset = 4;
+
+	/* Store the signature bytes */
+	while (address_offset < APP_BINARY_OFFSET) {
+		temp[address_offset] = signature_bytes[address_offset - 4];
+		address_offset++;
+	}
+	buffer_size = APP_CRC_SIZE + APP_SIGNATURE_SIZE;
+	address_offset = 0;
+
+#if FIRMWARE_AES_ENABLED
+	/* Initialize the AES Module */
+	init_aes();
+
+	/* Encrypt the CRC32 and Signature bytes */
+	aes_encrypt((uint32_t *)buffer, buffer_size/4);
+
+	/* Update the output buffer */
+	buf = (void *) aes_output;
+#else
+	/* Update the output buffer */
+	buf = (void *) buffer;
+#endif
+
+	/* Open the output file for writing the data */
+	res = f_open(&file_object2,
+			(char const *)output_file_name,
+			FA_WRITE | FA_CREATE_ALWAYS);
+	/* Check the return status */
+	if (res != FR_OK) {
+		/* LUN error */
+		f_close(&file_object2);
+		return false;
+	}
+
+	/* Write the CRC32 and Signature bytes into the output firmware */
+	f_write(&file_object2, buf, buffer_size, &buffer_size);
+
+	/* Flush the data into the file */
+	f_sync(&file_object2);
+
+	/* Close the input file */
+	f_close(&file_object2);
+
+	while(true) {
+		/* Open the input file */
+		f_open(&file_object1,
+				(char const *)input_file_name,
+				FA_OPEN_EXISTING | FA_READ);
+
+		/* Seek the file pointer to the current address offset */
+		f_lseek(&file_object1, address_offset);
+
+		/* Read the data from the firmware */
+		f_read(&file_object1, (uint8_t *)buffer, FLASH_BUFFER_SIZE,
+				&buffer_size);
+
+		/* Check if there is any buffer */
+		if (!buffer_size) {
+			/* Close the open file */
+			f_close(&file_object1);
+			/* Break out of the loop */
+			break;
+		}
+		/* Close the input file */
+		f_close(&file_object1);
+
+#if FIRMWARE_AES_ENABLED
+		/* Encrypt the binary data */
+		aes_encrypt((uint32_t *)buffer, buffer_size/4);
+		/* Update the output buffer */
+		buf = (void *)aes_output;
+#else
+		/* Update the output buffer */
+		buf = (void *)buffer;
+#endif
+
+		/* Open the output file for writing */
+		f_open(&file_object2,
+		(char const *)output_file_name,
+		FA_OPEN_EXISTING | FA_WRITE);
+
+		/* Seek the file pointer to the current address offset */
+		f_lseek(&file_object2, address_offset + APP_BINARY_OFFSET);
+
+		/* Store the buffer into the output file */
+		f_write(&file_object2, buf, buffer_size, &buffer_size);
+
+		/* Flush the data into the file */
+		f_sync(&file_object2);
+
+		/* Close the output file */
+		f_close(&file_object2);
+
+		/* Update the address offset */
+		address_offset += buffer_size;
+	}
+
+	return true;
+}
+
+
+/**
+ * \brief Generate the CRC value for the firmware
+ */
+static void generate_crc(void)
+{
+	uint32_t buffer_size = 0;
+
+	/* Enable CRCCU peripheral clock */
+	sysclk_enable_peripheral_clock(CRCCU);
+
+	/* Reset the CRCCU */
+	crccu_reset(CRCCU);
+
+	/* Open the input file for CRC32 generation */
+	f_open(&file_object1,
+			(char const *)input_file_name,
+			FA_OPEN_EXISTING | FA_READ);
+
+	/* Generate the CRC32 for the input binary */
+	while(true) {
+		/* Read the data from the firmware */
+		f_read(&file_object1, (uint8_t *)buffer, FLASH_BUFFER_SIZE,
+				&buffer_size);
+
+		/* Check if there is any buffer */
+		if (!buffer_size) {
+			break;
+		}
+
+		/* Set the memory address for CRCCU DMA transfer */
+		crc_dscr.ul_tr_addr = (uint32_t) buffer;
+
+		/* Transfer width: byte, interrupt disable(here interrupt mask enabled) */
+		crc_dscr.ul_tr_ctrl = CRCCU_TR_CTRL_TRWIDTH_BYTE | buffer_size
+								| CRCCU_TR_CTRL_IEN_DISABLE;
+
+		/* Configure the CRCCU descriptor */
+		crccu_configure_descriptor(CRCCU, (uint32_t) &crc_dscr);
+
+		/* Configure CRCCU mode */
+		crccu_configure_mode(CRCCU, CRCCU_MR_ENABLE | APP_CRC_POLYNOMIAL_TYPE);
+
+		/* Start the CRC calculation */
+		crccu_enable_dma(CRCCU);
+
+		/* Wait for calculation ready */
+		while ((crccu_get_dma_status(CRCCU) == CRCCU_DMA_SR_DMASR)) {
+		}
+	}
+
+	/* Store the CRC32 Value */
+	firmware_crc = crccu_read_crc_value(CRCCU);
+
+	/* Enable CRCCU peripheral clock */
+	sysclk_disable_peripheral_clock(CRCCU);
+
+	/* Close the input file */
+	f_close(&file_object1);
+}
+
+
+#if FIRMWARE_AES_ENABLED
+/**
+ * \brief AES Initialization routine
+ */
+static void init_aes()
+{
+	uint32_t aes_key[FIRMWARE_AES_KEY_SIZE >> 5] = {
+		 FIRMWARE_AES_KEY_WORD0
+		,FIRMWARE_AES_KEY_WORD1
+		,FIRMWARE_AES_KEY_WORD2
+		,FIRMWARE_AES_KEY_WORD3
+		#if FIRMWARE_AES_KEY_SIZE > 128
+		,FIRMWARE_AES_KEY_WORD4
+		,FIRMWARE_AES_KEY_WORD5
+		#endif
+		#if FIRMWARE_AES_KEY_SIZE > 192
+		,FIRMWARE_AES_KEY_WORD6
+		,FIRMWARE_AES_KEY_WORD7
+		#endif
+	};
+
+	uint32_t aes_initvect[4] = {
+		FIRMWARE_AES_INITVECT_WORD0,
+		FIRMWARE_AES_INITVECT_WORD1,
+		FIRMWARE_AES_INITVECT_WORD2,
+		FIRMWARE_AES_INITVECT_WORD3
+	};
+
+	/* Enable the AES module. */
+	aes_get_config_defaults(&g_aes_cfg);
+	aes_init(&g_aes_inst, AESA, &g_aes_cfg);
+
+	/* Enable the AES Module */
+	aes_enable(&g_aes_inst);
+
+	/* Configure the AES. */
+	g_aes_inst.aes_cfg->encrypt_mode = AES_ENCRYPTION;
+	g_aes_inst.aes_cfg->key_size = AES_KEY_SIZE_128;
+	g_aes_inst.aes_cfg->dma_mode = AES_MANUAL_MODE;
+	g_aes_inst.aes_cfg->opmode = AES_CBC_MODE;
+	g_aes_inst.aes_cfg->cfb_size = AES_CFB_SIZE_128;
+	g_aes_inst.aes_cfg->countermeasure_mask = AES_COUNTERMEASURE_TYPE_ALL;
+	aes_set_config(&g_aes_inst);
+
+	/* Beginning of a new message. */
+	aes_set_new_message(&g_aes_inst);
+
+	/* Set the cryptographic key. */
+	aes_write_key(&g_aes_inst, aes_key);
+
+	/* Set the initialization vector. */
+	aes_write_initvector(&g_aes_inst, aes_initvect);
+}
+
+
+/**
+ * \brief AES Decryption routine
+ */
+static void aes_encrypt(uint32_t *encrypted_data, uint32_t size)
+{
+	uint16_t i;
+	for (i = 0; i < size ; i+=4) {
+		/* Write the data to be ciphered to the input data registers. */
+		aes_write_input_data(&g_aes_inst, (encrypted_data[i]));
+		aes_write_input_data(&g_aes_inst, (encrypted_data[i+1]));
+		aes_write_input_data(&g_aes_inst, (encrypted_data[i+2]));
+		aes_write_input_data(&g_aes_inst, (encrypted_data[i+3]));
+
+		/* Wait until the output data is ready */
+		while(!(aes_read_status(&g_aes_inst) & AESA_SR_ODATARDY));
+
+		/* Read the decrypted output data */
+		aes_output[i]     = aes_read_output_data(&g_aes_inst);
+		aes_output[i + 1] = aes_read_output_data(&g_aes_inst);
+		aes_output[i + 2] = aes_read_output_data(&g_aes_inst);
+		aes_output[i + 3] = aes_read_output_data(&g_aes_inst);
+	}
+}
+
+#endif
+
+#if CONSOLE_OUTPUT_ENABLED
+/**
+ * \brief Initializes the console output
+ */
+static void console_init(void)
+{
+	const sam_usart_opt_t usart_serial_options = {
+		.baudrate     = CONSOLE_UART_BAUDRATE,
+		.parity_type  = CONSOLE_UART_PARITY,
+		.char_length  = CONSOLE_UART_CHAR_LENGTH,
+		.stop_bits    = CONSOLE_UART_STOPBITS,
+		.channel_mode = US_MR_CHMODE_NORMAL
+	};
+	/* Enable the clock for the console UART */
+	sysclk_enable_peripheral_clock(CONSOLE_UART);
+	/* Initialize the UART Module for console output */
+	usart_init_rs232(CONSOLE_UART, &usart_serial_options, sysclk_get_peripheral_bus_hz(CONSOLE_UART));
+	/* Enable the transmitter. */
+	usart_enable_tx(CONSOLE_UART);
+}
+#endif
+
+
+/**
+ * \brief Initializes the device for the bootloader
+ */
+static void firmware_gen_system_init()
+{
+	/* Initialize the system clocks */
+	sysclk_init();
+
+	/* Initialize the board components */
+	board_init();
+
+	/* Initialize the sleep manager */
+	sleepmgr_init();
+
+#if CONSOLE_OUTPUT_ENABLED
+	/* Initialize the console */
+	console_init();
+	/* Print a header */
+	CONSOLE_PUTS(APP_HEADER);
+#endif
+
+	/* Enable the global interrupts */
+	cpu_irq_enable();
+
+	/* Start USB host stack */
+	uhc_start();
+}
+
+
+/**
+ * \brief Main function. Execution starts here.
+ */
+int main(void)
+{
+	uint32_t file_size = 0;
+	uint8_t lun;
+	FRESULT res;
+
+	/* Device initialization for the bootloader */
+	firmware_gen_system_init();
+
+#if CONSOLE_OUTPUT_ENABLED
+		/* Print a header */
+		CONSOLE_PUTS("\n\rInsert device");
+#endif
+	/* The USB management is entirely managed by interrupts. */
+	while (true) {
+		/* Check if a MSC device and its LUN are configured. */
+		if (!lun_connected) {
+			continue;
+		}
+
+		/* Adding a small delay to ensure that the MSC device is ready */
+		while (sof_count < MSC_DELAY_SOF_COUNT);
+
+#if CONSOLE_OUTPUT_ENABLED
+		/* Print a header */
+		CONSOLE_PUTS("\n\r Device Connected");
+#endif
+		/* Go through the different LUN and check for the file. */
+		for (lun = 0; (lun < uhi_msc_mem_get_lun()) && (lun < 8); lun++) {
+
+			TCHAR root_directory[3] = "0:";
+			root_directory[0] = '0' + lun;
+
+			/* Initialize the file system object */
+			memset(&fs, 0, sizeof(FATFS));
+
+#if CONSOLE_OUTPUT_ENABLED
+			/* Print the current task */
+			CONSOLE_PUTS("\n\rMounting the device...");
+#endif
+			/* 
+			 * Set and mount the currently selected LUN as a drive
+			 * in Navigator
+			 */
+			res = f_mount(lun, &fs);
+			/* Check the return status */
+			if (res != FR_OK) {
+				continue;
+			}
+
+			/* Open the root directory */
+			res = f_opendir(&file_dir, root_directory);
+			/* Check the return status */
+			if (res != FR_OK) {
+#if CONSOLE_OUTPUT_ENABLED
+				/* Print task output */
+				CONSOLE_PUTS(TASK_FAILED);
+#endif
+				/* Check the next LUN */
+				continue;
+			}
+
+#if CONSOLE_OUTPUT_ENABLED
+			/* Print the current task */
+			CONSOLE_PUTS("\n\rSearch firmware...");
+#endif
+
+			/* Firmware files on the disk */
+			input_file_name[0] = lun + '0';
+			output_file_name[0] = lun + '0';
+
+			/* Open the input file */
+			res = f_open(&file_object1,
+				(char const *)input_file_name,
+				FA_OPEN_EXISTING | FA_READ);
+
+			/* Get the file length */
+			file_size = file_object1.fsize;
+
+			/* Check if file size is greater than the possible flash size */
+			/* Open the firmware upgrade file in READ mode from the disk */
+			if (!(file_size && (file_size < APP_MAX_SIZE)
+			&& (res == FR_OK))) {
+#if CONSOLE_OUTPUT_ENABLED
+				/* Print task output */
+				CONSOLE_PUTS(TASK_FAILED);
+#endif
+				/* LUN error */
+				f_close(&file_object1);
+				continue;
+			}
+
+			/* Close the File after operation. */
+			f_close(&file_object1);
+
+#if CONSOLE_OUTPUT_ENABLED
+			/* Print the current task */
+			CONSOLE_PUTS(TASK_PASSED);
+			CONSOLE_PUTS("\n\rCRC32 Generation...");
+#endif
+			/* Generate the CRC32 for the firmware file */
+			generate_crc();
+
+#if CONSOLE_OUTPUT_ENABLED
+			/* Print the current task */
+			CONSOLE_PUTS(TASK_PASSED);
+			CONSOLE_PUTS("\n\rGenerating output firmware...");
+#endif
+			/* Generate the final firmware */
+			if (generate_firmware()) {
+#if CONSOLE_OUTPUT_ENABLED
+				/* Print the current task */
+				CONSOLE_PUTS(TASK_PASSED);
+				CONSOLE_PUTS("\n\rFirmware Generation completed. Remove the device.");
+#endif
+			} else {
+#if CONSOLE_OUTPUT_ENABLED
+				/* Print task output */
+				CONSOLE_PUTS(TASK_FAILED);
+#endif
+				continue;
+			}
+
+			/* Unmount the MSC device */
+			f_mount(lun, NULL);
+
+			/* Stop the USB Host */
+			uhc_stop(true);
+
+			/* Disable global interrupts. */
+			cpu_irq_disable();
+		}
+		/* None of the connected LUN has the upgrade file. */
+		lun_connected = false;
+	}
+}
+
+//! \brief Notify that a SOF has been sent (each 1 ms)
+void main_usb_sof_event(void)
+{
+	sof_count++;
+}
+
+void main_usb_connection_event(uhc_device_t * dev, bool b_present)
+{
+	/* Enumeration status of the connected MSC device */
+	lun_connected = b_present;
+
+	/* Reset sof_count to start MSC delay*/
+	sof_count = 0;
+}
+
+/**
+ * \mainpage ASF SAM4L USB Host Mass Storage Bootloader Solution
+ *
+ * \section intro Introduction
+ * SAM4L USB Host Mass Storage Bootloader application is to facilitate firmware upgrade
+ * using a USB MSC drives. The application includes CRC check,
+ * Signature verification, AES decryption and memory verification functionality offering
+ * safe and secure firmware upgradation.
+ *
+ * \section startup Procedure
+ * - Do complete chip erase and Userpage erase.
+ * - Program the bootloader
+ * - Load the application firmware into U-disk. Connect it to the SAM4L-EK USB MSC Host.
+ * - Press PB0 on RESET to start the bootloader.
+ *
+ * \section config Configuration Options
+ * - conf_bootloader.h -> Bootloader Configurations
+ *   Important configuration options
+ *   - FIRMWARE_AES_ENABLED       -> Enable/disable the AES Decryption
+ *   - CONSOLE_OUTPUT_ENABLED     -> Enable/disable the Console message output
+ *   - VERIFY_PROGRAMMING_ENABLED -> Enable/disable the verification of programmed memory
+ *   - APP_START_OFFSET           -> Application starting offset from Flash origin
+ *   - FIRMWARE_IN_FILE_NAME      -> Application Firmware file to be programmed
+ *   - APP_SIGNATURE              -> Signature bytes to be verified
+ *   - MSC_BOOT_LOAD_PIN          -> IO Pin used for bootloader activation
+ *   - MSC_BOOT_LOAD_PIN_ACTIVE_LVL -> Active level to be monitored for the pin
+ * 
+ * \section board Board Setup
+ * - SAM4L-EK -> Has an IO configured for VBUS Detect. VBUS Pin jumper PA06/USB should be set
+ *   - conf_board.h -> USB Pin configuration
+ *   - CONF_BOARD_USB_PORT           -> Enable USB interface
+ *   - CONF_BOARD_USB_VBUS_CONTROL   -> VBUS control enabled, jumper PC08/USB should be set
+ *   - CONF_BOARD_USB_VBUS_ERR_DETECT-> VBUS error control enabled, jumper PC07/USB should be set
+ *   - An external power supply should be used since the VBUS is powered only through the external
+ *     power supply controlled by the VBUS Control(VBOF) pin. Refer the SAM4L-EK schematics for
+ *     more details.
+ *   - Console message output is sent through the Embedded Debugger(onboard)'s COM PORT.
+ * 
+ * \section func Bootloader Operation
+ * The bootloader will decrypt the first block (24 bytes of data). It verifies the
+ * Signature data. If the verification is successful, it decrypts the entire firmware and
+ * generates CRC32 value and compares it with the stored CRC32 value. If it matches, it
+ * starts to program the application. Then, verification of the programmed memory (CRC32
+ * check again) is performed. Then it programs the Firmware Revision into the User jumps
+ * to the application section with WDT reset.
+ * Output Firmware Structure with AES:
+ * - 4 bytes   -> Encrypted CRC32
+ * - 12 bytes  -> Encrypted Signature Data
+ * - Rest data -> Encrypted Input Firmware
+ * Output Firmware Structure without AES:
+ * - 4 bytes   -> CRC32
+ * - 12 bytes  -> Signature Data
+ * - Rest data -> Input Firmware
+ *
+ * \copydoc UI
+ *
+ * \section  dependencies Application Dependencies
+ *
+ * The application uses the following module groups:
+ * - Basic modules:
+ *   Startup, board, clock, interrupt, power management
+ * - USB host stack and MSC modules:
+ *   <br>services/usb/
+ *   <br>services/usb/uhc/
+ *   <br>services/usb/class/msc/host/
+ * - Thirdparty modules:
+ *   <br>thirdparty/fatfs
+ * - Specific implementation:
+ *    - main.c,
+ *      <br>initializes clock
+ *      <br>initializes interrupt
+ *      <br>initializes USB, FATFS, AES, CRCCU
+ *      <br>Search, validate, program & verify the firmware
+ */

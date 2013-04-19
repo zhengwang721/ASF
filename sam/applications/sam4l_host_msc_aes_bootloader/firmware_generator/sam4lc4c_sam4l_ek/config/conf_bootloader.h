@@ -46,28 +46,16 @@
 #ifndef CONF_BOOTLOADER_H_
 #define CONF_BOOTLOADER_H_
 
-#include "compiler.h"
-#include "aesa.h"
-
 /* Enable/disable the AES Decryption */
 #define FIRMWARE_AES_ENABLED         ENABLE
 /* Enable/disable the Console message output */
 #define CONSOLE_OUTPUT_ENABLED       ENABLE
-/* Enable/disable the verification of memory after programming */
-#define VERIFY_PROGRAMMING_ENABLED   ENABLE
 
-/* GP Fuse bit to force bootloader mode after reset 31-16 is usable (15-0 used of region locking) */
-#define BOOT_GP_FUSE_BIT_OFFSET      16
 /* Firmware file input name */
-#define FIRMWARE_IN_FILE_NAME        "0:firmware.bin"
-/* GPIO pin used to activate the bootloader mode */
-#define MSC_BOOT_LOAD_PIN            GPIO_PUSH_BUTTON_0
-/* Active state of GPIO pin used to activate the bootloader mode */
-#define MSC_BOOT_LOAD_PIN_ACTIVE_LVL PUSH_BUTTON_0_DOWN_LEVEL
-/* Polling time of the boot pin before jumping to application */
-#define BOOT_PIN_POLL_INTERVAL       1000
-/* UI displaying the bootloader status */
-#define BOOT_LED                     LED0_GPIO
+#define FIRMWARE_IN_FILE_NAME        "0:firmware_input.bin"
+/* Firmware file output name */
+#define FIRMWARE_OUT_FILE_NAME       "0:firmware.bin"
+
 
 /* Application starting offset */
 #define APP_START_OFFSET             0x8000 // Check the output code size to determine this offset
@@ -83,9 +71,9 @@
 /* CRCCU Polynomial Selection */
 #define APP_CRC_POLYNOMIAL_TYPE      CRCCU_MR_PTYPE_CCITT8023 //32-bit CRC
 /* Application Signature Bytes */
-#define APP_SIGNATURE                "ATMEL SAM4L"
+#define APP_SIGNATURE                "ATMEL SAM4L " // 12 bytes
 /* Size of firmware revision, signature and CRC */
-#define APP_SIGNATURE_SIZE           12 // 10 bytes
+#define APP_SIGNATURE_SIZE           12 // 12 bytes
 #define APP_CRC_SIZE                 4  // 4 bytes
 
 
@@ -93,7 +81,7 @@
 #if FIRMWARE_AES_ENABLED
 
 /* AES Key Size */
-#define  FIRMWARE_AES_KEY_SIZE       AESA_KEY_SIZE_128
+#define  FIRMWARE_AES_KEY_SIZE       128
 
 /* Initialization vector AES */
 #define  FIRMWARE_AES_INITVECT_WORD0 0x03020100
@@ -101,19 +89,18 @@
 #define  FIRMWARE_AES_INITVECT_WORD2 0x0b0a0908
 #define  FIRMWARE_AES_INITVECT_WORD3 0x0f0e0d0c
 
-/* AES Encryption Key */
+/* AES Encryption Key 128 */
 #define  FIRMWARE_AES_KEY_WORD0      0x603deb10
 #define  FIRMWARE_AES_KEY_WORD1      0x15ca71be
 #define  FIRMWARE_AES_KEY_WORD2      0x2b73aef0
 #define  FIRMWARE_AES_KEY_WORD3      0x857d7781
-#  if FIRMWARE_AES_KEY_SIZE > AESA_KEY_SIZE_128
+/* AES Encryption Key Size 192 */
 #  define  FIRMWARE_AES_KEY_WORD4    0x1f352c07
 #  define  FIRMWARE_AES_KEY_WORD5    0x3b6108d7
-#  endif
-#  if FIRMWARE_AES_KEY_SIZE > AESA_KEY_SIZE_192
+/* AES Encryption Key Size 256 */
 #  define  FIRMWARE_AES_KEY_WORD6    0x2d9810a3
 #  define  FIRMWARE_AES_KEY_WORD7    0x0914dff4
-#  endif
+
 #endif
 
 /* Console configurations */
