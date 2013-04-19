@@ -189,17 +189,17 @@ typedef struct _DeviceVectors
 
   /* Cortex-M handlers */
   void* pfnReset_Handler;
-  void* pfnNonMaskableInt_Handler;
+  void* pfnNMI_Handler;
   void* pfnHardFault_Handler;
-  void* pfnMemoryManagement_Handler;
+  void* pfnMemManage_Handler;
   void* pfnBusFault_Handler;
   void* pfnUsageFault_Handler;
   void* pfnReservedM9;
   void* pfnReservedM8;
   void* pfnReservedM7;
   void* pfnReservedM6;
-  void* pfnSVCall_Handler;
-  void* pfnDebugMonitor_Handler;
+  void* pfnSVC_Handler;
+  void* pfnDebugMon_Handler;
   void* pfnReservedM3;
   void* pfnPendSV_Handler;
   void* pfnSysTick_Handler;
@@ -289,13 +289,13 @@ typedef struct _DeviceVectors
 
 /* Cortex-M4 processor handlers */
 void Reset_Handler               ( void );
-void NonMaskableInt_Handler      ( void );
+void NMI_Handler                 ( void );
 void HardFault_Handler           ( void );
-void MemoryManagement_Handler    ( void );
+void MemManage_Handler           ( void );
 void BusFault_Handler            ( void );
 void UsageFault_Handler          ( void );
-void SVCall_Handler              ( void );
-void DebugMonitor_Handler        ( void );
+void SVC_Handler                 ( void );
+void DebugMon_Handler            ( void );
 void PendSV_Handler              ( void );
 void SysTick_Handler             ( void );
 
@@ -809,11 +809,6 @@ void TWIM3_Handler               ( void );
 /*@{*/
 // These defines are used to keep compatibility with existing 
 // sam/drivers/usart implementation from SAM3/4 products with SAM4L product.
-#define NMI_Handler           NonMaskableInt_Handler
-#define MemManage_Handler     MemoryManagement_Handler
-#define SVC_Handler           SVCall_Handler
-#define DebugMon_Handler      DebugMonitor_Handler
-
 #define US_MR_USART_MODE_HW_HANDSHAKING  US_MR_USART_MODE_HARDWARE
 #define US_MR_USART_MODE_IS07816_T_0     US_MR_USART_MODE_ISO7816_T0
 #define US_MR_USART_MODE_IS07816_T_1     US_MR_USART_MODE_ISO7816_T1

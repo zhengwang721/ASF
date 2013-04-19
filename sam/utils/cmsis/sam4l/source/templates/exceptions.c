@@ -169,12 +169,6 @@ void WDT_Handler(void)          __attribute__ ((weak, alias("Dummy_Handler")));
 #pragma weak PendSV_Handler=Dummy_Handler
 #pragma weak SysTick_Handler=Dummy_Handler
 
-/* These defines are used to keep compatibility with new */
-#pragma weak NonMaskableInt_Handler=Dummy_Handler
-#pragma weak MemoryManagement_Handler=Dummy_Handler
-#pragma weak SVCall_Handler=Dummy_Handler
-#pragma weak DebugMonitor_Handler=Dummy_Handler
-
 /* Peripherals handlers */
 #pragma weak ABDACB_Handler       = Dummy_Handler
 #pragma weak ACIFC_Handler        = Dummy_Handler
