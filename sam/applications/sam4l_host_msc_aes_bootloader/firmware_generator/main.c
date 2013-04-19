@@ -62,6 +62,10 @@
 /*****************************************************************************/
 /*                              GLOBAL VARIABLES                             */
 /*****************************************************************************/
+
+/* SOF Event Counter */
+static uint32_t sof_count = 0;
+
 /* Flag to track connected LUNs */
 volatile bool lun_connected = false;
 
@@ -96,10 +100,10 @@ COMPILER_WORD_ALIGNED
 volatile uint8_t buffer[FLASH_BUFFER_SIZE];
 
 #if FIRMWARE_AES_ENABLED
-/** AES instance */
+/* AES instance */
 struct aes_dev_inst g_aes_inst;
 
-/** AES configuration */
+/* AES configuration */
 struct aes_config   g_aes_cfg;
 
 /* AES Output Buffer */
@@ -107,7 +111,7 @@ COMPILER_WORD_ALIGNED
 volatile uint32_t aes_output[FLASH_BUFFER_SIZE/4];
 #endif
 
-static uint32_t sof_count = 0;
+
 /*****************************************************************************/
 /*                             FUNCTION DECLARATIONS                         */
 /*****************************************************************************/
@@ -284,7 +288,7 @@ static void generate_crc(void)
 		/* Set the memory address for CRCCU DMA transfer */
 		crc_dscr.ul_tr_addr = (uint32_t) buffer;
 
-		/* Transfer width: byte, interrupt disable(here interrupt mask enabled) */
+		/* Transfer width: byte, interrupt disable */
 		crc_dscr.ul_tr_ctrl = CRCCU_TR_CTRL_TRWIDTH_BYTE | buffer_size
 								| CRCCU_TR_CTRL_IEN_DISABLE;
 
@@ -371,15 +375,15 @@ static void init_aes()
 /**
  * \brief AES Decryption routine
  */
-static void aes_encrypt(uint32_t *encrypted_data, uint32_t size)
+static void aes_encrypt(uint32_t *decrypted_data, uint32_t size)
 {
 	uint16_t i;
 	for (i = 0; i < size ; i+=4) {
 		/* Write the data to be ciphered to the input data registers. */
-		aes_write_input_data(&g_aes_inst, (encrypted_data[i]));
-		aes_write_input_data(&g_aes_inst, (encrypted_data[i+1]));
-		aes_write_input_data(&g_aes_inst, (encrypted_data[i+2]));
-		aes_write_input_data(&g_aes_inst, (encrypted_data[i+3]));
+		aes_write_input_data(&g_aes_inst, (decrypted_data[i]));
+		aes_write_input_data(&g_aes_inst, (decrypted_data[i+1]));
+		aes_write_input_data(&g_aes_inst, (decrypted_data[i+2]));
+		aes_write_input_data(&g_aes_inst, (decrypted_data[i+3]));
 
 		/* Wait until the output data is ready */
 		while(!(aes_read_status(&g_aes_inst) & AESA_SR_ODATARDY));
@@ -410,7 +414,8 @@ static void console_init(void)
 	/* Enable the clock for the console UART */
 	sysclk_enable_peripheral_clock(CONSOLE_UART);
 	/* Initialize the UART Module for console output */
-	usart_init_rs232(CONSOLE_UART, &usart_serial_options, sysclk_get_peripheral_bus_hz(CONSOLE_UART));
+	usart_init_rs232(CONSOLE_UART, &usart_serial_options,
+						sysclk_get_peripheral_bus_hz(CONSOLE_UART));
 	/* Enable the transmitter. */
 	usart_enable_tx(CONSOLE_UART);
 }
@@ -562,7 +567,7 @@ int main(void)
 #if CONSOLE_OUTPUT_ENABLED
 				/* Print the current task */
 				CONSOLE_PUTS(TASK_PASSED);
-				CONSOLE_PUTS("\n\rFirmware Generation completed. Remove the device.");
+				CONSOLE_PUTS("\n\rPlease remove the device.");
 #endif
 			} else {
 #if CONSOLE_OUTPUT_ENABLED
@@ -602,50 +607,44 @@ void main_usb_connection_event(uhc_device_t * dev, bool b_present)
 }
 
 /**
- * \mainpage ASF SAM4L USB Host Mass Storage Bootloader Solution
+ * \mainpage ASF SAM4L Firmware Generator for USB Host Mass Storage Bootloader
  *
  * \section intro Introduction
- * SAM4L USB Host Mass Storage Bootloader application is to facilitate firmware upgrade
- * using a USB MSC drives. The application includes CRC check,
- * Signature verification, AES decryption and memory verification functionality offering
- * safe and secure firmware upgradation.
- *
- * \section startup Procedure
+ * SAM4L Firmware generator application is to provide a easy way to generate
+ * AES encrypted firmware with CRC32 and signature bytes. The firmware is fully
+ * compatible for the SAM4L USB Host MSC Bootloader.
  * - Do complete chip erase and Userpage erase.
- * - Program the bootloader
- * - Load the application firmware into U-disk. Connect it to the SAM4L-EK USB MSC Host.
- * - Press PB0 on RESET to start the bootloader.
+ * - Program the firmware generator application
+ * - Load the application firmware into U-disk. Connect it to the SAM4L-EK USB
+ *   MSC Host.
+ * - Application generates & appends CRC32 with signature bytes and encrypts
+ *   the whole binary.
  *
  * \section config Configuration Options
  * - conf_bootloader.h -> Bootloader Configurations
  *   Important configuration options
  *   - FIRMWARE_AES_ENABLED       -> Enable/disable the AES Decryption
  *   - CONSOLE_OUTPUT_ENABLED     -> Enable/disable the Console message output
- *   - VERIFY_PROGRAMMING_ENABLED -> Enable/disable the verification of programmed memory
- *   - APP_START_OFFSET           -> Application starting offset from Flash origin
+ *   - APP_START_OFFSET           -> Application starting offset from Flash
  *   - FIRMWARE_IN_FILE_NAME      -> Application Firmware file to be programmed
  *   - APP_SIGNATURE              -> Signature bytes to be verified
- *   - MSC_BOOT_LOAD_PIN          -> IO Pin used for bootloader activation
- *   - MSC_BOOT_LOAD_PIN_ACTIVE_LVL -> Active level to be monitored for the pin
  * 
  * \section board Board Setup
- * - SAM4L-EK -> Has an IO configured for VBUS Detect. VBUS Pin jumper PA06/USB should be set
+ * - SAM4L-EK -> Has an IO configured for VBUS Detect. VBUS Pin jumper PA06/USB
+ *               should be set
  *   - conf_board.h -> USB Pin configuration
  *   - CONF_BOARD_USB_PORT           -> Enable USB interface
- *   - CONF_BOARD_USB_VBUS_CONTROL   -> VBUS control enabled, jumper PC08/USB should be set
- *   - CONF_BOARD_USB_VBUS_ERR_DETECT-> VBUS error control enabled, jumper PC07/USB should be set
- *   - An external power supply should be used since the VBUS is powered only through the external
- *     power supply controlled by the VBUS Control(VBOF) pin. Refer the SAM4L-EK schematics for
- *     more details.
- *   - Console message output is sent through the Embedded Debugger(onboard)'s COM PORT.
+ *   - CONF_BOARD_USB_VBUS_CONTROL   -> VBUS control enabled, jumper PC08/USB
+ *                                      should be set
+ *   - CONF_BOARD_USB_VBUS_ERR_DETECT-> VBUS error control enabled, jumper
+ *                                      PC07/USB should be set
+ *   - An external power supply should be used since the VBUS is powered only
+ *     through the external power supply controlled by the VBUS Control(VBOF)
+ *     pin. Refer the SAM4L-EK schematics for more details.
+ *   - Console message output is sent through the Embedded Debugger(onboard)'s 
+ *     COM PORT.
  * 
- * \section func Bootloader Operation
- * The bootloader will decrypt the first block (24 bytes of data). It verifies the
- * Signature data. If the verification is successful, it decrypts the entire firmware and
- * generates CRC32 value and compares it with the stored CRC32 value. If it matches, it
- * starts to program the application. Then, verification of the programmed memory (CRC32
- * check again) is performed. Then it programs the Firmware Revision into the User jumps
- * to the application section with WDT reset.
+ * \section func Application Output
  * Output Firmware Structure with AES:
  * - 4 bytes   -> Encrypted CRC32
  * - 12 bytes  -> Encrypted Signature Data

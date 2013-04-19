@@ -58,14 +58,25 @@
 #include "aesa.h"
 #endif
 
-#define GPIO_BOOT_PIN_PORT        ((volatile GpioPort *)(GPIO_ADDR + (MSC_BOOT_LOAD_PIN >> 5) * sizeof(GpioPort)))
-#define GPIO_BOOT_PIN_MASK        (1U << (MSC_BOOT_LOAD_PIN & 0x1F))
+#define GPIO_BOOT_PIN_PORT      ((volatile GpioPort *)(GPIO_ADDR +         \
+                                (MSC_BOOT_LOAD_PIN >> 5) * sizeof(GpioPort)))
+#define GPIO_BOOT_PIN_MASK      (1U << (MSC_BOOT_LOAD_PIN & 0x1F))
 
 /*****************************************************************************/
 /*                              GLOBAL VARIABLES                             */
 /*****************************************************************************/
+
+/* SOF Event Counter */
+static uint32_t sof_count = 0;
+
 /* Flag to track connected LUNs */
 volatile bool lun_connected = false;
+
+/* File System Management object */
+static FATFS fs; // Re-use fs for LUNs to reduce memory footprint
+
+/* Directory management */
+static DIR file_dir;
 
 /* File object management */
 static FIL file_object;
@@ -78,30 +89,31 @@ char input_file_name[] = {
 /* CRC32 Value of the firmware */
 static uint32_t firmware_crc = 0;
 
-/* Revision of the application firmware */
-static uint16_t firmware_rev = *(uint16_t *)FIRMWARE_REV_ADDRESS;
-
-/* Force Boot Option */
-static bool force_boot = (((*(uint16_t *) BOOT_CONF_ADDRESS) & FORCE_BOOT_MASK) == 1); 
-
 /* CRC descriptor - Should be 512 byte aligned */
-__attribute__ ((aligned(512)))
+COMPILER_ALIGNED(512)
 static crccu_dscr_type_t crc_dscr;
 
 /* File Data Buffer */
-__attribute__ ((aligned(4)))
+COMPILER_WORD_ALIGNED
 volatile uint8_t buffer[FLASH_BUFFER_SIZE];
 
 #if FIRMWARE_AES_ENABLED
+/* AES instance */
+struct aes_dev_inst g_aes_inst;
+
+/* AES configuration */
+struct aes_config   g_aes_cfg;
+
 /* AES Output Buffer */
-__attribute__ ((aligned(4)))
+COMPILER_WORD_ALIGNED
 volatile uint32_t aes_output[FLASH_BUFFER_SIZE/4];
 #endif
+
 
 /*****************************************************************************/
 /*                             FUNCTION DECLARATIONS                         */
 /*****************************************************************************/
-static void bootloader_activation_check(void);
+static void bootloader_mode_check(void);
 
 static void start_application(void);
 
@@ -117,7 +129,7 @@ static void bootloader_system_init(void);
 
 #if FIRMWARE_AES_ENABLED
 
-static void aes_init(void);
+static void init_aes(void);
 
 static void aes_decrypt(uint32_t *encrypted_data, uint32_t size);
 
@@ -140,16 +152,15 @@ static void start_application(void)
 {
 	/* Pointer to the Application Section */
 	void (*application_code_entry)(void);
-	unsigned *p;
-	
+
 	/* Rebase the Stack Pointer */
 	__set_MSP(*(uint32_t *) APP_START_ADDRESS);
-		
+
 	/* Rebase the vector table base address */
 	SCB->VTOR = ((uint32_t) APP_START_ADDRESS & SCB_VTOR_TBLOFF_Msk);
 
 	/* Load the Reset Handler address of the application */
-	application_code_entry = (void (*)(void))(unsigned *)(*(unsigned *)(APP_START_ADDRESS + 4));
+	application_code_entry = (void (*)(void))(unsigned *)(APP_START_ADDRESS + 4);
 
 	/* Jump to user Reset Handler in the application */
 	application_code_entry();
@@ -159,24 +170,32 @@ static void start_application(void)
 /**
  * \brief Function to check the bootloader mode activaton.
  */
-static void bootloader_activation_check(void)
+static void bootloader_mode_check()
 {
-	/*
-	 * Check the following parameters for loading the bootloader
-	 * Bootloader Force bit is set
-	 * No watchdog Reset
-	 * Activation of the boot pin
-	 * Absence of Application by checking the firmware revision data
-	 */
-	 if (!force_boot) {
+	volatile bool boot_mode = false;
+
+	/* Check Force Boot option */
+	boot_mode = !(flashcalw_read_gp_fuse_bit(BOOT_GP_FUSE_BIT_OFFSET));
+
+	/* If Force Boot is enabled, ignore other checks and start the bootloader */
+	if (!boot_mode) {
 		/* Enable the input mode in Boot GPIO Pin */
 		GPIO_BOOT_PIN_PORT->GPIO_ODERC = GPIO_BOOT_PIN_MASK;
 		GPIO_BOOT_PIN_PORT->GPIO_STERS = GPIO_BOOT_PIN_MASK;
-		boot_en = (uint32_t) (GPIO_ADDR + (MSC_BOOT_LOAD_PIN >> 5) * sizeof(GpioPort));
-		boot_en = ((GpioPort *)(boot_en))->GPIO_PVR & GPIO_BOOT_PIN_MASK;
-		/* In absence of firmware or activation of boot pin or on absence of WDT reset enter bootloader mode */
-		if (!((firmware_rev == 0xFFFF) || (boot_en) || (PM->PM_RCAUSE & PM_RCAUSE_WDT))) {
-			/* Start the application - No return*/
+		/* Activation of bootloader mode pin */
+		boot_mode = ((GPIO_BOOT_PIN_PORT->GPIO_PVR & GPIO_BOOT_PIN_MASK) 
+							== MSC_BOOT_LOAD_PIN_ACTIVE_LVL);
+
+		/* Check absence of application firmware */
+		boot_mode = boot_mode ||(*((uint32_t *)APP_START_ADDRESS) == 0xFFFFFFFF);
+
+		/*
+		 * Check the following one of the parameters for loading the bootloader
+		 * Activation of the boot pin
+		 * Absence of Application
+		 */
+		if (!boot_mode) {
+			/* Enters application mode*/
 			start_application();
 		}
 	}
@@ -188,25 +207,25 @@ static void bootloader_activation_check(void)
  * \brief Function to issue a WDT reset to start the application.
  * This will reset the clock & peripheral configurations.
  */
-static void start_application_with_WDT(void)
+static void start_application_with_WDT()
 {
+	uint32_t wdt_ctrl_val = 0;
+
 	/* Disable the global interrupts */
 	cpu_irq_disable();
 
-	/* Switch off the LED */
+	/* Switch on the LED */
 	ioport_set_pin_level(BOOT_LED, 0);
 
 	/* Store the WDT Configuration value */
-	uint32_t wdt_ctrl_val = (WDT_CTRL_EN | WDT_CTRL_PSEL(5) | WDT_CTRL_CEN	| WDT_CTRL_DAR) ;
+	wdt_ctrl_val = (WDT_CTRL_EN | WDT_CTRL_PSEL(5) | WDT_CTRL_CEN | WDT_CTRL_DAR);
 
 	/* Set the WDT to trigger a reset - Two times for the two keys*/
 	WDT->WDT_CTRL = wdt_ctrl_val | WDT_CTRL_KEY(0x55);
 	WDT->WDT_CTRL = wdt_ctrl_val | WDT_CTRL_KEY(0xAA);
 
-	/* Wait indefinitely for a WDT reset */
 	while (1) {
-		/* Toggle the LED */
-		ioport_toggle_pin_level(BOOT_LED);
+		/* Wait indefinitely for a WDT reset */
 	}
 }
 
@@ -214,7 +233,7 @@ static void start_application_with_WDT(void)
 /**
  * \brief Function to program the Flash. Decrypt the firmware and program it.
  */
-static bool program_memory(void)
+static bool program_memory()
 {
 	uint32_t address_offset = 0;
 	void *buf = NULL;
@@ -236,7 +255,8 @@ static bool program_memory(void)
 
 #if FIRMWARE_AES_ENABLED
 	/* Decrypt as a new message */
-	aes_init();
+	aes_set_new_message(&g_aes_inst);
+
 	/* Decrypt the AES data */
 	aes_decrypt((uint32_t *)buffer, APP_BINARY_OFFSET/4);
 #endif
@@ -248,7 +268,6 @@ static bool program_memory(void)
 	while(true) {
 		/* Open the input file */
 		f_read(&file_object, (void *)buffer, FLASH_BUFFER_SIZE, &buffer_size);
-
 		/* Check if there is any buffer */
 		if (!buffer_size) {
 			break;
@@ -269,8 +288,8 @@ static bool program_memory(void)
 
 		/* Program the Flash Memory. */
 		flashcalw_memcpy((void *)(APP_START_ADDRESS + address_offset),
-		buf , buffer_size, true);
-		
+							buf , buffer_size, true);
+
 		/* Enable the global interrupts */
 		cpu_irq_enable();
 
@@ -282,34 +301,36 @@ static bool program_memory(void)
 	f_close(&file_object);
 
 #if VERIFY_PROGRAMMING_ENABLED
-		/* Update the buffer size */
-		buffer_size = address_offset;
-		/* Re-initialize offset to zero */
-		address_offset = 0;
-		/* Reset the CRCCU to start fresh calculation */
-		crccu_reset(CRCCU);
-		/* Do it in a loop of max size 12-bit since the CRCCU can operate at a max of 12-bit only*/
-		do {
-			/* Calculate the CRC32 of the programmed memory with a max limit of 0xFFF*/
-			crc32_calculate((uint32_t)(APP_START_ADDRESS + address_offset), min(0xFFF, buffer_size));
-			buffer_size -= min(0xFFF, buffer_size);
-			address_offset += 0xFFF;
-		} while (buffer_size!=0);
+	/* Update the buffer size */
+	buffer_size = address_offset;
+	/* Re-initialize offset to zero */
+	address_offset = 0;
 
-		/* Get the CRC32 value */
-		firmware_crc_output = crccu_read_crc_value(CRCCU);
+	/* Reset the CRCCU to start fresh calculation */
+	crccu_reset(CRCCU);
 
-		if (APP_CRC_POLYNOMIAL_TYPE == CRCCU_MR_PTYPE_CCITT16) {
-			/* 16-bit CRC */
-			firmware_crc_output &= 0xFF;
-		}
+	/* CRC calculation with max 0xFFF since the CRCCU size limit is 12-bit */
+	do {
+		/* Calculate the CRC32 of the programmed memory */
+		crc32_calculate((uint32_t)(APP_START_ADDRESS + address_offset),
+							min(0xFFF, buffer_size));
+		buffer_size -= min(0xFFF, buffer_size);
+		address_offset += 0xFFF;
+	} while (buffer_size!=0);
 
-		/* Compare the calculated CRC Value */
-		if (firmware_crc != firmware_crc_output) {
-			/* Verification Failed */
-			return false;
-		}
+	/* Get the CRC32 value */
+	firmware_crc_output = crccu_read_crc_value(CRCCU);
 
+	if (APP_CRC_POLYNOMIAL_TYPE == CRCCU_MR_PTYPE_CCITT16) {
+		/* 16-bit CRC */
+		firmware_crc_output &= 0xFF;
+	}
+
+	/* Compare the calculated CRC Value */
+	if (firmware_crc != firmware_crc_output) {
+		/* Verification Failed */
+		return false;
+	}
 #endif
 
 	/* Clear the busy LED */
@@ -323,14 +344,12 @@ static bool program_memory(void)
 /**
  * \brief Function to check the integrity of the firmware.
  */
-static bool integrity_check(void)
+static bool integrity_check()
 {
-	uint32_t *buf = NULL;
+	uint8_t *buf = NULL;
 	uint32_t firmware_crc_output = 0;
 	uint32_t buffer_size = 0;
-
-	/* Enable CRCCU peripheral clock */
-	sysclk_enable_peripheral_clock(CRCCU);
+	uint8_t *signature_bytes = APP_SIGNATURE;
 
 	/* Reset the CRCCU */
 	crccu_reset(CRCCU);
@@ -341,9 +360,10 @@ static bool integrity_check(void)
 			FA_OPEN_EXISTING | FA_READ);
 
 	/* Routine to check the signature for decryption
-	 * Firmware - First 4 bytes - CRC32, Next 12 bytes - Firmware Signature/Password
+	 * Firmware - First 4 bytes - CRC32, 12 bytes - Firmware Signature/Password
 	 * Remaining bytes - Application binary file
 	 */
+
 	/* Read the CRC data & Signature from the firmware */
 	f_read(&file_object, (void *)buffer, APP_BINARY_OFFSET, &buffer_size);
 	/* Check if there is any buffer */
@@ -355,36 +375,39 @@ static bool integrity_check(void)
 
 #if FIRMWARE_AES_ENABLED
 	/* Initialize the AES Module */
-	aes_init();
-	/* Decrypt the AES data */
-	aes_decrypt((uint32_t *)buffer, APP_BINARY_OFFSET/4);
-	
-	/* Get the firmware CRC32 value */
-	firmware_crc = aes_output[0];
+	init_aes();
 
-	/* Check the signature bytes */
-	if ((aes_output[1] != APP_SIGNATURE_WORD0) || (aes_output[2] != APP_SIGNATURE_WORD1) || (aes_output[3] != APP_SIGNATURE_WORD2)) {
-		/* Signature verification failed */
-		/* Close the File after operation. */
-		f_close(&file_object);
-		return false;
-	}
+	/* Decrypt the AES data - input size should be a multiple of 4*/
+	aes_decrypt((uint32_t *)buffer, (buffer_size + 3)/4);
+
+	/* Update the buffer */
+	buf = (uint8_t *) aes_output;
 #else
 	/* Update the buffer */
-	buf = (uint32_t *) buffer;
-	/* Store the firmware CRC */
-	firmware_crc = buf[0];
-	/* Check the signature bytes */
-	if ((buf[1] != APP_SIGNATURE_WORD0) || (buf[2] != APP_SIGNATURE_WORD1) || (buf[3] != APP_SIGNATURE_WORD2)) {
-		/* Signature verification failed */
-		/* Close the File after operation. */
-		f_close(&file_object);
-		return false;
-	}
+	buf = (uint8_t *) buffer;
 #endif
-	/* File pointer didnt get updated at this point to the binary offset value. Calling F_SEEK again. */
+
+	/* Store the firmware CRC */
+	firmware_crc = *(uint32_t *)buf;
+	/* Update the buffer size */
+	buffer_size-=4;
+	buf+=4;
+	/* Validate the Signature bytes */
+	while (buffer_size--) {
+		if (*buf++ != *signature_bytes++) {
+			/* Signature verification failed */
+			/* Close the File after operation. */
+			f_close(&file_object);
+			return false;
+		}
+	}
+
+	/*
+	 * File pointer didnt get updated at this point to the binary offset value.
+	 * Calling F_SEEK again.
+	 */
 	f_lseek(&file_object, APP_BINARY_OFFSET);
-	/* Verify the CRC32 of the entire decrypted file before starting the programming sequence */
+	/* Verify the CRC32 of the entire decrypted file before programming */
 	while(true) {
 		/* Read the data from the firmware */
 		f_read(&file_object, (void *)buffer, FLASH_BUFFER_SIZE, &buffer_size);
@@ -396,10 +419,10 @@ static bool integrity_check(void)
 		/* Decrypt the application binary */
 		aes_decrypt((uint32_t *)(buffer), buffer_size/4);
 		/* Update the output buffer */
-		buf = (uint32_t *) aes_output;
+		buf = (uint8_t *) aes_output;
 #else
 		/* Update the output buffer */
-		buf = (uint32_t *) buffer;
+		buf = (uint8_t *) buffer;
 #endif
 
 		/* Calculate the CRC32 for the buffer */
@@ -433,7 +456,7 @@ static void crc32_calculate(uint32_t address, uint32_t size)
 {
 	/* Set the memory address for CRCCU DMA transfer */
 	crc_dscr.ul_tr_addr = address;
-		
+
 	/* Transfer width: byte, interrupt disable(here interrupt mask enabled) */
 	crc_dscr.ul_tr_ctrl =
 	CRCCU_TR_CTRL_TRWIDTH_BYTE | size |
@@ -458,54 +481,54 @@ static void crc32_calculate(uint32_t address, uint32_t size)
 /**
  * \brief AES Initialization routine
  */
-static void aes_init()
+static void init_aes()
 {
-	aesa_config_t aesa_config;
-	uint32_t aesa_key[FIRMWARE_AES_KEY_SIZE * 2 + 4] = {
+	uint32_t aes_key[FIRMWARE_AES_KEY_SIZE >> 5] = {
 		 FIRMWARE_AES_KEY_WORD0
 		,FIRMWARE_AES_KEY_WORD1
 		,FIRMWARE_AES_KEY_WORD2
 		,FIRMWARE_AES_KEY_WORD3
-		#if FIRMWARE_AES_KEY_SIZE > AESA_KEY_SIZE_128
+		#if FIRMWARE_AES_KEY_SIZE > 128
 		,FIRMWARE_AES_KEY_WORD4
 		,FIRMWARE_AES_KEY_WORD5
 		#endif
-		#if FIRMWARE_AES_KEY_SIZE > AESA_KEY_SIZE_192
+		#if FIRMWARE_AES_KEY_SIZE > 192
 		,FIRMWARE_AES_KEY_WORD6
 		,FIRMWARE_AES_KEY_WORD7
 		#endif
 	};
 
-	uint32_t aesa_initvect[4] = {
+	uint32_t aes_initvect[4] = {
 		FIRMWARE_AES_INITVECT_WORD0,
 		FIRMWARE_AES_INITVECT_WORD1,
 		FIRMWARE_AES_INITVECT_WORD2,
 		FIRMWARE_AES_INITVECT_WORD3
 	};
 
-	/* Reset the AES */
-	aesa_reset(AESA);
-	
-	/* Enable the AES Module */
-	aesa_enable(AESA);
+	/* Enable the AES module. */
+	aes_get_config_defaults(&g_aes_cfg);
+	aes_init(&g_aes_inst, AESA, &g_aes_cfg);
 
-	/* Configure the AESA. */
-	aesa_config.encrypt_mode = AESA_DECRYPTION;
-	aesa_config.key_size = FIRMWARE_AES_KEY_SIZE;
-	aesa_config.dma_mode = AESA_MANUAL_MODE;
-	aesa_config.opmode = AESA_CBC_MODE;
-	aesa_config.cfb_size = AESA_CFB_SIZE_128;
-	aesa_config.countermeasure_mask = 0xF;
-	aesa_set_config(AESA, &aesa_config);
+	/* Enable the AES Module */
+	aes_enable(&g_aes_inst);
+
+	/* Configure the AES. */
+	g_aes_inst.aes_cfg->encrypt_mode = AES_DECRYPTION;
+	g_aes_inst.aes_cfg->key_size = AES_KEY_SIZE_128;
+	g_aes_inst.aes_cfg->dma_mode = AES_MANUAL_MODE;
+	g_aes_inst.aes_cfg->opmode = AES_CBC_MODE;
+	g_aes_inst.aes_cfg->cfb_size = AES_CFB_SIZE_128;
+	g_aes_inst.aes_cfg->countermeasure_mask = AES_COUNTERMEASURE_TYPE_ALL;
+	aes_set_config(&g_aes_inst);
 
 	/* Beginning of a new message. */
-	aesa_set_new_message(AESA);
+	aes_set_new_message(&g_aes_inst);
 
 	/* Set the cryptographic key. */
-	aesa_write_key(AESA, aesa_key);
+	aes_write_key(&g_aes_inst, aes_key);
 
 	/* Set the initialization vector. */
-	aesa_write_initvector(AESA, aesa_initvect);
+	aes_write_initvector(&g_aes_inst, aes_initvect);
 }
 
 
@@ -516,20 +539,20 @@ static void aes_decrypt(uint32_t *encrypted_data, uint32_t size)
 {
 	uint16_t i;
 	for (i = 0; i < size ; i+=4) {
-		/* Write the data to be ciphered to the input data registers. */
-		aesa_write_input_data(AESA, (encrypted_data[i]));
-		aesa_write_input_data(AESA, (encrypted_data[i+1]));
-		aesa_write_input_data(AESA, (encrypted_data[i+2]));
-		aesa_write_input_data(AESA, (encrypted_data[i+3]));
+		/* Write the data to be ciphered to the input data registers */
+		aes_write_input_data(&g_aes_inst, (encrypted_data[i]));
+		aes_write_input_data(&g_aes_inst, (encrypted_data[i+1]));
+		aes_write_input_data(&g_aes_inst, (encrypted_data[i+2]));
+		aes_write_input_data(&g_aes_inst, (encrypted_data[i+3]));
 
 		/* Wait until the output data is ready */
-		while(!(aesa_read_status(AESA) & AESA_SR_ODATARDY));
+		while(!(aes_read_status(&g_aes_inst) & AESA_SR_ODATARDY));
 
 		/* Read the decrypted output data */
-		aes_output[i]     = aesa_read_output_data(AESA);
-		aes_output[i + 1] = aesa_read_output_data(AESA);
-		aes_output[i + 2] = aesa_read_output_data(AESA);
-		aes_output[i + 3] = aesa_read_output_data(AESA);
+		aes_output[i]     = aes_read_output_data(&g_aes_inst);
+		aes_output[i + 1] = aes_read_output_data(&g_aes_inst);
+		aes_output[i + 2] = aes_read_output_data(&g_aes_inst);
+		aes_output[i + 3] = aes_read_output_data(&g_aes_inst);
 	}
 }
 
@@ -541,19 +564,20 @@ static void aes_decrypt(uint32_t *encrypted_data, uint32_t size)
  */
 static void console_init(void)
 {
-		const sam_usart_opt_t usart_serial_options = {
-			.baudrate     = CONSOLE_UART_BAUDRATE,
-			.parity_type  = CONSOLE_UART_PARITY,
-			.char_length  = CONSOLE_UART_CHAR_LENGTH,
-			.stop_bits    = CONSOLE_UART_STOPBITS,
-			.channel_mode = US_MR_CHMODE_NORMAL
-		};
-		/* Enable the clock for the console UART */
-		sysclk_enable_peripheral_clock(CONSOLE_UART);
-		/* Initialize the UART Module for console output */
-		usart_init_rs232(CONSOLE_UART, &usart_serial_options, sysclk_get_peripheral_bus_hz(CONSOLE_UART));
-		/* Enable the transmitter. */
-		usart_enable_tx(CONSOLE_UART);
+	const sam_usart_opt_t usart_serial_options = {
+		.baudrate     = CONSOLE_UART_BAUDRATE,
+		.parity_type  = CONSOLE_UART_PARITY,
+		.char_length  = CONSOLE_UART_CHAR_LENGTH,
+		.stop_bits    = CONSOLE_UART_STOPBITS,
+		.channel_mode = US_MR_CHMODE_NORMAL
+	};
+	/* Enable the clock for the console UART */
+	sysclk_enable_peripheral_clock(CONSOLE_UART);
+	/* Initialize the UART Module for console output */
+	usart_init_rs232(CONSOLE_UART, &usart_serial_options,
+						sysclk_get_peripheral_bus_hz(CONSOLE_UART));
+	/* Enable the transmitter. */
+	usart_enable_tx(CONSOLE_UART);
 }
 #endif
 
@@ -561,11 +585,8 @@ static void console_init(void)
 /**
  * \brief Initializes the device for the bootloader
  */
-static void bootloader_system_init(void)
+static void bootloader_system_init()
 {
-	/* Initialize the bootloader system */
-	bootloader_system_init();
-
 	/* Initialize the system clocks */
 	sysclk_init();
 
@@ -597,30 +618,27 @@ int main(void)
 {
 	uint32_t file_size = 0;
 	uint8_t lun;
-	/* File System Management object */
-	FATFS fs; // Re-use fs for LUNs to reduce memory footprint
+	FRESULT res;
 
-	/* Check the bootloader activation condition */
-	bootloader_activation_check();
+	/* Check whether the bootloader mode is activated */
+	bootloader_mode_check();
 
 	/* Device initialization for the bootloader */
 	bootloader_system_init();
 
 #if CONSOLE_OUTPUT_ENABLED
-		/* Print a header */
-		CONSOLE_PUTS("\n\rInsert device");
+	/* Print a header */
+	CONSOLE_PUTS("\n\rInsert device");
 #endif
 	/* The USB management is entirely managed by interrupts. */
 	while (true) {
-
 		/* Check if a MSC device and its LUN are configured. */
 		if (!lun_connected) {
 			continue;
 		}
+		/* Adding a small delay to ensure that the MSC device is ready */
+		while (sof_count < 1000);
 
-		FRESULT res;
-		/* Directory management */
-		DIR file_dir;
 #if CONSOLE_OUTPUT_ENABLED
 		/* Print a header */
 		CONSOLE_PUTS("\n\r Device Connected");
@@ -743,24 +761,40 @@ int main(void)
 	}
 }
 
+/**
+ * \brief Notify that a SOF has been sent (each 1 ms)
+ */
+void main_usb_sof_event(void)
+{
+	sof_count++;
+}
+
+/**
+ * \brief Callback on enumeration status change of a MSC device
+ */
 void main_usb_connection_event(uhc_device_t * dev, bool b_present)
 {
+	/* Enumeration status of the connected MSC device */
 	lun_connected = b_present;
+
+	/* Reset sof_count to start MSC delay*/
+	sof_count = 0;
 }
 
 /**
  * \mainpage ASF SAM4L USB Host Mass Storage Bootloader Solution
  *
  * \section intro Introduction
- * SAM4L USB Host Mass Storage Bootloader application is to facilitate firmware upgrade
- * using a USB MSC drives. The application includes firmware revision, CRC check,
- * Signature verification, AES decryption and memory verification functionality offering
- * safe and secure firmware upgradation.
+ * SAM4L USB Host Mass Storage Bootloader application is to facilitate firmware
+ * upgrade using a USB MSC drives. The application includes CRC check,
+ * Signature verification, AES decryption and memory verification functionality
+ *  offering safe and secure firmware upgradation.
  *
  * \section startup Procedure
  * - Do complete chip erase and Userpage erase.
  * - Program the bootloader
- * - Load the application firmware into U-disk. Connect it to the SAM4L-EK USB MSC Host.
+ * - Load the application firmware into U-disk. Connect it to the SAM4L
+ *   USB MSC Host.
  * - Press PB0 on RESET to start the bootloader.
  *
  * \section config Configuration Options
@@ -768,41 +802,43 @@ void main_usb_connection_event(uhc_device_t * dev, bool b_present)
  *   Important configuration options
  *   - FIRMWARE_AES_ENABLED       -> Enable/disable the AES Decryption
  *   - CONSOLE_OUTPUT_ENABLED     -> Enable/disable the Console message output
- *   - VERIFY_PROGRAMMING_ENABLED -> Enable/disable the verification of programmed memory
- *   - APP_START_OFFSET           -> Application starting offset from Flash origin
+ *   - VERIFY_PROGRAMMING_ENABLED -> Enable/disable the verification of
+ *                                   programmed memory
+ *   - APP_START_OFFSET           -> Application starting offset from Flash
  *   - FIRMWARE_IN_FILE_NAME      -> Application Firmware file to be programmed
  *   - APP_SIGNATURE              -> Signature bytes to be verified
  *   - MSC_BOOT_LOAD_PIN          -> IO Pin used for bootloader activation
  *   - MSC_BOOT_LOAD_PIN_ACTIVE_LVL -> Active level to be monitored for the pin
- *   - BOOT_CONF_ADDRESS          -> Bootloader settings in Userpage (Last word in Userpage)
  * 
  * \section board Board Setup
- * - SAM4L-EK -> Has an IO configured for VBUS Detect. VBUS Pin jumper PA06/USB should be set
+ * - SAM4L-EK -> Has an IO configured for VBUS Detect. VBUS Pin jumper PA06/USB
+ *               should be set
  *   - conf_board.h -> USB Pin configuration
  *   - CONF_BOARD_USB_PORT           -> Enable USB interface
- *   - CONF_BOARD_USB_VBUS_CONTROL   -> VBUS control enabled, jumper PC08/USB should be set
- *   - CONF_BOARD_USB_VBUS_ERR_DETECT-> VBUS error control enabled, jumper PC07/USB should be set
- *   - An external power supply should be used since the VBUS is powered only through the external
- *     power supply controlled by the VBUS Control(VBOF) pin. Refer the SAM4L-EK schematics for
- *     more details.
- *   - Console message output is sent through the Embedded Debugger(onboard)'s COM PORT.
+ *   - CONF_BOARD_USB_VBUS_CONTROL   -> VBUS control enabled, jumper PC08/USB
+ *                                      should be set
+ *   - CONF_BOARD_USB_VBUS_ERR_DETECT-> VBUS error control enabled, jumper
+ *                                      PC07/USB should be set
+ *   - An external power supply should be used since the VBUS is powered only
+ *     through the external power supply controlled by the VBUS Control(VBOF)
+ *     pin. Refer the SAM4L-EK schematics for more details.
+ *   - Console message output is sent through the Embedded Debugger(onboard)'s 
+ *     COM PORT.
  * 
  * \section func Bootloader Operation
- * The bootloader will decrypt the first block (24 bytes of data). It verifies the
- * Signature data. If the verification is successful, it decrypts the entire firmware and
- * generates CRC32 value and compares it with the stored CRC32 value. If it matches, it
- * starts to program the application. Then, verification of the programmed memory (CRC32
- * check again) is performed. Then it programs the Firmware Revision into the User jumps
- * to the application section with WDT reset.
+ * The bootloader will decrypt the first block (24 bytes of data). It verifies
+ * the Signature data. If the verification is successful, it decrypts the
+ * entire firmware and generates CRC32 value and compares it with the stored
+ * CRC32 value. If it matches, it starts to program the application. Then,
+ * verification of the programmed memory (CRC32 check again) is performed.
+ * Then it jumps to the application section with WDT reset.
  * Output Firmware Structure with AES:
  * - 4 bytes   -> Encrypted CRC32
- * - 2 bytes   -> Encrypted Firmware Revision
- * - 18 bytes  -> Encrypted Signature Data
+ * - 12 bytes  -> Encrypted Signature Data
  * - Rest data -> Encrypted Input Firmware
  * Output Firmware Structure without AES:
  * - 4 bytes   -> CRC32
- * - 2 bytes   -> Firmware Revision
- * - 18 bytes  -> Signature Data
+ * - 12 bytes  -> Signature Data
  * - Rest data -> Input Firmware
  *
  * \copydoc UI

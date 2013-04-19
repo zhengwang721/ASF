@@ -92,7 +92,7 @@
 
 //! Called for each received SOF each 1 ms
 //! Note: Available in High and Full speed mode
-#define UHC_SOF_EVENT()                    // main_usb_sof_event()
+#define UHC_SOF_EVENT()                    main_usb_sof_event()
 
 //! Called when a USB device configuration must be chosen.
 //! Thus, the application can choose either a configuration number for this device

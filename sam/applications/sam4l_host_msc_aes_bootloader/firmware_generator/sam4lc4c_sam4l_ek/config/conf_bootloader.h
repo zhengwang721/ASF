@@ -57,23 +57,24 @@
 #define FIRMWARE_OUT_FILE_NAME       "0:firmware.bin"
 
 
-/* Application starting offset */
-#define APP_START_OFFSET             0x8000 // Check the output code size to determine this offset
+/* Application starting offset - Verify with bootloader footprint*/
+#define APP_START_OFFSET             0x8000
 /* Application starting address in Flash */
 #define APP_START_ADDRESS            (FLASH_ADDR + APP_START_OFFSET)
 /* Maximum possible size of the Application */
-#define APP_MAX_SIZE                 (FLASH_ADDR + FLASH_SIZE - APP_START_ADDRESS)
+#define APP_MAX_SIZE                 (FLASH_ADDR + FLASH_SIZE  \
+                                      - APP_START_ADDRESS)
 /* Buffer size to be used for programming */
 #define FLASH_BUFFER_SIZE            (FLASH_PAGE_SIZE)
 
-/* Offset for the firmware in the input application binary*/
-#define APP_BINARY_OFFSET            (APP_CRC_SIZE + APP_SIGNATURE_SIZE) // 16 bytes
+/* Offset for the firmware in the input application binary - 16 bytes */
+#define APP_BINARY_OFFSET            (APP_CRC_SIZE + APP_SIGNATURE_SIZE)
 /* CRCCU Polynomial Selection */
 #define APP_CRC_POLYNOMIAL_TYPE      CRCCU_MR_PTYPE_CCITT8023 //32-bit CRC
 /* Application Signature Bytes */
-#define APP_SIGNATURE                "ATMEL SAM4L " // 12 bytes
+#define APP_SIGNATURE                "ATMEL SAM4L"
 /* Size of firmware revision, signature and CRC */
-#define APP_SIGNATURE_SIZE           12 // 12 bytes
+#define APP_SIGNATURE_SIZE           12 // 10 bytes
 #define APP_CRC_SIZE                 4  // 4 bytes
 
 
@@ -116,7 +117,8 @@
 #define CONSOLE_PUTS(str)            usart_write_line(CONSOLE_UART, str)
 #define CONSOLE_PUTC(c)              usart_putchar(CONSOLE_UART, c)
 /* Console Strings */
-#define APP_HEADER                   "\n\rATMEL MSC BOOTLOADER"
+#define APP_HEADER                   \
+                    "\n\rATMEL SAM4L Firmware Generator for USB MSC BOOTLOADER"
 #define TASK_PASSED                  "\n\rPASS"
 #define TASK_FAILED                  "\n\rFAIL"
 #endif
