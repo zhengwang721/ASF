@@ -312,7 +312,7 @@ static enum status_code _spi_check_config(
 			return STATUS_ERR_DENIED;
 		}
 
-		ctrla |= SERCOM_SPI_CTRLA_MODE(3);
+		ctrla |= SERCOM_SPI_CTRLA_MODE_SPI_MASTER;
 	} else {
 		/* Set frame format */
 		ctrla |= config->slave.frame_format;
@@ -332,7 +332,7 @@ static enum status_code _spi_check_config(
 			ctrlb |= SERCOM_SPI_CTRLB_PLOADEN;
 		}
 
-		ctrla |= SERCOM_SPI_CTRLA_MODE(2);
+		ctrla |= SERCOM_SPI_CTRLA_MODE_SPI_SLAVE;
 	}
 
 	/* Set data order */
@@ -438,11 +438,11 @@ enum status_code spi_init(
 
 	if (config->mode == SPI_MODE_MASTER) {
 		/* Set the SERCOM in SPI master mode */
-		spi_module->CTRLA.reg |= SERCOM_SPI_CTRLA_MODE(0x3);
+		spi_module->CTRLA.reg |= SERCOM_SPI_CTRLA_MODE_SPI_MASTER;
 	}
 	else {
 		/* Set the SERCOM in SPI slave mode */
-		spi_module->CTRLA.reg |= SERCOM_SPI_CTRLA_MODE(0x2);
+		spi_module->CTRLA.reg |= SERCOM_SPI_CTRLA_MODE_SPI_SLAVE;
 	}
 
 #if SPI_CALLBACK_MODE == true

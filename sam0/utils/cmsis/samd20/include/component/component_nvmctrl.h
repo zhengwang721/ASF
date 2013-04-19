@@ -310,4 +310,193 @@ typedef struct {
 
 /*@}*/
 
+/* ************************************************************************** */
+/**  SOFTWARE PERIPHERAL API DEFINITION FOR NON-VOLATILE FUSES */
+/* ************************************************************************** */
+/** \addtogroup fuses_api Peripheral Software API */
+/*@{*/
+
+
+#define ADC_FUSES_BIASCAL_ADDR      (NVMCTRL_OTP4 + 4)
+#define ADC_FUSES_BIASCAL_Pos       3            /**< \brief (NVMCTRL_OTP4) ADC Bias Calibration */
+#define ADC_FUSES_BIASCAL_Msk       (0x7u << ADC_FUSES_BIASCAL_Pos)
+#define ADC_FUSES_BIASCAL(value)    ((ADC_FUSES_BIASCAL_Msk & ((value) << ADC_FUSES_BIASCAL_Pos)))
+
+#define ADC_FUSES_BIAS_OPA_ADDR     (NVMCTRL_OTP2 + 4)
+#define ADC_FUSES_BIAS_OPA_Pos      19           /**< \brief (NVMCTRL_OTP2) ADC OPA Bias */
+#define ADC_FUSES_BIAS_OPA_Msk      (0x1u << ADC_FUSES_BIAS_OPA_Pos)
+
+#define ADC_FUSES_BOOSTEN_ADDR      (NVMCTRL_OTP2 + 4)
+#define ADC_FUSES_BOOSTEN_Pos       17           /**< \brief (NVMCTRL_OTP2) ADC Boost Enable */
+#define ADC_FUSES_BOOSTEN_Msk       (0x1u << ADC_FUSES_BOOSTEN_Pos)
+
+#define ADC_FUSES_CMPDELAY_ADDR     (NVMCTRL_OTP2 + 4)
+#define ADC_FUSES_CMPDELAY_Pos      16           /**< \brief (NVMCTRL_OTP2) ADC Comparator Delay */
+#define ADC_FUSES_CMPDELAY_Msk      (0x1u << ADC_FUSES_CMPDELAY_Pos)
+
+#define ADC_FUSES_DCFG_ADDR         (NVMCTRL_OTP2 + 4)
+#define ADC_FUSES_DCFG_Pos          16           /**< \brief (NVMCTRL_OTP2) ADC Device Configuration */
+#define ADC_FUSES_DCFG_Msk          (0xFu << ADC_FUSES_DCFG_Pos)
+#define ADC_FUSES_DCFG(value)       ((ADC_FUSES_DCFG_Msk & ((value) << ADC_FUSES_DCFG_Pos)))
+
+#define ADC_FUSES_GAINCORR_ADDR     NVMCTRL_OTP4
+#define ADC_FUSES_GAINCORR_Pos      3            /**< \brief (NVMCTRL_OTP4) ADC Gain Correction */
+#define ADC_FUSES_GAINCORR_Msk      (0xFFFu << ADC_FUSES_GAINCORR_Pos)
+#define ADC_FUSES_GAINCORR(value)   ((ADC_FUSES_GAINCORR_Msk & ((value) << ADC_FUSES_GAINCORR_Pos)))
+
+#define ADC_FUSES_LINEARITY_0_ADDR  NVMCTRL_OTP4
+#define ADC_FUSES_LINEARITY_0_Pos   27           /**< \brief (NVMCTRL_OTP4) ADC Linearity bits 4:0 */
+#define ADC_FUSES_LINEARITY_0_Msk   (0x1Fu << ADC_FUSES_LINEARITY_0_Pos)
+#define ADC_FUSES_LINEARITY_0(value) ((ADC_FUSES_LINEARITY_0_Msk & ((value) << ADC_FUSES_LINEARITY_0_Pos)))
+
+#define ADC_FUSES_LINEARITY_1_ADDR  (NVMCTRL_OTP4 + 4)
+#define ADC_FUSES_LINEARITY_1_Pos   0            /**< \brief (NVMCTRL_OTP4) ADC Linearity bits 7:5 */
+#define ADC_FUSES_LINEARITY_1_Msk   (0x7u << ADC_FUSES_LINEARITY_1_Pos)
+#define ADC_FUSES_LINEARITY_1(value) ((ADC_FUSES_LINEARITY_1_Msk & ((value) << ADC_FUSES_LINEARITY_1_Pos)))
+
+#define ADC_FUSES_OFFSETCORR_ADDR   NVMCTRL_OTP4
+#define ADC_FUSES_OFFSETCORR_Pos    15           /**< \brief (NVMCTRL_OTP4) ADC Offset Correction */
+#define ADC_FUSES_OFFSETCORR_Msk    (0xFFFu << ADC_FUSES_OFFSETCORR_Pos)
+#define ADC_FUSES_OFFSETCORR(value) ((ADC_FUSES_OFFSETCORR_Msk & ((value) << ADC_FUSES_OFFSETCORR_Pos)))
+
+#define ADC_FUSES_VCMPULSE_ADDR     (NVMCTRL_OTP2 + 4)
+#define ADC_FUSES_VCMPULSE_Pos      18           /**< \brief (NVMCTRL_OTP2) ADC VCM Pulse */
+#define ADC_FUSES_VCMPULSE_Msk      (0x1u << ADC_FUSES_VCMPULSE_Pos)
+
+#define DSU_FUSES_DCFG0_ADDR        NVMCTRL_OTP2
+#define DSU_FUSES_DCFG0_Pos         0            /**< \brief (NVMCTRL_OTP2) Device Configuration 0 */
+#define DSU_FUSES_DCFG0_Msk         (0xFFFFFFFFu << DSU_FUSES_DCFG0_Pos)
+#define DSU_FUSES_DCFG0(value)      ((DSU_FUSES_DCFG0_Msk & ((value) << DSU_FUSES_DCFG0_Pos)))
+
+#define DSU_FUSES_DCFG1_ADDR        (NVMCTRL_OTP2 + 4)
+#define DSU_FUSES_DCFG1_Pos         0            /**< \brief (NVMCTRL_OTP2) Device Configuration 1 */
+#define DSU_FUSES_DCFG1_Msk         (0xFFFFFFFFu << DSU_FUSES_DCFG1_Pos)
+#define DSU_FUSES_DCFG1(value)      ((DSU_FUSES_DCFG1_Msk & ((value) << DSU_FUSES_DCFG1_Pos)))
+
+#define DSU_FUSES_DEV_FAMILY_CFG_0_ADDR NVMCTRL_OTP2
+#define DSU_FUSES_DEV_FAMILY_CFG_0_Pos 5            /**< \brief (NVMCTRL_OTP2) Device Family Configuration bits 26:0 */
+#define DSU_FUSES_DEV_FAMILY_CFG_0_Msk (0x7FFFFFFu << DSU_FUSES_DEV_FAMILY_CFG_0_Pos)
+#define DSU_FUSES_DEV_FAMILY_CFG_0(value) ((DSU_FUSES_DEV_FAMILY_CFG_0_Msk & ((value) << DSU_FUSES_DEV_FAMILY_CFG_0_Pos)))
+
+#define DSU_FUSES_DEV_FAMILY_CFG_1_ADDR (NVMCTRL_OTP2 + 4)
+#define DSU_FUSES_DEV_FAMILY_CFG_1_Pos 0            /**< \brief (NVMCTRL_OTP2) Device Family Configuration bits 42:27 */
+#define DSU_FUSES_DEV_FAMILY_CFG_1_Msk (0xFFFFu << DSU_FUSES_DEV_FAMILY_CFG_1_Pos)
+#define DSU_FUSES_DEV_FAMILY_CFG_1(value) ((DSU_FUSES_DEV_FAMILY_CFG_1_Msk & ((value) << DSU_FUSES_DEV_FAMILY_CFG_1_Pos)))
+
+#define DSU_FUSES_DID_DEVSEL_ADDR   NVMCTRL_OTP2
+#define DSU_FUSES_DID_DEVSEL_Pos    0            /**< \brief (NVMCTRL_OTP2) Device Number */
+#define DSU_FUSES_DID_DEVSEL_Msk    (0x1Fu << DSU_FUSES_DID_DEVSEL_Pos)
+#define DSU_FUSES_DID_DEVSEL(value) ((DSU_FUSES_DID_DEVSEL_Msk & ((value) << DSU_FUSES_DID_DEVSEL_Pos)))
+
+#define DSU_FUSES_RAM_BIAS_ADDR     (NVMCTRL_OTP2 + 4)
+#define DSU_FUSES_RAM_BIAS_Pos      20           /**< \brief (NVMCTRL_OTP2) RAM Bias */
+#define DSU_FUSES_RAM_BIAS_Msk      (0x3u << DSU_FUSES_RAM_BIAS_Pos)
+#define DSU_FUSES_RAM_BIAS(value)   ((DSU_FUSES_RAM_BIAS_Msk & ((value) << DSU_FUSES_RAM_BIAS_Pos)))
+
+#define DSU_FUSES_RAM_READ_MARGIN_ADDR (NVMCTRL_OTP2 + 4)
+#define DSU_FUSES_RAM_READ_MARGIN_Pos 22           /**< \brief (NVMCTRL_OTP2) RAM Read Margin */
+#define DSU_FUSES_RAM_READ_MARGIN_Msk (0xFu << DSU_FUSES_RAM_READ_MARGIN_Pos)
+#define DSU_FUSES_RAM_READ_MARGIN(value) ((DSU_FUSES_RAM_READ_MARGIN_Msk & ((value) << DSU_FUSES_RAM_READ_MARGIN_Pos)))
+
+#define NVMCTRL_FUSES_BOOTPROT_ADDR NVMCTRL_USER
+#define NVMCTRL_FUSES_BOOTPROT_Pos  0            /**< \brief (NVMCTRL_USER) Bootloader Size */
+#define NVMCTRL_FUSES_BOOTPROT_Msk  (0x7u << NVMCTRL_FUSES_BOOTPROT_Pos)
+#define NVMCTRL_FUSES_BOOTPROT(value) ((NVMCTRL_FUSES_BOOTPROT_Msk & ((value) << NVMCTRL_FUSES_BOOTPROT_Pos)))
+
+#define NVMCTRL_FUSES_EEPROM_SIZE_ADDR NVMCTRL_USER
+#define NVMCTRL_FUSES_EEPROM_SIZE_Pos 4            /**< \brief (NVMCTRL_USER) EEPROM Size */
+#define NVMCTRL_FUSES_EEPROM_SIZE_Msk (0x7u << NVMCTRL_FUSES_EEPROM_SIZE_Pos)
+#define NVMCTRL_FUSES_EEPROM_SIZE(value) ((NVMCTRL_FUSES_EEPROM_SIZE_Msk & ((value) << NVMCTRL_FUSES_EEPROM_SIZE_Pos)))
+
+#define NVMCTRL_FUSES_LOCKFIELD_ADDR NVMCTRL_LOCKBIT
+#define NVMCTRL_FUSES_LOCKFIELD_Pos 0            /**< \brief (NVMCTRL_LOCKBIT) LOCK Region */
+#define NVMCTRL_FUSES_LOCKFIELD_Msk (0xFFu << NVMCTRL_FUSES_LOCKFIELD_Pos)
+#define NVMCTRL_FUSES_LOCKFIELD(value) ((NVMCTRL_FUSES_LOCKFIELD_Msk & ((value) << NVMCTRL_FUSES_LOCKFIELD_Pos)))
+
+#define NVMCTRL_FUSES_NVMP_ADDR     NVMCTRL_OTP1
+#define NVMCTRL_FUSES_NVMP_Pos      16           /**< \brief (NVMCTRL_OTP1) Number of NVM Pages */
+#define NVMCTRL_FUSES_NVMP_Msk      (0xFFFFu << NVMCTRL_FUSES_NVMP_Pos)
+#define NVMCTRL_FUSES_NVMP(value)   ((NVMCTRL_FUSES_NVMP_Msk & ((value) << NVMCTRL_FUSES_NVMP_Pos)))
+
+#define NVMCTRL_FUSES_NVM_LOCK_ADDR NVMCTRL_OTP1
+#define NVMCTRL_FUSES_NVM_LOCK_Pos  0            /**< \brief (NVMCTRL_OTP1) NVM Lock */
+#define NVMCTRL_FUSES_NVM_LOCK_Msk  (0xFFu << NVMCTRL_FUSES_NVM_LOCK_Pos)
+#define NVMCTRL_FUSES_NVM_LOCK(value) ((NVMCTRL_FUSES_NVM_LOCK_Msk & ((value) << NVMCTRL_FUSES_NVM_LOCK_Pos)))
+
+#define NVMCTRL_FUSES_PSZ_ADDR      NVMCTRL_OTP1
+#define NVMCTRL_FUSES_PSZ_Pos       8            /**< \brief (NVMCTRL_OTP1) NVM Page Size */
+#define NVMCTRL_FUSES_PSZ_Msk       (0xFu << NVMCTRL_FUSES_PSZ_Pos)
+#define NVMCTRL_FUSES_PSZ(value)    ((NVMCTRL_FUSES_PSZ_Msk & ((value) << NVMCTRL_FUSES_PSZ_Pos)))
+
+#define NVMCTRL_FUSES_REGION_LOCKS_ADDR (NVMCTRL_USER + 4)
+#define NVMCTRL_FUSES_REGION_LOCKS_Pos 16           /**< \brief (NVMCTRL_USER) NVM Region Locks */
+#define NVMCTRL_FUSES_REGION_LOCKS_Msk (0xFFFFu << NVMCTRL_FUSES_REGION_LOCKS_Pos)
+#define NVMCTRL_FUSES_REGION_LOCKS(value) ((NVMCTRL_FUSES_REGION_LOCKS_Msk & ((value) << NVMCTRL_FUSES_REGION_LOCKS_Pos)))
+
+#define SYSCTRL_FUSES_BOD12USERLEVEL_ADDR NVMCTRL_USER
+#define SYSCTRL_FUSES_BOD12USERLEVEL_Pos 17           /**< \brief (NVMCTRL_USER) BOD12 User Level */
+#define SYSCTRL_FUSES_BOD12USERLEVEL_Msk (0x1Fu << SYSCTRL_FUSES_BOD12USERLEVEL_Pos)
+#define SYSCTRL_FUSES_BOD12USERLEVEL(value) ((SYSCTRL_FUSES_BOD12USERLEVEL_Msk & ((value) << SYSCTRL_FUSES_BOD12USERLEVEL_Pos)))
+
+#define SYSCTRL_FUSES_BOD12_ACTION_ADDR NVMCTRL_USER
+#define SYSCTRL_FUSES_BOD12_ACTION_Pos 23           /**< \brief (NVMCTRL_USER) BOD12 Action */
+#define SYSCTRL_FUSES_BOD12_ACTION_Msk (0x3u << SYSCTRL_FUSES_BOD12_ACTION_Pos)
+#define SYSCTRL_FUSES_BOD12_ACTION(value) ((SYSCTRL_FUSES_BOD12_ACTION_Msk & ((value) << SYSCTRL_FUSES_BOD12_ACTION_Pos)))
+
+#define SYSCTRL_FUSES_BOD12_EN_ADDR NVMCTRL_USER
+#define SYSCTRL_FUSES_BOD12_EN_Pos  22           /**< \brief (NVMCTRL_USER) BOD12 Enable */
+#define SYSCTRL_FUSES_BOD12_EN_Msk  (0x1u << SYSCTRL_FUSES_BOD12_EN_Pos)
+
+#define SYSCTRL_FUSES_BOD33USERLEVEL_ADDR NVMCTRL_USER
+#define SYSCTRL_FUSES_BOD33USERLEVEL_Pos 8            /**< \brief (NVMCTRL_USER) BOD33 User Level */
+#define SYSCTRL_FUSES_BOD33USERLEVEL_Msk (0x3Fu << SYSCTRL_FUSES_BOD33USERLEVEL_Pos)
+#define SYSCTRL_FUSES_BOD33USERLEVEL(value) ((SYSCTRL_FUSES_BOD33USERLEVEL_Msk & ((value) << SYSCTRL_FUSES_BOD33USERLEVEL_Pos)))
+
+#define SYSCTRL_FUSES_BOD33_ACTION_ADDR NVMCTRL_USER
+#define SYSCTRL_FUSES_BOD33_ACTION_Pos 15           /**< \brief (NVMCTRL_USER) BOD33 Action */
+#define SYSCTRL_FUSES_BOD33_ACTION_Msk (0x3u << SYSCTRL_FUSES_BOD33_ACTION_Pos)
+#define SYSCTRL_FUSES_BOD33_ACTION(value) ((SYSCTRL_FUSES_BOD33_ACTION_Msk & ((value) << SYSCTRL_FUSES_BOD33_ACTION_Pos)))
+
+#define SYSCTRL_FUSES_BOD33_EN_ADDR NVMCTRL_USER
+#define SYSCTRL_FUSES_BOD33_EN_Pos  14           /**< \brief (NVMCTRL_USER) BOD33 Enable */
+#define SYSCTRL_FUSES_BOD33_EN_Msk  (0x1u << SYSCTRL_FUSES_BOD33_EN_Pos)
+
+#define SYSCTRL_FUSES_ULPVREG_ADDR  NVMCTRL_OTP4
+#define SYSCTRL_FUSES_ULPVREG_Pos   0            /**< \brief (NVMCTRL_OTP4) ULP Regulator Fallback Mode */
+#define SYSCTRL_FUSES_ULPVREG_Msk   (0x7u << SYSCTRL_FUSES_ULPVREG_Pos)
+#define SYSCTRL_FUSES_ULPVREG(value) ((SYSCTRL_FUSES_ULPVREG_Msk & ((value) << SYSCTRL_FUSES_ULPVREG_Pos)))
+
+#define WDT_FUSES_ALWAYSON_ADDR     NVMCTRL_USER
+#define WDT_FUSES_ALWAYSON_Pos      26           /**< \brief (NVMCTRL_USER) WDT Always On */
+#define WDT_FUSES_ALWAYSON_Msk      (0x1u << WDT_FUSES_ALWAYSON_Pos)
+
+#define WDT_FUSES_ENABLE_ADDR       NVMCTRL_USER
+#define WDT_FUSES_ENABLE_Pos        25           /**< \brief (NVMCTRL_USER) WDT Enable */
+#define WDT_FUSES_ENABLE_Msk        (0x1u << WDT_FUSES_ENABLE_Pos)
+
+#define WDT_FUSES_EWOFFSET_ADDR     (NVMCTRL_USER + 4)
+#define WDT_FUSES_EWOFFSET_Pos      3            /**< \brief (NVMCTRL_USER) WDT Early Warning Offset */
+#define WDT_FUSES_EWOFFSET_Msk      (0xFu << WDT_FUSES_EWOFFSET_Pos)
+#define WDT_FUSES_EWOFFSET(value)   ((WDT_FUSES_EWOFFSET_Msk & ((value) << WDT_FUSES_EWOFFSET_Pos)))
+
+#define WDT_FUSES_PER_ADDR          NVMCTRL_USER
+#define WDT_FUSES_PER_Pos           27           /**< \brief (NVMCTRL_USER) WDT Period */
+#define WDT_FUSES_PER_Msk           (0xFu << WDT_FUSES_PER_Pos)
+#define WDT_FUSES_PER(value)        ((WDT_FUSES_PER_Msk & ((value) << WDT_FUSES_PER_Pos)))
+
+#define WDT_FUSES_WEN_ADDR          (NVMCTRL_USER + 4)
+#define WDT_FUSES_WEN_Pos           7            /**< \brief (NVMCTRL_USER) WDT Window Mode Enable */
+#define WDT_FUSES_WEN_Msk           (0x1u << WDT_FUSES_WEN_Pos)
+
+#define WDT_FUSES_WINDOW_0_ADDR     NVMCTRL_USER
+#define WDT_FUSES_WINDOW_0_Pos      31           /**< \brief (NVMCTRL_USER) WDT Window bit 0 */
+#define WDT_FUSES_WINDOW_0_Msk      (0x1u << WDT_FUSES_WINDOW_0_Pos)
+
+#define WDT_FUSES_WINDOW_1_ADDR     (NVMCTRL_USER + 4)
+#define WDT_FUSES_WINDOW_1_Pos      0            /**< \brief (NVMCTRL_USER) WDT Window bits 3:1 */
+#define WDT_FUSES_WINDOW_1_Msk      (0x7u << WDT_FUSES_WINDOW_1_Pos)
+#define WDT_FUSES_WINDOW_1(value)   ((WDT_FUSES_WINDOW_1_Msk & ((value) << WDT_FUSES_WINDOW_1_Pos)))
+
+/*@}*/
+
 #endif /* _SAMD20_NVMCTRL_COMPONENT_ */

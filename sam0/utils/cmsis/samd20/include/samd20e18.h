@@ -235,7 +235,6 @@ void DAC_Handler                 ( void );
 #include "component/component_eic.h"
 #include "component/component_evsys.h"
 #include "component/component_gclk.h"
-#include "component/component_hmatrixb.h"
 #include "component/component_nvmctrl.h"
 #include "component/component_pac.h"
 #include "component/component_pm.h"
@@ -260,7 +259,6 @@ void DAC_Handler                 ( void );
 #include "instance/instance_eic.h"
 #include "instance/instance_evsys.h"
 #include "instance/instance_gclk.h"
-#include "instance/instance_sbmatrix.h"
 #include "instance/instance_nvmctrl.h"
 #include "instance/instance_pac0.h"
 #include "instance/instance_pac1.h"
@@ -302,7 +300,6 @@ void DAC_Handler                 ( void );
 #define ID_DSU           33 /**< \brief Device Service Unit (DSU) */
 #define ID_NVMCTRL       34 /**< \brief Non-Volatile Memory Controller (NVMCTRL) */
 #define ID_PORT          35 /**< \brief Port Module (PORT) */
-#define ID_SBMATRIX      36 /**< \brief HSB Matrix (SBMATRIX) */
 
 // Peripheral instances on HPB2 bridge
 #define ID_PAC2          64 /**< \brief Peripheral Access Controller PAC (PAC2) */
@@ -338,7 +335,6 @@ void DAC_Handler                 ( void );
 #define EIC                           (0x40001800U) /**< \brief (EIC) APB Base Address */
 #define EVSYS                         (0x42000400U) /**< \brief (EVSYS) APB Base Address */
 #define GCLK                          (0x40000C00U) /**< \brief (GCLK) APB Base Address */
-#define SBMATRIX                      (0x41004800U) /**< \brief (SBMATRIX) APB Base Address */
 #define NVMCTRL                       (0x41004000U) /**< \brief (NVMCTRL) APB Base Address */
 #define NVMCTRL_CAL                   (0x00800000U) /**< \brief (NVMCTRL) CAL Base Address */
 #define NVMCTRL_LOCKBIT               (0x00802000U) /**< \brief (NVMCTRL) LOCKBIT Base Address */
@@ -394,17 +390,13 @@ void DAC_Handler                 ( void );
 #define GCLK_INST_NUM     1                         /**< \brief (GCLK) Number of instances */
 #define GCLK_INSTS        { GCLK }                  /**< \brief (GCLK) Instances List */
 
-#define SBMATRIX          ((Hmatrixb *)0x41004800U) /**< \brief (SBMATRIX) APB Base Address */
-#define HMATRIXB_INST_NUM 1                         /**< \brief (HMATRIXB) Number of instances */
-#define HMATRIXB_INSTS    { SBMATRIX }              /**< \brief (HMATRIXB) Instances List */
-
 #define NVMCTRL           ((Nvmctrl  *)0x41004000U) /**< \brief (NVMCTRL) APB Base Address */
-#define NVMCTRL_CAL       ((Nvmctrl  *)0x00800000U) /**< \brief (NVMCTRL) CAL Base Address */
-#define NVMCTRL_LOCKBIT   ((Nvmctrl  *)0x00802000U) /**< \brief (NVMCTRL) LOCKBIT Base Address */
-#define NVMCTRL_OTP1      ((Nvmctrl  *)0x00806000U) /**< \brief (NVMCTRL) OTP1 Base Address */
-#define NVMCTRL_OTP2      ((Nvmctrl  *)0x00806008U) /**< \brief (NVMCTRL) OTP2 Base Address */
-#define NVMCTRL_OTP4      ((Nvmctrl  *)0x00806020U) /**< \brief (NVMCTRL) OTP4 Base Address */
-#define NVMCTRL_USER      ((Nvmctrl  *)0x00804000U) /**< \brief (NVMCTRL) USER Base Address */
+#define NVMCTRL_CAL                   (0x00800000U) /**< \brief (NVMCTRL) CAL Base Address */
+#define NVMCTRL_LOCKBIT               (0x00802000U) /**< \brief (NVMCTRL) LOCKBIT Base Address */
+#define NVMCTRL_OTP1                  (0x00806000U) /**< \brief (NVMCTRL) OTP1 Base Address */
+#define NVMCTRL_OTP2                  (0x00806008U) /**< \brief (NVMCTRL) OTP2 Base Address */
+#define NVMCTRL_OTP4                  (0x00806020U) /**< \brief (NVMCTRL) OTP4 Base Address */
+#define NVMCTRL_USER                  (0x00804000U) /**< \brief (NVMCTRL) USER Base Address */
 #define NVMCTRL_INST_NUM  1                         /**< \brief (NVMCTRL) Number of instances */
 #define NVMCTRL_INSTS     { NVMCTRL }               /**< \brief (NVMCTRL) Instances List */
 
@@ -473,7 +465,6 @@ void DAC_Handler                 ( void );
 #define FLASH_USER_PAGE_SIZE  64
 #define HRAMC0_SIZE           0x8000 /* 32 kB */
 #define FLASH_ADDR            (0x00000000U) /**< FLASH base address */
-#define FLASH_USER_PAGE_ADDR  (0x00800000U) /**< FLASH_USER_PAGE base address */
 #define HRAMC0_ADDR           (0x20000000U) /**< HRAMC0 base address */
 
 /* ************************************************************************** */

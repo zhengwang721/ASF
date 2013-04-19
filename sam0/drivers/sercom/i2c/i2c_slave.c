@@ -103,7 +103,7 @@ static enum status_code _i2c_slave_check_config(
 	/* Write config to register CTRLA */
 	tmp_ctrla |= config->sda_hold_time |
 			(config->run_in_standby << SERCOM_I2CS_CTRLA_RUNSTDBY_Pos) |
-			SERCOM_I2CS_CTRLA_MODE(4) |
+			SERCOM_I2CS_CTRLA_MODE_I2C_SLAVE |
 			SERCOM_I2CS_CTRLA_ENABLE;
 
 	/* Set CTRLB configuration */
@@ -274,7 +274,7 @@ enum status_code i2c_slave_init(
 #endif
 
 	/* Set SERCOM module to operate in I2C slave mode. */
-	i2c_hw->CTRLA.reg = SERCOM_I2CS_CTRLA_MODE(4);
+	i2c_hw->CTRLA.reg = SERCOM_I2CS_CTRLA_MODE_I2C_SLAVE;
 
 	/* Set config and return status. */
 	return _i2c_slave_set_config(module, config);

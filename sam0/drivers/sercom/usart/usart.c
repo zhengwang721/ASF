@@ -113,10 +113,10 @@ static enum status_code _usart_set_config(
 	ctrla |= config->transfer_mode;
 
 	if (config->use_external_clock == false) {
-		ctrla |= SERCOM_USART_CTRLA_MODE(1);
+		ctrla |= SERCOM_SPI_CTRLA_MODE_USART_INT_CLK;
 	}
 	else {
-		ctrla |= SERCOM_USART_CTRLA_MODE(0);
+		ctrla |= SERCOM_SPI_CTRLA_MODE_USART_EXT_CLK;
 	}
 
 	/* Set stopbits and character size */
