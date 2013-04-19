@@ -74,22 +74,23 @@
 /*! brief States of the example.
  */
 enum wdt_example_state {
-	//! Writing tests in WDT
+	/* ! Writing tests in WDT */
 	START_OF_PROG = (0x01),
-	//! MCU reset using WDT
+	/* ! MCU reset using WDT */
 	WDT_MCU_RESET = (0x02),
-	//! Enable WDT in Reset mode, 8x wdt_reset() before TIMEOUT (TO)
-	REFRESH_WDT = (0x03), 
-	//! Enable WDT in Reset mode, no wdt_reset(), reaching the TO
+	/* ! Enable WDT in Reset mode, 8x wdt_reset() before TIMEOUT (TO) */
+	REFRESH_WDT = (0x03),
+	/* ! Enable WDT in Reset mode, no wdt_reset(), reaching the TO */
 	WDT_RST = (0x04),
+
 	/* Enable WDT in Interrupt mode, no wdt_reset(), interrupt will
-	 get triggered when reaching the TO */
+	 * get triggered when reaching the TO */
 	WDT_INTERRUPT = (0x05),
-	//! Enable WDT in Reset Interrupt mode, no wdt_reset(), reaching the TO
+	/* ! Enable WDT in Reset Interrupt mode, no wdt_reset(), reaching the TO */
 	WDT_RST_INTERRUPT = (0x06),
-	//! Indicate the test complete through LED On
+	/* ! Indicate the test complete through LED On */
 	END_OF_PROG = (0x07),
-	//! WDT error (loop without end)
+	/* ! WDT error (loop without end) */
 	ERROR_STATE = (0x0F),
 };
 
@@ -97,7 +98,7 @@ enum wdt_example_state {
  */
 #if defined (__GNUC__)
 volatile enum wdt_example_state state_flag
-		__attribute__ ((section(".noinit")));
+__attribute__ ((section(".noinit")));
 #elif defined(__ICCAVR__)
 __no_init volatile enum wdt_example_state state_flag;
 #else
@@ -111,10 +112,11 @@ __no_init volatile enum wdt_example_state state_flag;
  */
 static void wdt_timer_callback(void)
 {
-	if( state_flag != WDT_RST_INTERRUPT )		
-	   state_flag = WDT_RST_INTERRUPT;
-	else
-	   state_flag = END_OF_PROG;
+	if (state_flag != WDT_RST_INTERRUPT) {
+		state_flag = WDT_RST_INTERRUPT;
+	} else {
+		state_flag = END_OF_PROG;
+	}
 }
 
 /** \brief Main function. */
@@ -122,7 +124,7 @@ int main(void)
 {
 	uint8_t delay_counter;
 	volatile uint16_t delay;
-	
+
 	/* Initialize the board.
 	 * The board-specific conf_board.h file contains the configuration of
 	 * the board initialization.
@@ -140,25 +142,27 @@ int main(void)
 	} else {
 		reset_cause_clear_causes(CHIP_RESET_CAUSE_WDT);
 	}
-        
-        wdt_disable();
-	
-	while (true) {
-		
-		switch (state_flag) {
 
+	wdt_disable();
+
+	while (true) {
+		switch (state_flag) {
 		case START_OF_PROG:
 			/* Writing test. */
 			wdt_set_timeout_period(WDT_TIMEOUT_PERIOD_2KCLK);
-			if (wdt_get_timeout_period() != WDT_TIMEOUT_PERIOD_2KCLK) {
+			if (wdt_get_timeout_period() !=
+					WDT_TIMEOUT_PERIOD_2KCLK) {
 				state_flag = ERROR_STATE;
 				break;
 			}
+
 			wdt_set_timeout_period(WDT_TIMEOUT_PERIOD_1024KCLK);
-			if (wdt_get_timeout_period() != WDT_TIMEOUT_PERIOD_1024KCLK) {
+			if (wdt_get_timeout_period() !=
+					WDT_TIMEOUT_PERIOD_1024KCLK) {
 				state_flag = ERROR_STATE;
 				break;
 			}
+
 			/* Wait for 2 s. */
 			delay = 2000;
 			delay_ms(delay);
@@ -174,14 +178,17 @@ int main(void)
 			/* Enable WDT 500 ms. */
 			wdt_set_timeout_period(WDT_TIMEOUT_PERIOD_64KCLK);
 			wdt_enable(SYSTEM_RESET_MODE);
-			if (wdt_get_timeout_period() != WDT_TIMEOUT_PERIOD_64KCLK)  {
+			if (wdt_get_timeout_period() !=
+					WDT_TIMEOUT_PERIOD_64KCLK) {
 				state_flag = ERROR_STATE;
 				break;
-			}			
-			for (delay_counter = 0; delay_counter < 8; delay_counter++) {
+			}
+
+			for (delay_counter = 0; delay_counter < 8;
+					delay_counter++) {
 				/* Wait for 8x 250 ms = 2 s. */
-		        delay = 250;
-		        delay_ms(delay);
+				delay = 250;
+				delay_ms(delay);
 				wdt_reset();
 			}
 			wdt_disable();
@@ -193,29 +200,33 @@ int main(void)
 			/* Enable WDT 2 s. */
 			wdt_set_timeout_period(WDT_TIMEOUT_PERIOD_256KCLK);
 			wdt_enable(SYSTEM_RESET_MODE);
-			if (wdt_get_timeout_period() != WDT_TIMEOUT_PERIOD_256KCLK)  {
+			if (wdt_get_timeout_period() !=
+					WDT_TIMEOUT_PERIOD_256KCLK) {
 				state_flag = ERROR_STATE;
 				break;
-			}			
+			}
+
 			while (true) {
 				/* Wait for Watchdog reset. */
 			}
-			// No break is needed
+		/* No break is needed */
 
 		case WDT_INTERRUPT:
 			/* Enable WDT 250 ms. */
 			wdt_set_timeout_period(WDT_TIMEOUT_PERIOD_32KCLK);
 			wdt_set_interrupt_callback(wdt_timer_callback);
 			wdt_enable(INTERRUPT_MODE);
-			if (wdt_get_timeout_period() != WDT_TIMEOUT_PERIOD_32KCLK)  {
+			if (wdt_get_timeout_period() !=
+					WDT_TIMEOUT_PERIOD_32KCLK) {
 				state_flag = ERROR_STATE;
 				break;
 			}
+
 			cpu_irq_enable();
 			/* Wait for interrupt to get triggered */
 			delay = 400;
 			delay_ms(delay);
-                        wdt_disable();
+			wdt_disable();
 			break;
 
 		case WDT_RST_INTERRUPT:
@@ -224,10 +235,12 @@ int main(void)
 			wdt_set_timeout_period(WDT_TIMEOUT_PERIOD_16KCLK);
 			wdt_set_interrupt_callback(wdt_timer_callback);
 			wdt_enable(INTERRUPT_SYSTEM_RESET_MODE);
-			if (wdt_get_timeout_period() != WDT_TIMEOUT_PERIOD_16KCLK) {
+			if (wdt_get_timeout_period() !=
+					WDT_TIMEOUT_PERIOD_16KCLK) {
 				state_flag = ERROR_STATE;
 				break;
 			}
+
 			/* Wait for 200 ms. */
 			delay = 200;
 			delay_ms(delay);
@@ -235,32 +248,31 @@ int main(void)
 			while (true) {
 				/* Wait for Watchdog reset. */
 			}
-			// No break is needed
+		/* No break is needed */
 
 		case ERROR_STATE:
-		
-		    wdt_disable();
-                        
+
+			wdt_disable();
+
 			while (true) {
-			    LED_On(LED_PIN);
+				LED_On(LED_PIN);
 				/* Wait for 500 ms. */
 				delay = 500;
 				delay_ms(delay);
 				/* Blinking. */
-			    LED_Off(LED_PIN);
+				LED_Off(LED_PIN);
 				/* Wait for 500 ms. */
 				delay = 500;
 				delay_ms(delay);
 			}
-			// No break is needed
+		/* No break is needed */
 
 		case END_OF_PROG:
 		default:
 			LED_On(LED_PIN);
 			while (true) {
-            }			
-			// No break is needed
+			}
+			/* No break is needed */
 		}
 	}
-		
 }

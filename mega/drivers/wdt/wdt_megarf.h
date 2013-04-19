@@ -44,7 +44,8 @@
 #define _WDT_MEGARF_H_
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 #include <compiler.h>
@@ -71,36 +72,36 @@ extern "C" {
  * the callback function must match the wdt_callback_t type.
  *
  */
-typedef void (*wdt_callback_t) (void);
+typedef void (*wdt_callback_t)(void);
 
 /* WDTCSR  bit masks and bit positions */
-#define WDIF_bm  0x80 /* WDT timeout interrupt flag bit mask.*/
-#define WDIF_bp  7 /* WDT timeout interrupt flag bit position.*/
+#define WDIF_bm  0x80           /* WDT timeout interrupt flag bit mask. */
+#define WDIF_bp  7              /* WDT timeout interrupt flag bit position. */
 
-#define WDIE_bm  0x40 /* WDT timeout interrupt enable bit mask.*/
-#define WDIE_bp  6 /* WDT timeout interrupt enable bit position.*/
+#define WDIE_bm  0x40           /* WDT timeout interrupt enable bit mask. */
+#define WDIE_bp  6              /* WDT timeout interrupt enable bit position. */
 
-#define WDP3_bm  0x20 /* WDT prescaler 3 Bit mask.*/
-#define WDP3_bp  5 /*  WDT prescaler 3 bit position.*/
+#define WDP3_bm  0x20           /* WDT prescaler 3 Bit mask. */
+#define WDP3_bp  5              /*  WDT prescaler 3 bit position. */
 
-#define WDCE_bm   0x10 /* WDT change enable bit mask.*/
-#define WDCE_bp   4 /* WDT change enable bit position.*/
+#define WDCE_bm   0x10          /* WDT change enable bit mask. */
+#define WDCE_bp   4             /* WDT change enable bit position. */
 
-#define WDE_bm  0x08 /* WDT enable bit mask.*/
-#define WDE_bp  3 /* WDT enable bit position.*/
+#define WDE_bm  0x08            /* WDT enable bit mask. */
+#define WDE_bp  3               /* WDT enable bit position. */
 
-#define WDP2_bm  0x04 /* WDT prescaler 2 Bit mask.*/
-#define WDP2_bp  2 /*  WDT prescaler 2 bit position.*/
+#define WDP2_bm  0x04           /* WDT prescaler 2 Bit mask. */
+#define WDP2_bp  2              /*  WDT prescaler 2 bit position. */
 
-#define WDP1_bm  0x02 /* WDT prescaler 1 Bit mask.*/
-#define WDP1_bp  1 /*  WDT prescaler 1 bit position.*/
+#define WDP1_bm  0x02           /* WDT prescaler 1 Bit mask. */
+#define WDP1_bp  1              /*  WDT prescaler 1 bit position. */
 
-#define WDP0_bm  0x01 /* WDT prescaler 0 Bit mask.*/
-#define WDP0_bp  0 /*  WDT prescaler 0 bit position.*/
+#define WDP0_bm  0x01           /* WDT prescaler 0 Bit mask. */
+#define WDP0_bp  0              /*  WDT prescaler 0 bit position. */
 
 /* WDRF bit mask and bit position in MCUSR */
-#define WDRF_bm  0x08 /* WDT Reset flag Bit mask.*/
-#define WDRF_bp  3 /*  WDT Reset flag bit position.*/
+#define WDRF_bm  0x08           /* WDT Reset flag Bit mask. */
+#define WDRF_bp  3              /*  WDT Reset flag bit position. */
 
 /**
  * \internal
@@ -108,25 +109,25 @@ typedef void (*wdt_callback_t) (void);
  * \brief Watchdog timeout period setting
  */
 enum wdt_timeout_period {
-	//! Timeout period = 2K cycles or 16ms @ 3.3V
+	/* ! Timeout period = 2K cycles or 16ms @ 3.3V */
 	WDT_TIMEOUT_PERIOD_2KCLK = (0x00),
-	//! Timeout period = 4K cycles or 32ms @ 3.3V
+	/* ! Timeout period = 4K cycles or 32ms @ 3.3V */
 	WDT_TIMEOUT_PERIOD_4KCLK = (0x01),
-	//! Timeout period = 8K cycles or 64ms @ 3.3V
+	/* ! Timeout period = 8K cycles or 64ms @ 3.3V */
 	WDT_TIMEOUT_PERIOD_8KCLK = (0x02),
-	//! Timeout period = 16K cycles or 125ms @ 3.3V
+	/* ! Timeout period = 16K cycles or 125ms @ 3.3V */
 	WDT_TIMEOUT_PERIOD_16KCLK = (0x03),
-	//! Timeout period = 32K cycles or 250ms @ 3.3V
+	/* ! Timeout period = 32K cycles or 250ms @ 3.3V */
 	WDT_TIMEOUT_PERIOD_32KCLK = (0x04),
-	//! Timeout period = 64K cycles or 500ms @ 3.3V
+	/* ! Timeout period = 64K cycles or 500ms @ 3.3V */
 	WDT_TIMEOUT_PERIOD_64KCLK = (0x05),
-	//! Timeout period = 128K cycles or 1s @ 3.3V
+	/* ! Timeout period = 128K cycles or 1s @ 3.3V */
 	WDT_TIMEOUT_PERIOD_128KCLK = (0x06),
-	//! Timeout period = 256K cycles or 2s @ 3.3V
+	/* ! Timeout period = 256K cycles or 2s @ 3.3V */
 	WDT_TIMEOUT_PERIOD_256KCLK = (0x07),
-	//! Timeout period = 512K cycles or 4s @ 3.3V
+	/* ! Timeout period = 512K cycles or 4s @ 3.3V */
 	WDT_TIMEOUT_PERIOD_512KCLK = (0x08),
-	//! Timeout period = 1024K cycles or 8s @ 3.3V
+	/* ! Timeout period = 1024K cycles or 8s @ 3.3V */
 	WDT_TIMEOUT_PERIOD_1024KCLK = (0x09),
 };
 
@@ -144,7 +145,7 @@ enum wdt_mode_select {
 /**
  * \internal
  * \def MASK_PRESCALE_WPD3
- * \brief Mask for timeout period setting above WDT_TIMEOUT_PERIOD_256KCLK 
+ * \brief Mask for timeout period setting above WDT_TIMEOUT_PERIOD_256KCLK
  */
 #define MASK_PRESCALE_WPD3 0x08
 
@@ -153,7 +154,7 @@ enum wdt_mode_select {
  * \def PRESCALE_MASK
  * \brief Mask for timeout period setting register
  */
-#define PRESCALE_MASK (WDP3_bm | WDP2_bm | WDP1_bm | WDP0_bm) 
+#define PRESCALE_MASK (WDP3_bm | WDP2_bm | WDP1_bm | WDP0_bm)
 
 /**
  * \internal
@@ -161,7 +162,7 @@ enum wdt_mode_select {
  * \brief This macro resets (clears/refreshes) the Watchdog Timer.
  */
 #if defined(__GNUC__)
-#define wdt_reset() __asm__ __volatile__("wdr");
+#define wdt_reset() __asm__ __volatile__ ("wdr");
 #elif defined(__ICCAVR__)
 #define wdt_reset() __watchdog_reset();
 #else
@@ -169,29 +170,29 @@ enum wdt_mode_select {
 #endif
 
 /**
- *\brief Clear Watchdog reset flag.
+ * *\brief Clear Watchdog reset flag.
  *
  *  This function clears the WDT flag.
  *
- *\param  none
+ ***\param  none
  */
 static inline void wdt_reset_flag_clear(void)
 {
-   /* Clear WDRF flag in MCUSR */
-  MCUSR &= ~ WDRF_bm;
+	/* Clear WDRF flag in MCUSR */
+	MCUSR &= ~WDRF_bm;
 }
 
 /**
- *\brief Gets the status of Watchdog reset flag.
+ * *\brief Gets the status of Watchdog reset flag.
  *
  *  This function checks the WDT reset flag is set
  *
- *  \retval  false  WDT reset flag is not set 
- *           true   reset flag is set 
+ *  \retval  false  WDT reset flag is not set
+ *           true   reset flag is set
  */
 static inline bool wdt_reset_flag_is_set(void)
 {
-   return ((MCUSR & WDRF_bm) == WDRF_bm );
+	return ((MCUSR & WDRF_bm) == WDRF_bm);
 }
 
 /**
@@ -203,8 +204,8 @@ static inline bool wdt_reset_flag_is_set(void)
  */
 static inline void wdt_timeout_interrupt_flag_clear(void)
 {
-  /* Clear WDIF flag in WDTCSR */
-  WDTCSR |= WDIF_bm;
+	/* Clear WDIF flag in WDTCSR */
+	WDTCSR |= WDIF_bm;
 }
 
 /**
@@ -218,7 +219,7 @@ static inline void wdt_timeout_interrupt_flag_clear(void)
  */
 static inline bool wdt_timeout_interrupt_flag_is_set(void)
 {
-   return ((WDTCSR & WDIF_bm) == WDIF_bm );
+	return ((WDTCSR & WDIF_bm) == WDIF_bm);
 }
 
 /**
@@ -230,7 +231,7 @@ static inline bool wdt_timeout_interrupt_flag_is_set(void)
  */
 static inline bool wdt_system_reset_mode_enabled(void)
 {
-   return (((WDTCSR & WDE_bm) == WDE_bm) && ((WDTCSR & WDIE_bm) == 0x00));
+	return (((WDTCSR & WDE_bm) == WDE_bm) && ((WDTCSR & WDIE_bm) == 0x00));
 }
 
 /**
@@ -241,11 +242,11 @@ static inline bool wdt_system_reset_mode_enabled(void)
  */
 static inline bool wdt_interrupt_mode_enabled(void)
 {
-   return (((WDTCSR & WDIE_bm) == WDIE_bm) && ((WDTCSR & WDE_bm) == 0x00));
+	return (((WDTCSR & WDIE_bm) == WDIE_bm) && ((WDTCSR & WDE_bm) == 0x00));
 }
 
 /**
- * \brief checks whether the Watchdog is enabled for system reset and 
+ * \brief checks whether the Watchdog is enabled for system reset and
  * interrupt mode
  *
  * \return  false  WDT in system reset and interrupt mode is disabled
@@ -253,29 +254,30 @@ static inline bool wdt_interrupt_mode_enabled(void)
  */
 static inline bool wdt_reset_interrupt_mode_enabled(void)
 {
-   return (((WDTCSR & WDIE_bm) == WDIE_bm) && ((WDTCSR & WDE_bm) == WDE_bm) );
+	return (((WDTCSR & WDIE_bm) == WDIE_bm) &&
+	       ((WDTCSR & WDE_bm) == WDE_bm));
 }
 
-
 /**
- *\brief Get Watchdog timeout period.
+ * *\brief Get Watchdog timeout period.
  *
  *  This function gets the coded field of the WDT timeout period.
  *
- *\return WDT timeout coded period
+ ***\return WDT timeout coded period
  */
 static inline enum wdt_timeout_period wdt_get_timeout_period(void)
 {
 	volatile uint8_t period;
 
 	period = WDTCSR & PRESCALE_MASK;
-	
-	if(period == 0x20)
-          return WDT_TIMEOUT_PERIOD_512KCLK; 
-	else if(period == 0x21)
-          return WDT_TIMEOUT_PERIOD_1024KCLK;
-	else
-          return (enum wdt_timeout_period)period;
+
+	if (period == 0x20) {
+		return WDT_TIMEOUT_PERIOD_512KCLK;
+	} else if (period == 0x21) {
+		return WDT_TIMEOUT_PERIOD_1024KCLK;
+	} else {
+		return (enum wdt_timeout_period)period;
+	}
 }
 
 /**
@@ -320,13 +322,14 @@ void wdt_enable(enum wdt_mode_select mode);
 void wdt_set_interrupt_callback(wdt_callback_t callback);
 
 /**
- *\brief Reset MCU via Watchdog.
+ * *\brief Reset MCU via Watchdog.
  *
  *  This function generates an hardware microcontroller reset using the WDT.
  *
- *  The function loads enables the WDT in system reset mode. 
+ *  The function loads enables the WDT in system reset mode.
  */
 void wdt_reset_mcu(void);
+
 /** @} */
 
 #ifdef __cplusplus
@@ -441,4 +444,4 @@ void wdt_reset_mcu(void);
  * -# Reset the WDT before the timeout period is over to prevent system reset:
  *   - \code wdt_reset(); \endcode
  */
-#endif // _WDT_MEGARF_H_
+#endif /* _WDT_MEGARF_H_ */
