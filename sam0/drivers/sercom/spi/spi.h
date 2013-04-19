@@ -349,7 +349,10 @@ extern "C" {
 /**
  * \brief SPI Callback enum
  *
- * Callbacks for SPI callback driver
+ * Callbacks for SPI callback driver.
+ *
+ * \note For slave mode, these callbacks will be called when a transaction
+ * is ended by the master pulling Slave Select high.
  *
  */
 enum spi_callback {
@@ -361,7 +364,10 @@ enum spi_callback {
 	SPI_CALLBACK_BUFFER_TRANSCEIVED,
 	/** Callback for error */
 	SPI_CALLBACK_ERROR,
-	/** Callback for transmission complete for slave */
+	/** 
+	* Callback for transmission ended by master before entire buffer was
+	* read or written from slave
+	*/
 	SPI_CALLBACK_SLAVE_TRANSMISSION_COMPLETE,
 #  if !defined(__DOXYGEN__)
 	/** Number of available callbacks. */
@@ -579,7 +585,10 @@ struct spi_module {
 	/** Receiver enabled */
 	bool receiver_enabled;
 #  if SPI_CALLBACK_MODE == true
+	/** Direction of transaction */
 	volatile enum spi_direction dir;
+	/** Direction of finished transaction for slave */
+	volatile enum spi_direction slave_dir;
 	/** Array to store callback function pointers in */
 	spi_callback_t callback[SPI_CALLBACK_N];
 	/** Buffer pointer to where the next received character will be put */

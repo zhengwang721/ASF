@@ -458,6 +458,7 @@ enum status_code spi_init(
 	module->enabled_callback           = 0x00;
 	module->status                     = STATUS_OK;
 	module->dir                        = SPI_DIRECTION_IDLE;
+	module->slave_dir                  = SPI_DIRECTION_IDLE;
 	/*
 	 * Set interrupt handler and register SPI software module struct in
 	 * look-up table
@@ -618,7 +619,13 @@ enum status_code spi_select_slave(
 
 			/* Write address to slave */
 			spi_write(module, slave->address);
-			// TODO: WAIT FOR RETURN VALUE
+
+			if (!(module->receiver_enabled)) {
+				/* Flush contents of shift register shifted back from slave */
+				while(!spi_is_ready_to_read(module));
+				uint16_t flush = 0;
+				spi_read(module, &flush);
+			}
 		}
 	} else {
 		/* Drive Slave Select high */
@@ -700,7 +707,7 @@ enum status_code spi_write_buffer_wait(
 		/* Write the data to send */
 		spi_write(module, data_to_send);
 
-		if (module->reciever_enabled) {
+		if (module->receiver_enabled) {
 
 			/* Start timeout period for slave */
 			if (module->mode == SPI_MODE_SLAVE) {
