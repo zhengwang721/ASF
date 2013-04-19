@@ -68,6 +68,7 @@ __no_inline enum status_code system_peripheral_lock(
 {
 	/* Bit to be set in desired register is given by bit 5:0 */
 	uint8_t register_bit_pos = peripheral_id % 32;
+	UNUSED(register_bit_pos);
 
 	/* Value of which PAC register to use is given by bit 31:6 */
 	uint8_t register_pos = peripheral_id / 32;
@@ -127,6 +128,7 @@ __no_inline enum status_code system_peripheral_unlock(
 {
 	/* Bit to be set in desired register is given by bit 5:0 */
 	uint8_t register_bit_pos = peripheral_id % 32;
+	UNUSED(register_bit_pos);
 
 	/* Value of which PAC register to use is given by bit 31:6 */
 	uint8_t register_pos = peripheral_id / 32;
