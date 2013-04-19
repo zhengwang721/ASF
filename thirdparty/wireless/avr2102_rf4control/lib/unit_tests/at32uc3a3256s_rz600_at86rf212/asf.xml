@@ -9,11 +9,10 @@
 		<build type="header-file" value="conf_nvm.h"/>
 		<build type="header-file" value="conf_sleepmgr.h"/>
 		<build type="header-file" value="conf_test.h"/>
-		
+
         <config name="config.compiler.iarew.data_stack_size" value="0x200"/>
 		<config name="config.compiler.iarew.near_heap_size" value="0x40"/>
-		
-   		
+
 		<config name="config.thirdparty.wireless.avr2025_mac.source.tal" value="at86rf212"/>
 		<config name="config.thirdparty.wireless.avr2025_mac.source.mac.callbacks" value="none"/>
 		<config name="config.thirdparty.wireless.avr2025_mac.source.sal" value="at86rf2xx"/>
@@ -25,9 +24,7 @@
         <require idref="thirdparty.wireless.avr2102_rf4control.zrc.unit_tests"/>
    		<require idref="common.utils.stdio.stdio_usb"/>
 		<config name="config.compiler.iarew32.dlib" value="full"/>
-			<generator value="iarew32"/>
-		<generator value="avr32gcc" />
-		<generator value="as5_32" />
+		<generator value="iarew32"/>
 		<generator value="doxygen"/>
 		<device-support value="at32uc3a3256s"/>
 	</project>
