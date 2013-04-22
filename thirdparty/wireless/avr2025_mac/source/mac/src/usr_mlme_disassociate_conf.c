@@ -60,9 +60,14 @@
 /* === Prototypes ========================================================== */
 
 /* === Implementation ====================================================== */
-
+#if (defined __GNUC__)
+void __attribute__((weak))
+usr_mlme_disassociate_conf(uint8_t status,
+                           wpan_addr_spec_t *DeviceAddrSpec)
+#else
 void usr_mlme_disassociate_conf(uint8_t status,
                                 wpan_addr_spec_t *DeviceAddrSpec)
+#endif
 {
     /* Keep compiler happy. */
     DeviceAddrSpec = DeviceAddrSpec;
