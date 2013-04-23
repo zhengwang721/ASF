@@ -707,7 +707,7 @@ void _spi_interrupt_handler(
 			module->remaining_tx_buffer_length = 0;
 			module->remaining_rx_buffer_length = 0;
 
-			if (module->status = STATUS_ERR_OVERFLOW) {
+			if (module->status == STATUS_ERR_OVERFLOW) {
 				if (callback_mask & (1 << SPI_CALLBACK_ERROR)) {
 					(module->callback[SPI_CALLBACK_ERROR])(module);
 				}
