@@ -212,8 +212,6 @@ struct afec_config {
 struct afec_ch_config {
 	/** Differential Mode */
 	bool diff;
-	/** DC Offset */
-	bool offset;
 	/** Gain Value */
 	enum afec_gainvalue gain;
 };
@@ -630,6 +628,11 @@ static inline Pdc *afec_get_pdc_base(Afec *const afec)
  */
 static inline enum status_code afec_start_calibration(Afec *const afec)
 {
+	uint32_t reg;
+
+	reg = afec->AFEC_CHSR;
+	afec->AFEC_CDOR = reg;
+
 	if ((afec->AFEC_MR & AFEC_MR_FREERUN) == AFEC_MR_FREERUN_ON) {
 		return STATUS_ERR_BUSY;
 	}

@@ -281,7 +281,6 @@ static void set_afec_test(void)
 		puts("Gain and Offset Test \n\r");
 		g_delay_cnt = 1000;
 		afec_init(AFEC0, &afec_cfg);
-		afec_ch_cfg.offset = true;
 		afec_ch_cfg.gain = AFEC_GAINVALUE_3;
 		afec_ch_set_config(AFEC0, AFEC_CHANNEL_4, &afec_ch_cfg);
 		afec_set_trigger(AFEC0, AFEC_TRIG_SW);
@@ -369,7 +368,6 @@ static void set_afec_test(void)
 		g_max_digital = MAX_DIGITAL_12_BIT * 16;
 		afec_cfg.resolution = AFEC_16_BITS;
 		afec_init(AFEC0, &afec_cfg);
-		afec_ch_cfg.offset = true;
 		afec_ch_cfg.gain = AFEC_GAINVALUE_3;
 		afec_ch_set_config(AFEC0, AFEC_CHANNEL_4, &afec_ch_cfg);
 		afec_set_trigger(AFEC0, AFEC_TRIG_SW);
