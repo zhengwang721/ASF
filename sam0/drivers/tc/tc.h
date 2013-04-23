@@ -184,8 +184,7 @@
  *
  * \subsection asfdoc_samd20_tc_module_overview_clock Clock Settings
  *
- * \subsubsection asfdoc_samd20_tc_module_overview_clock_selection Clock
- *Selection
+ * \subsubsection asfdoc_samd20_tc_module_overview_clock_selection Clock Selection
  * Each TC peripheral is clocked asynchronously to the system clock by a GCLK
  * (Generic Clock) channel. The GCLK channel connects to any of the GCLK
  * generators. The GCLK generators are configured to use one of the available
@@ -254,14 +253,12 @@
  * left unaltered when the re-trigger happens, letting the counter reset on the
  * next GCLK cycle.
  *
- * \subsection asfdoc_samd20_tc_module_overview_compare_match Compare Match
- *Operations
+ * \subsection asfdoc_samd20_tc_module_overview_compare_match Compare Match Operations
  * In compare match operation, Compare/Capture registers are used in comparison
  * with the counter value. When the timer's count value matches the value of a
  * compare channel, a user defined action can be taken.
  *
- * \subsubsection asfdoc_samd20_tc_module_overview_compare_match_timer Basic
- *Timer
+ * \subsubsection asfdoc_samd20_tc_module_overview_compare_match_timer Basic Timer
  *
  * A Basic Timer is a simple application where compare match operations is used
  * to determine when a specific period has elapsed. In Basic Timer operations,
@@ -272,14 +269,12 @@
  *polled
  * via the user application.
  *
- * \subsubsection asfdoc_samd20_tc_module_overview_compare_match_wg Waveform
- *Generation
+ * \subsubsection asfdoc_samd20_tc_module_overview_compare_match_wg Waveform Generation
  *
  * Waveform generation enables the TC module to generate square waves, or if
  * combined with an external passive low-pass filter, analog waveforms.
  *
- * \subsubsection asfdoc_samd20_tc_module_overview_compare_match_wg_pwm Waveform
- *Generation - PWM
+ * \subsubsection asfdoc_samd20_tc_module_overview_compare_match_wg_pwm Waveform Generation - PWM
  *
  * Pulse width modulation is a form of waveform generation and a signaling
  * technique that can be useful in many situations. When PWM mode is used,
@@ -300,8 +295,7 @@
  * normal (i.e non-inverted) output mode.
  *
  * \anchor asfdoc_samd20_tc_module_pwm_normal_diag
- * \image html pwm_normal_ex.svg "Example of PWM in normal mode, and different
- *counter operations"
+ * \image html pwm_normal_ex.svg "Example of PWM in normal mode, and different counter operations"
  *
  *
  * In \ref asfdoc_samd20_tc_module_pwm_match_diag "the figure below", the
@@ -312,29 +306,24 @@
  * change the TOP value when running in PWM match mode.
  *
  * \anchor asfdoc_samd20_tc_module_pwm_match_diag
- * \image html pwm_match_ex.svg "Example of PWM in match mode, and different
- *counter operations"
+ * \image html pwm_match_ex.svg "Example of PWM in match mode, and different counter operations"
  *
- * \subsubsection asfdoc_samd20_tc_module_overview_compare_match_wg_freq
- *Waveform Generation - Frequency
+ * \subsubsection asfdoc_samd20_tc_module_overview_compare_match_wg_freq Waveform Generation - Frequency
  *
- * Frequency Generation mode is in many ways identical to PWM generation.
- *However,
- * in Frequency Generation a toggle only occurs on the output when a match on
- * a capture channels occurs. When the match is made, the timer value is reset,
- * resulting in a variable frequency square wave with a fixed 50% duty cycle.
+ * Frequency Generation mode is in many ways identical to PWM
+ * generation. However, in Frequency Generation a toggle only occurs
+ * on the output when a match on a capture channels occurs. When the
+ * match is made, the timer value is reset, resulting in a variable
+ * frequency square wave with a fixed 50% duty cycle.
  *
- * \subsubsection asfdoc_samd20_tc_module_overview_compare_match_capt Capture
- *Operations
+ * \subsubsection asfdoc_samd20_tc_module_overview_compare_match_capt Capture Operations
  *
  * In capture operations, any event from the event system or a pin change can
  * trigger a capture of the counter value. This captured counter value can be
  * used as a timestamp for the event, or it can be used in frequency and pulse
  * width capture.
  *
- * \subsubsection
- *asfdoc_samd20_tc_module_overview_compare_match_capt_event_capture Capture
- *Operations - Event
+ * \subsubsection asfdoc_samd20_tc_module_overview_compare_match_capt_event_capture Capture Operations - Event
  *
  * Event capture is a simple use of the capture functionality, designed to
  *create
@@ -355,8 +344,7 @@
  * application, however it may be necessary to clear both the capture overflow
  * flag and the capture flag upon each capture reading.
  *
- * \subsubsection asfdoc_samd20_tc_module_overview_compare_match_capt_pwc
- *Capture Operations - Pulse Width
+ * \subsubsection asfdoc_samd20_tc_module_overview_compare_match_capt_pwc Capture Operations - Pulse Width
  *
  * Pulse Width Capture mode makes it possible to measure the pulse width and
  * period of PWM signals. This mode uses two capture channels of the counter.
@@ -379,8 +367,7 @@
  * triggered by the user application software or an event signal from the event
  * system.
  *
- * \subsubsection asfdoc_samd20_tc_module_overview_inversion Wave Generation
- *Output Inversion
+ * \subsubsection asfdoc_samd20_tc_module_overview_inversion Wave Generation Output Inversion
  *
  * The output of the wave generation can be inverted by hardware if desired,
  * resulting in the logically inverted value being output to the configured
@@ -681,8 +668,8 @@ enum tc_event_action {
  */
 struct tc_events {
 	/** Generate an output event on a compare channel match. */
-	bool generate_event_on_compare_channel[
-		NUMBER_OF_COMPARE_CAPTURE_CHANNELS];
+	bool generate_event_on_compare_channel
+			[NUMBER_OF_COMPARE_CAPTURE_CHANNELS];
 	/** Generate an output event on counter overflow. */
 	bool generate_event_on_overflow;
 	/** Consume events into the module. */
@@ -695,8 +682,7 @@ struct tc_events {
 struct tc_8bit_config {
 	/** Initial timer count value. */
 	uint8_t count;
-	/** Where to count to or from depending on the direction on the counter.
-	 **/
+	/** Where to count to or from depending on the direction on the counter. */
 	uint8_t period;
 	/** Value to be used for compare match on each channel. */
 	uint8_t compare_capture_channel[NUMBER_OF_COMPARE_CAPTURE_CHANNELS];
@@ -812,8 +798,7 @@ typedef void (*tc_callback_t)(struct tc_module *const module);
  */
 struct tc_module {
 #if !defined(__DOXYGEN__)
-	/** Hardware module pointer of the associated Timer/Counter peripheral.
-	 **/
+	/** Hardware module pointer of the associated Timer/Counter peripheral. */
 	Tc *hw;
 
 	/** Size of the initialized Timer/Counter module configuration. */
@@ -1160,7 +1145,7 @@ static inline void tc_stop_counter(
 	}
 
 	/* Write command to execute */
-	tc_module->CTRLBSET.reg = TC_CTRLBSET_CMD(2); /* TC_CTRLBSET_CMD_STOP; */
+	tc_module->CTRLBSET.reg = TC_CTRLBSET_CMD(2);
 }
 
 /**
@@ -1184,8 +1169,7 @@ static inline void tc_start_counter(
 		/* Wait for sync */
 	}
 
-	/* Make certain that there are no conflicting commands in the register
-	 **/
+	/* Make certain that there are no conflicting commands in the register */
 	tc_module->CTRLBCLR.reg = TC_CTRLBCLR_CMD_NONE;
 
 	while (tc_is_syncing(module_inst)) {
@@ -1193,7 +1177,7 @@ static inline void tc_start_counter(
 	}
 
 	/* Write command to execute */
-	tc_module->CTRLBSET.reg = TC_CTRLBSET_CMD(1); /* TC_CTRLBSET_CMD_RETRIGGER; */
+	tc_module->CTRLBSET.reg = TC_CTRLBSET_CMD(1);
 }
 
 /** @} */
