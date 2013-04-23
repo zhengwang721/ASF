@@ -246,7 +246,6 @@ void afec_get_config_defaults(struct afec_config *const cfg)
  * Use to initialize the configuration structure to known default values.
  *
  * The default configuration is as follows:
- * - No Offset
  * - Single Ended Mode
  * - Gain value is 1
  *
