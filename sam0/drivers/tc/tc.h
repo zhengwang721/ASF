@@ -406,6 +406,11 @@
 #include <gclk.h>
 #include <pinmux.h>
 
+#if !defined(__DOXYGEN__)
+#define NUMBER_OF_COMPARE_CAPTURE_CHANNELS TC0_CC8_NUM
+/* Same number for 8-, 16- and 32-bit TC and all TC instances */
+#endif
+
 #if TC_ASYNC == true
 #  include <system_interrupt.h>
 #endif
@@ -653,7 +658,7 @@ enum tc_event_action {
  */
 struct tc_events {
 	/** Generate an output event on a compare channel match. */
-	bool generate_event_on_compare_channel[2];
+	bool generate_event_on_compare_channel[NUMBER_OF_COMPARE_CAPTURE_CHANNELS];
 	/** Generate an output event on counter overflow. */
 	bool generate_event_on_overflow;
 	/** Consume events into the module. */
@@ -669,7 +674,7 @@ struct tc_8bit_config {
 	/** Where to count to or from depending on the direction on the counter. */
 	uint8_t period;
 	/** Value to be used for compare match on each channel. */
-	uint8_t compare_capture_channel[2];
+	uint8_t compare_capture_channel[NUMBER_OF_COMPARE_CAPTURE_CHANNELS];
 };
 
 /**
@@ -679,7 +684,7 @@ struct tc_16bit_config {
 	/** Initial timer count value. */
 	uint16_t count;
 	/** Value to be used for compare match on each channel. */
-	uint16_t compare_capture_channel[2];
+	uint16_t compare_capture_channel[NUMBER_OF_COMPARE_CAPTURE_CHANNELS];
 };
 
 /**
@@ -689,7 +694,7 @@ struct tc_32bit_config {
 	/** Initial timer count value. */
 	uint32_t count;
 	/** Value to be used for compare match on each channel. */
-	uint32_t compare_capture_channel[2];
+	uint32_t compare_capture_channel[NUMBER_OF_COMPARE_CAPTURE_CHANNELS];
 };
 
 /**
@@ -745,11 +750,11 @@ struct tc_config {
 	enum tc_event_action event_action;
 
 	/** When \c true, PWM output for the given channel is enabled. */
-	bool channel_pwm_out_enabled[2];
+	bool channel_pwm_out_enabled[NUMBER_OF_COMPARE_CAPTURE_CHANNELS];
 	/** Specifies pin output for each channel. */
-	uint32_t channel_pwm_out_pin[2];
+	uint32_t channel_pwm_out_pin[NUMBER_OF_COMPARE_CAPTURE_CHANNELS];
 	/** Specifies MUX setting for each output channel pin. */
-	uint32_t channel_pwm_out_mux[2];
+	uint32_t channel_pwm_out_mux[NUMBER_OF_COMPARE_CAPTURE_CHANNELS];
 
 	/** This setting determines what size counter is used. */
 	union {
@@ -969,7 +974,7 @@ static inline void tc_enable_events(
 		event_mask |= TC_EVCTRL_OVFEO;
 	}
 
-	for (uint8_t i = 0; i < 2; i++) {
+	for (uint8_t i = 0; i < NUMBER_OF_COMPARE_CAPTURE_CHANNELS; i++) {
 		if (events->generate_event_on_compare_channel[i] == true) {
 			event_mask |= (TC_EVCTRL_MCEO(1) << i);
 		}
@@ -1010,7 +1015,7 @@ static inline void tc_disable_events(
 		event_mask |= TC_EVCTRL_OVFEO;
 	}
 
-	for (uint8_t i = 0; i < 2; i++) {
+	for (uint8_t i = 0; i < NUMBER_OF_COMPARE_CAPTURE_CHANNELS; i++) {
 		if (events->generate_event_on_compare_channel[i] == true) {
 			event_mask |= (TC_EVCTRL_MCEO(1) << i);
 		}
