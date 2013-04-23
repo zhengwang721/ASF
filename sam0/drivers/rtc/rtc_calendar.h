@@ -122,35 +122,38 @@
  * module configuration. For the RTC to operate correctly in calendar mode, this
  * frequency must be 1024 Hz. The \b n parameter is the event source generator
  * index of the RTC module. If the asynchronous clock is operated at the
- * recommended 1024 Hz, the formula results in the following output:
+ * recommended 1KHz, the formula results in the values shown in
+ * \ref asfdoc_samd20_rtc_calendar_module_rtc_hz "the table below".
  *
+ * \anchor asfdoc_samd20_rtc_calendar_module_rtc_hz
  * <table>
+ *   <caption>RTC event frequencies for each prescaler bit using a 1KHz clock</caption>
  *   <tr>
- *      <th>n</th>	<th>Periodic event</th>
+ *      <th>n</th> <th>Periodic event</th>
  *   </tr>
  *   <tr>
- *      <td>7</td>	<td>1 Hz</td>
+ *      <td>7</td> <td>1 Hz</td>
  *   </tr>
  *   <tr>
- *      <td>6</td>	<td>2 Hz</td>
+ *      <td>6</td> <td>2 Hz</td>
  *   </tr>
  *   <tr>
- *      <td>5</td>	<td>4 Hz</td>
+ *      <td>5</td> <td>4 Hz</td>
  *   </tr>
  *   <tr>
- *      <td>4</td>	<td>8 Hz</td>
+ *      <td>4</td> <td>8 Hz</td>
  *   </tr>
  *   <tr>
- *      <td>3</td>	<td>16 Hz</td>
+ *      <td>3</td> <td>16 Hz</td>
  *   </tr>
  *   <tr>
- *      <td>2</td>	<td>32 Hz</td>
+ *      <td>2</td> <td>32 Hz</td>
  *   </tr>
  *   <tr>
- *      <td>1</td>	<td>64 Hz</td>
+ *      <td>1</td> <td>64 Hz</td>
  *   </tr>
  *   <tr>
- *      <td>0</td>	<td>128 Hz</td>
+ *      <td>0</td> <td>128 Hz</td>
  *   </tr>
  * </table>
  *
@@ -189,10 +192,14 @@
  * resulting clock frequency of 1024 Hz to the RTC. The internal RTC prescaler
  * is set to 1024 which yields an end-frequency of 1 Hz.
  *
- * The implementer also has the option to set other end-frequencies. The table
- * below lists the available RTC frequencies for each possible GCLK and RTC
- * input prescaler options:
+ * The implementer also has the option to set other end-frequencies.
+ * \ref asfdoc_samd20_rtc_calendar_rtc_out_freq "The table below" lists the
+ * available RTC frequencies for each possible GCLK and RTC input prescaler
+ * options.
+ *
+ * \anchor asfdoc_samd20_rtc_calendar_rtc_out_freq
  * <table>
+ *   <caption>RTC output frequencies from allowable input clocks</caption>
  *   <tr>
  *     <th>End-frequency</th>
  *     <th>GCLK prescaler</th>
@@ -215,7 +222,10 @@
  *   </tr>
  * </table>
  *
- * The overall RTC module clocking scheme is shown below.
+ * The overall RTC module clocking scheme is shown in
+ * \ref asfdoc_samd20_rtc_calendar_rtc_clock_fig "the figure below".
+ *
+ * \anchor asfdoc_samd20_rtc_calendar_rtc_clock_fig
  * \dot
  * digraph clocking_scheme {
  *     rankdir=LR;
@@ -261,7 +271,7 @@
 #include <system_interrupt.h>
 #endif
 
-#if CONF_CLOCK_GCLK_2_RTC == false
+#if CONF_CLOCK_GCLK_2_ENABLE == false
 #  error "Application conf_clocks.h configuration header has invalid settings for the RTC module."
 #endif
 

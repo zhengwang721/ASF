@@ -147,7 +147,7 @@ struct system_gclk_gen_config {
 	bool high_when_disabled;
 	/** Integer division factor of the clock output compared to the input. */
 	uint32_t division_factor;
-	/** If \c true the clock is kept enabled during device standby mode. */
+	/** If \c true, the clock is kept enabled during device standby mode. */
 	bool run_in_standby;
 	/** If \c true, enables GCLK generator clock output to a GPIO pin. */
 	bool output_enable;
@@ -163,8 +163,9 @@ struct system_gclk_gen_config {
 struct system_gclk_chan_config {
 	/** Generic Clock Generator source channel. */
 	enum gclk_generator source_generator;
-	/** If \c true, the clock is kept enabled during device standby mode. */
-	bool run_in_standby;
+	/** If \c true the clock configuration will be locked until the device is
+	 *  reset. */
+	bool write_lock;
 };
 
 /** \name Generic Clock management
@@ -216,6 +217,8 @@ void system_gclk_init(void);
  *  \li Clock is generated undivided from the source frequency
  *  \li Clock generator output is low when the generator is disabled
  *  \li The input clock is sourced from input clock channel 0
+ *  \li Clock will be disabled during sleep
+ *  \li The clock output will not be routed to a physical GPIO pin
  *
  * \param[out] config  Configuration structure to initialize to default values
  */
@@ -228,7 +231,7 @@ static inline void system_gclk_gen_get_config_defaults(
 	/* Default configuration values */
 	config->division_factor    = 1;
 	config->high_when_disabled = false;
-	config->source_clock       = 0;
+	config->source_clock       = GCLK_SOURCE_OSC8M;
 	config->run_in_standby     = false;
 	config->output_enable      = false;
 }
@@ -261,7 +264,7 @@ void system_gclk_gen_disable(
  *
  * The default configuration is as follows:
  *  \li Clock is sourced from the Generic Clock Generator channel 0
- *  \li Clock is disabled during device sleep
+ *  \li Clock configuration will not be write-locked when set
  *
  * \param[out] config  Configuration structure to initialize to default values
  */
@@ -273,10 +276,7 @@ static inline void system_gclk_chan_get_config_defaults(
 
 	/* Default configuration values */
 	config->source_generator = GCLK_GENERATOR_0;
-
-	#if !defined (REVB)
-	config->run_in_standby = false;
-	#endif
+	config->write_lock       = false;
 }
 
 void system_gclk_chan_set_config(

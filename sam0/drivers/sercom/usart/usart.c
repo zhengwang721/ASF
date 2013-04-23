@@ -251,21 +251,29 @@ static enum status_code _usart_set_config(
 
 	/* Set sample mode */
 	ctrla |= config->transfer_mode;
-	ctrla |= SERCOM_USART_CTRLA_MODE(0);
 
 	if (config->use_external_clock == false) {
-		ctrla |= SERCOM_USART_CTRLA_CSRC;
+		ctrla |= SERCOM_SPI_CTRLA_MODE_USART_INT_CLK;
+	}
+	else {
+		ctrla |= SERCOM_SPI_CTRLA_MODE_USART_EXT_CLK;
 	}
 
 	/* Set stopbits and character size */
 	ctrlb = config->stopbits | config->character_size;
 
-	/* set parity mode */
+	/* Set parity mode */
 	if (config->parity != USART_PARITY_NONE) {
 		ctrla |= SERCOM_USART_CTRLA_FORM(1);
 		ctrlb |= config->parity;
 	} else {
 		ctrla |= SERCOM_USART_CTRLA_FORM(0);
+	}
+
+	/* Set run mode during device sleep */
+	if (config->run_in_standby) {
+		/* Enable in sleep mode */
+		ctrla |= SERCOM_USART_CTRLA_RUNSTDBY;
 	}
 
 	/* Wait until synchronization is complete */
@@ -351,7 +359,7 @@ enum status_code usart_init(
 	gclk_chan_conf.source_generator = config->generator_source;
 	system_gclk_chan_set_config(gclk_index, &gclk_chan_conf);
 	system_gclk_chan_enable(gclk_index);
-	sercom_set_gclk_generator(config->generator_source, true, false);
+	sercom_set_gclk_generator(config->generator_source, false);
 
 	/* set character size */
 	module->character_size = config->character_size;
@@ -462,7 +470,7 @@ enum status_code usart_write_wait(
 
 #else
 	/* Check if USART is ready for new data */
-	if (!(usart_hw->INTFLAG.reg & SERCOM_USART_INTFLAG_DREIF)) {
+	if (!(usart_hw->INTFLAG.reg & SERCOM_USART_INTFLAG_DRE)) {
 		/* Return error code */
 		return STATUS_BUSY;
 	}
@@ -474,7 +482,7 @@ enum status_code usart_write_wait(
 	/* Write data to USART module */
 	usart_hw->DATA.reg = tx_data;
 
-	while (!(usart_hw->INTFLAG.reg & SERCOM_USART_INTFLAG_TXCIF)) {
+	while (!(usart_hw->INTFLAG.reg & SERCOM_USART_INTFLAG_TXC)) {
 		/* Wait until data is sent */
 	}
 
@@ -524,7 +532,7 @@ enum status_code usart_read_wait(
 
 #else
 	/* Check if USART has new data */
-	if (!(usart_hw->INTFLAG.reg & SERCOM_USART_INTFLAG_RXCIF)) {
+	if (!(usart_hw->INTFLAG.reg & SERCOM_USART_INTFLAG_RXC)) {
 		/* Return error code */
 		return STATUS_BUSY;
 	}
@@ -614,7 +622,7 @@ enum status_code usart_write_buffer_wait(
 		/* Wait for the USART to be ready for new data and abort
 		* operation if it doesn't get ready within the timeout*/
 		for (uint32_t i = 0; i < USART_TIMEOUT; i++) {
-			if (usart_hw->INTFLAG.reg & SERCOM_USART_INTFLAG_DREIF) {
+			if (usart_hw->INTFLAG.reg & SERCOM_USART_INTFLAG_DRE) {
 				break;
 			} else if (i == USART_TIMEOUT) {
 				return STATUS_ERR_TIMEOUT;
@@ -635,7 +643,7 @@ enum status_code usart_write_buffer_wait(
 
 	/* Wait until Transmit is complete or timeout */
 	for (uint32_t i = 0; i < USART_TIMEOUT; i++) {
-		if (usart_hw->INTFLAG.reg & SERCOM_USART_INTFLAG_TXCIF) {
+		if (usart_hw->INTFLAG.reg & SERCOM_USART_INTFLAG_TXC) {
 			break;
 		} else if (i == USART_TIMEOUT) {
 			return STATUS_ERR_TIMEOUT;
@@ -698,7 +706,7 @@ enum status_code usart_read_buffer_wait(
 		/* Wait for the USART to have new data and abort operation if it
 		 * doesn't get ready within the timeout*/
 		for (uint32_t i = 0; i < USART_TIMEOUT; i++) {
-			if (!(usart_hw->INTFLAG.reg & SERCOM_USART_INTFLAG_RXCIF)) {
+			if (!(usart_hw->INTFLAG.reg & SERCOM_USART_INTFLAG_RXC)) {
 				break;
 			} else if (i == USART_TIMEOUT) {
 				return STATUS_ERR_TIMEOUT;

@@ -84,51 +84,11 @@
  * Writing the DATA register will start a new conversion. It is also possible
  * to trigger the conversion from the event system.
  *
- * A simplified block diagram of the DAC can be seen in the following figure:
+ * A simplified block diagram of the DAC can be seen in
+ * \ref asfdoc_samd20_dac_module_block_diagram "the figure below".
  *
- * \dot
- * digraph overview {
- *  splines = false;
- *  nodesep = .2;
- *  rankdir=LR;
- *  data [label="DATA", shape=box, style=filled, fillcolor=lightblue];
- *  empty1 [label="", style=invisible];
- *  empty2 [label="", style=invisible];
- *  databuf [label="DATABUF", shape=box, style=filled, fillcolor=lightblue];
- *  evctrl [label="EVCTRL", shape=box, style=filled, fillcolor=lightblue];
- *  eventcontrol [label="EVENT CONTROL", shape=box, style=filled, fillcolor=darkolivegreen1];
- *  dac [label="DAC", shape=polygon, sides=5, orientation=-90, distortion=-0.6, style=filled, fillcolor=darkolivegreen1, height=1, width=1];
- *  outputdriver [label="Output\n Driver", shape=polygon, sides=3, orientation=-90, style=filled, fillcolor=darkolivegreen1];
- *  vout [label="VOUT", shape=box];
- *  aref [label="AREF", shape=box];
- *  avcc [label="AVCC", shape=none];
- *  int1v [label="INT1V", shape=none];
- *  acadc [label="AC/ADC", shape=none];
- *  mux [label="", shape=polygon, sides=4, distortion=0.6, orientation=-90, style=filled, fillcolor=black, height=0.9, width=0.2];
- *
- *  edge [dir="back"];
- *  eventcontrol -> empty2 [label="START"]
- *  edge [dir="forward"];
- *  evctrl -> eventcontrol;
- *  eventcontrol -> empty1 [label="EMPTY"]
- *  databuf -> data;
- *  data -> dac;
- *  dac -> outputdriver;
- *  dac -> acadc;
- *  outputdriver -> vout;
- *  eventcontrol -> dac [constraint=true, style="invis"];
- *  dac -> mux [constraint=true, style="invis"];
- *  mux:w -> dac:s;
- *  edge [dir="both"];
- *  evctrl -> databuf;
- *  edge [dir="back"];
- *  mux:se -> aref;
- *  mux:e -> avcc;
- *  mux:ne -> int1v;
- *  {rank=same; evctrl databuf data }
- *  {rank=same; vout aref }
- *  {rank=same; eventcontrol dac mux }
- * }
+ * \anchor asfdoc_samd20_dac_module_block_diagram
+ * \image html dac_block_diagram.gif "DAC Block Diagram"
  *
  * \enddot
  *
@@ -183,11 +143,12 @@
  *
  * \subsection asfdoc_samd20_dac_data_adjust Left and Right Adjusted Values
  * The 10-bit input value to the DAC is contained in a 16-bit register. This
- * can be configured to be either left or right adjusted. In the figure below
- * both options are shown, and the position of the most (MSB) and the least
- * (LSB) significant bit are shown. The unused bits should always be written to
- * zero.
+ * can be configured to be either left or right adjusted. In
+ * \ref asfdoc_samd20_dac_module_adj_modes "the figure below" both options are
+ * shown, and the position of the most (MSB) and the least (LSB) significant bits
+ * are indicated. The unused bits should always be written to zero.
  *
+ * \anchor asfdoc_samd20_dac_module_adj_modes
  * \dot
  * digraph {
  *   subgraph cluster_right {

@@ -93,8 +93,10 @@
  * incoming event from another peripheral in the device, and both internal and
  * external reference voltages can be selected.
  *
- * A simplified block diagram of the ADC can be seen in the following figure:
+ * A simplified block diagram of the ADC can be seen in
+ * \ref asfdoc_samd20_adc_module_block_diagram "the figure below".
  *
+ * \anchor asfdoc_samd20_adc_module_block_diagram
  * \dot
  * digraph overview {
  * splines = false;
@@ -176,10 +178,12 @@
  * noisy conditions.
  *
  * The effective ADC sample rate will be reduced when averaging is enabled,
- * however the effective resolution will be increased according to the following
- * table:
+ * however the effective resolution will be increased according to
+ * \ref asfdoc_samd20_adc_module_hw_av_resolution "the table below".
  *
+ * \anchor asfdoc_samd20_adc_module_hw_av_resolution
  * <table>
+ *   <caption>Effective ADC resolution from various hardware averaging modes</caption>
  *   <tr>
  *     <th>Number of Samples</th>
  *     <th>Final Result</th>
@@ -1192,7 +1196,7 @@ static inline enum status_code adc_read(
 	Assert(module_inst->hw);
 	Assert(result);
 
-	if (!adc_get_status(module_inst) & ADC_STATUS_RESULT_READY) {
+	if (!(adc_get_status(module_inst) & ADC_STATUS_RESULT_READY)) {
 		/* Result not ready */
 		return STATUS_BUSY;
 	}

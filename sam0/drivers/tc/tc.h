@@ -92,8 +92,10 @@
  * - Waveform period capture
  * - Waveform frequency capture
  *
- * The diagram below shows the overview of the TC module design.
+ * \ref asfdoc_samd20_tc_block_diagram "The diagram below" shows the overview
+ * of the TC module design.
  *
+ * \anchor asfdoc_samd20_tc_block_diagram
  * \image html overview.svg "Basic overview of the TC module"
  *
  *
@@ -116,10 +118,12 @@
  * Each timer module can be configured in one of three different counter
  * sizes; 8-, 16-, and 32-bits. The size of the counter determines the maximum
  * value it can count to before an overflow occurs and the count is reset back
- * to zero. The table below shows the maximum values for each of the possible
- * counter sizes.
+ * to zero. \ref asfdoc_samd20_tc_count_size_vs_top "The table below" shows the
+ * maximum values for each of the possible counter sizes.
  *
+ * \anchor asfdoc_samd20_tc_count_size_vs_top
  * <table>
+ *  <caption>Timer counter sizes and their maximum count values</caption>
  *  <tr>
  *    <th>Counter Size</th>
  *    <th>Max (Hexadecimal)</th>
@@ -151,9 +155,11 @@
  * configured as 32-bit counters. The odd numbered counters will act as slaves
  * to the even numbered masters, and will not be reconfigurable until the
  * master timer is disabled. The pairing of timer modules for 32-bit mode is
- * shown in the table below.
+ * shown in \ref asfdoc_samd20_tc_module_ms_pairs "the table below".
  *
+ * \anchor asfdoc_samd20_tc_module_ms_pairs
  * <table>
+ *   <caption>TC master and slave module pairings</caption>
  *   <tr>
  *     <th>Master TC Module</th>
  *     <th>Slave TC Module</th>
@@ -209,10 +215,12 @@
  * system tells the counter to re-trigger. The reload action determines if the
  * prescaler should be reset, and when this should happen. The counter will
  * always be reloaded with the value it is set to start counting from. The user
- * can choose between three different reload actions, described in the
- * following table.
+ * can choose between three different reload actions, described in
+ * \ref asfdoc_samd20_tc_module_reload_act "the table below".
  *
+ * \anchor asfdoc_samd20_tc_module_reload_act
  * <table>
+ *   <caption>TC module reload actions</caption>
  *   <tr>
  *     <th>Reload Action</th>
  *     <th>Description</th>
@@ -277,21 +285,25 @@
  * using an analog voltage value, as noise will not generally affect the
  * signal's integrity to a meaningful extent.
  *
- * The figure below illustrates operations and different states of the counter
- * and its output when running the counter in PWM normal mode. As can be seen,
- * the TOP value is unchanged and is set to MAX. The compare match value is
- * changed at several points to illustrate the resulting waveform output
- * changes. The PWM output is set to normal (i.e non-inverted) output mode.
+ * \ref asfdoc_samd20_tc_module_pwm_normal_diag "The figure below" illustrates
+ * operations and different states of the counter and its output when running
+ * the counter in PWM normal mode. As can be seen, the TOP value is unchanged
+ * and is set to MAX. The compare match value is changed at several points to
+ * illustrate the resulting waveform output changes. The PWM output is set to
+ * normal (i.e non-inverted) output mode.
  *
+ * \anchor asfdoc_samd20_tc_module_pwm_normal_diag
  * \image html pwm_normal_ex.svg "Example of PWM in normal mode, and different counter operations"
  *
  *
- * In the figure below, the counter is set to generate PWM in Match mode. The
- * PWM output is inverted via the appropriate configuration option in the TC
- * driver configuration structure. In this example, the counter value is
- * changed once, but the compare match value is kept unchanged. As can be seen,
- * it is possible to change the TOP value when running in PWM match mode.
+ * In \ref asfdoc_samd20_tc_module_pwm_match_diag "the figure below", the
+ * counter is set to generate PWM in Match mode. The PWM output is inverted via
+ * the appropriate configuration option in the TC driver configuration
+ * structure. In this example, the counter value is changed once, but the
+ * compare match value is kept unchanged. As can be seen, it is possible to
+ * change the TOP value when running in PWM match mode.
  *
+ * \anchor asfdoc_samd20_tc_module_pwm_match_diag
  * \image html pwm_match_ex.svg "Example of PWM in match mode, and different counter operations"
  *
  * \subsubsection asfdoc_samd20_tc_module_overview_compare_match_wg_freq Waveform Generation - Frequency
@@ -323,7 +335,7 @@
  * result in order to detect this situation and perform an appropriate
  * adjustment.
  *
- * Before checking for a new capture, \ref TC_INTERRUPT_FLAG_OVERFLOW
+ * Before checking for a new capture, \ref TC_STATUS_COUNT_OVERFLOW
  * should be checked. The response to a overflow error is left to the user
  * application, however it may be necessary to clear both the capture overflow
  * flag and the capture flag upon each capture reading.
@@ -478,22 +490,22 @@ enum tc_wave_generation {
 	/** Top is max, except in 8-bit counter size where it is the PER
 	 * register
 	 */
-	TC_WAVE_GENERATION_NORMAL_FREQ         = TC_CTRLA_WAVEGEN_NFRQ,
+	TC_WAVE_GENERATION_NORMAL_FREQ      = TC_CTRLA_WAVEGEN_NFRQ,
 
 	/** Top is CC0, except in 8-bit counter size where it is the PER
 	 * register
 	 */
-	TC_WAVE_GENERATION_MATCH_FREQ          = TC_CTRLA_WAVEGEN_MFRQ,
+	TC_WAVE_GENERATION_MATCH_FREQ       = TC_CTRLA_WAVEGEN_MFRQ,
 
 	/** Top is max, except in 8-bit counter size where it is the PER
 	 * register
 	 */
-	TC_WAVE_GENERATION_NORMAL_PWM          = TC_CTRLA_WAVEGEN_NPWM,
+	TC_WAVE_GENERATION_NORMAL_PWM       = TC_CTRLA_WAVEGEN_NPWM,
 
 	/** Top is CC0, except in 8-bit counter size where it is the PER
 	 * register
 	 */
-	TC_WAVE_GENERATION_MATCH_PWM           = TC_CTRLA_WAVEGEN_MPWM,
+	TC_WAVE_GENERATION_MATCH_PWM        = TC_CTRLA_WAVEGEN_MPWM,
 };
 
 /**
@@ -505,21 +517,21 @@ enum tc_counter_size {
 	/** The counter's max value is 0xFF, the period register is
 	 * available to be used as top value.
 	 */
-	TC_COUNTER_SIZE_8BIT                    = TC_CTRLA_MODE_COUNT8,
+	TC_COUNTER_SIZE_8BIT                = TC_CTRLA_MODE_COUNT8,
 
 	/** The counter's max value is 0xFFFF. There is no separate
 	 * period register, to modify top one of the capture compare
 	 * registers has to be used. This limits the amount of
 	 * available channels.
 	 */
-	TC_COUNTER_SIZE_16BIT                   = TC_CTRLA_MODE_COUNT16,
+	TC_COUNTER_SIZE_16BIT               = TC_CTRLA_MODE_COUNT16,
 
 	/** The counter's max value is 0xFFFFFFFF. There is no separate
 	 * period register, to modify top one of the capture compare
 	 * registers has to be used. This limits the amount of
 	 * available channels.
 	 */
-	TC_COUNTER_SIZE_32BIT                   = TC_CTRLA_MODE_COUNT32,
+	TC_COUNTER_SIZE_32BIT               = TC_CTRLA_MODE_COUNT32,
 };
 
 /**
@@ -531,16 +543,16 @@ enum tc_reload_action {
 	/** The counter is reloaded/reset on the next GCLK and starts
 	 * counting on the prescaler clock.
 	 */
-	TC_RELOAD_ACTION_GCLK                 = TC_CTRLA_PRESCSYNC_GCLK,
+	TC_RELOAD_ACTION_GCLK               = TC_CTRLA_PRESCSYNC_GCLK,
 
 	/** The counter is reloaded/reset on the next prescaler clock
 	 */
-	TC_RELOAD_ACTION_PRESC                = TC_CTRLA_PRESCSYNC_PRESC,
+	TC_RELOAD_ACTION_PRESC              = TC_CTRLA_PRESCSYNC_PRESC,
 
 	/** The counter is reloaded/reset on the next GCLK, and the
 	 * prescaler is restarted as well.
 	 */
-	TC_RELOAD_ACTION_RESYNC               = TC_CTRLA_PRESCSYNC_RESYNC,
+	TC_RELOAD_ACTION_RESYNC             = TC_CTRLA_PRESCSYNC_RESYNC,
 };
 
 /**
@@ -552,21 +564,21 @@ enum tc_reload_action {
  */
 enum tc_clock_prescaler {
 	/** Divide clock by 1 */
-	TC_CLOCK_PRESCALER_DIV1               = TC_CTRLA_PRESCALER(0),
+	TC_CLOCK_PRESCALER_DIV1             = TC_CTRLA_PRESCALER(0),
 	/** Divide clock by 2 */
-	TC_CLOCK_PRESCALER_DIV2               = TC_CTRLA_PRESCALER(1),
+	TC_CLOCK_PRESCALER_DIV2             = TC_CTRLA_PRESCALER(1),
 	/** Divide clock by 4 */
-	TC_CLOCK_PRESCALER_DIV4               = TC_CTRLA_PRESCALER(2),
+	TC_CLOCK_PRESCALER_DIV4             = TC_CTRLA_PRESCALER(2),
 	/** Divide clock by 8 */
-	TC_CLOCK_PRESCALER_DIV8               = TC_CTRLA_PRESCALER(3),
+	TC_CLOCK_PRESCALER_DIV8             = TC_CTRLA_PRESCALER(3),
 	/** Divide clock by 16 */
-	TC_CLOCK_PRESCALER_DIV16              = TC_CTRLA_PRESCALER(4),
+	TC_CLOCK_PRESCALER_DIV16            = TC_CTRLA_PRESCALER(4),
 	/** Divide clock by 64 */
-	TC_CLOCK_PRESCALER_DIV64              = TC_CTRLA_PRESCALER(5),
+	TC_CLOCK_PRESCALER_DIV64            = TC_CTRLA_PRESCALER(5),
 	/** Divide clock by 256 */
-	TC_CLOCK_PRESCALER_DIV256             = TC_CTRLA_PRESCALER(6),
+	TC_CLOCK_PRESCALER_DIV256           = TC_CTRLA_PRESCALER(6),
 	/** Divide clock by 1024 */
-	TC_CLOCK_PRESCALER_DIV1024            = TC_CTRLA_PRESCALER(7),
+	TC_CLOCK_PRESCALER_DIV1024          = TC_CTRLA_PRESCALER(7),
 };
 
 /**
@@ -589,11 +601,11 @@ enum tc_count_direction {
  */
 enum tc_capture_enable {
 	/** No channels are enabled for capture. */
-	TC_CAPTURE_ENABLE_NONE                 = 0,
+	TC_CAPTURE_ENABLE_NONE              = 0,
 	/** Enable channel 0 for capture. */
-	TC_CAPTURE_ENABLE_CHANNEL_0            = TC_CTRLC_CPTEN(1),
+	TC_CAPTURE_ENABLE_CHANNEL_0         = TC_CTRLC_CPTEN(1),
 	/** Enable channel 1 for capture. */
-	TC_CAPTURE_ENABLE_CHANNEL_1            = TC_CTRLC_CPTEN(2),
+	TC_CAPTURE_ENABLE_CHANNEL_1         = TC_CTRLC_CPTEN(2),
 };
 
 /**
@@ -617,49 +629,21 @@ enum tc_waveform_invert_output {
  */
 enum tc_event_action {
 	/** No event action. */
-	TC_EVENT_ACTION_OFF               = TC_EVCTRL_EVACT_OFF,
+	TC_EVENT_ACTION_OFF                 = TC_EVCTRL_EVACT_OFF,
 	/** Re-trigger on event. */
-	TC_EVENT_ACTION_RETRIGGER         = TC_EVCTRL_EVACT_RETRIGGER,
+	TC_EVENT_ACTION_RETRIGGER           = TC_EVCTRL_EVACT_RETRIGGER,
 	/** Increment counter on event. */
-	TC_EVENT_ACTION_INCREMENT_COUNTER = TC_EVCTRL_EVACT_COUNT,
+	TC_EVENT_ACTION_INCREMENT_COUNTER   = TC_EVCTRL_EVACT_COUNT,
 	/** Start counter on event. */
-	TC_EVENT_ACTION_START             = TC_EVCTRL_EVACT_START,
+	TC_EVENT_ACTION_START               = TC_EVCTRL_EVACT_START,
 	/** Store period in capture register 0, pulse width in capture
 	 *  register 1.
 	 */
-	TC_EVENT_ACTION_PPW               = TC_EVCTRL_EVACT_PPW,
+	TC_EVENT_ACTION_PPW                 = TC_EVCTRL_EVACT_PPW,
 	/** Store pulse width in capture register 0, period in capture
 	 *  register 1.
 	 */
-	TC_EVENT_ACTION_PWP               = TC_EVCTRL_EVACT_PWP,
-};
-
-/**
- * \brief Enum to be used to check interrupt flags
- *
- * This enum defines the different interrupt flags for the TC module.
- */
-enum tc_interrupt_flag {
-	/** Interrupt flag for channel 0 */
-	TC_INTERRUPT_FLAG_CHANNEL_0    =  TC_INTFLAG_MC(1),
-	/** Interrupt flag for channel 1 */
-	TC_INTERRUPT_FLAG_CHANNEL_1    =  TC_INTFLAG_MC(2),
-	/** Interrupt flag for generating interrupts when
-	 *  synchronization is done. This is flag is meant for the
-	 *  async driver. */
-	TC_INTERRUPT_FLAG_READY     =  TC_INTFLAG_READY,
-
-	/** Interrupt flag used to test for capture overflow in capture
-	 *  mode
-	 */
-	TC_INTERRUPT_FLAG_ERROR     =  TC_INTFLAG_ERR,
-
-	/** Interrupt flag used to check for a counter overflow in
-	 *  compare mode
-	 */
-	TC_INTERRUPT_FLAG_OVERFLOW  =  TC_INTFLAG_OVF,
-	/** Number of interrupts */
-	TC_INTERRUPT_FLAG_N,
+	TC_EVENT_ACTION_PWP                 = TC_EVCTRL_EVACT_PWP,
 };
 
 /**
@@ -1254,7 +1238,7 @@ static inline uint32_t tc_get_status(
 	}
 
 	/* Check for TC read synchronization ready */
-	if (int_flags & TC_INTFLAG_READY) {
+	if (int_flags & TC_INTFLAG_SYNCRDY) {
 		status_flags |= TC_STATUS_SYNC_READY;
 	}
 
@@ -1304,7 +1288,7 @@ static inline void tc_clear_status(
 
 	/* Check for TC read synchronization ready */
 	if (status_flags & TC_STATUS_SYNC_READY) {
-		int_flags |= TC_INTFLAG_READY;
+		int_flags |= TC_INTFLAG_SYNCRDY;
 	}
 
 	/* Check for TC capture overflow */

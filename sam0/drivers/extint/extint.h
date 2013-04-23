@@ -112,9 +112,13 @@
  * channel, a hardware signal filter can be enabled on individual channels. This
  * filter provides a Majority-of-Three voter filter on the incoming signal, so
  * that the input state is considered to be the majority vote of three
- * subsequent samples of the pin input buffer:
+ * subsequent samples of the pin input buffer. The possible sampled input and
+ * resulting filtered output when the filter is enabled is shown in
+ * \ref asfdoc_samd20_extint_filter_table "the table below".
  *
+ * \anchor asfdoc_samd20_extint_filter_table
  * <table>
+ *  <caption>Sampled input and resulting filtered output</caption>
  *	<tr>
  *		<th>Input Sample 1</th>
  *		<th>Input Sample 2</th>
@@ -157,8 +161,10 @@
  *
  * \subsection asfdoc_samd20_extint_module_overview_physical Physical Connection
  *
- * The following diagram shows how this module is interconnected within the device:
+ * \ref asfdoc_samd20_extint_int_connections "The diagram below" shows how this
+ * module is interconnected within the device.
  *
+ * \anchor asfdoc_samd20_extint_int_connections
  * \dot
  * digraph overview {
  *   node [label="Port Pad" shape=square] pad;
@@ -417,75 +423,11 @@ void extint_disable(void);
  * @{
  */
 
-/**
- * \brief Enables an External Interrupt event output.
- *
- *  Enables one or more output events from the External Interrupt module. See
- *  \ref extint_events "here" for a list of events this module supports.
- *
- *  \note Events cannot be altered while the module is enabled.
- *
- *  \param[in] events    Struct containing flags of events to enable
- */
-static inline void extint_enable_events(
-		struct extint_events *const events)
-{
-	/* Sanity check arguments */
-	Assert(events);
+void extint_enable_events(
+		struct extint_events *const events);
 
-	/* Array of available EICs. */
-	Eic *const eics[EIC_INST_NUM] = EIC_INSTS;
-
-	/* Update the event control register for each physical EIC instance */
-	for (uint32_t i = 0; i < EIC_INST_NUM; i++) {
-		uint32_t event_mask = 0;
-
-		/* Create an enable mask for the current EIC module */
-		for (uint32_t j = 0; j < 32; j++) {
-			if (events->generate_event_on_detect[(32 * i) + j]) {
-				event_mask |= (1UL << j);
-			}
-		}
-
-		/* Enable the masked events */
-		eics[i]->EVCTRL.reg |= event_mask;
-	}
-}
-
-/**
- * \brief Disables an External Interrupt event output.
- *
- *  Disables one or more output events from the External Interrupt module. See
- *  \ref extint_events "here" for a list of events this module supports.
- *
- *  \note Events cannot be altered while the module is enabled.
- *
- *  \param[in] events    Struct containing flags of events to disable
- */
-static inline void extint_disable_events(
-		struct extint_events *const events)
-{
-	/* Sanity check arguments */
-	Assert(events);
-
-	/* Array of available EICs. */
-	Eic *const eics[EIC_INST_NUM] = EIC_INSTS;
-
-	/* Update the event control register for each physical EIC instance */
-	for (uint32_t i = 0; i < EIC_INST_NUM; i++) {
-		uint32_t event_mask = 0;
-
-		/* Create a disable mask for the current EIC module */
-		for (uint32_t j = 0; j < 32; j++) {
-			if (events->generate_event_on_detect[(32 * i) + j]) {
-				event_mask |= (1UL << j);
-			}
-		}
-
-		/* Disable the masked events */
-		eics[i]->EVCTRL.reg &= ~event_mask;
-	}
-}
+void extint_disable_events(
+		struct extint_events *const events);
 
 /** @} */
 

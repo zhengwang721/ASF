@@ -133,10 +133,10 @@ static void _i2c_master_async_address_response(
 	/* Check for error. Ignore bus-error; workaround for bus state stuck in
 	 * BUSY.
 	 */
-	if (i2c_module->INTFLAG.reg & SERCOM_I2CM_INTFLAG_WIF)
+	if (i2c_module->INTFLAG.reg & SERCOM_I2CM_INTFLAG_MB)
 	{
 		/* Clear write interrupt flag */
-		i2c_module->INTFLAG.reg = SERCOM_I2CM_INTENCLR_WIEN;
+		i2c_module->INTFLAG.reg = SERCOM_I2CM_INTENCLR_MB;
 
 		/* Check arbitration */
 		if (i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_ARBLOST) {
@@ -230,7 +230,7 @@ void i2c_master_unregister_callback(
  * \param[in,out] module  Pointer to software module struct
  * \param[in,out] packet  Pointer to I<SUP>2</SUP>C packet to transfer
  *
- * \return Status of starting reading I<SUP>2</SUP>C packet
+ * \return Status of starting reading I<SUP>2</SUP>C packet.
  * \retval STATUS_OK    If reading was started successfully
  * \retval STATUS_BUSY  If module is currently busy with another transfer
  */
@@ -252,7 +252,7 @@ static enum status_code _i2c_master_read_packet(
 
 	/* Enable interrupts */
 	i2c_module->INTENSET.reg =
-			SERCOM_I2CM_INTENSET_WIEN | SERCOM_I2CM_INTENSET_RIEN;
+			SERCOM_I2CM_INTENSET_MB | SERCOM_I2CM_INTENSET_SB;
 
 	/* Set address and direction bit. Will send start command on bus */
 	i2c_module->ADDR.reg = (packet->address << 1) | _I2C_TRANSFER_READ;
@@ -339,7 +339,7 @@ enum status_code i2c_master_read_packet_job_no_stop(
  * \param[in,out] module  Pointer to software module struct
  * \param[in,out] packet  Pointer to I<SUP>2</SUP>C packet to transfer
  *
- * \return Status of starting writing I<SUP>2</SUP>C packet job
+ * \return Status of starting writing I<SUP>2</SUP>C packet job.
  * \retval STATUS_OK   If writing was started successfully
  * \retval STATUS_BUSY If module is currently busy with another transfer
  */
@@ -361,7 +361,7 @@ static enum status_code _i2c_master_write_packet(
 
 	/* Enable interrupts */
 	i2c_module->INTENSET.reg =
-			SERCOM_I2CM_INTENSET_WIEN | SERCOM_I2CM_INTENSET_RIEN;
+			SERCOM_I2CM_INTENSET_MB | SERCOM_I2CM_INTENSET_SB;
 
 	/* Set address and direction bit, will send start command on bus */
 	i2c_module->ADDR.reg = (packet->address << 1) | _I2C_TRANSFER_WRITE;
@@ -378,7 +378,7 @@ static enum status_code _i2c_master_write_packet(
  * \param[in,out] module  Pointer to software module struct
  * \param[in,out] packet  Pointer to I<SUP>2</SUP>C packet to transfer
  *
- * \return Status of starting writing I<SUP>2</SUP>C packet job
+ * \return Status of starting writing I<SUP>2</SUP>C packet job.
  * \retval STATUS_OK    If writing was started successfully
  * \retval STATUS_BUSY  If module is currently busy with another transfer
  */
@@ -417,7 +417,7 @@ enum status_code i2c_master_write_packet_job(
  * \param[in,out] module  Pointer to software module struct
  * \param[in,out] packet  Pointer to I<SUP>2</SUP>C packet to transfer
  *
- * \return Status of starting writing I<SUP>2</SUP>C packet job
+ * \return Status of starting writing I<SUP>2</SUP>C packet job.
  * \retval STATUS_OK    If writing was started successfully
  * \retval STATUS_BUSY  If module is currently busy with another
  */
@@ -473,7 +473,7 @@ void _i2c_master_interrupt_handler(
 			module->status == STATUS_BUSY && module->transfer_direction == 0) {
 		/* Stop packet operation */
 		i2c_module->INTENCLR.reg =
-				SERCOM_I2CM_INTENCLR_WIEN | SERCOM_I2CM_INTENCLR_RIEN;
+				SERCOM_I2CM_INTENCLR_MB | SERCOM_I2CM_INTENCLR_SB;
 
 		module->buffer_length = 0;
 		module->status        = STATUS_OK;
@@ -505,7 +505,7 @@ void _i2c_master_interrupt_handler(
 
 		/* Stop packet operation */
 		i2c_module->INTENCLR.reg =
-				SERCOM_I2CM_INTENCLR_WIEN | SERCOM_I2CM_INTENCLR_RIEN;
+				SERCOM_I2CM_INTENCLR_MB | SERCOM_I2CM_INTENCLR_SB;
 		module->buffer_length = 0;
 		module->status        = STATUS_OK;
 
@@ -522,8 +522,8 @@ void _i2c_master_interrupt_handler(
 	/* Check for error */
 	if (module->status != STATUS_BUSY && module->status != STATUS_OK) {
 		/* Stop packet operation */
-		i2c_module->INTENCLR.reg = SERCOM_I2CM_INTENCLR_WIEN |
-				SERCOM_I2CM_INTENCLR_RIEN;
+		i2c_module->INTENCLR.reg = SERCOM_I2CM_INTENCLR_MB |
+				SERCOM_I2CM_INTENCLR_SB;
 
 		module->buffer_length = 0;
 		module->buffer_remaining = 0;

@@ -120,8 +120,7 @@ static enum status_code _i2c_master_check_config(
 	/* Workaround for BUSSTATE stuck at BUSY */
 	tmp_ctrla |= SERCOM_I2CM_CTRLA_INACTOUT(3);
 
-	tmp_ctrla |= SERCOM_I2CM_CTRLA_ENABLE | SERCOM_I2CS_CTRLA_MODE(2) |
-			SERCOM_I2CS_CTRLA_MASTER;
+	tmp_ctrla |= SERCOM_I2CM_CTRLA_ENABLE | SERCOM_I2CM_CTRLA_MODE_I2C_MASTER;
 
 	/* Write config to register CTRLA. */
 	if (tmp_ctrla != i2c_module->CTRLA.reg) {
@@ -260,7 +259,7 @@ static enum status_code _i2c_master_set_config(
  * \param[in]  hw      Pointer to the hardware instance
  * \param[in]  config  Pointer to the configuration struct
  *
- * \return Status of initialization
+ * \return Status of initialization.
  * \retval STATUS_OK                        Module initiated correctly
  * \retval STATUS_ERR_DENIED                If module is enabled
  * \retval STATUS_BUSY                      If module is busy resetting
@@ -298,7 +297,7 @@ enum status_code i2c_master_init(
 	gclk_chan_conf.source_generator = config->generator_source;
 	system_gclk_chan_set_config(gclk_index, &gclk_chan_conf);
 	system_gclk_chan_enable(gclk_index);
-	sercom_set_gclk_generator(config->generator_source, true, false);
+	sercom_set_gclk_generator(config->generator_source, false);
 
 	/* Check if module is enabled. */
 	if (i2c_module->CTRLA.reg & SERCOM_I2CM_CTRLA_ENABLE) {
@@ -327,8 +326,7 @@ enum status_code i2c_master_init(
 #endif
 
 	/* Set sercom module to operate in I2C master mode. */
-	i2c_module->CTRLA.reg = SERCOM_I2CS_CTRLA_MODE(2) |
-			SERCOM_I2CS_CTRLA_MASTER;
+	i2c_module->CTRLA.reg = SERCOM_I2CM_CTRLA_MODE_I2C_MASTER;
 
 	/* Set config and return status. */
 	return _i2c_master_set_config(module, config);
@@ -394,10 +392,10 @@ static enum status_code _i2c_master_address_response(
 
 	/* Check for error and ignore bus-error; workaround for BUSSTATE stuck in
 	 * BUSY */
-	if (i2c_module->INTFLAG.reg & SERCOM_I2CM_INTFLAG_RIF) {
+	if (i2c_module->INTFLAG.reg & SERCOM_I2CM_INTFLAG_SB) {
 
 		/* Clear write interrupt flag */
-		i2c_module->INTFLAG.reg = SERCOM_I2CM_INTFLAG_RIF;
+		i2c_module->INTFLAG.reg = SERCOM_I2CM_INTFLAG_SB;
 
 		/* Check arbitration. */
 		if (i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_ARBLOST) {
@@ -438,8 +436,8 @@ static enum status_code _i2c_master_wait_for_bus(
 
 	/* Wait for reply. */
 	uint16_t timeout_counter = 0;
-	while (!(i2c_module->INTFLAG.reg & SERCOM_I2CM_INTFLAG_WIF) &&
-			!(i2c_module->INTFLAG.reg & SERCOM_I2CM_INTFLAG_RIF)) {
+	while (!(i2c_module->INTFLAG.reg & SERCOM_I2CM_INTFLAG_MB) &&
+			!(i2c_module->INTFLAG.reg & SERCOM_I2CM_INTFLAG_SB)) {
 
 		/* Check timeout condition. */
 		if (++timeout_counter >= module->buffer_timeout) {
@@ -457,7 +455,7 @@ static enum status_code _i2c_master_wait_for_bus(
  * \param[in,out] module  Pointer to software module struct.
  * \param[in,out] packet  Pointer to I<SUP>2</SUP>C packet to transfer.
  *
- * \return Status of reading packet
+ * \return Status of reading packet.
  * \retval STATUS_OK                    The packet was read successfully
  * \retval STATUS_ERR_TIMEOUT           If no response was given within
  *                                      specified timeout period

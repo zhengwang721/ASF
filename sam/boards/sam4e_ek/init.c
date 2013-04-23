@@ -343,6 +343,25 @@ void board_init(void)
 	ioport_set_pin_peripheral_mode(PIN_USART1_SCK_IDX, PIN_USART1_SCK_FLAGS);
 #endif
 
+#ifdef CONF_BOARD_NAND
+	ioport_set_pin_peripheral_mode(PIN_EBI_NANDOE,   PIN_EBI_NANDOE_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_EBI_NANDWE,   PIN_EBI_NANDWE_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_EBI_NANDCLE,  PIN_EBI_NANDCLE_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_EBI_NANDALE,  PIN_EBI_NANDALE_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_EBI_NANDIO_0, PIN_EBI_NANDIO_0_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_EBI_NANDIO_1, PIN_EBI_NANDIO_1_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_EBI_NANDIO_2, PIN_EBI_NANDIO_2_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_EBI_NANDIO_3, PIN_EBI_NANDIO_3_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_EBI_NANDIO_4, PIN_EBI_NANDIO_4_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_EBI_NANDIO_5, PIN_EBI_NANDIO_5_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_EBI_NANDIO_6, PIN_EBI_NANDIO_6_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_EBI_NANDIO_7, PIN_EBI_NANDIO_7_FLAGS);
+    ioport_set_pin_dir(PIN_NF_CE_IDX, IOPORT_DIR_OUTPUT);
+    ioport_set_pin_dir(PIN_NF_RB_IDX, IOPORT_DIR_INPUT);
+	ioport_set_pin_mode(PIN_NF_RB_IDX, IOPORT_MODE_PULLUP);
+#endif
+
+
 #ifdef CONF_BOARD_QTOUCH
 	/* Configure CHANGE pin for QTouch device */
 	ioport_set_pin_input_mode(BOARD_QT_CHANGE_PIN_IDX, BOARD_QT_CHANGE_PIN_FLAGS,

@@ -1,5 +1,6 @@
 <asf xmlversion="1.0">
 	<project caption="LED Toggle Application" id="sam0.applications.led_toggle.samd20_xplained_pro">
+		<info type="gui-flag" value="move-to-root"/>
 		<require idref="board.samd20_xplained_pro"/>
 		<require idref="sam0.applications.led_toggle"/>
 		<build type="include-path" value="."/>
@@ -9,6 +10,6 @@
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>
-		<device-support value="atsamd20j18a"/>
+		<device-support value="atsamd20j18"/>
 	</project>
 </asf>
