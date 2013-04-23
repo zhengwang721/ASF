@@ -69,7 +69,7 @@
 	 * PIO type and attribute of the pin connected with nPENIRQ,
 	 * normally should be (PIO_INPUT | PIO_PULLUP)
 	 */
-	#define BOARD_ADS7843_IRQ_FLAGS    PIO_INPUT | PIO_PULLUP
+	#define BOARD_ADS7843_IRQ_FLAGS    (PIO_INPUT | PIO_PULLUP)
 
 #endif
 

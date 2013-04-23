@@ -62,28 +62,28 @@
 
 #define CGI_LED_ID_KEY    "n"
 #define CGI_LED_CMD_KEY   "set"
-#define GET_LED_STATUS(status, \
-			led_id) (((status) & (1 << (led_id))) >> (led_id))
+#define GET_LED_STATUS(status, led_id) \
+		(((status) & (1 << (led_id))) >> (led_id))
 #define CLEAR_LED_STATUS(status, led_id)   ((status) &= ~(1 << (led_id)))
 #define SET_LED_STATUS(status, led_id)     ((status) |= (1 << (led_id)))
 
 #define CHIPID_NVTYP   (((CHIPID->CHIPID_CIDR) & \
-	CHIPID_CIDR_NVPTYP_Msk) >>  CHIPID_CIDR_NVPTYP_Pos)
+		CHIPID_CIDR_NVPTYP_Msk) >> CHIPID_CIDR_NVPTYP_Pos)
 #define CHIPID_NVPSIZ  (((CHIPID->CHIPID_CIDR) & \
-	CHIPID_CIDR_NVPSIZ_Msk) >>  CHIPID_CIDR_NVPSIZ_Pos)
+		CHIPID_CIDR_NVPSIZ_Msk) >> CHIPID_CIDR_NVPSIZ_Pos)
 #define CHIPID_SRAMSIZ (((CHIPID->CHIPID_CIDR) & \
-	CHIPID_CIDR_SRAMSIZ_Msk) >>  CHIPID_CIDR_SRAMSIZ_Pos)
+		CHIPID_CIDR_SRAMSIZ_Msk) >> CHIPID_CIDR_SRAMSIZ_Pos)
 #define CHIPID_ARCH    (((CHIPID->CHIPID_CIDR) & \
-	CHIPID_CIDR_ARCH_Msk) >>  CHIPID_CIDR_ARCH_Pos)
+		CHIPID_CIDR_ARCH_Msk) >> CHIPID_CIDR_ARCH_Pos)
 #define CHIPID_EPRCOC  (((CHIPID->CHIPID_CIDR) & \
-	CHIPID_CIDR_EPROC_Msk) >>  CHIPID_CIDR_EPROC_Pos)
+		CHIPID_CIDR_EPROC_Msk) >> CHIPID_CIDR_EPROC_Pos)
 
 /** Macro to unpack the ip address from LwIP format into 4 integers. */
-#define IP_ADDR_TO_INT_TUPLE(addr) \
-	(int)((addr) >>  0 & 0xff), \
-	(int)((addr) >>  8 & 0xff), \
-	(int)((addr) >> 16 & 0xff), \
-	(int)((addr) >> 24 & 0xff)
+#define IP_ADDR_TO_INT_TUPLE(addr)  \
+		(int)((addr) >> 0 & 0xff),  \
+		(int)((addr) >> 8 & 0xff),  \
+		(int)((addr) >> 16 & 0xff), \
+		(int)((addr) >> 24 & 0xff)
 
 #define CGI_MSG_CMD_KEY   "msg"
 
@@ -142,46 +142,46 @@ static const char *const chip_id_sramsize[] = {
 
 static const struct archnames { unsigned value; const char *name; }
 chip_id_archnames[] = {
-	{ 0x19, "AT91SAM9xx Series" },
-	{ 0x29, "AT91SAM9XExx Series" },
-	{ 0x34, "AT91x34 Series" },
-	{ 0x37, "CAP7 Series" },
-	{ 0x39, "CAP9 Series" },
-	{ 0x3B, "CAP11 Series" },
-	{ 0x3C, "SAM4E Series" },
-	{ 0x40, "AT91x40 Series" },
-	{ 0x42, "AT91x42 Series" },
-	{ 0x55, "AT91x55 Series" },
-	{ 0x60, "AT91SAM7Axx Series" },
-	{ 0x61, "AT91SAM7AQxx Series" },
-	{ 0x63, "AT91x63 Series" },
-	{ 0x70, "AT91SAM7Sxx Series" },
-	{ 0x71, "AT91SAM7XCxx Series" },
-	{ 0x72, "AT91SAM7SExx Series" },
-	{ 0x73, "AT91SAM7Lxx Series" },
-	{ 0x75, "AT91SAM7Xxx Series" },
-	{ 0x76, "AT91SAM7SLxx Series" },
-	{ 0x80, "ATSAM3UxC Series (100-pin version)" },
-	{ 0x81, "ATSAM3UxE Series (144-pin version)" },
-	{ 0x83, "ATSAM3AxC Series (100-pin version)" },
-	{ 0x84, "ATSAM3XxC Series (100-pin version)" },
-	{ 0x85, "ATSAM3XxE Series (144-pin version)" },
-	{ 0x86, "ATSAM3X8H Series (217-pin version)" },
-	{ 0x88, "ATSAM3SxA Series (48-pin version)" },
-	{ 0x89, "ATSAM3SxB Series (64-pin version)" },
-	{ 0x8A, "ATSAM3SxC Series (100-pin version)" },
-	{ 0x92, "AT91x92 Series" },
-	{ 0x95, "ATSAM3NxC Series (100-pin version)" },
-	{ 0xF0, "AT75Cxx Series" },
-	{ (unsigned)-1, NULL },
+	{0x19, "AT91SAM9xx Series"},
+	{0x29, "AT91SAM9XExx Series"},
+	{0x34, "AT91x34 Series"},
+	{0x37, "CAP7 Series"},
+	{0x39, "CAP9 Series"},
+	{0x3B, "CAP11 Series"},
+	{0x3C, "SAM4E Series"},
+	{0x40, "AT91x40 Series"},
+	{0x42, "AT91x42 Series"},
+	{0x55, "AT91x55 Series"},
+	{0x60, "AT91SAM7Axx Series"},
+	{0x61, "AT91SAM7AQxx Series"},
+	{0x63, "AT91x63 Series"},
+	{0x70, "AT91SAM7Sxx Series"},
+	{0x71, "AT91SAM7XCxx Series"},
+	{0x72, "AT91SAM7SExx Series"},
+	{0x73, "AT91SAM7Lxx Series"},
+	{0x75, "AT91SAM7Xxx Series"},
+	{0x76, "AT91SAM7SLxx Series"},
+	{0x80, "ATSAM3UxC Series (100-pin version)"},
+	{0x81, "ATSAM3UxE Series (144-pin version)"},
+	{0x83, "ATSAM3AxC Series (100-pin version)"},
+	{0x84, "ATSAM3XxC Series (100-pin version)"},
+	{0x85, "ATSAM3XxE Series (144-pin version)"},
+	{0x86, "ATSAM3X8H Series (217-pin version)"},
+	{0x88, "ATSAM3SxA Series (48-pin version)"},
+	{0x89, "ATSAM3SxB Series (64-pin version)"},
+	{0x8A, "ATSAM3SxC Series (100-pin version)"},
+	{0x92, "AT91x92 Series"},
+	{0x95, "ATSAM3NxC Series (100-pin version)"},
+	{0xF0, "AT75Cxx Series"},
+	{(unsigned)-1, NULL},
 };
 
 static const char *const chip_id_nvptype[] = {
-	"rom", /* 0 */
-	"romless or onchip flash", /* 1 */
-	"embedded flash memory", /* 2 */
+	"rom",                                    /* 0 */
+	"romless or onchip flash",                /* 1 */
+	"embedded flash memory",                  /* 2 */
 	"rom(nvpsiz) + embedded flash (nvpsiz2)", /* 3 */
-	"sram emulating flash", /* 4 */
+	"sram emulating flash",                   /* 4 */
 };
 
 /** HTTP buffer to store key value. */
@@ -207,17 +207,17 @@ static int cgi_displayMsg(const char *name, char *recv_buf, size_t recv_len);
  * CGI table where we associate one callback to one page.
  */
 HttpCGI cgi_table[] = {
-	{ CGI_MATCH_NAME, "echo", cgi_echo },
-	{ CGI_MATCH_NAME, "get_temperature", cgi_temp },
-	{ CGI_MATCH_NAME, "get_uptime", cgi_uptime },
-	{ CGI_MATCH_NAME, "get_resistor", cgi_resistor },
-	{ CGI_MATCH_NAME, "set_led", cgi_led },
-	{ CGI_MATCH_NAME, "get_ledStatus", cgi_ledStatus },
-	{ CGI_MATCH_NAME, "error", cgi_error },
-	{ CGI_MATCH_NAME, "status", cgi_status },
-	{ CGI_MATCH_NAME, "get_chipinfo", cgi_chipInfo },
-	{ CGI_MATCH_NAME, "display", cgi_displayMsg },
-	{ CGI_MATCH_NONE, NULL, NULL }
+	{CGI_MATCH_NAME, "echo", cgi_echo},
+	{CGI_MATCH_NAME, "get_temperature", cgi_temp},
+	{CGI_MATCH_NAME, "get_uptime", cgi_uptime},
+	{CGI_MATCH_NAME, "get_resistor", cgi_resistor},
+	{CGI_MATCH_NAME, "set_led", cgi_led},
+	{CGI_MATCH_NAME, "get_ledStatus", cgi_ledStatus},
+	{CGI_MATCH_NAME, "error", cgi_error},
+	{CGI_MATCH_NAME, "status", cgi_status},
+	{CGI_MATCH_NAME, "get_chipinfo", cgi_chipInfo},
+	{CGI_MATCH_NAME, "display", cgi_displayMsg},
+	{CGI_MATCH_NONE, NULL, NULL}
 };
 
 /**
@@ -231,7 +231,7 @@ HttpCGI cgi_table[] = {
  */
 static int cgi_echo(const char *name, char *recv_buf, size_t recv_len)
 {
-	(void)name;
+	UNUSED(name);
 
 	http_sendOk(HTTP_CONTENT_PLAIN);
 	http_write(recv_buf, recv_len);
@@ -249,9 +249,9 @@ static int cgi_echo(const char *name, char *recv_buf, size_t recv_len)
  */
 static int cgi_temp(const char *name, char *recv_buf, size_t recv_len)
 {
-	(void)recv_buf;
-	(void)recv_len;
-	(void)name;
+	UNUSED(recv_buf);
+	UNUSED(recv_len);
+	UNUSED(name);
 
 	sprintf((char *)tx_buf, "[%d.%d]", status.internal_temp / 100,
 			status.internal_temp % 100);
@@ -299,9 +299,9 @@ static int sec_to_strDhms(u32_t sec_time, char *str, size_t len)
  */
 static int cgi_uptime(const char *name, char *recv_buf, size_t recv_len)
 {
-	(void)recv_buf;
-	(void)recv_len;
-	(void)name;
+	UNUSED(recv_buf);
+	UNUSED(recv_len);
+	UNUSED(name);
 
 	sec_to_strDhms(status.up_time, (char *)tx_buf, sizeof(tx_buf));
 
@@ -322,9 +322,9 @@ static int cgi_uptime(const char *name, char *recv_buf, size_t recv_len)
  */
 static int cgi_resistor(const char *name, char *recv_buf, size_t recv_len)
 {
-	(void)recv_buf;
-	(void)recv_len;
-	(void)name;
+	UNUSED(recv_buf);
+	UNUSED(recv_len);
+	UNUSED(name);
 
 	u16_t volt;
 
@@ -349,9 +349,9 @@ static int cgi_resistor(const char *name, char *recv_buf, size_t recv_len)
  */
 static int cgi_led(const char *name, char *recv_buf, size_t recv_len)
 {
-	(void)recv_buf;
-	(void)recv_len;
-	(void)name;
+	UNUSED(recv_buf);
+	UNUSED(recv_len);
+	UNUSED(name);
 
 	char *query_str = strstr(name, "?") + 1;
 	size_t query_str_len = strlen(query_str);
@@ -415,9 +415,9 @@ error:
  */
 static int cgi_ledStatus(const char *name, char *recv_buf, size_t recv_len)
 {
-	(void)recv_buf;
-	(void)recv_len;
-	(void)name;
+	UNUSED(recv_buf);
+	UNUSED(recv_len);
+	UNUSED(name);
 
 	sprintf((char *)tx_buf, "{ \"0\":\"%d\", \"1\":\"%d\", \"2\":\"%d\"}",
 			GET_LED_STATUS(status.led_status, 0),
@@ -441,9 +441,9 @@ static int cgi_ledStatus(const char *name, char *recv_buf, size_t recv_len)
  */
 static int cgi_error(const char *name, char *recv_buf, size_t recv_len)
 {
-	(void)name;
-	(void)recv_buf;
-	(void)recv_len;
+	UNUSED(name);
+	UNUSED(recv_buf);
+	UNUSED(recv_len);
 
 	return -1;
 }
@@ -459,9 +459,10 @@ static int cgi_error(const char *name, char *recv_buf, size_t recv_len)
  */
 static int cgi_status(const char *name, char *recv_buf, size_t recv_len)
 {
-	(void)recv_buf;
-	(void)recv_len;
-	(void)name;
+	UNUSED(recv_buf);
+	UNUSED(recv_len);
+	UNUSED(name);
+
 	volatile uint16_t volt;
 	uint32_t length = 0;
 	uint32_t i;
@@ -598,9 +599,9 @@ static const char *chipid_nvptype(int idx)
  */
 static int cgi_chipInfo(const char *name, char *recv_buf, size_t recv_len)
 {
-	(void)recv_buf;
-	(void)recv_len;
-	(void)name;
+	UNUSED(recv_buf);
+	UNUSED(recv_len);
+	UNUSED(name);
 
 	sprintf((char *)tx_buf,
 			"{ \"core_name\":\"%s\", \"arch_name\":\"%s\", \"sram_size\":\"%s\",\"flash_size\":\"%s\", \"mem_boot_type\":\"%s\" }",
@@ -627,9 +628,9 @@ static int cgi_chipInfo(const char *name, char *recv_buf, size_t recv_len)
  */
 static int cgi_displayMsg(const char *name, char *recv_buf, size_t recv_len)
 {
-	(void)recv_buf;
-	(void)recv_len;
-	(void)name;
+	UNUSED(recv_buf);
+	UNUSED(recv_len);
+	UNUSED(name);
 
 	char *query_str = strstr(name, "?") + 1;
 	size_t query_str_len = strlen(query_str);

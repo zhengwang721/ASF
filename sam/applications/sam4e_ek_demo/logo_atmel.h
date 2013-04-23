@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief atmel_logo for the FreeRTOS Web/DSP Demo.
+ * \brief Atmel logo for the FreeRTOS Web/DSP Demo.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *

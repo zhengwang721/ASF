@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief GFX task from the FreeRTOS Web/DSP Demo.
+ * \brief GFX task for the FreeRTOS Web/DSP Demo.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -74,10 +74,10 @@ static void gfx_refresh_mag(void);
 static void gfx_draw_bmpfile(const uint8_t *bmpImage);
 
 /** Chip select number to be set */
-#define ILI93XX_LCD_CS			1
+#define ILI93XX_LCD_CS  1
 
 /** IRQ priority for PIO (The lower the value, the greater the priority) */
-#define IRQ_PRIOR_PIO			9
+#define IRQ_PRIOR_PIO  9
 
 const portTickType instructions_delay = 50UL / portTICK_RATE_MS;
 static const portTickType presentation_delay = 2000UL / portTICK_RATE_MS;
@@ -105,11 +105,11 @@ extern xSemaphoreHandle gfx_notification_semaphore;
 static uint32_t button1_filter_cnt = 0;
 static uint32_t button2_filter_cnt = 0;
 static uint32_t touch_sel = 0;
-#define COLOR_CUSTOM_GREY			0xE4E4E4u
+#define COLOR_CUSTOM_GREY  0xE4E4E4u
 
 /** The Y value to determine which button is pressed*/
 /* this value can be changed according to touch screen calibration status */
-#define BUTTON_DETECT_Y				110
+#define BUTTON_DETECT_Y  110
 
 /** BMP (Windows) Header Format. */
 COMPILER_PACK_SET(1)
@@ -161,8 +161,7 @@ static void event_handler(rtouch_event_t const *event)
 	case RTOUCH_MOVE:
 	case RTOUCH_PRESS:
 	case RTOUCH_RELEASE:
-		if (event->panel.y < BUTTON_DETECT_Y)
-		{
+		if (event->panel.y < BUTTON_DETECT_Y) {
 			/** Static IP button selected. */
 			/** Button 1. */
 			ili93xx_set_foreground_color(COLOR_BLACK);
@@ -176,8 +175,7 @@ static void event_handler(rtouch_event_t const *event)
 
 			button1_filter_cnt++;
 			button2_filter_cnt = 0;
-			if(button1_filter_cnt >= 1)
-			{
+			if (button1_filter_cnt >= 1) {
 				touch_sel = 1;
 
 				/** Button 2. */
@@ -190,8 +188,7 @@ static void event_handler(rtouch_event_t const *event)
 				ili93xx_set_foreground_color(COLOR_BLACK);
 				ili93xx_draw_string(102, 191, (uint8_t *)"DHCP");
 			}
-		}
-		else{
+		} else {
 			/** DHCP IP button selected. */
 			/** Button 2. */
 			ili93xx_set_foreground_color(COLOR_BLACK);
@@ -205,8 +202,7 @@ static void event_handler(rtouch_event_t const *event)
 
 			button2_filter_cnt++;
 			button1_filter_cnt = 0;
-			if(button2_filter_cnt >= 1)
-			{
+			if (button2_filter_cnt >= 1) {
 				touch_sel = 2;
 				/** Button 1. */
 				ili93xx_set_foreground_color(COLOR_CUSTOM_GREY);
@@ -225,16 +221,14 @@ static void event_handler(rtouch_event_t const *event)
 	}
 
 	/** If released, freeze buttons and perform IP settings. */
-	if (event->type == RTOUCH_RELEASE)
-	{
-		if((button1_filter_cnt>1) || (button2_filter_cnt >1))
-		{
-		g_ip_mode = touch_sel;
-		ili93xx_set_foreground_color(COLOR_GRAY);
-		ili93xx_draw_string(92, 91, (uint8_t *)"Static");
-		ili93xx_draw_string(102, 191, (uint8_t *)"DHCP");
-		ili93xx_set_foreground_color(COLOR_BLACK);
-		}else{
+	if (event->type == RTOUCH_RELEASE) {
+		if((button1_filter_cnt>1) || (button2_filter_cnt >1)) {
+			g_ip_mode = touch_sel;
+			ili93xx_set_foreground_color(COLOR_GRAY);
+			ili93xx_draw_string(92, 91, (uint8_t *)"Static");
+			ili93xx_draw_string(102, 191, (uint8_t *)"DHCP");
+			ili93xx_set_foreground_color(COLOR_BLACK);
+		} else {
 			/** Button 1. */
 			ili93xx_set_foreground_color(COLOR_CUSTOM_GREY);
 			ili93xx_draw_rectangle(20,70,220,130);
@@ -282,12 +276,11 @@ void create_gfx_task(uint16_t stack_depth_words,
 static void gfx_task(void *pvParameters)
 {
 	/* Just to avoid compiler warnings. */
-	( void ) pvParameters;
+	UNUSED(pvParameters);
 
 	/** Draw IP config menu. */
 	ili93xx_set_foreground_color(COLOR_WHITE);
-	ili93xx_draw_filled_rectangle(0, 0, ILI93XX_LCD_WIDTH,
-								ILI93XX_LCD_HEIGHT);
+	ili93xx_draw_filled_rectangle(0, 0, ILI93XX_LCD_WIDTH, ILI93XX_LCD_HEIGHT);
 
 	/** Display ATMEL logo. */
 	ili93xx_set_cursor_position(0,0);
@@ -305,8 +298,7 @@ static void gfx_task(void *pvParameters)
 
 	/** Draw IP config menu. */
 	ili93xx_set_foreground_color(COLOR_WHITE);
-	ili93xx_draw_filled_rectangle(0, 0, ILI93XX_LCD_WIDTH,
-								ILI93XX_LCD_HEIGHT);
+	ili93xx_draw_filled_rectangle(0, 0, ILI93XX_LCD_WIDTH, ILI93XX_LCD_HEIGHT);
 
 	/** Button 1. */
 	ili93xx_set_foreground_color(COLOR_CUSTOM_GREY);
@@ -331,7 +323,7 @@ static void gfx_task(void *pvParameters)
 	ili93xx_draw_string(22, 30, (uint8_t *)"IP Configuration");
 
 	ili93xx_draw_string(20, 260, (uint8_t *)"Assigned IP:");
-	ili93xx_draw_rectangle(20,280,220,310);
+	ili93xx_draw_rectangle(20, 280, 220, 310);
 
 	while (g_ip_mode == 0) {
 		rtouch_process();
@@ -350,10 +342,10 @@ static void gfx_task(void *pvParameters)
 
 	/** Show configured IP and unlock all other waiting tasks. */
 	ili93xx_set_foreground_color(COLOR_WHITE);
-	ili93xx_draw_filled_rectangle(20,280,220,310);
-	ili93xx_draw_filled_rectangle(0,0,240,60);
+	ili93xx_draw_filled_rectangle(20, 280, 220, 310);
+	ili93xx_draw_filled_rectangle(0, 0, 240, 60);
 	ili93xx_set_foreground_color(COLOR_BLACK);
-	ili93xx_draw_rectangle(20,280,220,310);
+	ili93xx_draw_rectangle(20, 280, 220, 310);
 	ili93xx_draw_string(30, 290, (uint8_t const *)g_c_ipconfig);
 	ili93xx_draw_string(5, 30, (uint8_t *)"Hit screen to start!");
 	while (rtouch_is_pressed() == false) {
@@ -362,26 +354,23 @@ static void gfx_task(void *pvParameters)
 
 	/** Draw application context. */
 	ili93xx_set_foreground_color(COLOR_WHITE);
-	ili93xx_draw_filled_rectangle(0, 0, ILI93XX_LCD_WIDTH,
-				     ILI93XX_LCD_HEIGHT);
+	ili93xx_draw_filled_rectangle(0, 0, ILI93XX_LCD_WIDTH, ILI93XX_LCD_HEIGHT);
 	ili93xx_set_foreground_color(COLOR_BLACK);
 #if SAM4E
 	ili93xx_draw_string(10, 30, (uint8_t *)"SAM4E Web/DSP Demo");
 #else
 # error No proper title found!
 #endif
-	ili93xx_draw_rectangle(20,60,220,160);
+	ili93xx_draw_rectangle(20, 60, 220, 160);
 	ili93xx_draw_line(15, 110, 225, 110);
-	ili93xx_draw_rectangle(20,180,220,280);
+	ili93xx_draw_rectangle(20, 180, 220, 280);
 	ili93xx_draw_string(15, 295, (uint8_t *)"0Hz");
 	ili93xx_draw_string(165, 295, (uint8_t *)"10kHz");
 
 	/** GFX task Loop. */
-	while (1)
-	{
+	while (1) {
 		/** Wait for DSP task processing to complete. */
-		if (xSemaphoreTake(gfx_notification_semaphore,
-								max_block_time_ticks)) {
+		if (xSemaphoreTake(gfx_notification_semaphore, max_block_time_ticks)) {
 
 			/** Display sampled signal */
 			/* 800 cyles at most in approx. 6ms */
@@ -406,17 +395,17 @@ static void gfx_init(void)
 
 	/** Configure SMC interface for Lcd */
 	smc_set_setup_timing(SMC,ILI93XX_LCD_CS,SMC_SETUP_NWE_SETUP(2)
-	| SMC_SETUP_NCS_WR_SETUP(2)
-	| SMC_SETUP_NRD_SETUP(2)
-	| SMC_SETUP_NCS_RD_SETUP(2));
+			| SMC_SETUP_NCS_WR_SETUP(2)
+			| SMC_SETUP_NRD_SETUP(2)
+			| SMC_SETUP_NCS_RD_SETUP(2));
 	smc_set_pulse_timing(SMC, ILI93XX_LCD_CS , SMC_PULSE_NWE_PULSE(4)
-	| SMC_PULSE_NCS_WR_PULSE(4)
-	| SMC_PULSE_NRD_PULSE(10)
-	| SMC_PULSE_NCS_RD_PULSE(10));
+			| SMC_PULSE_NCS_WR_PULSE(4)
+			| SMC_PULSE_NRD_PULSE(10)
+			| SMC_PULSE_NCS_RD_PULSE(10));
 	smc_set_cycle_timing(SMC, ILI93XX_LCD_CS, SMC_CYCLE_NWE_CYCLE(10)
-	| SMC_CYCLE_NRD_CYCLE(22));
+			| SMC_CYCLE_NRD_CYCLE(22));
 	smc_set_mode(SMC, ILI93XX_LCD_CS, SMC_MODE_READ_MODE
-	| SMC_MODE_WRITE_MODE);
+			| SMC_MODE_WRITE_MODE);
 
 	/** Initialize display parameter */
 	g_ili93xx_display_opt.ul_width = ILI93XX_LCD_WIDTH;
@@ -449,17 +438,17 @@ static void gfx_refresh_wav(void) {
 	ili93xx_set_foreground_color(COLOR_WHITE);
 	ili93xx_draw_filled_rectangle(21, 61, 219, 159);
 	ili93xx_set_foreground_color(COLOR_BLACK);
-	ili93xx_draw_line(10, 110,230, 110);
+	ili93xx_draw_line(10, 110, 230, 110);
 
 	/** Draw wave with available data. */
 	ili93xx_set_foreground_color(COLOR_BLUE);
 
 	/** Limit to 398, ie. ~200 to fit the rendering frame. */
-	while (i < 398)
-	{
+	while (i < 398) {
 		pixel = (wav_in_buffer[i] * display_factor);
-		if ((pixel < 50) && (pixel > -50))
+		if ((pixel < 50) && (pixel > -50)) {
 			ili93xx_draw_pixel(col, (uint32_t)(110 - pixel));
+		}
 
 		i = i + 2;
 		col = col + 1;
@@ -486,10 +475,10 @@ static void gfx_refresh_mag(void) {
 	 * a clean rendering. Hence we cannot render all the magnitudes,
 	 * because of the screen width. It would require a 128*2 space.
 	 */
-	for (i = 0; i < 99; i += 1, col += 2)
-	{
-		if (mag_in_buffer_int[i] > 0)
+	for (i = 0; i < 99; i += 1, col += 2) {
+		if (mag_in_buffer_int[i] > 0) {
 			ili93xx_draw_line(col, 279, col, 279 - mag_in_buffer_int[i]);
+		}
 	}
 }
 
@@ -510,32 +499,33 @@ static void gfx_draw_bmpfile(const uint8_t *bmpImage)
 	length = bmp_header->height * bmp_header->width * 3;
 	offset = sizeof(struct bmpfile_header);
 
-	if(ili93xx_device_type() == DEVICE_TYPE_ILI9325){
+	if (ili93xx_device_type() == DEVICE_TYPE_ILI9325) {
 
-		ili93xx_set_cursor_position(0,0);
+		ili93xx_set_cursor_position(0, 0);
 
 		/** Prepare to write in GRAM */
 		LCD_IR(0);
 		LCD_IR(ILI9325_GRAM_DATA_REG);
 		for (i = offset; i < length; i += 3) {
 			/** Invert red and blue. */
-			LCD_WD(bmpImage[i+2]);
-			LCD_WD(bmpImage[i+1]);
+			LCD_WD(bmpImage[i + 2]);
+			LCD_WD(bmpImage[i + 1]);
 			LCD_WD(bmpImage[i]);
 		}
 	} else if (ili93xx_device_type() == DEVICE_TYPE_ILI9341) {
-		ili93xx_set_window(0, 0, bmp_header->width-15, bmp_header->height);
+		ili93xx_set_window(0, 0, bmp_header->width - 15, bmp_header->height);
 		/** memory write command (R2Ch)*/
 		LCD_IR(ILI9341_CMD_MEMORY_WRITE);
 		LCD_IR(ILI9341_CMD_WRITE_MEMORY_CONTINUE);
 
 		/** the original image is mirrored */
-		for(i=bmp_header->height-1;i*bmp_header->width*3>offset;i -=1)
-			for(uint16_t j=45;j<bmp_header->width*3;j +=3)
-			{
-				LCD_WD(bmpImage[i*bmp_header->width*3 + j+2]);
-				LCD_WD(bmpImage[i*bmp_header->width*3 + j+1]);
-				LCD_WD(bmpImage[i*bmp_header->width*3 + j]);
+		for (i= bmp_header->height - 1; i * bmp_header->width * 3 > offset;
+				i -=1) {
+			for (uint16_t j = 45; j < bmp_header->width * 3; j += 3) {
+				LCD_WD(bmpImage[i * bmp_header->width * 3 + j + 2]);
+				LCD_WD(bmpImage[i * bmp_header->width * 3 + j + 1]);
+				LCD_WD(bmpImage[i * bmp_header->width * 3 + j]);
 			}
+		}
 	}
 }

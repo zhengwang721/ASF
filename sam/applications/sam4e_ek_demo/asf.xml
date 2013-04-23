@@ -39,17 +39,8 @@
 		<build type="include-path" value="./network"/>
 		<build type="include-path" value="./network/httpserver_raw"/>
 		<device-support value="sam4e"/>
-		<require idref="board.sam4e_ek"/>
 		<require idref="thirdparty.lwip.version"/>
-<!--		<require idref="thirdparty.os.freertos.version"/> -->
 		<require idref="common.services.os.freertos"/>
-<!--
-		<require idref="sam.components.ethernet_phy.ksz8051mnl"/>
-		<require idref="sam.drivers.gmac"/>
-		<require idref="sam.drivers.uart"/>
-		<require idref="sam.drivers.tc"/>
-		
-		-->
 		<require idref="common.components.touch.qt.qt_i2c"/>
 		<require idref="sam.components.display.aat31xx"/>
 		<require idref="sam.services.resistive_touch"/>
@@ -60,12 +51,11 @@
 		<require idref="sam.drivers.pdc"/>
 		<require idref="sam.drivers.rstc"/>
 		<require idref="common.services.ioport"/>
-		<require idref="common.services.basic.gpio"/>
 		<require idref="sam.drivers.pio"/>
 		<require idref="common.services.basic.clock"/>
 		<require idref="common.utils.stdio.stdio_serial"/>
 		<require idref="sam.drivers.pmc"/>
 		<require idref="sam.utils.syscalls"/>
-		<require idref="sam.utils.cmsis.sam4e.source.template"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

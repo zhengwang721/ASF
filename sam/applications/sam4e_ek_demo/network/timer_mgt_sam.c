@@ -58,7 +58,7 @@ static volatile uint32_t gs_ul_clk_tick;
 void TC0_Handler(void)
 {
 	/** Clear status bit to acknowledge interrupt */
-	TC0->TC_CHANNEL[0].TC_SR;
+	tc_get_status(TC0, 0);
 
 	/** Increase tick */
 	gs_ul_clk_tick++;
@@ -71,6 +71,7 @@ void sys_init_timing(void)
 {
 	uint32_t ul_div;
 	uint32_t ul_tcclks;
+	uint32_t ul_system_clk = sysclk_get_cpu_hz();
 
 	/** Clear tick value */
 	gs_ul_clk_tick = 0;
@@ -78,12 +79,11 @@ void sys_init_timing(void)
 	/** Configure PMC */
 	pmc_enable_periph_clk(ID_TC0);
 
-	/** Configure TC for a 4Hz frequency and trigger on RC compare. */
+	/** Configure TC for a 1kHz frequency and trigger on RC compare. */
 	tc_find_mck_divisor(1000,
-			sysclk_get_main_hz(), &ul_div, &ul_tcclks,
-			sysclk_get_main_hz());
+			ul_system_clk, &ul_div, &ul_tcclks, ul_system_clk);
 	tc_init(TC0, 0, ul_tcclks | TC_CMR_CPCTRG);
-	tc_write_rc(TC0, 0, (sysclk_get_main_hz() / ul_div) / 1000);
+	tc_write_rc(TC0, 0, (ul_system_clk / ul_div) / 1000);
 
 	/** Configure and enable interrupt on RC compare */
 	NVIC_EnableIRQ((IRQn_Type)ID_TC0);
@@ -101,7 +101,7 @@ uint32_t sys_get_ms(void)
 	return gs_ul_clk_tick;
 }
 
-#if ((LWIP_VERSION) != ((1U << 24) | (3U << 16) | (2U << 8) | (LWIP_VERSION_RC)) )
+#if ((LWIP_VERSION) != ((1U << 24) | (3U << 16) | (2U << 8) | (LWIP_VERSION_RC)))
 /*
  * See lwip/sys.h for more information
  * Returns number of milliseconds expired

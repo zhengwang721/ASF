@@ -59,8 +59,8 @@
 #include <pmc.h>
 #include <sysclk.h>
 
-#define SLIDER_SELECTOR_NB		(9UL)
-#define SLIDER_SELECTOR_RANGE	(255UL / SLIDER_SELECTOR_NB)
+#define SLIDER_SELECTOR_NB     (9UL)
+#define SLIDER_SELECTOR_RANGE  (255UL / SLIDER_SELECTOR_NB)
 
 /** Small delay to hold tasks, during instruction screen. */
 extern const portTickType instructions_delay;

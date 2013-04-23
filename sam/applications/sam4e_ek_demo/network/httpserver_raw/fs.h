@@ -45,8 +45,8 @@
 #define __FS_H__
 
 struct fs_file {
-  char *data;
-  int len;
+	char *data;
+	int len;
 };
 
 extern int fs_open(char *name, struct fs_file *file);

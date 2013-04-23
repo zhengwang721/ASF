@@ -1,9 +1,7 @@
 /**
- *
  * \file
  *
  * \brief LwIP configuration.
- *
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *

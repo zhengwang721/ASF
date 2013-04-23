@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief DSP task from the FreeRTOS Web/DSP Demo.
+ * \brief DSP task for the FreeRTOS Web/DSP Demo.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -55,42 +55,42 @@
 #include <serial.h>
 
 /** sound sampling frequency */
-#define SAMPLING_FREQUENCY		22050UL
+#define SAMPLING_FREQUENCY  22050UL
 
 /** ADC relateddefinition*/
-#define ADC_CHANNEL_POTENTIOMETER	AFEC_CHANNEL_5
-#define ADC_CHANNEL_MICROPHONE		AFEC_CHANNEL_4
-#define ADC_POTENTIOMETER_NOISE		10
+#define ADC_CHANNEL_POTENTIOMETER  AFEC_CHANNEL_5
+#define ADC_CHANNEL_MICROPHONE     AFEC_CHANNEL_4
+#define ADC_POTENTIOMETER_NOISE    10
 
 /** DACC related definitions. */
-#define SPEAKER_CHANNEL_R			DACC_MR_USER_SEL_CHANNEL0
-#define SPEAKER_CHANNEL_L			DACC_MR_USER_SEL_CHANNEL1
-#define DACC_REFRESH			1
+#define SPEAKER_CHANNEL_R          DACC_MR_USER_SEL_CHANNEL0
+#define SPEAKER_CHANNEL_L          DACC_MR_USER_SEL_CHANNEL1
+#define DACC_REFRESH               1
 
 /** TC related definitions */
-#define TC_RC		(BOARD_MCK / 2 / SAMPLING_FREQUENCY)
-#define TC_RA		(TC_RC / 2)
+#define TC_RC                      (BOARD_MCK / 2 / SAMPLING_FREQUENCY)
+#define TC_RA                      (TC_RC / 2)
 
 /** IRQ priority for PIO (The lower the value, the greater the priority). */
-#define IRQ_PRIOR_PIO			5
+#define IRQ_PRIOR_PIO              5
 
 /** Voice changer step in hertz. */
-#define VOICE_CHANGER_DELTA		100UL
+#define VOICE_CHANGER_DELTA        100UL
 
 /** Numbers Definitions related to the FFT calculation */
-#define SAMPLE_BLOCK_SIZE		256UL
+#define SAMPLE_BLOCK_SIZE          256UL
 
 /** Wave file offset in bytes. */
 /* Normal wave offset should be 44. But the next 4 bytes are meaningless. */
-#define WAVE_OFFSET			(44 + 4)
+#define WAVE_OFFSET                (44 + 4)
 
 /**
  * Interrupt priorities. (lowest value = highest priority)
  * ISRs using FreeRTOS *FromISR APIs must have priorities below or equal to
  * configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY.
  */
-#define INT_PRIORITY_DACC	configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY
-#define INT_PRI_PUSHBUTTON	configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY + 2
+#define INT_PRIORITY_DACC   configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY
+#define INT_PRI_PUSHBUTTON  (configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY + 2)
 
 static void dsp_task(void *pvParameters);
 static void dsp_configure_tc(void);
@@ -157,14 +157,13 @@ uint32_t offset = WAVE_OFFSET;
  */
 void DACC_Handler(void)
 {
-	uint32_t isr = DACC->DACC_ISR;
+	uint32_t isr = dacc_get_interrupt_status(DACC);
 
 	/** Check if one PDC buffer has been received. */
-	if (isr & DACC_ISR_ENDTX)
-	{
+	if (isr & DACC_ISR_ENDTX) {
 		/** Add cur_dac_buffer as next transfert for PDC. */
 		g_pdc_nextpacket.ul_addr =
-			(uint32_t) dacc_out_buffer[cur_dac_buffer];
+				(uint32_t) dacc_out_buffer[cur_dac_buffer];
 		g_pdc_nextpacket.ul_size = SAMPLE_BLOCK_SIZE;
 		pdc_tx_init(dacc_pdc, NULL, &g_pdc_nextpacket);
 
@@ -217,7 +216,7 @@ static void dsp_task(void *pvParameters)
 	float32_t tmp;
 
 	/* Just to avoid compiler warnings. */
-	( void ) pvParameters;
+	UNUSED(pvParameters);
 
 	/* Wait for user to read instructions. */
 	WAIT_FOR_TOUCH_EVENT;
@@ -243,12 +242,11 @@ static void dsp_task(void *pvParameters)
 	tc_start(TC0, 1);
 
 	/** DSP task loop. */
-	while (1)
-	{
+	while (1) {
 		/* Using input wave signal. */
 		if (g_mode_select == 1) {
 			if (xSemaphoreTake(dacc_notification_semaphore,
-										max_block_time_ticks)) {
+					max_block_time_ticks)) {
 				/* Copy dsp_sfx into wav_in_buffer and prepare Q15 format. */
 				for (i = 0, j = 0; i < 512; ++j) {
 					tmp = (((dsp_sfx[offset] - (float) 128)) / 100);
@@ -261,40 +259,38 @@ static void dsp_task(void *pvParameters)
 
 					/* Prepare buffer for DACC. */
 					dacc_out_buffer[cur_dac_buffer][j] = (uint16_t)((tmp * 100
-										* sin_buffer[slider_pos][j]) + 128);
+							* sin_buffer[slider_pos][j]) + 128);
 
 					/* Update the wave file offset pointer. */
-					if(offset < dsp_sfx_size - 1)
+					if (offset < dsp_sfx_size - 1) {
 						offset++;
-					else
+					} else {
 						offset = WAVE_OFFSET;
+					}
 				}
-			}
-			else {
-
+			} else {
 				/* Ensure we take the semaphore. */
 				continue;
 			}
-		}
-		/* Using generated input sinus signal. */
-		else {
+		} else {
+			/* Using generated input sinus signal. */
 			if (xSemaphoreTake(dacc_notification_semaphore,
-									max_block_time_ticks)) {
+					max_block_time_ticks)) {
 				/*
 				 * Read potentiometer value and generate
 				 * sinus signal accordingly.
 				 */
 				adc_potentiometer_old = adc_potentiometer;
 				adc_potentiometer = (afec_channel_get_value(AFEC0,
-										ADC_CHANNEL_POTENTIOMETER));
+						ADC_CHANNEL_POTENTIOMETER));
 				adc_potentiometer = adc_potentiometer * 10000 / 4096;
 				if (adc_potentiometer > adc_potentiometer_old &&
 						adc_potentiometer -
-						adc_potentiometer_old < ADC_POTENTIOMETER_NOISE){
+						adc_potentiometer_old < ADC_POTENTIOMETER_NOISE) {
 					adc_potentiometer = adc_potentiometer_old;
-				}else if (adc_potentiometer_old > adc_potentiometer &&
+				} else if (adc_potentiometer_old > adc_potentiometer &&
 						adc_potentiometer_old -
-						adc_potentiometer < ADC_POTENTIOMETER_NOISE){
+						adc_potentiometer < ADC_POTENTIOMETER_NOISE) {
 					adc_potentiometer = adc_potentiometer_old;
 				}
 
@@ -331,24 +327,23 @@ static void dsp_task(void *pvParameters)
 		 * a clean rendering. Hence we cannot render all the magnitudes,
 		 * because of the screen width. It would require a 128*2 space.
 		 */
-		for (i = 0; i < 99; ++i)
-		{
+		for (i = 0; i < 99; ++i) {
 			bin = (mag_in_buffer[i] * display_factor);
-			if (bin > 0)
-			{
-				if (bin > 98){
+			if (bin > 0) {
+				if (bin > 98) {
 					bin = 98;
 				}
 				mag_in_buffer_int[i] = (uint32_t)bin;
-			}else{
+			} else {
 				mag_in_buffer_int[i] = 0;
 			}
 		}
 
 		/* Notify GFX task to start refreshing screen (if necessary). */
-		if (g_mode_select == 1 ||
-			(g_mode_select == 0 && adc_potentiometer != adc_potentiometer_old))
+		if (g_mode_select == 1 || (g_mode_select == 0 &&
+				adc_potentiometer != adc_potentiometer_old)) {
 			xSemaphoreGive(gfx_notification_semaphore);
+		}
 	}
 }
 
@@ -418,7 +413,7 @@ static void dsp_configure_adc(void)
 	/* Perform an auto cab on the ADC Channel 4. */
 	afec_start_calibration(AFEC0);
 	while((afec_get_interrupt_status(AFEC0) & AFEC_ISR_EOCAL) !=
-							 AFEC_ISR_EOCAL);
+			AFEC_ISR_EOCAL);
 
 	/* Enable potentiometer channel, disable microphone. */
 	afec_channel_disable(AFEC0, ADC_CHANNEL_MICROPHONE);
@@ -442,7 +437,7 @@ static void dsp_configure_dacc(void)
 	 * -No max Speed Mode
 	 * -Startup time of 0 periods of DACClock
 	 */
-	dacc_set_timing(DACC, DACC_REFRESH,	0, DACC_MR_STARTUP_0);
+	dacc_set_timing(DACC, DACC_REFRESH, 0, DACC_MR_STARTUP_0);
 
 	/* Set TIO Output of TC Channel 1 as trigger */
 	dacc_set_trigger(DACC,2);
@@ -492,12 +487,11 @@ static void dsp_sin_init(void)
 
 		for (i = 0 ; i < SAMPLE_BLOCK_SIZE; i++) {
 			/* Amplification is set to 1. */
-			if (ratio <= 1.0){
+			if (ratio <= 1.0) {
 				/* It won't change anything. */
 				sin_buffer[j][i] = 1;
-			}else{
-				sin_buffer[j][i] =
-					arm_sin_f32(2 * PI * i * ratio);
+			} else {
+				sin_buffer[j][i] = arm_sin_f32(2 * PI * i * ratio);
 			}
 		}
 
@@ -517,8 +511,9 @@ static void dsp_sin_input(float32_t freq)
 	uint32_t y;
 	float32_t ratio;
 
-	if (freq < 1)
+	if (freq < 1) {
 		freq = 1;
+	}
 
 	ratio = freq / SAMPLING_FREQUENCY;
 
@@ -555,15 +550,15 @@ static void dsp_configure_button2(void)
 	/* Configure Pushbutton 1. */
 	pmc_enable_periph_clk(PIN_PUSHBUTTON_2_ID);
 	pio_set_debounce_filter(PIN_PUSHBUTTON_2_PIO,
-				PIN_PUSHBUTTON_2_MASK, 10);
+			PIN_PUSHBUTTON_2_MASK, 10);
 	pio_handler_set(PIN_PUSHBUTTON_2_PIO, PIN_PUSHBUTTON_2_ID,
 			PIN_PUSHBUTTON_2_MASK, PIN_PUSHBUTTON_2_ATTR,
 			dsp_event_button2);
 
 	/* Take care of NVIC_SetPriority. */
 	pio_handler_set_priority(PIN_PUSHBUTTON_2_PIO,
-				 (IRQn_Type) PIN_PUSHBUTTON_2_ID,
-				 INT_PRI_PUSHBUTTON);
+			(IRQn_Type) PIN_PUSHBUTTON_2_ID,
+			INT_PRI_PUSHBUTTON);
 	pio_enable_interrupt(PIN_PUSHBUTTON_2_PIO, PIN_PUSHBUTTON_2_MASK);
 }
 
@@ -579,8 +574,7 @@ static void dsp_event_button2(uint32_t id, uint32_t mask)
 		if (g_mode_select == 1) {
 			/* Set acquisition mode to sinus generation. */
 			g_mode_select = 0;
-		}
-		else {
+		} else {
 			/* Set acquisition mode to wave file. */
 			g_mode_select = 1;
 		}

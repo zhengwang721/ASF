@@ -329,9 +329,7 @@ static void http_decodeUrl(const char *raw_buf, size_t raw_len,
 		if (raw_buf[i] == '%') {
 			if (i + 2 < raw_len) {
 				/* Convert HEX value after %. */
-				value
-					= http_hexToAscii(raw_buf[i + 1],
-						raw_buf[i + 2]);
+				value = http_hexToAscii(raw_buf[i + 1], raw_buf[i + 2]);
 				if (value) {
 					*decodec_buf++ = value;
 					len--;
@@ -377,8 +375,7 @@ int http_getValue(char *tolenized_buf, size_t tolenized_buf_len,
 			/* skip key */
 			p += token_len + 1;
 
-			http_decodeUrl(p, strlen(p), decoded_str,
-					sizeof(decoded_str));
+			http_decodeUrl(p, strlen(p), decoded_str, sizeof(decoded_str));
 			value_len = strlen(decoded_str);
 
 			if (value_len >= len) {
@@ -545,14 +542,12 @@ static err_t http_recv(void *arg, struct tcp_pcb *pcb, struct pbuf *p,
 				if (cgi(req_string, buf, buflen) < 0) {
 					http_sendInternalErr(HTTP_CONTENT_HTML);
 					http_write(http_server_error,
-							sizeof(http_server_error) -
-							1);
+							sizeof(http_server_error) - 1);
 				}
 			} else {
 				if (fs_open(req_string, &file) == 0) {
 					http_write(http_html_hdr_404,
-							sizeof(http_html_hdr_404) -
-							1);
+							sizeof(http_html_hdr_404) - 1);
 				} else {
 					/* Send the HTML header. */
 					int type = http_searchContentType(

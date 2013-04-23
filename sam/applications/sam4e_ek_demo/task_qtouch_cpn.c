@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief QTouch component task from the FreeRTOS Web/DSP Demo.
+ * \brief QTouch component task for the FreeRTOS Web/DSP Demo.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -110,8 +110,7 @@ static void demo_process_qt_status(struct qt_status *qt_status)
 {
 	static uint8_t slide_position = 0;
 
-	if(qt_status->general_status & QT_GENERAL_STATUS_RESET)
-	{
+	if (qt_status->general_status & QT_GENERAL_STATUS_RESET) {
 		/** Read setup block */
 		qt_read_setup_block(&setup_block);
 		/** Modify setup block parameters for specific example */
@@ -124,8 +123,9 @@ static void demo_process_qt_status(struct qt_status *qt_status)
 		/** Save a slider position to be used in the DSP task. */
 		slide_position = qt_status->slider_position / SLIDER_SELECTOR_RANGE;
 		/** Necessary to avoid sin_buffer overflow, when position equals 0. */
-		if (slide_position == 0)
+		if (slide_position == 0) {
 			slide_position += 1;
+		}
 		slider_pos = SLIDER_SELECTOR_NB - slide_position;
 	}
 }
@@ -175,17 +175,16 @@ void create_qtouch_task(uint16_t stack_depth_words,
 static void qtouch_task(void *pvParameters)
 {
 	/* Just to avoid compiler warnings. */
-	( void ) pvParameters;
+	UNUSED(pvParameters);
 
 	/** Wait for user to read instructions. */
 	WAIT_FOR_TOUCH_EVENT;
-		while (g_ip_mode != 3) {
+	while (g_ip_mode != 3) {
 		vTaskDelay(qtouch_delay);
 	}
 
 	/** QTouch task Loop. */
-	while (1)
-	{
+	while (1) {
 		if (qt_is_change_line_low()) {
 			/** Read all status bytes */
 			qt_get_status(&qtstatus);

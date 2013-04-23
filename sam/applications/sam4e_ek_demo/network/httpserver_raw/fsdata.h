@@ -45,17 +45,17 @@
 #define __FSDATA_H__
 
 struct fsdata_file {
-  const struct fsdata_file *next;
-  const unsigned char *name;
-  const unsigned char *data;
-  const int len;
+	const struct fsdata_file *next;
+	const unsigned char *name;
+	const unsigned char *data;
+	const int len;
 };
 
 struct fsdata_file_noconst {
-  struct fsdata_file *next;
-  unsigned char *name;
-  unsigned char *data;
-  int len;
+	struct fsdata_file *next;
+	unsigned char *name;
+	unsigned char *data;
+	int len;
 };
 
 /** FS_ROOT represents the root of the virtual file system. */

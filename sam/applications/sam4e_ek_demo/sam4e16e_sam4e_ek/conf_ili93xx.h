@@ -52,9 +52,9 @@
 	/*
 	 * The base address, depends on which SMC chip select is used by ILI9325.
 	 */
-	#define BOARD_ILI93XX_ADDR     0x61000000 
+	#define BOARD_ILI93XX_ADDR     (0x61000000)
 	/* Register select (1 << 1) */
-	#define BOARD_ILI93XX_RS       1 << 1 
+	#define BOARD_ILI93XX_RS       (1 << 1)
 #endif
 
 #endif /* CONF_ILI93XX_H_INCLUDED */

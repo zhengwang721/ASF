@@ -120,28 +120,28 @@
 static void prvSetupHardware(void);
 
 /** The priorities at which various tasks will get created. */
-#define mainDSP_TASK_PRIORITY		(tskIDLE_PRIORITY + 4)
+#define mainDSP_TASK_PRIORITY          (tskIDLE_PRIORITY + 4)
 
 /** The stack sizes allocated to the DSP stack: (2048 * 4) = 8192 bytes. */
-#define mainDSP_TASK_STACK_SIZE		(2048)
+#define mainDSP_TASK_STACK_SIZE        (2048)
 
 /** The priorities at which various tasks will get created. */
-#define mainGFX_TASK_PRIORITY		(tskIDLE_PRIORITY + 2)
+#define mainGFX_TASK_PRIORITY          (tskIDLE_PRIORITY + 2)
 
 /** The stack sizes allocated to the DSP stack: (1048 * 4) = 4096 bytes. */
-#define mainGFX_TASK_STACK_SIZE		(1048)
+#define mainGFX_TASK_STACK_SIZE        (1048)
 
 /** The priorities at which various tasks will get created. */
-#define mainQTOUCH_TASK_PRIORITY	(tskIDLE_PRIORITY + 2)
+#define mainQTOUCH_TASK_PRIORITY       (tskIDLE_PRIORITY + 2)
 
 /** The stack sizes allocated to the DSP stack: (1048 * 4) = 4096 bytes. */
-#define mainQTOUCH_TASK_STACK_SIZE	(1048)
+#define mainQTOUCH_TASK_STACK_SIZE     (1048)
 
 /** The priorities at which various tasks will get created. */
-#define mainWEBSERVER_TASK_PRIORITY	(tskIDLE_PRIORITY + 2)
+#define mainWEBSERVER_TASK_PRIORITY    (tskIDLE_PRIORITY + 2)
 
 /** The stack sizes allocated to the DSP stack: (1048 * 4) = 4096 bytes. */
-#define mainWEBSERVER_TASK_STACK_SIZE	(1048)
+#define mainWEBSERVER_TASK_STACK_SIZE  (1048)
 
 /*
  * FreeRTOS hook (or callback) functions that are defined in this file.
@@ -198,7 +198,8 @@ int main(void)
 	create_qtouch_task(mainQTOUCH_TASK_STACK_SIZE, mainQTOUCH_TASK_PRIORITY);
 
 	/** Create WebServer task. */
-	create_webserver_task(mainWEBSERVER_TASK_STACK_SIZE, mainWEBSERVER_TASK_PRIORITY);
+	create_webserver_task(mainWEBSERVER_TASK_STACK_SIZE,
+			mainWEBSERVER_TASK_PRIORITY);
 
 	/** Start the RTOS scheduler. */
 	vTaskStartScheduler();

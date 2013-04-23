@@ -1,5 +1,4 @@
-/**************************************************************************
- *
+/**
  * \file
  *
  * \brief lwIP core & application threads configuration file.

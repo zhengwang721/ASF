@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Webserver component task from the FreeRTOS Web/DSP Demo.
+ * \brief Webserver component task for the FreeRTOS Web/DSP Demo.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -71,7 +71,7 @@ void create_webserver_task(uint16_t stack_depth_words,
 static void webserver_task(void *pvParameters)
 {
 	/* Just to avoid compiler warnings. */
-	( void ) pvParameters;
+	UNUSED(pvParameters);
 
 	/** Wait for user to read instructions. */
 	WAIT_FOR_TOUCH_EVENT;

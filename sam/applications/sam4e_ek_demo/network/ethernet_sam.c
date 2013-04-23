@@ -59,7 +59,7 @@
 #include "lwip/stats.h"
 #include "lwip/init.h"
 #include "lwip/ip_frag.h"
-#if ( (LWIP_VERSION) == ((1U << 24) | (3U << 16) | (2U << 8) | (LWIP_VERSION_RC)) )
+#if ((LWIP_VERSION) == ((1U << 24) | (3U << 16) | (2U << 8) | (LWIP_VERSION_RC)))
 #include "netif/loopif.h"
 #else
 #include "lwip/inet.h"
@@ -91,11 +91,6 @@ typedef struct timers_info {
 static timers_info_t gs_timers_table[] = {
 	{0, TCP_TMR_INTERVAL, tcp_tmr},
 	{0, IP_TMR_INTERVAL, ip_reass_tmr},
-#if 0
-	/* LWIP_TCP */
-	{0, TCP_FAST_INTERVAL, tcp_fasttmr},
-	{0, TCP_SLOW_INTERVAL, tcp_slowtmr},
-#endif
 	/* LWIP_ARP */
 	{0, ARP_TMR_INTERVAL, etharp_tmr},
 	/* LWIP_DHCP */
@@ -124,8 +119,8 @@ static void timers_update(void)
 	if (ul_time_diff) {
 		ul_last_time = ul_cur_time;
 		for (ul_idx_timer = 0;
-			 ul_idx_timer < (sizeof(gs_timers_table) / sizeof(timers_info_t));
-			 ul_idx_timer++) {
+			ul_idx_timer < (sizeof(gs_timers_table) / sizeof(timers_info_t));
+			ul_idx_timer++) {
 			p_tmr_inf = &gs_timers_table[ul_idx_timer];
 			p_tmr_inf->timer += ul_time_diff;
 			if (p_tmr_inf->timer > p_tmr_inf->timer_interval) {
@@ -146,29 +141,28 @@ static void ethernet_configure_interface(void)
 {
 	struct ip_addr x_ip_addr, x_net_mask, x_gateway;
 
-	if (g_ip_mode == 2)
-	{
-	x_ip_addr.addr = 0;
-	x_net_mask.addr = 0;
-	}else{
-	/** Default ip addr */
-	IP4_ADDR(&x_ip_addr, ETHERNET_CONF_IPADDR0, ETHERNET_CONF_IPADDR1,
-			ETHERNET_CONF_IPADDR2, ETHERNET_CONF_IPADDR3);
-
-	/** Default subnet mask */
-	IP4_ADDR(&x_net_mask, ETHERNET_CONF_NET_MASK0, ETHERNET_CONF_NET_MASK1,
-			ETHERNET_CONF_NET_MASK2, ETHERNET_CONF_NET_MASK3);
-
-	/** Default gateway addr */
-	IP4_ADDR(&x_gateway, ETHERNET_CONF_GATEWAY_ADDR0,
-			ETHERNET_CONF_GATEWAY_ADDR1,
-			ETHERNET_CONF_GATEWAY_ADDR2,
-			ETHERNET_CONF_GATEWAY_ADDR3);
+	if (g_ip_mode == 2) {
+		x_ip_addr.addr = 0;
+		x_net_mask.addr = 0;
+	} else {
+		/** Default ip addr */
+		IP4_ADDR(&x_ip_addr, ETHERNET_CONF_IPADDR0, ETHERNET_CONF_IPADDR1,
+				ETHERNET_CONF_IPADDR2, ETHERNET_CONF_IPADDR3);
+	
+		/** Default subnet mask */
+		IP4_ADDR(&x_net_mask, ETHERNET_CONF_NET_MASK0, ETHERNET_CONF_NET_MASK1,
+				ETHERNET_CONF_NET_MASK2, ETHERNET_CONF_NET_MASK3);
+	
+		/** Default gateway addr */
+		IP4_ADDR(&x_gateway, ETHERNET_CONF_GATEWAY_ADDR0,
+				ETHERNET_CONF_GATEWAY_ADDR1,
+				ETHERNET_CONF_GATEWAY_ADDR2,
+				ETHERNET_CONF_GATEWAY_ADDR3);
 	}
 
 	/** Add data to netif */
 	if( NULL == netif_add(&gs_net_if, &x_ip_addr, &x_net_mask, &x_gateway, NULL,
-						  ethernetif_init, ethernet_input) ) {
+			ethernetif_init, ethernet_input) ) {
 		TRACE_DEBUG("ERROR");
 		while(1);
 	}
@@ -179,15 +173,13 @@ static void ethernet_configure_interface(void)
 	netif_set_status_callback(&gs_net_if, status_callback);
 
 	/** Bring it up */
-	if (g_ip_mode == 2)
-	{
+	if (g_ip_mode == 2) {
 		/** DHCP mode*/
-		if(ERR_OK != dhcp_start(&gs_net_if))
-		{
+		if(ERR_OK != dhcp_start(&gs_net_if)) {
 			TRACE_DEBUG("ERROR");
 			while(1);
 		}
-	}else{
+	} else {
 		/** Static mode*/
 		netif_set_up(&gs_net_if);
 	}
@@ -223,7 +215,8 @@ void status_callback(struct netif *netif)
 	if (netif_is_up(netif)) {
 		TRACE_DEBUG("Network up");
 		TRACE_DEBUG("IP=");
-		strcat((char*)g_c_ipconfig, inet_ntoa(*(struct in_addr *)&(netif->ip_addr)));
+		strcat((char*)g_c_ipconfig,
+				inet_ntoa(*(struct in_addr *)&(netif->ip_addr)));
 		TRACE_DEBUG((char const*)g_c_ipconfig);
 		g_ip_mode = 3;
 	} else {
