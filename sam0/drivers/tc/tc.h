@@ -184,12 +184,14 @@
  *
  * \subsection asfdoc_samd20_tc_module_overview_clock Clock Settings
  *
- * \subsubsection asfdoc_samd20_tc_module_overview_clock_selection Clock Selection
+ * \subsubsection asfdoc_samd20_tc_module_overview_clock_selection Clock
+ *Selection
  * Each TC peripheral is clocked asynchronously to the system clock by a GCLK
  * (Generic Clock) channel. The GCLK channel connects to any of the GCLK
  * generators. The GCLK generators are configured to use one of the available
  * clock sources on the system such as internal oscillator, external crystals
- * etc. - see the \ref asfdoc_samd20_system_clock_group "Generic Clock driver" for
+ * etc. - see the \ref asfdoc_samd20_system_clock_group "Generic Clock driver"
+ *for
  * more information.
  *
  * \subsubsection asfdoc_samd20_tc_module_overview_clock_prescaler Prescaler
@@ -252,27 +254,32 @@
  * left unaltered when the re-trigger happens, letting the counter reset on the
  * next GCLK cycle.
  *
- * \subsection asfdoc_samd20_tc_module_overview_compare_match Compare Match Operations
+ * \subsection asfdoc_samd20_tc_module_overview_compare_match Compare Match
+ *Operations
  * In compare match operation, Compare/Capture registers are used in comparison
  * with the counter value. When the timer's count value matches the value of a
  * compare channel, a user defined action can be taken.
  *
- * \subsubsection asfdoc_samd20_tc_module_overview_compare_match_timer Basic Timer
+ * \subsubsection asfdoc_samd20_tc_module_overview_compare_match_timer Basic
+ *Timer
  *
  * A Basic Timer is a simple application where compare match operations is used
  * to determine when a specific period has elapsed. In Basic Timer operations,
  * one or more values in the module's Compare/Capture registers are used to
  * specify the time (as a number of prescaled GCLK cycles) when an action should
  * be taken by the microcontroller. This can be an Interrupt Service Routine
- * (ISR), event generator via the event system, or a software flag that is polled
+ * (ISR), event generator via the event system, or a software flag that is
+ *polled
  * via the user application.
  *
- * \subsubsection asfdoc_samd20_tc_module_overview_compare_match_wg Waveform Generation
+ * \subsubsection asfdoc_samd20_tc_module_overview_compare_match_wg Waveform
+ *Generation
  *
  * Waveform generation enables the TC module to generate square waves, or if
  * combined with an external passive low-pass filter, analog waveforms.
  *
- * \subsubsection asfdoc_samd20_tc_module_overview_compare_match_wg_pwm Waveform Generation - PWM
+ * \subsubsection asfdoc_samd20_tc_module_overview_compare_match_wg_pwm Waveform
+ *Generation - PWM
  *
  * Pulse width modulation is a form of waveform generation and a signaling
  * technique that can be useful in many situations. When PWM mode is used,
@@ -293,7 +300,8 @@
  * normal (i.e non-inverted) output mode.
  *
  * \anchor asfdoc_samd20_tc_module_pwm_normal_diag
- * \image html pwm_normal_ex.svg "Example of PWM in normal mode, and different counter operations"
+ * \image html pwm_normal_ex.svg "Example of PWM in normal mode, and different
+ *counter operations"
  *
  *
  * In \ref asfdoc_samd20_tc_module_pwm_match_diag "the figure below", the
@@ -304,25 +312,32 @@
  * change the TOP value when running in PWM match mode.
  *
  * \anchor asfdoc_samd20_tc_module_pwm_match_diag
- * \image html pwm_match_ex.svg "Example of PWM in match mode, and different counter operations"
+ * \image html pwm_match_ex.svg "Example of PWM in match mode, and different
+ *counter operations"
  *
- * \subsubsection asfdoc_samd20_tc_module_overview_compare_match_wg_freq Waveform Generation - Frequency
+ * \subsubsection asfdoc_samd20_tc_module_overview_compare_match_wg_freq
+ *Waveform Generation - Frequency
  *
- * Frequency Generation mode is in many ways identical to PWM generation. However,
+ * Frequency Generation mode is in many ways identical to PWM generation.
+ *However,
  * in Frequency Generation a toggle only occurs on the output when a match on
  * a capture channels occurs. When the match is made, the timer value is reset,
  * resulting in a variable frequency square wave with a fixed 50% duty cycle.
  *
- * \subsubsection asfdoc_samd20_tc_module_overview_compare_match_capt Capture Operations
+ * \subsubsection asfdoc_samd20_tc_module_overview_compare_match_capt Capture
+ *Operations
  *
  * In capture operations, any event from the event system or a pin change can
  * trigger a capture of the counter value. This captured counter value can be
  * used as a timestamp for the event, or it can be used in frequency and pulse
  * width capture.
  *
- * \subsubsection asfdoc_samd20_tc_module_overview_compare_match_capt_event_capture Capture Operations - Event
+ * \subsubsection
+ *asfdoc_samd20_tc_module_overview_compare_match_capt_event_capture Capture
+ *Operations - Event
  *
- * Event capture is a simple use of the capture functionality, designed to create
+ * Event capture is a simple use of the capture functionality, designed to
+ *create
  * timestamps for specific events. When the TC module's input capture pin is
  * externally toggled, the current timer count value is copied into a buffered
  * register which can then be read out by the user application.
@@ -340,7 +355,8 @@
  * application, however it may be necessary to clear both the capture overflow
  * flag and the capture flag upon each capture reading.
  *
- * \subsubsection asfdoc_samd20_tc_module_overview_compare_match_capt_pwc Capture Operations - Pulse Width
+ * \subsubsection asfdoc_samd20_tc_module_overview_compare_match_capt_pwc
+ *Capture Operations - Pulse Width
  *
  * Pulse Width Capture mode makes it possible to measure the pulse width and
  * period of PWM signals. This mode uses two capture channels of the counter.
@@ -363,7 +379,8 @@
  * triggered by the user application software or an event signal from the event
  * system.
  *
- * \subsubsection asfdoc_samd20_tc_module_overview_inversion Wave Generation Output Inversion
+ * \subsubsection asfdoc_samd20_tc_module_overview_inversion Wave Generation
+ *Output Inversion
  *
  * The output of the wave generation can be inverted by hardware if desired,
  * resulting in the logically inverted value being output to the configured
@@ -390,7 +407,8 @@
  *
  * \section asfdoc_samd20_tc_examples Examples
  *
- * The following Quick Start guides and application examples are available for this driver:
+ * The following Quick Start guides and application examples are available for
+ *this driver:
  * - \ref asfdoc_samd20_tc_basic_use_case
  * \if TC_CALLBACK_MODE
  * - \ref asfdoc_samd20_tc_callback_use_case
@@ -421,8 +439,7 @@ extern "C" {
 
 #if TC_ASYNC == true
 /** Enum for the possible callback types for the TC module. */
-enum tc_callback
-{
+enum tc_callback {
 	/** Callback for TC overflow */
 	TC_CALLBACK_OVERFLOW,
 	/** Callback for capture overflow error */
@@ -451,18 +468,22 @@ enum tc_callback
  *  new value.
  */
 #define TC_STATUS_CHANNEL_0_MATCH    (1UL << 0)
+
 /** Timer channel 1 has matched against its compare value, or a has captured a
  *  new value.
  */
 #define TC_STATUS_CHANNEL_1_MATCH    (1UL << 1)
+
 /** Timer register synchronization has completed, and the synchronized count
  *  value may be read.
  */
 #define TC_STATUS_SYNC_READY         (1UL << 2)
+
 /** A new value was captured before the previous value was read, resulting in
  *  lost data.
  */
 #define TC_STATUS_CAPTURE_OVERFLOW   (1UL << 3)
+
 /** The timer count value has overflowed from its maximum value to its minimum
  *  when counting upwards, or from its minimum value to its maximum when
  *  counting downwards.
@@ -641,10 +662,12 @@ enum tc_event_action {
 	TC_EVENT_ACTION_INCREMENT_COUNTER   = TC_EVCTRL_EVACT_COUNT,
 	/** Start counter on event. */
 	TC_EVENT_ACTION_START               = TC_EVCTRL_EVACT_START,
+
 	/** Store period in capture register 0, pulse width in capture
 	 *  register 1.
 	 */
 	TC_EVENT_ACTION_PPW                 = TC_EVCTRL_EVACT_PPW,
+
 	/** Store pulse width in capture register 0, period in capture
 	 *  register 1.
 	 */
@@ -658,7 +681,8 @@ enum tc_event_action {
  */
 struct tc_events {
 	/** Generate an output event on a compare channel match. */
-	bool generate_event_on_compare_channel[NUMBER_OF_COMPARE_CAPTURE_CHANNELS];
+	bool generate_event_on_compare_channel[
+		NUMBER_OF_COMPARE_CAPTURE_CHANNELS];
 	/** Generate an output event on counter overflow. */
 	bool generate_event_on_overflow;
 	/** Consume events into the module. */
@@ -671,7 +695,8 @@ struct tc_events {
 struct tc_8bit_config {
 	/** Initial timer count value. */
 	uint8_t count;
-	/** Where to count to or from depending on the direction on the counter. */
+	/** Where to count to or from depending on the direction on the counter.
+	 **/
 	uint8_t period;
 	/** Value to be used for compare match on each channel. */
 	uint8_t compare_capture_channel[NUMBER_OF_COMPARE_CAPTURE_CHANNELS];
@@ -759,14 +784,14 @@ struct tc_config {
 	/** This setting determines what size counter is used. */
 	union {
 		/** Struct for 8-bit specific timer configuration. */
-		struct tc_8bit_config  size_8_bit;
+		struct tc_8bit_config size_8_bit;
 		/** Struct for 16-bit specific timer configuration. */
 		struct tc_16bit_config size_16_bit;
 		/** Struct for 32-bit specific timer configuration. */
 		struct tc_32bit_config size_32_bit;
-	} size_specific;
+	}
+	size_specific;
 };
-
 
 #if TC_ASYNC == true
 /* Forward Declaration for the device instance */
@@ -787,7 +812,8 @@ typedef void (*tc_callback_t)(struct tc_module *const module);
  */
 struct tc_module {
 #if !defined(__DOXYGEN__)
-	/** Hardware module pointer of the associated Timer/Counter peripheral. */
+	/** Hardware module pointer of the associated Timer/Counter peripheral.
+	 **/
 	Tc *hw;
 
 	/** Size of the initialized Timer/Counter module configuration. */
@@ -803,14 +829,14 @@ struct tc_module {
 #endif
 };
 
-
 /**
  * \name Driver Initialization and Configuration
  * @{
  */
 
 /**
- * \brief Determines if the hardware module(s) are currently synchronizing to the bus.
+ * \brief Determines if the hardware module(s) are currently synchronizing to
+ *the bus.
  *
  * Checks to see if the underlying hardware peripheral module(s) are currently
  * synchronizing across multiple clock domains to the hardware bus, This
@@ -1134,7 +1160,7 @@ static inline void tc_stop_counter(
 	}
 
 	/* Write command to execute */
-	tc_module->CTRLBSET.reg = TC_CTRLBSET_CMD(2); //TC_CTRLBSET_CMD_STOP;
+	tc_module->CTRLBSET.reg = TC_CTRLBSET_CMD(2); /* TC_CTRLBSET_CMD_STOP; */
 }
 
 /**
@@ -1158,7 +1184,8 @@ static inline void tc_start_counter(
 		/* Wait for sync */
 	}
 
-	/* Make certain that there are no conflicting commands in the register */
+	/* Make certain that there are no conflicting commands in the register
+	 **/
 	tc_module->CTRLBCLR.reg = TC_CTRLBCLR_CMD_NONE;
 
 	while (tc_is_syncing(module_inst)) {
@@ -1166,7 +1193,7 @@ static inline void tc_start_counter(
 	}
 
 	/* Write command to execute */
-	tc_module->CTRLBSET.reg = TC_CTRLBSET_CMD(1); //TC_CTRLBSET_CMD_RETRIGGER;
+	tc_module->CTRLBSET.reg = TC_CTRLBSET_CMD(1); /* TC_CTRLBSET_CMD_RETRIGGER; */
 }
 
 /** @} */
@@ -1192,7 +1219,7 @@ enum status_code tc_set_compare_value(
  * @{
  */
 
-enum status_code tc_set_top_value (
+enum status_code tc_set_top_value(
 		const struct tc_module *const module_inst,
 		const uint32_t top_value);
 
@@ -1309,6 +1336,7 @@ static inline void tc_clear_status(
 	/* Clear interrupt flag */
 	tc_module->INTFLAG.reg = int_flags;
 }
+
 /** @} */
 
 /** @} */
