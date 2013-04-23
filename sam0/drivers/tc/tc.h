@@ -325,11 +325,11 @@
  *
  * \subsubsection asfdoc_samd20_tc_module_overview_compare_match_capt_event_capture Capture Operations - Event
  *
- * Event capture is a simple use of the capture functionality, designed to
- *create
- * timestamps for specific events. When the TC module's input capture pin is
- * externally toggled, the current timer count value is copied into a buffered
- * register which can then be read out by the user application.
+ * Event capture is a simple use of the capture functionality,
+ * designed to create timestamps for specific events. When the TC
+ * module's input capture pin is externally toggled, the current timer
+ * count value is copied into a buffered register which can then be
+ * read out by the user application.
  *
  * Note that when performing any capture operation, there is a risk that the
  * counter reaches its top value (MAX) when counting up, or the bottom value
@@ -395,12 +395,11 @@
  * \section asfdoc_samd20_tc_examples Examples
  *
  * The following Quick Start guides and application examples are available for
- *this driver:
+ * this driver:
  * - \ref asfdoc_samd20_tc_basic_use_case
  * \if TC_CALLBACK_MODE
  * - \ref asfdoc_samd20_tc_callback_use_case
  * \endif
- *
  *
  * \section asfdoc_samd20_tc_api_overview API Overview
  * @{
