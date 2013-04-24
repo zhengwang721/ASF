@@ -71,6 +71,24 @@ void spi_reset(
 }
 
 /**
+ * \internal Clears the Transmit Complete interrupt flag.
+ *
+ * \param[in]  module  Pointer to the software instance struct
+ */
+static void _spi_clear_tx_complete_flag(
+		struct spi_module *const module)
+{
+	/* Sanity check arguments */
+	Assert(module);
+	Assert(module->hw);
+
+	SercomSpi *const spi_module = &(module->hw->SPI);
+
+	/* Clear interrupt flag */
+	spi_module->INTFLAG.reg = SPI_INTERRUPT_FLAG_TX_COMPLETE;
+}
+
+/**
  * \internal Writes an SPI SERCOM configuration to the hardware module.
  *
  * This function will write out a given configuration to the hardware module.
@@ -488,6 +506,8 @@ enum status_code spi_init(
  *
  * \return Status of the read operation
  * \retval STATUS_OK              If the read was completed
+ * \retval STATUS_ABORTED          If transaction was ended by master before
+ *                                 entire buffer was transferred
  * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) were provided.
  * \retval STATUS_ERR_TIMEOUT     If the operation was not completed within the
  *                                timeout in slave mode.
@@ -539,6 +559,11 @@ enum status_code spi_read_buffer_wait(
 					break;
 				}
 			}
+			/* Check if master has ended the transaction */
+			if (spi_is_write_complete(module)) {
+				_spi_clear_tx_complete_flag(module);
+				return STATUS_ABORTED;
+			}
 
 			if (!spi_is_ready_to_read(module)) {
 				/* Not ready to read data within timeout period */
@@ -566,6 +591,7 @@ enum status_code spi_read_buffer_wait(
 			rx_data[rx_pos++] = (received_data >> 8);
 		}
 	}
+	// TODO: SLAVE WAIT FOR TXC?
 	return STATUS_OK;
 }
 
@@ -622,7 +648,8 @@ enum status_code spi_select_slave(
 
 			if (!(module->receiver_enabled)) {
 				/* Flush contents of shift register shifted back from slave */
-				while(!spi_is_ready_to_read(module));
+				while (!spi_is_ready_to_read(module)) {
+				}
 				uint16_t flush = 0;
 				spi_read(module, &flush);
 			}
@@ -651,9 +678,11 @@ enum status_code spi_select_slave(
  *
  * \return Status of the write operation
  * \retval STATUS_OK               If the write was completed
- * \retval STATUS_ERR_INVALID_ARG  If invalid argument(s) were provided.
+ * \retval STATUS_ABORTED          If transaction was ended by master before
+ *                                 entire buffer was transferred
+ * \retval STATUS_ERR_INVALID_ARG  If invalid argument(s) were provided
  * \retval STATUS_ERR_TIMEOUT      If the operation was not completed within the
- *                                 timeout in slave mode.
+ *                                 timeout in slave mode
  */
 enum status_code spi_write_buffer_wait(
 		struct spi_module *const module,
@@ -684,6 +713,11 @@ enum status_code spi_write_buffer_wait(
 				if (spi_is_ready_to_write(module)) {
 					break;
 				}
+			}
+			/* Check if master has ended the transaction */
+			if (spi_is_write_complete(module)) {
+				_spi_clear_tx_complete_flag(module);
+				return STATUS_ABORTED;
 			}
 
 			if (!spi_is_ready_to_write(module)) {
@@ -716,6 +750,11 @@ enum status_code spi_write_buffer_wait(
 						break;
 					}
 				}
+			/* Check if master has ended the transaction */
+			if (spi_is_write_complete(module)) {
+				_spi_clear_tx_complete_flag(module);
+				return STATUS_ABORTED;
+			}
 
 				if (!spi_is_ready_to_read(module)) {
 					/* Not ready to read data within timeout period */
@@ -723,7 +762,7 @@ enum status_code spi_write_buffer_wait(
 				}
 			}
 
-			while(!spi_is_ready_to_read(module)) {
+			while (!spi_is_ready_to_read(module)) {
 			}
 
 			/* Flush read buffer */
@@ -737,7 +776,7 @@ enum status_code spi_write_buffer_wait(
 		while (!spi_is_write_complete(module)) {
 		}
 	}
-
+	//TODO: SLAVE WAIT OFR TXC?
 	return STATUS_OK;
 }
 
@@ -804,6 +843,11 @@ enum status_code spi_transceive_buffer_wait(
 					break;
 				}
 			}
+			/* Check if master has ended the transaction */
+			if (spi_is_write_complete(module)) {
+				_spi_clear_tx_complete_flag(module);
+				return STATUS_ABORTED;
+			}
 
 			if (!spi_is_ready_to_write(module)) {
 				/* Not ready to write data within timeout period */
@@ -832,6 +876,11 @@ enum status_code spi_transceive_buffer_wait(
 				if (spi_is_ready_to_read(module)) {
 					break;
 				}
+			}
+			/* Check if master has ended the transaction */
+			if (spi_is_write_complete(module)) {
+				_spi_clear_tx_complete_flag(module);
+				return STATUS_ABORTED;
 			}
 
 			if (!spi_is_ready_to_read(module)) {
@@ -868,6 +917,6 @@ enum status_code spi_transceive_buffer_wait(
 		while (!spi_is_write_complete(module)) {
 		}
 	}
-
+	//TODO: SLAVE: Wait for TXC?
 	return STATUS_OK;
 }
