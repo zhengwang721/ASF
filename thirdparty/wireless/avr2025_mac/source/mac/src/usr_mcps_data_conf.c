@@ -63,12 +63,20 @@
 
 
 /* === Implementation ====================================================== */
-
+#if (defined __GNUC__)
+void __attribute__((weak))
+#ifdef ENABLE_TSTAMP
+usr_mcps_data_conf(uint8_t msduHandle, uint8_t status, uint32_t Timestamp)
+#else
+usr_mcps_data_conf(uint8_t msduHandle, uint8_t status)
+#endif  /* ENABLE_TSTAMP */
+#else
 #ifdef ENABLE_TSTAMP
 void usr_mcps_data_conf(uint8_t msduHandle, uint8_t status, uint32_t Timestamp)
 #else
 void usr_mcps_data_conf(uint8_t msduHandle, uint8_t status)
 #endif  /* ENABLE_TSTAMP */
+#endif
 {
     /* Keep compiler happy. */
     msduHandle = msduHandle;
