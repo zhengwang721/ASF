@@ -178,7 +178,7 @@ void i2c_slave_unregister_callback(
  * \param[in,out] module  Pointer to software module struct
  * \param[in,out] packet  Pointer to I<SUP>2</SUP>C packet to transfer
  *
- * \return Status of starting asynchronously reading I<SUP>2</SUP>C packet
+ * \return Status of starting asynchronously reading I<SUP>2</SUP>C packet.
  * \retval STATUS_OK    If reading was started successfully
  * \retval STATUS_BUSY  If module is currently busy with another transfer
  */
