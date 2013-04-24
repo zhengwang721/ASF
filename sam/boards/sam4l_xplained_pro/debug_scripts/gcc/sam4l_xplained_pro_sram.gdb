@@ -1,6 +1,6 @@
 #*******************************************************
 #
-#  Connect to J-Link and debug application in sram on SAM3X.
+#  Connect to J-Link and debug application in sram on SAM4L.
 #
 
 # Define 'reset' command

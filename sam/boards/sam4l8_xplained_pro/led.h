@@ -1,12 +1,10 @@
 /**
  * \file
  *
- * \brief SAM4L8 Xplained Pro Board LEDs support package.
+ * \brief SAM4L8 Xplained Pro board LEDs support package.
  *
  * This file contains definitions and services related to the LED features of
- * the SAM4L8-XPLAINED-PRO Board.
- *
- * To use this board, define BOARD=SAM4L8_XPLAINED_PRO.
+ * the SAM4L8 Xplained Pro board.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *

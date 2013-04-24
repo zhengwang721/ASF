@@ -42,6 +42,7 @@
 
 #include <board.h>
 #include <ioport.h>
+#include <wdt_sam4l.h>
 
 /**
  * \addtogroup sam4l8_xplained_pro_group
@@ -62,6 +63,12 @@
 
 void board_init(void)
 {
+#ifndef CONF_BOARD_KEEP_WATCHDOG_AT_INIT
+	struct wdt_dev_inst wdt_inst;
+	wdt_init(&wdt_inst, WDT, NULL);
+	wdt_disable(&wdt_inst);
+#endif
+
 	/* Initialize IOPORT */
 	ioport_init();
 
@@ -73,10 +80,10 @@ void board_init(void)
 	ioport_set_pin_dir(BUTTON_0_PIN, IOPORT_DIR_INPUT);
 	ioport_set_pin_mode(BUTTON_0_PIN, IOPORT_MODE_PULLUP);
 
-#ifdef  CONF_BOARD_EIC
+#ifdef CONF_BOARD_EIC
 	/* Set push button as external interrupt pin */
 	ioport_set_pin_peripheral_mode(BUTTON_0_EIC_PIN,
-	BUTTON_0_EIC_PIN_MUX|IOPORT_MODE_PULLUP);
+			BUTTON_0_EIC_PIN_MUX|IOPORT_MODE_PULLUP);
 #else
 	/* Push button as input: already done, it's the default pin state */
 #endif

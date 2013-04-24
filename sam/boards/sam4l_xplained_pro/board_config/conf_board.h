@@ -43,6 +43,4 @@
 #ifndef CONF_BOARD_H
 #define CONF_BOARD_H
 
-//#define CONF_BOARD_KEEP_WATCHDOG_AT_INIT
-
 #endif /* CONF_BOARD_H */

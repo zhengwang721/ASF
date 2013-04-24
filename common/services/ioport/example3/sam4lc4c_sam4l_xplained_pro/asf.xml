@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="Common IOPORT service example 3 for SAM4L8 Xplained Pro" id="common.services.ioport.example3.sam4l_xplained_pro">
+	<project caption="Common IOPORT service example 3 for SAM4L Xplained Pro" id="common.services.ioport.example3.sam4l_xplained_pro">
 		<info type="description" value="summary">
 			Example that reads button 0 and outputs it on LED0.
 		</info>

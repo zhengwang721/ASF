@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Clock system example 3 configuration for SAM4L8-XPLAINEDPRO
+ * \brief Clock system example 3 configuration for SAM4L8 Xplained Pro
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -44,9 +44,9 @@
 #define CONF_EXAMPLE3_H_INCLUDED
 
 /** This is the pin for the onboard PB0 button, corresponding to PC03. */
-#define NEXT_BUTTON     GPIO_PUSH_BUTTON_0
+#define NEXT_BUTTON     BUTTON_0_PIN
 
 /** This is the LED that will be toggled in this example */
-#define LED_EXAMPLE_OUTPUT     LED0
+#define LED_EXAMPLE_OUTPUT     LED_0_PIN
 
 #endif /* CONF_EXAMPLE3_H_INCLUDED */
