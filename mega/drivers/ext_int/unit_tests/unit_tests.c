@@ -148,19 +148,19 @@ static void run_interrupt_trigger_test(const struct test_case *test)
 	ioport_set_pin_level(CONF_OUT_PIN,HIGH);
 	
 	/* Wait for the ISR to get serviced */
-	for(uint16_t delay=0;delay<10000;delay++);
+	for(volatile uint16_t delay=0;delay<10000;delay++);
 	
 	/* Output Low on the IOPORT pin */
 	ioport_set_pin_level(CONF_OUT_PIN,LOW);
 	
 	/* Wait for the ISR to get serviced */
-	for(uint16_t delay=0;delay<10000;delay++);
+	for(volatile uint16_t delay=0;delay<10000;delay++);
 	
 	/* Output Low on the IOPORT pin */
 	ioport_set_pin_level(CONF_OUT_PIN,LOW);
 		
 	/* Wait for the ISR to get serviced */
-	for(uint16_t delay=0;delay<10000;delay++);
+	for(volatile uint16_t delay=0;delay<10000;delay++);
 	
 	/* Disable Global interrupt */
 	cpu_irq_disable();

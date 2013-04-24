@@ -107,7 +107,6 @@
     the SafeRTOS brand: http://www.SafeRTOS.com.
 */
 
-
 #ifndef PORTMACRO_H
 #define PORTMACRO_H
 
@@ -116,7 +115,7 @@ extern "C" {
 #endif
 
 /*-----------------------------------------------------------
- * Port specific definitions.  
+ * Port specific definitions.
  *
  * The settings in this file configure FreeRTOS correctly for the
  * given hardware and compiler.
@@ -134,26 +133,27 @@ extern "C" {
 #define portSTACK_TYPE  unsigned portLONG
 #define portBASE_TYPE   long
 
-#if( configUSE_16_BIT_TICKS == 1 )
-	typedef unsigned portSHORT portTickType;
-	#define portMAX_DELAY ( portTickType ) 0xffff
+#if (configUSE_16_BIT_TICKS == 1)
+typedef unsigned portSHORT portTickType;
+	#define portMAX_DELAY (portTickType)0xffff
 #else
-	typedef unsigned portLONG portTickType;
-	#define portMAX_DELAY ( portTickType ) 0xffffffff
+typedef unsigned portLONG portTickType;
+	#define portMAX_DELAY (portTickType)0xffffffff
 #endif
 /*-----------------------------------------------------------*/
 
 /* Architecture specifics. */
-#define portSTACK_GROWTH        ( -1 )
-#define portTICK_RATE_MS        ( ( portTickType ) 1000 / configTICK_RATE_HZ )
+#define portSTACK_GROWTH        (-1)
+#define portTICK_RATE_MS        ((portTickType)1000 / configTICK_RATE_HZ)
 #define portBYTE_ALIGNMENT       8
 /*-----------------------------------------------------------*/
 
-
 /* Scheduler utilities. */
 extern void vPortYieldFromISR( void );
+
 #define portYIELD()        vPortYieldFromISR()
-#define portEND_SWITCHING_ISR( xSwitchRequired ) if( xSwitchRequired ) vPortYieldFromISR()
+#define portEND_SWITCHING_ISR( xSwitchRequired ) if (xSwitchRequired) \
+		vPortYieldFromISR()
 /*-----------------------------------------------------------*/
 
 /* Critical section management. */
@@ -161,6 +161,7 @@ extern void vPortEnterCritical( void );
 extern void vPortExitCritical( void );
 extern unsigned long ulPortSetInterruptMask( void );
 extern void vPortClearInterruptMask( unsigned long ulNewMaskValue );
+
 #define portSET_INTERRUPT_MASK_FROM_ISR()       ulPortSetInterruptMask()
 #define portCLEAR_INTERRUPT_MASK_FROM_ISR(x)    vPortClearInterruptMask(x)
 #define portDISABLE_INTERRUPTS()                ulPortSetInterruptMask()
@@ -168,23 +169,27 @@ extern void vPortClearInterruptMask( unsigned long ulNewMaskValue );
 #define portENTER_CRITICAL()                    vPortEnterCritical()
 #define portEXIT_CRITICAL()                     vPortExitCritical()
 
-/* There are an uneven number of items on the initial stack, so 
-portALIGNMENT_ASSERT_pxCurrentTCB() will trigger false positive asserts. */
-#define portALIGNMENT_ASSERT_pxCurrentTCB ( void )
+/* There are an uneven number of items on the initial stack, so
+ * portALIGNMENT_ASSERT_pxCurrentTCB() will trigger false positive asserts. */
+#define portALIGNMENT_ASSERT_pxCurrentTCB (void)
 
 /*-----------------------------------------------------------*/
 
 /* Task function macros as described on the FreeRTOS.org WEB site.  These are
-not necessary for to use this port.  They are defined so the common demo files
-(which build with all the ports) will build. */
-#define portTASK_FUNCTION_PROTO( vFunction, pvParameters ) void vFunction( void *pvParameters )
-#define portTASK_FUNCTION( vFunction, pvParameters ) void vFunction( void *pvParameters )
+ * not necessary for to use this port.  They are defined so the common demo
+ * files (which build with all the ports) will build. */
+#define portTASK_FUNCTION_PROTO( vFunction, pvParameters ) void vFunction( \
+		void *pvParameters )
+#define portTASK_FUNCTION( vFunction, pvParameters ) void vFunction( \
+		void *pvParameters )
 /*-----------------------------------------------------------*/
 
 /* Tickless idle/low power functionality. */
 #ifndef portSUPPRESS_TICKS_AND_SLEEP
-	extern void vPortSuppressTicksAndSleep( portTickType xExpectedIdleTime );
-	#define portSUPPRESS_TICKS_AND_SLEEP( xExpectedIdleTime ) vPortSuppressTicksAndSleep( xExpectedIdleTime )
+extern void vPortSuppressTicksAndSleep( portTickType xExpectedIdleTime );
+
+	#define portSUPPRESS_TICKS_AND_SLEEP( xExpectedIdleTime ) \
+	vPortSuppressTicksAndSleep( xExpectedIdleTime )
 #endif
 
 /*-----------------------------------------------------------*/
@@ -197,4 +202,3 @@ not necessary for to use this port.  They are defined so the common demo files
 #endif
 
 #endif /* PORTMACRO_H */
-
