@@ -119,17 +119,17 @@ void system_gclk_gen_set_config(
 
 			/* Set binary divider power of 2 division factor */
 			new_gendiv_config  |= div2_count << GCLK_GENDIV_DIV_Pos;
+			new_genctrl_config |= GCLK_GENCTRL_DIVSEL;
 		} else {
 			/* Set integer division factor */
 			new_gendiv_config  |=
 					config->division_factor << GCLK_GENDIV_DIV_Pos;
 
 			/* Enable non-binary division with increased duty cycle accuracy */
-			new_genctrl_config |= GCLK_GENCTRL_DIVSEL;
 			new_genctrl_config |= GCLK_GENCTRL_IDC;
 		}
 	} else {
-		new_genctrl_config |= GCLK_GENCTRL_DIVSEL;
+		new_genctrl_config |=  GCLK_GENCTRL_DIVSEL;
 	}
 
 	/* Enable or disable the clock in standby mode */
