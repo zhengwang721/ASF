@@ -189,7 +189,8 @@
  * (Generic Clock) channel. The GCLK channel connects to any of the GCLK
  * generators. The GCLK generators are configured to use one of the available
  * clock sources on the system such as internal oscillator, external crystals
- * etc. - see the \ref asfdoc_samd20_system_clock_group "Generic Clock driver" for
+ * etc. - see the \ref asfdoc_samd20_system_clock_group "Generic Clock driver"
+ *for
  * more information.
  *
  * \subsubsection asfdoc_samd20_tc_module_overview_clock_prescaler Prescaler
@@ -264,7 +265,8 @@
  * one or more values in the module's Compare/Capture registers are used to
  * specify the time (as a number of prescaled GCLK cycles) when an action should
  * be taken by the microcontroller. This can be an Interrupt Service Routine
- * (ISR), event generator via the event system, or a software flag that is polled
+ * (ISR), event generator via the event system, or a software flag that is
+ *polled
  * via the user application.
  *
  * \subsubsection asfdoc_samd20_tc_module_overview_compare_match_wg Waveform Generation
@@ -308,10 +310,11 @@
  *
  * \subsubsection asfdoc_samd20_tc_module_overview_compare_match_wg_freq Waveform Generation - Frequency
  *
- * Frequency Generation mode is in many ways identical to PWM generation. However,
- * in Frequency Generation a toggle only occurs on the output when a match on
- * a capture channels occurs. When the match is made, the timer value is reset,
- * resulting in a variable frequency square wave with a fixed 50% duty cycle.
+ * Frequency Generation mode is in many ways identical to PWM
+ * generation. However, in Frequency Generation a toggle only occurs
+ * on the output when a match on a capture channels occurs. When the
+ * match is made, the timer value is reset, resulting in a variable
+ * frequency square wave with a fixed 50% duty cycle.
  *
  * \subsubsection asfdoc_samd20_tc_module_overview_compare_match_capt Capture Operations
  *
@@ -322,10 +325,11 @@
  *
  * \subsubsection asfdoc_samd20_tc_module_overview_compare_match_capt_event_capture Capture Operations - Event
  *
- * Event capture is a simple use of the capture functionality, designed to create
- * timestamps for specific events. When the TC module's input capture pin is
- * externally toggled, the current timer count value is copied into a buffered
- * register which can then be read out by the user application.
+ * Event capture is a simple use of the capture functionality,
+ * designed to create timestamps for specific events. When the TC
+ * module's input capture pin is externally toggled, the current timer
+ * count value is copied into a buffered register which can then be
+ * read out by the user application.
  *
  * Note that when performing any capture operation, there is a risk that the
  * counter reaches its top value (MAX) when counting up, or the bottom value
@@ -390,12 +394,12 @@
  *
  * \section asfdoc_samd20_tc_examples Examples
  *
- * The following Quick Start guides and application examples are available for this driver:
+ * The following Quick Start guides and application examples are available for
+ * this driver:
  * - \ref asfdoc_samd20_tc_basic_use_case
  * \if TC_CALLBACK_MODE
  * - \ref asfdoc_samd20_tc_callback_use_case
  * \endif
- *
  *
  * \section asfdoc_samd20_tc_api_overview API Overview
  * @{
@@ -405,6 +409,11 @@
 #include <clock.h>
 #include <gclk.h>
 #include <pinmux.h>
+
+#if !defined(__DOXYGEN__)
+#define NUMBER_OF_COMPARE_CAPTURE_CHANNELS TC0_CC8_NUM
+/* Same number for 8-, 16- and 32-bit TC and all TC instances */
+#endif
 
 #if TC_ASYNC == true
 #  include <system_interrupt.h>
@@ -416,8 +425,7 @@ extern "C" {
 
 #if TC_ASYNC == true
 /** Enum for the possible callback types for the TC module. */
-enum tc_callback
-{
+enum tc_callback {
 	/** Callback for TC overflow */
 	TC_CALLBACK_OVERFLOW,
 	/** Callback for capture overflow error */
@@ -446,18 +454,22 @@ enum tc_callback
  *  new value.
  */
 #define TC_STATUS_CHANNEL_0_MATCH    (1UL << 0)
+
 /** Timer channel 1 has matched against its compare value, or a has captured a
  *  new value.
  */
 #define TC_STATUS_CHANNEL_1_MATCH    (1UL << 1)
+
 /** Timer register synchronization has completed, and the synchronized count
  *  value may be read.
  */
 #define TC_STATUS_SYNC_READY         (1UL << 2)
+
 /** A new value was captured before the previous value was read, resulting in
  *  lost data.
  */
 #define TC_STATUS_CAPTURE_OVERFLOW   (1UL << 3)
+
 /** The timer count value has overflowed from its maximum value to its minimum
  *  when counting upwards, or from its minimum value to its maximum when
  *  counting downwards.
@@ -636,10 +648,12 @@ enum tc_event_action {
 	TC_EVENT_ACTION_INCREMENT_COUNTER   = TC_EVCTRL_EVACT_COUNT,
 	/** Start counter on event. */
 	TC_EVENT_ACTION_START               = TC_EVCTRL_EVACT_START,
+
 	/** Store period in capture register 0, pulse width in capture
 	 *  register 1.
 	 */
 	TC_EVENT_ACTION_PPW                 = TC_EVCTRL_EVACT_PPW,
+
 	/** Store pulse width in capture register 0, period in capture
 	 *  register 1.
 	 */
@@ -653,7 +667,8 @@ enum tc_event_action {
  */
 struct tc_events {
 	/** Generate an output event on a compare channel match. */
-	bool generate_event_on_compare_channel[2];
+	bool generate_event_on_compare_channel
+			[NUMBER_OF_COMPARE_CAPTURE_CHANNELS];
 	/** Generate an output event on counter overflow. */
 	bool generate_event_on_overflow;
 	/** Consume events into the module. */
@@ -669,7 +684,7 @@ struct tc_8bit_config {
 	/** Where to count to or from depending on the direction on the counter. */
 	uint8_t period;
 	/** Value to be used for compare match on each channel. */
-	uint8_t compare_capture_channel[2];
+	uint8_t compare_capture_channel[NUMBER_OF_COMPARE_CAPTURE_CHANNELS];
 };
 
 /**
@@ -679,7 +694,7 @@ struct tc_16bit_config {
 	/** Initial timer count value. */
 	uint16_t count;
 	/** Value to be used for compare match on each channel. */
-	uint16_t compare_capture_channel[2];
+	uint16_t compare_capture_channel[NUMBER_OF_COMPARE_CAPTURE_CHANNELS];
 };
 
 /**
@@ -689,7 +704,7 @@ struct tc_32bit_config {
 	/** Initial timer count value. */
 	uint32_t count;
 	/** Value to be used for compare match on each channel. */
-	uint32_t compare_capture_channel[2];
+	uint32_t compare_capture_channel[NUMBER_OF_COMPARE_CAPTURE_CHANNELS];
 };
 
 /**
@@ -745,23 +760,23 @@ struct tc_config {
 	enum tc_event_action event_action;
 
 	/** When \c true, PWM output for the given channel is enabled. */
-	bool channel_pwm_out_enabled[2];
+	bool channel_pwm_out_enabled[NUMBER_OF_COMPARE_CAPTURE_CHANNELS];
 	/** Specifies pin output for each channel. */
-	uint32_t channel_pwm_out_pin[2];
+	uint32_t channel_pwm_out_pin[NUMBER_OF_COMPARE_CAPTURE_CHANNELS];
 	/** Specifies MUX setting for each output channel pin. */
-	uint32_t channel_pwm_out_mux[2];
+	uint32_t channel_pwm_out_mux[NUMBER_OF_COMPARE_CAPTURE_CHANNELS];
 
 	/** This setting determines what size counter is used. */
 	union {
 		/** Struct for 8-bit specific timer configuration. */
-		struct tc_8bit_config  size_8_bit;
+		struct tc_8bit_config size_8_bit;
 		/** Struct for 16-bit specific timer configuration. */
 		struct tc_16bit_config size_16_bit;
 		/** Struct for 32-bit specific timer configuration. */
 		struct tc_32bit_config size_32_bit;
-	} size_specific;
+	}
+	size_specific;
 };
-
 
 #if TC_ASYNC == true
 /* Forward Declaration for the device instance */
@@ -798,14 +813,14 @@ struct tc_module {
 #endif
 };
 
-
 /**
  * \name Driver Initialization and Configuration
  * @{
  */
 
 /**
- * \brief Determines if the hardware module(s) are currently synchronizing to the bus.
+ * \brief Determines if the hardware module(s) are currently synchronizing to
+ *the bus.
  *
  * Checks to see if the underlying hardware peripheral module(s) are currently
  * synchronizing across multiple clock domains to the hardware bus, This
@@ -969,7 +984,7 @@ static inline void tc_enable_events(
 		event_mask |= TC_EVCTRL_OVFEO;
 	}
 
-	for (uint8_t i = 0; i < 2; i++) {
+	for (uint8_t i = 0; i < NUMBER_OF_COMPARE_CAPTURE_CHANNELS; i++) {
 		if (events->generate_event_on_compare_channel[i] == true) {
 			event_mask |= (TC_EVCTRL_MCEO(1) << i);
 		}
@@ -1010,7 +1025,7 @@ static inline void tc_disable_events(
 		event_mask |= TC_EVCTRL_OVFEO;
 	}
 
-	for (uint8_t i = 0; i < 2; i++) {
+	for (uint8_t i = 0; i < NUMBER_OF_COMPARE_CAPTURE_CHANNELS; i++) {
 		if (events->generate_event_on_compare_channel[i] == true) {
 			event_mask |= (TC_EVCTRL_MCEO(1) << i);
 		}
@@ -1129,7 +1144,7 @@ static inline void tc_stop_counter(
 	}
 
 	/* Write command to execute */
-	tc_module->CTRLBSET.reg = TC_CTRLBSET_CMD(2); //TC_CTRLBSET_CMD_STOP;
+	tc_module->CTRLBSET.reg = TC_CTRLBSET_CMD(2);
 }
 
 /**
@@ -1161,7 +1176,7 @@ static inline void tc_start_counter(
 	}
 
 	/* Write command to execute */
-	tc_module->CTRLBSET.reg = TC_CTRLBSET_CMD(1); //TC_CTRLBSET_CMD_RETRIGGER;
+	tc_module->CTRLBSET.reg = TC_CTRLBSET_CMD(1);
 }
 
 /** @} */
@@ -1187,7 +1202,7 @@ enum status_code tc_set_compare_value(
  * @{
  */
 
-enum status_code tc_set_top_value (
+enum status_code tc_set_top_value(
 		const struct tc_module *const module_inst,
 		const uint32_t top_value);
 
@@ -1304,6 +1319,7 @@ static inline void tc_clear_status(
 	/* Clear interrupt flag */
 	tc_module->INTFLAG.reg = int_flags;
 }
+
 /** @} */
 
 /** @} */

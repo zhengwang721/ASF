@@ -146,7 +146,7 @@ void system_gclk_gen_set_config(
 	while (system_gclk_is_syncing()) {
 		/* Wait for synchronization */
 	};
-	GCLK->GENCTRL.reg = new_genctrl_config;
+	GCLK->GENCTRL.reg = new_genctrl_config | (GCLK->GENCTRL.reg & GCLK_GENCTRL_GENEN);
 }
 
 /**

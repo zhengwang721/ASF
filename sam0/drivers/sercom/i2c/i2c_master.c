@@ -58,7 +58,7 @@
  * \param[out] module  Pointer to software module structure.
  * \param[in]  config  Configuration structure with configurations to set.
  *
- * \return Status of setting configuration
+ * \return Status of setting configuration.
  * \retval STATUS_OK                        If module was configured correctly
  * \retval STATUS_ERR_ALREADY_INITIALIZED   If setting other GCLK generator than
  *                                          previously set
@@ -157,7 +157,7 @@ static enum status_code _i2c_master_check_config(
  * \param[out] module  Pointer to software module structure.
  * \param[in]  config  Configuration structure with configurations to set.
  *
- * \return Status of setting configuration
+ * \return Status of setting configuration.
  * \retval STATUS_OK                        If module was configured correctly
  * \retval STATUS_ERR_ALREADY_INITIALIZED   If setting other GCLK generator than
  *                                          previously set
@@ -720,7 +720,7 @@ static enum status_code _i2c_master_write_packet(
  * \param[in,out] module  Pointer to software module struct
  * \param[in,out] packet  Pointer to I<SUP>2</SUP>C packet to transfer
  *
- * \return Status of reading packet
+ * \return Status of reading packet.
  * \retval STATUS_OK                    If packet was read
  * \retval STATUS_BUSY                  If master module is busy with a job
  * \retval STATUS_ERR_DENIED            If error on bus
@@ -769,7 +769,7 @@ enum status_code i2c_master_write_packet_wait(
  * \param[in,out] module  Pointer to software module struct
  * \param[in,out] packet  Pointer to I<SUP>2</SUP>C packet to transfer
  *
- * \return Status of reading packet
+ * \return Status of reading packet.
  * \retval STATUS_OK                    If packet was read
  * \retval STATUS_BUSY                  If master module is busy
  * \retval STATUS_ERR_DENIED            If error on bus
