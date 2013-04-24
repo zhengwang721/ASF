@@ -44,11 +44,10 @@
 #include <asf.h>
 #include <conf_example.h>
 
-static void ast_per_interrupt_callback(void);
 static void ast_per_interrupt_callback(void)
 {
 	ast_clear_interrupt_flag(AST, AST_INTERRUPT_PER);
-}	
+}
 
 int main(void)
 {
@@ -86,17 +85,17 @@ int main(void)
 	ast_conf.psel = AST_PSEL_32KHZ_1HZ - 6;
 	ast_conf.counter = ast_counter;
 	ast_set_config(AST, &ast_conf);
-	
+
 	/*
 	 * Configure the AST to wake up the CPU when the counter reaches the
 	 * selected periodic0 value.
 	 */
-	ast_write_periodic0_value(AST,AST_PSEL_32KHZ_1HZ - 3);
+	ast_write_periodic0_value(AST, AST_PSEL_32KHZ_1HZ - 3);
 	ast_enable_wakeup(AST, AST_WAKEUP_PER);
 	ast_enable_event(AST, AST_EVENT_PER);
 	ast_clear_interrupt_flag(AST, AST_INTERRUPT_PER);
 	ast_set_callback(AST, AST_INTERRUPT_PER, ast_per_interrupt_callback,
-				AST_PER_IRQn, 0);
+			AST_PER_IRQn, 0);
 
 	/* AST can wakeup the device */
 	bpm_enable_wakeup_source(BPM, (1 << BPM_BKUPWEN_AST));

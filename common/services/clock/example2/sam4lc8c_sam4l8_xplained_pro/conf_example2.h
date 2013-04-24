@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Clock system example 2 configuration for SAM4L8-XPLAINEDPRO
+ * \brief Clock system example 2 configuration for SAM4L8 Xplained Pro
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *

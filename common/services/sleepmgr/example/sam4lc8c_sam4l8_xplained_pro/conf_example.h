@@ -3,7 +3,7 @@
  *
  * \brief Chip-specific example configuration
  *
- * Copyright (c) 2010-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -45,15 +45,15 @@
 
 /* Refer to the example C file for further documentation. */
 
-//! \note This is push button on the SAM4L-XPLAINEDPRO.
+//! \note This is push button on the SAM4L8 Xplained Pro.
 #define WAKE_BUTTON_EIC_PIN       SW0_EIC_PIN
 #define WAKE_BUTTON_EIC_FUNCTION  SW0_EIC_PIN_MUX
 #define WAKE_BUTTON_EIC_LINE      SW0_EIC_LINE
 
-//! \note This is the SAM4L-XPLAINEDPRO's on-board LED.
-#define LED_ACTIVITY_STATUS_PIN   LED0_GPIO
-#define LED_STATUS_ON    IOPORT_PIN_LEVEL_LOW
-#define LED_STATUS_OFF   IOPORT_PIN_LEVEL_HIGH
+//! \note This is the SAM4L8 Xplained Pro on-board LED.
+#define LED_ACTIVITY_STATUS_PIN   LED_0_PIN
+#define LED_STATUS_ON    LED_0_ACTIVE
+#define LED_STATUS_OFF   LED_0_INACTIVE
 
 #endif /* CONF_EXAMPLE_H_INCLUDED */
 

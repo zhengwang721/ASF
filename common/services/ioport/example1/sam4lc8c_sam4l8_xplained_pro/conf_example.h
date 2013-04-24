@@ -3,7 +3,7 @@
  *
  * \brief Common IOPORT service demo configuration header file.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,11 +43,11 @@
 #ifndef CONF_EXAMPLE_H_INCLUDED
 #define CONF_EXAMPLE_H_INCLUDED
 
-/* Using LED0 SAM4L8-XplainedPro */
+/* Using LED0 SAM4L8 Xplained Pro */
 #define EXAMPLE_LED_PORT (2)
 #define EXAMPLE_LED_MASK ((1 << 7))
 
-/* Using button SW0 on SAM4L8-XplainedPro */
+/* Using button SW0 on SAM4L8 Xplained Pro */
 #define EXAMPLE_BUTTON_PORT (2)
 #define EXAMPLE_BUTTON_MASK ((1 << 24))
 

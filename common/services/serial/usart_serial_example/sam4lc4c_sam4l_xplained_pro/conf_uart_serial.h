@@ -45,7 +45,7 @@
 #define CONF_USART_SERIAL_H
 
 /** USART Interface */
-#define USART_SERIAL_EXAMPLE            USART1
+#define USART_SERIAL_EXAMPLE            COM_PORT_USART
 /** Baudrate setting */
 #define USART_SERIAL_EXAMPLE_BAUDRATE   115200
 /** Character length setting */
