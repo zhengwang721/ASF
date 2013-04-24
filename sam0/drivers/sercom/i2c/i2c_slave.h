@@ -87,7 +87,7 @@ enum i2c_slave_callback {
 	 * Callback for write request from master - can be used to issue a read
 	 */
 	I2C_SLAVE_CALLBACK_WRITE_REQUEST,
-	/** Callback for error. */
+	/** Callback for error */
 	I2C_SLAVE_CALLBACK_ERROR,
 	/**
 	 * Callback for error in last transfer. Discovered on a new address
@@ -227,7 +227,7 @@ struct i2c_slave_config {
 	uint8_t address_mask;
 	/**
 	 * Enable general call address recognition. General call address
-	 * is defined as 0000000 with dir bit 0
+	 * is defined as 0000000 with direction bit 0
 	 */
 	bool enable_general_call_address;
 #  if I2C_SLAVE_CALLBACK_MODE == true
@@ -238,9 +238,9 @@ struct i2c_slave_config {
 	 */
 	bool enable_nack_on_address;
 #  endif
-	/** GCLK generator to use as clock source. */
+	/** GCLK generator to use as clock source */
 	enum gclk_generator generator_source;
-	/** Set to keep module active in sleep modes. */
+	/** Set to keep module active in sleep modes */
 	bool run_in_standby;
 	/** PAD0 (SDA) pinmux */
 	uint32_t pinmux_pad0;
