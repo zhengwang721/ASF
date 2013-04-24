@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Common IOPORT service demo configuration header file.
+ * \brief Clock system example 3 configuration for SAM4L-XPLAINEDPRO
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,13 +40,13 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_EXAMPLE_H_INCLUDED
-#define CONF_EXAMPLE_H_INCLUDED
+#ifndef CONF_EXAMPLE3_H_INCLUDED
+#define CONF_EXAMPLE3_H_INCLUDED
 
-/* Using LED0 on SAM4L-XplainedPro */
-#define EXAMPLE_LED LED0_GPIO
+/** This is the pin for the onboard PB0 button, corresponding to PC03. */
+#define NEXT_BUTTON     GPIO_PUSH_BUTTON_0
 
-/* Using button SW0 on SAM4L-XplainPro */
-#define EXAMPLE_BUTTON GPIO_PUSH_BUTTON_0
+/** This is the LED that will be toggled in this example */
+#define LED_EXAMPLE_OUTPUT     LED0
 
-#endif /* CONF_EXAMPLE_H_INCLUDED */
+#endif /* CONF_EXAMPLE3_H_INCLUDED */

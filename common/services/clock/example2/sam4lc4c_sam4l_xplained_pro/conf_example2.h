@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Common IOPORT service demo configuration header file.
+ * \brief Clock system example 2 configuration for SAM4L-XPLAINEDPRO
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,13 +40,14 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_EXAMPLE_H_INCLUDED
-#define CONF_EXAMPLE_H_INCLUDED
+#ifndef CONF_EXAMPLE2_H_INCLUDED
+#define CONF_EXAMPLE2_H_INCLUDED
 
-/* Using LED0 on SAM4L-XplainedPro */
-#define EXAMPLE_LED LED0_GPIO
+#define GCLK_ID         0
+//! \note This is GPIO pin 2, corresponding to PA02.
+#define GCLK_PIN        PIN_PA02A_SCIF_GCLK0
+#define GCLK_FUNCTION   MUX_PA02A_SCIF_GCLK0
+#define GCLK_SOURCE     GENCLK_SRC_CLK_CPU
+#define GCLK_DIV        1
 
-/* Using button SW0 on SAM4L-XplainPro */
-#define EXAMPLE_BUTTON GPIO_PUSH_BUTTON_0
-
-#endif /* CONF_EXAMPLE_H_INCLUDED */
+#endif /* CONF_EXAMPLE2_H_INCLUDED */

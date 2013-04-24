@@ -110,6 +110,8 @@
 //! \name LED0 definitions
 //@{
 #define LED0                      PIN_PC07
+/*Be compliant with other evaluation boards*/
+#define LED0_GPIO                 PIN_PC07
 #define LED0_PIN                  PIN_PC07
 #define LED0_ACTIVE               false
 #define LED0_INACTIVE             !LED0_ACTIVE
@@ -155,7 +157,7 @@
 
 //! \name USART connections to GPIO for Virtual Com Port
 // @{
-#define COM_PORT_USART				    USART1
+#define COM_PORT_USART				USART1
 #define COM_PORT_USART_ID         ID_USART1
 #define COM_PORT_RX_PIN           PIN_PC26A_USART1_RXD
 #define COM_PORT_RX_GPIO          GPIO_PC26A_USART1_RXD

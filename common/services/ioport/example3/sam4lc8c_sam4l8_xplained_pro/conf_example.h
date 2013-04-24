@@ -44,7 +44,7 @@
 #define CONF_EXAMPLE_H_INCLUDED
 
 /* Using LED0 on SAM4L8-XplainedPro */
-#define EXAMPLE_LED LED0
+#define EXAMPLE_LED LED0_GPIO
 
 /* Using button SW0 on SAM4L8-XplainedPro */
 #define EXAMPLE_BUTTON GPIO_PUSH_BUTTON_0

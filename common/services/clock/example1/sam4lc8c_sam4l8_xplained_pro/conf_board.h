@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Common IOPORT service demo configuration header file.
+ * \brief Board configuration for clock example 1
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,13 +40,10 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_EXAMPLE_H_INCLUDED
-#define CONF_EXAMPLE_H_INCLUDED
 
-/* Using LED0 on SAM4L-XplainedPro */
-#define EXAMPLE_LED LED0_GPIO
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-/* Using button SW0 on SAM4L-XplainPro */
-#define EXAMPLE_BUTTON GPIO_PUSH_BUTTON_0
+/* Intentionally empty */
 
-#endif /* CONF_EXAMPLE_H_INCLUDED */
+#endif /* CONF_BOARD_H_INCLUDED */
