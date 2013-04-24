@@ -277,9 +277,6 @@ void system_clock_source_dfll_set_config(
 	 * by the DFLL output */
 	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_DFLL, false);
 
-	//SYSCTRL->DFLLCTRL.reg = 0;
-
-
 	/* Write Fine and Coarse values for open loop mode */
 	_system_dfll_wait_for_sync();
 	SYSCTRL->DFLLVAL.reg =
@@ -730,14 +727,14 @@ void system_clock_init(void)
 #  endif
 
 /* Enable DFLL reference clock if in closed loop mode */
-#	if (CONF_CLOCK_DFLL_ENABLE && CONF_CLOCK_DFLL_LOOP_MODE == SYSTEM_CLOCK_DFLL_CLOSED_LOOP)
+#  if (CONF_CLOCK_DFLL_ENABLE && CONF_CLOCK_DFLL_LOOP_MODE == SYSTEM_CLOCK_DFLL_CLOSED_LOOP)
 	struct system_gclk_chan_config dfll_gclk_chan_conf;
 
 	system_gclk_chan_get_config_defaults(&dfll_gclk_chan_conf);
 	dfll_gclk_chan_conf.source_generator = CONF_CLOCK_DFLL_SOURCE_GCLK_GENERATOR;
 	system_gclk_chan_set_config(0, &dfll_gclk_chan_conf);
 	system_gclk_chan_enable(0);
-#	endif
+#  endif
 
 	/* Configured last as it might depend on other generators */
 #  if CONF_CLOCK_GCLK_0_ENABLE == true
