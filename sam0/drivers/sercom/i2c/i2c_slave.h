@@ -283,7 +283,7 @@ static void _i2c_slave_wait_for_sync(
  *
  * \param[out] module  Pointer to software module structure
  *
- * \return Status of the synchronization
+ * \return Status of the synchronization.
  * \retval true   Module is busy synchronizing
  * \retval false  Module is not synchronizing
  */
