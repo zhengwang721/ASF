@@ -49,6 +49,6 @@
 /** PWM output pin */
 #define PWM_OUT_PIN     EXT1_PWM_0_PIN
 /** PWM ouptut pin mux */
-#define PWM_OUT_PIN_MUX EXT1_PWM_0_PIN_MUX
+#define PWM_OUT_PIN_MUX EXT1_PWM_0_MUX
 
 #endif /* CONF_QUICK_START_H_INCLUDED */
