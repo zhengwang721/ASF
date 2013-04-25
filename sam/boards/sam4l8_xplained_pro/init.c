@@ -63,12 +63,6 @@
 
 void board_init(void)
 {
-#ifndef CONF_BOARD_KEEP_WATCHDOG_AT_INIT
-	struct wdt_dev_inst wdt_inst;
-	wdt_init(&wdt_inst, WDT, NULL);
-	wdt_disable(&wdt_inst);
-#endif
-
 	/* Initialize IOPORT */
 	ioport_init();
 
