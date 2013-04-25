@@ -587,8 +587,6 @@ struct spi_module {
 #  if SPI_CALLBACK_MODE == true
 	/** Direction of transaction */
 	volatile enum spi_direction dir;
-	/** Direction of finished transaction for slave */
-	volatile enum spi_direction slave_dir;
 	/** Array to store callback function pointers in */
 	spi_callback_t callback[SPI_CALLBACK_N];
 	/** Buffer pointer to where the next received character will be put */

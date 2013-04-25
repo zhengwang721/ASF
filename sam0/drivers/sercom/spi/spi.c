@@ -476,7 +476,6 @@ enum status_code spi_init(
 	module->enabled_callback           = 0x00;
 	module->status                     = STATUS_OK;
 	module->dir                        = SPI_DIRECTION_IDLE;
-	module->slave_dir                  = SPI_DIRECTION_IDLE;
 	/*
 	 * Set interrupt handler and register SPI software module struct in
 	 * look-up table
