@@ -71,6 +71,24 @@ void spi_reset(
 }
 
 /**
+ * \internal Clears the Transmit Complete interrupt flag.
+ *
+ * \param[in]  module  Pointer to the software instance struct
+ */
+static void _spi_clear_tx_complete_flag(
+		struct spi_module *const module)
+{
+	/* Sanity check arguments */
+	Assert(module);
+	Assert(module->hw);
+
+	SercomSpi *const spi_module = &(module->hw->SPI);
+
+	/* Clear interrupt flag */
+	spi_module->INTFLAG.reg = SPI_INTERRUPT_FLAG_TX_COMPLETE;
+}
+
+/**
  * \internal Writes an SPI SERCOM configuration to the hardware module.
  *
  * This function will write out a given configuration to the hardware module.
@@ -137,8 +155,9 @@ static enum status_code _spi_set_config(
 		system_pinmux_pin_set_config(pad3 >> 16, &pin_conf);
 	}
 
-	module->mode           = config->mode;
-	module->character_size = config->character_size;
+	module->mode             = config->mode;
+	module->character_size   = config->character_size;
+	module->receiver_enabled = config->receiver_enable;
 
 	/* Value to write to BAUD register */
 	uint16_t baud = 0;
@@ -460,8 +479,7 @@ enum status_code spi_init(
 	module->remaining_rx_buffer_length = 0x0000;
 	module->registered_callback        = 0x00;
 	module->enabled_callback           = 0x00;
-	module->rx_status                  = STATUS_OK;
-	module->tx_status                  = STATUS_OK;
+	module->status                     = STATUS_OK;
 	module->dir                        = SPI_DIRECTION_IDLE;
 	/*
 	 * Set interrupt handler and register SPI software module struct in
@@ -492,9 +510,12 @@ enum status_code spi_init(
  *
  * \return Status of the read operation
  * \retval STATUS_OK              If the read was completed
+ * \retval STATUS_ABORTED          If transaction was ended by master before
+ *                                 entire buffer was transferred
  * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) were provided.
  * \retval STATUS_ERR_TIMEOUT     If the operation was not completed within the
  *                                timeout in slave mode.
+ * \retval STATUS_ERR_DENIED      If the receiver is not enabled
  * \retval STATUS_ERR_OVERFLOW    If the data is overflown
  */
 enum status_code spi_read_buffer_wait(
@@ -507,9 +528,25 @@ enum status_code spi_read_buffer_wait(
 	Assert(module);
 	Assert(module->hw);
 
+#  if SPI_CALLBACK_MODE == true
+	if (module->status == STATUS_BUSY) {
+		/* Check if the SPI module is busy with a job */
+		return STATUS_BUSY;
+	}
+#  endif
+
 	/* Sanity check arguments */
 	if (length == 0) {
 		return STATUS_ERR_INVALID_ARG;
+	}
+
+	if (!(module->receiver_enabled)) {
+		return STATUS_ERR_DENIED;
+	}
+
+	if ((module->mode == SPI_MODE_SLAVE) && (spi_is_write_complete(module))) {
+		/* Clear TX complete flag */
+		_spi_clear_tx_complete_flag(module);
 	}
 
 	uint16_t rx_pos = 0;
@@ -530,6 +567,11 @@ enum status_code spi_read_buffer_wait(
 				if (spi_is_ready_to_read(module)) {
 					break;
 				}
+			}
+			/* Check if master has ended the transaction */
+			if (spi_is_write_complete(module)) {
+				_spi_clear_tx_complete_flag(module);
+				return STATUS_ABORTED;
 			}
 
 			if (!spi_is_ready_to_read(module)) {
@@ -558,6 +600,7 @@ enum status_code spi_read_buffer_wait(
 			rx_data[rx_pos++] = (received_data >> 8);
 		}
 	}
+
 	return STATUS_OK;
 }
 
@@ -611,6 +654,14 @@ enum status_code spi_select_slave(
 
 			/* Write address to slave */
 			spi_write(module, slave->address);
+
+			if (!(module->receiver_enabled)) {
+				/* Flush contents of shift register shifted back from slave */
+				while (!spi_is_ready_to_read(module)) {
+				}
+				uint16_t flush = 0;
+				spi_read(module, &flush);
+			}
 		}
 	} else {
 		/* Drive Slave Select high */
@@ -625,7 +676,7 @@ enum status_code spi_select_slave(
  *
  * This function will send a buffer of SPI characters via the SPI
  * and discard any data that is received. To both send and receive a buffer of
- * data, use the \ref spi_tranceive_buffer_wait function.
+ * data, use the \ref spi_transceive_buffer_wait function.
  *
  * Note that this function does not handle the _SS (slave select) pin(s) in
  * master mode; this must be handled by the user application.
@@ -636,9 +687,11 @@ enum status_code spi_select_slave(
  *
  * \return Status of the write operation
  * \retval STATUS_OK               If the write was completed
- * \retval STATUS_ERR_INVALID_ARG  If invalid argument(s) were provided.
+ * \retval STATUS_ABORTED          If transaction was ended by master before
+ *                                 entire buffer was transferred
+ * \retval STATUS_ERR_INVALID_ARG  If invalid argument(s) were provided
  * \retval STATUS_ERR_TIMEOUT      If the operation was not completed within the
- *                                 timeout in slave mode.
+ *                                 timeout in slave mode
  */
 enum status_code spi_write_buffer_wait(
 		struct spi_module *const module,
@@ -648,8 +701,20 @@ enum status_code spi_write_buffer_wait(
 	/* Sanity check arguments */
 	Assert(module);
 
+#  if SPI_CALLBACK_MODE == true
+	if (module->status == STATUS_BUSY) {
+		/* Check if the SPI module is busy with a job */
+		return STATUS_BUSY;
+	}
+#  endif
+
 	if (length == 0) {
 		return STATUS_ERR_INVALID_ARG;
+	}
+
+	if ((module->mode == SPI_MODE_SLAVE) && (spi_is_write_complete(module))) {
+		/* Clear TX complete flag */
+		_spi_clear_tx_complete_flag(module);
 	}
 
 	uint16_t tx_pos = 0;
@@ -662,6 +727,11 @@ enum status_code spi_write_buffer_wait(
 				if (spi_is_ready_to_write(module)) {
 					break;
 				}
+			}
+			/* Check if master has ended the transaction */
+			if (spi_is_write_complete(module)) {
+				_spi_clear_tx_complete_flag(module);
+				return STATUS_ABORTED;
 			}
 
 			if (!spi_is_ready_to_write(module)) {
@@ -685,26 +755,34 @@ enum status_code spi_write_buffer_wait(
 		/* Write the data to send */
 		spi_write(module, data_to_send);
 
-		/* Start timeout period for slave */
-		if (module->mode == SPI_MODE_SLAVE) {
-			for (uint32_t i = 0; i <= SPI_TIMEOUT; i++) {
-				if (spi_is_ready_to_read(module)) {
-					break;
+		if (module->receiver_enabled) {
+
+			/* Start timeout period for slave */
+			if (module->mode == SPI_MODE_SLAVE) {
+				for (uint32_t i = 0; i <= SPI_TIMEOUT; i++) {
+					if (spi_is_ready_to_read(module)) {
+						break;
+					}
+				}
+			/* Check if master has ended the transaction */
+			if (spi_is_write_complete(module)) {
+				_spi_clear_tx_complete_flag(module);
+				return STATUS_ABORTED;
+			}
+
+				if (!spi_is_ready_to_read(module)) {
+					/* Not ready to read data within timeout period */
+					return STATUS_ERR_TIMEOUT;
 				}
 			}
 
-			if (!spi_is_ready_to_read(module)) {
-				/* Not ready to read data within timeout period */
-				return STATUS_ERR_TIMEOUT;
+			while (!spi_is_ready_to_read(module)) {
 			}
-		}
 
-		while(!spi_is_ready_to_read(module)) {
+			/* Flush read buffer */
+			uint16_t flush;
+			spi_read(module, &flush);
 		}
-
-		/* Flush read buffer */
-		uint16_t flush;
-		spi_read(module, &flush);
 	}
 
 	if (module->mode == SPI_MODE_MASTER) {
@@ -739,9 +817,10 @@ enum status_code spi_write_buffer_wait(
  * \retval STATUS_ERR_INVALID_ARG  If invalid argument(s) were provided.
  * \retval STATUS_ERR_TIMEOUT      If the operation was not completed within the
  *                                 timeout in slave mode.
+ * \retval STATUS_ERR_DENIED       If the receiver is not enabled
  * \retval STATUS_ERR_OVERFLOW     If the data is overflown
  */
-enum status_code spi_tranceive_buffer_wait(
+enum status_code spi_transceive_buffer_wait(
 		struct spi_module *const module,
 		uint8_t *tx_data,
 		uint8_t *rx_data,
@@ -750,9 +829,25 @@ enum status_code spi_tranceive_buffer_wait(
 	/* Sanity check arguments */
 	Assert(module);
 
+#  if SPI_CALLBACK_MODE == true
+	if (module->status == STATUS_BUSY) {
+		/* Check if the SPI module is busy with a job */
+		return STATUS_BUSY;
+	}
+#  endif
+
 	/* Sanity check arguments */
 	if (length == 0) {
 		return STATUS_ERR_INVALID_ARG;
+	}
+	
+	if (!(module->receiver_enabled)) {
+		return STATUS_ERR_DENIED;
+	}
+
+	if ((module->mode == SPI_MODE_SLAVE) && (spi_is_write_complete(module))) {
+		/* Clear TX complete flag */
+		_spi_clear_tx_complete_flag(module);
 	}
 
 	uint16_t tx_pos = 0;
@@ -766,6 +861,11 @@ enum status_code spi_tranceive_buffer_wait(
 				if (spi_is_ready_to_write(module)) {
 					break;
 				}
+			}
+			/* Check if master has ended the transaction */
+			if (spi_is_write_complete(module)) {
+				_spi_clear_tx_complete_flag(module);
+				return STATUS_ABORTED;
 			}
 
 			if (!spi_is_ready_to_write(module)) {
@@ -795,6 +895,11 @@ enum status_code spi_tranceive_buffer_wait(
 				if (spi_is_ready_to_read(module)) {
 					break;
 				}
+			}
+			/* Check if master has ended the transaction */
+			if (spi_is_write_complete(module)) {
+				_spi_clear_tx_complete_flag(module);
+				return STATUS_ABORTED;
 			}
 
 			if (!spi_is_ready_to_read(module)) {
