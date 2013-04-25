@@ -255,6 +255,8 @@ enum system_sleepmode {
  * List of possible reset causes of the system.
  */
 enum system_reset_cause {
+	/** The system was last reset by a software reset. */
+	SYSTEM_RESET_CAUSE_SOFTWARE       = PM_RCAUSE_SYST,
 	/** The system was last reset by the watchdog timer. */
 	SYSTEM_RESET_CAUSE_WDT            = PM_RCAUSE_WDT,
 	/** The system was last reset because the external reset line was pulled low. */
