@@ -818,8 +818,7 @@ enum status_code system_clock_source_write_calibration(
 		const uint8_t freq_range);
 
 enum status_code system_clock_source_enable(
-		const enum system_clock_source system_clock_source,
-		const bool block_until_ready);
+		const enum system_clock_source system_clock_source);
 
 enum status_code system_clock_source_disable(
 		const enum system_clock_source clk_source);
