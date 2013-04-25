@@ -226,15 +226,15 @@ struct i2c_slave_config {
 	/** Address mask, second address or lower limit of address range */
 	uint8_t address_mask;
 	/**
-	 * Enable general call address recognition. General call address
-	 * is defined as 0000000 with direction bit 0
+	 * Enable general call address recognition (general call address
+	 * is defined as 0000000 with direction bit 0)
 	 */
 	bool enable_general_call_address;
 #  if I2C_SLAVE_CALLBACK_MODE == true
 	/**
-	 * Enable NAK on address match. Can be changed after initialization via the
+	 * Enable NAK on address match (this can be changed after initialization via the
 	 * \ref i2c_slave_enable_nack_on_address and
-	 * \ref i2c_slave_disable_nack_on_address functions.
+	 * \ref i2c_slave_disable_nack_on_address functions)
 	 */
 	bool enable_nack_on_address;
 #  endif
