@@ -88,6 +88,10 @@ uint32_t at24cxx_write_continuous(uint16_t us_start_address,
 uint32_t at24cxx_read_byte(uint16_t us_address, uint8_t *p_rd_byte);
 uint32_t at24cxx_read_continuous(uint16_t us_start_address, uint16_t us_length,
 		uint8_t * p_rd_buffer);
+uint32_t at24cxx_write_page(uint32_t ul_page_address,
+		uint32_t ul_page_size, uint8_t const *p_wr_buffer);
+uint32_t at24cxx_read_page(uint32_t us_page_address,
+		uint32_t ul_page_size, uint8_t *p_rd_buffer);
 
 /// @cond 0
 /**INDENT-OFF**/

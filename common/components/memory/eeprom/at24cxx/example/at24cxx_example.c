@@ -3,7 +3,7 @@
  *
  * \brief AT24CXX Component Example for SAM.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -86,7 +86,7 @@ extern "C" {
 #define CONSOLE_BAUD_RATE  115200
 
 /** EEPROM Wait Time */
-#define WAIT_TIME          10
+#define WAIT_TIME       10
 /** Memory Start Address of AT24CXX chips */
 #define AT24C_MEM_ADDR  0
 /** TWI Bus Clock 400kHz */
@@ -104,6 +104,11 @@ static const uint8_t test_data_tx[] = {
 	'S', 'A', 'M', ' ', 'A', 'T', '2', '4', 'C', 'X', 'X', ' ', 'E',
 	'X', 'A', 'M', 'P', 'L', 'E'
 };
+
+#define PAGE_SIZE  128
+#define PAGE_ADDR  1
+uint8_t page_read_buf[PAGE_SIZE];
+uint8_t page_write_buf[PAGE_SIZE];
 
 /** Reception buffer */
 static uint8_t test_data_rx[TEST_DATA_LENGTH] = { 0 };
@@ -131,7 +136,7 @@ static void configure_console(void)
 		.baudrate = CONF_UART_BAUDRATE,
 		.paritytype = CONF_UART_PARITY
 	};
-	
+
 	/* Configure console UART. */
 	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
 	stdio_serial_init(CONF_UART, &uart_serial_options);
@@ -191,7 +196,7 @@ int main(void)
 	/* Configure the options of TWI driver */
 	opt.master_clk = sysclk_get_main_hz();
 	opt.speed = AT24C_TWI_CLK;
-	
+
 	if (twi_master_init(BOARD_AT24C_TWI_INSTANCE, &opt) != TWI_SUCCESS) {
 		puts("AT24CXX initialization is failed.\r");
 		LED_On(LED0_GPIO);
@@ -202,8 +207,8 @@ int main(void)
 	}
 
 	/* Send test pattern to EEPROM */
-	if (at24cxx_write_continuous(AT24C_MEM_ADDR, TEST_DATA_LENGTH, test_data_tx) !=
-			AT24C_WRITE_SUCCESS) {
+	if (at24cxx_write_continuous(AT24C_MEM_ADDR, TEST_DATA_LENGTH,
+			test_data_tx) != AT24C_WRITE_SUCCESS) {
 		puts("AT24CXX write packet is failed.\r");
 		LED_On(LED0_GPIO);
 		LED_On(LED1_GPIO);
@@ -211,14 +216,13 @@ int main(void)
 			/* Capture error */
 		}
 	}
-	printf("Write: OK!\n\r");
 
 	/* Wait at least 10 ms */
 	mdelay(WAIT_TIME);
 
 	/* Get memory from EEPROM */
-	if (at24cxx_read_continuous(AT24C_MEM_ADDR, TEST_DATA_LENGTH, test_data_rx) !=
-			AT24C_READ_SUCCESS) {
+	if (at24cxx_read_continuous(AT24C_MEM_ADDR, TEST_DATA_LENGTH,
+			test_data_rx) != AT24C_READ_SUCCESS) {
 		puts("AT24CXX read packet is failed.\r");
 		LED_On(LED0_GPIO);
 		LED_On(LED1_GPIO);
@@ -226,7 +230,6 @@ int main(void)
 			/* Capture error */
 		}
 	}
-	puts("Read: OK!\r");
 
 	/* Compare the sent and the received */
 	for (i = 0; i < TEST_DATA_LENGTH; i++) {
@@ -234,6 +237,7 @@ int main(void)
 			/* No match */
 			puts("Data comparison: Unmatched!\r");
 			LED_On(LED0_GPIO);
+			LED_On(LED1_GPIO);
 			while (1) {
 				/* Capture error */
 			}
@@ -241,8 +245,46 @@ int main(void)
 	}
 	/* Match */
 	puts("Data comparison: Matched!\r");
-	LED_On(LED1_GPIO);
 
+	/* Page Operation */
+	for (i = 0; i < PAGE_SIZE; i++) {
+		page_read_buf[i] = 0;
+		page_write_buf[i] = 0xff-i;
+	}
+
+	if (at24cxx_write_page(PAGE_ADDR, PAGE_SIZE, page_write_buf) !=
+			AT24C_WRITE_SUCCESS) {
+		puts("AT24CXX page write is failed.\r");
+		LED_On(LED0_GPIO);
+		LED_On(LED1_GPIO);
+		while (1) {
+			/* Capture error */
+		}
+	}
+	mdelay(WAIT_TIME);
+	if (at24cxx_read_page(PAGE_ADDR, PAGE_SIZE, page_read_buf) !=
+			AT24C_READ_SUCCESS) {
+		puts("AT24CXX page read is failed.\r");
+		LED_On(LED0_GPIO);
+		LED_On(LED1_GPIO);
+		while (1) {
+			/* Capture error */
+		}
+	}
+
+	for (i = 0; i < PAGE_SIZE; i++) {
+		if (page_read_buf[i] != page_write_buf[i]) {
+			/* No match */
+			puts("Page comparison: Unmatched!\r");
+			LED_On(LED0_GPIO);
+			LED_On(LED1_GPIO);
+			while (1) {
+				/* Capture error */
+			}
+		}
+	}
+	/* Match */
+	puts("Page comparison: Matched!\r");
 	while (1) {
 	}
 }
