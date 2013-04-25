@@ -58,9 +58,15 @@
 /* === Externals ============================================================ */
 
 /* === Prototypes =========================================================== */
+
+ /** \page api RF4Control API Parser 
+  *    - \ref group_api_parser_rf4ce
+  */
+  
  /**
-  * \defgroup group_api_parser_rf4ce API Parser Module
-  * API Parser for RF4Control acts as a interface for converting Nwk and Zrc Api's to appropriate command byte stream
+  * \defgroup group_api_parser_rf4ce RF4Control API Parser Module
+  * This module is responsible for encoding and decoding the serial bytes to/from NCP into NWK or ZRC APIs to provide seamless working for application similar to stack running in same processor or on 
+  * NCP.
   * @{
   */
 

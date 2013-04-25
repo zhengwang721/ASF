@@ -134,4 +134,45 @@
 //! @}
 #endif //XMEGA
 
+#if SAM
+
+#define AT86RFX_SPI                  SPI
+#define AT86RFX_RST_PIN              PIN_PA04
+#define AT86RFX_IRQ_PIN              PIN_PA04
+#define AT86RFX_SLP_PIN              PIN_PA06
+#define AT86RFX_SPI_CS               0
+#define AT86RFX_SPI_MOSI             PIN_PA07
+#define AT86RFX_SPI_MISO             PIN_PA08
+#define AT86RFX_SPI_SCK              PIN_PA09
+
+#define AT86RFX_INTC_INIT()         ioport_set_pin_dir(AT86RFX_IRQ_PIN, IOPORT_DIR_INPUT);\
+                                    ioport_set_pin_sense_mode(AT86RFX_IRQ_PIN, IOPORT_SENSE_RISING);\
+									arch_ioport_pin_to_base(AT86RFX_IRQ_PIN)->GPIO_IERS = arch_ioport_pin_to_mask(AT86RFX_IRQ_PIN);\
+									arch_ioport_pin_to_base(AT86RFX_IRQ_PIN)->GPIO_IMR0S = arch_ioport_pin_to_mask(AT86RFX_IRQ_PIN);\
+									NVIC_EnableIRQ(GPIO_11_IRQn)
+
+#define AT86RFX_ISR()               ISR(GPIO_11_Handler)
+
+/** Enables the transceiver main interrupt. */
+#define ENABLE_TRX_IRQ()            arch_ioport_pin_to_base(AT86RFX_IRQ_PIN)->GPIO_IERS = arch_ioport_pin_to_mask(AT86RFX_IRQ_PIN)
+
+/** Disables the transceiver main interrupt. */
+#define DISABLE_TRX_IRQ()           arch_ioport_pin_to_base(AT86RFX_IRQ_PIN)->GPIO_IERC = arch_ioport_pin_to_mask(AT86RFX_IRQ_PIN)
+
+/** Clears the transceiver main interrupt. */
+#define CLEAR_TRX_IRQ()             arch_ioport_pin_to_base(AT86RFX_IRQ_PIN)->GPIO_IFRC = arch_ioport_pin_to_mask(AT86RFX_IRQ_PIN)
+
+/*
+ * This macro saves the trx interrupt status and disables the trx interrupt.
+ */
+#define ENTER_TRX_REGION()         NVIC_DisableIRQ(GPIO_11_IRQn)
+
+/*
+ *  This macro restores the transceiver interrupt status
+ */
+#define LEAVE_TRX_REGION()         NVIC_EnableIRQ(GPIO_11_IRQn)
+
+#define AT86RFX_SPI_BAUDRATE         (3000000)
+
+#endif //SAM
 #endif /* CONF_PAL_H_INCLUDED */

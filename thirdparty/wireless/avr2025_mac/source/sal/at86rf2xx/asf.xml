@@ -8,5 +8,6 @@
 		<build type="doxygen-entry-point" value="sal_group"/>
 		<build type="define" name="SAL_TYPE" value ="AT86RF2xx"/>
 			<device-support value="uc3"/>
+			<device-support value="sam4l"/>
 	</module>
 </asf>

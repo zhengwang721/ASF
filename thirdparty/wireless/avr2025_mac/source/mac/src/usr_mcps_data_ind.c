@@ -63,7 +63,35 @@
 
 
 /* === Implementation ====================================================== */
-
+#if (defined __GNUC__)
+void __attribute__((weak))
+#ifdef MAC_SECURITY_ZIP
+usr_mcps_data_ind(wpan_addr_spec_t *SrcAddrSpec,
+                  wpan_addr_spec_t *DstAddrSpec,
+                  uint8_t msduLength,
+                  uint8_t *msdu,
+                  uint8_t mpduLinkQuality,
+                  uint8_t DSN,
+    #ifdef ENABLE_TSTAMP
+                  uint32_t Timestamp,
+    #endif  /* ENABLE_TSTAMP */
+                  uint8_t SecurityLevel,
+                  uint8_t KeyIdMode,
+                  uint8_t KeyIndex)
+#else   /* No MAC_SECURITY */
+usr_mcps_data_ind(wpan_addr_spec_t *SrcAddrSpec,
+                  wpan_addr_spec_t *DstAddrSpec,
+                  uint8_t msduLength,
+                  uint8_t *msdu,
+                  uint8_t mpduLinkQuality,
+    #ifdef ENABLE_TSTAMP
+                  uint8_t DSN,
+                  uint32_t Timestamp)
+    #else
+                  uint8_t DSN)
+    #endif  /* ENABLE_TSTAMP */
+#endif  /* MAC_SECURITY */
+#else
 #ifdef MAC_SECURITY_ZIP
 void usr_mcps_data_ind(wpan_addr_spec_t *SrcAddrSpec,
                        wpan_addr_spec_t *DstAddrSpec,
@@ -90,6 +118,7 @@ void usr_mcps_data_ind(wpan_addr_spec_t *SrcAddrSpec,
                        uint8_t DSN)
     #endif  /* ENABLE_TSTAMP */
 #endif  /* MAC_SECURITY */
+#endif
 {
     /* Keep compiler happy. */
     SrcAddrSpec = SrcAddrSpec;
