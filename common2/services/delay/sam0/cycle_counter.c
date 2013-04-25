@@ -3,7 +3,7 @@
  *
  * \brief ARM functions for busy-wait delay loops
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -46,13 +46,13 @@
 /**
  * Value used to calculate ms delay. Default to be used with a 8MHz clock;
  */
-static uint32_t cycles_per_ms = 8000000/1000;
-static uint32_t cycles_per_us = 8000000/1000000;
+static uint32_t cycles_per_ms = 8000000UL / 1000;
+static uint32_t cycles_per_us = 8000000UL / 1000000;
 
 /**
- * @def delay_init
+ * \def delay_init
  *
- * @brief Initialize the delay driver.
+ * \brief Initialize the delay driver.
  *
  * This must be called during start up to initialize the delay routine with
  * the current used main clock. It must run any time the main CPU clock is changed.
@@ -69,9 +69,10 @@ void delay_init(void)
 /**
  * \brief Delay loop to delay at least n number of microseconds
  *
- * \param n Number of microseconds to wait
+ * \param n  Number of microseconds to wait
  */
-void delay_cycles_us(uint32_t n)
+void delay_cycles_us(
+		uint32_t n)
 {
 	while (n--) {
 		/* Devide up to blocks of 10u */
@@ -82,9 +83,10 @@ void delay_cycles_us(uint32_t n)
 /**
  * \brief Delay loop to delay at least n number of milliseconds
  *
- * \param n Number of milliseconds to wait
+ * \param n  Number of milliseconds to wait
  */
-void delay_cycles_ms(uint32_t n)
+void delay_cycles_ms(
+		uint32_t n)
 {
 	while (n--) {
 		/* Devide up to blocks of 1ms */

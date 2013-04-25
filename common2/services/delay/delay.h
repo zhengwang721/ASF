@@ -40,15 +40,14 @@
  * \asf_license_stop
  *
  */
-#ifndef _DELAY_H_
-#define _DELAY_H_
+#ifndef DELAY_H_INCLUDED
+#define DELAY_H_INCLUDED
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 #include "sam0/cycle_counter.h"
-
 
 /**
  * @defgroup group_common_services_delay Busy-Wait Delay Routines
@@ -61,33 +60,25 @@ extern "C" {
  */
 
 /**
- * @def delay_s
- * @brief Delay in at least specified number of seconds.
- * @param delay Delay in seconds
+ * \def delay_s
+ * \brief Delay in at least specified number of seconds.
+ * \param delay Delay in seconds
  */
-#define delay_s(delay)      cpu_delay_s(delay)
+#define delay_s(delay)          cpu_delay_s(delay)
 
 /**
- * @def delay_ms
- * @brief Delay in at least specified number of milliseconds.
- * @param delay Delay in milliseconds
+ * \def delay_ms
+ * \brief Delay in at least specified number of milliseconds.
+ * \param delay Delay in milliseconds
  */
-#define delay_ms(delay)     cpu_delay_ms(delay)
+#define delay_ms(delay)         cpu_delay_ms(delay)
 
 /**
- * @def delay_us
- * @brief Delay in at least specified number of microseconds.
- * @param delay Delay in microseconds
+ * \def delay_us
+ * \brief Delay in at least specified number of microseconds.
+ * \param delay Delay in microseconds
  */
-#define delay_us(delay)     cpu_delay_us(delay)
-
-
-/**
- * @def delay_cycles
- * @brief Delay in at least specified number of cycles. Will have a minimum of about 3us.
- * @param delay Delay in cycles
- */
-#define delay_cycles(delay)     cpu_delay_cycles(delay)
+#define delay_us(delay)         cpu_delay_us(delay)
 
 #ifdef __cplusplus
 }
@@ -97,4 +88,4 @@ extern "C" {
  * @}
  */
 
-#endif /* _DELAY_H_ */
+#endif /* DELAY_H_INCLUDED */
