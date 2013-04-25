@@ -61,6 +61,7 @@ enum spi_job_type {
 	SPI_JOB_READ_BUFFER,
 	/** Asynchronous SPI write from a user provided buffer */
 	SPI_JOB_WRITE_BUFFER,
+	/** Asynchronous SPI transceive from user provided buffers */
 	SPI_JOB_TRANSCEIVE_BUFFER,
 };
 
