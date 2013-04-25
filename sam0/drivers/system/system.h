@@ -119,7 +119,6 @@
  *  <caption>SAM D20 Device Sleep Modes</caption>
  * 	<tr>
  * 		<th>Sleep mode</th>
- * 		<th>IDLE</th>
  * 		<th>CPU clock</th>
  * 		<th>AHB clock</th>
  * 		<th>APB clocks</th>
@@ -130,47 +129,40 @@
  * 		<th>RAM mode</th>
  * 	</tr>
  * 	<tr>
- * 		<td rowspan="4">IDLE</td>
- * 		<td>0</td>
+ * 		<td>IDLE 0</td>
  * 		<td>Stop</td>
  * 		<td>Run</td>
  * 		<td>Run</td>
  * 		<td>Run</td>
  * 		<td>Run</td>
  * 		<td>Run</td>
- * 		<td rowspan="4">Normal Mode (LDO)</td>
- * 		<td rowspan="4">Normal Mode</td>
+ * 		<td>Normal</td>
+ * 		<td>Normal</td>
  * 	</tr>
  * 	<tr>
- * 		<td>1</td>
+ * 		<td>IDLE 1</td>
  * 		<td>Stop</td>
  * 		<td>Stop</td>
  * 		<td>Run</td>
  * 		<td>Run</td>
  * 		<td>Run</td>
  * 		<td>Run</td>
+ * 		<td>Normal</td>
+ * 		<td>Normal</td>
  *	</tr>
  * 	<tr>
- * 		<td>2</td>
+ * 		<td>IDLE 2</td>
  * 		<td>Stop</td>
  * 		<td>Stop</td>
  * 		<td>Stop</td>
  * 		<td>Run</td>
  * 		<td>Run</td>
  * 		<td>Run</td>
+ * 		<td>Normal</td>
+ * 		<td>Normal</td>
  *	</tr>
  * 	<tr>
- * 		<td>3</td>
- * 		<td>Stop</td>
- * 		<td>Stop</td>
- * 		<td>Stop</td>
- * 		<td>Stop</td>
- * 		<td>Run</td>
- * 		<td>Run</td>
- *	</tr>
- * 	<tr>
- * 		<td>STDBY</td>
- * 		<td> </td>
+ * 		<td>STANDBY</td>
  * 		<td>Stop</td>
  * 		<td>Stop</td>
  * 		<td>Stop</td>
@@ -243,8 +235,6 @@ enum system_sleepmode {
 	SYSTEM_SLEEPMODE_IDLE_1,
 	/** IDLE 2 sleep mode. */
 	SYSTEM_SLEEPMODE_IDLE_2,
-	/** IDLE 3 sleep mode. */
-	SYSTEM_SLEEPMODE_IDLE_3,
 	/** Standby sleep mode. */
 	SYSTEM_SLEEPMODE_STANDBY,
 };
@@ -291,9 +281,11 @@ static inline void system_voltage_reference_enable(
 		case SYSTEM_VOLTAGE_REFERENCE_TEMPSENSE:
 			SYSCTRL->VREF.reg |= SYSCTRL_VREF_TSEN;
 			break;
+
 		case SYSTEM_VOLTAGE_REFERENCE_BANDGAP:
 			SYSCTRL->VREF.reg |= SYSCTRL_VREF_BGOUTEN;
 			break;
+
 		default:
 			Assert(false);
 			return;
@@ -314,9 +306,11 @@ static inline void system_voltage_reference_disable(
 		case SYSTEM_VOLTAGE_REFERENCE_TEMPSENSE:
 			SYSCTRL->VREF.reg &= ~SYSCTRL_VREF_TSEN;
 			break;
+
 		case SYSTEM_VOLTAGE_REFERENCE_BANDGAP:
 			SYSCTRL->VREF.reg &= ~SYSCTRL_VREF_BGOUTEN;
 			break;
+
 		default:
 			Assert(false);
 			return;
@@ -356,7 +350,6 @@ static inline enum status_code system_set_sleepmode(
 		case SYSTEM_SLEEPMODE_IDLE_0:
 		case SYSTEM_SLEEPMODE_IDLE_1:
 		case SYSTEM_SLEEPMODE_IDLE_2:
-		case SYSTEM_SLEEPMODE_IDLE_3:
 			SCB->SCR &= ~SCB_SCR_SLEEPDEEP_Msk;
 			PM->SLEEP.reg = sleep_mode;
 			break;
@@ -377,7 +370,7 @@ static inline enum status_code system_set_sleepmode(
  *
  * This will execute the WFI (wait for interrupt) instruction,
  * putting the device into the sleep mode specified by \ref system_set_sleepmode
- * and wait for an interrupt to wake up
+ * and wait for an interrupt to wake up.
  */
 static inline void system_sleep(void)
 {
