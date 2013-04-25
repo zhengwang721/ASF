@@ -540,6 +540,11 @@ enum status_code spi_read_buffer_wait(
 		return STATUS_ERR_DENIED;
 	}
 
+	if ((module->mode == SPI_MODE_SLAVE) && (spi_is_write_complete(module))) {
+		/* Clear TX complete flag */
+		_spi_clear_tx_complete_flag(module);
+	}
+
 	uint16_t rx_pos = 0;
 
 	while (length--) {
@@ -591,7 +596,7 @@ enum status_code spi_read_buffer_wait(
 			rx_data[rx_pos++] = (received_data >> 8);
 		}
 	}
-	// TODO: SLAVE WAIT FOR TXC?
+
 	return STATUS_OK;
 }
 
@@ -703,6 +708,11 @@ enum status_code spi_write_buffer_wait(
 		return STATUS_ERR_INVALID_ARG;
 	}
 
+	if ((module->mode == SPI_MODE_SLAVE) && (spi_is_write_complete(module))) {
+		/* Clear TX complete flag */
+		_spi_clear_tx_complete_flag(module);
+	}
+
 	uint16_t tx_pos = 0;
 
 	/* Write block */
@@ -776,7 +786,7 @@ enum status_code spi_write_buffer_wait(
 		while (!spi_is_write_complete(module)) {
 		}
 	}
-	//TODO: SLAVE WAIT OFR TXC?
+
 	return STATUS_OK;
 }
 
@@ -829,6 +839,11 @@ enum status_code spi_transceive_buffer_wait(
 	
 	if (!(module->receiver_enabled)) {
 		return STATUS_ERR_DENIED;
+	}
+
+	if ((module->mode == SPI_MODE_SLAVE) && (spi_is_write_complete(module))) {
+		/* Clear TX complete flag */
+		_spi_clear_tx_complete_flag(module);
 	}
 
 	uint16_t tx_pos = 0;
@@ -917,6 +932,6 @@ enum status_code spi_transceive_buffer_wait(
 		while (!spi_is_write_complete(module)) {
 		}
 	}
-	//TODO: SLAVE: Wait for TXC?
+
 	return STATUS_OK;
 }

@@ -86,6 +86,8 @@ static void _spi_transceive_buffer(
 			SPI_INTERRUPT_FLAG_RX_COMPLETE);
 			
 	if (module->mode == SPI_MODE_SLAVE) {
+		/* Clear TXC flag if set */
+		hw->INTFLAG.reg = SPI_INTERRUPT_FLAG_TX_COMPLETE;
 		/* Enable transmit complete interrupt for slave */
 		hw->INTENSET.reg = SPI_INTERRUPT_FLAG_TX_COMPLETE;
 	}
@@ -121,6 +123,8 @@ static void _spi_write_buffer(
 	SercomSpi *const hw = &(module->hw->SPI);
 
 	if (module->mode == SPI_MODE_SLAVE) {
+		/* Clear TXC flag if set */
+		hw->INTFLAG.reg = SPI_INTERRUPT_FLAG_TX_COMPLETE;
 		/* Enable transmit complete interrupt for slave */
 		hw->INTENSET.reg = SPI_INTERRUPT_FLAG_TX_COMPLETE;
 	}
@@ -167,7 +171,6 @@ static void _spi_read_buffer(
 	/* Get a pointer to the hardware module instance */
 	SercomSpi *const hw = &(module->hw->SPI);
 
-	
 	/* Enable the RX Complete Interrupt */
 	tmp_intenset = SPI_INTERRUPT_FLAG_RX_COMPLETE;
 
@@ -176,6 +179,8 @@ static void _spi_read_buffer(
 		tmp_intenset |= SPI_INTERRUPT_FLAG_DATA_REGISTER_EMPTY;
 	}
 	if (module->mode == SPI_MODE_SLAVE) {
+		/* Clear TXC flag if set */
+		hw->INTFLAG.reg = SPI_INTERRUPT_FLAG_TX_COMPLETE;
 		/* Enable transmit complete interrupt for slave */
 		tmp_intenset |= SPI_INTERRUPT_FLAG_TX_COMPLETE;
 	}
