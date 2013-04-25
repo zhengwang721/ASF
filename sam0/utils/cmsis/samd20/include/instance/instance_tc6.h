@@ -61,6 +61,7 @@
 #define REG_TC6_COUNT16_COUNT      (0x42003810U) /**< \brief (TC6) COUNT16 Count Register */
 #define REG_TC6_COUNT32_COUNT      (0x42003810U) /**< \brief (TC6) COUNT32 Count Register */
 #define REG_TC6_COUNT8_PER         (0x42003814U) /**< \brief (TC6) COUNT8 Period Register */
+#define REG_TC6_COUNT32_PER        (0x42003814U) /**< \brief (TC6) COUNT32 Period Register */
 #define REG_TC6_COUNT8_CC0         (0x42003818U) /**< \brief (TC6) COUNT8 Compare and Capture Register 0 */
 #define REG_TC6_COUNT8_CC1         (0x42003819U) /**< \brief (TC6) COUNT8 Compare and Capture Register 1 */
 #define REG_TC6_COUNT16_CC0        (0x42003818U) /**< \brief (TC6) COUNT16 Compare and Capture Register 0 */
@@ -83,6 +84,7 @@
 #define REG_TC6_COUNT16_COUNT      (*(RwReg16*)0x42003810U) /**< \brief (TC6) COUNT16 Count Register */
 #define REG_TC6_COUNT32_COUNT      (*(RwReg  *)0x42003810U) /**< \brief (TC6) COUNT32 Count Register */
 #define REG_TC6_COUNT8_PER         (*(RwReg8 *)0x42003814U) /**< \brief (TC6) COUNT8 Period Register */
+#define REG_TC6_COUNT32_PER        (*(RwReg  *)0x42003814U) /**< \brief (TC6) COUNT32 Period Register */
 #define REG_TC6_COUNT8_CC0         (*(RwReg8 *)0x42003818U) /**< \brief (TC6) COUNT8 Compare and Capture Register 0 */
 #define REG_TC6_COUNT8_CC1         (*(RwReg8 *)0x42003819U) /**< \brief (TC6) COUNT8 Compare and Capture Register 1 */
 #define REG_TC6_COUNT16_CC0        (*(RwReg16*)0x42003818U) /**< \brief (TC6) COUNT16 Compare and Capture Register 0 */
@@ -95,7 +97,10 @@
 #define TC6_CC8_NUM                 2
 #define TC6_CC16_NUM                2
 #define TC6_CC32_NUM                2
+#define TC6_DITHERING_EXT           0
 #define TC6_GCLK_ID                 22
 #define TC6_OW_NUM                  2
+#define TC6_PERIOD_EXT              0
+#define TC6_SHADOW_EXT              0
 
 #endif /* _SAMD20_TC6_INSTANCE_ */

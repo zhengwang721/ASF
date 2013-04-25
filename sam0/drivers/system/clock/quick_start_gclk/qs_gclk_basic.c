@@ -82,7 +82,6 @@ void configure_gclock_channel(void)
 
 //! [setup_8]
 	gclk_chan_conf.source_generator = EXAMPLE_GCLOCK_GENERATOR;
-	gclk_chan_conf.run_in_standby   = false;
 //! [setup_8]
 //! [setup_9]
 	system_gclk_chan_set_config(EXAMPLE_GCLOCK_CHANNEL, &gclk_chan_conf);

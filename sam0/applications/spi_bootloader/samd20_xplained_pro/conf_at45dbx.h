@@ -47,10 +47,8 @@
 
 #include "board.h"
 
-//_____ D E F I N I T I O N S ______________________________________________
-
-//! SERCOM module to be used
-#define AT45DBX_SPI                 SERCOM2
+//! Select the SPI module AT45DBX is connected to
+#define AT45DBX_SPI                 EXT2_SPI_MODULE
 
 //! Size of AT45DBX data flash memories to manage.
 #define AT45DBX_MEM_SIZE            AT45DBX_500KB
@@ -59,12 +57,12 @@
 #define AT45DBX_MEM_CNT             1
 
 #define AT45DBX_SPI_PINMUX_SETTING  SPI_SIGNAL_MUX_SETTING_E
-#define AT45DBX_SPI_PINMUX_PAD0     PINMUX_PA14B_SERCOM2_PAD0
-#define AT45DBX_SPI_PINMUX_PAD1     PINMUX_PA15B_SERCOM2_PAD1
-#define AT45DBX_SPI_PINMUX_PAD2     PINMUX_PA12B_SERCOM2_PAD2
-#define AT45DBX_SPI_PINMUX_PAD3     PINMUX_PA13B_SERCOM2_PAD3
+#define AT45DBX_SPI_PINMUX_PAD0     EXT2_SPI_MISO_PINMUX
+#define AT45DBX_SPI_PINMUX_PAD1     EXT2_SPI_SS_PINMUX
+#define AT45DBX_SPI_PINMUX_PAD2     EXT2_SPI_MOSI_PINMUX
+#define AT45DBX_SPI_PINMUX_PAD3     EXT2_SPI_SCK_PINMUX
 
-#define AT45DBX_CS                  PIN_PA17
+#define AT45DBX_CS                  EXT2_PIN_15
 
 //! SPI master speed in Hz.
 #define AT45DBX_CLOCK_SPEED         9600

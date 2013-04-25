@@ -87,15 +87,18 @@
  * the channel, as well as the synchronization path and edge detection mode.
  * The fixed-function Event Users, connected to peripherals within the device,
  * can then subscribe to an Event Channel in a one-to-many relationship in order
- * to receive events as they are generated.
+ * to receive events as they are generated. An overview of the event system
+ * chain is shown in
+ * \ref asfdoc_samd20_events_module_overview_fig "the figure below".
  *
+ * \anchor asfdoc_samd20_events_module_overview_fig
  * \dot
  * digraph overview {
  *   rankdir=LR;
  *   node [label="Source\nPeripheral" shape=ellipse style=filled fillcolor=lightgray] src_peripheral;
- *   node [label="Event\nChannel a" shape=square] event_gen0;
- *   node [label="Event\nUser x" shape=square] event_user0;
- *   node [label="Event\nUser y" shape=square] event_user1;
+ *   node [label="Event\nChannel a" shape=square style=""] event_gen0;
+ *   node [label="Event\nUser x" shape=square style=""] event_user0;
+ *   node [label="Event\nUser y" shape=square style=""] event_user1;
  *   node [label="Destination\nPeripheral" shape=ellipse style=filled fillcolor=lightgray] dst_peripheral0;
  *   node [label="Destination\nPeripheral" shape=ellipse style=filled fillcolor=lightgray] dst_peripheral1;
  *
@@ -150,8 +153,10 @@
  * peripherals share the same \ref asfdoc_samd20_system_clock_group "Generic Clock"
  * channel. In this mode the event is propagated between the source and
  * destination directly to reduce the event latency, thus no edge detection is
- * possible.
+ * possible. The asynchronous event chain is shown in
+ * \ref asfdoc_samd20_events_module_async_path_fig "the figure below".
  *
+ * \anchor asfdoc_samd20_events_module_async_path_fig
  * \dot
  * digraph overview {
  *   rankdir=LR;
@@ -172,8 +177,10 @@
  * different generic clock channels. This case introduces additional latency in
  * the event propagation due to the addition of a synchronizer and edge detector
  * on the input event signal, however this allows modules of different clocks to
- * communicate events to one-another.
+ * communicate events to one-another. The synchronous event chain is shown in
+ * \ref asfdoc_samd20_events_module_sync_path_fig "the figure below".
  *
+ * \anchor asfdoc_samd20_events_module_sync_path_fig
  * \dot
  * digraph overview {
  *   rankdir=LR;
@@ -194,7 +201,10 @@
  * module itself, but the event generator does not. This reduces latency by
  * performing the synchronization across the event source and event user clock
  * domains once within the event channel itself, rather than in each event user.
+ * The re-synchronous event chain is shown in
+ * \ref asfdoc_samd20_events_module_resync_path_fig "the figure below".
  *
+ * \anchor asfdoc_samd20_events_module_resync_path_fig
  * \dot
  * digraph overview {
  *   rankdir=LR;
@@ -211,8 +221,10 @@
  *
  * \subsection asfdoc_samd20_events_module_overview_physical Physical Connection
  *
- * The following diagram shows how this module is interconnected within the device:
+ * \ref asfdoc_samd20_events_module_int_connections_fig "The diagram below"
+ * shows how this module is interconnected within the device.
  *
+ * \anchor asfdoc_samd20_events_module_int_connections_fig
  * \dot
  * digraph overview {
  *   rankdir=LR;
@@ -346,8 +358,6 @@ struct events_chan_config {
 	uint8_t generator_id;
 	/** GCLK generator used to clock the specific event channel */
 	enum gclk_generator clock_source;
-	/** Keep GLCK running in standby */
-	bool run_in_standby;
 };
 
 /**
@@ -428,7 +438,6 @@ static inline void events_chan_get_config_defaults(
 	config->path           = EVENT_PATH_SYNCHRONOUS;
 	config->generator_id   = 0;
 	config->clock_source   = GCLK_GENERATOR_0;
-	config->run_in_standby = false;
 }
 
 void events_chan_set_config(
@@ -549,7 +558,7 @@ static inline bool events_user_is_ready(
 
 	/* Determine if the specified channel users(s) are currently ready */
 	if (channel_status_ptr[status_halfword] &
-			(EVSYS_CHSTATUS_USRREADY0_Pos << status_bitindex)) {
+			(EVSYS_CHSTATUS_USRRDY0_Pos << status_bitindex)) {
 		return true;
 	}
 

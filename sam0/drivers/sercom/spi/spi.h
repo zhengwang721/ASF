@@ -89,9 +89,10 @@
  * synchronize to the slave by pulling the SS line high.
  *
  * \subsection asfdoc_samd20_sercom_spi_bus SPI Bus Connection
- * In the figure below, the connection between one master and one slave is
- * shown.
+ * In \ref asfdoc_samd20_spi_connection_example "the figure below", the
+ * connection between one master and one slave is shown.
  *
+ * \anchor asfdoc_samd20_spi_connection_example
  * \dot
  * digraph spi_slaves_par {
  *   subgraph cluster_spi_master {
@@ -190,12 +191,14 @@
  *
  * \subsection asfdoc_samd20_sercom_spi_data_modes Data Modes
  * There are four combinations of SCK phase and polarity with respect to
- * serial data. The table below shows the clock polarity (CPOL) and
- * clock phase (CPHA) in the different modes.
- * Leading edge is the first clock edge in a clock cycle and trailing edge is
- * the last clock edge in a clock cycle.
+ * serial data. \ref asfdoc_samd20_spi_mode_table "The table below" shows the
+ * clock polarity (CPOL) and clock phase (CPHA) in the different modes.
+ * <i>Leading edge</i> is the first clock edge in a clock cycle and
+ * <i>trailing edge</i> is the last clock edge in a clock cycle.
  *
+ * \anchor asfdoc_samd20_spi_mode_table
  * <table>
+ *   <caption>SPI Data Modes</caption>
  *   <tr>
  *      <th>Mode</th>
  *      <th>CPOL</th>
@@ -235,14 +238,17 @@
  *
  *
  * \subsection asfdoc_samd20_sercom_spi_pads SERCOM Pads
- * The SERCOM pads are automatically configured as seen in the table below.
- * If the receiver is disabled, the data input (MISO for master, MOSI for
- * slave) can be used for other purposes.
+ * The SERCOM pads are automatically configured as seen in
+ * \ref asfdoc_samd20_spi_sercom_pad_table "the table below". If the receiver
+ * is disabled, the data input (MISO for master, MOSI for slave) can be used
+ * for other purposes.
  *
  * In master mode, the SS pin(s) must be configured using the \ref spi_slave_inst
  * struct.
  *
+ * \anchor asfdoc_samd20_spi_sercom_pad_table
  * <table>
+ *   <caption>SERCOM SPI Pad Usages</caption>
  *   <tr>
  *      <th> Pin </th>
  *      <th> Master SPI </th>
@@ -394,14 +400,14 @@ enum spi_interrupt_flag {
 	 * This flag is set when the contents of the data register has been moved
 	 * to the shift register and the data register is ready for new data
 	 */
-	SPI_INTERRUPT_FLAG_DATA_REGISTER_EMPTY = SERCOM_SPI_INTFLAG_DREIF,
+	SPI_INTERRUPT_FLAG_DATA_REGISTER_EMPTY = SERCOM_SPI_INTFLAG_DRE,
 	/**
 	 * This flag is set when the contents of the shift register has been
 	 * shifted out
 	 */
-	SPI_INTERRUPT_FLAG_TX_COMPLETE       = SERCOM_SPI_INTFLAG_TXCIF,
+	SPI_INTERRUPT_FLAG_TX_COMPLETE         = SERCOM_SPI_INTFLAG_TXC,
 	/** This flag is set when data has been shifted into the data register */
-	SPI_INTERRUPT_FLAG_RX_COMPLETE       = SERCOM_SPI_INTFLAG_RXCIF,
+	SPI_INTERRUPT_FLAG_RX_COMPLETE         = SERCOM_SPI_INTFLAG_RXC,
 };
 
 /**
@@ -499,19 +505,19 @@ enum spi_signal_mux_setting {
  */
 enum spi_addr_mode {
 	/**
-	 * addrmask in the \ref spi_config struct is used as a mask to the register.
+	 * \c address_mask in the \ref spi_config struct is used as a mask to the register.
 	 */
-	SPI_ADDR_MODE_MASK   = SERCOM_SPI_CTRLB_AMODE(0),
+	SPI_ADDR_MODE_MASK      = SERCOM_SPI_CTRLB_AMODE(0),
 	/**
-	 * The slave responds to the two unique addresses in addr and addrmask in
-	 * the \ref spi_config struct.
+	 * The slave responds to the two unique addresses in \c address and
+	 * \c address_mask in the \ref spi_config struct.
 	 */
-	SPI_ADDR_MODE_UNIQUE = SERCOM_SPI_CTRLB_AMODE(1),
+	SPI_ADDR_MODE_UNIQUE    = SERCOM_SPI_CTRLB_AMODE(1),
 	/**
-	 * The slave responds to the range of addresses between and including addr
-	 * and addrmask in the \ref spi_config struct. addr is the upper limit.
+	 * The slave responds to the range of addresses between and including \c address
+	 * and \c address_mask in in the \ref spi_config struct.
 	 */
-	SPI_ADDR_MODE_RANGE  = SERCOM_SPI_CTRLB_AMODE(2),
+	SPI_ADDR_MODE_RANGE     = SERCOM_SPI_CTRLB_AMODE(2),
 };
 
 /**
@@ -519,9 +525,9 @@ enum spi_addr_mode {
  */
 enum spi_mode {
 	/** Master mode */
-	SPI_MODE_MASTER = SERCOM_SPI_CTRLA_MASTER,
+	SPI_MODE_MASTER         = 1,
 	/** Slave mode */
-	SPI_MODE_SLAVE = 0,
+	SPI_MODE_SLAVE          = 0,
 };
 
 /**
@@ -529,9 +535,9 @@ enum spi_mode {
  */
 enum spi_data_order {
 	/** The LSB of the data is transmitted first */
-	SPI_DATA_ORDER_LSB = SERCOM_SPI_CTRLA_DORD,
+	SPI_DATA_ORDER_LSB      = SERCOM_SPI_CTRLA_DORD,
 	/** The MSB of the data is transmitted first */
-	SPI_DATA_ORDER_MSB = 0,
+	SPI_DATA_ORDER_MSB      = 0,
 };
 
 /**
@@ -539,9 +545,9 @@ enum spi_data_order {
  */
 enum spi_character_size {
 	/** 8 bit character */
-	SPI_CHARACTER_SIZE_8BIT = 0,
+	SPI_CHARACTER_SIZE_8BIT = SERCOM_SPI_CTRLB_CHSIZE(0),
 	/** 9 bit character */
-	SPI_CHARACTER_SIZE_9BIT = SERCOM_SPI_CTRLB_CHSIZE,
+	SPI_CHARACTER_SIZE_9BIT = SERCOM_SPI_CTRLB_CHSIZE(1),
 };
 
 #if SPI_CALLBACK_MODE == true
@@ -958,7 +964,7 @@ static inline bool spi_is_write_complete(
 	SercomSpi *const spi_module = &(module->hw->SPI);
 
 	/* Check interrupt flag */
-	return (spi_module->INTFLAG.reg & SERCOM_SPI_INTFLAG_TXCIF);
+	return (spi_module->INTFLAG.reg & SERCOM_SPI_INTFLAG_TXC);
 }
 
  /**
@@ -982,7 +988,7 @@ static inline bool spi_is_ready_to_write(
 	SercomSpi *const spi_module = &(module->hw->SPI);
 
 	/* Check interrupt flag */
-	return (spi_module->INTFLAG.reg & SERCOM_SPI_INTFLAG_DREIF);
+	return (spi_module->INTFLAG.reg & SERCOM_SPI_INTFLAG_DRE);
 }
 
 /**
@@ -1006,7 +1012,7 @@ static inline bool spi_is_ready_to_read(
 	SercomSpi *const spi_module = &(module->hw->SPI);
 
 	/* Check interrupt flag */
-	return (spi_module->INTFLAG.reg & SERCOM_SPI_INTFLAG_RXCIF);
+	return (spi_module->INTFLAG.reg & SERCOM_SPI_INTFLAG_RXC);
 }
 /** @} */
 

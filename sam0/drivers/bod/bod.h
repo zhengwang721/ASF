@@ -152,6 +152,8 @@ struct bod_config {
 	uint8_t level; /* TODO: document this more */
 	/** If \c true, enables detection hysteresis. */
 	bool hysteresis;
+	/** If \c true, the BOD is kept enabled and sampled during device sleep. */
+	bool run_in_standby;
 };
 
 
@@ -168,6 +170,7 @@ struct bod_config {
  * - Reset on BOD detect
  * - Hysteresis enabled
  * - BOD level 0x12
+ * - BOD kept enabled during device sleep
  *
  * \param[out] conf BOD configuration struct to set to default settings
  */
@@ -177,10 +180,11 @@ static inline void bod_get_config_defaults(
 	/* Sanity check arguments */
 	Assert(conf);
 
-	conf->mode       = BOD_MODE_CONTINIOUS;
-	conf->action     = BOD_ACTION_RESET;
-	conf->level      = 0x12; /* TODO: Need to revisit this level */
-	conf->hysteresis = true;
+	conf->mode           = BOD_MODE_CONTINIOUS;
+	conf->action         = BOD_ACTION_RESET;
+	conf->level          = 0x12; /* TODO: Need to revisit this level */
+	conf->hysteresis     = true;
+	conf->run_in_standby = true;
 }
 
 enum status_code bod_set_config(

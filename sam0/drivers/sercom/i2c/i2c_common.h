@@ -111,119 +111,14 @@ extern "C" {
  * slave devices by responding to more than one address.
  *
  * \subsection asfdoc_samd20_i2c_bus_topology Bus Topology
- * The I<SUP>2</SUP>C bus topology is illustrated in the figure below. The pullup
+ * The I<SUP>2</SUP>C bus topology is illustrated in
+ * \ref asfdoc_samd20_i2c_bus_topology_figure "the figure below". The pullup
  * resistors (Rs) will provide a high level on the bus lines when none of the
- * I<SUP>2</SUP>C devices are driving the bus. These are optional, and can be replaced
- * with a constant current source.
- * \dot
- * digraph bus_topology{
+ * I<SUP>2</SUP>C devices are driving the bus. These are optional, and can be
+ * replaced with a constant current source.
  *
- * splines = false;
- *
- * vcc [label="VCC", shape=none];
- * vcc_end [label="", style=invisible];
- * sda [label="SDA", shape=none];
- * sda_end [label="", style=invisible];
- * scl [label="SCL", shape=none];
- * scl_end [label="", style=invisible];
- *
- * res1 [label="Rp", shape=box, height=1, width=0.1];
- * res2 [label="Rp", shape=box, height=1, width=0.1];
- * res1dev1 [label="Rs", shape=box, style=dotted, height=1, width=0.1];
- * res2dev1 [label="Rs", shape=box, style=dotted, height=1, width=0.1];
- * res1dev2 [label="Rs", shape=box, style=dotted, height=1, width=0.1];
- * res2dev2 [label="Rs", shape=box, style=dotted, height=1, width=0.1];
- * res1devn [label="Rs", shape=box, style=dotted, height=1, width=0.1];
- * res2devn [label="Rs", shape=box, style=dotted, height=1, width=0.1];
- *
- * i2c1 [label="I2C DEVICE 1", shape=box, height=1.5];
- * i2c2 [label="I2C DEVICE 2", shape=box, height=1.5];
- * i2cn [label="I2C DEVICE N", shape=box, height=1.5];
- * dev_invis [label="", style=invisible];
- * dev_invis_end [label="", style="invis"];
- *
- * vcc_res1 [label="", style="invis", height=0];
- * vcc_res2 [label="", style="invis", height=0];
- * vcc_dev1 [label="", style="invis", height=0];
- * vcc_dev2 [label="", style="invis", height=0];
- * vcc_devn [label="", style="invis", height=0];
- *
- * scl_res1 [label="", style="invis", height=0];
- * sda_res2 [label="", style="invis", height=0];
- * scl_res1dev1 [label="", style="invis", height=0];
- * sda_res2dev1 [label="", style="invis", height=0];
- * scl_res1dev2 [label="", style="invis", height=0];
- * sda_res2dev2 [label="", style="invis", height=0];
- * scl_res1devn [label="", style="invis", height=0];
- * sda_res2devn [label="", style="invis", height=0];
- * vcc_devn [label="", style="invis", height=0];
- *
- * {rank=same; dev_invis res1 res2 i2c1 i2c2 i2cn dev_invis_end}
- * {rank=same; res1dev1 res2dev1 res1dev2 res2dev2 res1devn res2devn}
- * {rank=same; vcc vcc_res1 vcc_res2 vcc_dev1 vcc_dev2 vcc_devn vcc_end}
- * {rank=same; sda sda_res2 sda_res2dev1 sda_res2dev2 sda_res2devn sda_end}
- * {rank=same; scl scl_res1 scl_res1dev1 scl_res1dev2 scl_res1devn scl_end}
- *
- * edge [dir=none];
- * vcc->vcc_res1:e;
- * vcc_res1->vcc_res2:e [constraint=true];
- * vcc_res1->res1 [constraint=true];
- * vcc_res2->vcc_dev1:e [constraint=true];
- * vcc_res2->res2 [constraint=true];
- * vcc_dev1->vcc_dev2:e [constraint=true];
- * vcc_dev2->vcc_devn:e [constraint=true];
- * vcc_dev2->i2c2 [constraint=true];
- * vcc_devn->vcc_end [constraint=true];
- * vcc_devn:c->i2cn [constraint=true];
- * vcc_dev1:c->i2c1 [constraint=true];
- *
- * vcc_end->sda_end [constraint=true, style="invis"];
- *
- * vcc->dev_invis [constraint=true, style="invis"];
- * dev_invis->sda [constraint=true, style="invis"];
- *
- * sda->sda_res2:e;
- * sda_res2->sda_res2dev1:e;
- * sda_res2dev1->sda_res2dev2:e;
- * sda_res2dev2->sda_res2devn:e;
- * sda_res2devn->sda_end;
- *
- * sda->scl [constraint=true, style="invis"];
- * scl->scl_res1:e;
- * scl_res1->scl_res1dev1:e;
- * scl_res1dev1->scl_res1dev2:e;
- * scl_res1dev2->scl_res1devn:e;
- * scl_res1devn->scl_end;
- *
- * res1->res2 [constraint=true, style="invis"];
- * res2->i2c1 [constraint=true, style="invis"];
- * i2c1->i2c2 [constraint=true, style="invis"];
- * i2c2->i2cn [constraint=true, style="dotted"];
- *
- * res1->scl_res1;
- * res2->sda_res2;
- *
- * i2c1->res1dev1;
- * i2c1->res2dev1;
- * res1dev1->scl_res1dev1;
- * res2dev1->sda_res2dev1;
- *
- * i2c2->res1dev2;
- * i2c2->res2dev2;
- * res1dev2->scl_res1dev2;
- * res2dev2->sda_res2dev2;
- *
- * i2cn->res1devn;
- * i2cn->res2devn;
- * res1devn->scl_res1devn;
- * res2devn->sda_res2devn;
- *
- * i2cn->dev_invis_end [constraint=true, style="invis"];
- * vcc_end->dev_invis_end [constraint=true, style="invis"];
- * dev_invis_end->sda_end [constraint=true, style="invis"];
- * sda_end->scl_end [constraint=true, style="invis"];
- * }
- * \enddot
+ * \anchor asfdoc_samd20_i2c_bus_topology_figure
+ * \image html bus_topology.svg "I2C bus topology" width=100%
  *
  * \subsection asfdoc_samd20_i2c_transactions Transactions
  * The I<SUP>2</SUP>C standard defines three fundamental transaction formats:
@@ -266,23 +161,28 @@ extern "C" {
  * \subsubsection asfdoc_samd20_i2c_trans_examples Transaction Examples
  * The gray bits in the following examples are sent from master to slave, and
  * the white bits are sent from slave to master.
- * Example of a read transaction is shown below. Here, the master first issues
- * a \b Start condition and gets ownership of the bus. An address packet with
- * the direction flag set to read is then sent and acknowledged by the slave.
- * Then the slave sends one data packet which is acknowledged by the master.
- * The slave sends another packet, which is not acknowledged by the master
- * and indicates that the master will terminate the transaction. In the end,
- * the transaction is terminated by the master issuing a \b Stop condition.
+ * Example of a read transaction is shown in
+ * \ref asfdoc_samd20_i2c_trans_examples_i2c_read "the figure below". Here, the
+ * master first issues a \b Start condition and gets ownership of the bus. An
+ * address packet with the direction flag set to read is then sent and
+ * acknowledged by the slave. Then the slave sends one data packet which is
+ * acknowledged by the master. The slave sends another packet, which is not
+ * acknowledged by the master and indicates that the master will terminate the
+ * transaction. In the end, the transaction is terminated by the master issuing
+ * a \b Stop condition.
  *
+ * \anchor asfdoc_samd20_i2c_trans_examples_i2c_read
  * \image html i2c_read.svg "I2C Packet Read" width=100%
  *
- * Example of a write transaction is shown below. Here, the master first issues
- * a \b Start condition and gets ownership of the bus. An address packet with
- * the dir flag set to write is then sent and acknowledged by the slave. Then
- * the master sends two data packets, each acknowledged by the slave. In the
- * end, the transaction is terminated by the master issuing a \b Stop
- * condition.
+ * Example of a write transaction is shown in
+ * \ref asfdoc_samd20_i2c_trans_examples_i2c_write "the figure below". Here, the
+ * master first issues a \b Start condition and gets ownership of the bus. An
+ * address packet with the dir flag set to write is then sent and acknowledged
+ * by the slave. Then the master sends two data packets, each acknowledged by
+ * the slave. In the end, the transaction is terminated by the master issuing
+ * a \b Stop condition.
  *
+ * \anchor asfdoc_samd20_i2c_trans_examples_i2c_write
  * \image html i2c_write.svg "I2C Packet Write" width=100%
  *
  * \subsubsection asfdoc_samd20_i2c_packet_timeout Packet Timeout
@@ -352,31 +252,13 @@ extern "C" {
  * \ref asfdoc_samd20_i2c_unknown_bus_timeout "timeout" when
  * the master module is enabled.
  *
- * The bus state diagram can be seen below.
+ * The bus state diagram can be seen in
+ * \ref asfdoc_samd20_i2c_bus_states_figure "the figure below".
  * \li S: Start condition
  * \li P: Stop condition
  * \li Sr: Repeated start condition
- * \dot
- * digraph bus_states{
- *   reset [label="", style=invisible];
- *   unknown [label="UNKNOWN", shape=circle, height=1.5];
- *   idle [label="IDLE", shape=circle, height=1.5];
- *   owner [label="OWNER", shape=circle, height=1.5];
- *   busy [label="BUSY", shape=circle, height=1.5];
- *
- *  {rank=same; idle busy}
- *
- *   reset->unknown [label="RESET"];
- *   unknown->idle [label="P + Timeout"];
- *   idle->owner [label="Write ADDR \n(S)"];
- *   idle->busy [label="S"];
- *   owner->owner [label="Write ADDR (Sr)"];
- *   owner->idle [label="Command P"];
- *   owner->busy [label="Arbitration \nLost"];
- *   busy->busy [label="Sr"];
- *   busy->idle [label="P + Timeout"];
- * }
- * \enddot
+ * \anchor asfdoc_samd20_i2c_bus_states_figure
+ * \image html bus_state_diagram.svg "I2C bus state diagram" width=100%
  *
  * \subsection asfdoc_samd20_i2c_timeout Bus Timing
  * Inactive bus timeout for the master and SDA hold time is configurable in the
@@ -404,9 +286,12 @@ extern "C" {
  * The I<SUP>2</SUP>C module can operate in all sleep modes by setting
  * the run_in_standby boolean in the \ref i2c_master_config or
  * \ref i2c_slave_config struct.
- * The operation in slave and master mode is shown in the table below.
+ * The operation in slave and master mode is shown in
+ * \ref asfdoc_samd20_i2c_sleep_modes_table "the table below".
  *
+ * \anchor asfdoc_samd20_i2c_sleep_modes_table
  * <table>
+ *   <caption>I2C standby operations</caption>
  *   <tr>
  *      <th>Run in standby</th>
  *      <th>Slave</th>
@@ -478,10 +363,12 @@ struct i2c_packet {
  * \page asfdoc_samd20_i2c_extra_info_page  Extra Information for SERCOM I2C Driver
  *
  * \section asfdoc_samd20_i2c_acronyms Acronyms
- * Below is a table listing the acronyms used in this module, along with their
- * intended meanings.
+ * \ref asfdoc_samd20_i2c_acronyms_table "Below" is a table listing the acronyms
+ * used in this module, along with their intended meanings.
  *
+ * \anchor asfdoc_samd20_i2c_acronyms_table
  * <table>
+ *  <caption>Acronyms</caption>
  *	<tr>
  *		<th>Acronym</th>
  *		<th>Description</th>
@@ -501,7 +388,7 @@ struct i2c_packet {
  * \li \ref asfdoc_samd20_system_pinmux_group "System Pin Multiplexer Driver"
  *
  *
- * \section asfdoc_samd20_i2c_extra_workarounds Workarounds implemented by driver
+ * \section asfdoc_samd20_i2c_extra_workarounds Workarounds Implemented by Driver
  * \if I2C_MASTER_MODE
  * Master:
  * - A bug in hardware makes the master go straight from IDLE to BUSY bus state.
@@ -523,11 +410,15 @@ struct i2c_packet {
  *
  *
  * \section asfdoc_samd20_i2c_extra_history Module History
- * Below is an overview of the module history, detailing enhancements and fixes
- * made to the module since its first release. The current version of this
- * corresponds to the newest version listed in the table below.
+ * \ref asfdoc_samd20_i2c_extra_history_table "Below" is an overview of the
+ * module history, detailing enhancements and fixes made to the module since
+ * its first release. The current version of this corresponds to the newest
+ * version listed in
+ * \ref asfdoc_samd20_i2c_extra_history_table "the table below".
  *
+ * \anchor asfdoc_samd20_i2c_extra_history_table
  * <table>
+ *  <caption>Module History</caption>
  *	<tr>
  *		<th>Changelog</th>
  *	</tr>

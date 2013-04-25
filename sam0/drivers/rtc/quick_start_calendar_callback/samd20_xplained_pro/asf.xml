@@ -1,5 +1,6 @@
 <asf xmlversion="1.0">
 	<project caption="Quick Start for the SAM D20 RTC Counter Driver (Callback)" id="sam0.drivers.rtc.quick_start_calendar_interrupt.samd20_xplained_pro">
+		<info type="gui-flag" value="move-to-root"/>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_clocks.h"/>
 		<build type="header-file" value="conf_board.h"/>
@@ -8,7 +9,7 @@
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>
-		<device-support value="atsamd20j18a"/>
+		<device-support value="atsamd20j18"/>
 		<config name="config.sam0.drivers.rtc" value="calendar_callback"/>
 	</project>
 </asf>

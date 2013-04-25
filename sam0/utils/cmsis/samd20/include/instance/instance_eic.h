@@ -73,7 +73,7 @@
 
 /* ========== Instance parameters for EIC peripheral ========== */
 #define EIC_GCLK_ID                 3
-#define EIC_NUMBER_OF_CONFIG_REGS   4 /* TODO: Manually updated to match datasheet */
+#define EIC_NUMBER_OF_CONFIG_REGS   2
 #define EIC_NUMBER_OF_INTERRUPTS    16
 
 #define EIC_NMI_NO_DETECT_ALLOWED   0 /* TODO: Manually added */

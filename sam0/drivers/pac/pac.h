@@ -101,8 +101,10 @@
  * security.
  *
  * \subsection asfdoc_samd20_pac_correct_implementation Recommended Implementation
- * A recommended implementation of the PAC can be seen in the figure below:
+ * A recommended implementation of the PAC can be seen in
+ * \ref asfdoc_samd20_pac_rec_imp_diagram "the figure below".
  *
+ * \anchor asfdoc_samd20_pac_rec_imp_diagram
  * \dot
  *	digraph correct {
  *		subgraph cluster_a {
@@ -148,8 +150,9 @@
  *       inside an interrupt handler.
  *
  * An example to illustrate the potential hazard of not disabling interrupts is
- * given below.
+ * shown in \ref asfdoc_samd20_pac_int_hazard_diagram "the diagram below".
  *
+ * \anchor asfdoc_samd20_pac_int_hazard_diagram
  * \dot
  *	digraph enabled_interrupt {
  *		subgraph cluster_0{
@@ -187,8 +190,11 @@
  * implementation of the PAC, the code run-away can potentially be stopped.
  *
  * A graphical example showing how a PAC implementation will behave for
- * different circumstances of code run-away:
+ * different circumstances of code run-away in shown in
+ * \ref asfdoc_samd20_pac_code_runaway_diagram "the first" and
+ * \ref asfdoc_samd20_pac_code_runaway_diagram2 "second figures below".
  *
+ * \anchor asfdoc_samd20_pac_code_runaway_diagram
  * \dot
  *	digraph run_away {
  *	   subgraph cluster_away1{
@@ -314,6 +320,7 @@
  *	}
  * \enddot
  *
+ * \anchor asfdoc_samd20_pac_code_runaway_diagram2
  * \dot
  *	digraph run_away2 {
  *	   subgraph cluster_away3{
@@ -453,7 +460,7 @@
  * rejected before inflicting any damage. The argument is simply set to be
  * the bitwise inverse of the module flag, i.e.
  *
- * \code{.c}
+ * \code
  * system_peripheral_<lock_state>(SYSTEM_PERIPHERAL_<module>,
  * 		~SYSTEM_PERIPHERAL_<module>);
  * \endcode
@@ -474,8 +481,10 @@
  *
  * \subsection asfdoc_samd20_pac_module_overview_physical Physical Connection
  *
- * The following diagram shows how this module is interconnected within the device:
+ * \ref asfdoc_samd20_pac_int_connections "The diagram below" shows how this
+ * module is interconnected within the device.
  *
+ * \anchor asfdoc_samd20_pac_int_connections
  * \dot
  * digraph overview {
  *	nodesep = .05;
@@ -513,9 +522,10 @@
  * Reading the state of the peripheral lock is to be avoided as it greatly
  * compromises the protection initially provided by the PAC. If a lock/unlock
  * is implemented conditionally, there is a risk that eventual errors are not
- * caught in the protection scheme. Examples indicating the issue is provided
- * figuratively below:
+ * caught in the protection scheme. Examples indicating the issue is shown
+ * in \ref asfdoc_samd20_pac_lock_errors_diagram "the diagram below".
  *
+ * \anchor asfdoc_samd20_pac_lock_errors_diagram
  * \dot
  *	digraph read_lock {
  *	   subgraph cluster_read1{

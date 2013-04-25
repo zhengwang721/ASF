@@ -50,7 +50,7 @@
 /** \addtogroup SAMD20_AC Analog Comparators */
 /*@{*/
 
-#define REV_AC                      0x100
+#define REV_AC                      0x110
 
 /* -------- AC_CTRLA : (AC Offset: 0x00) (R/W  8) Control A Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -58,7 +58,7 @@ typedef union {
   struct {
     uint8_t  SWRST:1;          /*!< bit:      0  Software Reset                     */
     uint8_t  ENABLE:1;         /*!< bit:      1  Enable                             */
-    uint8_t  RUNSTDBY:1;       /*!< bit:      2  Run during Standby                 */
+    uint8_t  RUNSTDBY:1;       /*!< bit:      2  Run during Standby [PAIRS]         */
     uint8_t  :5;               /*!< bit:  3.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
@@ -73,7 +73,8 @@ typedef union {
 #define AC_CTRLA_ENABLE_Pos         1            /**< \brief (AC_CTRLA) Enable */
 #define AC_CTRLA_ENABLE             (0x1u << AC_CTRLA_ENABLE_Pos)
 #define AC_CTRLA_RUNSTDBY_Pos       2            /**< \brief (AC_CTRLA) Run during Standby */
-#define AC_CTRLA_RUNSTDBY           (0x1u << AC_CTRLA_RUNSTDBY_Pos)
+#define AC_CTRLA_RUNSTDBY_Msk       (0x1u << AC_CTRLA_RUNSTDBY_Pos)
+#define AC_CTRLA_RUNSTDBY(value)    ((AC_CTRLA_RUNSTDBY_Msk & ((value) << AC_CTRLA_RUNSTDBY_Pos)))
 #define AC_CTRLA_MASK               0x07u        /**< \brief (AC_CTRLA) MASK Register */
 
 /* -------- AC_CTRLB : (AC Offset: 0x01) ( /W  8) Control B Register -------- */

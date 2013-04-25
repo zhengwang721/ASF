@@ -10,7 +10,7 @@
 		<build type="macro-config" subtype="aux-script" value="debug_scripts/iar/dummy_sram.mac" toolchain="iarewarm"/>
 		<require idref="sam0.utils.cmsis.samd20.source.template"/>
 		<require idref="common.boards"/>
-		<build type="define" name="__SAMD20J18A__" value=""/>
-		<device-support value="atsamd20j18a"/>
+		<build type="define" name="__SAMD20J18__" value=""/>
+		<device-support value="atsamd20j18"/>
 	</board>
 </asf>
