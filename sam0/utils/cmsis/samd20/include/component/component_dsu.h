@@ -50,7 +50,7 @@
 /** \addtogroup SAMD20_DSU Device Service Unit */
 /*@{*/
 
-#define REV_DSU                     0x100
+#define REV_DSU                     0x101
 
 /* -------- DSU_CTRL : (DSU Offset: 0x0000) ( /W  8) Control Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -141,25 +141,6 @@ typedef union {
 #define DSU_STATUSB_HPE_Pos         4            /**< \brief (DSU_STATUSB) Hot-Plugging Enable */
 #define DSU_STATUSB_HPE             (0x1u << DSU_STATUSB_HPE_Pos)
 #define DSU_STATUSB_MASK            0x1Fu        /**< \brief (DSU_STATUSB) MASK Register */
-
-/* -------- DSU_STATUSC : (DSU Offset: 0x0003) (R/   8) Status Register C -------- */
-#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
-  struct {
-    uint8_t  STATE:3;          /*!< bit:  0.. 2  State                              */
-    uint8_t  :5;               /*!< bit:  3.. 7  Reserved                           */
-  } bit;                       /*!< Structure used for bit  access                  */
-  uint8_t reg;                 /*!< Type      used for register access              */
-} DSU_STATUSC_Type;
-#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
-
-#define DSU_STATUSC_OFFSET          0x0003       /**< \brief (DSU_STATUSC offset) Status Register C */
-#define DSU_STATUSC_RESETVALUE      0x00         /**< \brief (DSU_STATUSC reset_value) Status Register C */
-
-#define DSU_STATUSC_STATE_Pos       0            /**< \brief (DSU_STATUSC) State */
-#define DSU_STATUSC_STATE_Msk       (0x7u << DSU_STATUSC_STATE_Pos)
-#define DSU_STATUSC_STATE(value)    ((DSU_STATUSC_STATE_Msk & ((value) << DSU_STATUSC_STATE_Pos)))
-#define DSU_STATUSC_MASK            0x07u        /**< \brief (DSU_STATUSC) MASK Register */
 
 /* -------- DSU_ADDR : (DSU Offset: 0x0004) (R/W 32) Address Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -333,7 +314,7 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint32_t PRES:1;           /*!< bit:      0  Entry Present                      */
+    uint32_t EPRES:1;          /*!< bit:      0  Entry Present                      */
     uint32_t FMT:1;            /*!< bit:      1  Format                             */
     uint32_t :10;              /*!< bit:  2..11  Reserved                           */
     uint32_t ADDOFF:20;        /*!< bit: 12..31  Address Offset                     */
@@ -344,8 +325,8 @@ typedef union {
 
 #define DSU_ENTRY_OFFSET            0x1000       /**< \brief (DSU_ENTRY offset) CoreSight ROM Table Entry Register */
 
-#define DSU_ENTRY_PRES_Pos          0            /**< \brief (DSU_ENTRY) Entry Present */
-#define DSU_ENTRY_PRES              (0x1u << DSU_ENTRY_PRES_Pos)
+#define DSU_ENTRY_EPRES_Pos         0            /**< \brief (DSU_ENTRY) Entry Present */
+#define DSU_ENTRY_EPRES             (0x1u << DSU_ENTRY_EPRES_Pos)
 #define DSU_ENTRY_FMT_Pos           1            /**< \brief (DSU_ENTRY) Format */
 #define DSU_ENTRY_FMT               (0x1u << DSU_ENTRY_FMT_Pos)
 #define DSU_ENTRY_ADDOFF_Pos        12           /**< \brief (DSU_ENTRY) Address Offset */
@@ -613,20 +594,20 @@ typedef struct {
   __O  DSU_CTRL_Type             CTRL;        /**< \brief Offset: 0x0000 ( /W  8) Control Register */
   __IO DSU_STATUSA_Type          STATUSA;     /**< \brief Offset: 0x0001 (R/W  8) Status Register A */
   __I  DSU_STATUSB_Type          STATUSB;     /**< \brief Offset: 0x0002 (R/   8) Status Register B */
-  __I  DSU_STATUSC_Type          STATUSC;     /**< \brief Offset: 0x0003 (R/   8) Status Register C */
+       RoReg8                    Reserved1[0x1];
   __IO DSU_ADDR_Type             ADDR;        /**< \brief Offset: 0x0004 (R/W 32) Address Register */
   __IO DSU_LENGTH_Type           LENGTH;      /**< \brief Offset: 0x0008 (R/W 32) Length Register */
   __IO DSU_DATA_Type             DATA;        /**< \brief Offset: 0x000C (R/W 32) Data Register */
   __IO DSU_DCC_Type              DCC[2];      /**< \brief Offset: 0x0010 (R/W 32) Debug Communication Channel Register */
   __I  DSU_DID_Type              DID;         /**< \brief Offset: 0x0018 (R/  32) Device Identification Register */
-       RoReg8                    Reserved1[0xD4];
+       RoReg8                    Reserved2[0xD4];
   __IO DSU_DCFG_Type             DCFG[2];     /**< \brief Offset: 0x00F0 (R/W 32) Device Configuration Register */
   __IO DSU_UPTM_Type             UPTM;        /**< \brief Offset: 0x00F8 (R/W 32) UnProtected Test Mode Register */
   __IO DSU_TESTMODE_Type         TESTMODE;    /**< \brief Offset: 0x00FC (R/W 32) Test Mode Register */
-       RoReg8                    Reserved2[0xF00];
+       RoReg8                    Reserved3[0xF00];
   __I  DSU_ENTRY_Type            ENTRY[2];    /**< \brief Offset: 0x1000 (R/  32) CoreSight ROM Table Entry Register */
   __I  DSU_END_Type              END;         /**< \brief Offset: 0x1008 (R/  32) CoreSight ROM Table End Register */
-       RoReg8                    Reserved3[0xFC0];
+       RoReg8                    Reserved4[0xFC0];
   __I  DSU_MEMTYPE_Type          MEMTYPE;     /**< \brief Offset: 0x1FCC (R/  32) CoreSight ROM Table Memory Type Register */
   __I  DSU_PID4_Type             PID4;        /**< \brief Offset: 0x1FD0 (R/  32) Peripheral Identification Register 4 */
   __I  DSU_PID5_Type             PID5;        /**< \brief Offset: 0x1FD4 (R/  32) Peripheral Identification Register 5 */

@@ -58,11 +58,11 @@ static void configure_pins(void)
 
 	/* Set up the Xplained PRO LED pin to output status info */
 	pin_config.mux_position = SYSTEM_PINMUX_GPIO;
-	pin_config.direction = SYSTEM_PINMUX_PIN_DIR_OUTPUT;
-	pin_config.input_pull = PORT_PIN_PULL_UP;
+	pin_config.direction    = SYSTEM_PINMUX_PIN_DIR_OUTPUT;
+	pin_config.input_pull   = SYSTEM_PINMUX_PIN_PULL_UP;
 	system_pinmux_pin_set_config(LED0_PIN, &pin_config);
 
-	pin_config.direction = SYSTEM_PINMUX_PIN_DIR_INPUT;
+	pin_config.direction    = SYSTEM_PINMUX_PIN_DIR_INPUT;
 	system_pinmux_pin_set_config(SW0_PIN, &pin_config);
 }
 
@@ -175,7 +175,7 @@ int main(void)
 	system_init();
 
 	/* Enable the internal bandgap to use as reference to the DAC */
-	system_vref_enable(SYSTEM_VOLTAGE_REFERENCE_BANDGAP);
+	system_voltage_reference_enable(SYSTEM_VOLTAGE_REFERENCE_BANDGAP);
 
 	configure_tc(&tc_module);
 

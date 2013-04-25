@@ -142,32 +142,46 @@
  *
  * \subsection asfdoc_samd20_eeprom_special_considerations_memlayout Memory Layout
  * Within the EEPROM memory reservation section at the top of the NVM memory
- * space, this emulator will produce the layout shown below when initialized for
+ * space, this emulator will produce the layout as shown in
+ * \ref asfdoc_samd20_eeprom_init_layout "the figure below" when initialized for
  * the first time.
- * \image html "init_layout.svg"
  *
- * Where a single EEPROM page is represented by the following:
- * \image html "page_layout.svg"
+ * \anchor asfdoc_samd20_eeprom_init_layout
+ * \image html init_layout.svg "Intial physical layout of the emulated EEPROM memory"
+ *
+ * Where a single EEPROM page is represented by
+ * \ref asfdoc_samd20_eeprom_page_layout "the following figure".
+ *
+ * \anchor asfdoc_samd20_eeprom_page_layout
+ * \image html page_layout.svg "Internal layout of an emulated EEPROM page"
  *
  * When a EEPROM page needs to be flushed to physical memory, the next free page
  * in the same row will be chosen - this makes recovery simple, as the
  * right-most version of a logical page in a row is considered the most current.
  * With four pages to a physical NVM row, this allows for up to three updates to
- * the same logical page to be made before an erase is needed. The figure below
- * shows the result of the user writing an updated version of logical EEPROM
- * page <tt>N-1</tt> to the physical memory.
- * \image html "nm1_page_write.svg"
+ * the same logical page to be made before an erase is needed.
+ * \ref asfdoc_samd20_eeprom_page_write1 "The figure below" shows the result of
+ * the user writing an updated version of logical EEPROM page <tt>N-1</tt> to
+ * the physical memory.
+ *
+ * \anchor asfdoc_samd20_eeprom_page_write1
+ * \image html nm1_page_write.svg "First write to logical EEPROM page N-1"
  *
  * A second write of the same logical EEPROM page results in the layout shown
- * below.
- * \image html "nm1_page_write2.svg"
+ * in \ref asfdoc_samd20_eeprom_page_write2 "the figure below".
+ *
+ * \anchor asfdoc_samd20_eeprom_page_write2
+ * \image html nm1_page_write2.svg "Second write to logical EEPROM page N-1"
  *
  * A third write of the same logical page requires that the EEPROM emulator
  * erase the row, as it has become full. To this, the contents of the unmodified
  * page in the same row as the page being updated will be copied into the spare
  * row, along with the new version of the page being updated. The old (full)
- * row is then erased, resulting in the layout below.
- * \image html "nm1_page_write3.svg"
+ * row is then erased, resulting in the layout shown in
+ * \ref asfdoc_samd20_eeprom_page_write3 "the figure below".
+ *
+ * \anchor asfdoc_samd20_eeprom_page_write3
+ * \image html nm1_page_write3.svg "Third write to logical EEPROM page N-1"
  *
  *
  * \section asfdoc_samd20_eeprom_special_considerations Special Considerations

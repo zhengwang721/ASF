@@ -168,12 +168,12 @@ static inline void i2c_slave_cancel_job(
  *
  * \param[in,out] module Pointer to software module structure
  *
- * \return                      Status of job
+ * \return                      Status of job.
  * \retval STATUS_OK            No error has occurred
  * \retval STATUS_BUSY          Transfer is in progress
  * \retval STATUS_ERR_IO        A collision, timeout or bus error happened in
  *                              the last transfer
- * \retval STATUS_ERR_TIMEOUT   A timeout occurred.
+ * \retval STATUS_ERR_TIMEOUT   A timeout occurred
  * \retval STATUS_ERR_OVERFLOW  Data from master overflows receive buffer
  */
 static inline enum status_code i2c_slave_get_job_status(

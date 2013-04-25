@@ -4,12 +4,12 @@
 		<require idref="board.samd20_xplained_pro"/>
 		<require idref="sam0.drivers.nvm.unit_test"/>
 		<build type="include-path" value="."/>
-		<build type="header-file" value="config/conf_board.h"/>
-		<build type="header-file" value="config/conf_clocks.h"/>
-		<build type="header-file" value="config/conf_test.h"/>
+		<build type="header-file" value="conf_board.h"/>
+		<build type="header-file" value="conf_clocks.h"/>
+		<build type="header-file" value="conf_test.h"/>
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>
-		<device-support value="atsamd20j18a"/>
+		<device-support value="atsamd20j18"/>
 	</project>
 </asf>

@@ -1,5 +1,6 @@
 <asf xmlversion="1.0">
 	<project caption="Quick Start for the SAM D20 SERCOM SPI Driver (Polled)" id="sam0.drivers.sercom.spi.quick_start.dummy.atsamd20">
+		<info type="gui-flag" value="move-to-root"/>
 		<require idref="board.dummy.samd20"/>
 		<require idref="sam0.drivers.sercom.spi.quick_start"/>
 		<config name="config.sam0.drivers.sercom.spi" value="polled"/>
@@ -8,6 +9,6 @@
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>
-		<device-support value="atsamd20j18a"/>
+		<device-support value="atsamd20j18"/>
 	</project>
 </asf>

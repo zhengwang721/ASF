@@ -103,7 +103,6 @@ enum status_code wdt_init(
 	/* Configure GCLK channel and enable clock */
 	struct system_gclk_chan_config gclk_chan_conf;
 	gclk_chan_conf.source_generator = config->clock_source;
-	gclk_chan_conf.run_in_standby   = false;
 	system_gclk_chan_set_config(WDT_GCLK_ID, &gclk_chan_conf);
 	system_gclk_chan_enable(WDT_GCLK_ID);
 
@@ -111,22 +110,28 @@ enum status_code wdt_init(
 		/* Wait for all hardware modules to complete synchronization */
 	}
 
+	uint32_t new_config = 0;
+
 	/* Update the timeout period value with the requested period */
-	WDT_module->CTRL.reg = (config->timeout_period - 1) << WDT_CTRL_PER_Pos;
+	new_config |= (config->timeout_period - 1) << WDT_CONFIG_PER_Pos;
+
+	/* Check if the user has requested a reset window period */
+	if (config->window_period != WDT_PERIOD_NONE) {
+		WDT_module->CTRL.reg |= WDT_CTRL_WEN;
+
+		/* Update and enable the timeout period value */
+		new_config |= (config->window_period - 1) << WDT_CONFIG_WINDOW_Pos;
+	} else {
+		/* Ensure the window enable control flag is cleared */
+		WDT_module->CTRL.reg &= ~WDT_CTRL_WEN;
+	}
 
 	while (wdt_is_syncing()) {
 		/* Wait for all hardware modules to complete synchronization */
 	}
 
-	/* Check if the user has requested a reset window period */
-	if (config->window_period != WDT_PERIOD_NONE) {
-		/* Update and enable the timeout period value */
-		WDT_module->WINCTRL.reg = WDT_WINCTRL_WEN |
-				(config->window_period - 1) << WDT_WINCTRL_WINDOW_Pos;
-	} else {
-		/* Ensure the window enable control flag is cleared */
-		WDT_module->WINCTRL.reg &= ~WDT_WINCTRL_WEN;
-	}
+	/* Write the new Watchdog configuration */
+	WDT_module->CONFIG.reg = new_config;
 
 	/* Check if the user has requested an early warning period */
 	if (config->early_warning_period != WDT_PERIOD_NONE) {

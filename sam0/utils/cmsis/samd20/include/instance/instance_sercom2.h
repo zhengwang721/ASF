@@ -55,7 +55,6 @@
 #define REG_SERCOM2_SPI_CTRLB      (0x42001004U) /**< \brief (SERCOM2) SPI Control Register B */
 #define REG_SERCOM2_USART_CTRLB    (0x42001004U) /**< \brief (SERCOM2) USART Control Register B */
 #define REG_SERCOM2_I2CM_DBGCTRL   (0x42001008U) /**< \brief (SERCOM2) I2CM Debug Register */
-#define REG_SERCOM2_I2CS_DBGCTRL   (0x42001008U) /**< \brief (SERCOM2) I2CS Debug Register */
 #define REG_SERCOM2_SPI_DBGCTRL    (0x42001008U) /**< \brief (SERCOM2) SPI Debug Register */
 #define REG_SERCOM2_USART_DBGCTRL  (0x42001008U) /**< \brief (SERCOM2) USART Debug Register */
 #define REG_SERCOM2_I2CM_BAUD      (0x4200100AU) /**< \brief (SERCOM2) I2CM Baud Rate Register */
@@ -94,7 +93,6 @@
 #define REG_SERCOM2_SPI_CTRLB      (*(RwReg  *)0x42001004U) /**< \brief (SERCOM2) SPI Control Register B */
 #define REG_SERCOM2_USART_CTRLB    (*(RwReg  *)0x42001004U) /**< \brief (SERCOM2) USART Control Register B */
 #define REG_SERCOM2_I2CM_DBGCTRL   (*(RwReg8 *)0x42001008U) /**< \brief (SERCOM2) I2CM Debug Register */
-#define REG_SERCOM2_I2CS_DBGCTRL   (*(RwReg8 *)0x42001008U) /**< \brief (SERCOM2) I2CS Debug Register */
 #define REG_SERCOM2_SPI_DBGCTRL    (*(RwReg8 *)0x42001008U) /**< \brief (SERCOM2) SPI Debug Register */
 #define REG_SERCOM2_USART_DBGCTRL  (*(RwReg8 *)0x42001008U) /**< \brief (SERCOM2) USART Debug Register */
 #define REG_SERCOM2_I2CM_BAUD      (*(RwReg16*)0x4200100AU) /**< \brief (SERCOM2) I2CM Baud Rate Register */

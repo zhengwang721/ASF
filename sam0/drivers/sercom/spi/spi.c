@@ -141,9 +141,9 @@ static enum status_code _spi_set_config(
 	module->character_size = config->character_size;
 
 	/* Value to write to BAUD register */
-	uint16_t baud;
+	uint16_t baud = 0;
 	/* Value to write to CTRLA register */
-	uint32_t ctrla;
+	uint32_t ctrla = 0;
 
 	/**
 	 * \todo need to get reference clockspeed from conf struct and gclk_get_hz
@@ -164,10 +164,7 @@ static enum status_code _spi_set_config(
 		spi_module->BAUD.reg = (uint8_t)baud;
 	}
 
-	if (config->mode == SPI_MODE_MASTER) {
-		/* Set module in master mode */
-		ctrla = SERCOM_SPI_CTRLA_MASTER;
-	} else {
+	if (config->mode == SPI_MODE_SLAVE) {
 		/* Set frame format */
 		ctrla = config->slave.frame_format;
 
@@ -314,7 +311,8 @@ static enum status_code _spi_check_config(
 		if (spi_module->BAUD.reg !=  (uint8_t)baud) {
 			return STATUS_ERR_DENIED;
 		}
-		ctrla |= SERCOM_SPI_CTRLA_MASTER;
+
+		ctrla |= SERCOM_SPI_CTRLA_MODE_SPI_MASTER;
 	} else {
 		/* Set frame format */
 		ctrla |= config->slave.frame_format;
@@ -333,6 +331,8 @@ static enum status_code _spi_check_config(
 			/* Enable pre-loading of shift register */
 			ctrlb |= SERCOM_SPI_CTRLB_PLOADEN;
 		}
+
+		ctrla |= SERCOM_SPI_CTRLA_MODE_SPI_SLAVE;
 	}
 
 	/* Set data order */
@@ -357,7 +357,6 @@ static enum status_code _spi_check_config(
 		ctrlb |= SERCOM_SPI_CTRLB_RXEN;
 	}
 
-	ctrla |= SERCOM_SPI_CTRLA_MODE(0x1);
 	ctrla |= SERCOM_SPI_CTRLA_ENABLE;
 
 	/* Check that same config is set */
@@ -435,10 +434,16 @@ enum status_code spi_init(
 	gclk_chan_conf.source_generator = config->generator_source;
 	system_gclk_chan_set_config(gclk_index, &gclk_chan_conf);
 	system_gclk_chan_enable(gclk_index);
-	sercom_set_gclk_generator(config->generator_source, true, false);
+	sercom_set_gclk_generator(config->generator_source, false);
 
-	/* Set the SERCOM in SPI mode */
-	spi_module->CTRLA.reg |= SERCOM_SPI_CTRLA_MODE(0x1);
+	if (config->mode == SPI_MODE_MASTER) {
+		/* Set the SERCOM in SPI master mode */
+		spi_module->CTRLA.reg |= SERCOM_SPI_CTRLA_MODE_SPI_MASTER;
+	}
+	else {
+		/* Set the SERCOM in SPI slave mode */
+		spi_module->CTRLA.reg |= SERCOM_SPI_CTRLA_MODE_SPI_SLAVE;
+	}
 
 #if SPI_CALLBACK_MODE == true
 	/* Temporary variables */

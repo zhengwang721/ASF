@@ -178,7 +178,7 @@ void i2c_slave_unregister_callback(
  * \param[in,out] module  Pointer to software module struct
  * \param[in,out] packet  Pointer to I<SUP>2</SUP>C packet to transfer
  *
- * \return Status of starting asynchronously reading I<SUP>2</SUP>C packet
+ * \return Status of starting asynchronously reading I<SUP>2</SUP>C packet.
  * \retval STATUS_OK    If reading was started successfully
  * \retval STATUS_BUSY  If module is currently busy with another transfer
  */
@@ -264,7 +264,7 @@ void _i2c_slave_interrupt_handler(
 			module->enabled_callback & module->registered_callback;
 
 
-	if (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_AIF) {
+	if (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_AMATCH) {
 	/* Address match */
 		/* Check if last read is done - repeated start */
 		if (module->buffer_length != module->buffer_remaining &&
@@ -333,14 +333,14 @@ void _i2c_slave_interrupt_handler(
 		i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_CMD(0x3);
 		/* ACK next incoming packet */
 		i2c_hw->CTRLB.reg &= ~SERCOM_I2CS_CTRLB_ACKACT;
-	} else if (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_PIF) {
+	} else if (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_PREC) {
 		/* Stop condition on bus - current transfer done */
 		module->status = STATUS_OK;
 		module->buffer_length = 0;
 		module->buffer_remaining = 0;
 
 		/* Clear Stop interrupt */
-		i2c_hw->INTFLAG.reg |= SERCOM_I2CS_INTFLAG_PIF;
+		i2c_hw->INTFLAG.reg |= SERCOM_I2CS_INTFLAG_PREC;
 
 		/* Call appropriate callback if enabled and registered */
 		if ((callback_mask & (1 << I2C_SLAVE_CALLBACK_READ_COMPLETE))
@@ -348,7 +348,7 @@ void _i2c_slave_interrupt_handler(
 			/* Read from master complete */
 			module->callbacks[I2C_SLAVE_CALLBACK_READ_COMPLETE](module);
 		}
-	} else if (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_DIF) {
+	} else if (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_DRDY) {
 		/* Check if buffer is full, or NACK from master */
 		if (module->buffer_remaining <= 0 ||
 				(module->transfer_direction == 1 &&

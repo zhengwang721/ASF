@@ -67,7 +67,6 @@ static void _dac_set_config(
 	/* Configure GCLK channel and enable clock */
 	struct system_gclk_chan_config gclk_chan_conf;
 	gclk_chan_conf.source_generator = config->clock_source;
-	gclk_chan_conf.run_in_standby   = config->run_in_standby;
 	system_gclk_chan_set_config(DAC_GCLK_ID, &gclk_chan_conf);
 	system_gclk_chan_enable(DAC_GCLK_ID);
 
@@ -128,10 +127,10 @@ void dac_init(
 	system_pinmux_get_config_defaults(&pin_conf);
 
 	/* Set up the DAC VOUT pin */
-	pin_conf.mux_position = MUX_PA00H_DAC_VOUT;
+	pin_conf.mux_position = MUX_PA02B_DAC_VOUT;
 	pin_conf.direction    = SYSTEM_PINMUX_PIN_DIR_INPUT;
 	pin_conf.input_pull   = SYSTEM_PINMUX_PIN_PULL_NONE;
-	system_pinmux_pin_set_config(PIN_PA00H_DAC_VOUT, &pin_conf);
+	system_pinmux_pin_set_config(PIN_PA02B_DAC_VOUT, &pin_conf);
 
 	/* Write configuration to module */
 	_dac_set_config(module_inst, config);

@@ -122,8 +122,10 @@
  *
  * \subsection asfdoc_samd20_system_pinmux_module_overview_physical Physical Connection
  *
- * The following diagram shows how this module is interconnected within the device:
+ * \ref asfdoc_samd20_system_pinmux_intconnections "The diagram below" shows
+ * how this module is interconnected within the device:
  *
+ * \anchor asfdoc_samd20_system_pinmux_intconnections
  * \dot
  * digraph overview {
  *   node [label="Port Pad" shape=square] pad;

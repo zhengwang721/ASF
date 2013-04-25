@@ -1,5 +1,6 @@
 <asf xmlversion="1.0">
 	<project caption="Quick Start for the SAM D20 EEPROM Emulation Service" id="sam0.services.eeprom_emulator.quick_start.dummy.samd20">
+		<info type="gui-flag" value="move-to-root"/>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clocks.h"/>
@@ -8,6 +9,6 @@
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>
-		<device-support value="atsamd20j18a"/>
+		<device-support value="atsamd20j18"/>
 	</project>
 </asf>
