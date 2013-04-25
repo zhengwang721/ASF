@@ -355,7 +355,10 @@ extern "C" {
 /**
  * \brief SPI Callback enum
  *
- * Callbacks for SPI callback driver
+ * Callbacks for SPI callback driver.
+ *
+ * \note For slave mode, these callbacks will be called when a transaction
+ * is ended by the master pulling Slave Select high.
  *
  */
 enum spi_callback {
@@ -363,9 +366,14 @@ enum spi_callback {
 	SPI_CALLBACK_BUFFER_TRANSMITTED,
 	/** Callback for buffer received */
 	SPI_CALLBACK_BUFFER_RECEIVED,
+	/** Callback for buffers transceived */
+	SPI_CALLBACK_BUFFER_TRANSCEIVED,
 	/** Callback for error */
 	SPI_CALLBACK_ERROR,
-	/** Callback for transmission complete for slave */
+	/** 
+	* Callback for transmission ended by master before entire buffer was
+	* read or written from slave
+	*/
 	SPI_CALLBACK_SLAVE_TRANSMISSION_COMPLETE,
 #  if !defined(__DOXYGEN__)
 	/** Number of available callbacks. */
@@ -580,7 +588,10 @@ struct spi_module {
 	enum spi_mode mode;
 	/** SPI character size */
 	enum spi_character_size character_size;
+	/** Receiver enabled */
+	bool receiver_enabled;
 #  if SPI_CALLBACK_MODE == true
+	/** Direction of transaction */
 	volatile enum spi_direction dir;
 	/** Array to store callback function pointers in */
 	spi_callback_t callback[SPI_CALLBACK_N];
@@ -599,10 +610,8 @@ struct spi_module {
 	uint8_t registered_callback;
 	/** Bit mask for callbacks enabled */
 	uint8_t enabled_callback;
-	/** Holds the status of the ongoing or last read operation */
-	volatile enum status_code rx_status;
-	/** Holds the status of the ongoing or last write operation */
-	volatile enum status_code tx_status;
+	/** Holds the status of the ongoing or last operation */
+	volatile enum status_code status;
 #  endif
 #endif
 };
@@ -1153,16 +1162,28 @@ enum status_code spi_read_buffer_wait(
  * \return Status of the operation.
  * \retval STATUS_OK            If the operation was completed
  * \retval STATUS_ERR_TIMEOUT   If the operation was not completed within the
- *                              timeout in slave mode.
+ *                              timeout in slave mode
+ * \retval STATUS_ERR_DENIED    If the receiver is not enabled
  * \retval STATUS_ERR_OVERFLOW  If the incoming data is overflown
  */
-static inline enum status_code spi_tranceive_wait(
+static inline enum status_code spi_transceive_wait(
 		struct spi_module *const module,
 		uint16_t tx_data,
 		uint16_t *rx_data)
 {
 	/* Sanity check arguments */
 	Assert(module);
+
+	if (!(module->receiver_enabled)) {
+		return STATUS_ERR_DENIED;
+	}
+
+#  if SPI_CALLBACK_MODE == true
+	if (module->status == STATUS_BUSY) {
+		/* Check if the SPI module is busy with a job */
+		return STATUS_BUSY;
+	}
+#  endif
 
 	uint16_t j;
 	enum status_code retval = STATUS_OK;
@@ -1208,7 +1229,7 @@ static inline enum status_code spi_tranceive_wait(
 	return retval;
 }
 
-enum status_code spi_tranceive_buffer_wait(
+enum status_code spi_transceive_buffer_wait(
 		struct spi_module *const module,
 		uint8_t *tx_data,
 		uint8_t *rx_data,
