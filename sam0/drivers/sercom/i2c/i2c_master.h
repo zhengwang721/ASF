@@ -81,9 +81,9 @@ enum _i2c_transfer_direction {
  * Flags used when reading or setting interrupt flags.
  */
 enum i2c_master_interrupt_flag {
-	/** Interrupt flag used for write. */
+	/** Interrupt flag used for write */
 	I2C_MASTER_INTERRUPT_WRITE = 0,
-	/** Interrupt flag used for read. */
+	/** Interrupt flag used for read */
 	I2C_MASTER_INTERRUPT_READ  = 1,
 };
 
@@ -94,13 +94,13 @@ enum i2c_master_interrupt_flag {
  * bit has been sent.
  */
 enum i2c_master_start_hold_time {
-	/** Internal SDA hold time disabled. */
+	/** Internal SDA hold time disabled */
 	I2C_MASTER_START_HOLD_TIME_DISABLED = SERCOM_I2CM_CTRLA_SDAHOLD(0),
-	/** Internal SDA hold time 50ns-100ns. */
+	/** Internal SDA hold time 50ns-100ns */
 	I2C_MASTER_START_HOLD_TIME_50NS_100NS = SERCOM_I2CM_CTRLA_SDAHOLD(1),
-	/** Internal SDA hold time 300ns-600ns. */
+	/** Internal SDA hold time 300ns-600ns */
 	I2C_MASTER_START_HOLD_TIME_300NS_600NS = SERCOM_I2CM_CTRLA_SDAHOLD(2),
-	/** Internal SDA hold time 400ns-800ns. */
+	/** Internal SDA hold time 400ns-800ns */
 	I2C_MASTER_START_HOLD_TIME_400NS_800NS = SERCOM_I2CM_CTRLA_SDAHOLD(3),
 };
 
@@ -118,9 +118,9 @@ enum i2c_master_start_hold_time {
  *       given by GCLK-frequency divided by 510.
  */
 enum i2c_master_baud_rate {
-	/** Baud rate at 100kHz. */
+	/** Baud rate at 100kHz */
 	I2C_MASTER_BAUD_RATE_100KHZ = 100,
-	/** Baud rate at 400kHz. */
+	/** Baud rate at 400kHz */
 	I2C_MASTER_BAUD_RATE_400KHZ = 400,
 };
 
@@ -131,14 +131,14 @@ enum i2c_master_baud_rate {
  * The available callback types for the I<SUP>2</SUP>C master module.
  */
 enum i2c_master_callback {
-	/** Callback for packet write complete. */
+	/** Callback for packet write complete */
 	I2C_MASTER_CALLBACK_WRITE_COMPLETE = 0,
-	/** Callback for packet read complete. */
+	/** Callback for packet read complete */
 	I2C_MASTER_CALLBACK_READ_COMPLETE  = 1,
-	/** Callback for error. */
+	/** Callback for error */
 	I2C_MASTER_CALLBACK_ERROR          = 2,
 #  if !defined(__DOXYGEN__)
-	/** Total number of callbacks. */
+	/** Total number of callbacks */
 	_I2C_MASTER_CALLBACK_N             = 3,
 #  endif
 };
@@ -204,17 +204,17 @@ struct i2c_master_module {
  * \ref i2c_master_get_config_defaults .
  */
 struct i2c_master_config {
-	/** Baud rate for I<SUP>2</SUP>C operations. */
+	/** Baud rate for I<SUP>2</SUP>C operations */
 	enum i2c_master_baud_rate baud_rate;
-	/** GCLK generator to use as clock source. */
+	/** GCLK generator to use as clock source */
 	enum gclk_generator generator_source;
-	/** Bus hold time after start signal on data line. */
+	/** Bus hold time after start signal on data line */
 	enum i2c_master_start_hold_time start_hold_time;
-	/** Unknown bus state \ref asfdoc_samd20_i2c_unknown_bus_timeout "timeout". */
+	/** Unknown bus state \ref asfdoc_samd20_i2c_unknown_bus_timeout "timeout" */
 	uint16_t unknown_bus_state_timeout;
-	/** Timeout for packet write to wait for slave. */
+	/** Timeout for packet write to wait for slave */
 	uint16_t buffer_timeout;
-	/** Set to keep module active in sleep modes. */
+	/** Set to keep module active in sleep modes */
 	bool run_in_standby;
 	/** PAD0 (SDA) pinmux */
 	uint32_t pinmux_pad0;
