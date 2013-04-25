@@ -218,14 +218,16 @@ void rtouch_disable(void)
 	g_ul_is_rtouch_enabled = 0;
 }
 
-void rtouch_default_calibration(void)
+void rtouch_set_calibration_parameter(int32_t xslope, int32_t yslope,
+								int32_t rawx, int32_t rawy)
 {
-	/* Force calibration using default settings. */
-	/* Warning these settings may not be accurate. */
-	g_l_xslope = 7432;
-	g_l_yslope = -5637;
-	calibration_point_0.raw.x = 318;
-	calibration_point_0.raw.y = 1845;
+	/* Set calibration parameters when manual calibration procedure
+	 * is not performed.
+	 */
+	g_l_xslope = xslope;
+	g_l_yslope = yslope;
+	calibration_point_0.raw.x = rawx;
+	calibration_point_0.raw.y = rawy;
 	g_ul_is_calibrated = 1;
 }
 

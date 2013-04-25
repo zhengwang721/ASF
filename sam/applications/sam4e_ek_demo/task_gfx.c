@@ -294,7 +294,11 @@ static void gfx_task(void *pvParameters)
 	rtouch_init(ILI93XX_LCD_WIDTH, ILI93XX_LCD_HEIGHT);
 	rtouch_enable();
 	rtouch_set_event_handler(event_handler);
-	rtouch_default_calibration();
+	/*
+	 * Set touch screen calibration parameters which are got
+	 * from manual calibration when developing.
+	 */
+	rtouch_set_calibration_parameter(7432, -5637, 318, 1845);
 
 	/** Draw IP config menu. */
 	ili93xx_set_foreground_color(COLOR_WHITE);
