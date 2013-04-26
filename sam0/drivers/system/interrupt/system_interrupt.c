@@ -95,8 +95,7 @@ enum status_code system_interrupt_set_pending(
 
 	if (vector >= _SYSTEM_INTERRUPT_EXTERNAL_VECTOR_START) {
 		NVIC->ISPR[0] = (1 << vector);
-	}
-	else if (vector == SYSTEM_INTERRUPT_NON_MASKABLE) {
+	} else if (vector == SYSTEM_INTERRUPT_NON_MASKABLE) {
 		/* Note: Because NMI has highest priority it will be executed
 		 * immediately after it has been set pending */
 		SCB->ICSR = (1 << SCB_ICSR_NMIPENDSET_Pos);
