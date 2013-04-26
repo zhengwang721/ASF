@@ -8,7 +8,6 @@
 		<build type="include-path" value="."/>
 		<require idref="sam0.drivers.sercom.usart"/>
 		<require idref="common.utils.unit_test"/>
-		<require idref="sam0.utils.stdio.stdio_serial"/>
 		<device-support value="samd20"/>
 	</module>
 </asf>
