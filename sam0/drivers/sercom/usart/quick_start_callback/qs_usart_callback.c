@@ -85,12 +85,11 @@ int main(void)
 	/* Initialize system clocks */
 	system_init();
 
-	system_clock_source_write_calibration(SYSTEM_CLOCK_SOURCE_OSC8M, 1801, 1);
 	/* Get configuration defaults for the USART
 	 * 9600 8N1
 	 */
 	usart_get_config_defaults(&config_struct);
-	config_struct.mux_settings = USART_RX_3_TX_2_XCK_3;
+	config_struct.mux_settings = USART_RX_1_TX_0_XCK_1;
 
 	config_struct.pinout_pad3 = EDBG_CDC_RX_PINMUX;
 	config_struct.pinout_pad2 = EDBG_CDC_TX_PINMUX;
