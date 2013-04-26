@@ -189,6 +189,7 @@
 			<build type="define" name="TEST_SUITE_DEFINE_ASSERT_MACRO" value=""/>
 			<require idref="sam0.utils"/>
 			<require idref="sam0.utils.stdio"/>
+			<require idref="sam0.utils.stdio.stdio_serial"/>
 		</module>
 	</select-by-device>
 	<module type="meta" id="common.utils.unit_test.generic" caption="Generic components of unit test framework">
