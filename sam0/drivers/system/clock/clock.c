@@ -275,7 +275,7 @@ void system_clock_source_dfll_set_config(
 
 	/* Enable the DFLL, as all the DFLL core registers are clocked
 	 * by the DFLL output */
-	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_DFLL, false);
+	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_DFLL);
 
 	/* Write Fine and Coarse values for open loop mode */
 	_system_dfll_wait_for_sync();
@@ -378,42 +378,31 @@ enum status_code system_clock_source_write_calibration(
  *
  * Enables a clock source which has been previously configured.
  *
- * \param[in] block_until_ready  Block until the clock source has been enabled
- *                               or until timeout
  * \param[in] clock_source       Clock source to enable
  *
  * \retval STATUS_OK               Clock source was enabled successfully and
  *                                 is ready
  * \retval STATUS_ERR_INVALID_ARG  The clock source is not available on this
  *                                 device
- * \retval STATUS_TIMEOUT          The clock source did not start (timeout)
  */
-
 enum status_code system_clock_source_enable(
-		const enum system_clock_source clock_source,
-		const bool block_until_ready)
+		const enum system_clock_source clock_source)
 {
-	uint32_t waitmask;
-
 	switch (clock_source) {
 		case SYSTEM_CLOCK_SOURCE_OSC8M:
 			SYSCTRL->OSC8M.reg |= SYSCTRL_OSC8M_ENABLE;
-			/* Not possible to wait for ready, so we return */
 			return STATUS_OK;
 
 		case SYSTEM_CLOCK_SOURCE_OSC32K:
 			SYSCTRL->OSC32K.reg |= SYSCTRL_OSC32K_ENABLE;
-			waitmask = SYSCTRL_PCLKSR_OSC32KRDY;
 			break;
 
 		case SYSTEM_CLOCK_SOURCE_XOSC:
 			SYSCTRL->XOSC.reg |= SYSCTRL_XOSC_ENABLE;
-			waitmask = SYSCTRL_PCLKSR_XOSCRDY;
 			break;
 
 		case SYSTEM_CLOCK_SOURCE_XOSC32K:
 			SYSCTRL->XOSC32K.reg |= SYSCTRL_XOSC32K_ENABLE;
-			waitmask = SYSCTRL_PCLKSR_XOSC32KRDY;
 			break;
 
 		case SYSTEM_CLOCK_SOURCE_DFLL:
@@ -422,7 +411,6 @@ enum status_code system_clock_source_enable(
 			/* Will erase current config as read-modify-write is not possible
 			   while DFLL is not running */
 			SYSCTRL->DFLLCTRL.reg = SYSCTRL_DFLLCTRL_ENABLE;
-			waitmask = SYSCTRL_PCLKSR_DFLLRDY;
 			break;
 		case SYSTEM_CLOCK_SOURCE_ULP32K:
 			/* Always enabled */
@@ -431,17 +419,6 @@ enum status_code system_clock_source_enable(
 		default:
 			Assert(!"Invalid clock source supplied");
 			return STATUS_ERR_INVALID_ARG;
-	}
-
-	if (block_until_ready == true) {
-		/* Wait for the clock source to be ready or timeout */
-		for (uint32_t timeout = 0; timeout < CONF_CLOCK_TIMEOUT; timeout++) {
-			if (SYSCTRL->PCLKSR.reg & waitmask) {
-				return STATUS_OK;
-			}
-		}
-
-		return STATUS_ERR_TIMEOUT;
 	}
 
 	return STATUS_OK;
@@ -584,7 +561,7 @@ void system_clock_init(void)
 	xosc32k_conf.run_in_standby        = CONF_CLOCK_XOSC32K_RUN_IN_STANDBY;
 
 	system_clock_source_xosc32k_set_config(&xosc32k_conf);
-	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_XOSC32K, true);
+	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_XOSC32K);
 #endif
 
 
@@ -599,7 +576,7 @@ void system_clock_init(void)
 	osc32k_conf.run_in_standby      = CONF_CLOCK_OSC32K_RUN_IN_STANDBY;
 
 	system_clock_source_osc32k_set_config(&osc32k_conf);
-	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_OSC32K, true);
+	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_OSC32K);
 #endif
 
 
@@ -660,7 +637,7 @@ void system_clock_init(void)
 	osc8m_conf.run_in_standby       = CONF_CLOCK_OSC8M_RUN_IN_STANDBY;
 
 	system_clock_source_osc8m_set_config(&osc8m_conf);
-	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_OSC8M, false);
+	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_OSC8M);
 
 	/* GCLK */
 #if CONF_CLOCK_CONFIGURE_GCLK == true
