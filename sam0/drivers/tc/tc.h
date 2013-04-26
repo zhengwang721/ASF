@@ -411,8 +411,8 @@
 #include <pinmux.h>
 
 #if !defined(__DOXYGEN__)
-#define NUMBER_OF_COMPARE_CAPTURE_CHANNELS TC0_CC8_NUM
-/* Same number for 8-, 16- and 32-bit TC and all TC instances */
+#  define NUMBER_OF_COMPARE_CAPTURE_CHANNELS TC0_CC8_NUM
+   /* Same number for 8-, 16- and 32-bit TC and all TC instances */
 #endif
 
 #if TC_ASYNC == true

@@ -52,7 +52,7 @@
  */
 #  define _TC_INTERRUPT_VECT_NUM(n, unused) \
 		SYSTEM_INTERRUPT_MODULE_TC##n,
-#  endif
+#endif
 
 #if !defined(__DOXYGEN__)
 #  define _TC_GCLK_ID(n, unused)       TC##n##_GCLK_ID   ,
