@@ -57,6 +57,31 @@ struct tc_module tc1_module;
 struct tc_config tc0_config;
 struct tc_config tc1_config;
 
+enum status_code init_status = STATUS_OK;
+
+/**
+ * \internal
+ * \brief Test of tc_init() and tc_get_config_defaults()
+ *
+ * This test is used to initialize the tcx_module structs and asosiate the given
+ * hw module with the struct. This test should be run at the very beggining of
+ * testing as other tests depend on the reslut of this test.
+ */
+static void run_init_test(const struct test_case *test)
+{
+	tc_get_config_defaults(&tc0_config);
+	enum status_code test1 = tc_init(&tc0_module, TC0, &tc0_config);
+
+	tc_get_config_defaults(&tc1_config);
+	enum status_code test2 = tc_init(&tc1_module, TC1, &tc1_config);
+	if ((test1 !=STATUS_OK) || (test2 1= STATUS_OK)) {
+		init_status = STATUS_ERR_DENIED;
+	}
+	test_assert_true(test,
+			(test2 != STATUS_OK) || (test1 != STATUS_OK) ,
+			"Failded to initialize modueles");
+}
+
 /**
  * \internal
  * \brief Test initializing and resetting 32-bit TC and reinitialize
@@ -135,10 +160,17 @@ static void run_16bit_capture_and_compare_test(const struct test_case *test)
 /**
  * \brief Initialize USARTs for unit tests
  *
- * Initializes the USART used by the unit test for outputting the
- * results (using the embedded debugger).
+ * Initializes the USART used by the unit test for outputting the results (using
+ * the embedded debugger).
+ *
+ * Comunication seting:
+ *  - Baudrate      38400
+ *  - Data bits     8
+ *  - Stop bits     1
+ *  - Parity        None
+ *  - Flow control  XON/XOFF
  */
-static void test_system_init(void)
+static void test_usart_comunication_init(void)
 {
 	struct usart_config usart_conf;
 	struct usart_module unit_test_output;
@@ -156,35 +188,33 @@ static void test_system_init(void)
 	/* Enable transceivers */
 	usart_enable_transceiver(&unit_test_output, USART_TRANSCEIVER_TX);
 	usart_enable_transceiver(&unit_test_output, USART_TRANSCEIVER_RX);
-
-	tc_get_config_defaults(&tc0_config);
-	tc_init(&tc0_module, TC0, &tc0_config);
-
-	tc_get_config_defaults(&tc1_config);
-	tc_init(&tc1_module, TC1, &tc1_config);
-
 }
 
 /**
  * \brief Run USART unit tests
  *
- * Initializes the system and serial output, then sets up the
- * USART unit test suite and runs it.
+ * Initializes the system and serial output, then sets up the USART unit test
+ * suite and runs it.
  */
 int main(void)
 {
 	system_init();
-	test_system_init();
+	test_usart_comunication_init();
 
 	/* Define Test Cases */
+	DEFINE_TEST_CASE(init_test, NULL,
+			run_init_test, NULL,
+			"Initialize tc_xmodules");
+
 	DEFINE_TEST_CASE(reset_32bit_master_test, NULL,
 			run_reset_32bit_master_test, NULL,
 			"Setup, reset and reinitialice TC modules of a 32-bit TC");
 
 	/* Put test case addresses in an array */
 	DEFINE_TEST_ARRAY(tc_tests) = {
-			&reset_32bit_master_test,
-			};
+		&init_test,
+		&reset_32bit_master_test,
+	};
 
 	/* Define the test suite */
 	DEFINE_TEST_SUITE(tc_suite, tc_tests,
