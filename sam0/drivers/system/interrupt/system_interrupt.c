@@ -95,11 +95,13 @@ enum status_code system_interrupt_set_pending(
 
 	if (vector >= _SYSTEM_INTERRUPT_EXTERNAL_VECTOR_START) {
 		NVIC->ISPR[0] = (1 << vector);
-	} else if ((vector == SYSTEM_INTERRUPT_SYSTICK) ||
-			(vector == SYSTEM_INTERRUPT_NON_MASKABLE)) {
-		/* Because NMI has highest priority it will be executed immediately after it has been set pending */
-		SCB->ICSR = (vector == SYSTEM_INTERRUPT_SYSTICK) ?
-				(1 << SCB_ICSR_PENDSTSET_Pos) : (1 << SCB_ICSR_NMIPENDSET_Pos);
+	}
+	else if (vector == SYSTEM_INTERRUPT_NON_MASKABLE) {
+		/* Note: Because NMI has highest priority it will be executed
+		 * immediately after it has been set pending */
+		SCB->ICSR = (1 << SCB_ICSR_NMIPENDSET_Pos);
+	} else if (vector == SYSTEM_INTERRUPT_SYSTICK) {
+		SCB->ICSR = (1 << SCB_ICSR_PENDSTSET_Pos);
 	} else {
 		/* The user want to set something unsupported as pending */
 		Assert(false);
@@ -129,9 +131,12 @@ enum status_code system_interrupt_clear_pending(
 
 	if (vector >= _SYSTEM_INTERRUPT_EXTERNAL_VECTOR_START) {
 		NVIC->ICPR[0] = (1 << vector);
+	} else if (vector == SYSTEM_INTERRUPT_NON_MASKABLE) {
+		/* Note: Clearing of NMI pending interrupts does not make sense and is
+		 * not supported by the device, as it has the highest priority and will
+		 * always be executed at the moment it is set */
+		return STATUS_ERR_INVALID_ARG;
 	} else if (vector == SYSTEM_INTERRUPT_SYSTICK) {
-		/* Clearing of NMI pending interrupts does not make sense and is not supported by the
-		   device because it has the highest priority and will executed at the moment it is set */
 		SCB->ICSR = (1 << SCB_ICSR_PENDSTCLR_Pos);
 	} else {
 		Assert(false);
