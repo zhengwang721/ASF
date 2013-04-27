@@ -75,6 +75,9 @@ extern "C" {
 /* AT24CXX internal address length */
 #define AT24C_MEM_ADDR_LEN   2
 
+/* AT24CXX write cycle time (ms) */
+#define AT24C_WRITE_WAIT   10
+
 /* Return value for accessing AT24CXX */
 #define AT24C_WRITE_SUCCESS     0
 #define AT24C_WRITE_FAIL        1
@@ -92,6 +95,8 @@ uint32_t at24cxx_write_page(uint32_t ul_page_address,
 		uint32_t ul_page_size, uint8_t const *p_wr_buffer);
 uint32_t at24cxx_read_page(uint32_t us_page_address,
 		uint32_t ul_page_size, uint8_t *p_rd_buffer);
+uint32_t at24cxx_fill_pattern(uint32_t ul_start_address,
+		uint32_t ul_end_address, uint8_t uc_pattern);
 
 /// @cond 0
 /**INDENT-OFF**/

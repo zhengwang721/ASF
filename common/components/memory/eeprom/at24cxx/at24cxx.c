@@ -119,6 +119,7 @@ uint32_t at24cxx_write_byte(uint16_t us_address, uint8_t uc_value)
 			TWI_SUCCESS) {
 		return AT24C_WRITE_FAIL;
 	}
+	delay_ms(AT24C_WRITE_WAIT);
 
 	return AT24C_WRITE_SUCCESS;
 }
@@ -150,6 +151,7 @@ uint32_t at24cxx_write_continuous(uint16_t us_start_address,
 			TWI_SUCCESS) {
 		return AT24C_WRITE_FAIL;
 	}
+	delay_ms(AT24C_WRITE_WAIT);
 
 	return AT24C_WRITE_SUCCESS;
 }
@@ -240,6 +242,7 @@ uint32_t at24cxx_write_page(uint32_t ul_page_address,
 			TWI_SUCCESS) {
 		return AT24C_WRITE_FAIL;
 	}
+	delay_ms(AT24C_WRITE_WAIT);
 
 	return AT24C_WRITE_SUCCESS;
 }
@@ -273,6 +276,31 @@ uint32_t at24cxx_read_page(uint32_t ul_page_address,
 	}
 
 	return AT24C_READ_SUCCESS;
+}
+
+/**
+ * \brief Fill the specified pattern to AT24CXX.
+ *
+ * \param ul_start_address  The first address to be filled.
+ * \param ul_end_address  The last address to be filled.
+ * \param uc_pattern  The pattern to be filled.
+ *
+ * \return AT24C_WRITE_SUCCESS if the pattern was filled, AT24C_WRITE_FAIL
+ * otherwise.
+ */
+uint32_t at24cxx_fill_pattern(uint32_t ul_start_address,
+		uint32_t ul_end_address, uint8_t uc_pattern)
+{
+	uint32_t addr;
+
+	for (addr = ul_start_address; addr < ul_end_address + 1; addr++) {
+		if (at24cxx_write_byte((uint16_t)addr, uc_pattern) !=
+				AT24C_WRITE_SUCCESS) {
+			return AT24C_WRITE_FAIL;
+		}
+	}
+
+	return AT24C_WRITE_SUCCESS;
 }
 
 /// @cond 0
