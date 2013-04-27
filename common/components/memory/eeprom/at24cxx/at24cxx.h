@@ -75,9 +75,6 @@ extern "C" {
 /* AT24CXX internal address length */
 #define AT24C_MEM_ADDR_LEN   2
 
-/* AT24CXX write cycle time (ms) */
-#define AT24C_WRITE_WAIT   10
-
 /* Return value for accessing AT24CXX */
 #define AT24C_WRITE_SUCCESS     0
 #define AT24C_WRITE_FAIL        1

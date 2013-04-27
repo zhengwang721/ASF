@@ -63,6 +63,38 @@ extern "C" {
 /// @endcond
 
 /**
+ * \brief Poll the acknowledge from AT24CXX.
+ *
+ * \param twi_package Pointer to TWI data package. Only the slave address is
+ * used in the acknowledge polling.
+ */
+static void at24cxx_acknowledge_polling(twi_package_t *twi_package)
+{
+	uint8_t data = 0;
+
+	/* Store the package parameters */
+	uint8_t addr = twi_package->addr[0];
+	uint32_t addr_length = twi_package->addr_length;
+	void *buffer = twi_package->buffer;
+	uint32_t length = twi_package->length;
+
+	/* Configure the data packet to be transmitted */
+	twi_package->addr[0] = 0;
+	twi_package->addr_length = 0;
+	twi_package->buffer = &data;
+	twi_package->length = 1;
+
+	while (twi_master_write(BOARD_AT24C_TWI_INSTANCE, twi_package) !=
+		TWI_SUCCESS);
+
+	/* Restore the package parameters */
+	twi_package->addr[0] = addr;
+	twi_package->addr_length = addr_length;
+	twi_package->buffer = buffer;
+	twi_package->length = length;
+}
+
+/**
  * \brief Reset AT24CXX.
  *
  * Send 9 clock cycles to reset memory state.
@@ -72,7 +104,7 @@ extern "C" {
  */
 void at24cxx_reset(void)
 {
-	int i;
+	uint32_t i;
 	/* MEM reset
 	 * a) Clock up to 9 cycles (use 100K)
 	 * b) look for SDA high in each cycle while SCL is high and then
@@ -119,7 +151,7 @@ uint32_t at24cxx_write_byte(uint16_t us_address, uint8_t uc_value)
 			TWI_SUCCESS) {
 		return AT24C_WRITE_FAIL;
 	}
-	delay_ms(AT24C_WRITE_WAIT);
+	at24cxx_acknowledge_polling(&twi_package);
 
 	return AT24C_WRITE_SUCCESS;
 }
@@ -151,7 +183,7 @@ uint32_t at24cxx_write_continuous(uint16_t us_start_address,
 			TWI_SUCCESS) {
 		return AT24C_WRITE_FAIL;
 	}
-	delay_ms(AT24C_WRITE_WAIT);
+	at24cxx_acknowledge_polling(&twi_package);
 
 	return AT24C_WRITE_SUCCESS;
 }
@@ -242,7 +274,7 @@ uint32_t at24cxx_write_page(uint32_t ul_page_address,
 			TWI_SUCCESS) {
 		return AT24C_WRITE_FAIL;
 	}
-	delay_ms(AT24C_WRITE_WAIT);
+	at24cxx_acknowledge_polling(&twi_package);
 
 	return AT24C_WRITE_SUCCESS;
 }
