@@ -1,12 +1,10 @@
 /**
  * \file
  *
- * \brief SAM4L-EK Board LEDs support package.
+ * \brief SAM4L Xplained Pro board LEDs support package.
  *
  * This file contains definitions and services related to the LED features of
- * the SAM4L-XPLAINED-PRO Board.
- *
- * To use this board, define BOARD=SAM4L_EK.
+ * the Xplained Pro board.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -80,4 +78,4 @@
 #define LED_Toggle(led)  ioport_toggle_pin_level(led)
 
 
-#endif  // LED_H_INCLUDED
+#endif  /* LED_H_INCLUDED */

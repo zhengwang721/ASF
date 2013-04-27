@@ -72,9 +72,9 @@
  * If this symbol is defined, the watchdog is left running with its current
  * configuration. Otherwise, it gets disabled during board initialization.
  */
-# ifndef CONF_BOARD_KEEP_WATCHDOG_AT_INIT
-#  define CONF_BOARD_KEEP_WATCHDOG_AT_INIT
-# endif
+#ifndef CONF_BOARD_KEEP_WATCHDOG_AT_INIT
+#define CONF_BOARD_KEEP_WATCHDOG_AT_INIT
+#endif
 
 //@}
 
@@ -96,21 +96,20 @@
 //! \name Board oscillator definitions
 //@{
 //! Osc frequency (Hz.) and startup time (RCOsc periods)
-#define FOSC0                     (12000000)
+#define FOSC0                     (12000000UL)
 //! Osc32 frequency (Hz.) and startup time (RCOsc periods)
-#define FOSC32                    (32768)
+#define FOSC32                    (32768UL)
 #define BOARD_OSC32_IS_XTAL       true
 #define BOARD_OSC32_HZ            FOSC32
-#define BOARD_OSC32_STARTUP_US    (750000)
+#define BOARD_OSC32_STARTUP_US    (750000UL)
 #define BOARD_OSC32_SELCURR       BSCIF_OSCCTRL32_SELCURR(10)
 #define BOARD_OSC0_IS_XTAL        true
 #define BOARD_OSC0_HZ             FOSC0
-#define BOARD_OSC0_STARTUP_US     (6100)
+#define BOARD_OSC0_STARTUP_US     (6100UL)
 //@}
 
 //! \name LED0 definitions
 //@{
-#define LED0                      PIN_PC07
 #define LED0_PIN                  PIN_PC07
 #define LED0_ACTIVE               false
 #define LED0_INACTIVE             !LED0_ACTIVE
@@ -118,7 +117,6 @@
 
 //! \name SW0 definitions
 //@{
-#define GPIO_PUSH_BUTTON_0        PIN_PC24
 #define SW0_PIN                   PIN_PC24
 #define SW0_ACTIVE                false
 #define SW0_INACTIVE              !SW0_ACTIVE
@@ -129,11 +127,11 @@
 
 //! \name TOUCH QTouch button definitions
 //@{
-#define TOUCH_DISCHARGE_PIN       PIN_PC14
-#define TOUCH_DISCHARGE_MUX       MUX_PC14G_CATB_DIS
-#define TOUCH_SENSE_PIN           PIN_PC13
-#define TOUCH_SENSE_MUX           MUX_PC13G_CATB_SENSE15
-#define TOUCH_PINSEL_BUTTON       15
+#define QTOUCH_DISCHARGE_PIN       PIN_PC14
+#define QTOUCH_DISCHARGE_MUX       MUX_PC14G_CATB_DIS
+#define QTOUCH_SENSE_PIN           PIN_PC13
+#define QTOUCH_SENSE_MUX           MUX_PC13G_CATB_SENSE15
+#define QTOUCH_PINSEL_BUTTON       15
 //@}
 
 /**
@@ -148,15 +146,13 @@
 #define USB_VBUS_PIN              PIN_PC11
 #define USB_VBUS_FLAGS            IOPORT_MODE_GLITCH_FILTER
 #define USB_VBOF_PIN              PIN_PC12
-#define USB_VBOF_ACTIVE           true
-#define USB_VBOF_INACTIVE         !USB_VBOF_ACTIVE
-#define USB_VBOF_ACTIVE_LEVEL     USB_VBOF_ACTIVE
-#define USB_VBOF_INACTIVE_LEVEL   USB_VBOF_INACTIVE
+#define USB_VBOF_ACTIVE_LEVEL     true
+#define USB_VBOF_INACTIVE_LEVEL   !USB_VBOF_ACTIVE_LEVEL
 //@}
 
 //! \name USART connections to GPIO for Virtual Com Port
 // @{
-#define COM_PORT_USART				    USART1
+#define COM_PORT_USART            USART1
 #define COM_PORT_USART_ID         ID_USART1
 #define COM_PORT_RX_PIN           PIN_PC26A_USART1_RXD
 #define COM_PORT_RX_GPIO          GPIO_PC26A_USART1_RXD
@@ -185,7 +181,7 @@
  * boards.
  */
 //@{
-#define LED_0_NAME                "LED0 (yellow)"
+#define LED_0_NAME                "LED0"
 #define LED_0_PIN                 LED0_PIN
 #define LED_0_ACTIVE              LED0_ACTIVE
 #define LED_0_INACTIVE            LED0_INACTIVE
@@ -211,7 +207,7 @@
 //@}
 
 //! Number of on-board buttons
-#define BUTTON_COUNT 1
+#define BUTTON_COUNT              1
 
 //! \name Extension header #1 pin definitions
 //@{
