@@ -114,8 +114,41 @@
 /** Test data */
 #define TEST_DATA  0xA5u
 
-uint8_t data = 0;
-uint32_t result = 0;
+bool result = false;
+
+#define  TEST_DATA_LENGTH  (sizeof(test_data_tx)/sizeof(uint8_t))
+static uint8_t test_data_tx[] = {
+	'A', 'T', '2', '4', 'C', 'X', 'X', ' ', 'U', 'N', 'I', 'T', ' ',
+	'T', 'E', 'S', 'T', 'S'
+};
+static uint8_t test_data_rx[TEST_DATA_LENGTH];
+
+/* Memory Pattern */
+#define MEMORY_PATTERN  TEST_DATA
+/* EEPROM Page Size */
+#define PAGE_SIZE  128UL
+/* EEPROM Page Address */
+#define PAGE_ADDR  511UL
+uint8_t page_read_buf[PAGE_SIZE];
+uint8_t page_write_buf[PAGE_SIZE];
+
+static bool buffer_cmp(const uint8_t *pbuf_0, const uint8_t *pbuf_1,
+		uint32_t len)
+{
+	for (len += 1; len != 0; len--) {
+		if (*(pbuf_0++) != *(pbuf_1++)) {
+			return false;
+		}
+	}
+	return true;
+}
+
+static void buffer_fill(uint8_t *pbuf, uint32_t len, const uint8_t pattern)
+{
+	for (len += 1; len != 0; len--) {
+		*(pbuf++) = pattern;
+	}
+}
 
 /**
  * \brief Test data read/write API functions.
@@ -128,13 +161,16 @@ uint32_t result = 0;
 static void run_test_setup(const struct test_case *test)
 {
 	twi_options_t opt;
+	uint32_t tmp = 0;
 
 	/* Configure the options of TWI driver */
 	opt.master_clk = sysclk_get_cpu_hz();
 	opt.speed = AT24C_TWI_CLK;
 
-	result = twi_master_setup(BOARD_AT24C_TWI_INSTANCE, &opt);
-	test_assert_true(test, result == TWI_SUCCESS, "TWI master setup failed!");
+	tmp = twi_master_setup(BOARD_AT24C_TWI_INSTANCE, &opt);
+
+	result = (tmp == TWI_SUCCESS);
+	test_assert_true(test, result, "TWI master setup failed!");
 }
 
 /**
@@ -145,11 +181,22 @@ static void run_test_setup(const struct test_case *test)
  *
  * \param test Current test case.
  */
-static void run_test_write(const struct test_case *test)
+static void run_test_byte_access(const struct test_case *test)
 {
-	if (result == TWI_SUCCESS) {
-		result = at24cxx_write_byte(AT24C_MEM_ADDR, TEST_DATA);
-		test_assert_true(test, result == AT24C_WRITE_SUCCESS, "Write NG!");
+	uint8_t data = 0;
+
+	if (result == true) {
+		if (at24cxx_write_byte(AT24C_MEM_ADDR, TEST_DATA) !=
+				AT24C_WRITE_SUCCESS) {
+			result = false;
+			test_assert_true(test, false, "Byte Write NG!");
+		}
+		if (at24cxx_read_byte(AT24C_MEM_ADDR, &data) != AT24C_READ_SUCCESS) {
+			result = false;
+			test_assert_true(test, false, "Byte Read NG!");
+		}
+		result = (data == TEST_DATA);
+		test_assert_true(test, result, "Byte Comparison NG!");
 	}
 }
 
@@ -161,11 +208,56 @@ static void run_test_write(const struct test_case *test)
  *
  * \param test Current test case.
  */
-static void run_test_read(const struct test_case *test)
+static void run_test_continuous_access(const struct test_case *test)
 {
-	if (result == AT24C_WRITE_SUCCESS) {
-		result = at24cxx_read_byte(AT24C_MEM_ADDR,  &data);
-		test_assert_true(test, result == AT24C_READ_SUCCESS, "Read NG!");
+	if (result == true) {
+		buffer_fill(test_data_rx, TEST_DATA_LENGTH, 0);
+
+		if (at24cxx_write_continuous(AT24C_MEM_ADDR, TEST_DATA_LENGTH,
+				test_data_tx) != AT24C_WRITE_SUCCESS) {
+			result = false;
+			test_assert_true(test, false, "Continuous Write NG!");
+		}
+
+		if (at24cxx_read_continuous(AT24C_MEM_ADDR, TEST_DATA_LENGTH,
+				test_data_rx) != AT24C_READ_SUCCESS) {
+			result = false;
+			test_assert_true(test, false, "Continuous Read NG!");
+		}
+
+		result = buffer_cmp(test_data_tx, test_data_rx, TEST_DATA_LENGTH);
+		test_assert_true(test, result, "Continuous Comparsion NG!");
+	}
+}
+
+/**
+ * \brief Test data read API function.
+ *
+ * This test calls the data read API function and check if the read operation
+ * succeeded.
+ *
+ * \param test Current test case.
+ */
+static void run_test_page_access(const struct test_case *test)
+{
+	if (result == true) {
+		buffer_fill(page_read_buf, PAGE_SIZE, 0);
+		buffer_fill(page_write_buf, PAGE_SIZE, MEMORY_PATTERN);
+
+		if (at24cxx_write_page(PAGE_ADDR, PAGE_SIZE, page_write_buf) !=
+				AT24C_WRITE_SUCCESS) {
+			result = false;
+			test_assert_true(test, false, "Page Write NG!");
+		}
+
+		if (at24cxx_read_page(PAGE_ADDR, PAGE_SIZE, page_read_buf) !=
+				AT24C_WRITE_SUCCESS) {
+			result = false;
+			test_assert_true(test, false, "Page Read NG!");
+		}
+
+		result = buffer_cmp(page_read_buf, page_write_buf, PAGE_SIZE);
+		test_assert_true(test, result, "Continuous Comparsion NG!");
 	}
 }
 
@@ -177,10 +269,27 @@ static void run_test_read(const struct test_case *test)
  *
  * \param test Current test case.
  */
-static void run_test_data_comparison(const struct test_case *test)
+static void run_test_fill_pattern(const struct test_case *test)
 {
-	if (result == AT24C_READ_SUCCESS) {
-		test_assert_true(test, data == TEST_DATA, "Data is not consistent!");
+	if (result == true) {
+		buffer_fill(test_data_rx, TEST_DATA_LENGTH, 0);
+		buffer_fill(test_data_tx, PAGE_SIZE, MEMORY_PATTERN);
+
+		if (at24cxx_fill_pattern(AT24C_MEM_ADDR,
+			AT24C_MEM_ADDR + TEST_DATA_LENGTH - 1, MEMORY_PATTERN) !=
+			AT24C_WRITE_SUCCESS) {
+			result = false;
+			test_assert_true(test, false, "Pattern Fill NG!");
+		}
+
+		if (at24cxx_read_continuous(AT24C_MEM_ADDR, TEST_DATA_LENGTH,
+				test_data_rx) != AT24C_READ_SUCCESS) {
+			result = false;
+			test_assert_true(test, false, "Continuous Read NG!");
+		}
+
+		result = buffer_cmp(test_data_tx, test_data_rx, TEST_DATA_LENGTH);
+		test_assert_true(test, result, "Pattern Fill Comparison NG!");
 	}
 }
 
@@ -208,22 +317,26 @@ int main(void)
 	DEFINE_TEST_CASE(at24cxx_test_setup, NULL,
 			run_test_setup, NULL,
 			"at24cxx setup test");
-	DEFINE_TEST_CASE(at24cxx_test_write, NULL,
-			run_test_write, NULL,
-			"at24cxx write test");
-	DEFINE_TEST_CASE(at24cxx_test_read, NULL,
-			run_test_read, NULL,
-			"at24cxx read test");
-	DEFINE_TEST_CASE(at24cxx_test_comparison, NULL,
-			run_test_data_comparison, NULL,
-			"at24cxx comparison test");
+	DEFINE_TEST_CASE(at24cxx_test_byte_access, NULL,
+			run_test_byte_access, NULL,
+			"at24cxx byte access test");
+	DEFINE_TEST_CASE(at24cxx_test_continuous_access, NULL,
+			run_test_continuous_access, NULL,
+			"at24cxx continuous access test");
+	DEFINE_TEST_CASE(at24cxx_test_page_access, NULL,
+			run_test_page_access, NULL,
+			"at24cxx page access test");
+	DEFINE_TEST_CASE(at24cxx_test_fill_pattern, NULL,
+			run_test_fill_pattern, NULL,
+			"at24cxx fill pattern test");
 
 	/* Put test case addresses in an array */
 	DEFINE_TEST_ARRAY(at24cxx_test_array) = {
 		&at24cxx_test_setup,
-		&at24cxx_test_write,
-		&at24cxx_test_read,
-		&at24cxx_test_comparison
+		&at24cxx_test_byte_access,
+		&at24cxx_test_continuous_access,
+		&at24cxx_test_page_access,
+		&at24cxx_test_fill_pattern
 	};
 
 	/* Define the test suite */

@@ -111,7 +111,7 @@ static const uint8_t test_data_tx[] = {
 /* EEPROM Page Size */
 #define PAGE_SIZE  128
 /* EEPROM Page Address */
-#define PAGE_ADDR  1
+#define PAGE_ADDR  3
 uint8_t page_read_buf[PAGE_SIZE];
 uint8_t page_write_buf[PAGE_SIZE];
 
@@ -178,7 +178,8 @@ int main(void)
 	/* Fill EEPROM with memory pattern */
 	uint16_t addr;
 	uint8_t tmp = 0;
-	if (at24cxx_fill_pattern(AT24C_MEM_ADDR, AT24C_MEM_ADDR + TEST_DATA_LENGTH,
+	if (at24cxx_fill_pattern(AT24C_MEM_ADDR,
+			AT24C_MEM_ADDR + TEST_DATA_LENGTH - 1,
 			MEMORY_PATTERN) != AT24C_WRITE_SUCCESS) {
 		puts("AT24CXX pattern fill is failed.\r");
 		LED_On(LED0_GPIO);
@@ -187,11 +188,22 @@ int main(void)
 			/* Capture error */
 		}
 	}
-	for (addr = AT24C_MEM_ADDR; addr <= AT24C_MEM_ADDR + TEST_DATA_LENGTH;
-			addr++) {
-		if ((at24cxx_read_byte(addr, &tmp) != AT24C_READ_SUCCESS) ||
-				(tmp != MEMORY_PATTERN)) {
-			puts("Pattern check is failed\r\n");
+
+	if (at24cxx_read_continuous(AT24C_MEM_ADDR, TEST_DATA_LENGTH,
+			test_data_rx) != AT24C_READ_SUCCESS) {
+		puts("AT24CXX read packet is failed.\r");
+		LED_On(LED0_GPIO);
+		LED_On(LED1_GPIO);
+		while (1) {
+			/* Capture error */
+		}
+	}
+
+	/* Compare the sent and the received */
+	for (i = 0; i < TEST_DATA_LENGTH; i++) {
+		if (MEMORY_PATTERN != test_data_rx[i]) {
+			/* No match */
+			puts("Pattern comparison: Unmatched!\r");
 			LED_On(LED0_GPIO);
 			LED_On(LED1_GPIO);
 			while (1) {

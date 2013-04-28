@@ -225,17 +225,16 @@ static uint32_t twi_mk_addr(const uint8_t *addr, int len)
 {
 	uint32_t val;
 
-	if (len == 0)
+	if (len == 0) {
 		return 0;
+	}
 
 	val = addr[0];
 	if (len > 1) {
-		val <<= 8;
-		val |= addr[1];
+		val |= ((uint32_t)addr[1] << 8);
 	}
 	if (len > 2) {
-		val <<= 8;
-		val |= addr[2];
+		val |= ((uint32_t)addr[2] << 16);
 	}
 	return val;
 }
