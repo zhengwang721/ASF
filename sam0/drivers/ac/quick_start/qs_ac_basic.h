@@ -48,14 +48,12 @@
  *  \li Comparator peripheral in manually triggered (i.e. "Single Shot" mode)
  *  \li One comparator channel connected to input MUX pin 0 and compared to a
  *      scaled VCC/2 voltage
- *  \li Comparators 0 and 1 enabled during device sleep
  *
  * This use case sets up the Analog Comparator to compare an input voltage fed
  * into a GPIO pin of the device against a scaled voltage of the
  * microcontroller's VCC power rail. The comparisons are made on-demand in
- * single-shot mode, and the result stored into a local variable which can then
- * be used in a user application to alter the system behavior based on the
- * comparison result.
+ * single-shot mode, and the result stored into a local variable which is then
+ * output to the board LED to visually show the comparison state.
  *
  * \section asfdoc_samd20_ac_basic_use_case_setup Setup
  *
@@ -138,6 +136,8 @@
  * -# Read the comparator output state into the local variable for application
  *    use.
  *  \snippet qs_ac_basic.c main_5
- * -# Trigger the next conversion on the Analog Comparator channel.
+ * -# Set the board LED state to mirror the last comparison state.
  *  \snippet qs_ac_basic.c main_6
+ * -# Trigger the next conversion on the Analog Comparator channel.
+ *  \snippet qs_ac_basic.c main_7
  */

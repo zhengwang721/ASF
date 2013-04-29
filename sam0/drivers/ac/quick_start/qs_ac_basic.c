@@ -137,13 +137,15 @@ int main(void)
 	//! [main_4]
 			//! [main_5]
 			last_comparison = ac_chan_get_state(&ac_dev, AC_COMPARATOR_CHANNEL);
-
-			port_pin_set_output_level(LED_0_PIN, last_comparison);
 			//! [main_5]
 
 			//! [main_6]
-			ac_chan_trigger_single_shot(&ac_dev, AC_COMPARATOR_CHANNEL);
+			port_pin_set_output_level(LED_0_PIN, last_comparison);
 			//! [main_6]
+
+			//! [main_7]
+			ac_chan_trigger_single_shot(&ac_dev, AC_COMPARATOR_CHANNEL);
+			//! [main_7]
 		}
 	}
 	//! [main]
