@@ -241,7 +241,7 @@ uint32_t system_gclk_gen_get_hz(
 	/* Check if the generator is using fractional or binary division */
 	/* Workaround for divider = DIV instead of DIV+1 */
 	if (!divsel && divider > 1) {
-		gen_input_hz /= divider;
+		gen_input_hz /= divider / 2;
 	} else if (divsel) {
 		gen_input_hz >>= (divider);
 	}
