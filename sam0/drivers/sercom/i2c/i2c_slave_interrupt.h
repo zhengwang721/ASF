@@ -57,13 +57,17 @@ extern "C" {
  */
 
 /**
- * \name Nack on Address Match
+ * \name Address Match Functionality
  * @{
  */
 
 void i2c_slave_enable_nack_on_address(
 		struct i2c_slave_module *const module);
 void i2c_slave_disable_nack_on_address(
+		struct i2c_slave_module *const module);
+void i2c_slave_enable_wake_on_address(
+		struct i2c_slave_module *const module);
+void i2c_slave_disable_wake_on_address(
 		struct i2c_slave_module *const module);
 
 /** @} */

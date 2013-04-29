@@ -78,6 +78,47 @@ void i2c_slave_disable_nack_on_address(
 }
 
 /**
+ * \brief Enables sending of NACK on address match
+ *
+ * Enables wake on address match.
+ *
+ * \param[in,out] module  Pointer to software module structure
+ */
+void i2c_slave_enable_wake_on_address(
+		struct i2c_slave_module *const module)
+{
+	/* Sanity check arguments. */
+	Assert(module);
+	Assert(module->hw);
+
+	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
+
+	module->wake_on_address = true;
+	i2c_hw->INTENSET.reg = SERCOM_I2CS_INTFLAG_AMATCH;
+}
+
+/**
+ * \brief Disables address match interrupt when using polled functions
+ *
+ * Disables wake on address match.
+ *
+ * \param[in,out] module  Pointer to software module structure
+ */
+void i2c_slave_disable_wake_on_address(
+		struct i2c_slave_module *const module)
+{
+	/* Sanity check arguments. */
+	Assert(module);
+	Assert(module->hw);
+
+	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
+
+	module->wake_on_address = false;
+	// TODO: CHeck if we can disable interrupt
+	// i2c_hw->INTENCLR.reg = SERCOM_I2CS_INTFLAG_AMATCH;
+}
+
+/**
  * \internal
  * Reads next data. Used by interrupt handler to get next data byte from master.
  *
