@@ -234,11 +234,18 @@ struct i2c_slave_config {
 	bool enable_general_call_address;
 #  if I2C_SLAVE_CALLBACK_MODE == true
 	/**
-	 * Enable NAK on address match (this can be changed after initialization
+	 * Enable NACK on address match (this can be changed after initialization
 	 * via the \ref i2c_slave_enable_nack_on_address and
 	 * \ref i2c_slave_disable_nack_on_address functions)
 	 */
 	bool enable_nack_on_address;
+	/**
+	 * Enable wake on address match interrupt to be able to used the polled
+	 * functions after getting an address match. (This can be changed after
+	 * initialization via the \ref i2c_slave_enable_wake_on_address and
+	 * \ref i2c_slave_disable_wake_on_address functions)
+	 */
+	bool enable_wake_on_address;
 #  endif
 	/** GCLK generator to use as clock source */
 	enum gclk_generator generator_source;
@@ -316,6 +323,7 @@ static inline bool i2c_slave_is_syncing(
  * - Address mask = 0 (one single address)
  * - General call address disabled
  * - Address nack disabled if the interrupt driver is used
+ * - Wake on address match disabled if the interrupt driver is used.
  * - GCLK generator 0
  * - Do not run in standby
  * - PINMUX_DEFAULT for SERCOM pads
@@ -336,6 +344,7 @@ static inline void i2c_slave_get_config_defaults(
 	config->enable_general_call_address = false;
 #if I2C_SLAVE_CALLBACK_MODE == true
 	config->enable_nack_on_address = false;
+	config->enable_wake_on_address = false;
 #endif
 	config->generator_source = GCLK_GENERATOR_0;
 	config->run_in_standby = false;

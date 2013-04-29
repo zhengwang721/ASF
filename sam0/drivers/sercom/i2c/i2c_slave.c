@@ -271,7 +271,8 @@ enum status_code i2c_slave_init(
 	module->registered_callback = 0;
 	module->enabled_callback = 0;
 	module->buffer_length = 0;
-	module->wake_on_address = false;
+	module->wake_on_address = config->enable_wake_on_address;
+	module->nack_on_address = config->enable_nack_on_address;
 #endif
 
 	/* Set SERCOM module to operate in I2C slave mode. */
