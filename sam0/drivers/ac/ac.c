@@ -53,6 +53,15 @@ static enum status_code _ac_set_config(
 
 	Ac *const ac_module = module_inst->hw;
 
+	/* Set up GCLK */
+	struct system_gclk_chan_config gclk_chan_conf;
+	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
+	gclk_chan_conf.source_generator = config->source_generator;
+	system_gclk_chan_set_config(AC_GCLK_ID_DIG, &gclk_chan_conf);
+	system_gclk_chan_set_config(AC_GCLK_ID_ANA, &gclk_chan_conf);
+	system_gclk_chan_enable(AC_GCLK_ID_DIG);
+	system_gclk_chan_enable(AC_GCLK_ID_ANA);
+
 	/* Use a temporary register for computing the control bits */
 	uint32_t ctrla_temp = 0;
 
@@ -134,13 +143,6 @@ enum status_code ac_init(
 
 	/* Turn on the digital interface clock */
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, PM_APBCMASK_AC);
-
-	/* Set up GCLK */
-	struct system_gclk_chan_config gclk_chan_conf;
-	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
-	gclk_chan_conf.source_generator = config->source_generator;
-	system_gclk_chan_set_config(AC_GCLK_ID_DIG, &gclk_chan_conf);
-	system_gclk_chan_enable(AC_GCLK_ID_DIG);
 
 	/* Write configuration to module */
 	return _ac_set_config(module_inst, config);
