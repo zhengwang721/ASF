@@ -89,8 +89,9 @@ int main(void)
 
 	/* Enable the external 32KHz oscillator */
 //! [enable_extosc32k_main]
-	enum status_code osc32k_status = system_clock_source_enable(
-			SYSTEM_CLOCK_SOURCE_XOSC32K, false);
+	enum status_code osc32k_status =
+			system_clock_source_enable(SYSTEM_CLOCK_SOURCE_XOSC32K);
+
 	if (osc32k_status != STATUS_OK) {
 		/* Error enabling the clock source */
 	}
@@ -103,8 +104,9 @@ int main(void)
 
 	/* Enable the DFLL oscillator */
 //! [enable_dfll_main]
-	enum status_code dfll_status = system_clock_source_enable(
-			SYSTEM_CLOCK_SOURCE_DFLL, false);
+	enum status_code dfll_status =
+			system_clock_source_enable(SYSTEM_CLOCK_SOURCE_DFLL);
+
 	if (dfll_status != STATUS_OK) {
 		/* Error enabling the clock source */
 	}

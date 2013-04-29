@@ -134,6 +134,9 @@
 
 <!-- 	This module will not be required if TFA is used since TFA module will directly include the above TAL modules based on the TAL_TYPE -->
 	<module type="component" id="thirdparty.wireless.avr2025_mac.source.tal" caption="AVR2025 - TAL">
+		<info type="description" value="summary">
+        The Transceiver Abstraction Layer (TAL) implements the transceiver specific functionalities.This module is necessary for  TAL applications,i.e when the Highest Stack Layer is TAL .The transceiver to be used is  selected with the help of this module.When a application requires TFA(Transceiver Feature Access)features to be included and the Highest Layer is TAL the "AVR2025 - TFA" module should be included instead of this module since the TFA module inturn includes this TAL module.For MAC and Other Higher Layer applications this module will be automatically added for eg.This module is a sub module of AVR2025 - IEEE 802.15.4 MAC or AVR2102 - RF4Control.
+        </info>
 		<require idref="config.thirdparty.wireless.avr2025_mac.source.tal"/>
 		<require idref="thirdparty.wireless.avr2025_mac.source.tal.generic"/>
 		<build type="doxygen-entry-point" value="group_tal"/>
