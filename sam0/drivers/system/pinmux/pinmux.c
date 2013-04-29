@@ -63,14 +63,13 @@ static void _system_pinmux_config(
 	Assert(config);
 
 	/* Track the configuration bits into a temporary variable before writing */
-	uint32_t pin_cfg     = 0;
-	uint32_t pin_cfg_mux = 0;
+	uint32_t pin_cfg = 0;
 
 	/* Enable the pin peripheral mux flag if non-GPIO selected (pin mux will
 	 * be written later) and store the new mux mask */
 	if (config->mux_position != SYSTEM_PINMUX_GPIO) {
-		pin_cfg    |= PORT_WRCONFIG_PMUXEN;
-		pin_cfg_mux = (config->mux_position << PORT_WRCONFIG_PMUX_Pos);
+		pin_cfg |= PORT_WRCONFIG_PMUXEN;
+		pin_cfg |= (config->mux_position << PORT_WRCONFIG_PMUX_Pos);
 	}
 
 	/* Check if the user has requested that the input buffer be enabled */
@@ -109,17 +108,13 @@ static void _system_pinmux_config(
 	 * including the pin peripheral multiplexer just in case it is enabled */
 	port->WRCONFIG.reg
 		= (lower_pin_mask << PORT_WRCONFIG_PINMASK_Pos) |
-			/* Shift to upper 16 bits. */
-			pin_cfg | pin_cfg_mux |
-			PORT_WRCONFIG_WRPMUX | PORT_WRCONFIG_WRPINCFG;
+			pin_cfg | PORT_WRCONFIG_WRPMUX | PORT_WRCONFIG_WRPINCFG;
 
 	/* Configure the upper 16-bits of the port to the desired configuration,
 	 * including the pin peripheral multiplexer just in case it is enabled */
 	port->WRCONFIG.reg
 		= (upper_pin_mask << PORT_WRCONFIG_PINMASK_Pos) |
-			/* Shift to upper 16 bits. */
-			pin_cfg | pin_cfg_mux |
-			PORT_WRCONFIG_WRPMUX | PORT_WRCONFIG_WRPINCFG |
+			pin_cfg | PORT_WRCONFIG_WRPMUX | PORT_WRCONFIG_WRPINCFG |
 			PORT_WRCONFIG_HWSEL;
 
 	/* Set the pull-up state once the port pins are configured if one was
