@@ -124,8 +124,6 @@ enum status_code ac_init(
 		Ac *const hw,
 		struct ac_config *const config)
 {
-	struct system_gclk_chan_config gclk_chan_conf;
-
 	/* Sanity check arguments */
 	Assert(module_inst);
 	Assert(hw);
@@ -134,7 +132,12 @@ enum status_code ac_init(
 	/* Initialize device instance */
 	module_inst->hw = hw;
 
+	/* Turn on the digital interface clock */
+	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, PM_APBCMASK_AC);
+
 	/* Set up GCLK */
+	struct system_gclk_chan_config gclk_chan_conf;
+	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
 	gclk_chan_conf.source_generator = config->source_generator;
 	system_gclk_chan_set_config(AC_GCLK_ID_DIG, &gclk_chan_conf);
 	system_gclk_chan_enable(AC_GCLK_ID_DIG);
