@@ -110,8 +110,13 @@ void system_gclk_gen_set_config(
 			/* Determine the index of the highest bit set to get the
 			 * division factor that must be loaded into the division
 			 * register */
+#if 1
+			/* TODO: Bug 10653 */
 			/* Set to 1 to workaround that doesn't use DIV+1 like in datasheet */
 			uint32_t div2_count = 1;
+#else
+			uint32_t div2_count = 0;
+#endif
 			uint32_t mask;
 			for (mask = (1UL << 1); mask < config->division_factor;
 						mask <<= 1) {
@@ -123,15 +128,23 @@ void system_gclk_gen_set_config(
 			new_genctrl_config |= GCLK_GENCTRL_DIVSEL;
 		} else {
 			/* Set integer division factor */
+#if 1
+			/* TODO: Bug 10653 */
 			/* Workaround for 2 shift internal to gclk module */
 			new_gendiv_config  |=
 					(config->division_factor * 2) << GCLK_GENDIV_DIV_Pos;
-
+#else
+			new_gendiv_config  |=
+					(config->division_factor) << GCLK_GENDIV_DIV_Pos;
+#endif
 			/* Enable non-binary division with increased duty cycle accuracy */
 			new_genctrl_config |= GCLK_GENCTRL_IDC;
 		}
+#if 1
+	/* TODO: Bug 10653 */
 	} else {
 		new_genctrl_config |=  GCLK_GENCTRL_DIVSEL;
+#endif
 	}
 
 	/* Enable or disable the clock in standby mode */
@@ -239,15 +252,22 @@ uint32_t system_gclk_gen_get_hz(
 	uint32_t divider = GCLK->GENDIV.bit.DIV;
 
 	/* Check if the generator is using fractional or binary division */
+#if 1
+	/* TODO: Bug 10653 */
 	/* Workaround for divider = DIV instead of DIV+1 */
 	if (!divsel && divider > 1) {
 		gen_input_hz /= divider / 2;
 	} else if (divsel) {
 		gen_input_hz >>= (divider);
 	}
-
+#else
+	if (!divsel && divider > 1) {
+		gen_input_hz /= divider;
+	} else if (divsel) {
+		gen_input_hz >>= (divider+1);
+	}
+#endif
 	return gen_input_hz;
-
 }
 
 /**
