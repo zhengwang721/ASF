@@ -179,6 +179,8 @@ struct i2c_slave_module {
 	/** Timeout value for polled functions */
 	uint16_t buffer_timeout;
 #  if I2C_SLAVE_CALLBACK_MODE == true
+	/** Wake on address match to use polled functions */
+	bool wake_on_address;
 	/** Nack on address match */
 	bool nack_on_address;
 	/** Pointers to callback functions */
@@ -362,9 +364,10 @@ static inline void i2c_slave_enable(
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
 
 #if I2C_SLAVE_CALLBACK_MODE == true
-	/* Enable interrupts */
-	i2c_hw->INTENSET.reg = SERCOM_I2CS_INTENSET_PREC |
-			SERCOM_I2CS_INTENSET_AMATCH | SERCOM_I2CS_INTENSET_DRDY;
+	if (module->wake_on_address) {
+		/* Enable address match interrupt */
+		i2c_hw->INTENSET.reg = SERCOM_I2CS_INTFLAG_AMATCH;
+	}
 
 	/* Enable global interrupt for module */
 	system_interrupt_enable(_sercom_get_interrupt_vector(module->hw));
@@ -432,6 +435,8 @@ enum status_code i2c_slave_read_packet_wait(
 		struct i2c_slave_module *const module,
 		struct i2c_packet *const packet);
 enum i2c_slave_direction i2c_slave_get_direction_wait(
+		struct i2c_slave_module *const module);
+enum i2c_slave_direction i2c_slave_get_direction(
 		struct i2c_slave_module *const module);
 
 /** @} */
