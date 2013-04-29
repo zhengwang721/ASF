@@ -54,6 +54,7 @@
 #include "tal_types.h"
 #if (TAL_TYPE == AT86RF230B)
 
+#define TRANSCEIVER_NAME    "AT86RF230B"
 /* === EXTERNALS =========================================================== */
 
 
