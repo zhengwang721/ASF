@@ -2,7 +2,7 @@
 	<module type="driver" id="sam0.utils.stdio.stdio_serial" caption="Standard serial I/O (stdio)">
 		<info type="description" value="summary">
 		Common standard serial I/O management driver that
-		implements a stdio serial interface on SAM D20 devices.
+		implements a stdio serial interface on SAM devices.
 		</info>
 		<device-support value="samd20"/>
 		<build type="header-file" value="stdio_serial.h"/>
