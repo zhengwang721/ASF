@@ -152,7 +152,8 @@
  * For successful transmit and receive using the asynchronous mode the receiver
  * and transmitter clocks needs to be closely matched. When receiving a frame
  * that does not match the selected baud rate closely enough the receiver will
- * be unable synchronize the frame(s), and garbage transmissions will result.
+ * be unable to synchronize the frame(s), and garbage transmissions will
+ * result.
  *
  * \subsection asfdoc_samd20_sercom_usart_parity Parity
  * Parity can be enabled to detect if a transmission was in error. This is done by
