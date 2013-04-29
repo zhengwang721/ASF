@@ -248,9 +248,8 @@ static void nlde_data_indication(uint8_t PairingRef, profile_id_t ProfileId,
                                  uint16_t VendorId, uint8_t nsduLength, uint8_t *nsdu,
                                  uint8_t RxLinkQuality, uint8_t RxFlags);
 
-void stack_indication_callback_init(void);
 #endif
-
+void stack_indication_callback_init(void);
 #ifdef PBP_ORG
 static void pbp_org_pair_confirm(nwk_enum_t Status, uint8_t PairingRef);
 #endif
