@@ -63,9 +63,14 @@
 
 
 /* === Implementation ====================================================== */
-
+#if (defined __GNUC__)
+void __attribute__((weak))
+usr_mlme_disassociate_ind(uint64_t DeviceAddress,
+                          uint8_t DisassociateReason)
+#else
 void usr_mlme_disassociate_ind(uint64_t DeviceAddress,
                                uint8_t DisassociateReason)
+#endif
 {
     /* Keep compiler happy. */
     DeviceAddress = DeviceAddress;

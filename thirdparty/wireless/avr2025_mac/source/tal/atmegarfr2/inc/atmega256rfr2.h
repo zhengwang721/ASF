@@ -56,6 +56,8 @@
 #include "tal_types.h"
 #if (TAL_TYPE == ATMEGARFR2)
 
+
+#define TRANSCEIVER_NAME    "ATMEGARFR2"
 /* === EXTERNALS =========================================================== */
 
 
