@@ -419,7 +419,7 @@ extern int test_suite_run(const struct test_suite *suite);
 #if defined(__GNUC__)
 /* GCC should perform additional printf() argument sanity checks on the
  * function call site to try to ensure arguments are printf() compatible */
-__attribute__((format(printf, 5, 6)))
+__attribute__((format(__printf__, 5, 6)))
 #endif
 extern void test_case_fail(const struct test_case *test, int result,
 		const char *file, unsigned int line,

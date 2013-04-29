@@ -293,7 +293,8 @@ enum status_code nvm_update_buffer(
 
 	/* Calculate the starting page in the row that is to be updated */
 	uint8_t page_in_row =
-			(destination_address % (_nvm_dev.page_size * NVMCTRL_ROW_PAGES)) / _nvm_dev.page_size;
+			(destination_address % (_nvm_dev.page_size * NVMCTRL_ROW_PAGES)) /
+			_nvm_dev.page_size;
 
 	/* Update the specified bytes in the page buffer */
 	for (uint32_t i = 0; i < length; i++) {
@@ -567,9 +568,11 @@ void nvm_get_parameters(
 	/* Read out from the PARAM register */
 	uint32_t param_reg = nvm_module->PARAM.reg;
 
-	/* Mask out page size and number of pages */
-	parameters->page_size  =
-			(param_reg & NVMCTRL_PARAM_PSZ_Msk)  >> NVMCTRL_PARAM_PSZ_Pos;
+	/* Mask out page size exponent and convert to a number of bytes */
+	parameters->page_size =
+			8 << ((param_reg & NVMCTRL_PARAM_PSZ_Msk) >> NVMCTRL_PARAM_PSZ_Pos);
+
+	/* Mask out number of pages count */
 	parameters->nvm_number_of_pages =
 			(param_reg & NVMCTRL_PARAM_NVMP_Msk) >> NVMCTRL_PARAM_NVMP_Pos;
 
