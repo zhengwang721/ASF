@@ -354,7 +354,8 @@ struct events_chan_config {
 	enum events_edge edge_detection;
 	/** Path of the event system, from \ref events_path. */
 	enum events_path path;
-	/** Event generator module that should be attached to the event channel. */
+	/** Event generator module that should be attached to the event channel,
+	 *  a \c EVSYS_ID_GEN_* constant from the device header files. */
 	uint8_t generator_id;
 	/** GCLK generator used to clock the specific event channel */
 	enum gclk_generator clock_source;
