@@ -109,7 +109,8 @@ void events_chan_set_config(
  * Writes out a given configuration of a Event System user MUX configuration to
  * the hardware module.
  *
- * \param[in] user    Event User MUX index to configure
+ * \param[in] user    Event User MUX index to configure, a \c EVSYS_ID_USER_*
+ *                    constant from the device header files
  * \param[in] config  Configuration settings for the event user MUX
  */
 void events_user_set_config(
