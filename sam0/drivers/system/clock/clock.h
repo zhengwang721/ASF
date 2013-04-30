@@ -376,21 +376,6 @@ enum system_main_clock_div {
 };
 
 /**
- * \brief Selectable speeds for the RTC to run at.
- *
- * RTC generic clock source generator frequency configuration values,
- * for \c conf_clock.h.
- */
-enum conf_clock_rtc_freq {
-	/** 1Hz counter speed for the RTC (Calendar mode only). */
-	CONF_CLOCK_RTC_FREQ_1HZ   = 32,
-	/** 1kHz counter speed for the RTC. */
-	CONF_CLOCK_RTC_FREQ_1KHZ  = 32,
-	/** 32kHz counter speed for the RTC. */
-	CONF_CLOCK_RTC_FREQ_32KHZ = 1,
-};
-
-/**
  * \brief External clock source types.
  *
  * Available external clock source types.
