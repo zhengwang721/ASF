@@ -9,9 +9,9 @@
 		<require idref="common.boards"/>
 	</module>
 
-	<board id="board.user_board.samd20ja" caption="User Board">
+	<board id="board.user_board.samd20j" caption="User Board">
 		<require idref="common2.boards.user_board.common"/>
 		<require idref="sam0.utils.linker_scripts"/>
-		<device-support value="samd20ja"/>
+		<device-support value="samd20j"/>
 	</board>
 </asf>

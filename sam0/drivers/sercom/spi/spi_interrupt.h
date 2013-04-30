@@ -61,6 +61,8 @@ enum spi_job_type {
 	SPI_JOB_READ_BUFFER,
 	/** Asynchronous SPI write from a user provided buffer */
 	SPI_JOB_WRITE_BUFFER,
+	/** Asynchronous SPI transceive from user provided buffers */
+	SPI_JOB_TRANSCEIVE_BUFFER,
 };
 
 
@@ -133,6 +135,13 @@ enum status_code spi_write_buffer_job(
 
 enum status_code spi_read_buffer_job(
 		struct spi_module *const module,
+		uint8_t *rx_data,
+		uint16_t length,
+		uint16_t dummy);
+		
+enum status_code spi_transceive_buffer_job(
+		struct spi_module *const module,
+		uint8_t *tx_data,
 		uint8_t *rx_data,
 		uint16_t length);
 

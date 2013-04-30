@@ -1,5 +1,6 @@
 <asf xmlversion="1.0">
 	<project caption="Quick Start for the SAM D20 ADC Driver (Callback)" id="sam0.drivers.adc.quick_start_callback.dummy.atsamd20">
+		<info type="gui-flag" value="move-to-root"/>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_clocks.h"/>
 		<require idref="board.dummy.samd20"/>
@@ -8,6 +9,6 @@
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>
-		<device-support value="atsamd20j18a"/>
+		<device-support value="atsamd20j18"/>
 	</project>
 </asf>

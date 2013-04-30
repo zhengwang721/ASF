@@ -63,11 +63,18 @@ void system_gclk_init(void)
  * \brief Writes a Generic Clock Generator configuration to the hardware module.
  *
  * Writes out a given configuration of a Generic Clock Generator configuration
- * to the hardware module. If the generator is currently running, it will be
- * stopped.
+ * to the hardware module.
  *
- * \note Once called the generator will not be running; to start the generator,
- *       call \ref system_gclk_gen_enable() after configuring a generator.
+ * \note Changing the clock source on the fly (on a running
+ *       generator) can take additional time if the clock source is configured
+ *       to only run on-demand (ONDEMAND bit is set) and it is not currently
+ *       running (no peripheral is requesting the clock source). In this case
+ *       the GCLK will request the new clock while still keeping a request to
+ *       the old clock source until the new clock source is ready.
+ *
+ * \note This function will not start a generator that is not already running;
+ *       to start the generator, call \ref system_gclk_gen_enable()
+ *       after configuring a generator.
  *
  * \param[in] generator  Generic Clock Generator index to configure
  * \param[in] config     Configuration settings for the generator
@@ -103,46 +110,58 @@ void system_gclk_gen_set_config(
 			/* Determine the index of the highest bit set to get the
 			 * division factor that must be loaded into the division
 			 * register */
+#if 1
+			/* TODO: Bug 10653 */
+			/* Set to 1 to workaround that doesn't use DIV+1 like in datasheet */
+			uint32_t div2_count = 1;
+#else
 			uint32_t div2_count = 0;
+#endif
 			uint32_t mask;
-			for (mask = (1UL << 1); mask < config->division_factor; mask <<= 1) {
+			for (mask = (1UL << 1); mask < config->division_factor;
+						mask <<= 1) {
 				div2_count++;
 			}
 
 			/* Set binary divider power of 2 division factor */
 			new_gendiv_config  |= div2_count << GCLK_GENDIV_DIV_Pos;
+			new_genctrl_config |= GCLK_GENCTRL_DIVSEL;
 		} else {
 			/* Set integer division factor */
-			new_gendiv_config  |= config->division_factor << GCLK_GENDIV_DIV_Pos;
-
+#if 1
+			/* TODO: Bug 10653 */
+			/* Workaround for 2 shift internal to gclk module */
+			new_gendiv_config  |=
+					(config->division_factor * 2) << GCLK_GENDIV_DIV_Pos;
+#else
+			new_gendiv_config  |=
+					(config->division_factor) << GCLK_GENDIV_DIV_Pos;
+#endif
 			/* Enable non-binary division with increased duty cycle accuracy */
-			new_genctrl_config |= GCLK_GENCTRL_DIVSEL;
 			new_genctrl_config |= GCLK_GENCTRL_IDC;
 		}
+#if 1
+	/* TODO: Bug 10653 */
 	} else {
-		new_genctrl_config |= GCLK_GENCTRL_DIVSEL;
+		new_genctrl_config |=  GCLK_GENCTRL_DIVSEL;
+#endif
 	}
 
-	#if defined (REVB)
 	/* Enable or disable the clock in standby mode */
 	if (config->run_in_standby) {
 		new_genctrl_config |= GCLK_GENCTRL_RUNSTDBY;
 	}
-	#endif
-
-	/* Disable generator before updating it */
-	system_gclk_gen_disable(generator);
 
 	/* Write the new generator configuration */
 	while (system_gclk_is_syncing()) {
 		/* Wait for synchronization */
 	};
 	GCLK->GENDIV.reg  = new_gendiv_config;
+
 	while (system_gclk_is_syncing()) {
 		/* Wait for synchronization */
 	};
-
-	GCLK->GENCTRL.reg = new_genctrl_config;
+	GCLK->GENCTRL.reg = new_genctrl_config | (GCLK->GENCTRL.reg & GCLK_GENCTRL_GENEN);
 }
 
 /**
@@ -233,14 +252,22 @@ uint32_t system_gclk_gen_get_hz(
 	uint32_t divider = GCLK->GENDIV.bit.DIV;
 
 	/* Check if the generator is using fractional or binary division */
-	if (divsel && divider > 1) {
-		gen_input_hz /= divider;
-	} else if (!divsel) {
-		gen_input_hz >>= (divider + 1);
+#if 1
+	/* TODO: Bug 10653 */
+	/* Workaround for divider = DIV instead of DIV+1 */
+	if (!divsel && divider > 1) {
+		gen_input_hz /= divider / 2;
+	} else if (divsel) {
+		gen_input_hz >>= (divider);
 	}
-
+#else
+	if (!divsel && divider > 1) {
+		gen_input_hz /= divider;
+	} else if (divsel) {
+		gen_input_hz >>= (divider+1);
+	}
+#endif
 	return gen_input_hz;
-
 }
 
 /**
@@ -268,12 +295,10 @@ void system_gclk_chan_set_config(
 	/* Select the desired generic clock generator */
 	new_clkctrl_config |= config->source_generator << GCLK_CLKCTRL_GEN_Pos;
 
-	#if !defined (REVB)
-	/* Enable or disable the clock in standby mode */
-	if (config->run_in_standby) {
-		new_clkctrl_config |= GCLK_CLKCTRL_RUNSTDBY;
+	/* Enable write lock if requested to prevent further modification */
+	if (config->write_lock) {
+		new_clkctrl_config |= GCLK_CLKCTRL_WRTLOCK;
 	}
-	#endif
 
 	/* Disable generic clock channel */
 	system_gclk_chan_disable(channel);

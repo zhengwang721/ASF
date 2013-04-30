@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="driver" id="sam0.utils.stdio" caption="Standard I/O (stdio) Interface - SAM0 implementation">
+	<module type="driver" id="sam0.utils.stdio" caption="Standard I/O (stdio) Interface">
 		<info type="description" value="summary">
 		Common standard I/O driver that implements the stdio
 		read and write functions on SAM devices.

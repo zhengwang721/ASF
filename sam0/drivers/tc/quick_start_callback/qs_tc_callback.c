@@ -89,7 +89,7 @@ int main(void)
 	//! [pwm_channel_0]
 	config.channel_pwm_out_enabled[0] = true;
 	config.channel_pwm_out_pin[0]     = PWM_OUT_PIN;
-	config.channel_pwm_out_mux[0]     = PWM_OUT_PIN_MUX;
+	config.channel_pwm_out_mux[0]     = PWM_OUT_MUX;
 	//! [pwm_channel_0]
 
 	//! [setup]

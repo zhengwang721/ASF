@@ -23,11 +23,9 @@
 		</g>
 		<marker id="mrkr13-132" class="st5" v:arrowType="13" v:arrowSize="2" v:setback="33" refX="33" orient="auto"
 				markerUnits="strokeWidth">
-			<use xlink:href="#lend13" transform="scale(11.5) "/>
 		</marker>
 		<marker id="mrkr13-134" class="st5" v:arrowType="13" v:arrowSize="2" v:setback="34.5" refX="-34.5" orient="auto"
 				markerUnits="strokeWidth">
-			<use xlink:href="#lend13" transform="scale(-11.5,-11.5) "/>
 		</marker>
 	</defs>
 	<g v:mID="0" v:index="1" v:groupContext="foregroundPage">

@@ -49,8 +49,10 @@
 #define CONF_RX_USART      EDBG_CDC_MODULE
 /* RX USART to test */
 #define RX_USART           EXT1_UART_MODULE
+#define RX_USART_PINMUX    EXT1_UART_RX_PINMUX
 /* TX USART to test */
 #define TX_USART           EXT2_UART_MODULE
+#define TX_USART_PINMUX    EXT2_UART_TX_PINMUX
 
 /* Test string to send */
 #define TEST_STRING        "Hello world!"
@@ -284,7 +286,7 @@ static void test_system_init(void)
 	/* Configure RX USART */
 	usart_get_config_defaults(&usart_rx_config);
 	usart_rx_config.mux_settings = USART_RX_1_TX_0_XCK_1;
-	usart_rx_config.pinout_pad1  = PINMUX_PA11B_SERCOM0_PAD1;
+	usart_rx_config.pinout_pad1  = RX_USART_PINMUX;
 	usart_rx_config.baudrate     = TEST_USART_SPEED;
 	/* Apply configuration */
 	usart_init(&usart_rx_module, RX_USART, &usart_rx_config);
@@ -294,7 +296,7 @@ static void test_system_init(void)
 	/* Configure TX USART */
 	usart_get_config_defaults(&usart_tx_config);
 	usart_tx_config.mux_settings = USART_RX_1_TX_0_XCK_1;
-	usart_tx_config.pinout_pad0  = PINMUX_PA24B_SERCOM3_PAD0;
+	usart_tx_config.pinout_pad0  = TX_USART_PINMUX;
 	usart_tx_config.baudrate     = TEST_USART_SPEED;
 	/* Apply configuration */
 	usart_init(&usart_tx_module, TX_USART, &usart_tx_config);

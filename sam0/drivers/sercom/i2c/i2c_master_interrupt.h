@@ -164,7 +164,7 @@ static inline void i2c_master_cancel_job(
  *
  * \param[in] module  Pointer to software module structure
  *
- * \return Last status code from transfer operation
+ * \return Last status code from transfer operation.
  * \retval STATUS_OK                    No error has occurred
  * \retval STATUS_BUSY                  If transfer is in progress
  * \retval STATUS_BUSY                  If master module is busy

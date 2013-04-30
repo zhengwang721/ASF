@@ -44,7 +44,57 @@
 
 /**
  * \internal
- * Writes of a buffer with a given length
+ *
+ * Dummy byte to send when reading in master mode.
+ */
+uint16_t dummy_write;
+
+/**
+ * \internal
+ * Starts transceive of buffers with a given length
+ *
+ * \param[in]  module   Pointer to SPI software instance struct
+ * \param[in]  rx_data  Pointer to data to be received
+ * \param[in]  tx_data  Pointer to data to be transmitted
+ * \param[in]  length   Length of data buffer
+ *
+ */
+static void _spi_transceive_buffer(
+		struct spi_module *const module,
+		uint8_t *tx_data,
+		uint8_t *rx_data,
+		uint16_t length)
+{
+	Assert(module);
+	Assert(tx_data);
+
+	/* Write parameters to the device instance */
+	module->remaining_tx_buffer_length = length;
+	module->remaining_rx_buffer_length = length;
+	module->rx_buffer_ptr = rx_data;
+	module->tx_buffer_ptr = tx_data;
+	module->status = STATUS_BUSY;
+
+	module->dir = SPI_DIRECTION_BOTH;
+
+	/* Get a pointer to the hardware module instance */
+	SercomSpi *const hw = &(module->hw->SPI);
+
+	/* Enable the Data Register Empty and RX Complete Interrupt */
+	hw->INTENSET.reg = (SPI_INTERRUPT_FLAG_DATA_REGISTER_EMPTY |
+			SPI_INTERRUPT_FLAG_RX_COMPLETE);
+			
+	if (module->mode == SPI_MODE_SLAVE) {
+		/* Clear TXC flag if set */
+		hw->INTFLAG.reg = SPI_INTERRUPT_FLAG_TX_COMPLETE;
+		/* Enable transmit complete interrupt for slave */
+		hw->INTENSET.reg = SPI_INTERRUPT_FLAG_TX_COMPLETE;
+	}
+}
+
+/**
+ * \internal
+ * Starts write of a buffer with a given length
  *
  * \param[in]  module   Pointer to SPI software instance struct
  * \param[in]  tx_data  Pointer to data to be transmitted
@@ -61,21 +111,30 @@ static void _spi_write_buffer(
 
 	/* Write parameters to the device instance */
 	module->remaining_tx_buffer_length = length;
+	module->remaining_dummy_buffer_length = length;
 	module->tx_buffer_ptr = tx_data;
-	module->tx_status = STATUS_BUSY;
+	module->status = STATUS_BUSY;
 
-	if (module->dir == SPI_DIRECTION_IDLE) {
-		module->dir = SPI_DIRECTION_WRITE;
-	} else {
-		module->dir = SPI_DIRECTION_BOTH;
-	}
+	module->dir = SPI_DIRECTION_WRITE;
 
 	/* Get a pointer to the hardware module instance */
 	SercomSpi *const hw = &(module->hw->SPI);
 
-	/* Enable the Data Register Empty, TX and RX Complete Interrupt */
-	hw->INTENSET.reg = (SPI_INTERRUPT_FLAG_DATA_REGISTER_EMPTY |
-			SPI_INTERRUPT_FLAG_TX_COMPLETE | SPI_INTERRUPT_FLAG_RX_COMPLETE);
+	if (module->mode == SPI_MODE_SLAVE) {
+		/* Clear TXC flag if set */
+		hw->INTFLAG.reg = SPI_INTERRUPT_FLAG_TX_COMPLETE;
+		/* Enable transmit complete interrupt for slave */
+		hw->INTENSET.reg = SPI_INTERRUPT_FLAG_TX_COMPLETE;
+	}
+
+	if (module->receiver_enabled) {
+		/* Enable the Data Register Empty and RX Complete interrupt */
+		hw->INTENSET.reg = (SPI_INTERRUPT_FLAG_DATA_REGISTER_EMPTY |
+				SPI_INTERRUPT_FLAG_RX_COMPLETE);
+	} else {
+		/* Enable the Data Register Empty interrupt */
+		hw->INTENSET.reg = SPI_INTERRUPT_FLAG_DATA_REGISTER_EMPTY;
+	}
 }
 
 /**
@@ -95,28 +154,36 @@ static void _spi_read_buffer(
 	Assert(module);
 	Assert(rx_data);
 
+	uint8_t tmp_intenset = 0;
+
 	/* Set length for the buffer and the pointer, and let
 	 * the interrupt handler do the rest */
 	module->remaining_rx_buffer_length = length;
 	module->remaining_dummy_buffer_length = length;
 	module->rx_buffer_ptr = rx_data;
-	module->rx_status = STATUS_BUSY;
+	module->status = STATUS_BUSY;
 
-	if (module->dir == SPI_DIRECTION_IDLE) {
-		module->dir = SPI_DIRECTION_READ;
-	} else {
-		module->dir = SPI_DIRECTION_BOTH;
-	}
+	module->dir = SPI_DIRECTION_READ;
+
 	/* Get a pointer to the hardware module instance */
 	SercomSpi *const hw = &(module->hw->SPI);
 
 	/* Enable the RX Complete Interrupt */
-	hw->INTENSET.reg = SPI_INTERRUPT_FLAG_RX_COMPLETE;
+	tmp_intenset = SPI_INTERRUPT_FLAG_RX_COMPLETE;
 
 	if (module->mode == SPI_MODE_MASTER && module->dir == SPI_DIRECTION_READ) {
-		/* Enable Data Register Empty interrupt if needed */
-		hw->INTENSET.reg = SPI_INTERRUPT_FLAG_DATA_REGISTER_EMPTY;
+		/* Enable Data Register Empty interrupt for master */
+		tmp_intenset |= SPI_INTERRUPT_FLAG_DATA_REGISTER_EMPTY;
 	}
+	if (module->mode == SPI_MODE_SLAVE) {
+		/* Clear TXC flag if set */
+		hw->INTFLAG.reg = SPI_INTERRUPT_FLAG_TX_COMPLETE;
+		/* Enable transmit complete interrupt for slave */
+		tmp_intenset |= SPI_INTERRUPT_FLAG_TX_COMPLETE;
+	}
+	
+	/* Enable all interrupts simultaneously */
+	hw->INTENSET.reg = tmp_intenset;
 }
 
 /**
@@ -200,8 +267,8 @@ enum status_code spi_write_buffer_job(
 		return STATUS_ERR_INVALID_ARG;
 	}
 
-	/* Check if the SPI is busy transmitting */
-	if (module->remaining_tx_buffer_length > 0 || (module->tx_status == STATUS_BUSY)) {
+	/* Check if the SPI is busy transmitting or slave waiting for TXC*/
+	if (module->status == STATUS_BUSY) {
 		return STATUS_BUSY;
 	}
 
@@ -218,9 +285,60 @@ enum status_code spi_write_buffer_job(
  * and enabled, a callback function will be called when the read is finished.
  *
  * \note If address matching is enabled for the slave, the first character
- *       received and placed in the buffer will be the address.
+ *       received and placed in the RX buffer will be the address.
  *
  * \param[in]  module   Pointer to SPI software instance struct
+ * \param[out] rx_data  Pointer to data buffer to receive
+ * \param[in]  length   Data buffer length
+ * \param[in]  dummy    Dummy character to send when reading in master mode.
+ *
+ * \returns Status of the operation
+ * \retval  STATUS_OK               If the operation completed successfully
+ * \retval  STATUS_ERR_BUSY         If the SPI was already busy with a read
+ *                                  operation
+ * \retval  STATUS_ERR_DENIED       If the receiver is not enabled
+ * \retval  STATUS_ERR_INVALID_ARG  If requested read length was zero
+ */
+enum status_code spi_read_buffer_job(
+		struct spi_module *const module,
+		uint8_t *rx_data,
+		uint16_t length,
+		uint16_t dummy)
+{
+	/* Sanity check arguments */
+	Assert(module);
+	Assert(rx_data);
+
+	if (length == 0) {
+		return STATUS_ERR_INVALID_ARG;
+	}
+
+	if (!(module->receiver_enabled)) {
+		return STATUS_ERR_DENIED;
+	}
+
+	/* Check if the SPI is busy transmitting or slave waiting for TXC*/
+	if (module->status == STATUS_BUSY) {
+		return STATUS_BUSY;
+	}
+	
+	dummy_write = dummy;
+	/* Issue internal read */
+	_spi_read_buffer(module, rx_data, length);
+	return STATUS_OK;
+}
+
+/**
+ * \brief Asynchronous buffer write and read
+ *
+ * Sets up the driver to write and read to and from given buffers. If registered
+ * and enabled, a callback function will be called when the tranfer is finished.
+ *
+ * \note If address matching is enabled for the slave, the first character
+ *       received and placed in the RX buffer will be the address.
+ *
+ * \param[in]  module   Pointer to SPI software instance struct
+ * \param[in] tx_data   Pointer to data buffer to send
  * \param[out] rx_data  Pointer to data buffer to receive
  * \param[in]  length   Data buffer length
  *
@@ -228,10 +346,12 @@ enum status_code spi_write_buffer_job(
  * \retval  STATUS_OK               If the operation completed successfully
  * \retval  STATUS_ERR_BUSY         If the SPI was already busy with a read
  *                                  operation
+ * \retval  STATUS_ERR_DENIED       If the receiver is not enabled
  * \retval  STATUS_ERR_INVALID_ARG  If requested read length was zero
  */
-enum status_code spi_read_buffer_job(
+enum status_code spi_transceive_buffer_job(
 		struct spi_module *const module,
+		uint8_t *tx_data,
 		uint8_t *rx_data,
 		uint16_t length)
 {
@@ -243,16 +363,20 @@ enum status_code spi_read_buffer_job(
 		return STATUS_ERR_INVALID_ARG;
 	}
 
-	/* Check if the SPI is busy */
-	if (module->remaining_rx_buffer_length > 0 || (module->rx_status == STATUS_BUSY)) {
-		return STATUS_BUSY;
+	if (!(module->receiver_enabled)) {
+		return STATUS_ERR_DENIED;
 	}
 
-	/* Issue internal read */
-	_spi_read_buffer(module, rx_data, length);
+	/* Check if the SPI is busy transmitting or slave waiting for TXC*/
+	if (module->status == STATUS_BUSY) {
+		return STATUS_BUSY;
+	}
+	
+	/* Issue internal transceive */
+	_spi_transceive_buffer(module, tx_data, rx_data, length);
+
 	return STATUS_OK;
 }
-
 /**
  * \brief Aborts an ongoing job
  *
@@ -269,29 +393,19 @@ void spi_abort_job(
 	SercomSpi *const spi_hw
 		= &(module->hw->SPI);
 
-	if (job_type == SPI_JOB_READ_BUFFER) {
-		/* Abort read buffer job */
-		module->rx_status = STATUS_ABORTED;
-		module->remaining_rx_buffer_length = 0;
-		module->remaining_dummy_buffer_length = 0;
-		if (module->dir == SPI_DIRECTION_READ) {
-			spi_hw->INTENCLR.reg = SPI_INTERRUPT_FLAG_RX_COMPLETE;
-			module->dir = SPI_DIRECTION_IDLE;
-		} else if (module->dir == SPI_DIRECTION_BOTH) {
-			module->dir = SPI_DIRECTION_WRITE;
-		}
-	} else {
-		/* Abort write buffer job */
-		module->tx_status = STATUS_ABORTED;
-		module->remaining_tx_buffer_length = 0;
-                if (module->dir == SPI_DIRECTION_WRITE) {
-                  spi_hw->INTENCLR.reg = SPI_INTERRUPT_FLAG_DATA_REGISTER_EMPTY
-                        | SPI_INTERRUPT_FLAG_TX_COMPLETE;
-                    module->dir = SPI_DIRECTION_IDLE;
-                } else if (module->dir == SPI_DIRECTION_BOTH) {
-                  module->dir = SPI_DIRECTION_READ;
-                }
-	}
+	/* Abort ongoing job */
+	
+	/* Disable interrupts */
+	spi_hw->INTENCLR.reg = SPI_INTERRUPT_FLAG_RX_COMPLETE | 
+			SPI_INTERRUPT_FLAG_DATA_REGISTER_EMPTY |
+			SPI_INTERRUPT_FLAG_TX_COMPLETE;
+
+	module->status = STATUS_ABORTED;
+	module->remaining_rx_buffer_length = 0;
+	module->remaining_dummy_buffer_length = 0;
+	module->remaining_tx_buffer_length = 0;
+
+	module->dir = SPI_DIRECTION_IDLE;
 }
 
 /**
@@ -308,11 +422,8 @@ enum status_code spi_get_job_status(
 		const struct spi_module *const module,
 		enum spi_job_type job_type)
 {
-	if (job_type == SPI_JOB_READ_BUFFER) {
-		return module->rx_status;
-	} else {
-		return module->tx_status;
-	}
+	return module->status;
+
 }
 
 /**
@@ -347,7 +458,7 @@ static void _spi_write(
 
 /**
  * \internal
- * Writes a dummy character from the to the Data register.
+ * Writes a dummy character to the Data register.
  *
  * \param[in,out]  module  Pointer to SPI software instance struct
  */
@@ -358,7 +469,28 @@ static void _spi_write_dummy(
 	SercomSpi *const spi_hw = &(module->hw->SPI);
 
 	/* Write dummy byte */
-	spi_hw->DATA.reg = 0xAA;
+	spi_hw->DATA.reg = dummy_write;
+
+	/* Decrement remaining dummy buffer length */
+	module->remaining_dummy_buffer_length--;
+}
+
+/**
+ * \internal
+ * Writes a dummy character from the to the Data register.
+ *
+ * \param[in,out]  module  Pointer to SPI software instance struct
+ */
+static void _spi_read_dummy(
+		struct spi_module *const module)
+{
+	/* Pointer to the hardware module instance */
+	SercomSpi *const spi_hw = &(module->hw->SPI);
+	uint16_t flush = 0;
+	
+	/* Read dummy byte */
+	flush = spi_hw->DATA.reg;
+	UNUSED(flush);
 
 	/* Decrement remaining dummy buffer length */
 	module->remaining_dummy_buffer_length--;
@@ -423,142 +555,128 @@ void _spi_interrupt_handler(
 	/* Read and mask interrupt flag register */
 	uint16_t interrupt_status = (spi_hw->INTFLAG.reg & spi_hw->INTENSET.reg);
 
+	/* Data register empty interrupt */
 	if (interrupt_status & SPI_INTERRUPT_FLAG_DATA_REGISTER_EMPTY) {
-		if (module->mode == SPI_MODE_MASTER) {
-			if (module->dir == SPI_DIRECTION_READ) {
-				/* Send dummy byte when reading */
-				_spi_write_dummy(module);
 
-				/* Check if more dummy bytes should be sent */
-				if (module->remaining_dummy_buffer_length == 0) {
-					/* Disable the Data Register Empty Interrupt */
-					spi_hw->INTENCLR.reg
-						= SPI_INTERRUPT_FLAG_DATA_REGISTER_EMPTY;
-				}
-			} else if (module->remaining_tx_buffer_length) {
-				/* Send next byte from buffer */
-				_spi_write(module);
-
-				if (module->remaining_dummy_buffer_length) {
-					/* Decrement dummy buffer length if needed */
-					(module->remaining_dummy_buffer_length)--;
-				}
-
-				/* Check if it was the last transmission */
-				if (module->remaining_tx_buffer_length == 0) {
-					/* Disable the Data Register Empty Interrupt */
-					spi_hw->INTENCLR.reg
-							= SPI_INTERRUPT_FLAG_DATA_REGISTER_EMPTY;
-				}
-			}
-		} else {
-			/* Write next byte from buffer in slave mode */
-			_spi_write(module);
-
-			if (module->remaining_tx_buffer_length == 0) {
+		if (module->mode == SPI_MODE_MASTER &&
+			module->dir == SPI_DIRECTION_READ) {
+			/* Send dummy byte when reading in master mode */
+			_spi_write_dummy(module);
+			if (module->remaining_dummy_buffer_length == 0) {
 				/* Disable the Data Register Empty Interrupt */
 				spi_hw->INTENCLR.reg
 						= SPI_INTERRUPT_FLAG_DATA_REGISTER_EMPTY;
 			}
-		}
-	} else if (interrupt_status & SPI_INTERRUPT_FLAG_TX_COMPLETE) {
-		if (module->mode == SPI_MODE_MASTER &&
-				(module->remaining_tx_buffer_length == 0)){
-			/* Disable interrupt */
-			spi_hw->INTENCLR.reg = SPI_INTERRUPT_FLAG_TX_COMPLETE;
-			module->tx_status = STATUS_OK;
 
-			/* Change direction*/
-			if (module->dir == SPI_DIRECTION_BOTH) {
-				module->dir = SPI_DIRECTION_READ;
-				/* Enable Data Register Empty Interrupt */
-				spi_hw->INTENSET.reg
+		} else if (module->dir != SPI_DIRECTION_READ) {
+			/* Write next byte from buffer */
+			_spi_write(module);
+			if (module->remaining_tx_buffer_length == 0) {
+				/* Disable the Data Register Empty Interrupt */
+				spi_hw->INTENCLR.reg
 						= SPI_INTERRUPT_FLAG_DATA_REGISTER_EMPTY;
-			} else {
-				module->dir = SPI_DIRECTION_IDLE;
-				spi_hw->INTENCLR.reg = SPI_INTERRUPT_FLAG_RX_COMPLETE;
-			}
-
-			/* Run callback if registered and enabled */
-			if (callback_mask & (1 << SPI_CALLBACK_BUFFER_TRANSMITTED)){
-				(module->callback[SPI_CALLBACK_BUFFER_TRANSMITTED])(module);
-			}
-		} else if (module->mode == SPI_MODE_SLAVE) {
-			/* Transaction ended by master, stop ongoing transmissions */
-			spi_hw->INTENCLR.reg =
-					SPI_INTERRUPT_FLAG_TX_COMPLETE |
-					SPI_INTERRUPT_FLAG_RX_COMPLETE |
-					SPI_INTERRUPT_FLAG_DATA_REGISTER_EMPTY;
-			spi_hw->INTFLAG.reg = SPI_INTERRUPT_FLAG_TX_COMPLETE;
-
-			module->tx_status = STATUS_OK;
-			module->rx_status = STATUS_OK;
-			module->dir = SPI_DIRECTION_IDLE;
-			module->remaining_tx_buffer_length = 0;
-			module->remaining_rx_buffer_length = 0;
-
-			/* Run callback if registered and enabled */
-			if (callback_mask & (1 << SPI_CALLBACK_SLAVE_TRANSMISSION_COMPLETE)){
-				(module->callback[SPI_CALLBACK_SLAVE_TRANSMISSION_COMPLETE])(module);
+				
+				if (module->dir == SPI_DIRECTION_WRITE &&
+						!(module->receiver_enabled)) {
+					/* Buffer sent with receiver disabled */
+					module->dir = SPI_DIRECTION_IDLE;
+					module->status = STATUS_OK;
+					/* Run callback if registered and enabled */
+					if (callback_mask & (1 << SPI_CALLBACK_BUFFER_TRANSMITTED)){
+							(module->callback[SPI_CALLBACK_BUFFER_TRANSMITTED])
+									(module);
+					}
+				}
 			}
 		}
-	} else if (interrupt_status & SPI_INTERRUPT_FLAG_RX_COMPLETE) {
+	}
+
+	/* Receive complete interrupt*/
+	if (interrupt_status & SPI_INTERRUPT_FLAG_RX_COMPLETE) {
 		/* Check for overflow */
 		if (spi_hw->STATUS.reg & SERCOM_SPI_STATUS_BUFOVF) {
-			if (module->dir == SPI_DIRECTION_READ || module->dir == SPI_DIRECTION_BOTH) {
+			if (module->dir != SPI_DIRECTION_WRITE) {
 				/* Store the error code */
-				module->rx_status = STATUS_ERR_OVERFLOW;
+				module->status = STATUS_ERR_OVERFLOW;
 
+				/* End transaction */
+				module->dir = SPI_DIRECTION_IDLE;
+
+				spi_hw->INTENCLR.reg = SPI_INTERRUPT_FLAG_RX_COMPLETE |
+						SPI_INTERRUPT_FLAG_DATA_REGISTER_EMPTY;
 				/* Run callback if registered and enabled */
 				if (callback_mask & (1 << SPI_CALLBACK_ERROR)) {
 					(module->callback[SPI_CALLBACK_ERROR])(module);
 				}
 			}
-
-			/* Clear overflow flag */
-			spi_hw->STATUS.reg |= SERCOM_SPI_STATUS_BUFOVF;
-		}
-		if (module->dir == SPI_DIRECTION_WRITE) {
-			/* Flush data register when writing */
+			/* Flush */
 			uint16_t flush = spi_hw->DATA.reg;
 			UNUSED(flush);
-
-			if (module->remaining_tx_buffer_length == 0) {
-				/* Write complete */
-				module->dir = SPI_DIRECTION_IDLE;
-				module->tx_status = STATUS_OK;
-
-				spi_hw->INTENCLR.reg = SPI_INTERRUPT_FLAG_RX_COMPLETE;
-
-				if (module->mode == SPI_MODE_SLAVE &&
-						(callback_mask & (1 << SPI_CALLBACK_BUFFER_TRANSMITTED))) {
-
-					/* Run callback for slave if registered and enabled */
-					(module->callback[SPI_CALLBACK_BUFFER_TRANSMITTED])(module);
+			/* Clear overflow flag */
+			spi_hw->STATUS.reg |= SERCOM_SPI_STATUS_BUFOVF;
+		} else {
+			if (module->dir == SPI_DIRECTION_WRITE) {
+				/* Flush receive buffer when writing */
+				_spi_read_dummy(module);
+				if (module->remaining_dummy_buffer_length == 0) {
+					spi_hw->INTENCLR.reg = SPI_INTERRUPT_FLAG_RX_COMPLETE;
+					module->status = STATUS_OK;
+					module->dir = SPI_DIRECTION_IDLE;
+					/* Run callback if registered and enabled */
+					if (callback_mask &
+							(1 << SPI_CALLBACK_BUFFER_TRANSMITTED)){
+						(module->callback[SPI_CALLBACK_BUFFER_TRANSMITTED])(module);
+					}
 				}
-			}
-		} else if (module->rx_status != STATUS_ABORTED) {
-			/* Read data register */
-			_spi_read(module);
+			} else {
+				/* Read data register */
+				_spi_read(module);
 
-			/* Check if the last character have been received */
-			if(module->remaining_rx_buffer_length == 0 &&
-					!(module->dir == SPI_DIRECTION_WRITE)) {
-				module->rx_status = STATUS_OK;
-
-				if (module->dir == SPI_DIRECTION_BOTH) {
-					module->dir = SPI_DIRECTION_WRITE;
-				} else if (module->dir == SPI_DIRECTION_READ){
+				/* Check if the last character have been received */
+				if (module->remaining_rx_buffer_length == 0) {
+					module->status = STATUS_OK;
 					/* Disable RX Complete Interrupt and set status */
 					spi_hw->INTENCLR.reg = SPI_INTERRUPT_FLAG_RX_COMPLETE;
-					module->dir = SPI_DIRECTION_IDLE;
-				}
-
-				/* Run callback if registered and enabled */
-				if (callback_mask & (1 << SPI_CALLBACK_BUFFER_RECEIVED)) {
-					(module->callback[SPI_CALLBACK_BUFFER_RECEIVED])(module);
+					if(module->dir == SPI_DIRECTION_BOTH) {
+						if (callback_mask & (1 << SPI_CALLBACK_BUFFER_TRANSCEIVED)) {
+							(module->callback[SPI_CALLBACK_BUFFER_TRANSCEIVED])(module);
+						}
+					} else if (module->dir == SPI_DIRECTION_READ) {
+						if (callback_mask & (1 << SPI_CALLBACK_BUFFER_RECEIVED)) {
+							(module->callback[SPI_CALLBACK_BUFFER_RECEIVED])(module);
+						}
+					}
 				}
 			}
+		}
+	}
+
+	/* Transmit complete */
+	if (interrupt_status & SPI_INTERRUPT_FLAG_TX_COMPLETE) {
+		if (module->mode == SPI_MODE_SLAVE) {
+			/* Transaction ended by master */
+
+			/* Disable interrupts */
+			spi_hw->INTENCLR.reg =
+					SPI_INTERRUPT_FLAG_TX_COMPLETE |
+					SPI_INTERRUPT_FLAG_RX_COMPLETE |
+					SPI_INTERRUPT_FLAG_DATA_REGISTER_EMPTY;
+			/* Clear interrupt flag */
+			spi_hw->INTFLAG.reg = SPI_INTERRUPT_FLAG_TX_COMPLETE;
+
+
+			/* Reset all status information */
+			module->dir = SPI_DIRECTION_IDLE;
+			module->remaining_tx_buffer_length = 0;
+			module->remaining_rx_buffer_length = 0;
+			module->status = STATUS_OK;
+
+			if (callback_mask &
+					(1 << SPI_CALLBACK_SLAVE_TRANSMISSION_COMPLETE)) {
+			(module->callback[SPI_CALLBACK_SLAVE_TRANSMISSION_COMPLETE])
+					(module);
+			}
+
 		}
 	}
 }

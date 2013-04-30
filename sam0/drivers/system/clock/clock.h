@@ -96,7 +96,10 @@
  * have additional prescaler division ratios set to give each peripheral bus a
  * different clock speed.
  *
- * The general main clock tree for the CPU and associated buses is shown below.
+ * The general main clock tree for the CPU and associated buses is shown in
+ * \ref asfdoc_samd20_system_clock_module_clock_tree "the figure below".
+ *
+ * \anchor asfdoc_samd20_system_clock_module_clock_tree
  * \dot
  * digraph overview {
  *   rankdir=LR;
@@ -144,6 +147,7 @@
  * generator to feed one or more channels, which can then be enabled or disabled
  * individually as required.
  *
+ * \anchor asfdoc_samd20_system_clock_module_chain_overview
  * \dot
  * digraph overview {
  *   rankdir=LR;
@@ -151,8 +155,8 @@
  *   node [label="Generator 1" shape=square] clock_gen;
  *   node [label="Channel x" shape=square] clock_chan0;
  *   node [label="Channel y" shape=square] clock_chan1;
- *   node [label="Peripheral x" shape=ellipse  style=filled fillcolor=lightgray] peripheral0;
- *   node [label="Peripheral y" shape=ellipse  style=filled fillcolor=lightgray] peripheral1;
+ *   node [label="Peripheral x" shape=ellipse style=filled fillcolor=lightgray] peripheral0;
+ *   node [label="Peripheral y" shape=ellipse style=filled fillcolor=lightgray] peripheral1;
  *
  *   system_clock_source -> clock_gen;
  *   clock_gen   -> clock_chan0;
@@ -162,8 +166,10 @@
  * }
  * \enddot
  *
- * An example setup of a complete clock chain within the device is shown below.
+ * An example setup of a complete clock chain within the device is shown in
+ * \ref asfdoc_samd20_system_clock_module_chain_example "the figure below".
  *
+ * \anchor asfdoc_samd20_system_clock_module_chain_example
  * \dot
  * digraph overview {
  *   rankdir=LR;
@@ -175,7 +181,6 @@
  *   system_clock_source0 -> clock_gen0;
  *   clock_gen0    -> clock_chan0;
  *   clock_chan0   -> peripheral0;
- *
  *   node [label="8MHz R/C\nOscillator (OSC8M)" shape=square fillcolor=white] system_clock_source1;
  *   node [label="Generator 1" shape=square] clock_gen1;
  *   node [label="Channel y" shape=square] clock_chan1;
@@ -351,7 +356,7 @@ enum system_osc32k_startup {
  */
 enum system_osc8m_div {
 	/** Do not divide the 8MHz RC oscillator output */
-	SYSTEM_OSC8M_DIV_0,
+	SYSTEM_OSC8M_DIV_1,
 	/** Divide the 8MHz RC oscillator output by 2 */
 	SYSTEM_OSC8M_DIV_2,
 	/** Divide the 8MHz RC oscillator output by 4 */
@@ -437,24 +442,6 @@ enum system_dfll_quick_lock {
 	SYSTEM_CLOCK_DFLL_QUICK_LOCK_DISABLE = SYSCTRL_DFLLCTRL_QLDIS,
 };
 
-#if !defined (REVB)
-/**
- * \brief Clock sources for the CPU and APB/AHB buses (main clock)
- *
- * Possible clock source inputs that can be used as the main CPU core clock.
- */
-enum system_main_clock {
-	/** Internal 8MHz oscillator */
-	SYSTEM_MAIN_CLOCK_OSC8M,
-	/** External oscillator */
-	SYSTEM_MAIN_CLOCK_XOSC,
-	/** Digital Frequency Locked Loop (DFLL) */
-	SYSTEM_MAIN_CLOCK_DFLL,
-	/** GCLK channel 0 */
-	SYSTEM_MAIN_CLOCK_GCLK, /* GCLK0 ?*/
-};
-#endif
-
 /**
  * \brief Main CPU and APB/AHB bus clock source prescaler values
  *
@@ -510,7 +497,7 @@ enum system_clock_source {
 	/** Digital Frequency Locked Loop (DFLL) */
 	SYSTEM_CLOCK_SOURCE_DFLL     = GCLK_SOURCE_DFLL48M,
 	/** Internal Ultra Low Power 32kHz oscillator */
-	SYSTEM_CLOCK_SOURCE_ULP32KHZ = GCLK_SOURCE_OSCULP32K,
+	SYSTEM_CLOCK_SOURCE_ULP32K   = GCLK_SOURCE_OSCULP32K,
 };
 
 /**
@@ -527,6 +514,11 @@ struct system_clock_source_xosc_config {
 	bool auto_gain_control;
 	/** External clock/crystal frequency */
 	uint32_t frequency;
+	/** Keep the XOSC enabled in standby sleep mode */
+	bool run_in_standby;
+	/** Run On Demand. If this is set the XOSC won't run
+	 * until requested by a peripheral */
+	bool on_demand;
 };
 
 /**
@@ -547,6 +539,11 @@ struct system_clock_source_xosc32k_config {
 	bool enable_32khz_output;
 	/** External clock/crystal frequency */
 	uint32_t frequency;
+	/** Keep the XOSC32K enabled in standby sleep mode */
+	bool run_in_standby;
+	/** Run On Demand. If this is set the XOSC32K won't run
+	 * until requested by a peripheral */
+	bool on_demand;
 };
 
 /**
@@ -557,6 +554,11 @@ struct system_clock_source_xosc32k_config {
 struct system_clock_source_osc8m_config {
 	/* Internal 8MHz RC oscillator prescaler */
 	enum system_osc8m_div prescaler;
+	/** Keep the OSC8M enabled in standby sleep mode */
+	bool run_in_standby;
+	/** Run On Demand. If this is set the OSC8M won't run
+	 * until requested by a peripheral */
+	bool on_demand;
 };
 
 /**
@@ -571,6 +573,11 @@ struct system_clock_source_osc32k_config {
 	bool enable_1khz_output;
 	/** Enable 32kHz output */
 	bool enable_32khz_output;
+	/** Keep the OSC32K enabled in standby sleep mode */
+	bool run_in_standby;
+	/** Run On Demand. If this is set the OSC32K won't run
+	 * until requested by a peripheral */
+	bool on_demand;
 };
 
 /**
@@ -581,6 +588,11 @@ struct system_clock_source_osc32k_config {
 struct system_clock_source_dfll_config {
 	/** Loop mode */
 	enum system_dfll_mode loop;
+	/** Keep the DFLL enabled in standby sleep mode */
+	bool run_in_standby;
+	/** Run On Demand. If this is set the DFLL won't run
+	 * until requested by a peripheral */
+	bool on_demand;
 	/** Enable Quick Lock */
 	enum system_dfll_quick_lock quick_lock;
 	/** Enable Chill Cycle */
@@ -615,6 +627,8 @@ struct system_clock_source_dfll_config {
  *   - Start-up time of 16384 external clock cycles
  *   - Automatic crystal gain control mode enabled
  *   - Frequency of 12MHz
+ *   - Don't run in STANDBY sleep mode
+ *   - Run only when requested by peripheral (on demand)
  *
  * \param[out] config  Configuration structure to fill with default values
  */
@@ -625,6 +639,8 @@ static inline void system_clock_source_xosc_get_default_config(
 	config->startup_time        = SYSTEM_XOSC_STARTUP_16384;
 	config->auto_gain_control   = true;
 	config->frequency           = 12000000UL;
+	config->run_in_standby      = false;
+	config->on_demand           = true;
 }
 
 void system_clock_source_xosc_set_config(
@@ -651,6 +667,8 @@ void system_clock_source_xosc_set_config(
  *   - Frequency of 32.768KHz
  *   - 1KHz clock output disabled
  *   - 32KHz clock output enabled
+ *   - Don't run in STANDBY sleep mode
+ *   - Run only when requested by peripheral (on demand)
  *
  * \param[out] config  Configuration structure to fill with default values
  */
@@ -663,6 +681,8 @@ static inline void system_clock_source_xosc32k_get_default_config(
 	config->frequency           = 32768UL;
 	config->enable_1khz_output  = false;
 	config->enable_32khz_output = true;
+	config->run_in_standby      = false;
+	config->on_demand           = true;
 }
 
 void system_clock_source_xosc32k_set_config(
@@ -684,6 +704,8 @@ void system_clock_source_xosc32k_set_config(
  * internal 32KHz oscillator module:
  *   - 1KHz clock output enabled
  *   - 32KHz clock output enabled
+ *   - Don't run in STANDBY sleep mode
+ *   - Run only when requested by peripheral (on demand)
  *
  * \param[out] config  Configuration structure to fill with default values
  */
@@ -692,6 +714,8 @@ static inline void system_clock_source_osc32k_get_default_config(
 {
 	config->enable_1khz_output  = true;
 	config->enable_32khz_output = true;
+	config->run_in_standby      = false;
+	config->on_demand           = true;
 }
 
 void system_clock_source_osc32k_set_config(
@@ -713,6 +737,8 @@ void system_clock_source_osc32k_set_config(
  * Fills a configuration structure with the default configuration for an
  * internal 8MHz (nominal) oscillator module:
  *   - Clock output frequency divided by a factor of 8
+ *   - Don't run in STANDBY sleep mode
+ *   - Run only when requested by peripheral (on demand)
  *
  * \param[out] config  Configuration structure to fill with default values
  */
@@ -720,6 +746,8 @@ static inline void system_clock_source_osc8m_get_default_config(
 		struct system_clock_source_osc8m_config *const config)
 {
 	config->prescaler = SYSTEM_OSC8M_DIV_8;
+	config->run_in_standby      = false;
+	config->on_demand           = true;
 }
 
 void system_clock_source_osc8m_set_config(
@@ -747,6 +775,8 @@ void system_clock_source_osc8m_set_config(
  *   - Continuous tracking of the output frequency
  *   - Default tracking values at the mid-points for both coarse and fine
  *     tracking parameters
+ *   - Don't run in STANDBY sleep mode
+ *   - Run only when requested by peripheral (on demand)
  *
  * \param[out] config  Configuration structure to fill with default values
  */
@@ -758,6 +788,8 @@ static inline void system_clock_source_dfll_get_default_config(
 	config->chill_cycle     = SYSTEM_CLOCK_DFLL_CHILL_CYCLE_ENABLE;
 	config->wakeup_lock     = SYSTEM_CLOCK_DFLL_KEEP_LOCK_AFTER_WAKE;
 	config->stable_tracking = SYSTEM_CLOCK_DFLL_TRACK_AFTER_FINE_LOCK;
+	config->run_in_standby  = false;
+	config->on_demand       = true;
 
 	/* Open loop mode calibration value */
 	config->coarse_value    = 0x1f / 4; /* Midpoint */
@@ -786,8 +818,7 @@ enum status_code system_clock_source_write_calibration(
 		const uint8_t freq_range);
 
 enum status_code system_clock_source_enable(
-		const enum system_clock_source system_clock_source,
-		const bool block_until_ready);
+		const enum system_clock_source system_clock_source);
 
 enum status_code system_clock_source_disable(
 		const enum system_clock_source clk_source);
@@ -836,22 +867,6 @@ static inline void system_main_clock_set_failure_detect(
 		PM->CTRL.reg &= ~PM_CTRL_CFDEN;
 	}
 }
-
-#if !defined (REVB)
-/**
- *\brief Set the main clock
- *
- * This sets the clock source for the main clock that will be used to generate
- * the CPU and synchronous bus clocks
- *
- * \param[in] clock CPU clock source
- */
-static inline void system_main_clock_set_source(
-		const enum system_main_clock clock)
-{
-	PM->CTRL.reg = (PM->CTRL.reg & ~PM_CTRL_MCSEL_Msk) | PM_CTRL_MCSEL(clock);
-}
-#endif
 
 /**
  * \brief Set main CPU clock divider.

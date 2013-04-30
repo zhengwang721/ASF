@@ -61,6 +61,7 @@
 #define REG_TC0_COUNT16_COUNT      (0x42002010U) /**< \brief (TC0) COUNT16 Count Register */
 #define REG_TC0_COUNT32_COUNT      (0x42002010U) /**< \brief (TC0) COUNT32 Count Register */
 #define REG_TC0_COUNT8_PER         (0x42002014U) /**< \brief (TC0) COUNT8 Period Register */
+#define REG_TC0_COUNT32_PER        (0x42002014U) /**< \brief (TC0) COUNT32 Period Register */
 #define REG_TC0_COUNT8_CC0         (0x42002018U) /**< \brief (TC0) COUNT8 Compare and Capture Register 0 */
 #define REG_TC0_COUNT8_CC1         (0x42002019U) /**< \brief (TC0) COUNT8 Compare and Capture Register 1 */
 #define REG_TC0_COUNT16_CC0        (0x42002018U) /**< \brief (TC0) COUNT16 Compare and Capture Register 0 */
@@ -83,6 +84,7 @@
 #define REG_TC0_COUNT16_COUNT      (*(RwReg16*)0x42002010U) /**< \brief (TC0) COUNT16 Count Register */
 #define REG_TC0_COUNT32_COUNT      (*(RwReg  *)0x42002010U) /**< \brief (TC0) COUNT32 Count Register */
 #define REG_TC0_COUNT8_PER         (*(RwReg8 *)0x42002014U) /**< \brief (TC0) COUNT8 Period Register */
+#define REG_TC0_COUNT32_PER        (*(RwReg  *)0x42002014U) /**< \brief (TC0) COUNT32 Period Register */
 #define REG_TC0_COUNT8_CC0         (*(RwReg8 *)0x42002018U) /**< \brief (TC0) COUNT8 Compare and Capture Register 0 */
 #define REG_TC0_COUNT8_CC1         (*(RwReg8 *)0x42002019U) /**< \brief (TC0) COUNT8 Compare and Capture Register 1 */
 #define REG_TC0_COUNT16_CC0        (*(RwReg16*)0x42002018U) /**< \brief (TC0) COUNT16 Compare and Capture Register 0 */
@@ -95,7 +97,10 @@
 #define TC0_CC8_NUM                 2
 #define TC0_CC16_NUM                2
 #define TC0_CC32_NUM                2
+#define TC0_DITHERING_EXT           0
 #define TC0_GCLK_ID                 19
 #define TC0_OW_NUM                  2
+#define TC0_PERIOD_EXT              0
+#define TC0_SHADOW_EXT              0
 
 #endif /* _SAMD20_TC0_INSTANCE_ */

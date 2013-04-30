@@ -53,7 +53,7 @@
  * This use case sets up the Watchdog to force a system reset after every 2048
  * clocks of the Watchdog's Generic Clock channel, unless the user periodically
  * resets the Watchdog counter via a button before the timer expires. If the
- * watchdog resets the device, a LED on the board is turned on.
+ * watchdog resets the device, a LED on the board is turned off.
  *
  * \section asfdoc_samd20_wdt_basic_use_case_setup Setup
  *
@@ -103,6 +103,7 @@
  *  \snippet qs_wdt_basic.c main_3
  * -# Test to see if the board button is currently being pressed.
  *  \snippet qs_wdt_basic.c main_4
- * -# If the button is pressed, turn off board LED and reset the Watchdog timer.
+ * -# If the button is pressed, turn on the board LED and reset the Watchdog
+ *    timer.
  *  \snippet qs_wdt_basic.c main_5
  */

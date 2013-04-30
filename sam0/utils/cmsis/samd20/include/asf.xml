@@ -5,21 +5,21 @@
 		</info>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="samd20.h"/>
-		<build type="header-file" value="samd20e14a.h"/>
-		<build type="header-file" value="samd20e15a.h"/>
-		<build type="header-file" value="samd20e16a.h"/>
-		<build type="header-file" value="samd20e17a.h"/>
-		<build type="header-file" value="samd20e18a.h"/>
-		<build type="header-file" value="samd20g14a.h"/>
-		<build type="header-file" value="samd20g15a.h"/>
-		<build type="header-file" value="samd20g16a.h"/>
-		<build type="header-file" value="samd20g17a.h"/>
-		<build type="header-file" value="samd20g18a.h"/>
-		<build type="header-file" value="samd20j14a.h"/>
-		<build type="header-file" value="samd20j15a.h"/>
-		<build type="header-file" value="samd20j16a.h"/>
-		<build type="header-file" value="samd20j17a.h"/>
-		<build type="header-file" value="samd20j18a.h"/>
+		<build type="header-file" value="samd20e14.h"/>
+		<build type="header-file" value="samd20e15.h"/>
+		<build type="header-file" value="samd20e16.h"/>
+		<build type="header-file" value="samd20e17.h"/>
+		<build type="header-file" value="samd20e18.h"/>
+		<build type="header-file" value="samd20g14.h"/>
+		<build type="header-file" value="samd20g15.h"/>
+		<build type="header-file" value="samd20g16.h"/>
+		<build type="header-file" value="samd20g17.h"/>
+		<build type="header-file" value="samd20g18.h"/>
+		<build type="header-file" value="samd20j14.h"/>
+		<build type="header-file" value="samd20j15.h"/>
+		<build type="header-file" value="samd20j16.h"/>
+		<build type="header-file" value="samd20j17.h"/>
+		<build type="header-file" value="samd20j18.h"/>
 		<info type="gui-flag" value="hidden"/>
 		<device-support value="samd20"/>
 	</module>

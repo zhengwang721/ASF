@@ -87,7 +87,7 @@ enum i2c_slave_callback {
 	 * Callback for write request from master - can be used to issue a read
 	 */
 	I2C_SLAVE_CALLBACK_WRITE_REQUEST,
-	/** Callback for error. */
+	/** Callback for error */
 	I2C_SLAVE_CALLBACK_ERROR,
 	/**
 	 * Callback for error in last transfer. Discovered on a new address
@@ -226,21 +226,21 @@ struct i2c_slave_config {
 	/** Address mask, second address or lower limit of address range */
 	uint8_t address_mask;
 	/**
-	 * Enable general call address recognition. General call address
-	 * is defined as 0000000 with dir bit 0
+	 * Enable general call address recognition (general call address
+	 * is defined as 0000000 with direction bit 0)
 	 */
 	bool enable_general_call_address;
 #  if I2C_SLAVE_CALLBACK_MODE == true
 	/**
-	 * Enable NAK on address match. Can be changed after initialization via the
-	 * \ref i2c_slave_enable_nack_on_address and
-	 * \ref i2c_slave_disable_nack_on_address functions.
+	 * Enable NAK on address match (this can be changed after initialization
+	 * via the \ref i2c_slave_enable_nack_on_address and
+	 * \ref i2c_slave_disable_nack_on_address functions)
 	 */
 	bool enable_nack_on_address;
 #  endif
-	/** GCLK generator to use as clock source. */
+	/** GCLK generator to use as clock source */
 	enum gclk_generator generator_source;
-	/** Set to keep module active in sleep modes. */
+	/** Set to keep module active in sleep modes */
 	bool run_in_standby;
 	/** PAD0 (SDA) pinmux */
 	uint32_t pinmux_pad0;
@@ -283,7 +283,7 @@ static void _i2c_slave_wait_for_sync(
  *
  * \param[out] module  Pointer to software module structure
  *
- * \return Status of the synchronization
+ * \return Status of the synchronization.
  * \retval true   Module is busy synchronizing
  * \retval false  Module is not synchronizing
  */
@@ -363,8 +363,8 @@ static inline void i2c_slave_enable(
 
 #if I2C_SLAVE_CALLBACK_MODE == true
 	/* Enable interrupts */
-	i2c_hw->INTENSET.reg = SERCOM_I2CS_INTENSET_PIEN |
-			SERCOM_I2CS_INTENSET_AIEN | SERCOM_I2CS_INTENSET_DIEN;
+	i2c_hw->INTENSET.reg = SERCOM_I2CS_INTENSET_PREC |
+			SERCOM_I2CS_INTENSET_AMATCH | SERCOM_I2CS_INTENSET_DRDY;
 
 	/* Enable global interrupt for module */
 	system_interrupt_enable(_sercom_get_interrupt_vector(module->hw));
@@ -397,12 +397,12 @@ static inline void i2c_slave_disable(
 
 #if I2C_SLAVE_CALLBACK_MODE == true
 	/* Disable interrupts */
-	i2c_hw->INTENCLR.reg = SERCOM_I2CS_INTENSET_PIEN |
-			SERCOM_I2CS_INTENSET_AIEN | SERCOM_I2CS_INTENSET_DIEN;
+	i2c_hw->INTENCLR.reg = SERCOM_I2CS_INTENSET_PREC |
+			SERCOM_I2CS_INTENSET_AMATCH | SERCOM_I2CS_INTENSET_DRDY;
 
 	/* Clear interrupt flags */
-	i2c_hw->INTFLAG.reg = SERCOM_I2CS_INTFLAG_PIF | SERCOM_I2CS_INTFLAG_AIF |
-			SERCOM_I2CS_INTFLAG_DIF;
+	i2c_hw->INTFLAG.reg = SERCOM_I2CS_INTFLAG_PREC | SERCOM_I2CS_INTFLAG_AMATCH |
+			SERCOM_I2CS_INTFLAG_DRDY;
 
 	/* Disable global interrupt for module */
 	system_interrupt_disable(_sercom_get_interrupt_vector(module->hw));

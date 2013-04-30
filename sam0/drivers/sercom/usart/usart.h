@@ -86,9 +86,14 @@
  * Communication is based on frames, where the frame format can be customized
  * to accommodate a wide range of standards. A frame consists of a start bit,
  * a number of data bits, an optional parity bit for error detection as well
- * as a configurable length stop bit(s).
- * The table below shows the available parameters you can change in a frame
+ * as a configurable length stop bit(s) - see
+ * \ref asfdoc_samd20_sercom_usart_frame_diagram "the figure below".
+ * \ref asfdoc_samd20_sercom_usart_frame_params "The table below" shows the
+ * available parameters you can change in a frame.
+ *
+ * \anchor asfdoc_samd20_sercom_usart_frame_params
  * <table>
+ *  <caption>USART Frame Parameters</caption>
  *  <tr>
  *      <th>Parameter</th>
  *      <th>Options</th>
@@ -111,7 +116,8 @@
  *  </tr>
  * </table>
  *
- * \image html usart_frame.svg "USART Frame overview"
+ * \anchor asfdoc_samd20_sercom_usart_frame_diagram
+ * \image html usart_frame.svg "USART Frame overview" width=100%
  *
  * \subsection asfdoc_samd20_sercom_usart_overview_sync Synchronous mode
  *
@@ -146,7 +152,8 @@
  * For successful transmit and receive using the asynchronous mode the receiver
  * and transmitter clocks needs to be closely matched. When receiving a frame
  * that does not match the selected baud rate closely enough the receiver will
- * be unable synchronize the frame(s), and garbage transmissions will result.
+ * be unable to synchronize the frame(s), and garbage transmissions will
+ * result.
  *
  * \subsection asfdoc_samd20_sercom_usart_parity Parity
  * Parity can be enabled to detect if a transmission was in error. This is done by

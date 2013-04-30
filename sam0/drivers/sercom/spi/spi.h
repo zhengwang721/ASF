@@ -89,9 +89,10 @@
  * synchronize to the slave by pulling the SS line high.
  *
  * \subsection asfdoc_samd20_sercom_spi_bus SPI Bus Connection
- * In the figure below, the connection between one master and one slave is
- * shown.
+ * In \ref asfdoc_samd20_spi_connection_example "the figure below", the
+ * connection between one master and one slave is shown.
  *
+ * \anchor asfdoc_samd20_spi_connection_example
  * \dot
  * digraph spi_slaves_par {
  *   subgraph cluster_spi_master {
@@ -190,12 +191,14 @@
  *
  * \subsection asfdoc_samd20_sercom_spi_data_modes Data Modes
  * There are four combinations of SCK phase and polarity with respect to
- * serial data. The table below shows the clock polarity (CPOL) and
- * clock phase (CPHA) in the different modes.
- * Leading edge is the first clock edge in a clock cycle and trailing edge is
- * the last clock edge in a clock cycle.
+ * serial data. \ref asfdoc_samd20_spi_mode_table "The table below" shows the
+ * clock polarity (CPOL) and clock phase (CPHA) in the different modes.
+ * <i>Leading edge</i> is the first clock edge in a clock cycle and
+ * <i>trailing edge</i> is the last clock edge in a clock cycle.
  *
+ * \anchor asfdoc_samd20_spi_mode_table
  * <table>
+ *   <caption>SPI Data Modes</caption>
  *   <tr>
  *      <th>Mode</th>
  *      <th>CPOL</th>
@@ -235,14 +238,17 @@
  *
  *
  * \subsection asfdoc_samd20_sercom_spi_pads SERCOM Pads
- * The SERCOM pads are automatically configured as seen in the table below.
- * If the receiver is disabled, the data input (MISO for master, MOSI for
- * slave) can be used for other purposes.
+ * The SERCOM pads are automatically configured as seen in
+ * \ref asfdoc_samd20_spi_sercom_pad_table "the table below". If the receiver
+ * is disabled, the data input (MISO for master, MOSI for slave) can be used
+ * for other purposes.
  *
  * In master mode, the SS pin(s) must be configured using the \ref spi_slave_inst
  * struct.
  *
+ * \anchor asfdoc_samd20_spi_sercom_pad_table
  * <table>
+ *   <caption>SERCOM SPI Pad Usages</caption>
  *   <tr>
  *      <th> Pin </th>
  *      <th> Master SPI </th>
@@ -349,7 +355,10 @@ extern "C" {
 /**
  * \brief SPI Callback enum
  *
- * Callbacks for SPI callback driver
+ * Callbacks for SPI callback driver.
+ *
+ * \note For slave mode, these callbacks will be called when a transaction
+ * is ended by the master pulling Slave Select high.
  *
  */
 enum spi_callback {
@@ -357,9 +366,14 @@ enum spi_callback {
 	SPI_CALLBACK_BUFFER_TRANSMITTED,
 	/** Callback for buffer received */
 	SPI_CALLBACK_BUFFER_RECEIVED,
+	/** Callback for buffers transceived */
+	SPI_CALLBACK_BUFFER_TRANSCEIVED,
 	/** Callback for error */
 	SPI_CALLBACK_ERROR,
-	/** Callback for transmission complete for slave */
+	/** 
+	* Callback for transmission ended by master before entire buffer was
+	* read or written from slave
+	*/
 	SPI_CALLBACK_SLAVE_TRANSMISSION_COMPLETE,
 #  if !defined(__DOXYGEN__)
 	/** Number of available callbacks. */
@@ -394,14 +408,14 @@ enum spi_interrupt_flag {
 	 * This flag is set when the contents of the data register has been moved
 	 * to the shift register and the data register is ready for new data
 	 */
-	SPI_INTERRUPT_FLAG_DATA_REGISTER_EMPTY = SERCOM_SPI_INTFLAG_DREIF,
+	SPI_INTERRUPT_FLAG_DATA_REGISTER_EMPTY = SERCOM_SPI_INTFLAG_DRE,
 	/**
 	 * This flag is set when the contents of the shift register has been
 	 * shifted out
 	 */
-	SPI_INTERRUPT_FLAG_TX_COMPLETE       = SERCOM_SPI_INTFLAG_TXCIF,
+	SPI_INTERRUPT_FLAG_TX_COMPLETE         = SERCOM_SPI_INTFLAG_TXC,
 	/** This flag is set when data has been shifted into the data register */
-	SPI_INTERRUPT_FLAG_RX_COMPLETE       = SERCOM_SPI_INTFLAG_RXCIF,
+	SPI_INTERRUPT_FLAG_RX_COMPLETE         = SERCOM_SPI_INTFLAG_RXC,
 };
 
 /**
@@ -499,19 +513,19 @@ enum spi_signal_mux_setting {
  */
 enum spi_addr_mode {
 	/**
-	 * addrmask in the \ref spi_config struct is used as a mask to the register.
+	 * \c address_mask in the \ref spi_config struct is used as a mask to the register.
 	 */
-	SPI_ADDR_MODE_MASK   = SERCOM_SPI_CTRLB_AMODE(0),
+	SPI_ADDR_MODE_MASK      = SERCOM_SPI_CTRLB_AMODE(0),
 	/**
-	 * The slave responds to the two unique addresses in addr and addrmask in
-	 * the \ref spi_config struct.
+	 * The slave responds to the two unique addresses in \c address and
+	 * \c address_mask in the \ref spi_config struct.
 	 */
-	SPI_ADDR_MODE_UNIQUE = SERCOM_SPI_CTRLB_AMODE(1),
+	SPI_ADDR_MODE_UNIQUE    = SERCOM_SPI_CTRLB_AMODE(1),
 	/**
-	 * The slave responds to the range of addresses between and including addr
-	 * and addrmask in the \ref spi_config struct. addr is the upper limit.
+	 * The slave responds to the range of addresses between and including \c address
+	 * and \c address_mask in in the \ref spi_config struct.
 	 */
-	SPI_ADDR_MODE_RANGE  = SERCOM_SPI_CTRLB_AMODE(2),
+	SPI_ADDR_MODE_RANGE     = SERCOM_SPI_CTRLB_AMODE(2),
 };
 
 /**
@@ -519,9 +533,9 @@ enum spi_addr_mode {
  */
 enum spi_mode {
 	/** Master mode */
-	SPI_MODE_MASTER = SERCOM_SPI_CTRLA_MASTER,
+	SPI_MODE_MASTER         = 1,
 	/** Slave mode */
-	SPI_MODE_SLAVE = 0,
+	SPI_MODE_SLAVE          = 0,
 };
 
 /**
@@ -529,9 +543,9 @@ enum spi_mode {
  */
 enum spi_data_order {
 	/** The LSB of the data is transmitted first */
-	SPI_DATA_ORDER_LSB = SERCOM_SPI_CTRLA_DORD,
+	SPI_DATA_ORDER_LSB      = SERCOM_SPI_CTRLA_DORD,
 	/** The MSB of the data is transmitted first */
-	SPI_DATA_ORDER_MSB = 0,
+	SPI_DATA_ORDER_MSB      = 0,
 };
 
 /**
@@ -539,9 +553,9 @@ enum spi_data_order {
  */
 enum spi_character_size {
 	/** 8 bit character */
-	SPI_CHARACTER_SIZE_8BIT = 0,
+	SPI_CHARACTER_SIZE_8BIT = SERCOM_SPI_CTRLB_CHSIZE(0),
 	/** 9 bit character */
-	SPI_CHARACTER_SIZE_9BIT = SERCOM_SPI_CTRLB_CHSIZE,
+	SPI_CHARACTER_SIZE_9BIT = SERCOM_SPI_CTRLB_CHSIZE(1),
 };
 
 #if SPI_CALLBACK_MODE == true
@@ -574,7 +588,10 @@ struct spi_module {
 	enum spi_mode mode;
 	/** SPI character size */
 	enum spi_character_size character_size;
+	/** Receiver enabled */
+	bool receiver_enabled;
 #  if SPI_CALLBACK_MODE == true
+	/** Direction of transaction */
 	volatile enum spi_direction dir;
 	/** Array to store callback function pointers in */
 	spi_callback_t callback[SPI_CALLBACK_N];
@@ -593,10 +610,8 @@ struct spi_module {
 	uint8_t registered_callback;
 	/** Bit mask for callbacks enabled */
 	uint8_t enabled_callback;
-	/** Holds the status of the ongoing or last read operation */
-	volatile enum status_code rx_status;
-	/** Holds the status of the ongoing or last write operation */
-	volatile enum status_code tx_status;
+	/** Holds the status of the ongoing or last operation */
+	volatile enum status_code status;
 #  endif
 #endif
 };
@@ -958,7 +973,7 @@ static inline bool spi_is_write_complete(
 	SercomSpi *const spi_module = &(module->hw->SPI);
 
 	/* Check interrupt flag */
-	return (spi_module->INTFLAG.reg & SERCOM_SPI_INTFLAG_TXCIF);
+	return (spi_module->INTFLAG.reg & SERCOM_SPI_INTFLAG_TXC);
 }
 
  /**
@@ -982,7 +997,7 @@ static inline bool spi_is_ready_to_write(
 	SercomSpi *const spi_module = &(module->hw->SPI);
 
 	/* Check interrupt flag */
-	return (spi_module->INTFLAG.reg & SERCOM_SPI_INTFLAG_DREIF);
+	return (spi_module->INTFLAG.reg & SERCOM_SPI_INTFLAG_DRE);
 }
 
 /**
@@ -1006,7 +1021,7 @@ static inline bool spi_is_ready_to_read(
 	SercomSpi *const spi_module = &(module->hw->SPI);
 
 	/* Check interrupt flag */
-	return (spi_module->INTFLAG.reg & SERCOM_SPI_INTFLAG_RXCIF);
+	return (spi_module->INTFLAG.reg & SERCOM_SPI_INTFLAG_RXC);
 }
 /** @} */
 
@@ -1147,16 +1162,28 @@ enum status_code spi_read_buffer_wait(
  * \return Status of the operation.
  * \retval STATUS_OK            If the operation was completed
  * \retval STATUS_ERR_TIMEOUT   If the operation was not completed within the
- *                              timeout in slave mode.
+ *                              timeout in slave mode
+ * \retval STATUS_ERR_DENIED    If the receiver is not enabled
  * \retval STATUS_ERR_OVERFLOW  If the incoming data is overflown
  */
-static inline enum status_code spi_tranceive_wait(
+static inline enum status_code spi_transceive_wait(
 		struct spi_module *const module,
 		uint16_t tx_data,
 		uint16_t *rx_data)
 {
 	/* Sanity check arguments */
 	Assert(module);
+
+	if (!(module->receiver_enabled)) {
+		return STATUS_ERR_DENIED;
+	}
+
+#  if SPI_CALLBACK_MODE == true
+	if (module->status == STATUS_BUSY) {
+		/* Check if the SPI module is busy with a job */
+		return STATUS_BUSY;
+	}
+#  endif
 
 	uint16_t j;
 	enum status_code retval = STATUS_OK;
@@ -1202,7 +1229,7 @@ static inline enum status_code spi_tranceive_wait(
 	return retval;
 }
 
-enum status_code spi_tranceive_buffer_wait(
+enum status_code spi_transceive_buffer_wait(
 		struct spi_module *const module,
 		uint8_t *tx_data,
 		uint8_t *rx_data,

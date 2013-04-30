@@ -91,18 +91,14 @@ static enum status_code _adc_set_config(
 {
 	uint8_t adjres;
 	enum adc_average_samples average;
-	struct system_gclk_chan_config gclk_chan_conf;
 
 	/* Get the hardware module pointer */
 	Adc *const adc_module = module_inst->hw;
 
 	/* Configure GCLK channel and enable clock */
+	struct system_gclk_chan_config gclk_chan_conf;
+	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
 	gclk_chan_conf.source_generator = config->clock_source;
-
-	/* Set the GCLK channel to run in standby mode */
-	gclk_chan_conf.run_in_standby = config->run_in_standby;
-
-	/* Apply configuration and enable the GCLK channel */
 	system_gclk_chan_set_config(ADC_GCLK_ID, &gclk_chan_conf);
 	system_gclk_chan_enable(ADC_GCLK_ID);
 
@@ -291,7 +287,7 @@ static enum status_code _adc_set_config(
 
 	/* Disable all interrupts */
 	adc_module->INTENCLR.reg =
-			(1 << ADC_INTENCLR_READY_Pos)   | (1 << ADC_INTENCLR_WINMON_Pos) |
+			(1 << ADC_INTENCLR_SYNCRDY_Pos) | (1 << ADC_INTENCLR_WINMON_Pos) |
 			(1 << ADC_INTENCLR_OVERRUN_Pos) | (1 << ADC_INTENCLR_RESRDY_Pos);
 
 	if (config->correction.correction_enable){

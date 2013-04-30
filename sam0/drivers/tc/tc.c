@@ -59,9 +59,9 @@
 #  define _TC_PM_APBCMASK(n, unused)   PM_APBCMASK_TC##n ,
 
 /** TODO: Remove once present in device header file */
-#  define TC_INST_GCLK_ID              { MREPEAT(TC_INST_NUM, _TC_GCLK_ID    , ~) }
+#  define TC_INST_GCLK_ID          { MREPEAT(TC_INST_NUM, _TC_GCLK_ID    , ~) }
 /** TODO: Remove once present in device header file */
-#  define TC_INST_PM_APBCMASK          { MREPEAT(TC_INST_NUM, _TC_PM_APBCMASK, ~) }
+#  define TC_INST_PM_APBCMASK      { MREPEAT(TC_INST_NUM, _TC_PM_APBCMASK, ~) }
 #endif
 
 /**
@@ -182,8 +182,8 @@ enum status_code tc_init(
 	module_inst->hw = hw;
 
 	/* Check if odd numbered TC modules are being configured in 32-bit
-	 * counter size. Only even numbered counters are allowed to be configured
-	 * in 32-bit counter size.
+	 * counter size. Only even numbered counters are allowed to be
+	 * configured in 32-bit counter size.
 	 */
 	if ((config->counter_size == TC_COUNTER_SIZE_32BIT) &&
 			(instance & 0x01)) {
@@ -217,7 +217,8 @@ enum status_code tc_init(
 		system_pinmux_get_config_defaults(&pin_config);
 		pin_config.mux_position = config->channel_pwm_out_mux[0];
 		pin_config.direction = SYSTEM_PINMUX_PIN_DIR_OUTPUT;
-		system_pinmux_pin_set_config(config->channel_pwm_out_pin[0], &pin_config);
+		system_pinmux_pin_set_config(
+				config->channel_pwm_out_pin[0], &pin_config);
 	}
 
 	/* Set up the TC PWM out pin for channel 1 */
@@ -225,7 +226,8 @@ enum status_code tc_init(
 		system_pinmux_get_config_defaults(&pin_config);
 		pin_config.mux_position = config->channel_pwm_out_mux[1];
 		pin_config.direction = SYSTEM_PINMUX_PIN_DIR_OUTPUT;
-		system_pinmux_pin_set_config(config->channel_pwm_out_pin[1], &pin_config);
+		system_pinmux_pin_set_config(
+				config->channel_pwm_out_pin[1], &pin_config);
 	}
 
 	/* Enable the user interface clock in the PM */
@@ -235,7 +237,6 @@ enum status_code tc_init(
 	/* Setup clock for module */
 	system_gclk_chan_get_config_defaults(&gclk_chan_config);
 	gclk_chan_config.source_generator = config->clock_source;
-	gclk_chan_config.run_in_standby   = config->run_in_standby;
 	system_gclk_chan_set_config(inst_gclk_id[instance], &gclk_chan_config);
 	system_gclk_chan_enable(inst_gclk_id[instance]);
 
@@ -317,15 +318,15 @@ enum status_code tc_init(
 				/* Wait for sync */
 			}
 
-			hw->COUNT8.CC[0].reg
-				= config->size_specific.size_8_bit.compare_capture_channel[0];
+			hw->COUNT8.CC[0].reg = config->size_specific.\
+					size_8_bit.compare_capture_channel[0];
 
 			while (tc_is_syncing(module_inst)) {
 				/* Wait for sync */
 			}
 
-			hw->COUNT8.CC[1].reg
-				= config->size_specific.size_8_bit.compare_capture_channel[1];
+			hw->COUNT8.CC[1].reg = config->size_specific.\
+					size_8_bit.compare_capture_channel[1];
 
 			return STATUS_OK;
 
@@ -341,15 +342,15 @@ enum status_code tc_init(
 				/* Wait for sync */
 			}
 
-			hw->COUNT16.CC[0].reg
-				= config->size_specific.size_16_bit.compare_capture_channel[0];
+			hw->COUNT16.CC[0].reg = config->size_specific.\
+					size_16_bit.compare_capture_channel[0];
 
 			while (tc_is_syncing(module_inst)) {
 				/* Wait for sync */
 			}
 
-			hw->COUNT16.CC[1].reg
-				= config->size_specific.size_16_bit.compare_capture_channel[1];
+			hw->COUNT16.CC[1].reg = config->size_specific.\
+					size_16_bit.compare_capture_channel[1];
 
 			return STATUS_OK;
 
@@ -365,15 +366,15 @@ enum status_code tc_init(
 				/* Wait for sync */
 			}
 
-			hw->COUNT32.CC[0].reg
-				= config->size_specific.size_32_bit.compare_capture_channel[0];
+			hw->COUNT32.CC[0].reg = config->size_specific.\
+					size_32_bit.compare_capture_channel[0];
 
 			while (tc_is_syncing(module_inst)) {
 				/* Wait for sync */
 			}
 
-			hw->COUNT32.CC[1].reg
-				= config->size_specific.size_32_bit.compare_capture_channel[1];
+			hw->COUNT32.CC[1].reg = config->size_specific.\
+					size_32_bit.compare_capture_channel[1];
 
 			return STATUS_OK;
 	}
@@ -498,17 +499,20 @@ uint32_t tc_get_capture_value(
 	/* Read out based on the TC counter size */
 	switch (module_inst->counter_size) {
 		case TC_COUNTER_SIZE_8BIT:
-			if (channel_index < 2) {
+			if (channel_index <
+					NUMBER_OF_COMPARE_CAPTURE_CHANNELS) {
 				return tc_module->COUNT8.CC[channel_index].reg;
 			}
 
 		case TC_COUNTER_SIZE_16BIT:
-			if (channel_index < 2) {
+			if (channel_index <
+					NUMBER_OF_COMPARE_CAPTURE_CHANNELS) {
 				return tc_module->COUNT16.CC[channel_index].reg;
 			}
 
 		case TC_COUNTER_SIZE_32BIT:
-			if (channel_index < 2) {
+			if (channel_index <
+					NUMBER_OF_COMPARE_CAPTURE_CHANNELS) {
 				return tc_module->COUNT32.CC[channel_index].reg;
 			}
 	}
@@ -551,20 +555,26 @@ enum status_code tc_set_compare_value(
 	/* Read out based on the TC counter size */
 	switch (module_inst->counter_size) {
 		case TC_COUNTER_SIZE_8BIT:
-			if (channel_index < 2) {
-				tc_module->COUNT8.CC[channel_index].reg  = (uint8_t)compare;
+			if (channel_index <
+					NUMBER_OF_COMPARE_CAPTURE_CHANNELS) {
+				tc_module->COUNT8.CC[channel_index].reg  =
+						(uint8_t)compare;
 				return STATUS_OK;
 			}
 
 		case TC_COUNTER_SIZE_16BIT:
-			if (channel_index < 2) {
-				tc_module->COUNT16.CC[channel_index].reg = (uint16_t)compare;
+			if (channel_index <
+					NUMBER_OF_COMPARE_CAPTURE_CHANNELS) {
+				tc_module->COUNT16.CC[channel_index].reg =
+						(uint16_t)compare;
 				return STATUS_OK;
 			}
 
 		case TC_COUNTER_SIZE_32BIT:
-			if (channel_index < 2) {
-				tc_module->COUNT16.CC[channel_index].reg = (uint32_t)compare;
+			if (channel_index <
+					NUMBER_OF_COMPARE_CAPTURE_CHANNELS) {
+				tc_module->COUNT16.CC[channel_index].reg =
+						(uint32_t)compare;
 				return STATUS_OK;
 			}
 	}
@@ -580,13 +590,15 @@ enum status_code tc_set_compare_value(
  * accessible while the reset is being performed.
  *
  * \note When resetting a 32-bit counter only the master TC module's instance
- *       structure should be used.
+ *       structure should be passed to the function.
  *
  * \param[in]  module_inst    Pointer to the software module instance struct
  *
  * \return Status of the procedure
  * \retval STATUS_OK                   The module was reset successfully
- * \retval STATUS_ERR_UNSUPPORTED_DEV  A 32-bit slave TC module was supplied
+ * \retval STATUS_ERR_UNSUPPORTED_DEV  A 32-bit slave TC module was passed to
+ *                                     the function. Only use reset on master
+ *                                     tc.
  */
 enum status_code tc_reset(
 		const struct tc_module *const module_inst)
@@ -598,41 +610,20 @@ enum status_code tc_reset(
 	/* Get a pointer to the module hardware instance */
 	TcCount8 *const tc_module = &(module_inst->hw->COUNT8);
 
-	/* Disable this module */
-	tc_disable(module_inst);
-
 	if (tc_module->STATUS.reg & TC_STATUS_SLAVE) {
 		return STATUS_ERR_UNSUPPORTED_DEV;
 	}
 
-	/* Reset TC slave if one exists */
-	if (tc_module->CTRLA.reg & TC_COUNTER_SIZE_32BIT) {
+	/* Disable this module if it is running */
+	if (tc_module->CTRLA.reg & TC_CTRLA_ENABLE) {
+		tc_disable(module_inst);
 		while (tc_is_syncing(module_inst)) {
-			/* Wait for sync */
+			/* wait while module is disabling */
 		}
-
-		/* Reset this TC module */
-		tc_module->CTRLA.reg  |= TC_CTRLA_SWRST;
-
-		/* Get the slave hw pointer */
-		Tc *const tc_modules[TC_INST_NUM] = TC_INSTS;
-		Tc *const slave = tc_modules[_tc_get_inst_index(module_inst->hw) + 1];
-
-		while (slave->COUNT8.STATUS.reg & TC_STATUS_SYNCBUSY) {
-			/* Wait for sync */
-		}
-
-		/* Reset slave */
-		slave->COUNT8.CTRLA.reg |= TC_CTRLA_SWRST;
 	}
-	else {
-		while (tc_is_syncing(module_inst)) {
-			/* Wait for sync */
-		}
 
-		/* Reset this TC module */
-		tc_module->CTRLA.reg  |= TC_CTRLA_SWRST;
-	}
+	/* Reset this TC module */
+	tc_module->CTRLA.reg  |= TC_CTRLA_SWRST;
 
 	return STATUS_OK;
 }

@@ -89,8 +89,9 @@ int main(void)
 
 	/* Enable the external 32KHz oscillator */
 //! [enable_extosc32k_main]
-	enum status_code osc32k_status = system_clock_source_enable(
-			SYSTEM_CLOCK_SOURCE_XOSC32K, false);
+	enum status_code osc32k_status =
+			system_clock_source_enable(SYSTEM_CLOCK_SOURCE_XOSC32K);
+
 	if (osc32k_status != STATUS_OK) {
 		/* Error enabling the clock source */
 	}
@@ -103,8 +104,9 @@ int main(void)
 
 	/* Enable the DFLL oscillator */
 //! [enable_dfll_main]
-	enum status_code dfll_status = system_clock_source_enable(
-			SYSTEM_CLOCK_SOURCE_DFLL, false);
+	enum status_code dfll_status =
+			system_clock_source_enable(SYSTEM_CLOCK_SOURCE_DFLL);
+
 	if (dfll_status != STATUS_OK) {
 		/* Error enabling the clock source */
 	}
@@ -112,7 +114,11 @@ int main(void)
 
 	/* Change system clock to DFLL */
 //! [set_sys_clk_src]
-	system_main_clock_set_source(SYSTEM_MAIN_CLOCK_DFLL);
+	struct system_gclk_gen_config gclock_gen_conf;
+	system_gclk_gen_get_config_defaults(&gclock_gen_conf);
+	gclock_gen_conf.source_clock    = SYSTEM_CLOCK_SOURCE_DFLL;
+	gclock_gen_conf.division_factor = 1;
+	system_gclk_gen_set_config(GCLK_GENERATOR_0, &gclock_gen_conf);
 //! [set_sys_clk_src]
 //! [main]
 

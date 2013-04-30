@@ -3,7 +3,7 @@
  *
  * \brief Unit tests for FatFS service.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -74,6 +74,7 @@
  * - sam4s16c_sam4s_ek
  * - sam4s16c_sam4s_xplained
  * - XMEGA-A1 Xplained
+ * - sam4e16e_sam4e_ek
  *
  * \section compinfo Compilation info
  * This software was written for the GNU GCC and IAR for ARM. Other compilers
