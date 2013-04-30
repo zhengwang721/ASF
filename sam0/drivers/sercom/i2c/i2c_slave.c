@@ -271,7 +271,6 @@ enum status_code i2c_slave_init(
 	module->registered_callback = 0;
 	module->enabled_callback = 0;
 	module->buffer_length = 0;
-	module->wake_on_address = config->enable_wake_on_address;
 	module->nack_on_address = config->enable_nack_on_address;
 #endif
 
@@ -305,7 +304,6 @@ void i2c_slave_reset(
 	module->buffer_length = 0;
 	module->buffer_remaining = 0;
 	module->buffer = NULL;
-	module->wake_on_address = false;
 #endif
 
 	/* Disable module */
@@ -396,8 +394,8 @@ enum status_code i2c_slave_write_packet_wait(
 	}
 
 #if I2C_SLAVE_CALLBACK_MODE == true
-	/* Check if the I2C module is busy with a job. */
-	if (module->buffer_remaining > 0) {
+	/* Check if the module is busy with a job or AMATCH is enabled */
+	if (module->buffer_remaining > 0 || (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_AMATCH)) {
 		return STATUS_BUSY;
 	}
 #endif
@@ -511,8 +509,8 @@ enum status_code i2c_slave_read_packet_wait(
 	}
 
 #if I2C_SLAVE_CALLBACK_MODE == true
-	/* Check if the I2C module is busy with a job. */
-	if (module->buffer_remaining > 0) {
+	/* Check if the module is busy with a job or AMATCH is enabled */
+	if (module->buffer_remaining > 0 || (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_AMATCH)) {
 		return STATUS_BUSY;
 	}
 #endif
@@ -525,6 +523,7 @@ enum status_code i2c_slave_read_packet_wait(
 		/* Timeout, return */
 		return status;
 	}
+
 	/* Check if there was an error in the last transfer */
 	if (i2c_hw->STATUS.reg & (SERCOM_I2CS_STATUS_BUSERR ||
 			SERCOM_I2CS_STATUS_COLL || SERCOM_I2CS_STATUS_LOWTOUT)) {
@@ -564,22 +563,18 @@ enum status_code i2c_slave_read_packet_wait(
 		/* Read data */
 		_i2c_slave_wait_for_sync(module);
 		packet->data[i++] = i2c_hw->DATA.reg;
+
 	}
 
 	/* Packet read done, wait for packet to NACK, Stop or repeated start */
 	status = _i2c_slave_wait_for_bus(module);
 
-	if (status != STATUS_OK) {
-		/* Workaround: Do nothing, as the stop interrupt flag is
-		 * not always set when it should.
-		 */
-	}
-
 	if (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_DRDY) {
 		/* Buffer is full, send NACK */
 		i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_ACKACT;
 		i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_CMD(0x2);
-	} else if (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_PREC) {
+	}
+	if (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_PREC) {
 		/* Clear stop flag */
 		i2c_hw->INTFLAG.reg = SERCOM_I2CS_INTFLAG_PREC;
 	}
@@ -619,47 +614,6 @@ enum i2c_slave_direction i2c_slave_get_direction_wait(
 		/* Timeout, return */
 		return I2C_SLAVE_DIRECTION_NONE;
 	}
-
-	if (!(i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_AMATCH)) {
-		/* Not address interrupt, something is wrong */
-		return I2C_SLAVE_DIRECTION_NONE;
-	}
-
-	/* Check direction */
-	if ((i2c_hw->STATUS.reg & SERCOM_I2CS_STATUS_DIR)) {
-		/* Read request from master */
-		return I2C_SLAVE_DIRECTION_WRITE;
-	} else {
-		/* Write request from master */
-		return I2C_SLAVE_DIRECTION_READ;
-	}
-}
-
-/**
- * \brief Returns the direction of an initiated transaction
- *
- * Checks if the master has initiated a transaction and returns the
- * direction.
- *
- * Note that this function does not check for errors in the last transfer,
- * this will be discovered when reading or writing.
- *
- * \param[in]  module  Pointer to software module structure
- *
- * \return Direction of the current transfer, when in slave mode.
- *
- * \retval I2C_SLAVE_DIRECTION_NONE   No request from master
- * \retval I2C_SLAVE_DIRECTION_READ   Write request from master
- * \retval I2C_SLAVE_DIRECTION_WRITE  Read request from master
- */
-enum i2c_slave_direction i2c_slave_get_direction(
-		struct i2c_slave_module *const module)
-{
-	/* Sanity check arguments. */
-	Assert(module);
-	Assert(module->hw);
-
-	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
 
 	if (!(i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_AMATCH)) {
 		/* Not address interrupt, something is wrong */

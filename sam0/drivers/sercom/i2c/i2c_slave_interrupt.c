@@ -78,47 +78,6 @@ void i2c_slave_disable_nack_on_address(
 }
 
 /**
- * \brief Enables sending of NACK on address match
- *
- * Enables wake on address match.
- *
- * \param[in,out] module  Pointer to software module structure
- */
-void i2c_slave_enable_wake_on_address(
-		struct i2c_slave_module *const module)
-{
-	/* Sanity check arguments. */
-	Assert(module);
-	Assert(module->hw);
-
-	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
-
-	module->wake_on_address = true;
-	i2c_hw->INTENSET.reg = SERCOM_I2CS_INTFLAG_AMATCH;
-}
-
-/**
- * \brief Disables address match interrupt when using polled functions
- *
- * Disables wake on address match.
- *
- * \param[in,out] module  Pointer to software module structure
- */
-void i2c_slave_disable_wake_on_address(
-		struct i2c_slave_module *const module)
-{
-	/* Sanity check arguments. */
-	Assert(module);
-	Assert(module->hw);
-
-	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
-
-	module->wake_on_address = false;
-	// TODO: CHeck if we can disable interrupt
-	// i2c_hw->INTENCLR.reg = SERCOM_I2CS_INTFLAG_AMATCH;
-}
-
-/**
  * \internal
  * Reads next data. Used by interrupt handler to get next data byte from master.
  *
@@ -240,7 +199,12 @@ enum status_code i2c_slave_read_packet_job(
 	/* Save packet to software module. */
 	module->buffer           = packet->data;
 	module->buffer_remaining = packet->data_length;
+	module->buffer_length    = packet->data_length;
 	module->status           = STATUS_BUSY;
+
+	/* Enable interrupts */
+	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
+	i2c_hw->INTENSET.reg = SERCOM_I2CS_INTFLAG_AMATCH | SERCOM_I2CS_INTFLAG_DRDY | SERCOM_I2CS_INTFLAG_PREC;
 
 	/* Read will begin when master initiates the transfer */
 	return STATUS_OK;
@@ -279,7 +243,12 @@ enum status_code i2c_slave_write_packet_job(
 	/* Save packet to software module. */
 	module->buffer           = packet->data;
 	module->buffer_remaining = packet->data_length;
+	module->buffer_length    = packet->data_length;
 	module->status           = STATUS_BUSY;
+
+	/* Enable interrupts */
+	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
+	i2c_hw->INTENSET.reg = SERCOM_I2CS_INTFLAG_AMATCH | SERCOM_I2CS_INTFLAG_DRDY | SERCOM_I2CS_INTFLAG_PREC;
 
 	return STATUS_OK;
 }
@@ -307,7 +276,7 @@ void _i2c_slave_interrupt_handler(
 
 	if (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_AMATCH) {
 	/* Address match */
-		/* Check if last read is done - repeated start */
+		/* Check if last transfer is done - repeated start */
 		if (module->buffer_length != module->buffer_remaining &&
 				module->transfer_direction == 0) {
 
@@ -317,6 +286,15 @@ void _i2c_slave_interrupt_handler(
 
 			if ((callback_mask & (1 << I2C_SLAVE_CALLBACK_READ_COMPLETE))) {
 				module->callbacks[I2C_SLAVE_CALLBACK_READ_COMPLETE](module);
+			}
+		} else if (module->buffer_length != module->buffer_remaining &&
+				module->transfer_direction == 1) {
+			module->status = STATUS_OK;
+			module->buffer_length = 0;
+			module->buffer_remaining = 0;
+
+			if ((callback_mask & (1 << I2C_SLAVE_CALLBACK_WRITE_COMPLETE))) {
+				module->callbacks[I2C_SLAVE_CALLBACK_WRITE_COMPLETE](module);
 			}
 		}
 
@@ -333,7 +311,7 @@ void _i2c_slave_interrupt_handler(
 			/* NACK address */
 			i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_ACKACT;
 		} else if (i2c_hw->STATUS.reg & SERCOM_I2CS_STATUS_DIR) {
-			/* Set transfer direction in dev inst */
+			/* Set transfer direction in module instance */
 			module->transfer_direction = 1;
 
 			/* Read request from master */
@@ -341,8 +319,6 @@ void _i2c_slave_interrupt_handler(
 				module->callbacks[I2C_SLAVE_CALLBACK_READ_REQUEST](module);
 			}
 
-			/* Setting total length of buffer. */
-			module->buffer_length = module->buffer_remaining;
 			if (module->buffer_length == 0) {
 				/* Data buffer not set up, NACK address */
 				i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_ACKACT;
@@ -359,8 +335,6 @@ void _i2c_slave_interrupt_handler(
 				module->callbacks[I2C_SLAVE_CALLBACK_WRITE_REQUEST](module);
 			}
 
-			/* Setting total length of buffer. */
-			module->buffer_length = module->buffer_remaining;
 			if (module->buffer_length == 0) {
 				/* Data buffer not set up, NACK address */
 				i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_ACKACT;
@@ -372,23 +346,41 @@ void _i2c_slave_interrupt_handler(
 
 		/* ACK or NACK address */
 		i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_CMD(0x3);
+
 		/* ACK next incoming packet */
 		i2c_hw->CTRLB.reg &= ~SERCOM_I2CS_CTRLB_ACKACT;
+
 	} else if (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_PREC) {
 		/* Stop condition on bus - current transfer done */
-		module->status = STATUS_OK;
-		module->buffer_length = 0;
-		module->buffer_remaining = 0;
 
 		/* Clear Stop interrupt */
 		i2c_hw->INTFLAG.reg |= SERCOM_I2CS_INTFLAG_PREC;
 
-		/* Call appropriate callback if enabled and registered */
-		if ((callback_mask & (1 << I2C_SLAVE_CALLBACK_READ_COMPLETE))
-				&& (module->transfer_direction == 0)) {
-			/* Read from master complete */
-			module->callbacks[I2C_SLAVE_CALLBACK_READ_COMPLETE](module);
+		/* Disable interrupts */
+		i2c_hw->INTENCLR.reg = SERCOM_I2CS_INTFLAG_PREC | SERCOM_I2CS_INTFLAG_DRDY;
+		
+		if (!((module->enabled_callback & (1 << I2C_SLAVE_CALLBACK_READ_REQUEST))
+				|| (module->enabled_callback == (1 << I2C_SLAVE_CALLBACK_WRITE_REQUEST)))) {
+			/* Clear address match if read/write request is not enabled */
+			i2c_hw->INTENCLR.reg = SERCOM_I2CS_INTFLAG_AMATCH;
 		}
+
+		if (!(module->status == STATUS_ERR_OVERFLOW || module->status == STATUS_ERR_IO)) {
+			module->status = STATUS_OK;
+			module->buffer_length = 0;
+			module->buffer_remaining = 0;
+
+			/* Call appropriate callback if enabled and registered */
+			if ((callback_mask & (1 << I2C_SLAVE_CALLBACK_READ_COMPLETE))
+					&& (module->transfer_direction == 0)) {
+				/* Read from master complete */
+				module->callbacks[I2C_SLAVE_CALLBACK_READ_COMPLETE](module);
+			} else if ((callback_mask & (1 << I2C_SLAVE_CALLBACK_WRITE_COMPLETE))
+					&& (module->transfer_direction == 1)) {
+				/* Write to master complete */
+				module->callbacks[I2C_SLAVE_CALLBACK_WRITE_COMPLETE](module);
+			}
+					}
 	} else if (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_DRDY) {
 		/* Check if buffer is full, or NACK from master */
 		if (module->buffer_remaining <= 0 ||
@@ -420,10 +412,8 @@ void _i2c_slave_interrupt_handler(
 				/* Transfer successful */
 				module->status = STATUS_OK;
 
-				if (callback_mask & (1 << I2C_SLAVE_CALLBACK_WRITE_COMPLETE)) {
-					/* No more data to write, write complete */
-					module->callbacks[I2C_SLAVE_CALLBACK_WRITE_COMPLETE](module);
-				}
+				/* Disable interrupts */
+				i2c_hw->INTENCLR.reg = SERCOM_I2CS_INTFLAG_DRDY;
 			}
 
 		/* Continue buffer write/read */

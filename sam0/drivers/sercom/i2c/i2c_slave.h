@@ -179,8 +179,6 @@ struct i2c_slave_module {
 	/** Timeout value for polled functions */
 	uint16_t buffer_timeout;
 #  if I2C_SLAVE_CALLBACK_MODE == true
-	/** Wake on address match to use polled functions */
-	bool wake_on_address;
 	/** Nack on address match */
 	bool nack_on_address;
 	/** Pointers to callback functions */
@@ -239,13 +237,6 @@ struct i2c_slave_config {
 	 * \ref i2c_slave_disable_nack_on_address functions)
 	 */
 	bool enable_nack_on_address;
-	/**
-	 * Enable wake on address match interrupt to be able to used the polled
-	 * functions after getting an address match. (This can be changed after
-	 * initialization via the \ref i2c_slave_enable_wake_on_address and
-	 * \ref i2c_slave_disable_wake_on_address functions)
-	 */
-	bool enable_wake_on_address;
 #  endif
 	/** GCLK generator to use as clock source */
 	enum gclk_generator generator_source;
@@ -344,7 +335,6 @@ static inline void i2c_slave_get_config_defaults(
 	config->enable_general_call_address = false;
 #if I2C_SLAVE_CALLBACK_MODE == true
 	config->enable_nack_on_address = false;
-	config->enable_wake_on_address = false;
 #endif
 	config->generator_source = GCLK_GENERATOR_0;
 	config->run_in_standby = false;
@@ -373,11 +363,6 @@ static inline void i2c_slave_enable(
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
 
 #if I2C_SLAVE_CALLBACK_MODE == true
-	if (module->wake_on_address) {
-		/* Enable address match interrupt */
-		i2c_hw->INTENSET.reg = SERCOM_I2CS_INTFLAG_AMATCH;
-	}
-
 	/* Enable global interrupt for module */
 	system_interrupt_enable(_sercom_get_interrupt_vector(module->hw));
 #endif
