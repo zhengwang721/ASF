@@ -959,11 +959,13 @@ static inline void system_ahb_clock_clear_mask(
  * \brief Set bits in the clock mask for an APBx bus.
  *
  * This function will set bits in the clock mask for an APBx bus.
- * Any bits set to 1 will enable that clock, zero bits in the mask
- * will be ignored.
+ * Any bits set to 1 will enable the corresponding module clock, zero bits in
+ * the mask will be ignored.
  *
- * \param[in] mask  APBx clock mask
- * \param[in] bus   Bus to set clock mask bits for
+ * \param[in] mask  APBx clock mask, a \c SYSTEM_CLOCK_APB_APBx constant from
+ *                  the device header files
+ * \param[in] bus   Bus to set clock mask bits for, a mask of \c PM_APBxMASK_*
+ *                  constants from the device header files
  *
  * \returns Status indicating the result of the clock mask change operation.
  *
@@ -999,10 +1001,11 @@ static inline enum status_code system_apb_clock_set_mask(
  * \brief Clear bits in the clock mask for an APBx bus.
  *
  * This function will clear bits in the clock mask for an APBx bus.
- * Any bits set to 1 will disable that clock, zero bits in the mask
- * will be ignored.
+ * Any bits set to 1 will disable the corresponding module clock, zero bits in
+ * the mask will be ignored.
  *
- * \param[in] mask  APBx clock mask
+ * \param[in] mask  APBx clock mask, a \c SYSTEM_CLOCK_APB_APBx constant from
+ *                  the device header files
  * \param[in] bus   Bus to clear clock mask bits for
  *
  * \returns Status indicating the result of the clock mask change operation.
