@@ -370,7 +370,7 @@ enum system_osc8m_div {
  *
  * Available external clock source types.
  */
-enum system_external_clock {
+enum system_clock_external {
 	/** The external clock source is a crystal oscillator */
 	SYSTEM_CLOCK_EXTERNAL_CRYSTAL,
 	/** The connected clock source is an external logic level clock signal */
@@ -382,13 +382,13 @@ enum system_external_clock {
  *
  * Available operating modes of the DFLL clock source module,
  */
-enum system_dfll_mode {
+enum system_clock_dfll_loop_mode {
 	/** The DFLL is operating in open loop mode with no feedback */
-	SYSTEM_CLOCK_DFLL_OPEN_LOOP,
+	SYSTEM_CLOCK_DFLL_LOOP_MODE_OPEN,
 	/** The DFLL is operating in closed loop mode with frequency feedback from
 	 *  a low frequency reference clock
 	 */
-	SYSTEM_CLOCK_DFLL_CLOSED_LOOP = SYSCTRL_DFLLCTRL_MODE,
+	SYSTEM_CLOCK_DFLL_LOOP_MODE_CLOSED = SYSCTRL_DFLLCTRL_MODE,
 };
 
 /**
@@ -396,11 +396,11 @@ enum system_dfll_mode {
  *
  * DFLL lock behavior modes on device wake-up from sleep.
  */
-enum system_dfll_wakeup_lock {
+enum system_clock_dfll_wakeup_lock {
 	/** Keep DFLL lock when the device wakes from sleep */
-	SYSTEM_CLOCK_DFLL_KEEP_LOCK_AFTER_WAKE,
+	SYSTEM_CLOCK_DFLL_WAKEUP_LOCK_KEEP,
 	/** Lose DFLL lock when the devices wakes from sleep */
-	SYSTEM_CLOCK_DFLL_LOSE_LOCK_AFTER_WAKE = SYSCTRL_DFLLCTRL_LLAW,
+	SYSTEM_CLOCK_DFLL_WAKEUP_LOCK_LOSE = SYSCTRL_DFLLCTRL_LLAW,
 };
 
 /**
@@ -408,11 +408,11 @@ enum system_dfll_wakeup_lock {
  *
  * DFLL fine tracking behavior modes after a lock has been acquired.
  */
-enum system_dfll_stable_tracking {
+enum system_clock_dfll_stable_tracking {
 	/** Keep tracking after the DFLL has gotten a fine lock */
-	SYSTEM_CLOCK_DFLL_TRACK_AFTER_FINE_LOCK,
+	SYSTEM_CLOCK_DFLL_STABLE_TRACKING_TRACK_AFTER_LOCK,
 	/** Stop tracking after the DFLL has gotten a fine lock */
-	SYSTEM_CLOCK_DFLL_FIX_AFTER_FINE_LOCK = SYSCTRL_DFLLCTRL_STABLE,
+	SYSTEM_CLOCK_DFLL_STABLE_TRACKING_FIX_AFTER_LOCK = SYSCTRL_DFLLCTRL_STABLE,
 };
 
 /**
@@ -422,7 +422,7 @@ enum system_dfll_stable_tracking {
  * of time when the DFLL output frequency is not measured by the unit, to allow
  * the output to stabilize after a change in the input clock source.
  */
-enum system_dfll_chill_cycle {
+enum system_clock_dfll_chill_cycle {
 	/** Enable a chill cycle, where the DFLL output frequency is not measured */
 	SYSTEM_CLOCK_DFLL_CHILL_CYCLE_ENABLE,
 	/** Disable a chill cycle, where the DFLL output frequency is not measured */
@@ -435,7 +435,7 @@ enum system_dfll_chill_cycle {
  * DFLL QuickLock settings for the DFLL module, to allow for a faster lock of
  * the DFLL output frequency at the expense of accuracy.
  */
-enum system_dfll_quick_lock {
+enum system_clock_dfll_quick_lock {
 	/** Enable the QuickLock feature for looser lock requirements on the DFLL */
 	SYSTEM_CLOCK_DFLL_QUICK_LOCK_ENABLE,
 	/** Disable the QuickLock feature for strict lock requirements on the DFLL */
@@ -471,7 +471,7 @@ enum system_main_clock_div {
  *
  * Available bus clock domains on the APB bus.
  */
-enum clock_apb_bus {
+enum system_clock_apb_bus {
 	/** Peripheral bus A on the APB bus. */
 	SYSTEM_CLOCK_APB_APBA,
 	/** Peripheral bus B on the APB bus. */
@@ -507,7 +507,7 @@ enum system_clock_source {
  */
 struct system_clock_source_xosc_config {
 	/** External clock type */
-	enum system_external_clock external_clock;
+	enum system_clock_external external_clock;
 	/** Crystal oscillator start-up time */
 	enum system_xosc_startup startup_time;
 	/** Enable automatic amplitude gain control */
@@ -528,7 +528,7 @@ struct system_clock_source_xosc_config {
  */
 struct system_clock_source_xosc32k_config {
 	/** External clock type */
-	enum system_external_clock external_clock;
+	enum system_clock_external external_clock;
 	/** Crystal oscillator start-up time */
 	enum system_xosc32k_startup startup_time;
 	/** Enable automatic amplitude control */
@@ -587,20 +587,20 @@ struct system_clock_source_osc32k_config {
  */
 struct system_clock_source_dfll_config {
 	/** Loop mode */
-	enum system_dfll_mode loop;
+	enum system_clock_dfll_loop_mode loop_mode;
 	/** Keep the DFLL enabled in standby sleep mode */
 	bool run_in_standby;
 	/** Run On Demand. If this is set the DFLL won't run
 	 * until requested by a peripheral */
 	bool on_demand;
 	/** Enable Quick Lock */
-	enum system_dfll_quick_lock quick_lock;
+	enum system_clock_dfll_quick_lock quick_lock;
 	/** Enable Chill Cycle */
-	enum system_dfll_chill_cycle chill_cycle;
+	enum system_clock_dfll_chill_cycle chill_cycle;
 	/** DFLL lock state on wakeup */
-	enum system_dfll_wakeup_lock wakeup_lock;
+	enum system_clock_dfll_wakeup_lock wakeup_lock;
 	/** DFLL tracking after fine lock */
-	enum system_dfll_stable_tracking stable_tracking;
+	enum system_clock_dfll_stable_tracking stable_tracking;
 	/** Coarse calibration value (Open loop mode) */
 	uint8_t coarse_value;
 	/** Fine calibration value (Open loop mode) */
@@ -783,11 +783,11 @@ void system_clock_source_osc8m_set_config(
 static inline void system_clock_source_dfll_get_default_config(
 		struct system_clock_source_dfll_config *const config)
 {
-	config->loop            = SYSTEM_CLOCK_DFLL_OPEN_LOOP;
+	config->loop_mode       = SYSTEM_CLOCK_DFLL_LOOP_MODE_OPEN;
 	config->quick_lock      = SYSTEM_CLOCK_DFLL_QUICK_LOCK_ENABLE;
 	config->chill_cycle     = SYSTEM_CLOCK_DFLL_CHILL_CYCLE_ENABLE;
-	config->wakeup_lock     = SYSTEM_CLOCK_DFLL_KEEP_LOCK_AFTER_WAKE;
-	config->stable_tracking = SYSTEM_CLOCK_DFLL_TRACK_AFTER_FINE_LOCK;
+	config->wakeup_lock     = SYSTEM_CLOCK_DFLL_WAKEUP_LOCK_KEEP;
+	config->stable_tracking = SYSTEM_CLOCK_DFLL_STABLE_TRACKING_TRACK_AFTER_LOCK;
 	config->run_in_standby  = false;
 	config->on_demand       = true;
 
@@ -896,7 +896,7 @@ static inline void system_cpu_clock_set_divider(
  * \retval STATUS_OK               The APBx clock was set successfully
  */
 static inline enum status_code system_apb_clock_set_divider(
-		const enum clock_apb_bus bus,
+		const enum system_clock_apb_bus bus,
 		const enum system_main_clock_div divider)
 {
 	switch (bus) {
@@ -971,7 +971,7 @@ static inline void system_ahb_clock_clear_mask(
  * \retval STATUS_OK               The clock mask was set successfully
  */
 static inline enum status_code system_apb_clock_set_mask(
-		const enum clock_apb_bus bus,
+		const enum system_clock_apb_bus bus,
 		const uint32_t mask)
 {
 	switch (bus) {
@@ -1011,7 +1011,7 @@ static inline enum status_code system_apb_clock_set_mask(
  * \retval STATUS_OK               The clock mask was changed successfully.
  */
 static inline enum status_code system_apb_clock_clear_mask(
-		const enum clock_apb_bus bus,
+		const enum system_clock_apb_bus bus,
 		const uint32_t mask)
 {
 	switch (bus) {

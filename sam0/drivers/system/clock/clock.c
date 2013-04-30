@@ -291,7 +291,7 @@ void system_clock_source_dfll_set_config(
 			(uint32_t)config->run_in_standby << SYSCTRL_DFLLCTRL_RUNSTDBY_Pos |
 			(uint32_t)config->on_demand << SYSCTRL_DFLLCTRL_ONDEMAND_Pos;
 
-	if (config->loop == SYSTEM_CLOCK_DFLL_CLOSED_LOOP) {
+	if (config->loop_mode == SYSTEM_CLOCK_DFLL_LOOP_MODE_CLOSED) {
 		_system_dfll_wait_for_sync();
 		SYSCTRL->DFLLMUL.reg =
 				SYSCTRL_DFLLMUL_CSTEP(config->coarse_max_step) |
@@ -299,7 +299,7 @@ void system_clock_source_dfll_set_config(
 				SYSCTRL_DFLLMUL_MUL(config->multiply_factor);
 
 		/* Enable the closed loop mode */
-		temp |= config->loop;
+		temp |= config->loop_mode;
 	}
 
 	/* Set configuration to DFLL */
@@ -585,11 +585,11 @@ void system_clock_init(void)
 	struct system_clock_source_dfll_config dfll_conf;
 	system_clock_source_dfll_get_default_config(&dfll_conf);
 
-	dfll_conf.loop                 = CONF_CLOCK_DFLL_LOOP_MODE;
+	dfll_conf.loop_mode            = CONF_CLOCK_DFLL_LOOP_MODE;
 	dfll_conf.on_demand            = CONF_CLOCK_DFLL_ON_DEMAND;
 	dfll_conf.run_in_standby       = CONF_CLOCK_DFLL_RUN_IN_STANDBY;
 
-	if (CONF_CLOCK_DFLL_LOOP_MODE == SYSTEM_CLOCK_DFLL_OPEN_LOOP) {
+	if (CONF_CLOCK_DFLL_LOOP_MODE == SYSTEM_CLOCK_DFLL_LOOP_MODE_OPEN) {
 		dfll_conf.coarse_value = CONF_CLOCK_DFLL_COARSE_VALUE;
 		dfll_conf.fine_value   = CONF_CLOCK_DFLL_FINE_VALUE;
 	}
@@ -601,15 +601,15 @@ void system_clock_init(void)
 #  endif
 
 #  if CONF_CLOCK_DFLL_TRACK_AFTER_FINE_LOCK == true
-	dfll_conf.stable_tracking = SYSTEM_CLOCK_DFLL_TRACK_AFTER_FINE_LOCK;
+	dfll_conf.stable_tracking = SYSTEM_CLOCK_DFLL_STABLE_TRACKING_TRACK_AFTER_LOCK;
 #  else
-	dfll_conf.stable_tracking = SYSTEM_CLOCK_DFLL_FIX_AFTER_FINE_LOCK;
+	dfll_conf.stable_tracking = SYSTEM_CLOCK_DFLL_STABLE_TRACKING_FIX_AFTER_LOCK;
 #  endif
 
 #  if CONF_CLOCK_DFLL_KEEP_LOCK_ON_WAKEUP == true
-	dfll_conf.wakeup_lock = SYSTEM_CLOCK_DFLL_KEEP_LOCK_AFTER_WAKE;
+	dfll_conf.wakeup_lock = SYSTEM_CLOCK_DFLL_WAKEUP_LOCK_KEEP;
 #  else
-	dfll_conf.wakeup_lock = SYSTEM_CLOCK_DFLL_LOSE_LOCK_AFTER_WAKE;
+	dfll_conf.wakeup_lock = SYSTEM_CLOCK_DFLL_WAKEUP_LOCK_LOSE;
 #  endif
 
 #  if CONF_CLOCK_DFLL_ENABLE_CHILL_CYCLE == true
@@ -618,7 +618,7 @@ void system_clock_init(void)
 	dfll_conf.chill_cycle = SYSTEM_CLOCK_DFLL_CHILL_CYCLE_DISABLE;
 #  endif
 
-	if (CONF_CLOCK_DFLL_LOOP_MODE == SYSTEM_CLOCK_DFLL_CLOSED_LOOP) {
+	if (CONF_CLOCK_DFLL_LOOP_MODE == SYSTEM_CLOCK_DFLL_LOOP_MODE_CLOSED) {
 		dfll_conf.multiply_factor = CONF_CLOCK_DFLL_MULTIPLY_FACTOR;
 	}
 
@@ -704,13 +704,15 @@ void system_clock_init(void)
 #  endif
 
 /* Enable DFLL reference clock if in closed loop mode */
-#  if (CONF_CLOCK_DFLL_ENABLE && CONF_CLOCK_DFLL_LOOP_MODE == SYSTEM_CLOCK_DFLL_CLOSED_LOOP)
-	struct system_gclk_chan_config dfll_gclk_chan_conf;
+#  if (CONF_CLOCK_DFLL_ENABLE)
+	if (CONF_CLOCK_DFLL_LOOP_MODE == SYSTEM_CLOCK_DFLL_LOOP_MODE_CLOSED) {
+		struct system_gclk_chan_config dfll_gclk_chan_conf;
 
-	system_gclk_chan_get_config_defaults(&dfll_gclk_chan_conf);
-	dfll_gclk_chan_conf.source_generator = CONF_CLOCK_DFLL_SOURCE_GCLK_GENERATOR;
-	system_gclk_chan_set_config(0, &dfll_gclk_chan_conf);
-	system_gclk_chan_enable(0);
+		system_gclk_chan_get_config_defaults(&dfll_gclk_chan_conf);
+		dfll_gclk_chan_conf.source_generator = CONF_CLOCK_DFLL_SOURCE_GCLK_GENERATOR;
+		system_gclk_chan_set_config(0, &dfll_gclk_chan_conf);
+		system_gclk_chan_enable(0);
+	}
 #  endif
 
 	/* Configured last as it might depend on other generators */
