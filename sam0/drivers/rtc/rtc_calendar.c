@@ -204,7 +204,7 @@ static void _rtc_calendar_set_config(
  * the desired functionality of the RTC. \note The application \c conf_clocks.h
  * configuration file should be set up correctly before using this function.
  *
- * \param[in] config Pointer to the configuration structure.
+ * \param[in] config  Pointer to the configuration structure.
  *
  * \return Status of the initialization procedure.
  * \retval STATUS_OK If the initialization was run successfully.
