@@ -370,7 +370,7 @@ enum spi_callback {
 	SPI_CALLBACK_BUFFER_TRANSCEIVED,
 	/** Callback for error */
 	SPI_CALLBACK_ERROR,
-	/** 
+	/**
 	* Callback for transmission ended by master before entire buffer was
 	* read or written from slave
 	*/
@@ -386,9 +386,8 @@ enum spi_callback {
 #  if !defined(__DOXYGEN__)
 /**
  * \internal SPI transfer directions
- *
  */
-enum spi_direction {
+enum _spi_direction {
 	SPI_DIRECTION_READ,
 	SPI_DIRECTION_WRITE,
 	SPI_DIRECTION_BOTH,
@@ -592,7 +591,7 @@ struct spi_module {
 	bool receiver_enabled;
 #  if SPI_CALLBACK_MODE == true
 	/** Direction of transaction */
-	volatile enum spi_direction dir;
+	volatile enum _spi_direction dir;
 	/** Array to store callback function pointers in */
 	spi_callback_t callback[SPI_CALLBACK_N];
 	/** Buffer pointer to where the next received character will be put */
