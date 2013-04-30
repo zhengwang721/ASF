@@ -87,7 +87,7 @@
 
 /* SYSTEM_CLOCK_SOURCE_DFLL configuration - Digital Frequency Locked Loop */
 #  define CONF_CLOCK_DFLL_ENABLE                  false
-#  define CONF_CLOCK_DFLL_LOOP_MODE               SYSTEM_CLOCK_DFLL_OPEN_LOOP
+#  define CONF_CLOCK_DFLL_LOOP_MODE               SYSTEM_CLOCK_DFLL_LOOP_MODE_OPEN
 #  define CONF_CLOCK_DFLL_ON_DEMAND               true
 #  define CONF_CLOCK_DFLL_RUN_IN_STANDBY          false
 
@@ -135,10 +135,10 @@
 #  define CONF_CLOCK_GCLK_3_PRESCALER             1
 
 /* Configure GCLK generator 4 */
-#  define CONF_CLOCK_GCLK_4_ENABLE                false
+#  define CONF_CLOCK_GCLK_4_ENABLE                true
 #  define CONF_CLOCK_GCLK_4_RUN_IN_STANDBY        false
-#  define CONF_CLOCK_GCLK_4_CLOCK_SOURCE          SYSTEM_CLOCK_SOURCE_OSC8M
-#  define CONF_CLOCK_GCLK_4_PRESCALER             1
+#  define CONF_CLOCK_GCLK_4_CLOCK_SOURCE          SYSTEM_CLOCK_SOURCE_ULP32K
+#  define CONF_CLOCK_GCLK_4_PRESCALER             32
 
 /* Configure GCLK generator 5 */
 #  define CONF_CLOCK_GCLK_5_ENABLE                false
