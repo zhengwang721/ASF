@@ -243,20 +243,6 @@
 /* TODO: Add to conf_clock.h, set default value */
 #define CONF_CLOCK_TIMEOUT 0xFFFFFFFF
 
-/**
- * \brief Selectable speeds for the RTC to run at.
- *
- * RTC generic clock source generator frequency configuration values,
- * for \c conf_clock.h.
- */
-enum conf_clock_rtc_freq {
-	/** 1Hz counter speed for the RTC (Calendar mode only). */
-	CONF_CLOCK_RTC_FREQ_1HZ   = 32,
-	/** 1kHz counter speed for the RTC. */
-	CONF_CLOCK_RTC_FREQ_1KHZ  = 32,
-	/** 32kHz counter speed for the RTC. */
-	CONF_CLOCK_RTC_FREQ_32KHZ = 1,
-};
 
 /**
  * \brief Available start-up times for the XOSC32K
@@ -366,6 +352,45 @@ enum system_osc8m_div {
 };
 
 /**
+ * \brief Main CPU and APB/AHB bus clock source prescaler values
+ *
+ * Available division ratios for the CPU and APB/AHB bus clocks.
+ */
+enum system_main_clock_div {
+	/** Divide Main clock by 1 */
+	SYSTEM_MAIN_CLOCK_DIV_1,
+	/** Divide Main clock by 2 */
+	SYSTEM_MAIN_CLOCK_DIV_2,
+	/** Divide Main clock by 4 */
+	SYSTEM_MAIN_CLOCK_DIV_4,
+	/** Divide Main clock by 8 */
+	SYSTEM_MAIN_CLOCK_DIV_8,
+	/** Divide Main clock by 16 */
+	SYSTEM_MAIN_CLOCK_DIV_16,
+	/** Divide Main clock by 32 */
+	SYSTEM_MAIN_CLOCK_DIV_32,
+	/** Divide Main clock by 64 */
+	SYSTEM_MAIN_CLOCK_DIV_64,
+	/** Divide Main clock by 128 */
+	SYSTEM_MAIN_CLOCK_DIV_128,
+};
+
+/**
+ * \brief Selectable speeds for the RTC to run at.
+ *
+ * RTC generic clock source generator frequency configuration values,
+ * for \c conf_clock.h.
+ */
+enum conf_clock_rtc_freq {
+	/** 1Hz counter speed for the RTC (Calendar mode only). */
+	CONF_CLOCK_RTC_FREQ_1HZ   = 32,
+	/** 1kHz counter speed for the RTC. */
+	CONF_CLOCK_RTC_FREQ_1KHZ  = 32,
+	/** 32kHz counter speed for the RTC. */
+	CONF_CLOCK_RTC_FREQ_32KHZ = 1,
+};
+
+/**
  * \brief External clock source types.
  *
  * Available external clock source types.
@@ -440,30 +465,6 @@ enum system_clock_dfll_quick_lock {
 	SYSTEM_CLOCK_DFLL_QUICK_LOCK_ENABLE,
 	/** Disable the QuickLock feature for strict lock requirements on the DFLL */
 	SYSTEM_CLOCK_DFLL_QUICK_LOCK_DISABLE = SYSCTRL_DFLLCTRL_QLDIS,
-};
-
-/**
- * \brief Main CPU and APB/AHB bus clock source prescaler values
- *
- * Available division ratios for the CPU and APB/AHB bus clocks.
- */
-enum system_main_clock_div {
-	/** Divide Main clock by 1 */
-	SYSTEM_MAIN_CLOCK_DIV_1,
-	/** Divide Main clock by 2 */
-	SYSTEM_MAIN_CLOCK_DIV_2,
-	/** Divide Main clock by 4 */
-	SYSTEM_MAIN_CLOCK_DIV_4,
-	/** Divide Main clock by 8 */
-	SYSTEM_MAIN_CLOCK_DIV_8,
-	/** Divide Main clock by 16 */
-	SYSTEM_MAIN_CLOCK_DIV_16,
-	/** Divide Main clock by 32 */
-	SYSTEM_MAIN_CLOCK_DIV_32,
-	/** Divide Main clock by 64 */
-	SYSTEM_MAIN_CLOCK_DIV_64,
-	/** Divide Main clock by 128 */
-	SYSTEM_MAIN_CLOCK_DIV_128,
 };
 
 /**
