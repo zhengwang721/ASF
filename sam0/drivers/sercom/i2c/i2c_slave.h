@@ -314,7 +314,6 @@ static inline bool i2c_slave_is_syncing(
  * - Address mask = 0 (one single address)
  * - General call address disabled
  * - Address nack disabled if the interrupt driver is used
- * - Wake on address match disabled if the interrupt driver is used.
  * - GCLK generator 0
  * - Do not run in standby
  * - PINMUX_DEFAULT for SERCOM pads
