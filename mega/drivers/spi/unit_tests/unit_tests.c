@@ -372,7 +372,7 @@ static void run_spi_transfer_test(const struct test_case *test)
 	for (uint8_t i = 0; i < DATA_BUFFER_SIZE; i++) {
 
 	   test_assert_true(test, data[i] == manufac_id[i],
-				"read data %d, expected %d", data[i],
+				"read spi data %d, expected %d", data[i],
 				manufac_id[i]);
 	}        
 
