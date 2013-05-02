@@ -99,20 +99,22 @@ void configure_ac_channel(void)
 	//! [setup_10]
 
 	/* Set up a pin as an AC channel input */
+	//! [setup_11]
 	struct system_pinmux_config ac0_pin_conf;
 	system_pinmux_get_config_defaults(&ac0_pin_conf);
 	ac0_pin_conf.direction    = SYSTEM_PINMUX_PIN_DIR_INPUT;
 	ac0_pin_conf.mux_position = MUX_PA04B_AC_AIN0;
 	system_pinmux_pin_set_config(PIN_PA04B_AC_AIN0, &ac0_pin_conf);
+	//! [setup_11]
 
 	/* Initialize and enable the Analog Comparator channel with the user
 	 * settings */
-	//! [setup_11]
+	//! [setup_12]
 	ac_chan_set_config(&ac_dev, AC_COMPARATOR_CHANNEL, &ac_chan_conf);
-	//! [setup_11]
 	//! [setup_12]
+	//! [setup_13]
 	ac_chan_enable(&ac_dev, AC_COMPARATOR_CHANNEL);
-	//! [setup_12]
+	//! [setup_13]
 }
 //! [setup]
 
@@ -122,9 +124,9 @@ int main(void)
 	system_init();
 	configure_ac();
 	configure_ac_channel();
-	//! [setup_13]
+	//! [setup_14]
 	ac_enable(&ac_dev);
-	//! [setup_13]
+	//! [setup_14]
 	//! [setup_init]
 
 	//! [main]
