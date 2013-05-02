@@ -49,6 +49,9 @@ void configure_rtc_calendar(void);
 //! [callback]
 void rtc_match_callback(void)
 {
+	/* Do something on RTC alarm match here */
+	port_pin_toggle_output_level(LED_0_PIN);
+
 	/* Set new alarm in 5 seconds */
 	//! [alarm_struct]
 	struct rtc_calendar_alarm_time alarm;
@@ -84,7 +87,6 @@ void configure_rtc_callbacks(void)
 //! [initialize_rtc]
 void configure_rtc_calendar(void)
 {
-
 	/* Initialize RTC in calendar mode. */
 //! [init_conf]
 	struct rtc_calendar_config config;
@@ -99,7 +101,7 @@ void configure_rtc_calendar(void)
 	alarm.day       = 1;
 	alarm.hour      = 0;
 	alarm.minute    = 0;
-	alarm.second    = 2;
+	alarm.second    = 4;
 //! [time_struct]
 
 //! [set_config]
@@ -133,7 +135,7 @@ int main(void)
 	time.day    = 31;
 	time.hour   = 23;
 	time.minute = 59;
-	time.second = 0;
+	time.second = 59;
 //! [time]
 
 	/* Configure and enable RTC */

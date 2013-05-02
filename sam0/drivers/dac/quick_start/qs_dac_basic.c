@@ -51,6 +51,9 @@ int main(void)
 	struct dac_chan_config chan_config;
 //! [variable]
 
+//! [system_init]
+	system_init();
+//! [system_init]
 	/* Setup DAC module*/
 //! [get_conf]
 	dac_get_config_defaults(&config);
