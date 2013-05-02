@@ -126,8 +126,8 @@ static inline void adc_disable_callback(
  */
 enum status_code adc_read_buffer_job(
 		struct adc_module *const module_inst,
-		uint16_t samples,
-		uint16_t *buffer);
+		uint16_t *buffer,
+		uint16_t samples);
 /** @} */
 
 #endif /* ADC_CALLBACK_H_INCLUDED */
