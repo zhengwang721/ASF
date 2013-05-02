@@ -904,7 +904,7 @@ enum status_code adc_init(
  *  \li All events (input and generation) disabled
  *  \li Sleep operation disabled
  *  \li No reference compensation
- *  \li No gain/offset correction
+ *  \li Factory gain/offset corrections
  *  \li No added sampling time
  *  \li Pin scan mode disabled
  *
