@@ -135,7 +135,7 @@ uint8_t page_write_buf[PAGE_SIZE];
 static bool buffer_cmp(const uint8_t *pbuf_0, const uint8_t *pbuf_1,
 		uint32_t len)
 {
-	for (len += 1; len != 0; len--) {
+	for (; len != 0; len--) {
 		if (*(pbuf_0++) != *(pbuf_1++)) {
 			return false;
 		}
@@ -145,7 +145,7 @@ static bool buffer_cmp(const uint8_t *pbuf_0, const uint8_t *pbuf_1,
 
 static void buffer_fill(uint8_t *pbuf, uint32_t len, const uint8_t pattern)
 {
-	for (len += 1; len != 0; len--) {
+	for (; len != 0; len--) {
 		*(pbuf++) = pattern;
 	}
 }
@@ -273,11 +273,11 @@ static void run_test_fill_pattern(const struct test_case *test)
 {
 	if (result == true) {
 		buffer_fill(test_data_rx, TEST_DATA_LENGTH, 0);
-		buffer_fill(test_data_tx, PAGE_SIZE, MEMORY_PATTERN);
+		buffer_fill(test_data_tx, TEST_DATA_LENGTH, MEMORY_PATTERN);
 
 		if (at24cxx_fill_pattern(AT24C_MEM_ADDR,
-			AT24C_MEM_ADDR + TEST_DATA_LENGTH - 1, MEMORY_PATTERN) !=
-			AT24C_WRITE_SUCCESS) {
+				AT24C_MEM_ADDR + TEST_DATA_LENGTH - 1, MEMORY_PATTERN) !=
+				AT24C_WRITE_SUCCESS) {
 			result = false;
 			test_assert_true(test, false, "Pattern Fill NG!");
 		}
