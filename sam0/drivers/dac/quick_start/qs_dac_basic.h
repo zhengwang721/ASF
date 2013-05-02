@@ -63,6 +63,8 @@
  * \section asfdoc_samd20_dac_basic_use_case_workflow Workflow
  * -# Create variables for device software instance, config and channel config.
  *  \snippet qs_dac_basic.c variable
+ * -# Initialize system.
+ *  \snippet qs_dac_basic.c system_init
  * -# Get DAC config defaults.
  *  \snippet qs_dac_basic.c get_conf
  * -# Initialize software instance with hardware module and write configuration
