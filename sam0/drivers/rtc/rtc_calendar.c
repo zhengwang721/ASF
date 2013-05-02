@@ -152,11 +152,11 @@ static void _rtc_calendar_register_value_to_time(
  * Set the configurations given from the configuration structure to the
  * hardware module.
  *
- * \param[in] config Pointer to the configuration structure.
+ * \param[in] config  Pointer to the configuration structure.
  *
  * \return Status of the configuration procedure.
- * \retval STATUS_OK RTC configurations where set successfully.
- * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) where given.
+ * \retval STATUS_OK               RTC configurations was set successfully.
+ * \retval STATUS_ERR_INVALID_ARG  If invalid argument(s) where given.
  */
 static void _rtc_calendar_set_config(
 		const struct rtc_calendar_config *const config)
@@ -200,15 +200,14 @@ static void _rtc_calendar_set_config(
 /**
  * \brief Initializes the RTC module with given configurations.
  *
- * This initializes the module, setting up all given configurations to provide
- * the desired functionality of the RTC. \note The application \c conf_clocks.h
- * configuration file should be set up correctly before using this function.
+ * Initializes the module, setting up all given configurations to provide
+ * the desired functionality of the RTC.
  *
  * \param[in] config  Pointer to the configuration structure.
  *
  * \return Status of the initialization procedure.
- * \retval STATUS_OK If the initialization was run successfully.
- * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) were given.
+ * \retval STATUS_OK               If the initialization was run successfully.
+ * \retval STATUS_ERR_INVALID_ARG  If invalid argument(s) were given.
  */
 void rtc_calendar_init(
 		const struct rtc_calendar_config *const config)
@@ -218,7 +217,6 @@ void rtc_calendar_init(
 
 	/* Set up GCLK */
 	struct system_gclk_chan_config gclk_chan_conf;
-
 	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
 	gclk_chan_conf.source_generator = GCLK_GENERATOR_2;
 	system_gclk_chan_set_config(RTC_GCLK_ID, &gclk_chan_conf);
@@ -228,18 +226,18 @@ void rtc_calendar_init(
 	rtc_calendar_reset();
 
 	/* Save conf_struct internally for continued use. */
-	_rtc_dev.clock_24h = config->clock_24h;
+	_rtc_dev.clock_24h           = config->clock_24h;
 	_rtc_dev.continuously_update = config->continuously_update;
-	_rtc_dev.year_init_value = config->year_init_value;
+	_rtc_dev.year_init_value     = config->year_init_value;
 
 	/* Set config. */
 	_rtc_calendar_set_config(config);
 }
 
 /**
- * \brief Swap between 12h and 24h clock.
+ * \brief Swaps between 12h and 24h clock mode.
  *
- * This will swap the time mode.
+ * Swaps the current RTC time mode.
  * - If currently in 12h mode, it will swap to 24h.
  * - If currently in 24h mode, it will swap to 12h.
  *
@@ -327,9 +325,9 @@ void rtc_calendar_swap_time_mode(void)
 /**
  * \brief Set the current calendar time to desired time.
  *
- * This will set the time provided to the calendar.
+ * Sets the time provided to the calendar.
  *
- * \param[in] time The time to set in the calendar.
+ * \param[in] time  The time to set in the calendar.
  */
 void rtc_calendar_set_time(
 		const struct rtc_calendar_time *const time)
@@ -350,9 +348,9 @@ void rtc_calendar_set_time(
 /**
  * \brief Get the current calendar value.
  *
- * Returns the current time of the calendar
+ * Retrieves the current time of the calendar.
  *
- * \param[out] time Pointer to value that will be filled with current time.
+ * \param[out] time  Pointer to value that will be filled with current time.
  */
 void rtc_calendar_get_time(
 		struct rtc_calendar_time *const time)
@@ -381,14 +379,14 @@ void rtc_calendar_get_time(
 /**
  * \brief Set the alarm time for the specified alarm.
  *
- * This set the time and mask specified to the requested alarm.
+ * Sets the time and mask specified to the requested alarm.
  *
- * \param[in] alarm The alarm struct to set the alarm with.
- * \param[in] alarm_index The index of the alarm to set.
+ * \param[in] alarm        The alarm struct to set the alarm with.
+ * \param[in] alarm_index  The index of the alarm to set.
  *
  * \return Status of setting alarm.
- * \retval STATUS_OK If alarm was set correctly.
- * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) were provided.
+ * \retval STATUS_OK               If alarm was set correctly.
+ * \retval STATUS_ERR_INVALID_ARG  If invalid argument(s) were provided.
  */
 enum status_code rtc_calendar_set_alarm(
 		const struct rtc_calendar_alarm_time *const alarm,
@@ -421,15 +419,15 @@ enum status_code rtc_calendar_set_alarm(
 /**
  * \brief Get the current alarm time of specified alarm.
  *
- * This will provide the current alarm time for the alarm specified.
+ * Retrieves the current alarm time for the alarm specified.
  *
- * \param[out] alarm Pointer to the struct that will be filled with alarm
- * time and mask of the specified alarm.
- * \param[in] alarm_index Index of alarm to get alarm time from.
+ * \param[out] alarm  Pointer to the struct that will be filled with alarm
+ *                    time and mask of the specified alarm.
+ * \param[in] alarm_index  Index of alarm to get alarm time from.
  *
  * \return Status of getting alarm.
- * \retval STATUS_OK If alarm was read correctly.
- * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) were provided.
+ * \retval STATUS_OK               If alarm was read correctly.
+ * \retval STATUS_ERR_INVALID_ARG  If invalid argument(s) were provided.
  */
 enum status_code rtc_calendar_get_alarm(
 		struct rtc_calendar_alarm_time *const alarm,
@@ -472,8 +470,8 @@ enum status_code rtc_calendar_get_alarm(
  * \param[in] value Between -127 and 127 used for the correction.
  *
  * \return Status of the calibration procedure.
- * \retval STATUS_OK If calibration was done correctly.
- * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) were provided.
+ * \retval STATUS_OK               If calibration was done correctly.
+ * \retval STATUS_ERR_INVALID_ARG  If invalid argument(s) were provided.
  */
 enum status_code rtc_calendar_frequency_correction(
 		const int8_t value)
