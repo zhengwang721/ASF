@@ -904,7 +904,7 @@ enum status_code adc_init(
  *  \li All events (input and generation) disabled
  *  \li Sleep operation disabled
  *  \li No reference compensation
- *  \li No gain/offset correction
+ *  \li Factory gain/offset corrections
  *  \li No added sampling time
  *  \li Pin scan mode disabled
  *
@@ -935,12 +935,23 @@ static inline void adc_get_config_defaults(struct adc_config *const config)
 	config->event.generate_event_on_window_monitor  = false;
 	config->run_in_standby                = false;
 	config->reference_compensation_enable = false;
-	config->correction.correction_enable  = false;
-	config->correction.gain_correction    = 0;
-	config->correction.offset_correction  = 0;
+	config->correction.correction_enable  = true;
+	config->correction.gain_correction    =
+			(*(uint32_t *)(ADC_FUSES_GAINCORR_ADDR)) &
+			ADC_FUSES_GAINCORR_Msk >> ADC_FUSES_GAINCORR_Pos;
+	config->correction.offset_correction  =
+			(*(uint32_t *)(ADC_FUSES_OFFSETCORR_ADDR)) &
+			ADC_FUSES_OFFSETCORR_Msk >> ADC_FUSES_OFFSETCORR_Pos;
 	config->sample_length                 = 0;
 	config->pin_scan.offset_start_scan    = 0;
 	config->pin_scan.inputs_to_scan       = 0;
+
+	/* Check if the part has been calibrated and disable correction
+	 * if it's not. */
+	if (config->correction.gain_correction == 0xFFF ||
+			config->correction.offset_correction == 0xFFF) {
+		config->correction.correction_enable = false;
+	}
 }
 
 /** @} */
