@@ -306,8 +306,8 @@ inline static bool spi_is_rx_ready(volatile void *spi)
  *      };
  *
  *      spi_master_init(&SPCR);
- *      spi_master_setup_device(&SPCR, &spi_device_conf, SPI_MODE_0, 1000000,
- *0);
+ *      spi_master_setup_device(&SPCR, &spi_device_conf, SPI_MODE_0,
+ *        1000000,0);
  *      spi_enable(&SPCR);
  *   }
  * \endcode
@@ -402,8 +402,8 @@ inline static bool spi_is_rx_ready(volatile void *spi)
  *   {
  *       ...
  *
- *       spi_master_setup_device(&SPCR, spi_device_conf, SPI_MODE_0, 1000000,
- *0);
+ *       spi_master_setup_device(&SPCR, spi_device_conf, SPI_MODE_0, 
+ *       1000000, 0);
  *
  *       ...
  *   }
@@ -419,13 +419,11 @@ inline static bool spi_is_rx_ready(volatile void *spi)
  *   spi_read_packet(&SPCR, data_buffer, 1);
  * \endcode
  *  - \attention As the SPI works as a shift register so that data is shifted in
- *at
- * the same time as data is shifted out a read operation will mean that a dummy
+ * at the same time as data is shifted out a read operation will mean that a dummy
  * byte \ref CONFIG_SPI_MASTER_DUMMY is written to the SPI bus. \ref
- *CONFIG_SPI_MASTER_DUMMY
+ *  CONFIG_SPI_MASTER_DUMMY
  * defaults to 0xFF, but can be changed by defining it inside the \ref
- *conf_spi_master.h
- * file.
+ * conf_spi_master.h file.
  * -# When read and write operations is done de-select the slave:
  *  - \code
  *   spi_deselect_device(&SPCR, &spi_device_conf);

@@ -66,8 +66,7 @@
  *
  * \section description Description of the unit tests
  * See the documentation for the individual unit test functions \ref
- * unit_tests.c
- * "here" for detailed descriptions of the tests.
+ * unit_tests.c "here" for detailed descriptions of the tests.
  *
  * \section dependencies Dependencies
  * This example depends directly on the following modules:
