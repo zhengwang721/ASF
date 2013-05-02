@@ -45,14 +45,14 @@
  * \page asfdoc_samd20_rtc_calendar_basic_use_case Quick Start Guide for RTC (CAL) - Basic
  * In this use case, the RTC is set up in calendar mode. The time is set and
  * also a alarm is set to show a general use of the RTC in calendar mode. Also
- * the clock is swapped from 24h to 12h mode after initialization.
+ * the clock is swapped from 24h to 12h mode after initialization. The board LED
+ * will be toggled once the current time matches the set time.
  *
  * \section asfdoc_samd20_rtc_calendar_basic_use_case_prereq Prerequisites
  * The clocks need be be set up correctly in the clock domain, and the drivers
  * also needs to be included in the project.
  *
  * \section asfdoc_samd20_rtc_calendar_basic_use_case_setup Setup
- * Set up the RTC as intended.
  *
  * \subsection asfdoc_samd20_rtc_calendar_basic_use_case_init_code Initialization Code
  * Copy-paste the following setup code to your application:

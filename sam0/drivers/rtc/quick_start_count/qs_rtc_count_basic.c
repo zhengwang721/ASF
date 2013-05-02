@@ -47,7 +47,6 @@ void configure_rtc_count(void);
 //! [initiate]
 void configure_rtc_count(void)
 {
-
 //! [set_conf]
 	struct rtc_count_config config;
 //! [set_conf]
@@ -59,7 +58,7 @@ void configure_rtc_count(void)
 //! [set_config]
 	config.mode                = RTC_COUNT_MODE_16BIT;
 	config.continuously_update = true;
-	config.compare_values[0]   = 10;
+	config.compare_values[0]   = 1000;
 //! [set_config]
 //! [init_rtc]
 	rtc_count_init(&config);
@@ -85,14 +84,16 @@ int main(void)
 
 //! [implementation_code]
 //! [period]
-	rtc_count_set_period(20);
+	rtc_count_set_period(2000);
 //! [period]
 
 	while (true) {
 //! [poll]
 		if (rtc_count_is_compare_match(RTC_COUNT_COMPARE_0)) {
+			/* Do something on RTC count match here */
+			port_pin_toggle_output_level(LED_0_PIN);
+
 			rtc_count_clear_compare_match(RTC_COUNT_COMPARE_0);
-			/* Do something */
 		}
 //! [poll]
 	}

@@ -63,7 +63,7 @@ void configure_rtc_calendar(void)
 	alarm.day    = 1;
 	alarm.hour   = 0;
 	alarm.minute = 0;
-	alarm.second = 2;
+	alarm.second = 4;
 //! [time_struct]
 
 //! [set_config]
@@ -91,9 +91,9 @@ int main(void)
 	time.year   = 2012;
 	time.month  = 12;
 	time.day    = 31;
-	time.hour   = 22;
-	time.minute = 0;
-	time.second = 0;
+	time.hour   = 23;
+	time.minute = 59;
+	time.second = 59;
 
 	configure_rtc_calendar();
 
@@ -106,6 +106,7 @@ int main(void)
 	while (true) {
 		if (rtc_calendar_is_alarm_match(RTC_CALENDAR_ALARM_0)) {
 			/* Do something on RTC alarm match here */
+			port_pin_toggle_output_level(LED_0_PIN);
 
 			rtc_calendar_clear_alarm_match(RTC_CALENDAR_ALARM_0);
 		}

@@ -44,7 +44,9 @@
 /**
  * \page asfdoc_samd20_rtc_calendar_callback_use_case Quick Start Guide for RTC (CAL) - Callback
  * In this use case, the RTC is set up in calendar mode. The time is set and an
- * alarm is enabled, as well as a callback for when the alarm time is hit.
+ * alarm is enabled, as well as a callback for when the alarm time is hit. Each
+ * time the callback fires, the alarm time is reset to 5 seconds in the future
+ * and the board LED toggled.
  *
  * \section asfdoc_samd20_rtc_calendar_callback_use_case_prereq Prerequisites
  * The clocks need be be set up correctly in the clock domain, and the drivers
