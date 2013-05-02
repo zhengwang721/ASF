@@ -300,14 +300,11 @@ extern "C" {
  */
 enum dac_reference {
 	/** 1V from internal bandgap reference.*/
-	/* TODO: This define needs to be updated once it is available in the header */
-	DAC_REFERENCE_INT1V = 0,
+	DAC_REFERENCE_INT1V = DAC_CTRLB_REFSEL(0),
 	/** Analog VCC as reference. */
-	/* TODO: This define needs to be updated once it is available in the header */
-	DAC_REFERENCE_AVCC  = 1,
+	DAC_REFERENCE_AVCC  = DAC_CTRLB_REFSEL(1),
 	/** External reference on AREF. */
-	/* TODO: This define needs to be updated once it is available in the header */
-	DAC_REFERENCE_AREF  = 2,
+	DAC_REFERENCE_AREF  = DAC_CTRLB_REFSEL(2),
 };
 
 /**
