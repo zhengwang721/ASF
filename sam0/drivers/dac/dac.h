@@ -340,9 +340,13 @@ enum dac_channel {
  * Enum for the DAC status flags.
  */
 enum dac_status {
-	/** Data Buffer Empty Channel 0 */
+	/** Data Buffer Empty Channel 0 - Set when data is transferred from DATABUF
+	 * to DATA
+	 */
 	DAC_STATUS_CHANNEL_0_EMPTY    = 1 << 0,
-	/** Underrun Channel 0 */
+	/** Underrun Channel 0 - Set when a start conversion event occurs when
+	 * DATABUF is empty
+	 */
 	DAC_STATUS_CHANNEL_0_UNDERRUN = 1 << 1,
 };
 
@@ -361,6 +365,8 @@ struct dac_module {
 	Dac *hw_dev;
 	/** DAC output selection */
 	enum dac_output output;
+	/** DAC event selection */
+	bool start_on_event;
 #endif
 };
 

@@ -66,6 +66,7 @@ static void _dac_set_config(
 
 	/* Set selected DAC output to be enabled when enabling the module */
 	module_inst->output = config->output;
+	module_inst->start_on_event = false;
 
 	uint32_t new_config = 0;
 
@@ -263,9 +264,11 @@ void dac_chan_set_config(
 	if (config->enable_start_on_event) {
 		/* Enable start conversion event input */
 		dac_module->EVCTRL.reg |=  DAC_EVCTRL_STARTEI;
+		module_inst->start_on_event = true;
 	} else {
 		/* Disable start conversion event input */
 		dac_module->EVCTRL.reg &= ~DAC_EVCTRL_STARTEI;
+		module_inst->start_on_event = false;
 	}
 
 	if (config->enable_empty_event) {
@@ -368,11 +371,12 @@ void dac_chan_disable_output_buffer(
 /**
  * \brief Write to the DAC.
  *
- * This function writes to the DATABUF register.
- * If the conversion is not event-triggered, the data will be transferred
- * to the DATA register and the conversion will start.
- * If the conversion is event-triggered, the data will be transferred to the
- * DATA register when a Start Conversion Event is issued.
+ * This function writes to the DATA or DATABUF register.
+ * If the conversion is not event-triggered, the data will be written to 
+ * the DATA register and the conversion will start.
+ * If the conversion is event-triggered, the data will written to DATABUF and
+ * transferred to the DATA register and converted when a Start Conversion Event
+ * is issued.
  * Conversion data must be right or left adjusted according to configuration
  * settings.
  * \note To be event triggered, the enable_start_on_event must be
@@ -383,9 +387,7 @@ void dac_chan_disable_output_buffer(
  * \param[in] data             Conversion data
  *
  * \return Status of the operation
- * \retval STATUS_OK           If the data was written to DATABUF
- * \retval STATUS_BUSY         If the contents of DATABUF is not yet transferred
- *                             to DATA
+ * \retval STATUS_OK           If the data was written
  */
 enum status_code dac_chan_write(
 		struct dac_module *const module_inst,
@@ -401,15 +403,16 @@ enum status_code dac_chan_write(
 
 	Dac *const dac_module = module_inst->hw_dev;
 
-	if (!(dac_get_status(module_inst) & DAC_STATUS_CHANNEL_0_EMPTY)) {
-		return STATUS_BUSY;
-	}
-
 	/* Wait until the synchronization is complete */
 	while (dac_module->STATUS.reg & DAC_STATUS_SYNCBUSY);
 
-	/* Write the new value to the buffered DAC data register */
-	dac_module->DATABUF.reg = data;
+	if (module_inst->start_on_event) {
+		/* Write the new value to the buffered DAC data register */
+		dac_module->DATABUF.reg = data;
+	} else {
+		/* Write the new value to the DAC data register */
+		dac_module->DATA.reg = data;
+	}
 
 	return STATUS_OK;
 }
@@ -476,10 +479,10 @@ enum status_code dac_clear_status(
 	/* Clear requested status */
 	switch (status) {
 	case DAC_STATUS_CHANNEL_0_EMPTY:
-		dac_module->INTENCLR.reg = DAC_INTFLAG_EMPTY;
+		dac_module->INTFLAG.reg = DAC_INTFLAG_EMPTY;
 		break;
 	case DAC_STATUS_CHANNEL_0_UNDERRUN:
-		dac_module->INTENCLR.reg = DAC_INTFLAG_UNDERRUN;
+		dac_module->INTFLAG.reg = DAC_INTFLAG_UNDERRUN;
 		break;
 	default:
 		return STATUS_ERR_INVALID_ARG;
