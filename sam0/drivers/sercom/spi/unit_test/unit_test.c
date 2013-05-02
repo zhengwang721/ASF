@@ -47,8 +47,11 @@
  * \section intro Introduction
  * This unit test carries out tests for SERCOM SPI driver.
  * It consists of test cases for the following functionalities:
+ *      - Test for driver initialization.
  *      - Test for single byte write and read by polling.
  *      - Test for buffer write by polling and read with interrupt.
+ *      - Test for buffer read & write using transceive function.
+ *      - Test for 9-bit data transfer.
  *      - Test for baudrate.
  *
  * The following kit is required for carrying out the test:
@@ -211,7 +214,7 @@ static void run_spi_init_test(const struct test_case *test)
 	/* Enable the SPI slave */
 	spi_enable(&slave);
 	if (status == STATUS_OK) {
-			spi_init_success = true;
+		spi_init_success = true;
 	}
 }
 
@@ -229,11 +232,11 @@ static void run_spi_init_test(const struct test_case *test)
 static void run_single_byte_polled_test(const struct test_case *test)
 {
 	uint16_t txd_data = 0x55, rxd_data;
-	
+
 	/* Skip test if initialization failed */
 	test_assert_true(test, spi_init_success,
 			"Skipping test due to failed initialization");
-	
+
 	/* Send data to slave */
 	spi_select_slave(&master, &slave_inst, true);
 	while (!spi_is_ready_to_write(&master)) {
@@ -310,11 +313,11 @@ static void run_buffer_polled_write_interrupt_read_test
 	(const struct test_case *test)
 {
 	uint16_t i, timeout_cycles;
-	
+
 	/* Skip test if initialization failed */
 	test_assert_true(test, spi_init_success,
 			"Skipping test due to failed initialization");
-	
+
 	/* Start the test */
 	transfer_complete = false;
 	timeout_cycles = 1000;
@@ -346,6 +349,44 @@ static void run_buffer_polled_write_interrupt_read_test
 
 /**
  * \internal
+ * \brief Test: Send & receive data using transceive functions.
+ *
+ * This test sends (writes) an array of data to the slave and
+ * receives (reads) the buffer back using transceive functions
+ * and compares.
+ *
+ * \param test Current test case.
+ */
+static void run_transceive_buffer_test(const struct test_case *test)
+{
+	enum status_code status = STATUS_ERR_IO;
+
+	/* Skip test if initialization failed */
+	test_assert_true(test, spi_init_success,
+			"Skipping test due to failed initialization");
+
+	/* Start the test */
+	spi_select_slave(&master, &slave_inst, true);
+	spi_write_buffer_job(&slave, tx_buf, BUFFER_LENGTH);
+	status = spi_transceive_buffer_wait(&master, tx_buf, rx_buf,
+			BUFFER_LENGTH);
+	spi_select_slave(&master, &slave_inst, false);
+
+	test_assert_true(test, status == STATUS_OK,
+			"Transceive buffer failed");
+
+	/* Compare received data with transmitted data */
+	if (status == STATUS_OK) {
+		for (uint16_t i = 0; i < BUFFER_LENGTH - 1; i++) {
+			test_assert_true(test, tx_buf[i] == rx_buf[i + 1],
+					"Bytes differ at buffer index %d : %d != %d",
+					i, tx_buf[i], rx_buf[i + 1]);
+		}
+	}
+}
+
+/**
+ * \internal
  * \brief Test: Sends data at different baud rates.
  *
  * This test sends (writes) a byte to the slave and receives the data
@@ -360,11 +401,11 @@ static void run_baud_test(const struct test_case *test)
 	uint32_t test_baud = 1000000;
 	uint16_t txd_data = 0x55, rxd_data;
 	bool max_baud = true;
-	
+
 	/* Skip test if initialization failed */
 	test_assert_true(test, spi_init_success,
 			"Skipping test due to failed initialization");
-	
+
 	/* Structure for SPI configuration */
 	struct spi_config config;
 
@@ -413,6 +454,104 @@ static void run_baud_test(const struct test_case *test)
 }
 
 /**
+ * \internal
+ * \brief Setup function: Send & receive 9-bit data by polling.
+ *
+ * This function configures the SPI master & slave in 9-bit mode.
+ *
+ * \param test Current test case.
+ */
+static void setup_transfer_9bit_test(const struct test_case *test)
+{
+	enum status_code status = STATUS_ERR_IO;
+	spi_init_success = false;
+
+	/* Structure for SPI configuration */
+	struct spi_config config;
+
+	spi_disable(&master);
+	spi_disable(&slave);
+
+	/* Configure the SPI master */
+	spi_get_config_defaults(&config);
+	config.mux_setting     = SPI_SIGNAL_MUX_SETTING_E;
+	config.pinmux_pad0     = SPI_MASTER_DATA_IN_PIN_MUX;
+	config.pinmux_pad1     = PINMUX_UNUSED;
+	config.pinmux_pad2     = SPI_MASTER_DATA_OUT_PIN_MUX;
+	config.pinmux_pad3     = SPI_MASTER_SCK_PIN_MUX;
+	config.master.baudrate = TEST_SPI_BAUDRATE;
+	config.character_size  = SPI_CHARACTER_SIZE_9BIT;
+	status = spi_init(&master, SPI_MASTER_MODULE, &config);
+	test_assert_true(test, status == STATUS_OK,
+			"SPI master initialization failed for 9-bit configuration");
+	/* Enable the SPI master */
+	spi_enable(&master);
+
+	status = STATUS_ERR_IO;
+	/* Configure the SPI slave */
+	spi_get_config_defaults(&config);
+	config.mode                 = SPI_MODE_SLAVE;
+	config.mux_setting          = SPI_SIGNAL_MUX_SETTING_E;
+	config.pinmux_pad0          = SPI_SLAVE_DATA_IN_PIN_MUX;
+	config.pinmux_pad1          = SPI_SLAVE_SS_PIN_MUX;
+	config.pinmux_pad2          = SPI_SLAVE_DATA_OUT_PIN_MUX;
+	config.pinmux_pad3          = SPI_SLAVE_SCK_PIN_MUX;
+	config.slave.frame_format   = SPI_FRAME_FORMAT_SPI_FRAME;
+	config.slave.preload_enable = true;
+	config.character_size       = SPI_CHARACTER_SIZE_9BIT;
+	status = spi_init(&slave, SPI_SLAVE_MODULE, &config);
+	test_assert_true(test, status == STATUS_OK,
+			"SPI slave initialization failed for 9-bit configuration");
+	/* Enable the SPI slave */
+	spi_enable(&slave);
+	if (status == STATUS_OK) {
+		spi_init_success = true;
+	}
+}
+
+/**
+ * \internal
+ * \brief Test sending and receiving 9-bit data by polling.
+ *
+ * This test sends (writes) one 9-bit data to the slave and
+ * receives (reads) the data back and compares.
+ *
+ * Writing and reading are carried out by polling.
+ *
+ * \param test Current test case.
+ */
+static void run_transfer_9bit_test(const struct test_case *test)
+{
+	uint16_t txd_data = 0x155, rxd_data;
+
+	/* Skip test if initialization failed */
+	test_assert_true(test, spi_init_success,
+			"Skipping test due to failed initialization");
+
+	/* Send data to slave */
+	spi_select_slave(&master, &slave_inst, true);
+	while (!spi_is_ready_to_write(&master)) {
+	}
+	spi_write(&master, txd_data);
+	while (!spi_is_write_complete(&master)) {
+	}
+	/* Dummy read SPI master data register */
+	while (!spi_is_ready_to_read(&master)) {
+	}
+	spi_read(&master, &rxd_data);
+	/* Read SPI slave data register */
+	while (!spi_is_ready_to_read(&slave)) {
+	}
+	spi_read(&slave, &rxd_data);
+	spi_select_slave(&master, &slave_inst, false);
+
+	/* Output test result */
+	test_assert_true(test, rxd_data == txd_data,
+			"Failed transmitting/receiving byte. TX='%d', RX='%d'",
+			txd_data, rxd_data);
+}
+
+/**
  * \brief Run SPI unit tests
  *
  * Initializes the system and serial output, then sets up the
@@ -444,15 +583,25 @@ int main(void)
 			cleanup_buffer_polled_write_interrupt_read_test,
 			"Transfer bytes by polling and read back with interrupt");
 
+	DEFINE_TEST_CASE(transceive_buffer_test, NULL,
+			run_transceive_buffer_test, NULL,
+			"Transmit & receive bytes using transceive functions");
+
 	DEFINE_TEST_CASE(baud_test, NULL, run_baud_test, NULL,
 			"Transfer byte at different baud rates");
+
+	DEFINE_TEST_CASE(transfer_9bit_test, setup_transfer_9bit_test,
+			run_transfer_9bit_test, NULL,
+			"Transfer 9-bit character and readback by polling");
 
 	/* Put test case addresses in an array */
 	DEFINE_TEST_ARRAY(spi_tests) = {
 		&spi_init_test,
 		&single_byte_polled_test,
 		&buffer_polled_write_interrupt_read_test,
+		&transceive_buffer_test,
 		&baud_test,
+		&transfer_9bit_test,
 	};
 
 	/* Define the test suite */
