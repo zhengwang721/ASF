@@ -64,12 +64,6 @@ static void _dac_set_config(
 
 	Dac *const dac_module = module_inst->hw_dev;
 
-	/* Configure GCLK channel and enable clock */
-	struct system_gclk_chan_config gclk_chan_conf;
-	gclk_chan_conf.source_generator = config->clock_source;
-	system_gclk_chan_set_config(DAC_GCLK_ID, &gclk_chan_conf);
-	system_gclk_chan_enable(DAC_GCLK_ID);
-
 	/* Set selected DAC output to be enabled when enabling the module */
 	module_inst->output = config->output;
 
@@ -105,8 +99,12 @@ static void _dac_set_config(
  * \param[in]  config       Pointer to the config struct, created by the user
  *                          application
  *
+ * \return Status of initialization
+ * \retval STATUS_OK          Module initiated correctly
+ * \retval STATUS_ERR_DENIED  If module is enabled
+ * \retval STATUS_BUSY        If module is busy resetting
  */
-void dac_init(
+enum status_code dac_init(
 		struct dac_module *const module_inst,
 		Dac *const module,
 		struct dac_config *const config)
@@ -119,8 +117,26 @@ void dac_init(
 	/* Initialize device instance */
 	module_inst->hw_dev = module;
 
+	Dac *const dac_module = module_inst->hw_dev;
+
 	/* Turn on the digital interface clock */
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, PM_APBCMASK_DAC);
+
+	/* Configure GCLK channel and enable clock */
+	struct system_gclk_chan_config gclk_chan_conf;
+	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
+	gclk_chan_conf.source_generator = config->clock_source;
+	system_gclk_chan_set_config(DAC_GCLK_ID, &gclk_chan_conf);
+	system_gclk_chan_enable(DAC_GCLK_ID);
+
+	/* Check if module is enabled. */
+	if (dac_module->CTRLA.reg & DAC_CTRLA_ENABLE) {
+		return STATUS_ERR_DENIED;
+	}
+	/* Check if reset is in progress. */
+	if (dac_module->CTRLA.reg & DAC_CTRLA_SWRST) {
+		return STATUS_BUSY;
+	}
 
 	/* MUX the DAC VOUT pin */
 	struct system_pinmux_config pin_conf;
@@ -134,6 +150,8 @@ void dac_init(
 
 	/* Write configuration to module */
 	_dac_set_config(module_inst, config);
+
+	return STATUS_OK;
 }
 
 /**
@@ -350,11 +368,11 @@ void dac_chan_disable_output_buffer(
 /**
  * \brief Write to the DAC.
  *
- * This function writes to the DATA or DATABUF register depending on whether
- * the conversion is event triggered or not.
- * If the conversion isn't event triggered, it will start right away.
- * If the conversion is event triggered, it will start when a Start Conversion
- * Event is issued.
+ * This function writes to the DATABUF register.
+ * If the conversion is not event-triggered, the data will be transferred
+ * to the DATA register and the conversion will start.
+ * If the conversion is event-triggered, the data will be transferred to the
+ * DATA register when a Start Conversion Event is issued.
  * Conversion data must be right or left adjusted according to configuration
  * settings.
  * \note To be event triggered, the enable_start_on_event must be
@@ -363,8 +381,13 @@ void dac_chan_disable_output_buffer(
  * \param[in] module_inst      Pointer to the DAC software device struct
  * \param[in] channel          DAC channel to write to
  * \param[in] data             Conversion data
+ *
+ * \return Status of the operation
+ * \retval STATUS_OK           If the data was written to DATABUF
+ * \retval STATUS_BUSY         If the contents of DATABUF is not yet transferred
+ *                             to DATA
  */
-void dac_chan_write(
+enum status_code dac_chan_write(
 		struct dac_module *const module_inst,
 		enum dac_channel channel,
 		const uint16_t data)
@@ -378,9 +401,88 @@ void dac_chan_write(
 
 	Dac *const dac_module = module_inst->hw_dev;
 
+	if (!(dac_get_status(module_inst) & DAC_STATUS_CHANNEL_0_EMPTY)) {
+		return STATUS_BUSY;
+	}
+
 	/* Wait until the synchronization is complete */
 	while (dac_module->STATUS.reg & DAC_STATUS_SYNCBUSY);
 
 	/* Write the new value to the buffered DAC data register */
 	dac_module->DATABUF.reg = data;
+
+	return STATUS_OK;
+}
+
+/**
+ * \brief Retrieves the current module status
+ *
+ * Checks the status of the module and returns it as a bitmask of status
+ * flags
+ *
+ * \param[in] module_inst      Pointer to the DAC software device struct
+ * \param[in] channel          DAC channel to write to
+ *
+ * \return Bitmask of \ref dac_status flags
+ *
+ */
+uint32_t dac_get_status(
+		struct dac_module *const module_inst)
+{
+	 /* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+
+	Dac *const dac_module = module_inst->hw_dev;
+
+	uint8_t intflags = dac_module->INTFLAG.reg;
+	uint32_t status_flags = 0;
+
+	/* Check Data Buffer Empty flag */
+	if (intflags & DAC_INTFLAG_EMPTY) {
+		status_flags |= DAC_STATUS_CHANNEL_0_EMPTY;
+	}
+	/* Check Underrun flag */
+	if (intflags & DAC_INTFLAG_UNDERRUN) {
+		status_flags |= DAC_STATUS_CHANNEL_0_UNDERRUN;
+	}
+
+	return status_flags;
+}
+
+/**
+ * \brief Clears a module status flag
+ *
+ * Clears the given status flag of the module.
+ *
+ * \param[in] module_inst      Pointer to the DAC software device struct
+ * \param[in] status           Status flag to clear
+ *
+ * \return Status of the operation
+ * \retval STATUS_OK              The status was cleared successfully
+ * \retval STATUS_ERR_INVALID_ARG Invalid argument was provided
+ *
+ */
+enum status_code dac_clear_status(
+		struct dac_module *const module_inst,
+		enum dac_status status)
+{
+	 /* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+
+	Dac *const dac_module = module_inst->hw_dev;
+
+	/* Clear requested status */
+	switch (status) {
+	case DAC_STATUS_CHANNEL_0_EMPTY:
+		dac_module->INTENCLR.reg = DAC_INTFLAG_EMPTY;
+		break;
+	case DAC_STATUS_CHANNEL_0_UNDERRUN:
+		dac_module->INTENCLR.reg = DAC_INTFLAG_UNDERRUN;
+		break;
+	default:
+		return STATUS_ERR_INVALID_ARG;
+	}
+	return STATUS_OK;
 }

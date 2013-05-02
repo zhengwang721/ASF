@@ -335,6 +335,18 @@ enum dac_channel {
 };
 
 /**
+ * \brief DAC status flag enum.
+ *
+ * Enum for the DAC status flags.
+ */
+enum dac_status {
+	/** Data Buffer Empty Channel 0 */
+	DAC_STATUS_CHANNEL_0_EMPTY    = 1 << 0,
+	/** Underrun Channel 0 */
+	DAC_STATUS_CHANNEL_0_UNDERRUN = 1 << 1,
+};
+
+/**
  * \brief DAC software device instance structure.
  *
  * DAC software instance structure, used to retain software state information
@@ -457,7 +469,7 @@ static inline void dac_get_config_defaults(
 	config->run_in_standby = false;
 };
 
-void dac_init(
+enum status_code dac_init(
 		struct dac_module *const dev_inst,
 		Dac *const module,
 		struct dac_config *const config);
@@ -531,11 +543,22 @@ void dac_chan_disable_output_buffer(
  * @{
  */
 
-void dac_chan_write(
+enum status_code dac_chan_write(
 		struct dac_module *const dev_inst,
 		enum dac_channel channel,
 		const uint16_t data);
 
+/** @} */
+
+/**
+ * \name Status Management
+ * @{
+ */
+uint32_t dac_get_status(
+		struct dac_module *const module_inst);
+enum status_code dac_clear_status(
+		struct dac_module *const module_inst,
+		enum dac_status status);
 /** @} */
 
 #ifdef __cplusplus
