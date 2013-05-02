@@ -57,7 +57,7 @@ extern "C" {
  */
 
 /**
- * \name Nack on Address Match
+ * \name Address Match Functionality
  * @{
  */
 
@@ -103,6 +103,12 @@ static inline void i2c_slave_enable_callback(
 
 	/* Mark callback as enabled */
 	module->enabled_callback |= (1 << callback_type);
+
+	/* Enable address callback */
+	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
+	if (callback_type == I2C_SLAVE_CALLBACK_READ_REQUEST || callback_type == I2C_SLAVE_CALLBACK_WRITE_REQUEST) {
+		i2c_hw->INTENSET.reg = SERCOM_I2CS_INTFLAG_AMATCH;
+	}
 }
 
 /**
@@ -123,6 +129,11 @@ static inline void i2c_slave_disable_callback(
 
 	/* Mark callback as enabled */
 	module->enabled_callback &= ~(1 << callback_type);
+	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
+	if (callback_type == I2C_SLAVE_CALLBACK_READ_REQUEST || callback_type == I2C_SLAVE_CALLBACK_WRITE_REQUEST
+			|| module->status != STATUS_BUSY) {
+		i2c_hw->INTENCLR.reg = SERCOM_I2CS_INTFLAG_AMATCH;	
+	}
 }
 
 /** @} */
@@ -131,6 +142,7 @@ static inline void i2c_slave_disable_callback(
  * \name Read and Write, Interrupt-Driven
  * @{
  */
+
 
 enum status_code i2c_slave_read_packet_job(
 		struct i2c_slave_module *const module,

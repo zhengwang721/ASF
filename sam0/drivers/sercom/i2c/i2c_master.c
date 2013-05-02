@@ -117,9 +117,6 @@ static enum status_code _i2c_master_check_config(
 		tmp_ctrla |= config->start_hold_time;
 	}
 
-	/* Workaround for BUSSTATE stuck at BUSY */
-	tmp_ctrla |= SERCOM_I2CM_CTRLA_INACTOUT(3);
-
 	tmp_ctrla |= SERCOM_I2CM_CTRLA_ENABLE | SERCOM_I2CM_CTRLA_MODE_I2C_MASTER;
 
 	/* Write config to register CTRLA. */
@@ -221,9 +218,6 @@ static enum status_code _i2c_master_set_config(
 	if (config->start_hold_time != I2C_MASTER_START_HOLD_TIME_DISABLED) {
 		tmp_ctrla |= config->start_hold_time;
 	}
-
-	/* Workaround for BUSSTATE stuck at BUSY */
-	tmp_ctrla |= SERCOM_I2CM_CTRLA_INACTOUT(3);
 
 	/* Write config to register CTRLA. */
 	i2c_module->CTRLA.reg |= tmp_ctrla;
