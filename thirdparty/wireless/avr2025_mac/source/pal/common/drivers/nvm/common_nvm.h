@@ -75,8 +75,14 @@ typedef enum {
 #endif
 } mem_type_t;
 /* ! @} */
-
-#if SAM
+#if SAM4L
+#       ifndef IFLASH_PAGE_SIZE
+#               define IFLASH_PAGE_SIZE FLASH_PAGE_SIZE
+#       endif
+#       ifndef IFLASH_SIZE
+#               define IFLASH_SIZE FLASH_SIZE
+#       endif
+#else
 #       ifndef IFLASH_PAGE_SIZE
 #               define IFLASH_PAGE_SIZE IFLASH0_PAGE_SIZE
 #       endif

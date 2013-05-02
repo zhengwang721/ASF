@@ -102,12 +102,12 @@
 #define MIN_TX_PWR                  (-11)
 
 #if (EU_TX_PWR_TABLE == 1)
-#define MAX_TX_PWR_BPSK_20          (2)
+#define MAX_TX_PWR_BPSK_20          (4)
 #define MAX_TX_PWR_OQPSK_100        (-1)
 #endif
 #if (EU_TX_PWR_TABLE == 2)
 #define MAX_TX_PWR_BPSK_20          (5)
-#define MAX_TX_PWR_OQPSK_100        (3)
+#define MAX_TX_PWR_OQPSK_100        (2)
 #endif
 
 #ifdef HIGH_DATA_RATE_SUPPORT
@@ -117,7 +117,8 @@
 #define MAX_TX_PWR_OQPSK_1000       (4)
 #endif
 
-#define MAX_TX_PWR_CHINA            (5)
+#define MAX_TX_PWR_CHINA            (8)     /* MAX TX power limit for 250,500kbps data rates */
+#define MAX_TX_PWR_CHINA_1000       (5)     /* MAX TX power limit for 1000kbps data rates */
 
 #endif  /* #ifndef CUSTOM_PWR_TABLE */
 
@@ -786,7 +787,6 @@ static void limit_tx_pwr(void)
             case 5: /* China, O-QPSK */
 #ifdef HIGH_DATA_RATE_SUPPORT
             case 18: /* Chinese O-QPSK 500 */
-            case 19: /* Chinese O-QPSK 1000 */
 #endif
                 if (dbm_value > MAX_TX_PWR_CHINA)
                 {
@@ -794,6 +794,12 @@ static void limit_tx_pwr(void)
                 }
                 break;
 #ifdef HIGH_DATA_RATE_SUPPORT
+            case 19: /* Chinese O-QPSK 1000 */
+                if (dbm_value > MAX_TX_PWR_CHINA_1000)
+                {
+                    dbm_value = MAX_TX_PWR_CHINA_1000;
+                }
+                break;
             case 16: /* O-QPSK 200, 500 */
                 if (tal_pib.CurrentChannel == 0)
                 {

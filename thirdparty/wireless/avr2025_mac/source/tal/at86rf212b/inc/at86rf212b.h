@@ -56,6 +56,7 @@
 
 #if (TAL_TYPE == AT86RF212B)
 
+#define TRANSCEIVER_NAME    "AT86RF212B"
 /* === EXTERNALS =========================================================== */
 
 

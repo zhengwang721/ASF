@@ -3,7 +3,7 @@
  *
  * \brief Matrix driver for SAM.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -46,13 +46,13 @@
 
 #include "compiler.h"
 
-/// @cond 0
+/* / @cond 0 */
 /**INDENT-OFF**/
 #ifdef __cplusplus
 extern "C" {
 #endif
 /**INDENT-ON**/
-/// @endcond
+/* / @endcond */
 
 /** \brief Matrix master: undefined length burst type */
 typedef enum {
@@ -70,12 +70,13 @@ typedef enum {
 	MATRIX_DEFMSTR_FIXED_DEFAULT_MASTER = MATRIX_SCFG_DEFMSTR_TYPE(2)
 } defaut_master_t;
 
+#if !SAM4E
 /** \brief Matrix slave: arbitration type */
 typedef enum {
 	MATRIX_ARBT_ROUND_ROBIN    = MATRIX_SCFG_ARBT(0),
 	MATRIX_ARBT_FIXED_PRIORITY = MATRIX_SCFG_ARBT(1)
 } arbitration_type_t;
-
+#endif
 
 void matrix_set_master_burst_type(uint32_t ul_id, burst_type_t burst_type);
 burst_type_t matrix_get_master_burst_type(uint32_t ul_id);
@@ -83,37 +84,45 @@ void matrix_set_slave_slot_cycle(uint32_t ul_id, uint32_t ul_slot_cycle);
 uint32_t matrix_get_slave_slot_cycle(uint32_t ul_id);
 void matrix_set_slave_default_master_type(uint32_t ul_id, defaut_master_t type);
 defaut_master_t matrix_get_slave_default_master_type(uint32_t ul_id);
-void matrix_set_slave_fixed_default_master(uint32_t ul_id, uint32_t ul_fixed_id);
+void matrix_set_slave_fixed_default_master(uint32_t ul_id,
+		uint32_t ul_fixed_id);
 uint32_t matrix_get_slave_fixed_default_master(uint32_t ul_id);
+
+#if !SAM4E
 void matrix_set_slave_arbitration_type(uint32_t ul_id, arbitration_type_t type);
 arbitration_type_t matrix_get_slave_arbitration_type(uint32_t ul_id);
+#endif
+
 void matrix_set_slave_priority(uint32_t ul_id, uint32_t ul_prio);
 uint32_t matrix_get_slave_priority(uint32_t ul_id);
 
-#if (SAM3XA || SAM3U)
+#if (SAM3XA || SAM3U || SAM4E)
 void matrix_set_master_remap(uint32_t ul_remap);
 uint32_t matrix_get_master_remap(void);
-#endif /* (SAM3XA || SAM3U) */
 
-#if (SAM3S || SAM3XA || SAM3N || SAM4S)
+#endif /* (SAM3XA || SAM3U || SAM4E) */
+
+#if (SAM3S || SAM3XA || SAM3N || SAM4S || SAM4E)
 void matrix_set_system_io(uint32_t ul_io);
 uint32_t matrix_get_system_io(void);
-#endif /* (SAM3S || SAM3XA || SAM3N || SAM4S) */
 
-#if (SAM3S || SAM4S)
+#endif /* (SAM3S || SAM3XA || SAM3N || SAM4S || SAM4E) */
+
+#if (SAM3S || SAM4S || SAM4E)
 void matrix_set_nandflash_cs(uint32_t ul_cs);
 uint32_t matrix_get_nandflash_cs(void);
-#endif /* (SAM3S || SAM4S) */
+
+#endif /* (SAM3S || SAM4S || SAM4E) */
 
 void matrix_set_writeprotect(uint32_t ul_enable);
 uint32_t matrix_get_writeprotect_status(void);
 
-/// @cond 0
+/* / @cond 0 */
 /**INDENT-OFF**/
 #ifdef __cplusplus
 }
 #endif
 /**INDENT-ON**/
-/// @endcond
+/* / @endcond */
 
 #endif /* MATRIX_H_INCLUDED */
