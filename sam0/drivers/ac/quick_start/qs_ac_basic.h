@@ -134,7 +134,7 @@
  *    to be read.
  *  \snippet qs_ac_basic.c main_4
  * -# Read the comparator output state into the local variable for application
- *    use.
+ *    use, re-trying until the comparison state is ready.
  *  \snippet qs_ac_basic.c main_5
  * -# Set the board LED state to mirror the last comparison state.
  *  \snippet qs_ac_basic.c main_6

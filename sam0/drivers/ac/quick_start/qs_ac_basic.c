@@ -98,6 +98,13 @@ void configure_ac_channel(void)
 	ac_chan_conf.vcc_scale_factor = 32;
 	//! [setup_10]
 
+	/* Set up a pin as an AC channel input */
+	struct system_pinmux_config ac0_pin_conf;
+	system_pinmux_get_config_defaults(&ac0_pin_conf);
+	ac0_pin_conf.direction    = SYSTEM_PINMUX_PIN_DIR_INPUT;
+	ac0_pin_conf.mux_position = MUX_PA04B_AC_AIN0;
+	system_pinmux_pin_set_config(PIN_PA04B_AC_AIN0, &ac0_pin_conf);
+
 	/* Initialize and enable the Analog Comparator channel with the user
 	 * settings */
 	//! [setup_11]
@@ -136,11 +143,14 @@ int main(void)
 		if (ac_chan_is_ready(&ac_dev, AC_COMPARATOR_CHANNEL)) {
 	//! [main_4]
 			//! [main_5]
-			last_comparison = ac_chan_get_state(&ac_dev, AC_COMPARATOR_CHANNEL);
+			do
+			{
+				last_comparison = ac_chan_get_state(&ac_dev, AC_COMPARATOR_CHANNEL);
+			} while (last_comparison == AC_CHAN_STATE_UNKNOWN);
 			//! [main_5]
 
 			//! [main_6]
-			port_pin_set_output_level(LED_0_PIN, last_comparison);
+			port_pin_set_output_level(LED_0_PIN, (last_comparison == AC_CHAN_STATE_NEG_ABOVE_POS));
 			//! [main_6]
 
 			//! [main_7]
