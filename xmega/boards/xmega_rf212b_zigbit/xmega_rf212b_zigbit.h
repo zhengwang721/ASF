@@ -50,6 +50,9 @@
 
 #include <compiler.h>
 
+#define MCU_SOC_NAME        "ATxmega256A3U"
+
+
 /**
  * \defgroup xmega_a3bu_xplained_group XMEGA-A3BU Xplained board
  * @{
@@ -81,7 +84,7 @@
  */
 //@{
 #ifdef ZIGBIT_USB
-
+#define BOARD_NAME          "ATZB-X-212B-USB"
 #define LED0_GPIO                       IOPORT_CREATE_PIN(PORTA, 4)
 #define LED1_GPIO                       IOPORT_CREATE_PIN(PORTA, 5)
 
@@ -95,6 +98,7 @@
 
 #ifdef ZIGBIT_EXT
 
+#define BOARD_NAME          "ATZB-X-212B-XPRO"
 #define LED0_GPIO                       IOPORT_CREATE_PIN(PORTA, 6)
 #define LED1_GPIO                       IOPORT_CREATE_PIN(PORTA, 4)
 #define LED2_GPIO                       IOPORT_CREATE_PIN(PORTA, 5)
@@ -124,11 +128,6 @@
 #endif
 
 //@}
-
-
-
-
-
 
 /*! \name Connections of the AT86RFX transceiver
  */
@@ -170,8 +169,6 @@
 #define LEAVE_TRX_REGION()   PORTC.INTCTRL = irq_mask; }
 
 //! @}
-
-
 
 /**
  * @}

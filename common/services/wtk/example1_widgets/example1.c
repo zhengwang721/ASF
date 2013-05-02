@@ -3,7 +3,7 @@
  *
  * \brief Graphic Widget Toolkit library example application
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -63,7 +63,7 @@
  * - conf_win.h: window system configuration
  * - conf_wtk.h: widget library configuration
  *
- * For boards using the mXT143E Xplained only: 
+ * For boards using the mXT143E Xplained only:
  * - conf_ili9341.h: display driver configuration
  * - conf_mxt.h: maXTouch driver configuration
  * - UC3 and SAM only: conf_spi_master.h: SPI master service configuration
@@ -173,7 +173,6 @@ int main(void)
 	membag_init();
 
 	gfx_init();
-	gfx_set_orientation(GFX_SWITCH_XY | GFX_FLIP_Y);
 
 	touch_interface_init();
 	win_init();
@@ -186,7 +185,7 @@ int main(void)
 
 	while (true) {
 		struct win_pointer_event win_touch_event;
-	
+
 		/* Queue touch events from the touchscreen if any are available */
 		while (touch_interface_read(&win_touch_event)) {
 			win_queue_pointer_event(&win_touch_event);

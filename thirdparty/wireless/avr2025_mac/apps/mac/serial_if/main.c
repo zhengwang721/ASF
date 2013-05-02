@@ -39,53 +39,44 @@
  *
  * \asf_license_stop
  */
-
+ 
 /**
-* \mainpage
-* \section preface Preface
-* This is the reference manual for the Serial Interface Application
-* \section toc Table of Contents
-*  - \subpage overview
-*  -  \b Application \b Interface(API)
-*    - \ref group_mac
-*    - \ref group_pal
-*    - \ref group_tal
-*    - \ref group_resources
-*  - \subpage main_files
-*  - \subpage devsup
-*  - \subpage compinfo
-*  - \subpage references
-*  - \subpage contactinfo
-*/
-
-/**
- * \page overview Overview
- * \section intro Introduction
- * To be Added
- */
-
-
-/** \page main_files Application Files
- * - main.c\n                      Application main file.
-
- * \page devsup Device Support
- * - \b ATXMEGA256A3BU
- *                     - <A href="http://www.atmel.com/tools/xmega-a3buxplained.aspx"> \b   XMEGA-A3BU Xplained  </A>  <A href="http://store.atmel.com/PartDetail.aspx?q=p:10500293">\a Buy </A>\n
- * - \b ATXMEGA256A3U-Zigbit (USB and Carrier)
- * - \b Atmega256rfr2 Xplained Pro
- * - \b Atmega256rfr2 Zigbit (Carrier)
- * - \b UC3A3256S
- *                      - <A href="http://www.atmel.com/tools/rz600.aspx"> \b RZ600 </A> <A href="http://store.atmel.com/PartDetail.aspx?q=p:10500245;c:100118">\a Buy </A>\n
- * \page compinfo Compilation Info
- * This software was written for the GNU GCC and IAR for AVR.
+ * \mainpage
+ * \section preface Preface
+ * This is the reference manual for the MAC Serial Interface Application
+ * \section main_files Application Files
+ * 	- main.c                 Application main file.
+ * \section intro Application Introduction
+ * The Serial Interface Application can be used for two purposes .
+ *	 1. For Performing Serial based Interop and Compliance Tests for the MAC Stack and by selecting any of the four configurations
+ * 		- Beacon FFD
+ * 		- Beacon RFD
+ * 		- No-Beacon FFD
+ * 		- No-Beacon RFD
+ *	2. On the other hand it can be used for Running MAC Applications eg.MAC Beacon/No Beacon Application for Two-Processor Boards.
+ * 	Following are the Four approaches by which a MAC Application can be run.
+ *		- Approach-1:Running Beacon/No beacon/ No beacon Sleep application on a single processor platform(Eg.Xmega-a3bu-xplained or uc3-rz600 ,
+ *    	 Xmega Zigit-usb,RFR2 Xplained Pro)
+ *		- Approach 2: Running Beacon/No beacon application for 2p-approach ,with ncp image(Serial-if(Beacon FFD for Beacon App and NoBeacon FFD for NoBeacon App)(MAC Stack)) flashed in NCP board(Eg.Xmega-Zigbit-Ext or RFR2-Zigbit)
+ *    	 and host image(actual application with api-parser support) flashed in Host board(Eg.SAM4L-Xplained Pro).
+ *		- Approach3: Running serial-if application in Single processor for  boards  menitioned in Approach 1.This is used for performing  
+ *    	 compliance and interop tests for MAC stack.
+ *		- Approach 4:Running serial-if application for 2p-approach for boards mentioned in approach 2 used for performing  compliance and 
+ *    	 interop tests for MAC stack, ,with ncp image(Serial-if application(MAC Stack)) flashed in NCP board(Eg.Xmega-Zigbit-Ext or RFR2-Zigbit) 
+ *    	 and host image(Serial-if application with only api-parser support(MAC Stack not included)) flashed in Host board(Eg.SAM4L-Xplained Pro).
+ * \section api_modules Application Dependent Modules
+ * - \subpage api
+ * \section compinfo Compilation Info
+ * This software was written for the GNU GCC and IAR .
  * Other compilers may or may not work.
  *
- * \page references References
+ * \section references References
  * 1)  IEEE Std 802.15.4-2006 Part 15.4: Wireless Medium Access Control (MAC)
  *     and Physical Layer (PHY) Specifications for Low-Rate Wireless Personal Area
  *     Networks (WPANs).\n\n
  * 2)  AVR Wireless Support <A href="http://avr@atmel.com">avr@atmel.com</A>.\n
- * \page contactinfo Contact Information
+ *
+ * \section contactinfo Contact Information
  * For further information,visit
  * <A href="http://www.atmel.com/avr">www.atmel.com</A>.\n
  */
@@ -111,8 +102,8 @@ int main(void)
 	 * The board-specific conf_board.h file contains the configuration of
 	 * the board initialization.
 	 */
-	board_init();
 	sysclk_init();
+	board_init();
 	sw_timer_init();
 
 	if(MAC_SUCCESS != wpan_init())
