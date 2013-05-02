@@ -84,7 +84,7 @@
  * \snippet qs_rtc_count_basic.c implementation_code
  *
  * \subsection asfdoc_samd20_rtc_count_basic_use_case_imp_workflow Workflow
- * -# Set RTC period to 20
+ * -# Set RTC period to 2000ms (2 seconds)
  *  \snippet qs_rtc_count_basic.c period
  * -# Poll on compare match flag. Clear compare match flag when set.
  *  \snippet qs_rtc_count_basic.c poll

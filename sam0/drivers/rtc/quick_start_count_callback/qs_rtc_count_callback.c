@@ -49,10 +49,8 @@ void configure_rtc_callbacks(void);
 //! [callback]
 void rtc_overflow_callback(void)
 {
-	/* Change period */
-	//! [set_per]
-	rtc_count_set_period(10);
-	//! [set_per]
+	/* Do something on RTC overflow here */
+	port_pin_toggle_output_level(LED_0_PIN);
 }
 //! [callback]
 
@@ -111,7 +109,7 @@ int main(void)
 
 	/* Set period */
 //! [period]
-	rtc_count_set_period(20);
+	rtc_count_set_period(2000);
 //! [period]
 //! [run_initialize_rtc]
 

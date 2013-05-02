@@ -52,21 +52,28 @@ extern "C" {
 
 /**
  * \addtogroup asfdoc_samd20_rtc_count_group
-  * @{
- *
+ * @{
  */
 
  /**
  * \name Callbacks
  * @{
  */
-enum status_code rtc_count_register_callback(rtc_count_callback_t callback,
+enum status_code rtc_count_register_callback(
+		rtc_count_callback_t callback,
 		enum rtc_count_callback callback_type);
-enum status_code rtc_count_unregister_callback(enum rtc_count_callback callback_type);
-void rtc_count_enable_callback(enum rtc_count_callback callback_type);
-void rtc_count_disable_callback(enum rtc_count_callback callback_type);
+
+enum status_code rtc_count_unregister_callback(
+		enum rtc_count_callback callback_type);
+
+void rtc_count_enable_callback(
+		enum rtc_count_callback callback_type);
+
+void rtc_count_disable_callback(
+		enum rtc_count_callback callback_type);
 
 /** @} */
+
 /** @} */
 
 #ifdef __cplusplus
