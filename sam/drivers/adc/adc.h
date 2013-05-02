@@ -314,7 +314,7 @@ Pdc *adc12b_get_pdc_base(const Adc12b *p_adc);
  *   void ADC_IrqHandler(void)
  *   {
  *       // Check the ADC conversion status
- *       if ((adc_get_status(ADC).isr_status & ADC_ISR_DRDY) ==	ADC_ISR_DRDY)
+ *       if ((adc_get_status(ADC) & ADC_ISR_DRDY) == ADC_ISR_DRDY)
  *       {
  *       // Get latest digital data value from ADC and can be used by application
  *           uint32_t result = adc_get_latest_value(ADC);
@@ -342,7 +342,7 @@ Pdc *adc12b_get_pdc_base(const Adc12b *p_adc);
  *   void ADC_IrqHandler(void)
  *   {
  *       //Check the ADC conversion status
- *       if ((adc_get_status(ADC).isr_status & ADC_ISR_DRDY) ==	ADC_ISR_DRDY)
+ *       if ((adc_get_status(ADC) & ADC_ISR_DRDY) == ADC_ISR_DRDY)
  *       {
  *       //Get latest digital data value from ADC and can be used by application
  *           uint32_t result = adc_get_latest_value(ADC);
@@ -403,7 +403,7 @@ Pdc *adc12b_get_pdc_base(const Adc12b *p_adc);
  *   void ADC_IrqHandler(void)
  *   {
  *       // Check the ADC conversion status
- *       if ((adc_get_status(ADC).isr_status & ADC_ISR_COMPE) == ADC_ISR_COMPE)
+ *       if ((adc_get_status(ADC) & ADC_ISR_COMPE) == ADC_ISR_COMPE)
  *       {
  *           // Get comparison mode of ADC
  *           uint32_t ul_mode = adc_get_comparison_mode(ADC);
@@ -440,7 +440,7 @@ Pdc *adc12b_get_pdc_base(const Adc12b *p_adc);
  *   void ADC_IrqHandler(void)
  *   {
  *       // Check the ADC conversion status
- *       if ((adc_get_status(ADC).isr_status & ADC_ISR_COMPE) == ADC_ISR_COMPE)
+ *       if ((adc_get_status(ADC) & ADC_ISR_COMPE) == ADC_ISR_COMPE)
  *       {
  *           // Get comparison mode of ADC
  *           uint32_t ul_mode = adc_get_comparison_mode(ADC);
