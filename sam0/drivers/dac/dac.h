@@ -294,6 +294,25 @@ extern "C" {
 #include <gclk.h>
 
 /**
+ * \name DAC status flags
+ *
+ * DAC status flags, returned by \ref dac_get_status() and cleared by \ref
+ * dac_clear_status().
+ * @{
+ */
+
+/** Data Buffer Empty Channel 0 - Set when data is transferred from DATABUF
+ * to DATA by a start conversion event and DATABUF is ready for new data
+ */
+#define DAC_STATUS_CHANNEL_0_EMPTY     (1UL << 0)
+/** Underrun Channel 0 - Set when a start conversion event occurs when
+ * DATABUF is empty
+ */
+#define DAC_STATUS_CHANNEL_0_UNDERRUN  (1UL << 1)
+
+/** @} */
+
+/**
  * \brief DAC reference voltage enum.
  *
  * Enum for the possible reference voltages for the DAC.
@@ -329,22 +348,6 @@ enum dac_output {
 enum dac_channel {
 	/** DAC output channel 0. */
 	DAC_CHANNEL_0,
-};
-
-/**
- * \brief DAC status flag enum.
- *
- * Enum for the DAC status flags.
- */
-enum dac_status {
-	/** Data Buffer Empty Channel 0 - Set when data is transferred from DATABUF
-	 * to DATA by a start conversion event
-	 */
-	DAC_STATUS_CHANNEL_0_EMPTY    = 1 << 0,
-	/** Underrun Channel 0 - Set when a start conversion event occurs when
-	 * DATABUF is empty
-	 */
-	DAC_STATUS_CHANNEL_0_UNDERRUN = 1 << 1,
 };
 
 /**
@@ -559,9 +562,9 @@ enum status_code dac_chan_write(
  */
 uint32_t dac_get_status(
 		struct dac_module *const module_inst);
-enum status_code dac_clear_status(
+void dac_clear_status(
 		struct dac_module *const module_inst,
-		enum dac_status status);
+		uint32_t status_flags);
 /** @} */
 
 #ifdef __cplusplus
