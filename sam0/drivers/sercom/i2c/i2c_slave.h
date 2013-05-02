@@ -232,7 +232,7 @@ struct i2c_slave_config {
 	bool enable_general_call_address;
 #  if I2C_SLAVE_CALLBACK_MODE == true
 	/**
-	 * Enable NAK on address match (this can be changed after initialization
+	 * Enable NACK on address match (this can be changed after initialization
 	 * via the \ref i2c_slave_enable_nack_on_address and
 	 * \ref i2c_slave_disable_nack_on_address functions)
 	 */
@@ -362,10 +362,6 @@ static inline void i2c_slave_enable(
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
 
 #if I2C_SLAVE_CALLBACK_MODE == true
-	/* Enable interrupts */
-	i2c_hw->INTENSET.reg = SERCOM_I2CS_INTENSET_PREC |
-			SERCOM_I2CS_INTENSET_AMATCH | SERCOM_I2CS_INTENSET_DRDY;
-
 	/* Enable global interrupt for module */
 	system_interrupt_enable(_sercom_get_interrupt_vector(module->hw));
 #endif
@@ -432,6 +428,8 @@ enum status_code i2c_slave_read_packet_wait(
 		struct i2c_slave_module *const module,
 		struct i2c_packet *const packet);
 enum i2c_slave_direction i2c_slave_get_direction_wait(
+		struct i2c_slave_module *const module);
+enum i2c_slave_direction i2c_slave_get_direction(
 		struct i2c_slave_module *const module);
 
 /** @} */
