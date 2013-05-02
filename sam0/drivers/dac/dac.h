@@ -562,9 +562,9 @@ enum status_code dac_chan_write(
  */
 uint32_t dac_get_status(
 		struct dac_module *const module_inst);
-enum status_code dac_clear_status(
+void dac_clear_status(
 		struct dac_module *const module_inst,
-		uint32_t dac_status status_flags);
+		uint32_t status_flags);
 /** @} */
 
 #ifdef __cplusplus

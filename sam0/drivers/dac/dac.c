@@ -470,7 +470,7 @@ uint32_t dac_get_status(
  */
 void dac_clear_status(
 		struct dac_module *const module_inst,
-		uint32_t dac_status status_flags)
+		uint32_t status_flags)
 {
 	 /* Sanity check arguments */
 	Assert(module_inst);
@@ -484,11 +484,9 @@ void dac_clear_status(
 	if (status_flags & DAC_STATUS_CHANNEL_0_EMPTY) {
 		intflags |= DAC_INTFLAG_EMPTY;
 	}
-	if (status_flags & DAC_STATUS_CHANNEL_0_UNDERRUN)
+	if (status_flags & DAC_STATUS_CHANNEL_0_UNDERRUN) {
 		intflags |= DAC_INTFLAG_UNDERRUN;
 	}
 
 	dac_module->INTFLAG.reg = intflags;
-
-	return STATUS_OK;
 }
