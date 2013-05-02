@@ -54,7 +54,8 @@
  *   \retval >=0  Success.
  *   \retval  <0  Error.
  */
-int8_t spi_set_baud_div(volatile void *spi, uint32_t baudrate, uint32_t clkper_hz)
+int8_t spi_set_baud_div(volatile void *spi, uint32_t baudrate,
+		uint32_t clkper_hz)
 {
 	uint32_t divisor;
 	uint8_t divisor_8bit;
@@ -82,8 +83,8 @@ int8_t spi_set_baud_div(volatile void *spi, uint32_t baudrate, uint32_t clkper_h
 	 * variable to make sure the following comparison is more optimized.
 	 */
 	divisor_8bit = divisor;
-        
-        spi_double_speed_disable(spi);
+
+	spi_double_speed_disable(spi);
 
 	/*
 	 * For divisor values between the possible ones round up to the closest
@@ -91,36 +92,30 @@ int8_t spi_set_baud_div(volatile void *spi, uint32_t baudrate, uint32_t clkper_h
 	 */
 	if (divisor_8bit > 64) {
 		ctrl = SPI_PRESCALER_DIV128_gc;
-	}
-	else if (divisor_8bit > 32) {
+	} else if (divisor_8bit > 32) {
 		ctrl = SPI_PRESCALER_DIV64_gc;
-	}
-	else if (divisor_8bit > 16) {
+	} else if (divisor_8bit > 16) {
 		ctrl = SPI_PRESCALER_DIV64_gc;
-		
+
 		/* Enable double baud rate */
 		spi_double_speed_enable(spi);
-	}
-	else if (divisor_8bit > 8) {
+	} else if (divisor_8bit > 8) {
 		ctrl = SPI_PRESCALER_DIV16_gc;
-	}
-	else if (divisor_8bit > 4) {
+	} else if (divisor_8bit > 4) {
 		ctrl = SPI_PRESCALER_DIV16_gc;
-		
+
 		/* Enable double baud rate */
 		spi_double_speed_enable(spi);
-	}
-	else if (divisor_8bit > 2) {
+	} else if (divisor_8bit > 2) {
 		ctrl = SPI_PRESCALER_DIV4_gc;
-	}
-	else {
+	} else {
 		ctrl = SPI_PRESCALER_DIV4_gc;
-		
+
 		/* Enable double baud rate */
 		spi_double_speed_enable(spi);
 	}
 
-	// Update register and make sure to clear out any leftover bits
+	/* Update register and make sure to clear out any leftover bits */
 	SPCR = (SPCR & ~(SPI_PRESCALER_gm)) | ctrl;
 
 	return 1;

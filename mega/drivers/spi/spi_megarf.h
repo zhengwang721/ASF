@@ -41,7 +41,6 @@
  *
  */
 
-
 #ifndef _SPI_MEGARF_H_
 #define _SPI_MEGARF_H_
 
@@ -85,9 +84,9 @@ extern "C" {
 
 #define SPI_PRESCALER_gm  0x03  /* Prescaler group mask. */
 #define SPI_PRESCALER_gp  0  /* Prescaler group position. */
-#define SPI_PRESCALER0_bm  (1<<0)  /* Prescaler bit 0 mask. */
+#define SPI_PRESCALER0_bm  (1 << 0)  /* Prescaler bit 0 mask. */
 #define SPI_PRESCALER0_bp  0  /* Prescaler bit 0 position. */
-#define SPI_PRESCALER1_bm  (1<<1)  /* Prescaler bit 1 mask. */
+#define SPI_PRESCALER1_bm  (1 << 1)  /* Prescaler bit 1 mask. */
 #define SPI_PRESCALER1_bp  1  /* Prescaler bit 1 position. */
 
 /* SPSR  bit masks and bit positions */
@@ -105,23 +104,22 @@ extern "C" {
 
 /* Mask for baud rate for spi_sck_clock_rate_t */
 #define BAUD_RATE_MASK    0x03
-  
+
 /* SPI mode 0 */
-#define SPI_MODE0	0
+#define SPI_MODE0       0
 /* SPI mode 1 */
-#define SPI_MODE1	(SPI_CPHA)
+#define SPI_MODE1       (SPI_CPHA)
 /* SPI mode 2 */
-#define SPI_MODE2	(SPI_CPOL)
+#define SPI_MODE2       (SPI_CPOL)
 /* SPI mode 3 */
-#define SPI_MODE3	(SPI_CPOL | SPI_CPHA)  
+#define SPI_MODE3       (SPI_CPOL | SPI_CPHA)
 
 /* Prescaler setting */
-typedef enum SPI_PRESCALER_enum
-{
-	SPI_PRESCALER_DIV4_gc = (0x00<<0),  /* System Clock / 4 */
-	SPI_PRESCALER_DIV16_gc = (0x01<<0),  /* System Clock / 16 */
-	SPI_PRESCALER_DIV64_gc = (0x02<<0),  /* System Clock / 64 */
-	SPI_PRESCALER_DIV128_gc = (0x03<<0),  /* System Clock / 128 */
+typedef enum SPI_PRESCALER_enum {
+	SPI_PRESCALER_DIV4_gc = (0x00 << 0), /* System Clock / 4 */
+	SPI_PRESCALER_DIV16_gc = (0x01 << 0), /* System Clock / 16 */
+	SPI_PRESCALER_DIV64_gc = (0x02 << 0), /* System Clock / 64 */
+	SPI_PRESCALER_DIV128_gc = (0x03 << 0), /* System Clock / 128 */
 } SPI_PRESCALER_t;
 
 /**
@@ -135,7 +133,8 @@ typedef enum SPI_PRESCALER_enum
  *   \retval >=0  Success.
  *   \retval  <0  Error.
  */
-int8_t spi_set_baud_div(volatile void *spi, uint32_t baudrate, uint32_t clkper_hz);
+int8_t spi_set_baud_div(volatile void *spi, uint32_t baudrate,
+		uint32_t clkper_hz);
 
 /**
  * \brief Enables the SPI.
@@ -207,7 +206,7 @@ static inline void spi_enable_slave_mode(volatile void *spi)
  * \param spi Base address of the SPI instance.
  * \param mode Value of the mode to be set.
  */
-static inline void spi_set_clock_mode(volatile void *spi,uint8_t mode)
+static inline void spi_set_clock_mode(volatile void *spi, uint8_t mode)
 {
 	SPCR = (SPCR & ~SPI_MODE_gm) | ((mode << SPI_MODE_gp) & SPI_MODE_gm);
 }
@@ -320,10 +319,11 @@ static inline void spi_set_dord_msb(volatile void *spi)
  */
 static inline void spi_set_clock_polarity(volatile void *spi, bool polarity)
 {
-	if(polarity)
-      SPCR |= SPI_CPOL_bm;
-	else
-	  SPSR &= ~SPI_CPOL_bm;
+	if (polarity) {
+		SPCR |= SPI_CPOL_bm;
+	} else {
+		SPSR &= ~SPI_CPOL_bm;
+	}
 }
 
 /**
@@ -334,14 +334,15 @@ static inline void spi_set_clock_polarity(volatile void *spi, bool polarity)
  */
 static inline void spi_set_clock_phase(volatile void *spi, bool polarity)
 {
-	if(polarity)
-	  SPCR |= SPI_CPHA_bm;
-	else
-	  SPSR &= ~SPI_CPHA_bm;
+	if (polarity) {
+		SPCR |= SPI_CPHA_bm;
+	} else {
+		SPSR &= ~SPI_CPHA_bm;
+	}
 }
 
-//! @}
+/* ! @} */
 #ifdef __cplusplus
 }
 #endif
-#endif  // _SPI_MEGARF_H_
+#endif  /* _SPI_MEGARF_H_ */

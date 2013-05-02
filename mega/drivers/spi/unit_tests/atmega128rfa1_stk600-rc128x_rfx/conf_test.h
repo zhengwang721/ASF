@@ -52,21 +52,21 @@
  *   - MOSI(PB2) -- SI
  */
 
-//! \note Perform unit tests using SPI 
+/* ! \note Perform unit tests using SPI */
 #define CONF_TEST_SPI        SPCR
-//! \note SPI BAUDRATE
+/* ! \note SPI BAUDRATE */
 #define CONF_TEST_SPI_BAUDRATE 1000000
-//! \note SPI Mode
+/* ! \note SPI Mode */
 #define CONF_TEST_SPI_MODE   SPI_MODE0
-//! \note USARTA1 on PORTD (RX on PD2, TX on PD3)
+/* ! \note USARTA1 on PORTD (RX on PD2, TX on PD3) */
 #define CONF_TEST_USART      &USARTA1
-//! \note 38.4 kbaud
+/* ! \note 38.4 kbaud */
 #define CONF_TEST_BAUDRATE   38400
-//! \note 8-bit character length
+/* ! \note 8-bit character length */
 #define CONF_TEST_CHARLENGTH USART_CHSIZE_8BIT_gc
-//! \note No parity check
+/* ! \note No parity check */
 #define CONF_TEST_PARITY     USART_PMODE_DISABLED_gc
-//! \note No extra stopbit, i.e., use 1
+/* ! \note No extra stopbit, i.e., use 1 */
 #define CONF_TEST_STOPBITS   false
 
 #endif

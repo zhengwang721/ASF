@@ -1,5 +1,5 @@
 /**
- * \file 
+ * \file
  *
  * \brief Spi Master configuration for spi example
  *

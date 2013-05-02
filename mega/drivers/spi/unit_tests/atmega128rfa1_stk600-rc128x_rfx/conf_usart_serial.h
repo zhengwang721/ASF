@@ -43,6 +43,6 @@
 #ifndef CONF_USART_SERIAL_H
 #define CONF_USART_SERIAL_H
 
-// Intentionally left empty.
+/* Intentionally left empty. */
 
 #endif

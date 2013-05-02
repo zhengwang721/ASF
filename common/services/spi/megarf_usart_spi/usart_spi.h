@@ -55,14 +55,14 @@ extern "C" {
 
 /*! \name USART in SPI mode Management Configuration
  */
-//! @{
+/* ! @{ */
 #include "conf_usart_spi.h"
 
-//! Default Config Spi Master Dummy Field
+/* ! Default Config Spi Master Dummy Field */
 #ifndef CONFIG_USART_SPI_DUMMY
 	#define CONFIG_USART_SPI_DUMMY              0xFF
 #endif
-//! @}
+/* ! @} */
 
 /**
  * \brief Clock phase
@@ -78,14 +78,17 @@ extern "C" {
  * \brief SPI mode 0
  */
 #define SPI_MODE_0  0
+
 /**
  * \brief SPI mode 1
  */
 #define SPI_MODE_1  (SPI_CPHA)
+
 /**
  * \brief SPI mode 2
  */
 #define SPI_MODE_2  (SPI_CPOL)
+
 /**
  * \brief SPI mode 3
  */
@@ -94,9 +97,9 @@ extern "C" {
 typedef uint8_t spi_flags_t;
 typedef uint32_t board_spi_select_id_t;
 
-//! \brief Polled SPI device definition
+/* ! \brief Polled SPI device definition */
 struct usart_spi_device {
-	//! Board specific select id
+	/* ! Board specific select id */
 	port_pin_t id;
 };
 
@@ -122,7 +125,8 @@ extern void usart_spi_init(USART_t *usart);
  * \param baud_rate Baud rate for communication with slave device in Hz.
  * \param sel_id    Board specific select id
  */
-extern void usart_spi_setup_device(USART_t *usart, struct usart_spi_device *device,
+extern void usart_spi_setup_device(USART_t *usart,
+		struct usart_spi_device *device,
 		spi_flags_t flags, unsigned long baud_rate,
 		board_spi_select_id_t sel_id);
 
@@ -154,7 +158,8 @@ extern void usart_spi_disable(USART_t *usart);
  *
  * \pre usart device must be selected with usart_spi_select_device() first
  */
-extern status_code_t usart_spi_write_packet(USART_t *usart,const uint8_t *data, size_t len);
+extern status_code_t usart_spi_write_packet(USART_t *usart, const uint8_t *data,
+		size_t len);
 
 /**
  * \brief Receive a sequence of bytes from a USART in SPI mode device
@@ -167,7 +172,8 @@ extern status_code_t usart_spi_write_packet(USART_t *usart,const uint8_t *data, 
  *
  * \pre usart device must be selected with usart_spi_select_device() first
  */
-extern status_code_t usart_spi_read_packet(USART_t *usart, uint8_t *data, size_t len);
+extern status_code_t usart_spi_read_packet(USART_t *usart, uint8_t *data,
+		size_t len);
 
 /**
  * \brief Select given device on the SPI bus
@@ -178,7 +184,8 @@ extern status_code_t usart_spi_read_packet(USART_t *usart, uint8_t *data, size_t
  * \param device SPI device
  *
  */
-extern void usart_spi_select_device(USART_t *usart, struct usart_spi_device *device);
+extern void usart_spi_select_device(USART_t *usart,
+		struct usart_spi_device *device);
 
 /**
  * \brief Deselect given device on the SPI bus
@@ -188,7 +195,8 @@ extern void usart_spi_select_device(USART_t *usart, struct usart_spi_device *dev
  * \param usart Base address of the USART instance.
  * \param device SPI device
  */
-extern void usart_spi_deselect_device(USART_t *usart, struct usart_spi_device *device);
+extern void usart_spi_deselect_device(USART_t *usart,
+		struct usart_spi_device *device);
 
 /**
  * \brief Write one byte to a SPI device using USART in SPI mode
@@ -229,7 +237,8 @@ inline static bool usart_spi_is_tx_empty(USART_t *usart)
 }
 
 /**
- * \brief Check whether the USART in SPI master mode contains a received character.
+ * \brief Check whether the USART in SPI master mode contains a received
+ *character.
  *
  * \param usart Base address of the USART instance.
  *
@@ -270,4 +279,4 @@ inline static bool usart_spi_is_rx_full(USART_t *usart)
 }
 #endif
 
-#endif  // _USART_SPI_H_
+#endif  /* _USART_SPI_H_ */

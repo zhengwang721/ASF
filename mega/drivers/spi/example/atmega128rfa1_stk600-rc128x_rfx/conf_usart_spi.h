@@ -45,4 +45,3 @@
 #define _CONF_USART_SPI_H
 
 #endif /* _CONF_USART_SPI_H */
-

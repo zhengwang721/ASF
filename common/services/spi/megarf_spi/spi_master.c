@@ -44,7 +44,6 @@
 #include "spi_master.h"
 #include "sysclk.h"
 
-
 /**
  * \brief Initializes the SPI in master mode.
  *
@@ -78,11 +77,12 @@ void spi_master_setup_device(volatile void *spi, struct spi_device *device,
 {
 	/* Set SPI Baud rate */
 	if (spi_set_baud_div(spi, baud_rate, sysclk_get_cpu_hz()) < 0) {
-			Assert(false);
-			return;
+		Assert(false);
+		return;
 	}
 
-	/* Clear any set SPI mode flags and set them to the user-specified mode */
+	/* Clear any set SPI mode flags and set them to the user-specified mode
+	 **/
 	SPCR = (SPCR & ~SPI_MODE_gm) |
 			((flags << SPI_MODE_gp) & SPI_MODE_gm);
 }
@@ -98,18 +98,18 @@ void spi_master_setup_device(volatile void *spi, struct spi_device *device,
  *
  * \pre SPI device must be selected with spi_select_device() first
  */
-status_code_t spi_write_packet(volatile void *spi, const uint8_t *data, size_t len)
+status_code_t spi_write_packet(volatile void *spi, const uint8_t *data,
+		size_t len)
 {
 	while (len) {
-		
-		 spi_write_single(spi, *data++);
-			
-		 while (!spi_is_tx_empty(spi)) {
-	     }
+		spi_write_single(spi, *data++);
 
-		 len--;
+		while (!spi_is_tx_empty(spi)) {
+		}
+
+		len--;
 	}
-	
+
 	return STATUS_OK;
 }
 
@@ -127,18 +127,17 @@ status_code_t spi_write_packet(volatile void *spi, const uint8_t *data, size_t l
 status_code_t spi_read_packet(volatile void *spi, uint8_t *data, size_t len)
 {
 	while (len) {
-		
-		spi_write_single(spi,CONFIG_SPI_MASTER_DUMMY); //Dummy write
+		spi_write_single(spi, CONFIG_SPI_MASTER_DUMMY); /* Dummy write */
 
 		while (!spi_is_rx_full(spi)) {
 		}
-				
-		*data = SPDR;	
-		
+
+		*data = SPDR;
+
 		data++;
-		len--; 
+		len--;
 	}
-	
+
 	return STATUS_OK;
 }
 

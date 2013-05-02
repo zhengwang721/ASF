@@ -43,7 +43,7 @@
 #ifndef CONF_BOARD_H_INCLUDED
 #define CONF_BOARD_H_INCLUDED
 
-// Enable AT45DBX Component.
+/* Enable AT45DBX Component. */
 #define CONF_BOARD_AT45DBX
 
 #endif /* CONF_BOARD_H_INCLUDED */

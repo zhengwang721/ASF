@@ -65,7 +65,8 @@
  * - atmega128rfa1_stk600-rc128x_rfx
  *
  * \section description Description of the unit tests
- * See the documentation for the individual unit test functions \ref unit_tests.c
+ * See the documentation for the individual unit test functions \ref
+ * unit_tests.c
  * "here" for detailed descriptions of the tests.
  *
  * \section dependencies Dependencies
@@ -80,93 +81,76 @@
  * For further information, visit <a href="http://www.atmel.com/">Atmel</a>.\n
  */
 
-//! \name Unit test configuration
-//@{
+/* ! \name Unit test configuration */
+/* @{ */
+
 /**
  * \def CONF_TEST_SPI
  * \brief SPI instance to perform unit tests on
  */
+
 /**
  * \def CONF_TEST_SPI_BAUDRATE
  * \brief SPI baudrate selection
  */
+
 /**
  * \def CONF_TEST_SPI_MODE
  * \brief SPI clock mode selection
  */
+
 /**
  * \def CONF_TEST_USART
  * \brief USART to redirect STDIO to
  */
+
 /**
  * \def CONF_TEST_BAUDRATE
  * \brief Baudrate of USART
  */
+
 /**
  * \def CONF_TEST_CHARLENGTH
  * \brief Character length (bits) of USART
  */
+
 /**
  * \def CONF_TEST_PARITY
  * \brief Parity mode of USART
  */
+
 /**
  * \def CONF_TEST_STOPBITS
  * \brief Stopbit configuration of USART
  */
-//@}
-
-/* Manufacturer ID for Atmel dataflash. */
-#define ATMEL_MANUFACTURER_ID         0x1F
-
-/* Device ID1 for Atmel dataflash. */
-#define DEVICE_ID_1                  0x24
-
-/* Device ID2 for Atmel dataflash. */
-#define DEVICE_ID_2                  0x00
-
-/* Ext Device ID length for Atmel dataflash. */
-#define EXT_DEVICE_IN_LENGTH         0x00
-
-/* AT45DBX Command: Manufacturer ID Read. */
-#define AT45DF_CMDC_RD_MID_REG       0xD7
+/* @} */
 
 /* Buffer size. */
-#define DATA_BUFFER_SIZE             0x04
+#define DATA_BUFFER_SIZE             0x05
 
 /* Dummy data to initiate the SPI transfer */
 #define SPI_MASTER_DUMMY             0xFF
 
 /* Device selection IO pin */
-#define SPI_DEVICE_SELECT            IOPORT_CREATE_PIN(PORTB,0)
+#define SPI_DEVICE_SELECT            IOPORT_CREATE_PIN(PORTB, 0)
 
-/* Data buffer. */
-uint8_t data___[DATA_BUFFER_SIZE]  =    {AT45DF_CMDC_RD_MID_REG};
+/* First 4 Bytes are commands for buffer write, after that data to written to
+ * memory */
+static const uint8_t data_buffer_write[]
+	= {0x84, 0x00, 0x00, 0x00, 0x01, 0x02, 0x03, 0x04, 0x05};
 
-/* Manufacturer ID */
-const uint8_t manufac_id[] = {ATMEL_MANUFACTURER_ID,DEVICE_ID_1,DEVICE_ID_2,EXT_DEVICE_IN_LENGTH};
-	
+/* Data to be written in memory */
+static const uint8_t data_sent[] = {0x01, 0x02, 0x03, 0x04, 0x05};
 
+/* Command for flash write */
+static const uint8_t data_flash_write[] = {0x83, 0x00, 0x00, 0x00};
 
-/*! \name Bit-Masks and Values for the Status Register
- */
-//! @{
-#define AT45DBX_MSK_DENSITY               0x3C      //!< Device density bit-mask
-#define AT45DBX_DENSITY                   0x3C      //!< Device density value.
-//! @}
+/* Command for flash read */
+static const uint8_t data_flash_read[]
+	= {0xd2, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
-//! First Status Command Register - Second Dummy Data
-uint8_t data[1] = {AT45DF_CMDC_RD_MID_REG};
-	
-uint8_t data_buffer_write[] = {0x84,0x00,0x00,0x00,0x01,0x02,0x03,0x04,0x05};
-	
-uint8_t data_flash_write[] = {0x83,0x00,0x00,0x00};	
-		
-uint8_t data_flash_read[] = {0xd2,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
-	
-uint8_t data_buffer_read[] = {0xd4,0x00,0x00,0x00,0x00};
-		
-uint8_t data__[10];	
+/* Flash read data buffer*/
+static uint8_t data_received[DATA_BUFFER_SIZE];
 
 /**
  * \brief Get SPI module baudrate divisor value
@@ -175,7 +159,7 @@ uint8_t data__[10];
  */
 static uint8_t get_spi_divisor(void)
 {
-	uint8_t divisor=0;
+	uint8_t divisor = 0;
 
 	switch (SPCR & SPI_PRESCALER_gm) {
 	case SPI_PRESCALER_DIV4_gc:
@@ -217,19 +201,20 @@ static void run_baudrate_set_test(const struct test_case *test)
 		uint32_t baudrate;
 		uint8_t divisor;
 		int8_t ret;
-	} test_set[] = {
+	}
+	test_set[] = {
 		/*  First we test the possible divisors*/
-		{ 4000000,   2,  1},
-		{ 2000000,   4,  1},
-		{ 1000000,   8,  1},
-		{  500000,  16,  1},
-		{  250000,  32,  1},
-		{  125000,  64,  1},        
-		{   62500, 128,  1},                  
+		{ 4000000, 2, 1},
+		{ 2000000, 4, 1},
+		{ 1000000, 8, 1},
+		{  500000, 16, 1},
+		{  250000, 32, 1},
+		{  125000, 64, 1},
+		{   62500, 128, 1},
 		/* Test baudrate very close to one higher divisor */
-		{ 3999999,    4,  1},
+		{ 3999999, 4, 1},
 		/* Test that too low speed requested fails */
-		{  10000,   128, -1}
+		{  10000, 128, -1}
 	};
 	int8_t ret;
 	uint8_t i;
@@ -286,18 +271,18 @@ static void spi_deselect_device(void)
  *
  * \pre SPI device must be selected with spi_select_device() first
  */
-static status_code_t spi_write(volatile void *spi, const uint8_t *data, size_t len)
+static status_code_t spi_write(volatile void *spi, const uint8_t *data,
+		size_t len)
 {
 	while (len) {
-		
-		 spi_put(spi, *data++);
-			
-		 while (!spi_is_tx_ok(spi)) {
-	     }
+		spi_put(spi, *data++);
 
-		 len--;
+		while (!spi_is_tx_ok(spi)) {
+		}
+
+		len--;
 	}
-	
+
 	return STATUS_OK;
 }
 
@@ -315,136 +300,124 @@ static status_code_t spi_write(volatile void *spi, const uint8_t *data, size_t l
 static status_code_t spi_read(volatile void *spi, uint8_t *data, size_t len)
 {
 	while (len) {
-		
-		spi_put(spi,SPI_MASTER_DUMMY); //Dummy write
+		spi_put(spi, SPI_MASTER_DUMMY); /* Dummy write */
 
 		while (!spi_is_tx_ok(spi)) {
 		}
-				
-		*data = spi_get(spi);	
-		
+
+		*data = spi_get(spi);
+
 		data++;
-		len--; 
+		len--;
 	}
-	
+
 	return STATUS_OK;
+}
+
+/**
+ * \brief Read data from flash
+ *
+ * Read command is sent to read the data from specific page of the flash
+ *
+ * \param test Current test case.
+ */
+static void flash_read_data(void)
+{
+	/* Select the DF memory */
+	spi_select_device();
+
+	/* Send the flash read command */
+	spi_write(&CONF_TEST_SPI, data_flash_read, 8);
+
+	/* Get the data from flash */
+	spi_read(&CONF_TEST_SPI, data_received, DATA_BUFFER_SIZE);
+
+	/* Deselect the checked DF memory. */
+	spi_deselect_device();
 }
 
 /**
  * \brief Test SPI transfer
  *
- * In this test SPI master sends manufacturer ID read command to data flash 
- * and gets back the data from external flash.
+ * In this test SPI master sends write command to write set of data and send
+ * read command to get the data back from external flash.
  *
  * \param test Current test case.
  */
-#if 0
 static void run_spi_transfer_test(const struct test_case *test)
 {
-        /* Enable SPI peripheral clock */
-  	sysclk_enable_peripheral_clock(&CONF_TEST_SPI);
-	  
-	  /* Enable SPI is master mode */
-	  spi_enable_master_mode(&CONF_TEST_SPI);
-	  
-	   /* Set the baud rate */
-	   spi_set_baud_div(&CONF_TEST_SPI,CONF_TEST_SPI_BAUDRATE, sysclk_get_cpu_hz());
+	bool write_enable = false;
 
-        /* Set the clock mode */        
-	spi_set_clock_mode(&CONF_TEST_SPI,CONF_TEST_SPI_MODE);
-        
-        /* Enable SPI */        
+	/* Enable SPI peripheral clock */
+	sysclk_enable_peripheral_clock(&CONF_TEST_SPI);
+
+	/* Enable SPI is master mode */
+	spi_enable_master_mode(&CONF_TEST_SPI);
+
+	/* Set the baud rate */
+	spi_set_baud_div(&CONF_TEST_SPI, CONF_TEST_SPI_BAUDRATE,
+			sysclk_get_cpu_hz());
+
+	/* Set the clock mode */
+	spi_set_clock_mode(&CONF_TEST_SPI, CONF_TEST_SPI_MODE);
+
+	/* Enable SPI */
 	spi_enable(&CONF_TEST_SPI);
-        
-	/* Select the DF memory */
-	spi_select_device();
 
-	/* Send the Manufacturer ID  Read command */
-	spi_write(&CONF_TEST_SPI, data, 1);
+	/* Read the data from Page 0 of flash. This is to avoid write of same
+	 * data again and to reduce the flash write during testing */
+	flash_read_data();
 
-	/* Receive Manufacturer ID*/
-	spi_read(&CONF_TEST_SPI, data,4);
-
-	/* Deselect the DF memory */
-	spi_deselect_device();
-        
 	/* Check the read data */
 	for (uint8_t i = 0; i < DATA_BUFFER_SIZE; i++) {
+		if (data_received[i] != data_sent[i]) {
+			write_enable = true;
+		}
 
-	   test_assert_true(test, data[i] == manufac_id[i],
-				"read spi data %d, expected %d", data[i],
-				manufac_id[i]);
-	}        
+		/* Clear receive data buffer */
+		data_received[i] = 0;
+	}
 
-}
-
-
-
-struct spi_device SPI_DEVICE_EXAMPLE = {
-	//! Board specific select id
-	.id = SPI_DEVICE_EXAMPLE_ID
-};
-#endif
-
-uint16_t status; // Status value for dataflash.
-static void run_spi_transfer_test(const struct test_case *test)
-{
-	
-        /* Enable SPI peripheral clock */
-        sysclk_enable_peripheral_clock(&CONF_TEST_SPI);
-        
-        /* Enable SPI is master mode */
-        spi_enable_master_mode(&CONF_TEST_SPI);
-        
-        /* Set the baud rate */
-        spi_set_baud_div(&CONF_TEST_SPI,CONF_TEST_SPI_BAUDRATE, sysclk_get_cpu_hz());
-
-        /* Set the clock mode */
-        spi_set_clock_mode(&CONF_TEST_SPI,CONF_TEST_SPI_MODE);
-        
-        /* Enable SPI */
-        spi_enable(&CONF_TEST_SPI);
-			
-	// Select the DF memory to check.
+	/* If first time flash is getting used data will be 0xff. So write known
+	 * data */
+	if (write_enable) {
+		/* Select the DF memory */
 		spi_select_device();
 
-	// Send the Status Register Read command following by a dummy data.
-	spi_write(&CONF_TEST_SPI, data_buffer_write, 9);
-	
-    spi_deselect_device();
-	
-	for(volatile uint16_t i=0;i<30000;i++);
-		
-    	spi_select_device();
-	
-	spi_write(&CONF_TEST_SPI, data_flash_write, 4);
-	
-	spi_deselect_device();
-	
-    for(volatile uint16_t i=0;i<30000;i++);
-		
+		/* Send the buffer write command followed by data to written */
+		spi_write(&CONF_TEST_SPI, data_buffer_write, 9);
+
+		/* Deselect the DF memory */
+		spi_deselect_device();
+
+		/* Flash delay */
+		for (volatile uint16_t i = 0; i < 30000; i++) {
+		}
+
+		/* Select the DF memory */
 		spi_select_device();
-	
-	spi_write(&CONF_TEST_SPI, data_flash_read, 8);
-	
-	//spi_write_packet(SPI_EXAMPLE, data_buffer_read, 5);
 
-	// Receive status.
-	spi_read(&CONF_TEST_SPI,  data__,5);
+		/* Send the flash write command to write the previously sent
+		 * data to flash */
+		spi_write(&CONF_TEST_SPI, data_flash_write, 4);
 
-	// Extract the status.
-	status = data[0];
+		/* Deselect the DF memory */
+		spi_deselect_device();
 
-	// Deselect the checked DF memory.
-	spi_deselect_device();
+		/* Flash delay */
+		for (volatile uint16_t i = 0; i < 30000; i++) {
+		}
+	}
 
-	// Unexpected device density value.
+	/* Read the data from flash. */
+	flash_read_data();
+
 	/* Check the read data */
-	for (uint8_t i = 0; i < 5; i++) {
-
-		test_assert_true(test, data__[i] == data_buffer_write[i+4],
-		"read data %d, expected %d", data__[i],
-		data_buffer_write[i+4]);
+	for (uint8_t i = 0; i < DATA_BUFFER_SIZE; i++) {
+		test_assert_true(test, data_received[i] == data_sent[i],
+				"read spi data %d, expected %d",
+				data_received[i],
+				data_sent[i]);
 	}
 }
 
@@ -464,23 +437,23 @@ int main(void)
 	board_init();
 	stdio_serial_init(CONF_TEST_USART, &usart_serial_options);
 
-	// Define all the test cases
+	/* Define all the test cases */
 	DEFINE_TEST_CASE(baudrate_set_test, NULL, run_baudrate_set_test, NULL,
 			"Baudrate set test");
 
 	DEFINE_TEST_CASE(data_transfer_test, NULL, run_spi_transfer_test, NULL,
 			"SPI data transfer test");
-        
-	// Put test case addresses in an array
+
+	/* Put test case addresses in an array */
 	DEFINE_TEST_ARRAY(spi_tests) = {
 		&baudrate_set_test,
-		&data_transfer_test,                
+		&data_transfer_test,
 	};
 
-	// Define the test suite
+	/* Define the test suite */
 	DEFINE_TEST_SUITE(spi_suite, spi_tests, "MEGARF SPI driver test suite");
 
-	// Run all tests in the test suite
+	/* Run all tests in the test suite */
 	test_suite_run(&spi_suite);
 
 	while (1) {

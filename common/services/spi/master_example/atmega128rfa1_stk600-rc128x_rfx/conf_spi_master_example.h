@@ -1,5 +1,5 @@
 /**
- * \file 
+ * \file
  *
  * \brief Configuration of the atmega128rfa1_stk600 board for the spi example
  *
@@ -48,15 +48,15 @@
 
 /*! \name Configuration
  */
-//! @{
+/* ! @{ */
 #define SPI_EXAMPLE             AT45DBX_SPI
 #define SPI_DEVICE_EXAMPLE_ID   AT45DBX_CS
 #define SPI_EXAMPLE_BAUDRATE    1000000
 #define SPI_EXAMPLE_LED_PIN_EXAMPLE_1 LED_GREEN_GPIO
 #define SPI_EXAMPLE_LED_PIN_EXAMPLE_2 LED_YELLOW_GPIO
-//! @}
+/* ! @} */
 
 /* Serial Flash on the STK600 Board */
 #define AT45DB041
 
-#endif  // _CONF_SPI_MASTER_EXAMPLE_H
+#endif  /* _CONF_SPI_MASTER_EXAMPLE_H */

@@ -52,15 +52,17 @@
 void usart_spi_init(USART_t *usart)
 {
 #ifdef USARTA0
-     if ((uintptr_t)usart == (uintptr_t)&UCSR0A) {
-		 sysclk_enable_module(POWER_RED_REG0, PRUSART0_bm);
-		 }
+	if ((uintptr_t)usart == (uintptr_t)&UCSR0A) {
+		sysclk_enable_module(POWER_RED_REG0, PRUSART0_bm);
+	}
+
 #endif
 #ifdef USARTA1
-     if ((uintptr_t)usart == (uintptr_t)&UCSR1A) {
-		 sysclk_enable_module(POWER_RED_REG1, PRUSART1_bm);
-		 }
-#endif  
+	if ((uintptr_t)usart == (uintptr_t)&UCSR1A) {
+		sysclk_enable_module(POWER_RED_REG1, PRUSART1_bm);
+	}
+
+#endif
 }
 
 /**
@@ -78,13 +80,13 @@ void usart_spi_init(USART_t *usart)
  * \param sel_id    Board specific select id
  */
 void usart_spi_setup_device(USART_t *usart, struct usart_spi_device *device,
-     spi_flags_t flags, unsigned long baud_rate,
-     board_spi_select_id_t sel_id)
+		spi_flags_t flags, unsigned long baud_rate,
+		board_spi_select_id_t sel_id)
 {
 	usart_spi_options_t opt;
-	opt.baudrate=baud_rate;
-	opt.spimode=flags;
-	opt.data_order=false;
+	opt.baudrate = baud_rate;
+	opt.spimode = flags;
+	opt.data_order = false;
 	usart_init_spi(usart, &opt);
 }
 
@@ -124,11 +126,12 @@ void usart_spi_disable(USART_t *usart)
  *
  * \pre usart device must be selected with usart_spi_select_device() first
  */
-status_code_t usart_spi_write_packet(USART_t *usart,const uint8_t *data, size_t len)
+status_code_t usart_spi_write_packet(USART_t *usart, const uint8_t *data,
+		size_t len)
 {
-	size_t i=0;
-	while(len) {
-		usart_spi_transmit(usart,*(data+i));
+	size_t i = 0;
+	while (len) {
+		usart_spi_transmit(usart, *(data + i));
 		len--;
 		i++;
 	}
@@ -148,11 +151,11 @@ status_code_t usart_spi_write_packet(USART_t *usart,const uint8_t *data, size_t 
  */
 status_code_t usart_spi_read_packet(USART_t *usart, uint8_t *data, size_t len)
 {
-	while(len) {
+	while (len) {
 		*data = usart_spi_transmit(usart, CONFIG_USART_SPI_DUMMY);
 		len--;
 		data++;
- 	}
+	}
 	return STATUS_OK;
 }
 

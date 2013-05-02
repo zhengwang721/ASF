@@ -59,7 +59,7 @@
 
 /* USARTA0 configured in SPI master mode */
 #define USART_SPI_EXAMPLE                   &USARTA0
-#define USART_SPI_DEVICE_EXAMPLE_ID         IOPORT_CREATE_PIN(PORTB,4)
+#define USART_SPI_DEVICE_EXAMPLE_ID         IOPORT_CREATE_PIN(PORTB, 4)
 #define USART_SPI_EXAMPLE_BAUDRATE          1000000
 
 #endif /* _CONF_SPI_SLAVE_EXAMPLE_H */
