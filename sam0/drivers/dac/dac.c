@@ -426,7 +426,13 @@ enum status_code dac_chan_write(
  * \param[in] module_inst      Pointer to the DAC software device struct
  * \param[in] channel          DAC channel to write to
  *
- * \return Bitmask of \ref dac_status flags
+ * \return Bitmask of status flags
+ *
+ * \retval DAC_STATUS_CHANNEL_0_EMPTY    Data has been transferred from DATABUF
+ *                                       to DATA by a start conversion event
+ *                                       and DATABUF is ready for new data.
+ * \retval DAC_STATUS_CHANNEL_0_UNDERRUN A start conversion event has occured
+ *                                       when DATABUF is empty
  *
  */
 uint32_t dac_get_status(
@@ -459,16 +465,12 @@ uint32_t dac_get_status(
  * Clears the given status flag of the module.
  *
  * \param[in] module_inst      Pointer to the DAC software device struct
- * \param[in] status           Status flag to clear
- *
- * \return Status of the operation
- * \retval STATUS_OK              The status was cleared successfully
- * \retval STATUS_ERR_INVALID_ARG Invalid argument was provided
+ * \param[in] status           Bit mask of status flags to clear
  *
  */
-enum status_code dac_clear_status(
+void dac_clear_status(
 		struct dac_module *const module_inst,
-		enum dac_status status)
+		uint32_t dac_status status_flags)
 {
 	 /* Sanity check arguments */
 	Assert(module_inst);
@@ -476,16 +478,17 @@ enum status_code dac_clear_status(
 
 	Dac *const dac_module = module_inst->hw_dev;
 
+	uint32_t intflags = 0;
+
 	/* Clear requested status */
-	switch (status) {
-	case DAC_STATUS_CHANNEL_0_EMPTY:
-		dac_module->INTFLAG.reg = DAC_INTFLAG_EMPTY;
-		break;
-	case DAC_STATUS_CHANNEL_0_UNDERRUN:
-		dac_module->INTFLAG.reg = DAC_INTFLAG_UNDERRUN;
-		break;
-	default:
-		return STATUS_ERR_INVALID_ARG;
+	if (status_flags & DAC_STATUS_CHANNEL_0_EMPTY) {
+		intflags |= DAC_INTFLAG_EMPTY;
 	}
+	if (status_flags & DAC_STATUS_CHANNEL_0_UNDERRUN)
+		intflags |= DAC_INTFLAG_UNDERRUN;
+	}
+
+	dac_module->INTFLAG.reg = intflags;
+
 	return STATUS_OK;
 }
