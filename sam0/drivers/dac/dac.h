@@ -338,7 +338,7 @@ enum dac_channel {
  */
 enum dac_status {
 	/** Data Buffer Empty Channel 0 - Set when data is transferred from DATABUF
-	 * to DATA
+	 * to DATA by a start conversion event
 	 */
 	DAC_STATUS_CHANNEL_0_EMPTY    = 1 << 0,
 	/** Underrun Channel 0 - Set when a start conversion event occurs when
