@@ -41,6 +41,7 @@
  *
  */
 #include "rtc_calendar.h"
+#include <gclk.h>
 
 /**
  * \brief Resets the RTC module
@@ -56,7 +57,7 @@ void rtc_calendar_reset(void)
 
 #if RTC_CALENDAR_ASYNC == true
 	_rtc_dev.registered_callback = 0;
-	_rtc_dev.enabled_callback = 0;
+	_rtc_dev.enabled_callback    = 0;
 #endif
 
 	while (rtc_calendar_is_syncing()) {
@@ -167,8 +168,17 @@ static void _rtc_calendar_set_config(
 	/* Set up temporary register value. */
 	uint16_t tmp_reg;
 
+	/* Determine prescaler required to get a 1Hz counting speed */
+	uint32_t rtc_gen_hz    = system_gclk_gen_get_hz(GCLK_GENERATOR_2);
+	uint16_t prescaler_div = 0;
+	while (rtc_gen_hz > 1) {
+		prescaler_div++;
+		rtc_gen_hz >>= 1;
+	}
+
 	/* Set to calendar mode and set the prescaler to get 1 Hz. */
-	tmp_reg = RTC_MODE2_CTRL_MODE(2) | RTC_MODE2_CTRL_PRESCALER_DIV1024;
+	tmp_reg = RTC_MODE2_CTRL_MODE(2) |
+			(prescaler_div << RTC_MODE2_CTRL_PRESCALER_Pos);
 
 	/* Check clock mode. */
 	if (!(config->clock_24h)) {
