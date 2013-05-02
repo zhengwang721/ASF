@@ -141,8 +141,8 @@ uint32_t at24cxx_write_byte(uint16_t us_address, uint8_t uc_value)
 
 	/* Configure the data packet to be transmitted */
 	twi_package.chip = BOARD_AT24C_ADDRESS;
-	twi_package.addr[0] = (uint8_t)us_address;
-	twi_package.addr[1] = (uint8_t)(us_address >> 8);
+	twi_package.addr[0] = (uint8_t)(us_address >> 8);
+	twi_package.addr[1] = (uint8_t)us_address;
 	twi_package.addr_length = AT24C_MEM_ADDR_LEN;
 	twi_package.buffer = &uc_value;
 	twi_package.length = 1;
@@ -173,8 +173,8 @@ uint32_t at24cxx_write_continuous(uint16_t us_start_address,
 
 	/* Configure the data packet to be transmitted */
 	twi_package.chip = BOARD_AT24C_ADDRESS;
-	twi_package.addr[0] = (uint8_t)us_start_address;
-	twi_package.addr[1] = (uint8_t)(us_start_address >> 8);
+	twi_package.addr[0] = (uint8_t)(us_start_address >> 8);
+	twi_package.addr[1] = (uint8_t)us_start_address;
 	twi_package.addr_length = AT24C_MEM_ADDR_LEN;
 	twi_package.buffer = (uint8_t *) p_wr_buffer;
 	twi_package.length = us_length;
@@ -202,8 +202,8 @@ uint32_t at24cxx_read_byte(uint16_t us_address, uint8_t *p_rd_byte)
 
 	/* Configure the data packet to be received */
 	twi_package.chip = BOARD_AT24C_ADDRESS;
-	twi_package.addr[0] = (uint8_t)us_address;
-	twi_package.addr[1] = (uint8_t)(us_address >> 8);
+	twi_package.addr[0] = (uint8_t)(us_address >> 8);
+	twi_package.addr[1] = (uint8_t)us_address;
 	twi_package.addr_length = AT24C_MEM_ADDR_LEN;
 	twi_package.buffer = p_rd_byte;
 	twi_package.length = 1;
@@ -232,8 +232,8 @@ uint32_t at24cxx_read_continuous(uint16_t us_start_address, uint16_t us_length,
 
 	/* Configure the data packet to be received */
 	twi_package.chip = BOARD_AT24C_ADDRESS;
-	twi_package.addr[0] = (uint8_t)us_start_address;
-	twi_package.addr[1] = (uint8_t)(us_start_address >> 8);
+	twi_package.addr[0] = (uint8_t)(us_start_address >> 8);
+	twi_package.addr[1] = (uint8_t)us_start_address;
 	twi_package.addr_length = AT24C_MEM_ADDR_LEN;
 	twi_package.buffer = p_rd_buffer;
 	twi_package.length = us_length;
@@ -264,8 +264,8 @@ uint32_t at24cxx_write_page(uint32_t ul_page_address,
 
 	/* Configure the data packet to be transmitted */
 	twi_package.chip = BOARD_AT24C_ADDRESS;
-	twi_package.addr[0] = (uint8_t)start_address;
-	twi_package.addr[1] = (uint8_t)(start_address >> 8);
+	twi_package.addr[0] = (uint8_t)(start_address >> 8);
+	twi_package.addr[1] = (uint8_t)start_address;
 	twi_package.addr_length = AT24C_MEM_ADDR_LEN;
 	twi_package.buffer = (uint8_t *)p_wr_buffer;
 	twi_package.length = ul_page_size;
@@ -296,8 +296,8 @@ uint32_t at24cxx_read_page(uint32_t ul_page_address,
 
 	/* Configure the data packet to be received */
 	twi_package.chip = BOARD_AT24C_ADDRESS;
-	twi_package.addr[0] = (uint8_t)start_address;
-	twi_package.addr[1] = (uint8_t)(start_address >> 8);
+	twi_package.addr[0] = (uint8_t)(start_address >> 8);
+	twi_package.addr[1] = (uint8_t)start_address;
 	twi_package.addr_length = AT24C_MEM_ADDR_LEN;
 	twi_package.buffer = p_rd_buffer;
 	twi_package.length = ul_page_size;

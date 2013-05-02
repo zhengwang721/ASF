@@ -176,8 +176,6 @@ int main(void)
 	}
 
 	/* Fill EEPROM with memory pattern */
-	uint16_t addr;
-	uint8_t tmp = 0;
 	if (at24cxx_fill_pattern(AT24C_MEM_ADDR,
 			AT24C_MEM_ADDR + TEST_DATA_LENGTH - 1,
 			MEMORY_PATTERN) != AT24C_WRITE_SUCCESS) {
