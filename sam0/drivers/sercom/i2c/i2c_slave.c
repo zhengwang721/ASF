@@ -271,6 +271,7 @@ enum status_code i2c_slave_init(
 	module->registered_callback = 0;
 	module->enabled_callback = 0;
 	module->buffer_length = 0;
+	module->nack_on_address = config->enable_nack_on_address;
 #endif
 
 	/* Set SERCOM module to operate in I2C slave mode. */
@@ -368,6 +369,8 @@ static enum status_code _i2c_slave_wait_for_bus(
  * \retval STATUS_OK                Packet was written successfully
  * \retval STATUS_ERR_IO            There was an error in the previous transfer
  * \retval STATUS_ERR_BAD_FORMAT    Master wants to write data
+ * \retval STATUS_ERR_INVALID_ARG   Invalid argument(s) was provided
+ * \retval STATUS_ERR_BUSY          The I<SUP>2</SUP>C module is busy with a job.
  * \retval STATUS_ERR_ERR_OVERFLOW  Master NAKed before entire packet was
  *                                  transferred
  * \retval STATUS_ERR_TIMEOUT       No response was given within the timeout
@@ -385,6 +388,18 @@ enum status_code i2c_slave_write_packet_wait(
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
 
 	uint16_t length = packet->data_length;
+
+	if (length == 0) {
+		return STATUS_ERR_INVALID_ARG;
+	}
+
+#if I2C_SLAVE_CALLBACK_MODE == true
+	/* Check if the module is busy with a job or AMATCH is enabled */
+	if (module->buffer_remaining > 0 || (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_AMATCH)) {
+		return STATUS_BUSY;
+	}
+#endif
+
 	enum status_code status;
 	/* Wait for master to send address packet */
 	status = _i2c_slave_wait_for_bus(module);
@@ -471,6 +486,8 @@ enum status_code i2c_slave_write_packet_wait(
  *                                  start before specified length of bytes
  *                                  was received
  * \retval STATUS_ERR_IO            There was an error in the previous transfer
+ * \retval STATUS_ERR_INVALID_ARG   Invalid argument(s) was provided
+ * \retval STATUS_ERR_BUSY          The I<SUP>2</SUP>C module is busy with a job.
  * \retval STATUS_ERR_BAD_FORMAT    Master wants to read data
  * \retval STATUS_ERR_ERR_OVERFLOW  Last byte received overflows buffer
  */
@@ -487,6 +504,17 @@ enum status_code i2c_slave_read_packet_wait(
 
 	uint16_t length = packet->data_length;
 
+	if (length == 0) {
+		return STATUS_ERR_INVALID_ARG;
+	}
+
+#if I2C_SLAVE_CALLBACK_MODE == true
+	/* Check if the module is busy with a job or AMATCH is enabled */
+	if (module->buffer_remaining > 0 || (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_AMATCH)) {
+		return STATUS_BUSY;
+	}
+#endif
+
 	enum status_code status;
 
 	/* Wait for master to send address packet */
@@ -495,6 +523,7 @@ enum status_code i2c_slave_read_packet_wait(
 		/* Timeout, return */
 		return status;
 	}
+
 	/* Check if there was an error in the last transfer */
 	if (i2c_hw->STATUS.reg & (SERCOM_I2CS_STATUS_BUSERR ||
 			SERCOM_I2CS_STATUS_COLL || SERCOM_I2CS_STATUS_LOWTOUT)) {
@@ -534,22 +563,18 @@ enum status_code i2c_slave_read_packet_wait(
 		/* Read data */
 		_i2c_slave_wait_for_sync(module);
 		packet->data[i++] = i2c_hw->DATA.reg;
+
 	}
 
 	/* Packet read done, wait for packet to NACK, Stop or repeated start */
 	status = _i2c_slave_wait_for_bus(module);
 
-	if (status != STATUS_OK) {
-		/* Workaround: Do nothing, as the stop interrupt flag is
-		 * not always set when it should.
-		 */
-	}
-
 	if (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_DRDY) {
 		/* Buffer is full, send NACK */
 		i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_ACKACT;
 		i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_CMD(0x2);
-	} else if (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_PREC) {
+	}
+	if (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_PREC) {
 		/* Clear stop flag */
 		i2c_hw->INTFLAG.reg = SERCOM_I2CS_INTFLAG_PREC;
 	}
@@ -559,7 +584,7 @@ enum status_code i2c_slave_read_packet_wait(
 /**
  * \brief Waits for a start condition on the bus
  *
- * Waits for the master to issue a star condition on the bus.
+ * Waits for the master to issue a start condition on the bus.
  * Note that this function does not check for errors in the last transfer,
  * this will be discovered when reading or writing.
  *
