@@ -133,12 +133,12 @@ static enum status_code _adc_set_config(
 		break;
 
 	case ADC_OVERSAMPLING_AND_DECIMATION_3BIT:
-		adjres = 0x01;
+		adjres = 0x03;
 		average = ADC_AVGCTRL_SAMPLENUM_64;
 		break;
 
 	case ADC_OVERSAMPLING_AND_DECIMATION_4BIT:
-		adjres = 0x00;
+		adjres = 0x04;
 		average = ADC_AVGCTRL_SAMPLENUM_256;
 		break;
 

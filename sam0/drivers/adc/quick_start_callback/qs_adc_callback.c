@@ -97,7 +97,7 @@ int main(void)
 
 //! [start_adc_job]
 	system_interrupt_enable_global();
-	adc_read_buffer_job(&module_inst, ADC_SAMPLES, adc_result_buffer);
+	adc_read_buffer_job(&module_inst, adc_result_buffer, ADC_SAMPLES);
 //! [start_adc_job]
 
 //! [job_complete_poll]

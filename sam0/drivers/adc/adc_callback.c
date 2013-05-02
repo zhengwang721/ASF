@@ -170,8 +170,8 @@ void adc_unregister_callback(
  */
 enum status_code adc_read_buffer_job(
 		struct adc_module *const module_inst,
-		uint16_t samples,
-		uint16_t *buffer)
+		uint16_t *buffer,
+		uint16_t samples)
 {
 	Assert(module_inst);
 	Assert(samples);
