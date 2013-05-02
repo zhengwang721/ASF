@@ -129,7 +129,7 @@
 #define EXT_DEVICE_IN_LENGTH         0x00
 
 /* AT45DBX Command: Manufacturer ID Read. */
-#define AT45DF_CMDC_RD_MID_REG       0x9F
+#define AT45DF_CMDC_RD_MID_REG       0xD7
 
 /* Buffer size. */
 #define DATA_BUFFER_SIZE             0x04
@@ -141,10 +141,32 @@
 #define SPI_DEVICE_SELECT            IOPORT_CREATE_PIN(PORTB,0)
 
 /* Data buffer. */
-uint8_t data[DATA_BUFFER_SIZE]  =    {AT45DF_CMDC_RD_MID_REG};
+uint8_t data___[DATA_BUFFER_SIZE]  =    {AT45DF_CMDC_RD_MID_REG};
 
 /* Manufacturer ID */
 const uint8_t manufac_id[] = {ATMEL_MANUFACTURER_ID,DEVICE_ID_1,DEVICE_ID_2,EXT_DEVICE_IN_LENGTH};
+	
+
+
+/*! \name Bit-Masks and Values for the Status Register
+ */
+//! @{
+#define AT45DBX_MSK_DENSITY               0x3C      //!< Device density bit-mask
+#define AT45DBX_DENSITY                   0x3C      //!< Device density value.
+//! @}
+
+//! First Status Command Register - Second Dummy Data
+uint8_t data[1] = {AT45DF_CMDC_RD_MID_REG};
+	
+uint8_t data_buffer_write[] = {0x84,0x00,0x00,0x00,0x01,0x02,0x03,0x04,0x05};
+	
+uint8_t data_flash_write[] = {0x83,0x00,0x00,0x00};	
+		
+uint8_t data_flash_read[] = {0xd2,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+	
+uint8_t data_buffer_read[] = {0xd4,0x00,0x00,0x00,0x00};
+		
+uint8_t data__[10];	
 
 /**
  * \brief Get SPI module baudrate divisor value
@@ -316,6 +338,7 @@ static status_code_t spi_read(volatile void *spi, uint8_t *data, size_t len)
  *
  * \param test Current test case.
  */
+#if 0
 static void run_spi_transfer_test(const struct test_case *test)
 {
         /* Enable SPI peripheral clock */
@@ -353,6 +376,76 @@ static void run_spi_transfer_test(const struct test_case *test)
 				manufac_id[i]);
 	}        
 
+}
+
+
+
+struct spi_device SPI_DEVICE_EXAMPLE = {
+	//! Board specific select id
+	.id = SPI_DEVICE_EXAMPLE_ID
+};
+#endif
+
+uint16_t status; // Status value for dataflash.
+static void run_spi_transfer_test(const struct test_case *test)
+{
+	
+        /* Enable SPI peripheral clock */
+        sysclk_enable_peripheral_clock(&CONF_TEST_SPI);
+        
+        /* Enable SPI is master mode */
+        spi_enable_master_mode(&CONF_TEST_SPI);
+        
+        /* Set the baud rate */
+        spi_set_baud_div(&CONF_TEST_SPI,CONF_TEST_SPI_BAUDRATE, sysclk_get_cpu_hz());
+
+        /* Set the clock mode */
+        spi_set_clock_mode(&CONF_TEST_SPI,CONF_TEST_SPI_MODE);
+        
+        /* Enable SPI */
+        spi_enable(&CONF_TEST_SPI);
+			
+	// Select the DF memory to check.
+		spi_select_device();
+
+	// Send the Status Register Read command following by a dummy data.
+	spi_write(&CONF_TEST_SPI, data_buffer_write, 9);
+	
+    spi_deselect_device();
+	
+	for(volatile uint16_t i=0;i<30000;i++);
+		
+    	spi_select_device();
+	
+	spi_write(&CONF_TEST_SPI, data_flash_write, 4);
+	
+	spi_deselect_device();
+	
+    for(volatile uint16_t i=0;i<30000;i++);
+		
+		spi_select_device();
+	
+	spi_write(&CONF_TEST_SPI, data_flash_read, 8);
+	
+	//spi_write_packet(SPI_EXAMPLE, data_buffer_read, 5);
+
+	// Receive status.
+	spi_read(&CONF_TEST_SPI,  data__,5);
+
+	// Extract the status.
+	status = data[0];
+
+	// Deselect the checked DF memory.
+	spi_deselect_device();
+
+	// Unexpected device density value.
+	/* Check the read data */
+	for (uint8_t i = 0; i < 5; i++) {
+
+		test_assert_true(test, data__[i] == data_buffer_write[i+4],
+		"read data %d, expected %d", data__[i],
+		data_buffer_write[i+4]);
+	}
 }
 
 /**
