@@ -109,7 +109,8 @@
 #define BUFFER_LENGTH                 256
 
 /* Structures for SPI master, slave configuration & slave instance selection */
-struct spi_module master, slave;
+struct spi_module master;
+struct spi_module slave;
 struct spi_slave_inst slave_inst;
 
 /* Structure for UART module connected to EDBG (used for unit test output) */
@@ -120,9 +121,9 @@ uint8_t tx_buf[BUFFER_LENGTH];
 uint8_t rx_buf[BUFFER_LENGTH];
 
 /* Flag to indicate whether buffer transmission is complete or not */
-bool transfer_complete = false;
+volatile bool transfer_complete = false;
 /* Flag to check whether initialization passed */
-bool spi_init_success = false;
+volatile bool spi_init_success = false;
 
 /**
  * \internal
@@ -231,7 +232,8 @@ static void run_spi_init_test(const struct test_case *test)
  */
 static void run_single_byte_polled_test(const struct test_case *test)
 {
-	uint16_t txd_data = 0x55, rxd_data;
+	uint16_t txd_data = 0x55;
+	uint16_t rxd_data;
 
 	/* Skip test if initialization failed */
 	test_assert_true(test, spi_init_success,
@@ -312,7 +314,8 @@ static void cleanup_buffer_polled_write_interrupt_read_test
 static void run_buffer_polled_write_interrupt_read_test
 	(const struct test_case *test)
 {
-	uint16_t i, timeout_cycles;
+	uint16_t i;
+	uint16_t timeout_cycles;
 
 	/* Skip test if initialization failed */
 	test_assert_true(test, spi_init_success,
@@ -399,7 +402,8 @@ static void run_transceive_buffer_test(const struct test_case *test)
 static void run_baud_test(const struct test_case *test)
 {
 	uint32_t test_baud = 1000000;
-	uint16_t txd_data = 0x55, rxd_data;
+	uint16_t txd_data = 0x55;
+	uint16_t rxd_data;
 	bool max_baud = true;
 
 	/* Skip test if initialization failed */
@@ -522,7 +526,8 @@ static void setup_transfer_9bit_test(const struct test_case *test)
  */
 static void run_transfer_9bit_test(const struct test_case *test)
 {
-	uint16_t txd_data = 0x155, rxd_data;
+	uint16_t txd_data = 0x155;
+	uint16_t rxd_data;
 
 	/* Skip test if initialization failed */
 	test_assert_true(test, spi_init_success,
