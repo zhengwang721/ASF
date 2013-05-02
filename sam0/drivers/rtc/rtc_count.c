@@ -41,6 +41,7 @@
  *
  */
 #include "rtc_count.h"
+#include <gclk.h>
 
 /**
  * \brief Resets the RTC module.
@@ -56,7 +57,7 @@ void rtc_count_reset(void)
 
 #if RTC_COUNT_ASYNC == true
 	_rtc_dev.registered_callback = 0;
-	_rtc_dev.enabled_callback = 0;
+	_rtc_dev.enabled_callback    = 0;
 #endif
 
 	while (rtc_count_is_syncing()) {
@@ -86,6 +87,21 @@ static enum status_code _rtc_count_set_config(
 {
 	/* Initialize module pointer. */
 	Rtc *const rtc_module = RTC;
+
+	/* Determine and ensure the RTC source clock is a multiple of 1KHz */
+	uint32_t rtc_gen_hz    = system_gclk_gen_get_hz(GCLK_GENERATOR_2);
+	if (rtc_gen_hz % 1024) {
+		return STATUS_ERR_BAD_FRQ;
+	}
+
+	/* Compute and set the prescaler, clear all other configuration */
+	uint16_t prescaler_div = 0;
+	while (rtc_gen_hz > 1024) {
+		prescaler_div++;
+		rtc_gen_hz >>= 1;
+	}
+	rtc_module->MODE0.CTRL.reg = RTC_MODE0_CTRL_MODE(0) |
+			(prescaler_div << RTC_MODE0_CTRL_PRESCALER_Pos);
 
 	/* Set mode and clear on match if applicable. */
 	switch (config->mode) {
@@ -170,15 +186,8 @@ enum status_code rtc_count_init(
 	/* Reset module to hardware defaults. */
 	rtc_count_reset();
 
-	//TODO: Get tools to add in alias names for other RTC modes
-	/* Set the prescaler according to settings in conf_clocks.h */
-#if CONF_CLOCK_RTC_FREQ != CONF_CLOCK_RTC_FREQ_32KHZ
-	rtc_module->MODE0.CTRL.reg = RTC_MODE2_CTRL_PRESCALER_DIV1024;
-#else
-	rtc_module->MODE0.CTRL.reg = RTC_MODE2_CTRL_PRESCALER_DIV1;
-#endif
 	/* Save conf_struct internally for continued use. */
-	_rtc_dev.mode = config->mode;
+	_rtc_dev.mode                = config->mode;
 	_rtc_dev.continuously_update = config->continuously_update;
 
 	/* Set config and return status. */
