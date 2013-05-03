@@ -332,11 +332,11 @@ enum nvm_command {
  */
 enum nvm_sleep_power_mode {
 	/** NVM controller exits low power mode on first access after sleep. */
-	NVM_AUTO_WAKE_MODE_WAKEONACCESS  = NVMCTRL_CTRLB_SLEEPPRM_WAKEONACCESS,
+	NVM_SLEEP_POWER_MODE_WAKEONACCESS  = NVMCTRL_CTRLB_SLEEPPRM_WAKEONACCESS,
 	/** NVM controller exits low power mode when the device exits sleep mode. */
-	NVM_AUTO_WAKE_MODE_WAKEUPINSTANT = NVMCTRL_CTRLB_SLEEPPRM_WAKEUPINSTANT,
+	NVM_SLEEP_POWER_MODE_WAKEUPINSTANT = NVMCTRL_CTRLB_SLEEPPRM_WAKEUPINSTANT,
 	/** Power reduction mode in the NVM controller disabled. */
-	NVM_AUTO_WAKE_MODE_ALWAYS_AWAKE  = NVMCTRL_CTRLB_SLEEPPRM_DISABLED,
+	NVM_SLEEP_POWER_MODE_ALWAYS_AWAKE  = NVMCTRL_CTRLB_SLEEPPRM_DISABLED,
 };
 
 /**
@@ -408,7 +408,7 @@ static inline void nvm_get_config_defaults(
 	Assert(config);
 
 	/* Write the default configuration for the NVM configuration */
-	config->sleep_power_mode  = NVM_AUTO_WAKE_MODE_WAKEONACCESS;
+	config->sleep_power_mode  = NVM_SLEEP_POWER_MODE_WAKEONACCESS;
 	config->manual_page_write = false;
 	config->wait_states       = NVMCTRL->CTRLB.bit.RWS;
 }
