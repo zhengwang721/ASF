@@ -1,0 +1,14 @@
+<asf xmlversion="1.0">
+	<select-by-device id="thirdparty.wireless.avr2102_rf4control.lib.zid.dev" caption="AVR2102-ZID LIB For HID Class Device">
+        <module type="service" id="thirdparty.wireless.avr2102_rf4control.lib.zid.dev#1" caption="AVR2102-ZID LIB For atmega256rfr2 HID Class Device">
+            <info type="description" value="summary">
+            ZID HID Class Device library for MEGA256RFR2 controller
+            </info>
+            <build type="library" subtype="user" value="atmega256rfr2/iar/librf4ce-zid-device.r90" toolchain="iarew"/>
+            <build type="library" subtype="user" value="atmega256rfr2/gcc/librf4ce-zrc-device.a" toolchain="avrgcc"/>
+            <build type="doxygen-entry-point" value="group_rf4control"/>
+            <require idref="thirdparty.wireless.avr2102_rf4control.lib.zid.dev.config" />
+            <device-support value="atmega256rfr2"/>
+        </module>
+    </select-by-device>
+</asf>

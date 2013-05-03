@@ -1,0 +1,14 @@
+<asf xmlversion="1.0">
+	<select-by-device id="thirdparty.wireless.avr2102_rf4control.lib.zid.aptr" caption="AVR2102-ZID LIB For Controller">
+        <module type="service" id="thirdparty.wireless.avr2102_rf4control.lib.zid.aptr#1" caption="AVR2102-ZID LIB For atmega256rfr2 Controller">
+            <info type="description" value="summary">
+            ZID adaptor library for MEGA256RFR2 controller
+            </info>
+            <build type="library" subtype="user" value="atmega256rfr2/iar/librf4ce-zid-adaptor.r90" toolchain="iarew"/>
+            <build type="library" subtype="user" value="atmega256rfr2/gcc/librf4ce-zrc-adaptor.a" toolchain="avrgcc"/>
+            <build type="doxygen-entry-point" value="group_rf4control"/>
+            <require idref="thirdparty.wireless.avr2102_rf4control.lib.zid.aptr.config" />
+            <device-support value="atmega256rfr2"/>
+        </module>
+    </select-by-device>
+</asf>
