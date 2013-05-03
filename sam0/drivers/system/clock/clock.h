@@ -240,10 +240,6 @@
 #include <compiler.h>
 #include <gclk.h>
 
-/* TODO: Add to conf_clock.h, set default value */
-#define CONF_CLOCK_TIMEOUT 0xFFFFFFFF
-
-
 /**
  * \brief Available start-up times for the XOSC32K
  *
@@ -373,21 +369,6 @@ enum system_main_clock_div {
 	SYSTEM_MAIN_CLOCK_DIV_64,
 	/** Divide Main clock by 128 */
 	SYSTEM_MAIN_CLOCK_DIV_128,
-};
-
-/**
- * \brief Selectable speeds for the RTC to run at.
- *
- * RTC generic clock source generator frequency configuration values,
- * for \c conf_clock.h.
- */
-enum conf_clock_rtc_freq {
-	/** 1Hz counter speed for the RTC (Calendar mode only). */
-	CONF_CLOCK_RTC_FREQ_1HZ   = 32,
-	/** 1kHz counter speed for the RTC. */
-	CONF_CLOCK_RTC_FREQ_1KHZ  = 32,
-	/** 32kHz counter speed for the RTC. */
-	CONF_CLOCK_RTC_FREQ_32KHZ = 1,
 };
 
 /**
