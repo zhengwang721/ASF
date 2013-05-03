@@ -48,7 +48,7 @@
 #define AES_H_INCLUDED
 
 /**
- * \defgroup group_sam_drivers_aes AES - Advanced Encryption Standard module
+ * \defgroup group_sam_drivers_aesa AES - Advanced Encryption Standard module
  *
  * Driver for the AES (Advanced Encryption Standard) module.
  * Provides functions for configuring and initiating ciphering/deciphering

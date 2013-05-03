@@ -45,7 +45,7 @@
 #define _ABDAC_H_INCLUDED
 
 /**
- * \defgroup group_sam_drivers_abdac ABDAC - Audio Bitstream DAC
+ * \defgroup group_sam_drivers_abdacb ABDAC - Audio Bitstream DAC
  *
  * Audio Bitstream DAC (Digital to Analog Converter) provides functions to
  * convert a sample value to a digital bitstream.
