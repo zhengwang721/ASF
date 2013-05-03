@@ -396,7 +396,7 @@ struct nvm_parameters {
  * The default configuration is as follows:
  *  \li Power reduction mode enabled after sleep until first NVM access
  *  \li Automatic page commit when full pages are written to
- *  \li Zero wait states when reading flash memory
+ *  \li Number of FLASH wait states left unchanged
  *
  * \param[out] config  Configuration structure to initialize to default values
  *
@@ -410,7 +410,7 @@ static inline void nvm_get_config_defaults(
 	/* Write the default configuration for the NVM configuration */
 	config->sleep_power_mode  = NVM_AUTO_WAKE_MODE_WAKEONACCESS;
 	config->manual_page_write = false;
-	config->wait_states       = 0;
+	config->wait_states       = NVMCTRL->CTRLB.bit.RWS;
 }
 
 enum status_code nvm_set_config(
