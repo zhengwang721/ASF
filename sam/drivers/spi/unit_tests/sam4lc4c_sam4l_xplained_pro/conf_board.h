@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Unit test configuration.
+ * \brief  Configuration File for SAM4L-Xplained Pro Board.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,41 +41,13 @@
  *
  */
 
-#ifndef CONF_TEST_H
-#define CONF_TEST_H
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-/** Perform unit tests using SPI */
-#define CONF_TEST_SPI        SPI
-/** Unit test SPI ID */
-#define CONF_TEST_SPI_ID     SPI_IRQn
-/** Unit test SPI NPCS */
-#define CONF_TEST_SPI_NPCS   1
-/** Unit test SPI handler in vector table */
-#define CONF_TEST_SPI_HANDLER SPI_Handler
+/** Enable Com Port. */
+#define CONF_BOARD_COM_PORT
 
-/** \brief SPI DataFlash settings.
- *  Define \ref CONF_TEST_DF to enable DataFlash test.
- */
-/** DataFlash test enable */
-#define CONF_TEST_DF
-/** DataFlash NPCS (using CONF_TEST_SPI for SPI) */
-#define CONF_TEST_DF_NPCS        2
-/** DataFlash ID expected (AT25DF641A) */
-#define CONF_TEST_DF_ID          0x0000481F
-/** DataFlash Page Size */
-#define CONF_TEST_DF_PAGE_SIZE   256
-/** DataFlash address to test (last block) */
-#define CONF_TEST_DF_ADDRESS     (4*1024*1024-4*1024)
+/** SPI pins initialization */
+#define CONF_BOARD_SPI
 
-/** USART Interface  : Console UART */
-#define CONF_TEST_USART      USART2
-/** Baudrate setting : 115200 */
-#define CONF_TEST_BAUDRATE   115200
-/** Char setting     : 8-bit character length (don't care for UART) */
-#define CONF_TEST_CHARLENGTH   US_MR_CHRL_8_BIT
-/** Parity setting   : No parity check */
-#define CONF_TEST_PARITY     US_MR_PAR_NO
-/** Stopbit setting  : No extra stopbit, i.e., use 1 (don't care for UART) */
-#define CONF_TEST_STOPBITS   US_MR_NBSTOP_1_BIT
-
-#endif /* CONF_TEST_H_INCLUDED */
+#endif /* CONF_BOARD_H_INCLUDED */

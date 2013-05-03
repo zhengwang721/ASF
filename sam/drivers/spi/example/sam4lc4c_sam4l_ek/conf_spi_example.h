@@ -3,7 +3,7 @@
  *
  * \brief SPI example configuration.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,35 +43,19 @@
 
 /**
  * \defgroup spi_example_pin_defs
- *  - <b> SAM4S-Xplained  --  SAM4S-Xplained </b>
+ *  - <b> SAM4L-EK  --  SAM4L-EK </b>
  *  - VCC -- VCC
- *  - NPCS0(PA11) -- NPCS0(PA11)
- *  - MISO(PA12)  -- MISO(PA12)
- *  - MOSI(PA13)  -- MOSI(PA13)
- *  - SPCK(PA14)  -- SPCK(PA14)
+ *  - NPCS0(PA02) -- NPCS0(PA02)
+ *  - MISO(PC04)  -- MISO(PC04)
+ *  - MOSI(PC05)  -- MOSI(PC05)
+ *  - SPCK(PC06)  -- SPCK(PC06)
  *  - GND -- GND
  */
 
 #ifndef CONF_SPI_EXAMPLE_H_INCLUDED
 #define CONF_SPI_EXAMPLE_H_INCLUDED
 
-/// @cond 0
-/**INDENT-OFF**/
-#ifdef __cplusplus
-extern "C" {
-#endif
-/**INDENT-ON**/
-/// @endcond
-
 #define SPI_Handler     SPI_Handler
 #define SPI_IRQn        SPI_IRQn
-
-/// @cond 0
-/**INDENT-OFF**/
-#ifdef __cplusplus
-}
-#endif
-/**INDENT-ON**/
-/// @endcond
 
 #endif /* CONF_SPI_EXAMPLE_H_INCLUDED */

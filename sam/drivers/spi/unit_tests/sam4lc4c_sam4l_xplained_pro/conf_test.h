@@ -3,7 +3,7 @@
  *
  * \brief Unit test configuration.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -52,23 +52,8 @@
 #define CONF_TEST_SPI_NPCS   1
 /** Unit test SPI handler in vector table */
 #define CONF_TEST_SPI_HANDLER SPI_Handler
-
-/** \brief SPI DataFlash settings.
- *  Define \ref CONF_TEST_DF to enable DataFlash test.
- */
-/** DataFlash test enable */
-#define CONF_TEST_DF
-/** DataFlash NPCS (using CONF_TEST_SPI for SPI) */
-#define CONF_TEST_DF_NPCS        2
-/** DataFlash ID expected (AT25DF641A) */
-#define CONF_TEST_DF_ID          0x0000481F
-/** DataFlash Page Size */
-#define CONF_TEST_DF_PAGE_SIZE   256
-/** DataFlash address to test (last block) */
-#define CONF_TEST_DF_ADDRESS     (4*1024*1024-4*1024)
-
 /** USART Interface  : Console UART */
-#define CONF_TEST_USART      USART2
+#define CONF_TEST_USART      USART1
 /** Baudrate setting : 115200 */
 #define CONF_TEST_BAUDRATE   115200
 /** Char setting     : 8-bit character length (don't care for UART) */
