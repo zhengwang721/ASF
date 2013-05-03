@@ -88,7 +88,7 @@
  *   \snippet qs_rtc_count_callback.c set_config
  * -# Initialize the RTC module.
  *   \snippet qs_rtc_count_callback.c init_rtc
- * -# Enable the RTC module, so that is may begin counting.
+ * -# Enable the RTC module, so that it may begin counting.
  *   \snippet qs_rtc_count_callback.c enable
  * -# Configure callback functionality.
  *  \snippet qs_rtc_count_callback.c run_callback

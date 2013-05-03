@@ -77,7 +77,7 @@
  *  \snippet qs_rtc_count_basic.c set_config
  * -# Initialize the RTC module.
  *  \snippet qs_rtc_count_basic.c init_rtc
- * -# Enable the RTC module, so that is may begin counting.
+ * -# Enable the RTC module, so that it may begin counting.
  *  \snippet qs_rtc_count_basic.c enable
  *
  * \section asfdoc_samd20_rtc_count_basic_use_case_implement Implementation
