@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Board configuration.
+ * \brief Unit test configuration.
  *
- * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,12 +41,24 @@
  *
  */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#ifndef CONF_TEST_H_INCLUDED
+#define CONF_TEST_H_INCLUDED
 
-/** Enable Com Port. */
-#define CONF_BOARD_COM_PORT
+#define BOARD_ID_USART        USART0
+#define BOARD_USART           USART0
+#define BOARD_USART_BAUDRATE  (115200UL)
+#define USART_Handler         USART0_Handler
+#define USART_IRQn            USART0_IRQn
 
-#define PDCA_PID_USART_TX    20
+/** USART Interface  : Console UART */
+#define CONF_TEST_USART        COM_PORT_USART
+/** Baudrate setting : 115200 */
+#define CONF_TEST_BAUDRATE     (115200UL)
+/** Char setting     : 8-bit character length (don't care for UART) */
+#define CONF_TEST_CHARLENGTH   US_MR_CHRL_8_BIT
+/** Parity setting   : No parity check */
+#define CONF_TEST_PARITY       US_MR_PAR_NO
+/** Stopbit setting  : No extra stopbit, i.e., use 1 (don't care for UART) */
+#define CONF_TEST_STOPBITS     US_MR_NBSTOP_1_BIT
 
-#endif /* CONF_BOARD_H_INCLUDED */
+#endif /* CONF_TEST_H_INCLUDED */

@@ -3,7 +3,7 @@
  *
  * \brief Unit tests for PDCA driver.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -71,6 +71,8 @@
  * The SAM4L devices can be used.
  * This example has been tested with the following setup:
  * - sam4lc4c_sam4l_ek
+ * - sam4lc4c_sam4l_xplained_pro
+ * - sam4lc8c_sam4l8_xplained_pro
  *
  * \section compinfo Compilation info
  * This software was written for the GNU GCC and IAR for ARM. Other compilers
@@ -112,19 +114,20 @@ volatile uint8_t rxbuff_flag = 0;
 
 /** PDC channel options. */
 pdca_channel_config_t PDCA_RX_OPTIONS = {
-	.addr = (void *)gs_rev_buffer, /* memory address */
-	.pid = PDCA_PID_USART0_RX, /* select peripheral - USART0 RX line.*/
-	.size = BUFFER_SIZE, /* transfer counter */
-	.r_addr = (void *)gs_rev_buffer, /* next memory address */
-	.r_size = BUFFER_SIZE, /* next transfer counter */
+	.addr = (void *)gs_rev_buffer,     /* memory address */
+	.pid = PDCA_PID_USART0_RX,         /* select peripheral - USART0 RX line.*/
+	.size = BUFFER_SIZE,               /* transfer counter */
+	.r_addr = (void *)gs_rev_buffer,   /* next memory address */
+	.r_size = BUFFER_SIZE,             /* next transfer counter */
 	.transfer_size = PDCA_MR_SIZE_BYTE /* select size of the transfer */
 };
+
 pdca_channel_config_t PDCA_TX_OPTIONS = {
-	.addr = (void *)gs_tran_buffer, /* memory address */
-	.pid = PDCA_PID_USART0_TX, /* select peripheral - USART0 TX line.*/
-	.size = BUFFER_SIZE, /* transfer counter */
-	.r_addr = (void *)gs_tran_buffer, /* next memory address */
-	.r_size = BUFFER_SIZE, /* next transfer counter */
+	.addr = (void *)gs_tran_buffer,    /* memory address */
+	.pid = PDCA_PID_USART0_TX,         /* select peripheral - USART0 TX line.*/
+	.size = BUFFER_SIZE,               /* transfer counter */
+	.r_addr = (void *)gs_tran_buffer,  /* next memory address */
+	.r_size = BUFFER_SIZE,             /* next transfer counter */
 	.transfer_size = PDCA_MR_SIZE_BYTE /* select size of the transfer */
 };
 

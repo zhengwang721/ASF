@@ -3,7 +3,7 @@
  *
  * \brief Peripheral DMA Controller Example for SAM4L.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -51,11 +51,11 @@
  *
  * \section Requirements
  *
- * This example can be used on SAM4L-EK boards.
+ * This example can be used on SAM4L series.
  *
  * \section Description
  *
- * The SAM4L controller send data in ascii_anim1.h and ascii_anim2.h from USART
+ * The SAM4L controller sends data in ascii_anim1.h and ascii_anim2.h from USART
  * to the terminal.
  *
  * \section Usage
@@ -92,7 +92,6 @@
 #include "conf_board.h"
 
 #define PDCA_TX_CHANNEL  0
-#define PDCA_PID_USART2_TX    20
 
 #define STRING_EOL    "\r"
 #define STRING_HEADER "-- PDCA_USART Example --\r\n" \
@@ -117,12 +116,12 @@ const char ascii_anim2[] =
 
 /* PDCA channel options */
 static const pdca_channel_config_t PDCA_TX_CONFIGS = {
-	.addr = (void *)ascii_anim1,   /* memory address */
-	.pid = PDCA_PID_USART2_TX,     /* select peripheral */
-	.size = sizeof(ascii_anim1),   /* transfer counter */
-	.r_addr = 0,                   /* next memory address */
-	.r_size = 0,                   /* next transfer counter */
-	.ring = false,                 /* disable ring buffer mode */
+	.addr   = (void *)ascii_anim1,      /* memory address              */
+	.pid    = PDCA_PID_USART_TX,        /* select peripheral           */
+	.size   = sizeof(ascii_anim1),      /* transfer counter            */
+	.r_addr = 0,                        /* next memory address         */
+	.r_size = 0,                        /* next transfer counter       */
+	.ring   = false,                    /* disable ring buffer mode    */
 	.transfer_size = PDCA_MR_SIZE_BYTE  /* select size of the transfer */
 };
 
