@@ -154,7 +154,6 @@ enum status_code rtc_count_unregister_callback(
  *
  * Enables the callback specified by the callback_type.
  *
- * \param[in,out] module        Pointer to the software module struct
  * \param[in]     callback_type Callback type to enable
  */
 void rtc_count_enable_callback(
