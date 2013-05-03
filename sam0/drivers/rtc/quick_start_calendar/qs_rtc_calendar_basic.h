@@ -65,7 +65,11 @@
  * \subsection asfdoc_samd20_rtc_calendar_basic_use_case_cal_basic_use_workflow Workflow
  * -# Make configuration structure.
  *  \snippet qs_rtc_calendar_basic.c set_conf
- * -# Set default in configuration structure.
+ * -# Fill the configuration structure with the default driver configuration.
+ *  \note This should always be performed before using the configuration
+ *        struct to ensure that all values are initialized to known default
+ *        settings.
+ *
  *  \snippet qs_rtc_calendar_basic.c get_default
  * -# Make time structure for alarm and set with default and desired values.
  *  \snippet qs_rtc_calendar_basic.c time_struct

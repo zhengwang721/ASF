@@ -66,7 +66,11 @@
  * -# Create a RTC configuration structure to hold the desired RTC driver
  *    settings.
  *  \snippet qs_rtc_count_basic.c set_conf
- * -# Fill the RTC configuration structure with the default driver settings.
+ * -# Fill the configuration structure with the default driver configuration.
+ *  \note This should always be performed before using the configuration
+ *        struct to ensure that all values are initialized to known default
+ *        settings.
+ *
  *  \snippet qs_rtc_count_basic.c get_default
  * -# Alter the RTC driver configuration to run in 16-bit counting mode, with
  *    continuous counter register updates.

@@ -78,6 +78,10 @@
  *  \snippet qs_rtc_count_callback.c run_conf
  * -# Create a RTC configuration structure to hold the desired RTC driver
  *    settings and fill it with the default driver configuration values.
+ *  \note This should always be performed before using the configuration
+ *        struct to ensure that all values are initialized to known default
+ *        settings.
+ *
  *   \snippet qs_rtc_count_callback.c init_conf
  * -# Alter the RTC driver configuration to run in 16-bit counting mode, with
  *    continuous counter register updates and a compare value of 1000ms.

@@ -76,7 +76,12 @@
  *  \snippet qs_rtc_calendar_callback.c time
  * -# Configure and enable module.
  *  \snippet qs_rtc_calendar_callback.c run_conf
- *  -# Create and initialize configuration structure.
+ *  -# Create a RTC configuration structure to hold the desired RTC driver
+ *     settings and fill it with the default driver configuration values.
+ *   \note This should always be performed before using the configuration
+ *         struct to ensure that all values are initialized to known default
+ *         settings.
+ *
  *   \snippet qs_rtc_calendar_callback.c init_conf
  *  -# Create and initialize an alarm.
  *   \snippet qs_rtc_calendar_callback.c time_struct
