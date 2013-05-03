@@ -45,9 +45,9 @@
  * \page asfdoc_samd20_system_gclk_basic_use_case Quick Start Guide for SYSTEM CLOCK - GCLK Configuration
  *
  * In this use case, the GCLK module is configured for:
- *  \li One generator attached to source channel 0
+ *  \li One generator attached to the internal 8MHz RC oscillator clock source
  *  \li Generator output equal to input frequency divided by a factor of 128
- *  \li One channel (index 0) enabled with the enabled generator selected
+ *  \li One channel (connected to the TC0 module) enabled with the enabled generator selected
  *
  * This use case configures a clock channel to output a clock for a peripheral
  * within the device, by first setting up a clock generator from a master clock
