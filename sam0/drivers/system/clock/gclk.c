@@ -43,6 +43,7 @@
 
 #include <gclk.h>
 #include <clock.h>
+#include <system_interrupt.h>
 
 /**
  * \brief Initializes the GCLK driver.
@@ -143,6 +144,8 @@ void system_gclk_gen_set_config(
 		/* Wait for synchronization */
 	};
 
+	system_interrupt_enter_critical_section();
+
 	/* Select the correct generator */
 	*((uint8_t*)&GCLK->GENDIV.reg) = generator;
 
@@ -156,6 +159,8 @@ void system_gclk_gen_set_config(
 		/* Wait for synchronization */
 	};
 	GCLK->GENCTRL.reg = new_genctrl_config | (GCLK->GENCTRL.reg & GCLK_GENCTRL_GENEN);
+
+	system_interrupt_leave_critical_section();
 }
 
 /**
@@ -173,6 +178,8 @@ void system_gclk_gen_enable(
 		/* Wait for synchronization */
 	};
 
+	system_interrupt_enter_critical_section();
+
 	/* Select the requested generator */
 	*((uint8_t*)&GCLK->GENCTRL.reg) = generator;
 	while (system_gclk_is_syncing()) {
@@ -181,6 +188,8 @@ void system_gclk_gen_enable(
 
 	/* Enable generator */
 	GCLK->GENCTRL.reg |= GCLK_GENCTRL_GENEN;
+
+	system_interrupt_leave_critical_section();
 }
 
 /**
@@ -197,6 +206,9 @@ void system_gclk_gen_disable(
 	while (system_gclk_is_syncing()) {
 		/* Wait for synchronization */
 	};
+
+	system_interrupt_enter_critical_section();
+
 	/* Select the requested generator */
 	*((uint8_t*)&GCLK->GENCTRL.reg) = generator;
 	while (system_gclk_is_syncing()) {
@@ -208,6 +220,8 @@ void system_gclk_gen_disable(
 	while (GCLK->GENCTRL.reg & GCLK_GENCTRL_GENEN) {
 		/* Wait for clock to become disabled */
 	}
+
+	system_interrupt_leave_critical_section();
 }
 
 /**
@@ -226,11 +240,15 @@ uint32_t system_gclk_gen_get_hz(
 	while (system_gclk_is_syncing()) {
 		/* Wait for synchronization */
 	};
+
+	system_interrupt_enter_critical_section();
+
 	/* Select the appropriate generator */
 	*((uint8_t*)&GCLK->GENCTRL.reg) = generator;
 	while (system_gclk_is_syncing()) {
 		/* Wait for synchronization */
 	};
+
 	/* Get the frequency of the source connected to the GCLK generator */
 	uint32_t gen_input_hz = system_clock_source_get_hz(
 			(enum system_clock_source)GCLK->GENCTRL.bit.SRC);
@@ -246,6 +264,8 @@ uint32_t system_gclk_gen_get_hz(
 	};
 
 	uint32_t divider = GCLK->GENDIV.bit.DIV;
+
+	system_interrupt_leave_critical_section();
 
 	/* Check if the generator is using fractional or binary division */
 	if (!divsel && divider > 1) {
@@ -305,11 +325,15 @@ void system_gclk_chan_set_config(
 void system_gclk_chan_enable(
 		const uint8_t channel)
 {
+	system_interrupt_enter_critical_section();
+
 	/* Select the requested generator channel */
 	*((uint8_t*)&GCLK->CLKCTRL.reg) = channel;
 
 	/* Enable the generic clock */
 	GCLK->CLKCTRL.reg |= GCLK_CLKCTRL_CLKEN;
+
+	system_interrupt_leave_critical_section();
 }
 
 /**
@@ -323,6 +347,8 @@ void system_gclk_chan_enable(
 void system_gclk_chan_disable(
 		const uint8_t channel)
 {
+	system_interrupt_enter_critical_section();
+
 	/* Select the requested generator channel */
 	*((uint8_t*)&GCLK->CLKCTRL.reg) = channel;
 
@@ -331,6 +357,8 @@ void system_gclk_chan_disable(
 	while (GCLK->CLKCTRL.reg & GCLK_CLKCTRL_CLKEN) {
 		/* Wait for clock to become disabled */
 	}
+
+	system_interrupt_leave_critical_section();
 }
 
 /**
@@ -346,9 +374,16 @@ void system_gclk_chan_disable(
 uint32_t system_gclk_chan_get_hz(
 		const uint8_t channel)
 {
+	uint8_t gen_id;
+
+	system_interrupt_enter_critical_section();
+
 	/* Select the requested generic clock channel */
 	*((uint8_t*)&GCLK->CLKCTRL.reg) = channel;
+	gen_id = GCLK->CLKCTRL.bit.GEN;
+
+	system_interrupt_leave_critical_section();
 
 	/* Return the clock speed of the associated GCLK generator */
-	return system_gclk_gen_get_hz(GCLK->CLKCTRL.bit.GEN);
+	return system_gclk_gen_get_hz(gen_id);
 }
