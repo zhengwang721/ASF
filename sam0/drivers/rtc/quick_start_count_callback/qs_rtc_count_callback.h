@@ -51,12 +51,12 @@
  * A callback is implemented for when the RTC overflows.
  *
  * \section asfdoc_samd20_rtc_count_callback_use_case_prereq Prerequisites
- * The clocks need be be set up correctly in the clock domain, and the drivers
- * also needs to be included in the project.
+ * The Generic Clock Generator for the RTC should be configured and enabled; if
+ * you are using the System Clock driver, this may be done via \c conf_clocks.h.
  *
  * \section asfdoc_samd20_rtc_count_callback_use_case_setup Setup
- * Set up the RTC as intended.
- * \section asfdoc_samd20_rtc_count_callback_use_case_setup_code Code
+ *
+ * \subsection asfdoc_samd20_rtc_count_callback_use_case_setup_code Code
  * The following must be added to the user application:
  *
  * Function for setting up the module:
@@ -71,20 +71,22 @@
  * Add to user application main():
  * \snippet qs_rtc_count_callback.c run_initialize_rtc
  *
- * \section asfdoc_samd20_rtc_count_callback_use_case_setup_workflow Workflow
+ * \subsection asfdoc_samd20_rtc_count_callback_use_case_setup_workflow Workflow
  * -# Initialize system.
  *  \snippet qs_rtc_count_callback.c system_init
  * -# Configure and enable module.
  *  \snippet qs_rtc_count_callback.c run_conf
- *  -# Create and initialize configuration structure.
+ * -# Create a RTC configuration structure to hold the desired RTC driver
+ *    settings and fill it with the default driver configuration values.
  *   \snippet qs_rtc_count_callback.c init_conf
- *  -# Change settings in the configuration.
+ * -# Alter the RTC driver configuration to run in 16-bit counting mode, with
+ *    continuous counter register updates and a compare value of 1000ms.
  *   \snippet qs_rtc_count_callback.c set_config
- *  -# Initialize the module with the set configurations.
+ * -# Initialize the RTC module.
  *   \snippet qs_rtc_count_callback.c init_rtc
- *  -# Enable the module.
+ * -# Enable the RTC module, so that is may begin counting.
  *   \snippet qs_rtc_count_callback.c enable
- * -# Configure callback funtionality.
+ * -# Configure callback functionality.
  *  \snippet qs_rtc_count_callback.c run_callback
  *  -# Register overflow callback.
  *   \snippet qs_rtc_count_callback.c reg_callback
@@ -94,6 +96,7 @@
  *  \snippet qs_rtc_count_callback.c period
  *
  * \section asfdoc_samd20_rtc_count_callback_use_case_implementation Implementation
+ *
  * \subsection asfdoc_samd20_rtc_count_callback_use_case_implementation_code Code
  * Add to user application main:
  * \snippet qs_rtc_count_callback.c while
@@ -104,6 +107,6 @@
  * \section asfdoc_samd20_rtc_count_callback_use_case_callback Callback
  * Each time the RTC counter overflows, the callback function will be called.
  * \subsection asfdoc_samd20_rtc_count_callback_use_case_callback_workflow Workflow
- * -# Change period:
- *  \snippet qs_rtc_count_callback.c set_per
+ * -# Perform the desired user action for each RTC overflow:
+ *  \snippet qs_rtc_count_callback.c overflow_act
  */

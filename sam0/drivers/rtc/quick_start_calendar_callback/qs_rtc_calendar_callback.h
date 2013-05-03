@@ -49,12 +49,12 @@
  * and the board LED toggled.
  *
  * \section asfdoc_samd20_rtc_calendar_callback_use_case_prereq Prerequisites
- * The clocks need be be set up correctly in the clock domain, and the drivers
- * also needs to be included in the project.
+ * The Generic Clock Generator for the RTC should be configured and enabled; if
+ * you are using the System Clock driver, this may be done via \c conf_clocks.h.
  *
  * \section asfdoc_samd20_rtc_calendar_callback_use_case_setup Setup
- * Set up the RTC as intended.
- * \section asfdoc_samd20_rtc_calendar_callback_use_case_setup_code Code
+ *
+ * \subsection asfdoc_samd20_rtc_calendar_callback_use_case_setup_code Code
  * The following must be added to the user application:
  *
  * Function for setting up the module:
@@ -66,10 +66,10 @@
  * Function for setting up the callback functionality of the driver:
  * \snippet qs_rtc_calendar_callback.c setup_callback
 *
- * Add to user application main():
+ * Add to user application \c main():
  * \snippet qs_rtc_calendar_callback.c run_initialize_rtc
  *
- * \section asfdoc_samd20_rtc_calendar_callback_use_case_setup_workflow Workflow
+ * \subsection asfdoc_samd20_rtc_calendar_callback_use_case_setup_workflow Workflow
  * -# Initialize system.
  *  \snippet qs_rtc_calendar_callback.c system_init
  * -# Create and initialize a time structure.
@@ -101,7 +101,7 @@
  * \snippet qs_rtc_calendar_callback.c while
  * \subsection asfdoc_samd20_rtc_calendar_callback_use_case_implementation_workflow Workflow
  * -# Infinite while loop while waiting for callbacks.
- *  \snippet qs_rtc_calendar_callback.c while
+ *  \snippet qs_rtc_calendar_callback.c main_loop
  *
  * \section asfdoc_samd20_rtc_calendar_callback_use_case_callback Callback
  * Each time the RTC time matches the configured alarm, the callback function

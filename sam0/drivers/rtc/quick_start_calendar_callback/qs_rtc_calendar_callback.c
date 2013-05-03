@@ -152,11 +152,12 @@ int main(void)
 //! [set_time]
 	rtc_calendar_set_time(&time);
 //! [set_time]
-
 //! [run_initialize_rtc]
 
 //! [while]
+//! [main_loop]
 	while (true) {
+//! [main_loop]
 		/* Infinite loop */
 	}
 //! [while]

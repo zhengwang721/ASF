@@ -49,8 +49,8 @@
  * will be toggled once the current time matches the set time.
  *
  * \section asfdoc_samd20_rtc_calendar_basic_use_case_prereq Prerequisites
- * The clocks need be be set up correctly in the clock domain, and the drivers
- * also needs to be included in the project.
+ * The Generic Clock Generator for the RTC should be configured and enabled; if
+ * you are using the System Clock driver, this may be done via \c conf_clocks.h.
  *
  * \section asfdoc_samd20_rtc_calendar_basic_use_case_setup Setup
  *
@@ -59,7 +59,7 @@
  * \snippet qs_rtc_calendar_basic.c initiate
  *
  * \subsection asfdoc_samd20_rtc_calendar_basic_use_case_main_code Add to Main
- * Add the following to your main().
+ * Add the following to \c main().
  * \snippet qs_rtc_calendar_basic.c add_main
  *
  * \subsection asfdoc_samd20_rtc_calendar_basic_use_case_cal_basic_use_workflow Workflow
@@ -77,5 +77,16 @@
  *  \snippet qs_rtc_calendar_basic.c enable
  *
  * \section asfdoc_samd20_rtc_calendar_basic_use_case_count_basic_implement Implementation
- * There is no implementation for this quick start.
+ * Add the following to \c main().
+ * \snippet qs_rtc_calendar_basic.c main_imp
+ *
+ * \subsection asfdoc_samd20_rtc_calendar_basic_use_case_count_basic_workflow Workflow
+ * -# Start an infinite loop, to continuously poll for a RTC alarm match.
+ * \snippet qs_rtc_calendar_basic.c main_loop
+ * -# Check to see if a RTC alarm match has occurred.
+ * \snippet qs_rtc_calendar_basic.c check_alarm_match
+ * -# Once an alarm match occurs, perform the desired user action.
+ * \snippet qs_rtc_calendar_basic.c alarm_match_action
+ * -# Clear the alarm match, so that future alarms may occur.
+ * \snippet qs_rtc_calendar_basic.c clear_alarm_match
  */
