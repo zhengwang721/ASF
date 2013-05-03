@@ -240,10 +240,6 @@
 #include <compiler.h>
 #include <gclk.h>
 
-/* TODO: Add to conf_clock.h, set default value */
-#define CONF_CLOCK_TIMEOUT 0xFFFFFFFF
-
-
 /**
  * \brief Available start-up times for the XOSC32K
  *
