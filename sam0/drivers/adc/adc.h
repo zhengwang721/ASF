@@ -137,11 +137,39 @@
  * sampling rate to be reduced.
  *
  * \subsection asfdoc_samd20_adc_module_overview_resolution ADC Resolution
- * The ADC supports full 8-bit, 10-bit or 12-bit resolution. Additionally,
- * hardware oversampling and decimation modes can be configured to increase the
- * effective resolution at the expense of throughput. In oversampling and
+ * The ADC supports full 8-bit, 10-bit or 12-bit resolution. Hardware
+ * oversampling and decimation can be used to increase the
+ * effective resolution at the expense of throughput. Using oversampling and
  * decimation mode the ADC resolution is increased from 12-bits to an effective
- * 13, 14, 15 or 16-bits.
+ * 13, 14, 15 or 16-bits. In these modes the conversion rate is reduced, as
+ * a greater number of samples is used to achieve the increased resolution. The
+ * available resolutions and effective conversion rate is listed in
+ * \ref asfdoc_samd20_adc_module_conversion_rate "the table below".
+ *
+ * \anchor asfdoc_samd20_adc_module_conversion_rate
+ * <table>
+ *	<caption>Effective ADC conversion speed using oversampling</caption>
+ *	<tr>
+ *		<td>Resolution</td>
+ *		<td>Effective conversion rate</td>
+ *	</tr>
+ *	<tr>
+ *		<td>13-bits</td>
+ *		<td>conversion rate divided by 4</td>
+ *	</tr>
+ *	<tr>
+ *		<td>14-bits</td>
+ *		<td>Conversion rate divided by 16</td>
+ *	</tr>
+ *	<tr>
+ *		<td>15-bits</td>
+ *		<td>Conversion rate divided by 64</td>
+ *	</tr>
+ *	<tr>
+ *		<td>16-bits</td>
+ *		<td>Conversion rate divided by 256</td>
+ *	</tr>
+ * </table>
  *
  * \subsection asfdoc_samd20_adc_module_overview_conversion Conversion Modes
  * ADC conversions can be software triggered on demand by the user application,
@@ -177,7 +205,16 @@
  * multiple samples in hardware. This feature is suitable when operating in
  * noisy conditions.
  *
- * The effective ADC sample rate will be reduced when averaging is enabled,
+ * You can specify any number of samples to accumulate (up to 1024) and the
+ * divide ratio to use (up to divide by 128). To modify these settings the
+ * ADC_RESOLUTION_CUSTOM needs to be set as the resolution. When this is set
+ * the number of samples to accumulate and the division ratio can be set by
+ * the configuration struct members \ref accumulate_samples and \ref divide_result
+ * When using this mode the ADC result register will be set to be 16-bits wide
+ * to accommodate the larger result sizes produced by the accumulator.
+ *
+ * The effective ADC conversion rate will be reduced by a factor of the number
+ * of accumulated samples;
  * however the effective resolution will be increased according to
  * \ref asfdoc_samd20_adc_module_hw_av_resolution "the table below".
  *
