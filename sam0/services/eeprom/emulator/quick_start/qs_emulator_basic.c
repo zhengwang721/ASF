@@ -42,57 +42,54 @@
  */
 #include <asf.h>
 
-int main(void)
+void configure_eeprom(void);
+
+//! [setup]
+void configure_eeprom(void)
 {
-//! [main]
-//! [variable]
-	uint8_t write_buffer[EEPROM_PAGE_SIZE] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf};
-	uint8_t read_buffer[EEPROM_PAGE_SIZE];
-//! [variable]
+	/* Setup EEPROM emulator service */
+//! [init_eeprom_service]
+	enum status_code error_code = eeprom_emulator_init();
+//! [init_eeprom_service]
 
-	/* Setup EEPROM emulator service*/
-//! [init_eeprom_emulator]
-	enum status_code error_code;
-
-	error_code = eeprom_emulator_init();
-
+//! [check_init_ok]
 	if (error_code == STATUS_ERR_NO_MEMORY) {
 		while (true) {
 			/* No EEPROM section has been set in the device's fuses */
 		}
 	}
+//! [check_init_ok]
+//! [check_re-init]
 	else if (error_code != STATUS_OK) {
+		/* Erase the emulated EEPROM memory (assume it is unformatted or
+		 * irrecoverably corrupt) */
 		eeprom_emulator_erase_memory();
 		eeprom_emulator_init();
 	}
+//! [check_re-init]
+}
+//! [setup]
 
-//! [init_eeprom_emulator]
+int main(void)
+{
+	system_init();
 
-	/* Write data to page 0 */
-//! [write_data]
-	eeprom_emulator_write_page(0, write_buffer);
-//! [write_data]
+//! [setup_main]
+	configure_eeprom();
+//! [setup_main]
 
-//! [read_data]
-	eeprom_emulator_read_page(0, read_buffer);
-//! [read_data]
+//! [main]
+	uint8_t page_data[EEPROM_PAGE_SIZE];
 
-//! [write_back_to_page_1]
-	eeprom_emulator_write_page(1, read_buffer);
-//! [write_back_to_page_1]
-
-//! [flush_cache]
+	eeprom_emulator_read_page(0, page_data);
+	page_data[0] ^= 0x01;
+	eeprom_emulator_write_page(0, page_data);
 	eeprom_emulator_flush_page_buffer();
-//! [flush_cache]
 
-	for (uint8_t i = 0; i < 10; i++) {
-		eeprom_emulator_write_page(1, write_buffer);
-		eeprom_emulator_flush_page_buffer();
-	}
+	port_pin_set_output_level(LED_0_PIN, (page_data[0] & 0x01));
 
-//! [inf_loop]
 	while (true) {
+
 	}
-//! [inf_loop]
 //! [main]
 }
