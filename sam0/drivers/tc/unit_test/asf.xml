@@ -8,6 +8,9 @@
 		<build type="include-path" value="."/>
 		<require idref="sam0.utils" />
 		<require idref="sam0.drivers.tc"/>
+		<require idref="sam0.drivers.events"/>
+		<require idref="sam0.drivers.extint"/>
+		<require idref="sam0.drivers.system.pinmux"/>
 		<require idref="common.utils.unit_test"/>
 		<require idref="sam0.utils.stdio.stdio_serial"/>
 		<device-support value="samd20"/>
