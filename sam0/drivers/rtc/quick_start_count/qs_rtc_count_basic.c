@@ -62,7 +62,6 @@ void configure_rtc_count(void)
 //! [set_config]
 //! [init_rtc]
 	rtc_count_init(&config);
-
 //! [init_rtc]
 
 //! [enable]
@@ -87,15 +86,21 @@ int main(void)
 	rtc_count_set_period(2000);
 //! [period]
 
+//! [main_loop]
 	while (true) {
-//! [poll]
+//! [main_loop]
+//! [check_match]
 		if (rtc_count_is_compare_match(RTC_COUNT_COMPARE_0)) {
+//! [check_match]
+//! [compare_match_action]
 			/* Do something on RTC count match here */
 			port_pin_toggle_output_level(LED_0_PIN);
+//! [compare_match_action]
 
+//! [clear_compare_match]
 			rtc_count_clear_compare_match(RTC_COUNT_COMPARE_0);
+//! [clear_compare_match]
 		}
-//! [poll]
 	}
 //! [implementation_code]
 

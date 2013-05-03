@@ -650,6 +650,7 @@ void system_clock_init(void)
 	gclk_generator_conf.source_clock    = CONF_CLOCK_GCLK_1_CLOCK_SOURCE;
 	gclk_generator_conf.division_factor = CONF_CLOCK_GCLK_1_PRESCALER;
 	gclk_generator_conf.run_in_standby  = CONF_CLOCK_GCLK_1_RUN_IN_STANDBY;
+	gclk_generator_conf.output_enable   = CONF_CLOCK_GCLK_1_OUTPUT_ENABLE;
 	system_gclk_gen_set_config(1, &gclk_generator_conf);
 	system_gclk_gen_enable(1);
 #  endif
@@ -658,6 +659,7 @@ void system_clock_init(void)
 	gclk_generator_conf.source_clock    = CONF_CLOCK_GCLK_2_CLOCK_SOURCE;
 	gclk_generator_conf.division_factor = CONF_CLOCK_GCLK_2_PRESCALER;
 	gclk_generator_conf.run_in_standby  = CONF_CLOCK_GCLK_2_RUN_IN_STANDBY;
+	gclk_generator_conf.output_enable   = CONF_CLOCK_GCLK_2_OUTPUT_ENABLE;
 	system_gclk_gen_set_config(2, &gclk_generator_conf);
 	system_gclk_gen_enable(2);
 #  endif
@@ -666,6 +668,7 @@ void system_clock_init(void)
 	gclk_generator_conf.source_clock    = CONF_CLOCK_GCLK_3_CLOCK_SOURCE;
 	gclk_generator_conf.division_factor = CONF_CLOCK_GCLK_3_PRESCALER;
 	gclk_generator_conf.run_in_standby  = CONF_CLOCK_GCLK_3_RUN_IN_STANDBY;
+	gclk_generator_conf.output_enable   = CONF_CLOCK_GCLK_3_OUTPUT_ENABLE;
 	system_gclk_gen_set_config(3, &gclk_generator_conf);
 	system_gclk_gen_enable(3);
 #  endif
@@ -674,6 +677,7 @@ void system_clock_init(void)
 	gclk_generator_conf.source_clock    = CONF_CLOCK_GCLK_4_CLOCK_SOURCE;
 	gclk_generator_conf.division_factor = CONF_CLOCK_GCLK_4_PRESCALER;
 	gclk_generator_conf.run_in_standby  = CONF_CLOCK_GCLK_4_RUN_IN_STANDBY;
+	gclk_generator_conf.output_enable   = CONF_CLOCK_GCLK_4_OUTPUT_ENABLE;
 	system_gclk_gen_set_config(4, &gclk_generator_conf);
 	system_gclk_gen_enable(4);
 #  endif
@@ -682,6 +686,7 @@ void system_clock_init(void)
 	gclk_generator_conf.source_clock    = CONF_CLOCK_GCLK_5_CLOCK_SOURCE;
 	gclk_generator_conf.division_factor = CONF_CLOCK_GCLK_5_PRESCALER;
 	gclk_generator_conf.run_in_standby  = CONF_CLOCK_GCLK_5_RUN_IN_STANDBY;
+	gclk_generator_conf.output_enable   = CONF_CLOCK_GCLK_5_OUTPUT_ENABLE;
 	system_gclk_gen_set_config(5, &gclk_generator_conf);
 	system_gclk_gen_enable(5);
 #  endif
@@ -690,7 +695,7 @@ void system_clock_init(void)
 	gclk_generator_conf.source_clock    = CONF_CLOCK_GCLK_6_CLOCK_SOURCE;
 	gclk_generator_conf.division_factor = CONF_CLOCK_GCLK_6_PRESCALER;
 	gclk_generator_conf.run_in_standby  = CONF_CLOCK_GCLK_6_RUN_IN_STANDBY;
-	gclk_generator_conf.output_enable   = true;
+	gclk_generator_conf.output_enable   = CONF_CLOCK_GCLK_6_OUTPUT_ENABLE;
 	system_gclk_gen_set_config(6, &gclk_generator_conf);
 	system_gclk_gen_enable(6);
 #  endif
@@ -699,6 +704,7 @@ void system_clock_init(void)
 	gclk_generator_conf.source_clock    = CONF_CLOCK_GCLK_7_CLOCK_SOURCE;
 	gclk_generator_conf.division_factor = CONF_CLOCK_GCLK_7_PRESCALER;
 	gclk_generator_conf.run_in_standby  = CONF_CLOCK_GCLK_7_RUN_IN_STANDBY;
+	gclk_generator_conf.output_enable   = CONF_CLOCK_GCLK_7_OUTPUT_ENABLE;
 	system_gclk_gen_set_config(7, &gclk_generator_conf);
 	system_gclk_gen_enable(7);
 #  endif
@@ -720,6 +726,7 @@ void system_clock_init(void)
 	gclk_generator_conf.source_clock    = CONF_CLOCK_GCLK_0_CLOCK_SOURCE;
 	gclk_generator_conf.division_factor = CONF_CLOCK_GCLK_0_PRESCALER;
 	gclk_generator_conf.run_in_standby  = CONF_CLOCK_GCLK_0_RUN_IN_STANDBY;
+	gclk_generator_conf.output_enable   = CONF_CLOCK_GCLK_0_OUTPUT_ENABLE;
 	system_gclk_gen_set_config(0, &gclk_generator_conf);
 	system_gclk_gen_enable(0);
 #  endif

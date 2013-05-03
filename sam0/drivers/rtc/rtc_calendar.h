@@ -257,7 +257,7 @@
  * The following Quick Start guides and application examples are available for this driver:
  * - \ref asfdoc_samd20_rtc_calendar_basic_use_case
  * \if RTC_CALENDAR_CALLBACK_MODE
- * - \subpage asfdoc_samd20_rtc_calendar_callback_use_case
+ * - \ref asfdoc_samd20_rtc_calendar_callback_use_case
  * \endif
  *
  *
