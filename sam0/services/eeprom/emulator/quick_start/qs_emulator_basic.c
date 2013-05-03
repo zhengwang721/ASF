@@ -74,19 +74,27 @@ int main(void)
 {
 	system_init();
 
-//! [setup_main]
+//! [setup_init]
 	configure_eeprom();
-//! [setup_main]
+//! [setup_init]
 
 //! [main]
+//! [read_page]
 	uint8_t page_data[EEPROM_PAGE_SIZE];
-
 	eeprom_emulator_read_page(0, page_data);
-	page_data[0] ^= 0x01;
+//! [read_page]
+
+//! [toggle_first_byte]
+	page_data[0] = !page_data[0];
+//! [toggle_first_byte]
+//! [set_led]
+	port_pin_set_output_level(LED_0_PIN, page_data[0]);
+//! [set_led]
+
+//! [write_page]
 	eeprom_emulator_write_page(0, page_data);
 	eeprom_emulator_flush_page_buffer();
-
-	port_pin_set_output_level(LED_0_PIN, (page_data[0] & 0x01));
+//! [write_page]
 
 	while (true) {
 
