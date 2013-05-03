@@ -521,6 +521,9 @@ bool system_clock_source_is_ready(
 	}
 }
 
+/* Include some checks for conf_clocks.h validation */
+#include "clock_config_check.h"
+
 /**
  * \brief Initialize clock system based on the configuration in conf_clocks.h
  *
