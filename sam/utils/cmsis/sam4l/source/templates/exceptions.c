@@ -62,7 +62,7 @@ extern "C" {
 /* @endcond */
 
 #ifdef __GNUC__
-/* Cortex-M3 core handlers */
+/* Cortex-M core handlers */
 void Reset_Handler      ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void NMI_Handler        ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void HardFault_Handler  ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
