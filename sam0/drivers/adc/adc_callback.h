@@ -89,6 +89,10 @@ static inline void adc_enable_callback(
 		/* Enable callback */
 		module->enabled_callback_mask |= (1 << callback_type);
 
+		/* Enable window interrupt if this is a window callback */
+		if (callback_type == ADC_CALLBACK_WINDOW) {
+			adc_enable_interrupt(module, ADC_INTERRUPT_WINDOW);
+		}
 }
 
 /**
@@ -115,6 +119,11 @@ static inline void adc_disable_callback(
 
 		/* Disable callback */
 		module->enabled_callback_mask &= ~(1 << callback_type);
+
+		/* Disable window interrupt if this is a window callback */
+		if (callback_type == ADC_CALLBACK_WINDOW) {
+			adc_disable_interrupt(module, ADC_INTERRUPT_WINDOW);
+		}
 }
 
 /** @} */
