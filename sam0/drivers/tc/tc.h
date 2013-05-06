@@ -895,13 +895,13 @@ static inline void tc_get_config_defaults(
 
 	config->channel_pwm_out_enabled[1]                        = false;
 	config->channel_pwm_out_pin[TC_COMPARE_CAPTURE_CHANNEL_1] = 0;
-	config->channel_pwm_out_mux[TC_COMPARE_CAPTURE_CHANNEL_0] = 0;
+	config->channel_pwm_out_mux[TC_COMPARE_CAPTURE_CHANNEL_1] = 0;
 
 	config->size_specific.size_16_bit.count                   = 0x0000;
 	config->size_specific.size_16_bit.compare_capture_channel\
 		[TC_COMPARE_CAPTURE_CHANNEL_0]                    = 0x0000;
 	config->size_specific.size_16_bit.compare_capture_channel\
-		[TC_COMPARE_CAPTURE_CHANNEL_0]                    = 0x0000;
+		[TC_COMPARE_CAPTURE_CHANNEL_1]                    = 0x0000;
 }
 
 enum status_code tc_init(
