@@ -163,6 +163,8 @@ static enum status_code _spi_set_config(
 	uint16_t baud = 0;
 	/* Value to write to CTRLA register */
 	uint32_t ctrla = 0;
+	/* Value to write to CTRLB register */
+	uint32_t ctrlb = 0;
 
 	/* Find baud value and write it */
 	if (config->mode == SPI_MODE_MASTER) {
@@ -189,7 +191,7 @@ static enum status_code _spi_set_config(
 		ctrla = config->slave.frame_format;
 
 		/* Set address mode */
-		spi_module->CTRLB.reg |= config->slave.address_mode;
+		ctrlb = config->slave.address_mode;
 
 		/* Set address and address mask*/
 		spi_module->ADDR.reg |=
@@ -198,7 +200,7 @@ static enum status_code _spi_set_config(
 
 		if (config->slave.preload_enable) {
 			/* Enable pre-loading of shift register */
-			spi_module->CTRLB.reg |= SERCOM_SPI_CTRLB_PLOADEN;
+			ctrlb |= SERCOM_SPI_CTRLB_PLOADEN;
 		}
 	}
 
@@ -212,7 +214,7 @@ static enum status_code _spi_set_config(
 	ctrla |= config->mux_setting;
 
 	/* Set SPI character size */
-	spi_module->CTRLB.reg |= config->character_size;
+	ctrlb |= config->character_size;
 
 	if (config->run_in_standby) {
 		/* Enable in sleep mode */
@@ -221,11 +223,14 @@ static enum status_code _spi_set_config(
 
 	if (config->receiver_enable) {
 		/* Enable receiver */
-		spi_module->CTRLB.reg |= SERCOM_SPI_CTRLB_RXEN;
+		ctrlb |= SERCOM_SPI_CTRLB_RXEN;
 	}
 
 	/* Write CTRLA register */
 	spi_module->CTRLA.reg |= ctrla;
+
+	/* Write CTRLB register */
+	spi_module->CTRLB.reg |= ctrlb;
 
 	return STATUS_OK;
 }
