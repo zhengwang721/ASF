@@ -164,16 +164,17 @@ static enum status_code _spi_set_config(
 	/* Value to write to CTRLA register */
 	uint32_t ctrla = 0;
 
-	/**
-	 * \todo need to get reference clockspeed from conf struct and gclk_get_hz
-	 */
-	uint32_t external_clock = system_gclk_chan_get_hz(SERCOM_GCLK_ID);
-
 	/* Find baud value and write it */
 	if (config->mode == SPI_MODE_MASTER) {
+		/* Find frequency of the internal SERCOMi_GCLK_ID_CORE */
+		uint32_t sercom_index = _sercom_get_sercom_inst_index(module->hw);
+		uint32_t gclk_index   = sercom_index + SERCOM0_GCLK_ID_CORE;
+		uint32_t internal_clock = system_gclk_chan_get_hz(gclk_index);
+
+		/* Get baud value, based on baudrate and the internal clock frequency */
 		enum status_code error_code = _sercom_get_sync_baud_val(
 				config->master.baudrate,
-				external_clock, &baud);
+				internal_clock, &baud);
 
 		if (error_code != STATUS_OK) {
 			/* Baud rate calculation error, return status code */
