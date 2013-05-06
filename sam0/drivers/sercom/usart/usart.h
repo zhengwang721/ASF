@@ -811,9 +811,9 @@ static inline void usart_disable_transceiver(
  * a selection of use cases. Note that QSGs can be compiled as a standalone
  * application or be added to the user application.
  *
- * - \ref asfdoc_samd20_sercom_usart_basic_use_case
+ * - \subpage asfdoc_samd20_sercom_usart_basic_use_case
  * \if USART_CALLBACK_MODE
- * - \ref asfdoc_samd20_sercom_usart_callback_use_case
+ * - \subpage asfdoc_samd20_sercom_usart_callback_use_case
  * \endif
  */
 
