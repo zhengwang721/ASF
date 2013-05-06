@@ -60,6 +60,19 @@ struct tc_config tc1_config;
 
 bool tc_init_success = false;
 
+volatile bool callback_function_entered = false;
+
+/**
+ * \internal
+ * \brief Function used to test callback API
+ *
+ * This function indicates that the callback function has been invoked. 
+ */
+void tc_callback_function(struct tc_module *const module_inst)
+{
+	callback_function_entered = true;
+}
+
 /**
  * \internal
  * \brief Test of tc_init() and tc_get_config_defaults()
@@ -145,17 +158,31 @@ static void run_reset_32bit_master_test(const struct test_case *test)
 	tc_disable(&tc1_module);
 }
 
+/**
+ * \internal
+ * \brief Test the callback API
+ *
+ * This test tests the callback API for the TC.
+ *
+ * \param test Current test case.
+ */
 static void run_callback_test(const struct test_case *test)
 {
 	test_assert_true(test, 
 			tc_init_success == true,
 			"TC initialization failed, skipping test");
-	/* Configure TC0 */
+
+	/* Setup TC0 */
 	tc_get_config_defaults(&tc0_config);
-	tc_init(&tc0_module, EXT1_PWM_MODULE, &tc0_config);
+	tc0_config.
+	tc_init(&tc0_module, TC0, &tc0_config);
 
-	tc_enable(&tc0_module);
+	/* setup callbacks */
+	tc_register_callback(&tc0_module, tc_callback_function, TC_CALBACK_CC_CHANNEL1);
+	tc_enable_callback(&tc0_module, TC_CALBACK_CC_CHANNEL1);
 
+	/* Enable global interrupts */
+	system_interrupt_enable_global();
 }
 
 /**
