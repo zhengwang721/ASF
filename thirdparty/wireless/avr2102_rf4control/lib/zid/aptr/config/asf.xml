@@ -9,7 +9,7 @@
 		<device-support-alias value="avr2102_rf4control_zid_aptr_support"/>
 	</module>
     <device-alias-map name="avr2102_rf4control_zid_aptr_support">
-        <device-support value="atmega256rfr2"/>		
-		<device-support value="atxmega256a3bu"/>	
+        <device-support value="atmega256rfr2"/>	
+		<device-support value="atxmega256a3bu"/>		
     </device-alias-map>
 </asf>
