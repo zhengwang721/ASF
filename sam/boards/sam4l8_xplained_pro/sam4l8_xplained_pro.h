@@ -54,35 +54,7 @@
  */
 
 /**
- * \defgroup sam4l_xplained_pro_config_group Configuration
- *
- * Symbols to use for configuring the board and its initialization.
- *
- * @{
- */
-#ifdef __DOXYGEN__
-
-//! \name Initialization
-//@{
-
-/**
- * \def CONF_BOARD_KEEP_WATCHDOG_AT_INIT
- * \brief Let watchdog remain enabled
- *
- * If this symbol is defined, the watchdog is left running with its current
- * configuration. Otherwise, it gets disabled during board initialization.
- */
-# ifndef CONF_BOARD_KEEP_WATCHDOG_AT_INIT
-#  define CONF_BOARD_KEEP_WATCHDOG_AT_INIT
-# endif
-
-//@}
-
-#endif // __DOXYGEN__
-/** @} */
-
-/**
- * \defgroup sam4l_xplained_pro_features_group Features
+ * \defgroup sam4l8_xplained_pro_features_group Features
  *
  * Symbols that describe features and capabilities of the board.
  *
@@ -90,8 +62,7 @@
  */
 
 //! Name string macro
-#define BOARD_NAME          "SAM4L8 Xplained Pro"
-#define MCU_SOC_NAME        "ATSAM4LC8C"
+#define BOARD_NAME "SAM4L8_XPLAINED_PRO"
 
 //! \name Board oscillator definitions
 //@{
@@ -110,16 +81,13 @@
 
 //! \name LED0 definitions
 //@{
-#define LED0                      PIN_PC07
-#define LED0_PIN                  PIN_PC07 /* Wrapper definition */
-#define LED0_GPIO                 PIN_PC07 /* Wrapper definition */
+#define LED0_PIN                  PIN_PC07
 #define LED0_ACTIVE               false
 #define LED0_INACTIVE             !LED0_ACTIVE
 //@}
 
 //! \name SW0 definitions
 //@{
-#define GPIO_PUSH_BUTTON_0        PIN_PC24 /* Wrapper definition */
 #define SW0_PIN                   PIN_PC24
 #define SW0_ACTIVE                false
 #define SW0_INACTIVE              !SW0_ACTIVE
@@ -149,8 +117,8 @@
 #define USB_VBUS_PIN              PIN_PC11
 #define USB_VBUS_FLAGS            IOPORT_MODE_GLITCH_FILTER
 #define USB_VBOF_PIN              PIN_PC12
-#define USB_VBOF_ACTIVE_LEVEL     1
-#define USB_VBOF_INACTIVE_LEVEL   0
+#define USB_VBOF_ACTIVE_LEVEL     true
+#define USB_VBOF_INACTIVE_LEVEL   !USB_VBOF_ACTIVE_LEVEL
 //@}
 
 //! \name USART connections to GPIO for Virtual Com Port
@@ -188,6 +156,9 @@
 #define LED_0_PIN                 LED0_PIN
 #define LED_0_ACTIVE              LED0_ACTIVE
 #define LED_0_INACTIVE            LED0_INACTIVE
+
+/* backup define */
+#define LED0_GPIO LED0_PIN
 //@}
 
 //! Number of on-board LEDs
@@ -208,7 +179,7 @@
 #define BUTTON_0_EIC_PIN_MUX      SW0_EIC_PIN_MUX
 #define BUTTON_0_EIC_LINE         SW0_EIC_LINE
 
-/* Definitions for SW0 when using it as EIC pin */
+/* backup define */
 #define GPIO_PUSH_BUTTON_EIC_PIN        PIN_PC24B_EIC_EXTINT1
 #define GPIO_PUSH_BUTTON_EIC_PIN_MASK   GPIO_PC24B_EIC_EXTINT1
 #define GPIO_PUSH_BUTTON_EIC_PIN_MUX    MUX_PC24B_EIC_EXTINT1
@@ -593,47 +564,6 @@
 #define EDBG_TWI_SCL_PIN          PIN_PA24B_TWIMS0_TWCK
 #define EDBG_TWI_SCL_MUX          MUX_PA24B_TWIMS0_TWCK
 //@}
-
-/*! \name Connections of the AT86RFX transceiver
- */
-//! @{
-#define AT86RFX_SPI                  SPI
-#define AT86RFX_RST_PIN              EXT1_PIN_7
-#define AT86RFX_IRQ_PIN              EXT1_PIN_9
-#define AT86RFX_SLP_PIN              EXT1_PIN_10
-#define AT86RFX_SPI_CS               0
-#define AT86RFX_SPI_MOSI             EXT1_PIN_16
-#define AT86RFX_SPI_MISO             EXT1_PIN_17
-#define AT86RFX_SPI_SCK              EXT1_PIN_18
-
-#define AT86RFX_INTC_INIT()         ioport_set_pin_dir(AT86RFX_IRQ_PIN, IOPORT_DIR_INPUT);\
-                                    ioport_set_pin_sense_mode(AT86RFX_IRQ_PIN, IOPORT_SENSE_RISING);\
-									arch_ioport_pin_to_base(AT86RFX_IRQ_PIN)->GPIO_IERS = arch_ioport_pin_to_mask(AT86RFX_IRQ_PIN);\
-									arch_ioport_pin_to_base(AT86RFX_IRQ_PIN)->GPIO_IMR0S = arch_ioport_pin_to_mask(AT86RFX_IRQ_PIN);\
-									NVIC_EnableIRQ(GPIO_11_IRQn)
-
-#define AT86RFX_ISR()               ISR(GPIO_11_Handler)
-
-/** Enables the transceiver main interrupt. */
-#define ENABLE_TRX_IRQ()            arch_ioport_pin_to_base(AT86RFX_IRQ_PIN)->GPIO_IERS = arch_ioport_pin_to_mask(AT86RFX_IRQ_PIN)
-
-/** Disables the transceiver main interrupt. */
-#define DISABLE_TRX_IRQ()           arch_ioport_pin_to_base(AT86RFX_IRQ_PIN)->GPIO_IERC = arch_ioport_pin_to_mask(AT86RFX_IRQ_PIN)
-
-/** Clears the transceiver main interrupt. */
-#define CLEAR_TRX_IRQ()             arch_ioport_pin_to_base(AT86RFX_IRQ_PIN)->GPIO_IFRC = arch_ioport_pin_to_mask(AT86RFX_IRQ_PIN)
-
-/*
- * This macro saves the trx interrupt status and disables the trx interrupt.
- */
-#define ENTER_TRX_REGION()         NVIC_DisableIRQ(GPIO_11_IRQn)
-
-/*
- *  This macro restores the transceiver interrupt status
- */
-#define LEAVE_TRX_REGION()         NVIC_EnableIRQ(GPIO_11_IRQn)
-
-//! @}
 
 /** @} */
 

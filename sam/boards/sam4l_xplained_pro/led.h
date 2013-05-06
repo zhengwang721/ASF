@@ -4,9 +4,7 @@
  * \brief SAM4L Xplained Pro board LEDs support package.
  *
  * This file contains definitions and services related to the LED features of
- * the SAM4L Xplained Pro board.
- *
- * To use this board, define BOARD=SAM4L_XPLAINED_PRO.
+ * the Xplained Pro board.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -55,7 +53,7 @@
 /**
  * \brief Turns off the specified LEDs.
  *
- * \param led LED to turn off (LEDx).
+ * \param led LED to turn off (LEDx_GPIO).
  *
  * \note The pins of the specified LEDs are set to GPIO output mode.
  */
@@ -64,7 +62,7 @@
 /**
  * \brief Turns on the specified LEDs.
  *
- * \param led LED to turn on (LEDx).
+ * \param led LED to turn on (LEDx_GPIO).
  *
  * \note The pins of the specified LEDs are set to GPIO output mode.
  */
@@ -73,7 +71,7 @@
 /**
  * \brief Toggles the specified LEDs.
  *
- * \param led LED to toggle (LEDx).
+ * \param led LED to toggle (LEDx_GPIO).
  *
  * \note The pins of the specified LEDs are set to GPIO output mode.
  */
