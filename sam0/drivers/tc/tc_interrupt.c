@@ -88,7 +88,8 @@ enum status_code tc_register_callback(
 /**
  * \brief Unregisters a callback
  *
- * Unregisters a callback function implemented by the user.
+ * Unregisters a callback function implemented by the user. The callback should be 
+ * disabled before it is unregistered.
  *
  * \param[in]     module Pointer to TC software instance struct
  * \param[in]     callback_type Callback type given by an enum
