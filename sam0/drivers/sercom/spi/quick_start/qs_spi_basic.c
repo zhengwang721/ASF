@@ -111,7 +111,7 @@ int main(void)
 //! [do]
 	/* Configure pad 3 for SCK */
 //! [sck]
-	config.pinmux_pad3 = PINMUX_PA19D_SERCOM3_PAD3;
+	config.pinmux_pad3 = PINMUX_PA11D_SERCOM2_PAD3;
 //! [sck]
 //! [init]
 	spi_init(&master, SERCOM2, &config);
