@@ -48,7 +48,7 @@ void tc_callback_to_change_duty_cycle(
 
 
 //! [module_inst]
-struct tc_module module_inst;
+struct tc_module pwm_tc_module;
 //! [module_inst]
 
 //! [callback_funcs]
@@ -85,11 +85,11 @@ void configure_tc(void)
 	//! [setup_change_config_pwm]
 
 	//! [setup_set_config]
-	tc_init(&module_inst, PWM_MODULE, &config);
+	tc_init(&pwm_tc_module, PWM_MODULE, &config);
 	//! [setup_set_config]
 
 	//! [setup_enable]
-	tc_enable(&module_inst);
+	tc_enable(&pwm_tc_module);
 	//! [setup_enable]
 }
 
@@ -97,13 +97,13 @@ void configure_tc_callbacks(void)
 {
 	//! [setup_register_callback]
 	tc_register_callback(
-			&module_inst,
+			&pwm_tc_module,
 			tc_callback_to_change_duty_cycle,
 			TC_CALLBACK_CC_CHANNEL0);
 	//! [setup_register_callback]
 
 	//! [setup_enable_callback]
-	tc_enable_callback(&module_inst, TC_CALLBACK_CC_CHANNEL0);
+	tc_enable_callback(&pwm_tc_module, TC_CALLBACK_CC_CHANNEL0);
 	//! [setup_enable_callback]
 }
 //! [setup]
