@@ -47,7 +47,7 @@
 #define BUF_LENGTH 20
 //! [buf_length]
 //! [slave_select_pin]
-#define SLAVE_SELECT_PIN PIN_PA16
+#define SLAVE_SELECT_PIN EXT1_PIN_SPI_SS_0
 //! [slave_select_pin]
 //! [buffer]
 static const uint8_t buffer[20] = {
@@ -55,30 +55,47 @@ static const uint8_t buffer[20] = {
 		 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x10, 0x11, 0x12, 0x13
 };
 //! [buffer]
+
+//! [dev_inst]
+struct spi_module slave;
+//! [dev_inst]
+
+//! [var]
+volatile bool transfer_complete = false;
+//! [var]
 //! [setup]
 
-int main(void)
+//! [callback]
+static void callback(const struct spi_module *const module)
 {
-//! [main]
-	/* Structures for config and software device instances */
+	transfer_complete = true;
+}
+//! [callback]
+
+//! [conf_callback]
+void configure_callback(void)
+{
+//! [reg_callback]
+	spi_register_callback(&master, callback, SPI_CALLBACK_BUFFER_TRANSMITTED);
+//! [reg_callback]
+//! [en_callback]
+	spi_enable_callback(&master, SPI_CALLBACK_BUFFER_TRANSMITTED);
+//! [en_callback]
+}
+//! [conf_callback]
+
+//! [configure_spi]
+void configure_spi(void)
+{
 //! [config]
 	struct spi_config config;
 //! [config]
-//! [dev_inst]
-	struct spi_module master;
-//! [dev_inst]
 //! [slave_config]
 	struct spi_slave_inst_config slave_dev_config;
 //! [slave_config]
 //! [slave_dev_inst]
 	struct spi_slave_inst slave;
 //! [slave_dev_inst]
-
-	/* Initialize system */
-//! [system_init]
-	system_init();
-//! [system_init]
-
 	/* Configure and initialize software device instance of peripheral slave */
 //! [slave_conf_defaults]
 	spi_slave_inst_get_config_defaults(&slave_dev_config);
@@ -89,45 +106,67 @@ int main(void)
 //! [slave_init]
 	spi_attach_slave(&slave, &slave_dev_config);
 //! [slave_init]
-
 	/* Configure, initialize and enable SERCOM SPI module */
 //! [conf_defaults]
 	spi_get_config_defaults(&config);
 //! [conf_defaults]
+//! [conf_preload]
+	config.slave.preload_enable = true;
+//! [conf_preload]
+//! [conf_format]
+	config.slave.frame_format = SPI_FRAME_FORMAT_SPI_FRAME;
+//! [conf_format]
 //! [mux_setting]
 	config.mux_setting = SPI_SIGNAL_MUX_SETTING_E;
 //! [mux_setting]
 	/* Configure pad 0 for data in */
 //! [di]
-	config.pinmux_pad0 = PINMUX_PA08D_SERCOM2_PAD0;
+	config.pinmux_pad0 = EXT1_SPI_MISO_PINMUX;
 //! [di]
 	/* Configure pad 1 as unused */
 //! [ss]
-	config.pinmux_pad1 = PINMUX_UNUSED;
+	config.pinmux_pad1 = EXT1_SPI_SS_PINMUX;
 //! [ss]
 	/* Configure pad 2 for data out */
 //! [do]
-	config.pinmux_pad2 = PINMUX_PA10D_SERCOM2_PAD2;
+	config.pinmux_pad2 = EXT1_SPI_MOSI_PINMUX;
 //! [do]
 	/* Configure pad 3 for SCK */
 //! [sck]
-	config.pinmux_pad3 = PINMUX_PA19D_SERCOM3_PAD3;
+	config.pinmux_pad3 = EXT1_SPI_SCK_PINMUX;
 //! [sck]
 //! [init]
-	spi_init(&master, SERCOM2, &config);
+	spi_init(&master, EXT1_SPI_MODULE, &config);
 //! [init]
 
 //! [enable]
 	spi_enable(&master);
 //! [enable]
+
+}
+//! [configure_spi]
+
+int main(void)
+{
+//! [main_start]
+	/* Initialize system */
+//! [system_init]
+	system_init();
+//! [system_init]
+
+	configure_spi();
+	configure_callback();
+//! [main_start]
+
+//! [main_use_case]
 //! [select_slave]
 	spi_select_slave(&master, &slave, true);
 //! [select_slave]
 //! [write]
-	spi_write_buffer_wait(&master, buffer, BUF_LENGTH);
+	spi_write_buffer_job(&master, buffer, BUF_LENGTH);
 //! [write]
 //! [wait]
-	while (spi_is_write_complete(&master) == false) {
+	while (!transfer_complete) {
 		/* Wait for write complete */
 	}
 //! [wait]
@@ -140,5 +179,5 @@ int main(void)
 		/* Infinite loop */
 	}
 //! [inf_loop]
-//! [main]
+//! [main_use_case]
 }
