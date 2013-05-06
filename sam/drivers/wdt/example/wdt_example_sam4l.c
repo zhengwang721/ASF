@@ -236,7 +236,7 @@ int main(void)
 		/* Simulate deadlock when button is pressed. */
 		if (g_b_button_event == true) {
 			puts("The program enters an infinite loop, the WDT reset will " \
-					"trigger in about 5s.\r");
+					"be triggered in about 5s.\r");
 			wdt_clear(&g_wdt_inst);
 			while (1) {
 				if (g_b_systick_event == true) {
