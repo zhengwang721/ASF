@@ -42,61 +42,70 @@
  */
 #include <asf.h>
 
-int main(void)
+void configure_usart(void);
+
+//! [module_inst]
+struct usart_module usart_edbg;
+//! [module_inst]
+
+//! [setup]
+void configure_usart(void)
 {
-//! [main]
-//! [module_inst]
-	struct usart_module usart_edbg;
-//! [module_inst]
-//! [config]
+//! [setup_config]
 	struct usart_config config_struct;
-//! [config]
-//! [temp_variable]
-	uint16_t temp;
-//! [temp_variable]
-
-	/* Initialize system clocks */
-//! [system_init]
-	system_init();
-//! [system_init]
-
-	/* Get configuration defaults for the USART
-	 * 9600 8N1
-	 */
-//! [conf_defaults]
+//! [setup_config]
+//! [setup_config_defaults]
 	usart_get_config_defaults(&config_struct);
-//! [conf_defaults]
-//! [conf_modify]
+//! [setup_config_defaults]
+
+//! [setup_change_config]
+	config_struct.baudrate     = 57600;
 	config_struct.mux_settings = USART_RX_1_TX_0_XCK_1;
 	config_struct.pinout_pad3  = EDBG_CDC_RX_PINMUX;
 	config_struct.pinout_pad2  = EDBG_CDC_TX_PINMUX;
-//! [conf_modify]
+//! [setup_change_config]
 
-	/* Apply configuration */
-//! [init]
+//! [setup_set_config]
 	while (usart_init(&usart_edbg,
 			EDBG_CDC_MODULE, &config_struct) != STATUS_OK) {
 	}
-//! [init]
+//! [setup_set_config]
 
-	/* Enable USART */
-//! [enable]
+//! [setup_enable]
 	usart_enable(&usart_edbg);
-//! [enable]
+//! [setup_enable]
 
-//! [enable_transceivers]
+//! [setup_enable_txrx]
 	usart_enable_transceiver(&usart_edbg, USART_TRANSCEIVER_TX);
 	usart_enable_transceiver(&usart_edbg, USART_TRANSCEIVER_RX);
-//! [enable_transceivers]
+//! [setup_enable_txrx]
+}
+//! [setup]
 
-	/* Echo back characters received */
-//! [echo_characters]
+int main(void)
+{
+	system_init();
+
+//! [setup_init]
+	configure_usart();
+//! [setup_init]
+
+//! [main]
+//! [main_rec_var]
+	uint16_t temp;
+//! [main_rec_var]
+
+//! [main_loop]
 	while (true) {
+//! [main_read]
 		if (usart_read_wait(&usart_edbg, &temp) == STATUS_OK) {
+//! [main_read]
+//! [main_write]
 			while (usart_write_wait(&usart_edbg, temp) != STATUS_OK) {
 			}
+//! [main_write]
 		}
 	}
-//! [echo_characters]
+//! [main_loop]
 //! [main]
 }
