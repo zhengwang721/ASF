@@ -628,7 +628,7 @@ bool nvm_is_page_locked(uint16_t page_number)
 	Nvmctrl *const nvm_module = NVMCTRL;
 
 	/* Get number of pages in a region */
-	pages_in_region = 16 / _nvm_dev.number_of_pages;
+	pages_in_region = _nvm_dev.number_of_pages / 16;
 
 	/* Get region for given page */
 	region_number = page_number / pages_in_region;
