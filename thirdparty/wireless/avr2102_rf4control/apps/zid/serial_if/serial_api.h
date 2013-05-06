@@ -34,7 +34,11 @@ extern "C" {
 
 void serial_interface_init(void);
 void serial_data_handler(void);
+/* Protocol Identifier of the RF4Control */
+#define RF4CONTROL_PID                         (2)
 
+/* RF4Control Protocol Identifier Length */
+#define RF4CONTROL_PID_LEN                     (1)
 
 #ifdef __cplusplus
 } /* extern "C" */
