@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D20 RTC Basic Usage Example
+ * \brief SAM D20 Xplained PRO board configuration.
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,68 +40,8 @@
  * \asf_license_stop
  *
  */
-#include <asf.h>
 
-void configure_rtc_count(void);
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-//! [initiate]
-void configure_rtc_count(void)
-{
-//! [set_conf]
-	struct rtc_count_config config;
-//! [set_conf]
-
-//! [get_default]
-	rtc_count_get_config_defaults(&config);
-//! [get_default]
-
-//! [set_config]
-	config.mode                = RTC_COUNT_MODE_16BIT;
-	config.continuously_update = true;
-	config.compare_values[0]   = 1000;
-//! [set_config]
-//! [init_rtc]
-	rtc_count_init(&config);
-//! [init_rtc]
-
-//! [enable]
-	rtc_count_enable();
-//! [enable]
-}
-//! [initiate]
-
-int main(void)
-{
-	/* Initialize system. Must configure conf_clocks.h first. */
-//! [system]
-	system_init();
-//! [system]
-
-//! [add_main]
-	configure_rtc_count();
-//! [add_main]
-
-//! [implementation_code]
-//! [period]
-	rtc_count_set_period(2000);
-//! [period]
-
-//! [main_loop]
-	while (true) {
-//! [main_loop]
-//! [check_match]
-		if (rtc_count_is_compare_match(RTC_COUNT_COMPARE_0)) {
-//! [check_match]
-//! [compare_match_action]
-			/* Do something on RTC count match here */
-			port_pin_toggle_output_level(LED_0_PIN);
-//! [compare_match_action]
-
-//! [clear_compare_match]
-			rtc_count_clear_compare_match(RTC_COUNT_COMPARE_0);
-//! [clear_compare_match]
-		}
-	}
-//! [implementation_code]
-
-}
+#endif /* CONF_BOARD_H_INCLUDED */

@@ -46,9 +46,6 @@ void configure_gclock_generator(void);
 void configure_gclock_channel(void);
 
 //! [setup]
-#define EXAMPLE_GCLOCK_GENERATOR    0
-#define EXAMPLE_GCLOCK_CHANNEL      0
-
 void configure_gclock_generator(void)
 {
 //! [setup_1]
@@ -59,15 +56,15 @@ void configure_gclock_generator(void)
 //! [setup_2]
 
 //! [setup_3]
-	gclock_gen_conf.source_clock    = 0;
+	gclock_gen_conf.source_clock    = SYSTEM_CLOCK_SOURCE_OSC8M;
 	gclock_gen_conf.division_factor = 128;
 //! [setup_3]
 //! [setup_4]
-	system_gclk_gen_set_config(EXAMPLE_GCLOCK_GENERATOR, &gclock_gen_conf);
+	system_gclk_gen_set_config(GCLK_GENERATOR_1, &gclock_gen_conf);
 //! [setup_4]
 
 //! [setup_5]
-	system_gclk_gen_enable(EXAMPLE_GCLOCK_GENERATOR);
+	system_gclk_gen_enable(GCLK_GENERATOR_1);
 //! [setup_5]
 }
 
@@ -81,14 +78,14 @@ void configure_gclock_channel(void)
 //! [setup_7]
 
 //! [setup_8]
-	gclk_chan_conf.source_generator = EXAMPLE_GCLOCK_GENERATOR;
+	gclk_chan_conf.source_generator = GCLK_GENERATOR_1;
 //! [setup_8]
 //! [setup_9]
-	system_gclk_chan_set_config(EXAMPLE_GCLOCK_CHANNEL, &gclk_chan_conf);
+	system_gclk_chan_set_config(TC0_GCLK_ID, &gclk_chan_conf);
 //! [setup_9]
 
 //! [setup_10]
-	system_gclk_chan_enable(EXAMPLE_GCLOCK_CHANNEL);
+	system_gclk_chan_enable(TC0_GCLK_ID);
 //! [setup_10]
 }
 //! [setup]

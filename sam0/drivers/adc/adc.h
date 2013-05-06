@@ -449,12 +449,25 @@ enum adc_clock_prescaler {
 enum adc_resolution {
 	/** ADC 12-bit resolution */
 	ADC_RESOLUTION_12BIT = ADC_CTRLB_RESSEL_12BIT,
-	/** ADC 16-bit resolution, for averaging mode output */
+	/** ADC 16-bit resolution using oversampling and decimation */
 	ADC_RESOLUTION_16BIT = ADC_CTRLB_RESSEL_16BIT,
 	/** ADC 10-bit resolution */
 	ADC_RESOLUTION_10BIT = ADC_CTRLB_RESSEL_10BIT,
 	/** ADC 8-bit resolution */
 	ADC_RESOLUTION_8BIT  = ADC_CTRLB_RESSEL_8BIT,
+	/** ADC 13-bit resolution using oversampling and decimation */
+	ADC_RESOLUTION_13BIT,
+	/** ADC 14-bit resolution using oversampling and decimation */
+	ADC_RESOLUTION_14BIT,
+	/** ADC 15-bit resolution using oversampling and decimation */
+	ADC_RESOLUTION_15BIT,
+	/** ADC 16-bit result register for use with averaging. When using this mode
+	  * the ADC result register will be set to 16-bit wide, and the number of
+	  * samples to accumulate and the division factor is configured by the
+	  * \ref accumulate_samples and \ref divide_result members in the configuration
+	  * struct
+	  */
+	ADC_RESOLUTION_CUSTOM,
 };
 
 /**
@@ -641,34 +654,64 @@ enum adc_negative_input {
 };
 
 /**
- * \brief ADC averaging selection enum
+ * \brief ADC number of accumulated samples enum
  *
- * Enum for the possible numbers of ADC samples to average.
+ * Enum for the possible numbers of ADC samples to accumulate.
+ * This setting is only used when the \ref ADC_RESOLUTION_CUSTOM
+ * resolution setting is used.
  *
  */
-enum adc_average_samples {
+enum adc_accumulate_samples {
 	/** No averaging */
-	ADC_AVERAGE_DISABLE      = ADC_AVGCTRL_SAMPLENUM_1,
+	ADC_ACCUMULATE_DISABLE      = ADC_AVGCTRL_SAMPLENUM_1,
 	/** Average 2 samples */
-	ADC_AVERAGE_SAMPLES_2    = ADC_AVGCTRL_SAMPLENUM_2,
+	ADC_ACCUMULATE_SAMPLES_2    = ADC_AVGCTRL_SAMPLENUM_2,
 	/** Average 4 samples */
-	ADC_AVERAGE_SAMPLES_4    = ADC_AVGCTRL_SAMPLENUM_4,
+	ADC_ACCUMULATE_SAMPLES_4    = ADC_AVGCTRL_SAMPLENUM_4,
 	/** Average 8 samples */
-	ADC_AVERAGE_SAMPLES_8    = ADC_AVGCTRL_SAMPLENUM_8,
+	ADC_ACCUMULATE_SAMPLES_8    = ADC_AVGCTRL_SAMPLENUM_8,
 	/** Average 16 samples */
-	ADC_AVERAGE_SAMPLES_16   = ADC_AVGCTRL_SAMPLENUM_16,
+	ADC_ACCUMULATE_SAMPLES_16   = ADC_AVGCTRL_SAMPLENUM_16,
 	/** Average 32 samples */
-	ADC_AVERAGE_SAMPLES_32   = ADC_AVGCTRL_SAMPLENUM_32,
+	ADC_ACCUMULATE_SAMPLES_32   = ADC_AVGCTRL_SAMPLENUM_32,
 	/** Average 64 samples */
-	ADC_AVERAGE_SAMPLES_64   = ADC_AVGCTRL_SAMPLENUM_64,
+	ADC_ACCUMULATE_SAMPLES_64   = ADC_AVGCTRL_SAMPLENUM_64,
 	/** Average 128 samples */
-	ADC_AVERAGE_SAMPLES_128  = ADC_AVGCTRL_SAMPLENUM_128,
+	ADC_ACCUMULATE_SAMPLES_128  = ADC_AVGCTRL_SAMPLENUM_128,
 	/** Average 265 samples */
-	ADC_AVERAGE_SAMPLES_265  = ADC_AVGCTRL_SAMPLENUM_256,
+	ADC_ACCUMULATE_SAMPLES_256  = ADC_AVGCTRL_SAMPLENUM_256,
 	/** Average 512 samples */
-	ADC_AVERAGE_SAMPLES_512  = ADC_AVGCTRL_SAMPLENUM_512,
+	ADC_ACCUMULATE_SAMPLES_512  = ADC_AVGCTRL_SAMPLENUM_512,
 	/** Average 1024 samples */
-	ADC_AVERAGE_SAMPLES_1024 = ADC_AVGCTRL_SAMPLENUM_1024,
+	ADC_ACCUMULATE_SAMPLES_1024 = ADC_AVGCTRL_SAMPLENUM_1024,
+};
+
+/**
+ * \brief ADC possible dividers for the result register
+ *
+ * Enum for the possible division factors to use when accumulating
+ * multiple samples. To keep the same resolution for the averaged
+ * result and the actual input value the division factor must
+ * be equal to the number of samples accumulated. This setting is only
+ * used when the \ref ADC_RESOLUTION_CUSTOM resolution setting is used.
+ */
+enum adc_divide_result {
+	/* Don't divide result register after accumulation */
+	ADC_DIVIDE_RESULT_DISABLE = 0,
+	/** Divide result register by 2 after accumulation */
+	ADC_DIVIDE_RESULT_2     = 1,
+	/** Divide result register by 4 after accumulation */
+	ADC_DIVIDE_RESULT_4     = 2,
+	/** Divide result register by 8 after accumulation */
+	ADC_DIVIDE_RESULT_8     = 3,
+	/** Divide result register by 16 after accumulation */
+	ADC_DIVIDE_RESULT_16    = 4,
+	/** Divide result register by 32 after accumulation */
+	ADC_DIVIDE_RESULT_32    = 5,
+	/** Divide result register by 64 after accumulation */
+	ADC_DIVIDE_RESULT_64    = 6,
+	/** Divide result register by 128 after accumulation */
+	ADC_DIVIDE_RESULT_128   = 7,
 };
 
 #if ADC_CALLBACK_MODE == true
@@ -790,23 +833,24 @@ struct adc_pin_scan_config {
  */
 struct adc_config {
 	/** GCLK generator used to clock the peripheral */
-	enum gclk_generator       clock_source;
+	enum gclk_generator           clock_source;
 	/** Voltage reference */
-	enum adc_reference       reference;
+	enum adc_reference            reference;
 	/** Clock prescaler */
-	enum adc_clock_prescaler clock_prescaler;
+	enum adc_clock_prescaler      clock_prescaler;
 	/** Result resolution */
-	enum adc_resolution      resolution;
+	enum adc_resolution           resolution;
 	/** Gain factor */
-	enum adc_gain_factor     gain_factor;
+	enum adc_gain_factor          gain_factor;
 	/** Positive MUX input */
-	enum adc_positive_input  positive_input;
+	enum adc_positive_input       positive_input;
 	/** Negative MUX input */
-	enum adc_negative_input  negative_input;
-	/** Number of samples to average when using 16-bit resolution */
-	enum adc_average_samples average_samples;
-	/** Oversampling and decimation mode */
-	enum adc_oversampling_and_decimation oversampling_and_decimation;
+	enum adc_negative_input       negative_input;
+	/** Number of ADC samples to accumulate when using the
+	  * ADC_RESOLUTION_CUSTOM mode */
+	enum adc_accumulate_samples   accumulate_samples;
+	/** Division ration when using the ADC_RESOLUTION_CUSTOM mode */
+	enum adc_divide_result        divide_result;
 	/** Left adjusted result */
 	bool left_adjust;
 	/** Enables differential mode if true */
@@ -904,7 +948,7 @@ enum status_code adc_init(
  *  \li All events (input and generation) disabled
  *  \li Sleep operation disabled
  *  \li No reference compensation
- *  \li Factory gain/offset corrections
+ *  \li Factory gain/offset correction
  *  \li No added sampling time
  *  \li Pin scan mode disabled
  *
@@ -915,18 +959,17 @@ static inline void adc_get_config_defaults(struct adc_config *const config)
 {
 	Assert(config);
 	config->clock_source                  = GCLK_GENERATOR_0;
-	config->reference                     = ADC_REFERENCE_INTVCC1;
+	config->reference                     = ADC_REFERENCE_INT1V;
 	config->clock_prescaler               = ADC_CLOCK_PRESCALER_DIV4;
 	config->resolution                    = ADC_RESOLUTION_12BIT;
 	config->window.window_mode            = ADC_WINDOW_MODE_DISABLE;
 	config->window.window_upper_value     = 0;
 	config->window.window_lower_value     = 0;
-	config->gain_factor                   = ADC_GAIN_FACTOR_DIV2;
+	config->gain_factor                   = ADC_GAIN_FACTOR_1X;
 	config->positive_input                = ADC_POSITIVE_INPUT_PIN0 ;
 	config->negative_input                = ADC_NEGATIVE_INPUT_GND ;
-	config->average_samples               = ADC_AVERAGE_DISABLE;
-	config->oversampling_and_decimation   =
-			ADC_OVERSAMPLING_AND_DECIMATION_DISABLE;
+	config->accumulate_samples            = ADC_ACCUMULATE_DISABLE;
+	config->divide_result                 = ADC_DIVIDE_RESULT_DISABLE;
 	config->left_adjust                   = false;
 	config->differential_mode             = false;
 	config->freerunning                   = false;
@@ -946,8 +989,6 @@ static inline void adc_get_config_defaults(struct adc_config *const config)
 	config->pin_scan.offset_start_scan    = 0;
 	config->pin_scan.inputs_to_scan       = 0;
 
-	/* Check if the part has been calibrated and disable correction
-	 * if it's not. */
 	if (config->correction.gain_correction == 0xFFF ||
 			config->correction.offset_correction == 0xFFF) {
 		config->correction.correction_enable = false;
@@ -1384,7 +1425,7 @@ static inline enum status_code adc_set_pin_scan_mode(
 	/* Set pin scan mode */
 	adc_module->INPUTCTRL.reg =
 			(adc_module->INPUTCTRL.reg &
-			 ~(ADC_INPUTCTRL_INPUTSCAN_Msk | ADC_INPUTCTRL_INPUTOFFSET_Msk)) |
+			~(ADC_INPUTCTRL_INPUTSCAN_Msk | ADC_INPUTCTRL_INPUTOFFSET_Msk)) |
 			(start_offset   << ADC_INPUTCTRL_INPUTOFFSET_Pos) |
 			(inputs_to_scan << ADC_INPUTCTRL_INPUTSCAN_Pos);
 

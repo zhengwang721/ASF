@@ -103,12 +103,22 @@ int main(void)
 	rtc_calendar_swap_time_mode();
 //! [add_main]
 
+//! [main_imp]
+//! [main_loop]
 	while (true) {
+//! [main_loop]
+//! [check_alarm_match]
 		if (rtc_calendar_is_alarm_match(RTC_CALENDAR_ALARM_0)) {
+//! [check_alarm_match]
+//! [alarm_match_action]
 			/* Do something on RTC alarm match here */
 			port_pin_toggle_output_level(LED_0_PIN);
+//! [alarm_match_action]
 
+//! [clear_alarm_match]
 			rtc_calendar_clear_alarm_match(RTC_CALENDAR_ALARM_0);
+//! [clear_alarm_match]
 		}
 	}
+//! [main_imp]
 }

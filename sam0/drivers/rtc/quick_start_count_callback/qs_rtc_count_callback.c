@@ -49,8 +49,10 @@ void configure_rtc_callbacks(void);
 //! [callback]
 void rtc_overflow_callback(void)
 {
+//! [overflow_act]
 	/* Do something on RTC overflow here */
 	port_pin_toggle_output_level(LED_0_PIN);
+//! [overflow_act]
 }
 //! [callback]
 
