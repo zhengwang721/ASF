@@ -185,6 +185,9 @@
 #define LED_0_PIN                 LED0_PIN
 #define LED_0_ACTIVE              LED0_ACTIVE
 #define LED_0_INACTIVE            LED0_INACTIVE
+
+/* backup define */
+#define LED0_GPIO LED0_PIN
 //@}
 
 //! Number of on-board LEDs
@@ -204,6 +207,13 @@
 #define BUTTON_0_EIC_PIN          SW0_EIC_PIN
 #define BUTTON_0_EIC_PIN_MUX      SW0_EIC_PIN_MUX
 #define BUTTON_0_EIC_LINE         SW0_EIC_LINE
+
+/* backup define */
+#define GPIO_PUSH_BUTTON_EIC_PIN        PIN_PC24B_EIC_EXTINT1
+#define GPIO_PUSH_BUTTON_EIC_PIN_MASK   GPIO_PC24B_EIC_EXTINT1
+#define GPIO_PUSH_BUTTON_EIC_PIN_MUX    MUX_PC24B_EIC_EXTINT1
+#define GPIO_PUSH_BUTTON_EIC_LINE       1
+#define GPIO_PUSH_BUTTON_EIC_IRQ        EIC_1_IRQn
 //@}
 
 //! Number of on-board buttons

@@ -49,12 +49,13 @@
  * It also comes bundled with an application-example of usage.
  *
  * This example demonstrates how to use the BPM driver. It requires a
- * board monitor firmware version V1.3 or greater.
+ * board monitor firmware version V1.3 or greater if it run on the SAM4L_EK.
  *
  * <b>Operating mode: </b>The user can select the low power mode and power
- * scaling from the terminal. The example uses the terminal and the board
- * monitor to provide infomation about the current power save mode and actual
- * power consumption.
+ * scaling from the terminal. The example uses the terminal to provide
+ * infomation about the current power save mode. If it run on the SAM4L_EK,
+ * the example can also uses the board monitor to provide infomation about
+ * the actual power consumption.
  *
  * \section files Main Files
  * - bpm.c: BPM driver;
@@ -70,10 +71,7 @@
  *
  * \section configinfo Configuration Information
  * This example has been tested with the following configuration:
- * - SAM4L_EK evaluation kit;
  * - CPU clock: 12 MHz;
- * - USART2 (on SAM4L_EK) abstracted with a USB CDC connection to a PC;
- * - USART0 (on SAM4L_EK) which connected to board monitor;
  * - PC terminal settings:
  *   - 115200 bps,
  *   - 8 data bits,
@@ -88,11 +86,16 @@
  */
 
 #include <asf.h>
+#include <conf_board.h>
+
+#ifdef CONF_BOARD_BM_USART
 #include "board_monitor.h"
+#endif
 
 /* Flag to use board monitor */
 static bool ps_status = BPM_PS_1;
 
+#ifdef CONF_BOARD_BM_USART
 /* Current sleep mode */
 static uint32_t current_sleep_mode = SLEEP_MODE_NA;
 
@@ -100,11 +103,12 @@ static uint32_t current_sleep_mode = SLEEP_MODE_NA;
 power_scaling_t ps_statuses[] = {
 	POWER_SCALING_PS0, POWER_SCALING_PS1
 };
+#endif
 
 /**
  * EIC interrupt handler for push button interrupt
  */
-static void eic_5_callback(void)
+static void eic_callback(void)
 {
 	sysclk_enable_peripheral_clock(EIC);
 	if(eic_line_interrupt_is_pending(EIC, GPIO_PUSH_BUTTON_EIC_LINE)) {
@@ -165,8 +169,8 @@ static void config_buttons(void)
 	eic_enable(EIC);
 	eic_line_set_config(EIC, GPIO_PUSH_BUTTON_EIC_LINE, 
 		&eic_line_conf);
-	eic_line_set_callback(EIC, GPIO_PUSH_BUTTON_EIC_LINE, eic_5_callback,
-		EIC_5_IRQn, 1);
+	eic_line_set_callback(EIC, GPIO_PUSH_BUTTON_EIC_LINE, eic_callback,
+		GPIO_PUSH_BUTTON_EIC_IRQ, 1);
 	eic_line_enable(EIC, GPIO_PUSH_BUTTON_EIC_LINE);
 }
 
@@ -176,8 +180,13 @@ static void config_backup_wakeup(void)
 	/* EIC and AST can wakeup the device */
 	bpm_enable_wakeup_source(BPM,
 			(1 << BPM_BKUPWEN_EIC) | (1 << BPM_BKUPWEN_AST));
+
+	/* Take care the table 11-5 in datasheet, not all pin can been set */
+#ifdef CONF_BOARD_BM_USART
 	/* EIC can wake the device from backup mode */
 	bpm_enable_backup_pin(BPM, 1 << GPIO_PUSH_BUTTON_EIC_LINE);
+#endif
+
 	/**
 	 * Retain I/O lines after wakeup from backup.
 	 * Disable to undo the previous retention state then enable.
@@ -226,8 +235,10 @@ static void display_menu(void)
 			"  h: Display menu \r\n"
 			"  --Push button can also be used to exit low power mode--\r\n"
 			"\r\n");
+#ifdef CONF_BOARD_BM_USART
 	printf("-- IMPORTANT: This example requires a board "
 			"monitor firmware version V1.3 or greater.\r\n\r\n");
+#endif
 }
 
 /**
@@ -252,8 +263,10 @@ int main(void)
 	printf("-- %s\r\n", BOARD_NAME);
 	printf("-- Compiled: %s %s --\r\n", __DATE__, __TIME__);
 
+#ifdef CONF_BOARD_BM_USART
 	/* Initialize the board monitor  */
 	bm_init();
+#endif
 
 	/* Configurate the AST to wake up */
 	config_ast();
@@ -287,14 +300,18 @@ int main(void)
 			bpm_configure_power_scaling(BPM, ps_status,
 					BPM_PSCM_CPU_NOT_HALT);
 			while((bpm_get_status(BPM) & BPM_SR_PSOK) == 0);
+#ifdef CONF_BOARD_BM_USART
 			bm_send_mcu_status(ps_statuses[ps_status], current_sleep_mode,
 					12000000, CPU_SRC_RC4M);
+#endif
 			break;
 
 		case '0':
+#ifdef CONF_BOARD_BM_USART
 			current_sleep_mode = SLEEP_MODE_0;
 			bm_send_mcu_status(ps_statuses[ps_status], current_sleep_mode,
 					12000000, CPU_SRC_RC4M);
+#endif
 			printf("\r\n--Enter Sleep mode 0.\r\n");
 			ast_enable_wakeup(AST, AST_WAKEUP_PER);
 			/* Wait for the printf operation to finish before
@@ -306,9 +323,11 @@ int main(void)
 			break;
 
 		case '1':
+#ifdef CONF_BOARD_BM_USART
 			current_sleep_mode = SLEEP_MODE_1;
 			bm_send_mcu_status(ps_statuses[ps_status], current_sleep_mode,
 					12000000, CPU_SRC_RC4M);
+#endif
 			printf("\r\n--Enter Sleep mode 1.\r\n");
 			ast_enable_wakeup(AST, AST_WAKEUP_PER);
 			/* Wait for the printf operation to finish before
@@ -320,9 +339,11 @@ int main(void)
 			break;
 
 		case '2':
+#ifdef CONF_BOARD_BM_USART
 			current_sleep_mode = SLEEP_MODE_2;
 			bm_send_mcu_status(ps_statuses[ps_status], current_sleep_mode,
 					12000000, CPU_SRC_RC4M);
+#endif
 			printf("\r\n--Enter Sleep mode 2.\r\n");
 			ast_enable_wakeup(AST, AST_WAKEUP_PER);
 			/* Wait for the printf operation to finish before
@@ -334,9 +355,11 @@ int main(void)
 			break;
 
 		case '3':
+#ifdef CONF_BOARD_BM_USART
 			current_sleep_mode = SLEEP_MODE_3;
 			bm_send_mcu_status(ps_statuses[ps_status], current_sleep_mode,
 					12000000, CPU_SRC_RC4M);
+#endif
 			printf("\r\n--Enter Sleep mode 3.\r\n");
 			ast_enable_wakeup(AST, AST_WAKEUP_PER);
 			/* Wait for the printf operation to finish before
@@ -348,9 +371,11 @@ int main(void)
 			break;
 
 		case '4':
+#ifdef CONF_BOARD_BM_USART
 			current_sleep_mode = SLEEP_MODE_WAIT;
 			bm_send_mcu_status(ps_statuses[ps_status], current_sleep_mode,
 					12000000, CPU_SRC_RC4M);
+#endif
 			printf("\r\n--Enter Wait mode.\r\n");
 			ast_enable_wakeup(AST, AST_WAKEUP_PER);
 			/* Wait for the printf operation to finish before
@@ -362,9 +387,11 @@ int main(void)
 			break;
 
 		case '5':
+#ifdef CONF_BOARD_BM_USART
 			current_sleep_mode = SLEEP_MODE_RETENTION;
 			bm_send_mcu_status(ps_statuses[ps_status], current_sleep_mode,
 					12000000, CPU_SRC_RC4M);
+#endif
 			printf("\r\n--Enter Retention mode.\r\n");
 			ast_enable_wakeup(AST, AST_WAKEUP_PER);
 			/* Wait for the printf operation to finish before
@@ -376,9 +403,11 @@ int main(void)
 			break;
 
 		case '6':
+#ifdef CONF_BOARD_BM_USART
 			current_sleep_mode = SLEEP_MODE_BACKUP;
 			bm_send_mcu_status(ps_statuses[ps_status], current_sleep_mode,
 					12000000, CPU_SRC_RC4M);
+#endif
 			printf("\r\n--Enter Backup mode.\r\n");
 			ast_enable_wakeup(AST, AST_WAKEUP_PER);
 			/* Wait for the printf operation to finish before
