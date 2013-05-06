@@ -72,7 +72,9 @@ void configure_spi(void);
 //! [callback]
 static void callback(const struct spi_module *const module)
 {
+//! [callback_var]
 	transfer_complete = true;
+//! [callback_var]
 }
 //! [callback]
 
@@ -155,8 +157,12 @@ int main(void)
 	system_init();
 //! [system_init]
 
+//! [run_config]
 	configure_spi();
+//! [run_config]
+//! [run_callback_config]
 	configure_callback();
+//! [run_callback_config]
 //! [main_start]
 
 //! [main_use_case]

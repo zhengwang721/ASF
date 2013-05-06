@@ -42,11 +42,12 @@
  */
 
 /**
- * \page asfdoc_samd20_sercom_spi_slave_basic_use Quick Start Guide for SERCOM SPI Slave - Polled
+ * \page asfdoc_samd20_sercom_spi_slave_callback Quick Start Guide for SERCOM SPI Slave - Callback
  *
  * In this use case, the SPI on extension header 1 of the Xplained Pro board
  * will configured with the following settings:
  * - Slave mode enabled
+ * - Preloading of shift register enabled
  * - MSB of the data is transmitted first
  * - Transfer mode 0
  * - \ref asfdoc_samd20_sercom_spi_mux_setting_e
@@ -76,14 +77,14 @@
  * state while it is in use.
  * \snippet qs_spi_slave_callback.c dev_inst
  * A function for configuring the SPI:
- * \snippet configure_spi
+ * \snippet qs_spi_slave_callback.c configure_spi
  * A function for configuring the callback functionality of the SPI:
- * \snippet conf_callback
+ * \snippet qs_spi_slave_callback.c conf_callback
  * A global variable that can flag to the application that the buffer has been
  * transferred:
- * \snippet var
+ * \snippet qs_spi_slave_callback.c var
  * Callback function:
- * \snippet callback
+ * \snippet qs_spi_slave_callback.c callback
  *
  * Add to user application %main():
  * \snippet qs_spi_slave_callback.c main_start
@@ -132,7 +133,7 @@
  * -# Initiate a write buffer job.
  *  \snippet qs_spi_slave_callback.c write
  * -# Wait for the transfer to be complete.
- *  \snippet qs_spi_slave_callback.c transf_compl
+ *  \snippet qs_spi_slave_callback.c transf_complete
  * -# Infinite loop.
  *  \snippet qs_spi_slave_callback.c inf_loop
  *

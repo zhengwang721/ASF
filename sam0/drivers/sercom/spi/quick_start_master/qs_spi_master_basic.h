@@ -79,10 +79,10 @@
  * A globally available peripheral slave software device instance struct.
  * \snippet qs_spi_master_basic.c slave_dev_inst
  * A function for configuring the SPI:
- * \snippet configure_spi
+ * \snippet qs_spi_master_basic.c configure_spi
  *
  * Add to user application %main():
- * \snippet qs_spi_master_basic.c main
+ * \snippet qs_spi_master_basic.c main_setup
  *
  * \section asfdoc_samd20_sercom_spi_master_basic_use_workflow Workflow
  * -# Initialize system.
@@ -123,7 +123,7 @@
  * Add the following to your user application \c main():
  * \snippet qs_spi_master_basic.c main_use_case
  * \subsection asfdoc_samd20_sercom_spi_master_basic_use_case_workflow Workflow
-  * -# Select slave.
+ * -# Select slave.
  *  \snippet qs_spi_master_basic.c select_slave
  * -# Write buffer to SPI slave.
  *  \snippet qs_spi_master_basic.c write

@@ -79,17 +79,17 @@
  * A globally available peripheral slave software device instance struct.
  * \snippet qs_spi_master_callback.c slave_dev_inst
  * A function for configuring the SPI:
- * \snippet configure_spi
+ * \snippet qs_spi_master_callback.c configure_spi
  * A function for configuring the callback functionality of the SPI:
- * \snippet conf_callback
+ * \snippet qs_spi_master_callback.c conf_callback
  * A global variable that can flag to the application that the buffer has been
  * transferred:
- * \snippet var
+ * \snippet qs_spi_master_callback.c var
  * Callback function:
- * \snippet callback
+ * \snippet qs_spi_master_callback.c callback
  *
  * Add to user application %main():
- * \snippet qs_spi_master_callback.c main
+ * \snippet qs_spi_master_callback.c main_start
  *
  * \section asfdoc_samd20_sercom_spi_master_callback_use_workflow Workflow
  * -# Initialize system.
@@ -134,12 +134,12 @@
  * Add the following to your user application \c main():
  * \snippet qs_spi_master_callback.c main_use_case
  * \subsection asfdoc_samd20_sercom_spi_master_callback_use_case_workflow Workflow
-  * -# Select slave.
+ * -# Select slave.
  *  \snippet qs_spi_master_callback.c select_slave
  * -# Write buffer to SPI slave.
  *  \snippet qs_spi_master_callback.c write
  * -# Wait for the transfer to be complete.
- *  \snippet qs_spi_master_callback.c transf_compl
+ *  \snippet qs_spi_master_callback.c wait
  * -# Deselect slave.
  *  \snippet qs_spi_master_callback.c deselect_slave
  * -# Infinite loop.

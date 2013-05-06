@@ -47,6 +47,7 @@
  * In this use case, the SPI on extension header 1 of the Xplained Pro board
  * will configured with the following settings:
  * - Slave mode enabled
+ * - Preloading of shift register enabled
  * - MSB of the data is transmitted first
  * - Transfer mode 0
  * - \ref asfdoc_samd20_sercom_spi_mux_setting_e
@@ -68,15 +69,15 @@
  * The following must be added to the user application source file, outside
  * any functions:
  *
- * A sample buffer to send via SPI:
+ * A sample buffer to send via SPI.
  * \snippet qs_spi_slave_basic.c buffer
- * Number of entries in the sample buffer:
+ * Number of entries in the sample buffer.
  * \snippet qs_spi_slave_basic.c buf_length
  * A globally available software device instance struct to store the SPI driver
  * state while it is in use.
- *  \snippet qs_spi_slave_basic.c dev_inst
- * A function for configuring the SPI:
- * \snippet configure_spi
+ * \snippet qs_spi_slave_basic.c dev_inst
+ * A function for configuring the SPI.
+ * \snippet qs_spi_slave_basic.c configure_spi
  *
  * Add to user application %main():
  * \snippet qs_spi_slave_basic.c main_start
