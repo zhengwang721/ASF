@@ -53,7 +53,9 @@
 #include <stdio.h>
 
 #include "rf4ce.h"
+#ifdef ZRC_PROFILE
 #include "zrc.h"
+#endif
 
 /* === MACROS ============================================================== */
 

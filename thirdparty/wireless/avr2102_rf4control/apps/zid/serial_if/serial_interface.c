@@ -99,20 +99,26 @@
 #define UART_RX_STATE_LENGTH            (2)
 
 /**
+oh nenje * A UART state that expects the protocol id  to be received as the next character.
+ */
+#define UART_RX_PROTOCOL_ID             (3)
+
+/**
  * A UART state that expects the next data character to be received.
  */
-#define UART_RX_STATE_DATA              (3)
+#define UART_RX_STATE_DATA              (4)
 
 /**
  * A UART state that expects a \ref EOT to be received as the next character.
  */
-#define UART_RX_STATE_EOT               (4)
+#define UART_RX_STATE_EOT               (5)
 
 #define SIO_BUF_COUNT                   (2)
 
-#define SIO_RX_BUF_SIZE                 (200)
+#define SIO_RX_BUF_SIZE                 (264)
 #define SIO_TX_BUF_SIZE                 SIO_RX_BUF_SIZE
 
+/* Set the Interface to Transfer the Serial Data */
 #ifdef UART0
 #define SIO_CHANNEL                     (SIO_0)
 #endif
@@ -167,6 +173,7 @@ static uint8_t data[SIO_RX_BUF_SIZE];
 static uint8_t data_length = 0;
 static uint8_t rx_index = 0;
 static uint8_t head = 0, buf_count = 0;
+static uint8_t protocol_id;
 
 #if (defined  RF4CE_CALLBACK_PARAM)
 static zid_indication_callback_t zid_ind;
@@ -339,6 +346,7 @@ static inline void process_incoming_sio_data(void)
 {
     switch (sio_rx_state)
     {
+        /* SOT Received */
         case UART_RX_STATE_SOT:
             sio_rx_ptr = sio_rx_buf;
             if (SOT == data[rx_index])
@@ -347,11 +355,12 @@ static inline void process_incoming_sio_data(void)
             }
             break;
 
+        /* Get the Payload Length */
         case UART_RX_STATE_LENGTH:
             sio_rx_length = data[rx_index];
             if (sio_rx_length)
             {
-                sio_rx_state = UART_RX_STATE_DATA;
+                sio_rx_state = UART_RX_PROTOCOL_ID;
                 *sio_rx_ptr = sio_rx_length;
                 sio_rx_ptr++;
             }
@@ -362,7 +371,14 @@ static inline void process_incoming_sio_data(void)
                 sio_rx_state = UART_RX_STATE_SOT;
             }
             break;
-
+	case UART_RX_PROTOCOL_ID:
+            
+            protocol_id = data[rx_index];
+            sio_rx_length--;
+            sio_rx_state = UART_RX_STATE_DATA;
+          
+            break;
+			
         case UART_RX_STATE_DATA:
             *sio_rx_ptr = data[rx_index];
             sio_rx_ptr++;
@@ -373,17 +389,22 @@ static inline void process_incoming_sio_data(void)
             }
             break;
 
+        /* End of transmission detected */
         case UART_RX_STATE_EOT:
             if (EOT == data[rx_index])
             {
-                /* Message received successfully */
-                handle_incoming_msg();
+	       if(RF4CONTROL_PID == protocol_id)
+                {
+                    /* Message received successfully */
+                    handle_incoming_msg();
+				}
             }
             /* Make rx buffer ready for next reception before handling received data. */
             sio_rx_ptr = sio_rx_buf;
             sio_rx_state = UART_RX_STATE_SOT;
             break;
 
+            /* Unknown state and initialize the serial input handler state to the initial state */
         default:
             sio_rx_ptr = sio_rx_buf;
             sio_rx_state = UART_RX_STATE_SOT;
@@ -666,6 +687,7 @@ static inline void handle_incoming_msg(void)
                {
                case MOUSE:
                {
+                   /* Mouse report received and construct the ZID mouse report */
                    mouse_desc_t *mouse_desc_ptr = (mouse_desc_t *) desc_ptr;
                    mouse_desc_ptr->button0 = *msg_ptr++ & 0x01;
                    mouse_desc_ptr->button1 = *msg_ptr++ & 0x01;
@@ -677,6 +699,7 @@ static inline void handle_incoming_msg(void)
                }
                case  KEYBOARD:
                {
+                  /* Keyboard report received and construct the ZID Keyboard report */
                    if(zid_report_data_record[i].report_type == INPUT)
                    {
                        keyboard_input_desc_t *mouse_desc_ptr = (keyboard_input_desc_t *) desc_ptr;
@@ -704,6 +727,7 @@ static inline void handle_incoming_msg(void)
                }
                case CONTACT_DATA:
                {
+                   /* Construct & send the ZID contact data report */
                    contact_data_report_t *contact_data;
                    contact_data = (contact_data_report_t *)desc_ptr;
 
@@ -726,6 +750,7 @@ static inline void handle_incoming_msg(void)
                }
                case TAP_GESTURE:
                {
+                  /* Send the ZID tap gesture report */
                   tap_gesture_report_t *tap_gesture;
                   tap_gesture = (tap_gesture_report_t *)desc_ptr;
 
@@ -741,6 +766,7 @@ static inline void handle_incoming_msg(void)
                }
                case SCROLL_GESTURE:
                {
+                  /* Send the scroll gesture report */
                   scroll_gesture_report_t  *scroll_gesture;
                   scroll_gesture = (scroll_gesture_report_t *)desc_ptr;
 
@@ -757,6 +783,7 @@ static inline void handle_incoming_msg(void)
                }
                case PINCH_GESTURE:
                {
+                  /* Send the pinch gesture report */
                   pinch_gesture_report_t *pinch_gesture;
                   pinch_gesture = (pinch_gesture_report_t *)desc_ptr;
 
@@ -777,6 +804,7 @@ static inline void handle_incoming_msg(void)
                }
                case ROTATE_GESTURE:
                {
+                  /* Send the rotate gesture report */
                   rotation_gesture_report_t *rotation_gesture;
                   rotation_gesture = (rotation_gesture_report_t *)desc_ptr;
 
@@ -789,6 +817,7 @@ static inline void handle_incoming_msg(void)
                }
                case SYNC:
                {
+                  /* Send the synchronization report */
                   sync_report_t *sync;
                   sync = (sync_report_t *)desc_ptr;
 
@@ -800,6 +829,7 @@ static inline void handle_incoming_msg(void)
                }
                case TOUCH_SENSOR_PROPERTIES:
                {
+                  /* Send the touch sensor properties report */
                   touch_sensor_properties_t *touch_sensor_properties;
                   touch_sensor_properties = (touch_sensor_properties_t *)desc_ptr;
 
@@ -821,6 +851,7 @@ static inline void handle_incoming_msg(void)
                }
                case TAP_SUPPORT_PROPERTIES:
                {
+                  /* Send the tap support properties report */
                   tap_support_properties_t *tap_support_properties;
                   tap_support_properties = (tap_support_properties_t *)desc_ptr;
 
@@ -980,7 +1011,8 @@ void nlde_data_indication(uint8_t PairingRef, profile_id_t ProfileId,
     uint8_t i;
 
     msg_buf = get_next_tx_buffer();
-    *msg_buf++ = NLDE_DATA_IND_LEN + nsduLength;
+    *msg_buf++ = NLDE_DATA_IND_LEN + nsduLength+RF4CONTROL_PID_LEN;
+    *msg_buf++ = RF4CONTROL_PID;
     *msg_buf++ = NLDE_DATA_INDICATION;
     *msg_buf++ = PairingRef;
     *msg_buf++ = ProfileId;
@@ -1011,7 +1043,8 @@ void nlde_data_confirm(nwk_enum_t Status, uint8_t PairingRef, profile_id_t OrgPr
     uint8_t *msg_buf;
 
     msg_buf = get_next_tx_buffer();
-    *msg_buf++ = NLDE_DATA_CONF_LEN;
+    *msg_buf++ = NLDE_DATA_CONF_LEN+RF4CONTROL_PID_LEN;
+    *msg_buf++ = RF4CONTROL_PID;
     *msg_buf++ = NLDE_DATA_CONFIRM;
     *msg_buf++ = Status;
     *msg_buf++ = PairingRef;
@@ -1031,7 +1064,8 @@ void nlme_reset_confirm(nwk_enum_t Status)
     uint8_t *msg_buf;
 
     msg_buf = get_next_tx_buffer();
-    *msg_buf++ = NLME_RESET_CONF_LEN;
+    *msg_buf++ = NLME_RESET_CONF_LEN+RF4CONTROL_PID_LEN;
+    *msg_buf++ = RF4CONTROL_PID;
     *msg_buf++ = NLME_RESET_CONFIRM;
     *msg_buf++ = Status;
     *msg_buf = EOT;
@@ -1046,7 +1080,8 @@ void nlme_rx_enable_confirm(nwk_enum_t Status)
 {
     uint8_t *msg_buf;
      msg_buf = get_next_tx_buffer();
-    *msg_buf++ = NLME_RX_ENABLE_CONF_LEN;
+    *msg_buf++ = NLME_RX_ENABLE_CONF_LEN+RF4CONTROL_PID_LEN;
+    *msg_buf++ = RF4CONTROL_PID;
     *msg_buf++ = NLME_RX_ENABLE_CONFIRM;
     *msg_buf++ = Status;
     *msg_buf = EOT;
@@ -1061,7 +1096,8 @@ void nlme_set_confirm(nwk_enum_t Status, nib_attribute_t NIBAttribute, uint8_t N
     uint8_t *msg_buf;
 
     msg_buf = get_next_tx_buffer();
-    *msg_buf++ = NLME_SET_CONF_LEN;
+    *msg_buf++ = 5;  // *msg_buf++ = NLME_SET_CONF_LEN+RF4CONTROL_PID_LEN;
+    *msg_buf++ = RF4CONTROL_PID;
     *msg_buf++ = NLME_SET_CONFIRM;
     *msg_buf++ = Status;
     *msg_buf++ = NIBAttribute;
@@ -1086,7 +1122,8 @@ void nlme_get_confirm(nwk_enum_t Status, nib_attribute_t NIBAttribute,
 
     msg_buf = get_next_tx_buffer();
     attr_len = nwk_get_nib_attribute_size(NIBAttribute);
-    *msg_buf++ = NLME_GET_CONF_LEN + attr_len;
+    *msg_buf++ = NLME_GET_CONF_LEN + attr_len+RF4CONTROL_PID_LEN;
+    *msg_buf++ = RF4CONTROL_PID;
     *msg_buf++ = NLME_GET_CONFIRM;
     *msg_buf++ = Status;
     *msg_buf++ = NIBAttribute;
@@ -1107,7 +1144,8 @@ void nlme_start_confirm(nwk_enum_t Status)
     uint8_t *msg_buf;
 
     msg_buf = get_next_tx_buffer();
-    *msg_buf++ = NLME_START_CONF_LEN;
+    *msg_buf++ = NLME_START_CONF_LEN+RF4CONTROL_PID_LEN;
+    *msg_buf++ = RF4CONTROL_PID;
     *msg_buf++ = NLME_START_CONFIRM;
     *msg_buf++ = Status;
     *msg_buf = EOT;
@@ -1123,7 +1161,8 @@ void nlme_unpair_indication(uint8_t PairingRef)
     uint8_t *msg_buf;
 
     msg_buf = get_next_tx_buffer();
-    *msg_buf++ = NLME_UNPAIR_IND_LEN;
+    *msg_buf++ = NLME_UNPAIR_IND_LEN+RF4CONTROL_PID_LEN;
+    *msg_buf++ = RF4CONTROL_PID;
     *msg_buf++ = NLME_UNPAIR_INDICATION;
     *msg_buf++ = PairingRef;
     *msg_buf = EOT;
@@ -1140,7 +1179,8 @@ void nlme_unpair_confirm(uint8_t Status, uint8_t PairingRef)
     uint8_t *msg_buf;
 
     msg_buf = get_next_tx_buffer();
-    *msg_buf++ = NLME_UNPAIR_CONF_LEN;
+    *msg_buf++ = NLME_UNPAIR_CONF_LEN+RF4CONTROL_PID_LEN;
+    *msg_buf++ = RF4CONTROL_PID;
     *msg_buf++ = NLME_UNPAIR_CONFIRM;
     *msg_buf++ = Status;
     *msg_buf++ = PairingRef;
@@ -1158,7 +1198,8 @@ void nlme_update_key_confirm(nwk_enum_t Status, uint8_t PairingRef)
     uint8_t *msg_buf;
 
     msg_buf = get_next_tx_buffer();
-    *msg_buf++ = NLME_UPDATE_KEY_CONF_LEN;
+    *msg_buf++ = NLME_UPDATE_KEY_CONF_LEN+RF4CONTROL_PID_LEN;
+    *msg_buf++ = RF4CONTROL_PID;
     *msg_buf++ = NLME_UPDATE_KEY_CONFIRM;
     *msg_buf++ = Status;
     *msg_buf++ = PairingRef;
@@ -1173,7 +1214,8 @@ void nwk_ch_agility_indication(uint8_t LogicalChannel)
     uint8_t *msg_buf;
 
     msg_buf = get_next_tx_buffer();
-    *msg_buf++ = NWK_CH_AGILITY_IND_LEN;
+    *msg_buf++ = NWK_CH_AGILITY_IND_LEN+RF4CONTROL_PID_LEN;
+    *msg_buf++ = RF4CONTROL_PID;
     *msg_buf++ = NWK_CH_AGILITY_INDICATION;
     *msg_buf++ = LogicalChannel;
     *msg_buf = EOT;
@@ -1190,7 +1232,8 @@ void nwk_ch_agility_confirm(nwk_enum_t Status, bool ChannelChanged, uint8_t Logi
     uint8_t *msg_buf;
 
     msg_buf = get_next_tx_buffer();
-    *msg_buf++ = NWK_CH_AGILITY_CONF_LEN;
+    *msg_buf++ = NWK_CH_AGILITY_CONF_LEN+RF4CONTROL_PID_LEN;
+    *msg_buf++ = RF4CONTROL_PID;
     *msg_buf++ = NWK_CH_AGILITY_CONFIRM;
     *msg_buf++ = Status;
     *msg_buf++ = (uint8_t)ChannelChanged;
@@ -1213,7 +1256,8 @@ void vendor_data_confirm(nwk_enum_t Status, uint8_t PairingRef, profile_id_t Pro
     uint8_t *msg_buf;
 
     msg_buf = get_next_tx_buffer();
-    *msg_buf++ = 3;
+    *msg_buf++ = 3+RF4CONTROL_PID_LEN;
+    *msg_buf++ = RF4CONTROL_PID;
     *msg_buf++ = VENDOR_DATA_CONFIRM;
     *msg_buf++ = Status;
     *msg_buf++ = PairingRef;
@@ -1240,7 +1284,8 @@ void vendor_data_ind(uint8_t PairingRef, uint16_t VendorId,
     uint8_t i;
 
     msg_buf = get_next_tx_buffer();
-    *msg_buf++ = 8 + nsduLength;
+    *msg_buf++ = 8 + nsduLength+RF4CONTROL_PID_LEN;
+    *msg_buf++ = RF4CONTROL_PID;
     *msg_buf++ = VENDOR_DATA_INDICATION;
     *msg_buf++ = PairingRef;
     *msg_buf++ = PROFILE_ID_ZID;
@@ -1269,7 +1314,8 @@ void zid_connect_confirm(nwk_enum_t Status, uint8_t PairingRef)
     uint8_t *msg_buf;
 
     msg_buf = get_next_tx_buffer();
-    *msg_buf++ = 3;
+    *msg_buf++ = 3+RF4CONTROL_PID_LEN;
+    *msg_buf++ = RF4CONTROL_PID;
     *msg_buf++ = ZID_CONNECT_CONFIRM;
     *msg_buf++ = Status;
     *msg_buf++ = PairingRef;
@@ -1287,7 +1333,8 @@ void zid_set_attribute_confirm(nwk_enum_t Status, uint8_t PairingRef, zid_attrib
     uint8_t *msg_buf;
 
     msg_buf = get_next_tx_buffer();
-    *msg_buf++ = 5;
+    *msg_buf++ = 5+RF4CONTROL_PID_LEN;
+    *msg_buf++ = RF4CONTROL_PID;
     *msg_buf++ = ZID_SET_ATTRIBUTE_CONFIRM;
     *msg_buf++ = Status;
     *msg_buf++ = PairingRef;
@@ -1308,7 +1355,8 @@ void zid_get_attribute_confirm(nwk_enum_t Status, uint8_t PairingRef, zid_attrib
     uint8_t *msg_buf;
 
     msg_buf = get_next_tx_buffer();
-    *msg_buf++ = 6 + AttributeSize;
+    *msg_buf++ = 6 + AttributeSize+RF4CONTROL_PID_LEN;
+    *msg_buf++ = RF4CONTROL_PID;
     *msg_buf++ = ZID_GET_ATTRIBUTE_CONFIRM;
     *msg_buf++ = Status;
     *msg_buf++ = PairingRef;
@@ -1342,7 +1390,8 @@ void zid_report_data_confirm(nwk_enum_t Status, uint8_t PairingRef)
     uint8_t *msg_buf;
 
     msg_buf = get_next_tx_buffer();
-    *msg_buf++ = 3;
+    *msg_buf++ = 3+RF4CONTROL_PID_LEN;
+    *msg_buf++ = RF4CONTROL_PID;
     *msg_buf++ = ZID_REPORT_DATA_CONFIRM;
     *msg_buf++ = Status;
     *msg_buf++ = PairingRef;
@@ -1358,7 +1407,8 @@ void zid_set_report_confirm(nwk_enum_t Status, uint8_t PairingRef)
     uint8_t *msg_buf;
 
     msg_buf = get_next_tx_buffer();
-    *msg_buf++ = 3;
+    *msg_buf++ = 3+RF4CONTROL_PID_LEN;
+    *msg_buf++ = RF4CONTROL_PID;
     *msg_buf++ = ZID_SET_REPORT_CONFIRM;
     *msg_buf++ = Status;
     *msg_buf++ = PairingRef;
@@ -1375,7 +1425,8 @@ void zid_get_report_confirm(nwk_enum_t Status, uint8_t PairingRef)
     uint8_t *msg_buf;
 
     msg_buf = get_next_tx_buffer();
-    *msg_buf++ = 3;
+    *msg_buf++ = 3+RF4CONTROL_PID_LEN;
+    *msg_buf++ = RF4CONTROL_PID;
     *msg_buf++ = ZID_GET_REPORT_CONFIRM;
     *msg_buf++ = Status;
     *msg_buf++ = PairingRef;
@@ -1392,9 +1443,11 @@ void zid_report_data_indication(uint8_t PairingRef, uint8_t num_report_records,
     uint8_t *msg_buf;
     uint8_t *length_ptr,temp;
 
+    /* Handle the various incoming zid report data */
     msg_buf = get_next_tx_buffer();
     length_ptr = msg_buf;
     msg_buf++;
+    *msg_buf++ =RF4CONTROL_PID;
     *msg_buf++ = ZID_REPORT_DATA_INDICATION;
     *msg_buf++ = PairingRef;
     *msg_buf++ = RxLinkQuality;
@@ -1402,7 +1455,7 @@ void zid_report_data_indication(uint8_t PairingRef, uint8_t num_report_records,
 
     msg_buf++; // Skipping the zid payloadlength. this will be updated at the end
     *msg_buf++ = num_report_records;
-    *length_ptr = 6;
+    *length_ptr = 7;
 
     for(uint8_t i=0;i<num_report_records;i++)
     {
@@ -1584,8 +1637,9 @@ void zid_report_data_indication(uint8_t PairingRef, uint8_t num_report_records,
 
     }
     temp = (*length_ptr);
-    length_ptr +=5;
-    *length_ptr = temp - 5;
+    length_ptr +=6;
+    *length_ptr = temp - 6;
+    
 #if 0
     *msg_buf++ = zidPayloadLength;
     for (uint8_t i = 0; i < zidPayloadLength; i++)
@@ -1607,7 +1661,8 @@ void zid_standby_confirm(nwk_enum_t Status, bool StdbyEnabled)
     uint8_t *msg_buf;
 
     msg_buf = get_next_tx_buffer();
-    *msg_buf++ = 3;
+    *msg_buf++ = 3+RF4CONTROL_PID_LEN;
+    *msg_buf++ = RF4CONTROL_PID;
     *msg_buf++ = ZID_STANDBY_CONFIRM;
     *msg_buf++ = Status;
     *msg_buf++ = StdbyEnabled;
@@ -1625,7 +1680,8 @@ void zid_standby_leave_indication(void)
     uint8_t *msg_buf;
 
     msg_buf = get_next_tx_buffer();
-    *msg_buf++ = 1;
+    *msg_buf++ = 1+RF4CONTROL_PID_LEN;
+    *msg_buf++ = RF4CONTROL_PID;
     *msg_buf++ = ZID_STANDBY_LEAVE_INDICATION;
     *msg_buf = EOT;
 }
@@ -1638,7 +1694,8 @@ void zid_get_idle_confirm(nwk_enum_t Status, uint8_t PairingRef, uint8_t ReportI
     uint8_t *msg_buf;
 
     msg_buf = get_next_tx_buffer();
-    *msg_buf++ = 5;
+    *msg_buf++ = 5+RF4CONTROL_PID_LEN;
+    *msg_buf++ = RF4CONTROL_PID;
     *msg_buf++ = ZID_GET_IDLE_CONFIRM;
     *msg_buf++ = Status;
     *msg_buf++ = PairingRef;
@@ -1659,7 +1716,8 @@ void zid_heartbeat_indication(uint8_t PairingRef)
     uint8_t *msg_buf;
 
     msg_buf = get_next_tx_buffer();
-    *msg_buf++ = 2;
+    *msg_buf++ = 2+RF4CONTROL_PID_LEN;
+    *msg_buf++ = RF4CONTROL_PID;
     *msg_buf++ = ZID_HEARTBEAT_INDICATION;
     *msg_buf++ = PairingRef;
     *msg_buf = EOT;
@@ -1676,7 +1734,8 @@ void zid_heartbeat_confirm(nwk_enum_t Status, uint8_t PairingRef)
     uint8_t *msg_buf;
 
     msg_buf = get_next_tx_buffer();
-    *msg_buf++ = 3;
+    *msg_buf++ = 3+RF4CONTROL_PID_LEN;
+    *msg_buf++ = RF4CONTROL_PID;
     *msg_buf++ = ZID_HEARTBEAT_CONFIRM;
     *msg_buf++ = Status;
     *msg_buf++ = PairingRef;
@@ -1690,7 +1749,8 @@ static void zid_set_null_report_confirm(nwk_enum_t Status)
     uint8_t *msg_buf;
 
     msg_buf = get_next_tx_buffer();
-    *msg_buf++ = 2;
+    *msg_buf++ = 2+RF4CONTROL_PID_LEN;
+    *msg_buf++ = RF4CONTROL_PID;
     *msg_buf++ = ZID_SET_NULL_REPORT_CONFIRM;
     *msg_buf++ = Status;
     *msg_buf = EOT;
@@ -1706,7 +1766,8 @@ void pbp_rec_pair_confirm(nwk_enum_t Status, uint8_t PairingRef)
     uint8_t *msg_buf;
 
     msg_buf = get_next_tx_buffer();
-    *msg_buf++ = 3;
+    *msg_buf++ = 3+RF4CONTROL_PID_LEN;
+    *msg_buf++ = RF4CONTROL_PID;
     *msg_buf++ = PBP_REC_PAIR_CONFIRM;
     *msg_buf++ = Status;
     *msg_buf++ = PairingRef;
@@ -1723,7 +1784,8 @@ void pbp_org_pair_confirm(nwk_enum_t Status, uint8_t PairingRef)
     uint8_t *msg_buf;
 
     msg_buf = get_next_tx_buffer();
-    *msg_buf++ = 3;
+    *msg_buf++ = 3+RF4CONTROL_PID_LEN;
+    *msg_buf++ = RF4CONTROL_PID;
     *msg_buf++ = PBP_ORG_PAIR_CONFIRM;
     *msg_buf++ = Status;
     *msg_buf++ = PairingRef;
@@ -1739,7 +1801,8 @@ static void zid_get_report_indication(uint8_t PairingRef, zid_report_types_t zid
     uint8_t *msg_buf;
 
     msg_buf = get_next_tx_buffer();
-    *msg_buf++ = 4;
+    *msg_buf++ = 4+RF4CONTROL_PID_LEN;
+    *msg_buf++ = RF4CONTROL_PID;
     *msg_buf++ = ZID_GET_REPORT_INDICATION;
     *msg_buf++ = PairingRef;
     *msg_buf++ = zid_report_type;

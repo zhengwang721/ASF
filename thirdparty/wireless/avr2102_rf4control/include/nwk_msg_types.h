@@ -51,6 +51,8 @@
 #include <stdint.h>
 #include "nwk_msg_code.h"
 #include "rf4ce.h"
+#include "nwk_config.h"
+
 
 
 /* === Macros =============================================================== */
