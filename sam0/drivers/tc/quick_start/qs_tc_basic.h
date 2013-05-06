@@ -115,6 +115,6 @@
  * \snippet qs_tc_basic.c main
  *
  * \subsection asfdoc_samd20_tc_basic_use_case_main_flow Workflow
- * -# Enter an infinite loop to continuously echo received values on the USART.
+ * -# Enter an infinite loop while the PWM wave is generated via the TC module.
  *  \snippet qs_tc_basic.c main_loop
  */

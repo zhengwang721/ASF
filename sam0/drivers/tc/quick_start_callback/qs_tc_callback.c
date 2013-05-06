@@ -41,89 +41,90 @@
 #include <conf_quick_start_callback.h>
 #include <asf.h>
 
+void configure_tc(void);
+void configure_tc_callbacks(void);
 void tc_callback_to_change_duty_cycle(
 		struct tc_module *const module_inst);
 
+
+//! [module_inst]
+struct tc_module module_inst;
+//! [module_inst]
+
+//! [callback_funcs]
 void tc_callback_to_change_duty_cycle(
 		struct tc_module *const module_inst)
 {
-	static uint32_t pases = 0;
+	static uint16_t i = 0;
 
-	pases = pases + 1;
-
-	if (pases == 2) {
-		while (tc_is_syncing(module_inst)) {
-			/* Wait for sync */
-		}
-		module_inst->hw->COUNT16.CC[0].reg = 0x5555;
-	}
-
-	if (pases == 3) {
-		pases = 0;
-		while (tc_is_syncing(module_inst)) {
-			/* Wait for sync */
-		}
-		module_inst->hw->COUNT16.CC[0].reg = 0x7FFF;
-	}
+	i += 128;
+	tc_set_compare_value(module_inst, TC_COMPARE_CAPTURE_CHANNEL_0, i + 1);
 }
+//! [callback_funcs]
 
-int main(void)
+//! [setup]
+void configure_tc(void)
 {
-	//! [main]
-	//! [system_init]
-	system_init();
-	//! [system_init]
-
-	/* Structures for config and software device instance */
-	//! [config]
+	//! [setup_config]
 	struct tc_config config;
-	//! [config]
-	//! [dev_inst]
-	struct tc_module module_inst;
-	//! [dev_inst]
-
-	//! [tc_get_config_defaults]
+	//! [setup_config]
+	//! [setup_config_defaults]
 	tc_get_config_defaults(&config);
-	//! [tc_get_config_defaults]
+	//! [setup_config_defaults]
 
-	//! [pwm_channel_0]
+	//! [setup_change_config]
+	config.counter_size    = TC_COUNTER_SIZE_16BIT;
+	config.wave_generation = TC_WAVE_GENERATION_NORMAL_PWM;
+	config.size_specific.size_16_bit.compare_capture_channel[0] = 0xFFFF;
+	//! [setup_change_config]
+
+	//! [setup_change_config_pwm]
 	config.channel_pwm_out_enabled[0] = true;
 	config.channel_pwm_out_pin[0]     = PWM_OUT_PIN;
 	config.channel_pwm_out_mux[0]     = PWM_OUT_MUX;
-	//! [pwm_channel_0]
+	//! [setup_change_config_pwm]
 
-	//! [setup]
-	config.counter_size    = TC_COUNTER_SIZE_16BIT;
-	config.wave_generation = TC_WAVE_GENERATION_NORMAL_PWM;
-	config.size_specific.size_16_bit.compare_capture_channel[0] = 0x7FFF;
-	//! [setup]
-
-	//! [tc_init]
+	//! [setup_set_config]
 	tc_init(&module_inst, PWM_MODULE, &config);
-	//! [tc_init]
+	//! [setup_set_config]
 
-	//! [register_callback]
+	//! [setup_enable]
+	tc_enable(&module_inst);
+	//! [setup_enable]
+}
+
+void configure_tc_callbacks(void)
+{
+	//! [setup_register_callback]
 	tc_register_callback(
 			&module_inst,
 			tc_callback_to_change_duty_cycle,
 			TC_CALLBACK_CC_CHANNEL0);
-	//! [register_callback]
+	//! [setup_register_callback]
 
-	//! [enable_callback
+	//! [setup_enable_callback]
 	tc_enable_callback(&module_inst, TC_CALLBACK_CC_CHANNEL0);
-	//! [enable_callback]
+	//! [setup_enable_callback]
+}
+//! [setup]
 
+int main(void)
+{
+	system_init();
+
+//! [setup_init]
+	configure_tc();
+	configure_tc_callbacks();
+//! [setup_init]
+
+//! [main]
 	//! [enable_global_interrupts]
 	system_interrupt_enable_global();
 	//! [enable_global_interrupts]
 
-	//! [tc_enable]
-	tc_enable(&module_inst);
-	//! [tc_enable]
-
-	//! [inf_loop]
+	//! [main_loop]
 	while (true) {
 	}
-	//! [inf_loop]
-	//! [main]
+	//! [main_loop]
+//! [main]
 }

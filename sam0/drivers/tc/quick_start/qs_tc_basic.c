@@ -83,15 +83,15 @@ int main(void)
 {
 	system_init();
 
-//! [setup_init]
+	//! [setup_init]
 	configure_tc();
-//! [setup_init]
+	//! [setup_init]
 
 //! [main]
-//! [main_loop]
+	//! [main_loop]
 	while (true) {
 		/* Infinite loop */
 	}
-//! [main_loop]
+	//! [main_loop]
 //! [main]
 }
