@@ -42,56 +42,81 @@
  */
 #include <asf.h>
 
+void configure_dac(void);
+void configure_dac_channel(void);
+
+//! [module_inst]
+struct dac_module dac_instance;
+//! [module_inst]
+
+//! [setup]
+void configure_dac(void)
+{
+//! [setup_config]
+	struct dac_config config;
+//! [setup_config]
+//! [setup_config_defaults]
+	dac_get_config_defaults(&config);
+//! [setup_config_defaults]
+
+//! [setup_set_config]
+	dac_init(&dac_instance, DAC, &config);
+//! [setup_set_config]
+
+//! [setup_enable]
+	dac_enable(&dac_instance);
+//! [setup_enable]
+}
+
+void configure_dac_channel(void)
+{
+//! [setup_ch_config]
+	struct dac_chan_config chan_config;
+//! [setup_ch_config]
+//! [setup_ch_config_defaults]
+	dac_chan_get_config_defaults(&chan_config);
+//! [setup_ch_config_defaults]
+
+//! [setup_ch_change_config]
+	chan_config.enable_start_on_event = false;
+//! [setup_ch_change_config]
+
+//! [setup_ch_set_config]
+	dac_chan_set_config(&dac_instance, DAC_CHANNEL_0, &chan_config);
+//! [setup_ch_set_config]
+
+//! [setup_ch_enable]
+	dac_chan_enable(&dac_instance, DAC_CHANNEL_0);
+//! [setup_ch_enable]
+}
+//! [setup]
+
 int main(void)
 {
-//! [main]
-//! [variable]
-	struct dac_module dev_inst;
-	struct dac_config config;
-	struct dac_chan_config chan_config;
-//! [variable]
-
-//! [system_init]
 	system_init();
-//! [system_init]
-	/* Setup DAC module*/
-//! [get_conf]
-	dac_get_config_defaults(&config);
-//! [get_conf]
-//! [init_dac]
-	dac_init(&dev_inst, DAC, &config);
-//! [init_dac]
-//! [enable]
-	dac_enable(&dev_inst);
-//! [enable]
 
-	/* Setup channel 0*/
-//! [get_ch_conf]
-	dac_chan_get_config_defaults(&chan_config);
-//! [get_ch_conf]
-//! [edit_ch_conf]
-	chan_config.enable_start_on_event = false;
-	//! [edit_ch_conf]
-//! [set_ch_conf]
-	dac_chan_set_config(&dev_inst, DAC_CHANNEL_0, &chan_config);
-//! [set_ch_conf]
-//! [enable_ch]
-	dac_chan_enable(&dev_inst, DAC_CHANNEL_0);
-	//! [enable_ch]
+//! [setup_init]
+	configure_dac();
+	configure_dac_channel();
+//! [setup_init]
 
-	/* Convert a value */
-	//! [write]
-	dac_chan_write(&dev_inst, DAC_CHANNEL_0, 0x44);
-//! [write]
+//! [main]
+//! [main_output_var]
+	uint16_t i = 0;
+//! [main_output_var]
 
-	/* Disable DAC*/
-//! [disable]
-	dac_disable(&dev_inst);
-//! [disable]
-
-//! [inf_loop]
+//! [main_loop]
 	while (1) {
+//! [main_loop]
+//! [main_write]
+		dac_chan_write(&dac_instance, DAC_CHANNEL_0, i);
+//! [main_write]
+
+//! [main_inc_val]
+		if (++i == 0x3FF) {
+			i = 0;
+		}
+//! [main_inc_val]
 	}
-//! [inf_loop]
 //! [main]
 }

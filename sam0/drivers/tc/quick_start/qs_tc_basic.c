@@ -41,49 +41,57 @@
 #include <asf.h>
 #include <conf_quick_start.h>
 
+void configure_tc(void);
+
+//! [module_inst]
+struct tc_module pwm_tc_module;
+//! [module_inst]
+
+//! [setup]
+void configure_tc(void)
+{
+	//! [setup_config]
+	struct tc_config config;
+	//! [setup_config]
+	//! [setup_config_defaults]
+	tc_get_config_defaults(&config);
+	//! [setup_config_defaults]
+
+	//! [setup_change_config]
+	config.counter_size    = TC_COUNTER_SIZE_16BIT;
+	config.wave_generation = TC_WAVE_GENERATION_NORMAL_PWM;
+	config.size_specific.size_16_bit.compare_capture_channel[0] = (0xFFFF / 4);
+	//! [setup_change_config]
+
+	//! [setup_change_config_pwm]
+	config.channel_pwm_out_enabled[0] = true;
+	config.channel_pwm_out_pin[0]     = PWM_OUT_PIN;
+	config.channel_pwm_out_mux[0]     = PWM_OUT_MUX;
+	//! [setup_change_config_pwm]
+
+	//! [setup_set_config]
+	tc_init(&pwm_tc_module, PWM_MODULE, &config);
+	//! [setup_set_config]
+
+	//! [setup_enable]
+	tc_enable(&pwm_tc_module);
+	//! [setup_enable]
+}
+//! [setup]
+
 int main(void)
 {
-	//! [main]
-	//! [system_init]
 	system_init();
-	//! [system_init]
 
-	/* Structures for config and software device instance */
-	//! [config]
-	struct tc_config config;
-	//! [config]
-	//! [dev_inst]
-	struct tc_module module_inst;
-	//! [dev_inst]
+	//! [setup_init]
+	configure_tc();
+	//! [setup_init]
 
-	//! [tc_get_config_defaults]
-	tc_get_config_defaults(&config);
-	//! [tc_get_config_defaults]
-
-	//! [pwm_channel_0]
-	config.channel_pwm_out_enabled[0] = true;
-	config.channel_pwm_out_pin[0] = PWM_OUT_PIN;
-	config.channel_pwm_out_mux[0] = PWM_OUT_MUX;
-	//! [pwm_channel_0]
-
-	//! [setup]
-	config.counter_size = TC_COUNTER_SIZE_16BIT;
-	config.wave_generation = TC_WAVE_GENERATION_NORMAL_FREQ;
-	config.size_specific.size_16_bit.compare_capture_channel[0] = 0x7FFF;
-	//! [setup]
-
-	//! [tc_init]
-	tc_init(&module_inst, PWM_MODULE, &config);
-	//! [tc_init]
-
-	//! [tc_enable]
-	tc_enable(&module_inst);
-	//! [tc_enable]
-
-	//! [inf_loop]
+//! [main]
+	//! [main_loop]
 	while (true) {
 		/* Infinite loop */
 	}
-	//! [inf_loop]
-	//! [main]
+	//! [main_loop]
+//! [main]
 }
