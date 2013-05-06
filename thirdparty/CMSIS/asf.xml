@@ -39,6 +39,7 @@ and reduces time-to-market for new embedded applications.
 			<build type="header-file" value="Include/core_cmInstr.h" toolchain="armgcc"/>
 			<device-support value="sam4s"/>
 			<device-support value="sam4l"/>
+			<device-support value="sam4n"/>
 			<build type="distribute" subtype="file" value="CMSIS END USER LICENCE AGREEMENT.pdf"/>
 			<build type="distribute" subtype="file" value="README.txt"/>
 			<build type="distribute" subtype="license" value="license.txt"/>
