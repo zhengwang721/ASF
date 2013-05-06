@@ -91,6 +91,11 @@ int main(void)
 //! [setup_init]
 
 //! [main]
+//! [main_send_string]
+	uint8_t string[] = "Hello World!\r\n";
+	usart_write_buffer_wait(&usart_edbg, string, sizeof(string));
+//! [main_send_string]
+
 //! [main_rec_var]
 	uint16_t temp;
 //! [main_rec_var]

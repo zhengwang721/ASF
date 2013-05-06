@@ -102,8 +102,9 @@
  * \snippet qs_usart_basic_use.c main
  *
  * \subsection asfdoc_samd20_usart_basic_use_case_main_flow Workflow
- * -# Create a temporary variable to store the last received USART value.
- *  \snippet qs_usart_basic_use.c main_rec_var
+ * -# Send a string to the USART to show the demo is running, blocking until
+ *    all characters have been sent.
+ *  \snippet qs_usart_basic_use.c main_send_string
  * -# Enter an infinite loop to continuously echo received values on the USART.
  *  \snippet qs_usart_basic_use.c main_loop
  * -# Perform a blocking read of the USART, storing the received character into
