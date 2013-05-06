@@ -10,5 +10,16 @@
             <require idref="thirdparty.wireless.avr2102_rf4control.lib.zid.aptr.config" />
             <device-support value="atmega256rfr2"/>
         </module>
+		
+		<module type="service" id="thirdparty.wireless.avr2102_rf4control.lib.zid.aptr#2" caption="AVR2102-ZID LIB For atxmega256a3bu Controller">
+            <info type="description" value="summary">
+            ZID adaptor library for ATXMEGA256A3BU controller
+            </info>
+            <build type="library" subtype="user" value="atxmega256a3bu/iar/librf4ce-zid-adaptor.r90" toolchain="iarew"/>
+            <build type="library" subtype="user" value="atxmega256a3bu/gcc/librf4ce-zrc-adaptor.a" toolchain="avrgcc"/>
+            <build type="doxygen-entry-point" value="group_rf4control"/>
+            <require idref="thirdparty.wireless.avr2102_rf4control.lib.zid.aptr.config" />
+            <device-support value="atxmega256a3bu"/>
+        </module>
     </select-by-device>
 </asf>
