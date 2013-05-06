@@ -119,11 +119,8 @@ enum status_code tc_unregister_callback(
 
 /**
  * \internal ISR handler for TC
- */
-/** Auto-generate a set of interrupt handlers for each TC in the device */
-
-/** \internal
- * Generates a TC interrupt handler function for a given TC index.
+ *
+ * Auto-generate a set of interrupt handlers for each TC in the device
  */
 #define _TC_INTERRUPT_HANDLER(n, unused) \
 		void TC##n##_Handler(void) \
