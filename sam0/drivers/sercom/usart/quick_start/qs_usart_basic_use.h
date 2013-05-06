@@ -44,44 +44,72 @@
 /**
  * \page asfdoc_samd20_sercom_usart_basic_use_case Quick Start Guide for SERCOM USART - Basic
  *
- * In this use case the USART will be used and set up as follows:
+ * This quick start will echo back characters typed into the terminal. In this
+ * use case the USART will be configured with the following settings:
  * - Asynchronous mode
  * - 9600 Baudrate
- * - 8-bits, no parity and 1 stopbit
- * - TX and RX connected to Xplained PRO embedded debugger virtual COM port
+ * - 8-bits, No Parity and 1 Stop Bit
+ * - TX and RX connected to the Xplained PRO Embedded Debugger virtual COM port
  *
  * \section asfdoc_samd20_sercom_usart_basic_use_case_setup Quick Start
  *
  * \subsection asfdoc_samd20_sercom_usart_basic_use_case_prereq Prerequisites
+ * There are no special setup requirements for this use-case.
  *
- * \subsection asfdoc_samd20_sercom_usart_basic_use_case_setup_code Code
- * The following must be added to the user application:
+ * \subsection asfdoc_samd20_usart_basic_use_case_setup_code Code
+ * Add to the main application source file, outside of any functions:
+ * \snippet qs_usart_basic_use.c module_inst
  *
- * Add to user application %main():
+ * Copy-paste the following setup code to your user application:
+ * \snippet qs_usart_basic_use.c setup
+ *
+ * Add to user application initialization (typically the start of \c main()):
+ * \snippet qs_usart_basic_use.c setup_init
+ *
+ * \subsection asfdoc_samd20_usart_basic_use_case_setup_flow Workflow
+ * -# Create a module software instance structure for the USART module to store
+ *    the USART driver state while it is in use.
+ *    \note This should never go out of scope as long as the module is in use.
+ *          In most cases, this should be global.
+ *
+ *    \snippet qs_usart_basic_use.c module_inst
+ * -# Configure the USART module.
+ *  -# Create a USART module configuration struct, which can be filled out to
+ *     adjust the configuration of a physical USART peripheral.
+ *     \snippet qs_usart_basic_use.c setup_config
+ *  -# Initialize the USART configuration struct with the module's default values.
+ *     \note This should always be performed before using the configuration
+ *           struct to ensure that all values are initialized to known default
+ *           settings.
+ *
+ *     \snippet qs_usart_basic_use.c setup_config_defaults
+ *  -# Alter the USART settings to configure the physical pinout, baud rate and
+ *     other relevant parameters.
+ *     \snippet qs_usart_basic_use.c setup_change_config
+ *  -# Configure the USART module with the desired settings, retrying while the
+ *     driver is busy until the configuration is stressfully set.
+ *     \snippet qs_usart_basic_use.c setup_set_config
+ *  -# Enable the USART module so that the transceivers can be configured.
+ *     \snippet qs_usart_basic_use.c setup_enable
+ * -# Enable the RX and TX transceivers for bidirectional USART communications.
+ *    \snippet qs_usart_basic_use.c setup_enable_txrx
+ *
+ *
+ * \section asfdoc_samd20_usart_basic_use_case_main Use Case
+ *
+ * \subsection asfdoc_samd20_usart_basic_use_case_main_code Code
+ * Copy-paste the following code to your user application:
  * \snippet qs_usart_basic_use.c main
  *
- * \section asfdoc_samd20_sercom_usart_basic_use_case_workflow Workflow
- * -# Initialize system
- *  \snippet qs_usart_basic_use.c system_init
- * -# Create configuration struct
- *  \snippet qs_usart_basic_use.c config
- * -# Create software device module instance
- *  \snippet qs_usart_basic_use.c module_inst
- * -# Get default configuration values
- *  \snippet qs_usart_basic_use.c conf_defaults
- * -# Modify confiuration defaults for Embedded Debugger (EDBG) pins
- *  \snippet qs_usart_basic_use.c conf_modify
- * -# Initialize USART with given configuration
- *  \snippet qs_usart_basic_use.c init
- * -# Enable USART
- *  \snippet qs_usart_basic_use.c enable
- * -# Enable Tx and RX
- *  \snippet qs_usart_basic_use.c enable_transceivers
- * -# Echo every received character back
- *  \snippet qs_usart_basic_use.c echo_characters
- *
+ * \subsection asfdoc_samd20_usart_basic_use_case_main_flow Workflow
+ * -# Send a string to the USART to show the demo is running, blocking until
+ *    all characters have been sent.
+ *  \snippet qs_usart_basic_use.c main_send_string
+ * -# Enter an infinite loop to continuously echo received values on the USART.
+ *  \snippet qs_usart_basic_use.c main_loop
+ * -# Perform a blocking read of the USART, storing the received character into
+ *    the previously declared temporary variable.
+ *  \snippet qs_usart_basic_use.c main_read
+ * -# Echo the received variable back to the USART via a blocking write.
+ *  \snippet qs_usart_basic_use.c main_write
  */
-
-#include <asf.h>
-#include <conf_clocks.h>
-
