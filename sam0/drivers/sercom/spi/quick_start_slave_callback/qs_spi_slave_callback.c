@@ -42,15 +42,13 @@
  */
 #include <asf.h>
 
-void configure_spi(void);
-
 //! [setup]
 //! [buf_length]
 #define BUF_LENGTH 20
 //! [buf_length]
 
 //! [buffer]
-static const uint8_t buffer[20] = {
+static uint8_t buffer[20] = {
 		0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09,
 		 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x10, 0x11, 0x12, 0x13
 };
@@ -63,6 +61,9 @@ volatile bool transfer_complete = false;
 struct spi_module slave;
 //! [dev_inst]
 //! [setup]
+
+void configure_callback(void);
+void configure_spi(void);
 
 //! [callback]
 static void callback(const struct spi_module *const module)
@@ -146,7 +147,7 @@ int main(void)
 	configure_spi();
 //! [run_config]
 //! [run_callback_config]
-	configure_callbacks();
+	configure_callback();
 //! [run_callback_config]
 //! [main_start]
 

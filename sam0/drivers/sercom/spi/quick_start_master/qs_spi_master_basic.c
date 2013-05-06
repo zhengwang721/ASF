@@ -57,9 +57,14 @@ static const uint8_t buffer[20] = {
 //! [buffer]
 
 //! [dev_inst]
-	struct spi_module master;
+struct spi_module master;
 //! [dev_inst]
+//! [slave_dev_inst]
+struct spi_slave_inst slave;
+//! [slave_dev_inst]
 //! [setup]
+
+void configure_spi(void);
 
 //! [configure_spi]
 void configure_spi(void)
@@ -70,9 +75,6 @@ void configure_spi(void)
 //! [slave_config]
 	struct spi_slave_inst_config slave_dev_config;
 //! [slave_config]
-//! [slave_dev_inst]
-	struct spi_slave_inst slave;
-//! [slave_dev_inst]
 	/* Configure and initialize software device instance of peripheral slave */
 //! [slave_conf_defaults]
 	spi_slave_inst_get_config_defaults(&slave_dev_config);

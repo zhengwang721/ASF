@@ -125,7 +125,7 @@ int main(void)
 
 //! [main_use_case]
 //! [write]
-	while (spi_write_buffer_wait(&slave, buffer, BUF_LENGTH != STATUS_OK) {
+	while (spi_write_buffer_wait(&slave, buffer, BUF_LENGTH != STATUS_OK)) {
 		/* Wait for transfer from master */
 	}
 //! [write]

@@ -50,21 +50,25 @@
 #define SLAVE_SELECT_PIN EXT1_PIN_SPI_SS_0
 //! [slave_select_pin]
 //! [buffer]
-static const uint8_t buffer[20] = {
+static uint8_t buffer[20] = {
 		0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09,
 		 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x10, 0x11, 0x12, 0x13
 };
 //! [buffer]
 
 //! [dev_inst]
-struct spi_module slave;
+struct spi_module master;
 //! [dev_inst]
-
+//! [slave_dev_inst]
+struct spi_slave_inst slave;
+//! [slave_dev_inst]
 //! [var]
 volatile bool transfer_complete = false;
 //! [var]
 //! [setup]
 
+void configure_callback(void);
+void configure_spi(void);
 //! [callback]
 static void callback(const struct spi_module *const module)
 {
@@ -93,9 +97,6 @@ void configure_spi(void)
 //! [slave_config]
 	struct spi_slave_inst_config slave_dev_config;
 //! [slave_config]
-//! [slave_dev_inst]
-	struct spi_slave_inst slave;
-//! [slave_dev_inst]
 	/* Configure and initialize software device instance of peripheral slave */
 //! [slave_conf_defaults]
 	spi_slave_inst_get_config_defaults(&slave_dev_config);

@@ -76,6 +76,8 @@
  * A globally available software device instance struct to store the SPI driver
  * state while it is in use.
  * \snippet qs_spi_master_callback.c dev_inst
+ * A globally available peripheral slave software device instance struct.
+ * \snippet qs_spi_master_callback.c slave_dev_inst
  * A function for configuring the SPI:
  * \snippet configure_spi
  * A function for configuring the callback functionality of the SPI:
@@ -98,8 +100,6 @@
  *     \snippet qs_spi_master_callback.c config
  *   -# Create peripheral slave configuration struct.
  *     \snippet qs_spi_master_callback.c slave_config
- *   -# Create peripheral slave software device instance struct.
- *     \snippet qs_spi_master_callback.c slave_dev_inst
  *   -# Get default peripheral slave configuration.
  *     \snippet qs_spi_master_callback.c slave_conf_defaults
  *   -# Set Slave Select pin.

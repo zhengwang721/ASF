@@ -76,6 +76,8 @@
  * A globally available software device instance struct to store the SPI driver
  * state while it is in use.
  * \snippet qs_spi_master_basic.c dev_inst
+ * A globally available peripheral slave software device instance struct.
+ * \snippet qs_spi_master_basic.c slave_dev_inst
  * A function for configuring the SPI:
  * \snippet configure_spi
  *
