@@ -106,14 +106,16 @@
  *          \ref ac_chan_config.vcc_scale_factor "here".
  *
  *  \snippet qs_ac_basic.c setup_10
+ * -# Configure the physical pin that will be routed to the AC module channel 0.
+ *  \snippet qs_ac_basic.c setup_11
  * -# Initialize the Analog Comparator channel and configure it with the desired
  *    settings.
- *  \snippet qs_ac_basic.c setup_11
- * -# Enable the now initialized Analog Comparator channel.
  *  \snippet qs_ac_basic.c setup_12
+ * -# Enable the now initialized Analog Comparator channel.
+ *  \snippet qs_ac_basic.c setup_13
  *
  * -# Enable the now initialized Analog Comparator peripheral.
- *  \snippet qs_ac_basic.c setup_13
+ *  \snippet qs_ac_basic.c setup_14
  *
  * \section asfdoc_samd20_ac_basic_use_case_imp Implementation
  *
@@ -134,7 +136,7 @@
  *    to be read.
  *  \snippet qs_ac_basic.c main_4
  * -# Read the comparator output state into the local variable for application
- *    use.
+ *    use, re-trying until the comparison state is ready.
  *  \snippet qs_ac_basic.c main_5
  * -# Set the board LED state to mirror the last comparison state.
  *  \snippet qs_ac_basic.c main_6

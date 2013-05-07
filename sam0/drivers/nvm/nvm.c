@@ -604,3 +604,34 @@ void nvm_get_parameters(
 				NVMCTRL_ROW_PAGES << (7 - boot_fuse_value);
 	}
 }
+
+/**
+ * \brief Checks whether the page region is locked
+ *
+ * Extracts the region to which the given page belongs and checks whether
+ * that region is locked.
+ *
+ * \param[in] page_number    Page number to be checked
+ *
+ * \return Page lock status
+ *
+ * \retval true              Page is locked
+ * \retval false             Page is not locked
+ *
+ */
+bool nvm_is_page_locked(uint16_t page_number)
+{
+	uint16_t pages_in_region;
+	uint16_t region_number;
+
+	/* Get a pointer to the module hardware instance */
+	Nvmctrl *const nvm_module = NVMCTRL;
+
+	/* Get number of pages in a region */
+	pages_in_region = _nvm_dev.number_of_pages / 16;
+
+	/* Get region for given page */
+	region_number = page_number / pages_in_region;
+
+	return !(nvm_module->LOCK.reg & (1 << region_number));
+}

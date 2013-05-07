@@ -21,6 +21,7 @@
 
 		<build type="header-file" subtype="api" value="gclk.h"/>
 		<build type="header-file" subtype="api" value="clock.h"/>
+		<build type="header-file" value="clock_config_check.h"/>
 		<build type="c-source" value="clock.c"/>
 		<build type="c-source" value="gclk.c"/>
 
@@ -30,6 +31,7 @@
 		<build type="module-config" subtype="path" value="module_config"/>
 		<build type="module-config" subtype="required-header-file" value="conf_clocks.h"/>
 
+		<require idref="sam0.drivers.system.interrupt"/>
 		<require idref="sam0.utils"/>
 
 		<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
