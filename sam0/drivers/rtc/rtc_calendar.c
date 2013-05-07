@@ -43,6 +43,10 @@
 #include "rtc_calendar.h"
 #include <gclk.h>
 
+#if !defined(__DOXYGEN__)
+volatile struct _rtc_device _rtc_dev;
+#endif
+
 /**
  * \brief Resets the RTC module
  * Resets the RTC module to hardware defaults.
