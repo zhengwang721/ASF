@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Configuration File for GPIO example.
+ * \brief  Configuration File for SAM4L Xplained Pro Board.
  *
- * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,21 +41,10 @@
  *
  */
 
-#ifndef CONF_EXAMPLE_H_INCLUDED
-#define CONF_EXAMPLE_H_INCLUDED
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#define EXAMPLE_LED LED0
+/** Enable Com Port. */
+#define CONF_BOARD_COM_PORT
 
-/** Using button PB0 on SAM4L-EK to trigger an interrupt */
-#define EXAMPLE_BUTTON_INT    GPIO_PUSH_BUTTON_0
-
-/** Using PC08 on SAM4L-EK to trigger an event */
-#define EXAMPLE_PIN_EVENT     PIN_PC08
-#define EXAMPLE_PIN_NAME      "PC08"
-
-#define EXAMPLE_GND_NAME      "J4/PIN9"
-
-/** PDCA ID for USART TX */
-#define PDCA_PID_USART_TX    20
-
-#endif  /* CONF_EXAMPLE_H_INCLUDED */
+#endif /* CONF_BOARD_H_INCLUDED */

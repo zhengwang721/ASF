@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Configuration File for GPIO example.
+ * \brief Unit test configuration
  *
- * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,21 +41,25 @@
  *
  */
 
-#ifndef CONF_EXAMPLE_H_INCLUDED
-#define CONF_EXAMPLE_H_INCLUDED
+#ifndef CONF_TEST_H_INCLUDED
+#define CONF_TEST_H_INCLUDED
 
-#define EXAMPLE_LED LED0
 
-/** Using button PB0 on SAM4L-EK to trigger an interrupt */
-#define EXAMPLE_BUTTON_INT    GPIO_PUSH_BUTTON_0
+/** USART Interface  : Console UART */
+#define CONF_TEST_USART      COM_PORT_USART
+/** Baudrate setting : 115200 */
+#define CONF_TEST_BAUDRATE   115200
+/** Char setting     : 8-bit character length (don't care for UART) */
+#define CONF_TEST_CHARLENGTH US_MR_CHRL_8
+/** Parity setting   : No parity check */
+#define CONF_TEST_PARITY     US_MR_PAR_NONE
+/** Stopbit setting  : No extra stopbit, i.e., use 1 (don't care for UART) */
+#define CONF_TEST_STOPBITS   US_MR_NBSTOP_1
 
-/** Using PC08 on SAM4L-EK to trigger an event */
-#define EXAMPLE_PIN_EVENT     PIN_PC08
-#define EXAMPLE_PIN_NAME      "PC08"
+/** Input pin for the test */
+#define CONF_TEST_GPIO_IN    PIN_PA06
 
-#define EXAMPLE_GND_NAME      "J4/PIN9"
+/** Output pin for the test */
+#define CONF_TEST_GPIO_OUT   PIN_PB05
 
-/** PDCA ID for USART TX */
-#define PDCA_PID_USART_TX    20
-
-#endif  /* CONF_EXAMPLE_H_INCLUDED */
+#endif /* CONF_TEST_H_INCLUDED */

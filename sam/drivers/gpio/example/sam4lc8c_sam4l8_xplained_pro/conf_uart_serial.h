@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Configuration File for GPIO example.
+ * \brief Serial USART service configuration.
  *
- * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,21 +41,18 @@
  *
  */
 
-#ifndef CONF_EXAMPLE_H_INCLUDED
-#define CONF_EXAMPLE_H_INCLUDED
+#ifndef CONF_USART_SERIAL_H
+#define CONF_USART_SERIAL_H
 
-#define EXAMPLE_LED LED0
+/** USART Interface */
+#define CONF_UART              COM_PORT_USART
+/** Baudrate setting */
+#define CONF_UART_BAUDRATE     115200
+/** Character length setting */
+#define CONF_UART_CHAR_LENGTH  US_MR_CHRL_8_BIT
+/** Parity setting */
+#define CONF_UART_PARITY       US_MR_PAR_NO
+/** Stop bits setting */
+#define CONF_UART_STOP_BITS    US_MR_NBSTOP_1_BIT
 
-/** Using button PB0 on SAM4L-EK to trigger an interrupt */
-#define EXAMPLE_BUTTON_INT    GPIO_PUSH_BUTTON_0
-
-/** Using PC08 on SAM4L-EK to trigger an event */
-#define EXAMPLE_PIN_EVENT     PIN_PC08
-#define EXAMPLE_PIN_NAME      "PC08"
-
-#define EXAMPLE_GND_NAME      "J4/PIN9"
-
-/** PDCA ID for USART TX */
-#define PDCA_PID_USART_TX    20
-
-#endif  /* CONF_EXAMPLE_H_INCLUDED */
+#endif/* CONF_USART_SERIAL_H_INCLUDED */

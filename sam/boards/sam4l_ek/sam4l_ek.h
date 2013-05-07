@@ -135,6 +135,7 @@
 #define GPIO_PUSH_BUTTON_0_MASK         GPIO_PC03
 #define PUSH_BUTTON_0_DOWN_LEVEL        IOPORT_PIN_LEVEL_LOW
 #define PUSH_BUTTON_0_UP_LEVEL          IOPORT_PIN_LEVEL_HIGH
+#define BUTTON_0_NAME                   "PB0"
 //! @}
 
 /*! \name Push Button Connection on External Interrupt line
