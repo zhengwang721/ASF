@@ -1090,7 +1090,7 @@ void pmc_clr_fast_startup_input(uint32_t ul_inputs)
  */
 void pmc_enable_sleepmode(uint8_t uc_type)
 {
-#if !defined(SAM4S) || !defined(SAM4E)
+#if !defined(SAM4S) || !defined(SAM4E) || !defined(SAM4N)
 	PMC->PMC_FSMR &= (uint32_t) ~ PMC_FSMR_LPM; // Enter Sleep mode
 #endif
 	SCB->SCR &= (uint32_t) ~ SCB_SCR_SLEEPDEEP_Msk; // Deep sleep
@@ -1107,7 +1107,7 @@ void pmc_enable_sleepmode(uint8_t uc_type)
 #endif
 }
 
-#if (SAM4S || SAM4E)
+#if (SAM4S || SAM4E || SAM4N)
 static uint32_t ul_flash_in_wait_mode = PMC_WAIT_MODE_FLASH_DEEP_POWERDOWN;
 /**
  * \brief Set the embedded flash state in wait mode
@@ -1232,6 +1232,26 @@ void pmc_enable_clock_failure_detector(void)
 void pmc_disable_clock_failure_detector(void)
 {
 	uint32_t ul_reg = PMC->CKGR_MOR & (~CKGR_MOR_CFDEN);
+
+	PMC->CKGR_MOR = PMC_CKGR_MOR_KEY_VALUE | ul_reg;
+}
+
+/**
+ * \brief Enable Slow Crystal Oscillator Frequency Monitoring.
+ */
+void pmc_enable_sclk_osc_freq_monitor(void)
+{
+	uint32_t ul_reg = PMC->CKGR_MOR;
+
+	PMC->CKGR_MOR = PMC_CKGR_MOR_KEY_VALUE | CKGR_MOR_XT32KFME | ul_reg;
+}
+
+/**
+ * \brief Disable Slow Crystal Oscillator Frequency Monitoring.
+ */
+void pmc_disable_sclk_osc_freq_monitor(void)
+{
+	uint32_t ul_reg = PMC->CKGR_MOR & (~CKGR_MOR_XT32KFME);
 
 	PMC->CKGR_MOR = PMC_CKGR_MOR_KEY_VALUE | ul_reg;
 }
