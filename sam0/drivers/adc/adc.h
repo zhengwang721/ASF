@@ -761,7 +761,7 @@ enum adc_interrupt_flag {
 	/** Window monitor match */
 	ADC_INTERRUPT_WINDOW       = ADC_INTFLAG_WINMON,
 	/** ADC result overwritten before read */
-	ADC_INTERRUPT_OVERRUN      = ADC_INTFLAG_MASK,
+	ADC_INTERRUPT_OVERRUN      = ADC_INTFLAG_OVERRUN,
 };
 #endif
 
