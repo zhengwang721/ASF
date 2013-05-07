@@ -44,6 +44,12 @@
 #ifndef ADC_CALLBACK_H_INCLUDED
 #define ADC_CALLBACK_H_INCLUDED
 
+/**
+ * \addtogroup asfdoc_samd20_adc_group
+ *
+ * @{
+ */
+
 #include <adc.h>
 
 enum adc_job_type {
