@@ -43,12 +43,12 @@
 
 /**
  * \defgroup spi_example_pin_defs
- *  - <b> SAM4L-Xplained Pro  --  SAM4L-Xplained Pro </b>
+ *  - <b> SAM4L Xplained Pro board --  SAM4L Xplained Pro board</b>
  *  - VCC -- VCC
- *  - NPCS0(PC03) -- NPCS0(PC03)
- *  - MISO(PA21)  -- MISO(PA21)
- *  - MOSI(PA22)  -- MOSI(PA22)
- *  - SPCK(PC30)  -- SPCK(PC30)
+ *  - NPCS0(PC03,EXT1/PIN15) -- NPCS0(PC03,EXT1/PIN15)
+ *  - MISO(PA21,EXT1/PIN17)  -- MISO(PA21,EXT1/PIN17)
+ *  - MOSI(PA22,EXT1/PIN16)  -- MOSI(PA22,EXT1/PIN16)
+ *  - SPCK(PC30,EXT1/PIN18)  -- SPCK(PC30,EXT1/PIN18)
  *  - GND -- GND
  */
 
