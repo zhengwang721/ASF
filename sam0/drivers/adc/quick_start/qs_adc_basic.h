@@ -65,14 +65,14 @@
  * - No added sampling time
  * - Pin scan mode disabled
  *
- * \section asfdoc_samd20_adc_basic_use_case_setup Quick Start
+ * \section asfdoc_samd20_adc_basic_use_case_setup Setup
  *
  * \subsection asfdoc_samd20_adc_basic_use_case_prereq Prerequisites
  * There are no special setup requirements for this use-case.
  *
  * \subsection asfdoc_samd20_adc_basic_use_case_code Code
  * Add to user application %main():
- * \snippet qs_adc_basic.c main
+ * \snippet qs_adc_basic.c main_setup
  *
  * \section asfdoc_samd20_adc_basic_use_case_workflow Workflow
  * -# Create variables for device software instance, config and channel config.
@@ -86,10 +86,18 @@
  *  \snippet qs_adc_basic.c init_adc
  * -# Enable the ADC.
  *  \snippet qs_adc_basic.c enable
- * -# Start conversion.
+ 
+  * \section asfdoc_samd20_adc_basic_use_case_use Use Case
+ * \subsection asfdoc_samd20_adc_basic_use_case_use_code Code
+ * Copy-paste the following code to your user application:
+ * \snippet qs_adc_basic.c main_use_case
+ * \subsection asfdoc_samd20_adc_basic_use_case_use_workflow Workflow
+  * -# Start conversion.
  *  \snippet qs_adc_basic.c start_conv
  * -# Wait until conversion is done and read result.
  *  \snippet qs_adc_basic.c get_res
  * -# Start infinite loop.
  *  \snippet qs_adc_basic.c inf_loop
+
+ */
  */
