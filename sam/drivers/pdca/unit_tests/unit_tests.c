@@ -113,22 +113,26 @@ static uint8_t gs_tran_buffer[BUFFER_SIZE];
 volatile uint8_t rxbuff_flag = 0;
 
 /** PDC channel options. */
-pdca_channel_config_t PDCA_RX_OPTIONS = {
+pdca_channel_config_t pdca_rx_options = {
 	.addr = (void *)gs_rev_buffer,     /* memory address */
 	.pid = PDCA_PID_USART0_RX,         /* select peripheral - USART0 RX line.*/
 	.size = BUFFER_SIZE,               /* transfer counter */
 	.r_addr = (void *)gs_rev_buffer,   /* next memory address */
 	.r_size = BUFFER_SIZE,             /* next transfer counter */
-	.transfer_size = PDCA_MR_SIZE_BYTE /* select size of the transfer */
+	.transfer_size = PDCA_MR_SIZE_BYTE,/* select size of the transfer */
+	.etrig  = false,                   /* disable the transfer upon event
+										* trigger */
 };
 
-pdca_channel_config_t PDCA_TX_OPTIONS = {
+pdca_channel_config_t pdca_tx_options = {
 	.addr = (void *)gs_tran_buffer,    /* memory address */
 	.pid = PDCA_PID_USART0_TX,         /* select peripheral - USART0 TX line.*/
 	.size = BUFFER_SIZE,               /* transfer counter */
 	.r_addr = (void *)gs_tran_buffer,  /* next memory address */
 	.r_size = BUFFER_SIZE,             /* next transfer counter */
-	.transfer_size = PDCA_MR_SIZE_BYTE /* select size of the transfer */
+	.transfer_size = PDCA_MR_SIZE_BYTE,/* select size of the transfer */
+	.etrig  = false,                   /* disable the transfer upon event
+										* trigger */
 };
 
 /**
@@ -205,8 +209,8 @@ static void run_pdca_loopback_test(const struct test_case *test)
 	/* Enable PDCA module clock */
 	pdca_enable(PDCA);
 	/* Init PDCA channel with the pdca_options.*/
-	pdca_channel_set_config(PDCA_RX_CHANNEL, &PDCA_RX_OPTIONS);
-	pdca_channel_set_config(PDCA_TX_CHANNEL, &PDCA_TX_OPTIONS);
+	pdca_channel_set_config(PDCA_RX_CHANNEL, &pdca_rx_options);
+	pdca_channel_set_config(PDCA_TX_CHANNEL, &pdca_tx_options);
 	/* Enable PDCA channel, start receiving data. */
 	pdca_channel_enable(PDCA_RX_CHANNEL);
 	pdca_channel_enable(PDCA_TX_CHANNEL);

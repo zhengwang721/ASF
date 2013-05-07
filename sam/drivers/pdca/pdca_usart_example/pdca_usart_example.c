@@ -115,12 +115,14 @@ const char ascii_anim2[] =
 ;
 
 /* PDCA channel options */
-static const pdca_channel_config_t PDCA_TX_CONFIGS = {
+static const pdca_channel_config_t pdca_tx_configs = {
 	.addr   = (void *)ascii_anim1,      /* memory address              */
 	.pid    = PDCA_PID_USART_TX,        /* select peripheral           */
 	.size   = sizeof(ascii_anim1),      /* transfer counter            */
 	.r_addr = 0,                        /* next memory address         */
 	.r_size = 0,                        /* next transfer counter       */
+	.etrig  = false,                    /* disable the transfer upon event
+										 * trigger */
 	.ring   = false,                    /* disable ring buffer mode    */
 	.transfer_size = PDCA_MR_SIZE_BYTE  /* select size of the transfer */
 };
@@ -186,7 +188,7 @@ int main(void)
 	pdca_enable(PDCA);
 
 	/* Init PDCA channel with the pdca_options.*/
-	pdca_channel_set_config(PDCA_TX_CHANNEL, &PDCA_TX_CONFIGS);
+	pdca_channel_set_config(PDCA_TX_CHANNEL, &pdca_tx_configs);
 
 	/* Enable PDCA channel */
 	pdca_channel_enable(PDCA_TX_CHANNEL);
