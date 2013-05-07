@@ -45,28 +45,24 @@
  * \page asfdoc_samd20_tc_basic_use_case Quick Start Guide for TC - Basic
  *
  * In this use case, the TC will be used to generate a PWM signal. Here
- * the pulse width is set to half the period. The TC module will be set up as
- * follows:
+ * the pulse width is set to one quarter of the period. The TC module will be
+ * set up as follows:
  *
  * - GCLK generator 0 (GCLK main) clock source
  * - 16 bit resolution on the counter
  * - No prescaler
- * - Normal frequency wave generation
+ * - Normal PWM wave generation
  * - GCLK reload action
  * - Don't run in standby
  * - No inversion of waveform output
  * - No capture enabled
  * - Count upward
- * - Don't perform oneshot operations
+ * - Don't perform one-shot operations
  * - No event input enabled
  * - No event action
  * - No event generation enabled
  * - Counter starts on 0
- * - Capture compare channel 0 set to 0x7FFF
- *
- * Looking at the configuration returned from the function
- * tc_get_config_defaults the only difference is that capture compare
- * channel 0 is set to 0x7FFF not zero.
+ * - Capture compare channel 0 set to 0xFFFF/4
  *
  * \section asfdoc_samd20_tc_basic_use_case_setup Quick Start
  *
@@ -74,28 +70,51 @@
  * There are no prerequisites for this use case.
  *
  * \subsection asfdoc_samd20_tc_basic_use_case_setup_code Code
- * The following must be added to the user application:
+ * Add to the main application source file, outside of any functions:
+ * \snippet qs_tc_basic.c module_inst
  *
- * Add to user application %main():
+ * Copy-paste the following setup code to your user application:
+ * \snippet qs_tc_basic.c setup
+ *
+ * Add to user application initialization (typically the start of \c main()):
+ * \snippet qs_tc_basic.c setup_init
+ *
+ * \subsection asfdoc_samd20_tc_basic_use_case_setup_flow Workflow
+ * -# Create a module software instance structure for the TC module to store
+ *    the TC driver state while it is in use.
+ *    \note This should never go out of scope as long as the module is in use.
+ *          In most cases, this should be global.
+ *
+ *    \snippet qs_tc_basic.c module_inst
+ * -# Configure the TC module.
+ *  -# Create a TC module configuration struct, which can be filled out to
+ *     adjust the configuration of a physical TC peripheral.
+ *     \snippet qs_tc_basic.c setup_config
+ *  -# Initialize the TC configuration struct with the module's default values.
+ *     \note This should always be performed before using the configuration
+ *           struct to ensure that all values are initialized to known default
+ *           settings.
+ *
+ *     \snippet qs_tc_basic.c setup_config_defaults
+ *  -# Alter the TC settings to configure the counter width, wave generation
+ *     mode and the compare channel 0 value.
+ *     \snippet qs_tc_basic.c setup_change_config
+ *  -# Alter the TC settings to configure the PWM output on a physical device
+ *     pin.
+ *     \snippet qs_tc_basic.c setup_change_config_pwm
+ *  -# Configure the TC module with the desired settings.
+ *     \snippet qs_tc_basic.c setup_set_config
+ *  -# Enable the TC module to start the timer and begin PWM signal generation.
+ *     \snippet qs_tc_basic.c setup_enable
+ *
+ *
+ * \section asfdoc_samd20_tc_basic_use_case_main Use Case
+ *
+ * \subsection asfdoc_samd20_tc_basic_use_case_main_code Code
+ * Copy-paste the following code to your user application:
  * \snippet qs_tc_basic.c main
  *
- * \section asfdoc_samd20_tc_basic_use_case_workflow Workflow
- * -# Initialize system.
- *  \snippet qs_tc_basic.c system_init
- * -# Create configuration struct.
- *  \snippet qs_tc_basic.c config
- * -# Create software device instance struct.
- *  \snippet qs_tc_basic.c dev_inst
- * -# Get default configuration values.
- *  \snippet qs_tc_basic.c tc_get_config_defaults
- * -# Set up PWM output on channel 0.
- *   \snippet qs_tc_basic.c pwm_channel_0
- * -# Set counter size, wave generation mode and compare capture value.
- *  \snippet qs_tc_basic.c setup
- * -# Initialize the TC module based on given configuration values.
- *  \snippet qs_tc_basic.c tc_init
- * -# Enable and start the TC module.
- *  \snippet qs_tc_basic.c tc_enable
- * -# Loop infinitly. Let the module generate PWM signal.
- *  \snippet qs_tc_basic.c inf_loop
+ * \subsection asfdoc_samd20_tc_basic_use_case_main_flow Workflow
+ * -# Enter an infinite loop while the PWM wave is generated via the TC module.
+ *  \snippet qs_tc_basic.c main_loop
  */

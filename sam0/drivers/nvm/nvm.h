@@ -470,6 +470,8 @@ enum status_code nvm_execute_command(
 		const uint32_t address,
 		const uint32_t parameter);
 
+bool nvm_is_page_locked(uint16_t page_number);
+
 /**
  * \brief Retrieves the error code of the last issued NVM operation.
  *
