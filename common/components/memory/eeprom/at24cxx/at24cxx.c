@@ -62,6 +62,32 @@ extern "C" {
 /**INDENT-ON**/
 /// @endcond
 
+#ifndef AT24C_MEM_ADDR_LEN
+#  error Please define AT24C_MEM_ADDR_LEN according to the using AT24C
+#else
+#  if AT24C_MEM_ADDR_LEN>3
+#    error AT24C_MEM_ADDR_LEN over 3 not supported
+#  elif AT24C_MEM_ADDR_LEN>2
+#    define at24c_build_word_address(p_u8, addr) \
+	do {\
+		p_u8[0] = (uint8_t)(addr >> 16);\
+		p_u8[1] = (uint8_t)(addr >>  8);\
+		p_u8[2] = (uint8_t)(addr >>> 0);\
+	} while (0)
+#  elif AT24C_MEM_ADDR_LEN>1
+#    define at24c_build_word_address(p_u8, addr) \
+	do {\
+		p_u8[0] = (uint8_t)(addr >> 8);\
+		p_u8[1] = (uint8_t)(addr >> 0);\
+	} while (0)
+#  else /* 1 */
+#    define at24c_build_word_address(p_u8, addr) \
+	do {\
+		p_u8[0] = (uint8_t)(addr >> 0);\
+	} while (0)
+#  endif
+#endif /* AT24C_MEM_ADDR_LEN */
+
 /**
  * \brief Poll the acknowledge from AT24CXX.
  *
@@ -129,22 +155,21 @@ void at24cxx_reset(void)
 /**
  * \brief Write single byte to AT24CXX.
  *
- * \param us_address Address of the byte to write.
- * \param uc_value Value that will be written to the specified address.
+ * \param u32_address Address of the byte to write.
+ * \param u8_value Value that will be written to the specified address.
  *
  * \return AT24C_WRITE_SUCCESS if single byte was written, AT24C_WRITE_FAIL
  * otherwise.
  */
-uint32_t at24cxx_write_byte(uint16_t us_address, uint8_t uc_value)
+uint32_t at24cxx_write_byte(uint32_t u32_address, uint8_t u8_value)
 {
 	twi_package_t twi_package;
 
 	/* Configure the data packet to be transmitted */
 	twi_package.chip = BOARD_AT24C_ADDRESS;
-	twi_package.addr[0] = (uint8_t)(us_address >> 8);
-	twi_package.addr[1] = (uint8_t)us_address;
+	at24c_build_word_address(twi_package.addr, u32_address);
 	twi_package.addr_length = AT24C_MEM_ADDR_LEN;
-	twi_package.buffer = &uc_value;
+	twi_package.buffer = &u8_value;
 	twi_package.length = 1;
 
 	if (twi_master_write(BOARD_AT24C_TWI_INSTANCE, &twi_package) !=
@@ -159,25 +184,24 @@ uint32_t at24cxx_write_byte(uint16_t us_address, uint8_t uc_value)
 /**
  * \brief Write multiple bytes continuously to AT24CXX.
  *
- * \param us_start_address Address of the first byte in transaction.
- * \param us_length Number of bytes to write.
+ * \param u32_start_address Address of the first byte in transaction.
+ * \param u16_length Number of bytes to write.
  * \param p_wr_buffer Pointer to array where the bytes to be written are stored.
  *
  * \return AT24C_WRITE_SUCCESS if single byte was written, AT24C_WRITE_FAIL
  * otherwise.
  */
-uint32_t at24cxx_write_continuous(uint16_t us_start_address,
-		uint16_t us_length, uint8_t const *p_wr_buffer)
+uint32_t at24cxx_write_continuous(uint32_t u32_start_address,
+		uint16_t u16_length, uint8_t const *p_wr_buffer)
 {
 	twi_package_t twi_package;
 
 	/* Configure the data packet to be transmitted */
 	twi_package.chip = BOARD_AT24C_ADDRESS;
-	twi_package.addr[0] = (uint8_t)(us_start_address >> 8);
-	twi_package.addr[1] = (uint8_t)us_start_address;
+	at24c_build_word_address(twi_package.addr, u32_start_address);
 	twi_package.addr_length = AT24C_MEM_ADDR_LEN;
 	twi_package.buffer = (uint8_t *) p_wr_buffer;
-	twi_package.length = us_length;
+	twi_package.length = u16_length;
 
 	if (twi_master_write(BOARD_AT24C_TWI_INSTANCE, &twi_package) !=
 			TWI_SUCCESS) {
@@ -191,19 +215,18 @@ uint32_t at24cxx_write_continuous(uint16_t us_start_address,
 /**
  * \brief Read single byte from AT24CXX.
  *
- * \param us_address Address of the byte to read.
- * \param uc_read_byte Pointer to memory where the read byte will be stored.
+ * \param u32_address Address of the byte to read.
+ * \param p_rd_byte Pointer to memory where the read byte will be stored.
  *
  * \return AT24C_READ_SUCCESS if one byte was read, AT24C_READ_FAIL otherwise.
  */
-uint32_t at24cxx_read_byte(uint16_t us_address, uint8_t *p_rd_byte)
+uint32_t at24cxx_read_byte(uint32_t u32_address, uint8_t *p_rd_byte)
 {
 	twi_package_t twi_package;
 
 	/* Configure the data packet to be received */
 	twi_package.chip = BOARD_AT24C_ADDRESS;
-	twi_package.addr[0] = (uint8_t)(us_address >> 8);
-	twi_package.addr[1] = (uint8_t)us_address;
+	at24c_build_word_address(twi_package.addr, u32_address);
 	twi_package.addr_length = AT24C_MEM_ADDR_LEN;
 	twi_package.buffer = p_rd_byte;
 	twi_package.length = 1;
@@ -219,24 +242,23 @@ uint32_t at24cxx_read_byte(uint16_t us_address, uint8_t *p_rd_byte)
 /**
  * \brief Read multiple bytes continuously from AT24CXX.
  *
- * \param us_start_address Address of the first byte to read.
- * \param us_length Number of bytes to read.
+ * \param u32_start_address Address of the first byte to read.
+ * \param u16_length Number of bytes to read.
  * \param p_rd_buffer Pointer to memory where the read bytes will be stored.
  *
  * \return AT24C_READ_SUCCESS if one byte was read, AT24C_READ_FAIL otherwise.
  */
-uint32_t at24cxx_read_continuous(uint16_t us_start_address, uint16_t us_length,
-		uint8_t *p_rd_buffer)
+uint32_t at24cxx_read_continuous(uint32_t u32_start_address,
+		uint16_t u16_length, uint8_t *p_rd_buffer)
 {
 	twi_package_t twi_package;
 
 	/* Configure the data packet to be received */
 	twi_package.chip = BOARD_AT24C_ADDRESS;
-	twi_package.addr[0] = (uint8_t)(us_start_address >> 8);
-	twi_package.addr[1] = (uint8_t)us_start_address;
+	at24c_build_word_address(twi_package.addr, u32_start_address);
 	twi_package.addr_length = AT24C_MEM_ADDR_LEN;
 	twi_package.buffer = p_rd_buffer;
-	twi_package.length = us_length;
+	twi_package.length = u16_length;
 
 	if (twi_master_read(BOARD_AT24C_TWI_INSTANCE, &twi_package) !=
 			TWI_SUCCESS) {
@@ -249,26 +271,25 @@ uint32_t at24cxx_read_continuous(uint16_t us_start_address, uint16_t us_length,
 /**
  * \brief Write data to the specified page in AT24CXX.
  *
- * \param ul_page_address  The page number.
- * \param ul_page_size The size of the page (which varies with the chips).
+ * \param u32_page_address  The page number.
+ * \param u32_page_size The size of the page (which varies with the chips).
  * \param p_wr_buffer Pointer to array where the bytes to be written are stored.
  *
  * \return AT24C_WRITE_SUCCESS if the page was written, AT24C_WRITE_FAIL
  * otherwise.
  */
-uint32_t at24cxx_write_page(uint32_t ul_page_address,
-		uint32_t ul_page_size, uint8_t const *p_wr_buffer)
+uint32_t at24cxx_write_page(uint32_t u32_page_address,
+		uint32_t u32_page_size, uint8_t const *p_wr_buffer)
 {
 	twi_package_t twi_package;
-	uint32_t start_address = (ul_page_address * ul_page_size) & 0xFFFF;
+	uint32_t start_address = (u32_page_address * u32_page_size) & 0xFFFF;
 
 	/* Configure the data packet to be transmitted */
 	twi_package.chip = BOARD_AT24C_ADDRESS;
-	twi_package.addr[0] = (uint8_t)(start_address >> 8);
-	twi_package.addr[1] = (uint8_t)start_address;
+	at24c_build_word_address(twi_package.addr, start_address);
 	twi_package.addr_length = AT24C_MEM_ADDR_LEN;
 	twi_package.buffer = (uint8_t *)p_wr_buffer;
-	twi_package.length = ul_page_size;
+	twi_package.length = u32_page_size;
 
 	if (twi_master_write(BOARD_AT24C_TWI_INSTANCE, &twi_package) !=
 			TWI_SUCCESS) {
@@ -282,25 +303,24 @@ uint32_t at24cxx_write_page(uint32_t ul_page_address,
 /**
  * \brief Read data from the specified page in AT24CXX.
  *
- * \param ul_page_address  The page number.
- * \param ul_page_size The size of the page (which varies with the chips).
+ * \param u32_page_address  The page number.
+ * \param u32_page_size The size of the page (which varies with the chips).
  * \param p_rd_buffer Pointer to array where the bytes read are to be stored.
  *
  * \return AT24C_READ_SUCCESS if the page was read, AT24C_READ_FAIL otherwise.
  */
-uint32_t at24cxx_read_page(uint32_t ul_page_address,
-		uint32_t ul_page_size, uint8_t *p_rd_buffer)
+uint32_t at24cxx_read_page(uint32_t u32_page_address,
+		uint32_t u32_page_size, uint8_t *p_rd_buffer)
 {
 	twi_package_t twi_package;
-	uint32_t start_address = (ul_page_address * ul_page_size) & 0xFFFF;
+	uint32_t start_address = (u32_page_address * u32_page_size) & 0xFFFF;
 
 	/* Configure the data packet to be received */
 	twi_package.chip = BOARD_AT24C_ADDRESS;
-	twi_package.addr[0] = (uint8_t)(start_address >> 8);
-	twi_package.addr[1] = (uint8_t)start_address;
+	at24c_build_word_address(twi_package.addr, start_address);
 	twi_package.addr_length = AT24C_MEM_ADDR_LEN;
 	twi_package.buffer = p_rd_buffer;
-	twi_package.length = ul_page_size;
+	twi_package.length = u32_page_size;
 
 	if (twi_master_read(BOARD_AT24C_TWI_INSTANCE, &twi_package) !=
 			TWI_SUCCESS) {
@@ -313,20 +333,20 @@ uint32_t at24cxx_read_page(uint32_t ul_page_address,
 /**
  * \brief Fill the specified pattern to AT24CXX.
  *
- * \param ul_start_address  The first address to be filled.
- * \param ul_end_address  The last address to be filled.
- * \param uc_pattern  The pattern to be filled.
+ * \param u32_start_address  The first address to be filled.
+ * \param u32_end_address  The last address to be filled.
+ * \param u8_pattern  The pattern to be filled.
  *
  * \return AT24C_WRITE_SUCCESS if the pattern was filled, AT24C_WRITE_FAIL
  * otherwise.
  */
-uint32_t at24cxx_fill_pattern(uint32_t ul_start_address,
-		uint32_t ul_end_address, uint8_t uc_pattern)
+uint32_t at24cxx_fill_pattern(uint32_t u32_start_address,
+		uint32_t u32_end_address, uint8_t u8_pattern)
 {
 	uint32_t addr;
 
-	for (addr = ul_start_address; addr < ul_end_address + 1; addr++) {
-		if (at24cxx_write_byte((uint16_t)addr, uc_pattern) !=
+	for (addr = u32_start_address; addr < u32_end_address + 1; addr++) {
+		if (at24cxx_write_byte((uint16_t)addr, u8_pattern) !=
 				AT24C_WRITE_SUCCESS) {
 			return AT24C_WRITE_FAIL;
 		}

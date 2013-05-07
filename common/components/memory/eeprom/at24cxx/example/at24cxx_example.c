@@ -85,8 +85,6 @@ extern "C" {
 
 #define CONSOLE_BAUD_RATE  115200
 
-/** EEPROM Wait Time */
-#define WAIT_TIME       10
 /** Memory Start Address of AT24CXX chips */
 #define AT24C_MEM_ADDR  0
 /** TWI Bus Clock 400kHz */
