@@ -403,7 +403,7 @@ enum status_code usart_read_wait(
 	/* Wait until synchronization is complete */
 	_usart_wait_for_sync(module);
 
-	/* Read out the status code and mask away all but the 4 LSBs*/
+	/* Read out the status code and mask away all but the 3 LSBs*/
 	error_code = (uint8_t)(usart_hw->STATUS.reg & SERCOM_USART_STATUS_MASK);
 
 	/* Check if an error has occurred during the receiving */
