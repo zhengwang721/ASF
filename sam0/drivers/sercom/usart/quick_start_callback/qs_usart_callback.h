@@ -52,7 +52,7 @@
  * - 8-bits, No Parity and 1 Stop Bit
  * - TX and RX connected to the Xplained PRO Embedded Debugger virtual COM port
  *
- * \section asfdoc_samd20_sercom_usart_callback_use_case_setup Quick Start
+ * \section asfdoc_samd20_sercom_usart_callback_use_case_setup Setup
  *
  * \subsection asfdoc_samd20_sercom_usart_callback_use_case_prereq Prerequisites
  * There are no special setup requirements for this use-case.
