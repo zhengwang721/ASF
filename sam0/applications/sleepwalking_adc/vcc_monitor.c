@@ -190,10 +190,11 @@ static void adc_setup(void)
 
 int main(void)
 {
-	volatile uint32_t delay = 0xFFF;
-
 	/* Initalize clock system */
 	system_init();
+
+	/* Initialize delay service */
+	delay_init();
 
 	rtc_setup();
 	event_setup();
@@ -212,8 +213,7 @@ int main(void)
 			while(1) {
 				/* Toggle pin ad infinium */
 				port_pin_toggle_output_level(LED0_PIN);
-				while(delay--){};
-				delay = 0xFFFF;
+				delay_ms(500);
 			}
 		}
 	}

@@ -11,6 +11,7 @@
 		<require idref="sam0.drivers.adc"/>
 		<require idref="sam0.drivers.events"/>
 		<require idref="sam0.drivers.rtc"/>
+		<require idref="common2.services.delay"/>
 		<device-support value="samd20"/>
 	</module>
 </asf>
