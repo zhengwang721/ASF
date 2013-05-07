@@ -207,6 +207,9 @@ enum status_code adc_get_job_status(
 		struct adc_module *module_inst,
 		enum adc_job_type type)
 {
+	/* Sanity check arguments */
+	Assert(module_inst);
+
 	if (type == ADC_JOB_READ_BUFFER ) {
 		return module_inst->job_status;
 	} else {
@@ -226,6 +229,9 @@ void adc_abort_job(
 		struct adc_module *module_inst,
 		enum adc_job_type type)
 {
+	/* Sanity check arguments */
+	Assert(module_inst);
+
 	if (type == ADC_JOB_READ_BUFFER ) {
 		/* Disable interrupt */
 		adc_disable_interrupt(module_inst, ADC_INTERRUPT_RESULT_READY);
