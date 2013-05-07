@@ -193,3 +193,45 @@ enum status_code adc_read_buffer_job(
 	return STATUS_OK;
 }
 
+/**
+ * \brief Gets the status of a job
+ *
+ * Gets the status of an ongoing or the last job.
+ *
+ * \param [in]  module_inst Pointer to the ADC software instance struct
+ * \param [in]  type        Type of job to abort
+ *
+ * \return Status of the job
+ */
+enum status_code adc_get_job_status(
+		struct adc_module *module_inst,
+		enum adc_job_type type)
+{
+	if (type == ADC_JOB_READ_BUFFER ) {
+		return module_inst->job_status;
+	} else {
+		return STATUS_ERR_INVALID_ARG;
+	}
+}
+
+/**
+ * \brief Aborts an ongoing job
+ *
+ * Aborts an ongoing job.
+ *
+ * \param [in]  module_inst Pointer to the ADC software instance struct
+ * \param [in]  type        Type of job to abort
+ */
+void adc_abort_job(
+		struct adc_module *module_inst,
+		enum adc_job_type type)
+{
+	if (type == ADC_JOB_READ_BUFFER ) {
+		/* Disable interrupt */
+		adc_disable_interrupt(module_inst, ADC_INTERRUPT_RESULT_READY);
+		/* Mark job as aborted */
+		module_inst->job_status = STATUS_ABORTED;
+		module_inst->remaining_conversions = 0;
+	}
+}
+
