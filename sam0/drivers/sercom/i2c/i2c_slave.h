@@ -98,11 +98,11 @@ extern "C" {
 /** Received not acknowledge 
  * \note Cannot be cleared
  */
-#define I2C_SLAVE_STATUS_RECEIVED_NACK     (1UL << 5)
+#define I2C_SLAVE_STATUS_RECEIVED_NACK     (1UL << 6)
 /** Transmit Collision */
-#define I2C_SLAVE_STATUS_COLLISION         (1UL << 6)
+#define I2C_SLAVE_STATUS_COLLISION         (1UL << 7)
 /** Bus error */
-#define I2C_SLAVE_STATUS_BUS_ERROR         (1UL << 7)
+#define I2C_SLAVE_STATUS_BUS_ERROR         (1UL << 8)
 
 /** @} */
 
