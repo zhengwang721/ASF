@@ -12,8 +12,8 @@ target remote localhost:2331
 # Reset the chip to get to a known state
 monitor reset
 
-# Select flash device (Should be AT91SAM4SD32C, but it is not available now)
-monitor flash device = AT91SAM4SD32C
+# Select flash device (Should be AT91SAM4N16C, but it is not available now)
+monitor flash device = AT91SAM4N16C
 # Enable flash download and flash breakpoints
 monitor flash download = 1
 
