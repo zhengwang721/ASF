@@ -3,7 +3,7 @@
  *
  * \brief Widget ToolKit training application
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -223,7 +223,6 @@ int main(void)
 	sysclk_init();
 	membag_init();
 	gfx_init();
-	gfx_set_orientation(GFX_SWITCH_XY | GFX_FLIP_Y);
 	mxt_init(&device);
 	win_init();
 
@@ -262,10 +261,10 @@ int main(void)
 			/* Translate the touch X and Y position into a screen
 			 * coordinate
 			 */
-			win_touch_event.pos.x = ((uint32_t)touch_event.x *
-					gfx_get_width()) / 4096;
-			win_touch_event.pos.y = ((uint32_t)touch_event.y *
-					gfx_get_height()) / 4096;
+			win_touch_event.pos.x =
+					((uint32_t)(4096 - touch_event.x) * gfx_get_width()) / 4096;
+			win_touch_event.pos.y =
+					((uint32_t)(4096 - touch_event.y) * gfx_get_height()) / 4096;
 			win_queue_pointer_event(&win_touch_event);
 		}
 

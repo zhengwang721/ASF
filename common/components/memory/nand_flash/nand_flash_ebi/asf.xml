@@ -102,6 +102,7 @@
 			<build type="doxygen-entry-point" value="common_components_nand_flash_group"/>
 			<build type="doxygen-quick-start" value="common_components_nand_flash_quickstart"/>
 			<device-support value="sam4s"/>
+			<device-support value="sam4e"/>
 			<require idref="common.services.basic.gpio"/>
 			<require idref="sam.drivers.pmc"/>
 			<require idref="sam.drivers.smc"/>
