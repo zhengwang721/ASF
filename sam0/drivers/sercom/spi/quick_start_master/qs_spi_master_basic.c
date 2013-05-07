@@ -89,12 +89,6 @@ void configure_spi(void)
 //! [conf_defaults]
 	spi_get_config_defaults(&config);
 //! [conf_defaults]
-//! [conf_preload]
-	config.slave.preload_enable = true;
-//! [conf_preload]
-//! [conf_format]
-	config.slave.frame_format = SPI_FRAME_FORMAT_SPI_FRAME;
-//! [conf_format]
 //! [mux_setting]
 	config.mux_setting = SPI_SIGNAL_MUX_SETTING_E;
 //! [mux_setting]
@@ -104,7 +98,7 @@ void configure_spi(void)
 //! [di]
 	/* Configure pad 1 as unused */
 //! [ss]
-	config.pinmux_pad1 = EXT1_SPI_SS_PINMUX;
+	config.pinmux_pad1 = PINMUX_UNUSED;
 //! [ss]
 	/* Configure pad 2 for data out */
 //! [do]
@@ -143,11 +137,6 @@ int main(void)
 //! [write]
 	spi_write_buffer_wait(&master, buffer, BUF_LENGTH);
 //! [write]
-//! [wait]
-	while (spi_is_write_complete(&master) == false) {
-		/* Wait for write complete */
-	}
-//! [wait]
 //! [deselect_slave]
 	spi_select_slave(&master, &slave, false);
 //! [deselect_slave]

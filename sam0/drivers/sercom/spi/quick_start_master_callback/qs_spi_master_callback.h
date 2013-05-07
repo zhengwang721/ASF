@@ -56,7 +56,7 @@
  *   - SS on extension header 1, pin 15
  * - 8-bit character size
  * - Not enabled in sleep mode
- * - Baudrate 9600
+ * - Baudrate 100000
  * - GLCK generator 0
  *
  *
