@@ -149,7 +149,7 @@ static void spi_slave_init(volatile void *spi, uint8_t mode)
 	spi_enable_slave_mode(spi);
 
 	/* Enable SPI interrupt */
-	spi_interrupt_enable(spi);
+	spi_enable_interrupt(spi);
 }
 
 /*! \brief Usart configured as SPI master transfers data to SPI slave.

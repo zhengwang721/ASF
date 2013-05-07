@@ -165,7 +165,7 @@ static inline void spi_disable(volatile void *spi)
  *
  * \param spi Base address of the SPI instance.
  */
-static inline void spi_interrupt_enable(volatile void *spi)
+static inline void spi_enable_interrupt(volatile void *spi)
 {
 	SPCR |= SPI_SPIE_bm;
 }
@@ -175,7 +175,7 @@ static inline void spi_interrupt_enable(volatile void *spi)
  *
  * \param spi Base address of the SPI instance.
  */
-static inline void spi_interrupt_disable(volatile void *spi)
+static inline void spi_disable_interrupt(volatile void *spi)
 {
 	SPCR &= ~SPI_SPIE_bm;
 }
