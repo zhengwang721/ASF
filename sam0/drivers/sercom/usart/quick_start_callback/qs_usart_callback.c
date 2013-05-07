@@ -131,6 +131,10 @@ int main(void)
 //! [setup_init]
 
 //! [main]
+//! [enable_global_interrupts]
+	system_interrupt_enable_global();
+//! [enable_global_interrupts]
+
 //! [main_send_string]
 	uint8_t string[] = "Hello World!\r\n";
 	usart_write_buffer_job(&usart_edbg, string, sizeof(string));

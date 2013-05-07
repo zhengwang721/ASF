@@ -112,6 +112,8 @@
  * \snippet qs_usart_callback.c main
  *
  * \subsection asfdoc_samd20_usart_callback_use_case_main_flow Workflow
+ * -# Enable global interrupts, so that the callbacks can be fired.
+ *  \snippet qs_usart_callback.c enable_global_interrupts
  * -# Send a string to the USART to show the demo is running, blocking until
  *    all characters have been sent.
  *  \snippet qs_usart_callback.c main_send_string

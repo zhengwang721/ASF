@@ -118,7 +118,7 @@ static inline void usart_disable_callback(
 	Assert(module);
 
 	/* Disable callback */
-	module->callback_enable_mask |= (0 << callback_type);
+	module->callback_enable_mask &= ~(1 << callback_type);
 }
 
 /**
