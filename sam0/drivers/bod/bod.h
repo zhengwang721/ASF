@@ -227,7 +227,7 @@ static inline void bod_get_config_defaults(
 	Assert(conf);
 
 	conf->prescaler      = BOD_PRESCALE_DIV_2;
-	conf->mode           = BOD_MODE_CONTINIOUS;
+	conf->mode           = BOD_MODE_CONTINUOUS;
 	conf->action         = BOD_ACTION_RESET;
 	conf->level          = 0x12;
 	conf->hysteresis     = true;
