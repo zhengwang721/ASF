@@ -104,7 +104,6 @@ enum status_code tc_unregister_callback(
 	module->callback[callback_type] = NULL;
 
 	/* Clear the bit corresponding to the callback_type */
-	/* Set the bit corresponding to the callback_type */
 	if (callback_type == TC_CALLBACK_CC_CHANNEL0) {
 		module->register_callback_mask &= ~TC_INTFLAG_MC(1);
 	}
