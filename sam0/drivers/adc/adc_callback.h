@@ -93,6 +93,10 @@ static inline void adc_enable_callback(
 		if (callback_type == ADC_CALLBACK_WINDOW) {
 			adc_enable_interrupt(module, ADC_INTERRUPT_WINDOW);
 		}
+		/* Enable overrun interrupt if error callback is registered */
+		if (callback_type == ADC_CALLBACK_ERROR) {
+			adc_enable_interrupt(module, ADC_INTERRUPT_OVERRUN);
+		}
 }
 
 /**
@@ -123,6 +127,10 @@ static inline void adc_disable_callback(
 		/* Disable window interrupt if this is a window callback */
 		if (callback_type == ADC_CALLBACK_WINDOW) {
 			adc_disable_interrupt(module, ADC_INTERRUPT_WINDOW);
+		}
+		/* Disable overrun interrupt if this is the error callback */
+		if (callback_type == ADC_CALLBACK_ERROR) {
+			adc_disable_interrupt(module, ADC_INTERRUPT_OVERRUN);
 		}
 }
 
