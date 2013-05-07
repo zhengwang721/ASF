@@ -58,7 +58,7 @@ enum adc_job_type {
 
 /**
  * \name Callback Management
- * {@
+ * @{
  */
 void adc_register_callback(
 		struct adc_module *const module,
@@ -128,12 +128,14 @@ static inline void adc_disable_callback(
 
 /**
  * \name Buffer reads
- * {@
+ * @{
  */
 enum status_code adc_read_buffer_job(
 		struct adc_module *const module_inst,
 		uint16_t *buffer,
 		uint16_t samples);
+/** @} */
+
 /** @} */
 
 #endif /* ADC_CALLBACK_H_INCLUDED */
