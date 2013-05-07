@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_samd20_tc_callback_use_case Quick Start Guide for TC - Basic
+ * \page asfdoc_samd20_tc_callback_use_case Quick Start Guide for TC - Callback
  *
  * In this use case, the TC will be used to generate a PWM signal, with a
  * varying duty cycle. Here the pulse width is increased each time the timer
