@@ -127,12 +127,12 @@ static inline void i2c_slave_disable_callback(
 	Assert(module);
 	Assert(module->hw);
 
-	/* Mark callback as enabled */
+	/* Mark callback as disabled */
 	module->enabled_callback &= ~(1 << callback_type);
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
 	if (callback_type == I2C_SLAVE_CALLBACK_READ_REQUEST || callback_type == I2C_SLAVE_CALLBACK_WRITE_REQUEST
 			|| module->status != STATUS_BUSY) {
-		i2c_hw->INTENCLR.reg = SERCOM_I2CS_INTFLAG_AMATCH;	
+		i2c_hw->INTENCLR.reg = SERCOM_I2CS_INTFLAG_AMATCH;
 	}
 }
 
