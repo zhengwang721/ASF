@@ -257,12 +257,6 @@ int main(void)
 	/* Initialize the console uart */
 	configure_console();
 
-	/* Output example information */
-	printf("\r\n");
-	printf("-- BPM Example --\r\n");
-	printf("-- %s\r\n", BOARD_NAME);
-	printf("-- Compiled: %s %s --\r\n", __DATE__, __TIME__);
-
 #ifdef CONF_BOARD_BM_USART
 	/* Initialize the board monitor  */
 	bm_init();
@@ -276,6 +270,12 @@ int main(void)
 
 	/* Configurate the backup wakeup source */
 	config_backup_wakeup();
+
+	/* Output example information */
+	printf("\r\n");
+	printf("-- BPM Example --\r\n");
+	printf("-- %s\r\n", BOARD_NAME);
+	printf("-- Compiled: %s %s --\r\n", __DATE__, __TIME__);
 
 	/* Display menu */
 	display_menu();
@@ -410,6 +410,11 @@ int main(void)
 #endif
 			printf("\r\n--Enter Backup mode.\r\n");
 			ast_enable_wakeup(AST, AST_WAKEUP_PER);
+			/**
+			 * The EIC pin status depend on outside circuit in backup mode,
+			 * so disable it to avoid wake up immediately.
+			 */
+			bpm_disable_wakeup_source(BPM, (1 << BPM_BKUPWEN_EIC));
 			/* Wait for the printf operation to finish before
 			setting the device in a power save mode. */
 			delay_ms(30);
