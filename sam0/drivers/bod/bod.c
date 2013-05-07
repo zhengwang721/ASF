@@ -62,10 +62,11 @@ enum status_code bod_set_config(
 	/* Sanity check arguments */
 	Assert(conf);
 
-	uint32_t temp;
+	uint32_t temp = 0;
 
-	/* Convert BOD trigger action and mode to a bitmask */
-	temp = (uint32_t)conf->action | (uint32_t)conf->mode;
+	/* Convert BOD prescaler, trigger action and mode to a bitmask */
+	temp |= (uint32_t)conf->prescaler | (uint32_t)conf->action |
+			(uint32_t)conf->mode;
 
 	if (conf->mode == BOD_MODE_SAMPLED) {
 		/* Enable sampling clock if sampled mode */
