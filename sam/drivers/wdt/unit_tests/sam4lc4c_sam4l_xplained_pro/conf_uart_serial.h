@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief  Configuration File for SAM4L-EK Board.
+ * \brief Serial USART service configuration.
  *
- * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,16 +41,9 @@
  *
  */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#ifndef CONF_USART_SERIAL_H
+#define CONF_USART_SERIAL_H
 
-/** Define to avoid disabling the watchdog at startup. */
-#define CONF_BOARD_KEEP_WATCHDOG_AT_INIT
+/* Intentional empty */
 
-/** Enable Com Port. */
-#define CONF_BOARD_COM_PORT
-
-/* Configure push button pin as external interrupt */
-#define CONF_BOARD_EIC
-
-#endif /* CONF_BOARD_H_INCLUDED */
+#endif/* CONF_USART_SERIAL_H_INCLUDED */

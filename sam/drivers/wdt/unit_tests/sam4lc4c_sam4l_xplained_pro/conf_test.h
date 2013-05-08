@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief  Configuration File for SAM4L-EK Board.
+ * \brief Unit test configuration
  *
- * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,16 +41,19 @@
  *
  */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#ifndef CONF_TEST_H_INCLUDED
+#define CONF_TEST_H_INCLUDED
 
-/** Define to avoid disabling the watchdog at startup. */
-#define CONF_BOARD_KEEP_WATCHDOG_AT_INIT
 
-/** Enable Com Port. */
-#define CONF_BOARD_COM_PORT
+/** USART Interface  : Console UART */
+#define CONF_TEST_USART      COM_PORT_USART
+/** Baudrate setting : 115200 */
+#define CONF_TEST_BAUDRATE   115200
+/** Char setting     : 8-bit character length (don't care for UART) */
+#define CONF_TEST_CHARLENGTH US_MR_CHRL_8
+/** Parity setting   : No parity check */
+#define CONF_TEST_PARITY     US_MR_PAR_NONE
+/** Stopbit setting  : No extra stopbit, i.e., use 1 (don't care for UART) */
+#define CONF_TEST_STOPBITS   US_MR_NBSTOP_1
 
-/* Configure push button pin as external interrupt */
-#define CONF_BOARD_EIC
-
-#endif /* CONF_BOARD_H_INCLUDED */
+#endif /* CONF_TEST_H_INCLUDED */
