@@ -220,7 +220,6 @@ extern uint8_t Channel_Offset;
 
 /* === Types ================================================================ */
 
-
 //typedef void (*handler_t)(uint8_t *);
 
 /* Structure implementing the NIB */
