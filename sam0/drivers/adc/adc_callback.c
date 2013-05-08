@@ -105,9 +105,9 @@ void ADC_Handler(void)
  * \note The callback must be enabled by for the interrupt handler to call it
  * when the conditions for the callback is met.
  *
- * \param[in]     module      Pointer to ADC software instance struct
- * \param[in]     callback_func Pointer to callback function
- * \param[in]     callback_type Callback type given by an enum
+ * \param[in] module         Pointer to ADC software instance struct
+ * \param[in] callback_func  Pointer to callback function
+ * \param[in] callback_type  Callback type given by an enum
  *
  */
 void adc_register_callback(
@@ -131,9 +131,8 @@ void adc_register_callback(
  *
  * Unregisters a callback function which is implemented by the user.
  *
- * \param[in]     module Pointer to ADC software instance struct
- * \param[in]     callback_func Pointer to callback function
- * \param[in]     callback_type Callback type given by an enum
+ * \param[in] module         Pointer to ADC software instance struct
+ * \param[in] callback_type  Callback type given by an enum
  *
  */
 void adc_unregister_callback(
@@ -159,9 +158,9 @@ void adc_unregister_callback(
  * is complete until \c samples samples has been acquired. To avoid
  * jitter in the sampling frequency using an event trigger is adviced.
  *
- * \param [in]  module_inst Pointer to the ADC software instance struct
- * \param [in]  samples number of samples to acquire
- * \param [out] buffer buffer to store the ADC samples
+ * \param[in]  module_inst  Pointer to the ADC software instance struct
+ * \param[in]  samples      Number of samples to acquire
+ * \param[out] buffer       Buffer to store the ADC samples
  *
  * \return Status of the job start
  * \retval STATUS_OK        The conversion job was started succesfully and is in progress

@@ -214,9 +214,10 @@
  * divide ratio to use (up to divide by 128). To modify these settings the
  * ADC_RESOLUTION_CUSTOM needs to be set as the resolution. When this is set
  * the number of samples to accumulate and the division ratio can be set by
- * the configuration struct members \ref accumulate_samples and \ref divide_result
- * When using this mode the ADC result register will be set to be 16-bits wide
- * to accommodate the larger result sizes produced by the accumulator.
+ * the configuration struct members \ref adc_config.accumulate_samples and
+ * \ref adc_config.divide_result When using this mode the ADC result register
+ * will be set to be 16-bits wide to accommodate the larger result sizes
+ * produced by the accumulator.
  *
  * The effective ADC conversion rate will be reduced by a factor of the number
  * of accumulated samples;
@@ -512,8 +513,8 @@ enum adc_resolution {
 	/** ADC 16-bit result register for use with averaging. When using this mode
 	  * the ADC result register will be set to 16-bit wide, and the number of
 	  * samples to accumulate and the division factor is configured by the
-	  * \ref accumulate_samples and \ref divide_result members in the
-	  * configuration struct
+	  * \ref adc_config.accumulate_samples and \ref adc_config.divide_result
+	  * members in the configuration struct
 	  */
 	ADC_RESOLUTION_CUSTOM,
 };
@@ -1353,10 +1354,10 @@ static inline void adc_flush(
  *
  * Sets the ADC window mode to a given mode and value range.
  *
- * \param[in] module_inst        Pointer to the ADC software instance struct
- * \param[in] adc_window_mode    Window monitor mode to set
- * \param[in] window_lower_value Lower window monitor threshold value
- * \param[in] window_upper_value Upper window monitor threshold value
+ * \param[in] module_inst         Pointer to the ADC software instance struct
+ * \param[in] window_mode         Window monitor mode to set
+ * \param[in] window_lower_value  Lower window monitor threshold value
+ * \param[in] window_upper_value  Upper window monitor threshold value
   */
 static inline void adc_set_window_mode(
 		struct adc_module *const module_inst,
