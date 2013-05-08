@@ -278,7 +278,7 @@ extern "C" {
 /**
  * \brief Event System channel selection
  *
- * Enum containing the possible event channel selections
+ * Enum containing the possible event channel selections.
  */
 enum events_channel {
 	/** Event channel 0 */
@@ -496,7 +496,7 @@ void events_user_set_config(
  *
  * \pre The specified event channel must be configured and enabled.
  *
- * \param[in] channel  Event channel to check
+ * \param[in] event_channel  Event channel to check
  *
  * \return Status of the specified event channel.
  *
@@ -535,7 +535,7 @@ static inline bool events_chan_is_ready(
  *
  * \pre The specified event channel must be configured and enabled.
  *
- * \param[in] channel  Event channel to check
+ * \param[in] event_channel  Event channel to check
  *
  * \return Status of the specified event channel subscribers.
  *
@@ -574,7 +574,7 @@ static inline bool events_user_is_ready(
  *
  * \pre The specified event channel must be configured and enabled.
  *
- * \param[in] channel  Event channel to trigger
+ * \param[in] event_channel  Event channel to trigger
  */
 static inline void events_chan_software_trigger(
 		const enum events_channel event_channel)

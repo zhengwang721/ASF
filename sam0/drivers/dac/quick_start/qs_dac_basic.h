@@ -44,10 +44,10 @@
 /**
  * \page asfdoc_samd20_dac_basic_use_case Quick Start Guide for DAC - Basic
  *
- * In this use case, the DAC will be used  The DAC will be set up as follows:
+ * In this use case, the DAC will be configured with the following settings:
  * - Analog VCC as reference
  * - Internal output disabled
- * - Drive the DAC output to the VOUT pin
+ * - Drive the DAC output to the V<sub>OUT</sub> pin
  * - Right adjust data
  * - The output buffer is disabled when the chip enters STANDBY sleep mode
  *
@@ -56,34 +56,72 @@
  * \subsection asfdoc_samd20_dac_basic_use_case_prereq Prerequisites
  * There are no special setup requirements for this use-case.
  *
- * \subsection asfdoc_samd20_dac_basic_use_case_code Code
- * Add to user application %main():
+ * \subsection asfdoc_samd20_dac_basic_use_case_setup_code Code
+ * Add to the main application source file, outside of any functions:
+ * \snippet qs_dac_basic.c module_inst
+ *
+ * Copy-paste the following setup code to your user application:
+ * \snippet qs_dac_basic.c setup
+ *
+ * Add to user application initialization (typically the start of \c main()):
+ * \snippet qs_dac_basic.c setup_init
+ *
+ * \subsection asfdoc_samd20_dac_basic_use_case_setup_flow Workflow
+ * -# Create a module software instance structure for the DAC module to store
+ *    the DAC driver state while it is in use.
+ *    \note This should never go out of scope as long as the module is in use.
+ *          In most cases, this should be global.
+ *
+ *    \snippet qs_dac_basic.c module_inst
+ * -# Configure the DAC module.
+ *  -# Create a DAC module configuration struct, which can be filled out to
+ *     adjust the configuration of a physical DAC peripheral.
+ *     \snippet qs_dac_basic.c setup_config
+ *  -# Initialize the DAC configuration struct with the module's default values.
+ *     \note This should always be performed before using the configuration
+ *           struct to ensure that all values are initialized to known default
+ *           settings.
+ *
+ *     \snippet qs_dac_basic.c setup_config_defaults
+ *  -# Configure the DAC module with the desired channel settings.
+ *     \snippet qs_dac_basic.c setup_set_config
+ *  -# Enable the DAC module so that channels can be configured.
+ *     \snippet qs_dac_basic.c setup_enable
+ * -# Configure the DAC channel.
+ *  -# Create a DAC channel configuration struct, which can be filled out to
+ *     adjust the configuration of a physical DAC output channel.
+ *     \snippet qs_dac_basic.c setup_ch_config
+ *  -# Initialize the DAC channel configuration struct with the module's default
+ *     values.
+ *     \note This should always be performed before using the configuration
+ *           struct to ensure that all values are initialized to known default
+ *           settings.
+ *
+ *     \snippet qs_dac_basic.c setup_ch_config_defaults
+ *  -# Change the desired channel settings.
+ *     \snippet qs_dac_basic.c setup_ch_change_config
+ *  -# Configure the DAC channel with the desired channel settings.
+ *     \snippet qs_dac_basic.c setup_ch_set_config
+ *  -# Enable the DAC channel so that it can output a voltage.
+ *     \snippet qs_dac_basic.c setup_ch_enable
+ *
+ *
+ * \section asfdoc_samd20_dac_basic_use_case_main Use Case
+ *
+ * \subsection asfdoc_samd20_dac_basic_use_case_main_code Code
+ * Copy-paste the following code to your user application:
  * \snippet qs_dac_basic.c main
  *
- * \section asfdoc_samd20_dac_basic_use_case_workflow Workflow
- * -# Create variables for device software instance, config and channel config.
- *  \snippet qs_dac_basic.c variable
- * -# Initialize system.
- *  \snippet qs_dac_basic.c system_init
- * -# Get DAC config defaults.
- *  \snippet qs_dac_basic.c get_conf
- * -# Initialize software instance with hardware module and write configuration
- * to the module.
- *  \snippet qs_dac_basic.c init_dac
- * -# Enable the DAC.
- *  \snippet qs_dac_basic.c enable
- * -# Get DAC channel config defaults.
- *  \snippet qs_dac_basic.c get_ch_conf
- * -# Disable event triggered conversion.
- *  \snippet qs_dac_basic.c edit_ch_conf
- * -# Write the channel configuration to the DAC.
- *  \snippet qs_dac_basic.c set_ch_conf
-  * -# Enable the DAC channel.
- *  \snippet qs_dac_basic.c enable_ch
- * -# Write and convert a value.
- *  \snippet qs_dac_basic.c write
- * -# Disable the DAC
- *  \snippet qs_dac_basic.c disable
- * -# Start infinite loop.
- *  \snippet qs_dac_basic.c inf_loop
+ * \subsection asfdoc_samd20_dac_basic_use_case_main_flow Workflow
+ * -# Create a temporary variable to track the current DAC output value.
+ *  \snippet qs_dac_basic.c main_output_var
+ * -# Enter an infinite loop to continuously output new conversion values to
+ *    the DAC.
+ *  \snippet qs_dac_basic.c main_loop
+ * -# Write the next conversion value to the DAC, so that it will be output on
+ *    the device's DAC analog output pin.
+ *  \snippet qs_dac_basic.c main_write
+ * -# Increment and wrap the DAC output conversion value, so that a ramp pattern
+ *    will be generated.
+ *  \snippet qs_dac_basic.c main_inc_val
  */

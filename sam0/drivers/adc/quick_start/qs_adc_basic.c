@@ -44,7 +44,7 @@
 
 int main(void)
 {
-//! [main]
+//! [main_setup]
 //! [variable]
 	struct adc_module module_inst;
 	struct adc_config config;
@@ -63,7 +63,9 @@ int main(void)
 //! [enable]
 	adc_enable(&module_inst);
 //! [enable]
+//! [main_setup]
 
+//! [main_use_case]
 //! [start_conv]
 	adc_start_conversion(&module_inst);
 //! [start_conv]
@@ -79,5 +81,5 @@ int main(void)
 		/* Infinite loop */
 	}
 //! [inf_loop]
-//! [main]
+//! [main_use_case]
 }

@@ -320,7 +320,12 @@
  *
  * The following quick start guides and application examples are available for
  * this driver:
- * - \ref asfdoc_samd20_sercom_spi_basic_use_case
+ * - \ref asfdoc_samd20_sercom_spi_master_basic_use
+ * - \ref asfdoc_samd20_sercom_spi_slave_basic_use
+  * \if SPI_CALLBACK_MODE
+ * - \ref asfdoc_samd20_sercom_spi_master_callback_use
+ * - \ref asfdoc_samd20_sercom_spi_slave_callback
+ * \endif
  *
  * \section asfdoc_samd20_sercom_spi_api_overview API Overview
  * @{
@@ -777,7 +782,7 @@ static inline bool spi_is_syncing(
  *  \li Character size 8 bit
  *  \li Not enabled in sleep mode
  *  \li Receiver enabled
- *  \li Baudrate 9600
+ *  \li Baudrate 100000
  *  \li Default pinmux settings for all pads
  *  \li GCLK generator 0
  *
@@ -789,8 +794,6 @@ static inline void spi_get_config_defaults(
 	/* Sanity check arguments */
 	Assert(config);
 
-	memset(&(config->slave), 0, sizeof(struct spi_slave_config));
-
 	/* Default configuration values */
 	config->mode             = SPI_MODE_MASTER;
 	config->data_order       = SPI_DATA_ORDER_MSB;
@@ -801,8 +804,11 @@ static inline void spi_get_config_defaults(
 	config->receiver_enable  = true;
 	config->generator_source = GCLK_GENERATOR_0;
 
+	/* Clear slave config */
+	memset(&(config->slave), 0, sizeof(struct spi_slave_config));
+
 	/* Master config defaults */
-	config->master.baudrate = 9600;
+	config->master.baudrate = 100000;
 
 	/* pinmux config defaults */
 	config->pinmux_pad0 = PINMUX_DEFAULT;

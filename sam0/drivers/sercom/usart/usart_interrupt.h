@@ -118,7 +118,7 @@ static inline void usart_disable_callback(
 	Assert(module);
 
 	/* Disable callback */
-	module->callback_enable_mask |= (0 << callback_type);
+	module->callback_enable_mask &= ~(1 << callback_type);
 }
 
 /**
@@ -139,7 +139,8 @@ enum status_code usart_read_job(
 
 enum status_code usart_write_buffer_job(
 		struct usart_module *const module,
-		uint8_t *tx_data, uint16_t length);
+		uint8_t *tx_data,
+		uint16_t length);
 
 enum status_code usart_read_buffer_job(
 		struct usart_module *const module,
