@@ -144,13 +144,21 @@ static inline void adc_disable_callback(
 
 
 /**
- * \name Buffer reads
+ * \name Job Management
  * @{
  */
 enum status_code adc_read_buffer_job(
 		struct adc_module *const module_inst,
 		uint16_t *buffer,
 		uint16_t samples);
+
+enum status_code adc_get_job_status(
+		struct adc_module *module_inst,
+		enum adc_job_type type);
+
+void adc_abort_job(
+		struct adc_module *module_inst,
+		enum adc_job_type type);
 /** @} */
 
 /** @} */

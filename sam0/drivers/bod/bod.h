@@ -180,7 +180,7 @@ enum bod_action {
  */
 enum bod_mode {
 	/** BOD will sample the supply line continuously. */
-	BOD_MODE_CONTINIOUS  = 0,
+	BOD_MODE_CONTINUOUS  = 0,
 	/** BOD will use the BOD sampling clock (1kHz) to sample the supply line. */
 	BOD_MODE_SAMPLED     = SYSCTRL_BOD33_MODE,
 };
@@ -227,7 +227,7 @@ static inline void bod_get_config_defaults(
 	Assert(conf);
 
 	conf->prescaler      = BOD_PRESCALE_DIV_2;
-	conf->mode           = BOD_MODE_CONTINIOUS;
+	conf->mode           = BOD_MODE_CONTINUOUS;
 	conf->action         = BOD_ACTION_RESET;
 	conf->level          = 0x12;
 	conf->hysteresis     = true;
