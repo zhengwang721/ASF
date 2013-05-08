@@ -44,13 +44,15 @@
 #ifndef _SAMD20E17_
 #define _SAMD20E17_
 
-/** \addtogroup SAMD20E17_definitions SAMD20E17 definitions
-  This file defines all structures and symbols for SAMD20E17:
-    - registers and bitfields
-    - peripheral base address
-    - peripheral ID
-    - PIO definitions
-*/
+/**
+ * \ingroup SAMD20_definitions
+ * \addtogroup SAMD20E17_definitions SAMD20E17 definitions
+ * This file defines all structures and symbols for SAMD20E17:
+ *   - registers and bitfields
+ *   - peripheral base address
+ *   - peripheral ID
+ *   - PIO definitions
+ */
 /*@{*/
 
 #ifdef __cplusplus
