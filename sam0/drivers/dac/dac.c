@@ -440,7 +440,7 @@ uint32_t dac_get_status(
 {
 	 /* Sanity check arguments */
 	Assert(module_inst);
-	Assert(module_inst->hw);
+	Assert(module_inst->hw_dev);
 
 	Dac *const dac_module = module_inst->hw_dev;
 
@@ -474,7 +474,7 @@ void dac_clear_status(
 {
 	 /* Sanity check arguments */
 	Assert(module_inst);
-	Assert(module_inst->hw);
+	Assert(module_inst->hw_dev);
 
 	Dac *const dac_module = module_inst->hw_dev;
 
