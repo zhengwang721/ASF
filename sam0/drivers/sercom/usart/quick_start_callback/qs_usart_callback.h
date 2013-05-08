@@ -52,7 +52,7 @@
  * - 8-bits, No Parity and 1 Stop Bit
  * - TX and RX connected to the Xplained PRO Embedded Debugger virtual COM port
  *
- * \section asfdoc_samd20_sercom_usart_callback_use_case_setup Quick Start
+ * \section asfdoc_samd20_sercom_usart_callback_use_case_setup Setup
  *
  * \subsection asfdoc_samd20_sercom_usart_callback_use_case_prereq Prerequisites
  * There are no special setup requirements for this use-case.
@@ -112,6 +112,8 @@
  * \snippet qs_usart_callback.c main
  *
  * \subsection asfdoc_samd20_usart_callback_use_case_main_flow Workflow
+ * -# Enable global interrupts, so that the callbacks can be fired.
+ *  \snippet qs_usart_callback.c enable_global_interrupts
  * -# Send a string to the USART to show the demo is running, blocking until
  *    all characters have been sent.
  *  \snippet qs_usart_callback.c main_send_string

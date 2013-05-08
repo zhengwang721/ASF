@@ -54,14 +54,15 @@ uint16_t adc_result_buffer[ADC_SAMPLES];
 volatile bool adc_read_done = false;
 
 void adc_complete_callback(
-		const struct adc_module *const module) {
+		const struct adc_module *const module)
+{
 	adc_read_done = true;
 }
 //! [job_complete_callback]
 
 int main(void)
 {
-//! [main]
+//! [main_setup]
 //! [variable]
 	struct adc_module module_inst;
 	struct adc_config config;
@@ -79,7 +80,7 @@ int main(void)
 	config.clock_prescaler = ADC_CLOCK_PRESCALER_DIV8;
 	config.reference       = ADC_REFERENCE_INTVCC1;
 	config.positive_input  = ADC_POSITIVE_INPUT_PIN4;
-	config.resolution      =  ADC_RESOLUTION_12BIT;
+	config.resolution      = ADC_RESOLUTION_12BIT;
 //! [modify_conf]
 
 //! [init_adc]
@@ -93,10 +94,10 @@ int main(void)
 	adc_register_callback(&module_inst, adc_complete_callback, ADC_CALLBACK_READ_BUFFER);
 	adc_enable_callback(&module_inst, ADC_CALLBACK_READ_BUFFER);
 //! [setup_callback]
+//! [main_setup]
 
-
+//! [main_use_case]
 //! [start_adc_job]
-	system_interrupt_enable_global();
 	adc_read_buffer_job(&module_inst, adc_result_buffer, ADC_SAMPLES);
 //! [start_adc_job]
 
@@ -111,5 +112,5 @@ int main(void)
 		/* Infinite loop */
 	}
 //! [inf_loop]
-//! [main]
+//! [main_use_case]
 }

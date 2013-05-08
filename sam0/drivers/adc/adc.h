@@ -50,6 +50,11 @@
  * This driver for SAM D20 devices provides an interface for the configuration
  * and management of the device's Analog to Digital Converter functionality, for
  * the conversion of analog voltages into a corresponding digital form.
+ * The following driver API modes are covered by this manual:
+ * - Polled APIs
+ * \if ADC_CALLBACK_MODE
+ * - Callback APIs
+ * \endif
  *
  * The following peripherals are used by this module:
  *
@@ -371,6 +376,9 @@
  *
  * The following Quick Start guides and application examples are available for this driver:
  * - \ref asfdoc_samd20_adc_basic_use_case
+ * \if ADC_CALLBACK_MODE
+ * - \ref asfdoc_samd20_adc_basic_use_case_callback
+ * \endif
  *
  *
  * \section asfdoc_samd20_adc_api_overview API Overview
@@ -761,7 +769,7 @@ enum adc_interrupt_flag {
 	/** Window monitor match */
 	ADC_INTERRUPT_WINDOW       = ADC_INTFLAG_WINMON,
 	/** ADC result overwritten before read */
-	ADC_INTERRUPT_OVERRUN      = ADC_INTFLAG_MASK,
+	ADC_INTERRUPT_OVERRUN      = ADC_INTFLAG_OVERRUN,
 };
 #endif
 

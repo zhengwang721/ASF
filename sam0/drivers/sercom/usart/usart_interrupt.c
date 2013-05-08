@@ -371,15 +371,15 @@ enum status_code usart_get_job_status(
 	enum status_code status_code;
 
 	switch(transceiver_type) {
-		case USART_TRANSCEIVER_RX:
+	case USART_TRANSCEIVER_RX:
 			status_code = module->rx_status;
 			break;
 
-		case USART_TRANSCEIVER_TX:
+	case USART_TRANSCEIVER_TX:
 			status_code = module->tx_status;
 			break;
 
-		default:
+	default:
 			status_code = STATUS_ERR_INVALID_ARG;
 			break;
 	}
