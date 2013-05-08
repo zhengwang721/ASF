@@ -176,7 +176,10 @@ static void run_reset_32bit_master_test(const struct test_case *test)
  * \brief Test basic functionality.
  *
  * This test tests the basic functionality for the TC. It tests the following functions:
- * 
+ *  - tc_get_count_value()
+ *  - tc_stop_counter()
+ *  - tc_set_count_value()
+ *  - tc_start_counter()
  *
  * \param test Current test case.
  */
@@ -339,15 +342,6 @@ static void run_16bit_capture_and_compare_test(const struct test_case *test)
 	tc1_config.enable_incoming_events       = true;
 	tc1_config.event_action                 = TC_EVENT_ACTION_PPW;
 	tc_init(&tc1_module, TC1, &tc1_config);
-
-	/* Configure pins used for output and input of PWM signal */
-	struct system_pinmux_config system_pinmux_conf;
-	system_pinmux_get_config_defaults(&system_pinmux_conf);
-	/* Configure PWM output pin */
-	system_pinmux_conf.mux_position = MUX_PB31F_TC0_WO1;
-	system_pinmux_conf.direction    = SYSTEM_PINMUX_PIN_DIR_OUTPUT;
-	system_pinmux_conf.input_pull   = SYSTEM_PINMUX_PIN_PULL_NONE;
-	system_pinmux_pin_set_config(PIN_PB31F_TC0_WO1, &system_pinmux_conf);
 
 	/* Configure external interrupt controller */
 	struct extint_chan_conf extint_chan_config;
