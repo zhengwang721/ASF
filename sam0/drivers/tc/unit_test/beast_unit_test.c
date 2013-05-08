@@ -62,7 +62,7 @@ struct tc_module tc6_module;
 struct tc_config tc0_config;
 struct tc_config tc1_config;
 
-uint32_t tc_init_success = 0;
+bool tc_init_success = 0;
 
 volatile uint32_t callback_function_entered = 0;
 bool basic_functionality_test_passed = false;
