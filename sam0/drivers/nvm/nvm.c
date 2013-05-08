@@ -259,7 +259,7 @@ enum status_code nvm_update_buffer(
 		uint16_t length)
 {
 	enum status_code error_code = STATUS_OK;
-	uint8_t row_buffer[NVMCTRL_ROW_PAGES][_nvm_dev.page_size];
+	uint8_t row_buffer[NVMCTRL_ROW_PAGES][NVMCTRL_PAGE_SIZE];
 
 	/* Ensure the read does not overflow the page size */
 	if ((offset + length) > _nvm_dev.page_size) {
