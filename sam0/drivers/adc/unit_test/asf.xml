@@ -10,7 +10,6 @@
 		<require idref="sam0.drivers.dac"/>
 		<require idref="sam0.drivers.system"/>
 		<require idref="common2.services.delay"/>
-		<require idref="sam0.utils.stdio.stdio_serial"/>
 		<require idref="common.utils.unit_test"/>
 		<device-support value="samd20"/>
 	</module>
