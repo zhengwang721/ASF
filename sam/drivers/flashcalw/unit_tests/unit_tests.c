@@ -3,7 +3,7 @@
  *
  * \brief Unit tests for flashcalw driver.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -66,6 +66,8 @@
  * All SAM devices with FLASHCALW controller can be used.
  * This example has been tested with the following setup:
  * - sam4l4c_sam4l_ek
+ * - sam4l4c_sam4l_xplained_pro
+ * - sam4l8c_sam4l8_xplained_pro
  *
  * \section compinfo Compilation info
  * This software was written for the GNU GCC and IAR for ARM. Other compilers
@@ -360,7 +362,7 @@ static void run_flashcalw_gp_fuse_test(const struct test_case *test)
 		"Test flashcalw gp_fuse: gp_fuse read/write all error!");
 
 	/* Clear all fuses */
-	flashcalw_erase_all_gp_fuses(true);
+    flashcalw_erase_all_gp_fuses(true);
 }
 
 /**
