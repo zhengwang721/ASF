@@ -43,16 +43,8 @@
 #include "adc_callback.h"
 
 struct adc_module *_adc_instances[ADC_INST_NUM];
-void _adc_interrupt_handler(uint8_t instance);
 
-
-void ADC_Handler(void)
-{
-	_adc_interrupt_handler(0);
-}
-
-
-void _adc_interrupt_handler(uint8_t instance)
+static void _adc_interrupt_handler(const uint8_t instance)
 {
 	struct adc_module *module = _adc_instances[instance];
 
@@ -62,6 +54,7 @@ void _adc_interrupt_handler(uint8_t instance)
 	if (flags & ADC_INTFLAG_RESRDY) {
 		/* clear interrupt flag */
 		module->hw->INTFLAG.reg = ADC_INTFLAG_RESRDY;
+
 		if (module->remaining_conversions > 0) {
 			/* store ADC result in job buffer */
 			*(module->job_buffer++) = module->hw->RESULT.reg;
@@ -81,6 +74,7 @@ void _adc_interrupt_handler(uint8_t instance)
 			}
 		}
 	}
+
 	if (flags & ADC_INTFLAG_WINMON) {
 		module->hw->INTFLAG.reg = ADC_INTFLAG_WINMON;
 		if(module->enabled_callback_mask & (1 << ADC_CALLBACK_WINDOW)) {
@@ -88,6 +82,7 @@ void _adc_interrupt_handler(uint8_t instance)
 		}
 
 	}
+
 	if (flags & ADC_INTFLAG_OVERRUN) {
 		module->hw->INTFLAG.reg = ADC_INTFLAG_OVERRUN;
 		if(module->enabled_callback_mask & (1 << ADC_CALLBACK_ERROR)) {
@@ -96,7 +91,11 @@ void _adc_interrupt_handler(uint8_t instance)
 	}
 }
 
-
+/** Interrupt handler for the ADC module. */
+void ADC_Handler(void)
+{
+	_adc_interrupt_handler(0);
+}
 
 /**
  * \brief Registers a callback
