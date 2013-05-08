@@ -273,8 +273,6 @@ static void setup_adc_callback_mode_test(const struct test_case *test)
 	adc_register_callback(&adc_inst, adc_user_callback,
 			ADC_CALLBACK_READ_BUFFER);
 	adc_enable_callback(&adc_inst, ADC_CALLBACK_READ_BUFFER);
-	/* Enable global interrupt */
-	system_interrupt_enable_global();
 }
 
 /**
@@ -294,7 +292,7 @@ static void run_adc_callback_mode_test(const struct test_case *test)
 	dac_chan_write(&dac_inst, DAC_CHANNEL_0, 512);
 	delay_ms(1);
 	/* Start ADC read */
-	adc_read_buffer_job(&adc_inst, ADC_SAMPLES, adc_buf);
+	adc_read_buffer_job(&adc_inst, adc_buf, ADC_SAMPLES);
 
 	do {
 		timeout_cycles--;
@@ -330,8 +328,6 @@ static void cleanup_adc_callback_mode_test(const struct test_case *test)
 	/* Unregister & disable ADC read buffer callback */
 	adc_unregister_callback(&adc_inst, ADC_CALLBACK_READ_BUFFER);
 	adc_disable_callback(&adc_inst, ADC_CALLBACK_READ_BUFFER);
-	/* Disable global interrupt */
-	system_interrupt_disable_global();
 }
 
 /**
@@ -358,7 +354,7 @@ static void setup_adc_average_mode_test(const struct test_case *test)
 	config.clock_source    = GCLK_GENERATOR_3;
 	config.gain_factor     = ADC_GAIN_FACTOR_1X;
 	config.resolution      = ADC_RESOLUTION_16BIT;
-	config.average_samples = ADC_AVERAGE_SAMPLES_16;
+	config.accumulate_samples = ADC_ACCUMULATE_SAMPLES_16;
 	/* Re-initialize & enable ADC */
 	status = adc_init(&adc_inst, ADC, &config);
 	test_assert_true(test, status == STATUS_OK,
@@ -443,9 +439,6 @@ static void setup_adc_window_mode_test(const struct test_case *test)
 	adc_register_callback(&adc_inst, adc_user_callback,
 			ADC_CALLBACK_WINDOW);
 	adc_enable_callback(&adc_inst, ADC_CALLBACK_WINDOW);
-	adc_enable_interrupt(&adc_inst, ADC_INTERRUPT_WINDOW);
-	/* Enable global interrupt */
-	system_interrupt_enable_global();
 	/* Start ADC conversion */
 	adc_start_conversion(&adc_inst);
 }
@@ -488,11 +481,8 @@ static void run_adc_window_mode_test(const struct test_case *test)
 static void cleanup_adc_window_mode_test(const struct test_case *test)
 {
 	/* Unregister and disable window mode callback */
-	adc_disable_interrupt(&adc_inst, ADC_INTERRUPT_WINDOW);
 	adc_disable_callback(&adc_inst, ADC_CALLBACK_WINDOW);
 	adc_unregister_callback(&adc_inst, ADC_CALLBACK_WINDOW);
-	/* Disable global interrupt */
-	system_interrupt_disable_global();
 }
 
 /**
