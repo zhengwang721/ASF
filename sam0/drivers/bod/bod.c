@@ -48,15 +48,15 @@
  * Configures a given BOD module with the settings stored in the given
  * configuration structure.
  *
- * \param[in] bod   BOD module to configure
- * \param[in] conf  Configuration settings to use for the specified BOD
+ * \param[in] bod_id   BOD module to configure
+ * \param[in] conf     Configuration settings to use for the specified BOD
  *
  * \retval STATUS_OK                  Operation completed successfully
  * \retval STATUS_ERR_INVALID_ARG     An invalid BOD was supplied
  * \retval STATUS_ERR_INVALID_OPTION  The requested BOD level was outside the acceptable range
  */
 enum status_code bod_set_config(
-		const enum bod bod,
+		const enum bod bod_id,
 		struct bod_config *const conf)
 {
 	/* Sanity check arguments */
@@ -81,7 +81,7 @@ enum status_code bod_set_config(
 		temp |= SYSCTRL_BOD33_RUNSTDBY;
 	}
 
-	switch (bod) {
+	switch (bod_id) {
 		case BOD_BOD33:
 			if (conf->level > 0x3F) {
 				return STATUS_ERR_INVALID_ARG;
