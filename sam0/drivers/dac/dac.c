@@ -372,7 +372,7 @@ void dac_chan_disable_output_buffer(
  * \brief Write to the DAC.
  *
  * This function writes to the DATA or DATABUF register.
- * If the conversion is not event-triggered, the data will be written to 
+ * If the conversion is not event-triggered, the data will be written to
  * the DATA register and the conversion will start.
  * If the conversion is event-triggered, the data will written to DATABUF and
  * transferred to the DATA register and converted when a Start Conversion Event
@@ -424,7 +424,6 @@ enum status_code dac_chan_write(
  * flags
  *
  * \param[in] module_inst      Pointer to the DAC software device struct
- * \param[in] channel          DAC channel to write to
  *
  * \return Bitmask of status flags
  *
@@ -465,7 +464,7 @@ uint32_t dac_get_status(
  * Clears the given status flag of the module.
  *
  * \param[in] module_inst      Pointer to the DAC software device struct
- * \param[in] status           Bit mask of status flags to clear
+ * \param[in] status_flags     Bit mask of status flags to clear
  *
  */
 void dac_clear_status(
