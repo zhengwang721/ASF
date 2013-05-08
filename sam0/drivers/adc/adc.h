@@ -393,11 +393,15 @@ extern "C" {
 #include <system.h>
 
 #if ADC_CALLBACK_MODE == true
-#include <system_interrupt.h>
+#  include <system_interrupt.h>
 
+#if !defined(__DOXYGEN__)
 extern struct adc_module *_adc_instances[ADC_INST_NUM];
-/** Prototype for the device instance */
+#endif
+
+/** Forward definition of the device instance */
 struct adc_module;
+
 /** Type of the callback functions */
 typedef void (*adc_callback_t)(const struct adc_module *const module);
 
@@ -414,12 +418,11 @@ enum adc_callback {
 	ADC_CALLBACK_WINDOW,
 	/** Callback for error */
 	ADC_CALLBACK_ERROR,
-#if !defined(__DOXYGEN__)
+#  if !defined(__DOXYGEN__)
 	/** Number of available callbacks. */
 	ADC_CALLBACK_N,
-#endif
+#  endif
 };
-
 
 #endif
 
@@ -509,8 +512,8 @@ enum adc_resolution {
 	/** ADC 16-bit result register for use with averaging. When using this mode
 	  * the ADC result register will be set to 16-bit wide, and the number of
 	  * samples to accumulate and the division factor is configured by the
-	  * \ref accumulate_samples and \ref divide_result members in the configuration
-	  * struct
+	  * \ref accumulate_samples and \ref divide_result members in the
+	  * configuration struct
 	  */
 	ADC_RESOLUTION_CUSTOM,
 };
@@ -741,22 +744,22 @@ enum adc_accumulate_samples {
  * used when the \ref ADC_RESOLUTION_CUSTOM resolution setting is used.
  */
 enum adc_divide_result {
-	/* Don't divide result register after accumulation */
+	/** Don't divide result register after accumulation */
 	ADC_DIVIDE_RESULT_DISABLE = 0,
 	/** Divide result register by 2 after accumulation */
-	ADC_DIVIDE_RESULT_2     = 1,
+	ADC_DIVIDE_RESULT_2       = 1,
 	/** Divide result register by 4 after accumulation */
-	ADC_DIVIDE_RESULT_4     = 2,
+	ADC_DIVIDE_RESULT_4       = 2,
 	/** Divide result register by 8 after accumulation */
-	ADC_DIVIDE_RESULT_8     = 3,
+	ADC_DIVIDE_RESULT_8       = 3,
 	/** Divide result register by 16 after accumulation */
-	ADC_DIVIDE_RESULT_16    = 4,
+	ADC_DIVIDE_RESULT_16      = 4,
 	/** Divide result register by 32 after accumulation */
-	ADC_DIVIDE_RESULT_32    = 5,
+	ADC_DIVIDE_RESULT_32      = 5,
 	/** Divide result register by 64 after accumulation */
-	ADC_DIVIDE_RESULT_64    = 6,
+	ADC_DIVIDE_RESULT_64      = 6,
 	/** Divide result register by 128 after accumulation */
-	ADC_DIVIDE_RESULT_128   = 7,
+	ADC_DIVIDE_RESULT_128     = 7,
 };
 
 #if ADC_CALLBACK_MODE == true
@@ -830,23 +833,23 @@ struct adc_event_config {
  */
 struct adc_correction_config {
 	/**
-	Enables correction for gain and offset based on values of gain_correction and
-	offset_correction if set to true.
-	*/
+	 * Enables correction for gain and offset based on values of gain_correction and
+	 * offset_correction if set to true.
+	 */
 	bool correction_enable;
 	/**
-	* This value defines how the ADC conversion result is compensated for gain
-	* error before written to the result register. This is a fractional value,
-	* 1-bit integer plus 11-bits fraction, therefore
-	* 1/2 <= gain_correction < 2.
-	* gain_correction values ranges from 0b010000000000 to 0b111111111111.
-	*/
+	 * This value defines how the ADC conversion result is compensated for gain
+	 * error before written to the result register. This is a fractional value,
+	 * 1-bit integer plus an 11-bit fraction, therefore
+	 * 1/2 <= gain_correction < 2. Valid \c gain_correction values ranges from
+	 * \c 0b010000000000 to \c 0b111111111111.
+	 */
 	uint16_t gain_correction;
 	/**
-	* This value defines how the ADC conversion result is compensated for
-	* offset error before written to the result register. This is a 12-bit
-	* value in two’s complement format.
-	*/
+	 * This value defines how the ADC conversion result is compensated for
+	 * offset error before written to the result register. This is a 12-bit
+	 * value in two’s complement format.
+	 */
 	int16_t offset_correction;
 };
 
@@ -858,13 +861,13 @@ struct adc_correction_config {
  */
 struct adc_pin_scan_config {
 	/**
-	 * Offset (relative to selected positive input) of first input pin to be
+	 * Offset (relative to selected positive input) of the first input pin to be
 	 * used in pin scan mode.
 	 */
 	uint8_t offset_start_scan;
 	/**
-	 * Number of input pins to scan in pin scan mode.
-	 * inputs_to_scan < 2 will disable pin scan mode.
+	 * Number of input pins to scan in pin scan mode. A value below 2 will
+	 * disable pin scan mode.
 	 */
 	uint8_t inputs_to_scan;
 };
@@ -878,24 +881,25 @@ struct adc_pin_scan_config {
  */
 struct adc_config {
 	/** GCLK generator used to clock the peripheral */
-	enum gclk_generator           clock_source;
+	enum gclk_generator clock_source;
 	/** Voltage reference */
-	enum adc_reference            reference;
+	enum adc_reference reference;
 	/** Clock prescaler */
-	enum adc_clock_prescaler      clock_prescaler;
+	enum adc_clock_prescaler clock_prescaler;
 	/** Result resolution */
-	enum adc_resolution           resolution;
+	enum adc_resolution resolution;
 	/** Gain factor */
-	enum adc_gain_factor          gain_factor;
+	enum adc_gain_factor gain_factor;
 	/** Positive MUX input */
-	enum adc_positive_input       positive_input;
+	enum adc_positive_input positive_input;
 	/** Negative MUX input */
-	enum adc_negative_input       negative_input;
+	enum adc_negative_input negative_input;
 	/** Number of ADC samples to accumulate when using the
-	  * ADC_RESOLUTION_CUSTOM mode */
-	enum adc_accumulate_samples   accumulate_samples;
+	 *  \c ADC_RESOLUTION_CUSTOM mode
+	 */
+	enum adc_accumulate_samples accumulate_samples;
 	/** Division ration when using the ADC_RESOLUTION_CUSTOM mode */
-	enum adc_divide_result        divide_result;
+	enum adc_divide_result divide_result;
 	/** Left adjusted result */
 	bool left_adjust;
 	/** Enables differential mode if true */
@@ -905,22 +909,22 @@ struct adc_config {
 	/** Enables ADC in standby sleep mode if true */
 	bool run_in_standby;
 	/**
-	Enables reference buffer offset compensation if true.
-	This will increase the accuracy of the gain stage, but decreasee the input
-	impedance; therefore the startup time of the reference must be increased.
-	*/
+	 * Enables reference buffer offset compensation if true.
+	 * This will increase the accuracy of the gain stage, but decreases the input
+	 * impedance; therefore the startup time of the reference must be increased.
+	 */
 	bool reference_compensation_enable;
 	/**
-	This value (0-63) control the ADC sampling time in number of half ADC
-	prescaled clock cycles (depends of ADC_PRESCALER value), thus
-	controlling the ADC input impedance.
-	Sampling time is set according to the formula:
-	Sample time = (sample_length+1) * (ADCclk / 2)
-	*/
+	 * This value (0-63) control the ADC sampling time in number of half ADC
+	 * prescaled clock cycles (depends of \c ADC_PRESCALER value), thus
+	 * controlling the ADC input impedance. Sampling time is set according to
+	 * the formula:
+	 * Sample time = (sample_length+1) * (ADCclk / 2)
+	 */
 	uint8_t sample_length;
 	/** Window monitor configuration structure */
 	struct adc_window_config window;
-	/** Gain and offsett correction configuration structure */
+	/** Gain and offset correction configuration structure */
 	struct adc_correction_config correction;
 	/** Event configuration structure */
 	struct adc_event_config event;
@@ -941,7 +945,7 @@ struct adc_module {
 #if !defined(__DOXYGEN__)
 	/** Pointer to ADC hardware module */
 	Adc *hw;
-#if ADC_CALLBACK_MODE == true
+#  if ADC_CALLBACK_MODE == true
 	/** Array to store callback functions */
 	adc_callback_t callback[ADC_CALLBACK_N];
 	/** Pointer to buffer used for ADC results */
@@ -956,7 +960,7 @@ struct adc_module {
 	volatile enum status_code job_status;
 	/** If osftware triggering is needed */
 	bool software_trigger;
-#endif
+#  endif
 #endif
 };
 
@@ -1628,10 +1632,6 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
  *  <tr>
  *		<td>DAC</td>
  *		<td>Digital-to-Analog Converter</td>
- *	</tr>
- *  <tr>
- *		<td>SCIF</td>
- *		<td>System Control Interface</td>
  *	</tr>
  *	<tr>
  *		<td>LSB</td>
