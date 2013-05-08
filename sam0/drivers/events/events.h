@@ -520,7 +520,7 @@ static inline bool events_chan_is_ready(
 
 	/* Determine if the specified channel is currently busy */
 	if (channel_status_ptr[status_halfword] &
-			(EVSYS_CHSTATUS_CHBUSY0_Pos << status_bitindex)) {
+			EVSYS_CHSTATUS_CHBUSY0(1 << status_bitindex)) {
 		return false;
 	}
 
@@ -559,7 +559,7 @@ static inline bool events_user_is_ready(
 
 	/* Determine if the specified channel users(s) are currently ready */
 	if (channel_status_ptr[status_halfword] &
-			(EVSYS_CHSTATUS_USRRDY0_Pos << status_bitindex)) {
+			EVSYS_CHSTATUS_USRRDY0(1 << status_bitindex)) {
 		return true;
 	}
 
