@@ -43,16 +43,8 @@
 #include "adc_callback.h"
 
 struct adc_module *_adc_instances[ADC_INST_NUM];
-void _adc_interrupt_handler(uint8_t instance);
 
-
-void ADC_Handler(void)
-{
-	_adc_interrupt_handler(0);
-}
-
-
-void _adc_interrupt_handler(uint8_t instance)
+static void _adc_interrupt_handler(const uint8_t instance)
 {
 	struct adc_module *module = _adc_instances[instance];
 
@@ -62,6 +54,7 @@ void _adc_interrupt_handler(uint8_t instance)
 	if (flags & ADC_INTFLAG_RESRDY) {
 		/* clear interrupt flag */
 		module->hw->INTFLAG.reg = ADC_INTFLAG_RESRDY;
+
 		if (module->remaining_conversions > 0) {
 			/* store ADC result in job buffer */
 			*(module->job_buffer++) = module->hw->RESULT.reg;
@@ -81,6 +74,7 @@ void _adc_interrupt_handler(uint8_t instance)
 			}
 		}
 	}
+
 	if (flags & ADC_INTFLAG_WINMON) {
 		module->hw->INTFLAG.reg = ADC_INTFLAG_WINMON;
 		if(module->enabled_callback_mask & (1 << ADC_CALLBACK_WINDOW)) {
@@ -88,6 +82,7 @@ void _adc_interrupt_handler(uint8_t instance)
 		}
 
 	}
+
 	if (flags & ADC_INTFLAG_OVERRUN) {
 		module->hw->INTFLAG.reg = ADC_INTFLAG_OVERRUN;
 		if(module->enabled_callback_mask & (1 << ADC_CALLBACK_ERROR)) {
@@ -96,7 +91,11 @@ void _adc_interrupt_handler(uint8_t instance)
 	}
 }
 
-
+/** Interrupt handler for the ADC module. */
+void ADC_Handler(void)
+{
+	_adc_interrupt_handler(0);
+}
 
 /**
  * \brief Registers a callback
@@ -106,9 +105,9 @@ void _adc_interrupt_handler(uint8_t instance)
  * \note The callback must be enabled by for the interrupt handler to call it
  * when the conditions for the callback is met.
  *
- * \param[in]     module      Pointer to ADC software instance struct
- * \param[in]     callback_func Pointer to callback function
- * \param[in]     callback_type Callback type given by an enum
+ * \param[in] module         Pointer to ADC software instance struct
+ * \param[in] callback_func  Pointer to callback function
+ * \param[in] callback_type  Callback type given by an enum
  *
  */
 void adc_register_callback(
@@ -132,9 +131,8 @@ void adc_register_callback(
  *
  * Unregisters a callback function which is implemented by the user.
  *
- * \param[in]     module Pointer to ADC software instance struct
- * \param[in]     callback_func Pointer to callback function
- * \param[in]     callback_type Callback type given by an enum
+ * \param[in] module         Pointer to ADC software instance struct
+ * \param[in] callback_type  Callback type given by an enum
  *
  */
 void adc_unregister_callback(
@@ -160,9 +158,9 @@ void adc_unregister_callback(
  * is complete until \c samples samples has been acquired. To avoid
  * jitter in the sampling frequency using an event trigger is adviced.
  *
- * \param [in]  module_inst Pointer to the ADC software instance struct
- * \param [in]  samples number of samples to acquire
- * \param [out] buffer buffer to store the ADC samples
+ * \param[in]  module_inst  Pointer to the ADC software instance struct
+ * \param[in]  samples      Number of samples to acquire
+ * \param[out] buffer       Buffer to store the ADC samples
  *
  * \return Status of the job start
  * \retval STATUS_OK        The conversion job was started succesfully and is in progress

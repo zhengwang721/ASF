@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_samd20_sercom_spi_slave_callback Quick Start Guide for SERCOM SPI Slave - Callback
+ * \page asfdoc_samd20_sercom_spi_slave_callback_use Quick Start Guide for SERCOM SPI Slave - Callback
  *
  * In this use case, the SPI on extension header 1 of the Xplained Pro board
  * will configured with the following settings:
@@ -60,12 +60,12 @@
  * - GLCK generator 0
  *
  *
- * \section asfdoc_samd20_sercom_spi_slave_callback_usesetup Setup
+ * \section asfdoc_samd20_sercom_spi_slave_callback_use_setup Setup
  *
  * \subsection asfdoc_samd20_sercom_spi_slave_callback_useprereq Prerequisites
  * The device must be connected to a SPI master which must read from the device.
  *
- * \subsection asfdoc_samd20_sercom_spi_slave_callback_usesetup_code Code
+ * \subsection asfdoc_samd20_sercom_spi_slave_callback_use_setup_code Code
  * The following must be added to the user application source file, outside
  * any functions:
  *
@@ -89,7 +89,7 @@
  * Add to user application %main():
  * \snippet qs_spi_slave_callback.c main_start
  *
- * \subsection asfdoc_samd20_sercom_spi_slave_callback_useworkflow Workflow
+ * \subsection asfdoc_samd20_sercom_spi_slave_callback_use_workflow Workflow
  * -# Initialize system.
  *  \snippet qs_spi_slave_callback.c system_init
  * -# Setup the SPI:

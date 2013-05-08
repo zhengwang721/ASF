@@ -303,7 +303,7 @@ enum status_code i2c_master_read_packet_job(
  * \ref i2c_master_write_packet_wait "write" with stop condition must be
  * performed.
  *
- * This is the non-blocking equivalent of \ref i2c_master_read_packet_wait.
+ * This is the non-blocking equivalent of \ref i2c_master_read_packet_wait_no_stop.
  *
  * \param[in,out] module  Pointer to software module struct
  * \param[in,out] packet  Pointer to I<SUP>2</SUP>C packet to transfer
@@ -412,7 +412,7 @@ enum status_code i2c_master_write_packet_job(
  * \ref i2c_master_write_packet_wait "write" with stop condition or sending
  * a stop with the \ref i2c_master_send_stop function must be performed.
  *
- * This is the non-blocking equivalent of \ref i2c_master_write_packet_no_stop.
+ * This is the non-blocking equivalent of \ref i2c_master_write_packet_wait_no_stop.
  *
  * \param[in,out] module  Pointer to software module struct
  * \param[in,out] packet  Pointer to I<SUP>2</SUP>C packet to transfer

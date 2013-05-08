@@ -324,7 +324,7 @@
  * - \ref asfdoc_samd20_sercom_spi_slave_basic_use
   * \if SPI_CALLBACK_MODE
  * - \ref asfdoc_samd20_sercom_spi_master_callback_use
- * - \ref asfdoc_samd20_sercom_spi_slave_callback
+ * - \ref asfdoc_samd20_sercom_spi_slave_callback_use
  * \endif
  *
  * \section asfdoc_samd20_sercom_spi_api_overview API Overview
@@ -1040,7 +1040,7 @@ static inline bool spi_is_ready_to_read(
  *
  * This function will send a single SPI character via SPI and ignore any data
  * shifted in by the connected device. To both send and receive data, use the
- * \ref spi_tranceive_wait function or use the \ref spi_read function after
+ * \ref spi_transceive_wait function or use the \ref spi_read function after
  * writing a character. The \ref spi_is_ready_to_write function
  * should be called before calling this function.
  *
@@ -1337,7 +1337,12 @@ enum status_code spi_select_slave(
  *
  * \see General list of module \ref asfdoc_samd20_sercom_spi_examples "examples".
  *
- * - \subpage asfdoc_samd20_sercom_spi_basic_use_case
+ * - \subpage asfdoc_samd20_sercom_spi_master_basic_use
+ * - \subpage asfdoc_samd20_sercom_spi_slave_basic_use
+  * \if SPI_CALLBACK_MODE
+ * - \subpage asfdoc_samd20_sercom_spi_master_callback_use
+ * - \subpage asfdoc_samd20_sercom_spi_slave_callback_use
+ * \endif
  */
 
  /**
