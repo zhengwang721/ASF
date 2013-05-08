@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SPI example configuration.
+ * \brief Serial USART service configuration.
  *
- * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,21 +41,9 @@
  *
  */
 
-/**
- * \defgroup spi_example_pin_defs
- *  - <b> SAM4L-EK  --  SAM4L-EK </b>
- *  - VCC -- VCC
- *  - NPCS0(PA02,J207/PIN5) -- NPCS0(PA02,J207/PIN5)
- *  - MISO(PC04,J207/PIN7)  -- MISO(PC04,J207/PIN7)
- *  - MOSI(PC05,J207/PIN6)  -- MOSI(PC05,J207/PIN6)
- *  - SPCK(PC06,J207/PIN8)  -- SPCK(PC06,J207/PIN8)
- *  - GND -- GND
- */
+#ifndef CONF_USART_SERIAL_H
+#define CONF_USART_SERIAL_H
 
-#ifndef CONF_SPI_EXAMPLE_H_INCLUDED
-#define CONF_SPI_EXAMPLE_H_INCLUDED
+/* Intentionally empty */
 
-#define SPI_Handler     SPI_Handler
-#define SPI_IRQn        SPI_IRQn
-
-#endif /* CONF_SPI_EXAMPLE_H_INCLUDED */
+#endif/* CONF_USART_SERIAL_H_INCLUDED */
