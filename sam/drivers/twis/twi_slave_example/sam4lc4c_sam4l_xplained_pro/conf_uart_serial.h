@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Example configuration header file.
+ * \brief Serial USART service configuration.
  *
- * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,31 +41,18 @@
  *
  */
 
-/**
- * \defgroup twim_master_example_pin_defs
- *   - <b> Board  --  EEPROM</b>
- *   - TWIMS1 TWD(PB00)  --  SDA
- *   - TWIMS1 TWCK(PB01)  --  SCL
- *   - VCC  --  VCC
- *   - GND  --  GND
- */
+#ifndef CONF_USART_SERIAL_H
+#define CONF_USART_SERIAL_H
 
-#ifndef CONF_EXAMPLE_H_INCLUDED
-#define CONF_EXAMPLE_H_INCLUDED
+/** USART Interface */
+#define CONF_UART              USART1
+/** Baudrate setting */
+#define CONF_UART_BAUDRATE     115200
+/** Character length setting */
+#define CONF_UART_CHAR_LENGTH  US_MR_CHRL_8_BIT
+/** Parity setting */
+#define CONF_UART_PARITY       US_MR_PAR_NO
+/** Stop bits setting */
+#define CONF_UART_STOP_BITS    US_MR_NBSTOP_1_BIT
 
-/** TWIM Interrupt Number */
-#define EXAMPLE_TWIM_IRQn    TWIM1_IRQn
-/** TWIM Module Used */
-#define EXAMPLE_TWIM         TWIM1
-/** Target's TWI address */
-#define TARGET_ADDRESS       0x50
-/** Internal Address length */
-#define TARGET_ADDR_LGT      2
-/** Internal Address */
-#define VIRTUALMEM_ADDR      0x0
-/** Speed of TWI */
-#define TWIM_MASTER_SPEED    TWI_STD_MODE_SPEED
-/** TWIM Interrupt Handler */
-#define EXAMPLE_TWIM_Handler TWIM1_Handler
-
-#endif /* CONF_EXAMPLE_H_INCLUDED */
+#endif/* CONF_USART_SERIAL_H_INCLUDED */

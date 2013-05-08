@@ -96,6 +96,20 @@ void board_init(void)
 	ioport_set_pin_peripheral_mode(COM_PORT_TX_PIN, COM_PORT_TX_MUX);
 #endif
 
+#ifdef CONF_BOARD_TWIMS0
+	ioport_set_pin_peripheral_mode(PIN_PA23B_TWIMS0_TWD,
+			MUX_PA23B_TWIMS0_TWD);
+	ioport_set_pin_peripheral_mode(PIN_PA24B_TWIMS0_TWCK,
+			MUX_PA24B_TWIMS0_TWCK);
+#endif
+
+#ifdef CONF_BOARD_TWIMS3
+	ioport_set_pin_peripheral_mode(PIN_PB14C_TWIMS3_TWD,
+			MUX_PB14C_TWIMS3_TWD);
+	ioport_set_pin_peripheral_mode(PIN_PB15C_TWIMS3_TWCK,
+			MUX_PB15C_TWIMS3_TWCK);
+#endif
+
 #ifdef CONF_BOARD_USART0
 	ioport_set_pin_peripheral_mode(EXT1_PIN_UART_RX, EXT1_UART_RX_MUX);
 	ioport_set_pin_peripheral_mode(EXT1_PIN_UART_TX, EXT1_UART_TX_MUX);

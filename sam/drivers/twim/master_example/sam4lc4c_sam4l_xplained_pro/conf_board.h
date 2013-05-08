@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Example configuration header file.
+ * \brief  Configuration File for SAM4L Xplained Pro Board.
  *
- * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,31 +41,13 @@
  *
  */
 
-/**
- * \defgroup twim_master_example_pin_defs
- *   - <b> Board  --  EEPROM</b>
- *   - TWIMS1 TWD(PB00)  --  SDA
- *   - TWIMS1 TWCK(PB01)  --  SCL
- *   - VCC  --  VCC
- *   - GND  --  GND
- */
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#ifndef CONF_EXAMPLE_H_INCLUDED
-#define CONF_EXAMPLE_H_INCLUDED
+/** Enable Com Port. */
+#define CONF_BOARD_COM_PORT
 
-/** TWIM Interrupt Number */
-#define EXAMPLE_TWIM_IRQn    TWIM1_IRQn
-/** TWIM Module Used */
-#define EXAMPLE_TWIM         TWIM1
-/** Target's TWI address */
-#define TARGET_ADDRESS       0x50
-/** Internal Address length */
-#define TARGET_ADDR_LGT      2
-/** Internal Address */
-#define VIRTUALMEM_ADDR      0x0
-/** Speed of TWI */
-#define TWIM_MASTER_SPEED    TWI_STD_MODE_SPEED
-/** TWIM Interrupt Handler */
-#define EXAMPLE_TWIM_Handler TWIM1_Handler
+/** Enable TWIM3 pins. */
+#define CONF_BOARD_TWIMS3
 
-#endif /* CONF_EXAMPLE_H_INCLUDED */
+#endif /* CONF_BOARD_H_INCLUDED */

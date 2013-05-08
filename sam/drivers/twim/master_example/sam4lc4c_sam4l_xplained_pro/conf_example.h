@@ -3,7 +3,7 @@
  *
  * \brief Example configuration header file.
  *
- * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,8 +44,8 @@
 /**
  * \defgroup twim_master_example_pin_defs
  *   - <b> Board  --  EEPROM</b>
- *   - TWIMS1 TWD(PB00)  --  SDA
- *   - TWIMS1 TWCK(PB01)  --  SCL
+ *   - TWIMS3 TWD(PB14,EXT2/PIN11)  --  SDA
+ *   - TWIMS3 TWCK(PB15,EXT2/PIN12)  --  SCL
  *   - VCC  --  VCC
  *   - GND  --  GND
  */
@@ -54,9 +54,9 @@
 #define CONF_EXAMPLE_H_INCLUDED
 
 /** TWIM Interrupt Number */
-#define EXAMPLE_TWIM_IRQn    TWIM1_IRQn
+#define EXAMPLE_TWIM_IRQn    TWIM3_IRQn
 /** TWIM Module Used */
-#define EXAMPLE_TWIM         TWIM1
+#define EXAMPLE_TWIM         TWIM3
 /** Target's TWI address */
 #define TARGET_ADDRESS       0x50
 /** Internal Address length */
@@ -66,6 +66,6 @@
 /** Speed of TWI */
 #define TWIM_MASTER_SPEED    TWI_STD_MODE_SPEED
 /** TWIM Interrupt Handler */
-#define EXAMPLE_TWIM_Handler TWIM1_Handler
+#define EXAMPLE_TWIM_Handler TWIM3_Handler
 
 #endif /* CONF_EXAMPLE_H_INCLUDED */

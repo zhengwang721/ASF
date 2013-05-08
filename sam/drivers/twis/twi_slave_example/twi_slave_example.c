@@ -50,15 +50,15 @@
  *
  * \section Requirements
  *
- * This package can be used with SAM4L-EK.
+ * This package can be used with SAM4L boards.
  *
  * In addition, another device will be needed to act as the TWI master. The
  * twim_example can be used for that, in which case a second kit
  * supported by that project is needed.
- * -# Connect TWD1 (SDA) for the 2 boards.
- * -# Connect TWCK1 (SCL) for the 2 boards.
+ * -# Connect TWD (SDA) for the 2 boards.
+ * -# Connect TWCK (SCL) for the 2 boards.
  * -# Connect GND for the 2 boards.
- * -# Add a pull up of 2.2KOhms on TWD and TWCK
+ * -# Add a pull up resistor on TWD and TWCK
  *
  * \section files Main files:
  *  - twis.c SAM Two-Wire Slave Interface driver implementation.
