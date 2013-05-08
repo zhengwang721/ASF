@@ -58,9 +58,10 @@ struct tc_module tc6_module;
 struct tc_config tc0_config;
 struct tc_config tc1_config;
 
-bool tc_init_success = false;
+uint32_t tc_init_success = 0;
 
-volatile bool callback_function_entered = false;
+volatile uint32_t callback_function_entered = 0;
+bool basic_functionality_test_pased = false;
 
 /**
  * \internal
@@ -70,7 +71,7 @@ volatile bool callback_function_entered = false;
  */
 void tc_callback_function(struct tc_module *const module_inst)
 {
-	callback_function_entered = true;
+	callback_function_entered += 1;
 }
 
 /**
@@ -90,10 +91,10 @@ static void run_init_test(const struct test_case *test)
 	enum status_code test2 = tc_init(&tc1_module, TC1, &tc1_config);
 
 	if ((test1 == STATUS_OK) && (test2 == STATUS_OK)) {
-		tc_init_sucessc = true;
+		tc_init_success = true;
 	}
 	test_assert_true(test,
-			(test2 == STATUS_OK) && (test1 == STATUS_OK) ,
+			(test2 == STATUS_OK) && (test1 == STATUS_OK),
 			"Failed to initialize modules");
 }
 
@@ -113,6 +114,7 @@ static void run_reset_32bit_master_test(const struct test_case *test)
 			tc_init_success == true,
 			"TC initialization failed, skipping test");
 	/* Configure 32-bit TC module and run test*/
+	tc_reset(&tc0_module);
 	tc_get_config_defaults(&tc0_config);
 	tc0_config.counter_size = TC_COUNTER_SIZE_32BIT;
 	tc_init(&tc0_module, TC0, &tc0_config);
@@ -160,9 +162,68 @@ static void run_reset_32bit_master_test(const struct test_case *test)
 
 /**
  * \internal
+ * \brief Test basic functionality.
+ *
+ * This test tests the basic functionality for the TC. It tests the following functions:
+ * 
+ *
+ * \param test Current test case.
+ */
+static void run_basic_functionality_test(const struct test_case *test)
+{
+	test_assert_true(test, 
+			tc_init_success == true,
+			"TC initialization failed, skipping test");
+	
+	/* Setup TC0 */
+	tc_reset(&tc0_module);
+	tc_get_config_defaults(&tc0_config);
+	tc_init(&tc0_module, TC0, &tc0_config);
+	tc_enable(&tc0_module);
+
+	for (int i = 0; i < 10; i++) {
+		/* Let the counter count for a short while */
+	}
+
+	uint32_t test_val0 = tc_get_count_value(&tc0_module);
+
+	test_assert_true(test,
+			test_val0 > 0,
+			"The tc_get_count_value() returned 0 expected larger value");
+
+	tc_stop_counter(&tc0_module);
+
+	uint32_t test_val1 = tc_get_count_value(&tc0_module);
+	uint32_t test_val2 = tc_get_count_value(&tc0_module);
+
+	test_assert_true(test,
+			test_val1 == test_val2,
+			"The counter failed to stop");
+
+	tc_set_count_value(&tc0_module, 0x00FF);
+
+	test_assert_true(test,
+			tc_get_count_value(&tc0_module) == 0x00FF,
+			"tc_set_count_value() have failed");
+
+	tc_start_counter(&tc0_module);
+
+	for (int i = 0; i < 10; i++) {
+		/* Let the counter count for a short while */
+	}
+
+	test_assert_true(test,
+			tc_get_count_value(&tc0_module) > 0x00FF,
+			"tc_get_count_value() have failed");
+
+	basic_functionality_test_pased = true;
+}
+
+/**
+ * \internal
  * \brief Test the callback API
  *
- * This test tests the callback API for the TC.
+ * This test tests the callback API for the TC. The TC uses one-shot mode.
  *
  * \param test Current test case.
  */
@@ -172,17 +233,56 @@ static void run_callback_test(const struct test_case *test)
 			tc_init_success == true,
 			"TC initialization failed, skipping test");
 
+	test_assert_true(test,
+			basic_functionality_test_pased == true,
+			"Basic functionality test failed, skipping test");
+
 	/* Setup TC0 */
+	tc_reset(&tc0_module);
 	tc_get_config_defaults(&tc0_config);
-	tc0_config.
+	tc0_config.wave_generation                            = TC_WAVE_GENERATION_MATCH_PWM;
+	//tc0_config.oneshot                                    = true;
+	tc0_config.size_specific.size_16_bit.compare_capture_channel\
+		[TC_COMPARE_CAPTURE_CHANNEL_0]                    = 0x03FF;
+	tc0_config.size_specific.size_16_bit.compare_capture_channel\
+		[TC_COMPARE_CAPTURE_CHANNEL_1]                    = 0x03FA;
 	tc_init(&tc0_module, TC0, &tc0_config);
 
 	/* setup callbacks */
-	tc_register_callback(&tc0_module, tc_callback_function, TC_CALBACK_CC_CHANNEL1);
-	tc_enable_callback(&tc0_module, TC_CALBACK_CC_CHANNEL1);
+	tc_register_callback(&tc0_module, tc_callback_function, TC_CALLBACK_CC_CHANNEL1);
+	tc_enable_callback(&tc0_module, TC_CALLBACK_CC_CHANNEL1);
 
 	/* Enable global interrupts */
 	system_interrupt_enable_global();
+
+	tc_enable(&tc0_module);
+
+	while ((tc_get_status(&tc0_module) & TC_STATUS_COUNT_OVERFLOW) == 0) {
+		/* Wait for overflow of TC1*/
+	}
+	tc_disable(&tc0_module);
+	tc_clear_status(&tc0_module, TC_STATUS_COUNT_OVERFLOW);
+
+	test_assert_true(test,
+			callback_function_entered == 1,
+			"The callback has failed callback_function_entered = %d",
+			callback_function_entered);
+
+	/* Test disable callback function */
+	tc_disable_callback(&tc0_module, TC_CALLBACK_CC_CHANNEL1);
+	tc_set_count_value(&tc0_module, 0x00000000);
+	
+	tc_enable(&tc0_module);
+
+	while ((tc_get_status(&tc0_module) & TC_STATUS_COUNT_OVERFLOW) == 0) {
+		/* Wait for overflow of TC1*/
+	}
+
+	tc_disable(&tc0_module);
+
+	test_assert_true(test,
+			callback_function_entered == 1,
+			"Disabling the callback has failed");
 }
 
 /**
@@ -199,20 +299,37 @@ static void run_16bit_capture_and_compare_test(const struct test_case *test)
 	test_assert_true(test, 
 			tc_init_success == true,
 			"TC initialization failed, skipping test");
+
+	test_assert_true(test,
+			callback_function_entered == 1,
+			"The callback test has failed, skipping test");
+
 	/* Configure 16-bit TC module for PWM generation */
+	tc_reset(&tc0_module);
 	tc_get_config_defaults(&tc0_config);
 	tc0_config.wave_generation                                       =
-			TC_WAVE_GENERATION_NORMAL_PWM;
+			TC_WAVE_GENERATION_MATCH_PWM;
 	tc0_config.size_specific.size_16_bit.compare_capture_channel[0]  =
-			0x7FFF;
-	tc0_config.channel_pwm_out_enabled[TC_COMPARE_CAPTURE_CHANNEL[0] = true;
-	tc0_config.channel_pwm_out_pin[0]                                = 0;
-	tc0_config.channel_pwm_out_mux[0]                                = 0;
-	tc_init(&tc0_module, EXT1_PWM_MODULE, &tc0_config);
+			0x03FF;
+	tc0_config.size_specific.size_16_bit.compare_capture_channel[1]  =
+			0x02FF;
+	tc0_config.channel_pwm_out_enabled[TC_COMPARE_CAPTURE_CHANNEL_1] = true;
+	tc0_config.channel_pwm_out_pin[1]                                = PIN_PB31F_TC0_WO1;
+	tc0_config.channel_pwm_out_mux[1]                                = MUX_PB31F_TC0_WO1;
+
+	tc_init(&tc0_module, TC0, &tc0_config);
+
+	tc_register_callback(&tc0_module, tc_callback_function, TC_CALLBACK_CC_CHANNEL0);
+	tc_enable_callback(&tc0_module, TC_CALLBACK_CC_CHANNEL0);
+
+	/* Enable global interrupts */
+	system_interrupt_enable_global();
+
 
 	/* Configure 16-bit TC module for capture */
+	tc_reset(&tc1_module);
 	tc_get_config_defaults(&tc1_config);
-	tc1_config.clock_prescaler              = TC_CLOCK_PRESCALER_DIV2;
+	tc1_config.clock_prescaler              = TC_CLOCK_PRESCALER_DIV1;
 	tc1_config.enable_capture_on_channel[0] = true;
 	tc1_config.enable_capture_on_channel[1] = true;
 	tc1_config.enable_incoming_events       = true;
@@ -223,19 +340,24 @@ static void run_16bit_capture_and_compare_test(const struct test_case *test)
 	struct system_pinmux_config system_pinmux_conf;
 	system_pinmux_get_config_defaults(&system_pinmux_conf);
 	/* Configure PWM output pin */
-	system_pinmux_conf.mux_position = MUX_PA04F_TC0_WO0;
-	system_pinmux_conf.direction = SYSTEM_PINMUX_PIN_DIR_OUTPUT;
-	system_pinmux_conf.input_pull = SYSTEM_PINMUX_PIN_PULL_NONE;
-	system_pinmux_pin_set_config(PIN_PA04F_TC0_WO0, &system_pinmux_conf);
-	/* Configure PWM input pin */
-	system_pinmux_conf.mux_position = MUX_PA16A_EIC_EXTINT0;
-	system_pinmux_conf.direction = SYSTEM_PINMUX_PIN_DIR_INPUT;
-	system_pinmux_conf.input_pull = SYSTEM_PINMUX_PIN_PULL_UP;
-	system_pinmux_pin_set_config(PIN_PA16A_EIC_EXTINT0, &system_pinmux_conf);
+	system_pinmux_conf.mux_position = MUX_PB31F_TC0_WO1;
+	system_pinmux_conf.direction    = SYSTEM_PINMUX_PIN_DIR_OUTPUT;
+	system_pinmux_conf.input_pull   = SYSTEM_PINMUX_PIN_PULL_NONE;
+	system_pinmux_pin_set_config(PIN_PB31F_TC0_WO1, &system_pinmux_conf);
 
+	/* Configure external interrupt controller to generate events */
+	struct extint_chan_conf extint_chan_config;
+	extint_chan_config.gpio_pin            = PIN_PA16A_EIC_EXTINT0;
+	extint_chan_config.gpio_pin_mux        = MUX_PA16A_EIC_EXTINT0;
+	extint_chan_config.gpio_pin_pull       = EXTINT_PULL_UP;
+	extint_chan_config.wake_if_sleeping    = false;
+	extint_chan_config.filter_input_signal = false;
+	extint_chan_config.detection_criteria  = EXTINT_DETECT_BOTH;
+	extint_chan_set_config(0, &extint_chan_config);
+	extint_enable();
 	/* Configure external interrupt module to be event generator */
 	struct extint_events extint_event_conf;
-	extint_event_conf.generate_event_on_detect[0] = true; //TODO: select correct channel
+	extint_event_conf.generate_event_on_detect[0] = true;
 	extint_enable_events(&extint_event_conf);
 
 	/* Configure event system */
@@ -248,17 +370,37 @@ static void run_16bit_capture_and_compare_test(const struct test_case *test)
 	/* Configure channel */
 	struct events_chan_config events_chan_conf;
 	events_chan_get_config_defaults(&events_chan_conf);
-	events_chan_conf.generator_id = EVSYS_ID_GEN_EIC_EXTINT_0;
-	events_chan_conf.path = EVENT_PATH_ASYNCHRONOUS;
+	events_chan_conf.generator_id   = EVSYS_ID_GEN_EIC_EXTINT_0;
+	events_chan_conf.path           = EVENT_PATH_SYNCHRONOUS;
+	events_chan_conf.edge_detection = EVENT_EDGE_BOTH;
 	events_chan_set_config(EVENT_CHANNEL_0, &events_chan_conf);
-
-	/* get capture values before any capture has occurred for comparison */
-	uint16_t period_before_capture = tc_get_capture_value(&tc1_module, TC_COMPARE_CAPTURE_CHANNEL_0);
-	uint16_t pulse_width_before_capture = tc_get_capture_value(&tc1_module, TC_COMPARE_CAPTURE_CHANNEL_1);
 
 	/* Enable TC modules */
 	tc_enable(&tc1_module);
 	tc_enable(&tc0_module);
+
+	test_assert_true(test,
+			events_user_is_ready(EVENT_CHANNEL_0),
+			"Event user not ready");
+
+	test_assert_true(test,
+			events_chan_is_ready(EVENT_CHANNEL_0),
+			"Event channel not ready");
+
+	while (callback_function_entered < 3) {
+		/* Do nothing */
+	}
+
+	uint16_t period_after_capture = tc_get_capture_value(&tc1_module,
+			TC_COMPARE_CAPTURE_CHANNEL_0);
+	uint16_t pulse_width_after_capture = tc_get_capture_value(&tc1_module,
+			TC_COMPARE_CAPTURE_CHANNEL_1);
+
+	test_assert_true(test,
+			(0 < pulse_width_after_capture) && (0 < period_after_capture),
+			"PWM has not been captured, pulse width: %d, period: %d",
+			pulse_width_after_capture,
+			period_after_capture);
 }
 
 /**
@@ -313,14 +455,30 @@ int main(void)
 			run_init_test, NULL,
 			"Initialize tc_xmodules");
 
+	DEFINE_TEST_CASE(basic_functionality_test, NULL,
+			run_basic_functionality_test, NULL,
+			"test start stop and getters and setters");
+
+	DEFINE_TEST_CASE(callback_test, NULL,
+			run_callback_test, NULL,
+			"test callback API");
+
 	DEFINE_TEST_CASE(reset_32bit_master_test, NULL,
 			run_reset_32bit_master_test, NULL,
 			"Setup, reset and reinitialize TC modules of a 32-bit TC");
 
+	
+	DEFINE_TEST_CASE(capture_and_compare_test, NULL,
+			run_16bit_capture_and_compare_test, NULL,
+			"Test capture and compare");
+
 	/* Put test case addresses in an array */
 	DEFINE_TEST_ARRAY(tc_tests) = {
 		&init_test,
+		&basic_functionality_test,
+		&callback_test,
 		&reset_32bit_master_test,
+		&capture_and_compare_test,
 	};
 
 	/* Define the test suite */
