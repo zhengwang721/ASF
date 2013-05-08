@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief  Configuration File for SAM4L-EK Board.
+ * \brief Configuration File for SAM4L Xplained Pro Board.
  *
- * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,13 +44,31 @@
 #ifndef CONF_BOARD_H_INCLUDED
 #define CONF_BOARD_H_INCLUDED
 
-/** Define to avoid disabling the watchdog at startup. */
-#define CONF_BOARD_KEEP_WATCHDOG_AT_INIT
-
 /** Enable Com Port. */
 #define CONF_BOARD_COM_PORT
 
-/* Configure push button pin as external interrupt */
-#define CONF_BOARD_EIC
+/**
+ * \note For test the example on SAM4L Xplained Pro, we need to connect pin6
+ * in EXT1 and pin7 in EXT2.
+ */
 
-#endif /* CONF_BOARD_H_INCLUDED */
+#define TC             TC1
+#define TC_PERIPHERAL  1
+
+/** Configure TC1 channel 2 as waveform output. */
+#define TC_CHANNEL_WAVEFORM  2
+#define ID_TC_WAVEFORM       TC1
+#define PIN_TC_WAVEFORM      PIN_PC04D_TC1_A2
+#define PIN_TC_WAVEFORM_MUX  MUX_PC04D_TC1_A2
+
+/** Configure TC1 channel 1 as capture input. */
+#define TC_CHANNEL_CAPTURE  1
+#define ID_TC_CAPTURE       TC1
+#define PIN_TC_CAPTURE      PIN_PC02D_TC1_A1
+#define PIN_TC_CAPTURE_MUX  MUX_PC02D_TC1_A1
+
+/** Use TC11_Handler for TC capture interrupt */
+#define TC_Handler  TC11_Handler
+#define TC_IRQn     TC11_IRQn
+
+#endif  /* CONF_BOARD_H_INCLUDED */

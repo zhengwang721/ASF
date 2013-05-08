@@ -54,7 +54,7 @@
  */
 
 /**
- * \defgroup sam4l_xplained_pro_config_group Configuration
+ * \defgroup sam4l8_xplained_pro_config_group Configuration
  *
  * Symbols to use for configuring the board and its initialization.
  *
@@ -82,7 +82,7 @@
 /** @} */
 
 /**
- * \defgroup sam4l_xplained_pro_features_group Features
+ * \defgroup sam4l8_xplained_pro_features_group Features
  *
  * Symbols that describe features and capabilities of the board.
  *

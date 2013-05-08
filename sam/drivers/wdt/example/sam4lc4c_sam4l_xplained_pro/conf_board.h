@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief  Configuration File for SAM4L-EK Board.
+ * \brief  Configuration File for SAM4L Xplained Pro board.
  *
- * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,17 +40,13 @@
  * \asf_license_stop
  *
  */
-
 #ifndef CONF_BOARD_H_INCLUDED
 #define CONF_BOARD_H_INCLUDED
 
-/** Define to avoid disabling the watchdog at startup. */
-#define CONF_BOARD_KEEP_WATCHDOG_AT_INIT
-
-/** Enable Com Port. */
+/** Enable USART console */
 #define CONF_BOARD_COM_PORT
 
-/* Configure push button pin as external interrupt */
+/** Force usage of external EIC */
 #define CONF_BOARD_EIC
 
 #endif /* CONF_BOARD_H_INCLUDED */
