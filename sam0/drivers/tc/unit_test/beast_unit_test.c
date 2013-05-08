@@ -41,10 +41,14 @@
  *
  */
 
+/*
+ * This unit test requires pin PA16 and PB31 to be connected. On the 
+ * Xplained Pro this corresponds to pin EXT3_PIN_17 on the EXT3 header and 
+ * the pin EXT3_PIN_8 on the EXT3 header.
+ */
+
 #include <asf.h>
 #include <stdio_serial.h>
-#include <string.h>
-#include <compiler.h>
 
 /* USART for STDIO */
 #define CONF_RX_USART      EDBG_CDC_MODULE
@@ -61,7 +65,7 @@ struct tc_config tc1_config;
 uint32_t tc_init_success = 0;
 
 volatile uint32_t callback_function_entered = 0;
-bool basic_functionality_test_pased = false;
+bool basic_functionality_test_passed = false;
 
 /**
  * \internal
@@ -69,7 +73,7 @@ bool basic_functionality_test_pased = false;
  *
  * This function indicates that the callback function has been invoked. 
  */
-void tc_callback_function(struct tc_module *const module_inst)
+static void tc_callback_function(struct tc_module *const module_inst)
 {
 	callback_function_entered += 1;
 }
@@ -93,6 +97,7 @@ static void run_init_test(const struct test_case *test)
 	if ((test1 == STATUS_OK) && (test2 == STATUS_OK)) {
 		tc_init_success = true;
 	}
+
 	test_assert_true(test,
 			(test2 == STATUS_OK) && (test1 == STATUS_OK),
 			"Failed to initialize modules");
@@ -119,18 +124,22 @@ static void run_reset_32bit_master_test(const struct test_case *test)
 	tc0_config.counter_size = TC_COUNTER_SIZE_32BIT;
 	tc_init(&tc0_module, TC0, &tc0_config);
 	tc_enable(&tc0_module);
+
 	while (tc_is_syncing(&tc0_module)) {
 		/* synchronize enable */
 	}
+
 	test_assert_true(test,
 			tc0_module.hw->COUNT32.CTRLA.reg & TC_CTRLA_ENABLE,
 			"Failed first enable of 32-bit TC");
 
 	/* Reset and test if both TC modules are disabled after reset */
 	tc_reset(&tc0_module);
+
 	while (tc_is_syncing(&tc0_module)) {
-		/* synchronize enable */
+		/* synchronize reset */
 	}
+
 	test_assert_false(test,
 			tc0_module.hw->COUNT32.CTRLA.reg & TC_CTRLA_ENABLE,
 			"Failed reset of 32-bit master TC0");
@@ -138,26 +147,28 @@ static void run_reset_32bit_master_test(const struct test_case *test)
 			tc1_module.hw->COUNT32.CTRLA.reg & TC_CTRLA_ENABLE,
 			"Failed reset of 32-bit slave TC1");
 
+	/* Change to 16-bit counter on TC0  */
 	tc0_config.counter_size = TC_COUNTER_SIZE_16BIT;
 	tc_init(&tc0_module, TC0, &tc0_config);
 	tc_enable(&tc0_module);
+
 	while (tc_is_syncing(&tc0_module)) {
 		/* synchronize enable */
 	}
+
 	tc_init(&tc1_module, TC1, &tc1_config);
 	tc_enable(&tc1_module);
+	
 	while (tc_is_syncing(&tc1_module)) {
 		/* synchronize enable */
 	}
+
 	test_assert_true(test,
 			tc0_module.hw->COUNT16.CTRLA.reg & TC_CTRLA_ENABLE,
 			"Failed re-enable of TC0");
 	test_assert_true(test,
 			tc1_module.hw->COUNT16.CTRLA.reg & TC_CTRLA_ENABLE,
 			"Failed re-enable TC1");
-
-	tc_disable(&tc0_module);
-	tc_disable(&tc1_module);
 }
 
 /**
@@ -180,10 +191,6 @@ static void run_basic_functionality_test(const struct test_case *test)
 	tc_get_config_defaults(&tc0_config);
 	tc_init(&tc0_module, TC0, &tc0_config);
 	tc_enable(&tc0_module);
-
-	for (int i = 0; i < 10; i++) {
-		/* Let the counter count for a short while */
-	}
 
 	uint32_t test_val0 = tc_get_count_value(&tc0_module);
 
@@ -208,15 +215,11 @@ static void run_basic_functionality_test(const struct test_case *test)
 
 	tc_start_counter(&tc0_module);
 
-	for (int i = 0; i < 10; i++) {
-		/* Let the counter count for a short while */
-	}
-
 	test_assert_true(test,
 			tc_get_count_value(&tc0_module) > 0x00FF,
 			"tc_get_count_value() have failed");
 
-	basic_functionality_test_pased = true;
+	basic_functionality_test_passed = true;
 }
 
 /**
@@ -234,7 +237,7 @@ static void run_callback_test(const struct test_case *test)
 			"TC initialization failed, skipping test");
 
 	test_assert_true(test,
-			basic_functionality_test_pased == true,
+			basic_functionality_test_passed == true,
 			"Basic functionality test failed, skipping test");
 
 	/* Setup TC0 */
@@ -260,6 +263,7 @@ static void run_callback_test(const struct test_case *test)
 	while ((tc_get_status(&tc0_module) & TC_STATUS_COUNT_OVERFLOW) == 0) {
 		/* Wait for overflow of TC1*/
 	}
+
 	tc_disable(&tc0_module);
 	tc_clear_status(&tc0_module, TC_STATUS_COUNT_OVERFLOW);
 
@@ -345,7 +349,7 @@ static void run_16bit_capture_and_compare_test(const struct test_case *test)
 	system_pinmux_conf.input_pull   = SYSTEM_PINMUX_PIN_PULL_NONE;
 	system_pinmux_pin_set_config(PIN_PB31F_TC0_WO1, &system_pinmux_conf);
 
-	/* Configure external interrupt controller to generate events */
+	/* Configure external interrupt controller */
 	struct extint_chan_conf extint_chan_config;
 	extint_chan_config.gpio_pin            = PIN_PA16A_EIC_EXTINT0;
 	extint_chan_config.gpio_pin_mux        = MUX_PA16A_EIC_EXTINT0;
@@ -437,18 +441,15 @@ static void test_usart_comunication_init(void)
 }
 
 /**
- * \brief Run USART unit tests
+ * \brief Run TC unit tests
  *
- * Initializes the system and serial output, then sets up the USART unit test
+ * Initializes the system and serial output, then sets up the TC unit test
  * suite and runs it.
  */
 int main(void)
 {
 	system_init();
 	test_usart_comunication_init();
-
-	//TODO: remove this.
-	system_clock_source_write_calibration(SYSTEM_CLOCK_SOURCE_OSC8M, 18, 2);
 
 	/* Define Test Cases */
 	DEFINE_TEST_CASE(init_test, NULL,
@@ -487,6 +488,9 @@ int main(void)
 
 	/* Run all tests in the suite*/
 	test_suite_run(&tc_suite);
+
+	tc_reset(&tc0_module);
+	tc_reset(&tc1_module);
 
 	while (true) {
 		/* Intentionally left empty */
