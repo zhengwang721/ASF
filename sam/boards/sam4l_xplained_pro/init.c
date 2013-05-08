@@ -114,6 +114,10 @@ void board_init(void)
 	ioport_set_pin_dir(AT86RFX_SLP_PIN, IOPORT_DIR_OUTPUT);
 	ioport_set_pin_level(AT86RFX_SLP_PIN, IOPORT_PIN_LEVEL_HIGH);
 #endif
+
+#ifdef CONF_BOARD_DACC_VOUT
+	ioport_set_pin_peripheral_mode(DACC_VOUT_PIN, DACC_VOUT_MUX);
+#endif
 }
 
 /** @} */
