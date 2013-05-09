@@ -3,7 +3,7 @@
  *
  * \brief USART Serial example for SAM.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -49,7 +49,10 @@
  * peripherals.
  *
  * \par Requirements
- *  This package can be used with SAM4L EK with USART and PDCA.
+ * This package can be used with  with USART and PDCA.
+ * - SAM4L-EK
+ * - SAM4L Xplained Pro
+ * - SAM4L8 Xplained Pro
  *
  * \par Description
  *
@@ -111,8 +114,6 @@
 
 #define PDCA_RX_CHANNEL  0
 #define PDCA_TX_CHANNEL  1
-#define PDCA_PID_USART2_RX    2
-#define PDCA_PID_USART2_TX    20
 
 /** Receive buffer. */
 static uint8_t gs_puc_buffer[2][BUFFER_SIZE];
@@ -135,7 +136,7 @@ static uint8_t g_uc_transend_flag = 0;
 /** PDCA channel options. */
 pdca_channel_config_t PDCA_RX_OPTIONS = {
 	.addr = (void *)gs_puc_buffer, /* memory address */
-	.pid = PDCA_PID_USART2_RX, /* select peripheral - USART0 RX line.*/
+	.pid = PDCA_PID_USART_RX, /* select peripheral - USART0 RX line.*/
 	.size = BUFFER_SIZE, /* transfer counter */
 	.r_addr = (void *)gs_puc_nextbuffer, /* next memory address */
 	.r_size = BUFFER_SIZE, /* next transfer counter */
@@ -143,7 +144,7 @@ pdca_channel_config_t PDCA_RX_OPTIONS = {
 };
 pdca_channel_config_t PDCA_TX_OPTIONS = {
 	.addr = (void *)gs_puc_buffer, /* memory address */
-	.pid = PDCA_PID_USART2_TX, /* select peripheral - USART0 TX line.*/
+	.pid = PDCA_PID_USART_TX, /* select peripheral - USART0 TX line.*/
 	.size = 0, /* transfer counter */
 	.r_addr = (void *)gs_puc_nextbuffer, /* next memory address */
 	.r_size = 0, /* next transfer counter */
@@ -154,7 +155,7 @@ pdca_channel_config_t PDCA_TX_OPTIONS = {
  * \brief Interrupt handler for USART. Echo the bytes received and start the
  * next receive.
  */
-void USART2_Handler(void)
+void USART_Handler(void)
 {
 	uint32_t ul_status;
 
