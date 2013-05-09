@@ -101,6 +101,11 @@ void board_init(void)
 	ioport_set_pin_peripheral_mode(EXT1_PIN_UART_TX, EXT1_UART_TX_MUX);
 #endif
 
+#if (defined CONF_BOARD_USB_PORT)
+	ioport_set_pin_peripheral_mode(PIN_PA25A_USBC_DM, MUX_PA25A_USBC_DM);
+	ioport_set_pin_peripheral_mode(PIN_PA26A_USBC_DP, MUX_PA26A_USBC_DP);
+#endif
+
 #ifdef CONF_BOARD_AT86RFX
 	ioport_set_pin_peripheral_mode(AT86RFX_SPI_MISO, MUX_PA21A_SPI_MISO);
 	ioport_set_pin_peripheral_mode(AT86RFX_SPI_MOSI, MUX_PA22A_SPI_MOSI);
