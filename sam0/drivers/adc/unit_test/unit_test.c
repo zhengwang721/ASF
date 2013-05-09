@@ -92,6 +92,14 @@
 
 /* Number of ADC samples used in the test */
 #define ADC_SAMPLES 128
+/* Theoretical ADC results for DAC outputs */
+#define ADC_VAL_DAC_HALF_OUTPUT 2047
+#define ADC_VAL_DAC_FULL_OUTPUT 4095
+/* Offset due to ADC & DAC errors */
+#define ADC_OFFSET              50
+/* Theoretical DAC values for 0.5V & 1V output*/
+#define DAC_VAL_HALF_VOLT       512
+#define DAC_VAL_ONE_VOLT        1023
 
 /* Structure for UART module connected to EDBG (used for unit test output) */
 struct usart_module cdc_uart_module;
@@ -226,26 +234,28 @@ static void run_adc_polled_mode_test(const struct test_case *test)
 			"Skipping test due to failed initialization");
 	
 	/* Set 0.5V on DAC output */
-	dac_chan_write(&dac_inst, DAC_CHANNEL_0, 512);
+	dac_chan_write(&dac_inst, DAC_CHANNEL_0, DAC_VAL_HALF_VOLT);
 	delay_ms(1);
 	/* Start an ADC conversion */
 	adc_start_conversion(&adc_inst);
 	while (adc_read(&adc_inst, &adc_result) != STATUS_OK) {
 	}
 	/* Test result */
-	test_assert_true(test, adc_result > 1990,
+	test_assert_true(test, 
+			adc_result > (ADC_VAL_DAC_HALF_OUTPUT - ADC_OFFSET),
 			"Error in ADC conversion at 0.5V input");
 
 	adc_flush(&adc_inst);
 	/* Set 1V on DAC output */
-	dac_chan_write(&dac_inst, DAC_CHANNEL_0, 1023);
+	dac_chan_write(&dac_inst, DAC_CHANNEL_0, DAC_VAL_ONE_VOLT);
 	delay_ms(1);
 	/* Start an ADC conversion */
 	adc_start_conversion(&adc_inst);
 	while (adc_read(&adc_inst, &adc_result) != STATUS_OK) {
 	}
 	/* Test result */
-	test_assert_true(test, adc_result > 4000,
+	test_assert_true(test, 
+			adc_result > (ADC_VAL_DAC_FULL_OUTPUT - ADC_OFFSET),
 			"Error in ADC conversion at 1V input");
 }
 
@@ -289,7 +299,7 @@ static void run_adc_callback_mode_test(const struct test_case *test)
 {
 	uint16_t timeout_cycles = 10000;
 	/* Set 0.5V DAC output */
-	dac_chan_write(&dac_inst, DAC_CHANNEL_0, 512);
+	dac_chan_write(&dac_inst, DAC_CHANNEL_0, DAC_VAL_HALF_VOLT);
 	delay_ms(1);
 	/* Start ADC read */
 	adc_read_buffer_job(&adc_inst, adc_buf, ADC_SAMPLES);
@@ -305,7 +315,8 @@ static void run_adc_callback_mode_test(const struct test_case *test)
 			"Timeout in ADC read");
 	/* Test result */
 	for (uint8_t i = 0; i < ADC_SAMPLES; i++) {
-		test_assert_true(test, adc_buf[i] > 1990,
+		test_assert_true(test, 
+				adc_buf[i] > (ADC_VAL_DAC_HALF_OUTPUT - ADC_OFFSET),
 				"Error in ADC conversion for 0.5V at index %d", i);
 	}
 }
@@ -379,7 +390,7 @@ static void run_adc_average_mode_test(const struct test_case *test)
 {
 	uint16_t adc_result = 0;
 	/* Set 0.5V DAC output */
-	dac_chan_write(&dac_inst, DAC_CHANNEL_0, 512);
+	dac_chan_write(&dac_inst, DAC_CHANNEL_0, DAC_VAL_HALF_VOLT);
 	delay_ms(1);
 	/* Start an ADC conversion */
 	adc_start_conversion(&adc_inst);
@@ -387,7 +398,8 @@ static void run_adc_average_mode_test(const struct test_case *test)
 	}
 	adc_result = adc_result >> 4;
 	/* Test result */
-	test_assert_true(test, adc_result > 1990,
+	test_assert_true(test, 
+			adc_result > (ADC_VAL_DAC_HALF_OUTPUT - ADC_OFFSET),
 			"Error in ADC average mode conversion at 0.5V input");
 }
 
@@ -407,7 +419,7 @@ static void setup_adc_window_mode_test(const struct test_case *test)
 	enum status_code status = STATUS_ERR_IO;
 	interrupt_flag = false;
 	/* Set 0.5V DAC output */
-	dac_chan_write(&dac_inst, DAC_CHANNEL_0, 512);
+	dac_chan_write(&dac_inst, DAC_CHANNEL_0, DAC_VAL_HALF_VOLT);
 	delay_ms(1);
 	/* Skip test if ADC initialization failed */
 	test_assert_true(test, adc_init_success,
@@ -424,8 +436,8 @@ static void setup_adc_window_mode_test(const struct test_case *test)
 	config.resolution      = ADC_RESOLUTION_12BIT;
 	config.freerunning     = true;
 	config.window.window_mode = ADC_WINDOW_MODE_BETWEEN_INVERTED;
-	config.window.window_lower_value = 1990;
-	config.window.window_upper_value = 2100;
+	config.window.window_lower_value = (ADC_VAL_DAC_HALF_OUTPUT - ADC_OFFSET);
+	config.window.window_upper_value = (ADC_VAL_DAC_HALF_OUTPUT + ADC_OFFSET);
 	/* Re-initialize & enable ADC */
 	status = adc_init(&adc_inst, ADC, &config);
 	test_assert_true(test, status == STATUS_OK,
@@ -457,7 +469,7 @@ static void run_adc_window_mode_test(const struct test_case *test)
 	uint16_t adc_result = 0;
 	uint16_t timeout_cycles = 10000;
 	/* Set 1V DAC output */
-	dac_chan_write(&dac_inst, DAC_CHANNEL_0, 1023);
+	dac_chan_write(&dac_inst, DAC_CHANNEL_0, DAC_VAL_ONE_VOLT);
 	delay_ms(1);
 
 	do {
