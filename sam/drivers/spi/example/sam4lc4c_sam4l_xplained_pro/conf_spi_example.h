@@ -3,7 +3,7 @@
  *
  * \brief SPI example configuration.
  *
- * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,12 +43,12 @@
 
 /**
  * \defgroup spi_example_pin_defs
- *  - <b> SAM4L-EK  --  SAM4L-EK </b>
+ *  - <b> SAM4L Xplained Pro board --  SAM4L Xplained Pro board</b>
  *  - VCC -- VCC
- *  - NPCS0(PA02,J207/PIN5) -- NPCS0(PA02,J207/PIN5)
- *  - MISO(PC04,J207/PIN7)  -- MISO(PC04,J207/PIN7)
- *  - MOSI(PC05,J207/PIN6)  -- MOSI(PC05,J207/PIN6)
- *  - SPCK(PC06,J207/PIN8)  -- SPCK(PC06,J207/PIN8)
+ *  - NPCS0(PC03,EXT1/PIN15) -- NPCS0(PC03,EXT1/PIN15)
+ *  - MISO(PA21,EXT1/PIN17)  -- MISO(PA21,EXT1/PIN17)
+ *  - MOSI(PA22,EXT1/PIN16)  -- MOSI(PA22,EXT1/PIN16)
+ *  - SPCK(PC30,EXT1/PIN18)  -- SPCK(PC30,EXT1/PIN18)
  *  - GND -- GND
  */
 
