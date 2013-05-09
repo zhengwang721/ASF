@@ -72,9 +72,9 @@
  * If this symbol is defined, the watchdog is left running with its current
  * configuration. Otherwise, it gets disabled during board initialization.
  */
-#ifndef CONF_BOARD_KEEP_WATCHDOG_AT_INIT
-#define CONF_BOARD_KEEP_WATCHDOG_AT_INIT
-#endif
+# ifndef CONF_BOARD_KEEP_WATCHDOG_AT_INIT
+#  define CONF_BOARD_KEEP_WATCHDOG_AT_INIT
+# endif
 
 //@}
 
@@ -110,13 +110,16 @@
 
 //! \name LED0 definitions
 //@{
-#define LED0_PIN                  PIN_PC07
+#define LED0                      PIN_PC07
+#define LED0_PIN                  PIN_PC07 /* Wrapper definition */
+#define LED0_GPIO                 PIN_PC07 /* Wrapper definition */
 #define LED0_ACTIVE               false
 #define LED0_INACTIVE             !LED0_ACTIVE
 //@}
 
 //! \name SW0 definitions
 //@{
+#define GPIO_PUSH_BUTTON_0        PIN_PC24 /* Wrapper definition */
 #define SW0_PIN                   PIN_PC24
 #define SW0_ACTIVE                false
 #define SW0_INACTIVE              !SW0_ACTIVE
@@ -146,8 +149,8 @@
 #define USB_VBUS_PIN              PIN_PC11
 #define USB_VBUS_FLAGS            IOPORT_MODE_GLITCH_FILTER
 #define USB_VBOF_PIN              PIN_PC12
-#define USB_VBOF_ACTIVE_LEVEL     true
-#define USB_VBOF_INACTIVE_LEVEL   !USB_VBOF_ACTIVE_LEVEL
+#define USB_VBOF_ACTIVE_LEVEL     1
+#define USB_VBOF_INACTIVE_LEVEL   0
 //@}
 
 //! \name USART connections to GPIO for Virtual Com Port
@@ -185,9 +188,6 @@
 #define LED_0_PIN                 LED0_PIN
 #define LED_0_ACTIVE              LED0_ACTIVE
 #define LED_0_INACTIVE            LED0_INACTIVE
-
-/* backup define */
-#define LED0_GPIO LED0_PIN
 //@}
 
 //! Number of on-board LEDs
@@ -208,7 +208,7 @@
 #define BUTTON_0_EIC_PIN_MUX      SW0_EIC_PIN_MUX
 #define BUTTON_0_EIC_LINE         SW0_EIC_LINE
 
-/* backup define */
+/* Definitions for SW0 when using it as EIC pin */
 #define GPIO_PUSH_BUTTON_EIC_PIN        PIN_PC24B_EIC_EXTINT1
 #define GPIO_PUSH_BUTTON_EIC_PIN_MASK   GPIO_PC24B_EIC_EXTINT1
 #define GPIO_PUSH_BUTTON_EIC_PIN_MUX    MUX_PC24B_EIC_EXTINT1
