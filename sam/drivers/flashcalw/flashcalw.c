@@ -665,8 +665,8 @@ uint8_t flashcalw_read_gp_fuse_byte(uint32_t gp_fuse_byte)
  */
 uint64_t flashcalw_read_all_gp_fuses(void)
 {
-	return HFLASHC->FLASHCALW_FGPFRLO |
-		(uint64_t)HFLASHC->FLASHCALW_FGPFRHI << 32;
+	uint32_t fuselo = HFLASHC->FLASHCALW_FGPFRLO;
+	return fuselo |	(uint64_t)HFLASHC->FLASHCALW_FGPFRHI << 32;
 }
 
 /*! \brief Erases a general-purpose fuse bit.
