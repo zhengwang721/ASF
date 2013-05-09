@@ -128,6 +128,26 @@ void board_init(void)
 	ioport_set_pin_dir(AT86RFX_SLP_PIN, IOPORT_DIR_OUTPUT);
 	ioport_set_pin_level(AT86RFX_SLP_PIN, IOPORT_PIN_LEVEL_HIGH);
 #endif
+
+#ifdef CONF_BOARD_SPI
+	ioport_set_pin_peripheral_mode(PIN_PA21A_SPI_MISO, MUX_PA21A_SPI_MISO);
+	ioport_set_pin_peripheral_mode(PIN_PA22A_SPI_MOSI, MUX_PA22A_SPI_MOSI);
+	ioport_set_pin_peripheral_mode(PIN_PC30B_SPI_SCK, MUX_PC30B_SPI_SCK);
+
+	#ifdef CONF_BOARD_SPI_NPCS0
+		ioport_set_pin_peripheral_mode(PIN_PC03A_SPI_NPCS0,
+				MUX_PC03A_SPI_NPCS0);
+	#endif
+	#ifdef CONF_BOARD_SPI_NPCS1
+		ioport_set_pin_peripheral_mode(PIN_PB13B_SPI_NPCS1,
+				MUX_PB13B_SPI_NPCS1);
+	#endif
+	#ifdef CONF_BOARD_SPI_NPCS2
+		ioport_set_pin_peripheral_mode(PIN_PB11B_SPI_NPCS2,
+				MUX_PB11B_SPI_NPCS2);
+	#endif
+
+#endif
 }
 
 /** @} */
