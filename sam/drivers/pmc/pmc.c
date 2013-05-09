@@ -53,6 +53,8 @@
 # define MAX_PERIPH_ID    34
 #elif (SAM4E)
 # define MAX_PERIPH_ID    47
+#elif (SAM4N)
+# define MAX_PERIPH_ID    31
 #endif
 
 /// @cond 0
@@ -1090,12 +1092,12 @@ void pmc_clr_fast_startup_input(uint32_t ul_inputs)
  */
 void pmc_enable_sleepmode(uint8_t uc_type)
 {
-#if !defined(SAM4S) || !defined(SAM4E)
+#if !defined(SAM4S) || !defined(SAM4E) || !defined(SAM4N)
 	PMC->PMC_FSMR &= (uint32_t) ~ PMC_FSMR_LPM; // Enter Sleep mode
 #endif
 	SCB->SCR &= (uint32_t) ~ SCB_SCR_SLEEPDEEP_Msk; // Deep sleep
 
-#if (SAM4S || SAM4E)
+#if (SAM4S || SAM4E || SAM4N)
 	UNUSED(uc_type);
 	__WFI();
 #else
@@ -1107,7 +1109,7 @@ void pmc_enable_sleepmode(uint8_t uc_type)
 #endif
 }
 
-#if (SAM4S || SAM4E)
+#if (SAM4S || SAM4E || SAM4N)
 static uint32_t ul_flash_in_wait_mode = PMC_WAIT_MODE_FLASH_DEEP_POWERDOWN;
 /**
  * \brief Set the embedded flash state in wait mode
@@ -1209,7 +1211,7 @@ void pmc_enable_waitmode(void)
 void pmc_enable_backupmode(void)
 {
 	SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
-#if (SAM4S || SAM4E)
+#if (SAM4S || SAM4E || SAM4N)
 	SUPC->SUPC_CR = SUPC_CR_KEY(0xA5u) | SUPC_CR_VROFF_STOP_VREG;
 #else
 	__WFE();

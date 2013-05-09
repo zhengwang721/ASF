@@ -161,7 +161,7 @@ void Reset_Handler(void)
         __libc_init_array();
 
         /* Branch to main function */
-        //main();
+        main();
 
         /* Infinite loop */
         while (1);

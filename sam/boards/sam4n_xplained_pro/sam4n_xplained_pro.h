@@ -104,14 +104,14 @@
 
 //! \name LED0 definitions
 //@{
-#define LED0_PIN                  IOPORT_CREATE_PIN(PIOC, 23)
+#define LED0_GPIO                  IOPORT_CREATE_PIN(PIOB, 14)
 #define LED0_ACTIVE               false
 #define LED0_INACTIVE             !LED0_ACTIVE
 //@}
 
 //! \name SW0 definitions
 //@{
-#define SW0_PIN                   IOPORT_CREATE_PIN(PIOA, 2)
+#define SW0_PIN                   IOPORT_CREATE_PIN(PIOA, 30)
 #define SW0_ACTIVE                false
 #define SW0_INACTIVE              !SW0_ACTIVE
 #define SW0_SUPC_INPUT            2
@@ -125,7 +125,7 @@
  */
 //@{
 #define LED_0_NAME                "LED0 (yellow)"
-#define LED_0_PIN                 LED0_PIN
+#define LED_0_PIN                 LED0_GPIO
 #define LED_0_ACTIVE              LED0_ACTIVE
 #define LED_0_INACTIVE            LED0_INACTIVE
 //@}
@@ -388,12 +388,18 @@
 #define EDBG_SPI_MODULE           SPI
 //@}
 
-#define CONSOLE_UART              UART1
+#define CONSOLE_UART              UART3
 
-/** UART1 pins (UTXD1 and URXD1) definitions, PB2,PB3. */
-#define PINS_UART1                (PIO_PB2A_URXD1 | PIO_PB3A_UTXD1)
-#define PINS_UART1_FLAGS          (PIO_PERIPH_A | PIO_DEFAULT)
-#define PINS_UART1_PIO            PIOB
+/** UART3 pins (UTXD3 and URXD3) definitions, PB10,11. */
+#define PINS_UART3        (PIO_PB10B_URXD3 | PIO_PB11B_UTXD3)
+#define PINS_UART3_FLAGS  (IOPORT_MODE_MUX_B)
+
+#define PINS_UART3_PORT   IOPORT_PIOB
+#define PINS_UART3_MASK   (PIO_PB10B_URXD3 | PIO_PB11B_UTXD3)
+#define PINS_UART3_PIO    PIOB
+#define PINS_UART3_ID     ID_PIOB
+#define PINS_UART3_TYPE   PIO_PERIPH_B
+#define PINS_UART3_ATTR   PIO_DEFAULT
 
 //! \name SPI
 //@{
@@ -463,62 +469,6 @@
 #define TWI0_DATA_FLAGS  (PIO_PERIPH_A | PIO_PULLUP)
 #define TWI0_CLK_GPIO    PIO_PA4_IDX
 #define TWI0_CLK_FLAGS   (PIO_PERIPH_A | PIO_PULLUP)
-//@}
-
-
-
-//! \name IO1 led definitions */
-//@{
-#define IO1_LED1_PIN                  EXT3_PIN_7
-#define IO1_LED1_ACTIVE               false
-#define IO1_LED1_INACTIVE             !IO1_LED1_ACTIVE
-
-#define IO1_LED2_PIN                  EXT3_PIN_8
-#define IO1_LED2_ACTIVE               false
-#define IO1_LED2_INACTIVE             !IO1_LED2_ACTIVE
-
-#define IO1_LED3_PIN                  EXT3_PIN_6
-#define IO1_LED3_ACTIVE               false
-#define IO1_LED3_INACTIVE             !IO1_LED3_ACTIVE
-//@}
-
-//! \name IO1 button definitions */
-//@{
-/** Push button #1 definition. Attributes = pull-up + debounce + interrupt on rising edge. */
-#define PUSHBUTTON_1_NAME    "BUTTON 1"
-#define GPIO_PUSH_BUTTON_1   (PIO_PA0_IDX)
-#define GPIO_PUSH_BUTTON_1_FLAGS    (PIO_INPUT | PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE)
-
-#define PIN_PUSHBUTTON_1    {PIO_PA0, PIOA, ID_PIOA, PIO_INPUT, PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE}
-#define PIN_PUSHBUTTON_1_MASK PIO_PA0
-#define PIN_PUSHBUTTON_1_PIO PIOA
-#define PIN_PUSHBUTTON_1_ID ID_PIOA
-#define PIN_PUSHBUTTON_1_TYPE PIO_INPUT
-#define PIN_PUSHBUTTON_1_ATTR (PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE)
-
-/** Push button #2 definition. Attributes = pull-up + debounce + interrupt on rising edge. */
-#define PUSHBUTTON_2_NAME    "BUTTON 2"
-#define GPIO_PUSH_BUTTON_2   (PIO_PC29_IDX)
-#define GPIO_PUSH_BUTTON_2_FLAGS    (PIO_INPUT | PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE)
-
-#define PIN_PUSHBUTTON_2    {PIO_PC29, PIOC, ID_PIOC, PIO_INPUT, PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE}
-#define PIN_PUSHBUTTON_2_MASK PIO_PC29
-#define PIN_PUSHBUTTON_2_PIO PIOC
-#define PIN_PUSHBUTTON_2_ID ID_PIOC
-#define PIN_PUSHBUTTON_2_TYPE PIO_INPUT
-#define PIN_PUSHBUTTON_2_ATTR (PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE)
-
-/** Push button #3 definition. Attributes = pull-up + debounce + interrupt on rising edge. */
-#define PUSHBUTTON_3_NAME    "BUTTON 3"
-#define GPIO_PUSH_BUTTON_3   (PIO_PC30_IDX)
-#define GPIO_PUSH_BUTTON_3_FLAGS    (PIO_INPUT | PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE)
-
-#define PIN_PUSHBUTTON_3    {PIO_PC30, PIOC, ID_PIOC, PIO_INPUT, PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE}
-#define PIN_PUSHBUTTON_3_MASK PIO_PC30
-#define PIN_PUSHBUTTON_3_PIO PIOC
-#define PIN_PUSHBUTTON_3_ID ID_PIOC
-#define PIN_PUSHBUTTON_3_TYPE PIO_INPUT
-#define PIN_PUSHBUTTON_3_ATTR (PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE)
 //@}
 
 //! \name Light Sensor

@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM4N Xplained Pro board initialization
+ * \brief SAM4N-XPLAINED-PRO LEDs support package.
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,64 +38,41 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
+ *
  */
 
-#include <board.h>
-#include <ioport.h>
+#ifndef LED_H_INCLUDED
+#define LED_H_INCLUDED
+
+#include "compiler.h"
+#include "ioport.h"
 
 /**
- * \addtogroup sam4n_xplained_pro_group
- * @{
+ * \brief Turns off the specified LEDs.
+ *
+ * \param led LED to turn off (LEDx_GPIO).
+ *
+ * \note The pins of the specified LEDs are set to GPIO output mode.
  */
+#define LED_Off(led)     ioport_set_pin_level(led##_GPIO, led##_INACTIVE_LEVEL)
 
 /**
- * \brief Set peripheral mode for IOPORT pins.
- * It will configure port mode and disable pin mode (but enable peripheral).
- * \param port IOPORT port to configure
- * \param masks IOPORT pin masks to configure
- * \param mode Mode masks to configure for the specified pin (\ref ioport_modes)
+ * \brief Turns on the specified LEDs.
+ *
+ * \param led LED to turn on (LEDx_GPIO).
+ *
+ * \note The pins of the specified LEDs are set to GPIO output mode.
  */
-#define ioport_set_port_peripheral_mode(port, masks, mode) \
-	do {\
-		ioport_set_port_mode(port, masks, mode);\
-		ioport_disable_port(port, masks);\
-	} while (0)
+#define LED_On(led)      ioport_set_pin_level(led##_GPIO, led##_ACTIVE_LEVEL)
 
 /**
- * \brief Set peripheral mode for one single IOPORT pin.
- * It will configure port mode and disable pin mode (but enable peripheral).
- * \param pin IOPORT pin to configure
- * \param mode Mode masks to configure for the specified pin (\ref ioport_modes)
+ * \brief Toggles the specified LEDs.
+ *
+ * \param led LED to toggle (LEDx_GPIO).
+ *
+ * \note The pins of the specified LEDs are set to GPIO output mode.
  */
-#define ioport_set_pin_peripheral_mode(pin, mode) \
-	do {\
-		ioport_set_pin_mode(pin, mode);\
-		ioport_disable_pin(pin);\
-	} while (0)
-	
-void board_init(void)
-{
-#ifndef CONF_BOARD_KEEP_WATCHDOG_AT_INIT
-	/* Disable the watchdog */
-	WDT->WDT_MR = WDT_MR_WDDIS;
-#endif
+#define LED_Toggle(led)  ioport_toggle_pin_level(led##_GPIO)
 
-	// Initialize IOPORT
-	ioport_init();
 
-	// Initialize LED0, turned off
-	ioport_set_pin_dir(LED_0_PIN, IOPORT_DIR_OUTPUT);
-	ioport_set_pin_level(LED_0_PIN, IOPORT_PIN_LEVEL_HIGH);
-
-	// Initialize SW0
-	ioport_set_pin_dir(BUTTON_0_PIN, IOPORT_DIR_INPUT);
-	ioport_set_pin_mode(BUTTON_0_PIN, IOPORT_MODE_PULLUP);
-
-#if defined (CONF_BOARD_COM_PORT)
-	/* Configure UART pins */
-	ioport_set_port_peripheral_mode(PINS_UART3_PORT, PINS_UART3,
-			PINS_UART3_MASK);
-#endif
-}
-
-/** @} */
+#endif  // LED_H_INCLUDED
