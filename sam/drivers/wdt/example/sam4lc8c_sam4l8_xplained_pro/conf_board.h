@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SPI example configuration.
+ * \brief  Configuration File for SAM4L8 Xplained Pro Board.
  *
- * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,21 +41,13 @@
  *
  */
 
-/**
- * \defgroup spi_example_pin_defs
- *  - <b> SAM4L-EK  --  SAM4L-EK </b>
- *  - VCC -- VCC
- *  - NPCS0(PA02,J207/PIN5) -- NPCS0(PA02,J207/PIN5)
- *  - MISO(PC04,J207/PIN7)  -- MISO(PC04,J207/PIN7)
- *  - MOSI(PC05,J207/PIN6)  -- MOSI(PC05,J207/PIN6)
- *  - SPCK(PC06,J207/PIN8)  -- SPCK(PC06,J207/PIN8)
- *  - GND -- GND
- */
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#ifndef CONF_SPI_EXAMPLE_H_INCLUDED
-#define CONF_SPI_EXAMPLE_H_INCLUDED
+/** Enable USART console */
+#define CONF_BOARD_COM_PORT
 
-#define SPI_Handler     SPI_Handler
-#define SPI_IRQn        SPI_IRQn
+/** Force usage of external EIC */
+#define CONF_BOARD_EIC
 
-#endif /* CONF_SPI_EXAMPLE_H_INCLUDED */
+#endif /* CONF_BOARD_H_INCLUDED */

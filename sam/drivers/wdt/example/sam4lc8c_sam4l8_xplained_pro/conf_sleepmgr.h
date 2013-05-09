@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SPI example configuration.
+ * \brief Chip-specific sleep manager configuration
  *
- * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,22 +40,10 @@
  * \asf_license_stop
  *
  */
+#ifndef CONF_SLEEPMGR_INCLUDED
+#define CONF_SLEEPMGR_INCLUDED
 
-/**
- * \defgroup spi_example_pin_defs
- *  - <b> SAM4L-EK  --  SAM4L-EK </b>
- *  - VCC -- VCC
- *  - NPCS0(PA02,J207/PIN5) -- NPCS0(PA02,J207/PIN5)
- *  - MISO(PC04,J207/PIN7)  -- MISO(PC04,J207/PIN7)
- *  - MOSI(PC05,J207/PIN6)  -- MOSI(PC05,J207/PIN6)
- *  - SPCK(PC06,J207/PIN8)  -- SPCK(PC06,J207/PIN8)
- *  - GND -- GND
- */
+/* Sleep manager options */
+#define CONFIG_SLEEPMGR_ENABLE
 
-#ifndef CONF_SPI_EXAMPLE_H_INCLUDED
-#define CONF_SPI_EXAMPLE_H_INCLUDED
-
-#define SPI_Handler     SPI_Handler
-#define SPI_IRQn        SPI_IRQn
-
-#endif /* CONF_SPI_EXAMPLE_H_INCLUDED */
+#endif /* CONF_SLEEPMGR_INCLUDED */

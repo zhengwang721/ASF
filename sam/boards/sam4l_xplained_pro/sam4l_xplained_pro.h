@@ -54,7 +54,7 @@
  */
 
 /**
- * \defgroup sam4s_xplained_pro_config_group Configuration
+ * \defgroup sam4l_xplained_pro_config_group Configuration
  *
  * Symbols to use for configuring the board and its initialization.
  *
@@ -90,7 +90,7 @@
  */
 
 //! Name string macro
-#define BOARD_NAME "SAM4L Xplained Pro"
+#define BOARD_NAME          "SAM4L Xplained Pro"
 #define MCU_SOC_NAME        "ATSAM4LC4C"
 
 //! \name Board oscillator definitions
