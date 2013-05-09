@@ -63,13 +63,13 @@ retval_t pal_init(void)
 #ifdef ENABLE_STACK_NVM
 retval_t pal_ps_get(ps_type_t mem_type, uint16_t offset, uint16_t length, void *value)
 {
-    nvm_read(INT_FLASH,(uint32_t)offset + INT_FLASH_END - STACK_FLASH_SIZE + 1, value,length);
+    nvm_read(INT_FLASH,(uint32_t)offset + FLASHEND - BOOT_LOADER_SIZE - NIB_SIZE + 1, value,length);
     return MAC_SUCCESS;
 }
 
 retval_t pal_ps_set(uint16_t offset, uint16_t length, void *value)
 {
-    nvm_write(INT_FLASH,(uint32_t)offset + INT_FLASH_END - STACK_FLASH_SIZE + 1, value,length);
+    nvm_write(INT_FLASH,(uint32_t)offset + FLASHEND - BOOT_LOADER_SIZE - NIB_SIZE + 1, value,length);
     return MAC_SUCCESS;
 }
 #endif
