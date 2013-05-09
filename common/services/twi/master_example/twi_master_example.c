@@ -57,8 +57,9 @@
  * The TWI API can be found \ref twi_master.h "here".
  *
  * \section deviceinfo Device Info
- * All AVR or SAM devices can be used. This example has been tested
- * with the following setup:
+ * All AVR or SAM devices can be used. When use the example in Xplained Pro
+ * Kits, we need connect an IO1 Xplained Pro board to the proper EXT port.
+ * This example has been tested with the following setup:
  *   - access to the TWI signals.
  *
  * \section exampledescription Description of the example
@@ -87,10 +88,15 @@
 
 #include "conf_board.h"
 
+#if SAM
+#include "conf_twi_master.h"
+#endif
+
 //! \name Local Configuration Constants
 //@{
-
+#ifndef EEPROM_BUS_ADDR
 #define EEPROM_BUS_ADDR       0x50        //!< TWI slave bus address
+#endif
 #define EEPROM_MEM_ADDR       0xaa        //!< TWI slave memory address
 #define TWI_SPEED             50000       //!< TWI data transfer rate
 
@@ -141,7 +147,9 @@ int main(void)
 
   twi_master_options_t opt = {
     .speed = TWI_SPEED,
+#if (!SAM4L)
     .chip  = EEPROM_BUS_ADDR
+#endif
   };
 
   // Initialize the TWI master driver.
@@ -153,7 +161,7 @@ int main(void)
   LED_Off(LED0_GPIO);
 
   twi_package_t packet = {
-#if SAM
+#if SAM3XA
     .addr[0]      = EEPROM_MEM_ADDR >> 8, // TWI slave memory address data MSB
     .addr[1]      = EEPROM_MEM_ADDR,      // TWI slave memory address data LSB
     .addr_length  = sizeof (uint16_t),    // TWI slave memory address data size
@@ -172,7 +180,7 @@ int main(void)
   uint8_t data_received[PATTERN_TEST_LENGTH] = {0};
 
   twi_package_t packet_received = {
-#if SAM
+#if SAM3XA
     .addr[0]      = EEPROM_MEM_ADDR >> 8, // TWI slave memory address data MSB
     .addr[1]      = EEPROM_MEM_ADDR,      // TWI slave memory address data LSB
     .addr_length  = sizeof (uint16_t),    // TWI slave memory address data size
