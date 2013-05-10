@@ -56,6 +56,10 @@ extern "C" {
  * @{
  */
 
+/** \name Callback configuration and initialization
+ * @{
+ */
+
 /** Type definition for a WDT module callback function. */
 typedef void (*wdt_callback_t)(void);
 
@@ -86,6 +90,8 @@ enum status_code wdt_enable_callback(
 
 enum status_code wdt_disable_callback(
 	const enum wdt_callback_type type);
+
+/** @} */
 
 /** @} */
 
