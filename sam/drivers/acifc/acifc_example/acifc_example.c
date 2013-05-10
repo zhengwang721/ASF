@@ -57,9 +57,12 @@
  * \section Description
  *
  * The acifc_irq is aimed to demonstrate the usage of ACIFC peripheral with
- * interrupt support. The PA06 and PA07 are selected as two inputs. Connect
- * PA06 (J101.2) on ADC_SENSOR (J101.3) output voltage, PA07(J4.4) on GND(J4.9)
- * or 3.3V(J4.10).
+ * interrupt support. The PA06 and PA07 are selected as two inputs.
+ * On SAM4L-EK board, connect PA06 (J100.2) with ADC SENSOR VBAT(J105.1),
+ * and PA07(J4.4) with GND(J4.9) or 3.3V(J4.10).
+ * On SAM4L Xplained Pro board, connect PA06 (EXT3/PIN9) with GND(EXT3/PIN19)
+ * and PA07(EXT2/PIN3) with VCC(EXT2/PIN20), or connect PA06 (EXT3/PIN9) with
+ * VCC(EXT3/PIN20) and PA07(EXT2/PIN3) with GND(EXT2/PIN19).
  *
  * The comparison event would be generated if the voltage of one input is
  * changed across the voltage of the other input. Both bigger and less events
