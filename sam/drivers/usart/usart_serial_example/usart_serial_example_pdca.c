@@ -140,7 +140,9 @@ pdca_channel_config_t pdca_rx_options = {
 	.size = BUFFER_SIZE, /* transfer counter */
 	.r_addr = (void *)gs_puc_nextbuffer, /* next memory address */
 	.r_size = BUFFER_SIZE, /* next transfer counter */
-	.transfer_size = PDCA_MR_SIZE_BYTE /* select size of the transfer */
+	.transfer_size = PDCA_MR_SIZE_BYTE, /* select size of the transfer */
+	.etrig = false, /* disable event trigger*/
+	.ring = false /* not use ring buffer*/
 };
 pdca_channel_config_t pdca_tx_options = {
 	.addr = (void *)gs_puc_buffer, /* memory address */
@@ -148,7 +150,9 @@ pdca_channel_config_t pdca_tx_options = {
 	.size = 0, /* transfer counter */
 	.r_addr = (void *)gs_puc_nextbuffer, /* next memory address */
 	.r_size = 0, /* next transfer counter */
-	.transfer_size = PDCA_MR_SIZE_BYTE /* select size of the transfer */
+	.transfer_size = PDCA_MR_SIZE_BYTE, /* select size of the transfer */
+	.etrig = false, /* disable event trigger*/
+	.ring = false /* not use ring buffer*/
 };
 
 /**
