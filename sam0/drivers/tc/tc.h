@@ -798,6 +798,10 @@ struct tc_module {
 #endif
 };
 
+//#if !defined(__DOXYGEN__)
+uint8_t _tc_get_inst_index(
+		Tc *const hw);
+//#endif
 /**
  * \name Driver Initialization and Configuration
  * @{
