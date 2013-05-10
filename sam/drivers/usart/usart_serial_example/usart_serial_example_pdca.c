@@ -49,7 +49,7 @@
  * peripherals.
  *
  * \par Requirements
- * This package can be used with  with USART and PDCA.
+ * This package can be used with SAM4L with USART and PDCA.
  * - SAM4L-EK
  * - SAM4L Xplained Pro
  * - SAM4L8 Xplained Pro
@@ -134,7 +134,7 @@ static uint8_t gs_uc_buf_num = 0;
 static uint8_t g_uc_transend_flag = 0;
 
 /** PDCA channel options. */
-pdca_channel_config_t PDCA_RX_OPTIONS = {
+pdca_channel_config_t pdca_rx_options = {
 	.addr = (void *)gs_puc_buffer, /* memory address */
 	.pid = PDCA_PID_USART_RX, /* select peripheral - USART0 RX line.*/
 	.size = BUFFER_SIZE, /* transfer counter */
@@ -142,7 +142,7 @@ pdca_channel_config_t PDCA_RX_OPTIONS = {
 	.r_size = BUFFER_SIZE, /* next transfer counter */
 	.transfer_size = PDCA_MR_SIZE_BYTE /* select size of the transfer */
 };
-pdca_channel_config_t PDCA_TX_OPTIONS = {
+pdca_channel_config_t pdca_tx_options = {
 	.addr = (void *)gs_puc_buffer, /* memory address */
 	.pid = PDCA_PID_USART_TX, /* select peripheral - USART0 TX line.*/
 	.size = 0, /* transfer counter */
@@ -302,8 +302,8 @@ int main(void)
 	/* Enable PDCA module clock */
 	pdca_enable(PDCA);
 	/* Init PDCA channel with the pdca_options.*/
-	pdca_channel_set_config(PDCA_RX_CHANNEL, &PDCA_RX_OPTIONS);
-	pdca_channel_set_config(PDCA_TX_CHANNEL, &PDCA_TX_OPTIONS);
+	pdca_channel_set_config(PDCA_RX_CHANNEL, &pdca_rx_options);
+	pdca_channel_set_config(PDCA_TX_CHANNEL, &pdca_tx_options);
 	/* Enable PDCA channel, start receiving data. */
 	pdca_channel_enable(PDCA_RX_CHANNEL);
 	pdca_channel_enable(PDCA_TX_CHANNEL);

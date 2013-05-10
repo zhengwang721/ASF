@@ -87,7 +87,7 @@
  * for Atmel. Other compilers may or may not work.
  *
  * \section deviceinfo Device Information
- * SAM4L-EK devices with a FLASHCALW module can be used.
+ * SAM4L devices with a FLASHCALW module can be used.
  *
  * \section configinfo Configuration Information
  * This example has been tested with the following kits:
