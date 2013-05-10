@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM4N Xplained Pro board initialization
+ * \brief USART Serial Configuration
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,64 +38,26 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
+ *
  */
 
-#include <board.h>
-#include <ioport.h>
+#ifndef CONF_USART_SERIAL_H
+#define CONF_USART_SERIAL_H
 
-/**
- * \addtogroup sam4n_xplained_pro_group
- * @{
- */
-
-/**
- * \brief Set peripheral mode for IOPORT pins.
- * It will configure port mode and disable pin mode (but enable peripheral).
- * \param port IOPORT port to configure
- * \param masks IOPORT pin masks to configure
- * \param mode Mode masks to configure for the specified pin (\ref ioport_modes)
- */
-#define ioport_set_port_peripheral_mode(port, masks, mode) \
-	do {\
-		ioport_set_port_mode(port, masks, mode);\
-		ioport_disable_port(port, masks);\
-	} while (0)
-
-/**
- * \brief Set peripheral mode for one single IOPORT pin.
- * It will configure port mode and disable pin mode (but enable peripheral).
- * \param pin IOPORT pin to configure
- * \param mode Mode masks to configure for the specified pin (\ref ioport_modes)
- */
-#define ioport_set_pin_peripheral_mode(pin, mode) \
-	do {\
-		ioport_set_pin_mode(pin, mode);\
-		ioport_disable_pin(pin);\
-	} while (0)
-	
-void board_init(void)
-{
-#ifndef CONF_BOARD_KEEP_WATCHDOG_AT_INIT
-	/* Disable the watchdog */
-	WDT->WDT_MR = WDT_MR_WDDIS;
+#ifdef __cplusplus
+extern "C" {
 #endif
 
-	// Initialize IOPORT
-	ioport_init();
+// USART serial configuration options
+#define USART_SERIAL_EXAMPLE            ((Uart*)CONSOLE_UART)
 
-	// Initialize LED0, turned off
-	ioport_set_pin_dir(LED_0_PIN, IOPORT_DIR_OUTPUT);
-	ioport_set_pin_level(LED_0_PIN, IOPORT_PIN_LEVEL_HIGH);
+#define USART_SERIAL_EXAMPLE_BAUDRATE   (115200)
+#define USART_SERIAL_CHAR_LENGTH        (US_MR_CHRL_8_BIT)
+#define USART_SERIAL_PARITY             (US_MR_PAR_NO)
+#define USART_SERIAL_STOP_BIT           (US_MR_NBSTOP_1_BIT)
 
-	// Initialize SW0
-	ioport_set_pin_dir(BUTTON_0_PIN, IOPORT_DIR_INPUT);
-	ioport_set_pin_mode(BUTTON_0_PIN, IOPORT_MODE_PULLUP);
-
-#if defined (CONF_BOARD_UART_CONSOLE)
-	/* Configure UART pins */
-	ioport_set_port_peripheral_mode(PINS_UART3_PORT, PINS_UART3,
-			PINS_UART3_MASK);
-#endif
+#ifdef __cplusplus
 }
+#endif
 
-/** @} */
+#endif/* CONF_USART_SERIAL_H_INCLUDED */

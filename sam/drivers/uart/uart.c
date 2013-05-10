@@ -410,7 +410,7 @@ Pdc *uart_get_pdc_base(Uart *p_uart)
 {
 	Pdc *p_pdc_base;
 
-#if (SAM3S || SAM3N || SAM4S || SAM4E)
+#if (SAM3S || SAM3N || SAM4S || SAM4E || SAM4N)
 	if (p_uart == UART0)
 		p_pdc_base = PDC_UART0;
 #elif (SAM3XA || SAM3U)
@@ -420,9 +420,14 @@ Pdc *uart_get_pdc_base(Uart *p_uart)
 #error "Unsupported device"
 #endif
 
-#if (SAM3S || SAM4S || SAM4E)
+#if (SAM3S || SAM4S || SAM4E || SAM4N)
 	if (p_uart == UART1)
 		p_pdc_base = PDC_UART1;
+#endif
+
+#if (SAM4N)
+	if (p_uart == UART2)
+		p_pdc_base = PDC_UART2;
 #endif
 
 	return p_pdc_base;
