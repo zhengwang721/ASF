@@ -258,9 +258,6 @@ static void run_callback_test(const struct test_case *test)
 	tc_register_callback(&tc0_module, tc_callback_function, TC_CALLBACK_CC_CHANNEL1);
 	tc_enable_callback(&tc0_module, TC_CALLBACK_CC_CHANNEL1);
 
-	/* Enable global interrupts */
-	system_interrupt_enable_global();
-
 	tc_enable(&tc0_module);
 
 	while ((tc_get_status(&tc0_module) & TC_STATUS_COUNT_OVERFLOW) == 0) {
@@ -273,7 +270,7 @@ static void run_callback_test(const struct test_case *test)
 	test_assert_true(test,
 			callback_function_entered == 1,
 			"The callback has failed callback_function_entered = %d",
-			callback_function_entered);
+			(int)callback_function_entered);
 
 	/* Test disable callback function */
 	tc_disable_callback(&tc0_module, TC_CALLBACK_CC_CHANNEL1);
@@ -319,7 +316,7 @@ static void run_16bit_capture_and_compare_test(const struct test_case *test)
 	tc0_config.size_specific.size_16_bit.compare_capture_channel[0]  =
 			0x03FF;
 	tc0_config.size_specific.size_16_bit.compare_capture_channel[1]  =
-			0x02FF;
+			0x01FF;
 	tc0_config.channel_pwm_out_enabled[TC_COMPARE_CAPTURE_CHANNEL_1] = true;
 	tc0_config.channel_pwm_out_pin[1]                                = PIN_PB31F_TC0_WO1;
 	tc0_config.channel_pwm_out_mux[1]                                = MUX_PB31F_TC0_WO1;
@@ -328,10 +325,6 @@ static void run_16bit_capture_and_compare_test(const struct test_case *test)
 
 	tc_register_callback(&tc0_module, tc_callback_function, TC_CALLBACK_CC_CHANNEL0);
 	tc_enable_callback(&tc0_module, TC_CALLBACK_CC_CHANNEL0);
-
-	/* Enable global interrupts */
-	system_interrupt_enable_global();
-
 
 	/* Configure 16-bit TC module for capture */
 	tc_reset(&tc1_module);
@@ -350,7 +343,7 @@ static void run_16bit_capture_and_compare_test(const struct test_case *test)
 	extint_chan_config.gpio_pin_pull       = EXTINT_PULL_UP;
 	extint_chan_config.wake_if_sleeping    = false;
 	extint_chan_config.filter_input_signal = false;
-	extint_chan_config.detection_criteria  = EXTINT_DETECT_BOTH;
+	extint_chan_config.detection_criteria  = EXTINT_DETECT_HIGH;
 	extint_chan_set_config(0, &extint_chan_config);
 	extint_enable();
 	/* Configure external interrupt module to be event generator */
@@ -369,30 +362,23 @@ static void run_16bit_capture_and_compare_test(const struct test_case *test)
 	struct events_chan_config events_chan_conf;
 	events_chan_get_config_defaults(&events_chan_conf);
 	events_chan_conf.generator_id   = EVSYS_ID_GEN_EIC_EXTINT_0;
-	events_chan_conf.path           = EVENT_PATH_SYNCHRONOUS;
-	events_chan_conf.edge_detection = EVENT_EDGE_BOTH;
+	events_chan_conf.path           = EVENT_PATH_ASYNCHRONOUS;
+	events_chan_conf.edge_detection = EVENT_EDGE_NONE;
 	events_chan_set_config(EVENT_CHANNEL_0, &events_chan_conf);
 
 	/* Enable TC modules */
 	tc_enable(&tc1_module);
 	tc_enable(&tc0_module);
 
-	test_assert_true(test,
-			events_user_is_ready(EVENT_CHANNEL_0),
-			"Event user not ready");
+	uint16_t period_after_capture = 0;
+	uint16_t pulse_width_after_capture = 0;
 
-	test_assert_true(test,
-			events_chan_is_ready(EVENT_CHANNEL_0),
-			"Event channel not ready");
-
-	while (callback_function_entered < 3) {
-		/* Do nothing */
+	while (callback_function_entered < 4) {
+		period_after_capture = tc_get_capture_value(&tc1_module,
+				TC_COMPARE_CAPTURE_CHANNEL_0);
+		pulse_width_after_capture = tc_get_capture_value(&tc1_module,
+				TC_COMPARE_CAPTURE_CHANNEL_1);
 	}
-
-	uint16_t period_after_capture = tc_get_capture_value(&tc1_module,
-			TC_COMPARE_CAPTURE_CHANNEL_0);
-	uint16_t pulse_width_after_capture = tc_get_capture_value(&tc1_module,
-			TC_COMPARE_CAPTURE_CHANNEL_1);
 
 	test_assert_true(test,
 			(0 < pulse_width_after_capture) && (0 < period_after_capture),
