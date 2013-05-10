@@ -430,7 +430,7 @@ void _usart_interrupt_handler(
 			(module->tx_buffer_ptr)++;
 
 			if (module->character_size == USART_CHARACTER_SIZE_9BIT) {
-				data_to_send = ((*(module->tx_buffer_ptr)) << 8);
+				data_to_send = (*(module->tx_buffer_ptr) << 8);
 				/* Increment 8-bit pointer */
 				(module->tx_buffer_ptr)++;
 			}
@@ -439,7 +439,7 @@ void _usart_interrupt_handler(
 
 			if (--(module->remaining_tx_buffer_length) == 0) {
 				/* Disable the Data Register Empty Interrupt */
-				usart_hw->INTENCLR.reg	= SERCOM_USART_INTFLAG_DRE;
+				usart_hw->INTENCLR.reg = SERCOM_USART_INTFLAG_DRE;
 				/* Enable Transmission Complete interrupt */
 				usart_hw->INTENSET.reg = SERCOM_USART_INTFLAG_TXC;
 
@@ -475,22 +475,17 @@ void _usart_interrupt_handler(
 			if (error_code) {
 				/* Check which error occurred */
 				if (error_code & SERCOM_USART_STATUS_FERR) {
-					/* Store the error code and clearing
-					 * flag by writing 1 to it */
+					/* Store the error code and clear flag by writing 1 to it */
 					module->rx_status = STATUS_ERR_BAD_FORMAT;
-					usart_hw->STATUS.reg &= ~SERCOM_USART_STATUS_FERR;
-
+					usart_hw->STATUS.reg |= SERCOM_USART_STATUS_FERR;
 				} else if (error_code & SERCOM_USART_STATUS_BUFOVF) {
-					/* Store the error code and clearing
-					 * flag by writing 1 to it */
+					/* Store the error code and clear flag by writing 1 to it */
 					module->rx_status = STATUS_ERR_OVERFLOW;
-					usart_hw->STATUS.reg &= ~SERCOM_USART_STATUS_BUFOVF;
-
+					usart_hw->STATUS.reg |= SERCOM_USART_STATUS_BUFOVF;
 				} else if (error_code & SERCOM_USART_STATUS_PERR) {
-					/* Store the error code and clearing
-					 * flag by writing 1 to it */
+					/* Store the error code and clear flag by writing 1 to it */
 					module->rx_status = STATUS_ERR_BAD_DATA;
-					usart_hw->STATUS.reg &= ~SERCOM_USART_STATUS_PERR;
+					usart_hw->STATUS.reg |= SERCOM_USART_STATUS_PERR;
 				}
 
 				/* Run callback if registered and enabled */
