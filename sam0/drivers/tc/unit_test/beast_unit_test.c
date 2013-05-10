@@ -431,6 +431,8 @@ int main(void)
 	system_init();
 	test_usart_comunication_init();
 
+		system_clock_source_write_calibration(SYSTEM_CLOCK_SOURCE_OSC8M, 18, 2);
+
 	/* Define Test Cases */
 	DEFINE_TEST_CASE(init_test, NULL,
 			run_init_test, NULL,
@@ -464,7 +466,7 @@ int main(void)
 
 	/* Define the test suite */
 	DEFINE_TEST_SUITE(tc_suite, tc_tests,
-			"SAM D20 TC beast driver test suite");
+			"SAM D20 TC driver test suite");
 
 	/* Run all tests in the suite*/
 	test_suite_run(&tc_suite);

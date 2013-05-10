@@ -45,11 +45,6 @@
 
 #if TC_ASYNC == true
 #  include "tc_interrupt.h"
-
-/** \internal
- * Converts a given TC index to its interrupt vector index.
- */
-
 #endif
 
 #if !defined(__DOXYGEN__)
