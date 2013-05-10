@@ -99,7 +99,7 @@
 #define UART_RX_STATE_LENGTH            (2)
 
 /**
-oh nenje * A UART state that expects the protocol id  to be received as the next character.
+ * A UART state that expects the protocol id  to be received as the next character.
  */
 #define UART_RX_PROTOCOL_ID             (3)
 
@@ -154,12 +154,6 @@ static uint8_t *sio_rx_ptr;
  */
 static volatile uint8_t sio_rx_state;
 
-/**
- * This is the transmit state of the UART. (\ref UART_TX_STATE_SOT,
- *   \ref UART_TX_STATE_LENGTH, \ref UART_TX_STATE_DATA, or
- *   \ref UART_TX_STATE_EOT)
- */
-//volatile uint8_t sio_tx_state;
 
 /**
  * This is the length of the message should be received.
