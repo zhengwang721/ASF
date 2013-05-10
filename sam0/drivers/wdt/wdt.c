@@ -42,14 +42,7 @@
  */
 #include "wdt.h"
 #include <system.h>
-
-/**
- * \internal Internal device structure.
- */
-struct _wdt_module {
-	/** If \c true, the Watchdog should be locked on when enabled. */
-	bool always_on;
-};
+#include <system_interrupt.h>
 
 /**
  * \internal
@@ -57,27 +50,22 @@ struct _wdt_module {
  * Internal Watchdog device state, used to track instance specific information
  * for the Watchdog peripheral within the device.
  */
-static struct _wdt_module _wdt_instance;
+struct _wdt_module _wdt_instance;
 
-/** \brief Initializes and configures the Watchdog driver.
+
+/**
+ * \internal Writes a WDT configuration to the hardware module.
  *
- * Initializes the Watchdog driver, resetting the hardware module and
- * configuring it to the user supplied configuration parameters, ready for
- * use. This function should be called before enabling the Watchdog.
+ * Writes out a given configuration to the hardware module.
  *
- * \note Once called the Watchdog will not be running; to start the Watchdog,
- *       call \ref wdt_enable() after configuring the module.
- *
- * \param[in] config  Configuration settings for the Watchdog
- *
- * \return Status of the configuration procedure.
- * \retval STATUS_OK     If the module was configured correctly
- * \retval STATUS_ERR_INVALID_ARG   If invalid argument(s) were supplied
- * \retval STATUS_ERR_IO  If the Watchdog module is locked to be always on
+ * \param[in]  config  Pointer to the configuration struct
  */
-enum status_code wdt_init(
+static enum status_code _wdt_set_config(
 		const struct wdt_conf *const config)
 {
+	/* Sanity check arguments */
+	Assert(config);
+
 	Wdt *const WDT_module = WDT;
 
 	/* Sanity check arguments */
@@ -99,13 +87,6 @@ enum status_code wdt_init(
 			(config->timeout_period < config->early_warning_period)) {
 		return STATUS_ERR_INVALID_ARG;
 	}
-
-	/* Configure GCLK channel and enable clock */
-	struct system_gclk_chan_config gclk_chan_conf;
-	gclk_chan_conf.source_generator = config->clock_source;
-	gclk_chan_conf.write_lock       = config->always_on;
-	system_gclk_chan_set_config(WDT_GCLK_ID, &gclk_chan_conf);
-	system_gclk_chan_enable(WDT_GCLK_ID);
 
 	while (wdt_is_syncing()) {
 		/* Wait for all hardware modules to complete synchronization */
@@ -145,10 +126,49 @@ enum status_code wdt_init(
 			= (config->early_warning_period - 1) << WDT_EWCTRL_EWOFFSET_Pos;
 	}
 
+	return STATUS_OK;
+}
+
+/** \brief Initializes and configures the Watchdog driver.
+ *
+ * Initializes the Watchdog driver, resetting the hardware module and
+ * configuring it to the user supplied configuration parameters, ready for
+ * use. This function should be called before enabling the Watchdog.
+ *
+ * \note Once called the Watchdog will not be running; to start the Watchdog,
+ *       call \ref wdt_enable() after configuring the module.
+ *
+ * \param[in] config  Configuration settings for the Watchdog
+ *
+ * \return Status of the configuration procedure.
+ * \retval STATUS_OK     If the module was configured correctly
+ * \retval STATUS_ERR_INVALID_ARG   If invalid argument(s) were supplied
+ * \retval STATUS_ERR_IO  If the Watchdog module is locked to be always on
+ */
+enum status_code wdt_init(
+		const struct wdt_conf *const config)
+{
+	/* Configure GCLK channel and enable clock */
+	struct system_gclk_chan_config gclk_chan_conf;
+	gclk_chan_conf.source_generator = config->clock_source;
+	gclk_chan_conf.write_lock       = config->always_on;
+	system_gclk_chan_set_config(WDT_GCLK_ID, &gclk_chan_conf);
+	system_gclk_chan_enable(WDT_GCLK_ID);
+
+	/* Turn on the digital interface clock */
+	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBA, PM_APBAMASK_WDT);
+
 	/* Save the requested Watchdog lock state for when the WDT is enabled */
 	_wdt_instance.always_on = config->always_on;
 
-	return STATUS_OK;
+#if WDT_CALLBACK_MODE == true
+	_wdt_instance.early_warning_callback = NULL;
+
+	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_WDT);
+#endif
+
+	/* Write configuration to module */
+	return _wdt_set_config(config);
 }
 
 /**
