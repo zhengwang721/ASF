@@ -47,7 +47,13 @@
  * \defgroup asfdoc_samd20_dac_group SAM D20 Digital-to-Analog Driver (DAC)
  *
  * This driver for SAM D20 devices provides an interface for the conversion of
- * digital values to analog voltage.
+ * digital values to analog voltage. The following driver API modes are covered
+ * by this manual:
+ *
+ *  - Polled APIs
+ * \if DAC_CALLBACK_MODE
+ *  - Callback APIs
+ * \endif
  *
  * The following peripherals are used by this module:
  *
