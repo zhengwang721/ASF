@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 Timer Counter Callback Driver
+ * \brief SAM D20  TC - Timer Counter Callback Driver
  *
  * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
