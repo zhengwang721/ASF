@@ -136,6 +136,7 @@
 #define PUSH_BUTTON_0_DOWN_LEVEL        IOPORT_PIN_LEVEL_LOW
 #define PUSH_BUTTON_0_UP_LEVEL          IOPORT_PIN_LEVEL_HIGH
 #define BUTTON_0_NAME                   "PB0"
+#define PUSH_BUTTON_0_NAME              BUTTON_0_NAME
 //! @}
 
 /*! \name Push Button Connection on External Interrupt line
