@@ -110,29 +110,6 @@ void sysclk_set_source(uint32_t ul_src)
 	SystemCoreClockUpdate();
 }
 
-#if defined(CONFIG_USBCLK_SOURCE)
-#  warning SAM4N has no USB peripheral, please remove CONFIG_USBCLK_SOURCE
-#endif
-#if defined(CONFIG_USBCLK_SOURCE) || defined(__DOXYGEN__)
-/**
- * \brief Enable USB clock.
- *
- * \note SAM4N has no USB peripheral, nothing is done here
- */
-void sysclk_enable_usb(void)
-{
-}
-
-/**
- * \brief Disable the USB clock.
- *
- * \note SAM4N has no USB peripheral, nothing is done here
- */
-void sysclk_disable_usb(void)
-{
-}
-#endif // CONFIG_USBCLK_SOURCE
-
 void sysclk_init(void)
 {
 	/* Set a flash wait state depending on the new cpu frequency */

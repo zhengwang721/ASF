@@ -59,7 +59,7 @@
  *
  * \section sysclk_quickstart_basic Basic usage of the System Clock Management service
  * This section will present a basic use case for the System Clock Management service.
- * This use case will configure the main system clock to 96MHz, using an internal PLL
+ * This use case will configure the main system clock to 100Hz, using an internal PLL
  * module to multiply the frequency of a crystal attached to the microcontroller.
  *
  * \subsection sysclk_quickstart_use_case_1_prereq Prerequisites
@@ -83,11 +83,11 @@
  *
  *   // Fpll0 = (Fclk * PLL_mul) / PLL_div
  *   #define CONFIG_PLL0_SOURCE          PLL_SRC_MAINCK_XTAL
- *   #define CONFIG_PLL0_MUL             (96000000UL / BOARD_FREQ_MAINCK_XTAL)
- *   #define CONFIG_PLL0_DIV             1
+ *   #define CONFIG_PLL0_MUL             (600000000UL / BOARD_FREQ_MAINCK_XTAL)
+ *   #define CONFIG_PLL0_DIV             3
  *
  *   // Fbus = Fsys / BUS_div
- *   #define CONFIG_SYSCLK_PRES          SYSCLK_PRES_1
+ *   #define CONFIG_SYSCLK_PRES          SYSCLK_PRES_2
  *   \endcode
  *
  * \subsection sysclk_quickstart_use_case_1_example_workflow Workflow
@@ -95,16 +95,16 @@
  *   \code #define CONFIG_SYSCLK_SOURCE          SYSCLK_SRC_PLLACK \endcode
  *  -# Configure the PLL module to use the fast external fast crystal oscillator as its source:
  *   \code #define CONFIG_PLL0_SOURCE            PLL_SRC_MAINCK_XTAL \endcode
- *  -# Configure the PLL module to multiply the external fast crystal oscillator frequency up to 96MHz:
+ *  -# Configure the PLL module to multiply the external fast crystal oscillator frequency up to 100MHz:
  *   \code
- *   #define CONFIG_PLL0_MUL             (96000000UL / BOARD_FREQ_MAINCK_XTAL)
- *   #define CONFIG_PLL0_DIV             1
+ *   #define CONFIG_PLL0_MUL             (600000000UL / BOARD_FREQ_MAINCK_XTAL)
+ *   #define CONFIG_PLL0_DIV             3
  *   \endcode
  *   \note For user boards, \c BOARD_FREQ_MAINCK_XTAL should be defined in the board \c conf_board.h configuration
  *         file as the frequency of the fast crystal attached to the microcontroller.
- *  -# Configure the main clock to run at the full 96MHz, disable scaling of the main system clock speed:
+ *  -# Configure the main clock to run at the full 100MHz, disable scaling of the main system clock speed:
  *    \code
- *    #define CONFIG_SYSCLK_PRES         SYSCLK_PRES_1
+ *    #define CONFIG_SYSCLK_PRES         SYSCLK_PRES_2
  *    \endcode
  *    \note Some dividers are powers of two, while others are integer division factors. Refer to the
  *          formulas in the conf_clock.h template commented above each division define.
@@ -175,37 +175,6 @@ extern "C" {
 #define SYSCLK_PRES_64                  PMC_MCKR_PRES_CLK_64    //!< Set master clock prescaler to 64
 #define SYSCLK_PRES_3                   PMC_MCKR_PRES_CLK_3     //!< Set master clock prescaler to 3
 //@}
-
-//! \name USB Clock Sources
-//@{
-#define USBCLK_SRC_PLL0       0     //!< Use PLLA
-//@}
-
-/**
- * \def CONFIG_USBCLK_SOURCE
- * \brief Configuration symbol for the USB generic clock source
- *
- * Sets the clock source to use for the USB. The source must also be properly
- * configured.
- *
- * Define this to one of the \c USBCLK_SRC_xxx settings. Leave it undefined if
- * USB is not required.
- */
-#ifdef __DOXYGEN__
-# define CONFIG_USBCLK_SOURCE
-#endif
-
-/**
- * \def CONFIG_USBCLK_DIV
- * \brief Configuration symbol for the USB generic clock divider setting
- *
- * Sets the clock division for the USB generic clock. If a USB clock source is
- * selected with CONFIG_USBCLK_SOURCE, this configuration symbol must also be
- * defined.
- */
-#ifdef __DOXYGEN__
-# define CONFIG_USBCLK_DIV
-#endif
 
 /**
  * \name Querying the system clock
@@ -350,9 +319,6 @@ extern void sysclk_set_prescalers(uint32_t ul_pres);
 extern void sysclk_set_source(uint32_t ul_src);
 
 //@}
-
-extern void sysclk_enable_usb(void);
-extern void sysclk_disable_usb(void);
 
 extern void sysclk_init(void);
 

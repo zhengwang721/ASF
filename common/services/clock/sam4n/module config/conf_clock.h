@@ -56,7 +56,7 @@
 #define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_PLLACK
 
 // ===== System Clock (MCK) Prescaler Options   (Fmck = Fsys / (SYSCLK_PRES))
-//#define CONFIG_SYSCLK_PRES            SYSCLK_PRES_1
+//#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_1
 #define CONFIG_SYSCLK_PRES          SYSCLK_PRES_2
 //#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_4
 //#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_8
@@ -77,7 +77,6 @@
 // - System clock prescaler: 2 (divided by 2)
 // - PLLA source: XTAL
 // - PLLA output: XTAL * 16 / 1
-// - System clock is: 16 * 12 / 1 / 2 = 96MHz
-
+// - System clock: 12 * 16 / 1 / 2 = 96MHz
 
 #endif /* CONF_CLOCK_H_INCLUDED */

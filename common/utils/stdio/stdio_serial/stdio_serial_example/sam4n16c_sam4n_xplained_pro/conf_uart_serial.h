@@ -49,7 +49,7 @@ extern "C" {
 #endif
 
 // USART serial configuration options
-#define USART_SERIAL_EXAMPLE            ((Uart*)CONSOLE_UART)
+#define USART_SERIAL_EXAMPLE            ((Usart*)CONSOLE_UART)
 
 #define USART_SERIAL_EXAMPLE_BAUDRATE   (115200)
 #define USART_SERIAL_CHAR_LENGTH        (US_MR_CHRL_8_BIT)

@@ -47,7 +47,7 @@
 #define EXAMPLE_LED_PORT (1)
 #define EXAMPLE_LED_MASK ((1 << 14))
 
-/* Using button BP2 on SAM4N-XPLAINED-PRO (PA30) */
+/* Using button SW0 on SAM4N-XPLAINED-PRO (PA30) */
 #define EXAMPLE_BUTTON_PORT (0)
 #define EXAMPLE_BUTTON_MASK ((1 << 30))
 
