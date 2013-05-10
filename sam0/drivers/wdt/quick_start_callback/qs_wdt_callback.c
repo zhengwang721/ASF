@@ -82,10 +82,14 @@ void configure_wdt(void)
 
 void configure_wdt_callbacks(void)
 {
+	//! [setup_6]
 	wdt_register_callback(watchdog_early_warning_callback,
 		WDT_CALLBACK_TYPE_EARLY_WARNING);
+	//! [setup_6]
 
+	//! [setup_7]
 	wdt_enable_callback(WDT_CALLBACK_TYPE_EARLY_WARNING);
+	//! [setup_7]
 }
 //! [setup]
 
@@ -98,13 +102,19 @@ int main(void)
 	configure_wdt_callbacks();
 	//! [setup_init]
 
+//! [main]
+//! [main_1]
 	port_pin_set_output_level(LED_0_PIN, LED_0_INACTIVE);
+//! [main_1]
 
+//! [main_2]
 	system_interrupt_enable_global();
+//! [main_2]
 
 	//! [main_3]
 	while (true) {
-		for (;;);
+		/* Wait for callback */
 	}
-	//! [main]
+	//! [main_3]
+//! [main]
 }

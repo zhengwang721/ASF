@@ -45,14 +45,16 @@
  * \page asfdoc_samd20_wdt_callback_use_case Quick Start Guide for WDT - Callback
  *
  * In this use case, the Watchdog module is configured for:
- *  \li System reset after 2048 clocks of the Watchdog generic clock
+ *  \li System reset after 4096 clocks of the Watchdog generic clock
  *  \li Always on mode disabled
- *  \li Early warning period if 1024 clocks of the Watchdog generic clock
+ *  \li Early warning period of 2048 clocks of the Watchdog generic clock
  *
- * This use case sets up the Watchdog to force a system reset after every 2048
- * clocks of the Watchdog's Generic Clock channel, unless the user periodically
- * resets the Watchdog counter via a button before the timer expires. If the
- * watchdog resets the device, a LED on the board is turned off.
+ * This use case sets up the Watchdog to force a system reset after every 4096
+ * clocks of the Watchdog's Generic Clock channel, with an Early Warning
+ * callback being generated every 2048 clocks. Each time the Early Warning
+ * interrupt fires the boar LED is turned on, and each time the device resets
+ * the board LED is turned off, giving a periodic flashing pattern.
+ *
  *
  * \section asfdoc_samd20_wdt_callback_use_case_setup Setup
  *
@@ -61,48 +63,49 @@
  *
  * \subsection asfdoc_samd20_wdt_callback_use_case_setup_code Code
  * Copy-paste the following setup code to your user application:
- * \snippet qs_wdt_basic.c setup
+ * \snippet qs_wdt_callback.c setup
  *
  * Add to user application initialization (typically the start of \c main()):
- * \snippet qs_wdt_basic.c setup_init
+ * \snippet qs_wdt_callback.c setup_init
  *
  * \subsection asfdoc_samd20_wdt_callback_use_case_setup_flow Workflow
- * -# Create a Watchdog module configuration struct, which can be filled out to
- *    adjust the configuration of the Watchdog.
- *  \snippet qs_wdt_basic.c setup_1
- * -# Initialize the Watchdog configuration struct with the module's default
- *    values.
- *    \note This should always be performed before using the configuration
- *          struct to ensure that all values are initialized to known default
- *          settings.
+ * -# Configure and enable the Watchdog driver
+ *  -# Create a Watchdog module configuration struct, which can be filled out to
+ *     adjust the configuration of the Watchdog.
+ *   \snippet qs_wdt_callback.c setup_1
+ *  -# Initialize the Watchdog configuration struct with the module's default
+ *     values.
+ *     \note This should always be performed before using the configuration
+ *           struct to ensure that all values are initialized to known default
+ *           settings.
  *
- *  \snippet qs_wdt_basic.c setup_2
- * -# Adjust the configuration struct to set the timeout period and lock mode
- *    of the Watchdog.
- *  \snippet qs_wdt_basic.c setup_3
- * -# Initialize the Watchdog to configure the module with the requested
- *    settings.
- *  \snippet qs_wdt_basic.c setup_4
- * -# Enable the Watchdog to start the module.
- *  \snippet qs_wdt_basic.c setup_5
+ *   \snippet qs_wdt_callback.c setup_2
+ *  -# Adjust the configuration struct to set the timeout and early warning
+ *     periods of the Watchdog.
+ *   \snippet qs_wdt_callback.c setup_3
+ *  -# Initialize the Watchdog to configure the module with the requested
+ *     settings.
+ *   \snippet qs_wdt_callback.c setup_4
+ *  -# Enable the Watchdog to start the module.
+ *   \snippet qs_wdt_callback.c setup_5
+ * -# Register and enable the Early Warning callback handler
+ *  -# Register the user-provided Early Warning callback function with the
+ *     driver, so that it will be run when an Early Warning condition occurs.
+ *   \snippet qs_wdt_callback.c setup_6
+ *  -# Enable the Early Warning callback so that it will generate callbacks.
+ *   \snippet qs_wdt_callback.c setup_7
  *
  * \section asfdoc_samd20_wdt_callback_use_case Use Case
  *
  * \subsection asfdoc_samd20_wdt_callback_use_case_code Code
  * Copy-paste the following code to your user application:
- * \snippet qs_wdt_basic.c main
+ * \snippet qs_wdt_callback.c main
  *
  * \subsection asfdoc_samd20_wdt_callback_use_case_main Workflow
- * -# Retrieve the cause of the system reset to determine if the watchdog module
- *    was the cause of the last reset.
- *  \snippet qs_wdt_basic.c main_1
- * -# Turn on or off the board LED based on whether the watchdog reset the device.
- *  \snippet qs_wdt_basic.c main_2
+ * -# Turn off the board LED when the application starts.
+ *  \snippet qs_wdt_callback.c main_1
+ * -# Enable global interrupts so that callbacks can be generated.
+ *  \snippet qs_wdt_callback.c main_2
  * -# Enter an infinite loop to hold the main program logic.
- *  \snippet qs_wdt_basic.c main_3
- * -# Test to see if the board button is currently being pressed.
- *  \snippet qs_wdt_basic.c main_4
- * -# If the button is pressed, turn on the board LED and reset the Watchdog
- *    timer.
- *  \snippet qs_wdt_basic.c main_5
+ *  \snippet qs_wdt_callback.c main_3
  */
