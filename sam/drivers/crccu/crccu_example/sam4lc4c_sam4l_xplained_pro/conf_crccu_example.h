@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Board configuration.
+ * \brief CRCCU example configuration.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -41,10 +41,25 @@
  *
  */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#ifndef CONF_CRCCU_EXAMPLE_H_INCLUDED
+#define CONF_CRCCU_EXAMPLE_H_INCLUDED
 
-/* Enable Com Port. */
-#define CONF_BOARD_COM_PORT
+/// @cond 0
+/**INDENT-OFF**/
+#ifdef __cplusplus
+extern "C" {
+#endif
+/**INDENT-ON**/
+/// @endcond
 
-#endif /* CONF_BOARD_H_INCLUDED */
+#define FLASH_BUFFER_SIZE  FLASH_PAGE_SIZE
+
+/// @cond 0
+/**INDENT-OFF**/
+#ifdef __cplusplus
+}
+#endif
+/**INDENT-ON**/
+/// @endcond
+
+#endif /* CONF_CRCCU_EXAMPLE_H_INCLUDED*/

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Board configuration.
+ * \brief AESA configuration.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -41,10 +41,13 @@
  *
  */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+/** Configuration of the AESA driver. */
 
-/* Enable Com Port. */
-#define CONF_BOARD_COM_PORT
+#ifndef CONF_AESA_H_INCLUDED
+#define CONF_AESA_H_INCLUDED
 
-#endif /* CONF_BOARD_H_INCLUDED */
+/* Generic clock setting for CLK_AESA */
+#define CONFIG_AESA_GENERIC_SRC    GENCLK_SRC_CLK_CPU
+#define CONFIG_AESA_GENERIC_DIV    1
+
+#endif /* CONF_AESA_H_INCLUDED */
