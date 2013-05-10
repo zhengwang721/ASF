@@ -48,7 +48,13 @@
  *
  * This driver for SAM D20 devices provides an interface for the configuration
  * and management of the device's Watchdog Timer module, including the enabling,
- * disabling and kicking within the device.
+ * disabling and kicking within the device. The following driver API modes are
+ * covered by this manual:
+ *
+ *  - Polled APIs
+ * \if WDT_CALLBACK_MODE
+ *  - Callback APIs
+ * \endif
  *
  * The following peripherals are used by this module:
  *
@@ -177,6 +183,10 @@
 #include <clock.h>
 #include <gclk.h>
 
+#if WDT_CALLBACK_MODE == true
+#  include "wdt_callback.h"
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -239,6 +249,21 @@ struct wdt_conf {
 	 *  set. */
 	enum wdt_period early_warning_period;
 };
+
+#if !defined(__DOXYGEN__)
+struct _wdt_module {
+	/** If \c true, the Watchdog should be locked on when enabled. */
+	bool always_on;
+#  if WDT_CALLBACK_MODE == true
+	wdt_callback_t early_warning_callback;
+#  endif
+};
+
+#  if WDT_CALLBACK_MODE == true
+extern struct _wdt_module _wdt_instance;
+#  endif
+#endif
+
 
 /** \name Configuration and initialization
  * @{

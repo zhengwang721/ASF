@@ -44,20 +44,13 @@
 #include <system.h>
 
 /**
- * \internal Internal device structure.
- */
-struct _wdt_module {
-	/** If \c true, the Watchdog should be locked on when enabled. */
-	bool always_on;
-};
-
-/**
  * \internal
  *
  * Internal Watchdog device state, used to track instance specific information
  * for the Watchdog peripheral within the device.
  */
-static struct _wdt_module _wdt_instance;
+struct _wdt_module _wdt_instance;
+
 
 /** \brief Initializes and configures the Watchdog driver.
  *
