@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief USART serial example configuration.
+ * \brief Unit test configuration
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,23 +41,29 @@
  *
  */
 
-#ifndef CONF_EXAMPLE_H_INCLUDED
-#define CONF_EXAMPLE_H_INCLUDED
+#ifndef CONF_TEST_INCLUDED
+#define CONF_TEST_INCLUDED
 
-#include "conf_board.h"
-#include "conf_clock.h"
+#include "compiler.h"
 
-#define BOARD_ID_USART             USART2
+/** USART Interface */
+#define CONF_TEST_USART      USART2
+/** Baudrate setting */
+#define CONF_TEST_BAUDRATE   115200
+/** Character length setting */
+#define CONF_TEST_CHARLENGTH US_MR_CHRL_8_BIT
+/** Parity setting */
+#define CONF_TEST_PARITY     US_MR_PAR_NO
+/** Stop bits setting */
+#define CONF_TEST_STOPBITS   US_MR_NBSTOP_1_BIT
 
-#define BOARD_USART                USART2
+/** 1MHz RC Oscillator */
+#define BOARD_RC1M_HZ
+/** 80MHz RC Oscillator */
+#define BOARD_RC80M_HZ
+/** RCFAST Oscillator */
+#define BOARD_RCFAST_HZ
+/** Dfll max lock sycles */
+#define DFLL_MAX_LOCK_CYCLES 300
 
-#define BOARD_USART_BAUDRATE       115200
-
-#define USART_Handler              USART2_Handler
-
-#define USART_IRQn                 USART2_IRQn
-
-#define PDCA_PID_USART_RX          2
-#define PDCA_PID_USART_TX          20
-
-#endif /* CONF_EXAMPLE_H_INCLUDED */
+#endif /* CONF_TEST_INCLUDED */

@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief USART serial example configuration.
+ * \brief  Configuration File for SAM4L Xplained Pro Board.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,23 +41,10 @@
  *
  */
 
-#ifndef CONF_EXAMPLE_H_INCLUDED
-#define CONF_EXAMPLE_H_INCLUDED
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#include "conf_board.h"
-#include "conf_clock.h"
+/** Enable Com Port. */
+#define CONF_BOARD_COM_PORT
 
-#define BOARD_ID_USART             USART2
-
-#define BOARD_USART                USART2
-
-#define BOARD_USART_BAUDRATE       115200
-
-#define USART_Handler              USART2_Handler
-
-#define USART_IRQn                 USART2_IRQn
-
-#define PDCA_PID_USART_RX          2
-#define PDCA_PID_USART_TX          20
-
-#endif /* CONF_EXAMPLE_H_INCLUDED */
+#endif  /* CONF_BOARD_H_INCLUDED */
