@@ -46,6 +46,7 @@
 			<build type="doxygen-enable-section" value="EXTINT_CALLBACK_MODE"/>
 
 			<build type="header-file" value="quick_start/qs_wdt_basic.h"/>
+			<build type="header-file" value="quick_start_callback/qs_wdt_callback.h"/>
 
 			<build type="doxygen-entry-point" value="asfdoc_samd20_wdt_group"/>
 			<build type="doxygen-example-path" value="quick_start"/>

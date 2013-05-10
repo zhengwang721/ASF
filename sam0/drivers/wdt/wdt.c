@@ -42,6 +42,7 @@
  */
 #include "wdt.h"
 #include <system.h>
+#include <system_interrupt.h>
 
 /**
  * \internal
@@ -140,6 +141,12 @@ enum status_code wdt_init(
 
 	/* Save the requested Watchdog lock state for when the WDT is enabled */
 	_wdt_instance.always_on = config->always_on;
+
+#if WDT_CALLBACK_MODE == true
+	_wdt_instance.early_warning_callback = NULL;
+
+	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_WDT);
+#endif
 
 	return STATUS_OK;
 }

@@ -116,10 +116,12 @@ enum status_code wdt_unregister_callback(
 enum status_code wdt_enable_callback(
 	const enum wdt_callback_type type)
 {
+	Wdt *const WDT_module = WDT;
+
 	switch (type)
 	{
 		case WDT_CALLBACK_TYPE_EARLY_WARNING:
-			WDT->INTENSET.reg = WDT_INTENSET_EW;
+			WDT_module->INTENSET.reg = WDT_INTENSET_EW;
 			return STATUS_OK;
 		default:
 			Assert(false);
@@ -141,10 +143,12 @@ enum status_code wdt_enable_callback(
 enum status_code wdt_disable_callback(
 	const enum wdt_callback_type type)
 {
+	Wdt *const WDT_module = WDT;
+
 	switch (type)
 	{
 		case WDT_CALLBACK_TYPE_EARLY_WARNING:
-			WDT->INTENCLR.reg = WDT_INTENCLR_EW;
+			WDT_module->INTENCLR.reg = WDT_INTENCLR_EW;
 			return STATUS_OK;
 		default:
 			Assert(false);

@@ -173,6 +173,7 @@
  *
  * The following Quick Start guides and application examples are available for this driver:
  * - \ref asfdoc_samd20_wdt_basic_use_case
+ * - \ref asfdoc_samd20_wdt_calback_use_case
  *
  *
  * \section asfdoc_samd20_wdt_api_overview API Overview
@@ -444,6 +445,7 @@ void wdt_reset_count(void);
  * added to the user application.
  *
  *  - \subpage asfdoc_samd20_wdt_basic_use_case
+ *  - \subpage asfdoc_samd20_wdt_callback_use_case
  */
 
 #endif /* WDT_H_INCLUDED */
