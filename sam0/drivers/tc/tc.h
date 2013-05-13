@@ -803,7 +803,7 @@ struct tc_module {
 	/** Size of the initialized Timer/Counter module configuration. */
 	enum tc_counter_size counter_size;
 #  if TC_ASYNC == true
-	/** Array of callbacs */
+	/** Array of callbacks */
 	tc_callback_t callback[TC_CALLBACK_N];
 	/** Bit mask for callbacks registered */
 	uint8_t register_callback_mask;
