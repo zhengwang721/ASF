@@ -119,30 +119,17 @@ enum status_code ac_unregister_callback(
 /**
  * \internal ISR handler for AC
  */
-/** Auto-generate a set of interrupt handlers for each AC in the device */
-
-/** \internal
- * Generates a AC interrupt handler function for a given AC index.
- */
-#define _AC_INTERRUPT_HANDLER(n, unused) \
-		void ac##n##_Handler(void) \
-		{ \
-			_ac_interrupt_handler(n); \
-		}
-
-MREPEAT(AC_INST_NUM, _AC_INTERRUPT_HANDLER, ~)
+void AC_Handler(void) {
+	_ac_interrupt_handler();
+}
 
 /**
  * \brief Interrupt Handler for AC module
  *
  * Handles interrupts as they occur, it will run the callback functions
  * that are registered and enabled.
- *
- * \param[in]  instance  ID of the AC instance calling the interrupt
- *                       handler.
  */
-void _ac_interrupt_handler(
-		uint8_t instance)
+void _ac_interrupt_handler(void)
 {
 
 }

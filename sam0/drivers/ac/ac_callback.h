@@ -46,9 +46,6 @@
 
 #include "ac.h"
 
-extern void *_ac_instances[AC_INST_NUM];
-
-
 /**
  * \name Callback Management
  * {@
@@ -108,7 +105,6 @@ static inline void ac_disable_callback(
 	module->enable_callback_mask |= (1 << callback_type);
 	/* Enable the interrupt for the callback */
 	module->hw->COUNT8.INTENCLR.reg = (1 << callback_type);
-
 }
 
 /**
