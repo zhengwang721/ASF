@@ -359,10 +359,10 @@ enum ac_chan_output {
 	/** Comparator channel output is not routed to a physical GPIO pin, and is
 	 *  used internally only. */
 	AC_CHAN_OUTPUT_INTERNAL    = AC_COMPCTRL_OUT_OFF,
-	/** Comparator channel output is routed to it's matching physical GPIO pin,
+	/** Comparator channel output is routed to its matching physical GPIO pin,
 	 *  via an asynchronous path. */
 	AC_CHAN_OUTPUT_ASYNCRONOUS = AC_COMPCTRL_OUT_ASYNC,
-	/** Comparator channel output is routed to it's matching physical GPIO pin,
+	/** Comparator channel output is routed to its matching physical GPIO pin,
 	 *  via a synchronous path. */
 	AC_CHAN_OUTPUT_SYNCHRONOUS = AC_COMPCTRL_OUT_SYNC,
 };
@@ -824,7 +824,7 @@ static inline void ac_chan_enable(
  *  \ref ac_chan_enable().
  *
  *  \param[in] module_inst  Software instance for the Analog Comparator peripheral
- *  \param[in] channel      Comparator channel channel to disable
+ *  \param[in] channel      Comparator channel to disable
  */
 static inline void ac_chan_disable(
 		struct ac_module *const module_inst,
@@ -855,7 +855,7 @@ static inline void ac_chan_disable(
  *  (single shot mode) rather than continuously.
  *
  *  \param[in] module_inst  Software instance for the Analog Comparator peripheral
- *  \param[in] channel      Comparator channel channel to trigger
+ *  \param[in] channel      Comparator channel to trigger
  */
 static inline void ac_chan_trigger_single_shot(
 		struct ac_module *const module_inst,
@@ -878,7 +878,7 @@ static inline void ac_chan_trigger_single_shot(
  *  begin comparisons.
  *
  *  \param[in] module_inst  Software instance for the Analog Comparator peripheral
- *  \param[in] channel      Comparator channel channel to test
+ *  \param[in] channel      Comparator channel to test
  *
  *  \return Comparator channel readiness state.
  */
@@ -903,7 +903,7 @@ static inline bool ac_chan_is_ready(
  *  result will be indicated as being unknown.
  *
  *  \param[in] module_inst   Software instance for the Analog Comparator peripheral
- *  \param[in] channel       Comparator channel channel to test
+ *  \param[in] channel       Comparator channel to test
  *
  *  \return Comparator channel state.
  */
@@ -988,7 +988,7 @@ void ac_win_disable(
  *  detection is currently ready to begin comparisons.
  *
  *  \param[in] module_inst  Software instance for the Analog Comparator peripheral
- *  \param[in] win_channel  Window Comparator channel channel to test
+ *  \param[in] win_channel  Window Comparator channel to test
  *
  *  \return Window Comparator channel readiness state.
  */
