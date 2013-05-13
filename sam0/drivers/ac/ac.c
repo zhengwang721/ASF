@@ -40,6 +40,7 @@
  * \asf_license_stop
  *
  */
+
 #include "ac.h"
 
 #if AC_CALLBACK == true
@@ -148,6 +149,18 @@ enum status_code ac_init(
 
 	/* Turn on the digital interface clock */
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, PM_APBCMASK_AC);
+
+#if AC_CALLBACK == true
+	/* Initialize parameters */
+	for (uint8_t i = 0; i < AC_CALLBACK_N; i++) {
+		module_inst->callback[i]        = NULL;
+	}
+	module_inst->register_callback_mask     = 0x00;
+	module_inst->enable_callback_mask       = 0x00;
+
+	/* Register this instance for callbacks*/
+	_ac_instances[instance] = module_inst;
+#endif /*AC_CALLBACK == true */
 
 	/* Write configuration to module */
 	return _ac_set_config(module_inst, config);
