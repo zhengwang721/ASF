@@ -578,7 +578,7 @@ enum status_code tc_set_compare_value(
  * \retval STATUS_OK                   The module was reset successfully
  * \retval STATUS_ERR_UNSUPPORTED_DEV  A 32-bit slave TC module was passed to
  *                                     the function. Only use reset on master
- *                                     tc.
+ *                                     TC.
  */
 enum status_code tc_reset(
 		const struct tc_module *const module_inst)

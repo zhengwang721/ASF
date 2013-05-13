@@ -44,8 +44,7 @@
 /**
  * \page asfdoc_samd20_adc_basic_use_case Quick Start Guide for ADC - Basic
  *
- * In this use case, the ADC will be used for..
- * The ADC will be set up as follows:
+ * In this use case, the ADC will be configured with the following settings:
  * - 1V from internal bandgap reference
  * - Div 4 clock prescaler
  * - 12 bit resolution
