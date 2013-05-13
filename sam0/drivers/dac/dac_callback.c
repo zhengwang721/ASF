@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D20 Digital to Analog Interrupt Driver
+ * \brief SAM D20 Digital-to-Analog Interrupt Driver
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
