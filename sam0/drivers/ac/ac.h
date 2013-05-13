@@ -486,6 +486,14 @@ struct ac_module {
 #if !defined(__DOXYGEN__)
 	/** Hardware module pointer of the associated Analog Comparator peripheral. */
 	Ac *hw;
+#  if AC_CALLBACK == true
+	/** Array of callbacks */
+	ac_callback_t callback[AC_CALLBACK_N];
+	/** Bit mask for callbacks registered */
+	uint8_t register_callback_mask;
+	/** Bit mask for callbacks enabled */
+	uint8_t enable_callback_mask;
+#  endif /* AC_CALLBACK == true */
 #endif
 };
 
