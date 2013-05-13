@@ -355,7 +355,7 @@ int main(void)
 
 	/* Define the test suite */
 	DEFINE_TEST_SUITE(extint_test_suite, extint_tests,
-			"SAM0 External Interrupt driver test suite");
+			"SAM D20 External Interrupt driver test suite");
 
 	/* Run all tests in the suite*/
 	test_suite_run(&extint_test_suite);
