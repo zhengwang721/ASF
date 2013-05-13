@@ -269,9 +269,9 @@ enum usart_dataorder {
  * Select USART transfer mode
  */
 enum usart_transfer_mode {
-	/* Transfer of data is done synchronously */
+	/** Transfer of data is done synchronously */
 	USART_TRANSFER_SYNCHRONOUSLY = (SERCOM_USART_CTRLA_CMODE),
-	/* Transfer of data is done asynchronously */
+	/** Transfer of data is done asynchronously */
 	USART_TRANSFER_ASYNCHRONOUSLY = 0
 };
 
@@ -601,7 +601,7 @@ static inline void usart_disable(
 	/* Get a pointer to the hardware module instance */
 	SercomUsart *const usart_hw = &(module->hw->USART);
 
-	/* Enable Global interrupt for module */
+	/* Disable Global interrupt for module */
 	system_interrupt_disable(_sercom_get_interrupt_vector(module->hw));
 
 	/* Wait until synchronization is complete */
@@ -811,9 +811,9 @@ static inline void usart_disable_transceiver(
  * a selection of use cases. Note that QSGs can be compiled as a standalone
  * application or be added to the user application.
  *
- * - \ref asfdoc_samd20_sercom_usart_basic_use_case
+ * - \subpage asfdoc_samd20_sercom_usart_basic_use_case
  * \if USART_CALLBACK_MODE
- * - \ref asfdoc_samd20_sercom_usart_callback_use_case
+ * - \subpage asfdoc_samd20_sercom_usart_callback_use_case
  * \endif
  */
 

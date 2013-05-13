@@ -64,7 +64,7 @@ void configure_gclock_generator(void)
 //! [setup_4]
 
 //! [setup_5]
-	system_gclk_gen_enable(TC0_GCLK_ID);
+	system_gclk_gen_enable(GCLK_GENERATOR_1);
 //! [setup_5]
 }
 
@@ -81,11 +81,11 @@ void configure_gclock_channel(void)
 	gclk_chan_conf.source_generator = GCLK_GENERATOR_1;
 //! [setup_8]
 //! [setup_9]
-	system_gclk_chan_set_config(EXAMPLE_GCLOCK_CHANNEL, &gclk_chan_conf);
+	system_gclk_chan_set_config(TC0_GCLK_ID, &gclk_chan_conf);
 //! [setup_9]
 
 //! [setup_10]
-	system_gclk_chan_enable(EXAMPLE_GCLOCK_CHANNEL);
+	system_gclk_chan_enable(TC0_GCLK_ID);
 //! [setup_10]
 }
 //! [setup]

@@ -394,7 +394,7 @@ struct _rtc_device {
 #endif
 };
 
-volatile struct _rtc_device _rtc_dev;
+extern volatile struct _rtc_device _rtc_dev;
 #endif
 
 /**

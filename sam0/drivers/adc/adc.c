@@ -89,8 +89,9 @@ static enum status_code _adc_set_config(
 		struct adc_module *const module_inst,
 		struct adc_config *const config)
 {
-	uint8_t adjres;
-	enum adc_average_samples average;
+	uint8_t adjres = 0;
+	uint32_t resolution = ADC_RESOLUTION_16BIT;
+	enum adc_accumulate_samples accumulate = ADC_ACCUMULATE_DISABLE;
 
 	/* Get the hardware module pointer */
 	Adc *const adc_module = module_inst->hw;
@@ -115,31 +116,56 @@ static enum status_code _adc_set_config(
 			(config->reference);
 
 	/* Set adjusting result and number of samples */
-	switch (config->oversampling_and_decimation) {
+	switch (config->resolution) {
 
-	case ADC_OVERSAMPLING_AND_DECIMATION_DISABLE:
-		adjres = 0x00;
-		average = config->average_samples;
+	case ADC_RESOLUTION_CUSTOM:
+		adjres = config->divide_result;
+		accumulate = config->accumulate_samples;
+		/* 16-bit result register */
+		resolution = ADC_RESOLUTION_16BIT;
 		break;
 
-	case ADC_OVERSAMPLING_AND_DECIMATION_1BIT:
-		adjres = 0x01;
-		average = ADC_AVGCTRL_SAMPLENUM_4;
+	case ADC_RESOLUTION_13BIT:
+		/* Increase resolution by 1 bit */
+		adjres = ADC_DIVIDE_RESULT_2;
+		accumulate = ADC_ACCUMULATE_SAMPLES_4;
+		/* 16-bit result register */
+		resolution = ADC_RESOLUTION_16BIT;
 		break;
 
-	case ADC_OVERSAMPLING_AND_DECIMATION_2BIT:
-		adjres = 0x02;
-		average = ADC_AVGCTRL_SAMPLENUM_16;
+	case ADC_RESOLUTION_14BIT:
+		/* Increase resolution by 2 bit */
+		adjres = ADC_DIVIDE_RESULT_4;
+		accumulate = ADC_ACCUMULATE_SAMPLES_16;
+		/* 16-bit result register */
+		resolution = ADC_RESOLUTION_16BIT;
 		break;
 
-	case ADC_OVERSAMPLING_AND_DECIMATION_3BIT:
-		adjres = 0x03;
-		average = ADC_AVGCTRL_SAMPLENUM_64;
+	case ADC_RESOLUTION_15BIT:
+		/* Increase resolution by 3 bit */
+		adjres = ADC_DIVIDE_RESULT_8;
+		accumulate = ADC_ACCUMULATE_SAMPLES_64;
+		/* 16-bit result register */
+		resolution = ADC_RESOLUTION_16BIT;
 		break;
 
-	case ADC_OVERSAMPLING_AND_DECIMATION_4BIT:
-		adjres = 0x04;
-		average = ADC_AVGCTRL_SAMPLENUM_256;
+	case ADC_RESOLUTION_16BIT:
+		/* Increase resolution by 4 bit */
+		adjres = ADC_DIVIDE_RESULT_16;
+		accumulate = ADC_ACCUMULATE_SAMPLES_256;
+		break;
+
+	case ADC_RESOLUTION_8BIT:
+		/* 8-bit result register */
+		resolution = ADC_RESOLUTION_8BIT;
+		break;
+	case ADC_RESOLUTION_10BIT:
+		/* 10-bit result register */
+		resolution = ADC_RESOLUTION_10BIT;
+		break;
+	case ADC_RESOLUTION_12BIT:
+		/* 12-bit result register */
+		resolution = ADC_RESOLUTION_12BIT;
 		break;
 
 	default:
@@ -147,14 +173,15 @@ static enum status_code _adc_set_config(
 		return STATUS_ERR_INVALID_ARG;
 	}
 
-	adc_module->AVGCTRL.reg = ADC_AVGCTRL_ADJRES(adjres) | average;
+	adc_module->AVGCTRL.reg = ADC_AVGCTRL_ADJRES(adjres) | accumulate;
 
 	/* Check validity of sample length value */
 	if (config->sample_length > 63) {
 		return STATUS_ERR_INVALID_ARG;
 	} else {
 		/* Configure sample length */
-		adc_module->SAMPCTRL.reg = (config->sample_length << ADC_SAMPCTRL_SAMPLEN_Pos);
+		adc_module->SAMPCTRL.reg =
+				(config->sample_length << ADC_SAMPCTRL_SAMPLEN_Pos);
 	}
 
 	while (adc_is_syncing(module_inst)) {
@@ -164,7 +191,7 @@ static enum status_code _adc_set_config(
 	/* Configure CTRLB */
 	adc_module->CTRLB.reg =
 			config->clock_prescaler |
-			config->resolution |
+			resolution |
 			(config->correction.correction_enable << ADC_CTRLB_CORREN_Pos) |
 			(config->freerunning << ADC_CTRLB_FREERUN_Pos) |
 			(config->left_adjust << ADC_CTRLB_LEFTADJ_Pos) |
@@ -172,7 +199,7 @@ static enum status_code _adc_set_config(
 
 	/* Check validity of window thresholds */
 	if (config->window.window_mode != ADC_WINDOW_MODE_DISABLE) {
-		switch (config->resolution) {
+		switch (resolution) {
 		case ADC_RESOLUTION_8BIT:
 			if (config->differential_mode &&
 					(config->window.window_lower_value > 127 ||
@@ -216,7 +243,8 @@ static enum status_code _adc_set_config(
 			}
 			break;
 		case ADC_RESOLUTION_16BIT:
-			if (config->differential_mode && (config->window.window_lower_value > 32767 ||
+			if (config->differential_mode &&
+					(config->window.window_lower_value > 32767 ||
 					config->window.window_lower_value < -32768 ||
 					config->window.window_upper_value > 32767 ||
 					config->window.window_upper_value < -32768)) {
@@ -243,14 +271,16 @@ static enum status_code _adc_set_config(
 	}
 
 	/* Configure lower threshold */
-	adc_module->WINLT.reg = config->window.window_lower_value << ADC_WINLT_WINLT_Pos;
+	adc_module->WINLT.reg = config->window.window_lower_value <<
+			ADC_WINLT_WINLT_Pos;
 
 	while (adc_is_syncing(module_inst)) {
 		/* Wait for synchronization */
 	}
 
 	/* Configure lower threshold */
-	adc_module->WINUT.reg = config->window.window_upper_value << ADC_WINUT_WINUT_Pos;
+	adc_module->WINUT.reg = config->window.window_upper_value <<
+			ADC_WINUT_WINUT_Pos;
 
 	uint8_t inputs_to_scan = config->pin_scan.inputs_to_scan;
 	if (inputs_to_scan > 0) {
@@ -273,7 +303,8 @@ static enum status_code _adc_set_config(
 	/* Configure pin scan mode and positive and negative input pins */
 	adc_module->INPUTCTRL.reg =
 			config->gain_factor |
-			(config->pin_scan.offset_start_scan << ADC_INPUTCTRL_INPUTOFFSET_Pos) |
+			(config->pin_scan.offset_start_scan <<
+			ADC_INPUTCTRL_INPUTOFFSET_Pos) |
 			(inputs_to_scan << ADC_INPUTCTRL_INPUTSCAN_Pos) |
 			config->negative_input |
 			config->positive_input;
@@ -281,8 +312,10 @@ static enum status_code _adc_set_config(
 	/* Configure events */
 	adc_module->EVCTRL.reg =
 			config->event.event_action |
-			(config->event.generate_event_on_window_monitor  << ADC_EVCTRL_WINMONEO_Pos) |
-			(config->event.generate_event_on_conversion_done << ADC_EVCTRL_RESRDYEO_Pos);
+			(config->event.generate_event_on_window_monitor  <<
+			ADC_EVCTRL_WINMONEO_Pos) |
+			(config->event.generate_event_on_conversion_done <<
+			ADC_EVCTRL_RESRDYEO_Pos);
 
 
 	/* Disable all interrupts */

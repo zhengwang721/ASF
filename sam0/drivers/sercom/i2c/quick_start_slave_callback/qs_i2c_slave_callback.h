@@ -117,13 +117,13 @@
  *
  * \subsection asfdoc_samd20_i2c_slave_callback_use_callback_workflow Workflow
  * - Read request callback:
- *  -# Length of buffer and buffer to be sent to master is initalized.
+ *  -# Length of buffer and buffer to be sent to master is initialized.
  *   \snippet qs_i2c_slave_callback.c packet_write
  *  -# Write packet to master.
  *   \snippet qs_i2c_slave_callback.c write_packet
  *
  * - Write request callback:
- *  -# Length of buffer and buffer to be read from master is initalized.
+ *  -# Length of buffer and buffer to be read from master is initialized.
  *   \snippet qs_i2c_slave_callback.c packet_read
  *  -# Read packet from master.
  *   \snippet qs_i2c_slave_callback.c read_packet
