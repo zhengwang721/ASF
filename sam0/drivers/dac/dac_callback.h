@@ -70,9 +70,11 @@ typedef void (*dac_callback_t)(uint8_t channel);
 /** Enum for the possible callback types for the DAC module. */
 enum dac_callback
 {
-	/** Callback type for when a DAC channel data empty condition occurs. */
+	/** Callback type for when a DAC channel data empty condition occurs
+	 *  (requires event triggered mode). */
 	DAC_CALLBACK_DATA_EMPTY,
-	/** Callback type for when a DAC channel data under-run condition occurs. */
+	/** Callback type for when a DAC channel data under-run condition occurs
+	 *  (requires event triggered mode). */
 	DAC_CALLBACK_DATA_UNDERRUN,
 #if !defined(__DOXYGEN__)
 	DAC_CALLBACK_N,

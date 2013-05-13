@@ -284,6 +284,9 @@
  *
  * The following Quick Start guides and application examples are available for this driver:
  * - \ref asfdoc_samd20_dac_basic_use_case
+ * \if DAC_CALLBACK_MODE
+ * - \ref asfdoc_samd20_dac_callback_use_case
+ * \endif
  *
  *
  * \section asfdoc_samd20_dac_api_overview API Overview
@@ -658,6 +661,9 @@ void dac_clear_status(
  * added to the user application.
  *
  *  - \subpage asfdoc_samd20_dac_basic_use_case
+ * \if DAC_CALLBACK_MODE
+ *  - \subpage asfdoc_samd20_dac_callback_use_case
+ * \endif
  */
 
 #endif /* DAC_H_INCLUDED */

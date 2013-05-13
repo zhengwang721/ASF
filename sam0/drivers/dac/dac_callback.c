@@ -56,8 +56,11 @@ struct dac_module *_dac_instances[DAC_INST_NUM];
  * \param[in]     type        Type of callback function to register
  *
  * \return Status of the registration operation.
- * \retval STATUS_OK               The callback was registered successfully.
- * \retval STATUS_ERR_INVALID_ARG  If an invalid callback type was supplied.
+ * \retval STATUS_OK                   The callback was registered successfully.
+ * \retval STATUS_ERR_INVALID_ARG      If an invalid callback type was supplied.
+ * \retval STATUS_ERR_UNSUPPORTED_DEV  If a callback that requires event driven
+ *                                     mode was specified with a DAC instance
+ *                                     configured in non-event mode.
  */
 enum status_code dac_register_callback(
 		struct dac_module *const dac_module,
@@ -67,6 +70,12 @@ enum status_code dac_register_callback(
 	/* Sanity check arguments */
 	Assert(dac_module);
 	Assert(callback);
+
+	/* DAC interrupts require it to be driven by events to work, fail if in
+	 * unbuffered (polled) mode */
+	if (dac_module->start_on_event == false) {
+		return STATUS_ERR_UNSUPPORTED_DEV;
+	}
 
 	if ((uint8_t)type < DAC_CALLBACK_N)
 	{
@@ -87,8 +96,11 @@ enum status_code dac_register_callback(
  * \param[in]     type        Type of callback function to unregister
  *
  * \return Status of the de-registration operation.
- * \retval STATUS_OK               The callback was Unregistered successfully.
- * \retval STATUS_ERR_INVALID_ARG  If an invalid callback type was supplied.
+ * \retval STATUS_OK                   The callback was unregistered successfully.
+ * \retval STATUS_ERR_INVALID_ARG      If an invalid callback type was supplied.
+ * \retval STATUS_ERR_UNSUPPORTED_DEV  If a callback that requires event driven
+ *                                     mode was specified with a DAC instance
+ *                                     configured in non-event mode.
  */
 enum status_code dac_unregister_callback(
 		struct dac_module *const dac_module,
@@ -97,6 +109,12 @@ enum status_code dac_unregister_callback(
 	/* Sanity check arguments */
 	Assert(dac_module);
 	Assert(callback);
+
+	/* DAC interrupts require it to be driven by events to work, fail if in
+	 * unbuffered (polled) mode */
+	if (dac_module->start_on_event == false) {
+		return STATUS_ERR_UNSUPPORTED_DEV;
+	}
 
 	if ((uint8_t)type < DAC_CALLBACK_N)
 	{
@@ -118,8 +136,11 @@ enum status_code dac_unregister_callback(
  * \param[in]     type        Type of callback function callbacks to enable
  *
  * \return Status of the callback enable operation.
- * \retval STATUS_OK               The callback was enabled successfully.
- * \retval STATUS_ERR_INVALID_ARG  If an invalid callback type was supplied.
+ * \retval STATUS_OK                   The callback was enabled successfully.
+ * \retval STATUS_ERR_INVALID_ARG      If an invalid callback type was supplied.
+ * \retval STATUS_ERR_UNSUPPORTED_DEV  If a callback that requires event driven
+ *                                     mode was specified with a DAC instance
+ *                                     configured in non-event mode.
  */
 enum status_code dac_chan_enable_callback(
 		struct dac_module *const dac_module,
@@ -133,6 +154,12 @@ enum status_code dac_chan_enable_callback(
 	UNUSED(channel);
 
 	Dac *const dac_hw = dac_module->hw_dev;
+
+	/* DAC interrupts require it to be driven by events to work, fail if in
+	 * unbuffered (polled) mode */
+	if (dac_module->start_on_event == false) {
+		return STATUS_ERR_UNSUPPORTED_DEV;
+	}
 
 	switch ((uint8_t)type)
 	{
@@ -158,8 +185,11 @@ enum status_code dac_chan_enable_callback(
  * \param[in]     type        Type of callback function callbacks to disable
  *
  * \return Status of the callback disable operation.
- * \retval STATUS_OK               The callback was disabled successfully.
- * \retval STATUS_ERR_INVALID_ARG  If an invalid callback type was supplied.
+ * \retval STATUS_OK                   The callback was disabled successfully.
+ * \retval STATUS_ERR_INVALID_ARG      If an invalid callback type was supplied.
+ * \retval STATUS_ERR_UNSUPPORTED_DEV  If a callback that requires event driven
+ *                                     mode was specified with a DAC instance
+ *                                     configured in non-event mode.
  */
 enum status_code dac_chan_disable_callback(
 		struct dac_module *const dac_module,
@@ -173,6 +203,12 @@ enum status_code dac_chan_disable_callback(
 	UNUSED(channel);
 
 	Dac *const dac_hw = dac_module->hw_dev;
+
+	/* DAC interrupts require it to be driven by events to work, fail if in
+	 * unbuffered (polled) mode */
+	if (dac_module->start_on_event == false) {
+		return STATUS_ERR_UNSUPPORTED_DEV;
+	}
 
 	switch ((uint8_t)type)
 	{
