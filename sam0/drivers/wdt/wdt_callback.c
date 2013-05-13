@@ -58,20 +58,20 @@
  * \retval STATUS_ERR_INVALID_ARG  If an invalid callback type was supplied.
  */
 enum status_code wdt_register_callback(
-	const wdt_callback_t callback,
-	const enum wdt_callback_type type)
+		const wdt_callback_t callback,
+		const enum wdt_callback type)
 {
 	/* Sanity check arguments */
 	Assert(callback);
 
 	switch (type)
 	{
-		case WDT_CALLBACK_TYPE_EARLY_WARNING:
-			_wdt_instance.early_warning_callback = callback;
-			return STATUS_OK;
-		default:
-			Assert(false);
-			return STATUS_ERR_INVALID_ARG;
+	case WDT_CALLBACK_EARLY_WARNING:
+		_wdt_instance.early_warning_callback = callback;
+		return STATUS_OK;
+	default:
+		Assert(false);
+		return STATUS_ERR_INVALID_ARG;
 	}
 }
 
@@ -88,16 +88,16 @@ enum status_code wdt_register_callback(
  * \retval STATUS_ERR_INVALID_ARG  If an invalid callback type was supplied.
  */
 enum status_code wdt_unregister_callback(
-	const enum wdt_callback_type type)
+		const enum wdt_callback type)
 {
 	switch (type)
 	{
-		case WDT_CALLBACK_TYPE_EARLY_WARNING:
-			_wdt_instance.early_warning_callback = NULL;
-			return STATUS_OK;
-		default:
-			Assert(false);
-			return STATUS_ERR_INVALID_ARG;
+	case WDT_CALLBACK_EARLY_WARNING:
+		_wdt_instance.early_warning_callback = NULL;
+		return STATUS_OK;
+	default:
+		Assert(false);
+		return STATUS_ERR_INVALID_ARG;
 	}
 }
 
@@ -114,18 +114,18 @@ enum status_code wdt_unregister_callback(
  * \retval STATUS_ERR_INVALID_ARG  If an invalid callback type was supplied.
  */
 enum status_code wdt_enable_callback(
-	const enum wdt_callback_type type)
+		const enum wdt_callback type)
 {
 	Wdt *const WDT_module = WDT;
 
 	switch (type)
 	{
-		case WDT_CALLBACK_TYPE_EARLY_WARNING:
-			WDT_module->INTENSET.reg = WDT_INTENSET_EW;
-			return STATUS_OK;
-		default:
-			Assert(false);
-			return STATUS_ERR_INVALID_ARG;
+	case WDT_CALLBACK_EARLY_WARNING:
+		WDT_module->INTENSET.reg = WDT_INTENSET_EW;
+		return STATUS_OK;
+	default:
+		Assert(false);
+		return STATUS_ERR_INVALID_ARG;
 	}
 }
 
@@ -141,18 +141,18 @@ enum status_code wdt_enable_callback(
  * \retval STATUS_ERR_INVALID_ARG  If an invalid callback type was supplied.
  */
 enum status_code wdt_disable_callback(
-	const enum wdt_callback_type type)
+		const enum wdt_callback type)
 {
 	Wdt *const WDT_module = WDT;
 
 	switch (type)
 	{
-		case WDT_CALLBACK_TYPE_EARLY_WARNING:
-			WDT_module->INTENCLR.reg = WDT_INTENCLR_EW;
-			return STATUS_OK;
-		default:
-			Assert(false);
-			return STATUS_ERR_INVALID_ARG;
+	case WDT_CALLBACK_EARLY_WARNING:
+		WDT_module->INTENCLR.reg = WDT_INTENCLR_EW;
+		return STATUS_OK;
+	default:
+		Assert(false);
+		return STATUS_ERR_INVALID_ARG;
 	}
 }
 

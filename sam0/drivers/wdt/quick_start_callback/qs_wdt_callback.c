@@ -84,11 +84,11 @@ void configure_wdt_callbacks(void)
 {
 	//! [setup_6]
 	wdt_register_callback(watchdog_early_warning_callback,
-		WDT_CALLBACK_TYPE_EARLY_WARNING);
+		WDT_CALLBACK_EARLY_WARNING);
 	//! [setup_6]
 
 	//! [setup_7]
-	wdt_enable_callback(WDT_CALLBACK_TYPE_EARLY_WARNING);
+	wdt_enable_callback(WDT_CALLBACK_EARLY_WARNING);
 	//! [setup_7]
 }
 //! [setup]
