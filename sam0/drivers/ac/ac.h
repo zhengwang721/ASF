@@ -255,6 +255,37 @@
 extern "C" {
 #endif
 
+#if AC_CALLBACK == true
+/** Enum for possible callback types for the AC module */
+enum ac_callback {
+	/** Callback for comparator 0 */
+	AC_CALLBACK_COMPARATOR_0  = AC_INTFLAG_COMP0_Pos,
+	/** Callback for comparator 1 */
+	AC_CALLBACK_COMPARATOR_1  = AC_INTFLAG_COMP1_Pos,
+#  if defined(__DOXYGEN__) || (AC_NUM_CMP > 2)
+	/** Callback for comparator 2 */
+	AC_CALLBACK_COMPARATOR_2  = AC_INTFLAG_COMP2_Pos,
+	/** Callback for comparator 3 */
+	AC_CALLBACK_COMPARATOR_3  = AC_INTFLAG_COMP3_Pos,
+#  endif /*  defined(__DOXYGEN__) || (AC_NUM_CMP > 2) */
+	/** Callback for window 0 */
+	AC_CALLBACK_WINDOW_0      = AC_INTFLAG_WIN0_Pos,
+#  if defined(__DOXYGEN__) || (AC_PAIRS > 1)
+	/** Callback for window 1 */
+	AC_CALLBACK_WINDOW_1      = AC_INTFLAG_WIN1_Pos,
+#  endif /* defined(__DOXYGEN__) || (AC_PAIRS > 1) */
+#  if !defined(__DOXYGEN__)
+	/** Number of available callbacks */
+#    if (AC_PAIRS < 1)
+	AC_CALLBACK_N = 3,
+#    endif /* (AC_PAIRS < 1) */
+#    if (AC_PAIRS > 1)
+	AC_CALLBACK_N = 6,
+#    endif /* (AC_PAIRS > 1) */
+#  endif /* !defined(__DOXYGEN__) */
+}
+#endif /* AC_CALLBACK == true */
+
 /**
  * \brief AC comparator channel selection enum.
  *
