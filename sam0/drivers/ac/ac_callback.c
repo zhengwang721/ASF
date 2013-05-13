@@ -67,6 +67,21 @@ enum status_code ac_register_callback(
 	Assert(module);
 	Assert(callback_func);
 
+#if (AC_NUM_CMP < 2)
+	/* Register callback function */
+	if (callback_type == AC_CALLBACK_WINDOW_0) {
+		module->callback[2] = callback_func;
+	}
+	else {
+		module->callback[callback_type] = callback_func;
+	}
+# endif /* (AC_NUM_CMP < 2) */
+
+	module->callback[callback_type] = callback_func;
+	/* Set software flag for callback */
+	module->register_callback_mask |= (1 << callback_type);
+
+	return STATUS_OK;
 }
 
 /**
@@ -84,6 +99,21 @@ enum status_code ac_unregister_callback(
 	/* Sanity check arguments */
 	Assert(module);
 
+#if (AC_NUM_CMP < 2)
+	/* Unregister callback function */
+	if (callback_type == AC_CALLBACK_WINDOW_0) {
+		module->callback[2] = NULL;
+	}
+	else {
+		module->callback[callback_type] = NULL;
+	}
+# endif /* (AC_NUM_CMP < 2) */
+	module->callback[callback_type] = NULL;
+
+	/* Set software flag for callback */
+	module->register_callback_mask |= (1 << callback_type);
+
+	return STATUS_OK;
 }
 
 /**
