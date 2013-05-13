@@ -330,9 +330,9 @@ enum events_edge {
  * digital clock synchronization settings for each channel.
  */
 enum events_path {
-	/** Event is synchronised to the digital clock. */
+	/** Event is synchronized to the digital clock. */
 	EVENT_PATH_SYNCHRONOUS   = 0,
-	/** Event is re-synchronised between the source and destination digital
+	/** Event is re-synchronized between the source and destination digital
 	 *  clock domains. */
 	EVENT_PATH_RESYNCHRONOUS = 1,
 	/** Event is asynchronous to the digital clock. */
@@ -355,7 +355,7 @@ struct events_chan_config {
 	/** Path of the event system, from \ref events_path. */
 	enum events_path path;
 	/** Event generator module that should be attached to the event channel,
-	 *  a \c EVSYS_ID_GEN_* constant from the device header files. */
+	 *  an \c EVSYS_ID_GEN_* constant from the device header files. */
 	uint8_t generator_id;
 	/** GCLK generator used to clock the specific event channel */
 	enum gclk_generator clock_source;
