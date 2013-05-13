@@ -89,8 +89,8 @@ extern "C" {
  *
  * \section dependencies Dependencies
  * This driver depends on the following modules:
- * - \ref asfdoc_samd20_sercom_port_group for IO port control.
- * - \ref asfdoc_samd20_sercom_system_group for getting system clock speeds for init functions.
+ * - \ref asfdoc_samd20_port_group for IO port control.
+ * - \ref asfdoc_samd20_system_group for getting system clock speeds for init functions.
  * - \ref asfdoc_samd20_sercom_spi_group for communication with the OLED controller
  * @{
  */
@@ -189,8 +189,6 @@ static inline uint8_t ssd1306_get_status(void)
  * \brief Perform a hard reset of the OLED controller
  *
  * This functions will reset the OLED controller by setting the reset pin low.
- * \note this functions should not be confused with the \ref ssd1306_soft_reset()
- * function, this command will control the RST pin.
  */
 static inline void ssd1306_hard_reset(void)
 {
