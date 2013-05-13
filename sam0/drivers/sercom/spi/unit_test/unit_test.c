@@ -611,7 +611,7 @@ int main(void)
 
 	/* Define the test suite */
 	DEFINE_TEST_SUITE(spi_test_suite, spi_tests,
-			"SAM0 SPI driver test suite");
+			"SAM D20 SPI driver test suite");
 
 	/* Run all tests in the suite*/
 	test_suite_run(&spi_test_suite);
