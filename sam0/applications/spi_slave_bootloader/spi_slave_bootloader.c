@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 Master SPI Slave Bootloader
+ * \brief SAM D20 SPI Slave Bootloader
  *
  * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
@@ -66,8 +66,8 @@
  * \section appdoc_samd20_spi_slave_bootloader_intro Introduction
  * As many electronic designs evolve rapidly there is a growing need for being
  * able to update products, which have already been shipped or sold.
- * Microcontrollers that support boot loader facilitates updating the
- * application flash section without the need of an external programmer, are of
+ * Microcontrollers that support bootloader which allows updating of the
+ * flash without the need of an external programmer, are of
  * great use in situations where the application has to be updated on the field.
  * The boot loader may use various interfaces like SPI, UART, TWI, Ethernet etc.
  * This application implements a SPI Slave bootloader for SAM D20.
@@ -211,7 +211,7 @@ static void program_memory(uint32_t address, uint8_t *buffer, uint16_t len)
 			len -= NVMCTRL_PAGE_SIZE;
 		}
 
-		/* Check if there is data remaining to be programmed*/
+		/* Check if there is data remaining to be programmed */
 		if (len > 0) {
 			/* Write the data to flash */
 			nvm_write_buffer(address, buffer + offset, len);
@@ -244,7 +244,7 @@ static void check_boot_mode(void)
 	uint32_t *app_check_address_ptr;
 
 	/* Check if WDT is locked */
-	if (!(WDT->CTRL.reg & WDT_CTRL_ALWAYSON)) {
+	if (WDT->CTRL.reg & WDT_CTRL_ALWAYSON) {
 		/* Watchdog always enabled, unsafe to program */
 		while (1);
 	}
@@ -262,7 +262,7 @@ static void check_boot_mode(void)
 	/* Read the BOOT_LOAD_PIN status */
 	boot_en = (boot_port->IN.reg) & GPIO_BOOT_PIN_MASK;
 
-	/* Check the BOOT pin or the reset cause is Watchdog */
+	/* Check the BOOT pin */
 	if (boot_en) {
 		app_check_address = APP_START_ADDRESS;
 		app_check_address_ptr = (uint32_t *) app_check_address;
@@ -344,6 +344,7 @@ int main(void)
 	static volatile uint32_t len = 0;
 	uint32_t remaining_len = 0;
 	uint32_t curr_prog_addr;
+	uint32_t tmp_len;
 	uint8_t buff[NVMCTRL_PAGE_SIZE];
 	struct nvm_config config;
 
@@ -374,17 +375,20 @@ int main(void)
 	remaining_len = len;
 
 	do {
+		/* Get remaining or NVMCTRL_PAGE_SIZE as block length */
+		tmp_len = min(NVMCTRL_PAGE_SIZE, len);
+
 		/* Read data of AT45DBX_SECTOR_SIZE */
-		fetch_data(buff, min(NVMCTRL_PAGE_SIZE, len));
+		fetch_data(buff, tmp_len);
 
 		/* Program the read data into Flash */
-		program_memory(curr_prog_addr, buff, min(NVMCTRL_PAGE_SIZE, len));
+		program_memory(curr_prog_addr, buff, tmp_len);
 
 		/* Increment the current programming address */
-		curr_prog_addr += min(NVMCTRL_PAGE_SIZE, len);
+		curr_prog_addr += tmp_len;
 
 		/* Calculate the remaining length */
-		remaining_len -= min(NVMCTRL_PAGE_SIZE, len);
+		remaining_len -= tmp_len;
 
 		/* Update the length to remaining length to be programmed */
 		len = remaining_len;
