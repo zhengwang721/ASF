@@ -90,6 +90,7 @@
 
 #if SAM
 #include "conf_twi_master.h"
+#include <string.h>
 #endif
 
 //! \name Local Configuration Constants
@@ -145,12 +146,14 @@ int main(void)
 
   // TWI master initialization options.
 
-  twi_master_options_t opt = {
-    .speed = TWI_SPEED,
-#if (!SAM4L)
-    .chip  = EEPROM_BUS_ADDR
+  twi_master_options_t opt;
+#if SAM
+  memset((void *)&opt, 0, sizeof(opt));
 #endif
-  };
+  opt.speed = TWI_SPEED;
+#if (!SAM4L)
+  opt.chip  = EEPROM_BUS_ADDR;
+#endif
 
   // Initialize the TWI master driver.
 
@@ -161,10 +164,16 @@ int main(void)
   LED_Off(LED0_GPIO);
 
   twi_package_t packet = {
-#if SAM3XA
+#if SAM
+#if (EEPROM_INTERNAL_ADDRESS_LENGTH == 0x02)
     .addr[0]      = EEPROM_MEM_ADDR >> 8, // TWI slave memory address data MSB
     .addr[1]      = EEPROM_MEM_ADDR,      // TWI slave memory address data LSB
     .addr_length  = sizeof (uint16_t),    // TWI slave memory address data size
+#endif
+#if (EEPROM_INTERNAL_ADDRESS_LENGTH == 0x01)
+	.addr[0]	  = EEPROM_MEM_ADDR,	  // TWI slave memory address data MSB
+	.addr_length  = sizeof (uint8_t),	  // TWI slave memory address data size
+#endif
 #else
     .addr[0]      = EEPROM_MEM_ADDR,      // TWI slave memory address data MSB
     .addr_length  = sizeof (uint8_t),     // TWI slave memory address data size
@@ -180,10 +189,16 @@ int main(void)
   uint8_t data_received[PATTERN_TEST_LENGTH] = {0};
 
   twi_package_t packet_received = {
-#if SAM3XA
+#if SAM
+#if (EEPROM_INTERNAL_ADDRESS_LENGTH == 0x02)
     .addr[0]      = EEPROM_MEM_ADDR >> 8, // TWI slave memory address data MSB
     .addr[1]      = EEPROM_MEM_ADDR,      // TWI slave memory address data LSB
     .addr_length  = sizeof (uint16_t),    // TWI slave memory address data size
+#endif
+#if (EEPROM_INTERNAL_ADDRESS_LENGTH == 0x01)
+    .addr[0]	  = EEPROM_MEM_ADDR,	  // TWI slave memory address data MSB
+    .addr_length  = sizeof (uint8_t),	  // TWI slave memory address data size
+#endif
 #else
     .addr[0]      = EEPROM_MEM_ADDR,      // TWI slave memory address data MSB
     .addr_length  = sizeof (uint8_t),     // TWI slave memory address data size

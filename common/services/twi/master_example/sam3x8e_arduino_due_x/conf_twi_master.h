@@ -48,6 +48,9 @@
  */
 //! @{
 #define TWI_EXAMPLE  BOARD_BASE_TWI_EEPROM
+
+/** Define the EEPROM internal address length */
+#define EEPROM_INTERNAL_ADDRESS_LENGTH 0x02
 //! @}
 
 #endif  // _CONF_TWI_MASTER_EXAMPLE_H
