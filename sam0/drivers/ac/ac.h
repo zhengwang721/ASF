@@ -465,6 +465,14 @@ enum ac_win_state {
 	AC_WIN_STATE_BELOW,
 };
 
+#if AC_CALLBACK == true
+/* Forward Declaration for the device instance */
+struct ac_module;
+
+/* Type of the callback functions */
+typedef void (*ac_callback_t)(struct ac_module *const module);
+#endif /* AC_CALLBACK == true */
+
 /**
  * \brief AC software device instance structure.
  *
