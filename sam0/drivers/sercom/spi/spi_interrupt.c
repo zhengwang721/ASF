@@ -193,7 +193,7 @@ static void _spi_read_buffer(
  *
  * \note The callback must be enabled by \ref spi_enable_callback, in order
  *       for the interrupt handler to call it when the conditions for the
- *       callback type is met.
+ *       callback type are met.
  *
  * \param[in]  module         Pointer to USART software instance struct
  * \param[in]  callback_func  Pointer to callback function

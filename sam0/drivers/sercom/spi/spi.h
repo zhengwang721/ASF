@@ -149,7 +149,7 @@
  * The SPI character size is configurable to 8 or 9 bits.
  *
  * \subsection asfdoc_samd20_sercom_spi_master_mode Master Mode
- * When configured as a master, the SS pin will be configured as an output..
+ * When configured as a master, the SS pin will be configured as an output.
  *
  * \subsubsection asfdoc_samd20_sercom_spi_master_mode_data_transfer Data Transfer
  * Writing a character will start the SPI clock generator, and

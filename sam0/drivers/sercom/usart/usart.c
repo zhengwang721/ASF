@@ -367,8 +367,8 @@ enum status_code usart_write_wait(
  *                                  due to configuration mismatch between USART
  *                                  and the sender
  * \retval STATUS_ERR_BAD_OVERFLOW  If the operation was not completed,
- *                                  due to the baud rate being to low or the
- *                                  system frequency being to high
+ *                                  due to the baud rate being too low or the
+ *                                  system frequency being too high
  * \retval STATUS_ERR_BAD_DATA      If the operation was not completed, due to
  *                                  data being corrupted
  */
@@ -539,8 +539,8 @@ enum status_code usart_write_buffer_wait(
  *                                  due to a configuration mismatch
  *                                  between USART and the sender
  * \retval STATUS_ERR_BAD_OVERFLOW  If the operation was not completed,
- *                                  due to the baud rate being to low or the
- *                                  system frequency being to high
+ *                                  due to the baud rate being too low or the
+ *                                  system frequency being too high
  * \retval STATUS_ERR_BAD_DATA      If the operation was not completed, due
  *                                  to data being corrupted
  */

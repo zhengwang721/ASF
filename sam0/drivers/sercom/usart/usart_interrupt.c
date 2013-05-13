@@ -111,7 +111,7 @@ void _usart_read_buffer(
  *
  * \note The callback must be enabled by \ref usart_enable_callback,
  *       in order for the interrupt handler to call it when the conditions for
- *       the callback type is met.
+ *       the callback type are met.
  *
  * \param[in]  module         Pointer to USART software instance struct
  * \param[in]  callback_func  Pointer to callback function
@@ -356,7 +356,7 @@ void usart_abort_job(
  *                                 by external noise.
  * \retval STATUS_ERR_BAD_FORMAT   The last operation was aborted due to a
  *                                 frame error.
- * \retval STATUS_ERR_OVERFLOW     The last operation was aborted due to an
+ * \retval STATUS_ERR_OVERFLOW     The last operation was aborted due to a
  *                                 buffer overflow.
  * \retval STATUS_ERR_INVALID_ARG  An invalid transceiver enum given.
  */
