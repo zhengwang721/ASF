@@ -42,6 +42,11 @@
  */
 #include "ac.h"
 
+#if AC_CALLBACK == true
+#  include "ac_callback.h"
+#endif /* AC_CALLBACK == true */
+
+
 static enum status_code _ac_set_config(
 		struct ac_module *const module_inst,
 		struct ac_config *const config)
