@@ -74,31 +74,40 @@ enum status_code ac_unregister_callback(
  * \param[in]     module Pointer to AC software instance struct
  * \param[in]     callback_type Callback type given by an enum
  */
-static inline void tc_enable_callback(
-		struct tc_module *const module,
-		const enum tc_callback callback_type)
+static inline void ac_enable_callback(
+		struct ac_module *const module,
+		const enum ac_callback callback_type)
 {
 	/* Sanity check arguments */
 	Assert(module);
 
+	/* Set software flag for the callback */
+	module->enable_callback_mask |= (1 << callback_type);
+	/* Enable the interrupt for the callback */
+	module->hw->COUNT8.INTENSET.reg = (1 << callback_type);
 }
 
 /**
  * \brief Disables callback
  *
  * Disables the callback function registered by the \ref
- * tc_register_callback, and the callback will not be called from the
+ * ac_register_callback, and the callback will not be called from the
  * interrupt routine. The function will also disable the appropriate
  * interrupts.
  *
- * \param[in]     module Pointer to TC software instance struct
+ * \param[in]     module Pointer to AC software instance struct
  * \param[in]     callback_type Callback type given by an enum
  */
-static inline void tc_disable_callback(
-		struct tc_module *const module,
-		const enum tc_callback callback_type){
+static inline void ac_disable_callback(
+		struct ac_module *const module,
+		const enum ac_callback callback_type){
 	/* Sanity check arguments */
 	Assert(module);
+
+	/* Set software flag for the callback */
+	module->enable_callback_mask |= (1 << callback_type);
+	/* Enable the interrupt for the callback */
+	module->hw->COUNT8.INTENCLR.reg = (1 << callback_type);
 
 }
 
