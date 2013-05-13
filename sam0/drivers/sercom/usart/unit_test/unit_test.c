@@ -213,8 +213,8 @@ static void run_buffer_write_blocking_read_interrupt_test
  * \internal
  * \brief Test initializing a module multiple times
  *
- * This test initializes a usart module many times to check that
- * it fials when the config is different and returns STATUS_OK
+ * This test initializes a USART module many times to check that
+ * it fails when the config is different and returns STATUS_OK
  * when it is the same
  *
  * \param test Current test case.

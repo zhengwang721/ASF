@@ -119,26 +119,26 @@ static enum status_code _usart_check_config(
 
 	switch (config->transfer_mode)
 	{
-		case USART_TRANSFER_SYNCHRONOUSLY:
-			if (!config->use_external_clock) {
-				status_code = _sercom_get_sync_baud_val(config->baudrate,
+	case USART_TRANSFER_SYNCHRONOUSLY:
+		if (!config->use_external_clock) {
+			status_code = _sercom_get_sync_baud_val(config->baudrate,
+					system_gclk_chan_get_hz(SERCOM_GCLK_ID), &baud);
+		}
+
+		break;
+
+	case USART_TRANSFER_ASYNCHRONOUSLY:
+		if (config->use_external_clock) {
+			status_code =
+					_sercom_get_async_baud_val(config->baudrate,
+						config->ext_clock_freq, &baud);
+		} else {
+			status_code =
+					_sercom_get_async_baud_val(config->baudrate,
 						system_gclk_chan_get_hz(SERCOM_GCLK_ID), &baud);
-			}
+		}
 
-			break;
-
-		case USART_TRANSFER_ASYNCHRONOUSLY:
-			if (config->use_external_clock) {
-				status_code =
-						_sercom_get_async_baud_val(config->baudrate,
-							config->ext_clock_freq, &baud);
-			} else {
-				status_code =
-						_sercom_get_async_baud_val(config->baudrate,
-							system_gclk_chan_get_hz(SERCOM_GCLK_ID), &baud);
-			}
-
-			break;
+		break;
 	}
 
 	if (status_code != STATUS_OK) {
@@ -146,7 +146,7 @@ static enum status_code _usart_check_config(
 		return STATUS_ERR_DENIED;
 	}
 
-	if (usart_hw->BAUD.reg !=  baud) {
+	if (usart_hw->BAUD.reg != baud) {
 		return STATUS_ERR_DENIED;
 	}
 
@@ -179,8 +179,7 @@ static enum status_code _usart_check_config(
 	if (usart_hw->CTRLA.reg == ctrla && usart_hw->CTRLB.reg == ctrlb) {
 		module->character_size = config->character_size;
 		return STATUS_OK;
-	}
-	else {
+	} else {
 		module->hw = NULL;
 		return STATUS_ERR_DENIED;
 	}
@@ -345,7 +344,7 @@ enum status_code usart_init(
 	uint32_t gclk_index   = sercom_index + SERCOM0_GCLK_ID_CORE;
 
 	if (usart_hw->CTRLA.reg & SERCOM_USART_CTRLA_SWRST) {
-		/* The module is busy resetting it self */
+		/* The module is busy resetting itself */
 		return STATUS_BUSY;
 	}
 
