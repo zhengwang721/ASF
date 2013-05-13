@@ -163,8 +163,6 @@ enum status_code wdt_init(
 
 #if WDT_CALLBACK_MODE == true
 	_wdt_instance.early_warning_callback = NULL;
-
-	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_WDT);
 #endif
 
 	/* Write configuration to module */
@@ -202,6 +200,10 @@ enum status_code wdt_enable(void)
 	} else {
 		WDT_module->CTRL.reg |= WDT_CTRL_ENABLE;
 	}
+
+#if WDT_CALLBACK_MODE == true
+	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_WDT);
+#endif
 
 	return STATUS_OK;
 }
