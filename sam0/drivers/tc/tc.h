@@ -455,7 +455,7 @@ enum tc_callback {
  */
 #define TC_STATUS_CHANNEL_0_MATCH    (1UL << 0)
 
-/** Timer channel 1 has matched against its compare value, or a has captured a
+/** Timer channel 1 has matched against its compare value, or has captured a
  *  new value.
  */
 #define TC_STATUS_CHANNEL_1_MATCH    (1UL << 1)
