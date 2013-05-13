@@ -374,9 +374,9 @@ void dac_chan_disable_output_buffer(
  * This function writes to the DATA or DATABUF register.
  * If the conversion is not event-triggered, the data will be written to
  * the DATA register and the conversion will start.
- * If the conversion is event-triggered, the data will written to DATABUF and
- * transferred to the DATA register and converted when a Start Conversion Event
- * is issued.
+ * If the conversion is event-triggered, the data will be written to DATABUF
+ * and transferred to the DATA register and converted when a Start Conversion
+ * Event is issued.
  * Conversion data must be right or left adjusted according to configuration
  * settings.
  * \note To be event triggered, the enable_start_on_event must be
@@ -430,7 +430,7 @@ enum status_code dac_chan_write(
  * \retval DAC_STATUS_CHANNEL_0_EMPTY    Data has been transferred from DATABUF
  *                                       to DATA by a start conversion event
  *                                       and DATABUF is ready for new data.
- * \retval DAC_STATUS_CHANNEL_0_UNDERRUN A start conversion event has occured
+ * \retval DAC_STATUS_CHANNEL_0_UNDERRUN A start conversion event has occurred
  *                                       when DATABUF is empty
  *
  */
