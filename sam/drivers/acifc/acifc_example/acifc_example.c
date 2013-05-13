@@ -47,7 +47,7 @@
  * \section Purpose
  *
  * The Analog Comparator Interfacer example demonstrates how to use the ACIFC
- * peripheral to detect comparison event on the input pair.
+ * peripheral to get comparison result of the input pair.
  *
  * \section Requirements
  *
@@ -56,17 +56,10 @@
  *
  * \section Description
  *
- * The acifc_irq is aimed to demonstrate the usage of ACIFC peripheral with
- * interrupt support. The PA06 and PA07 are selected as two inputs.
- * On SAM4L-EK board, connect PA06 (J100.2) with ADC SENSOR VBAT(J105.1),
- * and PA07(J4.4) with GND(J4.9) or 3.3V(J4.10).
- * On SAM4L Xplained Pro board, connect PA06 (EXT3/PIN9) with GND(EXT3/PIN19)
- * and PA07(EXT2/PIN3) with VCC(EXT2/PIN20), or connect PA06 (EXT3/PIN9) with
- * VCC(EXT3/PIN20) and PA07(EXT2/PIN3) with GND(EXT2/PIN19).
- *
- * The comparison event would be generated if the voltage of one input is
- * changed across the voltage of the other input. Both bigger and less events
- * could be triggered by default.
+ * This example is aimed to demonstrate the usage of ACIFC peripheral with
+ * interrupt support. The PA06 and PA07 are selected as two inputs. The
+ * connection can be:
+ * \copydoc acifc_example_pins_def
  *
  * \section Usage
  *
@@ -84,10 +77,10 @@
  *     -- xxxxxx-xx
  *     -- Compiled: xxx xx xxxx xx:xx:xx --
  *    \endcode
- * -# The application will output then a different message if PA06 lower or
+ * -# The application will then output a different message if PA06 lower or
  * higher than PA07.
- *      -ISR- Voltage Comparison Result: ACAP0 > ACAN0
- *      -ISR- Voltage Comparison Result: ACAP0 < ACAN0
+ *   - -ISR- Voltage Comparison Result: ACAP0 > ACAN0
+ *   - -ISR- Voltage Comparison Result: ACAP0 < ACAN0
  */
 #include "asf.h"
 #include "stdio_serial.h"
