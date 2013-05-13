@@ -137,11 +137,11 @@ enum status_code extint_unregister_callback(
  * and type. This must be called before an external interrupt channel will
  * generate callback events.
  *
- * \param[in] channel  Logical channel to enable callback generations for
+ * \param[in] channel  Logical channel to enable callback generation for
  * \param[in] type     Type of callback function callbacks to enable
  *
  * \return Status of the callback enable operation.
- * \retval STATUS_OK               The callbacks was enabled successfully.
+ * \retval STATUS_OK               The callback was enabled successfully.
  * \retval STATUS_ERR_INVALID_ARG  If an invalid callback type was supplied.
  */
 enum status_code extint_chan_enable_callback(
@@ -167,11 +167,11 @@ enum status_code extint_chan_enable_callback(
  * Disables asynchronous callbacks for a given logical external interrupt
  * channel and type.
  *
- * \param[in] channel  Logical channel to disable callback generations for
+ * \param[in] channel  Logical channel to disable callback generation for
  * \param[in] type     Type of callback function callbacks to disable
  *
  * \return Status of the callback disable operation.
- * \retval STATUS_OK               The callbacks was disabled successfully.
+ * \retval STATUS_OK               The callback was disabled successfully.
  * \retval STATUS_ERR_INVALID_ARG  If an invalid callback type was supplied.
  */
 enum status_code extint_chan_disable_callback(

@@ -59,7 +59,8 @@
  * \retval STATUS_OK              Registering was done successfully
  * \retval STATUS_ERR_INVALID_ARG If trying to register a callback not available
  */
-enum status_code rtc_count_register_callback(rtc_count_callback_t callback,
+enum status_code rtc_count_register_callback(
+		rtc_count_callback_t callback,
 		enum rtc_count_callback callback_type)
 {
 
@@ -153,10 +154,10 @@ enum status_code rtc_count_unregister_callback(
  *
  * Enables the callback specified by the callback_type.
  *
- * \param[in,out] module        Pointer to the software module struct
  * \param[in]     callback_type Callback type to enable
  */
-void rtc_count_enable_callback(enum rtc_count_callback callback_type)
+void rtc_count_enable_callback(
+		enum rtc_count_callback callback_type)
 {
 	/* Initialize hardware module pointer */
 	Rtc *const rtc_hw = RTC;
@@ -177,7 +178,8 @@ void rtc_count_enable_callback(enum rtc_count_callback callback_type)
  *
  * \param[in]     callback_type Callback type to disable
  */
-void rtc_count_disable_callback(enum rtc_count_callback callback_type)
+void rtc_count_disable_callback(
+		enum rtc_count_callback callback_type)
 {
 	/* Initialize hardware module pointer */
 	Rtc *const rtc_hw = RTC;

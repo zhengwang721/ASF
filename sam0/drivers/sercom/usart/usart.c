@@ -201,6 +201,10 @@ static enum status_code _usart_set_config(
 	/* Get a pointer to the hardware module instance */
 	SercomUsart *const usart_hw = &(module->hw->USART);
 
+	/* Index for generic clock */
+	uint32_t sercom_index = _sercom_get_sercom_inst_index(module->hw);
+	uint32_t gclk_index   = sercom_index + SERCOM0_GCLK_ID_CORE;
+
 	/* Cache new register values to minimize the number of register writes */
 	uint32_t ctrla = 0;
 	uint32_t ctrlb = 0;
@@ -218,7 +222,7 @@ static enum status_code _usart_set_config(
 		case USART_TRANSFER_SYNCHRONOUSLY:
 			if (!config->use_external_clock) {
 				status_code = _sercom_get_sync_baud_val(config->baudrate,
-						system_gclk_chan_get_hz(SERCOM_GCLK_ID), &baud);
+						system_gclk_chan_get_hz(gclk_index), &baud);
 			}
 
 			break;
@@ -231,7 +235,7 @@ static enum status_code _usart_set_config(
 			} else {
 				status_code =
 						_sercom_get_async_baud_val(config->baudrate,
-							system_gclk_chan_get_hz(SERCOM_GCLK_ID), &baud);
+							system_gclk_chan_get_hz(gclk_index), &baud);
 			}
 
 			break;
@@ -541,7 +545,7 @@ enum status_code usart_read_wait(
 	/* Wait until synchronization is complete */
 	_usart_wait_for_sync(module);
 
-	/* Read out the status code and mask away all but the 4 LSBs*/
+	/* Read out the status code and mask away all but the 3 LSBs*/
 	error_code = (uint8_t)(usart_hw->STATUS.reg & SERCOM_USART_STATUS_MASK);
 
 	/* Check if an error has occurred during the receiving */

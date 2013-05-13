@@ -53,6 +53,15 @@ static enum status_code _ac_set_config(
 
 	Ac *const ac_module = module_inst->hw;
 
+	/* Set up GCLK */
+	struct system_gclk_chan_config gclk_chan_conf;
+	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
+	gclk_chan_conf.source_generator = config->source_generator;
+	system_gclk_chan_set_config(AC_GCLK_ID_DIG, &gclk_chan_conf);
+	system_gclk_chan_set_config(AC_GCLK_ID_ANA, &gclk_chan_conf);
+	system_gclk_chan_enable(AC_GCLK_ID_DIG);
+	system_gclk_chan_enable(AC_GCLK_ID_ANA);
+
 	/* Use a temporary register for computing the control bits */
 	uint32_t ctrla_temp = 0;
 
@@ -124,8 +133,6 @@ enum status_code ac_init(
 		Ac *const hw,
 		struct ac_config *const config)
 {
-	struct system_gclk_chan_config gclk_chan_conf;
-
 	/* Sanity check arguments */
 	Assert(module_inst);
 	Assert(hw);
@@ -134,10 +141,8 @@ enum status_code ac_init(
 	/* Initialize device instance */
 	module_inst->hw = hw;
 
-	/* Set up GCLK */
-	gclk_chan_conf.source_generator = config->source_generator;
-	system_gclk_chan_set_config(AC_GCLK_ID_DIG, &gclk_chan_conf);
-	system_gclk_chan_enable(AC_GCLK_ID_DIG);
+	/* Turn on the digital interface clock */
+	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, PM_APBCMASK_AC);
 
 	/* Write configuration to module */
 	return _ac_set_config(module_inst, config);
@@ -149,8 +154,8 @@ enum status_code ac_init(
  *  module.
  *
  *  \param[in] module_inst  Software instance for the Analog Comparator peripheral
- *  \param[in] channel   Analog Comparator channel to configure
- *  \param[in] config    Pointer to the channel configuration struct
+ *  \param[in] channel      Analog Comparator channel to configure
+ *  \param[in] config       Pointer to the channel configuration struct
  */
 enum status_code ac_chan_set_config(
 		struct ac_module *const module_inst,
@@ -203,7 +208,7 @@ enum status_code ac_chan_set_config(
  *  Writes a given Analog Comparator Window channel configuration to the hardware
  *  module.
  *
- *  \param[in] module_inst     Software instance for the Analog Comparator peripheral
+ *  \param[in] module_inst  Software instance for the Analog Comparator peripheral
  *  \param[in] win_channel  Analog Comparator window channel to configure
  *  \param[in] config       Pointer to the window channel configuration struct
  */
@@ -279,7 +284,7 @@ enum status_code ac_win_set_config(
  *        forming each window comparator pair must have identical configurations
  *        other than the negative pin multiplexer setting.
  *
- *  \param[in] module_inst     Software instance for the Analog Comparator peripheral
+ *  \param[in] module_inst  Software instance for the Analog Comparator peripheral
  *  \param[in] win_channel  Comparator window channel to enable
  *
  *  \return Status of the window enable procedure.
@@ -343,7 +348,7 @@ enum status_code ac_win_enable(
  *  Stops an Analog Comparator window channel that was previously started via a
  *  call to \ref ac_win_enable().
  *
- *  \param[in] module_inst     Software instance for the Analog Comparator peripheral
+ *  \param[in] module_inst  Software instance for the Analog Comparator peripheral
  *  \param[in] win_channel  Comparator window channel to disable
  */
 void ac_win_disable(
@@ -380,7 +385,7 @@ void ac_win_disable(
  *  Retrieves the current window detection state, indicating what the input
  *  signal is currently comparing to relative to the window boundaries.
  *
- *  \param[in] module_inst     Software instance for the Analog Comparator peripheral
+ *  \param[in] module_inst  Software instance for the Analog Comparator peripheral
  *  \param[in] win_channel  Comparator Window channel to test
  *
  *  \return Current window comparison state.

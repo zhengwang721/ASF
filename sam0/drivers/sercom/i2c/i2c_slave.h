@@ -87,7 +87,7 @@ enum i2c_slave_callback {
 	 * Callback for write request from master - can be used to issue a read
 	 */
 	I2C_SLAVE_CALLBACK_WRITE_REQUEST,
-	/** Callback for error. */
+	/** Callback for error */
 	I2C_SLAVE_CALLBACK_ERROR,
 	/**
 	 * Callback for error in last transfer. Discovered on a new address
@@ -226,21 +226,21 @@ struct i2c_slave_config {
 	/** Address mask, second address or lower limit of address range */
 	uint8_t address_mask;
 	/**
-	 * Enable general call address recognition. General call address
-	 * is defined as 0000000 with dir bit 0
+	 * Enable general call address recognition (general call address
+	 * is defined as 0000000 with direction bit 0)
 	 */
 	bool enable_general_call_address;
 #  if I2C_SLAVE_CALLBACK_MODE == true
 	/**
-	 * Enable NAK on address match. Can be changed after initialization via the
-	 * \ref i2c_slave_enable_nack_on_address and
-	 * \ref i2c_slave_disable_nack_on_address functions.
+	 * Enable NACK on address match (this can be changed after initialization
+	 * via the \ref i2c_slave_enable_nack_on_address and
+	 * \ref i2c_slave_disable_nack_on_address functions)
 	 */
 	bool enable_nack_on_address;
 #  endif
-	/** GCLK generator to use as clock source. */
+	/** GCLK generator to use as clock source */
 	enum gclk_generator generator_source;
-	/** Set to keep module active in sleep modes. */
+	/** Set to keep module active in sleep modes */
 	bool run_in_standby;
 	/** PAD0 (SDA) pinmux */
 	uint32_t pinmux_pad0;
@@ -362,10 +362,6 @@ static inline void i2c_slave_enable(
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
 
 #if I2C_SLAVE_CALLBACK_MODE == true
-	/* Enable interrupts */
-	i2c_hw->INTENSET.reg = SERCOM_I2CS_INTENSET_PREC |
-			SERCOM_I2CS_INTENSET_AMATCH | SERCOM_I2CS_INTENSET_DRDY;
-
 	/* Enable global interrupt for module */
 	system_interrupt_enable(_sercom_get_interrupt_vector(module->hw));
 #endif
@@ -432,6 +428,8 @@ enum status_code i2c_slave_read_packet_wait(
 		struct i2c_slave_module *const module,
 		struct i2c_packet *const packet);
 enum i2c_slave_direction i2c_slave_get_direction_wait(
+		struct i2c_slave_module *const module);
+enum i2c_slave_direction i2c_slave_get_direction(
 		struct i2c_slave_module *const module);
 
 /** @} */

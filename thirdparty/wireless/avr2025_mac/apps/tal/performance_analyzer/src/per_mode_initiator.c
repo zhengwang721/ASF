@@ -2257,7 +2257,7 @@ static void set_channel(uint8_t channel)
         }
         else
         {
-#if(TAL_TYPE == AT86RF212)
+#if ( (TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B) )
             int8_t dbm_val =0;
             uint8_t tx_pwr =0;
 #endif
@@ -2270,7 +2270,7 @@ static void set_channel(uint8_t channel)
 
             /* Update the database */
             curr_trx_config_params.channel = channel;
-#if(TAL_TYPE == AT86RF212)
+#if ( (TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B) )
             tal_pib_get(phyTransmitPower, &tx_pwr);
             dbm_val = CONV_phyTransmitPower_TO_DBM(tx_pwr);
             curr_trx_config_params.tx_power_dbm = dbm_val;
@@ -2330,7 +2330,7 @@ static void set_channel_page(uint8_t channel_page)
                 }
                 else
                 {
-#if(TAL_TYPE == AT86RF212)
+#if ( (TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B) )
                     uint8_t channel;
                     int8_t dbm_val =0;
                     uint8_t tx_pwr =0;
@@ -2339,7 +2339,7 @@ static void set_channel_page(uint8_t channel_page)
 
                     /* update the data base with this value */
                     curr_trx_config_params.channel_page = channel_page;
-#if(TAL_TYPE == AT86RF212)
+#if ( (TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B) )
                     tal_pib_get(phyCurrentChannel, &channel);
                     curr_trx_config_params.channel = channel;
                     tal_pib_get(phyTransmitPower, &tx_pwr);
@@ -3921,7 +3921,7 @@ uint8_t get_param_length(uint8_t param_type)
  */
 static bool validate_tx_power(int8_t dbm_value)
 {
-
+#if (TAL_TYPE == AT86RF212)
     uint8_t ch_page ;
     tal_pib_get(phyCurrentPage, &ch_page);
     /* Check for MIN Tx power for any case */
@@ -3956,7 +3956,7 @@ static bool validate_tx_power(int8_t dbm_value)
                 {
                     if (0 == tal_pib.CurrentChannel)
                     {
-                        if (dbm_value > 3 ) /* MAX_TX_PWR_OQPSK_100 */
+                        if (dbm_value > 2 ) /* MAX_TX_PWR_OQPSK_100 */
                         {
                             return (false);
                         }
@@ -3973,21 +3973,31 @@ static bool validate_tx_power(int8_t dbm_value)
             case 5: /* China, O-QPSK */
 #ifdef HIGH_DATA_RATE_SUPPORT
             case 18: /* Chinese O-QPSK 500 */
-            case 19: /* Chinese O-QPSK 1000 */
 #endif
                 {
-                    if (dbm_value > 5 ) /* MAX_TX_PWR_CHINA */
+                    if (dbm_value > 8 ) /* MAX_TX_PWR_CHINA */
                     {
                         return (false);;
                     }
                 }
                 break;
 #ifdef HIGH_DATA_RATE_SUPPORT
+            case 19: /* Chinese O-QPSK 1000 */
+
+                {
+                    if (dbm_value > 5 ) /* MAX_TX_PWR_CHINA_1000 */
+                    {
+                        return (false);;
+                    }
+                }
+                break;
+#endif                
+#ifdef HIGH_DATA_RATE_SUPPORT
             case 16: /* O-QPSK 200, 500 */
                 {
                     if (0 == tal_pib.CurrentChannel)
                     {
-                        if (dbm_value >  3 ) /* MAX_TX_PWR_OQPSK_200 */
+                        if (dbm_value >  2 ) /* MAX_TX_PWR_OQPSK_200 */
                         {
                             return (false);
                         }
@@ -4005,7 +4015,7 @@ static bool validate_tx_power(int8_t dbm_value)
                 {
                     if (0 == tal_pib.CurrentChannel)
                     {
-                        if (dbm_value >  3) /* MAX_TX_PWR_OQPSK_400 */
+                        if (dbm_value >  2) /* MAX_TX_PWR_OQPSK_400 */
                         {
                             return (false);
                         }
@@ -4025,6 +4035,125 @@ static bool validate_tx_power(int8_t dbm_value)
         }
     }
     return true;
+    
+
+#elif (TAL_TYPE == AT86RF212B)
+     uint8_t ch_page ;
+    tal_pib_get(phyCurrentPage, &ch_page);
+    /* Check for MIN Tx power for any case */
+    if (dbm_value < -25)
+    {
+        return(false);
+    }
+    else
+    {
+        switch (ch_page)
+        {
+
+            case 0: /* BPSK */
+                {
+                    if (0 == tal_pib.CurrentChannel)
+                    {
+                        if (dbm_value > 6) /*MAX_TX_PWR_BPSK_20*/
+                        {
+                            return (false);
+                        }
+                    }
+                    else    /* channels 1-10 */
+                    {
+                        if (dbm_value > 11 )  /* MAX_TX_PWR */
+                        {
+                            return (false);
+                        }
+                    }
+                }
+                break;
+            case 2: /* O-QPSK */
+                {
+                    if (0 == tal_pib.CurrentChannel)
+                    {
+                        if (dbm_value > 3 ) /* MAX_TX_PWR_OQPSK_100 */
+                        {
+                            return (false);
+                        }
+                    }
+                    else    /* channels 1-10 */
+                    {
+                        if (dbm_value > 11 ) /* MAX_TX_PWR */
+                        {
+                            return (false);
+                        }
+                    }
+                }
+                break;
+            case 5:/* China, O-QPSK: only channels 0 to 3 allowed */
+                {
+                    if (dbm_value > 10)
+                    {
+                        return(false);
+                    }
+                }
+                break;
+#ifdef HIGH_DATA_RATE_SUPPORT
+            case 18: /* Chinese O-QPSK 500 */
+                {
+                    if (dbm_value > 10)
+                    {
+                        return(false);
+                    }
+                }
+                break;
+            case 19: /* Chinese O-QPSK 1000 */
+                {
+                    if (dbm_value > 10 ) /* MAX_TX_PWR_CHINA */
+                    {
+                        return (false);
+                    }
+                }
+                break;
+            case 16: /* O-QPSK 200, 500 */
+                {
+                    if (0 == tal_pib.CurrentChannel)
+                    {
+                        if (dbm_value >  3 ) /* MAX_TX_PWR_OQPSK_200 */
+                        {
+                            return (false);
+                        }
+                    }
+                    else    /* channels 1-10 */
+                    {
+                        if (dbm_value > 11 ) /* MAX_TX_PWR_OQPSK_500 */
+                        {
+                            return (false);
+                        }
+                    }
+                }
+                break;
+            case 17: /* O-QPSK 400, 1000 */
+                {
+                    if (0 == tal_pib.CurrentChannel)
+                    {
+                        if (dbm_value >  3) /* MAX_TX_PWR_OQPSK_400 */
+                        {
+                            return (false);
+                        }
+                    }
+                    else    /* channels 1-10 */
+                    {
+                        if (dbm_value > 11 ) /* MAX_TX_PWR_OQPSK_1000 */
+                        {
+                            return (false);
+                        }
+                    }
+                }
+                break;
+            default: /* Do nothing */
+                break;
+#endif  /* #ifdef HIGH_DATA_RATE_SUPPORT */
+        }
+    }
+    return true;
+#endif //TAL_TYPE=212B
 }
 
 #endif

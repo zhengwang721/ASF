@@ -275,10 +275,7 @@ void system_clock_source_dfll_set_config(
 
 	/* Enable the DFLL, as all the DFLL core registers are clocked
 	 * by the DFLL output */
-	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_DFLL, false);
-
-	SYSCTRL->DFLLCTRL.reg = 0;
-
+	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_DFLL);
 
 	/* Write Fine and Coarse values for open loop mode */
 	_system_dfll_wait_for_sync();
@@ -294,11 +291,7 @@ void system_clock_source_dfll_set_config(
 			(uint32_t)config->run_in_standby << SYSCTRL_DFLLCTRL_RUNSTDBY_Pos |
 			(uint32_t)config->on_demand << SYSCTRL_DFLLCTRL_ONDEMAND_Pos;
 
-
-	_system_dfll_wait_for_sync();
-	SYSCTRL->DFLLCTRL.reg |= temp;
-
-	if (config->loop == SYSTEM_CLOCK_DFLL_CLOSED_LOOP) {
+	if (config->loop_mode == SYSTEM_CLOCK_DFLL_LOOP_MODE_CLOSED) {
 		_system_dfll_wait_for_sync();
 		SYSCTRL->DFLLMUL.reg =
 				SYSCTRL_DFLLMUL_CSTEP(config->coarse_max_step) |
@@ -306,9 +299,12 @@ void system_clock_source_dfll_set_config(
 				SYSCTRL_DFLLMUL_MUL(config->multiply_factor);
 
 		/* Enable the closed loop mode */
-		_system_dfll_wait_for_sync();
-		SYSCTRL->DFLLCTRL.reg |= config->loop;
+		temp |= config->loop_mode;
 	}
+
+	/* Set configuration to DFLL */
+	_system_dfll_wait_for_sync();
+	SYSCTRL->DFLLCTRL.reg |= temp;
 }
 
 /**
@@ -382,50 +378,39 @@ enum status_code system_clock_source_write_calibration(
  *
  * Enables a clock source which has been previously configured.
  *
- * \param[in] block_until_ready  Block until the clock source has been enabled
- *                               or until timeout
  * \param[in] clock_source       Clock source to enable
  *
  * \retval STATUS_OK               Clock source was enabled successfully and
  *                                 is ready
  * \retval STATUS_ERR_INVALID_ARG  The clock source is not available on this
  *                                 device
- * \retval STATUS_TIMEOUT          The clock source did not start (timeout)
  */
-
 enum status_code system_clock_source_enable(
-		const enum system_clock_source clock_source,
-		const bool block_until_ready)
+		const enum system_clock_source clock_source)
 {
-	uint32_t waitmask;
-
 	switch (clock_source) {
 		case SYSTEM_CLOCK_SOURCE_OSC8M:
 			SYSCTRL->OSC8M.reg |= SYSCTRL_OSC8M_ENABLE;
-			/* Not possible to wait for ready, so we return */
 			return STATUS_OK;
 
 		case SYSTEM_CLOCK_SOURCE_OSC32K:
 			SYSCTRL->OSC32K.reg |= SYSCTRL_OSC32K_ENABLE;
-			waitmask = SYSCTRL_PCLKSR_OSC32KRDY;
 			break;
 
 		case SYSTEM_CLOCK_SOURCE_XOSC:
 			SYSCTRL->XOSC.reg |= SYSCTRL_XOSC_ENABLE;
-			waitmask = SYSCTRL_PCLKSR_XOSCRDY;
 			break;
 
 		case SYSTEM_CLOCK_SOURCE_XOSC32K:
 			SYSCTRL->XOSC32K.reg |= SYSCTRL_XOSC32K_ENABLE;
-			waitmask = SYSCTRL_PCLKSR_XOSC32KRDY;
 			break;
 
 		case SYSTEM_CLOCK_SOURCE_DFLL:
-			SYSCTRL->DFLLSYNC.bit.READREQ = 1;
 			_system_dfll_wait_for_sync();
 
-			SYSCTRL->DFLLCTRL.reg |= SYSCTRL_DFLLCTRL_ENABLE;
-			waitmask = SYSCTRL_PCLKSR_DFLLRDY;
+			/* Will erase current config as read-modify-write is not possible
+			   while DFLL is not running */
+			SYSCTRL->DFLLCTRL.reg = SYSCTRL_DFLLCTRL_ENABLE;
 			break;
 		case SYSTEM_CLOCK_SOURCE_ULP32K:
 			/* Always enabled */
@@ -434,17 +419,6 @@ enum status_code system_clock_source_enable(
 		default:
 			Assert(!"Invalid clock source supplied");
 			return STATUS_ERR_INVALID_ARG;
-	}
-
-	if (block_until_ready == true) {
-		/* Wait for the clock source to be ready or timeout */
-		for (uint32_t timeout = 0; timeout < CONF_CLOCK_TIMEOUT; timeout++) {
-			if (SYSCTRL->PCLKSR.reg & waitmask) {
-				return STATUS_OK;
-			}
-		}
-
-		return STATUS_ERR_TIMEOUT;
 	}
 
 	return STATUS_OK;
@@ -547,6 +521,30 @@ bool system_clock_source_is_ready(
 	}
 }
 
+/* Include some checks for conf_clocks.h validation */
+#include "clock_config_check.h"
+
+#if !defined(__DOXYGEN__)
+/** \internal
+ *
+ * Configures a Generic Clock Generator with the configuration from \c conf_clocks.h.
+ */
+#  define _CONF_CLOCK_GCLK_CONFIG(n, unused) \
+	if (CONF_CLOCK_GCLK_##n##_ENABLE == true) { \
+		struct system_gclk_gen_config gclk_conf;                          \
+		system_gclk_gen_get_config_defaults(&gclk_conf);                  \
+		gclk_conf.source_clock    = CONF_CLOCK_GCLK_##n##_CLOCK_SOURCE;   \
+		gclk_conf.division_factor = CONF_CLOCK_GCLK_##n##_PRESCALER;      \
+		gclk_conf.run_in_standby  = CONF_CLOCK_GCLK_##n##_RUN_IN_STANDBY; \
+		gclk_conf.output_enable   = CONF_CLOCK_GCLK_##n##_OUTPUT_ENABLE;  \
+		system_gclk_gen_set_config(GCLK_GENERATOR_##n, &gclk_conf);       \
+		system_gclk_gen_enable(GCLK_GENERATOR_##n);                       \
+	}
+
+#  define _CONF_CLOCK_GCLK_CONFIG_NONMAIN(n, unused) \
+		if (n > 0) { _CONF_CLOCK_GCLK_CONFIG(n, unused); }
+#endif
+
 /**
  * \brief Initialize clock system based on the configuration in conf_clocks.h
  *
@@ -556,17 +554,13 @@ bool system_clock_source_is_ready(
  */
 void system_clock_init(void)
 {
-#ifndef CONF_CLOCK_FLASH_WAIT_STATES
-	system_flash_set_waitstates(2);
-#else
 	system_flash_set_waitstates(CONF_CLOCK_FLASH_WAIT_STATES);
-#endif
 
 	/* XOSC */
 #if CONF_CLOCK_XOSC_ENABLE == true
 	struct system_clock_source_xosc_config xosc_conf;
-
 	system_clock_source_xosc_get_default_config(&xosc_conf);
+
 	xosc_conf.external_clock       = CONF_CLOCK_XOSC_EXTERNAL_CRYSTAL;
 	xosc_conf.startup_time         = CONF_CLOCK_XOSC_STARTUP_TIME;
 	xosc_conf.auto_gain_control    = CONF_CLOCK_XOSC_AUTO_GAIN_CONTROL;
@@ -575,12 +569,15 @@ void system_clock_init(void)
 	xosc_conf.run_in_standby       = CONF_CLOCK_XOSC_RUN_IN_STANDBY;
 
 	system_clock_source_xosc_set_config(&xosc_conf);
+	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_XOSC);
 #endif
 
 
 	/* XOSC32K */
 #if CONF_CLOCK_XOSC32K_ENABLE == true
 	struct system_clock_source_xosc32k_config xosc32k_conf;
+	system_clock_source_xosc32k_get_default_config(&xosc32k_conf);
+
 	xosc32k_conf.frequency             = 32768UL;
 	xosc32k_conf.external_clock        = CONF_CLOCK_XOSC32K_EXTERNAL_CRYSTAL;
 	xosc32k_conf.startup_time          = CONF_CLOCK_XOSC32K_STARTUP_TIME;
@@ -591,13 +588,14 @@ void system_clock_init(void)
 	xosc32k_conf.run_in_standby        = CONF_CLOCK_XOSC32K_RUN_IN_STANDBY;
 
 	system_clock_source_xosc32k_set_config(&xosc32k_conf);
-	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_XOSC32K, true);
+	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_XOSC32K);
 #endif
 
 
 	/* OSCK32K */
 #if CONF_CLOCK_OSC32K_ENABLE == true
 	struct system_clock_source_osc32k_config osc32k_conf;
+	system_clock_source_osc32k_get_default_config(&osc32k_conf);
 
 	osc32k_conf.startup_time        = CONF_CLOCK_OSC32K_STARTUP_TIME;
 	osc32k_conf.enable_1khz_output  = CONF_CLOCK_OSC32K_ENABLE_1KHZ_OUTPUT;
@@ -606,7 +604,7 @@ void system_clock_init(void)
 	osc32k_conf.run_in_standby      = CONF_CLOCK_OSC32K_RUN_IN_STANDBY;
 
 	system_clock_source_osc32k_set_config(&osc32k_conf);
-	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_OSC32K, true);
+	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_OSC32K);
 #endif
 
 
@@ -615,11 +613,11 @@ void system_clock_init(void)
 	struct system_clock_source_dfll_config dfll_conf;
 	system_clock_source_dfll_get_default_config(&dfll_conf);
 
-	dfll_conf.loop                 = SYSTEM_CLOCK_DFLL_OPEN_LOOP;
+	dfll_conf.loop_mode            = CONF_CLOCK_DFLL_LOOP_MODE;
 	dfll_conf.on_demand            = CONF_CLOCK_DFLL_ON_DEMAND;
 	dfll_conf.run_in_standby       = CONF_CLOCK_DFLL_RUN_IN_STANDBY;
 
-	if (CONF_CLOCK_DFLL_LOOP_MODE == SYSTEM_CLOCK_DFLL_OPEN_LOOP) {
+	if (CONF_CLOCK_DFLL_LOOP_MODE == SYSTEM_CLOCK_DFLL_LOOP_MODE_OPEN) {
 		dfll_conf.coarse_value = CONF_CLOCK_DFLL_COARSE_VALUE;
 		dfll_conf.fine_value   = CONF_CLOCK_DFLL_FINE_VALUE;
 	}
@@ -631,15 +629,15 @@ void system_clock_init(void)
 #  endif
 
 #  if CONF_CLOCK_DFLL_TRACK_AFTER_FINE_LOCK == true
-	dfll_conf.stable_tracking = SYSTEM_CLOCK_DFLL_TRACK_AFTER_FINE_LOCK;
+	dfll_conf.stable_tracking = SYSTEM_CLOCK_DFLL_STABLE_TRACKING_TRACK_AFTER_LOCK;
 #  else
-	dfll_conf.stable_tracking = SYSTEM_CLOCK_DFLL_FIX_AFTER_FINE_LOCK;
+	dfll_conf.stable_tracking = SYSTEM_CLOCK_DFLL_STABLE_TRACKING_FIX_AFTER_LOCK;
 #  endif
 
 #  if CONF_CLOCK_DFLL_KEEP_LOCK_ON_WAKEUP == true
-	dfll_conf.wakeup_lock = SYSTEM_CLOCK_DFLL_KEEP_LOCK_AFTER_WAKE;
+	dfll_conf.wakeup_lock = SYSTEM_CLOCK_DFLL_WAKEUP_LOCK_KEEP;
 #  else
-	dfll_conf.wakeup_lock = SYSTEM_CLOCK_DFLL_LOSE_LOCK_AFTER_WAKE;
+	dfll_conf.wakeup_lock = SYSTEM_CLOCK_DFLL_WAKEUP_LOCK_LOSE;
 #  endif
 
 #  if CONF_CLOCK_DFLL_ENABLE_CHILL_CYCLE == true
@@ -648,7 +646,7 @@ void system_clock_init(void)
 	dfll_conf.chill_cycle = SYSTEM_CLOCK_DFLL_CHILL_CYCLE_DISABLE;
 #  endif
 
-	if (CONF_CLOCK_DFLL_LOOP_MODE == SYSTEM_CLOCK_DFLL_CLOSED_LOOP) {
+	if (CONF_CLOCK_DFLL_LOOP_MODE == SYSTEM_CLOCK_DFLL_LOOP_MODE_CLOSED) {
 		dfll_conf.multiply_factor = CONF_CLOCK_DFLL_MULTIPLY_FACTOR;
 	}
 
@@ -661,113 +659,44 @@ void system_clock_init(void)
 
 	/* OSC8M */
 	struct system_clock_source_osc8m_config osc8m_conf;
+	system_clock_source_osc8m_get_default_config(&osc8m_conf);
 
 	osc8m_conf.prescaler            = CONF_CLOCK_OSC8M_PRESCALER;
 	osc8m_conf.on_demand            = CONF_CLOCK_OSC8M_ON_DEMAND;
 	osc8m_conf.run_in_standby       = CONF_CLOCK_OSC8M_RUN_IN_STANDBY;
 
 	system_clock_source_osc8m_set_config(&osc8m_conf);
-	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_OSC8M, false);
+	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_OSC8M);
 
 
 	/* GCLK */
 #if CONF_CLOCK_CONFIGURE_GCLK == true
 	system_gclk_init();
 
-	struct system_gclk_gen_config gclk_generator_conf;
-	system_gclk_gen_get_config_defaults(&gclk_generator_conf);
+	/* Configure all GCLK generators except for the main generator, which
+	 * is configured later after all other clock systems are set up */
+	MREPEAT(GCLK_GEN_NUM_MSB, _CONF_CLOCK_GCLK_CONFIG_NONMAIN, ~);
 
-#  if CONF_CLOCK_GCLK_0_ENABLE == true
-	gclk_generator_conf.source_clock    = CONF_CLOCK_GCLK_0_CLOCK_SOURCE;
-	gclk_generator_conf.division_factor = CONF_CLOCK_GCLK_0_PRESCALER;
-	gclk_generator_conf.run_in_standby  = CONF_CLOCK_GCLK_0_RUN_IN_STANDBY;
-	system_gclk_gen_set_config(0, &gclk_generator_conf);
-	system_gclk_gen_enable(0);
-#  endif
-
-#  if CONF_CLOCK_GCLK_1_ENABLE == true
-	gclk_generator_conf.source_clock    = CONF_CLOCK_GCLK_1_CLOCK_SOURCE;
-	gclk_generator_conf.division_factor = CONF_CLOCK_GCLK_1_PRESCALER;
-	gclk_generator_conf.run_in_standby  = CONF_CLOCK_GCLK_1_RUN_IN_STANDBY;
-	system_gclk_gen_set_config(1, &gclk_generator_conf);
-	system_gclk_gen_enable(1);
-#  endif
-
-#  if CONF_CLOCK_GCLK_2_ENABLE == true
-	gclk_generator_conf.source_clock    = CONF_CLOCK_GCLK_2_CLOCK_SOURCE;
-	gclk_generator_conf.division_factor = CONF_CLOCK_GCLK_2_PRESCALER;
-	gclk_generator_conf.run_in_standby  = CONF_CLOCK_GCLK_2_RUN_IN_STANDBY;
-	system_gclk_gen_set_config(2, &gclk_generator_conf);
-	system_gclk_gen_enable(2);
-#  endif
-
-#  if CONF_CLOCK_GCLK_3_ENABLE == true
-	gclk_generator_conf.source_clock    = CONF_CLOCK_GCLK_3_CLOCK_SOURCE;
-	gclk_generator_conf.division_factor = CONF_CLOCK_GCLK_3_PRESCALER;
-	gclk_generator_conf.run_in_standby  = CONF_CLOCK_GCLK_3_RUN_IN_STANDBY;
-	system_gclk_gen_set_config(3, &gclk_generator_conf);
-	system_gclk_gen_enable(3);
-#  endif
-
-#  if CONF_CLOCK_GCLK_4_ENABLE == true
-	gclk_generator_conf.source_clock    = CONF_CLOCK_GCLK_4_CLOCK_SOURCE;
-	gclk_generator_conf.division_factor = CONF_CLOCK_GCLK_4_PRESCALER;
-	gclk_generator_conf.run_in_standby  = CONF_CLOCK_GCLK_4_RUN_IN_STANDBY;
-	system_gclk_gen_set_config(4, &gclk_generator_conf);
-	system_gclk_gen_enable(4);
-#  endif
-
-#  if CONF_CLOCK_GCLK_5_ENABLE == true
-	gclk_generator_conf.source_clock    = CONF_CLOCK_GCLK_5_CLOCK_SOURCE;
-	gclk_generator_conf.division_factor = CONF_CLOCK_GCLK_5_PRESCALER;
-	gclk_generator_conf.run_in_standby  = CONF_CLOCK_GCLK_5_RUN_IN_STANDBY;
-	system_gclk_gen_set_config(5, &gclk_generator_conf);
-	system_gclk_gen_enable(5);
-#  endif
-
-#  if CONF_CLOCK_GCLK_6_ENABLE == true
-	gclk_generator_conf.source_clock    = CONF_CLOCK_GCLK_6_CLOCK_SOURCE;
-	gclk_generator_conf.division_factor = CONF_CLOCK_GCLK_6_PRESCALER;
-	gclk_generator_conf.run_in_standby  = CONF_CLOCK_GCLK_6_RUN_IN_STANDBY;
-	gclk_generator_conf.output_enable   = true;
-	system_gclk_gen_set_config(6, &gclk_generator_conf);
-	system_gclk_gen_enable(6);
-#  endif
-
-#  if CONF_CLOCK_GCLK_7_ENABLE == true
-	gclk_generator_conf.source_clock    = CONF_CLOCK_GCLK_7_CLOCK_SOURCE;
-	gclk_generator_conf.division_factor = CONF_CLOCK_GCLK_7_PRESCALER;
-	gclk_generator_conf.run_in_standby  = CONF_CLOCK_GCLK_7_RUN_IN_STANDBY;
-	system_gclk_gen_set_config(7, &gclk_generator_conf);
-	system_gclk_gen_enable(7);
-#  endif
-#endif
-
-
-	/* DFLL (Closed Loop) */
-#  if CONF_CLOCK_DFLL_ENABLE == true
-	if (CONF_CLOCK_DFLL_LOOP_MODE == SYSTEM_CLOCK_DFLL_CLOSED_LOOP) {
+/* Enable DFLL reference clock if in closed loop mode */
+#  if (CONF_CLOCK_DFLL_ENABLE)
+	if (CONF_CLOCK_DFLL_LOOP_MODE == SYSTEM_CLOCK_DFLL_LOOP_MODE_CLOSED) {
 		struct system_gclk_chan_config dfll_gclk_chan_conf;
 
 		system_gclk_chan_get_config_defaults(&dfll_gclk_chan_conf);
 		dfll_gclk_chan_conf.source_generator = CONF_CLOCK_DFLL_SOURCE_GCLK_GENERATOR;
 		system_gclk_chan_set_config(0, &dfll_gclk_chan_conf);
 		system_gclk_chan_enable(0);
-
-		dfll_conf.loop = SYSTEM_CLOCK_DFLL_CLOSED_LOOP;
-		system_clock_source_dfll_set_config(&dfll_conf);
 	}
 #  endif
+
+	/* Configure the main GCLK last as it might depend on other generators */
+	_CONF_CLOCK_GCLK_CONFIG(0, ~);
+#endif
 
 
 	/* CPU and BUS clocks */
 	system_cpu_clock_set_divider(CONF_CLOCK_CPU_DIVIDER);
-#if CONF_CLOCK_CPU_CLOCK_FAILURE_DETECT == true
-	system_main_clock_set_failure_detect(true);
-#else
-	system_main_clock_set_failure_detect(false);
-#endif
+	system_main_clock_set_failure_detect(CONF_CLOCK_CPU_CLOCK_FAILURE_DETECT);
 	system_apb_clock_set_divider(SYSTEM_CLOCK_APB_APBA, CONF_CLOCK_APBA_DIVIDER);
 	system_apb_clock_set_divider(SYSTEM_CLOCK_APB_APBB, CONF_CLOCK_APBB_DIVIDER);
 }
-

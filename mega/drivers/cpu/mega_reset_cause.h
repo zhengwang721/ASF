@@ -63,16 +63,16 @@ typedef uint8_t         reset_cause_t;
 //! \internal \name Chip-specific reset causes
 //@{
 	//! \internal External reset cause
-	#define CHIP_RESET_CAUSE_EXTRST         EXTRF
+	#define CHIP_RESET_CAUSE_EXTRST         (1<<EXTRF)
 	//! \internal brown-out detected reset cause, same as for CPU
-	#define CHIP_RESET_CAUSE_BOD_CPU        BORF
+	#define CHIP_RESET_CAUSE_BOD_CPU        (1<<BORF)
 	//! \internal Power-on-reset reset cause
-	#define CHIP_RESET_CAUSE_POR            PORF
+	#define CHIP_RESET_CAUSE_POR            (1<<PORF)
 	//! \internal Watchdog timeout reset cause
-	#define CHIP_RESET_CAUSE_WDT            WDRF
+	#define CHIP_RESET_CAUSE_WDT            (1<<WDRF)
 #if !MEGA_XX8 && !MEGA_XX8_A
 	//! \internal Software reset reset cause
-	#define CHIP_RESET_CAUSE_JTAG           JTRF
+	#define CHIP_RESET_CAUSE_JTAG           (1<<JTRF)
 #endif
 //@}
 static inline reset_cause_t reset_cause_get_causes(void)
@@ -80,38 +80,22 @@ static inline reset_cause_t reset_cause_get_causes(void)
 #if (MEGA_XX4 ||MEGA_XX4_A || MEGA_XX8 || MEGA_XX8_A || \
 	MEGA_XX || MEGA_XX_UN2 || MEGA_XX0_1 || MEGA_RF ) && !MEGA_XX_UN0 && !MEGA_XX_UN1
 	uint8_t temp_mcsr = MCUSR ;
+	return temp_mcsr;
 #else	
 	uint8_t temp_mcsr = MCUCSR ;
-#endif 
-	if(temp_mcsr == 1<< CHIP_RESET_CAUSE_POR)
-	{
-		return CHIP_RESET_CAUSE_POR;
-	}
-	else if(temp_mcsr == 1<< CHIP_RESET_CAUSE_EXTRST)
-	{
-		return CHIP_RESET_CAUSE_EXTRST;
-	}
-	else if(temp_mcsr == 1<< CHIP_RESET_CAUSE_BOD_CPU)
-	{
-		return CHIP_RESET_CAUSE_BOD_CPU;
-	}
-	else if(temp_mcsr == 1<< CHIP_RESET_CAUSE_WDT)
-	{
-		return CHIP_RESET_CAUSE_WDT;
-	}
-#if !MEGA_XX8 && !MEGA_XX8_A	
-	else if(temp_mcsr == 1<< CHIP_RESET_CAUSE_JTAG)
-	{
-		return CHIP_RESET_CAUSE_JTAG;
-	}
-#endif
-	else
-	{
-		return 0;
-	}
-	
+	return temp_mcsr;
+#endif 	
 }
 
+static inline void reset_cause_clear_causes(reset_cause_t causes)
+{
+#if (MEGA_XX4 ||MEGA_XX4_A || MEGA_XX8 || MEGA_XX8_A || \
+	MEGA_XX || MEGA_XX_UN2 || MEGA_XX0_1 || MEGA_RF ) && !MEGA_XX_UN0 && !MEGA_XX_UN1
+	MCUSR &= ~causes;
+#else	
+	MCUCSR &= ~causes;
+#endif
+}
 
 //! @}
 

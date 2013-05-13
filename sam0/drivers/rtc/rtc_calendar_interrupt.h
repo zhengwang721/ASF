@@ -52,19 +52,25 @@ extern "C" {
 
 /**
  * \addtogroup asfdoc_samd20_rtc_calendar_group
-  * @{
- *
+ * @{
  */
 
  /**
  * \name Callbacks
  * @{
  */
-enum status_code rtc_calendar_register_callback(rtc_calendar_callback_t callback,
+enum status_code rtc_calendar_register_callback(
+		rtc_calendar_callback_t callback,
 		enum rtc_calendar_callback callback_type);
-enum status_code rtc_calendar_unregister_callback(enum rtc_calendar_callback callback_type);
-void rtc_calendar_enable_callback(enum rtc_calendar_callback callback_type);
-void rtc_calendar_disable_callback(enum rtc_calendar_callback callback_type);
+
+enum status_code rtc_calendar_unregister_callback(
+		enum rtc_calendar_callback callback_type);
+
+void rtc_calendar_enable_callback(
+		enum rtc_calendar_callback callback_type);
+
+void rtc_calendar_disable_callback(
+	enum rtc_calendar_callback callback_type);
 
 /** @} */
 /** @} */

@@ -97,7 +97,7 @@ static inline void tc_enable_callback(
 }
 
 /**
- * \brief Disable callback
+ * \brief Disables callback
  *
  * Disables the callback function registered by the \ref
  * tc_register_callback, and the callback will not be called from the

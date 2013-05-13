@@ -71,8 +71,8 @@ void events_init(void)
  * \pre The user must be configured before the channel is configured, see
  * \ref events_user_set_config
  *
- * \param[in] channel  Event channel to configure
- * \param[in] config   Configuration settings for the event channel
+ * \param[in] event_channel  Event channel to configure
+ * \param[in] config         Configuration settings for the event channel
  */
 void events_chan_set_config(
 		const enum events_channel event_channel,
@@ -109,11 +109,12 @@ void events_chan_set_config(
  * Writes out a given configuration of a Event System user MUX configuration to
  * the hardware module.
  *
- * \param[in] user    Event User MUX index to configure
- * \param[in] config  Configuration settings for the event user MUX
+ * \param[in] event_user  Event User MUX index to configure, a \c EVSYS_ID_USER_*
+ *                        constant from the device header files
+ * \param[in] config      Configuration settings for the event user MUX
  */
 void events_user_set_config(
-		const uint8_t user,
+		const uint8_t event_user,
 		struct events_user_config *const config)
 {
 	/* Sanity check arguments */
@@ -128,6 +129,6 @@ void events_user_set_config(
 
 	/* Select and configure the user MUX channel (must be done in one
 	 * word-access write as specified in the module datasheet */
-	EVSYS->USER.reg = (user << EVSYS_USER_USER_Pos) |
+	EVSYS->USER.reg = (event_user << EVSYS_USER_USER_Pos) |
 			(channel << EVSYS_USER_CHANNEL_Pos);
 }

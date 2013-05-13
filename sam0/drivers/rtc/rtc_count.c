@@ -41,6 +41,11 @@
  *
  */
 #include "rtc_count.h"
+#include <gclk.h>
+
+#if !defined(__DOXYGEN__)
+volatile struct _rtc_device _rtc_dev;
+#endif
 
 /**
  * \brief Resets the RTC module.
@@ -56,7 +61,7 @@ void rtc_count_reset(void)
 
 #if RTC_COUNT_ASYNC == true
 	_rtc_dev.registered_callback = 0;
-	_rtc_dev.enabled_callback = 0;
+	_rtc_dev.enabled_callback    = 0;
 #endif
 
 	while (rtc_count_is_syncing()) {
@@ -70,20 +75,37 @@ void rtc_count_reset(void)
 /**
  * \internal Applies the given configuration.
  *
- * Set the configurations given from the configuration structure to the
+ * Sets the configurations given from the configuration structure to the
  * hardware module.
  *
- * \param[in] config pointer to the configuration structure.
+ * \param[in] config  Pointer to the configuration structure.
  *
  * \return Status of the configuration procedure.
- * \retval STATUS_OK RTC configurations where set successfully.
- * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) were given.
+ * \retval STATUS_OK               RTC configurations was set successfully.
+ * \retval STATUS_ERR_INVALID_ARG  If invalid argument(s) were given.
+ * \retval STATUS_ERR_BAD_FRQ      If the RTC source clock is not an exact
+ *                                 multiple of 1KHz
  */
 static enum status_code _rtc_count_set_config(
 		const struct rtc_count_config *const config)
 {
 	/* Initialize module pointer. */
 	Rtc *const rtc_module = RTC;
+
+	/* Determine and ensure the RTC source clock is a multiple of 1KHz */
+	uint32_t rtc_gen_hz    = system_gclk_gen_get_hz(GCLK_GENERATOR_2);
+	if (rtc_gen_hz % 1024) {
+		return STATUS_ERR_BAD_FRQ;
+	}
+
+	/* Compute and set the prescaler, clear all other configuration */
+	uint16_t prescaler_div = 0;
+	while (rtc_gen_hz > 1024) {
+		prescaler_div++;
+		rtc_gen_hz >>= 1;
+	}
+	rtc_module->MODE0.CTRL.reg = RTC_MODE0_CTRL_MODE(0) |
+			(prescaler_div << RTC_MODE0_CTRL_PRESCALER_Pos);
 
 	/* Set mode and clear on match if applicable. */
 	switch (config->mode) {
@@ -143,28 +165,23 @@ static enum status_code _rtc_count_set_config(
 /**
  * \brief Initializes the RTC module with given configurations.
  *
- * This initializes the module, setting up all given configurations to provide
- * the desired functionality of the RTC. \note The application conf_clocks.h
- * configuration file should be set up correctly before using this function.
+ * Initializes the module, setting up all given configurations to provide
+ * the desired functionality of the RTC.
  *
- * \param[in] config Pointer to the configuration structure.
+ * \param[in] config  Pointer to the configuration structure.
  *
  * \return Status of the initialization procedure.
- * \retval STATUS_OK If the initialization was run stressfully.
- * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) were given.
+ * \retval STATUS_OK               If the initialization was run stressfully.
+ * \retval STATUS_ERR_INVALID_ARG  If invalid argument(s) were given.
  */
 enum status_code rtc_count_init(
 		const struct rtc_count_config *const config)
 {
-	/* Initialize module pointer. */
-	Rtc *const rtc_module = RTC;
-
 	/* Sanity check. */
 	Assert(config);
 
 	/* Set up GCLK */
 	struct system_gclk_chan_config gclk_chan_conf;
-
 	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
 	gclk_chan_conf.source_generator = GCLK_GENERATOR_2;
 	system_gclk_chan_set_config(RTC_GCLK_ID, &gclk_chan_conf);
@@ -173,15 +190,8 @@ enum status_code rtc_count_init(
 	/* Reset module to hardware defaults. */
 	rtc_count_reset();
 
-	//TODO: Get tools to add in alias names for other RTC modes
-	/* Set the prescaler according to settings in conf_clocks.h */
-#if CONF_CLOCK_RTC_FREQ != CONF_CLOCK_RTC_FREQ_32KHZ
-	rtc_module->MODE0.CTRL.reg = RTC_MODE2_CTRL_PRESCALER_DIV1024;
-#else
-	rtc_module->MODE0.CTRL.reg = RTC_MODE2_CTRL_PRESCALER_DIV1;
-#endif
 	/* Save conf_struct internally for continued use. */
-	_rtc_dev.mode = config->mode;
+	_rtc_dev.mode                = config->mode;
 	_rtc_dev.continuously_update = config->continuously_update;
 
 	/* Set config and return status. */
@@ -191,13 +201,13 @@ enum status_code rtc_count_init(
 /**
  * \brief Set the current count value to desired value.
  *
- * This will set the value of the counter to the specified value.
+ * Sets the value of the counter to the specified value.
  *
- * \param[in] count_value The value to be set in count register.
+ * \param[in] count_value  The value to be set in count register.
  *
  * \return Status of setting the register.
- * \retval STATUS_OK If everything was executed correctly.
- * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) were provided.
+ * \retval STATUS_OK               If everything was executed correctly.
+ * \retval STATUS_ERR_INVALID_ARG  If invalid argument(s) were provided.
  */
 enum status_code rtc_count_set_count(
 		const uint32_t count_value)
@@ -212,14 +222,12 @@ enum status_code rtc_count_set_count(
 	/* Set count according to mode */
 	switch(_rtc_dev.mode){
 		case RTC_COUNT_MODE_32BIT:
-
 			/* Write value to register. */
 			rtc_module->MODE0.COUNT.reg = count_value;
 
 			break;
 
 		case RTC_COUNT_MODE_16BIT:
-
 			/* Check if 16 bit value is provided. */
 			if(count_value > 0xffff){
 				return STATUS_ERR_INVALID_ARG;
@@ -290,18 +298,17 @@ uint32_t rtc_count_get_count(void)
 /**
  * \brief Set the compare value for the specified compare.
  *
- * This set the value specified by the implementer to the requested
- * compare.
+ * Sets the value specified by the implementer to the requested compare.
  *
  * \note Compare 4 and 5 are only available in 16 bit mode.
  *
- * \param[in] comp_value The value to be written to the compare.
- * \param[in] comp_index Index of the compare to set.
+ * \param[in] comp_value  The value to be written to the compare.
+ * \param[in] comp_index  Index of the compare to set.
  *
  * \return Status indicating if compare was successfully set.
- * \retval STATUS_OK If compare was successfully set.
- * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) were provided.
- * \retval STATUS_ERR_BAD_FORMAT If the module was not initialized in a mode.
+ * \retval STATUS_OK               If compare was successfully set.
+ * \retval STATUS_ERR_INVALID_ARG  If invalid argument(s) were provided.
+ * \retval STATUS_ERR_BAD_FORMAT   If the module was not initialized in a mode.
  */
 enum status_code rtc_count_set_compare(
 		const uint32_t comp_value,
@@ -317,7 +324,6 @@ enum status_code rtc_count_set_compare(
 	/* Set compare values based on operation mode. */
 	switch (_rtc_dev.mode) {
 		case RTC_COUNT_MODE_32BIT:
-
 			/* Check sanity of comp_index. */
 			if ((uint32_t)comp_index > RTC_NUM_OF_ALARMS) {
 				return STATUS_ERR_INVALID_ARG;
@@ -357,18 +363,18 @@ enum status_code rtc_count_set_compare(
 /**
  * \brief Get the current compare value of specified compare.
  *
- * This will provide the current value of the specified compare.
+ * Retrieves the current value of the specified compare.
  *
  * \note Compare 4 and 5 are only available in 16 bit mode.
  *
- * \param[out] comp_value Pointer to 32 bit integer that will be populated with
- * the current compare value.
- * \param[in] comp_index Index of compare to check.
+ * \param[out] comp_value  Pointer to 32 bit integer that will be populated with
+ *                         the current compare value.
+ * \param[in]  comp_index  Index of compare to check.
  *
  * \return Status of the reading procedure.
- * \retval STATUS_OK If the value was read correctly.
- * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) were provided.
- * \retval STATUS_ERR_BAD_FORMAT If the module was not initialized in a mode.
+ * \retval STATUS_OK               If the value was read correctly.
+ * \retval STATUS_ERR_INVALID_ARG  If invalid argument(s) were provided.
+ * \retval STATUS_ERR_BAD_FORMAT   If the module was not initialized in a mode.
  */
 enum status_code rtc_count_get_compare(
 		uint32_t *const comp_value,
@@ -409,18 +415,17 @@ enum status_code rtc_count_get_compare(
 }
 
 /**
- * \brief Returns the value of period.
+ * \brief Retrieves the value of period.
  *
- * This will return the value of the period for the 16 bit mode
- * counter.
+ * Retrieves the value of the period for the 16 bit mode counter.
  *
  * \note Only available in 16 bit mode.
  *
- * \param[out] period_value Pointer to value for return argument.
+ * \param[out] period_value  Pointer to value for return argument.
  *
  * \return Status of getting the period value.
- * \retval STATUS_OK If the period value was read correctly.
- * \retval STATUS_ERR_UNSUPPORTED_DEV If incorrect mode was set.
+ * \retval STATUS_OK                   If the period value was read correctly.
+ * \retval STATUS_ERR_UNSUPPORTED_DEV  If incorrect mode was set.
  */
 enum status_code rtc_count_get_period(
 		uint16_t *const period_value)
@@ -442,15 +447,15 @@ enum status_code rtc_count_get_period(
 /**
  * \brief Set the given value to the period.
  *
- * This will set the given value to the period.
+ * Sets the given value to the period.
  *
  * \note Only available in 16 bit mode.
  *
- * \param[in] period_value The value to set to the period.
+ * \param[in] period_value  The value to set to the period.
  *
  * \return Status of setting the period value.
- * \retval STATUS_OK If the period was set correctly.
- * \retval STATUS_ERR_UNSUPPORTED_DEV If module is not operated in 16 bit mode.
+ * \retval STATUS_OK                   If the period was set correctly.
+ * \retval STATUS_ERR_UNSUPPORTED_DEV  If module is not operated in 16 bit mode.
  */
 enum status_code rtc_count_set_period(
 		const uint16_t period_value)
@@ -476,12 +481,12 @@ enum status_code rtc_count_set_period(
 /**
  * \brief Check if RTC compare match has occurred.
  *
- * Checks the compare flag. The compare flag is set
- * when there is a compare match between counter and the compare.
+ * Checks the compare flag to see if a match has occurred. The compare flag is
+ * set when there is a compare match between counter and the compare.
  *
  * \note Compare 4 and 5 are only available in 16 bit mode.
  *
- * \param[in] comp_index Index of compare to check current flag.
+ * \param[in] comp_index  Index of compare to check current flag.
  */
 bool rtc_count_is_compare_match(
 		const enum rtc_count_compare comp_index)
@@ -519,17 +524,17 @@ bool rtc_count_is_compare_match(
 /**
  * \brief Clears RTC compare match flag.
  *
- * Clears the compare flag. The compare flag is set
- * when there is a compare match between the counter and the compare.
+ * Clears the compare flag. The compare flag is set when there is a compare
+ * match between the counter and the compare.
  *
  * \note Compare 4 and 5 are only available in 16 bit mode.
  *
- * \param[in] comp_index Index of compare to check current flag.
+ * \param[in] comp_index  Index of compare to check current flag.
  *
  * \return Status indicating if flag was successfully cleared.
- * \retval STATUS_OK If flag was successfully cleared.
- * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) were provided.
- * \retval STATUS_ERR_BAD_FORMAT If the module was not initialized in a mode.
+ * \retval STATUS_OK               If flag was successfully cleared.
+ * \retval STATUS_ERR_INVALID_ARG  If invalid argument(s) were provided.
+ * \retval STATUS_ERR_BAD_FORMAT   If the module was not initialized in a mode.
  */
 enum status_code rtc_count_clear_compare_match(
 		const enum rtc_count_compare comp_index)
@@ -578,11 +583,11 @@ enum status_code rtc_count_clear_compare_match(
  *
  * \note Can only be used when the RTC is operated in 1Hz.
  *
- * \param[in] value Ranging from -127 to 127 used for the correction.
+ * \param[in] value  Ranging from -127 to 127 used for the correction.
  *
  * \return Status of the calibration procedure.
- * \retval STATUS_OK If calibration was executed correctly.
- * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) were provided.
+ * \retval STATUS_OK               If calibration was executed correctly.
+ * \retval STATUS_ERR_INVALID_ARG  If invalid argument(s) were provided.
  */
 enum status_code rtc_count_frequency_correction(
 		const int8_t value)

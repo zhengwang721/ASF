@@ -264,11 +264,7 @@
 #include <conf_clocks.h>
 
 #if RTC_COUNT_ASYNC == true
-#include <system_interrupt.h>
-#endif
-
-#if CONF_CLOCK_GCLK_2_ENABLE == false
-#  error "Application conf_clocks.h configuration header has invalid settings for the RTC module."
+#  include <system_interrupt.h>
 #endif
 
 #ifdef __cplusplus
@@ -398,7 +394,7 @@ struct _rtc_device {
 #endif
 };
 
-volatile struct _rtc_device _rtc_dev;
+extern volatile struct _rtc_device _rtc_dev;
 #endif
 
 /**

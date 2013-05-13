@@ -7,6 +7,7 @@
 		<build type="c-source" value="qs_rtc_calendar_basic.c"/>
 		<build type="include-path" value="."/>
 		<require idref="sam0.drivers.rtc"/>
+		<require idref="sam0.drivers.port"/>
 		<device-support value="samd20"/>
 	</module>
 </asf>
