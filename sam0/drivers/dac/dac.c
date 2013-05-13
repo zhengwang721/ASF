@@ -157,8 +157,6 @@ enum status_code dac_init(
 	};
 
 	_dac_instances[0] = module_inst;
-
-	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_DAC);
 #endif
 
 	return STATUS_OK;
@@ -215,6 +213,10 @@ void dac_enable(
 
 	/* Enable selected output */
 	dac_module->CTRLB.reg |= module_inst->output;
+
+#if DAC_CALLBACK_MODE == true
+	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_DAC);
+#endif
 }
 
 /**
