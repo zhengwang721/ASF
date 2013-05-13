@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="driver" id="sam0.drivers.dac" caption="DAC - Digital-to-Analog Converter">
+	<select-by-config id="sam0.drivers.dac" name="config.sam0.drivers.dac" caption="DAC - Digital-to-Analog Converter" default="callback">
 		<info type="description" value="summary">
 			Driver for the SAM D20 Digital to Analog Converter. Provides a unified
 			interface for the configuration and management of the DAC in the
@@ -9,23 +9,51 @@
 			<keyword value="Analog Conversion"/>
 		</info>
 
-		<info type="appnote" value="AT03244"/>
+		<module type="driver" id="sam0.drivers.dac#polled" caption="DAC - Digital-to-Analog Converter (Polled APIs)">
+			<build type="include-path" value="."/>
+			<build type="header-file" subtype="api" value="dac.h"/>
+			<build type="c-source" value="dac.c"/>
 
-		<build type="include-path" value="."/>
-		<build type="header-file" subtype="api" value="dac.h"/>
-		<build type="c-source" value="dac.c"/>
+			<build type="header-file" value="quick_start/qs_dac_basic.h"/>
 
-		<build type="header-file" value="quick_start/qs_dac_basic.h"/>
+			<build type="define" name="DAC_CALLBACK_MODE" value="false"/>
 
-		<build type="doxygen-entry-point" value="asfdoc_samd20_dac_group"/>
-		<build type="doxygen-example-path" value="quick_start"/>
-		<build type="doxygen-image-path" value="docimg"/>
+			<build type="doxygen-entry-point" value="asfdoc_samd20_dac_group"/>
+			<build type="doxygen-example-path" value="quick_start"/>
+			<build type="doxygen-image-path" value="docimg"/>
 
-		<device-support value="samd20"/>
+			<device-support value="samd20"/>
 
-		<require idref="sam0.utils"/>
-		<require idref="sam0.drivers.system"/>
+			<require idref="sam0.utils"/>
+			<require idref="sam0.drivers.system"/>
 
-		<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
-	</module>
+			<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
+		</module>
+
+		<module type="driver" id="sam0.drivers.dac#callback" caption="DAC - Digital-to-Analog Converter (Callback APIs)">
+			<info type="appnote" value="AT03244"/>
+
+			<build type="include-path" value="."/>
+			<build type="header-file" subtype="api" value="dac.h"/>
+			<build type="c-source" value="dac.c"/>
+			<build type="header-file" subtype="api" value="dac_callback.h"/>
+			<build type="c-source" value="dac_callback.c"/>
+
+			<build type="header-file" value="quick_start/qs_dac_basic.h"/>
+
+			<build type="define" name="DAC_CALLBACK_MODE" value="true"/>
+			<build type="doxygen-enable-section" value="DAC_CALLBACK_MODE"/>
+
+			<build type="doxygen-entry-point" value="asfdoc_samd20_dac_group"/>
+			<build type="doxygen-example-path" value="quick_start"/>
+			<build type="doxygen-image-path" value="docimg"/>
+
+			<device-support value="samd20"/>
+
+			<require idref="sam0.utils"/>
+			<require idref="sam0.drivers.system"/>
+
+			<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
+		</module>
+	</select-by-config>
 </asf>

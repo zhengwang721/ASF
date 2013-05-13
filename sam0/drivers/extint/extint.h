@@ -400,8 +400,8 @@ static inline Eic * _extint_get_eic_from_nmi(
  *
  * \return Synchronization status of the underlying hardware module(s).
  *
- * \retval true if the module has completed synchronization
- * \retval false if the module synchronization is ongoing
+ * \retval true  If the module has completed synchronization
+ * \retval false If the module synchronization is ongoing
  */
 static inline bool extint_is_syncing(void)
 {
@@ -520,13 +520,13 @@ enum status_code extint_nmi_set_config(
 /**
  * \brief Retrieves the edge detection state of a configured channel.
  *
- *  Reads the current state of a configured channel, and determines if
+ *  Reads the current state of a configured channel, and determines
  *  if the detection criteria of the channel has been met.
  *
  *  \param[in] channel  External Interrupt channel index to check.
  *
  *  \return Status of the requested channel's edge detection state.
- *  \retval true  If the channel's edge/level detection criteria was met
+ *  \retval true   If the channel's edge/level detection criteria was met
  *  \retval false  If the channel has not detected its configured criteria
  */
 static inline bool extint_chan_is_detected(
@@ -564,13 +564,13 @@ static inline void extint_chan_clear_detected(
 /**
  * \brief Retrieves the edge detection state of a configured NMI channel.
  *
- *  Reads the current state of a configured NMI channel, and determines if
+ *  Reads the current state of a configured NMI channel, and determines
  *  if the detection criteria of the NMI channel has been met.
  *
  *  \param[in] nmi_channel  External Interrupt NMI channel index to check.
  *
  *  \return Status of the requested NMI channel's edge detection state.
- *  \retval true  If the NMI channel's edge/level detection criteria was met
+ *  \retval true   If the NMI channel's edge/level detection criteria was met
  *  \retval false  If the NMI channel has not detected its configured criteria
  */
 static inline bool extint_nmi_is_detected(
