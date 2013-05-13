@@ -179,7 +179,7 @@
  * \subsection asfdoc_samd20_adc_module_overview_conversion Conversion Modes
  * ADC conversions can be software triggered on demand by the user application,
  * if continuous sampling is not required. It is also possible to configure the
- * ADC in free-running mode, where new conversions are started as soon as a the
+ * ADC in free-running mode, where new conversions are started as soon as the
  * previous conversion is completed, or configure the ADC to scan across a
  * number of input pins (see \ref asfdoc_samd20_adc_module_overview_pin_scan).
  *
@@ -331,7 +331,7 @@
  * monitor threshold values are user-configurable, and follow the overall ADC
  * sampling bit precision set when the ADC is configured by the user application.
  * For example, only the eight lower bits of the window threshold values will be
- * compares to the sampled data whilst the ADC is configured in 8-bit mode. In
+ * compares to the sampled data whilst the ADC is configured in 8-bit mode.
  * In addition, if using differential mode, the 8th bit will be considered as
  * the sign bit even if bit 9 is zero.
  *
