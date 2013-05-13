@@ -47,12 +47,11 @@
 #include "tc.h"
 #include <system_interrupt.h>
 
+#if !defined(__DOXYGEN__)
 extern void *_tc_instances[TC_INST_NUM];
 
-#define _TC_INTERRUPT_VECT_NUM(n, unused) \
-		SYSTEM_INTERRUPT_MODULE_TC##n,
-
-//#if TC_ASYNC == true
+#  define _TC_INTERRUPT_VECT_NUM(n, unused) \
+		  SYSTEM_INTERRUPT_MODULE_TC##n,
 /**
  * \internal Get the interrupt vector for the given device instance
  *
@@ -70,7 +69,8 @@ static enum system_interrupt_vector _tc_interrupt_get_interrupt_vector(
 
 	return tc_interrupt_vectors[inst_num];
 }
-//#endif
+#endif /* !defined(__DOXYGEN__) */
+
 /**
  * \name Callback Management
  * {@
@@ -138,8 +138,6 @@ static inline void tc_disable_callback(
 		const enum tc_callback callback_type){
 	/* Sanity check arguments */
 	Assert(module);
-
-		system_interrupt_disable(_tc_interrupt_get_interrupt_vector(_tc_get_inst_index(module->hw)));
 
 	/* Disable callback */
 	if (callback_type == TC_CALLBACK_CC_CHANNEL0) {
