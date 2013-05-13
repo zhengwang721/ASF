@@ -57,7 +57,7 @@
  * \section Setup
  *
  * The following connection has to be made on the EXT1 header of the
- * SAM D20 Xplained Pro board using  a jumper/wire.
+ * SAM D20 Xplained Pro board using a jumper/wire.
  * EXT1 Header:
  *      - Pin 9 (PB06) <-----> Pin 10 (PB07)
  *
