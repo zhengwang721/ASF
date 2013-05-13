@@ -48,7 +48,13 @@
  *
  * This driver for SAM D20 devices provides an interface for the configuration
  * and management of the device's Watchdog Timer module, including the enabling,
- * disabling and kicking within the device.
+ * disabling and kicking within the device. The following driver API modes are
+ * covered by this manual:
+ *
+ *  - Polled APIs
+ * \if WDT_CALLBACK_MODE
+ *  - Callback APIs
+ * \endif
  *
  * The following peripherals are used by this module:
  *
@@ -167,7 +173,9 @@
  *
  * The following Quick Start guides and application examples are available for this driver:
  * - \ref asfdoc_samd20_wdt_basic_use_case
- *
+ * \if WDT_CALLBACK_MODE
+ * - \ref asfdoc_samd20_wdt_calback_use_case
+ * \endif
  *
  * \section asfdoc_samd20_wdt_api_overview API Overview
  * @{
@@ -176,6 +184,10 @@
 #include <compiler.h>
 #include <clock.h>
 #include <gclk.h>
+
+#if WDT_CALLBACK_MODE == true
+#  include "wdt_callback.h"
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -239,6 +251,21 @@ struct wdt_conf {
 	 *  set. */
 	enum wdt_period early_warning_period;
 };
+
+#if !defined(__DOXYGEN__)
+struct _wdt_module {
+	/** If \c true, the Watchdog should be locked on when enabled. */
+	bool always_on;
+#  if WDT_CALLBACK_MODE == true
+	wdt_callback_t early_warning_callback;
+#  endif
+};
+
+#  if WDT_CALLBACK_MODE == true
+extern struct _wdt_module _wdt_instance;
+#  endif
+#endif
+
 
 /** \name Configuration and initialization
  * @{
@@ -419,6 +446,9 @@ void wdt_reset_count(void);
  * added to the user application.
  *
  *  - \subpage asfdoc_samd20_wdt_basic_use_case
+ * \if WDT_CALLBACK_MODE
+ *  - \subpage asfdoc_samd20_wdt_callback_use_case
+ * \endif
  */
 
 #endif /* WDT_H_INCLUDED */

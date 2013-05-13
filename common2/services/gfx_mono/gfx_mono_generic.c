@@ -303,7 +303,7 @@ void gfx_mono_generic_draw_filled_rect(gfx_coord_t x, gfx_coord_t y,
  * \param[in]  y           Y coordinate of center.
  * \param[in]  radius      Circle radius in pixels.
  * \param[in]  color       Pixel operation.
- * \param[in][in]  octant_mask Bitmask indicating which octants to draw.
+ * \param[in]  octant_mask Bitmask indicating which octants to draw.
  */
 void gfx_mono_generic_draw_circle(gfx_coord_t x, gfx_coord_t y,
 		gfx_coord_t radius, enum gfx_mono_color color,
