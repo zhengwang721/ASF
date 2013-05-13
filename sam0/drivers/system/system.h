@@ -180,7 +180,7 @@
  *
  * Some peripheral clocks will remain enabled during sleep, depending on their
  * configuration; if desired, modules can remain clocked during sleep to allow
- * them to continue to operated while other parts of the system are powered down
+ * them to continue to operate while other parts of the system are powered down
  * to save power.
  *
  *
