@@ -379,7 +379,7 @@ typedef struct
  * \def likely(exp)
  * \brief The expression \a exp is likely to be true
  */
-#ifndef likely
+#if !defined(likely) || defined(__DOXYGEN__)
 #   define likely(exp)    (exp)
 #endif
 
@@ -387,7 +387,7 @@ typedef struct
  * \def unlikely(exp)
  * \brief The expression \a exp is unlikely to be true
  */
-#ifndef unlikely
+#if !defined(unlikely) || defined(__DOXYGEN__)
 #   define unlikely(exp)  (exp)
 #endif
 
@@ -945,7 +945,7 @@ typedef struct
 
 /* Define OPTIMIZE_HIGH attribute */
 #if defined   ( __CC_ARM   ) /* Keil uVision 4 */
-#   define OPTIMIZE_HIGH _Pragma("O3") 
+#   define OPTIMIZE_HIGH _Pragma("O3")
 #elif defined ( __ICCARM__ ) /* IAR Ewarm 5.41+ */
 #   define OPTIMIZE_HIGH _Pragma("optimize=high")
 #elif defined (  __GNUC__  ) /* GCC CS3 2009q3-68 */
@@ -980,7 +980,7 @@ typedef double                  F64;  //!< 64-bit floating-point number.
 #define  LSB2W(u32)     MSB1W(u32)           //!< Least significant byte of 3rd rank of \a u32.
 #define  LSB1W(u32)     MSB2W(u32)           //!< Least significant byte of 2nd rank of \a u32.
 #define  LSB0W(u32)     MSB3W(u32)           //!< Least significant byte of 1st rank of \a u32.
-        
+
 #define  MSW(u64)       (((U32 *)&(u64))[1]) //!< Most significant word of \a u64.
 #define  LSW(u64)       (((U32 *)&(u64))[0]) //!< Least significant word of \a u64.
 #define  MSH0(u64)      (((U16 *)&(u64))[3]) //!< Most significant half-word of 1st rank of \a u64.

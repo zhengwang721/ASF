@@ -91,8 +91,6 @@
  * \anchor asfdoc_samd20_dac_module_block_diagram
  * \image html dac_block_diagram.gif "DAC Block Diagram"
  *
- * \enddot
- *
  * \subsection asfdoc_samd20_dac_conversion_range Conversion Range
  * The conversion range is between GND and the selected voltage reference.
  * Available voltage references are:

@@ -154,8 +154,8 @@ enum status_code ac_init(
  *  module.
  *
  *  \param[in] module_inst  Software instance for the Analog Comparator peripheral
- *  \param[in] channel   Analog Comparator channel to configure
- *  \param[in] config    Pointer to the channel configuration struct
+ *  \param[in] channel      Analog Comparator channel to configure
+ *  \param[in] config       Pointer to the channel configuration struct
  */
 enum status_code ac_chan_set_config(
 		struct ac_module *const module_inst,
@@ -208,7 +208,7 @@ enum status_code ac_chan_set_config(
  *  Writes a given Analog Comparator Window channel configuration to the hardware
  *  module.
  *
- *  \param[in] module_inst     Software instance for the Analog Comparator peripheral
+ *  \param[in] module_inst  Software instance for the Analog Comparator peripheral
  *  \param[in] win_channel  Analog Comparator window channel to configure
  *  \param[in] config       Pointer to the window channel configuration struct
  */
@@ -284,7 +284,7 @@ enum status_code ac_win_set_config(
  *        forming each window comparator pair must have identical configurations
  *        other than the negative pin multiplexer setting.
  *
- *  \param[in] module_inst     Software instance for the Analog Comparator peripheral
+ *  \param[in] module_inst  Software instance for the Analog Comparator peripheral
  *  \param[in] win_channel  Comparator window channel to enable
  *
  *  \return Status of the window enable procedure.
@@ -348,7 +348,7 @@ enum status_code ac_win_enable(
  *  Stops an Analog Comparator window channel that was previously started via a
  *  call to \ref ac_win_enable().
  *
- *  \param[in] module_inst     Software instance for the Analog Comparator peripheral
+ *  \param[in] module_inst  Software instance for the Analog Comparator peripheral
  *  \param[in] win_channel  Comparator window channel to disable
  */
 void ac_win_disable(
@@ -385,7 +385,7 @@ void ac_win_disable(
  *  Retrieves the current window detection state, indicating what the input
  *  signal is currently comparing to relative to the window boundaries.
  *
- *  \param[in] module_inst     Software instance for the Analog Comparator peripheral
+ *  \param[in] module_inst  Software instance for the Analog Comparator peripheral
  *  \param[in] win_channel  Comparator Window channel to test
  *
  *  \return Current window comparison state.
