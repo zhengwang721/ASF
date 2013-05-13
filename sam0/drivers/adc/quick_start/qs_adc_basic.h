@@ -82,22 +82,21 @@
  * -# Get ADC config defaults.
  *  \snippet qs_adc_basic.c get_conf
  * -# Initialize software instance with hardware module and write configuration
- * to the module.
+ *    to the module.
  *  \snippet qs_adc_basic.c init_adc
  * -# Enable the ADC.
  *  \snippet qs_adc_basic.c enable
- 
-  * \section asfdoc_samd20_adc_basic_use_case_use Use Case
+ *
+ * \section asfdoc_samd20_adc_basic_use_case_use Use Case
  * \subsection asfdoc_samd20_adc_basic_use_case_use_code Code
  * Copy-paste the following code to your user application:
  * \snippet qs_adc_basic.c main_use_case
+ *
  * \subsection asfdoc_samd20_adc_basic_use_case_use_workflow Workflow
-  * -# Start conversion.
+ *  -# Start conversion.
  *  \snippet qs_adc_basic.c start_conv
- * -# Wait until conversion is done and read result.
+ *  -# Wait until conversion is done and read result.
  *  \snippet qs_adc_basic.c get_res
- * -# Start infinite loop.
+ *  -# Start infinite loop.
  *  \snippet qs_adc_basic.c inf_loop
-
- */
  */

@@ -60,9 +60,10 @@
  * - GLCK generator 0
  *
  *
- * \section asfdoc_samd20_sercom_spi_master_basic_use_setup Quick Start
+ * \section asfdoc_samd20_sercom_spi_master_basic_use_setup Setup
  *
  * \subsection asfdoc_samd20_sercom_spi_master_basic_use_prereq Prerequisites
+ * There are no special setup requirements for this use-case.
  *
  * \subsection asfdoc_samd20_sercom_spi_master_basic_use_setup_code Code
  * The following must be added to the user application:

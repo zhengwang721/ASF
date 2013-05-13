@@ -41,7 +41,7 @@
  *
  */
 
-/*
+/**
  * \mainpage
  *
  * This application demonstrates how to configure the ADC in a sleepwalking
@@ -83,13 +83,12 @@
  *
  */
 
-
 #include <asf.h>
 
 /* ADC module instance */
 struct adc_module module_inst;
 
-/* Flag to indicate if a low-voltage situation has occured */
+/* Flag to indicate if a low-voltage situation has occurred */
 volatile bool low_voltage = false;
 
 /* ADC Window callback; called whenever the supply voltage drops
@@ -135,7 +134,7 @@ static void event_setup(void)
 
 	/* Setup event channel 0 with RTC compare 0 as input */
 	chan_config.generator_id = EVSYS_ID_GEN_RTC_CMP_0;
-	chan_config.path = EVENT_PATH_ASYNCHRONOUS;
+	chan_config.path         = EVENT_PATH_ASYNCHRONOUS;
 	events_chan_set_config(EVENT_CHANNEL_0, &chan_config);
 
 	/* Setup ADC to listen to event channel 0 */
@@ -155,7 +154,7 @@ static void adc_setup(void)
 	config.clock_source       = GCLK_GENERATOR_4;
 	/* Divide input clock by 4 (8MHz / 4 = 2MHz) */
 	config.clock_prescaler    = ADC_CLOCK_PRESCALER_DIV4;
-	/* Use internal 1V bandgap reference */
+	/* Use internal 1V band-gap reference */
 	config.reference          = ADC_REFERENCE_INT1V;
 	/* Use VCC divided by 4 as positive input */
 	config.positive_input     = ADC_POSITIVE_INPUT_SCALEDIOVCC;
@@ -165,7 +164,7 @@ static void adc_setup(void)
 	/* Enable the ADC to run in standby sleep mode */
 	config.run_in_standby     = true;
 
-	/* Average 16 samples in hardware (accmulate 16 samples and divide by 16) */
+	/* Average 16 samples in hardware (accumulate 16 samples and divide by 16) */
 	config.resolution         = ADC_RESOLUTION_CUSTOM;
 	config.accumulate_samples = ADC_ACCUMULATE_SAMPLES_16;
 	config.divide_result      = ADC_DIVIDE_RESULT_16;
@@ -190,7 +189,7 @@ static void adc_setup(void)
 
 int main(void)
 {
-	/* Initalize clock system */
+	/* Initialize clock system */
 	system_init();
 
 	/* Initialize delay service */
@@ -209,9 +208,9 @@ int main(void)
 	system_sleep();
 
 	while (true) {
-		if(low_voltage == true) {
-			while(1) {
-				/* Toggle pin ad infinium */
+		if (low_voltage == true) {
+			while (true) {
+				/* Toggle pin ad-infinitum */
 				port_pin_toggle_output_level(LED0_PIN);
 				delay_ms(500);
 			}
