@@ -57,4 +57,7 @@
 
 #define USART_IRQn                 USART2_IRQn
 
+#define PDCA_PID_USART_RX          2
+#define PDCA_PID_USART_TX          20
+
 #endif /* CONF_EXAMPLE_H_INCLUDED */
