@@ -87,4 +87,9 @@
 #  include "sam4e.h"
 #endif
 
+/* SAM4N series */
+#if (SAM4N)
+#  include "sam4n.h"
+#endif
+
 #endif /* _SAM_IO_ */
