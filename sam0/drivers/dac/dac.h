@@ -298,6 +298,11 @@ extern "C" {
 #include <clock.h>
 #include <gclk.h>
 
+#if DAC_CALLBACK_MODE == true
+#  include <system_interrupt.h>
+#  include "dac_callback.h"
+#endif
+
 /**
  * \name DAC status flags
  *
@@ -307,11 +312,12 @@ extern "C" {
  */
 
 /** Data Buffer Empty Channel 0 - Set when data is transferred from DATABUF
- * to DATA by a start conversion event and DATABUF is ready for new data
+ *  to DATA by a start conversion event and DATABUF is ready for new data.
  */
 #define DAC_STATUS_CHANNEL_0_EMPTY     (1UL << 0)
+
 /** Under-run Channel 0 - Set when a start conversion event occurs when
- * DATABUF is empty
+ *  DATABUF is empty.
  */
 #define DAC_STATUS_CHANNEL_0_UNDERRUN  (1UL << 1)
 
@@ -323,7 +329,7 @@ extern "C" {
  * Enum for the possible reference voltages for the DAC.
  */
 enum dac_reference {
-	/** 1V from internal bandgap reference.*/
+	/** 1V from the internal band-gap reference.*/
 	DAC_REFERENCE_INT1V = DAC_CTRLB_REFSEL(0),
 	/** Analog VCC as reference. */
 	DAC_REFERENCE_AVCC  = DAC_CTRLB_REFSEL(1),
@@ -341,7 +347,7 @@ enum dac_output {
 	DAC_OUTPUT_EXTERNAL = DAC_CTRLB_EOEN,
 	/** DAC output as internal reference */
 	DAC_OUTPUT_INTERNAL = DAC_CTRLB_IOEN,
-	/** No output*/
+	/** No output */
 	DAC_OUTPUT_NONE     = 0,
 };
 
@@ -372,6 +378,10 @@ struct dac_module {
 	enum dac_output output;
 	/** DAC event selection */
 	bool start_on_event;
+#  if DAC_CALLBACK_MODE == true
+	/** DAC registered callback functions */
+	dac_callback_t callback[DAC_CALLBACK_N];
+#  endif
 #endif
 };
 

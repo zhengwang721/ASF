@@ -118,8 +118,6 @@ enum status_code dac_init(
 	/* Initialize device instance */
 	module_inst->hw_dev = module;
 
-	Dac *const dac_module = module_inst->hw_dev;
-
 	/* Turn on the digital interface clock */
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, PM_APBCMASK_DAC);
 
@@ -131,11 +129,12 @@ enum status_code dac_init(
 	system_gclk_chan_enable(DAC_GCLK_ID);
 
 	/* Check if module is enabled. */
-	if (dac_module->CTRLA.reg & DAC_CTRLA_ENABLE) {
+	if (module->CTRLA.reg & DAC_CTRLA_ENABLE) {
 		return STATUS_ERR_DENIED;
 	}
+
 	/* Check if reset is in progress. */
-	if (dac_module->CTRLA.reg & DAC_CTRLA_SWRST) {
+	if (module->CTRLA.reg & DAC_CTRLA_SWRST) {
 		return STATUS_BUSY;
 	}
 
@@ -151,6 +150,16 @@ enum status_code dac_init(
 
 	/* Write configuration to module */
 	_dac_set_config(module_inst, config);
+
+#if DAC_CALLBACK_MODE == true
+	for (uint8_t i = 0; i < DAC_CALLBACK_N; i++) {
+		module_inst->callback[i] = NULL;
+	};
+
+	_dac_instances[0] = module_inst;
+
+	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_DAC);
+#endif
 
 	return STATUS_OK;
 }
@@ -178,7 +187,6 @@ void dac_reset(
 
 	/* Software reset the module */
 	dac_module->CTRLA.reg |= DAC_CTRLA_SWRST;
-
 }
 
 /**
@@ -446,11 +454,10 @@ uint32_t dac_get_status(
 	uint8_t intflags = dac_module->INTFLAG.reg;
 	uint32_t status_flags = 0;
 
-	/* Check Data Buffer Empty flag */
 	if (intflags & DAC_INTFLAG_EMPTY) {
 		status_flags |= DAC_STATUS_CHANNEL_0_EMPTY;
 	}
-	/* Check Underrun flag */
+
 	if (intflags & DAC_INTFLAG_UNDERRUN) {
 		status_flags |= DAC_STATUS_CHANNEL_0_UNDERRUN;
 	}
@@ -479,10 +486,10 @@ void dac_clear_status(
 
 	uint32_t intflags = 0;
 
-	/* Clear requested status */
 	if (status_flags & DAC_STATUS_CHANNEL_0_EMPTY) {
 		intflags |= DAC_INTFLAG_EMPTY;
 	}
+
 	if (status_flags & DAC_STATUS_CHANNEL_0_UNDERRUN) {
 		intflags |= DAC_INTFLAG_UNDERRUN;
 	}
