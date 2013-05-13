@@ -100,7 +100,7 @@
  *
  *
  * \subsection asfdoc_samd20_tc_module_overview_func_desc Functional Description
- * Independent of the configured counter size, each TC module can be set set up
+ * Independent of the configured counter size, each TC module can be set up
  * in one of two different modes; capture and compare.
  *
  * In capture mode, the counter value is stored when a configurable event
@@ -151,7 +151,7 @@
  * generation match mode.
  *
  * When using 32-bit counter size, two 16-bit counters are chained together
- * in a cascade formation. Even numbered TC modules (e,g, TC0, TC2) can be
+ * in a cascade formation. Even numbered TC modules (e.g. TC0, TC2) can be
  * configured as 32-bit counters. The odd numbered counters will act as slaves
  * to the even numbered masters, and will not be reconfigurable until the
  * master timer is disabled. The pairing of timer modules for 32-bit mode is
@@ -292,7 +292,7 @@
  * the counter in PWM normal mode. As can be seen, the TOP value is unchanged
  * and is set to MAX. The compare match value is changed at several points to
  * illustrate the resulting waveform output changes. The PWM output is set to
- * normal (i.e non-inverted) output mode.
+ * normal (i.e. non-inverted) output mode.
  *
  * \anchor asfdoc_samd20_tc_module_pwm_normal_diag
  * \image html pwm_normal_ex.svg "Example of PWM in normal mode, and different counter operations"
@@ -340,7 +340,7 @@
  * adjustment.
  *
  * Before checking for a new capture, \ref TC_STATUS_COUNT_OVERFLOW
- * should be checked. The response to a overflow error is left to the user
+ * should be checked. The response to an overflow error is left to the user
  * application, however it may be necessary to clear both the capture overflow
  * flag and the capture flag upon each capture reading.
  *
@@ -450,7 +450,7 @@ enum tc_callback {
  * @{
  */
 
-/** Timer channel 0 has matched against its compare value, or a has captured a
+/** Timer channel 0 has matched against its compare value, or has captured a
  *  new value.
  */
 #define TC_STATUS_CHANNEL_0_MATCH    (1UL << 0)
@@ -720,7 +720,7 @@ struct tc_config {
 
 	/** When \c true the module is enabled during standby. */
 	bool run_in_standby;
-	/** Specifies either 8-, 16-, or 32-bit counter counter size. */
+	/** Specifies either 8-, 16-, or 32-bit counter size. */
 	enum tc_counter_size counter_size;
 	/** Specifies the prescaler value for GCLK_TC. */
 	enum tc_clock_prescaler clock_prescaler;
@@ -953,7 +953,7 @@ enum status_code tc_init(
  */
 
 /**
- * \brief Enables an TC module event input or output.
+ * \brief Enables a TC module event input or output.
  *
  * Enables one or more input or output events to or from the TC module.
  * See \ref tc_events for a list of events this module supports.
@@ -994,7 +994,7 @@ static inline void tc_enable_events(
 }
 
 /**
- * \brief Disables an TC module event input or output.
+ * \brief Disables a TC module event input or output.
  *
  * Disables one or more input or output events to or from the TC module.
  * See \ref tc_events for a list of events this module supports.

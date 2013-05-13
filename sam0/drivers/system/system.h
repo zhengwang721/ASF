@@ -392,7 +392,7 @@ static inline void system_sleep(void)
  *
  * This function will return the cause of a system reset
  *
- * \return A enum value indicating the cause of the last system reset.
+ * \return An enum value indicating the cause of the last system reset.
  */
 static inline enum system_reset_cause system_get_reset_cause(void)
 {
