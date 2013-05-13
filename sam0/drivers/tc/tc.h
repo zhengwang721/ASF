@@ -859,7 +859,7 @@ static inline bool tc_is_syncing(
  *  \li Capture compare channel 0 set to 0
  *  \li Capture compare channel 1 set to 0
  *  \li No PWM pin output enabled
- *  \li Pin and Mux configuratioon not set
+ *  \li Pin and Mux configuration not set
  *
  * \param[out]  config  Pointer to a TC module configuration structure to set
  */
