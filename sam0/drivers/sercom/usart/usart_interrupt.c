@@ -111,7 +111,7 @@ void _usart_read_buffer(
  *
  * \note The callback must be enabled by \ref usart_enable_callback,
  *       in order for the interrupt handler to call it when the conditions for
- *       the callback type is met.
+ *       the callback type are met.
  *
  * \param[in]  module         Pointer to USART software instance struct
  * \param[in]  callback_func  Pointer to callback function
@@ -356,7 +356,7 @@ void usart_abort_job(
  *                                 by external noise.
  * \retval STATUS_ERR_BAD_FORMAT   The last operation was aborted due to a
  *                                 frame error.
- * \retval STATUS_ERR_OVERFLOW     The last operation was aborted due to an
+ * \retval STATUS_ERR_OVERFLOW     The last operation was aborted due to a
  *                                 buffer overflow.
  * \retval STATUS_ERR_INVALID_ARG  An invalid transceiver enum given.
  */
@@ -371,15 +371,15 @@ enum status_code usart_get_job_status(
 	enum status_code status_code;
 
 	switch(transceiver_type) {
-		case USART_TRANSCEIVER_RX:
+	case USART_TRANSCEIVER_RX:
 			status_code = module->rx_status;
 			break;
 
-		case USART_TRANSCEIVER_TX:
+	case USART_TRANSCEIVER_TX:
 			status_code = module->tx_status;
 			break;
 
-		default:
+	default:
 			status_code = STATUS_ERR_INVALID_ARG;
 			break;
 	}
@@ -430,7 +430,7 @@ void _usart_interrupt_handler(
 			(module->tx_buffer_ptr)++;
 
 			if (module->character_size == USART_CHARACTER_SIZE_9BIT) {
-				data_to_send = ((*(module->tx_buffer_ptr)) << 8);
+				data_to_send = (*(module->tx_buffer_ptr) << 8);
 				/* Increment 8-bit pointer */
 				(module->tx_buffer_ptr)++;
 			}
@@ -439,7 +439,7 @@ void _usart_interrupt_handler(
 
 			if (--(module->remaining_tx_buffer_length) == 0) {
 				/* Disable the Data Register Empty Interrupt */
-				usart_hw->INTENCLR.reg	= SERCOM_USART_INTFLAG_DRE;
+				usart_hw->INTENCLR.reg = SERCOM_USART_INTFLAG_DRE;
 				/* Enable Transmission Complete interrupt */
 				usart_hw->INTENSET.reg = SERCOM_USART_INTFLAG_TXC;
 
@@ -475,22 +475,17 @@ void _usart_interrupt_handler(
 			if (error_code) {
 				/* Check which error occurred */
 				if (error_code & SERCOM_USART_STATUS_FERR) {
-					/* Store the error code and clearing
-					 * flag by writing 1 to it */
+					/* Store the error code and clear flag by writing 1 to it */
 					module->rx_status = STATUS_ERR_BAD_FORMAT;
-					usart_hw->STATUS.reg &= ~SERCOM_USART_STATUS_FERR;
-
+					usart_hw->STATUS.reg |= SERCOM_USART_STATUS_FERR;
 				} else if (error_code & SERCOM_USART_STATUS_BUFOVF) {
-					/* Store the error code and clearing
-					 * flag by writing 1 to it */
+					/* Store the error code and clear flag by writing 1 to it */
 					module->rx_status = STATUS_ERR_OVERFLOW;
-					usart_hw->STATUS.reg &= ~SERCOM_USART_STATUS_BUFOVF;
-
+					usart_hw->STATUS.reg |= SERCOM_USART_STATUS_BUFOVF;
 				} else if (error_code & SERCOM_USART_STATUS_PERR) {
-					/* Store the error code and clearing
-					 * flag by writing 1 to it */
+					/* Store the error code and clear flag by writing 1 to it */
 					module->rx_status = STATUS_ERR_BAD_DATA;
-					usart_hw->STATUS.reg &= ~SERCOM_USART_STATUS_PERR;
+					usart_hw->STATUS.reg |= SERCOM_USART_STATUS_PERR;
 				}
 
 				/* Run callback if registered and enabled */

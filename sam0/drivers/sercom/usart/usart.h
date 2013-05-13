@@ -73,7 +73,7 @@
  *
  * To use the USART you need to have a GCLK generator enabled and running
  * that can be used as the SERCOM clock source. This can either be configured
- * in conf_clock.h or by using the system clock driver.
+ * in conf_clocks.h or by using the system clock driver.
  *
  * \section asfdoc_samd20_sercom_usart_overview Module Overview
  *
@@ -269,9 +269,9 @@ enum usart_dataorder {
  * Select USART transfer mode
  */
 enum usart_transfer_mode {
-	/* Transfer of data is done synchronously */
+	/** Transfer of data is done synchronously */
 	USART_TRANSFER_SYNCHRONOUSLY = (SERCOM_USART_CTRLA_CMODE),
-	/* Transfer of data is done asynchronously */
+	/** Transfer of data is done asynchronously */
 	USART_TRANSFER_ASYNCHRONOUSLY = 0
 };
 
@@ -482,7 +482,7 @@ static inline void _usart_wait_for_sync(
  *
  * Return peripheral synchronization status. If doing a non-blocking
  * implementation this function can be used to check the sync state and hold of
- * any new actions until sync is complete.If this functions is not run; the
+ * any new actions until sync is complete. If this functions is not run; the
  * functions will block until the sync has completed.
  *
  * \param[in]  module  Pointer to peripheral module
@@ -601,7 +601,7 @@ static inline void usart_disable(
 	/* Get a pointer to the hardware module instance */
 	SercomUsart *const usart_hw = &(module->hw->USART);
 
-	/* Enable Global interrupt for module */
+	/* Disable Global interrupt for module */
 	system_interrupt_disable(_sercom_get_interrupt_vector(module->hw));
 
 	/* Wait until synchronization is complete */

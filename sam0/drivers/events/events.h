@@ -278,7 +278,7 @@ extern "C" {
 /**
  * \brief Event System channel selection
  *
- * Enum containing the possible event channel selections
+ * Enum containing the possible event channel selections.
  */
 enum events_channel {
 	/** Event channel 0 */
@@ -330,9 +330,9 @@ enum events_edge {
  * digital clock synchronization settings for each channel.
  */
 enum events_path {
-	/** Event is synchronised to the digital clock. */
+	/** Event is synchronized to the digital clock. */
 	EVENT_PATH_SYNCHRONOUS   = 0,
-	/** Event is re-synchronised between the source and destination digital
+	/** Event is re-synchronized between the source and destination digital
 	 *  clock domains. */
 	EVENT_PATH_RESYNCHRONOUS = 1,
 	/** Event is asynchronous to the digital clock. */
@@ -355,7 +355,7 @@ struct events_chan_config {
 	/** Path of the event system, from \ref events_path. */
 	enum events_path path;
 	/** Event generator module that should be attached to the event channel,
-	 *  a \c EVSYS_ID_GEN_* constant from the device header files. */
+	 *  an \c EVSYS_ID_GEN_* constant from the device header files. */
 	uint8_t generator_id;
 	/** GCLK generator used to clock the specific event channel */
 	enum gclk_generator clock_source;
@@ -496,7 +496,7 @@ void events_user_set_config(
  *
  * \pre The specified event channel must be configured and enabled.
  *
- * \param[in] channel  Event channel to check
+ * \param[in] event_channel  Event channel to check
  *
  * \return Status of the specified event channel.
  *
@@ -520,7 +520,7 @@ static inline bool events_chan_is_ready(
 
 	/* Determine if the specified channel is currently busy */
 	if (channel_status_ptr[status_halfword] &
-			(EVSYS_CHSTATUS_CHBUSY0_Pos << status_bitindex)) {
+			EVSYS_CHSTATUS_CHBUSY0(1 << status_bitindex)) {
 		return false;
 	}
 
@@ -535,7 +535,7 @@ static inline bool events_chan_is_ready(
  *
  * \pre The specified event channel must be configured and enabled.
  *
- * \param[in] channel  Event channel to check
+ * \param[in] event_channel  Event channel to check
  *
  * \return Status of the specified event channel subscribers.
  *
@@ -559,7 +559,7 @@ static inline bool events_user_is_ready(
 
 	/* Determine if the specified channel users(s) are currently ready */
 	if (channel_status_ptr[status_halfword] &
-			(EVSYS_CHSTATUS_USRRDY0_Pos << status_bitindex)) {
+			EVSYS_CHSTATUS_USRRDY0(1 << status_bitindex)) {
 		return true;
 	}
 
@@ -574,7 +574,7 @@ static inline bool events_user_is_ready(
  *
  * \pre The specified event channel must be configured and enabled.
  *
- * \param[in] channel  Event channel to trigger
+ * \param[in] event_channel  Event channel to trigger
  */
 static inline void events_chan_software_trigger(
 		const enum events_channel event_channel)

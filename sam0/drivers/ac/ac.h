@@ -148,7 +148,7 @@
  * every cycle of the module's clock.
  *
  * \subsection asfdoc_samd20_ac_module_overview_events Input and Output Events
- * Each comparator unit is capable of being triggered by a both software and
+ * Each comparator unit is capable of being triggered by both software and
  * hardware triggers. Hardware input events allow for other peripherals to
  * automatically trigger a comparison on demand - for example, a timer output
  * event could be used to trigger comparisons at a desired regular interval.
@@ -359,10 +359,10 @@ enum ac_chan_output {
 	/** Comparator channel output is not routed to a physical GPIO pin, and is
 	 *  used internally only. */
 	AC_CHAN_OUTPUT_INTERNAL    = AC_COMPCTRL_OUT_OFF,
-	/** Comparator channel output is routed to it's matching physical GPIO pin,
+	/** Comparator channel output is routed to its matching physical GPIO pin,
 	 *  via an asynchronous path. */
 	AC_CHAN_OUTPUT_ASYNCRONOUS = AC_COMPCTRL_OUT_ASYNC,
-	/** Comparator channel output is routed to it's matching physical GPIO pin,
+	/** Comparator channel output is routed to its matching physical GPIO pin,
 	 *  via a synchronous path. */
 	AC_CHAN_OUTPUT_SYNCHRONOUS = AC_COMPCTRL_OUT_SYNC,
 };
@@ -663,7 +663,7 @@ static inline void ac_disable(
  *  \note Events cannot be altered while the module is enabled.
  *
  *  \param[in] module_inst  Software instance for the Analog Comparator peripheral
- *  \param[in] events    Struct containing flags of events to enable
+ *  \param[in] events       Struct containing flags of events to enable
  */
 static inline void ac_enable_events(
 		struct ac_module *const module_inst,
@@ -709,7 +709,7 @@ static inline void ac_enable_events(
  *  \note Events cannot be altered while the module is enabled.
  *
  *  \param[in] module_inst  Software instance for the Analog Comparator peripheral
- *  \param[in] events    Struct containing flags of events to disable
+ *  \param[in] events       Struct containing flags of events to disable
  */
 static inline void ac_disable_events(
 		struct ac_module *const module_inst,
@@ -801,7 +801,7 @@ enum status_code ac_chan_set_config(
  *  configured via a call to \ref ac_chan_set_config().
  *
  *  \param[in] module_inst  Software instance for the Analog Comparator peripheral
- *  \param[in] channel   Comparator channel to enable
+ *  \param[in] channel      Comparator channel to enable
  */
 static inline void ac_chan_enable(
 		struct ac_module *const module_inst,
@@ -824,7 +824,7 @@ static inline void ac_chan_enable(
  *  \ref ac_chan_enable().
  *
  *  \param[in] module_inst  Software instance for the Analog Comparator peripheral
- *  \param[in] channel   Comparator channel channel to disable
+ *  \param[in] channel      Comparator channel to disable
  */
 static inline void ac_chan_disable(
 		struct ac_module *const module_inst,
@@ -855,7 +855,7 @@ static inline void ac_chan_disable(
  *  (single shot mode) rather than continuously.
  *
  *  \param[in] module_inst  Software instance for the Analog Comparator peripheral
- *  \param[in] channel   Comparator channel channel to trigger
+ *  \param[in] channel      Comparator channel to trigger
  */
 static inline void ac_chan_trigger_single_shot(
 		struct ac_module *const module_inst,
@@ -878,7 +878,7 @@ static inline void ac_chan_trigger_single_shot(
  *  begin comparisons.
  *
  *  \param[in] module_inst  Software instance for the Analog Comparator peripheral
- *  \param[in] channel   Comparator channel channel to test
+ *  \param[in] channel      Comparator channel to test
  *
  *  \return Comparator channel readiness state.
  */
@@ -903,7 +903,7 @@ static inline bool ac_chan_is_ready(
  *  result will be indicated as being unknown.
  *
  *  \param[in] module_inst   Software instance for the Analog Comparator peripheral
- *  \param[in] channel    Comparator channel channel to test
+ *  \param[in] channel       Comparator channel to test
  *
  *  \return Comparator channel state.
  */
@@ -987,8 +987,8 @@ void ac_win_disable(
  *  Checks a Window Comparator to see if the both comparators used for window
  *  detection is currently ready to begin comparisons.
  *
- *  \param[in] module_inst     Software instance for the Analog Comparator peripheral
- *  \param[in] win_channel  Window Comparator channel channel to test
+ *  \param[in] module_inst  Software instance for the Analog Comparator peripheral
+ *  \param[in] win_channel  Window Comparator channel to test
  *
  *  \return Window Comparator channel readiness state.
  */
@@ -1029,7 +1029,7 @@ enum ac_win_state ac_win_get_state(
  *  to the window bounds matches the detection criteria previously configured
  *  for the Window Comparator.
  *
- *  \param[in] module_inst     Software instance for the Analog Comparator peripheral
+ *  \param[in] module_inst  Software instance for the Analog Comparator peripheral
  *  \param[in] win_channel  Comparator Window channel to test
  *
  *  \return State of the Window Comparator criteria detection flag.
@@ -1053,7 +1053,7 @@ static inline bool ac_win_is_detected(
  *  Clears the Analog Comparator window condition detection flag for a specified
  *  comparator channel.
  *
- *  \param[in] module_inst     Software instance for the Analog Comparator peripheral
+ *  \param[in] module_inst  Software instance for the Analog Comparator peripheral
  *  \param[in] win_channel  Comparator Window channel to modify
  */
 static inline void ac_win_clear_detected(

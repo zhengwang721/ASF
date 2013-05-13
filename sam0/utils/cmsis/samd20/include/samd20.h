@@ -44,6 +44,11 @@
 #ifndef _SAMD20_
 #define _SAMD20_
 
+/**
+ * \defgroup SAMD20_definitions SAM D20 Device Definitions
+ * \brief SAM D20 CMSIS Definitions.
+ */
+
 #if   defined(__SAMD20E14__) || defined(__ATSAMD20E14__)
   #include "samd20e14.h"
 #elif defined(__SAMD20E15__) || defined(__ATSAMD20E15__)

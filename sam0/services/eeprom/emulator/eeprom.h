@@ -46,7 +46,7 @@
 /**
  * \defgroup asfdoc_samd20_eeprom_group SAM D20 EEPROM Emulator Service (EEPROM)
  *
- * This driver for SAM D20 devices provides a en emulated EEPROM memory space,
+ * This driver for SAM D20 devices provides an emulated EEPROM memory space,
  * for the storage and retrieval of configuration data into and out of
  * non-volatile memory.
  *
@@ -92,14 +92,14 @@
  * to individually, however pages must be erased before being reprogrammed and
  * the smallest granularity available for erasure is one single row.
  *
- * This discrepancy results in the need for a emulator scheme that is able to
+ * This discrepancy results in the need for an emulator scheme that is able to
  * handle the versioning and moving of page data to different physical rows as
  * needed, erasing old rows ready for re-use by future page write operations.
  *
  * \subsubsection asfdoc_samd20_eeprom_module_overview_implementation_mp Master Page
  * One row, at the end of the emulated EEPROM memory space, is reserved for
  * use by the emulator to store configuration data. This includes a magic
- * identifier to indicated an initialized emulated EEPROM memory, as well as
+ * identifier to indicate an initialized emulated EEPROM memory, as well as
  * version information and other relevant data. The master page is not
  * user-accessible, and is reserved solely for internal use by the emulator.
  *
@@ -136,7 +136,7 @@
  * write request to a different logical EEPROM memory page is requested, or when
  * the user manually flushes the write cache.
  *
- * Without the write cache, each write request to a EEPROM memory page would
+ * Without the write cache, each write request to an EEPROM memory page would
  * require a full page write, reducing the system performance and significantly
  * reducing the lifespan of the non-volatile memory.
  *
@@ -147,7 +147,7 @@
  * the first time.
  *
  * \anchor asfdoc_samd20_eeprom_init_layout
- * \image html init_layout.svg "Intial physical layout of the emulated EEPROM memory"
+ * \image html init_layout.svg "Initial physical layout of the emulated EEPROM memory"
  *
  * Where a single EEPROM page is represented by
  * \ref asfdoc_samd20_eeprom_page_layout "the following figure".
@@ -155,7 +155,7 @@
  * \anchor asfdoc_samd20_eeprom_page_layout
  * \image html page_layout.svg "Internal layout of an emulated EEPROM page"
  *
- * When a EEPROM page needs to be flushed to physical memory, the next free page
+ * When an EEPROM page needs to be flushed to physical memory, the next free page
  * in the same row will be chosen - this makes recovery simple, as the
  * right-most version of a logical page in a row is considered the most current.
  * With four pages to a physical NVM row, this allows for up to three updates to

@@ -515,7 +515,7 @@ static enum status_code _eeprom_emulator_verify_master_page(void)
 /**
  * \brief Retrieves the parameters of the EEPROM Emulator memory layout.
  *
- * Retrives the configuration parameters of the EEPROM Emulator, after it has
+ * Retrieves the configuration parameters of the EEPROM Emulator, after it has
  * been initialized.
  *
  * \param[out] parameters  EEPROM Emulator parameter struct to fill
@@ -782,7 +782,7 @@ enum status_code eeprom_emulator_read_page(
  * \brief Writes a buffer of data to the emulated EEPROM memory space
  *
  * Writes a buffer of data to a section of emulated EEPROM memory space. The
- * source buffer may be of any size, and the destination may lie outside of a
+ * source buffer may be of any size, and the destination may lie outside of an
  * emulated EEPROM page boundary.
  *
  * \note Data stored in pages may be cached in volatile RAM memory; to commit
@@ -855,7 +855,7 @@ enum status_code eeprom_emulator_write_buffer(
  * \brief Reads a buffer of data from the emulated EEPROM memory space
  *
  * Reads a buffer of data from a section of emulated EEPROM memory space. The
- * destination buffer may be of any size, and the source may lie outside of a
+ * destination buffer may be of any size, and the source may lie outside of an
  * emulated EEPROM page boundary.
  *
  * \param[in]  offset  Starting byte offset to read from, in emulated EEPROM

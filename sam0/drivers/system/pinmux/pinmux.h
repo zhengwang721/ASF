@@ -89,13 +89,14 @@
  * counterparts, for simplicity the design of this driver uses the logical GPIO
  * numbers instead.
  *
- * \subsection asfdoc_samd20_system_pinmux_peripheral_muxing Peripheral Muxltiplexing
+ * \subsection asfdoc_samd20_system_pinmux_peripheral_muxing Peripheral Multiplexing
  * SAM D20 devices contain a peripheral MUX, which is individually controllable
  * for each I/O pin of the device. The peripheral MUX allows you to select the
  * function of a physical package pin - whether it will be controlled as a user
  * controllable GPIO pin, or whether it will be connected internally to one of
- * several peripheral modules (such as a I2C module). When a pin is configured
- * in GPIO mode, other peripherals connected to the same pin will be disabled.
+ * several peripheral modules (such as an I<SUP>2</SUP>C module). When a pin is
+ * configured in GPIO mode, other peripherals connected to the same pin will be
+ * disabled.
  *
  * \subsection asfdoc_samd20_system_pinmux_pad_characteristics Special Pad Characteristics
  * There are several special modes that can be selected on one or more I/O pins

@@ -85,7 +85,7 @@
  * at a scheduled time or periodically using the alarm functions.
  *
  * In this driver, the RTC is operated in Count mode. This allows for an
- * easy integration of a asynchronous counter into a user application, which is
+ * easy integration of an asynchronous counter into a user application, which is
  * capable of operating while the device is in sleep mode.
  *
  * Whilst operating in Count mode, the RTC features:
@@ -394,7 +394,7 @@ struct _rtc_device {
 #endif
 };
 
-volatile struct _rtc_device _rtc_dev;
+extern volatile struct _rtc_device _rtc_dev;
 #endif
 
 /**

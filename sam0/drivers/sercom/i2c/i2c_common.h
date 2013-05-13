@@ -112,7 +112,7 @@ extern "C" {
  *
  * \subsection asfdoc_samd20_i2c_bus_topology Bus Topology
  * The I<SUP>2</SUP>C bus topology is illustrated in
- * \ref asfdoc_samd20_i2c_bus_topology_figure "the figure below". The pullup
+ * \ref asfdoc_samd20_i2c_bus_topology_figure "the figure below". The pull-up
  * resistors (Rs) will provide a high level on the bus lines when none of the
  * I<SUP>2</SUP>C devices are driving the bus. These are optional, and can be
  * replaced with a constant current source.
@@ -326,6 +326,9 @@ extern "C" {
  *   If the user would like to get callback from operations while using the
  *   interrupt-driven driver, the callback must be registered and then enabled
  *   using the "register_callback" and "enable_callback" functions.
+ * \else
+ *   There are no special considerations for this driver for the APIs listed in
+ *   this document.
  * \endif
  *
  * \section asfdoc_samd20_i2c_extra Extra Information
@@ -388,7 +391,8 @@ struct i2c_packet {
  * \li \ref asfdoc_samd20_system_pinmux_group "System Pin Multiplexer Driver"
  *
  *
- * \section asfdoc_samd20_i2c_extra_workarounds Workarounds Implemented by Driver
+ * \section asfdoc_samd20_i2c_extra_errata Errata
+ * There are no errata related to this driver.
  *
  * \section asfdoc_samd20_i2c_extra_history Module History
  * \ref asfdoc_samd20_i2c_extra_history_table "Below" is an overview of the

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 Peripheral Digital to Analog Converter Driver
+ * \brief SAM D20 Peripheral Digital-to-Analog Converter Driver
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -118,8 +118,6 @@ enum status_code dac_init(
 	/* Initialize device instance */
 	module_inst->hw_dev = module;
 
-	Dac *const dac_module = module_inst->hw_dev;
-
 	/* Turn on the digital interface clock */
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, PM_APBCMASK_DAC);
 
@@ -131,11 +129,12 @@ enum status_code dac_init(
 	system_gclk_chan_enable(DAC_GCLK_ID);
 
 	/* Check if module is enabled. */
-	if (dac_module->CTRLA.reg & DAC_CTRLA_ENABLE) {
+	if (module->CTRLA.reg & DAC_CTRLA_ENABLE) {
 		return STATUS_ERR_DENIED;
 	}
+
 	/* Check if reset is in progress. */
-	if (dac_module->CTRLA.reg & DAC_CTRLA_SWRST) {
+	if (module->CTRLA.reg & DAC_CTRLA_SWRST) {
 		return STATUS_BUSY;
 	}
 
@@ -151,6 +150,14 @@ enum status_code dac_init(
 
 	/* Write configuration to module */
 	_dac_set_config(module_inst, config);
+
+#if DAC_CALLBACK_MODE == true
+	for (uint8_t i = 0; i < DAC_CALLBACK_N; i++) {
+		module_inst->callback[i] = NULL;
+	};
+
+	_dac_instances[0] = module_inst;
+#endif
 
 	return STATUS_OK;
 }
@@ -178,7 +185,6 @@ void dac_reset(
 
 	/* Software reset the module */
 	dac_module->CTRLA.reg |= DAC_CTRLA_SWRST;
-
 }
 
 /**
@@ -207,6 +213,10 @@ void dac_enable(
 
 	/* Enable selected output */
 	dac_module->CTRLB.reg |= module_inst->output;
+
+#if DAC_CALLBACK_MODE == true
+	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_DAC);
+#endif
 }
 
 /**
@@ -372,11 +382,11 @@ void dac_chan_disable_output_buffer(
  * \brief Write to the DAC.
  *
  * This function writes to the DATA or DATABUF register.
- * If the conversion is not event-triggered, the data will be written to 
+ * If the conversion is not event-triggered, the data will be written to
  * the DATA register and the conversion will start.
- * If the conversion is event-triggered, the data will written to DATABUF and
- * transferred to the DATA register and converted when a Start Conversion Event
- * is issued.
+ * If the conversion is event-triggered, the data will be written to DATABUF
+ * and transferred to the DATA register and converted when a Start Conversion
+ * Event is issued.
  * Conversion data must be right or left adjusted according to configuration
  * settings.
  * \note To be event triggered, the enable_start_on_event must be
@@ -424,14 +434,13 @@ enum status_code dac_chan_write(
  * flags
  *
  * \param[in] module_inst      Pointer to the DAC software device struct
- * \param[in] channel          DAC channel to write to
  *
  * \return Bitmask of status flags
  *
  * \retval DAC_STATUS_CHANNEL_0_EMPTY    Data has been transferred from DATABUF
  *                                       to DATA by a start conversion event
  *                                       and DATABUF is ready for new data.
- * \retval DAC_STATUS_CHANNEL_0_UNDERRUN A start conversion event has occured
+ * \retval DAC_STATUS_CHANNEL_0_UNDERRUN A start conversion event has occurred
  *                                       when DATABUF is empty
  *
  */
@@ -440,18 +449,17 @@ uint32_t dac_get_status(
 {
 	 /* Sanity check arguments */
 	Assert(module_inst);
-	Assert(module_inst->hw);
+	Assert(module_inst->hw_dev);
 
 	Dac *const dac_module = module_inst->hw_dev;
 
 	uint8_t intflags = dac_module->INTFLAG.reg;
 	uint32_t status_flags = 0;
 
-	/* Check Data Buffer Empty flag */
 	if (intflags & DAC_INTFLAG_EMPTY) {
 		status_flags |= DAC_STATUS_CHANNEL_0_EMPTY;
 	}
-	/* Check Underrun flag */
+
 	if (intflags & DAC_INTFLAG_UNDERRUN) {
 		status_flags |= DAC_STATUS_CHANNEL_0_UNDERRUN;
 	}
@@ -465,7 +473,7 @@ uint32_t dac_get_status(
  * Clears the given status flag of the module.
  *
  * \param[in] module_inst      Pointer to the DAC software device struct
- * \param[in] status           Bit mask of status flags to clear
+ * \param[in] status_flags     Bit mask of status flags to clear
  *
  */
 void dac_clear_status(
@@ -474,16 +482,16 @@ void dac_clear_status(
 {
 	 /* Sanity check arguments */
 	Assert(module_inst);
-	Assert(module_inst->hw);
+	Assert(module_inst->hw_dev);
 
 	Dac *const dac_module = module_inst->hw_dev;
 
 	uint32_t intflags = 0;
 
-	/* Clear requested status */
 	if (status_flags & DAC_STATUS_CHANNEL_0_EMPTY) {
 		intflags |= DAC_INTFLAG_EMPTY;
 	}
+
 	if (status_flags & DAC_STATUS_CHANNEL_0_UNDERRUN) {
 		intflags |= DAC_INTFLAG_UNDERRUN;
 	}

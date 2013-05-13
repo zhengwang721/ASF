@@ -103,13 +103,6 @@ enum status_code nvm_set_config(
 	/* Sanity check argument */
 	Assert(config);
 
-	/* Configure the generic clock for the module */
-	struct system_gclk_chan_config gclk_chan_conf;
-	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
-	gclk_chan_conf.source_generator = GCLK_GENERATOR_0;
-	system_gclk_chan_set_config(NVMCTRL_GCLK_ID, &gclk_chan_conf);
-	system_gclk_chan_enable(NVMCTRL_GCLK_ID);
-
 	/* Get a pointer to the module hardware instance */
 	Nvmctrl *const nvm_module = NVMCTRL;
 
@@ -266,7 +259,7 @@ enum status_code nvm_update_buffer(
 		uint16_t length)
 {
 	enum status_code error_code = STATUS_OK;
-	uint8_t row_buffer[NVMCTRL_ROW_PAGES][_nvm_dev.page_size];
+	uint8_t row_buffer[NVMCTRL_ROW_PAGES][NVMCTRL_PAGE_SIZE];
 
 	/* Ensure the read does not overflow the page size */
 	if ((offset + length) > _nvm_dev.page_size) {

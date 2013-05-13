@@ -160,7 +160,7 @@ enum bod_prescale {
 };
 
 /**
- * \breif Brown Out Detector detection actions.
+ * \brief Brown Out Detector detection actions.
  *
  * List of possible BOD actions when a BOD module detects a brown-out condition.
  */
@@ -174,13 +174,13 @@ enum bod_action {
 };
 
 /**
- * \breif Brown Out Detector sampling modes.
+ * \brief Brown Out Detector sampling modes.
  *
  * List of possible BOD module voltage sampling modes.
  */
 enum bod_mode {
 	/** BOD will sample the supply line continuously. */
-	BOD_MODE_CONTINIOUS  = 0,
+	BOD_MODE_CONTINUOUS  = 0,
 	/** BOD will use the BOD sampling clock (1kHz) to sample the supply line. */
 	BOD_MODE_SAMPLED     = SYSCTRL_BOD33_MODE,
 };
@@ -227,7 +227,7 @@ static inline void bod_get_config_defaults(
 	Assert(conf);
 
 	conf->prescaler      = BOD_PRESCALE_DIV_2;
-	conf->mode           = BOD_MODE_CONTINIOUS;
+	conf->mode           = BOD_MODE_CONTINUOUS;
 	conf->action         = BOD_ACTION_RESET;
 	conf->level          = 0x12;
 	conf->hysteresis     = true;
@@ -235,7 +235,7 @@ static inline void bod_get_config_defaults(
 }
 
 enum status_code bod_set_config(
-		const enum bod bod,
+		const enum bod bod_id,
 		struct bod_config *const conf);
 
 /**
@@ -243,7 +243,7 @@ enum status_code bod_set_config(
  *
  * Enables the specified BOD module that has been previously configured.
  *
- * \param[in] bod  BOD module to enable
+ * \param[in] bod_id  BOD module to enable
  *
  * \return Error code indicating the status of the enable operation.
  *
@@ -251,9 +251,9 @@ enum status_code bod_set_config(
  * \retval STATUS_ERR_INVALID_ARG  An invalid BOD was supplied
  */
 static inline enum status_code bod_enable(
-		const enum bod bod)
+		const enum bod bod_id)
 {
-	switch (bod) {
+	switch (bod_id) {
 		case BOD_BOD33:
 			SYSCTRL->BOD33.reg |= SYSCTRL_BOD33_ENABLE;
 			break;
@@ -275,7 +275,7 @@ static inline enum status_code bod_enable(
  *
  * Disables the specified BOD module that was previously enabled.
  *
- * \param[in] bod  BOD module to disable
+ * \param[in] bod_id  BOD module to disable
  *
  * \return Error code indicating the status of the disable operation.
  *
@@ -283,9 +283,9 @@ static inline enum status_code bod_enable(
  * \retval STATUS_ERR_INVALID_ARG  An invalid BOD was supplied
  */
 static inline enum status_code bod_disable(
-		const enum bod bod)
+		const enum bod bod_id)
 {
-	switch (bod) {
+	switch (bod_id) {
 		case BOD_BOD33:
 			SYSCTRL->BOD33.reg &= ~SYSCTRL_BOD33_ENABLE;
 			break;
@@ -308,7 +308,7 @@ static inline enum status_code bod_disable(
  * Determines if a specified BOD has detected a voltage lower than its
  * configured threshold.
  *
- * \param[in] bod  BOD module to check
+ * \param[in] bod_id  BOD module to check
  *
  * \return Detection status of the specified BOD.
  *
@@ -316,9 +316,9 @@ static inline enum status_code bod_disable(
  * \retval false  If the BOD has not detected a low voltage condition
  */
 static inline bool bod_is_detected(
-		const enum bod bod)
+		const enum bod bod_id)
 {
-	switch (bod) {
+	switch (bod_id) {
 		case BOD_BOD33:
 			return SYSCTRL->INTFLAG.bit.BOD33DET;
 
@@ -339,12 +339,12 @@ static inline bool bod_is_detected(
  * Clears the low voltage condition of a specified BOD module, so that new
  * low voltage conditions can be detected.
  *
- * \param[in] bod  BOD module to clear
+ * \param[in] bod_id  BOD module to clear
  */
 static inline void bod_clear_detected(
-		const enum bod bod)
+		const enum bod bod_id)
 {
-	switch (bod) {
+	switch (bod_id) {
 		case BOD_BOD33:
 			SYSCTRL->INTFLAG.bit.BOD33DET = true;
 			return;

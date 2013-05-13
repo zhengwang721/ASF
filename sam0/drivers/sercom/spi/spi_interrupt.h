@@ -16,7 +16,7 @@
  *    this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
+ *    this list of conditions and the followinFcong disclaimer in the documentation
  *    and/or other materials provided with the distribution.
  *
  * 3. The name of Atmel may not be used to endorse or promote products derived
@@ -87,7 +87,7 @@ void spi_unregister_callback(
  * The callback function will be called from the interrupt handler when the
  * conditions for the callback type are met.
  *
- * \param[in] module         Pointer to spi software instance struct
+ * \param[in] module         Pointer to SPI software instance struct
  * \param[in] callback_type  Callback type given by an enum
  */
 static inline void spi_enable_callback(
