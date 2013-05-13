@@ -240,10 +240,6 @@
 #include <compiler.h>
 #include <gclk.h>
 
-/* TODO: Add to conf_clock.h, set default value */
-#define CONF_CLOCK_TIMEOUT 0xFFFFFFFF
-
-
 /**
  * \brief Available start-up times for the XOSC32K
  *
@@ -373,21 +369,6 @@ enum system_main_clock_div {
 	SYSTEM_MAIN_CLOCK_DIV_64,
 	/** Divide Main clock by 128 */
 	SYSTEM_MAIN_CLOCK_DIV_128,
-};
-
-/**
- * \brief Selectable speeds for the RTC to run at.
- *
- * RTC generic clock source generator frequency configuration values,
- * for \c conf_clock.h.
- */
-enum conf_clock_rtc_freq {
-	/** 1Hz counter speed for the RTC (Calendar mode only). */
-	CONF_CLOCK_RTC_FREQ_1HZ   = 32,
-	/** 1kHz counter speed for the RTC. */
-	CONF_CLOCK_RTC_FREQ_1KHZ  = 32,
-	/** 32kHz counter speed for the RTC. */
-	CONF_CLOCK_RTC_FREQ_32KHZ = 1,
 };
 
 /**
@@ -829,6 +810,7 @@ bool system_clock_source_is_ready(
 
 uint32_t system_clock_source_get_hz(
 		const enum system_clock_source clk_source);
+
 /**
  * @}
  */
@@ -883,6 +865,19 @@ static inline void system_cpu_clock_set_divider(
 }
 
 /**
+ * \brief Retrieves the current frequency of the CPU core.
+ *
+ * Retrieves the operating frequency of the CPU core, obtained from the main
+ * generic clock and the set CPU bus divider.
+ *
+ * \return Current CPU frequency in Hz.
+ */
+static inline uint32_t system_cpu_clock_get_hz(void)
+{
+	return (system_gclk_gen_get_hz(GCLK_GENERATOR_0) >> PM->CPUSEL.reg);
+}
+
+/**
  * \brief Set APBx clock divider.
  *
  * Set the clock divider used on the main clock to provide the clock for the
@@ -916,6 +911,38 @@ static inline enum status_code system_apb_clock_set_divider(
 
 	return STATUS_OK;
 }
+
+/**
+ * \brief Retrieves the current frequency of a ABPx.
+ *
+ * Retrieves the operating frequency of a APBx bus, obtained from the main
+ * generic clock and the set APBx bus divider.
+ *
+ * \return Current APBx bus frequency in Hz.
+ */
+static inline uint32_t system_apb_clock_get_hz(
+		const enum system_clock_apb_bus bus)
+{
+	uint16_t bus_divider = 0;
+
+	switch (bus) {
+		case SYSTEM_CLOCK_APB_APBA:
+			 bus_divider = PM->APBASEL.reg;
+			break;
+		case SYSTEM_CLOCK_APB_APBB:
+			bus_divider = PM->APBBSEL.reg;
+			break;
+		case SYSTEM_CLOCK_APB_APBC:
+			bus_divider = PM->APBCSEL.reg;
+			break;
+		default:
+			Assert(0);
+			return 0;
+	}
+
+	return (system_gclk_gen_get_hz(GCLK_GENERATOR_0) >> bus_divider);
+}
+
 
 /**
  * @}

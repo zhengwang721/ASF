@@ -66,7 +66,7 @@ static void _sercom_default_handler(
  * \internal
  * Find index of given instance.
  *
- * \param[in] Instance pointer.
+ * \param[in] sercom_instance  Instance pointer.
  *
  * \return Index of given instance.
  */

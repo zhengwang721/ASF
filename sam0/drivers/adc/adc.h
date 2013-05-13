@@ -50,6 +50,11 @@
  * This driver for SAM D20 devices provides an interface for the configuration
  * and management of the device's Analog to Digital Converter functionality, for
  * the conversion of analog voltages into a corresponding digital form.
+ * The following driver API modes are covered by this manual:
+ * - Polled APIs
+ * \if ADC_CALLBACK_MODE
+ * - Callback APIs
+ * \endif
  *
  * The following peripherals are used by this module:
  *
@@ -137,11 +142,39 @@
  * sampling rate to be reduced.
  *
  * \subsection asfdoc_samd20_adc_module_overview_resolution ADC Resolution
- * The ADC supports full 8-bit, 10-bit or 12-bit resolution. Additionally,
- * hardware oversampling and decimation modes can be configured to increase the
- * effective resolution at the expense of throughput. In oversampling and
+ * The ADC supports full 8-bit, 10-bit or 12-bit resolution. Hardware
+ * oversampling and decimation can be used to increase the
+ * effective resolution at the expense of throughput. Using oversampling and
  * decimation mode the ADC resolution is increased from 12-bits to an effective
- * 13, 14, 15 or 16-bits.
+ * 13, 14, 15 or 16-bits. In these modes the conversion rate is reduced, as
+ * a greater number of samples is used to achieve the increased resolution. The
+ * available resolutions and effective conversion rate is listed in
+ * \ref asfdoc_samd20_adc_module_conversion_rate "the table below".
+ *
+ * \anchor asfdoc_samd20_adc_module_conversion_rate
+ * <table>
+ *	<caption>Effective ADC conversion speed using oversampling</caption>
+ *	<tr>
+ *		<td>Resolution</td>
+ *		<td>Effective conversion rate</td>
+ *	</tr>
+ *	<tr>
+ *		<td>13-bits</td>
+ *		<td>conversion rate divided by 4</td>
+ *	</tr>
+ *	<tr>
+ *		<td>14-bits</td>
+ *		<td>Conversion rate divided by 16</td>
+ *	</tr>
+ *	<tr>
+ *		<td>15-bits</td>
+ *		<td>Conversion rate divided by 64</td>
+ *	</tr>
+ *	<tr>
+ *		<td>16-bits</td>
+ *		<td>Conversion rate divided by 256</td>
+ *	</tr>
+ * </table>
  *
  * \subsection asfdoc_samd20_adc_module_overview_conversion Conversion Modes
  * ADC conversions can be software triggered on demand by the user application,
@@ -177,7 +210,17 @@
  * multiple samples in hardware. This feature is suitable when operating in
  * noisy conditions.
  *
- * The effective ADC sample rate will be reduced when averaging is enabled,
+ * You can specify any number of samples to accumulate (up to 1024) and the
+ * divide ratio to use (up to divide by 128). To modify these settings the
+ * ADC_RESOLUTION_CUSTOM needs to be set as the resolution. When this is set
+ * the number of samples to accumulate and the division ratio can be set by
+ * the configuration struct members \ref adc_config.accumulate_samples and
+ * \ref adc_config.divide_result When using this mode the ADC result register
+ * will be set to be 16-bits wide to accommodate the larger result sizes
+ * produced by the accumulator.
+ *
+ * The effective ADC conversion rate will be reduced by a factor of the number
+ * of accumulated samples;
  * however the effective resolution will be increased according to
  * \ref asfdoc_samd20_adc_module_hw_av_resolution "the table below".
  *
@@ -334,6 +377,9 @@
  *
  * The following Quick Start guides and application examples are available for this driver:
  * - \ref asfdoc_samd20_adc_basic_use_case
+ * \if ADC_CALLBACK_MODE
+ * - \ref asfdoc_samd20_adc_basic_use_case_callback
+ * \endif
  *
  *
  * \section asfdoc_samd20_adc_api_overview API Overview
@@ -348,11 +394,15 @@ extern "C" {
 #include <system.h>
 
 #if ADC_CALLBACK_MODE == true
-#include <system_interrupt.h>
+#  include <system_interrupt.h>
 
+#if !defined(__DOXYGEN__)
 extern struct adc_module *_adc_instances[ADC_INST_NUM];
-/** Prototype for the device instance */
+#endif
+
+/** Forward definition of the device instance */
 struct adc_module;
+
 /** Type of the callback functions */
 typedef void (*adc_callback_t)(const struct adc_module *const module);
 
@@ -369,12 +419,11 @@ enum adc_callback {
 	ADC_CALLBACK_WINDOW,
 	/** Callback for error */
 	ADC_CALLBACK_ERROR,
-#if !defined(__DOXYGEN__)
+#  if !defined(__DOXYGEN__)
 	/** Number of available callbacks. */
 	ADC_CALLBACK_N,
-#endif
+#  endif
 };
-
 
 #endif
 
@@ -449,12 +498,25 @@ enum adc_clock_prescaler {
 enum adc_resolution {
 	/** ADC 12-bit resolution */
 	ADC_RESOLUTION_12BIT = ADC_CTRLB_RESSEL_12BIT,
-	/** ADC 16-bit resolution, for averaging mode output */
+	/** ADC 16-bit resolution using oversampling and decimation */
 	ADC_RESOLUTION_16BIT = ADC_CTRLB_RESSEL_16BIT,
 	/** ADC 10-bit resolution */
 	ADC_RESOLUTION_10BIT = ADC_CTRLB_RESSEL_10BIT,
 	/** ADC 8-bit resolution */
 	ADC_RESOLUTION_8BIT  = ADC_CTRLB_RESSEL_8BIT,
+	/** ADC 13-bit resolution using oversampling and decimation */
+	ADC_RESOLUTION_13BIT,
+	/** ADC 14-bit resolution using oversampling and decimation */
+	ADC_RESOLUTION_14BIT,
+	/** ADC 15-bit resolution using oversampling and decimation */
+	ADC_RESOLUTION_15BIT,
+	/** ADC 16-bit result register for use with averaging. When using this mode
+	  * the ADC result register will be set to 16-bit wide, and the number of
+	  * samples to accumulate and the division factor is configured by the
+	  * \ref adc_config.accumulate_samples and \ref adc_config.divide_result
+	  * members in the configuration struct
+	  */
+	ADC_RESOLUTION_CUSTOM,
 };
 
 /**
@@ -641,34 +703,64 @@ enum adc_negative_input {
 };
 
 /**
- * \brief ADC averaging selection enum
+ * \brief ADC number of accumulated samples enum
  *
- * Enum for the possible numbers of ADC samples to average.
+ * Enum for the possible numbers of ADC samples to accumulate.
+ * This setting is only used when the \ref ADC_RESOLUTION_CUSTOM
+ * resolution setting is used.
  *
  */
-enum adc_average_samples {
+enum adc_accumulate_samples {
 	/** No averaging */
-	ADC_AVERAGE_DISABLE      = ADC_AVGCTRL_SAMPLENUM_1,
+	ADC_ACCUMULATE_DISABLE      = ADC_AVGCTRL_SAMPLENUM_1,
 	/** Average 2 samples */
-	ADC_AVERAGE_SAMPLES_2    = ADC_AVGCTRL_SAMPLENUM_2,
+	ADC_ACCUMULATE_SAMPLES_2    = ADC_AVGCTRL_SAMPLENUM_2,
 	/** Average 4 samples */
-	ADC_AVERAGE_SAMPLES_4    = ADC_AVGCTRL_SAMPLENUM_4,
+	ADC_ACCUMULATE_SAMPLES_4    = ADC_AVGCTRL_SAMPLENUM_4,
 	/** Average 8 samples */
-	ADC_AVERAGE_SAMPLES_8    = ADC_AVGCTRL_SAMPLENUM_8,
+	ADC_ACCUMULATE_SAMPLES_8    = ADC_AVGCTRL_SAMPLENUM_8,
 	/** Average 16 samples */
-	ADC_AVERAGE_SAMPLES_16   = ADC_AVGCTRL_SAMPLENUM_16,
+	ADC_ACCUMULATE_SAMPLES_16   = ADC_AVGCTRL_SAMPLENUM_16,
 	/** Average 32 samples */
-	ADC_AVERAGE_SAMPLES_32   = ADC_AVGCTRL_SAMPLENUM_32,
+	ADC_ACCUMULATE_SAMPLES_32   = ADC_AVGCTRL_SAMPLENUM_32,
 	/** Average 64 samples */
-	ADC_AVERAGE_SAMPLES_64   = ADC_AVGCTRL_SAMPLENUM_64,
+	ADC_ACCUMULATE_SAMPLES_64   = ADC_AVGCTRL_SAMPLENUM_64,
 	/** Average 128 samples */
-	ADC_AVERAGE_SAMPLES_128  = ADC_AVGCTRL_SAMPLENUM_128,
+	ADC_ACCUMULATE_SAMPLES_128  = ADC_AVGCTRL_SAMPLENUM_128,
 	/** Average 265 samples */
-	ADC_AVERAGE_SAMPLES_265  = ADC_AVGCTRL_SAMPLENUM_256,
+	ADC_ACCUMULATE_SAMPLES_256  = ADC_AVGCTRL_SAMPLENUM_256,
 	/** Average 512 samples */
-	ADC_AVERAGE_SAMPLES_512  = ADC_AVGCTRL_SAMPLENUM_512,
+	ADC_ACCUMULATE_SAMPLES_512  = ADC_AVGCTRL_SAMPLENUM_512,
 	/** Average 1024 samples */
-	ADC_AVERAGE_SAMPLES_1024 = ADC_AVGCTRL_SAMPLENUM_1024,
+	ADC_ACCUMULATE_SAMPLES_1024 = ADC_AVGCTRL_SAMPLENUM_1024,
+};
+
+/**
+ * \brief ADC possible dividers for the result register
+ *
+ * Enum for the possible division factors to use when accumulating
+ * multiple samples. To keep the same resolution for the averaged
+ * result and the actual input value the division factor must
+ * be equal to the number of samples accumulated. This setting is only
+ * used when the \ref ADC_RESOLUTION_CUSTOM resolution setting is used.
+ */
+enum adc_divide_result {
+	/** Don't divide result register after accumulation */
+	ADC_DIVIDE_RESULT_DISABLE = 0,
+	/** Divide result register by 2 after accumulation */
+	ADC_DIVIDE_RESULT_2       = 1,
+	/** Divide result register by 4 after accumulation */
+	ADC_DIVIDE_RESULT_4       = 2,
+	/** Divide result register by 8 after accumulation */
+	ADC_DIVIDE_RESULT_8       = 3,
+	/** Divide result register by 16 after accumulation */
+	ADC_DIVIDE_RESULT_16      = 4,
+	/** Divide result register by 32 after accumulation */
+	ADC_DIVIDE_RESULT_32      = 5,
+	/** Divide result register by 64 after accumulation */
+	ADC_DIVIDE_RESULT_64      = 6,
+	/** Divide result register by 128 after accumulation */
+	ADC_DIVIDE_RESULT_128     = 7,
 };
 
 #if ADC_CALLBACK_MODE == true
@@ -681,7 +773,7 @@ enum adc_interrupt_flag {
 	/** Window monitor match */
 	ADC_INTERRUPT_WINDOW       = ADC_INTFLAG_WINMON,
 	/** ADC result overwritten before read */
-	ADC_INTERRUPT_OVERRUN      = ADC_INTFLAG_MASK,
+	ADC_INTERRUPT_OVERRUN      = ADC_INTFLAG_OVERRUN,
 };
 #endif
 
@@ -742,23 +834,23 @@ struct adc_event_config {
  */
 struct adc_correction_config {
 	/**
-	Enables correction for gain and offset based on values of gain_correction and
-	offset_correction if set to true.
-	*/
+	 * Enables correction for gain and offset based on values of gain_correction and
+	 * offset_correction if set to true.
+	 */
 	bool correction_enable;
 	/**
-	* This value defines how the ADC conversion result is compensated for gain
-	* error before written to the result register. This is a fractional value,
-	* 1-bit integer plus 11-bits fraction, therefore
-	* 1/2 <= gain_correction < 2.
-	* gain_correction values ranges from 0b010000000000 to 0b111111111111.
-	*/
+	 * This value defines how the ADC conversion result is compensated for gain
+	 * error before written to the result register. This is a fractional value,
+	 * 1-bit integer plus an 11-bit fraction, therefore
+	 * 1/2 <= gain_correction < 2. Valid \c gain_correction values ranges from
+	 * \c 0b010000000000 to \c 0b111111111111.
+	 */
 	uint16_t gain_correction;
 	/**
-	* This value defines how the ADC conversion result is compensated for
-	* offset error before written to the result register. This is a 12-bit
-	* value in two’s complement format.
-	*/
+	 * This value defines how the ADC conversion result is compensated for
+	 * offset error before written to the result register. This is a 12-bit
+	 * value in two’s complement format.
+	 */
 	int16_t offset_correction;
 };
 
@@ -770,13 +862,13 @@ struct adc_correction_config {
  */
 struct adc_pin_scan_config {
 	/**
-	 * Offset (relative to selected positive input) of first input pin to be
+	 * Offset (relative to selected positive input) of the first input pin to be
 	 * used in pin scan mode.
 	 */
 	uint8_t offset_start_scan;
 	/**
-	 * Number of input pins to scan in pin scan mode.
-	 * inputs_to_scan < 2 will disable pin scan mode.
+	 * Number of input pins to scan in pin scan mode. A value below 2 will
+	 * disable pin scan mode.
 	 */
 	uint8_t inputs_to_scan;
 };
@@ -790,23 +882,25 @@ struct adc_pin_scan_config {
  */
 struct adc_config {
 	/** GCLK generator used to clock the peripheral */
-	enum gclk_generator       clock_source;
+	enum gclk_generator clock_source;
 	/** Voltage reference */
-	enum adc_reference       reference;
+	enum adc_reference reference;
 	/** Clock prescaler */
 	enum adc_clock_prescaler clock_prescaler;
 	/** Result resolution */
-	enum adc_resolution      resolution;
+	enum adc_resolution resolution;
 	/** Gain factor */
-	enum adc_gain_factor     gain_factor;
+	enum adc_gain_factor gain_factor;
 	/** Positive MUX input */
-	enum adc_positive_input  positive_input;
+	enum adc_positive_input positive_input;
 	/** Negative MUX input */
-	enum adc_negative_input  negative_input;
-	/** Number of samples to average when using 16-bit resolution */
-	enum adc_average_samples average_samples;
-	/** Oversampling and decimation mode */
-	enum adc_oversampling_and_decimation oversampling_and_decimation;
+	enum adc_negative_input negative_input;
+	/** Number of ADC samples to accumulate when using the
+	 *  \c ADC_RESOLUTION_CUSTOM mode
+	 */
+	enum adc_accumulate_samples accumulate_samples;
+	/** Division ration when using the ADC_RESOLUTION_CUSTOM mode */
+	enum adc_divide_result divide_result;
 	/** Left adjusted result */
 	bool left_adjust;
 	/** Enables differential mode if true */
@@ -816,22 +910,22 @@ struct adc_config {
 	/** Enables ADC in standby sleep mode if true */
 	bool run_in_standby;
 	/**
-	Enables reference buffer offset compensation if true.
-	This will increase the accuracy of the gain stage, but decreasee the input
-	impedance; therefore the startup time of the reference must be increased.
-	*/
+	 * Enables reference buffer offset compensation if true.
+	 * This will increase the accuracy of the gain stage, but decreases the input
+	 * impedance; therefore the startup time of the reference must be increased.
+	 */
 	bool reference_compensation_enable;
 	/**
-	This value (0-63) control the ADC sampling time in number of half ADC
-	prescaled clock cycles (depends of ADC_PRESCALER value), thus
-	controlling the ADC input impedance.
-	Sampling time is set according to the formula:
-	Sample time = (sample_length+1) * (ADCclk / 2)
-	*/
+	 * This value (0-63) control the ADC sampling time in number of half ADC
+	 * prescaled clock cycles (depends of \c ADC_PRESCALER value), thus
+	 * controlling the ADC input impedance. Sampling time is set according to
+	 * the formula:
+	 * Sample time = (sample_length+1) * (ADCclk / 2)
+	 */
 	uint8_t sample_length;
 	/** Window monitor configuration structure */
 	struct adc_window_config window;
-	/** Gain and offsett correction configuration structure */
+	/** Gain and offset correction configuration structure */
 	struct adc_correction_config correction;
 	/** Event configuration structure */
 	struct adc_event_config event;
@@ -852,7 +946,7 @@ struct adc_module {
 #if !defined(__DOXYGEN__)
 	/** Pointer to ADC hardware module */
 	Adc *hw;
-#if ADC_CALLBACK_MODE == true
+#  if ADC_CALLBACK_MODE == true
 	/** Array to store callback functions */
 	adc_callback_t callback[ADC_CALLBACK_N];
 	/** Pointer to buffer used for ADC results */
@@ -867,7 +961,7 @@ struct adc_module {
 	volatile enum status_code job_status;
 	/** If osftware triggering is needed */
 	bool software_trigger;
-#endif
+#  endif
 #endif
 };
 
@@ -904,7 +998,7 @@ enum status_code adc_init(
  *  \li All events (input and generation) disabled
  *  \li Sleep operation disabled
  *  \li No reference compensation
- *  \li No gain/offset correction
+ *  \li Factory gain/offset correction
  *  \li No added sampling time
  *  \li Pin scan mode disabled
  *
@@ -915,18 +1009,17 @@ static inline void adc_get_config_defaults(struct adc_config *const config)
 {
 	Assert(config);
 	config->clock_source                  = GCLK_GENERATOR_0;
-	config->reference                     = ADC_REFERENCE_INTVCC1;
+	config->reference                     = ADC_REFERENCE_INT1V;
 	config->clock_prescaler               = ADC_CLOCK_PRESCALER_DIV4;
 	config->resolution                    = ADC_RESOLUTION_12BIT;
 	config->window.window_mode            = ADC_WINDOW_MODE_DISABLE;
 	config->window.window_upper_value     = 0;
 	config->window.window_lower_value     = 0;
-	config->gain_factor                   = ADC_GAIN_FACTOR_DIV2;
+	config->gain_factor                   = ADC_GAIN_FACTOR_1X;
 	config->positive_input                = ADC_POSITIVE_INPUT_PIN0 ;
 	config->negative_input                = ADC_NEGATIVE_INPUT_GND ;
-	config->average_samples               = ADC_AVERAGE_DISABLE;
-	config->oversampling_and_decimation   =
-			ADC_OVERSAMPLING_AND_DECIMATION_DISABLE;
+	config->accumulate_samples            = ADC_ACCUMULATE_DISABLE;
+	config->divide_result                 = ADC_DIVIDE_RESULT_DISABLE;
 	config->left_adjust                   = false;
 	config->differential_mode             = false;
 	config->freerunning                   = false;
@@ -935,12 +1028,21 @@ static inline void adc_get_config_defaults(struct adc_config *const config)
 	config->event.generate_event_on_window_monitor  = false;
 	config->run_in_standby                = false;
 	config->reference_compensation_enable = false;
-	config->correction.correction_enable  = false;
-	config->correction.gain_correction    = 0;
-	config->correction.offset_correction  = 0;
+	config->correction.correction_enable  = true;
+	config->correction.gain_correction    =
+			(*(uint32_t *)(ADC_FUSES_GAINCORR_ADDR)) &
+			ADC_FUSES_GAINCORR_Msk >> ADC_FUSES_GAINCORR_Pos;
+	config->correction.offset_correction  =
+			(*(uint32_t *)(ADC_FUSES_OFFSETCORR_ADDR)) &
+			ADC_FUSES_OFFSETCORR_Msk >> ADC_FUSES_OFFSETCORR_Pos;
 	config->sample_length                 = 0;
 	config->pin_scan.offset_start_scan    = 0;
 	config->pin_scan.inputs_to_scan       = 0;
+
+	if (config->correction.gain_correction == 0xFFF ||
+			config->correction.offset_correction == 0xFFF) {
+		config->correction.correction_enable = false;
+	}
 }
 
 /** @} */
@@ -1252,10 +1354,10 @@ static inline void adc_flush(
  *
  * Sets the ADC window mode to a given mode and value range.
  *
- * \param[in] module_inst        Pointer to the ADC software instance struct
- * \param[in] adc_window_mode    Window monitor mode to set
- * \param[in] window_lower_value Lower window monitor threshold value
- * \param[in] window_upper_value Upper window monitor threshold value
+ * \param[in] module_inst         Pointer to the ADC software instance struct
+ * \param[in] window_mode         Window monitor mode to set
+ * \param[in] window_lower_value  Lower window monitor threshold value
+ * \param[in] window_upper_value  Upper window monitor threshold value
   */
 static inline void adc_set_window_mode(
 		struct adc_module *const module_inst,
@@ -1373,7 +1475,7 @@ static inline enum status_code adc_set_pin_scan_mode(
 	/* Set pin scan mode */
 	adc_module->INPUTCTRL.reg =
 			(adc_module->INPUTCTRL.reg &
-			 ~(ADC_INPUTCTRL_INPUTSCAN_Msk | ADC_INPUTCTRL_INPUTOFFSET_Msk)) |
+			~(ADC_INPUTCTRL_INPUTSCAN_Msk | ADC_INPUTCTRL_INPUTOFFSET_Msk)) |
 			(start_offset   << ADC_INPUTCTRL_INPUTOFFSET_Pos) |
 			(inputs_to_scan << ADC_INPUTCTRL_INPUTSCAN_Pos);
 
@@ -1531,10 +1633,6 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
  *  <tr>
  *		<td>DAC</td>
  *		<td>Digital-to-Analog Converter</td>
- *	</tr>
- *  <tr>
- *		<td>SCIF</td>
- *		<td>System Control Interface</td>
  *	</tr>
  *	<tr>
  *		<td>LSB</td>

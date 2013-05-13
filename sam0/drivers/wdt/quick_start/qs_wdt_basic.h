@@ -46,8 +46,7 @@
  *
  * In this use case, the Watchdog module is configured for:
  *  \li System reset after 2048 clocks of the Watchdog generic clock
- *  \li Always on mode, so that it is lock-enabled until the system power is
- *      cycled
+ *  \li Always on mode disabled
  *  \li Basic mode, with no window or early warning periods
  *
  * This use case sets up the Watchdog to force a system reset after every 2048
