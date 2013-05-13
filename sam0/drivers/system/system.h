@@ -180,7 +180,7 @@
  *
  * Some peripheral clocks will remain enabled during sleep, depending on their
  * configuration; if desired, modules can remain clocked during sleep to allow
- * them to continue to operated while other parts of the system are powered down
+ * them to continue to operate while other parts of the system are powered down
  * to save power.
  *
  *
@@ -392,7 +392,7 @@ static inline void system_sleep(void)
  *
  * This function will return the cause of a system reset
  *
- * \return A enum value indicating the cause of the last system reset.
+ * \return An enum value indicating the cause of the last system reset.
  */
 static inline enum system_reset_cause system_get_reset_cause(void)
 {

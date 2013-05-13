@@ -548,7 +548,7 @@ bool system_clock_source_is_ready(
 /**
  * \brief Initialize clock system based on the configuration in conf_clocks.h
  *
- * This function will apply the settings in conf_clock.h when run from the user
+ * This function will apply the settings in conf_clocks.h when run from the user
  * application. All clock sources and GCLK generators are running when this function
  * returns.
  */

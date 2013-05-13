@@ -212,7 +212,7 @@
  * The User Row in the Auxiliary Space Cannot be read or written when
  * the Security Bit is set. The Security Bit can be set by using passing
  * \ref NVM_COMMAND_SET_SECURITY_BIT to the \ref nvm_execute_command() function,
- * or it will be be set if one tries to access a locked region. See
+ * or it will be set if one tries to access a locked region. See
  * \ref asfdoc_samd20_nvm_module_overview_locking_regions.
  *
  * The Security Bit can only be cleared by performing a chip erase.
