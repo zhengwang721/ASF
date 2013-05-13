@@ -65,8 +65,12 @@
 
 
 /* === Implementation ====================================================== */
-
+#if (defined __GNUC__)
+void __attribute__((weak))
+usr_mcps_purge_conf(uint8_t msduHandle, uint8_t status)
+#else
 void usr_mcps_purge_conf(uint8_t msduHandle, uint8_t status)
+#endif
 {
     /* Keep compiler happy. */
     msduHandle = msduHandle;

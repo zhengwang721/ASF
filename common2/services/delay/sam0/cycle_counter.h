@@ -40,44 +40,36 @@
  * \asf_license_stop
  *
  */
-#ifndef _cycle_counter_h_
-#define _cycle_counter_h_
+#ifndef CYCLE_COUNTER_H_INCLUDED
+#define CYCLE_COUNTER_H_INCLUDED
+
+#include <compiler.h>
+#include <clock.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-
-#include <compiler.h>
-#include <clock.h>
-
 /**
- * @name Convenience functions for busy-wait delay loops
+ * \name Convenience functions for busy-wait delay loops
  *
- * @def delay_cycles
- * @brief Delay program execution for at least the specified number of CPU cycles.
- * @param n number of CPU cycles to wait
- *
- * @def cpu_delay_ms
- * @brief Delay program execution for at least the specified number of milliseconds.
- * @param delay number of milliseconds to wait
- *
- * @def cpu_delay_s
- * @brief Delay program execution for at least the specified number of seconds.
- * @param delay number of seconds to wait
  * @{
  */
 
 /**
  * \brief Delay loop to delay n number of cycles
+ * Delay program execution for at least the specified number of CPU cycles.
  *
- * \param n Number of cycles
+ * \param n  Number of cycles to delay
  */
-static inline void delay_cycles(uint32_t n)
+static inline void delay_cycles(
+		const uint32_t n)
 {
 	SysTick->LOAD = n;
 	SysTick->VAL = 0;
-	while(!(SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk));
+
+	while (!(SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk)) {
+	};
 }
 
 void delay_cycles_us(uint32_t n);
@@ -86,15 +78,33 @@ void delay_cycles_ms(uint32_t n);
 
 void delay_init(void);
 
-#define cpu_delay_cycles(delay) delay_cycles(delay)
-#define cpu_delay_us(delay) delay_cycles_us(delay)
-#define cpu_delay_ms(delay) delay_cycles_ms(delay)
-#define cpu_delay_s(delay) delay_cycles_ms(1000 * delay)
-//! @}
+/**
+ * \brief Delay program execution for at least the specified number of microseconds.
+ *
+ * \param delay  number of microseconds to wait
+ */
+#define cpu_delay_us(delay)      delay_cycles_us(delay)
 
+/**
+ * \brief Delay program execution for at least the specified number of milliseconds.
+ *
+ * \param delay  number of milliseconds to wait
+ */
+#define cpu_delay_ms(delay)      delay_cycles_ms(delay)
+
+/**
+ * \brief Delay program execution for at least the specified number of seconds.
+ *
+ * \param delay  number of seconds to wait
+ */
+#define cpu_delay_s(delay)       delay_cycles_ms(1000 * delay)
+
+/**
+ * @}
+ */
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* _cycle_counter_h_ */
+#endif /* CYCLE_COUNTER_H_INCLUDED */

@@ -44,13 +44,15 @@
 #ifndef _SAMD20E18_
 #define _SAMD20E18_
 
-/** \addtogroup SAMD20E18_definitions SAMD20E18 definitions
-  This file defines all structures and symbols for SAMD20E18:
-    - registers and bitfields
-    - peripheral base address
-    - peripheral ID
-    - PIO definitions
-*/
+/**
+ * \ingroup SAMD20_definitions
+ * \addtogroup SAMD20E18_definitions SAMD20E18 definitions
+ * This file defines all structures and symbols for SAMD20E18:
+ *   - registers and bitfields
+ *   - peripheral base address
+ *   - peripheral ID
+ *   - PIO definitions
+ */
 /*@{*/
 
 #ifdef __cplusplus
@@ -84,7 +86,7 @@ typedef volatile       uint8_t  RwReg8;  /**< Read-Write  8-bit register (volati
 /* ************************************************************************** */
 /**  CMSIS DEFINITIONS FOR SAMD20E18 */
 /* ************************************************************************** */
-/** \addtogroup SAMD20E18_cmsis CMSIS Definitions */
+/** \defgroup SAMD20E18_cmsis CMSIS Definitions */
 /*@{*/
 
 /**< Interrupt Number Definition */
@@ -204,7 +206,7 @@ void DAC_Handler                 ( void );
  * \brief Configuration of the Cortex-M0+ Processor and Core Peripherals
  */
 
-#define LITTLE_ENDIAN          1        
+#define LITTLE_ENDIAN          1
 #define __CM0PLUS_REV          1         /*!< Core revision r0p1 */
 #define __MPU_PRESENT          0         /*!< MPU present or not */
 #define __NVIC_PRIO_BITS       2         /*!< Number of bits used for Priority Levels */
@@ -225,7 +227,7 @@ void DAC_Handler                 ( void );
 /* ************************************************************************** */
 /**  SOFTWARE PERIPHERAL API DEFINITION FOR SAMD20E18 */
 /* ************************************************************************** */
-/** \addtogroup SAMD20E18_api Peripheral Software API */
+/** \defgroup SAMD20E18_api Peripheral Software API */
 /*@{*/
 
 #include "component/component_ac.h"
@@ -249,7 +251,7 @@ void DAC_Handler                 ( void );
 /* ************************************************************************** */
 /**  REGISTERS ACCESS DEFINITIONS FOR SAMD20E18 */
 /* ************************************************************************** */
-/** \addtogroup SAMD20E18_reg Registers Access Definitions */
+/** \defgroup SAMD20E18_reg Registers Access Definitions */
 /*@{*/
 
 #include "instance/instance_ac.h"
@@ -283,7 +285,7 @@ void DAC_Handler                 ( void );
 /* ************************************************************************** */
 /**  PERIPHERAL ID DEFINITIONS FOR SAMD20E18 */
 /* ************************************************************************** */
-/** \addtogroup SAMD20E18_id Peripheral Ids Definitions */
+/** \defgroup SAMD20E18_id Peripheral Ids Definitions */
 /*@{*/
 
 // Peripheral instances on HPB0 bridge
@@ -324,7 +326,7 @@ void DAC_Handler                 ( void );
 /* ************************************************************************** */
 /**  BASE ADDRESS DEFINITIONS FOR SAMD20E18 */
 /* ************************************************************************** */
-/** \addtogroup SAMD20E18_base Peripheral Base Address Definitions */
+/** \defgroup SAMD20E18_base Peripheral Base Address Definitions */
 /*@{*/
 
 #if defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)
@@ -449,7 +451,7 @@ void DAC_Handler                 ( void );
 /* ************************************************************************** */
 /**  PORT DEFINITIONS FOR SAMD20E18 */
 /* ************************************************************************** */
-/** \addtogroup SAMD20E18_port PORT Definitions */
+/** \defgroup SAMD20E18_port PORT Definitions */
 /*@{*/
 
 #include "pio/pio_samd20e18.h"

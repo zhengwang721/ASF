@@ -46,8 +46,8 @@
  ******************************************************************************/
 
 
-#ifndef _STDIO_SERIAL_H_
-#define _STDIO_SERIAL_H_
+#ifndef STDIO_SERIAL_H_INCLUDED
+#define STDIO_SERIAL_H_INCLUDED
 
 /**
  * \defgroup group_common_utils_stdio_stdio_serial Standard serial I/O (stdio)
@@ -56,28 +56,32 @@
  * Common standard serial I/O management driver that
  * implements a stdio serial interface on AVR and SAM devices.
  *
- * \{
+ * @{
  */
 
 #include <stdio.h>
-#include "compiler.h"
+#include <compiler.h>
 
-//! Pointer to the base of the USART module instance to use for stdio.
+/** Pointer to the base of the USART module instance to use for stdio. */
 extern volatile void *volatile stdio_base;
-//! Pointer to the external low level write function.
+
+/** Pointer to the external low level write function. */
 extern int (*ptr_put)(void volatile*, char);
 
-//! Pointer to the external low level read function.
+/** Pointer to the external low level read function. */
 extern void (*ptr_get)(void volatile*, char*);
 
-/*! \brief Initializes the stdio in Serial Mode.
+/** \brief Initializes the stdio in Serial Mode.
  *
- * \param usart       Base address of the USART instance.
- * \param opt         Options needed to set up RS232 communication (see \ref usart_options_t).
+ * \param module       Software USART instance to associate with the hardware.
+ * \param hw           Base address of the USART hardware instance.
+ * \param config       USART configuration parameters for the STDIO stream.
  *
  */
-static inline void stdio_serial_init(struct usart_module *const module,
-		usart_inst_t const hw, const struct usart_config *const config)
+static inline void stdio_serial_init(
+		struct usart_module *const module,
+		usart_inst_t const hw,
+		const struct usart_config *const config)
 {
 	stdio_base = (void *)module;
 	ptr_put = (int (*)(void volatile*,char))&usart_serial_putchar;
@@ -96,7 +100,7 @@ static inline void stdio_serial_init(struct usart_module *const module,
 }
 
 /**
- * \}
+ * @}
  */
 
 #endif  // _STDIO_SERIAL_H_

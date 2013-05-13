@@ -74,9 +74,9 @@ __no_inline enum status_code system_peripheral_lock(
 	uint8_t register_pos = peripheral_id / 32;
 
 	/* Check if key is correct. */
-	if (~peripheral_id != key){
-		/* If key is not correct, do hard fault. */
-		HardFault_Handler();
+	if (~peripheral_id != key) {
+		Assert(false);
+		return STATUS_ERR_INVALID_ARG;
 	}
 
 	switch (register_pos) {
@@ -134,9 +134,9 @@ __no_inline enum status_code system_peripheral_unlock(
 	uint8_t register_pos = peripheral_id / 32;
 
 	/* Check if key is correct. */
-	if (~peripheral_id != key){
-		/* If key is not correct, do hard fault. */
-		HardFault_Handler();
+	if (~peripheral_id != key) {
+		Assert(false);
+		return STATUS_ERR_INVALID_ARG;
 	}
 
 	switch (register_pos) {

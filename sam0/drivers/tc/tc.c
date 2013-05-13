@@ -171,10 +171,10 @@ enum status_code tc_init(
 	module_inst->register_callback_mask     = 0x00;
 	module_inst->enable_callback_mask       = 0x00;
 
-	/* register this instance for callbacks*/
+	/* Register this instance for callbacks*/
 	_tc_instances[instance] = module_inst;
 
-	/* enable interupts for this TC module */
+	/* Enable interupts for this TC module */
 	system_interrupt_enable(_tc_interrupt_get_interrupt_vector(instance));
 #endif
 
@@ -273,7 +273,7 @@ enum status_code tc_init(
 		while (tc_is_syncing(module_inst)) {
 			/* Wait for sync */
 		}
-		/* Write configuration to register */
+
 		hw->COUNT8.CTRLBSET.reg = ctrlbset_tmp;
 	}
 
@@ -393,7 +393,7 @@ enum status_code tc_init(
 }
 
 /**
- * \brief Set TC module count value.
+ * \brief Sets TC module count value.
  *
  * Sets the current timer count value of a initialized TC module. The
  * specified TC module may be started or stopped.
@@ -464,7 +464,7 @@ uint32_t tc_get_count_value(
 		/* Wait for sync */
 	}
 
-	/* Read from based on the TC counter size */
+	/* Read from count register based on the TC counter size */
 	switch (module_inst->counter_size) {
 		case TC_COUNTER_SIZE_8BIT:
 			return (uint32_t)tc_module->COUNT8.COUNT.reg;
@@ -531,7 +531,7 @@ uint32_t tc_get_capture_value(
 }
 
 /**
- * \brief Set a TC module compare value.
+ * \brief Sets a TC module compare value.
  *
  * Writes a compare value to the given TC module compare/capture channel.
  *
@@ -592,7 +592,7 @@ enum status_code tc_set_compare_value(
 }
 
 /**
- * \brief Reset the TC module.
+ * \brief Resets the TC module.
  *
  * Resets the TC module, restoring all hardware module registers to their
  * default values and disabling the module. The TC module will not be

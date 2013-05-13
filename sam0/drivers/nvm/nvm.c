@@ -103,13 +103,6 @@ enum status_code nvm_set_config(
 	/* Sanity check argument */
 	Assert(config);
 
-	/* Configure the generic clock for the module */
-	struct system_gclk_chan_config gclk_chan_conf;
-	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
-	gclk_chan_conf.source_generator = GCLK_GENERATOR_0;
-	system_gclk_chan_set_config(NVMCTRL_GCLK_ID, &gclk_chan_conf);
-	system_gclk_chan_enable(NVMCTRL_GCLK_ID);
-
 	/* Get a pointer to the module hardware instance */
 	Nvmctrl *const nvm_module = NVMCTRL;
 
@@ -266,7 +259,7 @@ enum status_code nvm_update_buffer(
 		uint16_t length)
 {
 	enum status_code error_code = STATUS_OK;
-	uint8_t row_buffer[NVMCTRL_ROW_PAGES][_nvm_dev.page_size];
+	uint8_t row_buffer[NVMCTRL_ROW_PAGES][NVMCTRL_PAGE_SIZE];
 
 	/* Ensure the read does not overflow the page size */
 	if ((offset + length) > _nvm_dev.page_size) {
@@ -293,7 +286,8 @@ enum status_code nvm_update_buffer(
 
 	/* Calculate the starting page in the row that is to be updated */
 	uint8_t page_in_row =
-			(destination_address % (_nvm_dev.page_size * NVMCTRL_ROW_PAGES)) / _nvm_dev.page_size;
+			(destination_address % (_nvm_dev.page_size * NVMCTRL_ROW_PAGES)) /
+			_nvm_dev.page_size;
 
 	/* Update the specified bytes in the page buffer */
 	for (uint32_t i = 0; i < length; i++) {
@@ -567,9 +561,11 @@ void nvm_get_parameters(
 	/* Read out from the PARAM register */
 	uint32_t param_reg = nvm_module->PARAM.reg;
 
-	/* Mask out page size and number of pages */
-	parameters->page_size  =
-			(param_reg & NVMCTRL_PARAM_PSZ_Msk)  >> NVMCTRL_PARAM_PSZ_Pos;
+	/* Mask out page size exponent and convert to a number of bytes */
+	parameters->page_size =
+			8 << ((param_reg & NVMCTRL_PARAM_PSZ_Msk) >> NVMCTRL_PARAM_PSZ_Pos);
+
+	/* Mask out number of pages count */
 	parameters->nvm_number_of_pages =
 			(param_reg & NVMCTRL_PARAM_NVMP_Msk) >> NVMCTRL_PARAM_NVMP_Pos;
 
@@ -600,4 +596,35 @@ void nvm_get_parameters(
 		parameters->bootloader_number_of_pages =
 				NVMCTRL_ROW_PAGES << (7 - boot_fuse_value);
 	}
+}
+
+/**
+ * \brief Checks whether the page region is locked
+ *
+ * Extracts the region to which the given page belongs and checks whether
+ * that region is locked.
+ *
+ * \param[in] page_number    Page number to be checked
+ *
+ * \return Page lock status
+ *
+ * \retval true              Page is locked
+ * \retval false             Page is not locked
+ *
+ */
+bool nvm_is_page_locked(uint16_t page_number)
+{
+	uint16_t pages_in_region;
+	uint16_t region_number;
+
+	/* Get a pointer to the module hardware instance */
+	Nvmctrl *const nvm_module = NVMCTRL;
+
+	/* Get number of pages in a region */
+	pages_in_region = _nvm_dev.number_of_pages / 16;
+
+	/* Get region for given page */
+	region_number = page_number / pages_in_region;
+
+	return !(nvm_module->LOCK.reg & (1 << region_number));
 }

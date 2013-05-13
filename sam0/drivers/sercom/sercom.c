@@ -129,7 +129,6 @@ enum status_code _sercom_get_async_baud_val(
  * using the \c force_change flag.
  *
  * \param[in]  generator_source The generator to use for SERCOM.
- * \param[in]  run_in_standby   If the generator should stay on in standby.
  * \param[in]  force_change     Force change the generator.
  *
  * \return Status code indicating the GCLK generator change operation.

@@ -260,6 +260,27 @@ static inline uint32_t port_group_get_input_level(
 }
 
 /**
+ *  \brief Retrieves the state of a group of port pins that are configured as outputs.
+ *
+ *  Reads the current logicical output level of a port module's pins and returns
+ *  the current levels as a bitmask.
+ *
+ *  \param[in] port  Base of the PORT module to read from.
+ *  \param[in] mask  Mask of the port pin(s) to read.
+ *
+ *  \return Status of the port pin(s) output buffers.
+ */
+static inline uint32_t port_group_get_output_level(
+		const PortGroup *const port,
+		const uint32_t mask)
+{
+	/* Sanity check arguments */
+	Assert(port);
+
+	return (port->OUT.reg & mask);
+}
+
+/**
  *  \brief Sets the state of a group of port pins that are configured as outputs.
  *
  *  Sets the current output level of a port module's pins to a given logic
@@ -361,6 +382,25 @@ static inline bool port_pin_get_input_level(
 	uint32_t pin_mask  = (1UL << (gpio_pin % 32));
 
 	return (port_base->IN.reg & pin_mask);
+}
+
+/**
+ *  \brief Retrieves the state of a port pin that is configured as an output.
+ *
+ *  Reads the current logical output level of a port pin and returns the current
+ *  level as a boolean value.
+ *
+ *  \param[in] gpio_pin  Index of the GPIO pin to read.
+ *
+ *  \return Status of the port pin's output buffer.
+ */
+static inline bool port_pin_get_output_level(
+		const uint8_t gpio_pin)
+{
+	PortGroup *const port_base = port_get_group_from_gpio_pin(gpio_pin);
+	uint32_t pin_mask  = (1UL << (gpio_pin % 32));
+
+	return (port_base->OUT.reg & pin_mask);
 }
 
 /**

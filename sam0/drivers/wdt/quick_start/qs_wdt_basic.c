@@ -58,7 +58,7 @@ void configure_wdt(void)
 
 	/* Set the Watchdog configuration settings */
 	//! [setup_3]
-	wdt_conf.always_on      = true;
+	wdt_conf.always_on      = false;
 	wdt_conf.clock_source   = GCLK_GENERATOR_4;
 	wdt_conf.timeout_period = WDT_PERIOD_2048CLK;
 	//! [setup_3]
@@ -88,10 +88,10 @@ int main(void)
 
 	//! [main_2]
 	if (reset_cause == SYSTEM_RESET_CAUSE_WDT) {
-		port_pin_set_output_level(LED_0_PIN, false);
+		port_pin_set_output_level(LED_0_PIN, LED_0_INACTIVE);
 	}
 	else {
-		port_pin_set_output_level(LED_0_PIN, true);
+		port_pin_set_output_level(LED_0_PIN, LED_0_ACTIVE);
 	}
 	//! [main_2]
 
@@ -102,7 +102,7 @@ int main(void)
 		if (port_pin_get_input_level(BUTTON_0_PIN) == false) {
 		//! [main_4]
 		//! [main_5]
-			port_pin_set_output_level(LED_0_PIN, true);
+			port_pin_set_output_level(LED_0_PIN, LED_0_ACTIVE);
 
 			wdt_reset_count();
 		//! [main_5]

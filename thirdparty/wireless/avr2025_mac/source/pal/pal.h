@@ -53,7 +53,7 @@
  */
 
  /**
-  * \defgroup group_pal PAL 
+  * \defgroup group_pal Platform Abstraction Layer 
   * This module acts as a wrapper layer between the Wireless stack and the ASF drivers 
   * All hardwar level acess to the ASF drivers from the stack happens through this module
   * @{

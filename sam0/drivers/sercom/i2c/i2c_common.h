@@ -326,6 +326,9 @@ extern "C" {
  *   If the user would like to get callback from operations while using the
  *   interrupt-driven driver, the callback must be registered and then enabled
  *   using the "register_callback" and "enable_callback" functions.
+ * \else
+ *   There are no special considerations for this driver for the APIs listed in
+ *   this document.
  * \endif
  *
  * \section asfdoc_samd20_i2c_extra Extra Information
@@ -388,26 +391,8 @@ struct i2c_packet {
  * \li \ref asfdoc_samd20_system_pinmux_group "System Pin Multiplexer Driver"
  *
  *
- * \section asfdoc_samd20_i2c_extra_workarounds Workarounds Implemented by Driver
- * \if I2C_MASTER_MODE
- * Master:
- * - A bug in hardware makes the master go straight from IDLE to BUSY bus state.
- * As a workaround the inactive timeout is enabled, which will force the bus
- * state back to IDLE. If a address is written while the bus state was in BUSY,
- * the hardware will be able to generate a start condition and enter OWNER
- * before the hardware bug makes it go into the internal BUSY state.
- * As result of the timeout, there will be generated at BUSERR, thus the
- * workaround ignores all these errors.
- * \endif
- *
- * \if I2C_SLAVE_MODE
- * Slave:
- * - A bug in hardware makes the Stop interrupt only fire
- * occasionally. This means that the callback for a read will not be called
- * until a new address packet it received. The write callback will be called
- * when the master nacks the data, or when the entire packet is written.
- * \endif
- *
+ * \section asfdoc_samd20_i2c_extra_errata Errata
+ * There are no errata related to this driver.
  *
  * \section asfdoc_samd20_i2c_extra_history Module History
  * \ref asfdoc_samd20_i2c_extra_history_table "Below" is an overview of the

@@ -43,77 +43,110 @@
 #include <asf.h>
 #include <stdio.h>
 
+void usart_read_callback(const struct usart_module *const usart_module);
+void usart_write_callback(const struct usart_module *const usart_module);
 
+void configure_usart(void);
+void configure_usart_callbacks(void);
+
+//! [module_inst]
 struct usart_module usart_edbg;
+//! [module_inst]
 
-volatile uint8_t rx_buffer[5];
+//! [rx_buffer_var]
+#define MAX_RX_BUFFER_LENGTH   5
 
-volatile uint8_t buff[20];
+volatile uint8_t rx_buffer[MAX_RX_BUFFER_LENGTH];
+//! [rx_buffer_var]
 
-static void read_callback(const struct usart_module *const mod)
+//! [callback_funcs]
+void usart_read_callback(const struct usart_module *const usart_module)
 {
-	usart_write_buffer_job(&usart_edbg, (uint8_t *)rx_buffer, sizeof(rx_buffer)-1);
-
+	usart_write_buffer_job(&usart_edbg,
+			(uint8_t *)rx_buffer, MAX_RX_BUFFER_LENGTH);
 }
 
-static void write_callback(const struct usart_module *const mod)
+void usart_write_callback(const struct usart_module *const usart_module)
 {
-	static uint8_t cnt;
-	uint8_t len = sprintf((char *)&buff[0], "CNT:%u\n\r", cnt);
+	port_pin_toggle_output_level(LED_0_PIN);
+}
+//! [callback_funcs]
 
-	if(cnt++ < 10) {
-		usart_write_buffer_job(&usart_edbg,(uint8_t *)buff, len);
+//! [setup]
+void configure_usart(void)
+{
+//! [setup_config]
+	struct usart_config config_struct;
+//! [setup_config]
+//! [setup_config_defaults]
+	usart_get_config_defaults(&config_struct);
+//! [setup_config_defaults]
+
+//! [setup_change_config]
+	config_struct.baudrate     = 9600;
+	config_struct.mux_settings = USART_RX_1_TX_0_XCK_1;
+	config_struct.pinout_pad3  = EDBG_CDC_RX_PINMUX;
+	config_struct.pinout_pad2  = EDBG_CDC_TX_PINMUX;
+//! [setup_change_config]
+
+//! [setup_set_config]
+	while (usart_init(&usart_edbg,
+			EDBG_CDC_MODULE, &config_struct) != STATUS_OK) {
 	}
+//! [setup_set_config]
+
+//! [setup_enable]
+	usart_enable(&usart_edbg);
+//! [setup_enable]
+
+//! [setup_enable_txrx]
+	usart_enable_transceiver(&usart_edbg, USART_TRANSCEIVER_TX);
+	usart_enable_transceiver(&usart_edbg, USART_TRANSCEIVER_RX);
+//! [setup_enable_txrx]
 }
 
-static void configure_callbacks(void)
+void configure_usart_callbacks(void)
 {
-	usart_register_callback(&usart_edbg, write_callback, USART_CALLBACK_BUFFER_TRANSMITTED);
-	usart_register_callback(&usart_edbg, read_callback, USART_CALLBACK_BUFFER_RECEIVED);
+//! [setup_register_callbacks]
+	usart_register_callback(&usart_edbg,
+			usart_write_callback, USART_CALLBACK_BUFFER_TRANSMITTED);
+	usart_register_callback(&usart_edbg,
+			usart_read_callback, USART_CALLBACK_BUFFER_RECEIVED);
+//! [setup_register_callbacks]
+
+//! [setup_enable_callbacks]
 	usart_enable_callback(&usart_edbg, USART_CALLBACK_BUFFER_TRANSMITTED);
 	usart_enable_callback(&usart_edbg, USART_CALLBACK_BUFFER_RECEIVED);
+//! [setup_enable_callbacks]
 }
+//! [setup]
 
 int main(void)
 {
-	struct usart_config config_struct;
-	volatile uint32_t delay;
-
-	uint8_t string[] = "hello there world!\n\r";
-
-
-	/* Initialize system clocks */
 	system_init();
 
-	/* Get configuration defaults for the USART
-	 * 9600 8N1
-	 */
-	usart_get_config_defaults(&config_struct);
-	config_struct.mux_settings = USART_RX_1_TX_0_XCK_1;
+//! [setup_init]
+	configure_usart();
+	configure_usart_callbacks();
+//! [setup_init]
 
-	config_struct.pinout_pad3 = EDBG_CDC_RX_PINMUX;
-	config_struct.pinout_pad2 = EDBG_CDC_TX_PINMUX;
+//! [main]
+//! [enable_global_interrupts]
+	system_interrupt_enable_global();
+//! [enable_global_interrupts]
 
-	/* Apply configuration */
-	while (usart_init(&usart_edbg, EDBG_CDC_MODULE,
-			&config_struct) != STATUS_OK) {
+//! [main_send_string]
+	uint8_t string[] = "Hello World!\r\n";
+	usart_write_buffer_job(&usart_edbg, string, sizeof(string));
+//! [main_send_string]
+
+//! [main_loop]
+	while (true) {
+//! [main_loop]
+//! [main_read]
+		usart_read_buffer_job(&usart_edbg,
+				(uint8_t *)rx_buffer, MAX_RX_BUFFER_LENGTH);
+//! [main_read]
 	}
-
-	configure_callbacks();
-
-	/* Enable USARTs */
-	usart_enable(&usart_edbg);
-
-	/* Enable transmitter */
-	usart_enable_transceiver(&usart_edbg, USART_TRANSCEIVER_TX);
-	usart_enable_transceiver(&usart_edbg, USART_TRANSCEIVER_RX);
-
-	for(delay=0; delay < 100000; delay++);
-
-	usart_write_buffer_job(&usart_edbg,string, sizeof(string));
-
-	/* Echo back characters received */
-	while (1) {
-		usart_read_buffer_job(&usart_edbg, (uint8_t *)rx_buffer, sizeof(rx_buffer));
-	}
+//! [main]
 }
