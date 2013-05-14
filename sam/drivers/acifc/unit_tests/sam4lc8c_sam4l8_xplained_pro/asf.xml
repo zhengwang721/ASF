@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="ACIFC unit Test for SAM4L-EK" id="sam.drivers.acifc.unit_tests.sam4l_ek" type="unit-test">
+	<project caption="ACIFC unit Test for SAM4L8 Xplained Pro" id="sam.drivers.acifc.unit_tests.sam4l8_xplained_pro" type="unit-test">
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clock.h"/>
@@ -7,7 +7,7 @@
 		<build type="header-file" value="conf_uart_serial.h"/>
 		<build type="header-file" value="conf_sleepmgr.h" />
 		<require idref="sam.drivers.acifc.unit_tests"/>
-		<require idref="board.sam4l_ek"/>
+		<require idref="board.sam4l8_xplained_pro"/>
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>
@@ -15,6 +15,7 @@
 		<config name="config.compiler.iarewarm.dlib" value="full"/>
 		<config name="config.compiler.iarewarm.create_aux" value="no"/>
 		<config name="config.compiler.armgcc.create_aux" value="no"/>
-		<device-support value="atsam4lc4c"/>
+		<config name="config.compiler.as5_arm.create_aux" value="no"/>
+		<device-support value="atsam4lc8c"/>
 	</project>
 </asf>

@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Board configuration.
+ * \brief Serial USART service configuration.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,23 +41,9 @@
  *
  */
 
-/**
- * \defgroup acifc_example_pins_def
- *  - <b> SAM4L EK board </b>
- *  - PA06(J100.2) -- ADC SENSOR VBAT(J105.1)
- *  - PA07(J4.4) -- VCC(J4.10)
- *  - Or
- *  - PA06(J100.2) -- ADC SENSOR VBAT(J105.1)
- *  - PA07(J4.4) -- GND(J4.9)
- */
+#ifndef CONF_USART_SERIAL_H
+#define CONF_USART_SERIAL_H
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+/* Intentionally empty */
 
-/** Enable Com Port. */
-#define CONF_BOARD_COM_PORT
-
-/* Configure ACIFC ACAN0/ACAP0 pin */
-#define CONF_BOARD_ACIFC
-
-#endif /* CONF_BOARD_H_INCLUDED */
+#endif/* CONF_USART_SERIAL_H_INCLUDED */
