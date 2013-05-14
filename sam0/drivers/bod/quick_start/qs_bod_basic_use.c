@@ -41,22 +41,38 @@
 
 void configure_bod33(void);
 
+//! [setup]
 void configure_bod33(void)
 {
+//! [setup_config]
 	struct bod_config bod33_conf;
-
+//! [setup_config]
+//! [setup_config_defaults]
 	bod_get_config_defaults(&bod33_conf);
-	bod_set_config(BOD_BOD33, &bod33_conf);
+//! [setup_config_defaults]
 
+//! [setup_set_config]
+	bod_set_config(BOD_BOD33, &bod33_conf);
+//! [setup_set_config]
+
+//! [setup_enable]
 	bod_enable(BOD_BOD33);
+//! [setup_enable]
 }
+//! [setup]
 
 int main(void)
 {
 	/* Configure the BOD 3.3V module */
+//! [setup_init]
 	configure_bod33();
+//! [setup_init]
 
+//! [main]
+//! [main_loop]
 	while (true) {
 
 	}
+//! [main_loop]
+//! [main]
 }
