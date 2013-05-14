@@ -72,8 +72,8 @@ static void run_wdt_enable_disable_test(const struct test_case *test)
 		wdt_get_config_defaults(&config);
 
 		/* Set the desired configuration */
-		config.clock_source = CONF_WDT_GCLK_GEN;
-		config.timeout_period = CONF_WDT_TIMEOUT_PERIOD;
+		config.clock_source         = CONF_WDT_GCLK_GEN;
+		config.timeout_period       = CONF_WDT_TIMEOUT_PERIOD;
 		config.early_warning_period = WDT_PERIOD_1024CLK;
 
 		/* Initialize the Watchdog module */
@@ -170,9 +170,9 @@ static void configure_stdio_serial(void)
 	/* Configure USART for unit test output */
 	usart_get_config_defaults(&usart_conf);
 	usart_conf.mux_settings = CONF_STDIO_MUX_SETTING;
-	usart_conf.pinout_pad3 = CONF_STDIO_RX_PINMUX;
-	usart_conf.pinout_pad2 = CONF_STDIO_TX_PINMUX;
-	usart_conf.baudrate = CONF_STDIO_BAUDRATE;
+	usart_conf.pinout_pad3  = CONF_STDIO_RX_PINMUX;
+	usart_conf.pinout_pad2  = CONF_STDIO_TX_PINMUX;
+	usart_conf.baudrate     = CONF_STDIO_BAUDRATE;
 
 	stdio_serial_init(&unit_test_output, CONF_STDIO_USART, &usart_conf);
 	usart_enable(&unit_test_output);
