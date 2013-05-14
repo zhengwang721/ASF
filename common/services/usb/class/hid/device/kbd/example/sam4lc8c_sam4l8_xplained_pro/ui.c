@@ -44,16 +44,73 @@
 #include <asf.h>
 #include "ui.h"
 
-#define  MOUSE_MOVE_RANGE  3
-#define  MOUSE_MOVE_COUNT  50
+//! Sequence process running each \c SEQUENCE_PERIOD ms
+#define SEQUENCE_PERIOD 150
 
-#define  MOVE_UP     0
-#define  MOVE_RIGHT  1
-#define  MOVE_DOWN   2
-#define  MOVE_LEFT   3
-
-static uint8_t move_dir = MOVE_UP;
-static int32_t move_count = MOUSE_MOVE_COUNT;
+static struct {
+	bool b_modifier;
+	bool b_down;
+	uint8_t value;
+} ui_sequence[] = {
+	// Display windows menu
+	{true,true,HID_MODIFIER_LEFT_UI},
+	// Launch Windows Command line
+	{false,true,HID_R},
+	{false,false,HID_R},
+	// Clear modifier
+	{true,false,HID_MODIFIER_LEFT_UI},
+	// Tape sequence "notepad" + return
+	{false,true,HID_N},
+	{false,false,HID_N},
+	{false,true,HID_O},
+	{false,false,HID_O},
+	{false,true,HID_T},
+	{false,false,HID_T},
+	{false,true,HID_E},
+	{false,false,HID_E},
+	{false,true,HID_P},
+	{false,false,HID_P},
+	{false,true,HID_A},
+	{false,false,HID_A},
+	{false,true,HID_D},
+	{false,false,HID_D},
+	{false,true,HID_ENTER},
+	{false,false,HID_ENTER},
+	// Delay to wait "notepad" focus
+	{false,false,0}, // No key (= SEQUENCE_PERIOD delay)
+	{false,false,0}, // No key (= SEQUENCE_PERIOD delay)
+	{false,false,0}, // No key (= SEQUENCE_PERIOD delay)
+	{false,false,0}, // No key (= SEQUENCE_PERIOD delay)
+	{false,false,0}, // No key (= SEQUENCE_PERIOD delay)
+	{false,false,0}, // No key (= SEQUENCE_PERIOD delay)
+	{false,false,0}, // No key (= SEQUENCE_PERIOD delay)
+	// Display "Atmel "
+	{true,true,HID_MODIFIER_RIGHT_SHIFT}, // Enable Maj
+	{false,true,HID_A},
+	{false,false,HID_A},
+	{true,false,HID_MODIFIER_RIGHT_SHIFT}, // Disable Maj
+	{false,true,HID_T},
+	{false,false,HID_T},
+	{false,true,HID_M},
+	{false,false,HID_M},
+	{false,true,HID_E},
+	{false,false,HID_E},
+	{false,true,HID_L},
+	{false,false,HID_L},
+	{false,true,HID_SPACEBAR},
+	{false,false,HID_SPACEBAR},
+	// Display "ARM "
+	{false,true,HID_CAPS_LOCK}, // Enable caps lock
+	{false,false,HID_CAPS_LOCK},
+	{false,true,HID_A},
+	{false,false,HID_A},
+	{false,true,HID_R},
+	{false,false,HID_R},
+	{false,true,HID_M},
+	{false,false,HID_M},
+	{false,true,HID_CAPS_LOCK}, // Disable caps lock
+	{false,false,HID_CAPS_LOCK},
+};
 
 // Wakeup pin is SW0 (PC24, EIC1)
 #define UI_WAKEUP_IRQN         EIC_1_IRQn
@@ -157,7 +214,12 @@ void ui_wakeup(void)
 
 void ui_process(uint16_t framenumber)
 {
-	static uint8_t cpt_sof = 0;
+	bool b_btn_state, success;
+	static bool btn_last_state = false;
+	static bool sequence_running = false;
+	static uint8_t sequence_pos = 0;
+	uint8_t value;
+	static uint16_t cpt_sof = 0;
 
 	if ((framenumber % 1000) == 0) {
 		LED_On(LED0);
@@ -167,54 +229,66 @@ void ui_process(uint16_t framenumber)
 	}
 	// Scan process running each 2ms
 	cpt_sof++;
-	if (cpt_sof < 2) {
+	if ((cpt_sof % 2) == 0) {
+		return;
+	}
+
+	// Scan buttons on switch 0 to send keys sequence
+	b_btn_state = (!ioport_get_pin_level(GPIO_PUSH_BUTTON_0));
+	if (b_btn_state != btn_last_state) {
+		btn_last_state = b_btn_state;
+		sequence_running = true;
+	}
+
+	// Sequence process running each period
+	if (SEQUENCE_PERIOD > cpt_sof) {
 		return;
 	}
 	cpt_sof = 0;
 
-	// Uses buttons to move mouse
-	if (!ioport_get_pin_level(SW0_PIN)) {
-		move_count --;
-		switch(move_dir) {
-		case MOVE_UP:
-			udi_hid_mouse_moveY(-MOUSE_MOVE_RANGE);
-			if (move_count < 0) {
-				move_dir = MOVE_RIGHT;
-				move_count = MOUSE_MOVE_COUNT;
+	if (sequence_running) {
+		// Send next key
+		value = ui_sequence[sequence_pos].value;
+		if (value!=0) {
+			if (ui_sequence[sequence_pos].b_modifier) {
+				if (ui_sequence[sequence_pos].b_down) {
+					success = udi_hid_kbd_modifier_down(value);
+				} else {
+					success = udi_hid_kbd_modifier_up(value);
+				}
+			} else {
+				if (ui_sequence[sequence_pos].b_down) {
+					success = udi_hid_kbd_down(value);
+				} else {
+					success = udi_hid_kbd_up(value);
+				}
 			}
-			break;
-		case MOVE_RIGHT:
-			udi_hid_mouse_moveX(+MOUSE_MOVE_RANGE);
-			if (move_count < 0) {
-				move_dir = MOVE_DOWN;
-				move_count = MOUSE_MOVE_COUNT;
+			if (!success) {
+				return; // Retry it on next schedule
 			}
-			break;
-		case MOVE_DOWN:
-			udi_hid_mouse_moveY(+MOUSE_MOVE_RANGE);
-			if (move_count < 0) {
-				move_dir = MOVE_LEFT;
-				move_count = MOUSE_MOVE_COUNT;
-			}
-			break;
-		case MOVE_LEFT:
-			udi_hid_mouse_moveX(-MOUSE_MOVE_RANGE);
-			if (move_count < 0) {
-				move_dir = MOVE_UP;
-				move_count = MOUSE_MOVE_COUNT;
-			}
-			break;
+		}
+		// Valid sequence position
+		sequence_pos++;
+		if (sequence_pos >=
+			sizeof(ui_sequence) / sizeof(ui_sequence[0])) {
+			sequence_pos = 0;
+			sequence_running = false;
 		}
 	}
+}
+
+void ui_kbd_led(uint8_t value)
+{
+	UNUSED(value);
 }
 
 /**
  * \defgroup UI User Interface
  *
- * Human interface on SAM4L Xplained Pro:
- * - LED0 blinks when USB host has checked and enabled HID Mouse interface
- * - No mouse buttons are linked
- * - SW0 is used to move mouse around
- * - Only a low level on SW0 will generate a wakeup to USB Host in remote wakeup mode.
+ * Human interface on SAM4L8 Xplained Pro:
+ * - LED0 blinks when USB host has checked and enabled HID Keyboard interface
+ * - The SW0 opens a notepad application on Windows O.S.
+ *   and sends key sequence "Atmel ARM"
+ * - Only SW0 will generate a wakeup to USB Host in remote wakeup mode.
  *
  */

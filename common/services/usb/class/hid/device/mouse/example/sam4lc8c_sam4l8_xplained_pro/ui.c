@@ -211,7 +211,7 @@ void ui_process(uint16_t framenumber)
 /**
  * \defgroup UI User Interface
  *
- * Human interface on SAM4L-EK:
+ * Human interface on SAM4L8 Xplained Pro:
  * - LED0 blinks when USB host has checked and enabled HID Mouse interface
  * - No mouse buttons are linked
  * - SW0 is used to move mouse around
