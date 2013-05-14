@@ -137,7 +137,10 @@ void board_init(void)
 		ioport_set_pin_peripheral_mode(PIN_PB11B_SPI_NPCS2,
 				MUX_PB11B_SPI_NPCS2);
 	#endif
+#endif
 
+#ifdef CONF_BOARD_DACC_VOUT
+	ioport_set_pin_peripheral_mode(DACC_VOUT_PIN, DACC_VOUT_MUX);
 #endif
 
 #ifdef CONF_BOARD_ACIFC
