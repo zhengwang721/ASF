@@ -152,8 +152,8 @@ struct adc_cdma_first_config g_adc_cdma_first_cfg[2] = {
 		.enstup = 1,
 		.dw = 0
 	},
-	{.
-		zoomrange = ADC_ZOOMRANGE_0,
+	{
+		.zoomrange = ADC_ZOOMRANGE_0,
 		.muxneg = ADC_MUXNEG_1,
 		/* DAC internal */
 		.muxpos = ADC_MUXPOS_3,

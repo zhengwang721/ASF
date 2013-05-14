@@ -77,7 +77,7 @@
  * This example has been tested with the following setup:
  * - sam4lc4c_sam4l_ek
  * - sam4lc4c_sam4l_xplained_pro
- * - sam4lc4c_sam4l8_xplained_pro
+ * - sam4lc8c_sam4l8_xplained_pro
  *
  * \section compinfo Compilation info
  * This software was written for the GNU GCC and IAR for ARM. Other compilers
@@ -131,8 +131,8 @@ struct adc_cdma_first_config g_adc_cdma_first_cfg[2] = {
 		.enstup = 1,
 		.dw = 0
 	},
-	{.
-		zoomrange = ADC_ZOOMRANGE_0,
+	{
+		.zoomrange = ADC_ZOOMRANGE_0,
 		.muxneg = ADC_MUXNEG_1,
 		/* DAC internal */
 		.muxpos = ADC_MUXPOS_3,
