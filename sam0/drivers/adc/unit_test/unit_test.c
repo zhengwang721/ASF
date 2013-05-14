@@ -123,7 +123,7 @@ volatile bool adc_init_success = false;
  *
  * \param module Pointer to the ADC module (not used)
  */
-void adc_user_callback(const struct adc_module *const module)
+static void adc_user_callback(const struct adc_module *const module)
 {
 	interrupt_flag = true;
 }
@@ -146,6 +146,7 @@ static void cdc_uart_init(void)
 	cdc_uart_config.baudrate         = 115200;
 	stdio_serial_init(&cdc_uart_module, EDBG_CDC_MODULE, &cdc_uart_config);
 	usart_enable(&cdc_uart_module);
+
 	/* Enable transceivers */
 	usart_enable_transceiver(&cdc_uart_module, USART_TRANSCEIVER_TX);
 	usart_enable_transceiver(&cdc_uart_module, USART_TRANSCEIVER_RX);
@@ -191,7 +192,7 @@ static void test_dac_init(void)
 static void run_adc_init_test(const struct test_case *test)
 {
 	enum status_code status = STATUS_ERR_IO;
-	
+
 	/* Structure for ADC configuration */
 	struct adc_config config;
 	adc_get_config_defaults(&config);
@@ -199,14 +200,18 @@ static void run_adc_init_test(const struct test_case *test)
 	config.reference      = ADC_REFERENCE_INT1V;
 	config.clock_source   = GCLK_GENERATOR_3;
 	config.gain_factor    = ADC_GAIN_FACTOR_1X;
+
 	/* Initialize the ADC */
 	status = adc_init(&adc_inst, ADC, &config);
+
 	/* Check for successful initialization */
 	test_assert_true(test, status == STATUS_OK,
 			"ADC initialization failed");
 	status = STATUS_ERR_IO;
+
 	/* Enable the ADC */
 	status = adc_enable(&adc_inst);
+
 	/* Check for successful enable */
 	test_assert_true(test, status == STATUS_OK,
 			"ADC enabling failed");
@@ -232,7 +237,7 @@ static void run_adc_polled_mode_test(const struct test_case *test)
 	/* Skip test if ADC initialization failed */
 	test_assert_true(test, adc_init_success,
 			"Skipping test due to failed initialization");
-	
+
 	/* Set 0.5V on DAC output */
 	dac_chan_write(&dac_inst, DAC_CHANNEL_0, DAC_VAL_HALF_VOLT);
 	delay_ms(1);
@@ -241,7 +246,7 @@ static void run_adc_polled_mode_test(const struct test_case *test)
 	while (adc_read(&adc_inst, &adc_result) != STATUS_OK) {
 	}
 	/* Test result */
-	test_assert_true(test, 
+	test_assert_true(test,
 			adc_result > (ADC_VAL_DAC_HALF_OUTPUT - ADC_OFFSET),
 			"Error in ADC conversion at 0.5V input");
 
@@ -254,7 +259,7 @@ static void run_adc_polled_mode_test(const struct test_case *test)
 	while (adc_read(&adc_inst, &adc_result) != STATUS_OK) {
 	}
 	/* Test result */
-	test_assert_true(test, 
+	test_assert_true(test,
 			adc_result > (ADC_VAL_DAC_FULL_OUTPUT - ADC_OFFSET),
 			"Error in ADC conversion at 1V input");
 }
@@ -271,14 +276,16 @@ static void run_adc_polled_mode_test(const struct test_case *test)
 static void setup_adc_callback_mode_test(const struct test_case *test)
 {
 	interrupt_flag = false;
+
 	/* Skip test if ADC initialization failed */
 	test_assert_true(test, adc_init_success,
 			"Skipping test due to failed initialization");
-	
+
 	/* Initialize ADC buffer */
 	for (uint8_t i = 0; i < ADC_SAMPLES; i++) {
 		adc_buf[i] = 0;
 	}
+
 	/* Register and enable buffer read callback */
 	adc_register_callback(&adc_inst, adc_user_callback,
 			ADC_CALLBACK_READ_BUFFER);
@@ -310,12 +317,14 @@ static void run_adc_callback_mode_test(const struct test_case *test)
 			break;
 		}
 	} while (timeout_cycles > 0);
+
 	/* Test for timeout */
 	test_assert_true(test, timeout_cycles > 0,
 			"Timeout in ADC read");
+
 	/* Test result */
 	for (uint8_t i = 0; i < ADC_SAMPLES; i++) {
-		test_assert_true(test, 
+		test_assert_true(test,
 				adc_buf[i] > (ADC_VAL_DAC_HALF_OUTPUT - ADC_OFFSET),
 				"Error in ADC conversion for 0.5V at index %d", i);
 	}
@@ -336,6 +345,7 @@ static void cleanup_adc_callback_mode_test(const struct test_case *test)
 	for (uint8_t i = 0; i < ADC_SAMPLES; i++) {
 		adc_buf[i] = 0;
 	}
+
 	/* Unregister & disable ADC read buffer callback */
 	adc_unregister_callback(&adc_inst, ADC_CALLBACK_READ_BUFFER);
 	adc_disable_callback(&adc_inst, ADC_CALLBACK_READ_BUFFER);
@@ -352,25 +362,26 @@ static void cleanup_adc_callback_mode_test(const struct test_case *test)
 static void setup_adc_average_mode_test(const struct test_case *test)
 {
 	enum status_code status = STATUS_ERR_IO;
+
 	/* Skip test if ADC initialization failed */
 	test_assert_true(test, adc_init_success,
 			"Skipping test due to failed initialization");
-			
+
 	/* Disable ADC before initialization */
 	adc_disable(&adc_inst);
 	struct adc_config config;
 	adc_get_config_defaults(&config);
-	config.positive_input  = ADC_POSITIVE_INPUT_PIN2;
-	config.reference       = ADC_REFERENCE_INT1V;
-	config.clock_source    = GCLK_GENERATOR_3;
-	config.gain_factor     = ADC_GAIN_FACTOR_1X;
-	config.resolution      = ADC_RESOLUTION_16BIT;
+	config.positive_input     = ADC_POSITIVE_INPUT_PIN2;
+	config.reference          = ADC_REFERENCE_INT1V;
+	config.clock_source       = GCLK_GENERATOR_3;
+	config.gain_factor        = ADC_GAIN_FACTOR_1X;
+	config.resolution         = ADC_RESOLUTION_16BIT;
 	config.accumulate_samples = ADC_ACCUMULATE_SAMPLES_16;
+
 	/* Re-initialize & enable ADC */
 	status = adc_init(&adc_inst, ADC, &config);
 	test_assert_true(test, status == STATUS_OK,
 			"ADC initialization failed");
-	status = STATUS_ERR_IO;
 	status = adc_enable(&adc_inst);
 	test_assert_true(test, status == STATUS_OK,
 			"ADC enabling failed");
@@ -392,13 +403,15 @@ static void run_adc_average_mode_test(const struct test_case *test)
 	/* Set 0.5V DAC output */
 	dac_chan_write(&dac_inst, DAC_CHANNEL_0, DAC_VAL_HALF_VOLT);
 	delay_ms(1);
+
 	/* Start an ADC conversion */
 	adc_start_conversion(&adc_inst);
 	while (adc_read(&adc_inst, &adc_result) != STATUS_OK) {
 	}
 	adc_result = adc_result >> 4;
+
 	/* Test result */
-	test_assert_true(test, 
+	test_assert_true(test,
 			adc_result > (ADC_VAL_DAC_HALF_OUTPUT - ADC_OFFSET),
 			"Error in ADC average mode conversion at 0.5V input");
 }
@@ -415,16 +428,18 @@ static void run_adc_average_mode_test(const struct test_case *test)
  */
 static void setup_adc_window_mode_test(const struct test_case *test)
 {
-	uint16_t adc_result = 0;
 	enum status_code status = STATUS_ERR_IO;
+
 	interrupt_flag = false;
+
 	/* Set 0.5V DAC output */
 	dac_chan_write(&dac_inst, DAC_CHANNEL_0, DAC_VAL_HALF_VOLT);
 	delay_ms(1);
+
 	/* Skip test if ADC initialization failed */
 	test_assert_true(test, adc_init_success,
 			"Skipping test due to failed initialization");
-	
+
 	/* Disable ADC before initialization */
 	adc_disable(&adc_inst);
 	struct adc_config config;
@@ -438,19 +453,20 @@ static void setup_adc_window_mode_test(const struct test_case *test)
 	config.window.window_mode = ADC_WINDOW_MODE_BETWEEN_INVERTED;
 	config.window.window_lower_value = (ADC_VAL_DAC_HALF_OUTPUT - ADC_OFFSET);
 	config.window.window_upper_value = (ADC_VAL_DAC_HALF_OUTPUT + ADC_OFFSET);
+
 	/* Re-initialize & enable ADC */
 	status = adc_init(&adc_inst, ADC, &config);
 	test_assert_true(test, status == STATUS_OK,
 			"ADC initialization failed");
-	status = STATUS_ERR_IO;
 	status = adc_enable(&adc_inst);
 	test_assert_true(test, status == STATUS_OK,
 			"ADC enabling failed");
-	
+
 	/* Register and enable window mode callback */
 	adc_register_callback(&adc_inst, adc_user_callback,
 			ADC_CALLBACK_WINDOW);
 	adc_enable_callback(&adc_inst, ADC_CALLBACK_WINDOW);
+
 	/* Start ADC conversion */
 	adc_start_conversion(&adc_inst);
 }
@@ -466,8 +482,8 @@ static void setup_adc_window_mode_test(const struct test_case *test)
  */
 static void run_adc_window_mode_test(const struct test_case *test)
 {
-	uint16_t adc_result = 0;
 	uint16_t timeout_cycles = 10000;
+
 	/* Set 1V DAC output */
 	dac_chan_write(&dac_inst, DAC_CHANNEL_0, DAC_VAL_ONE_VOLT);
 	delay_ms(1);
