@@ -155,11 +155,13 @@ enum status_code ac_init(
 	for (uint8_t i = 0; i < AC_CALLBACK_N; i++) {
 		module_inst->callback[i]        = NULL;
 	}
+
+	/* Initialize software flags*/
 	module_inst->register_callback_mask     = 0x00;
 	module_inst->enable_callback_mask       = 0x00;
 
 	/* Register this instance for callbacks*/
-	_ac_instances[instance] = module_inst;
+	_ac_instance = module_inst;
 #endif /*AC_CALLBACK == true */
 
 	/* Write configuration to module */

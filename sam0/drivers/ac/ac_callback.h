@@ -46,6 +46,8 @@
 
 #include "ac.h"
 
+extern struct ac_module *_ac_instance;
+
 /**
  * \name Callback Management
  * {@

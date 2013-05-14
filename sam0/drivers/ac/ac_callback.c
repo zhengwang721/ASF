@@ -43,6 +43,8 @@
 
 #include "ac_callback.h"
 
+struct ac_module *_ac_instance;
+
 void _ac_interrupt_handler(uint8_t instance);
 
 /**
@@ -67,7 +69,7 @@ enum status_code ac_register_callback(
 	Assert(module);
 	Assert(callback_func);
 
-#if (AC_NUM_CMP < 2)
+#if (AC_PAIRS == 1)
 	/* Register callback function */
 	if (callback_type == AC_CALLBACK_WINDOW_0) {
 		module->callback[2] = callback_func;
@@ -75,7 +77,7 @@ enum status_code ac_register_callback(
 	else {
 		module->callback[callback_type] = callback_func;
 	}
-# endif /* (AC_NUM_CMP < 2) */
+# endif /* (AC_PAIRS == 1) */
 
 	module->callback[callback_type] = callback_func;
 	/* Set software flag for callback */
@@ -99,7 +101,7 @@ enum status_code ac_unregister_callback(
 	/* Sanity check arguments */
 	Assert(module);
 
-#if (AC_NUM_CMP < 2)
+#if (AC_PAIRS == 1)
 	/* Unregister callback function */
 	if (callback_type == AC_CALLBACK_WINDOW_0) {
 		module->callback[2] = NULL;
@@ -107,7 +109,7 @@ enum status_code ac_unregister_callback(
 	else {
 		module->callback[callback_type] = NULL;
 	}
-# endif /* (AC_NUM_CMP < 2) */
+# endif /* (AC_PAIRS == 1) */
 	module->callback[callback_type] = NULL;
 
 	/* Set software flag for callback */
@@ -131,5 +133,76 @@ void AC_Handler(void) {
  */
 void _ac_interrupt_handler(void)
 {
+	/* Temporary variable */
+	uint8_t interrupt_and_callback_status_mask;
 
+	/* Get device instance from the look-up table */
+
+
+	/* Read and mask interrupt flag register */
+	interrupt_and_callback_status_mask = module->hw->COUNT8.INTFLAG.reg &
+			_ac_instance->register_callback_mask &
+			_ac_instance->enable_callback_mask;
+
+	/* Check if comparator channel 0 needs to be serviced */
+	if (interrupt_and_callback_status_mask & AC_INTFLAG_COMP0) {
+		/* Invoke registered and enabled callback function */
+		(_ac_instance->callback[AC_CALLBACK_COMPARATOR_0])(_ac_instance);
+		/* Clear interrupt flag */
+		_ac_instance->hw.INTFLAG.reg = AC_INTFLAG_COMP0;
+	}
+
+	/* Check if comparator channel 1 needs to be serviced */
+	if (interrupt_and_callback_status_mask & AC_INTFLAG_COMP1) {
+		/* Invoke registered and enabled callback function */
+		(_ac_instance->callback[AC_CALLBACK_COMPARATOR_1])(_ac_instance);
+		/* Clear interrupt flag */
+		_ac_instance->hw.INTFLAG.reg = AC_INTFLAG_COMP1;
+	}
+
+#if defined(__DOXYGEN__) || (AC_NUM_CMP > 2)
+		/* Check if comparator channel 2 needs to be serviced */
+	if (interrupt_and_callback_status_mask & AC_INTFLAG_COMP2) {
+		/* Invoke registered and enabled callback function */
+		(_ac_instance->callback[AC_CALLBACK_COMPARATOR_2])(_ac_instance);
+		/* Clear interrupt flag */
+		_ac_instance->hw.INTFLAG.reg = AC_INTFLAG_COMP2;
+	}
+
+	/* Check if comparator channel 3 needs to be serviced */
+	if (interrupt_and_callback_status_mask & AC_INTFLAG_COMP3) {
+		/* Invoke registered and enabled callback function */
+		(_ac_instance->callback[AC_CALLBACK_COMPARATOR_3])(_ac_instance);
+		/* Clear interrupt flag */
+		_ac_instance->hw.INTFLAG.reg = AC_INTFLAG_COMP3;
+	}
+#endif /*  defined(__DOXYGEN__) || (AC_NUM_CMP > 2) */
+
+#if (AC_PAIRS == 1)
+	/* Check if window 0 needs to be serviced */
+	if (interrupt_and_callback_status_mask & AC_INTFLAG_WIN0) {
+		/* Invoke registered and enabled callback function */
+		(_ac_instance->callback[2])(_ac_instance);
+		/* Clear interrupt flag */
+		_ac_instance->hw.INTFLAG.reg = AC_INTFLAG_WIN0;
+	}
+#endif /* (AC_PAIRS == 1) */
+
+#if defined(__DOXYGEN__) || (AC_PAIRS > 1)
+	/* Check if window 0 needs to be serviced */
+	if (interrupt_and_callback_status_mask & AC_INTFLAG_WIN0) {
+		/* Invoke registered and enabled callback function */
+		(_ac_instance->callback[AC_CALLBACK_WINDOW_0])(_ac_instance);
+		/* Clear interrupt flag */
+		_ac_instance->hw.INTFLAG.reg = AC_INTFLAG_WIN0;
+	}
+
+		/* Check if window 1 needs to be serviced */
+	if (interrupt_and_callback_status_mask & AC_INTFLAG_WIN1) {
+		/* Invoke registered and enabled callback function */
+		(_ac_instance->callback[AC_CALLBACK_WINDOW_1])(_ac_instance);
+		/* Clear interrupt flag */
+		_ac_instance->hw.INTFLAG.reg = AC_INTFLAG_WIN1;
+	}
+#endif /* defined(__DOXYGEN__) || (AC_PAIRS > 1) */
 }
