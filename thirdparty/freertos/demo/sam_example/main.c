@@ -3,7 +3,7 @@
  *
  * \brief FreeRTOS Real Time Kernel example.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -46,17 +46,18 @@
  *
  * \section Purpose
  *
- * The FreeRTOS example will help users how to use FreeRTOS in SAM-EK board.
- * This basic application shows hwo to create task and get information of created task.
+ * The FreeRTOS example will help users how to use FreeRTOS in SAM boards.
+ * This basic application shows hwo to create task and get information of
+ * created task.
  *
  * \section Requirements
  *
- * This package can be used with SAM evaluation kits.
+ * This package can be used with SAM boards.
  *
  * \section Description
  *
- * The demonstration program create two task, one is make LED on the board blink at a fixed rate
- * and another is monitor status of task.
+ * The demonstration program create two task, one is make LED on the board
+ * blink at a fixed rate, and another is monitor status of task.
  *
  * \section Usage
  *
