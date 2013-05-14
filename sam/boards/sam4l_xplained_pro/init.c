@@ -139,6 +139,11 @@ void board_init(void)
 	#endif
 
 #endif
+
+#ifdef CONF_BOARD_ACIFC
+	ioport_set_pin_peripheral_mode(PIN_PA06E_ACIFC_ACAN0, MUX_PA06E_ACIFC_ACAN0);
+	ioport_set_pin_peripheral_mode(PIN_PA07E_ACIFC_ACAP0, MUX_PA07E_ACIFC_ACAP0);
+#endif
 }
 
 /** @} */

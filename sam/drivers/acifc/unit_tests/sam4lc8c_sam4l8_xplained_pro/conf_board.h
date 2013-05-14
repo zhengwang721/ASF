@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Board configuration.
+ * \brief  Configuration File for SAM4L8 Xplained Pro Board.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -39,16 +39,6 @@
  *
  * \asf_license_stop
  *
- */
-
-/**
- * \defgroup acifc_example_pins_def
- *  - <b> SAM4L EK board </b>
- *  - PA06(J100.2) -- ADC SENSOR VBAT(J105.1)
- *  - PA07(J4.4) -- VCC(J4.10)
- *  - Or
- *  - PA06(J100.2) -- ADC SENSOR VBAT(J105.1)
- *  - PA07(J4.4) -- GND(J4.9)
  */
 
 #ifndef CONF_BOARD_H_INCLUDED
