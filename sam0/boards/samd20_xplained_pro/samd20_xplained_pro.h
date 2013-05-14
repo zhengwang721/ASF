@@ -79,20 +79,20 @@ void system_board_init(void);
 
 /** \name LED0 definitions
  *  @{ */
-#define LED0_PIN                  PIN_PA15
+#define LED0_PIN                  PIN_PA14
 #define LED0_ACTIVE               false
 #define LED0_INACTIVE             !LED0_ACTIVE
 /** @} */
 
 /** \name SW0 definitions
  *  @{ */
-#define SW0_PIN                   PIN_PA14
+#define SW0_PIN                   PIN_PA15
 #define SW0_ACTIVE                false
 #define SW0_INACTIVE              !SW0_ACTIVE
-#define SW0_EIC_PIN               PIN_PA14A_EIC_EXTINT14
-#define SW0_EIC_MUX               MUX_PA14A_EIC_EXTINT14
-#define SW0_EIC_PINMUX            PINMUX_PA14A_EIC_EXTINT14
-#define SW0_EIC_LINE              14
+#define SW0_EIC_PIN               PIN_PA15A_EIC_EXTINT15
+#define SW0_EIC_MUX               MUX_PA15A_EIC_EXTINT15
+#define SW0_EIC_PINMUX            PINMUX_PA15A_EIC_EXTINT15
+#define SW0_EIC_LINE              15
 /** @} */
 
 /**
@@ -142,8 +142,8 @@ void system_board_init(void);
 #define EXT1_PIN_8                PIN_PB03
 #define EXT1_PIN_9                PIN_PB04
 #define EXT1_PIN_10               PIN_PB05
-#define EXT1_PIN_11               PIN_PA12
-#define EXT1_PIN_12               PIN_PA13
+#define EXT1_PIN_11               PIN_PA08
+#define EXT1_PIN_12               PIN_PA09
 #define EXT1_PIN_13               PIN_PB09
 #define EXT1_PIN_14               PIN_PB08
 #define EXT1_PIN_15               PIN_PA05
@@ -178,13 +178,13 @@ void system_board_init(void);
  */
 #define EXT1_ADC_MODULE           ADC
 #define EXT1_ADC_0_CHANNEL        8
-#define EXT1_ADC_0_PIN            PIN_PB00A_ADC_AIN8
-#define EXT1_ADC_0_MUX            MUX_PB00A_ADC_AIN8
-#define EXT1_ADC_0_PINMUX         PINMUX_PB00A_ADC_AIN8
+#define EXT1_ADC_0_PIN            PIN_PB00B_ADC_AIN8
+#define EXT1_ADC_0_MUX            MUX_PB00B_ADC_AIN8
+#define EXT1_ADC_0_PINMUX         PINMUX_PB00B_ADC_AIN8
 #define EXT1_ADC_1_CHANNEL        9
-#define EXT1_ADC_1_PIN            PIN_PB01A_ADC_AIN9
-#define EXT1_ADC_1_MUX            MUX_PB01A_ADC_AIN9
-#define EXT1_ADC_1_PINMUX         PINMUX_PB01A_ADC_AIN9
+#define EXT1_ADC_1_PIN            PIN_PB01B_ADC_AIN9
+#define EXT1_ADC_1_MUX            MUX_PB01B_ADC_AIN9
+#define EXT1_ADC_1_PINMUX         PINMUX_PB01B_ADC_AIN9
 /** @} */
 
 /** \name Extension header #1 PWM definitions
@@ -215,13 +215,13 @@ void system_board_init(void);
  *  @{
  */
 #define EXT1_TWI_MODULE           SERCOM2
-#define EXT1_TWI_SDA_PIN          PIN_PA12C_SERCOM2_PAD0
-#define EXT1_TWI_SDA_MUX          MUX_PA12C_SERCOM2_PAD0
-#define EXT1_TWI_SDA_PINMUX       PINMUX_PA12C_SERCOM2_PAD0
+#define EXT1_TWI_SDA_PIN          PIN_PA08D_SERCOM2_PAD0
+#define EXT1_TWI_SDA_MUX          MUX_PA08D_SERCOM2_PAD0
+#define EXT1_TWI_SDA_PINMUX       PINMUX_PA08D_SERCOM2_PAD0
 #define EXT1_TWI_SDA_SERCOM_PAD   0
-#define EXT1_TWI_SCL_PIN          PIN_PA13C_SERCOM2_PAD1
-#define EXT1_TWI_SCL_MUX          MUX_PA13C_SERCOM2_PAD1
-#define EXT1_TWI_SCL_PINMUX       PINMUX_PA13C_SERCOM2_PAD1
+#define EXT1_TWI_SCL_PIN          PIN_PA09D_SERCOM2_PAD1
+#define EXT1_TWI_SCL_MUX          MUX_PA09D_SERCOM2_PAD1
+#define EXT1_TWI_SCL_PINMUX       PINMUX_PA09D_SERCOM2_PAD1
 #define EXT1_TWI_SCL_SERCOM_PAD   1
 /** @} */
 
@@ -286,8 +286,8 @@ void system_board_init(void);
 #define EXT2_PIN_8                PIN_PA23
 #define EXT2_PIN_9                PIN_PB14
 #define EXT2_PIN_10               PIN_PB15
-#define EXT2_PIN_11               PIN_PA12
-#define EXT2_PIN_12               PIN_PA13
+#define EXT2_PIN_11               PIN_PA08
+#define EXT2_PIN_12               PIN_PA09
 #define EXT2_PIN_13               PIN_PB13
 #define EXT2_PIN_14               PIN_PB12
 #define EXT2_PIN_15               PIN_PA17
@@ -322,13 +322,13 @@ void system_board_init(void);
  */
 #define EXT2_ADC_MODULE           ADC
 #define EXT2_ADC_0_CHANNEL        18
-#define EXT2_ADC_0_PIN            PIN_PA10A_ADC_AIN18
-#define EXT2_ADC_0_MUX            MUX_PA10A_ADC_AIN18
-#define EXT2_ADC_0_PINMUX         PINMUX_PA10A_ADC_AIN18
+#define EXT2_ADC_0_PIN            PIN_PA10B_ADC_AIN18
+#define EXT2_ADC_0_MUX            MUX_PA10B_ADC_AIN18
+#define EXT2_ADC_0_PINMUX         PINMUX_PA10B_ADC_AIN18
 #define EXT2_ADC_1_CHANNEL        19
-#define EXT2_ADC_1_PIN            PIN_PA11A_ADC_AIN19
-#define EXT2_ADC_1_MUX            MUX_PA11A_ADC_AIN19
-#define EXT2_ADC_1_PINMUX         PINMUX_PA11A_ADC_AIN19
+#define EXT2_ADC_1_PIN            PIN_PA11B_ADC_AIN19
+#define EXT2_ADC_1_MUX            MUX_PA11B_ADC_AIN19
+#define EXT2_ADC_1_PINMUX         PINMUX_PA11B_ADC_AIN19
 /** @} */
 
 /** \name Extension header #2 PWM definitions
@@ -336,13 +336,13 @@ void system_board_init(void);
  */
 #define EXT2_PWM_MODULE           TC4
 #define EXT2_PWM_0_CHANNEL        0
-#define EXT2_PWM_0_PIN            PIN_PA22H_TC1_WO0
-#define EXT2_PWM_0_MUX            MUX_PA22H_TC1_WO0
-#define EXT2_PWM_0_PINMUX         PINMUX_PA22H_TC1_WO0
+#define EXT2_PWM_0_PIN            PIN_PA22F_TC4_WO0
+#define EXT2_PWM_0_MUX            MUX_PA22F_TC4_WO0
+#define EXT2_PWM_0_PINMUX         PINMUX_PA22F_TC4_WO0
 #define EXT2_PWM_1_CHANNEL        1
-#define EXT2_PWM_1_PIN            PIN_PA23H_TC1_WO1
-#define EXT2_PWM_1_MUX            MUX_PA23H_TC1_WO1
-#define EXT2_PWM_1_PINMUX         PINMUX_PA23H_TC1_WO1
+#define EXT2_PWM_1_PIN            PIN_PA23F_TC4_WO1
+#define EXT2_PWM_1_MUX            MUX_PA23F_TC4_WO1
+#define EXT2_PWM_1_PINMUX         PINMUX_PA23F_TC4_WO1
 /** @} */
 
 /** \name Extension header #2 IRQ/External interrupt definitions
@@ -359,13 +359,13 @@ void system_board_init(void);
  *  @{
  */
 #define EXT2_TWI_MODULE           SERCOM2
-#define EXT2_TWI_SDA_PIN          PIN_PA12C_SERCOM2_PAD0
-#define EXT2_TWI_SDA_MUX          MUX_PA12C_SERCOM2_PAD0
-#define EXT2_TWI_SDA_PINMUX       PINMUX_PA12C_SERCOM2_PAD0
+#define EXT2_TWI_SDA_PIN          PIN_PA08D_SERCOM2_PAD0
+#define EXT2_TWI_SDA_MUX          MUX_PA08D_SERCOM2_PAD0
+#define EXT2_TWI_SDA_PINMUX       PINMUX_PA08D_SERCOM2_PAD0
 #define EXT2_TWI_SDA_SERCOM_PAD   0
-#define EXT2_TWI_SCL_PIN          PIN_PA13C_SERCOM2_PAD1
-#define EXT2_TWI_SCL_MUX          MUX_PA13C_SERCOM2_PAD1
-#define EXT2_TWI_SCL_PINMUX       PINMUX_PA13C_SERCOM2_PAD1
+#define EXT2_TWI_SCL_PIN          PIN_PA09D_SERCOM2_PAD1
+#define EXT2_TWI_SCL_MUX          MUX_PA09D_SERCOM2_PAD1
+#define EXT2_TWI_SCL_PINMUX       PINMUX_PA09D_SERCOM2_PAD1
 #define EXT2_TWI_SCL_SERCOM_PAD   1
 /** @} */
 
