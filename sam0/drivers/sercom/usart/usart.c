@@ -162,10 +162,10 @@ static enum status_code _usart_check_config(
 	ctrla |= (SERCOM_USART_CTRLA_ENABLE);
 
 	if (config->use_external_clock == false) {
-		ctrla |= SERCOM_SPI_CTRLA_MODE_USART_INT_CLK;
+		ctrla |= SERCOM_USART_CTRLA_MODE_USART_INT_CLK;
 	}
 	else {
-		ctrla |= SERCOM_SPI_CTRLA_MODE_USART_EXT_CLK;
+		ctrla |= SERCOM_USART_CTRLA_MODE_USART_EXT_CLK;
 	}
 
 	/* Check stopbits and character size */
@@ -259,10 +259,10 @@ static enum status_code _usart_set_config(
 	ctrla |= config->transfer_mode;
 
 	if (config->use_external_clock == false) {
-		ctrla |= SERCOM_SPI_CTRLA_MODE_USART_INT_CLK;
+		ctrla |= SERCOM_USART_CTRLA_MODE_USART_INT_CLK;
 	}
 	else {
-		ctrla |= SERCOM_SPI_CTRLA_MODE_USART_EXT_CLK;
+		ctrla |= SERCOM_USART_CTRLA_MODE_USART_EXT_CLK;
 	}
 
 	/* Set stopbits and character size */
