@@ -204,7 +204,8 @@ enum status_code i2c_slave_read_packet_job(
 
 	/* Enable interrupts */
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
-	i2c_hw->INTENSET.reg = SERCOM_I2CS_INTFLAG_AMATCH | SERCOM_I2CS_INTFLAG_DRDY | SERCOM_I2CS_INTFLAG_PREC;
+	i2c_hw->INTENSET.reg = SERCOM_I2CS_INTFLAG_AMATCH |
+			SERCOM_I2CS_INTFLAG_DRDY | SERCOM_I2CS_INTFLAG_PREC;
 
 	/* Read will begin when master initiates the transfer */
 	return STATUS_OK;
@@ -248,7 +249,8 @@ enum status_code i2c_slave_write_packet_job(
 
 	/* Enable interrupts */
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
-	i2c_hw->INTENSET.reg = SERCOM_I2CS_INTFLAG_AMATCH | SERCOM_I2CS_INTFLAG_DRDY | SERCOM_I2CS_INTFLAG_PREC;
+	i2c_hw->INTENSET.reg = SERCOM_I2CS_INTFLAG_AMATCH |
+			SERCOM_I2CS_INTFLAG_DRDY | SERCOM_I2CS_INTFLAG_PREC;
 
 	return STATUS_OK;
 }
@@ -361,7 +363,7 @@ void _i2c_slave_interrupt_handler(
 		
 		if (!((module->enabled_callback & (1 << I2C_SLAVE_CALLBACK_READ_REQUEST))
 				|| (module->enabled_callback == (1 << I2C_SLAVE_CALLBACK_WRITE_REQUEST)))) {
-			/* Clear address match if read/write request is not enabled */
+			/* Disable address match if read/write request is not enabled */
 			i2c_hw->INTENCLR.reg = SERCOM_I2CS_INTFLAG_AMATCH;
 		}
 
