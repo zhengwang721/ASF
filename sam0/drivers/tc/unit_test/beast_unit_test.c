@@ -247,7 +247,6 @@ static void run_callback_test(const struct test_case *test)
 	tc_reset(&tc0_module);
 	tc_get_config_defaults(&tc0_config);
 	tc0_config.wave_generation                            = TC_WAVE_GENERATION_MATCH_PWM;
-	//tc0_config.oneshot                                    = true;
 	tc0_config.size_specific.size_16_bit.compare_capture_channel\
 		[TC_COMPARE_CAPTURE_CHANNEL_0]                    = 0x03FF;
 	tc0_config.size_specific.size_16_bit.compare_capture_channel\
