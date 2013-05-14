@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM4N clock configuration.
+ * \brief PMC_CLOCK_SWITCHING example configuration.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -41,42 +41,9 @@
  *
  */
 
-#ifndef CONF_CLOCK_H_INCLUDED
-#define CONF_CLOCK_H_INCLUDED
+#ifndef CONF_PMC_CLOCK_SWITCHING_EXAMPLE_H_INCLUDED
+#define CONF_PMC_CLOCK_SWITCHING_EXAMPLE_H_INCLUDED
 
-// ===== System Clock (MCK) Source Options
-//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_SLCK_RC
-//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_SLCK_XTAL
-//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_SLCK_BYPASS
-//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_4M_RC
-//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_8M_RC
-//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_12M_RC
-//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_XTAL
-//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_BYPASS
-#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_PLLACK
+#define BUTTON_NAME  "SW0"
 
-// ===== System Clock (MCK) Prescaler Options   (Fmck = Fsys / (SYSCLK_PRES))
-//#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_1
-#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_2
-//#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_4
-//#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_8
-//#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_16
-//#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_32
-//#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_64
-//#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_3
-
-// ===== PLL0 (A) Options   (Fpll = (Fclk * PLL_mul) / PLL_div)
-// Use mul and div effective values here.
-#define CONFIG_PLL0_SOURCE          PLL_SRC_MAINCK_XTAL
-#define CONFIG_PLL0_MUL             50
-#define CONFIG_PLL0_DIV             3
-
-// ===== Target frequency (System clock)
-// - XTAL frequency: 12MHz
-// - System clock source: PLLA
-// - System clock prescaler: 2 (divided by 2)
-// - PLLA source: XTAL
-// - PLLA output: XTAL * 50 / 3
-// - System clock: XTAL * 50 / 3 / 2 = 100MHz
-
-#endif /* CONF_CLOCK_H_INCLUDED */
+#endif /* CONF_PMC_CLOCK_SWITCHING_EXAMPLE_H_INCLUDED */

@@ -105,8 +105,8 @@
 //! \name LED0 definitions
 //@{
 #define LED0_GPIO                  IOPORT_CREATE_PIN(PIOB, 14)
-#define LED0_ACTIVE               false
-#define LED0_INACTIVE             !LED0_ACTIVE
+#define LED0_ACTIVE_LEVEL               false
+#define LED0_INACTIVE_LEVEL             !LED0_ACTIVE_LEVEL
 //@}
 
 //! \name SW0 definitions
@@ -389,6 +389,7 @@
 //@}
 
 #define CONSOLE_UART              UART3
+#define CONSOLE_UART_ID        ID_UART3
 
 /** UART3 pins (UTXD3 and URXD3) definitions, PB10,11. */
 #define PINS_UART3        (PIO_PB10B_URXD3 | PIO_PB11B_UTXD3)
@@ -469,6 +470,32 @@
 #define TWI0_DATA_FLAGS  (PIO_PERIPH_A | PIO_PULLUP)
 #define TWI0_CLK_GPIO    PIO_PA4_IDX
 #define TWI0_CLK_FLAGS   (PIO_PERIPH_A | PIO_PULLUP)
+//@}
+
+/** PCK0 pin definition (PA6) */
+#define PIN_PCK0         (PIO_PA6_IDX)
+#define PIN_PCK0_MUX     (IOPORT_MODE_MUX_B)
+#define PIN_PCK0_FLAGS   (IOPORT_MODE_MUX_B)
+#define PIN_PCK0_PORT    IOPORT_PIOA
+#define PIN_PCK0_MASK    PIO_PA6B_PCK0
+#define PIN_PCK0_PIO     PIOA
+#define PIN_PCK0_ID      ID_PIOA
+#define PIN_PCK0_TYPE    PIO_PERIPH_B
+#define PIN_PCK0_ATTR    PIO_DEFAULT
+
+//! \name IO1 button definitions */
+//@{
+/** Push button #1 definition. Attributes = pull-up + debounce + interrupt on rising edge. */
+#define PUSHBUTTON_1_NAME    "SW0"
+#define GPIO_PUSH_BUTTON_1   (PIO_PA30_IDX)
+#define GPIO_PUSH_BUTTON_1_FLAGS    (PIO_INPUT | PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE)
+
+#define PIN_PUSHBUTTON_1    {PIO_PA30, PIOA, ID_PIOA, PIO_INPUT, PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE}
+#define PIN_PUSHBUTTON_1_MASK PIO_PA30
+#define PIN_PUSHBUTTON_1_PIO PIOA
+#define PIN_PUSHBUTTON_1_ID ID_PIOA
+#define PIN_PUSHBUTTON_1_TYPE PIO_INPUT
+#define PIN_PUSHBUTTON_1_ATTR (PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE)
 //@}
 
 //! \name Light Sensor
