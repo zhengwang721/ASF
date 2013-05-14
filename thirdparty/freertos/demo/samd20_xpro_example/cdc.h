@@ -105,7 +105,7 @@ static inline void cdc_rx_init(struct usart_module *const usart,
 	usart_enable_transceiver(usart, USART_TRANSCEIVER_RX);
 
 	// ..and the RX Complete interrupt
-	((SercomUsart *)EDBG_CDC_MODULE)->INTENSET.reg = SERCOM_USART_INTFLAG_RXCIF;
+	((SercomUsart *)EDBG_CDC_MODULE)->INTENSET.reg = SERCOM_USART_INTFLAG_RXC;
 }
 
 /** @} */
