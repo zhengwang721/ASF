@@ -341,8 +341,7 @@ static void send_ack(void)
  */
 int main(void)
 {
-	static volatile uint32_t len = 0;
-	uint32_t remaining_len = 0;
+	uint32_t len;
 	uint32_t curr_prog_addr;
 	uint32_t tmp_len;
 	uint8_t buff[NVMCTRL_PAGE_SIZE];
@@ -360,6 +359,7 @@ int main(void)
 	/* Initialize system */
 	system_init();
 
+
 	/* Configure the SPI slave module */
 	configure_spi();
 
@@ -371,32 +371,31 @@ int main(void)
 	port_pin_set_output_level(BOOT_LED, false);
 	/* Get the length to be programmed */
 	len = get_length();
-	send_ack();
-	remaining_len = len;
 
 	do {
 		/* Get remaining or NVMCTRL_PAGE_SIZE as block length */
 		tmp_len = min(NVMCTRL_PAGE_SIZE, len);
 
-		/* Read data of AT45DBX_SECTOR_SIZE */
+		/* Acknowledge last received data */
+		send_ack();
+
+		/* Read data from SPI master */
 		fetch_data(buff, tmp_len);
 
-		/* Program the read data into Flash */
+		/* Program the data into Flash */
 		program_memory(curr_prog_addr, buff, tmp_len);
 
 		/* Increment the current programming address */
 		curr_prog_addr += tmp_len;
 
-		/* Calculate the remaining length */
-		remaining_len -= tmp_len;
-
 		/* Update the length to remaining length to be programmed */
-		len = remaining_len;
-
-		send_ack();
+		len -= tmp_len;
 
 		/* Do this for entire length */
 	} while (len != 0);
+
+	/* Acknowledge last block */
+	send_ack();
 
 	/* Reset module and boot into application */
 	NVIC_SystemReset();
