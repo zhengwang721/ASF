@@ -644,7 +644,7 @@ static void cdc_rx_handler(uint8_t instance)
 	// Read and mask interrupt flag register
 	interrupt_status = usart_hw->INTFLAG.reg;
 
-	if (interrupt_status & SERCOM_USART_INTFLAG_RXCIF) {
+	if (interrupt_status & SERCOM_USART_INTFLAG_RXC) {
 		// Check for errors
 		error_code = (uint8_t)(usart_hw->STATUS.reg & SERCOM_USART_STATUS_MASK);
 		if (error_code) {
