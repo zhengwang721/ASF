@@ -58,9 +58,7 @@
 #  define _TC_GCLK_ID(n, unused)       TC##n##_GCLK_ID   ,
 #  define _TC_PM_APBCMASK(n, unused)   PM_APBCMASK_TC##n ,
 
-/** TODO: Remove once present in device header file */
 #  define TC_INST_GCLK_ID          { MREPEAT(TC_INST_NUM, _TC_GCLK_ID    , ~) }
-/** TODO: Remove once present in device header file */
 #  define TC_INST_PM_APBCMASK      { MREPEAT(TC_INST_NUM, _TC_PM_APBCMASK, ~) }
 #endif
 

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 Master I2C Slave Bootloader
+ * \brief SAM D20 I2C Slave Bootloader
  *
  * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
