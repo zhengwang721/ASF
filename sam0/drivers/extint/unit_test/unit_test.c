@@ -115,7 +115,7 @@ volatile bool interrupt_flag = false;
  *
  * \param channel Channel number of the interrupt (not used)
  */
-void extint_user_callback(uint32_t channel)
+static void extint_user_callback(uint32_t channel)
 {
 	interrupt_flag = true;
 }
