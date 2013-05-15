@@ -55,14 +55,17 @@
  * This makes use of the \ref asfdoc_samd20_sercom_usart_group, but configures a
  * custom interrupt handler for the SERCOM instead of using the driver's own
  * handler.
+ * The purpose of this driver is to avoid the overhead of the SERCOM USART
+ * driver's callback functionality, allowing the received data to be handled
+ * directly for increased throughput / reduced overhead.
  *
- * Only the receiver and its interrupt are enabled, so the custom interrupt
- * handler can, e.g., be a stripped down version of the SERCOM USART callback
- * driver's interrupt handler (\ref _usart_interrupt_handler()).
+ * Both USART receiver and transmitter are enabled, but only the receive
+ * interrupt is enabled since the intended use of the transmitter is to echo
+ * back the received characters.
  *
- * The purpose of this driver is to avoid the overhead of the SERCOM driver's
- * callback functionality, allowing the received data to be handled directly for
- * increased throughput and reduced overhead.
+ * The custom interrupt handler can, e.g., be a stripped down version of the
+ * SERCOM USART callback driver's interrupt handler
+ * (\ref _usart_interrupt_handler()).
  *
  * @{
  */
@@ -71,7 +74,8 @@
  * \brief Initialize USART for reception from EDBG Virtual COM Port
  *
  * This function initializes the specified SERCOM USART driver instance for use
- * with the Embedded Debugger (EDBG) Virtual COM Port.
+ * with the Embedded Debugger (EDBG) Virtual COM Port. Both transmitter and
+ * receiver are enabled, but only the receive interrupt is enabled.
  *
  * A custom handler function for the receive interrupt must must be supplied.
  * See the SERCOM USART callback driver's handler for an implementation
@@ -100,8 +104,9 @@ static inline void cdc_rx_init(struct usart_module *const usart,
 	instance_index = _sercom_get_sercom_inst_index(EDBG_CDC_MODULE);
 	_sercom_set_handler(instance_index, cdc_rx_handler);
 
-	// Enable the UART receiver
+	// Enable the UART transceiver
 	usart_enable(usart);
+	usart_enable_transceiver(usart, USART_TRANSCEIVER_TX);
 	usart_enable_transceiver(usart, USART_TRANSCEIVER_RX);
 
 	// ..and the RX Complete interrupt
