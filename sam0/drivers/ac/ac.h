@@ -276,14 +276,14 @@ enum ac_callback {
 #  endif /* defined(__DOXYGEN__) || (AC_PAIRS > 1) */
 #  if !defined(__DOXYGEN__)
 	/** Number of available callbacks */
-#    if (AC_PAIRS < 1)
+#    if (AC_PAIRS == 1)
 	AC_CALLBACK_N = 3,
 #    endif /* (AC_PAIRS < 1) */
 #    if (AC_PAIRS > 1)
 	AC_CALLBACK_N = 6,
 #    endif /* (AC_PAIRS > 1) */
 #  endif /* !defined(__DOXYGEN__) */
-}
+};
 #endif /* AC_CALLBACK == true */
 
 /**
@@ -466,11 +466,8 @@ enum ac_win_state {
 };
 
 #if AC_CALLBACK == true
-/* Forward Declaration for the device instance */
-struct ac_module;
-
 /* Type of the callback functions */
-typedef void (*ac_callback_t)(struct ac_module *const module);
+typedef void (*ac_callback_t)(void);
 #endif /* AC_CALLBACK == true */
 
 /**

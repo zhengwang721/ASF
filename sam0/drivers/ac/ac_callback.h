@@ -45,14 +45,71 @@
 #define AC_CALLBACK_H_INCLUDED
 
 #include "ac.h"
+#include "system_interrupt.h"
 
 extern struct ac_module *_ac_instance;
+
+enum ac_channel_interrupt_selection {
+	/* An interrupt will be generated when the comparator level is passed */
+	AC_CHANNEL_INTERRUPT_SELECTION_TOGGLE         = AC_COMPCTRL_INTSEL_TOGGLE,
+	/* An interrupt will be generated when the measurement goes above the compare level*/
+	AC_CHANNEL_INTERRUPT_SELECTION_RISING         = AC_COMPCTRL_INTSEL_RISING,
+	/* An interrupt will be generated when the measurement goes below the compare level*/
+	AC_CHANNEL_INTERRUPT_SELECTION_FALLING        = AC_COMPCTRL_INTSEL_FALLING,
+	/* An interrupt will be generated when a new measurement is complete. 
+	 * Interrupts will only be generated in single shot mode
+	 */
+	AC_CHANNEL_INTERRUPT_SELECTION_END_OF_COMPAR  = AC_COMPCTRL_INTSEL_EOC,
+};
+
+enum ac_window_interrupt_selection {
+	/* Interrupt is generated when the compare value goes above the window */
+	AC_WINDOW_INTERRUPT_SELECTION_ABOVE    = AC_WINCTRL_WINTSEL0_ABOVE,
+	/* Interrupt is generated when the compare value goes inside the window */
+	AC_WINDOW_INTERRUPT_SELECTION_INSIDE   = AC_WINCTRL_WINTSEL0_INSIDE,
+	/* Interrupt is generated when the compare value goes below the window */
+	AC_WINDOW_INTERRUPT_SELECTION_BELOW    = AC_WINCTRL_WINTSEL0_BELOW,
+	/* Interrupt is generated when the compare value goes outside the window */
+	AC_WINDOW_INTERRUPT_SELECTION_OUTSIDE  = AC_WINCTRL_WINTSEL0_OUTSIDE,
+};
+
+enum status_code ac_callback_channel_interrupt_selection(
+		struct ac_module *const module,
+		const enum ac_chan_channel channel,
+		const enum ac_channel_interrupt_selection interrupt_selection)
+{
+	Assert(module);
+	Assert(module->hw);
+}
+
+enum status_code ac_callback_window_interrupt_selection(
+		struct ac_module *const module,
+		const enum ac_win_channel win_channel,
+		const enum ac_window_interrupt_selection interrupt_selection)
+{
+	Assert(module);
+	Assert(module->hw);
+
+	if (win_channel == AC_WIN_CHANNEL_0) {
+		module->hw->WINCTRL.reg = AC_WINCTRL_WEN0 + interrupt_selection;
+	}
+#if defined(__DOXYGEN__) || (AC_PAIRS > 1)
+	else if (win_channel == AC_WIN_CHANNEL_1) {
+		module->hw->WINCTRL.reg = AC_WINCTRL_WEN1 + (interrupt_selection << 
+					(AC_WINCTRL_WINTSEL1_Pos - AC_WINCTRL_WINTSEL0_Pos);
+	} 
+#endif /* #if defined(__DOXYGEN__) || (AC_PAIRS > 1) */
+	else {
+		return STATUS_INVALID_ARG;
+	}
+	return STATUS_OK;
+}
+
 
 /**
  * \name Callback Management
  * {@
  */
-
 enum status_code ac_register_callback(
 		struct ac_module *const module,
 		ac_callback_t callback_func,
@@ -83,7 +140,9 @@ static inline void ac_enable_callback(
 	/* Set software flag for the callback */
 	module->enable_callback_mask |= (1 << callback_type);
 	/* Enable the interrupt for the callback */
-	module->hw->COUNT8.INTENSET.reg = (1 << callback_type);
+	module->hw->INTENSET.reg = (1 << callback_type);
+	/* Enable interrupts for AC module */
+	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_AC);
 }
 
 /**
@@ -106,7 +165,7 @@ static inline void ac_disable_callback(
 	/* Set software flag for the callback */
 	module->enable_callback_mask |= (1 << callback_type);
 	/* Enable the interrupt for the callback */
-	module->hw->COUNT8.INTENCLR.reg = (1 << callback_type);
+	module->hw->INTENCLR.reg = (1 << callback_type);
 }
 
 /**
