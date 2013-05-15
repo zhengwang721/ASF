@@ -43,10 +43,11 @@
 
 /**
  * \mainpage
- * TODO
+ * \copydetails preface
  */
 
 /**
  * \page preface Preface
- * TODO
+ * This document describes the API interfaces to the low level ASF module
+ * drivers of the device.
  */

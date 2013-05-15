@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="ASF Programmers Manual (SAM D20)" force-caption="true" id="sam0.applications.asf_programmers_manual.atsamd20">
+	<project caption="ASF Manual (SAM D20)" force-caption="true" id="sam0.applications.asf_programmers_manual.atsamd20">
 		<require idref="sam0.applications.asf_programmers_manual"/>
 
 		<generator value="doxygen-v2"/>
