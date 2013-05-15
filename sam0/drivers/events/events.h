@@ -419,9 +419,9 @@ static inline bool events_is_syncing(void)
  * user application.
  *
  * The default configuration is as follows:
- *  \li Event channel fires on rising edge of trigger
- *  \li Event channel is synchronized between the source and destination
- *      event system digital clocks
+ *  \li Event channel uses asynchronous path between the source and destination
+ *  \li Event channel is set not to use edge detection as the path is
+ *      asynchronous and no intervention in the event system can take place
  *  \li Event channel is not connected to an Event Generator
  *  \li Event channel generic clock source is GLCK_GENERATOR_0
  *  \li Event channel generic clock does not run in standby mode
@@ -435,8 +435,8 @@ static inline void events_chan_get_config_defaults(
 	Assert(config);
 
 	/* Default configuration values */
-	config->edge_detection = EVENT_EDGE_RISING;
-	config->path           = EVENT_PATH_SYNCHRONOUS;
+	config->edge_detection = EVENT_EDGE_NONE;
+	config->path           = EVENT_PATH_ASYNCHRONOUS;
 	config->generator_id   = 0;
 	config->clock_source   = GCLK_GENERATOR_0;
 }
