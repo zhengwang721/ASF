@@ -335,7 +335,9 @@ extern "C" {
  * For extra information see \ref asfdoc_samd20_i2c_extra_info_page.
  *
  * \section asfdoc_samd20_i2c_examples Examples
- * - \ref asfdoc_samd20_i2c_quickstart
+ *
+ * For a list of examples related to this driver, see
+ * \ref asfdoc_samd20_i2c_exqsg.
  *
  * \section asfdoc_samd20_i2c_api_overview API Overview
  * @{

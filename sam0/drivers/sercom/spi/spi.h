@@ -318,14 +318,8 @@
  *
  * \section asfdoc_samd20_sercom_spi_examples Examples
  *
- * The following quick start guides and application examples are available for
- * this driver:
- * - \ref asfdoc_samd20_sercom_spi_master_basic_use
- * - \ref asfdoc_samd20_sercom_spi_slave_basic_use
-  * \if SPI_CALLBACK_MODE
- * - \ref asfdoc_samd20_sercom_spi_master_callback_use
- * - \ref asfdoc_samd20_sercom_spi_slave_callback_use
- * \endif
+ * For a list of examples related to this driver, see
+ * \ref asfdoc_samd20_spi_exqsg.
  *
  * \section asfdoc_samd20_sercom_spi_api_overview API Overview
  * @{

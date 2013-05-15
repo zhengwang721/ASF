@@ -194,11 +194,8 @@
  *
  * \section asfdoc_samd20_sercom_usart_examples Examples
  *
- * The following Quick Start guides and application examples are available for this driver:
- * - \ref asfdoc_samd20_sercom_usart_basic_use_case
- * \if USART_CALLBACK_MODE
- * - \ref asfdoc_samd20_sercom_usart_callback_use_case
- * \endif
+ * For a list of examples related to this driver, see
+ * \ref asfdoc_samd20_usart_exqsg.
  *
  * \section asfdoc_samd20_sercom_usart_api_overview API Overview
  * @{
