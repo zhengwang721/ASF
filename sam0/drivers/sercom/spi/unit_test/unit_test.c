@@ -402,8 +402,8 @@ static void run_transceive_buffer_test(const struct test_case *test)
 static void run_baud_test(const struct test_case *test)
 {
 	uint32_t test_baud = 1000000;
-	uint16_t txd_data = 0x55;
-	uint16_t rxd_data;
+	uint8_t txd_data = 0x55;
+	uint8_t rxd_data;
 	bool max_baud = true;
 
 	/* Skip test if initialization failed */
@@ -429,19 +429,8 @@ static void run_baud_test(const struct test_case *test)
 
 		/* Send data to slave */
 		spi_select_slave(&master, &slave_inst, true);
-		while (!spi_is_ready_to_write(&master)) {
-		}
-		spi_write(&master, txd_data);
-		while (!spi_is_write_complete(&master)) {
-		}
-		/* Dummy read SPI master data register */
-		while (!spi_is_ready_to_read(&master)) {
-		}
-		spi_read(&master, &rxd_data);
-		/* Read SPI slave data register */
-		while (!spi_is_ready_to_read(&slave)) {
-		}
-		spi_read(&slave, &rxd_data);
+		spi_write_buffer_wait(&master, &txd_data, 1);
+		spi_read_buffer_wait(&slave, &rxd_data, 1, 0);
 		spi_select_slave(&master, &slave_inst, false);
 
 		if (txd_data != rxd_data) {
