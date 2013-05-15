@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 Timer Counter Callback Driver
+ * \brief SAM D20  TC - Timer Counter Callback Driver
  *
  * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
@@ -88,7 +88,8 @@ enum status_code tc_register_callback(
 /**
  * \brief Unregisters a callback
  *
- * Unregisters a callback function implemented by the user.
+ * Unregisters a callback function implemented by the user. The callback should be 
+ * disabled before it is unregistered.
  *
  * \param[in]     module Pointer to TC software instance struct
  * \param[in]     callback_type Callback type given by an enum
@@ -118,11 +119,8 @@ enum status_code tc_unregister_callback(
 
 /**
  * \internal ISR handler for TC
- */
-/** Auto-generate a set of interrupt handlers for each TC in the device */
-
-/** \internal
- * Generates a TC interrupt handler function for a given TC index.
+ *
+ * Auto-generate a set of interrupt handlers for each TC in the device
  */
 #define _TC_INTERRUPT_HANDLER(n, unused) \
 		void TC##n##_Handler(void) \

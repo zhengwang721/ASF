@@ -394,12 +394,8 @@
  *
  * \section asfdoc_samd20_tc_examples Examples
  *
- * The following Quick Start guides and application examples are available for
- * this driver:
- * - \ref asfdoc_samd20_tc_basic_use_case
- * \if TC_CALLBACK_MODE
- * - \ref asfdoc_samd20_tc_callback_use_case
- * \endif
+ * For a list of examples related to this driver, see
+ * \ref asfdoc_samd20_tc_exqsg.
  *
  * \section asfdoc_samd20_tc_api_overview API Overview
  * @{
@@ -798,6 +794,10 @@ struct tc_module {
 #endif
 };
 
+//#if !defined(__DOXYGEN__)
+uint8_t _tc_get_inst_index(
+		Tc *const hw);
+//#endif
 /**
  * \name Driver Initialization and Configuration
  * @{
@@ -895,13 +895,13 @@ static inline void tc_get_config_defaults(
 
 	config->channel_pwm_out_enabled[1]                        = false;
 	config->channel_pwm_out_pin[TC_COMPARE_CAPTURE_CHANNEL_1] = 0;
-	config->channel_pwm_out_mux[TC_COMPARE_CAPTURE_CHANNEL_0] = 0;
+	config->channel_pwm_out_mux[TC_COMPARE_CAPTURE_CHANNEL_1] = 0;
 
 	config->size_specific.size_16_bit.count                   = 0x0000;
 	config->size_specific.size_16_bit.compare_capture_channel\
-		[TC_COMPARE_CAPTURE_CHANNEL_0]                    = 0x0000;
+		[TC_COMPARE_CAPTURE_CHANNEL_0]                        = 0x0000;
 	config->size_specific.size_16_bit.compare_capture_channel\
-		[TC_COMPARE_CAPTURE_CHANNEL_0]                    = 0x0000;
+		[TC_COMPARE_CAPTURE_CHANNEL_1]                        = 0x0000;
 }
 
 enum status_code tc_init(

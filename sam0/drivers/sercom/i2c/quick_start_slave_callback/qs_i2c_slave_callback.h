@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_samd20_i2c_slave_callback_use_case Quick Start Guide for SERCOM I2C Slave - Callback
+ * \page asfdoc_samd20_sercom_i2c_slave_callback_use_case Quick Start Guide for SERCOM I2C Slave - Callback
  *
  * In this use case, the I<SUP>2</SUP>C will used and set up as follows:
  *  - Slave mode
@@ -50,12 +50,12 @@
  *  - Not operational in standby
  *  - 10000 packet timeout value
  *
- * \section asfdoc_samd20_i2c_slave_callback_use_case_prereq Prerequisites
+ * \section asfdoc_samd20_sercom_i2c_slave_callback_use_case_prereq Prerequisites
  * The device must be connected to an I<SUP>2</SUP>C master.
  *
- * \section asfdoc_samd20_i2c_slave_callback_use_case_setup_code Setup
+ * \section asfdoc_samd20_sercom_i2c_slave_callback_use_case_setup_code Setup
  *
- * \subsection asfdoc_samd20_i2c_slave_callback_use_setup_code Code
+ * \subsection asfdoc_samd20_sercom_i2c_slave_callback_use_setup_code Code
  * The following must be added to the user application:
  *
  * A sample buffer to write from, a sample buffer to read to and length of buffers:
@@ -85,7 +85,7 @@
  * Add to user application main():
  * \snippet qs_i2c_slave_callback.c run_initialize_i2c
  *
- * \subsection asfdoc_samd20_i2c_slave_callback_use_setup_workflow Workflow
+ * \subsection asfdoc_samd20_sercom_i2c_slave_callback_use_setup_workflow Workflow
  * -# Initialize system.
  *  \snippet qs_i2c_slave_callback.c system_init
  * -# Configure and enable module:
@@ -103,19 +103,19 @@
  *   -# Register and enable callbacks for read and write requests from master.
  *    \snippet qs_i2c_slave_callback.c reg_en_i2c_callback
  *
- * \section asfdoc_samd20_i2c_slave_callback_use_implementation Implementation
- * \subsection asfdoc_samd20_i2c_slave_callback_use_implementation_code Code
+ * \section asfdoc_samd20_sercom_i2c_slave_callback_use_implementation Implementation
+ * \subsection asfdoc_samd20_sercom_i2c_slave_callback_use_implementation_code Code
  * Add to user application main:
  * \snippet qs_i2c_slave_callback.c while
  * \subsection i2c_slave_callback_use_implementation_workflow Workflow
  * -# Infinite while loop, while waiting for interaction from master.
  *  \snippet qs_i2c_slave_callback.c while
  *
- * \section asfdoc_samd20_i2c_slave_callback_use_callback Callback
+ * \section asfdoc_samd20_sercom_i2c_slave_callback_use_callback Callback
  * When an address packet is received, one of the callback functions will be
   * called, depending on the DIR bit in the received packet.
  *
- * \subsection asfdoc_samd20_i2c_slave_callback_use_callback_workflow Workflow
+ * \subsection asfdoc_samd20_sercom_i2c_slave_callback_use_callback_workflow Workflow
  * - Read request callback:
  *  -# Length of buffer and buffer to be sent to master is initialized.
  *   \snippet qs_i2c_slave_callback.c packet_write

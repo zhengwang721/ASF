@@ -69,7 +69,7 @@
  *
  * \return Index of the given TC module instance.
  */
-static uint8_t _tc_get_inst_index(
+uint8_t _tc_get_inst_index(
 		Tc *const hw)
 {
 	/* List of available TC modules. */
@@ -87,25 +87,6 @@ static uint8_t _tc_get_inst_index(
 	return 0;
 }
 
-#if TC_ASYNC == true
-/**
- * \internal Get the interrupt vector for the given device instance
- *
- * \param[in] TC module instance number.
- *
- * \return Interrupt vector for of the given TC module instance.
- */
-static enum system_interrupt_vector _tc_interrupt_get_interrupt_vector(
-		uint32_t inst_num)
-{
-	static uint8_t tc_interrupt_vectors[TC_INST_NUM] =
-		{
-			MREPEAT(TC_INST_NUM, _TC_INTERRUPT_VECT_NUM, ~)
-		};
-
-	return tc_interrupt_vectors[inst_num];
-}
-#endif
 
 /**
  * \brief Initializes a hardware TC module instance.
@@ -171,9 +152,6 @@ enum status_code tc_init(
 
 	/* Register this instance for callbacks*/
 	_tc_instances[instance] = module_inst;
-
-	/* Enable interupts for this TC module */
-	system_interrupt_enable(_tc_interrupt_get_interrupt_vector(instance));
 #endif
 
 	/* Associate the given device instance with the hardware module */
@@ -271,7 +249,7 @@ enum status_code tc_init(
 		while (tc_is_syncing(module_inst)) {
 			/* Wait for sync */
 		}
-
+		/* Write configuration to register */
 		hw->COUNT8.CTRLBSET.reg = ctrlbset_tmp;
 	}
 
@@ -462,7 +440,7 @@ uint32_t tc_get_count_value(
 		/* Wait for sync */
 	}
 
-	/* Read from count register based on the TC counter size */
+	/* Read from based on the TC counter size */
 	switch (module_inst->counter_size) {
 		case TC_COUNTER_SIZE_8BIT:
 			return (uint32_t)tc_module->COUNT8.COUNT.reg;
