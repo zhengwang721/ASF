@@ -79,7 +79,7 @@
  * Add to user application initialization (typically the start of \c main()):
  * \snippet qs_adc_basic.c setup_init
  *
- * \section asfdoc_samd20_adc_basic_use_case_workflow Workflow
+ * \subsection asfdoc_samd20_adc_basic_use_case_workflow Workflow
  * -# Create a module software instance structure for the ADC module to store
  *    the ADC driver state while it is in use.
  *    \note This should never go out of scope as long as the module is in use.
