@@ -47,7 +47,7 @@
 /**
  * \mainpage FreeRTOS v7.4.0 demo for SAM D20 Xplained Pro
  *
- * Overview:
+ * \section appdoc_overview Overview
  * - \ref appdoc_intro
  * - \ref appdoc_compinfo
  * - \ref appdoc_continfo
@@ -74,12 +74,26 @@
  *
  * Further, the LEDs on the OLED1 Xplained Pro wing board are lit up for the
  * duration of the various tasks' loops, simply to give a visual representation
- * of the task switching.
+ * of the task switching:
+ * - LED1: update of graph and handling of incoming terminal characters.
+ * - LED2: printing terminal and about text.
+ * - LED3: checking user selection, handling display buffer and menu drawing.
+ *
+ * Note that several LEDs can be lit up at one time if one task is waiting for
+ * another task to release a resource. In this application, the resources would
+ * be the mutexes for the display and terminal text buffer.
+ *
+ * To write text to the terminal window, one must connect to the EDBG Virtual
+ * COM Port with a terminal emulator at a baud rate of 9.6 kbaud. The demo will
+ * echo back the received characters.
  *
  * For more details on the application:
  * - \ref freertos-v7_4_0_sam_d20_demotasks_group
  * - \ref oled1_xpro_io_group
  * - \ref edbg_cdc_rx_group
+ *
+ * For details on FreeRTOS and its API, go to the
+ * <a href="http://www.freertos.org">official FreeRTOS website</a>.
  *
  *
  * \section appdoc_compinfo Compiler information
