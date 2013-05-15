@@ -152,7 +152,7 @@ static uint8_t terminal_buffer[TERMINAL_BUFFER_LINES][TERMINAL_BUFFER_COLUMNS];
 static uint8_t terminal_line_offset;
 
 //! Queue for incoming terminal characters
-static xQueueHandle terminal_queue;
+static xQueueHandle terminal_in_queue;
 
 //! Semaphore to signal busy display
 static xSemaphoreHandle display_mutex;
@@ -201,7 +201,7 @@ void demotasks_init(void)
 
 	display_mutex  = xSemaphoreCreateMutex();
 	terminal_mutex = xSemaphoreCreateMutex();
-	terminal_queue = xQueueCreate(64, sizeof(uint8_t));
+	terminal_in_queue = xQueueCreate(64, sizeof(uint8_t));
 
 	xTaskCreate(about_task,
 			(signed char *)"About",
@@ -573,7 +573,7 @@ static void uart_task(void *params)
 		current_char_ptr = current_line_ptr + current_column;
 
 		// Any characters queued? Handle them!
-		while (xQueueReceive(terminal_queue, current_char_ptr, 0)) {
+		while (xQueueReceive(terminal_in_queue, current_char_ptr, 0)) {
 			/* Newline-handling is difficult because all terminal emulators
 			 * seem to do it their own way. The method below seems to work
 			 * with Putty and Realterm out of the box.
@@ -625,8 +625,9 @@ static void uart_task(void *params)
  *
  * This function is based on the interrupt handler of the SERCOM USART callback
  * driver (\ref _usart_interrupt_handler()). It has been modified to only handle
- * the receive interrupt and to push the received data directly into the
- * queue for terminal characters (\ref terminal_queue).
+ * the receive interrupt and to push the received data directly into the queue
+ * for terminal characters (\ref terminal_in_queue), and echo the character back
+ * to the sender.
  *
  * \param instance Instance number of SERCOM that generated interrupt.
  */
@@ -634,7 +635,7 @@ static void cdc_rx_handler(uint8_t instance)
 {
 	SercomUsart *const usart_hw = (SercomUsart *)EDBG_CDC_MODULE;
 	uint16_t interrupt_status;
-	uint16_t received_data;
+	uint16_t data;
 	uint8_t error_code;
 
 	// Wait for synch to complete
@@ -658,15 +659,22 @@ static void cdc_rx_handler(uint8_t instance)
 			}
 		// All is fine, so push the received character into our queue
 		} else {
-			received_data = (usart_hw->DATA.reg & SERCOM_USART_DATA_MASK);
+			data = (usart_hw->DATA.reg & SERCOM_USART_DATA_MASK);
 
-			if (!xQueueSendFromISR(terminal_queue, (uint8_t *)&received_data,
-					NULL)) {
+			if (!xQueueSendFromISR(terminal_in_queue, (uint8_t *)&data,
+						NULL)) {
 				// Error: could not enqueue character
+			} else {
+				// Echo back! Data reg. should empty fast since this is the
+				// only place anything is sent.
+				while (!(interrupt_status & SERCOM_USART_INTFLAG_DRE)) {
+					interrupt_status = usart_hw->INTFLAG.reg;
+				}
+				usart_hw->DATA.reg = (uint8_t)data;
 			}
 		}
 	} else {
-		// Error: only RX is enabled, so ending up here should be impossible
+		// Error: only RX interrupt should be enabled
 	}
 }
 
