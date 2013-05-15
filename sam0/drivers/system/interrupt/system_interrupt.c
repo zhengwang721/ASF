@@ -98,9 +98,9 @@ enum status_code system_interrupt_set_pending(
 	} else if (vector == SYSTEM_INTERRUPT_NON_MASKABLE) {
 		/* Note: Because NMI has highest priority it will be executed
 		 * immediately after it has been set pending */
-		SCB->ICSR = (1 << SCB_ICSR_NMIPENDSET_Pos);
+		SCB->ICSR = SCB_ICSR_NMIPENDSET_Msk;
 	} else if (vector == SYSTEM_INTERRUPT_SYSTICK) {
-		SCB->ICSR = (1 << SCB_ICSR_PENDSTSET_Pos);
+		SCB->ICSR = SCB_ICSR_PENDSTSET_Msk;
 	} else {
 		/* The user want to set something unsupported as pending */
 		Assert(false);
@@ -136,7 +136,7 @@ enum status_code system_interrupt_clear_pending(
 		 * always be executed at the moment it is set */
 		return STATUS_ERR_INVALID_ARG;
 	} else if (vector == SYSTEM_INTERRUPT_SYSTICK) {
-		SCB->ICSR = (1 << SCB_ICSR_PENDSTCLR_Pos);
+		SCB->ICSR = SCB_ICSR_PENDSTCLR_Msk;
 	} else {
 		Assert(false);
 		status = STATUS_ERR_INVALID_ARG;
