@@ -269,18 +269,18 @@ static void main_task(void *params)
 
 	for(;;) {
 		// Show that task is executing
-		oled1_set_led_state(&oled1, 2, true);
+		oled1_set_led_state(&oled1, OLED1_LED3_ID, true);
 
 		// Check buttons to see if user changed the selection
-		if (oled1_get_button_state(&oled1, 0)
+		if (oled1_get_button_state(&oled1, OLED1_BUTTON1_ID)
 					&& (current_selection != MENU_ITEM_GRAPH)) {
 			current_selection = MENU_ITEM_GRAPH;
 			selection_changed = true;
-		} else if (oled1_get_button_state(&oled1, 1)
+		} else if (oled1_get_button_state(&oled1, OLED1_BUTTON2_ID)
 					&& (current_selection != MENU_ITEM_TERMINAL)) {
 			current_selection = MENU_ITEM_TERMINAL;
 			selection_changed = true;
-		} else if (oled1_get_button_state(&oled1, 2)
+		} else if (oled1_get_button_state(&oled1, OLED1_BUTTON3_ID)
 					&& (current_selection != MENU_ITEM_ABOUT)) {
 			current_selection = MENU_ITEM_ABOUT;
 			selection_changed = true;
@@ -370,7 +370,7 @@ static void main_task(void *params)
 		}
 
 		// Show that task is done
-		oled1_set_led_state(&oled1, 2, false);
+		oled1_set_led_state(&oled1, OLED1_LED3_ID, false);
 
 		vTaskDelay(MAIN_TASK_DELAY);
 	}
@@ -396,7 +396,7 @@ static void graph_task(void *params)
 	current_value = graph_noise;
 
 	for(;;) {
-		oled1_set_led_state(&oled1, 0, true);
+		oled1_set_led_state(&oled1, OLED1_LED1_ID, true);
 
 		// Compute new noise sample and value of current graph sample
 		graph_noise = (graph_noise * 173) + 1;
@@ -426,7 +426,7 @@ static void graph_task(void *params)
 			x = 0;
 		}
 
-		oled1_set_led_state(&oled1, 0, false);
+		oled1_set_led_state(&oled1, OLED1_LED1_ID, false);
 
 		vTaskDelay(GRAPH_TASK_DELAY);
 	}
@@ -449,7 +449,7 @@ static void terminal_task(void *params)
 	uint8_t printed_lines;
 
 	for (;;) {
-		oled1_set_led_state(&oled1, 1, true);
+		oled1_set_led_state(&oled1, OLED1_LED2_ID, true);
 
 		// Grab both display and terminal mutexes before doing anything
 		xSemaphoreTake(display_mutex, portMAX_DELAY);
@@ -490,7 +490,7 @@ static void terminal_task(void *params)
 		xSemaphoreGive(terminal_mutex);
 		xSemaphoreGive(display_mutex);
 
-		oled1_set_led_state(&oled1, 1, false);
+		oled1_set_led_state(&oled1, OLED1_LED2_ID, false);
 
 		vTaskDelay(TERMINAL_TASK_DELAY);
 	}
@@ -515,7 +515,7 @@ static void about_task(void *params)
 	shift = 1;
 
 	for (;;) {
-		oled1_set_led_state(&oled1, 1, true);
+		oled1_set_led_state(&oled1, OLED1_LED2_ID, true);
 
 		xSemaphoreTake(display_mutex, portMAX_DELAY);
 
@@ -533,7 +533,7 @@ static void about_task(void *params)
 
 		xSemaphoreGive(display_mutex);
 
-		oled1_set_led_state(&oled1, 1, false);
+		oled1_set_led_state(&oled1, OLED1_LED2_ID, false);
 
 		// Repeat task until we're displaying the text in full size
 		if (shift < max_shift) {
@@ -564,7 +564,7 @@ static void uart_task(void *params)
 
 	for (;;) {
 		// Show that task is executing
-		oled1_set_led_state(&oled1, 0, true);
+		oled1_set_led_state(&oled1, OLED1_LED1_ID, true);
 
 		// Grab terminal mutex
 		xSemaphoreTake(terminal_mutex, portMAX_DELAY);
@@ -612,7 +612,7 @@ static void uart_task(void *params)
 
 		xSemaphoreGive(terminal_mutex);
 
-		oled1_set_led_state(&oled1, 0, false);
+		oled1_set_led_state(&oled1, OLED1_LED1_ID, false);
 
 		vTaskDelay(UART_TASK_DELAY);
 	}
