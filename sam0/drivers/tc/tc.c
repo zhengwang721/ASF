@@ -287,7 +287,7 @@ enum status_code tc_init(
 	while (tc_is_syncing(module_inst)) {
 		/* Wait for sync */
 	}
-		hw->COUNT8.CTRLC.reg = ctrlc_tmp;
+	hw->COUNT8.CTRLC.reg = ctrlc_tmp;
 
 	/* Set evctrl register */
 	if (config->invert_event_input) {
