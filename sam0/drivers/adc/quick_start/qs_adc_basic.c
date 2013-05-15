@@ -54,7 +54,6 @@ void configure_adc(void)
 //! [setup_config]
 	struct adc_config config;
 //! [setup_config]
-//! [setup_config]
 //! [setup_config_defaults]
 	adc_get_config_defaults(&config);
 //! [setup_config_defaults]

@@ -625,7 +625,7 @@ void dac_clear_status(
  * \section asfdoc_samd20_dac_extra_dependencies Dependencies
  * This driver has the following dependencies:
  *
- *  - \ref asfdoc_samd20_pinmux_group "System Pin Multiplexer Driver"
+ *  - \ref asfdoc_samd20_system_pinmux_group "System Pin Multiplexer Driver"
  *
  *
  * \section asfdoc_samd20_dac_extra_errata Errata

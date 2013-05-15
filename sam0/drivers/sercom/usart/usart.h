@@ -195,7 +195,7 @@
  * \section asfdoc_samd20_sercom_usart_examples Examples
  *
  * For a list of examples related to this driver, see
- * \ref asfdoc_samd20_usart_exqsg.
+ * \ref asfdoc_samd20_sercom_usart_exqsg.
  *
  * \section asfdoc_samd20_sercom_usart_api_overview API Overview
  * @{
@@ -800,13 +800,13 @@ static inline void usart_disable_transceiver(
 */
 
 /**
- * \page asfdoc_samd20_sercom_exqsg Examples for USART Driver
+ * \page asfdoc_samd20_sercom_usart_exqsg Examples for SERCOM USART Driver
  *
  * This is a list of the available Quick Start guides (QSGs) and example
- * applications for \ref asfdoc_samd20_sercom_usart_group. QSGs are simple
- * examples with step-by-step instructions to configure and use this driver in
- * a selection of use cases. Note that QSGs can be compiled as a standalone
- * application or be added to the user application.
+ * applications for \ref asfdoc_samd20_sercom_usart_group. QSGs are simple examples with
+ * step-by-step instructions to configure and use this driver in a selection of
+ * use cases. Note that QSGs can be compiled as a standalone application or be
+ * added to the user application.
  *
  * - \subpage asfdoc_samd20_sercom_usart_basic_use_case
  * \if USART_CALLBACK_MODE

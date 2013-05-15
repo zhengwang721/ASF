@@ -319,7 +319,7 @@
  * \section asfdoc_samd20_sercom_spi_examples Examples
  *
  * For a list of examples related to this driver, see
- * \ref asfdoc_samd20_spi_exqsg.
+ * \ref asfdoc_samd20_sercom_spi_exqsg.
  *
  * \section asfdoc_samd20_sercom_spi_api_overview API Overview
  * @{
@@ -1318,18 +1318,13 @@ enum status_code spi_select_slave(
  */
 
 /**
- * \page asfdoc_samd20_sercom_spi_quickstart Quick Start Guides for the SPI module
+ * \page asfdoc_samd20_sercom_spi_exqsg Examples for SERCOM SPI Driver
  *
- * This is the quick start guide list for the \ref asfdoc_samd20_sercom_spi_group
- * module, with step-by-step instructions on how to configure and use the driver
- * in a selection of use cases.
- *
- * The use cases contain several code fragments. The code fragments in the
- * steps for setup can be copied into a custom initialization function of the
- * user application and run at system startup, while the steps for usage can be
- * copied into the normal user application program flow.
- *
- * \see General list of module \ref asfdoc_samd20_sercom_spi_examples "examples".
+ * This is a list of the available Quick Start guides (QSGs) and example
+ * applications for \ref asfdoc_samd20_sercom_spi_group. QSGs are simple examples with
+ * step-by-step instructions to configure and use this driver in a selection of
+ * use cases. Note that QSGs can be compiled as a standalone application or be
+ * added to the user application.
  *
  * - \subpage asfdoc_samd20_sercom_spi_master_basic_use
  * - \subpage asfdoc_samd20_sercom_spi_slave_basic_use
