@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 Master I2C Slave Bootloader
+ * \brief SAM D20 SPI Slave Bootloader
  *
  * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
@@ -42,62 +42,62 @@
  */
 
 /**
- * \mainpage I2C Slave Bootloader for SAM D20
+ * \mainpage SPI Slave Bootloader for SAM D20
  * Overview:
- * - \ref appdoc_samd20_i2c_bootloader_features
- * - \ref appdoc_samd20_i2c_bootloader_intro
- * - \ref appdoc_samd20_i2c_bootloader_mem_org
- * - \ref appdoc_samd20_i2c_bootloader_prereq
- * - \ref appdoc_samd20_i2c_bootloader_hw
- * - \ref appdoc_samd20_i2c_bootloader_process
- *    - \ref appdoc_samd20_i2c_bootloader_process_boot_check
- *    - \ref appdoc_samd20_i2c_bootloader_process_init
- *    - \ref appdoc_samd20_i2c_bootloader_boot_protocol
- *    - \ref appdoc_samd20_i2c_bootloader_start_app
- * - \ref appdoc_samd20_i2c_bootloader_compinfo
- * - \ref appdoc_samd20_i2c_bootloader_contactinfo
+ * - \ref appdoc_samd20_spi_slave_bootloader_features
+ * - \ref appdoc_samd20_spi_slave_bootloader_intro
+ * - \ref appdoc_samd20_spi_slave_bootloader_mem_org
+ * - \ref appdoc_samd20_spi_slave_bootloader_prereq
+ * - \ref appdoc_samd20_spi_slave_bootloader_hw
+ * - \ref appdoc_samd20_spi_slave_bootloader_process
+ *    - \ref appdoc_samd20_spi_slave_bootloader_process_boot_check
+ *    - \ref appdoc_samd20_spi_slave_bootloader_process_init
+ *    - \ref appdoc_samd20_spi_slave_bootloader_boot_protocol
+ *    - \ref appdoc_samd20_spi_slave_bootloader_start_app
+ * - \ref appdoc_samd20_spi_slave_bootloader_compinfo
+ * - \ref appdoc_samd20_spi_slave_bootloader_contactinfo
  *
- * \section appdoc_samd20_i2c_bootloader_features Features
+ * \section appdoc_samd20_spi_slave_bootloader_features Features
  * \li Application for self programming
- * \li Uses I2C Slave interface
- * \li I2C Master sends the data to be programmed over I2C bus
+ * \li Uses SPI Slave interface
+ * \li SPI Master sends the data to be programmed over SPI bus
  * \li Resets the device after programming and starts executing application
  *
- * \section appdoc_samd20_i2c_bootloader_intro Introduction
+ * \section appdoc_samd20_spi_slave_bootloader_intro Introduction
  * As many electronic designs evolve rapidly there is a growing need for being
  * able to update products, which have already been shipped or sold.
- * Microcontrollers that support boot loader facilitates updating the
- * application flash section without the need of an external programmer, are of
+ * Microcontrollers that support bootloader which allows updating of the
+ * flash without the need of an external programmer, are of
  * great use in situations where the application has to be updated on the field.
  * The boot loader may use various interfaces like SPI, UART, TWI, Ethernet etc.
- * This application implements a I2C Slave bootloader for SAM D20.
+ * This application implements a SPI Slave bootloader for SAM D20.
  *
- * \section appdoc_samd20_i2c_bootloader_mem_org Program Memory Organization
+ * \section appdoc_samd20_spi_slave_bootloader_mem_org Program Memory Organization
  * This bootloader implementation consumes around 8000 bytes (approximately),
  * which is 32 rows of Program Memory space starting from 0x00000000. BOOTPROT
  * fuses on the device can be set to protect first 32 rows of the program
  * memory which are allocated for the BOOT section. So, the end user application
- * should be generated with starting address as 0x00002000.
+ * should be generated with starting address as 0x00004000.
  *
- * \section appdoc_samd20_i2c_bootloader_prereq Prerequisites
+ * \section appdoc_samd20_spi_slave_bootloader_prereq Prerequisites
  * There are no prerequisites for this implementation
  *
- * \section appdoc_samd20_i2c_bootloader_hw Hardware Setup
- * SAM D20 in SAM D20 Xplained Pro kit is used as the I2C Slave.
- * I2C master should be connected to PIN17 (PA14 - SDA) and PIN15 (PA15 – SCL)
- * on External header 1 (EXT1) of SAM D20 Xplained Pro.
+ * \section appdoc_samd20_spi_slave_bootloader_hw Hardware Setup
+ * SAM D20 in SAM D20 Xplained Pro kit is used as the SPI Slave.
+ * SPI master should be connected to PIN_PA16 (MOSI), PIN_PA17 (SS), PIN_PA18 (MISO)
+ * and PIN_PA19 (SCK) on External header 1 (EXT1) of SAM D20 Xplained Pro.
  * SW0 will be configured as BOOT_LOAD_PIN and LED0 will be used to
  * display the bootloader status. LED0 will be ON when the device is in
  * bootloader mode.
  *
- * \section appdoc_samd20_i2c_bootloader_process Bootloader Process
+ * \section appdoc_samd20_spi_slave_bootloader_process Bootloader Process
  *
- * \subsection appdoc_samd20_i2c_bootloader_process_boot_check Boot Check
+ * \subsection appdoc_samd20_spi_slave_bootloader_process_boot_check Boot Check
  * The bootloader is located at the start of the program memory and is
  * executed at each reset/power-on sequence. Initially check the
  * status of a user configurable BOOT_LOAD_PIN.
  * - If the pin is pulled low continue execution in bootloader mode.
- * - Else read the first location of application section (0x00002000) which
+ * - Else read the first location of application section (0x00004000) which
  *   contains the stack pointer address and check whether it is 0xFFFFFFFF.
  *    - If yes, application section is empty and wait indefinitely there.
  *    - If not, jump to the application section and start execution from there.
@@ -105,54 +105,43 @@
  * check routine are made with direct peripheral register access to enable quick
  * decision on application or bootloader mode.
  *
- * \subsection appdoc_samd20_i2c_bootloader_process_init Initialization
+ * \subsection appdoc_samd20_spi_slave_bootloader_process_init Initialization
  * Initialize the following
  *   - Board
  *   - System clock
- *   - I2C Slave module
+ *   - SPI Slave module
  *   - NVM module
  *
- * \subsection appdoc_samd20_i2c_bootloader_boot_protocol Boot Protocol
- *   - I2C Master first sends 4 bytes of data which contains the length of
+ * \subsection appdoc_samd20_spi_slave_bootloader_boot_protocol Boot Protocol
+ *   - SPI Master first sends 4 bytes of data which contains the length of
  *     the data to be programmed
- *   - Read a block from I2C Master of size NVMCTRL_PAGE_SIZE
- *   - Program the data to Program memory starting APP_START_ADDRESS
- *   - Send an acknowledgment byte 's' to I2C Master to indicate it has
+ *   - Bootloader acknowledges length by sending byte 's'
+ *   - Read a block from SPI Master of size NVMCTRL_PAGE_SIZE
+ *   - Program the data to program memory starting at APP_START_ADDRESS
+ *   - Send an acknowledgment byte 's' to SPI Master to indicate it has
  *     received the data and finished programming
  *   - Repeat till entire length of data has been programmed to the device
  *
- * \subsection appdoc_samd20_i2c_bootloader_start_app Start Application
- * Once the programming is completed, enable Watchdog Timer with a timeout
- * period of 256 clock cyles and wait in a loop for Watchdog to reset
- * the device.
+ * \subsection appdoc_samd20_spi_slave_bootloader_start_app Start Application
+ * Once the programming is completed, the CMSIS command NVIC_SystemReset() is
+ * called to restart the device. If SW0 is high, the previously programmed application
+ * will now be run.
  *
- * \section appdoc_samd20_i2c_bootloader_compinfo Compilation Info
+ * \section appdoc_samd20_spi_slave_bootloader_compinfo Compilation Info
  * This software was written for the GNU GCC and IAR for ARM.
  * Other compilers may or may not work.
  *
- * \section appdoc_samd20_i2c_bootloader_contactinfo Contact Information
+ * \section appdoc_samd20_spi_slave_bootloader_contactinfo Contact Information
  * For further information, visit
  * <A href="http://www.atmel.com/">Atmel</A>.\n
  */
 
 #include <asf.h>
-#include "conf_bootloader.h"
+#include <conf_bootloader.h>
 
-struct i2c_slave_module slave;
+struct spi_module slave;
 
-struct i2c_packet packet = {
-	.address     = SLAVE_ADDRESS,
-	.data_length = NVMCTRL_PAGE_SIZE,
-};
-
-/* Function prototypes */
-static uint32_t get_length(void);
-static void fetch_data(uint8_t *buffer, uint16_t len);
-static void program_memory(uint32_t address, uint8_t *buffer, uint16_t len);
-static void start_application(void);
-static void check_boot_mode(void);
-static void configure_i2c(void);
-static void send_ack(void);
+uint16_t dummy;
 
 /**
  * \brief Function for fetching length of file to be programmed
@@ -165,11 +154,8 @@ static uint32_t get_length(void)
 	uint8_t read_buffer[4];
 	uint32_t len = 0;
 
-	packet.data_length = 4;
-	packet.data = read_buffer;
-
 	/* Read 4 bytes of data from master */
-	while (i2c_slave_read_packet_wait(&slave, &packet) != STATUS_OK);
+	while (spi_read_buffer_wait(&slave, read_buffer, 4, dummy) != STATUS_OK);
 	MSB0W(len) = read_buffer[0];
 	MSB1W(len) = read_buffer[1];
 	MSB2W(len) = read_buffer[2];
@@ -184,16 +170,13 @@ static uint32_t get_length(void)
  * This function will read \ref len number of bytes from master for
  * programming the device.
  *
- * \param buffer pointer to the buffer to store data from I2C master
- * \param len    length of the data that will be sent by I2C master
+ * \param buffer pointer to the buffer to store data from SPI master
+ * \param len    length of the data that will be sent by SPI master
  */
 static void fetch_data(uint8_t *buffer, uint16_t len)
 {
-	packet.data_length = len;
-	packet.data = buffer;
-
 	/* Read \ref len number of bytes from master */
-	while (i2c_slave_read_packet_wait(&slave, &packet) != STATUS_OK);
+	while (spi_read_buffer_wait(&slave, buffer, len, dummy) != STATUS_OK);
 }
 
 /**
@@ -228,7 +211,7 @@ static void program_memory(uint32_t address, uint8_t *buffer, uint16_t len)
 			len -= NVMCTRL_PAGE_SIZE;
 		}
 
-		/* Check if there is data remaining to be programmed*/
+		/* Check if there is data remaining to be programmed */
 		if (len > 0) {
 			/* Write the data to flash */
 			nvm_write_buffer(address, buffer + offset, len);
@@ -241,39 +224,6 @@ static void program_memory(uint32_t address, uint8_t *buffer, uint16_t len)
 		}
 		/* Write the data to flash */
 		nvm_write_buffer(address, buffer, len);
-	}
-}
-
-/**
- * \brief Function for starting application
- *
- * This function will configure the WDT module and enable it. The LED is
- * kept toggling till WDT reset occurs.
- */
-static void start_application(void)
-{
-	struct wdt_conf wdt_config;
-
-	/* Turn off LED */
-	port_pin_set_output_level(BOOT_LED, true);
-
-	/* Get WDT default configuration */
-	wdt_get_config_defaults(&wdt_config);
-
-	/* Set the required clock source and timeout period */
-	wdt_config.clock_source   = GCLK_GENERATOR_4;
-	wdt_config.timeout_period = WDT_PERIOD_256CLK;
-
-	/* Initialize WDT */
-	wdt_init(&wdt_config);
-
-	wdt_enable();
-
-	/* Turn ON LED after watchdog has initialized */
-	port_pin_set_output_level(BOOT_LED, false);
-
-	while (1) {
-		/* Wait for watchdog reset */
 	}
 }
 
@@ -294,9 +244,9 @@ static void check_boot_mode(void)
 	uint32_t *app_check_address_ptr;
 
 	/* Check if WDT is locked */
-	if (!(WDT->CTRL.reg & WDT_CTRL_ALWAYSON)) {
-		/* Disable the Watchdog module */
-		WDT->CTRL.reg &= ~WDT_CTRL_ENABLE;
+	if (WDT->CTRL.reg & WDT_CTRL_ALWAYSON) {
+		/* Watchdog always enabled, unsafe to program */
+		while (1);
 	}
 
 	volatile PortGroup *boot_port = (volatile PortGroup *)
@@ -312,8 +262,8 @@ static void check_boot_mode(void)
 	/* Read the BOOT_LOAD_PIN status */
 	boot_en = (boot_port->IN.reg) & GPIO_BOOT_PIN_MASK;
 
-	/* Check the BOOT pin or the reset cause is Watchdog */
-	if ((boot_en) || (PM->RCAUSE.reg & PM_RCAUSE_WDT)) {
+	/* Check the BOOT pin */
+	if (boot_en) {
 		app_check_address = APP_START_ADDRESS;
 		app_check_address_ptr = (uint32_t *) app_check_address;
 
@@ -346,42 +296,44 @@ static void check_boot_mode(void)
 }
 
 /**
- * \brief Function for configuring I2C slave module
+ * \brief Function for configuring SPI slave module
  *
- * This function will configure the I2C slave module with
- * the SERCOM module to be used, required slave address, address mode mask
- * and pinmux settings
+ * This function will configure the SPI slave module with
+ * the SERCOM module to be used and pinmux settings
  */
-static void configure_i2c(void)
+static void configure_spi(void)
 {
 	/* Create and initialize config structure */
-	struct i2c_slave_config config_i2c;
-	i2c_slave_get_config_defaults(&config_i2c);
+	struct spi_config config_spi;
+	spi_get_config_defaults(&config_spi);
 
-	/* Change address and address_mode */
-	config_i2c.address      = SLAVE_ADDRESS;
-	config_i2c.address_mode = I2C_SLAVE_ADDRESS_MODE_MASK;
-	config_i2c.pinmux_pad0  = BOOT_I2C_PAD0;
-	config_i2c.pinmux_pad1  = BOOT_I2C_PAD1;
+	/* Change SPI settings to slave */
+	config_spi.mode = SPI_MODE_SLAVE;
+	config_spi.mux_setting = SPI_SIGNAL_MUX_SETTING_E;
+	config_spi.slave.preload_enable = true;
+	config_spi.slave.frame_format = SPI_FRAME_FORMAT_SPI_FRAME;
+	config_spi.pinmux_pad0 = BOOT_SPI_PAD0;
+	config_spi.pinmux_pad1 = BOOT_SPI_PAD1;
+	config_spi.pinmux_pad2 = BOOT_SPI_PAD2;
+	config_spi.pinmux_pad3 = BOOT_SPI_PAD3;
 
 	/* Initialize and enable device with config */
-	i2c_slave_init(&slave, BOOT_SERCOM, &config_i2c);
+	spi_init(&slave, BOOT_SERCOM, &config_spi);
 
-	i2c_slave_enable(&slave);
+	spi_enable(&slave);
 }
 
 /**
- * \brief Function for sending acknowledgment to I2C Master
+ * \brief Function for sending acknowledgment to SPI Master
  *
- * This function will write an acknowledgment byte 's' on I2C bus to
+ * This function will send an acknowledgment byte 's' to the master to
  * indicate the master that it has received and programmed the data.
  */
 static void send_ack(void)
 {
-	uint8_t ack = 's';
-	packet.data_length = 1;
-	packet.data = &ack;
-	while (i2c_slave_write_packet_wait(&slave, &packet) != STATUS_OK);
+	uint16_t ack = (uint16_t)'s';
+	while(!spi_is_ready_to_write(&slave));
+	spi_write(&slave, ack);
 }
 
 /**
@@ -389,9 +341,9 @@ static void send_ack(void)
  */
 int main(void)
 {
-	static volatile uint32_t len = 0;
-	uint32_t remaining_len = 0;
+	uint32_t len;
 	uint32_t curr_prog_addr;
+	uint32_t tmp_len;
 	uint8_t buff[NVMCTRL_PAGE_SIZE];
 	struct nvm_config config;
 
@@ -407,8 +359,9 @@ int main(void)
 	/* Initialize system */
 	system_init();
 
-	/* Configure the I2C slave module */
-	configure_i2c();
+
+	/* Configure the SPI slave module */
+	configure_spi();
 
 	/* Get NVM default configuration and load the same */
 	nvm_get_config_defaults(&config);
@@ -416,33 +369,36 @@ int main(void)
 
 	/* Turn on LED */
 	port_pin_set_output_level(BOOT_LED, false);
-
 	/* Get the length to be programmed */
 	len = get_length();
-	remaining_len = len;
 
 	do {
-		/* Read data of AT45DBX_SECTOR_SIZE */
-		fetch_data(buff, min(NVMCTRL_PAGE_SIZE, len));
+		/* Get remaining or NVMCTRL_PAGE_SIZE as block length */
+		tmp_len = min(NVMCTRL_PAGE_SIZE, len);
 
-		/* Program the read data into Flash */
-		program_memory(curr_prog_addr, buff, min(NVMCTRL_PAGE_SIZE, len));
+		/* Acknowledge last received data */
+		send_ack();
+
+		/* Read data from SPI master */
+		fetch_data(buff, tmp_len);
+
+		/* Program the data into Flash */
+		program_memory(curr_prog_addr, buff, tmp_len);
 
 		/* Increment the current programming address */
-		curr_prog_addr += min(NVMCTRL_PAGE_SIZE, len);
-
-		/* Calculate the remaining length */
-		remaining_len -= min(NVMCTRL_PAGE_SIZE, len);
+		curr_prog_addr += tmp_len;
 
 		/* Update the length to remaining length to be programmed */
-		len = remaining_len;
-
-		send_ack();
+		len -= tmp_len;
 
 		/* Do this for entire length */
 	} while (len != 0);
 
-	start_application();
+	/* Acknowledge last block */
+	send_ack();
+
+	/* Reset module and boot into application */
+	NVIC_SystemReset();
 
 	while (1) {
 		/* Inf loop */

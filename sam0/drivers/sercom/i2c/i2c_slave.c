@@ -367,11 +367,13 @@ static enum status_code _i2c_slave_wait_for_bus(
  *
  * \return Status of packet write.
  * \retval STATUS_OK                Packet was written successfully
+ * \retval STATUS_ERR_DENIED        Start condition not received, another
+ *                                  interrupt flag is set
  * \retval STATUS_ERR_IO            There was an error in the previous transfer
  * \retval STATUS_ERR_BAD_FORMAT    Master wants to write data
  * \retval STATUS_ERR_INVALID_ARG   Invalid argument(s) was provided
  * \retval STATUS_ERR_BUSY          The I<SUP>2</SUP>C module is busy with a job.
- * \retval STATUS_ERR_ERR_OVERFLOW  Master NAKed before entire packet was
+ * \retval STATUS_ERR_ERR_OVERFLOW  Master NACKed before entire packet was
  *                                  transferred
  * \retval STATUS_ERR_TIMEOUT       No response was given within the timeout
  *                                  period
@@ -395,7 +397,8 @@ enum status_code i2c_slave_write_packet_wait(
 
 #if I2C_SLAVE_CALLBACK_MODE == true
 	/* Check if the module is busy with a job or AMATCH is enabled */
-	if (module->buffer_remaining > 0 || (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_AMATCH)) {
+	if (module->buffer_remaining > 0 ||
+			(i2c_hw->INTENSET.reg & SERCOM_I2CS_INTFLAG_AMATCH)) {
 		return STATUS_BUSY;
 	}
 #endif
@@ -486,8 +489,10 @@ enum status_code i2c_slave_write_packet_wait(
  *                                  start before specified length of bytes
  *                                  was received
  * \retval STATUS_ERR_IO            There was an error in the previous transfer
+ * \retval STATUS_ERR_DENIED        Start condition not received, another
+ *                                  interrupt flag is set
  * \retval STATUS_ERR_INVALID_ARG   Invalid argument(s) was provided
- * \retval STATUS_ERR_BUSY          The I<SUP>2</SUP>C module is busy with a job.
+ * \retval STATUS_ERR_BUSY          The I<SUP>2</SUP>C module is busy with a job
  * \retval STATUS_ERR_BAD_FORMAT    Master wants to read data
  * \retval STATUS_ERR_ERR_OVERFLOW  Last byte received overflows buffer
  */
@@ -510,7 +515,8 @@ enum status_code i2c_slave_read_packet_wait(
 
 #if I2C_SLAVE_CALLBACK_MODE == true
 	/* Check if the module is busy with a job or AMATCH is enabled */
-	if (module->buffer_remaining > 0 || (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_AMATCH)) {
+	if (module->buffer_remaining > 0 ||
+			(i2c_hw->INTENSET.reg & SERCOM_I2CS_INTFLAG_AMATCH)) {
 		return STATUS_BUSY;
 	}
 #endif
@@ -524,10 +530,14 @@ enum status_code i2c_slave_read_packet_wait(
 		return status;
 	}
 
+	if (!(i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_AMATCH)) {
+		/* Not address interrupt, something is wrong */
+		return STATUS_ERR_DENIED;
+	}
+
 	/* Check if there was an error in the last transfer */
 	if (i2c_hw->STATUS.reg & (SERCOM_I2CS_STATUS_BUSERR ||
 			SERCOM_I2CS_STATUS_COLL || SERCOM_I2CS_STATUS_LOWTOUT)) {
-		// TODO: NACK?
 		return STATUS_ERR_IO;
 	}
 	/* Check direction */
@@ -627,5 +637,134 @@ enum i2c_slave_direction i2c_slave_get_direction_wait(
 	} else {
 		/* Write request from master */
 		return I2C_SLAVE_DIRECTION_READ;
+	}
+}
+
+/**
+ * \brief Retrieves the current module status
+ *
+ * Checks the status of the module and returns it as a bitmask of status
+ * flags
+ *
+ * \param[in] module_inst      Pointer to the I2C slave software device struct
+ *
+ * \return Bitmask of status flags
+ *
+ * \retval I2C_SLAVE_STATUS_ADDRESS_MATCH   A valid address has been received
+ * \retval I2C_SLAVE_STATUS_DATA_READY      A I2C slave byte transmission is
+ *                                          successfully completed
+ * \retval I2C_SLAVE_STATUS_STOP_RECEIVED   A stop condition is detected for a
+ *                                          transaction being processed
+ * \retval I2C_SLAVE_STATUS_CLOCK_HOLD      The slave is holding the SCL line
+ *                                          low
+ * \retval I2C_SLAVE_STATUS_SCL_LOW_TIMEOUT An SCL low time-out has occured
+ * \retval I2C_SLAVE_STATUS_REPEATED_START  Indicates a repeated start, only
+ *                                          valid if \ref
+ *                                          I2C_SLAVE_STATUS_ADDRESS_MATCH is
+ *                                          set
+ * \retval I2C_SLAVE_STATUS_RECEIVED_NACK   The last data packet sent was not
+ *                                          acknowledged
+ * \retval I2C_SLAVE_STATUS_COLLISION       The I2C slave was not able to
+ *                                          transmit a high data or NACK bit
+ * \retval I2C_SLAVE_STATUS_BUS_ERROR       An illegal bus condition has
+ *                                          occurred on the bus
+ */
+uint32_t i2c_slave_get_status(
+		struct i2c_slave_module *const module)
+{
+	 /* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+
+	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
+
+	uint8_t intflags = i2c_hw->INTFLAG.reg;
+	uint8_t status = i2c_hw->STATUS.reg;
+	uint32_t status_flags = 0;
+
+	/* Check Address Match flag */
+	if (intflags & SERCOM_I2CS_INTFLAG_AMATCH) {
+		status_flags |= I2C_SLAVE_STATUS_ADDRESS_MATCH;
+	}
+	/* Check Data Ready flag */
+	if (intflags & SERCOM_I2CS_INTFLAG_DRDY) {
+		status_flags |= I2C_SLAVE_STATUS_DATA_READY;
+	}
+	/* Check Stop flag */
+	if (intflags & SERCOM_I2CS_INTFLAG_PREC) {
+		status_flags |= I2C_SLAVE_STATUS_STOP_RECEIVED;
+	}
+	/* Check Clock Hold */
+	if (status & SERCOM_I2CS_STATUS_CLKHOLD) {
+		status_flags |= I2C_SLAVE_STATUS_CLOCK_HOLD;
+	}
+	/* Check SCL Low Timeout */
+	if (status & SERCOM_I2CS_STATUS_LOWTOUT) {
+		status_flags |= I2C_SLAVE_STATUS_SCL_LOW_TIMEOUT;
+	}
+	/* Check Repeated Start */
+	if (status & SERCOM_I2CS_STATUS_SR) {
+		status_flags |= I2C_SLAVE_STATUS_REPEATED_START;
+	}
+	/* Check Received Not Acknowledge */
+	if (status & SERCOM_I2CS_STATUS_RXNACK) {
+		status_flags |= I2C_SLAVE_STATUS_RECEIVED_NACK;
+	}
+	/* Check Transmit Collision */
+	if (status & SERCOM_I2CS_STATUS_COLL) {
+		status_flags |= I2C_SLAVE_STATUS_COLLISION;
+	}
+	/* Check Bus Error */
+	if (status & SERCOM_I2CS_STATUS_BUSERR) {
+		status_flags |= I2C_SLAVE_STATUS_BUS_ERROR;
+	}
+
+	return status_flags;
+}
+
+/**
+ * \brief Clears a module status flag
+ *
+ * Clears the given status flag of the module.
+ *
+ * \note Not all status flags can be cleared.
+ *
+ * \param[in] module_inst      Pointer to the I2C software device struct
+ * \param[in] status           Bit mask of status flags to clear
+ *
+ */
+void i2c_slave_clear_status(
+		struct i2c_slave_module *const module,
+		uint32_t status_flags)
+{
+		 /* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+
+	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
+
+	/* Clear Address Match flag */
+	if (status_flags & I2C_SLAVE_STATUS_ADDRESS_MATCH) {
+		i2c_hw->INTFLAG.reg = SERCOM_I2CS_INTFLAG_AMATCH;
+	}
+	/* Clear Data Ready flag */
+	if (status_flags & I2C_SLAVE_STATUS_DATA_READY) {
+		i2c_hw->INTFLAG.reg = SERCOM_I2CS_INTFLAG_DRDY;
+	}
+	/* Clear Stop flag */
+	if (status_flags & I2C_SLAVE_STATUS_STOP_RECEIVED) {
+		i2c_hw->INTFLAG.reg = SERCOM_I2CS_INTFLAG_PREC;
+	}
+	/* Clear SCL Low Timeout */
+	if (status_flags & I2C_SLAVE_STATUS_SCL_LOW_TIMEOUT) {
+		i2c_hw->STATUS.reg = SERCOM_I2CS_STATUS_LOWTOUT;
+	}
+	/* Clear Transmit Collision */
+	if (status_flags & I2C_SLAVE_STATUS_COLLISION) {
+		i2c_hw->STATUS.reg = SERCOM_I2CS_STATUS_COLL;
+	}
+	/* Clear Bus Error */
+	if (status_flags & I2C_SLAVE_STATUS_BUS_ERROR) {
+		i2c_hw->STATUS.reg = SERCOM_I2CS_STATUS_BUSERR;
 	}
 }

@@ -1,11 +1,13 @@
 /**
  * \file
  *
- * \brief SAM D20 BOD Driver Quick Start
+ * \brief Bootloader specific configuration.
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -36,43 +38,23 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
+ *
  */
-#include <asf.h>
 
-void configure_bod33(void);
+#ifndef CONF_BOOTLOADER_H_INCLUDED
+#define CONF_BOOTLOADER_H_INCLUDED
 
-//! [setup]
-void configure_bod33(void)
-{
-//! [setup_config]
-	struct bod_config bod33_conf;
-//! [setup_config]
-//! [setup_config_defaults]
-	bod_get_config_defaults(&bod33_conf);
-//! [setup_config_defaults]
+#include "conf_board.h"
 
-//! [setup_set_config]
-	bod_set_config(BOD_BOD33, &bod33_conf);
-//! [setup_set_config]
+#define APP_START_ADDRESS          0x00004000
+#define BOOT_LED                   LED0_PIN
+#define BOOT_LOAD_PIN              SW0_PIN
+#define GPIO_BOOT_PIN_MASK         (1U << (BOOT_LOAD_PIN & 0x1F))
 
-//! [setup_enable]
-	bod_enable(BOD_BOD33);
-//! [setup_enable]
-}
-//! [setup]
+#define BOOT_SERCOM                EXT2_SPI_MODULE
+#define BOOT_SPI_PAD0              EXT2_SPI_MOSI_PINMUX
+#define BOOT_SPI_PAD1              EXT2_SPI_SS_PINMUX
+#define BOOT_SPI_PAD2              EXT2_SPI_MISO_PINMUX
+#define BOOT_SPI_PAD3              EXT2_SPI_SCK_PINMUX
 
-int main(void)
-{
-	/* Configure the BOD 3.3V module */
-//! [setup_init]
-	configure_bod33();
-//! [setup_init]
-
-//! [main]
-//! [main_loop]
-	while (true) {
-
-	}
-//! [main_loop]
-//! [main]
-}
+#endif /* CONF_BOARD_H_INCLUDED */
