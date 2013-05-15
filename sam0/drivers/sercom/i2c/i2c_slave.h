@@ -67,6 +67,45 @@ extern "C" {
  *
  */
 
+/**
+ * \name I2C slave status flags
+ *
+ * I2C slave status flags, returned by \ref i2c_slave_get_status() and cleared
+ * by \ref i2c_slave_clear_status().
+ * @{
+ */
+
+/** Address Match
+ * \note Should only be cleared internally by driver.
+ */
+#define I2C_SLAVE_STATUS_ADDRESS_MATCH     (1UL << 0)
+/** Data Ready */
+#define I2C_SLAVE_STATUS_DATA_READY        (1UL << 1)
+/** Stop Received */
+#define I2C_SLAVE_STATUS_STOP_RECEIVED     (1UL << 2)
+/** Clock Hold
+ * \note Cannot be cleared, only valid when I2C_SLAVE_STATUS_ADDRESS_MATCH is
+ * set
+ */
+#define I2C_SLAVE_STATUS_CLOCK_HOLD        (1UL << 3)
+/** SCL Low Timeout */
+#define I2C_SLAVE_STATUS_SCL_LOW_TIMEOUT   (1UL << 4)
+/** Repeated Start
+ * \note Cannot be cleared, only valid when I2C_SLAVE_STATUS_ADDRESS_MATCH is
+ * set
+ */
+#define I2C_SLAVE_STATUS_REPEATED_START    (1UL << 5)
+/** Received not acknowledge 
+ * \note Cannot be cleared
+ */
+#define I2C_SLAVE_STATUS_RECEIVED_NACK     (1UL << 6)
+/** Transmit Collision */
+#define I2C_SLAVE_STATUS_COLLISION         (1UL << 7)
+/** Bus error */
+#define I2C_SLAVE_STATUS_BUS_ERROR         (1UL << 8)
+
+/** @} */
+
 #if I2C_SLAVE_CALLBACK_MODE == true
  /**
  * \brief Callback types
@@ -433,6 +472,18 @@ enum i2c_slave_direction i2c_slave_get_direction(
 		struct i2c_slave_module *const module);
 
 /** @} */
+
+/**
+ * \name Status Management
+ * @{
+ */
+uint32_t i2c_slave_get_status(
+		struct i2c_slave_module *const module);
+void i2c_slave_clear_status(
+		struct i2c_slave_module *const module,
+		uint32_t status_flags);
+/** @} */
+
 /** @} */
 
 #ifdef __cplusplus

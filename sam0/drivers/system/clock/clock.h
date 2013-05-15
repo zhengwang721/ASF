@@ -84,7 +84,7 @@
  *
  * \subsection asfdoc_samd20_system_clock_module_overview_clock_sources Clock Sources
  * The SAM D20 devices have a number of master clock source modules, each of
- * which being capable of producing a stabilized output frquency which can then
+ * which being capable of producing a stabilized output frequency which can then
  * be fed into the various peripherals and modules within the device.
  *
  * Possible clock source modules include internal R/C oscillators, internal
@@ -748,7 +748,7 @@ void system_clock_source_osc8m_set_config(
 /**
  * \brief Retrieve the default configuration for DFLL
  *
- * Fills a configuration structure with the default configuration for an
+ * Fills a configuration structure with the default configuration for a
  * DFLL oscillator module:
  *   - Open loop mode
  *   - QuickLock mode enabled
@@ -915,7 +915,7 @@ static inline enum status_code system_apb_clock_set_divider(
 /**
  * \brief Retrieves the current frequency of a ABPx.
  *
- * Retrieves the operating frequency of a APBx bus, obtained from the main
+ * Retrieves the operating frequency of an APBx bus, obtained from the main
  * generic clock and the set APBx bus divider.
  *
  * \return Current APBx bus frequency in Hz.
@@ -1086,11 +1086,11 @@ void system_clock_init(void);
  */
 
 /**
- * \brief Set flash controller waitstates
+ * \brief Set flash controller wait states
  *
- * Will set the number of waitstates that are used by the onboard
- * flash memory. The number of waitstates depend on both device
- * supply voltage and CPU speed. The required number of waitstates
+ * Will set the number of wait states that are used by the onboard
+ * flash memory. The number of wait states depend on both device
+ * supply voltage and CPU speed. The required number of wait states
  * can be found in the electrical characteristics of the device.
  *
  * \param[in] wait_states Number of wait states to use for internal flash

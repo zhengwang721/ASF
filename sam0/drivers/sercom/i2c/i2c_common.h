@@ -112,7 +112,7 @@ extern "C" {
  *
  * \subsection asfdoc_samd20_i2c_bus_topology Bus Topology
  * The I<SUP>2</SUP>C bus topology is illustrated in
- * \ref asfdoc_samd20_i2c_bus_topology_figure "the figure below". The pullup
+ * \ref asfdoc_samd20_i2c_bus_topology_figure "the figure below". The pull-up
  * resistors (Rs) will provide a high level on the bus lines when none of the
  * I<SUP>2</SUP>C devices are driving the bus. These are optional, and can be
  * replaced with a constant current source.

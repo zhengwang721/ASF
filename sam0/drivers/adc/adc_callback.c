@@ -103,7 +103,7 @@ void ADC_Handler(void)
  * Registers a callback function which is implemented by the user.
  *
  * \note The callback must be enabled by for the interrupt handler to call it
- * when the conditions for the callback is met.
+ * when the condition for the callback is met.
  *
  * \param[in] module         Pointer to ADC software instance struct
  * \param[in] callback_func  Pointer to callback function
@@ -163,7 +163,8 @@ void adc_unregister_callback(
  * \param[out] buffer       Buffer to store the ADC samples
  *
  * \return Status of the job start
- * \retval STATUS_OK        The conversion job was started succesfully and is in progress
+ * \retval STATUS_OK        The conversion job was started successfully and is
+ *                          in progress
  * \retval STATUS_BUSY      The ADC is already busy with another job
  */
 enum status_code adc_read_buffer_job(

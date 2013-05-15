@@ -58,9 +58,7 @@
 #  define _TC_GCLK_ID(n, unused)       TC##n##_GCLK_ID   ,
 #  define _TC_PM_APBCMASK(n, unused)   PM_APBCMASK_TC##n ,
 
-/** TODO: Remove once present in device header file */
 #  define TC_INST_GCLK_ID          { MREPEAT(TC_INST_NUM, _TC_GCLK_ID    , ~) }
-/** TODO: Remove once present in device header file */
 #  define TC_INST_PM_APBCMASK      { MREPEAT(TC_INST_NUM, _TC_PM_APBCMASK, ~) }
 #endif
 
@@ -597,7 +595,7 @@ enum status_code tc_set_compare_value(
  * \retval STATUS_OK                   The module was reset successfully
  * \retval STATUS_ERR_UNSUPPORTED_DEV  A 32-bit slave TC module was passed to
  *                                     the function. Only use reset on master
- *                                     tc.
+ *                                     TC.
  */
 enum status_code tc_reset(
 		const struct tc_module *const module_inst)

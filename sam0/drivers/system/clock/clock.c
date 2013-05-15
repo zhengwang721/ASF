@@ -548,7 +548,7 @@ bool system_clock_source_is_ready(
 /**
  * \brief Initialize clock system based on the configuration in conf_clocks.h
  *
- * This function will apply the settings in conf_clock.h when run from the user
+ * This function will apply the settings in conf_clocks.h when run from the user
  * application. All clock sources and GCLK generators are running when this function
  * returns.
  */
@@ -684,8 +684,8 @@ void system_clock_init(void)
 
 		system_gclk_chan_get_config_defaults(&dfll_gclk_chan_conf);
 		dfll_gclk_chan_conf.source_generator = CONF_CLOCK_DFLL_SOURCE_GCLK_GENERATOR;
-		system_gclk_chan_set_config(0, &dfll_gclk_chan_conf);
-		system_gclk_chan_enable(0);
+		system_gclk_chan_set_config(SYSCTRL_GCLK_ID_DFLL48, &dfll_gclk_chan_conf);
+		system_gclk_chan_enable(SYSCTRL_GCLK_ID_DFLL48);
 	}
 #  endif
 

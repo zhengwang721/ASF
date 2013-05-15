@@ -522,7 +522,7 @@
  * Reading the state of the peripheral lock is to be avoided as it greatly
  * compromises the protection initially provided by the PAC. If a lock/unlock
  * is implemented conditionally, there is a risk that eventual errors are not
- * caught in the protection scheme. Examples indicating the issue is shown
+ * caught in the protection scheme. Examples indicating the issue are shown
  * in \ref asfdoc_samd20_pac_lock_errors_diagram "the diagram below".
  *
  * \anchor asfdoc_samd20_pac_lock_errors_diagram
