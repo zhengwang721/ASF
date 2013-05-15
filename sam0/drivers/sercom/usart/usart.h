@@ -171,6 +171,9 @@
  * The PADS can then be routed to an external GPIO pin using the normal pin
  * multiplexing scheme on the SAM D20.
  *
+ * For SERCOM pad multiplexer position documentation, see
+ * \ref asfdoc_samd20_sercom_usart_mux_settings.
+ *
  * \section asfdoc_samd20_sercom_usart_special_considerations Special considerations
  *
  * \if USART_CALLBACK_MODE
