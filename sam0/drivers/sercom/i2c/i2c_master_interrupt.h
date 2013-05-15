@@ -51,7 +51,7 @@ extern "C" {
 #endif
 
 /**
- * \addtogroup asfdoc_samd20_i2c_group
+ * \addtogroup asfdoc_samd20_sercom_i2c_group
  * @{
  *
  */

@@ -394,12 +394,8 @@
  *
  * \section asfdoc_samd20_tc_examples Examples
  *
- * The following Quick Start guides and application examples are available for
- * this driver:
- * - \ref asfdoc_samd20_tc_basic_use_case
- * \if TC_CALLBACK_MODE
- * - \ref asfdoc_samd20_tc_callback_use_case
- * \endif
+ * For a list of examples related to this driver, see
+ * \ref asfdoc_samd20_tc_exqsg.
  *
  * \section asfdoc_samd20_tc_api_overview API Overview
  * @{

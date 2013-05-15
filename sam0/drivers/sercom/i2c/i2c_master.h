@@ -61,7 +61,7 @@ extern "C" {
 #endif
 
 /**
- * \addtogroup asfdoc_samd20_i2c_group
+ * \addtogroup asfdoc_samd20_sercom_i2c_group
  *
  * @{
  */
@@ -210,7 +210,7 @@ struct i2c_master_config {
 	enum gclk_generator generator_source;
 	/** Bus hold time after start signal on data line */
 	enum i2c_master_start_hold_time start_hold_time;
-	/** Unknown bus state \ref asfdoc_samd20_i2c_unknown_bus_timeout "timeout" */
+	/** Unknown bus state \ref asfdoc_samd20_sercom_i2c_unknown_bus_timeout "timeout" */
 	uint16_t unknown_bus_state_timeout;
 	/** Timeout for packet write to wait for slave */
 	uint16_t buffer_timeout;
@@ -313,7 +313,7 @@ enum status_code i2c_master_init(
  * \brief Enables the I<SUP>2</SUP>C module
  *
  * Enables the requested I<SUP>2</SUP>C module and set the bus state to IDLE
- * after the specified \ref asfdoc_samd20_i2c_timeout "timeout" period if no
+ * after the specified \ref asfdoc_samd20_sercom_i2c_timeout "timeout" period if no
  * stop bit is detected.
  *
  * \param[in]  module  Pointer to the software module struct

@@ -50,7 +50,7 @@ extern "C" {
 #endif
 
 /**
- * \defgroup asfdoc_samd20_i2c_group SAM D20 I2C Bus Driver (SERCOM I2C)
+ * \defgroup asfdoc_samd20_sercom_i2c_group SAM D20 I2C Bus Driver (SERCOM I2C)
  *
  * This driver for SAM D20 devices provides an interface for the configuration
  * and management of the device's SERCOM I<SUP>2</SUP>C module, for the transfer
@@ -75,27 +75,27 @@ extern "C" {
  * - SERCOM (Serial Communication Interface)
  *
  * The outline of this documentation is as follows:
- * - \ref asfdoc_samd20_i2c_prerequisites
- * - \ref asfdoc_samd20_i2c_overview
- * - \ref asfdoc_samd20_i2c_special_considerations
- * - \ref asfdoc_samd20_i2c_extra
- * - \ref asfdoc_samd20_i2c_examples
- * - \ref asfdoc_samd20_i2c_api_overview
+ * - \ref asfdoc_samd20_sercom_i2c_prerequisites
+ * - \ref asfdoc_samd20_sercom_i2c_overview
+ * - \ref asfdoc_samd20_sercom_i2c_special_considerations
+ * - \ref asfdoc_samd20_sercom_i2c_extra
+ * - \ref asfdoc_samd20_sercom_i2c_examples
+ * - \ref asfdoc_samd20_sercom_i2c_api_overview
  *
- * \section asfdoc_samd20_i2c_prerequisites Prerequisites
+ * \section asfdoc_samd20_sercom_i2c_prerequisites Prerequisites
  * There are no prerequisites.
  *
- * \section asfdoc_samd20_i2c_overview Module Overview
+ * \section asfdoc_samd20_sercom_i2c_overview Module Overview
  * The outline of this section is as follows:
- * - \ref asfdoc_samd20_i2c_functional_desc
- * - \ref asfdoc_samd20_i2c_bus_topology
- * - \ref asfdoc_samd20_i2c_transactions
- * - \ref asfdoc_samd20_i2c_multi_master
- * - \ref asfdoc_samd20_i2c_bus_states
- * - \ref asfdoc_samd20_i2c_timeout
- * - \ref asfdoc_samd20_i2c_sleep_modes
+ * - \ref asfdoc_samd20_sercom_i2c_functional_desc
+ * - \ref asfdoc_samd20_sercom_i2c_bus_topology
+ * - \ref asfdoc_samd20_sercom_i2c_transactions
+ * - \ref asfdoc_samd20_sercom_i2c_multi_master
+ * - \ref asfdoc_samd20_sercom_i2c_bus_states
+ * - \ref asfdoc_samd20_sercom_i2c_timeout
+ * - \ref asfdoc_samd20_sercom_i2c_sleep_modes
  *
- * \subsection asfdoc_samd20_i2c_functional_desc Functional Description
+ * \subsection asfdoc_samd20_sercom_i2c_functional_desc Functional Description
  * The I<SUP>2</SUP>C provides a simple two-wire bidirectional bus consisting of a
  * wired-AND type serial clock line (SCA) and a wired-AND type serial data line
  * (SDA).
@@ -110,17 +110,17 @@ extern "C" {
  * device can contain both master and slave logic, and can emulate multiple
  * slave devices by responding to more than one address.
  *
- * \subsection asfdoc_samd20_i2c_bus_topology Bus Topology
+ * \subsection asfdoc_samd20_sercom_i2c_bus_topology Bus Topology
  * The I<SUP>2</SUP>C bus topology is illustrated in
- * \ref asfdoc_samd20_i2c_bus_topology_figure "the figure below". The pull-up
+ * \ref asfdoc_samd20_sercom_i2c_bus_topology_figure "the figure below". The pull-up
  * resistors (Rs) will provide a high level on the bus lines when none of the
  * I<SUP>2</SUP>C devices are driving the bus. These are optional, and can be
  * replaced with a constant current source.
  *
- * \anchor asfdoc_samd20_i2c_bus_topology_figure
+ * \anchor asfdoc_samd20_sercom_i2c_bus_topology_figure
  * \image html bus_topology.svg "I2C bus topology" width=100%
  *
- * \subsection asfdoc_samd20_i2c_transactions Transactions
+ * \subsection asfdoc_samd20_sercom_i2c_transactions Transactions
  * The I<SUP>2</SUP>C standard defines three fundamental transaction formats:
  * - Master Write
  *   - The master transmits data packets to the slave after addressing it
@@ -147,22 +147,22 @@ extern "C" {
  * A master can issue multiple \b Start conditions during a transaction; this
  * is then called a \b Repeated \b Start condition.
  *
- * \subsubsection asfdoc_samd20_i2c_address_packets Address Packets
+ * \subsubsection asfdoc_samd20_sercom_i2c_address_packets Address Packets
  * The slave address consists of seven bits. The 8th bit in the transfer
  * determines the data direction (read or write). An address packet always
  * succeeds a \b Start or \b Repeated \b Start condition. The 8th bit is handled
  * in the driver, and the user will only have to provide the 7 bit address.
  *
- * \subsubsection asfdoc_samd20_i2c_data_packets Data Packets
+ * \subsubsection asfdoc_samd20_sercom_i2c_data_packets Data Packets
  * Data packets are nine bits long, consisting of one 8-bit data byte, and an
  * acknowledgment bit. Data packets follow either an address packet or another
  * data packet on the bus.
  *
- * \subsubsection asfdoc_samd20_i2c_trans_examples Transaction Examples
+ * \subsubsection asfdoc_samd20_sercom_i2c_trans_examples Transaction Examples
  * The gray bits in the following examples are sent from master to slave, and
  * the white bits are sent from slave to master.
  * Example of a read transaction is shown in
- * \ref asfdoc_samd20_i2c_trans_examples_i2c_read "the figure below". Here, the
+ * \ref asfdoc_samd20_sercom_i2c_trans_examples_i2c_read "the figure below". Here, the
  * master first issues a \b Start condition and gets ownership of the bus. An
  * address packet with the direction flag set to read is then sent and
  * acknowledged by the slave. Then the slave sends one data packet which is
@@ -171,21 +171,21 @@ extern "C" {
  * transaction. In the end, the transaction is terminated by the master issuing
  * a \b Stop condition.
  *
- * \anchor asfdoc_samd20_i2c_trans_examples_i2c_read
+ * \anchor asfdoc_samd20_sercom_i2c_trans_examples_i2c_read
  * \image html i2c_read.svg "I2C Packet Read" width=100%
  *
  * Example of a write transaction is shown in
- * \ref asfdoc_samd20_i2c_trans_examples_i2c_write "the figure below". Here, the
+ * \ref asfdoc_samd20_sercom_i2c_trans_examples_i2c_write "the figure below". Here, the
  * master first issues a \b Start condition and gets ownership of the bus. An
  * address packet with the dir flag set to write is then sent and acknowledged
  * by the slave. Then the master sends two data packets, each acknowledged by
  * the slave. In the end, the transaction is terminated by the master issuing
  * a \b Stop condition.
  *
- * \anchor asfdoc_samd20_i2c_trans_examples_i2c_write
+ * \anchor asfdoc_samd20_sercom_i2c_trans_examples_i2c_write
  * \image html i2c_write.svg "I2C Packet Write" width=100%
  *
- * \subsubsection asfdoc_samd20_i2c_packet_timeout Packet Timeout
+ * \subsubsection asfdoc_samd20_sercom_i2c_packet_timeout Packet Timeout
  * When a master sends an I<SUP>2</SUP>C packet, there is no way of
  * being sure that a slave will acknowledge the packet. To avoid stalling the
  * device forever while waiting for an acknowledge, a user selectable timeout
@@ -197,9 +197,9 @@ extern "C" {
  * \c _wait.
  *
  * The time before the timeout occurs, will be the same as
- * for \ref asfdoc_samd20_i2c_unknown_bus_timeout "unknown bus state" timeout.
+ * for \ref asfdoc_samd20_sercom_i2c_unknown_bus_timeout "unknown bus state" timeout.
  *
- * \subsubsection asfdoc_samd20_i2c_repeated_start Repeated Start
+ * \subsubsection asfdoc_samd20_sercom_i2c_repeated_start Repeated Start
  * To issue a \b Repeated \b Start, the functions postfixed \c _no_stop must be
  * used.
  * These functions will not send a \b Stop condition when the transfer is done,
@@ -207,11 +207,11 @@ extern "C" {
  * transaction, the functions without the \c _no_stop postfix must be used
  * for the last read/write.
  *
- * \subsection asfdoc_samd20_i2c_multi_master Multi Master
+ * \subsection asfdoc_samd20_sercom_i2c_multi_master Multi Master
  * In a multi master environment, arbitration of the bus is important, as only
  * one master can own the bus at any point.
  *
- * \subsubsection asfdoc_samd20_i2c_arbitration Arbitration
+ * \subsubsection asfdoc_samd20_sercom_i2c_arbitration Arbitration
  *
  * \par Clock stretching
  * The serial clock line is always driven by a master device. However, all
@@ -230,13 +230,13 @@ extern "C" {
  * will get the bus ownership, this will create an arbitration scheme always
  * prioritizing the slaves with the lowest address in case of a bus collision.
  *
- * \subsubsection asfdoc_samd20_i2c_clock_sync Clock Synchronization
+ * \subsubsection asfdoc_samd20_sercom_i2c_clock_sync Clock Synchronization
  * In situations where more than one master is trying to control the bus clock
  * line at the same time, a clock synchronization algorithm based on the same
  * principles used for clock stretching is necessary.
  *
  *
- * \subsection asfdoc_samd20_i2c_bus_states Bus States
+ * \subsection asfdoc_samd20_sercom_i2c_bus_states Bus States
  * As the I<SUP>2</SUP>C bus is limited to one transaction at the time,
  * a master that wants to perform a bus transaction must wait until the bus is
  * free.
@@ -249,22 +249,22 @@ extern "C" {
  * \li \b BUSY If another master is driving the bus
  * \li \b UNKNOWN If the master has recently been enabled or connected to
  * the bus. Is forced to \b IDLE after given
- * \ref asfdoc_samd20_i2c_unknown_bus_timeout "timeout" when
+ * \ref asfdoc_samd20_sercom_i2c_unknown_bus_timeout "timeout" when
  * the master module is enabled.
  *
  * The bus state diagram can be seen in
- * \ref asfdoc_samd20_i2c_bus_states_figure "the figure below".
+ * \ref asfdoc_samd20_sercom_i2c_bus_states_figure "the figure below".
  * \li S: Start condition
  * \li P: Stop condition
  * \li Sr: Repeated start condition
- * \anchor asfdoc_samd20_i2c_bus_states_figure
+ * \anchor asfdoc_samd20_sercom_i2c_bus_states_figure
  * \image html bus_state_diagram.svg "I2C bus state diagram" width=100%
  *
- * \subsection asfdoc_samd20_i2c_timeout Bus Timing
+ * \subsection asfdoc_samd20_sercom_i2c_timeout Bus Timing
  * Inactive bus timeout for the master and SDA hold time is configurable in the
  * drivers.
  *
- * \subsubsection asfdoc_samd20_i2c_unknown_bus_timeout Unknown Bus State Timeout
+ * \subsubsection asfdoc_samd20_sercom_i2c_unknown_bus_timeout Unknown Bus State Timeout
  * When a master is enabled or connected to the bus, the bus state will be
  * unknown until either a given timeout or a stop command has occurred. The
  * timeout is configurable in the \ref i2c_master_config struct.
@@ -282,14 +282,14 @@ extern "C" {
  * The SDA hold time is also available for the master driver, but is not a
  * necessity.
  *
- * \subsection asfdoc_samd20_i2c_sleep_modes Operation in Sleep Modes
+ * \subsection asfdoc_samd20_sercom_i2c_sleep_modes Operation in Sleep Modes
  * The I<SUP>2</SUP>C module can operate in all sleep modes by setting
  * the run_in_standby boolean in the \ref i2c_master_config or
  * \ref i2c_slave_config struct.
  * The operation in slave and master mode is shown in
- * \ref asfdoc_samd20_i2c_sleep_modes_table "the table below".
+ * \ref asfdoc_samd20_sercom_i2c_sleep_modes_table "the table below".
  *
- * \anchor asfdoc_samd20_i2c_sleep_modes_table
+ * \anchor asfdoc_samd20_sercom_i2c_sleep_modes_table
  * <table>
  *   <caption>I2C standby operations</caption>
  *   <tr>
@@ -310,10 +310,10 @@ extern "C" {
  * </table>
  *
  *
- * \section asfdoc_samd20_i2c_special_considerations Special Considerations
+ * \section asfdoc_samd20_sercom_i2c_special_considerations Special Considerations
  *
  * \if (I2C_MASTER_CALLBACK_MODE || I2C_SLAVE_CALLBACK_MODE)
- *   \subsection asfdoc_samd20_i2c_common_interrupt Interrupt-Driven Operation
+ *   \subsection asfdoc_samd20_sercom_i2c_common_interrupt Interrupt-Driven Operation
  *   While an interrupt-driven operation is in progress, subsequent calls to a
  *   write or read operation will return the STATUS_BUSY flag, indicating that
  *   only one operation is allowed at any given time.
@@ -331,13 +331,15 @@ extern "C" {
  *   this document.
  * \endif
  *
- * \section asfdoc_samd20_i2c_extra Extra Information
- * For extra information see \ref asfdoc_samd20_i2c_extra_info_page.
+ * \section asfdoc_samd20_sercom_i2c_extra Extra Information
+ * For extra information see \ref asfdoc_samd20_sercom_i2c_extra_info_page.
  *
- * \section asfdoc_samd20_i2c_examples Examples
- * - \ref asfdoc_samd20_i2c_quickstart
+ * \section asfdoc_samd20_sercom_i2c_examples Examples
  *
- * \section asfdoc_samd20_i2c_api_overview API Overview
+ * For a list of examples related to this driver, see
+ * \ref asfdoc_samd20_sercom_i2c_exqsg.
+ *
+ * \section asfdoc_samd20_sercom_i2c_api_overview API Overview
  * @{
  */
 
@@ -363,13 +365,13 @@ struct i2c_packet {
 #endif
 
 /**
- * \page asfdoc_samd20_i2c_extra_info_page  Extra Information for SERCOM I2C Driver
+ * \page asfdoc_samd20_sercom_i2c_extra_info_page  Extra Information for SERCOM I2C Driver
  *
- * \section asfdoc_samd20_i2c_acronyms Acronyms
- * \ref asfdoc_samd20_i2c_acronyms_table "Below" is a table listing the acronyms
+ * \section asfdoc_samd20_sercom_i2c_acronyms Acronyms
+ * \ref asfdoc_samd20_sercom_i2c_acronyms_table "Below" is a table listing the acronyms
  * used in this module, along with their intended meanings.
  *
- * \anchor asfdoc_samd20_i2c_acronyms_table
+ * \anchor asfdoc_samd20_sercom_i2c_acronyms_table
  * <table>
  *  <caption>Acronyms</caption>
  *	<tr>
@@ -386,22 +388,22 @@ struct i2c_packet {
  *	</tr>
  * </table>
  *
- * \section asfdoc_samd20_i2c_extra_dependencies Dependencies
+ * \section asfdoc_samd20_sercom_i2c_extra_dependencies Dependencies
  * The I<SUP>2</SUP>C driver has the following dependencies:
  * \li \ref asfdoc_samd20_system_pinmux_group "System Pin Multiplexer Driver"
  *
  *
- * \section asfdoc_samd20_i2c_extra_errata Errata
+ * \section asfdoc_samd20_sercom_i2c_extra_errata Errata
  * There are no errata related to this driver.
  *
- * \section asfdoc_samd20_i2c_extra_history Module History
- * \ref asfdoc_samd20_i2c_extra_history_table "Below" is an overview of the
+ * \section asfdoc_samd20_sercom_i2c_extra_history Module History
+ * \ref asfdoc_samd20_sercom_i2c_extra_history_table "Below" is an overview of the
  * module history, detailing enhancements and fixes made to the module since
  * its first release. The current version of this corresponds to the newest
  * version listed in
- * \ref asfdoc_samd20_i2c_extra_history_table "the table below".
+ * \ref asfdoc_samd20_sercom_i2c_extra_history_table "the table below".
  *
- * \anchor asfdoc_samd20_i2c_extra_history_table
+ * \anchor asfdoc_samd20_sercom_i2c_extra_history_table
  * <table>
  *  <caption>Module History</caption>
  *	<tr>
@@ -414,30 +416,25 @@ struct i2c_packet {
  */
 
 /**
- * \page asfdoc_samd20_i2c_quickstart Quick Start Guides for the SERCOM I2C module
+ * \page asfdoc_samd20_sercom_i2c_exqsg Examples for SERCOM I2C Driver
  *
- * This is the quick start guide list for the \ref asfdoc_samd20_i2c_group
- * "I2C" module, with step-by-step instructions on how to configure and use the
- * driver in a selection of use cases.
- *
- * The use cases contain several code fragments. The code fragments in the
- * steps for setup can be copied into a custom initialization function of the
- * user application and run at system startup, while the steps for usage can be
- * copied into the normal user application program flow.
- *
- * \see General list of module \ref asfdoc_samd20_i2c_examples "examples".
+ * This is a list of the available Quick Start guides (QSGs) and example
+ * applications for \ref asfdoc_samd20_sercom_i2c_group. QSGs are simple examples with
+ * step-by-step instructions to configure and use this driver in a selection of
+ * use cases. Note that QSGs can be compiled as a standalone application or be
+ * added to the user application.
  *
  * \if I2C_MASTER_MODE
- * - \subpage asfdoc_samd20_i2c_master_basic_use_case "Quick Start Guide for the I2C Master module - Basic Use Case"
+ * - \subpage asfdoc_samd20_sercom_i2c_master_basic_use_case "Quick Start Guide for the I2C Master module - Basic Use Case"
  * \endif
  * \if I2C_MASTER_CALLBACK_MODE
- * - \subpage asfdoc_samd20_i2c_master_callback_use_case "Quick Start Guide for the I2C Master module - Callback Use Case"
+ * - \subpage asfdoc_samd20_sercom_i2c_master_callback_use_case "Quick Start Guide for the I2C Master module - Callback Use Case"
  * \endif
  * \if I2C_SLAVE_MODE
- * - \subpage asfdoc_samd20_i2c_slave_basic_use_case "Quick Start Guide for the I2C Slave module - Basic Use Case"
+ * - \subpage asfdoc_samd20_sercom_i2c_slave_basic_use_case "Quick Start Guide for the I2C Slave module - Basic Use Case"
  * \endif
  * \if I2C_SLAVE_CALLBACK_MODE
- * - \subpage asfdoc_samd20_i2c_slave_callback_use_case "Quick Start Guide for the I2C Slave module - Callback Use Case"
+ * - \subpage asfdoc_samd20_sercom_i2c_slave_callback_use_case "Quick Start Guide for the I2C Slave module - Callback Use Case"
  * \endif
  */
 
