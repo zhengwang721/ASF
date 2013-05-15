@@ -43,6 +43,7 @@
 #include <asf.h>
 
 void configure_adc(void);
+void configure_adc_callbacks(void);
 void adc_complete_callback(
 		const struct adc_module *const module);
 
@@ -96,11 +97,11 @@ void configure_adc(void)
 void configure_adc_callbacks(void)
 {
 //! [setup_register_callback]
-	adc_register_callback(&module_inst,
+	adc_register_callback(&adc_instance,
 			adc_complete_callback, ADC_CALLBACK_READ_BUFFER);
 //! [setup_register_callback]
 //! [setup_enable_callback]
-	adc_enable_callback(&module_inst, ADC_CALLBACK_READ_BUFFER);
+	adc_enable_callback(&adc_instance, ADC_CALLBACK_READ_BUFFER);
 //! [setup_enable_callback]
 }
 //! [setup]
@@ -120,7 +121,7 @@ int main(void)
 //! [enable_global_interrupts]
 
 //! [start_adc_job]
-	adc_read_buffer_job(&module_inst, adc_result_buffer, ADC_SAMPLES);
+	adc_read_buffer_job(&adc_instance, adc_result_buffer, ADC_SAMPLES);
 //! [start_adc_job]
 
 //! [job_complete_poll]
