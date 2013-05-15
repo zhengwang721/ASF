@@ -58,7 +58,9 @@
  *
  * \section deviceinfo Device Info
  * All AVR or SAM devices can be used. When use the example in Xplained Pro
- * Kits, we need connect an IO1 Xplained Pro board to the proper EXT port.
+ * Kits, we need connect an IO1 Xplained Pro board to the proper EXT port. For
+ * information of the IO1Xplained Pro board, visit
+ * <A href="http://www.atmel.com/tools/ATIO1-XPRO.aspx">IO1 web link.</A>
  * This example has been tested with the following setup:
  *   - access to the TWI signals.
  *
@@ -164,16 +166,14 @@ int main(void)
   LED_Off(LED0_GPIO);
 
   twi_package_t packet = {
-#if SAM
-#if (EEPROM_INTERNAL_ADDRESS_LENGTH == 0x02)
+/**
+ * The SAM3X_EK and SAM3X Arduino board use two bytes length internal
+ * address EEPROM.
+ */
+#if SAM3XA
     .addr[0]      = EEPROM_MEM_ADDR >> 8, // TWI slave memory address data MSB
     .addr[1]      = EEPROM_MEM_ADDR,      // TWI slave memory address data LSB
     .addr_length  = sizeof (uint16_t),    // TWI slave memory address data size
-#endif
-#if (EEPROM_INTERNAL_ADDRESS_LENGTH == 0x01)
-	.addr[0]	  = EEPROM_MEM_ADDR,	  // TWI slave memory address data MSB
-	.addr_length  = sizeof (uint8_t),	  // TWI slave memory address data size
-#endif
 #else
     .addr[0]      = EEPROM_MEM_ADDR,      // TWI slave memory address data MSB
     .addr_length  = sizeof (uint8_t),     // TWI slave memory address data size
@@ -189,16 +189,10 @@ int main(void)
   uint8_t data_received[PATTERN_TEST_LENGTH] = {0};
 
   twi_package_t packet_received = {
-#if SAM
-#if (EEPROM_INTERNAL_ADDRESS_LENGTH == 0x02)
+#if SAM3XA
     .addr[0]      = EEPROM_MEM_ADDR >> 8, // TWI slave memory address data MSB
     .addr[1]      = EEPROM_MEM_ADDR,      // TWI slave memory address data LSB
     .addr_length  = sizeof (uint16_t),    // TWI slave memory address data size
-#endif
-#if (EEPROM_INTERNAL_ADDRESS_LENGTH == 0x01)
-    .addr[0]	  = EEPROM_MEM_ADDR,	  // TWI slave memory address data MSB
-    .addr_length  = sizeof (uint8_t),	  // TWI slave memory address data size
-#endif
 #else
     .addr[0]      = EEPROM_MEM_ADDR,      // TWI slave memory address data MSB
     .addr_length  = sizeof (uint8_t),     // TWI slave memory address data size

@@ -52,9 +52,6 @@
 
 /** Default address of the EEPROM in IO1 Xplained Pro board */
 #define EEPROM_BUS_ADDR       0x57
-
-/** Define the EEPROM internal address length */
-#define EEPROM_INTERNAL_ADDRESS_LENGTH 0x01
 //! @}
 
 #endif  // _CONF_TWI_MASTER_EXAMPLE_H
