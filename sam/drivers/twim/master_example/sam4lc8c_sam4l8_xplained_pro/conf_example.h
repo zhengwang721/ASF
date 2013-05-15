@@ -1,13 +1,9 @@
-/*****************************************************************************
- *
+/**
  * \file
  *
- * \brief TWI Master driver for SAM.
+ * \brief Example configuration header file.
  *
- * This file defines a useful set of functions for the TWIM interface on SAM
- * devices.
- *
- * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,25 +39,33 @@
  *
  * \asf_license_stop
  *
- ******************************************************************************/
+ */
 
+/**
+ * \defgroup twim_master_example_pin_defs
+ *   - <b> Board  --  EEPROM</b>
+ *   - TWIMS3 TWD(PB14,EXT2/PIN11)  --  SDA
+ *   - TWIMS3 TWCK(PB15,EXT2/PIN12)  --  SCL
+ *   - VCC  --  VCC
+ *   - GND  --  GND
+ */
 
-#ifndef _TWI_MASTER_H_
-#define _TWI_MASTER_H_
+#ifndef CONF_EXAMPLE_H_INCLUDED
+#define CONF_EXAMPLE_H_INCLUDED
 
-#include "compiler.h"
-#include "sysclk.h"
-#include "status_codes.h"
-#include "twim.h"
+/** TWIM Interrupt Number */
+#define EXAMPLE_TWIM_IRQn    TWIM3_IRQn
+/** TWIM Module Used */
+#define EXAMPLE_TWIM         TWIM3
+/** Target's TWI address */
+#define TARGET_ADDRESS       0x50
+/** Internal Address length */
+#define TARGET_ADDR_LGT      2
+/** Internal Address */
+#define VIRTUALMEM_ADDR      0x0
+/** Speed of TWI */
+#define TWIM_MASTER_SPEED    TWI_STD_MODE_SPEED
+/** TWIM Interrupt Handler */
+#define EXAMPLE_TWIM_Handler TWIM3_Handler
 
-typedef twi_options_t twi_master_options_t;
-
-static inline uint32_t twi_master_setup(Twim *twi, twi_master_options_t *opt)
-{
-	opt->twim_clk = sysclk_get_pba_hz();
-	/* Initialize the TWIM Module */
-	twim_set_callback(twi, 0, twim_default_callback, 1);
-	return twi_master_init(twi, (twi_master_options_t *)opt);
-}
-
-#endif  // _TWI_MASTER_H_
+#endif /* CONF_EXAMPLE_H_INCLUDED */

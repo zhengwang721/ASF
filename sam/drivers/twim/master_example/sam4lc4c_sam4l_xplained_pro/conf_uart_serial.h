@@ -1,13 +1,9 @@
-/*****************************************************************************
- *
+/**
  * \file
  *
- * \brief TWI Master driver for SAM.
+ * \brief Serial USART service configuration.
  *
- * This file defines a useful set of functions for the TWIM interface on SAM
- * devices.
- *
- * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,25 +39,20 @@
  *
  * \asf_license_stop
  *
- ******************************************************************************/
+ */
 
+#ifndef CONF_USART_SERIAL_H
+#define CONF_USART_SERIAL_H
 
-#ifndef _TWI_MASTER_H_
-#define _TWI_MASTER_H_
+/** USART Interface */
+#define CONF_UART              USART1
+/** Baudrate setting */
+#define CONF_UART_BAUDRATE     115200
+/** Character length setting */
+#define CONF_UART_CHAR_LENGTH  US_MR_CHRL_8_BIT
+/** Parity setting */
+#define CONF_UART_PARITY       US_MR_PAR_NO
+/** Stop bits setting */
+#define CONF_UART_STOP_BITS    US_MR_NBSTOP_1_BIT
 
-#include "compiler.h"
-#include "sysclk.h"
-#include "status_codes.h"
-#include "twim.h"
-
-typedef twi_options_t twi_master_options_t;
-
-static inline uint32_t twi_master_setup(Twim *twi, twi_master_options_t *opt)
-{
-	opt->twim_clk = sysclk_get_pba_hz();
-	/* Initialize the TWIM Module */
-	twim_set_callback(twi, 0, twim_default_callback, 1);
-	return twi_master_init(twi, (twi_master_options_t *)opt);
-}
-
-#endif  // _TWI_MASTER_H_
+#endif/* CONF_USART_SERIAL_H_INCLUDED */

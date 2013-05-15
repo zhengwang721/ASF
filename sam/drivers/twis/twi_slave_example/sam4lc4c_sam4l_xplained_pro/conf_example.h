@@ -1,13 +1,9 @@
-/*****************************************************************************
- *
+/**
  * \file
  *
- * \brief TWI Master driver for SAM.
+ * \brief TWI Slave Example configuration.
  *
- * This file defines a useful set of functions for the TWIM interface on SAM
- * devices.
- *
- * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,25 +39,14 @@
  *
  * \asf_license_stop
  *
- ******************************************************************************/
+ */
 
+/* Configuration of TWI Slave Example */
 
-#ifndef _TWI_MASTER_H_
-#define _TWI_MASTER_H_
+#ifndef CONF_TWI_SLAVE_EXAMPLE_H_INCLUDED
+#define CONF_TWI_SLAVE_EXAMPLE_H_INCLUDED
 
-#include "compiler.h"
-#include "sysclk.h"
-#include "status_codes.h"
-#include "twim.h"
+/** TWI Base for TWI SLAVE application to use */
+#define BOARD_BASE_TWI_SLAVE  TWIS0
 
-typedef twi_options_t twi_master_options_t;
-
-static inline uint32_t twi_master_setup(Twim *twi, twi_master_options_t *opt)
-{
-	opt->twim_clk = sysclk_get_pba_hz();
-	/* Initialize the TWIM Module */
-	twim_set_callback(twi, 0, twim_default_callback, 1);
-	return twi_master_init(twi, (twi_master_options_t *)opt);
-}
-
-#endif  // _TWI_MASTER_H_
+#endif /* CONF_TWI_SLAVE_EXAMPLE_H_INCLUDED */
