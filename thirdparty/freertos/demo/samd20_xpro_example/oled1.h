@@ -124,6 +124,19 @@ struct oled1_instance {
 	uint8_t button2_pin;
 };
 
+//! IDs for each of the on-board LEDs
+enum oled1_led_id {
+	OLED1_LED1_ID,
+	OLED1_LED2_ID,
+	OLED1_LED3_ID,
+};
+
+//! IDs for each of the on-board buttons
+enum oled1_button_id {
+	OLED1_BUTTON1_ID,
+	OLED1_BUTTON2_ID,
+	OLED1_BUTTON3_ID,
+};
 
 /**
  * \brief Initialize hardware for driver instance
@@ -164,24 +177,25 @@ static inline void oled1_init(const struct oled1_instance *const oled1)
  * \brief Get the pin identifier for a given LED number in instance
  *
  * \param oled1 Address of driver instance to fetch pin identifier from.
- * \param led_id Number of the LED to fetch pin identifier for, starting from 0.
+ * \param led_id ID of the LED to fetch pin identifier for.
  */
 static inline uint8_t _oled1_get_led_pin(
-		const struct oled1_instance *const oled1, const uint8_t led_id)
+		const struct oled1_instance *const oled1,
+		const enum oled1_led_id led_id)
 {
 	uint8_t pin;
 
 	switch (led_id) {
-	case 0:
+	case OLED1_LED1_ID:
 		pin = oled1->led0_pin;
 		break;
 
-	case 1:
+	case OLED1_LED2_ID:
 		pin = oled1->led1_pin;
 		break;
 
 	default:
-	case 2:
+	case OLED1_LED3_ID:
 		pin = oled1->led2_pin;
 		break;
 	}
@@ -193,13 +207,13 @@ static inline uint8_t _oled1_get_led_pin(
  * \brief Get the state of a LED
  *
  * \param oled1 Address of driver instance to operate on.
- * \param led_id Number of the LED to get state of, starting from 0.
+ * \param led_id ID of the LED to get state of.
  *
  * \retval true if LED is active, i.e., lit up.
  * \retval false if LED is not active.
  */
 static inline bool oled1_get_led_state(const struct oled1_instance *const oled1,
-		const uint8_t led_id)
+		const enum oled1_led_id led_id)
 {
 	uint8_t pin = _oled1_get_led_pin(oled1, led_id);
 	return port_pin_get_input_level(pin) == OLED1_LED_ACTIVE;
@@ -209,13 +223,13 @@ static inline bool oled1_get_led_state(const struct oled1_instance *const oled1,
  * \brief Set the state of a LED
  *
  * \param oled1 Address of driver instance to operate on.
- * \param led_id Number of the LED to set state of, starting from 0.
+ * \param led_id ID of the LED to set state of.
  * \param state State to set LED to:
  * \arg true to activate, i.e., light it up.
  * \arg false to deactivate.
  */
 static inline void oled1_set_led_state(const struct oled1_instance *const oled1,
-		const uint8_t led_id, const bool state)
+		const enum oled1_led_id led_id, const bool state)
 {
 	uint8_t pin = _oled1_get_led_pin(oled1, led_id);
 	port_pin_set_output_level(pin, state == OLED1_LED_ACTIVE);
@@ -225,10 +239,11 @@ static inline void oled1_set_led_state(const struct oled1_instance *const oled1,
  * \brief Set the state of a LED
  *
  * \param oled1 Address of driver instance to operate on.
- * \param led_id Number of the LED to toggle state of, starting from 0.
+ * \param led_id ID of the LED to toggle state of.
  */
 static inline void oled1_toggle_led_state(
-		const struct oled1_instance *const oled1, const uint8_t led_id)
+		const struct oled1_instance *const oled1,
+		const enum oled1_led_id led_id)
 {
 	uint8_t pin = _oled1_get_led_pin(oled1, led_id);
 	port_pin_toggle_output_level(pin);
@@ -244,27 +259,27 @@ static inline void oled1_toggle_led_state(
  * \brief Get the pin identifier for a given button number in instance
  *
  * \param oled1_instance Driver instance to fetch pin identifier from.
- * \param led_id Number of the button to fetch pin identifier for, starting from
- * 0.
+ * \param led_id ID of the button to fetch pin identifier for.
  *
  * \return Identifier of pin for specified button.
  */
 static inline uint8_t _oled1_get_button_pin(
-		const struct oled1_instance *const oled1, const uint8_t button_id)
+		const struct oled1_instance *const oled1,
+		const enum oled1_button_id button_id)
 {
 	uint8_t pin;
 
 	switch (button_id) {
-	case 0:
+	case OLED1_BUTTON1_ID:
 		pin = oled1->button0_pin;
 		break;
 
-	case 1:
+	case OLED1_BUTTON2_ID:
 		pin = oled1->button1_pin;
 		break;
 
 	default:
-	case 2:
+	case OLED1_BUTTON3_ID:
 		pin = oled1->button2_pin;
 		break;
 	}
@@ -276,13 +291,14 @@ static inline uint8_t _oled1_get_button_pin(
  * \brief Get the state of a button
  *
  * \param oled1 Address of driver instance to operate on.
- * \param led_id Number of the button to get state of, starting from 0.
+ * \param led_id ID of the button to get state of.
  *
  * \retval true if button is active, i.e., pressed.
  * \retval false if button is not active.
  */
 static inline bool oled1_get_button_state(
-		const struct oled1_instance *const oled1, const uint8_t button_id)
+		const struct oled1_instance *const oled1,
+		const enum oled1_button_id button_id)
 {
 	uint8_t pin = _oled1_get_button_pin(oled1, button_id);
 	return port_pin_get_input_level(pin) == OLED1_BUTTON_ACTIVE;
