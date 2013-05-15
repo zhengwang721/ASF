@@ -1,13 +1,9 @@
-/*****************************************************************************
- *
+/**
  * \file
  *
- * \brief TWI Master driver for SAM.
+ * \brief TWIM Configuration.
  *
- * This file defines a useful set of functions for the TWIM interface on SAM
- * devices.
- *
- * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,25 +39,19 @@
  *
  * \asf_license_stop
  *
- ******************************************************************************/
+ */
 
+#ifndef CONF_TWI_MASTER_EXAMPLE_H
+#define CONF_TWI_MASTER_EXAMPLE_H
 
-#ifndef _TWI_MASTER_H_
-#define _TWI_MASTER_H_
+/*! \name Configuration
+ */
+//! @{
+/** Use the TWI in EXT2 */
+#define TWI_EXAMPLE  TWIM3
 
-#include "compiler.h"
-#include "sysclk.h"
-#include "status_codes.h"
-#include "twim.h"
+/** Default address of the EEPROM in IO1 Xplained Pro board */
+#define EEPROM_BUS_ADDR       0x57
+//! @}
 
-typedef twi_options_t twi_master_options_t;
-
-static inline uint32_t twi_master_setup(Twim *twi, twi_master_options_t *opt)
-{
-	opt->twim_clk = sysclk_get_pba_hz();
-	/* Initialize the TWIM Module */
-	twim_set_callback(twi, 0, twim_default_callback, 1);
-	return twi_master_init(twi, (twi_master_options_t *)opt);
-}
-
-#endif  // _TWI_MASTER_H_
+#endif  // _CONF_TWI_MASTER_EXAMPLE_H

@@ -1,13 +1,9 @@
-/*****************************************************************************
- *
+/**
  * \file
  *
- * \brief TWI Master driver for SAM.
+ * \brief Chip-specific sleep manager configuration
  *
- * This file defines a useful set of functions for the TWIM interface on SAM
- * devices.
- *
- * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,25 +39,11 @@
  *
  * \asf_license_stop
  *
- ******************************************************************************/
+ */
+#ifndef CONF_SLEEPMGR_INCLUDED
+#define CONF_SLEEPMGR_INCLUDED
 
+/* Sleep manager options */
+#define CONFIG_SLEEPMGR_ENABLE
 
-#ifndef _TWI_MASTER_H_
-#define _TWI_MASTER_H_
-
-#include "compiler.h"
-#include "sysclk.h"
-#include "status_codes.h"
-#include "twim.h"
-
-typedef twi_options_t twi_master_options_t;
-
-static inline uint32_t twi_master_setup(Twim *twi, twi_master_options_t *opt)
-{
-	opt->twim_clk = sysclk_get_pba_hz();
-	/* Initialize the TWIM Module */
-	twim_set_callback(twi, 0, twim_default_callback, 1);
-	return twi_master_init(twi, (twi_master_options_t *)opt);
-}
-
-#endif  // _TWI_MASTER_H_
+#endif /* CONF_SLEEPMGR_INCLUDED */
