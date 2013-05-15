@@ -6,6 +6,8 @@
 
 		<info type="appnote" value="AT03665"/>
 
+		<config name="config.compiler.doxygen-v2.document_type" value="asf_manual"/>
+
 		<require idref="sam0.drivers.ac"/>
 		<require idref="sam0.drivers.adc"/>
 		<require idref="sam0.drivers.bod"/>
