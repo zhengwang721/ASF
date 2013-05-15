@@ -42,6 +42,7 @@
  */
 #include <asf.h>
 
+void configure_adc(void);
 void adc_complete_callback(
 		const struct adc_module *const module);
 
@@ -49,6 +50,10 @@ void adc_complete_callback(
 #define ADC_SAMPLES 128
 uint16_t adc_result_buffer[ADC_SAMPLES];
 //! [result_buffer]
+
+//! [module_inst]
+struct adc_module adc_instance;
+//! [module_inst]
 
 //! [job_complete_callback]
 volatile bool adc_read_done = false;
@@ -60,43 +65,60 @@ void adc_complete_callback(
 }
 //! [job_complete_callback]
 
-int main(void)
+//! [setup]
+void configure_adc(void)
 {
-//! [main_setup]
-//! [variable]
-	struct adc_module module_inst;
+//! [setup_config]
 	struct adc_config config;
-//! [variable]
-//! [system_init]
-	system_init();
-//! [system_init]
-	/* Setup ADC module*/
-//! [get_conf]
+//! [setup_config]
+//! [setup_config]
+//! [setup_config_defaults]
 	adc_get_config_defaults(&config);
-//! [get_conf]
+//! [setup_config_defaults]
 
-//! [modify_conf]
+//! [setup_modify_conf]
 	config.gain_factor     = ADC_GAIN_FACTOR_DIV2;
 	config.clock_prescaler = ADC_CLOCK_PRESCALER_DIV8;
 	config.reference       = ADC_REFERENCE_INTVCC1;
 	config.positive_input  = ADC_POSITIVE_INPUT_PIN4;
 	config.resolution      = ADC_RESOLUTION_12BIT;
-//! [modify_conf]
+//! [setup_modify_conf]
 
-//! [init_adc]
-	adc_init(&module_inst, ADC, &config);
-//! [init_adc]
-//! [enable]
-	adc_enable(&module_inst);
-//! [enable]
+//! [setup_set_config]
+	adc_init(&adc_instance, ADC, &config);
+//! [setup_set_config]
 
-//! [setup_callback]
-	adc_register_callback(&module_inst, adc_complete_callback, ADC_CALLBACK_READ_BUFFER);
+//! [setup_enable]
+	adc_enable(&adc_instance);
+//! [setup_enable]
+}
+
+void configure_adc_callbacks(void)
+{
+//! [setup_register_callback]
+	adc_register_callback(&module_inst,
+			adc_complete_callback, ADC_CALLBACK_READ_BUFFER);
+//! [setup_register_callback]
+//! [setup_enable_callback]
 	adc_enable_callback(&module_inst, ADC_CALLBACK_READ_BUFFER);
-//! [setup_callback]
-//! [main_setup]
+//! [setup_enable_callback]
+}
+//! [setup]
 
-//! [main_use_case]
+int main(void)
+{
+	system_init();
+
+//! [setup_init]
+	configure_adc();
+	configure_adc_callbacks();
+//! [setup_init]
+
+//! [main]
+//! [enable_global_interrupts]
+	system_interrupt_enable_global();
+//! [enable_global_interrupts]
+
 //! [start_adc_job]
 	adc_read_buffer_job(&module_inst, adc_result_buffer, ADC_SAMPLES);
 //! [start_adc_job]
@@ -112,5 +134,5 @@ int main(void)
 		/* Infinite loop */
 	}
 //! [inf_loop]
-//! [main_use_case]
+//! [main]
 }
