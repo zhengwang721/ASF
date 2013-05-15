@@ -118,6 +118,7 @@ static void run_reset_32bit_master_test(const struct test_case *test)
 	test_assert_true(test, 
 			tc_init_success == true,
 			"TC initialization failed, skipping test");
+
 	/* Configure 32-bit TC module and run test*/
 	tc_reset(&tc0_module);
 	tc_get_config_defaults(&tc0_config);
@@ -126,7 +127,7 @@ static void run_reset_32bit_master_test(const struct test_case *test)
 	tc_enable(&tc0_module);
 
 	while (tc_is_syncing(&tc0_module)) {
-		/* synchronize enable */
+		/* Synchronize enable */
 	}
 
 	test_assert_true(test,
@@ -137,7 +138,7 @@ static void run_reset_32bit_master_test(const struct test_case *test)
 	tc_reset(&tc0_module);
 
 	while (tc_is_syncing(&tc0_module)) {
-		/* synchronize reset */
+		/* Synchronize reset */
 	}
 
 	test_assert_false(test,
@@ -153,14 +154,14 @@ static void run_reset_32bit_master_test(const struct test_case *test)
 	tc_enable(&tc0_module);
 
 	while (tc_is_syncing(&tc0_module)) {
-		/* synchronize enable */
+		/* Synchronize enable */
 	}
 
 	tc_init(&tc1_module, TC1, &tc1_config);
 	tc_enable(&tc1_module);
 	
 	while (tc_is_syncing(&tc1_module)) {
-		/* synchronize enable */
+		/* Synchronize enable */
 	}
 
 	test_assert_true(test,
@@ -195,12 +196,14 @@ static void run_basic_functionality_test(const struct test_case *test)
 	tc_init(&tc0_module, TC0, &tc0_config);
 	tc_enable(&tc0_module);
 
+	/* Test tc_get_count_value() */
 	uint32_t test_val0 = tc_get_count_value(&tc0_module);
 
 	test_assert_true(test,
 			test_val0 > 0,
 			"The tc_get_count_value() returned 0 expected larger value");
 
+	/* Test tc_stop_counter() */
 	tc_stop_counter(&tc0_module);
 
 	uint32_t test_val1 = tc_get_count_value(&tc0_module);
@@ -210,12 +213,14 @@ static void run_basic_functionality_test(const struct test_case *test)
 			test_val1 == test_val2,
 			"The counter failed to stop");
 
+	/* Test tc_set_count_value() */
 	tc_set_count_value(&tc0_module, 0x00FF);
 
 	test_assert_true(test,
 			tc_get_count_value(&tc0_module) == 0x00FF,
 			"tc_set_count_value() have failed");
 
+	/* Test tc_start_counter() */
 	tc_start_counter(&tc0_module);
 
 	test_assert_true(test,
@@ -253,7 +258,7 @@ static void run_callback_test(const struct test_case *test)
 		[TC_COMPARE_CAPTURE_CHANNEL_1]                    = 0x03FA;
 	tc_init(&tc0_module, TC0, &tc0_config);
 
-	/* setup callbacks */
+	/* Setup callbacks */
 	tc_register_callback(&tc0_module, tc_callback_function, TC_CALLBACK_CC_CHANNEL1);
 	tc_enable_callback(&tc0_module, TC_CALLBACK_CC_CHANNEL1);
 
@@ -281,6 +286,7 @@ static void run_callback_test(const struct test_case *test)
 		/* Wait for overflow of TC1*/
 	}
 
+	/* Test tc_disable() */
 	tc_disable(&tc0_module);
 
 	test_assert_true(test,
