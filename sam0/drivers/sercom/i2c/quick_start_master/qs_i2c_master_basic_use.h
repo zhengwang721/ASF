@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_samd20_i2c_master_basic_use_case Quick Start Guide for SERCOM I2C Master - Basic
+ * \page asfdoc_samd20_sercom_i2c_master_basic_use_case Quick Start Guide for SERCOM I2C Master - Basic
  *
  * In this use case, the I<SUP>2</SUP>C will used and set up as follows:
  *  - Master mode
@@ -52,12 +52,12 @@
  *  - 65535 unknown bus state timeout value
  *
  *
- * \section asfdoc_samd20_i2c_master_basic_use_case_prereq Prerequisites
+ * \section asfdoc_samd20_sercom_i2c_master_basic_use_case_prereq Prerequisites
  * The device must be connected to an I<SUP>2</SUP>C slave.
  *
- * \section asfdoc_samd20_i2c_master_basic_use_setup Setup
+ * \section asfdoc_samd20_sercom_i2c_master_basic_use_setup Setup
  *
- * \subsection asfdoc_samd20_i2c_master_basic_use_setup_code Code
+ * \subsection asfdoc_samd20_sercom_i2c_master_basic_use_setup_code Code
  * The following must be added to the user application:
  *
  * - A sample buffer to send, number of entries to send and address of slave:
@@ -75,7 +75,7 @@
  * - Add to user application \c main():
  * \snippet qs_i2c_master_basic_use.c init
  *
- * \subsection asfdoc_samd20_i2c_master_basic_use_setup_workflow Workflow
+ * \subsection asfdoc_samd20_sercom_i2c_master_basic_use_setup_workflow Workflow
  * -# Initialize system.
  *  \snippet qs_i2c_master_basic_use.c system_init
  * -# Configure and enable module:
@@ -93,12 +93,12 @@
  * -# Create a packet to send:
  *  \snippet qs_i2c_master_basic_use.c packet
  *
- * \section asfdoc_samd20_i2c_master_basic_use_implemenation Implementation
- * \subsection asfdoc_samd20_i2c_master_basic_use_implemenation_code Code
+ * \section asfdoc_samd20_sercom_i2c_master_basic_use_implemenation Implementation
+ * \subsection asfdoc_samd20_sercom_i2c_master_basic_use_implemenation_code Code
  * Add to user application \c main():
  * \snippet qs_i2c_master_basic_use.c main
  *
- * \subsection asfdoc_samd20_i2c_master_basic_use_implemenation_workflow Workflow
+ * \subsection asfdoc_samd20_sercom_i2c_master_basic_use_implemenation_workflow Workflow
  * -# Write packet to slave.
  *  \snippet qs_i2c_master_basic_use.c write_packet
  * The module will try to send the packet TIMEOUT number of times or until it is

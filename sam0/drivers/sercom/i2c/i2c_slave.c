@@ -646,7 +646,7 @@ enum i2c_slave_direction i2c_slave_get_direction_wait(
  * Checks the status of the module and returns it as a bitmask of status
  * flags
  *
- * \param[in] module_inst      Pointer to the I2C slave software device struct
+ * \param[in] module      Pointer to the I2C slave software device struct
  *
  * \return Bitmask of status flags
  *
@@ -729,8 +729,8 @@ uint32_t i2c_slave_get_status(
  *
  * \note Not all status flags can be cleared.
  *
- * \param[in] module_inst      Pointer to the I2C software device struct
- * \param[in] status           Bit mask of status flags to clear
+ * \param[in] module         Pointer to the I2C software device struct
+ * \param[in] status_flags   Bit mask of status flags to clear
  *
  */
 void i2c_slave_clear_status(

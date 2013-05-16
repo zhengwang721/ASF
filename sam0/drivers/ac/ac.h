@@ -239,8 +239,8 @@
  *
  * \section asfdoc_samd20_ac_examples Examples
  *
- * The following Quick Start guides and application examples are available for this driver:
- * - \ref asfdoc_samd20_ac_basic_use_case
+ * For a list of examples related to this driver, see
+ * \ref asfdoc_samd20_ac_exqsg.
  *
  *
  * \section asfdoc_samd20_ac_api_overview API Overview
