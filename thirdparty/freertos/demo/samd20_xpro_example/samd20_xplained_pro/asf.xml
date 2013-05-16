@@ -12,7 +12,7 @@
 		<build type="include-path" value="."/>
 		<config name="common2.services.gfx_mono.display" value="ug_2832hsweg04"/>
 		<config name="config.sam0.drivers.sercom.usart" value="callback"/>
-		<config name="config.thirdparty.os.freertos-7_4_0.memory_manager" value="1"/>
+		<config name="config.thirdparty.os.freertos-7_4_2.memory_manager" value="1"/>
 		<device-support value="atsamd20j18"/>
 		<require idref="board.samd20_xplained_pro"/>
 		<require idref="common.services.freertos.samd20_xpro_example"/>
