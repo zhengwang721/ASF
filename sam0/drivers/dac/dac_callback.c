@@ -108,7 +108,6 @@ enum status_code dac_unregister_callback(
 {
 	/* Sanity check arguments */
 	Assert(dac_module);
-	Assert(callback);
 
 	/* DAC interrupts require it to be driven by events to work, fail if in
 	 * unbuffered (polled) mode */

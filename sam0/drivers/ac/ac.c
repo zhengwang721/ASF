@@ -223,81 +223,9 @@ enum status_code ac_chan_set_config(
 	return STATUS_OK;
 }
 
-/** \brief Writes an Analog Comparator Window channel configuration to the hardware module.
- *
- *  Writes a given Analog Comparator Window channel configuration to the hardware
- *  module.
- *
- *  \param[in] module_inst  Software instance for the Analog Comparator peripheral
- *  \param[in] win_channel  Analog Comparator window channel to configure
- *  \param[in] config       Pointer to the window channel configuration struct
- */
-enum status_code ac_win_set_config(
-		struct ac_module *const module_inst,
-		const enum ac_win_channel win_channel,
-		struct ac_win_config *const config)
-{
-	/* Sanity check arguments */
-	Assert(module_inst);
-	Assert(module_inst->hw);
-	Assert(config);
-
-	Ac *const ac_module = module_inst->hw;
-
-	while (ac_is_syncing(module_inst)) {
-		/* Wait until synchronization is complete */
-	}
-
-	uint32_t win_ctrl_mask = 0;
-
-	switch (config->window_detection)
-	{
-		case AC_WIN_DETECT_ABOVE:
-			win_ctrl_mask =
-					AC_WINCTRL_WINTSEL0_ABOVE >> AC_WINCTRL_WINTSEL0_Pos;
-			break;
-		case AC_WIN_DETECT_BELOW:
-			win_ctrl_mask =
-					AC_WINCTRL_WINTSEL0_BELOW >> AC_WINCTRL_WINTSEL0_Pos;
-			break;
-		case AC_WIN_DETECT_INSIDE:
-			win_ctrl_mask =
-					AC_WINCTRL_WINTSEL0_INSIDE >> AC_WINCTRL_WINTSEL0_Pos;
-			break;
-		case AC_WIN_DETECT_OUTSIDE:
-			win_ctrl_mask =
-					AC_WINCTRL_WINTSEL0_OUTSIDE >> AC_WINCTRL_WINTSEL0_Pos;
-			break;
-		default:
-			break;
-	}
-
-
-	switch (win_channel)
-	{
-		case AC_WIN_CHANNEL_0:
-			ac_module->WINCTRL.reg =
-				(ac_module->WINCTRL.reg & ~AC_WINCTRL_WINTSEL0_Msk) |
-				(win_ctrl_mask << AC_WINCTRL_WINTSEL0_Pos);
-			break;
-
-#if (AC_PAIRS > 1)
-		case AC_WIN_CHANNEL_1:
-			ac_module->WINCTRL.reg =
-				(ac_module->WINCTRL.reg & ~AC_WINCTRL_WINTSEL1_Msk) |
-				(win_ctrl_mask << AC_WINCTRL_WINTSEL1_Pos);
-			break;
-#endif
-	}
-
-	return STATUS_OK;
-}
-
-
 /** \brief Enables an Analog Comparator window channel that was previously configured.
  *
- *  Enables and starts an Analog Comparator window channel that was previously
- *  configured via a call to \ref ac_win_set_config().
+ *  Enables and starts an Analog Comparator window channel.
  *
  *  \note The comparator channels used by the window channel must be configured
  *        and enabled before calling this function. The two comparator channels

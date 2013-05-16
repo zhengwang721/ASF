@@ -225,7 +225,7 @@ static void run_multiple_init_while_enabled_test(const struct test_case *test)
 	/* Configure RX USART */
 	usart_get_config_defaults(&usart_rx_config);
 	usart_rx_config.mux_settings = USART_RX_1_TX_0_XCK_1;
-	usart_rx_config.pinout_pad1 = PINMUX_PA11B_SERCOM0_PAD1;
+	usart_rx_config.pinout_pad1 = RX_USART_PINMUX;
 	usart_rx_config.baudrate = TEST_USART_SPEED;
 	/* Apply configuration */
 	while(usart_is_syncing(&usart_rx_module)) {
@@ -262,7 +262,7 @@ static void run_multiple_init_while_enabled_test(const struct test_case *test)
 	test_assert_false(test, (test_code == STATUS_OK),
 			"Changing the pad did not fail as it should");
 	/* revert to old configuration */
-	usart_rx_config.pinout_pad1 = PINMUX_PA11B_SERCOM0_PAD1;
+	usart_rx_config.pinout_pad1 = RX_USART_PINMUX;
 	usart_init(&usart_rx_module,
 			RX_USART, &usart_rx_config);
 }

@@ -1,11 +1,13 @@
 /**
  * \file
  *
- * \brief SAM D20 BOD Driver Quick Start
+ * \brief SAM D20 Xplained PRO test configuration.
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -36,43 +38,22 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
+ *
  */
-#include <asf.h>
 
-void configure_bod33(void);
+#ifndef CONF_TEST_H_INCLUDED
+#define CONF_TEST_H_INCLUDED
 
-//! [setup]
-void configure_bod33(void)
-{
-//! [setup_config]
-	struct bod_config bod33_conf;
-//! [setup_config]
-//! [setup_config_defaults]
-	bod_get_config_defaults(&bod33_conf);
-//! [setup_config_defaults]
+#define CONF_STDIO_USART               EDBG_CDC_MODULE
+#define CONF_STDIO_MUX_SETTING         USART_RX_3_TX_2_XCK_3
+#define CONF_STDIO_TX_PINMUX           EDBG_CDC_TX_PINMUX
+#define CONF_STDIO_RX_PINMUX           EDBG_CDC_RX_PINMUX
+#define CONF_STDIO_BAUDRATE            38400
 
-//! [setup_set_config]
-	bod_set_config(BOD_BOD33, &bod33_conf);
-//! [setup_set_config]
+#define CONF_WDT_GCLK_GEN              GCLK_GENERATOR_1
+#define CONF_WDT_TIMEOUT_PERIOD        WDT_PERIOD_2048CLK
+#define CONF_WDT_EARLY_WARNING_PERIOD  WDT_PERIOD_1024CLK
+#define CONF_WDT_EARLY_WARNING_WAIT_MS 33
+#define CONF_WDT_RESET_WAIT_MS         50
 
-//! [setup_enable]
-	bod_enable(BOD_BOD33);
-//! [setup_enable]
-}
-//! [setup]
-
-int main(void)
-{
-	/* Configure the BOD 3.3V module */
-//! [setup_init]
-	configure_bod33();
-//! [setup_init]
-
-//! [main]
-//! [main_loop]
-	while (true) {
-
-	}
-//! [main_loop]
-//! [main]
-}
+#endif /* CONF_TEST_H_INCLUDED */

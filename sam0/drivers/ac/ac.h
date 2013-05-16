@@ -429,24 +429,6 @@ enum ac_win_channel {
 };
 
 /**
- * \brief AC window channel detection mode configuration enum.
- *
- * Enum for the possible detection modes of an Analog Comparator window channel.
- */
-enum ac_win_detect {
-	/** Window Comparator should detect an input above the upper threshold. */
-	AC_WIN_DETECT_ABOVE,
-	/** Window Comparator should detect an input between the lower and upper
-	 *  thresholds. */
-	AC_WIN_DETECT_INSIDE,
-	/** Window Comparator should detect an input below the lower threshold. */
-	AC_WIN_DETECT_BELOW,
-	/** Window Comparator should detect an input above the upper threshold or
-	 *  below the lower threshold. */
-	AC_WIN_DETECT_OUTSIDE,
-};
-
-/**
  * \brief AC window channel output state enum.
  *
  * Enum for the possible output states of an Analog Comparator window channel.
@@ -559,18 +541,6 @@ struct ac_chan_config {
 	 *  scalar input. If the VCC voltage scalar is not selected as a comparator
 	 *  channel pin's input, this value will be ignored. */
 	uint8_t vcc_scale_factor;
-};
-
-/**
- * \brief Analog Comparator module Window Comparator configuration structure.
- *
- *  Configuration structure for a Window Comparator channel, to configure the
- *  detection characteristics of the window.
- */
-struct ac_win_config {
-	/** Window detection criteria that should be used to determine the state
-	 *  of the window detection flag. */
-	enum ac_win_detect window_detection;
 };
 
 /**
@@ -979,35 +949,6 @@ static inline enum ac_chan_state ac_chan_get_state(
  * \name Window Mode Configuration and Initialization
  * @{
  */
-
-/**
- * \brief Initializes an Analog Comparator window channel configuration structure to defaults.
- *
- *  Initializes a given Analog Comparator window channel configuration structure
- *  to a set of known default values. This function should be called on all new
- *  instances of these configuration structures before being modified by the
- *  user application.
- *
- *  The default configuration is as follows:
- *   \li Detect when the signal is inside the comparator pair window
- *
- *  \param[out] config  Window channel configuration structure to initialize to
- *                      default values
- */
-static inline void ac_win_get_config_defaults(
-		struct ac_win_config *const config)
-{
-	/* Sanity check arguments */
-	Assert(config);
-
-	/* Default configuration values */
-	config->window_detection = AC_WIN_DETECT_INSIDE;
-}
-
-enum status_code ac_win_set_config(
-		struct ac_module *const module_inst,
-		const enum ac_win_channel win_channel,
-		struct ac_win_config *const config);
 
 enum status_code ac_win_enable(
 		struct ac_module *const module_inst,

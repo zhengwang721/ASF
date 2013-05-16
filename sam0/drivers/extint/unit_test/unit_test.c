@@ -115,7 +115,7 @@ volatile bool interrupt_flag = false;
  *
  * \param channel Channel number of the interrupt (not used)
  */
-void extint_user_callback(uint32_t channel)
+static void extint_user_callback(uint32_t channel)
 {
 	interrupt_flag = true;
 }
@@ -132,10 +132,10 @@ static void cdc_uart_init(void)
 
 	/* Configure USART for unit test output */
 	usart_get_config_defaults(&cdc_uart_config);
-	cdc_uart_config.mux_settings     = USART_RX_3_TX_2_XCK_3;
-	cdc_uart_config.pinout_pad3      = EDBG_CDC_RX_PINMUX;
-	cdc_uart_config.pinout_pad2      = EDBG_CDC_TX_PINMUX;
-	cdc_uart_config.baudrate         = 115200;
+	cdc_uart_config.mux_settings = USART_RX_3_TX_2_XCK_3;
+	cdc_uart_config.pinout_pad3  = EDBG_CDC_RX_PINMUX;
+	cdc_uart_config.pinout_pad2  = EDBG_CDC_TX_PINMUX;
+	cdc_uart_config.baudrate     = 115200;
 	stdio_serial_init(&cdc_uart_module, EDBG_CDC_MODULE, &cdc_uart_config);
 	usart_enable(&cdc_uart_module);
 	/* Enable transceivers */
