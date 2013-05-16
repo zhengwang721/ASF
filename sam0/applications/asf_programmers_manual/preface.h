@@ -39,8 +39,6 @@
  *
  */
 
-// transform_asf_manual.xsl
-
 /**
  * \mainpage
  * \copydetails preface
@@ -48,6 +46,22 @@
 
 /**
  * \page preface Preface
+ *
+ * The Atmel® Software Framework (ASF) is a collection of free embedded software
+ * for Atmel microcontroller devices. It simplifies the usage of Atmel products,
+ * providing an abstraction to the hardware and high-value middleware.
+ *
+ * ASF is designed to be used for evaluation, prototyping, design and production
+ * phases. ASF is integrated in the Atmel Studio IDE with a graphical user
+ * interface or available as a standalone package for several commercial and
+ * open source compilers.
+ *
  * This document describes the API interfaces to the low level ASF module
  * drivers of the device.
+ *
+ * \anchor samd20_asfdoc_preface_asf_structure
+ * \image html asf_structure.jpg ""
+ *
+ * For more information on ASF please refer to the online documentation at
+ * <a href="www.atmel.com/asf">www.atmel.com/asf</a>.
  */
