@@ -62,8 +62,8 @@ extern "C" {
 #define PLL_OUTPUT_MIN_HZ   80000000
 #define PLL_OUTPUT_MAX_HZ   240000000
 
-#define PLL_INPUT_MIN_HZ    8000000
-#define PLL_INPUT_MAX_HZ    32000000
+#define PLL_INPUT_MIN_HZ    3500000
+#define PLL_INPUT_MAX_HZ    20000000
 
 #define NR_PLLS             1
 #define PLLA_ID             0

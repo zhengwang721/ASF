@@ -1238,6 +1238,28 @@ void pmc_disable_clock_failure_detector(void)
 	PMC->CKGR_MOR = PMC_CKGR_MOR_KEY_VALUE | ul_reg;
 }
 
+#if SAM4N
+/**
+ * \brief Enable Slow Crystal Oscillator Frequency Monitoring.
+ */
+void pmc_enable_sclk_osc_freq_monitor(void)
+{
+	uint32_t ul_reg = PMC->CKGR_MOR;
+
+	PMC->CKGR_MOR = PMC_CKGR_MOR_KEY_VALUE | CKGR_MOR_XT32KFME | ul_reg;
+}
+
+/**
+ * \brief Disable Slow Crystal Oscillator Frequency Monitoring.
+ */
+void pmc_disable_sclk_osc_freq_monitor(void)
+{
+	uint32_t ul_reg = PMC->CKGR_MOR & (~CKGR_MOR_XT32KFME);
+
+	PMC->CKGR_MOR = PMC_CKGR_MOR_KEY_VALUE | ul_reg;
+}
+#endif
+
 /**
  * \brief Enable or disable write protect of PMC registers.
  *

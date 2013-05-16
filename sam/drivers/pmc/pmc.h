@@ -284,6 +284,19 @@ void pmc_disable_clock_failure_detector(void);
 
 //@}
 
+#if SAM4N
+/**
+ * \name Slow Crystal Oscillator Frequency Monitoring
+ *
+ */
+//@{
+
+void pmc_enable_sclk_osc_freq_monitor(void);
+void pmc_disable_sclk_osc_freq_monitor(void);
+
+//@}
+#endif
+
 /**
  * \name Write protection
  *
