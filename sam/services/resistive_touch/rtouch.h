@@ -3,7 +3,7 @@
  *
  * \brief Resistive Touch Service.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -101,7 +101,7 @@ typedef struct rtouch_calibration_point_struct
 } rtouch_calibration_point_t;
 
 /**
- * \brief Collection of the five calibration points required to compute 
+ * \brief Collection of the five calibration points required to compute
  * calibration.
  */
 typedef struct rtouch_calibration_points_struct
@@ -164,10 +164,17 @@ void rtouch_wait_released(void);
 void rtouch_enable(void);
 
 /**
- * \brief Disable the resistive touch service. Touch interrupt will be 
+ * \brief Disable the resistive touch service. Touch interrupt will be
  * disabled as well.
  */
 void rtouch_disable(void);
+
+/**
+ * \brief Set calibration parameters when manual calibration procedure
+ * is not performed.
+ */
+void rtouch_set_calibration_parameter(int32_t xslope, int32_t yslope,
+								int32_t rawx, int32_t rawy);
 
 /**
  * \brief Perform the calibration process using the provided points.
@@ -180,18 +187,18 @@ uint32_t rtouch_compute_calibration(rtouch_calibration_point_t *points);
 
 /**
  * \brief Set the touch event handler.
- * \note This handler is called whenever the position or state of the touch 
+ * \note This handler is called whenever the position or state of the touch
  * screen changes. The handler is called from the rtouch_process() function.
  *
- * \param handler Pointer to the touch event handler, or NULL to disable 
+ * \param handler Pointer to the touch event handler, or NULL to disable
  * the handler.
  */
 void rtouch_set_event_handler(rtouch_event_handler_t handler);
 
 /**
  * \brief Get the touch event handler.
- 
- * \note Use this to store the old handler while replacing it for a short 
+
+ * \note Use this to store the old handler while replacing it for a short
  * while, e.g. for calibration.
  *
  * \return Current touch event handler pointer.
@@ -201,8 +208,8 @@ rtouch_event_handler_t rtouch_get_event_handler(void);
 /**
  * \brief Core function for resistive touch service.
  *
- * \note An external timer interrupt should call rtouch_process() per 10ms 
- * in order to compute the touch state and eventually generate one of the 
+ * \note An external timer interrupt should call rtouch_process() per 10ms
+ * in order to compute the touch state and eventually generate one of the
  * following events: RTOUCH_PRESS or RTOUCH_RELEASE or RTOUCH_MOVE.
  */
 void rtouch_process(void);
