@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_samd20_i2c_slave_basic_use_case Quick Start Guide for SERCOM I2C Slave - Basic
+ * \page asfdoc_samd20_sercom_i2c_slave_basic_use_case Quick Start Guide for SERCOM I2C Slave - Basic
  *
  * In this use case, the I<SUP>2</SUP>C will used and set up as follows:
  *  - Slave mode
@@ -50,12 +50,12 @@
  *  - Not operational in standby
  *  - 10000 packet timeout value
  *
- * \section asfdoc_samd20_i2c_slave_basic_use_case_prereq Prerequisites
+ * \section asfdoc_samd20_sercom_i2c_slave_basic_use_case_prereq Prerequisites
  * The device must be connected to an I<SUP>2</SUP>C master.
  *
- * \section asfdoc_samd20_i2c_slave_basic_use_case_setup_code Setup
+ * \section asfdoc_samd20_sercom_i2c_slave_basic_use_case_setup_code Setup
  *
- * \subsection asfdoc_samd20_i2c_slave_basic_use_setup_code Code
+ * \subsection asfdoc_samd20_sercom_i2c_slave_basic_use_setup_code Code
  * The following must be added to the user application:
  *
  * A sample buffer to write from, a sample buffer to read to and length of buffers:
@@ -73,7 +73,7 @@
  * Add to user application main():
  * \snippet qs_i2c_slave_basic_use.c run_initialize_i2c
  *
- * \subsection asfdoc_samd20_i2c_slave_basic_use_setup_workflow Workflow
+ * \subsection asfdoc_samd20_sercom_i2c_slave_basic_use_setup_workflow Workflow
  * -# Initialize system.
  *  \snippet qs_i2c_slave_basic_use.c system_init
  * -# Configure and enable module:
@@ -91,8 +91,8 @@
  * -# Create packet variable to transfer
  *  \snippet qs_i2c_slave_basic_use.c pack
  *
- * \section asfdoc_samd20_i2c_slave_basic_use_implementation Implementation
- * \subsection asfdoc_samd20_i2c_slave_basic_use_implementation_code Code
+ * \section asfdoc_samd20_sercom_i2c_slave_basic_use_implementation Implementation
+ * \subsection asfdoc_samd20_sercom_i2c_slave_basic_use_implementation_code Code
  * Add to user application main:
  * \snippet qs_i2c_slave_basic_use.c while
  * \subsection i2c_slave_basic_use_implementation_workflow Workflow

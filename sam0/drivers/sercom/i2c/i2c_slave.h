@@ -61,7 +61,7 @@ extern "C" {
 #endif
 
 /**
- * \addtogroup asfdoc_samd20_i2c_group
+ * \addtogroup asfdoc_samd20_sercom_i2c_group
  *
  * @{
  *
@@ -95,7 +95,7 @@ extern "C" {
  * set
  */
 #define I2C_SLAVE_STATUS_REPEATED_START    (1UL << 5)
-/** Received not acknowledge 
+/** Received not acknowledge
  * \note Cannot be cleared
  */
 #define I2C_SLAVE_STATUS_RECEIVED_NACK     (1UL << 6)
