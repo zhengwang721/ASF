@@ -249,11 +249,8 @@
  *
  * \section asfdoc_samd20_rtc_count_examples Examples
  *
- * The following Quick Start guides and application examples are available for this driver:
- * - \ref asfdoc_samd20_rtc_count_basic_use_case
- * \if RTC_COUNT_CALLBACK_MODE
- * - \ref asfdoc_samd20_rtc_count_callback_use_case
- * \endif
+ * For a list of examples related to this driver, see
+ * \ref asfdoc_samd20_rtc_count_exqsg.
  *
  *
  * \section asfdoc_samd20_rtc_count_api_overview API Overview

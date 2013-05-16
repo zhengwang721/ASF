@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D20 ADC Quick Start
+ * \brief SAM D20 Xplained PRO board configuration.
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,59 +40,14 @@
  * \asf_license_stop
  *
  */
-#include <asf.h>
 
-void configure_adc(void);
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-//! [module_inst]
-struct adc_module adc_instance;
-//! [module_inst]
+#define TC6_MASTER      EXT1_PWM_MODULE
+/** PWM output pin */
+#define PWM_OUT_PIN     EXT1_PWM_0_PIN
+/** PWM ouptut pin mux */
+#define PWM_OUT_MUX     EXT1_PWM_0_MUX
 
-//! [setup]
-void configure_adc(void)
-{
-//! [setup_config]
-	struct adc_config config;
-//! [setup_config]
-//! [setup_config_defaults]
-	adc_get_config_defaults(&config);
-//! [setup_config_defaults]
-
-//! [setup_set_config]
-	adc_init(&adc_instance, ADC, &config);
-//! [setup_set_config]
-
-//! [setup_enable]
-	adc_enable(&adc_instance);
-//! [setup_enable]
-}
-//! [setup]
-
-int main(void)
-{
-	system_init();
-
-//! [setup_init]
-	configure_adc();
-//! [setup_init]
-
-//! [main]
-//! [start_conv]
-	adc_start_conversion(&adc_instance);
-//! [start_conv]
-
-//! [get_res]
-	uint16_t result;
-
-	do {
-		/* Wait for conversion to be done and read out result */
-	} while (adc_read(&adc_instance, &result) == STATUS_BUSY);
-//! [get_res]
-
-//! [inf_loop]
-	while (1) {
-		/* Infinite loop */
-	}
-//! [inf_loop]
-//! [main]
-}
+#endif /* CONF_BOARD_H_INCLUDED */

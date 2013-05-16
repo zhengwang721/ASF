@@ -394,12 +394,8 @@
  *
  * \section asfdoc_samd20_tc_examples Examples
  *
- * The following Quick Start guides and application examples are available for
- * this driver:
- * - \ref asfdoc_samd20_tc_basic_use_case
- * \if TC_CALLBACK_MODE
- * - \ref asfdoc_samd20_tc_callback_use_case
- * \endif
+ * For a list of examples related to this driver, see
+ * \ref asfdoc_samd20_tc_exqsg.
  *
  * \section asfdoc_samd20_tc_api_overview API Overview
  * @{
@@ -411,8 +407,8 @@
 #include <pinmux.h>
 
 #if !defined(__DOXYGEN__)
-#define NUMBER_OF_COMPARE_CAPTURE_CHANNELS TC0_CC8_NUM
-/* Same number for 8-, 16- and 32-bit TC and all TC instances */
+#  define NUMBER_OF_COMPARE_CAPTURE_CHANNELS TC0_CC8_NUM
+   /* Same number for 8-, 16- and 32-bit TC and all TC instances */
 #endif
 
 #if TC_ASYNC == true
@@ -471,8 +467,8 @@ enum tc_callback {
 #define TC_STATUS_CAPTURE_OVERFLOW   (1UL << 3)
 
 /** The timer count value has overflowed from its maximum value to its minimum
- *  when counting upwards, or from its minimum value to its maximum when
- *  counting downwards.
+ *  when counting upward, or from its minimum value to its maximum when
+ *  counting downward.
  */
 #define TC_STATUS_COUNT_OVERFLOW     (1UL << 4)
 
@@ -599,25 +595,11 @@ enum tc_clock_prescaler {
  * Timer/Counter count direction.
  */
 enum tc_count_direction {
-	/** Timer should count upwards from zero to MAX. */
+	/** Timer should count upward from zero to MAX. */
 	TC_COUNT_DIRECTION_UP,
 
-	/** Timer should count downwards to zero from MAX. */
+	/** Timer should count downward to zero from MAX. */
 	TC_COUNT_DIRECTION_DOWN,
-};
-
-/**
- * \brief TC channel capture enable mode.
- *
- * Capture mode to use on a TC module channel.
- */
-enum tc_capture_enable {
-	/** No channels are enabled for capture. */
-	TC_CAPTURE_ENABLE_NONE              = 0,
-	/** Enable channel 0 for capture. */
-	TC_CAPTURE_ENABLE_CHANNEL_0         = TC_CTRLC_CPTEN(1),
-	/** Enable channel 1 for capture. */
-	TC_CAPTURE_ENABLE_CHANNEL_1         = TC_CTRLC_CPTEN(2),
 };
 
 /**
@@ -736,13 +718,12 @@ struct tc_config {
 	uint8_t waveform_invert_output;
 
 	/** Specifies which channel(s) to enable channel capture
-	 *  operation on. Since all capture channels use the same
-	 *  event line, only one capture channel must be enabled at a
-	 *  time, when used for event capture. When PWM capture is
-	 *  used this is not the case as it does not use the event
-	 *  line.
+	 *  operation on.
 	 */
-	uint8_t capture_enable;
+	bool enable_capture_on_channel[NUMBER_OF_COMPARE_CAPTURE_CHANNELS];
+
+	/** Consume events into the module. */
+	bool enable_incoming_events;
 
 	/** When \c true, one-shot will stop the TC on next HW/SW re-trigger
 	 *  event or overflow/underflow.
@@ -803,7 +784,7 @@ struct tc_module {
 	/** Size of the initialized Timer/Counter module configuration. */
 	enum tc_counter_size counter_size;
 #  if TC_ASYNC == true
-	/** Array of callbacs */
+	/** Array of callbacks */
 	tc_callback_t callback[TC_CALLBACK_N];
 	/** Bit mask for callbacks registered */
 	uint8_t register_callback_mask;
@@ -813,6 +794,10 @@ struct tc_module {
 #endif
 };
 
+//#if !defined(__DOXYGEN__)
+uint8_t _tc_get_inst_index(
+		Tc *const hw);
+//#endif
 /**
  * \name Driver Initialization and Configuration
  * @{
@@ -865,6 +850,7 @@ static inline bool tc_is_syncing(
  *  \li Don't run in standby
  *  \li No inversion of waveform output
  *  \li No capture enabled
+ *  \li No event input enabled
  *  \li Count upward
  *  \li Don't perform one-shot operations
  *  \li No event action
@@ -893,26 +879,42 @@ static inline void tc_get_config_defaults(
 	config->run_in_standby             = false;
 
 	config->waveform_invert_output     = TC_WAVEFORM_INVERT_OUTPUT_NONE;
-	config->capture_enable             = TC_CAPTURE_ENABLE_NONE;
+	config->enable_capture_on_channel[TC_COMPARE_CAPTURE_CHANNEL_0] = false;
+	config->enable_capture_on_channel[TC_COMPARE_CAPTURE_CHANNEL_1] = false;
 
 	config->count_direction            = TC_COUNT_DIRECTION_UP;
 	config->oneshot                    = false;
 
 	config->invert_event_input         = false;
+	config->enable_incoming_events     = false;
 	config->event_action               = TC_EVENT_ACTION_OFF;
 
-	config->channel_pwm_out_enabled[0] = false;
-	config->channel_pwm_out_pin[0]     = 0;
-	config->channel_pwm_out_mux[0]     = 0;
+	config->channel_pwm_out_enabled[0]                        = false;
+	config->channel_pwm_out_pin[TC_COMPARE_CAPTURE_CHANNEL_0] = 0;
+	config->channel_pwm_out_mux[TC_COMPARE_CAPTURE_CHANNEL_0] = 0;
 
-	config->channel_pwm_out_enabled[1] = false;
-	config->channel_pwm_out_pin[1]     = 0;
-	config->channel_pwm_out_mux[1]     = 0;
+	config->channel_pwm_out_enabled[1]                        = false;
+	config->channel_pwm_out_pin[TC_COMPARE_CAPTURE_CHANNEL_1] = 0;
+	config->channel_pwm_out_mux[TC_COMPARE_CAPTURE_CHANNEL_1] = 0;
 
-	config->size_specific.size_16_bit.count = 0x0000;
-	config->size_specific.size_16_bit.compare_capture_channel[0] = 0x0000;
-	config->size_specific.size_16_bit.compare_capture_channel[1] = 0x0000;
+	config->size_specific.size_16_bit.count                   = 0x0000;
+	config->size_specific.size_16_bit.compare_capture_channel\
+		[TC_COMPARE_CAPTURE_CHANNEL_0]                        = 0x0000;
+	config->size_specific.size_16_bit.compare_capture_channel\
+		[TC_COMPARE_CAPTURE_CHANNEL_1]                        = 0x0000;
 }
+
+enum status_code tc_init(
+		struct tc_module *const module_inst,
+		Tc *const hw,
+		const struct tc_config *const config);
+
+/** @} */
+
+/**
+ * \name Event Management
+ * @{
+ */
 
 /**
  * \brief Initializes event config with predefined default values.
@@ -942,17 +944,6 @@ static inline void tc_get_events_config_default(
 	events_config->enable_incoming_events = false;
 }
 
-enum status_code tc_init(
-		struct tc_module *const module_inst,
-		Tc *const hw,
-		const struct tc_config *const config);
-
-/** @} */
-
-/**
- * \name Event Management
- * @{
- */
 
 /**
  * \brief Enables a TC module event input or output.

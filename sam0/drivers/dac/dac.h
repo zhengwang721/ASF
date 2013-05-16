@@ -282,8 +282,8 @@
  *
  * \section asfdoc_samd20_dac_examples Examples
  *
- * The following Quick Start guides and application examples are available for this driver:
- * - \ref asfdoc_samd20_dac_basic_use_case
+ * For a list of examples related to this driver, see
+ * \ref asfdoc_samd20_dac_exqsg.
  *
  *
  * \section asfdoc_samd20_dac_api_overview API Overview
@@ -625,7 +625,7 @@ void dac_clear_status(
  * \section asfdoc_samd20_dac_extra_dependencies Dependencies
  * This driver has the following dependencies:
  *
- *  - \ref asfdoc_samd20_pinmux_group "System Pin Multiplexer Driver"
+ *  - \ref asfdoc_samd20_system_pinmux_group "System Pin Multiplexer Driver"
  *
  *
  * \section asfdoc_samd20_dac_extra_errata Errata
