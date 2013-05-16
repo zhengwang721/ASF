@@ -111,9 +111,8 @@
  *
  * \section asfdoc_samd20_system_interrupt_examples Examples
  *
- * The following Quick Start guides and application examples are available for this driver:
- * - \ref asfdoc_samd20_system_interrupt_critsec_use_case
- * - \ref asfdoc_samd20_system_interrupt_enablemodint_use_case
+ * For a list of examples related to this driver, see
+ * \ref asfdoc_samd20_system_interrupt_exqsg.
  *
  * \section asfdoc_samd20_system_interrupt_api_overview API Overview
  * @{

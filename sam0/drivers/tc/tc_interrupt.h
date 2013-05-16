@@ -45,9 +45,31 @@
 #define TC_INTERRUPT_H_INCLUDED
 
 #include "tc.h"
+#include <system_interrupt.h>
 
+#if !defined(__DOXYGEN__)
 extern void *_tc_instances[TC_INST_NUM];
 
+#  define _TC_INTERRUPT_VECT_NUM(n, unused) \
+		  SYSTEM_INTERRUPT_MODULE_TC##n,
+/**
+ * \internal Get the interrupt vector for the given device instance
+ *
+ * \param[in] TC module instance number.
+ *
+ * \return Interrupt vector for of the given TC module instance.
+ */
+static enum system_interrupt_vector _tc_interrupt_get_interrupt_vector(
+		uint32_t inst_num)
+{
+	static uint8_t tc_interrupt_vectors[TC_INST_NUM] =
+		{
+			MREPEAT(TC_INST_NUM, _TC_INTERRUPT_VECT_NUM, ~)
+		};
+
+	return tc_interrupt_vectors[inst_num];
+}
+#endif /* !defined(__DOXYGEN__) */
 
 /**
  * \name Callback Management
@@ -80,6 +102,10 @@ static inline void tc_enable_callback(
 {
 	/* Sanity check arguments */
 	Assert(module);
+
+
+	/* Enable interupts for this TC module */
+	system_interrupt_enable(_tc_interrupt_get_interrupt_vector(_tc_get_inst_index(module->hw)));
 
 	/* Enable callback */
 	if (callback_type == TC_CALLBACK_CC_CHANNEL0) {
