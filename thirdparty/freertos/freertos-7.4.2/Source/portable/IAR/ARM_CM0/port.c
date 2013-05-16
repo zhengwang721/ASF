@@ -86,6 +86,7 @@
 /* Constants required to manipulate the NVIC. */
 #define portNVIC_SYSTICK_CTRL		( ( volatile unsigned long *) 0xe000e010 )
 #define portNVIC_SYSTICK_LOAD		( ( volatile unsigned long *) 0xe000e014 )
+#define portNVIC_SYSTICK_VAL		( ( volatile unsigned long *) 0xe000e018 )
 #define portNVIC_SYSPRI2			( ( volatile unsigned long *) 0xe000ed20 )
 #define portNVIC_SYSTICK_CLK		0x00000004
 #define portNVIC_SYSTICK_INT		0x00000002
@@ -230,6 +231,7 @@ unsigned long ulDummy;
 static void prvSetupTimerInterrupt( void )
 {
 	/* Configure SysTick to interrupt at the requested rate. */
+	*(portNVIC_SYSTICK_VAL)  = 0; /* Load the SysTick Counter Value */
 	*(portNVIC_SYSTICK_LOAD) = ( configCPU_CLOCK_HZ / configTICK_RATE_HZ ) - 1UL;
 	*(portNVIC_SYSTICK_CTRL) = portNVIC_SYSTICK_CLK | portNVIC_SYSTICK_INT | portNVIC_SYSTICK_ENABLE;
 }
