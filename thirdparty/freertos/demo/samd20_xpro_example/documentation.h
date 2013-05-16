@@ -45,7 +45,7 @@
 #define DOCUMENTATION_H
 
 /**
- * \mainpage FreeRTOS v7.4.0 demo for SAM D20 Xplained Pro
+ * \mainpage FreeRTOS v7.4.2 demo for SAM D20 Xplained Pro
  *
  * \section appdoc_overview Overview
  * - \ref appdoc_intro
@@ -88,7 +88,7 @@
  * echo back the received characters.
  *
  * For more details on the application:
- * - \ref freertos-v7_4_0_sam_d20_demotasks_group
+ * - \ref freertos-v7_4_2_sam_d20_demotasks_group
  * - \ref oled1_xpro_io_group
  * - \ref edbg_cdc_rx_group
  *

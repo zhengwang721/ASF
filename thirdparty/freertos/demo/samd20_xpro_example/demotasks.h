@@ -45,7 +45,7 @@
 #define DEMOTASKS_H
 
 /**
- * \defgroup freertos-v7_4_0_sam_d20_demotasks_group FreeRTOS demo tasks
+ * \defgroup freertos-v7_4_2_sam_d20_demotasks_group FreeRTOS demo tasks
  *
  * The demo tasks demonstrate basic use of FreeRTOS, with inter-task
  * communication using queues and mutexes.
