@@ -88,11 +88,11 @@ static void setup_tc_channels(struct tc_module *const calib_chan, struct tc_modu
 	config.counter_size = TC_COUNTER_SIZE_32BIT;
 	config.clock_prescaler = TC_CLOCK_PRESCALER_DIV1;
 	config.wave_generation = TC_WAVE_GENERATION_NORMAL_FREQ;
-	config.capture_enable = TC_CAPTURE_ENABLE_CHANNEL_0;
+	config.enable_capture_on_channel[0] = true;
 
 	tc_init(calib_chan, TC0, &config);
 
-	config.capture_enable = 0;
+	config.enable_capture_on_channel[0] = false;
 	config.counter_size = TC_COUNTER_SIZE_16BIT;
 	config.clock_source = GCLK_GENERATOR_3;
 	config.size_specific.size_16_bit.compare_capture_channel[0] = RES;
