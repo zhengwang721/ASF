@@ -3,7 +3,7 @@
  *
  * \brief HMATRIX example for SAM.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -51,7 +51,7 @@
  *
  * \section Requirements
  *
- * This example can be used on any SAM4L EK boards.
+ * This example can be used on any SAM4L boards.
  *
  * \section Description
  *
@@ -124,7 +124,7 @@ static void configure_console(void)
  */
 static uint32_t toggle_led_test(uint32_t ul_dly_ticks)
 {
-	int32_t ul_cnt = 0;
+	uint32_t ul_cnt = 0;
 	uint32_t ul_cur_ticks;
 
 	ul_cur_ticks = g_ul_ms_ticks;
@@ -155,7 +155,7 @@ void SysTick_Handler(void)
 int main(void)
 {
 	enum hmatrix_slave_id ul_slave_id;
-	int32_t ul_cnt;
+	uint32_t ul_cnt;
 	struct hmatrix_slave_ch_conf config;
 
 	/* Initialize the system */
