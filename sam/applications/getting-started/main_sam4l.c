@@ -197,7 +197,7 @@ static void configure_tc(void)
 	sysclk_enable_peripheral_clock(TC0);
 
 	/* Configure TC for a 4Hz frequency and trigger on RC compare. */
-	if (!tc_find_mck_divisor(5, ul_sysclk, &ul_div, &ul_tcclks, ul_sysclk)) {
+	if (!tc_find_mck_divisor(4, ul_sysclk, &ul_div, &ul_tcclks, ul_sysclk)) {
 		puts("No valid divisor found!\r");
 		return;
 	}
