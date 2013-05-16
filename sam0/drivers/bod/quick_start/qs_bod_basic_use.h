@@ -44,7 +44,9 @@
  * \page asfdoc_samd20_bod_basic_use_case Quick Start Guide for BOD - Basic
  *
  * In this use case, the BOD33 will be configured with the following settings:
- * - TODO
+ * - Continuous sampling mode
+ * - Prescaler setting of 2
+ * - Reset action on low voltage detect
  *
  * \section asfdoc_samd20_bod_basic_use_case_setup Quick Start
  *

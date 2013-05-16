@@ -45,14 +45,7 @@
 
 #if TC_ASYNC == true
 #  include "tc_interrupt.h"
-#  include <system_interrupt.h>
-
-/** \internal
- * Converts a given TC index to its interrupt vector index.
- */
-#  define _TC_INTERRUPT_VECT_NUM(n, unused) \
-		SYSTEM_INTERRUPT_MODULE_TC##n,
-#  endif
+#endif
 
 #if !defined(__DOXYGEN__)
 #  define _TC_GCLK_ID(n, unused)       TC##n##_GCLK_ID   ,
@@ -69,7 +62,7 @@
  *
  * \return Index of the given TC module instance.
  */
-static uint8_t _tc_get_inst_index(
+uint8_t _tc_get_inst_index(
 		Tc *const hw)
 {
 	/* List of available TC modules. */
@@ -87,25 +80,6 @@ static uint8_t _tc_get_inst_index(
 	return 0;
 }
 
-#if TC_ASYNC == true
-/**
- * \internal Get the interrupt vector for the given device instance
- *
- * \param[in] TC module instance number.
- *
- * \return Interrupt vector for of the given TC module instance.
- */
-static enum system_interrupt_vector _tc_interrupt_get_interrupt_vector(
-		uint32_t inst_num)
-{
-	static uint8_t tc_interrupt_vectors[TC_INST_NUM] =
-		{
-			MREPEAT(TC_INST_NUM, _TC_INTERRUPT_VECT_NUM, ~)
-		};
-
-	return tc_interrupt_vectors[inst_num];
-}
-#endif
 
 /**
  * \brief Initializes a hardware TC module instance.
@@ -171,9 +145,6 @@ enum status_code tc_init(
 
 	/* Register this instance for callbacks*/
 	_tc_instances[instance] = module_inst;
-
-	/* Enable interupts for this TC module */
-	system_interrupt_enable(_tc_interrupt_get_interrupt_vector(instance));
 #endif
 
 	/* Associate the given device instance with the hardware module */
@@ -238,18 +209,17 @@ enum status_code tc_init(
 	system_gclk_chan_set_config(inst_gclk_id[instance], &gclk_chan_config);
 	system_gclk_chan_enable(inst_gclk_id[instance]);
 
+	/* Set ctrla register */
 	if (config->run_in_standby) {
 		ctrla_tmp |= TC_CTRLA_RUNSTDBY;
 	}
-
 	ctrla_tmp = config->counter_size | config->wave_generation
 			| config->reload_action | config->clock_prescaler;
 
+	/* Write configuration to register */
 	while (tc_is_syncing(module_inst)) {
 		/* Wait for sync */
 	}
-
-	/* Set configuration to registers common for all 3 modes */
 	hw->COUNT8.CTRLA.reg = ctrla_tmp;
 
 	/* Set ctrlb register */
@@ -261,6 +231,7 @@ enum status_code tc_init(
 		ctrlbset_tmp |= TC_CTRLBSET_DIR;
 	}
 
+	/* Clear old ctrlb configuration */
 	while (tc_is_syncing(module_inst)) {
 		/* Wait for sync */
 	}
@@ -271,26 +242,36 @@ enum status_code tc_init(
 		while (tc_is_syncing(module_inst)) {
 			/* Wait for sync */
 		}
-
+		/* Write configuration to register */
 		hw->COUNT8.CTRLBSET.reg = ctrlbset_tmp;
 	}
 
-	ctrlc_tmp = config->waveform_invert_output | config->capture_enable;
+	/* Set ctrlc register*/
+	ctrlc_tmp = config->waveform_invert_output;
+	for (uint8_t i = 0; i < NUMBER_OF_COMPARE_CAPTURE_CHANNELS; i++) {
+		if (config->enable_capture_on_channel[i] == true) {
+			ctrlc_tmp |= (TC_CTRLC_CPTEN(1) << i);
+		}
+	}
 
+	/* Write configuration to register */
 	while (tc_is_syncing(module_inst)) {
 		/* Wait for sync */
 	}
-
 	hw->COUNT8.CTRLC.reg = ctrlc_tmp;
 
+	/* Set evctrl register */
 	if (config->invert_event_input) {
 		evctrl_tmp |= TC_EVCTRL_TCINV;
 	}
+	if (config->enable_incoming_events) {
+		evctrl_tmp |= TC_EVCTRL_TCEI;
+	}
 
+	/* Write configuration to register */
 	while (tc_is_syncing(module_inst)) {
 		/* Wait for sync */
 	}
-
 	hw->COUNT8.EVCTRL.reg = evctrl_tmp | config->event_action;
 
 	/* Switch for TC counter size  */
@@ -452,7 +433,7 @@ uint32_t tc_get_count_value(
 		/* Wait for sync */
 	}
 
-	/* Read from count register based on the TC counter size */
+	/* Read from based on the TC counter size */
 	switch (module_inst->counter_size) {
 		case TC_COUNTER_SIZE_8BIT:
 			return (uint32_t)tc_module->COUNT8.COUNT.reg;
