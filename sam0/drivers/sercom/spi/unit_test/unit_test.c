@@ -116,9 +116,12 @@ struct spi_slave_inst slave_inst;
 /* Structure for UART module connected to EDBG (used for unit test output) */
 struct usart_module cdc_uart_module;
 
-/* Transmit and receive buffers used during test */
+/* Transmit and receive buffers used by master during test */
 uint8_t tx_buf[BUFFER_LENGTH];
 uint8_t rx_buf[BUFFER_LENGTH];
+/* Transmit and receive buffers used by slave during test */
+uint8_t slave_tx_buf[BUFFER_LENGTH];
+uint8_t slave_rx_buf[BUFFER_LENGTH];
 
 /* Flag to indicate whether buffer transmission is complete or not */
 volatile bool transfer_complete = false;
@@ -369,8 +372,9 @@ static void run_transceive_buffer_test(const struct test_case *test)
 			"Skipping test due to failed initialization");
 
 	/* Start the test */
+	spi_transceive_buffer_job(&slave, slave_tx_buf, slave_rx_buf, 
+			BUFFER_LENGTH);
 	spi_select_slave(&master, &slave_inst, true);
-	spi_write_buffer_job(&slave, tx_buf, BUFFER_LENGTH);
 	status = spi_transceive_buffer_wait(&master, tx_buf, rx_buf,
 			BUFFER_LENGTH);
 	spi_select_slave(&master, &slave_inst, false);
@@ -380,10 +384,13 @@ static void run_transceive_buffer_test(const struct test_case *test)
 
 	/* Compare received data with transmitted data */
 	if (status == STATUS_OK) {
-		for (uint16_t i = 0; i < BUFFER_LENGTH - 1; i++) {
-			test_assert_true(test, tx_buf[i] == rx_buf[i + 1],
-					"Bytes differ at buffer index %d : %d != %d",
-					i, tx_buf[i], rx_buf[i + 1]);
+		for (uint16_t i = 0; i < BUFFER_LENGTH; i++) {
+			test_assert_true(test, tx_buf[i] == slave_rx_buf[i],
+					"During TX: Bytes differ at buffer index %d : %d != %d",
+					i, tx_buf[i], slave_rx_buf[i]);
+			test_assert_true(test, slave_tx_buf[i] == rx_buf[i],
+					"During RX: Bytes differ at buffer index %d : %d != %d",
+					i, slave_tx_buf[i], rx_buf[i]);
 		}
 	}
 }
@@ -557,9 +564,10 @@ int main(void)
 	cdc_uart_init();
 	cpu_irq_enable();
 
-	/* Fill the transmit buffer with some data */
+	/* Fill the transmit buffers with some data */
 	for (uint16_t i = 0; i < BUFFER_LENGTH; i++) {
 		tx_buf[i] = i + 1;
+		slave_tx_buf[i] = i + 1;
 	}
 
 	/* Define Test Cases */
