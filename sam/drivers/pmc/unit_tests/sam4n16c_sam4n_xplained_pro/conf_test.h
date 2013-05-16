@@ -51,10 +51,4 @@
 /** Parity setting */
 #define CONF_TEST_PARITY     UART_MR_PAR_NO
 
-/** PCK output to pin PCK0 enable
- *  (disabled by default since output is for debug only and not measured in
- *  automatically tests)
- */
-//#define CONF_TEST_PCK_OUTPUT_ENABLE
-
 #endif /* CONF_TEST_H_INCLUDED */

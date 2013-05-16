@@ -68,15 +68,15 @@
 // ===== PLL0 (A) Options   (Fpll = (Fclk * PLL_mul) / PLL_div)
 // Use mul and div effective values here.
 #define CONFIG_PLL0_SOURCE          PLL_SRC_MAINCK_XTAL
-#define CONFIG_PLL0_MUL             16
-#define CONFIG_PLL0_DIV             1
+#define CONFIG_PLL0_MUL             50
+#define CONFIG_PLL0_DIV             3
 
 // ===== Target frequency (System clock)
 // - XTAL frequency: 12MHz
 // - System clock source: PLLA
 // - System clock prescaler: 2 (divided by 2)
 // - PLLA source: XTAL
-// - PLLA output: XTAL * 16 / 1
-// - System clock: 12 * 16 / 1 / 2 = 96MHz
+// - PLLA output: XTAL * 50 / 3
+// - System clock: XTAL * 50 / 3 / 2 = 100MHz
 
 #endif /* CONF_CLOCK_H_INCLUDED */
