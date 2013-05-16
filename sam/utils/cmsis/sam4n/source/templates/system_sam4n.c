@@ -225,10 +225,8 @@ void system_init_flash( uint32_t ul_clk )
 	      }
         else
         {
-          if ( ul_clk < CHIP_FREQ_FWS_4 )
-          {
-		        EFC->EEFC_FMR = EEFC_FMR_FWS(4);
-	        }
+        	     EFC->EEFC_FMR = EEFC_FMR_FWS(4);
+	       
         }
       }
     }

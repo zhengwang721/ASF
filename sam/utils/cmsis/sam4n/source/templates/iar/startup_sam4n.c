@@ -72,6 +72,7 @@ const DeviceVectors __vector_table[] = {
         (void*) WDT_Handler,    /* 4  Watchdog Timer */
         (void*) PMC_Handler,    /* 5  Power Management Controller */
         (void*) EFC_Handler,    /* 6  Enhanced Flash Controller */
+        (void*) (0UL),                /* 7 Reserved */
         (void*) UART0_Handler,  /* 8  UART 0 */
         (void*) UART1_Handler,  /* 9  UART 1 */
         (void*) UART2_Handler,  /* 10 UART 2 */
@@ -94,6 +95,7 @@ const DeviceVectors __vector_table[] = {
 #else
         (void*) (0UL),          /* 17 Reserved */
 #endif /* _SAM4N_USART2_INSTANCE_ */
+	(void*) (0UL),                   /* 18 Reserved */
         (void*) TWI0_Handler,   /* 19 Two Wire Interface 0 */
         (void*) TWI1_Handler,   /* 20 Two Wire Interface 1 */
         (void*) SPI_Handler,    /* 21 Serial Peripheral Interface */

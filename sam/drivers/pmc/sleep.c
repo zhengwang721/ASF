@@ -182,7 +182,7 @@ void pmc_sleep(int sleep_mode)
 	switch (sleep_mode) {
 	case SAM_PM_SMODE_SLEEP_WFI:
 	case SAM_PM_SMODE_SLEEP_WFE:
-#if (SAM4S || SAM4E)
+#if (SAM4S || SAM4E || SAM4N)
 		SCB->SCR &= (uint32_t)~SCR_SLEEPDEEP;
 		cpu_irq_enable();
 		__WFI();

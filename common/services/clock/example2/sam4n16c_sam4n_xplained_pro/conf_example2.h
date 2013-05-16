@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Common GPIO API.
+ * \brief Clock system example 2 configuration.
  *
- * Copyright (c) 2010-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,44 +40,15 @@
  * \asf_license_stop
  *
  */
-#ifndef _GPIO_H_
-#define _GPIO_H_
 
-#include <parts.h>
+#ifndef CONF_EXAMPLE2_H_INCLUDED
+#define CONF_EXAMPLE2_H_INCLUDED
 
-#if (SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S || SAM4E || SAM4N)
-# include "sam_gpio/sam_gpio.h"
-#elif XMEGA
-# include "xmega_gpio/xmega_gpio.h"
-#elif MEGA || MEGA_RF
-# include "mega_gpio/mega_gpio.h"
-#else
-# error Unsupported chip type
-#endif
+#define GCLK_PIN        PIN_PCK0
+#define GCLK_PIN_MUX    PIN_PCK0_FLAGS
 
-/**
- * \defgroup gpio_group General Purpose Input/Output
- *
- * This is the common API for GPIO. Additional features are available
- * in the documentation of the specific modules.
- *
- * \section io_group_platform Platform Dependencies
- *
- * The following functions are available on all platforms, but there may
- * be variations in the function signature (i.e. parameters) and
- * behaviour. These functions are typically called by platform-specific
- * parts of drivers, and applications that aren't intended to be
- * portable:
- *   - gpio_pin_is_low()
- *   - gpio_pin_is_high()
- *   - gpio_set_pin_high()
- *   - gpio_set_pin_group_high()
- *   - gpio_set_pin_low()
- *   - gpio_set_pin_group_low()
- *   - gpio_toggle_pin()
- *   - gpio_toggle_pin_group()
- *   - gpio_configure_pin()
- *   - gpio_configure_group()
- */
+#define GCLK_SOURCE		GENCLK_PCK_SRC_MAINCK_XTAL
+#define GCLK_DIV		GENCLK_PCK_PRES_1
 
-#endif  /* _GPIO_H_ */
+
+#endif /* CONF_EXAMPLE2_H_INCLUDED */
