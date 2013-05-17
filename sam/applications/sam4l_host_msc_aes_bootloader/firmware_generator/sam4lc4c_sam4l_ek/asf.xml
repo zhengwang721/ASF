@@ -1,17 +1,16 @@
 <asf xmlversion="1.0">
 	<project caption="Firmware Generator for USB Host MSC Bootloader with AES for SAM4L-EK" id="sam.applications.sam4l_host_msc_boot_aes_fw_gen.sam4l_ek">
 		<build type="include-path" value="."/>
-		<build type="include-path" value="./config"/>
-		<build type="header-file" value="config/conf_bootloader.h"/>
-		<build type="header-file" value="config/conf_aesa.h"/>
-		<build type="header-file" value="config/conf_ast.h"/>
-		<build type="header-file" value="config/conf_clock.h"/>
-		<build type="header-file" value="config/conf_board.h"/>
-		<build type="header-file" value="config/conf_sleepmgr.h"/>
-		<build type="header-file" value="config/conf_usb_host.h"/>
-		<build type="header-file" value="config/conf_access.h"/>
-		<build type="header-file" value="config/conf_fatfs.h"/>
-		<build type="header-file" value="config/conf_sleepmgr.h"/>
+		<build type="header-file" value="conf_bootloader.h"/>
+		<build type="header-file" value="conf_aesa.h"/>
+		<build type="header-file" value="conf_ast.h"/>
+		<build type="header-file" value="conf_clock.h"/>
+		<build type="header-file" value="conf_board.h"/>
+		<build type="header-file" value="conf_sleepmgr.h"/>
+		<build type="header-file" value="conf_usb_host.h"/>
+		<build type="header-file" value="conf_access.h"/>
+		<build type="header-file" value="conf_fatfs.h"/>
+		<build type="header-file" value="conf_sleepmgr.h"/>
 		<config name="config.board.sam4l_ek.led" value="yes"/>
 		<config name="config.board.sam4l_ek.bm" value="no"/>
 		<config name="config.common.services.fs.fatfs.codepage" value="sbcs"/>

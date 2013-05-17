@@ -479,7 +479,7 @@ int main(void)
 
 #if CONSOLE_OUTPUT_ENABLED
 		/* Print a header */
-		CONSOLE_PUTS("\n\r Device Connected");
+		CONSOLE_PUTS("\n\rDevice Connected");
 #endif
 		/* Go through the different LUN and check for the file. */
 		for (lun = 0; (lun < uhi_msc_mem_get_lun()) && (lun < 8); lun++) {
