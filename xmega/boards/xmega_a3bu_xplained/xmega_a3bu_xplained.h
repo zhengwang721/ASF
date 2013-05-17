@@ -50,6 +50,8 @@
 
 #include <compiler.h>
 
+#define MCU_SOC_NAME        "ATxmega256A3BU"
+#define BOARD_NAME          "XMEGA-A3BU-XPLAINED"
 /**
  * \defgroup xmega_a3bu_xplained_group XMEGA-A3BU Xplained board
  * @{

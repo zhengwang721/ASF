@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project type="unit-test" caption="AT86RF212 Wireless Module unit tests-XMEGA-A3BU Xplained" id="thirdparty.wireless.avr2102_rf4control.lib.unit_tests.xmega_a3bu_xplained_rz600rf212">
+	<project type="unit-test" caption="Unit Tests for RF4Control AT86RF212-XMEGA-A3BU Xplained" force-caption="true" id="thirdparty.wireless.avr2102_rf4control.lib.unit_tests.xmega_a3bu_xplained_rz600rf212">
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clock.h"/>
@@ -22,7 +22,7 @@
 		<config name="config.common.services.usb.class.device" value="cdc"/>
 		<config name="config.common.drivers.nvm.mem_type" value="no_extmem"/>
 		<require idref="board.xmega_a3bu_xplained"/>
-        <require idref="thirdparty.wireless.avr2102_rf4control.lib.unit_tests"/>
+        <require idref="thirdparty.wireless.avr2102_rf4control.zrc.unit_tests"/>
    		<require idref="common.utils.stdio.stdio_usb"/>
 		<config name="config.compiler.iarew.dlib" value="full"/>
 		<generator value="iarew"/>

@@ -3,7 +3,7 @@
  *
  * \brief mXT143E Xplained paint demo application
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -384,10 +384,10 @@ static void mxt_handler(struct mxt_device *device)
 		}
 
 		/* Rescale from 4k touch X-coordinate to the display width */
-		screen_touch_x = ((uint32_t)touch_event.x * gfx_get_width()) / 4096;
+		screen_touch_x = ((uint32_t)(4096 - touch_event.x) * gfx_get_width()) / 4096;
 
 		/* Rescale from 4k touch Y-coordinate to the display height */
-		screen_touch_y = ((uint32_t)touch_event.y * gfx_get_height()) / 4096;
+		screen_touch_y = ((uint32_t)(4096 - touch_event.y) * gfx_get_height()) / 4096;
 
 		/* Scale the touch size to a value suitable for the target display */
 		screen_touch_size = touch_event.size;
@@ -460,16 +460,9 @@ int main(void)
 	gfx_init();
 	mxt_init(&device);
 
-	/* Set screen orientation to landscape mode */
-	gfx_set_orientation(GFX_SWITCH_XY | GFX_FLIP_Y);
-
-	/* Clear the display */
-	gfx_draw_filled_rect(0, 0, gfx_get_width(), gfx_get_height(),
-			GFX_COLOR_BLACK);
-
 	/* Draw the paint pallet to the display */
 	draw_paint_pallet();
-	
+
 	/* Draw instructions to the display */
 	gfx_draw_string_aligned(
 			"Select a color from the pallet below, and\n"

@@ -63,13 +63,22 @@
 
 
 /* === Implementation ====================================================== */
-
+#if (defined __GNUC__)
+void __attribute__((weak))
+usr_mlme_beacon_notify_ind(uint8_t BSN,
+                           wpan_pandescriptor_t *PANDescriptor,
+                           uint8_t PendAddrSpec,
+                           uint8_t *AddrList,
+                           uint8_t sduLength,
+                           uint8_t *sdu)
+#else
 void usr_mlme_beacon_notify_ind(uint8_t BSN,
                                 wpan_pandescriptor_t *PANDescriptor,
                                 uint8_t PendAddrSpec,
                                 uint8_t *AddrList,
                                 uint8_t sduLength,
                                 uint8_t *sdu)
+#endif
 {
     /* Keep compiler happy. */
     BSN = BSN;

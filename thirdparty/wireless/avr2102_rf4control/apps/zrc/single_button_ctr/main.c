@@ -40,29 +40,14 @@
  * \asf_license_stop
  *
  */
- 
 /**
-* \mainpage
-* \section preface Preface
-* This is the reference manual for ZRC Single button controller demo application.
-* \section toc Table of Contents
-*  - \subpage overview
-*  -  \b Application \b Interface(API)\n
-*    - \ref group_rf4control_ZRC
-*    - \ref group_mac
-*    - \ref group_pal
-*    - \ref group_tal
-*    - \ref group_resources
-*  - \subpage main_files
-*  - \subpage devsup
-*  - \subpage compinfo
-*  - \subpage references
-*  - \subpage contactinfo
-*/
-
-/**
- * \page overview Overview
- * \section intro Introduction
+ * \mainpage
+ * \section preface Preface
+ * This is the reference manual for ZRC Single button controller demo application.
+ * \section main_files Application Files
+ * - main.c                     Application main file.
+ * - vendor_data.c               Vendor Specific API functions
+ * \section intro Application Introduction
  *  Single Button Controller is the RF4CE demo application which can be used in the ZRC target - controller setup
  *  This will support push button pairing procedure and zrc commands i.e Sending the button events to the remote terminal target over the air.
  *
@@ -72,29 +57,20 @@
  *  If the Select key is pressed on power on, it does the push pairing procedure following the cold reset.
  *
  *  The Application will use the ZRC Commands to send the key press event to paired device.
- *
- */
-
-/** \page main_files Application Files
- * - main.c\n                      Application main file.
- * - vendor_data.c\n               Vendor Specific API functions.
-
- * \page devsup Device Support
- * - \b ATXMEGA256A3BU
- *                     - <A href="http://www.atmel.com/tools/xmega-a3buxplained.aspx"> \b   XMEGA-A3BU Xplained </A>  <A href="http://store.atmel.com/PartDetail.aspx?q=p:10500293">\a Buy </A>\n
-
- * - \b UC3A3256S
-*                      - <A href="http://www.atmel.com/tools/rz600.aspx"> \b RZ600</A> <A href="http://store.atmel.com/PartDetail.aspx?q=p:10500245;c:100118">\a Buy </A>\n
- * \page compinfo Compilation Info
- * This software was written for the GNU GCC and IAR for AVR.
+ * \section api_modules Application Dependent Modules
+ * - \ref group_rf4control
+ * - \subpage api
+ * \section compinfo Compilation Info
+ * This software was written for the GNU GCC and IAR .
  * Other compilers may or may not work.
  *
- * \page references References
+ * \section references References
  * 1)  IEEE Std 802.15.4-2006 Part 15.4: Wireless Medium Access Control (MAC)
  *     and Physical Layer (PHY) Specifications for Low-Rate Wireless Personal Area
  *     Networks (WPANs).\n\n
  * 2)  AVR Wireless Support <A href="http://avr@atmel.com">avr@atmel.com</A>.\n
- * \page contactinfo Contact Information
+ *
+ * \section contactinfo Contact Information
  * For further information,visit
  * <A href="http://www.atmel.com/avr">www.atmel.com</A>.\n
  */

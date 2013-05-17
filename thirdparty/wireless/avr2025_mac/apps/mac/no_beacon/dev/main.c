@@ -42,25 +42,11 @@
 
 /**
 * \mainpage
-* \section preface Preface
-* This is the reference manual for the IEEE 802.15.4 MAC No-Beacon Application - Device
-* \section toc Table of Contents
-*  - \subpage overview
-*  -  \b Application \b Interface(API)
-*    - \ref group_mac
-*    - \ref group_pal
-*    - \ref group_tal
-*    - \ref group_resources
-*  - \subpage main_files
-*  - \subpage devsup
-*  - \subpage compinfo
-*  - \subpage references
-*  - \subpage contactinfo
-*/
-
-/**
- * \page overview Overview
- * \section intro Introduction
+ * \section preface Preface
+ * This is the reference manual for the IEEE 802.15.4 MAC No-Beacon Application - Device
+ * \section main_files Application Files
+ * 	- main.c                 Application main file.
+ * \section intro Application Introduction
  * The basic MAC Example Nobeacon Application deploys a nonbeacon-enabled network.
  * The coordinator starts a PAN at channel DEFAULT_CHANNEL with the PAN ID DEFAULT_PAN_ID.
  * The device scans for this network and associates to the coordinator.
@@ -69,34 +55,27 @@
  * If the coordinator receives a data request frame from a particular device, it transmits the pending data frame to the device.
  * Device after receiving the data from the Coordinator sends back the same data to the Coordinator itself by direct data transmission
  * The results of the proper data transmission/reception are printed to a terminal program via Serial I/O (UART or USB).
+ * \note For Two Processor Approach the Application needs to be flashed in the Host board(eg.SAM4L-Xplained Pro) and the Serial-if application(NoBeacon FFD) (MAC Stack)
+ * needs to be flashed in the NCP(Network CoProcessor) board.
  *
  * For demonstration purposes the coordinator's configuration is limited to associate two devices at maximum.
- */
-
-
-/** \page main_files Application Files
- * - main.c\n                      Application main file.
-
- * \page devsup Device Support
- * - \b ATXMEGA256A3BU
- *                     - <A href="http://www.atmel.com/tools/xmega-a3buxplained.aspx"> \b   XMEGA-A3BU Xplained  </A>  <A href="http://store.atmel.com/PartDetail.aspx?q=p:10500293">\a Buy </A>\n
- * - \b ATXMEGA256A3U-Zigbit (USB )
- * - \b Atmega256rfr2 Xplained Pro
- * - \b UC3A3256S
-*                      - <A href="http://www.atmel.com/tools/rz600.aspx"> \b RZ600 </A> <A href="http://store.atmel.com/PartDetail.aspx?q=p:10500245;c:100118">\a Buy </A>\n
- * \page compinfo Compilation Info
- * This software was written for the GNU GCC and IAR for AVR.
+ * \section api_modules Application Dependent Modules
+ * - \subpage api
+ * \section compinfo Compilation Info
+ * This software was written for the GNU GCC and IAR .
  * Other compilers may or may not work.
  *
- * \page references References
+ * \section references References
  * 1)  IEEE Std 802.15.4-2006 Part 15.4: Wireless Medium Access Control (MAC)
  *     and Physical Layer (PHY) Specifications for Low-Rate Wireless Personal Area
  *     Networks (WPANs).\n\n
  * 2)  AVR Wireless Support <A href="http://avr@atmel.com">avr@atmel.com</A>.\n
- * \page contactinfo Contact Information
+ *
+ * \section contactinfo Contact Information
  * For further information,visit
  * <A href="http://www.atmel.com/avr">www.atmel.com</A>.\n
  */
+
 /* === INCLUDES ============================================================ */
 #include <string.h>
 #include <inttypes.h>

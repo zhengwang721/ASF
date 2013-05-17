@@ -47,6 +47,9 @@
 #include "compiler.h"
 #include "gpio.h"
 
+#define MCU_SOC_NAME        "AT32UC3A3256S"
+#define BOARD_NAME          "RZ600"
+
 #ifdef __AVR32_ABI_COMPILER__ // Automatically defined when compiling for AVR32, not when assembling.
 #  include "led.h"
 #endif  // __AVR32_ABI_COMPILER__

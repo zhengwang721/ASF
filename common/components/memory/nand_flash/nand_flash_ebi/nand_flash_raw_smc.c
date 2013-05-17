@@ -70,7 +70,7 @@
 #define CONF_NF_CYCLE_TIMING 0
 #endif
 
-#if SAM4S /* For compatible */
+#if SAM4S || SAM4E /* For compatible */
 #define SMC_MODE_DBW_8_BIT  0
 #endif
 

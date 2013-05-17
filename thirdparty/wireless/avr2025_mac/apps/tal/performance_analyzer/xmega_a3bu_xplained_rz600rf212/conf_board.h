@@ -44,10 +44,8 @@
 #define CONF_BOARD_H_INCLUDED
 
 #define CONF_BOARD_AT86RFX
-#define TRANSCEIVER_NAME    "AT86RF212"
 #define IC_TYPE             (0x00)
-#define MCU_SOC_NAME        "ATxmega256A3BU"
-#define BOARD_NAME          "XMEGA-A3BU-XPLAINED"
+
 
 # include "conf_usb.h"
 #endif /* CONF_BOARD_H_INCLUDED */

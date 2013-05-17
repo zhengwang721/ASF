@@ -49,6 +49,37 @@
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
 
+ /**
+ * \ingroup group_mac_prot
+ * \defgroup group_mac_api MAC API's
+ *
+ * The application interfaces the MAC stack via the MAC-API
+ *
+ */
+
+
+ /**
+ * \ingroup group_mac_api
+ * \defgroup group_mac_req MAC Request API's
+ *
+ * This module describes all MAC Request API's 
+ */
+ 
+  /**
+ * \ingroup group_mac_api
+ * \defgroup group_mac_gen MAC General API's
+ *
+ * This module describes all MAC General API's 
+ */
+ 
+ 
+  /**
+ * \ingroup group_mac_api
+ * \defgroup group_mac_resp MAC Response API's
+ *
+ * This module describes all MAC Response API's 
+ */
+ 
 /* === Includes ============================================================ */
 #include <compiler.h>
 #include <string.h>

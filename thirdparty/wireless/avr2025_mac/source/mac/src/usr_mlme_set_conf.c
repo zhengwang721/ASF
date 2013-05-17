@@ -58,12 +58,20 @@
 /* === Prototypes ========================================================== */
 
 /* === Implementation ====================================================== */
-
+#if (defined __GNUC__)
+void __attribute__((weak))
+#ifdef MAC_SECURITY_ZIP
+usr_mlme_set_conf(uint8_t status, uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
+#else
+usr_mlme_set_conf(uint8_t status, uint8_t PIBAttribute)
+#endif  /* MAC_SECURITY_ZIP */
+#else
 #ifdef MAC_SECURITY_ZIP
 void usr_mlme_set_conf(uint8_t status, uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
 #else
 void usr_mlme_set_conf(uint8_t status, uint8_t PIBAttribute)
 #endif  /* MAC_SECURITY_ZIP */
+#endif
 {
     /* Keep compiler happy. */
     status = status;

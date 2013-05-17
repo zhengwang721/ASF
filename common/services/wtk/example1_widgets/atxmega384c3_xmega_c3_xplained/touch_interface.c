@@ -3,7 +3,7 @@
  *
  * \brief Touch screen interface functions for the mxt143e Xplained module
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -66,7 +66,7 @@ bool touch_interface_read(struct win_pointer_event *win_touch_event)
 	if (!(mxt_is_message_pending(&mxt_dev_inst))) {
 		return false;
 	}
-	
+
 	/* Get the first touch event in queue */
 	if (mxt_read_touch_event(&mxt_dev_inst, &touch_event) != STATUS_OK) {
 		return false;
@@ -91,9 +91,9 @@ bool touch_interface_read(struct win_pointer_event *win_touch_event)
 
 	/* Translate the touch X and Y position into a screen coordinate */
 	win_touch_event->pos.x =
-			((uint32_t)touch_event.x * gfx_get_width()) / 4096;
+			((uint32_t)(4096 - touch_event.x) * gfx_get_width()) / 4096;
 	win_touch_event->pos.y =
-			((uint32_t)touch_event.y * gfx_get_height()) / 4096;
+			((uint32_t)(4096 - touch_event.y) * gfx_get_height()) / 4096;
 
 	return true;
 }
