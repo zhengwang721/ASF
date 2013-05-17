@@ -3,7 +3,7 @@
  *
  * \brief Flash program example for SAM.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -189,8 +189,8 @@ int main(void)
 		ul_page_buffer[ul_idx] = 1 << (ul_idx % 32);
 	}
 
-#if (SAM4S || SAM4E)
-	/* The EWP command is not supported by SAM4S and SAM4E, so an erase
+#if (SAM4S || SAM4E || SAM4N)
+	/* The EWP command is not supported by SAM4S and SAM4E, SAM4N, so an erase
 	 * command is requried before any write operation.
 	 */
 	ul_rc = flash_erase_sector(ul_last_page_addr);
