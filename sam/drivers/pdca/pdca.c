@@ -57,7 +57,7 @@ extern "C" {
 /// @endcond
 
 /**
- * \defgroup sam_drivers_pdc_group Peripheral DMA Controller (PDC)
+ * \defgroup sam_drivers_pdca_group Peripheral DMA Controller (PDC)
  *
  * See \ref sam_pdca_quickstart.
  *
