@@ -177,14 +177,17 @@ static void config_buttons(void)
 /* configurations for backup mode wakeup */
 static void config_backup_wakeup(void)
 {
+	/* Take care the table 11-5 in datasheet, not all pin can been set */
+#ifdef CONF_BOARD_BM_USART
 	/* EIC and AST can wakeup the device */
 	bpm_enable_wakeup_source(BPM,
 			(1 << BPM_BKUPWEN_EIC) | (1 << BPM_BKUPWEN_AST));
 
-	/* Take care the table 11-5 in datasheet, not all pin can been set */
-#ifdef CONF_BOARD_BM_USART
 	/* EIC can wake the device from backup mode */
 	bpm_enable_backup_pin(BPM, 1 << GPIO_PUSH_BUTTON_EIC_LINE);
+#else
+	/* Only AST can wakeup the device */
+	bpm_enable_wakeup_source(BPM, (1 << BPM_BKUPWEN_AST));
 #endif
 
 	/**
@@ -233,11 +236,16 @@ static void display_menu(void)
 			"  5: Enter Retention mode. \r\n"
 			"  6: Enter Backup mode. \r\n"
 			"  h: Display menu \r\n"
-			"  --Push button can also be used to exit low power mode--\r\n"
-			"\r\n");
+			"  --AST has been used to exit low power mode.--\r\n"
 #ifdef CONF_BOARD_BM_USART
-	printf("-- IMPORTANT: This example requires a board "
+			"  --Push button can also be used to exit low power mode.--\r\n"
+			"\r\n"
+			"-- IMPORTANT: This example requires a board "
 			"monitor firmware version V1.3 or greater.\r\n\r\n");
+#else
+			"  --Push button can also be used to exit low power mode"
+			" except the backup mode.--\r\n"
+			"\r\n");
 #endif
 }
 
@@ -410,11 +418,6 @@ int main(void)
 #endif
 			printf("\r\n--Enter Backup mode.\r\n");
 			ast_enable_wakeup(AST, AST_WAKEUP_PER);
-			/**
-			 * The EIC pin status depend on outside circuit in backup mode,
-			 * so disable it to avoid wake up immediately.
-			 */
-			bpm_disable_wakeup_source(BPM, (1 << BPM_BKUPWEN_EIC));
 			/* Wait for the printf operation to finish before
 			setting the device in a power save mode. */
 			delay_ms(30);
