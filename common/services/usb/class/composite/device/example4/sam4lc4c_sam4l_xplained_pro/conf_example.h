@@ -45,11 +45,11 @@
 
 #define USART_ENABLE()
 #define USART_DISABLE()
-#define USART_BASE       ((Usart*)USART2)
-#define USART_ID         ID_USART2
+#define USART_BASE       ((Usart*)USART1)
+#define USART_ID         ID_USART1
 
-#define USART_HANDLER    USART2_Handler
-#define USART_INT_IRQn   USART2_IRQn
+#define USART_HANDLER    USART1_Handler
+#define USART_INT_IRQn   USART1_IRQn
 #define USART_INT_LEVEL  3
 
 #endif /* CONF_EXAMPLE_H_INCLUDED */
