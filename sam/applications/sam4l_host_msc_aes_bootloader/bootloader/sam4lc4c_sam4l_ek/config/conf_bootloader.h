@@ -57,15 +57,14 @@
  * GP Fuse bit to force bootloader mode after reset 31-16 is usable
  * (15-0 used of region locking)
  */
+ /* GP Fuse bit to be used to force start the bootloader after next reset */
 #define BOOT_GP_FUSE_BIT_OFFSET      16
 /* Firmware file input name */
 #define FIRMWARE_IN_FILE_NAME        "0:firmware.bin"
 /* GPIO pin used to activate the bootloader mode */
-#define MSC_BOOT_LOAD_PIN            GPIO_PUSH_BUTTON_0
+#define BOOT_LOAD_PIN            GPIO_PUSH_BUTTON_0
 /* Active state of GPIO pin used to activate the bootloader mode */
-#define MSC_BOOT_LOAD_PIN_ACTIVE_LVL PUSH_BUTTON_0_DOWN_LEVEL
-/* Polling time of the boot pin before jumping to application */
-#define BOOT_PIN_POLL_INTERVAL       1000
+#define BOOT_LOAD_PIN_ACTIVE_LVL PUSH_BUTTON_0_DOWN_LEVEL
 /* UI displaying the bootloader status */
 #define BOOT_LED                     LED0_GPIO
 
@@ -84,9 +83,9 @@
 /* CRCCU Polynomial Selection */
 #define APP_CRC_POLYNOMIAL_TYPE      CRCCU_MR_PTYPE_CCITT8023 //32-bit CRC
 /* Application Signature Bytes */
-#define APP_SIGNATURE                "ATMEL SAM4L"
+#define APP_SIGNATURE                "ATMEL SAM4L " // 12 characters
 /* Size of firmware revision, signature and CRC */
-#define APP_SIGNATURE_SIZE           12 // 10 bytes
+#define APP_SIGNATURE_SIZE           12 // 12 bytes
 #define APP_CRC_SIZE                 4  // 4 bytes
 
 
@@ -129,7 +128,7 @@
 #define CONSOLE_PUTS(str)            usart_write_line(CONSOLE_UART, str)
 #define CONSOLE_PUTC(c)              usart_putchar(CONSOLE_UART, c)
 /* Console Strings */
-#define APP_HEADER                   "\n\ATMEL SAM4L USB MSC BOOTLOADER"
+#define APP_HEADER                   "\n\rATMEL SAM4L USB MSC BOOTLOADER"
 #define TASK_PASSED                  "\n\rPASS"
 #define TASK_FAILED                  "\n\rFAIL"
 #endif
