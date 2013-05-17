@@ -1,8 +1,9 @@
-/*! \file
+/**
+ * \file
  *
- * \brief Unit test configuration.
+ * \brief User Interface
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,20 +41,84 @@
  *
  */
 
-#ifndef CONF_TEST_H_INCLUDED
-#define CONF_TEST_H_INCLUDED
+#include <asf.h>
+#include "ui.h"
 
-#include "board.h"
+static uint8_t nb_com_openned = 0;
 
-/** USART Interface  : Virtual Com Port (USART1) */
-#define CONF_TEST_USART      COM_PORT_USART
-/** Baudrate setting : 115200 */
-#define CONF_TEST_BAUDRATE   115200
-/** Char setting     : 8-bit character length (don't care for UART) */
-#define CONF_TEST_CHARLENGTH US_MR_CHRL_8_BIT
-/** Parity setting   : No parity check */
-#define CONF_TEST_PARITY     US_MR_PAR_NO
-/** Stopbit setting  : No extra stopbit, i.e., use 1 (don't care for UART) */
-#define CONF_TEST_STOPBITS   false
+void ui_init(void)
+{
+	// Initialize LEDs
+	LED_On(LED0);
+}
 
-#endif /* CONF_TEST_H_INCLUDED */
+void ui_powerdown(void)
+{
+	LED_Off(LED0);
+}
+
+void ui_wakeup(void)
+{
+	LED_On(LED0);
+}
+
+void ui_com_open(uint8_t port)
+{
+	LED_On(LED0);
+	nb_com_openned++;
+}
+
+void ui_com_close(uint8_t port)
+{
+	nb_com_openned--;
+}
+
+void ui_com_rx_start(void)
+{
+}
+
+void ui_com_rx_stop(void)
+{
+}
+
+void ui_com_tx_start(void)
+{
+}
+
+void ui_com_tx_stop(void)
+{
+}
+
+void ui_com_error(void)
+{
+
+}
+
+void ui_com_overflow(void)
+{
+
+}
+
+void ui_process(uint16_t framenumber)
+{
+	if (nb_com_openned) {
+		// Always on if port is ON
+		return;
+	}
+	// Blink LED
+	if (0 == framenumber) {
+		LED_On(LED0);
+	}
+	if (1000 == framenumber) {
+		LED_Off(LED0);
+	}
+}
+
+/**
+ * \defgroup UI User Interface
+ *
+ * Human interface on SAM4L Xplained Pro:
+ * - SAM4L USART used USART connected through DEBUG USB Port.
+ * - LED0 blinks when USB host has checked and enabled CDC interface
+ * - LED0 always on when CDC UART port is openned
+ */
