@@ -185,7 +185,7 @@ static void configure_button(void)
 }
 
 /**
- *  Configure Timer Counter 0 to generate an interrupt every 250ms.
+ *  Configure Timer Counter 0 to generate an interrupt every 200ms.
  */
 static void configure_tc(void)
 {
@@ -196,13 +196,13 @@ static void configure_tc(void)
 	/* Configure TC0 */
 	sysclk_enable_peripheral_clock(TC0);
 
-	/* Configure TC for a 4Hz frequency and trigger on RC compare. */
-	if (!tc_find_mck_divisor(4, ul_sysclk, &ul_div, &ul_tcclks, ul_sysclk)) {
+	/* Configure TC for a 5Hz frequency and trigger on RC compare. */
+	if (!tc_find_mck_divisor(5, ul_sysclk, &ul_div, &ul_tcclks, ul_sysclk)) {
 		puts("No valid divisor found!\r");
 		return;
 	}
 	tc_init(TC0, 0, ul_tcclks | TC_CMR_CPCTRG);
-	tc_write_rc(TC0, 0, (ul_sysclk / ul_div) / 4);
+	tc_write_rc(TC0, 0, (ul_sysclk / ul_div) / 5);
 
 	/* Configure and enable interrupt on RC compare */
 	NVIC_EnableIRQ((IRQn_Type) TC00_IRQn);
