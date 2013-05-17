@@ -59,8 +59,8 @@
 #endif
 
 #define GPIO_BOOT_PIN_PORT      ((volatile GpioPort *)(GPIO_ADDR +         \
-                                (MSC_BOOT_LOAD_PIN >> 5) * sizeof(GpioPort)))
-#define GPIO_BOOT_PIN_MASK      (1U << (MSC_BOOT_LOAD_PIN & 0x1F))
+                                (BOOT_LOAD_PIN >> 5) * sizeof(GpioPort)))
+#define GPIO_BOOT_PIN_MASK      (1U << (BOOT_LOAD_PIN & 0x1F))
 
 /*****************************************************************************/
 /*                              GLOBAL VARIABLES                             */
@@ -150,8 +150,7 @@ static void console_init(void);
  */
 static void start_application(void)
 {
-	/* Pointer to the Application Section */
-	void (*application_code_entry)(void);
+	uint32_t app_start_address;
 
 	/* Rebase the Stack Pointer */
 	__set_MSP(*(uint32_t *) APP_START_ADDRESS);
@@ -160,10 +159,10 @@ static void start_application(void)
 	SCB->VTOR = ((uint32_t) APP_START_ADDRESS & SCB_VTOR_TBLOFF_Msk);
 
 	/* Load the Reset Handler address of the application */
-	application_code_entry = (void (*)(void))(unsigned *)(APP_START_ADDRESS + 4);
+	app_start_address = *(uint32_t *)(APP_START_ADDRESS + 4);
 
-	/* Jump to user Reset Handler in the application */
-	application_code_entry();
+	/* Jump to application Reset Handler in the application */
+    asm("bx %0"::"r"(app_start_address));
 }
 
 
@@ -173,21 +172,26 @@ static void start_application(void)
 static void bootloader_mode_check()
 {
 	volatile bool boot_mode = false;
-
+    volatile uint32_t temp;
+   
 	/* Check Force Boot option */
 	boot_mode = !(flashcalw_read_gp_fuse_bit(BOOT_GP_FUSE_BIT_OFFSET));
 
 	/* If Force Boot is enabled, ignore other checks and start the bootloader */
 	if (!boot_mode) {
+		/* Get the pointer to the GPIO Port Address */
+		temp = (uint32_t)((GPIO_ADDR +
+						(BOOT_LOAD_PIN >> 5) * sizeof(GpioPort)));
 		/* Enable the input mode in Boot GPIO Pin */
-		GPIO_BOOT_PIN_PORT->GPIO_ODERC = GPIO_BOOT_PIN_MASK;
-		GPIO_BOOT_PIN_PORT->GPIO_STERS = GPIO_BOOT_PIN_MASK;
+		((GpioPort *)temp)->GPIO_ODERC = GPIO_BOOT_PIN_MASK;
+		((GpioPort *)temp)->GPIO_STERS = GPIO_BOOT_PIN_MASK;
 		/* Activation of bootloader mode pin */
-		boot_mode = ((GPIO_BOOT_PIN_PORT->GPIO_PVR & GPIO_BOOT_PIN_MASK) 
-							== MSC_BOOT_LOAD_PIN_ACTIVE_LVL);
+		boot_mode = ((((GpioPort *)temp)->GPIO_PVR & GPIO_BOOT_PIN_MASK)
+							== BOOT_LOAD_PIN_ACTIVE_LVL);
 
+		temp = *((uint32_t *)APP_START_ADDRESS);
 		/* Check absence of application firmware */
-		boot_mode = boot_mode ||(*((uint32_t *)APP_START_ADDRESS) == 0xFFFFFFFF);
+		boot_mode = boot_mode ||( temp == 0xFFFFFFFF);
 
 		/*
 		 * Check the following one of the parameters for loading the bootloader
@@ -239,6 +243,7 @@ static bool program_memory()
 	void *buf = NULL;
 	uint32_t buffer_size = 0;
 	uint32_t firmware_crc_output = 0;
+    bool programming_started = false;
 
 	/* Open the input file */
 	f_open(&file_object,
@@ -289,12 +294,31 @@ static bool program_memory()
 		/* Program the Flash Memory. */
 		flashcalw_memcpy((void *)(APP_START_ADDRESS + address_offset),
 							buf , buffer_size, true);
+        /* Check the error status */
+        if (flashcalw_is_lock_error() || flashcalw_is_programming_error()) {
+          /* Abort programming */
+          if (programming_started) {
+            /* Erase the first page in the application */
+            flashcalw_erase_page(APP_START_ADDRESS/FLASH_PAGE_SIZE, false);
+          }
+          
+          /* Enable the global interrupts */
+          cpu_irq_enable();
+          
+          /* Close the File after operation. */
+          f_close(&file_object);
+    
+          return false;
+      }
 
 		/* Enable the global interrupts */
 		cpu_irq_enable();
-
+        
 		/* Update the address and page offset values */
 		address_offset += buffer_size;
+        
+        /* Update the programming flag */
+        programming_started = true;
 	}
 
 	/* Close the File after operation. */
@@ -595,6 +619,9 @@ static void bootloader_system_init()
 
 	/* Initialize the sleep manager */
 	sleepmgr_init();
+    
+    /* Enable CRCCU peripheral clock */
+	sysclk_enable_peripheral_clock(CRCCU);
 
 #if CONSOLE_OUTPUT_ENABLED
 	/* Initialize the console */
@@ -641,7 +668,7 @@ int main(void)
 
 #if CONSOLE_OUTPUT_ENABLED
 		/* Print a header */
-		CONSOLE_PUTS("\n\r Device Connected");
+		CONSOLE_PUTS("\n\rDevice Connected");
 #endif
 		/* Go through the different LUN and check for the file. */
 		for (lun = 0; (lun < uhi_msc_mem_get_lun()) && (lun < 8); lun++) {
@@ -752,7 +779,11 @@ int main(void)
 			CONSOLE_PUTS(TASK_PASSED);
 			CONSOLE_PUTS("\n\rStarting application...");
 #endif
-
+            /* Reset the Force BOOT bit */
+            if(!(flashcalw_read_gp_fuse_bit(BOOT_GP_FUSE_BIT_OFFSET))) {
+              flashcalw_erase_gp_fuse_bit(BOOT_GP_FUSE_BIT_OFFSET, false);
+            }
+            
 			/* Start the application with a WDT Reset */
 			start_application_with_WDT();
 		}
@@ -807,8 +838,8 @@ void main_usb_connection_event(uhc_device_t * dev, bool b_present)
  *   - APP_START_OFFSET           -> Application starting offset from Flash
  *   - FIRMWARE_IN_FILE_NAME      -> Application Firmware file to be programmed
  *   - APP_SIGNATURE              -> Signature bytes to be verified
- *   - MSC_BOOT_LOAD_PIN          -> IO Pin used for bootloader activation
- *   - MSC_BOOT_LOAD_PIN_ACTIVE_LVL -> Active level to be monitored for the pin
+ *   - BOOT_LOAD_PIN          -> IO Pin used for bootloader activation
+ *   - BOOT_LOAD_PIN_ACTIVE_LVL -> Active level to be monitored for the pin
  * 
  * \section board Board Setup
  * - SAM4L-EK -> Has an IO configured for VBUS Detect. VBUS Pin jumper PA06/USB
