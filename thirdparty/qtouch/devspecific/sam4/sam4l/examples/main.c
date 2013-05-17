@@ -86,6 +86,7 @@
  * -# the sent text should appear.
  */
 #include "asf.h"
+#include "conf_example.h"
 
 #define STRING_EOL    "\r"
 #define STRING_HEADER "-- SAM4L QTouch Example --\r\n" \
@@ -135,7 +136,7 @@ static void example_qtouch_init(void)
 	ast_set_config(AST, &ast_conf);
 
 	ast_clear_interrupt_flag(AST, AST_INTERRUPT_PER);
-	ast_write_periodic0_value(AST, 5);
+	ast_write_periodic0_value(AST, EXAMPLE_UPDATE_PERIOD);
 
 	ast_set_callback(AST, AST_INTERRUPT_PER, ast_per_callback,
 		AST_PER_IRQn, 0);
@@ -169,13 +170,13 @@ int main(void)
 	/* Initialize Qtouch */
 	example_qtouch_init();
 
-	while (1){
+	while (1) {
 		touch_sensors_measure();
-		if (GET_QT_SENSOR_STATE(0)&&!pressed) {
+		if (GET_QT_SENSOR_STATE(EXAMPLE_KEY_ID) && !pressed) {
 			pressed = true;
 			LED_On(LED0);
 		} else {
-			if (!GET_QT_SENSOR_STATE(0)&&pressed) {
+			if (!GET_QT_SENSOR_STATE(EXAMPLE_KEY_ID) && pressed) {
 				LED_Off(LED0);
 				pressed = false;
 			}

@@ -6,6 +6,7 @@
 		<build type="header-file" value="conf_clock.h"/>
 		<build type="header-file" value="conf_sleepmgr.h"/>
 		<build type="header-file" value="conf_uart_serial.h"/>
+		<build type="header-file" value="conf_example.h"/>
 		<build type="header-file" value="touch_config_sam4l.h"/>
 		<require idref="sam.applications.sam4l_qtouch_example"/>
 		<require idref="board.sam4l_xplained_pro"/>
