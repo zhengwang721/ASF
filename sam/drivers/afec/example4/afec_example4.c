@@ -85,7 +85,7 @@
  *     =========================================================
  *     Menu: press a key to test feature.
  *     ---------------------------------------------------------
- *     -- 0: Gain and Offset Test --
+ *     -- 0: Gain Test --
  *     -- 1: Dual AFEC Conversion Test --
  *     -- 2: Differential Input Test --
  *     -- 3: User Sequence Test --
@@ -110,7 +110,7 @@
 		"-- Compiled: "__DATE__" "__TIME__" --"STRING_EOL
 
 #define MENU_HEADER "\n\r-- press a key to set test feature--\n\r" \
-		"-- 0: Gain and Offset Test --\n\r" \
+		"-- 0: Gain Test --\n\r" \
 		"-- 1: Dual AFEC Conversion Test --\n\r" \
 		"-- 2: Differential Input Test --\n\r" \
 		"-- 3: User Sequence Test --\n\r" \
@@ -275,13 +275,12 @@ static void set_afec_test(void)
 	case '0':
 		/*
 		* This test will use AFEC0 channel4 to connect with external input.
-		* Setting gain = 4 and offset = 1, if external input voltage is 100mv,
-		* the ouput result should be 1650 + 10 * 4 = 1690mv .
+		* Setting gain = 4, if external input voltage is 100mv,
+		* the ouput result should be 1650 + 100 * 4 = 2050mv .
 		*/
-		puts("Gain and Offset Test \n\r");
+		puts("Gain Test \n\r");
 		g_delay_cnt = 1000;
 		afec_init(AFEC0, &afec_cfg);
-		afec_ch_cfg.offset = true;
 		afec_ch_cfg.gain = AFEC_GAINVALUE_3;
 		afec_ch_set_config(AFEC0, AFEC_CHANNEL_4, &afec_ch_cfg);
 		afec_set_trigger(AFEC0, AFEC_TRIG_SW);
@@ -369,7 +368,6 @@ static void set_afec_test(void)
 		g_max_digital = MAX_DIGITAL_12_BIT * 16;
 		afec_cfg.resolution = AFEC_16_BITS;
 		afec_init(AFEC0, &afec_cfg);
-		afec_ch_cfg.offset = true;
 		afec_ch_cfg.gain = AFEC_GAINVALUE_3;
 		afec_ch_set_config(AFEC0, AFEC_CHANNEL_4, &afec_ch_cfg);
 		afec_set_trigger(AFEC0, AFEC_TRIG_SW);
