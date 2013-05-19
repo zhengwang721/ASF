@@ -50,19 +50,30 @@
 #define FIRMWARE_AES_ENABLED         ENABLE
 /* Enable/disable the Console message output */
 #define CONSOLE_OUTPUT_ENABLED       ENABLE
+/* Enable/disable the verification of memory after programming */
+#define VERIFY_PROGRAMMING_ENABLED   ENABLE
 
+/* 
+ * GP Fuse bit to force bootloader mode after reset 31-16 is usable
+ * (15-0 used of region locking)
+ */
+ /* GP Fuse bit to be used to force start the bootloader after next reset */
+#define BOOT_GP_FUSE_BIT_OFFSET      16
 /* Firmware file input name */
-#define FIRMWARE_IN_FILE_NAME        "0:firmware_input.bin"
-/* Firmware file output name */
-#define FIRMWARE_OUT_FILE_NAME       "0:firmware.bin"
-
+#define FIRMWARE_IN_FILE_NAME        "0:firmware.bin"
+/* GPIO pin used to activate the bootloader mode */
+#define BOOT_LOAD_PIN                GPIO_PUSH_BUTTON_0
+/* Active state of GPIO pin used to activate the bootloader mode */
+#define BOOT_LOAD_PIN_ACTIVE_LVL     SW0_ACTIVE
+/* UI displaying the bootloader status */
+#define BOOT_LED                     LED0_PIN
 
 /* Application starting offset - Verify with bootloader footprint*/
 #define APP_START_OFFSET             0x8000
 /* Application starting address in Flash */
 #define APP_START_ADDRESS            (FLASH_ADDR + APP_START_OFFSET)
 /* Maximum possible size of the Application */
-#define APP_MAX_SIZE                 (FLASH_ADDR + FLASH_SIZE  \
+#define APP_MAX_SIZE                 (FLASH_ADDR + FLASH_SIZE \
                                       - APP_START_ADDRESS)
 /* Buffer size to be used for programming */
 #define FLASH_BUFFER_SIZE            (FLASH_PAGE_SIZE)
@@ -72,9 +83,9 @@
 /* CRCCU Polynomial Selection */
 #define APP_CRC_POLYNOMIAL_TYPE      CRCCU_MR_PTYPE_CCITT8023 //32-bit CRC
 /* Application Signature Bytes */
-#define APP_SIGNATURE                "ATMEL SAM4L "
+#define APP_SIGNATURE                "ATMEL SAM4L " // 12 characters
 /* Size of firmware revision, signature and CRC */
-#define APP_SIGNATURE_SIZE           12 // 10 bytes
+#define APP_SIGNATURE_SIZE           12 // 12 bytes
 #define APP_CRC_SIZE                 4  // 4 bytes
 
 
@@ -96,11 +107,11 @@
 #define  FIRMWARE_AES_KEY_WORD2      0x2b73aef0
 #define  FIRMWARE_AES_KEY_WORD3      0x857d7781
 /* AES Encryption Key Size 192 */
-#  define  FIRMWARE_AES_KEY_WORD4    0x1f352c07
-#  define  FIRMWARE_AES_KEY_WORD5    0x3b6108d7
+#define  FIRMWARE_AES_KEY_WORD4      0x1f352c07
+#define  FIRMWARE_AES_KEY_WORD5      0x3b6108d7
 /* AES Encryption Key Size 256 */
-#  define  FIRMWARE_AES_KEY_WORD6    0x2d9810a3
-#  define  FIRMWARE_AES_KEY_WORD7    0x0914dff4
+#define  FIRMWARE_AES_KEY_WORD6      0x2d9810a3
+#define  FIRMWARE_AES_KEY_WORD7      0x0914dff4
 
 #endif
 
@@ -117,8 +128,7 @@
 #define CONSOLE_PUTS(str)            usart_write_line(CONSOLE_UART, str)
 #define CONSOLE_PUTC(c)              usart_putchar(CONSOLE_UART, c)
 /* Console Strings */
-#define APP_HEADER                   \
-                    "\n\rATMEL SAM4L Firmware Generator for USB MSC BOOTLOADER"
+#define APP_HEADER                   "\n\rATMEL SAM4L USB MSC BOOTLOADER"
 #define TASK_PASSED                  "\n\rPASS"
 #define TASK_FAILED                  "\n\rFAIL"
 #endif

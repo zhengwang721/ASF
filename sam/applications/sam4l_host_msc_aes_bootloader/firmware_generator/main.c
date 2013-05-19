@@ -64,10 +64,10 @@
 /*****************************************************************************/
 
 /* SOF Event Counter */
-static uint32_t sof_count = 0;
+static volatile uint32_t sof_count = 0;
 
 /* Flag to track connected LUNs */
-volatile bool lun_connected = false;
+static volatile bool lun_connected = false;
 
 /* File System Management object */
 static FATFS fs; // Re-use fs for LUNs to reduce memory footprint
