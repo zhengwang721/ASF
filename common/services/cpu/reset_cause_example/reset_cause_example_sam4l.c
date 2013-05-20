@@ -62,9 +62,7 @@
  *
  * \section Usage
  *
- * - Build the program and download it to the evaluation board. Please
- *  refer to the SAM4L main page documentation
- *  http://www.atmel.com/tools/SAM4L-EK.aspx
+ * - Build the program and download it to the board.
  * -# On the computer, open and configure a terminal application
  *    (e.g., HyperTerminal on Microsoft Windows) with these settings:
  *   - 115200 bauds
@@ -140,9 +138,7 @@ int main(void)
 			"  s:  Generate system reset \r");
 
 	if (reset_cause_is_power_on_reset()) {
-#ifdef LED0_GPIO
 		LED_On(LED0);
-#endif
 	}
 	if (reset_cause_is_cpu_brown_out_detected()) {
 		puts("-- Reset Cause is Core browm out reset --\r");
