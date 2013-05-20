@@ -817,9 +817,9 @@ void main_usb_connection_event(uhc_device_t * dev, bool b_present)
  *
  * \section intro Introduction
  * SAM4L USB Host Mass Storage Bootloader application is to facilitate firmware
- * upgrade using a USB MSC drives. The application includes CRC check,
+ * upgrade using USB MSC drives. The application includes CRC check,
  * Signature verification, AES decryption and memory verification functionality
- *  offering safe and secure firmware upgradation.
+ * offering safe and secure firmware upgradation.
  *
  * \section startup Procedure
  * - Do complete chip erase and Userpage erase.
