@@ -44,7 +44,12 @@
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
- 
+ /**
+  * \ingroup group_mac_api_parser
+  * \defgroup group_mac_api_encoder MAC API Encoder
+  * The API Encoder Module Encodes the MAC Api's into appropriate command byte stream
+  * @{
+  */
 #include <string.h>
 #include "compiler.h"
 #include "sio2ncp.h"
@@ -543,6 +548,6 @@ uint8_t mac_get_pib_attribute_size(uint8_t pib_attribute_id)
 
     return(0);
 }
-
+//! @}
 /* EOF */
 

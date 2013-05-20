@@ -56,7 +56,7 @@
 #include "nwk_build_config.h"
 
 /**
- * \defgroup group_rf4control RF4Control
+ * \defgroup group_rf4control RF4CE Stack Modules
  * The RF4Control stack is a ZigBee® RF4CE Certified Platform implementing the ZigBee 
  * RF4CE standard.
  * 
@@ -64,27 +64,50 @@
  */
 /**
  * \ingroup group_rf4control
- * \defgroup group_rf4control_NWK
- * \defgroup group_rf4control_ZRC
+ * \defgroup group_rf4control_NWK NWK Modules
  *  This module defines all Nwk layer core apis
+ */
+/**
+ * \ingroup group_rf4control
+ * \defgroup group_rf4control_ZRC ZRC Modules
+ *  This module defines all ZRC layer core apis
  */
 /**
  * \ingroup group_rf4control_NWK
  * \defgroup group_RF4CONTROL_NWK_API NWK APIs
- * \defgroup group_RF4CONTROL_GENERIC_API NWK Generic APIs
- * \defgroup group_RF4CONTROL_NWK_CONSTANTS NWK Constants
  *  This module defines all Nwk layer core apis
  */
-
- /**
+/**
+ * \ingroup group_rf4control_NWK
+ * \defgroup group_RF4CONTROL_GENERIC_API NWK Generic APIs
+ *  This module defines all generic apis used by nwk layer.
+ */
+/**
+ * \ingroup group_rf4control_NWK
+ * \defgroup group_RF4CONTROL_NWK_CONSTANTS NWK Constants
+ *  This module defines all Nwk layer constants.
+ */
+/**
  * \ingroup group_rf4control_ZRC
  * \defgroup group_RF4CONTROL_PBP_API Push button pairing APIs.
+ *  This module defines all the Push button pairing  APIs.
+ */
+/**
+ * \ingroup group_rf4control_ZRC
  * \defgroup group_RF4Control_ZRC_API ZRC APIs
- * \defgroup group_RF4CONTROL_GENERIC_API NWK Generic APIs
- * \defgroup group_RF4CONTROL_ZRC_CONSTANTS ZRC Constants
  *  This module defines all the ZRC core APIs.
  */
-
+/**
+ * \ingroup group_rf4control_ZRC
+ * \defgroup group_RF4CONTROL_GENERIC_API ZRC Generic APIs
+ *  This module defines all the ZRC generic APIs.
+ */
+/**
+ * \ingroup group_rf4control_ZRC
+ * \defgroup group_RF4CONTROL_ZRC_CONSTANTS ZRC Constants
+ *  This module defines all the Constatnts used by zrc layer.
+ */
+ 
 
 
 /* === Macros =============================================================== */

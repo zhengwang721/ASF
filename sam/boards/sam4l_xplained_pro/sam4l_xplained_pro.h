@@ -90,7 +90,8 @@
  */
 
 //! Name string macro
-#define BOARD_NAME "SAM4L_XPLAINED_PRO"
+#define BOARD_NAME "SAM4L Xplained Pro"
+#define MCU_SOC_NAME        "ATSAM4LC4C"
 
 //! \name Board oscillator definitions
 //@{
@@ -586,6 +587,47 @@
 #define EDBG_TWI_SCL_PIN          PIN_PA24B_TWIMS0_TWCK
 #define EDBG_TWI_SCL_MUX          MUX_PA24B_TWIMS0_TWCK
 //@}
+
+/*! \name Connections of the AT86RFX transceiver
+ */
+//! @{
+#define AT86RFX_SPI                  SPI
+#define AT86RFX_RST_PIN              EXT1_PIN_7
+#define AT86RFX_IRQ_PIN              EXT1_PIN_9
+#define AT86RFX_SLP_PIN              EXT1_PIN_10
+#define AT86RFX_SPI_CS               0
+#define AT86RFX_SPI_MOSI             EXT1_PIN_16
+#define AT86RFX_SPI_MISO             EXT1_PIN_17
+#define AT86RFX_SPI_SCK              EXT1_PIN_18
+
+#define AT86RFX_INTC_INIT()         ioport_set_pin_dir(AT86RFX_IRQ_PIN, IOPORT_DIR_INPUT);\
+                                    ioport_set_pin_sense_mode(AT86RFX_IRQ_PIN, IOPORT_SENSE_RISING);\
+									arch_ioport_pin_to_base(AT86RFX_IRQ_PIN)->GPIO_IERS = arch_ioport_pin_to_mask(AT86RFX_IRQ_PIN);\
+									arch_ioport_pin_to_base(AT86RFX_IRQ_PIN)->GPIO_IMR0S = arch_ioport_pin_to_mask(AT86RFX_IRQ_PIN);\
+									NVIC_EnableIRQ(GPIO_11_IRQn)
+
+#define AT86RFX_ISR()               ISR(GPIO_11_Handler)
+
+/** Enables the transceiver main interrupt. */
+#define ENABLE_TRX_IRQ()            arch_ioport_pin_to_base(AT86RFX_IRQ_PIN)->GPIO_IERS = arch_ioport_pin_to_mask(AT86RFX_IRQ_PIN)
+
+/** Disables the transceiver main interrupt. */
+#define DISABLE_TRX_IRQ()           arch_ioport_pin_to_base(AT86RFX_IRQ_PIN)->GPIO_IERC = arch_ioport_pin_to_mask(AT86RFX_IRQ_PIN)
+
+/** Clears the transceiver main interrupt. */
+#define CLEAR_TRX_IRQ()             arch_ioport_pin_to_base(AT86RFX_IRQ_PIN)->GPIO_IFRC = arch_ioport_pin_to_mask(AT86RFX_IRQ_PIN)
+
+/*
+ * This macro saves the trx interrupt status and disables the trx interrupt.
+ */
+#define ENTER_TRX_REGION()         NVIC_DisableIRQ(GPIO_11_IRQn)
+
+/*
+ *  This macro restores the transceiver interrupt status
+ */
+#define LEAVE_TRX_REGION()         NVIC_EnableIRQ(GPIO_11_IRQn)
+
+//! @}
 
 /** @} */
 

@@ -127,7 +127,7 @@ int main(void)
 	sysclk_init();
 
 	sw_timer_init();
-
+    wpan_init();
 	// Enable interrupts
 	cpu_irq_enable();
 
@@ -139,22 +139,13 @@ int main(void)
 }
 
 /**
- * \brief Performs a initialization check on AT86RFx module
+ * \brief Performs a Reset check on AT86RFx module
  *
  * This function will simply test the output of the function
- * \ref at86rfx_init and returns an error in case of failure.
+ * \ref wpan_mlme_reset_req and returns an error in case of failure.
  *
  * \param test Current test case.
  */
-static void run_wpan_init_test(const struct test_case *test)
-{
-	retval_t status;
-
-	status = wpan_init();
-	test_assert_true(test, status == MAC_SUCCESS,
-			"AVR2025_MAC - MAC Initialization Failed");
-}
-
 static void run_wpan_reset_test(const struct test_case *test)
 {
 	wpan_mlme_reset_req(true);
@@ -203,8 +194,6 @@ void usr_mlme_scan_conf(uint8_t status,
 void main_cdc_set_dtr(bool b_enable)
 {
 	if (b_enable) {
-		DEFINE_TEST_CASE(wpan_init_test, NULL, run_wpan_init_test,
-				NULL, "AVR2025_MAC - MAC Initialization");
 		DEFINE_TEST_CASE(wpan_reset_test, NULL, run_wpan_reset_test,
 				NULL, "AVR2025_MAC - MAC Reset request");
 		DEFINE_TEST_CASE(wpan_scan_test, NULL,
@@ -213,9 +202,8 @@ void main_cdc_set_dtr(bool b_enable)
 
 		// Put test case addresses in an array.
 		DEFINE_TEST_ARRAY(wpan_tests) = {
-			&wpan_init_test,
 			&wpan_reset_test,
-			&wpan_scan_test};
+            &wpan_scan_test};
 
 		// Define the test suite.
 		DEFINE_TEST_SUITE(wpan_suite, wpan_tests,

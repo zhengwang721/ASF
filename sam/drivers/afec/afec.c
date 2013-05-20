@@ -169,11 +169,6 @@ void afec_ch_set_config(Afec *const afec, const enum afec_channel_num channel,
 	afec_ch_sanity_check(afec, channel);
 	uint32_t reg = 0;
 
-	reg = afec->AFEC_CDOR;
-	reg &= ~(0x1u << channel);
-	reg |= (config->offset) ? (0x1u << channel) : 0;
-	afec->AFEC_CDOR = reg;
-
 	reg = afec->AFEC_DIFFR;
 	reg &= ~(0x1u << channel);
 	reg |= (config->diff) ? (0x1u << channel) : 0;
@@ -251,7 +246,6 @@ void afec_get_config_defaults(struct afec_config *const cfg)
  * Use to initialize the configuration structure to known default values.
  *
  * The default configuration is as follows:
- * - No Offset
  * - Single Ended Mode
  * - Gain value is 1
  *
@@ -263,7 +257,6 @@ void afec_ch_get_config_defaults(struct afec_ch_config *const cfg)
 	Assert(cfg);
 
 	cfg->diff = false;
-	cfg->offset = false;
 	cfg->gain = AFEC_GAINVALUE_1;
 }
 
@@ -418,8 +411,13 @@ void afec_set_callback(Afec *const afec, enum afec_interrupt_source source,
 void afec_enable_interrupt(Afec *const afec,
 		enum afec_interrupt_source interrupt_source)
 {
+	if (interrupt_source == AFEC_INTERRUPT_ALL) {
+		afec->AFEC_IER = AFEC_INTERRUPT_ALL;
+		return;
+	}
+
 	if (interrupt_source < AFEC_INTERRUPT_DATA_READY) {
-		if(interrupt_source == AFEC_INTERRUPT_EOC_15) {
+		if (interrupt_source == AFEC_INTERRUPT_EOC_15) {
 			afec->AFEC_IER = 1 << AFEC_TEMP_INT_SOURCE_NUM;
 		} else {
 			afec->AFEC_IER = 1 << interrupt_source;
@@ -441,8 +439,13 @@ void afec_enable_interrupt(Afec *const afec,
 void afec_disable_interrupt(Afec *const afec,
 		enum afec_interrupt_source interrupt_source)
 {
+	if (interrupt_source == AFEC_INTERRUPT_ALL) {
+		afec->AFEC_IDR = AFEC_INTERRUPT_ALL;
+		return;
+	}
+
 	if (interrupt_source < AFEC_INTERRUPT_DATA_READY) {
-		if(interrupt_source == AFEC_INTERRUPT_EOC_15) {
+		if (interrupt_source == AFEC_INTERRUPT_EOC_15) {
 			afec->AFEC_IDR = 1 << AFEC_TEMP_INT_SOURCE_NUM;
 		} else {
 			afec->AFEC_IDR = 1 << interrupt_source;

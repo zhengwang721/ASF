@@ -41,28 +41,13 @@
  *
  */
 
-  /**
-* \mainpage
-* \section preface Preface
-* This is the reference manual for RF4CE Serial Interface Application
-* \section toc Table of Contents
-*  - \subpage overview
-*  -  \b Application \b Interface(API)
-*    - \ref group_rf4control_ZRC
-*    - \ref group_mac
-*    - \ref group_pal
-*    - \ref group_tal
-*    - \ref group_resources
-*  - \subpage main_files
-*  - \subpage devsup
-*  - \subpage compinfo
-*  - \subpage references
-*  - \subpage contactinfo
-*/
-
 /**
- * \page overview Overview
- * \section intro Introduction
+ * \mainpage
+ * \section preface Preface
+ * This is the reference manual for RF4CE ZRC Serial Interface Application
+ * \section main_files Application Files
+ * - main.c                      Application main file.
+ * \section intro Application Introduction
  * RF4Control ZRC Serial Interface Application running on the network co-processor can be driven by the host controller which is running the main application. Both controller use a serial interface to communicate.
  * 
  * The host controller can be implemented as a standalone microcontroller, or it can also be a personal computer.
@@ -73,28 +58,20 @@
  * Interface between the host controller and the RF4CE client can be any interface. like UART, USB, TWI, Proprietary interface
  *
  * In this application serial interface is used for communication, whereas serial_data_handler api will handle all the incoming bytes from the serial interface.
- *
- */
-
-/** \page main_files Application Files
- * - main.c\n                      Application main file.
-
- * \page devsup Device Support
- * - \b ATXMEGA256A3BU
- *                     - <A href="http://www.atmel.com/tools/xmega-a3buxplained.aspx"> \b   XMEGA-A3BU Xplained </A>  <A href="http://store.atmel.com/PartDetail.aspx?q=p:10500293">\a Buy </A>\n
-
- * - \b UC3A3256S
- *                      - <A href="http://www.atmel.com/tools/rz600.aspx"> \b RZ600</A> <A href="http://store.atmel.com/PartDetail.aspx?q=p:10500245;c:100118">\a Buy </A>\n
- * \page compinfo Compilation Info
- * This software was written for the GNU GCC and IAR for AVR.
+ * \section api_modules Application Dependent Modules
+ * - \ref group_rf4control
+ * - \subpage api
+ * \section compinfo Compilation Info
+ * This software was written for the GNU GCC and IAR .
  * Other compilers may or may not work.
  *
- * \page references References
+ * \section references References
  * 1)  IEEE Std 802.15.4-2006 Part 15.4: Wireless Medium Access Control (MAC)
  *     and Physical Layer (PHY) Specifications for Low-Rate Wireless Personal Area
  *     Networks (WPANs).\n\n
  * 2)  AVR Wireless Support <A href="http://avr@atmel.com">avr@atmel.com</A>.\n
- * \page contactinfo Contact Information
+ *
+ * \section contactinfo Contact Information
  * For further information,visit
  * <A href="http://www.atmel.com/avr">www.atmel.com</A>.\n
  */

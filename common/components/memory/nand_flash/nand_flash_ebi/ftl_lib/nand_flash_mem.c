@@ -85,9 +85,11 @@ Ctrl_status nand_flash_test_unit_ready(void)
 	switch (nand_flash_status) {
 	case NAND_FLASH_NOT_INIT:
 		if (nand_flash_translation_initialize(&nf_translation, 0,
-				cmd_address, addr_address, data_address, 0, 0)) {
+				cmd_address, addr_address, data_address, 0,
+				0)) {
 			return CTRL_NO_PRESENT;
 		}
+
 		nand_flash_status = NAND_FLASH_READY;
 		return CTRL_GOOD;
 
@@ -121,14 +123,17 @@ Ctrl_status nand_flash_read_capacity(uint32_t *nb_sector)
 
 	if (nand_flash_status == NAND_FLASH_NOT_INIT) {
 		if (nand_flash_translation_initialize(&nf_translation, 0,
-				cmd_address, addr_address, data_address, 0,	0)) {
+				cmd_address, addr_address, data_address, 0,
+				0)) {
 			return CTRL_NO_PRESENT;
 		}
+
 		nand_flash_status = NAND_FLASH_READY;
 	}
 
 	if (nand_flash_status == NAND_FLASH_READY) {
-		*nb_sector	= nand_flash_translation_get_device_size_in_byte(
+		*nb_sector
+			= nand_flash_translation_get_device_size_in_byte(
 				&nf_translation) / SECTOR_SIZE;
 		return CTRL_GOOD;
 	}
@@ -164,21 +169,22 @@ bool nand_flash_removal(void)
 bool nand_flash_unload(bool unload)
 {
 	if (!unload && nand_flash_status == NAND_FLASH_UNLOADED) {
-			nand_flash_status = NAND_FLASH_NOT_INIT;
+		nand_flash_status = NAND_FLASH_NOT_INIT;
+		return false;
 	} else {
 		switch (nand_flash_status) {
 		case NAND_FLASH_NOT_INIT:
 			nand_flash_status = NAND_FLASH_UNLOADED;
 			return true;
-	
+
 		case NAND_FLASH_READY:
 			nand_flash_flush();
 			nand_flash_status = NAND_FLASH_UNLOADED;
 			return true;
-	
+
 		case NAND_FLASH_UNLOADED:
 			return true;
-	
+
 		default:
 			return false;
 		}
@@ -207,11 +213,16 @@ Ctrl_status nand_flash_usb_read_10(uint32_t addr, uint16_t nb_sector)
 
 	if (nand_flash_status == NAND_FLASH_READY) {
 		while (nb_sector) {
-			nb_sector_trans = min(nb_sector, (page_data_size / SECTOR_SIZE));
-			if (!nand_flash_read((addr * SECTOR_SIZE), nand_flash_usb_buffer,
+			nb_sector_trans
+				= min(nb_sector,
+					(page_data_size / SECTOR_SIZE));
+			if (!nand_flash_read((addr * SECTOR_SIZE),
+					nand_flash_usb_buffer,
 					(nb_sector_trans * SECTOR_SIZE))) {
-				udi_msc_trans_block(true, (uint8_t *)nand_flash_usb_buffer,
-						(nb_sector_trans * SECTOR_SIZE), NULL);
+				udi_msc_trans_block(true,
+						(uint8_t *)nand_flash_usb_buffer,
+						(nb_sector_trans * SECTOR_SIZE),
+						NULL);
 				nb_sector -= nb_sector_trans;
 				addr += nb_sector_trans;
 			} else {
@@ -240,13 +251,18 @@ Ctrl_status nand_flash_usb_write_10(uint32_t addr, uint16_t nb_sector)
 
 	if (nand_flash_status == NAND_FLASH_READY) {
 		while (nb_sector) {
-			nb_sector_trans = min(nb_sector, (page_data_size / SECTOR_SIZE));
-			udi_msc_trans_block(false, (uint8_t *)nand_flash_usb_buffer,
+			nb_sector_trans
+				= min(nb_sector,
+					(page_data_size / SECTOR_SIZE));
+			udi_msc_trans_block(false,
+					(uint8_t *)nand_flash_usb_buffer,
 					(nb_sector_trans * SECTOR_SIZE), NULL);
-			if (nand_flash_write((addr * SECTOR_SIZE), nand_flash_usb_buffer,
+			if (nand_flash_write((addr * SECTOR_SIZE),
+					nand_flash_usb_buffer,
 					(nb_sector_trans * SECTOR_SIZE))) {
 				return CTRL_FAIL;
 			}
+
 			nb_sector -= nb_sector_trans;
 			addr += nb_sector_trans;
 		}

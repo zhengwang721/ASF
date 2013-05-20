@@ -59,36 +59,7 @@
 
 /* === Macros =============================================================== */
 
-/**
- * \ingroup group_mac_prot
- * \defgroup group_mac_api MAC API's
- *
- * The application interfaces the MAC stack via the MAC-API
- *
- */
 
-
- /**
- * \ingroup group_mac_api
- * \defgroup group_mac_req MAC Request API's
- *
- * This module describes all MAC Request API's 
- */
- 
-  /**
- * \ingroup group_mac_api
- * \defgroup group_mac_gen MAC General API's
- *
- * This module describes all MAC General API's 
- */
- 
- 
-  /**
- * \ingroup group_mac_api
- * \defgroup group_mac_resp MAC Response API's
- *
- * This module describes all MAC Response API's 
- */
 
 /**
  * \ingroup group_mac_prot
@@ -158,9 +129,9 @@
 
 
 /* === Types ================================================================ */
-#ifndef UC3
+#ifdef SAM
 COMPILER_PACK_SET(1)
-#endif /* UC3 */
+#endif /* SAM */
 /**
  * MAC Address type
  */
@@ -461,9 +432,9 @@ typedef struct mac_sec_pib_tag
 
 #endif /* if !defined(__DOXYGEN___NO_MAC) */
 
-#ifndef UC3
+#ifdef SAM
 COMPILER_PACK_RESET()
-#endif /* UC3 */
+#endif /* SAM */
 //! @}
 /* === Macros =============================================================== */
 

@@ -47,8 +47,16 @@
  */
  
  /**
-  * \mainpage Serial Bridge Application
-  */
+ * \mainpage Serial Bridge Application
+ * \section preface Preface
+ * This is the reference manual for Serial Bridge application
+ * \section main_files Application Files
+ * - main.c      Application main file.
+ * \section intro Application Introduction
+ * The serial Bridge Application is used in the host which acts as a bridge between the Pc and the NCP device. 
+ * The serial Bridge application is used by Performance Analyzer application in 2p approach
+ * and for flashing image using Bootloader application,where it transfers data from the Pc to the NCP and vice-versa.
+ */
 
 /* === INCLUDES ============================================================ */
 

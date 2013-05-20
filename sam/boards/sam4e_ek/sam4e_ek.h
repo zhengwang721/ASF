@@ -553,6 +553,57 @@
 #define PIN_KSZ8051MNL_MDIO_IDX                PIO_PD9_IDX
 #define PIN_KSZ8051MNL_MDIO_FLAGS            (IOPORT_MODE_MUX_A)
 #define PIN_KSZ8051MNL_INTRP_IDX                PIO_PD28_IDX
+
+/** NandFlash pins definition: OE. */
+#define PIN_EBI_NANDOE    (PIO_PC9_IDX)
+#define PIN_EBI_NANDOE_FLAGS    (IOPORT_MODE_MUX_A)
+
+/** NandFlash pins definition: WE. */
+#define PIN_EBI_NANDWE    (PIO_PC10_IDX)
+#define PIN_EBI_NANDWE_FLAGS    (IOPORT_MODE_MUX_A)
+
+/** NandFlash pins definition: CLE. */
+#define PIN_EBI_NANDCLE    (PIO_PC17_IDX)
+#define PIN_EBI_NANDCLE_FLAGS    (IOPORT_MODE_MUX_A)
+
+/** NandFlash pins definition: ALE. */
+#define PIN_EBI_NANDALE    (PIO_PC16_IDX)
+#define PIN_EBI_NANDALE_FLAGS    (IOPORT_MODE_MUX_A)
+
+/** NandFlash pins definition: DATA. */
+#define PIN_EBI_NANDIO_0    (PIO_PC0_IDX)
+#define PIN_EBI_NANDIO_0_FLAGS    (IOPORT_MODE_MUX_A)
+
+#define PIN_EBI_NANDIO_1    (PIO_PC1_IDX)
+#define PIN_EBI_NANDIO_1_FLAGS    (IOPORT_MODE_MUX_A)
+
+#define PIN_EBI_NANDIO_2    (PIO_PC2_IDX)
+#define PIN_EBI_NANDIO_2_FLAGS    (IOPORT_MODE_MUX_A)
+
+#define PIN_EBI_NANDIO_3    (PIO_PC3_IDX)
+#define PIN_EBI_NANDIO_3_FLAGS    (IOPORT_MODE_MUX_A)
+
+#define PIN_EBI_NANDIO_4    (PIO_PC4_IDX)
+#define PIN_EBI_NANDIO_4_FLAGS    (IOPORT_MODE_MUX_A)
+
+#define PIN_EBI_NANDIO_5    (PIO_PC5_IDX)
+#define PIN_EBI_NANDIO_5_FLAGS    (IOPORT_MODE_MUX_A)
+
+#define PIN_EBI_NANDIO_6    (PIO_PC6_IDX)
+#define PIN_EBI_NANDIO_6_FLAGS    (IOPORT_MODE_MUX_A)
+
+#define PIN_EBI_NANDIO_7    (PIO_PC7_IDX)
+#define PIN_EBI_NANDIO_7_FLAGS    (IOPORT_MODE_MUX_A)
+
+/** Nandflash chip enable pin definition. */
+#define PIN_NF_CE_IDX    (PIO_PC14_IDX)
+
+/** Nandflash ready/busy pin definition. */
+#define PIN_NF_RB_IDX    (PIO_PC18_IDX)
+
+/* Chip select number for nand */
+#define BOARD_NAND_CS    0
+
 /*----------------------------------------------------------------------------*/
 /**
  * \page sam4e_ek_usb "SAM4E-EK - USB device"
@@ -640,7 +691,40 @@
  * \page sam4e_ek_mem "SAM4E-EK - Memories"
  * This page lists definitions related to internal & external on-board memories.
  *
+ * \section NandFlash
+ * - \ref BOARD_NF_COMMAND_ADDR
+ * - \ref BOARD_NF_ADDRESS_ADDR
+ * - \ref BOARD_NF_DATA_ADDR
+ *
+ * \section NorFlash
+ * - \ref BOARD_NORFLASH_ADDR
+ * - \ref BOARD_NORFLASH_DFT_BUS_SIZE
  */
+
+/** Address for transferring command bytes to the nandflash. */
+#define BOARD_NF_COMMAND_ADDR   0x60400000
+/** Address for transferring address bytes to the nandflash. */
+#define BOARD_NF_ADDRESS_ADDR   0x60200000
+/** Address for transferring data bytes to the nandflash. */
+#define BOARD_NF_DATA_ADDR      0x60000000
+/* Bus width for NAND */
+#define CONF_NF_BUSWIDTH    8
+/* Access timing for NAND */
+#define CONF_NF_SETUP_TIMING (SMC_SETUP_NWE_SETUP(0) \
+		| SMC_SETUP_NCS_WR_SETUP(1) \
+		| SMC_SETUP_NRD_SETUP(0) \
+		| SMC_SETUP_NCS_RD_SETUP(1))
+#define CONF_NF_PULSE_TIMING (SMC_PULSE_NWE_PULSE(2) \
+		| SMC_PULSE_NCS_WR_PULSE(3) \
+		| SMC_PULSE_NRD_PULSE(4) \
+		| SMC_PULSE_NCS_RD_PULSE(4))
+#define CONF_NF_CYCLE_TIMING (SMC_CYCLE_NWE_CYCLE(4) \
+		| SMC_CYCLE_NRD_CYCLE(7))
+
+/** Address for transferring command bytes to the norflash. */
+#define BOARD_NORFLASH_ADDR     0x63000000
+/** Default NOR bus size after power up reset */
+#define BOARD_NORFLASH_DFT_BUS_SIZE 8
 
 /*----------------------------------------------------------------------------*/
 

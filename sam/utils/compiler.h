@@ -1031,12 +1031,22 @@ typedef U8                  Byte;       //!< 8-bit unsigned integer.
 #define SHORTENUM           __attribute__((packed))
 #endif
 
+/* No operation */
+#if defined(__ICCARM__)
+#define nop()               __no_operation()
+#elif defined(__GNUC__)
+#define nop()               (__NOP())
+#endif
+
 #define FLASH_DECLARE(x)  const x
 #define FLASH_EXTERN(x) extern const x
 #define PGM_READ_BYTE(x) *(x)
 #define PGM_READ_WORD(x) *(x)
 #define MEMCPY_ENDIAN memcpy
 #define PGM_READ_BLOCK(dst, src, len) memcpy((dst), (src), (len))
+
+/*Defines the Flash Storage for the request and response of MAC*/
+#define CMD_ID_OCTET    (0)
 
 /* Converting of values from CPU endian to little endian. */
 #define CPU_ENDIAN_TO_LE16(x)   (x)
@@ -1048,6 +1058,11 @@ typedef U8                  Byte;       //!< 8-bit unsigned integer.
 #define LE32_TO_CPU_ENDIAN(x)   (x)
 #define LE64_TO_CPU_ENDIAN(x)   (x)
 
+/* Converting of constants from little endian to CPU endian. */
+#define CLE16_TO_CPU_ENDIAN(x)  (x)
+#define CLE32_TO_CPU_ENDIAN(x)  (x)
+#define CLE64_TO_CPU_ENDIAN(x)  (x)
+
 /* Converting of constants from CPU endian to little endian. */
 #define CCPU_ENDIAN_TO_LE16(x)  (x)
 #define CCPU_ENDIAN_TO_LE32(x)  (x)
@@ -1056,6 +1071,89 @@ typedef U8                  Byte;       //!< 8-bit unsigned integer.
 #define ADDR_COPY_DST_SRC_16(dst, src)  ((dst) = (src))
 #define ADDR_COPY_DST_SRC_64(dst, src)  ((dst) = (src))
 
+/**
+ * @brief Converts a 64-Bit value into  a 8 Byte array
+ *
+ * @param[in] value 64-Bit value
+ * @param[out] data Pointer to the 8 Byte array to be updated with 64-Bit value
+ * @ingroup apiPalApi
+ */
+static inline void convert_64_bit_to_byte_array(uint64_t value, uint8_t *data)
+{
+    uint8_t index = 0;
+
+    while (index < 8)
+    {
+        data[index++] = value & 0xFF;
+        value = value >> 8;
+    }
+}
+
+/**
+ * @brief Converts a 16-Bit value into  a 2 Byte array
+ *
+ * @param[in] value 16-Bit value
+ * @param[out] data Pointer to the 2 Byte array to be updated with 16-Bit value
+ * @ingroup apiPalApi
+ */
+static inline void convert_16_bit_to_byte_array(uint16_t value, uint8_t *data)
+{
+    data[0] = value & 0xFF;
+    data[1] = (value >> 8) & 0xFF;
+}
+
+/* Converts a 16-Bit value into a 2 Byte array */
+static inline void convert_spec_16_bit_to_byte_array(uint16_t value, uint8_t *data)
+{
+    data[0] = value & 0xFF;
+    data[1] = (value >> 8) & 0xFF;
+}
+
+/* Converts a 16-Bit value into a 2 Byte array */
+static inline void convert_16_bit_to_byte_address(uint16_t value, uint8_t *data)
+{
+    data[0] = value & 0xFF;
+    data[1] = (value >> 8) & 0xFF;
+}
+
+/*
+ * @brief Converts a 2 Byte array into a 16-Bit value
+ *
+ * @param data Specifies the pointer to the 2 Byte array
+ *
+ * @return 16-Bit value
+ * @ingroup apiPalApi
+ */
+static inline uint16_t convert_byte_array_to_16_bit(uint8_t *data)
+{
+    return (data[0] | ((uint16_t)data[1] << 8));
+}
+
+/**
+ * @brief Converts a 8 Byte array into a 64-Bit value
+ *
+ * @param data Specifies the pointer to the 8 Byte array
+ *
+ * @return 64-Bit value
+ * @ingroup apiPalApi
+ */
+static inline uint64_t convert_byte_array_to_64_bit(uint8_t *data)
+{
+    union
+    {
+        uint64_t u64;
+        uint8_t u8[8];
+    } long_addr;
+
+    uint8_t index;
+
+    for (index = 0; index < 8; index++)
+    {
+        long_addr.u8[index] = *data++;
+    }
+
+    return long_addr.u64;
+}
 /**
  * \}
  */

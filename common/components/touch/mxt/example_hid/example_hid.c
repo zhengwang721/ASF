@@ -3,7 +3,7 @@
  *
  * \brief Trackpad demo for mXT143E Xplained
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -229,9 +229,6 @@ int main(void)
 
 	/* Initialize the graphical library */
 	gfx_init();
-
-	/* Set correct landscape orientation */
-	gfx_set_orientation(GFX_SWITCH_XY | GFX_FLIP_Y);
 
 	/* Set background color */
 	gfx_draw_filled_rect(0, 0, gfx_get_width(), gfx_get_height(),

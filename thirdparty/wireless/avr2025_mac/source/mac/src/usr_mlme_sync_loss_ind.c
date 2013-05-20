@@ -64,11 +64,18 @@
 
 
 /* === Implementation ====================================================== */
-
+#if (defined __GNUC__)
+void __attribute__((weak))
+usr_mlme_sync_loss_ind(uint8_t LossReason,
+                       uint16_t PANId,
+                       uint8_t LogicalChannel,
+                       uint8_t ChannelPage)
+#else
 void usr_mlme_sync_loss_ind(uint8_t LossReason,
                             uint16_t PANId,
                             uint8_t LogicalChannel,
                             uint8_t ChannelPage)
+#endif
 {
     /* Keep compiler happy. */
     LossReason = LossReason;

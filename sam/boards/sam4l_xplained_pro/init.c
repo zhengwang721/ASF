@@ -130,6 +130,20 @@ void board_init(void)
 	ioport_set_pin_peripheral_mode(EXT1_PIN_UART_RX, EXT1_UART_RX_MUX);
 	ioport_set_pin_peripheral_mode(EXT1_PIN_UART_TX, EXT1_UART_TX_MUX);
 #endif
+
+#ifdef CONF_BOARD_AT86RFX
+	ioport_set_pin_peripheral_mode(AT86RFX_SPI_MISO, MUX_PA21A_SPI_MISO);
+	ioport_set_pin_peripheral_mode(AT86RFX_SPI_MOSI, MUX_PA22A_SPI_MOSI);
+	ioport_set_pin_peripheral_mode(AT86RFX_SPI_SCK, MUX_PC30B_SPI_SCK);
+
+	ioport_set_pin_peripheral_mode(EXT1_PIN_15, MUX_PC03A_SPI_NPCS0);
+
+	/* Initialize TRX_RST and SLP_TR as GPIO. */
+	ioport_set_pin_dir(AT86RFX_RST_PIN, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(AT86RFX_RST_PIN, IOPORT_PIN_LEVEL_HIGH);
+	ioport_set_pin_dir(AT86RFX_SLP_PIN, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(AT86RFX_SLP_PIN, IOPORT_PIN_LEVEL_HIGH);
+#endif
 }
 
 /** @} */

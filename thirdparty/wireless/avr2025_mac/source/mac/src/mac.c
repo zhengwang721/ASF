@@ -46,6 +46,12 @@
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
+/** \page api MAC Stack Modules
+*    - \ref group_mac
+*    - \ref group_pal
+*    - \ref group_tal
+*    - \ref group_resources
+*/
 
 /* === Includes ============================================================= */
 #include <compiler.h>
