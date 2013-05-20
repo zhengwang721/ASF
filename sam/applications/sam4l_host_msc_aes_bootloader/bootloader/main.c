@@ -171,12 +171,11 @@ static void start_application(void)
  */
 static void bootloader_mode_check()
 {
-	volatile bool boot_mode = false;
-    volatile uint32_t temp;
-   
+	volatile uint32_t temp;
+	volatile bool boot_mode;
+
 	/* Check Force Boot option */
 	boot_mode = !(flashcalw_read_gp_fuse_bit(BOOT_GP_FUSE_BIT_OFFSET));
-
 	/* If Force Boot is enabled, ignore other checks and start the bootloader */
 	if (!boot_mode) {
 		/* Get the pointer to the GPIO Port Address */
@@ -213,7 +212,7 @@ static void bootloader_mode_check()
  */
 static void start_application_with_WDT()
 {
-	uint32_t wdt_ctrl_val = 0;
+	uint32_t wdt_ctrl_val;
 
 	/* Disable the global interrupts */
 	cpu_irq_disable();
@@ -242,7 +241,7 @@ static bool program_memory()
 	uint32_t address_offset = 0;
 	void *buf = NULL;
 	uint32_t buffer_size = 0;
-	uint32_t firmware_crc_output = 0;
+	uint32_t firmware_crc_output;
     bool programming_started = false;
 
 	/* Open the input file */
