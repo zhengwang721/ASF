@@ -162,7 +162,7 @@ static void start_application(void)
 	app_start_address = *(uint32_t *)(APP_START_ADDRESS + 4);
 
 	/* Jump to application Reset Handler in the application */
-    asm("bx %0"::"r"(app_start_address));
+	asm("bx %0"::"r"(app_start_address));
 }
 
 
@@ -241,8 +241,10 @@ static bool program_memory()
 	uint32_t address_offset = 0;
 	void *buf = NULL;
 	uint32_t buffer_size = 0;
+	bool programming_started = false;
+#if VERIFY_PROGRAMMING_ENABLED
 	uint32_t firmware_crc_output;
-    bool programming_started = false;
+#endif
 
 	/* Open the input file */
 	f_open(&file_object,
@@ -293,31 +295,31 @@ static bool program_memory()
 		/* Program the Flash Memory. */
 		flashcalw_memcpy((void *)(APP_START_ADDRESS + address_offset),
 							buf , buffer_size, true);
-        /* Check the error status */
-        if (flashcalw_is_lock_error() || flashcalw_is_programming_error()) {
-          /* Abort programming */
-          if (programming_started) {
-            /* Erase the first page in the application */
-            flashcalw_erase_page(APP_START_ADDRESS/FLASH_PAGE_SIZE, false);
-          }
-          
-          /* Enable the global interrupts */
-          cpu_irq_enable();
-          
-          /* Close the File after operation. */
-          f_close(&file_object);
-    
-          return false;
-      }
+		/* Check the error status */
+		if (flashcalw_is_lock_error() || flashcalw_is_programming_error()) {
+			/* Abort programming */
+			if (programming_started) {
+				/* Erase the first page in the application */
+				flashcalw_erase_page(APP_START_ADDRESS/FLASH_PAGE_SIZE, false);
+			}
+
+			/* Enable the global interrupts */
+			cpu_irq_enable();
+
+			/* Close the File after operation. */
+			f_close(&file_object);
+
+			return false;
+		}
 
 		/* Enable the global interrupts */
 		cpu_irq_enable();
-        
+
 		/* Update the address and page offset values */
 		address_offset += buffer_size;
-        
-        /* Update the programming flag */
-        programming_started = true;
+
+		/* Update the programming flag */
+		programming_started = true;
 	}
 
 	/* Close the File after operation. */
@@ -618,8 +620,8 @@ static void bootloader_system_init()
 
 	/* Initialize the sleep manager */
 	sleepmgr_init();
-    
-    /* Enable CRCCU peripheral clock */
+
+	/* Enable CRCCU peripheral clock */
 	sysclk_enable_peripheral_clock(CRCCU);
 
 #if CONSOLE_OUTPUT_ENABLED
@@ -778,11 +780,11 @@ int main(void)
 			CONSOLE_PUTS(TASK_PASSED);
 			CONSOLE_PUTS("\n\rStarting application...");
 #endif
-            /* Reset the Force BOOT bit */
-            if(!(flashcalw_read_gp_fuse_bit(BOOT_GP_FUSE_BIT_OFFSET))) {
-              flashcalw_erase_gp_fuse_bit(BOOT_GP_FUSE_BIT_OFFSET, false);
-            }
-            
+			/* Reset the Force BOOT bit */
+			if(!(flashcalw_read_gp_fuse_bit(BOOT_GP_FUSE_BIT_OFFSET))) {
+			  flashcalw_erase_gp_fuse_bit(BOOT_GP_FUSE_BIT_OFFSET, false);
+			}
+
 			/* Start the application with a WDT Reset */
 			start_application_with_WDT();
 		}
