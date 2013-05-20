@@ -62,6 +62,50 @@ extern "C" {
  * @{
  */
 
+#if SAM4N
+/**
+ * \brief Initialize the given RTT.
+ *
+ * \note This function restarts the real-time timer. If RTC 1Hz clock selection is true, 
+ *  the RTT 32-bit counter is driven by the RTC 1 Hz clock, esle is driven by the 16-bit 
+ *  prescaler roll-over events. If w_prescaler is equal to zero, the prescaler period is 
+ *  equal to 2^16 * SCLK period. If not, the prescaler period is equal to
+ *  w_prescaler * SCLK period.
+ *
+ * \param p_rtt Pointer to an RTT instance.
+ * \param is_rtc_sel RTC 1Hz Clock Selection.
+ * \param w_prescaler Prescaler value for the RTT.
+ *
+ * \return 0 if successful.
+ */
+uint32_t rtt_init(Rtt *p_rtt, bool is_rtc_sel, uint16_t us_prescaler)
+{
+	if(is_rtc_sel) {
+		p_rtt->RTT_MR = RTT_MR_RTC1HZ | RTT_MR_RTTRST;
+	} else {
+		p_rtt->RTT_MR = (us_prescaler | RTT_MR_RTTRST);
+	}
+	return 0;
+}
+/**
+ * \brief Enable RTT.
+ *
+ * \param p_rtt Pointer to an RTT instance.
+ */
+void rtt_enable(Rtt *p_rtt)
+{
+	p_rtt->RTT_MR &= ~RTT_MR_RTTDIS;
+}
+/**
+ * \brief Disable RTT.
+ *
+ * \param p_rtt Pointer to an RTT instance.
+ */
+void rtt_disable(Rtt *p_rtt)
+{
+	p_rtt->RTT_MR |= RTT_MR_RTTDIS;
+}
+#else
 /**
  * \brief Initialize the given RTT.
  *
@@ -79,6 +123,7 @@ uint32_t rtt_init(Rtt *p_rtt, uint16_t us_prescaler)
 	p_rtt->RTT_MR = (us_prescaler | RTT_MR_RTTRST);
 	return 0;
 }
+#endif
 
 /**
  * \brief Enable RTT interrupts.
