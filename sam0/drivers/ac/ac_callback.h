@@ -46,43 +46,92 @@
 
 #include "ac.h"
 #include "system_interrupt.h"
+#include "status_codes.h"
 
-extern struct ac_module *_ac_instance;
+#ifdef __cplusplus
+extern "C" {
+#endif
 
+
+/**
+ * \name Callback Management
+ * {@
+ */
+
+/**
+ * \brief Channel interrupt selection enum.
+ *
+ * This enum is used to select when a channel interrupt should occur.
+ */
 enum ac_channel_interrupt_selection {
-	/* An interrupt will be generated when the comparator level is passed */
+	/** An interrupt will be generated when the comparator level is passed */
 	AC_CHANNEL_INTERRUPT_SELECTION_TOGGLE         = AC_COMPCTRL_INTSEL_TOGGLE,
-	/* An interrupt will be generated when the measurement goes above the compare level*/
+	/** An interrupt will be generated when the measurement goes above the compare level*/
 	AC_CHANNEL_INTERRUPT_SELECTION_RISING         = AC_COMPCTRL_INTSEL_RISING,
-	/* An interrupt will be generated when the measurement goes below the compare level*/
+	/** An interrupt will be generated when the measurement goes below the compare level*/
 	AC_CHANNEL_INTERRUPT_SELECTION_FALLING        = AC_COMPCTRL_INTSEL_FALLING,
-	/* An interrupt will be generated when a new measurement is complete. 
+	/** 
+	 * An interrupt will be generated when a new measurement is complete. 
 	 * Interrupts will only be generated in single shot mode
 	 */
-	AC_CHANNEL_INTERRUPT_SELECTION_END_OF_COMPAR  = AC_COMPCTRL_INTSEL_EOC,
+	AC_CHANNEL_INTERRUPT_SELECTION_END_OF_COMPARE  = AC_COMPCTRL_INTSEL_EOC,
 };
 
+/**
+ * \brief Window interrupt selection enum.
+ *
+ * This enum is used to select when a window interrupt should occur.
+ */
 enum ac_window_interrupt_selection {
-	/* Interrupt is generated when the compare value goes above the window */
+	/** Interrupt is generated when the compare value goes above the window */
 	AC_WINDOW_INTERRUPT_SELECTION_ABOVE    = AC_WINCTRL_WINTSEL0_ABOVE,
-	/* Interrupt is generated when the compare value goes inside the window */
+	/** Interrupt is generated when the compare value goes inside the window */
 	AC_WINDOW_INTERRUPT_SELECTION_INSIDE   = AC_WINCTRL_WINTSEL0_INSIDE,
-	/* Interrupt is generated when the compare value goes below the window */
+	/** Interrupt is generated when the compare value goes below the window */
 	AC_WINDOW_INTERRUPT_SELECTION_BELOW    = AC_WINCTRL_WINTSEL0_BELOW,
-	/* Interrupt is generated when the compare value goes outside the window */
+	/** Interrupt is generated when the compare value goes outside the window */
 	AC_WINDOW_INTERRUPT_SELECTION_OUTSIDE  = AC_WINCTRL_WINTSEL0_OUTSIDE,
 };
 
-enum status_code ac_callback_channel_interrupt_selection(
+/**
+ * \brief Function used to setup interrupt selection of a channel
+ *
+ * This function is used to setup when an interrupt should occur
+ * for a given channel.
+ *
+ * \param[in]  module               Pointer to software instance struct
+ * \param[in]  channel              Channel to setup
+ * \param[in]  interrupt_selection  Interrupt selection for the given channel
+ */
+static inline void ac_callback_channel_interrupt_selection(
 		struct ac_module *const module,
 		const enum ac_chan_channel channel,
 		const enum ac_channel_interrupt_selection interrupt_selection)
 {
 	Assert(module);
 	Assert(module->hw);
+
+	uint32_t compctrl_mask;
+	compctrl_mask = module->hw->COMPCTRL[channel].reg;
+	compctrl_mask &= ~AC_COMPCTRL_INTSEL_Msk;
+	compctrl_mask |= interrupt_selection;
+	module->hw->COMPCTRL[channel].reg = compctrl_mask;
 }
 
-enum status_code ac_callback_window_interrupt_selection(
+/**
+ * \brief Function used to setup interrupt selection of a window
+ *
+ * This function is used to setup when an interrupt should occur
+ * for a given window.
+ *
+ * \param[in]  module               Pointer to software instance struct
+ * \param[in]  win_channel          Window channel to setup
+ * \param[in]  interrupt_selection  Interrupt selection for the given channel
+ *
+ * \retval  STATUS_OK               Function exited successful
+ * \retval  STATUS_ERR_INVALID_ARG  win_channel argument incorrect
+ */
+static inline enum status_code ac_callback_window_interrupt_selection(
 		struct ac_module *const module,
 		const enum ac_win_channel win_channel,
 		const enum ac_window_interrupt_selection interrupt_selection)
@@ -90,26 +139,28 @@ enum status_code ac_callback_window_interrupt_selection(
 	Assert(module);
 	Assert(module->hw);
 
+	uint8_t winctrl_mask = module->hw->WINCTRL.reg;
+
 	if (win_channel == AC_WIN_CHANNEL_0) {
-		module->hw->WINCTRL.reg = AC_WINCTRL_WEN0 + interrupt_selection;
+		winctrl_mask &= ~AC_WINCTRL_WINTSEL0_Msk;
+		winctrl_mask |= interrupt_selection;
 	}
 #if defined(__DOXYGEN__) || (AC_PAIRS > 1)
 	else if (win_channel == AC_WIN_CHANNEL_1) {
-		module->hw->WINCTRL.reg = AC_WINCTRL_WEN1 + (interrupt_selection << 
-					(AC_WINCTRL_WINTSEL1_Pos - AC_WINCTRL_WINTSEL0_Pos);
+		winctrl_mask &= ~AC_WINCTRL_WINTSEL1_Msk;
+		winctrl_mask = (interrupt_selection << (AC_WINCTRL_WINTSEL1_Pos -
+		 AC_WINCTRL_WINTSEL0_Pos);
 	} 
 #endif /* #if defined(__DOXYGEN__) || (AC_PAIRS > 1) */
 	else {
-		return STATUS_INVALID_ARG;
+		return STATUS_ERR_INVALID_ARG ;
 	}
+
+	module->hw->WINCTRL.reg = winctrl_mask;
+
 	return STATUS_OK;
 }
 
-
-/**
- * \name Callback Management
- * {@
- */
 enum status_code ac_register_callback(
 		struct ac_module *const module,
 		ac_callback_t callback_func,
@@ -171,5 +222,9 @@ static inline void ac_disable_callback(
 /**
  * @}
  */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* AC_CALLBACK_H_INCLUDED */

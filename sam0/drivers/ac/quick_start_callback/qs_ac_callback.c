@@ -42,8 +42,12 @@
  */
 #include <asf.h>
 
+ bool callback_status = false;
+
 void configure_ac(void);
 void configure_ac_channel(void);
+void configure_ac_callback(void);
+void callback_function_ac(void);
 
 //! [setup]
 /* AC module software instance (must not go out of scope while in use) */
@@ -112,10 +116,30 @@ void configure_ac_channel(void)
 	//! [setup_12]
 	ac_chan_set_config(&ac_dev, AC_COMPARATOR_CHANNEL, &ac_chan_conf);
 	//! [setup_12]
-	//! [setup_13]
-	ac_chan_enable(&ac_dev, AC_COMPARATOR_CHANNEL);
-	//! [setup_13]
 }
+
+//! [callback_1]
+void callback_function_ac()
+{
+	//! [callback_2]
+	callback_status = true;
+	//! [callback_2]
+}
+//! [callback_1]
+
+//! [setup_15]
+void configure_ac_callback(void)
+{
+	//! [setup_16]
+	ac_register_callback(&ac_dev, callback_function_ac, AC_CALLBACK_COMPARATOR_0);
+	//! [setup_16]
+	//! [setup_17]
+	ac_callback_channel_interrupt_selection(&ac_dev, AC_COMPARATOR_CHANNEL, 
+				AC_CHANNEL_INTERRUPT_SELECTION_END_OF_COMPARE);
+	//! [setup_17]
+}
+//! [setup_15]
+
 //! [setup]
 
 int main(void)
@@ -124,9 +148,16 @@ int main(void)
 	system_init();
 	configure_ac();
 	configure_ac_channel();
-	//! [setup_14]
+	configure_ac_callback();
+	//! [setup_13]
+	ac_chan_enable(&ac_dev, AC_COMPARATOR_CHANNEL);
+	//! [setup_13]
+	//! [setup_18]
 	ac_enable(&ac_dev);
-	//! [setup_14]
+	//! [setup_18]
+	//! [setup_19]
+	ac_enable_callback(&ac_dev, AC_CALLBACK_COMPARATOR_0);
+	//! [setup_19]
 	//! [setup_init]
 
 	//! [main]
@@ -137,12 +168,12 @@ int main(void)
 	//! [main_2]
 	enum ac_chan_state last_comparison = AC_CHAN_STATE_UNKNOWN;
 	//! [main_2]
-
+	port_pin_set_output_level(LED_0_PIN, true);
 	//! [main_3]
 	while (true) {
 	//! [main_3]
 	//! [main_4]
-		if (ac_chan_is_ready(&ac_dev, AC_COMPARATOR_CHANNEL)) {
+		if (callback_status == true) {
 	//! [main_4]
 			//! [main_5]
 			do
@@ -150,14 +181,15 @@ int main(void)
 				last_comparison = ac_chan_get_state(&ac_dev, AC_COMPARATOR_CHANNEL);
 			} while (last_comparison == AC_CHAN_STATE_UNKNOWN);
 			//! [main_5]
-
 			//! [main_6]
 			port_pin_set_output_level(LED_0_PIN, (last_comparison == AC_CHAN_STATE_NEG_ABOVE_POS));
 			//! [main_6]
-
 			//! [main_7]
 			ac_chan_trigger_single_shot(&ac_dev, AC_COMPARATOR_CHANNEL);
 			//! [main_7]
+			//! [main_8]
+			callback_status = false;
+			//! [main_8]
 		}
 	}
 	//! [main]

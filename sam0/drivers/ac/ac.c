@@ -40,12 +40,12 @@
  * \asf_license_stop
  *
  */
-
-#include "ac.h"
-
 #if AC_CALLBACK == true
 #  include "ac_callback.h"
 #endif /* AC_CALLBACK == true */
+ 
+#include "ac.h"
+
 
 
 static enum status_code _ac_set_config(

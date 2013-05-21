@@ -43,8 +43,6 @@
 
 #include "ac_callback.h"
 
-struct ac_module *_ac_instance;
-
 void _ac_interrupt_handler(void);
 
 /**
