@@ -118,6 +118,16 @@ void board_init(void)
 #if (defined CONF_BOARD_USB_PORT)
 	ioport_set_pin_peripheral_mode(PIN_PA25A_USBC_DM, MUX_PA25A_USBC_DM);
 	ioport_set_pin_peripheral_mode(PIN_PA26A_USBC_DP, MUX_PA26A_USBC_DP);
+# if defined(CONF_BOARD_USB_VBUS_DETECT)
+	ioport_set_pin_dir(USB_VBUS_PIN, IOPORT_DIR_INPUT);
+# endif
+# if defined(CONF_BOARD_USB_ID_DETECT)
+	ioport_set_pin_dir(USB_ID_PIN, IOPORT_DIR_INPUT);
+# endif
+# if defined(CONF_BOARD_USB_VBUS_CONTROL)
+	ioport_set_pin_dir(USB_VBOF_PIN, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(USB_VBOF_PIN, USB_VBOF_INACTIVE_LEVEL);
+# endif
 #endif
 
 #ifdef CONF_BOARD_AT86RFX

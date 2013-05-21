@@ -50,4 +50,7 @@
 // Enable USB interface (USB)
 #define CONF_BOARD_USB_PORT
 
+// Enable USB VBUS detect
+#define CONF_BOARD_USB_VBUS_DETECT
+
 #endif /* CONF_BOARD_H_INCLUDED */
