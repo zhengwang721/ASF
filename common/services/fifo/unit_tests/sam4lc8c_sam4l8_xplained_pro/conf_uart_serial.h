@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief  Configuration File for SAM4L-EK Board.
+ * \brief Serial USART service configuration.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,13 +40,10 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
 
-// Enable USART console
-#define CONF_BOARD_COM_PORT
+#ifndef CONF_USART_SERIAL_H
+#define CONF_USART_SERIAL_H
 
-// Force usage of external EIC
-#define CONF_BOARD_EIC
+/* Intentionally empty */
 
-#endif /* CONF_BOARD_H_INCLUDED */
+#endif/* CONF_USART_SERIAL_H_INCLUDED */

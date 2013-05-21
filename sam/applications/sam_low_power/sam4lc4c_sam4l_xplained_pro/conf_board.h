@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief AST configuration.
+ * \brief  Configuration File for SAM4L Xplained Pro board.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -40,16 +40,13 @@
  * \asf_license_stop
  *
  */
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-//! Configuration of the AST driver
+/** Enable USART console */
+#define CONF_BOARD_COM_PORT
 
-#ifndef CONF_AST_H_INCLUDED
-#define CONF_AST_H_INCLUDED
+/** Force usage of external EIC */
+#define CONF_BOARD_EIC
 
-//#define AST_PER_ENABLE
-#define AST_ALARM_ENABLE
-// #define AST_OVF_ENABLE
-// #define AST_READY_ENABLE
-// #define AST_CLKREADY_ENABLE
-
-#endif /* CONF_AST_H_INCLUDED */
+#endif /* CONF_BOARD_H_INCLUDED */

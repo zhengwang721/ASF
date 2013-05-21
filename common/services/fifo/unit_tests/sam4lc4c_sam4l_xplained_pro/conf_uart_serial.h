@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief AST configuration.
+ * \brief Serial USART service configuration.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,15 +41,9 @@
  *
  */
 
-//! Configuration of the AST driver
+#ifndef CONF_USART_SERIAL_H
+#define CONF_USART_SERIAL_H
 
-#ifndef CONF_AST_H_INCLUDED
-#define CONF_AST_H_INCLUDED
+/* Intentionally empty */
 
-//#define AST_PER_ENABLE
-#define AST_ALARM_ENABLE
-// #define AST_OVF_ENABLE
-// #define AST_READY_ENABLE
-// #define AST_CLKREADY_ENABLE
-
-#endif /* CONF_AST_H_INCLUDED */
+#endif/* CONF_USART_SERIAL_H_INCLUDED */
