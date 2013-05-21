@@ -642,6 +642,25 @@
  */
 #define LEAVE_TRX_REGION()         NVIC_EnableIRQ(GPIO_11_IRQn)
 
+/** Defines required by SD MMC Stack */
+#define SD_MMC_SPI_MEM_CNT          1
+#define SD_MMC_0_CD_GPIO            (PIN_PB13)
+#define SD_MMC_0_CD_DIR             (IOPORT_DIR_INPUT)
+#define SD_MMC_0_CD_MODE            (IOPORT_MODE_PULLUP)
+//#define SD_MMC_0_CD_FLAGS           (IOPORT_DIR_INPUT | IOPORT_MODE_PULLUP)
+#define SD_MMC_0_CD_DETECT_VALUE    0
+#define SD_MMC_SPI                  SPI
+#define SD_MMC_SPI_0_CS             0
+
+#define SPI_NPCS0_GPIO              (PIN_PC03A_SPI_NPCS0)
+#define SPI_NPCS0_FLAGS             (MUX_PC03A_SPI_NPCS0)
+#define SPI_MISO_GPIO               (PIN_PA21A_SPI_MISO)
+#define SPI_MISO_FLAGS              (MUX_PA21A_SPI_MISO)
+#define SPI_MOSI_GPIO               (PIN_PA22A_SPI_MOSI)
+#define SPI_MOSI_FLAGS              (MUX_PA22A_SPI_MOSI)
+#define SPI_SPCK_GPIO               (PIN_PC30B_SPI_SCK)
+#define SPI_SPCK_FLAGS              (MUX_PC30B_SPI_SCK)
+
 //! @}
 
 /** @} */

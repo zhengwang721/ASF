@@ -1749,7 +1749,7 @@ static bool sd_mmc_mci_install_mmc(void)
 void sd_mmc_init(void)
 {
 	//! Enable the PMC clock for the card detect pins
-#if SAM && (defined SD_MMC_0_CD_GPIO)
+#if SAM && (defined SD_MMC_0_CD_GPIO) && !SAM4L
 # include "pmc.h"
 # define SD_MMC_ENABLE_CD_PIN(slot, unused) \
 	pmc_enable_periph_clk(SD_MMC_##slot##_CD_PIO_ID);

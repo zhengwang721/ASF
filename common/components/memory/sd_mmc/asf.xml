@@ -14,6 +14,7 @@
 		<device-support value="sam3"/>
 		<device-support value="sam4s"/>
 		<device-support value="sam4e"/>
+		<device-support value="sam4l"/>
 		<info type="gui-flag" value="move-to-root"/>
 	</module>
 	<select-by-config id="common.components.memory.sd_mmc" name="config.common.components.memory.sd_mmc" caption="SD/MMC stack" default="spi">
@@ -43,6 +44,7 @@
 			<device-support value="sam3"/>
 			<device-support value="sam4s"/>
 			<device-support value="sam4e"/>
+			<device-support value="sam4l"/>
 			<generator value="doxygen-module" default-mcu="unspecified-sam3s"/>
 		</module>
 		<module type="component" id="common.components.memory.sd_mmc#mci" caption="SD/MMC stack on Multimedia Card interface">
