@@ -162,6 +162,9 @@ static void button_handler(void)
 	if (eic_line_interrupt_is_pending(EIC, BUTTON_0_EIC_LINE)) {
 		eic_line_clear_interrupt(EIC, BUTTON_0_EIC_LINE);
 		g_ul_button_pressed = 1;
+		/* Stop AST and reset the counter */
+		ast_write_counter_value(AST, 0);
+		ast_stop(AST);
 	}
 }
 
@@ -178,9 +181,9 @@ static void configure_button(void)
 
 	eic_enable(EIC);
 	eic_line_set_config(EIC, BUTTON_0_EIC_LINE,
-	&eic_line_conf);
+			&eic_line_conf);
 	eic_line_set_callback(EIC, BUTTON_0_EIC_LINE, button_handler,
-	EIC_1_IRQn, 1);
+			EIC_1_IRQn, 1);
 	eic_line_enable(EIC, BUTTON_0_EIC_LINE);
 }
 
@@ -189,6 +192,7 @@ static void configure_button(void)
  */
 static void ast_per_callback(void)
 {
+	ast_stop(AST);
 	ast_clear_interrupt_flag(AST, AST_INTERRUPT_PER);
 }
 
@@ -199,7 +203,7 @@ static void config_ast(void)
 {
 	struct ast_config ast_conf;
 
-	/* Enable osc32 oscillator*/
+	/* Enable osc32 oscillator */
 	if (!osc_is_ready(OSC_ID_OSC32)) {
 		osc_enable(OSC_ID_OSC32);
 		osc_wait_ready(OSC_ID_OSC32);
@@ -213,6 +217,7 @@ static void config_ast(void)
 	ast_conf.psel = AST_PSEL_32KHZ_1HZ;
 	ast_conf.counter = 0;
 	ast_set_config(AST, &ast_conf);
+	ast_stop(AST);
 
 	/* Set periodic 0 to interrupt after 8 second in counter mode. */
 	ast_clear_interrupt_flag(AST, AST_INTERRUPT_PER);
@@ -220,7 +225,7 @@ static void config_ast(void)
 	ast_enable_wakeup(AST, AST_WAKEUP_PER);
 	/* Set callback for periodic0. */
 	ast_set_callback(AST, AST_INTERRUPT_PER, ast_per_callback,
-		AST_PER_IRQn, 1);
+			AST_PER_IRQn, 1);
 }
 
 /* configurations for backup mode wakeup */
@@ -243,12 +248,12 @@ static void config_backup_wakeup(void)
 
 static void app_prime_number_run(void)
 {
-	#define PRIM_NUMS 8
+#define PRIM_NUMS 8
 	uint32_t i, d, n;
 	uint32_t primes[PRIM_NUMS];
 
 
-	// Find prime numbers forever
+	/* Find prime numbers forever */
 	primes[0] = 1;
 	for (i = 1; i < PRIM_NUMS;) {
 		for (n = primes[i - 1] + 1; ;n++) {
@@ -260,7 +265,7 @@ static void app_prime_number_run(void)
 				if (n%d == 0) break;
 			}
 		}
-		nexti:
+nexti:
 		i++;
 	}
 }
@@ -270,7 +275,7 @@ static void app_prime_number_run(void)
  */
 static void test_active_mode(void)
 {
-	puts("Press SW0 to exit Active Mode\r");
+	printf("Press %s to exit Active Mode\r\n", BUTTON_0_NAME);
 
 	g_ul_button_pressed = 0;
 
@@ -285,11 +290,14 @@ static void test_active_mode(void)
 
 static void test_wait_mode(void)
 {
-	puts("Press SW0 or wait AST to exit Wait Mode\r");
-	/* Wait for the printf operation to finish before
-	setting the device in a power save mode. */
+	printf("Press %s or wait AST to exit Wait Mode\r\n", BUTTON_0_NAME);
+	/*
+	 * Wait for the printf operation to finish before setting the device in
+	 * a power save mode.
+	 */
 	delay_ms(30);
 
+	ast_start(AST);
 	sleepmgr_sleep(SLEEPMGR_WAIT);
 
 	puts("Exit from Wait Mode.\r");
@@ -297,11 +305,14 @@ static void test_wait_mode(void)
 
 static void test_retention_mode(void)
 {
-	puts("Press SW0 or wait AST to exit Retention Mode\r");
-	/* Wait for the printf operation to finish before
-	setting the device in a power save mode. */
+	printf("Press %s or wait AST to exit Retention Mode\r\n", BUTTON_0_NAME);
+	/*
+	 * Wait for the printf operation to finish before setting the device in
+	 * a power save mode.
+	 */
 	delay_ms(30);
 
+	ast_start(AST);
 	sleepmgr_sleep(SLEEPMGR_RET);
 
 	puts("Exit from Retention Mode.\r");
@@ -311,10 +322,13 @@ static void test_retention_mode(void)
 static void test_backup_mode(void)
 {
 	puts("Wait AST to exit Backup Mode\r");
-	/* Wait for the printf operation to finish before
-	setting the device in a power save mode. */
+	/*
+	 * Wait for the puts operation to finish before setting the device in
+	 * a power save mode.
+	 */
 	delay_ms(30);
 
+	ast_start(AST);
 	sleepmgr_sleep(SLEEPMGR_BACKUP);
 
 	/* Note: The core will reset when exiting from backup mode. */
@@ -392,7 +406,7 @@ static void test_core(void)
 		default:
 			puts("This menu does not exist !\r");
 			break;
-		} /* Switch */
+		}
 	}
 
 test_core_end:
@@ -421,7 +435,7 @@ int main(void)
 	/* Test core consumption */
 	test_core();
 
-	while(1u){
+	while (1) {
 	}
 
-}// end main function
+}
