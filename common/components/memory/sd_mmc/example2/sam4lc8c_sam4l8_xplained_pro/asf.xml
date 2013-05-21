@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="SD/MMC card example with FatFs for SAM4L Xplained Pro" id="common.components.memory.sd_mmc.example2.sam4l_xplained_pro">
+	<project caption="SD/MMC card example with FatFs for SAM4L8 Xplained Pro" id="common.components.memory.sd_mmc.example2.sam4l8_xplained_pro">
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_spi_master.h"/>
 		<build type="header-file" value="conf_sd_mmc.h"/>
@@ -12,7 +12,7 @@
 		<require idref="common.components.memory.sd_mmc.example2"/>
 		<config name="config.common.components.memory.sd_mmc" value="spi"/>
 		<config name="config.common.services.fs.fatfs.codepage" value="sbcs"/>
-		<require idref="board.sam4l_xplained_pro"/>
+		<require idref="board.sam4l8_xplained_pro"/>
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>
@@ -21,6 +21,6 @@
 		<config name="config.compiler.armgcc.stack_size" value="0x2000"/>
 		<config name="config.compiler.armgcc.create_aux" value="no"/>
 		<config name="config.compiler.iarewarm.create_aux" value="no"/>
-		<device-support value="atsam4lc4c"/>
+		<device-support value="atsam4lc8c"/>
 	</project>
 </asf>

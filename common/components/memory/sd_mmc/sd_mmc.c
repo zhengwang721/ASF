@@ -3,7 +3,7 @@
  *
  * \brief Common SD/MMC stack
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -1757,7 +1757,7 @@ void sd_mmc_init(void)
 # undef SD_MMC_ENABLE_CD_PIN
 #endif
 	//! Enable the PMC clock for the card write protection pins
-#if SAM && (defined SD_MMC_0_WP_GPIO)
+#if SAM && (defined SD_MMC_0_WP_GPIO) && !SAM4L
 # include "pmc.h"
 # define SD_MMC_ENABLE_WP_PIN(slot, unused) \
 	pmc_enable_periph_clk(SD_MMC_##slot##_WP_PIO_ID);

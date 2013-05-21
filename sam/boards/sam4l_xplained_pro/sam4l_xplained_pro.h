@@ -647,7 +647,6 @@
 #define SD_MMC_0_CD_GPIO            (PIN_PB13)
 #define SD_MMC_0_CD_DIR             (IOPORT_DIR_INPUT)
 #define SD_MMC_0_CD_MODE            (IOPORT_MODE_PULLUP)
-//#define SD_MMC_0_CD_FLAGS           (IOPORT_DIR_INPUT | IOPORT_MODE_PULLUP)
 #define SD_MMC_0_CD_DETECT_VALUE    0
 #define SD_MMC_SPI                  SPI
 #define SD_MMC_SPI_0_CS             0

@@ -123,26 +123,26 @@
 #  endif
 #  if SAM // Example from SAM3N-EK
 #    define SD_MMC_SPI_MEM_CNT          1
-	/* Optional card detect pin and write protection pin
-	 #    define SD_MMC_0_CD_GPIO            (PIO_PA19_IDX)
-	 #    define SD_MMC_0_CD_PIO_ID          ID_PIOA
-	 #    define SD_MMC_0_CD_FLAGS           (PIO_INPUT | PIO_PULLUP)
-	 #    define SD_MMC_0_CD_DETECT_VALUE    0
-	 */
+/* Optional card detect pin and write protection pin
+#    define SD_MMC_0_CD_GPIO            (PIO_PA19_IDX)
+#    define SD_MMC_0_CD_PIO_ID          ID_PIOA
+#    define SD_MMC_0_CD_FLAGS           (PIO_INPUT | PIO_PULLUP)
+#    define SD_MMC_0_CD_DETECT_VALUE    0
+*/
 #    define SD_MMC_SPI_0_CS             0
 #    ifdef  SPI
 #      define SD_MMC_SPI                  SPI
 #    else
 #      define SD_MMC_SPI                  SPI0
 #    endif
-//#    define SPI_NPCS0_GPIO              (PIO_PA11_IDX)
-//#    define SPI_NPCS0_FLAGS             (PIO_PERIPH_A | PIO_DEFAULT)
-//#    define SPI_MISO_GPIO               (PIO_PA12_IDX)
-//#    define SPI_MISO_FLAGS              (PIO_PERIPH_A | PIO_DEFAULT)
-//#    define SPI_MOSI_GPIO               (PIO_PA13_IDX)
-//#    define SPI_MOSI_FLAGS              (PIO_PERIPH_A | PIO_DEFAULT)
-//#    define SPI_SPCK_GPIO               (PIO_PA14_IDX)
-//#    define SPI_SPCK_FLAGS              (PIO_PERIPH_A | PIO_DEFAULT)
+#    define SPI_NPCS0_GPIO              (PIO_PA11_IDX)
+#    define SPI_NPCS0_FLAGS             (PIO_PERIPH_A | PIO_DEFAULT)
+#    define SPI_MISO_GPIO               (PIO_PA12_IDX)
+#    define SPI_MISO_FLAGS              (PIO_PERIPH_A | PIO_DEFAULT)
+#    define SPI_MOSI_GPIO               (PIO_PA13_IDX)
+#    define SPI_MOSI_FLAGS              (PIO_PERIPH_A | PIO_DEFAULT)
+#    define SPI_SPCK_GPIO               (PIO_PA14_IDX)
+#    define SPI_SPCK_FLAGS              (PIO_PERIPH_A | PIO_DEFAULT)
 #  endif
 #endif
 //! @}

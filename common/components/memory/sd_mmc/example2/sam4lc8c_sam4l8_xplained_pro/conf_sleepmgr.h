@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SD/MMC stack configuration file.
+ * \brief Chip-specific sleep manager configuration
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -40,18 +40,10 @@
  * \asf_license_stop
  *
  */
+#ifndef CONF_SLEEPMGR_INCLUDED
+#define CONF_SLEEPMGR_INCLUDED
 
-#ifndef CONF_SD_MMC_H_INCLUDED
-#define CONF_SD_MMC_H_INCLUDED
+// Sleep manager options
+#define CONFIG_SLEEPMGR_ENABLE
 
-/* Define it to enable the SPI mode instead of Multimedia Card interface mode */
-#define SD_MMC_SPI_MODE
-
-/* Define it to enable the SDIO support */
-//#define SDIO_SUPPORT_ENABLE
-
-/* Define it to enable the debug trace to the current standard output (stdio) */
-//#define SD_MMC_DEBUG
-
-#endif /* CONF_SD_MMC_H_INCLUDED */
-
+#endif /* CONF_SLEEPMGR_INCLUDED */

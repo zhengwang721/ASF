@@ -135,11 +135,12 @@ void board_init(void)
 	ioport_set_pin_peripheral_mode(PIN_PC30B_SPI_SCK, MUX_PC30B_SPI_SCK);
 
 	#ifdef CONF_BOARD_SD_MMC_SPI
+		/* Setting SD detection pin */
 		ioport_set_pin_dir(SD_MMC_0_CD_GPIO, IOPORT_DIR_INPUT);
 		ioport_set_pin_mode(SD_MMC_0_CD_GPIO, IOPORT_MODE_PULLUP);
 
-		ioport_set_pin_peripheral_mode(SPI_NPCS0_GPIO,
-				SPI_NPCS0_FLAGS);
+		/* Setting SD CS pin */
+		ioport_set_pin_peripheral_mode(SPI_NPCS0_GPIO, SPI_NPCS0_FLAGS);
 	#endif
 	#ifdef CONF_BOARD_SPI_NPCS0
 		ioport_set_pin_peripheral_mode(PIN_PC03A_SPI_NPCS0,
