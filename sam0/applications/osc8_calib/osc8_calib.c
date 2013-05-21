@@ -40,6 +40,59 @@
  */
 #include <asf.h>
 
+/**
+ * \mainpage SAM D20 OSC8M Calibration Example
+ * See \ref appdoc_main "here" for project documentation.
+ * \copydetails preface
+ *
+ *
+ * \page preface Overview
+ * This application calibrates the internal OSC8M (8MHz) oscillator of the
+ * device against a known, accurate external clock or crystal frequency.
+ */
+
+/**
+ * \page appdoc_main SAM D20 OSC8M Calibration Example
+ *
+ * Overview:
+ * - \ref appdoc_samd20_osc8m_cal_intro
+ * - \ref appdoc_samd20_osc8m_cal_usage
+ * - \ref appdoc_samd20_osc8m_cal_compinfo
+ * - \ref appdoc_samd20_osc8m_cal_contactinfo
+ *
+ * \section appdoc_samd20_osc8m_cal_intro Introduction
+ * While some devices require exact timing, and therefore require an external
+ * calibration crystal or other high-accuracy clock source, other applications
+ * with looser accuracy requirements may use the internal RC Oscillator(s) for
+ * space and/or cost reasons. However, this can lead to unstable communication
+ * interfaces if the internal oscillator is not first calibrated against an
+ * accurate reference clock.
+ *
+ * This application uses a known external reference frequency to calibrate the
+ * internal 8MHz (nominal) RC Oscillator, OSC8M, so that it is as close as
+ * possible to the desired 8MHz frequency.
+ *
+ * \section appdoc_samd20_osc8m_cal_usage Usage Instructions
+ * On startup, the application will immediately begin calibration of the OSC8M
+ * internal oscillator, against a 32.768KHz watch crystal attached to the device
+ * XOSC32K pins (see device datasheet). As the possible calibration values are
+ * cycled through, the board LED will turn on each time a better match is found,
+ * and turn off when an equal or lesser calibration value is tested. Once the
+ * best values are found, the results are printed to the device USART and the
+ * board LED will flash rapidly to signal the end of the calibration sequence.
+ *
+ * \note The calibration values are \b not stored to the device's non-volatile
+ *       memory.
+ *
+ * \section appdoc_samd20_osc8m_cal_compinfo Compilation Info
+ * This software was written for the GNU GCC and IAR for ARM.
+ * Other compilers may or may not work.
+ *
+ * \section appdoc_samd20_osc8m_cal_contactinfo Contact Information
+ * For further information, visit
+ * <a href="http://www.atmel.com">http://www.atmel.com</a>.
+ */
+
 /** Resolution of the calibration binary divider; higher powers of two will
  *  reduce the calibration resolution.
  */
