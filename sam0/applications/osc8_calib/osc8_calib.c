@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ OSC8MHz Calibration Application
+ * \brief SAMD20 OSC8MHz Calibration Application
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -40,224 +40,164 @@
  */
 #include <asf.h>
 
-#define RES 4096
-#define CAL_CLOCK_HZ 32768
+#define CALIBRATION_RESOLUTION 4096
+#define REFERENCE_CLOCK_HZ     32768
 
 static struct usart_module usart_edbg;
+static struct tc_module tc_calib;
+static struct tc_module tc_comp;
 
-/* Write string to usart. */
-static void debug_write_string(struct usart_module *const dev, uint8_t const *string)
-
+static void setup_tc_channels(void)
 {
-	do {
-		while (usart_write_wait(dev, *string) != STATUS_OK) {
-		}
-	} while (*(++string) != 0);
-}
-
-/* Convert number to string */
-static void debug_int_to_string(uint8_t *ret_val, uint8_t size, uint32_t integer)
-{
-	uint8_t i = 0;
-	uint32_t temp_int = integer;
-
-	while (temp_int) {
-		temp_int /= 10;
-		i++;
-	}
-
-	while (size--) {
-		if (size < i || size == 0) {
-			ret_val[size] = integer % 10 + 48;
-			integer /= 10;
-		} else {
-			ret_val[size] = 0;
-		}
-	}
-}
-
-/* Set up tc and events */
-static void setup_tc_channels(struct tc_module *const calib_chan, struct tc_module *const comp_chan)
-{
-	events_init();
-
 	struct tc_config config;
-
 	tc_get_config_defaults(&config);
 
-	config.counter_size = TC_COUNTER_SIZE_32BIT;
+	config.counter_size    = TC_COUNTER_SIZE_32BIT;
 	config.clock_prescaler = TC_CLOCK_PRESCALER_DIV1;
 	config.wave_generation = TC_WAVE_GENERATION_NORMAL_FREQ;
 	config.enable_capture_on_channel[0] = true;
-
-	tc_init(calib_chan, TC0, &config);
+	tc_init(&tc_calib, TC0, &config);
 
 	config.enable_capture_on_channel[0] = false;
 	config.counter_size = TC_COUNTER_SIZE_16BIT;
 	config.clock_source = GCLK_GENERATOR_3;
-	config.size_specific.size_16_bit.compare_capture_channel[0] = RES;
-	tc_init(comp_chan, TC2, &config);
+	config.size_specific.size_16_bit.compare_capture_channel[0] = CALIBRATION_RESOLUTION;
+	tc_init(&tc_comp, TC2, &config);
+}
 
+static void setup_tc_events(void)
+{
 	struct tc_events events;
 	tc_get_events_config_default(&events);
 
 	events.generate_event_on_compare_channel[0] = true;
-
-	tc_enable_events(comp_chan, &events);
+	tc_enable_events(&tc_comp, &events);
 
 	events.generate_event_on_compare_channel[0] = false;
 	events.enable_incoming_events = true;
+	tc_enable_events(&tc_calib, &events);
 
-	tc_enable_events(calib_chan, &events);
+	tc_enable(&tc_calib);
+	tc_enable(&tc_comp);
+}
 
-	tc_enable(calib_chan);
-	tc_enable(comp_chan);
-
+static void setup_events(void)
+{
 	struct events_chan_config evch_conf;
 	events_chan_get_config_defaults(&evch_conf);
 
-	evch_conf.edge_detection = EVENT_EDGE_RISING;
-	evch_conf.path = EVENT_PATH_SYNCHRONOUS;
-	evch_conf.generator_id = EVSYS_ID_GEN_TC2_MCX_0;
-
-	struct events_user_config evus_conf;
-	evus_conf.event_channel_id = EVENT_CHANNEL_0;
-
-	events_user_set_config(EVSYS_ID_USER_TC0_EVU, &evus_conf);
+	evch_conf.edge_detection   = EVENT_EDGE_RISING;
+	evch_conf.path             = EVENT_PATH_SYNCHRONOUS;
+	evch_conf.generator_id     = EVSYS_ID_GEN_TC2_MCX_0;
 	events_chan_set_config(EVENT_CHANNEL_0, &evch_conf);
 
+	struct events_user_config evus_conf;
+	events_user_get_config_defaults(&evus_conf);
+
+	evus_conf.event_channel_id = EVENT_CHANNEL_0;
+	events_user_set_config(EVSYS_ID_USER_TC0_EVU, &evus_conf);
 }
 
-/* Setup and initialize USART device. */
 static void setup_usart_channel(void)
 {
-	struct usart_config config_struct;
+	struct usart_config cdc_uart_config;
+	usart_get_config_defaults(&cdc_uart_config);
 
-	usart_get_config_defaults(&config_struct);
-	config_struct.mux_settings = USART_RX_3_TX_2_XCK_3;
-	config_struct.pinout_pad3 = EDBG_CDC_RX_PINMUX;
-	config_struct.pinout_pad2 = EDBG_CDC_TX_PINMUX;
-
-	while (usart_init(&usart_edbg, EDBG_CDC_MODULE,
-			&config_struct) != STATUS_OK) {
-	}
+	cdc_uart_config.mux_settings = USART_RX_3_TX_2_XCK_3;
+	cdc_uart_config.pinout_pad3  = EDBG_CDC_RX_PINMUX;
+	cdc_uart_config.pinout_pad2  = EDBG_CDC_TX_PINMUX;
+	cdc_uart_config.baudrate     = 115200;
+	stdio_serial_init(&usart_edbg, EDBG_CDC_MODULE, &cdc_uart_config);
 
 	usart_enable(&usart_edbg);
-
 	usart_enable_transceiver(&usart_edbg, USART_TRANSCEIVER_TX);
-	usart_enable_transceiver(&usart_edbg, USART_TRANSCEIVER_RX);
 }
 
-/* Get current frequency */
-static uint32_t debug_get_freq(struct tc_module *calib_chan, struct tc_module *comp_chan)
+static void setup_clock_out_pin(void)
 {
-	uint64_t tmp;
+	struct system_pinmux_config pin_mux;
+	system_pinmux_get_config_defaults(&pin_mux);
 
-	tc_clear_status(comp_chan, TC_STATUS_CHANNEL_0_MATCH);
+	pin_mux.mux_position = MUX_PA30H_GCLK_IO0;
+	system_pinmux_pin_set_config(PIN_PA30H_GCLK_IO0, &pin_mux);
+}
 
-	tc_start_counter(calib_chan);
-	tc_start_counter(comp_chan);
+static uint32_t get_osc_frequency(void)
+{
+	tc_clear_status(&tc_comp, TC_STATUS_CHANNEL_0_MATCH);
 
-	while (!(tc_get_status(comp_chan) & TC_STATUS_CHANNEL_0_MATCH)) {
+	tc_start_counter(&tc_calib);
+	tc_start_counter(&tc_comp);
+
+	while (!(tc_get_status(&tc_comp) & TC_STATUS_CHANNEL_0_MATCH)) {
 		/* Wait for channel 0 match */
 	}
 
-	tmp = (uint64_t)tc_get_capture_value(calib_chan, TC_COMPARE_CAPTURE_CHANNEL_0);
-	tmp = tmp * CAL_CLOCK_HZ;
-
-	return (uint32_t)(tmp / RES);
-}
-
-/* Wait loop */
-static void debug_wait(uint16_t ticks) {
-	while (ticks--) {
-		__asm__("NOP");
-	}
+	uint64_t tmp = tc_get_capture_value(&tc_calib, TC_COMPARE_CAPTURE_CHANNEL_0);
+	return ((tmp * REFERENCE_CLOCK_HZ) / CALIBRATION_RESOLUTION);
 }
 
 int main(void)
 {
-	uint8_t string[10];
-
 	system_init();
-	//setup_usart_channel();
+	events_init();
+	delay_init();
 
-	uint32_t tmp;
+	setup_tc_channels();
+	setup_tc_events();
+	setup_events();
+	setup_clock_out_pin();
 
-	/* Set up to clock out osc 8 on pin */
-	struct system_pinmux_config pin_mux;
-	system_pinmux_get_config_defaults(&pin_mux);
-	pin_mux.mux_position = MUX_PA30H_GCLK_IO0;
-	system_pinmux_pin_set_config(PIN_PA30H_GCLK_IO0, &pin_mux);
-
-	/* Structures for config and software device instance */
-	struct tc_module calib_chan;
-	struct tc_module comp_chan;
-
-	/* Set up tc modules to be used. */
-	setup_tc_channels(&calib_chan, &comp_chan);
-
-	/* Values for calculating current frequency of osc. */
-	uint16_t comm_cal;
-	uint8_t frange_cal;
-	uint16_t comm_best=0;
-	uint8_t frange_best=0;
-	uint32_t freq_best = 0xffffffff;
-	uint32_t freq_before = debug_get_freq(&calib_chan, &comp_chan);
-	uint32_t gen_freq = system_gclk_chan_get_hz(SERCOM_GCLK_ID);
+	uint16_t comm_best   = -1;
+	uint8_t  frange_best = -1;
+	uint32_t freq_best   = -1;
+	uint32_t freq_before = get_osc_frequency();
 
 	/* Run calibration */
-	for (frange_cal = 0; frange_cal < 4; frange_cal++) {
-		for (comm_cal = 0; comm_cal < 128; comm_cal++) {
-			system_clock_source_write_calibration(SYSTEM_CLOCK_SOURCE_OSC8M, comm_cal | 8 << 7, frange_cal);
+	for (uint8_t frange_cal = 1; frange_cal <= 2; frange_cal++) {
+		delay_ms(1);
 
-			debug_wait(1000);
-			tmp = debug_get_freq(&calib_chan, &comp_chan);
+		for (uint16_t comm_cal = 0; comm_cal < 128; comm_cal++) {
+			system_clock_source_write_calibration(
+					SYSTEM_CLOCK_SOURCE_OSC8M, comm_cal | (8 << 7), frange_cal);
 
-			if (abs(tmp - gen_freq) < abs(freq_best - gen_freq))
+			delay_cycles(1000);
+
+			uint32_t freq_current = get_osc_frequency();
+			if (abs(freq_current - 8000000UL) < abs(freq_best - 8000000UL))
 			{
-				freq_best = tmp;
-				comm_best = comm_cal;
+				freq_best   = freq_current;
+				comm_best   = comm_cal;
 				frange_best = frange_cal;
+
+				port_pin_set_output_level(LED_0_PIN, LED_0_ACTIVE);
+			}
+			else
+			{
+				port_pin_set_output_level(LED_0_PIN, !LED_0_ACTIVE);
 			}
 		}
 	}
-	/* Set the found best calibration. */
-	system_clock_source_write_calibration(SYSTEM_CLOCK_SOURCE_OSC8M, comm_best | 8 << 7, frange_best);
 
-	/* Setup usart module to give information back. */
+	/* Set the found best calibration. */
+	system_clock_source_write_calibration(
+			SYSTEM_CLOCK_SOURCE_OSC8M, comm_best | (8 << 7), frange_best);
+
+	/* Setup USART module to give information back. */
 	setup_usart_channel();
 
-	/* Get calibrated value. */
-	debug_wait(1000);
-
 	/* Write freq. before and now, together with calibration values to usart. */
-	debug_int_to_string(string, 10, freq_before);
-	debug_write_string(&usart_edbg, (uint8_t*)"Before: ");
-	debug_write_string(&usart_edbg, string);
-	debug_write_string(&usart_edbg, (uint8_t*)"\r\n");
+	printf("Freq Before: %lu\r\n", freq_before);
+	printf("Freq Before: %lu\r\n", freq_best);
 
-	debug_int_to_string(string, 10, freq_best);
-	debug_write_string(&usart_edbg, (uint8_t*)"Now: ");
-	debug_write_string(&usart_edbg, string);
-	debug_write_string(&usart_edbg, (uint8_t*)"\r\n");
+	printf("Freq Range: %u\r\n", frange_best);
+	printf("Calib Value: %u\r\n", comm_best | 8 << 7);
 
-	debug_int_to_string(string, 10, frange_best);
-	debug_write_string(&usart_edbg, (uint8_t*)"Frequency range: ");
-	debug_write_string(&usart_edbg, string);
-	debug_write_string(&usart_edbg, (uint8_t*)"\r\n");
-
-	debug_int_to_string(string, 10, comm_best  | 8 << 7);
-	debug_write_string(&usart_edbg, (uint8_t*)"Calibration value: ");
-	debug_write_string(&usart_edbg, string);
-	debug_write_string(&usart_edbg, (uint8_t*)"\r\n");
-
-	/* Deactivate tc modules. */
-	tc_disable(&calib_chan);
-	tc_disable(&comp_chan);
-
+	tc_disable(&tc_calib);
+	tc_disable(&tc_comp);
 
 	while (1) {
-		/* Inf loop */
+		port_pin_toggle_output_level(LED_0_PIN);
+		delay_ms(200);
 	}
 }
