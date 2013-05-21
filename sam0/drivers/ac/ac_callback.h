@@ -99,6 +99,11 @@ enum ac_window_interrupt_selection {
  * This function is used to setup when an interrupt should occur
  * for a given channel.
  *
+ * \note This must be done before enabling the channel. And after 
+ * configure_ac_channel() as configure_ac_channel() will over write
+ * these configurations.
+ *
+ *
  * \param[in]  module               Pointer to software instance struct
  * \param[in]  channel              Channel to setup
  * \param[in]  interrupt_selection  Interrupt selection for the given channel
@@ -111,11 +116,7 @@ static inline void ac_callback_channel_interrupt_selection(
 	Assert(module);
 	Assert(module->hw);
 
-	uint32_t compctrl_mask;
-	compctrl_mask = module->hw->COMPCTRL[channel].reg;
-	compctrl_mask &= ~AC_COMPCTRL_INTSEL_Msk;
-	compctrl_mask |= interrupt_selection;
-	module->hw->COMPCTRL[channel].reg = compctrl_mask;
+	module->hw->COMPCTRL[channel].bit.INTSEL = interrupt_selection;
 }
 
 /**
@@ -123,6 +124,10 @@ static inline void ac_callback_channel_interrupt_selection(
  *
  * This function is used to setup when an interrupt should occur
  * for a given window.
+ *
+ * \note This must be done before enabling the channel. And after 
+ * configure_ac_channel() as configure_ac_channel() will over write
+ * these configurations.
  *
  * \param[in]  module               Pointer to software instance struct
  * \param[in]  win_channel          Window channel to setup
