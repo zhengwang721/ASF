@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Chip-specific sleep manager configuration
+ * \brief  Configuration File for SAM4L Xplained Pro board.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -40,10 +40,13 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_SLEEPMGR_INCLUDED
-#define CONF_SLEEPMGR_INCLUDED
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-// Sleep manager options
-#define CONFIG_SLEEPMGR_ENABLE
+/** Enable USART console */
+#define CONF_BOARD_COM_PORT
 
-#endif /* CONF_SLEEPMGR_INCLUDED */
+/** Force usage of external EIC */
+#define CONF_BOARD_EIC
+
+#endif /* CONF_BOARD_H_INCLUDED */

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief AST configuration.
+ * \brief Chip-specific sleep manager configuration
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -40,16 +40,10 @@
  * \asf_license_stop
  *
  */
+#ifndef CONF_SLEEPMGR_INCLUDED
+#define CONF_SLEEPMGR_INCLUDED
 
-//! Configuration of the AST driver
+/* Sleep manager options */
+#define CONFIG_SLEEPMGR_ENABLE
 
-#ifndef CONF_AST_H_INCLUDED
-#define CONF_AST_H_INCLUDED
-
-//#define AST_PER_ENABLE
-#define AST_ALARM_ENABLE
-// #define AST_OVF_ENABLE
-// #define AST_READY_ENABLE
-// #define AST_CLKREADY_ENABLE
-
-#endif /* CONF_AST_H_INCLUDED */
+#endif /* CONF_SLEEPMGR_INCLUDED */
