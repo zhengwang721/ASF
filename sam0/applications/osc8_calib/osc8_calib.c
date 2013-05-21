@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 OSC8MHz Calibration Application
+ * \brief SAM0+ OSC8MHz Calibration Application
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -40,52 +40,88 @@
  */
 #include <asf.h>
 
-#define CALIBRATION_RESOLUTION 4096
-#define REFERENCE_CLOCK_HZ     32768
+/** Resolution of the calibration binary divider; higher powers of two will
+ *  reduce the calibration resolution.
+ */
+#define CALIBRATION_RESOLUTION   13
 
+/** Calibration reference clock generator index. */
+#define REFERENCE_CLOCK          GCLK_GENERATOR_3
+
+/** Frequency of the calibration reference clock in Hz */
+#define REFERENCE_CLOCK_HZ       32768
+
+/** Software instance of the USART upon which to transmit the results. */
 static struct usart_module usart_edbg;
+
+/** Software instance of the TC module used for calibration measurement. */
 static struct tc_module tc_calib;
+
+/** Software instance of the TC module used for calibration comparison. */
 static struct tc_module tc_comp;
 
+
+/** Set up the measurement and comparison timers for calibration.
+ *   - Configure the measurement timer to run from the CPU clock, in capture
+ *     mode.
+ *   - Configure the reference timer to run from the reference clock, generating
+ *     a capture every time the calibration resolution count is met.
+ */
 static void setup_tc_channels(void)
 {
 	struct tc_config config;
 	tc_get_config_defaults(&config);
 
+	/* Configure measurement timer to run from Fcpu and capture */
 	config.counter_size    = TC_COUNTER_SIZE_32BIT;
 	config.clock_prescaler = TC_CLOCK_PRESCALER_DIV1;
 	config.wave_generation = TC_WAVE_GENERATION_NORMAL_FREQ;
 	config.enable_capture_on_channel[0] = true;
 	tc_init(&tc_calib, TC0, &config);
 
+	/* Configure reference timer to run from Fcpu and capture when the resolution count is met */
+	config.counter_size    = TC_COUNTER_SIZE_16BIT;
+	config.clock_source    = REFERENCE_CLOCK;
 	config.enable_capture_on_channel[0] = false;
-	config.counter_size = TC_COUNTER_SIZE_16BIT;
-	config.clock_source = GCLK_GENERATOR_3;
-	config.size_specific.size_16_bit.compare_capture_channel[0] = CALIBRATION_RESOLUTION;
+	config.size_specific.size_16_bit.compare_capture_channel[0] = (1 << CALIBRATION_RESOLUTION);
 	tc_init(&tc_comp, TC2, &config);
 }
 
+/** Set up the measurement and comparison timer events.
+ *   - Configure the reference timer to generate an event upon comparison
+ *     match with channel 0.
+ *   - Configure the measurement timer to trigger a capture when an event is
+ *     received.
+ */
 static void setup_tc_events(void)
 {
 	struct tc_events events;
 	tc_get_events_config_default(&events);
 
-	events.generate_event_on_compare_channel[0] = true;
-	tc_enable_events(&tc_comp, &events);
-
-	events.generate_event_on_compare_channel[0] = false;
+	/* Enable incoming events on on measurement timer */
 	events.enable_incoming_events = true;
 	tc_enable_events(&tc_calib, &events);
+
+	/* Generate events from the reference timer on channel 0 compare match */
+	events.enable_incoming_events = false;
+	events.generate_event_on_compare_channel[0] = true;
+	tc_enable_events(&tc_comp, &events);
 
 	tc_enable(&tc_calib);
 	tc_enable(&tc_comp);
 }
 
+/** Set up the event system, linking the measurement and comparison timers so
+ *  that events generated from the reference timer are linked to the measurement
+ *  timer.
+ */
 static void setup_events(void)
 {
 	struct events_chan_config evch_conf;
 	events_chan_get_config_defaults(&evch_conf);
 
+	/* Event channel 0 detects rising edges of the reference timer output
+	 * event */
 	evch_conf.edge_detection   = EVENT_EDGE_RISING;
 	evch_conf.path             = EVENT_PATH_SYNCHRONOUS;
 	evch_conf.generator_id     = EVSYS_ID_GEN_TC2_MCX_0;
@@ -94,15 +130,18 @@ static void setup_events(void)
 	struct events_user_config evus_conf;
 	events_user_get_config_defaults(&evus_conf);
 
+	/* Measurement timer event user channel linked to Event channel 0 */
 	evus_conf.event_channel_id = EVENT_CHANNEL_0;
 	events_user_set_config(EVSYS_ID_USER_TC0_EVU, &evus_conf);
 }
 
+/** Set up the USART for transmit-only communication at a fixed baud rate. */
 static void setup_usart_channel(void)
 {
 	struct usart_config cdc_uart_config;
 	usart_get_config_defaults(&cdc_uart_config);
 
+	/* Configure the USART settings and initialize the standard I/O library */
 	cdc_uart_config.mux_settings = USART_RX_3_TX_2_XCK_3;
 	cdc_uart_config.pinout_pad3  = EDBG_CDC_RX_PINMUX;
 	cdc_uart_config.pinout_pad2  = EDBG_CDC_TX_PINMUX;
@@ -113,56 +152,76 @@ static void setup_usart_channel(void)
 	usart_enable_transceiver(&usart_edbg, USART_TRANSCEIVER_TX);
 }
 
+/** Set up the clock output pin so that the current system clock frequency can
+ *  be monitored via an external frequency counter or oscilloscope. */
 static void setup_clock_out_pin(void)
 {
 	struct system_pinmux_config pin_mux;
 	system_pinmux_get_config_defaults(&pin_mux);
 
+	/* MUX out the system clock to a I/O pin of the device */
 	pin_mux.mux_position = MUX_PA30H_GCLK_IO0;
 	system_pinmux_pin_set_config(PIN_PA30H_GCLK_IO0, &pin_mux);
 }
 
+/** Retrieves the current system clock frequency, computed from the reference
+ *  clock.
+ *
+ * \return Current system clock frequency in Hz.
+ */
 static uint32_t get_osc_frequency(void)
 {
+	/* Clear any existing match status on the measurement timer */
 	tc_clear_status(&tc_comp, TC_STATUS_CHANNEL_0_MATCH);
 
+	/* Restart both measurement and reference timers */
 	tc_start_counter(&tc_calib);
 	tc_start_counter(&tc_comp);
 
+	/* Wait for the measurement timer to signal a compare match */
 	while (!(tc_get_status(&tc_comp) & TC_STATUS_CHANNEL_0_MATCH)) {
 		/* Wait for channel 0 match */
 	}
 
+	/* Compute the real clock frequency from the measurement timer count and
+	 * reference count */
 	uint64_t tmp = tc_get_capture_value(&tc_calib, TC_COMPARE_CAPTURE_CHANNEL_0);
-	return ((tmp * REFERENCE_CLOCK_HZ) / CALIBRATION_RESOLUTION);
+	return ((tmp * REFERENCE_CLOCK_HZ) >> CALIBRATION_RESOLUTION);
 }
 
 int main(void)
 {
+	/* System initialization */
 	system_init();
 	events_init();
 	delay_init();
 
+	/* Module initialization */
 	setup_tc_channels();
 	setup_tc_events();
 	setup_events();
 	setup_clock_out_pin();
 
+	/* Variables to track the previous and best calibration settings */
 	uint16_t comm_best   = -1;
 	uint8_t  frange_best = -1;
 	uint32_t freq_best   = -1;
 	uint32_t freq_before = get_osc_frequency();
 
-	/* Run calibration */
+	/* Run calibration loop */
 	for (uint8_t frange_cal = 1; frange_cal <= 2; frange_cal++) {
-		delay_ms(1);
-
 		for (uint16_t comm_cal = 0; comm_cal < 128; comm_cal++) {
+			/* Set the test calibration values */
 			system_clock_source_write_calibration(
-					SYSTEM_CLOCK_SOURCE_OSC8M, comm_cal | (8 << 7), frange_cal);
+					SYSTEM_CLOCK_SOURCE_OSC8M, (8 << 7) | comm_cal, frange_cal);
 
+			/* Wait for stabilization */
 			delay_cycles(1000);
 
+			/* Compute the deltas of the current and best system clock
+			 * frequencies, save current settings if they are closer to the
+			 * ideal frequency than the previous best values
+			 */
 			uint32_t freq_current = get_osc_frequency();
 			if (abs(freq_current - 8000000UL) < abs(freq_best - 8000000UL))
 			{
@@ -179,23 +238,23 @@ int main(void)
 		}
 	}
 
-	/* Set the found best calibration. */
+	/* Set the found best calibration values */
 	system_clock_source_write_calibration(
-			SYSTEM_CLOCK_SOURCE_OSC8M, comm_best | (8 << 7), frange_best);
+			SYSTEM_CLOCK_SOURCE_OSC8M, (8 << 7) | comm_best, frange_best);
 
-	/* Setup USART module to give information back. */
+	/* Setup USART module to output results */
 	setup_usart_channel();
 
-	/* Write freq. before and now, together with calibration values to usart. */
+	/* Write previous and current frequency and new calibration settings to the
+	 * USART
+	 */
 	printf("Freq Before: %lu\r\n", freq_before);
 	printf("Freq Before: %lu\r\n", freq_best);
 
 	printf("Freq Range: %u\r\n", frange_best);
-	printf("Calib Value: %u\r\n", comm_best | 8 << 7);
+	printf("Calib Value: %u\r\n", (8 << 7) | comm_best);
 
-	tc_disable(&tc_calib);
-	tc_disable(&tc_comp);
-
+	/* Rapidly flash the board LED to signal the calibration completion */
 	while (1) {
 		port_pin_toggle_output_level(LED_0_PIN);
 		delay_ms(200);
