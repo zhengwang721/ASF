@@ -111,11 +111,32 @@
  * -# Initialize the Analog Comparator channel and configure it with the desired
  *    settings.
  *  \snippet qs_ac_basic.c setup_12
+ *
+ * -# Create a new function \c configure_ac_callback(), which will be used to
+ *    configure the callbacks.
+ *  \snippet qs_ac_basic.c setup_15
+ * -# Create a new callback function.
+ *  \snippet qs_ac_basic.c callback_1
+ * -# Create a callback status software flag
+ *  \snippet qs_ac_basic.c callback_3
+ * -# Let the callback function set the calback_status flag to true
+ *  \snippet qs_ac_basic.c callback_2
+ * -# Register callback function.
+ *  \snippet qs_ac_basic.c setup_16
+ * -# Select when the interrupt should occur. In this case an interrupt will occur
+ *    at every finished conversion.
+ *  \snippet qs_ac_basic.c setup_17
+ *
+ * -# Enable the callbacks.
+ * \note This must be done before enabling the channel.
+ *  \snippet qs_ac_basic.c setup_20
+ *
  * -# Enable the now initialized Analog Comparator channel.
- *  \snippet qs_ac_basic.c setup_13
+ *  \snippet qs_ac_basic.c setup_18
  *
  * -# Enable the now initialized Analog Comparator peripheral.
- *  \snippet qs_ac_basic.c setup_14
+ *  \snippet qs_ac_basic.c setup_19
+ *
  *
  * \section asfdoc_samd20_ac_basic_use_case_imp Implementation
  *
@@ -132,9 +153,11 @@
  * -# Make the application loop infinitely, while performing triggered
  *    comparisons.
  *  \snippet qs_ac_basic.c main_3
+ * -# Check if a new comparison is complete.
+ *  \snippet qs_ac_basic.c main_4
  * -# Check if the comparator is ready for the last triggered comparison result
  *    to be read.
- *  \snippet qs_ac_basic.c main_4
+ *  \snippet qs_ac_basic.c main_5
  * -# Read the comparator output state into the local variable for application
  *    use, re-trying until the comparison state is ready.
  *  \snippet qs_ac_basic.c main_5
@@ -142,4 +165,5 @@
  *  \snippet qs_ac_basic.c main_6
  * -# Trigger the next conversion on the Analog Comparator channel.
  *  \snippet qs_ac_basic.c main_7
+ * -# After the interrupt is handled set the software callback flag to false.
  */

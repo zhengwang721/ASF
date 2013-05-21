@@ -149,15 +149,15 @@ int main(void)
 	configure_ac();
 	configure_ac_channel();
 	configure_ac_callback();
-	//! [setup_13]
+	//! [setup_18]
 	ac_chan_enable(&ac_dev, AC_COMPARATOR_CHANNEL);
-	//! [setup_13]
 	//! [setup_18]
+	//! [setup_19]
 	ac_enable(&ac_dev);
-	//! [setup_18]
 	//! [setup_19]
+	//! [setup_20]
 	ac_enable_callback(&ac_dev, AC_CALLBACK_COMPARATOR_0);
-	//! [setup_19]
+	//! [setup_20]
 	//! [setup_init]
 
 	//! [main]
