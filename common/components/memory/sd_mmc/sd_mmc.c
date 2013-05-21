@@ -1748,16 +1748,6 @@ static bool sd_mmc_mci_install_mmc(void)
 
 void sd_mmc_init(void)
 {
-//#if SAM && (defined SD_MMC_0_CD_GPIO)
-//# define SD_MMC_ENABLE_CD_PIN(slot, unused) \
-//	MREPEAT(SD_MMC_MEM_CNT, SD_MMC_ENABLE_CD_PIN, ~)
-//# undef SD_MMC_ENABLE_CD_PIN
-//#endif
-//#if SAM && (defined SD_MMC_0_WP_GPIO)
-//# define SD_MMC_ENABLE_WP_PIN(slot, unused) \
-//	MREPEAT(SD_MMC_MEM_CNT, SD_MMC_ENABLE_WP_PIN, ~)
-//# undef SD_MMC_ENABLE_WP_PIN
-//#endif
 	for (uint8_t slot = 0; slot < SD_MMC_MEM_CNT; slot++) {
 		sd_mmc_cards[slot].state = SD_MMC_CARD_STATE_NO_CARD;
 	}
