@@ -45,22 +45,44 @@
 #include <stdio.h>
 
 /**
- * \mainpage
+ * \mainpage SAM D20 Tic-Tac-Toe Example
+ * See \ref appdoc_samd20_tictactoe_main "here" for project documentation.
+ * \copydetails preface
  *
+ * \page preface Overview
  * This application demonstrates the use of the OLED1 Xplained Pro extension
- * board for the SAM D20 Xplained Pro with a Tic Tac Toe game.
+ * board for the SAM D20 Xplained Pro with a Tic-tac-toe game.
+ */
+ 
+ /**
+ * \page appdoc_samd20_tictactoe_main SAM D20 Tic-Tac-Toe Example
+ * Overview:
+ * - \ref appdoc_samd20_tictactoe_intro
+ * - \ref appdoc_samd20_tictactoe_setup
+ * - \ref appdoc_samd20_tictactoe_compinfo
+ * - \ref appdoc_samd20_tictactoe_contactinfo
  *
- * \section  play How to Play
+ * \section  appdoc_samd20_tictactoe_intro Introduction
+ * This application demonstrates the use of the OLED1 Xplained Pro extension
+ * board for the SAM D20 Xplained Pro with a tic-tac-toe game.
+ *
  * The game is controlled with the three mechanical buttons on the OLED1
  * Xplained Pro. The goal is to get three circles in a horizontal, diagonal or
  * vertical row, before the opponent (SAM D20) gets three crosses in a row.
  *
- * \section setup Hardware Setup
+ * \section appdoc_samd20_tictactoe_setup Hardware Setup
  * The OLED1 Xplained Pro extension board must be connected to extension
  * header 3 on the SAM D20 Xplained Pro.
  * To use another extension header, the configuration in \ref conf_board.h and
  * \ref conf_ssd1306.h must be edited.
  *
+ * \section appdoc_samd20_tictactoe_compinfo Compilation Info
+ * This software was written for the GNU GCC and IAR for ARM.
+ * Other compilers may or may not work.
+ *
+ * \section appdoc_samd20_tictactoe_contactinfo Contact Information
+ * For further information, visit
+ * <a href="http://www.atmel.com">http://www.atmel.com</a>.
  */
 
 /* Size of a square */
@@ -134,7 +156,7 @@ uint16_t games = 0;
 char win_string[STRING_LENGTH];
 
 /** 
- * \brief Draws the Tic Tac Toe board on the display
+ * \brief Draws the Tic-tac-toe board on the display
  *
  */
 static void setup_board(void)
