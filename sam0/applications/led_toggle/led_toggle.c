@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 External Interrupt Driver Quick Start
+ * \brief SAM D20 LED Toggle Example
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -40,45 +40,154 @@
  * \asf_license_stop
  *
  */
-#include <asf.h>
 
-/*
-	USE_INTERRUPTS    USE_EIC  Result
-	--------------    -------  ---------------------------------------------
-	false             false    Polled via PORT driver
-	false             true     Polled via EIC driver
-	true              false    Polled via PORT driver, using SysTick handler
-	true              true     Polled via EIC driver, using EIC handler
+/**
+ * \mainpage SAM D20 LED Toggle Example
+ * See \ref appdoc_main "here" for project documentation.
+ * \copydetails preface
+ *
+ *
+ * \page preface Overview
+ * This application demonstrates a simple example to turn on the board LED when
+ * a button is pressed, using a variety of methods and modules within the device.
  */
 
+/**
+ * \page appdoc_main SAM D20 LED Toggle Example
+ *
+ * Overview:
+ * - \ref appdoc_samd20_led_toggle_app_intro
+ * - \ref appdoc_samd20_led_toggle_app_usage
+ * - \ref appdoc_samd20_led_toggle_app_config
+ * - \ref appdoc_samd20_led_toggle_app_compinfo
+ * - \ref appdoc_samd20_led_toggle_app_contactinfo
+ *
+ * \section appdoc_samd20_led_toggle_app_intro Introduction
+ * This application demonstrates a simple example to turn on the board LED when
+ * a button is pressed, using a variety of methods and modules within the device.
+ *
+ * \section appdoc_samd20_led_toggle_app_usage Usage
+ * When run, press the board button to turn on the board LED, release to turn
+ * the LED off. If the application settings are altered, the application must be
+ * recompiled and re-run on the device.
+ *
+ * \section appdoc_samd20_led_toggle_app_config Configuration
+ * The table \ref appdoc_samd20_led_toggle_app_conftable "below" shows the
+ * possible configurations of this example.
+ *
+ * \anchor appdoc_samd20_led_toggle_app_conftable
+ * <table>
+ *  <caption>Example Configurations</caption>
+ * 	<tr>
+ * 		<th>USE_INTERRUPTS</th>
+ * 		<th>USE_EIC</th>
+ * 		<th>Result</th>
+ * 	</tr>
+ * 	<tr>
+ * 		<td>false</td>
+ * 		<td>false</td>
+ * 		<td>Polled via PORT driver</td>
+ * 	</tr>
+ * 	<tr>
+ * 		<td>false</td>
+ * 		<td>true</td>
+ * 		<td>Polled via EIC driver</td>
+ * 	</tr>
+ * 	<tr>
+ * 		<td>true</td>
+ * 		<td>false</td>
+ * 		<td>Asynchronous using SysTick handler</td>
+ * 	</tr>
+ * 	<tr>
+ * 		<td>true</td>
+ * 		<td>true</td>
+ * 		<td>Asynchronous using EIC handler</td>
+ * 	</tr>
+ * </table>
+ *
+ * \section appdoc_samd20_led_toggle_app_compinfo Compilation Info
+ * This software was written for the GNU GCC and IAR for ARM.
+ * Other compilers may or may not work.
+ *
+ * \section appdoc_samd20_led_toggle_app_contactinfo Contact Information
+ * For further information, visit
+ * <a href="http://www.atmel.com">http://www.atmel.com</a>.
+ */
+
+#include <asf.h>
+
+/** If \true, interrupts are used to alter the board state, when \false polling
+ *  is used.
+ */
 #define USE_INTERRUPTS   true
+
+/** If \true, the External Interrupt Controller module is used to check when the
+ *   button state changes, when \false the PORT module is used.
+ */
 #define USE_EIC          true
 
-static void board_extint_handler(uint32_t channel)
+
+/** Updates the board LED to the current button state. */
+static void update_led_state(void)
 {
 	bool pin_state = port_pin_get_input_level(BUTTON_0_PIN);
 	port_pin_set_output_level(LED_0_PIN, pin_state);
 }
 
-static void configure_led(void)
+#if USE_INTERRUPTS == true
+#  if USE_EIC == true
+/** Callback function for the EXTINT driver, called when an external interrupt
+ *  detection occurs.
+ *
+ *  \param[in] channel  External Interrupt channel that has changed state
+ */
+static void extint_callback(uint32_t channel)
 {
-	struct port_config pin_conf;
-	port_get_config_defaults(&pin_conf);
-
-	pin_conf.direction = PORT_PIN_DIR_OUTPUT;
-	port_pin_set_config(LED_0_PIN, &pin_conf);
+	update_led_state();
 }
 
-static void configure_button(void)
+/** Configures and registers the External Interrupt callback function with the
+ *  driver.
+ */
+static void configure_eic_callback(void)
 {
-#if USE_EIC == false
-	struct port_config pin_conf;
-	port_get_config_defaults(&pin_conf);
+	extint_register_callback(extint_callback,
+			EXTINT_CALLBACK_TYPE_DETECT);
+	extint_chan_enable_callback(BUTTON_0_EIC_LINE,
+			EXTINT_CALLBACK_TYPE_DETECT);
+}
+#  else
+/** Handler for the device SysTick module, called when the SysTick counter
+ *  reaches the set period.
+ *
+ *  \note As this is a raw device interrupt, the function name is significant
+ *        and must not be altered to ensure it is hooked into the device's
+ *        vector table.
+ */
+void SysTick_Handler(void)
+{
+	update_led_state();
+}
 
-	pin_conf.direction  = PORT_PIN_DIR_INPUT;
-	pin_conf.input_pull = PORT_PIN_PULL_UP;
-	port_pin_set_config(BUTTON_0_PIN, &pin_conf);
-#else
+/** Configures the SysTick module to fire a SysTick interrupt every 999 system
+ *  clock source cycles.
+ */
+static void configure_systick_handler(void)
+{
+	SysTick->CTRL = 0;
+	SysTick->LOAD = 999;
+	SysTick->VAL  = 0;
+	SysTick->CTRL = SysTick_CTRL_CLKSOURCE_Msk | SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_ENABLE_Msk;
+}
+#  endif
+#endif
+
+#if USE_EIC == true
+/** Configures the External Interrupt Controller to detect changes in the board
+ *  button state.
+ */
+static void configure_extint(void)
+{
 	struct extint_chan_conf eint_chan_conf;
 	extint_chan_get_config_defaults(&eint_chan_conf);
 
@@ -88,20 +197,6 @@ static void configure_button(void)
 	extint_chan_set_config(BUTTON_0_EIC_LINE, &eint_chan_conf);
 
 	extint_enable();
-
-#  if USE_INTERRUPTS == true
-	extint_register_callback(board_extint_handler,
-			EXTINT_CALLBACK_TYPE_DETECT);
-	extint_chan_enable_callback(BUTTON_0_EIC_LINE,
-			EXTINT_CALLBACK_TYPE_DETECT);
-#  endif
-#endif
-}
-
-#if USE_EIC == false && USE_INTERRUPTS == true
-void SysTick_Handler(void)
-{
-	board_extint_handler(BUTTON_0_EIC_LINE);
 }
 #endif
 
@@ -109,15 +204,15 @@ int main(void)
 {
 	system_init();
 
-	configure_led();
-	configure_button();
+#if USE_EIC == true
+	configure_extint();
+#endif
 
 #if USE_INTERRUPTS == true
 #  if USE_EIC == false
-	SysTick->CTRL = 0;
-	SysTick->LOAD = 999;
-	SysTick->VAL  = 0;
-	SysTick->CTRL = SysTick_CTRL_CLKSOURCE_Msk | SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_ENABLE_Msk;
+	configure_systick_handler();
+#  else
+	configure_eic_callback();
 #  endif
 
 	system_interrupt_enable_global();
@@ -128,14 +223,14 @@ int main(void)
 #else
 #  if USE_EIC == false
 	while (true) {
-		board_extint_handler(BUTTON_0_EIC_LINE);
+		update_led_state();
 	}
 #  else
 	while (true) {
 		if (extint_chan_is_detected(BUTTON_0_EIC_LINE)) {
 			extint_chan_clear_detected(BUTTON_0_EIC_LINE);
 
-			board_extint_handler(BUTTON_0_EIC_LINE);
+			update_led_state();
 		}
 	}
 #  endif

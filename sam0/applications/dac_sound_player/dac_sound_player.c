@@ -39,40 +39,79 @@
  * \asf_license_stop
  *
  */
+
+/**
+ * \mainpage SAM D20 DAC Sound Player Application
+ * See \ref appdoc_main "here" for project documentation.
+ * \copydetails preface
+ *
+ *
+ * \page preface Overview
+ * This application demonstrates a simple sound player, sourcing a waveform
+ * from the device's Non-Volatile Memory and streaming it out of the DAC as
+ * an analog waveform.
+ */
+
+/**
+ * \page appdoc_main SAM D20 DAC Sound Player Application
+ *
+ * Overview:
+ * - \ref appdoc_samd20_dac_sound_player_intro
+ * - \ref appdoc_samd20_dac_sound_player_setup
+ * - \ref appdoc_samd20_dac_sound_player_usage
+ * - \ref appdoc_samd20_dac_sound_player_compinfo
+ * - \ref appdoc_samd20_dac_sound_player_contactinfo
+ *
+ * \section appdoc_samd20_dac_sound_player_intro Introduction
+ * This application demonstrates a simple sound player, sourcing a waveform
+ * from the device's Non-Volatile Memory and streaming it out of the DAC as
+ * an analog waveform.
+ *
+ * A timer is used to guarantee the DAC conversions are performed at the correct
+ * sample rate, using the Event System module of the device to link the periodic
+ * timer output events to the DAC module to trigger new sample conversions.
+ *
+ * \section appdoc_samd20_dac_sound_player_setup Hardware Setup
+ * The device's DAC channel 0 output should be connected to an audio amplifier,
+ * speaker, oscilloscope or other similar monitoring equipment so that the
+ * generated waveform can be monitored.
+ *
+ * \section appdoc_samd20_dac_sound_player_usage Usage
+ * On startup the device hardware will be configured, and the example will enter
+ * an infinite loop. Each time the board button is pressed, the embedded
+ * waveform will be output through the DAC and the board LED will be toggled
+ *
+ * \section appdoc_samd20_dac_sound_player_compinfo Compilation Info
+ * This software was written for the GNU GCC and IAR for ARM.
+ * Other compilers may or may not work.
+ *
+ * \section appdoc_samd20_dac_sound_player_contactinfo Contact Information
+ * For further information, visit
+ * <a href="http://www.atmel.com">http://www.atmel.com</a>.
+ */
+
 #include <asf.h>
 
+/** Sample rate of the sound table. */
 const uint32_t sample_rate = 16000;
+
+/** Embedded waveform table of sound samples to output. */
 const uint16_t wav_samples[] = {
 	#include "data.x"
 };
 
-const uint32_t number_of_samples = (sizeof(wav_samples)/sizeof(wav_samples[0]));
+/** Number of samples in the waveform. */
+const uint32_t number_of_samples =
+		(sizeof(wav_samples) / sizeof(wav_samples[0]));
+
 
 /**
- * \brief Function for configuring the pins
- */
-static void configure_pins(void)
-{
-	struct system_pinmux_config pin_config;
-	system_pinmux_get_config_defaults(&pin_config);
-
-	/* Set up the Xplained PRO LED pin to output status info */
-	pin_config.mux_position = SYSTEM_PINMUX_GPIO;
-	pin_config.direction    = SYSTEM_PINMUX_PIN_DIR_OUTPUT;
-	pin_config.input_pull   = SYSTEM_PINMUX_PIN_PULL_UP;
-	system_pinmux_pin_set_config(LED0_PIN, &pin_config);
-
-	pin_config.direction    = SYSTEM_PINMUX_PIN_DIR_INPUT;
-	system_pinmux_pin_set_config(SW0_PIN, &pin_config);
-}
-
-/**
- * \brief Function for configuring DAC
+ * \brief Configures the DAC in event triggered mode.
  *
- * This function will configure the DAC using the default DAC configuration,
- * except for manual trigger instead of event trigger.
+ * Configures the DAC to use the module's default configuration, with output
+ * channel mode configured for event triggered conversions.
  *
- * \param dev_inst pointer to the module descriptor
+ * \param dev_inst  Pointer to the DAC module software instance to initialize
  */
 static void configure_dac(struct dac_module *dac_module)
 {
@@ -100,56 +139,66 @@ static void configure_dac(struct dac_module *dac_module)
 	dac_chan_enable(dac_module, DAC_CHANNEL_0);
 }
 
+/**
+ * \brief Configures the TC to generate output events at the sample frequency.
+ *
+ * Configures the TC in Frequency Generation mode, with an event output once
+ * each time the audio sample frequency period expires.
+ *
+ * \param dev_inst  Pointer to the TC module software instance to initialize
+ */
 static void configure_tc(struct tc_module *tc_module)
 {
 	struct tc_config config;
-	struct tc_events events;
-
 	tc_get_config_defaults(&config);
 
-	config.clock_source = GCLK_GENERATOR_0;
+	config.clock_source    = GCLK_GENERATOR_0;
 	config.wave_generation = TC_WAVE_GENERATION_MATCH_FREQ;
 
 	tc_init(tc_module, TC0, &config);
 
+
+	struct tc_events events;
+	tc_get_events_config_default(&events);
+
 	events.generate_event_on_overflow = true;
-	events.enable_incoming_events = false;
-	events.generate_event_on_compare_channel[0] = false;
-	events.generate_event_on_compare_channel[1] = false;
 
 	tc_enable_events(tc_module, &events);
 
 	tc_set_top_value(tc_module,
 			system_gclk_gen_get_hz(GCLK_GENERATOR_0)/sample_rate);
 
+
 	tc_enable(tc_module);
 }
 
-static void configure_event_channel(void)
-{
-	struct events_chan_config events_chan_config;
-	events_chan_get_config_defaults(&events_chan_config);
-
-	events_chan_config.generator_id = EVSYS_ID_GEN_TC0_OVF;
-	events_chan_config.path = EVENT_PATH_ASYNCHRONOUS;
-	events_chan_set_config(EVENT_CHANNEL_0, &events_chan_config);
-
-}
-
-static void configure_event_user(void)
-{
-	struct events_user_config events_user_config;
-	events_user_get_config_defaults(&events_user_config);
-	events_user_config.event_channel_id = EVENT_CHANNEL_0;
-	events_user_set_config(EVSYS_ID_USER_DAC_START, &events_user_config);
-}
-
+/**
+ * \brief Configures the event system to link the sample timer to the DAC.
+ *
+ * Configures the event system, linking the TC module used for the audio sample
+ * rate timing to the DAC, so that a new conversion is triggered each time the
+ * DAC receives an event from the timer.
+ */
 static void configure_events(void)
 {
 	events_init();
 
-	configure_event_user();
-	configure_event_channel();
+
+	struct events_user_config events_user_config;
+	events_user_get_config_defaults(&events_user_config);
+
+	events_user_config.event_channel_id = EVENT_CHANNEL_0;
+
+	events_user_set_config(EVSYS_ID_USER_DAC_START, &events_user_config);
+
+
+	struct events_chan_config events_chan_config;
+	events_chan_get_config_defaults(&events_chan_config);
+
+	events_chan_config.generator_id = EVSYS_ID_GEN_TC0_OVF;
+	events_chan_config.path         = EVENT_PATH_ASYNCHRONOUS;
+
+	events_chan_set_config(EVENT_CHANNEL_0, &events_chan_config);
 }
 
 /**
@@ -163,23 +212,19 @@ int main(void)
 	/* Initialize all the system clocks, pm, gclk... */
 	system_init();
 
-	configure_pins();
-
 	/* Enable the internal bandgap to use as reference to the DAC */
 	system_voltage_reference_enable(SYSTEM_VOLTAGE_REFERENCE_BANDGAP);
 
+	/* Module configuration */
 	configure_tc(&tc_module);
-
-	/* Configure the DAC */
 	configure_dac(&dac_module);
-
-	tc_start_counter(&tc_module);
-
 	configure_events();
 
-	/* Main application loop that writes a sine wave */
+	/* Start the sample trigger timer */
+	tc_start_counter(&tc_module);
+
 	while (true) {
-		while (port_pin_get_input_level(SW0_PIN)) {
+		while (port_pin_get_input_level(SW0_PIN) == SW0_INACTIVE) {
 			/* Wait for the button to be pressed */
 		}
 
@@ -194,10 +239,8 @@ int main(void)
 
 		}
 
-		while (!port_pin_get_input_level(SW0_PIN)) {
+		while (!port_pin_get_input_level(SW0_PIN) == SW0_ACTIVE) {
 			/* Wait for the button to be depressed */
 		}
-
 	}
-
 }
