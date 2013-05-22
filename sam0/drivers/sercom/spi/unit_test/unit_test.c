@@ -159,6 +159,7 @@ static void cdc_uart_init(void)
 	cdc_uart_config.baudrate         = 115200;
 	stdio_serial_init(&cdc_uart_module, EDBG_CDC_MODULE, &cdc_uart_config);
 	usart_enable(&cdc_uart_module);
+
 	/* Enable transceivers */
 	usart_enable_transceiver(&cdc_uart_module, USART_TRANSCEIVER_TX);
 	usart_enable_transceiver(&cdc_uart_module, USART_TRANSCEIVER_RX);
@@ -198,6 +199,7 @@ static void run_spi_init_test(const struct test_case *test)
 	status = spi_init(&master, SPI_MASTER_MODULE, &config);
 	test_assert_true(test, status == STATUS_OK,
 			"SPI master initialization failed");
+
 	/* Enable the SPI master */
 	spi_enable(&master);
 
@@ -215,6 +217,7 @@ static void run_spi_init_test(const struct test_case *test)
 	status = spi_init(&slave, SPI_SLAVE_MODULE, &config);
 	test_assert_true(test, status == STATUS_OK,
 			"SPI slave initialization failed");
+
 	/* Enable the SPI slave */
 	spi_enable(&slave);
 	if (status == STATUS_OK) {
@@ -249,10 +252,12 @@ static void run_single_byte_polled_test(const struct test_case *test)
 	spi_write(&master, txd_data);
 	while (!spi_is_write_complete(&master)) {
 	}
+
 	/* Dummy read SPI master data register */
 	while (!spi_is_ready_to_read(&master)) {
 	}
 	spi_read(&master, &rxd_data);
+
 	/* Read SPI slave data register */
 	while (!spi_is_ready_to_read(&slave)) {
 	}
@@ -372,7 +377,7 @@ static void run_transceive_buffer_test(const struct test_case *test)
 			"Skipping test due to failed initialization");
 
 	/* Start the test */
-	spi_transceive_buffer_job(&slave, slave_tx_buf, slave_rx_buf, 
+	spi_transceive_buffer_job(&slave, slave_tx_buf, slave_rx_buf,
 			BUFFER_LENGTH);
 	spi_select_slave(&master, &slave_inst, true);
 	status = spi_transceive_buffer_wait(&master, tx_buf, rx_buf,
@@ -409,9 +414,9 @@ static void run_transceive_buffer_test(const struct test_case *test)
 static void run_baud_test(const struct test_case *test)
 {
 	uint32_t test_baud = 1000000;
-	uint8_t txd_data = 0x55;
-	uint8_t rxd_data;
-	bool max_baud = true;
+	uint8_t txd_data   = 0x55;
+	uint8_t rxd_data   = 0;
+	bool max_baud      = true;
 
 	/* Skip test if initialization failed */
 	test_assert_true(test, spi_init_success,
@@ -488,6 +493,7 @@ static void setup_transfer_9bit_test(const struct test_case *test)
 	spi_enable(&master);
 
 	status = STATUS_ERR_IO;
+
 	/* Configure the SPI slave */
 	spi_get_config_defaults(&config);
 	config.mode                 = SPI_MODE_SLAVE;
@@ -502,6 +508,7 @@ static void setup_transfer_9bit_test(const struct test_case *test)
 	status = spi_init(&slave, SPI_SLAVE_MODULE, &config);
 	test_assert_true(test, status == STATUS_OK,
 			"SPI slave initialization failed for 9-bit configuration");
+
 	/* Enable the SPI slave */
 	spi_enable(&slave);
 	if (status == STATUS_OK) {
@@ -523,7 +530,7 @@ static void setup_transfer_9bit_test(const struct test_case *test)
 static void run_transfer_9bit_test(const struct test_case *test)
 {
 	uint16_t txd_data = 0x155;
-	uint16_t rxd_data;
+	uint16_t rxd_data = 0;
 
 	/* Skip test if initialization failed */
 	test_assert_true(test, spi_init_success,
@@ -536,10 +543,12 @@ static void run_transfer_9bit_test(const struct test_case *test)
 	spi_write(&master, txd_data);
 	while (!spi_is_write_complete(&master)) {
 	}
+
 	/* Dummy read SPI master data register */
 	while (!spi_is_ready_to_read(&master)) {
 	}
 	spi_read(&master, &rxd_data);
+
 	/* Read SPI slave data register */
 	while (!spi_is_ready_to_read(&slave)) {
 	}
