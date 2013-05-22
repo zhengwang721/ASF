@@ -197,10 +197,19 @@ static void setup_board(void)
 static enum button get_button(void)
 {
 	if (port_pin_get_input_level(WING_BUTTON_1) == false) {
+		/* Wait for button to be released */
+		while(!port_pin_get_input_level(WING_BUTTON_1)) {
+		}
 		return BUTTON_1;
 	} else if (port_pin_get_input_level(WING_BUTTON_2) == false) {
+		/* Wait for button to be released */
+		while(!port_pin_get_input_level(WING_BUTTON_2)) {
+		}
 		return BUTTON_2;
 	} else if (port_pin_get_input_level(WING_BUTTON_3) == false) {
+		/* Wait for button to be released */
+		while(!port_pin_get_input_level(WING_BUTTON_3)) {
+		}
 		return BUTTON_3;
 	} else {
 		/* No button pushed */
@@ -290,7 +299,6 @@ static void user_turn(void)
 		do {
 			button_pushed = get_button();
 		} while (button_pushed == BUTTON_NONE);
-		delay_ms(500);
 
 		switch (button_pushed) {
 		case BUTTON_1:
@@ -452,6 +460,8 @@ int main(void)
 				break;
 			}
 
+			/* Add a delay for the opponent to "think" */
+			delay_ms(500);
 			/* Opponent's turn */
 			opponent_turn();
 
