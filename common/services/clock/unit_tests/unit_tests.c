@@ -472,9 +472,9 @@ int main (void)
 	ptr_put = (int (*)(void volatile*,char))&usart_write_char_buf;
 
 	// Define all the test cases.
-	DEFINE_TEST_CASE(osc_test, NULL, run_osc_test, NULL,
+	DEFINE_TEST_CASE(osc_test, NULL, run_osc_test, cleanup_osc_test,
 			"Oscillator0/1 test");
-	DEFINE_TEST_CASE(osc32_test, NULL, run_osc32_test, NULL,
+	DEFINE_TEST_CASE(osc32_test, NULL, run_osc32_test, cleanup_osc32_test,
 			"32KHz oscillator test");
 	DEFINE_TEST_CASE(pll_dfll_test, NULL, run_pll_dfll_test,
 			cleanup_pll_dfll_test, "Pll or Dfll test");
