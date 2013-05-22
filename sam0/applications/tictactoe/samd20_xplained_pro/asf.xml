@@ -6,9 +6,15 @@
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clocks.h"/>
+		<build type="header-file" value="conf_ssd1306.h"/>
+		<build type="header-file" value="conf_sysfont.h"/>
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>
 		<device-support value="atsamd20j18"/>
+
+		<config name="common2.services.gfx_mono.display" value="ug_2832hsweg04"/>
+		<config name="config.sam0.drivers.sercom.spi" value="polled"/>
+
 	</project>
 </asf>
