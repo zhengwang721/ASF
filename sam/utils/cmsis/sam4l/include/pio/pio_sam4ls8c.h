@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Peripheral I/O description for SAM4LC8C
+ * \brief Peripheral I/O description for SAM4LS8C
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -41,8 +41,8 @@
  *
  */
 
-#ifndef _SAM4LC8C_PIO_
-#define _SAM4LC8C_PIO_
+#ifndef _SAM4LS8C_PIO_
+#define _SAM4LS8C_PIO_
 
 #define PIN_PA00                           0  /**< \brief Pin Number for PA00 */
 #define GPIO_PA00                  (1u <<  0) /**< \brief GPIO Mask  for PA00 */
@@ -98,6 +98,16 @@
 #define GPIO_PA25                  (1u << 25) /**< \brief GPIO Mask  for PA25 */
 #define PIN_PA26                          26  /**< \brief Pin Number for PA26 */
 #define GPIO_PA26                  (1u << 26) /**< \brief GPIO Mask  for PA26 */
+#define PIN_PA27                          27  /**< \brief Pin Number for PA27 */
+#define GPIO_PA27                  (1u << 27) /**< \brief GPIO Mask  for PA27 */
+#define PIN_PA28                          28  /**< \brief Pin Number for PA28 */
+#define GPIO_PA28                  (1u << 28) /**< \brief GPIO Mask  for PA28 */
+#define PIN_PA29                          29  /**< \brief Pin Number for PA29 */
+#define GPIO_PA29                  (1u << 29) /**< \brief GPIO Mask  for PA29 */
+#define PIN_PA30                          30  /**< \brief Pin Number for PA30 */
+#define GPIO_PA30                  (1u << 30) /**< \brief GPIO Mask  for PA30 */
+#define PIN_PA31                          31  /**< \brief Pin Number for PA31 */
+#define GPIO_PA31                  (1u << 31) /**< \brief GPIO Mask  for PA31 */
 #define PIN_PB00                          32  /**< \brief Pin Number for PB00 */
 #define GPIO_PB00                  (1u <<  0) /**< \brief GPIO Mask  for PB00 */
 #define PIN_PB01                          33  /**< \brief Pin Number for PB01 */
@@ -239,6 +249,10 @@
 #define MUX_PC14D_IISC_IMCK                3
 #define PINMUX_PC14D_IISC_IMCK     ((PIN_PC14D_IISC_IMCK << 16) | MUX_PC14D_IISC_IMCK)
 #define GPIO_PC14D_IISC_IMCK       (1u << 14)
+#define PIN_PA31B_IISC_IMCK               31  /**< \brief IISC signal: IMCK on PA31 mux B */
+#define MUX_PA31B_IISC_IMCK                1
+#define PINMUX_PA31B_IISC_IMCK     ((PIN_PA31B_IISC_IMCK << 16) | MUX_PA31B_IISC_IMCK)
+#define GPIO_PA31B_IISC_IMCK       (1u << 31)
 #define PIN_PB02D_IISC_ISCK               34  /**< \brief IISC signal: ISCK on PB02 mux D */
 #define MUX_PB02D_IISC_ISCK                3
 #define PINMUX_PB02D_IISC_ISCK     ((PIN_PB02D_IISC_ISCK << 16) | MUX_PB02D_IISC_ISCK)
@@ -247,6 +261,10 @@
 #define MUX_PC09D_IISC_ISCK                3
 #define PINMUX_PC09D_IISC_ISCK     ((PIN_PC09D_IISC_ISCK << 16) | MUX_PC09D_IISC_ISCK)
 #define GPIO_PC09D_IISC_ISCK       (1u <<  9)
+#define PIN_PA27B_IISC_ISCK               27  /**< \brief IISC signal: ISCK on PA27 mux B */
+#define MUX_PA27B_IISC_ISCK                1
+#define PINMUX_PA27B_IISC_ISCK     ((PIN_PA27B_IISC_ISCK << 16) | MUX_PA27B_IISC_ISCK)
+#define GPIO_PA27B_IISC_ISCK       (1u << 27)
 #define PIN_PB03D_IISC_ISDI               35  /**< \brief IISC signal: ISDI on PB03 mux D */
 #define MUX_PB03D_IISC_ISDI                3
 #define PINMUX_PB03D_IISC_ISDI     ((PIN_PB03D_IISC_ISDI << 16) | MUX_PB03D_IISC_ISDI)
@@ -255,6 +273,10 @@
 #define MUX_PC10D_IISC_ISDI                3
 #define PINMUX_PC10D_IISC_ISDI     ((PIN_PC10D_IISC_ISDI << 16) | MUX_PC10D_IISC_ISDI)
 #define GPIO_PC10D_IISC_ISDI       (1u << 10)
+#define PIN_PA28B_IISC_ISDI               28  /**< \brief IISC signal: ISDI on PA28 mux B */
+#define MUX_PA28B_IISC_ISDI                1
+#define PINMUX_PA28B_IISC_ISDI     ((PIN_PA28B_IISC_ISDI << 16) | MUX_PA28B_IISC_ISDI)
+#define GPIO_PA28B_IISC_ISDI       (1u << 28)
 #define PIN_PB04D_IISC_ISDO               36  /**< \brief IISC signal: ISDO on PB04 mux D */
 #define MUX_PB04D_IISC_ISDO                3
 #define PINMUX_PB04D_IISC_ISDO     ((PIN_PB04D_IISC_ISDO << 16) | MUX_PB04D_IISC_ISDO)
@@ -263,6 +285,10 @@
 #define MUX_PC13D_IISC_ISDO                3
 #define PINMUX_PC13D_IISC_ISDO     ((PIN_PC13D_IISC_ISDO << 16) | MUX_PC13D_IISC_ISDO)
 #define GPIO_PC13D_IISC_ISDO       (1u << 13)
+#define PIN_PA30B_IISC_ISDO               30  /**< \brief IISC signal: ISDO on PA30 mux B */
+#define MUX_PA30B_IISC_ISDO                1
+#define PINMUX_PA30B_IISC_ISDO     ((PIN_PA30B_IISC_ISDO << 16) | MUX_PA30B_IISC_ISDO)
+#define GPIO_PA30B_IISC_ISDO       (1u << 30)
 #define PIN_PB06D_IISC_IWS                38  /**< \brief IISC signal: IWS on PB06 mux D */
 #define MUX_PB06D_IISC_IWS                 3
 #define PINMUX_PB06D_IISC_IWS      ((PIN_PB06D_IISC_IWS << 16) | MUX_PB06D_IISC_IWS)
@@ -271,6 +297,10 @@
 #define MUX_PC12D_IISC_IWS                 3
 #define PINMUX_PC12D_IISC_IWS      ((PIN_PC12D_IISC_IWS << 16) | MUX_PC12D_IISC_IWS)
 #define GPIO_PC12D_IISC_IWS        (1u << 12)
+#define PIN_PA29B_IISC_IWS                29  /**< \brief IISC signal: IWS on PA29 mux B */
+#define MUX_PA29B_IISC_IWS                 1
+#define PINMUX_PA29B_IISC_IWS      ((PIN_PA29B_IISC_IWS << 16) | MUX_PA29B_IISC_IWS)
+#define GPIO_PA29B_IISC_IWS        (1u << 29)
 /* ========== GPIO definition for SPI peripheral ========== */
 #define PIN_PA03B_SPI_MISO                 3  /**< \brief SPI signal: MISO on PA03 mux B */
 #define MUX_PA03B_SPI_MISO                 1
@@ -288,6 +318,10 @@
 #define MUX_PA21A_SPI_MISO                 0
 #define PINMUX_PA21A_SPI_MISO      ((PIN_PA21A_SPI_MISO << 16) | MUX_PA21A_SPI_MISO)
 #define GPIO_PA21A_SPI_MISO        (1u << 21)
+#define PIN_PA27A_SPI_MISO                27  /**< \brief SPI signal: MISO on PA27 mux A */
+#define MUX_PA27A_SPI_MISO                 0
+#define PINMUX_PA27A_SPI_MISO      ((PIN_PA27A_SPI_MISO << 16) | MUX_PA27A_SPI_MISO)
+#define GPIO_PA27A_SPI_MISO        (1u << 27)
 #define PIN_PC04A_SPI_MISO                68  /**< \brief SPI signal: MISO on PC04 mux A */
 #define MUX_PC04A_SPI_MISO                 0
 #define PINMUX_PC04A_SPI_MISO      ((PIN_PC04A_SPI_MISO << 16) | MUX_PC04A_SPI_MISO)
@@ -304,6 +338,10 @@
 #define MUX_PA22A_SPI_MOSI                 0
 #define PINMUX_PA22A_SPI_MOSI      ((PIN_PA22A_SPI_MOSI << 16) | MUX_PA22A_SPI_MOSI)
 #define GPIO_PA22A_SPI_MOSI        (1u << 22)
+#define PIN_PA28A_SPI_MOSI                28  /**< \brief SPI signal: MOSI on PA28 mux A */
+#define MUX_PA28A_SPI_MOSI                 0
+#define PINMUX_PA28A_SPI_MOSI      ((PIN_PA28A_SPI_MOSI << 16) | MUX_PA28A_SPI_MOSI)
+#define GPIO_PA28A_SPI_MOSI        (1u << 28)
 #define PIN_PC05A_SPI_MOSI                69  /**< \brief SPI signal: MOSI on PC05 mux A */
 #define MUX_PC05A_SPI_MOSI                 0
 #define PINMUX_PC05A_SPI_MOSI      ((PIN_PC05A_SPI_MOSI << 16) | MUX_PC05A_SPI_MOSI)
@@ -320,6 +358,10 @@
 #define MUX_PA24A_SPI_NPCS0                0
 #define PINMUX_PA24A_SPI_NPCS0     ((PIN_PA24A_SPI_NPCS0 << 16) | MUX_PA24A_SPI_NPCS0)
 #define GPIO_PA24A_SPI_NPCS0       (1u << 24)
+#define PIN_PA30A_SPI_NPCS0               30  /**< \brief SPI signal: NPCS0 on PA30 mux A */
+#define MUX_PA30A_SPI_NPCS0                0
+#define PINMUX_PA30A_SPI_NPCS0     ((PIN_PA30A_SPI_NPCS0 << 16) | MUX_PA30A_SPI_NPCS0)
+#define GPIO_PA30A_SPI_NPCS0       (1u << 30)
 #define PIN_PC03A_SPI_NPCS0               67  /**< \brief SPI signal: NPCS0 on PC03 mux A */
 #define MUX_PC03A_SPI_NPCS0                0
 #define PINMUX_PC03A_SPI_NPCS0     ((PIN_PC03A_SPI_NPCS0 << 16) | MUX_PC03A_SPI_NPCS0)
@@ -332,6 +374,10 @@
 #define MUX_PB13B_SPI_NPCS1                1
 #define PINMUX_PB13B_SPI_NPCS1     ((PIN_PB13B_SPI_NPCS1 << 16) | MUX_PB13B_SPI_NPCS1)
 #define GPIO_PB13B_SPI_NPCS1       (1u << 13)
+#define PIN_PA31A_SPI_NPCS1               31  /**< \brief SPI signal: NPCS1 on PA31 mux A */
+#define MUX_PA31A_SPI_NPCS1                0
+#define PINMUX_PA31A_SPI_NPCS1     ((PIN_PA31A_SPI_NPCS1 << 16) | MUX_PA31A_SPI_NPCS1)
+#define GPIO_PA31A_SPI_NPCS1       (1u << 31)
 #define PIN_PC02A_SPI_NPCS1               66  /**< \brief SPI signal: NPCS1 on PC02 mux A */
 #define MUX_PC02A_SPI_NPCS1                0
 #define PINMUX_PC02A_SPI_NPCS1     ((PIN_PC02A_SPI_NPCS1 << 16) | MUX_PC02A_SPI_NPCS1)
@@ -368,6 +414,10 @@
 #define MUX_PA23A_SPI_SCK                  0
 #define PINMUX_PA23A_SPI_SCK       ((PIN_PA23A_SPI_SCK << 16) | MUX_PA23A_SPI_SCK)
 #define GPIO_PA23A_SPI_SCK         (1u << 23)
+#define PIN_PA29A_SPI_SCK                 29  /**< \brief SPI signal: SCK on PA29 mux A */
+#define MUX_PA29A_SPI_SCK                  0
+#define PINMUX_PA29A_SPI_SCK       ((PIN_PA29A_SPI_SCK << 16) | MUX_PA29A_SPI_SCK)
+#define GPIO_PA29A_SPI_SCK         (1u << 29)
 #define PIN_PC06A_SPI_SCK                 70  /**< \brief SPI signal: SCK on PC06 mux A */
 #define MUX_PC06A_SPI_SCK                  0
 #define PINMUX_PC06A_SPI_SCK       ((PIN_PC06A_SPI_SCK << 16) | MUX_PC06A_SPI_SCK)
@@ -706,6 +756,10 @@
 #define PINMUX_PA20A_USART2_TXD    ((PIN_PA20A_USART2_TXD << 16) | MUX_PA20A_USART2_TXD)
 #define GPIO_PA20A_USART2_TXD      (1u << 20)
 /* ========== GPIO definition for USART3 peripheral ========== */
+#define PIN_PA29E_USART3_CLK              29  /**< \brief USART3 signal: CLK on PA29 mux E */
+#define MUX_PA29E_USART3_CLK               4
+#define PINMUX_PA29E_USART3_CLK    ((PIN_PA29E_USART3_CLK << 16) | MUX_PA29E_USART3_CLK)
+#define GPIO_PA29E_USART3_CLK      (1u << 29)
 #define PIN_PC14B_USART3_CLK              78  /**< \brief USART3 signal: CLK on PC14 mux B */
 #define MUX_PC14B_USART3_CLK               1
 #define PINMUX_PC14B_USART3_CLK    ((PIN_PC14B_USART3_CLK << 16) | MUX_PC14B_USART3_CLK)
@@ -718,10 +772,18 @@
 #define MUX_PC31A_USART3_CLK               0
 #define PINMUX_PC31A_USART3_CLK    ((PIN_PC31A_USART3_CLK << 16) | MUX_PC31A_USART3_CLK)
 #define GPIO_PC31A_USART3_CLK      (1u << 31)
+#define PIN_PA28E_USART3_CTS              28  /**< \brief USART3 signal: CTS on PA28 mux E */
+#define MUX_PA28E_USART3_CTS               4
+#define PINMUX_PA28E_USART3_CTS    ((PIN_PA28E_USART3_CTS << 16) | MUX_PA28E_USART3_CTS)
+#define GPIO_PA28E_USART3_CTS      (1u << 28)
 #define PIN_PB07A_USART3_CTS              39  /**< \brief USART3 signal: CTS on PB07 mux A */
 #define MUX_PB07A_USART3_CTS               0
 #define PINMUX_PB07A_USART3_CTS    ((PIN_PB07A_USART3_CTS << 16) | MUX_PB07A_USART3_CTS)
 #define GPIO_PB07A_USART3_CTS      (1u <<  7)
+#define PIN_PA27E_USART3_RTS              27  /**< \brief USART3 signal: RTS on PA27 mux E */
+#define MUX_PA27E_USART3_RTS               4
+#define PINMUX_PA27E_USART3_RTS    ((PIN_PA27E_USART3_RTS << 16) | MUX_PA27E_USART3_RTS)
+#define GPIO_PA27E_USART3_RTS      (1u << 27)
 #define PIN_PC13B_USART3_RTS              77  /**< \brief USART3 signal: RTS on PC13 mux B */
 #define MUX_PC13B_USART3_RTS               1
 #define PINMUX_PC13B_USART3_RTS    ((PIN_PC13B_USART3_RTS << 16) | MUX_PC13B_USART3_RTS)
@@ -734,6 +796,10 @@
 #define MUX_PC30A_USART3_RTS               0
 #define PINMUX_PC30A_USART3_RTS    ((PIN_PC30A_USART3_RTS << 16) | MUX_PC30A_USART3_RTS)
 #define GPIO_PC30A_USART3_RTS      (1u << 30)
+#define PIN_PA30E_USART3_RXD              30  /**< \brief USART3 signal: RXD on PA30 mux E */
+#define MUX_PA30E_USART3_RXD               4
+#define PINMUX_PA30E_USART3_RXD    ((PIN_PA30E_USART3_RXD << 16) | MUX_PA30E_USART3_RXD)
+#define GPIO_PA30E_USART3_RXD      (1u << 30)
 #define PIN_PC09B_USART3_RXD              73  /**< \brief USART3 signal: RXD on PC09 mux B */
 #define MUX_PC09B_USART3_RXD               1
 #define PINMUX_PC09B_USART3_RXD    ((PIN_PC09B_USART3_RXD << 16) | MUX_PC09B_USART3_RXD)
@@ -746,6 +812,10 @@
 #define MUX_PC28A_USART3_RXD               0
 #define PINMUX_PC28A_USART3_RXD    ((PIN_PC28A_USART3_RXD << 16) | MUX_PC28A_USART3_RXD)
 #define GPIO_PC28A_USART3_RXD      (1u << 28)
+#define PIN_PA31E_USART3_TXD              31  /**< \brief USART3 signal: TXD on PA31 mux E */
+#define MUX_PA31E_USART3_TXD               4
+#define PINMUX_PA31E_USART3_TXD    ((PIN_PA31E_USART3_TXD << 16) | MUX_PA31E_USART3_TXD)
+#define GPIO_PA31E_USART3_TXD      (1u << 31)
 #define PIN_PC10B_USART3_TXD              74  /**< \brief USART3 signal: TXD on PC10 mux B */
 #define MUX_PC10B_USART3_TXD               1
 #define PINMUX_PC10B_USART3_TXD    ((PIN_PC10B_USART3_TXD << 16) | MUX_PC10B_USART3_TXD)
@@ -898,6 +968,10 @@
 #define MUX_PA23D_GLOC_IN3                 3
 #define PINMUX_PA23D_GLOC_IN3      ((PIN_PA23D_GLOC_IN3 << 16) | MUX_PA23D_GLOC_IN3)
 #define GPIO_PA23D_GLOC_IN3        (1u << 23)
+#define PIN_PA27D_GLOC_IN4                27  /**< \brief GLOC signal: IN4 on PA27 mux D */
+#define MUX_PA27D_GLOC_IN4                 3
+#define PINMUX_PA27D_GLOC_IN4      ((PIN_PA27D_GLOC_IN4 << 16) | MUX_PA27D_GLOC_IN4)
+#define GPIO_PA27D_GLOC_IN4        (1u << 27)
 #define PIN_PC15D_GLOC_IN4                79  /**< \brief GLOC signal: IN4 on PC15 mux D */
 #define MUX_PC15D_GLOC_IN4                 3
 #define PINMUX_PC15D_GLOC_IN4      ((PIN_PC15D_GLOC_IN4 << 16) | MUX_PC15D_GLOC_IN4)
@@ -910,6 +984,10 @@
 #define MUX_PC28C_GLOC_IN4                 2
 #define PINMUX_PC28C_GLOC_IN4      ((PIN_PC28C_GLOC_IN4 << 16) | MUX_PC28C_GLOC_IN4)
 #define GPIO_PC28C_GLOC_IN4        (1u << 28)
+#define PIN_PA28D_GLOC_IN5                28  /**< \brief GLOC signal: IN5 on PA28 mux D */
+#define MUX_PA28D_GLOC_IN5                 3
+#define PINMUX_PA28D_GLOC_IN5      ((PIN_PA28D_GLOC_IN5 << 16) | MUX_PA28D_GLOC_IN5)
+#define GPIO_PA28D_GLOC_IN5        (1u << 28)
 #define PIN_PC16D_GLOC_IN5                80  /**< \brief GLOC signal: IN5 on PC16 mux D */
 #define MUX_PC16D_GLOC_IN5                 3
 #define PINMUX_PC16D_GLOC_IN5      ((PIN_PC16D_GLOC_IN5 << 16) | MUX_PC16D_GLOC_IN5)
@@ -922,6 +1000,10 @@
 #define MUX_PC29C_GLOC_IN5                 2
 #define PINMUX_PC29C_GLOC_IN5      ((PIN_PC29C_GLOC_IN5 << 16) | MUX_PC29C_GLOC_IN5)
 #define GPIO_PC29C_GLOC_IN5        (1u << 29)
+#define PIN_PA29D_GLOC_IN6                29  /**< \brief GLOC signal: IN6 on PA29 mux D */
+#define MUX_PA29D_GLOC_IN6                 3
+#define PINMUX_PA29D_GLOC_IN6      ((PIN_PA29D_GLOC_IN6 << 16) | MUX_PA29D_GLOC_IN6)
+#define GPIO_PA29D_GLOC_IN6        (1u << 29)
 #define PIN_PC17D_GLOC_IN6                81  /**< \brief GLOC signal: IN6 on PC17 mux D */
 #define MUX_PC17D_GLOC_IN6                 3
 #define PINMUX_PC17D_GLOC_IN6      ((PIN_PC17D_GLOC_IN6 << 16) | MUX_PC17D_GLOC_IN6)
@@ -934,6 +1016,10 @@
 #define MUX_PC30C_GLOC_IN6                 2
 #define PINMUX_PC30C_GLOC_IN6      ((PIN_PC30C_GLOC_IN6 << 16) | MUX_PC30C_GLOC_IN6)
 #define GPIO_PC30C_GLOC_IN6        (1u << 30)
+#define PIN_PA30D_GLOC_IN7                30  /**< \brief GLOC signal: IN7 on PA30 mux D */
+#define MUX_PA30D_GLOC_IN7                 3
+#define PINMUX_PA30D_GLOC_IN7      ((PIN_PA30D_GLOC_IN7 << 16) | MUX_PA30D_GLOC_IN7)
+#define GPIO_PA30D_GLOC_IN7        (1u << 30)
 #define PIN_PC18D_GLOC_IN7                82  /**< \brief GLOC signal: IN7 on PC18 mux D */
 #define MUX_PC18D_GLOC_IN7                 3
 #define PINMUX_PC18D_GLOC_IN7      ((PIN_PC18D_GLOC_IN7 << 16) | MUX_PC18D_GLOC_IN7)
@@ -950,6 +1036,10 @@
 #define MUX_PA24D_GLOC_OUT0                3
 #define PINMUX_PA24D_GLOC_OUT0     ((PIN_PA24D_GLOC_OUT0 << 16) | MUX_PA24D_GLOC_OUT0)
 #define GPIO_PA24D_GLOC_OUT0       (1u << 24)
+#define PIN_PA31D_GLOC_OUT1               31  /**< \brief GLOC signal: OUT1 on PA31 mux D */
+#define MUX_PA31D_GLOC_OUT1                3
+#define PINMUX_PA31D_GLOC_OUT1     ((PIN_PA31D_GLOC_OUT1 << 16) | MUX_PA31D_GLOC_OUT1)
+#define GPIO_PA31D_GLOC_OUT1       (1u << 31)
 #define PIN_PC19D_GLOC_OUT1               83  /**< \brief GLOC signal: OUT1 on PC19 mux D */
 #define MUX_PC19D_GLOC_OUT1                3
 #define PINMUX_PC19D_GLOC_OUT1     ((PIN_PC19D_GLOC_OUT1 << 16) | MUX_PC19D_GLOC_OUT1)
@@ -963,10 +1053,18 @@
 #define PINMUX_PC31C_GLOC_OUT1     ((PIN_PC31C_GLOC_OUT1 << 16) | MUX_PC31C_GLOC_OUT1)
 #define GPIO_PC31C_GLOC_OUT1       (1u << 31)
 /* ========== GPIO definition for ABDACB peripheral ========== */
+#define PIN_PA31C_ABDACB_CLK              31  /**< \brief ABDACB signal: CLK on PA31 mux C */
+#define MUX_PA31C_ABDACB_CLK               2
+#define PINMUX_PA31C_ABDACB_CLK    ((PIN_PA31C_ABDACB_CLK << 16) | MUX_PA31C_ABDACB_CLK)
+#define GPIO_PA31C_ABDACB_CLK      (1u << 31)
 #define PIN_PC12C_ABDACB_CLK              76  /**< \brief ABDACB signal: CLK on PC12 mux C */
 #define MUX_PC12C_ABDACB_CLK               2
 #define PINMUX_PC12C_ABDACB_CLK    ((PIN_PC12C_ABDACB_CLK << 16) | MUX_PC12C_ABDACB_CLK)
 #define GPIO_PC12C_ABDACB_CLK      (1u << 12)
+#define PIN_PA27C_ABDACB_DAC0             27  /**< \brief ABDACB signal: DAC0 on PA27 mux C */
+#define MUX_PA27C_ABDACB_DAC0              2
+#define PINMUX_PA27C_ABDACB_DAC0   ((PIN_PA27C_ABDACB_DAC0 << 16) | MUX_PA27C_ABDACB_DAC0)
+#define GPIO_PA27C_ABDACB_DAC0     (1u << 27)
 #define PIN_PB02C_ABDACB_DAC0             34  /**< \brief ABDACB signal: DAC0 on PB02 mux C */
 #define MUX_PB02C_ABDACB_DAC0              2
 #define PINMUX_PB02C_ABDACB_DAC0   ((PIN_PB02C_ABDACB_DAC0 << 16) | MUX_PB02C_ABDACB_DAC0)
@@ -979,6 +1077,10 @@
 #define MUX_PA17B_ABDACB_DAC0              1
 #define PINMUX_PA17B_ABDACB_DAC0   ((PIN_PA17B_ABDACB_DAC0 << 16) | MUX_PA17B_ABDACB_DAC0)
 #define GPIO_PA17B_ABDACB_DAC0     (1u << 17)
+#define PIN_PA29C_ABDACB_DAC1             29  /**< \brief ABDACB signal: DAC1 on PA29 mux C */
+#define MUX_PA29C_ABDACB_DAC1              2
+#define PINMUX_PA29C_ABDACB_DAC1   ((PIN_PA29C_ABDACB_DAC1 << 16) | MUX_PA29C_ABDACB_DAC1)
+#define GPIO_PA29C_ABDACB_DAC1     (1u << 29)
 #define PIN_PB04C_ABDACB_DAC1             36  /**< \brief ABDACB signal: DAC1 on PB04 mux C */
 #define MUX_PB04C_ABDACB_DAC1              2
 #define PINMUX_PB04C_ABDACB_DAC1   ((PIN_PB04C_ABDACB_DAC1 << 16) | MUX_PB04C_ABDACB_DAC1)
@@ -991,6 +1093,10 @@
 #define MUX_PA19B_ABDACB_DAC1              1
 #define PINMUX_PA19B_ABDACB_DAC1   ((PIN_PA19B_ABDACB_DAC1 << 16) | MUX_PA19B_ABDACB_DAC1)
 #define GPIO_PA19B_ABDACB_DAC1     (1u << 19)
+#define PIN_PA28C_ABDACB_DACN0            28  /**< \brief ABDACB signal: DACN0 on PA28 mux C */
+#define MUX_PA28C_ABDACB_DACN0             2
+#define PINMUX_PA28C_ABDACB_DACN0  ((PIN_PA28C_ABDACB_DACN0 << 16) | MUX_PA28C_ABDACB_DACN0)
+#define GPIO_PA28C_ABDACB_DACN0    (1u << 28)
 #define PIN_PB03C_ABDACB_DACN0            35  /**< \brief ABDACB signal: DACN0 on PB03 mux C */
 #define MUX_PB03C_ABDACB_DACN0             2
 #define PINMUX_PB03C_ABDACB_DACN0  ((PIN_PB03C_ABDACB_DACN0 << 16) | MUX_PB03C_ABDACB_DACN0)
@@ -1003,6 +1109,10 @@
 #define MUX_PA18B_ABDACB_DACN0             1
 #define PINMUX_PA18B_ABDACB_DACN0  ((PIN_PA18B_ABDACB_DACN0 << 16) | MUX_PA18B_ABDACB_DACN0)
 #define GPIO_PA18B_ABDACB_DACN0    (1u << 18)
+#define PIN_PA30C_ABDACB_DACN1            30  /**< \brief ABDACB signal: DACN1 on PA30 mux C */
+#define MUX_PA30C_ABDACB_DACN1             2
+#define PINMUX_PA30C_ABDACB_DACN1  ((PIN_PA30C_ABDACB_DACN1 << 16) | MUX_PA30C_ABDACB_DACN1)
+#define GPIO_PA30C_ABDACB_DACN1    (1u << 30)
 #define PIN_PB05C_ABDACB_DACN1            37  /**< \brief ABDACB signal: DACN1 on PB05 mux C */
 #define MUX_PB05C_ABDACB_DACN1             2
 #define PINMUX_PB05C_ABDACB_DACN1  ((PIN_PB05C_ABDACB_DACN1 << 16) | MUX_PB05C_ABDACB_DACN1)
@@ -1117,6 +1227,10 @@
 #define MUX_PA23G_CATB_DIS                 6
 #define PINMUX_PA23G_CATB_DIS      ((PIN_PA23G_CATB_DIS << 16) | MUX_PA23G_CATB_DIS)
 #define GPIO_PA23G_CATB_DIS        (1u << 23)
+#define PIN_PA31G_CATB_DIS                31  /**< \brief CATB signal: DIS on PA31 mux G */
+#define MUX_PA31G_CATB_DIS                 6
+#define PINMUX_PA31G_CATB_DIS      ((PIN_PA31G_CATB_DIS << 16) | MUX_PA31G_CATB_DIS)
+#define GPIO_PA31G_CATB_DIS        (1u << 31)
 #define PIN_PB03G_CATB_DIS                35  /**< \brief CATB signal: DIS on PB03 mux G */
 #define MUX_PB03G_CATB_DIS                 6
 #define PINMUX_PB03G_CATB_DIS      ((PIN_PB03G_CATB_DIS << 16) | MUX_PB03G_CATB_DIS)
@@ -1141,6 +1255,10 @@
 #define MUX_PA04G_CATB_SENSE0              6
 #define PINMUX_PA04G_CATB_SENSE0   ((PIN_PA04G_CATB_SENSE0 << 16) | MUX_PA04G_CATB_SENSE0)
 #define GPIO_PA04G_CATB_SENSE0     (1u <<  4)
+#define PIN_PA27G_CATB_SENSE0             27  /**< \brief CATB signal: SENSE0 on PA27 mux G */
+#define MUX_PA27G_CATB_SENSE0              6
+#define PINMUX_PA27G_CATB_SENSE0   ((PIN_PA27G_CATB_SENSE0 << 16) | MUX_PA27G_CATB_SENSE0)
+#define GPIO_PA27G_CATB_SENSE0     (1u << 27)
 #define PIN_PB13G_CATB_SENSE0             45  /**< \brief CATB signal: SENSE0 on PB13 mux G */
 #define MUX_PB13G_CATB_SENSE0              6
 #define PINMUX_PB13G_CATB_SENSE0   ((PIN_PB13G_CATB_SENSE0 << 16) | MUX_PB13G_CATB_SENSE0)
@@ -1149,6 +1267,10 @@
 #define MUX_PA05G_CATB_SENSE1              6
 #define PINMUX_PA05G_CATB_SENSE1   ((PIN_PA05G_CATB_SENSE1 << 16) | MUX_PA05G_CATB_SENSE1)
 #define GPIO_PA05G_CATB_SENSE1     (1u <<  5)
+#define PIN_PA28G_CATB_SENSE1             28  /**< \brief CATB signal: SENSE1 on PA28 mux G */
+#define MUX_PA28G_CATB_SENSE1              6
+#define PINMUX_PA28G_CATB_SENSE1   ((PIN_PA28G_CATB_SENSE1 << 16) | MUX_PA28G_CATB_SENSE1)
+#define GPIO_PA28G_CATB_SENSE1     (1u << 28)
 #define PIN_PB14G_CATB_SENSE1             46  /**< \brief CATB signal: SENSE1 on PB14 mux G */
 #define MUX_PB14G_CATB_SENSE1              6
 #define PINMUX_PB14G_CATB_SENSE1   ((PIN_PB14G_CATB_SENSE1 << 16) | MUX_PB14G_CATB_SENSE1)
@@ -1157,6 +1279,10 @@
 #define MUX_PA06G_CATB_SENSE2              6
 #define PINMUX_PA06G_CATB_SENSE2   ((PIN_PA06G_CATB_SENSE2 << 16) | MUX_PA06G_CATB_SENSE2)
 #define GPIO_PA06G_CATB_SENSE2     (1u <<  6)
+#define PIN_PA29G_CATB_SENSE2             29  /**< \brief CATB signal: SENSE2 on PA29 mux G */
+#define MUX_PA29G_CATB_SENSE2              6
+#define PINMUX_PA29G_CATB_SENSE2   ((PIN_PA29G_CATB_SENSE2 << 16) | MUX_PA29G_CATB_SENSE2)
+#define GPIO_PA29G_CATB_SENSE2     (1u << 29)
 #define PIN_PB15G_CATB_SENSE2             47  /**< \brief CATB signal: SENSE2 on PB15 mux G */
 #define MUX_PB15G_CATB_SENSE2              6
 #define PINMUX_PB15G_CATB_SENSE2   ((PIN_PB15G_CATB_SENSE2 << 16) | MUX_PB15G_CATB_SENSE2)
@@ -1165,6 +1291,10 @@
 #define MUX_PA07G_CATB_SENSE3              6
 #define PINMUX_PA07G_CATB_SENSE3   ((PIN_PA07G_CATB_SENSE3 << 16) | MUX_PA07G_CATB_SENSE3)
 #define GPIO_PA07G_CATB_SENSE3     (1u <<  7)
+#define PIN_PA30G_CATB_SENSE3             30  /**< \brief CATB signal: SENSE3 on PA30 mux G */
+#define MUX_PA30G_CATB_SENSE3              6
+#define PINMUX_PA30G_CATB_SENSE3   ((PIN_PA30G_CATB_SENSE3 << 16) | MUX_PA30G_CATB_SENSE3)
+#define GPIO_PA30G_CATB_SENSE3     (1u << 30)
 #define PIN_PC00G_CATB_SENSE3             64  /**< \brief CATB signal: SENSE3 on PC00 mux G */
 #define MUX_PC00G_CATB_SENSE3              6
 #define PINMUX_PC00G_CATB_SENSE3   ((PIN_PC00G_CATB_SENSE3 << 16) | MUX_PC00G_CATB_SENSE3)
@@ -1393,183 +1523,6 @@
 #define MUX_PC31G_CATB_SENSE31             6
 #define PINMUX_PC31G_CATB_SENSE31  ((PIN_PC31G_CATB_SENSE31 << 16) | MUX_PC31G_CATB_SENSE31)
 #define GPIO_PC31G_CATB_SENSE31    (1u << 31)
-/* ========== GPIO definition for LCDCA peripheral ========== */
-#define PIN_PA12F_LCDCA_COM0              12  /**< \brief LCDCA signal: COM0 on PA12 mux F */
-#define MUX_PA12F_LCDCA_COM0               5
-#define PINMUX_PA12F_LCDCA_COM0    ((PIN_PA12F_LCDCA_COM0 << 16) | MUX_PA12F_LCDCA_COM0)
-#define GPIO_PA12F_LCDCA_COM0      (1u << 12)
-#define PIN_PA11F_LCDCA_COM1              11  /**< \brief LCDCA signal: COM1 on PA11 mux F */
-#define MUX_PA11F_LCDCA_COM1               5
-#define PINMUX_PA11F_LCDCA_COM1    ((PIN_PA11F_LCDCA_COM1 << 16) | MUX_PA11F_LCDCA_COM1)
-#define GPIO_PA11F_LCDCA_COM1      (1u << 11)
-#define PIN_PA10F_LCDCA_COM2              10  /**< \brief LCDCA signal: COM2 on PA10 mux F */
-#define MUX_PA10F_LCDCA_COM2               5
-#define PINMUX_PA10F_LCDCA_COM2    ((PIN_PA10F_LCDCA_COM2 << 16) | MUX_PA10F_LCDCA_COM2)
-#define GPIO_PA10F_LCDCA_COM2      (1u << 10)
-#define PIN_PA09F_LCDCA_COM3               9  /**< \brief LCDCA signal: COM3 on PA09 mux F */
-#define MUX_PA09F_LCDCA_COM3               5
-#define PINMUX_PA09F_LCDCA_COM3    ((PIN_PA09F_LCDCA_COM3 << 16) | MUX_PA09F_LCDCA_COM3)
-#define GPIO_PA09F_LCDCA_COM3      (1u <<  9)
-#define PIN_PC15F_LCDCA_SEG0              79  /**< \brief LCDCA signal: SEG0 on PC15 mux F */
-#define MUX_PC15F_LCDCA_SEG0               5
-#define PINMUX_PC15F_LCDCA_SEG0    ((PIN_PC15F_LCDCA_SEG0 << 16) | MUX_PC15F_LCDCA_SEG0)
-#define GPIO_PC15F_LCDCA_SEG0      (1u << 15)
-#define PIN_PC16F_LCDCA_SEG1              80  /**< \brief LCDCA signal: SEG1 on PC16 mux F */
-#define MUX_PC16F_LCDCA_SEG1               5
-#define PINMUX_PC16F_LCDCA_SEG1    ((PIN_PC16F_LCDCA_SEG1 << 16) | MUX_PC16F_LCDCA_SEG1)
-#define GPIO_PC16F_LCDCA_SEG1      (1u << 16)
-#define PIN_PC17F_LCDCA_SEG2              81  /**< \brief LCDCA signal: SEG2 on PC17 mux F */
-#define MUX_PC17F_LCDCA_SEG2               5
-#define PINMUX_PC17F_LCDCA_SEG2    ((PIN_PC17F_LCDCA_SEG2 << 16) | MUX_PC17F_LCDCA_SEG2)
-#define GPIO_PC17F_LCDCA_SEG2      (1u << 17)
-#define PIN_PC18F_LCDCA_SEG3              82  /**< \brief LCDCA signal: SEG3 on PC18 mux F */
-#define MUX_PC18F_LCDCA_SEG3               5
-#define PINMUX_PC18F_LCDCA_SEG3    ((PIN_PC18F_LCDCA_SEG3 << 16) | MUX_PC18F_LCDCA_SEG3)
-#define GPIO_PC18F_LCDCA_SEG3      (1u << 18)
-#define PIN_PC19F_LCDCA_SEG4              83  /**< \brief LCDCA signal: SEG4 on PC19 mux F */
-#define MUX_PC19F_LCDCA_SEG4               5
-#define PINMUX_PC19F_LCDCA_SEG4    ((PIN_PC19F_LCDCA_SEG4 << 16) | MUX_PC19F_LCDCA_SEG4)
-#define GPIO_PC19F_LCDCA_SEG4      (1u << 19)
-#define PIN_PA13F_LCDCA_SEG5              13  /**< \brief LCDCA signal: SEG5 on PA13 mux F */
-#define MUX_PA13F_LCDCA_SEG5               5
-#define PINMUX_PA13F_LCDCA_SEG5    ((PIN_PA13F_LCDCA_SEG5 << 16) | MUX_PA13F_LCDCA_SEG5)
-#define GPIO_PA13F_LCDCA_SEG5      (1u << 13)
-#define PIN_PA14F_LCDCA_SEG6              14  /**< \brief LCDCA signal: SEG6 on PA14 mux F */
-#define MUX_PA14F_LCDCA_SEG6               5
-#define PINMUX_PA14F_LCDCA_SEG6    ((PIN_PA14F_LCDCA_SEG6 << 16) | MUX_PA14F_LCDCA_SEG6)
-#define GPIO_PA14F_LCDCA_SEG6      (1u << 14)
-#define PIN_PA15F_LCDCA_SEG7              15  /**< \brief LCDCA signal: SEG7 on PA15 mux F */
-#define MUX_PA15F_LCDCA_SEG7               5
-#define PINMUX_PA15F_LCDCA_SEG7    ((PIN_PA15F_LCDCA_SEG7 << 16) | MUX_PA15F_LCDCA_SEG7)
-#define GPIO_PA15F_LCDCA_SEG7      (1u << 15)
-#define PIN_PA16F_LCDCA_SEG8              16  /**< \brief LCDCA signal: SEG8 on PA16 mux F */
-#define MUX_PA16F_LCDCA_SEG8               5
-#define PINMUX_PA16F_LCDCA_SEG8    ((PIN_PA16F_LCDCA_SEG8 << 16) | MUX_PA16F_LCDCA_SEG8)
-#define GPIO_PA16F_LCDCA_SEG8      (1u << 16)
-#define PIN_PA17F_LCDCA_SEG9              17  /**< \brief LCDCA signal: SEG9 on PA17 mux F */
-#define MUX_PA17F_LCDCA_SEG9               5
-#define PINMUX_PA17F_LCDCA_SEG9    ((PIN_PA17F_LCDCA_SEG9 << 16) | MUX_PA17F_LCDCA_SEG9)
-#define GPIO_PA17F_LCDCA_SEG9      (1u << 17)
-#define PIN_PC20F_LCDCA_SEG10             84  /**< \brief LCDCA signal: SEG10 on PC20 mux F */
-#define MUX_PC20F_LCDCA_SEG10              5
-#define PINMUX_PC20F_LCDCA_SEG10   ((PIN_PC20F_LCDCA_SEG10 << 16) | MUX_PC20F_LCDCA_SEG10)
-#define GPIO_PC20F_LCDCA_SEG10     (1u << 20)
-#define PIN_PC21F_LCDCA_SEG11             85  /**< \brief LCDCA signal: SEG11 on PC21 mux F */
-#define MUX_PC21F_LCDCA_SEG11              5
-#define PINMUX_PC21F_LCDCA_SEG11   ((PIN_PC21F_LCDCA_SEG11 << 16) | MUX_PC21F_LCDCA_SEG11)
-#define GPIO_PC21F_LCDCA_SEG11     (1u << 21)
-#define PIN_PC22F_LCDCA_SEG12             86  /**< \brief LCDCA signal: SEG12 on PC22 mux F */
-#define MUX_PC22F_LCDCA_SEG12              5
-#define PINMUX_PC22F_LCDCA_SEG12   ((PIN_PC22F_LCDCA_SEG12 << 16) | MUX_PC22F_LCDCA_SEG12)
-#define GPIO_PC22F_LCDCA_SEG12     (1u << 22)
-#define PIN_PC23F_LCDCA_SEG13             87  /**< \brief LCDCA signal: SEG13 on PC23 mux F */
-#define MUX_PC23F_LCDCA_SEG13              5
-#define PINMUX_PC23F_LCDCA_SEG13   ((PIN_PC23F_LCDCA_SEG13 << 16) | MUX_PC23F_LCDCA_SEG13)
-#define GPIO_PC23F_LCDCA_SEG13     (1u << 23)
-#define PIN_PB08F_LCDCA_SEG14             40  /**< \brief LCDCA signal: SEG14 on PB08 mux F */
-#define MUX_PB08F_LCDCA_SEG14              5
-#define PINMUX_PB08F_LCDCA_SEG14   ((PIN_PB08F_LCDCA_SEG14 << 16) | MUX_PB08F_LCDCA_SEG14)
-#define GPIO_PB08F_LCDCA_SEG14     (1u <<  8)
-#define PIN_PB09F_LCDCA_SEG15             41  /**< \brief LCDCA signal: SEG15 on PB09 mux F */
-#define MUX_PB09F_LCDCA_SEG15              5
-#define PINMUX_PB09F_LCDCA_SEG15   ((PIN_PB09F_LCDCA_SEG15 << 16) | MUX_PB09F_LCDCA_SEG15)
-#define GPIO_PB09F_LCDCA_SEG15     (1u <<  9)
-#define PIN_PB10F_LCDCA_SEG16             42  /**< \brief LCDCA signal: SEG16 on PB10 mux F */
-#define MUX_PB10F_LCDCA_SEG16              5
-#define PINMUX_PB10F_LCDCA_SEG16   ((PIN_PB10F_LCDCA_SEG16 << 16) | MUX_PB10F_LCDCA_SEG16)
-#define GPIO_PB10F_LCDCA_SEG16     (1u << 10)
-#define PIN_PB11F_LCDCA_SEG17             43  /**< \brief LCDCA signal: SEG17 on PB11 mux F */
-#define MUX_PB11F_LCDCA_SEG17              5
-#define PINMUX_PB11F_LCDCA_SEG17   ((PIN_PB11F_LCDCA_SEG17 << 16) | MUX_PB11F_LCDCA_SEG17)
-#define GPIO_PB11F_LCDCA_SEG17     (1u << 11)
-#define PIN_PA18F_LCDCA_SEG18             18  /**< \brief LCDCA signal: SEG18 on PA18 mux F */
-#define MUX_PA18F_LCDCA_SEG18              5
-#define PINMUX_PA18F_LCDCA_SEG18   ((PIN_PA18F_LCDCA_SEG18 << 16) | MUX_PA18F_LCDCA_SEG18)
-#define GPIO_PA18F_LCDCA_SEG18     (1u << 18)
-#define PIN_PA19F_LCDCA_SEG19             19  /**< \brief LCDCA signal: SEG19 on PA19 mux F */
-#define MUX_PA19F_LCDCA_SEG19              5
-#define PINMUX_PA19F_LCDCA_SEG19   ((PIN_PA19F_LCDCA_SEG19 << 16) | MUX_PA19F_LCDCA_SEG19)
-#define GPIO_PA19F_LCDCA_SEG19     (1u << 19)
-#define PIN_PA20F_LCDCA_SEG20             20  /**< \brief LCDCA signal: SEG20 on PA20 mux F */
-#define MUX_PA20F_LCDCA_SEG20              5
-#define PINMUX_PA20F_LCDCA_SEG20   ((PIN_PA20F_LCDCA_SEG20 << 16) | MUX_PA20F_LCDCA_SEG20)
-#define GPIO_PA20F_LCDCA_SEG20     (1u << 20)
-#define PIN_PB07F_LCDCA_SEG21             39  /**< \brief LCDCA signal: SEG21 on PB07 mux F */
-#define MUX_PB07F_LCDCA_SEG21              5
-#define PINMUX_PB07F_LCDCA_SEG21   ((PIN_PB07F_LCDCA_SEG21 << 16) | MUX_PB07F_LCDCA_SEG21)
-#define GPIO_PB07F_LCDCA_SEG21     (1u <<  7)
-#define PIN_PB06F_LCDCA_SEG22             38  /**< \brief LCDCA signal: SEG22 on PB06 mux F */
-#define MUX_PB06F_LCDCA_SEG22              5
-#define PINMUX_PB06F_LCDCA_SEG22   ((PIN_PB06F_LCDCA_SEG22 << 16) | MUX_PB06F_LCDCA_SEG22)
-#define GPIO_PB06F_LCDCA_SEG22     (1u <<  6)
-#define PIN_PA08F_LCDCA_SEG23              8  /**< \brief LCDCA signal: SEG23 on PA08 mux F */
-#define MUX_PA08F_LCDCA_SEG23              5
-#define PINMUX_PA08F_LCDCA_SEG23   ((PIN_PA08F_LCDCA_SEG23 << 16) | MUX_PA08F_LCDCA_SEG23)
-#define GPIO_PA08F_LCDCA_SEG23     (1u <<  8)
-#define PIN_PC24F_LCDCA_SEG24             88  /**< \brief LCDCA signal: SEG24 on PC24 mux F */
-#define MUX_PC24F_LCDCA_SEG24              5
-#define PINMUX_PC24F_LCDCA_SEG24   ((PIN_PC24F_LCDCA_SEG24 << 16) | MUX_PC24F_LCDCA_SEG24)
-#define GPIO_PC24F_LCDCA_SEG24     (1u << 24)
-#define PIN_PC25F_LCDCA_SEG25             89  /**< \brief LCDCA signal: SEG25 on PC25 mux F */
-#define MUX_PC25F_LCDCA_SEG25              5
-#define PINMUX_PC25F_LCDCA_SEG25   ((PIN_PC25F_LCDCA_SEG25 << 16) | MUX_PC25F_LCDCA_SEG25)
-#define GPIO_PC25F_LCDCA_SEG25     (1u << 25)
-#define PIN_PC26F_LCDCA_SEG26             90  /**< \brief LCDCA signal: SEG26 on PC26 mux F */
-#define MUX_PC26F_LCDCA_SEG26              5
-#define PINMUX_PC26F_LCDCA_SEG26   ((PIN_PC26F_LCDCA_SEG26 << 16) | MUX_PC26F_LCDCA_SEG26)
-#define GPIO_PC26F_LCDCA_SEG26     (1u << 26)
-#define PIN_PC27F_LCDCA_SEG27             91  /**< \brief LCDCA signal: SEG27 on PC27 mux F */
-#define MUX_PC27F_LCDCA_SEG27              5
-#define PINMUX_PC27F_LCDCA_SEG27   ((PIN_PC27F_LCDCA_SEG27 << 16) | MUX_PC27F_LCDCA_SEG27)
-#define GPIO_PC27F_LCDCA_SEG27     (1u << 27)
-#define PIN_PC28F_LCDCA_SEG28             92  /**< \brief LCDCA signal: SEG28 on PC28 mux F */
-#define MUX_PC28F_LCDCA_SEG28              5
-#define PINMUX_PC28F_LCDCA_SEG28   ((PIN_PC28F_LCDCA_SEG28 << 16) | MUX_PC28F_LCDCA_SEG28)
-#define GPIO_PC28F_LCDCA_SEG28     (1u << 28)
-#define PIN_PC29F_LCDCA_SEG29             93  /**< \brief LCDCA signal: SEG29 on PC29 mux F */
-#define MUX_PC29F_LCDCA_SEG29              5
-#define PINMUX_PC29F_LCDCA_SEG29   ((PIN_PC29F_LCDCA_SEG29 << 16) | MUX_PC29F_LCDCA_SEG29)
-#define GPIO_PC29F_LCDCA_SEG29     (1u << 29)
-#define PIN_PC30F_LCDCA_SEG30             94  /**< \brief LCDCA signal: SEG30 on PC30 mux F */
-#define MUX_PC30F_LCDCA_SEG30              5
-#define PINMUX_PC30F_LCDCA_SEG30   ((PIN_PC30F_LCDCA_SEG30 << 16) | MUX_PC30F_LCDCA_SEG30)
-#define GPIO_PC30F_LCDCA_SEG30     (1u << 30)
-#define PIN_PC31F_LCDCA_SEG31             95  /**< \brief LCDCA signal: SEG31 on PC31 mux F */
-#define MUX_PC31F_LCDCA_SEG31              5
-#define PINMUX_PC31F_LCDCA_SEG31   ((PIN_PC31F_LCDCA_SEG31 << 16) | MUX_PC31F_LCDCA_SEG31)
-#define GPIO_PC31F_LCDCA_SEG31     (1u << 31)
-#define PIN_PB12F_LCDCA_SEG32             44  /**< \brief LCDCA signal: SEG32 on PB12 mux F */
-#define MUX_PB12F_LCDCA_SEG32              5
-#define PINMUX_PB12F_LCDCA_SEG32   ((PIN_PB12F_LCDCA_SEG32 << 16) | MUX_PB12F_LCDCA_SEG32)
-#define GPIO_PB12F_LCDCA_SEG32     (1u << 12)
-#define PIN_PB13F_LCDCA_SEG33             45  /**< \brief LCDCA signal: SEG33 on PB13 mux F */
-#define MUX_PB13F_LCDCA_SEG33              5
-#define PINMUX_PB13F_LCDCA_SEG33   ((PIN_PB13F_LCDCA_SEG33 << 16) | MUX_PB13F_LCDCA_SEG33)
-#define GPIO_PB13F_LCDCA_SEG33     (1u << 13)
-#define PIN_PA21F_LCDCA_SEG34             21  /**< \brief LCDCA signal: SEG34 on PA21 mux F */
-#define MUX_PA21F_LCDCA_SEG34              5
-#define PINMUX_PA21F_LCDCA_SEG34   ((PIN_PA21F_LCDCA_SEG34 << 16) | MUX_PA21F_LCDCA_SEG34)
-#define GPIO_PA21F_LCDCA_SEG34     (1u << 21)
-#define PIN_PA22F_LCDCA_SEG35             22  /**< \brief LCDCA signal: SEG35 on PA22 mux F */
-#define MUX_PA22F_LCDCA_SEG35              5
-#define PINMUX_PA22F_LCDCA_SEG35   ((PIN_PA22F_LCDCA_SEG35 << 16) | MUX_PA22F_LCDCA_SEG35)
-#define GPIO_PA22F_LCDCA_SEG35     (1u << 22)
-#define PIN_PB14F_LCDCA_SEG36             46  /**< \brief LCDCA signal: SEG36 on PB14 mux F */
-#define MUX_PB14F_LCDCA_SEG36              5
-#define PINMUX_PB14F_LCDCA_SEG36   ((PIN_PB14F_LCDCA_SEG36 << 16) | MUX_PB14F_LCDCA_SEG36)
-#define GPIO_PB14F_LCDCA_SEG36     (1u << 14)
-#define PIN_PB15F_LCDCA_SEG37             47  /**< \brief LCDCA signal: SEG37 on PB15 mux F */
-#define MUX_PB15F_LCDCA_SEG37              5
-#define PINMUX_PB15F_LCDCA_SEG37   ((PIN_PB15F_LCDCA_SEG37 << 16) | MUX_PB15F_LCDCA_SEG37)
-#define GPIO_PB15F_LCDCA_SEG37     (1u << 15)
-#define PIN_PA23F_LCDCA_SEG38             23  /**< \brief LCDCA signal: SEG38 on PA23 mux F */
-#define MUX_PA23F_LCDCA_SEG38              5
-#define PINMUX_PA23F_LCDCA_SEG38   ((PIN_PA23F_LCDCA_SEG38 << 16) | MUX_PA23F_LCDCA_SEG38)
-#define GPIO_PA23F_LCDCA_SEG38     (1u << 23)
-#define PIN_PA24F_LCDCA_SEG39             24  /**< \brief LCDCA signal: SEG39 on PA24 mux F */
-#define MUX_PA24F_LCDCA_SEG39              5
-#define PINMUX_PA24F_LCDCA_SEG39   ((PIN_PA24F_LCDCA_SEG39 << 16) | MUX_PA24F_LCDCA_SEG39)
-#define GPIO_PA24F_LCDCA_SEG39     (1u << 24)
 /* ========== GPIO definition for USBC peripheral ========== */
 #define PIN_PA25A_USBC_DM                 25  /**< \brief USBC signal: DM on PA25 mux A */
 #define MUX_PA25A_USBC_DM                  0
@@ -1795,4 +1748,4 @@
 #define PINMUX_PC06B_EIC_EXTINT8   ((PIN_PC06B_EIC_EXTINT8 << 16) | MUX_PC06B_EIC_EXTINT8)
 #define GPIO_PC06B_EIC_EXTINT8     (1u <<  6)
 
-#endif /* _SAM4LC8C_PIO_ */
+#endif /* _SAM4LS8C_PIO_ */
