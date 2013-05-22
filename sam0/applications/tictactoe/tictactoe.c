@@ -446,7 +446,7 @@ int main(void)
 		/* Wait for button interaction */
 		while (get_button() == BUTTON_NONE) {
 		}
-		delay_ms(500);
+		/* Draw empty board */
 		setup_board();
 
 		/* Start playing */
