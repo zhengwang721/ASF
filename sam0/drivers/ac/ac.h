@@ -580,7 +580,7 @@ struct ac_chan_config {
 	 *  scalar input. If the VCC voltage scalar is not selected as a comparator
 	 *  channel pin's input, this value will be ignored. */
 	uint8_t vcc_scale_factor;
-	/* This is used to sleect when interrupts should occur  */
+	/* This is used to select when interrupts should occur on a channel */
 	enum ac_chan_interrupt_selection interrupt_selection;
 };
 /**
@@ -589,7 +589,7 @@ struct ac_chan_config {
  * 
  */
 struct ac_win_config {
-	/*  */
+	/* This is used to select when interrupts should occur on a window */
 	enum ac_win_interrupt_selection interrupt_selection;
 };
 
@@ -833,6 +833,7 @@ static inline void ac_disable_events(
  *   \li Comparator pin multiplexer 0 selected as the positive input
  *   \li Scaled VCC voltage selected as the negative input
  *   \li VCC voltage scaler set for a division factor of 2 (\f$\frac{V_{CC}\times32}{64}\f$)
+ *   \li Channel interrupt set to occur when the compare threshold is passed
  *
  *   \param[out] config  Channel configuration structure to initialize to
  *                       default values
@@ -1000,13 +1001,16 @@ static inline enum ac_chan_state ac_chan_get_state(
  * \name Window Mode Configuration and Initialization
  * @{
  */
+ 
 /**
  * \brief Initializes an Analog Comparator window configuration structure to defaults.
  *
  *  Initializes a given Analog Comparator channel configuration structure to a
- *  set of known default values. This function should be called on ...
+ *  set of known default values. This function should be called if window interrupts
+ *  are needed and before ac_win_set_config().
  *
  *  The default configuration is as follows:
+ *   \li Channel interrupt set to occur when the measurement is above the window
  *
  *   \param[out] config  Window configuration structure to initialize to
  *                       default values

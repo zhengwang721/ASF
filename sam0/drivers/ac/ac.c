@@ -228,9 +228,9 @@ enum status_code ac_chan_set_config(
  *
  * \note This must be done before enabling the channel.
  *
- * \param[in]  module               Pointer to software instance struct
- * \param[in]  win_channel          Window channel to setup
- * \param[in]  interrupt_selection  Interrupt selection for the given channel
+ * \param[in]  module       Pointer to software instance struct
+ * \param[in]  win_channel  Window channel to setup
+ * \param[in]  config       Configuration for the given window channel
  *
  * \retval  STATUS_OK               Function exited successful
  * \retval  STATUS_ERR_INVALID_ARG  win_channel argument incorrect
