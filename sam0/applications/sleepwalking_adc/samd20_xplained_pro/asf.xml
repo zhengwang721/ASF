@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="SAM D20 ADC VCC Monitor Example" id="sam0.applications.vcc_monitor.atsamd20_xplained_pro">
+	<project caption="SAM D20 ADC VCC Monitor Example" id="sam0.applications.vcc_monitor.samd20_xplained_pro">
 		<info type="gui-flag" value="move-to-root"/>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_clocks.h"/>
