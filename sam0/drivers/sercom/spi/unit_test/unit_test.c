@@ -239,7 +239,7 @@ static void run_spi_init_test(const struct test_case *test)
 static void run_single_byte_polled_test(const struct test_case *test)
 {
 	uint16_t txd_data = 0x55;
-	uint16_t rxd_data;
+	uint16_t rxd_data = 0;
 
 	/* Skip test if initialization failed */
 	test_assert_true(test, spi_init_success,
