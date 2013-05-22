@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief  Configuration File for SAM4L-EK Board.
+ * \brief  Configuration File for SAM4L Xplained Pro board.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -43,10 +43,10 @@
 #ifndef CONF_BOARD_H_INCLUDED
 #define CONF_BOARD_H_INCLUDED
 
-// Enable USART console
+/** Enable USART console */
 #define CONF_BOARD_COM_PORT
 
-// Force usage of external EIC
+/** Force usage of external EIC */
 #define CONF_BOARD_EIC
 
 #endif /* CONF_BOARD_H_INCLUDED */
