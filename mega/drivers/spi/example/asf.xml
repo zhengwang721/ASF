@@ -13,5 +13,6 @@
 		<require idref="common.services.basic.gpio"/>
 		<require idref="common.boards"/>
 		<require idref="common.services.basic.spi_master"/>
+		<info type="gui-flag" value="move-to-root"/>		
 	</module>
 </asf>

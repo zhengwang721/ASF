@@ -28,6 +28,7 @@
 			<require idref="common.services.basic.clock"/>
 			<require idref="common.services.ioport"/>
 			<require idref="common.services.basic.spi_master"/>
+			<info type="gui-flag" value="move-to-root"/>			
 		</module>		
 	</select-by-device>
 </asf>
