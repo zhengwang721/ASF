@@ -876,6 +876,21 @@ __no_inline enum status_code system_peripheral_unlock(
  *		<td>(CLEAR)</td>
  *	</tr>
  * </table>
+ *
+ * \page asfdoc_samd20_pac_documentation_revsision_history Document Revision History
+ *
+ * <table>
+ *	<tr>
+ *		<th>Doc. Rev.</td>
+ *		<th>Date</td>
+ *		<th>Comment</td>
+ *	</tr>
+ *	<tr>
+ *		<td>A</td>
+ *		<td>05/22/2013</td>
+ *		<td>First release</td>
+ *	</tr>
+ * </table>
  */
 
 #endif /* PAC_H_INCLUDED */
