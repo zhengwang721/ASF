@@ -6,6 +6,8 @@
 		<info type="gui-flag" value="move-to-root"/>
 		<build type="c-source" value="osc8_calib.c"/>
 		<build type="include-path" value="."/>
+		<require idref="common2.services.delay"/>
+		<require idref="sam0.utils.stdio.stdio_serial"/>
 		<require idref="sam0.drivers.tc"/>
 		<require idref="sam0.drivers.events"/>
 		<require idref="sam0.drivers.port"/>

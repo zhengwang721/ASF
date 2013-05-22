@@ -42,7 +42,21 @@
  */
 
 /**
- * \mainpage SPI Slave Bootloader for SAM D20
+ * \mainpage SAM D20 SPI Slave Bootloader
+ * See \ref appdoc_main "here" for project documentation.
+ * \copydetails preface
+ *
+ *
+ * \page preface Features
+ * \li Application for self programming
+ * \li Uses SPI Slave interface
+ * \li SPI Master sends the data to be programmed over SPI bus
+ * \li Resets the device after programming and starts executing application
+ */
+
+/**
+ * \page appdoc_main SAM D20 SPI Slave Bootloader
+ *
  * Overview:
  * - \ref appdoc_samd20_spi_slave_bootloader_features
  * - \ref appdoc_samd20_spi_slave_bootloader_intro
@@ -120,7 +134,7 @@
  *   - Program the data to program memory starting at APP_START_ADDRESS
  *   - Send an acknowledgment byte 's' to SPI Master to indicate it has
  *     received the data and finished programming
- *   - Repeat till entire length of data has been programmed to the device
+ *   - Repeat until the entire length of data has been programmed to the device
  *
  * \subsection appdoc_samd20_spi_slave_bootloader_start_app Start Application
  * Once the programming is completed, the CMSIS command NVIC_SystemReset() is
@@ -133,7 +147,7 @@
  *
  * \section appdoc_samd20_spi_slave_bootloader_contactinfo Contact Information
  * For further information, visit
- * <A href="http://www.atmel.com/">Atmel</A>.\n
+ * <a href="http://www.atmel.com">http://www.atmel.com</a>.
  */
 
 #include <asf.h>

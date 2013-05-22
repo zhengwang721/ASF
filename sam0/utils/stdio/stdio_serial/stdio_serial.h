@@ -59,6 +59,7 @@
  * @{
  */
 
+#include <serial.h>
 #include <stdio.h>
 #include <compiler.h>
 
