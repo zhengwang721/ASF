@@ -159,7 +159,7 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint32_t EXTINT:16;        /*!< bit:  0..15  External Interrupt Disable [NUMBER_OF_INTERRUPTS] */
+    uint32_t EXTINT:16;        /*!< bit:  0..15  External Interrupt Disable         */
     uint32_t :16;              /*!< bit: 16..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
@@ -178,7 +178,7 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint32_t EXTINT:16;        /*!< bit:  0..15  External Interrupt Disable [NUMBER_OF_INTERRUPTS] */
+    uint32_t EXTINT:16;        /*!< bit:  0..15  External Interrupt Disable         */
     uint32_t :16;              /*!< bit: 16..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
@@ -197,7 +197,7 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint32_t EXTINT:16;        /*!< bit:  0..15  External Interrupt Flag [NUMBER_OF_INTERRUPTS] */
+    uint32_t EXTINT:16;        /*!< bit:  0..15  External Interrupt Flag            */
     uint32_t :16;              /*!< bit: 16..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
@@ -216,7 +216,7 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint32_t WAKEUPEN:16;      /*!< bit:  0..15  External Interrupt Wake-Up Enable [NUMBER_OF_INTERRUPTS] */
+    uint32_t WAKEUPEN:16;      /*!< bit:  0..15  External Interrupt Wake-Up Enable  */
     uint32_t :16;              /*!< bit: 16..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */

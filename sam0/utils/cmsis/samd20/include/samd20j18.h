@@ -491,6 +491,7 @@ void DAC_Handler                 ( void );
 #define FLASH_USER_PAGE_SIZE  64
 #define HRAMC0_SIZE           0x8000 /* 32 kB */
 #define FLASH_ADDR            (0x00000000U) /**< FLASH base address */
+#define FLASH_USER_PAGE_ADDR  (0x00800000U) /**< FLASH_USER_PAGE base address */
 #define HRAMC0_ADDR           (0x20000000U) /**< HRAMC0 base address */
 
 /* ************************************************************************** */

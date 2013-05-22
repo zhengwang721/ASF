@@ -58,7 +58,7 @@ typedef union {
   struct {
     uint16_t SWRST:1;          /*!< bit:      0  Software Reset                     */
     uint16_t ENABLE:1;         /*!< bit:      1  Enable                             */
-    uint16_t MODE:2;           /*!< bit:  2.. 3  Timer Counter Mode [2 + SHADOW_EXT] */
+    uint16_t MODE:2;           /*!< bit:  2.. 3  Timer Counter Mode                 */
     uint16_t :1;               /*!< bit:      4  Reserved                           */
     uint16_t WAVEGEN:2;        /*!< bit:  5.. 6  Waveform Generation Operation      */
     uint16_t :1;               /*!< bit:      7  Reserved                           */
@@ -191,9 +191,9 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint8_t  INVEN:2;          /*!< bit:  0.. 1  Output Waveform Invert Enable [OW_NUM] */
+    uint8_t  INVEN:2;          /*!< bit:  0.. 1  Output Waveform Invert Enable      */
     uint8_t  :2;               /*!< bit:  2.. 3  Reserved                           */
-    uint8_t  CPTEN:2;          /*!< bit:  4.. 5  Capture Channel  Enable [OW_NUM]   */
+    uint8_t  CPTEN:2;          /*!< bit:  4.. 5  Capture Channel  Enable            */
     uint8_t  :2;               /*!< bit:  6.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
@@ -240,7 +240,7 @@ typedef union {
     uint16_t :2;               /*!< bit:  6.. 7  Reserved                           */
     uint16_t OVFEO:1;          /*!< bit:      8  Event Output Enable                */
     uint16_t :3;               /*!< bit:  9..11  Reserved                           */
-    uint16_t MCEO:2;           /*!< bit: 12..13  MC Event Output Enable [OW_NUM]    */
+    uint16_t MCEO:2;           /*!< bit: 12..13  MC Event Output Enable             */
     uint16_t :2;               /*!< bit: 14..15  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint16_t reg;                /*!< Type      used for register access              */
@@ -278,7 +278,7 @@ typedef union {
     uint8_t  ERR:1;            /*!< bit:      1  ERR Interrupt Disable              */
     uint8_t  :1;               /*!< bit:      2  Reserved                           */
     uint8_t  SYNCRDY:1;        /*!< bit:      3  READY Interrupt Disable            */
-    uint8_t  MC:2;             /*!< bit:  4.. 5  MC Interrupt Disable [OW_NUM]      */
+    uint8_t  MC:2;             /*!< bit:  4.. 5  MC Interrupt Disable               */
     uint8_t  :2;               /*!< bit:  6.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
@@ -307,7 +307,7 @@ typedef union {
     uint8_t  ERR:1;            /*!< bit:      1  ERR Interrupt Enable               */
     uint8_t  :1;               /*!< bit:      2  Reserved                           */
     uint8_t  SYNCRDY:1;        /*!< bit:      3  READY Interrupt Enable             */
-    uint8_t  MC:2;             /*!< bit:  4.. 5  MC Interrupt Enable [OW_NUM]       */
+    uint8_t  MC:2;             /*!< bit:  4.. 5  MC Interrupt Enable                */
     uint8_t  :2;               /*!< bit:  6.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
@@ -336,7 +336,7 @@ typedef union {
     uint8_t  ERR:1;            /*!< bit:      1  ERR Interrupt Flag                 */
     uint8_t  :1;               /*!< bit:      2  Reserved                           */
     uint8_t  SYNCRDY:1;        /*!< bit:      3  READY Interrupt Flag               */
-    uint8_t  MC:2;             /*!< bit:  4.. 5  MC Interrupt Flag [OW_NUM]         */
+    uint8_t  MC:2;             /*!< bit:  4.. 5  MC Interrupt Flag                  */
     uint8_t  :2;               /*!< bit:  6.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */

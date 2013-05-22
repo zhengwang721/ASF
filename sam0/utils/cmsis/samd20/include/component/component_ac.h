@@ -58,7 +58,7 @@ typedef union {
   struct {
     uint8_t  SWRST:1;          /*!< bit:      0  Software Reset                     */
     uint8_t  ENABLE:1;         /*!< bit:      1  Enable                             */
-    uint8_t  RUNSTDBY:1;       /*!< bit:      2  Run during Standby [PAIRS]         */
+    uint8_t  RUNSTDBY:1;       /*!< bit:      2  Run during Standby                 */
     uint8_t  :5;               /*!< bit:  3.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
