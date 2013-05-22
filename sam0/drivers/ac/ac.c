@@ -146,7 +146,7 @@ enum status_code ac_init(
 
 #if AC_CALLBACK == true
 	/* Initialize parameters */
-	for (uint8_t i = 0; i < 6; i++) {
+	for (uint8_t i = 0; i < AC_CALLBACK_N; i++) {
 		module_inst->callback[i]         = NULL;
 	}
 
@@ -154,8 +154,14 @@ enum status_code ac_init(
 	module_inst->register_callback_mask  = 0x00;
 	module_inst->enable_callback_mask    = 0x00;
 
+#  if (AC_INST_NUM == 1)
+	_ac_instance[0] = module_inst;
+#  endif /* AC_INST_NUM == 1) */
+
+#  if (AC_INST_NUM > 1)
 	/* Register this instance for callbacks*/
-	_ac_instance = module_inst;
+	_ac_instance[_ac_get_inst_index(hw)] = module_inst;
+#  endif /* AC_INST_NUM > 1) */
 #endif /*AC_CALLBACK == true */
 
 	/* Write configuration to module */
@@ -204,8 +210,10 @@ enum status_code ac_chan_set_config(
 	/* Set sampling mode (single shot or continuous) */
 	compctrl_temp |= config->sample_mode;
 
+#if (AC_CALLBACK == true)
 	/* Set channel interrupt selection */
 	compctrl_temp |= config->interrupt_selection;
+#endif /* (AC_CALLBACK == true) */
 
 	while (ac_is_syncing(module_inst)) {
 		/* Wait until synchronization is complete */
@@ -220,6 +228,7 @@ enum status_code ac_chan_set_config(
 	return STATUS_OK;
 }
 
+#if (AC_CALLBACK == true)
 /**
  * \brief Function used to setup interrupt selection of a window
  *
@@ -266,6 +275,7 @@ enum status_code ac_win_set_config(
 
 	return STATUS_OK;
 }
+#endif /* (AC_CALLBACK == true) */
 
 /** \brief Enables an Analog Comparator window channel that was previously configured.
  *

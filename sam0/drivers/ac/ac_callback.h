@@ -52,6 +52,27 @@
 extern "C" {
 #endif
 
+#if (AC_INST_NUM > 1) && !defined(__DOXYGEN__)
+#  define _AC_INTERRUPT_VECT_NUM(n, unused) \
+		  SYSTEM_INTERRUPT_MODULE_AC##n,
+/**
+ * \internal Get the interrupt vector for the given device instance
+ *
+ * \param[in] TC module instance number.
+ *
+ * \return Interrupt vector for of the given TC module instance.
+ */
+static enum system_interrupt_vector _ac_interrupt_get_interrupt_vector(
+		uint32_t inst_num)
+{
+	static uint8_t ac_interrupt_vectors[AC_INST_NUM] =
+		{
+			MREPEAT(AC_INST_NUM, _AC_INTERRUPT_VECT_NUM, ~)
+		};
+
+	return ac_interrupt_vectors[inst_num];
+}
+#endif /* (AC_INST_NUM > 1) !defined(__DOXYGEN__)*/
 
 /**
  * \name Callback Management
@@ -88,9 +109,14 @@ static inline void ac_enable_callback(
 	/* Set software flag for the callback */
 	module->enable_callback_mask |= (1 << callback_type);
 	/* Enable the interrupt for the callback */
-	module->hw->INTENSET.reg |= (1 << callback_type);
+	module->hw->INTENSET.reg = (1 << callback_type);
+#if (AC_INST_NUM == 1)
 	/* Enable interrupts for AC module */
 	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_AC);
+#endif /* (AC_INST_NUM == 1) */
+#if (AC_INST_NUM > 1)
+	system_interrupt_enable(_ac_interrupt_get_interrupt_vector(_ac_get_inst_index(module->hw)));
+#endif /* (AC_INST_NUM > 1) */
 }
 
 /**
@@ -113,7 +139,7 @@ static inline void ac_disable_callback(
 	/* Clear software flag for the callback */
 	module->enable_callback_mask &= ~(1 << callback_type);
 	/* Disable the interrupt for the callback */
-	module->hw->INTENCLR.reg &= ~(1 << callback_type);
+	module->hw->INTENCLR.reg = (1 << callback_type);
 }
 
 /**

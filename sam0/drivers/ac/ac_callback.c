@@ -97,7 +97,7 @@ enum status_code ac_unregister_callback(
 	/* Unregister callback function */
 	module->callback[callback_type] = NULL;
 
-	/* Set software flag for callback */
+	/* Clear software flag for callback */
 	module->register_callback_mask &= ~(1 << callback_type);
 
 	return STATUS_OK;
@@ -106,9 +106,20 @@ enum status_code ac_unregister_callback(
 /**
  * \internal ISR handler for AC
  */
+#if (AC_INST_NUM == 1)
 void AC_Handler(void) {
 	_ac_interrupt_handler(0);
 }
+#endif /* (AC_INST_NUM == 1) */
+#if (AC_INST_NUM > 1)
+#define _AC_INTERRUPT_HANDLER(n, unused) \
+		void AC##n##_Handler(void) \
+		{ \
+			_ac_interrupt_handler(n); \
+		}
+
+MREPEAT(AC_INST_NUM, _AC_INTERRUPT_HANDLER, ~)
+#endif /* (AC_INST_NUM > 1) */
 
 /**
  * \brief Interrupt Handler for AC module
@@ -125,58 +136,59 @@ void _ac_interrupt_handler(const uint32_t instance_index)
 
 	/* Get device instance from the look-up table */
 
+	struct ac_module *module = _ac_instance[instance_index];
 
 	/* Read and mask interrupt flag register */
-	interrupt_and_callback_status_mask = _ac_instance->hw->INTFLAG.reg &
-			_ac_instance->register_callback_mask &
-			_ac_instance->enable_callback_mask;
+	interrupt_and_callback_status_mask = _ac_instance[instance_index]->hw->INTFLAG.reg &
+			module->register_callback_mask &
+			module->enable_callback_mask;
 
 	/* Check if comparator channel 0 needs to be serviced */
 	if (interrupt_and_callback_status_mask & AC_INTFLAG_COMP0) {
 		/* Invoke registered and enabled callback function */
-		(_ac_instance->callback[AC_CALLBACK_COMPARATOR_0])(_ac_instance);
+		(module->callback[AC_CALLBACK_COMPARATOR_0])(module);
 		/* Clear interrupt flag */
-		_ac_instance->hw->INTFLAG.reg = AC_INTFLAG_COMP0;
+		module->hw->INTFLAG.reg = AC_INTFLAG_COMP0;
 	}
 
 	/* Check if comparator channel 1 needs to be serviced */
 	if (interrupt_and_callback_status_mask & AC_INTFLAG_COMP1) {
 		/* Invoke registered and enabled callback function */
-		(_ac_instance->callback[AC_CALLBACK_COMPARATOR_1])(_ac_instance);
+		(module->callback[AC_CALLBACK_COMPARATOR_1])(module);
 		/* Clear interrupt flag */
-		_ac_instance->hw->INTFLAG.reg = AC_INTFLAG_COMP1;
+		module->hw->INTFLAG.reg = AC_INTFLAG_COMP1;
 	}
 
 	/* Check if window 0 needs to be serviced */
 	if (interrupt_and_callback_status_mask & AC_INTFLAG_WIN0) {
 		/* Invoke registered and enabled callback function */
-		(_ac_instance->callback[AC_CALLBACK_WINDOW_0])(_ac_instance);
+		(module->callback[AC_CALLBACK_WINDOW_0])(module);
 		/* Clear interrupt flag */
-		_ac_instance->hw->INTFLAG.reg = AC_INTFLAG_WIN0;
+		module->hw->INTFLAG.reg = AC_INTFLAG_WIN0;
 	}
 #if (AC_NUM_CMP > 2)
 		/* Check if comparator channel 2 needs to be serviced */
 	if (interrupt_and_callback_status_mask & AC_INTFLAG_COMP2) {
 		/* Invoke registered and enabled callback function */
-		(_ac_instance->callback[AC_CALLBACK_COMPARATOR_2])(_ac_instance);
+		(module->callback[AC_CALLBACK_COMPARATOR_2])(module);
 		/* Clear interrupt flag */
-		_ac_instance->hw->INTFLAG.reg = AC_INTFLAG_COMP2;
+		module->hw->INTFLAG.reg = AC_INTFLAG_COMP2;
 	}
 
 	/* Check if comparator channel 3 needs to be serviced */
 	if (interrupt_and_callback_status_mask & AC_INTFLAG_COMP3) {
 		/* Invoke registered and enabled callback function */
-		(_ac_instance->callback[AC_CALLBACK_COMPARATOR_3])(_ac_instance);
+		(module->callback[AC_CALLBACK_COMPARATOR_3])(module);
 		/* Clear interrupt flag */
-		_ac_instance->hw->INTFLAG.reg = AC_INTFLAG_COMP3;
+		module->hw->INTFLAG.reg = AC_INTFLAG_COMP3;
 	}
 
 		/* Check if window 1 needs to be serviced */
 	if (interrupt_and_callback_status_mask & AC_INTFLAG_WIN1) {
 		/* Invoke registered and enabled callback function */
-		(_ac_instance->callback[AC_CALLBACK_WINDOW_1])(_ac_instance);
+		(module->callback[AC_CALLBACK_WINDOW_1])(module);
 		/* Clear interrupt flag */
-		_ac_instance->hw->INTFLAG.reg = AC_INTFLAG_WIN1;
+		module->hw->INTFLAG.reg = AC_INTFLAG_WIN1;
 	}
 #endif /* (AC_NUM_CMP > 2) */
 }

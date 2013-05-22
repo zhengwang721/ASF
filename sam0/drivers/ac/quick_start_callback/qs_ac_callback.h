@@ -127,7 +127,6 @@
  *  \snippet qs_ac_basic.c setup_16, 
  *
  * -# Enable the callbacks.
- * \note This must be done before enabling the channel.
  *  \snippet qs_ac_basic.c setup_20
  *
  * -# Enable the now initialized Analog Comparator channel.

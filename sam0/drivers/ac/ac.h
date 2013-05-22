@@ -271,10 +271,6 @@ enum ac_callback {
 	AC_CALLBACK_COMPARATOR_1  = AC_INTFLAG_COMP1_Pos,
 	/** Callback for window 0 */
 	AC_CALLBACK_WINDOW_0      = AC_INTFLAG_WIN0_Pos,
-#  if !defined(__DOXYGEN__) && (AC_NUM_CMP == 2)
-	/** Number of available callbacks */
-	AC_CALLBACK_N = 3,
-#  endif /* !defined(__DOXYGEN__) */
 #  if (AC_NUM_CMP > 2)
 	/** Callback for comparator 2 */
 	AC_CALLBACK_COMPARATOR_2  = AC_INTFLAG_COMP2_Pos,
@@ -283,15 +279,15 @@ enum ac_callback {
 	/** Callback for window 1 */
 	AC_CALLBACK_WINDOW_1      = AC_INTFLAG_WIN1_Pos,
 	/** Number of available callbacks */
-#    if !defined(__DOXYGEN__)
-	AC_CALLBACK_N = 6,
-#    endif /* !defined(__DOXYGEN__) */
 #  endif /* (AC_NUM_CMP == 2) */
+#  if !defined(__DOXYGEN__)
+	AC_CALLBACK_N = 6,
+#  endif /* !defined(__DOXYGEN__) */
 };
 
 
 #    if !defined(__DOXYGEN__)
-struct ac_module *_ac_instance;
+struct ac_module *_ac_instance[AC_INST_NUM];
 #    endif /* !defined(__DOXYGEN__) */
 #  endif /* AC_CALLBACK == true */
 
@@ -456,6 +452,7 @@ enum ac_win_state {
 	AC_WIN_STATE_BELOW,
 };
 
+#if (AC_CALLBACK == true)
 /**
  * \brief Channel interrupt selection enum.
  *
@@ -490,6 +487,7 @@ enum ac_win_interrupt_selection {
 	/** Interrupt is generated when the compare value goes outside the window */
 	AC_WIN_INTERRUPT_SELECTION_OUTSIDE  = AC_WINCTRL_WINTSEL0_OUTSIDE,
 };
+#endif /* (AC_CALLBACK == true) */
 
 /**
  * \brief AC software device instance structure.
@@ -506,7 +504,7 @@ struct ac_module {
 	Ac *hw;
 #  if AC_CALLBACK == true
 	/** Array of callbacks */
-	ac_callback_t callback[6];
+	ac_callback_t callback[AC_CALLBACK_N];
 	/** Bit mask for callbacks registered */
 	uint8_t register_callback_mask;
 	/** Bit mask for callbacks enabled */
@@ -580,16 +578,14 @@ struct ac_chan_config {
 	 *  scalar input. If the VCC voltage scalar is not selected as a comparator
 	 *  channel pin's input, this value will be ignored. */
 	uint8_t vcc_scale_factor;
-	/* This is used to select when interrupts should occur on a channel */
+	/** This is used to select when interrupts should occur on a channel */
 	enum ac_chan_interrupt_selection interrupt_selection;
 };
 /**
  * \brief Analog Comparator module Comparator configuration structure.
- *
- * 
  */
 struct ac_win_config {
-	/* This is used to select when interrupts should occur on a window */
+	/** This is used to select when interrupts should occur on a window */
 	enum ac_win_interrupt_selection interrupt_selection;
 };
 
@@ -605,6 +601,33 @@ enum status_code ac_init(
 		struct ac_module *const module_inst,
 		Ac *const hw,
 		struct ac_config *const config);
+
+#if (AC_INST_NUM > 1) && !defined(__DOXYGEN__)
+/**
+ * \internal Find the index of given TC module instance.
+ *
+ * \param[in] AC module instance pointer.
+ *
+ * \return Index of the given AC module instance.
+ */
+uint8_t _ac_get_inst_index(
+		Tc *const hw)
+{
+	/* List of available TC modules. */
+	static Tc *const ac_modules[AC_INST_NUM] = AC_INSTS;
+
+	/* Find index for TC instance. */
+	for (uint32_t i = 0; i < AC_INST_NUM; i++) {
+		if (hw == ac_modules[i]) {
+			return i;
+		}
+	}
+
+	/* Invalid data given. */
+	Assert(false);
+	return 0;
+}
+#endif /* (AC_INST_NUM > 1) && !defined(__DOXYGEN__) */
 
 /**
  * \brief Determines if the hardware module(s) are currently synchronizing to the bus.
@@ -852,7 +875,9 @@ static inline void ac_chan_get_config_defaults(
 	config->positive_input      = AC_CHAN_POS_MUX_PIN0;
 	config->negative_input      = AC_CHAN_NEG_MUX_SCALED_VCC;
 	config->vcc_scale_factor    = 32;
+#if (AC_CALLBACK == true)
 	config->interrupt_selection = AC_CHAN_INTERRUPT_SELECTION_TOGGLE;
+#endif /* (AC_CALLBACK == true) */
 }
 
 enum status_code ac_chan_set_config(
@@ -1001,7 +1026,7 @@ static inline enum ac_chan_state ac_chan_get_state(
  * \name Window Mode Configuration and Initialization
  * @{
  */
- 
+
 /**
  * \brief Initializes an Analog Comparator window configuration structure to defaults.
  *
