@@ -96,6 +96,36 @@ void board_init(void)
 	ioport_set_port_peripheral_mode(PINS_UART3_PORT, PINS_UART3,
 			PINS_UART3_MASK);
 #endif
+
+#ifdef CONF_BOARD_USART_RXD
+	/* Configure USART RXD pin */
+	ioport_set_pin_peripheral_mode(PIN_USART1_RXD_IDX,
+			PIN_USART1_RXD_FLAGS);
+#endif
+
+#ifdef CONF_BOARD_USART_TXD
+	/* Configure USART TXD pin */
+	ioport_set_pin_peripheral_mode(PIN_USART1_TXD_IDX,
+			PIN_USART1_TXD_FLAGS);
+#endif
+
+#ifdef CONF_BOARD_USART_SCK
+	/* Configure USART synchronous communication SCK pin */
+	ioport_set_pin_peripheral_mode(PIN_USART1_SCK_IDX,
+			PIN_USART1_SCK_FLAGS);
+#endif
+
+#ifdef CONF_BOARD_ISO7816_RST
+	/* Configure ISO7816 card reset pin */
+	ioport_set_pin_dir(PIN_ISO7816_RST_IDX, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(PIN_ISO7816_RST_IDX, IOPORT_PIN_LEVEL_LOW);
+#endif
+
+#ifdef CONF_BOARD_ISO7816
+	/* Configure ISO7816 interface TXD & SCK pin */
+	ioport_set_pin_peripheral_mode(PIN_USART1_TXD_IDX, PIN_USART1_TXD_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_USART1_SCK_IDX, PIN_USART1_SCK_FLAGS);
+#endif
 }
 
 /** @} */
