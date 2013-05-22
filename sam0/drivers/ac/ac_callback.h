@@ -196,7 +196,7 @@ static inline void ac_enable_callback(
 	/* Set software flag for the callback */
 	module->enable_callback_mask |= (1 << callback_type);
 	/* Enable the interrupt for the callback */
-	module->hw->INTENSET.reg = (1 << callback_type);
+	module->hw->INTENSET.reg |= (1 << callback_type);
 	/* Enable interrupts for AC module */
 	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_AC);
 }
@@ -218,10 +218,10 @@ static inline void ac_disable_callback(
 	/* Sanity check arguments */
 	Assert(module);
 
-	/* Set software flag for the callback */
-	module->enable_callback_mask |= (1 << callback_type);
-	/* Enable the interrupt for the callback */
-	module->hw->INTENCLR.reg = (1 << callback_type);
+	/* Clear software flag for the callback */
+	module->enable_callback_mask &= ~(1 << callback_type);
+	/* Disable the interrupt for the callback */
+	module->hw->INTENCLR.reg &= ~(1 << callback_type);
 }
 
 /**

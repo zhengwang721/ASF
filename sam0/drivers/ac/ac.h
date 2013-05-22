@@ -256,23 +256,26 @@ extern "C" {
 #include <clock.h>
 
 #if AC_CALLBACK == true
-
+#  if !defined(__DOXYGEN__)
+/* Forward declaration of struct */
+struct ac_module;
+#  endif /* !defined(__DOXYGEN__) */
 /** Type definition for a AC module callback function. */
-typedef void (*ac_callback_t)(void);
+typedef void (*ac_callback_t)(struct ac_module *const module_inst);
 
 /** Enum for possible callback types for the AC module */
 enum ac_callback {
-#if !defined(__DOXYGEN__) || (AC_NUM_CMP == 2)
 	/** Callback for comparator 0 */
 	AC_CALLBACK_COMPARATOR_0  = AC_INTFLAG_COMP0_Pos,
 	/** Callback for comparator 1 */
 	AC_CALLBACK_COMPARATOR_1  = AC_INTFLAG_COMP1_Pos,
 	/** Callback for window 0 */
 	AC_CALLBACK_WINDOW_0      = AC_INTFLAG_WIN0_Pos,
+#  if !defined(__DOXYGEN__) && (AC_NUM_CMP == 2)
 	/** Number of available callbacks */
 	AC_CALLBACK_N = 3,
-#endif
-#if defined(__DOXYGEN__) || (AC_NUM_CMP > 2)
+#  endif /* !defined(__DOXYGEN__) */
+#  if (AC_NUM_CMP > 2)
 	/** Callback for comparator 2 */
 	AC_CALLBACK_COMPARATOR_2  = AC_INTFLAG_COMP2_Pos,
 	/** Callback for comparator 3 */
@@ -280,17 +283,17 @@ enum ac_callback {
 	/** Callback for window 1 */
 	AC_CALLBACK_WINDOW_1      = AC_INTFLAG_WIN1_Pos,
 	/** Number of available callbacks */
+#    if !defined(__DOXYGEN__)
 	AC_CALLBACK_N = 6,
-#endif /*  defined(__DOXYGEN__) || (AC_NUM_CMP > 2) */
+#    endif /* !defined(__DOXYGEN__) */
+#  endif /* (AC_NUM_CMP == 2) */
 };
 
 
-#if !defined(__DOXYGEN__)
+#    if !defined(__DOXYGEN__)
 struct ac_module *_ac_instance;
-#endif
-
-//#  include "ac_callback.h"
-#endif /* AC_CALLBACK == true */
+#    endif /* !defined(__DOXYGEN__) */
+#  endif /* AC_CALLBACK == true */
 
 /**
  * \brief AC comparator channel selection enum.
@@ -468,7 +471,7 @@ struct ac_module {
 	Ac *hw;
 #  if AC_CALLBACK == true
 	/** Array of callbacks */
-	ac_callback_t callback[AC_CALLBACK_N];
+	ac_callback_t callback[6];
 	/** Bit mask for callbacks registered */
 	uint8_t register_callback_mask;
 	/** Bit mask for callbacks enabled */

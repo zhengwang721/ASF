@@ -42,12 +42,12 @@
  */
 #include <asf.h>
 
- bool callback_status = false;
+bool callback_status = false;
 
 void configure_ac(void);
 void configure_ac_channel(void);
 void configure_ac_callback(void);
-void callback_function_ac(void);
+void callback_function_ac(struct ac_module *const module_inst);
 
 //! [setup]
 /* AC module software instance (must not go out of scope while in use) */
@@ -119,7 +119,7 @@ void configure_ac_channel(void)
 }
 
 //! [callback_1]
-void callback_function_ac()
+void callback_function_ac(struct ac_module *const module_inst)
 {
 	//! [callback_2]
 	callback_status = true;
