@@ -96,10 +96,11 @@ void configure_ac_channel(void)
 
 	/* Set the Analog Comparator channel configuration settings */
 	//! [setup_10]
-	ac_chan_conf.sample_mode      = AC_CHAN_MODE_SINGLE_SHOT;
-	ac_chan_conf.positive_input   = AC_CHAN_POS_MUX_PIN0;
-	ac_chan_conf.negative_input   = AC_CHAN_NEG_MUX_SCALED_VCC;
-	ac_chan_conf.vcc_scale_factor = 32;
+	ac_chan_conf.sample_mode         = AC_CHAN_MODE_SINGLE_SHOT;
+	ac_chan_conf.positive_input      = AC_CHAN_POS_MUX_PIN0;
+	ac_chan_conf.negative_input      = AC_CHAN_NEG_MUX_SCALED_VCC;
+	ac_chan_conf.vcc_scale_factor    = 32;
+	ac_chan_conf.interrupt_selection = AC_CHAN_INTERRUPT_SELECTION_END_OF_COMPARE;
 	//! [setup_10]
 
 	/* Set up a pin as an AC channel input */
@@ -133,10 +134,6 @@ void configure_ac_callback(void)
 	//! [setup_16]
 	ac_register_callback(&ac_dev, callback_function_ac, AC_CALLBACK_COMPARATOR_0);
 	//! [setup_16]
-	//! [setup_17]
-	ac_callback_channel_interrupt_selection(&ac_dev, AC_COMPARATOR_CHANNEL, 
-				AC_CHANNEL_INTERRUPT_SELECTION_END_OF_COMPARE);
-	//! [setup_17]
 }
 //! [setup_15]
 

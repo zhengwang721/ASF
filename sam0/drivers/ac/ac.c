@@ -146,13 +146,13 @@ enum status_code ac_init(
 
 #if AC_CALLBACK == true
 	/* Initialize parameters */
-	for (uint8_t i = 0; i < AC_CALLBACK_N; i++) {
-		module_inst->callback[i]        = NULL;
+	for (uint8_t i = 0; i < 6; i++) {
+		module_inst->callback[i]         = NULL;
 	}
 
 	/* Initialize software flags*/
-	module_inst->register_callback_mask     = 0x00;
-	module_inst->enable_callback_mask       = 0x00;
+	module_inst->register_callback_mask  = 0x00;
+	module_inst->enable_callback_mask    = 0x00;
 
 	/* Register this instance for callbacks*/
 	_ac_instance = module_inst;
@@ -204,6 +204,9 @@ enum status_code ac_chan_set_config(
 	/* Set sampling mode (single shot or continuous) */
 	compctrl_temp |= config->sample_mode;
 
+	/* Set channel interrupt selection */
+	compctrl_temp |= config->interrupt_selection;
+
 	while (ac_is_syncing(module_inst)) {
 		/* Wait until synchronization is complete */
 	}
@@ -213,6 +216,53 @@ enum status_code ac_chan_set_config(
 
 	/* Configure VCC voltage scaling for the comparator */
 	ac_module->SCALER[(uint8_t)channel].reg = config->vcc_scale_factor;
+
+	return STATUS_OK;
+}
+
+/**
+ * \brief Function used to setup interrupt selection of a window
+ *
+ * This function is used to setup when an interrupt should occur
+ * for a given window.
+ *
+ * \note This must be done before enabling the channel.
+ *
+ * \param[in]  module               Pointer to software instance struct
+ * \param[in]  win_channel          Window channel to setup
+ * \param[in]  interrupt_selection  Interrupt selection for the given channel
+ *
+ * \retval  STATUS_OK               Function exited successful
+ * \retval  STATUS_ERR_INVALID_ARG  win_channel argument incorrect
+ */
+enum status_code ac_win_set_config(
+		struct ac_module *const module_inst,
+		enum ac_win_channel const win_channel,
+		struct ac_win_config *const config)
+{
+	Assert(module_inst);
+	Assert(module_inst->hw);
+	Assert(config);
+
+	uint8_t winctrl_mask;
+	winctrl_mask = module_inst->hw->WINCTRL.reg;
+
+	if (win_channel == AC_WIN_CHANNEL_0) {
+		winctrl_mask &= ~AC_WINCTRL_WINTSEL0_Msk;
+		winctrl_mask |= config->interrupt_selection;
+	}
+#if (AC_PAIRS > 1)
+	else if (win_channel == AC_WIN_CHANNEL_1) {
+		winctrl_mask &= ~AC_WINCTRL_WINTSEL1_Msk;
+		winctrl_mask = (config->interrupt_selection << (AC_WINCTRL_WINTSEL1_Pos -
+		AC_WINCTRL_WINTSEL0_Pos);
+	} 
+#endif /* (AC_PAIRS > 1) */
+	else {
+		return STATUS_ERR_INVALID_ARG ;
+	}
+
+	module_inst->hw->WINCTRL.reg = winctrl_mask;
 
 	return STATUS_OK;
 }

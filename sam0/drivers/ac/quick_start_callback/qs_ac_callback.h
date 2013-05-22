@@ -104,8 +104,10 @@
  *    desired voltage scaler.
  *    \note The voltage scalar formula is documented
  *          \ref ac_chan_config.vcc_scale_factor "here".
- *
+ * -# Select when the interrupt should occur. In this case an interrupt will occur
+ *    at every finished conversion.
  *  \snippet qs_ac_basic.c setup_10
+ *
  * -# Configure the physical pin that will be routed to the AC module channel 0.
  *  \snippet qs_ac_basic.c setup_11
  * -# Initialize the Analog Comparator channel and configure it with the desired
@@ -122,10 +124,7 @@
  * -# Let the callback function set the calback_status flag to true
  *  \snippet qs_ac_basic.c callback_2
  * -# Register callback function.
- *  \snippet qs_ac_basic.c setup_16
- * -# Select when the interrupt should occur. In this case an interrupt will occur
- *    at every finished conversion.
- *  \snippet qs_ac_basic.c setup_17
+ *  \snippet qs_ac_basic.c setup_16, 
  *
  * -# Enable the callbacks.
  * \note This must be done before enabling the channel.
