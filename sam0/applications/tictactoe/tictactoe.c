@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Example application for GFX Monochrome System Font (sysfont)
+ * \brief Tic Tac Toe application for SAM D20 Xplained Pro with OLED1 Xplained Pro
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,6 +44,25 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+/**
+ * \mainpage
+ *
+ * This application demonstrates the use of the OLED1 Xplained Pro extension
+ * board for the SAM D20 Xplained Pro with a Tic Tac Toe game.
+ *
+ * \section  play How to Play
+ * The game is controlled with the three mechanical buttons on the OLED1
+ * Xplained Pro. The goal is to get three circles in a horizontal, diagonal or
+ * vertical row, before the opponent (SAM D20) gets three crosses in a row.
+ *
+ * \section setup Hardware Setup
+ * The OLED1 Xplained Pro extension board must be connected to extension
+ * header 3 on the SAM D20 Xplained Pro.
+ * To use another extension header, the configuration in \ref conf_board.h and
+ * \ref conf_ssd1306.h must be edited.
+ *
+ */
+
 /* Size of a square */
 #define SQUARE_SIZE  (LCD_HEIGHT_PIXELS / 3)
 
@@ -72,10 +91,13 @@
 #define SQUARE8_X SQUARE2_X
 #define SQUARE8_Y SQUARE6_Y
 
+/* Number of squares */
 #define NUMBER_OF_SQUARES 9
 
+/* X coordinate of strings */
 #define STRING_X (SQUARE2_X + SQUARE_SIZE*2)
 
+/* Lenght of strings */
 #define STRING_LENGTH 20
 
 /* Occupied squares */
@@ -92,16 +114,14 @@ const uint8_t square_coord[9][2] = {
 		{SQUARE6_X, SQUARE6_Y,},
 		{SQUARE7_X, SQUARE7_Y,},
 		{SQUARE8_X, SQUARE8_Y,},
-		};
+};
 
-/** 
- * \brief Enum for the different buttons
- */
+/* Enum for the different buttons */
 enum button {
 	BUTTON_1,
 	BUTTON_2,
 	BUTTON_3,
-	BUTTON_NONE,	
+	BUTTON_NONE,
 };
 
 /* Variable to mark number of wins */
@@ -113,9 +133,8 @@ uint16_t games = 0;
 /* String to display number of wins */
 char win_string[STRING_LENGTH];
 
-
 /** 
- * \brief Draws the tic-tac-toe board
+ * \brief Draws the Tic Tac Toe board on the display
  *
  */
 static void setup_board(void)
@@ -143,7 +162,7 @@ static void setup_board(void)
 	/* Print number of wins */
 	snprintf(win_string, STRING_LENGTH, "Wins: %d", wins);
 	gfx_mono_draw_string(win_string, STRING_X, SQUARE3_Y, &sysfont);
-	
+
 	/* Clear occupied squares */
 	for (uint8_t i = 0; i < NUMBER_OF_SQUARES; i++) {
 		occupied_squares[i] = 0;
@@ -168,7 +187,7 @@ static enum button get_button(void)
 }
 
 /** 
- * \brief Initalizes the display
+ * \brief Initalizes the display with explanatory text for the buttons
  */
 static void init_display(void)
 {
@@ -212,7 +231,7 @@ static void draw_circle(uint8_t square_num)
 }
 
 /**
- * \brief Highlight a square
+ * \brief Highlights a square
  */
 static void highlight_square(uint8_t square_num)
 {
@@ -221,14 +240,16 @@ static void highlight_square(uint8_t square_num)
 	/* Clear current highlighting */
 	uint8_t x = square_coord[last_square][0];
 	uint8_t y = square_coord[last_square][1];
-	gfx_mono_draw_rect(x + 1, y + 1, SQUARE_SIZE - 2, SQUARE_SIZE - 2, GFX_PIXEL_CLR);
+	gfx_mono_draw_rect(x + 1, y + 1, SQUARE_SIZE - 2, SQUARE_SIZE - 2,
+			GFX_PIXEL_CLR);
 
 	last_square = square_num;
 
 	/* Highlight new square */
 	x = square_coord[square_num][0];
 	y = square_coord[square_num][1];
-	gfx_mono_draw_rect(x + 1, y + 1, SQUARE_SIZE - 2, SQUARE_SIZE - 2, GFX_PIXEL_SET);
+	gfx_mono_draw_rect(x + 1, y + 1, SQUARE_SIZE - 2, SQUARE_SIZE - 2,
+			GFX_PIXEL_SET);
 }
 
 /** 
@@ -259,7 +280,7 @@ static void user_turn(void)
 			break;
 		case BUTTON_2:
 			if (occupied_squares[square_num] == 0) {
-				/* Select square */
+				/* Select square and draw circle */
 				occupied_squares[square_num] = 1;
 				draw_circle(square_num);
 				return;
