@@ -111,9 +111,11 @@ power_scaling_t ps_statuses[] = {
 static void eic_callback(void)
 {
 	sysclk_enable_peripheral_clock(EIC);
-	if(eic_line_interrupt_is_pending(EIC, GPIO_PUSH_BUTTON_EIC_LINE)) {
-		ast_write_counter_value(AST,0); /* Reset AST counter */
+	if (eic_line_interrupt_is_pending(EIC, GPIO_PUSH_BUTTON_EIC_LINE)) {
 		eic_line_clear_interrupt(EIC, GPIO_PUSH_BUTTON_EIC_LINE);
+		/* Stop AST and reset the counter */
+		ast_stop(AST);
+		ast_write_counter_value(AST, 0);
 	}
 	sysclk_disable_peripheral_clock(EIC);
 }
@@ -123,6 +125,7 @@ static void eic_callback(void)
  */
 static void ast_per_callback(void)
 {
+	ast_stop(AST);
 	ast_clear_interrupt_flag(AST, AST_INTERRUPT_PER);
 }
 
@@ -147,6 +150,7 @@ static void config_ast(void)
 	ast_conf.psel = AST_PSEL_32KHZ_1HZ;
 	ast_conf.counter = 0;
 	ast_set_config(AST, &ast_conf);
+	ast_stop(AST);
 
 	/* Set periodic 0 to interrupt after 8 second in counter mode. */
 	ast_clear_interrupt_flag(AST, AST_INTERRUPT_PER);
@@ -154,6 +158,7 @@ static void config_ast(void)
 	/* Set callback for periodic0. */
 	ast_set_callback(AST, AST_INTERRUPT_PER, ast_per_callback,
 		AST_PER_IRQn, 1);
+	ast_enable_wakeup(AST, AST_WAKEUP_PER);
 }
 
 static void config_buttons(void)
@@ -168,23 +173,26 @@ static void config_buttons(void)
 	};
 	eic_enable(EIC);
 	eic_line_set_config(EIC, GPIO_PUSH_BUTTON_EIC_LINE, 
-		&eic_line_conf);
+			&eic_line_conf);
 	eic_line_set_callback(EIC, GPIO_PUSH_BUTTON_EIC_LINE, eic_callback,
-		GPIO_PUSH_BUTTON_EIC_IRQ, 1);
+			GPIO_PUSH_BUTTON_EIC_IRQ, 1);
 	eic_line_enable(EIC, GPIO_PUSH_BUTTON_EIC_LINE);
 }
 
 /* configurations for backup mode wakeup */
 static void config_backup_wakeup(void)
 {
+	/* Take care the table 11-5 in datasheet, not all pin can been set */
+#ifdef CONF_BOARD_BM_USART
 	/* EIC and AST can wakeup the device */
 	bpm_enable_wakeup_source(BPM,
 			(1 << BPM_BKUPWEN_EIC) | (1 << BPM_BKUPWEN_AST));
 
-	/* Take care the table 11-5 in datasheet, not all pin can been set */
-#ifdef CONF_BOARD_BM_USART
 	/* EIC can wake the device from backup mode */
 	bpm_enable_backup_pin(BPM, 1 << GPIO_PUSH_BUTTON_EIC_LINE);
+#else
+	/* Only AST can wakeup the device */
+	bpm_enable_wakeup_source(BPM, (1 << BPM_BKUPWEN_AST));
 #endif
 
 	/**
@@ -233,11 +241,16 @@ static void display_menu(void)
 			"  5: Enter Retention mode. \r\n"
 			"  6: Enter Backup mode. \r\n"
 			"  h: Display menu \r\n"
-			"  --Push button can also be used to exit low power mode--\r\n"
-			"\r\n");
+			"  --AST has been used to exit low power mode.--\r\n"
 #ifdef CONF_BOARD_BM_USART
-	printf("-- IMPORTANT: This example requires a board "
+			"  --Push button can also be used to exit low power mode.--\r\n"
+			"\r\n"
+			"-- IMPORTANT: This example requires a board "
 			"monitor firmware version V1.3 or greater.\r\n\r\n");
+#else
+			"  --Push button can also be used to exit low power mode"
+			" except the backup mode.--\r\n"
+			"\r\n");
 #endif
 }
 
@@ -313,12 +326,13 @@ int main(void)
 					12000000, CPU_SRC_RC4M);
 #endif
 			printf("\r\n--Enter Sleep mode 0.\r\n");
-			ast_enable_wakeup(AST, AST_WAKEUP_PER);
-			/* Wait for the printf operation to finish before
-			setting the device in a power save mode. */
+			ast_start(AST);
+			/* 
+			 * Wait for the printf operation to finish before setting the
+			 * device in a power save mode.
+			 */
 			delay_ms(30);
 			bpm_sleep(BPM, BPM_SM_SLEEP_0);
-			ast_disable_wakeup(AST, AST_WAKEUP_PER);
 			printf("\r\n--Exit Sleep mode 0.\r\n");
 			break;
 
@@ -329,12 +343,13 @@ int main(void)
 					12000000, CPU_SRC_RC4M);
 #endif
 			printf("\r\n--Enter Sleep mode 1.\r\n");
-			ast_enable_wakeup(AST, AST_WAKEUP_PER);
-			/* Wait for the printf operation to finish before
-			setting the device in a power save mode. */
+			ast_start(AST);
+			/* 
+			 * Wait for the printf operation to finish before setting the
+			 * device in a power save mode.
+			 */
 			delay_ms(30);
 			bpm_sleep(BPM, BPM_SM_SLEEP_1);
-			ast_disable_wakeup(AST, AST_WAKEUP_PER);
 			printf("\r\n--Exit Sleep mode 1.\r\n");
 			break;
 
@@ -345,12 +360,13 @@ int main(void)
 					12000000, CPU_SRC_RC4M);
 #endif
 			printf("\r\n--Enter Sleep mode 2.\r\n");
-			ast_enable_wakeup(AST, AST_WAKEUP_PER);
-			/* Wait for the printf operation to finish before
-			setting the device in a power save mode. */
+			ast_start(AST);
+			/* 
+			 * Wait for the printf operation to finish before setting the
+			 * device in a power save mode.
+			 */
 			delay_ms(30);
 			bpm_sleep(BPM, BPM_SM_SLEEP_2);
-			ast_disable_wakeup(AST, AST_WAKEUP_PER);
 			printf("\r\n--Exit Sleep mode 2.\r\n");
 			break;
 
@@ -361,12 +377,13 @@ int main(void)
 					12000000, CPU_SRC_RC4M);
 #endif
 			printf("\r\n--Enter Sleep mode 3.\r\n");
-			ast_enable_wakeup(AST, AST_WAKEUP_PER);
-			/* Wait for the printf operation to finish before
-			setting the device in a power save mode. */
+			ast_start(AST);
+			/* 
+			 * Wait for the printf operation to finish before setting the
+			 * device in a power save mode.
+			 */
 			delay_ms(30);
 			bpm_sleep(BPM, BPM_SM_SLEEP_3);
-			ast_disable_wakeup(AST, AST_WAKEUP_PER);
 			printf("\r\n--Exit Sleep mode 3.\r\n");
 			break;
 
@@ -377,12 +394,13 @@ int main(void)
 					12000000, CPU_SRC_RC4M);
 #endif
 			printf("\r\n--Enter Wait mode.\r\n");
-			ast_enable_wakeup(AST, AST_WAKEUP_PER);
-			/* Wait for the printf operation to finish before
-			setting the device in a power save mode. */
+			ast_start(AST);
+			/* 
+			 * Wait for the printf operation to finish before setting the
+			 * device in a power save mode.
+			 */
 			delay_ms(30);
 			bpm_sleep(BPM, BPM_SM_WAIT);
-			ast_disable_wakeup(AST, AST_WAKEUP_PER);
 			printf("\r\n--Exit Wait mode.\r\n");
 			break;
 
@@ -393,12 +411,13 @@ int main(void)
 					12000000, CPU_SRC_RC4M);
 #endif
 			printf("\r\n--Enter Retention mode.\r\n");
-			ast_enable_wakeup(AST, AST_WAKEUP_PER);
-			/* Wait for the printf operation to finish before
-			setting the device in a power save mode. */
+			ast_start(AST);
+			/* 
+			 * Wait for the printf operation to finish before setting the
+			 * device in a power save mode.
+			 */
 			delay_ms(30);
 			bpm_sleep(BPM, BPM_SM_RET);
-			ast_disable_wakeup(AST, AST_WAKEUP_PER);
 			printf("\r\n--Exit Retention mode.\r\n");
 			break;
 
@@ -409,17 +428,13 @@ int main(void)
 					12000000, CPU_SRC_RC4M);
 #endif
 			printf("\r\n--Enter Backup mode.\r\n");
-			ast_enable_wakeup(AST, AST_WAKEUP_PER);
-			/**
-			 * The EIC pin status depend on outside circuit in backup mode,
-			 * so disable it to avoid wake up immediately.
+			ast_start(AST);
+			/* 
+			 * Wait for the printf operation to finish before setting the
+			 * device in a power save mode.
 			 */
-			bpm_disable_wakeup_source(BPM, (1 << BPM_BKUPWEN_EIC));
-			/* Wait for the printf operation to finish before
-			setting the device in a power save mode. */
 			delay_ms(30);
 			bpm_sleep(BPM, BPM_SM_BACKUP);
-			ast_disable_wakeup(AST, AST_WAKEUP_PER);
 			printf("\r\n--Exit Backup mode.\r\n");
 			break;
 
