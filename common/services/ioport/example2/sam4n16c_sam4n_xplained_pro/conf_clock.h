@@ -72,11 +72,11 @@
 #define CONFIG_PLL0_DIV             1
 
 // ===== Target frequency (System clock)
-// - XTAL frequency: 12MHz
+// - Internal RC frequency: 8MHz
 // - System clock source: PLLA
 // - System clock prescaler: 2 (divided by 2)
-// - PLLA source: XTAL
-// - PLLA output: XTAL * 25 / 1
-// - System clock: XTAL * 25 / 1 / 2 = 100MHz
+// - PLLA source: 8M_RC
+// - PLLA output: 8M_RC * 25 / 1
+// - System clock: 8M_RC * 25 / 1 / 2 = 100MHz
 
 #endif /* CONF_CLOCK_H_INCLUDED */
