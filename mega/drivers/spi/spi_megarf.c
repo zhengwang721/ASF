@@ -43,6 +43,24 @@
 
 #include "spi_megarf.h"
 
+/* ! \internal Local storage of SPI interrupt callback function */
+static spi_int_callback_t spi_int_callback;
+
+/**
+ * \internal
+ * \brief Interrupt handler for SPI interrupt
+ *
+ * This function will handle interrupt on SPI and
+ * call the callback function.
+ */
+
+ISR(SPI_STC_vect)
+{
+	if (spi_int_callback) {
+		spi_int_callback();
+	}
+}
+
 /**
  * \brief Calculates the SPI baudrate divider.
  *
@@ -119,4 +137,18 @@ int8_t spi_set_baud_div(volatile void *spi, uint32_t baudrate,
 	SPCR = (SPCR & ~(SPI_PRESCALER_gm)) | ctrl;
 
 	return 1;
+}
+
+/**
+ * \brief Set SPI interrupt callback function
+ *
+ * This function allows the caller to set and change the interrupt callback
+ * function. Without setting a callback function the interrupt handler in the
+ * driver will only clear the interrupt flags.
+ *
+ * \param callback Reference to a callback function
+ */
+void spi_set_interrupt_callback(spi_int_callback_t callback)
+{
+	spi_int_callback = callback;
 }

@@ -80,9 +80,7 @@
 
 
 #include "compiler.h"
-#if (!MEGA_RF)
 #include "preprocessor.h"
-#endif
 #include "board.h"
 #include "gpio.h"
 #include "sysclk.h"

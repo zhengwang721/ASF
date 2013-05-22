@@ -109,9 +109,11 @@ struct usart_spi_device USART_SPI_DEVICE_EXAMPLE = {
 	.id = USART_SPI_DEVICE_EXAMPLE_ID
 };
 
-/*! brief SPI interrupt handler
+/**
+ * \brief Interrupt callback for SPI interrupt
+ *  \param none
  */
-ISR(SPI_STC_vect)
+static void spi_interrupt_callback(void)
 {
 	uint8_t data = spi_get(SPI_SLAVE_EXAMPLE);
 
@@ -147,7 +149,10 @@ static void spi_slave_init(volatile void *spi, uint8_t mode)
 
 	/* Enable SPI as slave */
 	spi_enable_slave_mode(spi);
-
+        
+        /* Set the interrupt call back */
+        spi_set_interrupt_callback(spi_interrupt_callback);
+          
 	/* Enable SPI interrupt */
 	spi_enable_interrupt(spi);
 }
@@ -216,12 +221,12 @@ static bool spi_slave_transfer(void)
  */
 int main(void)
 {
+	sysclk_init();
 	/* Initialize the board.
 	 * The board-specific conf_board.h file contains the configuration of
 	 * the board initialization.
 	 */
 	board_init();
-	sysclk_init();
 
 	/* Config the USART_SPI in master mode. */
 	usart_spi_init(USART_SPI_EXAMPLE);

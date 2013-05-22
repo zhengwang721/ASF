@@ -123,6 +123,15 @@ typedef enum SPI_PRESCALER_enum {
 } SPI_PRESCALER_t;
 
 /**
+ * \brief Interrupt event callback function type
+ *
+ * The interrupt handler can be configured to do a function callback,
+ * the callback function must match the api_int_callback_t type.
+ *
+ */
+typedef void (*spi_int_callback_t)(void);
+
+/**
  * \brief Calculates the SPI baudrate divider.
  *
  * \param baudrate The expected baudrate on the SPI.
@@ -135,6 +144,17 @@ typedef enum SPI_PRESCALER_enum {
  */
 int8_t spi_set_baud_div(volatile void *spi, uint32_t baudrate,
 		uint32_t clkper_hz);
+
+/**
+ * \brief Set SPI interrupt callback function
+ *
+ * This function allows the caller to set and change the interrupt callback
+ * function. Without setting a callback function the interrupt handler in the
+ * driver will only clear the interrupt flags.
+ *
+ * \param callback Reference to a callback function
+ */
+void spi_set_interrupt_callback(spi_int_callback_t callback);
 
 /**
  * \brief Enables the SPI.

@@ -47,7 +47,7 @@
 		</module>
 		<module type="application" id="common.services.basic.spi.master_example#megarf" caption="Similar API for SPI Master Mode Example">
 			<info type="description" value="summary">
-			Provide an application example of SPI Master Mode Basic Services. Send &quot;Read Status&quot; commands to the ATMEL DataFlash and read back its status.
+			Provide an application example of SPI Master Mode Basic Services. Send "Read Status" commands to the ATMEL DataFlash and read back its status.
 			</info>
 			<info type="keyword" value="technology">
 				<keyword value="Communication"/>
@@ -58,6 +58,7 @@
 			<require idref="common.services.basic.clock"/>
 			<require idref="common.services.basic.gpio"/>
 			<require idref="common.services.basic.spi_master"/>
+			<info type="gui-flag" value="move-to-root"/>			
 		</module>		
 	</select-by-device>
 </asf>
