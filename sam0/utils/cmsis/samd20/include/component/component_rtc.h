@@ -201,7 +201,7 @@ typedef union {
 typedef union {
   struct {
     uint16_t PEREO:8;          /*!< bit:  0.. 7  Periodic Interval Event Output Enables */
-    uint16_t CMPEO:1;          /*!< bit:      8  Compare Event Output Enables [NUM_OF_COMP32] */
+    uint16_t CMPEO:1;          /*!< bit:      8  Compare Event Output Enables       */
     uint16_t :6;               /*!< bit:  9..14  Reserved                           */
     uint16_t OVFEO:1;          /*!< bit:     15  Overflow Event Output Enable       */
   } bit;                       /*!< Structure used for bit  access                  */
@@ -227,7 +227,7 @@ typedef union {
 typedef union {
   struct {
     uint16_t PEREO:8;          /*!< bit:  0.. 7  Periodic Interval Event Output Enables */
-    uint16_t CMPEO:2;          /*!< bit:  8.. 9  Compare Event Output Enables [NUM_OF_COMP16] */
+    uint16_t CMPEO:2;          /*!< bit:  8.. 9  Compare Event Output Enables       */
     uint16_t :5;               /*!< bit: 10..14  Reserved                           */
     uint16_t OVFEO:1;          /*!< bit:     15  Overflow Event Output Enable       */
   } bit;                       /*!< Structure used for bit  access                  */
@@ -253,7 +253,7 @@ typedef union {
 typedef union {
   struct {
     uint16_t PEREO:8;          /*!< bit:  0.. 7  Periodic Interval Event Output Enables */
-    uint16_t ALARMEO:1;        /*!< bit:      8  Alarm 0Event Output Enables [NUM_OF_ALARMS] */
+    uint16_t ALARMEO:1;        /*!< bit:      8  Alarm 0Event Output Enables        */
     uint16_t :6;               /*!< bit:  9..14  Reserved                           */
     uint16_t OVFEO:1;          /*!< bit:     15  Overflow Event Output Enable       */
   } bit;                       /*!< Structure used for bit  access                  */
@@ -278,7 +278,7 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint8_t  CMP:1;            /*!< bit:      0  Comparator Interrupt Disables [NUM_OF_COMP32] */
+    uint8_t  CMP:1;            /*!< bit:      0  Comparator Interrupt Disables      */
     uint8_t  :5;               /*!< bit:  1.. 5  Reserved                           */
     uint8_t  SYNCRDY:1;        /*!< bit:      6  Synchronization Ready Interrupt Disable */
     uint8_t  OVF:1;            /*!< bit:      7  Overflow Interrupt Disable         */
@@ -303,7 +303,7 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint8_t  CMP:2;            /*!< bit:  0.. 1  Comparator Interrupt Disables [NUM_OF_COMP16] */
+    uint8_t  CMP:2;            /*!< bit:  0.. 1  Comparator Interrupt Disables      */
     uint8_t  :4;               /*!< bit:  2.. 5  Reserved                           */
     uint8_t  SYNCRDY:1;        /*!< bit:      6  Synchronization Ready Interrupt Disable */
     uint8_t  OVF:1;            /*!< bit:      7  Overflow Interrupt Disable         */
@@ -328,7 +328,7 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint8_t  ALARM:1;          /*!< bit:      0  Alarm Interrupt Disables [NUM_OF_ALARMS] */
+    uint8_t  ALARM:1;          /*!< bit:      0  Alarm Interrupt Disables           */
     uint8_t  :5;               /*!< bit:  1.. 5  Reserved                           */
     uint8_t  SYNCRDY:1;        /*!< bit:      6  Synchronization Ready Interrupt Disable */
     uint8_t  OVF:1;            /*!< bit:      7  Overflow Interrupt Disable         */
@@ -353,7 +353,7 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint8_t  CMP:1;            /*!< bit:      0  Comparator Interrupt Enables [NUM_OF_COMP32] */
+    uint8_t  CMP:1;            /*!< bit:      0  Comparator Interrupt Enables       */
     uint8_t  :5;               /*!< bit:  1.. 5  Reserved                           */
     uint8_t  SYNCRDY:1;        /*!< bit:      6  Synchronization Ready Interrupt Enable */
     uint8_t  OVF:1;            /*!< bit:      7  Overflow Interrupt Enable          */
@@ -378,7 +378,7 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint8_t  CMP:2;            /*!< bit:  0.. 1  Comparator Interrupt Enables [NUM_OF_COMP16] */
+    uint8_t  CMP:2;            /*!< bit:  0.. 1  Comparator Interrupt Enables       */
     uint8_t  :4;               /*!< bit:  2.. 5  Reserved                           */
     uint8_t  SYNCRDY:1;        /*!< bit:      6  Synchronization Ready Interrupt Enable */
     uint8_t  OVF:1;            /*!< bit:      7  Overflow Interrupt Enable          */
@@ -403,7 +403,7 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint8_t  ALARM:1;          /*!< bit:      0  Alarm Interrupt Enables [NUM_OF_ALARMS] */
+    uint8_t  ALARM:1;          /*!< bit:      0  Alarm Interrupt Enables            */
     uint8_t  :5;               /*!< bit:  1.. 5  Reserved                           */
     uint8_t  SYNCRDY:1;        /*!< bit:      6  Synchronization Ready Interrupt Enable */
     uint8_t  OVF:1;            /*!< bit:      7  Overflow Interrupt Enable          */
@@ -428,7 +428,7 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint8_t  CMP:1;            /*!< bit:      0  Comparator Interrupt Flags [NUM_OF_COMP32] */
+    uint8_t  CMP:1;            /*!< bit:      0  Comparator Interrupt Flags         */
     uint8_t  :5;               /*!< bit:  1.. 5  Reserved                           */
     uint8_t  SYNCRDY:1;        /*!< bit:      6  Synchronization Ready Interrupt Flag */
     uint8_t  OVF:1;            /*!< bit:      7  Overflow Interrupt Flag            */
@@ -453,7 +453,7 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint8_t  CMP:2;            /*!< bit:  0.. 1  Comparator Interrupt Flags [NUM_OF_COMP16] */
+    uint8_t  CMP:2;            /*!< bit:  0.. 1  Comparator Interrupt Flags         */
     uint8_t  :4;               /*!< bit:  2.. 5  Reserved                           */
     uint8_t  SYNCRDY:1;        /*!< bit:      6  Synchronization Ready Interrupt Flag */
     uint8_t  OVF:1;            /*!< bit:      7  Overflow Interrupt Flag            */
@@ -478,7 +478,7 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint8_t  ALARM:1;          /*!< bit:      0  Alarm Interrupt Flags [NUM_OF_ALARMS] */
+    uint8_t  ALARM:1;          /*!< bit:      0  Alarm Interrupt Flags              */
     uint8_t  :5;               /*!< bit:  1.. 5  Reserved                           */
     uint8_t  SYNCRDY:1;        /*!< bit:      6  Synchronization Ready Interrupt Flag */
     uint8_t  OVF:1;            /*!< bit:      7  Overflow Interrupt Flag            */

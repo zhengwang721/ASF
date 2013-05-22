@@ -160,7 +160,7 @@
  *	</tr>
  *	<tr>
  *		<td>13-bits</td>
- *		<td>conversion rate divided by 4</td>
+ *		<td>Conversion rate divided by 4</td>
  *	</tr>
  *	<tr>
  *		<td>14-bits</td>

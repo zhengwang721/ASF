@@ -239,9 +239,14 @@ typedef union {
 /* -------- DAC_DATA : (DAC Offset: 0x8) (R/W 16) Data Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
-  struct {
-    uint16_t DATA:16;          /*!< bit:  0..15  Data to be Converted               */
-  } bit;                       /*!< Structure used for bit  access                  */
+  struct { // LEFT_ADJUSTED mode
+    uint16_t :6;               /*!< bit:  0.. 5  Reserved                           */
+    uint16_t DATA:10;          /*!< bit:  6..15  Data to be Converted               */
+  } LEFT_ADJUSTED;             /*!< Structure used for LEFT_ADJUSTED                */
+  struct { // RIGHT_ADJUSTED mode
+    uint16_t DATA:10;          /*!< bit:  0.. 9  Data to be converted               */
+    uint16_t :6;               /*!< bit: 10..15  Reserved                           */
+  } RIGHT_ADJUSTED;            /*!< Structure used for RIGHT_ADJUSTED               */
   uint16_t reg;                /*!< Type      used for register access              */
 } DAC_DATA_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
@@ -249,17 +254,29 @@ typedef union {
 #define DAC_DATA_OFFSET             0x8          /**< \brief (DAC_DATA offset) Data Register */
 #define DAC_DATA_RESETVALUE         0x0000       /**< \brief (DAC_DATA reset_value) Data Register */
 
-#define DAC_DATA_DATA_Pos           0            /**< \brief (DAC_DATA) Data to be Converted */
-#define DAC_DATA_DATA_Msk           (0xFFFFu << DAC_DATA_DATA_Pos)
-#define DAC_DATA_DATA(value)        ((DAC_DATA_DATA_Msk & ((value) << DAC_DATA_DATA_Pos)))
-#define DAC_DATA_MASK               0xFFFFu      /**< \brief (DAC_DATA) MASK Register */
+// LEFT_ADJUSTED mode
+#define DAC_DATA_LEFT_ADJUSTED_DATA_Pos 6            /**< \brief (DAC_DATA_LEFT_ADJUSTED) Data to be Converted */
+#define DAC_DATA_LEFT_ADJUSTED_DATA_Msk (0x3FFu << DAC_DATA_LEFT_ADJUSTED_DATA_Pos)
+#define DAC_DATA_LEFT_ADJUSTED_DATA(value) ((DAC_DATA_LEFT_ADJUSTED_DATA_Msk & ((value) << DAC_DATA_LEFT_ADJUSTED_DATA_Pos)))
+#define DAC_DATA_LEFT_ADJUSTED_MASK 0xFFC0u      /**< \brief (DAC_DATA_LEFT_ADJUSTED) MASK Register */
+
+// RIGHT_ADJUSTED mode
+#define DAC_DATA_RIGHT_ADJUSTED_DATA_Pos 0            /**< \brief (DAC_DATA_RIGHT_ADJUSTED) Data to be converted */
+#define DAC_DATA_RIGHT_ADJUSTED_DATA_Msk (0x3FFu << DAC_DATA_RIGHT_ADJUSTED_DATA_Pos)
+#define DAC_DATA_RIGHT_ADJUSTED_DATA(value) ((DAC_DATA_RIGHT_ADJUSTED_DATA_Msk & ((value) << DAC_DATA_RIGHT_ADJUSTED_DATA_Pos)))
+#define DAC_DATA_RIGHT_ADJUSTED_MASK 0x03FFu      /**< \brief (DAC_DATA_RIGHT_ADJUSTED) MASK Register */
 
 /* -------- DAC_DATABUF : (DAC Offset: 0xC) (R/W 16) Data Buffer Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
-  struct {
-    uint16_t DATABUF:16;       /*!< bit:  0..15  Data Buffer                        */
-  } bit;                       /*!< Structure used for bit  access                  */
+  struct { // LEFT_ADJUSTED mode
+    uint16_t :6;               /*!< bit:  0.. 5  Reserved                           */
+    uint16_t DATABUF:10;       /*!< bit:  6..15  Data Buffer                        */
+  } LEFT_ADJUSTED;             /*!< Structure used for LEFT_ADJUSTED                */
+  struct { // RIGHT_ADJUSTED mode
+    uint16_t DATABUF:10;       /*!< bit:  0.. 9  Data Buffer                        */
+    uint16_t :6;               /*!< bit: 10..15  Reserved                           */
+  } RIGHT_ADJUSTED;            /*!< Structure used for RIGHT_ADJUSTED               */
   uint16_t reg;                /*!< Type      used for register access              */
 } DAC_DATABUF_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
@@ -267,10 +284,17 @@ typedef union {
 #define DAC_DATABUF_OFFSET          0xC          /**< \brief (DAC_DATABUF offset) Data Buffer Register */
 #define DAC_DATABUF_RESETVALUE      0x0000       /**< \brief (DAC_DATABUF reset_value) Data Buffer Register */
 
-#define DAC_DATABUF_DATABUF_Pos     0            /**< \brief (DAC_DATABUF) Data Buffer */
-#define DAC_DATABUF_DATABUF_Msk     (0xFFFFu << DAC_DATABUF_DATABUF_Pos)
-#define DAC_DATABUF_DATABUF(value)  ((DAC_DATABUF_DATABUF_Msk & ((value) << DAC_DATABUF_DATABUF_Pos)))
-#define DAC_DATABUF_MASK            0xFFFFu      /**< \brief (DAC_DATABUF) MASK Register */
+// LEFT_ADJUSTED mode
+#define DAC_DATABUF_LEFT_ADJUSTED_DATABUF_Pos 6            /**< \brief (DAC_DATABUF_LEFT_ADJUSTED) Data Buffer */
+#define DAC_DATABUF_LEFT_ADJUSTED_DATABUF_Msk (0x3FFu << DAC_DATABUF_LEFT_ADJUSTED_DATABUF_Pos)
+#define DAC_DATABUF_LEFT_ADJUSTED_DATABUF(value) ((DAC_DATABUF_LEFT_ADJUSTED_DATABUF_Msk & ((value) << DAC_DATABUF_LEFT_ADJUSTED_DATABUF_Pos)))
+#define DAC_DATABUF_LEFT_ADJUSTED_MASK 0xFFC0u      /**< \brief (DAC_DATABUF_LEFT_ADJUSTED) MASK Register */
+
+// RIGHT_ADJUSTED mode
+#define DAC_DATABUF_RIGHT_ADJUSTED_DATABUF_Pos 0            /**< \brief (DAC_DATABUF_RIGHT_ADJUSTED) Data Buffer */
+#define DAC_DATABUF_RIGHT_ADJUSTED_DATABUF_Msk (0x3FFu << DAC_DATABUF_RIGHT_ADJUSTED_DATABUF_Pos)
+#define DAC_DATABUF_RIGHT_ADJUSTED_DATABUF(value) ((DAC_DATABUF_RIGHT_ADJUSTED_DATABUF_Msk & ((value) << DAC_DATABUF_RIGHT_ADJUSTED_DATABUF_Pos)))
+#define DAC_DATABUF_RIGHT_ADJUSTED_MASK 0x03FFu      /**< \brief (DAC_DATABUF_RIGHT_ADJUSTED) MASK Register */
 
 /** \brief DAC hardware registers */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))

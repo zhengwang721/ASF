@@ -60,8 +60,7 @@ typedef union {
     uint8_t  CFDEN:1;          /*!< bit:      2  Clock Failure Detector Enable      */
     uint8_t  :1;               /*!< bit:      3  Reserved                           */
     uint8_t  BKUPCLK:1;        /*!< bit:      4  Backup Clock Select                */
-    uint8_t  MCSEL1:1;         /*!< bit:      5  MCSEL1 Clock Select                */
-    uint8_t  :2;               /*!< bit:  6.. 7  Reserved                           */
+    uint8_t  :3;               /*!< bit:  5.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } PM_CTRL_Type;
@@ -74,9 +73,7 @@ typedef union {
 #define PM_CTRL_CFDEN               (0x1u << PM_CTRL_CFDEN_Pos)
 #define PM_CTRL_BKUPCLK_Pos         4            /**< \brief (PM_CTRL) Backup Clock Select */
 #define PM_CTRL_BKUPCLK             (0x1u << PM_CTRL_BKUPCLK_Pos)
-#define PM_CTRL_MCSEL1_Pos          5            /**< \brief (PM_CTRL) MCSEL1 Clock Select */
-#define PM_CTRL_MCSEL1              (0x1u << PM_CTRL_MCSEL1_Pos)
-#define PM_CTRL_MASK                0x34u        /**< \brief (PM_CTRL) MASK Register */
+#define PM_CTRL_MASK                0x14u        /**< \brief (PM_CTRL) MASK Register */
 
 /* -------- PM_SLEEP : (PM Offset: 0x01) (R/W  8) Sleep Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
