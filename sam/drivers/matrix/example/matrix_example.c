@@ -108,6 +108,8 @@
 #define MATRIX_SLAVE_NUM    10
 #elif (SAM4E)
 #define MATRIX_SLAVE_NUM    6
+#elif (SAM4N)
+#define MATRIX_SLAVE_NUM    4
 #else
 #warning "Not define matrix slave number, set 1 for default."
 #define MATRIX_SLAVE_NUM    1

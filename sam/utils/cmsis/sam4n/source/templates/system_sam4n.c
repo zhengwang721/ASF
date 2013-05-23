@@ -40,9 +40,9 @@ extern "C" {
 /* Clock Settings (100MHz) */
 #define SYS_BOARD_OSCOUNT   (CKGR_MOR_MOSCXTST(0x8U))
 #define SYS_BOARD_PLLAR     (CKGR_PLLAR_ONE \
-							| CKGR_PLLAR_MULA(0x31U) \
+							| CKGR_PLLAR_MULA(0x18U) \
 							| CKGR_PLLAR_PLLACOUNT(0x3fU) \
-							| CKGR_PLLAR_DIVA(0x3U))
+							| CKGR_PLLAR_DIVA(0x1U))
 #define SYS_BOARD_MCKR      (PMC_MCKR_PRES_CLK_2 | PMC_MCKR_CSS_PLLA_CLK)
 
 #define SYS_CKGR_MOR_KEY_VALUE	CKGR_MOR_KEY(0x37) /* Key to unlock MOR register */
@@ -69,8 +69,8 @@ void SystemInit( void )
 		}
 	}
 
-	/* Switch to 3-20MHz Xtal oscillator */
-	PMC->CKGR_MOR = SYS_CKGR_MOR_KEY_VALUE | SYS_BOARD_OSCOUNT | CKGR_MOR_MOSCRCEN | CKGR_MOR_MOSCXTEN | CKGR_MOR_MOSCSEL;
+	/* Switch to 8MHz Internal RC */
+	PMC->CKGR_MOR = SYS_CKGR_MOR_KEY_VALUE | SYS_BOARD_OSCOUNT | CKGR_MOR_MOSCRCEN | CKGR_MOR_MOSCXTEN | CKGR_MOR_MOSCRCF_8_MHz;
 
 	while ( !(PMC->PMC_SR & PMC_SR_MOSCSELS) )
   {
