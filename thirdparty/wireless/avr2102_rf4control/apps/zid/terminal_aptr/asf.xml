@@ -30,10 +30,6 @@
 		<build type="define" name="EXTERN_EEPROM_AVAILABLE" value ="0"/>
 		<build type="define" name="RSSI_TO_LQI_MAPPING" value =""/>
 		<build type="define" name="REDUCED_PARAM_CHECK" value =""/>
-		<build type="define" name="TAL_TYPE" value ="ATMEGARFR2"/>
-		<build type="define" name="PAL_TYPE" value ="ATMEGA256RFR2"/>
-		<build type="define" name="PAL_GENERIC_TYPE" value ="MEGA_RF"/>	
-		<build type="define" name="SAL_TYPE" value ="ATMEGARF_SAL"/>	
 		<build type="define" name="CHANNEL_AGILITY" value =""/>	
 		<build type="define" name="ENABLE_STACK_NVM" value =""/>
 		
@@ -43,7 +39,6 @@
 		<require idref="thirdparty.wireless.avr2025_mac.source.sal"/>
 		<require idref="thirdparty.wireless.avr2025_mac.source.stb"/>
 		<require idref="thirdparty.wireless.avr2025_mac.source.mac"/>
-		<require idref="thirdparty.wireless.addons.sio2host"/>
 		<require idref="common.drivers.nvm"/>
 
 		<device-support-alias value="avr2102_rf4control_zid_aptr_support"/>
