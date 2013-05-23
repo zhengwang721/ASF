@@ -96,8 +96,6 @@
  *           settings.
  *
  *     \snippet qs_dac_basic.c setup_ch_config_defaults
- *  -# Change the desired channel settings.
- *     \snippet qs_dac_basic.c setup_ch_change_config
  *  -# Configure the DAC channel with the desired channel settings.
  *     \snippet qs_dac_basic.c setup_ch_set_config
  *  -# Enable the DAC channel so that it can output a voltage.
