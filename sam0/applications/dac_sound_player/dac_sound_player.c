@@ -237,7 +237,7 @@ int main(void)
 
 		}
 
-		while (!port_pin_get_input_level(SW0_PIN) == SW0_ACTIVE) {
+		while (port_pin_get_input_level(SW0_PIN) == SW0_ACTIVE) {
 			/* Wait for the button to be depressed */
 		}
 	}
