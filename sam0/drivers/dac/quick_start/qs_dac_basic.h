@@ -83,8 +83,6 @@
  *           settings.
  *
  *     \snippet qs_dac_basic.c setup_config_defaults
- *  -# Configure the DAC module with the desired channel settings.
- *     \snippet qs_dac_basic.c setup_set_config
  *  -# Enable the DAC module so that channels can be configured.
  *     \snippet qs_dac_basic.c setup_enable
  * -# Configure the DAC channel.

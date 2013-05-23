@@ -77,10 +77,6 @@ void configure_dac_channel(void)
 	dac_chan_get_config_defaults(&chan_config);
 //! [setup_ch_config_defaults]
 
-//! [setup_ch_change_config]
-	chan_config.enable_start_on_event = false;
-//! [setup_ch_change_config]
-
 //! [setup_ch_set_config]
 	dac_chan_set_config(&dac_instance, DAC_CHANNEL_0, &chan_config);
 //! [setup_ch_set_config]
