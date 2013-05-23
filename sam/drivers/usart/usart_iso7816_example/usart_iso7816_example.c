@@ -52,7 +52,7 @@
  *  This example can be used on SAM evaluation kit. Please connect the
  *  smartcard contacts with following pins which could be easily wired from
  *  the board. 
- *  On SAM3N-EK, SAM3U-EK, and SAM3X-EK use USART0 TXD0 and SCK0, 
+ *  On SAM3N-EK, SAM3U-EK, SAM3X-EK and SAM4N-Xplained-Pro use USART0 TXD0 and SCK0, 
  *  On SAM3S-EK, SAM3S-EK2, SAM4S-EK and SAM4E-EK use USART1 TXD1 and SCK1.
  *  - <b>SAM-EK -- SMARTCARD</b>
  *   - PA15     --    RST
@@ -60,6 +60,8 @@
  *   - SCK*     --    CLK
  *   - VCC      --    VCC
  *   - GND      --    GND
+ *
+ *  \note Use PA13 connected with RST on SAM4N-Xplained-Pro.
  *
  *  \par Description
  *  The iso7816 software provide in this examples is use to transform APDU

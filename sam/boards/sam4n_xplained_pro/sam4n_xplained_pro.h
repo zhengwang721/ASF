@@ -430,9 +430,9 @@
 //@}
 
 /* ISO7816 example relate PIN definition. */
-#define ISO7816_USART_ID             ID_USART1
-#define ISO7816_USART                  USART1
-#define PIN_ISO7816_RST_IDX        PIO_PA15_IDX
+#define ISO7816_USART_ID             ID_USART0
+#define ISO7816_USART                  USART0
+#define PIN_ISO7816_RST_IDX        PIO_PA13_IDX
 #define PIN_ISO7816_RST_FLAG       (0)
 
 /** @} */
