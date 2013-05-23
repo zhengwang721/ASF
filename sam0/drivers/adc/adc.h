@@ -809,13 +809,12 @@ struct adc_window_config {
 };
 
 /**
- * \brief Event configuration structure
+ * \brief ADC event enable/disable structure.
  *
- * Event configuration structure.
+ * Event flags for the ADC module. This is used to enable and
+ * disable events via \ref adc_enable_events() and \ref adc_disable_events().
  */
-struct adc_event_config {
-	/** Event action to take on incoming event */
-	enum adc_event_action event_action;
+struct adc_events {
 	/** Enable event generation on conversion done */
 	bool generate_event_on_conversion_done;
 	/** Enable event generation on window monitor */
@@ -924,8 +923,8 @@ struct adc_config {
 	struct adc_window_config window;
 	/** Gain and offset correction configuration structure */
 	struct adc_correction_config correction;
-	/** Event configuration structure */
-	struct adc_event_config event;
+	/** Event action to take on incoming event */
+	enum adc_event_action event_action;
 	/** Pin scan configuration structure */
 	struct adc_pin_scan_config pin_scan;
 };
@@ -956,7 +955,7 @@ struct adc_module {
 	uint8_t enabled_callback_mask;
 	/** Holds the status of the ongoing or last conversion job */
 	volatile enum status_code job_status;
-	/** If osftware triggering is needed */
+	/** If software triggering is needed */
 	bool software_trigger;
 #  endif
 #endif
@@ -1020,9 +1019,7 @@ static inline void adc_get_config_defaults(struct adc_config *const config)
 	config->left_adjust                   = false;
 	config->differential_mode             = false;
 	config->freerunning                   = false;
-	config->event.event_action            = ADC_EVENT_ACTION_DISABLED;
-	config->event.generate_event_on_conversion_done = false;
-	config->event.generate_event_on_window_monitor  = false;
+	config->event_action                  = ADC_EVENT_ACTION_DISABLED;
 	config->run_in_standby                = false;
 	config->reference_compensation_enable = false;
 	config->correction.correction_enable  = true;
@@ -1251,6 +1248,81 @@ static inline enum status_code adc_reset(
 	/* Software reset the module */
 	adc_module->CTRLA.reg |= ADC_CTRLA_SWRST;
 	return STATUS_OK;
+}
+
+
+/**
+ * \brief Enables an ADC event input or output.
+ *
+ *  Enables one or more input or output events to or from the ADC module. See
+ *  \ref adc_events "here" for a list of events this module supports.
+ *
+ *  \note Events cannot be altered while the module is enabled.
+ *
+ *  \param[in] module_inst  Software instance for the ADC peripheral
+ *  \param[in] events       Struct containing flags of events to enable
+ */
+static inline void adc_enable_events(
+		struct adc_module *const module_inst,
+		struct adc_events *const events)
+{
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+	Assert(events);
+
+	Adc *const adc_module = module_inst->hw;
+
+	uint32_t event_mask = 0;
+
+	/* Configure Window Monitor event */
+	if (events->generate_event_on_window_monitor) {
+		event_mask |= ADC_EVCTRL_WINMONEO;
+	}
+
+	/* Configure Result Ready event */
+	if (events->generate_event_on_conversion_done) {
+		event_mask |= ADC_EVCTRL_RESRDYEO;
+	}
+
+	adc_module->EVCTRL.reg |= event_mask;
+}
+
+/**
+ * \brief Disables an ADC event input or output.
+ *
+ *  DIsables one or more input or output events to or from the ADC module. See
+ *  \ref adc_events "here" for a list of events this module supports.
+ *
+ *  \note Events cannot be altered while the module is enabled.
+ *
+ *  \param[in] module_inst  Software instance for the ADC peripheral
+ *  \param[in] events       Struct containing flags of events to disable
+ */
+static inline void adc_disable_events(
+		struct adc_module *const module_inst,
+		struct adc_events *const events)
+{
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+	Assert(events);
+
+	Adc *const adc_module = module_inst->hw;
+
+	uint32_t event_mask = 0;
+
+	/* Configure Window Monitor event */
+	if (events->generate_event_on_window_monitor) {
+		event_mask |= ADC_EVCTRL_WINMONEO;
+	}
+
+	/* Configure Result Ready event */
+	if (events->generate_event_on_conversion_done) {
+		event_mask |= ADC_EVCTRL_RESRDYEO;
+	}
+
+	adc_module->EVCTRL.reg &= ~event_mask;
 }
 
 /**

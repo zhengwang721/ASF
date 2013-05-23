@@ -173,7 +173,6 @@ static void test_dac_init(void)
 
 	/* Configure the DAC channel */
 	dac_chan_get_config_defaults(&chan_config);
-	chan_config.enable_start_on_event = false;
 	dac_chan_set_config(&dac_inst, DAC_CHANNEL_0, &chan_config);
 	dac_chan_enable(&dac_inst, DAC_CHANNEL_0);
 }
