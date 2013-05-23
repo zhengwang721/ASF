@@ -166,10 +166,11 @@
  * }
  * \enddot
  *
+ * \subsubsection asfdoc_samd20_system_clock_module_chain_example Clock Chain Example
  * An example setup of a complete clock chain within the device is shown in
- * \ref asfdoc_samd20_system_clock_module_chain_example "the figure below".
+ * \ref asfdoc_samd20_system_clock_module_chain_example_fig "the figure below".
  *
- * \anchor asfdoc_samd20_system_clock_module_chain_example
+ * \anchor asfdoc_samd20_system_clock_module_chain_example_fig
  * \dot
  * digraph overview {
  *   rankdir=LR;
