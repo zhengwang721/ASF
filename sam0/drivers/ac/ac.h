@@ -49,7 +49,12 @@
  * This driver for SAM D20 devices provides an interface for the configuration
  * and management of the device's Analog Comparator functionality, for the
  * comparison of analog voltages against a known reference voltage to determine
- * its relative level.
+ * its relative level. The following driver API modes are covered by this
+ * manual:
+ * - Polled APIs
+ * \if AC_CALLBACK_MODE
+ * - Callback APIs
+ * \endif
  *
  * The following peripherals are used by this module:
  *
@@ -465,8 +470,8 @@ enum ac_chan_interrupt_selection {
 	AC_CHAN_INTERRUPT_SELECTION_RISING          = AC_COMPCTRL_INTSEL_RISING,
 	/** An interrupt will be generated when the measurement goes below the compare level*/
 	AC_CHAN_INTERRUPT_SELECTION_FALLING         = AC_COMPCTRL_INTSEL_FALLING,
-	/** 
-	 * An interrupt will be generated when a new measurement is complete. 
+	/**
+	 * An interrupt will be generated when a new measurement is complete.
 	 * Interrupts will only be generated in single shot mode
 	 */
 	AC_CHAN_INTERRUPT_SELECTION_END_OF_COMPARE  = AC_COMPCTRL_INTSEL_EOC,
@@ -1231,6 +1236,9 @@ static inline void ac_win_clear_detected(
  * added to the user application.
  *
  *  - \subpage asfdoc_samd20_ac_basic_use_case
+ * \if AC_CALLBACK_MODE
+ *  - \subpage asfdoc_samd20_ac_callback_use_case
+ * \endif
  */
 
 #endif
