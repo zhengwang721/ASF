@@ -148,17 +148,13 @@ static void setup_tc_channels(void)
  */
 static void setup_tc_events(void)
 {
-	struct tc_events events;
-	tc_get_events_config_default(&events);
-
 	/* Enable incoming events on on measurement timer */
-	events.enable_incoming_events = true;
-	tc_enable_events(&tc_calib, &events);
+	struct tc_events events_calib = { .on_event_perform_action = true };
+	tc_enable_events(&tc_calib, &events_calib);
 
 	/* Generate events from the reference timer on channel 0 compare match */
-	events.enable_incoming_events = false;
-	events.generate_event_on_compare_channel[0] = true;
-	tc_enable_events(&tc_comp, &events);
+	struct tc_events events_comp = { .generate_event_on_compare_channel[0] = true };
+	tc_enable_events(&tc_comp, &events_comp);
 
 	tc_enable(&tc_calib);
 	tc_enable(&tc_comp);
@@ -175,9 +171,9 @@ static void setup_events(void)
 
 	/* Event channel 0 detects rising edges of the reference timer output
 	 * event */
-	evch_conf.edge_detection   = EVENT_EDGE_RISING;
-	evch_conf.path             = EVENT_PATH_SYNCHRONOUS;
-	evch_conf.generator_id     = EVSYS_ID_GEN_TC2_MCX_0;
+	evch_conf.edge_detection = EVENT_EDGE_RISING;
+	evch_conf.path           = EVENT_PATH_SYNCHRONOUS;
+	evch_conf.generator_id   = EVSYS_ID_GEN_TC2_MCX_0;
 	events_chan_set_config(EVENT_CHANNEL_0, &evch_conf);
 
 	struct events_user_config evus_conf;

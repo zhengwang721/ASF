@@ -188,7 +188,7 @@ static void adc_setup(void)
 	/* Use VCC divided by 4 as positive input */
 	config.positive_input     = ADC_POSITIVE_INPUT_SCALEDIOVCC;
 	/* Start new conversion on event */
-	config.event.event_action = ADC_EVENT_ACTION_START_CONV;
+	config.event_action       = ADC_EVENT_ACTION_START_CONV;
 
 	/* Enable the ADC to run in standby sleep mode */
 	config.run_in_standby     = true;

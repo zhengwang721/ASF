@@ -124,19 +124,20 @@ static void configure_dac(struct dac_module *dac_module)
 	/* Switch to GCLK generator 0 */
 	config.clock_source = GCLK_GENERATOR_0;
 
-	/* Initialize and enable the DAC */
 	dac_init(dac_module, DAC, &config);
-	dac_enable(dac_module);
 
 	/* Get the default DAC channel config */
 	dac_chan_get_config_defaults(&channel_config);
 
-	/* Disable start on event, we want manual trigger */
-	channel_config.enable_start_on_event = true;
-
 	/* Set the channel configuration, and enable it */
 	dac_chan_set_config(dac_module, DAC_CHANNEL_0, &channel_config);
 	dac_chan_enable(dac_module, DAC_CHANNEL_0);
+
+	/* Enable event triggered conversions */
+	struct dac_events events = { .on_event_start_conversion = true };
+	dac_enable_events(dac_module, &events);
+
+	dac_enable(dac_module);
 }
 
 /**
@@ -157,16 +158,13 @@ static void configure_tc(struct tc_module *tc_module)
 
 	tc_init(tc_module, TC0, &config);
 
-
-	struct tc_events events;
-	tc_get_events_config_default(&events);
-
-	events.generate_event_on_overflow = true;
-
+	/* Enable periodic event output generation */
+	struct tc_events events = { .generate_event_on_overflow = true };
 	tc_enable_events(tc_module, &events);
 
+	/* Set the timer top value to alter the overflow frequency */
 	tc_set_top_value(tc_module,
-			system_gclk_gen_get_hz(GCLK_GENERATOR_0)/sample_rate);
+			system_gclk_gen_get_hz(GCLK_GENERATOR_0) / sample_rate);
 
 
 	tc_enable(tc_module);
