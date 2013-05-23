@@ -73,8 +73,9 @@
  * \section appdoc_samd20_tictactoe_setup Hardware Setup
  * The OLED1 Xplained Pro extension board must be connected to extension
  * header 3 on the SAM D20 Xplained Pro.
- * To use another extension header, the configuration in \ref conf_board.h and
- * \ref conf_ssd1306.h must be edited.
+ * To use another extension header, edit the configuration in:
+ * - \ref conf_board.h
+ * - \ref conf_ssd1306.h
  *
  * \section appdoc_samd20_tictactoe_compinfo Compilation Info
  * This software was written for the GNU GCC and IAR for ARM.
@@ -122,9 +123,6 @@
 /* Lenght of strings */
 #define STRING_LENGTH 20
 
-/* Occupied squares */
-uint8_t occupied_squares[NUMBER_OF_SQUARES];
-
 /* X and Y coordinates for squares */
 const uint8_t square_coord[9][2] = {
 		{SQUARE0_X, SQUARE0_Y,},
@@ -145,6 +143,16 @@ enum button {
 	BUTTON_3,
 	BUTTON_NONE,
 };
+
+/* Enum for the different players */
+enum player {
+	NONE,
+	USER,
+	COMPUTER,
+};
+
+/* Occupied squares */
+enum player occupied_squares[3][3];
 
 /* Variable to mark number of wins */
 uint16_t wins = 0;
@@ -186,8 +194,10 @@ static void setup_board(void)
 	gfx_mono_draw_string(win_string, STRING_X, SQUARE3_Y, &sysfont);
 
 	/* Clear occupied squares */
-	for (uint8_t i = 0; i < NUMBER_OF_SQUARES; i++) {
-		occupied_squares[i] = 0;
+	for (uint8_t i = 0; i < 3; i++) {
+		for (uint8_t j = 0; j < 3; j++) {
+			occupied_squares[i][j] = NONE;
+		}
 	}
 }
 
@@ -309,9 +319,9 @@ static void user_turn(void)
 			}
 			break;
 		case BUTTON_2:
-			if (occupied_squares[square_num] == 0) {
+			if (occupied_squares[square_num / 3][square_num % 3] == NONE) {
 				/* Select square and draw circle */
-				occupied_squares[square_num] = 1;
+				occupied_squares[square_num / 3][square_num % 3] = USER;
 				draw_circle(square_num);
 				return;
 			}
@@ -332,64 +342,64 @@ static void user_turn(void)
 /** 
  * \brief Checks for winner
  *
- * \return Number to say if there is a winner or not.
- * \retval 0 No winner
- * \retval 1 Opponent won
- * \retval 2 User won 
+ * \return Enum to say if there is a winner or not.
+ * \retval NONE No winner
+ * \retval COMPUTER Opponent won
+ * \retval USER User won
  */
 static uint8_t we_have_a_winner(void)
 {
 	uint8_t winner = 0;
 
-	if (occupied_squares[0] == occupied_squares[1] &&
-			occupied_squares[1] == occupied_squares[2] &&
-			occupied_squares[0] != 0) {
+	if (occupied_squares[0][0] == occupied_squares[0][1] &&
+			occupied_squares[0][1] == occupied_squares[0][2] &&
+			occupied_squares[0][0] != NONE) {
 
 		/* Three in a row on top row */
-		winner = occupied_squares[0];
-	} else if (occupied_squares[0] == occupied_squares[3] &&
-			occupied_squares[3] == occupied_squares[6] &&
-			occupied_squares[0] != 0) {
+		winner = occupied_squares[0][0];
+	} else if (occupied_squares[0][0] == occupied_squares[1][0] &&
+			occupied_squares[1][0] == occupied_squares[2][0] &&
+			occupied_squares[0][0] != NONE) {
 
 		/* Three in a row on first vertical row */
-		winner = occupied_squares[0];
-	} else if (occupied_squares[0] == occupied_squares[4] &&
-			occupied_squares[4] == occupied_squares[8] &&
-			occupied_squares[0] != 0) {
+		winner = occupied_squares[0][0];
+	} else if (occupied_squares[0][0] == occupied_squares[1][1] &&
+			occupied_squares[1][1] == occupied_squares[2][2] &&
+			occupied_squares[0][0] != NONE) {
 
 		/* Three in a row on diagonal */
-		winner = occupied_squares[0];
-	} else if (occupied_squares[1] == occupied_squares[4] &&
-			occupied_squares[4] == occupied_squares[7] &&
-			occupied_squares[1] != 0) {
+		winner = occupied_squares[0][0];
+	} else if (occupied_squares[0][1] == occupied_squares[1][1] &&
+			occupied_squares[1][1] == occupied_squares[2][1] &&
+			occupied_squares[0][1] != NONE) {
 		/* Three in a row on second vertical row */
-		winner = occupied_squares[1];
-	} else if (occupied_squares[2] == occupied_squares[5] &&
-			occupied_squares[5] == occupied_squares[8] &&
-			occupied_squares[2] != 0) {
+		winner = occupied_squares[0][1];
+	} else if (occupied_squares[0][2] == occupied_squares[1][2] &&
+			occupied_squares[1][2] == occupied_squares[2][2] &&
+			occupied_squares[0][2] != NONE) {
 
 		/* Three in a row on third vertical row */
-		winner = occupied_squares[2];
-	} else if (occupied_squares[3] == occupied_squares[4] &&
-			occupied_squares[4] == occupied_squares[5] &&
-			occupied_squares[3] != 0) {
+		winner = occupied_squares[0][2];
+	} else if (occupied_squares[1][0] == occupied_squares[1][1] &&
+			occupied_squares[1][1] == occupied_squares[1][2] &&
+			occupied_squares[1][0] != NONE) {
 
 		/* Three in a row on second row */
-		winner = occupied_squares[3];
-	} else if (occupied_squares[6] == occupied_squares[7] &&
-			occupied_squares[7] == occupied_squares[8] &&
-			occupied_squares[6] != 0) {
+		winner = occupied_squares[1][0];
+	} else if (occupied_squares[2][0] == occupied_squares[2][1] &&
+			occupied_squares[2][1] == occupied_squares[2][2] &&
+			occupied_squares[2][0] != NONE) {
 
 		/* Three in a row on third row */
-		winner = occupied_squares[6];
-	} else if (occupied_squares[2] == occupied_squares[4] &&
-			occupied_squares[4] == occupied_squares[6] &&
-			occupied_squares[2] != 0) {
+		winner = occupied_squares[2][0];
+	} else if (occupied_squares[0][2] == occupied_squares[1][1] &&
+			occupied_squares[1][1] == occupied_squares[2][0] &&
+			occupied_squares[0][2] != NONE) {
 
 		/* Three in a row on diagonal */
-		winner = occupied_squares[2];
+		winner = occupied_squares[0][2];
 	}
-	/* Return winner or zero */
+	/* Return winner or NONE */
 	return winner;
 }
 
@@ -402,9 +412,9 @@ static void opponent_turn(void)
 
 	do {
 		square_num = rand() % 9;
-	} while (occupied_squares[square_num]);
+	} while (occupied_squares[square_num / 3][square_num % 3]);
 
-	occupied_squares[square_num] = 2;
+	occupied_squares[square_num / 3][square_num % 3] = COMPUTER;
 	draw_cross(square_num);
 }
 
