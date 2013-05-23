@@ -210,10 +210,8 @@ enum status_code ac_chan_set_config(
 	/* Set sampling mode (single shot or continuous) */
 	compctrl_temp |= config->sample_mode;
 
-#if (AC_CALLBACK == true)
 	/* Set channel interrupt selection */
 	compctrl_temp |= config->interrupt_selection;
-#endif /* (AC_CALLBACK == true) */
 
 	while (ac_is_syncing(module_inst)) {
 		/* Wait until synchronization is complete */
@@ -228,7 +226,6 @@ enum status_code ac_chan_set_config(
 	return STATUS_OK;
 }
 
-#if (AC_CALLBACK == true)
 /**
  * \brief Function used to setup interrupt selection of a window
  *
@@ -275,7 +272,6 @@ enum status_code ac_win_set_config(
 
 	return STATUS_OK;
 }
-#endif /* (AC_CALLBACK == true) */
 
 /** \brief Enables an Analog Comparator window channel that was previously configured.
  *
@@ -390,9 +386,9 @@ void ac_win_disable(
  *  \param[in] module_inst  Software instance for the Analog Comparator peripheral
  *  \param[in] win_channel  Comparator Window channel to test
  *
- *  \return Current window comparison state.
+ *  \return Current window comparison state mask.
  */
-enum ac_win_state ac_win_get_state(
+uint32_t ac_win_get_status(
 		struct ac_module *const module_inst,
 		const enum ac_win_channel win_channel)
 {
@@ -402,37 +398,40 @@ enum ac_win_state ac_win_get_state(
 
 	Ac *const ac_module = module_inst->hw;
 
+	uint32_t win_status = 0;
+
+	win_status = ac_module->INTFLAG.reg & (1 << (win_channel + AC_INTFLAG_WIN0_Pos));
+
 	/* If one or both window comparators not ready, return unknown result */
 	if (ac_win_is_ready(module_inst, win_channel) == false) {
-		return AC_WIN_STATE_UNKNOWN;
+		win_status |= AC_WIN_STATUS_UNKNOWN;
+		return win_status;
 	}
-
-	uint32_t win_state = 0;
 
 	/* Extract window comparison state bits */
 	switch (win_channel)
 	{
 		case AC_WIN_CHANNEL_0:
-			win_state = ac_module->STATUSA.bit.WSTATE0;
+			win_status = ac_module->STATUSA.bit.WSTATE0;
 			break;
 
 #if (AC_PAIRS > 1)
 		case AC_WIN_CHANNEL_1:
-			win_state = ac_module->STATUSA.bit.WSTATE1;
+			win_status = ac_module->STATUSA.bit.WSTATE1;
 			break;
 #endif
 	}
 
 	/* Map hardware comparison states to logical window states */
-	switch (win_state)
+	switch (win_status)
 	{
 		case (AC_STATUSA_WSTATE0_ABOVE >> AC_STATUSA_WSTATE0_Pos):
-			return AC_WIN_STATE_ABOVE;
+			return win_status | AC_WIN_STATUS_ABOVE;
 		case (AC_STATUSA_WSTATE0_BELOW >> AC_STATUSA_WSTATE0_Pos):
-			return AC_WIN_STATE_BELOW;
+			return win_status | AC_WIN_STATUS_BELOW;
 		case (AC_STATUSA_WSTATE0_INSIDE >> AC_STATUSA_WSTATE0_Pos):
-			return AC_WIN_STATE_INSIDE;
+			return win_status | AC_WIN_STATUS_INSIDE;
 		default:
-			return AC_WIN_STATE_UNKNOWN;
+			return win_status | AC_WIN_STATUS_UNKNOWN;
 	}
 }
