@@ -164,6 +164,7 @@ static uint8_t *get_next_tx_buffer(void);
 static inline void handle_incoming_msg(void);
 static uint8_t curr_tx_buffer_index = 0;
 
+
 //! \}
 /* === Implementation ====================================================== */
 
@@ -503,8 +504,7 @@ static inline void handle_incoming_msg(void)
 
             }
             break;
-            /* Process Peer Identification command */
-        case IDENTIFY_PEER_NODE_REQ:/* 0x04 */
+       case IDENTIFY_PEER_NODE_REQ:/* 0x04 */
             {
                 /* Order of reception:
                    size;
@@ -904,6 +904,40 @@ static inline void handle_incoming_msg(void)
                 }
             }
             break;
+                    /* Process Range Test start command */
+         case RANGE_TEST_START_REQ:/* 0x50 */
+            {
+                if (error_code)
+                {
+                    /* Send the confirmation with status as Failure
+                     * with error code as the reason for failure
+                     */
+                    usr_range_test_start_confirm(error_code);
+                    return;
+                }
+                /* The node should be in the PER_TEST_INITIATOR state to start PER TEST */
+                if (PER_TEST_INITIATOR == node_info.main_state)
+                {
+                    initiate_range_test();
+                }
+                else
+                {
+                    /* Send the confirmation with status as INVALID_CMD
+                     * as this command is not allowed in this state
+                     */
+                    usr_range_test_start_confirm(INVALID_CMD);
+                }
+            }
+            break;
+       case RANGE_TEST_STOP_REQ:/* 0x52 */
+            {
+
+                    stop_range_test();
+
+                
+            }
+            break;
+            
             /* Process Peer Disconnect Request command */
         case PEER_DISCONNECT_REQ:
             {
@@ -1182,6 +1216,118 @@ void usr_per_test_start_confirm(uint8_t status)
     *msg_buf++ = PROTOCOL_ID_LEN + PER_TEST_START_CONFIRM_LEN;
     *msg_buf++ = PROTOCOL_ID;
     *msg_buf++ = PER_TEST_START_CONFIRM;
+
+    /* Copy confirmation payload */
+    *msg_buf++ = status;
+
+    *msg_buf = EOT;
+}
+
+
+void usr_range_test_beacon_tx(uint8_t *frame)
+{
+    uint8_t *msg_buf;
+
+    msg_buf = get_next_tx_buffer();
+
+    /* Check if buffer could not be allocated */
+    if (NULL == msg_buf)
+    {
+        return;
+    }
+    /* Copy Len, Protocol Id, Msg Id parameters */
+    *msg_buf++ = PROTOCOL_ID_LEN + 1 +RANGE_TEST_PKT_LENGTH;
+    *msg_buf++ = PROTOCOL_ID;
+    *msg_buf++ = RANGE_TEST_BEACON;
+
+    /* Copy confirmation payload */
+    for(uint8_t i=0;i<RANGE_TEST_PKT_LENGTH;i++)
+    {
+    *msg_buf++ = *frame++;
+    }
+    *msg_buf = EOT;
+}
+
+void usr_range_test_beacon_rsp(uint32_t frame_count,uint8_t lqi_h,uint8_t ed_h,uint8_t rssi_h,uint8_t lqi_r,int8_t ed_r,int8_t rssi_r)
+{
+    uint8_t *msg_buf;
+
+    msg_buf = get_next_tx_buffer();
+
+    /* Check if buffer could not be allocated */
+    if (NULL == msg_buf)
+    {
+        return;
+    }
+    /* Copy Len, Protocol Id, Msg Id parameters */
+    *msg_buf++ = PROTOCOL_ID_LEN + 11;
+    *msg_buf++ = PROTOCOL_ID;
+    *msg_buf++ = RANGE_TEST_RESPONSE_CONFIRM;
+    *msg_buf = frame_count;
+     msg_buf += 4;
+    *msg_buf++ = lqi_h;
+    *msg_buf++ = ed_h;
+    *msg_buf++ = rssi_h;
+    *msg_buf++ = lqi_r;
+    *msg_buf++ = ed_r;
+    *msg_buf++ = rssi_r;
+
+    *msg_buf = EOT;
+}
+
+/*
+ * Function to generate Range Test Start confirmation frame that must be sent to
+ * host application via serial interface.
+ * Called by Performance application as confirmation for range_test_start_req request
+ * \param status      Result for requested per_test_start_req
+ *
+ * \return void
+ */
+void usr_range_test_start_confirm(uint8_t status)
+{
+    uint8_t *msg_buf;
+
+    msg_buf = get_next_tx_buffer();
+
+    /* Check if buffer could not be allocated */
+    if (NULL == msg_buf)
+    {
+        return;
+    }
+    /* Copy Len, Protocol Id, Msg Id parameters */
+    *msg_buf++ = PROTOCOL_ID_LEN + RANGE_TEST_START_CONFIRM_LEN;
+    *msg_buf++ = PROTOCOL_ID;
+    *msg_buf++ = RANGE_TEST_START_CONFIRM;
+
+    /* Copy confirmation payload */
+    *msg_buf++ = status;
+
+    *msg_buf = EOT;
+}
+
+/*
+ * Function to  Range Test stop confirmation frame that must be sent to
+ * host application via serial interface.
+ * Called by Performance application as confirmation for range_test_start_req request
+ * \param status      Result for requested per_test_start_req
+ *
+ * \return void
+ */
+void usr_range_test_stop_confirm(uint8_t status)
+{
+    uint8_t *msg_buf;
+
+    msg_buf = get_next_tx_buffer();
+
+    /* Check if buffer could not be allocated */
+    if (NULL == msg_buf)
+    {
+        return;
+    }
+    /* Copy Len, Protocol Id, Msg Id parameters */
+    *msg_buf++ = PROTOCOL_ID_LEN + RANGE_TEST_START_CONFIRM_LEN;
+    *msg_buf++ = PROTOCOL_ID;
+    *msg_buf++ = RANGE_TEST_STOP_CONFIRM;
 
     /* Copy confirmation payload */
     *msg_buf++ = status;

@@ -86,6 +86,8 @@
 #define ED_SCAN_END_INDICATION_LEN      (2)
 #define SENSOR_DATA_CONFIRM_LEN         (10)
 #define PER_TEST_START_CONFIRM_LEN      (2)
+#define RANGE_TEST_START_CONFIRM_LEN    (2)
+#define RANGE_TEST_STOP_CONFIRM_LEN    (2)
 #define PER_TEST_END_INDICATION_LEN     (36)
 #define PEER_DISCONNECT_CONFIRM_LEN     (2)
 #define SET_DEFAULT_CONFIG_CONFIRM_LEN  (20)
@@ -112,6 +114,7 @@
 #define INVALID_REGISTER_ORDER            (0x28)
 #define TRANSCEIVER_IN_SLEEP              (0x29)
 #define TRANSMISSION_FAILURE              (0x30)
+#define RANGE_TEST_IN_PROGRESS            (0x31)
 
 //! \}
 
@@ -225,7 +228,9 @@ enum msg_code
     PEER_DISCONNECT_REQ             =     (0x0d),
     SET_DEFAULT_CONFIG_REQ          =     (0x0e),
     GET_CURRENT_CONFIG_REQ          =     (0x0f),
-
+    RANGE_TEST_START_REQ            =     (0X50),
+    RANGE_TEST_STOP_REQ             =     (0x52),
+    
     /* Confirms and Indications */
 
     IDENTIFY_BOARD_CONFIRM          =     (0x10),
@@ -245,8 +250,11 @@ enum msg_code
     PER_TEST_END_INDICATION         =     (0x1e),
     PEER_DISCONNECT_CONFIRM         =     (0x1f),
     SET_DEFAULT_CONFIG_CONFIRM      =     (0x20),
-    GET_CURRENT_CONFIG_CONFIRM      =     (0x21)
-
+    GET_CURRENT_CONFIG_CONFIRM      =     (0x21),
+    RANGE_TEST_START_CONFIRM        =     (0x51),
+    RANGE_TEST_STOP_CONFIRM         =     (0x53),
+    RANGE_TEST_BEACON               =     (0x55), 
+    RANGE_TEST_RESPONSE_CONFIRM               =     (0x54)
 } SHORTENUM;
 
 //! \}

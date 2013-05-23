@@ -314,6 +314,22 @@ typedef struct
     char board_name[25];
     uint64_t mac_address;
 } peer_info_rsp_t;
+
+#if ((defined __ICCARM__) || (defined __ICCAVR32__) ||(defined __GNUARM__)|| (defined __GNUAVR32__)|| (defined __GNUC__))
+#pragma pack()
+#endif /* __ICCARM__, __ICCAVR32__, __GNUARM__ , __GNUAVR32__*/
+
+#if ((defined __ICCARM__) || (defined __ICCAVR32__) ||(defined __GNUARM__)|| (defined __GNUAVR32__)|| (defined __GNUC__))
+#pragma pack(1)
+#endif /* __ICCARM__, __ICCAVR32__, __GNUARM__ , __GNUAVR32__*/
+typedef struct
+{
+    uint32_t frame_count;
+    int8_t  ed;
+    uint8_t  lqi;
+    int8_t   rssi;
+} range_tx_t;
+
 #if ((defined __ICCARM__) || (defined __ICCAVR32__) ||(defined __GNUARM__)|| (defined __GNUAVR32__)|| (defined __GNUC__))
 #pragma pack()
 #endif /* __ICCARM__, __ICCAVR32__, __GNUARM__ , __GNUAVR32__*/
@@ -338,6 +354,7 @@ typedef union
     crc_stat_rsp_t          crc_stat_rsp_data;
     crc_set_req_t           crc_set_req_data;
     peer_info_rsp_t         peer_info_rsp_data;
+    range_tx_t              range_tx_data;
     result_req_t            result_req_data;
     crc_stat_req_t          crc_stat_req_data; 
 } general_pkt_t;

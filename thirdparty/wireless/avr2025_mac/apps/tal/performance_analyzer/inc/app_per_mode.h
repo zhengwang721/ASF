@@ -141,6 +141,10 @@
 #define DISCONNECT_NODE                     (0x0E)
 #define SET_DEFAULT_REQ                     (0x0F)
 #define PER_TEST_START_PKT                  (0x10)
+#define RANGE_TEST_START_PKT                (0x11)
+#define RANGE_TEST_PKT                      (0x12)
+#define RANGE_TEST_RSP                      (0x13)
+#define RANGE_TEST_PKT_LENGTH                (20)
 //\}
 
 /* === Types ================================================================ */

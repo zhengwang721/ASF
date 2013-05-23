@@ -92,6 +92,11 @@ void perf_get_req(uint8_t param_type);
 void initiate_per_test(void);
 
 /**
+ * \brief Initiates the Range test procedure
+ */
+void initiate_range_test(void);
+
+/**
  * \brief Function to start the ED scan
  *
  * \param scan_duration paramter which is used to calculate the scan time
@@ -109,6 +114,11 @@ void get_sensor_data(void);
  */
 void get_board_details(void);
 
+
+/* Stops range Test */
+void stop_range_test(void);
+
+void usr_range_test_beacon_rsp(uint32_t frame_count,uint8_t lqi_h,uint8_t ed_h,uint8_t rssi_h,uint8_t lqi_r,int8_t ed_r,int8_t rssi_r);
 /**
  * \brief Identifying peer node
  */
@@ -228,6 +238,27 @@ void usr_perf_start_confirm(uint8_t status,
  */
 void usr_per_test_start_confirm(uint8_t status);
 
+/**
+ * Function to generate Range Test Start confirmation frame that must be sent to
+ * host application via serial interface.
+ * Called by Performance application as confirmation for range_test_start_req request
+ * \param status      Result for requested per_test_start_req
+ *
+ * \return void
+ */
+void usr_range_test_start_confirm(uint8_t status);
+
+/**
+ * Function to generate Range Test Stop confirmation frame that must be sent to
+ * host application via serial interface.
+ * Called by Performance application as confirmation for range_test_start_req request
+ * \param status      Result for requested per_test_start_req
+ *
+ * \return void
+ */
+void usr_range_test_stop_confirm(uint8_t status);
+
+void usr_range_test_beacon_tx(uint8_t *frame);
 /**
  * Function to generate Per test End Indication frame that must be sent to
  * host application via serial interface.

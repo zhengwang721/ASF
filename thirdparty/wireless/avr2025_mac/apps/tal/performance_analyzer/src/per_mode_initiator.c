@@ -99,7 +99,10 @@ typedef struct
 #define DISCONNECT_PEER                         (0x0C)
 #define SET_DEFAULT_CONFIG_PEER                 (0x0D)
 #define PER_TEST_START                          (0x0E)
+#define RANGE_TEST_START                        (0x0F)
+#define RANGE_TEST_TX                        (0x10)
 
+#define RANGE_TST_PKT_SEQ_POS                    (11)
 
 #if (TAL_TYPE == ATMEGARFR2)
 #define MAX_REG_ADDRESS                         (0x16f)
@@ -137,6 +140,7 @@ typedef struct
 #define NO_OF_REGISTERS                         (65)
 
 #define TIMEOUT_FOR_RESPONSE_IN_MICRO_SEC       (200000)
+#define RANGE_TX_BEACON_INTERVAL                (3000000)
 #define PULSE_CW_TX_TIME_IN_MICRO_SEC           (50000)
 #define MICRO_SEC_MULTIPLIER                    (1.0/1000000)
 #define MILLI_VOLT_MULTIPLIER                   (1.0/1000)
@@ -184,11 +188,11 @@ static void toggle_trx_sleep(void);
 static void config_rpc_mode(bool config_value);
 static void config_frequency(float frequency);
 #endif /*End of #if (TAL_TYPE == AT86RF233) */
-
+frame_info_t *range_tx_frame;
 #if((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B))
 static bool validate_tx_power(int8_t dbm_value);
 #endif
-
+static uint8_t range_test_seq_num;
 static float calculate_time_duration(void);
 static float calculate_net_data_rate(float per_test_duration_sec);
 static void config_per_test_parameters(void);
@@ -211,11 +215,13 @@ static void set_transceiver_state(uint8_t trx_state);
 static void set_phy_frame_length(uint8_t frame_len);
 static bool send_set_default_config_command(void);
 static bool send_per_test_start_cmd(void);
+
 static float reverse_float( const float float_val );
 
 /* === GLOBALS ============================================================= */
 static bool scanning = false;
 static bool trx_sleep_status = false;
+static bool range_test_in_progress = false;
 static bool peer_found = false;
 static uint8_t scan_duration;
 static uint8_t seq_num_initiator;
@@ -232,7 +238,7 @@ static uint32_t frame_failure;
 static uint32_t frames_to_transmit;
 static set_param_cb_t set_param_cb;
 static uint8_t num_channels;
-
+static void configure_range_test_frame_sending(void);
 /**
  * This is variable is to keep track of the specific features supported
  */
@@ -455,7 +461,35 @@ void per_mode_initiator_task(void)
         }
     }
 }
+static void  range_test_timer_handler_cb(void *parameter)
+{
+  
 
+   node_info.tx_frame_info->mpdu[PL_POS_SEQ_NUM]++;
+   //node_info.tx_frame_info->mpdu[RANGE_TST_PKT_SEQ_POS]++;
+   //update frame count and seq num->to be changed
+   configure_range_test_frame_sending();
+            if (curr_trx_config_params.csma_enabled)
+            {
+                tal_tx_frame(node_info.tx_frame_info,
+                             CSMA_UNSLOTTED,
+                             curr_trx_config_params.retry_enabled );
+            }
+            else
+            {
+                tal_tx_frame(node_info.tx_frame_info,
+                             NO_CSMA_NO_IFS,
+                             curr_trx_config_params.retry_enabled );
+            }
+            node_info.transmitting = true;
+            app_led_event(LED_EVENT_TX_FRAME);
+            sw_timer_start(APP_TIMER_TO_TX,
+                        RANGE_TX_BEACON_INTERVAL,
+                        SW_TIMEOUT_RELATIVE,
+                        (FUNC_PTR)range_test_timer_handler_cb,
+                        NULL);
+
+}
 /**
  * \brief Wait for reply timer handler is called if any command sent on air
  * times out before any response message is received.
@@ -707,6 +741,15 @@ void per_mode_initiator_tx_done_cb(retval_t status, frame_info_t *frame)
                 start_test();
             }
             break;
+            
+            
+        case RANGE_TEST_TX:
+            {
+                usr_range_test_beacon_tx(node_info.tx_frame_info->mpdu);
+                //usr_range_tx_beacon
+            }
+            break;
+            
         case TX_OP_MODE:
             {
                 if (MAC_SUCCESS != status)
@@ -721,7 +764,7 @@ void per_mode_initiator_tx_done_cb(retval_t status, frame_info_t *frame)
                     }
                     else
                     {
-                        frame_failure++;
+                        frame_failure++;  
                     }
                 }
 
@@ -1168,7 +1211,22 @@ void per_mode_initiator_rx_cb(frame_info_t *mac_frame_info)
                 }
             }
             break;
-
+        case RANGE_TEST_RSP:
+            {
+                if (op_mode == RANGE_TEST_TX)
+                {
+                  uint8_t phy_frame_len = mac_frame_info->mpdu[0];
+                  app_led_event(LED_EVENT_RX_FRAME);
+                  usr_range_test_beacon_rsp(msg->payload.range_tx_data.frame_count,
+                            msg->payload.range_tx_data.lqi,msg->payload.range_tx_data.ed,msg->payload.range_tx_data.rssi,
+                            mac_frame_info->mpdu[phy_frame_len + LQI_LEN],
+                            mac_frame_info->mpdu[phy_frame_len + LQI_LEN + ED_VAL_LEN],-51);
+                  //rssi to be found and added to be changed
+                  
+                  
+            }
+            }
+            break;
         default:
             break;
     }
@@ -3092,6 +3150,54 @@ void initiate_per_test(void)
 }
 
 /*
+ * \brief To Initiate the Range  test
+ */
+void initiate_range_test(void)
+{
+     /* Check for the current operating mode */
+    if (TX_OP_MODE == op_mode)
+    {
+        /* Send the confirmation with the status as SUCCESS */
+        range_test_in_progress = true;
+        usr_range_test_start_confirm(MAC_SUCCESS);
+        range_test_seq_num = rand();
+        //Transmit beacon
+        configure_range_test_frame_sending();
+        node_info.tx_frame_info->mpdu[PL_POS_SEQ_NUM]++;
+        node_info.transmitting = true;
+        op_mode = RANGE_TEST_TX;
+        //to be changed
+            if (curr_trx_config_params.csma_enabled)
+            {
+                tal_tx_frame(node_info.tx_frame_info,
+                             CSMA_UNSLOTTED,
+                             curr_trx_config_params.retry_enabled );
+            }
+            else
+            {
+                tal_tx_frame(node_info.tx_frame_info,
+                             NO_CSMA_NO_IFS,
+                             curr_trx_config_params.retry_enabled );
+            }
+        
+    
+        sw_timer_start(APP_TIMER_TO_TX,
+                        RANGE_TX_BEACON_INTERVAL,
+                        SW_TIMEOUT_RELATIVE,
+                        (FUNC_PTR)range_test_timer_handler_cb,
+                        NULL);
+
+    }
+    else
+    {
+        /* Send the confirmation with the status as INVALID_CMD
+         * as the state is not correct
+         */
+        usr_range_test_start_confirm(INVALID_CMD);
+    }
+}
+
+/*
  * \brief To start the PER test
  */
 static void start_test(void)
@@ -3124,7 +3230,7 @@ static void start_test(void)
 #endif
         frame_failure = 0;
         configure_frame_sending();
-         start_time = sw_timer_get_time();
+        start_time = sw_timer_get_time();
         restart_time = (uint32_t)(start_time * MICRO_SEC_MULTIPLIER);
         no_of_roll_overs = 0;
 
@@ -3140,6 +3246,34 @@ static void start_test(void)
     }
 
 }
+
+
+
+
+/*
+ * \brief To stop the Range test
+ */
+void stop_range_test(void)
+{
+    /* Check for the current operating mode */
+    if ((RANGE_TEST_TX == op_mode)&&(true==range_test_in_progress))
+    {
+        /* Send the confirmation with the status as SUCCESS */
+        range_test_in_progress = false;
+        usr_range_test_stop_confirm(MAC_SUCCESS);
+        sw_timer_stop(APP_TIMER_TO_TX);
+        op_mode = TX_OP_MODE;
+    }
+    else
+    {
+        /* Send the confirmation with the status as INVALID_CMD
+         * as the state is not correct
+         */
+        usr_range_test_start_confirm(INVALID_CMD);
+    }
+
+}
+
 
 /**
  * \brief To Configure the frame sending
@@ -3231,6 +3365,109 @@ static void configure_frame_sending(void)
 
 
 /**
+ * \brief To Configure the frame sending
+ */
+static void configure_range_test_frame_sending(void)
+{
+    uint8_t index;
+    uint8_t app_frame_length;
+    uint8_t *frame_ptr;
+    uint8_t *temp_frame_ptr;
+    uint16_t fcf = 0;
+    uint16_t temp_value;
+    app_payload_t *tmp;
+    range_tx_t *data;
+    static uint32_t frame_cnt = 0;
+    /*
+     * Fill in PHY frame.
+     */
+
+    /* Get length of current frame. */
+    app_frame_length = (RANGE_TEST_PKT_LENGTH  - FRAME_OVERHEAD);//to be changed
+
+    /* Set payload pointer. */
+    frame_ptr = temp_frame_ptr =
+                    (uint8_t *)node_info.tx_frame_info +
+                    LARGE_BUFFER_SIZE -
+                    app_frame_length - FCS_LEN; /* Add 2 octets for FCS. */
+
+    tmp = (app_payload_t *) temp_frame_ptr;
+
+    data = (range_tx_t *)&tmp->payload;
+     
+    (tmp->cmd_id) = RANGE_TEST_PKT;
+    temp_frame_ptr++;
+    (tmp->seq_num) = range_test_seq_num++; //to be incremented for every frame
+
+    temp_frame_ptr++;
+    data->frame_count = frame_cnt++;
+    temp_frame_ptr += 4;
+    temp_frame_ptr++;
+    data->ed = 0;
+    temp_frame_ptr++;
+    data->lqi = 0;
+    temp_frame_ptr++;
+    data->rssi = 0;
+    temp_frame_ptr++;
+
+    /*
+     * Assign dummy payload values.
+     * Payload is stored to the end of the buffer avoiding payload copying by TAL.
+     */
+    for (index = 0; index < (app_frame_length - 8); index++) /* 1=> cmd ID */
+    {
+        *temp_frame_ptr++ = index; /* dummy values */
+    }
+
+    /* Source Address */
+    temp_value =  tal_pib.ShortAddress;
+    frame_ptr -= SHORT_ADDR_LEN;
+    convert_16_bit_to_byte_array(temp_value, frame_ptr);
+
+    /* Source PAN-Id */
+#if (DST_PAN_ID == SRC_PAN_ID)
+    /* No source PAN-Id included, but FCF updated. */
+    fcf |= FCF_PAN_ID_COMPRESSION;
+#else
+    frame_ptr -= PAN_ID_LEN;
+    temp_value = CCPU_ENDIAN_TO_LE16(SRC_PAN_ID);
+    convert_16_bit_to_byte_array(temp_value, frame_ptr);
+#endif
+
+    /* Destination Address */
+    temp_value = node_info.peer_short_addr;
+    frame_ptr -= SHORT_ADDR_LEN;
+    convert_16_bit_to_byte_array(temp_value, frame_ptr);
+
+    /* Destination PAN-Id */
+    temp_value = CCPU_ENDIAN_TO_LE16(DST_PAN_ID);
+    frame_ptr -= PAN_ID_LEN;
+    convert_16_bit_to_byte_array(temp_value, frame_ptr);
+
+    /* Set DSN. */
+    frame_ptr--;
+    *frame_ptr = (uint8_t)rand();
+
+    /* Set the FCF. */
+    fcf |= FCF_FRAMETYPE_DATA | FCF_SET_SOURCE_ADDR_MODE(FCF_SHORT_ADDR) |
+           FCF_SET_DEST_ADDR_MODE(FCF_SHORT_ADDR);
+    if (curr_trx_config_params.ack_request)
+    {
+        fcf |= FCF_ACK_REQUEST;
+    }
+    frame_ptr -= FCF_LEN;
+    convert_16_bit_to_byte_array(CCPU_ENDIAN_TO_LE16(fcf), frame_ptr);
+
+    /* First element shall be length of PHY frame. */
+    frame_ptr--;
+    *frame_ptr = RANGE_TEST_PKT_LENGTH; //to be changed
+
+    /* Finished building of frame. */
+    node_info.tx_frame_info->mpdu = frame_ptr;
+}
+
+
+/**
  * \brief Function to send the parameters which has been updated to
  * the receptor node.
  * \param param  Parameters being modified i.e. Channel,channel page,etc
@@ -3306,6 +3543,8 @@ static bool send_per_test_start_cmd(void)
     return(false);
 
 }
+
+
 /**
  * \brief Function used to request PER test result.
  * \return true if request was sent successfully, false if not.
@@ -3772,6 +4011,10 @@ uint8_t check_error_conditions(void)
     {
         error_code = TRANSMISSION_UNDER_PROGRESS;
     }
+    else if (true == range_test_in_progress ) /* Check if Range Mode is initiated */
+    {
+        error_code = RANGE_TEST_IN_PROGRESS;
+    }
     else
     {
         error_code = MAC_SUCCESS;
@@ -3949,7 +4192,7 @@ static bool validate_tx_power(int8_t dbm_value)
                 {
                     if (0 == tal_pib.CurrentChannel)
                     {
-                        if (dbm_value > 5) /*MAX_TX_PWR_BPSK_20*/
+                        if (dbm_value > 5) /*MAX_TX_PWR_BPSK_*/
                         {
                             return (false);
                         }

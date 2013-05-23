@@ -88,6 +88,7 @@ static void get_node_info(peer_info_rsp_t *data);
 #if (ANTENNA_DIVERSITY == 1)
 static void send_diversity_status_rsp(void);
 #endif /* End of ANTENNA_DIVERSITY */
+static void send_range_test_rsp(uint8_t seq_num,uint32_t frame_count,int8_t ed,uint8_t lqi,int8_t rssi);
 
 #ifdef CRC_SETTING_ON_REMOTE_NODE
 static void send_crc_status_rsp(void);
@@ -444,6 +445,20 @@ void per_mode_receptor_rx_cb(frame_info_t *mac_frame_info)
                 set_default_configuration_peer_node();
             }
             break;
+
+    case RANGE_TEST_PKT:
+            { 
+                            uint8_t phy_frame_len = mac_frame_info->mpdu[0];
+
+                app_led_event(LED_EVENT_RX_FRAME);
+                send_range_test_rsp(msg->seq_num,msg->payload.range_tx_data.frame_count,
+                mac_frame_info->mpdu[phy_frame_len + LQI_LEN + ED_VAL_LEN],
+                                            mac_frame_info->mpdu[phy_frame_len + LQI_LEN],
+                                            -45);
+                
+                //TO be done : send reply back
+            }
+            break;
         case PEER_INFO_REQ:
             {
                 send_peer_info_rsp();
@@ -796,6 +811,40 @@ static void send_peer_info_rsp(void)
     payload_length = ((sizeof(app_payload_t) -
                        sizeof(general_pkt_t)) +
                       sizeof(peer_info_rsp_t));
+
+    /* Send the frame to Peer node */
+    transmit_frame(FCF_SHORT_ADDR,
+                   (uint8_t *) & (node_info.peer_short_addr),
+                   FCF_SHORT_ADDR,
+                   seq_num_receptor,
+                   (uint8_t *) &msg,
+                   payload_length,
+                   true);
+
+}
+
+/**
+ * \brief Function used to send peer_info_rsp command
+ *
+ */
+static void send_range_test_rsp(uint8_t seq_num,uint32_t frame_count,int8_t ed,uint8_t lqi,int8_t rssi)
+{
+    uint8_t payload_length;
+    app_payload_t msg;
+    range_tx_t *data;
+
+    /* Create the payload */
+    msg.cmd_id = RANGE_TEST_RSP;
+    msg.seq_num = seq_num;
+    data = (range_tx_t *)&msg.payload;
+    data->frame_count = frame_count ;
+    data->ed = ed ;
+    data->lqi = lqi ;
+    data->rssi = rssi ;
+    app_led_event(LED_EVENT_TX_FRAME);
+    payload_length = ((sizeof(app_payload_t) -
+                       sizeof(general_pkt_t)) +
+                      sizeof(range_tx_t));
 
     /* Send the frame to Peer node */
     transmit_frame(FCF_SHORT_ADDR,
