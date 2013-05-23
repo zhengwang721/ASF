@@ -1654,9 +1654,13 @@ volatile void *flashcalw_memcpy(volatile void *dst, const void *src,
 				flash_add++;
 			}
 
+			/* Workaround for corrupted data after page write operations */
+			*(volatile uint64_t*)((uint32_t)flash_add - sizeof(uint64_t))
+					= (uint64_t)-1;
+			
 			/* Write the flash double-word buffer to the page buffer */
-			*(volatile uint64_t *)((uint32_t)flash_add
-			- sizeof(uint64_t)) = flash_dword.u64;
+			*(volatile uint64_t *)((uint32_t)flash_add - sizeof(uint64_t))
+					= flash_dword.u64;
 		}
 
 		/* Erase the current page if requested and write it from the
