@@ -144,6 +144,26 @@ enum status_code ac_init(
 	/* Turn on the digital interface clock */
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, PM_APBCMASK_AC);
 
+#if AC_CALLBACK == true
+	/* Initialize parameters */
+	for (uint8_t i = 0; i < AC_CALLBACK_N; i++) {
+		module_inst->callback[i]         = NULL;
+	}
+
+	/* Initialize software flags*/
+	module_inst->register_callback_mask  = 0x00;
+	module_inst->enable_callback_mask    = 0x00;
+
+#  if (AC_INST_NUM == 1)
+	_ac_instance[0] = module_inst;
+#  endif /* AC_INST_NUM == 1) */
+
+#  if (AC_INST_NUM > 1)
+	/* Register this instance for callbacks*/
+	_ac_instance[_ac_get_inst_index(hw)] = module_inst;
+#  endif /* AC_INST_NUM > 1) */
+#endif /*AC_CALLBACK == true */
+
 	/* Write configuration to module */
 	return _ac_set_config(module_inst, config);
 }
@@ -190,6 +210,11 @@ enum status_code ac_chan_set_config(
 	/* Set sampling mode (single shot or continuous) */
 	compctrl_temp |= config->sample_mode;
 
+#if (AC_CALLBACK == true)
+	/* Set channel interrupt selection */
+	compctrl_temp |= config->interrupt_selection;
+#endif /* (AC_CALLBACK == true) */
+
 	while (ac_is_syncing(module_inst)) {
 		/* Wait until synchronization is complete */
 	}
@@ -203,81 +228,58 @@ enum status_code ac_chan_set_config(
 	return STATUS_OK;
 }
 
-/** \brief Writes an Analog Comparator Window channel configuration to the hardware module.
+#if (AC_CALLBACK == true)
+/**
+ * \brief Function used to setup interrupt selection of a window
  *
- *  Writes a given Analog Comparator Window channel configuration to the hardware
- *  module.
+ * This function is used to setup when an interrupt should occur
+ * for a given window.
  *
- *  \param[in] module_inst  Software instance for the Analog Comparator peripheral
- *  \param[in] win_channel  Analog Comparator window channel to configure
- *  \param[in] config       Pointer to the window channel configuration struct
+ * \note This must be done before enabling the channel.
+ *
+ * \param[in]  module       Pointer to software instance struct
+ * \param[in]  win_channel  Window channel to setup
+ * \param[in]  config       Configuration for the given window channel
+ *
+ * \retval  STATUS_OK               Function exited successful
+ * \retval  STATUS_ERR_INVALID_ARG  win_channel argument incorrect
  */
 enum status_code ac_win_set_config(
 		struct ac_module *const module_inst,
-		const enum ac_win_channel win_channel,
+		enum ac_win_channel const win_channel,
 		struct ac_win_config *const config)
 {
-	/* Sanity check arguments */
 	Assert(module_inst);
 	Assert(module_inst->hw);
 	Assert(config);
 
-	Ac *const ac_module = module_inst->hw;
+	uint8_t winctrl_mask;
+	winctrl_mask = module_inst->hw->WINCTRL.reg;
 
-	while (ac_is_syncing(module_inst)) {
-		/* Wait until synchronization is complete */
+	if (win_channel == AC_WIN_CHANNEL_0) {
+		winctrl_mask &= ~AC_WINCTRL_WINTSEL0_Msk;
+		winctrl_mask |= config->interrupt_selection;
 	}
-
-	uint32_t win_ctrl_mask = 0;
-
-	switch (config->window_detection)
-	{
-		case AC_WIN_DETECT_ABOVE:
-			win_ctrl_mask =
-					AC_WINCTRL_WINTSEL0_ABOVE >> AC_WINCTRL_WINTSEL0_Pos;
-			break;
-		case AC_WIN_DETECT_BELOW:
-			win_ctrl_mask =
-					AC_WINCTRL_WINTSEL0_BELOW >> AC_WINCTRL_WINTSEL0_Pos;
-			break;
-		case AC_WIN_DETECT_INSIDE:
-			win_ctrl_mask =
-					AC_WINCTRL_WINTSEL0_INSIDE >> AC_WINCTRL_WINTSEL0_Pos;
-			break;
-		case AC_WIN_DETECT_OUTSIDE:
-			win_ctrl_mask =
-					AC_WINCTRL_WINTSEL0_OUTSIDE >> AC_WINCTRL_WINTSEL0_Pos;
-			break;
-		default:
-			break;
-	}
-
-
-	switch (win_channel)
-	{
-		case AC_WIN_CHANNEL_0:
-			ac_module->WINCTRL.reg =
-				(ac_module->WINCTRL.reg & ~AC_WINCTRL_WINTSEL0_Msk) |
-				(win_ctrl_mask << AC_WINCTRL_WINTSEL0_Pos);
-			break;
-
 #if (AC_PAIRS > 1)
-		case AC_WIN_CHANNEL_1:
-			ac_module->WINCTRL.reg =
-				(ac_module->WINCTRL.reg & ~AC_WINCTRL_WINTSEL1_Msk) |
-				(win_ctrl_mask << AC_WINCTRL_WINTSEL1_Pos);
-			break;
-#endif
+	else if (win_channel == AC_WIN_CHANNEL_1) {
+		winctrl_mask &= ~AC_WINCTRL_WINTSEL1_Msk;
+		winctrl_mask = (config->interrupt_selection << (AC_WINCTRL_WINTSEL1_Pos -
+		AC_WINCTRL_WINTSEL0_Pos);
+	} 
+#endif /* (AC_PAIRS > 1) */
+	else {
+		return STATUS_ERR_INVALID_ARG ;
 	}
+
+	module_inst->hw->WINCTRL.reg = winctrl_mask;
 
 	return STATUS_OK;
 }
-
+#endif /* (AC_CALLBACK == true) */
 
 /** \brief Enables an Analog Comparator window channel that was previously configured.
  *
- *  Enables and starts an Analog Comparator window channel that was previously
- *  configured via a call to \ref ac_win_set_config().
+ *  Enables and starts an Analog Comparator window channel.
  *
  *  \note The comparator channels used by the window channel must be configured
  *        and enabled before calling this function. The two comparator channels
