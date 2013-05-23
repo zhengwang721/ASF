@@ -558,7 +558,7 @@ struct ac_config {
 };
 
 /**
- * \brief Analog Comparator module Comparator configuration structure.
+ * \brief Analog Comparator Comparator channel configuration structure.
  *
  *  Configuration structure for a Comparator channel, to configure the input and
  *  output settings of the comparator.
@@ -584,17 +584,19 @@ struct ac_chan_config {
 	 *  channel pin's input, this value will be ignored. */
 	uint8_t vcc_scale_factor;
 #if AC_CALLBACK == true
-	/** This is used to select when interrupts should occur on a channel */
+	/** Interrupt criteria for the comparator channel, to select the condition
+	 *  that will trigger a callback. */
 	enum ac_chan_interrupt_selection interrupt_selection;
 #endif
 };
 
 /**
- * \brief Analog Comparator module Comparator configuration structure.
+ * \brief Analog Comparator Window configuration structure.
  */
 struct ac_win_config {
 #if AC_CALLBACK == true
-	/** This is used to select when interrupts should occur on a window */
+	/** Interrupt criteria for the comparator window channel, to select the
+	 *  condition that will trigger a callback. */
 	enum ac_win_interrupt_selection interrupt_selection;
 #elif !defined(__DOXYGEN__)
 	/** Dummy value to ensure the struct has at least one member */
