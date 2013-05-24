@@ -887,7 +887,7 @@ __no_inline enum status_code system_peripheral_unlock(
  *	</tr>
  *	<tr>
  *		<td>A</td>
- *		<td>05/2013</td>
+ *		<td>06/2013</td>
  *		<td>Initial release</td>
  *	</tr>
  * </table>
