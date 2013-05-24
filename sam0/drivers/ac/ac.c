@@ -234,7 +234,7 @@ enum status_code ac_chan_set_config(
  *
  * \note This must be done before enabling the channel.
  *
- * \param[in]  module       Pointer to software instance struct
+ * \param[in]  module_inst  Pointer to software instance struct
  * \param[in]  win_channel  Window channel to setup
  * \param[in]  config       Configuration for the given window channel
  *
@@ -262,7 +262,7 @@ enum status_code ac_win_set_config(
 		winctrl_mask &= ~AC_WINCTRL_WINTSEL1_Msk;
 		winctrl_mask = (config->interrupt_selection << (AC_WINCTRL_WINTSEL1_Pos -
 		AC_WINCTRL_WINTSEL0_Pos);
-	} 
+	}
 #endif /* (AC_PAIRS > 1) */
 	else {
 		return STATUS_ERR_INVALID_ARG ;

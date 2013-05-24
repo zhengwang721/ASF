@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D20 DAC Quick Start
+ * \brief SSD1306 display controller driver configuration file.
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,79 +40,28 @@
  * \asf_license_stop
  *
  */
-#include <asf.h>
+#ifndef CONF_SSD1306_H_INCLUDED
+#define CONF_SSD1306_H_INCLUDED
 
-void configure_dac(void);
-void configure_dac_channel(void);
+#include <board.h>
 
-//! [module_inst]
-struct dac_module dac_instance;
-//! [module_inst]
+// Interface configuration for SAM D20 Xplained Pro
+#  define SSD1306_SPI                 EXT3_SPI_MODULE
+#  define CONFIG_SSD1306_FRAMEBUFFER
 
-//! [setup]
-void configure_dac(void)
-{
-//! [setup_config]
-	struct dac_config config;
-//! [setup_config]
-//! [setup_config_defaults]
-	dac_get_config_defaults(&config);
-//! [setup_config_defaults]
+#  define SSD1306_DC_PIN              EXT3_PIN_5
+#  define SSD1306_RES_PIN             EXT3_PIN_10
+#  define SSD1306_CS_PIN              EXT3_PIN_15
 
-//! [setup_set_config]
-	dac_init(&dac_instance, DAC, &config);
-//! [setup_set_config]
+#  define SSD1306_SPI_PINMUX_SETTING  SPI_SIGNAL_MUX_SETTING_E
+#  define SSD1306_SPI_PINMUX_PAD0     EXT3_SPI_MISO_PINMUX
+#  define SSD1306_SPI_PINMUX_PAD1     PINMUX_UNUSED
+#  define SSD1306_SPI_PINMUX_PAD2     EXT3_SPI_MOSI_PINMUX
+#  define SSD1306_SPI_PINMUX_PAD3     EXT3_SPI_SCK_PINMUX
 
-//! [setup_enable]
-	dac_enable(&dac_instance);
-//! [setup_enable]
-}
+// Minimum clock period is 50ns@3.3V -> max frequency is 20MHz
+#define SSD1306_CLOCK_SPEED           1000000UL
+#define SSD1306_DISPLAY_CONTRAST_MAX  40
+#define SSD1306_DISPLAY_CONTRAST_MIN  30
 
-void configure_dac_channel(void)
-{
-//! [setup_ch_config]
-	struct dac_chan_config chan_config;
-//! [setup_ch_config]
-//! [setup_ch_config_defaults]
-	dac_chan_get_config_defaults(&chan_config);
-//! [setup_ch_config_defaults]
-
-//! [setup_ch_set_config]
-	dac_chan_set_config(&dac_instance, DAC_CHANNEL_0, &chan_config);
-//! [setup_ch_set_config]
-
-//! [setup_ch_enable]
-	dac_chan_enable(&dac_instance, DAC_CHANNEL_0);
-//! [setup_ch_enable]
-}
-//! [setup]
-
-int main(void)
-{
-	system_init();
-
-//! [setup_init]
-	configure_dac();
-	configure_dac_channel();
-//! [setup_init]
-
-//! [main]
-//! [main_output_var]
-	uint16_t i = 0;
-//! [main_output_var]
-
-//! [main_loop]
-	while (1) {
-//! [main_loop]
-//! [main_write]
-		dac_chan_write(&dac_instance, DAC_CHANNEL_0, i);
-//! [main_write]
-
-//! [main_inc_val]
-		if (++i == 0x3FF) {
-			i = 0;
-		}
-//! [main_inc_val]
-	}
-//! [main]
-}
+#endif /* CONF_SSD1306_H_INCLUDED */

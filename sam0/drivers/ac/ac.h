@@ -49,7 +49,12 @@
  * This driver for SAM D20 devices provides an interface for the configuration
  * and management of the device's Analog Comparator functionality, for the
  * comparison of analog voltages against a known reference voltage to determine
- * its relative level.
+ * its relative level. The following driver API modes are covered by this
+ * manual:
+ * - Polled APIs
+ * \if AC_CALLBACK_MODE
+ * - Callback APIs
+ * \endif
  *
  * The following peripherals are used by this module:
  *
@@ -476,8 +481,8 @@ enum ac_chan_interrupt_selection {
 	AC_CHAN_INTERRUPT_SELECTION_RISING          = AC_COMPCTRL_INTSEL_RISING,
 	/** An interrupt will be generated when the measurement goes below the compare level*/
 	AC_CHAN_INTERRUPT_SELECTION_FALLING         = AC_COMPCTRL_INTSEL_FALLING,
-	/** 
-	 * An interrupt will be generated when a new measurement is complete. 
+	/**
+	 * An interrupt will be generated when a new measurement is complete.
 	 * Interrupts will only be generated in single shot mode. This state needs 
 	 * to be cleared by the use of ac_chan_cleare_status().
 	 */
@@ -564,7 +569,7 @@ struct ac_config {
 };
 
 /**
- * \brief Analog Comparator module Comparator configuration structure.
+ * \brief Analog Comparator Comparator channel configuration structure.
  *
  *  Configuration structure for a Comparator channel, to configure the input and
  *  output settings of the comparator.
@@ -589,15 +594,25 @@ struct ac_chan_config {
 	 *  scalar input. If the VCC voltage scalar is not selected as a comparator
 	 *  channel pin's input, this value will be ignored. */
 	uint8_t vcc_scale_factor;
-	/** This is used to select when interrupts should occur on a channel */
+#if AC_CALLBACK == true
+	/** Interrupt criteria for the comparator channel, to select the condition
+	 *  that will trigger a callback. */
 	enum ac_chan_interrupt_selection interrupt_selection;
+#endif
 };
+
 /**
- * \brief Analog Comparator module Comparator configuration structure.
+ * \brief Analog Comparator Window configuration structure.
  */
 struct ac_win_config {
-	/** This is used to select when interrupts should occur on a window */
+#if AC_CALLBACK == true
+	/** Interrupt criteria for the comparator window channel, to select the
+	 *  condition that will trigger a callback. */
 	enum ac_win_interrupt_selection interrupt_selection;
+#elif !defined(__DOXYGEN__)
+	/** Dummy value to ensure the struct has at least one member */
+	uint8_t _dummy;
+#endif
 };
 
 /**
@@ -1082,7 +1097,9 @@ static inline void ac_win_get_config_defaults(
 	Assert(config);
 
 	/* Default configuration values */
+#if AC_CALLBACK == true
 	config->interrupt_selection  = AC_WIN_INTERRUPT_SELECTION_ABOVE;
+#endif
 }
 
 enum status_code ac_win_set_config(
@@ -1237,6 +1254,9 @@ static inline void ac_win_clear_status(
  * added to the user application.
  *
  *  - \subpage asfdoc_samd20_ac_basic_use_case
+ * \if AC_CALLBACK_MODE
+ *  - \subpage asfdoc_samd20_ac_callback_use_case
+ * \endif
  */
 
 #endif

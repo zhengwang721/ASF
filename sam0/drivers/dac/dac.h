@@ -373,7 +373,7 @@ enum dac_channel {
 struct dac_module {
 #if !defined(__DOXYGEN__)
 	/** DAC hardware module */
-	Dac *hw_dev;
+	Dac *hw;
 	/** DAC output selection */
 	enum dac_output output;
 	/** DAC event selection */
@@ -409,6 +409,19 @@ struct dac_config {
 };
 
 /**
+ * \brief DAC event enable/disable structure.
+ *
+ * Event flags for the DAC module. This is used to enable and
+ * disable events via \ref dac_enable_events() and \ref dac_disable_events().
+ */
+struct dac_events {
+	/** Start a new DAC conversion */
+	bool on_event_start_conversion;
+	/** Enable event generation on data buffer empty */
+	bool generate_event_on_buffer_empty;
+};
+
+/**
  * \brief DAC channel configuration structure
  *
  * Configuration for a DAC channel. This structure should be initialized by the
@@ -416,10 +429,10 @@ struct dac_config {
  * user application.
  */
 struct dac_chan_config {
-	/** Enable Start Conversion Event Input */
-	bool enable_start_on_event;
-	/** Enable Data Buffer Empty Event Output */
-	bool enable_empty_event;
+#if !defined(__DOXYGEN__)
+	/** Dummy value to ensure the struct has at least one member */
+	uint8_t _dummy;
+#endif
 };
 
 /**
@@ -449,7 +462,7 @@ static inline bool dac_is_syncing(
 	/* Sanity check arguments */
 	Assert(dev_inst);
 
-	Dac *const dac_module = dev_inst->hw_dev;
+	Dac *const dac_module = dev_inst->hw;
 
 	if (dac_module->STATUS.reg & DAC_STATUS_SYNCBUSY) {
 		return true;
@@ -504,6 +517,82 @@ void dac_enable(
 void dac_disable(
 		struct dac_module *const dev_inst);
 
+/**
+ * \brief Enables a DAC event input or output.
+ *
+ *  Enables one or more input or output events to or from the DAC module. See
+ *  \ref dac_events "here" for a list of events this module supports.
+ *
+ *  \note Events cannot be altered while the module is enabled.
+ *
+ *  \param[in] module_inst  Software instance for the DAC peripheral
+ *  \param[in] events       Struct containing flags of events to enable
+ */
+static inline void dac_enable_events(
+		struct dac_module *const module_inst,
+		struct dac_events *const events)
+{
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+	Assert(events);
+
+	Dac *const dac_module = module_inst->hw;
+
+	uint32_t event_mask = 0;
+
+	/* Configure Buffer Empty event */
+	if (events->generate_event_on_buffer_empty) {
+		event_mask |= DAC_EVCTRL_EMPTYEO;
+	}
+
+	/* Configure Conversion Start event */
+	if (events->on_event_start_conversion) {
+		event_mask |= DAC_EVCTRL_STARTEI;
+		module_inst->start_on_event = true;
+	}
+
+	dac_module->EVCTRL.reg |= event_mask;
+}
+
+/**
+ * \brief Disables a DAC event input or output.
+ *
+ *  Disables one or more input or output events to or from the DAC module. See
+ *  \ref dac_events "here" for a list of events this module supports.
+ *
+ *  \note Events cannot be altered while the module is enabled.
+ *
+ *  \param[in] module_inst  Software instance for the DAC peripheral
+ *  \param[in] events       Struct containing flags of events to disable
+ */
+static inline void dac_disable_events(
+		struct dac_module *const module_inst,
+		struct dac_events *const events)
+{
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+	Assert(events);
+
+	Dac *const dac_module = module_inst->hw;
+
+	uint32_t event_mask = 0;
+
+	/* Configure Buffer Empty event */
+	if (events->generate_event_on_buffer_empty) {
+		event_mask |= DAC_EVCTRL_EMPTYEO;
+	}
+
+	/* Configure Conversion Start event */
+	if (events->on_event_start_conversion) {
+		event_mask |= DAC_EVCTRL_STARTEI;
+		module_inst->start_on_event = false;
+	}
+
+	dac_module->EVCTRL.reg &= ~event_mask;
+}
+
 /** @} */
 
 /**
@@ -530,10 +619,6 @@ static inline void dac_chan_get_config_defaults(
 {
 	/* Sanity check arguments */
 	Assert(config);
-
-	/* Default configuration values */
-	config->enable_start_on_event = true;
-	config->enable_empty_event    = false;
 };
 
 void dac_chan_set_config(

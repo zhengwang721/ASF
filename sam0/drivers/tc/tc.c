@@ -271,9 +271,6 @@ enum status_code tc_init(
 	if (config->invert_event_input) {
 		evctrl_tmp |= TC_EVCTRL_TCINV;
 	}
-	if (config->enable_incoming_events) {
-		evctrl_tmp |= TC_EVCTRL_TCEI;
-	}
 
 	/* Write configuration to register */
 	while (tc_is_syncing(module_inst)) {

@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D20 DAC Quick Start
+ * \brief SAM D20 Xplained PRO board configuration.
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,79 +40,17 @@
  * \asf_license_stop
  *
  */
-#include <asf.h>
 
-void configure_dac(void);
-void configure_dac_channel(void);
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-//! [module_inst]
-struct dac_module dac_instance;
-//! [module_inst]
+/* Buttons on OLED1 Xplained Pro */
+#  define WING_BUTTON_1 EXT3_PIN_9
+#  define WING_BUTTON_2 EXT3_PIN_3
+#  define WING_BUTTON_3 EXT3_PIN_4
 
-//! [setup]
-void configure_dac(void)
-{
-//! [setup_config]
-	struct dac_config config;
-//! [setup_config]
-//! [setup_config_defaults]
-	dac_get_config_defaults(&config);
-//! [setup_config_defaults]
+/* Height and width of LCD */
+#  define LCD_WIDTH_PIXELS  128
+#  define LCD_HEIGHT_PIXELS  32
 
-//! [setup_set_config]
-	dac_init(&dac_instance, DAC, &config);
-//! [setup_set_config]
-
-//! [setup_enable]
-	dac_enable(&dac_instance);
-//! [setup_enable]
-}
-
-void configure_dac_channel(void)
-{
-//! [setup_ch_config]
-	struct dac_chan_config chan_config;
-//! [setup_ch_config]
-//! [setup_ch_config_defaults]
-	dac_chan_get_config_defaults(&chan_config);
-//! [setup_ch_config_defaults]
-
-//! [setup_ch_set_config]
-	dac_chan_set_config(&dac_instance, DAC_CHANNEL_0, &chan_config);
-//! [setup_ch_set_config]
-
-//! [setup_ch_enable]
-	dac_chan_enable(&dac_instance, DAC_CHANNEL_0);
-//! [setup_ch_enable]
-}
-//! [setup]
-
-int main(void)
-{
-	system_init();
-
-//! [setup_init]
-	configure_dac();
-	configure_dac_channel();
-//! [setup_init]
-
-//! [main]
-//! [main_output_var]
-	uint16_t i = 0;
-//! [main_output_var]
-
-//! [main_loop]
-	while (1) {
-//! [main_loop]
-//! [main_write]
-		dac_chan_write(&dac_instance, DAC_CHANNEL_0, i);
-//! [main_write]
-
-//! [main_inc_val]
-		if (++i == 0x3FF) {
-			i = 0;
-		}
-//! [main_inc_val]
-	}
-//! [main]
-}
+#endif /* CONF_BOARD_H_INCLUDED */

@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_samd20_ac_basic_use_case Quick Start Guide for AC - Basic
+ * \page asfdoc_samd20_ac_callback_use_case Quick Start Guide for AC - Callback
  *
  * In this use case, the Analog Comparator module is configured for:
  *  \li Comparator peripheral in manually triggered (i.e. "Single Shot" mode)
@@ -55,50 +55,50 @@
  * single-shot mode, and the result stored into a local variable which is then
  * output to the board LED to visually show the comparison state.
  *
- * \section asfdoc_samd20_ac_basic_use_case_setup Setup
+ * \section asfdoc_samd20_ac_callback_use_case_setup Setup
  *
- * \subsection asfdoc_samd20_ac_basic_use_case_setup_prereq Prerequisites
+ * \subsection asfdoc_samd20_ac_callback_use_case_setup_prereq Prerequisites
  * There are no special setup requirements for this use-case.
  *
- * \subsection asfdoc_samd20_ac_basic_use_case_setup_code Code
+ * \subsection asfdoc_samd20_ac_callback_use_case_setup_code Code
  * Copy-paste the following setup code to your user application:
- * \snippet qs_ac_basic.c setup
+ * \snippet qs_ac_callback.c setup
  *
  * Add to user application initialization (typically the start of \c main()):
- * \snippet qs_ac_basic.c setup_init
+ * \snippet qs_ac_callback.c setup_init
  *
- * \subsection asfdoc_samd20_ac_basic_use_case_setup_flow Workflow
+ * \subsection asfdoc_samd20_ac_callback_use_case_setup_flow Workflow
  * -# Create an AC device instance struct, which will be associated with an
  *    Analog Comparator peripheral hardware instance.
  *    \note Device instance structures should \b never go out of scope when in
  *          use.
  *
- *  \snippet qs_ac_basic.c setup_1
+ *  \snippet qs_ac_callback.c setup_1
  * -# Define a macro to select the comparator channel that will be sampled, for
  *    convenience.
- *  \snippet qs_ac_basic.c setup_2
+ *  \snippet qs_ac_callback.c setup_2
  * -# Create a new function \c configure_ac(), which will be used to configure
  *    the overall Analog Comparator peripheral.
- *  \snippet qs_ac_basic.c setup_3
+ *  \snippet qs_ac_callback.c setup_3
  * -# Create an Analog Comparator peripheral configuration structure that will
  *    be filled out to set the module configuration.
- *  \snippet qs_ac_basic.c setup_4
+ *  \snippet qs_ac_callback.c setup_4
  * -# Fill the Analog Comparator peripheral configuration structure with the
  *    default module configuration values.
- *  \snippet qs_ac_basic.c setup_5
+ *  \snippet qs_ac_callback.c setup_5
  * -# Initialize the Analog Comparator peripheral and associate it with the
  *    software instance structure that was defined previously.
- *  \snippet qs_ac_basic.c setup_6
+ *  \snippet qs_ac_callback.c setup_6
  *
  * -# Create a new function \c configure_ac_channel(), which will be used to
  *    configure the overall Analog Comparator peripheral.
- *  \snippet qs_ac_basic.c setup_7
+ *  \snippet qs_ac_callback.c setup_7
  * -# Create an Analog Comparator channel configuration structure that will
  *    be filled out to set the channel configuration.
- *  \snippet qs_ac_basic.c setup_8
+ *  \snippet qs_ac_callback.c setup_8
  * -# Fill the Analog Comparator channel configuration structure with the
  *    default channel configuration values.
- *  \snippet qs_ac_basic.c setup_9
+ *  \snippet qs_ac_callback.c setup_9
  * -# Alter the channel configuration parameters to set the channel to one-shot
  *    mode, with the correct negative and positive MUX selections and the
  *    desired voltage scaler.
@@ -106,62 +106,62 @@
  *          \ref ac_chan_config.vcc_scale_factor "here".
  * -# Select when the interrupt should occur. In this case an interrupt will occur
  *    at every finished conversion.
- *  \snippet qs_ac_basic.c setup_10
+ *  \snippet qs_ac_callback.c setup_10
  *
  * -# Configure the physical pin that will be routed to the AC module channel 0.
- *  \snippet qs_ac_basic.c setup_11
+ *  \snippet qs_ac_callback.c setup_11
  * -# Initialize the Analog Comparator channel and configure it with the desired
  *    settings.
- *  \snippet qs_ac_basic.c setup_12
+ *  \snippet qs_ac_callback.c setup_12
  *
  * -# Create a new function \c configure_ac_callback(), which will be used to
  *    configure the callbacks.
- *  \snippet qs_ac_basic.c setup_15
+ *  \snippet qs_ac_callback.c setup_13
  * -# Create a new callback function.
- *  \snippet qs_ac_basic.c callback_1
+ *  \snippet qs_ac_callback.c callback_1
  * -# Create a callback status software flag
- *  \snippet qs_ac_basic.c callback_3
+ *  \snippet qs_ac_callback.c callback_3
  * -# Let the callback function set the calback_status flag to true
- *  \snippet qs_ac_basic.c callback_2
+ *  \snippet qs_ac_callback.c callback_2
  * -# Register callback function.
- *  \snippet qs_ac_basic.c setup_16, 
+ *  \snippet qs_ac_callback.c setup_14
  *
  * -# Enable the callbacks.
- *  \snippet qs_ac_basic.c setup_20
+ *  \snippet qs_ac_callback.c setup_15
  *
  * -# Enable the now initialized Analog Comparator channel.
- *  \snippet qs_ac_basic.c setup_18
+ *  \snippet qs_ac_callback.c setup_16
  *
  * -# Enable the now initialized Analog Comparator peripheral.
- *  \snippet qs_ac_basic.c setup_19
+ *  \snippet qs_ac_callback.c setup_17
  *
  *
- * \section asfdoc_samd20_ac_basic_use_case_imp Implementation
+ * \section asfdoc_samd20_ac_callback_use_case_imp Implementation
  *
- * \subsection asfdoc_samd20_ac_basic_use_case_imp_code Code
+ * \subsection asfdoc_samd20_ac_callback_use_case_imp_code Code
  * Copy-paste the following code to your user application:
- * \snippet qs_ac_basic.c main
+ * \snippet qs_ac_callback.c main
  *
- * \subsection asfdoc_samd20_ac_basic_use_case_imp_flow Workflow
+ * \subsection asfdoc_samd20_ac_callback_use_case_imp_flow Workflow
  * -# Trigger the first comparison on the comparator channel.
- *  \snippet qs_ac_basic.c main_1
+ *  \snippet qs_ac_callback.c main_1
  * -# Create a local variable to maintain the current comparator state. Since no
  *    comparison has taken place, it is initialized to \ref AC_CHAN_STATE_UNKNOWN.
- *  \snippet qs_ac_basic.c main_2
+ *  \snippet qs_ac_callback.c main_2
  * -# Make the application loop infinitely, while performing triggered
  *    comparisons.
- *  \snippet qs_ac_basic.c main_3
+ *  \snippet qs_ac_callback.c main_3
  * -# Check if a new comparison is complete.
- *  \snippet qs_ac_basic.c main_4
+ *  \snippet qs_ac_callback.c main_4
  * -# Check if the comparator is ready for the last triggered comparison result
  *    to be read.
- *  \snippet qs_ac_basic.c main_5
+ *  \snippet qs_ac_callback.c main_5
  * -# Read the comparator output state into the local variable for application
  *    use, re-trying until the comparison state is ready.
- *  \snippet qs_ac_basic.c main_5
+ *  \snippet qs_ac_callback.c main_5
  * -# Set the board LED state to mirror the last comparison state.
- *  \snippet qs_ac_basic.c main_6
+ *  \snippet qs_ac_callback.c main_6
  * -# Trigger the next conversion on the Analog Comparator channel.
- *  \snippet qs_ac_basic.c main_7
+ *  \snippet qs_ac_callback.c main_7
  * -# After the interrupt is handled set the software callback flag to false.
  */
