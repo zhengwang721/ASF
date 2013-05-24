@@ -653,8 +653,8 @@ struct tc_events {
 			[NUMBER_OF_COMPARE_CAPTURE_CHANNELS];
 	/** Generate an output event on counter overflow. */
 	bool generate_event_on_overflow;
-	/** Consume events into the module. */
-	bool enable_incoming_events;
+	/** Perform the configured event action when an incoming event is signaled. */
+	bool on_event_perform_action;
 };
 
 /**
@@ -722,13 +722,12 @@ struct tc_config {
 	 */
 	bool enable_capture_on_channel[NUMBER_OF_COMPARE_CAPTURE_CHANNELS];
 
-	/** Consume events into the module. */
-	bool enable_incoming_events;
 
-	/** When \c true, one-shot will stop the TC on next HW/SW re-trigger
-	 *  event or overflow/underflow.
+	/** When \c true, one-shot will stop the TC on next hardware or software
+	 *  re-trigger event or overflow/underflow.
 	 */
 	bool oneshot;
+
 	/** Specifies the direction for the TC to count. */
 	enum tc_count_direction count_direction;
 
@@ -887,7 +886,6 @@ static inline void tc_get_config_defaults(
 	config->oneshot                    = false;
 
 	config->invert_event_input         = false;
-	config->enable_incoming_events     = false;
 	config->event_action               = TC_EVENT_ACTION_OFF;
 
 	config->channel_pwm_out_enabled[0]                        = false;
@@ -918,35 +916,6 @@ enum status_code tc_init(
  */
 
 /**
- * \brief Initializes event config with predefined default values.
- *
- * This function will initialize a given event configuration for the TC to
- * a set of known default values. This function should be called on
- * any event configuration for the TC.
- *
- * The default configuration is as follows:
- *  \li Generate event on compare channel 0 match off
- *  \li Generate event on compare channel 1 match off
- *  \li Generate event on overflow off
- *  \li Disable incoming events
- *
- * \param[out]  events_config Pointer to a event configuration structure to set
- */
-static inline void tc_get_events_config_default(
-		struct tc_events *const events_config)
-{
-	/* Sanity check arguments */
-	Assert(events_config);
-
-	/* Write default event config */
-	events_config->generate_event_on_compare_channel[0] = false;
-	events_config->generate_event_on_compare_channel[1] = false;
-	events_config->generate_event_on_overflow = false;
-	events_config->enable_incoming_events = false;
-}
-
-
-/**
  * \brief Enables a TC module event input or output.
  *
  * Enables one or more input or output events to or from the TC module.
@@ -970,7 +939,7 @@ static inline void tc_enable_events(
 
 	uint32_t event_mask = 0;
 
-	if (events->enable_incoming_events == true) {
+	if (events->on_event_perform_action == true) {
 		event_mask |= TC_EVCTRL_TCEI;
 	}
 
@@ -1011,7 +980,7 @@ static inline void tc_disable_events(
 
 	uint32_t event_mask = 0;
 
-	if (events->enable_incoming_events == true) {
+	if (events->on_event_perform_action == true) {
 		event_mask |= TC_EVCTRL_TCEI;
 	}
 

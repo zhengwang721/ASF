@@ -116,7 +116,7 @@
  *
  * -# Create a new function \c configure_ac_callback(), which will be used to
  *    configure the callbacks.
- *  \snippet qs_ac_callback.c setup_15
+ *  \snippet qs_ac_callback.c setup_13
  * -# Create a new callback function.
  *  \snippet qs_ac_callback.c callback_1
  * -# Create a callback status software flag
@@ -124,16 +124,16 @@
  * -# Let the callback function set the calback_status flag to true
  *  \snippet qs_ac_callback.c callback_2
  * -# Register callback function.
- *  \snippet qs_ac_callback.c setup_16,
+ *  \snippet qs_ac_callback.c setup_14
  *
  * -# Enable the callbacks.
- *  \snippet qs_ac_callback.c setup_20
+ *  \snippet qs_ac_callback.c setup_15
  *
  * -# Enable the now initialized Analog Comparator channel.
- *  \snippet qs_ac_callback.c setup_18
+ *  \snippet qs_ac_callback.c setup_16
  *
  * -# Enable the now initialized Analog Comparator peripheral.
- *  \snippet qs_ac_callback.c setup_19
+ *  \snippet qs_ac_callback.c setup_17
  *
  *
  * \section asfdoc_samd20_ac_callback_use_case_imp Implementation

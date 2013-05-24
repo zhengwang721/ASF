@@ -42,7 +42,9 @@
  */
 #include <asf.h>
 
+//! [callback_3]
 bool callback_status = false;
+//! [callback_3]
 
 void configure_ac(void);
 void configure_ac_channel(void);
@@ -128,14 +130,14 @@ void callback_function_ac(struct ac_module *const module_inst)
 }
 //! [callback_1]
 
-//! [setup_15]
+//! [setup_13]
 void configure_ac_callback(void)
 {
-	//! [setup_16]
+	//! [setup_14]
 	ac_register_callback(&ac_dev, callback_function_ac, AC_CALLBACK_COMPARATOR_0);
-	//! [setup_16]
+	//! [setup_14]
 }
-//! [setup_15]
+//! [setup_13]
 
 //! [setup]
 
@@ -146,15 +148,15 @@ int main(void)
 	configure_ac();
 	configure_ac_channel();
 	configure_ac_callback();
-	//! [setup_18]
+	//! [setup_15]
 	ac_chan_enable(&ac_dev, AC_COMPARATOR_CHANNEL);
-	//! [setup_18]
-	//! [setup_19]
+	//! [setup_15]
+	//! [setup_16]
 	ac_enable(&ac_dev);
-	//! [setup_19]
-	//! [setup_20]
+	//! [setup_16]
+	//! [setup_17]
 	ac_enable_callback(&ac_dev, AC_CALLBACK_COMPARATOR_0);
-	//! [setup_20]
+	//! [setup_17]
 	//! [setup_init]
 
 	//! [main]

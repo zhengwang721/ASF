@@ -60,9 +60,9 @@ static void _dac_set_config(
 	/* Sanity check arguments */
 	Assert(module_inst);
 	Assert(config);
-	Assert(module_inst->hw_dev);
+	Assert(module_inst->hw);
 
-	Dac *const dac_module = module_inst->hw_dev;
+	Dac *const dac_module = module_inst->hw;
 
 	/* Set selected DAC output to be enabled when enabling the module */
 	module_inst->output = config->output;
@@ -116,7 +116,7 @@ enum status_code dac_init(
 	Assert(config);
 
 	/* Initialize device instance */
-	module_inst->hw_dev = module;
+	module_inst->hw = module;
 
 	/* Turn on the digital interface clock */
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, PM_APBCMASK_DAC);
@@ -175,9 +175,9 @@ void dac_reset(
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
-	Assert(module_inst->hw_dev);
+	Assert(module_inst->hw);
 
-	Dac *const dac_module = module_inst->hw_dev;
+	Dac *const dac_module = module_inst->hw;
 
 	while (dac_is_syncing(module_inst)) {
 		/* Wait until the synchronization is complete */
@@ -200,9 +200,9 @@ void dac_enable(
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
-	Assert(module_inst->hw_dev);
+	Assert(module_inst->hw);
 
-	Dac *const dac_module = module_inst->hw_dev;
+	Dac *const dac_module = module_inst->hw;
 
 	while (dac_is_syncing(module_inst)) {
 		/* Wait until the synchronization is complete */
@@ -232,9 +232,9 @@ void dac_disable(
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
-	Assert(module_inst->hw_dev);
+	Assert(module_inst->hw);
 
-	Dac *const dac_module = module_inst->hw_dev;
+	Dac *const dac_module = module_inst->hw;
 
 	/* Wait until the synchronization is complete */
 	while (dac_module->STATUS.reg & DAC_STATUS_SYNCBUSY);
@@ -261,33 +261,8 @@ void dac_chan_set_config(
 		const enum dac_channel channel,
 		struct dac_chan_config *const config)
 {
-	/* Sanity check arguments */
-	Assert(module_inst);
-	Assert(config);
-	Assert(module_inst->hw_dev);
-
 	/* No channel support yet */
 	UNUSED(channel);
-
-	Dac *const dac_module = module_inst->hw_dev;
-
-	if (config->enable_start_on_event) {
-		/* Enable start conversion event input */
-		dac_module->EVCTRL.reg |=  DAC_EVCTRL_STARTEI;
-		module_inst->start_on_event = true;
-	} else {
-		/* Disable start conversion event input */
-		dac_module->EVCTRL.reg &= ~DAC_EVCTRL_STARTEI;
-		module_inst->start_on_event = false;
-	}
-
-	if (config->enable_empty_event) {
-		/* Enable data buffer empty event out */
-		dac_module->EVCTRL.reg |=  DAC_EVCTRL_EMPTYEO;
-	} else {
-		/* Disable data buffer empty event out */
-		dac_module->EVCTRL.reg &= ~DAC_EVCTRL_EMPTYEO;
-	}
 }
 
 /**
@@ -338,12 +313,12 @@ void dac_chan_enable_output_buffer(
 {
 	/*Sanity check arguments*/
 	Assert(module_inst);
-	Assert(module_inst->hw_dev);
+	Assert(module_inst->hw);
 
 	/* No channel support yet */
 	UNUSED(channel);
 
-	Dac *const dac_module = module_inst->hw_dev;
+	Dac *const dac_module = module_inst->hw;
 
 	/* Enable output buffer */
 	dac_module->CTRLB.reg |= DAC_OUTPUT_EXTERNAL;
@@ -367,12 +342,12 @@ void dac_chan_disable_output_buffer(
 {
 	/* Sanity check arguments*/
 	Assert(module_inst);
-	Assert(module_inst->hw_dev);
+	Assert(module_inst->hw);
 
 	/* No channel support yet */
 	UNUSED(channel);
 
-	Dac *const dac_module = module_inst->hw_dev;
+	Dac *const dac_module = module_inst->hw;
 
 	/* Disable output buffer */
 	dac_module->CTRLB.reg &= ~DAC_OUTPUT_EXTERNAL;
@@ -406,12 +381,12 @@ enum status_code dac_chan_write(
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
-	Assert(module_inst->hw_dev);
+	Assert(module_inst->hw);
 
 	/* No channel support yet */
 	UNUSED(channel);
 
-	Dac *const dac_module = module_inst->hw_dev;
+	Dac *const dac_module = module_inst->hw;
 
 	/* Wait until the synchronization is complete */
 	while (dac_module->STATUS.reg & DAC_STATUS_SYNCBUSY);
@@ -449,9 +424,9 @@ uint32_t dac_get_status(
 {
 	 /* Sanity check arguments */
 	Assert(module_inst);
-	Assert(module_inst->hw_dev);
+	Assert(module_inst->hw);
 
-	Dac *const dac_module = module_inst->hw_dev;
+	Dac *const dac_module = module_inst->hw;
 
 	uint8_t intflags = dac_module->INTFLAG.reg;
 	uint32_t status_flags = 0;
@@ -482,9 +457,9 @@ void dac_clear_status(
 {
 	 /* Sanity check arguments */
 	Assert(module_inst);
-	Assert(module_inst->hw_dev);
+	Assert(module_inst->hw);
 
-	Dac *const dac_module = module_inst->hw_dev;
+	Dac *const dac_module = module_inst->hw;
 
 	uint32_t intflags = 0;
 

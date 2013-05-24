@@ -21,7 +21,6 @@
 			<build type="header-file" value="quick_start/qs_ac_basic.h" />
 
 			<build type="doxygen-example-path" value="quick_start"/>
-			<build type="doxygen-image-path" value="docimg" />
 			<build type="doxygen-entry-point" value="asfdoc_samd20_ac_group" />
 
 			<device-support value="samd20" />
@@ -48,7 +47,6 @@
 
 			<build type="doxygen-example-path" value="quick_start"/>
 			<build type="doxygen-example-path" value="quick_start_callback"/>
-			<build type="doxygen-image-path" value="docimg" />
 			<build type="doxygen-entry-point" value="asfdoc_samd20_ac_group" />
 
 			<device-support value="samd20" />
