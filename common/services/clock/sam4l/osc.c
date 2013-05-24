@@ -67,7 +67,12 @@ void osc_priv_disable_osc0(void)
 	flags = cpu_irq_save();
 	SCIF->SCIF_UNLOCK = SCIF_UNLOCK_KEY(0xAAu)
 		| SCIF_UNLOCK_ADDR((uint32_t)&SCIF->SCIF_OSCCTRL0 - (uint32_t)SCIF);
-	SCIF->SCIF_OSCCTRL0 = 0;
+	SCIF->SCIF_OSCCTRL0 =
+			OSC0_STARTUP_VALUE
+# if BOARD_OSC0_IS_XTAL == true
+			| OSC0_GAIN_VALUE
+#endif
+			| OSC0_MODE_VALUE;
 	cpu_irq_restore(flags);
 }
 #endif /* BOARD_OSC0_HZ */
