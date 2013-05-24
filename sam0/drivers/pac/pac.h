@@ -877,13 +877,13 @@ __no_inline enum status_code system_peripheral_unlock(
  *	</tr>
  * </table>
  *
- * \page asfdoc_samd20_pac_documentation_revsision_history Document Revision History
+ * \page asfdoc_samd20_pac_document_revsision_history Document Revision History
  *
  * <table>
  *	<tr>
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
- *		<th>Comment</td>
+ *		<th>Comments</td>
  *	</tr>
  *	<tr>
  *		<td>A</td>
