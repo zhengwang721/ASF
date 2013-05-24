@@ -131,7 +131,7 @@ enum status_code tc_unregister_callback(
 MREPEAT(TC_INST_NUM, _TC_INTERRUPT_HANDLER, ~)
 
 /**
- * \brief Interrupt Handler for TC module
+ * \internal Interrupt Handler for TC module
  *
  * Handles interrupts as they occur, it will run the callback functions
  * that are registered and enabled.

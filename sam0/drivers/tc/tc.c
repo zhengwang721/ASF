@@ -45,6 +45,13 @@
 
 #if TC_ASYNC == true
 #  include "tc_interrupt.h"
+#  include <system_interrupt.h>
+
+/** \internal
+ * Converts a given TC index to its interrupt vector index.
+ */
+#  define _TC_INTERRUPT_VECT_NUM(n, unused) \
+		SYSTEM_INTERRUPT_MODULE_TC##n,
 #endif
 
 #if !defined(__DOXYGEN__)
@@ -263,9 +270,6 @@ enum status_code tc_init(
 	/* Set evctrl register */
 	if (config->invert_event_input) {
 		evctrl_tmp |= TC_EVCTRL_TCINV;
-	}
-	if (config->enable_incoming_events) {
-		evctrl_tmp |= TC_EVCTRL_TCEI;
 	}
 
 	/* Write configuration to register */

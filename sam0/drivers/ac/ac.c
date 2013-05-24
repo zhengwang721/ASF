@@ -144,6 +144,26 @@ enum status_code ac_init(
 	/* Turn on the digital interface clock */
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, PM_APBCMASK_AC);
 
+#if AC_CALLBACK == true
+	/* Initialize parameters */
+	for (uint8_t i = 0; i < AC_CALLBACK_N; i++) {
+		module_inst->callback[i]         = NULL;
+	}
+
+	/* Initialize software flags*/
+	module_inst->register_callback_mask  = 0x00;
+	module_inst->enable_callback_mask    = 0x00;
+
+#  if (AC_INST_NUM == 1)
+	_ac_instance[0] = module_inst;
+#  endif /* AC_INST_NUM == 1) */
+
+#  if (AC_INST_NUM > 1)
+	/* Register this instance for callbacks*/
+	_ac_instance[_ac_get_inst_index(hw)] = module_inst;
+#  endif /* AC_INST_NUM > 1) */
+#endif /*AC_CALLBACK == true */
+
 	/* Write configuration to module */
 	return _ac_set_config(module_inst, config);
 }
@@ -190,6 +210,9 @@ enum status_code ac_chan_set_config(
 	/* Set sampling mode (single shot or continuous) */
 	compctrl_temp |= config->sample_mode;
 
+	/* Set channel interrupt selection */
+	compctrl_temp |= config->interrupt_selection;
+
 	while (ac_is_syncing(module_inst)) {
 		/* Wait until synchronization is complete */
 	}
@@ -203,81 +226,56 @@ enum status_code ac_chan_set_config(
 	return STATUS_OK;
 }
 
-/** \brief Writes an Analog Comparator Window channel configuration to the hardware module.
+/**
+ * \brief Function used to setup interrupt selection of a window
  *
- *  Writes a given Analog Comparator Window channel configuration to the hardware
- *  module.
+ * This function is used to setup when an interrupt should occur
+ * for a given window.
  *
- *  \param[in] module_inst  Software instance for the Analog Comparator peripheral
- *  \param[in] win_channel  Analog Comparator window channel to configure
- *  \param[in] config       Pointer to the window channel configuration struct
+ * \note This must be done before enabling the channel.
+ *
+ * \param[in]  module_inst  Pointer to software instance struct
+ * \param[in]  win_channel  Window channel to setup
+ * \param[in]  config       Configuration for the given window channel
+ *
+ * \retval  STATUS_OK               Function exited successful
+ * \retval  STATUS_ERR_INVALID_ARG  win_channel argument incorrect
  */
 enum status_code ac_win_set_config(
 		struct ac_module *const module_inst,
-		const enum ac_win_channel win_channel,
+		enum ac_win_channel const win_channel,
 		struct ac_win_config *const config)
 {
-	/* Sanity check arguments */
 	Assert(module_inst);
 	Assert(module_inst->hw);
 	Assert(config);
 
-	Ac *const ac_module = module_inst->hw;
+	uint8_t winctrl_mask;
+	winctrl_mask = module_inst->hw->WINCTRL.reg;
 
-	while (ac_is_syncing(module_inst)) {
-		/* Wait until synchronization is complete */
+	if (win_channel == AC_WIN_CHANNEL_0) {
+		winctrl_mask &= ~AC_WINCTRL_WINTSEL0_Msk;
+		winctrl_mask |= config->interrupt_selection;
 	}
-
-	uint32_t win_ctrl_mask = 0;
-
-	switch (config->window_detection)
-	{
-		case AC_WIN_DETECT_ABOVE:
-			win_ctrl_mask =
-					AC_WINCTRL_WINTSEL0_ABOVE >> AC_WINCTRL_WINTSEL0_Pos;
-			break;
-		case AC_WIN_DETECT_BELOW:
-			win_ctrl_mask =
-					AC_WINCTRL_WINTSEL0_BELOW >> AC_WINCTRL_WINTSEL0_Pos;
-			break;
-		case AC_WIN_DETECT_INSIDE:
-			win_ctrl_mask =
-					AC_WINCTRL_WINTSEL0_INSIDE >> AC_WINCTRL_WINTSEL0_Pos;
-			break;
-		case AC_WIN_DETECT_OUTSIDE:
-			win_ctrl_mask =
-					AC_WINCTRL_WINTSEL0_OUTSIDE >> AC_WINCTRL_WINTSEL0_Pos;
-			break;
-		default:
-			break;
-	}
-
-
-	switch (win_channel)
-	{
-		case AC_WIN_CHANNEL_0:
-			ac_module->WINCTRL.reg =
-				(ac_module->WINCTRL.reg & ~AC_WINCTRL_WINTSEL0_Msk) |
-				(win_ctrl_mask << AC_WINCTRL_WINTSEL0_Pos);
-			break;
-
 #if (AC_PAIRS > 1)
-		case AC_WIN_CHANNEL_1:
-			ac_module->WINCTRL.reg =
-				(ac_module->WINCTRL.reg & ~AC_WINCTRL_WINTSEL1_Msk) |
-				(win_ctrl_mask << AC_WINCTRL_WINTSEL1_Pos);
-			break;
-#endif
+	else if (win_channel == AC_WIN_CHANNEL_1) {
+		winctrl_mask &= ~AC_WINCTRL_WINTSEL1_Msk;
+		winctrl_mask = (config->interrupt_selection << (AC_WINCTRL_WINTSEL1_Pos -
+		AC_WINCTRL_WINTSEL0_Pos);
 	}
+#endif /* (AC_PAIRS > 1) */
+	else {
+		return STATUS_ERR_INVALID_ARG ;
+	}
+
+	module_inst->hw->WINCTRL.reg = winctrl_mask;
 
 	return STATUS_OK;
 }
 
-
 /** \brief Enables an Analog Comparator window channel that was previously configured.
  *
- *  Enables and starts an Analog Comparator window channel that was previously
- *  configured via a call to \ref ac_win_set_config().
+ *  Enables and starts an Analog Comparator window channel.
  *
  *  \note The comparator channels used by the window channel must be configured
  *        and enabled before calling this function. The two comparator channels
@@ -388,9 +386,9 @@ void ac_win_disable(
  *  \param[in] module_inst  Software instance for the Analog Comparator peripheral
  *  \param[in] win_channel  Comparator Window channel to test
  *
- *  \return Current window comparison state.
+ *  \return Current window comparison state mask.
  */
-enum ac_win_state ac_win_get_state(
+uint32_t ac_win_get_status(
 		struct ac_module *const module_inst,
 		const enum ac_win_channel win_channel)
 {
@@ -400,37 +398,40 @@ enum ac_win_state ac_win_get_state(
 
 	Ac *const ac_module = module_inst->hw;
 
+	uint32_t win_status = 0;
+
+	win_status = ac_module->INTFLAG.reg & (1 << (win_channel + AC_INTFLAG_WIN0_Pos));
+
 	/* If one or both window comparators not ready, return unknown result */
 	if (ac_win_is_ready(module_inst, win_channel) == false) {
-		return AC_WIN_STATE_UNKNOWN;
+		win_status |= AC_WIN_STATUS_UNKNOWN;
+		return win_status;
 	}
-
-	uint32_t win_state = 0;
 
 	/* Extract window comparison state bits */
 	switch (win_channel)
 	{
 		case AC_WIN_CHANNEL_0:
-			win_state = ac_module->STATUSA.bit.WSTATE0;
+			win_status = ac_module->STATUSA.bit.WSTATE0;
 			break;
 
 #if (AC_PAIRS > 1)
 		case AC_WIN_CHANNEL_1:
-			win_state = ac_module->STATUSA.bit.WSTATE1;
+			win_status = ac_module->STATUSA.bit.WSTATE1;
 			break;
 #endif
 	}
 
 	/* Map hardware comparison states to logical window states */
-	switch (win_state)
+	switch (win_status)
 	{
 		case (AC_STATUSA_WSTATE0_ABOVE >> AC_STATUSA_WSTATE0_Pos):
-			return AC_WIN_STATE_ABOVE;
+			return win_status | AC_WIN_STATUS_ABOVE;
 		case (AC_STATUSA_WSTATE0_BELOW >> AC_STATUSA_WSTATE0_Pos):
-			return AC_WIN_STATE_BELOW;
+			return win_status | AC_WIN_STATUS_BELOW;
 		case (AC_STATUSA_WSTATE0_INSIDE >> AC_STATUSA_WSTATE0_Pos):
-			return AC_WIN_STATE_INSIDE;
+			return win_status | AC_WIN_STATUS_INSIDE;
 		default:
-			return AC_WIN_STATE_UNKNOWN;
+			return win_status | AC_WIN_STATUS_UNKNOWN;
 	}
 }

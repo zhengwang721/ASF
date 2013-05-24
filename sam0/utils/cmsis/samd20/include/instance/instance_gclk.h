@@ -62,6 +62,7 @@
 /* ========== Instance parameters for GCLK peripheral ========== */
 #define GCLK_GEN_NUM_MSB            7
 #define GCLK_GEN_SOURCE_NUM_MSB     7
+#define GCLK_MAX_DIV_BITS           16
 #define GCLK_NUM                    28
 #define GCLK_SOURCE_DFLL48M         7
 #define GCLK_SOURCE_GCLKGEN1        2

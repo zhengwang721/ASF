@@ -148,11 +148,11 @@ enum status_code dac_chan_enable_callback(
 {
 	/* Sanity check arguments */
 	Assert(dac_module);
-	Assert(dac_module->hw_dev);
+	Assert(dac_module->hw);
 
 	UNUSED(channel);
 
-	Dac *const dac_hw = dac_module->hw_dev;
+	Dac *const dac_hw = dac_module->hw;
 
 	/* DAC interrupts require it to be driven by events to work, fail if in
 	 * unbuffered (polled) mode */
@@ -197,11 +197,11 @@ enum status_code dac_chan_disable_callback(
 {
 	/* Sanity check arguments */
 	Assert(dac_module);
-	Assert(dac_module->hw_dev);
+	Assert(dac_module->hw);
 
 	UNUSED(channel);
 
-	Dac *const dac_hw = dac_module->hw_dev;
+	Dac *const dac_hw = dac_module->hw;
 
 	/* DAC interrupts require it to be driven by events to work, fail if in
 	 * unbuffered (polled) mode */
@@ -229,7 +229,7 @@ enum status_code dac_chan_disable_callback(
 static void _dac_interrupt_handler(const uint8_t instance)
 {
 	struct dac_module *module = _dac_instances[instance];
-	Dac *const dac_hw = module->hw_dev;
+	Dac *const dac_hw = module->hw;
 
 	if (dac_hw->INTFLAG.reg & DAC_INTFLAG_UNDERRUN) {
 		dac_hw->INTFLAG.reg |= DAC_INTFLAG_UNDERRUN;

@@ -310,13 +310,7 @@ static enum status_code _adc_set_config(
 			config->positive_input;
 
 	/* Configure events */
-	adc_module->EVCTRL.reg =
-			config->event.event_action |
-			(config->event.generate_event_on_window_monitor  <<
-			ADC_EVCTRL_WINMONEO_Pos) |
-			(config->event.generate_event_on_conversion_done <<
-			ADC_EVCTRL_RESRDYEO_Pos);
-
+	adc_module->EVCTRL.reg = config->event_action;
 
 	/* Disable all interrupts */
 	adc_module->INTENCLR.reg =
@@ -392,7 +386,7 @@ enum status_code adc_init(
 
 	_adc_instances[0] = module_inst;
 
-	if(config->event.event_action == ADC_EVENT_ACTION_DISABLED &&
+	if(config->event_action == ADC_EVENT_ACTION_DISABLED &&
 			!config->freerunning) {
 		module_inst->software_trigger = true;
 	} else {

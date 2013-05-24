@@ -167,7 +167,8 @@ typedef union {
   struct {
     uint32_t ID:4;             /*!< bit:  0.. 3  Generic Clock Generator Selection  */
     uint32_t :4;               /*!< bit:  4.. 7  Reserved                           */
-    uint32_t DIV:24;           /*!< bit:  8..31  Division Factor                    */
+    uint32_t DIV:16;           /*!< bit:  8..23  Division Factor                    */
+    uint32_t :8;               /*!< bit: 24..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } GCLK_GENDIV_Type;
@@ -180,9 +181,9 @@ typedef union {
 #define GCLK_GENDIV_ID_Msk          (0xFu << GCLK_GENDIV_ID_Pos)
 #define GCLK_GENDIV_ID(value)       ((GCLK_GENDIV_ID_Msk & ((value) << GCLK_GENDIV_ID_Pos)))
 #define GCLK_GENDIV_DIV_Pos         8            /**< \brief (GCLK_GENDIV) Division Factor */
-#define GCLK_GENDIV_DIV_Msk         (0xFFFFFFu << GCLK_GENDIV_DIV_Pos)
+#define GCLK_GENDIV_DIV_Msk         (0xFFFFu << GCLK_GENDIV_DIV_Pos)
 #define GCLK_GENDIV_DIV(value)      ((GCLK_GENDIV_DIV_Msk & ((value) << GCLK_GENDIV_DIV_Pos)))
-#define GCLK_GENDIV_MASK            0xFFFFFF0Fu  /**< \brief (GCLK_GENDIV) MASK Register */
+#define GCLK_GENDIV_MASK            0x00FFFF0Fu  /**< \brief (GCLK_GENDIV) MASK Register */
 
 /** \brief GCLK hardware registers */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
