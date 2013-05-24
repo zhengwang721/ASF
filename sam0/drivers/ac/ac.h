@@ -594,25 +594,18 @@ struct ac_chan_config {
 	 *  scalar input. If the VCC voltage scalar is not selected as a comparator
 	 *  channel pin's input, this value will be ignored. */
 	uint8_t vcc_scale_factor;
-#if AC_CALLBACK == true
 	/** Interrupt criteria for the comparator channel, to select the condition
 	 *  that will trigger a callback. */
 	enum ac_chan_interrupt_selection interrupt_selection;
-#endif
 };
 
 /**
  * \brief Analog Comparator Window configuration structure.
  */
 struct ac_win_config {
-#if AC_CALLBACK == true
 	/** Interrupt criteria for the comparator window channel, to select the
 	 *  condition that will trigger a callback. */
 	enum ac_win_interrupt_selection interrupt_selection;
-#elif !defined(__DOXYGEN__)
-	/** Dummy value to ensure the struct has at least one member */
-	uint8_t _dummy;
-#endif
 };
 
 /**
@@ -1097,9 +1090,7 @@ static inline void ac_win_get_config_defaults(
 	Assert(config);
 
 	/* Default configuration values */
-#if AC_CALLBACK == true
 	config->interrupt_selection  = AC_WIN_INTERRUPT_SELECTION_ABOVE;
-#endif
 }
 
 enum status_code ac_win_set_config(
