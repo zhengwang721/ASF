@@ -31,7 +31,7 @@
 
 		<build type="header-file" value="quick_start/qs_pac_basic.h"/>
 
-		<build type="doxygen-entry-point" value="asfdoc_samd20_pac_group "/>
+		<build type="doxygen-entry-point" value="asfdoc_samd20_pac_group"/>
 		<build type="doxygen-example-path" value="quick_start"/>
 
 		<device-support value="samd20"/>
