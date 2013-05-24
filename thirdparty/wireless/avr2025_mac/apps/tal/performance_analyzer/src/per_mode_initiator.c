@@ -262,6 +262,8 @@ static uint8_t cc_number_ct;
 #if( (TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B) )
 static uint8_t last_tx_power_format_set;
 #endif //#if( (TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B) )
+
+static uint32_t range_test_frame_cnt = 0;
 /**
  * \brief The reverse_float is used for reversing a float variable for supporting BIG ENDIAN systems
  * \param float_val Float variable to be reversed
@@ -1215,12 +1217,20 @@ void per_mode_initiator_rx_cb(frame_info_t *mac_frame_info)
             {
                 if (op_mode == RANGE_TEST_TX)
                 {
-                  uint8_t phy_frame_len = mac_frame_info->mpdu[0];
+                  uint8_t rssi_val;
+                int8_t rssi_base_val,ed_value;
+                rssi_val = get_rssi_val();//read register value SR_RSSI
+                rssi_base_val = tal_get_rssi_base_val();
+                rssi_val = 3*(rssi_val-1);
+                rssi_val += rssi_base_val;
+                uint8_t phy_frame_len = mac_frame_info->mpdu[0];
+                 ed_value = mac_frame_info->mpdu[phy_frame_len + LQI_LEN + ED_VAL_LEN] + rssi_base_val;
+                  
                   app_led_event(LED_EVENT_RX_FRAME);
                   usr_range_test_beacon_rsp(msg->payload.range_tx_data.frame_count,
                             msg->payload.range_tx_data.lqi,msg->payload.range_tx_data.ed,msg->payload.range_tx_data.rssi,
                             mac_frame_info->mpdu[phy_frame_len + LQI_LEN],
-                            mac_frame_info->mpdu[phy_frame_len + LQI_LEN + ED_VAL_LEN],-51);
+                           ed_value,rssi_val);
                   //rssi to be found and added to be changed
                   
                   
@@ -3260,6 +3270,7 @@ void stop_range_test(void)
     {
         /* Send the confirmation with the status as SUCCESS */
         range_test_in_progress = false;
+        range_test_frame_cnt = 0;
         usr_range_test_stop_confirm(MAC_SUCCESS);
         sw_timer_stop(APP_TIMER_TO_TX);
         op_mode = TX_OP_MODE;
@@ -3377,7 +3388,7 @@ static void configure_range_test_frame_sending(void)
     uint16_t temp_value;
     app_payload_t *tmp;
     range_tx_t *data;
-    static uint32_t frame_cnt = 0;
+    
     /*
      * Fill in PHY frame.
      */
@@ -3398,11 +3409,10 @@ static void configure_range_test_frame_sending(void)
     (tmp->cmd_id) = RANGE_TEST_PKT;
     temp_frame_ptr++;
     (tmp->seq_num) = range_test_seq_num++; //to be incremented for every frame
-
-    temp_frame_ptr++;
-    data->frame_count = frame_cnt++;
+    temp_frame_ptr++;    
+    range_test_frame_cnt++;
+    data->frame_count = Swap32(CCPU_ENDIAN_TO_LE32(range_test_frame_cnt));//to be checked
     temp_frame_ptr += 4;
-    temp_frame_ptr++;
     data->ed = 0;
     temp_frame_ptr++;
     data->lqi = 0;

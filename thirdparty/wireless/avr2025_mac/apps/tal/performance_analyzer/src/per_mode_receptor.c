@@ -448,13 +448,19 @@ void per_mode_receptor_rx_cb(frame_info_t *mac_frame_info)
 
     case RANGE_TEST_PKT:
             { 
-                            uint8_t phy_frame_len = mac_frame_info->mpdu[0];
-
+                uint8_t phy_frame_len = mac_frame_info->mpdu[0];
+                uint8_t rssi_val;
+                int8_t rssi_base_val,ed_value;
+                rssi_val = get_rssi_val();//read register value SR_RSSI
+                rssi_base_val = tal_get_rssi_base_val();
+                rssi_val = 3*(rssi_val-1);
+                rssi_val += rssi_base_val;
                 app_led_event(LED_EVENT_RX_FRAME);
+                ed_value = mac_frame_info->mpdu[phy_frame_len + LQI_LEN + ED_VAL_LEN] + rssi_base_val;
+                
                 send_range_test_rsp(msg->seq_num,msg->payload.range_tx_data.frame_count,
-                mac_frame_info->mpdu[phy_frame_len + LQI_LEN + ED_VAL_LEN],
-                                            mac_frame_info->mpdu[phy_frame_len + LQI_LEN],
-                                            -45);
+                ed_value,mac_frame_info->mpdu[phy_frame_len + LQI_LEN],
+                                            rssi_val);
                 
                 //TO be done : send reply back
             }
@@ -827,7 +833,7 @@ static void send_peer_info_rsp(void)
  * \brief Function used to send peer_info_rsp command
  *
  */
-static void send_range_test_rsp(uint8_t seq_num,uint32_t frame_count,int8_t ed,uint8_t lqi,int8_t rssi)
+static void send_range_test_rsp(uint8_t seq_num, uint32_t frame_count,int8_t ed,uint8_t lqi,int8_t rssi)
 {
     uint8_t payload_length;
     app_payload_t msg;

@@ -1250,7 +1250,9 @@ void usr_range_test_beacon_tx(uint8_t *frame)
 
 void usr_range_test_beacon_rsp(uint32_t frame_count,uint8_t lqi_h,uint8_t ed_h,uint8_t rssi_h,uint8_t lqi_r,int8_t ed_r,int8_t rssi_r)
 {
+
     uint8_t *msg_buf;
+
 
     msg_buf = get_next_tx_buffer();
 
@@ -1263,8 +1265,10 @@ void usr_range_test_beacon_rsp(uint32_t frame_count,uint8_t lqi_h,uint8_t ed_h,u
     *msg_buf++ = PROTOCOL_ID_LEN + 11;
     *msg_buf++ = PROTOCOL_ID;
     *msg_buf++ = RANGE_TEST_RESPONSE_CONFIRM;
-    *msg_buf = frame_count;
-     msg_buf += 4;
+    frame_count = (CCPU_ENDIAN_TO_LE32(frame_count));
+    memcpy(msg_buf, &frame_count, sizeof(uint32_t));
+    msg_buf +=  sizeof(uint32_t);
+
     *msg_buf++ = lqi_h;
     *msg_buf++ = ed_h;
     *msg_buf++ = rssi_h;
