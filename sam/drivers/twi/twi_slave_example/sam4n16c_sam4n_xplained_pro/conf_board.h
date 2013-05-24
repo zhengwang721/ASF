@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief TWI Slave driver for SAM.
+ * \brief Board configuration.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,32 +41,16 @@
  *
  */
 
-#ifndef _TWI_SLAVE_H_
-#define _TWI_SLAVE_H_
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#include "twi.h"
-#include "sysclk.h"
+/** Enable Com Port. */
+#define CONF_BOARD_UART_CONSOLE
 
-typedef Twi *twi_slave_t;
+/** Configure TWI0 pins */
+#define CONF_BOARD_TWI0
 
-static inline void twi_slave_setup(twi_slave_t p_twi, uint32_t dw_device_addr)
-{
-	if (p_twi == TWI0) {
-		sysclk_enable_peripheral_clock(ID_TWI0);
-	} else if (p_twi == TWI1) {
-		sysclk_enable_peripheral_clock(ID_TWI1);
-#if SAM4N
-	} else if (p_twi == TWI2) {
-		sysclk_enable_peripheral_clock(ID_TWI2);
-#endif
-	} else {
-		// Do Nothing
-	}
-	twi_slave_init(p_twi, dw_device_addr);
-}
+/** Uart Hw ID used by the console (UART3). */
+#define CONSOLE_UART_ID          ID_UART3
 
-#define twi_slave_enable(p_twi)  twi_enable_slave_mode(p_twi)
-
-#define twi_slave_disable(p_twi)  twi_disable_slave_mode(p_twi)
-
-#endif // _TWI_SLAVE_H_
+#endif /* CONF_BOARD_H_INCLUDED */
