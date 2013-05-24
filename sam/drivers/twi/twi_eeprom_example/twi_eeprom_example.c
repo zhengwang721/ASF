@@ -200,7 +200,7 @@ int main(void)
 	board_init();
 
 	/* Turn off LEDs */
-#if SAM3X
+#if SAM3XA
 	LED_Off(LED0_GPIO);
 	LED_Off(LED1_GPIO);
 #elif SAM4N
@@ -246,7 +246,7 @@ int main(void)
 
 	if (twi_master_init(BOARD_BASE_TWI_EEPROM, &opt) != TWI_SUCCESS) {
 		puts("-E-\tTWI master initialization failed.\r");
-#if SAM3X
+#if SAM3XA
 		LED_On(LED0_GPIO);
 		LED_On(LED1_GPIO);
 #endif
@@ -258,7 +258,7 @@ int main(void)
 	/* Send test pattern to EEPROM */
 	if (twi_master_write(BOARD_BASE_TWI_EEPROM, &packet_tx) != TWI_SUCCESS) {
 		puts("-E-\tTWI master write packet failed.\r");
-#if SAM3X
+#if SAM3XA
 		LED_On(LED0_GPIO);
 		LED_On(LED1_GPIO);
 #endif
@@ -274,7 +274,7 @@ int main(void)
 	/* Get memory from EEPROM */
 	if (twi_master_read(BOARD_BASE_TWI_EEPROM, &packet_rx) != TWI_SUCCESS) {
 		puts("-E-\tTWI master read packet failed.\r");
-#if SAM3X
+#if SAM3XA
 		LED_On(LED0_GPIO);
 		LED_On(LED1_GPIO);
 #endif
@@ -289,7 +289,7 @@ int main(void)
 		if (test_data_tx[i] != gs_uc_test_data_rx[i]) {
 			/* No match */
 			puts("Data comparison:\tUnmatched!\r");
-#if SAM3X
+#if SAM3XA
 			LED_On(LED0_GPIO);
 #endif
 			while (1) {
@@ -299,7 +299,7 @@ int main(void)
 	}
 	/* Match */
 	puts("Data comparison:\tMatched!\r");
-#if SAM3X
+#if SAM3XA
 	LED_On(LED1_GPIO);
 #elif SAM4N
 	LED_On(LED0);
