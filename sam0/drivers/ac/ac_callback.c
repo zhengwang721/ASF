@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20  TC - Timer Counter Callback Driver
+ * \brief SAM D20 AC - Analog Comparator Callback Driver
  *
  * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
@@ -41,29 +41,29 @@
  *
  */
 
-#include "tc_interrupt.h"
+#include "ac_callback.h"
 
-void *_tc_instances[TC_INST_NUM];
-
-void _tc_interrupt_handler(uint8_t instance);
+void _ac_interrupt_handler(const uint32_t instance_index);
 
 /**
  * \brief Registers a callback
  *
  * Registers a callback function which is implemented by the user.
  *
- * \note The callback must be enabled by \ref tc_enable_callback,
+ * \note The callback must be enabled by \ref ac_enable_callback,
  * in order for the interrupt handler to call it when the conditions for the
  * callback type is met.
  *
- * \param[in]     module      Pointer to TC software instance struct
+ * \param[in]     module      Pointer to software instance struct
  * \param[in]     callback_func Pointer to callback function
  * \param[in]     callback_type Callback type given by an enum
+ *
+ * \retval STATUS_OK  The function exited successfully
  */
-enum status_code tc_register_callback(
-		struct tc_module *const module,
-		tc_callback_t callback_func,
-		const enum tc_callback callback_type)
+enum status_code ac_register_callback(
+		struct ac_module *const module,
+		ac_callback_t callback_func,
+		const enum ac_callback callback_type)
 {
 	/* Sanity check arguments */
 	Assert(module);
@@ -72,117 +72,123 @@ enum status_code tc_register_callback(
 	/* Register callback function */
 	module->callback[callback_type] = callback_func;
 
-	/* Set the bit corresponding to the callback_type */
-	if (callback_type == TC_CALLBACK_CC_CHANNEL0) {
-		module->register_callback_mask |= TC_INTFLAG_MC(1);
-	}
-	else if (callback_type == TC_CALLBACK_CC_CHANNEL1) {
-		module->register_callback_mask |= TC_INTFLAG_MC(2);
-	}
-	else {
-		module->register_callback_mask |= (1 << callback_type);
-	}
+	/* Set software flag for callback */
+	module->register_callback_mask |= (1 << callback_type);
+
 	return STATUS_OK;
 }
 
 /**
  * \brief Unregisters a callback
  *
- * Unregisters a callback function implemented by the user. The callback should be 
- * disabled before it is unregistered.
+ * Unregisters a callback function implemented by the user.
  *
- * \param[in]     module Pointer to TC software instance struct
+ * \param[in]     module Pointer to AC software instance struct
  * \param[in]     callback_type Callback type given by an enum
+ *
+ * \retval STATUS_OK  The function exited successfully
  */
-enum status_code tc_unregister_callback(
-		struct tc_module *const module,
-		const enum tc_callback callback_type)
+enum status_code ac_unregister_callback(
+		struct ac_module *const module,
+		const enum ac_callback callback_type)
 {
 	/* Sanity check arguments */
 	Assert(module);
-
 	/* Unregister callback function */
 	module->callback[callback_type] = NULL;
 
-	/* Clear the bit corresponding to the callback_type */
-	if (callback_type == TC_CALLBACK_CC_CHANNEL0) {
-		module->register_callback_mask &= ~TC_INTFLAG_MC(1);
-	}
-	else if (callback_type == TC_CALLBACK_CC_CHANNEL1) {
-		module->register_callback_mask &= ~TC_INTFLAG_MC(2);
-	}
-	else {
-		module->register_callback_mask &= ~(1 << callback_type);
-	}
+	/* Clear software flag for callback */
+	module->register_callback_mask &= ~(1 << callback_type);
+
 	return STATUS_OK;
 }
 
 /**
- * \internal ISR handler for TC
- *
- * Auto-generate a set of interrupt handlers for each TC in the device
+ * \internal ISR handler for AC
  */
-#define _TC_INTERRUPT_HANDLER(n, unused) \
-		void TC##n##_Handler(void) \
+#if (AC_INST_NUM == 1)
+void AC_Handler(void) {
+	_ac_interrupt_handler(0);
+}
+#endif /* (AC_INST_NUM == 1) */
+#if (AC_INST_NUM > 1)
+#define _AC_INTERRUPT_HANDLER(n, unused) \
+		void AC##n##_Handler(void) \
 		{ \
-			_tc_interrupt_handler(n); \
+			_ac_interrupt_handler(n); \
 		}
 
-MREPEAT(TC_INST_NUM, _TC_INTERRUPT_HANDLER, ~)
+MREPEAT(AC_INST_NUM, _AC_INTERRUPT_HANDLER, ~)
+#endif /* (AC_INST_NUM > 1) */
 
 /**
- * \internal Interrupt Handler for TC module
+ * \brief Interrupt Handler for AC module
  *
  * Handles interrupts as they occur, it will run the callback functions
  * that are registered and enabled.
  *
- * \param[in]  instance  ID of the TC instance calling the interrupt
- *                       handler.
+ * \param [in] instance_index  Default value 0
  */
-void _tc_interrupt_handler(
-		uint8_t instance)
+void _ac_interrupt_handler(const uint32_t instance_index)
 {
 	/* Temporary variable */
 	uint8_t interrupt_and_callback_status_mask;
 
 	/* Get device instance from the look-up table */
-	struct tc_module *module
-			= (struct tc_module *)_tc_instances[instance];
+
+	struct ac_module *module = _ac_instance[instance_index];
 
 	/* Read and mask interrupt flag register */
-	interrupt_and_callback_status_mask = module->hw->COUNT8.INTFLAG.reg &
+	interrupt_and_callback_status_mask = _ac_instance[instance_index]->hw->INTFLAG.reg &
 			module->register_callback_mask &
 			module->enable_callback_mask;
 
-	/* Check if an Overflow interrupt has occurred */
-	if (interrupt_and_callback_status_mask & TC_INTFLAG_OVF) {
+	/* Check if comparator channel 0 needs to be serviced */
+	if (interrupt_and_callback_status_mask & AC_INTFLAG_COMP0) {
 		/* Invoke registered and enabled callback function */
-		(module->callback[TC_CALLBACK_OVERFLOW])(module);
+		(module->callback[AC_CALLBACK_COMPARATOR_0])(module);
 		/* Clear interrupt flag */
-		module->hw->COUNT8.INTFLAG.reg = TC_INTFLAG_OVF;
+		module->hw->INTFLAG.reg = AC_INTFLAG_COMP0;
 	}
 
-	/* Check if an Error interrupt has occurred */
-	if (interrupt_and_callback_status_mask & TC_INTFLAG_ERR) {
+	/* Check if comparator channel 1 needs to be serviced */
+	if (interrupt_and_callback_status_mask & AC_INTFLAG_COMP1) {
 		/* Invoke registered and enabled callback function */
-		(module->callback[TC_CALLBACK_ERROR])(module);
+		(module->callback[AC_CALLBACK_COMPARATOR_1])(module);
 		/* Clear interrupt flag */
-		module->hw->COUNT8.INTFLAG.reg = TC_INTFLAG_ERR;
+		module->hw->INTFLAG.reg = AC_INTFLAG_COMP1;
 	}
 
-	/* Check if an Match/Capture Channel 0 interrupt has occurred */
-	if (interrupt_and_callback_status_mask & TC_INTFLAG_MC(1)) {
+	/* Check if window 0 needs to be serviced */
+	if (interrupt_and_callback_status_mask & AC_INTFLAG_WIN0) {
 		/* Invoke registered and enabled callback function */
-		(module->callback[TC_CALLBACK_CC_CHANNEL0])(module);
+		(module->callback[AC_CALLBACK_WINDOW_0])(module);
 		/* Clear interrupt flag */
-		module->hw->COUNT8.INTFLAG.reg = TC_INTFLAG_MC(1);
+		module->hw->INTFLAG.reg = AC_INTFLAG_WIN0;
+	}
+#if (AC_NUM_CMP > 2)
+		/* Check if comparator channel 2 needs to be serviced */
+	if (interrupt_and_callback_status_mask & AC_INTFLAG_COMP2) {
+		/* Invoke registered and enabled callback function */
+		(module->callback[AC_CALLBACK_COMPARATOR_2])(module);
+		/* Clear interrupt flag */
+		module->hw->INTFLAG.reg = AC_INTFLAG_COMP2;
 	}
 
-	/* Check if an Match/Capture Channel 1 interrupt has occurred */
-	if (interrupt_and_callback_status_mask & TC_INTFLAG_MC(2)) {
+	/* Check if comparator channel 3 needs to be serviced */
+	if (interrupt_and_callback_status_mask & AC_INTFLAG_COMP3) {
 		/* Invoke registered and enabled callback function */
-		(module->callback[TC_CALLBACK_CC_CHANNEL1])(module);
+		(module->callback[AC_CALLBACK_COMPARATOR_3])(module);
 		/* Clear interrupt flag */
-		module->hw->COUNT8.INTFLAG.reg = TC_INTFLAG_MC(2);
+		module->hw->INTFLAG.reg = AC_INTFLAG_COMP3;
 	}
+
+		/* Check if window 1 needs to be serviced */
+	if (interrupt_and_callback_status_mask & AC_INTFLAG_WIN1) {
+		/* Invoke registered and enabled callback function */
+		(module->callback[AC_CALLBACK_WINDOW_1])(module);
+		/* Clear interrupt flag */
+		module->hw->INTFLAG.reg = AC_INTFLAG_WIN1;
+	}
+#endif /* (AC_NUM_CMP > 2) */
 }

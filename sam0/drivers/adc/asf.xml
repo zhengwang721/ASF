@@ -42,8 +42,8 @@
 			<build type="header-file" value="quick_start/qs_adc_basic.h"/>
 			<build type="header-file" value="quick_start_callback/qs_adc_callback.h"/>
 
-			<build type="doxygen-example-path" value ="quick_start_callback"/>
-			<build type="doxygen-example-path" value ="quick_start"/>
+			<build type="doxygen-example-path" value="quick_start_callback"/>
+			<build type="doxygen-example-path" value="quick_start"/>
 			<build type="doxygen-entry-point" value="asfdoc_samd20_adc_group"/>
 
 			<build type="define" name="ADC_CALLBACK_MODE" value="true"/>

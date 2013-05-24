@@ -42,8 +42,8 @@
  */
 
 /*
- * This unit test requires pin PA16 and PB31 to be connected. On the 
- * Xplained Pro this corresponds to pin EXT3_PIN_17 on the EXT3 header and 
+ * This unit test requires pin PA16 and PB31 to be connected. On the
+ * Xplained Pro this corresponds to pin EXT3_PIN_17 on the EXT3 header and
  * the pin EXT3_PIN_8 on the EXT3 header.
  */
 
@@ -71,7 +71,7 @@ bool basic_functionality_test_passed = false;
  * \internal
  * \brief Function used to test callback API
  *
- * This function indicates that the callback function has been invoked. 
+ * This function indicates that the callback function has been invoked.
  */
 static void tc_callback_function(struct tc_module *const module_inst)
 {
@@ -115,7 +115,7 @@ static void run_init_test(const struct test_case *test)
  */
 static void run_reset_32bit_master_test(const struct test_case *test)
 {
-	test_assert_true(test, 
+	test_assert_true(test,
 			tc_init_success == true,
 			"TC initialization failed, skipping test");
 
@@ -159,7 +159,7 @@ static void run_reset_32bit_master_test(const struct test_case *test)
 
 	tc_init(&tc1_module, TC1, &tc1_config);
 	tc_enable(&tc1_module);
-	
+
 	while (tc_is_syncing(&tc1_module)) {
 		/* Synchronize enable */
 	}
@@ -186,10 +186,10 @@ static void run_reset_32bit_master_test(const struct test_case *test)
  */
 static void run_basic_functionality_test(const struct test_case *test)
 {
-	test_assert_true(test, 
+	test_assert_true(test,
 			tc_init_success == true,
 			"TC initialization failed, skipping test");
-	
+
 	/* Setup TC0 */
 	tc_reset(&tc0_module);
 	tc_get_config_defaults(&tc0_config);
@@ -240,7 +240,7 @@ static void run_basic_functionality_test(const struct test_case *test)
  */
 static void run_callback_test(const struct test_case *test)
 {
-	test_assert_true(test, 
+	test_assert_true(test,
 			tc_init_success == true,
 			"TC initialization failed, skipping test");
 
@@ -279,7 +279,7 @@ static void run_callback_test(const struct test_case *test)
 	/* Test disable callback function */
 	tc_disable_callback(&tc0_module, TC_CALLBACK_CC_CHANNEL1);
 	tc_set_count_value(&tc0_module, 0x00000000);
-	
+
 	tc_enable(&tc0_module);
 
 	while ((tc_get_status(&tc0_module) & TC_STATUS_COUNT_OVERFLOW) == 0) {
@@ -305,7 +305,7 @@ static void run_callback_test(const struct test_case *test)
  */
 static void run_16bit_capture_and_compare_test(const struct test_case *test)
 {
-	test_assert_true(test, 
+	test_assert_true(test,
 			tc_init_success == true,
 			"TC initialization failed, skipping test");
 
@@ -337,9 +337,11 @@ static void run_16bit_capture_and_compare_test(const struct test_case *test)
 	tc1_config.clock_prescaler              = TC_CLOCK_PRESCALER_DIV1;
 	tc1_config.enable_capture_on_channel[0] = true;
 	tc1_config.enable_capture_on_channel[1] = true;
-	tc1_config.enable_incoming_events       = true;
 	tc1_config.event_action                 = TC_EVENT_ACTION_PPW;
 	tc_init(&tc1_module, TC1, &tc1_config);
+
+	struct tc_events tc_events = { .on_event_perform_action = true };
+	tc_enable_events(&tc1_module, &tc_events);
 
 	/* Configure external interrupt controller */
 	struct extint_chan_conf extint_chan_config;
@@ -455,7 +457,7 @@ int main(void)
 			run_reset_32bit_master_test, NULL,
 			"Setup, reset and reinitialize TC modules of a 32-bit TC");
 
-	
+
 	DEFINE_TEST_CASE(capture_and_compare_test, NULL,
 			run_16bit_capture_and_compare_test, NULL,
 			"Test capture and compare");
