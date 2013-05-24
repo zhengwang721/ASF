@@ -1472,8 +1472,7 @@ volatile void *flashcalw_memset64(volatile void *dst, uint64_t src,
 
 				/* Align the destination pointer with its 64-bit
 				 * boundary. */
-				dest.u64ptr = (uint64_t *)Align_down(
-						(uint32_t)dest.u8ptr,
+				dest.u64ptr = (uint64_t *)Align_down((uint32_t)dest.u8ptr,
 						sizeof(uint64_t));
 
 				/* If the current destination double-word is not
@@ -1481,8 +1480,7 @@ volatile void *flashcalw_memset64(volatile void *dst, uint64_t src,
 				if (dest.u64ptr < dest_end.u64ptr) {
 					/* Workaround for corrupted data after page write
 					 * operations */
-					*(volatile uint64_t*)((uint32_t)dest.u64ptr
-							- sizeof(uint64_t)) = (uint64_t)-1;
+					*(volatile uint64_t*)((uint32_t)dest.u64ptr) = (uint64_t)-1;
 					/* Write the flash double-word buffer to
 					the page buffer and reinitialize it. */
 					*dest.u64ptr++ = flash_dword.u64;
@@ -1495,7 +1493,7 @@ volatile void *flashcalw_memset64(volatile void *dst, uint64_t src,
 		 * alignment. */
 		for (i = flash_page_source_end.u64ptr - dest.u64ptr; i; i--) {
 			/* Workaround for corrupted data after page write operations */
-			*(volatile uint64_t*)((uint32_t)dest.u64ptr - sizeof(uint64_t))
+			*(volatile uint64_t*)((uint32_t)dest.u64ptr)
 					= (uint64_t)-1;
 			*dest.u64ptr++ = source.u64;
 		}
@@ -1524,8 +1522,7 @@ volatile void *flashcalw_memset64(volatile void *dst, uint64_t src,
 					}
 
 					/* Workaround for corrupted data after page write operations */
-					*(volatile uint64_t*)((uint32_t)dest.u64ptr -
-							sizeof(uint64_t)) = (uint64_t)-1;
+					*(volatile uint64_t*)((uint32_t)dest.u64ptr) = (uint64_t)-1;
 					/* Write the flash double-word buffer to
 					 * the page buffer. */
 					*dest.u64ptr++ = flash_dword.u64;
