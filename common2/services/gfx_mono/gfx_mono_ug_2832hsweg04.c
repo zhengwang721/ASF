@@ -86,6 +86,7 @@ void gfx_mono_ssd1306_init(void)
 	}
 }
 
+#ifdef CONFIG_SSD1306_FRAMEBUFFER
 /**
  * \brief Put framebuffer to LCD controller
  *
@@ -107,6 +108,7 @@ void gfx_mono_ssd1306_put_framebuffer(void)
 				GFX_MONO_LCD_WIDTH);
 	}
 }
+#endif
 
 /**
  * \brief Draw pixel to screen
