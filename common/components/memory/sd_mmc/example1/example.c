@@ -3,7 +3,7 @@
  *
  * \brief SD/MMC card example
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -68,6 +68,9 @@
  * The example outputs the information through the standard output (stdio).
  * To know the output used on the board, look in the conf_example.h file
  * and connect a terminal to the correct stdio port.
+ * 
+ * While using SAM4L Xplained Pro or SAM4L8 Xplained Pro, please attach IO1
+ * Xplained Pro extension board to EXT1.
  *
  * \section Usage
  *
@@ -159,15 +162,16 @@ static uint8_t buf_test[TEST_MEM_ACCESS_SIZE];
 //! Read and write test length of CIA in bytes
 #define TEST_CIA_SIZE           (0x16)
 
-//! Buffer for test SDIO data
-static uint8_t buf_cia[TEST_CIA_SIZE];
 //! @}
 
 static void main_display_info_card(uint8_t slot);
 static void main_test_memory(uint8_t slot);
+#ifdef SDIO_SUPPORT_ENABLE
+//! Buffer for test SDIO data
+static uint8_t buf_cia[TEST_CIA_SIZE];
 static void main_test_sdio(uint8_t slot);
 static void main_dump_buffer(uint8_t *data_buffer, uint32_t length);
-
+#endif
 /**
  * \brief Application entry point.
  *
@@ -220,12 +224,13 @@ int main(void)
 	
 		// Display basic card information
 		main_display_info_card(slot);
-	
+#ifdef SDIO_SUPPORT_ENABLE
 		/* Test the card */
 		if (sd_mmc_get_type(slot) & CARD_TYPE_SDIO) {
 			// Test CIA of SDIO card
 			main_test_sdio(slot);
 		}
+#endif
 		if (sd_mmc_get_type(slot) & (CARD_TYPE_SD | CARD_TYPE_MMC)) {
 			// SD/MMC Card R/W
 			main_test_memory(slot);
@@ -403,6 +408,7 @@ static void main_test_memory(uint8_t slot)
 	printf("[OK]\n\r");
 }
 
+#ifdef SDIO_SUPPORT_ENABLE
 /**
  * \brief Perform test on CIA (Common I/O Area) of SDIO card.
  *
@@ -526,3 +532,4 @@ static void main_dump_buffer(uint8_t *data_buffer, uint32_t length)
 	}
 	printf("\n\r");
 }
+#endif
