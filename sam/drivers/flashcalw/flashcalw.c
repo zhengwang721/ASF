@@ -1479,10 +1479,13 @@ volatile void *flashcalw_memset64(volatile void *dst, uint64_t src,
 				/* If the current destination double-word is not
 				 * the last one... */
 				if (dest.u64ptr < dest_end.u64ptr) {
+					/* Workaround for corrupted data after page write
+					 * operations */
+					*(volatile uint64_t*)((uint32_t)dest.u64ptr
+							- sizeof(uint64_t)) = (uint64_t)-1;
 					/* Write the flash double-word buffer to
 					the page buffer and reinitialize it. */
-					*dest.u32ptr++ = flash_dword.u32[0];
-					*dest.u32ptr++ = flash_dword.u32[1];
+					*dest.u64ptr++ = flash_dword.u64;
 					flash_dword.u64 = source.u64;
 				}
 			}
@@ -1491,8 +1494,10 @@ volatile void *flashcalw_memset64(volatile void *dst, uint64_t src,
 		/* Write the source data to the page buffer with 64-bit
 		 * alignment. */
 		for (i = flash_page_source_end.u64ptr - dest.u64ptr; i; i--) {
-			*dest.u32ptr++ = source.u32[0];
-			*dest.u32ptr++ = source.u32[1];
+			/* Workaround for corrupted data after page write operations */
+			*(volatile uint64_t*)((uint32_t)dest.u64ptr - sizeof(uint64_t))
+					= (uint64_t)-1;
+			*dest.u64ptr++ = source.u64;
 		}
 
 		/* If the current destination page has an incomplete end... */
@@ -1518,10 +1523,12 @@ volatile void *flashcalw_memset64(volatile void *dst, uint64_t src,
 						flash_dword.u8[i] = *tmp.u8ptr++;
 					}
 
+					/* Workaround for corrupted data after page write operations */
+					*(volatile uint64_t*)((uint32_t)dest.u64ptr -
+							sizeof(uint64_t)) = (uint64_t)-1;
 					/* Write the flash double-word buffer to
 					 * the page buffer. */
-					*dest.u32ptr++ = flash_dword.u32[0];
-					*dest.u32ptr++ = flash_dword.u32[1];
+					*dest.u64ptr++ = flash_dword.u64;
 				}
 
 				/* Fill the end of the page buffer with the
