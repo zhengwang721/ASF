@@ -1,9 +1,11 @@
+/* This source file is part of the ATMEL QTouch Library Release 5.1 */
+
 /**
  * \file
  *
- * \brief  Configuration File for events example.
+ * \brief QTouch debug settings.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,18 +43,79 @@
  *
  */
 
-#ifndef CONF_EXAMPLE_H_INCLUDED
-#define CONF_EXAMPLE_H_INCLUDED
+#ifndef QDEBUG_SETTINGS_H
+#define QDEBUG_SETTINGS_H
 
-/** PDCA ID for USART2 TX */
-#define CONF_PDCA_PID_USART_TX      20
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 
-/** Using PC08(J104.2) on SAM4L-EK to trigger an event */
-#define CONF_EXAMPLE_PIN_EVENT     PIN_PC08
+//---------- Do not edit --------------------
 
-/** Hint message on terminal */
-#define CONF_EXAMPLE_EVENT_MSG    \
-	"Connect PC08(J104.2) to GND to trigger one PAD_EVT event every time.\r\n"
+/*! \name Project Constants.
+ * \brief Values from 0xF000->0xFFFF are reserved for Atmel Kits.
+ * Values from 0x0000->0xEFFF are available for other projects.
+ */
+//! @{
 
-#endif  /* CONF_EXAMPLE_H_INCLUDED */
+#define 	QT8				0xF001
+#define 	QT16				0xF002
+#define 	QM64				0xF003
+#define 	UC3L_EK_REV2		        0xF005
+
+//! @}
+
+/*! \name Interface constants.
+ */
+//! @{
+
+#define 	TWI				1
+#define 	SPI1W				2
+#define 	SPI2W				3
+#define 	UART				4
+
+//! @}
+
+//---------- Edit Project Info -------------
+
+/*! \name Select the type of interface to use for the debug protocol.
+ * \brief Comment out the interface not used.
+ * Only one interface should be active.
+ */
+//! @{
+
+//#define QDEBUG_SPI
+//#define QDEBUG_TWI
+//#define QDEBUG_SERIAL
+//#define QDEBUG_BITBANG_SPI
+//#define QDEBUG_SPI_BB
+
+// The definitions below should not clash with the SNS/SNSK port pins
+#define QDEBUG_SPI_BB_SS_PIN        1
+#define QDEBUG_SPI_BB_SCK_PIN       7
+#define QDEBUG_SPI_BB_MOSI_PIN      8
+#define QDEBUG_SPI_BB_MISO_PIN      13
+
+#define QDEBUG_SPI_BB_SS_PORT       C
+#define QDEBUG_SPI_BB_SCK_PORT      C
+#define QDEBUG_SPI_BB_MOSI_PORT     C
+#define QDEBUG_SPI_BB_MISO_PORT     C
+
+//! @}
+
+/*! \name Set up project info.
+ */
+//! @{
+
+#define	PROJECT_ID	                0xABCD
+#define	INTERFACE			SPI2W
+
+//! @}
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif				/* QDEBUG_SETTINGS_H */
 

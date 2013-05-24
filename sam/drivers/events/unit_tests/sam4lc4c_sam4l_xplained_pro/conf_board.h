@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Chip-specific sleep manager configuration
+ * \brief  Configuration File for SAM4L Xplained Pro Board.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -40,10 +40,14 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_SLEEPMGR_INCLUDED
-#define CONF_SLEEPMGR_INCLUDED
 
-// Sleep manager options
-#define CONFIG_SLEEPMGR_ENABLE
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#endif /* CONF_SLEEPMGR_INCLUDED */
+/** Enable Com Port. */
+#define CONF_BOARD_COM_PORT
+
+/** Enable DACC Output Port */
+#define CONF_BOARD_DACC_VOUT
+
+#endif /* CONF_BOARD_H_INCLUDED */

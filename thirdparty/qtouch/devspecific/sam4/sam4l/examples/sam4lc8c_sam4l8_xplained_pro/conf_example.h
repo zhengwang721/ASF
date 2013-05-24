@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief  Configuration File for events example.
+ * \brief Example configuration.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -44,15 +44,7 @@
 #ifndef CONF_EXAMPLE_H_INCLUDED
 #define CONF_EXAMPLE_H_INCLUDED
 
-/** PDCA ID for USART2 TX */
-#define CONF_PDCA_PID_USART_TX      20
+#define EXAMPLE_UPDATE_PERIOD  (5u)
+#define EXAMPLE_KEY_ID         (0u)
 
-/** Using PC08(J104.2) on SAM4L-EK to trigger an event */
-#define CONF_EXAMPLE_PIN_EVENT     PIN_PC08
-
-/** Hint message on terminal */
-#define CONF_EXAMPLE_EVENT_MSG    \
-	"Connect PC08(J104.2) to GND to trigger one PAD_EVT event every time.\r\n"
-
-#endif  /* CONF_EXAMPLE_H_INCLUDED */
-
+#endif /* CONF_EXAMPLE_H_INCLUDED */

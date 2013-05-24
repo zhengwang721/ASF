@@ -46,8 +46,8 @@
 #ifndef CONF_AST_H_INCLUDED
 #define CONF_AST_H_INCLUDED
 
-//#define AST_PER_ENABLE
-#define AST_ALARM_ENABLE
+#define AST_PER_ENABLE
+//#define AST_ALARM_ENABLE
 // #define AST_OVF_ENABLE
 // #define AST_READY_ENABLE
 // #define AST_CLKREADY_ENABLE

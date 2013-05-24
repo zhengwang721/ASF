@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief  Configuration File for events example.
+ * \brief AST configuration.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -41,18 +41,15 @@
  *
  */
 
-#ifndef CONF_EXAMPLE_H_INCLUDED
-#define CONF_EXAMPLE_H_INCLUDED
+//! Configuration of the AST driver
 
-/** PDCA ID for USART2 TX */
-#define CONF_PDCA_PID_USART_TX      20
+#ifndef CONF_AST_H_INCLUDED
+#define CONF_AST_H_INCLUDED
 
-/** Using PC08(J104.2) on SAM4L-EK to trigger an event */
-#define CONF_EXAMPLE_PIN_EVENT     PIN_PC08
+#define AST_PER_ENABLE
+// #define AST_ALARM_ENABLE
+// #define AST_OVF_ENABLE
+// #define AST_READY_ENABLE
+// #define AST_CLKREADY_ENABLE
 
-/** Hint message on terminal */
-#define CONF_EXAMPLE_EVENT_MSG    \
-	"Connect PC08(J104.2) to GND to trigger one PAD_EVT event every time.\r\n"
-
-#endif  /* CONF_EXAMPLE_H_INCLUDED */
-
+#endif /* CONF_AST_H_INCLUDED */

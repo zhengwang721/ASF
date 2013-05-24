@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief  Configuration File for events example.
+ * \brief Unit test configuration.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -41,18 +41,23 @@
  *
  */
 
-#ifndef CONF_EXAMPLE_H_INCLUDED
-#define CONF_EXAMPLE_H_INCLUDED
+#ifndef CONF_TEST_H
+#define CONF_TEST_H
 
-/** PDCA ID for USART2 TX */
-#define CONF_PDCA_PID_USART_TX      20
+/** USART Interface  : Console UART */
+#define CONF_TEST_USART      USART1
+/** Baudrate setting : 115200 */
+#define CONF_TEST_BAUDRATE   115200
+/** Char setting     : 8-bit character length (don't care for UART) */
+#define CONF_TEST_CHARLENGTH   US_MR_CHRL_8_BIT
+/** Parity setting   : No parity check */
+#define CONF_TEST_PARITY     US_MR_PAR_NO
+/** Stopbit setting  : No extra stopbit, i.e., use 1 (don't care for UART) */
+#define CONF_TEST_STOPBITS   US_MR_NBSTOP_1_BIT
 
-/** Using PC08(J104.2) on SAM4L-EK to trigger an event */
-#define CONF_EXAMPLE_PIN_EVENT     PIN_PC08
+/** Generator ID for the test */
+#define CONF_TEST_GEN_ID     PEVC_ID_GEN_AST_2
+/** User ID for the test */
+#define CONF_TEST_USER_ID    PEVC_ID_USER_DACC_CONV
 
-/** Hint message on terminal */
-#define CONF_EXAMPLE_EVENT_MSG    \
-	"Connect PC08(J104.2) to GND to trigger one PAD_EVT event every time.\r\n"
-
-#endif  /* CONF_EXAMPLE_H_INCLUDED */
-
+#endif /* CONF_TEST_H_INCLUDED */
