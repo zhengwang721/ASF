@@ -45,7 +45,7 @@
 #define PARC_H_INCLUDED
 
 #include "compiler.h"
-
+#include "status_codes.h"
 /// @cond 0
 /**INDENT-OFF**/
 #ifdef __cplusplus
@@ -54,10 +54,7 @@ extern "C" {
 /**INDENT-ON**/
 /// @endcond
 
-#if PARC_CALLBACK_MODE == true
-extern struct adc_module *adc_module_instance;
 
-#endif
 /**
  * \defgroup group_sam_drivers_parc PARC - Parallel Capture
  *
@@ -66,6 +63,16 @@ extern struct adc_module *adc_module_instance;
  *
  * \{
  */
+#if PARC_CALLBACK_MODE == true
+
+extern struct parc_module *parc_module_instance;
+/**
+ * \name Callback Management
+ * {@
+ */
+struct parc_module;
+typedef void (*parc_callback_t)(const struct parc_module *const module_inst);
+#endif
 
 /**
  * \brief Sampling Edge
@@ -146,10 +153,10 @@ enum parc_interrupt_source {
  *
  */
 enum parc_status {
-	PARC_STATUS_EN = PARC_SR_EN;
-	PARC_STATUS_CS = PARC_SR_CS;
-	PARC_STATUS_DRDY = PARC_SR_DRDY;
-	PARC_STATUS_OVR = PARC_SR_OVR;
+	PARC_STATUS_EN = PARC_SR_EN,
+	PARC_STATUS_CS = PARC_SR_CS,
+	PARC_STATUS_DRDY = PARC_SR_DRDY,
+	PARC_STATUS_OVR = PARC_SR_OVR,
 };
 
 #if PARC_CALLBACK_MODE == true
@@ -162,7 +169,7 @@ enum parc_callback {
 	PARC_CALLBACK_DRDY,
 	PARC_CALLBACK_OVR,
 	PARC_CALLBACK_N,
-}
+};
 #endif
 /**
  * \brief PARC configuration structure
@@ -219,7 +226,7 @@ struct parc_module {
 	/** Bit mask for callbacks enabled */
 	uint8_t enabled_callback_mask;
 #endif
-}
+};
 
 /**
  * \brief Initializes the PARC
@@ -333,38 +340,6 @@ static inline enum status_code parc_disable(
 }
 
 /**
- * \brief Reads the PARC result
- *
- * Reads the result from an PARC conversion that was previously started.
- *
- * \param[in]  module_inst  Pointer to the PARC software instance struct
- * \param[out] data         Pointer to store the captured data in. Captured
- *                          data size is configured through parc_config.
- *
- * \return Status of the PARC read request.
- * \retval STATUS_OK    The result was retrieved successfully
- * \retval STATUS_BUSY  A captured data was not ready
- */
-static inline enum status_code parc_read(struct parc_module *const module_inst,
-		const uint32_t *data)
-{
-	Assert(module_inst);
-	Assert(module_inst->hw);
-	Assert(data);
-
-	if(!(parc_get_status(module_inst) & PARC_SR_DRDY)){
-		/* Captured data not ready*/
-		return STATUS_BUSY.
-	}
-
-	Parc *const parc_module_hw = module_inst->hw;
-	*data = parc_module_hw->PARC_RHR;
-
-	parc_clear_status(module_inst, PARC_STATUS_DRDY);
-	return STATUS_OK;
-}
-
-/**
  * \brief Start an PARC conversion
  *
  * Start PARC capture.
@@ -379,7 +354,7 @@ static inline void parc_start_capture(
 
 	Parc *const parc_module_hw = module_inst->hw;
 
-	parc_module_hw->CR = PARC_CR_START;
+	parc_module_hw->PARC_CR = PARC_CR_START;
 }
 
 /**
@@ -430,7 +405,7 @@ static inline uint32_t parc_get_status(struct parc_module *const module_inst)
 static inline bool parc_is_data_ready(struct parc_module *const module_inst)
 {
 	Parc *const parc_module_hw = module_inst->hw;
-	return (parc_module_hw->PARC_SR & PARC_SR_DRDY) != 0);
+	return ((parc_module_hw->PARC_SR & PARC_SR_DRDY) != 0);
 }
 
 /**
@@ -464,7 +439,41 @@ static inline enum status_code parc_clear_status(
 	}
 
 	/*clear interrupt flags*/
-	parc_module_hw->ICR = int_flags;
+	parc_module_hw->PARC_ICR = int_flags;
+	
+	return STATUS_OK;
+}
+
+/**
+ * \brief Reads the PARC result
+ *
+ * Reads the result from an PARC conversion that was previously started.
+ *
+ * \param[in]  module_inst  Pointer to the PARC software instance struct
+ * \param[out] data         Pointer to store the captured data in. Captured
+ *                          data size is configured through parc_config.
+ *
+ * \return Status of the PARC read request.
+ * \retval STATUS_OK    The result was retrieved successfully
+ * \retval STATUS_ERR_BUSY  A captured data was not ready
+ */
+static inline enum status_code parc_read(struct parc_module *const module_inst,
+		uint32_t *data)
+{
+	Assert(module_inst);
+	Assert(module_inst->hw);
+	Assert(data);
+
+	if(!(parc_get_status(module_inst) & PARC_SR_DRDY)){
+		/* Captured data not ready*/
+		return STATUS_ERR_BUSY;
+	}
+
+	Parc *const parc_module_hw = module_inst->hw;
+	*data = parc_module_hw->PARC_RHR;
+
+	parc_clear_status(module_inst, PARC_STATUS_DRDY);
+	return STATUS_OK;
 }
 
 #if PARC_CALLBACK_MODE == true
@@ -476,7 +485,7 @@ static inline enum status_code parc_clear_status(
  * \param[in] module_inst Pointer to the PARC software instance struct
  * \param[in] source Interrupt source to enable
  */
-static inline void parc_enable_interrupts(struct parc_module *const module,
+static inline void parc_enable_interrupts(struct parc_module *const module_inst,
 	enum parc_interrupt_source source)
 {
 	/* Sanity check arguments*/
@@ -485,7 +494,7 @@ static inline void parc_enable_interrupts(struct parc_module *const module,
 
 	Parc *const parc_module_hw = module_inst->hw;
 
-	parc_module_hw->IER = source;
+	parc_module_hw->PARC_IER = source;
 }
 /**
  * \brief Disable interrupt
@@ -495,7 +504,7 @@ static inline void parc_enable_interrupts(struct parc_module *const module,
  * \param[in] module_inst Pointer to the PARC software instance struct
  * \param[in] source Interrupt source to disable
  */
-static inline void parc_disable_interrupts(struct parc_module *const module,
+static inline void parc_disable_interrupts(struct parc_module *const module_inst,
 	enum parc_interrupt_source source)
 {
 	/* Sanity check arguments*/
@@ -504,7 +513,7 @@ static inline void parc_disable_interrupts(struct parc_module *const module,
 
 	Parc *const parc_module_hw = module_inst->hw;
 
-	parc_module_hw->IDR = source;
+	parc_module_hw->PARC_IDR = source;
 }
 
 /**

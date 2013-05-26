@@ -63,12 +63,7 @@ enum parc_callback_type {
 	PARC_CALLBACK_OVERRUN
 };
 
-/**
- * \name Callback Management
- * {@
- */
 
-typedef void (*parc_callback_t)(struct parc_module *const module_inst);
 
 /**
  * \brief Register callback function
@@ -86,11 +81,11 @@ typedef void (*parc_callback_t)(struct parc_module *const module_inst);
  *
  */
 enum status_code parc_register_callback(
-	struct parc_module *const module_inst;
+	struct parc_module *const module_inst,
 	parc_callback_t *const callback_function,
 	enum parc_callback_type type);
 
-	/**
+/**
  * \brief Unregister callback function
  *
  * Unregister the callback function.
@@ -105,7 +100,7 @@ enum status_code parc_register_callback(
  *
  */
 enum status_code parc_unregister_callback(
-	struct parc_module *const module_inst;
+	struct parc_module *const module_inst,
 	enum parc_callback_type type);
 /**
  * \brief Enables callback
@@ -124,14 +119,14 @@ enum status_code parc_unregister_callback(
  *
  */
 static inline enum status_code parc_enable_callback(
-	struct parc_module *const module_inst;
+	struct parc_module *const module_inst,
 	enum parc_callback_type type)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
 
 	/* Enable callback */
-	module_inst->enabled_callback_mask |= (1 << callback_type);
+	module_inst->enabled_callback_mask |= (1 << type);
 		
 	return STATUS_OK;
 }
@@ -152,14 +147,14 @@ static inline enum status_code parc_enable_callback(
  *
  */
 static inline enum status_code parc_disable_callback(
-	struct parc_module *const module_inst;
+	struct parc_module *const module_inst,
 	enum parc_callback_type type)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
 
 	/* Disable callback */
-	module_inst->enabled_callback_mask &= ~(1 << callback_type);
+	module_inst->enabled_callback_mask &= ~(1 << type);
 
 	return STATUS_OK;
 }

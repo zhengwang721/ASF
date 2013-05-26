@@ -92,6 +92,7 @@
 #include "conf_clock.h"
 #include "conf_example.h"
 #include "ioport.h"
+#include <sysclk.h>
 //#include "parc.h"     
 /** Size of the receive buffer used by the PDCA, in bytes. */
 #define BUFFER_SIZE         100
@@ -158,7 +159,7 @@ pdca_channel_config_t PDCA_TX_OPTIONS = {
  * \brief Interrupt handler for USART. Echo the bytes received and start the
  * next receive.
  */
-void USART2_Handler(void)
+void USART_Handler(void)
 {
 	uint32_t ul_status;
 
@@ -205,29 +206,46 @@ static volatile void PARC_input(uint8_t data)
     
     
     int8_t i = 0;
-    for(;i<4;i++)
-    {
-        pin = PIN_PB08 + i;
-        if(data & 0x01)
-        {
-            ioport_set_pin_level(pin,IOPORT_PIN_LEVEL_HIGH);
-        }else{
-            ioport_set_pin_level(pin,IOPORT_PIN_LEVEL_LOW);
-        }
-        data = data >> 1;
-    }
-    
-    for(;i<8;i++)
-    {
-           pin = PIN_PC15 + i - 4;
-        if(data & 0x01)
-        {
-            ioport_set_pin_level(pin,IOPORT_PIN_LEVEL_HIGH);
-        }else{
-            ioport_set_pin_level(pin,IOPORT_PIN_LEVEL_LOW);
-        }
-        data = data >> 1;
-    }
+	for(;i<8;i++)
+	{
+		pin = PIN_PC00+i;
+		if(pin == PIN_PC05)
+		{
+			data = data >> 1;
+
+		}
+		        if(data & 0x01)
+		        {
+			        ioport_set_pin_level(pin,IOPORT_PIN_LEVEL_HIGH);
+			        }else{
+			        ioport_set_pin_level(pin,IOPORT_PIN_LEVEL_LOW);
+		        }
+		        data = data >> 1;
+		
+	}
+    //for(;i<4;i++)
+    //{
+        //pin = PIN_PB08 + i;
+        //if(data & 0x01)
+        //{
+            //ioport_set_pin_level(pin,IOPORT_PIN_LEVEL_HIGH);
+        //}else{
+            //ioport_set_pin_level(pin,IOPORT_PIN_LEVEL_LOW);
+        //}
+        //data = data >> 1;
+    //}
+    //
+    //for(;i<8;i++)
+    //{
+           //pin = PIN_PC15 + i - 4;
+        //if(data & 0x01)
+        //{
+            //ioport_set_pin_level(pin,IOPORT_PIN_LEVEL_HIGH);
+        //}else{
+            //ioport_set_pin_level(pin,IOPORT_PIN_LEVEL_LOW);
+        //}
+        //data = data >> 1;
+    //}
 }
 /**
  * \brief Interrupt handler for TC00. Record the number of bytes received,
@@ -323,6 +341,27 @@ static void PDCA_PARC_handler(enum pdca_channel_status status)
      switching = !switching;
 }
 
+void parallel_port_source_simulation_config()
+{
+ioport_set_pin_dir(PIN_PA06, IOPORT_DIR_OUTPUT);
+ioport_set_pin_level(PIN_PA06,IOPORT_PIN_LEVEL_HIGH);
+ioport_set_pin_dir(PIN_PC01, IOPORT_DIR_OUTPUT);
+ioport_set_pin_level(PIN_PC01,IOPORT_PIN_LEVEL_HIGH);
+ioport_set_pin_dir(PIN_PC02, IOPORT_DIR_OUTPUT);
+ioport_set_pin_level(PIN_PC02,IOPORT_PIN_LEVEL_HIGH);
+ioport_set_pin_dir(PIN_PC03, IOPORT_DIR_OUTPUT);
+ioport_set_pin_level(PIN_PC03,IOPORT_PIN_LEVEL_HIGH);
+ioport_set_pin_dir(PIN_PC04, IOPORT_DIR_OUTPUT);
+ioport_set_pin_level(PIN_PC04,IOPORT_PIN_LEVEL_HIGH);
+ioport_set_pin_dir(PIN_PC05, IOPORT_DIR_OUTPUT);
+ioport_set_pin_level(PIN_PC05,IOPORT_PIN_LEVEL_HIGH);
+ioport_set_pin_dir(PIN_PC06, IOPORT_DIR_OUTPUT);
+ioport_set_pin_level(PIN_PC06,IOPORT_PIN_LEVEL_HIGH);
+ioport_set_pin_dir(PIN_PC17, IOPORT_DIR_OUTPUT);
+ioport_set_pin_level(PIN_PC17,IOPORT_PIN_LEVEL_HIGH);
+ioport_set_pin_dir(PIN_PC18, IOPORT_DIR_OUTPUT);
+ioport_set_pin_level(PIN_PC18,IOPORT_PIN_LEVEL_HIGH);
+}
 
 /**
  * \brief Application entry point for usart_serial example.
@@ -341,8 +380,10 @@ int main(void)
 	/* Configure UART for debug message output. */
 	configure_console();
 
+//pmc_enable_periph_clk(ID_PARC);
+sysclk_enable_peripheral_clock(PARC);
 	struct parc_module module_inst;
-	struct parc_confg config;
+	struct parc_config config;
 	/* PARC config */
 	parc_get_config_defaults(&config);
 	parc_init(&module_inst, PARC, &config);

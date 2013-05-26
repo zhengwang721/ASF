@@ -42,37 +42,37 @@
  */
 
 #include "parc.h"
+#include "parc_callback.h"
 #include "sysclk.h"
 #include "conf_parc.h"
 
-struct adc_module *adc_module_instance;
-void _parc_interrupt_handler(uint8_t instance);
+struct parc_module *parc_module_instance;
+void _parc_interrupt_handler(void);
 
 void PARC_Handler(void)
 {
-	_parc_interrupt_handler(0);
+	_parc_interrupt_handler();
 }
 
 
 void _parc_interrupt_handler()
 {
-	struct parc_module *module = adc_module_instance;
+	struct parc_module *module = parc_module_instance;
 
 	/* get interrupt flags and mask out enabled callbacks */
-	uint32_t flags = module->hw->SR;
+	uint32_t flags = module->hw->PARC_SR;
 
 	if (flags & PARC_INTERRUPT_DRDY) {
 				if(module->enabled_callback_mask & (1 << PARC_CALLBACK_DRDY)) {
-					(*(module->callback[ADC_CALLBACK_READ_BUFFER]))(module);
+					(*(module->callback[PARC_CALLBACK_DRDY]))(module);
 				}
 			}
-		}
-	}
+		
 
 	if (flags & PARC_INTERRUPT_DRDY) {
-		module->hw->INTFLAG.reg = ADC_INTFLAG_OVERRUN;
-		if(module->enabled_callback_mask & (1 << ADC_CALLBACK_ERROR)) {
-			(*(module->callback[ADC_CALLBACK_ERROR]))(module);
+		//module->hw->INTFLAG.reg = ADC_INTFLAG_OVERRUN;
+		if(module->enabled_callback_mask & (1 << PARC_CALLBACK_OVERRUN)) {
+			(*(module->callback[PARC_CALLBACK_OVERRUN]))(module);
 		}
 	}
 }
