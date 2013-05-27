@@ -7,7 +7,7 @@
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="I/O" />
-			<keyword value="Analog Comparator"/>
+			<keyword value="Analog Conversion"/>
 		</info>
 
 		<module caption="AC - Analog Comparator" id="sam0.drivers.ac#polled" type="driver">
