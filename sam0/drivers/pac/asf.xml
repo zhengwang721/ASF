@@ -12,6 +12,17 @@
 		</info>
 
 		<info type="appnote" value="AT03229"/>
+		<info type="keyword" value="pdf">
+			<keyword value="PAC"/>
+			<keyword value="Peripheral Access Controller"/>
+			<keyword value="security"/>
+			<keyword value="lock"/>
+		</info>
+
+		<info type="description" value="pdf">
+			This document describes how to use the Peripheral Access Controller
+			on the SAM D20, both the ASF driver and the peripheral itself.
+		</info>
 
 		<build type="include-path" value="."/>
 		<build type="c-source" value="pac.c"/>
@@ -20,7 +31,7 @@
 
 		<build type="header-file" value="quick_start/qs_pac_basic.h"/>
 
-		<build type="doxygen-entry-point" value="asfdoc_samd20_pac_group "/>
+		<build type="doxygen-entry-point" value="asfdoc_samd20_pac_group"/>
 		<build type="doxygen-example-path" value="quick_start"/>
 
 		<device-support value="samd20"/>
