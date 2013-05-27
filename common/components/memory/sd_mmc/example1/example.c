@@ -166,12 +166,12 @@ static uint8_t buf_test[TEST_MEM_ACCESS_SIZE];
 
 static void main_display_info_card(uint8_t slot);
 static void main_test_memory(uint8_t slot);
-#ifdef SDIO_SUPPORT_ENABLE
+
 //! Buffer for test SDIO data
 static uint8_t buf_cia[TEST_CIA_SIZE];
 static void main_test_sdio(uint8_t slot);
 static void main_dump_buffer(uint8_t *data_buffer, uint32_t length);
-#endif
+
 /**
  * \brief Application entry point.
  *
@@ -224,13 +224,12 @@ int main(void)
 	
 		// Display basic card information
 		main_display_info_card(slot);
-#ifdef SDIO_SUPPORT_ENABLE
 		/* Test the card */
 		if (sd_mmc_get_type(slot) & CARD_TYPE_SDIO) {
 			// Test CIA of SDIO card
 			main_test_sdio(slot);
 		}
-#endif
+
 		if (sd_mmc_get_type(slot) & (CARD_TYPE_SD | CARD_TYPE_MMC)) {
 			// SD/MMC Card R/W
 			main_test_memory(slot);
@@ -408,7 +407,6 @@ static void main_test_memory(uint8_t slot)
 	printf("[OK]\n\r");
 }
 
-#ifdef SDIO_SUPPORT_ENABLE
 /**
  * \brief Perform test on CIA (Common I/O Area) of SDIO card.
  *
@@ -532,4 +530,3 @@ static void main_dump_buffer(uint8_t *data_buffer, uint32_t length)
 	}
 	printf("\n\r");
 }
-#endif
