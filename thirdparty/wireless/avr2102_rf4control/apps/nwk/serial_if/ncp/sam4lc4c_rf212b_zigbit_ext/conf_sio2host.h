@@ -43,7 +43,6 @@
 #ifndef CONF_SIO2HOST_H_INCLUDED
 #define CONF_SIO2HOST_H_INCLUDED
 
-
 /** USART Interface */
 #define USART_HOST                 USART1
 /** Baudrate setting */
@@ -59,8 +58,8 @@
 
 #define USART_HOST_IRQn            USART1_IRQn
 
-#define USART_HOST_RX_ISR_ENABLE() usart_enable_interrupt(USART_HOST, US_IER_RXRDY);\
-								   NVIC_EnableIRQ(USART_HOST_IRQn);
-
+#define USART_HOST_RX_ISR_ENABLE() usart_enable_interrupt(USART_HOST, \
+		US_IER_RXRDY); \
+	NVIC_EnableIRQ(USART_HOST_IRQn);
 
 #endif /* CONF_SIO2HOST_H_INCLUDED */

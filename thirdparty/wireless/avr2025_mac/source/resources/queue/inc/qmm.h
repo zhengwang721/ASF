@@ -39,6 +39,7 @@
  *
  * \asf_license_stop
  */
+
 /*
  * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
@@ -61,9 +62,7 @@
  *  @{
  */
 
-
 /* === Macros ============================================================== */
-
 
 /* === Types =============================================================== */
 
@@ -72,13 +71,13 @@
  */
 typedef struct
 #if !defined(__DOXYGEN__)
-search_tag
+		search_tag
 #endif
 {
-    /** Pointer to search criteria function */
-    uint8_t (*criteria_func)(void *buf, void *handle);
-    /** Handle to callbck parameter */
-    void *handle;
+	/** Pointer to search criteria function */
+	uint8_t (*criteria_func)(void *buf, void *handle);
+	/** Handle to callbck parameter */
+	void *handle;
 } search_t;
 
 /**
@@ -91,29 +90,31 @@ search_tag
  */
 typedef struct
 #if !defined(__DOXYGEN__)
-queue_tag
+		queue_tag
 #endif
 {
-    /** Pointer to head of queue */
-    buffer_t *head;
-    /** Pointer to tail of queue */
-    buffer_t *tail;
+	/** Pointer to head of queue */
+	buffer_t *head;
+	/** Pointer to tail of queue */
+	buffer_t *tail;
 #ifdef ENABLE_QUEUE_CAPACITY
-    /**
-     * Maximum number of buffers that can be accomodated in the current queue
-     * Note: This is only required if the queue capacity shall be different
-     * from 255.
-     */
-    uint8_t capacity;
+
+	/**
+	 * Maximum number of buffers that can be accomodated in the current
+	 *queue
+	 * Note: This is only required if the queue capacity shall be different
+	 * from 255.
+	 */
+	uint8_t capacity;
 #endif  /* ENABLE_QUEUE_CAPACITY */
-    /**
-     * Number of buffers present in the current queue
-     */
-    uint8_t size;
+
+	/**
+	 * Number of buffers present in the current queue
+	 */
+	uint8_t size;
 } queue_t;
 
 /* === Externals =========================================================== */
-
 
 /* === Prototypes ========================================================== */
 
@@ -133,9 +134,12 @@ extern "C"
  */
 #ifdef ENABLE_QUEUE_CAPACITY
 void qmm_queue_init(queue_t *q, uint8_t capacity);
+
 #else
 void qmm_queue_init(queue_t *q);
+
 #endif  /* ENABLE_QUEUE_CAPACITY */
+
 /**
  * @brief Appends a buffer into the queue.
  *
@@ -150,8 +154,10 @@ void qmm_queue_init(queue_t *q);
  */
 #ifdef ENABLE_QUEUE_CAPACITY
 retval_t qmm_queue_append(queue_t *q, buffer_t *buf);
+
 #else
 void qmm_queue_append(queue_t *q, buffer_t *buf);
+
 #endif  /* ENABLE_QUEUE_CAPACITY */
 
 /**
@@ -200,7 +206,7 @@ void qmm_queue_flush(queue_t *q);
 } /* extern "C" */
 #endif
 
-//! @}
+/* ! @} */
 #endif /* QMM_INTERFACE_H */
 
- /* EOF */
+/* EOF */
