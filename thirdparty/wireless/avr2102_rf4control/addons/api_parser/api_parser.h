@@ -39,6 +39,7 @@
  *
  * \asf_license_stop
  */
+
 /*
  * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
@@ -59,32 +60,34 @@
 
 /* === Prototypes =========================================================== */
 
- /** \page api RF4Control API Parser 
-  *    - \ref group_api_parser_rf4ce
-  */
-  
- /**
-  * \defgroup group_api_parser_rf4ce RF4Control API Parser Module
-  * This module is responsible for encoding and decoding the serial bytes to/from NCP into NWK or ZRC APIs to provide seamless working for application similar to stack running in same processor or on 
-  * NCP.
-  * @{
-  */
+/** \page api RF4Control API Parser
+ *    - \ref group_api_parser_rf4ce
+ */
+
+/**
+ * \defgroup group_api_parser_rf4ce RF4Control API Parser Module
+ * This module is responsible for encoding and decoding the serial bytes to/from
+ *NCP into NWK or ZRC APIs to provide seamless working for application similar
+ *to stack running in same processor or on
+ * NCP.
+ * @{
+ */
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-    void serial_api_init(void);
-    bool nwk_task(void);
+void serial_api_init(void);
+bool nwk_task(void);
+
 #define RF4CONTROL_PID                         (2)
 
 /* MAC Protocol Identifier Length */
 #define RF4CONTROL_PID_LEN                     (1)
 
-
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
 #endif /* SERIAL_API_H */
-//! @}
+/* ! @} */
 /* EOF */

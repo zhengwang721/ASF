@@ -43,8 +43,4 @@
 #ifndef CONF_TC_TIMEOUT_H
 #define CONF_TC_TIMEOUT_H
 
-
-
-
-
 #endif /* CONF_TC_TIMEOUT_H */

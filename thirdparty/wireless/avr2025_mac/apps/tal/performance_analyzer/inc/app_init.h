@@ -40,6 +40,7 @@
  *
  * \asf_license_stop
  */
+
 /*
  * Copyright (c) 2012, Atmel Corporation All rights reserved.
  *
@@ -52,9 +53,11 @@
 # include "tal.h"
 #include "string.h"
 # include "app_config.h"
+
 /**
  * \defgroup group_perf_analyzer Performance Analyzer Application
- * This  application Performance Analyzer  is a Serial interface based application,
+ * This  application Performance Analyzer  is a Serial interface based
+ *application,
  * which communicates with Wireless Analyzer to demonstrate various features and
  * capabilities of Atmel Transceivers
  *
@@ -68,44 +71,42 @@
  */
 /* === Includes ============================================================= */
 
-
 /* === Macros =============================================================== */
 
 /* === Types ================================================================ */
 /* Main states */
-typedef enum
-{
-    INIT = 0,
-    WAIT_FOR_EVENT,
-    PEER_SEARCH_RANGE_TX,
-    PEER_SEARCH_PER_TX,
-    PEER_SEARCH_RANGE_RX,
-    PEER_SEARCH_PER_RX,
-    RANGE_TEST_TX_ON,
-    RANGE_TEST_TX_OFF,
-    SINGLE_NODE_TESTS,
-    PER_TEST_INITIATOR,
-    PER_TEST_RECEPTOR,
-    NUM_MAIN_STATES
+typedef enum {
+	INIT = 0,
+	WAIT_FOR_EVENT,
+	PEER_SEARCH_RANGE_TX,
+	PEER_SEARCH_PER_TX,
+	PEER_SEARCH_RANGE_RX,
+	PEER_SEARCH_PER_RX,
+	RANGE_TEST_TX_ON,
+	RANGE_TEST_TX_OFF,
+	SINGLE_NODE_TESTS,
+	PER_TEST_INITIATOR,
+	PER_TEST_RECEPTOR,
+	NUM_MAIN_STATES
 } main_state_t;
 
 /**
  * \brief Structure to holds the information base for the node
  *
  */
-typedef struct
-{
-    bool configure_mode;
-    bool peer_found;
-    uint8_t sub_state;
-    uint8_t transmitting ;
-    uint8_t msg_seq_num;
-    uint16_t peer_short_addr;
-    frame_info_t *tx_frame_info;
-    main_state_t main_state;
+typedef struct {
+	bool configure_mode;
+	bool peer_found;
+	uint8_t sub_state;
+	uint8_t transmitting;
+	uint8_t msg_seq_num;
+	uint16_t peer_short_addr;
+	frame_info_t *tx_frame_info;
+	main_state_t main_state;
 } node_ib_t;
 
 /* State change functions */
+
 /**
  * \brief Function to set the main state of state machine
  *
@@ -114,7 +115,6 @@ typedef struct
  */
 
 void set_main_state(main_state_t state, void *arg);
-
 
 /* Application Alert to indicate something has gone wrong */
 
@@ -153,7 +153,6 @@ void wait_for_event_init(void *arg);
  */
 void wait_for_event_task(void);
 
-
 /**
  * \brief Callback that is called if data has been received by trx
  * in WAIT_FOR_EVENT state. This allow the node to participate in
@@ -167,7 +166,6 @@ extern uint8_t T_APP_TIMER;
 extern uint8_t APP_TIMER_TO_TX;
 extern uint8_t APP_TIMER_TO_TX_LED_OFF;
 extern uint8_t APP_TIMER_TO_RX_LED_OFF;
-
 
 /* === Externals ============================================================ */
 
@@ -184,17 +182,17 @@ extern volatile node_ib_t node_info;
  * \param payload_length    data length
  * \param ack_req           specifies ack requested for frame if set to 1
  *
- * \return MAC_SUCCESS      if the TAL has accepted the data for frame transmission
+ * \return MAC_SUCCESS      if the TAL has accepted the data for frame
+ *transmission
  *         TAL_BUSY         if the TAL is busy servicing the previous tx request
  */
 extern retval_t transmit_frame( uint8_t dst_addr_mode,
-                                uint8_t *dst_addr,
-                                uint8_t src_addr_mode,
-                                uint8_t msdu_handle,
-                                uint8_t *payload,
-                                uint8_t payload_length,
-                                uint8_t ack_req);
-
+		uint8_t *dst_addr,
+		uint8_t src_addr_mode,
+		uint8_t msdu_handle,
+		uint8_t *payload,
+		uint8_t payload_length,
+		uint8_t ack_req);
 
 #ifdef __cplusplus
 extern "C" {
@@ -204,7 +202,7 @@ extern "C" {
 } /* extern "C" */
 #endif
 
-//! \}
+/* ! \} */
 
 #endif /* APP_STATE_H */
 /* EOF */

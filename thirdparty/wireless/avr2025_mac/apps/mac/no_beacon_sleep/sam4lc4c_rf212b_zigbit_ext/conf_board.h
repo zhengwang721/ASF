@@ -50,29 +50,27 @@
 
 #if (defined __GNUC__)
 
-int __attribute__((weak))
-_read (int file, char * ptr, int len); // Remove GCC compiler warning
+int __attribute__((weak)) _read(int file, char *ptr, int len); /* Remove GCC
+                                                                * compiler
+                                                                * warning */
 
-int __attribute__((weak))
-_read (int file, char * ptr, int len)
+int __attribute__((weak)) _read(int file, char *ptr, int len)
 {
-file=file; 
-ptr=ptr;
-len=len;
-return 0;
-}
-
-
-int __attribute__((weak))
-_write (int file, const char *ptr, int len);
-
-int __attribute__((weak))
-_write (int file, const char *ptr, int len)
-{
-	file=file;
-	ptr=ptr;
-	len=len;	
+	file = file;
+	ptr = ptr;
+	len = len;
 	return 0;
 }
+
+int __attribute__((weak)) _write(int file, const char *ptr, int len);
+
+int __attribute__((weak)) _write(int file, const char *ptr, int len)
+{
+	file = file;
+	ptr = ptr;
+	len = len;
+	return 0;
+}
+
 #endif
 #endif  /* CONF_BOARD_H_INCLUDED */

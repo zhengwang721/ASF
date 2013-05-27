@@ -1,7 +1,7 @@
 /**
  * \file main.c
  *
- * \brief MAC Serial Interface Application 
+ * \brief MAC Serial Interface Application
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -39,31 +39,43 @@
  *
  * \asf_license_stop
  */
- 
+
 /**
  * \mainpage
  * \section preface Preface
  * This is the reference manual for the MAC Serial Interface Application
  * \section main_files Application Files
- * 	- main.c                 Application main file.
+ *      - main.c                 Application main file.
  * \section intro Application Introduction
  * The Serial Interface Application can be used for two purposes .
- *	 1. For Performing Serial based Interop and Compliance Tests for the MAC Stack and by selecting any of the four configurations
- * 		- Beacon FFD
- * 		- Beacon RFD
- * 		- No-Beacon FFD
- * 		- No-Beacon RFD
- *	2. On the other hand it can be used for Running MAC Applications eg.MAC Beacon/No Beacon Application for Two-Processor Boards.
- * 	Following are the Four approaches by which a MAC Application can be run.
- *		- Approach-1:Running Beacon/No beacon/ No beacon Sleep application on a single processor platform(Eg.Xmega-a3bu-xplained or uc3-rz600 ,
- *    	 Xmega Zigit-usb,RFR2 Xplained Pro)
- *		- Approach 2: Running Beacon/No beacon application for 2p-approach ,with ncp image(Serial-if(Beacon FFD for Beacon App and NoBeacon FFD for NoBeacon App)(MAC Stack)) flashed in NCP board(Eg.Xmega-Zigbit-Ext or RFR2-Zigbit)
- *    	 and host image(actual application with api-parser support) flashed in Host board(Eg.SAM4L-Xplained Pro).
- *		- Approach3: Running serial-if application in Single processor for  boards  menitioned in Approach 1.This is used for performing  
- *    	 compliance and interop tests for MAC stack.
- *		- Approach 4:Running serial-if application for 2p-approach for boards mentioned in approach 2 used for performing  compliance and 
- *    	 interop tests for MAC stack, ,with ncp image(Serial-if application(MAC Stack)) flashed in NCP board(Eg.Xmega-Zigbit-Ext or RFR2-Zigbit) 
- *    	 and host image(Serial-if application with only api-parser support(MAC Stack not included)) flashed in Host board(Eg.SAM4L-Xplained Pro).
+ *	 1. For Performing Serial based Interop and Compliance Tests for the MAC
+ *Stack and by selecting any of the four configurations
+ *              - Beacon FFD
+ *              - Beacon RFD
+ *              - No-Beacon FFD
+ *              - No-Beacon RFD
+ *	2. On the other hand it can be used for Running MAC Applications eg.MAC
+ *Beacon/No Beacon Application for Two-Processor Boards.
+ *      Following are the Four approaches by which a MAC Application can be run.
+ *		- Approach-1:Running Beacon/No beacon/ No beacon Sleep
+ *application on a single processor platform(Eg.Xmega-a3bu-xplained or uc3-rz600
+ *,
+ *       Xmega Zigit-usb,RFR2 Xplained Pro)
+ *		- Approach 2: Running Beacon/No beacon application for
+ *2p-approach ,with ncp image(Serial-if(Beacon FFD for Beacon App and NoBeacon
+ *FFD for NoBeacon App)(MAC Stack)) flashed in NCP board(Eg.Xmega-Zigbit-Ext or
+ *RFR2-Zigbit)
+ *       and host image(actual application with api-parser support) flashed in
+ *Host board(Eg.SAM4L-Xplained Pro).
+ *		- Approach3: Running serial-if application in Single processor
+ *for  boards  menitioned in Approach 1.This is used for performing
+ *       compliance and interop tests for MAC stack.
+ *		- Approach 4:Running serial-if application for 2p-approach for
+ *boards mentioned in approach 2 used for performing  compliance and
+ *       interop tests for MAC stack, ,with ncp image(Serial-if application(MAC
+ *Stack)) flashed in NCP board(Eg.Xmega-Zigbit-Ext or RFR2-Zigbit)
+ *       and host image(Serial-if application with only api-parser support(MAC
+ *Stack not included)) flashed in Host board(Eg.SAM4L-Xplained Pro).
  * \section api_modules Application Dependent Modules
  * - \subpage api
  * \section compinfo Compilation Info
@@ -72,7 +84,8 @@
  *
  * \section references References
  * 1)  IEEE Std 802.15.4-2006 Part 15.4: Wireless Medium Access Control (MAC)
- *     and Physical Layer (PHY) Specifications for Low-Rate Wireless Personal Area
+ *     and Physical Layer (PHY) Specifications for Low-Rate Wireless Personal
+ *Area
  *     Networks (WPANs).\n\n
  * 2)  AVR Wireless Support <A href="http://avr@atmel.com">avr@atmel.com</A>.\n
  *
@@ -80,7 +93,7 @@
  * For further information,visit
  * <A href="http://www.atmel.com/avr">www.atmel.com</A>.\n
  */
- 
+
 #include "conf_board.h"
 #include "avr2025_mac.h"
 #include "serial_interface.h"
@@ -107,16 +120,15 @@ int main(void)
 
 	sw_timer_init();
 
-	if(MAC_SUCCESS != wpan_init())
-	{
+	if (MAC_SUCCESS != wpan_init()) {
 		app_alert();
 	}
+
 	LED_On(LED_POWER);
 	cpu_irq_enable();
 	serial_interface_init();
 
-	while (1)
-	{
+	while (1) {
 		wpan_task();
 		serial_data_handler();
 	}
@@ -125,9 +137,7 @@ int main(void)
 /* Alert to indicate something has gone wrong in the application */
 static void app_alert(void)
 {
-    while (1)
-    {
-     
+	while (1) {
 		#if LED_COUNT > 0
 		LED_Toggle(LED0);
 		#endif
@@ -162,4 +172,3 @@ static void app_alert(void)
 		delay_us(0xFFFF);
 	}
 }
-

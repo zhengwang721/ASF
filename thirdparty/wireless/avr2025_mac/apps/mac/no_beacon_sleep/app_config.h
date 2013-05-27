@@ -41,6 +41,7 @@
  *
  * \asf_license_stop
  */
+
 /*
  * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
@@ -70,15 +71,16 @@
 
 /* === Types ================================================================ */
 
-
 /** Defines the number of timers used by the application. */
 #define NUMBER_OF_APP_TIMERS        (2)
 
 /** Defines the largest timer identifier used by the application */
 #define APP_LAST_TIMER_ID           (LAST_STACK_TIMER_ID + NUMBER_OF_APP_TIMERS)
 
-/** Defines the total number of timers used by the application and the layers below. */
-#define TOTAL_NUMBER_OF_TIMERS      (NUMBER_OF_APP_TIMERS + NUMBER_OF_TOTAL_STACK_TIMERS)
+/** Defines the total number of timers used by the application and the layers
+ *below. */
+#define TOTAL_NUMBER_OF_TIMERS      (NUMBER_OF_APP_TIMERS + \
+	NUMBER_OF_TOTAL_STACK_TIMERS)
 
 /** Defines the number of additional large buffers used by the application */
 #define NUMBER_OF_LARGE_APP_BUFS    (0)
@@ -90,26 +92,23 @@
  *  Defines the total number of large buffers used by the application and the
  *  layers below.
  */
-#define TOTAL_NUMBER_OF_LARGE_BUFS  (NUMBER_OF_LARGE_APP_BUFS + NUMBER_OF_LARGE_STACK_BUFS)
+#define TOTAL_NUMBER_OF_LARGE_BUFS  (NUMBER_OF_LARGE_APP_BUFS +	\
+	NUMBER_OF_LARGE_STACK_BUFS)
 
 /**
  *  Defines the total number of small buffers used by the application and the
  *  layers below.
  */
-#define TOTAL_NUMBER_OF_SMALL_BUFS  (NUMBER_OF_SMALL_APP_BUFS + NUMBER_OF_SMALL_STACK_BUFS)
+#define TOTAL_NUMBER_OF_SMALL_BUFS  (NUMBER_OF_SMALL_APP_BUFS +	\
+	NUMBER_OF_SMALL_STACK_BUFS)
 
-#define TOTAL_NUMBER_OF_BUFS        (TOTAL_NUMBER_OF_LARGE_BUFS + TOTAL_NUMBER_OF_SMALL_BUFS)
-
-
+#define TOTAL_NUMBER_OF_BUFS        (TOTAL_NUMBER_OF_LARGE_BUFS + \
+	TOTAL_NUMBER_OF_SMALL_BUFS)
 
 /* Offset of IEEE address storage location within EEPROM */
 #define EE_IEEE_ADDR                (0)
 
-
-
-
 /* === Externals ============================================================ */
-
 
 /* === Prototypes =========================================================== */
 

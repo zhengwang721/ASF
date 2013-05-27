@@ -42,6 +42,7 @@
  * \asf_license_stop
  *
  */
+
 /*
  * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
@@ -58,12 +59,9 @@
 #include "rf4ce.h"
 #include "zrc.h"
 
-
 /* === Macros =============================================================== */
 
-
 /* === Types ================================================================ */
-
 
 /* Offset of IEEE address storage location within EEPROM */
 #define EE_IEEE_ADDR                (0)
@@ -71,14 +69,12 @@
 /** Defines the number of timers used by the application. */
 #define NUMBER_OF_APP_TIMERS        (1)
 
+/** Defines the total number of timers used by the application and the layers
+ *below. */
+#define TOTAL_NUMBER_OF_TIMERS      NUMBER_OF_APP_TIMERS
 
-
-/** Defines the total number of timers used by the application and the layers below. */
-#define TOTAL_NUMBER_OF_TIMERS      NUMBER_OF_APP_TIMERS 
-
-
-
-#define APP_USER_STRING                 "My Controller  "    /* 15 characters ! */
+#define APP_USER_STRING                 "My Controller  "    /* 15 characters !
+	                                                      **/
 #define USER_STRING_AVAILABLE           true
 #define NUM_SUPPORTED_DEV_TYPES         (1)
 #define NUM_SUPPORTED_PROFILES          (1)
@@ -93,14 +89,21 @@
 #define SUPPORTED_PROFILE_ID_5      PROFILE_ID_ZRC
 #define SUPPORTED_PROFILE_ID_6      PROFILE_ID_ZRC
 #if (USER_STRING_AVAILABLE == true)
-#define APP_CAPABILITIES                (0x01 | (NUM_SUPPORTED_DEV_TYPES << 1) | (NUM_SUPPORTED_PROFILES << 4))
+#define APP_CAPABILITIES                (0x01 |	\
+	(NUM_SUPPORTED_DEV_TYPES << \
+	1) | (NUM_SUPPORTED_PROFILES << 4))
 #else
-#define APP_CAPABILITIES                ((NUM_SUPPORTED_DEV_TYPES << 1) | (NUM_SUPPORTED_PROFILES << 4))
+#define APP_CAPABILITIES                ((NUM_SUPPORTED_DEV_TYPES << \
+	1) | (NUM_SUPPORTED_PROFILES << 4))
 #endif
-#define SUPPORTED_CEC_CMDS          {0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, \
-        0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, \
-        0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, \
-        0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00}
+#define SUPPORTED_CEC_CMDS          {0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, \
+				     0x00, \
+				     0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, \
+				     0x00, \
+				     0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, \
+				     0x00, \
+				     0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, \
+				     0x00}
 
 /* Define the periodic wakeup interval */
 #define WDT_WAKEUP_INTERVAL         WDT_TO_1S
@@ -112,9 +115,7 @@
 
 #define IEEE_FLASH_OFFSET (INT_FLASH_END - STACK_FLASH_SIZE  + 1)
 
-
 /* === Externals ============================================================ */
-
 
 /* === Prototypes =========================================================== */
 

@@ -39,6 +39,7 @@
  *
  * \asf_license_stop
  */
+
 /*
  * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
@@ -61,23 +62,26 @@
 #if (defined __GNUC__)
 void __attribute__((weak))
 #ifdef MAC_SECURITY_ZIP
-usr_mlme_set_conf(uint8_t status, uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
+usr_mlme_set_conf(uint8_t status, uint8_t PIBAttribute,
+		uint8_t PIBAttributeIndex)
 #else
 usr_mlme_set_conf(uint8_t status, uint8_t PIBAttribute)
 #endif  /* MAC_SECURITY_ZIP */
 #else
 #ifdef MAC_SECURITY_ZIP
-void usr_mlme_set_conf(uint8_t status, uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
+void usr_mlme_set_conf(uint8_t status, uint8_t PIBAttribute,
+		uint8_t PIBAttributeIndex)
 #else
 void usr_mlme_set_conf(uint8_t status, uint8_t PIBAttribute)
 #endif  /* MAC_SECURITY_ZIP */
 #endif
 {
-    /* Keep compiler happy. */
-    status = status;
-    PIBAttribute = PIBAttribute;
+	/* Keep compiler happy. */
+	status = status;
+	PIBAttribute = PIBAttribute;
 #ifdef MAC_SECURITY_ZIP
-    PIBAttributeIndex = PIBAttributeIndex;
+	PIBAttributeIndex = PIBAttributeIndex;
 #endif  /* MAC_SECURITY_ZIP */
 }
+
 /* EOF */
