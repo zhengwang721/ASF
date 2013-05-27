@@ -125,13 +125,13 @@ static void app_alert(void);
 int main(void)
 {
 	irq_initialize_vectors();
+	sysclk_init();
 
 	/* Initialize the board.
 	 * The board-specific conf_board.h file contains the configuration of
 	 * the board initialization.
 	 */
 	board_init();
-	sysclk_init();
 
 	sw_timer_init();
 

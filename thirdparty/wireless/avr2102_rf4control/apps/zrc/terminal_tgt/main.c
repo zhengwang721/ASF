@@ -235,22 +235,24 @@ static void app_alert(void);
  */
 int main(void)
 {
-	irq_initialize_vectors();
-
-	/* Initialize the board.
-	 * The board-specific conf_board.h file contains the configuration of
-	 * the board initialization.
-	 */
-	board_init();
+    irq_initialize_vectors();
 	sysclk_init();
 
-	sw_timer_init();
+    /* Initialize the board.
+     * The board-specific conf_board.h file contains the configuration of
+     * the board initialization.
+     */
+    board_init();
 
-	if (nwk_init() != NWK_SUCCESS) {
-		app_alert();
-	}
+    sw_timer_init();
 
-	zrc_ind.vendor_data_ind_cb = vendor_data_ind;
+    if (nwk_init()!= NWK_SUCCESS)
+    {
+        app_alert();
+    }
+
+    zrc_ind.vendor_data_ind_cb = vendor_data_ind;
+
 #ifdef ZRC_CMD_DISCOVERY
 	zrc_ind.zrc_cmd_disc_indication_cb =  zrc_cmd_disc_indication;
 #endif
