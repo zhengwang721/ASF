@@ -580,6 +580,21 @@ static inline void system_pinmux_pin_set_output_drive(
  * application or be added to the user application.
  *
  *  - \subpage asfdoc_samd20_system_pinmux_basic_use_case
+ *
+ * \page asfdoc_samd20_pac_document_revision_history Document Revision History
+ *
+ * <table>
+ *	<tr>
+ *		<th>Doc. Rev.</td>
+ *		<th>Date</td>
+ *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>A</td>
+ *		<td>06/2013</td>
+ *		<td>Initial release</td>
+ *	</tr>
+ * </table>
  */
 
 #endif

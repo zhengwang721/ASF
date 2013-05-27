@@ -889,6 +889,21 @@ static inline void rtc_calendar_disable_events(
  * \if RTC_CALENDAR_CALLBACK_MODE
  *  - \subpage asfdoc_samd20_rtc_calendar_callback_use_case
  * \endif
+ *
+ * \page asfdoc_samd20_pac_document_revision_history Document Revision History
+ *
+ * <table>
+ *	<tr>
+ *		<th>Doc. Rev.</td>
+ *		<th>Date</td>
+ *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>A</td>
+ *		<td>06/2013</td>
+ *		<td>Initial release</td>
+ *	</tr>
+ * </table>
  */
 
 #endif /* RTC_CALENDAR_H_INCLUDED */
