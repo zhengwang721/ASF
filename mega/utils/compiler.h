@@ -304,6 +304,208 @@
 #endif
 
 
+typedef int8_t                  S8 ;  //!< 8-bit signed integer.
+typedef uint8_t                 U8 ;  //!< 8-bit unsigned integer.
+typedef int16_t                 S16;  //!< 16-bit signed integer.
+typedef uint16_t                U16;  //!< 16-bit unsigned integer.
+typedef uint16_t                le16_t;
+typedef uint16_t                be16_t;
+typedef int32_t                 S32;  //!< 32-bit signed integer.
+typedef uint32_t                U32;  //!< 32-bit unsigned integer.
+typedef uint32_t                le32_t;
+typedef uint32_t                be32_t;
+typedef signed long long int    S64;  //!< 64-bit signed integer.
+typedef unsigned long long int  U64;  //!< 64-bit unsigned integer.
+typedef float                   F32;  //!< 32-bit floating-point number.
+typedef double                  F64;  //!< 64-bit floating-point number.
+typedef uint32_t                iram_size_t;
+//! @}
+
+
+/*! \name Status Types
+ */
+//! @{
+typedef bool                Status_bool_t;  //!< Boolean status.
+typedef U8                  Status_t;       //!< 8-bit-coded status.
+//! @}
+
+
+/*! \name Aliasing Aggregate Types
+ */
+//! @{
+
+//! 16-bit union.
+typedef union
+{
+  S16 s16   ;
+  U16 u16   ;
+  S8  s8 [2];
+  U8  u8 [2];
+} Union16;
+
+//! 32-bit union.
+typedef union
+{
+  S32 s32   ;
+  U32 u32   ;
+  S16 s16[2];
+  U16 u16[2];
+  S8  s8 [4];
+  U8  u8 [4];
+} Union32;
+
+//! 64-bit union.
+typedef union
+{
+  S64 s64   ;
+  U64 u64   ;
+  S32 s32[2];
+  U32 u32[2];
+  S16 s16[4];
+  U16 u16[4];
+  S8  s8 [8];
+  U8  u8 [8];
+} Union64;
+
+//! Union of pointers to 64-, 32-, 16- and 8-bit unsigned integers.
+typedef union
+{
+  S64 *s64ptr;
+  U64 *u64ptr;
+  S32 *s32ptr;
+  U32 *u32ptr;
+  S16 *s16ptr;
+  U16 *u16ptr;
+  S8  *s8ptr ;
+  U8  *u8ptr ;
+} UnionPtr;
+
+//! Union of pointers to volatile 64-, 32-, 16- and 8-bit unsigned integers.
+typedef union
+{
+  volatile S64 *s64ptr;
+  volatile U64 *u64ptr;
+  volatile S32 *s32ptr;
+  volatile U32 *u32ptr;
+  volatile S16 *s16ptr;
+  volatile U16 *u16ptr;
+  volatile S8  *s8ptr ;
+  volatile U8  *u8ptr ;
+} UnionVPtr;
+
+//! Union of pointers to constant 64-, 32-, 16- and 8-bit unsigned integers.
+typedef union
+{
+  const S64 *s64ptr;
+  const U64 *u64ptr;
+  const S32 *s32ptr;
+  const U32 *u32ptr;
+  const S16 *s16ptr;
+  const U16 *u16ptr;
+  const S8  *s8ptr ;
+  const U8  *u8ptr ;
+} UnionCPtr;
+
+//! Union of pointers to constant volatile 64-, 32-, 16- and 8-bit unsigned integers.
+typedef union
+{
+  const volatile S64 *s64ptr;
+  const volatile U64 *u64ptr;
+  const volatile S32 *s32ptr;
+  const volatile U32 *u32ptr;
+  const volatile S16 *s16ptr;
+  const volatile U16 *u16ptr;
+  const volatile S8  *s8ptr ;
+  const volatile U8  *u8ptr ;
+} UnionCVPtr;
+
+//! Structure of pointers to 64-, 32-, 16- and 8-bit unsigned integers.
+typedef struct
+{
+  S64 *s64ptr;
+  U64 *u64ptr;
+  S32 *s32ptr;
+  U32 *u32ptr;
+  S16 *s16ptr;
+  U16 *u16ptr;
+  S8  *s8ptr ;
+  U8  *u8ptr ;
+} StructPtr;
+
+//! Structure of pointers to volatile 64-, 32-, 16- and 8-bit unsigned integers.
+typedef struct
+{
+  volatile S64 *s64ptr;
+  volatile U64 *u64ptr;
+  volatile S32 *s32ptr;
+  volatile U32 *u32ptr;
+  volatile S16 *s16ptr;
+  volatile U16 *u16ptr;
+  volatile S8  *s8ptr ;
+  volatile U8  *u8ptr ;
+} StructVPtr;
+
+//! Structure of pointers to constant 64-, 32-, 16- and 8-bit unsigned integers.
+typedef struct
+{
+  const S64 *s64ptr;
+  const U64 *u64ptr;
+  const S32 *s32ptr;
+  const U32 *u32ptr;
+  const S16 *s16ptr;
+  const U16 *u16ptr;
+  const S8  *s8ptr ;
+  const U8  *u8ptr ;
+} StructCPtr;
+
+//! Structure of pointers to constant volatile 64-, 32-, 16- and 8-bit unsigned integers.
+typedef struct
+{
+  const volatile S64 *s64ptr;
+  const volatile U64 *u64ptr;
+  const volatile S32 *s32ptr;
+  const volatile U32 *u32ptr;
+  const volatile S16 *s16ptr;
+  const volatile U16 *u16ptr;
+  const volatile S8  *s8ptr ;
+  const volatile U8  *u8ptr ;
+} StructCVPtr;
+
+
+
+/*! \brief Toggles the endianism of \a u16 (by swapping its bytes).
+ *
+ * \param u16 U16 of which to toggle the endianism.
+ *
+ * \return Value resulting from \a u16 with toggled endianism.
+ *
+ * \note More optimized if only used with values known at compile time.
+ */
+#define Swap16(u16) ((U16)(((U16)(u16) >> 8) |\
+                           ((U16)(u16) << 8)))
+
+/*! \brief Toggles the endianism of \a u32 (by swapping its bytes).
+ *
+ * \param u32 U32 of which to toggle the endianism.
+ *
+ * \return Value resulting from \a u32 with toggled endianism.
+ *
+ * \note More optimized if only used with values known at compile time.
+ */
+#define Swap32(u32) ((U32)(((U32)Swap16((U32)(u32) >> 16)) |\
+                           ((U32)Swap16((U32)(u32)) << 16)))
+
+/*! \brief Toggles the endianism of \a u64 (by swapping its bytes).
+ *
+ * \param u64 U64 of which to toggle the endianism.
+ *
+ * \return Value resulting from \a u64 with toggled endianism.
+ *
+ * \note More optimized if only used with values known at compile time.
+ */
+#define Swap64(u64) ((U64)(((U64)Swap32((U64)(u64) >> 32)) |\
+                           ((U64)Swap32((U64)(u64)) << 32)))
+						   
 #if (defined __GNUC__)
   #define nop() do { __asm__ __volatile__ ("nop"); } while (0)
 #elif (defined __ICCAVR__)
