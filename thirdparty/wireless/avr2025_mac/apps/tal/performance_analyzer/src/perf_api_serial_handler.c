@@ -1248,11 +1248,11 @@ void usr_range_test_beacon_tx(uint8_t *frame)
     *msg_buf = EOT;
 }
 
-void usr_range_test_beacon_rsp(uint32_t frame_count,uint8_t lqi_h,uint8_t ed_h,uint8_t rssi_h,uint8_t lqi_r,int8_t ed_r,int8_t rssi_r)
+void usr_range_test_beacon_rsp(uint8_t* mpdu,uint8_t lqi_h,uint8_t ed_h,uint8_t rssi_h,uint8_t lqi_r,int8_t ed_r,int8_t rssi_r)
 {
 
     uint8_t *msg_buf;
-
+    uint8_t phy_frame_len = mpdu[0];
 
     msg_buf = get_next_tx_buffer();
 
@@ -1262,12 +1262,14 @@ void usr_range_test_beacon_rsp(uint32_t frame_count,uint8_t lqi_h,uint8_t ed_h,u
         return;
     }
     /* Copy Len, Protocol Id, Msg Id parameters */
-    *msg_buf++ = PROTOCOL_ID_LEN + 11;
+    *msg_buf++ = PROTOCOL_ID_LEN + 7 +(phy_frame_len-1);
     *msg_buf++ = PROTOCOL_ID;
     *msg_buf++ = RANGE_TEST_RESPONSE_CONFIRM;
-    frame_count = (CCPU_ENDIAN_TO_LE32(frame_count));
-    memcpy(msg_buf, &frame_count, sizeof(uint32_t));
-    msg_buf +=  sizeof(uint32_t);
+    //send ota frame excluding the added ed byte at the end
+    for(uint8_t i=0;i<phy_frame_len-1;i++)
+    {
+    *msg_buf++ = *mpdu++;
+    }
 
     *msg_buf++ = lqi_h;
     *msg_buf++ = ed_h;

@@ -1227,7 +1227,7 @@ void per_mode_initiator_rx_cb(frame_info_t *mac_frame_info)
                  ed_value = mac_frame_info->mpdu[phy_frame_len + LQI_LEN + ED_VAL_LEN] + rssi_base_val;
                   
                   app_led_event(LED_EVENT_RX_FRAME);
-                  usr_range_test_beacon_rsp(msg->payload.range_tx_data.frame_count,
+                  usr_range_test_beacon_rsp(mac_frame_info->mpdu,
                             msg->payload.range_tx_data.lqi,msg->payload.range_tx_data.ed,msg->payload.range_tx_data.rssi,
                             mac_frame_info->mpdu[phy_frame_len + LQI_LEN],
                            ed_value,rssi_val);
