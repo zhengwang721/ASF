@@ -97,13 +97,14 @@ static void app_alert(void);
 int main(void)
 {
 	irq_initialize_vectors();
+	sysclk_init();
 
 	/* Initialize the board.
 	 * The board-specific conf_board.h file contains the configuration of
 	 * the board initialization.
 	 */
-	sysclk_init();
 	board_init();
+
 	sw_timer_init();
 
 	if(MAC_SUCCESS != wpan_init())

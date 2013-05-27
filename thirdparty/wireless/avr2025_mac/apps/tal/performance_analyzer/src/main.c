@@ -352,15 +352,15 @@ volatile node_ib_t node_info;
  */
 int main(void)
 {
-        irq_initialize_vectors();
+	irq_initialize_vectors();
+	sysclk_init();
 
 	/* Initialize the board.
 	 * The board-specific conf_board.h file contains the configuration of
 	 * the board initialization.
 	 */
 	board_init();
-	sysclk_init();
-        
+
     /*
      * Power ON - so set the board to INIT state. All hardware, PAL, TAL and
      * stack level initialization must be done using this function
