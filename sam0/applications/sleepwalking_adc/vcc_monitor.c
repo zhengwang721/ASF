@@ -47,7 +47,7 @@
  * \copydetails preface
  *
  *
- * \page preface Overview
+ * \page appdoc_preface Overview
  * This application demonstrates how to configure the ADC in a sleepwalking
  * operation, where the device supply voltage is measured at a fixed interval,
  * but the device is not woken from sleep  until the measured value is below

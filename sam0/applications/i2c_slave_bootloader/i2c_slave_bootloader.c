@@ -47,7 +47,7 @@
  * \copydetails preface
  *
  *
- * \page preface Features
+ * \page appdoc_preface Features
  * \li Application for self programming
  * \li Uses I2C Slave interface
  * \li I2C Master sends the data to be programmed over I2C bus
