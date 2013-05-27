@@ -46,7 +46,7 @@
  * \copydetails preface
  *
  *
- * \page preface Overview
+ * \page appdoc_preface Overview
  * This application demonstrates a simple sound player, sourcing a waveform
  * from the device's Non-Volatile Memory and streaming it out of the DAC as
  * an analog waveform.

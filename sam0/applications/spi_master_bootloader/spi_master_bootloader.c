@@ -47,7 +47,7 @@
  * \copydetails preface
  *
  *
- * \page preface Features
+ * \page appdoc_preface Features
  * \li Application for self programming
  * \li Uses SPI Master interface
  * \li The binary file stored in AT45DBX dataflash is programmed

@@ -49,11 +49,11 @@
  * See \ref appdoc_samd20_tictactoe_main "here" for project documentation.
  * \copydetails preface
  *
- * \page preface Overview
+ * \page appdoc_preface Overview
  * This application demonstrates the use of the OLED1 Xplained Pro extension
  * board for the SAM D20 Xplained Pro with a Tic-tac-toe game.
  */
- 
+
  /**
  * \page appdoc_samd20_tictactoe_main SAM D20 Tic-Tac-Toe Example
  * Overview:
@@ -163,7 +163,7 @@ uint16_t games = 0;
 /* String to display number of wins */
 char win_string[STRING_LENGTH];
 
-/** 
+/**
  * \brief Draws the Tic-tac-toe board on the display
  *
  */
@@ -201,7 +201,7 @@ static void setup_board(void)
 	}
 }
 
-/** 
+/**
  * \brief Gets button push
  */
 static enum button get_button(void)
@@ -227,7 +227,7 @@ static enum button get_button(void)
 	}
 }
 
-/** 
+/**
  * \brief Initalizes the display with explanatory text for the buttons
  */
 static void init_display(void)
@@ -246,7 +246,7 @@ static void init_display(void)
 			&sysfont);
 }
 
-/** 
+/**
  * \brief Draws a cross in selected square
  */
 static void draw_cross(uint8_t square_num)
@@ -259,7 +259,7 @@ static void draw_cross(uint8_t square_num)
 	gfx_mono_draw_line(x + CROSS_SIZE, y, x, y + CROSS_SIZE, GFX_PIXEL_SET);
 }
 
-/** 
+/**
  * \brief Draws a circle at selected point
  */
 static void draw_circle(uint8_t square_num)
@@ -293,7 +293,7 @@ static void highlight_square(uint8_t square_num)
 			GFX_PIXEL_SET);
 }
 
-/** 
+/**
  * \brief User turn
  * Waits for the user to push buttons and select a new square
  */
@@ -339,7 +339,7 @@ static void user_turn(void)
 	}
 }
 
-/** 
+/**
  * \brief Checks for winner
  *
  * \return Enum to say if there is a winner or not.

@@ -47,7 +47,7 @@
  * \copydetails preface
  *
  *
- * \page preface Overview
+ * \page appdoc_preface Overview
  * This application demonstrates a simple example to turn on the board LED when
  * a button is pressed, using a variety of methods and modules within the device.
  */

@@ -47,7 +47,7 @@
  * \copydetails preface
  *
  *
- * \page preface Features
+ * \page appdoc_preface Features
  * \li Application for self programming
  * \li Uses SPI Slave interface
  * \li SPI Master sends the data to be programmed over SPI bus
