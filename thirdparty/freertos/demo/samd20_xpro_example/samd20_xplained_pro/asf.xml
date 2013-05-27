@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project id="common.services.freertos.samd20_xpro_example.samd20_xplained_pro" caption="FreeRTOS demo for SAM D20 Xplained Pro">
+	<project id="common.services.freertos.oled1_xpro_example.samd20_xplained_pro" caption="FreeRTOS demo using OLED1 Xplained Pro, for SAM D20 Xplained Pro">
 		<board-addon vendor="Atmel" caption="OLED1 Xplained Pro" position="EXT3"/>
 		<!-- Display can do double-buffering, so double the LCD height -->
 		<build type="define" name="GFX_MONO_LCD_HEIGHT" value="64"/>
@@ -15,7 +15,7 @@
 		<config name="config.thirdparty.os.freertos-7_4_2.memory_manager" value="1"/>
 		<device-support value="atsamd20j18"/>
 		<require idref="board.samd20_xplained_pro"/>
-		<require idref="common.services.freertos.samd20_xpro_example"/>
+		<require idref="common.services.freertos.oled1_xpro_example"/>
 		<generator value="as5_arm"/>
 		<generator value="doxygen-v2"/>
 	</project>
