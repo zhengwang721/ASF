@@ -510,6 +510,21 @@ static inline void port_pin_toggle_output_level(
  * added to the user application.
  *
  *  - \subpage asfdoc_samd20_port_basic_use_case
+ *
+ * \page asfdoc_samd20_pac_document_revision_history Document Revision History
+ *
+ * <table>
+ *	<tr>
+ *		<th>Doc. Rev.</td>
+ *		<th>Date</td>
+ *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>A</td>
+ *		<td>06/2013</td>
+ *		<td>Initial release</td>
+ *	</tr>
+ * </table>
  */
 
 #endif

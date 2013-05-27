@@ -1753,6 +1753,21 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
  * \if ADC_CALLBACK_MODE
  *  - \subpage asfdoc_samd20_adc_basic_use_case_callback
  * \endif
+ *
+ * \page asfdoc_samd20_pac_document_revision_history Document Revision History
+ *
+ * <table>
+ *	<tr>
+ *		<th>Doc. Rev.</td>
+ *		<th>Date</td>
+ *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>A</td>
+ *		<td>06/2013</td>
+ *		<td>Initial release</td>
+ *	</tr>
+ * </table>
  */
 
 #endif /* ADC_H_INCLUDED */
