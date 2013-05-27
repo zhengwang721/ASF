@@ -8,6 +8,7 @@
 		<build type="c-source" value="demotasks.c"/>
 		<build type="header-file" value="demotasks.h"/>
 		<build type="header-file" value="documentation.h"/>
+		<build type="module-config" subtype="required-header-file" value="conf_demo.h"/>
 		<device-support value="sam0"/>
 		<info type="gui-flag" value="move-to-root"/>
 		<require idref="common.services.freertos.samd20_xpro_example.user_io"/>
@@ -20,7 +21,6 @@
 	<module type="driver" id="common.services.freertos.samd20_xpro_example.user_io" caption="User I/O driver for FreeRTOS demo">
 		<build type="header-file" subtype="api" value="cdc.h"/>
 		<build type="header-file" subtype="api" value="oled1.h"/>
-		<build type="module-config" subtype="required-header-file" value="conf_demo.h"/>
 		<build type="include-path" value="."/>
 		<device-support value="sam0"/>
 		<info type="gui-flag" value="hidden"/>
