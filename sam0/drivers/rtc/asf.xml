@@ -30,6 +30,17 @@
 
 		<module type="driver" id="sam0.drivers.rtc#count_callback" caption="RTC - Real Time Clock (Count Mode) Interrupt Driver">
 			<info type="appnote" value="AT03249"/>
+			<info type="keyword" value="pdf">
+				<keyword value="RTC"/>
+				<keyword value="I/O"/>
+				<keyword value="Real Time Clock"/>
+				<keyword value="Count"/>
+			</info>
+
+			<info type="description" value="pdf">
+				This document describes how to use the Real Time Clock in count mode on the SAM D20, both the ASF driver and the peripheral itself.
+			</info>
+
 			<build type="include-path" value="." />
 			<build type="header-file" subtype="api" value="rtc_count.h"/>
 			<build type="header-file" subtype="api" value="rtc_count_interrupt.h"/>
@@ -76,6 +87,17 @@
 
 		<module type="driver" id="sam0.drivers.rtc#calendar_callback" caption="RTC - Real Time Clock (Calendar Mode) Interrupt Driver">
 			<info type="appnote" value="AT03266"/>
+			<info type="keyword" value="pdf">
+				<keyword value="RTC"/>
+				<keyword value="I/O"/>
+				<keyword value="Real Time Clock"/>
+				<keyword value="Calendar"/>
+			</info>
+
+			<info type="description" value="pdf">
+				This document describes how to use the Real Time Clock in calendar mode on the SAM D20, both the ASF driver and the peripheral itself.
+			</info>
+
 			<build type="include-path" value="." />
 			<build type="header-file" subtype="api" value="rtc_calendar.h"/>
 			<build type="header-file" subtype="api" value="rtc_calendar_interrupt.h"/>

@@ -7,7 +7,7 @@
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="I/O" />
-			<keyword value="Analog Conversion" />
+			<keyword value="Analog Comparator"/>
 		</info>
 
 		<module caption="AC - Analog Comparator" id="sam0.drivers.ac#polled" type="driver">
@@ -32,6 +32,15 @@
 		</module>
 		<module caption="AC - Analog Comparator" id="sam0.drivers.ac#callback" type="driver">
 			<info type="appnote" value="AT03242"/>
+			<info type="keyword" value="pdf">
+				<keyword value="AC"/>
+				<keyword value="I/O"/>
+				<keyword value="Analog Comparator"/>
+			</info>
+
+			<info type="description" value="pdf">
+				This document describes how to use the Analog Comparator on the SAM D20, both the ASF driver and the peripheral itself.
+			</info>
 
 			<build type="include-path" value="." />
 
