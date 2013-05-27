@@ -6,7 +6,23 @@
 
 		<info type="appnote" value="AT03665"/>
 
+		<info type="description" value="pdf">
+		This application note describes the Atmel Software Framework low level
+		module driver APIs for the Atmel SAM D20 series of devices.
+		</info>
+		<info type="keyword" value="pdf">
+			<keyword value="ASF"/>
+			<keyword value="API"/>
+			<keyword value="Reference"/>
+			<keyword value="Manual"/>
+			<keyword value="Driver"/>
+			<keyword value="Quick Start"/>
+		</info>
+
 		<config name="config.compiler.doxygen-v2.document_type" value="asf_manual"/>
+
+		<build type="include-path" value="."/>
+		<build type="header-file" value="revhistory.h"/>
 
 		<require idref="sam0.drivers.ac"/>
 		<require idref="sam0.drivers.adc"/>
