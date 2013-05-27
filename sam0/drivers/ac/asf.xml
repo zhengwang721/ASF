@@ -6,7 +6,6 @@
 		  hardware analog comparators.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="I/O" />
 			<keyword value="Analog Conversion"/>
 		</info>
 
@@ -34,7 +33,6 @@
 			<info type="appnote" value="AT03242"/>
 			<info type="keyword" value="pdf">
 				<keyword value="AC"/>
-				<keyword value="I/O"/>
 				<keyword value="Analog Comparator"/>
 			</info>
 
