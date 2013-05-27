@@ -162,13 +162,12 @@ static uint8_t buf_test[TEST_MEM_ACCESS_SIZE];
 //! Read and write test length of CIA in bytes
 #define TEST_CIA_SIZE           (0x16)
 
+//! Buffer for test SDIO data
+static uint8_t buf_cia[TEST_CIA_SIZE];
 //! @}
 
 static void main_display_info_card(uint8_t slot);
 static void main_test_memory(uint8_t slot);
-
-//! Buffer for test SDIO data
-static uint8_t buf_cia[TEST_CIA_SIZE];
 static void main_test_sdio(uint8_t slot);
 static void main_dump_buffer(uint8_t *data_buffer, uint32_t length);
 
@@ -224,12 +223,12 @@ int main(void)
 	
 		// Display basic card information
 		main_display_info_card(slot);
+	
 		/* Test the card */
 		if (sd_mmc_get_type(slot) & CARD_TYPE_SDIO) {
 			// Test CIA of SDIO card
 			main_test_sdio(slot);
 		}
-
 		if (sd_mmc_get_type(slot) & (CARD_TYPE_SD | CARD_TYPE_MMC)) {
 			// SD/MMC Card R/W
 			main_test_memory(slot);
