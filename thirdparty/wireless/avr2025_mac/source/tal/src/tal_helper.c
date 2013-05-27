@@ -949,4 +949,13 @@ retval_t tal_rxsafe_mode_ctrl(bool safe_mode_ctrl)
     }
 }
 #endif /* End of (TAL_TYPE != AT86RF230B) */
+
+uint8_t get_rssi_val()
+{
+
+uint8_t rssi_val = pal_trx_bit_read(SR_RSSI);
+return rssi_val;
+
+
+}
 /* EOF */

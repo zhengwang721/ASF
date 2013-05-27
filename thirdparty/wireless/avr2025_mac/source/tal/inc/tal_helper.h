@@ -344,6 +344,8 @@ extern "C" {
      */
     retval_t tal_rxsafe_mode_ctrl(bool safe_mode_ctrl);
 
+    
+uint8_t get_rssi_val();
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
