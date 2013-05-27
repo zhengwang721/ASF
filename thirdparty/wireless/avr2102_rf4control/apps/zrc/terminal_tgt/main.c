@@ -228,8 +228,9 @@ int main(void)
      * The board-specific conf_board.h file contains the configuration of
      * the board initialization.
      */
+	sysclk_init();
     board_init();
-    sysclk_init();
+    
 
     sw_timer_init();
        
