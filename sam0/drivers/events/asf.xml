@@ -7,8 +7,7 @@
 			from various modules within the device.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="Events" />
-			<keyword value="Peripheral Event System" />
+			<keyword value="Peripheral Event System"/>
 		</info>
 
 		<info type="appnote" value="AT03245"/>
