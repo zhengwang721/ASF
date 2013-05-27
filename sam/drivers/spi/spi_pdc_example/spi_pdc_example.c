@@ -67,6 +67,7 @@
  * - sam3sd8c_sam3s_ek2
  * - sam4s16c_sam4s_ek
  * - sam4sd32c_sam4s_ek2
+ * - sam4n16c_sam4n_xplained_pro
  *
  * The code can be roughly broken down as follows:
  * <ul>
@@ -140,7 +141,7 @@ extern "C" {
 #define NUM_SPCK_CONFIGURATIONS 4
 
 #define STRING_EOL    "\r"
-#define STRING_HEADER "--Spi Example --\r\n" \
+#define STRING_HEADER "-- Spi Pdc Example  --\r\n" \
 		"-- "BOARD_NAME" --\r\n" \
 		"-- Compiled: "__DATE__" "__TIME__" --"STRING_EOL
 

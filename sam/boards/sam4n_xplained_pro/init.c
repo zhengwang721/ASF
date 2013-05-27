@@ -96,6 +96,18 @@ void board_init(void)
 	ioport_set_port_peripheral_mode(PINS_UART3_PORT, PINS_UART3,
 			PINS_UART3_MASK);
 #endif
+
+#ifdef CONF_BOARD_SPI
+	ioport_set_pin_peripheral_mode(SPI_MISO_GPIO, SPI_MISO_FLAGS);
+	ioport_set_pin_peripheral_mode(SPI_MOSI_GPIO, SPI_MOSI_FLAGS);
+	ioport_set_pin_peripheral_mode(SPI_SPCK_GPIO, SPI_SPCK_FLAGS);
+
+#ifdef CONF_BOARD_SPI_NPCS0
+	ioport_set_pin_peripheral_mode(SPI_NPCS0_GPIO, SPI_NPCS0_FLAGS);
+#endif
+
+#endif
+
 }
 
 /** @} */
