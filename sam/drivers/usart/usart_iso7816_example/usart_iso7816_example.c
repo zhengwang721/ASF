@@ -61,8 +61,6 @@
  *   - VCC      --    VCC
  *   - GND      --    GND
  *
- *  \note Use PA13 connected with RST on SAM4N-Xplained-Pro.
- *
  *  \par Description
  *  The iso7816 software provide in this examples is use to transform APDU
  *  commands to TPDU commands for the smart card.
