@@ -55,7 +55,7 @@
 		</module>
 	</select-by-device>
 
-	<select-by-config id="thirdparty.os.freertos-7_4_2.memory_manager" caption="FreeRTOS memory manager" name="config.thirdparty.os.freertos-7_4_2.memory_manager" default="1">
+	<select-by-config id="thirdparty.os.freertos-7_4_2.memory_manager" caption="FreeRTOS memory heap manager" name="config.thirdparty.os.freertos-7_4_2.memory_manager" default="1_static_allocation">
 		<info type="description" value="summary">
 			The RTOS kernel allocates RAM each time a task, queue, mutex, software timer or
  			semaphore is created. The standard C library malloc() and free() functions may
@@ -64,7 +64,7 @@
 			For more information, please refer to http://www.freertos.org/.
 		</info>
 
-		<module type="service" id="thirdparty.os.freertos-7_4_2.memory_manager#1" caption="Memory manager variant #1">
+		<module type="service" id="thirdparty.os.freertos-7_4_2.memory_manager#1_static_allocation" caption="Memory heap manager variant #1">
 			<info type="description" value="summary">
 				This implementation can be used if your application never deletes a task, queue, semaphore,
 				mutex, etc. - which covers the majority of applications in which FreeRTOS is used.
@@ -75,7 +75,7 @@
 			<device-support value="sam0"/>
 		</module>
 
-		<module type="service" id="thirdparty.os.freertos-7_4_2.memory_manager#2" caption="Memory manager variant #2">
+		<module type="service" id="thirdparty.os.freertos-7_4_2.memory_manager#2_best_fit_no_coallesce" caption="Memory heap manager variant #2">
 			<info type="description" value="summary">
 				This implementation could possibly result in memory fragmentation problems if your application
 				queues, tasks, semaphores, mutexes, etc. in an unpredictable order. This would be unlikely for
@@ -88,7 +88,7 @@
 			<device-support value="sam0"/>
 		</module>
 
-		<module type="service" id="thirdparty.os.freertos-7_4_2.memory_manager#3" caption="Memory manager variant #3">
+		<module type="service" id="thirdparty.os.freertos-7_4_2.memory_manager#3_use_libc_malloc_free" caption="Memory heap manager variant #3">
 			<info type="description" value="summary">
 				This implementation requires the linker to set up a heap and the compiler library to provide
 				malloc() and free() implementations.
@@ -99,7 +99,7 @@
 			<device-support value="sam0"/>
 		</module>
 
-		<module type="service" id="thirdparty.os.freertos-7_4_2.memory_manager#4" caption="Memory manager variant #4">
+		<module type="service" id="thirdparty.os.freertos-7_4_2.memory_manager#4_first_fit_coallesce" caption="Memory heap manager variant #4">
 			<info type="description" value="summary">
 				This implementation can be used even when the application repeatedly deletes tasks, queues,
 				semaphores, mutexes, etc., and is much less likely than implementation #2 to result in a heap
