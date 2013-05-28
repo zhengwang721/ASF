@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief TWI Master driver for SAM.
+ * \brief TWI Slave Example configuration.
  *
- * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,38 +41,18 @@
  *
  */
 
-#ifndef _TWI_MASTER_H_
-#define _TWI_MASTER_H_
+/* Configuration of TWI Slave Example */
 
-#include "twi.h"
-#include "sysclk.h"
+#ifndef CONF_TWI_SLAVE_EXAMPLE_H_INCLUDED
+#define CONF_TWI_SLAVE_EXAMPLE_H_INCLUDED
 
-typedef Twi *twi_master_t;
-typedef twi_options_t twi_master_options_t;
-typedef twi_packet_t twi_package_t;
+/** Definition of TWI interrupt ID on board. */
+#define BOARD_TWI_IRQn          TWI0_IRQn
+#define BOARD_TWI_Handler       TWI0_Handler
 
-static inline uint32_t twi_master_setup(twi_master_t p_twi,
-		twi_master_options_t *p_opt)
-{
-	p_opt->master_clk = sysclk_get_cpu_hz();
-	p_opt->smbus      = 0;
+/** TWI ID for SLAVE application to use */
+#define BOARD_ID_TWI_SLAVE          ID_TWI0
+/** TWI Base for TWI SLAVE application to use */
+#define BOARD_BASE_TWI_SLAVE        TWI0
 
-	if (p_twi == TWI0) {
-		sysclk_enable_peripheral_clock(ID_TWI0);
-	} else if (p_twi == TWI1) {
-		sysclk_enable_peripheral_clock(ID_TWI1);
-#if SAM4N
-	} else if (p_twi == TWI2) {
-		sysclk_enable_peripheral_clock(ID_TWI2);
-#endif
-	} else {
-		// Do Nothing
-	}
-
-	return (twi_master_init(p_twi, p_opt));
-}
-
-#define twi_master_enable(p_twi)   twi_enable_master_mode(p_twi)
-#define twi_master_disable(p_twi)  twi_disable_master_mode(p_twi)
-
-#endif // _TWI_MASTER_H_
+#endif /* CONF_TWI_SLAVE_EXAMPLE_H_INCLUDED */

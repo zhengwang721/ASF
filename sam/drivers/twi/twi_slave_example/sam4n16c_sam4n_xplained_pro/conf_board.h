@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief TWI Master driver for SAM.
+ * \brief Board configuration.
  *
- * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,38 +41,16 @@
  *
  */
 
-#ifndef _TWI_MASTER_H_
-#define _TWI_MASTER_H_
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#include "twi.h"
-#include "sysclk.h"
+/** Enable Com Port. */
+#define CONF_BOARD_UART_CONSOLE
 
-typedef Twi *twi_master_t;
-typedef twi_options_t twi_master_options_t;
-typedef twi_packet_t twi_package_t;
+/** Configure TWI0 pins */
+#define CONF_BOARD_TWI0
 
-static inline uint32_t twi_master_setup(twi_master_t p_twi,
-		twi_master_options_t *p_opt)
-{
-	p_opt->master_clk = sysclk_get_cpu_hz();
-	p_opt->smbus      = 0;
+/** Uart Hw ID used by the console (UART3). */
+#define CONSOLE_UART_ID          ID_UART3
 
-	if (p_twi == TWI0) {
-		sysclk_enable_peripheral_clock(ID_TWI0);
-	} else if (p_twi == TWI1) {
-		sysclk_enable_peripheral_clock(ID_TWI1);
-#if SAM4N
-	} else if (p_twi == TWI2) {
-		sysclk_enable_peripheral_clock(ID_TWI2);
-#endif
-	} else {
-		// Do Nothing
-	}
-
-	return (twi_master_init(p_twi, p_opt));
-}
-
-#define twi_master_enable(p_twi)   twi_enable_master_mode(p_twi)
-#define twi_master_disable(p_twi)  twi_disable_master_mode(p_twi)
-
-#endif // _TWI_MASTER_H_
+#endif /* CONF_BOARD_H_INCLUDED */

@@ -582,6 +582,11 @@ Pdc *twi_get_pdc_base(Twi *p_twi)
 		p_pdc_base = PDC_TWI1;
 	}
 #endif
+#ifdef PDC_TWI2
+		else if (p_twi == TWI2) {
+			p_pdc_base = PDC_TWI2;
+		}
+#endif
 	else
 	{
 		Assert(false);
