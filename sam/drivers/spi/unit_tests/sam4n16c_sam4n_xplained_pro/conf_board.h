@@ -50,7 +50,7 @@
 /** SPI pins initialization */
 #define CONF_BOARD_SPI
 
-/** SPI pin NPCS3 initialization */
-#define CONF_BOARD_SPI_NPCS3
+/** SPI pin NPCS0 initialization */
+#define CONF_BOARD_SPI_NPCS0
 
 #endif /* CONF_BOARD_H_INCLUDED */
