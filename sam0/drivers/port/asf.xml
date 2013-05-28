@@ -13,6 +13,7 @@
 		<info type="keyword" value="pdf">
 			<keyword value="I/O"/>
 			<keyword value="PORT"/>
+			<keyword value="PIN"/>
 			<keyword value="GPIO Pin Control"/>
 		</info>
 
