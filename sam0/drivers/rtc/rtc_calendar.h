@@ -890,7 +890,7 @@ static inline void rtc_calendar_disable_events(
  *  - \subpage asfdoc_samd20_rtc_calendar_callback_use_case
  * \endif
  *
- * \page asfdoc_samd20_pac_document_revision_history Document Revision History
+ * \page asfdoc_samd20_rtc_calendar_document_revision_history Document Revision History
  *
  * <table>
  *	<tr>

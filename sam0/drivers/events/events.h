@@ -656,7 +656,7 @@ static inline void events_chan_software_trigger(
  *
  *  - \subpage asfdoc_samd20_events_basic_use_case
  *
- * \page asfdoc_samd20_pac_document_revision_history Document Revision History
+ * \page asfdoc_samd20_events_document_revision_history Document Revision History
  *
  * <table>
  *	<tr>

@@ -1249,7 +1249,7 @@ static inline void ac_win_clear_status(
  *  - \subpage asfdoc_samd20_ac_callback_use_case
  * \endif
  *
- * \page asfdoc_samd20_pac_document_revision_history Document Revision History
+ * \page asfdoc_samd20_ac_document_revision_history Document Revision History
  *
  * <table>
  *	<tr>

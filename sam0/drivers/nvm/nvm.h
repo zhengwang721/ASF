@@ -574,7 +574,7 @@ static inline enum nvm_error nvm_get_error(void)
  *
  *  - \subpage asfdoc_samd20_nvm_basic_use_case
  *
- * \page asfdoc_samd20_pac_document_revision_history Document Revision History
+ * \page asfdoc_samd20_nvm_document_revision_history Document Revision History
  *
  * <table>
  *	<tr>

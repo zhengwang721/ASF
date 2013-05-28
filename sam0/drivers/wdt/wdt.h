@@ -447,7 +447,7 @@ void wdt_reset_count(void);
  *  - \subpage asfdoc_samd20_wdt_callback_use_case
  * \endif
  *
- * \page asfdoc_samd20_pac_document_revision_history Document Revision History
+ * \page asfdoc_samd20_wdt_document_revision_history Document Revision History
  *
  * <table>
  *	<tr>

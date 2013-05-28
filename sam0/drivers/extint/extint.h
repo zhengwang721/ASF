@@ -668,7 +668,7 @@ static inline void extint_nmi_clear_detected(
  *  - \subpage asfdoc_samd20_extint_callback_use_case
  * \endif
  *
- * \page asfdoc_samd20_pac_document_revision_history Document Revision History
+ * \page asfdoc_samd20_extint_document_revision_history Document Revision History
  *
  * <table>
  *	<tr>
