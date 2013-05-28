@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Peripheral I/O description for SAM4LC4C
+ * \brief Peripheral I/O description for SAM4LC8C
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -41,8 +41,8 @@
  *
  */
 
-#ifndef _SAM4LC4C_PIO_
-#define _SAM4LC4C_PIO_
+#ifndef _SAM4LC8C_PIO_
+#define _SAM4LC8C_PIO_
 
 #define PIN_PA00                           0  /**< \brief Pin Number for PA00 */
 #define GPIO_PA00                  (1u <<  0) /**< \brief GPIO Mask  for PA00 */
@@ -1795,4 +1795,4 @@
 #define PINMUX_PC06B_EIC_EXTINT8   ((PIN_PC06B_EIC_EXTINT8 << 16) | MUX_PC06B_EIC_EXTINT8)
 #define GPIO_PC06B_EIC_EXTINT8     (1u <<  6)
 
-#endif /* _SAM4LC4C_PIO_ */
+#endif /* _SAM4LC8C_PIO_ */
