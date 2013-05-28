@@ -3,7 +3,7 @@
  *
  * \brief Real-time Timer (RTT) example for SAM.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -165,7 +165,11 @@ static void configure_rtt(void)
 	uint32_t ul_previous_time;
 
 	/* Configure RTT for a 1 second tick interrupt */
+#if SAM4N || SAM4S || SAM4E
+	rtt_sel_source(RTT, false);
+#endif	
 	rtt_init(RTT, 32768);
+
 	ul_previous_time = rtt_read_timer_value(RTT);
 	while (ul_previous_time == rtt_read_timer_value(RTT));
 

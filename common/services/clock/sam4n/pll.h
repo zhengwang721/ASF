@@ -62,8 +62,8 @@ extern "C" {
 #define PLL_OUTPUT_MIN_HZ   80000000
 #define PLL_OUTPUT_MAX_HZ   240000000
 
-#define PLL_INPUT_MIN_HZ    3500000
-#define PLL_INPUT_MAX_HZ    20000000
+#define PLL_INPUT_MIN_HZ    8000000
+#define PLL_INPUT_MAX_HZ    32000000
 
 #define NR_PLLS             1
 #define PLLA_ID             0
@@ -71,7 +71,6 @@ extern "C" {
 #define PLL_COUNT           0x3fU
 
 enum pll_source {
-	PLL_SRC_MAINCK_4M_RC        = OSC_MAINCK_4M_RC,     //!< Internal 4MHz RC oscillator.
 	PLL_SRC_MAINCK_8M_RC        = OSC_MAINCK_8M_RC,     //!< Internal 8MHz RC oscillator.
 	PLL_SRC_MAINCK_12M_RC       = OSC_MAINCK_12M_RC,    //!< Internal 12MHz RC oscillator.
 	PLL_SRC_MAINCK_XTAL         = OSC_MAINCK_XTAL,      //!< External crystal oscillator.
@@ -174,7 +173,6 @@ static inline uint32_t pll_is_locked(uint32_t ul_pll_id)
 static inline void pll_enable_source(enum pll_source e_src)
 {
 	switch (e_src) {
-	case PLL_SRC_MAINCK_4M_RC:
 	case PLL_SRC_MAINCK_8M_RC:
 	case PLL_SRC_MAINCK_12M_RC:
 	case PLL_SRC_MAINCK_XTAL:
