@@ -1200,7 +1200,7 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *  - \subpage asfdoc_samd20_system_clock_basic_use_case
  *  - \subpage asfdoc_samd20_system_gclk_basic_use_case
  *
- * \page asfdoc_samd20_pac_document_revision_history Document Revision History
+ * \page asfdoc_samd20_system_clock_document_revision_history Document Revision History
  *
  * <table>
  *	<tr>
