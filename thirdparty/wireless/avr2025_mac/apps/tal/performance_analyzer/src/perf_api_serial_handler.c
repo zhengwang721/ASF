@@ -1248,7 +1248,7 @@ void usr_range_test_beacon_tx(uint8_t *frame)
     *msg_buf = EOT;
 }
 
-void usr_range_test_beacon_rsp(uint8_t* mpdu,uint8_t lqi_h,uint8_t ed_h,uint8_t rssi_h,uint8_t lqi_r,int8_t ed_r,int8_t rssi_r)
+void usr_range_test_beacon_rsp(uint8_t* mpdu,uint8_t lqi_h,int8_t ed_h,uint8_t lqi_r,int8_t ed_r)
 {
 
     uint8_t *msg_buf;
@@ -1262,7 +1262,7 @@ void usr_range_test_beacon_rsp(uint8_t* mpdu,uint8_t lqi_h,uint8_t ed_h,uint8_t 
         return;
     }
     /* Copy Len, Protocol Id, Msg Id parameters */
-    *msg_buf++ = PROTOCOL_ID_LEN + 7 +(phy_frame_len-1);
+    *msg_buf++ = PROTOCOL_ID_LEN + 5 +(phy_frame_len-1);
     *msg_buf++ = PROTOCOL_ID;
     *msg_buf++ = RANGE_TEST_RESPONSE_CONFIRM;
     //send ota frame excluding the added ed byte at the end
@@ -1271,12 +1271,10 @@ void usr_range_test_beacon_rsp(uint8_t* mpdu,uint8_t lqi_h,uint8_t ed_h,uint8_t 
     *msg_buf++ = *mpdu++;
     }
 
-    *msg_buf++ = lqi_h;
-    *msg_buf++ = ed_h;
-    *msg_buf++ = rssi_h;
     *msg_buf++ = lqi_r;
     *msg_buf++ = ed_r;
-    *msg_buf++ = rssi_r;
+    *msg_buf++ = lqi_h;
+    *msg_buf++ = ed_h;
 
     *msg_buf = EOT;
 }

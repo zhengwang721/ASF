@@ -465,31 +465,30 @@ void per_mode_initiator_task(void)
 }
 static void  range_test_timer_handler_cb(void *parameter)
 {
-  
 
-   node_info.tx_frame_info->mpdu[PL_POS_SEQ_NUM]++;
-   //node_info.tx_frame_info->mpdu[RANGE_TST_PKT_SEQ_POS]++;
-   //update frame count and seq num->to be changed
-   configure_range_test_frame_sending();
-            if (curr_trx_config_params.csma_enabled)
-            {
-                tal_tx_frame(node_info.tx_frame_info,
-                             CSMA_UNSLOTTED,
-                             curr_trx_config_params.retry_enabled );
-            }
-            else
-            {
-                tal_tx_frame(node_info.tx_frame_info,
-                             NO_CSMA_NO_IFS,
-                             curr_trx_config_params.retry_enabled );
-            }
-            node_info.transmitting = true;
-            app_led_event(LED_EVENT_TX_FRAME);
-            sw_timer_start(APP_TIMER_TO_TX,
-                        RANGE_TX_BEACON_INTERVAL,
-                        SW_TIMEOUT_RELATIVE,
-                        (FUNC_PTR)range_test_timer_handler_cb,
-                        NULL);
+
+    node_info.tx_frame_info->mpdu[PL_POS_SEQ_NUM]++;
+    //To_be_done Try to optmize this
+    configure_range_test_frame_sending();
+    if (curr_trx_config_params.csma_enabled)
+    {
+        tal_tx_frame(node_info.tx_frame_info,
+                     CSMA_UNSLOTTED,
+                     curr_trx_config_params.retry_enabled );
+    }
+    else
+    {
+        tal_tx_frame(node_info.tx_frame_info,
+                     NO_CSMA_NO_IFS,
+                     curr_trx_config_params.retry_enabled );
+    }
+    node_info.transmitting = true;
+
+    sw_timer_start(APP_TIMER_TO_TX,
+                RANGE_TX_BEACON_INTERVAL,
+                SW_TIMEOUT_RELATIVE,
+                (FUNC_PTR)range_test_timer_handler_cb,
+                NULL);
 
 }
 /**
@@ -747,6 +746,7 @@ void per_mode_initiator_tx_done_cb(retval_t status, frame_info_t *frame)
             
         case RANGE_TEST_TX:
             {
+                app_led_event(LED_EVENT_TX_FRAME);
                 usr_range_test_beacon_tx(node_info.tx_frame_info->mpdu);
                 //usr_range_tx_beacon
             }
@@ -1217,24 +1217,15 @@ void per_mode_initiator_rx_cb(frame_info_t *mac_frame_info)
             {
                 if (op_mode == RANGE_TEST_TX)
                 {
-                  uint8_t rssi_val;
                 int8_t rssi_base_val,ed_value;
-                rssi_val = get_rssi_val();//read register value SR_RSSI
                 rssi_base_val = tal_get_rssi_base_val();
-                rssi_val = 3*(rssi_val-1);
-                rssi_val += rssi_base_val;
                 uint8_t phy_frame_len = mac_frame_info->mpdu[0];
-                 ed_value = mac_frame_info->mpdu[phy_frame_len + LQI_LEN + ED_VAL_LEN] + rssi_base_val;
-                  
-                  app_led_event(LED_EVENT_RX_FRAME);
-                  usr_range_test_beacon_rsp(mac_frame_info->mpdu,
-                            msg->payload.range_tx_data.lqi,msg->payload.range_tx_data.ed,msg->payload.range_tx_data.rssi,
-                            mac_frame_info->mpdu[phy_frame_len + LQI_LEN],
-                           ed_value,rssi_val);
-                  //rssi to be found and added to be changed
-                  
-                  
-            }
+                ed_value = mac_frame_info->mpdu[phy_frame_len + LQI_LEN + ED_VAL_LEN] + rssi_base_val;                  
+                app_led_event(LED_EVENT_RX_FRAME);
+                usr_range_test_beacon_rsp(mac_frame_info->mpdu,mac_frame_info->mpdu[phy_frame_len + LQI_LEN],
+                                          ed_value,msg->payload.range_tx_data.lqi,msg->payload.range_tx_data.ed);
+                             
+                }
             }
             break;
         default:
@@ -3164,38 +3155,38 @@ void initiate_per_test(void)
  */
 void initiate_range_test(void)
 {
-     /* Check for the current operating mode */
+    /* Check for the current operating mode */
     if (TX_OP_MODE == op_mode)
     {
-        /* Send the confirmation with the status as SUCCESS */
-        range_test_in_progress = true;
-        usr_range_test_start_confirm(MAC_SUCCESS);
-        range_test_seq_num = rand();
-        //Transmit beacon
-        configure_range_test_frame_sending();
-        node_info.tx_frame_info->mpdu[PL_POS_SEQ_NUM]++;
-        node_info.transmitting = true;
-        op_mode = RANGE_TEST_TX;
-        //to be changed
-            if (curr_trx_config_params.csma_enabled)
-            {
-                tal_tx_frame(node_info.tx_frame_info,
-                             CSMA_UNSLOTTED,
-                             curr_trx_config_params.retry_enabled );
-            }
-            else
-            {
-                tal_tx_frame(node_info.tx_frame_info,
-                             NO_CSMA_NO_IFS,
-                             curr_trx_config_params.retry_enabled );
-            }
-        
+    /* Send the confirmation with the status as SUCCESS */
+    range_test_in_progress = true;
+    usr_range_test_start_confirm(MAC_SUCCESS);
+    range_test_seq_num = rand();
     
-        sw_timer_start(APP_TIMER_TO_TX,
-                        RANGE_TX_BEACON_INTERVAL,
-                        SW_TIMEOUT_RELATIVE,
-                        (FUNC_PTR)range_test_timer_handler_cb,
-                        NULL);
+    configure_range_test_frame_sending();
+    node_info.tx_frame_info->mpdu[PL_POS_SEQ_NUM]++;
+    node_info.transmitting = true;
+    op_mode = RANGE_TEST_TX;
+    //to be changed
+        if (curr_trx_config_params.csma_enabled)
+        {
+            tal_tx_frame(node_info.tx_frame_info,
+                         CSMA_UNSLOTTED,
+                         curr_trx_config_params.retry_enabled );
+        }
+        else
+        {
+            tal_tx_frame(node_info.tx_frame_info,
+                         NO_CSMA_NO_IFS,
+                         curr_trx_config_params.retry_enabled );
+        }
+
+
+     sw_timer_start(APP_TIMER_TO_TX,
+                    RANGE_TX_BEACON_INTERVAL,
+                    SW_TIMEOUT_RELATIVE,
+                    (FUNC_PTR)range_test_timer_handler_cb,
+                    NULL);
 
     }
     else
@@ -3395,7 +3386,7 @@ static void configure_range_test_frame_sending(void)
 
     /* Get length of current frame. */
     app_frame_length = (RANGE_TEST_PKT_LENGTH  - FRAME_OVERHEAD);//to be changed
-
+    
     /* Set payload pointer. */
     frame_ptr = temp_frame_ptr =
                     (uint8_t *)node_info.tx_frame_info +
@@ -3417,8 +3408,7 @@ static void configure_range_test_frame_sending(void)
     temp_frame_ptr++;
     data->lqi = 0;
     temp_frame_ptr++;
-    data->rssi = 0;
-    temp_frame_ptr++;
+
 
     /*
      * Assign dummy payload values.

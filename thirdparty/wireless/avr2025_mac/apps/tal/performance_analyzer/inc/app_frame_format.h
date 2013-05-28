@@ -327,7 +327,6 @@ typedef struct
     uint32_t frame_count;
     int8_t  ed;
     uint8_t  lqi;
-    int8_t   rssi;
 } range_tx_t;
 
 #if ((defined __ICCARM__) || (defined __ICCAVR32__) ||(defined __GNUARM__)|| (defined __GNUAVR32__)|| (defined __GNUC__))

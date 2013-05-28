@@ -118,7 +118,7 @@ void get_board_details(void);
 /* Stops range Test */
 void stop_range_test(void);
 
-void usr_range_test_beacon_rsp(uint8_t* mpdu,uint8_t lqi_h,uint8_t ed_h,uint8_t rssi_h,uint8_t lqi_r,int8_t ed_r,int8_t rssi_r);
+void usr_range_test_beacon_rsp(uint8_t* mpdu,uint8_t lqi_h,int8_t ed_h,uint8_t lqi_r,int8_t ed_r);
 /**
  * \brief Identifying peer node
  */
