@@ -1,8 +1,7 @@
 /**
  * \file
  *
- * \brief Provides the low-level initialization functions that called
- * on chip startup.
+ * \brief USART synchronous example configuration.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -42,44 +41,27 @@
  *
  */
 
-#ifndef SYSTEM_SAM4N_H_INCLUDED
-#define SYSTEM_SAM4N_H_INCLUDED
-
-/* @cond 0 */
-/**INDENT-OFF**/
-#ifdef __cplusplus
-extern "C" {
-#endif
-/**INDENT-ON**/
-/* @endcond */
-
-#include <stdint.h>
-
-extern uint32_t SystemCoreClock; /* System Clock Frequency (Core Clock) */
-
 /**
- * @brief Setup the microcontroller system.
- * Initialize the System and update the SystemCoreClock variable.
+ * \defgroup usart_sync_example_pin_defs
+ *   - <b> master  --  slave</b>
+ *   - TXD(PA22)  --  RXD(PA21)
+ *   - RXD(PA21)  --  TXD(PA22)
+ *   - SCK(PA23)  --  SCK(PA23)
+ *   - GND  --  GND
  */
-void SystemInit(void);
 
-/**
- * @brief Updates the SystemCoreClock with current core Clock
- * retrieved from cpu registers.
- */
-void SystemCoreClockUpdate(void);
+#ifndef CONF_EXAMPLE_H_INCLUDED
+#define CONF_EXAMPLE_H_INCLUDED
 
-/**
- * Initialize flash.
- */
-void system_init_flash(uint32_t dw_clk);
+#include "conf_board.h"
+#include "conf_clock.h"
 
-/* @cond 0 */
-/**INDENT-OFF**/
-#ifdef __cplusplus
-}
-#endif
-/**INDENT-ON**/
-/* @endcond */
+#define BOARD_ID_USART             ID_USART1
 
-#endif /* SYSTEM_SAM4N_H_INCLUDED */
+#define BOARD_USART                USART1
+
+#define USART_Handler              USART1_Handler
+
+#define USART_IRQn                 USART1_IRQn
+
+#endif /* CONF_EXAMPLE_H_INCLUDED */

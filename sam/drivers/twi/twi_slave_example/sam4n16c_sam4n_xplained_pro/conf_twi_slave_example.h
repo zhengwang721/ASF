@@ -1,8 +1,7 @@
 /**
  * \file
  *
- * \brief Provides the low-level initialization functions that called
- * on chip startup.
+ * \brief TWI Slave Example configuration.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -42,44 +41,18 @@
  *
  */
 
-#ifndef SYSTEM_SAM4N_H_INCLUDED
-#define SYSTEM_SAM4N_H_INCLUDED
+/* Configuration of TWI Slave Example */
 
-/* @cond 0 */
-/**INDENT-OFF**/
-#ifdef __cplusplus
-extern "C" {
-#endif
-/**INDENT-ON**/
-/* @endcond */
+#ifndef CONF_TWI_SLAVE_EXAMPLE_H_INCLUDED
+#define CONF_TWI_SLAVE_EXAMPLE_H_INCLUDED
 
-#include <stdint.h>
+/** Definition of TWI interrupt ID on board. */
+#define BOARD_TWI_IRQn          TWI0_IRQn
+#define BOARD_TWI_Handler       TWI0_Handler
 
-extern uint32_t SystemCoreClock; /* System Clock Frequency (Core Clock) */
+/** TWI ID for SLAVE application to use */
+#define BOARD_ID_TWI_SLAVE          ID_TWI0
+/** TWI Base for TWI SLAVE application to use */
+#define BOARD_BASE_TWI_SLAVE        TWI0
 
-/**
- * @brief Setup the microcontroller system.
- * Initialize the System and update the SystemCoreClock variable.
- */
-void SystemInit(void);
-
-/**
- * @brief Updates the SystemCoreClock with current core Clock
- * retrieved from cpu registers.
- */
-void SystemCoreClockUpdate(void);
-
-/**
- * Initialize flash.
- */
-void system_init_flash(uint32_t dw_clk);
-
-/* @cond 0 */
-/**INDENT-OFF**/
-#ifdef __cplusplus
-}
-#endif
-/**INDENT-ON**/
-/* @endcond */
-
-#endif /* SYSTEM_SAM4N_H_INCLUDED */
+#endif /* CONF_TWI_SLAVE_EXAMPLE_H_INCLUDED */

@@ -1,8 +1,7 @@
 /**
  * \file
  *
- * \brief Provides the low-level initialization functions that called
- * on chip startup.
+ * \brief Board configuration.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -42,44 +41,15 @@
  *
  */
 
-#ifndef SYSTEM_SAM4N_H_INCLUDED
-#define SYSTEM_SAM4N_H_INCLUDED
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-/* @cond 0 */
-/**INDENT-OFF**/
-#ifdef __cplusplus
-extern "C" {
-#endif
-/**INDENT-ON**/
-/* @endcond */
+/** Enable Com Port. */
+#define CONF_BOARD_UART_CONSOLE
 
-#include <stdint.h>
+/* USART1 module is used in SYNC. mode. */
+#define CONF_BOARD_USART_RXD
+#define CONF_BOARD_USART_TXD
+#define CONF_BOARD_USART_SCK
 
-extern uint32_t SystemCoreClock; /* System Clock Frequency (Core Clock) */
-
-/**
- * @brief Setup the microcontroller system.
- * Initialize the System and update the SystemCoreClock variable.
- */
-void SystemInit(void);
-
-/**
- * @brief Updates the SystemCoreClock with current core Clock
- * retrieved from cpu registers.
- */
-void SystemCoreClockUpdate(void);
-
-/**
- * Initialize flash.
- */
-void system_init_flash(uint32_t dw_clk);
-
-/* @cond 0 */
-/**INDENT-OFF**/
-#ifdef __cplusplus
-}
-#endif
-/**INDENT-ON**/
-/* @endcond */
-
-#endif /* SYSTEM_SAM4N_H_INCLUDED */
+#endif /* CONF_BOARD_H_INCLUDED */

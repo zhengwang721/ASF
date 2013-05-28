@@ -1,8 +1,7 @@
 /**
  * \file
  *
- * \brief Provides the low-level initialization functions that called
- * on chip startup.
+ * \brief USART Serial Configuration
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -42,44 +41,14 @@
  *
  */
 
-#ifndef SYSTEM_SAM4N_H_INCLUDED
-#define SYSTEM_SAM4N_H_INCLUDED
+#ifndef CONF_USART_SERIAL_H
+#define CONF_USART_SERIAL_H
 
-/* @cond 0 */
-/**INDENT-OFF**/
-#ifdef __cplusplus
-extern "C" {
-#endif
-/**INDENT-ON**/
-/* @endcond */
+/** UART Interface */
+#define CONF_UART            CONSOLE_UART
+/** Baudrate setting */
+#define CONF_UART_BAUDRATE   115200
+/** Parity setting */
+#define CONF_UART_PARITY     UART_MR_PAR_NO
 
-#include <stdint.h>
-
-extern uint32_t SystemCoreClock; /* System Clock Frequency (Core Clock) */
-
-/**
- * @brief Setup the microcontroller system.
- * Initialize the System and update the SystemCoreClock variable.
- */
-void SystemInit(void);
-
-/**
- * @brief Updates the SystemCoreClock with current core Clock
- * retrieved from cpu registers.
- */
-void SystemCoreClockUpdate(void);
-
-/**
- * Initialize flash.
- */
-void system_init_flash(uint32_t dw_clk);
-
-/* @cond 0 */
-/**INDENT-OFF**/
-#ifdef __cplusplus
-}
-#endif
-/**INDENT-ON**/
-/* @endcond */
-
-#endif /* SYSTEM_SAM4N_H_INCLUDED */
+#endif/* CONF_USART_SERIAL_H_INCLUDED */

@@ -1,8 +1,7 @@
 /**
  * \file
  *
- * \brief Provides the low-level initialization functions that called
- * on chip startup.
+ * \brief SAM4N clock configuration.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -42,44 +41,42 @@
  *
  */
 
-#ifndef SYSTEM_SAM4N_H_INCLUDED
-#define SYSTEM_SAM4N_H_INCLUDED
+#ifndef CONF_CLOCK_H_INCLUDED
+#define CONF_CLOCK_H_INCLUDED
 
-/* @cond 0 */
-/**INDENT-OFF**/
-#ifdef __cplusplus
-extern "C" {
-#endif
-/**INDENT-ON**/
-/* @endcond */
+// ===== System Clock (MCK) Source Options
+//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_SLCK_RC
+//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_SLCK_XTAL
+//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_SLCK_BYPASS
+//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_4M_RC
+//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_8M_RC
+//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_12M_RC
+//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_XTAL
+//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_BYPASS
+#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_PLLACK
 
-#include <stdint.h>
+// ===== System Clock (MCK) Prescaler Options   (Fmck = Fsys / (SYSCLK_PRES))
+//#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_1
+#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_2
+//#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_4
+//#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_8
+//#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_16
+//#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_32
+//#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_64
+//#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_3
 
-extern uint32_t SystemCoreClock; /* System Clock Frequency (Core Clock) */
+// ===== PLL0 (A) Options   (Fpll = (Fclk * PLL_mul) / PLL_div)
+// Use mul and div effective values here.
+#define CONFIG_PLL0_SOURCE          PLL_SRC_MAINCK_8M_RC
+#define CONFIG_PLL0_MUL             25
+#define CONFIG_PLL0_DIV             1
 
-/**
- * @brief Setup the microcontroller system.
- * Initialize the System and update the SystemCoreClock variable.
- */
-void SystemInit(void);
+// ===== Target frequency (System clock)
+// - XTAL frequency: 12MHz
+// - System clock source: PLLA
+// - System clock prescaler: 2 (divided by 2)
+// - PLLA source: XTAL
+// - PLLA output: XTAL * 25 / 1
+// - System clock: XTAL * 25 / 1 / 2 = 100MHz
 
-/**
- * @brief Updates the SystemCoreClock with current core Clock
- * retrieved from cpu registers.
- */
-void SystemCoreClockUpdate(void);
-
-/**
- * Initialize flash.
- */
-void system_init_flash(uint32_t dw_clk);
-
-/* @cond 0 */
-/**INDENT-OFF**/
-#ifdef __cplusplus
-}
-#endif
-/**INDENT-ON**/
-/* @endcond */
-
-#endif /* SYSTEM_SAM4N_H_INCLUDED */
+#endif /* CONF_CLOCK_H_INCLUDED */

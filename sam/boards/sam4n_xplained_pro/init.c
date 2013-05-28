@@ -97,6 +97,57 @@ void board_init(void)
 			PINS_UART3_MASK);
 #endif
 
+#ifdef CONF_BOARD_USART_RXD
+	/* Configure USART RXD pin */
+	ioport_set_pin_peripheral_mode(PIN_USART1_RXD_IDX,
+			PIN_USART1_RXD_FLAGS);
+#endif
+
+#ifdef CONF_BOARD_USART_TXD
+	/* Configure USART TXD pin */
+	ioport_set_pin_peripheral_mode(PIN_USART1_TXD_IDX,
+			PIN_USART1_TXD_FLAGS);
+#endif
+
+#ifdef CONF_BOARD_USART_SCK
+	/* Configure USART synchronous communication SCK pin */
+	ioport_set_pin_peripheral_mode(PIN_USART1_SCK_IDX,
+			PIN_USART1_SCK_FLAGS);
+#endif
+
+#ifdef CONF_BOARD_USART_RTS
+	/* Configure USART synchronous communication RST pin */
+	ioport_set_pin_peripheral_mode(PIN_USART1_RTS_IDX,
+			PIN_USART1_RTS_FLAGS);
+#endif
+
+#ifdef CONF_BOARD_ISO7816_RST
+	/* Configure ISO7816 card reset pin */
+	ioport_set_pin_dir(PIN_ISO7816_RST_IDX, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(PIN_ISO7816_RST_IDX, IOPORT_PIN_LEVEL_LOW);
+#endif
+
+#ifdef CONF_BOARD_ISO7816
+	/* Configure ISO7816 interface TXD & SCK pin */
+	ioport_set_pin_peripheral_mode(PIN_USART0_TXD_IDX, PIN_USART0_TXD_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_USART0_SCK_IDX, PIN_USART0_SCK_FLAGS);
+#endif
+
+#ifdef CONF_BOARD_TWI0
+	ioport_set_pin_peripheral_mode(TWI0_DATA_GPIO, TWI0_DATA_FLAGS);
+	ioport_set_pin_peripheral_mode(TWI0_CLK_GPIO, TWI0_CLK_FLAGS);
+#endif
+
+#ifdef CONF_BOARD_TWI1
+	ioport_set_pin_peripheral_mode(TWI1_DATA_GPIO, TWI1_DATA_FLAGS);
+	ioport_set_pin_peripheral_mode(TWI1_CLK_GPIO, TWI1_CLK_FLAGS);
+#endif
+
+#ifdef CONF_BOARD_TWI2
+	ioport_set_pin_peripheral_mode(TWI2_DATA_GPIO, TWI2_DATA_FLAGS);
+	ioport_set_pin_peripheral_mode(TWI2_CLK_GPIO, TWI2_CLK_FLAGS);
+#endif
+
 #ifdef CONF_BOARD_SPI
 	ioport_set_pin_peripheral_mode(SPI_MISO_GPIO, SPI_MISO_FLAGS);
 	ioport_set_pin_peripheral_mode(SPI_MOSI_GPIO, SPI_MOSI_FLAGS);

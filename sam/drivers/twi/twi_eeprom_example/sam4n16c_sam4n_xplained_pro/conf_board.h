@@ -1,8 +1,7 @@
 /**
  * \file
  *
- * \brief Provides the low-level initialization functions that called
- * on chip startup.
+ * \brief Board configuration.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -42,44 +41,20 @@
  *
  */
 
-#ifndef SYSTEM_SAM4N_H_INCLUDED
-#define SYSTEM_SAM4N_H_INCLUDED
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-/* @cond 0 */
-/**INDENT-OFF**/
-#ifdef __cplusplus
-extern "C" {
-#endif
-/**INDENT-ON**/
-/* @endcond */
+/** Definition of TWI interrupt ID on board. */
+#define BOARD_TWI_IRQn          TWI0_IRQn
+#define BOARD_TWI_Handler    TWI0_Handler
 
-#include <stdint.h>
+/** Configure TWI0 pins */
+#define CONF_BOARD_TWI0
 
-extern uint32_t SystemCoreClock; /* System Clock Frequency (Core Clock) */
+/** Configure UART pins */
+#define CONF_BOARD_UART_CONSOLE
 
-/**
- * @brief Setup the microcontroller system.
- * Initialize the System and update the SystemCoreClock variable.
- */
-void SystemInit(void);
+/** Uart Hw ID used by the console (UART3). */
+#define CONSOLE_UART_ID          ID_UART3
 
-/**
- * @brief Updates the SystemCoreClock with current core Clock
- * retrieved from cpu registers.
- */
-void SystemCoreClockUpdate(void);
-
-/**
- * Initialize flash.
- */
-void system_init_flash(uint32_t dw_clk);
-
-/* @cond 0 */
-/**INDENT-OFF**/
-#ifdef __cplusplus
-}
-#endif
-/**INDENT-ON**/
-/* @endcond */
-
-#endif /* SYSTEM_SAM4N_H_INCLUDED */
+#endif /* CONF_BOARD_H_INCLUDED */

@@ -155,13 +155,17 @@ int main(void)
 	if (usart_spi_at45dbx_mem_check() == false) {
 		ioport_set_pin_level(USART_SPI_EXAMPLE_LED_PIN_EXAMPLE_1,
 				IOPORT_PIN_LEVEL_LOW);
+#ifdef USART_SPI_EXAMPLE_LED_PIN_EXAMPLE_2
 		ioport_set_pin_level(USART_SPI_EXAMPLE_LED_PIN_EXAMPLE_2,
 				IOPORT_PIN_LEVEL_HIGH);
+#endif
 	} else {
 		ioport_set_pin_level(USART_SPI_EXAMPLE_LED_PIN_EXAMPLE_1,
 				IOPORT_PIN_LEVEL_LOW);
+#ifdef USART_SPI_EXAMPLE_LED_PIN_EXAMPLE_2
 		ioport_set_pin_level(USART_SPI_EXAMPLE_LED_PIN_EXAMPLE_2,
 				IOPORT_PIN_LEVEL_LOW);
+#endif
 	}
 
 	while (1) {
