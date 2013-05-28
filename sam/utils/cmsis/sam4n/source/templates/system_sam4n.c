@@ -43,6 +43,7 @@
  */
 
 #include "sam4n.h"
+#include "compiler.h"
 
 /* @cond 0 */
 /**INDENT-OFF**/
