@@ -5,7 +5,7 @@
 			for the configuration and management of the RTC module.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="RTC" />
+			<keyword value="Timers"/>
 		</info>
 
 		<module type="driver" id="sam0.drivers.rtc#count_polled" caption="RTC - Real Time Clock (Count Mode) Polled Driver">

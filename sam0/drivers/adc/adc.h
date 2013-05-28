@@ -1754,7 +1754,7 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
  *  - \subpage asfdoc_samd20_adc_basic_use_case_callback
  * \endif
  *
- * \page asfdoc_samd20_pac_document_revision_history Document Revision History
+ * \page asfdoc_samd20_adc_document_revision_history Document Revision History
  *
  * <table>
  *	<tr>

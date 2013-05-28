@@ -1118,7 +1118,7 @@ static inline void usart_disable_transceiver(
  *   </tr>
  * </table>
  *
- * \page asfdoc_samd20_pac_document_revision_history Document Revision History
+ * \page asfdoc_samd20_sercom_usart_document_revision_history Document Revision History
  *
  * <table>
  *	<tr>

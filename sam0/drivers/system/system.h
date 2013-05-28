@@ -468,7 +468,7 @@ void system_init(void);
  *	</tr>
  * </table>
  *
- * \page asfdoc_samd20_pac_document_revision_history Document Revision History
+ * \page asfdoc_samd20_system_document_revision_history Document Revision History
  *
  * <table>
  *	<tr>

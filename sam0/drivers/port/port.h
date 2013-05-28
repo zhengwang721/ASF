@@ -511,7 +511,7 @@ static inline void port_pin_toggle_output_level(
  *
  *  - \subpage asfdoc_samd20_port_basic_use_case
  *
- * \page asfdoc_samd20_pac_document_revision_history Document Revision History
+ * \page asfdoc_samd20_port_document_revision_history Document Revision History
  *
  * <table>
  *	<tr>

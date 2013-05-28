@@ -581,7 +581,7 @@ static inline void system_pinmux_pin_set_output_drive(
  *
  *  - \subpage asfdoc_samd20_system_pinmux_basic_use_case
  *
- * \page asfdoc_samd20_pac_document_revision_history Document Revision History
+ * \page asfdoc_samd20_system_pinmux_document_revision_history Document Revision History
  *
  * <table>
  *	<tr>

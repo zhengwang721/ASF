@@ -768,7 +768,7 @@ static inline void rtc_count_disable_events(
  *  - \subpage asfdoc_samd20_rtc_count_callback_use_case
  * \endif
  *
- * \page asfdoc_samd20_pac_document_revision_history Document Revision History
+ * \page asfdoc_samd20_rtc_count_document_revision_history Document Revision History
  *
  * <table>
  *	<tr>

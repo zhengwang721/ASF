@@ -422,7 +422,7 @@ static inline void bod_clear_detected(
  *
  *  - \subpage asfdoc_samd20_bod_basic_use_case
  *
- * \page asfdoc_samd20_pac_document_revision_history Document Revision History
+ * \page asfdoc_samd20_bod_document_revision_history Document Revision History
  *
  * <table>
  *	<tr>

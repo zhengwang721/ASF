@@ -437,7 +437,7 @@ struct i2c_packet {
  * - \subpage asfdoc_samd20_sercom_i2c_slave_callback_use_case "Quick Start Guide for the I2C Slave module - Callback Use Case"
  * \endif
  *
- * \page asfdoc_samd20_pac_document_revision_history Document Revision History
+ * \page asfdoc_samd20_sercom_i2c_document_revision_history Document Revision History
  *
  * <table>
  *	<tr>

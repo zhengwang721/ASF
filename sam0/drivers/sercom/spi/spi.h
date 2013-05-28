@@ -1724,7 +1724,7 @@ enum status_code spi_select_slave(
   *   </tr>
   * </table>
   *
-  * \page asfdoc_samd20_pac_document_revision_history Document Revision History
+  * \page asfdoc_samd20_sercom_spi_document_revision_history Document Revision History
   *
   * <table>
   *	<tr>
