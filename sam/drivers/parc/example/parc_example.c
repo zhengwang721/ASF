@@ -234,6 +234,7 @@ static void configure_console(void)
  */
 static void pdca_parc_callback(enum pdca_channel_status status)
 {
+	UNUSED(status);
 	printf("End of capture.\r\n");
 	for (uint32_t uc_i = 0; uc_i < BUFFER_SIZE; uc_i++) {
 		printf("0x%02X ", gs_puc_buffer[uc_i]);

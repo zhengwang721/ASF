@@ -43,7 +43,6 @@
 
 #include "parc.h"
 #include "sysclk.h"
-#include "conf_parc.h"
 
 /**
  * \brief Initializes the PARC
@@ -90,7 +89,6 @@ enum status_code parc_init(
  *
  * \return Status of the configuration procedure
  * \retval STATUS_OK               The configuration was successful
- * \retval STATUS_ERR_INVALID_ARG  Invalid argument(s) were provided
  */
 enum status_code parc_set_config(
 	struct parc_module *const module_inst,

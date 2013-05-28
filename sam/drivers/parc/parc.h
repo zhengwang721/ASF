@@ -58,11 +58,11 @@ extern "C" {
 /**
  * \defgroup group_sam_drivers_parc PARC - Parallel Capture
  *
- * This driver provides a unified interface for the configuration and 
+ * This driver provides a unified interface for the configuration and
  * management of PARC (Parallel Capture) module.
- * 
+ *
  * The Parallel Capture peripheral samples an external 8-bit bus with
- * an external input clock. It can be connected to a CMOS digital 
+ * an external input clock. It can be connected to a CMOS digital
  * image sensor, an ADC, a DSP synchronous port etc..
  *
  * \{
@@ -171,6 +171,7 @@ enum parc_callback {
 	PARC_CALLBACK_N,
 };
 #endif
+
 /**
  * \brief PARC configuration structure
  *
@@ -243,7 +244,7 @@ enum status_code parc_set_config(
  * Initializes a given PARC configuration struct to a set of known default
  * values. This function should be called on any new instance of the
  * configuration struct before being modified by the user application.
- * 
+ *
  * The default configurations are:
  * - Capture every btye
  * - Sample the data bus on the rising edge of the PCCK input clock
@@ -412,7 +413,7 @@ static inline enum status_code parc_clear_status(
 
 	/*clear interrupt flags*/
 	parc_module_hw->PARC_ICR = int_flags;
-	
+
 	return STATUS_OK;
 }
 
@@ -468,6 +469,7 @@ static inline void parc_enable_interrupts(struct parc_module *const module_inst,
 
 	parc_module_hw->PARC_IER = source;
 }
+
 /**
  * \brief Disable interrupt
  *

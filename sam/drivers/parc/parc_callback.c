@@ -108,7 +108,7 @@ enum status_code parc_register_callback(
 
 	/* Set the bit corresponding to the callback_type */
 	module->registered_callback_mask |= (1 << callback_type);
-	
+
 	return STATUS_OK;
 }
 
@@ -134,7 +134,7 @@ enum status_code  parc_unregister_callback(
 
 	/* Clear the bit corresponding to the callback_type */
 	module->registered_callback_mask &= ~(1 << callback_type);
-	
+
 	return STATUS_OK;
 }
 

@@ -69,6 +69,7 @@ enum status_code parc_register_callback(struct parc_module *const module,
 
 enum status_code  parc_unregister_callback(struct parc_module *const module,
 		enum parc_callback callback_type);
+
 /**
  * \brief Enables callback
  *
@@ -80,7 +81,7 @@ enum status_code  parc_unregister_callback(struct parc_module *const module,
  * \param[in]  type          Callback type given by an enum
  *
  * \returns    Status of the operation
- * \retval     STATUS_OK              If operation was completed
+ * \retval     STATUS_OK     When operation was completed
  *
  */
 static inline enum status_code parc_enable_callback(
@@ -92,7 +93,7 @@ static inline enum status_code parc_enable_callback(
 
 	/* Enable callback */
 	module_inst->enabled_callback_mask |= (1 << type);
-		
+
 	return STATUS_OK;
 }
 
@@ -106,7 +107,7 @@ static inline enum status_code parc_enable_callback(
  * \param[in] type           Callback type given by an enum
  *
  * \returns    Status of the operation
- * \retval     STATUS_OK              If operation was completed
+ * \retval     STATUS_OK     When operation was completed
  *
  */
 static inline enum status_code parc_disable_callback(
@@ -122,10 +123,6 @@ static inline enum status_code parc_disable_callback(
 	return STATUS_OK;
 }
 
-/**
- * \}
- */
-
 /// @cond 0
 /**INDENT-OFF**/
 #ifdef __cplusplus
@@ -133,5 +130,5 @@ static inline enum status_code parc_disable_callback(
 #endif
 /**INDENT-ON**/
 /// @endcond
- 
+
 #endif  /* PARC_CALLBACK_H_INCLUDED */
