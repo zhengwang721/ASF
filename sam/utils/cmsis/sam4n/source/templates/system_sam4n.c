@@ -161,6 +161,8 @@ void SystemCoreClockUpdate(void)
 
 			switch (PMC->CKGR_MOR & CKGR_MOR_MOSCRCF_Msk) {
 			case CKGR_MOR_MOSCRCF_4_MHz:
+				/* The PLL input range is 8MHz to 32MHz */
+				/* So the 4MHz RC selection is forbidden */
 				Assert(false);
 				break;
 
