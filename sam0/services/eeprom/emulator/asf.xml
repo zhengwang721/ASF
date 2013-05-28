@@ -10,8 +10,8 @@
 		</info>
 		<info type="appnote" value="AT03265"/>
 		<info type="keyword" value="pdf">
-			<keyword value="EPROM Emulator"/>
-			<keyword value="EPROM"/>
+			<keyword value="EEPROM Emulator"/>
+			<keyword value="EEPROM"/>
 			<keyword value="Memory" />
 		</info>
 
