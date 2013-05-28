@@ -4,7 +4,7 @@
 		Example application. It demonstrates how to re-sample a 16-bit fixed-point vector using the DSP library.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="Digital signal processing"/>
+			<keyword value="Digital Signal Processing"/>
 		</info>
 		<build type="c-source" value="resampling_example.c"/>
 		<device-support value="uc3"/>
