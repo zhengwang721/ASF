@@ -1248,6 +1248,21 @@ static inline void ac_win_clear_status(
  * \if AC_CALLBACK_MODE
  *  - \subpage asfdoc_samd20_ac_callback_use_case
  * \endif
+ *
+ * \page asfdoc_samd20_ac_document_revision_history Document Revision History
+ *
+ * <table>
+ *	<tr>
+ *		<th>Doc. Rev.</td>
+ *		<th>Date</td>
+ *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>A</td>
+ *		<td>06/2013</td>
+ *		<td>Initial release</td>
+ *	</tr>
+ * </table>
  */
 
 #endif

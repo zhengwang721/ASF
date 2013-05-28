@@ -34,6 +34,17 @@
 
 		<module type="driver" id="sam0.drivers.wdt#callback" caption="WDT - Watchdog Timer (Callback APIs)">
 			<info type="appnote" value="AT03264"/>
+			<info type="keyword" value="pdf">
+				<keyword value="Timers"/>
+				<keyword value="Clocks"/>
+				<keyword value="CPU"/>
+				<keyword value="WDT"/>
+				<keyword value="Watchdog Timer"/>
+			</info>
+
+			<info type="description" value="pdf">
+				This document describes how to use the Watchdog Timer on the SAM D20, both the ASF driver and the peripheral itself.
+			</info>
 
 			<build type="include-path" value="."/>
 

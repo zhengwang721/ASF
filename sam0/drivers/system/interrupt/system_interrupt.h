@@ -442,6 +442,21 @@ enum system_interrupt_priority_level system_interrupt_get_priority(
  *
  *  - \subpage asfdoc_samd20_system_interrupt_critsec_use_case
  *  - \subpage asfdoc_samd20_system_interrupt_enablemodint_use_case
+ *
+ * \page asfdoc_samd20_system_interrupt_document_revision_history Document Revision History
+ *
+ * <table>
+ *	<tr>
+ *		<th>Doc. Rev.</td>
+ *		<th>Date</td>
+ *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>A</td>
+ *		<td>06/2013</td>
+ *		<td>Initial release</td>
+ *	</tr>
+ * </table>
  */
 
 #endif

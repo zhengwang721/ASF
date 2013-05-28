@@ -6,9 +6,7 @@
 		  hardware timers.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="I/O" />
 			<keyword value="Timers" />
-			<keyword value="Clocks" />
 		</info>
 
 		<module caption="TC - Timer Counter" id="sam0.drivers.tc#polled" type="driver">
@@ -35,6 +33,17 @@
 		</module>
 		<module caption="TC - Timer Counter" id="sam0.drivers.tc#callback" type="driver">
 			<info type="appnote" value="AT03263"/>
+			<info type="keyword" value="pdf">
+				<keyword value="I/O"/>
+				<keyword value="TC"/>
+				<keyword value="Timers" />
+				<keyword value="Counters" />
+				<keyword value="Clocks" />
+			</info>
+
+			<info type="description" value="pdf">
+				This document describes how to use the Timer Counter on the SAM D20, both the ASF driver and the peripheral itself.
+			</info>
 
 			<build type="include-path" value="." />
 

@@ -12,6 +12,16 @@
 		</info>
 
 		<info type="appnote" value="AT03260"/>
+		<info type="keyword" value="pdf">
+			<keyword value="SYSTEM"/>
+			<keyword value="I/O"/>
+			<keyword value="CPU"/>
+			<keyword value="Clocks"/>
+		</info>
+
+		<info type="description" value="pdf">
+			This document describes how to use the core system modules on the SAM D20, both the ASF driver and the peripheral itself.
+		</info>
 
 		<build type="include-path" value="."/>
 		<build type="header-file" subtype="api" value="system.h"/>

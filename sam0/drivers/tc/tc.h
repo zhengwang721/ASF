@@ -1360,6 +1360,21 @@ static inline void tc_clear_status(
  * \if TC_CALLBACK_MODE
  *  - \subpage asfdoc_samd20_tc_callback_use_case
  * \endif
+ *
+ * \page asfdoc_samd20_tc_document_revision_history Document Revision History
+ *
+ * <table>
+ *	<tr>
+ *		<th>Doc. Rev.</td>
+ *		<th>Date</td>
+ *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>A</td>
+ *		<td>06/2013</td>
+ *		<td>Initial release</td>
+ *	</tr>
+ * </table>
  */
 
 #endif /* TC_H_INCLUDED */

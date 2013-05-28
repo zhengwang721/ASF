@@ -467,6 +467,21 @@ void system_init(void);
  *		<td>Initial Release</td>
  *	</tr>
  * </table>
+ *
+ * \page asfdoc_samd20_system_document_revision_history Document Revision History
+ *
+ * <table>
+ *	<tr>
+ *		<th>Doc. Rev.</td>
+ *		<th>Date</td>
+ *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>A</td>
+ *		<td>06/2013</td>
+ *		<td>Initial release</td>
+ *	</tr>
+ * </table>
  */
 
 #endif /* SYSTEM_H_INCLUDED */

@@ -1199,6 +1199,21 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *
  *  - \subpage asfdoc_samd20_system_clock_basic_use_case
  *  - \subpage asfdoc_samd20_system_gclk_basic_use_case
+ *
+ * \page asfdoc_samd20_system_clock_document_revision_history Document Revision History
+ *
+ * <table>
+ *	<tr>
+ *		<th>Doc. Rev.</td>
+ *		<th>Date</td>
+ *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>A</td>
+ *		<td>06/2013</td>
+ *		<td>Initial release</td>
+ *	</tr>
+ * </table>
  */
 
 #endif /* SYSTEM_CLOCK_H_INCLUDED */

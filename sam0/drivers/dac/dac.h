@@ -743,6 +743,21 @@ void dac_clear_status(
  * added to the user application.
  *
  *  - \subpage asfdoc_samd20_dac_basic_use_case
+ *
+ * \page asfdoc_samd20_dac_document_revision_history Document Revision History
+ *
+ * <table>
+ *	<tr>
+ *		<th>Doc. Rev.</td>
+ *		<th>Date</td>
+ *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>A</td>
+ *		<td>06/2013</td>
+ *		<td>Initial release</td>
+ *	</tr>
+ * </table>
  */
 
 #endif /* DAC_H_INCLUDED */

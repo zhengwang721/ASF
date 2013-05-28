@@ -398,6 +398,21 @@ enum status_code eeprom_emulator_read_buffer(
  * added to the user application.
  *
  *  - \subpage asfdoc_samd20_eeprom_basic_use_case
+ *
+ * \page asfdoc_samd20_eeprom_document_revision_history Document Revision History
+ *
+ * <table>
+ *	<tr>
+ *		<th>Doc. Rev.</td>
+ *		<th>Date</td>
+ *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>A</td>
+ *		<td>06/2013</td>
+ *		<td>Initial release</td>
+ *	</tr>
+ * </table>
  */
 
 #endif /* EEPROM_H_INCLUDED */

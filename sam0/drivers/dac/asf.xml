@@ -32,6 +32,15 @@
 
 		<module type="driver" id="sam0.drivers.dac#callback" caption="DAC - Digital-to-Analog Converter (Callback APIs)">
 			<info type="appnote" value="AT03244"/>
+			<info type="keyword" value="pdf">
+				<keyword value="DAC"/>
+				<keyword value="Digital to Analog Converter"/>
+				<keyword value="Digital Conversion"/>
+			</info>
+
+			<info type="description" value="pdf">
+				This document describes how to use the Digital to Analog Converter on the SAM D20, both the ASF driver and the peripheral itself.
+			</info>
 
 			<build type="include-path" value="."/>
 			<build type="header-file" subtype="api" value="dac.h"/>

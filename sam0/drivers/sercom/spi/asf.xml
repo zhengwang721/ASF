@@ -32,6 +32,18 @@
 
 		<module type="driver" id="sam0.drivers.sercom.spi#callback" caption="SERCOM SPI - Serial Peripheral Interface (Callback Mode)">
 			<info type="appnote" value="AT03255"/>
+			<info type="keyword" value="pdf">
+				<keyword value="SPI"/>
+				<keyword value="I/O"/>
+				<keyword value="SERCOM"/>
+				<keyword value="Serial Communication"/>
+				<keyword value="Serial Peripheral Interface Bus"/>
+			</info>
+
+			<info type="description" value="pdf">
+				This document describes how to use the Serial Peripheral Interface in master mode on the SAM D20, both the ASF driver and the peripheral itself.
+			</info>
+			
 			<build type="c-source" value="spi.c"/>
 			<build type="c-source" value="spi_interrupt.c"/>
 			<build type="header-file" subtype="api" value="spi.h"/>
