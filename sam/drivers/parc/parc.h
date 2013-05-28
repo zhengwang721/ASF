@@ -161,13 +161,14 @@ enum parc_status {
 
 #if PARC_CALLBACK_MODE == true
 /**
- * \brief PARC Callback enum
- *
- * Callbacks for the PARC driver
+ * \brief callback type enum
  */
-enum parc_callback {
-	PARC_CALLBACK_DRDY,
-	PARC_CALLBACK_OVR,
+enum parc_callback_type {
+	/* Data ready */
+	PARC_CALLBACK_DATA_READY,
+	/* Data overrun */
+	PARC_CALLBACK_OVERRUN,
+	/* Callback count*/
 	PARC_CALLBACK_N,
 };
 #endif

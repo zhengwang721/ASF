@@ -135,9 +135,6 @@
 #define PDCA_PARC_CHANNEL     0
 #define PDCA_PID_PARC         16
 
-/** capture complete */
-static bool capture_complete = false;
-
 /** Receive buffer. */
 static uint8_t gs_puc_buffer[BUFFER_SIZE];
 
@@ -240,10 +237,12 @@ static void pdca_parc_callback(enum pdca_channel_status status)
 		printf("0x%02X ", gs_puc_buffer[uc_i]);
 	}
 	printf("\r\n");
-	capture_complete = true;
 
 	/* disable interrupt for pdca channel of PARC*/
 	pdca_channel_disable_interrupt(PDCA_PARC_CHANNEL,PDCA_IER_RCZ);
+	
+	pdca_channel_disable(PDCA_PARC_CHANNEL);
+	puts("\n\rThe example is done!\n\r");
 }
 
 /**
@@ -330,10 +329,5 @@ int main(void)
 			(void *)gs_puc_buffer, BUFFER_SIZE);
 	/* Main loop. */
 	while(1) {
-		if(capture_complete) {
-			pdca_channel_disable(PDCA_PARC_CHANNEL);
-			puts("\n\rThe example is done!\n\r");
-			capture_complete = false;
-		}
 	}
 }

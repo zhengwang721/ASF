@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief  Configuration File for SAM4L8 Xplained Pro Board.
+ * \brief Sleep manager configuration
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -40,14 +40,9 @@
  * \asf_license_stop
  *
  */
+#ifndef CONF_SLEEPMGR_H
+#define CONF_SLEEPMGR_H
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#define CONFIG_SLEEPMGR_ENABLE
 
-/** Enable Com Port. */
-#define CONF_BOARD_COM_PORT
-
-/** Enable PARC Port connection */
-#define CONF_BOARD_PARC
-
-#endif  /* CONF_BOARD_H_INCLUDED */
+#endif /* CONF_SLEEPMGR_H */

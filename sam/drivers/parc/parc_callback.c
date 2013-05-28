@@ -67,8 +67,8 @@ void _parc_interrupt_handler()
 	uint32_t flags = module->hw->PARC_SR;
 
 	if (flags & PARC_INTERRUPT_DRDY) {
-		if(module->enabled_callback_mask & (1 << PARC_CALLBACK_DRDY)) {
-			(*(module->callback[PARC_CALLBACK_DRDY]))(module);
+		if(module->enabled_callback_mask & (1 << PARC_CALLBACK_DATA_READY)) {
+			(*(module->callback[PARC_CALLBACK_DATA_READY]))(module);
 		}
 		parc_clear_status(module, PARC_STATUS_DRDY);
 	}
@@ -97,7 +97,7 @@ void _parc_interrupt_handler()
 enum status_code parc_register_callback(
 		struct parc_module *const module,
 		parc_callback_t const callback_func,
-		enum parc_callback callback_type)
+		enum parc_callback_type callback_type)
 {
 	/* Sanity check arguments */
 	Assert(module);
@@ -124,7 +124,7 @@ enum status_code parc_register_callback(
  */
 enum status_code  parc_unregister_callback(
 		struct parc_module *const module,
-		enum parc_callback callback_type)
+		enum parc_callback_type callback_type)
 {
 	/* Sanity check arguments */
 	Assert(module);

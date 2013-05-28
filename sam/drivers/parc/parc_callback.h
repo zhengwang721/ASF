@@ -53,22 +53,12 @@ extern "C" {
 /**INDENT-ON**/
 /// @endcond
 
-/**
- * \brief callback type enum
- */
-enum parc_callback_type {
-	/* Data ready */
-	PARC_CALLBACK_DATA_READY,
-	/* Data overrun */
-	PARC_CALLBACK_OVERRUN
-};
-
 enum status_code parc_register_callback(struct parc_module *const module,
 		parc_callback_t const callback_func,
-		enum parc_callback callback_type);
+		enum parc_callback_type callback_type);
 
 enum status_code  parc_unregister_callback(struct parc_module *const module,
-		enum parc_callback callback_type);
+		enum parc_callback_type callback_type);
 
 /**
  * \brief Enables callback
