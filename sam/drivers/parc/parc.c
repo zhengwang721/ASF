@@ -3,7 +3,7 @@
  *
  * \brief PARC driver for SAM.
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -45,7 +45,6 @@
 #include "sysclk.h"
 #include "conf_parc.h"
 
-
 /**
  * \brief Initializes the PARC
  *
@@ -69,9 +68,9 @@ enum status_code parc_init(
 	module_inst->hw = hw;
 
 #if PARC_CALLBACK_MODE == true
-	for (uint8_t i = 0; i < PARC_CALLBACK_N; i++) {
+	for (uint8_t i = 0; i < PARC_CALLBACK_N; i++){
 		module_inst->callback[i] = NULL;
-	};
+	}
 
 	module_inst->registered_callback_mask = 0;
 	module_inst->enabled_callback_mask = 0;
@@ -80,30 +79,6 @@ enum status_code parc_init(
 #endif
 	return parc_set_config(module_inst, config);
 }
-
-///**
- //* \brief Turn on the clock for PARC (CLK_PARC) to enable PARC module.
- //*
- //* \param parc Base address of the PARC.
- //*/
-//void parc_enable(Parc *parc)
-//{
-	//sysclk_enable_peripheral_clock(parc);
-//}
-
-///**
- //* \brief Disable the PARC. It also disables the PARC module.
- //*
- //* \param parc Base address of the PARC.
- //*/
-//void parc_disable(Parc *parc)
-//{
-	///* Disable the PARC */
-	//parc->PARC_CR &= ~(PARC_CR_DIS);
-//
-	//sysclk_disable_peripheral_clock(parc);
-//
-//}
 
 /**
  * \Writes an PARC configuration to the hardware module
@@ -130,16 +105,14 @@ enum status_code parc_set_config(
 
 	if(config->capture_mode == PARC_BOTH_CAPTURE){
 		parc_module_hw->PARC_CFG &= ~(PARC_CFG_HALF);
-	}else if(config->capture_mode == PARC_ODD_CAPTURE)
-	{
+	}else if(config->capture_mode == PARC_ODD_CAPTURE){
 		parc_module_hw->PARC_CFG |= (PARC_CFG_HALF | PARC_CFG_ODD);
 	}else if(config->capture_mode == PARC_EVEN_CAPTURE){
 		parc_module_hw->PARC_CFG |= PARC_CFG_HALF;
 		parc_module_hw->PARC_CFG &= ~(PARC_CFG_ODD);
 	}
 
-	if(config->sampling_edge == PARC_FALLING_EDGE)
-	{
+	if(config->sampling_edge == PARC_FALLING_EDGE){
 		parc_module_hw->PARC_CFG |= PARC_CFG_EDGE;
 	}else if(config->sampling_edge == PARC_RISING_EDGE){
 		parc_module_hw->PARC_CFG &= ~(PARC_CFG_EDGE);
@@ -147,36 +120,3 @@ enum status_code parc_set_config(
 
 	return STATUS_OK;
 }
-
-
-//
-///**
- //* \internal
- //* \brief PARC callback function pointer array
- //*/
-//parc_callback_t parc_callback_pointer[PARC_INTERRUPT_SOURCE_NUM];
-//
-//
-///**
- //* \brief Set callback for PARC
- //*
- //* \param parc      Base address of the PARC.
- //* \param source    PARC interrupt source.
- //* \param callback  callback function pointer.
- //* \param irq_line  interrupt line.
- //* \param irq_level interrupt level.
- //*/
-//void parc_set_callback(Parc *parc, parc_interrupt_source_t source,
-	//parc_callback_t callback, uint8_t irq_line, uint8_t irq_level)
-//{
-	//parc_callback_pointer[source] = callback;
-	//NVIC_ClearPendingIRQ(    (IRQn_Type)irq_line);
-	//NVIC_SetPriority(    (IRQn_Type)irq_line, irq_level);
-	//NVIC_EnableIRQ(      (IRQn_Type)irq_line);
-	//parc_enable_interrupts(parc, source);
-//}
-//
-//
-
-
-

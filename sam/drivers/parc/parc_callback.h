@@ -63,45 +63,12 @@ enum parc_callback_type {
 	PARC_CALLBACK_OVERRUN
 };
 
+enum status_code parc_register_callback(struct parc_module *const module,
+		parc_callback_t const callback_func,
+		enum parc_callback callback_type);
 
-
-/**
- * \brief Register callback function
- *
- * Register the callback function.
- *
- * \param[in] module_inst  Pointer to PARC software instance struct
- * \param[in] callback_function   callback function  
- * \param[in] type Callback type given by the callback enum
- *
- * \returns    Status of the operation
- * \retval     STATUS_OK              If operation was completed
- * \retval     STATUS_ERR_INVALID     If operation was not completed,
- *                                    due to invalid callback type
- *
- */
-enum status_code parc_register_callback(
-	struct parc_module *const module_inst,
-	parc_callback_t *const callback_function,
-	enum parc_callback_type type);
-
-/**
- * \brief Unregister callback function
- *
- * Unregister the callback function.
- *
- * \param[in] module_inst  Pointer to PARC software instance struct
- * \param[in] type Callback type given by the callback enum
- *
- * \returns    Status of the operation
- * \retval     STATUS_OK              If operation was completed
- * \retval     STATUS_ERR_INVALID     If operation was not completed,
- *                                    due to invalid callback type
- *
- */
-enum status_code parc_unregister_callback(
-	struct parc_module *const module_inst,
-	enum parc_callback_type type);
+enum status_code  parc_unregister_callback(struct parc_module *const module,
+		enum parc_callback callback_type);
 /**
  * \brief Enables callback
  *
@@ -114,8 +81,6 @@ enum status_code parc_unregister_callback(
  *
  * \returns    Status of the operation
  * \retval     STATUS_OK              If operation was completed
- * \retval     STATUS_ERR_INVALID     If operation was not completed,
- *                                    due to invalid callback_type
  *
  */
 static inline enum status_code parc_enable_callback(
@@ -142,8 +107,6 @@ static inline enum status_code parc_enable_callback(
  *
  * \returns    Status of the operation
  * \retval     STATUS_OK              If operation was completed
- * \retval     STATUS_ERR_INVALID     If operation was not completed,
- *                                    due to invalid callback_type
  *
  */
 static inline enum status_code parc_disable_callback(
@@ -159,7 +122,6 @@ static inline enum status_code parc_disable_callback(
 	return STATUS_OK;
 }
 
-
 /**
  * \}
  */
@@ -172,5 +134,4 @@ static inline enum status_code parc_disable_callback(
 /**INDENT-ON**/
 /// @endcond
  
-
 #endif  /* PARC_CALLBACK_H_INCLUDED */

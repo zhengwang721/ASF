@@ -58,18 +58,18 @@ extern "C" {
 /**
  * \defgroup group_sam_drivers_parc PARC - Parallel Capture
  *
- * Driver for the PARC (Parallel Capture).
- * Provides functions for configuring and operating the PARC.
+ * This driver provides a unified interface for the configuration and 
+ * management of PARC (Parallel Capture) module.
+ * 
+ * The Parallel Capture peripheral samples an external 8-bit bus with
+ * an external input clock. It can be connected to a CMOS digital 
+ * image sensor, an ADC, a DSP synchronous port etc..
  *
  * \{
  */
-#if PARC_CALLBACK_MODE == true
 
+#if PARC_CALLBACK_MODE == true
 extern struct parc_module *parc_module_instance;
-/**
- * \name Callback Management
- * {@
- */
 struct parc_module;
 typedef void (*parc_callback_t)(const struct parc_module *const module_inst);
 #endif
@@ -228,37 +228,11 @@ struct parc_module {
 #endif
 };
 
-/**
- * \brief Initializes the PARC
- *
- * Initializes the PARC device struct and the hardware module based on the
- * given configuration struct values.
- *
- * \param[out] module_inst Pointer to the PARC software instance struct
- * \param[in]  hw          Pointer to the PARC module instance
- * \param[in]  config      Pointer to the configuration struct
- *
- * \return Status of the initialization procedure
- * \retval STATUS_OK                The initialization was successful
- * \retval STATUS_ERR_INVALID_ARG   Invalid argument(s) were provided
- */
 enum status_code parc_init(
 	struct parc_module *const module_inst,
 	Parc *const hw,
 	struct parc_config *const config);
 
-/**
- * \Writes an PARC configuration to the hardware module
- *
- * Writes a given PARC module configuration to the hardware module.
- *
- * \param[out] module_inst  Pointer to the PARC software instance struct
- * \param[in]  config       Pointer to configuration struct
- *
- * \return Status of the configuration procedure
- * \retval STATUS_OK               The configuration was successful
- * \retval STATUS_ERR_INVALID_ARG  Invalid argument(s) were provided
- */
 enum status_code parc_set_config(
 	struct parc_module *const module_inst,
 	struct parc_config *config);
@@ -428,13 +402,11 @@ static inline enum status_code parc_clear_status(
 	uint32_t int_flags = 0;
 
 	/*check for PARC data ready*/
-	if(status & PARC_STATUS_DRDY)
-	{
+	if(status & PARC_STATUS_DRDY){
 		int_flags |= PARC_ICR_DRDY;
 	}
 	/*check for PARC overrun*/
-	if(status & PARC_STATUS_OVR)
-	{
+	if(status & PARC_STATUS_OVR){
 		int_flags |= PARC_ICR_OVR;
 	}
 
@@ -595,8 +567,102 @@ static inline uint32_t parc_get_version(struct parc_module *const module_inst)
 /// @endcond
 
 /**
- * \page sam_parc_quick_start Quick Start Guide for the parc driver
+ * \page sam_parc_quick_start Quick Start Guide for the PARC driver
  *
+ * This is the quick start guide for the \ref group_sam_drivers_parc, with
+ * step-by-step instructions on how to configure and use the driver for
+ * a specific use case.
+ *
+ * The use cases contain several code fragments. The code fragments in the
+ * steps for setup can be copied into a custom initialization function, while
+ * the steps for usage can be copied into, e.g., the main application function.
+ *
+ * \section parc_qs_use_cases Use Cases
+ * - \ref parc_basic_use_case
+ *
+ * \section parc_basic_use_case PARC Basic Use Case
+ *
+ * This use case will demonstrate how to use the PARC module
+ * on SAM4L. In this use case, PARC is configured as:
+ * - Capture every byte
+ * - Sample the data bus on the rising edge of the PCCK input clock
+ * - Sample data regardless of the levels of PCEN1 and PCEN2
+ * - 8-bit data width in the Rececive Holding Register
+ *
+ * \section parc_basic_setup Setup Steps
+ *
+ * \subsection parc_basic_prereq Prerequisites
+ *
+ * This module requires the following service
+ * - \ref clk_group
+ *
+ * \subsection parc_basic_setup_code Setup Code Example
+ *
+ * Add this to the main loop or a setup function:
+ * \code
+ *   struct parc_module   module_inst;
+ *   struct parc_config   config;
+ *
+ *   // Turn on the clock for PARC module
+ *   sysclk_enable_peripheral_clock(PARC);
+ *   // Get default configuration
+ *   parc_get_config_defaults(&config);
+ *   // Initialize PARC
+ *   parc_init(&module_inst, PARC, &config);
+ *
+ *   // Enable the PARC
+ *   parc_enable(&module_inst);
+ *   // Start capture
+ *   parc_start_capture(&module_inst);
+ *
+ * \endcode
+ *
+ * \subsection parc_basic_setup_workflow Basic Setup Workflow
+ *
+ * -# Turn on clock for PARC,
+ *  see sam/drivers/parc/example for detail.
+ *  \code
+ *   sysclk_enable_peripheral_clock(PARC);
+ *  \endcode
+ * -# Initialize and configure PARC,
+ *  see sam/drivers/parc/example for detail.
+ *  \code
+ *   parc_get_config_defaults(&config);
+ *   - \note the config can be modified here from the default parameters.
+ *   parc_init(&module_inst, PARC, &config);
+ *  \endcode
+ * -# Enable PARC and start capture
+ *  \code
+ *   parc_enable(&module_inst);
+ *   parc_start_capture(&module_inst);
+ *  \endcode
+ *
+ * \section parc_basic_usage PARC Basic Usage
+ *
+ * \subsection parc_basic_usage_code
+ *
+ * We can poll the data status then read it once data capture finishes.
+ * \code
+ *  uint32_t captured_data;
+ *  while(parc_is_data_ready(&module_inst) == false);
+ *  parc_read(&module_inst, &captured_data);
+ * \endcode
+ *
+ * We can enable interrupt of data ready and link callback function to perform
+ * customer function.
+ * \code
+ * 	parc_register_callback(&module_inst,
+ *  (parc_callback_t)parc_complete_callback, PARC_CALLBACK_DATA_READY);
+ *  parc_enable_interrupts(&module_inst, PARC_INTERRUPT_DRDY);
+ *  parc_enable_callback(&module_inst,PARC_CALLBACK_DATA_READY);
+ *  parc_start_capture(&module_inst);
+ *  //the callback function example.
+ *  static void parc_complete_callback(struct parc_module *const module)
+ *  {
+ *	  callback_data_ready = true;
+ *    parc_read(module, &captured_data);
+ *  }
+ * \endcode
  */
-
 #endif  /* PARC_H_INCLUDED */
+

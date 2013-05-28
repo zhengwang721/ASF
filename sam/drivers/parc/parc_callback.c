@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief PARC driver for SAM.
+ * \brief PARC driver(callback) for SAM.
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,17 +44,21 @@
 #include "parc.h"
 #include "parc_callback.h"
 #include "sysclk.h"
-#include "conf_parc.h"
 
 struct parc_module *parc_module_instance;
 void _parc_interrupt_handler(void);
 
+/**
+ * \brief PARC interrupt entry handler
+ */
 void PARC_Handler(void)
 {
 	_parc_interrupt_handler();
 }
 
-
+/**
+ * \brief PARC interrupt handler
+ */
 void _parc_interrupt_handler()
 {
 	struct parc_module *module = parc_module_instance;
@@ -63,21 +67,76 @@ void _parc_interrupt_handler()
 	uint32_t flags = module->hw->PARC_SR;
 
 	if (flags & PARC_INTERRUPT_DRDY) {
-				if(module->enabled_callback_mask & (1 << PARC_CALLBACK_DRDY)) {
-					(*(module->callback[PARC_CALLBACK_DRDY]))(module);
-				}
-			}
-		
+		if(module->enabled_callback_mask & (1 << PARC_CALLBACK_DRDY)) {
+			(*(module->callback[PARC_CALLBACK_DRDY]))(module);
+		}
+		parc_clear_status(module, PARC_STATUS_DRDY);
+	}
 
 	if (flags & PARC_INTERRUPT_DRDY) {
-		//module->hw->INTFLAG.reg = ADC_INTFLAG_OVERRUN;
 		if(module->enabled_callback_mask & (1 << PARC_CALLBACK_OVERRUN)) {
 			(*(module->callback[PARC_CALLBACK_OVERRUN]))(module);
 		}
+		parc_clear_status(module, PARC_STATUS_OVR);
 	}
 }
 
+/**
+ * \brief Registers a callback
+ *
+ * Registers a callback function which is implemented by the user.
+ *
+ * \note The callback must be enabled by for the interrupt handler to call it
+ * when the conditions for the callback is met.
+ *
+ * \param[in]     module      Pointer to PARC software instance struct
+ * \param[in]     callback_func Pointer to callback function
+ * \param[in]     callback_type Callback type given by an enum
+ *
+ */
+enum status_code parc_register_callback(
+		struct parc_module *const module,
+		parc_callback_t const callback_func,
+		enum parc_callback callback_type)
+{
+	/* Sanity check arguments */
+	Assert(module);
+	Assert(callback_func);
 
+	/* Register callback function */
+	module->callback[callback_type] = callback_func;
+
+	/* Set the bit corresponding to the callback_type */
+	module->registered_callback_mask |= (1 << callback_type);
+	
+	return STATUS_OK;
+}
+
+/**
+ * \brief Unregisters a callback
+ *
+ * Unregisters a callback function which is implemented by the user.
+ *
+ * \param[in]     module Pointer to PARC software instance struct
+ * \param[in]     callback_func Pointer to callback function
+ * \param[in]     callback_type Callback type given by an enum
+ *
+ */
+enum status_code  parc_unregister_callback(
+		struct parc_module *const module,
+		enum parc_callback callback_type)
+{
+	/* Sanity check arguments */
+	Assert(module);
+
+	/* Unregister callback function */
+	module->callback[callback_type] = NULL;
+
+	/* Clear the bit corresponding to the callback_type */
+	module->registered_callback_mask &= ~(1 << callback_type);
+	
+	return STATUS_OK;
+}
 
 
 
