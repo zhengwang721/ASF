@@ -194,7 +194,7 @@ __always_inline static void arch_ioport_set_port_mode(ioport_port_t port,
 			PORT_WRCONFIG_WRPMUX | PORT_WRCONFIG_WRPINCFG;
 
 	base->WRCONFIG.reg =
-			(lower_pin_mask << PORT_WRCONFIG_PINMASK_Pos) |
+			(upper_pin_mask << PORT_WRCONFIG_PINMASK_Pos) |
 			(config_mask << 16) | config_mux |
 			PORT_WRCONFIG_WRPMUX | PORT_WRCONFIG_WRPINCFG |
 			PORT_WRCONFIG_HWSEL;
@@ -205,8 +205,6 @@ __always_inline static void arch_ioport_set_port_mode(ioport_port_t port,
 	else if (mode & IOPORT_MODE_PULLUP) {
 		base->OUTSET.reg |= mask;
 	}
-
-	// TODO
 }
 
 __always_inline static void arch_ioport_set_pin_mode(ioport_pin_t pin,
