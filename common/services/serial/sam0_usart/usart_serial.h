@@ -90,7 +90,7 @@ static inline bool usart_serial_init(struct usart_module *const module,
 static inline enum status_code usart_serial_putchar(struct usart_module *const module,
 		uint8_t c)
 {
-	return usart_write_wait(module, (const uint16_t)c);
+	return usart_write_wait(module, c);
 }
 /*! \brief Waits until a character is received, and returns it.
  *
