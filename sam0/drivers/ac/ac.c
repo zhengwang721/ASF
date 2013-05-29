@@ -68,7 +68,7 @@ static enum status_code _ac_set_config(
 	/* Check if the comparators should be enabled during sleep */
 	for (uint32_t i = 0; i < AC_PAIRS; i++) {
 		if (config->run_in_standby[i] == true) {
-			ctrla_temp |= (i << AC_CTRLA_RUNSTDBY_Pos);
+			ctrla_temp |= (AC_CTRLA_RUNSTDBY_Msk << i);
 		}
 	}
 
@@ -78,9 +78,6 @@ static enum status_code _ac_set_config(
 
 	/* Write the new comparator module control configuration */
 	ac_module->CTRLA.reg = ctrla_temp;
-
-	/* Enable any requested user events */
-	ac_enable_events(module_inst, &config->events);
 
 	return STATUS_OK;
 }
@@ -144,25 +141,23 @@ enum status_code ac_init(
 	/* Turn on the digital interface clock */
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, PM_APBCMASK_AC);
 
-#if AC_CALLBACK == true
+#if AC_CALLBACK_MODE == true
 	/* Initialize parameters */
 	for (uint8_t i = 0; i < AC_CALLBACK_N; i++) {
-		module_inst->callback[i]         = NULL;
+		module_inst->callback[i]        = NULL;
 	}
 
 	/* Initialize software flags*/
-	module_inst->register_callback_mask  = 0x00;
-	module_inst->enable_callback_mask    = 0x00;
+	module_inst->register_callback_mask = 0x00;
+	module_inst->enable_callback_mask   = 0x00;
 
 #  if (AC_INST_NUM == 1)
 	_ac_instance[0] = module_inst;
-#  endif /* AC_INST_NUM == 1) */
-
-#  if (AC_INST_NUM > 1)
+#  else
 	/* Register this instance for callbacks*/
 	_ac_instance[_ac_get_inst_index(hw)] = module_inst;
-#  endif /* AC_INST_NUM > 1) */
-#endif /*AC_CALLBACK == true */
+#  endif
+#endif
 
 	/* Write configuration to module */
 	return _ac_set_config(module_inst, config);
@@ -205,7 +200,8 @@ enum status_code ac_chan_set_config(
 
 	/* Configure comparator positive and negative pin MUX configurations */
 	compctrl_temp |=
-			(uint32_t)config->positive_input | (uint32_t)config->negative_input;
+			(uint32_t)config->positive_input |
+			(uint32_t)config->negative_input;
 
 	/* Set sampling mode (single shot or continuous) */
 	compctrl_temp |= config->sample_mode;
@@ -221,7 +217,7 @@ enum status_code ac_chan_set_config(
 	ac_module->COMPCTRL[(uint8_t)channel].reg = compctrl_temp;
 
 	/* Configure VCC voltage scaling for the comparator */
-	ac_module->SCALER[(uint8_t)channel].reg = config->vcc_scale_factor;
+	ac_module->SCALER[(uint8_t)channel].reg   = config->vcc_scale_factor;
 
 	return STATUS_OK;
 }
@@ -251,6 +247,7 @@ enum status_code ac_win_set_config(
 	Assert(config);
 
 	uint8_t winctrl_mask;
+
 	winctrl_mask = module_inst->hw->WINCTRL.reg;
 
 	if (win_channel == AC_WIN_CHANNEL_0) {
@@ -400,7 +397,7 @@ uint32_t ac_win_get_status(
 
 	uint32_t win_status = 0;
 
-	win_status = ac_module->INTFLAG.reg & (1 << (win_channel + AC_INTFLAG_WIN0_Pos));
+	win_status = ac_module->INTFLAG.reg & (AC_INTFLAG_WIN0 << win_channel);
 
 	/* If one or both window comparators not ready, return unknown result */
 	if (ac_win_is_ready(module_inst, win_channel) == false) {
