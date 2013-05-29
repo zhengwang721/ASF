@@ -2,7 +2,7 @@
  * \file
  *
  * \brief Simple menu system
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,7 +41,6 @@
  */
 
 #include "sysfont.h"
-#include "gfx_mono.h"
 #include <conf_menu.h>
 
 #include "gfx_mono_menu.h"
