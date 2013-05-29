@@ -453,7 +453,7 @@ void per_mode_receptor_rx_cb(frame_info_t *mac_frame_info)
                 rssi_base_val = tal_get_rssi_base_val();
                 app_led_event(LED_EVENT_RX_FRAME);
                 ed_value = mac_frame_info->mpdu[phy_frame_len + LQI_LEN + ED_VAL_LEN] + rssi_base_val;                
-                send_range_test_rsp(msg->seq_num,msg->payload.range_tx_data.frame_count, 
+                send_range_test_rsp(msg->seq_num,msg->payload.range_tx_data.frame_count, \
                                 ed_value,mac_frame_info->mpdu[phy_frame_len + LQI_LEN]);
 
             }

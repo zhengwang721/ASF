@@ -1051,7 +1051,7 @@ static void set_parameter_on_transmitter_node(retval_t status)
  */
 void per_mode_initiator_rx_cb(frame_info_t *mac_frame_info)
 {
-
+    static uint8_t range_test_seq_num;
     app_payload_t *msg;
 
     /* Point to the message : 1 =>size is first byte and 2=>FCS*/
@@ -1217,6 +1217,11 @@ void per_mode_initiator_rx_cb(frame_info_t *mac_frame_info)
             {
                 if (op_mode == RANGE_TEST_TX)
                 {
+                //To avoid reception of retry frames
+                if(range_test_seq_num == msg->seq_num)
+                {
+                return;
+                }
                 int8_t rssi_base_val,ed_value;
                 rssi_base_val = tal_get_rssi_base_val();
                 uint8_t phy_frame_len = mac_frame_info->mpdu[0];
@@ -1224,7 +1229,7 @@ void per_mode_initiator_rx_cb(frame_info_t *mac_frame_info)
                 app_led_event(LED_EVENT_RX_FRAME);
                 usr_range_test_beacon_rsp(mac_frame_info->mpdu,mac_frame_info->mpdu[phy_frame_len + LQI_LEN],
                                           ed_value,msg->payload.range_tx_data.lqi,msg->payload.range_tx_data.ed);
-                             
+                range_test_seq_num = msg->seq_num ;
                 }
             }
             break;
