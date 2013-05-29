@@ -3,7 +3,7 @@
  *
  * \brief Simple menu system
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -45,6 +45,7 @@
 
 #include "compiler.h"
 #include "conf_menu.h"
+#include "gfx_mono.h"
 
 /**
  * \ingroup asfdoc_common2_gfx_mono
