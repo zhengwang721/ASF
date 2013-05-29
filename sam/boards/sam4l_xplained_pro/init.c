@@ -165,19 +165,18 @@ void board_init(void)
 	ioport_set_pin_peripheral_mode(PIN_PA07E_ACIFC_ACAP0, MUX_PA07E_ACIFC_ACAP0);
 #endif
 
-#ifdef  CONF_BOARD_PARC
-ioport_set_pin_peripheral_mode(PIN_PA17D_PARC_PCCK,MUX_PA17D_PARC_PCCK);
-ioport_set_pin_peripheral_mode(PIN_PA09D_PARC_PCDATA0 ,MUX_PA09D_PARC_PCDATA0 );
-ioport_set_pin_peripheral_mode(PIN_PA10D_PARC_PCDATA1 ,MUX_PA10D_PARC_PCDATA1 );
-ioport_set_pin_peripheral_mode(PIN_PA11D_PARC_PCDATA2 ,MUX_PA11D_PARC_PCDATA2 );
-ioport_set_pin_peripheral_mode(PIN_PA12D_PARC_PCDATA3 ,MUX_PA12D_PARC_PCDATA3 );
-ioport_set_pin_peripheral_mode(PIN_PA13D_PARC_PCDATA4 ,MUX_PA13D_PARC_PCDATA4 );
-ioport_set_pin_peripheral_mode(PIN_PA14D_PARC_PCDATA5 ,MUX_PA14D_PARC_PCDATA5 );
-ioport_set_pin_peripheral_mode(PIN_PA15D_PARC_PCDATA6 ,MUX_PA15D_PARC_PCDATA6 );
-ioport_set_pin_peripheral_mode(PIN_PA16D_PARC_PCDATA7 ,MUX_PA16D_PARC_PCDATA7 );
-ioport_set_pin_peripheral_mode(PIN_PA18D_PARC_PCEN1 , MUX_PA18D_PARC_PCEN1);
-ioport_set_pin_peripheral_mode(PIN_PA19D_PARC_PCEN2 , MUX_PA19D_PARC_PCEN2);
-
+#ifdef CONF_BOARD_PARC
+	ioport_set_pin_peripheral_mode(PIN_PA17D_PARC_PCCK, MUX_PA17D_PARC_PCCK);
+	ioport_set_pin_peripheral_mode(PIN_PA09D_PARC_PCDATA0, MUX_PA09D_PARC_PCDATA0);
+	ioport_set_pin_peripheral_mode(PIN_PA10D_PARC_PCDATA1, MUX_PA10D_PARC_PCDATA1);
+	ioport_set_pin_peripheral_mode(PIN_PA11D_PARC_PCDATA2, MUX_PA11D_PARC_PCDATA2);
+	ioport_set_pin_peripheral_mode(PIN_PA12D_PARC_PCDATA3, MUX_PA12D_PARC_PCDATA3);
+	ioport_set_pin_peripheral_mode(PIN_PA13D_PARC_PCDATA4, MUX_PA13D_PARC_PCDATA4);
+	ioport_set_pin_peripheral_mode(PIN_PA14D_PARC_PCDATA5, MUX_PA14D_PARC_PCDATA5);
+	ioport_set_pin_peripheral_mode(PIN_PA15D_PARC_PCDATA6, MUX_PA15D_PARC_PCDATA6);
+	ioport_set_pin_peripheral_mode(PIN_PA16D_PARC_PCDATA7, MUX_PA16D_PARC_PCDATA7);
+	ioport_set_pin_peripheral_mode(PIN_PA18D_PARC_PCEN1, MUX_PA18D_PARC_PCEN1);
+	ioport_set_pin_peripheral_mode(PIN_PA19D_PARC_PCEN2, MUX_PA19D_PARC_PCEN2);
 #endif
 }
 

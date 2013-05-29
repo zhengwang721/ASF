@@ -67,7 +67,7 @@ enum status_code parc_init(
 	module_inst->hw = hw;
 
 #if PARC_CALLBACK_MODE == true
-	for (uint8_t i = 0; i < PARC_CALLBACK_N; i++){
+	for (uint8_t i = 0; i < PARC_CALLBACK_N; i++) {
 		module_inst->callback[i] = NULL;
 	}
 
@@ -96,25 +96,29 @@ enum status_code parc_set_config(
 {
 	Assert(module_inst);
 	Assert(module_inst->hw);
+	uint32_t tmp_cfg = 0;
 
 	Parc *const parc_module_hw = module_inst->hw;
-	parc_module_hw->PARC_CFG |= PARC_CFG_SMODE(config->smode);
-	parc_module_hw->PARC_CFG |= PARC_CFG_DSIZE(config->dsize);
 
-	if(config->capture_mode == PARC_BOTH_CAPTURE){
-		parc_module_hw->PARC_CFG &= ~(PARC_CFG_HALF);
-	}else if(config->capture_mode == PARC_ODD_CAPTURE){
-		parc_module_hw->PARC_CFG |= (PARC_CFG_HALF | PARC_CFG_ODD);
-	}else if(config->capture_mode == PARC_EVEN_CAPTURE){
-		parc_module_hw->PARC_CFG |= PARC_CFG_HALF;
-		parc_module_hw->PARC_CFG &= ~(PARC_CFG_ODD);
+	tmp_cfg |= PARC_CFG_SMODE(config->smode);
+	tmp_cfg |= PARC_CFG_DSIZE(config->dsize);
+
+	if (config->capture_mode == PARC_BOTH_CAPTURE) {
+		tmp_cfg &= ~(PARC_CFG_HALF);
+	} else if (config->capture_mode == PARC_ODD_CAPTURE) {
+		tmp_cfg |= (PARC_CFG_HALF | PARC_CFG_ODD);
+	} else if (config->capture_mode == PARC_EVEN_CAPTURE) {
+		tmp_cfg |= PARC_CFG_HALF;
+		tmp_cfg &= ~(PARC_CFG_ODD);
 	}
 
-	if(config->sampling_edge == PARC_FALLING_EDGE){
-		parc_module_hw->PARC_CFG |= PARC_CFG_EDGE;
-	}else if(config->sampling_edge == PARC_RISING_EDGE){
-		parc_module_hw->PARC_CFG &= ~(PARC_CFG_EDGE);
+	if (config->sampling_edge == PARC_FALLING_EDGE) {
+		tmp_cfg |= PARC_CFG_EDGE;
+	} else if (config->sampling_edge == PARC_RISING_EDGE) {
+		tmp_cfg &= ~(PARC_CFG_EDGE);
 	}
+
+	parc_module_hw->PARC_CFG = tmp_cfg;
 
 	return STATUS_OK;
 }

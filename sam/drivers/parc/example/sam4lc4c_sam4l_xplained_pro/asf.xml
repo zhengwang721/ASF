@@ -7,8 +7,7 @@
 		<build type="header-file" value="conf_uart_serial.h"/>
 		<build type="header-file" value="conf_pdca.h"/>
 		<build type="header-file" value="conf_sleepmgr.h"/>
-		<config name="config.sam.drivers.parc" value="callback"/>
-		<build type="define" name="PARC_CALLBACK_MODE" value="true"/>
+		<config name="config.sam.drivers.parc" value="polled"/>
 		<require idref="sam.drivers.parc.example"/>
 		<require idref="board.sam4l_xplained_pro"/>
 		<generator value="iarewarm"/>

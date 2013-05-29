@@ -73,7 +73,7 @@ void _parc_interrupt_handler()
 		parc_clear_status(module, PARC_STATUS_DRDY);
 	}
 
-	if (flags & PARC_INTERRUPT_DRDY) {
+	if (flags & PARC_INTERRUPT_OVR) {
 		if(module->enabled_callback_mask & (1 << PARC_CALLBACK_OVERRUN)) {
 			(*(module->callback[PARC_CALLBACK_OVERRUN]))(module);
 		}

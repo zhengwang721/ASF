@@ -67,6 +67,22 @@
  * - sam4lc4c_sam4l_xplained_pro
  * - sam4lc8c_sam4l8_xplained_pro
  *
+ * \section connection Board Connection
+ * The connections on SAM4L Xplained Pro or SAM4L8 Xplained Pro should be:
+ *  EXT3-P9 (PIN_PA06) -- EXT3-P15(PCCK)
+ *  EXT1-P7 (PIN_PC00) -- EXT3-P8 (PCDATA0)
+ *  EXT1-P8 (PIN_PC01) -- EXT3-P10(PCDATA1)
+ *  EXT1-P6 (PIN_PC02) -- EXT4-P15(PCDATA2)
+ *  EXT1-P15(PIN_PC03) -- EXT4-P7 (PCDATA3)
+ *  EXT2-P7 (PIN_PC04) -- EXT4-P8 (PCDATA4)
+ *  EXT2-P8 (PIN_PC05) -- EXT4-P10(PCDATA6)
+ *  EXT2-P9 (PIN_PC06) -- EXT4-P9 (PCDATA7)
+ *  EXT4-P5 (PIN_PC17) -- EXT4-P18(PCEN1)
+ *  EXT4-P6 (PIN_PC18) -- EXT4-P17(PCEN2)
+ * Please note the PCDATA5 is only connected to LCD connector (EXT5)
+ * which can not be connected easily by plugging wires. So in this example
+ * PCDATA5 is nor required to be connected.
+ *
  * \section compinfo Compilation info
  * This software was written for the GNU GCC and IAR for ARM. Other compilers
  * may or may not work.
@@ -97,9 +113,9 @@ static bool callback_data_ready = false;
 static void parc_port_input_simulation(bool risingedge, uint32_t data)
 {
 	/* PCCK signal simulation */
-	if(risingedge){
+	if (risingedge) {
 		ioport_set_pin_level(PIN_PCCK, IOPORT_PIN_LEVEL_LOW);
-	}else{
+	} else {
 		ioport_set_pin_level(PIN_PCCK, IOPORT_PIN_LEVEL_HIGH);
 	}
 
@@ -107,9 +123,9 @@ static void parc_port_input_simulation(bool risingedge, uint32_t data)
 	place_data_to_port(data);
 
 	/* PCCK signal simulation */
-	if(risingedge){
+	if (risingedge) {
 		ioport_set_pin_level(PIN_PCCK, IOPORT_PIN_LEVEL_HIGH);
-	}else{
+	} else {
 		ioport_set_pin_level(PIN_PCCK, IOPORT_PIN_LEVEL_LOW);
 	}
 }
@@ -130,15 +146,15 @@ static void run_parc_polled_test(const struct test_case *test)
 	parc_enable(&module_inst);
 	parc_start_capture(&module_inst);
 
-	for(uint32_t i=0;i<8;i++)
-	{
+	for (uint32_t i = 0; i < 8; i++) {
 		parc_port_input_simulation(true, input_data);
 		delay_ms(DELAY_TIME);
 		test_assert_true(test, parc_is_data_ready(&module_inst) == true,
-			"Capture on rising edge failure!");
+				"Capture on rising edge failure!");
 		parc_read(&module_inst, &captured_data);
-		test_assert_true(test, captured_data == (input_data & DATA_MASK), "Wrong captured data!");
-		input_data =  1<<i;
+		test_assert_true(test, captured_data == (input_data & DATA_MASK),
+				"Wrong captured data!");
+		input_data = 1 << i;
 	}
 	parc_stop_capture(&module_inst);
 	parc_disable(&module_inst);
@@ -169,19 +185,20 @@ static void run_parc_callback_test(const struct test_case *test)
 	parc_enable(&module_inst);
 
 	parc_register_callback(&module_inst,
-		(parc_callback_t)parc_complete_callback,PARC_CALLBACK_DATA_READY);
+			(parc_callback_t)parc_complete_callback, PARC_CALLBACK_DATA_READY);
 	parc_enable_interrupts(&module_inst, PARC_INTERRUPT_DRDY);
-	parc_enable_callback(&module_inst,PARC_CALLBACK_DATA_READY);
+	parc_enable_callback(&module_inst, PARC_CALLBACK_DATA_READY);
 	parc_start_capture(&module_inst);
 
-	for(uint32_t i=0;i<8;i++){
+	for (uint32_t i = 0; i < 8; i++) {
 		callback_data_ready = false;
 		parc_port_input_simulation(true, input_data);
 		delay_ms(DELAY_TIME);
 		test_assert_true(test, callback_data_ready == true,
-			"Capture data failure");
+				"Capture data failure");
 		parc_read(&module_inst, &captured_data);
-		test_assert_true(test, captured_data == (input_data & DATA_MASK), "Wrong captured data!");
+		test_assert_true(test, captured_data == (input_data & DATA_MASK),
+				"Wrong captured data!");
 		input_data = 1 << i;
 	}
 	parc_disable_interrupts(&module_inst, PARC_INTERRUPT_DRDY);
@@ -202,12 +219,13 @@ static void run_parc_ctrl_test(const struct test_case *test)
 	parc_init(&module_inst, PARC, &config);
 	parc_enable(&module_inst);
 
-	test_assert_true(test, parc_get_status(&module_inst) == 0x0001,
-		"Test PARC enable: enable failed");
+	test_assert_true(test, parc_get_status(&module_inst) == PARC_STATUS_EN,
+			"Test PARC enable: enable failed");
 
 	parc_start_capture(&module_inst);
-	test_assert_true(test, parc_get_status(&module_inst) == 0x0003,
-		"Test PARC start: start failed");
+	test_assert_true(test, parc_get_status(&module_inst) ==
+			(PARC_STATUS_CS | PARC_STATUS_EN),
+			"Test PARC start: start failed");
 	parc_stop_capture(&module_inst);
 	parc_disable(&module_inst);
 }

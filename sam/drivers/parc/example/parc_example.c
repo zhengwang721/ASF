@@ -61,7 +61,7 @@
  * These pins can be connected easily by plugging wires except PCDATA5 pin
  * of PARC on SAM4L Xplained Pro and SAM4L8 Xplained Pro.
  *
- *  The connection list on SAM4L Xplained Pro or SAM4L8 Xplained Pro should be:
+ * The connection list on SAM4L Xplained Pro or SAM4L8 Xplained Pro should be:
  *  EXT3-P9 (PIN_PA06) -- EXT3-P15(PCCK)
  *  EXT1-P7 (PIN_PC00) -- EXT3-P8 (PCDATA0)
  *  EXT1-P8 (PIN_PC01) -- EXT3-P10(PCDATA1)
@@ -72,9 +72,9 @@
  *  EXT2-P9 (PIN_PC06) -- EXT4-P9 (PCDATA7)
  *  EXT4-P5 (PIN_PC17) -- EXT4-P18(PCEN1)
  *  EXT4-P6 (PIN_PC18) -- EXT4-P17(PCEN2)
- *  Please note the PCDATA5 is only connected to LCD connector (EXT5)
- *  which can not be connected easily by plugging wires. So in this example
- *  PCDATA5 is nor required to be connected.
+ * Please note the PCDATA5 is only connected to LCD connector (EXT5) which
+ * can not be connected easily by plugging wires. So in this example PCDATA5
+ * is nor required to be connected.
  *
  * On startup of the example, the debug information is dumped to on-board
  * serial port via DEBUG USB port. A terminal application, such as
@@ -147,7 +147,7 @@ struct parc_config parc_configex;
 /** PDCA channel options. */
 pdca_channel_config_t PDCA_PARC_OPTIONS = {
 	.addr = (void *)gs_puc_buffer, /* memory address */
-	.pid = PDCA_PID_PARC, /* select peripheral - USART0 RX line.*/
+	.pid = PDCA_PID_PARC, /* select peripheral - PARC line.*/
 	.size = BUFFER_SIZE, /* transfer counter */
 	.r_addr = (void *)gs_puc_nextbuffer, /* next memory address */
 	.r_size = BUFFER_SIZE, /* next transfer counter */
@@ -171,13 +171,13 @@ void TC00_Handler(void)
 
 	/* PCDATA changes every two PCCK level change*/
 	cnt++;
-	if(cnt == 1){
+	if (cnt == 1) {
 		/* Simulate PCD data */
 		place_data_to_port(input_data++);
-		if(input_data == BUFFER_SIZE ){
+		if (input_data == BUFFER_SIZE ) {
 			input_data = 0;
 		}
-	}else if(cnt == 2){
+	} else if (cnt == 2) {
 		cnt =0;
 	}
 }
@@ -284,8 +284,8 @@ int main(void)
 	if (uc_key == 'y') {
 		/* Sample the data when both data enable pins are enabled. */
 		config.smode = PARC_SMODE_PCEN1_AND_PCEN2_H;
-		ioport_set_pin_level(PIN_PCEN1_INPUT,IOPORT_PIN_LEVEL_HIGH);
-		ioport_set_pin_level(PIN_PCEN2_INPUT,IOPORT_PIN_LEVEL_HIGH);
+		ioport_set_pin_level(PIN_PCEN1_INPUT, IOPORT_PIN_LEVEL_HIGH);
+		ioport_set_pin_level(PIN_PCEN2_INPUT, IOPORT_PIN_LEVEL_HIGH);
 		printf("Receive data when both data enable pins are enabled.\r\n");
 	} else {
 		/* Sample the data, don't care the status of the data enable pins. */

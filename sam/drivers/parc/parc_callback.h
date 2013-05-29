@@ -57,7 +57,7 @@ enum status_code parc_register_callback(struct parc_module *const module,
 		parc_callback_t const callback_func,
 		enum parc_callback_type callback_type);
 
-enum status_code  parc_unregister_callback(struct parc_module *const module,
+enum status_code parc_unregister_callback(struct parc_module *const module,
 		enum parc_callback_type callback_type);
 
 /**

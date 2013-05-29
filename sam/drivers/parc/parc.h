@@ -111,7 +111,7 @@ enum parc_capture_mode {
  */
 enum parc_smode {
 	/** Data capture occurs with PCEN1 high */
-	PARC_SMODE_PCEN1_H,
+	PARC_SMODE_PCEN1_H = 0,
 	/** Data capture occurs with PCEN1 and PCEN2 high */
 	PARC_SMODE_PCEN1_AND_PCEN2_H,
 	/** Data capture occurs with PCEN1 or PCEN2 high */
@@ -136,17 +136,6 @@ enum parc_data_size {
 };
 
 /**
- * \brief interrupt type enum
- *
- * Enum for interrupt source for PARC.
- *
- */
-enum parc_interrupt_source {
-	PARC_INTERRUPT_DRDY = PARC_SR_DRDY,
-	PARC_INTERRUPT_OVR = PARC_SR_OVR,
-};
-
-/**
  * \brief Status enum
  *
  * Enum for status bit for PARC.
@@ -161,11 +150,22 @@ enum parc_status {
 
 #if PARC_CALLBACK_MODE == true
 /**
+ * \brief interrupt type enum
+ *
+ * Enum for interrupt source for PARC.
+ *
+ */
+enum parc_interrupt_source {
+	PARC_INTERRUPT_DRDY = PARC_SR_DRDY,
+	PARC_INTERRUPT_OVR = PARC_SR_OVR,
+};
+
+/**
  * \brief callback type enum
  */
 enum parc_callback_type {
 	/* Data ready */
-	PARC_CALLBACK_DATA_READY,
+	PARC_CALLBACK_DATA_READY = 0,
 	/* Data overrun */
 	PARC_CALLBACK_OVERRUN,
 	/* Callback count*/
@@ -216,9 +216,9 @@ struct parc_config {
  */
 struct parc_module {
 	/** Base address of the PARC module. */
-	Parc				*hw;
+	Parc *hw;
 	/** Pointer to PARC configuration structure. */
-	struct parc_config	*parc_cfg;
+	struct parc_config *parc_cfg;
 
 #if PARC_CALLBACK_MODE == true
 	/** Array to store callback functions */
@@ -654,7 +654,7 @@ static inline uint32_t parc_get_version(struct parc_module *const module_inst)
  * We can enable interrupt of data ready and link callback function to perform
  * customer function.
  * \code
- * 	parc_register_callback(&module_inst,
+ *  parc_register_callback(&module_inst,
  *  (parc_callback_t)parc_complete_callback, PARC_CALLBACK_DATA_READY);
  *  parc_enable_interrupts(&module_inst, PARC_INTERRUPT_DRDY);
  *  parc_enable_callback(&module_inst,PARC_CALLBACK_DATA_READY);
@@ -662,7 +662,7 @@ static inline uint32_t parc_get_version(struct parc_module *const module_inst)
  *  //the callback function example.
  *  static void parc_complete_callback(struct parc_module *const module)
  *  {
- *	  callback_data_ready = true;
+ *    callback_data_ready = true;
  *    parc_read(module, &captured_data);
  *  }
  * \endcode
