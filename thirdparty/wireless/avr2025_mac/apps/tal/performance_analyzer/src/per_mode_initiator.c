@@ -1263,8 +1263,8 @@ void per_mode_initiator_rx_cb(frame_info_t *mac_frame_info)
                     (FUNC_PTR)marker_rsp_timer_handler_cb,
                     NULL);
                   send_range_test_marker_rsp();
-                  //send marker notif to GUI
-                  
+                  //send marker indication to GUI
+                  usr_range_test_marker_ind(mac_frame_info->mpdu);
                 }
             }
             break;            
