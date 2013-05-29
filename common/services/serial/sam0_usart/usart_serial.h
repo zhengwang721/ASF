@@ -1,10 +1,9 @@
 /**
  * \file
  *
- * This file defines a useful set of functions for the Serial interface on AVR
- * XMEGA devices.
+ * \brief USART Serial wrapper service for the SAM D20 devices.
  *
- * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
