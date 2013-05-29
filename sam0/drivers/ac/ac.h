@@ -263,7 +263,7 @@ extern "C" {
 /* Forward declaration of struct */
 struct ac_module;
 
-struct ac_module *_ac_instance[AC_INST_NUM];
+extern struct ac_module *_ac_instance[AC_INST_NUM];
 #endif
 
 /** Type definition for a AC module callback function. */
@@ -1082,7 +1082,7 @@ static inline void ac_win_get_config_defaults(
 	Assert(config);
 
 	/* Default configuration values */
-	config->interrupt_selection  = AC_WIN_INTERRUPT_SELECTION_ABOVE;
+	config->interrupt_selection = AC_WIN_INTERRUPT_SELECTION_ABOVE;
 }
 
 enum status_code ac_win_set_config(
