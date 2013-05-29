@@ -79,8 +79,8 @@ extern "C" {
  * \param ul_frequency Desired frequency in Hz.
  * \param ul_mck Master clock frequency in Hz.
  *
- * \retval Return the value to be set in the PWM Clock Register (PWM Mode Register for SAM3N)
- * or PWM_INVALID_ARGUMENT if the configuration cannot be met.
+ * \retval Return the value to be set in the PWM Clock Register (PWM Mode Register for
+ * SAM3N/SAM4N) or PWM_INVALID_ARGUMENT if the configuration cannot be met.
  */
 static uint32_t pwm_clocks_generate(uint32_t ul_frequency, uint32_t ul_mck)
 {
