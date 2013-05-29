@@ -92,6 +92,8 @@
 //! \name The range 2100h to 21FFh is reserved to PIDs for AVR Tools.
 //! @{
 #define  USB_PID_ATMEL_XPLAINED                    0x2122
+#define  USB_PID_ATMEL_XMEGA_USB_ZIGBIT_2_4GHZ     0x214A
+#define  USB_PID_ATMEL_XMEGA_USB_ZIGBIT_SUBGHZ     0x214B
 //! @}
 
 //! \name The range 2300h to 23FFh is reserved to PIDs for demo from ASF1.7=>
