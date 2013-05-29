@@ -53,7 +53,7 @@
 
 /* ! Device definition */
 #define  USB_DEVICE_VENDOR_ID             USB_VID_ATMEL
-#define  USB_DEVICE_PRODUCT_ID            USB_PID_ATMEL_ASF_CDC
+#define  USB_DEVICE_PRODUCT_ID            USB_PID_ATMEL_XMEGA_USB_ZIGBIT_SUBGHZ
 #define  USB_DEVICE_MAJOR_VERSION         1
 #define  USB_DEVICE_MINOR_VERSION         0
 #define  USB_DEVICE_POWER                 100
