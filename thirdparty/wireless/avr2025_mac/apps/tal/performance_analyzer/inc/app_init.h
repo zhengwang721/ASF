@@ -89,6 +89,7 @@ typedef enum
     NUM_MAIN_STATES
 } main_state_t;
 
+#define DUMMY_PAYLOAD                           (0xAA)
 /**
  * \brief Structure to holds the information base for the node
  *
@@ -164,6 +165,7 @@ void wait_for_event_task(void);
 void wait_for_event_rx_cb(frame_info_t *frame);
 
 extern uint8_t T_APP_TIMER;
+extern uint8_t T_APP_TIMER_RANGE;
 extern uint8_t APP_TIMER_TO_TX;
 extern uint8_t APP_TIMER_TO_TX_LED_OFF;
 extern uint8_t APP_TIMER_TO_RX_LED_OFF;

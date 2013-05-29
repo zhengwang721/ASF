@@ -108,7 +108,7 @@
 /* === Types ================================================================ */
 
 
-#define NUMBER_OF_APP_TIMERS        (4)
+#define NUMBER_OF_APP_TIMERS        (5)
 
 #define TOTAL_NUMBER_OF_TIMERS      (NUMBER_OF_APP_TIMERS + NUMBER_OF_TOTAL_STACK_TIMERS)
 

@@ -115,7 +115,7 @@ typedef struct
 #define RX_DESENSITIZE_LEVEL                    (0x08)
 #define NO_RX_DESENSITIZE_LEVEL                 (0x00)
 #define INVALID_VALUE                           (0xff)
-#define DUMMY_PAYLOAD                           (0xAA)
+
 
 #if(TAL_TYPE == AT86RF233)
 #define ENABLE_ALL_RPC_MODES                     (0xff)
@@ -242,6 +242,7 @@ static uint32_t frames_to_transmit;
 static set_param_cb_t set_param_cb;
 static uint8_t num_channels;
 static void configure_range_test_frame_sending(void);
+static bool send_range_test_marker_rsp(void);
 /**
  * This is variable is to keep track of the specific features supported
  */
@@ -487,7 +488,7 @@ static void  range_test_timer_handler_cb(void *parameter)
     }
     node_info.transmitting = true;
 
-    sw_timer_start(APP_TIMER_TO_TX,
+    sw_timer_start(T_APP_TIMER_RANGE,
                 RANGE_TX_BEACON_INTERVAL,
                 SW_TIMEOUT_RELATIVE,
                 (FUNC_PTR)range_test_timer_handler_cb,
@@ -758,8 +759,15 @@ void per_mode_initiator_tx_done_cb(retval_t status, frame_info_t *frame)
             
         case RANGE_TEST_TX:
             {
+                app_payload_t *msg;
+
+                /* Point to the message : 1 =>size is first byte and 2=>FCS*/
+                msg = (app_payload_t *)(frame->mpdu + LENGTH_FIELD_LEN + FRAME_OVERHEAD - FCS_LEN);
+                if(msg->cmd_id == RANGE_TEST_PKT)
+                {
                 app_led_event(LED_EVENT_TX_FRAME);
                 usr_range_test_beacon_tx(node_info.tx_frame_info->mpdu);
+                }
                 //usr_range_tx_beacon
             }
             break;
@@ -1245,6 +1253,21 @@ void per_mode_initiator_rx_cb(frame_info_t *mac_frame_info)
                 }
             }
             break;
+        case RANGE_TEST_MARKER_CMD:
+            {
+                if (op_mode == RANGE_TEST_TX)
+                {
+                 sw_timer_start(T_APP_TIMER,
+                    LED_BLINK_RATE_IN_MICRO_SEC,
+                    SW_TIMEOUT_RELATIVE,
+                    (FUNC_PTR)marker_rsp_timer_handler_cb,
+                    NULL);
+                  send_range_test_marker_rsp();
+                  //send marker notif to GUI
+                  
+                }
+            }
+            break;            
         default:
             break;
     }
@@ -3257,7 +3280,7 @@ static void start_range_test(void)
     op_mode = RANGE_TEST_TX;
 
 
-     sw_timer_start(APP_TIMER_TO_TX,
+     sw_timer_start(T_APP_TIMER_RANGE,
                     RANGE_TX_BEACON_START_INTERVAL,
                     SW_TIMEOUT_RELATIVE,
                     (FUNC_PTR)range_test_timer_handler_cb,
@@ -3279,7 +3302,7 @@ void stop_range_test(void)
         range_test_in_progress = false;
         range_test_frame_cnt = 0;
         usr_range_test_stop_confirm(MAC_SUCCESS);
-        sw_timer_stop(APP_TIMER_TO_TX);
+        sw_timer_stop(T_APP_TIMER_RANGE);
         op_mode = TX_OP_MODE;
     }
     else
@@ -3631,6 +3654,46 @@ static bool send_range_test_stop_cmd(void)
 
 }
 
+static bool send_range_test_marker_rsp(void)
+{
+  
+    static uint8_t marker_seq_num;
+    uint8_t payload_length;
+    app_payload_t msg;
+    result_req_t *data;
+
+    /* Create the payload */
+    msg.cmd_id = RANGE_TEST_MARKER_RSP;
+    seq_num_initiator++;
+    msg.seq_num = marker_seq_num++;
+    data = (result_req_t *)&msg.payload;
+    /* Just a dummy value */
+    data->cmd = DUMMY_PAYLOAD;
+
+    payload_length = ((sizeof(app_payload_t) -
+                       sizeof(general_pkt_t)) +
+                      sizeof(result_req_t));
+
+    /* Send the frame to Peer node */
+    if (MAC_SUCCESS == transmit_frame(FCF_SHORT_ADDR,
+                                      (uint8_t *) & (node_info.peer_short_addr),
+                                      FCF_SHORT_ADDR,
+                                      seq_num_initiator,
+                                      (uint8_t *) &msg,
+                                      payload_length,
+                                      true)
+       )
+    {
+           sw_timer_start(APP_TIMER_TO_TX,
+            LED_BLINK_RATE_IN_MICRO_SEC,
+            SW_TIMEOUT_RELATIVE,
+            (FUNC_PTR)marker_tx_timer_handler_cb,
+            NULL);
+        return(true);
+    }
+    return(false);
+
+}
 
 /**
  * \brief Function used to request PER test result.

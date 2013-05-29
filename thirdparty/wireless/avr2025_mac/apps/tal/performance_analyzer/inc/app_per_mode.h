@@ -144,8 +144,11 @@
 #define RANGE_TEST_START_PKT                (0x11)
 #define RANGE_TEST_PKT                      (0x12)
 #define RANGE_TEST_RSP                      (0x13)
-#define RANGE_TEST_STOP_PKT                (0x14)
+#define RANGE_TEST_STOP_PKT                 (0x14)
+#define RANGE_TEST_MARKER_CMD                (0x15)
+#define RANGE_TEST_MARKER_RSP                (0x16)
 #define RANGE_TEST_PKT_LENGTH                (19)
+#define LED_BLINK_RATE_IN_MICRO_SEC           (50000)
 //\}
 
 /* === Types ================================================================ */
@@ -310,6 +313,8 @@ void per_mode_receptor_rx_cb(frame_info_t *frame);
  */
 void app_reset(void);
 
+void marker_tx_timer_handler_cb(void *parameter);
+void marker_rsp_timer_handler_cb(void *parameter);
 
 //! \}
 #ifdef __cplusplus

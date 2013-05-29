@@ -246,6 +246,7 @@ void app_led_event(led_event_t ev)
               LED_On(TX_LED);
                LED_Off(RX_LED);
             break;
+            
 
         case LED_EVENT_START_PEER_SEARCH:
              LED_Off(STATUS_LED);

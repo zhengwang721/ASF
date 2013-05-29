@@ -57,6 +57,7 @@
 #include "app_frame_format.h"
 #include "app_per_mode.h"
 #include "conf_board.h"
+#include "led.h"
 
 /**
  * \addtogroup group_per_mode_receptor
@@ -71,10 +72,10 @@
 
 /* LED Blink count for identify command */
 #define LED_BLINK_COUNT_FOR_IDENTIFY          (20)
+#define LED_BLINK_COUNT_FOR_BUTTON_PRESS      (10)
 
 /* At every LED_TOGGLE_COUNT_FOR_PER count the Led toggles when PER test
    is in progress */
-#define LED_BLINK_RATE_IN_MICRO_SEC           (50000)
 #define DELAY_BEFORE_APP_RESET_IN_MICRO_SEC   (5000)
 
 /* === PROTOTYPES ========================================================== */
@@ -89,6 +90,7 @@ static void get_node_info(peer_info_rsp_t *data);
 static void send_diversity_status_rsp(void);
 #endif /* End of ANTENNA_DIVERSITY */
 static void send_range_test_rsp(uint8_t seq_num,uint32_t frame_count,int8_t ed,uint8_t lqi);
+static bool send_range_test_marker_cmd(void);
 
 #ifdef CRC_SETTING_ON_REMOTE_NODE
 static void send_crc_status_rsp(void);
@@ -140,10 +142,62 @@ void per_mode_receptor_task(void)
 {
     if(range_test_in_progress)
   {
-//Button polling
+    static uint8_t key_press;
+    /* Check for any key press */
+    key_press = app_debounce_button();
+
+    if (key_press != 0)
+    {
+      if (send_range_test_marker_cmd())
+        {
+        //Transmit Marker Frame
+        sw_timer_start(APP_TIMER_TO_TX,
+                LED_BLINK_RATE_IN_MICRO_SEC,
+                SW_TIMEOUT_RELATIVE,
+                (FUNC_PTR)marker_tx_timer_handler_cb,
+                NULL);      
+        }
+    
+    }
+
   }
 }
 
+static bool send_range_test_marker_cmd(void)
+{
+  
+    static uint8_t marker_seq_num;
+    uint8_t payload_length;
+    app_payload_t msg;
+    result_req_t *data;
+
+    /* Create the payload */
+    msg.cmd_id = RANGE_TEST_MARKER_CMD;
+    seq_num_receptor++;
+    msg.seq_num = marker_seq_num++;
+    data = (result_req_t *)&msg.payload;
+    /* Just a dummy value */
+    data->cmd = DUMMY_PAYLOAD;
+
+    payload_length = ((sizeof(app_payload_t) -
+                       sizeof(general_pkt_t)) +
+                      sizeof(result_req_t));
+
+    /* Send the frame to Peer node */
+    if (MAC_SUCCESS == transmit_frame(FCF_SHORT_ADDR,
+                                      (uint8_t *) & (node_info.peer_short_addr),
+                                      FCF_SHORT_ADDR,
+                                      seq_num_receptor,
+                                      (uint8_t *) &msg,
+                                      payload_length,
+                                      true)
+       )
+    {
+        return(true);
+    }
+    return(false);
+
+}
 
 /*
  * \brief Callback that is called once tx is done in PER_TEST_RECEPTOR state
@@ -450,13 +504,16 @@ void per_mode_receptor_rx_cb(frame_info_t *mac_frame_info)
             break;
     case RANGE_TEST_START_PKT:
             {
+              //
                range_test_in_progress = true;
+               
             }
             break;
             
      case RANGE_TEST_STOP_PKT:
             {
                range_test_in_progress = false;
+
             }
             break;            
     case RANGE_TEST_PKT:
@@ -471,6 +528,15 @@ void per_mode_receptor_rx_cb(frame_info_t *mac_frame_info)
 
             }
             break;
+        case RANGE_TEST_MARKER_RSP:
+            {
+                sw_timer_start(T_APP_TIMER,
+                LED_BLINK_RATE_IN_MICRO_SEC,
+                SW_TIMEOUT_RELATIVE,
+                (FUNC_PTR)marker_rsp_timer_handler_cb,
+                NULL);
+            }
+            break;            
         case PEER_INFO_REQ:
             {
                 send_peer_info_rsp();
@@ -696,6 +762,72 @@ static void identify_timer_handler_cb(void *parameter)
                         LED_BLINK_RATE_IN_MICRO_SEC,
                         SW_TIMEOUT_RELATIVE,
                         (FUNC_PTR)identify_timer_handler_cb,
+                        NULL);
+    }
+    return;
+}
+
+void marker_tx_timer_handler_cb(void *parameter)
+{
+        static uint8_t led_count;
+    parameter = parameter;
+    /* LED Blinking sequence is completed */
+    if (led_count > LED_BLINK_COUNT_FOR_BUTTON_PRESS)
+    {
+        led_count = 0;
+        app_led_event(LED_EVENT_PEER_SEARCH_DONE);
+    }
+    else /* Blink count is not completed  */
+    {
+        /* For every timeout switch off and on all LEDs alternatively */
+        if (led_count & 0x01)
+        {
+            led_count++;
+            LED_Off(TX_LED);
+            sw_timer_stop(APP_TIMER_TO_TX);
+        }
+        else
+        {
+            led_count++;
+            LED_On(TX_LED);
+        }
+        sw_timer_start(APP_TIMER_TO_TX,
+                        LED_BLINK_RATE_IN_MICRO_SEC,
+                        SW_TIMEOUT_RELATIVE,
+                        (FUNC_PTR)marker_tx_timer_handler_cb,
+                        NULL);
+    }
+    return;
+}
+
+void marker_rsp_timer_handler_cb(void *parameter)
+{
+      static uint8_t led_count;
+    parameter = parameter;
+    /* LED Blinking sequence is completed */
+    if (led_count > LED_BLINK_COUNT_FOR_BUTTON_PRESS)
+    {
+        led_count = 0;
+        app_led_event(LED_EVENT_PEER_SEARCH_DONE);
+    }
+    else /* Blink count is not completed  */
+    {
+        /* For every timeout switch off and on all LEDs alternatively */
+        if (led_count & 0x01)
+        {
+            led_count++;
+            LED_Off(RX_LED);
+            sw_timer_stop(T_APP_TIMER);
+        }
+        else
+        {
+            led_count++;
+            LED_On(RX_LED);
+        }
+        sw_timer_start(T_APP_TIMER,
+                        LED_BLINK_RATE_IN_MICRO_SEC,
+                        SW_TIMEOUT_RELATIVE,
+                        (FUNC_PTR)marker_rsp_timer_handler_cb,
                         NULL);
     }
     return;

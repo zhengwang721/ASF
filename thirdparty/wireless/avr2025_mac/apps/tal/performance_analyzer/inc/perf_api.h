@@ -198,6 +198,9 @@ uint8_t check_error_conditions(void);
  */
 uint8_t get_param_length(uint8_t param_type);
 
+void marker_tx_timer_handler_cb(void *parameter);
+
+void marker_rsp_timer_handler_cb(void *parameter);
 //! \}
 /**
  * \name Functions for User Confirm/Indication  Messages generated in response to the Request Primitives
