@@ -329,8 +329,6 @@ static inline bool bod_is_detected(
 			Assert(false);
 			return false;
 	}
-
-	return false;
 }
 
 /**

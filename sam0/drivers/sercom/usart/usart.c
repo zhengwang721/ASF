@@ -154,9 +154,11 @@ static enum status_code _usart_check_config(
 	uint32_t ctrlb = 0;
 
 	/* Check sample mode, data order, internal muxing, and clock polarity */
-	ctrla = (config->data_order) | (config->mux_settings) |
-			(config->transfer_mode) | (SERCOM_USART_CTRLA_MODE(0)) |
-			(config->clock_polarity_inverted << SERCOM_USART_CTRLA_CPOL_Pos);
+	ctrla = (uint32_t)config->data_order |
+		(uint32_t)config->mux_settings |
+		(uint32_t)config->transfer_mode |
+		SERCOM_USART_CTRLA_MODE(0) |
+		(config->clock_polarity_inverted << SERCOM_USART_CTRLA_CPOL_Pos);
 
 	/* set enable bit */
 	ctrla |= (SERCOM_USART_CTRLA_ENABLE);
@@ -169,7 +171,7 @@ static enum status_code _usart_check_config(
 	}
 
 	/* Check stopbits and character size */
-	ctrlb = config->stopbits | config->character_size;
+	ctrlb = (uint32_t)config->stopbits | (uint32_t)config->character_size;
 
 	/* Check parity mode bits */
 	if (config->parity != USART_PARITY_NONE) {
@@ -194,7 +196,7 @@ static enum status_code _usart_check_config(
  */
 static enum status_code _usart_set_config(
 		struct usart_module *const module,
-		const struct usart_config const *config)
+		const struct usart_config *const config)
 {
 	/* Sanity check arguments */
 	Assert(module);
@@ -213,8 +215,9 @@ static enum status_code _usart_set_config(
 	uint16_t baud  = 0;
 
 	/* Set data order, internal muxing, and clock polarity */
-	ctrla = (config->data_order) | (config->mux_settings) |
-			(config->clock_polarity_inverted << SERCOM_USART_CTRLA_CPOL_Pos);
+	ctrla = (uint32_t)config->data_order |
+		(uint32_t)config->mux_settings |
+		(config->clock_polarity_inverted << SERCOM_USART_CTRLA_CPOL_Pos);
 
 	enum status_code status_code = STATUS_OK;
 
@@ -266,7 +269,7 @@ static enum status_code _usart_set_config(
 	}
 
 	/* Set stopbits and character size */
-	ctrlb = config->stopbits | config->character_size;
+	ctrlb = (uint32_t)config->stopbits | (uint32_t)config->character_size;
 
 	/* Set parity mode */
 	if (config->parity != USART_PARITY_NONE) {
