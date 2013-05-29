@@ -107,12 +107,12 @@ enum status_code ac_unregister_callback(
  * \internal ISR handler for AC
  */
 #if (AC_INST_NUM == 1)
-void AC_Handler(void) {
+void AC_Handler(void)
+{
 	_ac_interrupt_handler(0);
 }
-#endif /* (AC_INST_NUM == 1) */
-#if (AC_INST_NUM > 1)
-#define _AC_INTERRUPT_HANDLER(n, unused) \
+#elif (AC_INST_NUM > 1)
+#  define _AC_INTERRUPT_HANDLER(n, unused) \
 		void AC##n##_Handler(void) \
 		{ \
 			_ac_interrupt_handler(n); \
@@ -139,9 +139,9 @@ void _ac_interrupt_handler(const uint32_t instance_index)
 	struct ac_module *module = _ac_instance[instance_index];
 
 	/* Read and mask interrupt flag register */
-	interrupt_and_callback_status_mask = _ac_instance[instance_index]->hw->INTFLAG.reg &
-			module->register_callback_mask &
-			module->enable_callback_mask;
+	interrupt_and_callback_status_mask =
+			_ac_instance[instance_index]->hw->INTFLAG.reg &
+			(module->register_callback_mask & module->enable_callback_mask);
 
 	/* Check if comparator channel 0 needs to be serviced */
 	if (interrupt_and_callback_status_mask & AC_INTFLAG_COMP0) {
@@ -166,6 +166,7 @@ void _ac_interrupt_handler(const uint32_t instance_index)
 		/* Clear interrupt flag */
 		module->hw->INTFLAG.reg = AC_INTFLAG_WIN0;
 	}
+
 #if (AC_NUM_CMP > 2)
 		/* Check if comparator channel 2 needs to be serviced */
 	if (interrupt_and_callback_status_mask & AC_INTFLAG_COMP2) {

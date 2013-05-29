@@ -68,7 +68,7 @@ static enum status_code _ac_set_config(
 	/* Check if the comparators should be enabled during sleep */
 	for (uint32_t i = 0; i < AC_PAIRS; i++) {
 		if (config->run_in_standby[i] == true) {
-			ctrla_temp |= (AC_CTRLA_RUNSTDBY << i);
+			ctrla_temp |= (AC_CTRLA_RUNSTDBY_Msk << i);
 		}
 	}
 
@@ -78,9 +78,6 @@ static enum status_code _ac_set_config(
 
 	/* Write the new comparator module control configuration */
 	ac_module->CTRLA.reg = ctrla_temp;
-
-	/* Enable any requested user events */
-	ac_enable_events(module_inst, &config->events);
 
 	return STATUS_OK;
 }
@@ -144,7 +141,7 @@ enum status_code ac_init(
 	/* Turn on the digital interface clock */
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, PM_APBCMASK_AC);
 
-#if AC_CALLBACK == true
+#if AC_CALLBACK_MODE == true
 	/* Initialize parameters */
 	for (uint8_t i = 0; i < AC_CALLBACK_N; i++) {
 		module_inst->callback[i]        = NULL;
