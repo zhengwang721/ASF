@@ -144,7 +144,8 @@
 #define RANGE_TEST_START_PKT                (0x11)
 #define RANGE_TEST_PKT                      (0x12)
 #define RANGE_TEST_RSP                      (0x13)
-#define RANGE_TEST_PKT_LENGTH                (18)
+#define RANGE_TEST_STOP_PKT                (0x14)
+#define RANGE_TEST_PKT_LENGTH                (19)
 //\}
 
 /* === Types ================================================================ */

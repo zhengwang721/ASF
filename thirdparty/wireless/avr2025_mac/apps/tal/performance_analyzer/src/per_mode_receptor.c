@@ -95,7 +95,7 @@ static void send_crc_status_rsp(void);
 static bool crc_check_ok(frame_info_t *mac_frame_info);
 static uint16_t crc_test(uint16_t crc, uint8_t data);
 #endif /* End of CRC_SETTING_ON_REMOTE_NODE */
-
+static bool range_test_in_progress = false;
 /* === GLOBALS ============================================================= */
 
 static uint32_t number_rx_frames;
@@ -138,7 +138,10 @@ void per_mode_receptor_init(void *parameter)
  */
 void per_mode_receptor_task(void)
 {
-    /* Do nothing as all events are handled in the Rx_cb handler */
+    if(range_test_in_progress)
+  {
+//Button polling
+  }
 }
 
 
@@ -445,7 +448,17 @@ void per_mode_receptor_rx_cb(frame_info_t *mac_frame_info)
                 set_default_configuration_peer_node();
             }
             break;
-
+    case RANGE_TEST_START_PKT:
+            {
+               range_test_in_progress = true;
+            }
+            break;
+            
+     case RANGE_TEST_STOP_PKT:
+            {
+               range_test_in_progress = false;
+            }
+            break;            
     case RANGE_TEST_PKT:
             { 
                 uint8_t phy_frame_len = mac_frame_info->mpdu[0];
@@ -834,6 +847,7 @@ static void send_range_test_rsp(uint8_t seq_num, uint32_t frame_count,int8_t ed,
 
     /* Create the payload */
     msg.cmd_id = RANGE_TEST_RSP;
+    seq_num_receptor++;
     msg.seq_num = seq_num;
     data = (range_tx_t *)&msg.payload;
     data->frame_count = frame_count ;

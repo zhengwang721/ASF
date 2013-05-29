@@ -1236,12 +1236,12 @@ void usr_range_test_beacon_tx(uint8_t *frame)
         return;
     }
     /* Copy Len, Protocol Id, Msg Id parameters */
-    *msg_buf++ = PROTOCOL_ID_LEN + 1 +RANGE_TEST_PKT_LENGTH;
+    *msg_buf++ = PROTOCOL_ID_LEN + 1 +(RANGE_TEST_PKT_LENGTH-FCS_LEN+1); //1 for phr -> length
     *msg_buf++ = PROTOCOL_ID;
     *msg_buf++ = RANGE_TEST_BEACON;
 
     /* Copy confirmation payload */
-    for(uint8_t i=0;i<RANGE_TEST_PKT_LENGTH;i++)
+    for(uint8_t i=0;i<(RANGE_TEST_PKT_LENGTH-FCS_LEN+1);i++)
     {
     *msg_buf++ = *frame++;
     }

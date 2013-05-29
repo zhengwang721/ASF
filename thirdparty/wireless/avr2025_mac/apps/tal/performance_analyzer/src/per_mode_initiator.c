@@ -141,6 +141,7 @@ typedef struct
 
 #define TIMEOUT_FOR_RESPONSE_IN_MICRO_SEC       (200000)
 #define RANGE_TX_BEACON_INTERVAL                (3000000)
+#define RANGE_TX_BEACON_START_INTERVAL          (100000)
 #define PULSE_CW_TX_TIME_IN_MICRO_SEC           (50000)
 #define MICRO_SEC_MULTIPLIER                    (1.0/1000000)
 #define MILLI_VOLT_MULTIPLIER                   (1.0/1000)
@@ -156,6 +157,7 @@ static bool send_identify_command(void);
 static bool send_disconnect_command(void);
 static void set_parameter_on_transmitter_node(retval_t status);
 static void start_test(void);
+static void start_range_test(void);
 
 #ifdef CRC_SETTING_ON_REMOTE_NODE
 static bool send_crc_set_req(crc_set_req_t crc_msg);
@@ -192,7 +194,6 @@ frame_info_t *range_tx_frame;
 #if((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B))
 static bool validate_tx_power(int8_t dbm_value);
 #endif
-static uint8_t range_test_seq_num;
 static float calculate_time_duration(void);
 static float calculate_net_data_rate(float per_test_duration_sec);
 static void config_per_test_parameters(void);
@@ -215,6 +216,8 @@ static void set_transceiver_state(uint8_t trx_state);
 static void set_phy_frame_length(uint8_t frame_len);
 static bool send_set_default_config_command(void);
 static bool send_per_test_start_cmd(void);
+static bool send_range_test_start_cmd(void);
+static bool send_range_test_stop_cmd(void);
 
 static float reverse_float( const float float_val );
 
@@ -467,7 +470,7 @@ static void  range_test_timer_handler_cb(void *parameter)
 {
 
 
-    node_info.tx_frame_info->mpdu[PL_POS_SEQ_NUM]++;
+    seq_num_initiator++;
     //To_be_done Try to optmize this
     configure_range_test_frame_sending();
     if (curr_trx_config_params.csma_enabled)
@@ -740,6 +743,15 @@ void per_mode_initiator_tx_done_cb(retval_t status, frame_info_t *frame)
                 op_mode = TX_OP_MODE;
                 /* As start indication is successful start the actual PER Test*/
                 start_test();
+            }
+            break;
+            
+            
+       case RANGE_TEST_START:
+            {
+                //op_mode = RANGE_TEST_TX;
+                /* As start indication is successful start the actual RANGE Test*/
+                start_range_test();
             }
             break;
             
@@ -3160,47 +3172,24 @@ void initiate_per_test(void)
  */
 void initiate_range_test(void)
 {
-    /* Check for the current operating mode */
-    if (TX_OP_MODE == op_mode)
-    {
-    /* Send the confirmation with the status as SUCCESS */
-    range_test_in_progress = true;
-    usr_range_test_start_confirm(MAC_SUCCESS);
-    range_test_seq_num = rand();
     
-    configure_range_test_frame_sending();
-    node_info.tx_frame_info->mpdu[PL_POS_SEQ_NUM]++;
-    node_info.transmitting = true;
-    op_mode = RANGE_TEST_TX;
-    //to be changed
-        if (curr_trx_config_params.csma_enabled)
+      if (TX_OP_MODE == op_mode)
+    {
+        /* Initiate a packet to tell the receptor that a new Range test is going to be started */
+        if (send_range_test_start_cmd())
         {
-            tal_tx_frame(node_info.tx_frame_info,
-                         CSMA_UNSLOTTED,
-                         curr_trx_config_params.retry_enabled );
+            op_mode = RANGE_TEST_START;
         }
-        else
-        {
-            tal_tx_frame(node_info.tx_frame_info,
-                         NO_CSMA_NO_IFS,
-                         curr_trx_config_params.retry_enabled );
-        }
-
-
-     sw_timer_start(APP_TIMER_TO_TX,
-                    RANGE_TX_BEACON_INTERVAL,
-                    SW_TIMEOUT_RELATIVE,
-                    (FUNC_PTR)range_test_timer_handler_cb,
-                    NULL);
-
     }
-    else
+        else
     {
         /* Send the confirmation with the status as INVALID_CMD
          * as the state is not correct
          */
         usr_range_test_start_confirm(INVALID_CMD);
     }
+    
+    
 }
 
 /*
@@ -3253,8 +3242,30 @@ static void start_test(void)
 
 }
 
+/*
+ * \brief To Start the Range test
+ */
+static void start_range_test(void)
+{
+
+    /* Send the confirmation with the status as SUCCESS */
+    range_test_in_progress = true;
+    usr_range_test_start_confirm(MAC_SUCCESS);
+   
+
+    node_info.transmitting = true;
+    op_mode = RANGE_TEST_TX;
 
 
+     sw_timer_start(APP_TIMER_TO_TX,
+                    RANGE_TX_BEACON_START_INTERVAL,
+                    SW_TIMEOUT_RELATIVE,
+                    (FUNC_PTR)range_test_timer_handler_cb,
+                    NULL);
+
+
+    
+}
 
 /*
  * \brief To stop the Range test
@@ -3262,7 +3273,7 @@ static void start_test(void)
 void stop_range_test(void)
 {
     /* Check for the current operating mode */
-    if ((RANGE_TEST_TX == op_mode)&&(true==range_test_in_progress))
+    if ((RANGE_TEST_TX == op_mode)&&(true==range_test_in_progress)&& send_range_test_stop_cmd())
     {
         /* Send the confirmation with the status as SUCCESS */
         range_test_in_progress = false;
@@ -3390,7 +3401,7 @@ static void configure_range_test_frame_sending(void)
      */
 
     /* Get length of current frame. */
-    app_frame_length = (RANGE_TEST_PKT_LENGTH  - FRAME_OVERHEAD);//to be changed
+    app_frame_length = (RANGE_TEST_PKT_LENGTH - FRAME_OVERHEAD);//to be changed
     
     /* Set payload pointer. */
     frame_ptr = temp_frame_ptr =
@@ -3404,7 +3415,7 @@ static void configure_range_test_frame_sending(void)
      
     (tmp->cmd_id) = RANGE_TEST_PKT;
     temp_frame_ptr++;
-    (tmp->seq_num) = range_test_seq_num++; //to be incremented for every frame
+    (tmp->seq_num) = seq_num_initiator; //to be incremented for every frame
     temp_frame_ptr++;    
     range_test_frame_cnt++;
     data->frame_count = Swap32(CCPU_ENDIAN_TO_LE32(range_test_frame_cnt));//to be checked
@@ -3451,7 +3462,7 @@ static void configure_range_test_frame_sending(void)
 
     /* Set DSN. */
     frame_ptr--;
-    *frame_ptr = (uint8_t)rand();
+    *frame_ptr = seq_num_initiator;
 
     /* Set the FCF. */
     fcf |= FCF_FRAMETYPE_DATA | FCF_SET_SOURCE_ADDR_MODE(FCF_SHORT_ADDR) |
@@ -3523,6 +3534,77 @@ static bool send_per_test_start_cmd(void)
 
     /* Create the payload */
     msg.cmd_id = PER_TEST_START_PKT;
+    seq_num_initiator++;
+    msg.seq_num = seq_num_initiator;
+    data = (result_req_t *)&msg.payload;
+    /* Just a dummy value */
+    data->cmd = DUMMY_PAYLOAD;
+
+    payload_length = ((sizeof(app_payload_t) -
+                       sizeof(general_pkt_t)) +
+                      sizeof(result_req_t));
+
+    /* Send the frame to Peer node */
+    if (MAC_SUCCESS == transmit_frame(FCF_SHORT_ADDR,
+                                      (uint8_t *) & (node_info.peer_short_addr),
+                                      FCF_SHORT_ADDR,
+                                      seq_num_initiator,
+                                      (uint8_t *) &msg,
+                                      payload_length,
+                                      true)
+       )
+    {
+        return(true);
+    }
+    return(false);
+
+}
+
+
+
+static bool send_range_test_start_cmd(void)
+{
+    uint8_t payload_length;
+    app_payload_t msg;
+    result_req_t *data;
+
+    /* Create the payload */
+    msg.cmd_id = RANGE_TEST_START_PKT;
+    seq_num_initiator++;
+    msg.seq_num = seq_num_initiator;
+    data = (result_req_t *)&msg.payload;
+    /* Just a dummy value */
+    data->cmd = DUMMY_PAYLOAD;
+
+    payload_length = ((sizeof(app_payload_t) -
+                       sizeof(general_pkt_t)) +
+                      sizeof(result_req_t));
+
+    /* Send the frame to Peer node */
+    if (MAC_SUCCESS == transmit_frame(FCF_SHORT_ADDR,
+                                      (uint8_t *) & (node_info.peer_short_addr),
+                                      FCF_SHORT_ADDR,
+                                      seq_num_initiator,
+                                      (uint8_t *) &msg,
+                                      payload_length,
+                                      true)
+       )
+    {
+        return(true);
+    }
+    return(false);
+
+}
+
+
+static bool send_range_test_stop_cmd(void)
+{
+    uint8_t payload_length;
+    app_payload_t msg;
+    result_req_t *data;
+
+    /* Create the payload */
+    msg.cmd_id = RANGE_TEST_STOP_PKT;
     seq_num_initiator++;
     msg.seq_num = seq_num_initiator;
     data = (result_req_t *)&msg.payload;
