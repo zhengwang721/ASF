@@ -285,40 +285,40 @@
 //@{
 /** SPI MISO pin definition. */
 #define SPI_MISO_GPIO         (PIO_PA12_IDX)
-#define SPI_MISO_FLAGS       (PIO_PERIPH_A | PIO_PULLUP)
+#define SPI_MISO_FLAGS       (IOPORT_MODE_MUX_A)
 /** SPI MOSI pin definition. */
 #define SPI_MOSI_GPIO         (PIO_PA13_IDX)
-#define SPI_MOSI_FLAGS       (PIO_PERIPH_A | PIO_PULLUP)
+#define SPI_MOSI_FLAGS       (IOPORT_MODE_MUX_A)
 /** SPI SPCK pin definition. */
 #define SPI_SPCK_GPIO         (PIO_PA14_IDX)
-#define SPI_SPCK_FLAGS       (PIO_PERIPH_A | PIO_PULLUP)
+#define SPI_SPCK_FLAGS       (IOPORT_MODE_MUX_A)
 
 /** SPI chip select 0 pin definition. (Only one configuration is possible) */
 #define SPI_NPCS0_GPIO         (PIO_PA11_IDX)
-#define SPI_NPCS0_FLAGS           (PIO_PERIPH_A | PIO_DEFAULT)
+#define SPI_NPCS0_FLAGS           (IOPORT_MODE_MUX_A)
 /** SPI chip select 1 pin definition. (multiple configurations are possible) */
 #define SPI_NPCS1_PA9_GPIO     (PIO_PA9_IDX)
-#define SPI_NPCS1_PA9_FLAGS       (PIO_PERIPH_B | PIO_DEFAULT)
+#define SPI_NPCS1_PA9_FLAGS       (IOPORT_MODE_MUX_B)
 #define SPI_NPCS1_PA31_GPIO    (PIO_PA31_IDX)
-#define SPI_NPCS1_PA31_FLAGS      (PIO_PERIPH_A | PIO_DEFAULT)
+#define SPI_NPCS1_PA31_FLAGS      (IOPORT_MODE_MUX_A)
 #define SPI_NPCS1_PB14_GPIO    (PIO_PB14_IDX)
-#define SPI_NPCS1_PB14_FLAGS      (PIO_PERIPH_A | PIO_DEFAULT)
+#define SPI_NPCS1_PB14_FLAGS      (IOPORT_MODE_MUX_A)
 #define SPI_NPCS1_PC4_GPIO     (PIO_PC4_IDX)
-#define SPI_NPCS1_PC4_FLAGS       (PIO_PERIPH_B | PIO_DEFAULT)
+#define SPI_NPCS1_PC4_FLAGS       (IOPORT_MODE_MUX_B)
 /** SPI chip select 2 pin definition. (multiple configurations are possible) */
 #define SPI_NPCS2_PA10_GPIO    (PIO_PA10_IDX)
-#define SPI_NPCS2_PA10_FLAGS      (PIO_PERIPH_B | PIO_PULLUP)
+#define SPI_NPCS2_PA10_FLAGS      (IOPORT_MODE_MUX_B)
 #define SPI_NPCS2_PA30_GPIO    (PIO_PA30_IDX)
-#define SPI_NPCS2_PA30_FLAGS      (PIO_PERIPH_B | PIO_DEFAULT)
+#define SPI_NPCS2_PA30_FLAGS      (IOPORT_MODE_MUX_B)
 #define SPI_NPCS2_PB2_GPIO     (PIO_PB2_IDX)
-#define SPI_NPCS2_PB2_FLAGS       (PIO_PERIPH_B | PIO_DEFAULT)
+#define SPI_NPCS2_PB2_FLAGS       (IOPORT_MODE_MUX_B)
 /** SPI chip select 3 pin definition. (multiple configurations are possible) */
 #define SPI_NPCS3_PA3_GPIO     (PIO_PA3_IDX)
-#define SPI_NPCS3_PA3_FLAGS       (PIO_PERIPH_B | PIO_DEFAULT)
+#define SPI_NPCS3_PA3_FLAGS       (IOPORT_MODE_MUX_B)
 #define SPI_NPCS3_PA5_GPIO     (PIO_PA5_IDX)
-#define SPI_NPCS3_PA5_FLAGS       (PIO_PERIPH_B | PIO_DEFAULT)
+#define SPI_NPCS3_PA5_FLAGS       (IOPORT_MODE_MUX_B)
 #define SPI_NPCS3_PA22_GPIO    (PIO_PA22_IDX)
-#define SPI_NPCS3_PA22_FLAGS      (PIO_PERIPH_B | PIO_DEFAULT)
+#define SPI_NPCS3_PA22_FLAGS      (IOPORT_MODE_MUX_B)
 //@}
 
 //! \name TWI
