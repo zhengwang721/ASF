@@ -214,15 +214,9 @@ void system_board_init(void);
 /** \name Extension header #1 I2C definitions
  *  @{
  */
-#define EXT1_I2C_MODULE           SERCOM2
-#define EXT1_I2C_SDA_PIN          PIN_PA08D_SERCOM2_PAD0
-#define EXT1_I2C_SDA_MUX          MUX_PA08D_SERCOM2_PAD0
-#define EXT1_I2C_SDA_PINMUX       PINMUX_PA08D_SERCOM2_PAD0
-#define EXT1_I2C_SDA_SERCOM_PAD   0
-#define EXT1_I2C_SCL_PIN          PIN_PA09D_SERCOM2_PAD1
-#define EXT1_I2C_SCL_MUX          MUX_PA09D_SERCOM2_PAD1
-#define EXT1_I2C_SCL_PINMUX       PINMUX_PA09D_SERCOM2_PAD1
-#define EXT1_I2C_SCL_SERCOM_PAD   1
+#define EXT1_I2C_MODULE              SERCOM2
+#define EXT1_I2C_SERCOM_PINMUX_PAD0  PINMUX_PA08D_SERCOM2_PAD0
+#define EXT1_I2C_SERCOM_PINMUX_PAD1  PINMUX_PA09D_SERCOM2_PAD1
 /** @} */
 
 /** \name Extension header #1 UART definitions
