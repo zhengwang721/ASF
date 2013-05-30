@@ -45,7 +45,7 @@
 
 #include "board.h"
 
-/** USART Interface  : Virtual Com Port (USART2) */
+/** USART Interface  : Virtual Com Port (USART1) */
 #define CONF_TEST_USART      COM_PORT_USART
 /** Baudrate setting : 115200 */
 #define CONF_TEST_BAUDRATE   115200
