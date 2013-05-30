@@ -48,7 +48,6 @@
  * \brief DFLL specefic data container
  */
 struct _system_clock_dfll_config {
-	bool     configured;
 	uint32_t control;
 };
 
@@ -76,7 +75,6 @@ struct _system_clock_module {
  */
 static struct _system_clock_module _system_clock_inst = {
 		.dfll = {
-			.configured  = false,
 			.control     = 0,
 		},
 		.xosc = {
@@ -147,7 +145,7 @@ uint32_t system_clock_source_get_hz(
 		case SYSTEM_CLOCK_SOURCE_DFLL:
 
 			/* Check if the DFLL has been configured */
-			if(!_system_clock_inst.dfll.configured)
+			if(!(_system_clock_inst.dfll.control & SYSCTRL_DFLLCTRL_ENABLE))
 				return 0;
 
 			/* Make sure that the DFLL module is ready */
@@ -344,8 +342,6 @@ void system_clock_source_dfll_set_config(
 		_system_clock_inst.dfll.control |= config->loop_mode;
 	}
 
-	_system_clock_inst.dfll.configured = true;
-
 	/* Restore old DFLL enable state */
 	if(!(old_dfll_enable_bit_state)) {
 		system_clock_source_disable(SYSTEM_CLOCK_SOURCE_DFLL);
@@ -456,15 +452,10 @@ enum status_code system_clock_source_enable(
 			break;
 
 		case SYSTEM_CLOCK_SOURCE_DFLL:
-			if(!_system_clock_inst.dfll.configured) {
-				return STATUS_ERR_NOT_INITALIZATED;
-			}
-
 			_system_clock_inst.dfll.control |= SYSCTRL_DFLLCTRL_ENABLE;
-			_system_dfll_wait_for_sync();
 			SYSCTRL->DFLLCTRL.reg = _system_clock_inst.dfll.control;
-
 			break;
+
 		case SYSTEM_CLOCK_SOURCE_ULP32K:
 			/* Always enabled */
 			return STATUS_OK;
