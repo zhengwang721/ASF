@@ -217,7 +217,7 @@
 /**
  * \name Pin connections on header J4
  *
- * The whole port D is directly connected to J4.
+ * The whole port D is connected to J4.
  */
 //@{
 #define J4_PIN0                        IOPORT_CREATE_PIN(PORTD, 0)
@@ -225,9 +225,9 @@
 #define J4_PIN2                        IOPORT_CREATE_PIN(PORTD, 2)
 #define J4_PIN3                        IOPORT_CREATE_PIN(PORTD, 3)
 #define J4_PIN4                        IOPORT_CREATE_PIN(PORTD, 4)
-#define J4_PIN5                        IOPORT_CREATE_PIN(PORTD, 5)
+#define J4_PIN5                        IOPORT_CREATE_PIN(PORTD, 7)
 #define J4_PIN6                        IOPORT_CREATE_PIN(PORTD, 6)
-#define J4_PIN7                        IOPORT_CREATE_PIN(PORTD, 7)
+#define J4_PIN7                        IOPORT_CREATE_PIN(PORTD, 5)
 //@}
 
 /**

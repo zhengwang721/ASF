@@ -533,11 +533,6 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
  * \section uhc_use_case_3_usage Usage steps
  *
  * \subsection uhc_use_case_3_usage_code Example code
- * Content of conf_usb.h:
- * \code
- * #define UDC_VBUS_EVENT(b_vbus_high)   my_callback_device_vbus(b_vbus_high)
- * extern void my_callback_device_vbus(bool b_vbus_high);
- * \endcode
  * Content of conf_usb_host.h:
  * \code
  * #define UHC_MODE_CHANGE(b_host_mode)   my_callback_mode_change(b_host_mode)
@@ -550,15 +545,6 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
  * {
  *   //udc_start();
  *   uhc_start();
- * }
- *
- * void my_callback_device_vbus(bool b_vbus_high)
- * {
- *   if (b_vbus_high) {
- *     udc_attach();
- *   } else {
- *     udc_detach();
- *   }
  * }
  *
  * bool my_host_mode;
@@ -582,23 +568,6 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
  * by uhc_start() and the udc_start() must not be called.
  *   - \code //udc_start();
  * uhc_start(); \endcode
- * -# In dual role, the udc_attach() must be called only when the USB device mode
- * is started and when Vbus is present:
- *   - Ensure that conf_usb.h contains the following parameters.
- * \code
- * #define UDC_VBUS_EVENT(b_vbus_high)   my_callback_device_vbus(b_vbus_high)
- * extern void my_callback_device_vbus(bool b_vbus_high);
- * \endcode
- *   - Ensure that application contains the following code:
- * \code
- * void my_callback_device_vbus(bool b_vbus_high)
- * {
- *   if (b_vbus_high) {
- *     udc_attach();
- *   } else {
- *     udc_detach();
- *   }
- * \endcode
  * -# In dual role, to known the current USB mode, the callback to notify the
  * mode changes can be used.
  *   - Ensure that conf_usb_host.h contains the following parameters.

@@ -26,8 +26,9 @@
 		<build type="c-source" value="demo_parameters.c"/>
 		<build type="c-source" value="demo_qtouch.c"/>
 		<build type="header-file" value="demo_parameters.h"/>
-		<build type="header-file" subtype="api" value="bitmaps.h"/>
+		<build type="header-file" value="bitmaps.h"/>
 		<build type="include-path" value="."/>
+		<require idref="sam.application.sam_toolkit_demo.resources"/>
 		<require idref="sam.drivers.pio"/>
 		<require idref="sam.drivers.rtc"/>
 		<require idref="common.services.basic.clock"/>
@@ -44,5 +45,6 @@
 		<require idref="sam.drivers.tc"/>
 		<require idref="sam.drivers.pdc"/>
 		<device-support value="sam"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

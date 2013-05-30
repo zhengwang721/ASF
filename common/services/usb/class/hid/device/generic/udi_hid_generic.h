@@ -281,7 +281,6 @@ bool udi_hid_generic_send_report_in(uint8_t *data);
  * - \subpage udc_use_case_1
  * - \subpage udc_use_case_2
  * - \subpage udc_use_case_3
- * - \subpage udc_use_case_4
  * - \subpage udc_use_case_5
  * - \subpage udc_use_case_6
  */

@@ -3,7 +3,7 @@
  *
  * \brief HX8347A display controller driver
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -108,17 +108,11 @@ __always_inline static void hx8347a_send_byte(uint8_t data)
 #  elif XMEGA
 	usart_spi_write_single(CONF_HX8347A_USART_SPI, data);
 
-	/* Wait for TX to complete */
-	while (!usart_tx_is_complete(CONF_HX8347A_USART_SPI)) {
-		/* Do nothing */
-	}
-	/* Clear the TX complete flag */
-	usart_clear_tx_complete(CONF_HX8347A_USART_SPI);
 #  endif
 
 #elif defined(CONF_HX8347A_SPI)
 	spi_write_single(CONF_HX8347A_SPI, data);
-	
+
 	/* Wait for TX to complete */
 	while (!spi_is_tx_ok(CONF_HX8347A_SPI)) {
 		/* Do nothing */
@@ -149,19 +143,8 @@ __always_inline static uint8_t hx8347a_read_byte(void)
 	usart_spi_read_packet(CONF_HX8347A_USART_SPI, &data, 1);
 
 #  elif XMEGA
-	/* Workaround for clearing the RXCIF for XMEGA */
-	usart_rx_enable(CONF_HX8347A_USART_SPI);
-
-	usart_spi_write_single(CONF_HX8347A_USART_SPI, 0xFF);
-
-	/* Wait for RX to complete */
-	while (!usart_rx_is_complete(CONF_HX8347A_USART_SPI)) {
-		/* Do nothing */
-	}
 	usart_spi_read_single(CONF_HX8347A_USART_SPI, &data);
 
-	/* Workaround for clearing the RXCIF for XMEGA */
-	usart_rx_disable(CONF_HX8347A_USART_SPI);
 #  endif
 #elif defined(CONF_HX8347A_SPI)
 	spi_write_single(CONF_HX8347A_SPI, 0xFF);
@@ -170,7 +153,7 @@ __always_inline static uint8_t hx8347a_read_byte(void)
 	while (!spi_is_rx_full(CONF_HX8347A_SPI)) {
 		/* Do nothing */
 	}
-	
+
 	spi_read_single(CONF_HX8347A_SPI, &data);
 #endif
 	return data;

@@ -5,7 +5,7 @@
  *
  * This file contains ctrl access interface functions of NAND Flash module.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -53,6 +53,7 @@
 #define NAND_FLASH_NOT_INIT    0
 #define NAND_FLASH_READY       1
 #define NAND_FLASH_BUSY        2
+#define NAND_FLASH_UNLOADED    3
 
 /* ---- CONTROL FUNCTIONS ---- */
 /**
@@ -81,6 +82,12 @@ bool         nand_flash_wr_protect(void);
  * \return true if the memory is removable
  */
 bool         nand_flash_removal(void);
+/**
+ * \brief This function unloads/loads the memory
+ *
+ * \return true if memory unload/load success
+ */
+bool         nand_flash_unload(bool unload);
 
 /* ---- ACCESS DATA FUNCTIONS ---- */
 

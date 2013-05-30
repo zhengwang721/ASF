@@ -6,7 +6,6 @@
 		<build type="header-file" value="conf_example.h"/>
 		<build type="header-file" value="conf_uart_serial.h"/>
 		<require idref="sam.drivers.pio.alternate_function_example"/>
-		<require idref="sam.utils.cmsis.sam3x.source.template"/>
 		<require idref="board.sam3x_ek"/>
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>

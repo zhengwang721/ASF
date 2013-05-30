@@ -64,8 +64,8 @@
  
 /** \example arm_class_marks_example_f32.c 
   */  
-#include "arm_math.h" 
-#include "asf.h"
+#include <asf.h> 
+#include "arm_math.h"
 
 #define USE_STATIC_INIT 
  

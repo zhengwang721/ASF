@@ -55,9 +55,9 @@
 
 #if XMEGA
 # error Unsupported chip type
-#elif (defined(__GNUC__) && defined(__AVR32__)) || (defined(__ICCAVR32__) || defined(__AAVR32__))
+#elif UC3
 # error Unsupported chip type
-#elif (defined(__GNUC__) || (defined(__ICCARM__)))
+#elif SAM
 	/* SAM is supported. */
 #else
 # error Unsupported chip type

@@ -3,7 +3,7 @@
  *
  * \brief Two-Wire Interface (TWI) driver for SAM.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -79,6 +79,10 @@ extern "C" {
 #define TWI_CLK_CALC_ARGU    4
 #define TWI_CLK_DIV_MAX      0xFF
 #define TWI_CLK_DIV_MIN      7
+
+#if SAM4E
+#define TWI_WP_KEY_VALUE TWI_WPROT_MODE_SECURITY_CODE((uint32_t)0x545749)
+#endif
 
 /**
  * \brief Enable TWI master mode.
@@ -250,7 +254,7 @@ uint32_t twi_master_read(Twi *p_twi, twi_packet_t *p_packet)
 {
 	uint32_t status, cnt = p_packet->length;
 	uint8_t *buffer = p_packet->buffer;
-
+	
 	/* Check argument */
 	if (cnt == 0) {
 		return TWI_INVALID_ARGUMENT;
@@ -473,6 +477,18 @@ void twi_slave_init(Twi *p_twi, uint32_t ul_device_addr)
 }
 
 /**
+ * \brief Set TWI slave address.
+ *
+ * \param p_twi Pointer to a TWI instance.
+ * \param ul_device_addr Device address of the SAM slave device on the I2C bus.
+ */
+void twi_set_slave_addr(Twi *p_twi, uint32_t ul_device_addr)
+{
+	/* Set slave address */
+	p_twi->TWI_SMR = TWI_SMR_SADR(ul_device_addr);
+}
+
+/**
  * \brief Read data from master.
  *
  * \note This function will NOT return until master sends a STOP condition.
@@ -561,7 +577,7 @@ Pdc *twi_get_pdc_base(Twi *p_twi)
 	if (p_twi == TWI0) {
 		p_pdc_base = PDC_TWI0;
 	}
-#if (SAM3XA || SAM3U || SAM3S || SAM4S)
+#ifdef PDC_TWI1
 	else if (p_twi == TWI1) {
 		p_pdc_base = PDC_TWI1;
 	}
@@ -573,6 +589,34 @@ Pdc *twi_get_pdc_base(Twi *p_twi)
 
 	return p_pdc_base;
 }
+
+#if SAM4E
+/**
+ * \brief Enables/Disables write protection mode.
+ *
+ * \param p_twi Pointer to a TWI instance.
+ * \param flag ture for enable, false for disable.
+ */
+void twi_set_write_protection(Twi *p_twi, bool flag)
+{
+	if (flag) {
+		p_twi->TWI_WPROT_MODE = TWI_WP_KEY_VALUE | TWI_WPROT_MODE_WPROT;
+	} else {
+		p_twi->TWI_WPROT_MODE = TWI_WP_KEY_VALUE;
+	}
+}
+
+/**
+ * \brief Read the write protection status.
+ *
+ * \param p_twi Pointer to a TWI instance.
+ * \param p_status Pointer to save the status.
+ */
+void twi_read_write_protection_status(Twi *p_twi, uint32_t *p_status)
+{
+	*p_status = p_twi->TWI_WPROT_STATUS;
+}
+#endif
 
 //@}
 

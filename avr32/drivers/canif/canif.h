@@ -7,7 +7,7 @@
  * This file contains basic functions for the AVR32 CAN, with support for all
  * modes, settings and clock speeds.
  *
- * Copyright (c) 2009-2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -245,7 +245,7 @@ typedef struct
 #define CANIF_mob_get_dlc(ch,mob)            ( (CANIF_get_mobctrl(ch,mob)&AVR32_CANIF_DLC_MASK)>>AVR32_CANIF_DLC_OFFSET )
 #define CANIF_mob_clr_dir(ch,mob)            { CANIF_set_mobctrl(ch,mob,CANIF_get_mobctrl(ch,mob)&~(1<<AVR32_CANIF_DIR_OFFSET));}
 #define CANIF_mob_set_dir(ch,mob)            { CANIF_set_mobctrl(ch,mob,CANIF_get_mobctrl(ch,mob)| (1<<AVR32_CANIF_DIR_OFFSET));}
-#define CANIF_mob_get_dir(ch,mob)            ( (CANIF_get_mobctrl(ch,mob)&AVR32_CANIF_CANDIR_MASK) >> AVR32_CANIF_DIR_OFFSET )
+#define CANIF_mob_get_dir(ch,mob)            ( (CANIF_get_mobctrl(ch,mob)&AVR32_CANIF_DIR_MASK) >> AVR32_CANIF_DIR_OFFSET )
 
 //! MOBSR Register Access
 #define CANIF_mob_get_status(ch,mob)         (((unsigned volatile long*) &(AVR32_CANIF.channel[ch].mobsr))[mob*3])

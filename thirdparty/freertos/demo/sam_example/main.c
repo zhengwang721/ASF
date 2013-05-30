@@ -88,7 +88,8 @@
  *
  */
 
-#include "asf.h"
+#include <asf.h>
+#include "conf_board.h"
 
 #define TASK_MONITOR_STACK_SIZE            (2048/sizeof(portSTACK_TYPE))
 #define TASK_MONITOR_STACK_PRIORITY        (tskIDLE_PRIORITY)
@@ -145,6 +146,7 @@ extern void vApplicationTickHook(void)
 static void task_monitor(void *pvParameters)
 {
 	static portCHAR szList[256];
+	UNUSED(pvParameters);
 
 	for (;;) {
 		printf("--- task ## %u", (unsigned int)uxTaskGetNumberOfTasks());
@@ -159,8 +161,9 @@ static void task_monitor(void *pvParameters)
  */
 static void task_led(void *pvParameters)
 {
+	UNUSED(pvParameters);
 	for (;;) {
-		gpio_toggle_pin(LED0_GPIO);
+		LED_Toggle(LED0);
 		vTaskDelay(1000);
 	}
 }
@@ -172,11 +175,16 @@ static void configure_console(void)
 {
 	const usart_serial_options_t uart_serial_options = {
 		.baudrate = CONF_UART_BAUDRATE,
-		.paritytype = CONF_UART_PARITY
+#if (defined CONF_UART_CHAR_LENGTH)
+		.charlength = CONF_UART_CHAR_LENGTH,
+#endif
+		.paritytype = CONF_UART_PARITY,
+#if (defined CONF_UART_STOP_BITS)
+		.stopbits = CONF_UART_STOP_BITS,
+#endif
 	};
-	
+
 	/* Configure console UART. */
-	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
 	stdio_serial_init(CONF_UART, &uart_serial_options);
 
 	/* Specify that stdout should not be buffered. */

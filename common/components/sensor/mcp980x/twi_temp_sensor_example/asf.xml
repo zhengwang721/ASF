@@ -15,6 +15,7 @@
 			<require idref="common.utils.stdio.stdio_serial"/>
 			<require idref="common.components.sensors.mcp980x"/>
 			<require idref="common.services.basic.clock"/>
+			<info type="gui-flag" value="move-to-root"/>
 		</module>
 	</select-by-device>
 </asf>

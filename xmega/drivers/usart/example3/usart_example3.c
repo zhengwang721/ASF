@@ -43,30 +43,38 @@
 
 /*! \mainpage
  * \section intro Introduction
- * This example demonstrates how to use XMEGA E USART module with Start Frame
- * Detection.
+ * This example demonstrates how to use XMEGA E USART module in one wire
+ * communication mode.
  *
  * \section files Main Files
  * - usart_example3.c: the example application.
  * - conf_board.h: board configuration
  * - conf_usart_example.h: configuration of the example
  *
- * \section usart_apiinfo drivers/usart API
- * The USART driver API can be found \ref usart_group "here".
+ * \section usart_apiinfo drivers/usart API XMEGA E specific
+ * The USART XMEGA E specific driver extension can be found
+ * \ref usart_xmegae_group "here".
  *
  * \section deviceinfo Device Info
  * All AVR XMEGA devices can be used. This example has been tested
  * with the following setup:
- *   - STK600 with ATxmega32E5 on STK600-RC032X. (USARTC0 should be connected to
- * the RS232 spare port of STK600)
+ *   - STK600 with ATxmega32E5 on STK600-RC032X
+ *     USARTC0 one wire on pin PC2 must be connected
+ *     to USARTD0 one wire on pin PD2.
+ *     The PC4 must be connected to RS232 TXD pin on STK600
+ *     to spy the one wire communication
+ *   - XMEGA E5 Xplained evaluation kit
+ *     USARTC0 one wire on pin PC2 (J1-PIN3) must be connected
+ *     to USARTD0 one wire on pin PD2 (J4-PIN3).
+ *     The PC4 (J1-PIN5) must be connected to TXD pin (PD7, J4-PIN6).
+ *     of board controller to spy the one wire communication
+ * UART configuration is 115200 baudrate, no parity, data 8 bit.
  *
  * \section exampledescription Description of the example
- * The example waits for a received character on the configured USART and
- * echoes the character back to the same USART. When waiting for a character,
- * the cpu core enters standby mode and is wake up using the start frame
- * detection on USART.
- * Using the internal 8MHz Oscilator of XMEGA E, the wakeup character is not
- *lost.
+ * The example executes a transfer between two UARTs in one wire mode.
+ * The first UART sends "ping" message and the second responses "pong".
+ * Note: Using the XCL driver, the UART line PC2 is connected internaly to PC4
+ * pin to allow the connection of a UART spy.
  *
  * \section compinfo Compilation Info
  * This software was written for the GNU GCC and IAR for AVR.
@@ -81,6 +89,8 @@
 
 volatile bool message1_received = false;
 volatile bool message2_received = false;
+
+void send_onewire_message(USART_t *usart, uint8_t *msg, uint8_t len);
 
 ISR(USART1_RX_Vect)
 {
@@ -100,6 +110,14 @@ ISR(USART2_RX_Vect)
 	usart_clear_tx_complete(USART2_SERIAL_EXAMPLE);
 }
 
+/**
+ * \brief Send a sequence of bytes to USART one wire
+ *
+ * \param usart  Base address of the USART instance.
+ * \param msg    Data buffer to read
+ * \param len    Length of data
+ *
+ */
 void send_onewire_message(USART_t *usart, uint8_t *msg, uint8_t len)
 {
 	uint8_t i;
@@ -113,8 +131,8 @@ void send_onewire_message(USART_t *usart, uint8_t *msg, uint8_t len)
  */
 int main(void)
 {
-	uint8_t tx_buf1[] = "\n\rPing? ->";
-	uint8_t tx_buf2[] = "\n\r        Pong! ->";
+	uint8_t ping_msg[] = "\n\rPing? ->";
+	uint8_t pong_msg[] = "\n\r        Pong! ->";
 
 	/* Initialize the board.
 	 * The board-specific conf_board.h file contains the configuration of
@@ -122,7 +140,7 @@ int main(void)
 	 */
 	board_init();
 	sysclk_init();
-	pmic_init();
+	irq_initialize_vectors();
 	cpu_irq_enable();
 
 	/* USART options. */
@@ -145,10 +163,11 @@ int main(void)
 	usart_set_rx_interrupt_level(USART1_SERIAL_EXAMPLE, USART_INT_LVL_LO);
 	usart_set_rx_interrupt_level(USART2_SERIAL_EXAMPLE, USART_INT_LVL_LO);
 
+	/* To initiate the first transfer "Ping" */
 	message2_received = true;
 
 	/* Configure XCL so it copies the PC2 pin to PC4 (it allows to wire PC4
-	 * to RS232 TXD pin on STK600 to spi the one wire communication */
+	 * to RS232 TXD pin on STK600 to spy the one wire communication */
 	xcl_enable(XCL_ASYNCHRONOUS);
 	xcl_port(PC);
 	xcl_lut_type(LUT_2LUT2IN);
@@ -162,17 +181,19 @@ int main(void)
 	 * main loop simply enters sleep mode */
 	while (true) {
 		if (message2_received) {
+			/* When "pong" is received, send "ping" */
 			gpio_toggle_pin(LED0_GPIO);
 			message2_received = false;
-			send_onewire_message(USART1_SERIAL_EXAMPLE, tx_buf1,
-					sizeof(tx_buf1));
+			send_onewire_message(USART1_SERIAL_EXAMPLE, ping_msg,
+					sizeof(ping_msg));
 		}
 
 		if (message1_received) {
+			/* When "ping" is received, send "pong" */
 			gpio_toggle_pin(LED0_GPIO);
 			message1_received = false;
-			send_onewire_message(USART2_SERIAL_EXAMPLE, tx_buf2,
-					sizeof(tx_buf2));
+			send_onewire_message(USART2_SERIAL_EXAMPLE, pong_msg,
+					sizeof(pong_msg));
 		}
 	}
 }

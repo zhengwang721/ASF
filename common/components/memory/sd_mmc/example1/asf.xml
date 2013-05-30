@@ -1,6 +1,6 @@
 <asf xmlversion="1.0">
-	<select-by-device id="common.components.memory.sd_mmc.example1" caption="Basic SD/MMC/SDIO card example">
-		<module type="application" id="common.components.memory.sd_mmc.example1#0" caption="Basic SD/MMC/SDIO card example">
+	<select-by-device id="common.components.memory.sd_mmc.example1" caption="SD/MMC/SDIO Card Raw Access Example">
+		<module type="application" id="common.components.memory.sd_mmc.example1#0" caption="SD/MMC/SDIO Card Raw Access Example">
 			<info type="description" value="summary">
 			Install and execute a basic read and write block access to an external SD/MMC/SDIO card.
 			This example is interesting to start a specific development on SDIO card or
@@ -16,8 +16,9 @@
 			<require idref="common.utils.stdio.stdio_serial"/>
 			<require idref="common.components.memory.sd_mmc"/>
 			<device-support value="sam"/>
+			<info type="gui-flag" value="move-to-root"/>
 		</module>
-		<module type="application" id="common.components.memory.sd_mmc.example1#1" caption="Basic SD/MMC/SDIO card example">
+		<module type="application" id="common.components.memory.sd_mmc.example1#1" caption="SD/MMC/SDIO Card Raw Access Example">
 			<info type="description" value="summary">
 			Install and execute a basic read and write block access to an external SD/MMC/SDIO card.
 			This example is interesting to start a specific development on SDIO card or
@@ -33,8 +34,9 @@
 			<require idref="common.utils.stdio.stdio_serial"/>
 			<require idref="common.components.memory.sd_mmc"/>
 			<device-support value="uc3"/>
+			<info type="gui-flag" value="move-to-root"/>
 		</module>
-		<module type="application" id="common.components.memory.sd_mmc.example1#2" caption="Basic SD/MMC/SDIO card example">
+		<module type="application" id="common.components.memory.sd_mmc.example1#2" caption="SD/MMC/SDIO Card Raw Access Example">
 			<info type="description" value="summary">
 			Install and execute a basic read and write block access to an external SD/MMC/SDIO card.
 			This example is interesting to start a specific development on SDIO card or
@@ -50,6 +52,7 @@
 			<require idref="common.utils.stdio.stdio_serial"/>
 			<require idref="common.components.memory.sd_mmc"/>
 			<device-support value="xmega"/>
+			<info type="gui-flag" value="move-to-root"/>
 		</module>
 	</select-by-device>
 </asf>

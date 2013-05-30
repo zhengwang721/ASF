@@ -3,7 +3,7 @@
  *
  * \brief Board configuration
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -52,5 +52,9 @@
 
 /** USART Hw ID used by the console (UART0). */
 #define CONSOLE_UART_ID          ID_UART0
+
+/* Configure USB pins (VBus monitoring) */
+#define CONF_BOARD_USB_PORT
+#define CONF_BOARD_USB_VBUS_DETECT /* VBUS detect enabled */
 
 #endif /* CONF_BOARD_H_INCLUDED */

@@ -21,7 +21,7 @@
  *   - See the conf_usb.h file for more details about the configuration of
  *     this module.
  *
- * Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009 - 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -672,8 +672,10 @@ void usb_suspend_action(void)
    startup = AVR32_PM.OSCCTRL0.startup;
    pm_cksel_get(&AVR32_PM, &cksel_save);
 
-   // Setup a null startup time. We will control it with a software delay.
-   AVR32_PM.OSCCTRL0.startup = AVR32_PM_OSCCTRL0_STARTUP_0_RCOSC;
+   // Setup a long startup time. We will control it with a software delay.
+   // Moreover, this also ensures that the PLL0 will not be blocked due to a
+   // bad oscillator state/frequency in the case of a short startup (0 or 1.1 ms).
+   AVR32_PM.OSCCTRL0.startup = AVR32_PM_OSCCTRL0_STARTUP_2048_RCOSC;
 
    // Switch on the internal RC oscillator
    pm_switch_to_clock(&AVR32_PM, AVR32_PM_MCSEL_SLOW);
@@ -686,16 +688,24 @@ void usb_suspend_action(void)
    , 0, 0 // HSB
    );
 
-   // Entering into Sleep mode.
-   SLEEP(AVR32_PM_SMODE_STOP);
-   // Exit from static mode.
+   // If there is a chance that any PB write operations are incomplete, the CPU
+   // should perform a read operation from any register on the PB bus before
+   // executing the sleep instruction.
+   AVR32_INTC.ipr[0];  // Dummy read
 
-   // The host may start using the USB 10 ms after the RESUME.
+   // Entering into Sleep mode.
+   SLEEP(AVR32_PM_SMODE_STATIC);
+   // Exit from Sleep mode.
+
+   // The host may start using the USB 10 ms (FS) or 3 ms (HS) after the RESUME.
    // Waits for oscillator startup with a time lower than USB requirements.
-   cpu_delay_ms(6, AVR32_PM_RCOSC_FREQUENCY);
+   cpu_delay_us(1400, AVR32_PM_RCOSC_FREQUENCY);
 
    // Restore CKSEL
    pm_cksel_set(&AVR32_PM, cksel_save);
+
+   // Shorten the startup time, since OSC0 is ready.
+   AVR32_PM.OSCCTRL0.startup = AVR32_PM_OSCCTRL0_STARTUP_0_RCOSC;
 
    // Switch back to the previous clock.
    pm_switch_to_clock(&AVR32_PM, clock);
@@ -706,7 +716,16 @@ void usb_suspend_action(void)
 #else
 #warning This need to be updated for other parts.
    pm->AWEN.usb_waken = 1;
-   SLEEP(AVR32_PM_SMODE_STOP);
+
+   // If there is a chance that any PB write operations are incomplete, the CPU
+   // should perform a read operation from any register on the PB bus before
+   // executing the sleep instruction.
+   AVR32_INTC.ipr[0];  // Dummy read
+
+   // Entering into Sleep mode.
+   SLEEP(AVR32_PM_SMODE_STATIC);
+   // Exit from Sleep mode.
+
    pm->AWEN.usb_waken = 0;
 #endif
 }

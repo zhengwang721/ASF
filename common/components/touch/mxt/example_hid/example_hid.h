@@ -45,7 +45,6 @@
 
 bool main_mouse_enable(void);
 void main_mouse_disable(void);
-void main_vbus_action(bool b_high);
 void main_sof_action(void);
 void main_suspend_action(void);
 void main_resume_action(void);

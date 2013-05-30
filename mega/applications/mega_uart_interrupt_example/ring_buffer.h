@@ -78,13 +78,13 @@ struct ring_buffer {
  * \brief Function to get the next offset in a ring buffer.
  *
  * \param cur_offset the current offset in the ring buffer
- * \param max_offset the highest allowed offset in the ring buffer
+ * \param size       the size of the ring buffer in bytes
  *
  * \returns next offset or 0 if we are wrapping
  */
-static inline uint8_t get_next(uint8_t cur_offset, uint8_t max_offset)
+static inline uint8_t get_next(uint8_t cur_offset, uint8_t size)
 {
-	return (cur_offset == max_offset ? 0 : cur_offset + 1);
+	return (cur_offset == (size - 1) ? 0 : cur_offset + 1);
 }
 
 /**

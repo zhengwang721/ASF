@@ -3,7 +3,7 @@
  *
  * \brief Example configuration
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,11 +43,12 @@
 #ifndef CONF_EXAMPLE_H_INCLUDED
 #define CONF_EXAMPLE_H_INCLUDED
 
-#define USART_ENABLE()   
-#define USART_DISABLE()  
+#define USART_ENABLE()
+#define USART_DISABLE()
 #define USART_BASE       ((Usart*)UART)
-#define USART_HANDLER    UART_Handler
 #define USART_ID         ID_UART
+#define USART_HANDLER    UART_Handler
+#define USART_INT_IRQn   UART_IRQn
 #define USART_INT_LEVEL  3
 
 #endif /* CONF_EXAMPLE_H_INCLUDED */

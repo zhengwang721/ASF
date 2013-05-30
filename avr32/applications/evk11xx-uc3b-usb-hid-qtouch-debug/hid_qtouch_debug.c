@@ -3,7 +3,7 @@
  *
  * \brief  Main file of the USB HID QTouch Debug.
  *
- * Copyright (c) 2009-2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,6 +40,27 @@
  * \asf_license_stop
  */
 
+/**
+ * \mainpage
+ *
+ * \par USB HID stub for embedded QTouch Library to QTouch Studio communication
+ *
+ * This application is a USART<->USB gateway dedicated for trace messages
+ * between the embedded QTouch library and QTouch Studio. It is meant to run
+ * on a UC3B device connected through a UART to another device running the
+ * QTouch Library and connected through USB to a computer running QTouch Studio.
+ *
+ * \par Usage
+ *
+ * -# Set-up of the USB stack
+ * -# Set-up of the HID generic USB class
+ * -# Set-up of the UART connection
+ * -# All messages received from USB (i.e. from QTouch Studio) are sent over the
+ * UART to the QTouch Library.
+ * -# All messages received from the QTouch Library (i.e. over the UART) are
+ * sent through USB to QTouch Studio.
+ *
+ */
 
 //_____  I N C L U D E S ___________________________________________________
 

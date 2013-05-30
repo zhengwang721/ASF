@@ -3,7 +3,7 @@
  *
  * \brief CTRL_ACCESS interface for the AT45DBX data flash driver.
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -60,9 +60,13 @@
  */
 //! @{
 
+static bool b_at45dbx_unloaded = false;
 
 Ctrl_status at45dbx_test_unit_ready(void)
 {
+	if (b_at45dbx_unloaded) {
+		return CTRL_NO_PRESENT;
+	}
 	return (at45dbx_mem_check() == true) ? CTRL_GOOD : CTRL_NO_PRESENT;
 }
 
@@ -82,7 +86,12 @@ bool at45dbx_wr_protect(void)
 
 bool at45dbx_removal(void)
 {
-	return false;
+	return true;
+}
+
+bool at45dbx_unload(bool unload)
+{
+	b_at45dbx_unloaded = unload;
 }
 
 
@@ -93,6 +102,8 @@ bool at45dbx_removal(void)
 
 #include "udi_msc.h"
 
+//! Sector buffer.
+static uint8_t sector_buf[AT45DBX_SECTOR_SIZE];
 
 /*! \name MEM <-> USB Interface
  */
@@ -105,17 +116,14 @@ Ctrl_status at45dbx_usb_read_10(U32 addr, U16 nb_sector)
 		return CTRL_FAIL;
 	}
 	at45dbx_read_sector_open(addr);
-	at45dbx_read_multiple_sector(nb_sector);
+	while (nb_sector--) {
+		// Read the next sector.
+		at45dbx_read_sector_to_ram(sector_buf);
+		udi_msc_trans_block( true, sector_buf, AT45DBX_SECTOR_SIZE, NULL);
+	}
 	at45dbx_read_close();
 	return CTRL_GOOD;
 }
-
-
-void at45dbx_read_multiple_sector_callback(const void *psector)
-{
-	udi_msc_trans_block( true, (uint8_t*)psector, AT45DBX_SECTOR_SIZE, NULL);
-}
-
 
 Ctrl_status at45dbx_usb_write_10(U32 addr, U16 nb_sector)
 {
@@ -124,17 +132,14 @@ Ctrl_status at45dbx_usb_write_10(U32 addr, U16 nb_sector)
 	}
 
 	at45dbx_write_sector_open(addr);
-	at45dbx_write_multiple_sector(nb_sector);
+	while (nb_sector--) {
+		// Write the next sector.
+		udi_msc_trans_block( false, sector_buf, AT45DBX_SECTOR_SIZE, NULL);
+		at45dbx_write_sector_from_ram(sector_buf);
+	}
 	at45dbx_write_close();
 	return CTRL_GOOD;
 }
-
-
-void at45dbx_write_multiple_sector_callback(void *psector)
-{
-	udi_msc_trans_block( false, (uint8_t*)psector, AT45DBX_SECTOR_SIZE, NULL);
-}
-
 
 //! @}
 

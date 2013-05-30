@@ -3,7 +3,7 @@
  *
  * \brief ADC Management Task.
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -88,7 +88,8 @@ adcifa_opt_t adc_config_t = {
 	.sample_and_hold_disable    = false,              // Sample and Hold enabled
 	.single_sequencer_mode      = false,              // Dual sequencer mode
 	.free_running_mode_enable   = false,              // Free running not used
-	.sleep_mode_enable          = false               // Sleep mode not used
+	.sleep_mode_enable          = false,              // Sleep mode not used
+	.mux_settle_more_time       = false     		  // Multiplexer Settle Time
 };
 
 // Sequencer 0 Configuration

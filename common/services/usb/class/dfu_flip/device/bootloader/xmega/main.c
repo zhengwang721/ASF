@@ -58,7 +58,6 @@ int main(void)
 	// Start USB stack to authorize VBus monitoring
 	udc_start();
 
-	udc_attach();
 	while (true) {
 	}
 }

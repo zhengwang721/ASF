@@ -663,10 +663,10 @@ void hx8347a_fill(hx8347a_color_t us_color)
 void hx8347a_set_window(uint32_t ul_x, uint32_t ul_y, uint32_t ul_width,
 		uint32_t ul_height)
 {
-	assert(ul_x <= 0xEF);
-	assert(ul_y <= 0x13f);
-	assert(ul_width <= (0xF0 - ul_x));
-	assert(ul_height <= (0x140 - ul_y));
+	Assert(ul_x <= 0xEF);
+	Assert(ul_y <= 0x13f);
+	Assert(ul_width <= (0xF0 - ul_x));
+	Assert(ul_height <= (0x140 - ul_y));
 
 	uint8_t x1, x2, y1, y2;
 
@@ -790,8 +790,8 @@ uint32_t hx8347a_draw_pixel(uint32_t ul_x, uint32_t ul_y)
  */
 hx8347a_color_t hx8347a_get_pixel(uint32_t ul_x, uint32_t ul_y)
 {
-	assert(ul_x <= HX8347A_LCD_WIDTH);
-	assert(ul_y <= HX8347A_LCD_HEIGHT);
+	Assert(ul_x <= HX8347A_LCD_WIDTH);
+	Assert(ul_y <= HX8347A_LCD_HEIGHT);
 
 	/* Set cursor */
 	hx8347a_set_cursor_position(ul_x, ul_y);

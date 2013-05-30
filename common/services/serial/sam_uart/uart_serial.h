@@ -3,7 +3,7 @@
  *
  * \brief Uart Serial for SAM.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -50,28 +50,33 @@
 #endif
 #include "usart.h"
 
-/*! \name Serial Management Configuration
+/** 
+ * \name Serial Management Configuration
  */
 //! @{
 #include "conf_uart_serial.h"
 
 //! @}
 
-//! Input parameters when initializing RS232 and similar modes.
+/** Input parameters when initializing RS232 and similar modes. */
 typedef struct uart_rs232_options {
-	//! Set baud rate of the USART (unused in slave modes).
+	/** Set baud rate of the USART (unused in slave modes). */
 	uint32_t baudrate;
 
-	//! Number of bits to transmit as a character (5 to 9).
+	/** Number of bits to transmit as a character (5 to 9). */
 	uint32_t charlength;
 
-	//! Parity type: USART_PMODE_DISABLED_gc, USART_PMODE_EVEN_gc,
-	//! USART_PMODE_ODD_gc.
+	/**
+	 * Parity type: USART_PMODE_DISABLED_gc, USART_PMODE_EVEN_gc,
+	 * USART_PMODE_ODD_gc.
+	 */
 	uint32_t paritytype;
 
-	//! Number of stop bits between two characters:
-	//! true: 2 stop bits
-	//! false: 1 stop bit
+	/** 
+	 * Number of stop bits between two characters:
+	 * true: 2 stop bits
+	 * false: 1 stop bit
+	 */
 	bool stopbits;
 
 } usart_rs232_options_t;
@@ -80,11 +85,12 @@ typedef usart_rs232_options_t usart_serial_options_t;
 
 typedef Usart *usart_if;
 
-/*! \brief Initializes the Usart in master mode.
+/** 
+ * \brief Initializes the Usart in master mode.
  *
- * \param p_usart       Base address of the USART instance.
- * \param opt         Options needed to set up RS232 communication (see
- *                    \ref usart_options_t).
+ * \param p_usart  Base address of the USART instance.
+ * \param opt      Options needed to set up RS232 communication (see
+ * \ref usart_options_t).
  */
 static inline void usart_serial_init(usart_if p_usart,
 		usart_serial_options_t *opt)
@@ -124,7 +130,7 @@ static inline void usart_serial_init(usart_if p_usart,
 		uart_init((Uart*)p_usart, &uart_settings);
 	}
 # endif
-#endif // ifdef UART
+#endif /* ifdef UART */
 
 
 #ifdef USART
@@ -241,11 +247,12 @@ static inline void usart_serial_init(usart_if p_usart,
 		usart_enable_rx(p_usart);
 	}
 # endif
-#endif // ifdef USART
+#endif /* ifdef USART */
 
 }
 
-/*! \brief Sends a character with the USART.
+/**
+ * \brief Sends a character with the USART.
  *
  * \param p_usart   Base address of the USART instance.
  * \param c       Character to write.
@@ -253,7 +260,7 @@ static inline void usart_serial_init(usart_if p_usart,
  * \return Status.
  *   \retval 1  The character was written.
  *   \retval 0  The function timed out before the USART transmitter became
- *              ready to send.
+ * ready to send.
  */
 static inline int usart_serial_putchar(usart_if p_usart, const uint8_t c)
 {
@@ -275,7 +282,7 @@ static inline int usart_serial_putchar(usart_if p_usart, const uint8_t c)
 		return 1;
 	}
 # endif
-#endif // ifdef UART
+#endif /* ifdef UART */
 
 
 #ifdef USART
@@ -314,11 +321,12 @@ static inline int usart_serial_putchar(usart_if p_usart, const uint8_t c)
 		return 1;
 	}
 # endif
-#endif // ifdef USART
+#endif /* ifdef USART */
 
 	return 0;
 }
-/*! \brief Waits until a character is received, and returns it.
+/**
+ * \brief Waits until a character is received, and returns it.
  *
  * \param p_usart   Base address of the USART instance.
  * \param data   Data to read
@@ -326,7 +334,10 @@ static inline int usart_serial_putchar(usart_if p_usart, const uint8_t c)
  */
 static inline void usart_serial_getchar(usart_if p_usart, uint8_t *data)
 {
-	uint32_t val;
+	uint32_t val = 0;
+
+	/* Avoid Cppcheck Warning */
+	UNUSED(val);
 
 #ifdef UART
 	if (UART == (Uart*)p_usart) {
@@ -343,7 +354,7 @@ static inline void usart_serial_getchar(usart_if p_usart, uint8_t *data)
 		while (uart_read((Uart*)p_usart, data));
 	}
 # endif
-#endif // ifdef UART
+#endif /* ifdef UART */
 
 
 #ifdef USART
@@ -382,7 +393,7 @@ static inline void usart_serial_getchar(usart_if p_usart, uint8_t *data)
 		*data = (uint8_t)(val & 0xFF);
 	}
 # endif
-#endif // ifdef USART
+#endif /* ifdef USART */
 
 }
 
@@ -411,7 +422,7 @@ static inline uint32_t usart_serial_is_rx_ready(usart_if p_usart)
 		return uart_is_rx_ready((Uart*)p_usart);
 	}
 # endif
-#endif // ifdef UART
+#endif /* ifdef UART */
 
 
 #ifdef USART
@@ -444,7 +455,7 @@ static inline uint32_t usart_serial_is_rx_ready(usart_if p_usart)
 		return usart_is_rx_ready(p_usart);
 	}
 # endif
-#endif // ifdef USART
+#endif /* ifdef USART */
 
 	return 0;
 }
@@ -471,4 +482,4 @@ status_code_t usart_serial_write_packet(usart_if usart, const uint8_t *data,
 status_code_t usart_serial_read_packet(usart_if usart, uint8_t *data,
 		size_t len);
 
-#endif  // _UART_SERIAL_H_
+#endif  /* _UART_SERIAL_H_ */

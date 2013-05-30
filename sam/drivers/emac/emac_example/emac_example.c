@@ -3,7 +3,7 @@
  *
  * \brief EMAC example for SAM.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -286,7 +286,8 @@ static void emac_process_ip_packet(uint8_t *p_uc_data, uint32_t ul_size)
 	uint32_t ul_icmp_len;
 	int32_t ul_rc = EMAC_OK;
 
-	ul_size = ul_size;	/* stop warning */
+	/* avoid Cppcheck Warning */
+	UNUSED(ul_size);
 
 	p_ethernet_header_t p_eth = (p_ethernet_header_t) p_uc_data;
 	p_ip_header_t p_ip_header = (p_ip_header_t) (p_uc_data + ETH_HEADER_SIZE);
@@ -440,6 +441,7 @@ int main(void)
 	rstc_reset_extern(RSTC);
 	while (rstc_get_status(RSTC) & RSTC_SR_NRSTL) {
 	};
+	rstc_set_external_reset(RSTC, 0);  /* restore default */
 
 	/* Wait for PHY to be ready (CAT811: Max400ms) */
 	ul_delay = sysclk_get_cpu_hz() / 1000 / 3 * 400;

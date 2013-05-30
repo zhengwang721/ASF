@@ -66,9 +66,7 @@
  * - \ref conf_usart_serial.h
  *
  * \section device_info Device Info
- * All AVR devices can be used.
- * This example has been tested with the following setup:
- * - Xplain
+ * All Atmel devices can be used.
  *
  * \section description Description of the unit tests
  * See the documentation for the individual unit test functions \ref unit_tests.c
@@ -80,7 +78,7 @@
  * - \ref fifo.h "FIFO service"
  *
  * \section compinfo Compilation info
- * This software was written for the GNU GCC and IAR for AVR. Other compilers
+ * This software was written for the GNU GCC and IAR for AVR or ARM. Other compilers
  * may or may not work.
  *
  * \section contactinfo Contact Information

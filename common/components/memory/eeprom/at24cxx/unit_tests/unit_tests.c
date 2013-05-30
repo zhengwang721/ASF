@@ -3,7 +3,7 @@
  *
  * \brief Unit tests for at24cxx driver.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -185,6 +185,8 @@ int main(void)
 
 	sysclk_init();
 	board_init();
+	/* reset EEPROM state to release TWI */
+	at24cxx_reset();
 
 	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
 	stdio_serial_init(CONF_TEST_USART, &usart_serial_options);

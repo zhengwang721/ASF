@@ -89,10 +89,9 @@
  
 /** \example arm_signal_converge_example_f32.c 
   */  
-     
+#include <asf.h>
 #include "arm_math.h" 
 #include "math_helper.h"
-#include "asf.h"
  
 /* ---------------------------------------------------------------------- 
 ** Global defines for the simulation 

@@ -49,36 +49,36 @@
  * @{
  */
 
-//! Control endpoint size
-#define  USB_DEVICE_EP_CTRL_SIZE       32	// 8 is not supported by PHDC
+/* ! Control endpoint size */
+#define  USB_DEVICE_EP_CTRL_SIZE       32 /* 8 is not supported by PHDC */
 
-//! Endpoint numbers used by PHDC interface
+/* ! Endpoint numbers used by PHDC interface */
 #define  UDI_PHDC_EP_BULK_OUT          (1 | USB_EP_DIR_OUT)
 #define  UDI_PHDC_EP_BULK_IN           (2 | USB_EP_DIR_IN)
 #define  UDI_PHDC_EP_INTERRUPT_IN      (3 | USB_EP_DIR_IN)
 
-//! Endpoint sizes used by PHDC interface
+/* ! Endpoint sizes used by PHDC interface */
 #define  UDI_PHDC_EP_SIZE_BULK_OUT     32
 #define  UDI_PHDC_EP_SIZE_BULK_IN      32
 #define  UDI_PHDC_EP_SIZE_INT_IN       8
 
-//! Interface number
+/* ! Interface number */
 #define  UDI_PHDC_IFACE_NUMBER          0
 
 /**
  * \name UDD Configuration
+ * @{
  */
-//@{
-//! 2 or 3 endpoints used by PHDC interface
-#if ((UDI_PHDC_QOS_IN&USB_PHDC_QOS_LOW_GOOD)==USB_PHDC_QOS_LOW_GOOD)
+/* ! 2 or 3 endpoints used by PHDC interface */
+#if ((UDI_PHDC_QOS_IN & USB_PHDC_QOS_LOW_GOOD) == USB_PHDC_QOS_LOW_GOOD)
 #define  USB_DEVICE_MAX_EP             3
 #else
 #define  USB_DEVICE_MAX_EP             2
 #endif
-//@}
+/* @} */
 
-//@}
+/* @} */
 
 #include "udi_phdc.h"
 
-#endif // _UDI_PHDC_CONF_H_
+#endif /* _UDI_PHDC_CONF_H_ */

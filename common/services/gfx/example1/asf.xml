@@ -4,7 +4,7 @@
 		Graphic library graphic primitives example. Draw graphics shapes to a connected LCD display.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="Graphics" />
+			<keyword value="Graphics"/>
 		</info>
 		<build type="c-source" value="example1.c"/>
 		<device-support value="xmega"/>
@@ -14,5 +14,6 @@
 		<require idref="common.services.gfx"/>
 		<require idref="common.services.gfx.font"/>
 		<require idref="common.services.basic.clock"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

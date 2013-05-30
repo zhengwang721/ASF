@@ -27,7 +27,7 @@
 		<device-support value="sam3u"/>
 		<device-support value="sam3x"/>
 		<device-support value="sam3a"/>
-		<device-support value="sam4s"/>
+		<device-support value="sam4l"/>
 		<require idref="common.services.basic.clock"/>
 		<require idref="common.services.basic.sleepmgr"/>
 		<require idref="common.services.usb.class.host"/>
@@ -36,5 +36,6 @@
 			<keyword value="USB"/>
 			<keyword value="Communication"/>
 		</info>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

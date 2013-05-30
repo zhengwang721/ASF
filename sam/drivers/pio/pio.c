@@ -3,7 +3,7 @@
  *
  * \brief Parallel Input/Output (PIO) Controller driver for SAM.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -98,7 +98,7 @@ void pio_pull_up(Pio *p_pio, const uint32_t ul_mask,
 void pio_set_debounce_filter(Pio *p_pio, const uint32_t ul_mask,
 		const uint32_t ul_cut_off)
 {
-#if (SAM3S || SAM3N || SAM4S)
+#if (SAM3S || SAM3N || SAM4S || SAM4E)
 	/* Set Debouncing, 0 bit field no effect */
 	p_pio->PIO_IFSCER = ul_mask;
 #elif (SAM3XA || SAM3U)
@@ -108,9 +108,11 @@ void pio_set_debounce_filter(Pio *p_pio, const uint32_t ul_mask,
 #error "Unsupported device"
 #endif
 
-	/* The debouncing filter can filter a pulse of less than 1/2 Period of a
-	   programmable Divided Slow Clock:
-	   Tdiv_slclk = ((DIV+1)*2).Tslow_clock */
+	/* 
+	 * The debouncing filter can filter a pulse of less than 1/2 Period of a
+	 * programmable Divided Slow Clock:
+	 * Tdiv_slclk = ((DIV+1)*2).Tslow_clock 
+	 */
 	p_pio->PIO_SCDR = PIO_SCDR_DIV((FREQ_SLOW_CLOCK_EXT /
 					(2 * (ul_cut_off))) - 1);
 }
@@ -188,7 +190,7 @@ void pio_set_peripheral(Pio *p_pio, const pio_type_t ul_type,
 	/* Disable interrupts on the pin(s) */
 	p_pio->PIO_IDR = ul_mask;
 
-#if (SAM3S || SAM3N || SAM4S)
+#if (SAM3S || SAM3N || SAM4S || SAM4E)
 	switch (ul_type) {
 	case PIO_PERIPH_A:
 		ul_sr = p_pio->PIO_ABCDSR[0];
@@ -222,7 +224,7 @@ void pio_set_peripheral(Pio *p_pio, const pio_type_t ul_type,
 		p_pio->PIO_ABCDSR[1] = (ul_mask | ul_sr);
 		break;
 
-		// other types are invalid in this function
+		/* Other types are invalid in this function */
 	case PIO_INPUT:
 	case PIO_OUTPUT_0:
 	case PIO_OUTPUT_1:
@@ -252,7 +254,7 @@ void pio_set_peripheral(Pio *p_pio, const pio_type_t ul_type,
 #error "Unsupported device"
 #endif
 
-	// Remove the pins from under the control of PIO
+	/* Remove the pins from under the control of PIO */
 	p_pio->PIO_PDR = ul_mask;
 }
 
@@ -278,7 +280,7 @@ void pio_set_input(Pio *p_pio, const uint32_t ul_mask,
 		p_pio->PIO_IFDR = ul_mask;
 	}
 
-#if (SAM3S || SAM3N || SAM4S)
+#if (SAM3S || SAM3N || SAM4S || SAM4E)
 	/* Enable de-glitch or de-bounce if necessary */
 	if (ul_attribute & PIO_DEGLITCH) {
 		p_pio->PIO_IFSCDR = ul_mask;
@@ -363,10 +365,10 @@ uint32_t pio_configure(Pio *p_pio, const pio_type_t ul_type,
 	switch (ul_type) {
 	case PIO_PERIPH_A:
 	case PIO_PERIPH_B:
-#     if (SAM3S || SAM3N || SAM4S)
+#if (SAM3S || SAM3N || SAM4S || SAM4E)
 	case PIO_PERIPH_C:
 	case PIO_PERIPH_D:
-#     endif
+#endif
 		pio_set_peripheral(p_pio, ul_type, ul_mask);
 		pio_pull_up(p_pio, ul_mask, (ul_attribute & PIO_PULLUP));
 		break;
@@ -442,7 +444,7 @@ uint32_t pio_get_multi_driver_status(const Pio *p_pio)
 }
 
 
-#if (SAM3S || SAM3N || SAM4S)
+#if (SAM3S || SAM3N || SAM4S || SAM4E)
 /**
  * \brief Configure PIO pin internal pull-down.
  *
@@ -510,7 +512,7 @@ void pio_sync_output_write(Pio *p_pio, const uint32_t ul_mask)
 	p_pio->PIO_ODSR = ul_mask;
 }
 
-#if (SAM3S || SAM3N || SAM4S)
+#if (SAM3S || SAM3N || SAM4S || SAM4E)
 /**
  * \brief Configure PIO pin schmitt trigger. By default the Schmitt trigger is
  * active.
@@ -693,8 +695,6 @@ uint32_t pio_get_writeprotect_status(const Pio *p_pio)
 	return p_pio->PIO_WPSR;
 }
 
-#define PIO_DELTA   ((uint32_t) PIOB - (uint32_t) PIOA)
-
 /**
  * \brief Return the value of a pin.
  *
@@ -724,7 +724,7 @@ uint32_t pio_get_pin_value(uint32_t ul_pin)
 void pio_set_pin_high(uint32_t ul_pin)
 {
 	Pio *p_pio = (Pio *)((uint32_t)PIOA + (PIO_DELTA * (ul_pin >> 5)));
-	// Value to be driven on the I/O line: 1.
+	/* Value to be driven on the I/O line: 1. */
 	p_pio->PIO_SODR = 1 << (ul_pin & 0x1F);
 }
 
@@ -738,7 +738,7 @@ void pio_set_pin_high(uint32_t ul_pin)
 void pio_set_pin_low(uint32_t ul_pin)
 {
 	Pio *p_pio = (Pio *)((uint32_t)PIOA + (PIO_DELTA * (ul_pin >> 5)));
-	// Value to be driven on the I/O line: 0.
+	/* Value to be driven on the I/O line: 0. */
 	p_pio->PIO_CODR = 1 << (ul_pin & 0x1F);
 }
 
@@ -753,10 +753,10 @@ void pio_toggle_pin(uint32_t ul_pin)
 {
 	Pio *p_pio = (Pio *)((uint32_t)PIOA + (PIO_DELTA * (ul_pin >> 5)));
 	if (p_pio->PIO_ODSR & (1 << (ul_pin & 0x1F))) {
-		// Value to be driven on the I/O line: 0.
+		/* Value to be driven on the I/O line: 0. */
 		p_pio->PIO_CODR = 1 << (ul_pin & 0x1F);
 	} else {
-		// Value to be driven on the I/O line: 1.
+		/* Value to be driven on the I/O line: 1. */
 		p_pio->PIO_SODR = 1 << (ul_pin & 0x1F);
 	}
 }
@@ -786,7 +786,7 @@ uint32_t pio_configure_pin(uint32_t ul_pin, const uint32_t ul_flags)
 		pio_pull_up(p_pio, (1 << (ul_pin & 0x1F)),
 				(ul_flags & PIO_PULLUP));
 		break;
-#     if (SAM3S || SAM3N || SAM4S)
+#if (SAM3S || SAM3N || SAM4S || SAM4E)
 	case PIO_TYPE_PIO_PERIPH_C:
 		pio_set_peripheral(p_pio, PIO_PERIPH_C, (1 << (ul_pin & 0x1F)));
 		pio_pull_up(p_pio, (1 << (ul_pin & 0x1F)),
@@ -797,7 +797,7 @@ uint32_t pio_configure_pin(uint32_t ul_pin, const uint32_t ul_flags)
 		pio_pull_up(p_pio, (1 << (ul_pin & 0x1F)),
 				(ul_flags & PIO_PULLUP));
 		break;
-#     endif
+#endif
 
 	case PIO_TYPE_PIO_INPUT:
 		pio_set_input(p_pio, (1 << (ul_pin & 0x1F)), ul_flags);
@@ -827,7 +827,7 @@ uint32_t pio_configure_pin(uint32_t ul_pin, const uint32_t ul_flags)
  */
 void pio_set_pin_group_high(Pio *p_pio, uint32_t ul_mask)
 {
-	// Value to be driven on the I/O line: 1.
+	/* Value to be driven on the I/O line: 1. */
 	p_pio->PIO_SODR = ul_mask;
 }
 
@@ -839,7 +839,7 @@ void pio_set_pin_group_high(Pio *p_pio, uint32_t ul_mask)
  */
 void pio_set_pin_group_low(Pio *p_pio, uint32_t ul_mask)
 {
-	// Value to be driven on the I/O line: 0.
+	/* Value to be driven on the I/O line: 0. */
 	p_pio->PIO_CODR = ul_mask;
 }
 
@@ -852,10 +852,10 @@ void pio_set_pin_group_low(Pio *p_pio, uint32_t ul_mask)
 void pio_toggle_pin_group(Pio *p_pio, uint32_t ul_mask)
 {
 	if (p_pio->PIO_ODSR & ul_mask) {
-		// Value to be driven on the I/O line: 0.
+		/* Value to be driven on the I/O line: 0. */
 		p_pio->PIO_CODR = ul_mask;
 	} else {
-		// Value to be driven on the I/O line: 1.
+		/* Value to be driven on the I/O line: 1. */
 		p_pio->PIO_SODR = ul_mask;
 	}
 }
@@ -883,7 +883,7 @@ uint32_t pio_configure_pin_group(Pio *p_pio,
 		pio_set_peripheral(p_pio, PIO_PERIPH_B, ul_mask);
 		pio_pull_up(p_pio, ul_mask, (ul_flags & PIO_PULLUP));
 		break;
-#     if (SAM3S || SAM3N || SAM4S)
+#if (SAM3S || SAM3N || SAM4S || SAM4E)
 	case PIO_TYPE_PIO_PERIPH_C:
 		pio_set_peripheral(p_pio, PIO_PERIPH_C, ul_mask);
 		pio_pull_up(p_pio, ul_mask, (ul_flags & PIO_PULLUP));
@@ -892,7 +892,7 @@ uint32_t pio_configure_pin_group(Pio *p_pio,
 		pio_set_peripheral(p_pio, PIO_PERIPH_D, ul_mask);
 		pio_pull_up(p_pio, ul_mask, (ul_flags & PIO_PULLUP));
 		break;
-#     endif
+#endif
 
 	case PIO_TYPE_PIO_INPUT:
 		pio_set_input(p_pio, ul_mask, ul_flags);
@@ -982,9 +982,10 @@ uint32_t pio_get_pin_group_mask(uint32_t ul_pin)
 	return ul_mask;
 }
 
+#if (SAM3S || SAM4S || SAM4E)
+/* Capture mode enable flag */
+uint32_t pio_capture_enable_flag;
 
-
-#if (SAM3S || SAM4S)
 /**
  * \brief Configure PIO capture mode.
  * \note PIO capture mode will be disabled automatically.
@@ -1006,6 +1007,7 @@ void pio_capture_set_mode(Pio *p_pio, uint32_t ul_mode)
 void pio_capture_enable(Pio *p_pio)
 {
 	p_pio->PIO_PCMR |= PIO_PCMR_PCEN;
+	pio_capture_enable_flag = true;
 }
 
 /**
@@ -1016,11 +1018,12 @@ void pio_capture_enable(Pio *p_pio)
 void pio_capture_disable(Pio *p_pio)
 {
 	p_pio->PIO_PCMR &= (~PIO_PCMR_PCEN);
+	pio_capture_enable_flag = false;
 }
 
 /**
  * \brief Read from Capture Reception Holding Register.
- * Data presence should be tested before any read attempt.
+ * \note Data presence should be tested before any read attempt.
  *
  * \param p_pio Pointer to a PIO instance.
  * \param pul_data Pointer to store the data.
@@ -1098,7 +1101,7 @@ uint32_t pio_capture_get_interrupt_mask(const Pio *p_pio)
  */
 Pdc *pio_capture_get_pdc_base(const Pio *p_pio)
 {
-	p_pio = p_pio; /* Stop warning */
+	UNUSED(p_pio); /* Stop warning */
 	return PDC_PIOA;
 }
 #endif

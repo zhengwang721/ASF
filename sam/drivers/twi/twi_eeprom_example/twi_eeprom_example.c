@@ -3,7 +3,7 @@
  *
  * \brief TWI EEPROM Example for SAM.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -145,7 +145,7 @@ static void configure_console(void)
 		.baudrate = CONF_UART_BAUDRATE,
 		.paritytype = CONF_UART_PARITY
 	};
-	
+
 	/* Configure console UART. */
 	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
 	stdio_serial_init(CONF_UART, &uart_serial_options);
@@ -184,7 +184,7 @@ int main(void)
 	/* Turn off LEDs */
 	LED_Off(LED0_GPIO);
 	LED_Off(LED1_GPIO);
-	
+
 	/* Initialize the console UART */
 	configure_console();
 

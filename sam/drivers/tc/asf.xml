@@ -10,7 +10,6 @@
 		<build type="header-file" subtype="api" value="tc.h"/>
 		<build type="include-path" value="."/>
 		<device-support value="sam"/>
-		<require idref="sam.utils"/>
 		<generator value="doxygen-module" default-mcu="unspecified-sam3s"/>
 		<build type="doxygen-entry-point" value="sam_drivers_tc_group"/>
 	</module>

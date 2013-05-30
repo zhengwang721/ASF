@@ -3,7 +3,7 @@
  *
  * \brief Clock system example 1.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,7 +42,7 @@
  */
 
 /**
- * \mainpage 
+ * \mainpage
  *
  * \section intro Introduction
  * This example shows how to initialize the clock system and blink a LED
@@ -77,7 +77,7 @@
  * \section contactinfo Contact Information
  * For further information, visit
  * <A href="http://www.atmel.com/">Atmel</A>.\n
- * Support and FAQ: http://support.atmel.no/ 
+ * Support and FAQ: http://support.atmel.no/
  *
  */
 
@@ -125,22 +125,18 @@ void SysTick_Handler(void)
  * \return Unused (ANSI-C compatibility).
  */
 int main(void)
-{	
+{
 	sysclk_init();
-	board_init();	
+	board_init();
 
 	/* Setup SysTick Timer for 1 msec interrupts */
 	if (SysTick_Config(sysclk_get_cpu_hz() / 1000)) {
-		while (1) {		/* Capture error */
+		while (1) {  /* Capture error */
 		}
 	}
 
 	while (1) {
-#if (SAM4L)
 		ioport_toggle_pin_level(LED0_GPIO);
-#else
-		gpio_toggle_pin(LED0_GPIO);
-#endif
 		mdelay(500);
 	}
 }

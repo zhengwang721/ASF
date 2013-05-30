@@ -4,7 +4,7 @@
  * \brief Example to illustrate the Sleepwalking feature with the ACIFB module
  *        in AT32UC3L series
  *
- * Copyright (C) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -282,7 +282,6 @@ ISR(ACIFB_interrupt_handler, AVR32_ACIFB_IRQ_GROUP, AC_INTERRUPT_PRIORITY)
  */
 int main(void)
 {
-	uint32_t i;
 	/* Switch on the STATUS LED */
 	gpio_clr_gpio_pin(STATUS_LED);
 	/* Switch off the error LED. */
@@ -594,7 +593,7 @@ static void power_save_measures_init()
 /* Application Documentation */
 
 /**
- * \defgroup group_avr32_drivers_acifb_example1_sleepwalking
+ * \mainpage Sleepwalking example with the ACIFB module on AVR UC3 L devices
  * \section intro Introduction
  *  The Example projects demonstrates:\n
  *  - Sleepwalking Feature in AT32UC3L devices:\n

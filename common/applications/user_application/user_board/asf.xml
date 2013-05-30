@@ -1,7 +1,8 @@
 <asf xmlversion="1.0">
 	<module type="meta" id="common.applications.user_application.user_board.common" caption="User board project template">
-		<build type="include-path" value="."/>
-		<build type="header-file" value="conf_board.h"/>
+		<info type="gui-flag" value="move-to-root"/>
+		<build type="include-path" value="config"/>
+		<build type="header-file" value="config/conf_board.h"/>
 		<require idref="common.applications.user_application"/>
 	</module>
 
@@ -197,6 +198,16 @@
 		<generator value="as5_arm_template"/>
 		<generator value="doxygen"/>
 		<device-support value="sam4s"/>
+	</project>
+	<project id="common.applications.user_application.user_board.sam4e" caption="User board project template for SAM4E" type="template" default-mcu="unspecified-sam4e">
+		<info type="description" value="summary">
+		User board project template for SAM4E.
+		</info>
+		<require idref="common.applications.user_application.user_board.common"/>
+		<require idref="board.user_board.sam4e"/>
+		<generator value="as5_arm_template"/>
+		<generator value="doxygen"/>
+		<device-support value="sam4e"/>
 	</project>
 	<project id="common.applications.user_application.user_board.sam4lc4a" caption="User board project template for SAM4LC4A" type="template">
 		<info type="description" value="summary">

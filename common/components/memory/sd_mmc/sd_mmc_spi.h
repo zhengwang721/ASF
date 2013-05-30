@@ -3,7 +3,7 @@
  *
  * \brief Common SPI interface for SD/MMC stack
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -52,7 +52,7 @@ extern "C" {
 #endif
 
 /**
- * \ingroup sd_mmc_stack
+ * \ingroup sd_mmc_stack_group
  * \defgroup sd_mmc_stack_spi Common SPI interface for SD/MMC stack
  * @{
  */

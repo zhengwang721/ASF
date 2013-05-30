@@ -4,7 +4,7 @@
  * \brief USB Device driver
  * Compliance with common driver UDD
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -473,6 +473,11 @@ void udd_enable(void)
 	udd_set_nb_max_ep(USB_DEVICE_MAX_EP);
 	udd_enable_interface();
 	udd_enable_store_frame_number();
+#if XMEGA_A1U
+	Assert(((uint16_t)(&udd_sram) & 0x0F) == 0); /* check align on 16bit */
+#else
+	Assert(((uint16_t)(&udd_sram) & 0x01) == 0); /* check align on WORD */
+#endif
 	udd_set_ep_table_addr(udd_sram.ep_ctrl);
 	// Enable TC fifo management
 	udd_enable_fifo();
@@ -486,6 +491,9 @@ void udd_enable(void)
 	sleepmgr_lock_mode(USBC_SLEEP_MODE_USB_SUSPEND);
 #endif
 
+#ifndef USB_DEVICE_ATTACH_AUTO_DISABLE
+	udd_attach();
+#endif
 	cpu_irq_restore(flags);
 }
 

@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="xmega.drivers.ac.example" caption="AC Example">
+	<module type="application" id="xmega.drivers.ac.example" caption="AC Example 1">
 		<info type="description" value="summary">
 		Interrupt-based analog comparison in window mode. Compare the input value from PIN1 (PB1) with the bandgap voltage as lower reference and a scaled VCC as upper reference.
 		</info>
@@ -10,6 +10,7 @@
 		<device-support value="xmegaa"/>
 		<device-support value="xmegaau"/>
 		<require idref="xmega.drivers.ac"/>
-		<require idref="common.services.basic.gpio" />
+		<require idref="common.services.basic.gpio"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

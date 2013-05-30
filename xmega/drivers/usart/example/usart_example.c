@@ -54,17 +54,25 @@
  * The USART driver API can be found \ref usart_group "here".
  *
  * \section deviceinfo Device Info
- * All AVR XMEGA devices can be used. This example has been tested
- * with the following setup:
- *   - Xplain evaluation kit (USARTD0 on PORTD is used by default.
- *     Change to USARTC0 to use the USB Virtual COM PORT of the Xplain). 
- *   - STK600 with ATxmega64A3 and ATxmega256A3 on STK600-RC064X. (USARTC0 should be connected to the RS232 spare
- *     port of STK600) *   - STK600 with ATxmega128A1 on STK600-RC100X. (USARTC0 should be connected to the RS232 spare
- *     port of STK600)
- *   - XMEGA A1 Xplained evaluation kit (USARTC0 on PORTC is used. It is located
- *     on the J4 header.
- *   - XMEGA A3BU Xplained evaluation kit (USARTC0, pin 2 and 3 on header J1
- *     is utilized.
+ * All AVR XMEGA devices can be used.
+ * This example has been tested with the following setup:
+ *   - STK600 
+ *     USARTC0 should be connected to the RS232 spare port of STK600
+ *       Note:
+ *       XMEGA-A1 on STK600-RC100X
+ *       XMEGA-A3, XMEGA-A3U and XMEGA-C3 on STK600-RC064X.
+ *       XMEGA-A4U on STK600-RC044X
+ *       XMEGA-E5 on STK600-RC032X
+ *   - Xplain evaluation kit
+ *     USARTD0 on PORTD is used by default
+ *     Change to USARTC0 to use the USB Virtual COM PORT of the Xplain
+ *   - XMEGA A1 Xplained evaluation kit
+ *     USARTC0 on PORTC is used. It is located on the J4 header
+ *   - XMEGA A3BU Xplained evaluation kit
+ *     USARTC0, pin 2 and 3 on header J1 is utilized
+ *   - XMEGA E5 Xplained evaluation kit
+ *     USARTD0 on PORTD pin 6 and 7 is used (Connected to board controller)
+ * UART configuration is 9600 baudrate, no parity, data 8 bit.
  *
  * \section exampledescription Description of the example
  * The example waits for a received character on the configured USART and

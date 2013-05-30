@@ -3,7 +3,7 @@
  *
  * \brief Timer Counter (TC) driver for SAM.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -85,7 +85,7 @@ void tc_init(Tc *p_tc, uint32_t ul_channel, uint32_t ul_mode)
 {
 	TcChannel *tc_channel;
 
-	assert(ul_channel <
+	Assert(ul_channel <
 			(sizeof(p_tc->TC_CHANNEL) / sizeof(p_tc->TC_CHANNEL[0])));
 	tc_channel = p_tc->TC_CHANNEL + ul_channel;
 
@@ -142,7 +142,7 @@ void tc_set_block_mode(Tc *p_tc, uint32_t ul_blockmode)
 uint32_t tc_init_2bit_gray(Tc *p_tc, uint32_t ul_channel,
 		uint32_t ul_steppermode)
 {
-	assert(ul_channel <
+	Assert(ul_channel <
 			(sizeof(p_tc->TC_CHANNEL) / sizeof(p_tc->TC_CHANNEL[0])));
 
 	p_tc->TC_CHANNEL[ul_channel].TC_SMMR = ul_steppermode;
@@ -159,7 +159,7 @@ uint32_t tc_init_2bit_gray(Tc *p_tc, uint32_t ul_channel,
  */
 void tc_start(Tc *p_tc, uint32_t ul_channel)
 {
-	assert(ul_channel <
+	Assert(ul_channel <
 			(sizeof(p_tc->TC_CHANNEL) / sizeof(p_tc->TC_CHANNEL[0])));
 
 	p_tc->TC_CHANNEL[ul_channel].TC_CCR = TC_CCR_CLKEN | TC_CCR_SWTRG;
@@ -173,10 +173,26 @@ void tc_start(Tc *p_tc, uint32_t ul_channel)
  */
 void tc_stop(Tc *p_tc, uint32_t ul_channel)
 {
-	assert(ul_channel <
+	Assert(ul_channel <
 			(sizeof(p_tc->TC_CHANNEL) / sizeof(p_tc->TC_CHANNEL[0])));
 
 	p_tc->TC_CHANNEL[ul_channel].TC_CCR = TC_CCR_CLKDIS;
+}
+
+/**
+ * \brief Read counter value on the selected channel.
+ *
+ * \param p_tc Pointer to a TC instance.
+ * \param ul_channel Channel to configure.
+ *
+ * \return Counter value.
+ */
+uint32_t tc_read_cv(Tc *p_tc, uint32_t ul_channel)
+{
+	Assert(ul_channel <
+			(sizeof(p_tc->TC_CHANNEL) / sizeof(p_tc->TC_CHANNEL[0])));
+
+	return p_tc->TC_CHANNEL[ul_channel].TC_CV;
 }
 
 /**
@@ -187,9 +203,9 @@ void tc_stop(Tc *p_tc, uint32_t ul_channel)
  *
  * \return RA value.
  */
-int tc_read_ra(Tc *p_tc, uint32_t ul_channel)
+uint32_t tc_read_ra(Tc *p_tc, uint32_t ul_channel)
 {
-	assert(ul_channel <
+	Assert(ul_channel <
 			(sizeof(p_tc->TC_CHANNEL) / sizeof(p_tc->TC_CHANNEL[0])));
 
 	return p_tc->TC_CHANNEL[ul_channel].TC_RA;
@@ -203,9 +219,9 @@ int tc_read_ra(Tc *p_tc, uint32_t ul_channel)
  *
  * \return RB value.
  */
-int tc_read_rb(Tc *p_tc, uint32_t ul_channel)
+uint32_t tc_read_rb(Tc *p_tc, uint32_t ul_channel)
 {
-	assert(ul_channel <
+	Assert(ul_channel <
 			(sizeof(p_tc->TC_CHANNEL) / sizeof(p_tc->TC_CHANNEL[0])));
 
 	return p_tc->TC_CHANNEL[ul_channel].TC_RB;
@@ -219,9 +235,9 @@ int tc_read_rb(Tc *p_tc, uint32_t ul_channel)
  *
  * \return RC value.
  */
-int tc_read_rc(Tc *p_tc, uint32_t ul_channel)
+uint32_t tc_read_rc(Tc *p_tc, uint32_t ul_channel)
 {
-	assert(ul_channel <
+	Assert(ul_channel <
 			(sizeof(p_tc->TC_CHANNEL) / sizeof(p_tc->TC_CHANNEL[0])));
 
 	return p_tc->TC_CHANNEL[ul_channel].TC_RC;
@@ -237,7 +253,7 @@ int tc_read_rc(Tc *p_tc, uint32_t ul_channel)
 void tc_write_ra(Tc *p_tc, uint32_t ul_channel,
 		uint32_t ul_value)
 {
-	assert(ul_channel <
+	Assert(ul_channel <
 			(sizeof(p_tc->TC_CHANNEL) / sizeof(p_tc->TC_CHANNEL[0])));
 
 	p_tc->TC_CHANNEL[ul_channel].TC_RA = ul_value;
@@ -253,7 +269,7 @@ void tc_write_ra(Tc *p_tc, uint32_t ul_channel,
 void tc_write_rb(Tc *p_tc, uint32_t ul_channel,
 		uint32_t ul_value)
 {
-	assert(ul_channel <
+	Assert(ul_channel <
 			(sizeof(p_tc->TC_CHANNEL) / sizeof(p_tc->TC_CHANNEL[0])));
 
 	p_tc->TC_CHANNEL[ul_channel].TC_RB = ul_value;
@@ -269,7 +285,7 @@ void tc_write_rb(Tc *p_tc, uint32_t ul_channel,
 void tc_write_rc(Tc *p_tc, uint32_t ul_channel,
 		uint32_t ul_value)
 {
-	assert(ul_channel <
+	Assert(ul_channel <
 			(sizeof(p_tc->TC_CHANNEL) / sizeof(p_tc->TC_CHANNEL[0])));
 
 	p_tc->TC_CHANNEL[ul_channel].TC_RC = ul_value;
@@ -287,7 +303,7 @@ void tc_enable_interrupt(Tc *p_tc, uint32_t ul_channel,
 {
 	TcChannel *tc_channel;
 
-	assert(ul_channel <
+	Assert(ul_channel <
 			(sizeof(p_tc->TC_CHANNEL) / sizeof(p_tc->TC_CHANNEL[0])));
 	tc_channel = p_tc->TC_CHANNEL + ul_channel;
 	tc_channel->TC_IER = ul_sources;
@@ -305,7 +321,7 @@ void tc_disable_interrupt(Tc *p_tc, uint32_t ul_channel,
 {
 	TcChannel *tc_channel;
 
-	assert(ul_channel <
+	Assert(ul_channel <
 			(sizeof(p_tc->TC_CHANNEL) / sizeof(p_tc->TC_CHANNEL[0])));
 	tc_channel = p_tc->TC_CHANNEL + ul_channel;
 	tc_channel->TC_IDR = ul_sources;
@@ -323,7 +339,7 @@ uint32_t tc_get_interrupt_mask(Tc *p_tc, uint32_t ul_channel)
 {
 	TcChannel *tc_channel;
 
-	assert(ul_channel <
+	Assert(ul_channel <
 			(sizeof(p_tc->TC_CHANNEL) / sizeof(p_tc->TC_CHANNEL[0])));
 	tc_channel = p_tc->TC_CHANNEL + ul_channel;
 	return tc_channel->TC_IMR;
@@ -341,7 +357,7 @@ uint32_t tc_get_status(Tc *p_tc, uint32_t ul_channel)
 {
 	TcChannel *tc_channel;
 
-	assert(ul_channel <
+	Assert(ul_channel <
 			(sizeof(p_tc->TC_CHANNEL) / sizeof(p_tc->TC_CHANNEL[0])));
 	tc_channel = p_tc->TC_CHANNEL + ul_channel;
 	return tc_channel->TC_SR;

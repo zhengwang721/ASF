@@ -6,13 +6,14 @@
 			</info>
 			<info type="keyword" value="technology">
 				<keyword value="Clocks"/>
-			</info>			
+			</info>
 			<build type="c-source" value="clock_example2_xmega.c"/>
 			<device-support value="xmega"/>
 			<require idref="common.services.basic.clock"/>
 			<require idref="xmega.drivers.cpu"/>
 			<require idref="xmega.drivers.ioport"/>
 			<require idref="xmega.utils"/>
+			<info type="gui-flag" value="move-to-root"/>
 		</module>
 		<module type="application" id="common.services.basic.clock.example2#1" caption="Common API for Clocks Control Example 2">
 			<info type="description" value="summary">
@@ -20,7 +21,7 @@
 			</info>
 			<info type="keyword" value="technology">
 				<keyword value="Clocks"/>
-			</info>			
+			</info>
 			<build type="c-source" value="clock_example2_uc3.c"/>
 			<device-support value="uc3a"/>
 			<device-support value="uc3a3"/>
@@ -29,6 +30,7 @@
 			<require idref="avr32.drivers.flashc"/>
 			<require idref="avr32.drivers.gpio"/>
 			<require idref="common.services.basic.clock"/>
+			<info type="gui-flag" value="move-to-root"/>
 		</module>
 		<module type="application" id="common.services.basic.clock.example2#2" caption="Common API for Clocks Control Example 2">
 			<info type="description" value="summary">
@@ -36,13 +38,14 @@
 			</info>
 			<info type="keyword" value="technology">
 				<keyword value="Clocks"/>
-			</info>			
+			</info>
 			<build type="c-source" value="clock_example2_uc3.c"/>
 			<device-support value="uc3l"/>
 			<device-support value="uc3d"/>
 			<require idref="avr32.drivers.flashcdw"/>
 			<require idref="avr32.drivers.gpio"/>
 			<require idref="common.services.basic.clock"/>
+			<info type="gui-flag" value="move-to-root"/>
 		</module>
 		<module type="application" id="common.services.basic.clock.example2#3" caption="Common API for Clocks Control Example 2">
 			<info type="description" value="summary">
@@ -50,15 +53,18 @@
 			</info>
 			<info type="keyword" value="technology">
 				<keyword value="Clocks"/>
-			</info>			
+			</info>
 			<build type="c-source" value="clock_example2_sam.c"/>
+			<build type="module-config" subtype="required-header-file" value="conf_example2.h"/>
 			<device-support value="sam3"/>
 			<device-support value="sam4s"/>
+			<device-support value="sam4e"/>
 			<require idref="sam.drivers.pmc"/>
 			<require idref="sam.drivers.pio"/>
-			<require idref="sam.drivers.uart"/>
+			<require idref="common.services.ioport"/>
 			<require idref="common.services.basic.gpio"/>
 			<require idref="common.services.basic.clock"/>
+			<info type="gui-flag" value="move-to-root"/>
 		</module>
 		<module type="application" id="common.services.basic.clock.example2#4" caption="Common API for Clocks Control Example 2">
 			<info type="description" value="summary">
@@ -68,9 +74,11 @@
 				<keyword value="Clocks"/>
 			</info>
 			<build type="c-source" value="clock_example2_sam4l.c"/>
+			<build type="module-config" subtype="required-header-file" value="conf_example2.h"/>
 			<device-support value="sam4l"/>
 			<require idref="common.services.ioport"/>
 			<require idref="common.services.basic.clock"/>
+			<info type="gui-flag" value="move-to-root"/>
 		</module>
 	</select-by-device>
 </asf>

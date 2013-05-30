@@ -3,7 +3,7 @@
  *
  * \brief USB configuration file
  *
- * Copyright (c) 2009 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -54,8 +54,8 @@
  */
 
 //! Device definition (mandatory)
-#define  USB_DEVICE_VENDOR_ID             0x0000
-#define  USB_DEVICE_PRODUCT_ID            0x0000
+#define  USB_DEVICE_VENDOR_ID             USB_VID_ATMEL
+#define  USB_DEVICE_PRODUCT_ID            0xFFFF
 #define  USB_DEVICE_MAJOR_VERSION         1
 #define  USB_DEVICE_MINOR_VERSION         0
 #define  USB_DEVICE_POWER                 100 // Consumption on Vbus line (mA)
@@ -144,6 +144,7 @@
 #define  UDI_CDC_ENABLE_EXT(port)             true
 #define  UDI_CDC_DISABLE_EXT(port)
 #define  UDI_CDC_RX_NOTIFY(port)
+#define  UDI_CDC_TX_EMPTY_NOTIFY(port)
 #define  UDI_CDC_SET_CODING_EXT(port,cfg)
 #define  UDI_CDC_SET_DTR_EXT(port,set)
 #define  UDI_CDC_SET_RTS_EXT(port,set)
@@ -154,6 +155,8 @@
  * extern void my_callback_cdc_disable(void);
  * #define  UDI_CDC_RX_NOTIFY(port) my_callback_rx_notify(port)
  * extern void my_callback_rx_notify(uint8_t port);
+ * #define  UDI_CDC_TX_EMPTY_NOTIFY(port) my_callback_tx_empty_notify(port)
+ * extern void my_callback_tx_empty_notify(uint8_t port);
  * #define  UDI_CDC_SET_CODING_EXT(port,cfg) my_callback_config(port,cfg)
  * extern void my_callback_config(uint8_t port, usb_cdc_line_coding_t * cfg); 
  * #define  UDI_CDC_SET_DTR_EXT(port,set) my_callback_cdc_set_dtr(port,set)

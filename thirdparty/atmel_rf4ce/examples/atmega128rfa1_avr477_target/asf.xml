@@ -34,8 +34,8 @@
 		<device-support value="atmega128rfa1"/>
 		<require idref="thirdparty.services.atmel_rf4ce"/>
 		<require idref="thirdparty.services.atmel_rf4ce.lib.method"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
-
 	<project caption="AVR477 Target Example" id="thirdparty.services.atmel_rf4ce.examples.avr477_target.project">
 		<require idref="board.user_board.megarf"/>
 		<require idref="thirdparty.services.atmel_rf4ce"/>
@@ -43,9 +43,9 @@
 		<require idref="thirdparty.services.atmel_rf4ce.examples.avr477_target"/>
 		<config name="thirdparty.services.atmel_rf4ce.lib.method" value="target_method"/>
 		<require idref="common.utils"/>
-		<build type="header-file" subtype="api" value="pal_config.h"/>
+		<build type="header-file" value="pal_config.h"/>
 		<build type="include-path" value="."/>
-		<build type="header-file" subtype="api" value="conf_board.h"/>
+		<build type="header-file" value="conf_board.h"/>
 		<build type="include-path" value="."/>
 		<build type="linker-config" subtype="flags" value="--section-start=.bootloader=0x1f000"/>
 		<config name="config.compiler.avrgcc.optimization" value="size"/>

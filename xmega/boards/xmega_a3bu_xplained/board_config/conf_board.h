@@ -3,7 +3,7 @@
  *
  * \brief XMEGA-A3BU Xplained board configuration template
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -63,5 +63,8 @@
 
 // Enable Sensors Xplained board interface
 //#define SENSORS_XPLAINED_BOARD
+
+// Enable AT86RFx interface
+//#define CONF_BOARD_AT86RFX
 
 #endif // CONF_BOARD_H

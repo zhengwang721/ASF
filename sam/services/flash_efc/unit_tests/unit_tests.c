@@ -81,6 +81,7 @@
  * - sam3x8h_sam3x_ek
  * - sam4s16c_sam4s_ek
  * - sam4sd32c_sam4s_ek2
+ * - sam4e16e_sam4e_ek
  *
  * \section compinfo Compilation info
  * This software was written for the GNU GCC and IAR for ARM. Other compilers
@@ -115,13 +116,15 @@ static void run_flash_device_id_test(const struct test_case *test)
 	ul_rc = flash_read_unique_id(unique_id, 4);
 
 	/* Validate the get flash device id function */
-	test_assert_true(test, ul_rc == FLASH_RC_OK, "Test flash device id: flash read device id error!");
+	test_assert_true(test, ul_rc == FLASH_RC_OK,
+			"Test flash device id: flash read device id error!");
 }
 
 /**
  * \brief Test flash configure functions.
  *
- * This test gets the default wait state first, and then it will initialize the flash again and set/adaptively set the wait state.
+ * \note This test gets the default wait state first, and then it will
+ * initialize the flash again and set/adaptively set the wait state.
  *
  * \param test Current test case.
  */
@@ -140,7 +143,8 @@ static void run_flash_configure_test(const struct test_case *test)
 	ul_tmp_ws = flash_get_wait_state(IFLASH_ADDR);
 
 	/* Validate the flash initialization function */
-	test_assert_true(test, ul_tmp_ws == 6, "Test flash configure: flash init error!");
+	test_assert_true(test, ul_tmp_ws == 6,
+			"Test flash configure: flash init error!");
 
 	/* Set the new wait state */
 	flash_set_wait_state(IFLASH_ADDR, ul_default_ws+1);
@@ -149,33 +153,56 @@ static void run_flash_configure_test(const struct test_case *test)
 	ul_tmp_ws =  flash_get_wait_state(IFLASH_ADDR);
 
 	/* Validate the set flash wait state function */
-	test_assert_true(test, ul_tmp_ws == (ul_default_ws+1), "Test flash configure: set wait state error!");
+	test_assert_true(test, ul_tmp_ws == (ul_default_ws+1),
+			"Test flash configure: set wait state error!");
 
 	/* Adaptively set the wait state */
 	flash_set_wait_state_adaptively(IFLASH_ADDR);
 
-	/* Validate the adaptively set wait state function, get the wait state and check with the default */
+	/* Validate the adaptively set wait state function, get the wait state and
+	 * check with the default>
+	 */
 	if (SystemCoreClock < CHIP_FREQ_FWS_0) {
 		ul_tmp_ws =  flash_get_wait_state(IFLASH_ADDR);
-		test_assert_true(test, ul_tmp_ws == 0, "Test flash configure:adaptively set wait state error!");
+		test_assert_true(test, ul_tmp_ws == 0,
+				"Test flash configure:adaptively set wait state error!");
 	} else if (SystemCoreClock < CHIP_FREQ_FWS_1) {
 		ul_tmp_ws =  flash_get_wait_state(IFLASH_ADDR);
-		test_assert_true(test, ul_tmp_ws == 1, "Test flash configure:adaptively set wait state error!");
+		test_assert_true(test, ul_tmp_ws == 1,
+				"Test flash configure:adaptively set wait state error!");
 	} else if (SystemCoreClock < CHIP_FREQ_FWS_2) {
 		ul_tmp_ws =  flash_get_wait_state(IFLASH_ADDR);
-		test_assert_true(test, ul_tmp_ws == 2, "Test flash configure:adaptively set wait state error!");
-#if (SAM3XA || SAM3U || SAM4S)
+		test_assert_true(test, ul_tmp_ws == 2,
+				"Test flash configure:adaptively set wait state error!");
+#if (SAM3XA || SAM3U)
 	} else if (SystemCoreClock < CHIP_FREQ_FWS_3) {
 		ul_tmp_ws =  flash_get_wait_state(IFLASH_ADDR);
-		test_assert_true(test, ul_tmp_ws == 3, "Test flash configure:adaptively set wait state error!");
+		test_assert_true(test, ul_tmp_ws == 3,
+				"Test flash configure:adaptively set wait state error!");
 	} else {
 		ul_tmp_ws =  flash_get_wait_state(IFLASH_ADDR);
-		test_assert_true(test, ul_tmp_ws == 4, "Test flash configure:adaptively set wait state error!");
+		test_assert_true(test, ul_tmp_ws == 4,
+				"Test flash configure:adaptively set wait state error!");
+	}
+#elif (SAM4S || SAM4E)
+	} else if (SystemCoreClock < CHIP_FREQ_FWS_3) {
+		ul_tmp_ws =  flash_get_wait_state(IFLASH_ADDR);
+		test_assert_true(test, ul_tmp_ws == 3,
+				"Test flash configure:adaptively set wait state error!");
+	} else if (SystemCoreClock < CHIP_FREQ_FWS_4) {
+		ul_tmp_ws =  flash_get_wait_state(IFLASH_ADDR);
+		test_assert_true(test, ul_tmp_ws == 4,
+				"Test flash configure:adaptively set wait state error!");
+	} else {
+		ul_tmp_ws =  flash_get_wait_state(IFLASH_ADDR);
+		test_assert_true(test, ul_tmp_ws == 5,
+				"Test flash configure:adaptively set wait state error!");
 	}
 #else
 	} else {
 		ul_tmp_ws =  flash_get_wait_state(IFLASH_ADDR);
-		test_assert_true(test, ul_tmp_ws == 3, "Test flash configure:adaptively set wait state error!");
+		test_assert_true(test, ul_tmp_ws == 3,
+				"Test flash configure:adaptively set wait state error!");
 	}
 #endif
 
@@ -186,7 +213,8 @@ static void run_flash_configure_test(const struct test_case *test)
 /**
  * \brief Test get flash information interfaces.
  *
- * This test gets the descriptor first, and then it will read out the page count, page count per region and region count number.
+ * \note This test gets the descriptor first, and then it will read out the
+ * page count, page count per region and region count number.
  *
  * \param test Current test case.
  */
@@ -203,27 +231,32 @@ static void run_flash_information_test(const struct test_case *test)
 	ul_page_count = flash_get_page_count(ul_flash_descriptor);
 
 	/* Validate the get page count function */
-	test_assert_true(test, ul_page_count == DEFAULT_PAGE_COUNT, "Test flash information:get page count error!");
+	test_assert_true(test, ul_page_count == DEFAULT_PAGE_COUNT,
+			"Test flash information:get page count error!");
 
 	/* Read the page count number in one region */
-	ul_page_count_per_region = flash_get_page_count_per_region(ul_flash_descriptor);
+	ul_page_count_per_region =
+			flash_get_page_count_per_region(ul_flash_descriptor);
 
 	/* Validate the get page count per region function */
-	test_assert_true(test, (ul_page_count_per_region == IFLASH_NB_OF_PAGES), "Test flash information:get page count per region error!");
+	test_assert_true(test, (ul_page_count_per_region == IFLASH_NB_OF_PAGES),
+			"Test flash information:get page count per region error!");
 
 	/* Get the region number */
 	ul_region_count = flash_get_region_count(ul_flash_descriptor);
 
 	/* Validate the get region count function */
-	test_assert_true(test, (ul_region_count == DEFAULT_REGION_COUNT), "Test flash information:get region count error!");
+	test_assert_true(test, (ul_region_count == DEFAULT_REGION_COUNT),
+			"Test flash information:get region count error!");
 }
 
 #if SAM3SD8
 /**
  * \brief Test flash erasing.
  *
- * This test erases the whole flash and then reads out the flash content to ensure the erase operation.
- * As this test will erase one plane flash, it is valid for dual plane MCU, SAM3SD8 only.
+ * \note This test erases the whole flash and then reads out the flash content
+ * to ensure the erase operation. As this test will erase one plane flash,
+ * it is valid for dual plane MCU, SAM3SD8 only.
  *
  * \param test Current test case.
  */
@@ -277,7 +310,7 @@ static void run_flash_write_test(const struct test_case *test)
 		ul_page_buffer[ul_idx] = 1 << (ul_idx % 32);
 	}
 
-#if SAM4S
+#if (SAM4S || SAM4E)
 	/* Write the last page */
 	flash_erase_sector(ul_last_page_addr);
 
@@ -304,7 +337,8 @@ static void run_flash_write_test(const struct test_case *test)
 /**
  * \brief Test flash lock setting.
  *
- * This test gets the lock status of the whole flash space and unlocks/locks the last page for validation.
+ * \note This test gets the lock status of the whole flash space and
+ * unlocks/locks the last page for validation.
  *
  * \param test Current test case.
  */
@@ -314,38 +348,48 @@ static void run_flash_lock_test(const struct test_case *test)
 	uint32_t ul_last_page_addr = LAST_PAGE_ADDRESS;
 
 	/* Check if there is any region blocked */
-	ul_locked_region_num = flash_is_locked(IFLASH_ADDR, ul_last_page_addr + IFLASH_PAGE_SIZE - 1);
+	ul_locked_region_num = flash_is_locked(IFLASH_ADDR,
+			ul_last_page_addr + IFLASH_PAGE_SIZE - 1);
 
 	/* If all the regions are unlocked, set the last page locked */
 	if (ul_locked_region_num == 0) {
 		/* Lock the last page */
-		flash_lock(ul_last_page_addr, ul_last_page_addr + IFLASH_PAGE_SIZE - 1, 0, 0);
+		flash_lock(ul_last_page_addr,
+				ul_last_page_addr + IFLASH_PAGE_SIZE - 1, 0, 0);
 	}
 
 	/* Unlock the last page region */
 	flash_unlock(IFLASH_ADDR, ul_last_page_addr + IFLASH_PAGE_SIZE - 1, 0, 0);
 
 	/* Check if there is any region blocked */
-	ul_locked_region_num = flash_is_locked(IFLASH_ADDR, ul_last_page_addr + IFLASH_PAGE_SIZE - 1);
+	ul_locked_region_num = flash_is_locked(IFLASH_ADDR,
+			ul_last_page_addr + IFLASH_PAGE_SIZE - 1);
 
 	/* Validate the the unlock function */
-	test_assert_true(test, ul_locked_region_num == 0, "Test flash lock: flash unlock error!");
+	test_assert_true(test, ul_locked_region_num == 0,
+			"Test flash lock: flash unlock error!");
 
 	/* Lock the last page region */
-	flash_lock(ul_last_page_addr, ul_last_page_addr + IFLASH_PAGE_SIZE - 1, 0, 0);
+	flash_lock(ul_last_page_addr,
+			ul_last_page_addr + IFLASH_PAGE_SIZE - 1, 0, 0);
 
-#if (SAM3SD8 || SAM4S)
-	/* SAM3SD8 and SAM4S have a bigger page region which requires special attention */
-	ul_locked_region_num = flash_is_locked(IFLASH_ADDR, ul_last_page_addr + IFLASH_PAGE_SIZE - 1);
+#if (SAM3SD8 || SAM4S || SAM4E)
+	/* SAM3SD8, SAM4S and SAM4E have a bigger page region which requires special
+	 * attention.
+	 */
+	ul_locked_region_num = flash_is_locked(IFLASH_ADDR,
+			ul_last_page_addr + IFLASH_PAGE_SIZE - 1);
 #else
-	ul_locked_region_num = flash_is_locked(ul_last_page_addr, ul_last_page_addr + IFLASH_PAGE_SIZE - 1);
+	ul_locked_region_num = flash_is_locked(ul_last_page_addr,
+			ul_last_page_addr + IFLASH_PAGE_SIZE - 1);
 #endif
 
 	/* Unlock the last page region */
 	flash_unlock(IFLASH_ADDR, ul_last_page_addr + IFLASH_PAGE_SIZE - 1, 0, 0);
 
 	/* Validate the lock function */
-	test_assert_true(test, ul_locked_region_num == 1, "Test flash lock: flash lock error!");
+	test_assert_true(test, ul_locked_region_num == 1,
+			"Test flash lock: flash lock error!");
 }
 
 /**
@@ -362,8 +406,8 @@ static void run_flash_gpnvm_test(const struct test_case *test)
 	/* Get the default gpnvm 1 status */
 	ul_rc = flash_is_gpnvm_set(1);
 
-	/* Reverse the test, clear / set  the gpnvm */
-	if (ul_rc == FLASH_RC_YES) {  // default gpnvm 1 is set
+	/* Reverse the test, clear/set  the gpnvm */
+	if (ul_rc == FLASH_RC_YES) {  /* default gpnvm 1 is set */
 		/* Clear the gpnvm 1 */
 		flash_clear_gpnvm(1);
 
@@ -371,7 +415,8 @@ static void run_flash_gpnvm_test(const struct test_case *test)
 		ul_rc = flash_is_gpnvm_set(1);
 
 		/* Validate the gpnvm clear interface */
-		test_assert_true(test, ul_rc == FLASH_RC_NO, "Test flash GPNVM: flash GPNVM clear error!");
+		test_assert_true(test, ul_rc == FLASH_RC_NO,
+				"Test flash GPNVM: flash GPNVM clear error!");
 	} else {
 		/* Set the gpnvm 1 */
 		flash_set_gpnvm(1);
@@ -379,10 +424,11 @@ static void run_flash_gpnvm_test(const struct test_case *test)
 		ul_rc = flash_is_gpnvm_set(1);
 
 		/* Validate the gpnvm set interface */
-		test_assert_true(test, ul_rc == FLASH_RC_YES, "Test flash GPNVM: flash GPNVM set error!");
+		test_assert_true(test, ul_rc == FLASH_RC_YES,
+				"Test flash GPNVM: flash GPNVM set error!");
 	}
 
-	/* Reverse the test, set / clear the gpnvm */
+	/* Reverse the test, set/clear the gpnvm */
 	if (ul_rc == FLASH_RC_YES) {
 		/* Clear the gpnvm 1 */
 		flash_clear_gpnvm(1);
@@ -391,7 +437,8 @@ static void run_flash_gpnvm_test(const struct test_case *test)
 		ul_rc = flash_is_gpnvm_set(1);
 
 		/* Validate the gpnvm clear interface */
-		test_assert_true(test, ul_rc == FLASH_RC_NO, "Test flash GPNVM: flash GPNVM clear error!");
+		test_assert_true(test, ul_rc == FLASH_RC_NO,
+				"Test flash GPNVM: flash GPNVM clear error!");
 	} else {
 		/* Set the gpnvm 1 */
 		flash_set_gpnvm(1);
@@ -400,7 +447,8 @@ static void run_flash_gpnvm_test(const struct test_case *test)
 		ul_rc = flash_is_gpnvm_set(1);
 
 		/* Validate the gpnvm set interface */
-		test_assert_true(test, ul_rc == FLASH_RC_YES, "Test flash GPNVM: flash GPNVM set error!");
+		test_assert_true(test, ul_rc == FLASH_RC_YES,
+				"Test flash GPNVM: flash GPNVM set error!");
 	}
 }
 
@@ -425,26 +473,27 @@ int main(void)
 
 	/* Define all the test cases */
 	DEFINE_TEST_CASE(flash_device_id_test, NULL, run_flash_device_id_test, NULL,
-		"Readout flash device id");
+			"Readout flash device id");
 
 	DEFINE_TEST_CASE(flash_configure_test, NULL, run_flash_configure_test, NULL,
-		"Set, adaptively set and get the wait state for the flash");
+			"Set, adaptively set and get the wait state for the flash");
 
-	DEFINE_TEST_CASE(flash_information_test, NULL, run_flash_information_test, NULL,
-		"Get the descriptor, page count, page count per region and region count");
+	DEFINE_TEST_CASE(flash_information_test, NULL, run_flash_information_test,
+			NULL,
+			"Get the descriptor, page count, page count per region and region count");
 
 	DEFINE_TEST_CASE(flash_write_test, NULL, run_flash_write_test, NULL,
-		"Flash write test");
+			"Flash write test");
 
 	DEFINE_TEST_CASE(flash_lock_test, NULL, run_flash_lock_test, NULL,
-		"Flash lock, unlock and get lock status");
+			"Flash lock, unlock and get lock status");
 
 	DEFINE_TEST_CASE(flash_gpnvm_test, NULL, run_flash_gpnvm_test, NULL,
-		"GPNVM set, clear and get status");
+			"GPNVM set, clear and get status");
 
 #if SAM3SD8
 	DEFINE_TEST_CASE(flash_erase_test, NULL, run_flash_erase_test, NULL,
-		"Erase function test");
+			"Erase function test");
 #endif
 	/* Put test case addresses in an array */
 	DEFINE_TEST_ARRAY(flash_efc_tests) = {
@@ -460,7 +509,8 @@ int main(void)
 	};
 
 	/* Define the test suite */
-	DEFINE_TEST_SUITE(flash_efc_suite, flash_efc_tests, "SAM flash efc driver test suite");
+	DEFINE_TEST_SUITE(flash_efc_suite, flash_efc_tests,
+			"SAM flash efc driver test suite");
 
 	/* Run all tests in the test suite */
 	test_suite_run(&flash_efc_suite);

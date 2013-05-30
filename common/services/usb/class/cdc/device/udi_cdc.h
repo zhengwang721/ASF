@@ -3,7 +3,7 @@
  *
  * \brief USB Device Communication Device Class (CDC) interface definitions.
  *
- * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -376,6 +376,13 @@ void udi_cdc_signal_parity_error(void);
 void udi_cdc_signal_overrun(void);
 
 /**
+ * \brief Gets the number of byte received
+ *
+ * \return the number of data available
+ */
+iram_size_t udi_cdc_get_nb_received_data(void);
+
+/**
  * \brief This function checks if a character has been received on the CDC line
  *
  * \return \c 1 if a byte is ready to be read.
@@ -398,6 +405,13 @@ int udi_cdc_getc(void);
  * \return the number of data remaining
  */
 iram_size_t udi_cdc_read_buf(void* buf, iram_size_t size);
+
+/**
+ * \brief Gets the number of free byte in TX buffer
+ *
+ * \return the number of free byte in TX buffer
+ */
+iram_size_t udi_cdc_get_free_tx_buffer(void);
 
 /**
  * \brief This function checks if a new character sent is possible
@@ -471,6 +485,15 @@ void udi_cdc_multi_signal_parity_error(uint8_t port);
 void udi_cdc_multi_signal_overrun(uint8_t port);
 
 /**
+ * \brief Gets the number of byte received
+ *
+ * \param port       Communication port number to manage
+ *
+ * \return the number of data available
+ */
+iram_size_t udi_cdc_multi_get_nb_received_data(uint8_t port);
+
+/**
  * \brief This function checks if a character has been received on the CDC line
  *
  * \param port       Communication port number to manage
@@ -498,6 +521,15 @@ int udi_cdc_multi_getc(uint8_t port);
  * \return the number of data remaining
  */
 iram_size_t udi_cdc_multi_read_buf(uint8_t port, void* buf, iram_size_t size);
+
+/**
+ * \brief Gets the number of free byte in TX buffer
+ *
+ * \param port       Communication port number to manage
+ *
+ * \return the number of free byte in TX buffer
+ */
+iram_size_t udi_cdc_multi_get_free_tx_buffer(uint8_t port);
 
 /**
  * \brief This function checks if a new character sent is possible

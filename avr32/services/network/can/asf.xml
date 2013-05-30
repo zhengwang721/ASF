@@ -14,6 +14,7 @@
 		<require idref="avr32.drivers.gpio"/>
 		<require idref="avr32.drivers.intc"/>
 		<require idref="avr32.drivers.canif"/>
+		<require idref="common.services.delay"/>
 		<generator value="doxygen-module" default-mcu="unspecified-uc3c"/>
 	</module>
 </asf>

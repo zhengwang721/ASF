@@ -3,7 +3,7 @@
  *
  * \brief Serial Mode management
  *
- * Copyright (c) 2010 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -56,9 +56,11 @@
 
 #if XMEGA
 # include "xmega_usart/usart_serial.h"
-#elif (defined(__GNUC__) && defined(__AVR32__)) || (defined(__ICCAVR32__) || defined(__AAVR32__))
+#elif MEGA_RF
+# include "megarf_usart/usart_serial.h"
+#elif UC3
 # include "uc3_usart/usart_serial.h"
-#elif (defined(__GNUC__) || (defined(__ICCARM__)))
+#elif SAM
 # include "sam_uart/uart_serial.h"
 #else
 # error Unsupported chip type

@@ -13,6 +13,7 @@
 		<device-support value="uc3c"/>
 		<device-support value="sam3x"/>
 		<device-support value="sam3a"/>
+		<device-support value="sam4l"/>
 		<require idref="common.utils.unit_test"/>
 		<require idref="common.utils.stdio.stdio_serial"/>
 		<require idref="common.services.delay"/>
@@ -21,5 +22,6 @@
 			<keyword value="USB"/>
 			<keyword value="Communication"/>
 		</info>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

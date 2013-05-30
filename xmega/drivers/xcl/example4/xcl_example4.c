@@ -3,7 +3,7 @@
  *
  * \brief AVR XMEGA XCL example2
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,7 +43,8 @@
 
 /*! \mainpage
  * \section intro Introduction
- * This example demonstrates how to use XMEGA E XCL module with TC.
+ * This example demonstrates how to use XMEGA E XCL module with LUT sub-module.
+ * It performs a logic XOR operation between the 3 external input pins.
  *
  * \section files Main Files
  * - xcl_example4.c: the example application.
@@ -56,6 +57,10 @@
  * All AVR XMEGA E devices can be used. This example has been tested
  * with the following setup:
  *   - STK600 with ATxmega32E5 on STK600-RC032X.
+ *     LED0 pin should be connected to PD4 pin
+ *     SW0 pin should be connected to PD1 pin
+ *     SW1 pin should be connected to PD2 pin
+ *     SW2 pin should be connected to PD3 pin
  *
  * \section exampledescription Description of the example
  * This example configures XCL LUT sub-module LUT0/LUT1 in one 3 inputs LUT to
@@ -69,12 +74,8 @@
  * \image html xcl_example4.png
  *
  * \section stk600_setup Setup for STK600 and RC032x
- * - LED0 pin should be connected to PD4 pin
- * - SW0 pin should be connected to PD1 pin
- * - SW1 pin should be connected to PD2 pin
- * - SW0 pin should be connected to PD3 pin
  * As a result, LED0 will light when only one SW0 or SW1 or SW2 push button is
- *pressed.
+ * pressed.
  *
  * \section compinfo Compilation Info
  * This software was written for the GNU GCC and IAR for AVR.
@@ -91,8 +92,6 @@
  */
 int main(void)
 {
-	volatile uint32_t real_resolution;
-
 	/* Initialize the board.
 	 * The board-specific conf_board.h file contains the configuration of
 	 * the board initialization.
@@ -108,10 +107,11 @@ int main(void)
 	 * - Configure XCL to use XMEGA port D
 	 * - Configure LUT in 1 LUTs with 3 differents inputs
 	 * - LUT IN0 input on pin 2 or port D
-	 * - LUT IN1 input on internla XCL input
+	 * - LUT IN1 input on XCL LUT OUT1
+	 * - LUT OUT0 output on pin 4 or port D
 	 * - LUT IN2 input on pin 1 or port D
 	 * - LUT IN3 input on pin 3 or port D
-	 * - LUT OUT0 output on pin 4 or port D
+	 * - LUT OUT1 output on LUT IN1
 	 * - No time Delay for both LUT0 and LUT1
 	 * - LUT0 performs XOR operation
 	 * - LUT1 performs XOR operation

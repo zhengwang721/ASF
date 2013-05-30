@@ -56,10 +56,6 @@ bool main_generic_enable(void);
  */
 void main_generic_disable(void);
 
-/*! \brief Called when Vbus line state change
- */
-void main_vbus_action(bool b_high);
-
 /*! \brief Called when a start of frame is received on USB line
  */
 void main_sof_action(void);

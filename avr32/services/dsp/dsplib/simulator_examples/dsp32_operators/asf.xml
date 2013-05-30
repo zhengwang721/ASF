@@ -4,7 +4,7 @@
 		Example application. It demonstrates how to manipulate 32-bit fixed-point numbers by using the operators function set provided in the DSP library.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="Digital signal processing" />
+			<keyword value="Digital signal processing"/>
 		</info>
 		<build type="c-source" value="operators_example.c"/>
 		<build type="doxygen-entry-point" value="group_avr32_services_dsplib_simulator_example_dsp32_operators"/>
@@ -12,5 +12,6 @@
 		<require idref="common.services.basic.clock"/>
 		<require idref="avr32.drivers.cpu.cycle_counter"/>
 		<require idref="avr32.services.dsplib.operators"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

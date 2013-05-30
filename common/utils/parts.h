@@ -3,7 +3,7 @@
  *
  * \brief Atmel part identification macros
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -309,6 +309,7 @@
 #define XMEGA_C3 ( \
 		AVR8_PART_IS_DEFINED(ATxmega384C3)  || \
 		AVR8_PART_IS_DEFINED(ATxmega256C3)  || \
+		AVR8_PART_IS_DEFINED(ATxmega192C3)  || \
 		AVR8_PART_IS_DEFINED(ATxmega128C3)  || \
 		AVR8_PART_IS_DEFINED(ATxmega64C3) \
 		)
@@ -482,10 +483,20 @@
 		AVR8_PART_IS_DEFINED(ATmega64A)  || \
 		AVR8_PART_IS_DEFINED(ATmega128A) \
 		)
-/** ATmegaxxRF group */
-#define MEGA_RF ( \
+/** ATmegaxxRFA1 group */
+#define MEGA_RFA1 ( \
 		AVR8_PART_IS_DEFINED(ATmega128RFA1) \
 		)
+		
+/** ATmegaxxRFR2 group */
+#define MEGA_RFR2 ( \
+		AVR8_PART_IS_DEFINED(ATmega64RFR2)  || \
+		AVR8_PART_IS_DEFINED(ATmega128RFR2) || \
+		AVR8_PART_IS_DEFINED(ATmega256RFR2) \
+		)
+	
+/** ATmegaxxRFxx group */
+#define MEGA_RF (MEGA_RFA1 || MEGA_RFR2)
 
 /**
  * \name ATmegaxx_un0/un1/un2 subgroups
@@ -551,7 +562,6 @@
 		AVR8_PART_IS_DEFINED(ATmega16U4)     || \
 		AVR8_PART_IS_DEFINED(ATmega2564RFR2) || \
 		AVR8_PART_IS_DEFINED(ATmega256RFA2)  || \
-		AVR8_PART_IS_DEFINED(ATmega256RFR2)  || \
 		AVR8_PART_IS_DEFINED(ATmega324P)     || \
 		AVR8_PART_IS_DEFINED(ATmega325)      || \
 		AVR8_PART_IS_DEFINED(ATmega3250)     || \
@@ -586,7 +596,6 @@
 		AVR8_PART_IS_DEFINED(ATmega649P)     || \
 		AVR8_PART_IS_DEFINED(ATmega64M1)     || \
 		AVR8_PART_IS_DEFINED(ATmega64RFA2)   || \
-		AVR8_PART_IS_DEFINED(ATmega64RFR2)   || \
 		AVR8_PART_IS_DEFINED(ATmega8)        || \
 		AVR8_PART_IS_DEFINED(ATmega8515)     || \
 		AVR8_PART_IS_DEFINED(ATmega8535)     || \
@@ -811,21 +820,34 @@
  * @{
  */
 #define SAM4LS ( \
-		SAM_PART_IS_DEFINED(ATSAM4LS2A) || \
-		SAM_PART_IS_DEFINED(ATSAM4LS2B) || \
-		SAM_PART_IS_DEFINED(ATSAM4LS2C) || \
-		SAM_PART_IS_DEFINED(ATSAM4LS4A) || \
-		SAM_PART_IS_DEFINED(ATSAM4LS4B) || \
-		SAM_PART_IS_DEFINED(ATSAM4LS4C)	\
+		SAM_PART_IS_DEFINED(SAM4LS2A) || \
+		SAM_PART_IS_DEFINED(SAM4LS2B) || \
+		SAM_PART_IS_DEFINED(SAM4LS2C) || \
+		SAM_PART_IS_DEFINED(SAM4LS4A) || \
+		SAM_PART_IS_DEFINED(SAM4LS4B) || \
+		SAM_PART_IS_DEFINED(SAM4LS4C)	\
 		)
 
 #define SAM4LC ( \
-		SAM_PART_IS_DEFINED(ATSAM4LC2A) || \
-		SAM_PART_IS_DEFINED(ATSAM4LC2B) || \
-		SAM_PART_IS_DEFINED(ATSAM4LC2C) || \
-		SAM_PART_IS_DEFINED(ATSAM4LC4A) || \
-		SAM_PART_IS_DEFINED(ATSAM4LC4B) || \
-		SAM_PART_IS_DEFINED(ATSAM4LC4C)	\
+		SAM_PART_IS_DEFINED(SAM4LC2A) || \
+		SAM_PART_IS_DEFINED(SAM4LC2B) || \
+		SAM_PART_IS_DEFINED(SAM4LC2C) || \
+		SAM_PART_IS_DEFINED(SAM4LC4A) || \
+		SAM_PART_IS_DEFINED(SAM4LC4B) || \
+		SAM_PART_IS_DEFINED(SAM4LC4C)	\
+		)
+/** @} */
+
+/**
+ * \name SAM4E series
+ * @{
+ */
+#define SAM4E8 ( \
+		SAM_PART_IS_DEFINED(SAM4E8E) \
+		)
+
+#define SAM4E16 ( \
+		SAM_PART_IS_DEFINED(SAM4E16E) \
 		)
 /** @} */
 
@@ -850,10 +872,15 @@
 
 /** SAM4L Family */
 #define SAM4L (SAM4LS || SAM4LC)
+
+/** SAM4E Family */
+#define SAM4E (SAM4E8 || SAM4E16)
 /** @} */
 
 /** SAM product line */
-#define SAM (SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S || SAM4L)
+#define SAM (SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S || SAM4L || SAM4E)
+
+/** @} */
 
 /** @} */
 

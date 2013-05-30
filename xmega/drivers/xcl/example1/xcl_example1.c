@@ -44,6 +44,7 @@
 /*! \mainpage
  * \section intro Introduction
  * This example demonstrates how to use XMEGA E XCL module with LUT sub-module.
+ * It performs a logic XOR operation between the 2 external input pins.
  *
  * \section files Main Files
  * - xcl_example1.c: the example application.
@@ -55,8 +56,13 @@
  * \section deviceinfo Device Info
  * All AVR XMEGA E devices can be used. This example has been tested
  * with the following setup:
- *   - STK600 with ATxmega32E5 on STK600-RC032X.
- *
+ *   - STK600 with ATxmega32E5 on STK600-RC032X
+ *     LED0 pin should be connected to PD4 pin
+ *     SW0 pin should be connected to PD2 pin
+ *     SW1 pin should be connected to PD0 pin
+ *   - XMEGA E5 Xplained evaluation kit
+ *     No configuration required, SW0 and SW1 are already connected
+ *     on PD0 and PD2, and LED0 on PD4.
  *
  * \section exampledescription Description
  * This example configures XCL LUT0 sub-module to perform a logic XOR operation
@@ -66,13 +72,11 @@
  * Down sleep mode, but the XOR operation between the two pins is still
  * functionnal.
  *
+ * As a result, LED0 will light when only one SW0 or SW1 push button is pressed.
+ *
  * \image html xcl_example1.png
  *
  * \section stk600_setup Setup for STK600:
- * - LED0 pin should be connected to PD4 pin
- * - SW0 pin should be connected to PD2 pin
- * - SW1 pin should be connected to PD0 pin
- * As a result, LED0 will light when only one SW0 or SW1 push button is pressed.
  *
  * \section compinfo Compilation Info
  * This software was written for the GNU GCC and IAR for AVR.

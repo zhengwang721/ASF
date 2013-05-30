@@ -1,10 +1,8 @@
 <asf xmlversion="1.0">
 	<module type="application" id="common.services.usb.class.dfu_atmel.device.bootloader.avr32" caption="AVR UC3 USB DFU Bootloader">
-
 		<info type="description" value="summary">
 		ISP application, allowing R/W access to several on-chip memories through a USB DFU interface.  
 		</info>
-
 		<build type="c-source" value="main.c"/>
 		<build type="header-file" value="main.h"/>
 		<build type="header-file" value="sysclk_auto.h"/>
@@ -29,7 +27,8 @@
 		<require idref="common.services.usb.class.device"/>
 		<info type="keyword" value="technology">
 			<keyword value="Communication"/>
-			<keyword value="USB"/>			
+			<keyword value="USB"/>
 		</info>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

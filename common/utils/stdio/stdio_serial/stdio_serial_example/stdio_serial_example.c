@@ -65,38 +65,42 @@
  * The stdio_serial API can be found \ref stdio_serial.h "here".
  *
  * \section deviceinfo Device Info
- * All AVR devices can be used. This example has been tested
+ * All Atmel devices can be used. This example has been tested
  * with the following setup:
  *   - ATXMEGA128A1 XMEGA-A1 Xplained (USB connection to host virtual com port).
  *   - AT32UC3L064 UC3-L0 Xplained (USB connection to host virtual com port).
+ *   - SAM4E evaluation kit.
  *
  * \section exampledescription Description of the example
  *   - Send message on serial communication port.
  *   - Performs echo of any received character
  *
  * \section compinfo Compilation Info
- * This software was written for the GNU GCC and IAR for AVR.
+ * This software was written for the GNU GCC and IAR for AVR and ARM.
  * Other compilers may or may not work.
  *
  * \section contactinfo Contact Information
  * For further information, visit
- * <A href="http://www.atmel.com/avr">Atmel AVR</A>.\n
+ * <A href="http://www.atmel.com">Atmel</A>.\n
  */
 
 #include <board.h>
 #include <sysclk.h>
 #include <stdio_serial.h>
 
+#if SAM
+#include <conf_uart_serial.h>
+#else
 #include <conf_usart_serial.h>
+#endif
 
 /*! \brief Main function.
  */
 int main(void)
 {
-	uint8_t ch;
+	uint32_t ch;
 
-	const usart_serial_options_t usart_serial_options =
-	{
+	const usart_serial_options_t usart_serial_options = {
 		.baudrate     = USART_SERIAL_EXAMPLE_BAUDRATE,
 		.charlength   = USART_SERIAL_CHAR_LENGTH,
 		.paritytype   = USART_SERIAL_PARITY,
@@ -114,15 +118,14 @@ int main(void)
 	stdio_serial_init(USART_SERIAL_EXAMPLE, &usart_serial_options);
 
 	// Print welcome message
-	printf("\n\rHello AVR World!\n\r");
+	printf("\n\rHello ATMEL World!\n\r");
 
 	// Get and echo a character forever.
-	while (true)
-	{
-		scanf("%c",&ch);
+	while (true) {
+		scanf("%c",(char*)&ch);
 
 		if (ch) {
-			printf("%c",ch);
+			printf("%c",(char)ch);
 		}
 	}
 }

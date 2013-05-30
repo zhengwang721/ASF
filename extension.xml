@@ -1,5 +1,5 @@
-<fdk xml-version="2.0">
-	<extension uuid="Atmel.ASF" org="Atmel" shortname="ASF" version="3.6.0" fullname="Atmel Software Framework">
+<extension-container xmlversion="2.0">
+	<extension uuid="Atmel.ASF" org="Atmel" shortname="ASF" version="3.9.0" fullname="Atmel Software Framework">
 		<author name="Atmel Corp." website="http://www.atmel.com/" email="support@atmel.com"/>
 		<description/>
 		<icon-image path="icon.png"/>
@@ -13,4 +13,4 @@
 		</online-help>
 		<dependencies/>
 	</extension>
-</fdk>
+</extension-container>

@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Board specific example configuration file
+ * \brief Example configuration file
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

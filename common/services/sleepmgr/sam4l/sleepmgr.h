@@ -3,7 +3,7 @@
  *
  * \brief Chip-specific sleep manager configuration
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -51,7 +51,7 @@ extern "C" {
 #include <compiler.h>
 #include <conf_sleepmgr.h>
 #include <interrupt.h>
-#include "sleep.h"
+#include "bpm.h"
 
 /**
  * \weakgroup sleepmgr_group

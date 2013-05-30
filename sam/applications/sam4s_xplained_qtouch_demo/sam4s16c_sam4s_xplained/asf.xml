@@ -6,13 +6,13 @@
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_clock.h"/>
 		<build type="header-file" value="conf_board.h"/>
-		<build type="header-file" subtype="api" value="conf_example.h"/>
+		<build type="header-file" value="conf_example.h"/>
 		<build type="header-file" value="conf_uart_serial.h"/>
 		<build type="header-file" value="QDebugSettings.h"/>
 		<build type="include-path" value="."/>
 		<require idref="sam.applications.sam4s_xplained_qtouch_demo"/>
 		<require idref="board.sam4s_xplained"/>
-		<build type="header-file" subtype="api" value="QDebugSettings.h"/>
+		<build type="header-file" value="QDebugSettings.h"/>
 		<require idref="config.common.services.qtouch.generic.sam"/>
 		<config name="config.common.services.qtouch.generic.sam" value="qtouch_method"/>
 		<require idref="config.common.services.qtouch.qdebug.qt600.generic"/>

@@ -3,7 +3,7 @@
  *
  * \brief Unit tests for CAN driver.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -69,9 +69,10 @@
  * - \ref conf_uart_serial.h
  *
  * \section device_info Device Info
- * Only SAM3X devices can be used.
+ * SAM3X or SAM4E devices can be used.
  * This example has been tested with the following setup:
  * - sam3x8h_sam3x_ek
+ * - sam4e16e_sam4e_ek
  *
  * \section compinfo Compilation info
  * This software was written for the GNU GCC and IAR for ARM. Other compilers

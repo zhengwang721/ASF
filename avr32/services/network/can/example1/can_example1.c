@@ -4,7 +4,7 @@
  *
  * \brief CAN Software Stack Example 1.
  *
- * Copyright (c) 2006-2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2006-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -68,19 +68,22 @@
  * - UC3C_EK evaluation kit;
  * - CPU clock: 16 MHz;
  * This example demonstrates that the application can be waked-up from the CAN.
- * - Plug a DB9 cable on CAN1 DB9 connector and an external CAN node to setup a 'point to point' network.
+ * - Plug a DB9 cable on CAN1 DB9 connector and an external CAN node to setup a 
+ * 'point to point' network.
  * - Configure the baudrate to 1Mbps.
  * - Setup the external CAN node to transmit message.
  * - Start the example.
- * - The CPU is in sleep mode (STATIC) at the beginning of the application and then is waked up after the reception
+ * - The CPU is in sleep mode (STATIC) at the beginning of the application and 
+ * then is waked up after the reception
  *   of the message from the external CAN node
- * - Led0 is ON once a wakeup frame is received and Led1 is ON once the message is acknowledged.
+ * - Led0 is ON once a wakeup frame is received and Led1 is ON once the message 
+ * is acknowledged.
  * \section contactinfo Contact Information
  * For further information, visit
  * <A href="http://www.atmel.com/products/AVR32/">Atmel AVR32</A>.\n
  */
 
-#include <avr32/io.h>
+#include "asf.h"
 #include "compiler.h"
 #include "board.h"
 #include "power_clocks_lib.h"
@@ -94,146 +97,126 @@
 #include "print_funcs.h"
 #include "conf_can_example.h"
 
-//! CAN Wakeup Mask example
+/** CAN Wakeup Mask example */
 #define CAN_WAKEUP_MASK_EXAMPLE         AVR32_PM_AWEN_CANIF0WEN_MASK
 
-//! CAN Example Channel Used: 0 means CAN Channel 0
+/**  CAN Example Channel Used: 0 means CAN Channel 0 */
 #define CAN_CHANNEL_EXAMPLE             0
 
-//! Local allocation for MOB buffer
+/** Local allocation for MOB buffer */
 volatile can_msg_t mob_ram_ch0[NB_MOB_CHANNEL];
 
-//! Define the number of message received on CAN Channel 0
+/** Define the number of message received on CAN Channel 0 */
 volatile U8 nb_message_received_on_channel0 = 0;
 
-//! Local function to prepare RX and TX buffers
+/** Local function to prepare RX and TX buffers */
 void can_example_prepare_data_to_send(U8 mode);
-//! Call Back prototype
+/** Call Back prototype */
 void can_out_callback_channel0(U8 handle, U8 event);
 
 //! Call Back called by can_drv
 void can_out_callback_channel0(U8 handle, U8 event)
 {
-  // Reception of Wakeup frame
-  if (handle == NO_MOB)
-  {
-    // Disable Wake-Up Mode
-    CANIF_disable_wakeup(CAN_CHANNEL_EXAMPLE);
-    // Clear Interrupt Flag
-    CANIF_clr_interrupt_status(CAN_CHANNEL_EXAMPLE);
-    gpio_clr_gpio_pin(LED0_GPIO);
-  }
-  else
-  {
-    // Reception of Data frame
-    appli_rx_msg.can_msg->data.u64 = can_get_mob_data(CAN_CHANNEL_EXAMPLE,handle).u64;
-    appli_rx_msg.can_msg->id = can_get_mob_id(CAN_CHANNEL_EXAMPLE,handle);
-    appli_rx_msg.dlc = can_get_mob_dlc(CAN_CHANNEL_EXAMPLE,handle);
-    appli_rx_msg.status = event;
-    can_mob_free(CAN_CHANNEL_EXAMPLE,handle);
-    nb_message_received_on_channel0 = 1;
-    gpio_clr_gpio_pin(LED1_GPIO);
-  }
+	/* Reception of Wakeup frame */
+	if (handle == NO_MOB) {
+		/* Disable Wake-Up Mode */
+		CANIF_disable_wakeup(CAN_CHANNEL_EXAMPLE);
+		/* Clear Interrupt Flag */
+		CANIF_clr_interrupt_status(CAN_CHANNEL_EXAMPLE);
+		gpio_clr_gpio_pin(LED0_GPIO);
+	}
+	else {
+		/* Reception of Data frame */
+		appli_rx_msg.can_msg->data.u64 = 
+			can_get_mob_data(CAN_CHANNEL_EXAMPLE,handle).u64;
+		appli_rx_msg.can_msg->id = can_get_mob_id(CAN_CHANNEL_EXAMPLE,handle);
+		appli_rx_msg.dlc = can_get_mob_dlc(CAN_CHANNEL_EXAMPLE,handle);
+		appli_rx_msg.status = event;
+		can_mob_free(CAN_CHANNEL_EXAMPLE,handle);
+		nb_message_received_on_channel0 = 1;
+		gpio_clr_gpio_pin(LED1_GPIO);
+	}
 }
 
-/*! \brief Initializes the MCU system clocks.
- */
-static void init_sys_clocks(void)
-{
-  // Switch the main clock to OSC0
-    scif_configure_osc_crystalmode(SCIF_OSC0, FOSC0);
-    scif_enable_osc(SCIF_OSC0, OSC0_STARTUP, true);
-    pm_set_mclk_source(PM_CLK_SRC_OSC0);
-
-  // Setup the generic clock for CAN
-  scif_gc_setup(AVR32_SCIF_GCLK_CANIF,
-                SCIF_GCCTRL_OSC0,
-                AVR32_SCIF_GC_NO_DIV_CLOCK,
-                0);
-  // Now enable the generic clock
-  scif_gc_enable(AVR32_SCIF_GCLK_CANIF);
-
-}
-
-
+/** Main function to configure the CAN, and begin transfers. */
 int main(void)
 {
-  init_sys_clocks();
+	/* Initialize the system clocks */
+	sysclk_init();
 
-  init_dbg_rs232(FPBA_HZ);
+	/* Setup the generic clock for CAN */
+	scif_gc_setup(AVR32_SCIF_GCLK_CANIF,
+				SCIF_GCCTRL_OSC0,
+				AVR32_SCIF_GC_NO_DIV_CLOCK,
+				0);
+	/* Now enable the generic clock */
+	scif_gc_enable(AVR32_SCIF_GCLK_CANIF);
 
-  // Disable all interrupts.
-  Disable_global_interrupt();
+	init_dbg_rs232(FPBA_HZ);
 
-  // Initialize interrupt vectors.
-  INTC_init_interrupts();
+	/* Disable all interrupts. */
+	Disable_global_interrupt();
 
-  static const gpio_map_t CAN_GPIO_MAP =
-  {
-    {AVR32_CANIF_RXLINE_0_0_PIN, AVR32_CANIF_RXLINE_0_0_FUNCTION},
-    {AVR32_CANIF_TXLINE_0_0_PIN, AVR32_CANIF_TXLINE_0_0_FUNCTION}
-  };
-  // Assign GPIO to CAN.
-  gpio_enable_module(CAN_GPIO_MAP,
-                     sizeof(CAN_GPIO_MAP) / sizeof(CAN_GPIO_MAP[0]));
+	/* Initialize interrupt vectors. */
+	INTC_init_interrupts();
 
-  // Initialize channel 0
-  can_init(CAN_CHANNEL_EXAMPLE,
-           ((U32)&mob_ram_ch0[0]),
-           CANIF_CHANNEL_MODE_LISTENING,
-           can_out_callback_channel0);
+	static const gpio_map_t CAN_GPIO_MAP = {
+		{AVR32_CANIF_RXLINE_0_0_PIN, AVR32_CANIF_RXLINE_0_0_FUNCTION},
+		{AVR32_CANIF_TXLINE_0_0_PIN, AVR32_CANIF_TXLINE_0_0_FUNCTION}
+	};
+	/* Assign GPIO to CAN. */
+	gpio_enable_module(CAN_GPIO_MAP,
+		sizeof(CAN_GPIO_MAP) / sizeof(CAN_GPIO_MAP[0]));
 
-  // Enable all interrupts.
-  Enable_global_interrupt();
+	/* Initialize channel 0 */
+	can_init(CAN_CHANNEL_EXAMPLE, ((uint32_t)&mob_ram_ch0[0]), 
+		CANIF_CHANNEL_MODE_LISTENING, can_out_callback_channel0);
 
-  print_dbg("\r\nUC3C CAN Examples 1\r\n");
+	/* Enable all interrupts. */
+	Enable_global_interrupt();
 
-  print_dbg(CAN_Wakeup);
+	print_dbg("\r\nUC3C CAN Examples 1\r\n");
 
-  // Initialize CAN Channel 0
-  can_init(CAN_CHANNEL_EXAMPLE,
-           ((U32)&mob_ram_ch0[0]),
-           CANIF_CHANNEL_MODE_NORMAL,
-           can_out_callback_channel0);
+	print_dbg(CAN_Wakeup);
 
-  // Allocate one mob for RX
-  appli_rx_msg.handle = can_mob_alloc(CAN_CHANNEL_EXAMPLE);
+	/* Initialize CAN Channel 0 */
+	can_init(CAN_CHANNEL_EXAMPLE, ((uint32_t)&mob_ram_ch0[0]), 
+		CANIF_CHANNEL_MODE_NORMAL, can_out_callback_channel0);
 
-  // Initialize RX message
-  can_rx(CAN_CHANNEL_EXAMPLE,
-         appli_rx_msg.handle,
-         appli_rx_msg.req_type,
-         appli_rx_msg.can_msg);
+	/* Allocate one mob for RX */
+	appli_rx_msg.handle = can_mob_alloc(CAN_CHANNEL_EXAMPLE);
 
-  // Enable Async Wake Up Mode
-  pm_asyn_wake_up_enable(CAN_WAKEUP_MASK_EXAMPLE);
+	/* Initialize RX message */
+	can_rx(CAN_CHANNEL_EXAMPLE, appli_rx_msg.handle, appli_rx_msg.req_type,
+		appli_rx_msg.can_msg);
 
-  //---------SLEEP MODE PROCEDURE-------------
-  // Disable CAN Channel 0
-  CANIF_disable(CAN_CHANNEL_EXAMPLE);
-  // Wait CAN Channel 0 is disabled
-  while(!CANIF_channel_enable_status(CAN_CHANNEL_EXAMPLE));
-  // Enable Wake-Up Mode
-  CANIF_enable_wakeup(CAN_CHANNEL_EXAMPLE);
-  // Go to sleep mode.
-  SLEEP(AVR32_PM_SMODE_STATIC);
-  //---------SLEEP MODE PROCEDURE-------------
-  print_dbg(CAN_WakeupD);
-  // Initialize again CAN Channel 0
-  can_init(CAN_CHANNEL_EXAMPLE,
-           ((U32)&mob_ram_ch0[0]),
-           CANIF_CHANNEL_MODE_NORMAL,
-           can_out_callback_channel0);
+	/* Enable Async Wake Up Mode */
+	pm_asyn_wake_up_enable(CAN_WAKEUP_MASK_EXAMPLE);
 
-  // Allocate one mob for RX
-  appli_rx_msg.handle = can_mob_alloc(CAN_CHANNEL_EXAMPLE);
+	/* ---------SLEEP MODE PROCEDURE------------- */
+	/* Disable CAN Channel 0 */
+	CANIF_disable(CAN_CHANNEL_EXAMPLE);
+	/* Wait CAN Channel 0 is disabled */
+	while(!CANIF_channel_enable_status(CAN_CHANNEL_EXAMPLE));
+	/* Enable Wake-Up Mode */
+	CANIF_enable_wakeup(CAN_CHANNEL_EXAMPLE);
+	/* Go to sleep mode. */
+	SLEEP(AVR32_PM_SMODE_STATIC);
+	/* ---------SLEEP MODE PROCEDURE------------- */
+	print_dbg(CAN_WakeupD);
+	/* Initialize again CAN Channel 0 */
+	can_init(CAN_CHANNEL_EXAMPLE, ((uint32_t)&mob_ram_ch0[0]),
+		CANIF_CHANNEL_MODE_NORMAL, can_out_callback_channel0);
 
-  // Initialize RX message
-  can_rx(CAN_CHANNEL_EXAMPLE,
-         appli_rx_msg.handle,
-         appli_rx_msg.req_type,
-         appli_rx_msg.can_msg);
+	/* Allocate one mob for RX */
+	appli_rx_msg.handle = can_mob_alloc(CAN_CHANNEL_EXAMPLE);
 
-  while(1);
+	/* Initialize RX message */
+	can_rx(CAN_CHANNEL_EXAMPLE, appli_rx_msg.handle, appli_rx_msg.req_type,
+		appli_rx_msg.can_msg);
+
+	for (;;) {
+		/* Do nothing; interrupts handle the DAC conversions */
+	}
 
 }

@@ -30,7 +30,7 @@
 		<device-support value="sam3x"/>
 		<device-support value="sam3a"/>
 		<device-support value="sam4s"/>
-		<require idref="xmega.drivers.tc" />
+		<require idref="xmega.drivers.tc"/>
 		<require idref="common.services.basic.clock"/>
 		<require idref="common.services.basic.sleepmgr"/>
 		<require idref="common.services.usb.class.device"/>
@@ -38,5 +38,6 @@
 			<keyword value="USB"/>
 			<keyword value="Communication"/>
 		</info>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

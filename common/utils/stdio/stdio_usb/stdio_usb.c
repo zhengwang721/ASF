@@ -74,17 +74,6 @@ void stdio_usb_getchar (void volatile * unused, char *data)
 	*data = (char)udi_cdc_getc();
 }
 
-void stdio_usb_vbus_event(bool b_high)
-{
-	if (b_high) {
-		// Attach USB Device
-		udc_attach();
-	} else {
-		// VBUS not present
-		udc_detach();
-	}
-}
-
 bool stdio_usb_enable(void)
 {
 	stdio_usb_interface_enable = true;
@@ -108,10 +97,6 @@ void stdio_usb_init(void)
 	 * VBUS monitoring is not available.
 	 */
 	udc_start ();
-
-	if (!udc_include_vbus_monitoring()) {
-		stdio_usb_vbus_event(true);
-	}
 
 #if defined(__GNUC__)
 # if XMEGA

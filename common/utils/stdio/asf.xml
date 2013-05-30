@@ -41,6 +41,18 @@
 			<generator value="doxygen-module" default-mcu="unspecified-sam3s"/>
 			<info type="gui-flag" value="hidden"/>
 		</module>
+		<module type="driver" id="common.utils.stdio#mega" caption="Standard I/O (stdio) Interface - mega implementation">
+			<info type="description" value="summary">
+			Common standard I/O driver that implements the stdio
+			read and write functions on mega devices.
+			</info>
+			<device-support value="mega"/>
+			<require idref="common.utils.stdio.common"/>
+			<require idref="mega.utils"/>
+			<build type="doxygen-entry-point" value="group_common_utils_stdio"/>
+			<generator value="doxygen-module" default-mcu="unspecified-mega"/>
+			<info type="gui-flag" value="hidden"/>
+		</module>
 	</select-by-device>
 	<module type="meta" id="common.utils.stdio.common" caption="Standard I/O (stdio) Interface">
 		<build type="c-source" value="read.c"/>

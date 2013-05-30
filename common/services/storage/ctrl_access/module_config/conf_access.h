@@ -7,7 +7,7 @@
  * This file contains the possible external configuration of the memory access
  * control.
  *
- * Copyright (c) 2009 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -109,6 +109,7 @@
 #define LUN_0_INCLUDE                           "virtual_mem.h"
 #define Lun_0_test_unit_ready                   virtual_test_unit_ready
 #define Lun_0_read_capacity                     virtual_read_capacity
+#define Lun_0_unload                            NULL /* Can not be unloaded */
 #define Lun_0_wr_protect                        virtual_wr_protect
 #define Lun_0_removal                           virtual_removal
 #define Lun_0_usb_read_10                       virtual_usb_read_10
@@ -126,6 +127,7 @@
 #define LUN_1_INCLUDE                           "at45dbx_mem.h"
 #define Lun_1_test_unit_ready                   at45dbx_test_unit_ready
 #define Lun_1_read_capacity                     at45dbx_read_capacity
+#define Lun_1_unload                            NULL /* Can not be unloaded */
 #define Lun_1_wr_protect                        at45dbx_wr_protect
 #define Lun_1_removal                           at45dbx_removal
 #define Lun_1_usb_read_10                       at45dbx_usb_read_10
@@ -143,6 +145,7 @@
 #define LUN_2_INCLUDE                           "sd_mmc_spi_mem.h"
 #define Lun_2_test_unit_ready                   sd_mmc_spi_test_unit_ready
 #define Lun_2_read_capacity                     sd_mmc_spi_read_capacity
+#define Lun_2_unload                            NULL
 #define Lun_2_wr_protect                        sd_mmc_spi_wr_protect
 #define Lun_2_removal                           sd_mmc_spi_removal
 #define Lun_2_usb_read_10                       sd_mmc_spi_usb_read_10
@@ -160,6 +163,7 @@
 #define LUN_3_INCLUDE                           "sd_mmc_mci_mem.h"
 #define Lun_3_test_unit_ready                   sd_mmc_mci_test_unit_ready_0
 #define Lun_3_read_capacity                     sd_mmc_mci_read_capacity_0
+#define Lun_3_unload                            NULL
 #define Lun_3_wr_protect                        sd_mmc_mci_wr_protect_0
 #define Lun_3_removal                           sd_mmc_mci_removal_0
 #define Lun_3_usb_read_10                       sd_mmc_mci_usb_read_10_0
@@ -177,6 +181,7 @@
 #define LUN_4_INCLUDE                           "sd_mmc_mem.h"
 #define Lun_4_test_unit_ready                   sd_mmc_test_unit_ready_0
 #define Lun_4_read_capacity                     sd_mmc_read_capacity_0
+#define Lun_4_unload                            sd_mmc_unload_0
 #define Lun_4_wr_protect                        sd_mmc_wr_protect_0
 #define Lun_4_removal                           sd_mmc_removal_0
 #define Lun_4_usb_read_10                       sd_mmc_usb_read_10_0
@@ -194,6 +199,7 @@
 #define LUN_5_INCLUDE                           "sd_mmc_mem.h"
 #define Lun_5_test_unit_ready                   sd_mmc_test_unit_ready_1
 #define Lun_5_read_capacity                     sd_mmc_read_capacity_1
+#define Lun_5_unload                            sd_mmc_unload_1
 #define Lun_5_wr_protect                        sd_mmc_wr_protect_1
 #define Lun_5_removal                           sd_mmc_removal_1
 #define Lun_5_usb_read_10                       sd_mmc_usb_read_10_1
@@ -212,6 +218,7 @@
 #define Lun_usb_test_unit_ready(lun)            host_test_unit_ready(lun)
 #define Lun_usb_read_capacity(lun, nb_sect)     host_read_capacity(lun, nb_sect)
 #define Lun_usb_read_sector_size(lun)           host_read_sector_size(lun)
+#define Lun_usb_unload                          NULL
 #define Lun_usb_wr_protect(lun)                 host_wr_protect(lun)
 #define Lun_usb_removal()                       host_removal()
 #define Lun_usb_mem_2_ram(addr, ram)            host_read_10_ram(addr, ram)

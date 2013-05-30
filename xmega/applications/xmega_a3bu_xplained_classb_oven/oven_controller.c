@@ -42,6 +42,10 @@
  */
 
 #include <asf.h>
+#include "oven.h"
+#include "oven_controller.h"
+#include "oven_classb.h"
+
 #include <error_handler.h>
 #include <classb_cpu.h>
 #include <classb_interrupt_monitor.h>

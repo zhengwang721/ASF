@@ -3,7 +3,7 @@
  *
  * \brief USB Device Driver for UDPHS. Compliant with common UDD driver.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -47,6 +47,13 @@
 #include "compiler.h"
 #include "preprocessor.h"
 
+/* Get USB VBus pin configuration in board configuration */
+#include "conf_board.h"
+#include "board.h"
+#include "ioport.h"
+#include "pio.h"
+#include "pio_handler.h"
+
 /// @cond 0
 /**INDENT-OFF**/
 #ifdef __cplusplus
@@ -54,6 +61,22 @@ extern "C" {
 #endif
 /**INDENT-ON**/
 /// @endcond
+
+__always_inline static void io_pin_init(uint32_t pin, uint32_t flags,
+	IRQn_Type port_irqn, uint8_t irq_level,
+	void (*handler)(uint32_t,uint32_t), uint32_t wkup)
+{
+	// IOPORT must be initialized before by ioport_init(), \see ioport_group
+	pio_handler_set_pin(pin, flags, handler);
+	ioport_set_pin_sense_mode(pin, ioport_get_pin_level(pin) ?
+		IOPORT_SENSE_LEVEL_LOW : IOPORT_SENSE_LEVEL_HIGH);
+	NVIC_SetPriority(port_irqn, irq_level);
+	NVIC_EnableIRQ(port_irqn);
+	pio_enable_pin_interrupt(pin);
+	if (wkup) {
+		pmc_set_fast_startup_input(wkup);
+	}
+}
 
 //! \ingroup udd_group
 //! \defgroup udd_udphs_group USB Device High-Speed Port (UDPHS)
@@ -89,17 +112,38 @@ extern "C" {
 //! @{
 #ifdef USB_DEVICE_HS_SUPPORT
   //! Enable high speed test mode
-#  define   udd_enable_hs_test_mode()        (Wr_bitfield(UDPHS->UDPHS_TST, UDPHS_TST_SPEED_CFG_Msk, 3))
+#  define   udd_enable_hs_test_mode()        (Wr_bitfield(UDPHS->UDPHS_TST, UDPHS_TST_SPEED_CFG_Msk, 2))
 #  define   udd_enable_hs_test_mode_j()      (Set_bits(UDPHS->UDPHS_TST, UDPHS_TST_TST_J))
 #  define   udd_enable_hs_test_mode_k()      (Set_bits(UDPHS->UDPHS_TST, UDPHS_TST_TST_K))
 #  define   udd_enable_hs_test_mode_packet() (Set_bits(UDPHS->UDPHS_TST, UDPHS_TST_TST_PKT))
 #endif
 //! @}
 
-
-//! @name UDPHS Device vbus management
-//! UDPHS does not support vbus management.
+//! @name UDPHS Device vbus pin management
+//! UDPHS peripheral does not support vbus management and it's monitored by a
+//! PIO pin.
+//! This feature is optional, and it is enabled if USB_VBUS_PIN is defined in
+//! board.h and CONF_BOARD_USB_VBUS_DETECT defined in conf_board.h.
+//!
+//! @note ioport_init() must be invoked before using vbus pin functions since
+//!       they use IOPORT API, \see ioport_group.
+//!
 //! @{
+#define UDD_VBUS_DETECT (defined(CONF_BOARD_USB_PORT) && \
+ 		defined(CONF_BOARD_USB_VBUS_DETECT))
+#define UDD_VBUS_IO     (defined(USB_VBUS_PIN) && UDD_VBUS_DETECT)
+#ifndef USB_VBUS_WKUP
+#  define USB_VBUS_WKUP 0
+#endif
+
+#define udd_vbus_init(handler) io_pin_init(USB_VBUS_PIN, USB_VBUS_FLAGS, \
+	USB_VBUS_PIN_IRQn, UDD_USB_INT_LEVEL, handler, USB_VBUS_WKUP)
+#define Is_udd_vbus_high()           ioport_get_pin_level(USB_VBUS_PIN)
+#define Is_udd_vbus_low()            (!Is_udd_vbus_high())
+#define udd_enable_vbus_interrupt()  pio_enable_pin_interrupt(USB_VBUS_PIN)
+#define udd_disable_vbus_interrupt() pio_disable_pin_interrupt(USB_VBUS_PIN)
+#define udd_ack_vbus_interrupt(high) ioport_set_pin_sense_mode(USB_VBUS_PIN,\
+	high ? IOPORT_SENSE_LEVEL_LOW : IOPORT_SENSE_LEVEL_HIGH)
 //! @}
 
 //! @name UDP peripheral enable/disable
@@ -375,7 +419,7 @@ typedef struct {
 
 } udphs_endpoint_status_t;
 #define  udd_get_endpoint_status(ep)                    (UDPHS->UDPHS_EPT[ep].UDPHS_EPTSTA)
-                                                       
+
 #define  udd_get_endpoint_status_byte_count(status)     ((status & UDPHS_EPTSTA_BYTE_COUNT_Msk)    >> UDPHS_EPTSTA_BYTE_COUNT_Pos)
 #define  udd_get_endpoint_status_nb_busy_bank(status)   ((status & UDPHS_EPTSTA_BUSY_BANK_STA_Msk) >> UDPHS_EPTSTA_BUSY_BANK_STA_Pos)
 #define  udd_get_endpoint_status_current_bank(status)   ((status & UDPHS_EPTSTA_CURRENT_BANK_Msk)  >> UDPHS_EPTSTA_CURRENT_BANK_Pos)
@@ -472,22 +516,22 @@ typedef struct {
 
   //! acks endpoint isochronous error flow interrupt
 #define  udd_ack_errflow_interrupt(ep)             (UDPHS->UDPHS_EPT[ep].UDPHS_EPTCLRSTA = UDPHS_EPTCLRSTA_ERR_FL_ISO)
-  //! tests if an overflow occurs                 
+  //! tests if an overflow occurs
 #define  Is_udd_errflow(ep)                        (Tst_bits(UDPHS->UDPHS_EPT[ep].UDPHS_EPTSTA, UDPHS_EPTSTA_ERR_FL_ISO))
-  //! enables overflow interrupt                  
+  //! enables overflow interrupt
 #define  udd_enable_errflow_interrupt(ep)          (UDPHS->UDPHS_EPT[ep].UDPHS_EPTCTLENB = UDPHS_EPTCTLENB_ERR_FL_ISO)
-  //! disables overflow interrupt                 
+  //! disables overflow interrupt
 #define  udd_disable_errflow_interrupt(ep)         (UDPHS->UDPHS_EPT[ep].UDPHS_EPTCTLDIS = UDPHS_EPTCTLDIS_ERR_FL_ISO)
-  //! tests if overflow interrupt is enabled      
+  //! tests if overflow interrupt is enabled
 #define  Is_udd_errflow_interrupt_enabled(ep)      (Tst_bits(UDPHS->UDPHS_EPT[ep].UDPHS_EPTCTL, UDPHS_EPTCTL_ERR_FL_ISO))
-                                                  
-  //! acks endpoint transaction error interrupt   
+
+  //! acks endpoint transaction error interrupt
 #define  udd_ack_errtran_interrupt(ep)             (UDPHS->UDPHS_EPT[ep].UDPHS_EPTCLRSTA = UDPHS_EPTSTA_ERR_TRANS)
-  //! tests if an transaction error occurs        
+  //! tests if an transaction error occurs
 #define  Is_udd_errtran(ep)                        (Tst_bits(UDPHS->UDPHS_EPT[ep].UDPHS_EPTSTA, UDPHS_EPTSTA_ERR_TRANS))
-  //! enables transaction error interrupt         
+  //! enables transaction error interrupt
 #define  udd_enable_errtran_interrupt(ep)          (UDPHS->UDPHS_EPT[ep].UDPHS_EPTCTLENB = UDPHS_EPTCTLENB_ERR_TRANS)
-  //! disables transaction error interrupt        
+  //! disables transaction error interrupt
 #define  udd_disable_errtran_interrupt(ep)         (UDPHS->UDPHS_EPT[ep].UDPHS_EPTCTLDIS = UDPHS_EPTCTLDIS_ERR_TRANS)
   //! tests if transaction error interrupt is enabled
 #define  Is_udd_errtran_interrupt_enabled(ep)      (Tst_bits(UDPHS->UDPHS_EPT[ep].UDPHS_EPTCTL, UDPHS_EPTCTL_ERR_TRANS))

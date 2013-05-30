@@ -3,7 +3,7 @@
  *
  * \brief Unit tests for ADC driver using DAC
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -976,9 +976,10 @@ int main(void)
 		.paritytype = CONF_TEST_PARITY,
 		.stopbits   = CONF_TEST_STOPBITS,
 	};
-	sysclk_init();
+
 	board_init();
 	sysclk_init();
+	sleepmgr_init();
 	stdio_serial_init(CONF_TEST_USART, &usart_serial_options);
 
 	// Define single ended conversion test cases

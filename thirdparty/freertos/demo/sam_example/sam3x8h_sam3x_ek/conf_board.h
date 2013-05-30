@@ -50,4 +50,6 @@
 /** Configure UART pins */
 #define CONF_BOARD_UART_CONSOLE
 
+#define LED0 LED0_GPIO
+
 #endif /* CONF_BOARD_H_INCLUDED */

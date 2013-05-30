@@ -50,7 +50,7 @@
  * basic cmsis utilities of SAM4 microcontrollers.
  *
  * The example will execute the following tests:
- * - The application will flash the LED per second. The second 
+ * - The application will flash the LED per second. The second
  * is calculated by the standard system tick interface of cmsis.
  *
  * \section Requirements
@@ -77,9 +77,6 @@
 #include "conf_board.h"
 
 __INLINE static void delay_ms(uint32_t ul_dly_ticks);
-__INLINE static void led_config(void);
-__INLINE static void led_on(uint32_t ul_led);
-__INLINE static void led_off(uint32_t ul_led);
 
 /* Systick Counter */
 static volatile uint32_t g_ul_ms_ticks = 0U;
@@ -113,33 +110,23 @@ __INLINE static void delay_ms(uint32_t ul_dly_ticks)
 	}
 }
 
- /**
- * \brief Configure LED pins.
+/**
+ * \brief Stop watch dog timer.
  */
-__INLINE static void led_config(void)
+__INLINE static void stop_wdt(void)
 {
-	/* Set up LED pins. */
-	LED0_PIO->PIO_PER = LED0_MASK;
-	LED0_PIO->PIO_OER = LED0_MASK;
-	LED0_PIO->PIO_PUDR = LED0_MASK;
-}
-
-/**
-* \brief Switch on LED.
-*/
-__INLINE static void led_on(uint32_t ul_led)
-{
-	/* Turn On LED. */
-	LED0_PIO->PIO_CODR = ul_led;
-}
-
-/**
-* \brief Switch off LED.
-*/
-__INLINE static void led_off(uint32_t ul_led)
-{
-	/* Turn Off LED. */
-	LED0_PIO->PIO_SODR = ul_led;
+	/* Disable WDT. */
+#if SAM4L
+	uint32_t wdt_reg = WDT->WDT_CTRL;
+	wdt_reg &= ~(WDT_CTRL_EN | WDT_CTRL_KEY_Msk);
+	wdt_reg |= WDT_CTRL_KEY(0x55u);
+	WDT->WDT_CTRL = wdt_reg;
+	wdt_reg &= ~WDT_CTRL_KEY_Msk;
+	wdt_reg |= WDT_CTRL_KEY(0xAAu);
+	WDT->WDT_CTRL = wdt_reg;
+#else
+	WDT->WDT_MR = WDT_MR_WDDIS;
+#endif
 }
 
 /**
@@ -150,28 +137,26 @@ __INLINE static void led_off(uint32_t ul_led)
 int main(void)
 {
 	/* Initialize the SAM4 system */
-	SystemInit();
-
-	WDT->WDT_MR = WDT_MR_WDDIS;
+	stop_wdt();
+	sysclk_init();
+	board_init();
 
 	/* Set up SysTick Timer for 1 msec interrupts. */
-	if (SysTick_Config(SystemCoreClock / (uint32_t) 1000)) {
+	if (SysTick_Config(sysclk_get_cpu_hz() / (uint32_t) 1000)) {
 		/* Capture error. */
 		while (1) {
 		}
 	}
 
-	led_config();
-
 	/* Flash the LED. */
 	while (1) {
 		/* Turn on the LED. */
-		led_on(LED0_MASK);
+		LED_On(LED0);
 		/* Delay  1000 Msec. */
 		delay_ms((uint32_t) 1000);
 
 		/* Turn off the LED. */
-		led_off(LED0_MASK);
+		LED_Off(LED0);
 		/* Delay  1000 Msec. */
 		delay_ms((uint32_t) 1000);
 	}

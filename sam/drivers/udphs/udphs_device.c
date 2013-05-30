@@ -3,7 +3,7 @@
  *
  * \brief USB Device Driver for UDPHS. Compliant with common UDD driver.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -66,6 +66,10 @@
 
 #ifndef UDD_USB_INT_LEVEL
 #  define UDD_USB_INT_LEVEL 5 // By default USB interrupt have low priority
+#endif
+
+#ifndef UDC_VBUS_EVENT
+#  define UDC_VBUS_EVENT(present)
 #endif
 
 #define UDD_EP_USED(ep)      (USB_DEVICE_MAX_EP >= ep)
@@ -268,13 +272,66 @@ static void udd_sleep_mode(bool b_idle)
 
 static void udd_sleep_mode(bool b_idle)
 {
-	b_idle = b_idle;
+	UNUSED(b_idle);
 }
 
 #endif // UDD_NO_SLEEP_MGR
 
 //@}
 
+/**
+ * \name VBus monitor routine
+ */
+//@{
+
+#if UDD_VBUS_IO
+
+# if !defined(UDD_NO_SLEEP_MGR) && !defined(USB_VBUS_WKUP)
+/* Lock to SLEEPMGR_SLEEP_WFI if VBus not connected */
+static bool b_vbus_sleep_lock = false;
+/**
+ * Lock sleep mode for VBus PIO pin change detection
+ */
+static void udd_vbus_monitor_sleep_mode(bool b_lock)
+{
+	if (b_lock && !b_vbus_sleep_lock) {
+		b_vbus_sleep_lock = true;
+		sleepmgr_lock_mode(SLEEPMGR_SLEEP_WFI);
+	}
+	if (!b_lock && b_vbus_sleep_lock) {
+		b_vbus_sleep_lock = false;
+		sleepmgr_unlock_mode(SLEEPMGR_SLEEP_WFI);
+	}
+}
+# else
+#  define udd_vbus_monitor_sleep_mode(lock)
+# endif
+
+/**
+ * USB VBus pin change handler
+ */
+static void udd_vbus_handler(uint32_t id, uint32_t mask)
+{
+	if (USB_VBUS_PIO_ID != id || USB_VBUS_PIO_MASK != mask) {
+		return;
+	}
+	/* PIO interrupt status has been cleared, just detect level */
+	bool b_vbus_high = Is_udd_vbus_high();
+	if (b_vbus_high) {
+		udd_ack_vbus_interrupt(true);
+		udd_vbus_monitor_sleep_mode(false);
+		udd_attach();
+	} else {
+		udd_ack_vbus_interrupt(false);
+		udd_vbus_monitor_sleep_mode(true);
+		udd_detach();
+	}
+	UDC_VBUS_EVENT(b_vbus_high);
+}
+
+#endif
+
+//@}
 
 /**
  * \name Control endpoint low level management routine.
@@ -462,6 +519,16 @@ ISR(UDD_USB_INT_FUN)
 {
 	udd_enable_periph_ck();
 
+	/* For fast wakeup clocks restore
+	 * In WAIT mode, clocks are switched to FASTRC.
+	 * After wakeup clocks should be restored, before that ISR should not
+	 * be served.
+	 */
+	if (!pmc_is_wakeup_clocks_restored() && !Is_udd_suspend()) {
+		cpu_irq_disable();
+		return;
+	}
+
 	if (Is_udd_sof()) {
 		udd_ack_sof();
 		if (Is_udd_full_speed_mode()) {
@@ -563,7 +630,11 @@ udd_interrupt_sof_end:
 
 bool udd_include_vbus_monitoring(void)
 {
+#if UDD_VBUS_IO
+	return true;
+#else
 	return false;
+#endif
 }
 
 
@@ -606,6 +677,22 @@ void udd_enable(void)
 	sleepmgr_lock_mode(UDPHS_SLEEP_MODE_USB_SUSPEND);
 #endif
 
+#if UDD_VBUS_IO
+	/* Initialize VBus monitor */
+	udd_vbus_init(udd_vbus_handler);
+	udd_vbus_monitor_sleep_mode(true);
+	/* Force Vbus interrupt when Vbus is always high
+	 * This is possible due to a short timing between a Host mode stop/start.
+	 */
+	if (Is_udd_vbus_high()) {
+		udd_vbus_handler(USB_VBUS_PIO_ID, USB_VBUS_PIO_MASK);
+	}
+#else
+#  ifndef USB_DEVICE_ATTACH_AUTO_DISABLE
+	udd_attach();
+#  endif
+#endif
+
 	cpu_irq_restore(flags);
 }
 
@@ -622,6 +709,11 @@ void udd_disable(void)
 #ifndef UDD_NO_SLEEP_MGR
 	sleepmgr_unlock_mode(UDPHS_SLEEP_MODE_USB_SUSPEND);
 #endif
+
+# if UDD_VBUS_IO
+	udd_vbus_monitor_sleep_mode(false);
+# endif
+
 	cpu_irq_restore(flags);
 }
 
@@ -1096,7 +1188,6 @@ void udd_test_mode_packet(void)
 	uint8_t i;
 	uint8_t *ptr_dest;
 	const uint8_t *ptr_src;
-	irqflags_t flags;
 
 	const uint8_t test_packet[] = {
 		// 00000000 * 9
@@ -1134,11 +1225,9 @@ void udd_test_mode_packet(void)
 	for (i = 0; i < sizeof(test_packet); i++) {
 		*ptr_dest++ = *ptr_src++;
 	}
-	flags = cpu_irq_save();
-	udd_enable_in_send_interrupt(0);
-	cpu_irq_restore(flags);
-
+	// Validate and send the data available in the control endpoint buffer
 	udd_ack_in_send(0);
+	udd_raise_tx_pkt_ready(0);
 }
 #endif // USB_DEVICE_HS_SUPPORT
 
@@ -1642,7 +1731,7 @@ static void udd_ep_finish_job(udd_ep_job_t * ptr_job, bool b_abort, uint8_t ep_n
 	}
 	if (Is_udd_endpoint_in(ep_num)) {
 		ep_num |= USB_EP_DIR_IN;
-	}	
+	}
 	ptr_job->call_trans((b_abort) ? UDD_EP_TRANSFER_ABORT :
 			UDD_EP_TRANSFER_OK, ptr_job->buf_size, ep_num);
 }

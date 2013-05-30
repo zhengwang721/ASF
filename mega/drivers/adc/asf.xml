@@ -60,5 +60,20 @@
 			<build type="doxygen-entry-point" value="mega_adc_group"/>
 			<generator value="doxygen-module" default-mcu="atmega16"/>
 		</module>
+		<module type="driver" id="mega.drivers.adc#4" caption="ADC - Analog to Digital Converter">
+			<info type="description" value="summary">
+			ADC driver for the megaRF devices
+			</info>
+			<info type="keyword" value="technology">
+				<keyword value="Analog Conversion"/>
+			</info>			
+			<build type="header-file" subtype="api" value="adc.h"/>
+			<build type="header-file" value="adc_megarf.h"/>
+			<build type="include-path" value="."/>
+			<require idref="mega.utils"/>
+			<device-support value="megarf"/>
+			<build type="doxygen-entry-point" value="mega_adc_group"/>
+			<generator value="doxygen-module" default-mcu="atmega128rfa1"/>
+		</module>
 	</select-by-device>
 </asf>

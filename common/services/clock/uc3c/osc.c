@@ -3,7 +3,7 @@
  *
  * \brief Chip-specific oscillator management functions
  *
- * Copyright (c) 2010 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -74,7 +74,7 @@ void osc_priv_enable_osc1(void)
 	irqflags_t flags;
 
 	flags = cpu_irq_save();
-	AVR32_SCIF.unlock = 0xaa000000 | AVR32_SCIF_OSCCTRL;
+	AVR32_SCIF.unlock = 0xaa000000 | AVR32_SCIF_OSCCTRL1;
 	AVR32_SCIF.oscctrl[1] =
 			(OSC0_STARTUP_VALUE << AVR32_SCIF_OSCCTRL_STARTUP)
 			| (OSC0_GAIN_VALUE << AVR32_SCIF_OSCCTRL_GAIN)
@@ -88,7 +88,7 @@ void osc_priv_disable_osc1(void)
 	irqflags_t flags;
 
 	flags = cpu_irq_save();
-	AVR32_SCIF.unlock = 0xaa000000 | AVR32_SCIF_OSCCTRL;
+	AVR32_SCIF.unlock = 0xaa000000 | AVR32_SCIF_OSCCTRL1;
 	AVR32_SCIF.oscctrl[1] = 0;
 	cpu_irq_restore(flags);
 }

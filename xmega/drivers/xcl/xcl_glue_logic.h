@@ -158,16 +158,22 @@ enum xcl_lut_thruth_t {
 	NOR    = 0x1,
 	/* ! XNOR logic function */
 	XNOR   = 0x9,
-	/* ! NOT logic function */
-	NOT    = 0x3,
-	/* ! Copy IN1 input */
-	IN1    = 0xC,
-	/* ! Copy IN3 input */
+	/* ! NOT logic function on IN0 input (ignore IN1) */
+	NOT_IN0= 0x5,
+	/* ! NOT logic function on IN1 input (ignore IN0) */
+	NOT_IN1= 0x3,
+	/* ! NOT logic function on IN2 input (ignore IN3) */
+	NOT_IN2= 0x5,
+	/* ! NOT logic function on IN3 input (ignore IN2) */
+	NOT_IN3= 0x3,
+	/* ! Copy IN0 input (ignore IN1) */
+	IN0    = 0xA,                   
+	/* ! Copy IN1 input (ignore IN0) */
+	IN1    = 0xC,                   
+	/* ! Copy IN2 input (ignore IN3) */
+	IN2    = 0xA,                   
+	/* ! Copy IN3 input (ignore IN2) */
 	IN3    = 0xC,
-	/* ! Copy IN2 input */
-	IN2    = 0xA,
-	/* ! Copy IN0 input */
-	IN0    = 0xA,
 };
 
 /**

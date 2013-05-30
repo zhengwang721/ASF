@@ -3,7 +3,7 @@
  *
  * \brief Chip-specific PLL definitions.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -59,27 +59,27 @@ extern "C" {
  * @{
  */
 
-#define PLL_OUTPUT_MIN_HZ	84000000
-#define PLL_OUTPUT_MAX_HZ	192000000
+#define PLL_OUTPUT_MIN_HZ   84000000
+#define PLL_OUTPUT_MAX_HZ   192000000
 
-#define PLL_INPUT_MIN_HZ	8000000
-#define PLL_INPUT_MAX_HZ	16000000
+#define PLL_INPUT_MIN_HZ    8000000
+#define PLL_INPUT_MAX_HZ    16000000
 
-#define NR_PLLS				2
-#define	PLLA_ID				0
-#define	UPLL_ID				1	//!< USB UTMI PLL.
+#define NR_PLLS             2
+#define PLLA_ID             0
+#define UPLL_ID             1   //!< USB UTMI PLL.
 
-#define PLL_UPLL_HZ		480000000
-  
-#define PLL_COUNT			0x3fU
+#define PLL_UPLL_HZ     480000000
+
+#define PLL_COUNT           0x3fU
 
 enum pll_source {
-	PLL_SRC_MAINCK_4M_RC		= OSC_MAINCK_4M_RC,		//!< Internal 4MHz RC oscillator.
-	PLL_SRC_MAINCK_8M_RC		= OSC_MAINCK_8M_RC,		//!< Internal 8MHz RC oscillator.
-	PLL_SRC_MAINCK_12M_RC		= OSC_MAINCK_12M_RC,	//!< Internal 12MHz RC oscillator.
-	PLL_SRC_MAINCK_XTAL			= OSC_MAINCK_XTAL,		//!< External crystal oscillator.
-	PLL_SRC_MAINCK_BYPASS		= OSC_MAINCK_BYPASS,	//!< External bypass oscillator.
-	PLL_NR_SOURCES,										//!< Number of PLL sources.
+	PLL_SRC_MAINCK_4M_RC        = OSC_MAINCK_4M_RC,     //!< Internal 4MHz RC oscillator.
+	PLL_SRC_MAINCK_8M_RC        = OSC_MAINCK_8M_RC,     //!< Internal 8MHz RC oscillator.
+	PLL_SRC_MAINCK_12M_RC       = OSC_MAINCK_12M_RC,    //!< Internal 12MHz RC oscillator.
+	PLL_SRC_MAINCK_XTAL         = OSC_MAINCK_XTAL,      //!< External crystal oscillator.
+	PLL_SRC_MAINCK_BYPASS       = OSC_MAINCK_BYPASS,    //!< External bypass oscillator.
+	PLL_NR_SOURCES,                                     //!< Number of PLL sources.
 };
 
 struct pll_config {
@@ -101,9 +101,9 @@ struct pll_config {
 #ifdef CONFIG_PLL1_DIV
 # undef CONFIG_PLL1_DIV
 #endif
-#define CONFIG_PLL1_SOURCE	PLL_SRC_MAINCK_XTAL
-#define CONFIG_PLL1_MUL 	0
-#define CONFIG_PLL1_DIV 	0
+#define CONFIG_PLL1_SOURCE  PLL_SRC_MAINCK_XTAL
+#define CONFIG_PLL1_MUL     0
+#define CONFIG_PLL1_DIV     0
 
 /**
  * \note The SAM3X PLL hardware interprets mul as mul+1. For readability the hardware mul+1
@@ -123,11 +123,11 @@ static inline void pll_config_init(struct pll_config *p_cfg,
 		vco_hz = osc_get_rate(e_src) / ul_div;
 		Assert(vco_hz >= PLL_INPUT_MIN_HZ);
 		Assert(vco_hz <= PLL_INPUT_MAX_HZ);
-		
+
 		vco_hz *= ul_mul;
 		Assert(vco_hz >= PLL_OUTPUT_MIN_HZ);
 		Assert(vco_hz <= PLL_OUTPUT_MAX_HZ);
-	
+
 		/* PMC hardware will automatically make it mul+1 */
 		p_cfg->ctrl = CKGR_PLLAR_MULA(ul_mul - 1) | CKGR_PLLAR_DIVA(ul_div) | CKGR_PLLAR_PLLACOUNT(PLL_COUNT);
 	}
@@ -143,16 +143,17 @@ static inline void pll_config_read(struct pll_config *p_cfg, uint32_t ul_pll_id)
 {
 	Assert(ul_pll_id < NR_PLLS);
 
-	if (ul_pll_id == PLLA_ID)
+	if (ul_pll_id == PLLA_ID) {
 		p_cfg->ctrl = PMC->CKGR_PLLAR;
-	else
+	} else {
 		p_cfg->ctrl = PMC->CKGR_UCKR;
+	}
 }
 
 static inline void pll_config_write(const struct pll_config *p_cfg, uint32_t ul_pll_id)
 {
 	Assert(ul_pll_id < NR_PLLS);
-	
+
 	if (ul_pll_id == PLLA_ID) {
 		pmc_disable_pllack(); // Always stop PLL first!
 		PMC->CKGR_PLLAR = CKGR_PLLAR_ONE | p_cfg->ctrl;
@@ -164,7 +165,7 @@ static inline void pll_config_write(const struct pll_config *p_cfg, uint32_t ul_
 static inline void pll_enable(const struct pll_config *p_cfg, uint32_t ul_pll_id)
 {
 	Assert(ul_pll_id < NR_PLLS);
-	
+
 	if (ul_pll_id == PLLA_ID) {
 		pmc_disable_pllack(); // Always stop PLL first!
 		PMC->CKGR_PLLAR = CKGR_PLLAR_ONE | p_cfg->ctrl;
@@ -173,27 +174,29 @@ static inline void pll_enable(const struct pll_config *p_cfg, uint32_t ul_pll_id
 	}
 }
 
-/** 
+/**
  * \note This will only disable the selected PLL, not the underlying oscillator (mainck).
  */
 static inline void pll_disable(uint32_t ul_pll_id)
 {
 	Assert(ul_pll_id < NR_PLLS);
 
-	if (ul_pll_id == PLLA_ID)
+	if (ul_pll_id == PLLA_ID) {
 		pmc_disable_pllack();
-	else
+	} else {
 		PMC->CKGR_UCKR &= ~CKGR_UCKR_UPLLEN;
+	}
 }
 
 static inline uint32_t pll_is_locked(uint32_t ul_pll_id)
 {
 	Assert(ul_pll_id < NR_PLLS);
-	
-	if (ul_pll_id == PLLA_ID)
+
+	if (ul_pll_id == PLLA_ID) {
 		return pmc_is_locked_pllack();
-	else
+	} else {
 		return pmc_is_locked_upll();
+	}
 }
 
 static inline void pll_enable_source(enum pll_source e_src)

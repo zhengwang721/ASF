@@ -3,7 +3,7 @@
  *
  * \brief Peripheral DMA Controller (PDC) driver for SAM.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -56,9 +56,9 @@ extern "C" {
  *
  * \par Purpose
  *
- * The Peripheral DMA Controller (PDC) transfers data between on-chip serial 
- * peripherals and the on- and/or off-chip memories. The link between the PDC and 
- * a serial peripheral is operated by the AHB to ABP bridge.
+ * The Peripheral DMA Controller (PDC) transfers data between on-chip serial
+ * peripherals and the on- and/or off-chip memories. The link between the PDC
+ * and a serial peripheral is operated by the AHB to ABP bridge.
  *
  * @{
  */
@@ -67,9 +67,9 @@ extern "C" {
  * \brief Configure PDC for data transmit.
  *
  * \param p_pdc Pointer to a PDC instance.
- * \param p_packet Pointer to packet information for current buffer register 
+ * \param p_packet Pointer to packet information for current buffer register
  * set, NULL to let them as is.
- * \param p_next_packet Pointer to packet information for next buffer register 
+ * \param p_next_packet Pointer to packet information for next buffer register
  * set, NULL to let them as is.
  */
 void pdc_tx_init(Pdc *p_pdc, pdc_packet_t *p_packet,
@@ -89,9 +89,9 @@ void pdc_tx_init(Pdc *p_pdc, pdc_packet_t *p_packet,
  * \brief Configure PDC for data receive.
  *
  * \param p_pdc Pointer to a PDC instance.
- * \param p_packet Pointer to packet information for current buffer register 
+ * \param p_packet Pointer to packet information for current buffer register
  * set, NULL to let them as is.
- * \param p_next_packet Pointer to packet information for next buffer register 
+ * \param p_next_packet Pointer to packet information for next buffer register
  * set, NULL to let them as is.
  */
 void pdc_rx_init(Pdc *p_pdc, pdc_packet_t *p_packet,
@@ -121,11 +121,11 @@ void pdc_rx_clear_cnt(Pdc *p_pdc)
 /**
  * \brief Enable PDC transfers (TX and/or RX).
  *
- * \note It is forbidden to set both TXTEN and RXTEN for a half duplex 
+ * \note It is forbidden to set both TXTEN and RXTEN for a half duplex
  * peripheral.
  *
  * \param p_pdc Pointer to a PDC instance.
- * \param ul_controls Transfer directions. 
+ * \param ul_controls Transfer directions.
  * (bit PERIPH_PTCR_RXTEN and bit PERIPH_PTCR_TXTEN)
  */
 void pdc_enable_transfer(Pdc *p_pdc, uint32_t ul_controls)
@@ -138,7 +138,7 @@ void pdc_enable_transfer(Pdc *p_pdc, uint32_t ul_controls)
  * \brief Disable PDC transfers (TX and/or RX)
  *
  * \param p_pdc Pointer to a PDC instance.
- * \param ul_controls Transfer directions. 
+ * \param ul_controls Transfer directions.
  * (bit PERIPH_PTCR_TXTDIS, bit PERIPH_PTCR_TXTDIS)
  */
 void pdc_disable_transfer(Pdc *p_pdc, uint32_t ul_controls)
@@ -163,7 +163,7 @@ uint32_t pdc_read_status(Pdc *p_pdc)
  * \brief Return Receive Pointer Register (RPR) value.
  *
  * \param p_pdc Pointer to a PDC instance.
- * 
+ *
  * \return Receive Pointer Register value.
  */
 uint32_t pdc_read_rx_ptr(Pdc *p_pdc)

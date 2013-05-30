@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="USB Device HID Mouse for UC3-A3 Xplained" id="common.components.touch.mxt.example_hid.uc3_a3_xplained">
+	<project caption="USB Device example using the mXT143E Xplained kit as mouse" id="common.components.touch.mxt.example_hid.uc3_a3_xplained">
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clock.h"/>
 		<build type="header-file" value="conf_sleepmgr.h"/>

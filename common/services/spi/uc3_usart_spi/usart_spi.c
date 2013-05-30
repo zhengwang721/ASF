@@ -3,7 +3,7 @@
  *
  * \brief UC3 USART in SPI mode driver functions.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -109,9 +109,9 @@ void usart_spi_setup_device(volatile avr32_usart_t *p_usart,
 {
 	usart_spi_options_t opt;
 
-	/* Remove warnings. */
-	device = device;
-	sel_id = sel_id;
+	/* avoid Cppcheck Warning */
+	UNUSED(device);
+	UNUSED(sel_id);
 	
 	/* Basic usart SPI configuration. */
 	opt.baudrate = baud_rate;
@@ -218,8 +218,8 @@ uint32_t usart_spi_read_packet(volatile avr32_usart_t *p_usart, uint8_t *data,
 void usart_spi_select_device(volatile avr32_usart_t *p_usart, 
 	struct usart_spi_device *device)
 {
-	/* Remove the warning. */
-	device = device;
+	/* avoid Cppcheck Warning */
+	UNUSED(device);
 
 	usart_spi_selectChip(p_usart);
 }
@@ -233,8 +233,8 @@ void usart_spi_select_device(volatile avr32_usart_t *p_usart,
 void usart_spi_deselect_device(volatile avr32_usart_t *p_usart, 
 	struct usart_spi_device *device)
 {
-	/* Remove the warning. */
-	device = device;
+	/* avoid Cppcheck Warning */
+	UNUSED(device);
 
 	usart_spi_unselectChip(p_usart);
 }

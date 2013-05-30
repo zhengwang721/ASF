@@ -88,7 +88,7 @@
  * USB Device Callbacks definitions (Optional)
  * @{
  */
-#define  UDC_VBUS_EVENT(b_vbus_high)   main_usb_device_vbus_action(b_vbus_high)
+#define  UDC_VBUS_EVENT(b_vbus_high)
 #define  UDC_SOF_EVENT()               ui_device_sof_action()
 #define  UDC_SUSPEND_EVENT()           ui_device_suspend_action()
 #define  UDC_RESUME_EVENT()            ui_device_resume_action()
@@ -129,5 +129,4 @@
 //! The includes of classes and other headers must be done
 //! at the end of this file to avoid compile error.
 #include "udi_hid_mouse_conf.h"
-#include "main.h"
 #include "ui.h"

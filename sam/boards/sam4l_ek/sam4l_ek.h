@@ -8,7 +8,7 @@
  *
  * To use this board define BOARD=SAM4L_EK.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -80,7 +80,7 @@
 //@{
 #define BOARD_OSC32_IS_XTAL         true
 #define BOARD_OSC32_HZ              FOSC32
-#define BOARD_OSC32_STARTUP_US      (71000)
+#define BOARD_OSC32_STARTUP_US      (1100000)
 #define BOARD_OSC32_SELCURR         BSCIF_OSCCTRL32_SELCURR(10)
 #define BOARD_OSC0_IS_XTAL          true
 #define BOARD_OSC0_HZ               FOSC0
@@ -116,13 +116,13 @@
  */
 //@{
 #if defined(SAM4L_EK_REV1)
-#define LCD_BL                          PA02
-#define LCD_BL_GPIO                     PIN_PA02
-#define LCD_BL_GPIO_MASK                GPIO_PA02
+#  define LCD_BL                        PA02
+#  define LCD_BL_GPIO                   PIN_PA02
+#  define LCD_BL_GPIO_MASK              GPIO_PA02
 #else
-#define LCD_BL                          PC14
-#define LCD_BL_GPIO                     PIN_PC14
-#define LCD_BL_GPIO_MASK                GPIO_PC14
+#  define LCD_BL                        PC14
+#  define LCD_BL_GPIO                   PIN_PC14
+#  define LCD_BL_GPIO_MASK              GPIO_PC14
 #endif
 #define LCD_BL_ACTIVE_LEVEL             IOPORT_PIN_LEVEL_HIGH
 #define LCD_BL_INACTIVE_LEVEL           IOPORT_PIN_LEVEL_LOW
@@ -145,7 +145,7 @@
 #define GPIO_PUSH_BUTTON_EIC_PIN_MUX    MUX_PC03B_EIC_EXTINT5
 #define GPIO_PUSH_BUTTON_EIC_LINE       5
 
-#define GPIO_UNIT_TEST_EIC_PIN              PIN_PA06C_EIC_EXTINT1
+#define GPIO_UNIT_TEST_EIC_PIN        PIN_PA06C_EIC_EXTINT1
 #define GPIO_UNIT_TEST_EIC_PIN_MASK   GPIO_PA06C_EIC_EXTINT1
 #define GPIO_UNIT_TEST_EIC_PIN_MUX    MUX_PA06C_EIC_EXTINT1
 #define GPIO_UNIT_TEST_EIC_LINE       1
@@ -187,20 +187,42 @@
  */
 //! @{
 #if defined(SAM4L_EK_REV1)
-#define GPIO_VBUS_INPUT                 PIN_PC14
-#define GPIO_VBUS_INPUT_MASK            GPIO_PC14
-#else
-#define GPIO_VBUS_INPUT                 PIN_PA06
-#define GPIO_VBUS_INPUT_MASK            GPIO_PA06
+#define USB_VBUS_FLAGS           IOPORT_MODE_GLITCH_FILTER
+#define USB_VBUS_PIN             PIN_PC14  /* As IO pin input */
+/* No EIC for VBus pin */
+#elif 0 // The Vbus monitoring can not be used on SAM4L_EK Rev. 2
+#define USB_VBUS_FLAGS           IOPORT_MODE_GLITCH_FILTER
+#define USB_VBUS_EIC             PIN_PA06C_EIC_EXTINT1 /* As EIC input */
+#define USB_VBUS_EIC_MUX         IOPORT_MODE_MUX_C
+#define USB_VBUS_EIC_LINE        1
+#define USB_VBUS_EIC_IRQn        EIC_1_IRQn
 #endif
 //! @}
 
 /*! \name GPIO Connections of SAM4L4C VBUS Power Control
  */
 //! @{
-#define VBOF_GPIO                       PIN_PC08
-#define VBOF_GPIO_MASK                  GPIO_PC08
+#define USB_VBOF_PIN            PIN_PC08 /* As IO pin output */
+#define USB_VBOF_ACTIVE_LEVEL   0
+#define USB_VBOF_INACTIVE_LEVEL 1
 //! @}
+
+/*! \name GPIO Connections of SAM4L4C VBUS error detecting
+ */
+//! @{
+#define USB_VBERR_FLAGS          IOPORT_MODE_PULLUP | IOPORT_MODE_GLITCH_FILTER
+#define USB_VBERR_PIN            PIN_PC07 /* As IO pin input */
+/* No EIC for VBErr pin */
+//! @}
+
+/*! \name GPIO Connections of SAM4L4C ID detecting
+ */
+//! @{
+#define USB_ID_FLAGS             IOPORT_MODE_PULLUP | IOPORT_MODE_GLITCH_FILTER
+#define USB_ID_PIN               PIN_PB05 /* As IO pin input */
+/* No EIC for ID pin */
+//! @}
+
 
 //! \name USART connections to GPIO for Virtual Com Port
 // @{
@@ -242,6 +264,26 @@
 #define RS485_USART_CTS_PIN            PIN_PC08E_USART2_CTS
 #define RS485_USART_CTS_GPIO           GPIO_PC08E_USART2_CTS
 #define RS485_USART_CTS_MUX            MUX_PC08E_USART2_CTS
+// @}
+
+//! \name TWIMS1 pins
+// @{
+#define TWIMS1_TWI_SDA_PIN   PIN_PB00A_TWIMS1_TWD
+#define TWIMS1_TWI_SDA_GPIO  GPIO_PB00A_TWIMS1_TWD
+#define TWIMS1_TWI_SDA_MUX   MUX_PB00A_TWIMS1_TWD
+#define TWIMS1_TWI_SCL_PIN   PIN_PB01A_TWIMS1_TWCK
+#define TWIMS1_TWI_SCL_GPIO  GPIO_PB01A_TWIMS1_TWCK
+#define TWIMS1_TWI_SCL_MUX   MUX_PB01A_TWIMS1_TWCK
+// @}
+
+//! \name USART0 pins
+// @{
+#define USART0_RX_PIN   PIN_PC02C_USART0_RXD
+#define USART0_RX_MUX   MUX_PC02C_USART0_RXD
+#define USART0_RX_GPIO  GPIO_PC02C_USART0_RXD
+#define USART0_TX_PIN   PIN_PA07B_USART0_TXD
+#define USART0_TX_MUX   MUX_PA07B_USART0_TXD
+#define USART0_TX_GPIO  GPIO_PA07B_USART0_TXD
 // @}
 
 //! \name DACC pins

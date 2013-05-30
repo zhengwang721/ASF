@@ -44,8 +44,4 @@
 #ifndef _MAIN_H_
 #define _MAIN_H_
 
-/*! \brief Called when Vbus line state change
- */
-void main_vbus_action(bool b_high);
-
 #endif // _MAIN_H_

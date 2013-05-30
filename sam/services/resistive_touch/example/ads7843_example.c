@@ -96,6 +96,7 @@
 #include "stdio_serial.h"
 #include "conf_board.h"
 #include "resistive_touch_board.h"
+#include "rtouch_calibrate.h"
 
 /** IRQ priority for PIO (The lower the value, the greater the priority) */
 #define IRQ_PRIOR_PIO    0
@@ -188,15 +189,19 @@ int main(void)
 		while (1);
 	}
 
-	lcd_init();
+	/* Switch off backlight */
+	aat31xx_disable_backlight();
 
-	aat31xx_set_backlight(AAT31XX_MAX_BACKLIGHT_LEVEL);
+	lcd_init();
 
 	lcd_set_foreground_color(UNI_COLOR_WHITE);
 	lcd_draw_filled_rectangle(0, 0, LCD_WIDTH, LCD_HEIGHT);
 
 	/* Turn on LCD */
 	lcd_display_on();
+
+	/* Switch on backlight */
+	aat31xx_set_backlight(AAT31XX_MAX_BACKLIGHT_LEVEL);
 
 	/* Initializes the PIO interrupt management for touchscreen driver */
 	pio_handler_set_priority(PIOA, PIOA_IRQn, IRQ_PRIOR_PIO);

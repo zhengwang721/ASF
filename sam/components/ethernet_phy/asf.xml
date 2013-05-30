@@ -5,6 +5,7 @@
 		</info>
 		<build type="header-file" value="documentation.h"/>
 		<device-support value="sam3x"/>
+		<device-support value="sam4e"/>
 		<info type="gui-flag" value="hidden"/>
 		<generator value="doxygen-module" default-mcu="unspecified-sam3x"/>
 	</module>

@@ -3,7 +3,7 @@
  *
  * \brief mXT143E Xplained multi-touch demo application
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -169,13 +169,12 @@ static void get_finger_display_coordinates(const struct mxt_touch_event *touch_e
 	/* Display X-coordinate: rescale from 4k touch Y-coordinate to the
 	 * display's width
 	 */
-	finger_data->x = ((uint32_t)touch_event->y * gfx_get_width()) / 4096;
+	finger_data->x = ((uint32_t)(4096 - touch_event->x) * gfx_get_width()) / 4096;
 
 	/* Display Y-coordinate: rescale from 4k touch X-coordinate to the
 	 * display's height, and flip to get the right direction
 	 */
-	finger_data->y = gfx_get_height() - (((uint32_t)touch_event->x *
-			gfx_get_height()) / 4096);
+	finger_data->y = ((uint32_t)(4096 - touch_event->y) * gfx_get_height()) / 4096;
 
 	/* Save the scaled size of the touch */
 	finger_data->size = (touch_event->size * 4);

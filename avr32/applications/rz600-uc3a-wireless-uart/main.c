@@ -248,17 +248,6 @@ static void usb_task(void)
 	}
 }
 
-void main_vbus_action(bool b_high)
-{
-	if (b_high) {
-		/* Attach USB Device */
-		udc_attach();
-	} else {
-		/* VBUS not present */
-		udc_detach();
-	}
-}
-
 bool main_cdc_enable(void)
 {
 	/* Indication to application when CDC is enabled successfully */

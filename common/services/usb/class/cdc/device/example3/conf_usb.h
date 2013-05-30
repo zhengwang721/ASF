@@ -3,7 +3,7 @@
  *
  * \brief USB configuration file for CDC application
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -88,7 +88,7 @@
  * USB Device Callbacks definitions (Optional)
  * @{
  */
-#define  UDC_VBUS_EVENT(b_vbus_high)      main_vbus_action(b_vbus_high)
+#define  UDC_VBUS_EVENT(b_vbus_high)
 #define  UDC_SOF_EVENT()                  main_sof_action()
 #define  UDC_SUSPEND_EVENT()              main_suspend_action()
 #define  UDC_RESUME_EVENT()               main_resume_action()
@@ -121,6 +121,7 @@
 #define  UDI_CDC_ENABLE_EXT(port)         main_cdc_enable(port)
 #define  UDI_CDC_DISABLE_EXT(port)        main_cdc_disable(port)
 #define  UDI_CDC_RX_NOTIFY(port)          ui_com_rx_notify(port)
+#define  UDI_CDC_TX_EMPTY_NOTIFY(port)
 #define  UDI_CDC_SET_CODING_EXT(port,cfg)
 #define  UDI_CDC_SET_DTR_EXT(port,set)    main_cdc_set_dtr(port,set)
 #define  UDI_CDC_SET_RTS_EXT(port,set)

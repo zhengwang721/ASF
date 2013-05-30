@@ -44,9 +44,4 @@
 #ifndef _MAIN_H_
 #define _MAIN_H_
 
-/*! \brief Attach or detach USB device following Vbus present
- * Used in USB device mode and called when Vbus line state change
- */
-void main_usb_device_vbus_action(bool b_high);
-
 #endif // _MAIN_H_

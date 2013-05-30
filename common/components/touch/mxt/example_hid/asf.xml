@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
-	<module type="application" id="common.components.touch.mxt.example_hid" caption="USB HID example using the mXT143E Xplained kit as mouse">
+	<module type="application" id="common.components.touch.mxt.example_hid" caption="USB Device example using the mXT143E Xplained kit as mouse">
 		<info type="description" value="summary">
-		Provide an application example of USB Device HID Mouse implementation. Relies on the native HID driver and uses buttons available on the board as a mouse interfaces.
+		Implements a USB Device HID Mouse using the mXT143E Xplained top module as a touch-enabled trackpad. Relies on the native HID driver and uses buttons available on the board as a mouse interfaces.
 		</info>
 		<build type="header-file" value="conf_usb.h"/>
 		<build type="header-file" value="conf_sysfont.h"/>
@@ -23,9 +23,9 @@
 			<keyword value="Communication"/>
 			<keyword value="Touch"/>
 		</info>
-		<device-support value="xmegaau"/>
-		<device-support value="uc3a3_a4"/>
-		<device-support value="sam4s"/>
+		<device-support value="xmega"/>
+		<device-support value="uc3"/>
+		<device-support value="sam"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>
-

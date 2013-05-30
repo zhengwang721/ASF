@@ -196,61 +196,6 @@ extern bool at45dbx_write_byte(uint8_t b);
 //! @}
 
 
-/*! \name Multiple-Sector Access Functions
- */
-//! @{
-
-/*! \brief Reads \a nb_sector sectors from DataFlash memory.
- *
- * Data flow is: DataFlash -> callback.
- *
- * \param nb_sector Number of contiguous sectors to read.
- *
- * \retval true Success.
- * \retval false Failure.
- *
- * \note First call must be preceded by a call to the \ref at45dbx_read_sector_open
- *       function.
- *
- * \note As \ref AT45DBX_PAGE_SIZE is always a multiple of
- *       \ref AT45DBX_SECTOR_SIZE, there is no need to check page end for each
- *       byte.
- */
-extern bool at45dbx_read_multiple_sector(uint16_t nb_sector);
-
-/*! \brief Callback function invoked after each sector read during
- *         \ref at45dbx_read_multiple_sector.
- *
- * \param psector Pointer to read sector.
- */
-extern void at45dbx_read_multiple_sector_callback(const void *psector);
-
-/*! \brief Writes \a nb_sector sectors to DataFlash memory.
- *
- * Data flow is: callback -> DataFlash.
- *
- * \param nb_sector Number of contiguous sectors to write.
- *
- * \retval true Success.
- * \retval false Failure.
- *
- * \note First call must be preceded by a call to the \ref at45dbx_write_sector_open
- *       function.
- *
- * \note As \ref AT45DBX_PAGE_SIZE is always a multiple of
- *       \ref AT45DBX_SECTOR_SIZE, there is no need to check page end for each
- *       byte.
- */
-extern bool at45dbx_write_multiple_sector(uint16_t nb_sector);
-
-/*! \brief Callback function invoked before each sector write during
- *         \ref at45dbx_write_multiple_sector.
- *
- * \param psector Pointer to sector to write.
- */
-extern void at45dbx_write_multiple_sector_callback(void *psector);
-
-//! @}
 
 
 /*! \name Single-Sector Access Functions

@@ -11,11 +11,13 @@
 		<build type="module-config" subtype="required-header-file" value="conf_example.h"/>
 		<device-support value="xmegaa"/>
 		<device-support value="xmegaau"/>
+		<device-support value="xmegac"/>
 		<device-support value="xmegad"/>
 		<device-support value="xmegae"/>
 		<require idref="common.services.basic.gpio"/>
 		<require idref="common.boards"/>
 		<require idref="xmega.drivers.pmic"/>
 		<require idref="xmega.drivers.rtc"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

@@ -56,13 +56,16 @@ extern "C" {
 
 /*! \brief Option list for UART peripheral initialization */
 typedef struct sam_uart_opt {
-	//! MCK for UART
+	/** MCK for UART */
 	uint32_t ul_mck;
-	//! Expected baud rate
+	/** Expected baud rate */
 	uint32_t ul_baudrate;
-	//! Initialize value for UART mode register
+	/** Initialize value for UART mode register */
 	uint32_t ul_mode;
-	//! Configure channel mode (Normal, Automatic, Local_loopback or Remote_loopback)
+	/**
+	 * Configure channel mode (Normal, Automatic, Local_loopback or 
+	 * Remote_loopback)
+	 */
 	uint32_t ul_chmode;
 } sam_uart_opt_t;
 

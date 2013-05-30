@@ -3,7 +3,7 @@
  *
  * \brief User Interface
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -262,12 +262,15 @@ void ui_stop_write(void)
 
 void ui_kbd_led(uint8_t value)
 {
+	UNUSED(value);
+	/*
 	if (value & HID_LED_NUM_LOCK) {
 	} else {
 	}
 	if (value & HID_LED_CAPS_LOCK) {
 	} else {
 	}
+	*/
 }
 
 

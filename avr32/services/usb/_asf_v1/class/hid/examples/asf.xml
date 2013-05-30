@@ -10,6 +10,7 @@
 		<device-support value="uc3a3"/>
 		<device-support value="uc3b"/>
 		<require idref="avr32.services.usb.hid.example.main"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 	<module type="meta" id="avr32.services.usb.hid.example.main" caption="Main module for examples">
 		<build type="c-source" value="hid_example.c"/>
@@ -28,10 +29,8 @@
 		<build type="include-path" value="./enum/"/>
 		<build type="include-path" value="./enum/device/"/>
 		<build type="doxygen-image-path" value="docsrc"/>
-
-		<build type="c-source"  value="../../../../../../../thirdparty/freertos/freertos-7.0.0/source/portable/iar/avr32_uc3/read.c" toolchain="iarew32"/>
-		<build type="c-source"  value="../../../../../../../thirdparty/freertos/freertos-7.0.0/source/portable/iar/avr32_uc3/write.c" toolchain="iarew32"/>
-
+		<build type="c-source" value="../../../../../../../thirdparty/freertos/freertos-7.0.0/source/portable/iar/avr32_uc3/read.c" toolchain="iarew32"/>
+		<build type="c-source" value="../../../../../../../thirdparty/freertos/freertos-7.0.0/source/portable/iar/avr32_uc3/write.c" toolchain="iarew32"/>
 		<require idref="avr32.services.usb._asf_v1.class.hid.host_hid"/>
 		<require idref="avr32.services.usb._asf_v1.class.hid"/>
 		<require idref="avr32.drivers.usbb._asf_v1.enum.device"/>
@@ -49,7 +48,6 @@
 		<device-support value="uc3a"/>
 		<device-support value="uc3a3"/>
 		<device-support value="uc3b"/>
-
 		<build type="distribute" subtype="directory" value="./docsrc"/>
 		<build type="distribute" subtype="file" value="./docsrc/appli_evk1100_device.jpg"/>
 		<build type="distribute" subtype="file" value="./docsrc/appli_evk1100_host.jpg"/>
@@ -59,5 +57,6 @@
 		<build type="distribute" subtype="file" value="./docsrc/host_keyboard_hid_task.c"/>
 		<build type="distribute" subtype="file" value="./docsrc/host_keyboard_hid_task.h"/>
 		<build type="distribute" subtype="file" value="./docsrc/terminal.jpg"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

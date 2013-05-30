@@ -10,5 +10,6 @@
 		<require idref="avr32.drivers.intc"/>
 		<require idref="avr32.drivers.pm"/>
 		<require idref="avr32.drivers.ssc.i2s"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

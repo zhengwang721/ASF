@@ -7,6 +7,7 @@
 		<build type="header-file" value="conf_uart_serial.h"/>
 		<require idref="common.services.freertos.sam_example"/>
 		<require idref="board.sam3x_ek"/>
+		<config name="config.board.sam3x_ek.led" value="yes"/>
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>

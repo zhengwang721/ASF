@@ -3,8 +3,10 @@
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clock.h"/>
+		<build type="header-file" value="conf_sleepmgr.h"/>
 		<build type="header-file" value="conf_test.h"/>
 		<build type="header-file" value="conf_uart_serial.h"/>
+		<build type="header-file" value="conf_ast.h"/>
 		<require idref="sam.drivers.bpm.unit_tests"/>
 		<require idref="board.sam4l_ek"/>
 		<generator value="iarewarm"/>

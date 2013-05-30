@@ -174,6 +174,11 @@
  */
 
 #include <asf.h>
+#include "oven.h"
+#include "oven_controller.h"
+#include "oven_plant.h"
+#include "oven_ui.h"
+#include "oven_classb.h"
 
 /* Class B includes */
 #include <error_handler.h>

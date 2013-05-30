@@ -12,7 +12,6 @@
 		<build type="doxygen-entry-point" value="sam_drivers_usart_group"/>
 		<build type="doxygen-quick-start" value="sam_usart_quickstart"/>
 		<device-support value="sam"/>
-		<require idref="sam.utils"/>
 		<generator value="doxygen-module" default-mcu="unspecified-sam3s"/>
 	</module>
 </asf>

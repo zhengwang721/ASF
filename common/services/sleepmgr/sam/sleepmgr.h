@@ -3,7 +3,7 @@
  *
  * \brief SAM3/SAM4 Sleep manager implementation.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -99,6 +99,7 @@ static inline void sleepmgr_sleep(const enum sleepmgr_mode sleep_mode)
 	// Atomically enable the global interrupts and enter the sleep mode.
 	pmc_sleep(sleep_mode);
 #else
+	UNUSED(sleep_mode);
 	cpu_irq_enable();
 #endif /* CONFIG_SLEEPMGR_ENABLE */
 

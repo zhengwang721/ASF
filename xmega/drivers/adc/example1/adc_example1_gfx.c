@@ -3,7 +3,7 @@
  *
  * \brief AVR XMEGA Analog to Digital Converter Driver Example 1
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -49,7 +49,7 @@
  * measurement with the internal sensor.
  *
  * \section files Main files:
- * - adc_example1.c: ADC driver example application
+ * - adc_example1_gfx.c: ADC driver example application
  * - conf_adc.h: configuration of the ADC driver
  * - conf_example.h: configuration of the example
  *
@@ -130,9 +130,10 @@ int main(void)
 
 	board_init();
 	sysclk_init();
-	pmic_init();
-	gfx_mono_init();
+	sleepmgr_init();
+	irq_initialize_vectors();
 	cpu_irq_enable();
+	gfx_mono_init();
 
 	// Enable back light of display
 	ioport_set_pin_high(LCD_BACKLIGHT_ENABLE_PIN);

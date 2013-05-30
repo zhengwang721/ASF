@@ -3,7 +3,7 @@
  *
  * \brief ARM functions for busy-wait delay loops
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,14 +44,12 @@
 #include "cycle_counter.h"
 
 // Delay loop is put to SRAM so that FWS will not affect delay time
-#if (defined __GNUC__)
-__attribute__((optimize(s), section(".ramfunc")))
-#elif (defined __ICCARM__)
-_Pragma("optimize=high")
-__ramfunc
-#endif
+OPTIMIZE_HIGH
+RAMFUNC
 void portable_delay_cycles(unsigned long n)
 {
+	UNUSED(n);
+
 	__asm (
 		"loop: DMB	\n"
 		"SUBS R0, R0, #1  \n"

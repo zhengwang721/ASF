@@ -50,6 +50,8 @@
 # include "xmega_reset_cause.h"
 #elif UC3
 # include "avr32_reset_cause.h"
+#elif SAM4L
+# include "sam4l_reset_cause.h"
 #else
 # error Unsupported chip type
 #endif
@@ -70,7 +72,7 @@
  * to enable the clock to the debug system, for devices doing software reset
  * through the on-chip debug system. This applies only to the 32-bit AVR
  * devices.
- * 
+ *
  * \section Quick start guide
  * See \ref reset_cause_quickstart
  *
@@ -115,6 +117,10 @@
 //! Power-on-reset reset cause not available on this chip.
 # define CHIP_RESET_CAUSE_POR           0
 #endif
+#ifndef CHIP_RESET_CAUSE_POR_IO
+//! Power-on-reset on I/O power domain reset cause not available on this chip.
+# define CHIP_RESET_CAUSE_POR_IO           0
+#endif
 #ifndef CHIP_RESET_CAUSE_SLEEP
 //! Wake from Shutdown sleep mode reset cause not available on this chip.
 # define CHIP_RESET_CAUSE_SLEEP         0
@@ -150,6 +156,8 @@ enum reset_cause {
 	RESET_CAUSE_OCD         = CHIP_RESET_CAUSE_OCD,
 	/** \brief Power-on-reset reset cause */
 	RESET_CAUSE_POR         = CHIP_RESET_CAUSE_POR,
+	/** \brief Power-on-reset reset cause */
+	RESET_CAUSE_POR_IO         = CHIP_RESET_CAUSE_POR_IO,
 	/** \brief Wake from Shutdown sleep mode reset cause */
 	RESET_CAUSE_SLEEP       = CHIP_RESET_CAUSE_SLEEP,
 	/** \brief Software reset reset cause */
@@ -275,6 +283,16 @@ static inline bool reset_cause_is_ocd(void)
 static inline bool reset_cause_is_power_on_reset(void)
 {
 	return (reset_cause_get_causes() & RESET_CAUSE_POR);
+}
+
+/**
+ * \brief Check if chip reset was caused by an I/O power-on-reset
+ *
+ * \return True if reset was caused by a power-on-reset
+ */
+static inline bool reset_cause_is_io_power_on_reset(void)
+{
+	return (reset_cause_get_causes() & RESET_CAUSE_POR_IO);
 }
 
 /**

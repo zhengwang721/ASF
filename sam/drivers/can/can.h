@@ -3,7 +3,7 @@
  *
  * \brief Controller Area Network (CAN) driver module for SAM.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -80,28 +80,38 @@ extern "C" {
 #define CAN_MB_PRODUCER_MODE          5
 
 /** Define CAN mailbox transfer status code. */
-#define CAN_MAILBOX_TRANSFER_OK       0     //! Read from or write into mailbox successfully.  
-#define CAN_MAILBOX_NOT_READY         0x01  //! Receiver is empty or transmitter is busy.
-#define CAN_MAILBOX_RX_OVER           0x02  //! Message overwriting happens or there're messages lost in different receive modes.
-#define CAN_MAILBOX_RX_NEED_RD_AGAIN  0x04  //! Application needs to re-read the data register in Receive with Overwrite mode.
+#define CAN_MAILBOX_TRANSFER_OK       0     /**< Read from or write into mailbox
+	                                           successfully. */
+#define CAN_MAILBOX_NOT_READY         0x01  /**< Receiver is empty or
+	                                           transmitter is busy. */
+#define CAN_MAILBOX_RX_OVER           0x02  /**< Message overwriting happens or
+	                                           there're messages lost in
+	                                           different receive modes. */
+#define CAN_MAILBOX_RX_NEED_RD_AGAIN  0x04  /**< Application needs to re-read
+	                                           the data register in Receive with
+	                                           Overwrite mode. */
 
 /** Define the struct for CAN message mailbox. */
 typedef struct {
 	uint32_t ul_mb_idx;
-	uint8_t uc_obj_type;  //! Mailbox object type, one of the six different objects.
-	uint8_t uc_id_ver;    //! 0 stands for standard frame, 1 stands for extended frame.
-	uint8_t uc_length;    //! Received data length or transmitted data length.
-	uint8_t uc_tx_prio;   //! Mailbox priority, no effect in receive mode.
-	uint32_t ul_status;   //! Mailbox status register value.
-	uint32_t ul_id_msk;   //! No effect in transmit mode.
-	uint32_t ul_id;       //! Received frame ID or the frame ID to be transmitted.
-	uint32_t ul_fid;      //! Family ID.
+	uint8_t uc_obj_type;  /**< Mailbox object type, one of the six different
+	                         objects. */
+	uint8_t uc_id_ver;    /**< 0 stands for standard frame, 1 stands for
+	                         extended frame. */
+	uint8_t uc_length;    /**< Received data length or transmitted data
+	                         length. */
+	uint8_t uc_tx_prio;   /**< Mailbox priority, no effect in receive mode. */
+	uint32_t ul_status;   /**< Mailbox status register value. */
+	uint32_t ul_id_msk;   /**< No effect in transmit mode. */
+	uint32_t ul_id;       /**< Received frame ID or the frame ID to be
+	                         transmitted. */
+	uint32_t ul_fid;      /**< Family ID. */
 	uint32_t ul_datal;
 	uint32_t ul_datah;
 } can_mb_conf_t;
 
 /**
- * \defgroup sam_driver_can_group Controller Area Network (CAN) Driver
+ * \defgroup sam_drivers_can_group Controller Area Network (CAN) Driver
  *
  * See \ref sam_can_quickstart.
  *
@@ -131,7 +141,11 @@ void can_disable_timer_freeze(Can *p_can);
 void can_enable_timer_freeze(Can *p_can);
 void can_disable_tx_repeat(Can *p_can);
 void can_enable_tx_repeat(Can *p_can);
+
+#if !(SAM4E)
 void can_set_rx_sync_stage(Can *p_can, uint32_t ul_stage);
+#endif
+
 void can_enable_interrupt(Can *p_can, uint32_t dw_mask);
 void can_disable_interrupt(Can *p_can, uint32_t dw_mask);
 uint32_t can_get_interrupt_mask(Can *p_can);
@@ -166,18 +180,19 @@ void can_reset_all_mailbox(Can *p_can);
 /**
  * \page sam_can_quickstart Quickstart guide for SAM CAN module.
  *
- * This is the quickstart guide for the \ref sam_drivers_can_group "SAM CAN module",
- * with step-by-step instructions on how to configure and use the drivers in a
- * selection of use cases.
+ * This is the quickstart guide for the \ref sam_drivers_can_group "SAM CAN
+ * module",with step-by-step instructions on how to configure and use the
+ * drivers in a selection of use cases.
  *
  * The use cases contain several code fragments. The code fragments in the
  * steps for setup can be copied into a custom initialization function, while
  * the steps for usage can be copied into, e.g., the main application function.
  *
  * \section can_basic_use_case Basic use case
- * In this basic use case, as CAN module needs to work in network, two CAN modules
- * need to be configured. CAN0 mailbox 0 is configured as transmitter, and CAN1 mailbox 0
- * is configured as receiver. The communication baudrate is 1Mbit/s.
+ * In this basic use case, as CAN module needs to work in network, two CAN
+ * modules need to be configured. CAN0 mailbox 0 is configured as transmitter,
+ * and CAN1 mailbox 0 is configured as receiver. The communication baudrate
+ * is 1Mbit/s.
  *
  * \section can_basic_use_case_setup Setup steps
  *
@@ -236,9 +251,10 @@ void can_reset_all_mailbox(Can *p_can);
  *    can_init(CAN0, ul_sysclk, CAN_BPS_1000K);
  *    can_init(CAN1, ul_sysclk, CAN_BPS_1000K);
  *   \endcode
- *   - \note The CAN transceiver should be configured before initializing the CAN module.
+ *   - \note The CAN transceiver should be configured before initializing the
+ *           CAN module.
  * -# Reset all CAN0 and CAN1 mailboxes:
- *   - \code 
+ *   - \code
  *    can_reset_all_mailbox(CAN0);
  *    can_reset_all_mailbox(CAN1);
  *   \endcode
@@ -294,17 +310,18 @@ void can_reset_all_mailbox(Can *p_can);
  *
  * \section can_use_cases Advanced use cases
  * For more advanced use of the CAN driver, see the following use cases:
- * - \subpage can_use_case_1 : Two CAN modules work in PRODUCER and CONSUMER mode
- * respectively, use CAN interrupt handler to check whether the communication has been
- * completed. 
+ * - \subpage can_use_case_1 : Two CAN modules work in PRODUCER and CONSUMER
+ *                             mode
+ * respectively, use CAN interrupt handler to check whether the communication
+ * has been completed.
  */
- 
+
 /**
  * \page can_use_case_1 Use case #1
  *
- * In this use case, CAN0 mailbox 0 works in PRODUCER mode, and CAN1 mailbox 0 
- * works in CONSUMER mode. While CAN1 mailbox 0 receives a data frame from the bus,
- * an interrupt is triggered.
+ * In this use case, CAN0 mailbox 0 works in PRODUCER mode, and CAN1 mailbox 0
+ * works in CONSUMER mode. While CAN1 mailbox 0 receives a data frame from the
+ * bus, an interrupt is triggered.
  *
  * \section can_use_case_1_setup Setup steps
  *
@@ -388,7 +405,8 @@ void can_reset_all_mailbox(Can *p_can);
  *        g_ul_recv_status = 1;
  *    }
  *   \endcode
- * -# In CAN1_Handler(), if mailbox 0 is ready, read the received data from CAN1 mailbox 0:
+ * -# In CAN1_Handler(), if mailbox 0 is ready, read the received data from CAN1
+ *    mailbox 0:
  *   - \code
  *    can1_mailbox.ul_mb_idx = 0;
  *    can1_mailbox.ul_status = ul_status;
@@ -406,9 +424,10 @@ void can_reset_all_mailbox(Can *p_can);
  *    can_init(CAN0, ul_sysclk, CAN_BPS_1000K);
  *    can_init(CAN1, ul_sysclk, CAN_BPS_1000K);
  *   \endcode
- *   - \note The CAN transceiver should be configured before initializing the CAN module.
+ *   - \note The CAN transceiver should be configured before initializing the
+ *           CAN module.
  * -# Reset all CAN0 and CAN1 mailboxes:
- *   - \code 
+ *   - \code
  *    can_reset_all_mailbox(CAN0);
  *    can_reset_all_mailbox(CAN1);
  *   \endcode
@@ -456,7 +475,8 @@ void can_reset_all_mailbox(Can *p_can);
  * \subsection can_use_case_1_usage_flow Workflow
  * -# Enable CAN0 mailbox 0 to receive remote frame and respond it:
  *   - \code can_global_send_transfer_cmd(CAN0, CAN_TCR_MB0); \endcode
- * -# Enable CAN1 mailbox 0 to send out a remote frame and then receive data frame from bus:
+ * -# Enable CAN1 mailbox 0 to send out a remote frame and then receive data
+ *    frame from bus:
  *   - \code can_global_send_transfer_cmd(CAN1, CAN_TCR_MB0); \endcode
  * -# Wait for the communication to be completed.
  *   - \code

@@ -102,21 +102,16 @@
 /** Swap 2 bytes of a word */
 #define SWAP16(x)   (((x & 0xff) << 8) | (x >> 8))
 
-#pragma pack(1)
-#if defined   ( __CC_ARM   ) /* Keil ¦ÌVision 4 */
-#elif defined ( __ICCARM__ ) /* IAR Ewarm 5.41+ */
-#define __attribute__(...)
-#elif defined (  __GNUC__  ) /* GCC CS3 2009q3-68 */
-#endif
-
 /** Ethernet header structure */
+COMPILER_PACK_SET(1)
 typedef struct ethernet_header {
 	uint8_t et_dest[6];  /**< Destination node */
 	uint8_t et_src[6];   /**< Source node */
 	uint16_t et_protlen; /**< Protocol or length */
-} __attribute__ ((packed)) ethernet_header_t, *p_ethernet_header_t; /* GCC */
+} ethernet_header_t, *p_ethernet_header_t;
 
 /** ARP header structure */
+COMPILER_PACK_SET(1)
 typedef struct arp_header {
 	uint16_t ar_hrd;   /**< Format of hardware address */
 	uint16_t ar_pro;   /**< Format of protocol address */
@@ -127,9 +122,10 @@ typedef struct arp_header {
 	uint8_t ar_spa[4]; /**< Sender protocol address */
 	uint8_t ar_tha[6]; /**< Target hardware address */
 	uint8_t ar_tpa[4]; /**< Target protocol address */
-} __attribute__ ((packed)) arp_header_t, *p_arp_header_t; /* GCC */
+} arp_header_t, *p_arp_header_t;
 
 /** IP Header structure */
+COMPILER_PACK_SET(1)
 typedef struct _IPheader {
 	uint8_t ip_hl_v;   /**< Header length and version */
 	uint8_t ip_tos;    /**< Type of service */
@@ -141,24 +137,26 @@ typedef struct _IPheader {
 	uint16_t ip_sum;   /**< Checksum */
 	uint8_t ip_src[4]; /**< Source IP address */
 	uint8_t ip_dst[4]; /**< Destination IP address */
-} __attribute__ ((packed)) ip_header_t, *p_ip_header_t; /* GCC */
+} ip_header_t, *p_ip_header_t;
 
 /** ICMP echo header structure */
+COMPILER_PACK_SET(1)
 typedef struct icmp_echo_header {
 	uint8_t type;   /**< Type of message */
 	uint8_t code;   /**< Type subcode */
 	uint16_t cksum; /**< 1's complement cksum of struct */
 	uint16_t id;    /**< Identifier */
 	uint16_t seq;   /**< Sequence number */
-} __attribute__ ((packed)) icmp_echo_header_t, *p_icmp_echo_header_t; /* GCC */
+} icmp_echo_header_t, *p_icmp_echo_header_t;
 
 /** Ethernet packet structure */
+COMPILER_PACK_SET(1)
 typedef struct eth_packet {
 	ethernet_header_t eth_hdr;
 	arp_header_t arp_hdr;
-} __attribute__ ((packed)) eth_packet_t, *p_eth_packet_t; /* GCC */
+} eth_packet_t, *p_eth_packet_t;
 
-#pragma pack()
+COMPILER_PACK_RESET()
 
 /** Ethernet header size */
 #define ETH_HEADER_SIZE   (sizeof(ethernet_header_t))

@@ -5,7 +5,7 @@
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="Timers"/>
-		</info>					
+		</info>
 		<build type="c-source" value="ast_example1.c"/>
 		<device-support value="uc3c"/>
 		<device-support value="uc3d"/>
@@ -14,5 +14,6 @@
 		<require idref="avr32.drivers.gpio"/>
 		<require idref="avr32.drivers.pm"/>
 		<require idref="avr32.drivers.usart"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

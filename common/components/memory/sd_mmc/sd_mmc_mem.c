@@ -3,7 +3,7 @@
  *
  * \brief CTRL_ACCESS interface for common SD/MMC stack
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -60,11 +60,16 @@
  * @{
  */
 
+static bool sd_mmc_ejected[2] = {false, false};
+
 Ctrl_status sd_mmc_test_unit_ready(uint8_t slot)
 {
 	switch (sd_mmc_check(slot))
 	{
 	case SD_MMC_OK:
+		if (sd_mmc_ejected[slot]) {
+			return CTRL_NO_PRESENT;
+		}
 		if (sd_mmc_get_type(slot) & (CARD_TYPE_SD | CARD_TYPE_MMC)) {
 			return CTRL_GOOD;
 		}
@@ -75,6 +80,7 @@ Ctrl_status sd_mmc_test_unit_ready(uint8_t slot)
 		return CTRL_BUSY;
 
 	case SD_MMC_ERR_NO_CARD:
+		sd_mmc_ejected[slot] = false;
 		return CTRL_NO_PRESENT;
 
 	default:
@@ -110,6 +116,22 @@ Ctrl_status sd_mmc_read_capacity_1(uint32_t *nb_sector)
 	return sd_mmc_read_capacity(1, nb_sector);
 }
 
+bool sd_mmc_unload(uint8_t slot, bool unload)
+{
+	sd_mmc_ejected[slot] = unload;
+	return true;
+}
+
+bool sd_mmc_unload_0(bool unload)
+{
+	return sd_mmc_unload(0, unload);
+}
+
+bool sd_mmc_unload_1(bool unload)
+{
+	return sd_mmc_unload(1, unload);
+}
+
 bool sd_mmc_wr_protect(uint8_t slot)
 {
 	return sd_mmc_is_write_protected(slot);
@@ -128,7 +150,7 @@ bool sd_mmc_wr_protect_1(void)
 bool sd_mmc_removal(uint8_t slot)
 {
 	UNUSED(slot);
-	return false;
+	return true;
 }
 
 bool sd_mmc_removal_0(void)

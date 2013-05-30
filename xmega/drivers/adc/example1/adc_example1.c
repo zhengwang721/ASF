@@ -3,7 +3,7 @@
  *
  * \brief AVR XMEGA Analog to Digital Converter Driver Example 1
  *
- * Copyright (c) 2010-2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -123,7 +123,8 @@ int main(void)
 
 	board_init();
 	sysclk_init();
-	pmic_init();
+	sleepmgr_init();
+	irq_initialize_vectors();
 	cpu_irq_enable();
 
 	// Initialize configuration structures.

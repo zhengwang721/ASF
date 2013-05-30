@@ -46,9 +46,9 @@
  *
  * \section Purpose
  *
- * This basic example shows how to use the Flash service available on the Atmel SAM
- * microcontrollers. It details steps required to program the internal flash, and manage secure
- * and lock bits.
+ * This basic example shows how to use the Flash service available on the Atmel
+ * SAM microcontrollers. It details steps required to program the internal
+ * flash, and manage secure and lock bits.
  *
  * \section Requirements
  *
@@ -58,14 +58,17 @@
  *
  * The program performs the following set of commands:
  * - Unlock the last page.
- * - Program the last page of the embedded flash with walking bit pattern (0x1, 0x2, 0x4, ...).
- * - Check if the flash is correctly programmed by reading all the values programmed.
+ * - Program the last page of the embedded flash with walking bit pattern (0x1,
+ * 0x2, 0x4, ...).
+ * - Check if the flash is correctly programmed by reading all the values
+ * programmed.
  * - Lock the last page and check if it has been locked correctly.
  * - Set the security bit.
  *
- * The SAM MCU features a security bit, based on a specific General Purpose NVM bit 0.
- * When the security bit is enabled, any access to the Flash, SRAM, Core Registers
- * and Internal Peripherals through the ICE interface is forbidden.
+ * The SAM MCU features a security bit, based on a specific General Purpose
+ * NVM bit 0. When the security bit is enabled, any access to the Flash, SRAM,
+ * Core Registers and Internal Peripherals through the ICE interface is
+ * forbidden.
  * This example will reproduce this scene.
  *
  * The SAM MCU ROM code embeds small In-Application Programming (IAP) Procedure.
@@ -82,7 +85,8 @@
  *    <a href="http://www.atmel.com/dyn/resources/prod_documents/doc6310.pdf">
  *    GNU-Based Software Development</a> application note or the
  *    <a href="http://www.iar.com/website1/1.0.1.0/78/1/">
- *    IAR EWARM User and reference guides</a>, depending on the solutions that users choose.
+ *    IAR EWARM User and reference guides</a>, depending on the solutions that
+ *    users choose.
  * -# On the computer, open and configure a terminal application
  *    (e.g., HyperTerminal on Microsoft Windows) with these settings:
  *   - 115200 bauds
@@ -185,9 +189,10 @@ int main(void)
 		ul_page_buffer[ul_idx] = 1 << (ul_idx % 32);
 	}
 
-#if SAM4S
-	/* For SAM4S, the EWP command is not supported, so an erase command is
-       requried before any write operation. */
+#if (SAM4S || SAM4E)
+	/* The EWP command is not supported by SAM4S and SAM4E, so an erase
+	 * command is requried before any write operation.
+	 */
 	ul_rc = flash_erase_sector(ul_last_page_addr);
 	if (ul_rc != FLASH_RC_OK) {
 		printf("-F- Flash programming error %lu\n\r", (UL)ul_rc);
@@ -230,7 +235,8 @@ int main(void)
 	ul_rc = flash_write(ul_last_page_addr, ul_page_buffer,
 			IFLASH_PAGE_SIZE, 1);
 	if (ul_rc != FLASH_RC_OK) {
-		printf("-I- The page to be programmed belongs to locked region. Error %lu\n\r", (UL)ul_rc);
+		printf("-I- The page to be programmed belongs to locked region. Error %lu\n\r",
+				(UL)ul_rc);
 	}
 
 	printf("-I- Please open Segger's JMem program \n\r");

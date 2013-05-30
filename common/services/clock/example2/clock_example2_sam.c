@@ -3,7 +3,7 @@
  *
  * \brief Clock system example 2.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,7 +42,7 @@
  */
 
 /**
- * \mainpage 
+ * \mainpage
  *
  * \section intro Introduction
  * This example shows how to initialize the clock system and output the
@@ -73,7 +73,7 @@
  * \section contactinfo Contact Information
  * For further information, visit
  * <A href="http://www.atmel.com/">Atmel</A>.\n
- * Support and FAQ: http://support.atmel.no/ 
+ * Support and FAQ: http://support.atmel.no/
  *
  */
 
@@ -91,7 +91,7 @@ extern "C" {
 /// @endcond
 
 /**
- * \brief Initialize the clock system and output the CPU clock on pin 
+ * \brief Initialize the clock system and output the CPU clock on pin
  * PCK0 (please refer to datasheet for PIN number).
  *
  * \return Unused (ANSI-C compatibility).
@@ -104,10 +104,11 @@ int main(void)
 	board_init();
 
 	/* Configure specific CLKOUT pin */
-	gpio_configure_pin(GCLK_PIN, GCLK_PIN_FLAGS);
+	ioport_set_pin_mode(GCLK_PIN, GCLK_PIN_MUX);
+	ioport_disable_pin(GCLK_PIN);
 
 	/* Configure the output clock */
-	genclk_config_defaults(&gcfg, GENCLK_PCK_0);	
+	genclk_config_defaults(&gcfg, GENCLK_PCK_0);
 	genclk_config_set_source(&gcfg, GCLK_SOURCE);
 	genclk_config_set_divider(&gcfg, GCLK_DIV);
 	genclk_enable(&gcfg, GENCLK_PCK_0);

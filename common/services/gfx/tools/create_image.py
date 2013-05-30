@@ -45,7 +45,7 @@ for y in range(0, height):
 		elif (display_controller == "ili9341"):
 			color_val = ((r >> 3) << 11) | ((g >> 2) << 5) | ((b >> 3) << 0)
 			color_val = ((color_val << 8) | (color_val >> 8)) & 0xFFFF
-		elif (display_controller == "et024006dhu"):
+		elif (display_controller == "hx8347a_uc3"):
 			color_val = ((r >> 3) << 11) | ((g >> 2) << 5) | ((b >> 3) << 0)
 		else:
 			print "Unknown display controller \"%s\"" % display_controller

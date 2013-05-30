@@ -561,8 +561,7 @@ bool mci_adtc_start(sdmmc_cmd_def_t cmd, uint32_t arg, uint16_t block_size,
 
 	if (cmd & SDMMC_CMD_SDIO_BYTE) {
 		cmdr |= AVR32_MCI_CMDR_TRTYP_SDIO_BYTE_MASK;
-		/* Value 0 corresponds to a 512-byte transfer */
-		AVR32_MCI.blkr = (block_size % 512) << AVR32_MCI_BLKR_BCNT_OFFSET;
+		AVR32_MCI.blkr = block_size << AVR32_MCI_BLKR_BCNT_OFFSET;
 	} else {
 		AVR32_MCI.blkr = (block_size << AVR32_MCI_BLKR_BLKLEN_OFFSET) |
 				(nb_block << AVR32_MCI_BLKR_BCNT_OFFSET);
@@ -593,7 +592,7 @@ bool mci_adtc_stop(sdmmc_cmd_def_t cmd, uint32_t arg)
 	}
 
 	/* Workaround on AT32UC3A3 <= Rev. D
-	 * See Datasheet 32072G section errata $38.3.8 MCI */
+	 * See Datasheet 32072G section errata §38.3.8 MCI */
 	return mci_wait_busy_on_line();
     }
 

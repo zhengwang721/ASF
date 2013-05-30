@@ -1,6 +1,6 @@
 <asf xmlversion="1.0">
 	<select-by-device id="common.services.usb.class.cdc.host.example" caption="USB Host CDC example">
-		<module type="application" id="common.services.usb.class.cdc.host.example#0" caption="USB Host CDC example">
+		<module type="application" id="common.services.usb.class.cdc.host.example#0" caption="USB Host CDC Example">
 			<info type="description" value="summary">
 			Provide an application example of USB Host Communication Device Class (CDC) implementation: a bridge between USART and a USB device CDC.
 			</info>
@@ -20,8 +20,9 @@
 				<keyword value="Communication"/>
 			</info>
 			<device-support value="uc3"/>
+			<info type="gui-flag" value="move-to-root"/>
 		</module>
-		<module type="application" id="common.services.usb.class.cdc.host.example#1" caption="USB Host CDC example">
+		<module type="application" id="common.services.usb.class.cdc.host.example#1" caption="USB Host CDC Example">
 			<info type="description" value="summary">
 			Provide an application example of USB Host Communication Device Class (CDC) implementation: a bridge between USART and a USB device CDC.
 			</info>
@@ -42,6 +43,8 @@
 			</info>
 			<device-support value="sam3x"/>
 			<device-support value="sam3a"/>
+			<device-support value="sam4l"/>
+			<info type="gui-flag" value="move-to-root"/>
 		</module>
 	</select-by-device>
 </asf>

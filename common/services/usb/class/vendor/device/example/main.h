@@ -56,13 +56,6 @@ bool main_vendor_enable(void);
  */
 void main_vendor_disable(void);
 
-/*! \brief Attach or detach USB device
- * Called by UDC when Vbus line state changes
- *
- * \param b_high  True if VBus is present
- */
-void main_vbus_action(bool b_high);
-
 /*! \brief Manages the leds behaviors
  * Called when a start of frame is received on USB line each 1ms.
  */

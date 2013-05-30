@@ -5,7 +5,7 @@
  *
  * This file contains definitions and functions for ECC NAND Flash operation.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -97,7 +97,7 @@ uint32_t nand_flash_ecc_read_page(const struct nand_flash_ecc *ecc,
 
 	uint16_t page_data_size
 		= nand_flash_model_get_page_data_size(MODEL(ecc));
-
+		
 	/* if no buffer provided, use a temp one */
 	if (!spare) {
 		spare = spare_buffer;

@@ -6,7 +6,6 @@
 		<build type="header-file" value="conf_sleepmgr.h"/>
 		<build type="header-file" value="conf_uart_serial.h"/>
 		<build type="header-file" value="conf_lcdca.h"/>
-		<build type="header-file" value="conf_pdca.h"/>
 		<build type="header-file" value="conf_example.h"/>
 		<require idref="sam.drivers.lcdca.example"/>
 		<require idref="board.sam4l_ek"/>

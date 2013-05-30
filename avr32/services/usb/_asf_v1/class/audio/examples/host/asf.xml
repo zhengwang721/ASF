@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="avr32.services.usb.audio.host.example.common" caption="USB Host Audio Class example">
+	<module type="meta" id="avr32.services.usb.audio.host.example.common" caption="USB Host Audio Class example">
 		<build type="c-source" value="audio_example.c"/>
 		<build type="header-file" value="audio_example.h"/>
 		<build type="c-source" value="host_audio_task.c"/>
@@ -55,7 +55,7 @@
 	</module>
 
 	<select-by-device id="avr32.services.usb.audio.host.example" caption="Example of USB Audio">
-		<module type="application" id="avr32.services.usb.audio.host.example#0" caption="Example of USB Host Audio for UC3A">
+		<module type="meta" id="avr32.services.usb.audio.host.example#0" caption="Example of USB Host Audio for UC3A">
 			<info type="description" value="summary">
 			Using the USBB module and the deprecated USB software stack from ASF v1, USB Audio Class application that behaves as a USB Reduced-Host supporting the USB Audio class.
 			</info>

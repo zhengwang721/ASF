@@ -75,11 +75,6 @@ void main_cdc_disable(uint8_t port);
  */
 void main_cdc_set_dtr(uint8_t port, bool b_enable);
 
-/*! \brief Attach or detach USB device
- * Called by UDC when Vbus line state changes
- */
-void main_vbus_action(bool b_high);
-
 /*! \brief Manages the leds behaviors
  * Called when a start of frame is received on USB line each 1ms.
  */

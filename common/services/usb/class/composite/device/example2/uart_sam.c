@@ -177,8 +177,8 @@ void uart_open(uint8_t port)
 	UNUSED(port);
 	// IO is initialized in board init
 	// Enable interrupt with priority higher than USB
-	NVIC_SetPriority((IRQn_Type) USART_ID, USART_INT_LEVEL);
-	NVIC_EnableIRQ((IRQn_Type) USART_ID);
+	NVIC_SetPriority(USART_INT_IRQn, USART_INT_LEVEL);
+	NVIC_EnableIRQ(USART_INT_IRQn);
 
 	// Initialize it in RS232 mode.
 	pmc_enable_periph_clk(USART_ID);

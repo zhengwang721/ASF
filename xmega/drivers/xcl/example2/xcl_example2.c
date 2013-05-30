@@ -56,14 +56,13 @@
  * \section deviceinfo Device Info
  * All AVR XMEGA E devices can be used. This example has been tested
  * with the following setup:
- *   - STK600 with ATxmega32E5 on STK600-RC032X.
- *
- * \section stk600_setup Setup for STK600 and RC032x:
- * - LEDs header should be connected to PORTA
+ *   - STK600 with ATxmega32E5 on STK600-RC032X
+ *     LED0 pin should be connected to PA0 pin
+ *   - XMEGA E5 Xplained evaluation kit
  *
  * \section exampledescription Description of the example
  * This example will configure the XCL Timer sub-module in a 16bit timer with
- * its underflow interrupt to toggling an LED at 4Hz.
+ * its underflow interrupt to toggle a LED at 4Hz.
  *
  * \section compinfo Compilation Info
  * This software was written for the GNU GCC and IAR for AVR.

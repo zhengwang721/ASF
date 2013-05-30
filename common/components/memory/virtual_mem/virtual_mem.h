@@ -5,7 +5,7 @@
  *
  * This file manages the virtual memory.
  *
- * Copyright (c) 2009-2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -68,6 +68,7 @@ extern Ctrl_status  virtual_test_unit_ready(void);
 extern Ctrl_status  virtual_read_capacity(uint32_t *u32_nb_sector);
 extern bool         virtual_wr_protect(void);
 extern bool         virtual_removal(void);
+extern bool         virtual_unload(bool unload);
 
 
 //---- ACCESS DATA FUNCTIONS ----

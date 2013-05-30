@@ -43,122 +43,11 @@
  
 #include "app.h"
 
-// By default, the Full Demo Mode is on, used in main.c
-volatile bool lowpower_mode = false;
-// Internal counter for the QTouch library
-volatile uint32_t touch_sensors_idle_count = 0u;
-// Push button PB0 event
-volatile bool pbEvent = false; 
-
-// External reference to SAM4L Status
-extern volatile sam4l_status_t sam4l_status;
-static void wdt_clear(void);
-
-/**
- *  \brief Asynchronous timer (ASF) handler for the QTouch acquisition.
- *  and clear Watchdog counter - generates interrupt every 100ms
- */
-void AST_PER_Handler (void)
-{
-	touch_sensors_update_time();
-	touch_sensors_idle_count++;
-	AST->AST_SCR = 0x00010000;
-	wdt_clear();
-}
-
-/**
- *  \brief External interrupt handler, used by PB0 push button
- */
-void EIC_5_Handler(void)
-{
-	sysclk_enable_peripheral_clock(EIC);
-	
-	if(eic_is_interrupt_line_pending(EIC,GPIO_PUSH_BUTTON_EIC_LINE))
-	{
-		eic_clear_interrupt_line(EIC,GPIO_PUSH_BUTTON_EIC_LINE);
-		pbEvent = true;
-	}
-	sysclk_disable_peripheral_clock(EIC);
-}
-
-/**
- *  \brief Enable external interrupt to wake up the MCU from sleep modes
- */
-static void eic_enable_wkup(void)
-{
-	// Structure holding the configuration parameters
-	// of the EIC module.
-	eic_options_t eic_options;
-
-	// Enable level-triggered interrupt.
-	eic_options.eic_mode   = EIC_MODE_EDGE_TRIGGERED;
-	// Interrupt will trigger on low-level.
-	eic_options.eic_level  = EIC_LEVEL_LOW_LEVEL;
-	// Edge on falling edge
-	eic_options.eic_edge = EIC_EDGE_FALLING_EDGE;
-	// Enable filter.
-	eic_options.eic_filter = EIC_FILTER_DISABLED;
-	// For Wake Up mode, initialize in asynchronous mode
-	eic_options.eic_async  = EIC_ASYNCH_MODE;
-	// Choose External Interrupt Controller Line
-	eic_options.eic_line   = 5;
-
-	// Init the EIC controller with the options
-	eic_init(EIC, &eic_options,1);
-
-	// Enable External Interrupt Controller Line
-	eic_enable_line(EIC, eic_options.eic_line);
-
-	// Enable the interrupt for each EIC line.
-	eic_enable_interrupt_lines(EIC, (1<<eic_options.eic_line));
-
-	// Register EIC interrupt to the NVIC
-	NVIC_ClearPendingIRQ(EIC_5_IRQn);
-	NVIC_SetPriority(    EIC_5_IRQn, 1);
-	NVIC_EnableIRQ(      EIC_5_IRQn);
-
-	//EIC can wake the device from backup mode
-	BPM->BPM_BKUPWEN |= (1<<BPM_BKUPWEN_EIC) | (1<<BPM_BKUPWEN_AST);
-	//EIC can wake the device from backup mode
-	BPM->BPM_BKUPPMUX = (1<<GPIO_PUSH_BUTTON_EIC_LINE);
-	BPM->BPM_IORET = 0;
-	//Retain I/O lines after wakeup from backup
-	BPM->BPM_IORET = 1; 
-}
-
-/**
- *  \brief Set Control register function for WDT
- */
-static void wdt_set_ctrl(uint32_t ctrl)
-{
-	WDT->WDT_CTRL = ctrl | WDT_CTRL_KEY((uint32_t)0x55);
-	WDT->WDT_CTRL = ctrl | WDT_CTRL_KEY((uint32_t)0xAA);
-}
-
-/**
- *  \brief Clear WDT
- */
-static void wdt_clear(void)
-{
-	while (!(WDT->WDT_SR & WDT_SR_CLEARED));
-	WDT->WDT_CTRL = WDT_CLR_WDTCLR | WDT_CLR_KEY((uint32_t)0x55);
-	WDT->WDT_CTRL = WDT_CLR_WDTCLR | WDT_CLR_KEY((uint32_t)0xAA);
-}
-
-/**
- *  \brief Enable WDT
- */
-static void enable_wdt(void)
-{
-	wdt_set_ctrl(WDT_CTRL_EN | WDT_CTRL_CEN | WDT_CTRL_PSEL(17) );
-}
-
-
 /**
  *  \brief Application initialization: at startup the application run in full 
  *  demo mode (all features on, includes QTouch and segment LCD). Initialize the 
  *  board IO configuration, clocks, QTouch library, xternal interrupts, NVIC and 
- *  GUI SAM4L is running at 12 MHz from internal RCFAST (configured at 12MHz).
+ *  UI. SAM4L is running at 12 MHz from internal RCFAST (configured at 12MHz).
  */
 void app_init(void)
 {
@@ -169,39 +58,23 @@ void app_init(void)
 	sysclk_init();
 
 	// Initialize EIC Controller
-	sysclk_enable_peripheral_clock(EIC);
-	eic_enable_wkup();
-	sysclk_disable_peripheral_clock(EIC);
+	event_button_init();
 
-	// Initialize WDT Controller
-	sysclk_enable_peripheral_clock(WDT);
-	enable_wdt();
+	// Initialize Qtouch
+	event_qtouch_init();
 
-	// Enable Osc32
-	osc_enable(OSC_ID_OSC32);
-	while(!osc_is_ready(OSC_ID_OSC32));
+	// Set MCU Status
+	ui_set_mcu_status(POWER_SCALING_PS0, SLEEP_MODE_RUN,
+		12000000, CPU_SRC_RC4M);
 
-	// Initialize AST Controller
-	ast_init_counter(AST, AST_OSC_32KHZ, 1, 0);
-	ast_set_periodic0_value(AST, 0x09);
-	ast_enable_periodic0(AST);
-	ast_enable_periodic_interrupt(AST, 0);
-	ast_enable(AST);
-	// Set up interrupt handler
-	NVIC_ClearPendingIRQ(AST_PER_IRQn);
-	NVIC_SetPriority(AST_PER_IRQn,0);
-	NVIC_EnableIRQ(AST_PER_IRQn);
+	// Initialize Board Monitor
+	ui_bm_init();
 
-	//CATB & Related clocks - for QTouch Sensors
-	sysclk_enable_peripheral_clock(CATB);
-	sysclk_enable_peripheral_clock(PDCA);
+	// Set LCD backlight
+	ioport_set_pin_level(LCD_BL_GPIO, IOPORT_PIN_LEVEL_HIGH);
 
-	// Initialize QTouch Library.
-	touch_sensors_init();
-	
-	// Initialize GUI
-	gui_init();
-	pbEvent = false;
+	// Initialize LCD
+	ui_lcd_init();
 
 }
 
@@ -213,18 +86,11 @@ void app_init(void)
  */
 void app_init_lowpower(void)
 {
-	uint32_t voltage_scaling, sleep_mode, cpu_freq, cpu_src;
-	
-	// The application is running in low power mode
-	lowpower_mode = true;
-	
-	// Clear LCD
-	LCDCA->LCDCA_CFG = LCDCA_CFG_BLANK;
-	
-	// Stop LCD
-	LCDCA->LCDCA_CR = 0x1;
 
-	// Clear QTouch Initialization
+	// Stop LCD Controller
+	lcdca_disable();
+
+	// Stop QTouch Initialization
 	touch_sensors_deinit();
 
 	// Initialize board features
@@ -238,25 +104,86 @@ void app_init_lowpower(void)
 	sysclk_disable_peripheral_clock(PDCA);
 	sysclk_disable_peripheral_clock(LCDCA);
 
-	// Switch in PS1 mode
-	bpm_configure_power_scaling(BPM, BPM_PS_1, BPM_PSCM_CPU_NOT_HALT);
-	while(!(bpm_get_status(BPM)&BPM_SR_PSOK));
+	// Set MCU Status
+	ui_set_mcu_status(POWER_SCALING_PS1, SLEEP_MODE_RUN,
+		12000000, CPU_SRC_RC4M);
 
-	// Initialize structure for the board monitor message over USART
-	sam4l_status.voltage_scaling = VOLTAGE_SCALING_12V,
-	sam4l_status.sleep_mode = SLEEP_MODE_RUN,
-	sam4l_status.cpu_freq = 12000000,
-	sam4l_status.cpu_src = CPU_SRC_RC4M,
+	// Switch in selected Power Scaling mode
+	app_switch_power_scaling(ui_get_power_scaling_mcu_status());
 
-	// The USART needs to be enabled when sending the message to the board monitor
-	sysclk_enable_peripheral_clock(REMOTE_TASK_USART);
-	voltage_scaling = sam4l_status.voltage_scaling;
-	sleep_mode = sam4l_status.sleep_mode;
-	cpu_freq = sam4l_status.cpu_freq;
-	cpu_src = sam4l_status.cpu_src;
-	bm_send_mcu_status(voltage_scaling, sleep_mode, cpu_freq, cpu_src);
-	sysclk_disable_peripheral_clock(REMOTE_TASK_USART);
+	// Send new MCU status to the board monitor
+	ui_bm_send_mcu_status();
 
-	// Clear the push button event now that it is processed
-	pbEvent = false;
 }
+
+/**
+ *  \brief Prime Number function
+ */
+void app_prime_number_run(void)
+{
+	#define PRIM_NUMS 8
+	uint32_t i, d, n;
+	uint32_t primes[PRIM_NUMS];
+
+
+	// Find prime numbers forever
+	primes[0] = 1;
+	for (i = 1; i < PRIM_NUMS;) {
+		for (n = primes[i - 1] + 1; ;n++) {
+			for (d = 2; d <= n; d++) {
+				if (n == d) {
+					primes[i] = n;
+					goto nexti;
+				}
+				if (n%d == 0) break;
+			}
+		}
+		nexti:
+		i++;
+	}
+}
+
+/**
+ * \brief Switch into selected Power Scaling.
+ * \param power_scaling selected Power Scaling.
+ */
+void app_switch_power_scaling(power_scaling_t power_scaling)
+{
+	if (power_scaling == POWER_SCALING_PS1){
+		bpm_configure_power_scaling(BPM,
+				BPM_PMCON_PS(BPM_PS_1),
+				true);
+	}
+	else {
+		bpm_configure_power_scaling(BPM,
+				BPM_PMCON_PS(BPM_PS_0),
+				true);
+	}
+	while((bpm_get_status(BPM) & BPM_SR_PSOK) == 0);
+}
+
+/**
+ * \brief Enter into sleep mode
+ * \param sleep_mode selected sleep mode.
+ */
+void app_enter_sleep_mode(sleep_mode_t sleep_mode)
+{
+	enum sleepmgr_mode  current_sleep_mode;
+	switch(sleep_mode){
+		case SLEEP_MODE_WAIT:
+			current_sleep_mode = SLEEPMGR_WAIT;
+		break;
+		case SLEEP_MODE_RETENTION:
+			current_sleep_mode = SLEEPMGR_RET;
+		break;
+		case SLEEP_MODE_BACKUP:
+			current_sleep_mode = SLEEPMGR_BACKUP;
+		break;
+		case SLEEP_MODE_RUN:
+		default:
+			current_sleep_mode = SLEEPMGR_ACTIVE;
+		break;
+	}
+	sleepmgr_sleep(current_sleep_mode);
+}
+

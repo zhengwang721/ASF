@@ -3,7 +3,7 @@
  *
  * \brief USART ISO7816 example for SAM.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -53,7 +53,7 @@
  *  smartcard contacts with following pins which could be easily wired from
  *  the board. 
  *  On SAM3N-EK, SAM3U-EK, and SAM3X-EK use USART0 TXD0 and SCK0, 
- *  On SAM3S-EK, SAM3S-EK2 and SAM4S-EK use USART1 TXD1 and SCK1.
+ *  On SAM3S-EK, SAM3S-EK2, SAM4S-EK and SAM4E-EK use USART1 TXD1 and SCK1.
  *  - <b>SAM-EK -- SMARTCARD</b>
  *   - PA15     --    RST
  *   - TXD*     --    I/O

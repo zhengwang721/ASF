@@ -3,7 +3,7 @@
  *
  * \brief ILI9341 display controller component driver
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -108,6 +108,7 @@ __always_inline static void ili9341_wait_for_send_done(void)
 	while (!usart_tx_is_complete(CONF_ILI9341_USART_SPI)) {
 		/* Do nothing */
 	}
+	usart_clear_tx_complete(CONF_ILI9341_USART_SPI);
 #  else
 	/* Wait for TX to complete */
 	while (!usart_spi_is_tx_empty(CONF_ILI9341_USART_SPI)) {
@@ -810,6 +811,9 @@ void ili9341_init(void)
 void ili9341_set_orientation(uint8_t flags)
 {
 	uint8_t madctl = 0x48;
+
+	/* Pretend the display is in landscape mode by default to match other display drivers */
+	flags ^= ILI9341_SWITCH_XY | ILI9341_FLIP_X;
 
 	if (flags & ILI9341_FLIP_X) {
 		madctl &= ~(1 << 6);

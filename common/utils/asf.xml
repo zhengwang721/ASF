@@ -72,7 +72,7 @@
 			</info>
 			<info type="keyword" value="technology">
 				<keyword value="Interrupt"/>
-			</info>	
+			</info>
 			<device-support value="uc3" />
 			<build type="include-path" value="." />
 			<build type="header-file" subtype="api" value="interrupt.h" />
@@ -108,7 +108,7 @@
 			<build type="header-file" value="interrupt/interrupt_avr8.h" />
 			<build type="doxygen-entry-point" value="interrupt_group"/>
 		</module>
-		<module type="driver" id="common.utils.interrupt#sam_nvic" caption="Interrupt management - SAM3 implementation">
+		<module type="driver" id="common.utils.interrupt#sam_nvic" caption="Interrupt management - SAM implementation">
 			<info type="description" value="summary">
 			Driver for global enabling and disabling of interrupts.
 			</info>
@@ -144,6 +144,15 @@
 			<require idref="xmega.utils"/>
 			<build type="doxygen-entry-point" value="test_suite_group"/>
 		</module>
+		<module type="driver" id="common.utils.unit_test#mega" caption="Unit test framework - MEGA implementation">
+			<info type="description" value="summary">
+			Core functions for the unit test framework.
+			</info>
+			<device-support value="mega"/>
+			<require idref="common.utils.unit_test.generic"/>
+			<require idref="mega.utils"/>
+			<build type="doxygen-entry-point" value="test_suite_group"/>
+		</module>		
 		<module type="driver" id="common.utils.unit_test#sam" caption="Unit test framework - SAM implementation">
 			<info type="description" value="summary">
 			Core functions for the unit test framework.
@@ -230,4 +239,95 @@
 		<device-support value="uc3"/>
 		<device-support value="sam"/>
 	</module>
+
+
+	<select-by-device id="common.utils.toolchain_config" caption="Toolchain configuration defaults">
+		<info type="description" value="summary">
+		This module contains default toolchain configurations for the
+		various device families. This is ASF-specific, meaning other
+		extensions must define their own default toolchain settings
+		and put them in either a module of type "build-specific" or a
+		module-selector containing such modules.
+		The ID of the selector or single module must be
+		"common.utils.toolchain_config".
+		</info>
+
+		<module type="build-specific" id="common.utils.toolchain_config#avr" caption="Toolchain configuration defaults for 8-bit AVR">
+			<info type="gui-flag" value="hidden"/>
+			<info type="description" value="summary">
+			Default toolchain settings for 8-bit AVR, i.e., megaAVR, tinyAVR and AVR XMEGA.
+			</info>
+			<device-support value="mega"/>
+			<device-support value="tiny"/>
+			<device-support value="xmega"/>
+
+			<!-- AVRGCC -->
+			<toolchain-config name="avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned" value="False" toolchain="avrgcc"/>
+			<toolchain-config name="avrgcc.compiler.general.ChangeDefaultCharTypeUnsigned" value="False" toolchain="avrgcc"/>
+			<toolchain-config name="avrgcc.compiler.optimization.OtherFlags" value="-fdata-sections" toolchain="avrgcc"/>
+			<toolchain-config name="avrgcc.compiler.optimization.PrepareFunctionsForGarbageCollection" value="True" toolchain="avrgcc"/>
+			<toolchain-config name="avrgcc.compiler.warnings.AllWarnings" value="True" toolchain="avrgcc"/>
+			<toolchain-config name="avrgcc.linker.optimization.GarbageCollectUnusedSections" value="True" toolchain="avrgcc"/>
+			<toolchain-config name="avrgcc.linker.optimization.RelaxBranches" value="True" toolchain="avrgcc"/>
+			<!-- Compiler flags are added to this config-->
+			<toolchain-config name="avrgcc.compiler.miscellaneous.OtherFlags" value="-std=gnu99 -fno-strict-aliasing -Wstrict-prototypes -Wmissing-prototypes -Werror-implicit-function-declaration -Wpointer-arith -mrelax" toolchain="avrgcc"/>
+			<!-- Linker flags are added to this config -->
+			<toolchain-config name="avrgcc.linker.miscellaneous.LinkerFlags" value="-Wl,--relax" toolchain="avrgcc"/>
+			<!-- Define symbols are added to this config, per workaround for AVRSV-1972 and AVRSV-2180 -->
+			<toolchain-config name="avrgcc.assembler.general.AssemblerFlags" value="-mrelax" toolchain="avrgcc"/>
+			<!-- Standard library settings for linker -->
+			<toolchain-config name="avrgcc.linker.general.NoStartupOrDefaultLibs" value="False" toolchain="avrgcc"/>
+			<toolchain-config name="avrgcc.linker.general.DoNotUseDefaultLibraries" value="False" toolchain="avrgcc"/>
+			<toolchain-config name="avrgcc.linker.general.DoNotUseStandardStartFiles" value="False" toolchain="avrgcc"/>
+		</module>
+
+		<module type="build-specific" id="common.utils.toolchain_config#uc3" caption="Toolchain configuration defaults for 32-bit AVR">
+			<info type="gui-flag" value="hidden"/>
+			<info type="description" value="summary">
+			Default toolchain settings for 32-bit AVR, i.e., AVR UC3.
+			</info>
+			<device-support value="uc3"/>
+
+			<!-- AVR32GCC -->
+			<toolchain-config name="avr32gcc.assembler.general.AssemblerFlags" value="-mrelax" toolchain="avr32gcc"/>
+			<toolchain-config name="avr32gcc.compiler.optimization.OtherFlags" value="-fdata-sections" toolchain="avr32gcc"/>
+			<toolchain-config name="avr32gcc.compiler.optimization.PrepareFunctionsForGarbageCollection" value="True" toolchain="avr32gcc"/>
+			<toolchain-config name="avr32gcc.compiler.warnings.AllWarnings" value="True" toolchain="avr32gcc"/>
+			<toolchain-config name="avr32gcc.linker.optimization.GarbageCollectUnusedSections" value="True" toolchain="avr32gcc"/>
+			<!-- Compiler flags are added to this config -->
+			<toolchain-config name="avr32gcc.compiler.miscellaneous.OtherFlags" value="-std=gnu99 -fno-strict-aliasing -Wstrict-prototypes -Wmissing-prototypes -Werror-implicit-function-declaration -Wpointer-arith -mrelax -mno-cond-exec-before-reload" toolchain="avr32gcc"/>
+			<!-- Define symbols are added to this config, per workaround for AVRSV-1972 and AVRSV-2180 -->
+			<toolchain-config name="avr32gcc.preprocessingassembler.general.AssemblerFlags" value="-mrelax" toolchain="avr32gcc"/>
+			<!-- Linker flags, trampoline/startup label and stack/heap size settings are added to this config -->
+			<toolchain-config name="avr32gcc.linker.miscellaneous.LinkerFlags" value="-Wl,--relax" toolchain="avr32gcc"/>
+			<!-- Standard library settings for linker: ASF has its own startup-files for UC3 -->
+			<toolchain-config name="avr32gcc.linker.general.NoStartupOrDefaultLibs" value="False" toolchain="avr32gcc"/>
+			<toolchain-config name="avr32gcc.linker.general.DoNotUseDefaultLibraries" value="False" toolchain="avr32gcc"/>
+			<toolchain-config name="avr32gcc.linker.general.DoNotUseStandardStartFiles" value="True" toolchain="avr32gcc"/>
+		</module>
+
+		<module type="build-specific" id="common.utils.toolchain_config#sam" caption="Toolchain configuration defaults for SAM">
+			<info type="gui-flag" value="hidden"/>
+			<info type="description" value="summary">
+			Default toolchain settings for SAM.
+			</info>
+			<device-support value="sam"/>
+
+			<!-- ARMGCC -->
+			<toolchain-config name="armgcc.compiler.optimization.OtherFlags" value="-fdata-sections" toolchain="armgcc"/>
+			<toolchain-config name="armgcc.compiler.optimization.PrepareFunctionsForGarbageCollection" value="True" toolchain="armgcc"/>
+			<toolchain-config name="armgcc.compiler.warnings.AllWarnings" value="True" toolchain="armgcc"/>
+			<toolchain-config name="armgcc.linker.optimization.GarbageCollectUnusedSections" value="True" toolchain="armgcc"/>
+			<!-- Compiler flags are added to this config -->
+			<toolchain-config name="armgcc.compiler.miscellaneous.OtherFlags" value="-pipe -fno-strict-aliasing -Wall -Wstrict-prototypes -Wmissing-prototypes -Werror-implicit-function-declaration -Wpointer-arith -std=gnu99 -ffunction-sections -fdata-sections -Wchar-subscripts -Wcomment -Wformat=2 -Wimplicit-int -Wmain -Wparentheses -Wsequence-point -Wreturn-type -Wswitch -Wtrigraphs -Wunused -Wuninitialized -Wunknown-pragmas -Wfloat-equal -Wundef -Wshadow -Wbad-function-cast -Wwrite-strings -Wsign-compare -Waggregate-return  -Wmissing-declarations -Wformat -Wmissing-format-attribute -Wno-deprecated-declarations -Wpacked -Wredundant-decls -Wnested-externs -Winline -Wlong-long -Wunreachable-code -Wcast-align --param max-inline-insns-single=500" toolchain="armgcc"/>
+			<!-- Linker flags, startup label and stack/heap size settings are added to this config -->
+			<toolchain-config name="armgcc.linker.miscellaneous.LinkerFlags" value="-Wl,--entry=Reset_Handler -Wl,--cref -mthumb" toolchain="armgcc"/>
+			<!-- Define symbols are added to this config, per workaround for AVRSV-1972 and AVRSV-2180 -->
+			<toolchain-config name="armgcc.preprocessingassembler.general.AssemblerFlags" value="" toolchain="armgcc"/>
+			<!-- Standard library settings for linker -->
+			<toolchain-config name="armgcc.linker.general.NoStartupOrDefaultLibs" value="False" toolchain="armgcc"/>
+			<toolchain-config name="armgcc.linker.general.DoNotUseDefaultLibraries" value="False" toolchain="armgcc"/>
+			<toolchain-config name="armgcc.linker.general.DoNotUseStandardStartFiles" value="False" toolchain="armgcc"/>
+		</module>
+	</select-by-device>
 </asf>

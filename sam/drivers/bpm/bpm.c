@@ -3,7 +3,7 @@
  *
  * \brief BPM driver
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -238,4 +238,61 @@ uint32_t bpm_get_status(Bpm *bpm)
 uint32_t bpm_get_version(Bpm *bpm)
 {
 	return bpm->BPM_VERSION;
+}
+
+void bpm_sleep(Bpm *bpm, uint32_t sleep_mode)
+{
+	uint32_t pmcon;
+
+	/* Read PMCON register */
+	pmcon = bpm->BPM_PMCON;
+	pmcon &= ~BPM_PMCON_BKUP;
+	pmcon &= ~BPM_PMCON_RET;
+	pmcon &= ~BPM_PMCON_SLEEP_Msk;
+
+	/* Unlock PMCON register */
+	BPM_UNLOCK(PMCON);
+
+	if (sleep_mode == BPM_SM_SLEEP_0) {
+		pmcon |= BPM_PMCON_SLEEP(0);
+		bpm->BPM_PMCON = pmcon;
+		SCB->SCR &= ~SCB_SCR_SLEEPDEEP_Msk;
+	} else if (sleep_mode == BPM_SM_SLEEP_1) {
+		pmcon |= BPM_PMCON_SLEEP(1);
+		bpm->BPM_PMCON = pmcon;
+		SCB->SCR &= ~SCB_SCR_SLEEPDEEP_Msk;
+	} else if (sleep_mode == BPM_SM_SLEEP_2) {
+		pmcon |= BPM_PMCON_SLEEP(2);
+		bpm->BPM_PMCON = pmcon;
+		SCB->SCR &= ~SCB_SCR_SLEEPDEEP_Msk;
+	} else if (sleep_mode == BPM_SM_SLEEP_3) {
+		pmcon |= BPM_PMCON_SLEEP(3);
+		bpm->BPM_PMCON = pmcon;
+		SCB->SCR &= ~SCB_SCR_SLEEPDEEP_Msk;
+	} else if (sleep_mode == BPM_SM_WAIT) {
+		bpm->BPM_PMCON = pmcon;
+		SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
+	} else if (sleep_mode == BPM_SM_RET) {
+		pmcon |= BPM_PMCON_RET;
+		bpm->BPM_PMCON = pmcon;
+		SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
+	} else { /* if (sleep_mode == BPM_SM_BACKUP) */
+		pmcon |= BPM_PMCON_BKUP;
+		bpm->BPM_PMCON = pmcon;
+		SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
+	}
+
+	/* Wait until vreg is ok. */
+	while(!(BSCIF->BSCIF_PCLKSR & BSCIF_PCLKSR_VREGOK));
+	asm volatile ("wfi");
+	/* ensure sleep request propagation to flash. */
+	asm volatile ("nop");
+
+	/* The interrupts wake-up from the previous wfi, but there are still
+	 * masked since we are in the critical section thanks to the previous
+	 * set_pri_mask(1). Thus, we need to leave the critical section.
+	 * Please note that we should probably use something like
+	 * cpu_leave_critical(), using set_pri_mask(0)
+	 */
+	cpu_irq_enable();
 }

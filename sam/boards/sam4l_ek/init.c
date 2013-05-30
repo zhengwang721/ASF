@@ -5,7 +5,7 @@
  *
  * This file contains board initialization function.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -71,13 +71,16 @@ void board_init(void)
 
 	// Put all pins to default state (input & pull-up)
 	uint32_t pin;
+
 	for (pin = PIN_PA00; pin <= PIN_PC31; pin ++) {
 		// Skip output pins to configure later
 		if (pin == LED0_GPIO || pin == LCD_BL_GPIO
 #ifdef CONF_BOARD_RS485
 		|| pin == RS485_USART_CTS_PIN
 #endif
-		) {
+		/* PA02 is not configured as it is driven by hardware
+		configuration */
+		|| pin == PIN_PA02) {
 			continue;
 		}
 		ioport_set_pin_dir(pin, IOPORT_DIR_INPUT);
@@ -109,8 +112,45 @@ void board_init(void)
 #if (defined CONF_BOARD_USB_PORT)
 	ioport_set_pin_peripheral_mode(PIN_PA25A_USBC_DM, MUX_PA25A_USBC_DM);
 	ioport_set_pin_peripheral_mode(PIN_PA26A_USBC_DP, MUX_PA26A_USBC_DP);
-	ioport_set_pin_dir(GPIO_VBUS_INPUT, IOPORT_DIR_INPUT);
-#endif
+# if defined(CONF_BOARD_USB_VBUS_DETECT)
+#   if defined(USB_VBUS_EIC)
+	ioport_set_pin_peripheral_mode(USB_VBUS_EIC,
+			USB_VBUS_EIC_MUX|USB_VBUS_FLAGS);
+#   elif defined(USB_VBUS_PIN)
+	ioport_set_pin_dir(USB_VBUS_PIN, IOPORT_DIR_INPUT);
+#   else
+#       warning USB_VBUS pin not defined
+#   endif
+# endif
+# if defined(CONF_BOARD_USB_ID_DETECT)
+#   if defined(USB_ID_EIC)
+	ioport_set_pin_peripheral_mode(USB_ID_EIC,
+			USB_ID_EIC_MUX|USB_ID_FLAGS);
+#   elif defined(USB_ID_PIN)
+	ioport_set_pin_dir(USB_ID_PIN, IOPORT_DIR_INPUT);
+#   else
+#       warning USB_ID pin not defined
+#   endif
+# endif
+# if defined(CONF_BOARD_USB_VBUS_CONTROL)
+#   if defined(USB_VBOF_PIN)
+	ioport_set_pin_dir(USB_VBOF_PIN, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(USB_VBOF_PIN, USB_VBOF_INACTIVE_LEVEL);
+#   else
+#       warning USB_VBOF pin not defined
+#   endif
+#  if defined(CONF_BOARD_USB_VBUS_ERR_DETECT)
+#    if defined(USB_VBERR_EIC)
+	ioport_set_pin_peripheral_mode(USB_VBERR_EIC,
+			USB_VBERR_EIC_MUX|USB_VBERR_FLAGS);
+#    elif defined(USB_VBERR_PIN)
+	ioport_set_pin_dir(USB_VBERR_PIN, IOPORT_DIR_INPUT);
+#    else
+#        warning USB_VBERR pin not defined
+#    endif
+#  endif
+# endif /* !(defined CONF_BOARD_USB_NO_VBUS_CONTROL) */
+#endif /* (defined CONF_BOARD_USB_PORT) */
 
 #if defined (CONF_BOARD_COM_PORT)
 	ioport_set_pin_peripheral_mode(COM_PORT_RX_PIN, COM_PORT_RX_MUX);
@@ -151,8 +191,28 @@ void board_init(void)
 	ioport_set_pin_level(RS485_USART_CTS_PIN, IOPORT_PIN_LEVEL_LOW);
 #endif
 
+#ifdef CONF_BOARD_TWIMS1
+	ioport_set_pin_peripheral_mode(TWIMS1_TWI_SCL_PIN, TWIMS1_TWI_SCL_MUX);
+	ioport_set_pin_peripheral_mode(TWIMS1_TWI_SDA_PIN, TWIMS1_TWI_SDA_MUX);
+#endif
+
+#ifdef CONF_BOARD_USART0
+	ioport_set_pin_peripheral_mode(USART0_RX_PIN, USART0_RX_MUX);
+	ioport_set_pin_peripheral_mode(USART0_TX_PIN, USART0_TX_MUX);
+#endif
+
 #ifdef CONF_BOARD_DACC_VOUT
 	ioport_set_pin_peripheral_mode(DACC_VOUT_PIN, DACC_VOUT_MUX);
+#endif
+
+#ifdef CONF_BOARD_ACIFC
+	ioport_set_pin_peripheral_mode(PIN_PA06E_ACIFC_ACAN0, MUX_PA06E_ACIFC_ACAN0);
+	ioport_set_pin_peripheral_mode(PIN_PA07E_ACIFC_ACAP0, MUX_PA07E_ACIFC_ACAP0);
+#endif
+
+#ifdef CONF_BOARD_ABDACB_PORT
+	ioport_set_pin_peripheral_mode(ABDACB_AUDIO0_PIN, ABDACB_AUDIO0_MUX);
+	ioport_set_pin_peripheral_mode(ABDACB_AUDIO1_PIN, ABDACB_AUDIO1_MUX);
 #endif
 }
 /**

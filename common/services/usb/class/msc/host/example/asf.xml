@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="common.services.usb.class.msc.host.example" caption="USB Host MSC example">
+	<module type="application" id="common.services.usb.class.msc.host.example" caption="USB Host MSC Example">
 		<info type="description" value="summary">
 		Provide an application example of USB host Mass Storage Class implementation.
 		</info>
@@ -24,5 +24,6 @@
 			<keyword value="USB"/>
 			<keyword value="Communication"/>
 		</info>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

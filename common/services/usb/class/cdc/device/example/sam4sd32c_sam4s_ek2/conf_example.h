@@ -46,8 +46,10 @@
 #define USART_ENABLE()
 #define USART_DISABLE()
 #define USART_BASE       ((Usart*)UART0)
-#define USART_HANDLER    UART0_Handler
 #define USART_ID         ID_UART0
+
+#define USART_HANDLER    UART0_Handler
+#define USART_INT_IRQn   UART0_IRQn
 #define USART_INT_LEVEL  3
 
 #endif /* CONF_EXAMPLE_H_INCLUDED */

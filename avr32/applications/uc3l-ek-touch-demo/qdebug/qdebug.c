@@ -3,7 +3,7 @@
  *
  * \brief QDebug module
  *
- * Copyright (c) 2010 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -45,6 +45,7 @@
 #include "qdebug.h"
 #include "qdebugtransport.h"
 #include "QDebugSettings.h"
+#include "compiler.h"
 
 #if (defined QDEBUG_SPI)
   #include "SPI_Master.h"
@@ -186,7 +187,7 @@ Name    :   QDebug_SendData
 Purpose :   Send data to QTouch Studio based on the subscription
 Input   :   Change flag from measure_sensors
 Output  :   n/a
-Notes   :	This function should be called in the main loop after
+Notes   :   This function should be called in the main loop after
                       measure_sensors to send the measured touch data
 ============================================================================*/
 void QDebug_SendData(uint16_t qt_lib_flags)
@@ -247,7 +248,7 @@ Name    :   QDebug_SetSubscriptions
 Purpose :   Set subscription values.
 Input   :   Values
 Output  :   n/a
-Notes   :	This function can be used directly in main to set data subscription
+Notes   :   This function can be used directly in main to set data subscription
                       if 1way SPI interface is used
 ============================================================================*/
 void QDebug_SetSubscriptions(uint16_t once, uint16_t change, uint16_t allways)
@@ -332,7 +333,8 @@ void Set_Global_Config(void)
       touch_sensor_param.ndrift          = GetChar();
       touch_sensor_param.pdrift          = GetChar();
 
-      dummy_var = dummy_var; /* Dummy. Avoid compiler warning. */
+      /* avoid Cppcheck Warning */
+      UNUSED(dummy_var);
 
       /* update the global parameter value inside the uc3l library */
       touch_ret = QDEBUG_UPDATE_GLOBAL_PARAM_FUNC(&touch_sensor_param);
@@ -350,7 +352,7 @@ Name    :   Set_Channel_Config
 Purpose :   Extract the data packet from QTouch Studio and set channel config
 Input   :   n/a
 Output  :   n/a
-Notes   :	Should only be called from the command handler
+Notes   :   Should only be called from the command handler
 ============================================================================*/
 void Set_Channel_Config(void)
 {
@@ -401,7 +403,8 @@ void Set_Channel_Config(void)
       touch_at_param_t touch_sensor_param;
 
       sensor_id = GetChar(); /* Dummy. To skip sensor_id. */
-      sensor_id = sensor_id; /* Dummy. To avoid warning. */
+      /* avoid Cppcheck Warning */
+      UNUSED(sensor_id);
 
       /* Read back and initialize the touch_sensor_param structure.
          This is because not all the touch_sensor_param members are
@@ -430,12 +433,12 @@ Name    :   Set_Measurement_Period
 Purpose :   Extract the data packet from QTouch Studio and set measurement period
 Input   :   n/a
 Output  :   n/a
-Notes   :	Should only be called from the command handler
+Notes   :   Should only be called from the command handler
 ============================================================================*/
 
 void Set_Measurement_Period(void)
 {
-   measurement_period_ms = measurement_period_ms; /* Dummy.*/
+
 }
 
 /*============================================================================
@@ -444,7 +447,7 @@ Name    :   Set_QM_Burst_Lengths
 Purpose :   Extract the data packet from QTouch Studio and set QMatrix burst lengths
 Input   :   n/a
 Output  :   n/a
-Notes   :	Should only be called from the command handler
+Notes   :   Should only be called from the command handler
 ============================================================================*/
 #if (DEF_TOUCH_QMATRIX == 1)
 void Set_QM_Burst_Lengths(void)
@@ -480,7 +483,7 @@ Name    :   Set_QT_User_Data
 Purpose :   Extracts user data from QTouch Studio to touch mcu memory
 Input   :   data pointer
 Output  :   n/a
-Notes   :	The data can be binary data
+Notes   :   The data can be binary data
 ============================================================================*/
 void Set_QT_User_Data(uint8_t *pdata);
 void Set_QT_User_Data(uint8_t *pdata)
@@ -549,6 +552,8 @@ Notes   :
 void Transmit_Global_Config(void)
 {
       int16_t touch_ret;
+      /* avoid Cppcheck Warning */
+      UNUSED(touch_ret);
 
 #if ((DEF_TOUCH_QMATRIX == 1)      || \
      (DEF_TOUCH_QTOUCH_GRP_A == 1) || \
@@ -718,11 +723,13 @@ Name    :   Transmit_Delta
 Purpose :   Transmits the channel delta values to QTouch Studio
 Input   :   n/a
 Output  :   n/a
-Notes   :	The value is equal to signal-reference
+Notes   :   The value is equal to signal-reference
 ============================================================================*/
 void Transmit_Delta(void)
 {
       int16_t delta;
+      /* avoid Cppcheck Warning */
+      UNUSED(delta);
 
 #if ((DEF_TOUCH_QMATRIX == 1)      || \
      (DEF_TOUCH_QTOUCH_GRP_A == 1) || \
@@ -759,7 +766,7 @@ Name    :   Transmit_State
 Purpose :   Transmits the state values to QTouch Studio
 Input   :   n/a
 Output  :   n/a
-Notes   :	On/Off condition for each sensor
+Notes   :   On/Off condition for each sensor
 ============================================================================*/
 void Transmit_State(void)
 {
@@ -802,7 +809,7 @@ Name    :   Transmit_Burst_Lengths
 Purpose :   Transmits the QMatrix burst length values to QTouch Studio
 Input   :   n/a
 Output  :   n/a
-Notes   :	This value is available for each channel
+Notes   :   This value is available for each channel
 ============================================================================*/
 #if (DEF_TOUCH_QMATRIX == 1)
 void Transmit_Burst_Lengths(void);
@@ -824,7 +831,7 @@ Name    :   Transmit_Time_Stamps
 Purpose :   Transmits the application execution timestamp values to QTouch Studio
 Input   :   n/a
 Output  :   n/a
-Notes   :	This value is a combination of current_time_ms_touch (high word) &
+Notes   :   This value is a combination of current_time_ms_touch (high word) &
             timer counter register (low word)
 ============================================================================*/
 void Transmit_Time_Stamps(void);
@@ -845,7 +852,7 @@ Name    :   Transmit_QT_User_Data
 Purpose :   Transmits user data to QTouch Studio
 Input   :   data pointer, length of data in bytes
 Output  :   n/a
-Notes   :	The data will be binary data
+Notes   :  The data will be binary data
 ============================================================================*/
 void Transmit_QT_User_Data(uint8_t *pdata, uint16_t c);
 void Transmit_QT_User_Data(uint8_t *pdata, uint16_t c)

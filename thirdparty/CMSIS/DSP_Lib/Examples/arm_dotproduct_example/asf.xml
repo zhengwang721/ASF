@@ -1,12 +1,12 @@
 <asf xmlversion="1.0">
-	<module type="application" id="sam.utils.cmsis.dsp_lib.examples.arm_dotproduct_example" caption="Cortex-M4 CMSIS DSP Dotproduct Example">
+	<module type="application" id="sam.utils.cmsis.dsp_lib.examples.arm_dotproduct_example" caption="Cortex-M4 CMSIS DSP Dotproduct Example on SAM4">
 		<info type="description" value="summary">
-			Example code computing dot product of two vectors. 
+			Example code computing dot product of two vectors on SAM4. 
 		</info>
 		<build type="c-source" value="arm_dotproduct_example_f32.c"/>
 		<build type="header-file" value="documentation.h"/>
-		<device-support value="sam4s"/>
-		<require idref="sam.utils.cmsis.sam4s.source.template"/>
+		<device-support value="sam4"/>
 		<build type="distribute" subtype="license" value="../../../license.txt"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

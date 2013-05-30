@@ -44,6 +44,22 @@
  *
  */
 
+/**
+ * \mainpage ATSHA204 Example 2 for Security Xplained
+ *
+ * \par Purpose
+ *
+ * Client-host communication example with two ATSHA204 devices.
+ *
+ * \par Description
+ *
+ * In an infinite loop, sends a Mac command to an ATSHA204 device serving as
+ * a client, and sends a CheckMac command with the Mac challenge / response
+ * data to a second ATSHA204 device that serves as a host. Helper functions log
+ * the commands and responses through the USB-CDC board controller in hex-ascii.
+ *
+ */
+
 #include <string.h>
 #include <stdio.h>
 #include "asf.h"

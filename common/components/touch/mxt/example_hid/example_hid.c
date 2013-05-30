@@ -3,7 +3,7 @@
  *
  * \brief Trackpad demo for mXT143E Xplained
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -230,9 +230,6 @@ int main(void)
 	/* Initialize the graphical library */
 	gfx_init();
 
-	/* Set correct landscape orientation */
-	gfx_set_orientation(GFX_SWITCH_XY | GFX_FLIP_Y);
-
 	/* Set background color */
 	gfx_draw_filled_rect(0, 0, gfx_get_width(), gfx_get_height(),
 			COLOR_BACKGROUND);
@@ -252,12 +249,6 @@ int main(void)
 
 	/* Start USB stack to authorize VBus monitoring */
 	udc_start();
-
-	if (!udc_include_vbus_monitoring()) {
-		/* VBUS monitoring is not available on this product
-		 * thereby VBUS has to be considered as present */
-		main_vbus_action(true);
-	}
 
 	/* Check if there are any new touch data pending */
 	while (true) {
@@ -289,22 +280,6 @@ int main(void)
  * \name Callback functions for the USB stack
  * @{
  */
-
-/**
- * \brief Handle Vbus state change
- *
- * Called by USB stack when Vbus line changes state.
- */
-void main_vbus_action(bool b_high)
-{
-	if (b_high) {
-		/* Attach USB Device */
-		udc_attach();
-	} else {
-		/* VBUS not present */
-		udc_detach();
-	}
-}
 
 /**
  * \brief Handle suspend of bus

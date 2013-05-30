@@ -61,10 +61,6 @@ void main_msc_disable(void);
  */
 void main_msc_notify_trans(void);
 
-/*! \brief Called when Vbus line state change
- */
-void main_vbus_action(bool b_high);
-
 /*! \brief Called when a start of frame is received on USB line
  */
 void main_sof_action(void);

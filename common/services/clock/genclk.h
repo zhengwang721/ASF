@@ -57,6 +57,8 @@
 # include "sam4s/genclk.h"
 #elif SAM4L
 # include "sam4l/genclk.h"
+#elif SAM4E
+# include "sam4e/genclk.h"
 #elif (UC3A0 || UC3A1)
 # include "uc3a0_a1/genclk.h"
 #elif UC3A3

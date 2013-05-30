@@ -144,7 +144,7 @@ static void print_temp(float temp)
 	int16_t s_integer1 = 0;
 	int32_t l_integer2 = 0;
 
-	assert(INT16_MAX > (temp * 100.0) && INT16_MIN < (temp * 100.0));
+	Assert(INT16_MAX > (temp * 100.0) && INT16_MIN < (temp * 100.0));
 
 	/* Cast to integer */
 	s_integer1 = (int16_t) (temp * 100.0);

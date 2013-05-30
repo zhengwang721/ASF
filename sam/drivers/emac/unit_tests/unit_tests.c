@@ -3,7 +3,7 @@
  *
  * \brief Unit tests for EMAC driver.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -143,6 +143,7 @@ static void run_emac_link_test(const struct test_case *test)
 	rstc_reset_extern(RSTC);
 	while (rstc_get_status(RSTC) & RSTC_SR_NRSTL) {
 	};
+	rstc_set_external_reset(RSTC, 0);       /* restore default */
 
 	/* Wait for PHY to be ready (CAT811: Max400ms) */
 	ul_delay = sysclk_get_cpu_hz() / 1000 / 3 * 400;

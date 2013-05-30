@@ -6,7 +6,7 @@
 			</info>
 			<build type="c-source" value="mt48c16m16a2_example.c"/>
 			<build type="include-path" value="."/>
-			<device-support value="sam3x8h"/>
+			<device-support value="atsam3x8h"/>
 			<require idref="sam.utils.cmsis.sam3x.source.template"/>
 			<require idref="sam.drivers.sdramc"/>
 			<require idref="sam.components.memory.sdram.mt48lc16m16a2"/>
@@ -14,7 +14,8 @@
 			<require idref="sam.drivers.uart"/>
 			<require idref="sam.utils.syscalls"/>
 			<require idref="common.services.basic.clock"/>
-			<require idref="common.utils.stdio.stdio_serial"/>			
+			<require idref="common.utils.stdio.stdio_serial"/>
+			<info type="gui-flag" value="move-to-root"/>
 		</module>
 	</select-by-device>
 </asf>

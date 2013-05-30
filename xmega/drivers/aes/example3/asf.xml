@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="xmega.drivers.aes.example3" caption="XMEGA AES driver example 3">
+	<module type="application" id="xmega.drivers.aes.example3" caption="AES Example 3">
 		<info type="description" value="summary">
 		Use the XMEGA built-in AES accelerator. DMA channel 0 is used to access AES register.
 		</info>
@@ -14,5 +14,6 @@
 		<require idref="common.services.basic.sleepmgr"/>
 		<require idref="common.services.basic.clock"/>
 		<require idref="xmega.drivers.dma"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

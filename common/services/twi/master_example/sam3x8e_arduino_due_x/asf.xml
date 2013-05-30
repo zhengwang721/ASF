@@ -7,7 +7,7 @@
 		<build type="include-path" value="."/>
 		<require idref="common.services.basic.twi.master.example"/>
 		<require idref="board.arduino_due_x"/>
-		<require idref="config.board.arduino_due_x.led#yes"/>
+		<config name="config.board.arduino_due_x.led" value="yes"/>
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>

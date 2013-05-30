@@ -78,27 +78,9 @@ int main(void)
 	// Start USB stack to authorize VBus monitoring
 	udc_start();
 
-	if (!udc_include_vbus_monitoring()) {
-		// VBUS monitoring is not available on this product
-		// thereby VBUS has to be considered as present
-		main_vbus_action(true);
-	}
-
 	while (true) {
 	}
 }
-
-void main_vbus_action(bool b_high)
-{
-	if (b_high) {
-		// Attach USB Device
-		udc_attach();
-	}else{
-		// Detach USB Device
-		udc_detach();
-	}
-}
-
 
 /**
  * \mainpage ASF USB Device DFU

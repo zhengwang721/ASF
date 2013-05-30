@@ -3,7 +3,7 @@
  *
  * \brief USB Device Mass Storage Class (MSC) interface.
  *
- * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -330,12 +330,22 @@ static bool udi_msc_spc_testunitready_global(void);
 static void udi_msc_spc_testunitready(void);
 
 /**
+ * \brief Process prevent allow medium removal command
+ */
+static void udi_msc_spc_prevent_allow_medium_removal(void);
+
+/**
  * \brief Process mode sense command
  *
  * \param b_sense10     Sense10 SCSI command, if true
  * \param b_sense10     Sense6  SCSI command, if false
  */
 static void udi_msc_spc_mode_sense(bool b_sense10);
+
+/**
+ * \brief Process start stop command
+ */
+static void udi_msc_sbc_start_stop(void);
 
 /**
  * \brief Process read capacity command
@@ -356,16 +366,21 @@ static void udi_msc_sbc_trans(bool b_read);
 
 bool udi_msc_enable(void)
 {
+	uint8_t lun;
 	udi_msc_b_trans_req = false;
 	udi_msc_b_cbw_invalid = false;
 	udi_msc_nb_lun = get_nb_lun();
 	if (0 == udi_msc_nb_lun)
-		return false;	// No lun available, then not authorize to enable interface
+		return false; // No lun available, then not authorize to enable interface
 	udi_msc_nb_lun--;
 	// Call application callback
 	// to initialize memories or signal that interface is enabled
 	if (!UDI_MSC_ENABLE_EXT())
 		return false;
+	// Load the medium on each LUN
+	for (lun = 0; lun <= udi_msc_nb_lun; lun ++) {
+		mem_unload(lun, false);
+	}
 	// Start MSC process by CBW reception
 	udi_msc_cbw_wait();
 	return true;
@@ -524,12 +539,15 @@ static void udi_msc_cbw_received(udd_ep_status_t status,
 		udi_msc_sbc_read_capacity();
 		break;
 
-		// Optional but can not reply INVALID COMMAND because
-		// this command is used by the Linux 2.4 kernel.
-		// Otherwise the disk will not mount.
 	case SBC_START_STOP_UNIT:
+		udi_msc_sbc_start_stop();
+		break;
+
 		// Accepts request to support plug/plug in case of card reader
 	case SPC_PREVENT_ALLOW_MEDIUM_REMOVAL:
+		udi_msc_spc_prevent_allow_medium_removal();
+		break;
+
 		// Accepts request to support full format from Windows
 	case SBC_VERIFY10:
 		udi_msc_sense_pass();
@@ -751,11 +769,6 @@ static void udi_msc_spc_inquiry(void)
 	// Constant inquiry data for all LUNs
 	static struct scsi_inquiry_data udi_msc_inquiry_data = {
 		.pq_pdt = SCSI_INQ_PQ_CONNECTED | SCSI_INQ_DT_DIR_ACCESS,
-#ifdef UDI_MSC_NOT_REMOVABLE
-		.flags1 = 0,
-#else
-		.flags1 = SCSI_INQ_RMB,
-#endif
 		.version = SCSI_INQ_VER_SPC,
 		.flags3 = SCSI_INQ_RSP_SPC2,
 		.addl_len = SCSI_INQ_ADDL_LEN(sizeof(struct scsi_inquiry_data)),
@@ -780,6 +793,9 @@ static void udi_msc_spc_inquiry(void)
 		udi_msc_csw_process();
 		return;
 	}
+
+	udi_msc_inquiry_data.flags1 = mem_removal(udi_msc_cbw.bCBWLUN) ?
+			SCSI_INQ_RMB : 0;
 
 	//* Fill product ID field
 	// Copy name in product id field
@@ -912,6 +928,30 @@ static void udi_msc_spc_mode_sense(bool b_sense10)
 
 	// Send mode sense data
 	udi_msc_data_send((uint8_t *) & sense, request_lgt);
+}
+
+
+static void udi_msc_spc_prevent_allow_medium_removal(void)
+{
+	uint8_t prevent = udi_msc_cbw.CDB[4];
+	if (0 == prevent) {
+		udi_msc_sense_pass();
+	} else {
+		udi_msc_sense_fail_cdb_invalid(); // Command is unsupported
+	}
+	udi_msc_csw_process();
+}
+
+
+static void udi_msc_sbc_start_stop(void)
+{
+	bool start = 0x1 & udi_msc_cbw.CDB[4];
+	bool loej = 0x2 & udi_msc_cbw.CDB[4];
+	if (loej) {
+		mem_unload(udi_msc_cbw.bCBWLUN, !start);
+	}
+	udi_msc_sense_pass();
+	udi_msc_csw_process();
 }
 
 

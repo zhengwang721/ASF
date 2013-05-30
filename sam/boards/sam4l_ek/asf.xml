@@ -27,12 +27,13 @@
 			<build type="include-path" value="."/>
 			<require idref="sam.drivers.usart"/>
 			<require idref="common.services.basic.clock"/>
+			<require idref="common.services.delay"/>
 		</module>
 	</select-by-config>
 
 	<board id="board.sam4l_ek" vendor="Atmel" caption="SAM4L-EK"> 
 		<build type="define" name="BOARD" value="SAM4L_EK"/>
-		<build type="define" name="__ATSAM4LC4C__" value=""/>
+		<build type="define" name="__SAM4LC4C__" value=""/>
 		<build type="header-file" value="sam4l_ek.h"/>
 		<build type="include-path" value="."/>
 		<build type="include-path" value=".."/>

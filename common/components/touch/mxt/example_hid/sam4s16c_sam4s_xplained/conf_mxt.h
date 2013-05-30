@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief maxTouch driver configuration
+ * \brief maXTouch component configuration.
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *

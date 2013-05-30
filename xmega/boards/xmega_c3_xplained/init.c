@@ -91,7 +91,7 @@ void board_init(void)
 			| IOPORT_INIT_HIGH);
 	ioport_configure_pin(SD_MMC_SPI_MISO, IOPORT_DIR_INPUT);
 #endif
-	
+
 #ifdef CONF_BOARD_LIGHT_SENSOR
 	ioport_configure_pin(IOPORT_CREATE_PIN(PORTA, 0), IOPORT_DIR_INPUT);
 #endif
@@ -121,6 +121,28 @@ void board_init(void)
 	ioport_configure_pin(IOPORT_CREATE_PIN(PORTE, 3), IOPORT_DIR_OUTPUT
 			| IOPORT_INIT_HIGH);
 	ioport_configure_pin(IOPORT_CREATE_PIN(PORTE, 2), IOPORT_DIR_INPUT);
+#endif
+
+#ifdef CONF_BOARD_ENABLE_MXT143E_XPLAINED
+	ioport_configure_pin(MXT143E_XPLAINED_SCK, IOPORT_DIR_OUTPUT
+			| IOPORT_INIT_HIGH);
+	ioport_configure_pin(MXT143E_XPLAINED_MOSI, IOPORT_DIR_OUTPUT
+			| IOPORT_INIT_HIGH);
+	ioport_configure_pin(MXT143E_XPLAINED_MISO, IOPORT_DIR_INPUT);
+	ioport_configure_pin(MXT143E_XPLAINED_CS, IOPORT_DIR_OUTPUT
+			| IOPORT_INIT_HIGH);
+	ioport_configure_pin(MXT143E_XPLAINED_CHG, IOPORT_DIR_INPUT);
+	ioport_configure_pin(MXT143E_XPLAINED_DC, IOPORT_DIR_OUTPUT
+			| IOPORT_INIT_LOW);
+	#ifndef MXT143E_XPLAINED_BACKLIGHT_DISABLE
+	ioport_configure_pin(MXT143E_XPLAINED_BACKLIGHT, IOPORT_DIR_OUTPUT
+			| IOPORT_INIT_LOW);
+	#endif
+	ioport_configure_pin(MXT143E_XPLAINED_LCD_RESET, IOPORT_DIR_OUTPUT
+			| IOPORT_INIT_LOW);
+	// Setting PORT_USART0_bm to one will move the pin location
+	// of USARTC0 (in mode SPI) from Px[3:0] to Px[7:4].
+	PORTC.REMAP |= PORT_USART0_bm;
 #endif
 }
 

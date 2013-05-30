@@ -22,5 +22,6 @@
 		<require idref="avr32.drivers.usart"/>
 		<require idref="common.services.os.freertos"/>
 		<require idref="common.services.freertos.demo.common.minimal"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

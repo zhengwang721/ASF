@@ -136,15 +136,15 @@ extern void vPortStartFirstTask( void );
 /*
  * The number of SysTick increments that make up one tick period.
  */
-#if configUSE_TICKLESS_IDLE == 1
+#if (defined configUSE_TICKLESS_IDLE) && (configUSE_TICKLESS_IDLE == 1)
 	static unsigned long ulTimerReloadValueForOneTick = 0;
-#endif
+#endif /* configUSE_TICKLESS_IDLE */
 
 /*
  * The maximum number of tick periods that can be suppressed is limited by the
  * 24 bit resolution of the SysTick timer.
  */
-#if configUSE_TICKLESS_IDLE == 1
+#if (defined configUSE_TICKLESS_IDLE) && (configUSE_TICKLESS_IDLE == 1)
 	static unsigned long xMaximumPossibleSuppressedTicks = 0;
 #endif /* configUSE_TICKLESS_IDLE */
 
@@ -152,7 +152,7 @@ extern void vPortStartFirstTask( void );
  * Compensate for the CPU cycles that pass while the SysTick is stopped (low
  * power functionality only.
  */
-#if configUSE_TICKLESS_IDLE == 1
+#if (defined configUSE_TICKLESS_IDLE) && (configUSE_TICKLESS_IDLE == 1)
 	static unsigned long ulStoppedTimerCompensation = 0;
 #endif /* configUSE_TICKLESS_IDLE */
 
@@ -245,7 +245,7 @@ void SysTick_Handler( void )
 	1.  If it is set to 0 tickless idle is not being used.  If it is set to a
 	value other than 0 or 1 then a timer other than the SysTick is being used
 	to generate the tick interrupt. */
-	#if configUSE_TICKLESS_IDLE == 1
+	#if (defined configUSE_TICKLESS_IDLE) && (configUSE_TICKLESS_IDLE == 1)
 		portNVIC_SYSTICK_LOAD_REG = ulTimerReloadValueForOneTick;
 	#endif
 
@@ -257,7 +257,7 @@ void SysTick_Handler( void )
 }
 /*-----------------------------------------------------------*/
 
-#if configUSE_TICKLESS_IDLE == 1
+#if (defined configUSE_TICKLESS_IDLE) && (configUSE_TICKLESS_IDLE == 1)
 
 	__weak void vPortSuppressTicksAndSleep( portTickType xExpectedIdleTime )
 	{
@@ -371,7 +371,7 @@ void SysTick_Handler( void )
 __weak void vPortSetupTimerInterrupt( void )
 {
 	/* Calculate the constants required to configure the tick interrupt. */		
-	#if configUSE_TICKLESS_IDLE == 1
+	#if (defined configUSE_TICKLESS_IDLE) && (configUSE_TICKLESS_IDLE == 1)
 	{
 		ulTimerReloadValueForOneTick = ( configSYSTICK_CLOCK_HZ / configTICK_RATE_HZ ) - 1UL;
 		xMaximumPossibleSuppressedTicks = 0xffffffUL / ( ( configSYSTICK_CLOCK_HZ / configTICK_RATE_HZ ) - 1UL );

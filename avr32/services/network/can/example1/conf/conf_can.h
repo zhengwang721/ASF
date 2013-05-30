@@ -6,7 +6,7 @@
  *
  * This file contains basic configuration for the AVR32 CAN.
  *
- * Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -62,6 +62,7 @@
 #define CAN_BAUDRATE_1MHZ_CANCLOCK_16MHz_PHS2        1
 
 #define BAUDRATE        CAN_BAUDRATE_1MHZ_CANCLOCK_16MHz
+#define BAUDRATE_HZ     1000000
 #define BAUDRATE_SJW    CAN_BAUDRATE_1MHZ_CANCLOCK_16MHz_SJW
 #define BAUDRATE_PRES   CAN_BAUDRATE_1MHZ_CANCLOCK_16MHz_PRES
 #define BAUDRATE_PRS    CAN_BAUDRATE_1MHZ_CANCLOCK_16MHz_PRS

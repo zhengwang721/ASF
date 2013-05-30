@@ -195,7 +195,7 @@ extern "C"
  * Select the Number of times acquisition should be repeated.
  * Range: 0u to 8u.
  */
-#define QT_REPEAT			(0u)
+#define QT_REPEAT			(3u)
 
 
 

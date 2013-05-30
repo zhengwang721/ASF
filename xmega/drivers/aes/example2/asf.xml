@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="xmega.drivers.aes.example2" caption="XMEGA AES driver example 2">
+	<module type="application" id="xmega.drivers.aes.example2" caption="AES Example 2">
 		<info type="description" value="summary">
 		Use the XMEGA built-in AES accelerator with interrupts. A
 		single block is encrypted and decrypted using interrupts to
@@ -12,10 +12,12 @@
 		<build type="include-path" value="."/>
 		<device-support value="xmegaa"/>
 		<device-support value="xmegaau"/>
+		<device-support value="xmegac"/>
 		<require idref="xmega.drivers.aes"/>
 		<require idref="xmega.drivers.pmic"/>
 		<require idref="xmega.drivers.ioport"/>
 		<require idref="common.services.basic.sleepmgr"/>
 		<require idref="common.services.basic.clock"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

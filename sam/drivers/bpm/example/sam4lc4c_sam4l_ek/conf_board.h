@@ -45,7 +45,7 @@
 #define CONF_BOARD_H_INCLUDED
 
 /* Enable Com Port. */
-//#define CONF_BOARD_COM_PORT
+#define CONF_BOARD_COM_PORT
 
 /* Enable board monitor com port */
 #define CONF_BOARD_BM_USART

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief ILI9341 display controller configuration for the ILI9341 example
+ * \brief ILI9341 display controller driver configuration
  *
  * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *

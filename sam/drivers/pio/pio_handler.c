@@ -3,7 +3,7 @@
  *
  * \brief Parallel Input/Output (PIO) interrupt handler for SAM.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -45,7 +45,7 @@
 #include "pio.h"
 #include "pio_handler.h"
 
-/** 
+/**
  * Maximum number of interrupt sources that can be defined. This
  * constant can be increased, but the current value is the smallest possible one
  * that will be compatible with all existing projects.
@@ -71,6 +71,12 @@ static struct s_interrupt_source gs_interrupt_sources[MAX_INTERRUPT_SOURCES];
 
 /* Number of currently defined interrupt sources. */
 static uint32_t gs_ul_nb_sources = 0;
+
+#if (SAM3S || SAM4S || SAM4E)
+/* PIO Capture handler */
+static void (*pio_capture_handler)(Pio *) = NULL;
+extern uint32_t pio_capture_enable_flag;
+#endif
 
 /**
  * \brief Process an interrupt request on the given PIO controller.
@@ -104,12 +110,21 @@ void pio_handler_process(Pio *p_pio, uint32_t ul_id)
 			i++;
 		}
 	}
+
+	/* Check capture events */
+#if (SAM3S || SAM4S || SAM4E)
+	if (pio_capture_enable_flag) {
+		if (pio_capture_handler) {
+			pio_capture_handler(p_pio);
+		}
+	}
+#endif
 }
 
 /**
  * \brief Set an interrupt handler for the provided pins.
- * The provided handler will be called with the triggering pin as its parameter 
- * as soon as an interrupt is detected. 
+ * The provided handler will be called with the triggering pin as its parameter
+ * as soon as an interrupt is detected.
  *
  * \param p_pio PIO controller base address.
  * \param ul_id PIO ID.
@@ -137,15 +152,31 @@ uint32_t pio_handler_set(Pio *p_pio, uint32_t ul_id, uint32_t ul_mask,
 
 	/* Configure interrupt mode */
 	pio_configure_interrupt(p_pio, ul_mask, ul_attr);
-	
+
 	return 0;
 }
+
+#if (SAM3S || SAM4S || SAM4E)
+/**
+ * \brief Set a capture interrupt handler for all PIO.
+ *
+ * The handler will be called with the triggering PIO as its parameter
+ * as soon as an interrupt is detected.
+ *
+ * \param p_handler Interrupt handler function pointer.
+ *
+ */
+void pio_capture_handler_set(void (*p_handler)(Pio *))
+{
+	pio_capture_handler = p_handler;
+}
+#endif
 
 #ifdef ID_PIOA
 /**
  * \brief Set an interrupt handler for the specified pin.
- * The provided handler will be called with the triggering pin as its parameter 
- * as soon as an interrupt is detected. 
+ * The provided handler will be called with the triggering pin as its parameter
+ * as soon as an interrupt is detected.
  *
  * \param ul_pin Pin index to configure.
  * \param ul_flag Pin flag.
@@ -231,21 +262,20 @@ void PIOF_Handler(void)
 /**
  * \brief Initialize PIO interrupt management logic.
  *
- * \note The desired priority of PIO must be provided.
- * Calling this function multiple times result in the reset of currently
- * configured interrupt on the provided PIO.
- *
  * \param p_pio PIO controller base address.
  * \param ul_irqn NVIC line number.
  * \param ul_priority PIO controller interrupts priority.
  */
 void pio_handler_set_priority(Pio *p_pio, IRQn_Type ul_irqn, uint32_t ul_priority)
 {
-	/* Configure PIO interrupt sources */
-	pio_get_interrupt_status(p_pio);
+	uint32_t bitmask = 0;
+
+	bitmask = pio_get_interrupt_mask(p_pio);
 	pio_disable_interrupt(p_pio, 0xFFFFFFFF);
+	pio_get_interrupt_status(p_pio);
 	NVIC_DisableIRQ(ul_irqn);
 	NVIC_ClearPendingIRQ(ul_irqn);
 	NVIC_SetPriority(ul_irqn, ul_priority);
 	NVIC_EnableIRQ(ul_irqn);
+	pio_enable_interrupt(p_pio, bitmask);
 }

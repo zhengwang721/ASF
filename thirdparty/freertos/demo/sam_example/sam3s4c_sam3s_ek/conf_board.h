@@ -50,4 +50,6 @@
 /** Usart Hw ID used by the console (UART0). */
 #define CONSOLE_UART_ID          ID_UART0
 
+#define LED0 LED0_GPIO
+
 #endif /* CONF_BOARD_H_INCLUDED */

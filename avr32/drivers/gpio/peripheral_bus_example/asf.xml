@@ -5,7 +5,7 @@
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="I/O"/>
-		</info>	
+		</info>
 		<build type="c-source" value="gpio_peripheral_bus_example.c"/>
 		<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
 		<build type="module-config" subtype="required-header-file" value="conf_gpio_peripheral_bus_example.h"/>
@@ -16,5 +16,6 @@
 		<device-support value="uc3d"/>
 		<device-support value="uc3l"/>
 		<require idref="avr32.drivers.gpio"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

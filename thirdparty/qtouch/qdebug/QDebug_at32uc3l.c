@@ -9,7 +9,7 @@
  * - Userguide:          QTouch Library User Guide - doc8207.pdf.
  * - Support email:      touch@atmel.com
  *
- * Copyright (c) 2010-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -49,6 +49,7 @@
 
 /*============================ INCLUDES ======================================*/
 #include "QDebug_at32uc3l.h"
+#include "compiler.h"
 
 /*! compile file only when QDebug is enabled. */
 #if DEF_TOUCH_QDEBUG_ENABLE == 1
@@ -328,7 +329,7 @@ void Set_Global_Config(void)
 	touch_sensor_param.ndrift = GetChar();
 	touch_sensor_param.pdrift = GetChar();
 
-	dummy_var = dummy_var;  /* Dummy. Avoid compiler warning. */
+	UNUSED(dummy_var);  /* Dummy. Avoid compiler warning. */
 
 	/* update the global parameter value inside the uc3l library */
 	touch_ret = QDEBUG_UPDATE_GLOBAL_PARAM_FUNC(&touch_sensor_param);
@@ -399,7 +400,7 @@ void Set_Channel_Config(void)
 	touch_at_param_t touch_sensor_param;
 
 	sensor_id = GetChar();  /* Dummy. To skip sensor_id. */
-	sensor_id = sensor_id;  /* Dummy. To avoid warning. */
+	UNUSED(sensor_id);  /* Dummy. To avoid warning. */
 
 	/* Read back and initialize the touch_sensor_param structure.
 	 * This is because not all the touch_sensor_param members are
@@ -430,7 +431,7 @@ void Set_Channel_Config(void)
  */
 void Set_Measurement_Period(void)
 {
-	measurement_period_ms = measurement_period_ms;  /* Dummy. */
+	UNUSED(measurement_period_ms);  /* Dummy. */
 }
 
 /*! \brief Extract the data packet from QTouch Studio and set QMatrix burst
@@ -519,7 +520,8 @@ void Transmit_Sign_On(void)
 void Transmit_Global_Config(void)
 {
 	int16_t touch_ret;
-
+	UNUSED(touch_ret);  /* Dummy. To avoid warning. */
+	
 #if ((DEF_TOUCH_QDEBUG_ENABLE_QM == 1)      ||\
 	(DEF_TOUCH_QDEBUG_ENABLE_QTA == 1) ||\
 	(DEF_TOUCH_QDEBUG_ENABLE_QTB == 1))
@@ -666,6 +668,7 @@ void Transmit_Ref(void)
 void Transmit_Delta(void)
 {
 	int16_t delta;
+	UNUSED(delta);  /* Dummy. To avoid warning. */
 
 #if ((DEF_TOUCH_QDEBUG_ENABLE_QM == 1)      ||\
 	(DEF_TOUCH_QDEBUG_ENABLE_QTA == 1) ||\

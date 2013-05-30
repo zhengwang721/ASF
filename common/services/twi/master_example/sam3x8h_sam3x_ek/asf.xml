@@ -7,7 +7,7 @@
 		<build type="include-path" value="."/>
 		<require idref="common.services.basic.twi.master.example"/>
 		<require idref="board.sam3x_ek"/>
-		<require idref="config.board.sam3x_ek.led#yes"/>
+		<config name="config.board.sam3x_ek.led" value="yes"/>
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>

@@ -172,8 +172,8 @@
 /** \name Sampling Mode (OVSX2 & SHDYN)
  * @{
  */
-#  define ADCIFA_SH_MODE_STANDARD 0x0     /** No dynamic oversampling */
-#  define ADCIFA_SH_MODE_OVERSAMP 0x1     /** Oversampling: OVSX2 = 1 */
+#  define ADCIFA_SH_MODE_STANDARD 0x0     /** No dynamic over sampling */
+#  define ADCIFA_SH_MODE_OVERSAMP 0x1     /** Over sampling: OVSX2 = 1 */
 #  define ADCIFA_SH_MODE_DYNAMIC  0x2     /** Dynamic: SHDYN = 1 */
 /** @} */
 #endif
@@ -181,14 +181,14 @@
 /** \name Half Word Left Adjustment (HWLA)
  * @{
  */
-#define ADCIFA_HWLA_NOADJ         0x0     /** Enable the HWLA mode */
+#define ADCIFA_HWLA_NOADJ         0x0     /** Disable the HWLA mode */
 #define ADCIFA_HWLA_LEFTADJ       0x1     /** Enable the HWLA mode */
 /** @} */
 
 /** \name Software Acknowledge (SA)
  * @{
  */
-#define ADCIFA_SA_EOS_SOFTACK     0x0     /** Enable the SA mode */
+#define ADCIFA_SA_EOS_SOFTACK     0x0     /** Disable the SA mode */
 #define ADCIFA_SA_NO_EOS_SOFTACK  0x1     /** Enable the SA mode */
 /** @} */
 
@@ -203,11 +203,11 @@
 /** \name Window monitor
  * @{
  */
-#define ADCIFA_WINDOW_MODE_NONE     0
-#define ADCIFA_WINDOW_MODE_BELOW    1
-#define ADCIFA_WINDOW_MODE_ABOVE    2
-#define ADCIFA_WINDOW_MODE_INSIDE   3
-#define ADCIFA_WINDOW_MODE_OUTSIDE  4
+#define ADCIFA_WINDOW_MODE_NONE     0     /** 	No Window Mode : Default */
+#define ADCIFA_WINDOW_MODE_BELOW    1     /**   Active : Result < High Threshold */
+#define ADCIFA_WINDOW_MODE_ABOVE    2     /**   Active : Result > Low Threshold */
+#define ADCIFA_WINDOW_MODE_INSIDE   3     /**   Active : Low Threshold < Result  < High Threshold */
+#define ADCIFA_WINDOW_MODE_OUTSIDE  4     /**   Active : Result >= Low Threshold or Result >= High Threshold */
 /** @} */
 
 /** ADCIFA Start-Up time (us) */
@@ -216,33 +216,34 @@
 /**  Set Offset Calibration */
 #define ADCIFA_set_offset_calibration(ocal) \
 	{ \
-		AVR32_ADCIFA.adccal \
-			|= ((ocal) << AVR32_ADCIFA_ADCCAL_OCAL) & \
-				AVR32_ADCIFA_ADCCAL_OCAL_MASK; \
+		AVR32_ADCIFA.adccal =  \
+			((AVR32_ADCIFA.adccal & ~AVR32_ADCIFA_ADCCAL_OCAL_MASK)|\
+			(((ocal) << AVR32_ADCIFA_ADCCAL_OCAL) & \
+				AVR32_ADCIFA_ADCCAL_OCAL_MASK)); \
 	}
 
 /**  Set Gain Calibration */
 #define ADCIFA_set_gain_calibration(gcal) \
 	{ \
-		AVR32_ADCIFA.adccal \
-			|= ((gcal) << AVR32_ADCIFA_ADCCAL_GCAL) & \
-				AVR32_ADCIFA_ADCCAL_GCAL_MASK; \
+		AVR32_ADCIFA.adccal = \
+		((AVR32_ADCIFA.adccal & ~AVR32_ADCIFA_ADCCAL_GCAL_MASK) | \
+		(((gcal)<<AVR32_ADCIFA_ADCCAL_GCAL) & AVR32_ADCIFA_ADCCAL_GCAL_MASK)); \
 	}
 
 /**  Set Sample & Hold Gain Calibration for Seq 0 */
 #define ADCIFA_set_sh0_gain_calibration(scal) \
 	{ \
-		AVR32_ADCIFA.shcal \
-			|= ((scal) << AVR32_ADCIFA_SHCAL_GAIN0) & \
-				AVR32_ADCIFA_SHCAL_GAIN0_MASK; \
+		AVR32_ADCIFA.shcal = \
+		((AVR32_ADCIFA.shcal & ~AVR32_ADCIFA_SHCAL_GAIN0_MASK) | \
+		(((scal)<<AVR32_ADCIFA_SHCAL_GAIN0) & AVR32_ADCIFA_SHCAL_GAIN0_MASK)); \
 	}
 
 /**  Set Sample & Hold Gain Calibration for Seq 0 */
 #define ADCIFA_set_sh1_gain_calibration(scal) \
 	{ \
-		AVR32_ADCIFA.shcal \
-			|= ((scal) << AVR32_ADCIFA_SHCAL_GAIN1) & \
-				AVR32_ADCIFA_SHCAL_GAIN1_MASK; \
+		AVR32_ADCIFA.shcal = \
+		((AVR32_ADCIFA.shcal & ~AVR32_ADCIFA_SHCAL_GAIN1_MASK) | \
+		(((scal)<<AVR32_ADCIFA_SHCAL_GAIN1) & AVR32_ADCIFA_SHCAL_GAIN1_MASK)); \
 	}
 
 /**  Check Startup Time flag */
@@ -511,6 +512,24 @@
 /** Return result for conversion for Sequencer 1 */
 #define ADCIFA_read_resx_sequencer_1(ind) ((int)AVR32_ADCIFA.resx[(ind) + 8])
 
+/**  Window Monitor 0 : Check the Window Monitor 0 Status Bit */
+#define ADCIFA_is_window_0_set() \
+	(((AVR32_ADCIFA.sr) & (1 << AVR32_ADCIFA_SR_WM0)) == \
+	(1 << AVR32_ADCIFA_SR_WM0))
+
+/**  Window Monitor 0 : Ack the Window Monitor 0 Status Bit */
+#define ADCIFA_clear_window_0() \
+	((AVR32_ADCIFA.scr) |= (1 << AVR32_ADCIFA_SCR_WM0))
+
+/**  Window Monitor 1 : Check the Window Monitor 1 Status Bit */
+#define ADCIFA_is_window_1_set() \
+	(((AVR32_ADCIFA.sr) & (1 << AVR32_ADCIFA_SR_WM1)) == \
+	(1 << AVR32_ADCIFA_SR_WM1))
+
+/**  Window Monitor 1 : Ack the Window Monitor 1 Status Bit */
+#define ADCIFA_clear_window_1() \
+	((AVR32_ADCIFA.scr) |= (1 << AVR32_ADCIFA_SCR_WM1))
+
 /** Parameter */
 #define ADCIFA_NONE             0xFF
 
@@ -538,6 +557,7 @@ typedef struct {
 	bool single_sequencer_mode; /**< Single Sequencer Mode */
 	bool free_running_mode_enable; /**< Enable Free Running Mode */
 	bool sleep_mode_enable; /**< Sleep Mode Selection */
+	bool mux_settle_more_time; /** Multiplexer Settle Time */
 	int16_t gain_calibration_value; /**< Gain Calibration Value */
 	int16_t offset_calibration_value; /**< Offset Calibration Value */
 	int16_t sh0_calibration_value; /**< S/H Gain Calibration Value for Seq0 */
@@ -551,7 +571,7 @@ typedef struct {
 	uint8_t trigger_selection; /**< Trigger selection. */
 	uint8_t start_of_conversion; /**< Start of conversion. */
 #if (defined AVR32_ADCIFA_100_H_INCLUDED)
-	uint8_t oversampling; /**< Oversampling. */
+	uint8_t oversampling; /**< Over sampling. */
 #else
 	uint8_t sh_mode; /**< Sample & Hold mode. */
 #endif
@@ -574,6 +594,8 @@ typedef struct {
 	uint16_t high_threshold; /**< High threshold value */
 } adcifa_window_monitor_opt_t;
 
+void adcifa_calibrate_offset(volatile avr32_adcifa_t *adcifa,
+	adcifa_opt_t *p_adcifa_opt, uint32_t pb_hz);
 void adcifa_get_calibration_data(volatile avr32_adcifa_t *adcifa,
 		adcifa_opt_t *p_adcifa_opt);
 uint8_t adcifa_configure(volatile avr32_adcifa_t *adcifa,

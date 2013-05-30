@@ -47,7 +47,7 @@
 
 #if XMEGA
 # include "xmega_usart_spi/usart_spi.h"
-#elif (defined(__GNUC__) && defined(__AVR32__)) || (defined(__ICCAVR32__) || defined(__AAVR32__))
+#elif UC3
 # include "uc3_usart_spi/usart_spi.h"
 #elif SAM
 # include "sam_usart_spi/usart_spi.h"

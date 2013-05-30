@@ -3,7 +3,7 @@
  *
  * \brief AVR CAN Configuration File
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -54,6 +54,7 @@
 #define CAN_BAUDRATE_1MHZ_CANCLOCK_8MHz_PHS2    1
 
 #define BAUDRATE                            CAN_BAUDRATE_1MHZ_CANCLOCK_8MHz
+#define BAUDRATE_HZ                         1000000
 #define BAUDRATE_SJW                        CAN_BAUDRATE_1MHZ_CANCLOCK_8MHz_SJW
 #define BAUDRATE_PRES                       CAN_BAUDRATE_1MHZ_CANCLOCK_8MHz_PRES
 #define BAUDRATE_PRS                        CAN_BAUDRATE_1MHZ_CANCLOCK_8MHz_PRS

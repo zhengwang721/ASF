@@ -208,6 +208,17 @@ static bool wtk_radio_button_handler(struct win_window *win,
 				WTK_RADIOBUTTON_BUTTON_COLOR,
 				GFX_WHOLE);
 
+		/* Draw radio button filled circle background. */
+		if (WTK_RADIOBUTTON_BACKGROUND_COLOR != GFX_COLOR_TRANSPARENT) {
+			gfx_draw_filled_circle(clip->origin.x +
+				WTK_RADIOBUTTON_BUTTON_X,
+				clip->origin.y +
+				WTK_RADIOBUTTON_BUTTON_Y,
+				WTK_RADIOBUTTON_RADIUS - 1,
+				WTK_RADIOBUTTON_BACKGROUND_COLOR,
+				GFX_WHOLE);
+		}	
+
 		/* Draw radio button select marker if selected. */
 		if (radio_button->group->selected == radio_button) {
 			gfx_draw_filled_circle(clip->origin.x +

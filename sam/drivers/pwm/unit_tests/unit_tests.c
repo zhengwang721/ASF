@@ -3,7 +3,7 @@
  *
  * \brief Unit tests for PWM driver.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -79,7 +79,7 @@
  * - sam3u4e_sam3u_ek
  * - sam3x8h_sam3x_ek
  * - sam4s16c_sam4s_ek
- * - sam4sd32c_sam4s_ek2 
+ * - sam4sd32c_sam4s_ek2
  *
  * \section compinfo Compilation info
  * This software was written for the GNU GCC and IAR for ARM. Other compilers
@@ -158,9 +158,9 @@ static void delay_ms(uint32_t ul_dly_ticks)
 }
 
 /**
- * \brief Test watchdog setting
+ * \brief Test PWM setting
  *
- * This test sets the watchdog to trigger an interrupt every 100ms.
+ * This test sets the PWM APIs.
  *
  * \param test Current test case.
  */
@@ -178,7 +178,7 @@ static void run_pwm_test(const struct test_case *test)
 	/* Disable PWM channel */
 	pwm_channel_disable(PWM, PWM_UNIT_TEST_CH);
 
-	/* Set PWM clock A as PWM_FREQUENCY * PERIOD_VALUE (clock B is not used) */
+	/* Set PWM clock A as PWM_FREQUENCY*PERIOD_VALUE (clock B is not used) */
     pwm_clock_t test_clock = {
         .ul_clka = PWM_FREQUENCY * PERIOD_VALUE,
         .ul_clkb = 0,
@@ -189,8 +189,10 @@ static void run_pwm_test(const struct test_case *test)
 	/* Test1 */
 	/* Configure PWM channel */
 	pwm_channel_t test_channel = {
-		.ul_prescaler = PWM_CMR_CPRE_CLKA, /* Use PWM clock A as source clock */
-		.ul_period = PERIOD_VALUE,         /* Period value */
+		/* Use PWM clock A as source clock */
+		.ul_prescaler = PWM_CMR_CPRE_CLKA,
+		/* Period value */
+		.ul_period = PERIOD_VALUE,
 	};
 
 	/* Initialize PWM channel */
@@ -200,10 +202,14 @@ static void run_pwm_test(const struct test_case *test)
 	/* Enable PWM channel */
 	pwm_channel_enable(PWM, PWM_UNIT_TEST_CH);
 
-	/* Enable PWM channel event interrupt and wait for PWM to trigger a period interrupt after PERIOD_VALUE */
+	/*
+	 * Enable PWM channel event interrupt and wait for PWM to trigger
+	 * a period interrupt after PERIOD_VALUE.
+	 */
 	pwm_channel_enable_interrupt(PWM, PWM_UNIT_TEST_CH, 0);
 	delay_ms(50);
-	test_assert_true(test, gs_l_pwm_period_int_flag != 0, "Test1: No period interrupt triggered!");
+	test_assert_true(test, gs_l_pwm_period_int_flag != 0,
+			"Test1: No period interrupt triggered!");
 
 #if (SAM3U || SAM3S || SAM3XA || SAM4S)
 	/* Test2 */
@@ -213,9 +219,12 @@ static void run_pwm_test(const struct test_case *test)
 
 	/* Configure comparison unit */
 	pwm_cmp_t comparison_unit = {
-		.unit =  PWM_UNIT_TEST_CMP,     /* Use PWM_UNIT_TEST_CMP as comparison unit */
-		.b_enable = 1,                 /* Enable the comparison unit */
-		.ul_value = PERIOD_VALUE - 1   /* Comparison value = Period value - 1 */
+		/* Use PWM_UNIT_TEST_CMP as comparison unit */
+		.unit =  PWM_UNIT_TEST_CMP,
+		/* Enable the comparison unit */
+		.b_enable = 1,
+		/* Comparison value = Period value - 1 */
+		.ul_value = PERIOD_VALUE - 1
 	};
 
 	/* Initialize PWM comparison unit */
@@ -230,9 +239,13 @@ static void run_pwm_test(const struct test_case *test)
 	/* Enable PWM channel */
 	pwm_channel_enable(PWM, PWM_UNIT_TEST_CH);
 
-	/* Wait for PWM to trigger a comparison match interrupt after PERIOD_VALUE - 1 */
+	/*
+	 * Wait for PWM to trigger a comparison match interrupt
+	 * after PERIOD_VALUE - 1.
+	 */
 	delay_ms(50);
-	test_assert_true(test, gs_l_pwm_comparison_int_flag != 0, "Test2: No comparison match interrupt triggered!");
+	test_assert_true(test, gs_l_pwm_comparison_int_flag != 0,
+			"Test2: No comparison match interrupt triggered!");
 
 	/* Test3 */
 	/* Disable PWM channel */
@@ -245,15 +258,19 @@ static void run_pwm_test(const struct test_case *test)
 
 	/*
 	 * Initialize PWM synchronous channels
-	 * Synchronous Update Mode: Automatic update duty cycle value by the PDC and automatic update of synchronous channels. The update occurs when the Update Period is elapsed (MODE 2).
+	 * Synchronous Update Mode: Automatic update duty cycle value by the PDC
+	 * and automatic update of synchronous channels. The update occurs when
+	 * the Update Period is elapsed (MODE 2).
 	 * Synchronous Update Period = 1.
 	 */
 	pwm_sync_init(PWM, PWM_SYNC_UPDATE_MODE_2, 1);
 
 	/*
-	 * Request PDC transfer as soon as the synchronous update period is elapsed (comparison unit is ignored).
+	 * Request PDC transfer as soon as the synchronous update period is
+	 * elapsed (comparison unit is ignored).
 	 */
-	pwm_pdc_set_request_mode(PWM, PWM_PDC_UPDATE_PERIOD_ELAPSED, PWM_UNIT_TEST_CMP);
+	pwm_pdc_set_request_mode(PWM, PWM_PDC_UPDATE_PERIOD_ELAPSED,
+			PWM_UNIT_TEST_CMP);
 
 	/* Configure the PDC transfer packet and enable PDC transfer */
 	g_pdc_tx_packet.ul_addr = (uint32_t)(&gs_ul_ms_ticks);
@@ -267,7 +284,8 @@ static void run_pwm_test(const struct test_case *test)
 
 	/* Wait for PWM to trigger a PDC transfer end interrupt */
 	delay_ms(100);
-	test_assert_true(test, gs_l_pwm_pdc_tx_int_flag != 0, "Test3: No PDC transfer end interrupt triggered!");
+	test_assert_true(test, gs_l_pwm_pdc_tx_int_flag != 0,
+			"Test3: No PDC transfer end interrupt triggered!");
 	/* Disable PWM channel */
 	pwm_channel_disable(PWM, PWM_UNIT_TEST_CH);
 #endif /* (SAM3N) */

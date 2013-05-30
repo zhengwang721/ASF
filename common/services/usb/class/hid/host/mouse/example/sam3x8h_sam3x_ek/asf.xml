@@ -8,7 +8,7 @@
 		<config name="config.common.services.usb.class.host" value="hid_mouse"/>
 		<require idref="common.services.usb.class.hid.host.mouse.example"/>
 		<require idref="board.sam3x_ek"/>
-		<require idref="config.board.sam3x_ek.led#yes"/>
+		<config name="config.board.sam3x_ek.led" value="yes"/>
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>

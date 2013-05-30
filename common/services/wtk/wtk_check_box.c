@@ -181,12 +181,23 @@ static bool wtk_check_box_handler(struct win_window *win,
 		struct win_clip_region const *clip
 			= (struct win_clip_region const *)data;
 
-		/* Check check box square. */
+		/* Draw check box square. */
 		gfx_draw_rect(clip->origin.x + WTK_CHECKBOX_BOX_X,
 				clip->origin.y + WTK_CHECKBOX_BOX_Y,
 				WTK_CHECKBOX_BOX_SIZE,
 				WTK_CHECKBOX_BOX_SIZE,
 				WTK_CHECKBOX_BOX_COLOR);
+
+		/* Draw check box square background. */
+		if (WTK_CHECKBOX_BACKGROUND_COLOR != GFX_COLOR_TRANSPARENT) {
+			gfx_draw_filled_rect(clip->origin.x +
+					WTK_CHECKBOX_BOX_X + 1,
+					clip->origin.y +
+					WTK_CHECKBOX_BOX_Y + 1,
+					WTK_CHECKBOX_BOX_SIZE - 2,
+					WTK_CHECKBOX_BOX_SIZE - 2,
+					WTK_CHECKBOX_BACKGROUND_COLOR);
+		}
 
 		/* Draw check box select marker if selected. */
 		if (check_box->selected) {

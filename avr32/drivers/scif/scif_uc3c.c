@@ -265,7 +265,7 @@ long int scif_configure_osc_crystalmode(scif_osc_t osc, unsigned int fcrystal)
                                                                            AVR32_SCIF_OSCCTRL1_GAIN_G3;
     AVR32_ENTER_CRITICAL_REGION( );
     // Unlock the write-protected OSCCTRL1 register
-    SCIF_UNLOCK(AVR32_SCIF_OSCCTRL + 4);
+    SCIF_UNLOCK(AVR32_SCIF_OSCCTRL1);
     // Write Back
     AVR32_SCIF.OSCCTRL[SCIF_OSC1] = u_avr32_scif_oscctrl.OSCCTRL[SCIF_OSC1];
     AVR32_LEAVE_CRITICAL_REGION( );

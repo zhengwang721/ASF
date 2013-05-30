@@ -7,6 +7,8 @@
  *
  * \asf_license_start
  *
+ * \page License
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -42,7 +44,6 @@
 #include "eic.h"
 #include "sysclk.h"
 #include "sleepmgr.h"
-#include "conf_eic.h"
 
 /// @cond 0
 /**INDENT-OFF**/
@@ -73,11 +74,11 @@ eic_callback_t eic_callback_pointer[EIC_NUMBER_OF_LINES];
  * \brief Write the EIC hardware with specified configuration value.
  *
  * \param eic Base address of the EIC module
- * \param eic_line_conf Configuration parameters of the EIC module 
+ * \param eic_line_conf Configuration parameters of the EIC module
  * (see \ref eic_line_config)
  * \param line_number Number of line to config
  */
-void eic_line_set_config(Eic * eic, uint8_t line_number, 
+void eic_line_set_config(Eic *eic, uint8_t line_number,
 	struct eic_line_config *eic_line_conf)
 {
 		/* Set up mode level */
@@ -108,7 +109,7 @@ void eic_line_set_config(Eic * eic, uint8_t line_number,
  *
  * \param eic Base address of the EIC module
  */
-void eic_disable(Eic * eic)
+void eic_disable(Eic *eic)
 {
 	sysclk_disable_peripheral_clock(eic);
 	sleepmgr_unlock_mode(SLEEPMGR_BACKUP);
@@ -119,7 +120,7 @@ void eic_disable(Eic * eic)
  *
  * \param eic Base address of the EIC module
  */
-void eic_enable(Eic * eic)
+void eic_enable(Eic *eic)
 {
 	sysclk_enable_peripheral_clock(eic);
 	sleepmgr_lock_mode(SLEEPMGR_BACKUP);
@@ -134,7 +135,7 @@ void eic_enable(Eic * eic)
  * \param irq_line  interrupt line.
  * \param irq_level interrupt level.
  */
-void eic_line_set_callback(Eic * eic, uint8_t line_number, 
+void eic_line_set_callback(Eic *eic, uint8_t line_number,
 	eic_callback_t callback, uint8_t irq_line, uint8_t irq_level)
 {
 	eic_callback_pointer[line_number] = callback;
@@ -155,10 +156,11 @@ static void eic_line_interrupt(uint8_t line_number)
 {
 	if (eic_callback_pointer[line_number]) {
 		eic_callback_pointer[line_number]();
+	} else {
+		Assert(false); /* Catch unexpected interrupt */
 	}
 }
 
-#ifdef EIC_NMI_ENABLE
 /**
  * \brief Interrupt handler for EIC NMI.
  */
@@ -166,9 +168,7 @@ void NMI_Handler(void)
 {
 	eic_line_interrupt(0);
 }
-#endif
 
-#ifdef EIC_INT1_ENABLE
 /**
  * \brief Interrupt handler for EIC line 1.
  */
@@ -176,9 +176,7 @@ void EIC_1_Handler(void)
 {
 	eic_line_interrupt(1);
 }
-#endif
 
-#ifdef EIC_INT2_ENABLE
 /**
  * \brief Interrupt handler for EIC line 2.
  */
@@ -186,9 +184,7 @@ void EIC_2_Handler(void)
 {
 	eic_line_interrupt(2);
 }
-#endif
 
-#ifdef EIC_INT3_ENABLE
 /**
  * \brief Interrupt handler for EIC line 3.
  */
@@ -196,9 +192,7 @@ void EIC_3_Handler(void)
 {
 	eic_line_interrupt(3);
 }
-#endif
 
-#ifdef EIC_INT4_ENABLE
 /**
  * \brief Interrupt handler for EIC line 4.
  */
@@ -206,9 +200,7 @@ void EIC_4_Handler(void)
 {
 	eic_line_interrupt(4);
 }
-#endif
 
-#ifdef EIC_INT5_ENABLE
 /**
  * \brief Interrupt handler for EIC line 5.
  */
@@ -216,9 +208,7 @@ void EIC_5_Handler(void)
 {
 	eic_line_interrupt(5);
 }
-#endif
 
-#ifdef EIC_INT6_ENABLE
 /**
  * \brief Interrupt handler for EIC line 6.
  */
@@ -226,9 +216,7 @@ void EIC_6_Handler(void)
 {
 	eic_line_interrupt(6);
 }
-#endif
 
-#ifdef EIC_INT7_ENABLE
 /**
  * \brief Interrupt handler for EIC line 7.
  */
@@ -236,9 +224,7 @@ void EIC_7_Handler(void)
 {
 	eic_line_interrupt(7);
 }
-#endif
 
-#ifdef EIC_INT8_ENABLE
 /**
  * \brief Interrupt handler for EIC line 8.
  */
@@ -246,7 +232,6 @@ void EIC_8_Handler(void)
 {
 	eic_line_interrupt(8);
 }
-#endif
 
 //@}
 

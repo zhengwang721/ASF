@@ -3,7 +3,7 @@
  *
  * \brief AVR XMEGA Digital to Analog Converter driver
  *
- * Copyright (c) 2010-2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -221,6 +221,9 @@ void dac_write_configuration(DAC_t *dac, struct dac_config *conf)
 	uint8_t    enable;
 	uint8_t    gaincal0;
 	uint8_t    offsetcal0;
+	/* avoid Cppcheck Warning */
+	UNUSED(gaincal0);
+	UNUSED(offsetcal0);
 #if XMEGA_DAC_VERSION_2
 	uint8_t    gaincal1;
 	uint8_t    offsetcal1;

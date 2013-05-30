@@ -44,7 +44,7 @@
 #define CONF_TEST_H
 
 
-//! \note USART0 on PORTD (RX on PD2, TX on PD3)
+//! \note USART0 on PORTC (RX on PC2, TX on PC3)
 #define CONF_TEST_USART      &USARTC0
 //! \note 38.4 kbaud
 #define CONF_TEST_BAUDRATE   38400

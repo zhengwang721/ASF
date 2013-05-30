@@ -3,7 +3,7 @@
  *
  * \brief USB configuration file
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -118,6 +118,7 @@
 #define  UDI_CDC_ENABLE_EXT(port)          main_cdc_enable()
 #define  UDI_CDC_DISABLE_EXT(port)         main_cdc_disable()
 #define  UDI_CDC_RX_NOTIFY(port)
+#define  UDI_CDC_TX_EMPTY_NOTIFY(port)
 #define  UDI_CDC_SET_CODING_EXT(port,cfg)  main_cdc_config()
 #define  UDI_CDC_SET_DTR_EXT(port,set)
 #define  UDI_CDC_SET_RTS_EXT(port,set)

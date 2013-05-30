@@ -3,7 +3,7 @@
  *
  * \brief Embedded Flash service for SAM.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -62,6 +62,11 @@ extern "C" {
  * @{
  */
 
+#if SAM4E
+/* User signature size */
+# define FLASH_USER_SIG_SIZE   (512)
+#endif
+
 #if SAM4S
 /* Internal Flash Controller 0. */
 # define EFC     EFC0
@@ -117,7 +122,8 @@ static uint32_t gs_ul_page_buffer[IFLASH_PAGE_SIZE / sizeof(uint32_t)];
 
 /**
  * \brief Translate the given flash address to page and offset values.
- * \note pus_page and pus_offset must not be null in order to store the corresponding values.
+ * \note pus_page and pus_offset must not be null in order to store the
+ * corresponding values.
  *
  * \param pp_efc Pointer to an EFC pointer.
  * \param ul_addr Address to translate.
@@ -131,7 +137,7 @@ static void translate_address(Efc **pp_efc, uint32_t ul_addr,
 	uint16_t us_page;
 	uint16_t us_offset;
 
-#if (SAM3XA || SAM3U4 || SAM4SD16 || SAM4SD32)
+#if (SAM3XA || SAM3U4)
 	if (ul_addr >= IFLASH1_ADDR) {
 		p_efc = EFC1;
 		us_page = (ul_addr - IFLASH1_ADDR) / IFLASH1_PAGE_SIZE;
@@ -141,13 +147,33 @@ static void translate_address(Efc **pp_efc, uint32_t ul_addr,
 		us_page = (ul_addr - IFLASH0_ADDR) / IFLASH0_PAGE_SIZE;
 		us_offset = (ul_addr - IFLASH0_ADDR) % IFLASH0_PAGE_SIZE;
 	}
+#elif (SAM4SD16 || SAM4SD32)
+	uint32_t uc_gpnvm2;
+	uc_gpnvm2 = flash_is_gpnvm_set(2);
+	if (ul_addr >= IFLASH1_ADDR) {
+		if(uc_gpnvm2 == FLASH_RC_YES) {
+			p_efc = EFC0;
+		} else {
+			p_efc = EFC1;
+		}
+		us_page = (ul_addr - IFLASH1_ADDR) / IFLASH1_PAGE_SIZE;
+		us_offset = (ul_addr - IFLASH1_ADDR) % IFLASH1_PAGE_SIZE;
+	} else {
+		if(uc_gpnvm2 == FLASH_RC_YES) {
+			p_efc = EFC1;
+		} else {
+			p_efc = EFC0;
+		}
+		us_page = (ul_addr - IFLASH0_ADDR) / IFLASH0_PAGE_SIZE;
+		us_offset = (ul_addr - IFLASH0_ADDR) % IFLASH0_PAGE_SIZE;
+	}
 #elif (SAM3SD8)
 	p_efc = EFC;
 	us_page = (ul_addr - IFLASH0_ADDR) / IFLASH0_PAGE_SIZE;
 	us_offset = (ul_addr - IFLASH0_ADDR) % IFLASH0_PAGE_SIZE;
 #else
-	assert(ul_addr >= IFLASH_ADDR);
-	assert(ul_addr <= (IFLASH_ADDR + IFLASH_SIZE));
+	Assert(ul_addr >= IFLASH_ADDR);
+	Assert(ul_addr <= (IFLASH_ADDR + IFLASH_SIZE));
 
 	p_efc = EFC;
 	us_page = (ul_addr - IFLASH_ADDR) / IFLASH_PAGE_SIZE;
@@ -184,14 +210,31 @@ static void compute_address(Efc *p_efc, uint16_t us_page, uint16_t us_offset,
 /* Dual bank flash */
 #ifdef EFC1
 	/* Compute address */
+#if (SAM4SD16 || SAM4SD32)
+	uint32_t uc_gpnvm2;
+	uc_gpnvm2 = flash_is_gpnvm_set(2);
+	if (p_efc == EFC0) {
+		if(uc_gpnvm2 == FLASH_RC_YES) {
+			ul_addr = IFLASH1_ADDR + us_page * IFLASH_PAGE_SIZE + us_offset;
+		} else {
+			ul_addr = IFLASH0_ADDR + us_page * IFLASH_PAGE_SIZE + us_offset;
+		}
+	} else {
+		if(uc_gpnvm2 == FLASH_RC_YES) {
+			ul_addr = IFLASH0_ADDR + us_page * IFLASH_PAGE_SIZE + us_offset;
+		} else {
+			ul_addr = IFLASH1_ADDR + us_page * IFLASH_PAGE_SIZE + us_offset;
+		}
+	}
+#else
 	ul_addr = (p_efc == EFC0) ?
 			IFLASH0_ADDR + us_page * IFLASH_PAGE_SIZE + us_offset :
 			IFLASH1_ADDR + us_page * IFLASH_PAGE_SIZE + us_offset;
-
+#endif
 /* One bank flash */
 #else
-	/* Stop warning */
-	p_efc = p_efc;
+	/* avoid Cppcheck Warning */
+	UNUSED(p_efc);
 	/* Compute address */
 	ul_addr = IFLASH_ADDR + us_page * IFLASH_PAGE_SIZE + us_offset;
 #endif
@@ -287,11 +330,19 @@ uint32_t flash_set_wait_state_adaptively(uint32_t ul_address)
 		efc_set_wait_state(p_efc, 1);
 	} else if (clock < CHIP_FREQ_FWS_2) {
 		efc_set_wait_state(p_efc, 2);
-#if (SAM3XA || SAM3U || SAM4S)
+#if (SAM3XA || SAM3U)
 	} else if (clock < CHIP_FREQ_FWS_3) {
 		efc_set_wait_state(p_efc, 3);
 	} else {
 		efc_set_wait_state(p_efc, 4);
+	}
+#elif (SAM4S || SAM4E)
+	} else if (clock < CHIP_FREQ_FWS_3) {
+		efc_set_wait_state(p_efc, 3);
+	} else if (clock < CHIP_FREQ_FWS_4) {
+		efc_set_wait_state(p_efc, 4);
+	} else {
+		efc_set_wait_state(p_efc, 5);
 	}
 #else
 	} else {
@@ -356,8 +407,10 @@ uint32_t flash_get_descriptor(uint32_t ul_address,
 /**
  * \brief Get flash total page count for the specified bank.
  *
+ * \note The flash descriptor must be fetched from flash_get_descriptor
+ * function first.
+ *
  * \param pul_flash_descriptor Pointer to a flash descriptor.
- * \note The flash descriptor must be fetched from flash_get_descriptor function first.
  *
  * \return The flash total page count.
  */
@@ -369,8 +422,10 @@ uint32_t flash_get_page_count(const uint32_t *pul_flash_descriptor)
 /**
  * \brief Get flash page count per region (plane) for the specified bank.
  *
+ * \note The flash descriptor must be fetched from flash_get_descriptor
+ * function first.
+ *
  * \param pul_flash_descriptor Pointer to a flash descriptor.
- * The flash descriptor must be fetched from flash_get_descriptor function first.
  *
  * \return The flash page count per region (plane).
  */
@@ -382,8 +437,10 @@ uint32_t flash_get_page_count_per_region(const uint32_t *pul_flash_descriptor)
 /**
  * \brief Get flash region (plane) count for the specified bank.
  *
+ * \note The flash descriptor must be fetched from flash_get_descriptor
+ * function first.
+ *
  * \param pul_flash_descriptor Pointer to a flash descriptor.
- * The flash descriptor must be fetched from flash_get_descriptor function first.
  *
  * \return The flash region (plane) count.
  */
@@ -395,10 +452,11 @@ uint32_t flash_get_region_count(const uint32_t *pul_flash_descriptor)
 /**
  * \brief Erase the entire flash.
  *
+ * \note Only the flash bank including ul_address will be erased. If there are
+ * two flash banks, we need to call this function twice with each bank start
+ * address.
+ *
  * \param ul_address  Flash bank start address.
- * \note Only the flash bank including ul_address will be erased.
- * If there are two flash banks, we need to call this function twice with
- * each bank start address.
  *
  * \return 0 if successful; otherwise returns an error code.
  */
@@ -420,7 +478,9 @@ uint32_t flash_erase_all(uint32_t ul_address)
  * \brief Erase the flash by plane.
  *
  * \param ul_address Flash plane start address.
- * Erase plane command needs a page number parameter which belongs to the plane to be erased.
+ *
+ * \note Erase plane command needs a page number parameter which belongs to
+ * the plane to be erased.
  *
  * \return 0 if successful; otherwise returns an error code.
  */
@@ -439,7 +499,7 @@ uint32_t flash_erase_plane(uint32_t ul_address)
 }
 #endif
 
-#if SAM4S
+#if (SAM4S || SAM4E)
 /**
  * \brief Erase the specified pages of flash.
  *
@@ -473,8 +533,10 @@ uint32_t flash_erase_page(uint32_t ul_address, uint8_t uc_page_num)
 /**
  * \brief Erase the flash sector.
  *
+ * \note Erase sector command needs a page number parameter which belongs to
+ * the sector to be erased.
+ *
  * \param ul_address Flash sector start address.
- * \note Erase sector command needs a page number parameter which belongs to the sector to be erased.
  *
  * \return 0 if successful; otherwise returns an error code.
  */
@@ -499,7 +561,8 @@ uint32_t flash_erase_sector(uint32_t ul_address)
  * \note This function works in polling mode, and thus only returns when the
  * data has been effectively written.
  * \note For dual bank flash, this function doesn't support cross write from
- * bank 0 to bank 1. In this case, flash_write must be called twice (ie for each bank).
+ * bank 0 to bank 1. In this case, flash_write must be called twice (ie for
+ * each bank).
  *
  * \param ul_address Write address.
  * \param p_buffer Data buffer.
@@ -700,9 +763,17 @@ uint32_t flash_is_locked(uint32_t ul_start, uint32_t ul_end)
 	uint32_t ul_count = 0;
 	uint32_t ul_bit = 0;
 
-	assert(ul_end >= ul_start);
-	assert((ul_start >= IFLASH_ADDR)
-			&& (ul_end <= IFLASH_ADDR + IFLASH_SIZE));
+	Assert(ul_end >= ul_start);
+
+#ifdef EFC1
+	Assert(((ul_start >= IFLASH0_ADDR) 
+				&& (ul_end <= IFLASH0_ADDR + IFLASH0_SIZE))
+				|| ((ul_start >= IFLASH1_ADDR)
+					&& (ul_end <= IFLASH1_ADDR + IFLASH1_SIZE)));
+#else
+	Assert((ul_start >= IFLASH_ADDR) 
+				&& (ul_end <= IFLASH_ADDR + IFLASH_SIZE));
+#endif
 
 	/* Compute page numbers */
 	translate_address(&p_efc, ul_start, &us_start_page, 0);
@@ -715,11 +786,12 @@ uint32_t flash_is_locked(uint32_t ul_start, uint32_t ul_end)
 
 	/* Retrieve lock status */
 	ul_error = efc_perform_command(p_efc, EFC_FCMD_GLB, 0);
-	assert(!ul_error);
+	Assert(!ul_error);
 
 	/* Skip unrequested regions (if necessary) */
 	ul_status = efc_get_result(p_efc);
-	while (!(ul_count <= uc_start_region && uc_start_region < (ul_count + 32))) {
+	while (!(ul_count <= uc_start_region &&
+			uc_start_region < (ul_count + 32))) {
 		ul_status = efc_get_result(p_efc);
 		ul_count += 32;
 	}
@@ -801,6 +873,7 @@ uint32_t flash_clear_gpnvm(uint32_t ul_gpnvm)
  *
  * \retval 1 If the given GPNVM bit is currently set.
  * \retval 0 If the given GPNVM bit is currently cleared.
+ * otherwise returns an error code.
  */
 uint32_t flash_is_gpnvm_set(uint32_t ul_gpnvm)
 {
@@ -837,6 +910,7 @@ uint32_t flash_enable_security_bit(void)
  *
  * \retval 1 If the security bit is currently set.
  * \retval 0 If the security bit is currently cleared.
+ * otherwise returns an error code.
  */
 uint32_t flash_is_security_bit_enabled(void)
 {
@@ -857,7 +931,7 @@ uint32_t flash_read_unique_id(uint32_t *pul_data, uint32_t ul_size)
 	uint32_t ul_idx;
 
 	if (FLASH_RC_OK != efc_perform_read_sequence(EFC, EFC_FCMD_STUI,
-					EFC_FCMD_SPUI, uid_buf, 4)) {
+			EFC_FCMD_SPUI, uid_buf, 4)) {
 		return FLASH_RC_ERROR;
 	}
 
@@ -873,7 +947,7 @@ uint32_t flash_read_unique_id(uint32_t *pul_data, uint32_t ul_size)
 	return FLASH_RC_OK;
 }
 
-#if SAM4S
+#if (SAM4S || SAM4E)
 /**
  * \brief Read the flash user signature.
  *
@@ -891,7 +965,7 @@ uint32_t flash_read_user_signature(uint32_t *p_data, uint32_t ul_size)
 
 	/* Send the read user signature commands */
 	if (FLASH_RC_OK != efc_perform_read_sequence(EFC, EFC_FCMD_STUS,
-					EFC_FCMD_SPUS, p_data, ul_size)) {
+			EFC_FCMD_SPUS, p_data, ul_size)) {
 		return FLASH_RC_ERROR;
 	}
 
@@ -907,7 +981,8 @@ uint32_t flash_read_user_signature(uint32_t *p_data, uint32_t ul_size)
  *
  * \return 0 if successful; otherwise returns an error code.
  */
-uint32_t flash_write_user_signature(uint32_t ul_address, const void *p_buffer, uint32_t ul_size)
+uint32_t flash_write_user_signature(uint32_t ul_address, const void *p_buffer,
+		uint32_t ul_size)
 {
 	/* The user signature should be no longer than 512 bytes */
 	if (ul_size > FLASH_USER_SIG_SIZE) {

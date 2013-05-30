@@ -56,6 +56,8 @@
 # include "sam3n/pll.h"
 #elif SAM4S
 # include "sam4s/pll.h"
+#elif SAM4E
+# include "sam4e/pll.h"
 #elif SAM4L
 # include "sam4l/pll.h"
 #elif (UC3A0 || UC3A1)

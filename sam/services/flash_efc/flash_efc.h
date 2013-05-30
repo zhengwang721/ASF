@@ -3,7 +3,7 @@
  *
  * \brief Embedded Flash service for SAM.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -59,15 +59,17 @@
 //! @{
 typedef enum flash_rc {
 	FLASH_RC_OK = 0,        //!< Operation OK
-	FLASH_RC_YES = 0,       //!< Yes
-	FLASH_RC_NO = 1,        //!< No
+	FLASH_RC_YES = 1,       //!< Yes
+	FLASH_RC_NO = 0,        //!< No
 	FLASH_RC_ERROR = 0x10,  //!< General error
 	FLASH_RC_INVALID,       //!< Invalid argument input
 	FLASH_RC_NOT_SUPPORT = 0xFFFFFFFF    //!< Operation is not supported
 } flash_rc_t;
 //! @}
 
-/*! \name Flash erase page num in FARG[1:0] */
+/*! \name Flash erase page num in FARG[1:0] 
+  \note The erase page commands should be cautiouly used as EPA4/EPA32 will not
+  take effect according to errata and EPA8/EPA16 must module 8/16 page addresses.*/
 //! @{
 typedef enum flash_farg_page_num {
 	/* 4 of pages to be erased with EPA command*/
@@ -79,7 +81,7 @@ typedef enum flash_farg_page_num {
 	/* 32 of pages to be erased with EPA command*/
 	IFLASH_ERASE_PAGES_32,
 	/* Parameter is not support */
-	IFLASH_ERASE_PAGES_INVALID=3,
+	IFLASH_ERASE_PAGES_INVALID,
 }flash_farg_page_num_t;
 //! @}
 
@@ -104,7 +106,7 @@ uint32_t flash_erase_all(uint32_t ul_address);
 uint32_t flash_erase_plane(uint32_t ul_address);
 #endif
 
-#if SAM4S
+#if (SAM4S || SAM4E)
 uint32_t flash_erase_page(uint32_t ul_address, uint8_t uc_page_num);
 uint32_t flash_erase_sector(uint32_t ul_address);
 #endif
@@ -123,9 +125,10 @@ uint32_t flash_enable_security_bit(void);
 uint32_t flash_is_security_bit_enabled(void);
 uint32_t flash_read_unique_id(uint32_t *pul_data, uint32_t ul_size);
 
-#if SAM4S
+#if (SAM4S || SAM4E)
 uint32_t flash_read_user_signature(uint32_t *p_data, uint32_t ul_size);
-uint32_t flash_write_user_signature(uint32_t ul_address, const void *p_buffer, uint32_t ul_size);
+uint32_t flash_write_user_signature(uint32_t ul_address, const void *p_buffer,
+		uint32_t ul_size);
 uint32_t flash_erase_user_signature(void);
 #endif
 

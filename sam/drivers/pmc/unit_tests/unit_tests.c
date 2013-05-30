@@ -3,7 +3,7 @@
  *
  * \brief Unit tests for PMC driver.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -46,7 +46,6 @@
 #include <board.h>
 #include <sysclk.h>
 #include <pmc.h>
-#include <gpio.h>
 #include <unit_test/suite.h>
 #include <stdio_serial.h>
 #include <conf_test.h>
@@ -62,7 +61,7 @@
  * - Switch slow clock as MCK and enable PCK output
  * - Switch main clock as MCK and enable PCK output
  * - Switch PLLA clock as MCK and enable PCK output
- * - Switch PLLB clock as MCK and enable PCK output (for SAM3S)
+ * - Switch PLLB clock as MCK and enable PCK output (for SAM3S and SAM4S)
  * - Switch UPLL clock as MCK and enable PCK output (for SAM3XA and SAM3U)
  * - Test entering and exiting of sleep mode
  *
@@ -82,7 +81,8 @@
  * - sam3u4e_sam3u_ek
  * - sam3x8h_sam3x_ek
  * - sam4s16c_sam4s_ek
- * - sam3sd32c_sam4s_ek2
+ * - sam4sd32c_sam4s_ek2
+ * - sam4e16e_sam4e_ek
  *
  * \section compinfo Compilation info
  * This software was written for the GNU GCC and IAR for ARM. Other compilers
@@ -138,6 +138,9 @@ static void run_periph_clk_cfg_test(const struct test_case *test)
 #elif (SAM3S || SAM4S)
 #  define PERIPH_ID_START     ID_UART0
 #  define PERIPH_ID_END       ID_UDP
+#elif (SAM4E)
+#  define PERIPH_ID_START     ID_UART0
+#  define PERIPH_ID_END       ID_UART1
 #else
 #  error No peripheral defined for test.
 #endif
@@ -164,7 +167,8 @@ static void run_periph_clk_cfg_test(const struct test_case *test)
 
 /**
  * \brief Switch MCK to default as startup.
- * MCK should be switched to default after clock switching test,
+ *
+ * \note MCK should be switched to default after clock switching test,
  * so that we can use stdio console again.
  */
 static void switch_mck_to_default(void)
@@ -284,7 +288,7 @@ static void run_switch_pllack_as_mck_test(const struct test_case *test)
 
 	/* Wait for console output to be done before changing MCK */
 	while (!is_serial_output_done());
-	
+
 	/* First, switch main clock as MCK */
 	rc0 = pmc_switch_mck_to_mainck(PMC_MCKR_PRES_CLK_1);
 
@@ -428,7 +432,8 @@ int main(void)
 
 	/* Configure PCK0 */
 #ifdef CONF_TEST_PCK_OUTPUT_ENABLE
-	gpio_configure_pin(PIN_PCK0, PIN_PCK0_FLAGS);
+	ioport_set_pin_mode(PIN_PCK0, PIN_PCK0_MUX);
+	ioport_disable_pin(PIN_PCK0);
 #endif
 	pmc_disable_pck(PMC_PCK_0);
 	pmc_switch_pck_to_mainck(PMC_PCK_0, PMC_PCK_PRES_CLK_1);

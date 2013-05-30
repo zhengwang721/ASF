@@ -3,7 +3,7 @@
  *
  * \brief Controller Area Network (CAN) driver module for SAM.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,13 +43,13 @@
 
 #include "can.h"
 
-/// @cond 0
+/** @cond 0 */
 /**INDENT-OFF**/
 #ifdef __cplusplus
 extern "C" {
 #endif
 /**INDENT-ON**/
-/// @endcond
+/** @endcond */
 
 /** Define the timemark mask. */
 #define TIMEMARK_MASK              0x0000ffff
@@ -69,34 +69,38 @@ extern "C" {
 #define CAN_BIT_IPT                2
 
 typedef struct {
-	uint8_t uc_tq;      //! CAN_BIT_SYNC + uc_prog + uc_phase1 + uc_phase2 = uc_tq, 8 <= uc_tq <= 25.
-	uint8_t uc_prog;    //! Propagation segment, (3-bits + 1), 1~8;
-	uint8_t uc_phase1;  //! Phase segment 1, (3-bits + 1), 1~8;
-	uint8_t uc_phase2;  //! Phase segment 2, (3-bits + 1), 1~8, CAN_BIT_IPT <= uc_phase2;
-	uint8_t uc_sjw;     //! Resynchronization jump width, (2-bits + 1), min(uc_phase1, 4);
-	uint8_t uc_sp;      //! Sample point value, 0~100 in percent.
+	uint8_t uc_tq;      /**< CAN_BIT_SYNC + uc_prog + uc_phase1 + uc_phase2
+	                       = uc_tq, 8 <= uc_tq <= 25. */
+	uint8_t uc_prog;    /**< Propagation segment, (3-bits + 1), 1~8; */
+	uint8_t uc_phase1;  /**< Phase segment 1, (3-bits + 1), 1~8; */
+	uint8_t uc_phase2;  /**< Phase segment 2, (3-bits + 1), 1~8, CAN_BIT_IPT
+	                       <= uc_phase2; */
+	uint8_t uc_sjw;     /**< Resynchronization jump width, (2-bits + 1),
+	                       min(uc_phase1, 4); */
+	uint8_t uc_sp;      /**< Sample point value, 0~100 in percent. */
 } can_bit_timing_t;
 
-/** Values of bit time register for different baudrates, Sample point = ((1 + uc_prog + uc_phase1) / uc_tq) * 100%. */
+/** Values of bit time register for different baudrates, Sample point =
+ * ((1 + uc_prog + uc_phase1) / uc_tq) * 100%. */
 const can_bit_timing_t can_bit_time[] = {
-	{8,   (2 + 1), (1 + 1), (1 + 1), (2 + 1), 75},
-	{9,   (1 + 1), (2 + 1), (2 + 1), (1 + 1), 67},
-	{10,  (2 + 1), (2 + 1), (2 + 1), (2 + 1), 70},
-	{11,  (3 + 1), (2 + 1), (2 + 1), (3 + 1), 72},
-	{12,  (2 + 1), (3 + 1), (3 + 1), (3 + 1), 67},
-	{13,  (3 + 1), (3 + 1), (3 + 1), (3 + 1), 77},
-	{14,  (3 + 1), (3 + 1), (4 + 1), (3 + 1), 64},
-	{15,  (3 + 1), (4 + 1), (4 + 1), (3 + 1), 67},
-	{16,  (4 + 1), (4 + 1), (4 + 1), (3 + 1), 69},
-	{17,  (5 + 1), (4 + 1), (4 + 1), (3 + 1), 71},
-	{18,  (4 + 1), (5 + 1), (5 + 1), (3 + 1), 67},
-	{19,  (5 + 1), (5 + 1), (5 + 1), (3 + 1), 68},
-	{20,  (6 + 1), (5 + 1), (5 + 1), (3 + 1), 70},
-	{21,  (7 + 1), (5 + 1), (5 + 1), (3 + 1), 71},
-	{22,  (6 + 1), (6 + 1), (6 + 1), (3 + 1), 68},
-	{23,  (7 + 1), (7 + 1), (6 + 1), (3 + 1), 70},
-	{24,  (6 + 1), (7 + 1), (7 + 1), (3 + 1), 67},
-	{25,  (7 + 1), (7 + 1), (7 + 1), (3 + 1), 68}
+	{ 8, (2 + 1), (1 + 1), (1 + 1), (2 + 1), 75},
+	{ 9, (1 + 1), (2 + 1), (2 + 1), (1 + 1), 67},
+	{10, (2 + 1), (2 + 1), (2 + 1), (2 + 1), 70},
+	{11, (3 + 1), (2 + 1), (2 + 1), (3 + 1), 72},
+	{12, (2 + 1), (3 + 1), (3 + 1), (3 + 1), 67},
+	{13, (3 + 1), (3 + 1), (3 + 1), (3 + 1), 77},
+	{14, (3 + 1), (3 + 1), (4 + 1), (3 + 1), 64},
+	{15, (3 + 1), (4 + 1), (4 + 1), (3 + 1), 67},
+	{16, (4 + 1), (4 + 1), (4 + 1), (3 + 1), 69},
+	{17, (5 + 1), (4 + 1), (4 + 1), (3 + 1), 71},
+	{18, (4 + 1), (5 + 1), (5 + 1), (3 + 1), 67},
+	{19, (5 + 1), (5 + 1), (5 + 1), (3 + 1), 68},
+	{20, (6 + 1), (5 + 1), (5 + 1), (3 + 1), 70},
+	{21, (7 + 1), (5 + 1), (5 + 1), (3 + 1), 71},
+	{22, (6 + 1), (6 + 1), (6 + 1), (3 + 1), 68},
+	{23, (7 + 1), (7 + 1), (6 + 1), (3 + 1), 70},
+	{24, (6 + 1), (7 + 1), (7 + 1), (3 + 1), 67},
+	{25, (7 + 1), (7 + 1), (7 + 1), (3 + 1), 68}
 };
 
 /**
@@ -109,35 +113,40 @@ const can_bit_timing_t can_bit_time[] = {
  *
  * \retval Set the baudrate successfully or not.
  */
-static uint32_t can_set_baudrate(Can *p_can, uint32_t ul_mck, uint32_t ul_baudrate)
+static uint32_t can_set_baudrate(Can *p_can, uint32_t ul_mck,
+		uint32_t ul_baudrate)
 {
 	uint8_t uc_tq;
 	uint8_t uc_prescale;
 	uint32_t ul_mod;
 	uint32_t ul_cur_mod;
 	can_bit_timing_t *p_bit_time;
-	
-	/* Check whether the baudrate prescale will be greater than the max divide value. */
+
+	/* Check whether the baudrate prescale will be greater than the max
+	 * divide value. */
 	if (((ul_mck + (ul_baudrate * CAN_MAX_TQ_NUM * 1000 - 1)) /
-		(ul_baudrate * CAN_MAX_TQ_NUM * 1000)) > CAN_BAUDRATE_MAX_DIV) {
+			(ul_baudrate * CAN_MAX_TQ_NUM * 1000)) >
+			CAN_BAUDRATE_MAX_DIV) {
 		return 0;
 	}
-	
+
 	/* Check whether the input MCK is too small. */
-	if (ul_mck  < ul_baudrate * CAN_MIN_TQ_NUM * 1000) {
+	if ((ul_mck / 2)  < ul_baudrate * CAN_MIN_TQ_NUM * 1000) {
 		return 0;
 	}
 
 	/* Initialize it as the minimum Time Quantum. */
 	uc_tq = CAN_MIN_TQ_NUM;
 
-	/* Initialize the remainder as the max value. When the remainder is 0, get the right TQ number. */
+	/* Initialize the remainder as the max value. When the remainder is 0,
+	 *get the right TQ number. */
 	ul_mod = 0xffffffff;
-	/* Find out the approximate Time Quantum according to the baudrate. */ 
+	/* Find out the approximate Time Quantum according to the baudrate. */
 	for (uint8_t i = CAN_MIN_TQ_NUM; i <= CAN_MAX_TQ_NUM; i++) {
-		if ((ul_mck / (ul_baudrate * i * 1000)) <= CAN_BAUDRATE_MAX_DIV) {
+		if ((ul_mck / (ul_baudrate * i * 1000)) <=
+				CAN_BAUDRATE_MAX_DIV) {
 			ul_cur_mod = ul_mck % (ul_baudrate * i * 1000);
-			if (ul_cur_mod < ul_mod){
+			if (ul_cur_mod < ul_mod) {
 				ul_mod = ul_cur_mod;
 				uc_tq = i;
 				if (!ul_mod) {
@@ -149,6 +158,9 @@ static uint32_t can_set_baudrate(Can *p_can, uint32_t ul_mck, uint32_t ul_baudra
 
 	/* Calculate the baudrate prescale value. */
 	uc_prescale = ul_mck / (ul_baudrate * uc_tq * 1000);
+	if (uc_prescale < 2) {
+		return 0;
+	}
 
 	/* Get the right CAN BIT Timing group. */
 	p_bit_time = (can_bit_timing_t *)&can_bit_time[uc_tq - CAN_MIN_TQ_NUM];
@@ -158,13 +170,12 @@ static uint32_t can_set_baudrate(Can *p_can, uint32_t ul_mck, uint32_t ul_baudra
 
 	/* Write into the CAN baudrate register. */
 	p_can->CAN_BR = CAN_BR_PHASE2(p_bit_time->uc_phase2 - 1) |
-					CAN_BR_PHASE1(p_bit_time->uc_phase1 - 1) |
-					CAN_BR_PROPAG(p_bit_time->uc_prog - 1) |
-					CAN_BR_SJW(p_bit_time->uc_sjw - 1) |
-					CAN_BR_BRP(uc_prescale - 1);
+			CAN_BR_PHASE1(p_bit_time->uc_phase1 - 1) |
+			CAN_BR_PROPAG(p_bit_time->uc_prog - 1) |
+			CAN_BR_SJW(p_bit_time->uc_sjw - 1) |
+			CAN_BR_BRP(uc_prescale - 1);
 	return 1;
 }
-
 
 /**
  * \brief Initialize CAN controller.
@@ -175,7 +186,8 @@ static uint32_t can_set_baudrate(Can *p_can, uint32_t ul_mck, uint32_t ul_baudra
  *
  * \retval 0 If failed to initialize the CAN module; otherwise successful.
  *
- * \note PMC clock for CAN peripheral should be enabled before calling this function. 
+ * \note PMC clock for CAN peripheral should be enabled before calling this
+ *function.
  */
 uint32_t can_init(Can *p_can, uint32_t ul_mck, uint32_t ul_baudrate)
 {
@@ -282,7 +294,8 @@ void can_disable_overload_frame(Can *p_can)
 
 /**
  * \brief CAN Controller will generate an overload frame after each successful
- * reception for mailboxes configured in Receive mode, Producer and Consumer.
+ *        reception for mailboxes configured in Receive mode, Producer and
+ *        Consumer.
  *
  * \param p_can  Pointer to a CAN peripheral instance.
  */
@@ -292,7 +305,8 @@ void can_enable_overload_frame(Can *p_can)
 }
 
 /**
- * \brief Configure the timestamp capture point, at the start or the end of frame.
+ * \brief Configure the timestamp capture point, at the start or the end of
+ *        frame.
  *
  * \param p_can   Pointer to a CAN peripheral instance.
  * \param ul_flag 0: Timestamp is captured at each start of frame;
@@ -367,6 +381,8 @@ void can_enable_tx_repeat(Can *p_can)
 	p_can->CAN_MR &= ~CAN_MR_DRPT;
 }
 
+#if !(SAM4E)
+
 /**
  * \brief Configure CAN Controller reception synchronization stage.
  *
@@ -379,6 +395,8 @@ void can_set_rx_sync_stage(Can *p_can, uint32_t ul_stage)
 {
 	p_can->CAN_MR = (p_can->CAN_MR & ~CAN_MR_RXSYNC_Msk) | ul_stage;
 }
+
+#endif
 
 /**
  * \brief Enable CAN interrupt.
@@ -459,7 +477,7 @@ uint32_t can_get_timestamp_value(Can *p_can)
  */
 uint8_t can_get_tx_error_cnt(Can *p_can)
 {
-	return (uint8_t) (p_can->CAN_ECR >> CAN_ECR_TEC_Pos);
+	return (uint8_t)(p_can->CAN_ECR >> CAN_ECR_TEC_Pos);
 }
 
 /**
@@ -471,7 +489,7 @@ uint8_t can_get_tx_error_cnt(Can *p_can)
  */
 uint8_t can_get_rx_error_cnt(Can *p_can)
 {
-	return (uint8_t) (p_can->CAN_ECR >> CAN_ECR_REC_Pos);
+	return (uint8_t)(p_can->CAN_ECR >> CAN_ECR_REC_Pos);
 }
 
 /**
@@ -497,7 +515,7 @@ void can_global_send_transfer_cmd(Can *p_can, uint8_t uc_mask)
 {
 	uint32_t ul_reg;
 
-	ul_reg = p_can->CAN_TCR & ((uint32_t)~GLOBAL_MAILBOX_MASK);
+	ul_reg = p_can->CAN_TCR & ((uint32_t) ~GLOBAL_MAILBOX_MASK);
 	p_can->CAN_TCR = ul_reg | uc_mask;
 }
 
@@ -511,7 +529,7 @@ void can_global_send_abort_cmd(Can *p_can, uint8_t uc_mask)
 {
 	uint32_t ul_reg;
 
-	ul_reg = p_can->CAN_ACR & ((uint32_t)~GLOBAL_MAILBOX_MASK);
+	ul_reg = p_can->CAN_ACR & ((uint32_t) ~GLOBAL_MAILBOX_MASK);
 	p_can->CAN_ACR = ul_reg | uc_mask;
 }
 
@@ -528,7 +546,7 @@ void can_mailbox_set_timemark(Can *p_can, uint8_t uc_index, uint16_t us_cnt)
 {
 	uint32_t ul_reg;
 
-	ul_reg = p_can->CAN_MB[uc_index].CAN_MMR & ((uint32_t)~TIMEMARK_MASK);
+	ul_reg = p_can->CAN_MB[uc_index].CAN_MMR & ((uint32_t) ~TIMEMARK_MASK);
 	p_can->CAN_MB[uc_index].CAN_MMR = ul_reg | us_cnt;
 }
 
@@ -568,7 +586,8 @@ void can_mailbox_send_abort_cmd(Can *p_can, uint8_t uc_index)
 }
 
 /**
- * \brief Initialize the mailbox in different mode and set up related configuration.
+ * \brief Initialize the mailbox in different mode and set up related
+ *        configuration.
  *
  * \param p_can    Pointer to a CAN peripheral instance.
  * \param p_mailbox Pointer to a CAN mailbox instance.
@@ -578,7 +597,8 @@ void can_mailbox_init(Can *p_can, can_mb_conf_t *p_mailbox)
 	uint8_t uc_index;
 
 	uc_index = (uint8_t)p_mailbox->ul_mb_idx;
-	/* Check the object type of the mailbox. If it's used to disable the mailbox, reset the whole mailbox. */
+	/* Check the object type of the mailbox. If it's used to disable the
+	 * mailbox, reset the whole mailbox. */
 	if (!p_mailbox->uc_obj_type) {
 		p_can->CAN_MB[uc_index].CAN_MMR = 0;
 		p_can->CAN_MB[uc_index].CAN_MAM = 0;
@@ -591,12 +611,16 @@ void can_mailbox_init(Can *p_can, can_mb_conf_t *p_mailbox)
 
 	/* Set the priority in Transmit mode. */
 	p_can->CAN_MB[uc_index].CAN_MMR = (p_can->CAN_MB[uc_index].CAN_MMR &
-		~CAN_MMR_PRIOR_Msk) | (p_mailbox-> uc_tx_prio << CAN_MMR_PRIOR_Pos);
+			~CAN_MMR_PRIOR_Msk) |
+			(p_mailbox->uc_tx_prio << CAN_MMR_PRIOR_Pos);
 
-	/* Set the message ID and message acceptance mask for the mailbox in other modes. */
+	/* Set the message ID and message acceptance mask for the mailbox in
+	 * other modes. */
 	if (p_mailbox->uc_id_ver) {
-		p_can->CAN_MB[uc_index].CAN_MAM = p_mailbox->ul_id_msk | CAN_MAM_MIDE;
-		p_can->CAN_MB[uc_index].CAN_MID = p_mailbox->ul_id | CAN_MAM_MIDE;
+		p_can->CAN_MB[uc_index].CAN_MAM = p_mailbox->ul_id_msk |
+				CAN_MAM_MIDE;
+		p_can->CAN_MB[uc_index].CAN_MID = p_mailbox->ul_id |
+				CAN_MAM_MIDE;
 	} else {
 		p_can->CAN_MB[uc_index].CAN_MAM = p_mailbox->ul_id_msk;
 		p_can->CAN_MB[uc_index].CAN_MID = p_mailbox->ul_id;
@@ -604,7 +628,8 @@ void can_mailbox_init(Can *p_can, can_mb_conf_t *p_mailbox)
 
 	/* Set up mailbox in one of the five different modes. */
 	p_can->CAN_MB[uc_index].CAN_MMR = (p_can->CAN_MB[uc_index].CAN_MMR &
-		~CAN_MMR_MOT_Msk) | (p_mailbox-> uc_obj_type << CAN_MMR_MOT_Pos);
+			~CAN_MMR_MOT_Msk) |
+			(p_mailbox->uc_obj_type << CAN_MMR_MOT_Pos);
 }
 
 /**
@@ -614,7 +639,7 @@ void can_mailbox_init(Can *p_can, can_mb_conf_t *p_mailbox)
  * \param p_mailbox Pointer to a CAN mailbox instance.
  *
  * \retval Different CAN mailbox transfer status.
- * 
+ *
  * \note Read the mailbox status before calling this function.
  */
 uint32_t can_mailbox_read(Can *p_can, can_mb_conf_t *p_mailbox)
@@ -627,17 +652,20 @@ uint32_t can_mailbox_read(Can *p_can, can_mb_conf_t *p_mailbox)
 	uc_index = (uint8_t)p_mailbox->ul_mb_idx;
 	ul_status = p_mailbox->ul_status;
 
-	/* Check whether there is overwriting happening in Receive with Overwrite mode, 
-	   or there're messages lost in Receive mode. */
+	/* Check whether there is overwriting happening in Receive with
+	 * Overwrite mode,
+	 * or there're messages lost in Receive mode. */
 	if ((ul_status & CAN_MSR_MRDY) && (ul_status & CAN_MSR_MMI)) {
 		ul_retval = CAN_MAILBOX_RX_OVER;
 	}
 
 	/* Read the message family ID. */
-	p_mailbox->ul_fid = p_can->CAN_MB[uc_index].CAN_MFID & CAN_MFID_MFID_Msk;
+	p_mailbox->ul_fid = p_can->CAN_MB[uc_index].CAN_MFID &
+			CAN_MFID_MFID_Msk;
 
 	/* Read received data length. */
-	p_mailbox->uc_length = (ul_status & CAN_MSR_MDLC_Msk) >> CAN_MSR_MDLC_Pos;
+	p_mailbox->uc_length
+		= (ul_status & CAN_MSR_MDLC_Msk) >> CAN_MSR_MDLC_Pos;
 
 	/* Read received data. */
 	p_mailbox->ul_datal = p_can->CAN_MB[uc_index].CAN_MDL;
@@ -645,7 +673,8 @@ uint32_t can_mailbox_read(Can *p_can, can_mb_conf_t *p_mailbox)
 		p_mailbox->ul_datah = p_can->CAN_MB[uc_index].CAN_MDH;
 	}
 
-	/* Read the mailbox status again to check whether the software needs to re-read mailbox data register. */
+	/* Read the mailbox status again to check whether the software needs to
+	 * re-read mailbox data register. */
 	p_mailbox->ul_status = p_can->CAN_MB[uc_index].CAN_MSR;
 	ul_status = p_mailbox->ul_status;
 	if (ul_status & CAN_MSR_MMI) {
@@ -669,7 +698,8 @@ uint32_t can_mailbox_read(Can *p_can, can_mb_conf_t *p_mailbox)
  * \retval CAN_MAILBOX_NOT_READY: Failed because mailbox isn't ready.
  *       CAN_MAILBOX_TRANSFER_OK: Successfully write message into mailbox.
  *
- * \note After calling this function, the mailbox message won't be sent out until
+ * \note After calling this function, the mailbox message won't be sent out
+ *until
  * can_mailbox_send_transfer_cmd() is called.
  */
 uint32_t can_mailbox_write(Can *p_can, can_mb_conf_t *p_mailbox)
@@ -678,7 +708,8 @@ uint32_t can_mailbox_write(Can *p_can, can_mb_conf_t *p_mailbox)
 	uint8_t uc_index;
 
 	uc_index = (uint8_t)p_mailbox->ul_mb_idx;
-	/* Read the mailbox status firstly to check whether the mailbox is ready or not. */
+	/* Read the mailbox status firstly to check whether the mailbox is ready
+	 *or not. */
 	p_mailbox->ul_status = can_mailbox_get_status(p_can, uc_index);
 	ul_status = p_mailbox->ul_status;
 	if (!(ul_status & CAN_MSR_MRDY)) {
@@ -687,7 +718,8 @@ uint32_t can_mailbox_write(Can *p_can, can_mb_conf_t *p_mailbox)
 
 	/* Write transmit identifier. */
 	if (p_mailbox->uc_id_ver) {
-		p_can->CAN_MB[uc_index].CAN_MID = p_mailbox->ul_id | CAN_MAM_MIDE;
+		p_can->CAN_MB[uc_index].CAN_MID = p_mailbox->ul_id |
+				CAN_MAM_MIDE;
 	} else {
 		p_can->CAN_MB[uc_index].CAN_MID = p_mailbox->ul_id;
 	}
@@ -711,7 +743,8 @@ uint32_t can_mailbox_write(Can *p_can, can_mb_conf_t *p_mailbox)
  * \param p_can    Pointer to a CAN peripheral instance.
  * \param p_mailbox Pointer to a CAN mailbox instance.
  *
- * \retval CAN_MAILBOX_NOT_READY: Failed because mailbox isn't ready for transmitting message.
+ * \retval CAN_MAILBOX_NOT_READY: Failed because mailbox isn't ready for
+ *transmitting message.
  *       CAN_MAILBOX_TRANSFER_OK: Successfully send out a remote frame.
  */
 uint32_t can_mailbox_tx_remote_frame(Can *p_can, can_mb_conf_t *p_mailbox)
@@ -720,7 +753,8 @@ uint32_t can_mailbox_tx_remote_frame(Can *p_can, can_mb_conf_t *p_mailbox)
 	uint8_t uc_index;
 
 	uc_index = (uint8_t)p_mailbox->ul_mb_idx;
-	/* Read the mailbox status firstly to check whether the mailbox is ready or not. */
+	/* Read the mailbox status firstly to check whether the mailbox is ready
+	 *or not. */
 	p_mailbox->ul_status = p_can->CAN_MB[uc_index].CAN_MSR;
 	ul_status = p_mailbox->ul_status;
 	if (!(ul_status & CAN_MSR_MRDY)) {
@@ -729,7 +763,8 @@ uint32_t can_mailbox_tx_remote_frame(Can *p_can, can_mb_conf_t *p_mailbox)
 
 	/* Write transmit identifier. */
 	if (p_mailbox->uc_id_ver) {
-		p_can->CAN_MB[uc_index].CAN_MID = p_mailbox->ul_id | CAN_MAM_MIDE;
+		p_can->CAN_MB[uc_index].CAN_MID = p_mailbox->ul_id |
+				CAN_MAM_MIDE;
 	} else {
 		p_can->CAN_MB[uc_index].CAN_MID = p_mailbox->ul_id;
 	}
@@ -737,7 +772,8 @@ uint32_t can_mailbox_tx_remote_frame(Can *p_can, can_mb_conf_t *p_mailbox)
 	/* Set the RTR bit in the sent frame. */
 	p_can->CAN_MB[uc_index].CAN_MCR |= CAN_MCR_MRTR;
 
-	/* Set the MBx bit in the Transfer Command Register to send out the remote frame. */
+	/* Set the MBx bit in the Transfer Command Register to send out the
+	 *remote frame. */
 	can_global_send_transfer_cmd(p_can, (1 << uc_index));
 
 	return CAN_MAILBOX_TRANSFER_OK;
@@ -761,10 +797,10 @@ void can_reset_all_mailbox(Can *p_can)
 	}
 }
 
-/// @cond 0
+/** @cond 0 */
 /**INDENT-OFF**/
 #ifdef __cplusplus
 }
 #endif
 /**INDENT-ON**/
-/// @endcond
+/** @endcond */

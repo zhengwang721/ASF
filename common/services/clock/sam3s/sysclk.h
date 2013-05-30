@@ -3,7 +3,7 @@
  *
  * \brief Chip-specific system clock management functions.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -104,7 +104,7 @@
  *  -# Configure the PLL module to multiply the external fast crystal oscillator frequency up to 64MHz:
  *   \code
  *   #define CONFIG_PLL0_MUL             (64000000UL / BOARD_FREQ_MAINCK_XTAL)
- *   #define CONFIG_PLL0_DIV             1 
+ *   #define CONFIG_PLL0_DIV             1
  *   \endcode
  *   \note For user boards, \c BOARD_FREQ_MAINCK_XTAL should be defined in the board \c conf_board.h configuration
  *         file as the frequency of the fast crystal attached to the microcontroller.
@@ -170,7 +170,7 @@
  *  -# Configure the PLL0 module to multiply the external fast crystal oscillator frequency up to 64MHz:
  *   \code
  *   #define CONFIG_PLL0_MUL             (64000000UL / BOARD_FREQ_MAINCK_XTAL)
- *   #define CONFIG_PLL0_DIV             1 
+ *   #define CONFIG_PLL0_DIV             1
  *   \endcode
  *   \note For user boards, \c BOARD_FREQ_MAINCK_XTAL should be defined in the board \c conf_board.h configuration
  *         file as the frequency of the fast crystal attached to the microcontroller.
@@ -187,7 +187,7 @@
  *  -# Configure the PLL1 module to multiply the external fast crystal oscillator frequency up to 48MHz:
  *   \code
  *   #define CONFIG_PLL1_MUL             (48000000UL / BOARD_FREQ_MAINCK_XTAL)
- *   #define CONFIG_PLL1_DIV             1 
+ *   #define CONFIG_PLL1_DIV             1
  *   \endcode
  */
 
@@ -203,7 +203,7 @@ extern "C" {
  * \weakgroup sysclk_group
  * @{
  */
- 
+
 //! \name Configuration Symbols
 //@{
 /**
@@ -234,28 +234,28 @@ extern "C" {
 
 //! \name Master Clock Sources (MCK)
 //@{
-#define SYSCLK_SRC_SLCK_RC			0	//!< Internal 32kHz RC oscillator as master source clock
-#define SYSCLK_SRC_SLCK_XTAL		1	//!< External 32kHz crystal oscillator as master source clock
-#define SYSCLK_SRC_SLCK_BYPASS		2	//!< External 32kHz bypass oscillator as master source clock
-#define SYSCLK_SRC_MAINCK_4M_RC		3	//!< Internal 4MHz RC oscillator as master source clock
-#define SYSCLK_SRC_MAINCK_8M_RC		4	//!< Internal 8MHz RC oscillator as master source clock
-#define SYSCLK_SRC_MAINCK_12M_RC	5	//!< Internal 12MHz RC oscillator as master source clock
-#define SYSCLK_SRC_MAINCK_XTAL		6	//!< External crystal oscillator as master source clock
-#define SYSCLK_SRC_MAINCK_BYPASS	7	//!< External bypass oscillator as master source clock
-#define SYSCLK_SRC_PLLACK			8	//!< Use PLLACK as master source clock
-#define SYSCLK_SRC_PLLBCK			9	//!< Use PLLBCK as master source clock
+#define SYSCLK_SRC_SLCK_RC              0       //!< Internal 32kHz RC oscillator as master source clock
+#define SYSCLK_SRC_SLCK_XTAL            1       //!< External 32kHz crystal oscillator as master source clock
+#define SYSCLK_SRC_SLCK_BYPASS          2       //!< External 32kHz bypass oscillator as master source clock
+#define SYSCLK_SRC_MAINCK_4M_RC         3       //!< Internal 4MHz RC oscillator as master source clock
+#define SYSCLK_SRC_MAINCK_8M_RC         4       //!< Internal 8MHz RC oscillator as master source clock
+#define SYSCLK_SRC_MAINCK_12M_RC        5       //!< Internal 12MHz RC oscillator as master source clock
+#define SYSCLK_SRC_MAINCK_XTAL          6       //!< External crystal oscillator as master source clock
+#define SYSCLK_SRC_MAINCK_BYPASS        7       //!< External bypass oscillator as master source clock
+#define SYSCLK_SRC_PLLACK               8       //!< Use PLLACK as master source clock
+#define SYSCLK_SRC_PLLBCK               9       //!< Use PLLBCK as master source clock
 //@}
 
 //! \name Master Clock Prescalers (MCK)
 //@{
-#define SYSCLK_PRES_1			PMC_MCKR_PRES_CLK_1		//!< Set master clock prescaler to 1
-#define SYSCLK_PRES_2			PMC_MCKR_PRES_CLK_2		//!< Set master clock prescaler to 2
-#define SYSCLK_PRES_4			PMC_MCKR_PRES_CLK_4		//!< Set master clock prescaler to 4
-#define SYSCLK_PRES_8			PMC_MCKR_PRES_CLK_8		//!< Set master clock prescaler to 8
-#define SYSCLK_PRES_16			PMC_MCKR_PRES_CLK_16	//!< Set master clock prescaler to 16
-#define SYSCLK_PRES_32			PMC_MCKR_PRES_CLK_32	//!< Set master clock prescaler to 32
-#define SYSCLK_PRES_64			PMC_MCKR_PRES_CLK_64	//!< Set master clock prescaler to 64
-#define SYSCLK_PRES_3			PMC_MCKR_PRES_CLK_3		//!< Set master clock prescaler to 3
+#define SYSCLK_PRES_1           PMC_MCKR_PRES_CLK_1     //!< Set master clock prescaler to 1
+#define SYSCLK_PRES_2           PMC_MCKR_PRES_CLK_2     //!< Set master clock prescaler to 2
+#define SYSCLK_PRES_4           PMC_MCKR_PRES_CLK_4     //!< Set master clock prescaler to 4
+#define SYSCLK_PRES_8           PMC_MCKR_PRES_CLK_8     //!< Set master clock prescaler to 8
+#define SYSCLK_PRES_16          PMC_MCKR_PRES_CLK_16    //!< Set master clock prescaler to 16
+#define SYSCLK_PRES_32          PMC_MCKR_PRES_CLK_32    //!< Set master clock prescaler to 32
+#define SYSCLK_PRES_64          PMC_MCKR_PRES_CLK_64    //!< Set master clock prescaler to 64
+#define SYSCLK_PRES_3           PMC_MCKR_PRES_CLK_3     //!< Set master clock prescaler to 3
 //@}
 
 //! \name USB Clock Sources
@@ -324,43 +324,35 @@ static inline uint32_t sysclk_get_main_hz(void)
 #endif
 
 	/* Config system clock setting */
-	switch (CONFIG_SYSCLK_SOURCE) {
-	case SYSCLK_SRC_SLCK_RC:
+	if (CONFIG_SYSCLK_SOURCE == SYSCLK_SRC_SLCK_RC) {
 		return OSC_SLCK_32K_RC_HZ;
-	
-	case SYSCLK_SRC_SLCK_XTAL:
+	} else if (CONFIG_SYSCLK_SOURCE == SYSCLK_SRC_SLCK_XTAL) {
 		return OSC_SLCK_32K_XTAL_HZ;
-		
-	case SYSCLK_SRC_SLCK_BYPASS:
+	} else if (CONFIG_SYSCLK_SOURCE == SYSCLK_SRC_SLCK_BYPASS) {
 		return OSC_SLCK_32K_BYPASS_HZ;
-
-
-    case SYSCLK_SRC_MAINCK_4M_RC:
+	} else if (CONFIG_SYSCLK_SOURCE == SYSCLK_SRC_MAINCK_4M_RC) {
 		return OSC_MAINCK_4M_RC_HZ;
-
-    case SYSCLK_SRC_MAINCK_8M_RC:
+	} else if (CONFIG_SYSCLK_SOURCE == SYSCLK_SRC_MAINCK_8M_RC) {
 		return OSC_MAINCK_8M_RC_HZ;
-
-    case SYSCLK_SRC_MAINCK_12M_RC:
+	} else if (CONFIG_SYSCLK_SOURCE == SYSCLK_SRC_MAINCK_12M_RC) {
 		return OSC_MAINCK_12M_RC_HZ;
-
-    case SYSCLK_SRC_MAINCK_XTAL:
+	} else if (CONFIG_SYSCLK_SOURCE == SYSCLK_SRC_MAINCK_XTAL) {
 		return OSC_MAINCK_XTAL_HZ;
-
-    case SYSCLK_SRC_MAINCK_BYPASS:
+	} else if (CONFIG_SYSCLK_SOURCE == SYSCLK_SRC_MAINCK_BYPASS) {
 		return OSC_MAINCK_BYPASS_HZ;
-
+	}
 #ifdef CONFIG_PLL0_SOURCE
-	case SYSCLK_SRC_PLLACK:
-		return pll_get_default_rate(0);	
+	else if (CONFIG_SYSCLK_SOURCE == SYSCLK_SRC_PLLACK) {
+		return pll_get_default_rate(0);
+	}
 #endif
 
 #ifdef CONFIG_PLL1_SOURCE
-	case SYSCLK_SRC_PLLBCK:
-		return pll_get_default_rate(1);	
+	else if (CONFIG_SYSCLK_SOURCE == SYSCLK_SRC_PLLBCK) {
+		return pll_get_default_rate(1);
+	}
 #endif
-	
-	default:
+	else {
 		/* unhandled_case(CONFIG_SYSCLK_SOURCE); */
 		return 0;
 	}
@@ -400,6 +392,19 @@ static inline uint32_t sysclk_get_peripheral_hz(void)
 			(1 << (CONFIG_SYSCLK_PRES >> PMC_MCKR_PRES_Pos)));
 }
 
+/**
+ * \brief Retrieves the current rate in Hz of the Peripheral Bus clock attached
+ *        to the specified peripheral.
+ *
+ * \param module Pointer to the module's base address.
+ *
+ * \return Frequency of the bus attached to the specified peripheral, in Hz.
+ */
+static inline uint32_t sysclk_get_peripheral_bus_hz(const volatile void *module)
+{
+	UNUSED(module);
+	return sysclk_get_peripheral_hz();
+}
 //@}
 
 //! \name Enabling and disabling synchronous clocks

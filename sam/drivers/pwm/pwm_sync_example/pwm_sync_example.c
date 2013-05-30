@@ -3,7 +3,7 @@
  *
  * \brief PWM SYNC example for SAM.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -72,17 +72,6 @@
 
 #include "asf.h"
 #include "conf_board.h"
-
-/** Baud rate of console UART */
-#define CONSOLE_BAUD_RATE  115200
-
-/*
-In PWM synchronisation mode the channel0 is used as reference channel so it is
-necessary to disable, configure and enable it.
-*/
-#if ((PIN_PWM_LED1_CHANNEL != 0) && (PIN_PWM_LED0_CHANNEL != 0))
-#define PWM_CHANNEL0_REF
-#endif
 
 /** PWM frequency in Hz */
 #define PWM_FREQUENCY  50
@@ -184,7 +173,7 @@ static void configure_console(void)
 		.baudrate = CONF_UART_BAUDRATE,
 		.paritytype = CONF_UART_PARITY
 	};
-	
+
 	/* Configure console UART. */
 	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
 	stdio_serial_init(CONF_UART, &uart_serial_options);
@@ -199,7 +188,7 @@ int main(void)
 {
 	uint32_t i;
 	uint8_t uc_key;
-	int8_t c_numkey;
+	uint8_t c_numkey;
 
 	/* Initialize the SAM system */
 	sysclk_init();
@@ -218,11 +207,15 @@ int main(void)
 	pwm_channel_disable(PWM, PIN_PWM_LED0_CHANNEL);
 	pwm_channel_disable(PWM, PIN_PWM_LED1_CHANNEL);
 
-	#ifdef PWM_CHANNEL0_REF
-	pwm_channel_disable(PWM, 0);
-	#endif
+	/*
+	 * In PWM synchronisation mode the channel0 is used as reference channel,
+	 * so it is necessary to disable, configure and enable it.
+	 */
+	if (PIN_PWM_LED0_CHANNEL && PIN_PWM_LED1_CHANNEL) {
+		pwm_channel_disable(PWM, 0);
+	}
 
-	/* Set PWM clock A as PWM_FREQUENCY * PERIOD_VALUE (clock B is not used) */
+	/* Set PWM clock A as PWM_FREQUENCY*PERIOD_VALUE (clock B is not used) */
 	pwm_clock_t clock_setting = {
 		.ul_clka = PWM_FREQUENCY * PERIOD_VALUE,
 		.ul_clkb = 0,
@@ -232,29 +225,46 @@ int main(void)
 
 	/* Initialize PWM channels outputs */
 	pwm_output_t channel_output = {
-		.b_override_pwmh = false,         /* Disable override PWMH outputs */
-		.b_override_pwml = false,         /* Disable override PWML outputs */
-		.override_level_pwmh = PWM_HIGH,  /* Set override PWMH output level as HIGH */
-		.override_level_pwml = PWM_LOW    /* Set override PWML output level as LOW */
+		/* Disable override PWMH outputs */
+		.b_override_pwmh = false,
+		/* Disable override PWML outputs */
+		.b_override_pwml = false,
+		/* Set override PWMH output level as HIGH */
+		.override_level_pwmh = PWM_HIGH,
+		/* Set override PWML output level as LOW */
+		.override_level_pwml = PWM_LOW
 	};
 
 	/* Initialize PWM synchronous channels */
 	pwm_channel_t sync_channel = {
-		.ul_prescaler = PWM_CMR_CPRE_CLKA, /* Use PWM clock A as source clock */
-		.ul_period = PERIOD_VALUE,         /* Period value of output waveform */
-		.ul_duty = INIT_DUTY_VALUE,        /* Duty cycle value of output waveform */
-		.b_sync_ch = true,                 /* Set it as a synchronous channel */
-		.b_deadtime_generator = true,      /* Enable dead-time generator */
-		.us_deadtime_pwmh = INIT_DEAD_TIME, /* Dead-time value for PWMH output */
-		.us_deadtime_pwml = INIT_DEAD_TIME, /* Dead-time value for PWML output */
-		.output_selection.b_override_pwmh = false, /* Disable override PWMH outputs */
-		.output_selection.b_override_pwml = false  /* Disable override PWML outputs */
+		/* Use PWM clock A as source clock */
+		.ul_prescaler = PWM_CMR_CPRE_CLKA,
+		/* Period value of output waveform */
+		.ul_period = PERIOD_VALUE,
+		/* Duty cycle value of output waveform */
+		.ul_duty = INIT_DUTY_VALUE,
+		/* Set it as a synchronous channel */
+		.b_sync_ch = true,
+		/* Enable dead-time generator */
+		.b_deadtime_generator = true,
+		/* Dead-time value for PWMH output */
+		.us_deadtime_pwmh = INIT_DEAD_TIME,
+		/* Dead-time value for PWML output */
+		.us_deadtime_pwml = INIT_DEAD_TIME,
+		/* Disable override PWMH outputs */
+		.output_selection.b_override_pwmh = false,
+		/* Disable override PWML outputs */
+		.output_selection.b_override_pwml = false
 	};
 
-	#ifdef PWM_CHANNEL0_REF
-	sync_channel.channel = 0;
-	pwm_channel_init(PWM, &sync_channel);
-	#endif
+	/*
+	 * In PWM synchronisation mode the channel0 is used as reference channel,
+	 * so it is necessary to disable, configure and enable it.
+	 */
+	if (PIN_PWM_LED0_CHANNEL && PIN_PWM_LED1_CHANNEL) {
+		sync_channel.channel = 0;
+		pwm_channel_init(PWM, &sync_channel);
+	}
 
 	/* Initialize PWM channel of LED1 */
 	sync_channel.channel = PIN_PWM_LED1_CHANNEL;
@@ -287,7 +297,10 @@ int main(void)
 	pwm_pdc_enable_interrupt(PWM, PWM_PDC_TX_END);
 
 	/* Fill duty cycle buffer for channel #0 and #1 */
-	/* For PWM channel 0 and 1, duty cycle ranges from MIN_DUTY_CYCLE to MAX_DUTY_CYCLE */
+	/*
+	 * For PWM channel 0 and 1, duty cycle ranges from
+	 * MIN_DUTY_CYCLE to MAX_DUTY_CYCLE
+	 */
 	for (i = 0; i < (DUTY_BUFFER_LENGTH / 3); i++) {
 		g_us_duty_buffer[i * 3] = (i + INIT_DUTY_VALUE);
 		g_us_duty_buffer[i * 3 + 1] = (i + INIT_DUTY_VALUE);
@@ -301,9 +314,13 @@ int main(void)
 	pdc_enable_transfer(PDC_PWM, PERIPH_PTCR_TXTEN);
 
 	/* Enable all synchronous channels by enabling channel 0 */
-	#ifdef PWM_CHANNEL0_REF
-	pwm_channel_enable(PWM, 0);
-	#endif
+	/*
+	 * In PWM synchronisation mode the channel0 is used as reference channel,
+	 * so it is necessary to disable, configure and enable it.
+	 */
+	if (PIN_PWM_LED0_CHANNEL && PIN_PWM_LED1_CHANNEL) {
+		pwm_channel_enable(PWM, 0);
+	}
 	pwm_channel_enable(PWM, PIN_PWM_LED0_CHANNEL);
 	pwm_channel_enable(PWM, PIN_PWM_LED1_CHANNEL);
 
@@ -331,8 +348,7 @@ int main(void)
 			printf("Input dead time for channel #0 must be between %d and %d.\r\n", INIT_DUTY_VALUE, PERIOD_VALUE);
 			c_numkey = get_num_value();
 
-			if ((c_numkey >= INIT_DUTY_VALUE)
-					&& (c_numkey <= PERIOD_VALUE)) {
+			if (c_numkey <= PERIOD_VALUE) {
 				/* Set new dead time value for channel 0 */
 				pwm_channel_update_dead_time(PWM, &sync_channel,
 						c_numkey, c_numkey);
@@ -362,7 +378,7 @@ int main(void)
 				pwm_channel_update_output(PWM, &sync_channel,
 						&channel_output, true);
 				puts("PWM Channel #0 output has been overridden.\r\n");
-			
+
 			}
 			break;
 		default:

@@ -99,10 +99,6 @@ void main_cdc_disable(uint8_t port);
  */
 void main_cdc_set_dtr(uint8_t port, bool b_enable);
 
-/*! \brief Called when Vbus line state change
- */
-void main_vbus_action(bool b_high);
-
 /*! \brief Called when a start of frame is received on USB line
  */
 void main_sof_action(void);

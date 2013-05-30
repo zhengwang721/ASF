@@ -10,5 +10,6 @@
 		<device-support value="uc3l"/>
 		<require idref="avr32.drivers.gpio"/>
 		<require idref="avr32.drivers.pm"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

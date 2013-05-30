@@ -78,6 +78,7 @@
  * \param x        X coordinate on screen.
  * \param y        Y coordinate on screen.
  * \param font     Font to draw character in
+ * \param color    Foreground color to draw the character in
  */
 static void gfx_draw_char_hugemem(const char ch, const gfx_coord_t x,
 		const gfx_coord_t y, const struct font *font,
@@ -165,6 +166,7 @@ static void gfx_draw_char_hugemem(const char ch, const gfx_coord_t x,
  * \param x        X coordinate on screen.
  * \param y        Y coordinate on screen.
  * \param font     Font to draw character in
+ * \param color    Foreground color to draw the character in
  */
 static void gfx_draw_char_progmem(const char ch, const gfx_coord_t x,
 		const gfx_coord_t y, const struct font *font,

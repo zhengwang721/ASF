@@ -3,7 +3,7 @@
  *
  * \brief TWI Master Mode management
  *
- * Copyright (c) 2010-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -45,16 +45,20 @@
 
 #include <compiler.h>
 
-#if (SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S)
+#if (SAM4L)
+# include "sam_twim/twi_master.h"
+#elif (SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S || SAM4E)
 # include "sam_twi/twi_master.h"
 #elif XMEGA
 # include "xmega_twi/twi_master.h"
-#elif (defined(__GNUC__) && defined(__AVR32__)) || (defined(__ICCAVR32__) || defined(__AAVR32__))
-#if (defined AVR32_TWI)
+#elif MEGA_RF
+# include "megarf_twi/twi_master.h"
+#elif UC3
+# if (defined AVR32_TWI)
 # include "uc3_twi/twi_master.h"
-#else
+# else
 # include "uc3_twim/twi_master.h"
-#endif
+# endif
 #else
 # error Unsupported chip type
 #endif

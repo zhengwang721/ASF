@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<module type="service" id="common.services.basic.fifo" caption="FIFO - First-In-First-Out circular buffer">
 		<info type="description" value="summary">
-		Circular FIFO buffer implementation. Provides functions for initializing and accessing a FIFO buffer. Common API for XMEGA and UC3.
+		Circular FIFO buffer implementation. Provides functions for initializing and accessing a FIFO buffer. Common API for XMEGA, UC3 and SAM4L.
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="Memory" />
@@ -13,6 +13,7 @@
 		<build type="doxygen-quick-start" value="fifo_quickstart"/>
 		<device-support value="uc3"/>
 		<device-support value="xmega"/>
+		<device-support value="sam"/>
 		<generator value="doxygen-module" default-mcu="unspecified-xmegaa1"/>
 	</module>
 </asf>

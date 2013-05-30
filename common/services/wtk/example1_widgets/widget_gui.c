@@ -98,9 +98,9 @@ enum command_id {
  */
 
 /** Leftmost X coordinate in frame for the widgets */
-#define WIDGET_POS_X                20
+#define WIDGET_POS_X                14
 /** Topmost Y coordinate in frame for the widgets */
-#define WIDGET_POS_Y                10
+#define WIDGET_POS_Y                5
 
 /** Slider X coordinate, inside frame */
 #define SLIDER_POS_Y                10
@@ -120,10 +120,10 @@ enum command_id {
 #define CHECK_BOX_SPACING_Y         20
 
 /** Spacing above each radio button */
-#define RADIO_BUTTON_SPACING_Y      5
+#define RADIO_BUTTON_SPACING_Y      10
 
 /** Spacing above the button */
-#define BUTTON_SPACING_Y            10
+#define BUTTON_SPACING_Y            20
 /** Height of the button */
 #define BUTTON_SIZE_Y               30
 

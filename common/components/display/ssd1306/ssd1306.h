@@ -3,7 +3,7 @@
  *
  * \brief SSD1306 OLED display controller driver.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -45,7 +45,13 @@
 
 #include <compiler.h>
 #include <sysclk.h>
+#ifdef SAM
+#include <gpio.h>
+#define ioport_set_pin_low gpio_set_pin_low
+#define ioport_set_pin_high gpio_set_pin_high
+#else
 #include <ioport.h>
+#endif
 #include <status_codes.h>
 #include <delay.h>
 
@@ -100,12 +106,12 @@ extern "C" {
 
 //! \name Fundamental Command defines
 //@{
-#define SSD1306_CMD_COL_ADD_SET_LSB(column)         (0x00 | (column))
-#define SSD1306_CMD_COL_ADD_SET_MSB(column)         (0x10 | (column))
+#define SSD1306_CMD_SET_LOW_COL(column)             (0x00 | (column))
+#define SSD1306_CMD_SET_HIGH_COL(column)            (0x10 | (column))
 #define SSD1306_CMD_SET_MEMORY_ADDRESSING_MODE      0x20
 #define SSD1306_CMD_SET_COLUMN_ADDRESS              0x21
 #define SSD1306_CMD_SET_PAGE_ADDRESS                0x22
-#define SSD1306_CMD_SET_DISPLAY_START_LINE(line)    (0x40 | (line))
+#define SSD1306_CMD_SET_START_LINE(line)            (0x40 | (line))
 #define SSD1306_CMD_SET_CONTRAST_CONTROL_FOR_BANK0  0x81
 #define SSD1306_CMD_SET_CHARGE_PUMP_SETTING         0x8D
 #define SSD1306_CMD_SET_SEGMENT_RE_MAP_COL0_SEG0    0xA0
@@ -117,7 +123,7 @@ extern "C" {
 #define SSD1306_CMD_SET_MULTIPLEX_RATIO             0xA8
 #define SSD1306_CMD_SET_DISPLAY_ON                  0xAF
 #define SSD1306_CMD_SET_DISPLAY_OFF                 0xAE
-#define SSD1306_CMD_SET_PAGE_START_ADDRESS(page)    (0xB0 | (page))
+#define SSD1306_CMD_SET_PAGE_START_ADDRESS(page)    (0xB0 | (page & 0x07))
 #define SSD1306_CMD_SET_COM_OUTPUT_SCAN_UP          0xC0
 #define SSD1306_CMD_SET_COM_OUTPUT_SCAN_DOWN        0xC8
 #define SSD1306_CMD_SET_DISPLAY_OFFSET              0xD3
@@ -137,6 +143,13 @@ extern "C" {
 #define SSD1306_CMD_ACTIVATE_SCROLL                 0x2F
 #define SSD1306_CMD_SET_VERTICAL_SCROLL_AREA        0xA3
 //@}
+
+#define ssd1306_reset_clear()    ioport_set_pin_low(SSD1306_RES_PIN)
+#define ssd1306_reset_set()      ioport_set_pin_high(SSD1306_RES_PIN)
+
+// Data/CMD select, PC21Could not add reference to assembly IronPython.wpf
+#define ssd1306_sel_data()       ioport_set_pin_high(SSD1306_DC_PIN)
+#define ssd1306_sel_cmd()        ioport_set_pin_low(SSD1306_DC_PIN)
 
 /**
  * \name Interface selection
@@ -172,6 +185,8 @@ extern "C" {
 # define SSD1306_SERIAL_INTERFACE
 #endif
 
+#define SSD1306_LATENCY 10
+
 //! \name OLED controller write and read functions
 //@{
 /**
@@ -187,14 +202,15 @@ static inline void ssd1306_write_command(uint8_t command)
 #if defined(SSD1306_USART_SPI_INTERFACE)
 	struct usart_spi_device device = {.id = SSD1306_CS_PIN};
 	usart_spi_select_device(SSD1306_USART_SPI, &device);
-	ioport_set_pin_low(SSD1306_DC_PIN);
+	ssd1306_sel_cmd();
 	usart_spi_transmit(SSD1306_USART_SPI, command);
 	usart_spi_deselect_device(SSD1306_USART_SPI, &device);
 #elif defined(SSD1306_SPI_INTERFACE)
 	struct spi_device device = {.id = SSD1306_CS_PIN};
 	spi_select_device(SSD1306_SPI, &device);
-	ioport_set_pin_low(SSD1306_DC_PIN);
+	ssd1306_sel_cmd();
 	spi_write_single(SSD1306_SPI, command);
+	delay_us(SSD1306_LATENCY); // At lest 3탎
 	spi_deselect_device(SSD1306_SPI, &device);
 #endif
 }
@@ -214,14 +230,14 @@ static inline void ssd1306_write_data(uint8_t data)
 	usart_spi_select_device(SSD1306_USART_SPI, &device);
 	ioport_set_pin_high(SSD1306_DC_PIN);
 	usart_spi_transmit(SSD1306_USART_SPI, data);
-	ioport_set_pin_low(SSD1306_DC_PIN);
+	ssd1306_sel_cmd();
 	usart_spi_deselect_device(SSD1306_USART_SPI, &device);
 #elif defined(SSD1306_SPI_INTERFACE)
 	struct spi_device device = {.id = SSD1306_CS_PIN};
 	spi_select_device(SSD1306_SPI, &device);
-	ioport_set_pin_high(SSD1306_DC_PIN);
+	ssd1306_sel_data();
 	spi_write_single(SSD1306_SPI, data);
-	ioport_set_pin_low(SSD1306_DC_PIN);
+	delay_us(SSD1306_LATENCY); // At lest 3탎
 	spi_deselect_device(SSD1306_SPI, &device);
 #endif
 }
@@ -264,9 +280,9 @@ static inline uint8_t ssd1306_get_status(void)
 static inline void ssd1306_hard_reset(void)
 {
 	ioport_set_pin_low(SSD1306_RES_PIN);
-	delay_us(10); // At lest 3탎
+	delay_us(SSD1306_LATENCY); // At lest 3탎
 	ioport_set_pin_high(SSD1306_RES_PIN);
-	delay_us(10); // At lest 3탎
+	delay_us(SSD1306_LATENCY); // At lest 3탎
 }
 //@}
 
@@ -316,8 +332,8 @@ static inline void ssd1306_set_column_address(uint8_t address)
 {
 	// Make sure the address is 7 bits
 	address &= 0x7F;
-	ssd1306_write_command(SSD1306_CMD_COL_ADD_SET_MSB(address >> 4));
-	ssd1306_write_command(SSD1306_CMD_COL_ADD_SET_LSB(address & 0x0F));
+	ssd1306_write_command(SSD1306_CMD_SET_HIGH_COL(address >> 4));
+	ssd1306_write_command(SSD1306_CMD_SET_LOW_COL(address & 0x0F));
 }
 
 /**
@@ -329,7 +345,7 @@ static inline void ssd1306_set_display_start_line_address(uint8_t address)
 {
 	// Make sure address is 6 bits
 	address &= 0x3F;
-	ssd1306_write_command(SSD1306_CMD_SET_DISPLAY_START_LINE(address));
+	ssd1306_write_command(SSD1306_CMD_SET_START_LINE(address));
 }
 //@}
 
@@ -390,11 +406,32 @@ static inline void ssd1306_display_invert_disable(void)
 {
 	ssd1306_write_command(SSD1306_CMD_SET_NORMAL_DISPLAY);
 }
+
+static inline void ssd1306_clear(void)
+{
+	uint8_t page = 0;
+	uint8_t col = 0;
+
+	for (page = 0; page < 4; ++page)
+	{
+		ssd1306_set_page_address(page);
+		ssd1306_set_column_address(0);
+		for (col = 0; col < 128; ++col)
+		{
+			ssd1306_write_data(0x00);
+		}
+	}
+}
 //@}
 
 //! \name Initialization
 //@{
 void ssd1306_init(void);
+//@}
+
+//! \name Write text routine
+//@{
+void ssd1306_write_text(const char *string);
 //@}
 
 /** @} */

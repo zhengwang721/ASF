@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="service" id="common.services.gfx" caption="GFX - Graphic Library">
+	<module type="service" id="common.services.gfx" caption="GFX Color - Color Graphic Library">
 		<info type="description" value="summary">
 		Graphical library
 		</info>
@@ -18,7 +18,7 @@
 		<require idref="common.services.gfx.display"/>
 	</module>
 
-	<module type="service" id="common.services.gfx.generic" caption="GFX - Graphical Primitives (pixel, line, square, circle)">
+	<module type="service" id="common.services.gfx.generic" caption="GFX Color - Graphical Primitives (pixel, line, square, circle)">
 		<info type="gui-flag" value="hidden"/>
 		<info type="description" value="summary">
 		This service provides basic graphical primitives (pixel, line, square, circle) for the graphic service.
@@ -36,7 +36,7 @@
 		<generator value="doxygen-module" default-mcu="unspecified-xmegaa1"/>
 	</module>
 
-	<module type="service" id="common.services.gfx.font" caption="GFX - System Font">
+	<module type="service" id="common.services.gfx.font" caption="GFX Color - System Font">
 		<info type="description" value="summary">
 		System font for the graphical library. This driver provides a low-level static system font to use with displays. It is a
 		light weight implementation graphical fonts, with limited flexibility. Excellent for printing system messages and debug

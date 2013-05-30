@@ -3,7 +3,7 @@
  *
  * \brief Main functions for XMEGA-B1 Xplained demonstration
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -102,7 +102,7 @@ enum sensor_display_t main_sensor_selected;
 //! Flag to know if the HID generic interface is enabled
 static bool main_b_generic_enable = false;
 //! Flag to know if the Mass Storage interface is enabled
-static bool main_b_msc_enable = false;
+static volatile bool main_b_msc_enable = false;
 
 static void main_build_usb_serial_number(void);
 
@@ -156,12 +156,6 @@ int main(void)
 	// Start USB stack
 	main_build_usb_serial_number();
 	udc_start();
-
-	if (!udc_include_vbus_monitoring()) {
-		// VBUS monitoring is not available on this product
-		// thereby VBUS has to be considered as present
-		udc_attach();
-	}
 
 	// The main loop manages only the power mode
 	// because everything else is managed by interrupt.

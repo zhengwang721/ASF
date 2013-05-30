@@ -3,7 +3,7 @@
  *
  * \brief Clock system example 3.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,7 +42,7 @@
  */
 
 /**
- * \mainpage 
+ * \mainpage
  *
  * \section intro Introduction
  * This example shows how to switch between various system clock sources
@@ -71,7 +71,7 @@
  * \section contactinfo Contact Information
  * For further information, visit
  * <A href="http://www.atmel.com/">Atmel</A>.\n
- * Support and FAQ: http://support.atmel.no/ 
+ * Support and FAQ: http://support.atmel.no/
  *
  */
 
@@ -112,10 +112,10 @@ static void mdelay(uint32_t ul_dly_ticks)
 static void wait_for_switches(void)
 {
 	do {
-	} while (gpio_pin_is_high(GPIO_PUSH_BUTTON_1));
+	} while (ioport_get_pin_level(GPIO_PUSH_BUTTON_1));
 	mdelay(1);
 	do {
-	} while (gpio_pin_is_low(GPIO_PUSH_BUTTON_1));
+	} while (!ioport_get_pin_level(GPIO_PUSH_BUTTON_1));
 	mdelay(1);
 }
 
@@ -136,28 +136,29 @@ void SysTick_Handler(void)
  * \return Unused (ANSI-C compatibility).
  */
 int main(void)
-{	
+{
 	struct genclk_config gcfg;
-	
+
 	sysclk_init();
 	board_init();
 
 	/* Setup SysTick Timer for 1 msec interrupts */
 	if (SysTick_Config(SystemCoreClock / 1000)) {
-		while (1);	// Capture error
+		while (1);  // Capture error
 	}
 
 	/* Enable PIO module related clock */
 	sysclk_enable_peripheral_clock(PIN_PUSHBUTTON_1_ID);
 
 	/* Configure specific CLKOUT pin */
-	gpio_configure_pin(GCLK_PIN, GCLK_PIN_FLAGS);
+	ioport_set_pin_mode(GCLK_PIN, GCLK_PIN_MUX);
+	ioport_disable_pin(GCLK_PIN);
 
 	/* Configure the output clock source and frequency */
-	genclk_config_defaults(&gcfg, GENCLK_PCK_0);	
+	genclk_config_defaults(&gcfg, GENCLK_PCK_0);
 	genclk_config_set_source(&gcfg, GENCLK_PCK_SRC_PLLACK);
 	genclk_config_set_divider(&gcfg, GENCLK_PCK_PRES_1);
-	genclk_enable(&gcfg, GENCLK_PCK_0);	
+	genclk_enable(&gcfg, GENCLK_PCK_0);
 
 	while (1) {
 		/*
@@ -169,7 +170,7 @@ int main(void)
 		/*
 		 * Divide MCK frequency by 2. Now MCK = 32/60 (SAM3/SAM4) MHz.
 		 */
-		sysclk_set_prescalers(SYSCLK_PRES_2);		
+		sysclk_set_prescalers(SYSCLK_PRES_2);
 		genclk_config_set_divider(&gcfg, GENCLK_PCK_PRES_2);
 		genclk_enable(&gcfg, GENCLK_PCK_0);
 		wait_for_switches();
@@ -179,7 +180,7 @@ int main(void)
 		 * Switch to the slow clock with all prescalers disabled.
 		 */
 		sysclk_set_source(SYSCLK_SRC_SLCK_RC);
-		sysclk_set_prescalers(SYSCLK_PRES_1);		
+		sysclk_set_prescalers(SYSCLK_PRES_1);
 		genclk_config_set_source(&gcfg, GENCLK_PCK_SRC_SLCK_RC);
 		genclk_config_set_divider(&gcfg, GENCLK_PCK_PRES_1);
 		genclk_enable(&gcfg, GENCLK_PCK_0);
@@ -190,10 +191,12 @@ int main(void)
 		/*
 		 * Switch to internal 4 MHz RC.
 		 */
+		/* Switch to slow clock before switch main clock */
+		sysclk_set_source(SYSCLK_SRC_SLCK_RC);
 		osc_enable(OSC_MAINCK_4M_RC);
 		osc_wait_ready(OSC_MAINCK_4M_RC);
-		sysclk_set_source(SYSCLK_SRC_MAINCK_XTAL);		
-		genclk_config_set_source(&gcfg, GENCLK_PCK_SRC_MAINCK_XTAL);		
+		sysclk_set_source(SYSCLK_SRC_MAINCK_XTAL);
+		genclk_config_set_source(&gcfg, GENCLK_PCK_SRC_MAINCK_XTAL);
 		genclk_enable(&gcfg, GENCLK_PCK_0);
 		wait_for_switches();
 
@@ -202,8 +205,8 @@ int main(void)
 		 */
 		osc_enable(OSC_MAINCK_XTAL);
 		osc_wait_ready(OSC_MAINCK_XTAL);
-		sysclk_set_source(SYSCLK_SRC_MAINCK_XTAL);		
-		genclk_config_set_source(&gcfg, GENCLK_PCK_SRC_MAINCK_XTAL);		
+		sysclk_set_source(SYSCLK_SRC_MAINCK_XTAL);
+		genclk_config_set_source(&gcfg, GENCLK_PCK_SRC_MAINCK_XTAL);
 		genclk_enable(&gcfg, GENCLK_PCK_0);
 		osc_disable(OSC_MAINCK_4M_RC);
 		wait_for_switches();
@@ -211,11 +214,10 @@ int main(void)
 		/*
 		 * Go back to the initial state and start over.
 		 */
-		sysclk_init();		
+		sysclk_init();
 		genclk_config_set_source(&gcfg, GENCLK_PCK_SRC_PLLACK);
 		genclk_config_set_divider(&gcfg, GENCLK_PCK_PRES_1);
 		genclk_enable(&gcfg, GENCLK_PCK_0);
-		wait_for_switches();
 	}
 }
 

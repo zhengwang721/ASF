@@ -290,6 +290,10 @@ cxxflags-gnu-y  += -std=gnu++98
 cflags-gnu-y    += -funsigned-char
 cxxflags-gnu-y  += -funsigned-char
 
+# Don't use strict aliasing (very common in embedded applications).
+cflags-gnu-y    += -fno-strict-aliasing
+cxxflags-gnu-y  += -fno-strict-aliasing
+
 # Separate each function and data into its own separate section to allow
 # garbage collection of unused sections.
 cflags-gnu-y    += -ffunction-sections -fdata-sections

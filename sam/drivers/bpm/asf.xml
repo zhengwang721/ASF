@@ -9,7 +9,6 @@
 		</info>
 		<build type="c-source" value="bpm.c"/>
 		<build type="header-file" subtype="api" value="bpm.h"/>
-		<build type="header-file" subtype="api" value="sleep.h"/>
 		<build type="include-path" value="."/>
 		<build type="doxygen-entry-point" value="group_sam_drivers_bpm"/>
 		<build type="doxygen-quick-start" value="sam_bpm_quickstart"/>

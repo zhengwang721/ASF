@@ -43,6 +43,29 @@
  *
  */
 
+/**
+ * \mainpage Sensor platform unit test
+ *
+ * \par Purpose
+ *
+ * Perform a range of unit tests on the Sensor Platform library to ensure
+ * correct operation, using the INERTIAL ONE sensor board.
+ *
+ * \par Behavior: executing each unit test in turn
+ *
+ * -# Check that the Sensor Platform is initialized correctly with the Inertial
+ *  One board.
+ * -# Check that the gyroscope works correctly on the Inertial One board using
+ *  the Sensor Platform library.
+ * -# Check that the accelerometer works correctly on the Inertial One board
+ *  using the Sensor Platform library.
+ * -# Check that the compass works correctly on the Inertial One board using
+ *  the Sensor Platform library.
+ * -# Check that the gyroscope internal temperature sensor works correctly on
+ *  the Inertial One board using the Sensor Platform library.
+ *
+ */
+
 #include <asf.h>
 #include "conf_test.h"
 

@@ -93,7 +93,6 @@ void cdc_start(void)
 	}
 
 	udc_start();
-	udc_attach();
 }
 
 void cdc_set_dtr(bool enable)

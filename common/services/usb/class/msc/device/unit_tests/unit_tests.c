@@ -3,7 +3,7 @@
  *
  * \brief Main functions for MSC unit test
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -88,8 +88,8 @@ static bool main_b_vbus_event = false;
 static bool main_b_resume_event = false;
 static bool main_b_suspend_event = false;
 static bool main_b_sof_event = false;
-static bool main_b_msc_enumerated = false;
-static bool main_b_msc_read = false;
+static volatile bool main_b_msc_enumerated = false;
+static volatile bool main_b_msc_read = false;
 
 
 
@@ -229,11 +229,6 @@ void main_vbus_action(bool b_high)
 {
 	if (b_high) {
 		main_b_vbus_event = true;
-		// Attach USB Device
-		udc_attach();
-	} else {
-		// VBUS not present
-		udc_detach();
 	}
 }
 

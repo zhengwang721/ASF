@@ -9,7 +9,7 @@
  * @author    Support email: avr@atmel.com
  */
 /*
- * Copyright (c) 2010-2012, Atmel Corporation All rights reserved.
+ * Copyright (c) 2010-2013, Atmel Corporation All rights reserved.
  */
 
 #ifdef VENDOR_DATA
@@ -17,6 +17,7 @@
 /* === INCLUDES ============================================================ */
 
 #include <stdio.h>
+#include "compiler.h"
 
 #include "rf4ce.h"
 #include "zrc.h"
@@ -63,7 +64,7 @@ bool vendor_data_request(uint8_t PairingRef, profile_id_t ProfileId,
                        uint8_t TxOptions)
 {
     /* Keep compiler happy */
-    ProfileId = ProfileId;
+    UNUSED(ProfileId);
 
     return nlde_data_request(PairingRef, PROFILE_ID_VENDOR_DATA, VendorId,
                              nsduLength, nsdu, TxOptions);
@@ -223,9 +224,9 @@ void vendor_data_ind(uint8_t PairingRef, profile_id_t ProfileId, uint16_t Vendor
                         TXO_UNICAST | TXO_DST_ADDR_NET | TXO_ACK_REQ | TXO_SEC_REQ | TXO_MULTI_CH | TXO_CH_NOT_SPEC | TXO_VEND_SPEC);
 
         /* Keep compiler happy */
-        ProfileId = ProfileId;
-        RxLinkQuality = RxLinkQuality;
-        RxFlags = RxFlags;
+        UNUSED(ProfileId);
+        UNUSED(RxLinkQuality);
+        UNUSED(RxFlags);
     }
 }
 #endif  /* #ifndef RF4CE_TARGET */

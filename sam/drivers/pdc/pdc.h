@@ -3,7 +3,7 @@
  *
  * \brief Peripheral DMA Controller (PDC) driver for SAM.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -57,15 +57,17 @@ extern "C" {
 /*! \brief PDC data packet for transfer */
 typedef struct pdc_packet {
 	/** \brief Address for PDC transfer packet.
-	 *  The pointer to packet data start address. For pointer or next pointer register (_PR).
+	 *  The pointer to packet data start address. For pointer or next pointer
+	 *  register (_PR).
 	 */
 	uint32_t ul_addr;
 	/** \brief PDC transfer packet size.
-	 *  Size for counter or next counter register (_CR). The max value is 0xffff.
-	 *  The unit of size is based on peripheral data width, that is, data width that each time 
-	 *  the peripheral transfers.
-	 *  E.g., size of PDC for USART is in number of bytes, but size of PDC for 16 bit SSC is in 
-	 *  number of 16 bit word.
+	 *  Size for counter or next counter register (_CR). The max value is
+	 *  0xffff.
+	 *  The unit of size is based on peripheral data width, that is, data
+	 *  width that each time the peripheral transfers.
+	 *  E.g., size of PDC for USART is in number of bytes, but size of PDC
+	 *  for 16 bit SSC is in number of 16 bit word.
 	 */
 	uint32_t ul_size;
 } pdc_packet_t;
