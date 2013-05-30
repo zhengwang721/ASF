@@ -133,6 +133,11 @@
 typedef uint32_t irqflags_t;
 extern volatile bool g_interrupt_enabled;
 
+#define cpu_irq_is_enabled()    g_interrupt_enabled
+
+static volatile uint32_t cpu_irq_critical_section_counter;
+static volatile bool     cpu_irq_prev_interrupt_state;
+
 static inline irqflags_t cpu_irq_save(void)
 {
 	irqflags_t flags = g_interrupt_enabled;
@@ -151,7 +156,8 @@ static inline void cpu_irq_restore(irqflags_t flags)
 		cpu_irq_enable();
 }
 
-#define cpu_irq_is_enabled()    g_interrupt_enabled
+void cpu_irq_enter_critical(void);
+void cpu_irq_leave_critical(void);
 
 /**
  * \weakgroup interrupt_deprecated_group

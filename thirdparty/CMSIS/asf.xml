@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <asf xmlversion="1.0">
-	<select-by-device id="thirdparty.cmsis" caption="CMSIS thirdparty sources"> 
+	<select-by-device id="thirdparty.cmsis" caption="CMSIS thirdparty sources">
 		<module type="library" id="thirdparty.cmsis#0" caption="CMSIS thirdparty sources">
 			<info type="description" value="summary">
-			The Cortex Microcontroller Software Interface Standard (CMSIS) provides a single standard across all 
-Cortex-Mx processor series vendors. It enables code re-use and code sharing across software projects 
+			The Cortex Microcontroller Software Interface Standard (CMSIS) provides a single standard across all
+Cortex-Mx processor series vendors. It enables code re-use and code sharing across software projects
 and reduces time-to-market for new embedded applications.
 			</info>
 			<build type="include-path" value="Include/" toolchain="armgcc"/>
@@ -23,8 +23,8 @@ and reduces time-to-market for new embedded applications.
 		</module>
 		<module type="library" id="thirdparty.cmsis#1" caption="CMSIS thirdparty sources">
 			<info type="description" value="summary">
-			The Cortex Microcontroller Software Interface Standard (CMSIS) provides a single standard across all 
-Cortex-Mx processor series vendors. It enables code re-use and code sharing across software projects 
+			The Cortex Microcontroller Software Interface Standard (CMSIS) provides a single standard across all
+Cortex-Mx processor series vendors. It enables code re-use and code sharing across software projects
 and reduces time-to-market for new embedded applications.
 			</info>
 			<build type="include-path" value="Include/" toolchain="armgcc"/>
@@ -46,8 +46,8 @@ and reduces time-to-market for new embedded applications.
 		</module>
 		<module type="library" id="thirdparty.cmsis#2" caption="CMSIS thirdparty sources">
 			<info type="description" value="summary">
-			The Cortex Microcontroller Software Interface Standard (CMSIS) provides a single standard across all 
-Cortex-Mx processor series vendors. It enables code re-use and code sharing across software projects 
+			The Cortex Microcontroller Software Interface Standard (CMSIS) provides a single standard across all
+Cortex-Mx processor series vendors. It enables code re-use and code sharing across software projects
 and reduces time-to-market for new embedded applications.
 			</info>
 			<build type="include-path" value="Include/" toolchain="armgcc"/>
@@ -61,6 +61,26 @@ and reduces time-to-market for new embedded applications.
 			<build type="header-file" value="Include/core_cmInstr.h" toolchain="armgcc"/>
 			<require idref="sam.utils.fpu_used"/>
 			<device-support value="sam4e"/>
+			<build type="distribute" subtype="file" value="CMSIS END USER LICENCE AGREEMENT.pdf"/>
+			<build type="distribute" subtype="file" value="README.txt"/>
+			<build type="distribute" subtype="license" value="license.txt"/>
+			<info type="gui-flag" value="hidden"/>
+		</module>
+		<module type="library" id="thirdparty.cmsis#3" caption="CMSIS thirdparty sources">
+			<info type="description" value="summary">
+			The Cortex Microcontroller Software Interface Standard (CMSIS) provides a single standard across all
+Cortex-Mx processor series vendors. It enables code re-use and code sharing across software projects
+and reduces time-to-market for new embedded applications.
+			</info>
+			<build type="include-path" value="Include/" toolchain="armgcc"/>
+			<build type="include-path" value="Lib/GCC/" toolchain="armgcc"/>
+			<build type="library" subtype="user" value="Lib/GCC/libarm_cortexM0l_math.a" toolchain="armgcc"/>
+			<build type="define" name="ARM_MATH_CM0" value="true"/>
+			<build type="header-file" value="Include/core_cm0plus.h" toolchain="armgcc"/>
+			<build type="header-file" value="Include/arm_math.h" toolchain="armgcc"/>
+			<build type="header-file" value="Include/core_cmFunc.h" toolchain="armgcc"/>
+			<build type="header-file" value="Include/core_cmInstr.h" toolchain="armgcc"/>
+			<device-support value="sam0"/>
 			<build type="distribute" subtype="file" value="CMSIS END USER LICENCE AGREEMENT.pdf"/>
 			<build type="distribute" subtype="file" value="README.txt"/>
 			<build type="distribute" subtype="license" value="license.txt"/>
