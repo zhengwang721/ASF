@@ -365,7 +365,7 @@ enum status_code system_clock_source_write_calibration(
 			break;
 
 		default:
-			Assert(!"Invalid clock source provided");
+			Assert(false);
 			return STATUS_ERR_INVALID_ARG;
 			break;
 	}
@@ -417,7 +417,7 @@ enum status_code system_clock_source_enable(
 			return STATUS_OK;
 
 		default:
-			Assert(!"Invalid clock source supplied");
+			Assert(false);
 			return STATUS_ERR_INVALID_ARG;
 	}
 

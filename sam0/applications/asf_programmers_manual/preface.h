@@ -45,7 +45,7 @@
  */
 
 /**
- * \page preface Preface
+ * \page appdoc_preface Preface
  *
  * The Atmel® Software Framework (ASF) is a collection of free embedded software
  * for Atmel microcontroller devices. It simplifies the usage of Atmel products,

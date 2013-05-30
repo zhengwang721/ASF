@@ -44,9 +44,9 @@
 #ifndef AC_CALLBACK_H_INCLUDED
 #define AC_CALLBACK_H_INCLUDED
 
+#include <compiler.h>
+#include <system_interrupt.h>
 #include "ac.h"
-#include "system_interrupt.h"
-#include "status_codes.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -108,13 +108,42 @@ static inline void ac_enable_callback(
 
 	/* Set software flag for the callback */
 	module->enable_callback_mask |= (1 << callback_type);
+
+	uint32_t inenset_temp = 0;
+
+	switch (callback_type)
+	{
+		case AC_CALLBACK_COMPARATOR_0:
+			inenset_temp |= AC_INTFLAG_COMP0;
+			break;
+		case AC_CALLBACK_COMPARATOR_1:
+			inenset_temp |= AC_INTFLAG_COMP1;
+			break;
+		case AC_CALLBACK_WINDOW_0:
+			inenset_temp |= AC_INTFLAG_WIN0;
+			break;
+#if (AC_NUM_CMP > 2)
+		case AC_CALLBACK_COMPARATOR_2:
+			inenset_temp |= AC_INTFLAG_COMP2;
+			break;
+		case AC_CALLBACK_COMPARATOR_3:
+			inenset_temp |= AC_INTFLAG_COMP3;
+			break;
+		case AC_CALLBACK_WINDOW_1:
+			inenset_temp |= AC_INTFLAG_WIN1;
+			break;
+#endif
+		default:
+			break;
+	}
+
 	/* Enable the interrupt for the callback */
-	module->hw->INTENSET.reg = (1 << callback_type);
+	module->hw->INTENSET.reg = inenset_temp;
+
 #if (AC_INST_NUM == 1)
 	/* Enable interrupts for AC module */
 	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_AC);
-#endif /* (AC_INST_NUM == 1) */
-#if (AC_INST_NUM > 1)
+#elif (AC_INST_NUM > 1)
 	system_interrupt_enable(_ac_interrupt_get_interrupt_vector(_ac_get_inst_index(module->hw)));
 #endif /* (AC_INST_NUM > 1) */
 }
@@ -132,14 +161,44 @@ static inline void ac_enable_callback(
  */
 static inline void ac_disable_callback(
 		struct ac_module *const module,
-		const enum ac_callback callback_type){
+		const enum ac_callback callback_type)
+{
 	/* Sanity check arguments */
 	Assert(module);
 
 	/* Clear software flag for the callback */
 	module->enable_callback_mask &= ~(1 << callback_type);
+
+	uint32_t inenclr_temp = 0;
+
+	switch (callback_type)
+	{
+		case AC_CALLBACK_COMPARATOR_0:
+			inenclr_temp |= AC_INTFLAG_COMP0;
+			break;
+		case AC_CALLBACK_COMPARATOR_1:
+			inenclr_temp |= AC_INTFLAG_COMP1;
+			break;
+		case AC_CALLBACK_WINDOW_0:
+			inenclr_temp |= AC_INTFLAG_WIN0;
+			break;
+#if (AC_NUM_CMP > 2)
+		case AC_CALLBACK_COMPARATOR_2:
+			inenclr_temp |= AC_INTFLAG_COMP2;
+			break;
+		case AC_CALLBACK_COMPARATOR_3:
+			inenclr_temp |= AC_INTFLAG_COMP3;
+			break;
+		case AC_CALLBACK_WINDOW_1:
+			inenclr_temp |= AC_INTFLAG_WIN1;
+			break;
+#endif
+		default:
+			break;
+	}
+
 	/* Disable the interrupt for the callback */
-	module->hw->INTENCLR.reg = (1 << callback_type);
+	module->hw->INTENCLR.reg = inenclr_temp;
 }
 
 /**

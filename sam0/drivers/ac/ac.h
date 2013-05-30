@@ -252,49 +252,44 @@
  * @{
  */
 
+#include <compiler.h>
+#include <clock.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include <compiler.h>
-#include <string.h>
-#include <clock.h>
-
-#if AC_CALLBACK == true
-#  if !defined(__DOXYGEN__)
+#if !defined(__DOXYGEN__)
 /* Forward declaration of struct */
 struct ac_module;
-#  endif /* !defined(__DOXYGEN__) */
+
+extern struct ac_module *_ac_instance[AC_INST_NUM];
+#endif
+
 /** Type definition for a AC module callback function. */
 typedef void (*ac_callback_t)(struct ac_module *const module_inst);
 
 /** Enum for possible callback types for the AC module */
 enum ac_callback {
 	/** Callback for comparator 0 */
-	AC_CALLBACK_COMPARATOR_0  = AC_INTFLAG_COMP0_Pos,
+	AC_CALLBACK_COMPARATOR_0,
 	/** Callback for comparator 1 */
-	AC_CALLBACK_COMPARATOR_1  = AC_INTFLAG_COMP1_Pos,
+	AC_CALLBACK_COMPARATOR_1,
 	/** Callback for window 0 */
-	AC_CALLBACK_WINDOW_0      = AC_INTFLAG_WIN0_Pos,
-#  if (AC_NUM_CMP > 2)
+	AC_CALLBACK_WINDOW_0,
+#if (AC_NUM_CMP > 2)
 	/** Callback for comparator 2 */
-	AC_CALLBACK_COMPARATOR_2  = AC_INTFLAG_COMP2_Pos,
+	AC_CALLBACK_COMPARATOR_2,
 	/** Callback for comparator 3 */
-	AC_CALLBACK_COMPARATOR_3  = AC_INTFLAG_COMP3_Pos,
+	AC_CALLBACK_COMPARATOR_3,
 	/** Callback for window 1 */
-	AC_CALLBACK_WINDOW_1      = AC_INTFLAG_WIN1_Pos,
+	AC_CALLBACK_WINDOW_1,
 	/** Number of available callbacks */
-#  endif /* (AC_NUM_CMP == 2) */
-#  if !defined(__DOXYGEN__)
-	AC_CALLBACK_N = 6,
-#  endif /* !defined(__DOXYGEN__) */
+#endif /* (AC_NUM_CMP == 2) */
+#if !defined(__DOXYGEN__)
+	AC_CALLBACK_N,
+#endif /* !defined(__DOXYGEN__) */
 };
-
-
-#    if !defined(__DOXYGEN__)
-struct ac_module *_ac_instance[AC_INST_NUM];
-#    endif /* !defined(__DOXYGEN__) */
-#  endif /* AC_CALLBACK == true */
 
 /**
  * \brief AC comparator channel selection enum.
@@ -422,9 +417,9 @@ enum ac_chan_status {
 	/** Comparator's positive input pin is higher in voltage than the negative
 	 *  input pin. */
 	AC_CHAN_STATUS_POS_ABOVE_NEG,
-	/** 
+	/**
 	 * This state reflects the channel interrupt flag. When the interrupt flag
-	 * should be set is configured in ac_chan_set_config(). This state needs 
+	 * should be set is configured in ac_chan_set_config(). This state needs
 	 * to be cleared by the use of ac_chan_cleare_status().
 	 */
 	AC_CHAN_STATUS_INTERRUPT_SET,
@@ -461,10 +456,10 @@ enum ac_win_status {
 	/** Window Comparator's input voltage is below the lower window
 	 *  threshold. */
 	AC_WIN_STATUS_BELOW,
-	/** 
+	/**
 	 * This state reflects the window interrupt flag. When the interrupt flag
-	 * should be set is configured in ac_win_set_config(). This state needs 
-	 * to be cleared by the use of ac_win_cleare_status().
+	 * should be set is configured in \ref ac_win_set_config(). This state needs
+	 * to be cleared by the use of \ref ac_win_cleare_status().
 	 */
 	AC_WIN_STATUS_INTERRUPT_SET,
 };
@@ -477,13 +472,17 @@ enum ac_win_status {
 enum ac_chan_interrupt_selection {
 	/** An interrupt will be generated when the comparator level is passed */
 	AC_CHAN_INTERRUPT_SELECTION_TOGGLE          = AC_COMPCTRL_INTSEL_TOGGLE,
-	/** An interrupt will be generated when the measurement goes above the compare level*/
+	/** An interrupt will be generated when the measurement goes above the
+	 *  compare level
+	 */
 	AC_CHAN_INTERRUPT_SELECTION_RISING          = AC_COMPCTRL_INTSEL_RISING,
-	/** An interrupt will be generated when the measurement goes below the compare level*/
+	/** An interrupt will be generated when the measurement goes below the
+	 *  compare level
+	 */
 	AC_CHAN_INTERRUPT_SELECTION_FALLING         = AC_COMPCTRL_INTSEL_FALLING,
 	/**
 	 * An interrupt will be generated when a new measurement is complete.
-	 * Interrupts will only be generated in single shot mode. This state needs 
+	 * Interrupts will only be generated in single shot mode. This state needs
 	 * to be cleared by the use of ac_chan_cleare_status().
 	 */
 	AC_CHAN_INTERRUPT_SELECTION_END_OF_COMPARE  = AC_COMPCTRL_INTSEL_EOC,
@@ -518,14 +517,14 @@ struct ac_module {
 #if !defined(__DOXYGEN__)
 	/** Hardware module pointer of the associated Analog Comparator peripheral. */
 	Ac *hw;
-#  if AC_CALLBACK == true
+#  if AC_CALLBACK_MODE == true
 	/** Array of callbacks */
 	ac_callback_t callback[AC_CALLBACK_N];
 	/** Bit mask for callbacks registered */
 	uint8_t register_callback_mask;
 	/** Bit mask for callbacks enabled */
 	uint8_t enable_callback_mask;
-#  endif /* AC_CALLBACK == true */
+#  endif
 #endif
 };
 
@@ -559,11 +558,6 @@ struct ac_config {
 	/** If \c true, the comparator pairs will continue to sample during sleep
 	 *  mode when triggered. */
 	bool run_in_standby[AC_PAIRS];
-
-	/** Event generation and reception configuration for the AC module; event
-	 *  flags set to true are enabled when the module is configured. */
-	struct ac_events events;
-
 	/** Source generator for AC GCLK. */
 	enum gclk_generator source_generator;
 };
@@ -689,7 +683,6 @@ static inline bool ac_is_syncing(
  *
  *  The default configuration is as follows:
  *   \li All comparator pairs disabled during sleep mode
- *   \li No events enabled by default
  *   \li Generator 0 is the default GCLK generator
  *
  *  \param[out] config  Configuration structure to initialize to default values
@@ -705,7 +698,6 @@ static inline void ac_get_config_defaults(
 		config->run_in_standby[i] = false;
 	}
 	config->run_in_standby[0] = false;
-	memset(&config->events, 0x00, sizeof(config->events));
 	config->source_generator = GCLK_GENERATOR_0;
 }
 
@@ -1046,10 +1038,10 @@ static inline uint8_t ac_chan_get_status(
 
 /**
  * \brief Clears an interrupt status flag
- * 
+ *
  * This function is used to clear the AC_CHAN_STATUS_INTERRUPT_SET flag
  * it will clear the flag for the channel indicated by the channel argument
- * 
+ *
  * \param[in]  module_inst  Software instance for the Analog Comparator peripheral
  * \param[in]  channel      Comparator channel to clear
  */
@@ -1090,7 +1082,7 @@ static inline void ac_win_get_config_defaults(
 	Assert(config);
 
 	/* Default configuration values */
-	config->interrupt_selection  = AC_WIN_INTERRUPT_SELECTION_ABOVE;
+	config->interrupt_selection = AC_WIN_INTERRUPT_SELECTION_ABOVE;
 }
 
 enum status_code ac_win_set_config(
@@ -1157,10 +1149,10 @@ uint32_t ac_win_get_status(
 
 /**
  * \brief Clears an interrupt status flag
- * 
+ *
  * This function is used to clear the AC_WIN_STATus_INTERRUPT_SET flag
  * it will clear the flag for the channel indicated by the win_channel argument
- * 
+ *
  * \param[in]  module_inst  Software instance for the Analog Comparator peripheral
  * \param[in]  win_channel      Window channel to clear
  */
