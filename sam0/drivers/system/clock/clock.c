@@ -91,7 +91,7 @@ static struct _system_clock_module _system_clock_inst = {
  */
 static inline void _system_dfll_wait_for_sync(void)
 {
-	while (SYSCTRL->PCLKSR.reg & SYSCTRL_PCLKSR_DFLLRDY) {
+	while (!(SYSCTRL->PCLKSR.reg & SYSCTRL_PCLKSR_DFLLRDY)) {
 		/* Wait for DFLL sync */
 	}
 }
