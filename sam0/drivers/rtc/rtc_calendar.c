@@ -158,10 +158,6 @@ static void _rtc_calendar_register_value_to_time(
  * hardware module.
  *
  * \param[in] config  Pointer to the configuration structure.
- *
- * \return Status of the configuration procedure.
- * \retval STATUS_OK               RTC configurations was set successfully.
- * \retval STATUS_ERR_INVALID_ARG  If invalid argument(s) where given.
  */
 static void _rtc_calendar_set_config(
 		const struct rtc_calendar_config *const config)
@@ -209,10 +205,6 @@ static void _rtc_calendar_set_config(
  * the desired functionality of the RTC.
  *
  * \param[in] config  Pointer to the configuration structure.
- *
- * \return Status of the initialization procedure.
- * \retval STATUS_OK               If the initialization was run successfully.
- * \retval STATUS_ERR_INVALID_ARG  If invalid argument(s) were given.
  */
 void rtc_calendar_init(
 		const struct rtc_calendar_config *const config)

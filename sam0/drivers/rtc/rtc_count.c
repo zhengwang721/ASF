@@ -83,8 +83,6 @@ void rtc_count_reset(void)
  * \return Status of the configuration procedure.
  * \retval STATUS_OK               RTC configurations was set successfully.
  * \retval STATUS_ERR_INVALID_ARG  If invalid argument(s) were given.
- * \retval STATUS_ERR_BAD_FRQ      If the RTC source clock is not an exact
- *                                 multiple of 1KHz
  */
 static enum status_code _rtc_count_set_config(
 		const struct rtc_count_config *const config)
