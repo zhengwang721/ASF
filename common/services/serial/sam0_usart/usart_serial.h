@@ -1,10 +1,9 @@
 /**
  * \file
  *
- * This file defines a useful set of functions for the Serial interface on AVR
- * XMEGA devices.
+ * \brief USART Serial wrapper service for the SAM D20 devices.
  *
- * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -90,7 +89,7 @@ static inline bool usart_serial_init(struct usart_module *const module,
 static inline enum status_code usart_serial_putchar(struct usart_module *const module,
 		uint8_t c)
 {
-	return usart_write_wait(module, (const uint16_t)c);
+	return usart_write_wait(module, c);
 }
 /*! \brief Waits until a character is received, and returns it.
  *

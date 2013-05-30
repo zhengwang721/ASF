@@ -46,7 +46,7 @@
  * \copydetails preface
  *
  *
- * \page preface Overview
+ * \page appdoc_preface Overview
  * This application calibrates the internal OSC8M (8MHz) oscillator of the
  * device against a known, accurate external clock or crystal frequency.
  */

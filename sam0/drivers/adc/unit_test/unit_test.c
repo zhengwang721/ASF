@@ -206,7 +206,6 @@ static void run_adc_init_test(const struct test_case *test)
 	/* Check for successful initialization */
 	test_assert_true(test, status == STATUS_OK,
 			"ADC initialization failed");
-	status = STATUS_ERR_IO;
 
 	/* Enable the ADC */
 	status = adc_enable(&adc_inst);

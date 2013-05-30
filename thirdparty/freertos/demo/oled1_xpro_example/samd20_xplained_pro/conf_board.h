@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SSD1306 display controller driver configuration file.
+ * \brief SAM D20 Xplained PRO board configuration.
  *
  * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -40,28 +40,8 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_SSD1306_H_INCLUDED
-#define CONF_SSD1306_H_INCLUDED
 
-#include <board.h>
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-// Interface configuration for SAM D20 Xplained Pro
-#  define SSD1306_SPI                 EXT3_SPI_MODULE
-#  define CONFIG_SSD1306_FRAMEBUFFER
-
-#  define SSD1306_DC_PIN              EXT3_PIN_5
-#  define SSD1306_RES_PIN             EXT3_PIN_10
-#  define SSD1306_CS_PIN              EXT3_PIN_15
-
-#  define SSD1306_SPI_PINMUX_SETTING  SPI_SIGNAL_MUX_SETTING_E
-#  define SSD1306_SPI_PINMUX_PAD0     EXT3_SPI_MISO_PINMUX
-#  define SSD1306_SPI_PINMUX_PAD1     PINMUX_UNUSED
-#  define SSD1306_SPI_PINMUX_PAD2     EXT3_SPI_MOSI_PINMUX
-#  define SSD1306_SPI_PINMUX_PAD3     EXT3_SPI_SCK_PINMUX
-
-// Minimum clock period is 50ns@3.3V -> max frequency is 20MHz
-#define SSD1306_CLOCK_SPEED           1000000UL
-#define SSD1306_DISPLAY_CONTRAST_MAX  40
-#define SSD1306_DISPLAY_CONTRAST_MIN  30
-
-#endif /* CONF_SSD1306_H_INCLUDED */
+#endif /* CONF_BOARD_H_INCLUDED */
