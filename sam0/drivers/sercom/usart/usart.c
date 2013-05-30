@@ -72,10 +72,10 @@ static enum status_code _usart_check_config(
 	SercomUsart *const usart_hw = &(module->hw->USART);
 	Sercom *const hw = (module->hw);
 
-	uint32_t pad0 = config->pinout_pad0;
-	uint32_t pad1 = config->pinout_pad1;
-	uint32_t pad2 = config->pinout_pad2;
-	uint32_t pad3 = config->pinout_pad3;
+	uint32_t pad0 = config->pinmux_pad0;
+	uint32_t pad1 = config->pinmux_pad1;
+	uint32_t pad2 = config->pinmux_pad2;
+	uint32_t pad3 = config->pinmux_pad3;
 
 	/* SERCOM PAD0 */
 	if (pad0 == PINMUX_DEFAULT) {
@@ -155,7 +155,7 @@ static enum status_code _usart_check_config(
 
 	/* Check sample mode, data order, internal muxing, and clock polarity */
 	ctrla = (uint32_t)config->data_order |
-		(uint32_t)config->mux_settings |
+		(uint32_t)config->mux_setting |
 		(uint32_t)config->transfer_mode |
 		SERCOM_USART_CTRLA_MODE(0) |
 		(config->clock_polarity_inverted << SERCOM_USART_CTRLA_CPOL_Pos);
@@ -216,7 +216,7 @@ static enum status_code _usart_set_config(
 
 	/* Set data order, internal muxing, and clock polarity */
 	ctrla = (uint32_t)config->data_order |
-		(uint32_t)config->mux_settings |
+		(uint32_t)config->mux_setting |
 		(config->clock_polarity_inverted << SERCOM_USART_CTRLA_CPOL_Pos);
 
 	enum status_code status_code = STATUS_OK;
@@ -378,10 +378,10 @@ enum status_code usart_init(
 	system_pinmux_get_config_defaults(&pin_conf);
 	pin_conf.direction = SYSTEM_PINMUX_PIN_DIR_INPUT;
 
-	uint32_t pad0 = config->pinout_pad0;
-	uint32_t pad1 = config->pinout_pad1;
-	uint32_t pad2 = config->pinout_pad2;
-	uint32_t pad3 = config->pinout_pad3;
+	uint32_t pad0 = config->pinmux_pad0;
+	uint32_t pad1 = config->pinmux_pad1;
+	uint32_t pad2 = config->pinmux_pad2;
+	uint32_t pad3 = config->pinmux_pad3;
 
 	/* SERCOM PAD0 */
 	if (pad0 == PINMUX_DEFAULT) {
