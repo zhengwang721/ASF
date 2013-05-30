@@ -1,5 +1,4 @@
-/*****************************************************************************
- *
+/**
  * \file
  *
  * \brief AT45DBX configuration file.
@@ -42,7 +41,7 @@
  *
  * \asf_license_stop
  *
- ******************************************************************************/
+ */
 
 
 #ifndef _CONF_AT45DBX_H_
@@ -50,8 +49,6 @@
 
 #include "at45dbx.h"
 #include <board.h>
-
-//_____ D E F I N I T I O N S ______________________________________________
 
 #warning "Using a default at45dbx configuration: edit and modify the file conf_at45dbx.h depending on the application."
 
@@ -64,11 +61,11 @@
 //! Number of AT45DBX components to manage.
 #define AT45DBX_MEM_CNT             1
 
-#define AT45DBX_SPI_PINMUX_SETTING  SPI_SIGNAL_MUX_SETTING_E
-#define AT45DBX_SPI_PINMUX_PAD0     EXT2_SPI_MISO_PINMUX
-#define AT45DBX_SPI_PINMUX_PAD1     EXT2_SPI_SS_PINMUX
-#define AT45DBX_SPI_PINMUX_PAD2     EXT2_SPI_MOSI_PINMUX
-#define AT45DBX_SPI_PINMUX_PAD3     EXT2_SPI_SCK_PINMUX
+#define AT45DBX_SPI_PINMUX_SETTING  EXT2_SPI_SERCOM_MUX_SETTING
+#define AT45DBX_SPI_PINMUX_PAD0     EXT2_SPI_SERCOM_PINMUX_PAD0
+#define AT45DBX_SPI_PINMUX_PAD1     EXT2_SPI_SERCOM_PINMUX_PAD1
+#define AT45DBX_SPI_PINMUX_PAD2     EXT2_SPI_SERCOM_PINMUX_PAD2
+#define AT45DBX_SPI_PINMUX_PAD3     EXT2_SPI_SERCOM_PINMUX_PAD3
 
 #define AT45DBX_CS                  EXT2_PIN_15
 
