@@ -65,7 +65,8 @@ void configure_rtc_count(void)
 //! [init_conf]
 
 //! [set_config]
-	config.mode = RTC_COUNT_MODE_16BIT;
+	config.prescaler           = RTC_COUNT_PRESCALER_DIV_1;
+	config.mode                = RTC_COUNT_MODE_16BIT;
 	config.continuously_update = true;
 //! [set_config]
 //! [init_rtc]
