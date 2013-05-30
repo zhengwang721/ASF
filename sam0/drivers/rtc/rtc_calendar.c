@@ -207,7 +207,7 @@ static void _rtc_calendar_set_config(
 
 	/* Set alarm time registers. */
 	for (uint8_t i = 0; i < RTC_NUM_OF_ALARMS; i++) {
-		rtc_calendar_set_alarm(&(config->alarm[i]), i);
+		rtc_calendar_set_alarm(&(config->alarm[i]), (enum rtc_calendar_alarm)i);
 	}
 }
 
@@ -282,14 +282,14 @@ void rtc_calendar_swap_time_mode(void)
 
 		/* Update alarms */
 		for (uint8_t i = 0; i < RTC_NUM_OF_ALARMS; i++) {
-			rtc_calendar_get_alarm(&alarm, i);
+			rtc_calendar_get_alarm(&alarm, (enum rtc_calendar_alarm)i);
 			alarm.time.pm = (uint8_t)(alarm.time.hour / 12);
 			alarm.time.hour = alarm.time.hour % 12;
 			if (alarm.time.hour == 0) {
 				alarm.time.hour = 12;
 			}
 			_rtc_dev.clock_24h = false;
-			rtc_calendar_set_alarm(&alarm, i);
+			rtc_calendar_set_alarm(&alarm, (enum rtc_calendar_alarm)i);
 			_rtc_dev.clock_24h = true;
 		}
 
@@ -307,12 +307,12 @@ void rtc_calendar_swap_time_mode(void)
 
 		/* Update alarms */
 		for (uint8_t i = 0; i < RTC_NUM_OF_ALARMS; i++) {
-			rtc_calendar_get_alarm(&alarm, i);
+			rtc_calendar_get_alarm(&alarm, (enum rtc_calendar_alarm)i);
 			if (alarm.time.pm == 1) {
 				alarm.time.hour = alarm.time.hour + 12;
 				alarm.time.pm = 0;
 				_rtc_dev.clock_24h = true;
-				rtc_calendar_set_alarm(&alarm, i);
+				rtc_calendar_set_alarm(&alarm, (enum rtc_calendar_alarm)i);
 				_rtc_dev.clock_24h = false;
 			} else if (alarm.time.hour == 12) {
 				alarm.time.hour = 0;
@@ -463,7 +463,7 @@ enum status_code rtc_calendar_get_alarm(
 	_rtc_calendar_register_value_to_time(register_value, &(alarm->time));
 
 	/* Read alarm mask */
-	alarm->mask = rtc_module->MODE2.Mode2Alarm[alarm_index].MASK.reg;
+	alarm->mask = (enum rtc_calendar_alarm_mask)rtc_module->MODE2.Mode2Alarm[alarm_index].MASK.reg;
 
 	return STATUS_OK;
 }

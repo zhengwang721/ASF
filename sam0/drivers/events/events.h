@@ -462,7 +462,7 @@ void events_chan_set_config(
  * user application.
  *
  * The default configuration is as follows:
- *  \li User MUX input event is not connected to any source channel
+ *  \li User MUX input event is connected to source channel 0
  *
  * \param[out] config  Configuration structure to initialize to default values
  */
@@ -473,7 +473,7 @@ static inline void events_user_get_config_defaults(
 	Assert(config);
 
 	/* Default configuration values */
-	config->event_channel_id = 0;
+	config->event_channel_id = EVENT_CHANNEL_0;
 }
 
 void events_user_set_config(

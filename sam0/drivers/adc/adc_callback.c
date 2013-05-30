@@ -69,7 +69,7 @@ static void _adc_interrupt_handler(const uint8_t instance)
 				module->job_status = STATUS_OK;
 				adc_disable_interrupt(module, ADC_INTERRUPT_RESULT_READY);
 				if(module->enabled_callback_mask & (1 << ADC_CALLBACK_READ_BUFFER)) {
-					(*(module->callback[ADC_CALLBACK_READ_BUFFER]))(module);
+					(module->callback[ADC_CALLBACK_READ_BUFFER])(module);
 				}
 			}
 		}
@@ -78,7 +78,7 @@ static void _adc_interrupt_handler(const uint8_t instance)
 	if (flags & ADC_INTFLAG_WINMON) {
 		module->hw->INTFLAG.reg = ADC_INTFLAG_WINMON;
 		if(module->enabled_callback_mask & (1 << ADC_CALLBACK_WINDOW)) {
-			(*(module->callback[ADC_CALLBACK_WINDOW]))(module);
+			(module->callback[ADC_CALLBACK_WINDOW])(module);
 		}
 
 	}
@@ -86,7 +86,7 @@ static void _adc_interrupt_handler(const uint8_t instance)
 	if (flags & ADC_INTFLAG_OVERRUN) {
 		module->hw->INTFLAG.reg = ADC_INTFLAG_OVERRUN;
 		if(module->enabled_callback_mask & (1 << ADC_CALLBACK_ERROR)) {
-			(*(module->callback[ADC_CALLBACK_ERROR]))(module);
+			(module->callback[ADC_CALLBACK_ERROR])(module);
 		}
 	}
 }
@@ -231,7 +231,7 @@ void adc_abort_job(
 	/* Sanity check arguments */
 	Assert(module_inst);
 
-	if (type == ADC_JOB_READ_BUFFER ) {
+	if (type == ADC_JOB_READ_BUFFER) {
 		/* Disable interrupt */
 		adc_disable_interrupt(module_inst, ADC_INTERRUPT_RESULT_READY);
 		/* Mark job as aborted */

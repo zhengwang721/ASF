@@ -157,7 +157,7 @@ enum system_interrupt_vector _sercom_get_interrupt_vector(
 	uint8_t instance_index = _sercom_get_sercom_inst_index(sercom_instance);
 
 	/* Get the vector number from the lookup table for the requested SERCOM */
-	return sercom_int_vectors[instance_index];
+	return (enum system_interrupt_vector)sercom_int_vectors[instance_index];
 }
 
 /** Auto-generate a set of interrupt handlers for each SERCOM in the device */

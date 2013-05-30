@@ -12,7 +12,7 @@
 		<module caption="AC - Analog Comparator" id="sam0.drivers.ac#polled" type="driver">
 			<build type="include-path" value="." />
 
-			<build name="AC_CALLBACK" type="define" value="false" />
+			<build name="AC_CALLBACK_MODE" type="define" value="false" />
 
 			<build subtype="api" type="header-file" value="ac.h" />
 			<build type="c-source" value="ac.c" />
@@ -42,7 +42,7 @@
 
 			<build type="include-path" value="." />
 
-			<build name="AC_CALLBACK" type="define" value="true" />
+			<build name="AC_CALLBACK_MODE" type="define" value="true" />
 			<build type="doxygen-enable-section" value="AC_CALLBACK_MODE"/>
 
 			<build subtype="api" type="header-file" value="ac.h" />
