@@ -224,9 +224,9 @@ static void run_multiple_init_while_enabled_test(const struct test_case *test)
 	usart_disable(&usart_rx_module);
 	/* Configure RX USART */
 	usart_get_config_defaults(&usart_rx_config);
-	usart_rx_config.mux_settings = USART_RX_1_TX_0_XCK_1;
-	usart_rx_config.pinout_pad1 = RX_USART_PINMUX;
-	usart_rx_config.baudrate = TEST_USART_SPEED;
+	usart_rx_config.mux_setting = USART_RX_1_TX_0_XCK_1;
+	usart_rx_config.pinmux_pad1 = RX_USART_PINMUX;
+	usart_rx_config.baudrate    = TEST_USART_SPEED;
 	/* Apply configuration */
 	while(usart_is_syncing(&usart_rx_module)) {
 		/* wait for it */
@@ -255,14 +255,14 @@ static void run_multiple_init_while_enabled_test(const struct test_case *test)
 	usart_rx_config.baudrate = TEST_USART_SPEED;
 
 	/* Test changing the pad*/
-	usart_rx_config.pinout_pad1 = 0x0003;
+	usart_rx_config.pinmux_pad1 = 0x0003;
 	/* Apply new configuration */
 	test_code = usart_init(&usart_rx_module,
 			RX_USART, &usart_rx_config);
 	test_assert_false(test, (test_code == STATUS_OK),
 			"Changing the pad did not fail as it should");
 	/* revert to old configuration */
-	usart_rx_config.pinout_pad1 = RX_USART_PINMUX;
+	usart_rx_config.pinmux_pad1 = RX_USART_PINMUX;
 	usart_init(&usart_rx_module,
 			RX_USART, &usart_rx_config);
 }
@@ -330,10 +330,10 @@ static void test_system_init(void)
 
 	/* Configure USART for unit test output */
 	usart_get_config_defaults(&usart_conf);
-	usart_conf.mux_settings     = USART_RX_3_TX_2_XCK_3;
-	usart_conf.pinout_pad3      = EDBG_CDC_RX_PINMUX;
-	usart_conf.pinout_pad2      = EDBG_CDC_TX_PINMUX;
-	usart_conf.baudrate         = 38400;
+	usart_conf.mux_setting = USART_RX_3_TX_2_XCK_3;
+	usart_conf.pinmux_pad3 = EDBG_CDC_RX_PINMUX;
+	usart_conf.pinmux_pad2 = EDBG_CDC_TX_PINMUX;
+	usart_conf.baudrate    = 38400;
 
 	stdio_serial_init(&unit_test_output, CONF_RX_USART, &usart_conf);
 	usart_enable(&unit_test_output);
@@ -344,9 +344,9 @@ static void test_system_init(void)
 
 	/* Configure RX USART */
 	usart_get_config_defaults(&usart_rx_config);
-	usart_rx_config.mux_settings = USART_RX_1_TX_0_XCK_1;
-	usart_rx_config.pinout_pad1  = RX_USART_PINMUX;
-	usart_rx_config.baudrate     = TEST_USART_SPEED;
+	usart_rx_config.mux_setting = USART_RX_1_TX_0_XCK_1;
+	usart_rx_config.pinmux_pad1 = RX_USART_PINMUX;
+	usart_rx_config.baudrate    = TEST_USART_SPEED;
 	/* Apply configuration */
 	usart_init(&usart_rx_module, RX_USART, &usart_rx_config);
 	/* Enable USART */
@@ -354,9 +354,9 @@ static void test_system_init(void)
 
 	/* Configure TX USART */
 	usart_get_config_defaults(&usart_tx_config);
-	usart_tx_config.mux_settings = USART_RX_1_TX_0_XCK_1;
-	usart_tx_config.pinout_pad0  = TX_USART_PINMUX;
-	usart_tx_config.baudrate     = TEST_USART_SPEED;
+	usart_tx_config.mux_setting = USART_RX_1_TX_0_XCK_1;
+	usart_tx_config.pinmux_pad0 = TX_USART_PINMUX;
+	usart_tx_config.baudrate    = TEST_USART_SPEED;
 	/* Apply configuration */
 	usart_init(&usart_tx_module, TX_USART, &usart_tx_config);
 	/* Enable USART */
