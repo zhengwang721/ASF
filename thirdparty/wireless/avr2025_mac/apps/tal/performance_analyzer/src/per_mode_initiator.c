@@ -2655,8 +2655,9 @@ void start_ed_scan(uint8_t ed_scan_duration,uint32_t channel_sel_mask)
     /* Initialize the no. of channels to 0 */
     num_channels = 0;
 
-    scan_duration = ed_scan_duration;
-    scan_channel_mask = (channel_sel_mask & VALID_CHANNEL_MASK);
+    scan_duration = ed_scan_duration;    
+    scan_channel_mask = (channel_sel_mask & tal_pib.SupportedChannels);
+    //scan_channel_mask = (channel_sel_mask & VALID_CHANNEL_MASK);
 
 #if( (TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B) )
     /* saving the current transmit power to restore after scan*/
