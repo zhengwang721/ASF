@@ -414,10 +414,10 @@ static void test_usart_comunication_init(void)
 
 	/* Configure USART for unit test output */
 	usart_get_config_defaults(&usart_conf);
-	usart_conf.mux_settings     = USART_RX_1_TX_0_XCK_1;
-	usart_conf.pinout_pad3      = EDBG_CDC_RX_PINMUX;
-	usart_conf.pinout_pad2      = EDBG_CDC_TX_PINMUX;
-	usart_conf.baudrate         = 38400;
+	usart_conf.mux_setting = USART_RX_1_TX_0_XCK_1;
+	usart_conf.pinmux_pad3 = EDBG_CDC_RX_PINMUX;
+	usart_conf.pinmux_pad2 = EDBG_CDC_TX_PINMUX;
+	usart_conf.baudrate    = 38400;
 
 	stdio_serial_init(&unit_test_output, CONF_RX_USART, &usart_conf);
 	usart_enable(&unit_test_output);
