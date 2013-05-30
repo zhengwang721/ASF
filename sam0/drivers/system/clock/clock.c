@@ -53,7 +53,7 @@ struct _system_clock_dfll_config {
 
 /**
  * \internal
- * \brief XOSC specefic data container
+ * \brief XOSC specific data container
  */
 struct _system_clock_xosc_config {
 	uint32_t frequency;
@@ -61,7 +61,7 @@ struct _system_clock_xosc_config {
 
 /**
  * \internal
- * \breif System clock module data container
+ * \brief System clock module data container
  */
 struct _system_clock_module {
 	volatile struct _system_clock_dfll_config dfll;
@@ -91,7 +91,7 @@ static struct _system_clock_module _system_clock_inst = {
  */
 static inline void _system_dfll_wait_for_sync(void)
 {
-	while(SYSCTRL->PCLKSR.reg & SYSCTRL_PCLKSR_DFLLRDY) {
+	while (SYSCTRL->PCLKSR.reg & SYSCTRL_PCLKSR_DFLLRDY) {
 		/* Wait for DFLL sync */
 	}
 }
