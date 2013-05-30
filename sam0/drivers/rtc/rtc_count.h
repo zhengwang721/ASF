@@ -354,6 +354,36 @@ typedef void (*rtc_count_callback_t)(void);
 #endif
 
 /**
+ * \brief RTC input clock prescaler settings
+ *
+ * The available input clock prescaler values for the RTC count module.
+ */
+enum rtc_count_prescaler {
+	/** RTC input clock frequency is prescaled by a factor of 1. */
+	RTC_COUNT_PRESCALER_DIV_1    = RTC_MODE0_CTRL_PRESCALER_DIV1,
+	/** RTC input clock frequency is prescaled by a factor of 2. */
+	RTC_COUNT_PRESCALER_DIV_2    = RTC_MODE0_CTRL_PRESCALER_DIV2,
+	/** RTC input clock frequency is prescaled by a factor of 4. */
+	RTC_COUNT_PRESCALER_DIV_4    = RTC_MODE0_CTRL_PRESCALER_DIV4,
+	/** RTC input clock frequency is prescaled by a factor of 8. */
+	RTC_COUNT_PRESCALER_DIV_8    = RTC_MODE0_CTRL_PRESCALER_DIV8,
+	/** RTC input clock frequency is prescaled by a factor of 16. */
+	RTC_COUNT_PRESCALER_DIV_16   = RTC_MODE0_CTRL_PRESCALER_DIV16,
+	/** RTC input clock frequency is prescaled by a factor of 32. */
+	RTC_COUNT_PRESCALER_DIV_32   = RTC_MODE0_CTRL_PRESCALER_DIV32,
+	/** RTC input clock frequency is prescaled by a factor of 64. */
+	RTC_COUNT_PRESCALER_DIV_64   = RTC_MODE0_CTRL_PRESCALER_DIV64,
+	/** RTC input clock frequency is prescaled by a factor of 128. */
+	RTC_COUNT_PRESCALER_DIV_128  = RTC_MODE0_CTRL_PRESCALER_DIV128,
+	/** RTC input clock frequency is prescaled by a factor of 256. */
+	RTC_COUNT_PRESCALER_DIV_256  = RTC_MODE0_CTRL_PRESCALER_DIV256,
+	/** RTC input clock frequency is prescaled by a factor of 512. */
+	RTC_COUNT_PRESCALER_DIV_512  = RTC_MODE0_CTRL_PRESCALER_DIV512,
+	/** RTC input clock frequency is prescaled by a factor of 1024. */
+	RTC_COUNT_PRESCALER_DIV_1024 = RTC_MODE0_CTRL_PRESCALER_DIV1024,
+};
+
+/**
  * \brief RTC Count event enable/disable structure.
  *
  * Event flags for the \ref rtc_count_enable_events() and
@@ -402,6 +432,8 @@ extern volatile struct _rtc_device _rtc_dev;
  * user configurations are set.
  */
 struct rtc_count_config {
+	/** Input clock prescaler for the RTC module. */
+	enum rtc_count_prescaler prescaler;
 	/** Select the operation mode of the RTC.*/
 	enum rtc_count_mode mode;
 	/** If true, clears the counter value on compare match. Only available
@@ -453,6 +485,7 @@ static inline bool rtc_count_is_syncing(void)
  *  function should be called at the start of any RTC initialization.
  *
  *  The default configuration is as follows:
+ *  - Input clock divided by a factor of 1024.
  *  - RTC in 32 bit mode.
  *  - Clear on compare match off.
  *  - Continuously sync count register off.
@@ -469,6 +502,7 @@ static inline void rtc_count_get_config_defaults(
 	Assert(config);
 
 	/* Set default into configuration structure */
+	config->prescaler           = RTC_COUNT_PRESCALER_DIV_1024;
 	config->mode                = RTC_COUNT_MODE_32BIT;
 	config->clear_on_match      = false;
 	config->continuously_update = false;

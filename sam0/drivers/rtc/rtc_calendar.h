@@ -330,6 +330,36 @@ typedef void (*rtc_calendar_callback_t)(void);
 #  endif
 #endif
 
+/**
+ * \brief RTC input clock prescaler settings
+ *
+ * The available input clock prescaler values for the RTC calendar module.
+ */
+enum rtc_calendar_prescaler {
+	/** RTC input clock frequency is prescaled by a factor of 1. */
+	RTC_CALENDAR_PRESCALER_DIV_1    = RTC_MODE2_CTRL_PRESCALER_DIV1,
+	/** RTC input clock frequency is prescaled by a factor of 2. */
+	RTC_CALENDAR_PRESCALER_DIV_2    = RTC_MODE2_CTRL_PRESCALER_DIV2,
+	/** RTC input clock frequency is prescaled by a factor of 4. */
+	RTC_CALENDAR_PRESCALER_DIV_4    = RTC_MODE2_CTRL_PRESCALER_DIV4,
+	/** RTC input clock frequency is prescaled by a factor of 8. */
+	RTC_CALENDAR_PRESCALER_DIV_8    = RTC_MODE2_CTRL_PRESCALER_DIV8,
+	/** RTC input clock frequency is prescaled by a factor of 16. */
+	RTC_CALENDAR_PRESCALER_DIV_16   = RTC_MODE2_CTRL_PRESCALER_DIV16,
+	/** RTC input clock frequency is prescaled by a factor of 32. */
+	RTC_CALENDAR_PRESCALER_DIV_32   = RTC_MODE2_CTRL_PRESCALER_DIV32,
+	/** RTC input clock frequency is prescaled by a factor of 64. */
+	RTC_CALENDAR_PRESCALER_DIV_64   = RTC_MODE2_CTRL_PRESCALER_DIV64,
+	/** RTC input clock frequency is prescaled by a factor of 128. */
+	RTC_CALENDAR_PRESCALER_DIV_128  = RTC_MODE2_CTRL_PRESCALER_DIV128,
+	/** RTC input clock frequency is prescaled by a factor of 256. */
+	RTC_CALENDAR_PRESCALER_DIV_256  = RTC_MODE2_CTRL_PRESCALER_DIV256,
+	/** RTC input clock frequency is prescaled by a factor of 512. */
+	RTC_CALENDAR_PRESCALER_DIV_512  = RTC_MODE2_CTRL_PRESCALER_DIV512,
+	/** RTC input clock frequency is prescaled by a factor of 1024. */
+	RTC_CALENDAR_PRESCALER_DIV_1024 = RTC_MODE2_CTRL_PRESCALER_DIV1024,
+};
+
 #if !defined(__DOXYGEN__)
 /**
  * \internal Device structure
@@ -441,6 +471,8 @@ struct rtc_calendar_alarm_time {
  * user configurations are set.
  */
 struct rtc_calendar_config {
+	/** Input clock prescaler for the RTC module. */
+	enum rtc_calendar_prescaler prescaler;
 	/** If \c true, clears the clock on alarm match. */
 	bool clear_on_match;
 	/** If \c true, the digital counter registers will be continuously updated
@@ -513,13 +545,14 @@ static inline void rtc_calendar_get_time_defaults(
  * function should be called at the start of any RTC initiation.
  *
  * The default configuration is as follows:
- * - Clear on alarm match off.
- * - Continuously sync clock off.
- * - 12 hour calendar.
- * - Start year 2000 (Year 0 in the counter will be year 2000).
- * - Events off.
- * - Alarms set to January 1. 2000, 00:00:00.
- * - Alarm will match on second, minute, hour, day, month and year.
+ *  - Input clock divided by a factor of 1024.
+ *  - Clear on alarm match off.
+ *  - Continuously sync clock off.
+ *  - 12 hour calendar.
+ *  - Start year 2000 (Year 0 in the counter will be year 2000).
+ *  - Events off.
+ *  - Alarms set to January 1. 2000, 00:00:00.
+ *  - Alarm will match on second, minute, hour, day, month and year.
  *
  *  \param[out] config  Configuration structure to be initialized to default
  *                      values.
@@ -535,10 +568,11 @@ static inline void rtc_calendar_get_config_defaults(
 	rtc_calendar_get_time_defaults(&time);
 
 	/* Set defaults into configuration structure */
-	config->clear_on_match = false;
+	config->prescaler           = RTC_CALENDAR_PRESCALER_DIV_1024;
+	config->clear_on_match      = false;
 	config->continuously_update = false;
-	config->clock_24h = false;
-	config->year_init_value = 2000;
+	config->clock_24h           = false;
+	config->year_init_value     = 2000;
 	for (uint8_t i = 0; i < RTC_NUM_OF_ALARMS; i++) {
 		config->alarm[i].time = time;
 		config->alarm[i].mask = RTC_CALENDAR_ALARM_MASK_YEAR;
