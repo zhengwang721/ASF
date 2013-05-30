@@ -43,15 +43,49 @@
 #include <clock.h>
 #include <conf_clocks.h>
 
-/** \internal
- *  Internal variable to cache XOSC frequency.
+/**
+ * \internal
+ * \brief DFLL specefic data container
  */
-static uint32_t xosc_frequency = 0;
+struct _system_clock_dfll_config {
+	bool     configured;
+	uint32_t control;
+};
 
-/** \internal
- *  Internal variable to cache XOSC32 frequency.
+/**
+ * \internal
+ * \brief XOSC specefic data container
  */
-static uint32_t xosc32k_frequency = 0;
+struct _system_clock_xosc_config {
+	uint32_t frequency;
+};
+
+/**
+ * \internal
+ * \breif System clock module data container
+ */
+struct _system_clock_module {
+	volatile struct _system_clock_dfll_config dfll;
+	volatile struct _system_clock_xosc_config xosc;
+	volatile struct _system_clock_xosc_config xosc32k;
+};
+
+/**
+ * \internal
+ * \brief Internal module instance to cache configuration values
+ */
+static struct _system_clock_module _system_clock_inst = {
+		.dfll = {
+			.configured  = false,
+			.control     = 0,
+		},
+		.xosc = {
+			.frequency   = 0,
+		},
+		.xosc32k = {
+			.frequency   = 0,
+		},
+	};
 
 /**
  * \internal
@@ -59,7 +93,7 @@ static uint32_t xosc32k_frequency = 0;
  */
 static inline void _system_dfll_wait_for_sync(void)
 {
-	while (!(SYSCTRL->PCLKSR.reg & SYSCTRL_PCLKSR_DFLLRDY)) {
+	while(SYSCTRL->PCLKSR.reg & SYSCTRL_PCLKSR_DFLLRDY) {
 		/* Wait for DFLL sync */
 	}
 }
@@ -91,7 +125,7 @@ uint32_t system_clock_source_get_hz(
 
 	switch (clock_source) {
 		case SYSTEM_CLOCK_SOURCE_XOSC:
-			return xosc_frequency;
+			return _system_clock_inst.xosc.frequency;
 
 		case SYSTEM_CLOCK_SOURCE_OSC8M:
 			temp = (SYSCTRL->OSC8M.reg & SYSCTRL_OSC8M_PRESC_Msk) >> SYSCTRL_OSC8M_PRESC_Pos;
@@ -108,9 +142,15 @@ uint32_t system_clock_source_get_hz(
 			return 32768UL;
 
 		case SYSTEM_CLOCK_SOURCE_XOSC32K:
-			return xosc32k_frequency;
+			return _system_clock_inst.xosc32k.frequency;
 
 		case SYSTEM_CLOCK_SOURCE_DFLL:
+
+			/* Check if the DFLL has been configured */
+			if(!_system_clock_inst.dfll.configured)
+				return 0;
+
+			/* Make sure that the DFLL module is ready */
 			_system_dfll_wait_for_sync();
 
 			/* Check if operating in closed loop mode */
@@ -118,6 +158,7 @@ uint32_t system_clock_source_get_hz(
 				SYSCTRL->DFLLSYNC.bit.READREQ = 1;
 				_system_dfll_wait_for_sync();
 				temp = SYSCTRL->DFLLMUL.bit.MUL;
+
 				return system_gclk_chan_get_hz(SYSCTRL_GCLK_ID_DFLL48) * temp;
 			}
 
@@ -216,7 +257,7 @@ void system_clock_source_xosc_set_config(
 	temp.bit.RUNSTDBY = config->run_in_standby;
 
 	/* Store XOSC frequency for internal use */
-	xosc_frequency = config->frequency;
+	_system_clock_inst.xosc.frequency = config->frequency;
 
 	SYSCTRL->XOSC = temp;
 }
@@ -252,7 +293,7 @@ void system_clock_source_xosc32k_set_config(
 
 	/* Cache the new frequency in case the user needs to check the current
 	 * operating frequency later */
-	xosc32k_frequency = config->frequency;
+	_system_clock_inst.xosc32k.frequency = config->frequency;
 
 	SYSCTRL->XOSC32K = temp;
 }
@@ -271,40 +312,47 @@ void system_clock_source_xosc32k_set_config(
 void system_clock_source_dfll_set_config(
 		struct system_clock_source_dfll_config *const config)
 {
-	uint32_t temp;
+	/* Store away the enable bit state */
+	uint32_t old_dfll_enable_bit_state = _system_clock_inst.dfll.control & SYSCTRL_DFLLCTRL_ENABLE;
 
-	/* Enable the DFLL, as all the DFLL core registers are clocked
-	 * by the DFLL output */
+	/* Make sure that the DFLL module is enabled before writing the DFLL registers */
 	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_DFLL);
 
-	/* Write Fine and Coarse values for open loop mode */
+	/* Wait for the module to become ready */
 	_system_dfll_wait_for_sync();
+
 	SYSCTRL->DFLLVAL.reg =
 			SYSCTRL_DFLLVAL_COARSE(config->coarse_value) |
 			SYSCTRL_DFLLVAL_FINE(config->fine_value);
 
-	temp =
+	_system_clock_inst.dfll.control =
 			(uint32_t)config->wakeup_lock     |
 			(uint32_t)config->stable_tracking |
 			(uint32_t)config->quick_lock      |
 			(uint32_t)config->chill_cycle     |
 			(uint32_t)config->run_in_standby << SYSCTRL_DFLLCTRL_RUNSTDBY_Pos |
-			(uint32_t)config->on_demand << SYSCTRL_DFLLCTRL_ONDEMAND_Pos;
+			(uint32_t)config->on_demand << SYSCTRL_DFLLCTRL_ONDEMAND_Pos |
+			old_dfll_enable_bit_state;
 
 	if (config->loop_mode == SYSTEM_CLOCK_DFLL_LOOP_MODE_CLOSED) {
-		_system_dfll_wait_for_sync();
 		SYSCTRL->DFLLMUL.reg =
 				SYSCTRL_DFLLMUL_CSTEP(config->coarse_max_step) |
 				SYSCTRL_DFLLMUL_FSTEP(config->fine_max_step)   |
 				SYSCTRL_DFLLMUL_MUL(config->multiply_factor);
 
 		/* Enable the closed loop mode */
-		temp |= config->loop_mode;
+		_system_clock_inst.dfll.control |= config->loop_mode;
 	}
 
-	/* Set configuration to DFLL */
-	_system_dfll_wait_for_sync();
-	SYSCTRL->DFLLCTRL.reg |= temp;
+	_system_clock_inst.dfll.configured = true;
+
+	/* Restore old DFLL enable state */
+	if(!(old_dfll_enable_bit_state)) {
+		system_clock_source_disable(SYSTEM_CLOCK_SOURCE_DFLL);
+	} else {
+		SYSCTRL->DFLLCTRL.reg = _system_clock_inst.dfll.control;
+	}
+
 }
 
 /**
@@ -384,6 +432,8 @@ enum status_code system_clock_source_write_calibration(
  *                                 is ready
  * \retval STATUS_ERR_INVALID_ARG  The clock source is not available on this
  *                                 device
+ *
+ * \retval STATUS_ERR_NOT_INITIALIZED DFLL configuration is not initialized
  */
 enum status_code system_clock_source_enable(
 		const enum system_clock_source clock_source)
@@ -406,11 +456,14 @@ enum status_code system_clock_source_enable(
 			break;
 
 		case SYSTEM_CLOCK_SOURCE_DFLL:
-			_system_dfll_wait_for_sync();
+			if(!_system_clock_inst.dfll.configured) {
+				return STATUS_ERR_NOT_INITALIZATED;
+			}
 
-			/* Will erase current config as read-modify-write is not possible
-			   while DFLL is not running */
-			SYSCTRL->DFLLCTRL.reg = SYSCTRL_DFLLCTRL_ENABLE;
+			_system_clock_inst.dfll.control |= SYSCTRL_DFLLCTRL_ENABLE;
+			_system_dfll_wait_for_sync();
+			SYSCTRL->DFLLCTRL.reg = _system_clock_inst.dfll.control;
+
 			break;
 		case SYSTEM_CLOCK_SOURCE_ULP32K:
 			/* Always enabled */
@@ -456,7 +509,8 @@ enum status_code system_clock_source_disable(
 			break;
 
 		case SYSTEM_CLOCK_SOURCE_DFLL:
-			SYSCTRL->DFLLCTRL.reg &= ~SYSCTRL_DFLLCTRL_ENABLE;
+			_system_clock_inst.dfll.control &= ~SYSCTRL_DFLLCTRL_ENABLE;
+			SYSCTRL->DFLLCTRL.reg = _system_clock_inst.dfll.control;
 			break;
 
 		case SYSTEM_CLOCK_SOURCE_ULP32K:
