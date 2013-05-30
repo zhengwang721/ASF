@@ -606,8 +606,6 @@ static inline uint32_t parc_get_version(struct parc_module *const module_inst)
  *   struct parc_module   module_inst;
  *   struct parc_config   config;
  *
- *   // Turn on the clock for PARC module
- *   sysclk_enable_peripheral_clock(PARC);
  *   // Get default configuration
  *   parc_get_config_defaults(&config);
  *   // Initialize PARC
@@ -622,11 +620,6 @@ static inline uint32_t parc_get_version(struct parc_module *const module_inst)
  *
  * \subsection parc_basic_setup_workflow Basic Setup Workflow
  *
- * -# Turn on clock for PARC,
- *  see sam/drivers/parc/example for detail.
- *  \code
- *   sysclk_enable_peripheral_clock(PARC);
- *  \endcode
  * -# Initialize and configure PARC,
  *  see sam/drivers/parc/example for detail.
  *  \code

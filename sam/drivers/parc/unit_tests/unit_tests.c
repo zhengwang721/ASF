@@ -232,16 +232,16 @@ static void run_parc_ctrl_test(const struct test_case *test)
 int main(void)
 {
 	const usart_serial_options_t usart_serial_options = {
-		.baudrate   = CONF_TEST_BAUDRATE,
-		.charlength = CONF_TEST_CHARLENGTH,
-		.paritytype = CONF_TEST_PARITY,
-		.stopbits   = CONF_TEST_STOPBITS
+		.baudrate   = CONF_UART_BAUDRATE,
+		.charlength = CONF_UART_CHAR_LENGTH,
+		.paritytype = CONF_UART_PARITY,
+		.stopbits   = CONF_UART_STOP_BITS
 	};
 	/* Initialize the SAM system. */
 	sysclk_init();
 	board_init();
 	/* Configure console USART. */
-	stdio_serial_init(CONF_USART, &usart_serial_options);
+	stdio_serial_init(CONF_UART, &usart_serial_options);
 
 	parc_port_source_simulation_config();
 
