@@ -246,8 +246,7 @@ int main(void)
 
     sw_timer_init();
 
-    if (nwk_init()!= NWK_SUCCESS)
-    {
+    if (nwk_init()!= NWK_SUCCESS) {
         app_alert();
     }
 
