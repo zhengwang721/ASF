@@ -398,8 +398,8 @@ static bool integrity_check()
 	/* Initialize the AES Module */
 	init_aes();
 
-	/* Decrypt the AES data - input size should be a multiple of 4*/
-	aes_decrypt((uint32_t *)buffer, (buffer_size + 3)/4);
+	/* Decrypt the AES data */
+	aes_decrypt((uint32_t *)buffer, buffer_size/4);
 
 	/* Update the buffer */
 	buf = (uint8_t *) aes_output;

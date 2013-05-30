@@ -457,7 +457,8 @@ static void firmware_gen_system_init()
 int main(void)
 {
 	uint32_t file_size = 0;
-	uint8_t lun;
+	uint32_t temp;
+	uint8_t lun, i;
 	FRESULT res;
 
 	/* Device initialization for the bootloader */
@@ -548,6 +549,36 @@ int main(void)
 
 			/* Close the File after operation. */
 			f_close(&file_object1);
+            
+#if FIRMWARE_AES_ENABLED
+			/* Check for required padding for AES operation - 16byte aligned*/
+			temp = (file_size + APP_BINARY_OFFSET) % 16;
+			if (temp){
+				/* Open the input file */
+				f_open(&file_object1, (char const *)input_file_name,
+					FA_OPEN_EXISTING | FA_WRITE);
+
+				/* Required padding size */
+				temp = 16 - temp;
+
+				for (i = 0; i < temp; i++) {
+					/* Fill with 0xFF */
+					buffer[i] = 0xFF;
+				}
+
+				/* Seek to the end of the file */
+				f_lseek(&file_object1, file_size);
+
+				/* Store the buffer into the output file */
+				f_write(&file_object1, (void const *)buffer, temp, &temp);
+
+				/* Flush the data into the file */
+				f_sync(&file_object1);
+
+				/* Close the output file */
+				f_close(&file_object1);
+			}
+#endif
 
 #if CONSOLE_OUTPUT_ENABLED
 			/* Print the current task */
