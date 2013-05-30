@@ -77,9 +77,8 @@
  
 /** \example arm_fft_bin_example_f32.c 
   */  
-
+#include <asf.h>
 #include "arm_math.h" 
-#include "asf.h"
  
 #define TEST_LENGTH_SAMPLES 2048 
  

@@ -4,7 +4,7 @@
 		Read and write bytes to an external EEPROM AT24Cx memory through I2C.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="Memory" />
+			<keyword value="Memory"/>
 		</info>
 		<build type="c-source" value="at24cxx_example.c"/>
 		<build type="header-file" value="conf_at24cxx.h"/>
@@ -17,5 +17,6 @@
 		<require idref="avr32.drivers.pm"/>
 		<require idref="avr32.drivers.twim"/>
 		<require idref="avr32.utils.print_funcs"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

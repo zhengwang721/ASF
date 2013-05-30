@@ -4,7 +4,7 @@
 		Using the DIP204 display, display text messages and control the backlight with the on-board buttons.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="Graphics" />
+			<keyword value="Graphics"/>
 		</info>
 		<build type="c-source" value="dip204_example.c"/>
 		<build type="header-file" value="conf_clock.h"/>
@@ -15,5 +15,6 @@
 		<require idref="avr32.drivers.intc"/>
 		<require idref="avr32.drivers.pm"/>
 		<device-support value="uc3a"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

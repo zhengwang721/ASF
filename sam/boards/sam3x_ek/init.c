@@ -54,7 +54,12 @@ void board_init(void)
 	WDT->WDT_MR = WDT_MR_WDDIS;
 #endif
 
+	/* GPIO has been deprecated, the old code just keeps it for compatibility.
+	 * In new designs IOPORT is used instead.
+	 * Here IOPORT must be initialized for others to use before setting up IO.
+	 */
 	ioport_init();
+
 	/* Configure Power LED */
 	gpio_configure_pin(LED3_GPIO, LED3_FLAGS);
 	gpio_set_pin_high(LED3_GPIO); /* Turned on by default */

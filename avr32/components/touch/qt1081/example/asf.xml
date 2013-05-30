@@ -4,7 +4,7 @@
 		Use the QT1081 component to detect key touch and light LEDs.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="Touch" />
+			<keyword value="Touch"/>
 		</info>
 		<build type="c-source" value="qt1081_example.c"/>
 		<device-support value="uc3a"/>
@@ -14,5 +14,6 @@
 		<require idref="avr32.drivers.flashc"/>
 		<require idref="avr32.drivers.intc"/>
 		<require idref="avr32.drivers.pm"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

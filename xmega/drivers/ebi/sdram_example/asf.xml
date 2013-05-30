@@ -10,7 +10,8 @@
 		<device-support value="xmegaa"/>
 		<device-support value="xmegaau"/>
 		<require idref="xmega.drivers.ebi"/>
-		<require idref="common.services.basic.gpio" />
-		<require idref="common.services.basic.hugemem" />
+		<require idref="common.services.basic.gpio"/>
+		<require idref="common.services.basic.hugemem"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

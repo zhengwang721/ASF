@@ -80,7 +80,7 @@ enum genclk_source {
 	GENCLK_PCK_SRC_MAINCK_XTAL   = 6,//!< External crystal oscillator as PCK source clock
 	GENCLK_PCK_SRC_MAINCK_BYPASS = 7,//!< External bypass oscillator as PCK source clock
 	GENCLK_PCK_SRC_PLLACK        = 8,//!< Use PLLACK as PCK source clock
-	GENCLK_PCK_SRC_MCK	         = 9,//!< Use Master Clk as PCK source clock
+	GENCLK_PCK_SRC_MCK           = 9,//!< Use Master Clk as PCK source clock
 };
 
 //@}
@@ -89,13 +89,13 @@ enum genclk_source {
 //@{
 
 enum genclk_divider {
-	GENCLK_PCK_PRES_1  = PMC_PCK_PRES(0), //!< Set PCK clock prescaler to 1
-	GENCLK_PCK_PRES_2  = PMC_PCK_PRES(1), //!< Set PCK clock prescaler to 2
-	GENCLK_PCK_PRES_4  = PMC_PCK_PRES(2), //!< Set PCK clock prescaler to 4
-	GENCLK_PCK_PRES_8  = PMC_PCK_PRES(3), //!< Set PCK clock prescaler to 8
-	GENCLK_PCK_PRES_16 = PMC_PCK_PRES(4), //!< Set PCK clock prescaler to 16
-	GENCLK_PCK_PRES_32 = PMC_PCK_PRES(5), //!< Set PCK clock prescaler to 32
-	GENCLK_PCK_PRES_64 = PMC_PCK_PRES(6), //!< Set PCK clock prescaler to 64
+	GENCLK_PCK_PRES_1  = PMC_PCK_PRES_CLK_1, //!< Set PCK clock prescaler to 1
+	GENCLK_PCK_PRES_2  = PMC_PCK_PRES_CLK_2, //!< Set PCK clock prescaler to 2
+	GENCLK_PCK_PRES_4  = PMC_PCK_PRES_CLK_4, //!< Set PCK clock prescaler to 4
+	GENCLK_PCK_PRES_8  = PMC_PCK_PRES_CLK_8, //!< Set PCK clock prescaler to 8
+	GENCLK_PCK_PRES_16 = PMC_PCK_PRES_CLK_16, //!< Set PCK clock prescaler to 16
+	GENCLK_PCK_PRES_32 = PMC_PCK_PRES_CLK_32, //!< Set PCK clock prescaler to 32
+	GENCLK_PCK_PRES_64 = PMC_PCK_PRES_CLK_64, //!< Set PCK clock prescaler to 64
 };
 
 //@}
@@ -203,35 +203,35 @@ static inline void genclk_enable_source(enum genclk_source e_src)
 		}
 		break;
 
-    case GENCLK_PCK_SRC_MAINCK_4M_RC:
+	case GENCLK_PCK_SRC_MAINCK_4M_RC:
 		if (!osc_is_ready(OSC_MAINCK_4M_RC)) {
 			osc_enable(OSC_MAINCK_4M_RC);
 			osc_wait_ready(OSC_MAINCK_4M_RC);
 		}
 		break;
 
-    case GENCLK_PCK_SRC_MAINCK_8M_RC:
+	case GENCLK_PCK_SRC_MAINCK_8M_RC:
 		if (!osc_is_ready(OSC_MAINCK_8M_RC)) {
 			osc_enable(OSC_MAINCK_8M_RC);
 			osc_wait_ready(OSC_MAINCK_8M_RC);
 		}
 		break;
 
-    case GENCLK_PCK_SRC_MAINCK_12M_RC:
+	case GENCLK_PCK_SRC_MAINCK_12M_RC:
 		if (!osc_is_ready(OSC_MAINCK_12M_RC)) {
 			osc_enable(OSC_MAINCK_12M_RC);
 			osc_wait_ready(OSC_MAINCK_12M_RC);
 		}
 		break;
 
-    case GENCLK_PCK_SRC_MAINCK_XTAL:
+	case GENCLK_PCK_SRC_MAINCK_XTAL:
 		if (!osc_is_ready(OSC_MAINCK_XTAL)) {
 			osc_enable(OSC_MAINCK_XTAL);
 			osc_wait_ready(OSC_MAINCK_XTAL);
 		}
 		break;
 
-    case GENCLK_PCK_SRC_MAINCK_BYPASS:
+	case GENCLK_PCK_SRC_MAINCK_BYPASS:
 		if (!osc_is_ready(OSC_MAINCK_BYPASS)) {
 			osc_enable(OSC_MAINCK_BYPASS);
 			osc_wait_ready(OSC_MAINCK_BYPASS);

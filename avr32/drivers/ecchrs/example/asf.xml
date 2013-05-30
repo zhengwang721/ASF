@@ -2,9 +2,9 @@
 	<module type="application" id="avr32.drivers.ecchrs.example" caption="ECCHRS Example">
 		<info type="description" value="summary">
 		Using the ECCHRS, program an external Nand Flash block and write the corresponding ECC codewords, then read back the data and check if they are valid thanks to the ECC codewords.
-		</info>			
+		</info>
 		<info type="keyword" value="technology">
-			<keyword value="Memory" />
+			<keyword value="Memory"/>
 		</info>
 		<build type="header-file" value="conf/conf_ebi.h"/>
 		<build type="header-file" value="conf/conf_nf.h"/>
@@ -20,5 +20,6 @@
 		<require idref="avr32.drivers.pm"/>
 		<require idref="avr32.drivers.usart"/>
 		<require idref="avr32.utils.print_funcs"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

@@ -14,5 +14,6 @@
 		<require idref="avr32.drivers.macb"/>
 		<require idref="avr32.drivers.pm"/>
 		<require idref="avr32.utils.print_funcs"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

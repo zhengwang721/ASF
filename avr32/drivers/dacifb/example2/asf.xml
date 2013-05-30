@@ -18,5 +18,6 @@
 		<require idref="avr32.drivers.pm"/>
 		<require idref="avr32.utils.print_funcs"/>
 		<require idref="avr32.drivers.intc"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

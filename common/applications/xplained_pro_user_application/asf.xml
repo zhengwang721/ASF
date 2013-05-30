@@ -7,8 +7,8 @@
 		<require idref="common.services.ioport"/>
 		<info type="description" value="summary">
 			This user application template contains the bare minimum of files needed to
-			start a project which works with the ASF application builder wizard, and
-			demonstrates basic usage of LED and buttons on the Xplained Pro series.
+			start a project which works with the ASF application builder wizard.
 		</info>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

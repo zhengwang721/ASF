@@ -13,5 +13,6 @@
 		<require idref="common.boards.security_xplained"/>
 		<require idref="common.components.crypto.sha204.example_utilities_led"/>
 		<device-support value="xmegaa1"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

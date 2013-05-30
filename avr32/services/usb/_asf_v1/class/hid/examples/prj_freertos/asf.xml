@@ -11,6 +11,6 @@
 		<require idref="avr32.drivers.tc"/>
 		<require idref="common.services.os.freertos"/>
 		<require idref="avr32.services.usb.hid.example.main"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
-
 </asf>

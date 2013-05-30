@@ -116,7 +116,7 @@ int main(void)
 	sysclk_init();
 
 	sw_timer_init();
-
+    tal_init();
 	// Enable interrupts
 	cpu_irq_enable();
 
@@ -128,21 +128,13 @@ int main(void)
 }
 
 /**
- * \brief Performs a initialization check on AT86RFx module
+ * \brief Performs a Reset check on AT86RFx module
  *
  * This function will simply test the output of the function
- * \ref at86rfx_init and returns an error in case of failure.
+ * \ref tal_reset and returns an error in case of failure.
  *
  * \param test Current test case.
  */
-static void run_tal_init_test(const struct test_case *test)
-{
-	retval_t status;
-
-	status = tal_init();
-	test_assert_true(test, status == MAC_SUCCESS,
-			"AVR2025_MAC - TAL Initialization Failed");
-}
 
 static void run_tal_reset_test(const struct test_case *test)
 {
@@ -165,8 +157,8 @@ static void run_tal_pib_set_test(const struct test_case *test)
 
 	test_assert_true(test, status == MAC_SUCCESS,
 					"AVR2025_MAC - TAL Setting Current Channel failed");
-
-	status = tal_pib_set(phyCurrentPage, DEFAULT_CHANNEL_PAGE);
+    temp = DEFAULT_CHANNEL_PAGE;
+	status = tal_pib_set(phyCurrentPage, (pib_value_t *)&temp);
 	test_assert_true(test, status == MAC_SUCCESS,
 					"AVR2025_MAC - TAL Setting Current Page failed");
 }
@@ -175,17 +167,15 @@ static void run_tal_pib_set_test(const struct test_case *test)
 void main_cdc_set_dtr(bool b_enable)
 {
 	if (b_enable) {
-		DEFINE_TEST_CASE(tal_init_test, NULL, run_tal_init_test,
-				NULL, "AVR2025_MAC - TAL Initialization");
-		DEFINE_TEST_CASE(tal_reset_test, NULL, run_tal_reset_test,
+
+      DEFINE_TEST_CASE(tal_reset_test, NULL, run_tal_reset_test,
 				NULL, "AVR2025_MAC - TAL Reset request");
 		DEFINE_TEST_CASE(tal_pib_set_test, NULL,
 				run_tal_pib_set_test, NULL,
-				"AVR2025_MAC - TAL PIB Set test (this covers all ASF drivers/services used)");
+				"AVR2025_MAC - TAL PIB Set test");
 
 		// Put test case addresses in an array.
 		DEFINE_TEST_ARRAY(tal_tests) = {
-			&tal_init_test,
 			&tal_reset_test,
 			&tal_pib_set_test};
 

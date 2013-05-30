@@ -215,6 +215,11 @@ void sysclk_enable_usb(uint8_t frequency)
 			osc_enable(OSC_ID_RC32MHZ);
 			osc_wait_ready(OSC_ID_RC32MHZ);
 #ifdef CONFIG_OSC_AUTOCAL_RC32MHZ_REF_OSC
+			if (CONFIG_OSC_AUTOCAL_RC32MHZ_REF_OSC
+					!= OSC_ID_USBSOF) {
+				osc_enable(CONFIG_OSC_AUTOCAL_RC32MHZ_REF_OSC);
+				osc_wait_ready(CONFIG_OSC_AUTOCAL_RC32MHZ_REF_OSC);
+			}
 			osc_enable_autocalibration(OSC_ID_RC32MHZ,
 					CONFIG_OSC_AUTOCAL_RC32MHZ_REF_OSC);
 #endif

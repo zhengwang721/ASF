@@ -33,6 +33,7 @@
 			<require idref="common.services.os.freertos"/>
 			<require idref="thirdparty.lwip.version"/>
 			<require idref="common.utils.stdio.stdio_serial"/>
+			<info type="gui-flag" value="move-to-root"/>
 		</module>
 		<module type="application" id="common.services.freertos.sam_lwip_dhcp_example#sam4" caption="FreeRTOS with lwIP Example">
 			<info type="description" value="summary">
@@ -67,6 +68,7 @@
 			<require idref="common.services.os.freertos"/>
 			<require idref="thirdparty.lwip.version"/>
 			<require idref="common.utils.stdio.stdio_serial"/>
+			<info type="gui-flag" value="move-to-root"/>
 		</module>
 	</select-by-device>
 </asf>

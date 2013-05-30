@@ -1,4 +1,3 @@
-<?xml version="1.0"?>
 <asf xmlversion="1.0">
 	<module type="application" id="common.services.delay.example" caption="Common Delay Service Example">
 		<info type="description" value="summary">
@@ -9,5 +8,6 @@
 		<device-support value="sam"/>
 		<device-support value="xmega"/>
 		<require idref="common.services.delay"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

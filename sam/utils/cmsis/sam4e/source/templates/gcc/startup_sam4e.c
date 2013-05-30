@@ -97,12 +97,20 @@ const DeviceVectors exception_table = {
 	(void*) PMC_Handler,    /* 5  Power Management Controller */
 	(void*) EFC_Handler,    /* 6  Enhanced Embedded Flash Controller */
 	(void*) UART0_Handler,  /* 7  UART 0 */
-	(void*) SMC_Handler,    /* 8  Static Memory Controller */
+	(void*) Dummy_Handler,
 	(void*) PIOA_Handler,   /* 9  Parallel I/O Controller A */
 	(void*) PIOB_Handler,   /* 10 Parallel I/O Controller B */
 	(void*) PIOC_Handler,   /* 11 Parallel I/O Controller C */
+#ifdef _SAM4E_PIOD_INSTANCE_
 	(void*) PIOD_Handler,   /* 12 Parallel I/O Controller D */
+#else
+	(void*) Dummy_Handler,
+#endif
+#ifdef _SAM4E_PIOE_INSTANCE_
 	(void*) PIOE_Handler,   /* 13 Parallel I/O Controller E */
+#else
+	(void*) Dummy_Handler,
+#endif
 	(void*) USART0_Handler, /* 14 USART 0 */
 	(void*) USART1_Handler, /* 15 USART 1 */
 	(void*) HSMCI_Handler,  /* 16 Multimedia Card Interface */
@@ -133,7 +141,11 @@ const DeviceVectors exception_table = {
 	(void*) Dummy_Handler,
 	(void*) Dummy_Handler,
 	(void*) Dummy_Handler,
+#ifdef _SAM4E_GMAC_INSTANCE_
 	(void*) GMAC_Handler,   /* 44 EMAC */
+#else
+	(void*) Dummy_Handler,
+#endif
 	(void*) UART1_Handler   /* 45 UART */
 };
 

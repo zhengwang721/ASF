@@ -17,5 +17,6 @@
 		<require idref="common.services.layer.freertos.pdc"/>
 		<require idref="common.services.layer.freertos.twi"/>
 		<require idref="common.utils.unit_test"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

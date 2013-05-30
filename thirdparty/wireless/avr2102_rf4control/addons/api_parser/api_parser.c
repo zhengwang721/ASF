@@ -46,6 +46,11 @@
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
+ 
+  /**
+  * \ingroup  group_api_parser_rf4ce
+  * @{
+  */
 #ifdef SIO_HUB
 
 /* === INCLUDES ============================================================ */
@@ -1630,5 +1635,5 @@ uint8_t nwk_get_nib_attribute_size(uint8_t nib_attribute_id)
     return GET_NIB_ATTR_SIZE(nib_attribute_id);
 }
             
-
+//! @}
 #endif /*SIO_HUB*/

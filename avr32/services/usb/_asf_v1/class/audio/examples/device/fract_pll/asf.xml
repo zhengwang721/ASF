@@ -8,5 +8,6 @@
 		<build type="include-path" value="."/>
 		<device-support value="uc3a"/>
 		<require idref="avr32.services.usb.audio.device.example"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

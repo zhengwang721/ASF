@@ -60,7 +60,7 @@
 /* === Prototypes =========================================================== */
 /**
   * \defgroup group_sif_rf4ce Serial Interface Module
-  * Serial Interface Module acts as a interface for  converting stream of command bytes to corresponding Rf4control Api's
+  * This module is responsible for encoding and decoding the serial bytes to/from Host into corresponding RF4Control APIs .
   * @{
   */
 

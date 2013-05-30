@@ -65,9 +65,14 @@
 
 
 /* === Implementation ====================================================== */
-
+#if (defined __GNUC__)
+void __attribute__((weak))
+usr_mlme_associate_conf(uint16_t AssocShortAddress,
+                        uint8_t status)
+#else
 void usr_mlme_associate_conf(uint16_t AssocShortAddress,
                              uint8_t status)
+#endif
 {
     /* Keep compiler happy. */
     AssocShortAddress = AssocShortAddress;

@@ -119,6 +119,7 @@ extern "C" {
 #define ATMEGA256RFR2_ZIGBIT       55  //!< ATmega256RFR2 zigbit
 #define XMEGA_RF233_ZIGBIT         56  //!< ATxmega256A3U with AT86RF233 zigbit
 #define XMEGA_RF212B_ZIGBIT        57  //!< ATxmega256A3U with AT86RF212B zigbit
+#define SAM4S_WPIR_RD              58  //!< SAM4S-WPIR-RD board.
 #define SIMULATOR_XMEGA_A1         97  //!< Simulator for XMEGA A1 devices
 #define AVR_SIMULATOR_UC3          98  //!< AVR SIMULATOR for AVR UC3 device family.
 #define USER_BOARD                 99  //!< User-reserved board (if any).
@@ -214,6 +215,9 @@ extern "C" {
 #  include "system_sam3n.h"
 #elif BOARD == SAM4S_EK
 #  include "sam4s_ek/sam4s_ek.h"
+#  include "system_sam4s.h"
+#elif BOARD == SAM4S_WPIR_RD
+#  include "sam4s_wpir_rd/sam4s_wpir_rd.h"
 #  include "system_sam4s.h"
 #elif BOARD == SAM4S_XPLAINED
 #  include "sam4s_xplained/sam4s_xplained.h"

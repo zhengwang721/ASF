@@ -117,7 +117,7 @@ int main(void)
 	sysclk_init();
 
 	sw_timer_init();
-
+    tfa_init();
 	// Enable interrupts
 	cpu_irq_enable();
 
@@ -136,14 +136,6 @@ int main(void)
  *
  * \param test Current test case.
  */
-static void run_tfa_init_test(const struct test_case *test)
-{
-	retval_t status;
-
-	status = tfa_init();
-	test_assert_true(test, status == MAC_SUCCESS,
-			"AVR2025_MAC - TFA Initialization Failed");
-}
 
 static void run_tfa_pib_set_test(const struct test_case *test)
 {
@@ -163,15 +155,13 @@ static void run_tfa_pib_set_test(const struct test_case *test)
 void main_cdc_set_dtr(bool b_enable)
 {
 	if (b_enable) {
-		DEFINE_TEST_CASE(tfa_init_test, NULL, run_tfa_init_test,
-				NULL, "AVR2025_MAC - TFA Initialization");
+
 		DEFINE_TEST_CASE(tfa_pib_set_test, NULL,
 				run_tfa_pib_set_test, NULL,
-				"AVR2025_MAC - TFA PIB Set RX Sensitivity (this covers all ASF drivers/services used)");
+				"AVR2025_MAC - TFA PIB Set RX Sensitivity ");
 
 		// Put test case addresses in an array.
 		DEFINE_TEST_ARRAY(tfa_tests) = {
-			&tfa_init_test,
 			&tfa_pib_set_test};
 
 		// Define the test suite.

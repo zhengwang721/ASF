@@ -14,5 +14,6 @@
 		<device-support value="uc3"/>
 		<device-support value="xmega"/>
 		<require idref="common.services.sensors"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

@@ -3,7 +3,7 @@
  *
  * \brief Graphic Widget Toolkit library example application
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -260,7 +260,7 @@ static bool read_touch_event(struct mxt_device *device,
 	if (!(mxt_is_message_pending(device))) {
 		return false;
 	}
-	
+
 	/* Get the first touch event in queue */
 	if (mxt_read_touch_event(device, &touch_event) != STATUS_OK) {
 		return false;
@@ -285,10 +285,10 @@ static bool read_touch_event(struct mxt_device *device,
 
 	/* Translate the touch X and Y position into a screen coordinate */
 	win_touch_event->pos.x =
-			((uint32_t)touch_event.x * gfx_get_width()) / 4096;
+			((uint32_t)(4096 - touch_event.x) * gfx_get_width()) / 4096;
 	win_touch_event->pos.y =
-			((uint32_t)touch_event.y * gfx_get_height()) / 4096;
-			
+			((uint32_t)(4096 - touch_event.y) * gfx_get_height()) / 4096;
+
 	return true;
 }
 
@@ -316,8 +316,6 @@ int main(void)
 	membag_init();
 
 	gfx_init();
-	gfx_set_orientation(GFX_SWITCH_XY | GFX_FLIP_Y);
-	
 	mxt_init(&device);
 	win_init();
 
@@ -330,7 +328,7 @@ int main(void)
 
 	while (true) {
 		struct win_pointer_event win_touch_event;
-	
+
 		/* Queue touch events from the touchscreen if any are available */
 		while (read_touch_event(&device, &win_touch_event)) {
 			win_queue_pointer_event(&win_touch_event);

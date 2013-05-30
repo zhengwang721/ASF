@@ -3,7 +3,7 @@
  *
  * \brief Matrix example for SAM.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -47,7 +47,7 @@
  * \section Purpose
  *
  * This example demonstrates the Bus Matrix (MATRIX) provided on
- * SAM microcontrollers. 
+ * SAM microcontrollers.
  *
  * \section Requirements
  *
@@ -57,8 +57,8 @@
  *
  * This example shows running speed between two matrix configuration.
  * LED toggle times in one second is measured.
- * The first test is done with Round-Robin arbitration without default master. 
- * The second test is done with Round-Robin arbitration with last access master. 
+ * The first test is done with Round-Robin arbitration without default master.
+ * The second test is done with Round-Robin arbitration with last access master.
  * As expected, the LED toggle times of test1 is lower than that of test2.
  *
  * \section Usage
@@ -106,6 +106,8 @@
 #define MATRIX_SLAVE_NUM    9
 #elif (SAM3U)
 #define MATRIX_SLAVE_NUM    10
+#elif (SAM4E)
+#define MATRIX_SLAVE_NUM    6
 #else
 #warning "Not define matrix slave number, set 1 for default."
 #define MATRIX_SLAVE_NUM    1
@@ -113,8 +115,8 @@
 
 #define STRING_EOL    "\r"
 #define STRING_HEADER "-- MATRIX Example --\r\n" \
-		"-- "BOARD_NAME" --\r\n" \
-		"-- Compiled: "__DATE__" "__TIME__" --"STRING_EOL
+	"-- "BOARD_NAME " --\r\n" \
+	"-- Compiled: "__DATE__ " "__TIME__ " --"STRING_EOL
 
 /* Global g_ul_ms_ticks in milliseconds since start of application */
 volatile uint32_t g_ul_ms_ticks = 0;
@@ -128,7 +130,7 @@ static void configure_console(void)
 		.baudrate = CONF_UART_BAUDRATE,
 		.paritytype = CONF_UART_PARITY
 	};
-	
+
 	/* Configure console UART. */
 	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
 	stdio_serial_init(CONF_UART, &uart_serial_options);
@@ -149,9 +151,10 @@ static uint32_t toggle_led_test(uint32_t ul_dly_ticks)
 	ul_cur_ticks = g_ul_ms_ticks;
 	do {
 		ul_cnt++;
-		gpio_toggle_pin(LED0_GPIO);
+		ioport_toggle_pin_level(LED0_GPIO);
+                
 	} while ((g_ul_ms_ticks - ul_cur_ticks) < ul_dly_ticks);
-
+        
 	return ul_cnt;
 }
 
@@ -190,30 +193,35 @@ int main(void)
 	puts("Configure system tick to get 1ms tick period.\r");
 	if (SysTick_Config(sysclk_get_cpu_hz() / 1000)) {
 		puts("-F- Systick configuration error\r");
-		while (1);
+		while (1) {
+		}
 	}
 
 	/* First, test with Round-Robin arbitration without default master */
 	puts("-- Test1: configure Round-Robin arbitration without default master. --\r");
 	for (ul_slave_id = 0; ul_slave_id < MATRIX_SLAVE_NUM; ul_slave_id++) {
+		#if !SAM4E
 		matrix_set_slave_arbitration_type(ul_slave_id,
 				MATRIX_ARBT_ROUND_ROBIN);
+		#endif
 		matrix_set_slave_default_master_type(ul_slave_id,
 				MATRIX_DEFMSTR_NO_DEFAULT_MASTER);
 	}
 	ul_cnt = toggle_led_test(1000);
-	printf("    Led toggled %ld times in one second\n\r", (long)ul_cnt);
+	printf("Led toggled %ld times in one second\n\r", (long)ul_cnt);
 
 	/* Second, test with Round-Robin arbitration with last access master */
 	puts("-- Test2: configure Round-Robin arbitration with last access master. --\r");
 	for (ul_slave_id = 0; ul_slave_id < MATRIX_SLAVE_NUM; ul_slave_id++) {
+		#if !SAM4E
 		matrix_set_slave_arbitration_type(ul_slave_id,
 				MATRIX_ARBT_ROUND_ROBIN);
+		#endif
 		matrix_set_slave_default_master_type(ul_slave_id,
 				MATRIX_DEFMSTR_LAST_DEFAULT_MASTER);
 	}
 	ul_cnt = toggle_led_test(1000);
-	printf("    Led toggled %ld times in one second\n\r", (long)ul_cnt);
+	printf("Led toggled %ld times in one second\n\r", (long)ul_cnt);
 
 	/* Endless loop */
 	while (1) {

@@ -18,5 +18,6 @@
 		<require idref="common.services.basic.clock"/>
 		<require idref="common.services.delay"/>
 		<require idref="common.utils.stdio.stdio_serial"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

@@ -58,10 +58,7 @@ __always_inline static void io_pin_init(uint32_t pin, uint32_t flags,
 	IRQn_Type port_irqn, uint8_t irq_level,
 	void (*handler)(uint32_t,uint32_t), uint32_t wkup)
 {
-#if !SAM4E
-	// IOPORT maybe is not initialized in init.c
-	ioport_init();
-#endif
+	// IOPORT must be initialized before by ioport_init(), \see ioport_group.
 	pio_handler_set_pin(pin, flags, handler);
 	ioport_set_pin_sense_mode(pin, ioport_get_pin_level(pin) ?
 		IOPORT_SENSE_LEVEL_LOW : IOPORT_SENSE_LEVEL_HIGH);
@@ -107,7 +104,10 @@ __always_inline static void io_pin_init(uint32_t pin, uint32_t flags,
 //! pin.
 //! This feature is optional, and it is enabled if USB_VBUS_PIN is defined in
 //! board.h and CONF_BOARD_USB_VBUS_DETECT defined in conf_board.h.
-//! 
+//!
+//! @note ioport_init() must be invoked before using vbus pin functions since
+//!       they use IOPORT API, \see ioport_group.
+//!
 //! @{
 #define UDD_VBUS_DETECT (defined(CONF_BOARD_USB_PORT) && \
  		defined(CONF_BOARD_USB_VBUS_DETECT))
@@ -487,7 +487,7 @@ __always_inline static void io_pin_init(uint32_t pin, uint32_t flags,
 #define  Is_udd_in_pending(ep)                     (Tst_bits(UDP->UDP_CSR[ep], UDP_CSR_TXPKTRDY|UDP_CSR_TXCOMP))
   //! tests if IN sending
 #define  Is_udd_in_sent(ep)                        (Tst_bits(UDP->UDP_CSR[ep], UDP_CSR_TXCOMP))
-  //! acks IN sending                             
+  //! acks IN sending
 #define  udd_ack_in_sent(ep)                       udp_clear_csr(ep, UDP_CSR_TXCOMP)
 
   //! tests if transmit packet is ready

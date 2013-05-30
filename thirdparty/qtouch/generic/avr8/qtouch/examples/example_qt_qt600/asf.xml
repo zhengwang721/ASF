@@ -18,5 +18,6 @@
 		<require idref="common.services.qtouch.qdebug.xmega"/>
 		<device-support value="atxmega128a1"/>
 		<device-support value="atxmega384c3"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

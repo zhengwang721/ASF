@@ -51,6 +51,13 @@
 #include "api_parser.h"
 #include "common_sw_timer.h"
 
+ /**
+  * \ingroup group_mac_api_parser
+  * \defgroup group_mac_api_decoder MAC API Decoder
+  * The API Encoder Module Decodes the incoming command byte stream to corresponding MAC Api's 
+  * @{
+  */
+  
 
 #define SIO_RX_BUF_SIZE 156
 
@@ -384,3 +391,5 @@ static void api_process_incoming_sio_data(void)
     }
     
 }
+//! @}
+//EOF

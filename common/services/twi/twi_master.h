@@ -51,11 +51,13 @@
 # include "sam_twi/twi_master.h"
 #elif XMEGA
 # include "xmega_twi/twi_master.h"
+#elif MEGA_RF
+# include "megarf_twi/twi_master.h"
 #elif UC3
 # if (defined AVR32_TWI)
-#   include "uc3_twi/twi_master.h"
+# include "uc3_twi/twi_master.h"
 # else
-#   include "uc3_twim/twi_master.h"
+# include "uc3_twim/twi_master.h"
 # endif
 #else
 # error Unsupported chip type

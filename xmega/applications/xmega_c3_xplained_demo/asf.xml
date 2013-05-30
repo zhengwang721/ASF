@@ -30,13 +30,13 @@
 		<require idref="common.services.gfx_mono.font"/>
 		<require idref="common.services.fs.fatfs"/>
 		<require idref="common.components.memory.sd_mmc.ctrl_access"/>
-		<require idref="xmega.drivers.tc" />
-		<require idref="xmega.drivers.rtc" />
+		<require idref="xmega.drivers.tc"/>
+		<require idref="xmega.drivers.rtc"/>
 		<require idref="xmega.drivers.adc"/>
 		<require idref="config.common.services.qtouch.generic.avr8.xmega_c3_xplained.method"/>
 		<device-support value="xmegac3"/>
-
 		<build type="doxygen-image-path" value="docsrc"/>
 		<build type="distribute" subtype="file" value="./docsrc/tasks.png"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

@@ -2,11 +2,11 @@
 	<module type="application" id="avr32.applications.evk1104-usb-msc-sd-demo" caption="USB Device MSC on SD card (from ASF V1)">
 		<info type="description" value="summary">
 		This application is aimed to demonstrate the 32-bit AVR UC3 A3 Flash Microcontrollers USB Mass Storage with SD/MMC capabilities.
-		</info>	
+		</info>
 		<build type="include-path" value="."/>
-		<build type="c-source"    value="avr32_logo.c"/>
+		<build type="c-source" value="avr32_logo.c"/>
 		<build type="header-file" value="avr32_logo.h"/>
-		<build type="c-source"    value="device_mass_storage_task.c"/>
+		<build type="c-source" value="device_mass_storage_task.c"/>
 		<build type="header-file" value="device_mass_storage_task.h"/>
 		<require idref="avr32.drivers.gpio"/>
 		<require idref="avr32.drivers.intc"/>
@@ -16,11 +16,11 @@
 		<require idref="avr32.utils.print_funcs"/>
 		<require idref="avr32.components.display.et024006dhu"/>
 		<require idref="common.utils.stdio.stdio_serial"/>
-		<build type="c-source"    value="main.c"/>
+		<build type="c-source" value="main.c"/>
 		<build type="header-file" value="main.h"/>
-		<build type="c-source"    value="mmi_task.c"/>
+		<build type="c-source" value="mmi_task.c"/>
 		<build type="header-file" value="mmi_task.h"/>
-		<build type="c-source"    value="ms_key_logo.c"/>
+		<build type="c-source" value="ms_key_logo.c"/>
 		<build type="header-file" value="ms_key_logo.h"/>
 		<build type="include-path" value="conf/"/>
 		<build type="header-file" value="conf/conf_access.h"/>
@@ -35,9 +35,9 @@
 		<build type="header-file" value="conf/conf_stdio_serial.h"/>
 		<build type="header-file" value="conf/conf_clock.h"/>
 		<build type="include-path" value="enum/device/"/>
-		<build type="c-source"    value="enum/device/usb_descriptors.c"/>
+		<build type="c-source" value="enum/device/usb_descriptors.c"/>
 		<build type="header-file" value="enum/device/usb_descriptors.h"/>
-		<build type="c-source"    value="enum/device/usb_specific_request.c"/>
+		<build type="c-source" value="enum/device/usb_specific_request.c"/>
 		<build type="header-file" value="enum/device/usb_specific_request.h"/>
 		<require idref="avr32.drivers.usbb._asf_v1"/>
 		<require idref="avr32.drivers.usbb._asf_v1.enum.device"/>
@@ -55,5 +55,6 @@
 			<keyword value="USB"/>
 			<keyword value="Communication"/>
 		</info>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>
