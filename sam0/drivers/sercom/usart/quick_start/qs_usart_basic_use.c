@@ -59,10 +59,10 @@ void configure_usart(void)
 //! [setup_config_defaults]
 
 //! [setup_change_config]
-	config_struct.baudrate     = 57600;
-	config_struct.mux_settings = USART_RX_1_TX_0_XCK_1;
-	config_struct.pinout_pad3  = EDBG_CDC_RX_PINMUX;
-	config_struct.pinout_pad2  = EDBG_CDC_TX_PINMUX;
+	config_struct.baudrate    = 57600;
+	config_struct.mux_setting = USART_RX_1_TX_0_XCK_1;
+	config_struct.pinmux_pad3 = EDBG_CDC_RX_PINMUX;
+	config_struct.pinmux_pad2 = EDBG_CDC_TX_PINMUX;
 //! [setup_change_config]
 
 //! [setup_set_config]
