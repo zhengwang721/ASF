@@ -50,8 +50,6 @@
 #include <asf.h>
 #include <stdio_serial.h>
 
-/* USART for STDIO */
-#define CONF_RX_USART      EDBG_CDC_MODULE
 
 /* TC modules used in tests */
 struct tc_module tc0_module;
@@ -414,12 +412,14 @@ static void test_usart_comunication_init(void)
 
 	/* Configure USART for unit test output */
 	usart_get_config_defaults(&usart_conf);
-	usart_conf.mux_setting = USART_RX_1_TX_0_XCK_1;
-	usart_conf.pinmux_pad3 = EDBG_CDC_RX_PINMUX;
-	usart_conf.pinmux_pad2 = EDBG_CDC_TX_PINMUX;
+	usart_conf.mux_setting = EDBG_CDC_SERCOM_MUX_SETTING;
+	usart_conf.pinmux_pad0 = EDBG_CDC_SERCOM_PINMUX_PAD0;
+	usart_conf.pinmux_pad1 = EDBG_CDC_SERCOM_PINMUX_PAD1;
+	usart_conf.pinmux_pad2 = EDBG_CDC_SERCOM_PINMUX_PAD2;
+	usart_conf.pinmux_pad3 = EDBG_CDC_SERCOM_PINMUX_PAD3;
 	usart_conf.baudrate    = 38400;
 
-	stdio_serial_init(&unit_test_output, CONF_RX_USART, &usart_conf);
+	stdio_serial_init(&unit_test_output, EDBG_CDC_MODULE, &usart_conf);
 	usart_enable(&unit_test_output);
 
 	/* Enable transceivers */
