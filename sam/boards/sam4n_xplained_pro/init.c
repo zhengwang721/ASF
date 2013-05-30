@@ -80,14 +80,14 @@ void board_init(void)
 	WDT->WDT_MR = WDT_MR_WDDIS;
 #endif
 
-	// Initialize IOPORT
+	/* Initialize IOPORT */
 	ioport_init();
 
-	// Initialize LED0, turned off
+	/* Initialize LED0, turned off */
 	ioport_set_pin_dir(LED_0_PIN, IOPORT_DIR_OUTPUT);
 	ioport_set_pin_level(LED_0_PIN, IOPORT_PIN_LEVEL_HIGH);
 
-	// Initialize SW0
+	/* Initialize SW0 */
 	ioport_set_pin_dir(BUTTON_0_PIN, IOPORT_DIR_INPUT);
 	ioport_set_pin_mode(BUTTON_0_PIN, IOPORT_MODE_PULLUP);
 
@@ -157,6 +157,21 @@ void board_init(void)
 	ioport_set_pin_peripheral_mode(SPI_NPCS0_GPIO, SPI_NPCS0_FLAGS);
 #endif
 
+#ifdef CONF_BOARD_SPI_NPCS1
+	ioport_set_pin_peripheral_mode(SPI_NPCS1_GPIO, SPI_NPCS1_FLAGS);
+#endif
+
+#ifdef CONF_BOARD_SPI_NPCS2
+	ioport_set_pin_peripheral_mode(SPI_NPCS2_GPIO, SPI_NPCS2_FLAGS);
+#endif
+
+#endif
+
+#ifdef CONF_BOARD_OLED_UG_2832HSWEG04
+	ioport_set_pin_dir(UG_2832HSWEG04_DATA_CMD_GPIO, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_mode(UG_2832HSWEG04_DATA_CMD_GPIO, IOPORT_MODE_PULLUP);
+	ioport_set_pin_dir(UG_2832HSWEG04_RESET_GPIO, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_mode(UG_2832HSWEG04_RESET_GPIO, IOPORT_MODE_PULLUP);
 #endif
 
 }
