@@ -272,7 +272,6 @@
 extern "C" {
 #endif
 
-
 /**
  * \brief Available alarm channels.
  *
@@ -306,30 +305,29 @@ enum rtc_calendar_alarm {
 enum rtc_calendar_callback {
 	/** Callback for alarm 0 */
 	RTC_CALENDAR_CALLBACK_ALARM_0 = 0,
-#if (RTC_NUM_OF_ALARMS > 1) || defined(__DOXYGEN__)
+#  if (RTC_NUM_OF_ALARMS > 1) || defined(__DOXYGEN__)
 	/** Callback for alarm 1 */
 	RTC_CALENDAR_CALLBACK_ALARM_1,
-#endif
-#if (RTC_NUM_OF_ALARMS > 2) || defined(__DOXYGEN__)
+#  endif
+#  if (RTC_NUM_OF_ALARMS > 2) || defined(__DOXYGEN__)
 	/** Callback for alarm 2 */
 	RTC_CALENDAR_CALLBACK_ALARM_2,
-#endif
-#if (RTC_NUM_OF_ALARMS > 3)	|| defined(__DOXYGEN__)
+#  endif
+#  if (RTC_NUM_OF_ALARMS > 3)	|| defined(__DOXYGEN__)
 	/** Callback for alarm 3 */
 	RTC_CALENDAR_CALLBACK_ALARM_3,
-#endif
+#  endif
 	/** Callback for  overflow */
 	RTC_CALENDAR_CALLBACK_OVERFLOW,
-#if !defined(__DOXYGEN__)
+#  if !defined(__DOXYGEN__)
 	/** Total number of callbacks */
 	_RTC_CALENDAR_CALLBACK_N
-#endif
+#  endif
 };
 
-#if !defined(__DOXYGEN__)
-
+#  if !defined(__DOXYGEN__)
 typedef void (*rtc_calendar_callback_t)(void);
-#endif
+#  endif
 #endif
 
 #if !defined(__DOXYGEN__)
@@ -343,14 +341,14 @@ struct _rtc_device {
 	bool continuously_update;
 	/** Initial year for counter value 0. */
 	uint16_t year_init_value;
-#if RTC_CALENDAR_ASYNC == true
+#  if RTC_CALENDAR_ASYNC == true
 	/** Pointers to callback functions */
 	volatile rtc_calendar_callback_t callbacks[_RTC_CALENDAR_CALLBACK_N];
 	/** Mask for registered callbacks */
 	volatile uint8_t registered_callback;
 	/** Mask for enabled callbacks */
 	volatile uint8_t enabled_callback;
-#endif
+#  endif
 };
 
 extern volatile struct _rtc_device _rtc_dev;
@@ -392,7 +390,8 @@ struct rtc_calendar_events {
 	bool generate_event_on_alarm[RTC_NUM_OF_COMP16];
 	/** Generate an output event periodically at a binary division of the RTC
 	 *  counter frequency (see
-	 * \ref asfdoc_samd20_rtc_calendar_module_overview_periodic). */
+	 *  \ref asfdoc_samd20_rtc_calendar_module_overview_periodic).
+	 */
 	bool generate_event_on_periodic[8];
 };
 

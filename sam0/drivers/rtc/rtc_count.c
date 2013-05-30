@@ -93,7 +93,7 @@ static enum status_code _rtc_count_set_config(
 	Rtc *const rtc_module = RTC;
 
 	/* Determine and ensure the RTC source clock is a multiple of 1KHz */
-	uint32_t rtc_gen_hz    = system_gclk_gen_get_hz(GCLK_GENERATOR_2);
+	uint32_t rtc_gen_hz = system_gclk_gen_get_hz(GCLK_GENERATOR_2);
 	if (rtc_gen_hz % 1024) {
 		return STATUS_ERR_BAD_FRQ;
 	}

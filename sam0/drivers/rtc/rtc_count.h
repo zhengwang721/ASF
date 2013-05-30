@@ -320,38 +320,37 @@ enum rtc_count_compare {
 enum rtc_count_callback {
 	/** Callback for compare channel 0 */
 	RTC_COUNT_CALLBACK_COMPARE_0 = 0,
-#if (RTC_NUM_OF_COMP16 > 1) || defined(__DOXYGEN__)
+#  if (RTC_NUM_OF_COMP16 > 1) || defined(__DOXYGEN__)
 	/** Callback for compare channel 1 */
 	RTC_COUNT_CALLBACK_COMPARE_1,
-#endif
-#if (RTC_NUM_OF_COMP16 > 2) || defined(__DOXYGEN__)
+#  endif
+#  if (RTC_NUM_OF_COMP16 > 2) || defined(__DOXYGEN__)
 	/** Callback for compare channel 2 */
 	RTC_COUNT_CALLBACK_COMPARE_2,
-#endif
-#if (RTC_NUM_OF_COMP16 > 3)	|| defined(__DOXYGEN__)
+#  endif
+#  if (RTC_NUM_OF_COMP16 > 3)	|| defined(__DOXYGEN__)
 	/** Callback for compare channel 3 */
 	RTC_COUNT_CALLBACK_COMPARE_3,
-#endif
-#if (RTC_NUM_OF_COMP16 > 4) || defined(__DOXYGEN__)
+#  endif
+#  if (RTC_NUM_OF_COMP16 > 4) || defined(__DOXYGEN__)
 	/** Callback for compare channel 4 */
 	RTC_COUNT_CALLBACK_COMPARE_4,
-#endif
-#if (RTC_NUM_OF_COMP16 > 5) || defined(__DOXYGEN__)
+#  endif
+#  if (RTC_NUM_OF_COMP16 > 5) || defined(__DOXYGEN__)
 	/** Callback for compare channel 5 */
 	RTC_COUNT_CALLBACK_COMPARE_5,
-#endif
+#  endif
 	/** Callback for  overflow */
 	RTC_COUNT_CALLBACK_OVERFLOW,
-#if !defined(__DOXYGEN__)
+#  if !defined(__DOXYGEN__)
 	/** Total number of callbacks */
 	_RTC_COUNT_CALLBACK_N
-#endif
+#  endif
 };
 
-#if !defined(__DOXYGEN__)
-
+#  if !defined(__DOXYGEN__)
 typedef void (*rtc_count_callback_t)(void);
-#endif
+#  endif
 #endif
 
 /**
@@ -368,7 +367,8 @@ struct rtc_count_events {
 	bool generate_event_on_compare[RTC_NUM_OF_COMP16];
 	/** Generate an output event periodically at a binary division of the RTC
 	 *  counter frequency (see
-	 * \ref asfdoc_samd20_rtc_count_module_overview_periodic). */
+	 *  \ref asfdoc_samd20_rtc_count_module_overview_periodic).
+	 */
 	bool generate_event_on_periodic[8];
 };
 
@@ -381,14 +381,14 @@ struct _rtc_device {
 	enum rtc_count_mode mode;
 	/** Set if counter value should be continuously updated. */
 	bool continuously_update;
-#if RTC_COUNT_ASYNC == true
+#  if RTC_COUNT_ASYNC == true
 	/** Pointers to callback functions */
 	volatile rtc_count_callback_t callbacks[_RTC_COUNT_CALLBACK_N];
 	/** Mask for registered callbacks */
 	volatile uint8_t registered_callback;
 	/** Mask for enabled callbacks */
 	volatile uint8_t enabled_callback;
-#endif
+#  endif
 };
 
 extern volatile struct _rtc_device _rtc_dev;
