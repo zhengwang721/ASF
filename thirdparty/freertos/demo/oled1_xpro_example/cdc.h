@@ -92,9 +92,9 @@ static inline void cdc_rx_init(struct usart_module *const usart,
 
 	usart_get_config_defaults(&config_struct);
 
-	config_struct.mux_settings = USART_RX_3_TX_2_XCK_3;
-	config_struct.pinout_pad3 = EDBG_CDC_RX_PINMUX;
-	config_struct.pinout_pad2 = EDBG_CDC_TX_PINMUX;
+	config_struct.mux_setting = USART_RX_3_TX_2_XCK_3;
+	config_struct.pinmux_pad3 = EDBG_CDC_RX_PINMUX;
+	config_struct.pinmux_pad2 = EDBG_CDC_TX_PINMUX;
 
 	while (usart_init(usart, EDBG_CDC_MODULE, &config_struct) != STATUS_OK) {
 		// Intentionally left empty
