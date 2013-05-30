@@ -1,8 +1,9 @@
-/*! \file
+/**
+ * \file
  *
- * \brief Unit test configuration.
+ * \brief User Interface
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,20 +41,95 @@
  *
  */
 
-#ifndef CONF_TEST_H_INCLUDED
-#define CONF_TEST_H_INCLUDED
+#include <asf.h>
+#include "ui.h"
 
-#include "board.h"
+static bool ui_b_led_blink = true;
+static uint8_t ui_hid_report[UDI_HID_REPORT_OUT_SIZE];
 
-/** USART Interface  : Virtual Com Port (USART1) */
-#define CONF_TEST_USART      COM_PORT_USART
-/** Baudrate setting : 115200 */
-#define CONF_TEST_BAUDRATE   115200
-/** Char setting     : 8-bit character length (don't care for UART) */
-#define CONF_TEST_CHARLENGTH US_MR_CHRL_8_BIT
-/** Parity setting   : No parity check */
-#define CONF_TEST_PARITY     US_MR_PAR_NO
-/** Stopbit setting  : No extra stopbit, i.e., use 1 (don't care for UART) */
-#define CONF_TEST_STOPBITS   false
+void ui_init(void)
+{
+	// Initialize LEDs
+	LED_On(LED0);
+}
 
-#endif /* CONF_TEST_H_INCLUDED */
+void ui_powerdown(void)
+{
+	LED_Off(LED0);
+}
+
+
+void ui_wakeup_enable(void)
+{
+}
+
+void ui_wakeup_disable(void)
+{
+}
+
+void ui_wakeup(void)
+{
+	LED_On(LED0);
+}
+
+void ui_process(uint16_t framenumber)
+{
+	bool b_btn_state;
+	static bool btn0_last_state = false;
+	static uint8_t cpt_sof = 0;
+
+	// Blink LED
+	if (ui_b_led_blink) {
+		if ((framenumber % 1000) == 0) {
+			LED_On(LED0);
+		}
+		if ((framenumber % 1000) == 500) {
+			LED_Off(LED0);
+		}
+	}
+
+	// Scan process running each 40ms
+	cpt_sof++;
+	if (cpt_sof < 40) {
+		return;
+	}
+	cpt_sof = 0;
+
+	// Scan buttons
+	b_btn_state = !ioport_get_pin_level(GPIO_PUSH_BUTTON_0);
+	if (b_btn_state != btn0_last_state) {
+		ui_hid_report[0] = b_btn_state;
+		udi_hid_generic_send_report_in(ui_hid_report);
+		btn0_last_state = b_btn_state;
+	}
+}
+
+void ui_led_change(uint8_t *report)
+{
+	if (report[0]=='1') {
+		// A led must be on
+		switch(report[1]) {
+			case '1':
+			ui_b_led_blink = false;
+			LED_On(LED0);
+			break;
+		}
+	} else {
+		// A led can blink
+		switch(report[1]) {
+			case '1':
+			ui_b_led_blink = true;
+			break;
+		}
+	}
+}
+
+/**
+ * \defgroup UI User Interface
+ *
+ * Human interface on SAM4L Xplained Pro:
+ * - LED0 blinks when USB host has checked and enabled HID generic interface
+ * - HID events LED1 can make LED0 always on or blinking
+ * - Event buttons are linked to SW0.
+ *
+ */

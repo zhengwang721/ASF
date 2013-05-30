@@ -1,8 +1,9 @@
-/*! \file
+/**
+ * \file
  *
- * \brief Unit test configuration.
+ * \brief User Interface
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,20 +41,75 @@
  *
  */
 
-#ifndef CONF_TEST_H_INCLUDED
-#define CONF_TEST_H_INCLUDED
+#include <asf.h>
+#include "ui.h"
+#include "ieee11073_skeleton.h"
 
-#include "board.h"
+static bool associated = false;
 
-/** USART Interface  : Virtual Com Port (USART1) */
-#define CONF_TEST_USART      COM_PORT_USART
-/** Baudrate setting : 115200 */
-#define CONF_TEST_BAUDRATE   115200
-/** Char setting     : 8-bit character length (don't care for UART) */
-#define CONF_TEST_CHARLENGTH US_MR_CHRL_8_BIT
-/** Parity setting   : No parity check */
-#define CONF_TEST_PARITY     US_MR_PAR_NO
-/** Stopbit setting  : No extra stopbit, i.e., use 1 (don't care for UART) */
-#define CONF_TEST_STOPBITS   false
+void ui_init(void)
+{
+	// Initialize LEDs
+	LED_Off(LED0);
+}
 
-#endif /* CONF_TEST_H_INCLUDED */
+void ui_powerdown(void)
+{
+	LED_Off(LED0);
+}
+
+
+void ui_wakeup(void)
+{
+	LED_On(LED0);
+}
+
+void ui_association(bool state)
+{
+	associated = state;
+}
+
+void ui_process(uint16_t framenumber)
+{
+	static uint8_t cpt_sof = 0;
+	bool b_btn_state;
+	static bool btn0_last_state = false;
+
+	if (!associated) {
+		if ((framenumber % 1000) == 0) {
+			LED_On(LED0);
+		}
+		if ((framenumber % 1000) == 500) {
+			LED_Off(LED0);
+		}
+	} else {
+		LED_On(LED0);
+	}
+
+	/* Scan process running each 20ms */
+	cpt_sof++;
+	if (20 > cpt_sof) {
+		return;
+	}
+
+	cpt_sof = 0;
+
+	/* Use buttons to send measures */
+	b_btn_state = !ioport_get_pin_level(GPIO_PUSH_BUTTON_0);
+	if (b_btn_state != btn0_last_state) {
+		btn0_last_state = b_btn_state;
+		if (b_btn_state) {
+			ieee11073_skeleton_send_measure_1();
+		}
+	}
+}
+
+/**
+ * \defgroup UI User Interface
+ *
+ * Human interface on SAM4L Xplained Pro:
+ * - LED0 blinks when USB host has checked and enabled PHDC interface
+ * - LED0 is on when PHDC has validated association
+ * - SW0 is used to send a measure
+ *
+ */

@@ -1,8 +1,8 @@
 /*! \file
  *
- * \brief Unit test configuration.
+ * \brief Serial USART service configuration.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,20 +40,9 @@
  *
  */
 
-#ifndef CONF_TEST_H_INCLUDED
-#define CONF_TEST_H_INCLUDED
+#ifndef CONF_UART_SERIAL_H_INCLUDED
+#define CONF_UART_SERIAL_H_INCLUDED
 
-#include "board.h"
+/* Intentionally empty */
 
-/** USART Interface  : Virtual Com Port (USART1) */
-#define CONF_TEST_USART      COM_PORT_USART
-/** Baudrate setting : 115200 */
-#define CONF_TEST_BAUDRATE   115200
-/** Char setting     : 8-bit character length (don't care for UART) */
-#define CONF_TEST_CHARLENGTH US_MR_CHRL_8_BIT
-/** Parity setting   : No parity check */
-#define CONF_TEST_PARITY     US_MR_PAR_NO
-/** Stopbit setting  : No extra stopbit, i.e., use 1 (don't care for UART) */
-#define CONF_TEST_STOPBITS   false
-
-#endif /* CONF_TEST_H_INCLUDED */
+#endif/* CONF_UART_SERIAL_H_INCLUDED */

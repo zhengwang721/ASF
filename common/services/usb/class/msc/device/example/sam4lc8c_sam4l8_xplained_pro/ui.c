@@ -1,8 +1,9 @@
-/*! \file
+/**
+ * \file
  *
- * \brief Unit test configuration.
+ * \brief User Interface
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,20 +41,56 @@
  *
  */
 
-#ifndef CONF_TEST_H_INCLUDED
-#define CONF_TEST_H_INCLUDED
+#include <asf.h>
+#include "ui.h"
 
-#include "board.h"
+void ui_init(void)
+{
+	// Initialize LEDs
+	LED_On(LED0);
+}
 
-/** USART Interface  : Virtual Com Port (USART1) */
-#define CONF_TEST_USART      COM_PORT_USART
-/** Baudrate setting : 115200 */
-#define CONF_TEST_BAUDRATE   115200
-/** Char setting     : 8-bit character length (don't care for UART) */
-#define CONF_TEST_CHARLENGTH US_MR_CHRL_8_BIT
-/** Parity setting   : No parity check */
-#define CONF_TEST_PARITY     US_MR_PAR_NO
-/** Stopbit setting  : No extra stopbit, i.e., use 1 (don't care for UART) */
-#define CONF_TEST_STOPBITS   false
+void ui_powerdown(void)
+{
+	LED_Off(LED0);
+}
 
-#endif /* CONF_TEST_H_INCLUDED */
+void ui_wakeup(void)
+{
+	LED_On(LED0);
+}
+
+void ui_start_read(void)
+{
+}
+
+void ui_stop_read(void)
+{
+}
+
+void ui_start_write(void)
+{
+}
+
+void ui_stop_write(void)
+{
+}
+
+void ui_process(uint16_t framenumber)
+{
+	if (0 == framenumber) {
+		LED_On(LED0);
+	}
+	if (1000 == framenumber) {
+		LED_Off(LED0);
+	}
+}
+
+
+/**
+ * \defgroup UI User Interface
+ *
+ * Human interface on SAM4L Xplained Pro
+ * - LED0 blinks when USB host has checked and enabled MSC interface
+ *
+ */

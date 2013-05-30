@@ -1,8 +1,12 @@
-/*! \file
+/**
  *
- * \brief Unit test configuration.
+ * \file
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * \brief Virtual memory configuration file.
+ *
+ * This file contains the possible external configuration of the Virtual Memory.
+ *
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,20 +44,11 @@
  *
  */
 
-#ifndef CONF_TEST_H_INCLUDED
-#define CONF_TEST_H_INCLUDED
 
-#include "board.h"
+#ifndef _CONF_VIRTUAL_MEM_H_
+#define _CONF_VIRTUAL_MEM_H_
 
-/** USART Interface  : Virtual Com Port (USART1) */
-#define CONF_TEST_USART      COM_PORT_USART
-/** Baudrate setting : 115200 */
-#define CONF_TEST_BAUDRATE   115200
-/** Char setting     : 8-bit character length (don't care for UART) */
-#define CONF_TEST_CHARLENGTH US_MR_CHRL_8_BIT
-/** Parity setting   : No parity check */
-#define CONF_TEST_PARITY     US_MR_PAR_NO
-/** Stopbit setting  : No extra stopbit, i.e., use 1 (don't care for UART) */
-#define CONF_TEST_STOPBITS   false
+//! Size of Virtual Memory on internal RAM (unit 512B)
+#define VMEM_NB_SECTOR 48 // Internal RAM 24KB (should > 20KB or PC can not format it)
 
-#endif /* CONF_TEST_H_INCLUDED */
+#endif // _CONF_VIRTUAL_MEM_H_
