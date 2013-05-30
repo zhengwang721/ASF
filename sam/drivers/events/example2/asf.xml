@@ -4,7 +4,7 @@
 			This events example using the GPIO pad as an event source and the PDCA as a triggered event that sends a character to a USART output.
 			</info>
 		<info type="keyword" value="technology">
-			<keyword value="Events"/>
+			<keyword value="Peripheral Event System"/>
 		</info>
 		<build type="c-source" value="events_example2.c"/>
 		<build type="include-path" value="."/>
