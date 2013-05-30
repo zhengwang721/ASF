@@ -140,7 +140,6 @@ static void run_parc_polled_test(const struct test_case *test)
 	uint32_t input_data = 0x01;
 
 	/* PARC config */
-	sysclk_enable_peripheral_clock(PARC);
 	parc_get_config_defaults(&config);
 	parc_init(&module_inst, PARC, &config);
 	parc_enable(&module_inst);
@@ -179,7 +178,6 @@ static void parc_complete_callback(struct parc_module *const module)
 static void run_parc_callback_test(const struct test_case *test)
 {
 	uint32_t input_data = 0x01;
-	sysclk_enable_peripheral_clock(PARC);
 	parc_get_config_defaults(&config);
 	parc_init(&module_inst, PARC, &config);
 	parc_enable(&module_inst);
@@ -196,7 +194,6 @@ static void run_parc_callback_test(const struct test_case *test)
 		delay_ms(DELAY_TIME);
 		test_assert_true(test, callback_data_ready == true,
 				"Capture data failure");
-		parc_read(&module_inst, &captured_data);
 		test_assert_true(test, captured_data == (input_data & DATA_MASK),
 				"Wrong captured data!");
 		input_data = 1 << i;
@@ -214,7 +211,6 @@ static void run_parc_callback_test(const struct test_case *test)
  */
 static void run_parc_ctrl_test(const struct test_case *test)
 {
-	sysclk_enable_peripheral_clock(PARC);
 	parc_get_config_defaults(&config);
 	parc_init(&module_inst, PARC, &config);
 	parc_enable(&module_inst);

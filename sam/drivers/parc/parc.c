@@ -63,6 +63,9 @@ enum status_code parc_init(
 	Parc *const hw,
 	struct parc_config *const config)
 {
+	/* Turn on the clock for PARC*/
+	sysclk_enable_peripheral_clock(hw);
+
 	/* Associate the software module instance with the hardware module */
 	module_inst->hw = hw;
 

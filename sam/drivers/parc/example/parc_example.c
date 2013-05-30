@@ -262,7 +262,6 @@ int main(void)
 	configure_console();
 	parc_port_source_simulation_config();
 
-	sysclk_enable_peripheral_clock(PARC);
 	struct parc_module module_inst;
 	struct parc_config config;
 
