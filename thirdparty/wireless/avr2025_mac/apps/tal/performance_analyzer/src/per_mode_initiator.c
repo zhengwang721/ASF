@@ -100,7 +100,8 @@ typedef struct
 #define SET_DEFAULT_CONFIG_PEER                 (0x0D)
 #define PER_TEST_START                          (0x0E)
 #define RANGE_TEST_START                        (0x0F)
-#define RANGE_TEST_TX                        (0x10)
+#define RANGE_TEST_TX                           (0x10)
+#define RANGE_TEST_STOP                         (0x11)
 
 #define RANGE_TST_PKT_SEQ_POS                    (11)
 
@@ -756,6 +757,15 @@ void per_mode_initiator_tx_done_cb(retval_t status, frame_info_t *frame)
             }
             break;
             
+    case RANGE_TEST_STOP:
+          {
+            range_test_in_progress = false;
+            range_test_frame_cnt = 0;
+            usr_range_test_stop_confirm(MAC_SUCCESS);
+            sw_timer_stop(T_APP_TIMER_RANGE);
+            op_mode = TX_OP_MODE ;
+          }
+          break  ;
             
         case RANGE_TEST_TX:
             {
@@ -1398,6 +1408,7 @@ void get_board_details(void)
      * feature is available in the firmware
      */
     fw_feature_mask |= MULTI_CHANNEL_SELECT;
+    fw_feature_mask |= PER_RANGE_TEST_MODE;
 
     /* Send the Confirmation with the status as SUCCESS */
     usr_identify_board_confirm(MAC_SUCCESS,
@@ -3298,12 +3309,7 @@ void stop_range_test(void)
     /* Check for the current operating mode */
     if ((RANGE_TEST_TX == op_mode)&&(true==range_test_in_progress)&& send_range_test_stop_cmd())
     {
-        /* Send the confirmation with the status as SUCCESS */
-        range_test_in_progress = false;
-        range_test_frame_cnt = 0;
-        usr_range_test_stop_confirm(MAC_SUCCESS);
-        sw_timer_stop(T_APP_TIMER_RANGE);
-        op_mode = TX_OP_MODE;
+        op_mode = RANGE_TEST_STOP;
     }
     else
     {
