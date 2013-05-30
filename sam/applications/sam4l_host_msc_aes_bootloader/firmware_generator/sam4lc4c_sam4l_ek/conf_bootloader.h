@@ -63,7 +63,7 @@
 #define APP_START_ADDRESS            (FLASH_ADDR + APP_START_OFFSET)
 /* Maximum possible size of the Application */
 #define APP_MAX_SIZE                 (FLASH_ADDR + FLASH_SIZE  \
-                                      - APP_START_ADDRESS)
+										- APP_START_ADDRESS)
 /* Buffer size to be used for programming */
 #define FLASH_BUFFER_SIZE            (FLASH_PAGE_SIZE)
 
@@ -118,7 +118,7 @@
 #define CONSOLE_PUTC(c)              usart_putchar(CONSOLE_UART, c)
 /* Console Strings */
 #define APP_HEADER                   \
-                    "\n\rATMEL SAM4L Firmware Generator for USB MSC BOOTLOADER"
+					"\n\rATMEL SAM4L Firmware Generator for USB MSC BOOTLOADER"
 #define TASK_PASSED                  "\n\rPASS"
 #define TASK_FAILED                  "\n\rFAIL"
 #endif

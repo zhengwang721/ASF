@@ -74,34 +74,34 @@
 
 //! To notify that the USB mode are switched automatically.
 //! This is possible only when ID pin is available.
-#define UHC_MODE_CHANGE(b_host_mode)        //ui_usb_mode_change(b_host_mode)
+#define UHC_MODE_CHANGE(b_host_mode)
 
 //! To notify that the Vbus level has changed
 //! Available only in USB hardware with Vbus monitoring.
-#define UHC_VBUS_CHANGE(b_present)          //main_vbus_event(b_present)
+#define UHC_VBUS_CHANGE(b_present)
 
 //! To notify that a Vbus error has occurred
 //! Available only in USB hardware with Vbus monitoring.
-#define UHC_VBUS_ERROR()                    //ui_usb_vbus_error()
+#define UHC_VBUS_ERROR()
 
 //! To notify that a device has been connected or disconnected.
 #define UHC_CONNECTION_EVENT(dev,b_present)
 
 //! Called when a USB device or the host have wake up the USB line.
-#define UHC_WAKEUP_EVENT()                  //ui_usb_wakeup_event()
+#define UHC_WAKEUP_EVENT()
 
 //! Called for each received SOF each 1 ms
 //! Note: Available in High and Full speed mode
 #define UHC_SOF_EVENT()                    main_usb_sof_event()
 
 //! Called when a USB device configuration must be chosen.
-//! Thus, the application can choose either a configuration number for this device
-//! or a configuration number 0 to reject it.
+//! Thus, the application can choose either a configuration number for this
+//! device or a configuration number 0 to reject it.
 //! If callback not defined the configuration 1 is chosen.
 //#define UHC_DEVICE_CONF(dev)                uint8_t usb_device_conf(dev)
 
 //! Called when a USB device enumeration is completed.
-#define UHC_ENUM_EVENT(dev,b_status)        //ui_usb_enum_event(dev,b_status)
+#define UHC_ENUM_EVENT(dev,b_status)
 
 
 //@}

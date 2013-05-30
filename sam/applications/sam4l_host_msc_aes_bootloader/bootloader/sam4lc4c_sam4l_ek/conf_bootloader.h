@@ -52,21 +52,27 @@
 #define CONSOLE_OUTPUT_ENABLED       ENABLE
 /* Enable/disable the verification of memory after programming */
 #define VERIFY_PROGRAMMING_ENABLED   ENABLE
+/* Enable/disable the Security bit after firmware upgrade */
+#define SECURITY_BIT_ENABLED         ENABLE
 
 /* 
  * GP Fuse bit to force bootloader mode after reset 31-16 is usable
  * (15-0 used of region locking)
  */
  /* GP Fuse bit to be used to force start the bootloader after next reset */
-#define BOOT_GP_FUSE_BIT_OFFSET      16
+#define BOOT_GP_FUSE_BIT             16
 /* Firmware file input name */
 #define FIRMWARE_IN_FILE_NAME        "0:firmware.bin"
 /* GPIO pin used to activate the bootloader mode */
-#define BOOT_LOAD_PIN            GPIO_PUSH_BUTTON_0
+#define BOOT_LOAD_PIN                GPIO_PUSH_BUTTON_0
 /* Active state of GPIO pin used to activate the bootloader mode */
-#define BOOT_LOAD_PIN_ACTIVE_LVL PUSH_BUTTON_0_DOWN_LEVEL
+#define BOOT_LOAD_PIN_ACTIVE_LVL     PUSH_BUTTON_0_DOWN_LEVEL
 /* UI displaying the bootloader status */
 #define BOOT_LED                     LED0_GPIO
+/* ON level for the BOOT_LED */
+#define BOOT_LED_ON_LVL              0
+/* ON level for the BOOT_LED */
+#define BOOT_LED_OFF_LVL             1
 
 /* Application starting offset - Verify with bootloader footprint*/
 #define APP_START_OFFSET             0x8000
@@ -74,7 +80,7 @@
 #define APP_START_ADDRESS            (FLASH_ADDR + APP_START_OFFSET)
 /* Maximum possible size of the Application */
 #define APP_MAX_SIZE                 (FLASH_ADDR + FLASH_SIZE \
-                                      - APP_START_ADDRESS)
+										- APP_START_ADDRESS)
 /* Buffer size to be used for programming */
 #define FLASH_BUFFER_SIZE            (FLASH_PAGE_SIZE)
 

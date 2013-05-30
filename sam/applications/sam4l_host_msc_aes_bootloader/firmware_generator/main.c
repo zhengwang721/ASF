@@ -198,7 +198,7 @@ static bool generate_firmware(void)
 	/* Close the input file */
 	f_close(&file_object2);
 
-	while(true) {
+	while (true) {
 		/* Open the input file */
 		f_open(&file_object1,
 				(char const *)input_file_name,
@@ -275,7 +275,7 @@ static void generate_crc(void)
 			FA_OPEN_EXISTING | FA_READ);
 
 	/* Generate the CRC32 for the input binary */
-	while(true) {
+	while (true) {
 		/* Read the data from the firmware */
 		f_read(&file_object1, (uint8_t *)buffer, FLASH_BUFFER_SIZE,
 				&buffer_size);
@@ -599,6 +599,9 @@ void main_usb_sof_event(void)
 
 void main_usb_connection_event(uhc_device_t * dev, bool b_present)
 {
+	/* To remove compiler warning */
+	UNUSED(dev);
+
 	/* Enumeration status of the connected MSC device */
 	lun_connected = b_present;
 
@@ -626,7 +629,9 @@ void main_usb_connection_event(uhc_device_t * dev, bool b_present)
  *   - FIRMWARE_AES_ENABLED       -> Enable/disable the AES Decryption
  *   - CONSOLE_OUTPUT_ENABLED     -> Enable/disable the Console message output
  *   - APP_START_OFFSET           -> Application starting offset from Flash
- *   - FIRMWARE_IN_FILE_NAME      -> Application Firmware file to be programmed
+ *   - FIRMWARE_IN_FILE_NAME      -> Input Application Firmware
+ *   - FIRMWARE_OUT_FILE_NAME     -> Encrypted/Unencrypted Application Firmware
+ *                                   for bootloader
  *   - APP_SIGNATURE              -> Signature bytes to be verified
  * 
  * \section board Board Setup

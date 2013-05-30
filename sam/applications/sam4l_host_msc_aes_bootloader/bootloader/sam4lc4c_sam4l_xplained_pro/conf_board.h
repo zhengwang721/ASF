@@ -51,9 +51,9 @@
 
 /* Enable USB interface (USB) */
 #define CONF_BOARD_USB_PORT
-/* ID detect enabled,  uncomment it if jumper PB05/USB set */
+/* ID detect enabled */
 #define CONF_BOARD_USB_ID_DETECT
-/* Host VBUS control enabled,  uncomment it if jumper PC08/USB set */
+/* Host VBUS control enabled */
 #define CONF_BOARD_USB_VBUS_CONTROL
 
 #endif /* CONF_BOARD_H_INCLUDED */

@@ -48,18 +48,13 @@
 #include "conf_usb_host.h"
 #include "conf_bootloader.h"
 #include "main.h"
-#include "uhc.h"
-#include "uhi_msc.h"
-#include "uhi_msc_mem.h"
-#include "ff.h"
-#include "crccu.h"
 
 #if FIRMWARE_AES_ENABLED
 #include "aesa.h"
 #endif
 
 #define GPIO_BOOT_PIN_PORT      ((volatile GpioPort *)(GPIO_ADDR +         \
-                                (BOOT_LOAD_PIN >> 5) * sizeof(GpioPort)))
+									(BOOT_LOAD_PIN >> 5) * sizeof(GpioPort)))
 #define GPIO_BOOT_PIN_MASK      (1U << (BOOT_LOAD_PIN & 0x1F))
 
 /*****************************************************************************/
@@ -117,7 +112,7 @@ static void bootloader_mode_check(void);
 
 static void start_application(void);
 
-static void start_application_with_WDT(void);
+static void start_application_with_wdt(void);
 
 static bool program_memory(void);
 
@@ -175,8 +170,8 @@ static void bootloader_mode_check()
 	volatile bool boot_mode;
 
 	/* Check Force Boot option */
-	boot_mode = !(flashcalw_read_gp_fuse_bit(BOOT_GP_FUSE_BIT_OFFSET));
-	/* If Force Boot is enabled, ignore other checks and start the bootloader */
+	boot_mode = !(flashcalw_read_gp_fuse_bit(BOOT_GP_FUSE_BIT));
+	/* If Force Boot is enabled, ignore other check and start the bootloader */
 	if (!boot_mode) {
 		/* Get the pointer to the GPIO Port Address */
 		temp = (uint32_t)((GPIO_ADDR +
@@ -210,7 +205,7 @@ static void bootloader_mode_check()
  * \brief Function to issue a WDT reset to start the application.
  * This will reset the clock & peripheral configurations.
  */
-static void start_application_with_WDT()
+static void start_application_with_wdt()
 {
 	uint32_t wdt_ctrl_val;
 
@@ -218,14 +213,15 @@ static void start_application_with_WDT()
 	cpu_irq_disable();
 
 	/* Switch on the LED */
-	ioport_set_pin_level(BOOT_LED, 0);
+	ioport_set_pin_level(BOOT_LED, BOOT_LED_ON_LVL);
 
 	/* Store the WDT Configuration value */
-	wdt_ctrl_val = (WDT_CTRL_EN | WDT_CTRL_PSEL(5) | WDT_CTRL_CEN | WDT_CTRL_DAR);
+	wdt_ctrl_val = (WDT_CTRL_EN | WDT_CTRL_PSEL(5) | WDT_CTRL_CEN
+					| WDT_CTRL_DAR);
 
 	/* Set the WDT to trigger a reset - Two times for the two keys*/
-	WDT->WDT_CTRL = wdt_ctrl_val | WDT_CTRL_KEY(0x55);
-	WDT->WDT_CTRL = wdt_ctrl_val | WDT_CTRL_KEY(0xAA);
+	WDT->WDT_CTRL = wdt_ctrl_val | WDT_CTRL_KEY(0x55u);
+	WDT->WDT_CTRL = wdt_ctrl_val | WDT_CTRL_KEY(0xAAu);
 
 	while (1) {
 		/* Wait indefinitely for a WDT reset */
@@ -268,10 +264,10 @@ static bool program_memory()
 #endif
 
 	/* Set the busy LED */
-	ioport_set_pin_level(BOOT_LED, 0);
+	ioport_set_pin_level(BOOT_LED, BOOT_LED_ON_LVL);
 
 	/* Program the flash memory page by page */
-	while(true) {
+	while (true) {
 		/* Open the input file */
 		f_read(&file_object, (void *)buffer, FLASH_BUFFER_SIZE, &buffer_size);
 		/* Check if there is any buffer */
@@ -348,7 +344,7 @@ static bool program_memory()
 
 	if (APP_CRC_POLYNOMIAL_TYPE == CRCCU_MR_PTYPE_CCITT16) {
 		/* 16-bit CRC */
-		firmware_crc_output &= 0xFF;
+		firmware_crc_output &= 0xFFFF;
 	}
 
 	/* Compare the calculated CRC Value */
@@ -359,7 +355,7 @@ static bool program_memory()
 #endif
 
 	/* Clear the busy LED */
-	ioport_set_pin_level(BOOT_LED, 1);
+	ioport_set_pin_level(BOOT_LED, BOOT_LED_OFF_LVL);
 
 	/* return true */
 	return true;
@@ -433,7 +429,7 @@ static bool integrity_check()
 	 */
 	f_lseek(&file_object, APP_BINARY_OFFSET);
 	/* Verify the CRC32 of the entire decrypted file before programming */
-	while(true) {
+	while (true) {
 		/* Read the data from the firmware */
 		f_read(&file_object, (void *)buffer, FLASH_BUFFER_SIZE, &buffer_size);
 		/* Check if there is any buffer */
@@ -459,7 +455,7 @@ static bool integrity_check()
 
 	if (APP_CRC_POLYNOMIAL_TYPE == CRCCU_MR_PTYPE_CCITT16) {
 		/* 16-bit CRC */
-		firmware_crc_output &= 0xFF;
+		firmware_crc_output &= 0xFFFF;
 	}
 
 	/* Compare the calculated CRC Value */
@@ -781,12 +777,19 @@ int main(void)
 			CONSOLE_PUTS("\n\rStarting application...");
 #endif
 			/* Reset the Force BOOT bit */
-			if(!(flashcalw_read_gp_fuse_bit(BOOT_GP_FUSE_BIT_OFFSET))) {
-			  flashcalw_erase_gp_fuse_bit(BOOT_GP_FUSE_BIT_OFFSET, false);
+			if(!(flashcalw_read_gp_fuse_bit(BOOT_GP_FUSE_BIT))) {
+				flashcalw_erase_gp_fuse_bit(BOOT_GP_FUSE_BIT, false);
 			}
 
+#if SECURITY_BIT_ENABLED
+			/* Enable the security bit feature */
+			if(!(flashcalw_is_security_bit_active())) {
+				flashcalw_set_security_bit();
+			}
+#endif
+
 			/* Start the application with a WDT Reset */
-			start_application_with_WDT();
+			start_application_with_wdt();
 		}
 		/* None of the connected LUN has the upgrade file. */
 		lun_connected = false;
@@ -806,6 +809,9 @@ void main_usb_sof_event(void)
  */
 void main_usb_connection_event(uhc_device_t * dev, bool b_present)
 {
+	/* To remove compiler warning */
+	UNUSED(dev);
+
 	/* Enumeration status of the connected MSC device */
 	lun_connected = b_present;
 
@@ -836,11 +842,13 @@ void main_usb_connection_event(uhc_device_t * dev, bool b_present)
  *   - CONSOLE_OUTPUT_ENABLED     -> Enable/disable the Console message output
  *   - VERIFY_PROGRAMMING_ENABLED -> Enable/disable the verification of
  *                                   programmed memory
+ *   - FIRMWARE_AES_ENABLED       -> Enable/disable the security bit feature
  *   - APP_START_OFFSET           -> Application starting offset from Flash
  *   - FIRMWARE_IN_FILE_NAME      -> Application Firmware file to be programmed
  *   - APP_SIGNATURE              -> Signature bytes to be verified
- *   - BOOT_LOAD_PIN          -> IO Pin used for bootloader activation
- *   - BOOT_LOAD_PIN_ACTIVE_LVL -> Active level to be monitored for the pin
+ *   - BOOT_LOAD_PIN              -> IO Pin used for bootloader activation
+ *   - BOOT_LOAD_PIN_ACTIVE_LVL   -> Active level to be monitored for the pin
+ *   - BOOT_GP_FUSE_BIT           -> GP Fuse bit used for bootloader activation
  * 
  * \section board Board Setup
  * - SAM4L-EK -> Has an IO configured for VBUS Detect. VBUS Pin jumper PA06/USB
@@ -872,6 +880,14 @@ void main_usb_connection_event(uhc_device_t * dev, bool b_present)
  * - 4 bytes   -> CRC32
  * - 12 bytes  -> Signature Data
  * - Rest data -> Input Firmware
+ * A sample application binary output is provided for testing with the bootloader.
+ *
+ * \section app_req Application Requirements
+ * The SAM4L USB Host MSC Bootloader occupies the 32KB of the flash memory
+ * (may differ on the optimization setting used for build). Hence, the
+ * application has to be shifted by the same offset. To offset the application
+ * in those linkerscript files, set the flash origin to 0x8000 and decrease the
+ * flash size by 0x8000 for the application project.
  *
  * \copydoc UI
  *
