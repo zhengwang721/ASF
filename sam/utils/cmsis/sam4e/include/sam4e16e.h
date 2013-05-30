@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -53,7 +53,7 @@
 
 #ifdef __cplusplus
  extern "C" {
-#endif 
+#endif
 
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 #include <stdint.h>
@@ -85,7 +85,7 @@ typedef enum IRQn
   PendSV_IRQn           = -2,  /**< 14 Cortex-M4 Pend SV Interrupt           */
   SysTick_IRQn          = -1,  /**< 15 Cortex-M4 System Tick Interrupt       */
 /******  SAM4E16E specific Interrupt Numbers *********************************/
-  
+
   SUPC_IRQn            =  0, /**<  0 SAM4E16E Supply Controller (SUPC) */
   RSTC_IRQn            =  1, /**<  1 SAM4E16E Reset Controller (RSTC) */
   RTC_IRQn             =  2, /**<  2 SAM4E16E Real Time Clock (RTC) */
@@ -94,7 +94,6 @@ typedef enum IRQn
   PMC_IRQn             =  5, /**<  5 SAM4E16E Power Management Controller (PMC) */
   EFC_IRQn             =  6, /**<  6 SAM4E16E Enhanced Embedded Flash Controller (EFC) */
   UART0_IRQn           =  7, /**<  7 SAM4E16E UART 0 (UART0) */
-  SMC_IRQn             =  8, /**<  8 SAM4E16E Static Memory Controller (SMC) */
   PIOA_IRQn            =  9, /**<  9 SAM4E16E Parallel I/O Controller A (PIOA) */
   PIOB_IRQn            = 10, /**< 10 SAM4E16E Parallel I/O Controller B (PIOB) */
   PIOC_IRQn            = 11, /**< 11 SAM4E16E Parallel I/O Controller C (PIOC) */
@@ -136,7 +135,7 @@ typedef struct _DeviceVectors
 {
   /* Stack pointer */
   void* pvStack;
-  
+
   /* Cortex-M handlers */
   void* pfnReset_Handler;
   void* pfnNMI_Handler;
@@ -163,7 +162,7 @@ typedef struct _DeviceVectors
   void* pfnPMC_Handler;    /*  5 Power Management Controller */
   void* pfnEFC_Handler;    /*  6 Enhanced Embedded Flash Controller */
   void* pfnUART0_Handler;  /*  7 UART 0 */
-  void* pfnSMC_Handler;    /*  8 Static Memory Controller */
+  void* pvReserved8;
   void* pfnPIOA_Handler;   /*  9 Parallel I/O Controller A */
   void* pfnPIOB_Handler;   /* 10 Parallel I/O Controller B */
   void* pfnPIOC_Handler;   /* 11 Parallel I/O Controller C */
@@ -238,7 +237,6 @@ void PWM_Handler        ( void );
 void RSTC_Handler       ( void );
 void RTC_Handler        ( void );
 void RTT_Handler        ( void );
-void SMC_Handler        ( void );
 void SPI_Handler        ( void );
 void SUPC_Handler       ( void );
 void TC0_Handler        ( void );
@@ -260,7 +258,7 @@ void USART1_Handler     ( void );
 void WDT_Handler        ( void );
 
 /**
- * \brief Configuration of the Cortex-M4 Processor and Core Peripherals 
+ * \brief Configuration of the Cortex-M4 Processor and Core Peripherals
  */
 
 #define __CM4_REV              0x0000 /**< SAM4E16E core revision number ([15:8] revision number, [7:0] patch number) */
@@ -305,6 +303,7 @@ void WDT_Handler        ( void );
 #include "component/pmc.h"
 #include "component/pwm.h"
 #include "component/rstc.h"
+#include "component/rswdt.h"
 #include "component/rtc.h"
 #include "component/rtt.h"
 #include "component/smc.h"
@@ -364,6 +363,7 @@ void WDT_Handler        ( void );
 #include "instance/wdt.h"
 #include "instance/rtc.h"
 #include "instance/gpbr.h"
+#include "instance/rswdt.h"
 /*@}*/
 
 /* ************************************************************************** */
@@ -480,6 +480,7 @@ void WDT_Handler        ( void );
 #define WDT        (0x400E1850U) /**< \brief (WDT       ) Base Address */
 #define RTC        (0x400E1860U) /**< \brief (RTC       ) Base Address */
 #define GPBR       (0x400E1890U) /**< \brief (GPBR      ) Base Address */
+#define RSWDT      (0x400E1900U) /**< \brief (RSWDT     ) Base Address */
 #else
 #define PWM        ((Pwm    *)0x40000000U) /**< \brief (PWM       ) Base Address */
 #define PDC_PWM    ((Pdc    *)0x40000100U) /**< \brief (PDC_PWM   ) Base Address */
@@ -536,6 +537,7 @@ void WDT_Handler        ( void );
 #define WDT        ((Wdt    *)0x400E1850U) /**< \brief (WDT       ) Base Address */
 #define RTC        ((Rtc    *)0x400E1860U) /**< \brief (RTC       ) Base Address */
 #define GPBR       ((Gpbr   *)0x400E1890U) /**< \brief (GPBR      ) Base Address */
+#define RSWDT      ((Rswdt  *)0x400E1900U) /**< \brief (RSWDT     ) Base Address */
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 /*@}*/
 
@@ -572,8 +574,10 @@ void WDT_Handler        ( void );
 /* ************************************************************************** */
 
 #define CHIP_JTAGID (0x05B3703FUL)
-#define CHIP_CIDR (0xA3CC0CE0UL)
-#define CHIP_EXID (0x00110200UL)
+#define CHIP_CIDR   (0xA3CC0CE0UL)
+#define CHIP_EXID   (0x00120200UL)
+#define NB_CH_AFE0  (16UL)
+#define NB_CH_AFE1  (8UL)
 
 /* ************************************************************************** */
 /*   ELECTRICAL DEFINITIONS FOR SAM4E16E */

@@ -16,5 +16,6 @@
 		<require idref="avr32.drivers.eic"/>
 		<require idref="avr32.drivers.gpio"/>
 		<require idref="avr32.drivers.pm"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

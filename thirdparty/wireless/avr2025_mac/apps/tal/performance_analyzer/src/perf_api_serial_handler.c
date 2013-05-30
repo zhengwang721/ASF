@@ -802,7 +802,7 @@ static inline void handle_incoming_msg(void)
                     /* Send the confirmation with status as Failure
                      * with error code as the reason for failure
                      */
-                    usr_ed_scan_start_confirm(error_code, NUL_VAL, NUL_VAL);;
+                    usr_ed_scan_start_confirm(error_code, NUL_VAL, NUL_VAL);
                     return;
                 }
 

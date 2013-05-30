@@ -12,6 +12,6 @@
 		<require idref="common.services.basic.clock"/>
 		<require idref="common.boards"/>
 		<require idref="common.services.calendar"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>
-

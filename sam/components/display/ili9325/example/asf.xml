@@ -4,7 +4,7 @@
 		A simple example for drawing pictures and strings on the ILI9325 LCD controller.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="Display" />
+			<keyword value="Display"/>
 		</info>
 		<build type="c-source" value="ili9325_example.c"/>
 		<build type="include-path" value="."/>
@@ -15,5 +15,6 @@
 		<require idref="sam.components.display.ili9325"/>
 		<require idref="sam.components.display.aat31xx"/>
 		<require idref="common.utils.stdio.stdio_serial"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

@@ -4,13 +4,14 @@
 		Example application. It shows how to encode and decode a vector using the ADPCM algorithm from the DSP library.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="Digital signal processing" />
-			<keyword value="Audio" />
+			<keyword value="Digital signal processing"/>
+			<keyword value="Audio"/>
 		</info>
 		<build type="c-source" value="adpcm_example.c"/>
 		<require idref="avr32.drivers.pm"/>
 		<require idref="avr32.drivers.cpu.cycle_counter"/>
 		<require idref="avr32.services.dsplib.adpcm"/>
 		<device-support value="uc3"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

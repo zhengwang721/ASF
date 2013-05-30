@@ -8,8 +8,9 @@
 		<build type="c-source" value="tc45_example5.c"/>
 		<device-support value="xmega"/>
 		<require idref="common.services.basic.gpio"/>
-    <require idref="common.services.delay"/> 
-    <require idref="common.services.gfx_mono"/>     
+		<require idref="common.services.delay"/>
+		<require idref="common.services.gfx_mono"/>
 		<require idref="xmega.drivers.tc45"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

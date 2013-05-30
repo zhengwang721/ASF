@@ -3,7 +3,7 @@
  *
  * \brief TC Capture Waveform Example for SAM.
  *
- * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -58,8 +58,8 @@
  * conf_board.h file to check these previous define.
  *
  * To measure the wavefrom on channel_waveform, connect PIN_TC_WAVEFORM to
- * PIN_TC_CAPTURE, and configure PIN_TC_WAVEFORM as output pin and
- * PIN_TC_CAPTURE as input pin.
+ * PIN_TC_CAPTURE, and configure PIN_TC_WAVEFORM as output peripheral and
+ * PIN_TC_CAPTURE as input peripheral.
  *
  * \section Descriptions
  *
@@ -219,15 +219,9 @@ static void tc_waveform_initialize(void)
 			);
 
 	/* Configure waveform frequency and duty cycle. */
-#if (SAM4L)
 	rc = (sysclk_get_peripheral_bus_hz(TC) /
 			divisors[gc_waveconfig[gs_uc_configuration].ul_intclock]) /
 			gc_waveconfig[gs_uc_configuration].us_frequency;
-#else
-	rc = (sysclk_get_peripheral_hz() /
-			divisors[gc_waveconfig[gs_uc_configuration].ul_intclock]) /
-			gc_waveconfig[gs_uc_configuration].us_frequency;
-#endif
 	tc_write_rc(TC, TC_CHANNEL_WAVEFORM, rc);
 	ra = (100 - gc_waveconfig[gs_uc_configuration].us_dutycycle) * rc / 100;
 	tc_write_ra(TC, TC_CHANNEL_WAVEFORM, ra);
@@ -312,15 +306,10 @@ int main(void)
 	printf("-- Compiled: %s %s --\n\r", __DATE__, __TIME__);
 
 	/* Configure PIO Pins for TC */
-#if (SAM4L || SAM4E)
-	ioport_set_pin_mode(PIN_TC_WAVEFORM, PIN_TC_WAVEFORM_FLAGS);
+	ioport_set_pin_mode(PIN_TC_WAVEFORM, PIN_TC_WAVEFORM_MUX);
 	ioport_disable_pin(PIN_TC_WAVEFORM); // Disable IO (but enable peripheral mode)
-	ioport_set_pin_mode(PIN_TC_CAPTURE, PIN_TC_CAPTURE_FLAGS);
+	ioport_set_pin_mode(PIN_TC_CAPTURE, PIN_TC_CAPTURE_MUX);
 	ioport_disable_pin(PIN_TC_CAPTURE); // Disable IO (but enable peripheral mode)
-#else
-	gpio_configure_pin(PIN_TC_WAVEFORM, PIN_TC_WAVEFORM_FLAGS);
-	gpio_configure_pin(PIN_TC_CAPTURE, PIN_TC_CAPTURE_FLAGS);
-#endif
 
 	/* Configure TC TC_CHANNEL_WAVEFORM as waveform operating mode */
 	printf("Configure TC%d channel %d as waveform operating mode \n\r",
@@ -352,18 +341,12 @@ int main(void)
 			if (gs_ul_captured_pulses) {
 				tc_disable_interrupt(TC, TC_CHANNEL_CAPTURE, TC_IDR_LDRBS);
 				printf("Captured %u pulses from TC%d channel %d, RA = %u, RB = %u \n\r",
-						gs_ul_captured_pulses, TC_PERIPHERAL,
-						TC_CHANNEL_CAPTURE,	gs_ul_captured_ra,
-						gs_ul_captured_rb);
-#if (SAM4L)
+						(unsigned)gs_ul_captured_pulses, TC_PERIPHERAL,
+						TC_CHANNEL_CAPTURE,	(unsigned)gs_ul_captured_ra,
+						(unsigned)gs_ul_captured_rb);
 				frequence = (sysclk_get_peripheral_bus_hz(TC) /
 						divisors[TC_CAPTURE_TIMER_SELECTION]) /
 						gs_ul_captured_rb;
-#else
-				frequence = (sysclk_get_peripheral_hz() /
-						divisors[TC_CAPTURE_TIMER_SELECTION]) /
-						gs_ul_captured_rb;
-#endif
 				dutycycle
 					= (gs_ul_captured_rb - gs_ul_captured_ra) * 100 /
 						gs_ul_captured_rb;

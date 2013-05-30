@@ -3,7 +3,7 @@
  *
  * \brief Power Management Controller (PMC) driver for SAM.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -85,17 +85,11 @@ extern "C" {
 #define PMC_PCK_1               1 /* PCK1 ID */
 #define PMC_PCK_2               2 /* PCK2 ID */
 
-#if SAM4S
+#if SAM4S || SAM4E
 /** Flash state in Wait Mode */
 #define PMC_WAIT_MODE_FLASH_STANDBY         PMC_FSMR_FLPM_FLASH_STANDBY
 #define PMC_WAIT_MODE_FLASH_DEEP_POWERDOWN  PMC_FSMR_FLPM_FLASH_DEEP_POWERDOWN
 #define PMC_WAIT_MODE_FLASH_IDLE            PMC_FSMR_FLPM_FLASH_IDLE
-#endif
-#if SAM4E
-/** Flash state in Wait Mode */
-#define PMC_WAIT_MODE_FLASH_STANDBY         PMC_FSMR_FLPM(0)
-#define PMC_WAIT_MODE_FLASH_DEEP_POWERDOWN  PMC_FSMR_FLPM(1)
-#define PMC_WAIT_MODE_FLASH_IDLE            PMC_FSMR_FLPM(2)
 #endif
 
 /** Convert startup time from us to MOSCXTST */
@@ -149,10 +143,17 @@ uint32_t pmc_osc_is_ready_32kxtal(void);
 void pmc_switch_mainck_to_fastrc(uint32_t ul_moscrcf);
 void pmc_osc_enable_fastrc(uint32_t ul_rc);
 void pmc_osc_disable_fastrc(void);
+uint32_t pmc_osc_is_ready_fastrc(void);
+void pmc_osc_enable_main_xtal(uint32_t ul_xtal_startup_time);
+void pmc_osc_bypass_main_xtal(void);
+void pmc_osc_disable_main_xtal(void);
+uint32_t pmc_osc_is_bypassed_main_xtal(void);
+uint32_t pmc_osc_is_ready_main_xtal(void);
 void pmc_switch_mainck_to_xtal(uint32_t ul_bypass,
 		uint32_t ul_xtal_startup_time);
 void pmc_osc_disable_xtal(uint32_t ul_bypass);
 uint32_t pmc_osc_is_ready_mainck(void);
+void pmc_mainck_osc_select(uint32_t ul_xtal_rc);
 
 //@}
 

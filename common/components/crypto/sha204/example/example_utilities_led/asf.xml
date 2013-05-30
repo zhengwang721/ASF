@@ -14,5 +14,6 @@
 		<require idref="common.boards"/>
 		<require idref="common.components.crypto.sha204.xmega_sha204"/>
 		<device-support value="xmega"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

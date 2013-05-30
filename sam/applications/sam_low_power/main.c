@@ -122,6 +122,16 @@
 #include "conf_uart_serial.h"
 #include "low_power_board.h"
 
+#if !defined(PMC_PCK_PRES_CLK_1)
+#define PMC_PCK_PRES_CLK_1   PMC_PCK_PRES(0)
+#define PMC_PCK_PRES_CLK_2   PMC_PCK_PRES(1)
+#define PMC_PCK_PRES_CLK_4   PMC_PCK_PRES(2)
+#define PMC_PCK_PRES_CLK_8   PMC_PCK_PRES(3)
+#define PMC_PCK_PRES_CLK_16  PMC_PCK_PRES(4)
+#define PMC_PCK_PRES_CLK_32  PMC_PCK_PRES(5)
+#define PMC_PCK_PRES_CLK_64  PMC_PCK_PRES(6)
+#endif
+
 #define STRING_EOL    "\r"
 #define STRING_HEADER "-- Low Power Example --\r\n" \
 	"-- "BOARD_NAME " --\r\n" \

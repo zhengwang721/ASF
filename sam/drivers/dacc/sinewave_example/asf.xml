@@ -12,5 +12,6 @@
 		<require idref="sam.drivers.dacc"/>
 		<require idref="common.services.basic.clock"/>
 		<require idref="common.utils.stdio.stdio_serial"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

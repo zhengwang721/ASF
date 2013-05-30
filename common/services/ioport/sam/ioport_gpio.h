@@ -3,7 +3,7 @@
  *
  * \brief SAM architecture specific IOPORT service implementation header file.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -117,7 +117,7 @@ __always_inline static ioport_port_mask_t arch_ioport_pin_to_mask(ioport_pin_t p
 
 __always_inline static void arch_ioport_init(void)
 {
-	sysclk_enable_pba_module(SYSCLK_GPIO);
+	sysclk_enable_peripheral_clock(GPIO);
 }
 
 __always_inline static void arch_ioport_enable_port(ioport_port_t port,

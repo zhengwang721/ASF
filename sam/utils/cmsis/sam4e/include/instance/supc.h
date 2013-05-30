@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -47,15 +47,15 @@
 #define REG_SUPC_CR            (0x400E1810U) /**< \brief (SUPC) Supply Controller Control Register */
 #define REG_SUPC_SMMR          (0x400E1814U) /**< \brief (SUPC) Supply Controller Supply Monitor Mode Register */
 #define REG_SUPC_MR            (0x400E1818U) /**< \brief (SUPC) Supply Controller Mode Register */
-#define REG_SUPC_WUMR          (0x400E181CU) /**< \brief (SUPC) Supply Controller Wake Up Mode Register */
-#define REG_SUPC_WUIR          (0x400E1820U) /**< \brief (SUPC) Supply Controller Wake Up Inputs Register */
+#define REG_SUPC_WUMR          (0x400E181CU) /**< \brief (SUPC) Supply Controller Wake-up Mode Register */
+#define REG_SUPC_WUIR          (0x400E1820U) /**< \brief (SUPC) Supply Controller Wake-up Inputs Register */
 #define REG_SUPC_SR            (0x400E1824U) /**< \brief (SUPC) Supply Controller Status Register */
 #else
 #define REG_SUPC_CR   (*(WoReg*)0x400E1810U) /**< \brief (SUPC) Supply Controller Control Register */
 #define REG_SUPC_SMMR (*(RwReg*)0x400E1814U) /**< \brief (SUPC) Supply Controller Supply Monitor Mode Register */
 #define REG_SUPC_MR   (*(RwReg*)0x400E1818U) /**< \brief (SUPC) Supply Controller Mode Register */
-#define REG_SUPC_WUMR (*(RwReg*)0x400E181CU) /**< \brief (SUPC) Supply Controller Wake Up Mode Register */
-#define REG_SUPC_WUIR (*(RwReg*)0x400E1820U) /**< \brief (SUPC) Supply Controller Wake Up Inputs Register */
+#define REG_SUPC_WUMR (*(RwReg*)0x400E181CU) /**< \brief (SUPC) Supply Controller Wake-up Mode Register */
+#define REG_SUPC_WUIR (*(RwReg*)0x400E1820U) /**< \brief (SUPC) Supply Controller Wake-up Inputs Register */
 #define REG_SUPC_SR   (*(RoReg*)0x400E1824U) /**< \brief (SUPC) Supply Controller Status Register */
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 

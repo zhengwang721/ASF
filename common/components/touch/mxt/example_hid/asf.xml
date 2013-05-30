@@ -26,6 +26,6 @@
 		<device-support value="xmega"/>
 		<device-support value="uc3"/>
 		<device-support value="sam"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>
-

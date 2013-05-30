@@ -6,7 +6,7 @@
 		interrupt is enabled which gets triggered whenever overflow occurs.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="Clocks" />
+			<keyword value="Clocks"/>
 		</info>
 		<build type="c-source" value="pwma_example1.c"/>
 		<device-support value="uc3l"/>
@@ -17,5 +17,6 @@
 		<require idref="avr32.drivers.gpio"/>
 		<require idref="avr32.drivers.intc"/>
 		<require idref="avr32.drivers.pm"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

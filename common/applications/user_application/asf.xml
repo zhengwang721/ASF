@@ -8,5 +8,6 @@
 			This user application template contains the bare minimum of files needed to
 			start a project which works with the ASF application builder wizard.
 		</info>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

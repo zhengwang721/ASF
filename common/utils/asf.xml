@@ -144,6 +144,15 @@
 			<require idref="xmega.utils"/>
 			<build type="doxygen-entry-point" value="test_suite_group"/>
 		</module>
+		<module type="driver" id="common.utils.unit_test#mega" caption="Unit test framework - MEGA implementation">
+			<info type="description" value="summary">
+			Core functions for the unit test framework.
+			</info>
+			<device-support value="mega"/>
+			<require idref="common.utils.unit_test.generic"/>
+			<require idref="mega.utils"/>
+			<build type="doxygen-entry-point" value="test_suite_group"/>
+		</module>		
 		<module type="driver" id="common.utils.unit_test#sam" caption="Unit test framework - SAM implementation">
 			<info type="description" value="summary">
 			Core functions for the unit test framework.
@@ -266,6 +275,10 @@
 			<toolchain-config name="avrgcc.linker.miscellaneous.LinkerFlags" value="-Wl,--relax" toolchain="avrgcc"/>
 			<!-- Define symbols are added to this config, per workaround for AVRSV-1972 and AVRSV-2180 -->
 			<toolchain-config name="avrgcc.assembler.general.AssemblerFlags" value="-mrelax" toolchain="avrgcc"/>
+			<!-- Standard library settings for linker -->
+			<toolchain-config name="avrgcc.linker.general.NoStartupOrDefaultLibs" value="False" toolchain="avrgcc"/>
+			<toolchain-config name="avrgcc.linker.general.DoNotUseDefaultLibraries" value="False" toolchain="avrgcc"/>
+			<toolchain-config name="avrgcc.linker.general.DoNotUseStandardStartFiles" value="False" toolchain="avrgcc"/>
 		</module>
 
 		<module type="build-specific" id="common.utils.toolchain_config#uc3" caption="Toolchain configuration defaults for 32-bit AVR">
@@ -311,6 +324,10 @@
 			<toolchain-config name="armgcc.linker.miscellaneous.LinkerFlags" value="-Wl,--entry=Reset_Handler -Wl,--cref -mthumb" toolchain="armgcc"/>
 			<!-- Define symbols are added to this config, per workaround for AVRSV-1972 and AVRSV-2180 -->
 			<toolchain-config name="armgcc.preprocessingassembler.general.AssemblerFlags" value="" toolchain="armgcc"/>
+			<!-- Standard library settings for linker -->
+			<toolchain-config name="armgcc.linker.general.NoStartupOrDefaultLibs" value="False" toolchain="armgcc"/>
+			<toolchain-config name="armgcc.linker.general.DoNotUseDefaultLibraries" value="False" toolchain="armgcc"/>
+			<toolchain-config name="armgcc.linker.general.DoNotUseStandardStartFiles" value="False" toolchain="armgcc"/>
 		</module>
 	</select-by-device>
 </asf>

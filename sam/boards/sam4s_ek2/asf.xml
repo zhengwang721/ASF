@@ -15,8 +15,8 @@
 		<module type="meta" id="config.board.sam4s_ek2.init#no" caption="SAM4S initialization support disabled"/>
 		<module type="meta" id="config.board.sam4s_ek2.init#yes" caption="SAM4S initialization support enabled">
 			<build type="c-source" value="init.c"/>
-			<require idref="common.services.basic.gpio"/>
 			<require idref="common.services.ioport"/>
+			<require idref="common.services.basic.gpio"/>
 			<require idref="sam.drivers.pio"/>
 		</module>
 	</select-by-config>

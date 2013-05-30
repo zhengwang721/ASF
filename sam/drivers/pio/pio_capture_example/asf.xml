@@ -1,68 +1,24 @@
 <asf xmlversion="1.0">
-	<select-by-device id="sam.drivers.pio.capture_example" caption="PIO Capture Example"> 
-		<module type="application" id="sam.drivers.pio.capture_example#0" caption="PIO Capture Example">
-			<info type="description" value="summary">
-			This example is aimed to demonstrate the usage of PIO peripheral.
-			</info>
-			<info type="keyword" value="technology">
-				<keyword value="I/O" />
-			</info>
-			<build type="c-source" value="pio_capture_example.c"/>
-			<build type="c-source" value="pio_handler_with_capture.c"/>
-			<build type="header-file" value="pio_handler_with_capture.h"/>
-			<build type="include-path" value="."/>
-			<device-support value="sam3s"/>
-			<require idref="sam.utils.cmsis.sam3s.source.template"/>
-			<require idref="sam.drivers.pmc"/>
-			<require idref="sam.drivers.pio"/>
-			<require idref="sam.drivers.pdc"/>
-			<require idref="sam.drivers.uart"/>
-			<require idref="common.services.basic.gpio"/>
-			<require idref="common.services.basic.clock"/>
-			<require idref="common.utils.stdio.stdio_serial"/>
-		</module>
-		<module type="application" id="sam.drivers.pio.capture_example#4" caption="PIO Capture Example">
-			<info type="description" value="summary">
-			This example is aimed to demonstrate the usage of PIO peripheral.
-			</info>
-			<info type="keyword" value="technology">
-				<keyword value="I/O" />
-			</info>	
-			<build type="c-source" value="pio_capture_example.c"/>
-			<build type="c-source" value="pio_handler_with_capture.c"/>
-			<build type="header-file" value="pio_handler_with_capture.h"/>
-			<build type="include-path" value="."/>
-			<device-support value="sam3sd8"/>
-			<require idref="sam.utils.cmsis.sam3sd8.source.template"/>
-			<require idref="sam.drivers.pmc"/>
-			<require idref="sam.drivers.pio"/>
-			<require idref="sam.drivers.pdc"/>
-			<require idref="sam.drivers.uart"/>
-			<require idref="common.services.basic.gpio"/>
-			<require idref="common.services.basic.clock"/>
-			<require idref="common.utils.stdio.stdio_serial"/>
-		</module>
-		<module type="application" id="sam.drivers.pio.capture_example#5" caption="PIO Capture Example">
-			<info type="description" value="summary">
-			This example is aimed to demonstrate the usage of PIO peripheral.
-			</info>
-			<info type="keyword" value="technology">
-				<keyword value="I/O" />
-			</info>	
-			<build type="c-source" value="pio_capture_example.c"/>
-			<build type="c-source" value="pio_handler_with_capture.c"/>
-			<build type="header-file" value="pio_handler_with_capture.h"/>
-			<build type="include-path" value="."/>
-			<device-support value="sam4s"/>
-			<require idref="sam.utils.cmsis.sam4s.source.template"/>
-			<require idref="sam.drivers.pmc"/>
-			<require idref="sam.drivers.pio"/>
-			<require idref="sam.drivers.pdc"/>
-			<require idref="sam.drivers.uart"/>
-			<require idref="common.services.basic.gpio"/>
-			<require idref="common.services.basic.clock"/>
-			<require idref="common.utils.stdio.stdio_serial"/>
-		</module>
-	</select-by-device>	
+	<module type="application" id="sam.drivers.pio.capture_example" caption="PIO Capture Example">
+		<info type="description" value="summary">
+		This example is aimed to demonstrate the usage of PIO peripheral.
+		</info>
+		<info type="keyword" value="technology">
+			<keyword value="I/O" />
+		</info>
+		<build type="c-source" value="pio_capture_example.c"/>
+		<build type="include-path" value="."/>
+		<device-support value="sam3s"/>
+		<device-support value="sam3sd8"/>
+		<device-support value="sam4s"/>
+		<device-support value="sam4e"/>
+		<require idref="sam.drivers.pmc"/>
+		<require idref="sam.drivers.pio"/>
+		<require idref="sam.drivers.pdc"/>
+		<require idref="sam.drivers.uart"/>
+		<require idref="common.services.delay"/>
+		<require idref="common.services.basic.clock"/>
+		<require idref="common.utils.stdio.stdio_serial"/>
+		<info type="gui-flag" value="move-to-root"/>
+	</module>
 </asf>
-

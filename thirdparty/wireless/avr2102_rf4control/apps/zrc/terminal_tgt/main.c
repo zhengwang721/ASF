@@ -42,28 +42,15 @@
  * @author    Atmel Corporation: http://www.atmel.com
  * @author    Support email: avr@atmel.com
  */
+ 
 /**
-* \mainpage
-* \section preface Preface
-* This is the reference manual for ZRC Terminal target application.
-* \section toc Table of Contents
-*  - \subpage overview
-*  -  \b Application \b Interface(API)\n
-*    - \ref group_rf4control_ZRC
-*    - \ref group_mac
-*    - \ref group_pal
-*    - \ref group_tal
-*    - \ref group_resources
-*  - \subpage main_files
-*  - \subpage devsup
-*  - \subpage compinfo
-*  - \subpage references
-*  - \subpage contactinfo
-*/
-
-/**
- * \page overview Overview
- * \section intro Introduction
+ * \mainpage
+ * \section preface Preface
+ * This is the reference manual for ZRC Terminal target application.
+ * \section main_files Application Files
+ * - main.c                      Application main file.
+ * - vendor_data.c               Vendor Specific API functions
+ * \section intro Application Introduction
  * Terminal Target Example Application will act as target for the RF4CE ZRC button controller application. Terminal Target stack will respond for the user input via serial interface. 
  * The user options will be printed on the serial console. Where as the user will choose the options like cold start, warm start, reset(NIB will be reset to default values and stored in EEPROM), 
  * start network and push button pairing, channel agility, vendor data support, unpair, print the pairing table, setting the base channel on the target device, toggle the standby mode on the target device.
@@ -73,32 +60,26 @@
  * Push button pairing procedure can be triggered at target side either by using "All-in-one start" option or "Reset"->"Start"->"Pairing" sequence and make sure that the PBP is triggered at the controller side also.
  * The status of the push button pairing proceure will be displayed on the terminal.Then it displays ZRC commands received from the controller.
  *
- * Terminal target can be used with the single button controller node and button controller nodes.   */
-
-
-/** \page main_files Application Files
- * - main.c\n                      Application main file.
- * - vendor_data.c\n               Vendor Specific API functions.
-
- * \page devsup Device Support
- * - \b ATXMEGA256A3BU
- *                     - <A href="http://www.atmel.com/tools/xmega-a3buxplained.aspx"> \b   XMEGA-A3BU Xplained </A>  <A href="http://store.atmel.com/PartDetail.aspx?q=p:10500293">\a Buy </A>\n
-
- * - \b UC3A3256S
-*                      - <A href="http://www.atmel.com/tools/rz600.aspx"> \b RZ600</A> <A href="http://store.atmel.com/PartDetail.aspx?q=p:10500245;c:100118">\a Buy </A>\n
- * \page compinfo Compilation Info
- * This software was written for the GNU GCC and IAR for AVR.
+ * Terminal target can be used with the single button controller node and button controller nodes.
+ * \section api_modules Application Dependent Modules
+ * - \ref group_rf4control
+ * - \subpage api
+ * \section compinfo Compilation Info
+ * This software was written for the GNU GCC and IAR .
  * Other compilers may or may not work.
  *
- * \page references References
+ * \section references References
  * 1)  IEEE Std 802.15.4-2006 Part 15.4: Wireless Medium Access Control (MAC)
  *     and Physical Layer (PHY) Specifications for Low-Rate Wireless Personal Area
  *     Networks (WPANs).\n\n
  * 2)  AVR Wireless Support <A href="http://avr@atmel.com">avr@atmel.com</A>.\n
- * \page contactinfo Contact Information
+ *
+ * \section contactinfo Contact Information
  * For further information,visit
  * <A href="http://www.atmel.com/avr">www.atmel.com</A>.\n
  */
+
+
 
 /* === INCLUDES ============================================================ */
 
@@ -337,9 +318,9 @@ static void handle_input(uint8_t input_char)
     In case of POWER_SAVE state, we allow only reset & disabling POWER_SAVE req*/
     if (((node_status != IDLE) && (node_status != POWER_SAVE)) ||
         ((node_status == POWER_SAVE) && (!((input_char == 'Y') || (input_char == 'R') ||
-                                           (input_char == 'A') || (input_char == 'W')))))
+                                           (input_char == 'A') || (input_char == 'W')||(input_char ==0x0D)))))
     {
-        print_main_menu();
+        printf("Node is in power save mode.Press (R) to Reset/Press (Y) to Disable power save mode.\r\n");
         return;
     }
 
@@ -1277,11 +1258,11 @@ static void print_sub_mode_ch_ag_setup(void)
     {
         case 'F': /* Noise Threshold */
             {
-                char input_char2[4] = {0, 0, 0,0};
+                char input_char2[3] = {0, 0, 0};
                 uint8_t threshold;
-                printf("Enter new noise threshold (0 = -91dBm, 255 = -35 dBm).\r\n");
+                printf("Enter new noise threshold (Valid Range:0 = -91dBm to 84 = -35dBm).\r\n");
                 printf("Default: 10 = -80 dBm, new value: \r\n");
-                for (uint8_t i = 0; i < 3; i++)
+                for (uint8_t i = 0; i < 2; i++)
                 {
                     input = (char)sio2host_getchar();
                     if (isdigit(input))
@@ -1292,17 +1273,26 @@ static void print_sub_mode_ch_ag_setup(void)
                     {
                         break;
                     }
-					else
-					{
-					    printf("Invalid value. \r\n\r\n");
-                        printf("> Press Enter to return to main menu:\r\n ");
-                        return;
-					}
+		    else
+		    {
+		       printf("Invalid value. \r\n\r\n");
+                       printf("> Press Enter to return to main menu:\r\n ");
+                       return;
+		    }
                 }
                 threshold = atol(input_char2);
+                if(threshold<=84)
+                {
                 nlme_set_request(nwkPrivateChAgEdThreshold, 0, &threshold
                                  , (FUNC_PTR)nlme_set_confirm
                                 );
+                }
+                else
+                {
+                  printf("Invalid threshold value. \r\n\r\n");
+                  printf("> Press Enter to return to main menu:\r\n ");
+                  return;
+                }
             }
             break;
 

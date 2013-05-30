@@ -12,5 +12,6 @@
 		<device-support value="xmega"/>
 		<require idref="common.services.basic.gpio"/>
 		<require idref="xmega.drivers.tc45"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

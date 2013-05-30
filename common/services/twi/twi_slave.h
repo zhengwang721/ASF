@@ -44,15 +44,18 @@
 #define TWI_SLAVE_H_INCLUDED
 
 #include <parts.h>
+#include <compiler.h>
 
 #if (SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S || SAM4E)
 # include "sam_twi/twi_slave.h"
 #elif XMEGA
 # include "xmega_twi/twi_slave.h"
-#elif UC3
-# if (defined AVR32_TWI)
-#   error Not supported.
-# endif
+#elif MEGA_RF
+# include "megarf_twi/twi_slave.h" 
+#elif (defined(__GNUC__) && defined(__AVR32__)) || (defined(__ICCAVR32__) || defined(__AAVR32__))
+#if (defined AVR32_TWI)
+#error Not supported.
+#endif
 #else
 # error Unsupported chip type
 #endif

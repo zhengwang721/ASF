@@ -3,7 +3,7 @@
  *
  * \brief Board configuration.
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,26 +43,5 @@
 
 #ifndef CONF_BOARD_H_INCLUDED
 #define CONF_BOARD_H_INCLUDED
-
-#ifdef BOARD_REV_A
-#define GCLK_PIN		(PLEASE_FIX_ME)
-#define GCLK_PIN_FLAGS	(PLEASE_FIX_ME)
-
-#define CLKOUT_PIN		PLEASE_FIX_ME
-#endif
-
-#ifdef BOARD_REV_B
-#define GCLK_PIN		(PIO_PA6_IDX)
-#define GCLK_PIN_FLAGS	(PIO_PERIPH_B | PIO_DEFAULT)
-
-#define CLKOUT_PIN		{PIO_PA6, PIOA, ID_PIOA, PIO_PERIPH_B, PIO_DEFAULT}
-#define CLKOUT_PIN_MASK PIO_PA6
-#define CLKOUT_PIN_PIO 	PIOA
-#define CLKOUT_PIN_ID 	ID_PIOA
-#define CLKOUT_PIN_TYPE PIO_PERIPH_B
-#define CLKOUT_PIN_ATTR PIO_DEFAULT
-	
-#endif
-
 
 #endif /* CONF_BOARD_H_INCLUDED */

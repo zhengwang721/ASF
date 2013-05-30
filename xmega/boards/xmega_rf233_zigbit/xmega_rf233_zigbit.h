@@ -80,9 +80,9 @@
  * turn off the LED if needed.
  */
 //@{
-
+#define MCU_SOC_NAME        "ATxmega256A3U"
 #ifdef ZIGBIT_USB
-
+#define BOARD_NAME          "ATZB-X-233-USB"
 #define LED0_GPIO                       IOPORT_CREATE_PIN(PORTA, 4)
 #define LED1_GPIO                       IOPORT_CREATE_PIN(PORTA, 5)
 
@@ -96,6 +96,7 @@
 
 #ifdef ZIGBIT_EXT
 
+#define BOARD_NAME          "ATZB-X-233-XPRO"
 #define LED0_GPIO                       IOPORT_CREATE_PIN(PORTA, 6)
 #define LED1_GPIO                       IOPORT_CREATE_PIN(PORTA, 4)
 #define LED2_GPIO                       IOPORT_CREATE_PIN(PORTA, 5)

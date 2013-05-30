@@ -3,7 +3,7 @@
  *
  * \brief Arduino Due/X Board Definition.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -283,8 +283,8 @@
 #define PIN_PUSHBUTTON_2_ATTR (PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_FALL_EDGE)
 
 
-
 #define PIN_TC0_TIOA1           (PIO_PA2_IDX)
+#define PIN_TC0_TIOA1_MUX       (IOPORT_MODE_MUX_A)
 #define PIN_TC0_TIOA1_FLAGS     (PIO_PERIPH_A | PIO_DEFAULT)
 
 #define PIN_TC0_TIOA1_PIO     PIOA
@@ -295,6 +295,7 @@
 
 
 #define PIN_TC0_TIOA0         (PIO_PB25_IDX)
+#define PIN_TC0_TIOA0_MUX     (IOPORT_MODE_MUX_B)
 #define PIN_TC0_TIOA0_FLAGS   (PIO_INPUT | PIO_DEFAULT)
 
 #define PIN_TC0_TIOA0_PIO     PIOB
@@ -468,6 +469,7 @@
 /* ------------------------------------------------------------------------ */
 /*! PCK0 */
 #define PIN_PCK0        (PIO_PA1_IDX)
+#define PIN_PCK0_MUX    (IOPORT_MODE_MUX_B)
 #define PIN_PCK0_FLAGS  (PIO_PERIPH_B | PIO_DEFAULT)
 
 #define PIN_PCK_0_MASK  PIO_PA1

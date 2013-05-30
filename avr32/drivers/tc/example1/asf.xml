@@ -15,6 +15,7 @@
 		<require idref="avr32.drivers.pm"/>
 		<info type="keyword" value="technology">
 			<keyword value="Timers"/>
-		</info>			
+		</info>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

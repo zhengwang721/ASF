@@ -3,7 +3,7 @@
  *
  * \brief Board configuration.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,9 +43,5 @@
 
 #ifndef CONF_BOARD_H_INCLUDED
 #define CONF_BOARD_H_INCLUDED
-
-/*! Generated output clock "A14" pin definition. */
-#define GCLK_PIN		(PIO_PA1_IDX)
-#define GCLK_PIN_FLAGS	(PIO_PERIPH_B | PIO_DEFAULT)
 
 #endif /* CONF_BOARD_H_INCLUDED */

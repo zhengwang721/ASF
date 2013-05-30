@@ -9,5 +9,6 @@
 		<require idref="common.services.basic.sleepmgr"/>
 		<require idref="common.services.basic.clock"/>
 		<require idref="xmega.drivers.aes"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>
