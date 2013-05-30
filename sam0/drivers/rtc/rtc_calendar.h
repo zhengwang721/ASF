@@ -106,7 +106,7 @@
  *
  * \f[ COUNT_{MAX} = 2^{32}-1 \f]
  *
- * When the RTC is operated with the calendar enabled and run at the required
+ * When the RTC is operated with the calendar enabled and run using a nominal
  * 1 Hz input clock frequency, a register overflow will occur after 64 years.
  *
  * \subsection asfdoc_samd20_rtc_calendar_module_overview_periodic Periodic Events
@@ -120,9 +120,10 @@
  *
  * Where \f$f_{ASY}\f$ refers to the \e asynchronous clock set up in the RTC
  * module configuration. For the RTC to operate correctly in calendar mode, this
- * frequency must be 1024 Hz. The \b n parameter is the event source generator
- * index of the RTC module. If the asynchronous clock is operated at the
- * recommended 1KHz, the formula results in the values shown in
+ * frequency must be 1KHz, while the RTC's internal prescaler should be set to
+ * divide by 1024. The \b n parameter is the event source generator index of the
+ * RTC module. If the asynchronous clock is operated at the recommended 1KHz,
+ * the formula results in the values shown in
  * \ref asfdoc_samd20_rtc_calendar_module_rtc_hz "the table below".
  *
  * \anchor asfdoc_samd20_rtc_calendar_module_rtc_hz
@@ -189,8 +190,9 @@
  * The RTC is typically clocked by a specialized GCLK generator that has a
  * smaller prescaler than the others. By default the RTC clock is on, selected
  * to use the internal 32 kHz RC-oscillator with a prescaler of 32, giving a
- * resulting clock frequency of 1024 Hz to the RTC. The internal RTC prescaler
- * is set to 1024 which yields an end-frequency of 1 Hz.
+ * resulting clock frequency of 1024 Hz to the RTC. When the internal RTC
+ * prescaler is set to 1024, this yields an end-frequency of 1Hz for correct
+ * time keeping operations.
  *
  * The implementer also has the option to set other end-frequencies.
  * \ref asfdoc_samd20_rtc_calendar_rtc_out_freq "The table below" lists the
@@ -206,17 +208,17 @@
  *     <th>RTC Prescaler</th>
  *   </tr>
  *   <tr>
- *     <td>32kHz</td>
+ *     <td>32 KHz</td>
  *     <td>1</td>
  *     <td>1</td>
  *   </tr>
  *   <tr>
- *     <td>1kHz</td>
+ *     <td>1 KHz</td>
  *     <td>32</td>
  *     <td>1</td>
  *   </tr>
  *   <tr>
- *     <td>1Hz</td>
+ *     <td>1 Hz</td>
  *     <td>32</td>
  *     <td>1024</td>
  *   </tr>
@@ -239,8 +241,8 @@
  * }
  * \enddot
  *
- * \note For the calendar to operate correctly, the default setting of 1Hz must
- *       be used.
+ * \note For the calendar to operate correctly, an asynchronous clock of 1Hz
+ *       should be used.
  *
  *
  * \section asfdoc_samd20_rtc_calendar_extra_info Extra Information for RTC CAL

@@ -126,8 +126,8 @@
  *
  * Where \f$f_{ASY}\f$ refers to the \e asynchronous clock set up in the RTC
  * module configuration. The \b n parameter is the event source generator index
- * of the RTC module. If the asynchronous clock is operated at the
- * recommended 1KHz, the formula results in the values shown in
+ * of the RTC module. If the asynchronous clock is operated at the recommended
+ * frequency of 1 KHz, the formula results in the values shown in
  * \ref asfdoc_samd20_rtc_count_module_rtc_hz "the table below".
  *
  * \anchor asfdoc_samd20_rtc_count_module_rtc_hz
@@ -186,9 +186,9 @@
  * \subsection asfdoc_samd20_rtc_count_special_considerations_clock Clock Setup
  * The RTC is typically clocked by a specialized GCLK generator that has a
  * smaller prescaler than the others. By default the RTC clock is on, selected
- * to use the internal 32 kHz RC-oscillator with a prescaler of 32, giving a
- * resulting clock frequency of 1024 Hz to the RTC. The internal RTC prescaler
- * is set to 1024 which yields an end-frequency of 1 Hz.
+ * to use the internal 32 KHz RC-oscillator with a prescaler of 32, giving a
+ * resulting clock frequency of 1 KHz to the RTC.  When the internal RTC
+ * prescaler is set to 1024, this yields an end-frequency of 1 Hz.
  *
  * The implementer also has the option to set other end-frequencies.
  * \ref asfdoc_samd20_rtc_count_rtc_out_freq "The table below" lists the
@@ -204,17 +204,17 @@
  *     <th>RTC Prescaler</th>
  *   </tr>
  *   <tr>
- *     <td>32kHz</td>
+ *     <td>32 KHz</td>
  *     <td>1</td>
  *     <td>1</td>
  *   </tr>
  *   <tr>
- *     <td>1kHz</td>
+ *     <td>1 KHz</td>
  *     <td>32</td>
  *     <td>1</td>
  *   </tr>
  *   <tr>
- *     <td>1Hz</td>
+ *     <td>1 Hz</td>
  *     <td>32</td>
  *     <td>1024</td>
  *   </tr>
