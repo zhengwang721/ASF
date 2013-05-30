@@ -20,27 +20,6 @@
 		<device-support value="sam"/>
 	</module>
 
-	<!-- EWARM configurations -->
-	<select-by-config id="sam.utils.iarewarm.compiler.low_level_lib" name="config.compiler.iarewarm.low_level_lib" caption="EWARM lib low level interface selection" default="no_change">
-		<module type="meta" id="sam.utils.iarewarm.compiler.low_level_lib#no_change" caption="EWARM lib low level interface selection from template default"/>
-		<module type="meta" id="sam.utils.iarewarm.compiler.low_level_lib#semihosted" caption="EWARM lib low level interface Semihosted"/>
-	</select-by-config>
-	<select-by-config id="sam.utils.iarewarm.debugger.use_macro_file" name="config.debugger.iarewarm.use_macro_file" caption="EWARM macro file used or not" default="no_change">
-		<module type="meta" id="sam.utils.iarewarm.debugger.use_macro_file#no_change" caption="EWARM macro file setting from template default"/>
-		<module type="meta" id="sam.utils.iarewarm.debugger.use_macro_file#yes" caption="EWARM macro file used"/>
-		<module type="meta" id="sam.utils.iarewarm.debugger.use_macro_file#no" caption="EWARM macro file not used"/>
-	</select-by-config>
-	<select-by-config id="sam.utils.iarewarm.debugger.driver" name="config.debugger.iarewarm.driver" caption="EWARM debugger driver" default="no_change">
-		<module type="meta" id="sam.utils.iarewarm.debugger.driver#no_change" caption="EWARM debugger driver from template default"/>
-		<module type="meta" id="sam.utils.iarewarm.debugger.driver#jlink" caption="EWARM debugger driver uses JLINK"/>
-		<module type="meta" id="sam.utils.iarewarm.debugger.driver#cmsisdap" caption="EWARM debugger driver uses CMSISDAP"/>
-	</select-by-config>
-	<select-by-config id="sam.utils.iarewarm.debugger.interface" name="config.debugger.iarewarm.interface" caption="EWARM debugger interface" default="no_change">
-		<module type="meta" id="sam.utils.iarewarm.debugger.interface#no_change" caption="EWARM debugger interface from template default"/>
-		<module type="meta" id="sam.utils.iarewarm.debugger.interface#jtag" caption="EWARM debugger interface JTAG"/>
-		<module type="meta" id="sam.utils.iarewarm.debugger.interface#swd" caption="EWARM debugger interface SWD"/>
-	</select-by-config>
-
 	<!-- GCC printf configuration -->
 	<select-by-config id="sam.utils.printf" name="config.compiler.armgcc.printf" caption="SAM printf selection" default="iprintf">
 		<module type="meta" id="sam.utils.printf#printf" caption="Full printf for SAM"/>

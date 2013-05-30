@@ -51,14 +51,9 @@
 		<require idref="sam.utils.cmsis.sam4l.source.template"/>
 		<require idref="common.boards"/>
 
-		<!-- Required configurations -->
-		<require idref="sam.utils.iarewarm.compiler.low_level_lib"/>
-		<require idref="sam.utils.iarewarm.debugger.use_macro_file"/>
-		<require idref="sam.utils.iarewarm.debugger.driver"/>
-
 		<!-- Debug drivers default configuration -->
-		<config name="config.debugger.iarewarm.driver" value="cmsisdap"/>
-		<config name="config.debugger.iarewarm.use_macro_file" value="no"/>
+		<config name="config.compiler.iarewarm.debugger.driver" value="cmsisdap"/>
+		<config name="config.compiler.iarewarm.debugger.use_macro_file" value="no"/>
 		<!-- Compile option default configuration -->
 		<config name="config.compiler.iarewarm.low_level_lib" value="semihosted"/>
 	</board>
