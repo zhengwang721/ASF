@@ -20,6 +20,7 @@
 		<device-support value="sam"/>
 	</module>
 
+	<!-- GCC printf configuration -->
 	<select-by-config id="sam.utils.printf" name="config.compiler.armgcc.printf" caption="SAM printf selection" default="iprintf">
 		<module type="meta" id="sam.utils.printf#printf" caption="Full printf for SAM"/>
 		<module type="meta" id="sam.utils.printf#iprintf" caption="Integer iprintf for SAM">
