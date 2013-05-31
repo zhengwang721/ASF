@@ -43,11 +43,6 @@
 
 #include <asf.h>
 
-/* LED backlight control */
-#define backlight_on() ioport_set_pin_level(LCD_BL_GPIO,LCD_BL_ACTIVE_LEVEL)
-#define backlight_off() ioport_set_pin_level(LCD_BL_GPIO,LCD_BL_INACTIVE_LEVEL)
-#define backlight_toggle() ioport_toggle_pin_level(LCD_BL_GPIO)
-
 /**
  * \name Main user interface functions
  * @{
@@ -56,8 +51,6 @@ void ui_init(void)
 {
 	/* Initialize LEDs */
 	LED_Off(LED0);
-	/* Initialize backlight */
-	backlight_off();
 }
 
 void ui_usb_mode_change(bool b_host_mode)
@@ -99,7 +92,6 @@ void ui_usb_connection_event(uhc_device_t *dev, bool b_present)
 	UNUSED(dev);
 	if (!b_present) {
 		LED_On(LED0);
-		backlight_off();
 		ui_enum_status = UHC_ENUM_DISCONNECT;
 	}
 }
@@ -136,8 +128,8 @@ void ui_usb_sof_event(void)
 			counter_sof = 0;
 			LED_Toggle(LED0);
 			if (ui_test_done && !ui_test_result) {
-				/* Test fail then blink backlight */
-				backlight_toggle();
+				/* Test fail */
+				LED_Off(LED0);
 			}
 		}
 	}
@@ -147,9 +139,6 @@ void ui_test_finish(bool b_success)
 {
 	ui_test_done = true;
 	ui_test_result = b_success;
-	if (b_success) {
-		backlight_on();
-	}
 }
 
 /*! @} */
@@ -158,18 +147,11 @@ void ui_test_finish(bool b_success)
 /**
  * \defgroup UI User Interface
  *
- * Jumper setup on SAM4L_EK :
- * - Connect PA06 and usb (VBus detect)
- * - Connect PB05 and usb (ID detect)
- * - Connect PC07 and usb (VBus error detect)
- * - Connect PC08 and usb (VBus control)
- *
- * Human interface on SAM4L_EK :
+ * Human interface on SAM4L Xplained Pro:
  * - Led 0 is on when it's host and there is no device connected
  * - Led 0 blinks when a device is enumerated and Vendor interface enabled
  *   - The blink is slow (1s) with low speed device
  *   - The blink is normal (0.5s) with full speed device
  *   - The blink is fast (0.25s) with high speed device
- * - LED backlight is on when Vendor test is success
- * - LED backlight blinks when Vendor test is unsuccess
+ * - Led 0 is off when Vendor test is unsuccessful
  */
