@@ -114,11 +114,11 @@ void configure_spi(void)
 	spi_get_config_defaults(&config);
 //! [conf_defaults]
 //! [mux_setting]
-	config.mux_setting = SPI_SIGNAL_MUX_SETTING_E;
+	config.mux_setting = EXT1_SPI_SERCOM_MUX_SETTING;
 //! [mux_setting]
 	/* Configure pad 0 for data in */
 //! [di]
-	config.pinmux_pad0 = EXT1_SPI_MISO_PINMUX;
+	config.pinmux_pad0 = EXT1_SPI_SERCOM_PINMUX_PAD0;
 //! [di]
 	/* Configure pad 1 as unused */
 //! [ss]
@@ -126,11 +126,11 @@ void configure_spi(void)
 //! [ss]
 	/* Configure pad 2 for data out */
 //! [do]
-	config.pinmux_pad2 = EXT1_SPI_MOSI_PINMUX;
+	config.pinmux_pad2 = EXT1_SPI_SERCOM_PINMUX_PAD2;
 //! [do]
 	/* Configure pad 3 for SCK */
 //! [sck]
-	config.pinmux_pad3 = EXT1_SPI_SCK_PINMUX;
+	config.pinmux_pad3 = EXT1_SPI_SERCOM_PINMUX_PAD3;
 //! [sck]
 //! [init]
 	spi_init(&master, EXT1_SPI_MODULE, &config);

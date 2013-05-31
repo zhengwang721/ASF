@@ -54,7 +54,7 @@
 /* I2C Slave configurations */
 #define BOOT_SERCOM                EXT2_I2C_MODULE
 #define SLAVE_ADDRESS              0x15
-#define BOOT_I2C_PAD0              EXT2_I2C_SDA_PINMUX
-#define BOOT_I2C_PAD1              EXT2_I2C_SCL_PINMUX
+#define BOOT_I2C_PAD0              EXT2_I2C_SERCOM_PINMUX_PAD0
+#define BOOT_I2C_PAD1              EXT2_I2C_SERCOM_PINMUX_PAD1
 
 #endif /* CONF_BOARD_H_INCLUDED */

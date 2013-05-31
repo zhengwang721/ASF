@@ -81,23 +81,23 @@ void configure_spi(void)
 	config.slave.frame_format = SPI_FRAME_FORMAT_SPI_FRAME;
 //! [conf_format]
 //! [mux_setting]
-	config.mux_setting = SPI_SIGNAL_MUX_SETTING_E;
+	config.mux_setting = EXT1_SPI_SERCOM_MUX_SETTING;
 //! [mux_setting]
 	/* Configure pad 0 for data in */
 //! [di]
-	config.pinmux_pad0 = EXT1_SPI_MISO_PINMUX;
+	config.pinmux_pad0 = EXT1_SPI_SERCOM_PINMUX_PAD0;
 //! [di]
 	/* Configure pad 1 as unused */
 //! [ss]
-	config.pinmux_pad1 = EXT1_SPI_SS_PINMUX;
+	config.pinmux_pad1 = EXT1_SPI_SERCOM_PINMUX_PAD1;
 //! [ss]
 	/* Configure pad 2 for data out */
 //! [do]
-	config.pinmux_pad2 = EXT1_SPI_MOSI_PINMUX;
+	config.pinmux_pad2 = EXT1_SPI_SERCOM_PINMUX_PAD2;
 //! [do]
 	/* Configure pad 3 for SCK */
 //! [sck]
-	config.pinmux_pad3 = EXT1_SPI_SCK_PINMUX;
+	config.pinmux_pad3 = EXT1_SPI_SERCOM_PINMUX_PAD3;
 //! [sck]
 //! [init]
 	spi_init(&slave, EXT1_SPI_MODULE, &config);

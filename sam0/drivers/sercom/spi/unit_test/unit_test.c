@@ -60,10 +60,10 @@
  * \section Setup
  *
  *      - The following connections has to be made using wires:
- *            EXT1 PIN15 (PA15) <--> EXT2 PIN13 (PA25)
- *            EXT1 PIN16 (PA12) <--> EXT2 PIN14 (PA24)
- *            EXT1 PIN17 (PA14) <--> EXT3 PIN14 (PA26)
- *            EXT1 PIN18 (PA13) <--> EXT3 PIN13 (PA27)
+ *            SS_0: EXT1 PIN15 (PA05) <--> EXT2 PIN15 (PA17)
+ *            DO/DI: EXT1 PIN16 (PA06) <--> EXT2 PIN17 (PA16)
+ *            DI/DO: EXT1 PIN17 (PA04) <--> EXT2 PIN16 (PA18)
+ *            SCK: EXT1 PIN18 (PA07) <--> EXT2 PIN18 (PA19)
  *      - Connect the SAM D20 Xplained Pro board to the computer using a
  *        micro USB cable.
  *      - Open the virtual COM port in a terminal application.
@@ -75,8 +75,8 @@
  *
  * \section Description
  *
- *      - The unit tests are carried out with SERCOM3 as SPI master and
- *        SERCOM2 as SPI slave.
+ *      - The unit tests are carried out with SERCOM1 on EXT2 as SPI master and
+ *        SERCOM0 on EXT1 as SPI slave.
  *      - Data are transmitted from master to slave in single byte as well
  *        as in multiple bytes.
  *
@@ -91,16 +91,18 @@
 
 /* SERCOM SPI pin-out defines for SPI slave */
 #define SPI_SLAVE_MODULE              EXT1_SPI_MODULE
-#define SPI_SLAVE_DATA_IN_PIN_MUX     EXT1_SPI_MISO_PINMUX
-#define SPI_SLAVE_SS_PIN_MUX          EXT1_SPI_SS_PINMUX
-#define SPI_SLAVE_DATA_OUT_PIN_MUX    EXT1_SPI_MOSI_PINMUX
-#define SPI_SLAVE_SCK_PIN_MUX         EXT1_SPI_SCK_PINMUX
+#define SPI_SLAVE_SPI_MUX             EXT1_SPI_SERCOM_MUX_SETTING
+#define SPI_SLAVE_DATA_IN_PIN_MUX     EXT1_SPI_SERCOM_PINMUX_PAD0
+#define SPI_SLAVE_SS_PIN_MUX          EXT1_SPI_SERCOM_PINMUX_PAD1
+#define SPI_SLAVE_DATA_OUT_PIN_MUX    EXT1_SPI_SERCOM_PINMUX_PAD2
+#define SPI_SLAVE_SCK_PIN_MUX         EXT1_SPI_SERCOM_PINMUX_PAD3
 /* SERCOM SPI pin-out defines for SPI master */
-#define SPI_MASTER_MODULE             EXT2_UART_MODULE
-#define SPI_MASTER_DATA_IN_PIN_MUX    EXT2_UART_TX_PINMUX
-#define SPI_MASTER_DATA_OUT_PIN_MUX   EXT3_UART_TX_PINMUX
-#define SPI_MASTER_SCK_PIN_MUX        EXT3_UART_RX_PINMUX
-#define SPI_SLAVE_SS_PIN              EXT2_PIN_UART_RX
+#define SPI_MASTER_MODULE             EXT2_SPI_MODULE
+#define SPI_MASTER_SPI_MUX            EXT2_SPI_SERCOM_MUX_SETTING
+#define SPI_MASTER_DATA_IN_PIN_MUX    EXT2_SPI_SERCOM_PINMUX_PAD0
+#define SPI_MASTER_DATA_OUT_PIN_MUX   EXT2_SPI_SERCOM_PINMUX_PAD1
+#define SPI_MASTER_SCK_PIN_MUX        EXT2_SPI_SERCOM_PINMUX_PAD3
+#define SPI_SLAVE_SS_PIN              EXT2_PIN_SPI_SS_0
 
 /* Test Baud rate */
 #define TEST_SPI_BAUDRATE             1000000UL
@@ -153,9 +155,11 @@ static void cdc_uart_init(void)
 
 	/* Configure USART for unit test output */
 	usart_get_config_defaults(&cdc_uart_config);
-	cdc_uart_config.mux_setting = USART_RX_3_TX_2_XCK_3;
-	cdc_uart_config.pinmux_pad3 = EDBG_CDC_RX_PINMUX;
-	cdc_uart_config.pinmux_pad2 = EDBG_CDC_TX_PINMUX;
+	cdc_uart_config.mux_setting = EDBG_CDC_SERCOM_MUX_SETTING;
+	cdc_uart_config.pinmux_pad0 = EDBG_CDC_SERCOM_PINMUX_PAD0;
+	cdc_uart_config.pinmux_pad1 = EDBG_CDC_SERCOM_PINMUX_PAD1;
+	cdc_uart_config.pinmux_pad2 = EDBG_CDC_SERCOM_PINMUX_PAD2;
+	cdc_uart_config.pinmux_pad3 = EDBG_CDC_SERCOM_PINMUX_PAD3;
 	cdc_uart_config.baudrate    = 115200;
 	stdio_serial_init(&cdc_uart_module, EDBG_CDC_MODULE, &cdc_uart_config);
 	usart_enable(&cdc_uart_module);
@@ -190,7 +194,7 @@ static void run_spi_init_test(const struct test_case *test)
 
 	/* Configure the SPI master */
 	spi_get_config_defaults(&config);
-	config.mux_setting     = SPI_SIGNAL_MUX_SETTING_E;
+	config.mux_setting     = SPI_MASTER_SPI_MUX;
 	config.pinmux_pad0     = SPI_MASTER_DATA_IN_PIN_MUX;
 	config.pinmux_pad1     = PINMUX_UNUSED;
 	config.pinmux_pad2     = SPI_MASTER_DATA_OUT_PIN_MUX;
@@ -207,7 +211,7 @@ static void run_spi_init_test(const struct test_case *test)
 	/* Configure the SPI slave */
 	spi_get_config_defaults(&config);
 	config.mode                 = SPI_MODE_SLAVE;
-	config.mux_setting          = SPI_SIGNAL_MUX_SETTING_E;
+	config.mux_setting          = SPI_SLAVE_SPI_MUX;
 	config.pinmux_pad0          = SPI_SLAVE_DATA_IN_PIN_MUX;
 	config.pinmux_pad1          = SPI_SLAVE_SS_PIN_MUX;
 	config.pinmux_pad2          = SPI_SLAVE_DATA_OUT_PIN_MUX;
@@ -427,7 +431,7 @@ static void run_baud_test(const struct test_case *test)
 
 	/* Configure the SPI master */
 	spi_get_config_defaults(&config);
-	config.mux_setting     = SPI_SIGNAL_MUX_SETTING_E;
+	config.mux_setting     = SPI_MASTER_SPI_MUX;
 	config.pinmux_pad0     = SPI_MASTER_DATA_IN_PIN_MUX;
 	config.pinmux_pad1     = PINMUX_UNUSED;
 	config.pinmux_pad2     = SPI_MASTER_DATA_OUT_PIN_MUX;
@@ -479,7 +483,7 @@ static void setup_transfer_9bit_test(const struct test_case *test)
 
 	/* Configure the SPI master */
 	spi_get_config_defaults(&config);
-	config.mux_setting     = SPI_SIGNAL_MUX_SETTING_E;
+	config.mux_setting     = SPI_MASTER_SPI_MUX;
 	config.pinmux_pad0     = SPI_MASTER_DATA_IN_PIN_MUX;
 	config.pinmux_pad1     = PINMUX_UNUSED;
 	config.pinmux_pad2     = SPI_MASTER_DATA_OUT_PIN_MUX;
@@ -497,7 +501,7 @@ static void setup_transfer_9bit_test(const struct test_case *test)
 	/* Configure the SPI slave */
 	spi_get_config_defaults(&config);
 	config.mode                 = SPI_MODE_SLAVE;
-	config.mux_setting          = SPI_SIGNAL_MUX_SETTING_E;
+	config.mux_setting          = SPI_SLAVE_SPI_MUX;
 	config.pinmux_pad0          = SPI_SLAVE_DATA_IN_PIN_MUX;
 	config.pinmux_pad1          = SPI_SLAVE_SS_PIN_MUX;
 	config.pinmux_pad2          = SPI_SLAVE_DATA_OUT_PIN_MUX;

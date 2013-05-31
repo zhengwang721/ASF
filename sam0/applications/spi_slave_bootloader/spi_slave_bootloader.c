@@ -323,7 +323,7 @@ static void configure_spi(void)
 
 	/* Change SPI settings to slave */
 	config_spi.mode = SPI_MODE_SLAVE;
-	config_spi.mux_setting = SPI_SIGNAL_MUX_SETTING_E;
+	config_spi.mux_setting = BOOT_SPI_MUX;
 	config_spi.slave.preload_enable = true;
 	config_spi.slave.frame_format = SPI_FRAME_FORMAT_SPI_FRAME;
 	config_spi.pinmux_pad0 = BOOT_SPI_PAD0;
