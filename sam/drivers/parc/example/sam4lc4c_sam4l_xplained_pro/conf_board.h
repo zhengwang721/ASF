@@ -1,11 +1,9 @@
-/* This source file is part of the ATMEL QTouch Library Release 5.1 */
-
 /**
  * \file
  *
- * \brief QTouch debug settings.
+ * \brief  Configuration File for SAM4L Xplained Pro Board.
  *
- * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,79 +41,13 @@
  *
  */
 
-#ifndef QDEBUG_SETTINGS_H
-#define QDEBUG_SETTINGS_H
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
+/** Enable Com Port. */
+#define CONF_BOARD_COM_PORT
 
-//---------- Do not edit --------------------
+/** Enable PARC Port connection */
+#define CONF_BOARD_PARC
 
-/*! \name Project Constants.
- * \brief Values from 0xF000->0xFFFF are reserved for Atmel Kits.
- * Values from 0x0000->0xEFFF are available for other projects.
- */
-//! @{
-
-#define 	QT8				0xF001
-#define 	QT16				0xF002
-#define 	QM64				0xF003
-#define 	UC3L_EK_REV2		        0xF005
-
-//! @}
-
-/*! \name Interface constants.
- */
-//! @{
-
-#define 	TWI				1
-#define 	SPI1W				2
-#define 	SPI2W				3
-#define 	UART				4
-
-//! @}
-
-//---------- Edit Project Info -------------
-
-/*! \name Select the type of interface to use for the debug protocol.
- * \brief Comment out the interface not used.
- * Only one interface should be active.
- */
-//! @{
-
-//#define QDEBUG_SPI
-//#define QDEBUG_TWI
-//#define QDEBUG_SERIAL
-//#define QDEBUG_BITBANG_SPI
-//#define QDEBUG_SPI_BB
-
-// The definitions below should not clash with the SNS/SNSK port pins
-#define QDEBUG_SPI_BB_SS_PIN        1
-#define QDEBUG_SPI_BB_SCK_PIN       7
-#define QDEBUG_SPI_BB_MOSI_PIN      8
-#define QDEBUG_SPI_BB_MISO_PIN      13
-
-#define QDEBUG_SPI_BB_SS_PORT       C
-#define QDEBUG_SPI_BB_SCK_PORT      C
-#define QDEBUG_SPI_BB_MOSI_PORT     C
-#define QDEBUG_SPI_BB_MISO_PORT     C
-
-//! @}
-
-/*! \name Set up project info.
- */
-//! @{
-
-#define	PROJECT_ID	                0xABCD
-#define	INTERFACE			SPI2W
-
-//! @}
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif				/* QDEBUG_SETTINGS_H */
-
+#endif  /* CONF_BOARD_H_INCLUDED */
