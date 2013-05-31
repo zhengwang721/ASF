@@ -83,8 +83,6 @@ void rtc_count_reset(void)
  * \return Status of the configuration procedure.
  * \retval STATUS_OK               RTC configurations was set successfully.
  * \retval STATUS_ERR_INVALID_ARG  If invalid argument(s) were given.
- * \retval STATUS_ERR_BAD_FRQ      If the RTC source clock is not an exact
- *                                 multiple of 1KHz
  */
 static enum status_code _rtc_count_set_config(
 		const struct rtc_count_config *const config)
@@ -92,20 +90,7 @@ static enum status_code _rtc_count_set_config(
 	/* Initialize module pointer. */
 	Rtc *const rtc_module = RTC;
 
-	/* Determine and ensure the RTC source clock is a multiple of 1KHz */
-	uint32_t rtc_gen_hz    = system_gclk_gen_get_hz(GCLK_GENERATOR_2);
-	if (rtc_gen_hz % 1024) {
-		return STATUS_ERR_BAD_FRQ;
-	}
-
-	/* Compute and set the prescaler, clear all other configuration */
-	uint16_t prescaler_div = 0;
-	while (rtc_gen_hz > 1024) {
-		prescaler_div++;
-		rtc_gen_hz >>= 1;
-	}
-	rtc_module->MODE0.CTRL.reg = RTC_MODE0_CTRL_MODE(0) |
-			(prescaler_div << RTC_MODE0_CTRL_PRESCALER_Pos);
+	rtc_module->MODE0.CTRL.reg = RTC_MODE0_CTRL_MODE(0) | config->prescaler;
 
 	/* Set mode and clear on match if applicable. */
 	switch (config->mode) {

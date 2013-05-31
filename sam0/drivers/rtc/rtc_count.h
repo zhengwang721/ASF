@@ -126,8 +126,8 @@
  *
  * Where \f$f_{ASY}\f$ refers to the \e asynchronous clock set up in the RTC
  * module configuration. The \b n parameter is the event source generator index
- * of the RTC module. If the asynchronous clock is operated at the
- * recommended 1KHz, the formula results in the values shown in
+ * of the RTC module. If the asynchronous clock is operated at the recommended
+ * frequency of 1 KHz, the formula results in the values shown in
  * \ref asfdoc_samd20_rtc_count_module_rtc_hz "the table below".
  *
  * \anchor asfdoc_samd20_rtc_count_module_rtc_hz
@@ -186,9 +186,9 @@
  * \subsection asfdoc_samd20_rtc_count_special_considerations_clock Clock Setup
  * The RTC is typically clocked by a specialized GCLK generator that has a
  * smaller prescaler than the others. By default the RTC clock is on, selected
- * to use the internal 32 kHz RC-oscillator with a prescaler of 32, giving a
- * resulting clock frequency of 1024 Hz to the RTC. The internal RTC prescaler
- * is set to 1024 which yields an end-frequency of 1 Hz.
+ * to use the internal 32 KHz RC-oscillator with a prescaler of 32, giving a
+ * resulting clock frequency of 1 KHz to the RTC.  When the internal RTC
+ * prescaler is set to 1024, this yields an end-frequency of 1 Hz.
  *
  * The implementer also has the option to set other end-frequencies.
  * \ref asfdoc_samd20_rtc_count_rtc_out_freq "The table below" lists the
@@ -204,17 +204,17 @@
  *     <th>RTC Prescaler</th>
  *   </tr>
  *   <tr>
- *     <td>32kHz</td>
+ *     <td>32 KHz</td>
  *     <td>1</td>
  *     <td>1</td>
  *   </tr>
  *   <tr>
- *     <td>1kHz</td>
+ *     <td>1 KHz</td>
  *     <td>32</td>
  *     <td>1</td>
  *   </tr>
  *   <tr>
- *     <td>1Hz</td>
+ *     <td>1 Hz</td>
  *     <td>32</td>
  *     <td>1024</td>
  *   </tr>
@@ -320,39 +320,68 @@ enum rtc_count_compare {
 enum rtc_count_callback {
 	/** Callback for compare channel 0 */
 	RTC_COUNT_CALLBACK_COMPARE_0 = 0,
-#if (RTC_NUM_OF_COMP16 > 1) || defined(__DOXYGEN__)
+#  if (RTC_NUM_OF_COMP16 > 1) || defined(__DOXYGEN__)
 	/** Callback for compare channel 1 */
 	RTC_COUNT_CALLBACK_COMPARE_1,
-#endif
-#if (RTC_NUM_OF_COMP16 > 2) || defined(__DOXYGEN__)
+#  endif
+#  if (RTC_NUM_OF_COMP16 > 2) || defined(__DOXYGEN__)
 	/** Callback for compare channel 2 */
 	RTC_COUNT_CALLBACK_COMPARE_2,
-#endif
-#if (RTC_NUM_OF_COMP16 > 3)	|| defined(__DOXYGEN__)
+#  endif
+#  if (RTC_NUM_OF_COMP16 > 3)	|| defined(__DOXYGEN__)
 	/** Callback for compare channel 3 */
 	RTC_COUNT_CALLBACK_COMPARE_3,
-#endif
-#if (RTC_NUM_OF_COMP16 > 4) || defined(__DOXYGEN__)
+#  endif
+#  if (RTC_NUM_OF_COMP16 > 4) || defined(__DOXYGEN__)
 	/** Callback for compare channel 4 */
 	RTC_COUNT_CALLBACK_COMPARE_4,
-#endif
-#if (RTC_NUM_OF_COMP16 > 5) || defined(__DOXYGEN__)
+#  endif
+#  if (RTC_NUM_OF_COMP16 > 5) || defined(__DOXYGEN__)
 	/** Callback for compare channel 5 */
 	RTC_COUNT_CALLBACK_COMPARE_5,
-#endif
+#  endif
 	/** Callback for  overflow */
 	RTC_COUNT_CALLBACK_OVERFLOW,
-#if !defined(__DOXYGEN__)
+#  if !defined(__DOXYGEN__)
 	/** Total number of callbacks */
 	_RTC_COUNT_CALLBACK_N
-#endif
+#  endif
 };
 
-#if !defined(__DOXYGEN__)
-
+#  if !defined(__DOXYGEN__)
 typedef void (*rtc_count_callback_t)(void);
+#  endif
 #endif
-#endif
+
+/**
+ * \brief RTC input clock prescaler settings
+ *
+ * The available input clock prescaler values for the RTC count module.
+ */
+enum rtc_count_prescaler {
+	/** RTC input clock frequency is prescaled by a factor of 1. */
+	RTC_COUNT_PRESCALER_DIV_1    = RTC_MODE0_CTRL_PRESCALER_DIV1,
+	/** RTC input clock frequency is prescaled by a factor of 2. */
+	RTC_COUNT_PRESCALER_DIV_2    = RTC_MODE0_CTRL_PRESCALER_DIV2,
+	/** RTC input clock frequency is prescaled by a factor of 4. */
+	RTC_COUNT_PRESCALER_DIV_4    = RTC_MODE0_CTRL_PRESCALER_DIV4,
+	/** RTC input clock frequency is prescaled by a factor of 8. */
+	RTC_COUNT_PRESCALER_DIV_8    = RTC_MODE0_CTRL_PRESCALER_DIV8,
+	/** RTC input clock frequency is prescaled by a factor of 16. */
+	RTC_COUNT_PRESCALER_DIV_16   = RTC_MODE0_CTRL_PRESCALER_DIV16,
+	/** RTC input clock frequency is prescaled by a factor of 32. */
+	RTC_COUNT_PRESCALER_DIV_32   = RTC_MODE0_CTRL_PRESCALER_DIV32,
+	/** RTC input clock frequency is prescaled by a factor of 64. */
+	RTC_COUNT_PRESCALER_DIV_64   = RTC_MODE0_CTRL_PRESCALER_DIV64,
+	/** RTC input clock frequency is prescaled by a factor of 128. */
+	RTC_COUNT_PRESCALER_DIV_128  = RTC_MODE0_CTRL_PRESCALER_DIV128,
+	/** RTC input clock frequency is prescaled by a factor of 256. */
+	RTC_COUNT_PRESCALER_DIV_256  = RTC_MODE0_CTRL_PRESCALER_DIV256,
+	/** RTC input clock frequency is prescaled by a factor of 512. */
+	RTC_COUNT_PRESCALER_DIV_512  = RTC_MODE0_CTRL_PRESCALER_DIV512,
+	/** RTC input clock frequency is prescaled by a factor of 1024. */
+	RTC_COUNT_PRESCALER_DIV_1024 = RTC_MODE0_CTRL_PRESCALER_DIV1024,
+};
 
 /**
  * \brief RTC Count event enable/disable structure.
@@ -368,7 +397,8 @@ struct rtc_count_events {
 	bool generate_event_on_compare[RTC_NUM_OF_COMP16];
 	/** Generate an output event periodically at a binary division of the RTC
 	 *  counter frequency (see
-	 * \ref asfdoc_samd20_rtc_count_module_overview_periodic). */
+	 *  \ref asfdoc_samd20_rtc_count_module_overview_periodic).
+	 */
 	bool generate_event_on_periodic[8];
 };
 
@@ -381,14 +411,14 @@ struct _rtc_device {
 	enum rtc_count_mode mode;
 	/** Set if counter value should be continuously updated. */
 	bool continuously_update;
-#if RTC_COUNT_ASYNC == true
+#  if RTC_COUNT_ASYNC == true
 	/** Pointers to callback functions */
 	volatile rtc_count_callback_t callbacks[_RTC_COUNT_CALLBACK_N];
 	/** Mask for registered callbacks */
 	volatile uint8_t registered_callback;
 	/** Mask for enabled callbacks */
 	volatile uint8_t enabled_callback;
-#endif
+#  endif
 };
 
 extern volatile struct _rtc_device _rtc_dev;
@@ -402,6 +432,8 @@ extern volatile struct _rtc_device _rtc_dev;
  * user configurations are set.
  */
 struct rtc_count_config {
+	/** Input clock prescaler for the RTC module. */
+	enum rtc_count_prescaler prescaler;
 	/** Select the operation mode of the RTC.*/
 	enum rtc_count_mode mode;
 	/** If true, clears the counter value on compare match. Only available
@@ -453,6 +485,7 @@ static inline bool rtc_count_is_syncing(void)
  *  function should be called at the start of any RTC initialization.
  *
  *  The default configuration is as follows:
+ *  - Input clock divided by a factor of 1024.
  *  - RTC in 32 bit mode.
  *  - Clear on compare match off.
  *  - Continuously sync count register off.
@@ -469,6 +502,7 @@ static inline void rtc_count_get_config_defaults(
 	Assert(config);
 
 	/* Set default into configuration structure */
+	config->prescaler           = RTC_COUNT_PRESCALER_DIV_1024;
 	config->mode                = RTC_COUNT_MODE_32BIT;
 	config->clear_on_match      = false;
 	config->continuously_update = false;
