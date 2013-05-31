@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Initialization of memories (SAM)
+ * \brief Spi Master configuration.
  *
- * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,22 +40,25 @@
  * \asf_license_stop
  *
  */
-#include <asf.h>
-#include "conf_board.h" /* To get on-board memories configurations */
-#include "memories_initialization.h"
+ 
+#ifndef CONF_SPI_MASTER_H_INCLUDED
+#define CONF_SPI_MASTER_H_INCLUDED
 
-#ifdef CONF_BOARD_AT45DBX
-#include "at45dbx.h"
-#endif
+/* Possibility to change low-level configurations here. */
 
-void memories_initialization(void)
-{
-#ifdef CONF_BOARD_AT45DBX
-	at45dbx_init();
+//! Default Configuration of SPI Master Delay BCS
+// #define CONFIG_SPI_MASTER_DELAY_BCS            0
 
-	if (at45dbx_mem_check() != true) {
-		while (1) {
-		}
-	}
-#endif
-}
+//! Default Configuration of SPI Master Bits per Transfer Definition
+// #define CONFIG_SPI_MASTER_BITS_PER_TRANSFER    8
+
+//! Default Configuration of SPI Master Delay BCT
+// #define CONFIG_SPI_MASTER_DELAY_BCT            0
+
+//! Default Configuration of SPI Master Delay BS
+// #define CONFIG_SPI_MASTER_DELAY_BS             0
+
+//! Default Configuration of SPI Master Dummy Field
+// #define CONFIG_SPI_MASTER_DUMMY                0xFF
+
+#endif /* CONF_SPI_MASTER_H_INCLUDED */

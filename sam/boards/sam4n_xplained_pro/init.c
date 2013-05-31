@@ -148,7 +148,7 @@ void board_init(void)
 	ioport_set_pin_peripheral_mode(TWI2_CLK_GPIO, TWI2_CLK_FLAGS);
 #endif
 
-#if defined(CONF_BOARD_SPI) || defined(CONF_BOARD_SD_MMC_SPI)
+#if defined(CONF_BOARD_SPI) || defined(CONF_BOARD_SD_MMC_SPI) || defined(CONF_BOARD_AT45DBX)
 	ioport_set_pin_peripheral_mode(SPI_MISO_GPIO, SPI_MISO_FLAGS);
 	ioport_set_pin_peripheral_mode(SPI_MOSI_GPIO, SPI_MOSI_FLAGS);
 	ioport_set_pin_peripheral_mode(SPI_SPCK_GPIO, SPI_SPCK_FLAGS);
@@ -161,6 +161,10 @@ void board_init(void)
 
 #ifdef CONF_BOARD_SPI_NPCS0
 	ioport_set_pin_peripheral_mode(SPI_NPCS0_GPIO, SPI_NPCS0_FLAGS);
+#endif
+
+#ifdef CONF_BOARD_SPI_NPCS1
+	ioport_set_pin_peripheral_mode(SPI_NPCS1_PC4_GPIO, SPI_NPCS1_PC4_FLAGS);
 #endif
 
 #endif

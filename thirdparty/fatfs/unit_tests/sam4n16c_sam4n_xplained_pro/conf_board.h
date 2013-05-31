@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Initialization of memories (SAM)
+ * \brief Board configuration.
  *
- * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,22 +40,15 @@
  * \asf_license_stop
  *
  */
-#include <asf.h>
-#include "conf_board.h" /* To get on-board memories configurations */
-#include "memories_initialization.h"
 
-#ifdef CONF_BOARD_AT45DBX
-#include "at45dbx.h"
-#endif
 
-void memories_initialization(void)
-{
-#ifdef CONF_BOARD_AT45DBX
-	at45dbx_init();
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-	if (at45dbx_mem_check() != true) {
-		while (1) {
-		}
-	}
-#endif
-}
+/* Configure UART pins */
+#define CONF_BOARD_UART_CONSOLE
+
+#define CONF_BOARD_AT45DBX
+#define CONF_BOARD_SPI_NPCS1
+
+#endif /* CONF_BOARD_H_INCLUDED */
