@@ -44,6 +44,50 @@
 #include <compiler.h>
 #include "sleep.h"
 
+#define TRIGGER_ENABLE    0 /* Enable to test clock switching time */
+
+#if TRIGGER_ENABLE
+# include <asf.h>
+# define PIO_PORT_SIZE ((uint32_t)PIOB-(uint32_t)PIOA)
+# define pin_to_port_nb(pin_index) ((pin_index) >> 5)
+# define pin_to_pio(pin_index) \
+		((Pio*)((uint32_t)PIOA + PIO_PORT_SIZE*pin_to_port_nb(pin_index)))
+# define pin_to_mask(pin_index) (1 << ((pin_index) & 0x1F))
+# define pin_set(pin_index) do {\
+			pin_to_pio(pin_index)->PIO_SODR  = pin_to_mask(pin_index);\
+		} while(0)
+# define pin_clear(pin_index) do {\
+			pin_to_pio(pin_index)->PIO_CODR  = pin_to_mask(pin_index);\
+		} while(0)
+# define pin_toggle(pin_index) do {\
+			pin_to_pio(pin_index)->PIO_ODSR ^= pin_to_mask(pin_index);\
+		} while(0)
+/* 1 str instructon */
+# define led_on(led) do {\
+			if (led##_ACTIVE_LEVEL) {\
+				pin_set(led##_GPIO);\
+			} else {\
+				pin_clear(led##_GPIO);\
+			}\
+		} while(0)
+/* 1 str instruction */
+# define led_off(led) do {\
+			if (led##_ACTIVE_LEVEL) {\
+				pin_clear(led##_GPIO);\
+			} else {\
+				pin_set(led##_GPIO);\
+			}\
+		} while(0)
+/* 1 sub, 3 instructions (ld,xor,st) */
+#  define led_toggle(led) do {\
+			pin_toggle(led##_GPIO);\
+		} while(0)
+#else
+# define led_on(...)
+# define led_off(...)
+# define led_toggle(...)
+#endif
+
 /* SAM3 and SAM4 series */
 #if (SAM3S || SAM3N || SAM3XA || SAM3U || SAM4S || SAM4E)
 # include "pmc.h"
@@ -55,6 +99,13 @@
 # define BOARD_OSC_STARTUP_US    (15625UL)
 #endif
 
+#define _MODE_WAIT         0
+#define _MODE_SLEEP_SCLK   1
+
+#if !defined(EFC0)
+# define EFC0 EFC
+#endif
+
 /**
  * Save clock settings and shutdown PLLs
  */
@@ -62,10 +113,17 @@ __always_inline static void pmc_save_clock_settings(
 		uint32_t *p_osc_setting,
 		uint32_t *p_pll0_setting,
 		uint32_t *p_pll1_setting,
-		uint32_t *p_mck_setting)
+		uint32_t *p_mck_setting,
+		uint32_t *p_fmr_setting,
+		const uint32_t mode_to_enter,
+		const bool disable_xtal)
 {
+	uint32_t mor  = PMC->CKGR_MOR;
+	uint32_t mckr = PMC->PMC_MCKR;
+	uint32_t fmr  = EFC0->EEFC_FMR;
+
 	if (p_osc_setting) {
-		*p_osc_setting = PMC->CKGR_MOR;
+		*p_osc_setting = mor;
 	}
 	if (p_pll0_setting) {
 		*p_pll0_setting = PMC->CKGR_PLLAR;
@@ -80,50 +138,112 @@ __always_inline static void pmc_save_clock_settings(
 #endif
 	}
 	if (p_mck_setting) {
-		*p_mck_setting  = PMC->PMC_MCKR;
+		*p_mck_setting  = mckr;
 	}
+	if (p_fmr_setting) {
+		*p_fmr_setting  = fmr;
+	}
+	led_toggle(LED1);
 
-	/* Switch MCK to internal 4/8/12M RC for fast wakeup
-	   and disable unused clock for power saving. */
-	pmc_switch_mck_to_sclk(PMC_MCKR_PRES_CLK_1);
-	pmc_switch_mainck_to_fastrc(CKGR_MOR_MOSCRCF_12_MHz);
-	pmc_osc_disable_xtal(0);
+	/* Enable FAST RC */
+	PMC->CKGR_MOR = PMC_CKGR_MOR_KEY_VALUE | mor | CKGR_MOR_MOSCRCEN;
+	/* if MCK source is PLL, switch to mainck */
+	if ((mckr & PMC_MCKR_CSS_Msk) > PMC_MCKR_CSS_MAIN_CLK) {
+		/* MCK -> MAINCK */
+		mckr = (mckr & (~PMC_MCKR_CSS_Msk)) | PMC_MCKR_CSS_MAIN_CLK;
+		PMC->PMC_MCKR = mckr;
+		while(!(PMC->PMC_SR & PMC_SR_MCKRDY));
+		led_toggle(LED1);
+	}
+	/* MCK prescale -> 1 */
+	if (mckr & PMC_MCKR_PRES_Msk) {
+		mckr = (mckr & (~PMC_MCKR_PRES_Msk));
+		PMC->PMC_MCKR = mckr;
+		while(!(PMC->PMC_SR & PMC_SR_MCKRDY));
+		led_toggle(LED1);
+	}
+	/* Disable PLLs */
 	pmc_disable_pllack();
 #if (SAM3S || SAM4S)
 	pmc_disable_pllbck();
 #elif (SAM3U || SAM3XA)
 	pmc_disable_upll_clock();
 #endif
-	pmc_switch_mck_to_mainck(PMC_MCKR_PRES_CLK_1);
+	led_toggle(LED1);
+
+	if (_MODE_SLEEP_SCLK == mode_to_enter) {
+		/* Switch mainck to Slow clock */
+		PMC->PMC_MCKR = (PMC->PMC_MCKR & (~PMC_MCKR_CSS_Msk)) |
+				PMC_MCKR_CSS_SLOW_CLK;
+		while(!(PMC->PMC_SR & PMC_SR_MCKRDY));
+	} else {
+		/* Wait fast RC ready */
+		while (!(PMC->PMC_SR & PMC_SR_MOSCRCS));
+		led_toggle(LED1);
+
+		/* Switch mainck to FAST RC */
+		PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCSEL) |
+				PMC_CKGR_MOR_KEY_VALUE;
+		while (!(PMC->PMC_SR & PMC_SR_MOSCSELS));
+	}
+	/* FWS update */
+	EFC0->EEFC_FMR = fmr & (~EEFC_FMR_FWS_Msk);
+#if defined(EFC1)
+	EFC1->EEFC_FMR = fmr & (~EEFC_FMR_FWS_Msk);
+#endif
+
+	led_toggle(LED1);
+	/* Disable XTALs */
+	if (disable_xtal) {
+		PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCXTEN) |
+				PMC_CKGR_MOR_KEY_VALUE;
+	}
 }
 
 /**
  * Restore clock settings
  */
 __always_inline static void pmc_restore_clock_setting(
-		uint32_t osc_setting,
-		uint32_t pll0_setting,
-		uint32_t pll1_setting,
-		uint32_t mck_setting)
+		const uint32_t osc_setting,
+		const uint32_t pll0_setting,
+		const uint32_t pll1_setting,
+		const uint32_t mck_setting,
+		const uint32_t fmr_setting,
+		const uint32_t mode_to_exit)
 {
+	UNUSED(mode_to_exit);
 	uint32_t mckr;
 	uint32_t pll_sr = 0;
 
-	/* Switch MCK to slow clock  */
-	pmc_switch_mck_to_sclk(PMC_MCKR_PRES_CLK_1);
 	/* Switch mainck to external xtal */
 	if (CKGR_MOR_MOSCXTBY == (osc_setting & CKGR_MOR_MOSCXTBY)) {
 		/* Bypass mode */
-		pmc_switch_mainck_to_xtal(PMC_OSC_BYPASS,
-			pmc_us_to_moscxtst(BOARD_OSC_STARTUP_US,
-				CHIP_FREQ_SLCK_RC));
-		pmc_osc_disable_fastrc();
+		PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCXTEN) |
+				PMC_CKGR_MOR_KEY_VALUE | CKGR_MOR_MOSCXTBY |
+				CKGR_MOR_MOSCSEL;
+		PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCRCEN &
+					~CKGR_MOR_MOSCRCF_Msk)
+				| PMC_CKGR_MOR_KEY_VALUE;
+		led_toggle(LED1);
 	} else if (CKGR_MOR_MOSCXTEN == (osc_setting & CKGR_MOR_MOSCXTEN)) {
-		/* External XTAL */
-		pmc_switch_mainck_to_xtal(PMC_OSC_XTAL,
-			pmc_us_to_moscxtst(BOARD_OSC_STARTUP_US,
-				CHIP_FREQ_SLCK_RC));
-		pmc_osc_disable_fastrc();
+		/* Enable External XTAL */
+		if (!(PMC->CKGR_MOR & CKGR_MOR_MOSCXTEN)) {
+			PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCXTBY) |
+					PMC_CKGR_MOR_KEY_VALUE | CKGR_MOR_MOSCXTEN;
+			/* Wait the Xtal to stabilize */
+			while (!(PMC->PMC_SR & PMC_SR_MOSCXTS));
+			led_toggle(LED1);
+		}
+		/* Select External XTAL */
+		if (!(PMC->CKGR_MOR & CKGR_MOR_MOSCSEL)) {
+			PMC->CKGR_MOR |= PMC_CKGR_MOR_KEY_VALUE | CKGR_MOR_MOSCSEL;
+			while (!(PMC->PMC_SR & PMC_SR_MOSCSELS));
+			led_toggle(LED1);
+		}
+		/* Disable Fast RC */
+		PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCRCEN &
+						~CKGR_MOR_MOSCRCF_Msk)
+					| PMC_CKGR_MOR_KEY_VALUE;
 	}
 
 	if (pll0_setting & CKGR_PLLAR_MULA_Msk) {
@@ -158,22 +278,34 @@ __always_inline static void pmc_restore_clock_setting(
 		break;
 #endif
 	}
+	led_toggle(LED1);
 
 	/* Switch to faster clock */
 	mckr = PMC->PMC_MCKR;
+
 	/* Set PRES */
 	PMC->PMC_MCKR = (mckr & ~PMC_MCKR_PRES_Msk)
 		| (mck_setting & PMC_MCKR_PRES_Msk);
 	while (!(PMC->PMC_SR & PMC_SR_MCKRDY));
+	led_toggle(LED1);
+
+	/* Restore flash wait states */
+	EFC0->EEFC_FMR = fmr_setting;
+#if defined(EFC1)
+	EFC1->EEFC_FMR = fmr_setting;
+#endif
+
 	/* Set CSS and others */
 	PMC->PMC_MCKR = mck_setting;
 	while (!(PMC->PMC_SR & PMC_SR_MCKRDY));
+	led_toggle(LED1);
+
 	/* Waiting all restored PLLs ready */
 	while (!(PMC->PMC_SR & pll_sr));
 }
 
-/** If clocks are switched to FASTRC for WAIT mode */
-static volatile bool b_is_fastrc_used = false;
+/** If clocks are switched for some sleep mode */
+static volatile bool b_is_sleep_clock_used = false;
 /** Callback invoked once when clocks are restored */
 static pmc_callback_wakeup_clocks_restored_t callback_clocks_restored = NULL;
 
@@ -198,23 +330,36 @@ void pmc_sleep(int sleep_mode)
 		break;
 #endif
 	case SAM_PM_SMODE_WAIT: {
-		uint32_t mor, pllr0, pllr1, mckr;
+		uint32_t mor, pllr0, pllr1, mckr, fmr;
+
+		led_on(LED0);
+		led_on(LED1);
 		cpu_irq_disable();
-		b_is_fastrc_used = true;
-		pmc_save_clock_settings(&mor, &pllr0, &pllr1, &mckr);
+		b_is_sleep_clock_used = true;
+		pmc_save_clock_settings(&mor, &pllr0, &pllr1, &mckr, &fmr,
+				_MODE_WAIT, false);
 
 		/* Enter wait mode */
 		cpu_irq_enable();
+		led_off(LED0);
+		led_off(LED1);
+
 		pmc_enable_waitmode();
 
+		led_on(LED0);
+		led_on(LED1);
 		cpu_irq_disable();
-		pmc_restore_clock_setting(mor, pllr0, pllr1, mckr);
-		b_is_fastrc_used = false;
+		pmc_restore_clock_setting(mor, pllr0, pllr1, mckr, fmr,
+				_MODE_WAIT);
+		b_is_sleep_clock_used = false;
 		if (callback_clocks_restored) {
 			callback_clocks_restored();
 			callback_clocks_restored = NULL;
 		}
 		cpu_irq_enable();
+		led_off(LED1);
+		led_off(LED0);
+
 		break;
 	}
 
@@ -234,13 +379,13 @@ void pmc_sleep(int sleep_mode)
 
 bool pmc_is_wakeup_clocks_restored(void)
 {
-	return !b_is_fastrc_used;
+	return !b_is_sleep_clock_used;
 }
 
 void pmc_wait_wakeup_clocks_restore(
 		pmc_callback_wakeup_clocks_restored_t callback)
 {
-	if (b_is_fastrc_used) {
+	if (b_is_sleep_clock_used) {
 		cpu_irq_disable();
 		callback_clocks_restored = callback;
 	} else if (callback) {
