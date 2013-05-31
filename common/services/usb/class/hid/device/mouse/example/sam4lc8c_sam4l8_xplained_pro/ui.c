@@ -55,10 +55,10 @@
 static uint8_t move_dir = MOVE_UP;
 static int32_t move_count = MOUSE_MOVE_COUNT;
 
-// Wakeup pin is SW0 (PC24, EIC1)
+/* Wakeup pin is SW0 (PC24, EIC1) */
 #define UI_WAKEUP_IRQN         EIC_1_IRQn
 #define UI_WAKEUP_IRQ_LEVEL    5
-#define UI_WAKEUP_EIC_LINE     SW0_EIC_LINE // 1
+#define UI_WAKEUP_EIC_LINE     SW0_EIC_LINE
 #define UI_WAKEUP_HANDLER      button_handler
 #define UI_WAKEUP_BPM_SRC      BPM_BKUPWEN_EIC
 
