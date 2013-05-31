@@ -368,12 +368,14 @@ static inline enum status_code system_set_sleepmode(
 /**
  * \brief Put the system to sleep waiting for interrupt
  *
- * This will execute the WFI (wait for interrupt) instruction,
- * putting the device into the sleep mode specified by \ref system_set_sleepmode
- * and wait for an interrupt to wake up.
+ * This will execute a DSB (data synchronization barrier) intruction to ensure
+ * all ongoing memory accesses have completed. Then the WFI (wait for interrupt)
+ * instruction is executed, putting the device into the sleep mode specified
+ * by \ref system_set_sleepmode and wait for an interrupt to wake up.
  */
 static inline void system_sleep(void)
 {
+	__DSB();
 	__WFI();
 }
 
