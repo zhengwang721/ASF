@@ -42,7 +42,7 @@
  */
 
 
-/*! \mainpage
+/** \mainpage
  * \section intro Introduction
  * This example demonstrates how to use the Atmel DataFlash AT45DBx component.
  * The DataFlash requires an SPI bus as a low level communication interface.
