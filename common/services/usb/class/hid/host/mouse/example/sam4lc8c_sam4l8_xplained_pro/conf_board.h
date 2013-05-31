@@ -59,7 +59,4 @@
 /* Host VBUS control enabled */
 #define CONF_BOARD_USB_VBUS_CONTROL
 
-/* Enable USART to control Board Monitoring */
-#define CONF_BOARD_BM_USART
-
 #endif /* CONF_BOARD_H_INCLUDED */

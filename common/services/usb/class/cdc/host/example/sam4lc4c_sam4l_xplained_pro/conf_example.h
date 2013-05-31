@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief  Configuration File for SAM4L Xplained Pro Board.
+ * \brief Example configuration
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -40,23 +40,16 @@
  * \asf_license_stop
  *
  */
+#ifndef CONF_EXAMPLE_H_INCLUDED
+#define CONF_EXAMPLE_H_INCLUDED
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#define USART_ENABLE()
+#define USART_DISABLE()
+#define USART_BASE       ((Usart*)USART1)
+#define USART_ID         ID_USART1
 
-/* Auto-initialize USART GPIOs when board_init() is called */
-//#define CONF_BOARD_COM_PORT
+#define USART_HANDLER    USART1_Handler
+#define USART_INT_IRQn   USART1_IRQn
+#define USART_INT_LEVEL  3
 
-/* Enable EIC for SW0 */
-#define CONF_BOARD_EIC
-
-/* Enable USB interface (USB) */
-#define CONF_BOARD_USB_PORT
-/* Enable USB VBUS detect */
-#define CONF_BOARD_USB_VBUS_DETECT
-/* ID detect enabled */
-#define CONF_BOARD_USB_ID_DETECT
-/* Host VBUS control enabled */
-#define CONF_BOARD_USB_VBUS_CONTROL
-
-#endif /* CONF_BOARD_H_INCLUDED */
+#endif /* CONF_EXAMPLE_H_INCLUDED */

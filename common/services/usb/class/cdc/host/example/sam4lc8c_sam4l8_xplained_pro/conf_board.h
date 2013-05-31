@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief  Configuration File for SAM4L Xplained Pro Board.
+ * \brief  Configuration File for SAM4L8 Xplained Pro Board.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -45,7 +45,7 @@
 #define CONF_BOARD_H_INCLUDED
 
 /* Auto-initialize USART GPIOs when board_init() is called */
-//#define CONF_BOARD_COM_PORT
+#define CONF_BOARD_COM_PORT
 
 /* Enable EIC for SW0 */
 #define CONF_BOARD_EIC

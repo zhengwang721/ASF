@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief  Configuration File for SAM4L Xplained Pro Board.
+ * \brief Sleep manager configuration
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -41,22 +41,9 @@
  *
  */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#ifndef CONF_SLEEPMGR_H_INCLUDED
+#define CONF_SLEEPMGR_H_INCLUDED
 
-/* Auto-initialize USART GPIOs when board_init() is called */
-//#define CONF_BOARD_COM_PORT
+#define CONFIG_SLEEPMGR_ENABLE
 
-/* Enable EIC for SW0 */
-#define CONF_BOARD_EIC
-
-/* Enable USB interface (USB) */
-#define CONF_BOARD_USB_PORT
-/* Enable USB VBUS detect */
-#define CONF_BOARD_USB_VBUS_DETECT
-/* ID detect enabled */
-#define CONF_BOARD_USB_ID_DETECT
-/* Host VBUS control enabled */
-#define CONF_BOARD_USB_VBUS_CONTROL
-
-#endif /* CONF_BOARD_H_INCLUDED */
+#endif /* CONF_SLEEPMGR_H_INCLUDED */

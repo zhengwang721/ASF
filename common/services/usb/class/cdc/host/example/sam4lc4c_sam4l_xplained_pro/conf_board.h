@@ -45,7 +45,7 @@
 #define CONF_BOARD_H_INCLUDED
 
 /* Auto-initialize USART GPIOs when board_init() is called */
-//#define CONF_BOARD_COM_PORT
+#define CONF_BOARD_COM_PORT
 
 /* Enable EIC for SW0 */
 #define CONF_BOARD_EIC
