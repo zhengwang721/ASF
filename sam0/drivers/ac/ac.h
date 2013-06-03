@@ -1076,7 +1076,7 @@ static inline void ac_chan_clear_status(
  *                       default values
  */
 static inline void ac_win_get_config_defaults(
-		struct ac_chan_config *const config)
+		struct ac_win_config *const config)
 {
 	/* Sanity check arguments */
 	Assert(config);
