@@ -433,7 +433,7 @@ ifeq ($(target_type),elf)
 # if the common Makefile.sam.in or project config.mk is changed.
 $(target): $(MAKEFILE_PATH) config.mk $(obj-y)
 	@echo $(MSG_LINKING)
-	$(Q)$(CC) $(l_flags) $(obj-y) $(libflags-gnu-y) -o $@
+	$(Q)$(LD) $(l_flags) $(obj-y) $(libflags-gnu-y) -o $@
 	@echo $(MSG_SIZE)
 	$(Q)$(SIZE) -Ax $@
 	$(Q)$(SIZE) -Bx $@
