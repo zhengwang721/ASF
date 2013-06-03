@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="sam0.drivers.nvm.unit_test" caption="Unit test for the SAM D20 NVM Module">
+	<module type="application" id="sam0.drivers.nvm.unit_test" caption="Unit Tests for the SAM D20 NVM Driver">
 		<info type="description" value="summary">
 		Unit test for the NVM module.
 		</info>
