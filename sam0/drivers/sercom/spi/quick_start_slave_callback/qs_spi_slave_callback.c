@@ -54,40 +54,41 @@ static uint8_t buffer[BUF_LENGTH] = {
 };
 //! [buffer]
 //! [var]
-volatile bool transfer_complete = false;
+volatile bool transfer_complete_spi_slave = false;
 //! [var]
 
 //! [dev_inst]
-struct spi_module slave;
+struct spi_module spi_slave_instance;
 //! [dev_inst]
 //! [setup]
 
-void configure_callback(void);
-void configure_spi(void);
+void configure_spi_slave_callbacks(void);
+void configure_spi_slave(void);
 
 //! [callback]
-static void callback(const struct spi_module *const module)
+static void spi_slave_callback(const struct spi_module *const module)
 {
 //! [callback_var]
-	transfer_complete = true;
+	transfer_complete_spi_slave = true;
 //! [callback_var]
 }
 //! [callback]
 
 //! [conf_callback]
-void configure_callback(void)
+void configure_spi_slave_callbacks(void)
 {
 //! [reg_callback]
-	spi_register_callback(&slave, callback, SPI_CALLBACK_BUFFER_TRANSMITTED);
+	spi_register_callback(&spi_slave_instance, spi_slave_callback,
+			SPI_CALLBACK_BUFFER_TRANSMITTED);
 //! [reg_callback]
 //! [en_callback]
-	spi_enable_callback(&slave, SPI_CALLBACK_BUFFER_TRANSMITTED);
+	spi_enable_callback(&spi_slave_instance, SPI_CALLBACK_BUFFER_TRANSMITTED);
 //! [en_callback]
 }
 //! [conf_callback]
 
 //! [configure_spi]
-void configure_spi(void)
+void configure_spi_slave(void)
 {
 //! [config]
 	struct spi_config config;
@@ -96,14 +97,14 @@ void configure_spi(void)
 //! [conf_defaults]
 	spi_get_config_defaults(&config);
 //! [conf_defaults]
-//! [conf_slave]
+//! [conf_spi_slave_instance]
 	config.mode = SPI_MODE_SLAVE;
-//! [conf_slave]
+//! [conf_spi_slave_instance]
 //! [conf_preload]
-	config.slave.preload_enable = true;
+	config.spi_slave_instance.preload_enable = true;
 //! [conf_preload]
 //! [conf_format]
-	config.slave.frame_format = SPI_FRAME_FORMAT_SPI_FRAME;
+	config.spi_slave_instance.frame_format = SPI_FRAME_FORMAT_SPI_FRAME;
 //! [conf_format]
 //! [mux_setting]
 	config.mux_setting = EXT1_SPI_SERCOM_MUX_SETTING;
@@ -125,11 +126,11 @@ void configure_spi(void)
 	config.pinmux_pad3 = EXT1_SPI_SERCOM_PINMUX_PAD3;
 //! [sck]
 //! [init]
-	spi_init(&slave, EXT1_SPI_MODULE, &config);
+	spi_init(&spi_slave_instance, EXT1_SPI_MODULE, &config);
 //! [init]
 
 //! [enable]
-	spi_enable(&slave);
+	spi_enable(&spi_slave_instance);
 //! [enable]
 
 }
@@ -144,19 +145,19 @@ int main(void)
 //! [system_init]
 
 //! [run_config]
-	configure_spi();
+	configure_spi_slave();
 //! [run_config]
 //! [run_callback_config]
-	configure_callback();
+	configure_spi_slave_callbacks();
 //! [run_callback_config]
 //! [main_start]
 
 //! [main_use_case]
 //! [write]
-	spi_write_buffer_job(&slave, buffer, BUF_LENGTH);
+	spi_write_buffer_job(&spi_slave_instance, buffer, BUF_LENGTH);
 //! [write]
 //! [transf_complete]
-	while(!transfer_complete) {
+	while(!transfer_complete_spi_slave) {
 		/* Wait for transfer from master */
 	}
 //! [transf_complete]

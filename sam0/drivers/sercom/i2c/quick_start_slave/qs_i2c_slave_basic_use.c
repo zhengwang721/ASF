@@ -43,7 +43,7 @@
 
 #include <asf.h>
 
-void configure_i2c(void);
+void configure_i2c_slave(void);
 
 //! [address]
 #define SLAVE_ADDRESS 0x12
@@ -63,7 +63,7 @@ struct i2c_slave_module i2c_slave_instance;
 //! [module]
 
 //! [initialize_i2c]
-void configure_i2c(void)
+void configure_i2c_slave(void)
 {
 	/* Create and initialize config structure */
 	//! [init_conf]
@@ -97,7 +97,7 @@ int main(void)
 	//! [system_init]
 
 	//! [config]
-	configure_i2c();
+	configure_i2c_slave();
 	//! [config]
 
 	//! [dir]

@@ -69,7 +69,7 @@ struct i2c_packet packet;
 
 /* Init software module instance. */
 //! [dev_inst]
-struct i2c_master_module i2c_sw_instance;
+struct i2c_master_module i2c_master_instance;
 //! [dev_inst]
 
 //! [callback_func]
@@ -108,11 +108,11 @@ void configure_i2c(void)
 
 	/* Initialize and enable device with config */
 	//! [init_module]
-	while(i2c_master_init(&i2c_sw_instance, SERCOM2, &conf) != STATUS_OK);
+	while(i2c_master_init(&i2c_master_instance, SERCOM2, &conf) != STATUS_OK);
 	//! [init_module]
 
 	//! [enable_module]
-	i2c_master_enable(&i2c_sw_instance);
+	i2c_master_enable(&i2c_master_instance);
 	//! [enable_module]
 }
 //! [initialize_i2c]
@@ -122,11 +122,11 @@ void configure_i2c_callbacks(void)
 {
 	/* Register callback function. */
 	//! [callback_reg]
-	i2c_master_register_callback(&i2c_sw_instance, i2c_write_complete_callback,
+	i2c_master_register_callback(&i2c_master_instance, i2c_write_complete_callback,
 			I2C_MASTER_CALLBACK_WRITE_COMPLETE);
 	//! [callback_reg]
 	//! [callback_en]
-	i2c_master_enable_callback(&i2c_sw_instance,
+	i2c_master_enable_callback(&i2c_master_instance,
 			I2C_MASTER_CALLBACK_WRITE_COMPLETE);
 	//! [callback_en]
 }
@@ -158,7 +158,7 @@ int main(void)
 
 	/* Initiate first packet to be sent to slave. */
 	//! [write_packet]
-	i2c_master_write_packet_job(&i2c_sw_instance, &packet);
+	i2c_master_write_packet_job(&i2c_master_instance, &packet);
 	//! [write_packet]
 
 	//! [while]

@@ -44,7 +44,7 @@
 void configure_tc(void);
 
 //! [module_inst]
-struct tc_module pwm_tc_module;
+struct tc_module tc_instance;
 //! [module_inst]
 
 //! [setup]
@@ -70,11 +70,11 @@ void configure_tc(void)
 	//! [setup_change_config_pwm]
 
 	//! [setup_set_config]
-	tc_init(&pwm_tc_module, PWM_MODULE, &config);
+	tc_init(&tc_instance, PWM_MODULE, &config);
 	//! [setup_set_config]
 
 	//! [setup_enable]
-	tc_enable(&pwm_tc_module);
+	tc_enable(&tc_instance);
 	//! [setup_enable]
 }
 //! [setup]

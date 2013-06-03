@@ -65,7 +65,10 @@ void configure_extint_channel(void)
 //! [setup_4]
 	extint_chan_set_config(BUTTON_0_EIC_LINE, &eint_chan_conf);
 //! [setup_4]
+}
 
+void configure_extint_callbacks(void)
+{
 //! [setup_5]
 	extint_register_callback(extint_detection_callback,
 			EXTINT_CALLBACK_TYPE_DETECT);
@@ -93,6 +96,7 @@ int main(void)
 	//! [setup_init]
 	extint_enable();
 	configure_extint_channel();
+	configure_extint_callbacks();
 
 	system_interrupt_enable_global();
 	//! [setup_init]

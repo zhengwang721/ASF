@@ -50,7 +50,7 @@ void configure_usart(void);
 void configure_usart_callbacks(void);
 
 //! [module_inst]
-struct usart_module usart_edbg;
+struct usart_module usart_instance;
 //! [module_inst]
 
 //! [rx_buffer_var]
@@ -62,7 +62,7 @@ volatile uint8_t rx_buffer[MAX_RX_BUFFER_LENGTH];
 //! [callback_funcs]
 void usart_read_callback(const struct usart_module *const usart_module)
 {
-	usart_write_buffer_job(&usart_edbg,
+	usart_write_buffer_job(&usart_instance,
 			(uint8_t *)rx_buffer, MAX_RX_BUFFER_LENGTH);
 }
 
@@ -92,33 +92,33 @@ void configure_usart(void)
 //! [setup_change_config]
 
 //! [setup_set_config]
-	while (usart_init(&usart_edbg,
+	while (usart_init(&usart_instance,
 			EDBG_CDC_MODULE, &config_struct) != STATUS_OK) {
 	}
 //! [setup_set_config]
 
 //! [setup_enable]
-	usart_enable(&usart_edbg);
+	usart_enable(&usart_instance);
 //! [setup_enable]
 
 //! [setup_enable_txrx]
-	usart_enable_transceiver(&usart_edbg, USART_TRANSCEIVER_TX);
-	usart_enable_transceiver(&usart_edbg, USART_TRANSCEIVER_RX);
+	usart_enable_transceiver(&usart_instance, USART_TRANSCEIVER_TX);
+	usart_enable_transceiver(&usart_instance, USART_TRANSCEIVER_RX);
 //! [setup_enable_txrx]
 }
 
 void configure_usart_callbacks(void)
 {
 //! [setup_register_callbacks]
-	usart_register_callback(&usart_edbg,
+	usart_register_callback(&usart_instance,
 			usart_write_callback, USART_CALLBACK_BUFFER_TRANSMITTED);
-	usart_register_callback(&usart_edbg,
+	usart_register_callback(&usart_instance,
 			usart_read_callback, USART_CALLBACK_BUFFER_RECEIVED);
 //! [setup_register_callbacks]
 
 //! [setup_enable_callbacks]
-	usart_enable_callback(&usart_edbg, USART_CALLBACK_BUFFER_TRANSMITTED);
-	usart_enable_callback(&usart_edbg, USART_CALLBACK_BUFFER_RECEIVED);
+	usart_enable_callback(&usart_instance, USART_CALLBACK_BUFFER_TRANSMITTED);
+	usart_enable_callback(&usart_instance, USART_CALLBACK_BUFFER_RECEIVED);
 //! [setup_enable_callbacks]
 }
 //! [setup]
@@ -139,14 +139,14 @@ int main(void)
 
 //! [main_send_string]
 	uint8_t string[] = "Hello World!\r\n";
-	usart_write_buffer_job(&usart_edbg, string, sizeof(string));
+	usart_write_buffer_job(&usart_instance, string, sizeof(string));
 //! [main_send_string]
 
 //! [main_loop]
 	while (true) {
 //! [main_loop]
 //! [main_read]
-		usart_read_buffer_job(&usart_edbg,
+		usart_read_buffer_job(&usart_instance,
 				(uint8_t *)rx_buffer, MAX_RX_BUFFER_LENGTH);
 //! [main_read]
 	}

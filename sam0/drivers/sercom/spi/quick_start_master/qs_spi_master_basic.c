@@ -57,17 +57,17 @@ static const uint8_t buffer[BUF_LENGTH] = {
 //! [buffer]
 
 //! [dev_inst]
-struct spi_module master;
+struct spi_module spi_master_instance;
 //! [dev_inst]
 //! [slave_dev_inst]
 struct spi_slave_inst slave;
 //! [slave_dev_inst]
 //! [setup]
 
-void configure_spi(void);
+void configure_spi_master(void);
 
 //! [configure_spi]
-void configure_spi(void)
+void configure_spi_master(void)
 {
 //! [config]
 	struct spi_config config;
@@ -109,11 +109,11 @@ void configure_spi(void)
 	config.pinmux_pad3 = EXT1_SPI_SERCOM_PINMUX_PAD3;
 //! [sck]
 //! [init]
-	spi_init(&master, EXT1_SPI_MODULE, &config);
+	spi_init(&spi_master_instance, EXT1_SPI_MODULE, &config);
 //! [init]
 
 //! [enable]
-	spi_enable(&master);
+	spi_enable(&spi_master_instance);
 //! [enable]
 
 }
@@ -126,19 +126,19 @@ int main(void)
 	system_init();
 //! [system_init]
 //! [run_config]
-	configure_spi();
+	configure_spi_master();
 //! [run_config]
 //! [main_setup]
 
 //! [main_use_case]
 //! [select_slave]
-	spi_select_slave(&master, &slave, true);
+	spi_select_slave(&spi_master_instance, &slave, true);
 //! [select_slave]
 //! [write]
-	spi_write_buffer_wait(&master, buffer, BUF_LENGTH);
+	spi_write_buffer_wait(&spi_master_instance, buffer, BUF_LENGTH);
 //! [write]
 //! [deselect_slave]
-	spi_select_slave(&master, &slave, false);
+	spi_select_slave(&spi_master_instance, &slave, false);
 //! [deselect_slave]
 
 //! [inf_loop]

@@ -48,13 +48,13 @@ bool callback_status = false;
 
 void configure_ac(void);
 void configure_ac_channel(void);
-void configure_ac_callback(void);
+void configure_ac_callbacks(void);
 void callback_function_ac(struct ac_module *const module_inst);
 
 //! [setup]
 /* AC module software instance (must not go out of scope while in use) */
 //! [setup_1]
-static struct ac_module ac_dev;
+static struct ac_module ac_instance;
 //! [setup_1]
 
 /* Comparator channel that will be used */
@@ -79,7 +79,7 @@ void configure_ac(void)
 
 	/* Initialize and enable the Analog Comparator with the user settings */
 	//! [setup_6]
-	ac_init(&ac_dev, AC, &ac_config);
+	ac_init(&ac_instance, AC, &ac_config);
 	//! [setup_6]
 }
 
@@ -117,7 +117,7 @@ void configure_ac_channel(void)
 	/* Initialize and enable the Analog Comparator channel with the user
 	 * settings */
 	//! [setup_12]
-	ac_chan_set_config(&ac_dev, AC_COMPARATOR_CHANNEL, &ac_chan_conf);
+	ac_chan_set_config(&ac_instance, AC_COMPARATOR_CHANNEL, &ac_chan_conf);
 	//! [setup_12]
 }
 
@@ -131,10 +131,10 @@ void callback_function_ac(struct ac_module *const module_inst)
 //! [callback_1]
 
 //! [setup_13]
-void configure_ac_callback(void)
+void configure_ac_callbacks(void)
 {
 	//! [setup_14]
-	ac_register_callback(&ac_dev, callback_function_ac, AC_CALLBACK_COMPARATOR_0);
+	ac_register_callback(&ac_instance, callback_function_ac, AC_CALLBACK_COMPARATOR_0);
 	//! [setup_14]
 }
 //! [setup_13]
@@ -147,21 +147,21 @@ int main(void)
 	system_init();
 	configure_ac();
 	configure_ac_channel();
-	configure_ac_callback();
+	configure_ac_callbacks();
 	//! [setup_15]
-	ac_chan_enable(&ac_dev, AC_COMPARATOR_CHANNEL);
+	ac_chan_enable(&ac_instance, AC_COMPARATOR_CHANNEL);
 	//! [setup_15]
 	//! [setup_16]
-	ac_enable(&ac_dev);
+	ac_enable(&ac_instance);
 	//! [setup_16]
 	//! [setup_17]
-	ac_enable_callback(&ac_dev, AC_CALLBACK_COMPARATOR_0);
+	ac_enable_callback(&ac_instance, AC_CALLBACK_COMPARATOR_0);
 	//! [setup_17]
 	//! [setup_init]
 
 	//! [main]
 	//! [main_1]
-	ac_chan_trigger_single_shot(&ac_dev, AC_COMPARATOR_CHANNEL);
+	ac_chan_trigger_single_shot(&ac_instance, AC_COMPARATOR_CHANNEL);
 	//! [main_1]
 
 	//! [main_2]
@@ -177,14 +177,14 @@ int main(void)
 			//! [main_5]
 			do
 			{
-				last_comparison = ac_chan_get_status(&ac_dev, AC_COMPARATOR_CHANNEL);
+				last_comparison = ac_chan_get_status(&ac_instance, AC_COMPARATOR_CHANNEL);
 			} while (last_comparison == AC_CHAN_STATUS_UNKNOWN);
 			//! [main_5]
 			//! [main_6]
 			port_pin_set_output_level(LED_0_PIN, (last_comparison == AC_CHAN_STATUS_NEG_ABOVE_POS));
 			//! [main_6]
 			//! [main_7]
-			ac_chan_trigger_single_shot(&ac_dev, AC_COMPARATOR_CHANNEL);
+			ac_chan_trigger_single_shot(&ac_instance, AC_COMPARATOR_CHANNEL);
 			//! [main_7]
 			//! [main_8]
 			callback_status = false;
