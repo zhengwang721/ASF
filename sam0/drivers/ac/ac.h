@@ -1017,7 +1017,7 @@ static inline uint8_t ac_chan_get_status(
 
 	Ac *const ac_module = module_inst->hw;
 
-	uint8_t status_mask;
+	uint8_t status_mask = 0;
 
 	if (ac_module->INTFLAG.reg & (1 << channel)) {
 		status_mask = AC_CHAN_STATUS_INTERRUPT_SET;
