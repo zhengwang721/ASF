@@ -135,10 +135,10 @@ static void cdc_uart_init(void)
 
 	/* Configure USART for unit test output */
 	usart_get_config_defaults(&cdc_uart_config);
-	cdc_uart_config.mux_settings     = USART_RX_3_TX_2_XCK_3;
-	cdc_uart_config.pinout_pad3      = EDBG_CDC_RX_PINMUX;
-	cdc_uart_config.pinout_pad2      = EDBG_CDC_TX_PINMUX;
-	cdc_uart_config.baudrate         = 115200;
+	cdc_uart_config.mux_setting     = USART_RX_3_TX_2_XCK_3;
+	cdc_uart_config.pinmux_pad3     = EDBG_UART_RX_PINMUX;
+	cdc_uart_config.pinmux_pad2     = EDBG_UART_TX_PINMUX;
+	cdc_uart_config.baudrate        = 115200;
 	stdio_serial_init(&cdc_uart_module, EDBG_CDC_MODULE, &cdc_uart_config);
 	usart_enable(&cdc_uart_module);
 	/* Enable transceivers */
@@ -237,7 +237,7 @@ static void run_ac_init_test(const struct test_case *test)
  */
 static void run_ac_single_shot_test(const struct test_case *test)
 {
-	volatile enum ac_chan_status state = AC_CHAN_STATUS_UNKNOWN;
+	volatile uint32_t state = AC_CHAN_STATUS_UNKNOWN;
 
 	/* Skip test if initialization failed */
 	test_assert_true(test, ac_init_success,
@@ -250,6 +250,7 @@ static void run_ac_single_shot_test(const struct test_case *test)
 	while (!ac_chan_is_ready(&ac_inst, AC_CHAN_CHANNEL_0)) {
 	}
 	state = ac_chan_get_status(&ac_inst, AC_CHAN_CHANNEL_0);
+	state = state & AC_CHAN_STATUS_NEG_ABOVE_POS;
 	test_assert_true(test, state == AC_CHAN_STATUS_NEG_ABOVE_POS,
 			"AC comparison failed: POS < NEG not detected");
 
@@ -261,7 +262,8 @@ static void run_ac_single_shot_test(const struct test_case *test)
 	while (!ac_chan_is_ready(&ac_inst, AC_CHAN_CHANNEL_0)) {
 	}
 	state = ac_chan_get_status(&ac_inst, AC_CHAN_CHANNEL_0);
-	test_assert_true(test, state == AC_CHAN_STATUS_INTERRUPT_SET,
+	state = state & AC_CHAN_STATUS_POS_ABOVE_NEG;
+	test_assert_true(test, state == AC_CHAN_STATUS_POS_ABOVE_NEG,
 			"AC comparison failed: Interrupt not detected");
 	ac_chan_clear_status(&ac_inst, AC_CHAN_CHANNEL_0);
 }
@@ -494,7 +496,7 @@ static void setup_ac_window_mode_test(const struct test_case *test)
  */
 static void run_ac_window_mode_test(const struct test_case *test)
 {
-	volatile enum ac_win_status state = AC_WIN_STATUS_UNKNOWN;
+	volatile uint32_t state = AC_WIN_STATUS_UNKNOWN;
 
 	/* Skip test if initialization failed */
 	test_assert_true(test, ac_init_success,
@@ -507,6 +509,7 @@ static void run_ac_window_mode_test(const struct test_case *test)
 	while (!ac_win_is_ready(&ac_inst, AC_WIN_CHANNEL_0)) {
 	}
 	state = ac_win_get_status(&ac_inst, AC_WIN_CHANNEL_0);
+	state = state & AC_WIN_STATUS_BELOW;
 	test_assert_true(test, state == AC_WIN_STATUS_BELOW,
 			"AC window mode: Less than lower limit not detected");
 	ac_win_clear_status(&ac_inst, AC_WIN_CHANNEL_0);
@@ -521,8 +524,9 @@ static void run_ac_window_mode_test(const struct test_case *test)
 	while (!ac_win_is_ready(&ac_inst, AC_WIN_CHANNEL_0)) {
 	}
 	state = ac_win_get_status(&ac_inst, AC_WIN_CHANNEL_0);
-	/* test_assert_true(test, state == AC_WIN_STATUS_INSIDE, */
-	/* "AC window mode: Within limit not detected"); */
+	state = state & AC_WIN_STATUS_INSIDE;
+	test_assert_true(test, state == AC_WIN_STATUS_INSIDE, 
+			"AC window mode: Within limit not detected");
 	ac_win_clear_status(&ac_inst, AC_WIN_CHANNEL_0);
 	ac_chan_clear_status(&ac_inst, AC_CHAN_CHANNEL_0);
 	ac_chan_clear_status(&ac_inst, AC_CHAN_CHANNEL_1);
@@ -535,6 +539,7 @@ static void run_ac_window_mode_test(const struct test_case *test)
 	while (!ac_win_is_ready(&ac_inst, AC_WIN_CHANNEL_0)) {
 	}
 	state = ac_win_get_status(&ac_inst, AC_WIN_CHANNEL_0);
+	state = state & AC_WIN_STATUS_ABOVE;
 	test_assert_true(test, state == AC_WIN_STATUS_ABOVE,
 			"AC window mode: More than upper limit not detected");
 	ac_win_clear_status(&ac_inst, AC_WIN_CHANNEL_0);
