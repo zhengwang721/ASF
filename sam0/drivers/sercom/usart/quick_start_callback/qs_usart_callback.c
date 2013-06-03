@@ -76,24 +76,24 @@ void usart_write_callback(const struct usart_module *const usart_module)
 void configure_usart(void)
 {
 //! [setup_config]
-	struct usart_config config_struct;
+	struct usart_config config_usart;
 //! [setup_config]
 //! [setup_config_defaults]
-	usart_get_config_defaults(&config_struct);
+	usart_get_config_defaults(&config_usart);
 //! [setup_config_defaults]
 
 //! [setup_change_config]
-	config_struct.baudrate    = 9600;
-	config_struct.mux_setting = EDBG_CDC_SERCOM_MUX_SETTING;
-	config_struct.pinmux_pad0 = EDBG_CDC_SERCOM_PINMUX_PAD0;
-	config_struct.pinmux_pad1 = EDBG_CDC_SERCOM_PINMUX_PAD1;
-	config_struct.pinmux_pad2 = EDBG_CDC_SERCOM_PINMUX_PAD2;
-	config_struct.pinmux_pad3 = EDBG_CDC_SERCOM_PINMUX_PAD3;
+	config_usart.baudrate    = 9600;
+	config_usart.mux_setting = EDBG_CDC_SERCOM_MUX_SETTING;
+	config_usart.pinmux_pad0 = EDBG_CDC_SERCOM_PINMUX_PAD0;
+	config_usart.pinmux_pad1 = EDBG_CDC_SERCOM_PINMUX_PAD1;
+	config_usart.pinmux_pad2 = EDBG_CDC_SERCOM_PINMUX_PAD2;
+	config_usart.pinmux_pad3 = EDBG_CDC_SERCOM_PINMUX_PAD3;
 //! [setup_change_config]
 
 //! [setup_set_config]
 	while (usart_init(&usart_instance,
-			EDBG_CDC_MODULE, &config_struct) != STATUS_OK) {
+			EDBG_CDC_MODULE, &config_usart) != STATUS_OK) {
 	}
 //! [setup_set_config]
 

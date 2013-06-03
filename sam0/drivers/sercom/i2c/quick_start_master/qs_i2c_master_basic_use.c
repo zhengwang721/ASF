@@ -69,18 +69,18 @@ void configure_i2c_master(void)
 {
 	/* Initialize config structure and software module. */
 	//! [init_conf]
-	struct i2c_master_config conf;
-	i2c_master_get_config_defaults(&conf);
+	struct i2c_master_config config_i2c_master;
+	i2c_master_get_config_defaults(&config_i2c_master);
 	//! [init_conf]
 
 	/* Change buffer timeout to something longer. */
 	//! [conf_change]
-	conf.buffer_timeout = 10000;
+	config_i2c_master.buffer_timeout = 10000;
 	//! [conf_change]
 
 	/* Initialize and enable device with config. */
 	//! [init_module]
-	i2c_master_init(&i2c_master_instance, SERCOM2, &conf);
+	i2c_master_init(&i2c_master_instance, SERCOM2, &config_i2c_master);
 	//! [init_module]
 
 	//! [enable_module]

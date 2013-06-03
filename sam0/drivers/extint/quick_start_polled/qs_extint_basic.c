@@ -48,20 +48,20 @@ void configure_extint_channel(void);
 void configure_extint_channel(void)
 {
 //! [setup_1]
-	struct extint_chan_conf eint_chan_conf;
+	struct extint_chan_conf config_extint_chan;
 //! [setup_1]
 //! [setup_2]
-	extint_chan_get_config_defaults(&eint_chan_conf);
+	extint_chan_get_config_defaults(&config_extint_chan);
 //! [setup_2]
 
 //! [setup_3]
-	eint_chan_conf.gpio_pin           = BUTTON_0_EIC_PIN;
-	eint_chan_conf.gpio_pin_mux       = BUTTON_0_EIC_MUX;
-	eint_chan_conf.gpio_pin_pull      = EXTINT_PULL_UP;
-	eint_chan_conf.detection_criteria = EXTINT_DETECT_BOTH;
+	config_extint_chan.gpio_pin           = BUTTON_0_EIC_PIN;
+	config_extint_chan.gpio_pin_mux       = BUTTON_0_EIC_MUX;
+	config_extint_chan.gpio_pin_pull      = EXTINT_PULL_UP;
+	config_extint_chan.detection_criteria = EXTINT_DETECT_BOTH;
 //! [setup_3]
 //! [setup_4]
-	extint_chan_set_config(BUTTON_0_EIC_LINE, &eint_chan_conf);
+	extint_chan_set_config(BUTTON_0_EIC_LINE, &config_extint_chan);
 //! [setup_4]
 }
 //! [setup]

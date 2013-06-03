@@ -63,17 +63,17 @@ void configure_ac(void)
 	/* Create a new configuration structure for the Analog Comparator settings
 	 * and fill with the default module settings. */
 	//! [setup_4]
-	struct ac_config ac_config;
+	struct config_ac config_ac;
 	//! [setup_4]
 	//! [setup_5]
-	ac_get_config_defaults(&ac_config);
+	ac_get_config_defaults(&config_ac);
 	//! [setup_5]
 
 	/* Alter any Analog Comparator configuration settings here if required */
 
 	/* Initialize and enable the Analog Comparator with the user settings */
 	//! [setup_6]
-	ac_init(&ac_instance, AC, &ac_config);
+	ac_init(&ac_instance, AC, &config_ac);
 	//! [setup_6]
 }
 

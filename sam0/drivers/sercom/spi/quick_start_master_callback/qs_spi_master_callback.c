@@ -95,7 +95,7 @@ void configure_spi_master_callbacks(void)
 void configure_spi_master(void)
 {
 //! [config]
-	struct spi_config config;
+	struct spi_config config_spi_master;
 //! [config]
 //! [slave_config]
 	struct spi_slave_inst_config slave_dev_config;
@@ -112,29 +112,29 @@ void configure_spi_master(void)
 //! [slave_init]
 	/* Configure, initialize and enable SERCOM SPI module */
 //! [conf_defaults]
-	spi_get_config_defaults(&config);
+	spi_get_config_defaults(&config_spi_master);
 //! [conf_defaults]
 //! [mux_setting]
-	config.mux_setting = EXT1_SPI_SERCOM_MUX_SETTING;
+	config_spi_master.mux_setting = EXT1_SPI_SERCOM_MUX_SETTING;
 //! [mux_setting]
 	/* Configure pad 0 for data in */
 //! [di]
-	config.pinmux_pad0 = EXT1_SPI_SERCOM_PINMUX_PAD0;
+	config_spi_master.pinmux_pad0 = EXT1_SPI_SERCOM_PINMUX_PAD0;
 //! [di]
 	/* Configure pad 1 as unused */
 //! [ss]
-	config.pinmux_pad1 = PINMUX_UNUSED;
+	config_spi_master.pinmux_pad1 = PINMUX_UNUSED;
 //! [ss]
 	/* Configure pad 2 for data out */
 //! [do]
-	config.pinmux_pad2 = EXT1_SPI_SERCOM_PINMUX_PAD2;
+	config_spi_master.pinmux_pad2 = EXT1_SPI_SERCOM_PINMUX_PAD2;
 //! [do]
 	/* Configure pad 3 for SCK */
 //! [sck]
-	config.pinmux_pad3 = EXT1_SPI_SERCOM_PINMUX_PAD3;
+	config_spi_master.pinmux_pad3 = EXT1_SPI_SERCOM_PINMUX_PAD3;
 //! [sck]
 //! [init]
-	spi_init(&spi_master_instance, EXT1_SPI_MODULE, &config);
+	spi_init(&spi_master_instance, EXT1_SPI_MODULE, &config_spi_master);
 //! [init]
 
 //! [enable]

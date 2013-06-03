@@ -66,26 +66,26 @@ void tc_callback_to_change_duty_cycle(
 void configure_tc(void)
 {
 	//! [setup_config]
-	struct tc_config config;
+	struct tc_config config_tc;
 	//! [setup_config]
 	//! [setup_config_defaults]
-	tc_get_config_defaults(&config);
+	tc_get_config_defaults(&config_tc);
 	//! [setup_config_defaults]
 
 	//! [setup_change_config]
-	config.counter_size    = TC_COUNTER_SIZE_16BIT;
-	config.wave_generation = TC_WAVE_GENERATION_NORMAL_PWM;
-	config.size_specific.size_16_bit.compare_capture_channel[0] = 0xFFFF;
+	config_tc.counter_size    = TC_COUNTER_SIZE_16BIT;
+	config_tc.wave_generation = TC_WAVE_GENERATION_NORMAL_PWM;
+	config_tc.size_specific.size_16_bit.compare_capture_channel[0] = 0xFFFF;
 	//! [setup_change_config]
 
 	//! [setup_change_config_pwm]
-	config.channel_pwm_out_enabled[0] = true;
-	config.channel_pwm_out_pin[0]     = PWM_OUT_PIN;
-	config.channel_pwm_out_mux[0]     = PWM_OUT_MUX;
+	config_tc.channel_pwm_out_enabled[0] = true;
+	config_tc.channel_pwm_out_pin[0]     = PWM_OUT_PIN;
+	config_tc.channel_pwm_out_mux[0]     = PWM_OUT_MUX;
 	//! [setup_change_config_pwm]
 
 	//! [setup_set_config]
-	tc_init(&tc_instance, PWM_MODULE, &config);
+	tc_init(&tc_instance, PWM_MODULE, &config_tc);
 	//! [setup_set_config]
 
 	//! [setup_enable]

@@ -69,17 +69,17 @@ void configure_ac(void)
 	/* Create a new configuration structure for the Analog Comparator settings
 	 * and fill with the default module settings. */
 	//! [setup_4]
-	struct ac_config ac_config;
+	struct config_ac config_ac;
 	//! [setup_4]
 	//! [setup_5]
-	ac_get_config_defaults(&ac_config);
+	ac_get_config_defaults(&config_ac);
 	//! [setup_5]
 
 	/* Alter any Analog Comparator configuration settings here if required */
 
 	/* Initialize and enable the Analog Comparator with the user settings */
 	//! [setup_6]
-	ac_init(&ac_instance, AC, &ac_config);
+	ac_init(&ac_instance, AC, &config_ac);
 	//! [setup_6]
 }
 
@@ -90,19 +90,19 @@ void configure_ac_channel(void)
 	/* Create a new configuration structure for the Analog Comparator channel
 	 * settings and fill with the default module channel settings. */
 	//! [setup_8]
-	struct ac_chan_config ac_chan_conf;
+	struct ac_chan_config config_ac_chan;
 	//! [setup_8]
 	//! [setup_9]
-	ac_chan_get_config_defaults(&ac_chan_conf);
+	ac_chan_get_config_defaults(&config_ac_chan);
 	//! [setup_9]
 
 	/* Set the Analog Comparator channel configuration settings */
 	//! [setup_10]
-	ac_chan_conf.sample_mode         = AC_CHAN_MODE_SINGLE_SHOT;
-	ac_chan_conf.positive_input      = AC_CHAN_POS_MUX_PIN0;
-	ac_chan_conf.negative_input      = AC_CHAN_NEG_MUX_SCALED_VCC;
-	ac_chan_conf.vcc_scale_factor    = 32;
-	ac_chan_conf.interrupt_selection = AC_CHAN_INTERRUPT_SELECTION_END_OF_COMPARE;
+	config_ac_chan.sample_mode         = AC_CHAN_MODE_SINGLE_SHOT;
+	config_ac_chan.positive_input      = AC_CHAN_POS_MUX_PIN0;
+	config_ac_chan.negative_input      = AC_CHAN_NEG_MUX_SCALED_VCC;
+	config_ac_chan.vcc_scale_factor    = 32;
+	config_ac_chan.interrupt_selection = AC_CHAN_INTERRUPT_SELECTION_END_OF_COMPARE;
 	//! [setup_10]
 
 	/* Set up a pin as an AC channel input */
@@ -117,7 +117,7 @@ void configure_ac_channel(void)
 	/* Initialize and enable the Analog Comparator channel with the user
 	 * settings */
 	//! [setup_12]
-	ac_chan_set_config(&ac_instance, AC_COMPARATOR_CHANNEL, &ac_chan_conf);
+	ac_chan_set_config(&ac_instance, AC_COMPARATOR_CHANNEL, &config_ac_chan);
 	//! [setup_12]
 }
 

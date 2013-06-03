@@ -65,42 +65,42 @@ struct spi_module spi_slave_instance;
 void configure_spi_slave(void)
 {
 //! [config]
-	struct spi_config config;
+	struct spi_config config_spi_slave;
 //! [config]
 	/* Configure, initialize and enable SERCOM SPI module */
 //! [conf_defaults]
-	spi_get_config_defaults(&config);
+	spi_get_config_defaults(&config_spi_slave);
 //! [conf_defaults]
 //! [conf_spi_slave_instance]
-	config.mode = SPI_MODE_SLAVE;
+	config_spi_slave.mode = SPI_MODE_SLAVE;
 //! [conf_spi_slave_instance]
 //! [conf_preload]
-	config.spi_slave_instance.preload_enable = true;
+	config_spi_slave.spi_slave_instance.preload_enable = true;
 //! [conf_preload]
 //! [conf_format]
-	config.spi_slave_instance.frame_format = SPI_FRAME_FORMAT_SPI_FRAME;
+	config_spi_slave.spi_slave_instance.frame_format = SPI_FRAME_FORMAT_SPI_FRAME;
 //! [conf_format]
 //! [mux_setting]
-	config.mux_setting = EXT1_SPI_SERCOM_MUX_SETTING;
+	config_spi_slave.mux_setting = EXT1_SPI_SERCOM_MUX_SETTING;
 //! [mux_setting]
 	/* Configure pad 0 for data in */
 //! [di]
-	config.pinmux_pad0 = EXT1_SPI_SERCOM_PINMUX_PAD0;
+	config_spi_slave.pinmux_pad0 = EXT1_SPI_SERCOM_PINMUX_PAD0;
 //! [di]
 	/* Configure pad 1 as unused */
 //! [ss]
-	config.pinmux_pad1 = EXT1_SPI_SERCOM_PINMUX_PAD1;
+	config_spi_slave.pinmux_pad1 = EXT1_SPI_SERCOM_PINMUX_PAD1;
 //! [ss]
 	/* Configure pad 2 for data out */
 //! [do]
-	config.pinmux_pad2 = EXT1_SPI_SERCOM_PINMUX_PAD2;
+	config_spi_slave.pinmux_pad2 = EXT1_SPI_SERCOM_PINMUX_PAD2;
 //! [do]
 	/* Configure pad 3 for SCK */
 //! [sck]
-	config.pinmux_pad3 = EXT1_SPI_SERCOM_PINMUX_PAD3;
+	config_spi_slave.pinmux_pad3 = EXT1_SPI_SERCOM_PINMUX_PAD3;
 //! [sck]
 //! [init]
-	spi_init(&spi_slave_instance, EXT1_SPI_MODULE, &config);
+	spi_init(&spi_slave_instance, EXT1_SPI_MODULE, &config_spi_slave);
 //! [init]
 
 //! [enable]

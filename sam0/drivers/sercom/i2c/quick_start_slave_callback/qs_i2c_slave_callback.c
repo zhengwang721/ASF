@@ -112,17 +112,17 @@ void configure_i2c_slave(void)
 {
 	/* Initialize config structure and module instance. */
 	//! [init_conf]
-	struct i2c_slave_config conf;
-	i2c_slave_get_config_defaults(&conf);
+	struct i2c_slave_config config_i2c_slave;
+	i2c_slave_get_config_defaults(&config_i2c_slave);
 	//! [init_conf]
 	/* Change address and address_mode. */
 	//! [conf_changes]
-	conf.address      = SLAVE_ADDRESS;
-	conf.address_mode = I2C_SLAVE_ADDRESS_MODE_MASK;
+	config_i2c_slave.address      = SLAVE_ADDRESS;
+	config_i2c_slave.address_mode = I2C_SLAVE_ADDRESS_MODE_MASK;
 	//! [conf_changes]
 	/* Initialize and enable device with config. */
 	//! [init_module]
-	i2c_slave_init(&i2c_slave_instance, SERCOM2, &conf);
+	i2c_slave_init(&i2c_slave_instance, SERCOM2, &config_i2c_slave);
 	//! [init_module]
 
 	//! [enable_module]
