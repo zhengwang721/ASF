@@ -71,7 +71,8 @@ typedef struct {
   RwReg ADC_CWR;       /**< \brief (Adc Offset: 0x44) Compare Window Register */
   RoReg Reserved2[2];
   RoReg ADC_CDR[17];   /**< \brief (Adc Offset: 0x50) Channel Data Register */
-  RoReg Reserved3[20];
+  RwReg ADC_RCR;       /**< \brief (Adc Offset: 0x94) Analog Control Register */
+  RoReg Reserved3[19];
   RwReg ADC_WPMR;      /**< \brief (Adc Offset: 0xE4) Write Protect Mode Register */
   RoReg ADC_WPSR;      /**< \brief (Adc Offset: 0xE8) Write Protect Status Register */
   RoReg Reserved4[5];
@@ -412,6 +413,16 @@ typedef struct {
 /* -------- ADC_CDR[17] : (ADC Offset: 0x50) Channel Data Register -------- */
 #define ADC_CDR_DATA_Pos 0
 #define ADC_CDR_DATA_Msk (0xfffu << ADC_CDR_DATA_Pos) /**< \brief (ADC_CDR[17]) Converted Data */
+/* -------- ADC_ACR : (ADC Offset: 0x94) Analog Control Register -------- */
+#define ADC_CDR_IRVCE_Pos 2
+#define ADC_CDR_IRVCE_EN (0x1u << ADC_CDR_IRVCE_Pos) /**< \brief Internal reference voltage is defined by field IRVS */
+#define ADC_CDR_IRVS_Pos 3
+#define ADC_CDR_IRVS_Msk (0xfu << ADC_CDR_IRVS_Pos) /**< \brief Internal reference voltage selection */
+#define ADC_CDR_IRVS(value) ((ADC_CDR_IRVS_Msk & ((value) << ADC_CDR_IRVS_Pos)))
+#define ADC_CDR_FORCEREF_Pos 19
+#define ADC_CDR_FORCEREF_EN (0x1u << ADC_CDR_FORCEREF_Pos) /**< \brief Force internal reference voltage */
+#define ADC_CDR_ONREF_Pos 20
+#define ADC_CDR_ONREF_EN (0x1u << ADC_CDR_ONREF_Pos) /**< \brief Internal voltage reference ON */
 /* -------- ADC_WPMR : (ADC Offset: 0xE4) Write Protect Mode Register -------- */
 #define ADC_WPMR_WPEN (0x1u << 0) /**< \brief (ADC_WPMR) Write Protect Enable */
 #define ADC_WPMR_WPKEY_Pos 8
