@@ -383,9 +383,9 @@ void ac_win_disable(
  *  \param[in] module_inst  Software instance for the Analog Comparator peripheral
  *  \param[in] win_channel  Comparator Window channel to test
  *
- *  \return Current window comparison state mask.
+ *  \return Bit mask of window channel status flags
  */
-uint32_t ac_win_get_status(
+uint8_t ac_win_get_status(
 		struct ac_module *const module_inst,
 		const enum ac_win_channel win_channel)
 {
@@ -397,7 +397,10 @@ uint32_t ac_win_get_status(
 
 	uint32_t win_status = 0;
 
-	win_status = ac_module->INTFLAG.reg & (AC_INTFLAG_WIN0 << win_channel);
+	/* Check if interrupt flag is set */
+	if (ac_module->INTFLAG.reg & (AC_INTFLAG_WIN0 << win_channel)) {
+		win_status |= AC_WIN_STATUS_INTERRUPT_SET;
+	}
 
 	/* If one or both window comparators not ready, return unknown result */
 	if (ac_win_is_ready(module_inst, win_channel) == false) {
@@ -405,30 +408,15 @@ uint32_t ac_win_get_status(
 		return win_status;
 	}
 
-	/* Extract window comparison state bits */
-	switch (win_channel)
-	{
-		case AC_WIN_CHANNEL_0:
-			win_status = ac_module->STATUSA.bit.WSTATE0;
-			break;
-
-#if (AC_PAIRS > 1)
-		case AC_WIN_CHANNEL_1:
-			win_status = ac_module->STATUSA.bit.WSTATE1;
-			break;
-#endif
-	}
+	uint8_t statusa_tmp = ac_module->STATUSA.reg;
 
 	/* Map hardware comparison states to logical window states */
-	switch (win_status)
-	{
-		case (AC_STATUSA_WSTATE0_ABOVE >> AC_STATUSA_WSTATE0_Pos):
-			return win_status | AC_WIN_STATUS_ABOVE;
-		case (AC_STATUSA_WSTATE0_BELOW >> AC_STATUSA_WSTATE0_Pos):
-			return win_status | AC_WIN_STATUS_BELOW;
-		case (AC_STATUSA_WSTATE0_INSIDE >> AC_STATUSA_WSTATE0_Pos):
-			return win_status | AC_WIN_STATUS_INSIDE;
-		default:
-			return win_status | AC_WIN_STATUS_UNKNOWN;
+	if (statusa_tmp & (AC_STATUSA_WSTATE0_BELOW << win_channel)) {
+		return win_status | AC_WIN_STATUS_BELOW;
+	} else if (statusa_tmp & (AC_STATUSA_WSTATE0_INSIDE << win_channel)) {
+		return win_status | AC_WIN_STATUS_INSIDE;
+	} else {
+		return win_status | AC_WIN_STATUS_ABOVE;
 	}
+
 }

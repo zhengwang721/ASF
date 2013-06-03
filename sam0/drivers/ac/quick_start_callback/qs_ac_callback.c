@@ -165,7 +165,7 @@ int main(void)
 	//! [main_1]
 
 	//! [main_2]
-	enum ac_chan_status last_comparison = AC_CHAN_STATUS_UNKNOWN;
+	uint8_t last_comparison = AC_CHAN_STATUS_UNKNOWN;
 	//! [main_2]
 	port_pin_set_output_level(LED_0_PIN, true);
 	//! [main_3]
@@ -177,11 +177,13 @@ int main(void)
 			//! [main_5]
 			do
 			{
-				last_comparison = ac_chan_get_status(&ac_instance, AC_COMPARATOR_CHANNEL);
-			} while (last_comparison == AC_CHAN_STATUS_UNKNOWN);
+				last_comparison = ac_chan_get_status(&ac_instance,
+						AC_COMPARATOR_CHANNEL);
+			} while (last_comparison & AC_CHAN_STATUS_UNKNOWN);
 			//! [main_5]
 			//! [main_6]
-			port_pin_set_output_level(LED_0_PIN, (last_comparison == AC_CHAN_STATUS_NEG_ABOVE_POS));
+			port_pin_set_output_level(LED_0_PIN,
+					(last_comparison & AC_CHAN_STATUS_NEG_ABOVE_POS));
 			//! [main_6]
 			//! [main_7]
 			ac_chan_trigger_single_shot(&ac_instance, AC_COMPARATOR_CHANNEL);
