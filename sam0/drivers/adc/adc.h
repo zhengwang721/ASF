@@ -1024,11 +1024,11 @@ static inline void adc_get_config_defaults(struct adc_config *const config)
 	config->reference_compensation_enable = false;
 	config->correction.correction_enable  = true;
 	config->correction.gain_correction    =
-			(*(uint32_t *)(ADC_FUSES_GAINCORR_ADDR)) &
-			ADC_FUSES_GAINCORR_Msk >> ADC_FUSES_GAINCORR_Pos;
+			(*(uint32_t *)((ADC_FUSES_GAINCORR_ADDR)) &
+			ADC_FUSES_GAINCORR_Msk) >> ADC_FUSES_GAINCORR_Pos;
 	config->correction.offset_correction  =
-			(*(uint32_t *)(ADC_FUSES_OFFSETCORR_ADDR)) &
-			ADC_FUSES_OFFSETCORR_Msk >> ADC_FUSES_OFFSETCORR_Pos;
+			(*(uint32_t *)((ADC_FUSES_OFFSETCORR_ADDR)) &
+			ADC_FUSES_OFFSETCORR_Msk) >> ADC_FUSES_OFFSETCORR_Pos;
 	config->sample_length                 = 0;
 	config->pin_scan.offset_start_scan    = 0;
 	config->pin_scan.inputs_to_scan       = 0;
