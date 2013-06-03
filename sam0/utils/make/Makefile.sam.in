@@ -95,18 +95,30 @@ ifdef OS
   ifeq ($(strip $(OS)), Linux)
     os_type     := Linux
   endif
-	ifeq (Windows,$(findstring Windows,$(OS)))
+  ifeq ($(strip $(OS)), Windows)
     os_type     := windows32_64
   endif
 endif
 
-ifeq ($(os_type),windows32_64)
+os_type         ?= $(strip $(shell uname))
+
+ifeq ($(os_type),windows32)
 os              := Windows
 else
-ifeq ($(os_type),Linux)
-os              := Linux
+ifeq ($(os_type),windows64)
+os              := Windows
 else
+ifeq ($(os_type),windows32_64)
+os              ?= Windows
+else
+ifeq ($(os_type),)
+os              := Windows
+else
+# Default to Linux style operating system. Both Cygwin and mingw are fully
+# compatible (for this Makefile) with Linux.
 os              := Linux
+endif
+endif
 endif
 endif
 
@@ -127,11 +139,16 @@ OBJDUMP         := $(CROSS)objdump
 SIZE            := $(CROSS)size
 GDB             := $(CROSS)gdb
 
-RM              := rm -f
+RM              := rm
 ifeq ($(os),Windows)
-RMDIR           := rm -rf
+RMDIR           := rmdir /S /Q
 else
 RMDIR           := rmdir -p --ignore-fail-on-non-empty
+endif
+
+# On Windows, we need to override the shell to force the use of cmd.exe
+ifeq ($(os),Windows)
+SHELL           := cmd
 endif
 
 # Strings for beautifying output
@@ -316,8 +333,6 @@ clean-files             += $(dep-files)
 
 clean-dirs              += $(call reverse,$(sort $(wildcard $(dir $(obj-y)))))
 
-.PHONY: all
-
 # Default target.
 .PHONY: all
 ifeq ($(project_type),all)
@@ -333,14 +348,6 @@ all: $(target) $(project).lss $(project).sym $(project).hex $(project).bin
 endif
 endif
 endif
-
-# Default target.
-.PHONY: os
-os:
-	@echo OS '$(OS)'
-	@echo os type '$(os_type)'
-	@echo os '$(os)'
-	@echo '$(findstring Windows,$(OS))'
 
 # Clean up the project.
 .PHONY: clean
@@ -382,33 +389,33 @@ objfiles: $(obj-y)
 
 # Create object files from C source files.
 $(build-dir)%.o: %.c $(MAKEFILE_PATH) config.mk
-	@echo $(MSG_MKDIR)
+	$(Q)test -d $(dir $@) || echo $(MSG_MKDIR)
 ifeq ($(os),Windows)
-	$(Q)-mkdir $(subst /,\,$(dir $@))
+	$(Q)test -d $(patsubst %/,%,$(dir $@)) || mkdir $(subst /,\,$(dir $@))
 else
-	$(Q)-mkdir -p $(dir $@)
+	$(Q)test -d $(dir $@) || mkdir -p $(dir $@)
 endif
 	@echo $(MSG_COMPILING)
 	$(Q)$(CC) $(c_flags) -c $< -o $@
 
 # Create object files from C++ source files.
 $(build-dir)%.o: %.cpp $(MAKEFILE_PATH) config.mk
-	@echo $(MSG_MKDIR)
+	$(Q)test -d $(dir $@) || echo $(MSG_MKDIR)
 ifeq ($(os),Windows)
-	$(Q)-mkdir $(subst /,\,$(dir $@))
+	$(Q)test -d $(patsubst %/,%,$(dir $@)) || mkdir $(subst /,\,$(dir $@))
 else
-	$(Q)-mkdir -p $(dir $@)
+	$(Q)test -d $(dir $@) || mkdir -p $(dir $@)
 endif
 	@echo $(MSG_COMPILING_CXX)
 	$(Q)$(CXX) $(cxx_flags) -c $< -o $@
 
 # Preprocess and assemble: create object files from assembler source files.
 $(build-dir)%.o: %.S $(MAKEFILE_PATH) config.mk
-	@echo $(MSG_MKDIR)
+	$(Q)test -d $(dir $@) || echo $(MSG_MKDIR)
 ifeq ($(os),Windows)
-	$(Q)-mkdir $(subst /,\,$(dir $@))
+	$(Q)test -d $(patsubst %/,%,$(dir $@)) || mkdir $(subst /,\,$(dir $@))
 else
-	$(Q)-mkdir -p $(dir $@)
+	$(Q)test -d $(dir $@) || mkdir -p $(dir $@)
 endif
 	@echo $(MSG_ASSEMBLING)
 	$(Q)$(CC) $(a_flags) -c $< -o $@
@@ -426,10 +433,10 @@ $(target): $(MAKEFILE_PATH) config.mk $(obj-y)
 else
 ifeq ($(target_type),elf)
 # Link the object files into an ELF file. Also make sure the target is rebuilt
-# if the common Makefile.in or project config.mk is changed.
-$(target): $(linker_script) $(MAKEFILE_PATH) config.mk $(obj-y)
+# if the common Makefile.sam.in or project config.mk is changed.
+$(target): $(MAKEFILE_PATH) config.mk $(obj-y)
 	@echo $(MSG_LINKING)
-	$(Q)$(LD) $(l_flags) $(obj-y) $(libflags-gnu-y) -o $@
+	$(Q)$(CC) $(l_flags) $(obj-y) $(libflags-gnu-y) -o $@
 	@echo $(MSG_SIZE)
 	$(Q)$(SIZE) -Ax $@
 	$(Q)$(SIZE) -Bx $@
