@@ -411,14 +411,12 @@ uint8_t ac_win_get_status(
 	uint8_t statusa_tmp = ac_module->STATUSA.reg;
 
 	/* Map hardware comparison states to logical window states */
-	if (statusa_tmp & (AC_STATUSA_WSTATE0_ABOVE << win_channel)) {
-		return win_status | AC_WIN_STATUS_ABOVE;
-	} else if (statusa_tmp & (AC_STATUSA_WSTATE0_BELOW << win_channel)) {
+	if (statusa_tmp & (AC_STATUSA_WSTATE0_BELOW << win_channel)) {
 		return win_status | AC_WIN_STATUS_BELOW;
 	} else if (statusa_tmp & (AC_STATUSA_WSTATE0_INSIDE << win_channel)) {
 		return win_status | AC_WIN_STATUS_INSIDE;
 	} else {
-		return win_status | AC_WIN_STATUS_UNKNOWN;
+		return win_status | AC_WIN_STATUS_ABOVE;
 	}
 
 }
