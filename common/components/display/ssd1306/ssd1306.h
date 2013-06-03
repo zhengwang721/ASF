@@ -191,7 +191,7 @@ extern "C" {
  *
  * \param command the command to write
  */
-static inline void ssd1306_write_command(uint8_t command)
+static void ssd1306_write_command(uint8_t command)
 {
 #if defined(SSD1306_USART_SPI_INTERFACE)
 	struct usart_spi_device device = {.id = SSD1306_CS_PIN};

@@ -19,6 +19,7 @@
 		<build type="include-path" value="."/>
 		<build type="doxygen-entry-point" value="ssd1306_oled_controller_group"/>
 		<require idref="common.services.basic.gpio"/>
+		<require idref="common.services.ioport"/>
 		<require idref="common.services.basic.clock"/>
 		<require idref="common.services.delay"/>
 		<require idref="common.services.basic.spi_master"/>

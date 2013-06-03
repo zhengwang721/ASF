@@ -70,7 +70,7 @@
  * hardware scrolling function available in the LCD controller.
  *
  * \section compinfo Compilation Info
- * This software was written for the GNU GCC and IAR for AVR.
+ * This software was written for the GNU GCC and IAR.
  * Other compilers may or may not work.
  *
  * \section contactinfo Contact Information
