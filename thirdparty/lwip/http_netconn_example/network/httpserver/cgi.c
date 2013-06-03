@@ -187,7 +187,7 @@ static char key_value[80];
 
 /* FIFO tx buffer. */
 #define CONFIG_AFSK_TX_BUFLEN			1024
-u8_t tx_buf[CONFIG_AFSK_TX_BUFLEN];
+static u8_t tx_buf[CONFIG_AFSK_TX_BUFLEN];
 
 /* Function declarations */
 static int cgi_echo(struct netconn *client, const char *name, char *recv_buf, size_t recv_len);
@@ -445,6 +445,9 @@ static int cgi_error(struct netconn *client, const char *name, char *recv_buf, s
 	return -1;
 }
 
+#define FREERTOS_STATS_SIZE 512
+static char freertos_stats[FREERTOS_STATS_SIZE];
+
 /**
  * \brief Send a JSON string representing the board status.
  *
@@ -460,35 +463,79 @@ static int cgi_status(struct netconn *client, const char *name, char *recv_buf, 
 	(void)recv_len;
 	(void)name;
 	uint32_t length = 0;
-	uint32_t i;
-	status.tot_req++;
+	uint32_t nb = 11;
+	uint32_t i, count, new_entry;
 
+#if LWIP_STATS
+	extern uint32_t lwip_tx_rate;
+	extern uint32_t lwip_rx_rate;
+	volatile uint32_t tx_rate = lwip_tx_rate;
+	volatile uint32_t rx_rate = lwip_rx_rate;
+#else
+	volatile uint32_t tx_rate = 0;
+	volatile uint32_t rx_rate = 0;
+#endif
+
+	status.tot_req++;
 	status.up_time = xTaskGetTickCount() / 1000;
 
 	/* Update board status. */
 	sprintf(status.last_connected_ip, "%d.%d.%d.%d", IP_ADDR_TO_INT_TUPLE(client->pcb.ip->remote_ip.addr));
 	sprintf(status.local_ip, "%d.%d.%d.%d", IP_ADDR_TO_INT_TUPLE(client->pcb.ip->local_ip.addr));
-	length += sprintf((char *)tx_buf, "{\"local_ip\":\"%s\",\"last_connected_ip\":\"%s\", \"temp\":%d.%d, \"mag\":\"",
+	length += sprintf((char *)tx_buf, "{\"board_ip\":\"%s\",\"remote_ip\":\"%s\",\"download\":%d,\"upload\":%d",
 								status.local_ip, status.last_connected_ip,
-								status.internal_temp / 100, status.internal_temp % 100);
+								rx_rate, tx_rate);
 
-	/* Update magnitude graph (98 + 1). */
-	for (i = 0; i < 98; ++i) {
-		length += sprintf((char *)tx_buf + length, "%d|", 10);//mag_in_buffer_int[i]);
+	/* Turn FreeRTOS stats into JSON. */
+	vTaskGetRunTimeStats(freertos_stats);
+	length += sprintf((char *)tx_buf + length, ",\"rtos\":{\"10");
+	// i = 2 to skip first 13 10 sequence.
+	for (i = 2, count = 0, new_entry = 0; i < FREERTOS_STATS_SIZE && freertos_stats[i]; ++i) {
+		if (freertos_stats[i] == 13) {
+			tx_buf[length++] = '\"';
+			new_entry = 1;
+			continue;
+		}
+		if (freertos_stats[i] == 10)
+			continue;
+		if (freertos_stats[i] == 9) {
+			count += 1;
+			if (count == 4) {
+				tx_buf[length++] = '\"';
+				tx_buf[length++] = ':';
+				tx_buf[length++] = '\"';
+				count = 0;
+				continue;
+			}
+		}
+		if (count != 0)
+			continue;
+
+		if (new_entry == 1) {
+			new_entry = 0;
+			tx_buf[length++] = ',';
+			tx_buf[length++] = '\"';
+			/* Append ID to task name since JSON id must be unique. */
+			tx_buf[length++] = '0' + nb / 10;
+			tx_buf[length++] = '0' + nb % 10;
+			nb++;
+		}
+		tx_buf[length++] = freertos_stats[i];
 	}
-	length += sprintf((char *)tx_buf + length, "%d\"", 10);//mag_in_buffer_int[i]);
+	tx_buf[length++] = '}';
 
 	/* Remaining board status. */
-	length += sprintf((char *)tx_buf + length, ",\"lwip_m_heap\":%d,\"lwip_m_heap_s\":%d,\"lwip_m_heap_m\":%d,\"lwip_pp\":%d,\"lwip_pp_s\":%d,\"lwip_pp_m\":%d,\"lwip_pr\":%d,\"lwip_pr_s\":%d,\"lwip_pr_m\":%d,\"lwip_tcp_pcb\":%d,\"lwip_tcp_pcb_s\":%d,\"lwip_tcp_pcb_m\":%d,\"lwip_tcp_seg\":%d,\"lwip_tcp_seg_s\":%d,\"lwip_tcp_seg_m\":%d,\"up_time\":%ld,\"tot_req\":%d, \"leds\":{ \"0\":\"%d\", \"1\":\"%d\", \"2\":\"%d\"}}",
+	length += sprintf((char *)tx_buf + length, ",\"lwip_m_heap\":%d,\"lwip_m_heap_s\":%d,\"lwip_m_heap_m\":%d,\"lwip_pp\":%d,\"lwip_pp_s\":%d,\"lwip_pp_m\":%d,\"lwip_pr\":%d,\"lwip_pr_s\":%d,\"lwip_pr_m\":%d,\"lwip_tcp_pcb\":%d,\"lwip_tcp_pcb_s\":%d,\"lwip_tcp_pcb_m\":%d,\"lwip_tcp_seg\":%d,\"lwip_tcp_seg_s\":%d,\"lwip_tcp_seg_m\":%d,\"up_time\":%ld,\"tot_req\":%d}",
 								lwip_stats.mem.used, lwip_stats.mem.avail, lwip_stats.mem.max,
 								lwip_stats.memp[12].used, lwip_stats.memp[12].avail, lwip_stats.memp[12].max,
 								lwip_stats.memp[11].used, lwip_stats.memp[11].avail, lwip_stats.memp[11].max,
 								lwip_stats.memp[1].used, lwip_stats.memp[1].avail, lwip_stats.memp[1].max,
 								lwip_stats.memp[3].used, lwip_stats.memp[3].avail, lwip_stats.memp[3].max,
-								status.up_time, status.tot_req,
-								GET_LED_STATUS(status.led_status, 0),
-								GET_LED_STATUS(status.led_status, 1),
-								GET_LED_STATUS(status.led_status, 2));
+								status.up_time, status.tot_req);
+
+
+tx_buf[length] = 0;
+	printf("%s\r\n", tx_buf);
 
 	/* Send answer. */
 	http_sendOk(client, HTTP_CONTENT_JSON);

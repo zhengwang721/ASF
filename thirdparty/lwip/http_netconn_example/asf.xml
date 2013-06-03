@@ -42,6 +42,7 @@
 		<require idref="sam.drivers.pio"/>
 		<require idref="sam.drivers.gmac"/>
 		<require idref="sam.drivers.pmc"/>
+		<require idref="sam.drivers.tc"/>
 		<require idref="sam.utils.syscalls"/>
 		<require idref="sam.components.display.aat31xx"/>
 		<require idref="sam.components.display.ili9325"/>

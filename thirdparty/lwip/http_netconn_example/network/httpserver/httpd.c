@@ -60,9 +60,6 @@ http_content_type[] = {
 	{"txt", "Content-type: text/plain\r\n\r\n"},
 };
 
-/* Handle the incoming client request. */
-static char req_string[80];
-
 #define HTTP_DEFAULT_PAGE "index.html"
 
 static const char http_html_hdr_200[] = "HTTP/1.0 200 OK\r\n";
@@ -74,9 +71,7 @@ const char http_server_error[] = " \
 <html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\"> \
 <title>500 Internal Server error</title></head><body><img src=\"bertos_logo_jpg\"><h1>500 Internal Server error</h1>\
 <p>The internal server error was occur while processing the requested page.</p><hr>\
-<address>BeRTOS simple HTTP server</address></body></html>"                                                                                                                                                                                                                                                                                                                                                                                      ;
-
-static char decoded_str[80];
+<address>BeRTOS simple HTTP server</address></body></html>";
 
 BoardStatus status;
 
@@ -192,6 +187,8 @@ static void http_decodeUrl(const char *raw_buf, size_t raw_len,
 int http_getValue(char *tolenized_buf, size_t tolenized_buf_len,
 		const char *key, char *value, size_t len)
 {
+	char decoded_str[80];
+
 	if (!tolenized_buf || !key || !value) {
 		return -1;
 	}
@@ -344,6 +341,7 @@ static int start = 0;
  */
 void http_request(void *pvParameters)
 {
+	char req_string[80];
 	struct netconn *conn;
 	struct netbuf *inbuf;
 	char *buf;
@@ -369,7 +367,7 @@ void http_request(void *pvParameters)
 		if (req_string[0] == '\0')
 			strcpy(req_string, HTTP_DEFAULT_PAGE);
 
-		printf("Requested pageZ = %s\r\n", req_string);
+		printf("Requested pageZ = [%s]\r\n", req_string);
 
 		cgi = cgi_search(req_string, cgi_table);
 		if (cgi)

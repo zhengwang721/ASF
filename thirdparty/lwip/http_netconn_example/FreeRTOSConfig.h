@@ -84,11 +84,11 @@ void assert_triggered(const char * file, uint32_t line);
 
 /* Run time stats gathering definitions. */
 #if defined (__GNUC__) || defined (__ICCARM__)
-//void configure_timer_for_run_time_stats( void );
-//uint32_t get_run_time_counter_value( void );
-#define configGENERATE_RUN_TIME_STATS  0
-//#define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() configure_timer_for_run_time_stats()
-//#define portGET_RUN_TIME_COUNTER_VALUE() get_run_time_counter_value()
+void configure_timer_for_run_time_stats( void );
+uint32_t get_run_time_counter_value( void );
+#define configGENERATE_RUN_TIME_STATS  1
+#define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() configure_timer_for_run_time_stats()
+#define portGET_RUN_TIME_COUNTER_VALUE() get_run_time_counter_value()
 #endif
 
 /* Co-routine definitions. */

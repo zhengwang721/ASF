@@ -84,6 +84,14 @@
 /* configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY. */
 #define INT_PRIORITY_GMAC					12
 
+#if LWIP_STATS
+/** Used to compute LwIP bandwidth */
+uint32_t lwip_tx_count = 0;
+uint32_t lwip_rx_count = 0;
+uint32_t lwip_tx_rate = 0;
+uint32_t lwip_rx_rate = 0;
+#endif
+
 /** The MAC address used for the test */
 static uint8_t gs_uc_mac_address[] =
 { ETHERNET_CONF_ETHADDR0, ETHERNET_CONF_ETHADDR1, ETHERNET_CONF_ETHADDR2,
@@ -265,6 +273,10 @@ static err_t low_level_output(struct netif *netif, struct pbuf *p)
 		return ERR_BUF;
 	}
 
+#if LWIP_STATS
+	lwip_tx_count += p->tot_len;
+#endif
+
 #if ETH_PAD_SIZE
 	pbuf_header(p, ETH_PAD_SIZE);    /* Reclaim the padding word */
 #endif
@@ -299,6 +311,10 @@ static struct pbuf *low_level_input(struct netif *netif)
 	if (uc_rc != GMAC_OK) {
 		return NULL;
 	}
+
+#if LWIP_STATS
+	lwip_rx_count += ul_frmlen;
+#endif
 
 	s_len = ul_frmlen;
 
