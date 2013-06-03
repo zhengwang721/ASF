@@ -155,8 +155,8 @@
  * <table>
  *	<caption>Effective ADC conversion speed using oversampling</caption>
  *	<tr>
- *		<td>Resolution</td>
- *		<td>Effective conversion rate</td>
+ *		<th>Resolution</th>
+ *		<th>Effective conversion rate</th>
  *	</tr>
  *	<tr>
  *		<td>13-bits</td>
@@ -228,53 +228,53 @@
  * <table>
  *   <caption>Effective ADC resolution from various hardware averaging modes</caption>
  *   <tr>
- *     <th>Number of Samples</th>
- *     <th>Final Result</th>
+ *     <th>Number of Samples</tr>
+ *     <th>Final Result</tr>
  *   </tr>
  *   <tr>
  *     <td>1</td>
  *     <td>12-bits</td>
- *  </tr>
- *  <tr>
- *     <td>2</td>
- *     <td>13-bits</td>
- *  </tr>
- *  <tr>
- *     <td>4</td>
- *     <td>14-bits</td>
- *  </tr>
- *  <tr>
- *     <td>8</td>
- *     <td>15-bits</td>
- *  </tr>
- *  <tr>
- *     <td>16</td>
- *     <td>16-bits</td>
- *  </tr>
- *  <tr>
- *     <td>32</td>
- *     <td>16-bits</td>
- *  </tr>
- *  <tr>
- *     <td>64</td>
- *     <td>16-bits</td>
- *  </tr>
- *  <tr>
- *     <td>128</td>
- *     <td>16-bits</td>
- *  </tr>
- *  <tr>
- *     <td>256</td>
- *     <td>16-bits</td>
- *  </tr>
- *  <tr>
- *     <td>512</td>
- *     <td>16-bits</td>
- *  </tr>
- *  <tr>
- *     <td>1024</td>
- *     <td>16-bits</td>
- *  </tr>
+ *   </tr>
+ *   <tr>
+ *      <td>2</td>
+ *      <td>13-bits</td>
+ *   </tr>
+ *   <tr>
+ *      <td>4</td>
+ *      <td>14-bits</td>
+ *   </tr>
+ *   <tr>
+ *      <td>8</td>
+ *      <td>15-bits</td>
+ *   </tr>
+ *   <tr>
+ *      <td>16</td>
+ *      <td>16-bits</td>
+ *   </tr>
+ *   <tr>
+ *      <td>32</td>
+ *      <td>16-bits</td>
+ *   </tr>
+ *   <tr>
+ *      <td>64</td>
+ *      <td>16-bits</td>
+ *   </tr>
+ *   <tr>
+ *      <td>128</td>
+ *      <td>16-bits</td>
+ *   </tr>
+ *   <tr>
+ *      <td>256</td>
+ *      <td>16-bits</td>
+ *   </tr>
+ *   <tr>
+ *      <td>512</td>
+ *      <td>16-bits</td>
+ *   </tr>
+ *   <tr>
+ *      <td>1024</td>
+ *      <td>16-bits</td>
+ *   </tr>
  * </table>
  *
  *
