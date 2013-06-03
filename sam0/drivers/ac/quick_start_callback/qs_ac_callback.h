@@ -110,26 +110,26 @@
  *
  * -# Configure the physical pin that will be routed to the AC module channel 0.
  *  \snippet qs_ac_callback.c setup_11
+ *
  * -# Initialize the Analog Comparator channel and configure it with the desired
  *    settings.
  *  \snippet qs_ac_callback.c setup_12
- *
- * -# Create a new function \c configure_ac_callback(), which will be used to
- *    configure the callbacks.
+ * -# Enable the initialized Analog Comparator channel.
  *  \snippet qs_ac_callback.c setup_13
+ *
  * -# Create a new callback function.
  *  \snippet qs_ac_callback.c callback_1
  * -# Create a callback status software flag
  *  \snippet qs_ac_callback.c callback_3
  * -# Let the callback function set the calback_status flag to true
  *  \snippet qs_ac_callback.c callback_2
- * -# Register callback function.
+ *
+ * -# Create a new function \c configure_ac_callback(), which will be used to
+ *    configure the callbacks.
  *  \snippet qs_ac_callback.c setup_14
- *
- * -# Enable the callbacks.
+ * -# Register callback function.
  *  \snippet qs_ac_callback.c setup_15
- *
- * -# Enable the now initialized Analog Comparator channel.
+ * -# Enable the callbacks.
  *  \snippet qs_ac_callback.c setup_16
  *
  * -# Enable the now initialized Analog Comparator peripheral.
