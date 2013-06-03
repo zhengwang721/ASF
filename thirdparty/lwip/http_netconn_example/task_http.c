@@ -45,12 +45,22 @@
 #include "stdio_serial.h"
 #include "ethernet.h"
 #include "sysclk.h"
+#include "lwip/opt.h"
 #include "lwip/tcpip.h"
 #include "httpd.h"
+#include "tc.h"
 
 #include "lwip/stats.h"
 
 static void http_task(void *pvParameters);
+
+#if LWIP_STATS
+/** Used to compute LwIP bandwidth */
+extern uint32_t lwip_tx_count;
+extern uint32_t lwip_rx_count;
+extern uint32_t lwip_tx_rate;
+extern uint32_t lwip_rx_rate;
+#endif
 
 /**
  * \brief Create the HTTP task.
@@ -67,6 +77,41 @@ void create_http_task(uint16_t stack_depth_words,
 			NULL);
 }
 
+#if LWIP_STATS
+// TC3 means TC1 channel 0.
+void TC3_Handler(void)
+{
+	if ((tc_get_status(TC1, 0) & TC_SR_CPCS) == TC_SR_CPCS) {
+		lwip_tx_rate = lwip_tx_count;
+		lwip_rx_rate = lwip_rx_count;
+		lwip_tx_count = 0;
+		lwip_rx_count = 0;
+	}
+}
+
+/**
+ * \brief Enable TC1 channel 0 to trigger each second.
+ */
+static void configure_timer_for_bandwidth_stats(void)
+{
+	pmc_enable_periph_clk(ID_TC3);		// Warning TC number is the channel not TC number.
+										// Hence TC3 means TC1 channel 0.
+	tc_init(TC1, 0,						// Init timer counter 1 channel 0.
+			TC_CMR_WAVE |				// Waveform Mode is enabled.
+			TC_CMR_CPCTRG |				// UP mode with automatic trigger on RC Compare
+			TC_CMR_TCCLKS_TIMER_CLOCK5	// Use slow clock to avoid overflow.
+	);
+
+	tc_write_rc(TC1, 0, 32768);	// Load the highest possible value into TC.
+
+	/* Configure TC interrupts for TC TC_CHANNEL_CAPTURE only */
+	NVIC_SetPriority(TC3_IRQn, 0);		// TC3 means TC1 channel 0.
+	NVIC_EnableIRQ(TC3_IRQn);			// TC3 means TC1 channel 0.
+	tc_enable_interrupt(TC1, 0, TC_IER_CPCS);
+	tc_start(TC1, 0);					// Start Timer counter 0 channel 0.
+}
+#endif
+
 /**
  * \brief HTTP task core function.
  *
@@ -81,6 +126,10 @@ static void http_task(void *pvParameters)
 
 	/** Wait for user to read instructions. */
 	WAIT_FOR_TOUCH_EVENT;
+
+#if LWIP_STATS
+	configure_timer_for_bandwidth_stats();
+#endif
 
 	/* Create a new TCP connection handle */
 	conn = netconn_new(NETCONN_TCP);
@@ -100,10 +149,10 @@ static void http_task(void *pvParameters)
 		err = netconn_accept(conn, &newconn);
 		if (err == ERR_OK) {
 
-			stats_display();
+		//	stats_display();
 
 			/* Instanciate a new task to handle the HTTP request. */
-			xTaskCreate(http_request, (const signed char *const) "HTTP",
+			xTaskCreate(http_request, (const signed char *const) "HTTP-req",
 					mainHTTP_TASK_STACK_SIZE, newconn, mainHTTP_TASK_PRIORITY,
 					NULL);
 		}

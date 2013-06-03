@@ -112,6 +112,7 @@
 #include "conf_uart_serial.h"
 #include "uart_serial.h"
 #include "stdio_serial.h"
+#include "tc.h"
 
 /*
  * FreeRTOS hook (or callback) functions that are defined in this file.
@@ -121,8 +122,6 @@ void vApplicationIdleHook(void);
 void vApplicationStackOverflowHook(xTaskHandle pxTask,
 		signed char *pcTaskName);
 void vApplicationTickHook(void);
-
-
 
 static void prvSetupHardware(void)
 {
@@ -134,6 +133,24 @@ static void prvSetupHardware(void)
 
 	/* Atmel library function to setup for the evaluation kit being used. */
 	board_init();
+}
+
+uint32_t get_run_time_counter_value(void)
+{
+	return TC0->TC_CHANNEL[0].TC_CV;
+}
+
+void configure_timer_for_run_time_stats(void)
+{
+	pmc_enable_periph_clk(ID_TC0);
+	tc_init(TC0, 0,						// Init timer counter 0 channel 0.
+			TC_CMR_WAVE |				// Waveform Mode is enabled.
+			TC_CMR_TCCLKS_TIMER_CLOCK5	// Use slow clock to avoid overflow.
+	);
+
+	tc_write_rc(TC0, 0, 0xffffffff);	// Load the highest possible value into TC.
+
+	tc_start(TC0, 0);					// Start Timer counter 0 channel 0.
 }
 
 /**

@@ -21,100 +21,76 @@
 					    	});
    					  }
 					});
-   				var set_led_status = function(elm,status) {
 
-   					if (status == 1) {
-						elm.addClass('led-on').removeClass('led-off').text('ON').append("<span></span>");
-   					} else {
-   						elm.addClass('led-off').removeClass('led-on').text('OFF').prepend("<span></span>");
-	   				}
-   				}
-   				$("span[id^=led]").click(function(){
-   					var elm = $(this);
-					if (elm.hasClass('led-off')) {
-						var status = 1;
-					} else {
-						var status = 0;
-					}
-					set_led_status(elm, status);
-					$.ajax({
-					  url: "set_led",
-					  async: false,
-					  cache: false,
-					  data:{'n':elm.attr('name'),'set':status},
-					  dataType :'json',
-					  success: function(){
-					  }
-					});
-   				});
    				var options = {
 			        series: { shadowSize: 0 },
-			        yaxis:  { min: 0, max: 100 },
-			        xaxis:  { min: 0, max: 10000 }
+			        yaxis:  { min: 0},
+			        xaxis:  { min: 0}
 			    };
 
-				var magnitude_data = [];
-				var plot_magnitude = $.plot($("#magnitude-plot"), [{label: "Magnitude", data:magnitude_data}], options);
-				var reg = new RegExp("[|]+", "g");
+				var dl_rate_data = [];
+				var ul_rate_data = [];
+				var data_rate_graph = $.plot($("#data-rate-plot"), [{label: "Download (B/s)", data:dl_rate_data}, {label: "Upload (B/s)", data:ul_rate_data}], options);
 
 			    function updateStatus() {
+					$.ajax({
+						url: "status",
+						async: false,
+						cache: false,
+						dataType :'json',
+						success: function(data) {
 
-			$.ajax({
-					  url: "status",
-					  async: false,
-					  cache: false,
-					  dataType :'json',
-					  success: function(data){
+							$('#lwip_mem_heap').width(350*(parseInt(data['lwip_m_heap'])/parseInt(data['lwip_m_heap_s'])));
+							$('#lwip_mem_heap-value').text(data['lwip_m_heap'])
+							$('#lwip_mem_heap-value_size').text(data['lwip_m_heap_s'])
+							$('#lwip_mem_heap-value_max').text(data['lwip_m_heap_m'])
 
-						 $('#lwip_mem_heap').width(350*(parseInt(data['lwip_m_heap'])/parseInt(data['lwip_m_heap_s'])));
-						 $('#lwip_mem_heap-value').text(data['lwip_m_heap'])
-						 $('#lwip_mem_heap-value_size').text(data['lwip_m_heap_s'])
-						 $('#lwip_mem_heap-value_max').text(data['lwip_m_heap_m'])
+							$('#lwip_pbuf_pool').width(350*(parseInt(data['lwip_pp'])/parseInt(data['lwip_pp_s'])));
+							$('#lwip_pbuf_pool-value').text(data['lwip_pp'])
+							$('#lwip_pbuf_pool-value_size').text(data['lwip_pp_s'])
+							$('#lwip_pbuf_pool-value_max').text(data['lwip_pp_m'])
 
-						 $('#lwip_pbuf_pool').width(350*(parseInt(data['lwip_pp'])/parseInt(data['lwip_pp_s'])));
-						 $('#lwip_pbuf_pool-value').text(data['lwip_pp'])
-						 $('#lwip_pbuf_pool-value_size').text(data['lwip_pp_s'])
-						 $('#lwip_pbuf_pool-value_max').text(data['lwip_pp_m'])
+							$('#lwip_pbuf_ref').width(350*(parseInt(data['lwip_pr'])/parseInt(data['lwip_pr_s'])));
+							$('#lwip_pbuf_ref-value').text(data['lwip_pr'])
+							$('#lwip_pbuf_ref-value_size').text(data['lwip_pr_s'])
+							$('#lwip_pbuf_ref-value_max').text(data['lwip_pr_m'])
 
-						 $('#lwip_pbuf_ref').width(350*(parseInt(data['lwip_pr'])/parseInt(data['lwip_pr_s'])));
-						 $('#lwip_pbuf_ref-value').text(data['lwip_pr'])
-						 $('#lwip_pbuf_ref-value_size').text(data['lwip_pr_s'])
-						 $('#lwip_pbuf_ref-value_max').text(data['lwip_pr_m'])
+							$('#lwip_tcp_pcb').width(350*(parseInt(data['lwip_tcp_pcb'])/parseInt(data['lwip_tcp_pcb_s'])));
+							$('#lwip_tcp_pcb-value').text(data['lwip_tcp_pcb'])
+							$('#lwip_tcp_pcb-value_size').text(data['lwip_tcp_pcb_s'])
+							$('#lwip_tcp_pcb-value_max').text(data['lwip_tcp_pcb_m'])
 
-						 $('#lwip_tcp_pcb').width(350*(parseInt(data['lwip_tcp_pcb'])/parseInt(data['lwip_tcp_pcb_s'])));
-						 $('#lwip_tcp_pcb-value').text(data['lwip_tcp_pcb'])
-						 $('#lwip_tcp_pcb-value_size').text(data['lwip_tcp_pcb_s'])
-						 $('#lwip_tcp_pcb-value_max').text(data['lwip_tcp_pcb_m'])
+							$('#lwip_tcp_seg').width(350*(parseInt(data['lwip_tcp_seg'])/parseInt(data['lwip_tcp_seg_s'])));
+							$('#lwip_tcp_seg-value').text(data['lwip_tcp_seg'])
+							$('#lwip_tcp_seg-value_size').text(data['lwip_tcp_seg_s'])
+							$('#lwip_tcp_seg-value_max').text(data['lwip_tcp_seg_m'])
 
-						 $('#lwip_tcp_seg').width(350*(parseInt(data['lwip_tcp_seg'])/parseInt(data['lwip_tcp_seg_s'])));
-						 $('#lwip_tcp_seg-value').text(data['lwip_tcp_seg'])
-						 $('#lwip_tcp_seg-value_size').text(data['lwip_tcp_seg_s'])
-						 $('#lwip_tcp_seg-value_max').text(data['lwip_tcp_seg_m'])
+							$('#board_ip').text(data['board_ip']);
+							$('#remote_ip').text(data['remote_ip']);
+							$('#tot_req').text(data['tot_req']);
 
-
-						 $('#uptime').text(data['up_time'] +' sec');
-						 $('#local_ip').text(data['local_ip']);
-						 $('#last_connected_ip').text(data['last_connected_ip']);
-						 $('#tot_req').text(data['tot_req']);
-
-						 $.each(data['leds'], function (key,v) {
-							set_led_status($('#led-' + key), v);
+							var html = '';
+							$.each(data['rtos'], function (thread, usage) {
+								html += '<tr><td>' + thread.substring(2) + '</td><td>' + usage + '</td></tr>';
 							});
+							$('#rtostab tr').not(':first').remove();
+							$('#rtostab tr').first().after(html);
 
-						 magnitude_data.length = 0;
-						 var tab = data['mag'].split(reg);
-						 for (var i = 0; i < tab.length; i++)
-							 magnitude_data.push([i*100,tab[i]]);
-						 plot_magnitude.setData([{label: "Magnitude", data:magnitude_data}]);
-						 plot_magnitude.setupGrid();
-						 plot_magnitude.draw();
-						 setTimeout(updateStatus, 500);
-					  }
+							dl_rate_data.push([data['up_time'],data['download']]);
+							ul_rate_data.push([data['up_time'],data['upload']]);
+							var x = data_rate_graph.getAxes().xaxis.options;
+							var y = data_rate_graph.getAxes().yaxis.options;
+							x.max = Math.max(25,data['up_time']);
+							x.min = Math.max(0,(x.max - 25));
+							data_rate_graph.setData([{label: "Download (B/s)", data:dl_rate_data}, {label: "Upload (B/s)", data:ul_rate_data}]);
+							data_rate_graph.setupGrid();
+							data_rate_graph.draw();
+							setTimeout(updateStatus, 500);
+						}
 					});
 			    }
-			   updateStatus();
+				updateStatus();
 			});
-
 		</script>
 	</head>
 	<body>
@@ -129,19 +105,30 @@
 					</div>
 				</div>
 				<div class="content">
-					<b>Hardware Info:</b><br>
-					<b>CPU Core: </b><span id="core_name">--</span><br>
-					<b>Chip name: </b><span id="arch_name">--</span><br>
-					<b>SRAM size: </b><span id="sram_size">--</span><br>
-					<b>Flash size: </b><span id="flash_size">--</span><br><br>
+					<div class="control">
+						<b>Hardware Info:</b><br>
+						<b>CPU Core: </b><span id="core_name">--</span><br>
+						<b>Chip name: </b><span id="arch_name">--</span><br>
+						<b>SRAM size: </b><span id="sram_size">--</span><br>
+						<b>Flash size: </b><span id="flash_size">--</span><br><br>
 
-					<b>Connections Info:</b><br>
-					<b>Board IP: </b><span id="local_ip">--</span><br>
-					<b>Your IP: </b><span id="last_connected_ip">--</span><br>
-					<b>Total status requests: </b><span id="tot_req">--</span><br><br>
-					Press button "BP3" to switch between wave file loopback and generated sinus mode.<br>
-					Potentiometer can be used to change sinus frequency in sinus mode.<br>
-					Use QTouch slider to change audio out pitch.<br><br>
+						<b>Connections Info:</b><br>
+						<b>Board IP: </b><span id="board_ip">--</span><br>
+						<b>Your IP: </b><span id="remote_ip">--</span><br>
+						<b>Total status requests: </b><span id="tot_req">--</span><br><br>
+					</div>
+					<div class="control">
+						<b>FreeRTOS threads status:</b><br>
+						<table id="rtostab">
+							<tr>
+								<th>Thread ID - </th>
+								<th>CPU Usage</th>
+							</tr>
+						</table>
+						<br><br>
+					</div>
+				</div>
+				<div class="content">
 					<div class="control">
 						<b class="label">LwIP memory heap:</b>
 						<span class="trigger"><span id="lwip_mem_heap">&nbsp;</span></span>&nbsp;<div class="label2">Cur:<span id="lwip_mem_heap-value">0</span></div>&nbsp;<div class="label2">Size:<span id="lwip_mem_heap-value_size">0</span></div>&nbsp;<div class="label2">Max:<span id="lwip_mem_heap-value_max">0</span></div><br>
@@ -164,22 +151,8 @@
 					</div>
 				</div>
 				<div class="content">
-					<div class="control">
-						<b class="label">FreeRTOS uptime:</b><span id="uptime" class="box">--</span><br>
-						<b class="label">Temperature sensor:</b><span id="temperature" class="box">--</span><br/>
-					</div>
-					<div class="control">
-						<b>Led status:</b><br/>
-						<span id="led-0" name="0" class="led led-off">--</span><span id="led-1" name="1" class="led led-off">--</span><span id="led-2" name="2" class="led led-off">--</span>
-					</div>
-					<div class="control">
-						<b>Potentiometer value:</b><br/>
-						<span class="trigger"><span id="potentiometer">&nbsp;</span></span>&nbsp;<span id="potentiometer-value">--</span>
-					</div>
-				</div>
-				<div class="content">
-						<b>FFT input signal magnitude:</b><br/>
-						<div id="magnitude-plot" class="magnitude-plot"></div>
+						<b>Transfer rate on ethernet MAC:</b><br/>
+						<div id="data-rate-plot" class="data-rate-plot"></div>
 				</div>
 				<div  class="content footer">
 						Please visit <a href="http://www.atmel.com">www.atmel.com</a> for more info
