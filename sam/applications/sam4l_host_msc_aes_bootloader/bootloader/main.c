@@ -842,7 +842,7 @@ void main_usb_connection_event(uhc_device_t * dev, bool b_present)
  *   - CONSOLE_OUTPUT_ENABLED     -> Enable/disable the Console message output
  *   - VERIFY_PROGRAMMING_ENABLED -> Enable/disable the verification of
  *                                   programmed memory
- *   - FIRMWARE_AES_ENABLED       -> Enable/disable the security bit feature
+ *   - SECURITY_BIT_ENABLED       -> Enable/disable the security bit feature
  *   - APP_START_OFFSET           -> Application starting offset from Flash
  *   - FIRMWARE_IN_FILE_NAME      -> Application Firmware file to be programmed
  *   - APP_SIGNATURE              -> Signature bytes to be verified

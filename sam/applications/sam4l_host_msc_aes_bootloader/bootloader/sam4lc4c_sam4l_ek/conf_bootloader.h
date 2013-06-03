@@ -53,7 +53,7 @@
 /* Enable/disable the verification of memory after programming */
 #define VERIFY_PROGRAMMING_ENABLED   ENABLE
 /* Enable/disable the Security bit after firmware upgrade */
-#define SECURITY_BIT_ENABLED         ENABLE
+#define SECURITY_BIT_ENABLED         DISABLE
 
 /* 
  * GP Fuse bit to force bootloader mode after reset 31-16 is usable
