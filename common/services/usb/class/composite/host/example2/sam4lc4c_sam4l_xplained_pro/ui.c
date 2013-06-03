@@ -225,9 +225,14 @@ void ui_usb_sof_event(void)
 			} else {
 				LED_On(LED0);
 			}
-			if (ui_test_done && !ui_test_result) {
-				/* Test fail */
-				LED_Off(LED0);
+			if (ui_test_done) {
+				if (ui_test_result) {
+					/* Test successful */
+					LED_On(LED0);
+				} else {
+					/* Test fail */
+					LED_Off(LED0);
+				}
 			}
 		}
 		/* Scan button to enter in suspend mode and remote wakeup */
@@ -331,7 +336,7 @@ void ui_stop_write(void)
  *   - The blink is slow (1s) with low speed device
  *   - The blink is normal (0.5s) with full speed device
  *   - The blink is fast (0.25s) with high speed device
- * - Led 0 is on when a read or write access is on going
+ * - Led 0 is on when a read or write access is on going, and keep on if a LUN test is successful
  * - Led 0 is off when a LUN test is unsuccessful
  * - Led 0 is on when a HID mouse button is pressed
  * - Button SW0 allows to enter the device in suspend mode with remote wakeup
