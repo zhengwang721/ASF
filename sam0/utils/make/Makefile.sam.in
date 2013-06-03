@@ -402,7 +402,7 @@ objfiles: $(obj-y)
 $(build-dir)%.o: %.c $(MAKEFILE_PATH) config.mk
 	@echo $(MSG_MKDIR)
 ifeq ($(os),Windows)
-	$(Q)-mkdir -p $(subst \/,\,$(dir $@))
+	$(Q)-mkdir -p $(subst /,\,$(dir $@))
 else
 	$(Q)-mkdir -p $(dir $@)
 endif
@@ -413,7 +413,7 @@ endif
 $(build-dir)%.o: %.cpp $(MAKEFILE_PATH) config.mk
 	@echo $(MSG_MKDIR)
 ifeq ($(os),Windows)
-	$(Q)-mkdir -p $(subst \/,\,$(dir $@))
+	$(Q)-mkdir -p $(subst /,\,$(dir $@))
 else
 	$(Q)-mkdir -p $(dir $@)
 endif
@@ -424,7 +424,7 @@ endif
 $(build-dir)%.o: %.S $(MAKEFILE_PATH) config.mk
 	@echo $(MSG_MKDIR)
 ifeq ($(os),Windows)
-	$(Q)-mkdir -p $(subst \/,\,$(dir $@))
+	$(Q)-mkdir -p $(subst /,\,$(dir $@))
 else
 	$(Q)-mkdir -p $(dir $@)
 endif
