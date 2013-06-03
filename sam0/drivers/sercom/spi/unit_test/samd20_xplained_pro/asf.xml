@@ -1,6 +1,6 @@
 <asf xmlversion="1.0">
-	<project caption="Unit Test for the SAMD20 SPI driver" id="sam0.drivers.sercom.spi.unit_test.samd20_xplained_pro">
-		<build type ="include-path" value="."/>
+	<project caption="Unit Tests for the SAM D20 SPI Driver" id="sam0.drivers.sercom.spi.unit_test.samd20_xplained_pro">
+		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_clocks.h"/>
 		<build type="header-file" value="conf_board.h"/>
 		<require idref="board.samd20_xplained_pro"/>
