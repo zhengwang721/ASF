@@ -66,10 +66,10 @@ static inline void _adc_configure_ain_pin(uint32_t pin)
 			PIN_PB00, PIN_PB01, PIN_PB02, PIN_PB03,
 			PIN_PB04, PIN_PB05, PIN_PB06, PIN_PB07,
 			PIN_PA08, PIN_PA09, PIN_PA10, PIN_PA11,};
-	
+
 	/* Analog functions are at mux setting B */
 	config.mux_position = 1;
-		
+
 	if (pin <= ADC_INPUTCTRL_MUXPOS_PIN20) {
 		system_pinmux_pin_set_config(pinmapping[pin], &config);
 	}
