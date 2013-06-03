@@ -148,8 +148,10 @@ void per_mode_receptor_task(void)
 
     if (key_press != 0)
     {
+      printf("\r\nButton Pressed...");
       if (send_range_test_marker_cmd())
         {
+          printf("\r\nInitiating Marker Transmission...");
         //Transmit Marker Frame
         sw_timer_start(APP_TIMER_TO_TX,
                 LED_BLINK_RATE_IN_MICRO_SEC,
@@ -506,6 +508,7 @@ void per_mode_receptor_rx_cb(frame_info_t *mac_frame_info)
             {
               //
                range_test_in_progress = true;
+               printf("\r\nStarting Range Test in PER Mode...");
                
             }
             break;
@@ -513,6 +516,7 @@ void per_mode_receptor_rx_cb(frame_info_t *mac_frame_info)
      case RANGE_TEST_STOP_PKT:
             {
                range_test_in_progress = false;
+               printf("\r\nStopping Range Test...");
 
             }
             break;            
@@ -525,11 +529,17 @@ void per_mode_receptor_rx_cb(frame_info_t *mac_frame_info)
                 ed_value = mac_frame_info->mpdu[phy_frame_len + LQI_LEN + ED_VAL_LEN] + rssi_base_val;                
                 send_range_test_rsp(msg->seq_num,msg->payload.range_tx_data.frame_count, \
                                 ed_value,mac_frame_info->mpdu[phy_frame_len + LQI_LEN]);
+                printf("\r\nRange Test Packet Received...\tFrame No : %"PRIu32";\tLQI : %d\tED : %d",msg->payload.range_tx_data.frame_count,mac_frame_info->mpdu[phy_frame_len + LQI_LEN],ed_value);
 
             }
             break;
         case RANGE_TEST_MARKER_RSP:
             {
+                int8_t rssi_base_val,ed_value;
+                rssi_base_val = tal_get_rssi_base_val();
+                uint8_t phy_frame_len = mac_frame_info->mpdu[0];
+                ed_value = mac_frame_info->mpdu[phy_frame_len + LQI_LEN + ED_VAL_LEN] + rssi_base_val;
+                printf("\r\nMarker Response Received...Frame No:\t LQI : %d\t ED %d ",mac_frame_info->mpdu[phy_frame_len + LQI_LEN],ed_value);
                 sw_timer_start(T_APP_TIMER,
                 LED_BLINK_RATE_IN_MICRO_SEC,
                 SW_TIMEOUT_RELATIVE,

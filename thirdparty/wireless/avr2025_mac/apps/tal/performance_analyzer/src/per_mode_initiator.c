@@ -1247,7 +1247,6 @@ void per_mode_initiator_rx_cb(frame_info_t *mac_frame_info)
             {
                 if (op_mode == RANGE_TEST_TX)
                 {
-                //To avoid reception of retry frames
                 if(range_test_seq_num == msg->seq_num)
                 {
                 return;
@@ -1267,14 +1266,18 @@ void per_mode_initiator_rx_cb(frame_info_t *mac_frame_info)
             {
                 if (op_mode == RANGE_TEST_TX)
                 {
-                 sw_timer_start(T_APP_TIMER,
-                    LED_BLINK_RATE_IN_MICRO_SEC,
-                    SW_TIMEOUT_RELATIVE,
-                    (FUNC_PTR)marker_rsp_timer_handler_cb,
-                    NULL);
+                    int8_t rssi_base_val,ed_value;
+                    rssi_base_val = tal_get_rssi_base_val();
+                    uint8_t phy_frame_len = mac_frame_info->mpdu[0];
+                    ed_value = mac_frame_info->mpdu[phy_frame_len + LQI_LEN + ED_VAL_LEN] + rssi_base_val;
+                    sw_timer_start(T_APP_TIMER,
+                        LED_BLINK_RATE_IN_MICRO_SEC,
+                        SW_TIMEOUT_RELATIVE,
+                        (FUNC_PTR)marker_rsp_timer_handler_cb,
+                        NULL);
                   send_range_test_marker_rsp();
                   //send marker indication to GUI
-                  usr_range_test_marker_ind(mac_frame_info->mpdu);
+                  usr_range_test_marker_ind(mac_frame_info->mpdu,mac_frame_info->mpdu[phy_frame_len + LQI_LEN],ed_value);
                 }
             }
             break;            
