@@ -523,13 +523,15 @@ void per_mode_receptor_rx_cb(frame_info_t *mac_frame_info)
     case RANGE_TEST_PKT:
             { 
                 uint8_t phy_frame_len = mac_frame_info->mpdu[0];
+                uint32_t frame_count;
+                frame_count = Swap32(CCPU_ENDIAN_TO_LE32(msg->payload.range_tx_data.frame_count));
                 int8_t rssi_base_val,ed_value;
                 rssi_base_val = tal_get_rssi_base_val();
                 app_led_event(LED_EVENT_RX_FRAME);
                 ed_value = mac_frame_info->mpdu[phy_frame_len + LQI_LEN + ED_VAL_LEN] + rssi_base_val;                
                 send_range_test_rsp(msg->seq_num,msg->payload.range_tx_data.frame_count, \
                                 ed_value,mac_frame_info->mpdu[phy_frame_len + LQI_LEN]);
-                printf("\r\nRange Test Packet Received...\tFrame No : %"PRIu32";\tLQI : %d\tED : %d",msg->payload.range_tx_data.frame_count,mac_frame_info->mpdu[phy_frame_len + LQI_LEN],ed_value);
+                printf("\r\nRange Test Packet Received...\tFrame No : %"PRIu32"\tLQI : %d\tED : %d",frame_count,mac_frame_info->mpdu[phy_frame_len + LQI_LEN],ed_value);
 
             }
             break;
@@ -539,7 +541,7 @@ void per_mode_receptor_rx_cb(frame_info_t *mac_frame_info)
                 rssi_base_val = tal_get_rssi_base_val();
                 uint8_t phy_frame_len = mac_frame_info->mpdu[0];
                 ed_value = mac_frame_info->mpdu[phy_frame_len + LQI_LEN + ED_VAL_LEN] + rssi_base_val;
-                printf("\r\nMarker Response Received...Frame No:\t LQI : %d\t ED %d ",mac_frame_info->mpdu[phy_frame_len + LQI_LEN],ed_value);
+                printf("\r\nMarker Response Received... LQI : %d\t ED %d ",mac_frame_info->mpdu[phy_frame_len + LQI_LEN],ed_value);
                 sw_timer_start(T_APP_TIMER,
                 LED_BLINK_RATE_IN_MICRO_SEC,
                 SW_TIMEOUT_RELATIVE,
