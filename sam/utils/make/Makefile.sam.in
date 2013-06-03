@@ -100,24 +100,6 @@ ifdef OS
   endif
 endif
 
-#os_type         ?= $(strip $(shell uname))
-
-#ifeq ($(os_type),windows32)
-#os              := Windows
-#else
-#ifeq ($(os_type),windows64)
-#os              := Windows
-#else
-#ifeq ($(os_type),)
-#os              := Windows
-#else
-## Default to Linux style operating system. Both Cygwin and mingw are fully
-## compatible (for this Makefile) with Linux.
-#os              := Linux
-#endif
-#endif
-#endif
-
 ifeq ($(os_type),windows32_64)
 os              := Windows
 else
@@ -147,7 +129,6 @@ GDB             := $(CROSS)gdb
 
 RM              := rm -f
 ifeq ($(os),Windows)
-#RMDIR           := rmdir /S /Q
 RMDIR           := rm  -rf
 else
 RMDIR           := rmdir -p --ignore-fail-on-non-empty
@@ -200,8 +181,7 @@ endif
 ifeq ($(VERBOSE), 1)
   Q =
 else
-#  Q = @
-  Q =
+  Q = @
 endif
 
 arflags-gnu-y           := $(ARFLAGS)
@@ -285,7 +265,7 @@ cflags-gnu-y += -Wmain -Wparentheses
 cflags-gnu-y += -Wsequence-point -Wreturn-type -Wswitch -Wtrigraphs -Wunused
 cflags-gnu-y += -Wuninitialized -Wunknown-pragmas -Wfloat-equal -Wundef
 cflags-gnu-y += -Wshadow -Wbad-function-cast -Wwrite-strings
-cflags-gnu-y += -Wsign-compare -Waggregate-return 
+cflags-gnu-y += -Wsign-compare -Waggregate-return
 cflags-gnu-y += -Wmissing-declarations
 cflags-gnu-y += -Wformat -Wmissing-format-attribute -Wno-deprecated-declarations
 cflags-gnu-y += -Wpacked -Wredundant-decls -Wnested-externs -Winline -Wlong-long
@@ -401,9 +381,9 @@ objfiles: $(obj-y)
 $(build-dir)%.o: %.c $(MAKEFILE_PATH) config.mk
 	@echo $(MSG_MKDIR)
 ifeq ($(os),Windows)
-	-mkdir $(subst /,\,$(dir $@))
+	$(Q)-mkdir $(subst /,\,$(dir $@))
 else
-	-mkdir -p $(dir $@)
+	$(Q)-mkdir -p $(dir $@)
 endif
 	@echo $(MSG_COMPILING)
 	$(Q)$(CC) $(c_flags) -c $< -o $@
@@ -412,9 +392,9 @@ endif
 $(build-dir)%.o: %.cpp $(MAKEFILE_PATH) config.mk
 	@echo $(MSG_MKDIR)
 ifeq ($(os),Windows)
-	-mkdir $(subst /,\,$(dir $@))
+	$(Q)-mkdir $(subst /,\,$(dir $@))
 else
-	-mkdir -p $(dir $@)
+	$(Q)-mkdir -p $(dir $@)
 endif
 	@echo $(MSG_COMPILING_CXX)
 	$(Q)$(CXX) $(cxx_flags) -c $< -o $@
@@ -423,9 +403,9 @@ endif
 $(build-dir)%.o: %.S $(MAKEFILE_PATH) config.mk
 	@echo $(MSG_MKDIR)
 ifeq ($(os),Windows)
-	-mkdir $(subst /,\,$(dir $@))
+	$(Q)-mkdir $(subst /,\,$(dir $@))
 else
-	-mkdir -p $(dir $@)
+	$(Q)-mkdir -p $(dir $@)
 endif
 	@echo $(MSG_ASSEMBLING)
 	$(Q)$(CC) $(a_flags) -c $< -o $@
@@ -446,7 +426,6 @@ ifeq ($(target_type),elf)
 # if the common Makefile.in or project config.mk is changed.
 $(target): $(linker_script) $(MAKEFILE_PATH) config.mk $(obj-y)
 	@echo $(MSG_LINKING)
-	@echo $(Q)$(LD) $(l_flags) $(obj-y) $(libflags-gnu-y) -o $@
 	$(Q)$(LD) $(l_flags) $(obj-y) $(libflags-gnu-y) -o $@
 	@echo $(MSG_SIZE)
 	$(Q)$(SIZE) -Ax $@

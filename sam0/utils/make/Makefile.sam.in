@@ -16,6 +16,8 @@
 #
 # \asf_license_start
 #
+# \page License
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
 #
@@ -98,24 +100,6 @@ ifdef OS
   endif
 endif
 
-#os_type         ?= $(strip $(shell uname))
-
-#ifeq ($(os_type),windows32)
-#os              := Windows
-#else
-#ifeq ($(os_type),windows64)
-#os              := Windows
-#else
-#ifeq ($(os_type),)
-#os              := Windows
-#else
-## Default to Linux style operating system. Both Cygwin and mingw are fully
-## compatible (for this Makefile) with Linux.
-#os              := Linux
-#endif
-#endif
-#endif
-
 ifeq ($(os_type),windows32_64)
 os              := Windows
 else
@@ -145,8 +129,7 @@ GDB             := $(CROSS)gdb
 
 RM              := rm -f
 ifeq ($(os),Windows)
-#RMDIR           := rmdir /S /Q
-RMDIR           := rm  -rf
+RMDIR           := rm -rf
 else
 RMDIR           := rmdir -p --ignore-fail-on-non-empty
 endif
@@ -280,8 +263,7 @@ cxxflags-gnu-y  += -ffunction-sections -fdata-sections
 cflags-gnu-y += -Wchar-subscripts -Wcomment -Wformat=2 -Wimplicit-int
 cflags-gnu-y += -Wmain -Wparentheses
 cflags-gnu-y += -Wsequence-point -Wreturn-type -Wswitch -Wtrigraphs -Wunused
-cflags-gnu-y += -Wuninitialized -Wunknown-pragmas -Wfloat-equal
-# -Wundef
+cflags-gnu-y += -Wuninitialized -Wunknown-pragmas -Wfloat-equal -Wundef
 cflags-gnu-y += -Wshadow -Wbad-function-cast -Wwrite-strings
 cflags-gnu-y += -Wsign-compare -Waggregate-return
 cflags-gnu-y += -Wmissing-declarations
@@ -402,7 +384,7 @@ objfiles: $(obj-y)
 $(build-dir)%.o: %.c $(MAKEFILE_PATH) config.mk
 	@echo $(MSG_MKDIR)
 ifeq ($(os),Windows)
-	$(Q)-mkdir -p $(subst /,\,$(dir $@))
+	$(Q)-mkdir $(subst /,\,$(dir $@))
 else
 	$(Q)-mkdir -p $(dir $@)
 endif
@@ -413,7 +395,7 @@ endif
 $(build-dir)%.o: %.cpp $(MAKEFILE_PATH) config.mk
 	@echo $(MSG_MKDIR)
 ifeq ($(os),Windows)
-	$(Q)-mkdir -p $(subst /,\,$(dir $@))
+	$(Q)-mkdir $(subst /,\,$(dir $@))
 else
 	$(Q)-mkdir -p $(dir $@)
 endif
@@ -424,7 +406,7 @@ endif
 $(build-dir)%.o: %.S $(MAKEFILE_PATH) config.mk
 	@echo $(MSG_MKDIR)
 ifeq ($(os),Windows)
-	$(Q)-mkdir -p $(subst /,\,$(dir $@))
+	$(Q)-mkdir $(subst /,\,$(dir $@))
 else
 	$(Q)-mkdir -p $(dir $@)
 endif
@@ -444,7 +426,7 @@ $(target): $(MAKEFILE_PATH) config.mk $(obj-y)
 else
 ifeq ($(target_type),elf)
 # Link the object files into an ELF file. Also make sure the target is rebuilt
-# if the common Makefile.sam.in or project config.mk is changed.
+# if the common Makefile.in or project config.mk is changed.
 $(target): $(linker_script) $(MAKEFILE_PATH) config.mk $(obj-y)
 	@echo $(MSG_LINKING)
 	$(Q)$(LD) $(l_flags) $(obj-y) $(libflags-gnu-y) -o $@
