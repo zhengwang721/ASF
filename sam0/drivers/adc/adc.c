@@ -105,9 +105,20 @@ static enum status_code _adc_set_config(
 	system_gclk_chan_set_config(ADC_GCLK_ID, &gclk_chan_conf);
 	system_gclk_chan_enable(ADC_GCLK_ID);
 
-	/* Configure analog input pins */
-	_adc_configure_ain_pin(config->positive_input);
-	_adc_configure_ain_pin(config->negative_input);
+
+	/* Setup pinmuxing for analog inputs */
+	if (config->pin_scan.inputs_to_scan != 0) {
+		uint8_t start_pin = config->pin_scan.offset_start_scan +
+				(uint8_t)config->positive_input;
+		uint8_t end_pin = start_pin + config->pin_scan.inputs_to_scan;
+		for (; start_pin < end_pin; start_pin++) {
+			_adc_configure_ain_pin(start_pin);
+		}
+		_adc_configure_ain_pin(config->negative_input);
+	} else {
+		_adc_configure_ain_pin(config->positive_input);
+		_adc_configure_ain_pin(config->negative_input);
+	}
 
 	/* Configure run in standby */
 	adc_module->CTRLA.reg = (config->run_in_standby << ADC_CTRLA_RUNSTDBY_Pos);
