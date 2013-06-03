@@ -274,22 +274,22 @@ extern struct ac_module *_ac_instance[AC_INST_NUM];
  */
 
  /** Unknown output state; the comparator window channel was not ready. */
-#define AC_WIN_STATUS_UNKNOWN        (1UL << 0)
+#define AC_WIN_STATUS_UNKNOWN         (1UL << 0)
 /** Window Comparator's input voltage is above the upper window
  *  threshold. */
-#define AC_WIN_STATUS_ABOVE          (1UL << 1)
+#define AC_WIN_STATUS_ABOVE           (1UL << 1)
 /** Window Comparator's input voltage is between the lower and upper window
  *  thresholds. */
-#define AC_WIN_STATUS_INSIDE         (1UL << 2)
+#define AC_WIN_STATUS_INSIDE          (1UL << 2)
 /** Window Comparator's input voltage is below the lower window
  *  threshold. */
-#define AC_WIN_STATUS_BELOW          (1UL << 3)
+#define AC_WIN_STATUS_BELOW           (1UL << 3)
 /**
  * This state reflects the window interrupt flag. When the interrupt flag
  * should be set is configured in \ref ac_win_set_config(). This state needs
  * to be cleared by the of \ref ac_win_clear_status().
  */
-#define AC_WIN_STATUS_INTERRUPT_SET  (1UL << 4)
+#define AC_WIN_STATUS_INTERRUPT_SET   (1UL << 4)
 
 /**
  * \name AC channel status flags
@@ -298,7 +298,7 @@ extern struct ac_module *_ac_instance[AC_INST_NUM];
  */
 
 /** Unknown output state; the comparator channel was not ready. */
-#define AC_CHAN_STATUS_UNKNOWN       (1UL << 0)
+#define AC_CHAN_STATUS_UNKNOWN        (1UL << 0)
 /** Comparator's negative input pin is higher in voltage than the positive
  *  input pin. */
 #define AC_CHAN_STATUS_NEG_ABOVE_POS  (1UL << 1)
