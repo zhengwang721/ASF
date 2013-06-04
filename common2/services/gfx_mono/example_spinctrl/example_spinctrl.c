@@ -85,13 +85,13 @@
  * <A href="http://www.atmel.com/">Atmel</A>.\n
  */
 
-PROGMEM_DECLARE(char const, spinnertitle[]) = "Strings:";
-PROGMEM_DECLARE(char const, spinnertitle2[]) = "Numbers:";
-PROGMEM_DECLARE(char const, spinnertitle3[]) = "Numbers2:";
-PROGMEM_DECLARE(char const, spinner_choice1[]) = "String";
-PROGMEM_DECLARE(char const, spinner_choice2[]) = "String 2";
-PROGMEM_DECLARE(char const, spinner_choice3[]) = "String 3";
-PROGMEM_DECLARE(char const, spinner_choice4[]) = "String 4";
+PROGMEM_DECLARE(char, spinnertitle[]) = "Strings:";
+PROGMEM_DECLARE(char, spinnertitle2[]) = "Numbers:";
+PROGMEM_DECLARE(char, spinnertitle3[]) = "Numbers2:";
+PROGMEM_DECLARE(char, spinner_choice1[]) = "String";
+PROGMEM_DECLARE(char, spinner_choice2[]) = "String 2";
+PROGMEM_DECLARE(char, spinner_choice3[]) = "String 3";
+PROGMEM_DECLARE(char, spinner_choice4[]) = "String 4";
 
 PROGMEM_STRING_T spinner_choicestrings[] = {
 	spinner_choice1,

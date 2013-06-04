@@ -303,8 +303,9 @@ static enum status_code _adc_set_config(
 		*/
 		inputs_to_scan--;
 	}
-	if (inputs_to_scan > ADC_INPUTCTRL_INPUTSCAN_Msk ||
-			config->pin_scan.offset_start_scan > ADC_INPUTCTRL_INPUTOFFSET_Msk) {
+
+	if (inputs_to_scan > (ADC_INPUTCTRL_INPUTSCAN_Msk >> ADC_INPUTCTRL_INPUTSCAN_Pos) ||
+			config->pin_scan.offset_start_scan > (ADC_INPUTCTRL_INPUTOFFSET_Msk >> ADC_INPUTCTRL_INPUTOFFSET_Pos)) {
 		/* Invalid number of input pins or input offset */
 		return STATUS_ERR_INVALID_ARG;
 	}

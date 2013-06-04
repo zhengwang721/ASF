@@ -217,8 +217,11 @@ enum status_code tc_init(
 	system_gclk_chan_enable(inst_gclk_id[instance]);
 
 	/* Set ctrla register */
-	ctrla_tmp = config->counter_size | config->wave_generation
-			| config->reload_action | config->clock_prescaler;
+	ctrla_tmp =
+			(uint32_t)config->counter_size |
+			(uint32_t)config->wave_generation |
+			(uint32_t)config->reload_action |
+			(uint32_t)config->clock_prescaler;
 
 	if (config->run_in_standby) {
 		ctrla_tmp |= TC_CTRLA_RUNSTDBY;
