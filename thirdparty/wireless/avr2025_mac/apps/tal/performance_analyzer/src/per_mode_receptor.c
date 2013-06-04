@@ -148,7 +148,7 @@ void per_mode_receptor_task(void)
 
     if (key_press != 0)
     {
-      printf("\r\nButton Pressed...");
+      printf("\r\n\nButton Pressed...");
       if (send_range_test_marker_cmd())
         {
           printf("\r\nInitiating Marker Transmission...");
@@ -541,7 +541,7 @@ void per_mode_receptor_rx_cb(frame_info_t *mac_frame_info)
                 rssi_base_val = tal_get_rssi_base_val();
                 uint8_t phy_frame_len = mac_frame_info->mpdu[0];
                 ed_value = mac_frame_info->mpdu[phy_frame_len + LQI_LEN + ED_VAL_LEN] + rssi_base_val;
-                printf("\r\nMarker Response Received... LQI : %d\t ED %d ",mac_frame_info->mpdu[phy_frame_len + LQI_LEN],ed_value);
+                printf("\r\nMarker Response Received... LQI : %d\t ED %d \n",mac_frame_info->mpdu[phy_frame_len + LQI_LEN],ed_value);
                 sw_timer_start(T_APP_TIMER,
                 LED_BLINK_RATE_IN_MICRO_SEC,
                 SW_TIMEOUT_RELATIVE,
