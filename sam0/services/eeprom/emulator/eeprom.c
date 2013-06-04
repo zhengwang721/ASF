@@ -396,7 +396,7 @@ static enum status_code _eeprom_emulator_move_data_to_spare(
 				((_eeprom_instance.spare_row * NVMCTRL_ROW_PAGES) + c);
 
 		/* Flush cache buffer to write any uncommitted data */
-		eeprom_emulator_flush_page_buffer();
+		eeprom_emulator_commit_page_buffer();
 
 		/* Check if we we are looking at the page the calling function wishes
 		 * to change during the move operation */
@@ -652,7 +652,7 @@ void eeprom_emulator_erase_memory(void)
  *
  * \note Data stored in pages may be cached in volatile RAM memory; to commit
  *       any cached data to physical non-volatile memory, the
- *       \ref eeprom_emulator_flush_page_buffer() function should be called.
+ *       \ref eeprom_emulator_commit_page_buffer() function should be called.
  *
  * \param[in] logical_page  Logical EEPROM page number to write to
  * \param[in] data          Pointer to the data buffer containing source data to
@@ -685,7 +685,7 @@ enum status_code eeprom_emulator_write_page(
 	if ((_eeprom_instance.cache_active == true) &&
 			(_eeprom_instance.cache.header.logical_page != logical_page)) {
 		/* Flush the currently cached data buffer to non-volatile memory */
-		eeprom_emulator_flush_page_buffer();
+		eeprom_emulator_commit_page_buffer();
 	}
 
 	/* Check if we have space in the current page location's physical row for
@@ -787,7 +787,7 @@ enum status_code eeprom_emulator_read_page(
  *
  * \note Data stored in pages may be cached in volatile RAM memory; to commit
  *       any cached data to physical non-volatile memory, the
- *       \ref eeprom_emulator_flush_page_buffer() function should be called.
+ *       \ref eeprom_emulator_commit_page_buffer() function should be called.
  *
  * \param[in] offset  Starting byte offset to write to, in emulated EEPROM
  *                    memory space
@@ -930,7 +930,7 @@ enum status_code eeprom_emulator_read_buffer(
  *
  * \return Status code indicating the status of the operation.
  */
-enum status_code eeprom_emulator_flush_page_buffer(void)
+enum status_code eeprom_emulator_commit_page_buffer(void)
 {
 	enum status_code error_code = STATUS_OK;
 

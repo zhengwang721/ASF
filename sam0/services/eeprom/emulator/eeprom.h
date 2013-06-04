@@ -305,7 +305,7 @@ enum status_code eeprom_emulator_get_parameters(
  * @{
  */
 
-enum status_code eeprom_emulator_flush_page_buffer(void);
+enum status_code eeprom_emulator_commit_page_buffer(void);
 
 enum status_code eeprom_emulator_write_page(
 		const uint8_t logical_page,
