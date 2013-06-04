@@ -133,6 +133,8 @@
  *  \snippet qs_ac_callback.c setup_16
  *
  * -# Enable the now initialized Analog Comparator peripheral.
+ * \note This should not be done until after the AC is setup and ready
+ *       to be used
  *  \snippet qs_ac_callback.c setup_17
  *
  *
