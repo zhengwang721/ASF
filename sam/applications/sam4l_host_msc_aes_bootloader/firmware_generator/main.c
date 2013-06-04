@@ -40,17 +40,11 @@
  * \asf_license_stop
  *
  */
-
 #include <asf.h>
 #include <string.h>
 #include "conf_usb_host.h"
 #include "conf_bootloader.h"
 #include "main.h"
-#include "uhc.h"
-#include "uhi_msc.h"
-#include "uhi_msc_mem.h"
-#include "ff.h"
-#include "crccu.h"
 
 #if FIRMWARE_AES_ENABLED
 #include "aesa.h"

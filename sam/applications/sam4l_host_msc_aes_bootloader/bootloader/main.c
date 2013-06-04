@@ -44,7 +44,6 @@
 
 #include <asf.h>
 #include <string.h>
-#include <stdio.h>
 #include "conf_usb_host.h"
 #include "conf_bootloader.h"
 #include "main.h"
