@@ -60,17 +60,17 @@ void rtc_overflow_callback(void)
 void configure_rtc_count(void)
 {
 //! [init_conf]
-	struct rtc_count_config config;
-	rtc_count_get_config_defaults(&config);
+	struct rtc_count_config config_rtc_count;
+	rtc_count_get_config_defaults(&config_rtc_count);
 //! [init_conf]
 
 //! [set_config]
-	config.prescaler           = RTC_COUNT_PRESCALER_DIV_1;
-	config.mode                = RTC_COUNT_MODE_16BIT;
-	config.continuously_update = true;
+	config_rtc_count.prescaler           = RTC_COUNT_PRESCALER_DIV_1;
+	config_rtc_count.mode                = RTC_COUNT_MODE_16BIT;
+	config_rtc_count.continuously_update = true;
 //! [set_config]
 //! [init_rtc]
-	rtc_count_init(&config);
+	rtc_count_init(&config_rtc_count);
 //! [init_rtc]
 
 //! [enable]

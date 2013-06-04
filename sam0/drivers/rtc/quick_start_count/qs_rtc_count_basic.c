@@ -48,21 +48,21 @@ void configure_rtc_count(void);
 void configure_rtc_count(void)
 {
 //! [set_conf]
-	struct rtc_count_config config;
+	struct rtc_count_config config_rtc_count;
 //! [set_conf]
 
 //! [get_default]
-	rtc_count_get_config_defaults(&config);
+	rtc_count_get_config_defaults(&config_rtc_count);
 //! [get_default]
 
 //! [set_config]
-	config.prescaler           = RTC_COUNT_PRESCALER_DIV_1;
-	config.mode                = RTC_COUNT_MODE_16BIT;
-	config.continuously_update = true;
-	config.compare_values[0]   = 1000;
+	config_rtc_count.prescaler           = RTC_COUNT_PRESCALER_DIV_1;
+	config_rtc_count.mode                = RTC_COUNT_MODE_16BIT;
+	config_rtc_count.continuously_update = true;
+	config_rtc_count.compare_values[0]   = 1000;
 //! [set_config]
 //! [init_rtc]
-	rtc_count_init(&config);
+	rtc_count_init(&config_rtc_count);
 //! [init_rtc]
 
 //! [enable]

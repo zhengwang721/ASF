@@ -59,32 +59,32 @@ static uint8_t buffer[DATA_LENGTH] = {
 
 /* Init software module. */
 //! [dev_inst]
-struct i2c_master_module dev_inst;
+struct i2c_master_module i2c_master_instance;
 //! [dev_inst]
 
-void configure_i2c(void);
+void configure_i2c_master(void);
 
 //! [initialize_i2c]
-void configure_i2c(void)
+void configure_i2c_master(void)
 {
 	/* Initialize config structure and software module. */
 	//! [init_conf]
-	struct i2c_master_config conf;
-	i2c_master_get_config_defaults(&conf);
+	struct i2c_master_config config_i2c_master;
+	i2c_master_get_config_defaults(&config_i2c_master);
 	//! [init_conf]
 
 	/* Change buffer timeout to something longer. */
 	//! [conf_change]
-	conf.buffer_timeout = 10000;
+	config_i2c_master.buffer_timeout = 10000;
 	//! [conf_change]
 
 	/* Initialize and enable device with config. */
 	//! [init_module]
-	i2c_master_init(&dev_inst, SERCOM2, &conf);
+	i2c_master_init(&i2c_master_instance, SERCOM2, &config_i2c_master);
 	//! [init_module]
 
 	//! [enable_module]
-	i2c_master_enable(&dev_inst);
+	i2c_master_enable(&i2c_master_instance);
 	//! [enable_module]
 }
 //! [initialize_i2c]
@@ -98,7 +98,7 @@ int main(void)
 
 	/* Configure device and enable. */
 	//! [config]
-	configure_i2c();
+	configure_i2c_master();
 	//! [config]
 
 	/* Timeout counter. */
@@ -119,7 +119,8 @@ int main(void)
 	//! [main]
 	/* Write buffer to slave until success. */
 	//! [write_packet]
-	while (i2c_master_write_packet_wait(&dev_inst, &packet) != STATUS_OK) {
+	while (i2c_master_write_packet_wait(&i2c_master_instance, &packet) !=
+			STATUS_OK) {
 		/* Increment timeout counter and check if timed out. */
 		if (timeout++ == TIMEOUT) {
 			break;

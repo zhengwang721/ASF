@@ -47,8 +47,8 @@ void i2c_read_request_callback(
 		struct i2c_slave_module *const module);
 void i2c_write_request_callback(
 		struct i2c_slave_module *const module);
-void configure_i2c(void);
-void configure_i2c_callbacks(void);
+void configure_i2c_slave(void);
+void configure_i2c_slave_callbacks(void);
 
 //! [packet]
 static struct i2c_packet packet;
@@ -69,7 +69,7 @@ static uint8_t read_buffer [DATA_LENGTH];
 
 /* Init device instance. */
 //! [module]
-struct i2c_slave_module i2c_sw_instance;
+struct i2c_slave_module i2c_slave_instance;
 //! [module]
 
 //! [read_request]
@@ -108,42 +108,42 @@ void i2c_write_request_callback(
 //! [write_request]
 
 //! [initialize_i2c]
-void configure_i2c(void)
+void configure_i2c_slave(void)
 {
 	/* Initialize config structure and module instance. */
 	//! [init_conf]
-	struct i2c_slave_config conf;
-	i2c_slave_get_config_defaults(&conf);
+	struct i2c_slave_config config_i2c_slave;
+	i2c_slave_get_config_defaults(&config_i2c_slave);
 	//! [init_conf]
 	/* Change address and address_mode. */
 	//! [conf_changes]
-	conf.address      = SLAVE_ADDRESS;
-	conf.address_mode = I2C_SLAVE_ADDRESS_MODE_MASK;
+	config_i2c_slave.address      = SLAVE_ADDRESS;
+	config_i2c_slave.address_mode = I2C_SLAVE_ADDRESS_MODE_MASK;
 	//! [conf_changes]
 	/* Initialize and enable device with config. */
 	//! [init_module]
-	i2c_slave_init(&i2c_sw_instance, SERCOM2, &conf);
+	i2c_slave_init(&i2c_slave_instance, SERCOM2, &config_i2c_slave);
 	//! [init_module]
 
 	//! [enable_module]
-	i2c_slave_enable(&i2c_sw_instance);
+	i2c_slave_enable(&i2c_slave_instance);
 	//! [enable_module]
 }
 //! [initialize_i2c]
 
 //! [setup_i2c_callback]
-void configure_i2c_callbacks(void)
+void configure_i2c_slave_callbacks(void)
 {
 	/* Register and enable callback functions */
 	//![reg_en_i2c_callback]
-	i2c_slave_register_callback(&i2c_sw_instance, i2c_read_request_callback,
+	i2c_slave_register_callback(&i2c_slave_instance, i2c_read_request_callback,
 			I2C_SLAVE_CALLBACK_READ_REQUEST);
-	i2c_slave_enable_callback(&i2c_sw_instance,
+	i2c_slave_enable_callback(&i2c_slave_instance,
 			I2C_SLAVE_CALLBACK_READ_REQUEST);
 
-	i2c_slave_register_callback(&i2c_sw_instance, i2c_write_request_callback,
+	i2c_slave_register_callback(&i2c_slave_instance, i2c_write_request_callback,
 			I2C_SLAVE_CALLBACK_WRITE_REQUEST);
-	i2c_slave_enable_callback(&i2c_sw_instance,
+	i2c_slave_enable_callback(&i2c_slave_instance,
 			I2C_SLAVE_CALLBACK_WRITE_REQUEST);
 	//![reg_en_i2c_callback]
 }
@@ -158,10 +158,10 @@ int main(void)
 
 	/* Configure device and enable. */
 	//! [config]
-	configure_i2c();
+	configure_i2c_slave();
 	//! [config]
 	//! [config_callback]
-	configure_i2c_callbacks();
+	configure_i2c_slave_callbacks();
 	//! [config_callback]
 	//! [run_initialize_i2c]
 

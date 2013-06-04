@@ -48,13 +48,13 @@ bool callback_status = false;
 
 void configure_ac(void);
 void configure_ac_channel(void);
-void configure_ac_callback(void);
+void configure_ac_callbacks(void);
 void callback_function_ac(struct ac_module *const module_inst);
 
 //! [setup]
 /* AC module software instance (must not go out of scope while in use) */
 //! [setup_1]
-static struct ac_module ac_dev;
+static struct ac_module ac_instance;
 //! [setup_1]
 
 /* Comparator channel that will be used */
@@ -69,17 +69,17 @@ void configure_ac(void)
 	/* Create a new configuration structure for the Analog Comparator settings
 	 * and fill with the default module settings. */
 	//! [setup_4]
-	struct ac_config ac_config;
+	struct ac_config config_ac;
 	//! [setup_4]
 	//! [setup_5]
-	ac_get_config_defaults(&ac_config);
+	ac_get_config_defaults(&config_ac);
 	//! [setup_5]
 
 	/* Alter any Analog Comparator configuration settings here if required */
 
 	/* Initialize and enable the Analog Comparator with the user settings */
 	//! [setup_6]
-	ac_init(&ac_dev, AC, &ac_config);
+	ac_init(&ac_instance, AC, &config_ac);
 	//! [setup_6]
 }
 
@@ -90,19 +90,19 @@ void configure_ac_channel(void)
 	/* Create a new configuration structure for the Analog Comparator channel
 	 * settings and fill with the default module channel settings. */
 	//! [setup_8]
-	struct ac_chan_config ac_chan_conf;
+	struct ac_chan_config config_ac_chan;
 	//! [setup_8]
 	//! [setup_9]
-	ac_chan_get_config_defaults(&ac_chan_conf);
+	ac_chan_get_config_defaults(&config_ac_chan);
 	//! [setup_9]
 
 	/* Set the Analog Comparator channel configuration settings */
 	//! [setup_10]
-	ac_chan_conf.sample_mode         = AC_CHAN_MODE_SINGLE_SHOT;
-	ac_chan_conf.positive_input      = AC_CHAN_POS_MUX_PIN0;
-	ac_chan_conf.negative_input      = AC_CHAN_NEG_MUX_SCALED_VCC;
-	ac_chan_conf.vcc_scale_factor    = 32;
-	ac_chan_conf.interrupt_selection = AC_CHAN_INTERRUPT_SELECTION_END_OF_COMPARE;
+	config_ac_chan.sample_mode         = AC_CHAN_MODE_SINGLE_SHOT;
+	config_ac_chan.positive_input      = AC_CHAN_POS_MUX_PIN0;
+	config_ac_chan.negative_input      = AC_CHAN_NEG_MUX_SCALED_VCC;
+	config_ac_chan.vcc_scale_factor    = 32;
+	config_ac_chan.interrupt_selection = AC_CHAN_INTERRUPT_SELECTION_END_OF_COMPARE;
 	//! [setup_10]
 
 	/* Set up a pin as an AC channel input */
@@ -117,7 +117,7 @@ void configure_ac_channel(void)
 	/* Initialize and enable the Analog Comparator channel with the user
 	 * settings */
 	//! [setup_12]
-	ac_chan_set_config(&ac_dev, AC_COMPARATOR_CHANNEL, &ac_chan_conf);
+	ac_chan_set_config(&ac_instance, AC_COMPARATOR_CHANNEL, &config_ac_chan);
 	//! [setup_12]
 }
 
@@ -131,10 +131,10 @@ void callback_function_ac(struct ac_module *const module_inst)
 //! [callback_1]
 
 //! [setup_13]
-void configure_ac_callback(void)
+void configure_ac_callbacks(void)
 {
 	//! [setup_14]
-	ac_register_callback(&ac_dev, callback_function_ac, AC_CALLBACK_COMPARATOR_0);
+	ac_register_callback(&ac_instance, callback_function_ac, AC_CALLBACK_COMPARATOR_0);
 	//! [setup_14]
 }
 //! [setup_13]
@@ -147,21 +147,21 @@ int main(void)
 	system_init();
 	configure_ac();
 	configure_ac_channel();
-	configure_ac_callback();
+	configure_ac_callbacks();
 	//! [setup_15]
-	ac_chan_enable(&ac_dev, AC_COMPARATOR_CHANNEL);
+	ac_chan_enable(&ac_instance, AC_COMPARATOR_CHANNEL);
 	//! [setup_15]
 	//! [setup_16]
-	ac_enable(&ac_dev);
+	ac_enable(&ac_instance);
 	//! [setup_16]
 	//! [setup_17]
-	ac_enable_callback(&ac_dev, AC_CALLBACK_COMPARATOR_0);
+	ac_enable_callback(&ac_instance, AC_CALLBACK_COMPARATOR_0);
 	//! [setup_17]
 	//! [setup_init]
 
 	//! [main]
 	//! [main_1]
-	ac_chan_trigger_single_shot(&ac_dev, AC_COMPARATOR_CHANNEL);
+	ac_chan_trigger_single_shot(&ac_instance, AC_COMPARATOR_CHANNEL);
 	//! [main_1]
 
 	//! [main_2]
@@ -177,7 +177,7 @@ int main(void)
 			//! [main_5]
 			do
 			{
-				last_comparison = ac_chan_get_status(&ac_dev,
+				last_comparison = ac_chan_get_status(&ac_instance,
 						AC_COMPARATOR_CHANNEL);
 			} while (last_comparison & AC_CHAN_STATUS_UNKNOWN);
 			//! [main_5]
@@ -186,7 +186,7 @@ int main(void)
 					(last_comparison & AC_CHAN_STATUS_NEG_ABOVE_POS));
 			//! [main_6]
 			//! [main_7]
-			ac_chan_trigger_single_shot(&ac_dev, AC_COMPARATOR_CHANNEL);
+			ac_chan_trigger_single_shot(&ac_instance, AC_COMPARATOR_CHANNEL);
 			//! [main_7]
 			//! [main_8]
 			callback_status = false;
