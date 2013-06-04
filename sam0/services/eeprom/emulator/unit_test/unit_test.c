@@ -104,7 +104,7 @@ uint8_t verify_page[EEPROM_PAGE_SIZE];
 uint16_t i;
 
 /* Flag used to check successful initialization */
-volatile bool init_success = true;
+volatile bool init_success;
 
 /**
  * \brief Initialize the USART for unit test
@@ -144,7 +144,7 @@ static void cdc_uart_init(void)
  */
 static void run_eeprom_init_test(const struct test_case *test)
 {
-	enum status_code status = STATUS_ERR_IO;
+	enum status_code status;
 	init_success = true;
 
 	/* Initialize the EEPROM emulator */
@@ -169,7 +169,6 @@ static void run_eeprom_init_test(const struct test_case *test)
 			"EEPROM emulator initialization failed");
 
 	/* Get parameter check */
-	status = STATUS_ERR_IO;
 	status = eeprom_emulator_get_parameters(&ee_params);
 	if (status != STATUS_OK) {
 		init_success = false;
@@ -212,7 +211,7 @@ static void setup_eeprom_buffer_read_write_test(const struct test_case *test)
  */
 static void run_eeprom_buffer_read_write_test(const struct test_case *test)
 {
-	volatile enum status_code status = STATUS_ERR_IO;
+	volatile enum status_code status;
 
 	/* Skip test if initialization failed */
 	test_assert_true(test, init_success,
@@ -225,7 +224,6 @@ static void run_eeprom_buffer_read_write_test(const struct test_case *test)
 			"EEPROM write buffer failed");
 
 	/* Read buffer test */
-	status = STATUS_ERR_IO;
 	status = eeprom_emulator_read_buffer(TEST_BUFFER_OFFSET,
 			verify_buffer, TEST_BUFFER_SIZE);
 	test_assert_true(test, status == STATUS_OK,
@@ -269,7 +267,7 @@ static void setup_eeprom_page_read_write_test(const struct test_case *test)
  */
 static void run_eeprom_page_read_write_test(const struct test_case *test)
 {
-	volatile enum status_code status = STATUS_ERR_IO;
+	volatile enum status_code status;
 
 	/* Skip test if initialization failed */
 	test_assert_true(test, init_success,
@@ -281,7 +279,6 @@ static void run_eeprom_page_read_write_test(const struct test_case *test)
 			"EEPROM write page failed");
 
 	/* Read page test */
-	status = STATUS_ERR_IO;
 	status = eeprom_emulator_read_page(TEST_EEPROM_PAGE, verify_page);
 	test_assert_true(test, status == STATUS_OK,
 			"EEPROM read page failed");
