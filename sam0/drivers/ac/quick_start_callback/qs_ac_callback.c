@@ -48,7 +48,7 @@ bool callback_status = false;
 
 void configure_ac(void);
 void configure_ac_channel(void);
-void configure_ac_callbacks(void);
+void configure_ac_callback(void);
 void callback_function_ac(struct ac_module *const module_inst);
 
 //! [setup]
