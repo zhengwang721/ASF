@@ -113,8 +113,10 @@
 /** LED0 blinking control. */
 volatile bool g_b_led0_active = true;
 
+#ifdef LED1_GPIO
 /** LED1 blinking control. */
 volatile bool g_b_led1_active = true;
+#endif
 
 /** Global g_ul_ms_ticks in milliseconds since start of application */
 volatile uint32_t g_ul_ms_ticks = 0;
@@ -139,7 +141,9 @@ static void ProcessButtonEvt(uint8_t uc_button)
 		if (!g_b_led0_active) {
 			ioport_set_pin_level(LED0_GPIO, IOPORT_PIN_LEVEL_HIGH);
 		}
-	} else {
+	}
+#ifdef LED1_GPIO 
+	else {
 		g_b_led1_active = !g_b_led1_active;
 
 		/* Enable LED#2 and TC if they were enabled */
@@ -153,6 +157,7 @@ static void ProcessButtonEvt(uint8_t uc_button)
 			tc_stop(TC0, 0);
 		}
 	}
+#endif
 }
 
 /**
@@ -238,8 +243,11 @@ void TC0_Handler(void)
 	/* Avoid compiler warning */
 	UNUSED(ul_dummy);
 
+#ifdef LED1_GPIO
 	/** Toggle LED state. */
 	ioport_toggle_pin_level(LED1_GPIO);
+#endif
+
 	printf("2 ");
 }
 
@@ -264,10 +272,14 @@ static void configure_tc(void)
 	NVIC_EnableIRQ((IRQn_Type) ID_TC0);
 	tc_enable_interrupt(TC0, 0, TC_IER_CPCS);
 
+#ifdef LED1_GPIO
 	/** Start the counter if LED1 is enabled. */
 	if (g_b_led1_active) {
 		tc_start(TC0, 0);
 	}
+#else
+	tc_start(TC0, 0);
+#endif
 }
 
 /**
@@ -329,12 +341,12 @@ int main(void)
 	puts("Configure buttons with debouncing.\r");
 	configure_buttons();
 
-	printf("Press %s to Start/Stop the blue LED D2 blinking.\r\n",
-			PUSHBUTTON_1_NAME);
+	printf("Press %s to Start/Stop the %s blinking.\r\n",
+			PUSHBUTTON_1_NAME, LED_0_NAME);
 
 #ifndef BOARD_NO_PUSHBUTTON_2
-	printf("Press %s to Start/Stop the green LED D3 blinking.\r\n",
-			PUSHBUTTON_2_NAME);
+	printf("Press %s to Start/Stop the %s blinking.\r\n",
+			PUSHBUTTON_2_NAME, LED_1_NAME);
 #endif
 
 	while (1) {
