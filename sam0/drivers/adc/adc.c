@@ -43,7 +43,6 @@
 
 #include "adc.h"
 
-
 /**
 * \internal Configure MUX settings for the analog pins
 *
@@ -51,25 +50,28 @@
 * to the analog function in the pin mux, giving
 * the ADC access to the analog signal
 *
-* \param [in] pin pin number to configure
+* \param [in] pin AINxx pin to configure
 */
 static inline void _adc_configure_ain_pin(uint32_t pin)
 {
 	struct system_pinmux_config config;
 	system_pinmux_get_config_defaults(&config);
+
 	config.input_pull = SYSTEM_PINMUX_PIN_PULL_NONE;
 
-	/* Analog functions are at mux setting 7 */
-	config.mux_position = 7;
-	/* Pins above Pin23 are internal signals */
-	if (pin <= ADC_INPUTCTRL_MUXPOS_PIN23) {
-		if (pin < ADC_INPUTCTRL_MUXPOS_PIN8) {
-			/* PORT A */
-			system_pinmux_pin_set_config(pin, &config);
-		} else {
-			/* PORT B */
-			system_pinmux_pin_set_config(pin + 32, &config);
-		}
+	/* Pinmapping table for AINxx -> GPIO pin number */
+	const uint32_t pinmapping [ADC_INPUTCTRL_MUXPOS_PIN20] = {
+			PIN_PA02, PIN_PA03, PIN_PB08, PIN_PB09,
+			PIN_PA04, PIN_PA05, PIN_PA06, PIN_PA07,
+			PIN_PB00, PIN_PB01, PIN_PB02, PIN_PB03,
+			PIN_PB04, PIN_PB05, PIN_PB06, PIN_PB07,
+			PIN_PA08, PIN_PA09, PIN_PA10, PIN_PA11,};
+
+	/* Analog functions are at mux setting B */
+	config.mux_position = 1;
+
+	if (pin <= ADC_INPUTCTRL_MUXPOS_PIN20) {
+		system_pinmux_pin_set_config(pinmapping[pin], &config);
 	}
 }
 
@@ -103,9 +105,20 @@ static enum status_code _adc_set_config(
 	system_gclk_chan_set_config(ADC_GCLK_ID, &gclk_chan_conf);
 	system_gclk_chan_enable(ADC_GCLK_ID);
 
-	/* Configure analog input pins */
-	_adc_configure_ain_pin(config->positive_input);
-	_adc_configure_ain_pin(config->negative_input);
+
+	/* Setup pinmuxing for analog inputs */
+	if (config->pin_scan.inputs_to_scan != 0) {
+		uint8_t start_pin = config->pin_scan.offset_start_scan +
+				(uint8_t)config->positive_input;
+		uint8_t end_pin = start_pin + config->pin_scan.inputs_to_scan;
+		for (; start_pin < end_pin; start_pin++) {
+			_adc_configure_ain_pin(start_pin);
+		}
+		_adc_configure_ain_pin(config->negative_input);
+	} else {
+		_adc_configure_ain_pin(config->positive_input);
+		_adc_configure_ain_pin(config->negative_input);
+	}
 
 	/* Configure run in standby */
 	adc_module->CTRLA.reg = (config->run_in_standby << ADC_CTRLA_RUNSTDBY_Pos);
