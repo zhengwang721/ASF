@@ -124,8 +124,6 @@ typedef struct {
 #define   CHIPID_CIDR_ARCH_AT91SAM7Axx (0x60u << 20) /**< \brief (CHIPID_CIDR) AT91SAM7Axx Series */
 #define   CHIPID_CIDR_ARCH_AT91SAM7AQxx (0x61u << 20) /**< \brief (CHIPID_CIDR) AT91SAM7AQxx Series */
 #define   CHIPID_CIDR_ARCH_AT91x63 (0x63u << 20) /**< \brief (CHIPID_CIDR) AT91x63 Series */
-#define   CHIPID_CIDR_ARCH_SAM4CxxC (0x64u << 20) /**< \brief (CHIPID_CIDR) SAM4CxC Series (100-pin version) */
-#define   CHIPID_CIDR_ARCH_SAM4MxxC (0x65u << 20) /**< \brief (CHIPID_CIDR) SAM4MxxC Series (100-pin version) */
 #define   CHIPID_CIDR_ARCH_AT91SAM7Sxx (0x70u << 20) /**< \brief (CHIPID_CIDR) AT91SAM7Sxx Series */
 #define   CHIPID_CIDR_ARCH_AT91SAM7XCxx (0x71u << 20) /**< \brief (CHIPID_CIDR) AT91SAM7XCxx Series */
 #define   CHIPID_CIDR_ARCH_AT91SAM7SExx (0x72u << 20) /**< \brief (CHIPID_CIDR) AT91SAM7SExx Series */
