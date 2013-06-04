@@ -115,6 +115,12 @@ void board_init(void)
 			PIN_USART1_SCK_FLAGS);
 #endif
 
+#ifdef CONF_BOARD_USART_RTS
+	/* Configure USART synchronous communication RST pin */
+	ioport_set_pin_peripheral_mode(PIN_USART1_RTS_IDX,
+			PIN_USART1_RTS_FLAGS);
+#endif
+
 #ifdef CONF_BOARD_ISO7816_RST
 	/* Configure ISO7816 card reset pin */
 	ioport_set_pin_dir(PIN_ISO7816_RST_IDX, IOPORT_DIR_OUTPUT);
@@ -141,6 +147,18 @@ void board_init(void)
 	ioport_set_pin_peripheral_mode(TWI2_DATA_GPIO, TWI2_DATA_FLAGS);
 	ioport_set_pin_peripheral_mode(TWI2_CLK_GPIO, TWI2_CLK_FLAGS);
 #endif
+
+#ifdef CONF_BOARD_SPI
+	ioport_set_pin_peripheral_mode(SPI_MISO_GPIO, SPI_MISO_FLAGS);
+	ioport_set_pin_peripheral_mode(SPI_MOSI_GPIO, SPI_MOSI_FLAGS);
+	ioport_set_pin_peripheral_mode(SPI_SPCK_GPIO, SPI_SPCK_FLAGS);
+
+#ifdef CONF_BOARD_SPI_NPCS0
+	ioport_set_pin_peripheral_mode(SPI_NPCS0_GPIO, SPI_NPCS0_FLAGS);
+#endif
+
+#endif
+
 }
 
 /** @} */
