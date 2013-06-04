@@ -119,6 +119,9 @@ void configure_ac_channel(void)
 	//! [setup_12]
 	ac_chan_set_config(&ac_instance, AC_COMPARATOR_CHANNEL, &config_ac_chan);
 	//! [setup_12]
+	//! [setup_13]
+	ac_chan_enable(&ac_instance, AC_COMPARATOR_CHANNEL);
+	//! [setup_13]
 }
 
 //! [callback_1]
@@ -130,32 +133,31 @@ void callback_function_ac(struct ac_module *const module_inst)
 }
 //! [callback_1]
 
-//! [setup_13]
-void configure_ac_callbacks(void)
+//! [setup_14]
+void configure_ac_callback(void)
 {
-	//! [setup_14]
+	//! [setup_15]
 	ac_register_callback(&ac_instance, callback_function_ac, AC_CALLBACK_COMPARATOR_0);
-	//! [setup_14]
+	//! [setup_15]
+	//! [setup_16]
+	ac_enable_callback(&ac_instance, AC_CALLBACK_COMPARATOR_0);
+	//! [setup_16]
 }
-//! [setup_13]
+//! [setup_14]
 
 //! [setup]
-
 int main(void)
 {
 	//! [setup_init]
 	system_init();
 	configure_ac();
 	configure_ac_channel();
-	configure_ac_callbacks();
-	//! [setup_15]
-	ac_chan_enable(&ac_instance, AC_COMPARATOR_CHANNEL);
-	//! [setup_15]
 	//! [setup_16]
-	ac_enable(&ac_instance);
+	configure_ac_callback();
 	//! [setup_16]
+
 	//! [setup_17]
-	ac_enable_callback(&ac_instance, AC_CALLBACK_COMPARATOR_0);
+	ac_enable(&ac_instance);
 	//! [setup_17]
 	//! [setup_init]
 
