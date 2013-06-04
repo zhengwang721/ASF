@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Initialization of memories (SAM)
+ * \brief SD/MMC stack configuration file.
  *
- * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,22 +40,18 @@
  * \asf_license_stop
  *
  */
-#include <asf.h>
-#include "conf_board.h" /* To get on-board memories configurations */
-#include "memories_initialization.h"
 
-#ifdef CONF_BOARD_AT45DBX
-#include "at45dbx.h"
-#endif
+#ifndef CONF_SD_MMC_H_INCLUDED
+#define CONF_SD_MMC_H_INCLUDED
 
-void memories_initialization(void)
-{
-#ifdef CONF_BOARD_AT45DBX
-	at45dbx_init();
+/* Define it to enable the SPI mode instead of Multimedia Card interface mode */
+#define SD_MMC_SPI_MODE
 
-	if (at45dbx_mem_check() != true) {
-		while (1) {
-		}
-	}
-#endif
-}
+/* Define it to enable the SDIO support */
+#define SDIO_SUPPORT_ENABLE
+
+/* Define it to enable the debug trace to the current standard output (stdio) */
+//#define SD_MMC_DEBUG
+
+#endif /* CONF_SD_MMC_H_INCLUDED */
+

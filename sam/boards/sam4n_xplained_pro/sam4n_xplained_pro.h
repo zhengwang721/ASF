@@ -443,6 +443,19 @@
 #define PIN_ISO7816_RST_IDX        PIO_PA15_IDX
 #define PIN_ISO7816_RST_FLAG       (0)
 
+//! \name IO1 SD card definitions */
+//@{
+#define SD_MMC_SPI_MEM_CNT          1
+#define SD_MMC_0_CD_GPIO            (PIO_PA23_IDX)
+#define SD_MMC_0_CD_DIR             (IOPORT_DIR_INPUT)
+#define SD_MMC_0_CD_MODE            (IOPORT_MODE_PULLUP)
+#define SD_MMC_0_CD_DETECT_VALUE    0
+#define SD_MMC_SPI                  SPI
+#define SD_MMC_SPI_0_CS             0
+#define SD_MMC_0_CD_PIO_ID          ID_PIOA
+//@}
+
+
 /** @} */
 
 /** @} */

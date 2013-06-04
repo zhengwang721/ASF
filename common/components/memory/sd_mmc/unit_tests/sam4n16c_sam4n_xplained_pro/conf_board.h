@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Initialization of memories (SAM)
+ * \brief Board configuration for SD/MMC card example.
  *
- * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,22 +40,17 @@
  * \asf_license_stop
  *
  */
-#include <asf.h>
-#include "conf_board.h" /* To get on-board memories configurations */
-#include "memories_initialization.h"
 
-#ifdef CONF_BOARD_AT45DBX
-#include "at45dbx.h"
-#endif
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-void memories_initialization(void)
-{
-#ifdef CONF_BOARD_AT45DBX
-	at45dbx_init();
+/** Enable COM port. */
+#define CONF_BOARD_UART_CONSOLE
 
-	if (at45dbx_mem_check() != true) {
-		while (1) {
-		}
-	}
-#endif
-}
+/** Enable SD MMC interface pins through SPI */
+#define CONF_BOARD_SD_MMC_SPI
+
+/** SPI slave select MACRO definition */
+#define CONF_BOARD_SPI_NPCS0
+
+#endif /* CONF_BOARD_H_INCLUDED */

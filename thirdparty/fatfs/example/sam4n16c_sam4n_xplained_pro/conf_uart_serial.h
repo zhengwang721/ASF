@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Initialization of memories (SAM)
+ * \brief Serial UART service configuration.
  *
- * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,22 +40,16 @@
  * \asf_license_stop
  *
  */
-#include <asf.h>
-#include "conf_board.h" /* To get on-board memories configurations */
-#include "memories_initialization.h"
 
-#ifdef CONF_BOARD_AT45DBX
-#include "at45dbx.h"
-#endif
+#ifndef CONF_UART_SERIAL_H_INCLUDED
+#define CONF_UART_SERIAL_H_INCLUDED
 
-void memories_initialization(void)
-{
-#ifdef CONF_BOARD_AT45DBX
-	at45dbx_init();
+/** USART Interface */
+#define CONF_TEST_USART      CONSOLE_UART
+/** Baudrate setting */
+#define CONF_TEST_BAUDRATE   115200
+/** Parity setting */
+#define CONF_TEST_PARITY     UART_MR_PAR_NO
+/* Intentionally empty */
 
-	if (at45dbx_mem_check() != true) {
-		while (1) {
-		}
-	}
-#endif
-}
+#endif/* CONF_UART_SERIAL_H_INCLUDED */

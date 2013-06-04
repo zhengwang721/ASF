@@ -1,9 +1,11 @@
 /**
  * \file
  *
- * \brief Initialization of memories (SAM)
+ * \brief AT45DBX configuration file.
  *
- * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
+ * This file contains the possible external configuration of the AT45DBX.
+ *
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,22 +42,31 @@
  * \asf_license_stop
  *
  */
-#include <asf.h>
-#include "conf_board.h" /* To get on-board memories configurations */
-#include "memories_initialization.h"
 
-#ifdef CONF_BOARD_AT45DBX
-#include "at45dbx.h"
-#endif
+#ifndef CONF_AT45DBX_H_INCLUDED
+#define CONF_AT45DBX_H_INCLUDED
 
-void memories_initialization(void)
-{
-#ifdef CONF_BOARD_AT45DBX
-	at45dbx_init();
+#include "board.h"
 
-	if (at45dbx_mem_check() != true) {
-		while (1) {
-		}
-	}
-#endif
-}
+//! Connect AT45DBx driver to spi master service
+#define AT45DBX_USES_SPI_MASTER_SERVICE
+
+//! Select the SPI module AT45DBX is connected to
+#define AT45DBX_SPI_MODULE          SPI
+
+//! Size of AT45DBX data flash memories to manage.
+#define AT45DBX_MEM_SIZE            AT45DBX_500KB
+
+//! Number of AT45DBX components to manage.
+#define AT45DBX_MEM_CNT             1
+
+//! SPI master speed in Hz.
+#define AT45DBX_SPI_MASTER_SPEED    1000000
+
+//! First chip select used by AT45DBX components on the SPI module instance.
+#define AT45DBX_CS                  1
+
+//! Number of bits in each SPI transfer.
+#define AT45DBX_SPI_BITS            8
+
+#endif  /* CONF_AT45DBX_H_INCLUDED */

@@ -1,9 +1,8 @@
-/**
- * \file
+/*! \file
  *
- * \brief Initialization of memories (SAM)
+ * \brief Unit test configuration.
  *
- * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,22 +39,20 @@
  * \asf_license_stop
  *
  */
-#include <asf.h>
-#include "conf_board.h" /* To get on-board memories configurations */
-#include "memories_initialization.h"
 
-#ifdef CONF_BOARD_AT45DBX
-#include "at45dbx.h"
-#endif
+#ifndef CONF_TEST_H_INCLUDED
+#define CONF_TEST_H_INCLUDED
 
-void memories_initialization(void)
-{
-#ifdef CONF_BOARD_AT45DBX
-	at45dbx_init();
 
-	if (at45dbx_mem_check() != true) {
-		while (1) {
-		}
-	}
-#endif
-}
+/** USART Interface  : Console UART */
+#define CONF_TEST_USART      CONSOLE_UART
+/** Baudrate setting : 115200 */
+#define CONF_TEST_BAUDRATE   115200
+/** Char setting     : 8-bit character length (don't care for UART) */
+#define CONF_TEST_CHARLENGTH 0
+/** Parity setting   : No parity check */
+#define CONF_TEST_PARITY     UART_MR_PAR_NO
+/** Stopbit setting  : No extra stopbit, i.e., use 1 (don't care for UART) */
+#define CONF_TEST_STOPBITS   false
+
+#endif /* CONF_TEST_H_INCLUDED */
