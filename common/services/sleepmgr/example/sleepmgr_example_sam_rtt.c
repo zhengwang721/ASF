@@ -56,7 +56,7 @@ void RTT_Handler(void)
 int main(void)
 {
 	enum sleepmgr_mode current_sleep_mode = SLEEPMGR_ACTIVE;
-	
+
 	/*
 	 * Initialize the synchronous clock system to the default configuration
 	 * set in conf_clock.h.
@@ -78,7 +78,7 @@ int main(void)
 
 #if SAM4N || SAM4S || SAM4E
 	rtt_sel_source(RTT, false);
-#endif	
+#endif
 	rtt_init(RTT, 32768);
 
 	/* Enable RTT interrupt */
@@ -97,7 +97,7 @@ int main(void)
 	sleepmgr_lock_mode(current_sleep_mode);
 
 	while (1) {
-		
+
 		rtt_write_alarm_time(RTT, rtt_read_timer_value(RTT) + 5);
 		/*
 		 * Turn the activity status LED off to inform the user that the
@@ -110,7 +110,7 @@ int main(void)
 		 * deeper than the currently locked sleep mode).
 		 */
 		sleepmgr_enter_sleep();
-		
+
 		/*
 		 * Turn the activity status LED on to inform the user that the
 		 * device is active.
@@ -153,7 +153,7 @@ int main(void)
  * \section exampledescription Description of the example
  * The device is put to sleep in sleep modes with increasing "depth", and is
  * periodically woken up by the RTT_ALARM.  The RTT_ALARM wakes the CPU
- * every 5 seconds. 
+ * every 5 seconds.
  * The device will remain in ACTIVE mode for approximately 3 seconds after wake-
  * up, before it goes to sleep in the next mode.
  *
