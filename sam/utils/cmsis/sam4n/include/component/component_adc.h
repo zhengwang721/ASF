@@ -59,7 +59,8 @@ typedef struct {
   RwReg ADC_CWR;       /**< \brief (Adc Offset: 0x44) Compare Window Register */
   RoReg Reserved2[2];
   RoReg ADC_CDR[17];   /**< \brief (Adc Offset: 0x50) Channel Data Register */
-  RoReg Reserved3[20];
+  RwReg ADC_ACR;       /**< \brief (Adc Offset: 0x94) Analog Control Register */
+  RoReg Reserved3[19];
   RwReg ADC_WPMR;      /**< \brief (Adc Offset: 0xE4) Write Protect Mode Register */
   RoReg ADC_WPSR;      /**< \brief (Adc Offset: 0xE8) Write Protect Status Register */
   RoReg Reserved4[5];

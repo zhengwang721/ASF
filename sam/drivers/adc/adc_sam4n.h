@@ -50,12 +50,19 @@
 /** Write Protect Key */
 #define   ADC_WPMR_WPKEY_ADC   (0x414443u << 8)
 
+#define   ADC_ACR_IRVCE        (0x1u << 2)  /**< \brief (ADC_ACR) Internal Reference Voltage Change Enable */
+#define   ADC_ACR_FORCEREF     (0x1u << 19) /**< \brief (ADC_ACR) Force Internal Reference Voltage */
+#define   ADC_ACR_ONREF        (0x1u << 20) /**< \brief (ADC_ACR) Internal Voltage reference is selected */
+
+#define   ADC_ACR_IRVS_Pos     6
+
+
 /** Definitions for ADC resolution */
 enum adc_resolution {
 	ADC_8_BITS = ADC_MR_LOWRES_BITS_8,        /* ADC 8-bit resolution */
 	ADC_10_BITS = ADC_MR_LOWRES_BITS_10,      /* ADC 10-bit resolution */
 	ADC_11_BITS = ADC_EMR_OSR_OSR4,           /* ADC 11-bit resolution */
-	ADC_12_BITS = ADC_EMR_OSR_OSR16,          /* ADC 12-bit resolution */
+    ADC_12_BITS = ADC_EMR_OSR_OSR16           /* ADC 12-bit resolution */
 };
 
 /** Definitions for ADC power mode */
@@ -79,7 +86,7 @@ enum adc_trigger {
 	/* TIO Output of the Timer Counter Channel 2 */
 	ADC_TRIG_TIO_CH_2 = ADC_MR_TRGSEL_ADC_TRIG3 | ADC_MR_TRGEN,
 	/* Freerun mode conversion. */
-	ADC_TRIG_FREERUN = 0xFF,
+    ADC_TRIG_FREERUN = 0xFF
 };
 
 /** Definitions for ADC channel number */
@@ -101,7 +108,7 @@ enum adc_channel_num {
 	ADC_CHANNEL_14,
 	ADC_CHANNEL_15,
 	ADC_TEMPERATURE_SENSOR,
-	ADC_CHANNEL_ALL = 0xFFFF,
+    ADC_CHANNEL_ALL = 0xFFFF
 };
 
 /** Definitions for ADC Start Up Time */
@@ -140,6 +147,14 @@ enum adc_temp_cmp_mode {
 	ADC_TEMP_CMP_MODE_3 = ADC_TEMPMR_TEMPCMPMOD_OUT
 };
 
+/** Definitions for Reference Voltage Selection */
+enum adc_refer_voltage_source {
+    ADC_REFER_VOL_EXTERNAL = 0,
+    ADC_REFER_VOL_STUCK_AT_MIN,
+    ADC_REFER_VOL_VDDANA,
+    ADC_REFER_VOL_IRVS
+};
+
 /**
  * \brief ADC Enhanced configuration structure.
  *
@@ -166,10 +181,6 @@ struct adc_config {
 	bool tag;
 	/** Averaging on Single Trigger Event */
 	bool aste;
-	/** Internal Reference Voltage Change Enable */
-	bool irvce;
-	/** Internal Voltage Reference On */
-	bool onref;
 };
 
 /** ADC Temperature Sensor configuration structure.*/
@@ -210,7 +221,7 @@ enum adc_interrupt_source {
 	ADC_INTERRUPT_COMP_ERROR,
 	ADC_INTERRUPT_END_RXBUF,
 	ADC_INTERRUPT_RXBUF_FULL,
-	ADC_INTERRUPT_ALL = 0xFFFFFFFF,
+    ADC_INTERRUPT_ALL = 0xFFFFFFFF
 };
 
 typedef void (*adc_callback_t)(void);
@@ -234,8 +245,8 @@ void adc_set_callback(Adc *const adc, enum adc_interrupt_source source,
  * \internal
  * \brief ADC channel sanity check
  *
- * \param afec  Base address of the ADC.
- * \param channel  ADC channel number.
+ * \param adc  Base address of the ADC.
+ * \param channel  Adc channel number.
  *
  */
 static inline void adc_ch_sanity_check(Adc *const adc,
@@ -243,7 +254,7 @@ static inline void adc_ch_sanity_check(Adc *const adc,
 {
 	if (adc == ADC) {
 		Assert((channel < NB_CH_ADC) ||
-				(channel == AFEC_TEMPERATURE_SENSOR));
+				(channel == ADC_TEMPERATURE_SENSOR));
 	}
 
 	UNUSED(channel);
@@ -252,7 +263,7 @@ static inline void adc_ch_sanity_check(Adc *const adc,
 /**
  * \brief Configure conversion trigger and free run mode.
  *
- * \param ADC  Base address of the ADC.
+ * \param adc  Base address of the ADC.
  * \param trigger Conversion trigger.
  *
  */
@@ -284,7 +295,7 @@ void adc_set_comparison_mode(Adc *const adc,
 /**
  * \brief Get comparison mode.
  *
- * \param ADC  Base address of the ADC.
+ * \param adc  Base address of the ADC.
  *
  * \retval Compare mode value.
  */
@@ -296,7 +307,7 @@ static inline enum adc_cmp_mode adc_get_comparison_mode(Adc *const adc)
 /**
  * \brief Configure ADC compare window.
  *
- * \param ADC  Base address of the ADC.
+ * \param adc  Base address of the ADC.
  * \param us_low_threshold Low threshold of compare window.
  * \param us_high_threshold High threshold of compare window.
  */
@@ -311,7 +322,7 @@ static inline void adc_set_comparison_window(Adc *const adc,
 /**
  * \brief Enable or disable write protection of ADC registers.
  *
- * \param ADC  Base address of the ADC.
+ * \param adc  Base address of the ADC.
  * \param is_enable 1 to enable, 0 to disable.
  */
 static inline void adc_set_writeprotect(Adc *const adc,
@@ -328,7 +339,7 @@ static inline void adc_set_writeprotect(Adc *const adc,
 /**
  * \brief Indicate write protect status.
  *
- * \param ADC  Base address of the ADC.
+ * \param adc  Base address of the ADC.
  *
  * \return 0 if the peripheral is not protected, or 16-bit write protect
  * violation source.
@@ -342,7 +353,7 @@ static inline uint32_t adc_get_writeprotect_status(Adc *const adc)
 /**
  * \brief Get ADC overrun error status.
  *
- * \param ADC  Base address of the ADC.
+ * \param adc  Base address of the ADC.
  *
  * \return ADC overrun error status.
  */
@@ -352,12 +363,22 @@ static inline uint32_t adc_get_overrun_status(Adc *const adc)
 }
 
 /**
+ * \brief Set ADC averaging on single trigger event
+ *
+ * \param adc Base address of the ADC.
+ */
+static inline void adc_average_on_single_trigger(Adc *const adc)
+{
+    adc->ADC_EMR |= ADC_EMR_ASTE_SINGLE_TRIG_AVERAGE;
+}
+
+/**
  * \brief Start analog-to-digital conversion.
  *
  * \note If one of the hardware event is selected as ADC trigger,
  * this function can NOT start analog to digital conversion.
  *
- * \param ADC  Base address of the ADC.
+ * \param adc  Base address of the ADC.
  */
 static inline void adc_start_software_conversion(Adc *const adc)
 {
@@ -370,8 +391,8 @@ void adc_set_power_mode(Adc *const adc,
 /**
  * \brief Enable the specified ADC channel.
  *
- * \param ADC  Base address of the ADC.
- * \param ADC_ch ADC channel number.
+ * \param adc  Base address of the ADC.
+ * \param adc_ch Adc channel number.
  */
 static inline void adc_channel_enable(Adc *const adc,
 		const enum adc_channel_num adc_ch)
@@ -387,8 +408,8 @@ static inline void adc_channel_enable(Adc *const adc,
 /**
  * \brief Disable the specified ADC channel.
  *
- * \param ADC  Base address of the ADC.
- * \param ADC_ch ADC channel number.
+ * \param adc  Base address of the ADC.
+ * \param adc_ch Adc channel number.
  */
 static inline void adc_channel_disable(Adc *const adc,
 		const enum adc_channel_num adc_ch)
@@ -404,8 +425,8 @@ static inline void adc_channel_disable(Adc *const adc,
 /**
  * \brief Get the ADC channel status.
  *
- * \param ADC  Base address of the ADC.
- * \param ADC_ch ADC channel number.
+ * \param adc  Base address of the ADC.
+ * \param adc_ch Adc channel number.
  *
  * \retval 1 if channel is enabled.
  * \retval 0 if channel is disabled.
@@ -421,8 +442,8 @@ static inline uint32_t adc_channel_get_status(Adc *const adc,
 /**
  * \brief Read the Converted Data of the selected channel.
  *
- * \param ADC  Base address of the ADC.
- * \param ADC_ch ADC channel number.
+ * \param adc  Base address of the ADC.
+ * \param adc_ch Adc channel number.
  *
  * \return ADC converted value of the selected channel.
  */
@@ -437,7 +458,7 @@ static inline uint32_t adc_channel_get_value(Adc *const adc,
 /**
  * \brief Get the Last Data Converted.
  *
- * \param ADC  Base address of the ADC.
+ * \param adc  Base address of the ADC.
  *
  * \return ADC latest converted value.
  */
@@ -449,7 +470,7 @@ static inline uint32_t adc_get_latest_value(Adc *const adc)
 /**
  * \brief Get the Last Converted Channel Number.
  *
- * \param ADC  Base address of the ADC.
+ * \param adc Base address of the ADC.
  *
  * \return ADC Last Converted Channel Number.
  */
@@ -467,7 +488,7 @@ void adc_disable_interrupt(Adc *const adc,
 /**
  * \brief Get ADC interrupt status.
  *
- * \param ADC  Base address of the ADC.
+ * \param adc  Base address of the ADC.
  *
  * \return The interrupt status value.
  */
@@ -479,7 +500,7 @@ static inline uint32_t adc_get_interrupt_status(Adc *const adc)
 /**
  * \brief Get ADC interrupt mask.
  *
- * \param ADC  Base address of the ADC.
+ * \param adc  Base address of the ADC.
  *
  * \return The interrupt mask value.
  */
@@ -491,9 +512,9 @@ static inline uint32_t adc_get_interrupt_mask(Adc *const adc)
 /**
  * \brief Get PDC registers base address.
  *
- * \param ADC  Base address of the ADC.
+ * \param adc  Base address of the ADC.
  *
- * \return ADC PDC register base address.
+ * \return Adc Pdc register base address.
  */
 static inline Pdc *adc_get_pdc_base(Adc *const adc)
 {
@@ -509,7 +530,7 @@ static inline Pdc *adc_get_pdc_base(Adc *const adc)
 /**
  * \brief Launch an automatic calibration of the ADC on next sequence.
  *
- * \param ADC  Base address of the ADC.
+ * \param adc  Base address of the ADC.
  *
  * \retval STATUS_OK  An automatic calibration is launched.
  * \retval STATUS_ERR_BUSY  Automatic calibration can not be launched because
@@ -524,5 +545,32 @@ static inline enum status_code adc_start_calibration(Adc *const adc)
 	adc->ADC_CR = ADC_CR_AUTOCAL;
 	return STATUS_OK;
 }
+
+
+/**
+ * \brief ADC Reference Voltage Selection
+ *
+ * \param  adc  Base address of the ADC.
+ * \param  adc_ref_src The source selection for ADC reference voltage, See the product
+ *         electrical characteristics for further details.
+ * \param  irvs Internal reference volatage selection, only be effective when adc_ref_src
+ *         equals to ADC_REFER_VOL_IRVS
+ */
+static inline void adc_ref_vol_sel(Adc *const adc, enum adc_refer_voltage_source adc_ref_src,
+                                   uint8_t irvs)
+{
+    if (ADC_REFER_VOL_EXTERNAL == adc_ref_src){
+        adc->ADC_ACR &= ~ADC_ACR_ONREF;
+    } else if (ADC_REFER_VOL_STUCK_AT_MIN == adc_ref_src) {
+        adc->ADC_ACR |= ADC_ACR_ONREF;
+        adc->ADC_ACR &= ~(ADC_ACR_IRVCE | ADC_ACR_FORCEREF);
+    } else if (ADC_REFER_VOL_VDDANA == adc_ref_src) {
+        adc->ADC_ACR |= ADC_ACR_ONREF | ADC_ACR_FORCEREF;
+    } else if (ADC_REFER_VOL_IRVS == adc_ref_src) {
+        adc->ADC_ACR &= ~ADC_ACR_FORCEREF;
+        adc->ADC_ACR |= ADC_ACR_ONREF | ADC_ACR_IRVCE | (irvs << ADC_ACR_IRVS_Pos);
+    }
+}
+
 
 #endif /* ADC_SAM4N_H_INCLUDED */

@@ -42,7 +42,7 @@
  */
 
 #include "adc_sam4n.h"
-//#include "sleepmgr.h"
+#include "sleepmgr.h"
 #include "status_codes.h"
 #include "sysclk.h"
 #include "pmc.h"
@@ -94,6 +94,7 @@ static void adc_set_config(Adc *const adc, struct adc_config *config)
              ADC_10_BITS == config->resolution) {
 		adc->ADC_MR |= config->resolution;
 	} else {
+		adc->ADC_MR &= ~ADC_MR_LOWRES;
 		adc->ADC_EMR |= config->resolution;
 	}
 }
@@ -205,6 +206,25 @@ enum status_code adc_init(Adc *const adc, struct adc_config *config)
 }
 
 /**
+ * \brief Configure conversion resolution.
+ *
+ * \param adc  Base address of the ADC.
+ * \param res Conversion resolution.
+ *
+ */
+void adc_set_resolution(Adc *const adc,
+        const enum adc_resolution res)
+{
+    if (ADC_8_BITS == res ||
+             ADC_10_BITS == res) {
+        adc->ADC_MR |= res;
+    } else {
+        adc->ADC_MR &= ~ADC_MR_LOWRES;
+        adc->ADC_EMR |= res;
+    }
+}
+
+/**
  * \brief Configure comparison mode.
  *
  * \param adc  Base address of the ADC.
@@ -312,7 +332,7 @@ void adc_disable_interrupt(Adc *const adc,
 		adc->ADC_IDR = ADC_INTERRUPT_ALL;
 		return;
 	} else {
-		adc->ADC_IDR = interrupt_source;
+		adc->ADC_IDR = adc_interrupt_mask[interrupt_source];
 	}
 }
 
@@ -371,7 +391,7 @@ void adc_enable(Adc *const adc)
 	Assert(adc);
 	/* Enable peripheral clock. */
 	pmc_enable_periph_clk(ADC_ID);
-	//sleepmgr_lock_mode(SLEEPMGR_SLEEP_WFI);
+	sleepmgr_lock_mode(SLEEPMGR_SLEEP_WFI);
 }
 
 /**
@@ -384,7 +404,7 @@ void adc_disable(Adc *const adc)
 	Assert(adc);
 	/* Disable peripheral clock. */
 	pmc_disable_periph_clk(ADC_ID);
-	//sleepmgr_unlock_mode(SLEEPMGR_SLEEP_WFI);
+	sleepmgr_unlock_mode(SLEEPMGR_SLEEP_WFI);
 }
 
 /**
