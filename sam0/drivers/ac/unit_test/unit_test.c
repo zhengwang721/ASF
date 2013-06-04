@@ -118,7 +118,7 @@ volatile bool ac_init_success = false;
  *
  * \param module Pointer to the AC module (not used)
  */
-void ac_user_callback(struct ac_module *const module_inst)
+static void ac_user_callback(struct ac_module *const module_inst)
 {
 	interrupt_flag = true;
 }
@@ -525,7 +525,7 @@ static void run_ac_window_mode_test(const struct test_case *test)
 	}
 	state = ac_win_get_status(&ac_inst, AC_WIN_CHANNEL_0);
 	state = state & AC_WIN_STATUS_INSIDE;
-	test_assert_true(test, state == AC_WIN_STATUS_INSIDE, 
+	test_assert_true(test, state == AC_WIN_STATUS_INSIDE,
 			"AC window mode: Within limit not detected");
 	ac_win_clear_status(&ac_inst, AC_WIN_CHANNEL_0);
 	ac_chan_clear_status(&ac_inst, AC_CHAN_CHANNEL_0);

@@ -62,6 +62,9 @@ void at30tse_init(void)
 	/* Change buffer timeout to something longer. */
 	conf.buffer_timeout = 10000;
 
+	conf.pinmux_pad0 = AT30TSE_PINMUX_PAD0;
+	conf.pinmux_pad1 = AT30TSE_PINMUX_PAD1;
+
 	/* Initialize and enable device with config. */
 	i2c_master_init(&dev_inst_at30tse75x, AT30TSE_SERCOM, &conf);
 	i2c_master_enable(&dev_inst_at30tse75x);

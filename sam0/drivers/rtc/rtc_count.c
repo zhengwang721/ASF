@@ -109,7 +109,8 @@ static enum status_code _rtc_count_set_config(
 					/* Wait for synchronization */
 				}
 
-				rtc_count_set_compare(config->compare_values[i], i);
+				rtc_count_set_compare(config->compare_values[i],
+						(enum rtc_count_compare)i);
 			}
 			break;
 
@@ -129,7 +130,8 @@ static enum status_code _rtc_count_set_config(
 					/* Wait for synchronization */
 				}
 
-				rtc_count_set_compare(config->compare_values[i], i);
+				rtc_count_set_compare(config->compare_values[i],
+						(enum rtc_count_compare)i);
 			}
 			break;
 		default:

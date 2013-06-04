@@ -67,7 +67,7 @@ static enum system_interrupt_vector _tc_interrupt_get_interrupt_vector(
 			MREPEAT(TC_INST_NUM, _TC_INTERRUPT_VECT_NUM, ~)
 		};
 
-	return tc_interrupt_vectors[inst_num];
+	return (enum system_interrupt_vector)tc_interrupt_vectors[inst_num];
 }
 #endif /* !defined(__DOXYGEN__) */
 

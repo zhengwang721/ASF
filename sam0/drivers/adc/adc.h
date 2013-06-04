@@ -1531,8 +1531,8 @@ static inline enum status_code adc_set_pin_scan_mode(
 		inputs_to_scan--;
 	}
 
-	if (inputs_to_scan > ADC_INPUTCTRL_INPUTSCAN_Msk ||
-			start_offset > ADC_INPUTCTRL_INPUTOFFSET_Msk) {
+	if (inputs_to_scan > (ADC_INPUTCTRL_INPUTSCAN_Msk >> ADC_INPUTCTRL_INPUTSCAN_Pos) ||
+			start_offset > (ADC_INPUTCTRL_INPUTOFFSET_Msk >> ADC_INPUTCTRL_INPUTOFFSET_Pos)) {
 		/* Invalid number of input pins */
 		return STATUS_ERR_INVALID_ARG;
 	}
