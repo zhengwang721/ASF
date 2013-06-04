@@ -48,6 +48,8 @@
 /* === INCLUDES ============================================================ */
 #include "tal.h"
 # include "led.h"
+#include <stdio.h>
+#include <stdlib.h>
 # include "app_init.h"
 
 /**

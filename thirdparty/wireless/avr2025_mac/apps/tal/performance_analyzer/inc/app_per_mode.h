@@ -313,7 +313,18 @@ void per_mode_receptor_rx_cb(frame_info_t *frame);
  */
 void app_reset(void);
 
+/**
+ * \brief Timer Callback function  if marker response command is transmitted on air
+ *  This is used to blink the LED and thus identify that the transmission is done
+ * \param parameter pass parameters to timer handler
+ */
 void marker_tx_timer_handler_cb(void *parameter);
+
+/**
+ * \brief Timer Callback function  if marker command is received on air
+ * This is used to blink the LED and thus identify that the marker frame is received
+ * \param parameter pass parameters to timer handler
+ */
 void marker_rsp_timer_handler_cb(void *parameter);
 
 //! \}

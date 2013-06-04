@@ -191,7 +191,6 @@ static void toggle_trx_sleep(void);
 static void config_rpc_mode(bool config_value);
 static void config_frequency(float frequency);
 #endif /*End of #if (TAL_TYPE == AT86RF233) */
-frame_info_t *range_tx_frame;
 #if((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B))
 static bool validate_tx_power(int8_t dbm_value);
 #endif
@@ -468,13 +467,17 @@ void per_mode_initiator_task(void)
         }
     }
 }
+/** \brief This function is called periodically by the range test 
+ * timer to initiate the transmission of range test packets to the receptor
+ * \param parameter pass parameters to timer handler
+ */
 static void  range_test_timer_handler_cb(void *parameter)
 {
 
-
-    seq_num_initiator++;
-    //To_be_done Try to optmize this
+     /* Update the FCF and payload before transmission */
     configure_range_test_frame_sending();
+    
+    /* Transmit the Range Test Packet */    
     if (curr_trx_config_params.csma_enabled)
     {
         tal_tx_frame(node_info.tx_frame_info,
@@ -487,6 +490,7 @@ static void  range_test_timer_handler_cb(void *parameter)
                      NO_CSMA_NO_IFS,
                      curr_trx_config_params.retry_enabled );
     }
+    
     node_info.transmitting = true;
 
     sw_timer_start(T_APP_TIMER_RANGE,
@@ -496,6 +500,7 @@ static void  range_test_timer_handler_cb(void *parameter)
                 NULL);
 
 }
+
 /**
  * \brief Wait for reply timer handler is called if any command sent on air
  * times out before any response message is received.
@@ -751,34 +756,39 @@ void per_mode_initiator_tx_done_cb(retval_t status, frame_info_t *frame)
             
        case RANGE_TEST_START:
             {
-                //op_mode = RANGE_TEST_TX;
-                /* As start indication is successful start the actual RANGE Test*/
+                /* As start indication is successful start the actual RANGE Test in PER Mode*/
                 start_range_test();
             }
             break;
             
     case RANGE_TEST_STOP:
           {
+            /* Set the falg to default */
             range_test_in_progress = false;
+            /* reset the frame sount */
             range_test_frame_cnt = 0;
-            usr_range_test_stop_confirm(MAC_SUCCESS);
-            sw_timer_stop(T_APP_TIMER_RANGE);
+            /* Send Stop Confirmation to Host */
+            usr_range_test_stop_confirm(MAC_SUCCESS);            
+            /* Stop the Range Test Timer */
+            sw_timer_stop(T_APP_TIMER_RANGE);            
+            /* Reset the OPMODE */
             op_mode = TX_OP_MODE ;
           }
           break  ;
             
         case RANGE_TEST_TX:
             {
-                app_payload_t *msg;
-
-                /* Point to the message : 1 =>size is first byte and 2=>FCS*/
-                msg = (app_payload_t *)(frame->mpdu + LENGTH_FIELD_LEN + FRAME_OVERHEAD - FCS_LEN);
-                if(msg->cmd_id == RANGE_TEST_PKT)
-                {
+              
+            app_payload_t *msg;
+            /* Point to the message : 1 =>size is first byte and 2=>FCS*/
+            msg = (app_payload_t *)(frame->mpdu + LENGTH_FIELD_LEN + FRAME_OVERHEAD - FCS_LEN);
+            /* Check whether the tx frame was a range test packet*/
+            if(msg->cmd_id == RANGE_TEST_PKT)
+             {
                 app_led_event(LED_EVENT_TX_FRAME);
+                /* Send the transmitted OTA frame to Host UI for disply */
                 usr_range_test_beacon_tx(node_info.tx_frame_info->mpdu);
-                }
-                //usr_range_tx_beacon
+             }
             }
             break;
             
@@ -1244,18 +1254,26 @@ void per_mode_initiator_rx_cb(frame_info_t *mac_frame_info)
             }
             break;
         case RANGE_TEST_RSP:
-            {
+            { 
+                /*Verify if the response is recieved in the correct Operating mode*/                  
                 if (op_mode == RANGE_TEST_TX)
                 {
+                 /* Verify if the frame was already processed*/
                 if(range_test_seq_num == msg->seq_num)
                 {
                 return;
                 }
+                /* Calculate the ED value and LQI for the received frame and 
+                 * also derrive the LQI and ED values sent by the receptor from the received payload */
                 int8_t rssi_base_val,ed_value;
                 rssi_base_val = tal_get_rssi_base_val();
                 uint8_t phy_frame_len = mac_frame_info->mpdu[0];
+                /* Map the register ed value to dbm values */
                 ed_value = mac_frame_info->mpdu[phy_frame_len + LQI_LEN + ED_VAL_LEN] + rssi_base_val;                  
                 app_led_event(LED_EVENT_RX_FRAME);
+                
+                /* Send the range test rsp indication to Host UI with the two set of ED and LQI values */
+                
                 usr_range_test_beacon_rsp(mac_frame_info->mpdu,mac_frame_info->mpdu[phy_frame_len + LQI_LEN],
                                           ed_value,msg->payload.range_tx_data.lqi,msg->payload.range_tx_data.ed);
                 range_test_seq_num = msg->seq_num ;
@@ -1266,18 +1284,22 @@ void per_mode_initiator_rx_cb(frame_info_t *mac_frame_info)
             {
                 if (op_mode == RANGE_TEST_TX)
                 {
+                    /* Calculate the ED value and LQI for the received marker frame */ 
                     int8_t rssi_base_val,ed_value;
                     rssi_base_val = tal_get_rssi_base_val();
                     uint8_t phy_frame_len = mac_frame_info->mpdu[0];
+                    /* Map the register ed value to dbm values */
                     ed_value = mac_frame_info->mpdu[phy_frame_len + LQI_LEN + ED_VAL_LEN] + rssi_base_val;
+                    /* Timer to Perform LED indication for received Marker indication */
                     sw_timer_start(T_APP_TIMER,
                         LED_BLINK_RATE_IN_MICRO_SEC,
                         SW_TIMEOUT_RELATIVE,
                         (FUNC_PTR)marker_rsp_timer_handler_cb,
                         NULL);
-                  send_range_test_marker_rsp();
-                  //send marker indication to GUI
-                  usr_range_test_marker_ind(mac_frame_info->mpdu,mac_frame_info->mpdu[phy_frame_len + LQI_LEN],ed_value);
+                    /* Send response to the receptor on receiving the marker packet */
+                    send_range_test_marker_rsp();
+                    /*send marker indication to Host UI */
+                    usr_range_test_marker_ind(mac_frame_info->mpdu,mac_frame_info->mpdu[phy_frame_len + LQI_LEN],ed_value);
                 }
             }
             break;            
@@ -2660,7 +2682,6 @@ void start_ed_scan(uint8_t ed_scan_duration,uint32_t channel_sel_mask)
 
     scan_duration = ed_scan_duration;    
     scan_channel_mask = (channel_sel_mask & tal_pib.SupportedChannels);
-    //scan_channel_mask = (channel_sel_mask & VALID_CHANNEL_MASK);
 
 #if( (TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B) )
     /* saving the current transmit power to restore after scan*/
@@ -3281,28 +3302,26 @@ static void start_test(void)
 }
 
 /*
- * \brief To Start the Range test
+ * \brief Function to Start the Range test
  */
 static void start_range_test(void)
 {
 
-    /* Send the confirmation with the status as SUCCESS */
+    /* set the range_test_in_progress flag to true to indicate range test is in progress */
     range_test_in_progress = true;
-    usr_range_test_start_confirm(MAC_SUCCESS);
-   
+    
+    /* Send the confirmation with the status as SUCCESS */
+    usr_range_test_start_confirm(MAC_SUCCESS);   
 
-    node_info.transmitting = true;
+    /* Change the OPMODE to Range Test TX */
     op_mode = RANGE_TEST_TX;
 
-
-     sw_timer_start(T_APP_TIMER_RANGE,
+    /* Start a Range test timer  to start the  transmission of range test packets periodically*/    
+    sw_timer_start(T_APP_TIMER_RANGE,
                     RANGE_TX_BEACON_START_INTERVAL,
                     SW_TIMEOUT_RELATIVE,
                     (FUNC_PTR)range_test_timer_handler_cb,
-                    NULL);
-
-
-    
+                    NULL);    
 }
 
 /*
@@ -3310,9 +3329,11 @@ static void start_range_test(void)
  */
 void stop_range_test(void)
 {
-    /* Check for the current operating mode */
+    /* Check for the current operating mode and send stop range test command to the receptor*/
     if ((RANGE_TEST_TX == op_mode)&&(true==range_test_in_progress)&& send_range_test_stop_cmd())
     {
+        /* Change the opmode to RANGE_TEST_STOP so that once the cmd is sent succesfully
+         * the mode can be changed back to TX_OP_MODE and flags can be cleared and send confirmation to Host*/
         op_mode = RANGE_TEST_STOP;
     }
     else
@@ -3429,6 +3450,8 @@ static void configure_range_test_frame_sending(void)
     app_payload_t *tmp;
     range_tx_t *data;
     
+    /* Increment the seq_num of the initiator node */
+    seq_num_initiator++;
     /*
      * Fill in PHY frame.
      */
@@ -3594,7 +3617,9 @@ static bool send_per_test_start_cmd(void)
 }
 
 
-
+/**
+ * \brief Function to send the range test start command to the receptor to start the mode in the receptor
+ */
 static bool send_range_test_start_cmd(void)
 {
     uint8_t payload_length;
@@ -3629,7 +3654,9 @@ static bool send_range_test_start_cmd(void)
 
 }
 
-
+/**
+ * \brief Function to send the range test stop command to the receptor to stop the mode in the receptor
+ */
 static bool send_range_test_stop_cmd(void)
 {
     uint8_t payload_length;
@@ -3664,6 +3691,9 @@ static bool send_range_test_stop_cmd(void)
 
 }
 
+/**
+ * \brief Function to send the response packet for the marker sent from the receptor
+ */
 static bool send_range_test_marker_rsp(void)
 {
   

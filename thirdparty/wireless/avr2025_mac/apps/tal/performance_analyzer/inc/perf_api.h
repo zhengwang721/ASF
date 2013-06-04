@@ -115,11 +115,27 @@ void get_sensor_data(void);
 void get_board_details(void);
 
 
-/* Stops range Test */
+/** Function to  Stop the  range Test in PER Mode */
 void stop_range_test(void);
 
+/**
+ * \brief Function to send  the Received Range Test Response frame to the Host application
+ * \param frame Pointer to the actual frame Received
+ * \param lqi_h LQI of the received response calculated at host
+ * \param ed_h ED value  of the received response calculated at host
+ * \param lqi_r LQI of the sent range test packet calculated at receptor
+ * \param ed_r ED value  of the sent range test packet calculated at receptor
+ */
 void usr_range_test_beacon_rsp(uint8_t* mpdu,uint8_t lqi_h,int8_t ed_h,uint8_t lqi_r,int8_t ed_r);
+
+/**
+ * \brief Function to send  the Marker Indication frame to the Host application
+ * \param mpdu Pointer to the actual marker frame Received
+ * \param lqi LQI of the received marker packet
+ * \param ed_value ED value  of the received marker packet
+ */
 void usr_range_test_marker_ind(uint8_t* mpdu,uint8_t lqi,int8_t ed_value);
+
 /**
  * \brief Identifying peer node
  */
@@ -199,9 +215,6 @@ uint8_t check_error_conditions(void);
  */
 uint8_t get_param_length(uint8_t param_type);
 
-void marker_tx_timer_handler_cb(void *parameter);
-
-void marker_rsp_timer_handler_cb(void *parameter);
 //! \}
 /**
  * \name Functions for User Confirm/Indication  Messages generated in response to the Request Primitives
@@ -246,7 +259,7 @@ void usr_per_test_start_confirm(uint8_t status);
  * Function to generate Range Test Start confirmation frame that must be sent to
  * host application via serial interface.
  * Called by Performance application as confirmation for range_test_start_req request
- * \param status      Result for requested per_test_start_req
+ * \param status      Result for requested range_test_start_req
  *
  * \return void
  */
@@ -256,12 +269,16 @@ void usr_range_test_start_confirm(uint8_t status);
  * Function to generate Range Test Stop confirmation frame that must be sent to
  * host application via serial interface.
  * Called by Performance application as confirmation for range_test_start_req request
- * \param status      Result for requested per_test_start_req
+ * \param status      Result for requested range_test_stop_req
  *
  * \return void
  */
 void usr_range_test_stop_confirm(uint8_t status);
 
+/**
+ * \brief Function to send  the transmitted frame to the Host application
+ * \param frame Pointer to the actual frame transmitted
+ */ 
 void usr_range_test_beacon_tx(uint8_t *frame);
 /**
  * Function to generate Per test End Indication frame that must be sent to

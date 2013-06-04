@@ -140,6 +140,7 @@ void per_mode_receptor_init(void *parameter)
  */
 void per_mode_receptor_task(void)
 {
+  /* For Range Test  in PER Mode the receptor has to poll for a button press to initiate marker transmission */
     if(range_test_in_progress)
   {
     static uint8_t key_press;
@@ -152,7 +153,7 @@ void per_mode_receptor_task(void)
       if (send_range_test_marker_cmd())
         {
           printf("\r\nInitiating Marker Transmission...");
-        //Transmit Marker Frame
+        /* Timer for LED Blink for Marker Transmission*/
         sw_timer_start(APP_TIMER_TO_TX,
                 LED_BLINK_RATE_IN_MICRO_SEC,
                 SW_TIMEOUT_RELATIVE,
@@ -165,6 +166,10 @@ void per_mode_receptor_task(void)
   }
 }
 
+
+/**
+ * \brief Function to send the range test marker command to the initiator node 
+ */
 static bool send_range_test_marker_cmd(void)
 {
   
@@ -506,7 +511,7 @@ void per_mode_receptor_rx_cb(frame_info_t *mac_frame_info)
             break;
     case RANGE_TEST_START_PKT:
             {
-              //
+               /* set the flag to indicate that the receptor node is in range test mode */
                range_test_in_progress = true;
                printf("\r\nStarting Range Test in PER Mode...");
                
@@ -515,6 +520,7 @@ void per_mode_receptor_rx_cb(frame_info_t *mac_frame_info)
             
      case RANGE_TEST_STOP_PKT:
             {
+              /* reset the flag to indicate that the range test mode is stopped*/
                range_test_in_progress = false;
                printf("\r\nStopping Range Test...");
 
@@ -522,33 +528,43 @@ void per_mode_receptor_rx_cb(frame_info_t *mac_frame_info)
             break;            
     case RANGE_TEST_PKT:
             { 
+                /* On reception of the range test packet calculate the ed and lqi values of
+                 * the received pkt and add it as the payload of the response frame*/
                 uint8_t phy_frame_len = mac_frame_info->mpdu[0];
                 uint32_t frame_count;
+                /* Get the frame count in correct format */
                 frame_count = Swap32(CCPU_ENDIAN_TO_LE32(msg->payload.range_tx_data.frame_count));
                 int8_t rssi_base_val,ed_value;
                 rssi_base_val = tal_get_rssi_base_val();
                 app_led_event(LED_EVENT_RX_FRAME);
-                ed_value = mac_frame_info->mpdu[phy_frame_len + LQI_LEN + ED_VAL_LEN] + rssi_base_val;                
+                /* Map the register ed value to dbm values */
+                ed_value = mac_frame_info->mpdu[phy_frame_len + LQI_LEN + ED_VAL_LEN] + rssi_base_val; 
+                /* Send Response cmd to the received Range Test packet with the lqi and ed values */
                 send_range_test_rsp(msg->seq_num,msg->payload.range_tx_data.frame_count, \
                                 ed_value,mac_frame_info->mpdu[phy_frame_len + LQI_LEN]);
+                /* Print the received values to the terminal */
                 printf("\r\nRange Test Packet Received...\tFrame No : %"PRIu32"\tLQI : %d\tED : %d",frame_count,mac_frame_info->mpdu[phy_frame_len + LQI_LEN],ed_value);
 
             }
             break;
-        case RANGE_TEST_MARKER_RSP:
-            {
-                int8_t rssi_base_val,ed_value;
-                rssi_base_val = tal_get_rssi_base_val();
-                uint8_t phy_frame_len = mac_frame_info->mpdu[0];
-                ed_value = mac_frame_info->mpdu[phy_frame_len + LQI_LEN + ED_VAL_LEN] + rssi_base_val;
-                printf("\r\nMarker Response Received... LQI : %d\t ED %d \n",mac_frame_info->mpdu[phy_frame_len + LQI_LEN],ed_value);
-                sw_timer_start(T_APP_TIMER,
+    case RANGE_TEST_MARKER_RSP:
+        {
+            /* On reception of the Response frame to the Marker cmd sent ,
+             * get the lqi and ed values and print it on the terminsl */
+            int8_t rssi_base_val,ed_value;
+            rssi_base_val = tal_get_rssi_base_val();
+            uint8_t phy_frame_len = mac_frame_info->mpdu[0];
+            /* Map the register ed value to dbm values */
+            ed_value = mac_frame_info->mpdu[phy_frame_len + LQI_LEN + ED_VAL_LEN] + rssi_base_val;
+            printf("\r\nMarker Response Received... LQI : %d\t ED %d \n",mac_frame_info->mpdu[phy_frame_len + LQI_LEN],ed_value);
+            /* Timer for LED Blink for Reception of Marker Response*/
+            sw_timer_start(T_APP_TIMER,
                 LED_BLINK_RATE_IN_MICRO_SEC,
                 SW_TIMEOUT_RELATIVE,
                 (FUNC_PTR)marker_rsp_timer_handler_cb,
                 NULL);
-            }
-            break;            
+        }
+        break;            
         case PEER_INFO_REQ:
             {
                 send_peer_info_rsp();
@@ -779,6 +795,11 @@ static void identify_timer_handler_cb(void *parameter)
     return;
 }
 
+/**
+ * \brief Timer Callback function  if marker response command is transmitted on air
+ *  This is used to blink the LED and thus identify that the transmission is done
+ * \param parameter pass parameters to timer handler
+ */
 void marker_tx_timer_handler_cb(void *parameter)
 {
         static uint8_t led_count;
@@ -812,6 +833,11 @@ void marker_tx_timer_handler_cb(void *parameter)
     return;
 }
 
+/**
+ * \brief Timer Callback function  if marker command is received on air
+ * This is used to blink the LED and thus identify that the marker frame is received
+ * \param parameter pass parameters to timer handler
+ */
 void marker_rsp_timer_handler_cb(void *parameter)
 {
       static uint8_t led_count;
@@ -980,8 +1006,11 @@ static void send_peer_info_rsp(void)
 }
 
 /**
- * \brief Function used to send peer_info_rsp command
- *
+ * \brief Function used to send response to the received range test packet
+ * \param seq_num sequence number of the range test packet received
+ * \param frame_count Count of the received Range Test Packet
+ * \param ed ED value of the received range test packet which has to be uploaded into the response payload
+ * \param lqi LQI value of the received range test packet which has to be uploaded into the response payload
  */
 static void send_range_test_rsp(uint8_t seq_num, uint32_t frame_count,int8_t ed,uint8_t lqi)
 {

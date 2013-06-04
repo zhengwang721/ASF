@@ -904,7 +904,7 @@ static inline void handle_incoming_msg(void)
                 }
             }
             break;
-                    /* Process Range Test start command */
+              /* Process Range Test start command */
          case RANGE_TEST_START_REQ:/* 0x50 */
             {
                 if (error_code)
@@ -915,7 +915,7 @@ static inline void handle_incoming_msg(void)
                     usr_range_test_start_confirm(error_code);
                     return;
                 }
-                /* The node should be in the PER_TEST_INITIATOR state to start PER TEST */
+                /* The node should be in the PER_TEST_INITIATOR state to start the GUI based RANGE TEST */
                 if (PER_TEST_INITIATOR == node_info.main_state)
                 {
                     initiate_range_test();
@@ -931,9 +931,8 @@ static inline void handle_incoming_msg(void)
             break;
        case RANGE_TEST_STOP_REQ:/* 0x52 */
             {
-
+                    /* Change the mode of initiator and send stop cmd to receptor once the range test stop command is received */
                     stop_range_test();
-
                 
             }
             break;
@@ -1224,6 +1223,10 @@ void usr_per_test_start_confirm(uint8_t status)
 }
 
 
+/**
+ * \brief Function to send  the transmitted frame to the Host application
+ * \param frame Pointer to the actual frame transmitted
+ */                                                 
 void usr_range_test_beacon_tx(uint8_t *frame)
 {
     uint8_t *msg_buf;
@@ -1236,23 +1239,31 @@ void usr_range_test_beacon_tx(uint8_t *frame)
         return;
     }
     /* Copy Len, Protocol Id, Msg Id parameters */
-    *msg_buf++ = PROTOCOL_ID_LEN + 1 +(RANGE_TEST_PKT_LENGTH-FCS_LEN+1); //1 for phr -> length
+    *msg_buf++ = PROTOCOL_ID_LEN + RANGE_TEST_PKT_LEN;
     *msg_buf++ = PROTOCOL_ID;
     *msg_buf++ = RANGE_TEST_BEACON;
 
-    /* Copy confirmation payload */
-    for(uint8_t i=0;i<(RANGE_TEST_PKT_LENGTH-FCS_LEN+1);i++)
+    /* Copy OTA payload */
+    for(uint8_t i=0;i<(RANGE_TEST_PKT_LEN-1);i++)
     {
     *msg_buf++ = *frame++;
     }
     *msg_buf = EOT;
 }
 
+/**
+ * \brief Function to send  the Received Range Test Response frame to the Host application
+ * \param frame Pointer to the actual frame Received
+ * \param lqi_h LQI of the received response calculated at host
+ * \param ed_h ED value  of the received response calculated at host
+ * \param lqi_r LQI of the sent range test packet calculated at receptor
+ * \param ed_r ED value  of the sent range test packet calculated at receptor
+ */
 void usr_range_test_beacon_rsp(uint8_t* mpdu,uint8_t lqi_h,int8_t ed_h,uint8_t lqi_r,int8_t ed_r)
 {
 
     uint8_t *msg_buf;
-    uint8_t phy_frame_len = mpdu[0];
+    uint8_t phy_frame_len = *mpdu; /* First byte of mpdu is the frame length */
 
     msg_buf = get_next_tx_buffer();
 
@@ -1262,7 +1273,7 @@ void usr_range_test_beacon_rsp(uint8_t* mpdu,uint8_t lqi_h,int8_t ed_h,uint8_t l
         return;
     }
     /* Copy Len, Protocol Id, Msg Id parameters */
-    *msg_buf++ = PROTOCOL_ID_LEN + 5 +(phy_frame_len-1);
+    *msg_buf++ = PROTOCOL_ID_LEN + RANGE_TEST_RSP_PKT_LEN +(phy_frame_len-FCS_LEN+LENGTH_FIELD_LEN);
     *msg_buf++ = PROTOCOL_ID;
     *msg_buf++ = RANGE_TEST_RESPONSE_CONFIRM;
     //send ota frame 
@@ -1279,11 +1290,16 @@ void usr_range_test_beacon_rsp(uint8_t* mpdu,uint8_t lqi_h,int8_t ed_h,uint8_t l
     *msg_buf = EOT;
 }
 
-
+/**
+ * \brief Function to send  the Marker Indication frame to the Host application
+ * \param mpdu Pointer to the actual marker frame Received
+ * \param lqi LQI of the received marker packet
+ * \param ed_value ED value  of the received marker packet
+ */
 void usr_range_test_marker_ind(uint8_t* mpdu,uint8_t lqi,int8_t ed_value)
 {
     uint8_t *msg_buf;
-    uint8_t phy_frame_len = mpdu[0];
+    uint8_t phy_frame_len = *mpdu; /* First byte of mpdu is the frame length */
 
     msg_buf = get_next_tx_buffer();
 
@@ -1293,10 +1309,10 @@ void usr_range_test_marker_ind(uint8_t* mpdu,uint8_t lqi,int8_t ed_value)
         return;
     }
     /* Copy Len, Protocol Id, Msg Id parameters */
-    *msg_buf++ = PROTOCOL_ID_LEN + 3 +(phy_frame_len-1);
+    *msg_buf++ = PROTOCOL_ID_LEN + RANGE_TEST_MARKER_IND_LEN +(phy_frame_len-FCS_LEN+LENGTH_FIELD_LEN);
     *msg_buf++ = PROTOCOL_ID;
     *msg_buf++ = RANGE_TEST_MARKER_INDICATION;
-    //send ota frame excluding the added ed byte at the end
+    //send marker ota frame 
     for(uint8_t i=0;i<phy_frame_len-1;i++)
     {
     *msg_buf++ = *mpdu++;
@@ -1308,10 +1324,10 @@ void usr_range_test_marker_ind(uint8_t* mpdu,uint8_t lqi,int8_t ed_value)
 }
 
 /*
- * Function to generate Range Test Start confirmation frame that must be sent to
+ * Function to generate Range Test Start confirmation  that must be sent to
  * host application via serial interface.
  * Called by Performance application as confirmation for range_test_start_req request
- * \param status      Result for requested per_test_start_req
+ * \param status      Result for requested range_test_start_req
  *
  * \return void
  */
@@ -1340,8 +1356,8 @@ void usr_range_test_start_confirm(uint8_t status)
 /*
  * Function to  Range Test stop confirmation frame that must be sent to
  * host application via serial interface.
- * Called by Performance application as confirmation for range_test_start_req request
- * \param status      Result for requested per_test_start_req
+ * Called by Performance application as confirmation for range_test_stop_req request
+ * \param status      Result for requested range_test_stop_req
  *
  * \return void
  */
