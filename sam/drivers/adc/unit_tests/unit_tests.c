@@ -132,9 +132,9 @@ static void run_adc_tc_trig_test(const struct test_case *test)
 {
 	adc_set_callback(ADC, ADC_INTERRUPT_EOC_11,
 			adc_set_data_ready_flag, 1);
-        
-        configure_tc_trigger();
-        
+
+	configure_tc_trigger();
+
 	delay_ms(2000);
 
 	test_assert_true(test, is_data_ready == true,
@@ -163,12 +163,12 @@ int main(void)
 	struct adc_config adc_cfg;
 
 	adc_get_config_defaults(&adc_cfg);
-        
-   	adc_init(ADC, &adc_cfg);
+
+	adc_init(ADC, &adc_cfg);
 
 	adc_channel_enable(ADC, ADC_CHANNEL_11);
-        
-        adc_set_trigger(ADC, ADC_TRIG_TIO_CH_0);
+
+	adc_set_trigger(ADC, ADC_TRIG_TIO_CH_0);
 
 #if defined(__GNUC__)
 	setbuf(stdout, NULL);
@@ -177,7 +177,7 @@ int main(void)
 	/* Define all the test cases */
 	DEFINE_TEST_CASE(adc_tc_trig_test, NULL, run_adc_tc_trig_test, NULL,
 			"ADC TC Trig test");
-			
+
 	/* Put test case addresses in an array */
 	DEFINE_TEST_ARRAY(adc_tests) = {
 		&adc_tc_trig_test,

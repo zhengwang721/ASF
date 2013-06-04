@@ -46,7 +46,8 @@
  *
  * \section Purpose
  *
- * This example demonstrates how to use the enhanced resolution feature inside the microcontroller.
+ * This example demonstrates how to use the enhanced resolution feature inside
+ *the microcontroller.
  *
  * \section Requirements
  *
@@ -55,14 +56,20 @@
  * \section Description
  *
  * The example is aimed to demonstrate the enhanced resolution feature
- * inside the device. 
+ * inside the device.
  *
- * The ADC supports an 8-bit or 10-bit resolution mode, and conversion results are reported in a
- * common register for all channels, as well as in a channel-dedicated register. The 11-bit and
- * 12-bit resolution modes are obtained by interpolating multiple samples to acquire better accuracy.
- * For 11-bit mode, 4 samples are used, which gives an effective sample rate of 1/4 of the actual sample
- * frequency. For 12-bitmode, 16 samples are used, giving an effective sample rate of 1/16 of the actual
- * sample frequency. This arrangement allows conversion speed to be traded for better accuracy.
+ * The ADC supports an 8-bit or 10-bit resolution mode, and conversion results
+ *are reported in a
+ * common register for all channels, as well as in a channel-dedicated register.
+ *The 11-bit and
+ * 12-bit resolution modes are obtained by interpolating multiple samples to
+ *acquire better accuracy.
+ * For 11-bit mode, 4 samples are used, which gives an effective sample rate of
+ *1/4 of the actual sample
+ * frequency. For 12-bitmode, 16 samples are used, giving an effective sample
+ *rate of 1/16 of the actual
+ * sample frequency. This arrangement allows conversion speed to be traded for
+ *better accuracy.
  *
  * \section Usage
  *
@@ -84,7 +91,8 @@
  *   - 1 stop bit
  *   - No flow control
  * -# In the terminal window, the
- *    following text should appear (values depend on the board and the chip used):
+ *    following text should appear (values depend on the board and the chip
+ *used):
  *    \code
  *     -- ADC Enhanced Resolution xxx --
  *     -- xxxxxx-xx
@@ -110,14 +118,14 @@
 #define STRING_EOL    "\r"
 
 #define STRING_HEADER "\n-- ADC Enhanced Resolution Example --\r\n" \
-		"-- "BOARD_NAME" --\r\n" \
-		"-- Compiled: "__DATE__" "__TIME__" --"STRING_EOL
+	"-- "BOARD_NAME " --\r\n" \
+	"-- Compiled: "__DATE__ " "__TIME__ " --"STRING_EOL
 
 #define MENU_HEADER "\n\r-- press a key to change the resolution mode--\n\r" \
-        "-- a: Normal Resolution Mode, 8-bit --\n\r" \
-        "-- b: Normal Resolution Mode, 10-bit --\n\r" \
-        "-- c: Enhanced Resolution Mode, 11-bit --\n\r" \
-        "-- d: Enhanced Resolution Mode, 12-bit --\n\r" \
+	"-- a: Normal Resolution Mode, 8-bit --\n\r" \
+	"-- b: Normal Resolution Mode, 10-bit --\n\r" \
+	"-- c: Enhanced Resolution Mode, 11-bit --\n\r"	\
+	"-- d: Enhanced Resolution Mode, 12-bit --\n\r"	\
 
 /** The conversion data is done flag */
 volatile bool is_conversion_done = false;
@@ -175,7 +183,7 @@ static void configure_tc_trigger(void)
  */
 static void display_menu(void)
 {
-    puts(MENU_HEADER);
+	puts(MENU_HEADER);
 }
 
 /**
@@ -183,49 +191,54 @@ static void display_menu(void)
  */
 static void set_adc_resolution(void)
 {
-    uint8_t uc_key;
-    uint8_t uc_done = 0;
+	uint8_t uc_key;
+	uint8_t uc_done = 0;
 
-    display_menu();
+	display_menu();
 
-    while (!uc_done) {
-        while (uart_read(CONF_UART, &uc_key));
+	while (!uc_done) {
+		while (uart_read(CONF_UART, &uc_key)) {
+		}
 
-        switch (uc_key) {
-        case 'a':
-            g_max_digital = MAX_DIGITAL_8_Bit;
-            adc_set_resolution(ADC, ADC_8_BITS);
-            puts(" Set Resolution to Normal 8-bit \n\r");
-            uc_done = 1;
-            puts(" Quit Configuration \n\r");
-            break;
-        case 'b':
-            g_max_digital = MAX_DIGITAL_10_BIT;
-            adc_set_resolution(ADC, ADC_10_BITS);
-            puts(" Set Resolution to Normal 10-bit \n\r");
-            uc_done = 1;
-            puts(" Quit Configuration \n\r");
-            break;
-        case 'c':
-            g_max_digital = MAX_DIGITAL_11_BIT;
-            adc_set_resolution(ADC, ADC_11_BITS);
-            adc_average_on_single_trigger(ADC);
-            puts(" Set Resolution to Enhanced 11-bit \n\r");
-            uc_done = 1;
-            puts(" Quit Configuration \n\r");
-            break;
-        case 'd':
-            g_max_digital = MAX_DIGITAL_12_BIT;
-            adc_set_resolution(ADC, ADC_12_BITS);
-            adc_average_on_single_trigger(ADC);
-            puts(" Set Resolution to Enhanced 12-bit \n\r");
-            uc_done = 1;
-            puts(" Quit Configuration \n\r");
-            break;
-        default:
-            break;
-        }
-    }
+		switch (uc_key) {
+		case 'a':
+			g_max_digital = MAX_DIGITAL_8_Bit;
+			adc_set_resolution(ADC, ADC_8_BITS);
+			puts(" Set Resolution to Normal 8-bit \n\r");
+			uc_done = 1;
+			puts(" Quit Configuration \n\r");
+			break;
+
+		case 'b':
+			g_max_digital = MAX_DIGITAL_10_BIT;
+			adc_set_resolution(ADC, ADC_10_BITS);
+			puts(" Set Resolution to Normal 10-bit \n\r");
+			uc_done = 1;
+			puts(" Quit Configuration \n\r");
+			break;
+
+		case 'c':
+			g_max_digital = MAX_DIGITAL_11_BIT;
+			adc_set_resolution(ADC, ADC_11_BITS);
+			adc_average_on_single_trigger(ADC);
+			puts(" Set Resolution to Enhanced 11-bit \n\r");
+			uc_done = 1;
+			puts(" Quit Configuration \n\r");
+			break;
+
+		case 'd':
+			g_max_digital = MAX_DIGITAL_12_BIT;
+			adc_set_resolution(ADC, ADC_12_BITS);
+			adc_average_on_single_trigger(ADC);
+			puts(" Set Resolution to Enhanced 12-bit \n\r");
+			uc_done = 1;
+			puts(" Quit Configuration \n\r");
+			break;
+
+		default:
+			break;
+		}
+	}
 }
 
 /**
@@ -233,7 +246,7 @@ static void set_adc_resolution(void)
  */
 static void adc_end_conversion(void)
 {
-	g_ul_value = adc_channel_get_value(ADC,ADC_CHANNEL_11);
+	g_ul_value = adc_channel_get_value(ADC, ADC_CHANNEL_11);
 	is_conversion_done = true;
 }
 
@@ -245,7 +258,7 @@ static void adc_end_conversion(void)
 int main(void)
 {
 	int32_t ul_vol;
-       
+
 	/* Initialize the SAM system. */
 	sysclk_init();
 	board_init();
@@ -262,26 +275,25 @@ int main(void)
 	adc_get_config_defaults(&adc_cfg);
 
 	adc_init(ADC, &adc_cfg);
-        adc_channel_enable(ADC,ADC_CHANNEL_11);
+	adc_channel_enable(ADC, ADC_CHANNEL_11);
 
-        adc_set_trigger(ADC, ADC_TRIG_TIO_CH_0);
-           
-        adc_set_callback(ADC, ADC_INTERRUPT_EOC_11,
-            adc_end_conversion, 1);
+	adc_set_trigger(ADC, ADC_TRIG_TIO_CH_0);
 
-        set_adc_resolution();
-        adc_start_calibration(ADC);
+	adc_set_callback(ADC, ADC_INTERRUPT_EOC_11,
+			adc_end_conversion, 1);
 
-        /* Configure TC */
-        configure_tc_trigger();
-        
+	set_adc_resolution();
+	adc_start_calibration(ADC);
+
+	/* Configure TC */
+	configure_tc_trigger();
+
 	while (1) {
-
-          /* Check if ADC sample is done. */
-          if(is_conversion_done == true) {
-            ul_vol = g_ul_value * VOLT_REF / g_max_digital;
-            printf("-- Voltage is: %4dmv\r\n", (int)ul_vol);
+		/* Check if ADC sample is done. */
+		if (is_conversion_done == true) {
+			ul_vol = g_ul_value * VOLT_REF / g_max_digital;
+			printf("-- Voltage is: %4dmv\r\n", (int)ul_vol);
 			is_conversion_done = false;
-          }
+		}
 	}
 }

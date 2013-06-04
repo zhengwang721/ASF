@@ -50,19 +50,21 @@
 /** Write Protect Key */
 #define   ADC_WPMR_WPKEY_ADC   (0x414443u << 8)
 
-#define   ADC_ACR_IRVCE        (0x1u << 2)  /**< \brief (ADC_ACR) Internal Reference Voltage Change Enable */
-#define   ADC_ACR_FORCEREF     (0x1u << 19) /**< \brief (ADC_ACR) Force Internal Reference Voltage */
-#define   ADC_ACR_ONREF        (0x1u << 20) /**< \brief (ADC_ACR) Internal Voltage reference is selected */
+#define   ADC_ACR_IRVCE        (0x1u << 2)  /**< \brief (ADC_ACR) Internal
+	                                     *Reference Voltage Change Enable */
+#define   ADC_ACR_FORCEREF     (0x1u << 19) /**< \brief (ADC_ACR) Force Internal
+	                                     *Reference Voltage */
+#define   ADC_ACR_ONREF        (0x1u << 20) /**< \brief (ADC_ACR) Internal
+	                                     *Voltage reference is selected */
 
 #define   ADC_ACR_IRVS_Pos     6
-
 
 /** Definitions for ADC resolution */
 enum adc_resolution {
 	ADC_8_BITS = ADC_MR_LOWRES_BITS_8,        /* ADC 8-bit resolution */
 	ADC_10_BITS = ADC_MR_LOWRES_BITS_10,      /* ADC 10-bit resolution */
 	ADC_11_BITS = ADC_EMR_OSR_OSR4,           /* ADC 11-bit resolution */
-    ADC_12_BITS = ADC_EMR_OSR_OSR16           /* ADC 12-bit resolution */
+	ADC_12_BITS = ADC_EMR_OSR_OSR16       /* ADC 12-bit resolution */
 };
 
 /** Definitions for ADC power mode */
@@ -86,7 +88,7 @@ enum adc_trigger {
 	/* TIO Output of the Timer Counter Channel 2 */
 	ADC_TRIG_TIO_CH_2 = ADC_MR_TRGSEL_ADC_TRIG3 | ADC_MR_TRGEN,
 	/* Freerun mode conversion. */
-    ADC_TRIG_FREERUN = 0xFF
+	ADC_TRIG_FREERUN = 0xFF
 };
 
 /** Definitions for ADC channel number */
@@ -108,7 +110,7 @@ enum adc_channel_num {
 	ADC_CHANNEL_14,
 	ADC_CHANNEL_15,
 	ADC_TEMPERATURE_SENSOR,
-    ADC_CHANNEL_ALL = 0xFFFF
+	ADC_CHANNEL_ALL = 0xFFFF
 };
 
 /** Definitions for ADC Start Up Time */
@@ -149,10 +151,10 @@ enum adc_temp_cmp_mode {
 
 /** Definitions for Reference Voltage Selection */
 enum adc_refer_voltage_source {
-    ADC_REFER_VOL_EXTERNAL = 0,
-    ADC_REFER_VOL_STUCK_AT_MIN,
-    ADC_REFER_VOL_VDDANA,
-    ADC_REFER_VOL_IRVS
+	ADC_REFER_VOL_EXTERNAL = 0,
+	ADC_REFER_VOL_STUCK_AT_MIN,
+	ADC_REFER_VOL_VDDANA,
+	ADC_REFER_VOL_IRVS
 };
 
 /**
@@ -221,7 +223,7 @@ enum adc_interrupt_source {
 	ADC_INTERRUPT_COMP_ERROR,
 	ADC_INTERRUPT_END_RXBUF,
 	ADC_INTERRUPT_RXBUF_FULL,
-    ADC_INTERRUPT_ALL = 0xFFFFFFFF
+	ADC_INTERRUPT_ALL = 0xFFFFFFFF
 };
 
 typedef void (*adc_callback_t)(void);
@@ -369,7 +371,7 @@ static inline uint32_t adc_get_overrun_status(Adc *const adc)
  */
 static inline void adc_average_on_single_trigger(Adc *const adc)
 {
-    adc->ADC_EMR |= ADC_EMR_ASTE_SINGLE_TRIG_AVERAGE;
+	adc->ADC_EMR |= ADC_EMR_ASTE_SINGLE_TRIG_AVERAGE;
 }
 
 /**
@@ -546,31 +548,33 @@ static inline enum status_code adc_start_calibration(Adc *const adc)
 	return STATUS_OK;
 }
 
-
 /**
  * \brief ADC Reference Voltage Selection
  *
  * \param  adc  Base address of the ADC.
- * \param  adc_ref_src The source selection for ADC reference voltage, See the product
+ * \param  adc_ref_src The source selection for ADC reference voltage, See the
+ *product
  *         electrical characteristics for further details.
- * \param  irvs Internal reference volatage selection, only be effective when adc_ref_src
+ * \param  irvs Internal reference volatage selection, only be effective when
+ *adc_ref_src
  *         equals to ADC_REFER_VOL_IRVS
  */
-static inline void adc_ref_vol_sel(Adc *const adc, enum adc_refer_voltage_source adc_ref_src,
-                                   uint8_t irvs)
+static inline void adc_ref_vol_sel(Adc *const adc,
+		enum adc_refer_voltage_source adc_ref_src,
+		uint8_t irvs)
 {
-    if (ADC_REFER_VOL_EXTERNAL == adc_ref_src){
-        adc->ADC_ACR &= ~ADC_ACR_ONREF;
-    } else if (ADC_REFER_VOL_STUCK_AT_MIN == adc_ref_src) {
-        adc->ADC_ACR |= ADC_ACR_ONREF;
-        adc->ADC_ACR &= ~(ADC_ACR_IRVCE | ADC_ACR_FORCEREF);
-    } else if (ADC_REFER_VOL_VDDANA == adc_ref_src) {
-        adc->ADC_ACR |= ADC_ACR_ONREF | ADC_ACR_FORCEREF;
-    } else if (ADC_REFER_VOL_IRVS == adc_ref_src) {
-        adc->ADC_ACR &= ~ADC_ACR_FORCEREF;
-        adc->ADC_ACR |= ADC_ACR_ONREF | ADC_ACR_IRVCE | (irvs << ADC_ACR_IRVS_Pos);
-    }
+	if (ADC_REFER_VOL_EXTERNAL == adc_ref_src) {
+		adc->ADC_ACR &= ~ADC_ACR_ONREF;
+	} else if (ADC_REFER_VOL_STUCK_AT_MIN == adc_ref_src) {
+		adc->ADC_ACR |= ADC_ACR_ONREF;
+		adc->ADC_ACR &= ~(ADC_ACR_IRVCE | ADC_ACR_FORCEREF);
+	} else if (ADC_REFER_VOL_VDDANA == adc_ref_src) {
+		adc->ADC_ACR |= ADC_ACR_ONREF | ADC_ACR_FORCEREF;
+	} else if (ADC_REFER_VOL_IRVS == adc_ref_src) {
+		adc->ADC_ACR &= ~ADC_ACR_FORCEREF;
+		adc->ADC_ACR |= ADC_ACR_ONREF | ADC_ACR_IRVCE |
+				(irvs << ADC_ACR_IRVS_Pos);
+	}
 }
-
 
 #endif /* ADC_SAM4N_H_INCLUDED */

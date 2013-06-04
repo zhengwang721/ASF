@@ -90,8 +90,8 @@ static void adc_set_config(Adc *const adc, struct adc_config *config)
 	adc->ADC_EMR = (config->tag ? ADC_EMR_TAG : 0) |
 			(config->aste ? ADC_EMR_ASTE_SINGLE_TRIG_AVERAGE : 0);
 
-	if (ADC_8_BITS == config->resolution || 
-             ADC_10_BITS == config->resolution) {
+	if (ADC_8_BITS == config->resolution ||
+			ADC_10_BITS == config->resolution) {
 		adc->ADC_MR |= config->resolution;
 	} else {
 		adc->ADC_MR &= ~ADC_MR_LOWRES;
@@ -213,15 +213,15 @@ enum status_code adc_init(Adc *const adc, struct adc_config *config)
  *
  */
 void adc_set_resolution(Adc *const adc,
-        const enum adc_resolution res)
+		const enum adc_resolution res)
 {
-    if (ADC_8_BITS == res ||
-             ADC_10_BITS == res) {
-        adc->ADC_MR |= res;
-    } else {
-        adc->ADC_MR &= ~ADC_MR_LOWRES;
-        adc->ADC_EMR |= res;
-    }
+	if (ADC_8_BITS == res ||
+			ADC_10_BITS == res) {
+		adc->ADC_MR |= res;
+	} else {
+		adc->ADC_MR &= ~ADC_MR_LOWRES;
+		adc->ADC_EMR |= res;
+	}
 }
 
 /**
