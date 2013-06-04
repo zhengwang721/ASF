@@ -328,14 +328,14 @@ static void init_aes()
 		,FIRMWARE_AES_KEY_WORD1
 		,FIRMWARE_AES_KEY_WORD2
 		,FIRMWARE_AES_KEY_WORD3
-		#if FIRMWARE_AES_KEY_SIZE > 128
+#if FIRMWARE_AES_KEY_SIZE > 128
 		,FIRMWARE_AES_KEY_WORD4
 		,FIRMWARE_AES_KEY_WORD5
-		#endif
-		#if FIRMWARE_AES_KEY_SIZE > 192
+#endif
+#if FIRMWARE_AES_KEY_SIZE > 192
 		,FIRMWARE_AES_KEY_WORD6
 		,FIRMWARE_AES_KEY_WORD7
-		#endif
+#endif
 	};
 
 	uint32_t aes_initvect[4] = {
@@ -457,9 +457,12 @@ static void firmware_gen_system_init()
 int main(void)
 {
 	uint32_t file_size = 0;
-	uint32_t temp;
-	uint8_t lun, i;
+	uint8_t lun;
 	FRESULT res;
+#if FIRMWARE_AES_ENABLED
+	uint32_t temp;
+	uint8_t i;
+#endif
 
 	/* Device initialization for the bootloader */
 	firmware_gen_system_init();
