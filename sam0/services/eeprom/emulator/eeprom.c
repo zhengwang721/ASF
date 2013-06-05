@@ -395,8 +395,8 @@ static enum status_code _eeprom_emulator_move_data_to_spare(
 		uint32_t new_page =
 				((_eeprom_instance.spare_row * NVMCTRL_ROW_PAGES) + c);
 
-		/* Flush cache buffer to write any uncommitted data */
-		eeprom_emulator_flush_page_buffer();
+		/* Commit any cached data to physical non-volatile memory */
+		eeprom_emulator_commit_page_buffer();
 
 		/* Check if we we are looking at the page the calling function wishes
 		 * to change during the move operation */
@@ -413,7 +413,7 @@ static enum status_code _eeprom_emulator_move_data_to_spare(
 		}
 
 		/* Fill the physical NVM buffer with the new data so that it can be
-		 * quickly flushed in the future if needed due to a low power
+		 * quickly committed in the future if needed due to a low power
 		 * condition */
 		_eeprom_emulator_nvm_fill_cache(new_page, &_eeprom_instance.cache);
 
@@ -652,7 +652,7 @@ void eeprom_emulator_erase_memory(void)
  *
  * \note Data stored in pages may be cached in volatile RAM memory; to commit
  *       any cached data to physical non-volatile memory, the
- *       \ref eeprom_emulator_flush_page_buffer() function should be called.
+ *       \ref eeprom_emulator_commit_page_buffer() function should be called.
  *
  * \param[in] logical_page  Logical EEPROM page number to write to
  * \param[in] data          Pointer to the data buffer containing source data to
@@ -680,12 +680,12 @@ enum status_code eeprom_emulator_write_page(
 	}
 
 	/* Check if the cache is active and the currently cached page is not the
-	 * page that is being written (if not, we need to flush and cache the new
+	 * page that is being written (if not, we need to commit and cache the new
 	 * page) */
 	if ((_eeprom_instance.cache_active == true) &&
 			(_eeprom_instance.cache.header.logical_page != logical_page)) {
-		/* Flush the currently cached data buffer to non-volatile memory */
-		eeprom_emulator_flush_page_buffer();
+		/* Commit the currently cached data buffer to non-volatile memory */
+		eeprom_emulator_commit_page_buffer();
 	}
 
 	/* Check if we have space in the current page location's physical row for
@@ -718,7 +718,7 @@ enum status_code eeprom_emulator_write_page(
 			EEPROM_PAGE_SIZE);
 
 	/* Fill the physical NVM buffer with the new data so that it can be quickly
-	 * flushed in the future if needed due to a low power condition */
+	 * committed in the future if needed due to a low power condition */
 	_eeprom_emulator_nvm_fill_cache(new_page, &_eeprom_instance.cache);
 
 	/* Update the cache parameters and mark the cache as active */
@@ -787,7 +787,7 @@ enum status_code eeprom_emulator_read_page(
  *
  * \note Data stored in pages may be cached in volatile RAM memory; to commit
  *       any cached data to physical non-volatile memory, the
- *       \ref eeprom_emulator_flush_page_buffer() function should be called.
+ *       \ref eeprom_emulator_commit_page_buffer() function should be called.
  *
  * \param[in] offset  Starting byte offset to write to, in emulated EEPROM
  *                    memory space
@@ -913,9 +913,9 @@ enum status_code eeprom_emulator_read_buffer(
 }
 
 /**
- * \brief Flushes any cached data to physical non-volatile memory
+ * \brief Commits any cached data to physical non-volatile memory
  *
- * Flushes the internal SRAM caches to physical non-volatile memory, to ensure
+ * Commits the internal SRAM caches to physical non-volatile memory, to ensure
  * that any outstanding cached data is preserved. This function should be called
  * prior to a system reset or shutdown to prevent data loss.
  *
@@ -930,11 +930,11 @@ enum status_code eeprom_emulator_read_buffer(
  *
  * \return Status code indicating the status of the operation.
  */
-enum status_code eeprom_emulator_flush_page_buffer(void)
+enum status_code eeprom_emulator_commit_page_buffer(void)
 {
 	enum status_code error_code = STATUS_OK;
 
-	/* If cache is inactive, no need to flush anything to physical memory */
+	/* If cache is inactive, no need to commit anything to physical memory */
 	if (_eeprom_instance.cache_active == false) {
 		return STATUS_OK;
 	}

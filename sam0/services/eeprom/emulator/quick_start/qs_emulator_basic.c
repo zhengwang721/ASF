@@ -93,7 +93,7 @@ int main(void)
 
 //! [write_page]
 	eeprom_emulator_write_page(0, page_data);
-	eeprom_emulator_flush_page_buffer();
+	eeprom_emulator_commit_page_buffer();
 //! [write_page]
 
 	while (true) {
