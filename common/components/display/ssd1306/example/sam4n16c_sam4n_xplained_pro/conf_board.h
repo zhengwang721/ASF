@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Unit test configuration.
+ * \brief Board configuration.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -41,17 +41,13 @@
  *
  */
 
-#ifndef CONF_TEST_H
-#define CONF_TEST_H
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-/** USART Interface */
-#define CONF_TEST_USART      CONSOLE_UART
-/** Baudrate setting */
-#define CONF_TEST_BAUDRATE   115200
-/** Parity setting */
-#define CONF_TEST_PARITY     UART_MR_PAR_NO
+/** Enable the OLED screen. */
+#define CONF_BOARD_SPI
+#define CONF_BOARD_SPI_NPCS2
 
-/** PWM unit test channel */
-#define PWM_UNIT_TEST_CH      PWM_CHANNEL_0
+#define CONF_BOARD_OLED_UG_2832HSWEG04
 
-#endif /* CONF_TEST_H_INCLUDED */
+#endif /* CONF_BOARD_H_INCLUDED */

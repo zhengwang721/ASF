@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Unit test configuration.
+ * \brief Spi Master configuration.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -40,18 +40,25 @@
  * \asf_license_stop
  *
  */
+ 
+#ifndef CONF_SPI_MASTER_H_INCLUDED
+#define CONF_SPI_MASTER_H_INCLUDED
 
-#ifndef CONF_TEST_H
-#define CONF_TEST_H
+/* Possibility to change low-level configurations here. */
 
-/** USART Interface */
-#define CONF_TEST_USART      CONSOLE_UART
-/** Baudrate setting */
-#define CONF_TEST_BAUDRATE   115200
-/** Parity setting */
-#define CONF_TEST_PARITY     UART_MR_PAR_NO
+//! Default Configuration of SPI Master Delay BCS
+#define CONFIG_SPI_MASTER_DELAY_BCS            0x00
 
-/** PWM unit test channel */
-#define PWM_UNIT_TEST_CH      PWM_CHANNEL_0
+//! Default Configuration of SPI Master Bits per Transfer Definition
+#define CONFIG_SPI_MASTER_BITS_PER_TRANSFER    8
 
-#endif /* CONF_TEST_H_INCLUDED */
+//! Default Configuration of SPI Master Delay BCT
+#define CONFIG_SPI_MASTER_DELAY_BCT            0x00
+
+//! Default Configuration of SPI Master Delay BS
+#define CONFIG_SPI_MASTER_DELAY_BS             0x00
+
+//! Default Configuration of SPI Master Dummy Field
+// #define CONFIG_SPI_MASTER_DUMMY                0xFF
+
+#endif /* CONF_SPI_MASTER_H_INCLUDED */

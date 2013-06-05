@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Unit test configuration.
+ * \brief SSD1306 display controller driver configuration file.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -40,18 +40,20 @@
  * \asf_license_stop
  *
  */
+#ifndef CONF_SSD1306_H_INCLUDED
+#define CONF_SSD1306_H_INCLUDED
 
-#ifndef CONF_TEST_H
-#define CONF_TEST_H
+// Interface configuration for SAM4N Xplained Pro
+#define SSD1306_SPI_INTERFACE
+#define SSD1306_SPI SPI
 
-/** USART Interface */
-#define CONF_TEST_USART      CONSOLE_UART
-/** Baudrate setting */
-#define CONF_TEST_BAUDRATE   115200
-/** Parity setting */
-#define CONF_TEST_PARITY     UART_MR_PAR_NO
+#define SSD1306_DC_PIN       UG_2832HSWEG04_DATA_CMD_GPIO
+#define SSD1306_RES_PIN      UG_2832HSWEG04_RESET_GPIO
+#define SSD1306_CS_PIN       UG_2832HSWEG04_SS
 
-/** PWM unit test channel */
-#define PWM_UNIT_TEST_CH      PWM_CHANNEL_0
+// Minimum clock period is 50ns@3.3V -> max frequency is 20MHz
+#define SSD1306_CLOCK_SPEED          UG_2832HSWEG04_BAUDRATE
+#define SSD1306_DISPLAY_CONTRAST_MAX 40
+#define SSD1306_DISPLAY_CONTRAST_MIN 30
 
-#endif /* CONF_TEST_H_INCLUDED */
+#endif /* CONF_SSD1306_H_INCLUDED */
