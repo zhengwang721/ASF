@@ -285,40 +285,40 @@
 //@{
 /** SPI MISO pin definition. */
 #define SPI_MISO_GPIO         (PIO_PA12_IDX)
-#define SPI_MISO_FLAGS       (PIO_PERIPH_A | PIO_PULLUP)
+#define SPI_MISO_FLAGS       (IOPORT_MODE_MUX_A)
 /** SPI MOSI pin definition. */
 #define SPI_MOSI_GPIO         (PIO_PA13_IDX)
-#define SPI_MOSI_FLAGS       (PIO_PERIPH_A | PIO_PULLUP)
+#define SPI_MOSI_FLAGS       (IOPORT_MODE_MUX_A)
 /** SPI SPCK pin definition. */
 #define SPI_SPCK_GPIO         (PIO_PA14_IDX)
-#define SPI_SPCK_FLAGS       (PIO_PERIPH_A | PIO_PULLUP)
+#define SPI_SPCK_FLAGS       (IOPORT_MODE_MUX_A)
 
-/** SPI chip select 0 pin definition. (Only one configuration is possible) */
-#define SPI_NPCS0_GPIO         (PIO_PA11_IDX)
-#define SPI_NPCS0_FLAGS           (PIO_PERIPH_A | PIO_DEFAULT)
-/** SPI chip select 1 pin definition. (multiple configurations are possible) */
-#define SPI_NPCS1_PA9_GPIO     (PIO_PA9_IDX)
-#define SPI_NPCS1_PA9_FLAGS       (PIO_PERIPH_B | PIO_DEFAULT)
-#define SPI_NPCS1_PA31_GPIO    (PIO_PA31_IDX)
-#define SPI_NPCS1_PA31_FLAGS      (PIO_PERIPH_A | PIO_DEFAULT)
-#define SPI_NPCS1_PB14_GPIO    (PIO_PB14_IDX)
-#define SPI_NPCS1_PB14_FLAGS      (PIO_PERIPH_A | PIO_DEFAULT)
-#define SPI_NPCS1_PC4_GPIO     (PIO_PC4_IDX)
-#define SPI_NPCS1_PC4_FLAGS       (PIO_PERIPH_B | PIO_DEFAULT)
-/** SPI chip select 2 pin definition. (multiple configurations are possible) */
-#define SPI_NPCS2_PA10_GPIO    (PIO_PA10_IDX)
-#define SPI_NPCS2_PA10_FLAGS      (PIO_PERIPH_B | PIO_PULLUP)
-#define SPI_NPCS2_PA30_GPIO    (PIO_PA30_IDX)
-#define SPI_NPCS2_PA30_FLAGS      (PIO_PERIPH_B | PIO_DEFAULT)
-#define SPI_NPCS2_PB2_GPIO     (PIO_PB2_IDX)
-#define SPI_NPCS2_PB2_FLAGS       (PIO_PERIPH_B | PIO_DEFAULT)
-/** SPI chip select 3 pin definition. (multiple configurations are possible) */
-#define SPI_NPCS3_PA3_GPIO     (PIO_PA3_IDX)
-#define SPI_NPCS3_PA3_FLAGS       (PIO_PERIPH_B | PIO_DEFAULT)
-#define SPI_NPCS3_PA5_GPIO     (PIO_PA5_IDX)
-#define SPI_NPCS3_PA5_FLAGS       (PIO_PERIPH_B | PIO_DEFAULT)
-#define SPI_NPCS3_PA22_GPIO    (PIO_PA22_IDX)
-#define SPI_NPCS3_PA22_FLAGS      (PIO_PERIPH_B | PIO_DEFAULT)
+/** SPI chip select 0 pin definition. */
+#define SPI_NPCS0_GPIO        (PIO_PA11_IDX)
+#define SPI_NPCS0_FLAGS      (IOPORT_MODE_MUX_A)
+/** SPI chip select 1 pin definition. */
+#define SPI_NPCS1_GPIO        (PIO_PC4_IDX)
+#define SPI_NPCS1_FLAGS      (IOPORT_MODE_MUX_B)
+/** SPI chip select 2 pin definition. */
+#define SPI_NPCS2_GPIO        (PIO_PC7_IDX)
+#define SPI_NPCS2_FLAGS      (IOPORT_MODE_MUX_B)
+
+//@}
+
+//! \name OLED
+//@{
+/** OLED command/data select pin */
+#define UG_2832HSWEG04_DATA_CMD_GPIO   (PIO_PC2_IDX)
+/** OLED reset pin */
+#define UG_2832HSWEG04_RESET_GPIO      (PIO_PB3_IDX)
+/** OLED SPI configuration */
+#define UG_2832HSWEG04_SS               2
+#define UG_2832HSWEG04_BAUDRATE         5000000
+//! \name OLED dimensions
+//@{
+#define LCD_WIDTH_PIXELS                (128)
+#define LCD_HEIGHT_PIXELS               (32)
+//@}
 //@}
 
 //! \name TWI
@@ -442,6 +442,19 @@
 #define ISO7816_USART              USART0
 #define PIN_ISO7816_RST_IDX        PIO_PA15_IDX
 #define PIN_ISO7816_RST_FLAG       (0)
+
+//! \name IO1 SD card definitions */
+//@{
+#define SD_MMC_SPI_MEM_CNT          1
+#define SD_MMC_0_CD_GPIO            (PIO_PA23_IDX)
+#define SD_MMC_0_CD_DIR             (IOPORT_DIR_INPUT)
+#define SD_MMC_0_CD_MODE            (IOPORT_MODE_PULLUP)
+#define SD_MMC_0_CD_DETECT_VALUE    0
+#define SD_MMC_SPI                  SPI
+#define SD_MMC_SPI_0_CS             0
+#define SD_MMC_0_CD_PIO_ID          ID_PIOA
+//@}
+
 
 /** @} */
 

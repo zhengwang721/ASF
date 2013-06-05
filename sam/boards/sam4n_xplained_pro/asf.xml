@@ -44,5 +44,11 @@
 		<require idref="common.boards"/>
 		<require idref="config.board.sam4n_xplained_pro.init"/>
 		<require idref="config.board.sam4n_xplained_pro.led"/>
+		
+		<!-- Debug drivers -->
+		<config name="config.compiler.iarewarm.debugger.driver" value="cmsisdap"/>
+		<config name="config.compiler.iarewarm.debugger.use_macro_file" value="no"/>
+		<!-- Compile option -->
+		<config name="config.compiler.iarewarm.low_level_lib" value="semihosted"/>
 	</board>
 </asf>
