@@ -45,7 +45,7 @@
 
 /**
  * \internal
- * \brief DFLL specefic data container
+ * \brief DFLL-specific data container
  */
 struct _system_clock_dfll_config {
 	uint32_t control;
@@ -53,7 +53,7 @@ struct _system_clock_dfll_config {
 
 /**
  * \internal
- * \brief XOSC specific data container
+ * \brief XOSC-specific data container
  */
 struct _system_clock_xosc_config {
 	uint32_t frequency;
@@ -534,7 +534,8 @@ bool system_clock_source_is_ready(
 
 	switch (clock_source) {
 		case SYSTEM_CLOCK_SOURCE_OSC8M:
-			return true;
+			mask = SYSCTRL_PCLKSR_OSC8MRDY;
+			break;
 
 		case SYSTEM_CLOCK_SOURCE_OSC32K:
 			mask = SYSCTRL_PCLKSR_OSC32KRDY;
@@ -558,7 +559,8 @@ bool system_clock_source_is_ready(
 
 		default:
 			return false;
-		}
+	}
+
 	if ((SYSCTRL->PCLKSR.reg & mask) != 0) {
 		return true;
 	} else {
