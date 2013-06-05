@@ -93,6 +93,9 @@
  * <a href="http://www.atmel.com">http://www.atmel.com</a>.
  */
 
+/** Target OSC8M calibration frequency */
+#define TARGET_FREQUENCY         8000000
+
 /** Resolution of the calibration binary divider; higher powers of two will
  *  reduce the calibration resolution.
  */
@@ -274,7 +277,7 @@ int main(void)
 			 * ideal frequency than the previous best values
 			 */
 			uint32_t freq_current = get_osc_frequency();
-			if (abs(freq_current - 8000000UL) < abs(freq_best - 8000000UL))
+			if (abs(freq_current - TARGET_FREQUENCY) < abs(freq_best - TARGET_FREQUENCY))
 			{
 				freq_best   = freq_current;
 				comm_best   = comm_cal;
