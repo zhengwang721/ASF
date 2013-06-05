@@ -61,8 +61,9 @@
  * \ref group_common_services_storage_ctrl_access support. The conf_access.h
  * used in the ctrl access module will determine the actually used memory
  * device, e.g., the file system can be created in the internal RAM, NAND Flash 
- * and DataFlash (an AT45DBX needs to be connected) on SAM3X-EK/SAM3N-EK/SAM3S-EK
- * SAM3U-EK/SAM4E-EK/SAM4S-EK/SAM4S-Xplained/ATxmega128A1-Xplained/ATxmegaA3BU-Xplained.
+ * and DataFlash (an AT45DBX needs to be connected) on SAM3X-EK/SAM3N-EK/
+ * SAM3S-EK/SAM3U-EK/SAM4E-EK/SAM4S-EK/SAM4S-Xplained/ATxmega128A1-Xplained/
+ * ATxmegaA3BU-Xplained/SAM4N-Xplained-Pro.
  *
  *  \section Description
  *
