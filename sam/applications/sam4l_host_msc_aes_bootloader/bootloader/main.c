@@ -828,15 +828,14 @@ void main_usb_connection_event(uhc_device_t * dev, bool b_present)
  * offering safe and secure firmware upgradation.
  *
  * \section startup Procedure
- * - Do complete chip erase and Userpage erase.
+ * - Do complete chip erase
  * - Program the bootloader
  * - Load the application firmware into U-disk. Connect it to the SAM4L
- *   USB MSC Host.
- * - Press PB0 on RESET to start the bootloader.
+ *   USB MSC Host
+ * - Press push button on RESET to start the bootloader
  *
- * \section config Configuration Options
- * - conf_bootloader.h -> Bootloader Configurations
- *   Important configuration options
+ * \section config Bootloader Configuration
+ * Bootloader Configurations are managed in conf_bootloader.h
  *   - FIRMWARE_AES_ENABLED       -> Enable/disable the AES Decryption
  *   - CONSOLE_OUTPUT_ENABLED     -> Enable/disable the Console message output
  *   - VERIFY_PROGRAMMING_ENABLED -> Enable/disable the verification of
@@ -849,11 +848,12 @@ void main_usb_connection_event(uhc_device_t * dev, bool b_present)
  *   - BOOT_LOAD_PIN_ACTIVE_LVL   -> Active level to be monitored for the pin
  *   - BOOT_GP_FUSE_BIT           -> GP Fuse bit used for bootloader activation
  * 
- * \section board Board Setup
- * - SAM4L-EK -> Has an IO configured for VBUS Detect. VBUS Pin jumper PA06/USB
- *               should be set
- *   - conf_board.h -> USB Pin configuration
- *   - CONF_BOARD_USB_PORT           -> Enable USB interface
+ * \section board Board Configuration
+ * Board Configurations are managed in conf_board.h
+ * - SAM4L-EK configuration
+ *   - Has an IO configured for VBUS Detect. VBUS Pin jumper PA06/USB
+ *     should be set
+ *   - CONF_BOARD_USB_PORT           -> Enable USB pins
  *   - CONF_BOARD_USB_VBUS_CONTROL   -> VBUS control enabled, jumper PC08/USB
  *                                      should be set
  *   - CONF_BOARD_USB_VBUS_ERR_DETECT-> VBUS error control enabled, jumper
@@ -861,6 +861,14 @@ void main_usb_connection_event(uhc_device_t * dev, bool b_present)
  *   - An external power supply should be used since the VBUS is powered only
  *     through the external power supply controlled by the VBUS Control(VBOF)
  *     pin. Refer the SAM4L-EK schematics for more details.
+ *   - Console message output is sent through the Embedded Debugger(onboard)'s 
+ *     COM PORT.
+ * - SAM4L Xplained Pro configuration
+ *   - Has an IO configured for VBUS Detect.
+ *   - CONF_BOARD_USB_PORT           -> Enable USB pins
+ *   - CONF_BOARD_USB_VBUS_CONTROL   -> VBUS control enabled
+ *   - An external power supply should be used if the EDBG USB port is not able
+ *     to provide enough power to the USB MSC device.
  *   - Console message output is sent through the Embedded Debugger(onboard)'s 
  *     COM PORT.
  * 
@@ -871,15 +879,16 @@ void main_usb_connection_event(uhc_device_t * dev, bool b_present)
  * CRC32 value. If it matches, it starts to program the application. Then,
  * verification of the programmed memory (CRC32 check again) is performed.
  * Then it jumps to the application section with WDT reset.
- * Output Firmware Structure with AES:
- * - 4 bytes   -> Encrypted CRC32
- * - 12 bytes  -> Encrypted Signature Data
- * - Rest data -> Encrypted Input Firmware
- * Output Firmware Structure without AES:
- * - 4 bytes   -> CRC32
- * - 12 bytes  -> Signature Data
- * - Rest data -> Input Firmware
- * A sample application binary output is provided for testing with the bootloader.
+ * - Required Firmware Structure with AES:
+ *   - 4 bytes   -> Encrypted CRC32
+ *   - 12 bytes  -> Encrypted Signature Data
+ *   - Rest data -> Encrypted Input Firmware
+ * - Required Firmware Structure without AES:
+ *   - 4 bytes   -> CRC32
+ *   - 12 bytes  -> Signature Data
+ *   - Rest data -> Input Firmware
+ * - A sample application binary output (AES encrypted) is provided for testing
+ *   with the bootloader.
  *
  * \section app_req Application Requirements
  * The SAM4L USB Host MSC Bootloader occupies the 32KB of the flash memory
@@ -887,24 +896,34 @@ void main_usb_connection_event(uhc_device_t * dev, bool b_present)
  * application has to be shifted by the same offset. To offset the application
  * in those linkerscript files, set the flash origin to 0x8000 and decrease the
  * flash size by 0x8000 for the application project.
+ * When AES is enabled, the encrypted application binary should be 16-byte
+ * aligned. If Firmware Generator is used, it takes care of the alignment.
  *
  * \copydoc UI
  *
  * \section  dependencies Application Dependencies
  *
  * The application uses the following module groups:
+ * - Application Implementation:
+ *    - main.c
+ *    - main.h
+ * - Configuration Files
+ *    - conf_bootloader.h
+ *    - conf_board.h
+ *    - conf_clock.h
+ *    - conf_fatfs.h
+ *    - conf_access.h
+ *    - conf_aesa.h
+ *    - conf_ast.h
+ *    - conf_usb_host.h
+ *    - conf_sleepmgr.h
  * - Basic modules:
- *   Startup, board, clock, interrupt, power management
+ *   <br>Startup, board, clock, interrupt, power management
  * - USB host stack and MSC modules:
  *   <br>services/usb/
  *   <br>services/usb/uhc/
  *   <br>services/usb/class/msc/host/
  * - Thirdparty modules:
  *   <br>thirdparty/fatfs
- * - Specific implementation:
- *    - main.c,
- *      <br>initializes clock
- *      <br>initializes interrupt
- *      <br>initializes USB, FATFS, AES, CRCCU
- *      <br>Search, validate, program & verify the firmware
+
  */

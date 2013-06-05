@@ -644,16 +644,15 @@ void main_usb_connection_event(uhc_device_t * dev, bool b_present)
  * SAM4L Firmware generator application is to provide a easy way to generate
  * AES encrypted firmware with CRC32 and signature bytes. The firmware is fully
  * compatible for the SAM4L USB Host MSC Bootloader.
- * - Do complete chip erase and Userpage erase.
+ * - Do complete chip erase.
  * - Program the firmware generator application
  * - Load the application firmware into U-disk. Connect it to the SAM4L-EK USB
  *   MSC Host.
  * - Application generates & appends CRC32 with signature bytes and encrypts
  *   the whole binary.
  *
- * \section config Configuration Options
- * - conf_bootloader.h -> Bootloader Configurations
- *   Important configuration options
+ * \section config Bootloader Configuration
+ * Bootloader Configurations are managed in conf_bootloader.h
  *   - FIRMWARE_AES_ENABLED       -> Enable/disable the AES Decryption
  *   - CONSOLE_OUTPUT_ENABLED     -> Enable/disable the Console message output
  *   - APP_START_OFFSET           -> Application starting offset from Flash
@@ -662,11 +661,12 @@ void main_usb_connection_event(uhc_device_t * dev, bool b_present)
  *                                   for bootloader
  *   - APP_SIGNATURE              -> Signature bytes to be verified
  * 
- * \section board Board Setup
- * - SAM4L-EK -> Has an IO configured for VBUS Detect. VBUS Pin jumper PA06/USB
- *               should be set
- *   - conf_board.h -> USB Pin configuration
- *   - CONF_BOARD_USB_PORT           -> Enable USB interface
+ * \section board Board Configuration
+ * Board Configurations are managed in conf_board.h
+ * - SAM4L-EK configuration
+ *   - Has an IO configured for VBUS Detect. VBUS Pin jumper PA06/USB
+ *     should be set
+ *   - CONF_BOARD_USB_PORT           -> Enable USB pins
  *   - CONF_BOARD_USB_VBUS_CONTROL   -> VBUS control enabled, jumper PC08/USB
  *                                      should be set
  *   - CONF_BOARD_USB_VBUS_ERR_DETECT-> VBUS error control enabled, jumper
@@ -676,34 +676,52 @@ void main_usb_connection_event(uhc_device_t * dev, bool b_present)
  *     pin. Refer the SAM4L-EK schematics for more details.
  *   - Console message output is sent through the Embedded Debugger(onboard)'s 
  *     COM PORT.
+ * - SAM4L Xplained Pro configuration
+ *   - Has an IO configured for VBUS Detect.
+ *   - CONF_BOARD_USB_PORT           -> Enable USB pins
+ *   - CONF_BOARD_USB_VBUS_CONTROL   -> VBUS control enabled
+ *   - An external power supply should be used if the EDBG USB port is not able
+ *     to provide enough power to the USB MSC device.
+ *   - Console message output is sent through the Embedded Debugger(onboard)'s 
+ *     COM PORT.
  * 
- * \section func Application Output
- * Output Firmware Structure with AES:
- * - 4 bytes   -> Encrypted CRC32
- * - 12 bytes  -> Encrypted Signature Data
- * - Rest data -> Encrypted Input Firmware
- * Output Firmware Structure without AES:
- * - 4 bytes   -> CRC32
- * - 12 bytes  -> Signature Data
- * - Rest data -> Input Firmware
+ * \section func Application Output Format
+ * The application binary structure is modified by the firmware generator. The
+ * final application binary structure would be as below
+ * - AES Enabled:
+ *   - 4 bytes   -> Encrypted CRC32
+ *   - 12 bytes  -> Encrypted Signature Data
+ *   - Rest data -> Encrypted Input Firmware
+ * - AES Disabled:
+ *   - 4 bytes   -> CRC32
+ *   - 12 bytes  -> Signature Data
+ *   - Rest data -> Input Firmware
+ * - A sample application binary output (AES encrypted) is provided for testing
+ *   with the firmware generator.
  *
  * \copydoc UI
  *
- * \section  dependencies Application Dependencies
- *
+ * \section  dependencies Dependencies
  * The application uses the following module groups:
+ * - Application Implementation:
+ *    - main.c
+ *    - main.h
+ * - Configuration Files
+ *    - conf_bootloader.h
+ *    - conf_board.h
+ *    - conf_clock.h
+ *    - conf_fatfs.h
+ *    - conf_access.h
+ *    - conf_aesa.h
+ *    - conf_ast.h
+ *    - conf_usb_host.h
+ *    - conf_sleepmgr.h
  * - Basic modules:
- *   Startup, board, clock, interrupt, power management
+ *   <br>Startup, board, clock, interrupt, power management
  * - USB host stack and MSC modules:
  *   <br>services/usb/
  *   <br>services/usb/uhc/
  *   <br>services/usb/class/msc/host/
- * - Thirdparty modules:
+ * - FATFS File System:
  *   <br>thirdparty/fatfs
- * - Specific implementation:
- *    - main.c,
- *      <br>initializes clock
- *      <br>initializes interrupt
- *      <br>initializes USB, FATFS, AES, CRCCU
- *      <br>Search, validate, program & verify the firmware
  */
