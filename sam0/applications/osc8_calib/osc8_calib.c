@@ -211,8 +211,8 @@ static void setup_clock_out_pin(void)
 	system_pinmux_get_config_defaults(&pin_mux);
 
 	/* MUX out the system clock to a I/O pin of the device */
-	pin_mux.mux_position = MUX_PA30H_GCLK_IO0;
-	system_pinmux_pin_set_config(PIN_PA30H_GCLK_IO0, &pin_mux);
+	pin_mux.mux_position = MUX_PA28H_GCLK_IO0;
+	system_pinmux_pin_set_config(PIN_PA28H_GCLK_IO0, &pin_mux);
 }
 
 /** Retrieves the current system clock frequency, computed from the reference
