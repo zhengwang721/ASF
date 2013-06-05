@@ -108,6 +108,7 @@ static uint8_t seq_num_receptor;
 uint32_t frames_with_wrong_crc;
 bool manual_crc = false;
 #endif
+static uint8_t marker_seq_num = 0;
 
 //! \}
 
@@ -173,7 +174,7 @@ void per_mode_receptor_task(void)
 static bool send_range_test_marker_cmd(void)
 {
   
-    static uint8_t marker_seq_num;
+    
     uint8_t payload_length;
     app_payload_t msg;
     result_req_t *data;
@@ -522,6 +523,7 @@ void per_mode_receptor_rx_cb(frame_info_t *mac_frame_info)
             {
               /* reset the flag to indicate that the range test mode is stopped*/
                range_test_in_progress = false;
+               marker_seq_num = 0;
                printf("\r\nStopping Range Test...");
 
             }
@@ -543,7 +545,8 @@ void per_mode_receptor_rx_cb(frame_info_t *mac_frame_info)
                 send_range_test_rsp(msg->seq_num,msg->payload.range_tx_data.frame_count, \
                                 ed_value,mac_frame_info->mpdu[phy_frame_len + LQI_LEN]);
                 /* Print the received values to the terminal */
-                printf("\r\nRange Test Packet Received...\tFrame No : %"PRIu32"\tLQI : %d\tED : %d",frame_count,mac_frame_info->mpdu[phy_frame_len + LQI_LEN],ed_value);
+                printf("\r\nRange Test Packet Received...\tFrame No : %"PRIu32"\tLQI : %d\tED : %d",
+                       frame_count,mac_frame_info->mpdu[phy_frame_len + LQI_LEN],ed_value);
 
             }
             break;
@@ -556,7 +559,8 @@ void per_mode_receptor_rx_cb(frame_info_t *mac_frame_info)
             uint8_t phy_frame_len = mac_frame_info->mpdu[0];
             /* Map the register ed value to dbm values */
             ed_value = mac_frame_info->mpdu[phy_frame_len + LQI_LEN + ED_VAL_LEN] + rssi_base_val;
-            printf("\r\nMarker Response Received... LQI : %d\t ED %d \n",mac_frame_info->mpdu[phy_frame_len + LQI_LEN],ed_value);
+            printf("\r\nMarker Response Received... LQI : %d\t ED %d \n",
+                   mac_frame_info->mpdu[phy_frame_len + LQI_LEN],ed_value);
             /* Timer for LED Blink for Reception of Marker Response*/
             sw_timer_start(T_APP_TIMER,
                 LED_BLINK_RATE_IN_MICRO_SEC,
