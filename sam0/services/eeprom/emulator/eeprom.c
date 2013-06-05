@@ -395,7 +395,7 @@ static enum status_code _eeprom_emulator_move_data_to_spare(
 		uint32_t new_page =
 				((_eeprom_instance.spare_row * NVMCTRL_ROW_PAGES) + c);
 
-		/* Flush cache buffer to write any uncommitted data */
+		/* Commit any cached data to physical non-volatile memory */
 		eeprom_emulator_commit_page_buffer();
 
 		/* Check if we we are looking at the page the calling function wishes
@@ -413,7 +413,7 @@ static enum status_code _eeprom_emulator_move_data_to_spare(
 		}
 
 		/* Fill the physical NVM buffer with the new data so that it can be
-		 * quickly flushed in the future if needed due to a low power
+		 * quickly committed in the future if needed due to a low power
 		 * condition */
 		_eeprom_emulator_nvm_fill_cache(new_page, &_eeprom_instance.cache);
 
@@ -680,11 +680,11 @@ enum status_code eeprom_emulator_write_page(
 	}
 
 	/* Check if the cache is active and the currently cached page is not the
-	 * page that is being written (if not, we need to flush and cache the new
+	 * page that is being written (if not, we need to commit and cache the new
 	 * page) */
 	if ((_eeprom_instance.cache_active == true) &&
 			(_eeprom_instance.cache.header.logical_page != logical_page)) {
-		/* Flush the currently cached data buffer to non-volatile memory */
+		/* Commit the currently cached data buffer to non-volatile memory */
 		eeprom_emulator_commit_page_buffer();
 	}
 
@@ -718,7 +718,7 @@ enum status_code eeprom_emulator_write_page(
 			EEPROM_PAGE_SIZE);
 
 	/* Fill the physical NVM buffer with the new data so that it can be quickly
-	 * flushed in the future if needed due to a low power condition */
+	 * committed in the future if needed due to a low power condition */
 	_eeprom_emulator_nvm_fill_cache(new_page, &_eeprom_instance.cache);
 
 	/* Update the cache parameters and mark the cache as active */
@@ -913,9 +913,9 @@ enum status_code eeprom_emulator_read_buffer(
 }
 
 /**
- * \brief Flushes any cached data to physical non-volatile memory
+ * \brief Commits any cached data to physical non-volatile memory
  *
- * Flushes the internal SRAM caches to physical non-volatile memory, to ensure
+ * Commits the internal SRAM caches to physical non-volatile memory, to ensure
  * that any outstanding cached data is preserved. This function should be called
  * prior to a system reset or shutdown to prevent data loss.
  *
@@ -934,7 +934,7 @@ enum status_code eeprom_emulator_commit_page_buffer(void)
 {
 	enum status_code error_code = STATUS_OK;
 
-	/* If cache is inactive, no need to flush anything to physical memory */
+	/* If cache is inactive, no need to commit anything to physical memory */
 	if (_eeprom_instance.cache_active == false) {
 		return STATUS_OK;
 	}

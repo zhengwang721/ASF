@@ -132,9 +132,9 @@
  * As a typical EEPROM use case is to write to multiple sections of the same
  * EEPROM page sequentially, the emulator is optimized with a single logical
  * EEPROM page write cache to buffer writes before they are written to the
- * physical backing memory store. The cache is automatically flushed when a new
- * write request to a different logical EEPROM memory page is requested, or when
- * the user manually flushes the write cache.
+ * physical backing memory store. The cache is automatically committed when a
+ * new write request to a different logical EEPROM memory page is requested, or
+ * when the user manually commits the write cache.
  *
  * Without the write cache, each write request to an EEPROM memory page would
  * require a full page write, reducing the system performance and significantly
@@ -155,8 +155,8 @@
  * \anchor asfdoc_samd20_eeprom_page_layout
  * \image html page_layout.svg "Internal layout of an emulated EEPROM page"
  *
- * When an EEPROM page needs to be flushed to physical memory, the next free page
- * in the same row will be chosen - this makes recovery simple, as the
+ * When an EEPROM page needs to be committed to physical memory, the next free
+ * page in the same row will be chosen - this makes recovery simple, as the
  * right-most version of a logical page in a row is considered the most current.
  * With four pages to a physical NVM row, this allows for up to three updates to
  * the same logical page to be made before an erase is needed.
@@ -207,16 +207,16 @@
  * service), the available data in each EEPROM page is less than the total size
  * of a single NVM memory page by several bytes.
  *
- * \subsection asfdoc_samd20_eeprom_special_considerations_flushing Flushing of the Write Cache
+ * \subsection asfdoc_samd20_eeprom_special_considerations_committing Committing of the Write Cache
  * A single-page write cache is used internally to buffer data written to pages
  * in order to reduce the number of physical writes required to store the user
  * data, and to preserve the physical memory lifespan. As a result, it is
- * important that the write cache is flushed to physical memory <b>as soon as
+ * important that the write cache is committed to physical memory <b>as soon as
  * possible after a BOD low power condition</b>, to ensure that enough power is
  * available to guarantee a completed write so that no data is lost.
  *
- * The write cache must also be manually flushed to physical memory if the user
- * application is to perform any NVM operations using the NVM controller
+ * The write cache must also be manually committed to physical memory if the
+ * user application is to perform any NVM operations using the NVM controller
  * directly.
  *
  *
