@@ -630,7 +630,7 @@ enum status_code usart_write_buffer_wait(
 	while (length--) {
 		/* Wait for the USART to be ready for new data and abort
 		* operation if it doesn't get ready within the timeout*/
-		for (uint32_t i = 0; i < USART_TIMEOUT; i++) {
+		for (uint32_t i = 0; i <= USART_TIMEOUT; i++) {
 			if (usart_hw->INTFLAG.reg & SERCOM_USART_INTFLAG_DRE) {
 				break;
 			} else if (i == USART_TIMEOUT) {
@@ -651,7 +651,7 @@ enum status_code usart_write_buffer_wait(
 	}
 
 	/* Wait until Transmit is complete or timeout */
-	for (uint32_t i = 0; i < USART_TIMEOUT; i++) {
+	for (uint32_t i = 0; i <= USART_TIMEOUT; i++) {
 		if (usart_hw->INTFLAG.reg & SERCOM_USART_INTFLAG_TXC) {
 			break;
 		} else if (i == USART_TIMEOUT) {
@@ -714,7 +714,7 @@ enum status_code usart_read_buffer_wait(
 	while (length--) {
 		/* Wait for the USART to have new data and abort operation if it
 		 * doesn't get ready within the timeout*/
-		for (uint32_t i = 0; i < USART_TIMEOUT; i++) {
+		for (uint32_t i = 0; i <= USART_TIMEOUT; i++) {
 			if (usart_hw->INTFLAG.reg & SERCOM_USART_INTFLAG_RXC) {
 				break;
 			} else if (i == USART_TIMEOUT) {
