@@ -321,7 +321,6 @@ static void setup_ac_callback_mode_test(const struct test_case *test)
 			"AC channel initialization failed");
 
 	/* Callback configuration */
-	status = STATUS_ERR_IO;
 	status = ac_register_callback(&ac_inst, ac_user_callback,
 			AC_CALLBACK_COMPARATOR_0);
 	test_assert_true(test, status == STATUS_OK,
@@ -450,11 +449,8 @@ static void setup_ac_window_mode_test(const struct test_case *test)
 	test_assert_true(test, status == STATUS_OK,
 			"AC channel 1 initialization failed");
 	/* Set the channel configuration for CHAN0 - Upper limit*/
-	status = STATUS_ERR_IO;
 	channel_config.vcc_scale_factor  = AC_SCALER_0_75_VOLT;
-	status
-		= ac_chan_set_config(&ac_inst, AC_CHAN_CHANNEL_0,
-			&channel_config);
+	status = ac_chan_set_config(&ac_inst, AC_CHAN_CHANNEL_0, &channel_config);
 	/* Check for successful initialization */
 	test_assert_true(test, status == STATUS_OK,
 			"AC channel 0 initialization failed");
@@ -471,7 +467,6 @@ static void setup_ac_window_mode_test(const struct test_case *test)
 	ac_chan_enable(&ac_inst, AC_CHAN_CHANNEL_0);
 	ac_chan_enable(&ac_inst, AC_CHAN_CHANNEL_1);
 	/* Enable window mode */
-	status = STATUS_ERR_IO;
 	status = ac_win_enable(&ac_inst, AC_WIN_CHANNEL_0);
 	/* Check for successful initialization */
 	test_assert_true(test, status == STATUS_OK,

@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Global interrupt management for SAM3 and SAM4 (NVIC based)
+ * \brief Global interrupt management for SAM D20, SAM3 and SAM4 (NVIC based)
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
