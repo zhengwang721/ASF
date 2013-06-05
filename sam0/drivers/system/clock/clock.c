@@ -122,48 +122,48 @@ uint32_t system_clock_source_get_hz(
 	uint32_t temp = 0;
 
 	switch (clock_source) {
-		case SYSTEM_CLOCK_SOURCE_XOSC:
-			return _system_clock_inst.xosc.frequency;
+	case SYSTEM_CLOCK_SOURCE_XOSC:
+		return _system_clock_inst.xosc.frequency;
 
-		case SYSTEM_CLOCK_SOURCE_OSC8M:
-			temp = (SYSCTRL->OSC8M.reg & SYSCTRL_OSC8M_PRESC_Msk) >> SYSCTRL_OSC8M_PRESC_Pos;
-			if (temp) {
-				return 8000000 / (1 << temp);
-			} else {
-				return 8000000;
-			}
+	case SYSTEM_CLOCK_SOURCE_OSC8M:
+		temp = (SYSCTRL->OSC8M.reg & SYSCTRL_OSC8M_PRESC_Msk) >> SYSCTRL_OSC8M_PRESC_Pos;
+		if (temp) {
+			return 8000000 / (1 << temp);
+		} else {
+			return 8000000;
+		}
 
-		case SYSTEM_CLOCK_SOURCE_OSC32K:
-			return 32768UL;
+	case SYSTEM_CLOCK_SOURCE_OSC32K:
+		return 32768UL;
 
-		case SYSTEM_CLOCK_SOURCE_ULP32K:
-			return 32768UL;
+	case SYSTEM_CLOCK_SOURCE_ULP32K:
+		return 32768UL;
 
-		case SYSTEM_CLOCK_SOURCE_XOSC32K:
-			return _system_clock_inst.xosc32k.frequency;
+	case SYSTEM_CLOCK_SOURCE_XOSC32K:
+		return _system_clock_inst.xosc32k.frequency;
 
-		case SYSTEM_CLOCK_SOURCE_DFLL:
+	case SYSTEM_CLOCK_SOURCE_DFLL:
 
-			/* Check if the DFLL has been configured */
-			if(!(_system_clock_inst.dfll.control & SYSCTRL_DFLLCTRL_ENABLE))
-				return 0;
-
-			/* Make sure that the DFLL module is ready */
-			_system_dfll_wait_for_sync();
-
-			/* Check if operating in closed loop mode */
-			if (SYSCTRL->DFLLCTRL.reg & SYSCTRL_DFLLCTRL_MODE) {
-				SYSCTRL->DFLLSYNC.bit.READREQ = 1;
-				_system_dfll_wait_for_sync();
-				temp = SYSCTRL->DFLLMUL.bit.MUL;
-
-				return system_gclk_chan_get_hz(SYSCTRL_GCLK_ID_DFLL48) * temp;
-			}
-
-			return 48000000UL;
-
-		default:
+		/* Check if the DFLL has been configured */
+		if(!(_system_clock_inst.dfll.control & SYSCTRL_DFLLCTRL_ENABLE))
 			return 0;
+
+		/* Make sure that the DFLL module is ready */
+		_system_dfll_wait_for_sync();
+
+		/* Check if operating in closed loop mode */
+		if (SYSCTRL->DFLLCTRL.reg & SYSCTRL_DFLLCTRL_MODE) {
+			SYSCTRL->DFLLSYNC.bit.READREQ = 1;
+			_system_dfll_wait_for_sync();
+			temp = SYSCTRL->DFLLMUL.bit.MUL;
+
+			return system_gclk_chan_get_hz(SYSCTRL_GCLK_ID_DFLL48) * temp;
+		}
+
+		return 48000000UL;
+
+	default:
+		return 0;
 	}
 }
 
@@ -380,38 +380,38 @@ enum status_code system_clock_source_write_calibration(
 {
 
 	switch (clock_source) {
-		case SYSTEM_CLOCK_SOURCE_OSC8M:
+	case SYSTEM_CLOCK_SOURCE_OSC8M:
 
-			if (calibration_value > 0xfff || freq_range > 4) {
-				return STATUS_ERR_INVALID_ARG;
-			}
-
-			SYSCTRL->OSC8M.bit.CALIB = calibration_value;
-			SYSCTRL->OSC8M.bit.FRANGE = freq_range;
-			break;
-
-		case SYSTEM_CLOCK_SOURCE_OSC32K:
-
-			if (calibration_value > 128) {
-				return STATUS_ERR_INVALID_ARG;
-			}
-
-			_system_osc32k_wait_for_sync();
-			SYSCTRL->OSC32K.bit.CALIB = calibration_value;
-			break;
-
-		case SYSTEM_CLOCK_SOURCE_ULP32K:
-
-			if (calibration_value > 32) {
-				return STATUS_ERR_INVALID_ARG;
-			}
-			SYSCTRL->OSCULP32K.bit.CALIB = calibration_value;
-			break;
-
-		default:
-			Assert(false);
+		if (calibration_value > 0xfff || freq_range > 4) {
 			return STATUS_ERR_INVALID_ARG;
-			break;
+		}
+
+		SYSCTRL->OSC8M.bit.CALIB = calibration_value;
+		SYSCTRL->OSC8M.bit.FRANGE = freq_range;
+		break;
+
+	case SYSTEM_CLOCK_SOURCE_OSC32K:
+
+		if (calibration_value > 128) {
+			return STATUS_ERR_INVALID_ARG;
+		}
+
+		_system_osc32k_wait_for_sync();
+		SYSCTRL->OSC32K.bit.CALIB = calibration_value;
+		break;
+
+	case SYSTEM_CLOCK_SOURCE_ULP32K:
+
+		if (calibration_value > 32) {
+			return STATUS_ERR_INVALID_ARG;
+		}
+		SYSCTRL->OSCULP32K.bit.CALIB = calibration_value;
+		break;
+
+	default:
+		Assert(false);
+		return STATUS_ERR_INVALID_ARG;
+		break;
 	}
 
 	return STATUS_OK;
@@ -435,34 +435,34 @@ enum status_code system_clock_source_enable(
 		const enum system_clock_source clock_source)
 {
 	switch (clock_source) {
-		case SYSTEM_CLOCK_SOURCE_OSC8M:
-			SYSCTRL->OSC8M.reg |= SYSCTRL_OSC8M_ENABLE;
-			return STATUS_OK;
+	case SYSTEM_CLOCK_SOURCE_OSC8M:
+		SYSCTRL->OSC8M.reg |= SYSCTRL_OSC8M_ENABLE;
+		return STATUS_OK;
 
-		case SYSTEM_CLOCK_SOURCE_OSC32K:
-			SYSCTRL->OSC32K.reg |= SYSCTRL_OSC32K_ENABLE;
-			break;
+	case SYSTEM_CLOCK_SOURCE_OSC32K:
+		SYSCTRL->OSC32K.reg |= SYSCTRL_OSC32K_ENABLE;
+		break;
 
-		case SYSTEM_CLOCK_SOURCE_XOSC:
-			SYSCTRL->XOSC.reg |= SYSCTRL_XOSC_ENABLE;
-			break;
+	case SYSTEM_CLOCK_SOURCE_XOSC:
+		SYSCTRL->XOSC.reg |= SYSCTRL_XOSC_ENABLE;
+		break;
 
-		case SYSTEM_CLOCK_SOURCE_XOSC32K:
-			SYSCTRL->XOSC32K.reg |= SYSCTRL_XOSC32K_ENABLE;
-			break;
+	case SYSTEM_CLOCK_SOURCE_XOSC32K:
+		SYSCTRL->XOSC32K.reg |= SYSCTRL_XOSC32K_ENABLE;
+		break;
 
-		case SYSTEM_CLOCK_SOURCE_DFLL:
-			_system_clock_inst.dfll.control |= SYSCTRL_DFLLCTRL_ENABLE;
-			SYSCTRL->DFLLCTRL.reg = _system_clock_inst.dfll.control;
-			break;
+	case SYSTEM_CLOCK_SOURCE_DFLL:
+		_system_clock_inst.dfll.control |= SYSCTRL_DFLLCTRL_ENABLE;
+		SYSCTRL->DFLLCTRL.reg = _system_clock_inst.dfll.control;
+		break;
 
-		case SYSTEM_CLOCK_SOURCE_ULP32K:
-			/* Always enabled */
-			return STATUS_OK;
+	case SYSTEM_CLOCK_SOURCE_ULP32K:
+		/* Always enabled */
+		return STATUS_OK;
 
-		default:
-			Assert(false);
-			return STATUS_ERR_INVALID_ARG;
+	default:
+		Assert(false);
+		return STATUS_ERR_INVALID_ARG;
 	}
 
 	return STATUS_OK;
@@ -483,33 +483,33 @@ enum status_code system_clock_source_disable(
 		const enum system_clock_source clock_source)
 {
 	switch (clock_source) {
-		case SYSTEM_CLOCK_SOURCE_OSC8M:
-			SYSCTRL->OSC8M.reg &= ~SYSCTRL_OSC8M_ENABLE;
-			break;
+	case SYSTEM_CLOCK_SOURCE_OSC8M:
+		SYSCTRL->OSC8M.reg &= ~SYSCTRL_OSC8M_ENABLE;
+		break;
 
-		case SYSTEM_CLOCK_SOURCE_OSC32K:
-			SYSCTRL->OSC32K.reg &= ~SYSCTRL_OSC32K_ENABLE;
-			break;
+	case SYSTEM_CLOCK_SOURCE_OSC32K:
+		SYSCTRL->OSC32K.reg &= ~SYSCTRL_OSC32K_ENABLE;
+		break;
 
-		case SYSTEM_CLOCK_SOURCE_XOSC:
-			SYSCTRL->XOSC.reg &= ~SYSCTRL_XOSC_ENABLE;
-			break;
+	case SYSTEM_CLOCK_SOURCE_XOSC:
+		SYSCTRL->XOSC.reg &= ~SYSCTRL_XOSC_ENABLE;
+		break;
 
-		case SYSTEM_CLOCK_SOURCE_XOSC32K:
-			SYSCTRL->XOSC32K.reg &= ~SYSCTRL_XOSC32K_ENABLE;
-			break;
+	case SYSTEM_CLOCK_SOURCE_XOSC32K:
+		SYSCTRL->XOSC32K.reg &= ~SYSCTRL_XOSC32K_ENABLE;
+		break;
 
-		case SYSTEM_CLOCK_SOURCE_DFLL:
-			_system_clock_inst.dfll.control &= ~SYSCTRL_DFLLCTRL_ENABLE;
-			SYSCTRL->DFLLCTRL.reg = _system_clock_inst.dfll.control;
-			break;
+	case SYSTEM_CLOCK_SOURCE_DFLL:
+		_system_clock_inst.dfll.control &= ~SYSCTRL_DFLLCTRL_ENABLE;
+		SYSCTRL->DFLLCTRL.reg = _system_clock_inst.dfll.control;
+		break;
 
-		case SYSTEM_CLOCK_SOURCE_ULP32K:
-			/* Not possible to disable */
-			return STATUS_ERR_INVALID_ARG;
+	case SYSTEM_CLOCK_SOURCE_ULP32K:
+		/* Not possible to disable */
+		return STATUS_ERR_INVALID_ARG;
 
-		default:
-			return STATUS_ERR_INVALID_ARG;
+	default:
+		return STATUS_ERR_INVALID_ARG;
 	}
 
 	return STATUS_OK;
@@ -533,32 +533,32 @@ bool system_clock_source_is_ready(
 	uint32_t mask;
 
 	switch (clock_source) {
-		case SYSTEM_CLOCK_SOURCE_OSC8M:
-			mask = SYSCTRL_PCLKSR_OSC8MRDY;
-			break;
+	case SYSTEM_CLOCK_SOURCE_OSC8M:
+		mask = SYSCTRL_PCLKSR_OSC8MRDY;
+		break;
 
-		case SYSTEM_CLOCK_SOURCE_OSC32K:
-			mask = SYSCTRL_PCLKSR_OSC32KRDY;
-			break;
+	case SYSTEM_CLOCK_SOURCE_OSC32K:
+		mask = SYSCTRL_PCLKSR_OSC32KRDY;
+		break;
 
-		case SYSTEM_CLOCK_SOURCE_XOSC:
-			mask = SYSCTRL_PCLKSR_XOSCRDY;
-			break;
+	case SYSTEM_CLOCK_SOURCE_XOSC:
+		mask = SYSCTRL_PCLKSR_XOSCRDY;
+		break;
 
-		case SYSTEM_CLOCK_SOURCE_XOSC32K:
-			mask = SYSCTRL_PCLKSR_XOSC32KRDY;
-			break;
+	case SYSTEM_CLOCK_SOURCE_XOSC32K:
+		mask = SYSCTRL_PCLKSR_XOSC32KRDY;
+		break;
 
-		case SYSTEM_CLOCK_SOURCE_DFLL:
-			mask = SYSCTRL_PCLKSR_DFLLRDY;
-			break;
+	case SYSTEM_CLOCK_SOURCE_DFLL:
+		mask = SYSCTRL_PCLKSR_DFLLRDY;
+		break;
 
-		case SYSTEM_CLOCK_SOURCE_ULP32K:
-			/* Not possible to disable */
-			return true;
+	case SYSTEM_CLOCK_SOURCE_ULP32K:
+		/* Not possible to disable */
+		return true;
 
-		default:
-			return false;
+	default:
+		return false;
 	}
 
 	if ((SYSCTRL->PCLKSR.reg & mask) != 0) {
