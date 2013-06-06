@@ -385,11 +385,9 @@ void ADC_Handler(void)
 /**
  * \brief Enable ADC Module.
  *
- * \param adc  Base address of the ADC
  */
-void adc_enable(Adc *const adc)
+void adc_enable(void)
 {
-	Assert(adc);
 	/* Enable peripheral clock. */
 	pmc_enable_periph_clk(ID_ADC);
 	sleepmgr_lock_mode(SLEEPMGR_SLEEP_WFI);
@@ -398,11 +396,9 @@ void adc_enable(Adc *const adc)
 /**
  * \brief Disable ADC Module.
  *
- * \param adc  Base address of the ADC
  */
-void adc_disable(Adc *const adc)
+void adc_disable(void)
 {
-	Assert(adc);
 	/* Disable peripheral clock. */
 	pmc_disable_periph_clk(ID_ADC);
 	sleepmgr_unlock_mode(SLEEPMGR_SLEEP_WFI);

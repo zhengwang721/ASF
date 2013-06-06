@@ -230,8 +230,8 @@ void adc_temp_sensor_set_config(Adc *const adc,
 
 void adc_configure_sequence(Adc *const adc,
 		const enum adc_channel_num ch_list[], const uint8_t uc_num);
-void adc_enable(Adc *const adc);
-void adc_disable(Adc *const adc);
+void adc_enable(void);
+void adc_disable(void);
 void adc_set_callback(Adc *const adc, enum adc_interrupt_source source,
 		adc_callback_t callback, uint8_t irq_level);
 
