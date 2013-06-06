@@ -93,9 +93,9 @@
 		"  a: 24MHz from PLL clock\n\r"                    \
 		"  b: 32MHz from PLL clock\n\r"                    \
 		"  c: 48MHz from PLL clock\n\r"                    \
-		"  d: 64MHz from PLL clock\n\r"                    \
+		"  d: 60MHz from PLL clock\n\r"                    \
 		"  e: 84MHz from PLL clock\n\r"                    \
-		"  f: 100MHz from PLL clock\n\r"                   \
+		"  f: 96MHz from PLL clock\n\r"                   \
 
 #define MIN_CLOCK_FAST_RC_ITEM '1'
 #define MAX_CLOCK_FAST_RC_ITEM '8'

@@ -41,8 +41,48 @@
  *
  */
 
+ /**
+ * \mainpage Sleep manager example
+ *
+ * \section intro Introduction
+ * This simple example shows how to use the \ref sleepmgr_group.
+ *
+ * \section files Main files:
+ * - sleepmgr_example_sam_rtt.c: Sleep manager example application
+ * - conf_example.h: configuration of I/O pins
+ *
+ * \section apiinfo Sleep manager API
+ * The sleep manager API can be found \ref sleepmgr_group "here".
+ *
+ * \section deviceinfo Device Info
+ * All SAM series devices can be used.
+ * The example has been tested on the SAM4N-XPLAINED-PRO boards.
+ *
+ * \section exampledescription Description of the example
+ * The device is put to sleep in sleep modes with increasing "depth", and is
+ * periodically woken up by the RTT_ALARM.  The RTT_ALARM wakes the CPU
+ * every 5 seconds.
+ * The device will remain in ACTIVE mode for approximately 3 seconds after wake-
+ * up, before it goes to sleep in the next mode.
+ *
+ * A pin (\ref LED_ACTIVITY_STATUS_PIN) with, e.g., a LED connected is driven
+ * low when the device is active and driven high when the device is sleeping.
+ *
+ * \section compinfo Compilation Info
+ * This software was written for the GNU GCC and IAR.
+ * Other compilers may or may not work.
+ *
+ * \section contactinfo Contact Information
+ * For further information, visit
+ * <A href="http://www.atmel.com/">Atmel</A>.\n
+ * Support and FAQ: http://support.atmel.no/
+ */
+
 #include <asf.h>
 #include <conf_example.h>
+
+#define SLEEP_TIME     5
+#define ACTIVE_TIME   3
 
 void RTT_Handler(void)
 {
@@ -98,7 +138,7 @@ int main(void)
 
 	while (1) {
 
-		rtt_write_alarm_time(RTT, rtt_read_timer_value(RTT) + 5);
+		rtt_write_alarm_time(RTT, rtt_read_timer_value(RTT) + SLEEP_TIME);
 		/*
 		 * Turn the activity status LED off to inform the user that the
 		 * device is in a sleep mode.
@@ -121,7 +161,7 @@ int main(void)
 		sleepmgr_unlock_mode(current_sleep_mode);
 
 		/* Add a 3s delay. */
-		delay_s(3);
+		delay_s(ACTIVE_TIME);
 
 		/* Lock the next sleep mode. */
 		++current_sleep_mode;
@@ -132,41 +172,3 @@ int main(void)
 		sleepmgr_lock_mode(current_sleep_mode);
 	}
 }
-
-/**
- * \mainpage
- *
- * \section intro Introduction
- * This simple example shows how to use the \ref sleepmgr_group.
- *
- * \section files Main files:
- * - sleepmgr_example_sam_rtt.c: Sleep manager example application
- * - conf_example.h: configuration of I/O pins
- *
- * \section apiinfo Sleep manager API
- * The sleep manager API can be found \ref sleepmgr_group "here".
- *
- * \section deviceinfo Device Info
- * All SAM series devices can be used.
- * The example has been tested on the SAM4N-XPLAINED-PRO boards.
- *
- * \section exampledescription Description of the example
- * The device is put to sleep in sleep modes with increasing "depth", and is
- * periodically woken up by the RTT_ALARM.  The RTT_ALARM wakes the CPU
- * every 5 seconds.
- * The device will remain in ACTIVE mode for approximately 3 seconds after wake-
- * up, before it goes to sleep in the next mode.
- *
- * A pin (\ref LED_ACTIVITY_STATUS_PIN) with, e.g., a LED connected is driven
- * low when the device is active and driven high when the device is sleeping.
- *
- * \section compinfo Compilation Info
- * This software was written for the GNU GCC and IAR.
- * Other compilers may or may not work.
- *
- * \section contactinfo Contact Information
- * For further information, visit
- * <A href="http://www.atmel.com/">Atmel</A>.\n
- * Support and FAQ: http://support.atmel.no/
- */
-
