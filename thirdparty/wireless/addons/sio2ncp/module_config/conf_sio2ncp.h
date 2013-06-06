@@ -43,9 +43,10 @@
 #ifndef CONF_SIO2NCP_H_INCLUDED
 #define CONF_SIO2NCP_H_INCLUDED
 
-#warning "Using a default value. Edit this conf_sio2ncp.h file to modify that define value according to the current board."
-//! \name Configuration for Xmega
-//! @{
+#warning \
+	"Using a default value. Edit this conf_sio2ncp.h file to modify that define value according to the current board."
+/* ! \name Configuration for Xmega */
+/* ! @{ */
 #if (XMEGA)
 #define USART_NCP                &USARTC0
 #define USART_NCP_BAUDRATE       9600
@@ -53,27 +54,28 @@
 #define USART_NCP_PARITY         USART_PMODE_DISABLED_gc
 #define USART_NCP_STOP_BITS      1
 
-#define USART_NCP_RX_ISR_ENABLE() usart_set_rx_interrupt_level(USART_NCP, USART_INT_LVL_HI) 
+#define USART_NCP_RX_ISR_ENABLE() usart_set_rx_interrupt_level(USART_NCP, \
+		USART_INT_LVL_HI)
 #define USART_NCP_ISR_VECT()      ISR(USARTC0_RXC_vect)
-#endif //XMEGA
-//! @}
+#endif /* XMEGA */
+/* ! @} */
 
-//! \name Configuration for MegaRF
-//! @{
+/* ! \name Configuration for MegaRF */
+/* ! @{ */
 #if (MEGA_RF)
-#define USART_NCP                (&USARTA1)
+#define USART_NCP                (&USARTA0)
 #define USART_NCP_BAUDRATE       9600
 #define USART_NCP_CHAR_LENGTH    USART_CHSIZE_8BIT_gc
 #define USART_NCP_PARITY         USART_PMODE_DISABLED_gc
 #define USART_NCP_STOP_BITS      1
 
 #define USART_NCP_RX_ISR_ENABLE() usart_rx_complete_interrupt_enable(USART_NCP)
-#define USART_NCP_ISR_VECT()      ISR(USART1_RX_vect)
-#endif //MEGA_RF
-//! @}
+#define USART_NCP_ISR_VECT()      ISR(USART0_RX_vect)
+#endif /* MEGA_RF */
+/* ! @} */
 
-//! \name Configuration for UC3
-//! @{
+/* ! \name Configuration for UC3 */
+/* ! @{ */
 #if (UC3)
 #define USART_NCP                &AVR32_USART0
 #define USART_NCP_BAUDRATE       9600
@@ -81,13 +83,13 @@
 #define USART_NCP_PARITY         USART_NO_PARITY
 #define USART_NCP_STOP_BITS      USART_1_STOPBIT
 
-#define USART_NCP_RX_ISR_ENABLE() 
-#define USART_NCP_ISR_VECT()      ISR(ncp_uart_isr,2,1)
-#endif //UC3
-//! @}
+#define USART_NCP_RX_ISR_ENABLE()
+#define USART_NCP_ISR_VECT()      ISR(ncp_uart_isr, 2, 1)
+#endif /* UC3 */
+/* ! @} */
 
-//! \name Configuration for SAM4L
-//! @{
+/* ! \name Configuration for SAM4L */
+/* ! @{ */
 #if (SAM)
 #define NCP_RESET_GPIO            PIN_PC00
 
@@ -99,10 +101,11 @@
 
 #define USART_NCP_ISR_VECT()      ISR(USART1_Handler)
 #define USART_NCP_IRQn            USART1_IRQn
-#define USART_NCP_RX_ISR_ENABLE() usart_enable_interrupt(USART_NCP, US_IER_RXRDY);\
-						              NVIC_EnableIRQ(USART_NCP_IRQn);
-#endif //SAM
-//! @}
+#define USART_NCP_RX_ISR_ENABLE() usart_enable_interrupt(USART_NCP, \
+		US_IER_RXRDY); \
+	NVIC_EnableIRQ(USART_NCP_IRQn);
+#endif /* SAM */
+/* ! @} */
 
 #include "serial.h"
 

@@ -46,12 +46,13 @@
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
+
 /** \page api MAC Stack Modules
-*    - \ref group_mac
-*    - \ref group_pal
-*    - \ref group_tal
-*    - \ref group_resources
-*/
+ *    - \ref group_mac
+ *    - \ref group_pal
+ *    - \ref group_tal
+ *    - \ref group_resources
+ */
 
 /* === Includes ============================================================= */
 #include <compiler.h>
@@ -78,7 +79,6 @@
 #endif  /* MAC_SECURITY_ZIP */
 
 /* === Macros =============================================================== */
-
 
 /* === Globals ============================================================== */
 
@@ -110,6 +110,7 @@ mac_poll_state_t mac_poll_state;
 mac_radio_sleep_state_t mac_radio_sleep_state;
 
 #ifdef BEACON_SUPPORT
+
 /**
  * Final Cap Slot of current Superframe
  */
@@ -140,8 +141,8 @@ bool mac_rx_enabled;
 uint8_t mac_last_dsn;
 uint64_t mac_last_src_addr;
 
-
 #if (MAC_START_REQUEST_CONFIRM == 1)
+
 /**
  * Holds the contents of the beacon payload.
  */
@@ -149,6 +150,7 @@ uint8_t mac_beacon_payload[aMaxBeaconPayloadLength];
 #endif  /* (MAC_START_REQUEST_CONFIRM == 1) */
 
 #ifdef MAC_SECURITY_ZIP
+
 /**
  * Holds the values of all security related PIB attributes.
  */
@@ -162,6 +164,7 @@ mac_sec_pib_t mac_sec_pib;
 uint8_t *mac_conf_buf_ptr;
 
 #if (MAC_SCAN_SUPPORT == 1)
+
 /**
  * Stores the original channel before start of scanning.
  */
@@ -172,12 +175,15 @@ uint8_t mac_scan_orig_channel;
  */
 uint8_t mac_scan_orig_page;
 
-#if ((MAC_SCAN_ACTIVE_REQUEST_CONFIRM == 1) || (MAC_SCAN_PASSIVE_REQUEST_CONFIRM == 1))
+#if ((MAC_SCAN_ACTIVE_REQUEST_CONFIRM == 1) || \
+	(MAC_SCAN_PASSIVE_REQUEST_CONFIRM == 1))
+
 /**
  * Stores the original PAN-Id before start of scanning.
  */
 uint16_t mac_scan_orig_panid;
-#endif /* ((MAC_SCAN_ACTIVE_REQUEST_CONFIRM == 1) || (MAC_SCAN_PASSIVE_REQUEST_CONFIRM == 1)) */
+#endif /* ((MAC_SCAN_ACTIVE_REQUEST_CONFIRM == 1) ||
+        *(MAC_SCAN_PASSIVE_REQUEST_CONFIRM == 1)) */
 
 /**
  * Holds the buffer pointer which is used to send scan command.
@@ -204,6 +210,7 @@ queue_t tal_mac_q;
 
 #if (MAC_START_REQUEST_CONFIRM == 1)
 #ifdef BEACON_SUPPORT
+
 /**
  * Queue used by MAC layer in beacon-enabled network to put in broadcast data.
  * Any broadcast data given by NHLE at a Coordinator or PAN Coordinator
@@ -213,8 +220,8 @@ queue_t broadcast_q;
 #endif  /* BEACON_SUPPORT */
 #endif /* (MAC_START_REQUEST_CONFIRM == 1) */
 
-
 #if (MAC_INDIRECT_DATA_FFD == 1)
+
 /**
  * Queue used by MAC layer to put in indirect data. Any indirect data given by
  * NHLE is placed here by MAC, until the device polls for the data.
@@ -227,7 +234,6 @@ extern volatile bool timer_trigger;
 mac_pib_t mac_pib;
 
 /* === Prototypes =========================================================== */
-
 
 /* === Implementation ======================================================= */
 
@@ -242,44 +248,39 @@ mac_pib_t mac_pib;
  */
 bool mac_task(void)
 {
-    uint8_t *event = NULL;
-    bool processed_event = false;
+	uint8_t *event = NULL;
+	bool processed_event = false;
 
-    if (!mac_busy)
-    {
-        /* Check whether queue is empty */
-        if (nhle_mac_q.size != 0)
-        {
-            event = (uint8_t *)qmm_queue_remove(&nhle_mac_q, NULL);
+	if (!mac_busy) {
+		/* Check whether queue is empty */
+		if (nhle_mac_q.size != 0) {
+			event = (uint8_t *)qmm_queue_remove(&nhle_mac_q, NULL);
 
-            /* If an event has been detected, handle it. */
-            if (NULL != event)
-            {
-                /* Process event due to NHLE requests */
-                dispatch_event(event);
-                processed_event = true;
-            }
-        }
-    }
+			/* If an event has been detected, handle it. */
+			if (NULL != event) {
+				/* Process event due to NHLE requests */
+				dispatch_event(event);
+				processed_event = true;
+			}
+		}
+	}
 
-    /*
-     * Internal event queue should be dispatched
-     * irrespective of the dispatcher state.
-     */
-    /* Check whether queue is empty */
-    if (tal_mac_q.size != 0)
-    {
-        event = (uint8_t *)qmm_queue_remove(&tal_mac_q, NULL);
+	/*
+	 * Internal event queue should be dispatched
+	 * irrespective of the dispatcher state.
+	 */
+	/* Check whether queue is empty */
+	if (tal_mac_q.size != 0) {
+		event = (uint8_t *)qmm_queue_remove(&tal_mac_q, NULL);
 
-        /* If an event has been detected, handle it. */
-        if (NULL != event)
-        {
-            dispatch_event(event);
-            processed_event = true;
-        }
-    }
+		/* If an event has been detected, handle it. */
+		if (NULL != event) {
+			dispatch_event(event);
+			processed_event = true;
+		}
+	}
 
-    return processed_event;
+	return processed_event;
 }
 
 /**
@@ -287,30 +288,28 @@ bool mac_task(void)
  */
 bool mac_ready_to_sleep(void)
 {
-    bool idle;
+	bool idle;
 
-    if (mac_busy ||
-        (mac_nhle_q.size != 0) ||
-        (nhle_mac_q.size != 0) ||
-        (tal_mac_q.size != 0) ||
-        (tal_incoming_frame_queue.size != 0)
+	if (mac_busy ||
+			(mac_nhle_q.size != 0) ||
+			(nhle_mac_q.size != 0) ||
+			(tal_mac_q.size != 0) ||
+			(tal_incoming_frame_queue.size != 0)
 #if (MEGA_RF)
-        || timer_trigger
+			|| timer_trigger
 #ifdef NO_32KHZ_CRYSTAL
-        || (tal_trx_status != TRX_OFF)
+			|| (tal_trx_status != TRX_OFF)
 #endif
 #else
-        || (tal_trx_status != TRX_SLEEP)
+			|| (tal_trx_status != TRX_SLEEP)
 #endif
-       )
-    {
-        idle = false;
-    }
-    else
-    {
-        idle = true;
-    }
+			) {
+		idle = false;
+	} else {
+		idle = true;
+	}
 
-    return idle;
+	return idle;
 }
+
 /* EOF */

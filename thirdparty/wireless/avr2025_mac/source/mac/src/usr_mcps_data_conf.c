@@ -55,12 +55,9 @@
 
 /* === Macros ============================================================== */
 
-
 /* === Globals ============================================================= */
 
-
 /* === Prototypes ========================================================== */
-
 
 /* === Implementation ====================================================== */
 #if (defined __GNUC__)
@@ -78,11 +75,12 @@ void usr_mcps_data_conf(uint8_t msduHandle, uint8_t status)
 #endif  /* ENABLE_TSTAMP */
 #endif
 {
-    /* Keep compiler happy. */
-    msduHandle = msduHandle;
-    status = status;
+	/* Keep compiler happy. */
+	msduHandle = msduHandle;
+	status = status;
 #ifdef ENABLE_TSTAMP
-    Timestamp = Timestamp;
+	Timestamp = Timestamp;
 #endif  /* ENABLE_TSTAMP */
 }
+
 /* EOF */

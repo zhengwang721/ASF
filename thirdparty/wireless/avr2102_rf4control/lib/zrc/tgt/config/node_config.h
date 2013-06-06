@@ -42,6 +42,7 @@
  * \asf_license_stop
  *
  */
+
 /*
  * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
@@ -60,13 +61,12 @@
 
 /* === Macros =============================================================== */
 
-
 /* === Types ================================================================ */
 
-
-
 /* Configure RF4CE node capabilities */
-/* The capabilities of this node. Implementation specific according to the format
+
+/* The capabilities of this node. Implementation specific according to the
+ * format
  * illustrated in Figure 26.
  * Implementation specific
  * NodeTypeTarget
@@ -78,29 +78,24 @@
  * ChannelNormalizationCapableTrue
  * ChannelNormalizationCapableFalse    */
 #ifdef RF4CE_SECURITY
-#define NWKC_NODE_CAPABILITIES   (NodeTypeTarget | PowerSourceMainsTrue \
-                                  | SecurityCapableTrue | ChannelNormalizationCapableTrue)
+#define NWKC_NODE_CAPABILITIES   (NodeTypeTarget | PowerSourceMainsTrue	\
+	| SecurityCapableTrue | ChannelNormalizationCapableTrue)
 #else
-#define NWKC_NODE_CAPABILITIES   (NodeTypeTarget | PowerSourceMainsTrue \
-                                  | SecurityCapableFalse | ChannelNormalizationCapableTrue)
+#define NWKC_NODE_CAPABILITIES   (NodeTypeTarget | PowerSourceMainsTrue	\
+	| SecurityCapableFalse | ChannelNormalizationCapableTrue)
 #endif
 
 #define NWKC_MAX_PAIRING_TABLE_ENTRIES    (5)
-// #define NWKC_VENDOR_IDENTIFIER           (0x1014)
-// #define NWKC_VENDOR_STRING               "ATMEL  "          /* 7 characters ! */
-
+/* #define NWKC_VENDOR_IDENTIFIER           (0x1014) */
+/* #define NWKC_VENDOR_STRING               "ATMEL  "          / * 7 characters
+ * ! * / */
 
 /* Implementation specific ZRC constant defines */
 #define NWK_ACTIVE_PERIOD           nwkcMinActivePeriod /* 16.8 ms */
 #define NWK_DUTY_CYCLE              nwkcMaxDutyCycle   /* 62500 symbols = 1s */
 #define NWK_DISCOVERY_LQI_THRESHOLD (0x00)
 
-
-
-
-
 /* === Externals ============================================================ */
-
 
 /* === Prototypes =========================================================== */
 
