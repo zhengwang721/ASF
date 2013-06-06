@@ -99,7 +99,7 @@
 #include "asf.h"
 
 /** Reference voltage for ADC,in mv. */
-#define VOLT_REF        (3283)
+#define VOLT_REF        (3300)
 
 /** The maximal digital value */
 #define MAX_DIGITAL     (1023UL)

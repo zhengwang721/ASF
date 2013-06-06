@@ -568,15 +568,15 @@ static inline void adc_ref_vol_sel(Adc *const adc,
 		uint8_t irvs)
 {
 	if (ADC_REFER_VOL_EXTERNAL == adc_ref_src) {
-		adc->ADC_ACR &= ~ADC_ACR_ONREF;
+		adc->ADC_ACR &= ~ADC_ACR_ONREF_EN;
 	} else if (ADC_REFER_VOL_STUCK_AT_MIN == adc_ref_src) {
-		adc->ADC_ACR |= ADC_ACR_ONREF;
-		adc->ADC_ACR &= ~(ADC_ACR_IRVCE | ADC_ACR_FORCEREF);
+		adc->ADC_ACR |= ADC_ACR_ONREF_EN;
+		adc->ADC_ACR &= ~(ADC_ACR_IRVCE_EN | ADC_ACR_FORCEREF_EN);
 	} else if (ADC_REFER_VOL_VDDANA == adc_ref_src) {
-		adc->ADC_ACR |= ADC_ACR_ONREF | ADC_ACR_FORCEREF;
+		adc->ADC_ACR |= ADC_ACR_ONREF_EN | ADC_ACR_FORCEREF_EN;
 	} else if (ADC_REFER_VOL_IRVS == adc_ref_src) {
-		adc->ADC_ACR &= ~ADC_ACR_FORCEREF;
-		adc->ADC_ACR |= ADC_ACR_ONREF | ADC_ACR_IRVCE |
+		adc->ADC_ACR &= ~ADC_ACR_FORCEREF_EN;
+		adc->ADC_ACR |= ADC_ACR_ONREF_EN | ADC_ACR_IRVCE_EN |
 				(irvs << ADC_ACR_IRVS_Pos);
 	}
 }
