@@ -62,7 +62,7 @@ extern "C" {
 #define SYS_BOARD_MCKR      (PMC_MCKR_PRES_CLK_2 | PMC_MCKR_CSS_PLLA_CLK)
 
 /* Key to unlock MOR register */
-#define SYS_CKGR_MOR_KEY_VALUE	CKGR_MOR_KEY(0x37)
+#define SYS_CKGR_MOR_KEY_VALUE    CKGR_MOR_KEY(0x37)
 
 uint32_t SystemCoreClock = CHIP_FREQ_MAINCK_RC_4MHZ;
 

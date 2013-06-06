@@ -93,7 +93,7 @@
 		"  a: 24MHz from PLL clock\n\r"                    \
 		"  b: 32MHz from PLL clock\n\r"                    \
 		"  c: 48MHz from PLL clock\n\r"                    \
-		"  d: 60MHz from PLL clock\n\r"                    \
+		"  d: 64MHz from PLL clock\n\r"                    \
 		"  e: 84MHz from PLL clock\n\r"                    \
 		"  f: 96MHz from PLL clock\n\r"                   \
 
