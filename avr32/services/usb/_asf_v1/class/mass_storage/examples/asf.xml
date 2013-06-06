@@ -10,7 +10,6 @@
 		<device-support value="uc3b"/>
 		<device-support value="uc3a3"/>
 		<require idref="avr32.services.usb.ms.example.main"/>
-		<info type="gui-flag" value="move-to-root"/>
 	</module>
 	<module type="meta" id="avr32.services.usb.ms.example.main" caption="Main module for examples">
 		<build type="header-file" value="conf/conf_access.h"/>
@@ -70,6 +69,5 @@
 		<build type="distribute" subtype="file" value="./docsrc/appli_evk1105_device.jpg"/>
 		<build type="distribute" subtype="file" value="./docsrc/appli_evk1105_host.jpg"/>
 		<build type="distribute" subtype="file" value="./docsrc/arch_full.jpg"/>
-		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>
