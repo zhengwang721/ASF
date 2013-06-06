@@ -47,18 +47,18 @@ void configure_dfll_open_loop(void);
 void configure_extosc32k(void)
 {
 //! [config_extosc32k_config]
-	struct system_clock_source_xosc32k_config ext32k_conf;
+	struct system_clock_source_xosc32k_config config_ext32k;
 //! [config_extosc32k_config]
 //! [config_extosc32k_get_defaults]
-	system_clock_source_xosc32k_get_default_config(&ext32k_conf);
+	system_clock_source_xosc32k_get_default_config(&config_ext32k);
 //! [config_extosc32k_get_defaults]
 
 //! [config_extosc32k_change_defaults]
-	ext32k_conf.startup_time = SYSTEM_XOSC32K_STARTUP_4096;
+	config_ext32k.startup_time = SYSTEM_XOSC32K_STARTUP_4096;
 //! [config_extosc32k_change_defaults]
 
 //! [config_extosc32k_set_config]
-	system_clock_source_xosc32k_set_config(&ext32k_conf);
+	system_clock_source_xosc32k_set_config(&config_ext32k);
 //! [config_extosc32k_set_config]
 }
 //! [config_extosc32k]
@@ -67,13 +67,13 @@ void configure_extosc32k(void)
 void configure_dfll_open_loop(void)
 {
 //! [config_dfll_config]
-	struct system_clock_source_dfll_config dfll_conf;
+	struct system_clock_source_dfll_config config_dfll;
 //! [config_dfll_config]
 //! [config_dfll_get_defaults]
-	system_clock_source_dfll_get_default_config(&dfll_conf);
+	system_clock_source_dfll_get_default_config(&config_dfll);
 //! [config_dfll_get_defaults]
 //! [config_dfll_set_config]
-	system_clock_source_dfll_set_config(&dfll_conf);
+	system_clock_source_dfll_set_config(&config_dfll);
 //! [config_dfll_set_config]
 }
 //! [config_dfll]
@@ -114,11 +114,11 @@ int main(void)
 
 	/* Change system clock to DFLL */
 //! [set_sys_clk_src]
-	struct system_gclk_gen_config gclock_gen_conf;
-	system_gclk_gen_get_config_defaults(&gclock_gen_conf);
-	gclock_gen_conf.source_clock    = SYSTEM_CLOCK_SOURCE_DFLL;
-	gclock_gen_conf.division_factor = 1;
-	system_gclk_gen_set_config(GCLK_GENERATOR_0, &gclock_gen_conf);
+	struct system_gclk_gen_config config_gclock_gen;
+	system_gclk_gen_get_config_defaults(&config_gclock_gen);
+	config_gclock_gen.source_clock    = SYSTEM_CLOCK_SOURCE_DFLL;
+	config_gclock_gen.division_factor = 1;
+	system_gclk_gen_set_config(GCLK_GENERATOR_0, &config_gclock_gen);
 //! [set_sys_clk_src]
 //! [main]
 

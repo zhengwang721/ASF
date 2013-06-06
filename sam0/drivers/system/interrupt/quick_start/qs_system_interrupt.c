@@ -78,6 +78,4 @@ int main(void)
 	while (true) {
 		/* Infinite loop */
 	}
-
-	return 0;
 }

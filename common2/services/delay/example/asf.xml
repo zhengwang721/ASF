@@ -8,6 +8,5 @@
 		<device-support value="samd20"/>
 		<require idref="common2.services.delay"/>
 		<require idref="sam0.drivers.port"/>
-		<require idref="sam0.drivers.sercom.usart"/>
 	</module>
 </asf>

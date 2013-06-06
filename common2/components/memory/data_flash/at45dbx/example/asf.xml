@@ -8,6 +8,5 @@
 		<build type="c-source" value="at45dbx_example.c"/>
 		<build type="module-config" subtype="required-header-file" value="conf_data_flash_example.h"/>
 		<require idref="common2.components.memory.data_flash.at45dbx"/>
-		<require idref="sam0.drivers.sercom.usart"/>
 	</module>
 </asf>

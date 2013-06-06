@@ -53,14 +53,14 @@ struct dac_module dac_instance;
 void configure_dac(void)
 {
 //! [setup_config]
-	struct dac_config config;
+	struct dac_config config_dac;
 //! [setup_config]
 //! [setup_config_defaults]
-	dac_get_config_defaults(&config);
+	dac_get_config_defaults(&config_dac);
 //! [setup_config_defaults]
 
 //! [setup_set_config]
-	dac_init(&dac_instance, DAC, &config);
+	dac_init(&dac_instance, DAC, &config_dac);
 //! [setup_set_config]
 
 //! [setup_enable]
@@ -71,14 +71,14 @@ void configure_dac(void)
 void configure_dac_channel(void)
 {
 //! [setup_ch_config]
-	struct dac_chan_config chan_config;
+	struct dac_chan_config config_dac_chan;
 //! [setup_ch_config]
 //! [setup_ch_config_defaults]
-	dac_chan_get_config_defaults(&chan_config);
+	dac_chan_get_config_defaults(&config_dac_chan);
 //! [setup_ch_config_defaults]
 
 //! [setup_ch_set_config]
-	dac_chan_set_config(&dac_instance, DAC_CHANNEL_0, &chan_config);
+	dac_chan_set_config(&dac_instance, DAC_CHANNEL_0, &config_dac_chan);
 //! [setup_ch_set_config]
 
 //! [setup_ch_enable]

@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Global interrupt management for SAM3 and SAM4 (NVIC based)
+ * \brief Global interrupt management for SAM D20, SAM3 and SAM4 (NVIC based)
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,8 +43,13 @@
 
 #include "interrupt_sam_nvic.h"
 
-//! Global NVIC interrupt enable status (by default it's enabled)
+#if !defined(__DOXYGEN__)
+/* Deprecated - global flag to determine the global interrupt state. Required by
+ * QTouch library, however new applications should use cpu_irq_is_enabled()
+ * which probes the true global interrupt state from the CPU special registers.
+ */
 volatile bool g_interrupt_enabled = true;
+#endif
 
 void cpu_irq_enter_critical(void)
 {

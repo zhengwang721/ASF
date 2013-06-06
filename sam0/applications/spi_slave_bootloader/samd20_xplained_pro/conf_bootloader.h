@@ -52,9 +52,10 @@
 #define GPIO_BOOT_PIN_MASK         (1U << (BOOT_LOAD_PIN & 0x1F))
 
 #define BOOT_SERCOM                EXT2_SPI_MODULE
-#define BOOT_SPI_PAD0              EXT2_SPI_MOSI_PINMUX
-#define BOOT_SPI_PAD1              EXT2_SPI_SS_PINMUX
-#define BOOT_SPI_PAD2              EXT2_SPI_MISO_PINMUX
-#define BOOT_SPI_PAD3              EXT2_SPI_SCK_PINMUX
+#define BOOT_SPI_MUX               EXT2_SPI_SERCOM_MUX_SETTING
+#define BOOT_SPI_PAD0              EXT2_SPI_SERCOM_PINMUX_PAD0
+#define BOOT_SPI_PAD1              EXT2_SPI_SERCOM_PINMUX_PAD1
+#define BOOT_SPI_PAD2              EXT2_SPI_SERCOM_PINMUX_PAD2
+#define BOOT_SPI_PAD3              EXT2_SPI_SERCOM_PINMUX_PAD3
 
 #endif /* CONF_BOARD_H_INCLUDED */

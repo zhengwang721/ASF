@@ -378,7 +378,7 @@ struct usart_config {
 	/** USART character size */
 	enum usart_character_size character_size;
 	/** USART pin out */
-	enum usart_signal_mux_settings mux_settings;
+	enum usart_signal_mux_settings mux_setting;
 	/** USART baud rate */
 	uint32_t baudrate;
 
@@ -402,14 +402,14 @@ struct usart_config {
 	bool run_in_standby;
 	/** GCLK generator source */
 	enum gclk_generator generator_source;
-	/** PAD0 Pinout */
-	uint32_t pinout_pad0;
-	/** PAD1 Pinout */
-	uint32_t pinout_pad1;
-	/** PAD2 Pinout */
-	uint32_t pinout_pad2;
-	/** PAD3 Pinout */
-	uint32_t pinout_pad3;
+	/** PAD0 pinmux */
+	uint32_t pinmux_pad0;
+	/** PAD1 pinmux */
+	uint32_t pinmux_pad1;
+	/** PAD2 pinmux */
+	uint32_t pinmux_pad2;
+	/** PAD3 pinmux */
+	uint32_t pinmux_pad3;
 };
 
 #if USART_CALLBACK_MODE == true
@@ -532,22 +532,22 @@ static inline void usart_get_config_defaults(
 	Assert(config);
 
 	/* Set default config in the config struct */
-	config->data_order = USART_DATAORDER_LSB;
-	config->transfer_mode = USART_TRANSFER_ASYNCHRONOUSLY;
-	config->parity = USART_PARITY_NONE;
-	config->stopbits = USART_STOPBITS_1;
-	config->character_size = USART_CHARACTER_SIZE_8BIT;
-	config->baudrate = 9600;
+	config->data_order       = USART_DATAORDER_LSB;
+	config->transfer_mode    = USART_TRANSFER_ASYNCHRONOUSLY;
+	config->parity           = USART_PARITY_NONE;
+	config->stopbits         = USART_STOPBITS_1;
+	config->character_size   = USART_CHARACTER_SIZE_8BIT;
+	config->baudrate         = 9600;
 	config->clock_polarity_inverted = false;
 	config->use_external_clock = false;
-	config->ext_clock_freq = 0;
-	config->mux_settings = USART_RX_1_TX_2_XCK_3;
-	config->run_in_standby = false;
+	config->ext_clock_freq   = 0;
+	config->mux_setting      = USART_RX_1_TX_2_XCK_3;
+	config->run_in_standby   = false;
 	config->generator_source = GCLK_GENERATOR_0;
-	config->pinout_pad0 = PINMUX_DEFAULT;
-	config->pinout_pad1 = PINMUX_DEFAULT;
-	config->pinout_pad2 = PINMUX_DEFAULT;
-	config->pinout_pad3 = PINMUX_DEFAULT;
+	config->pinmux_pad0      = PINMUX_DEFAULT;
+	config->pinmux_pad1      = PINMUX_DEFAULT;
+	config->pinmux_pad2      = PINMUX_DEFAULT;
+	config->pinmux_pad3      = PINMUX_DEFAULT;
 }
 
 enum status_code usart_init(

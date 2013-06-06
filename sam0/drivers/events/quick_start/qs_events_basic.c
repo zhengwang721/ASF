@@ -53,36 +53,36 @@ void configure_event_user(void);
 void configure_event_channel(void)
 {
 //! [setup_1]
-	struct events_chan_config config;
+	struct events_chan_config config_events_chan;
 //! [setup_1]
 //! [setup_2]
-	events_chan_get_config_defaults(&config);
+	events_chan_get_config_defaults(&config_events_chan);
 //! [setup_2]
 
 //! [setup_3]
-	config.generator_id   = EXAMPLE_EVENT_GENERATOR;
-	config.edge_detection = EVENT_EDGE_RISING;
-	config.path           = EVENT_PATH_SYNCHRONOUS;
+	config_events_chan.generator_id   = EXAMPLE_EVENT_GENERATOR;
+	config_events_chan.edge_detection = EVENT_EDGE_RISING;
+	config_events_chan.path           = EVENT_PATH_SYNCHRONOUS;
 //! [setup_3]
 //! [setup_4]
-	events_chan_set_config(EXAMPLE_EVENT_CHANNEL, &config);
+	events_chan_set_config(EXAMPLE_EVENT_CHANNEL, &config_events_chan);
 //! [setup_4]
 }
 
 void configure_event_user(void)
 {
 //! [setup_5]
-	struct events_user_config config;
+	struct events_user_config config_events_user;
 //! [setup_5]
 //! [setup_6]
-	events_user_get_config_defaults(&config);
+	events_user_get_config_defaults(&config_events_user);
 //! [setup_6]
 
 //! [setup_7]
-	config.event_channel_id = EXAMPLE_EVENT_CHANNEL;
+	config_events_user.event_channel_id = EXAMPLE_EVENT_CHANNEL;
 //! [setup_7]
 //! [setup_8]
-	events_user_set_config(EXAMPLE_EVENT_USER, &config);
+	events_user_set_config(EXAMPLE_EVENT_USER, &config_events_user);
 //! [setup_8]
 }
 //! [setup]

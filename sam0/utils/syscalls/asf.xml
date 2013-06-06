@@ -4,7 +4,7 @@
 			Minimal system calls implementation to provide I/O support in C library.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="Drivers"/>
+			<keyword value="I/O"/>
 		</info>
 		<build type="c-source" value="gcc/syscalls.c" toolchain="armgcc"/>
 		<device-support value="sam0"/>

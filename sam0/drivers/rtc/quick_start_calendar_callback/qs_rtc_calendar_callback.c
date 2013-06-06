@@ -89,8 +89,8 @@ void configure_rtc_calendar(void)
 {
 	/* Initialize RTC in calendar mode. */
 //! [init_conf]
-	struct rtc_calendar_config config;
-	rtc_calendar_get_config_defaults(&config);
+	struct rtc_calendar_config config_rtc_calendar;
+	rtc_calendar_get_config_defaults(&config_rtc_calendar);
 //! [init_conf]
 
 //! [time_struct]
@@ -105,13 +105,13 @@ void configure_rtc_calendar(void)
 //! [time_struct]
 
 //! [set_config]
-	config.clock_24h = true;
-	config.alarm[0].time = alarm;
-	config.alarm[0].mask = RTC_CALENDAR_ALARM_MASK_YEAR;
+	config_rtc_calendar.clock_24h = true;
+	config_rtc_calendar.alarm[0].time = alarm;
+	config_rtc_calendar.alarm[0].mask = RTC_CALENDAR_ALARM_MASK_YEAR;
 //! [set_config]
 
 //! [init_rtc]
-	rtc_calendar_init(&config);
+	rtc_calendar_init(&config_rtc_calendar);
 //! [init_rtc]
 
 //! [enable]

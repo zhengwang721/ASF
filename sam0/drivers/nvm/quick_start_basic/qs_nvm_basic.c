@@ -48,15 +48,15 @@ void configure_nvm(void);
 void configure_nvm(void)
 {
 //! [setup_1]
-	struct nvm_config config;
+	struct nvm_config config_nvm;
 //! [setup_1]
 
 //! [setup_2]
-	nvm_get_config_defaults(&config);
+	nvm_get_config_defaults(&config_nvm);
 //! [setup_2]
 
 //! [setup_3]
-	nvm_set_config(&config);
+	nvm_set_config(&config_nvm);
 //! [setup_3]
 }
 //! [setup]

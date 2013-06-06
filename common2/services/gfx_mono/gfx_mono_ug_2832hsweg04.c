@@ -63,14 +63,8 @@ void gfx_mono_ssd1306_init(void)
 	gfx_mono_set_framebuffer(framebuffer);
 #endif
 
-	port_pin_set_output_level(PIN_PA18, true);
-	port_pin_set_output_level(PIN_PA18, false);
-
 	/* Initialize the low-level display controller. */
 	ssd1306_init();
-
-	port_pin_set_output_level(PIN_PA18, true);
-	port_pin_set_output_level(PIN_PA18, false);
 
 	/* Set display to output data from line 0 */
 	ssd1306_set_display_start_line_address(0);

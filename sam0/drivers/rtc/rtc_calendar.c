@@ -158,10 +158,6 @@ static void _rtc_calendar_register_value_to_time(
  * hardware module.
  *
  * \param[in] config  Pointer to the configuration structure.
- *
- * \return Status of the configuration procedure.
- * \retval STATUS_OK               RTC configurations was set successfully.
- * \retval STATUS_ERR_INVALID_ARG  If invalid argument(s) where given.
  */
 static void _rtc_calendar_set_config(
 		const struct rtc_calendar_config *const config)
@@ -172,17 +168,8 @@ static void _rtc_calendar_set_config(
 	/* Set up temporary register value. */
 	uint16_t tmp_reg;
 
-	/* Determine prescaler required to get a 1Hz counting speed */
-	uint32_t rtc_gen_hz    = system_gclk_gen_get_hz(GCLK_GENERATOR_2);
-	uint16_t prescaler_div = 0;
-	while (rtc_gen_hz > 1) {
-		prescaler_div++;
-		rtc_gen_hz >>= 1;
-	}
-
-	/* Set to calendar mode and set the prescaler to get 1 Hz. */
-	tmp_reg = RTC_MODE2_CTRL_MODE(2) |
-			(prescaler_div << RTC_MODE2_CTRL_PRESCALER_Pos);
+	/* Set to calendar mode and set the prescaler. */
+	tmp_reg = RTC_MODE2_CTRL_MODE(2) | config->prescaler;
 
 	/* Check clock mode. */
 	if (!(config->clock_24h)) {
@@ -218,10 +205,6 @@ static void _rtc_calendar_set_config(
  * the desired functionality of the RTC.
  *
  * \param[in] config  Pointer to the configuration structure.
- *
- * \return Status of the initialization procedure.
- * \retval STATUS_OK               If the initialization was run successfully.
- * \retval STATUS_ERR_INVALID_ARG  If invalid argument(s) were given.
  */
 void rtc_calendar_init(
 		const struct rtc_calendar_config *const config)

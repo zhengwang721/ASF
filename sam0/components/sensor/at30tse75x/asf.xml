@@ -4,7 +4,7 @@
 		Driver for the AT30TSE75X Series Temperature Sensor.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="Sensor" />
+			<keyword value="Sensors" />
 		</info>
 
 		<build type="include-path" value="."/>

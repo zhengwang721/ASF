@@ -43,7 +43,7 @@
 
 #include <asf.h>
 
-void configure_i2c(void);
+void configure_i2c_slave(void);
 
 //! [address]
 #define SLAVE_ADDRESS 0x12
@@ -63,24 +63,24 @@ struct i2c_slave_module i2c_slave_instance;
 //! [module]
 
 //! [initialize_i2c]
-void configure_i2c(void)
+void configure_i2c_slave(void)
 {
-	/* Create and initialize config structure */
+	/* Create and initialize config_i2c_slave structure */
 	//! [init_conf]
-	struct i2c_slave_config config;
-	i2c_slave_get_config_defaults(&config);
+	struct i2c_slave_config config_i2c_slave;
+	i2c_slave_get_config_defaults(&config_i2c_slave);
 	//! [init_conf]
 
 	/* Change address and address_mode */
 	//! [conf_changes]
-	config.address        = SLAVE_ADDRESS;
-	config.address_mode   = I2C_SLAVE_ADDRESS_MODE_MASK;
-	config.buffer_timeout = 1000;
+	config_i2c_slave.address        = SLAVE_ADDRESS;
+	config_i2c_slave.address_mode   = I2C_SLAVE_ADDRESS_MODE_MASK;
+	config_i2c_slave.buffer_timeout = 1000;
 	//! [conf_changes]
 
-	/* Initialize and enable device with config */
+	/* Initialize and enable device with config_i2c_slave */
 	//! [init_module]
-	i2c_slave_init(&i2c_slave_instance, SERCOM1, &config);
+	i2c_slave_init(&i2c_slave_instance, SERCOM1, &config_i2c_slave);
 	//! [init_module]
 
 	//! [enable_module]
@@ -97,7 +97,7 @@ int main(void)
 	//! [system_init]
 
 	//! [config]
-	configure_i2c();
+	configure_i2c_slave();
 	//! [config]
 
 	//! [dir]

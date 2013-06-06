@@ -52,14 +52,14 @@ struct adc_module adc_instance;
 void configure_adc(void)
 {
 //! [setup_config]
-	struct adc_config config;
+	struct adc_config config_adc;
 //! [setup_config]
 //! [setup_config_defaults]
-	adc_get_config_defaults(&config);
+	adc_get_config_defaults(&config_adc);
 //! [setup_config_defaults]
 
 //! [setup_set_config]
-	adc_init(&adc_instance, ADC, &config);
+	adc_init(&adc_instance, ADC, &config_adc);
 //! [setup_set_config]
 
 //! [setup_enable]

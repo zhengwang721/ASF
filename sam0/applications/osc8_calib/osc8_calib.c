@@ -191,10 +191,12 @@ static void setup_usart_channel(void)
 	usart_get_config_defaults(&cdc_uart_config);
 
 	/* Configure the USART settings and initialize the standard I/O library */
-	cdc_uart_config.mux_settings = USART_RX_3_TX_2_XCK_3;
-	cdc_uart_config.pinout_pad3  = EDBG_CDC_RX_PINMUX;
-	cdc_uart_config.pinout_pad2  = EDBG_CDC_TX_PINMUX;
-	cdc_uart_config.baudrate     = 115200;
+	cdc_uart_config.mux_setting = EDBG_CDC_SERCOM_MUX_SETTING;
+	cdc_uart_config.pinmux_pad0 = EDBG_CDC_SERCOM_PINMUX_PAD0;
+	cdc_uart_config.pinmux_pad1 = EDBG_CDC_SERCOM_PINMUX_PAD1;
+	cdc_uart_config.pinmux_pad2 = EDBG_CDC_SERCOM_PINMUX_PAD2;
+	cdc_uart_config.pinmux_pad3 = EDBG_CDC_SERCOM_PINMUX_PAD3;
+	cdc_uart_config.baudrate    = 115200;
 	stdio_serial_init(&usart_edbg, EDBG_CDC_MODULE, &cdc_uart_config);
 
 	usart_enable(&usart_edbg);

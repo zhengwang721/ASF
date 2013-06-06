@@ -45,14 +45,29 @@
 #include <stdio_serial.h>
 #include <string.h>
 
-/* USART for STDIO */
-#define CONF_RX_USART      EDBG_CDC_MODULE
 /* RX USART to test */
-#define RX_USART           EXT1_UART_MODULE
-#define RX_USART_PINMUX    EXT1_UART_RX_PINMUX
-/* TX USART to test */
-#define TX_USART           EXT2_UART_MODULE
-#define TX_USART_PINMUX    EXT2_UART_TX_PINMUX
+#define RX_USART              EXT1_UART_MODULE
+#define RX_USART_SERCOM_MUX   EXT1_UART_SERCOM_MUX_SETTING
+#define RX_USART_PINMUX_PAD0  EXT1_UART_SERCOM_PINMUX_PAD0
+#define RX_USART_PINMUX_PAD1  EXT1_UART_SERCOM_PINMUX_PAD1
+#define RX_USART_PINMUX_PAD2  EXT1_UART_SERCOM_PINMUX_PAD2
+#define RX_USART_PINMUX_PAD3  EXT1_UART_SERCOM_PINMUX_PAD3
+
+/* TX USART to test
+ *
+ * There is only one SERCOM for USART on the EXT headers of the rev. 2
+ * SAM D20 Xplained Pro. The settings below are a hack to get a second
+ * USART via a SERCOM that is not mapped to a RX/TX pin on a header.
+ *
+ * More specifically, it is the SPI SERCOM on EXT1, with RX mapped to PA05
+ * (EXT1_PIN_15 or "SS_0") and TX mapped to PA04 (EXT1_PIN_17 or "MISO").
+ */
+#define TX_USART              SERCOM0
+#define TX_USART_SERCOM_MUX   USART_RX_1_TX_0_XCK_1
+#define TX_USART_PINMUX_PAD0  PINMUX_PA04D_SERCOM0_PAD0
+#define TX_USART_PINMUX_PAD1  PINMUX_PA05D_SERCOM0_PAD1
+#define TX_USART_PINMUX_PAD2  PINMUX_PA06D_SERCOM0_PAD2
+#define TX_USART_PINMUX_PAD3  PINMUX_PA07D_SERCOM0_PAD3
 
 /* Test string to send */
 #define TEST_STRING        "Hello world!"
@@ -224,9 +239,12 @@ static void run_multiple_init_while_enabled_test(const struct test_case *test)
 	usart_disable(&usart_rx_module);
 	/* Configure RX USART */
 	usart_get_config_defaults(&usart_rx_config);
-	usart_rx_config.mux_settings = USART_RX_1_TX_0_XCK_1;
-	usart_rx_config.pinout_pad1 = RX_USART_PINMUX;
-	usart_rx_config.baudrate = TEST_USART_SPEED;
+	usart_rx_config.mux_setting = RX_USART_SERCOM_MUX;
+	usart_rx_config.pinmux_pad0 = RX_USART_PINMUX_PAD0;
+	usart_rx_config.pinmux_pad1 = RX_USART_PINMUX_PAD1;
+	usart_rx_config.pinmux_pad2 = RX_USART_PINMUX_PAD2;
+	usart_rx_config.pinmux_pad3 = RX_USART_PINMUX_PAD3;
+	usart_rx_config.baudrate    = TEST_USART_SPEED;
 	/* Apply configuration */
 	while(usart_is_syncing(&usart_rx_module)) {
 		/* wait for it */
@@ -255,14 +273,14 @@ static void run_multiple_init_while_enabled_test(const struct test_case *test)
 	usart_rx_config.baudrate = TEST_USART_SPEED;
 
 	/* Test changing the pad*/
-	usart_rx_config.pinout_pad1 = 0x0003;
+	usart_rx_config.pinmux_pad1 = 0x0003;
 	/* Apply new configuration */
 	test_code = usart_init(&usart_rx_module,
 			RX_USART, &usart_rx_config);
 	test_assert_false(test, (test_code == STATUS_OK),
 			"Changing the pad did not fail as it should");
 	/* revert to old configuration */
-	usart_rx_config.pinout_pad1 = RX_USART_PINMUX;
+	usart_rx_config.pinmux_pad1 = RX_USART_PINMUX_PAD1;
 	usart_init(&usart_rx_module,
 			RX_USART, &usart_rx_config);
 }
@@ -317,11 +335,15 @@ static void run_buffer_read_write_interrupt_test(const struct test_case *test)
  * outputting the results (using embedded debugger) and two for
  * the actual unit tests (one for RX and one for TX).
  *
- * The RX USART used is the one connected to EXT1 on the SAM D20 Xplained Pro.
- * The TX USART used is the one connected to EXT2 on the SAM D20 Xplained Pro.
- * RX is on pin 13 while TX is on pin 14. So for this unit test pin 13 on EXT1
- * should be connected to pin 14 on EXT2.
+ * The RX USART used is the one connected to EXT1 on rev. 2 of the
+ * SAM D20 Xplained Pro, while the TX USART used is the one reserved
+ * for SPI on EXT1.
  *
+ * The two SERCOMs have RX on pin 13 (RX) and 15 (SS_0), and TX on pin
+ * 14 (TX) and 17 (MISO), respectively, on the EXT1 header.
+ * Hence, the required connections on EXT1 are:
+ * - 13 <--> 17
+ * - 14 <--> 15
  */
 static void test_system_init(void)
 {
@@ -330,12 +352,14 @@ static void test_system_init(void)
 
 	/* Configure USART for unit test output */
 	usart_get_config_defaults(&usart_conf);
-	usart_conf.mux_settings     = USART_RX_3_TX_2_XCK_3;
-	usart_conf.pinout_pad3      = EDBG_CDC_RX_PINMUX;
-	usart_conf.pinout_pad2      = EDBG_CDC_TX_PINMUX;
-	usart_conf.baudrate         = 38400;
+	usart_conf.mux_setting = EDBG_CDC_SERCOM_MUX_SETTING;
+	usart_conf.pinmux_pad0 = EDBG_CDC_SERCOM_PINMUX_PAD0;
+	usart_conf.pinmux_pad1 = EDBG_CDC_SERCOM_PINMUX_PAD1;
+	usart_conf.pinmux_pad2 = EDBG_CDC_SERCOM_PINMUX_PAD2;
+	usart_conf.pinmux_pad3 = EDBG_CDC_SERCOM_PINMUX_PAD3;
+	usart_conf.baudrate    = 38400;
 
-	stdio_serial_init(&unit_test_output, CONF_RX_USART, &usart_conf);
+	stdio_serial_init(&unit_test_output, EDBG_CDC_MODULE, &usart_conf);
 	usart_enable(&unit_test_output);
 
 	/* Enable transceivers */
@@ -344,9 +368,12 @@ static void test_system_init(void)
 
 	/* Configure RX USART */
 	usart_get_config_defaults(&usart_rx_config);
-	usart_rx_config.mux_settings = USART_RX_1_TX_0_XCK_1;
-	usart_rx_config.pinout_pad1  = RX_USART_PINMUX;
-	usart_rx_config.baudrate     = TEST_USART_SPEED;
+	usart_rx_config.mux_setting = RX_USART_SERCOM_MUX;
+	usart_rx_config.pinmux_pad0 = RX_USART_PINMUX_PAD0;
+	usart_rx_config.pinmux_pad1 = RX_USART_PINMUX_PAD1;
+	usart_rx_config.pinmux_pad2 = RX_USART_PINMUX_PAD2;
+	usart_rx_config.pinmux_pad3 = RX_USART_PINMUX_PAD3;
+	usart_rx_config.baudrate    = TEST_USART_SPEED;
 	/* Apply configuration */
 	usart_init(&usart_rx_module, RX_USART, &usart_rx_config);
 	/* Enable USART */
@@ -354,9 +381,12 @@ static void test_system_init(void)
 
 	/* Configure TX USART */
 	usart_get_config_defaults(&usart_tx_config);
-	usart_tx_config.mux_settings = USART_RX_1_TX_0_XCK_1;
-	usart_tx_config.pinout_pad0  = TX_USART_PINMUX;
-	usart_tx_config.baudrate     = TEST_USART_SPEED;
+	usart_tx_config.mux_setting = TX_USART_SERCOM_MUX;
+	usart_tx_config.pinmux_pad0 = TX_USART_PINMUX_PAD0;
+	usart_tx_config.pinmux_pad1 = TX_USART_PINMUX_PAD1;
+	usart_tx_config.pinmux_pad2 = TX_USART_PINMUX_PAD2;
+	usart_tx_config.pinmux_pad3 = TX_USART_PINMUX_PAD3;
+	usart_tx_config.baudrate    = TEST_USART_SPEED;
 	/* Apply configuration */
 	usart_init(&usart_tx_module, TX_USART, &usart_tx_config);
 	/* Enable USART */
