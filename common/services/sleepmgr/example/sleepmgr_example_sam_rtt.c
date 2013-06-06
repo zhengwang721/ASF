@@ -116,9 +116,6 @@ int main(void)
 	 */
 	ioport_set_pin_level(LED_ACTIVITY_STATUS_PIN, LED_STATUS_ON);
 
-#if SAM4N || SAM4S || SAM4E
-	rtt_sel_source(RTT, false);
-#endif
 	rtt_init(RTT, 32768);
 
 	/* Enable RTT interrupt */
@@ -132,7 +129,7 @@ int main(void)
 	pmc_set_fast_startup_input(PMC_FSMR_RTTAL);
 	supc_set_wakeup_mode(SUPC, SUPC_WUMR_RTTEN_ENABLE);
 
-	// Initialize the sleep manager, lock initial mode.
+	/* Initialize the sleep manager, lock initial mode. */
 	sleepmgr_init();
 	sleepmgr_lock_mode(current_sleep_mode);
 
