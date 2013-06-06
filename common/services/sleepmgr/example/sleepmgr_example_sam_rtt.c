@@ -86,11 +86,7 @@
 
 void RTT_Handler(void)
 {
-	uint32_t ul_status;
-
-	/* Get RTT status */
-	ul_status = rtt_get_status(RTT);
-
+	rtt_get_status(RTT);
 }
 
 int main(void)
