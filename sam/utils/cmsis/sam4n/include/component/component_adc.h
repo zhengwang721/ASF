@@ -401,6 +401,11 @@ typedef struct {
 /* -------- ADC_CDR[17] : (ADC Offset: 0x50) Channel Data Register -------- */
 #define ADC_CDR_DATA_Pos 0
 #define ADC_CDR_DATA_Msk (0xfffu << ADC_CDR_DATA_Pos) /**< \brief (ADC_CDR[17]) Converted Data */
+/* -------- ADC_ACR : (ADC Offset: 0x94) Analog Control Register -----------*/
+#define   ADC_ACR_IRVCE        (0x1u << 2)  /**< \brief (ADC_ACR) Internal Reference Voltage Change Enable */
+#define   ADC_ACR_FORCEREF     (0x1u << 19) /**< \brief (ADC_ACR) Force Internal Reference Voltage */
+#define   ADC_ACR_ONREF        (0x1u << 20) /**< \brief (ADC_ACR) Internal Voltage reference is selected */
+#define   ADC_ACR_IRVS_Pos     6 
 /* -------- ADC_WPMR : (ADC Offset: 0xE4) Write Protect Mode Register -------- */
 #define ADC_WPMR_WPEN (0x1u << 0) /**< \brief (ADC_WPMR) Write Protect Enable */
 #define ADC_WPMR_WPKEY_Pos 8

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief ADC temperature sensor example for SAM4N.
+ * \brief ADC Enhanced Resolution example for SAM4N.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -59,17 +59,16 @@
  * inside the device.
  *
  * The ADC supports an 8-bit or 10-bit resolution mode, and conversion results
- *are reported in a
- * common register for all channels, as well as in a channel-dedicated register.
- *The 11-bit and
- * 12-bit resolution modes are obtained by interpolating multiple samples to
- *acquire better accuracy.
+ * are reported in a common register for all channels, as well as in a channel-
+ * dedicated register.
+ * The 11-bit and 12-bit resolution modes are obtained by interpolating multiple 
+ * samples to acquire better accuracy.
  * For 11-bit mode, 4 samples are used, which gives an effective sample rate of
- *1/4 of the actual sample
+ * 1/4 of the actual sample
  * frequency. For 12-bitmode, 16 samples are used, giving an effective sample
- *rate of 1/16 of the actual
+ * rate of 1/16 of the actual
  * sample frequency. This arrangement allows conversion speed to be traded for
- *better accuracy.
+ * better accuracy.
  *
  * \section Usage
  *
@@ -94,7 +93,7 @@
  *    following text should appear (values depend on the board and the chip
  *used):
  *    \code
- *     -- ADC Enhanced Resolution xxx --
+ *     -- ADC Enhanced Resolution Example xxx --
  *     -- xxxxxx-xx
  *     -- Compiled: xxx xx xxxx xx:xx:xx --
  *    \endcode

@@ -93,6 +93,7 @@ static void adc_set_config(Adc *const adc, struct adc_config *config)
 	if (ADC_8_BITS == config->resolution ||
 			ADC_10_BITS == config->resolution) {
 		adc->ADC_MR |= config->resolution;
+		adc->ADC_EMR &= ~ADC_EMR_OSR_Msk;
 	} else {
 		adc->ADC_MR &= ~ADC_MR_LOWRES;
 		adc->ADC_EMR |= config->resolution;
@@ -390,7 +391,7 @@ void adc_enable(Adc *const adc)
 {
 	Assert(adc);
 	/* Enable peripheral clock. */
-	pmc_enable_periph_clk(ADC_ID);
+	pmc_enable_periph_clk(ID_ADC);
 	sleepmgr_lock_mode(SLEEPMGR_SLEEP_WFI);
 }
 
@@ -403,7 +404,7 @@ void adc_disable(Adc *const adc)
 {
 	Assert(adc);
 	/* Disable peripheral clock. */
-	pmc_disable_periph_clk(ADC_ID);
+	pmc_disable_periph_clk(ID_ADC);
 	sleepmgr_unlock_mode(SLEEPMGR_SLEEP_WFI);
 }
 

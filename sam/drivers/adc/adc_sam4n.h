@@ -50,21 +50,13 @@
 /** Write Protect Key */
 #define   ADC_WPMR_WPKEY_ADC   (0x414443u << 8)
 
-#define   ADC_ACR_IRVCE        (0x1u << 2)  /**< \brief (ADC_ACR) Internal
-	                                     *Reference Voltage Change Enable */
-#define   ADC_ACR_FORCEREF     (0x1u << 19) /**< \brief (ADC_ACR) Force Internal
-	                                     *Reference Voltage */
-#define   ADC_ACR_ONREF        (0x1u << 20) /**< \brief (ADC_ACR) Internal
-	                                     *Voltage reference is selected */
-
-#define   ADC_ACR_IRVS_Pos     6
 
 /** Definitions for ADC resolution */
 enum adc_resolution {
 	ADC_8_BITS = ADC_MR_LOWRES_BITS_8,        /* ADC 8-bit resolution */
 	ADC_10_BITS = ADC_MR_LOWRES_BITS_10,      /* ADC 10-bit resolution */
 	ADC_11_BITS = ADC_EMR_OSR_OSR4,           /* ADC 11-bit resolution */
-	ADC_12_BITS = ADC_EMR_OSR_OSR16       /* ADC 12-bit resolution */
+	ADC_12_BITS = ADC_EMR_OSR_OSR16           /* ADC 12-bit resolution */
 };
 
 /** Definitions for ADC power mode */
@@ -349,7 +341,7 @@ static inline void adc_set_writeprotect(Adc *const adc,
 static inline uint32_t adc_get_writeprotect_status(Adc *const adc)
 {
 	return (adc->ADC_WPSR & ADC_WPSR_WPVS) ?
-	       (adc->ADC_WPSR & ADC_WPMR_WPKEY_Msk) : 0;
+			(adc->ADC_WPSR & ADC_WPMR_WPKEY_Msk) : 0;
 }
 
 /**
@@ -372,6 +364,16 @@ static inline uint32_t adc_get_overrun_status(Adc *const adc)
 static inline void adc_average_on_single_trigger(Adc *const adc)
 {
 	adc->ADC_EMR |= ADC_EMR_ASTE_SINGLE_TRIG_AVERAGE;
+}
+
+/**
+ * \brief Set ADC averaging on serval trigger events
+ *
+ * \param adc Base address of the ADC.
+ */
+static inline void adc_average_on_multi_trigger(Adc *const adc)
+{
+	adc->ADC_EMR &= ~ADC_EMR_ASTE_SINGLE_TRIG_AVERAGE;
 }
 
 /**
@@ -552,12 +554,14 @@ static inline enum status_code adc_start_calibration(Adc *const adc)
  * \brief ADC Reference Voltage Selection
  *
  * \param  adc  Base address of the ADC.
- * \param  adc_ref_src The source selection for ADC reference voltage, See the
- *product
- *         electrical characteristics for further details.
+ * \param  adc_ref_src The source selection for ADC reference voltage, 
+ * ADC_REFER_VOL_EXTERNAL - the external pin ADVREF defines the voltage reference.
+ * ADC_REFER_VOL_STUCK_AT_MIN - the internal reference voltage is stuck at the minimum value
+ * ADC_REFER_VOL_VDDANA - the internal voltage reference is forced to VDDANA. Effective only if ONREF is 1.
+ * ADC_REFER_VOL_IRVS - the internal reference voltage is defined by field IRVS
+ * See the product electrical characteristics for further details.
  * \param  irvs Internal reference volatage selection, only be effective when
- *adc_ref_src
- *         equals to ADC_REFER_VOL_IRVS
+ *         adc_ref_src equals to ADC_REFER_VOL_IRVS
  */
 static inline void adc_ref_vol_sel(Adc *const adc,
 		enum adc_refer_voltage_source adc_ref_src,
