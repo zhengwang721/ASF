@@ -440,7 +440,8 @@ uint32_t pwm_channel_get_interrupt_mask(Pwm *p_pwm)
  *
  * \param p_pwm Pointer to a PWM instance.
  * \param ul_event Channel number to enable counter event interrupt.
- * \param ul_fault Channel number to enable fault protection interrupt (ignored by SAM3N).
+ * \param ul_fault Channel number to enable fault protection interrupt(ignored
+ * by SAM3N/SAM4N).
  */
 void pwm_channel_enable_interrupt(Pwm *p_pwm, uint32_t ul_event,
 		uint32_t ul_fault)
@@ -460,7 +461,8 @@ void pwm_channel_enable_interrupt(Pwm *p_pwm, uint32_t ul_event,
  *
  * \param p_pwm Pointer to a PWM instance.
  * \param ul_event Bitmask of channel number to disable counter event interrupt.
- * \param ul_fault Bitmask of channel number to disable fault protection interrupt (ignored by SAM3N).
+ * \param ul_fault Bitmask of channel number to disable fault protection
+ * interrupt(ignored by SAM3N/SAM4N).
  */
 void pwm_channel_disable_interrupt(Pwm *p_pwm, uint32_t ul_event,
 		uint32_t ul_fault)
