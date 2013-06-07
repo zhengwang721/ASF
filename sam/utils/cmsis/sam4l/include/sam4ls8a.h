@@ -662,9 +662,9 @@ void TWIM3_Handler               ( void );
 
 #define HFLASHC           ((Flashcalw *)0x400A0000U) /**< \brief (HFLASHC) APB Base Address */
 #define HFLASHC_ADDR                  (0x400A0000U) /**< \brief (HFLASHC) APB Base Address */
-#define HFLASHC_FROW      ((Flashcalw *)0x00800200U) /**< \brief (HFLASHC) FROW Base Address */
+#define HFLASHC_FROW                  (0x00800200U) /**< \brief (HFLASHC) FROW Base Address */
 #define HFLASHC_FROW_ADDR             (0x00800200U) /**< \brief (HFLASHC) FROW Base Address */
-#define HFLASHC_USER      ((Flashcalw *)0x00800000U) /**< \brief (HFLASHC) USER Base Address */
+#define HFLASHC_USER                  (0x00800000U) /**< \brief (HFLASHC) USER Base Address */
 #define HFLASHC_USER_ADDR             (0x00800000U) /**< \brief (HFLASHC) USER Base Address */
 #define FLASHCALW_INST_NUM 1                         /**< \brief (FLASHCALW) Number of instances */
 #define FLASHCALW_INSTS   { HFLASHC }               /**< \brief (FLASHCALW) Instances List */
