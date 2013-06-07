@@ -5,7 +5,6 @@
 		<build type="header-file" value="conf_clock.h"/>
 		<build type="header-file" value="conf_test.h"/>
 		<build type="header-file" value="conf_uart_serial.h"/>
-		<build type="header-file" value="conf_sleepmgr.h"/>
 		<require idref="sam.drivers.adc.sam4n.unit_tests"/>
 		<require idref="board.sam4n_xplained_pro"/>
 		<generator value="iarewarm"/>

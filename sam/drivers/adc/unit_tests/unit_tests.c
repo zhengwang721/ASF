@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Unit tests for ADC driver for SAM 4N.
+ * \brief Unit tests for ADC driver for SAM4N.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *

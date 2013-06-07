@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM4E clock configuration.
+ * \brief SAM4N clock configuration.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -67,16 +67,16 @@
 
 // ===== PLL0 (A) Options   (Fpll = (Fclk * PLL_mul) / PLL_div)
 // Use mul and div effective values here.
-#define CONFIG_PLL0_SOURCE          PLL_SRC_MAINCK_XTAL
-#define CONFIG_PLL0_MUL             (20UL)
-#define CONFIG_PLL0_DIV             (1UL)
+#define CONFIG_PLL0_SOURCE          PLL_SRC_MAINCK_8M_RC
+#define CONFIG_PLL0_MUL             25
+#define CONFIG_PLL0_DIV             1
 
 // ===== Target frequency (System clock)
-// - XTAL frequency: 12MHz
+// - Internal RC frequency: 8MHz
 // - System clock source: PLLA
 // - System clock prescaler: 2 (divided by 2)
-// - PLLA source: XTAL
-// - PLLA output: XTAL * 20 / 1
-// - System clock: 12 * 20 / 1 / 2 = 120MHz
+// - PLLA source: 8M_RC
+// - PLLA output: 8M_RC * 25 / 1
+// - System clock: 8M_RC * 25 / 1 / 2 = 100MHz
 
 #endif /* CONF_CLOCK_H_INCLUDED */
