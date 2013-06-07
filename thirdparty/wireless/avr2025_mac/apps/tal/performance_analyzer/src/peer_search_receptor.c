@@ -334,17 +334,17 @@ static void wait_for_conf_init(void *arg)
  * \param status    Status of the transmission procedure
  * \param frame     Pointer to the transmitted frame structure
  */
-static void wait_for_conf_rx_cb(frame_info_t *mac_frame_info)
+static void wait_for_conf_rx_cb(frame_info_t *frame_info)
 {
     app_payload_t *msg;
 
-    if (*(mac_frame_info->mpdu) == (FRAME_OVERHEAD
+    if (*(frame_info->mpdu) == (FRAME_OVERHEAD
                                     + ((sizeof(app_payload_t)
                                         - sizeof(general_pkt_t))
                                        + sizeof(peer_conf_t))))
     {
         /* Point to the message : 1 =>size is first byte and 2=>FCS*/
-        msg = (app_payload_t *)(mac_frame_info->mpdu + 1 + FRAME_OVERHEAD - 2);
+        msg = (app_payload_t *)(frame_info->mpdu + 1 + FRAME_OVERHEAD - 2);
         if ((msg->cmd_id) == PEER_CONFIRM)
         {
             if (node_info.peer_short_addr == (msg->payload.peer_conf_data.nwk_addr))

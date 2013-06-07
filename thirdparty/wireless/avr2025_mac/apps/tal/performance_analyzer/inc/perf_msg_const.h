@@ -257,7 +257,7 @@ enum msg_code
     GET_CURRENT_CONFIG_CONFIRM      =     (0x21),
     RANGE_TEST_START_CONFIRM        =     (0x51),
     RANGE_TEST_STOP_CONFIRM         =     (0x53),
-    RANGE_TEST_RESPONSE_CONFIRM     =     (0x54),    
+    RANGE_TEST_BEACON_RESPONSE_CONFIRM     =     (0x54),    
     RANGE_TEST_BEACON               =     (0x55), 
     RANGE_TEST_MARKER_INDICATION    =     (0x56)
 } SHORTENUM;

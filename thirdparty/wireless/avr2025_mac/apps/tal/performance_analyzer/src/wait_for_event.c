@@ -117,7 +117,7 @@ void wait_for_event_task(void)
  *
  * \param frame Pointer to received frame
  */
-void wait_for_event_rx_cb(frame_info_t *mac_frame_info)
+void wait_for_event_rx_cb(frame_info_t *frame_info)
 {
     app_payload_t *msg;
     peer_search_receptor_arg_t peer_info;
@@ -127,17 +127,17 @@ void wait_for_event_rx_cb(frame_info_t *mac_frame_info)
                                      + sizeof(peer_req_t));
 
     /* Frame received on air: Processing the same */
-    if (*(mac_frame_info->mpdu) == expected_frame_size)
+    if (*(frame_info->mpdu) == expected_frame_size)
     {
         /* Point to the message : 1 =>size is first byte and 2=>FCS*/
-        msg = (app_payload_t *)(mac_frame_info->mpdu + LENGTH_FIELD_LEN
+        msg = (app_payload_t *)(frame_info->mpdu + LENGTH_FIELD_LEN
                                 + FRAME_OVERHEAD_SRC_IEEE_ADDR - FCS_LEN);
 
         /* Is this a peer request cmd */
         if ((msg->cmd_id) == PEER_REQUEST)
         {
-            uint8_t frame_len = mac_frame_info->mpdu[0];
-            uint8_t ed_val = mac_frame_info->mpdu[frame_len + LQI_LEN + ED_VAL_LEN];
+            uint8_t frame_len = frame_info->mpdu[0];
+            uint8_t ed_val = frame_info->mpdu[frame_len + LQI_LEN + ED_VAL_LEN];
 
             /* Check the threshold if the configuarion mode is enabled, not otherwise */
             if ( ( (msg->payload.peer_req_data.config_mode == true) &&
@@ -146,7 +146,7 @@ void wait_for_event_rx_cb(frame_info_t *mac_frame_info)
             {
                 peer_info.my_short_addr = (msg->payload.peer_req_data.nwk_addr);
                 memcpy(&(peer_info.peer_ieee_addr),
-                       (mac_frame_info->mpdu + LENGTH_FIELD_LEN +
+                       (frame_info->mpdu + LENGTH_FIELD_LEN +
                         OFFSET_FOR_SRC_IEEE_ADDR),
                        sizeof(peer_info.peer_ieee_addr));
 

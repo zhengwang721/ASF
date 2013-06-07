@@ -359,18 +359,18 @@ static void peer_req_send_task()
  * PEER_REQ_SEND State.
  * \param frame Pointer to received frame
  */
-static void peer_req_send_rx_cb(frame_info_t *mac_frame_info)
+static void peer_req_send_rx_cb(frame_info_t *frame_info)
 {
     app_payload_t *msg;
     uint16_t my_addr_from_peer;
 
-    if (*(mac_frame_info->mpdu) == (FRAME_OVERHEAD_DST_IEEE_ADDR
+    if (*(frame_info->mpdu) == (FRAME_OVERHEAD_DST_IEEE_ADDR
                                     + ((sizeof(app_payload_t)
                                         - sizeof(general_pkt_t))
                                        + sizeof(peer_rsp_t))))
     {
         /* Point to the message : 1 =>size is first byte and 2=>FCS*/
-        msg = (app_payload_t *)(mac_frame_info->mpdu + LENGTH_FIELD_LEN
+        msg = (app_payload_t *)(frame_info->mpdu + LENGTH_FIELD_LEN
                                 + FRAME_OVERHEAD_DST_IEEE_ADDR - FCS_LEN);
         if (PEER_RESPONSE == (msg->cmd_id))
         {

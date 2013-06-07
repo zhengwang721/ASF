@@ -57,7 +57,7 @@
 #include "app_frame_format.h"
 #include "app_per_mode.h"
 #include "conf_board.h"
-#include "led.h"
+#include "asf.h"
 
 /**
  * \addtogroup group_per_mode_receptor
@@ -94,7 +94,7 @@ static bool send_range_test_marker_cmd(void);
 
 #ifdef CRC_SETTING_ON_REMOTE_NODE
 static void send_crc_status_rsp(void);
-static bool crc_check_ok(frame_info_t *mac_frame_info);
+static bool crc_check_ok(frame_info_t *frame_info);
 static uint16_t crc_test(uint16_t crc, uint8_t data);
 #endif /* End of CRC_SETTING_ON_REMOTE_NODE */
 static bool range_test_in_progress = false;
@@ -231,14 +231,14 @@ void per_mode_receptor_tx_done_cb(retval_t status, frame_info_t *frame)
  * PER Measurement mode Receptor
  * \param frame Pointer to received frame
  */
-void per_mode_receptor_rx_cb(frame_info_t *mac_frame_info)
+void per_mode_receptor_rx_cb(frame_info_t *frame_info)
 {
     app_payload_t *msg;
     static uint8_t rx_count;
     uint8_t expected_frame_size;
 
     /* Point to the message : 1 =>size is first byte and 2=>FCS*/
-    msg = (app_payload_t *)(mac_frame_info->mpdu + LENGTH_FIELD_LEN + FRAME_OVERHEAD - FCS_LEN);
+    msg = (app_payload_t *)(frame_info->mpdu + LENGTH_FIELD_LEN + FRAME_OVERHEAD - FCS_LEN);
 
 #ifdef CRC_SETTING_ON_REMOTE_NODE
     /* If counting of wrong CRC packets is enabled on receptor node */
@@ -246,7 +246,7 @@ void per_mode_receptor_rx_cb(frame_info_t *mac_frame_info)
     {
         uint16_t my_addr;
         uint16_t dest_addr;
-        memcpy(&dest_addr, &mac_frame_info->mpdu[PL_POS_DST_ADDR_START], SHORT_ADDR_LEN);
+        memcpy(&dest_addr, &frame_info->mpdu[PL_POS_DST_ADDR_START], SHORT_ADDR_LEN);
         tal_pib_get(macShortAddress, (uint8_t *)&my_addr);
         /* Check the destination address of the packet is my address  */
         if (dest_addr != my_addr)
@@ -255,7 +255,7 @@ void per_mode_receptor_rx_cb(frame_info_t *mac_frame_info)
         }
 
         /* Counting of wrong crc packets option enabled and received crc is not OK */
-        if (false == crc_check_ok(mac_frame_info))
+        if (false == crc_check_ok(frame_info))
         {
             if ( msg->cmd_id != PER_TEST_PKT )
             {
@@ -276,7 +276,7 @@ void per_mode_receptor_rx_cb(frame_info_t *mac_frame_info)
                 expected_frame_size = (FRAME_OVERHEAD + ((sizeof(app_payload_t) -
                                                           sizeof(general_pkt_t)) +
                                                          sizeof(set_parm_req_t)));
-                if (*(mac_frame_info->mpdu) == expected_frame_size)
+                if (*(frame_info->mpdu) == expected_frame_size)
                 {
                     /* Extract and process the cmd received */
                     set_paramter_on_recptor_node(msg);
@@ -292,26 +292,26 @@ void per_mode_receptor_rx_cb(frame_info_t *mac_frame_info)
                 {
                     
                         printf("\r\nReceiving..");
-                    aver_lqi += mac_frame_info->mpdu[mac_frame_info->mpdu[0] + LQI_LEN];
-                    aver_rssi += mac_frame_info->mpdu[mac_frame_info->mpdu[0] + LQI_LEN + 1];
+                    aver_lqi += frame_info->mpdu[frame_info->mpdu[0] + LQI_LEN];
+                    aver_rssi += frame_info->mpdu[frame_info->mpdu[0] + LQI_LEN + 1];
 #ifdef CRC_SETTING_ON_REMOTE_NODE
                     frames_with_wrong_crc = 0;
 #endif /* #ifdef CRC_SETTING_ON_REMOTE_NODE */
                     number_rx_frames++;
                     /* Get the seq no. of the first packet */
-                    prev_seq_no = mac_frame_info->mpdu[PL_POS_SEQ_NUM];
+                    prev_seq_no = frame_info->mpdu[PL_POS_SEQ_NUM];
                 }
                 else
                 {
-                    cur_seq_no = mac_frame_info->mpdu[PL_POS_SEQ_NUM];
+                    cur_seq_no = frame_info->mpdu[PL_POS_SEQ_NUM];
                     /* Check for the duplicate packets */
                     if (prev_seq_no != cur_seq_no)
                     {
                         number_rx_frames++;
                         prev_seq_no = cur_seq_no;
                         /* Extract LQI and  RSSI */
-                        aver_lqi += mac_frame_info->mpdu[mac_frame_info->mpdu[0] + LQI_LEN];
-                        aver_rssi += mac_frame_info->mpdu[mac_frame_info->mpdu[0] + LQI_LEN + 1];
+                        aver_lqi += frame_info->mpdu[frame_info->mpdu[0] + LQI_LEN];
+                        aver_rssi += frame_info->mpdu[frame_info->mpdu[0] + LQI_LEN + 1];
                     }
 
                 }
@@ -336,7 +336,7 @@ void per_mode_receptor_rx_cb(frame_info_t *mac_frame_info)
                 expected_frame_size =  (FRAME_OVERHEAD + ((sizeof(app_payload_t) -
                                                            sizeof(general_pkt_t)) +
                                                           sizeof(result_req_t)));
-                if (*(mac_frame_info->mpdu) == expected_frame_size)
+                if (*(frame_info->mpdu) == expected_frame_size)
                 {
                     if (number_rx_frames != 0)
                     {
@@ -387,7 +387,7 @@ void per_mode_receptor_rx_cb(frame_info_t *mac_frame_info)
                 expected_frame_size = (FRAME_OVERHEAD + ((sizeof(app_payload_t) -
                                                           sizeof(general_pkt_t)) +
                                                          sizeof(div_stat_req_t)));
-                if (*(mac_frame_info->mpdu) == expected_frame_size)
+                if (*(frame_info->mpdu) == expected_frame_size)
                 {
                     send_diversity_status_rsp();
                 }
@@ -400,7 +400,7 @@ void per_mode_receptor_rx_cb(frame_info_t *mac_frame_info)
                 expected_frame_size = (FRAME_OVERHEAD + ((sizeof(app_payload_t) -
                                                           sizeof(general_pkt_t)) +
                                                          sizeof(div_set_req_t)));
-                if (*(mac_frame_info->mpdu) == expected_frame_size)
+                if (*(frame_info->mpdu) == expected_frame_size)
                 {
                     /* Antenna diversity need to be enabled */
                     if (msg->payload.div_set_req_data.status)
@@ -439,7 +439,7 @@ void per_mode_receptor_rx_cb(frame_info_t *mac_frame_info)
                 expected_frame_size =  (FRAME_OVERHEAD + ((sizeof(app_payload_t) -
                                                            sizeof(general_pkt_t)) +
                                                           sizeof(crc_stat_req_t)));
-                if (*(mac_frame_info->mpdu) == expected_frame_size)
+                if (*(frame_info->mpdu) == expected_frame_size)
                 {
                     send_crc_status_rsp();
                 }
@@ -452,7 +452,7 @@ void per_mode_receptor_rx_cb(frame_info_t *mac_frame_info)
                 expected_frame_size = (FRAME_OVERHEAD + ((sizeof(app_payload_t) -
                                                           sizeof(general_pkt_t)) +
                                                          sizeof(crc_set_req_t)));
-                if (*(mac_frame_info->mpdu) == expected_frame_size)
+                if (*(frame_info->mpdu) == expected_frame_size)
                 {
                     if (msg->payload.crc_set_req_data.status)
                     {
@@ -532,7 +532,7 @@ void per_mode_receptor_rx_cb(frame_info_t *mac_frame_info)
             { 
                 /* On reception of the range test packet calculate the ed and lqi values of
                  * the received pkt and add it as the payload of the response frame*/
-                uint8_t phy_frame_len = mac_frame_info->mpdu[0];
+                uint8_t phy_frame_len = frame_info->mpdu[0];
                 uint32_t frame_count;
                 /* Get the frame count in correct format */
                 frame_count = Swap32(CCPU_ENDIAN_TO_LE32(msg->payload.range_tx_data.frame_count));
@@ -540,13 +540,13 @@ void per_mode_receptor_rx_cb(frame_info_t *mac_frame_info)
                 rssi_base_val = tal_get_rssi_base_val();
                 app_led_event(LED_EVENT_RX_FRAME);
                 /* Map the register ed value to dbm values */
-                ed_value = mac_frame_info->mpdu[phy_frame_len + LQI_LEN + ED_VAL_LEN] + rssi_base_val; 
+                ed_value = frame_info->mpdu[phy_frame_len + LQI_LEN + ED_VAL_LEN] + rssi_base_val; 
                 /* Send Response cmd to the received Range Test packet with the lqi and ed values */
                 send_range_test_rsp(msg->seq_num,msg->payload.range_tx_data.frame_count, \
-                                ed_value,mac_frame_info->mpdu[phy_frame_len + LQI_LEN]);
+                                ed_value,frame_info->mpdu[phy_frame_len + LQI_LEN]);
                 /* Print the received values to the terminal */
                 printf("\r\nRange Test Packet Received...\tFrame No : %"PRIu32"\tLQI : %d\tED : %d",
-                       frame_count,mac_frame_info->mpdu[phy_frame_len + LQI_LEN],ed_value);
+                       frame_count,frame_info->mpdu[phy_frame_len + LQI_LEN],ed_value);
 
             }
             break;
@@ -556,11 +556,11 @@ void per_mode_receptor_rx_cb(frame_info_t *mac_frame_info)
              * get the lqi and ed values and print it on the terminsl */
             int8_t rssi_base_val,ed_value;
             rssi_base_val = tal_get_rssi_base_val();
-            uint8_t phy_frame_len = mac_frame_info->mpdu[0];
+            uint8_t phy_frame_len = frame_info->mpdu[0];
             /* Map the register ed value to dbm values */
-            ed_value = mac_frame_info->mpdu[phy_frame_len + LQI_LEN + ED_VAL_LEN] + rssi_base_val;
+            ed_value = frame_info->mpdu[phy_frame_len + LQI_LEN + ED_VAL_LEN] + rssi_base_val;
             printf("\r\nMarker Response Received... LQI : %d\t ED %d \n",
-                   mac_frame_info->mpdu[phy_frame_len + LQI_LEN],ed_value);
+                   frame_info->mpdu[phy_frame_len + LQI_LEN],ed_value);
             /* Timer for LED Blink for Reception of Marker Response*/
             sw_timer_start(T_APP_TIMER,
                 LED_BLINK_RATE_IN_MICRO_SEC,
@@ -909,18 +909,18 @@ static uint16_t crc_test(uint16_t crc, uint8_t data)
   * \brief Calculates CRC manually and compares with the received
   * and returns true if both are same,false otherwise.
  */
-static bool crc_check_ok(frame_info_t *mac_frame_info)
+static bool crc_check_ok(frame_info_t *frame_info)
 {
     /* Calculate CRC manually since we are bypassing hardware CRC */
-    uint8_t number_of_bytes_rec = (mac_frame_info->mpdu)[0];
+    uint8_t number_of_bytes_rec = (frame_info->mpdu)[0];
     uint16_t cal_crc = 0;
     uint16_t *rec_crc_ptr =
-        (uint16_t *) & (mac_frame_info->mpdu)[number_of_bytes_rec - 1 ];
+        (uint16_t *) & (frame_info->mpdu)[number_of_bytes_rec - 1 ];
     uint16_t rec_crc = CCPU_ENDIAN_TO_LE16(*rec_crc_ptr);
     uint8_t i;
     for (i = 1; i <= (number_of_bytes_rec - FCS_LEN); i++)
     {
-        cal_crc = crc_test(cal_crc, (mac_frame_info->mpdu)[i]);
+        cal_crc = crc_test(cal_crc, (frame_info->mpdu)[i]);
     }
     if ( rec_crc != cal_crc)
     {

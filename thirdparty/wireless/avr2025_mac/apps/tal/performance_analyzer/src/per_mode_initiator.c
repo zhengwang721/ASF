@@ -473,7 +473,8 @@ void per_mode_initiator_task(void)
  */
 static void  range_test_timer_handler_cb(void *parameter)
 {
-
+if(!node_info.transmitting)
+{
      /* Update the FCF and payload before transmission */
     configure_range_test_frame_sending();
     
@@ -498,6 +499,7 @@ static void  range_test_timer_handler_cb(void *parameter)
                 SW_TIMEOUT_RELATIVE,
                 (FUNC_PTR)range_test_timer_handler_cb,
                 NULL);
+}    
 
 }
 
@@ -747,32 +749,57 @@ void per_mode_initiator_tx_done_cb(retval_t status, frame_info_t *frame)
             }
         case PER_TEST_START:
             {
+              if (MAC_SUCCESS == status)
+                {
                 op_mode = TX_OP_MODE;
                 /* As start indication is successful start the actual PER Test*/
-                start_test();
+                start_test();                
+                }
+              else
+              {
+              op_mode = TX_OP_MODE;
+              usr_per_test_start_confirm(UNABLE_TO_CONTACT_PEER);
+              }
+
             }
             break;
             
             
        case RANGE_TEST_START:
             {
+              if (MAC_SUCCESS == status)
+                {
                 /* As start indication is successful start the actual RANGE Test in PER Mode*/
                 start_range_test();
+                }
+              else
+              {
+                op_mode = TX_OP_MODE;
+                usr_range_test_start_confirm(UNABLE_TO_CONTACT_PEER);
+              }
             }
             break;
             
     case RANGE_TEST_STOP:
           {
+            if (MAC_SUCCESS == status)
+                {
+            /* Stop the Range Test Timer */
+            sw_timer_stop(T_APP_TIMER_RANGE); 
             /* Set the falg to default */
             range_test_in_progress = false;
             /* reset the frame sount */
             range_test_frame_cnt = 0;
             /* Send Stop Confirmation to Host */
-            usr_range_test_stop_confirm(MAC_SUCCESS);            
-            /* Stop the Range Test Timer */
-            sw_timer_stop(T_APP_TIMER_RANGE);            
+            usr_range_test_stop_confirm(MAC_SUCCESS);                            
             /* Reset the OPMODE */
             op_mode = TX_OP_MODE ;
+                }
+            else
+            {
+            op_mode = RANGE_TEST_TX;
+            usr_range_test_stop_confirm(UNABLE_TO_CONTACT_PEER);      
+            }
           }
           break  ;
             
@@ -1087,15 +1114,15 @@ static void set_parameter_on_transmitter_node(retval_t status)
  * \brief Callback that is called if data has been received by trx
  * in the PER_FOUND_PER_INITIATOR state
  *
- * \param mac_frame_info  Frame Pointer to received frame
+ * \param frame_info  Frame Pointer to received frame
  */
-void per_mode_initiator_rx_cb(frame_info_t *mac_frame_info)
+void per_mode_initiator_rx_cb(frame_info_t *frame_info)
 {
     static uint8_t range_test_seq_num;
     app_payload_t *msg;
 
     /* Point to the message : 1 =>size is first byte and 2=>FCS*/
-    msg = (app_payload_t *)(mac_frame_info->mpdu +
+    msg = (app_payload_t *)(frame_info->mpdu +
                             LENGTH_FIELD_LEN + FRAME_OVERHEAD - FCS_LEN);
 
     switch ((msg->cmd_id))
@@ -1104,7 +1131,7 @@ void per_mode_initiator_rx_cb(frame_info_t *mac_frame_info)
             {
                 if (op_mode == WAIT_FOR_TEST_RES)
                 {
-                    if (*(mac_frame_info->mpdu) == ( FRAME_OVERHEAD +
+                    if (*(frame_info->mpdu) == ( FRAME_OVERHEAD +
                                                      ((sizeof(app_payload_t) -
                                                        sizeof(general_pkt_t)) +
                                                       sizeof(result_rsp_t))))
@@ -1161,7 +1188,7 @@ void per_mode_initiator_rx_cb(frame_info_t *mac_frame_info)
                 uint8_t ant_div_settings;
                 if (op_mode == DIVERSITY_STATUS_REQ)
                 {
-                    if (*(mac_frame_info->mpdu) == ( FRAME_OVERHEAD +
+                    if (*(frame_info->mpdu) == ( FRAME_OVERHEAD +
                                                      ((sizeof(app_payload_t) -
                                                        sizeof(general_pkt_t)) +
                                                       sizeof(div_stat_rsp_t))))
@@ -1204,7 +1231,7 @@ void per_mode_initiator_rx_cb(frame_info_t *mac_frame_info)
                 bool crc_settings;
                 if (op_mode == CRC_STATUS_REQ_WAIT)
                 {
-                    if (*(mac_frame_info->mpdu) == ( FRAME_OVERHEAD +
+                    if (*(frame_info->mpdu) == ( FRAME_OVERHEAD +
                                                      ((sizeof(app_payload_t) -
                                                        sizeof(general_pkt_t)) +
                                                       sizeof(crc_stat_rsp_t))))
@@ -1233,7 +1260,7 @@ void per_mode_initiator_rx_cb(frame_info_t *mac_frame_info)
             {
                 if (op_mode == PEER_INFO_RSP_WAIT)
                 {
-                    if (*(mac_frame_info->mpdu) == ( FRAME_OVERHEAD +
+                    if (*(frame_info->mpdu) == ( FRAME_OVERHEAD +
                                                      ((sizeof(app_payload_t) -
                                                        sizeof(general_pkt_t)) +
                                                       sizeof(peer_info_rsp_t))))
@@ -1267,14 +1294,14 @@ void per_mode_initiator_rx_cb(frame_info_t *mac_frame_info)
                  * also derrive the LQI and ED values sent by the receptor from the received payload */
                 int8_t rssi_base_val,ed_value;
                 rssi_base_val = tal_get_rssi_base_val();
-                uint8_t phy_frame_len = mac_frame_info->mpdu[0];
+                uint8_t phy_frame_len = frame_info->mpdu[0];
                 /* Map the register ed value to dbm values */
-                ed_value = mac_frame_info->mpdu[phy_frame_len + LQI_LEN + ED_VAL_LEN] + rssi_base_val;                  
+                ed_value = frame_info->mpdu[phy_frame_len + LQI_LEN + ED_VAL_LEN] + rssi_base_val;                  
                 app_led_event(LED_EVENT_RX_FRAME);
                 
                 /* Send the range test rsp indication to Host UI with the two set of ED and LQI values */
                 
-                usr_range_test_beacon_rsp(mac_frame_info->mpdu,mac_frame_info->mpdu[phy_frame_len + LQI_LEN],
+                usr_range_test_beacon_rsp(frame_info->mpdu,frame_info->mpdu[phy_frame_len + LQI_LEN],
                                           ed_value,msg->payload.range_tx_data.lqi,msg->payload.range_tx_data.ed);
                 range_test_seq_num = msg->seq_num ;
                 }
@@ -1287,9 +1314,9 @@ void per_mode_initiator_rx_cb(frame_info_t *mac_frame_info)
                     /* Calculate the ED value and LQI for the received marker frame */ 
                     int8_t rssi_base_val,ed_value;
                     rssi_base_val = tal_get_rssi_base_val();
-                    uint8_t phy_frame_len = mac_frame_info->mpdu[0];
+                    uint8_t phy_frame_len = frame_info->mpdu[0];
                     /* Map the register ed value to dbm values */
-                    ed_value = mac_frame_info->mpdu[phy_frame_len + LQI_LEN + ED_VAL_LEN] + rssi_base_val;
+                    ed_value = frame_info->mpdu[phy_frame_len + LQI_LEN + ED_VAL_LEN] + rssi_base_val;
                     /* Timer to Perform LED indication for received Marker indication */
                     sw_timer_start(T_APP_TIMER,
                         LED_BLINK_RATE_IN_MICRO_SEC,
@@ -1299,7 +1326,7 @@ void per_mode_initiator_rx_cb(frame_info_t *mac_frame_info)
                     /* Send response to the receptor on receiving the marker packet */
                     send_range_test_marker_rsp();
                     /*send marker indication to Host UI */
-                    usr_range_test_marker_ind(mac_frame_info->mpdu,mac_frame_info->mpdu[phy_frame_len + LQI_LEN],ed_value);
+                    usr_range_test_marker_ind(frame_info->mpdu,frame_info->mpdu[phy_frame_len + LQI_LEN],ed_value);
                 }
             }
             break;            
