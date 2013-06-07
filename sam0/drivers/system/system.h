@@ -259,6 +259,27 @@ enum system_reset_cause {
 	SYSTEM_RESET_CAUSE_POR            = PM_RCAUSE_POR,
 };
 
+/**
+ * \name System identification
+ * @{
+ */
+
+/**
+ * \brief Retrieve the device identification signature
+ *
+ * Retrieves the signature of the current device.
+ *
+ * \return Device ID signature as a 32-bit integer.
+ */
+static inline uint32_t system_get_device_id(void)
+{
+	return DSU->DID.reg;
+}
+
+/**
+ * @}
+ */
+
 
 /**
  * \name Voltage references
@@ -294,7 +315,7 @@ static inline void system_voltage_reference_enable(
 /**
  * \brief Disable the selected voltage reference
  *
- * Disablea the selected voltage reference source.
+ * Disables the selected voltage reference source.
  *
  * \param[in] vref  Voltage reference to disable
  */
