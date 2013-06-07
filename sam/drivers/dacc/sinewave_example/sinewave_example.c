@@ -288,24 +288,26 @@ static void display_menu(void)
  */
 void SysTick_Handler(void)
 {
-	uint32_t status;
-	static uint32_t dac_val;
-
-	status = dacc_get_interrupt_status(DACC_BASE);
-
-	/* If ready for new data */
-	if ((status & DACC_ISR_TXRDY) == DACC_ISR_TXRDY) {
-		g_ul_index_sample++;
-		if (g_ul_index_sample >= SAMPLES) {
-			g_ul_index_sample = 0;
-		}
-		dac_val = g_uc_wave_sel ?
-				((g_ul_index_sample > SAMPLES / 2) ? 0 : MAX_AMPLITUDE)
-				: wave_to_dacc(gc_us_sine_data[g_ul_index_sample],
-					 g_l_amplitude,
-					 MAX_DIGITAL * 2, MAX_AMPLITUDE);
-		dacc_write_conversion_data(DACC_BASE, dac_val);
-	}
+//	uint32_t status;
+//	uint32_t dac_val;
+//
+//	status = dacc_get_interrupt_status(DACC_BASE);
+//
+//	/* If ready for new data */
+//	if ((status & DACC_ISR_TXRDY) == DACC_ISR_TXRDY) {
+//		g_ul_index_sample++;
+//		if (g_ul_index_sample >= SAMPLES) {
+//			g_ul_index_sample = 0;
+//		}
+//		dac_val = g_uc_wave_sel ?
+//				((g_ul_index_sample > SAMPLES / 2) ? 0 : MAX_AMPLITUDE)
+//				: wave_to_dacc(gc_us_sine_data[g_ul_index_sample],
+//					 g_l_amplitude,
+//					 MAX_DIGITAL * 2, MAX_AMPLITUDE);
+//		dacc_write_conversion_data(DACC_BASE, dac_val);
+//	}
+  
+        DACC->DACC_CDR = 512;
 }
 
 /**
@@ -347,8 +349,10 @@ int main(void)
 	 * startup                - 0x10 (17 clocks)
 	 * internal trigger clock - 0x60 (96 clocks)
 	 */
-	dacc_set_timing(DACC_BASE, 0x10, 0x60);
-
+	//dacc_set_timing(DACC_BASE, 0x10, 0x60);
+        dacc_set_timing(DACC_BASE, 0x40, 0xE0);
+        DACC->DACC_CDR = 512;
+        
 	/* Enable DAC */
 	dacc_enable(DACC_BASE);
 #else
@@ -378,54 +382,57 @@ int main(void)
 	g_ul_frequency = DEFAULT_FREQUENCY;
 
 	SysTick_Config(sysclk_get_cpu_hz() / (g_ul_frequency * SAMPLES));
+  
 
 	/* Main menu */
 	display_menu();
-
+        
+        
 	while (1) {
-		usart_serial_getchar((Usart *)CONSOLE_UART, &uc_key);
-
-		switch (uc_key) {
-		case '0':
-			puts("Frequency:");
-			ul_freq = get_input_value(MIN_FREQUENCY, MAX_FREQUENCY);
-			puts("\r");
-
-			if (ul_freq != VAL_INVALID) {
-				printf("Set frequency to : %luHz\n\r", (unsigned long)ul_freq);
-				SysTick_Config(sysclk_get_cpu_hz() / (ul_freq * SAMPLES));
-				g_ul_frequency = ul_freq;
-			}
-			break;
-
-		case '1':
-			puts("Amplitude:");
-			ul_amp = get_input_value(MIN_AMPLITUDE, MAX_AMPLITUDE);
-			puts("\r");
-			if (ul_amp != VAL_INVALID) {
-				printf("Set amplitude to : %lu\n\r", (unsigned long)ul_amp);
-				g_l_amplitude = ul_amp;
-			}
-			break;
-
-		case 'i':
-		case 'I':
-			printf("-I- Frequency : %lu Hz Amplitude : %ld\n\r",
-				(unsigned long)g_ul_frequency, (long)g_l_amplitude);
-			break;
-
-		case 'w':
-		case 'W':
-			printf("-I- Switch wave to : %s\n\r", g_uc_wave_sel ?
-				"SINE" : "Full Amplitude SQUARE");
-			g_uc_wave_sel = (g_uc_wave_sel + 1) & 1;
-			break;
-
-		case 'm':
-		case 'M':
-			display_menu();
-			break;
-		}
-		puts("Press \'m\' or \'M\' to display the main menu again!\r");
+          
+//		usart_serial_getchar((Usart *)CONSOLE_UART, &uc_key);
+//
+//		switch (uc_key) {
+//		case '0':
+//			puts("Frequency:");
+//			ul_freq = get_input_value(MIN_FREQUENCY, MAX_FREQUENCY);
+//			puts("\r");
+//
+//			if (ul_freq != VAL_INVALID) {
+//				printf("Set frequency to : %luHz\n\r", (unsigned long)ul_freq);
+//				SysTick_Config(sysclk_get_cpu_hz() / (ul_freq * SAMPLES));
+//				g_ul_frequency = ul_freq;
+//			}
+//			break;
+//
+//		case '1':
+//			puts("Amplitude:");
+//			ul_amp = get_input_value(MIN_AMPLITUDE, MAX_AMPLITUDE);
+//			puts("\r");
+//			if (ul_amp != VAL_INVALID) {
+//				printf("Set amplitude to : %lu\n\r", (unsigned long)ul_amp);
+//				g_l_amplitude = ul_amp;
+//			}
+//			break;
+//
+//		case 'i':
+//		case 'I':
+//			printf("-I- Frequency : %lu Hz Amplitude : %ld\n\r",
+//				(unsigned long)g_ul_frequency, (long)g_l_amplitude);
+//			break;
+//
+//		case 'w':
+//		case 'W':
+//			printf("-I- Switch wave to : %s\n\r", g_uc_wave_sel ?
+//				"SINE" : "Full Amplitude SQUARE");
+//			g_uc_wave_sel = (g_uc_wave_sel + 1) & 1;
+//			break;
+//
+//		case 'm':
+//		case 'M':
+//			display_menu();
+//			break;
+//		}
+//		puts("Press \'m\' or \'M\' to display the main menu again!\r");
 	}
 }
