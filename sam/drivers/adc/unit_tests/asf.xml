@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<module type="application" id="sam.drivers.adc.sam4n.unit_tests" caption="Unit tests for SAM4N driver">
 		<info type="description" value="summary">
-		Unit test for SAM 4N ADC driver.
+		Unit test for SAM4N ADC driver.
 		</info>
 		<build type="c-source" value="unit_tests.c"/>
 		<build type="module-config" subtype="required-header-file" value="conf_test.h"/>

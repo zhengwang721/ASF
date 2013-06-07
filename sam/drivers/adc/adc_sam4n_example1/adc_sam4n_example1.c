@@ -158,7 +158,7 @@ int main(void)
 	/* Output example information. */
 	puts(STRING_HEADER);
 
-	adc_enable(ADC);
+	adc_enable();
 
 	struct adc_config adc_cfg;
 

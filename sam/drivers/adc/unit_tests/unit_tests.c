@@ -158,7 +158,7 @@ int main(void)
 	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
 	stdio_serial_init(CONF_TEST_USART, &usart_serial_options);
 
-	adc_enable(ADC);
+	adc_enable();
 
 	struct adc_config adc_cfg;
 
