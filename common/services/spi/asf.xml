@@ -16,6 +16,7 @@
 			<device-support value="xmega"/>
 			<device-support value="uc3"/>
 			<device-support value="sam"/>
+			<device-support value="megarf"/>			
 			<generator value="doxygen-module" default-mcu="unspecified-xmegaa1"/>
 		</module>
 		<module type="service" id="common.services.basic.spi_master#usart_spi" caption="SPI - implementation">
@@ -31,6 +32,7 @@
 			<device-support value="xmega"/>
 			<device-support value="uc3"/>
 			<device-support value="sam"/>
+			<device-support value="megarf"/>				
 			<generator value="doxygen-module" default-mcu="unspecified-xmegaa1"/>
 		</module>
 		<module type="service" id="common.services.basic.spi_master#usart_and_standard_spi" caption="SPI - implementation">
@@ -47,6 +49,7 @@
 			<device-support value="xmega"/>
 			<device-support value="uc3"/>
 			<device-support value="sam"/>
+			<device-support value="megarf"/>				
 			<generator value="doxygen-module" default-mcu="unspecified-xmegaa1"/>
 		</module>
 	</select-by-config>
@@ -115,6 +118,27 @@
 			<require idref="common.services.basic.clock"/>
 			<generator value="doxygen-module" default-mcu="unspecified-sam3s"/>
 		</module>
+		<module type="service" id="common.services.basic.spi_master.standard_spi#3" caption="SPI - MEGARF implementation">
+			<info type="description" value="summary">
+			MEGARF implementation for the common SPI API using the standard SPI peripheral.
+			</info>
+			<info type="keyword" value="technology">
+				<keyword value="Communication"/>
+			</info>
+			<build type="header-file" subtype="api" value="spi_master.h"/>
+			<build type="header-file" subtype="api" value="megarf_spi/spi_master.h"/>
+			<build type="c-source" value="megarf_spi/spi_master.c"/>
+			<build type="include-path" value="."/>
+			<build type="include-path" value="megarf_spi"/>
+			<build type="doxygen-entry-point" value="spi_group"/>
+			<build type="doxygen-quick-start" value="common_spi_master_quickstart"/>
+			<device-support value="megarf"/>
+			<build type="module-config" subtype="path" value="megarf_spi/module_config"/>
+			<build type="module-config" subtype="required-header-file" value="conf_spi_master.h"/>
+			<require idref="common.services.basic.clock"/>
+			<require idref="mega.drivers.spi"/>
+			<generator value="doxygen-module" default-mcu="unspecified-mega"/>
+		</module>		
 	</select-by-device>
 
 	<select-by-device id="common.services.basic.spi_master.usart_spi">
@@ -180,5 +204,25 @@
 			<require idref="avr32.drivers.usart"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3b"/>
 		</module>
+		<module type="service" id="common.services.basic.spi_master.usart_spi#3" caption="SPI - MEGARF implementation">
+			<info type="description" value="summary">
+			MEGARF implementation for the common SPI API using the USART peripheral in SPI mode.
+			</info>
+			<info type="keyword" value="technology">
+				<keyword value="Communication"/>
+			</info>
+			<build type="header-file" subtype="api" value="usart_spi.h"/>
+			<build type="header-file" subtype="api" value="megarf_usart_spi/usart_spi.h"/>
+			<build type="c-source" value="megarf_usart_spi/usart_spi.c"/>
+			<build type="include-path" value="."/>
+			<build type="module-config" subtype="required-header-file" value="conf_usart_spi.h"/>
+			<build type="module-config" subtype="path" value="megarf_usart_spi/module_config"/>
+			<build type="doxygen-entry-point" value="spi_group"/>
+			<build type="doxygen-quick-start" value="common_spi_master_quickstart"/>
+			<device-support value="megarf"/>
+			<require idref="common.services.basic.clock"/>
+			<require idref="mega.drivers.usart"/>
+			<generator value="doxygen-module" default-mcu="unspecified-mega"/>
+		</module>		
 	</select-by-device>
 </asf>

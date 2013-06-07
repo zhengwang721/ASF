@@ -10,7 +10,6 @@
 		<device-support value="uc3a3"/>
 		<device-support value="uc3b"/>
 		<require idref="avr32.services.usb.hid.example.main"/>
-		<info type="gui-flag" value="move-to-root"/>
 	</module>
 	<module type="meta" id="avr32.services.usb.hid.example.main" caption="Main module for examples">
 		<build type="c-source" value="hid_example.c"/>
@@ -57,6 +56,5 @@
 		<build type="distribute" subtype="file" value="./docsrc/host_keyboard_hid_task.c"/>
 		<build type="distribute" subtype="file" value="./docsrc/host_keyboard_hid_task.h"/>
 		<build type="distribute" subtype="file" value="./docsrc/terminal.jpg"/>
-		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

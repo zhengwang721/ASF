@@ -46,25 +46,20 @@
 
 #include "sam4l_xplained_pro.h"
 
-typedef enum key_id_tag
-{
-  BUTTON_0
-}SHORTENUM key_id_t;
-
+typedef enum key_id_tag {
+	BUTTON_0
+} SHORTENUM key_id_t;
 
 #define SELECT_KEY  BUTTON_0
 
 /**
  * @brief Button action
  */
-typedef enum key_state_tag
-{
-    /** Button is pressed. */
-    KEY_PRESSED,
-    /** Button is released. */
-    KEY_RELEASED
+typedef enum key_state_tag {
+	/** Button is pressed. */
+	KEY_PRESSED,
+	/** Button is released. */
+	KEY_RELEASED
 } SHORTENUM key_state_t;
-
-
 
 #endif /* KEYBOARD_H_INCLUDED */

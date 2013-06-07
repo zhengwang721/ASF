@@ -49,6 +49,4 @@
 #define CONF_BOARD_AT86RFX
 #define IC_TYPE             (0x00)
 
-
-
 #endif  /* CONF_BOARD_H_INCLUDED */
