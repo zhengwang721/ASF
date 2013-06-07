@@ -54,7 +54,4 @@
 /** PWM unit test channel */
 #define PWM_UNIT_TEST_CH      PWM_CHANNEL_0
 
-/** PWM unit test comparison unit */
-#define PWM_UNIT_TEST_CMP     PWM_CHANNEL_0
-
 #endif /* CONF_TEST_H_INCLUDED */

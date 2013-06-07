@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="common.components.memory.eeprom.at30tse75x.example" caption="AT30TSE75x Temperature Example">
+	<module type="application" id="common.components.memory.eeprom.at30tse75x.example" caption="I/O1 EEPROM and Temperature Sensor Example">
 		<info type="keyword" value="technology">
 			<keyword value="Sensor"/>
 		</info>

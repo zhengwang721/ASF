@@ -3,7 +3,7 @@
  *
  * \brief SD/MMC card example
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -68,6 +68,9 @@
  * The example outputs the information through the standard output (stdio).
  * To know the output used on the board, look in the conf_example.h file
  * and connect a terminal to the correct stdio port.
+ *
+ * While using Xplained Pro evaluation kits, please attach I/O1 Xplained Pro
+ * extension board to EXT1.
  *
  * \section Usage
  *

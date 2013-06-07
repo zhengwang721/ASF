@@ -60,7 +60,7 @@
  *
  * \section device_info Device Info
  * This example has been tested with the following setup:
- * - sam4n16c_sam4n_xplained_pro
+ * - sam4n16c_sam4n_xplained_pro with I/O1 XPRO board connected to EXT1
  *
  * \section compinfo Compilation info
  * This software was written for the GNU GCC and IAR for ARM. Other compilers
