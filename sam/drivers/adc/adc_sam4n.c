@@ -53,8 +53,6 @@
 /* The number of ADC interrupt source */
 #define ADC_NUM_OF_INTERRUPT_SOURCE         (24UL)
 
-/* The ADC Peripheral IDs */
-#define ADC_ID                              (29UL)
 
 const uint32_t adc_interrupt_mask[ADC_NUM_OF_INTERRUPT_SOURCE] = {
 	ADC_ISR_EOC0, ADC_ISR_EOC1, ADC_ISR_EOC2, ADC_ISR_EOC3,
@@ -219,6 +217,7 @@ void adc_set_resolution(Adc *const adc,
 	if (ADC_8_BITS == res ||
 			ADC_10_BITS == res) {
 		adc->ADC_MR |= res;
+		adc->ADC_EMR &= ~ADC_EMR_OSR_Msk;
 	} else {
 		adc->ADC_MR &= ~ADC_MR_LOWRES;
 		adc->ADC_EMR |= res;
