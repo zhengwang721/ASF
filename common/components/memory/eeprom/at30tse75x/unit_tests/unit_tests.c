@@ -115,26 +115,6 @@ double temp;
 uint8_t rx[NB_BYTE], tx[NB_BYTE];
 
 /**
- * \brief Compare two buffers
- *
- * \param buf1  The first buffer
- * \param buf2  The second buffer
- * \param len  Length of data
- *
- * \return 1 if the data matches, otherwise 0
- */
-static uint32_t bufcmp(uint8_t *buf1, uint8_t *buf2, uint32_t len)
-{
-	uint32_t cnt = 0;
-	for (; cnt < len; cnt++) {
-		if (*(buf1++) != *(buf2++)) {
-			return 0;
-		}
-	}
-	return 1;
-}
-
-/**
  * \brief AT30TSE75x write EEPROM test.
  *
  * \param test Current test case.
@@ -162,7 +142,7 @@ static void run_test_read_compare_data(const struct test_case *test)
 			(int)temp % NB_PAGE) == TWI_SUCCESS,
 			"Error: AT30TSE75x read failed\n\r");
 	test_assert_true(test,
-			bufcmp(tx, rx, NB_BYTE),
+			!memcmp(tx, rx, NB_BYTE),
 			"Error: AT30TSE75x comparison failed\n\r");
 }
 

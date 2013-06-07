@@ -94,26 +94,6 @@ extern "C" {
 uint8_t rx[NB_BYTE], tx[NB_BYTE];
 
 /**
- * \brief Compare two buffers
- *
- * \param buf1  The first buffer
- * \param buf2  The second buffer
- * \param len  Length of data
- *
- * \return 0 if the data matches, otherwise 1
- */
-static uint32_t bufcmp(uint8_t *buf1, uint8_t *buf2, uint32_t len)
-{
-	uint32_t cnt = 0;
-	for (; cnt < len; cnt++) {
-		if (*(buf1++) != *(buf2++)) {
-			return 1;
-		}
-	}
-	return 0;
-}
-
-/**
  *  \brief Configure the Console UART.
  */
 static void configure_console(void)
@@ -173,7 +153,7 @@ int main(void)
 			puts("Read EEPROM error\r");
 			return 0;
 		} else {
-			if (bufcmp(tx, rx, NB_BYTE - 1) && (rx[NB_PAGE - 1] != i)) {
+			if (memcmp(tx, rx, NB_BYTE - 1) && (rx[NB_PAGE - 1] != i)) {
 				puts("Comparison error\r");
 				return 0;
 			}
