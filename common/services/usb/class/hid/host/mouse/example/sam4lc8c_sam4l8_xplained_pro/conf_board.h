@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief  Configuration File for SAM4L Xplained Pro Board.
+ * \brief  Configuration File for SAM4L8 Xplained Pro Board.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
