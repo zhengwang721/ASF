@@ -126,7 +126,7 @@ static void init_pevc(void)
 	events_ch_get_config_defaults(&ch_config);
 	ch_config.channel_id = PEVC_ID_USER_PDCA_0;
 	ch_config.generator_id = PEVC_ID_GEN_PAD_1;
-	ch_config.sharper_enable = true;
+	ch_config.shaper_enable = true;
 	ch_config.igf_edge = EVENT_IGF_EDGE_FALLING;
 	events_ch_configure(&ch_config);
 	events_ch_enable(PEVC_ID_USER_PDCA_0);
