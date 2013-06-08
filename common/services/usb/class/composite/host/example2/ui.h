@@ -120,11 +120,8 @@ void ui_uhi_hid_mouse_move(int8_t x,int8_t y,int8_t scroll);
 //! @}
 
 //! \name Callback to show the MSC read and write access
+//! Functions are already declared in conf_access.h.
 //! @{
-void ui_start_read(void);
-void ui_stop_read(void);
-void ui_start_write(void);
-void ui_stop_write(void);
 //! @}
 
 #endif // _UI_H_

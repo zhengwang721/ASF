@@ -313,7 +313,7 @@ static uhd_callback_reset_t uhd_reset_callback = NULL;
  * is smaller than control endpoint size.
  * Also used when payload buffer is not word aligned.
  */
-COMPILER_ALIGNED(4) uint8_t uhd_ctrl_buffer[64];
+uint32_t uhd_ctrl_buffer[64/4];
 
 /**
  * \brief Structure to store the high level setup request
@@ -764,7 +764,7 @@ bool uhd_ep0_alloc(
 			USBC_UECFG0_EPBK_SINGLE >> USBC_UPCFG0_PBK_Pos);
 
 	uhd_udesc_set_uhaddr(0, add);
-	uhd_udesc_set_buf0_addr(0, (uint32_t *) uhd_ctrl_buffer);
+	uhd_udesc_set_buf0_addr(0, (uint8_t*)uhd_ctrl_buffer);
 
 	// Always enable stall and error interrupts of control endpoint
 	uhd_enable_stall_interrupt(0);
@@ -1400,7 +1400,7 @@ static void uhd_ctrl_phase_data_in(void)
 	//! thus the short packet flag must be computed
 	b_short_packet = (nb_byte_received != uhd_get_pipe_size(0));
 
-	ptr_ep_data = uhd_ctrl_buffer;
+	ptr_ep_data = (uint8_t*)uhd_ctrl_buffer;
 uhd_ctrl_receiv_in_read_data:
 	// Copy data from pipe to payload buffer
 	while (uhd_ctrl_request_first->payload_size && nb_byte_received) {
@@ -1697,7 +1697,7 @@ static void uhd_pipe_trans_complet(uint8_t pipe)
 			uhd_udesc_set_buf0_ctn(pipe, next_trans);
 			uhd_udesc_rst_buf0_size(pipe);
 			// Link the user buffer directly on USB hardware DMA
-			uhd_udesc_set_buf0_addr(pipe, (uint32_t *)&ptr_job->buf[ptr_job->nb_trans]);
+			uhd_udesc_set_buf0_addr(pipe, &ptr_job->buf[ptr_job->nb_trans]);
 			// Start transfer
 			uhd_ack_fifocon(pipe);
 			uhd_unfreeze_pipe(pipe);
@@ -1757,7 +1757,7 @@ static void uhd_pipe_trans_complet(uint8_t pipe)
 					Assert(ptr_job->buf_internal != NULL);
 					goto uhd_pipe_trans_complet_end;
 				}
-				uhd_udesc_set_buf0_addr(pipe, (uint32_t *)ptr_job->buf_internal);
+				uhd_udesc_set_buf0_addr(pipe, ptr_job->buf_internal);
 				uhd_udesc_set_buf0_size(pipe, pipe_size);
 			} else {
 				next_trans -= next_trans % pipe_size;
@@ -1767,7 +1767,7 @@ static void uhd_pipe_trans_complet(uint8_t pipe)
 				} else {
 					uhd_in_request_number(pipe, (next_trans+pipe_size-1)/pipe_size);
 				}
-				uhd_udesc_set_buf0_addr(pipe, (uint32_t *)&ptr_job->buf[ptr_job->nb_trans]);
+				uhd_udesc_set_buf0_addr(pipe, &ptr_job->buf[ptr_job->nb_trans]);
 				uhd_udesc_set_buf0_size(pipe, next_trans);
 			}
 			// Start transfer

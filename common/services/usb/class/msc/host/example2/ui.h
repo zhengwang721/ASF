@@ -98,11 +98,8 @@ void ui_test_finish(bool b_success);
 void ui_usb_enum_event(uhc_device_t *dev, uhc_enum_status_t status);
 
 //! \name Callback to show the MSC read and write accesses
+//! Functions are already declared in conf_access.h.
 //! @{
-void ui_start_read(void);
-void ui_stop_read(void);
-void ui_start_write(void);
-void ui_stop_write(void);
 //! @}
 
 #endif // _UI_H_
