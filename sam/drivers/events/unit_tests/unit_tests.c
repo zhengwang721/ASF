@@ -192,7 +192,7 @@ static void run_events_ast_test(const struct test_case *test)
 	events_ch_get_config_defaults(&ch_config);
 	ch_config.channel_id = CONF_TEST_USER_ID;
 	ch_config.generator_id = CONF_TEST_GEN_ID;
-	ch_config.sharper_enable = true;
+	ch_config.shaper_enable = true;
 	ch_config.igf_edge = EVENT_IGF_EDGE_NONE;
 	events_ch_configure(&ch_config);
 
