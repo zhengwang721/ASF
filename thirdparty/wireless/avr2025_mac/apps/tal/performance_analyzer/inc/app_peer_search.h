@@ -39,6 +39,7 @@
  *
  * \asf_license_stop
  */
+
 /*
  * Copyright (c) 2012, Atmel Corporation All rights reserved.
  *
@@ -75,7 +76,6 @@
 
 /* === Includes ============================================================= */
 
-
 /* === Macros =============================================================== */
 
 /**
@@ -92,38 +92,36 @@
 #define RANGE_MEASURE_MODE    (0x01)
 #define PER_TEST_MODE         (0x02)
 
-
-
 /* === Types ================================================================ */
+
 /**
  * \brief Structure to hold the the function pointers to handle
  * various Peer Search Process tasks
  *
  */
-typedef struct
-{
-    void (*peer_state_init)(void *arg);
-    void (*peer_state_task)(void);
-    void (*peer_state_tx_frame_done_cb)(retval_t status, frame_info_t *frame);
-    void (*peer_state_rx_frame_cb)(frame_info_t *frame);
-    void (*peer_state_exit)(void);
+typedef struct {
+	void (*peer_state_init)(void *arg);
+	void (*peer_state_task)(void);
+	void (*peer_state_tx_frame_done_cb)(retval_t status,
+			frame_info_t *frame);
+	void (*peer_state_rx_frame_cb)(frame_info_t *frame);
+	void (*peer_state_exit)(void);
 } peer_state_function_t;
+
 /**
  * \brief Structure to hold the peer device's short address and ieee address
  *
  */
-typedef struct
-{
-    uint16_t my_short_addr;
-    uint64_t peer_ieee_addr;
+typedef struct {
+	uint16_t my_short_addr;
+	uint64_t peer_ieee_addr;
 } peer_search_receptor_arg_t;
 
-//! \}
+/* ! \} */
 
 /* === Externals ============================================================ */
 
 /* === Prototypes =========================================================== */
-
 
 /**
  * \addtogroup group_peer_search_receptor
@@ -178,7 +176,7 @@ void peer_search_receptor_rx_cb(frame_info_t *frame);
  */
 void peer_search_receptor_exit(void);
 
-//! \}
+/* ! \} */
 
 /**
  * \addtogroup group_peer_search_initiator
@@ -208,7 +206,8 @@ void peer_search_initiator_init(void *arg);
 void peer_search_initiator_task(void);
 
 /**
- * \brief Callback that is called once tx is done in peer search initiator state.
+ * \brief Callback that is called once tx is done in peer search initiator
+ *state.
  *
  * \param status    Status of the transmission procedure
  * \param frame     Pointer to the transmitted frame structure
@@ -227,7 +226,7 @@ void peer_search_initiator_rx_cb(frame_info_t *frame);
  */
 void peer_search_initiator_exit(void);
 
-//! \}
+/* ! \} */
 
 #ifdef __cplusplus
 extern "C" {

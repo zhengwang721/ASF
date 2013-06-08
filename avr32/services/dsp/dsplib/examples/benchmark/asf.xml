@@ -4,7 +4,7 @@
 		Example application. This is a very simple application used to benchmark DSP library functions.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="Digital signal processing"/>
+			<keyword value="Digital Signal Processing"/>
 		</info>
 		<build type="c-source" value="benchmark.c"/>
 		<build type="include-path" value="."/>

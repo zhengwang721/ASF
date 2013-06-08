@@ -51,14 +51,14 @@
 #ifndef STACK_CONFIG_H
 #define STACK_CONFIG_H
 
- /**
-  * \ingroup group_inc 
- * \defgroup group_stack Common Stack Definitions 
+/**
+ * \ingroup group_inc
+ * \defgroup group_stack Common Stack Definitions
  * Includes Stack Definitions
  * @{
-
+ *
  */
- 
+
 /* Highest stack layer definitions up to MAC
  *
  * Do NOT change order here! The numbering needs to start with the lowest layer
@@ -68,6 +68,7 @@
 #define TAL                                 (2)
 #define RTB                                 (3)
 #define MAC                                 (4)
+
 /*
  * Layers above MAC are defined further below, since the enumeration
  * depends on the usage of the switch VENDOR_STACK_CONFIG.
@@ -82,31 +83,33 @@
 
 #if (!defined HIGHEST_STACK_LAYER)
 #define HIGHEST_STACK_LAYER     MAC
-#endif // (!defined HIGHEST_STACK_LAYER)
+#endif /* (!defined HIGHEST_STACK_LAYER) */
 
 #if (HIGHEST_STACK_LAYER == PAL)
+
 /*
- +----------+
+ * +----------+
  +          +
  +   PAL    +
  +          +
- +----------+
+ ++----------+
  */
 /* Reduce the header file dependency by using hard-coded values */
 #define LARGE_BUFFER_SIZE               (160)
 #define SMALL_BUFFER_SIZE               (68)
 
 #elif (HIGHEST_STACK_LAYER == TAL)
+
 /*
- +----------+
+ * +----------+
  +          +
  +   TAL    +
  +          +
- +----------+
+ ++----------+
  +          +
  +   PAL    +
  +          +
- +----------+
+ ++----------+
  */
 
 /**
@@ -116,13 +119,14 @@
  */
 
 #if (MEGA || XMEGA)
+
 /*
  * Size of frame_info_t + max number of payload octets +
  * 1 octet LQI  + 1 octet ED value.
  */
 #define LARGE_BUFFER_SIZE                   (sizeof(frame_info_t) + \
-                                             aMaxPHYPacketSize + \
-                                             LENGTH_FIELD_LEN + LQI_LEN + ED_VAL_LEN)
+	aMaxPHYPacketSize + \
+	LENGTH_FIELD_LEN + LQI_LEN + ED_VAL_LEN)
 
 /**
  * The following macro holds the size of a small buffer.
@@ -130,17 +134,18 @@
  * and the ED value are required.
  */
 #define SMALL_BUFFER_SIZE                   (sizeof(frame_info_t) + \
-                                             MAX_MGMT_FRAME_LENGTH + \
-                                             LENGTH_FIELD_LEN + LQI_LEN + ED_VAL_LEN)
+	MAX_MGMT_FRAME_LENGTH +	\
+	LENGTH_FIELD_LEN + LQI_LEN + ED_VAL_LEN)
 #elif (UC3 || SAM)
+
 /*
  * Size of frame_info_t + max number of payload octets +
  * 1 octet LQI  + 1 octet ED value.
  * The buffer size has to be a DWORD.
  */
 #define LARGE_BUFFER_SIZE                   (((sizeof(frame_info_t) + \
-                                               aMaxPHYPacketSize + \
-                                               LENGTH_FIELD_LEN + LQI_LEN + ED_VAL_LEN) / 4 + 1) * 4)
+	aMaxPHYPacketSize + \
+	LENGTH_FIELD_LEN + LQI_LEN + ED_VAL_LEN) / 4 + 1) * 4)
 
 /**
  * The following macro holds the size of a small buffer.
@@ -148,8 +153,8 @@
  * and the ED value are required.
  */
 #define SMALL_BUFFER_SIZE                   (((sizeof(frame_info_t) + \
-                                               MAX_MGMT_FRAME_LENGTH + \
-                                               LENGTH_FIELD_LEN + LQI_LEN + ED_VAL_LEN) / 4 + 1) * 4)
+	MAX_MGMT_FRAME_LENGTH +	\
+	LENGTH_FIELD_LEN + LQI_LEN + ED_VAL_LEN) / 4 + 1) * 4)
 #else
 #error "Unknown Device family for buffer calculation"
 #endif
@@ -157,19 +162,19 @@
 #elif ((HIGHEST_STACK_LAYER == MAC) || (HIGHEST_STACK_LAYER == RTB))
 
 /*
- +----------+    *----------+
+ * +----------+    *----------+
  +          +    +          +
  +   MAC    +    +   RTB    +
  +          +    +          +
- +----------+    +----------+
+ ++----------+    +----------+
  +          +    +          +
  +   TAL    + or +   TAL    +
  +          +    +          +
- +----------+    +----------+
+ ++----------+    +----------+
  +          +    +          +
  +   PAL    +    +   PAL    +
  +          +    +          +
- +----------+    +----------+
+ ++----------+    +----------+
  */
 
 /**
@@ -181,14 +186,15 @@
 #define MCPS_DATA_IND_SIZE                  (sizeof(mcps_data_ind_t))
 
 #if (MEGA || XMEGA)
+
 /*
  * Size of mcps_data_ind_t + max number of payload octets +
  * 1 octet LQI  + 1 octet ED value.
  */
 #define LARGE_BUFFER_SIZE                   (MCPS_DATA_IND_SIZE + \
-                                             aMaxMACPayloadSize + \
-                                             FCS_LEN + \
-                                             LQI_LEN + ED_VAL_LEN)
+	aMaxMACPayloadSize + \
+	FCS_LEN + \
+	LQI_LEN + ED_VAL_LEN)
 
 /**
  * The following macro holds the size of a small buffer.
@@ -196,17 +202,18 @@
  * and the ED value are required.
  */
 #define SMALL_BUFFER_SIZE                   (sizeof(frame_info_t) + \
-                                             MAX_MGMT_FRAME_LENGTH + \
-                                             LENGTH_FIELD_LEN + LQI_LEN + ED_VAL_LEN)
+	MAX_MGMT_FRAME_LENGTH +	\
+	LENGTH_FIELD_LEN + LQI_LEN + ED_VAL_LEN)
 #elif (UC3 || SAM)
+
 /*
  * Size of mcps_data_ind_t + max number of payload octets +
  * 1 octet LQI  + 1 octet ED value.
  * The buffer size has to be a DWORD.
  */
 #define LARGE_BUFFER_SIZE                   (((MCPS_DATA_IND_SIZE + \
-                                               aMaxMACPayloadSize + \
-                                               LQI_LEN + ED_VAL_LEN) / 4 + 1) * 4)
+	aMaxMACPayloadSize + \
+	LQI_LEN + ED_VAL_LEN) / 4 + 1) * 4)
 
 /**
  * The following macro holds the size of a small buffer.
@@ -214,15 +221,14 @@
  * and the ED value are required.
  */
 #define SMALL_BUFFER_SIZE                   (((sizeof(frame_info_t) + \
-                                               MAX_MGMT_FRAME_LENGTH + \
-                                               LENGTH_FIELD_LEN + LQI_LEN + ED_VAL_LEN) / 4 + 1) * 4)
+	MAX_MGMT_FRAME_LENGTH +	\
+	LENGTH_FIELD_LEN + LQI_LEN + ED_VAL_LEN) / 4 + 1) * 4)
 #else
 #error "Unknown Device family for buffer calculation"
 #endif
 
 #elif (HIGHEST_STACK_LAYER == RF4CE)
 #include "nwk_config.h"
-
 
 #else
 #error "Unknown HIGHEST_STACK_LAYER for buffer calculation"
@@ -248,11 +254,13 @@
 /* Configuration if RTB is the highest stack layer */
 #if (HIGHEST_STACK_LAYER == RTB)
 #include "rtb_config.h"
-#define NUMBER_OF_TOTAL_STACK_TIMERS        (NUMBER_OF_TAL_TIMERS + NUMBER_OF_RTB_TIMERS)
+#define NUMBER_OF_TOTAL_STACK_TIMERS        (NUMBER_OF_TAL_TIMERS + \
+	NUMBER_OF_RTB_TIMERS)
 /* Minimum number of large buffers is 3, but one more is given. */
 #define NUMBER_OF_LARGE_STACK_BUFS          (4)
 #define NUMBER_OF_SMALL_STACK_BUFS          (0)
 #else
+
 /*
  * In case RTB is enabled for a stack using higher layers,
  * extra buffers are required for proper RTB operation.
@@ -267,7 +275,8 @@
 /* Configuration if MAC is the highest stack layer */
 #if (HIGHEST_STACK_LAYER == MAC)
 #include "mac_config.h"
-#define NUMBER_OF_TOTAL_STACK_TIMERS        (NUMBER_OF_TAL_TIMERS + NUMBER_OF_RTB_TIMERS + NUMBER_OF_MAC_TIMERS)
+#define NUMBER_OF_TOTAL_STACK_TIMERS        (NUMBER_OF_TAL_TIMERS + \
+	NUMBER_OF_RTB_TIMERS + NUMBER_OF_MAC_TIMERS)
 #if (MAC_INDIRECT_DATA_FFD == 1)
 #define NUMBER_OF_LARGE_STACK_BUFS      (6 + EXTRA_RTB_BUFFER)
 #else
@@ -276,8 +285,7 @@
 #define NUMBER_OF_SMALL_STACK_BUFS          (0)
 #endif  /* (HIGHEST_STACK_LAYER == MAC) */
 
-
 #endif  /* #ifdef VENDOR_STACK_CONFIG */
-//! @}
+/* ! @} */
 #endif /* STACK_CONFIG_H */
 /* EOF */

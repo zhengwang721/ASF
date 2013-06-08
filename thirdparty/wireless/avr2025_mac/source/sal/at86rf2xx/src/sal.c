@@ -39,11 +39,13 @@
  *
  * \asf_license_stop
  */
+
 /**
  * @author
  *      Atmel Corporation: http://www.atmel.com
  *      Support email: avr@atmel.com
  */
+
 /*
  * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
@@ -63,13 +65,12 @@
 
 #define AES_RY_BIT                  (1)     /* AES_RY: poll on finished op */
 #define AES_DIR_VOID                (AES_DIR_ENCRYPT + AES_DIR_DECRYPT + 1)
-                                            /* Must be different from both summands */
+/* Must be different from both summands */
 
 #define _SR_MASK(addr, mask, pos, val)     (((uint8_t)val << pos) & mask)
 #define SR_MASK(SR, val)                   _SR_MASK(SR, val)
 
 /* === Types =============================================================== */
-
 
 /* === Globals ============================================================= */
 
@@ -78,7 +79,7 @@ static bool setup_flag;
 /* True if decryption key is actual and was computed. */
 static bool dec_initialized = false;
 /* Buffer written over SPI to AES unit. */
-static uint8_t aes_buf[AES_BLOCKSIZE+2];
+static uint8_t aes_buf[AES_BLOCKSIZE + 2];
 /* Last value of "dir" parameter in sal_aes_setup(). */
 static uint8_t last_dir = AES_DIR_VOID;
 /* Actual encryption key. */
@@ -101,8 +102,6 @@ void sal_init(void)
 {
 }
 
-
-
 /**
  * @brief Setup AES unit
  *
@@ -120,124 +119,130 @@ void sal_init(void)
  * @return  False if some parameter was illegal, true else
  */
 bool sal_aes_setup(uint8_t *key,
-                   uint8_t enc_mode,
-                   uint8_t dir)
+		uint8_t enc_mode,
+		uint8_t dir)
 {
-    if (key != NULL)
-    {
-        /* Setup key. */
-        dec_initialized = false;
+	if (key != NULL) {
+		/* Setup key. */
+		dec_initialized = false;
 
-        last_dir = AES_DIR_VOID;
+		last_dir = AES_DIR_VOID;
 
-        /* Save key for later use after decryption or sleep. */
-        memcpy(enc_key, key, AES_KEYSIZE);
+		/* Save key for later use after decryption or sleep. */
+		memcpy(enc_key, key, AES_KEYSIZE);
 
-        /* Set subregister AES_MODE (Bits 4:6 in AES_CON) to 1: KEY SETUP. */
-        aes_buf[0] = SR_MASK(SR_AES_MODE, AES_MODE_KEY);
+		/* Set subregister AES_MODE (Bits 4:6 in AES_CON) to 1: KEY
+		 *SETUP. */
+		aes_buf[0] = SR_MASK(SR_AES_MODE, AES_MODE_KEY);
 
-        /* Fill in key. */
-        memcpy(aes_buf+1, key, AES_KEYSIZE);
+		/* Fill in key. */
+		memcpy(aes_buf + 1, key, AES_KEYSIZE);
 
-        /* Write to SRAM in one step. */
-        pal_trx_sram_write((AES_BASE_ADDR + RG_AES_CTRL), aes_buf, AES_BLOCKSIZE + 1);
-    }
+		/* Write to SRAM in one step. */
+		pal_trx_sram_write((AES_BASE_ADDR + RG_AES_CTRL), aes_buf,
+				AES_BLOCKSIZE + 1);
+	}
 
-    /* Set encryption direction. */
-    switch(dir)
-    {
-        case AES_DIR_ENCRYPT:
-            if (last_dir == AES_DIR_DECRYPT)
-            {
-                /*
-                 * If the last operation was decryption, the encryption
-                 * key must be stored in enc_key, so re-initialize it.
-                 */
-                aes_buf[0] = SR_MASK(SR_AES_MODE, AES_MODE_KEY);
+	/* Set encryption direction. */
+	switch (dir) {
+	case AES_DIR_ENCRYPT:
+		if (last_dir == AES_DIR_DECRYPT) {
+			/*
+			 * If the last operation was decryption, the encryption
+			 * key must be stored in enc_key, so re-initialize it.
+			 */
+			aes_buf[0] = SR_MASK(SR_AES_MODE, AES_MODE_KEY);
 
-                /* Fill in key. */
-                memcpy(aes_buf+1, enc_key, AES_KEYSIZE);
+			/* Fill in key. */
+			memcpy(aes_buf + 1, enc_key, AES_KEYSIZE);
 
-                /* Write to SRAM in one step. */
-                pal_trx_sram_write((AES_BASE_ADDR + RG_AES_CTRL), aes_buf, AES_BLOCKSIZE + 1);
-            }
-            break;
+			/* Write to SRAM in one step. */
+			pal_trx_sram_write((AES_BASE_ADDR + RG_AES_CTRL),
+					aes_buf, AES_BLOCKSIZE + 1);
+		}
 
-        case AES_DIR_DECRYPT:
-            if (last_dir != AES_DIR_DECRYPT)
-            {
-                aes_buf[0] = SR_MASK(SR_AES_MODE, AES_MODE_KEY);
+		break;
 
-                if (!dec_initialized)
-                {
-                    uint8_t dummy[AES_BLOCKSIZE];
+	case AES_DIR_DECRYPT:
+		if (last_dir != AES_DIR_DECRYPT) {
+			aes_buf[0] = SR_MASK(SR_AES_MODE, AES_MODE_KEY);
 
-                    /* Compute decryption key and initialize unit with it. */
+			if (!dec_initialized) {
+				uint8_t dummy[AES_BLOCKSIZE];
 
-                    /* Dummy ECB encryption. */
-                    aes_buf[0] = SR_MASK(SR_AES_MODE, AES_MODE_ECB);
-                    aes_buf[AES_BLOCKSIZE + 1] = SR_MASK(SR_AES_MODE, AES_MODE_ECB) |
-                                                 SR_MASK(SR_AES_REQUEST, AES_REQUEST);
+				/* Compute decryption key and initialize unit
+				 *with it. */
 
-                    setup_flag = true;  /* Needed in sal_aes_wrrd(). */
-                    sal_aes_wrrd(dummy, NULL);
+				/* Dummy ECB encryption. */
+				aes_buf[0] = SR_MASK(SR_AES_MODE, AES_MODE_ECB);
+				aes_buf[AES_BLOCKSIZE + 1] = SR_MASK(
+						SR_AES_MODE, AES_MODE_ECB) |
+						SR_MASK(SR_AES_REQUEST,
+						AES_REQUEST);
 
-                    /* Read last round key: */
+				setup_flag = true; /* Needed in sal_aes_wrrd().
+				                    **/
+				sal_aes_wrrd(dummy, NULL);
 
-                    /* Set to key mode. */
-                    aes_buf[0] = SR_MASK(SR_AES_MODE, AES_MODE_KEY);
-                    pal_trx_sram_write((AES_BASE_ADDR + RG_AES_CTRL), aes_buf, 1);
+				/* Read last round key: */
 
-                    /* Read the key. */
-                    pal_trx_sram_read((AES_BASE_ADDR + RG_AES_STATE_KEY_0), dec_key, AES_KEYSIZE);
-                }
+				/* Set to key mode. */
+				aes_buf[0] = SR_MASK(SR_AES_MODE, AES_MODE_KEY);
+				pal_trx_sram_write(
+						(AES_BASE_ADDR + RG_AES_CTRL),
+						aes_buf, 1);
 
-                /*
-                 * Now the decryption key is computed resp. known,
-                 * simply re-initialize the unit;
-                 * aes_buf[0] is AES_MODE_KEY
-                 */
+				/* Read the key. */
+				pal_trx_sram_read((AES_BASE_ADDR +
+						RG_AES_STATE_KEY_0), dec_key,
+						AES_KEYSIZE);
+			}
 
-                /* Fill in key. */
-                memcpy(aes_buf+1, dec_key, AES_KEYSIZE);
+			/*
+			 * Now the decryption key is computed resp. known,
+			 * simply re-initialize the unit;
+			 * aes_buf[0] is AES_MODE_KEY
+			 */
 
-                /* Write to SRAM in one step. */
-                pal_trx_sram_write((AES_BASE_ADDR + RG_AES_CTRL), aes_buf, AES_BLOCKSIZE + 1);
+			/* Fill in key. */
+			memcpy(aes_buf + 1, dec_key, AES_KEYSIZE);
 
-                dec_initialized = true;
-            }
-            break;
+			/* Write to SRAM in one step. */
+			pal_trx_sram_write((AES_BASE_ADDR + RG_AES_CTRL),
+					aes_buf, AES_BLOCKSIZE + 1);
 
-        default:
-            return false;
-    }
+			dec_initialized = true;
+		}
 
-    last_dir = dir;
+		break;
 
-    /* Set encryption mode. */
-    switch(enc_mode)
-    {
-        case AES_MODE_ECB:
-        case AES_MODE_CBC:
-            {
-                aes_buf[0] = SR_MASK(SR_AES_MODE, enc_mode) |
-                             SR_MASK(SR_AES_DIR, dir);
-                aes_buf[AES_BLOCKSIZE + 1] = SR_MASK(SR_AES_MODE, enc_mode) |
-                                           SR_MASK(SR_AES_DIR, dir) |
-                                           SR_MASK(SR_AES_REQUEST, AES_REQUEST);
-            }
-            break;
+	default:
+		return false;
+	}
 
-        default:
-            return (false);
-    }
+	last_dir = dir;
 
-    setup_flag = true;
+	/* Set encryption mode. */
+	switch (enc_mode) {
+	case AES_MODE_ECB:
+	case AES_MODE_CBC:
+	{
+		aes_buf[0] = SR_MASK(SR_AES_MODE, enc_mode) |
+				SR_MASK(SR_AES_DIR, dir);
+		aes_buf[AES_BLOCKSIZE + 1] = SR_MASK(SR_AES_MODE, enc_mode) |
+				SR_MASK(SR_AES_DIR, dir) |
+				SR_MASK(SR_AES_REQUEST, AES_REQUEST);
+	}
+	break;
 
-    return (true);
+	default:
+		return (false);
+	}
+
+	setup_flag = true;
+
+	return (true);
 }
-
-
 
 /**
  * @brief Re-inits key and state after a sleep or TRX reset
@@ -255,64 +260,60 @@ bool sal_aes_setup(uint8_t *key,
 void sal_aes_restart(void)
 {
 #if ((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF231) || \
-     ((TAL_TYPE == AT86RF233) && (defined ENABLE_DEEP_SLEEP)))
-    /*
-     * AT86RF212 & AT86RF231 loose the key information after a sleep
-     * cycle, so the security information needs to be re-written
-     * to the transceiver.
-     * This is not required anymore for SPI transceivers beyond
-     * these two mentioned transceivers.
-     */
-    uint8_t *keyp;
-    uint8_t save_cmd;
+	((TAL_TYPE == AT86RF233) && (defined ENABLE_DEEP_SLEEP)))
+
+	/*
+	 * AT86RF212 & AT86RF231 loose the key information after a sleep
+	 * cycle, so the security information needs to be re-written
+	 * to the transceiver.
+	 * This is not required anymore for SPI transceivers beyond
+	 * these two mentioned transceivers.
+	 */
+	uint8_t *keyp;
+	uint8_t save_cmd;
 #endif /* #if ((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF231)) */
 
-    /* Ensure that radio is awake */
+	/* Ensure that radio is awake */
 
-    prev_trx_status = tal_trx_status;
-    if (tal_trx_status == TRX_SLEEP)
-    {
-        tal_trx_wakeup();
-    }
+	prev_trx_status = tal_trx_status;
+	if (tal_trx_status == TRX_SLEEP) {
+		tal_trx_wakeup();
+	}
 
 #if ((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF231) || \
-     ((TAL_TYPE == AT86RF233) && (defined ENABLE_DEEP_SLEEP)))
-    if (last_dir == AES_DIR_ENCRYPT)
-    {
-        keyp = enc_key;
-    }
-    else
-    {
-        keyp = dec_key;
-    }
+	((TAL_TYPE == AT86RF233) && (defined ENABLE_DEEP_SLEEP)))
+	if (last_dir == AES_DIR_ENCRYPT) {
+		keyp = enc_key;
+	} else {
+		keyp = dec_key;
+	}
 
-    save_cmd = aes_buf[0];
-    aes_buf[0] = SR_MASK(SR_AES_MODE, AES_MODE_KEY);
+	save_cmd = aes_buf[0];
+	aes_buf[0] = SR_MASK(SR_AES_MODE, AES_MODE_KEY);
 
-    /* Fill in key. */
-    memcpy(aes_buf+1, keyp, AES_KEYSIZE);
+	/* Fill in key. */
+	memcpy(aes_buf + 1, keyp, AES_KEYSIZE);
 
-    /* Write to SRAM in one step. */
-    pal_trx_sram_write((AES_BASE_ADDR + RG_AES_CTRL), aes_buf, AES_BLOCKSIZE + 1);
+	/* Write to SRAM in one step. */
+	pal_trx_sram_write((AES_BASE_ADDR + RG_AES_CTRL), aes_buf,
+			AES_BLOCKSIZE + 1);
 
-    aes_buf[0] = save_cmd;
-    setup_flag = true;
+	aes_buf[0] = save_cmd;
+	setup_flag = true;
 #endif  /* #if ((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF231)) */
 }
-
 
 /**
  * @brief Cleans up the SAL/AES after STB has been finished
  */
 void _sal_aes_clean_up(void)
 {
-    /* Set radio to SLEEP, if it has been in SLEEP before sal_aes_restart() */
-    if (prev_trx_status == TRX_SLEEP)
-    {
-        tal_trx_sleep(SLEEP_MODE_1);
-    }
+	/* Set radio to SLEEP, if it has been in SLEEP before sal_aes_restart()
+	 **/
+	if (prev_trx_status == TRX_SLEEP) {
+		tal_trx_sleep(SLEEP_MODE_1);
+	}
 }
-
 
 /**
  * @brief Writes data, reads previous result and does the AES en/decryption
@@ -332,43 +333,40 @@ void _sal_aes_clean_up(void)
  */
 void sal_aes_wrrd(uint8_t *idata, uint8_t *odata)
 {
-    uint8_t save_cmd;
+	uint8_t save_cmd;
 
-    /*
-     * Write data and start the operation.
-     * AES_MODE in aes_buf[0] and aes_buf[AES_BLOCKSIZE+1] as well as
-     * AES_REQUEST in aes_buf[AES_BLOCKSIZE+1]
-     * were set before in sal_aes_setup()
-     */
-    memcpy(aes_buf+1, idata, AES_BLOCKSIZE);
+	/*
+	 * Write data and start the operation.
+	 * AES_MODE in aes_buf[0] and aes_buf[AES_BLOCKSIZE+1] as well as
+	 * AES_REQUEST in aes_buf[AES_BLOCKSIZE+1]
+	 * were set before in sal_aes_setup()
+	 */
+	memcpy(aes_buf + 1, idata, AES_BLOCKSIZE);
 
-    /* pal_trx_aes_wrrd() overwrites aes_buf, the last byte must be saved. */
-    save_cmd = aes_buf[AES_BLOCKSIZE+1];
+	/* pal_trx_aes_wrrd() overwrites aes_buf, the last byte must be saved.
+	 **/
+	save_cmd = aes_buf[AES_BLOCKSIZE + 1];
 
-    if (setup_flag)
-    {
-        pal_trx_aes_wrrd((AES_BASE_ADDR + RG_AES_CTRL), aes_buf, AES_BLOCKSIZE + 2);
+	if (setup_flag) {
+		pal_trx_aes_wrrd((AES_BASE_ADDR + RG_AES_CTRL), aes_buf,
+				AES_BLOCKSIZE + 2);
 
-        setup_flag = false;
-    }
-    else
-    {
-        pal_trx_aes_wrrd((AES_BASE_ADDR + RG_AES_STATE_KEY_0), aes_buf + 1, AES_BLOCKSIZE + 1);
-    }
+		setup_flag = false;
+	} else {
+		pal_trx_aes_wrrd((AES_BASE_ADDR + RG_AES_STATE_KEY_0),
+				aes_buf + 1, AES_BLOCKSIZE + 1);
+	}
 
-    /* Restore the result. */
-    if (odata != NULL)
-    {
-        memcpy(odata, aes_buf+1, AES_BLOCKSIZE);
-    }
+	/* Restore the result. */
+	if (odata != NULL) {
+		memcpy(odata, aes_buf + 1, AES_BLOCKSIZE);
+	}
 
-    aes_buf[AES_BLOCKSIZE+1] = save_cmd;
+	aes_buf[AES_BLOCKSIZE + 1] = save_cmd;
 
-    /* Wait for the operation to finish for 24 us. */
-    pal_timer_delay(24);
+	/* Wait for the operation to finish for 24 us. */
+	pal_timer_delay(24);
 }
-
-
 
 /**
  * @brief Reads the result of previous AES en/decryption
@@ -381,7 +379,8 @@ void sal_aes_wrrd(uint8_t *idata, uint8_t *odata)
  */
 void sal_aes_read(uint8_t *data)
 {
-    pal_trx_sram_read((AES_BASE_ADDR + RG_AES_STATE_KEY_0), data, AES_BLOCKSIZE);
+	pal_trx_sram_read((AES_BASE_ADDR + RG_AES_STATE_KEY_0), data,
+			AES_BLOCKSIZE);
 }
 
 #endif /* AT86RF2xx */

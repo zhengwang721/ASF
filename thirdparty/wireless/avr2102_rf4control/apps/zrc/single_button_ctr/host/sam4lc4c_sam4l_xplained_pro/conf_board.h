@@ -48,9 +48,7 @@
 #define CONF_BOARD_COM_PORT
 #define CONF_BOARD_USART0
 
-	
-
-/* Since this is host and USB driven , directly providing voltage level */	
-#define GET_BATTERY_VOLTAGE()    (0xCE4)						
+/* Since this is host and USB driven , directly providing voltage level */
+#define GET_BATTERY_VOLTAGE()    (0xCE4)
 
 #endif  /* CONF_BOARD_H_INCLUDED */

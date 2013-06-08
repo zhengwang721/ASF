@@ -1,7 +1,8 @@
 /**
  * @file nwk_config.h
  *
- * @brief This module includes the Buffer and timer configuration for RF4Control stack.
+ * @brief This module includes the Buffer and timer configuration for RF4Control
+ *stack.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -40,8 +41,6 @@
  * \asf_license_stop
  *
  */
- 
-
 
 /* Prevent double inclusion */
 #ifndef NWK_CONFIG_H
@@ -49,19 +48,15 @@
 
 /* === Includes ============================================================= */
 
-
-//#include "mac_config.h"
+/* #include "mac_config.h" */
 #include "ieee_const.h"
 
 /* === Macros =============================================================== */
 
-
-
-
 /* === Types ================================================================ */
 
 /**
-  * \ingroup group_rf4control 
+ * \ingroup group_rf4control
  * \defgroup group_nwk_config  NWK layer configurations
  * All nwk layer configuration Macros are defined in this module
  * @{
@@ -86,7 +81,7 @@
 #endif
 
 #define NUMBER_OF_NWK_TIMERS            1 + NUMBER_OF_CH_AG_TIMERS + \
-                                        NUMBER_OF_PROFILE_TIMERS + PBP_TIMER
+	NUMBER_OF_PROFILE_TIMERS + PBP_TIMER
 #if (HIGHEST_STACK_LAYER == RF4CE)
 #define NUMBER_OF_LARGE_STACK_BUFS              (5)
 
@@ -94,27 +89,29 @@
 #endif
 #if (HIGHEST_STACK_LAYER == RF4CE)
 
-
 /* Reduce the header file dependency by using hard-coded values */
 #if (MEGA || XMEGA)
-#define MCPS_DATA_IND_SIZE  (32)        /* Size of mcps_data_ind_t w/o MAC security */
+#define MCPS_DATA_IND_SIZE  (32)        /* Size of mcps_data_ind_t w/o MAC
+	                                 *security */
 #define LARGE_BUFFER_SIZE           (MCPS_DATA_IND_SIZE + \
-                                     aMaxMACPayloadSize + \
-                                     FCS_LEN + \
-                                     LQI_LEN + ED_VAL_LEN)
+	aMaxMACPayloadSize + \
+	FCS_LEN + \
+	LQI_LEN + ED_VAL_LEN)
 #elif (UC3)
-// The discovery confirm message needs to be held by the buffer; its size is 180.
+/* The discovery confirm message needs to be held by the buffer; its size is
+ * 180. */
 #define LARGE_BUFFER_SIZE            180
 #elif (SAM)
-// The discovery confirm message needs to be held by the buffer; its size is 180.
+/* The discovery confirm message needs to be held by the buffer; its size is
+ * 180. */
 #define LARGE_BUFFER_SIZE            176
 #else
 #error "Unknown platform type"
 #endif
 #endif  /*#if (HIGHEST_STACK_LAYER == RF4CE)  */
 
-
 #ifdef ENABLE_QUEUE_CAPACITY
+
 /**
  * Macro configuring the queue capacities.
  */
@@ -128,13 +125,10 @@
 #define NWKC_VENDOR_IDENTIFIER           (0x1014)
 #define NWKC_VENDOR_STRING               "ATMEL  "          /* 7 characters ! */
 
-
-
 /* === Externals ============================================================ */
 
-
 /* === Prototypes =========================================================== */
-//! @}
+/* ! @} */
 #ifdef __cplusplus
 extern "C" {
 #endif
