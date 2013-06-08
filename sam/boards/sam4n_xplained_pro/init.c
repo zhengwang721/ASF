@@ -133,7 +133,7 @@ void board_init(void)
 	ioport_set_pin_peripheral_mode(PIN_USART0_SCK_IDX, PIN_USART0_SCK_FLAGS);
 #endif
 
-#ifdef CONF_BOARD_TWI0
+#if defined(CONF_BOARD_TWI0) || defined(CONF_BOARD_AT30TSE)
 	ioport_set_pin_peripheral_mode(TWI0_DATA_GPIO, TWI0_DATA_FLAGS);
 	ioport_set_pin_peripheral_mode(TWI0_CLK_GPIO, TWI0_CLK_FLAGS);
 #endif
