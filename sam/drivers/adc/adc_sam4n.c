@@ -126,7 +126,7 @@ void adc_temp_sensor_set_config(Adc *const adc,
  * - 10-bit resolution
  * - ADC clock frequency is 6MHz
  * - Start Up Time is 64 periods ADC clock
- * - Tracking Time is 3 periods of AFEC clock
+ * - Tracking Time is 3 periods of ADC clock
  * - Transfer Period field shall be programmed with 2 as datasheet said
  * - The controller converts channels in a simple numeric order
  * - Appends the channel number to the conversion result in ADC_LCDR register

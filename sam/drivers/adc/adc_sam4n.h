@@ -581,4 +581,74 @@ static inline void adc_ref_vol_sel(Adc *const adc,
 	}
 }
 
+/**
+ * \page sam4n_adc_quickstart Quickstart guide for SAM4N ADC driver
+ *
+ * This is the quickstart guide for the \ref sam4n_drivers_adc_group
+ * "SAM4N ADC driver" with step-by-step instructions on how to configure and use
+ * the driver in a selection of use cases.
+ *
+ * The use cases contain several code fragments. The code fragments in the
+ * steps for setup can be copied into a custom initialization function, while
+ * the steps for usage can be copied into, e.g., the main application function.
+ *
+ * \section adc_basic_use_case Basic use case
+ * In this basic use case, the ADC module and single channel are configured for:
+ * - 10 -bit resolution
+ * - ADC clock frequency is 6MHz
+ * - Start Up Time is 64 periods ADC clock
+ * - Tracking Time is 3 periods of ADC clock
+ * - Transfer Period field shall be programmed with 2 as datasheet said
+ * - The controller converts channels in a simple numeric order
+ * - Appends the channel number to the conversion result in AFE_LDCR register
+ * - Single Trigger is optional to get an averaged value
+ * - Software triggering of conversions
+ * - Single channel measurement
+ * - ADC_CHANNEL_11 of ADC as input
+ *
+ * \subsection sam4n_adc_quickstart_prereq Prerequisites
+ * -# \ref sysclk_group "System Clock Management (Sysclock)"
+ *
+ * \section adc_basic_use_case_setup Setup steps
+ * \subsection adc_basic_use_case_setup_code Example code
+ * Add to application C-file:
+ * \code
+ *  adc_enable();
+ *  adc_get_config_defaults(&adc_cfg);
+ *  adc_init(ADC, &adc_cfg);
+ *  adc_set_trigger(ADC, ADC_TRIG_SW);
+ *  adc_channel_enable(ADC, ADC_CHANNEL_11);
+ * \endcode
+ *
+ * \subsection adc_basic_use_case_setup_flow Workflow
+ * -# Enable ADC Module:
+ *   - \code adc_enable(); \endcode
+ * -# Get the ADC default configurations:
+ *   - \code adc_get_config_defaults(&adc_cfg); \endcode
+ * -# Initialize the ADC Module:
+ *   - \code adc_init(ADC, &adc_cfg); \endcode
+ * -# Configure conversion trigger and free run mode:
+ *   - \code adc_set_trigger(ADC, ADC_TRIG_SW); \endcode
+ * -# Enable Channel:
+ *   - \code adc_channel_enable(ADC, ADC_CHANNEL_11); \endcode
+ *
+ * \section adc_basic_use_case_usage Usage steps
+ * \subsection adc_basic_use_case_usage_code Example code
+ * Add to, e.g., main loop in application C-file:
+ * \code
+ *  adc_start_software_conversion(ADC);
+ *  while (adc_get_interrupt_status(ADC) & (1 << ADC_CHANNEL_11));
+ *  uint32_t result = adc_channel_get_value(ADC, ADC_CHANNEL_11);
+ * \endcode
+ *
+ * \subsection adc_basic_use_case_usage_flow Workflow
+ * -# Start ADC conversion on channel:
+ *   - \code adc_start_software_conversion(ADC); \endcode
+ * -# Wait for the conversion over:
+ *   - \code while (adc_get_interrupt_status(ADC) & (1 << ADC_CHANNEL_11));
+ *     \endcode
+ * -# Get the conversion result:
+ *   - \code uint32_t result = adc_channel_get_value(ADC, ADC_CHANNEL_11);
+ *     \endcode
+ */
 #endif /* ADC_SAM4N_H_INCLUDED */
