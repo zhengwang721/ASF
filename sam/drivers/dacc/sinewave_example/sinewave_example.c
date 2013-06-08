@@ -289,7 +289,7 @@ static void display_menu(void)
 void SysTick_Handler(void)
 {
 	uint32_t status;
-	uint32_t dac_val;
+	//uint32_t dac_val;
 
 	status = dacc_get_interrupt_status(DACC_BASE);
 
@@ -310,6 +310,16 @@ void SysTick_Handler(void)
   
         
 }
+void DACC_Handler(void)
+{
+    uint32_t status;
+    status = dacc_get_interrupt_status(DACC_BASE);
+    /* If ready for new data */
+    if ((status & DACC_ISR_TXRDY) == DACC_ISR_TXRDY) {
+      status += 1;
+    }
+}
+
 
 /**
  *  \brief DAC Sinewave application entry point.
@@ -351,7 +361,9 @@ int main(void)
 	 * internal trigger clock - 0x60 (96 clocks)
 	 */
 	//dacc_set_timing(DACC_BASE, 0x10, 0x60);
-        dacc_set_timing(DACC_BASE, 0x40, 0xE0);
+        dacc_set_timing(DACC_BASE, 0x20, 0xA0);
+        dacc_enable_interrupt(DACC,DACC_IER_TXRDY);
+        
         
 	/* Enable DAC */
 	dacc_enable(DACC_BASE);
@@ -383,7 +395,10 @@ int main(void)
 
 	SysTick_Config(sysclk_get_cpu_hz() / (g_ul_frequency * SAMPLES));
   
-
+        
+        g_ul_frequency = sysclk_get_cpu_hz();
+      
+          
 	/* Main menu */
 	display_menu();
         
