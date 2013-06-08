@@ -44,8 +44,6 @@
 #ifndef CONF_EXAMPLE_H_INCLUDED
 #define CONF_EXAMPLE_H_INCLUDED
 
-#define LED0 LED_0_PIN
-
 /** Using button SW0 on SAM4L8 Xplained Pro to trigger an interrupt */
 #define EXAMPLE_BUTTON_INT    SW0_PIN
 
