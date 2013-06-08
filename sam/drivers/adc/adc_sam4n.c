@@ -47,6 +47,17 @@
 #include "sysclk.h"
 #include "pmc.h"
 
+/**
+ * \defgroup sam4n_drivers_adc_group Analog-to-Digital Controller
+ *
+ * See \ref sam4n_adc_quickstart.
+ *
+ * Driver for the Analog-to-Digital Controller. This driver provides access to
+ * the main features of the ADC controller.
+ *
+ * @{
+ */
+
 /* The number of channel in channel sequence1 register */
 #define ADC_SEQ1_CHANNEL_NUM                (8UL)
 
@@ -439,4 +450,4 @@ void adc_configure_sequence(Adc *const adc,
 	}
 }
 
-/* @} */
+//@}
