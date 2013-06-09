@@ -78,22 +78,24 @@
 
 //#define  AVR32_USBC_TST     // AVR32 MCU with USBC interface
 //#define  SAMX_UOTGHS_TST    // SAM MCU with UOTGHS interface
-#define  SAM4L_USBC_TST     // SAM4L MCU with USBC interface
+//#define  SAM4L_USBC_TST     // SAM4L MCU with USBC interface
 
 #ifdef AVR32_USBC_TST
 #  define TST_15_DIS
 #  define TST_18_DIS
-#  define TST_DETACH_DELAY 200
 #endif
 #ifdef SAMX_UOTGHS_TST
 #  define TST_15_DIS
-#  define TST_DETACH_DELAY 200
 #endif
 #ifdef SAM4L_USBC_TST
 #  define TST_15_DIS
-#  define TST_DETACH_DELAY 800 // Delay more since clock slow
 #endif
 
+#ifdef SAM4L_USBC_TST
+#  define TST_DETACH_DELAY 800 // Delay more since clock slow
+#else
+#  define TST_DETACH_DELAY 200
+#endif
 
 #define  USB_DEVICE_VENDOR_ID             USB_VID_ATMEL
 #define  USB_DEVICE_PRODUCT_ID            USB_PID_ATMEL_ASF_HIDMOUSE
