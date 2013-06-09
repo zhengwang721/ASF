@@ -108,6 +108,7 @@
 #include "conf_clock.h"
 #include "conf_dacc_sinewave_example.h"
 
+
 //! Analog control value
 #define DACC_ANALOG_CONTROL (DACC_ACR_IBCTLCH0(0x02) \
 						  | DACC_ACR_IBCTLCH1(0x02) \
@@ -336,10 +337,10 @@ int main(void)
 
 	/* Reset DACC registers */
 	dacc_reset(DACC_BASE);
-	
+
 	/* Half word transfer mode */
 	dacc_set_transfer_mode(DACC_BASE, 0);
-	
+
 	/* Initialize timing, amplitude and frequency */
 #if (SAM3N) || (SAM4L) || (SAM4N)
 	/* Timing:
@@ -347,7 +348,7 @@ int main(void)
 	 * internal trigger clock - 0x60 (96 clocks)
 	 */
 	dacc_set_timing(DACC_BASE, 0x10, 0x60);
-	
+
 	/* Enable DAC */
 	dacc_enable(DACC_BASE);
 #else
@@ -377,13 +378,11 @@ int main(void)
 	g_ul_frequency = DEFAULT_FREQUENCY;
 
 	SysTick_Config(sysclk_get_cpu_hz() / (g_ul_frequency * SAMPLES));
-          
+
 	/* Main menu */
 	display_menu();
-        
-        
+
 	while (1) {
-          
 		usart_serial_getchar((Usart *)CONSOLE_UART, &uc_key);
 
 		switch (uc_key) {
