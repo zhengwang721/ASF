@@ -71,7 +71,6 @@ typedef enum dacc_rc {
 #define DACC_MAX_DATA       ((1 << DACC_RESOLUTION) - 1)
 
 #if SAM4N
-//! ADC patch for Dacc of SAM4N
 #define ADC_PATCH_DACC_ENABLE
 #endif
 
