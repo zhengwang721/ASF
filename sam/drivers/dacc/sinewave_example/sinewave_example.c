@@ -108,7 +108,6 @@
 #include "conf_clock.h"
 #include "conf_dacc_sinewave_example.h"
 
-
 //! Analog control value
 #define DACC_ANALOG_CONTROL (DACC_ACR_IBCTLCH0(0x02) \
 						  | DACC_ACR_IBCTLCH1(0x02) \
@@ -289,38 +288,24 @@ static void display_menu(void)
 void SysTick_Handler(void)
 {
 	uint32_t status;
-	//uint32_t dac_val;
+	uint32_t dac_val;
 
 	status = dacc_get_interrupt_status(DACC_BASE);
 
 	/* If ready for new data */
 	if ((status & DACC_ISR_TXRDY) == DACC_ISR_TXRDY) {
-//		g_ul_index_sample++;
-//		if (g_ul_index_sample >= SAMPLES) {
-//			g_ul_index_sample = 0;
-//		}
-//		dac_val = g_uc_wave_sel ?
-//				((g_ul_index_sample > SAMPLES / 2) ? 0 : MAX_AMPLITUDE)
-//				: wave_to_dacc(gc_us_sine_data[g_ul_index_sample],
-//					 g_l_amplitude,
-//					 MAX_DIGITAL * 2, MAX_AMPLITUDE);
-//		dacc_write_conversion_data(DACC_BASE, dac_val);
-                DACC->DACC_CDR = 340;
+		g_ul_index_sample++;
+		if (g_ul_index_sample >= SAMPLES) {
+			g_ul_index_sample = 0;
+		}
+		dac_val = g_uc_wave_sel ?
+				((g_ul_index_sample > SAMPLES / 2) ? 0 : MAX_AMPLITUDE)
+				: wave_to_dacc(gc_us_sine_data[g_ul_index_sample],
+					 g_l_amplitude,
+					 MAX_DIGITAL * 2, MAX_AMPLITUDE);
+		dacc_write_conversion_data(DACC_BASE, dac_val);
 	}
-  
-        
 }
-
-//void DACC_Handler(void)
-//{
-//    uint32_t status;
-//    status = dacc_get_interrupt_status(DACC_BASE);
-//    /* If ready for new data */
-//    if ((status & DACC_ISR_TXRDY) == DACC_ISR_TXRDY) {
-//      status += 1;
-//    }
-//}
-
 
 /**
  *  \brief DAC Sinewave application entry point.
@@ -351,21 +336,18 @@ int main(void)
 
 	/* Reset DACC registers */
 	dacc_reset(DACC_BASE);
-
+	
 	/* Half word transfer mode */
 	dacc_set_transfer_mode(DACC_BASE, 0);
-
+	
 	/* Initialize timing, amplitude and frequency */
 #if (SAM3N) || (SAM4L) || (SAM4N)
 	/* Timing:
 	 * startup                - 0x10 (17 clocks)
 	 * internal trigger clock - 0x60 (96 clocks)
 	 */
-	//dacc_set_timing(DACC_BASE, 0x10, 0x60);
-        dacc_set_timing(DACC_BASE, 0x10, 0x60);
-//        dacc_enable_interrupt(DACC,DACC_IER_TXRDY);
-        
-        
+	dacc_set_timing(DACC_BASE, 0x10, 0x60);
+	
 	/* Enable DAC */
 	dacc_enable(DACC_BASE);
 #else
@@ -395,10 +377,6 @@ int main(void)
 	g_ul_frequency = DEFAULT_FREQUENCY;
 
 	SysTick_Config(sysclk_get_cpu_hz() / (g_ul_frequency * SAMPLES));
-  
-        
-        g_ul_frequency = sysclk_get_cpu_hz();
-      
           
 	/* Main menu */
 	display_menu();
