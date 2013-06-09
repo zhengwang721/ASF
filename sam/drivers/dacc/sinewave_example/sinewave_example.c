@@ -310,15 +310,16 @@ void SysTick_Handler(void)
   
         
 }
-void DACC_Handler(void)
-{
-    uint32_t status;
-    status = dacc_get_interrupt_status(DACC_BASE);
-    /* If ready for new data */
-    if ((status & DACC_ISR_TXRDY) == DACC_ISR_TXRDY) {
-      status += 1;
-    }
-}
+
+//void DACC_Handler(void)
+//{
+//    uint32_t status;
+//    status = dacc_get_interrupt_status(DACC_BASE);
+//    /* If ready for new data */
+//    if ((status & DACC_ISR_TXRDY) == DACC_ISR_TXRDY) {
+//      status += 1;
+//    }
+//}
 
 
 /**
@@ -361,8 +362,8 @@ int main(void)
 	 * internal trigger clock - 0x60 (96 clocks)
 	 */
 	//dacc_set_timing(DACC_BASE, 0x10, 0x60);
-        dacc_set_timing(DACC_BASE, 0x20, 0xA0);
-        dacc_enable_interrupt(DACC,DACC_IER_TXRDY);
+        dacc_set_timing(DACC_BASE, 0x10, 0x60);
+//        dacc_enable_interrupt(DACC,DACC_IER_TXRDY);
         
         
 	/* Enable DAC */
