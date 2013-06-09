@@ -225,6 +225,12 @@ int main(void)
 		ast_enable_interrupt(AST, AST_INTERRUPT_ALARM);
 
 		printf("\r\n--Enter low power mode.\r\n");
+		/* 
+		 * Wait for the printf operation to finish before setting the
+		 * device in a power save mode.
+		 */
+		delay_ms(30);
+
 		/* Go into selected low power mode. */
 		bpm_sleep(BPM, key);
 		while (flag == false);
