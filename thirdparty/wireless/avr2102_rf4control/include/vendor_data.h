@@ -1,7 +1,8 @@
 /**
  * @file vendor_data.h
  *
- * @brief Declarations of API functions to access vendor specific data functionality
+ * @brief Declarations of API functions to access vendor specific data
+ *functionality
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -43,7 +44,6 @@
 
 #if ((defined VENDOR_DATA) || (defined DOXYGEN))
 
-
 /* Prevent double inclusion */
 #ifndef VENDOR_DATA_H
 #define VENDOR_DATA_H
@@ -58,7 +58,7 @@
 /* === MACROS ============================================================== */
 
 /** The maximum size of a vendor-specific data frame; i.e. maximum MSDU - header
-   and footer overhead: aMxMACSafePayloadSize - 12 */
+ * and footer overhead: aMxMACSafePayloadSize - 12 */
 #define MAX_NWK_VENDOR_DATA_SIZE    90
 
 #define APPLICATION_SEND_COORDINATES_TIME          200000
@@ -68,52 +68,48 @@
 /**
  * Enum Ids for vendor-specific commands
  */
-typedef enum vendor_cmd_id_tag
-{
-    BATTERY_STATUS_REQ,
-    BATTERY_STATUS_RESP,
-    ALIVE_REQ,
-    ALIVE_RESP,
-    FW_VERSION_REQ,
-    FW_VERSION_RESP,
-    RX_ON_REQ,
-    RX_ON_RESP,
-    FW_DATA_REQ,
-    FW_DATA_RESP,
-    FW_SWAP_REQ,
-    FW_SWAP_RESP
+typedef enum vendor_cmd_id_tag {
+	BATTERY_STATUS_REQ,
+	BATTERY_STATUS_RESP,
+	ALIVE_REQ,
+	ALIVE_RESP,
+	FW_VERSION_REQ,
+	FW_VERSION_RESP,
+	RX_ON_REQ,
+	RX_ON_RESP,
+	FW_DATA_REQ,
+	FW_DATA_RESP,
+	FW_SWAP_REQ,
+	FW_SWAP_RESP
 #ifdef ADC_ACCELEROMETER
-    ,
-    ACC_ENABLE_REQ,
-    ACC_DISABLE_IND,
-    ACC_POSITION
+	,
+	ACC_ENABLE_REQ,
+	ACC_DISABLE_IND,
+	ACC_POSITION
 #endif  /* ADC_ACCELEROMETER */
 } SHORTENUM vendor_cmd_id_t;
 
 /**
  * Structure handling firmware data frames
  */
-typedef struct fw_data_frame_tag
-{
-    vendor_cmd_id_t cmd_id; /**< vendor command id */
-    uint16_t frame_cnt; /**< firmware image frame counter */
-    uint16_t total_num_frames; /**< total number of frames used for image */
-    uint8_t fw_data[0]; /**< actual image data */
+typedef struct fw_data_frame_tag {
+	vendor_cmd_id_t cmd_id; /**< vendor command id */
+	uint16_t frame_cnt; /**< firmware image frame counter */
+	uint16_t total_num_frames; /**< total number of frames used for image */
+	uint8_t fw_data[0]; /**< actual image data */
 } fw_data_frame_t;
 
 /**
  * Enum Ids for vendor status code
  */
-typedef enum vendor_status_tag
-{
-    VD_SUCCESS,
-    VD_NOT_SUPPORTED_ATTRIBUTE,
-    VD_UNSUPPORTED_SIZE,
-    VD_INVALID_CHECKSUM
+typedef enum vendor_status_tag {
+	VD_SUCCESS,
+	VD_NOT_SUPPORTED_ATTRIBUTE,
+	VD_UNSUPPORTED_SIZE,
+	VD_INVALID_CHECKSUM
 } SHORTENUM vendor_status_t;
 
 /* === IMPLEMENTATION ====================================================== */
-
 
 /**
  * @brief Vendor data request
@@ -132,15 +128,14 @@ typedef enum vendor_status_tag
  * @ingroup group_RF4CONTROL_ZRC_API
  */
 bool vendor_data_request(uint8_t PairingRef, profile_id_t ProfileId,
-                         uint16_t VendorId, uint8_t nsduLength, uint8_t *nsdu,
-                         uint8_t TxOptions);
-
-
+		uint16_t VendorId, uint8_t nsduLength, uint8_t *nsdu,
+		uint8_t TxOptions);
 
 /**
  * @brief Vendor data alive request
  *
- * Hook for the application indicating that an alive request command was received.
+ * Hook for the application indicating that an alive request command was
+ *received.
  *
  * @ingroup group_RF4CONTROL_ZRC_API
  */

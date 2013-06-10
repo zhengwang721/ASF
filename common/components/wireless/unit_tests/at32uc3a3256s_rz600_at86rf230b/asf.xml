@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project type="unit-test" caption="AT86RF230b Wireless Module unit tests for RZ600" id="common.components.wireless.unit_tests.rz600.at86rf230b">
+	<project type="unit-test" caption="Unit Tests for the UC3 AT86RF230B-RZ600" id="common.components.wireless.unit_tests.rz600.at86rf230b" force-caption="true" force-description="true">
 		<build type="header-file" value="conf_at86rfx.h"/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clock.h"/>

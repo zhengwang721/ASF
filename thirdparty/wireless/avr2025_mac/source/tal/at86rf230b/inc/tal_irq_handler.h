@@ -39,6 +39,7 @@
  *
  * \asf_license_stop
  */
+
 /*
  * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
@@ -51,15 +52,11 @@
 
 /* === INCLUDES ============================================================ */
 
-
 /* === EXTERNALS =========================================================== */
-
 
 /* === TYPES =============================================================== */
 
-
 /* === MACROS ============================================================== */
-
 
 /* === PROTOTYPES ========================================================== */
 
@@ -67,19 +64,17 @@
 extern "C" {
 #endif
 
-    /**
-     * \brief Transceiver interrupt handler
-     *
-     * This function handles the transceiver generated interrupts.
-     * \ingroup group_tal_irq_230b
-     */
-    void trx_irq_handler_cb(void);
-
+/**
+ * \brief Transceiver interrupt handler
+ *
+ * This function handles the transceiver generated interrupts.
+ * \ingroup group_tal_irq_230b
+ */
+void trx_irq_handler_cb(void);
 
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
-
 
 #endif /* TAL_IRQ_HANDLER_H */
 

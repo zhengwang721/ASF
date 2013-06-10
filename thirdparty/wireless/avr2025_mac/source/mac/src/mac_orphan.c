@@ -41,7 +41,6 @@
  *
  */
 
-
 /*
  * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
@@ -70,16 +69,14 @@
 
 /* === Macros  ============================================================= */
 
-
 /* === Globals ============================================================= */
 
-
 /* === Prototypes ========================================================== */
-
 
 /* === Implementation ====================================================== */
 
 #if (MAC_ORPHAN_INDICATION_RESPONSE == 1)
+
 /**
  * @brief Handles an orphan notification
  *
@@ -91,19 +88,20 @@
  */
 void mac_process_orphan_notification(buffer_t *msg)
 {
-    mlme_orphan_ind_t *moi = (mlme_orphan_ind_t *)BMM_BUFFER_POINTER(msg);
+	mlme_orphan_ind_t *moi = (mlme_orphan_ind_t *)BMM_BUFFER_POINTER(msg);
 
-    moi->cmdcode = MLME_ORPHAN_INDICATION;
-    ADDR_COPY_DST_SRC_64(moi->OrphanAddress, mac_parse_data.src_addr.long_address);
+	moi->cmdcode = MLME_ORPHAN_INDICATION;
+	ADDR_COPY_DST_SRC_64(moi->OrphanAddress,
+			mac_parse_data.src_addr.long_address);
 
-    /* Append the MLME orphan indication message to MAC-NHLE queue */
-    qmm_queue_append(&mac_nhle_q, msg);
+	/* Append the MLME orphan indication message to MAC-NHLE queue */
+	qmm_queue_append(&mac_nhle_q, msg);
 }
+
 #endif /* MAC_ORPHAN_INDICATION_RESPONSE */
 
-
-
 #if (MAC_ORPHAN_INDICATION_RESPONSE == 1)
+
 /**
  * @brief Implements the MLME-ORPHAN.response
  *
@@ -118,18 +116,19 @@ void mac_process_orphan_notification(buffer_t *msg)
  */
 void mlme_orphan_response(uint8_t *m)
 {
-    bool transmission_status = mac_tx_coord_realignment_command(ORPHANREALIGNMENT,
-                                                           (buffer_t *)m,
-                                                           tal_pib.PANId,
-                                                           tal_pib.CurrentChannel,
-                                                           tal_pib.CurrentPage);
+	bool transmission_status = mac_tx_coord_realignment_command(
+			ORPHANREALIGNMENT,
+			(buffer_t *)m,
+			tal_pib.PANId,
+			tal_pib.CurrentChannel,
+			tal_pib.CurrentPage);
 
-    if (!transmission_status)
-    {
-        mac_mlme_comm_status(MAC_CHANNEL_ACCESS_FAILURE,
-                             (buffer_t *)m);
-    }
+	if (!transmission_status) {
+		mac_mlme_comm_status(MAC_CHANNEL_ACCESS_FAILURE,
+				(buffer_t *)m);
+	}
 }
+
 #endif /* MAC_ORPHAN_INDICATION_RESPONSE */
 
 /* EOF */

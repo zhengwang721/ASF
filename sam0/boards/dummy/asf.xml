@@ -1,0 +1,16 @@
+<asf xmlversion="1.0">
+	<board id="board.dummy.samd20" vendor="Atmel" caption="Dummy board support / ATSAMD20">
+		<build type="define" name="BOARD" value="DUMMY_BOARD"/>
+		<build type="header-file" value="dummy_board.h"/>
+		<build type="include-path" value="."/>
+		<build type="include-path" value=".."/>
+		<build type="macro-config" subtype="script" value="debug_scripts/gcc/dummy_flash.gdb" toolchain="armgcc"/>
+		<build type="macro-config" subtype="aux-script" value="debug_scripts/gcc/dummy_sram.gdb" toolchain="armgcc"/>
+		<build type="macro-config" subtype="script" value="debug_scripts/iar/dummy_flash.mac" toolchain="iarewarm"/>
+		<build type="macro-config" subtype="aux-script" value="debug_scripts/iar/dummy_sram.mac" toolchain="iarewarm"/>
+		<require idref="sam0.utils.cmsis.samd20.source.template"/>
+		<require idref="common.boards"/>
+		<build type="define" name="__SAMD20J18__" value=""/>
+		<device-support value="atsamd20j18"/>
+	</board>
+</asf>
