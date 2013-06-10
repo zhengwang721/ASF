@@ -381,6 +381,10 @@ struct usart_config {
 	enum usart_signal_mux_settings mux_setting;
 	/** USART baud rate */
 	uint32_t baudrate;
+	/** Enable receiver */
+	bool receiver_enable;
+	/** Enable transmitter */
+	bool transmitter_enable;
 
 	/** USART Clock Polarity.
 	 * If true, data changes on falling XCK edge and
@@ -435,6 +439,10 @@ struct usart_module {
 	Sercom *hw;
 	/** Character size of the data being transferred */
 	enum usart_character_size character_size;
+	/** Receiver enabled */
+	bool receiver_enabled;
+	/** Transmitter enabled */
+	bool transmitter_enabled;
 #  if USART_CALLBACK_MODE == true
 	/** Array to store callback function pointers in */
 	usart_callback_t callback[USART_CALLBACK_N];
@@ -517,6 +525,8 @@ static inline bool usart_is_syncing(
  * - No parity
  * - 1 stop bit
  * - 9600 baud
+ * - Transmitter enabled
+ * - Receiver enabled
  * - GCLK generator 0 as clock source
  * - Default pin configuration
  *
@@ -538,6 +548,8 @@ static inline void usart_get_config_defaults(
 	config->stopbits         = USART_STOPBITS_1;
 	config->character_size   = USART_CHARACTER_SIZE_8BIT;
 	config->baudrate         = 9600;
+	config->receiver_enable  = true;
+	config->transmitter_enable = true;
 	config->clock_polarity_inverted = false;
 	config->use_external_clock = false;
 	config->ext_clock_freq   = 0;
@@ -674,7 +686,7 @@ enum status_code usart_read_buffer_wait(
  * \param[in]  transceiver_type  Transceiver type.
  */
 static inline void usart_enable_transceiver(
-		const struct usart_module *const module,
+		struct usart_module *const module,
 		enum usart_transceiver_type transceiver_type)
 {
 	/* Sanity check arguments */
@@ -691,11 +703,13 @@ static inline void usart_enable_transceiver(
 		case USART_TRANSCEIVER_RX:
 			/* Enable RX */
 			usart_hw->CTRLB.reg |= SERCOM_USART_CTRLB_RXEN;
+			module->receiver_enabled = true;
 			break;
 
 		case USART_TRANSCEIVER_TX:
 			/* Enable TX */
 			usart_hw->CTRLB.reg |= SERCOM_USART_CTRLB_TXEN;
+			module->transmitter_enabled = true;
 			break;
 	}
 }
@@ -709,7 +723,7 @@ static inline void usart_enable_transceiver(
  * \param[in]  transceiver_type  Transceiver type.
  */
 static inline void usart_disable_transceiver(
-		const struct usart_module *const module,
+		struct usart_module *const module,
 		enum usart_transceiver_type transceiver_type)
 {
 	/* Sanity check arguments */
@@ -726,11 +740,13 @@ static inline void usart_disable_transceiver(
 		case USART_TRANSCEIVER_RX:
 			/* Disable RX */
 			usart_hw->CTRLB.reg &= ~SERCOM_USART_CTRLB_RXEN;
+			module->receiver_enabled = false;
 			break;
 
 		case USART_TRANSCEIVER_TX:
 			/* Disable TX */
 			usart_hw->CTRLB.reg &= ~SERCOM_USART_CTRLB_TXEN;
+			module->transmitter_enabled = false;
 			break;
 	}
 }
