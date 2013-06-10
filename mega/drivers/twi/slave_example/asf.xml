@@ -4,7 +4,7 @@
 		TWI as Slave for megaRF
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="TWI_SLAVE"/>
+			<keyword value="Communication"/>
 		</info>
 		<build type="c-source" value="twi_slave_example.c"/>
 		<build type="module-config" subtype="required-header-file" value="conf_twi.h"/>

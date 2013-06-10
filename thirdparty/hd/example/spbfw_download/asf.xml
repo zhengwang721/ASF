@@ -19,10 +19,8 @@
 		<build type="include-path" value="flash_fw"/>
 		<build type="include-path" value="ports/avr32"/>
 		<build type="include-path" value="util"/>
-		<build type="header-file" value="../../v2.6/include/wl_api.h"/>
-		<build type="include-path" value="../../v2.6/include/"/>
-		<build type="header-file" value="../../wl_fw.h"/>
-		<build type="include-path" value="../.."/>
+		<require idref="avr32.components.wifi.hd"/>
+		<require idref="avr32.components.wifi.helper"/>
 		<device-support value="uc3a"/>
 		<device-support value="uc3a3_a4"/>
 		<device-support value="uc3b"/>

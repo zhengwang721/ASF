@@ -9,7 +9,7 @@
 # rebuilddoc              Rebuild the documentation
 #
 #
-# Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
+# Copyright (c) 2009 - 2013 Atmel Corporation. All rights reserved.
 #
 # \asf_license_start
 #
@@ -118,7 +118,7 @@ AS              := $(CROSS)as
 CC              := $(CROSS)gcc
 CPP             := $(CROSS)gcc -E
 CXX             := $(CROSS)g++
-LD              := $(CROSS)g++
+LD              := $(CROSS)gcc
 NM              := $(CROSS)nm
 OBJCOPY         := $(CROSS)objcopy
 OBJDUMP         := $(CROSS)objdump
@@ -129,6 +129,11 @@ ifeq ($(os),Windows)
 RMDIR           := rmdir /S /Q
 else
 RMDIR           := rmdir -p --ignore-fail-on-non-empty
+endif
+
+# On Windows, we need to override the shell to force the use of cmd.exe
+ifeq ($(os),Windows)
+SHELL           := cmd
 endif
 
 # Strings for beautifying output
@@ -354,7 +359,7 @@ objfiles: $(obj-y)
 $(build-dir)%.o: %.c $(MAKEFILE_PATH) config.mk
 	$(Q)test -d $(dir $@) || echo $(MSG_MKDIR)
 ifeq ($(os),Windows)
-	$(Q)test -d $(dir $@) || mkdir $(subst /,\,$(dir $@))
+	$(Q)test -d $(patsubst %/,%,$(dir $@)) || mkdir $(subst /,\,$(dir $@))
 else
 	$(Q)test -d $(dir $@) || mkdir -p $(dir $@)
 endif
@@ -365,7 +370,7 @@ endif
 $(build-dir)%.o: %.cpp $(MAKEFILE_PATH) config.mk
 	$(Q)test -d $(dir $@) || echo $(MSG_MKDIR)
 ifeq ($(os),Windows)
-	$(Q)test -d $(dir $@) || mkdir $(subst /,\,$(dir $@))
+	$(Q)test -d $(patsubst %/,%,$(dir $@)) || mkdir $(subst /,\,$(dir $@))
 else
 	$(Q)test -d $(dir $@) || mkdir -p $(dir $@)
 endif
@@ -376,7 +381,7 @@ endif
 $(build-dir)%.o: %.s $(MAKEFILE_PATH) config.mk
 	$(Q)test -d $(dir $@) || echo $(MSG_MKDIR)
 ifeq ($(os),Windows)
-	$(Q)test -d $(dir $@) || mkdir $(subst /,\,$(dir $@))
+	$(Q)test -d $(patsubst %/,%,$(dir $@)) || mkdir $(subst /,\,$(dir $@))
 else
 	$(Q)test -d $(dir $@) || mkdir -p $(dir $@)
 endif
@@ -387,7 +392,7 @@ endif
 $(build-dir)%.o: %.S $(MAKEFILE_PATH) config.mk
 	$(Q)test -d $(dir $@) || echo $(MSG_MKDIR)
 ifeq ($(os),Windows)
-	$(Q)test -d $(dir $@) || mkdir $(subst /,\,$(dir $@))
+	$(Q)test -d $(patsubst %/,%,$(dir $@)) || mkdir $(subst /,\,$(dir $@))
 else
 	$(Q)test -d $(dir $@) || mkdir -p $(dir $@)
 endif
@@ -410,7 +415,7 @@ ifeq ($(target_type),elf)
 # if the common Makefile.avr.in or project config.mk is changed.
 $(target): $(MAKEFILE_PATH) config.mk $(obj-y)
 	@echo $(MSG_LINKING)
-	$(Q)$(CC) $(l_flags) $(obj-y) $(libflags-gnu-y) -o $@
+	$(Q)$(LD) $(l_flags) $(obj-y) $(libflags-gnu-y) -o $@
 	@echo $(MSG_SIZE)
 	$(Q)$(SIZE) -Ax $@
 	$(Q)$(SIZE) -Bx $@

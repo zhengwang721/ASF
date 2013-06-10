@@ -49,7 +49,7 @@
 #  include "interrupt/interrupt_avr8.h"
 #elif UC3
 #  include "interrupt/interrupt_avr32.h"
-#elif SAM3S || SAM3N || SAM3XA || SAM3U || SAM4S || SAM4L || SAM4E
+#elif SAM3S || SAM3N || SAM3XA || SAM3U || SAM4S || SAM4L || SAM4E || SAMD20 || SAM
 #  include "interrupt/interrupt_sam_nvic.h"
 #else
 #  error Unsupported device.
@@ -69,7 +69,7 @@
  * \brief Force usage of the ASF INTC driver
  *
  * Predefine this symbol when preprocessing to force the use of the ASF INTC driver.
- * This is useful to ensure compatibilty accross compilers and shall be used only when required
+ * This is useful to ensure compatibility across compilers and shall be used only when required
  * by the application needs.
  */
 #  define CONFIG_INTERRUPT_FORCE_INTC

@@ -2,7 +2,7 @@
 	<module type="application" id="avr32.applications.scope-meter-and-filtering-demo" caption="UC3C Scope Meter And Filtering Application">
 		<info type="keyword" value="technology">
 			<keyword value="Communication"/>
-			<keyword value="Digital signal processing"/>
+			<keyword value="Digital Signal Processing"/>
 		</info>
 		<info type="description" value="summary">
 			This application is aimed to demonstrate the 32-bit AVR UC3 C series Filtering Capabilities.
