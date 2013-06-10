@@ -259,6 +259,27 @@ enum system_reset_cause {
 	SYSTEM_RESET_CAUSE_POR            = PM_RCAUSE_POR,
 };
 
+/**
+ * \name System identification
+ * @{
+ */
+
+/**
+ * \brief Retrieve the device identification signature
+ *
+ * Retrieves the signature of the current device.
+ *
+ * \return Device ID signature as a 32-bit integer.
+ */
+static inline uint32_t system_get_device_id(void)
+{
+	return DSU->DID.reg;
+}
+
+/**
+ * @}
+ */
+
 
 /**
  * \name Voltage references
@@ -268,9 +289,8 @@ enum system_reset_cause {
 /**
  * \brief Enable the selected voltage reference
  *
- * This function will enable the selected voltage reference, making the voltage
- * reference available on a pin as well as an input source to the analog
- * peripherals.
+ * Enables the selected voltage reference source, making the voltage reference
+ * available on a pin as well as an input source to the analog peripherals.
  *
  * \param[in] vref  Voltage reference to enable
  */
@@ -295,7 +315,7 @@ static inline void system_voltage_reference_enable(
 /**
  * \brief Disable the selected voltage reference
  *
- * This function will disable the selected voltage reference
+ * Disables the selected voltage reference source.
  *
  * \param[in] vref  Voltage reference to disable
  */
@@ -330,12 +350,11 @@ static inline void system_voltage_reference_disable(
 /**
  * \brief Set the sleep mode of the device
  *
- * This function will set the sleep mode of the device; the configured sleep
- * mode will be entered upon the next call of the \ref system_sleep()
- * function.
+ * Sets the sleep mode of the device; the configured sleep mode will be entered
+ * upon the next call of the \ref system_sleep() function.
  *
- * For an overview of what are being disabled in sleep for the different sleep
- * modes, see \ref asfdoc_samd20_system_module_overview_sleep_mode.
+ * For an overview of which systems are disabled in sleep for the different
+ * sleep modes, see \ref asfdoc_samd20_system_module_overview_sleep_mode.
  *
  * \param[in] sleep_mode  Sleep mode to configure for the next sleep operation
  *
@@ -368,10 +387,10 @@ static inline enum status_code system_set_sleepmode(
 /**
  * \brief Put the system to sleep waiting for interrupt
  *
- * This will execute a DSB (data synchronization barrier) intruction to ensure
- * all ongoing memory accesses have completed. Then the WFI (wait for interrupt)
- * instruction is executed, putting the device into the sleep mode specified
- * by \ref system_set_sleepmode and wait for an interrupt to wake up.
+ * Executes a device DSB (Data Synchronization Barrier) instruction to ensure
+ * all ongoing memory accesses have completed, then a WFI (Wait For Interrupt)
+ * instruction to place the device into the sleep mode specified by
+ * \ref system_set_sleepmode until woken by an interrupt.
  */
 static inline void system_sleep(void)
 {
@@ -392,7 +411,7 @@ static inline void system_sleep(void)
 /**
  * \brief Return the reset cause
  *
- * This function will return the cause of a system reset
+ * Retrieves the cause of the last system reset.
  *
  * \return An enum value indicating the cause of the last system reset.
  */
