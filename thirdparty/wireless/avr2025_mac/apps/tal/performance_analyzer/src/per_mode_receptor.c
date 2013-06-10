@@ -161,6 +161,7 @@ void per_mode_receptor_task(void)
                 (FUNC_PTR)marker_tx_timer_handler_cb,
                 NULL);      
         }
+
     
     }
 
@@ -574,6 +575,8 @@ void per_mode_receptor_rx_cb(frame_info_t *frame_info)
                 send_peer_info_rsp();
             }
             break;
+        default:
+            break;
     }
 }
 
@@ -806,7 +809,7 @@ static void identify_timer_handler_cb(void *parameter)
  */
 void marker_tx_timer_handler_cb(void *parameter)
 {
-        static uint8_t led_count;
+    static uint8_t led_count;
     parameter = parameter;
     /* LED Blinking sequence is completed */
     if (led_count > LED_BLINK_COUNT_FOR_BUTTON_PRESS)

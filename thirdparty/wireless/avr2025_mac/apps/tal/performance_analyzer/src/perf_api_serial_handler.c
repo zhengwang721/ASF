@@ -504,7 +504,7 @@ static inline void handle_incoming_msg(void)
 
             }
             break;
-       case IDENTIFY_PEER_NODE_REQ:/* 0x04 */
+       case IDENTIFY_PEER_NODE_REQ:/* 0x04  - Process Peer identification command*/
             {
                 /* Order of reception:
                    size;
@@ -1275,7 +1275,7 @@ void usr_range_test_beacon_rsp(uint8_t* mpdu,uint8_t lqi_h,int8_t ed_h,uint8_t l
     /* Copy Len, Protocol Id, Msg Id parameters */
     *msg_buf++ = PROTOCOL_ID_LEN + RANGE_TEST_RSP_PKT_LEN +(phy_frame_len-FCS_LEN+LENGTH_FIELD_LEN);
     *msg_buf++ = PROTOCOL_ID;
-    *msg_buf++ = RANGE_TEST_BEACON_RESPONSE_CONFIRM;
+    *msg_buf++ = RANGE_TEST_BEACON_RESPONSE;
     //send ota frame 
     for(uint8_t i=0;i<phy_frame_len-1;i++)
     {
