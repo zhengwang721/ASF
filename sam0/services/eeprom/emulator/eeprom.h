@@ -46,9 +46,9 @@
 /**
  * \defgroup asfdoc_samd20_eeprom_group SAM D20 EEPROM Emulator Service (EEPROM)
  *
- * This driver for SAM D20 devices provides an emulated EEPROM memory space,
- * for the storage and retrieval of configuration data into and out of
- * non-volatile memory.
+ * This driver for SAM D20 devices provides an emulated EEPROM memory space in
+ * the device's FLASH memory, for the storage and retrieval of user-application
+ * configuration data into and out of non-volatile memory.
  *
  * The following peripherals are used by this module:
  *
@@ -68,26 +68,43 @@
  * The SAM D20 device fuses must be configured via an external programmer or
  * debugger, so that an EEPROM section is allocated in the main NVM flash
  * memory contents. If a NVM section is not allocated for the EEPROM emulator,
- * the module will fail to initialize.
+ * or if insufficient space for the emulator is reserved, the module will fail
+ * to initialize.
  *
  *
  * \section asfdoc_samd20_eeprom_module_overview Module Overview
  *
- * This module provides an EEPROM emulation layer on top of the device's raw
- * NVM controller, to provide a standard interface for the reading and writing
- * of non-volatile configuration data.
+ * As the SAM D20 devices do not contain any physical EEPROM memory, the storage
+ * of non-volatile user data is instead emulated using a special section of the
+ * device's main FLASH memory in lieu of EEPROM. The use of FLASH over EEPROM
+ * presents several difficulties over true EEPROM memory; data must be written
+ * as a number of physical memory pages (of several bytes each) rather than
+ * being individually byte addressable, and entire rows of FLASH must be erased
+ * before new data may be stored. To help abstract these characteristics away
+ * from the user application an emulation scheme is implemented to present a
+ * more user-friendly API for data storage and retrieval.
  *
- * A basic wear-leveling algorithm is implemented to automatically handle the
- * transferral of data across flash rows to ensure that repeated writes to
- * locations in the same logical EEPROM page do not exhaust the physical memory
- * write cycle lifespan.
+ * This module provides an EEPROM emulation layer on top of the device's
+ * internal NVM controller, to provide a standard interface for the reading and
+ * writing of non-volatile configuration data. This data is placed into the
+ * EEPROM emulated section of the device's main FLASH memory storage section,
+ * the size of which is configured using the device's fuses. Emulated EEPROM is
+ * exempt from the usual device NVM region lock bits, so that it may be read
+ * from or written to at any point in the user application.
+ *
+ * There are many different algorithms that may be employed for EEPROM emulation
+ * using FLASH memory, to tune the write and read latencies, RAM usage, wear
+ * leveling and other characteristics. As a result, multiple different emulator
+ * schemes may be implemented, so that the most appropriate scheme for a
+ * specific application's requirements may be used.
  *
  * \subsection asfdoc_samd20_eeprom_module_overview_implementation Implementation Details
- * The following information is relevant for EEPROM emulator scheme 1, version
- * 1.0.0 as implemented by this module. Other revisions or emulation schemes may
- * vary in their implementation details.
+ * The following information is relevant for <b>EEPROM Emulator scheme 1,
+ * version 1.0.0</b>, as implemented by this module. Other revisions or
+ * emulation schemes may vary in their implementation details and may have
+ * different wear-leveling, latency and other characteristics.
  *
- * The SAM D20 non-volatile FLASH is divided into a number of rows, each
+ * The SAM D20 non-volatile FLASH is divided into a number of physical rows, each
  * containing four identically sized flash pages. Pages may be read or written
  * to individually, however pages must be erased before being reprogrammed and
  * the smallest granularity available for erasure is one single row.
@@ -96,12 +113,13 @@
  * handle the versioning and moving of page data to different physical rows as
  * needed, erasing old rows ready for re-use by future page write operations.
  *
- * \subsubsection asfdoc_samd20_eeprom_module_overview_implementation_mp Master Page
+ * \subsubsection asfdoc_samd20_eeprom_module_overview_implementation_mp Master Row
  * One row, at the end of the emulated EEPROM memory space, is reserved for
  * use by the emulator to store configuration data. This includes a magic
  * identifier to indicate an initialized emulated EEPROM memory, as well as
- * version information and other relevant data. The master page is not
- * user-accessible, and is reserved solely for internal use by the emulator.
+ * version information and other relevant data used by the emulator internally.
+ * The master row is not user-accessible, and is reserved solely for internal
+ * use by the emulator.
  *
  * \subsubsection asfdoc_samd20_eeprom_module_overview_implementation_sr Spare Row
  * As data needs to be preserved between row erasures, a spare row is tracked in
