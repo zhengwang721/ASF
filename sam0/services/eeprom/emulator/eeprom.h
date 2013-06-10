@@ -221,6 +221,13 @@
  * reducing the lifespan of the non-volatile memory.
  *
  * \subsection asfdoc_samd20_eeprom_special_considerations_memlayout Memory Layout
+ * A single logical EEPROM page is physically stored as the page contents and a
+ * header inside a single physical FLASH page, as shown in
+ * \ref asfdoc_samd20_eeprom_page_layout "the following figure".
+ *
+ * \anchor asfdoc_samd20_eeprom_page_layout
+ * \image html page_layout.svg "Internal layout of an emulated EEPROM page"
+ *
  * Within the EEPROM memory reservation section at the top of the NVM memory
  * space, this emulator will produce the layout as shown in
  * \ref asfdoc_samd20_eeprom_init_layout "the figure below" when initialized for
@@ -228,12 +235,6 @@
  *
  * \anchor asfdoc_samd20_eeprom_init_layout
  * \image html init_layout.svg "Initial physical layout of the emulated EEPROM memory"
- *
- * In the above figure, a single logical EEPROM page is represented by
- * \ref asfdoc_samd20_eeprom_page_layout "the following figure".
- *
- * \anchor asfdoc_samd20_eeprom_page_layout
- * \image html page_layout.svg "Internal layout of an emulated EEPROM page"
  *
  * When an EEPROM page needs to be committed to physical memory, the next free
  * FLASH page in the same row will be chosen - this makes recovery simple, as the
