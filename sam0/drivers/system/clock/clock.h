@@ -614,7 +614,7 @@ struct system_clock_source_dfll_config {
  *
  * \param[out] config  Configuration structure to fill with default values
  */
-static inline void system_clock_source_xosc_get_default_config(
+static inline void system_clock_source_xosc_get_config_defaults(
 		struct system_clock_source_xosc_config *const config)
 {
 	config->external_clock      = SYSTEM_CLOCK_EXTERNAL_CRYSTAL;
@@ -654,7 +654,7 @@ void system_clock_source_xosc_set_config(
  *
  * \param[out] config  Configuration structure to fill with default values
  */
-static inline void system_clock_source_xosc32k_get_default_config(
+static inline void system_clock_source_xosc32k_get_config_defaults(
 		struct system_clock_source_xosc32k_config *const config)
 {
 	config->external_clock      = SYSTEM_CLOCK_EXTERNAL_CRYSTAL;
@@ -691,7 +691,7 @@ void system_clock_source_xosc32k_set_config(
  *
  * \param[out] config  Configuration structure to fill with default values
  */
-static inline void system_clock_source_osc32k_get_default_config(
+static inline void system_clock_source_osc32k_get_config_defaults(
 		struct system_clock_source_osc32k_config *const config)
 {
 	config->enable_1khz_output  = true;
@@ -724,7 +724,7 @@ void system_clock_source_osc32k_set_config(
  *
  * \param[out] config  Configuration structure to fill with default values
  */
-static inline void system_clock_source_osc8m_get_default_config(
+static inline void system_clock_source_osc8m_get_config_defaults(
 		struct system_clock_source_osc8m_config *const config)
 {
 	config->prescaler = SYSTEM_OSC8M_DIV_8;
@@ -762,7 +762,7 @@ void system_clock_source_osc8m_set_config(
  *
  * \param[out] config  Configuration structure to fill with default values
  */
-static inline void system_clock_source_dfll_get_default_config(
+static inline void system_clock_source_dfll_get_config_defaults(
 		struct system_clock_source_dfll_config *const config)
 {
 	config->loop_mode       = SYSTEM_CLOCK_DFLL_LOOP_MODE_OPEN;

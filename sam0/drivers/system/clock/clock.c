@@ -604,7 +604,7 @@ void system_clock_init(void)
 	/* XOSC */
 #if CONF_CLOCK_XOSC_ENABLE == true
 	struct system_clock_source_xosc_config xosc_conf;
-	system_clock_source_xosc_get_default_config(&xosc_conf);
+	system_clock_source_xosc_get_config_defaults(&xosc_conf);
 
 	xosc_conf.external_clock       = CONF_CLOCK_XOSC_EXTERNAL_CRYSTAL;
 	xosc_conf.startup_time         = CONF_CLOCK_XOSC_STARTUP_TIME;
@@ -621,7 +621,7 @@ void system_clock_init(void)
 	/* XOSC32K */
 #if CONF_CLOCK_XOSC32K_ENABLE == true
 	struct system_clock_source_xosc32k_config xosc32k_conf;
-	system_clock_source_xosc32k_get_default_config(&xosc32k_conf);
+	system_clock_source_xosc32k_get_config_defaults(&xosc32k_conf);
 
 	xosc32k_conf.frequency             = 32768UL;
 	xosc32k_conf.external_clock        = CONF_CLOCK_XOSC32K_EXTERNAL_CRYSTAL;
@@ -640,7 +640,7 @@ void system_clock_init(void)
 	/* OSCK32K */
 #if CONF_CLOCK_OSC32K_ENABLE == true
 	struct system_clock_source_osc32k_config osc32k_conf;
-	system_clock_source_osc32k_get_default_config(&osc32k_conf);
+	system_clock_source_osc32k_get_config_defaults(&osc32k_conf);
 
 	osc32k_conf.startup_time        = CONF_CLOCK_OSC32K_STARTUP_TIME;
 	osc32k_conf.enable_1khz_output  = CONF_CLOCK_OSC32K_ENABLE_1KHZ_OUTPUT;
@@ -656,7 +656,7 @@ void system_clock_init(void)
 	/* DFLL (Open and Closed Loop) */
 #if CONF_CLOCK_DFLL_ENABLE == true
 	struct system_clock_source_dfll_config dfll_conf;
-	system_clock_source_dfll_get_default_config(&dfll_conf);
+	system_clock_source_dfll_get_config_defaults(&dfll_conf);
 
 	dfll_conf.loop_mode            = CONF_CLOCK_DFLL_LOOP_MODE;
 	dfll_conf.on_demand            = CONF_CLOCK_DFLL_ON_DEMAND;
@@ -699,12 +699,13 @@ void system_clock_init(void)
 	dfll_conf.fine_max_step   = CONF_CLOCK_DFLL_MAX_FINE_STEP_SIZE;
 
 	system_clock_source_dfll_set_config(&dfll_conf);
+	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_DFLL);
 #endif
 
 
 	/* OSC8M */
 	struct system_clock_source_osc8m_config osc8m_conf;
-	system_clock_source_osc8m_get_default_config(&osc8m_conf);
+	system_clock_source_osc8m_get_config_defaults(&osc8m_conf);
 
 	osc8m_conf.prescaler            = CONF_CLOCK_OSC8M_PRESCALER;
 	osc8m_conf.on_demand            = CONF_CLOCK_OSC8M_ON_DEMAND;
