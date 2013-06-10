@@ -128,6 +128,52 @@
  * handle the versioning and moving of page data to different physical rows as
  * needed, erasing old rows ready for re-use by future page write operations.
  *
+ * Physically, the emulated EEPROM segment is located at the end of the physical
+ * FLASH memory space, as shown in
+ * \ref asfdoc_samd20_eeprom_module_mem_layout "the figure below".
+ *
+ * \anchor asfdoc_samd20_eeprom_module_mem_layout
+ * \dot
+ * digraph memory_layout {
+ *  size="5,5"
+ *  node [shape=plaintext]
+ *  memory [label=<
+ *   <table border="0" cellborder="1" cellspacing="0" >
+ *    <tr>
+ *     <td align="right" border="0"> End of NVM Memory </td>
+ *     <td rowspan="3" align="center"> Reserved EEPROM Section </td>
+ *    </tr>
+ *    <tr>
+ *     <td align="right" border="0"> </td>
+ *    </tr>
+ *    <tr>
+ *     <td align="right" border="0"> Start of EEPROM Memory </td>
+ *    </tr>
+ *    <tr>
+ *     <td align="right" border="0"> End of Application Memory </td>
+ *     <td rowspan="3" align="center"> Application Section </td>
+ *    </tr>
+ *    <tr>
+ *     <td height="300" align="right" border="0"> </td>
+ *    </tr>
+ *    <tr>
+ *     <td align="right" border="0"> Start of Application Memory </td>
+ *    </tr>
+ *    <tr>
+ *     <td align="right" border="0"> End of Bootloader Memory </td>
+ *     <td rowspan="3" align="center"> BOOT Section </td>
+ *    </tr>
+ *    <tr>
+ *     <td align="right" border="0"> </td>
+ *    </tr>
+ *    <tr>
+ *     <td align="right" border="0"> Start of NVM Memory</td>
+ *    </tr>
+ *   </table>
+ *  >]
+ * }
+ * \enddot
+ *
  * \subsubsection asfdoc_samd20_eeprom_module_overview_implementation_mp Master Row
  * One physical FLASH row at the end of the emulated EEPROM memory space is
  * reserved for use by the emulator to store configuration data. The master row
