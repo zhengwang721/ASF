@@ -5,7 +5,7 @@
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="Communication"/>
-		</info>	
+		</info>
 		<build type="c-source" value="usart_irda_example.c"/>
 		<build type="include-path" value="."/>
 		<device-support value="sam3"/>
@@ -17,5 +17,6 @@
 		<require idref="sam.drivers.pdc"/>
 		<require idref="common.services.basic.clock"/>
 		<require idref="common.utils.stdio.stdio_serial"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

@@ -9,5 +9,6 @@
 		<require idref="sam.components.display.ili9225"/>
 		<require idref="sam.components.display.aat31xx"/>
 		<require idref="common.utils.stdio.stdio_serial"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

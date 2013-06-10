@@ -3,7 +3,7 @@
  *
  * \brief Clock system example 2.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -104,12 +104,8 @@ int main(void)
 	board_init();
 
 	/* Configure specific CLKOUT pin */
-#if SAM4E
-	ioport_set_port_mode(PIN_PCK0_PORT, PIN_PCK0_MASK, PIN_PCK0_FLAGS);
-	ioport_disable_port(PIN_PCK0_PORT, PIN_PCK0_MASK);
-#else
-	gpio_configure_pin(GCLK_PIN, GCLK_PIN_FLAGS);
-#endif
+	ioport_set_pin_mode(GCLK_PIN, GCLK_PIN_MUX);
+	ioport_disable_pin(GCLK_PIN);
 
 	/* Configure the output clock */
 	genclk_config_defaults(&gcfg, GENCLK_PCK_0);

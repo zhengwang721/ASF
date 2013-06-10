@@ -4,7 +4,7 @@
 		Self-test demonstration application of the PolarSSL library.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="Cryptography" />
+			<keyword value="Cryptography"/>
 		</info>
 		<build type="c-source" value="selftest.c"/>
 		<build type="header-file" value="documentation.h"/>
@@ -17,5 +17,6 @@
 		<require idref="avr32.drivers.intc"/>
 		<require idref="avr32.services.crypto.polarssl"/>
 		<require idref="common.utils.stdio.stdio_serial"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

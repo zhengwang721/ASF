@@ -15,6 +15,7 @@
 			<require idref="sam.drivers.wdt"/>
 			<require idref="common.utils.unit_test"/>
 			<require idref="common.utils.stdio.stdio_serial"/>
+			<info type="gui-flag" value="move-to-root"/>
 		</module>
 		<module type="application" id="sam.drivers.wdt.unit_tests#sam4l" caption="Unit Tests for the SAM WDT Driver">
 			<info type="description" value="summary">
@@ -29,6 +30,7 @@
 			<require idref="common.services.basic.clock"/>
 			<require idref="common.utils.stdio.stdio_serial"/>
 			<require idref="common.utils.unit_test"/>
+			<info type="gui-flag" value="move-to-root"/>
 		</module>
 	</select-by-device>
 </asf>

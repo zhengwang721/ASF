@@ -284,9 +284,11 @@
 		PIN_PUSHBUTTON_3, PIN_PUSHBUTTON_4}
 
 #define PIN_TC0_TIOA0        (PIO_PA0_IDX)
+#define PIN_TC0_TIOA0_MUX    (IOPORT_MODE_MUX_B)
 #define PIN_TC0_TIOA0_FLAGS  (IOPORT_MODE_MUX_B)
 
 #define PIN_TC0_TIOA1        (PIO_PA15_IDX)
+#define PIN_TC0_TIOA1_MUX    (IOPORT_MODE_MUX_B)
 #define PIN_TC0_TIOA1_FLAGS  (IOPORT_MODE_MUX_B)
 
 #define PIN_TC0_TIOA1_PIO    PIOA
@@ -296,6 +298,7 @@
 #define PIN_TC0_TIOA1_ATTR   PIO_DEFAULT
 
 #define PIN_TC0_TIOA2        (PIO_PA26_IDX)
+#define PIN_TC0_TIOA2_MUX    (IOPORT_MODE_MUX_B)
 #define PIN_TC0_TIOA2_FLAGS  (IOPORT_MODE_MUX_B)
 
 #define PIN_TC0_TIOA2_PIO    PIOA
@@ -368,6 +371,19 @@
 /* Chip select used by AT25DFx components on the SPI module instance */
 #define AT25DFX_CS      3
 
+/* Touch screen IRQ & Busy pin definition */
+#define BOARD_ADS7843_IRQ_GPIO  (PIO_PA16_IDX)
+#define BOARD_ADS7843_IRQ_FLAGS  IOPORT_MODE_PULLUP
+#define BOARD_ADS7843_BUSY_GPIO  (PIO_PA17_IDX)
+#define BOARD_ADS7843_BUSY_FLAGS  IOPORT_MODE_PULLUP
+/**
+* SPI instance, which can be SPI, SPI0 or SPI1, depends on which SPI
+* channel is used.
+*/
+#define BOARD_ADS7843_SPI_BASE    SPI
+/* SPI chip select NO., depends on which SPI CS pin is used by ADS7843. */
+#define BOARD_ADS7843_SPI_NPCS    0
+
 /** TWI0 pins definition */
 #define TWI0_DATA_GPIO   PIO_PA3_IDX
 #define TWI0_DATA_FLAGS  (IOPORT_MODE_MUX_A)
@@ -382,6 +398,7 @@
 
 /** PCK0 pin definition (PA6) */
 #define PIN_PCK0         (PIO_PA6_IDX)
+#define PIN_PCK0_MUX     (IOPORT_MODE_MUX_B)
 #define PIN_PCK0_FLAGS   (IOPORT_MODE_MUX_B)
 #define PIN_PCK0_PORT    IOPORT_PIOA
 #define PIN_PCK0_MASK    PIO_PA6B_PCK0
@@ -464,6 +481,42 @@
 /** USB D+ pin (System function) */
 #define PIN_USB_DP      {PIO_PB11}
 
+/** EBI Data Bus pins */
+#define PIN_EBI_DATA_BUS_D0        PIO_PC0_IDX
+#define PIN_EBI_DATA_BUS_D1        PIO_PC1_IDX
+#define PIN_EBI_DATA_BUS_D2        PIO_PC2_IDX
+#define PIN_EBI_DATA_BUS_D3        PIO_PC3_IDX
+#define PIN_EBI_DATA_BUS_D4        PIO_PC4_IDX
+#define PIN_EBI_DATA_BUS_D5        PIO_PC5_IDX
+#define PIN_EBI_DATA_BUS_D6        PIO_PC6_IDX
+#define PIN_EBI_DATA_BUS_D7        PIO_PC7_IDX
+#define PIN_EBI_DATA_BUS_FLAGS     (IOPORT_MODE_MUX_A | IOPORT_MODE_PULLUP)
+
+#define PIN_EBI_NRD                PIO_PC11_IDX
+#define PIN_EBI_NRD_FLAGS          (IOPORT_MODE_MUX_A | IOPORT_MODE_PULLUP)
+#define PIN_EBI_NWE                PIO_PC8_IDX
+#define PIN_EBI_NWE_FLAGS          (IOPORT_MODE_MUX_A | IOPORT_MODE_PULLUP)
+
+/** EBI pin for LCD CS and RS **/
+#define PIN_EBI_NCS1               PIO_PD18_IDX
+#define PIN_EBI_NCS1_FLAGS         (IOPORT_MODE_MUX_A | IOPORT_MODE_PULLUP)
+#define PIN_EBI_LCD_RS             PIO_PC19_IDX
+#define PIN_EBI_LCD_RS_FLAGS       (IOPORT_MODE_MUX_A | IOPORT_MODE_PULLUP)
+
+/** Indicates board has an ILI9325 external component to manage LCD. */
+#define BOARD_LCD_ILI93XX
+
+/** Backlight pin definition. */
+#define BOARD_AAT31XX_SET_GPIO      PIO_PC13_IDX
+/** Define ILI93xx base address. */
+#define BOARD_ILI93XX_ADDR          0x61000000
+/** Define ILI9325 register select signal. */
+#define BOARD_ILI93XX_RS            (1 << 1)
+/** Display width in pixels. */
+#define BOARD_LCD_WIDTH             240
+/** Display height in pixels. */
+#define BOARD_LCD_HEIGHT            320
+
 /* KSZ8051MNL relate PIN definition */
 #define PIN_KSZ8051MNL_RXC_IDX                PIO_PD14_IDX
 #define PIN_KSZ8051MNL_RXC_FLAGS            (IOPORT_MODE_MUX_A)
@@ -500,6 +553,57 @@
 #define PIN_KSZ8051MNL_MDIO_IDX                PIO_PD9_IDX
 #define PIN_KSZ8051MNL_MDIO_FLAGS            (IOPORT_MODE_MUX_A)
 #define PIN_KSZ8051MNL_INTRP_IDX                PIO_PD28_IDX
+
+/** NandFlash pins definition: OE. */
+#define PIN_EBI_NANDOE    (PIO_PC9_IDX)
+#define PIN_EBI_NANDOE_FLAGS    (IOPORT_MODE_MUX_A)
+
+/** NandFlash pins definition: WE. */
+#define PIN_EBI_NANDWE    (PIO_PC10_IDX)
+#define PIN_EBI_NANDWE_FLAGS    (IOPORT_MODE_MUX_A)
+
+/** NandFlash pins definition: CLE. */
+#define PIN_EBI_NANDCLE    (PIO_PC17_IDX)
+#define PIN_EBI_NANDCLE_FLAGS    (IOPORT_MODE_MUX_A)
+
+/** NandFlash pins definition: ALE. */
+#define PIN_EBI_NANDALE    (PIO_PC16_IDX)
+#define PIN_EBI_NANDALE_FLAGS    (IOPORT_MODE_MUX_A)
+
+/** NandFlash pins definition: DATA. */
+#define PIN_EBI_NANDIO_0    (PIO_PC0_IDX)
+#define PIN_EBI_NANDIO_0_FLAGS    (IOPORT_MODE_MUX_A)
+
+#define PIN_EBI_NANDIO_1    (PIO_PC1_IDX)
+#define PIN_EBI_NANDIO_1_FLAGS    (IOPORT_MODE_MUX_A)
+
+#define PIN_EBI_NANDIO_2    (PIO_PC2_IDX)
+#define PIN_EBI_NANDIO_2_FLAGS    (IOPORT_MODE_MUX_A)
+
+#define PIN_EBI_NANDIO_3    (PIO_PC3_IDX)
+#define PIN_EBI_NANDIO_3_FLAGS    (IOPORT_MODE_MUX_A)
+
+#define PIN_EBI_NANDIO_4    (PIO_PC4_IDX)
+#define PIN_EBI_NANDIO_4_FLAGS    (IOPORT_MODE_MUX_A)
+
+#define PIN_EBI_NANDIO_5    (PIO_PC5_IDX)
+#define PIN_EBI_NANDIO_5_FLAGS    (IOPORT_MODE_MUX_A)
+
+#define PIN_EBI_NANDIO_6    (PIO_PC6_IDX)
+#define PIN_EBI_NANDIO_6_FLAGS    (IOPORT_MODE_MUX_A)
+
+#define PIN_EBI_NANDIO_7    (PIO_PC7_IDX)
+#define PIN_EBI_NANDIO_7_FLAGS    (IOPORT_MODE_MUX_A)
+
+/** Nandflash chip enable pin definition. */
+#define PIN_NF_CE_IDX    (PIO_PC14_IDX)
+
+/** Nandflash ready/busy pin definition. */
+#define PIN_NF_RB_IDX    (PIO_PC18_IDX)
+
+/* Chip select number for nand */
+#define BOARD_NAND_CS    0
+
 /*----------------------------------------------------------------------------*/
 /**
  * \page sam4e_ek_usb "SAM4E-EK - USB device"
@@ -560,6 +664,12 @@
  * - \ref BOARD_SD_PINS
  * - \ref BOARD_SD_PIN_CD
  *
+ * QTouch component (QT2160)
+ * - \ref BOARD_QT_TWI_INSTANCE
+ * - \ref BOARD_QT_DEVICE_ADDRESS
+ * - \ref BOARD_QT_CHANGE_PIN_IDX
+ * - \ref BOARD_QT_CHANGE_PIN_FLAGS
+ * - \ref BOARD_QT_CHANGE_PIN_SENSE
  */
 
 /** HSMCI pins that shall be configured to access the SD card. */
@@ -567,12 +677,54 @@
 /** HSMCI Card Detect pin. */
 #define BOARD_SD_PIN_CD             PIN_HSMCI_CD
 
+/** TWI instance for QTouch device */
+#define BOARD_QT_TWI_INSTANCE       TWI0
+/* QTouch device address (I2CA1 = I2CA0 = 0) */
+#define BOARD_QT_DEVICE_ADDRESS     0x0D
+/** QTouch component pin definition */
+#define BOARD_QT_CHANGE_PIN_IDX     (PIO_PE4_IDX)
+#define BOARD_QT_CHANGE_PIN_FLAGS   (IOPORT_MODE_PULLUP | IOPORT_MODE_DEBOUNCE)
+#define BOARD_QT_CHANGE_PIN_SENSE   (IOPORT_SENSE_FALLING)
+
 /*----------------------------------------------------------------------------*/
 /**
  * \page sam4e_ek_mem "SAM4E-EK - Memories"
  * This page lists definitions related to internal & external on-board memories.
  *
+ * \section NandFlash
+ * - \ref BOARD_NF_COMMAND_ADDR
+ * - \ref BOARD_NF_ADDRESS_ADDR
+ * - \ref BOARD_NF_DATA_ADDR
+ *
+ * \section NorFlash
+ * - \ref BOARD_NORFLASH_ADDR
+ * - \ref BOARD_NORFLASH_DFT_BUS_SIZE
  */
+
+/** Address for transferring command bytes to the nandflash. */
+#define BOARD_NF_COMMAND_ADDR   0x60400000
+/** Address for transferring address bytes to the nandflash. */
+#define BOARD_NF_ADDRESS_ADDR   0x60200000
+/** Address for transferring data bytes to the nandflash. */
+#define BOARD_NF_DATA_ADDR      0x60000000
+/* Bus width for NAND */
+#define CONF_NF_BUSWIDTH    8
+/* Access timing for NAND */
+#define CONF_NF_SETUP_TIMING (SMC_SETUP_NWE_SETUP(0) \
+		| SMC_SETUP_NCS_WR_SETUP(1) \
+		| SMC_SETUP_NRD_SETUP(0) \
+		| SMC_SETUP_NCS_RD_SETUP(1))
+#define CONF_NF_PULSE_TIMING (SMC_PULSE_NWE_PULSE(2) \
+		| SMC_PULSE_NCS_WR_PULSE(3) \
+		| SMC_PULSE_NRD_PULSE(4) \
+		| SMC_PULSE_NCS_RD_PULSE(4))
+#define CONF_NF_CYCLE_TIMING (SMC_CYCLE_NWE_CYCLE(4) \
+		| SMC_CYCLE_NRD_CYCLE(7))
+
+/** Address for transferring command bytes to the norflash. */
+#define BOARD_NORFLASH_ADDR     0x63000000
+/** Default NOR bus size after power up reset */
+#define BOARD_NORFLASH_DFT_BUS_SIZE 8
 
 /*----------------------------------------------------------------------------*/
 
@@ -651,6 +803,9 @@
 /** CAN1 PIN TX. */
 #define PIN_CAN1_TX_IDX           PIO_PC15_IDX
 #define PIN_CAN1_TX_FLAGS         IOPORT_MODE_MUX_C
+
+/** AFEC channel for potentiometer */
+#define AFEC_CHANNEL_POTENTIOMETER  AFEC_CHANNEL_5
 
 /*----------------------------------------------------------------------------*/
 #endif  /* _SAM4E_EK_H_ */

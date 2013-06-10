@@ -38,6 +38,7 @@
  *
  * \asf_license_stop
  */
+
 /*
  * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
@@ -57,10 +58,14 @@
 /* === Prototypes ========================================================== */
 
 /* === Implementation ====================================================== */
-
+#if (defined __GNUC__)
+void __attribute__((weak)) usr_mlme_orphan_ind(uint64_t OrphanAddress)
+#else
 void usr_mlme_orphan_ind(uint64_t OrphanAddress)
+#endif
 {
-    /* Keep compiler happy. */
-    OrphanAddress = OrphanAddress;
+	/* Keep compiler happy. */
+	OrphanAddress = OrphanAddress;
 }
+
 /* EOF */

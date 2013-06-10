@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<select-by-device id="thirdparty.wireless.avr2102_rf4control.lib.nwk" caption="RF4Control NWK Lib">
+	<select-by-device id="thirdparty.wireless.avr2102_rf4control.lib.nwk" caption="AVR2102 - RF4Control NWK Lib">
         <module type="service" id="thirdparty.wireless.avr2102_rf4control.lib.nwk#1" caption="RF4Control NWK Lib for at32uc3a3256s">
             <info type="description" value="summary">
             RF4CE network library for UC3A3256S controller
@@ -39,6 +39,16 @@
             <require idref="thirdparty.wireless.avr2102_rf4control.lib.nwk.config" />
             <build type="doxygen-entry-point" value="group_rf4control_NWK"/>
             <device-support value="atxmega256a3u"/>
+        </module>
+		 <module type="service" id="thirdparty.wireless.avr2102_rf4control.lib.nwk#5" caption="RF4Control NWK Lib for atxmega256a3u">
+            <info type="description" value="summary">
+            RF4CE network library for XMEGA256A3U controller
+            </info>
+            <build type="library" subtype="user" value="atsam4lc4c/iar/librf4ce-nwk.a" toolchain="iarewarm"/>
+            <build type="library" subtype="user" value="atsam4lc4c/gcc/librf4ce-nwk.a" toolchain="armgcc"/>
+            <require idref="thirdparty.wireless.avr2102_rf4control.lib.nwk.config" />
+            <build type="doxygen-entry-point" value="group_rf4control_NWK"/>
+            <device-support value="atsam4lc4c"/>
         </module>
     </select-by-device>
 </asf>

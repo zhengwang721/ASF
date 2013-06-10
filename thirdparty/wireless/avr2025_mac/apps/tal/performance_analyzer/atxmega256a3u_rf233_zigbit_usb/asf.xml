@@ -22,6 +22,7 @@
 
 		<build type="define"   name="HIGHEST_STACK_LAYER"                 value="TAL"/>
 		<build type="define"   name="HIGH_DATA_RATE_SUPPORT"              value=""/>
+		<build type="define"   name="ENABLE_DEEP_SLEEP"              value=""/>
 
         <build type="define"   name="FFD"                                 value=""/>
         <build type="define"   name="ENABLE_TFA"                          value=""/>

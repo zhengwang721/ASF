@@ -61,7 +61,7 @@
 			For support queries, email touch@atmel.com.
 			</info>
 			<info type="keyword" value="technology">
-				<keyword value="touch"/>
+				<keyword value="Touch"/>
 			</info>
 
 			<require idref="config.common.services.qtouch.generic.avr8.qtouch.common" />
@@ -100,14 +100,14 @@
 			<device-support value="atxmega128a1"/>
 		</module>
 	</select-by-config>
-	
+
 	<select-by-config id="config.common.services.qtouch.generic.avr8.mega128rfa1_stk600.method" name="config.common.services.qtouch.generic.avr8.mega128rfa1_stk600.method" caption="Atmel QTouch Library 5.0 - MEGA128RFA1-STK600" default="no_method">
 		<module type="service" id="config.common.services.qtouch.generic.avr8.mega128rfa1_stk600.method#no_method" caption="Atmel QTouch Library 5.0- MEGA128RFA1 - STK600">
 			<build type="doxygen-entry-point" value="group_common_services_qtouch"/>
 			<device-support value="atmega128rfa1"/>
 		</module>
 		<module type="service" id="config.common.services.qtouch.generic.avr8.mega128rfa1_stk600.method#qmatrix_method" caption="Atmel QTouch Library 5.0 - MEGA128RFA1 - STK600">
-			<build type="doxygen-entry-point" value="group_common_services_qtouch"/>    
+			<build type="doxygen-entry-point" value="group_common_services_qtouch"/>
 			<info type="description" value="summary">
 			The pre-compiled QTouch Library, common and include files for AVR 8-bit devices.
 			For more information on the QTouch Library, goto www.atmel.com/qtouchlib.
@@ -115,7 +115,7 @@
 			</info>
 
 			<info type="keyword" value="technology">
-				<keyword value="touch" />
+				<keyword value="Touch"/>
 			</info>
 			<require idref="config.common.services.qtouch.generic.avr8.qmatrix.common" />
 			<build type="asm-source" value="qmatrix/common/qm_asm_tiny_mega.S" toolchain="avrgcc"/>
@@ -137,9 +137,7 @@
 			<build type="distribute" subtype="file" value="qmatrix/lib/gcc/libm128rfa1_64qm_8x_8y_krs_4rs.a" toolchain="avrgcc"/>
 			<build type="distribute" subtype="file" value="qmatrix/lib/gcc/libm128rfa1_64qm_8x_8y_krs_8rs.a" toolchain="avrgcc"/>
 
-
 			<build type="include-path" value="."/>
-			<build type="doxygen-entry-point" value="group_common_services_qtouch"/>
 
 			<device-support value="atmega128rfa1"/>
 		</module>
@@ -157,7 +155,7 @@
 			For support queries, email touch@atmel.com.
 			</info>
 			<info type="keyword" value="technology">
-				<keyword value="touch" />
+				<keyword value="Touch"/>
 			</info>
 
 			<require idref="config.common.services.qtouch.generic.avr8.qtouch.common" />

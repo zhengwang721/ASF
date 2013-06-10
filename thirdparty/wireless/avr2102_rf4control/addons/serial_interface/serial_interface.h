@@ -39,6 +39,7 @@
  *
  * \asf_license_stop
  */
+
 /*
  * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
@@ -58,19 +59,20 @@
 /* === Externals ============================================================ */
 
 /* === Prototypes =========================================================== */
+
 /**
-  * \defgroup group_sif_rf4ce Serial Interface Module
-  * Serial Interface Module acts as a interface for  converting stream of command bytes to corresponding Rf4control Api's
-  * @{
-  */
+ * \defgroup group_sif_rf4ce Serial Interface Module
+ * This module is responsible for encoding and decoding the serial bytes to/from
+ *Host into corresponding RF4Control APIs .
+ * @{
+ */
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-    void serial_interface_init(void);
-    void serial_data_handler(void);
-
+void serial_interface_init(void);
+void serial_data_handler(void);
 
 /* Protocol Identifier of the MAC */
 #define RF4CONTROL_PID                         (2)
@@ -82,5 +84,5 @@ extern "C" {
 } /* extern "C" */
 #endif
 #endif /* SERIAL_API_H */
-//! @}
+/* ! @} */
 /* EOF */

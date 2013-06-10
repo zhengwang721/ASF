@@ -4,7 +4,7 @@
 		Start a EDMA transfer between two internal memory areas and upon completion verifies this by comparing those areas.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="EDMA Controller"/>
+			<keyword value="DMA Controller"/>
 		</info>
 		<build type="c-source" value="edma_example_1.c"/>
 		<build type="module-config" subtype="required-header-file" value="conf_example.h"/>
@@ -13,7 +13,6 @@
 		<require idref="common.services.basic.sleepmgr"/>
 		<require idref="common.services.gfx_mono"/>
 		<require idref="common.services.gfx_mono.font"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>
-
-

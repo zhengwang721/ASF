@@ -6,7 +6,7 @@
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="CPU"/>
-		</info>						
+		</info>
 		<build type="c-source" value="sau_example.c"/>
 		<build type="asm-source" value="sau_exception.S" toolchain="avr32gcc"/>
 		<build type="asm-source" value="sau_exception.s82" toolchain="iarew32"/>
@@ -21,5 +21,6 @@
 		<require idref="avr32.utils"/>
 		<require idref="avr32.utils.print_funcs"/>
 		<require idref="common.services.basic.clock"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

@@ -7,7 +7,7 @@
  ****************************************************************************/
 
 /**
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -153,11 +153,15 @@ int main(void)
 
 	/* Show the test result by LED. */
 	if (usart_spi_at45dbx_mem_check() == false) {
-		gpio_set_pin_low(USART_SPI_EXAMPLE_LED_PIN_EXAMPLE_1);
-		gpio_set_pin_high(USART_SPI_EXAMPLE_LED_PIN_EXAMPLE_2);
+		ioport_set_pin_level(USART_SPI_EXAMPLE_LED_PIN_EXAMPLE_1,
+				IOPORT_PIN_LEVEL_LOW);
+		ioport_set_pin_level(USART_SPI_EXAMPLE_LED_PIN_EXAMPLE_2,
+				IOPORT_PIN_LEVEL_HIGH);
 	} else {
-		gpio_set_pin_low(USART_SPI_EXAMPLE_LED_PIN_EXAMPLE_1);
-		gpio_set_pin_low(USART_SPI_EXAMPLE_LED_PIN_EXAMPLE_2);
+		ioport_set_pin_level(USART_SPI_EXAMPLE_LED_PIN_EXAMPLE_1,
+				IOPORT_PIN_LEVEL_LOW);
+		ioport_set_pin_level(USART_SPI_EXAMPLE_LED_PIN_EXAMPLE_2,
+				IOPORT_PIN_LEVEL_LOW);
 	}
 
 	while (1) {

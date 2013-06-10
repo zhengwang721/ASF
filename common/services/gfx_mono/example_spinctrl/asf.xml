@@ -4,7 +4,7 @@
 		Example showing how to use spinners.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="Graphics" />
+			<keyword value="Graphics"/>
 		</info>
 		<build type="include-path" value="."/>
 		<build type="c-source" value="example_spinctrl.c"/>
@@ -12,5 +12,6 @@
 		<require idref="common.services.gfx_mono.display"/>
 		<require idref="common.services.gfx_mono.font"/>
 		<require idref="common.services.gfx_mono.spinctrl"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

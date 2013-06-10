@@ -39,6 +39,7 @@
  *
  * \asf_license_stop
  */
+
 /*
  * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
@@ -60,10 +61,13 @@
 /* === Prototypes ========================================================== */
 
 /* === Implementation ====================================================== */
-
+#if (defined __GNUC__)
+void __attribute__((weak)) usr_mlme_rx_enable_conf(uint8_t status)
+#else
 void usr_mlme_rx_enable_conf(uint8_t status)
+#endif
 {
-    status = status;    /* Keep compiler happy. */
+	status = status; /* Keep compiler happy. */
 }
 
 #endif /* (MAC_RX_ENABLE_SUPPORT == 1) */

@@ -22,6 +22,7 @@
 			<device-support value="xmegaa4u"/>
 			<device-support value="xmegab"/>
 			<device-support value="xmegac"/>
+			<info type="gui-flag" value="move-to-root"/>
 		</module>
 	</select-by-device>
 </asf>

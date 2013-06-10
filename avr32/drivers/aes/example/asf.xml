@@ -5,7 +5,7 @@
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="Cryptography"/>
-		</info>				
+		</info>
 		<build type="c-source" value="aes_example.c"/>
 		<device-support value="uc3a3s_a4s"/>
 		<require idref="avr32.drivers.aes"/>
@@ -13,5 +13,6 @@
 		<require idref="avr32.drivers.pm"/>
 		<require idref="avr32.drivers.intc"/>
 		<require idref="avr32.utils.print_funcs"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

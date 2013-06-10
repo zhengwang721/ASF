@@ -33,8 +33,8 @@
 		<device-support value="uc3a"/>
 		<device-support value="uc3b"/>
 		<device-support value="uc3a3"/>
-		<build type="c-source"  value="../../../../../../../thirdparty/freertos/freertos-7.0.0/source/portable/iar/avr32_uc3/read.c" toolchain="iarew32"/>
-		<build type="c-source"  value="../../../../../../../thirdparty/freertos/freertos-7.0.0/source/portable/iar/avr32_uc3/write.c" toolchain="iarew32"/>
+		<build type="c-source" value="../../../../../../../thirdparty/freertos/freertos-7.0.0/source/portable/iar/avr32_uc3/read.c" toolchain="iarew32"/>
+		<build type="c-source" value="../../../../../../../thirdparty/freertos/freertos-7.0.0/source/portable/iar/avr32_uc3/write.c" toolchain="iarew32"/>
 		<require idref="common.services.basic.fifo"/>
 		<require idref="avr32.services.usb._asf_v1.class.cdc"/>
 		<require idref="avr32.drivers.usbb._asf_v1.enum.device"/>
@@ -48,9 +48,7 @@
 		<require idref="avr32.drivers.cpu.cycle_counter"/>
 		<require idref="avr32.drivers.gpio"/>
 		<require idref="avr32.utils.libs.newlib_addons"/>
-
 		<build type="distribute" subtype="file" value="driver/at32uc3xxx_cdc.inf"/>
-
 		<build type="distribute" subtype="directory" value="./docsrc"/>
 		<build type="distribute" subtype="file" value="./docsrc/appli.jpg"/>
 		<build type="distribute" subtype="file" value="./docsrc/appli_evk1100_device.jpg"/>
@@ -63,7 +61,5 @@
 		<build type="distribute" subtype="file" value="./docsrc/install_4.jpg"/>
 		<build type="distribute" subtype="file" value="./docsrc/install_5.jpg"/>
 		<build type="distribute" subtype="file" value="./docsrc/usb_cdc_device_manager.jpg"/>
-
-
 	</module>
 </asf>

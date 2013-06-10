@@ -153,6 +153,7 @@
 		<!-- Device supported //-->
 		<device-support value="uc3a"/>
 		<device-support value="uc3a3"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 	<!-- Device Specific //-->
 	<select-by-device id="avr32.applications.uc3-audio-player.common" caption="USB Audio player">

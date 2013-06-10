@@ -3,7 +3,7 @@
  *
  * \brief FLASHCALW example1 for SAM.
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -49,7 +49,10 @@
  *
  * It also comes bundled with an example. This example demonstrates flash read /
  * write data accesses, using a flash block as an NVRAM, located either in the
- * flash array or in the User page.
+ * flash array or in the User page. The security bit will be set finally.
+ *
+ * Once the security bit set, the only way to clear it is doing the
+ * Chip Erase command through Atmel Stdio 6 or asserting the erase pin to 1.
  *
  * Operating mode of the example:
  *   -# After reset, the NVRAM variables are displayed on the USART link.
@@ -61,7 +64,10 @@
  *   -# This is performed once in the flash array and then in the user page.
  *   -# The last page of the flash array will be locked.
  *   -# The lock status of the last page will be checked.
- *   -# The last page will be unlocked finally.
+ *   -# The last page will be unlocked.
+ *   -# Waiting for any key pressed in the debug console.
+ *   -# Then security bit will be set. Setting the security bit will lock the chip from
+ *     further access through all external programming and debugging interfaces.
  *
  * \section files Main Files
  *   - flashcalw.c: FLASHCALW driver;
@@ -215,6 +221,8 @@ static void flash_protect_example( void )
  */
 int main(void)
 {
+	uint32_t key;
+
 	/* Initialize the SAM system */
 	sysclk_init();
 	board_init();
@@ -239,6 +247,17 @@ int main(void)
 
 	/* Flash lock example */
 	flash_protect_example();
+
+	printf("-I- Good job!\n\r"
+		"-I- Now set the security bit \n\r"
+		"-I- Press any key to continue to see what happened...\n\r");
+	while (0 != usart_read(CONF_UART, &key));
+
+	/* Set security bit */
+	printf("-I- Setting security bit \n\r");
+	flashcalw_set_security_bit();
+
+	printf("-I- All tests done\n\r");
 
 	while (true) {
 	}

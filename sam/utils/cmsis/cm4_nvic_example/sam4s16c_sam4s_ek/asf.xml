@@ -7,7 +7,6 @@
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_uart_serial.h"/>
 		<build type="header-file" value="conf_clock.h"/>
-		<build type="include-path" value="."/>
 		<require idref="sam.utils.cmsis.cm4_nvic_example"/>
 		<require idref="board.sam4s_ek"/>
 		<generator value="iarewarm"/>

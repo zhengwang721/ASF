@@ -1,7 +1,8 @@
 /**
  * @file serial_interface.h
  *
- * @brief This header defines protoypes and definitions for serial interface functionalities
+ * @brief This header defines protoypes and definitions for serial interface
+ *functionalities
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -39,21 +40,21 @@
  *
  * \asf_license_stop
  */
+
 /*
  * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
- 
 
- 
 #include <string.h>
 
- /**
-  * \defgroup group_mac_serial_if Serial Interface Module
-  * Serial Interface Module acts as a interface for  converting stream of command bytes to corresponding MAC Api's
-  * @{
-  */
+/**
+ * \defgroup group_mac_serial_if Serial Interface Module
+ * This module is responsible for encoding and decoding the serial bytes to/from
+ *Host into corresponding MAC APIs .
+ * @{
+ */
 
 /**
  * A UART state that expects a \ref SOT to be received as the next character.
@@ -89,14 +90,14 @@
 /* MAC Protocol Identifier Length */
 #define MAC_PID_LEN                     (1)
 
-
 #define SIO_BUF_COUNT                   (5)
 
 #define SIO_RX_BUF_SIZE                 (156)
 #define SIO_TX_BUF_SIZE                 SIO_RX_BUF_SIZE
 
 /**
- * \brief This function does the initialization of the Serial handler state Machine.
+ * \brief This function does the initialization of the Serial handler state
+ *Machine.
  */
 void serial_interface_init(void);
 
@@ -105,5 +106,5 @@ void serial_interface_init(void);
  */
 void serial_data_handler(void);
 
-// @}
-//EOF
+/* @} */
+/* EOF */

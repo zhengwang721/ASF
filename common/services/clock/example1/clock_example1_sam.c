@@ -3,7 +3,7 @@
  *
  * \brief Clock system example 1.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -136,11 +136,7 @@ int main(void)
 	}
 
 	while (1) {
-#if (SAM4L || SAM4E)
 		ioport_toggle_pin_level(LED0_GPIO);
-#else
-		gpio_toggle_pin(LED0_GPIO);
-#endif
 		mdelay(500);
 	}
 }

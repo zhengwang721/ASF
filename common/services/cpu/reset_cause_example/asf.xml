@@ -9,6 +9,7 @@
 			<require idref="common.services.basic.gpio"/>
 			<require idref="common.boards"/>
 			<require idref="common.services.basic.cpu"/>
+			<info type="gui-flag" value="move-to-root"/>
 		</module>
 		<module type="application" id="common.services.basic.cpu.example#uc3" caption="Common API for Chip Reset Cause Access Example">
 			<info type="description" value="summary">
@@ -19,8 +20,9 @@
 			<require idref="avr32.drivers.gpio"/>
 			<require idref="common.boards"/>
 			<require idref="common.services.basic.cpu"/>
+			<info type="gui-flag" value="move-to-root"/>
 		</module>
-				<module type="application" id="common.services.basic.cpu.example#sam4l" caption="Common API for Chip Reset Cause Access Example">
+		<module type="application" id="common.services.basic.cpu.example#sam4l" caption="Common API for Chip Reset Cause Access Example">
 			<info type="description" value="summary">
 			This example demonstrates how to use the Common API for Chip Reset Cause Access.
 			</info>
@@ -31,7 +33,7 @@
 			<require idref="common.utils.stdio.stdio_serial"/>
 			<require idref="common.boards"/>
 			<require idref="common.services.basic.cpu"/>
+			<info type="gui-flag" value="move-to-root"/>
 		</module>
 	</select-by-device>
 </asf>
-

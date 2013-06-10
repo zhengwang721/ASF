@@ -1,7 +1,7 @@
 /**
  * @file hw_timer.h
  *
- * @brief 
+ * @brief
  *
  *  Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -37,12 +37,12 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
- 
+
 /* Prevent double inclusion */
 #ifndef HW_TIMER_H
 #define HW_TIMER_H
 #include <stdint.h>
-typedef void (*tmr_callback_t) (void);
+typedef void (*tmr_callback_t)(void);
 
 uint16_t tmr_read_count(void);
 uint8_t save_cpu_interrupt(void);

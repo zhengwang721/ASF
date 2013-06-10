@@ -2,7 +2,7 @@
 	<module type="application" id="avr32.drivers.adc.example" caption="ADC Example">
 		<info type="description" value="summary">
 		Initialize the ADC, use the on-board sensors and see the value change on a terminal.
-		</info>	
+		</info>
 		<info type="keyword" value="technology">
 			<keyword value="Analog Conversion"/>
 		</info>
@@ -18,5 +18,6 @@
 		<require idref="avr32.utils.print_funcs"/>
 		<require idref="common.services.delay"/>
 		<require idref="common.services.basic.clock"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

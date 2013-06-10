@@ -10,5 +10,6 @@
 		<build type="include-path" value="."/>
 		<build type="c-source" value="example1.c"/>
 		<require idref="xmega.services.pwm"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

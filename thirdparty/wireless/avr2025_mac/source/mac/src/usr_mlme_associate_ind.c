@@ -39,6 +39,7 @@
  *
  * \asf_license_stop
  */
+
 /*
  * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
@@ -58,12 +59,17 @@
 /* === Prototypes ========================================================== */
 
 /* === Implementation ====================================================== */
-
+#if (defined __GNUC__)
+void __attribute__((weak)) usr_mlme_associate_ind(uint64_t DeviceAddress,
+		uint8_t CapabilityInformation)
+#else
 void usr_mlme_associate_ind(uint64_t DeviceAddress,
-                            uint8_t CapabilityInformation)
+		uint8_t CapabilityInformation)
+#endif
 {
-    /* Keep compiler happy. */
-    DeviceAddress = DeviceAddress;
-    CapabilityInformation = CapabilityInformation;
+	/* Keep compiler happy. */
+	DeviceAddress = DeviceAddress;
+	CapabilityInformation = CapabilityInformation;
 }
+
 /* EOF */

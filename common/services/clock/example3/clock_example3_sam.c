@@ -3,7 +3,7 @@
  *
  * \brief Clock system example 3.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -109,7 +109,6 @@ static void mdelay(uint32_t ul_dly_ticks)
 /**
  *  Wait for user push the button.
  */
-#if SAM4E
 static void wait_for_switches(void)
 {
 	do {
@@ -119,17 +118,6 @@ static void wait_for_switches(void)
 	} while (!ioport_get_pin_level(GPIO_PUSH_BUTTON_1));
 	mdelay(1);
 }
-#else
-static void wait_for_switches(void)
-{
-	do {
-	} while (gpio_pin_is_high(GPIO_PUSH_BUTTON_1));
-	mdelay(1);
-	do {
-	} while (gpio_pin_is_low(GPIO_PUSH_BUTTON_1));
-	mdelay(1);
-}
-#endif
 
 /**
  * \brief Handler for System Tick interrupt.
@@ -163,12 +151,8 @@ int main(void)
 	sysclk_enable_peripheral_clock(PIN_PUSHBUTTON_1_ID);
 
 	/* Configure specific CLKOUT pin */
-#if SAM4E
-	ioport_set_port_mode(PIN_PCK0_PORT, PIN_PCK0_MASK, PIN_PCK0_FLAGS);
-    ioport_disable_port(PIN_PCK0_PORT, PIN_PCK0_MASK);
-#else
-	gpio_configure_pin(GCLK_PIN, GCLK_PIN_FLAGS);
-#endif
+	ioport_set_pin_mode(GCLK_PIN, GCLK_PIN_MUX);
+	ioport_disable_pin(GCLK_PIN);
 
 	/* Configure the output clock source and frequency */
 	genclk_config_defaults(&gcfg, GENCLK_PCK_0);
@@ -207,6 +191,8 @@ int main(void)
 		/*
 		 * Switch to internal 4 MHz RC.
 		 */
+		/* Switch to slow clock before switch main clock */
+		sysclk_set_source(SYSCLK_SRC_SLCK_RC);
 		osc_enable(OSC_MAINCK_4M_RC);
 		osc_wait_ready(OSC_MAINCK_4M_RC);
 		sysclk_set_source(SYSCLK_SRC_MAINCK_XTAL);
@@ -232,7 +218,6 @@ int main(void)
 		genclk_config_set_source(&gcfg, GENCLK_PCK_SRC_PLLACK);
 		genclk_config_set_divider(&gcfg, GENCLK_PCK_PRES_1);
 		genclk_enable(&gcfg, GENCLK_PCK_0);
-		wait_for_switches();
 	}
 }
 

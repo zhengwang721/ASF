@@ -61,37 +61,6 @@
 
 /**
  * \ingroup group_mac_prot
- * \defgroup group_mac_api MAC API's
- *
- * The application interfaces the MAC stack via the MAC-API
- *
- */
-
-
- /**
- * \ingroup group_mac_api
- * \defgroup group_mac_req MAC Request API's
- *
- * This module describes all MAC Request API's 
- */
- 
-  /**
- * \ingroup group_mac_api
- * \defgroup group_mac_gen MAC General API's
- *
- * This module describes all MAC General API's 
- */
- 
- 
-  /**
- * \ingroup group_mac_api
- * \defgroup group_mac_resp MAC Response API's
- *
- * This module describes all MAC Response API's 
- */
-
-/**
- * \ingroup group_mac_prot
  * \defgroup group_mac_cb MAC Callback's
  *
  * This module describes all MAC Callback's
@@ -104,19 +73,20 @@
  * This module describes all MAC Confirmation Callback's
  */
 
-
-  /**
+/**
  * \ingroup group_mac_cb
  * \defgroup group_mac_ind MAC Indication Callback'
  *
- * This module describes all MAC Indication Callback's 
+ * This module describes all MAC Indication Callback's
  */
 
 /* === Macros =============================================================== */
-    /**
-     * \addtogroup group_mac_def
-     * @{
-     */
+
+/**
+ * \addtogroup group_mac_def
+ * @{
+ */
+
 /**
  * The maximum number of entries supported in the macKeyTable.
  * This value is mplementation specific.
@@ -153,50 +123,52 @@
  * The maximum number of entries supported in the KeyUsageList
  */
 #define MAC_ZIP_MAX_KEY_USAGE_LIST_ENTRIES      (1)
-//! @}
+/* ! @} */
 /* === Externals ============================================================ */
 
-
 /* === Types ================================================================ */
-#ifndef UC3
+#ifdef SAM
 COMPILER_PACK_SET(1)
-#endif /* UC3 */
+#endif /* SAM */
+
 /**
  * MAC Address type
  */
-typedef union
-{
-    uint16_t short_address;
-    uint64_t long_address;
+typedef union {
+	uint16_t short_address;
+	uint64_t long_address;
 } address_field_t;
-    /**
-     * \addtogroup group_mac_ds
-     * @{
-     */
-	 
+
+/**
+ * \addtogroup group_mac_ds
+ * @{
+ */
+
 #if !defined(__DOXYGEN___NO_MAC)
+
 /**
  * @brief Device address specification structure
  *
  * @ingroup apiMacTypes
  */
-typedef struct wpan_addr_spec_tag
-{
-   /**
-    * Address mode (@ref WPAN_ADDRMODE_NONE, @ref WPAN_ADDRMODE_SHORT, or @ref WPAN_ADDRMODE_LONG)
-    */
-    uint8_t AddrMode;
+typedef struct wpan_addr_spec_tag {
+	/**
+	 * Address mode (@ref WPAN_ADDRMODE_NONE, @ref WPAN_ADDRMODE_SHORT, or
+	 *@ref WPAN_ADDRMODE_LONG)
+	 */
+	uint8_t AddrMode;
 
-   /**
-    * The 16 bit PAN identifier.
-    */
-    uint16_t PANId;
+	/**
+	 * The 16 bit PAN identifier.
+	 */
+	uint16_t PANId;
 
-   /**
-    * Device address. If AddrMode is @ref WPAN_ADDRMODE_SHORT, it is interpreted as a
-    * 16 bit address.
-    */
-    address_field_t Addr;
+	/**
+	 * Device address. If AddrMode is @ref WPAN_ADDRMODE_SHORT, it is
+	 *interpreted as a
+	 * 16 bit address.
+	 */
+	address_field_t Addr;
 } wpan_addr_spec_t;
 
 /**
@@ -204,274 +176,277 @@ typedef struct wpan_addr_spec_tag
  *
  * @ingroup apiMacTypes
  */
-typedef struct wpan_pandescriptor_tag
-{
-    /**
-     * Coordinator address specification in received beacon frame.
-     */
-    wpan_addr_spec_t CoordAddrSpec;
+typedef struct wpan_pandescriptor_tag {
+	/**
+	 * Coordinator address specification in received beacon frame.
+	 */
+	wpan_addr_spec_t CoordAddrSpec;
 
-    /**
-     * The current logical channel used by the network.
-     */
-    uint8_t     LogicalChannel;
+	/**
+	 * The current logical channel used by the network.
+	 */
+	uint8_t LogicalChannel;
 
-    /**
-     * The current channel page occupied by the network.
-     */
-    uint8_t     ChannelPage;
+	/**
+	 * The current channel page occupied by the network.
+	 */
+	uint8_t ChannelPage;
 
-    /**
-     * Superframe specification in received beacon frame.
-     */
-    uint16_t    SuperframeSpec;
+	/**
+	 * Superframe specification in received beacon frame.
+	 */
+	uint16_t SuperframeSpec;
 
-    /**
-     * Set to true if the beacon is from a PAN coordinator accepting GTS requests.
-     */
-    bool        GTSPermit;
+	/**
+	 * Set to true if the beacon is from a PAN coordinator accepting GTS
+	 *requests.
+	 */
+	bool GTSPermit;
 
-    /**
-     * LQI at which the beacon was received. Lower values represent poorer link
-     * quality.
-     */
-    uint8_t     LinkQuality;
+	/**
+	 * LQI at which the beacon was received. Lower values represent poorer
+	 *link
+	 * quality.
+	 */
+	uint8_t LinkQuality;
 
 #ifdef ENABLE_TSTAMP
-    /**
-     * Time at which the beacon frame was received, in symbol counts.  This quantity
-     * shall be interpreted as only 24-bits, with the most significant 8-bits entirely
-     * ignored.
-     */
-    uint32_t    TimeStamp;
+
+	/**
+	 * Time at which the beacon frame was received, in symbol counts.  This
+	 *quantity
+	 * shall be interpreted as only 24-bits, with the most significant
+	 *8-bits entirely
+	 * ignored.
+	 */
+	uint32_t TimeStamp;
 #endif  /* ENABLE_TSTAMP */
 } wpan_pandescriptor_t;
 
-
 #ifdef MAC_SECURITY_ZIP
+
 /**
  * Structure implementing a DeviceDescriptor.
  * See IEEE 802.15.4-2006 section 7.6.1 Table 93.
  */
-typedef struct mac_device_desc_tag
-{
-    /** The 16-bit PAN identifier of the device in this DeviceDescriptor. */
-    uint16_t PANId;
-    /**
-     * The 16-bit short address of the device in this DeviceDescriptor.
-     * A value of 0xfffe indicates that this device is using only its
-     * extended address. A value of 0xffff indicates that this value is
-     * unknown.
-     */
-    uint16_t ShortAddress;
-    /**
-     * The 64-bit IEEE extended address of the device in this DeviceDescriptor.
-     * This element is also used in unsecuring operations on incoming frames.
-     */
-    uint64_t ExtAddress;
-    /**
-     * The incoming frame counter of the device in this DeviceDescriptor.
-     * This value is used to ensure sequential freshness of frames.
-     */
-    uint32_t FrameCounter;
-    /**
-     * Indication of whether the device may override the minimum security
-     * level settings defined in Table 92.
-     */
-    bool Exempt;
+typedef struct mac_device_desc_tag {
+	/** The 16-bit PAN identifier of the device in this DeviceDescriptor. */
+	uint16_t PANId;
+
+	/**
+	 * The 16-bit short address of the device in this DeviceDescriptor.
+	 * A value of 0xfffe indicates that this device is using only its
+	 * extended address. A value of 0xffff indicates that this value is
+	 * unknown.
+	 */
+	uint16_t ShortAddress;
+
+	/**
+	 * The 64-bit IEEE extended address of the device in this
+	 *DeviceDescriptor.
+	 * This element is also used in unsecuring operations on incoming
+	 *frames.
+	 */
+	uint64_t ExtAddress;
+
+	/**
+	 * The incoming frame counter of the device in this DeviceDescriptor.
+	 * This value is used to ensure sequential freshness of frames.
+	 */
+	uint32_t FrameCounter;
+
+	/**
+	 * Indication of whether the device may override the minimum security
+	 * level settings defined in Table 92.
+	 */
+	bool Exempt;
 } mac_device_desc_t;
-
-
 
 /**
  * Structure implementing a KeyUsageDescriptor.
  * See IEEE 802.15.4-2006 section 7.6.1 Table 90.
  */
-typedef struct mac_key_usage_tag
-{
-    /** See 7.2.1.1.1. */
-    uint8_t Frametype;
+typedef struct mac_key_usage_tag {
+	/** See 7.2.1.1.1. */
+	uint8_t Frametype;
 
-    /** See Table 82. */
-    uint8_t CommandFrameIdentifier;
+	/** See Table 82. */
+	uint8_t CommandFrameIdentifier;
 } mac_key_usage_t;
-
-
 
 /**
  * Structure implementing a KeyDeviceDescriptor.
  * See IEEE 802.15.4-2006 section 7.6.1 Table 91.
  */
-typedef struct mac_key_device_desc_tag
-{
-    /** Handle to the DeviceDescriptor corresponding to the device. */
-    uint8_t DeviceDescriptorHandle;
+typedef struct mac_key_device_desc_tag {
+	/** Handle to the DeviceDescriptor corresponding to the device. */
+	uint8_t DeviceDescriptorHandle;
 
-    /**
-     * Indication of whether the device indicated by DeviceDescriptorHandle
-     * is uniquely associated with the KeyDescriptor, i.e., it is a link
-     * key as opposed to a group key.
-     */
-    bool UniqueDevice;
-    /**
-     * Indication of whether the device indicated by DeviceDescriptorHandle
-     * previously communicated with this key prior to the exhaustion of the
-     * frame counter. If TRUE, this indicates that the device shall not use
-     * this key further because it exhausted its use of the frame counter used
-     * with this key.
-     */
-    bool BlackListed;
+	/**
+	 * Indication of whether the device indicated by DeviceDescriptorHandle
+	 * is uniquely associated with the KeyDescriptor, i.e., it is a link
+	 * key as opposed to a group key.
+	 */
+	bool UniqueDevice;
+
+	/**
+	 * Indication of whether the device indicated by DeviceDescriptorHandle
+	 * previously communicated with this key prior to the exhaustion of the
+	 * frame counter. If TRUE, this indicates that the device shall not use
+	 * this key further because it exhausted its use of the frame counter
+	 *used
+	 * with this key.
+	 */
+	bool BlackListed;
 } mac_key_device_desc_t;
-
-
 
 /**
  * Structure implementing a KeyIdLookupDescriptor.
  * See IEEE 802.15.4-2006 section 7.6.1 Table 94.
  */
-typedef struct mac_key_id_lookup_desc_tag
-{
-    /** Data used to identify the key. */
-    uint8_t LookupData[9];
-    /**
-     * A value of 0x00 indicates a set of 5 octets, a value of 0x01 indicates
-     * a set of 9 octets.
-     */
-    uint8_t LookupDataSize;
+typedef struct mac_key_id_lookup_desc_tag {
+	/** Data used to identify the key. */
+	uint8_t LookupData[9];
+
+	/**
+	 * A value of 0x00 indicates a set of 5 octets, a value of 0x01
+	 *indicates
+	 * a set of 9 octets.
+	 */
+	uint8_t LookupDataSize;
 } mac_key_id_lookup_desc_t;
-
-
 
 /**
  * Structure implementing the macKeyTable
  * according to IEEE 802.15.4-2006 section 7.6.1.
  */
-typedef struct mac_key_table_tag
-{
-    /** List of KeyIdLookupDescriptor entries. */
-    mac_key_id_lookup_desc_t KeyIdLookupList[MAC_ZIP_MAX_KEY_ID_LOOKUP_LIST_ENTRIES];
-    /** The number of entries in KeyIdLookupList. */
-    uint8_t KeyIdLookupListEntries;
+typedef struct mac_key_table_tag {
+	/** List of KeyIdLookupDescriptor entries. */
+	mac_key_id_lookup_desc_t KeyIdLookupList[
+		MAC_ZIP_MAX_KEY_ID_LOOKUP_LIST_ENTRIES];
+	/** The number of entries in KeyIdLookupList. */
+	uint8_t KeyIdLookupListEntries;
 
-    /** List of KeyDeviceDescriptor entries. */
-    mac_key_device_desc_t KeyDeviceList[MAC_ZIP_MAX_KEY_DEV_LIST_ENTRIES];
-    /** The number of entries in KeyDeviceList. */
-    uint8_t KeyDeviceListEntries;
+	/** List of KeyDeviceDescriptor entries. */
+	mac_key_device_desc_t KeyDeviceList[MAC_ZIP_MAX_KEY_DEV_LIST_ENTRIES];
+	/** The number of entries in KeyDeviceList. */
+	uint8_t KeyDeviceListEntries;
 
-    /** List of KeyUsageDescriptor entries. */
-    mac_key_usage_t KeyUsageList[MAC_ZIP_MAX_KEY_USAGE_LIST_ENTRIES];
-    /** The number of entries in KeyUsageList. */
-    uint8_t KeyUsageListEntries;
+	/** List of KeyUsageDescriptor entries. */
+	mac_key_usage_t KeyUsageList[MAC_ZIP_MAX_KEY_USAGE_LIST_ENTRIES];
+	/** The number of entries in KeyUsageList. */
+	uint8_t KeyUsageListEntries;
 
-    /** Set of 16 octets - the actual value of the key. */
-    uint8_t Key[16];
+	/** Set of 16 octets - the actual value of the key. */
+	uint8_t Key[16];
 } mac_key_table_t;
-
-
 
 /**
  * Structure implementing the macSecurityLevelTable
  * according to IEEE 802.15.4-2006 section 7.6.1.
  */
-typedef struct mac_sec_lvl_table_tag
-{
-    /** See 7.2.1.1.1. */
-    uint8_t FrameType;
+typedef struct mac_sec_lvl_table_tag {
+	/** See 7.2.1.1.1. */
+	uint8_t FrameType;
 
-    /** See Table 82. */
-    uint8_t CommandFrameIdentifier;
+	/** See Table 82. */
+	uint8_t CommandFrameIdentifier;
 
-    /**
-     * The minimal required/expected security level for incoming
-     * MAC frames with the indicated frame type and, if present,
-     * command frame type (see Table 95 in 7.6.2.2.1).
-     */
-    uint8_t SecurityMinimum;
+	/**
+	 * The minimal required/expected security level for incoming
+	 * MAC frames with the indicated frame type and, if present,
+	 * command frame type (see Table 95 in 7.6.2.2.1).
+	 */
+	uint8_t SecurityMinimum;
 
-    /**
-     * Indication of whether originating devices for which the Exempt flag
-     * is set may override the minimum security level indicated by the
-     * SecurityMinimum element.
-     * If TRUE, this indicates that for originating devices with Exempt status,
-     * the incoming security level zero is acceptable, in addition to the
-     * incoming security levels meeting the minimum expected security level
-     * indicated by the SecurityMinimum element.
-     */
-    bool DeviceOverrideSecurityMinimum;
+	/**
+	 * Indication of whether originating devices for which the Exempt flag
+	 * is set may override the minimum security level indicated by the
+	 * SecurityMinimum element.
+	 * If TRUE, this indicates that for originating devices with Exempt
+	 *status,
+	 * the incoming security level zero is acceptable, in addition to the
+	 * incoming security levels meeting the minimum expected security level
+	 * indicated by the SecurityMinimum element.
+	 */
+	bool DeviceOverrideSecurityMinimum;
 } mac_sec_lvl_table_t;
-
-
 
 /**
  * Structure implementing the macDeviceTable
  * according to IEEE 802.15.4-2006 section 7.6.1.
  */
-typedef struct mac_dev_table_tag
-{
-    mac_device_desc_t DeviceDescriptor[1];
+typedef struct mac_dev_table_tag {
+	mac_device_desc_t DeviceDescriptor[1];
 } mac_dev_table_t;
 
-
-
 /* Structure implementing the MAC Security related PIB attributes */
-typedef struct mac_sec_pib_tag
-{
-    /**
-     * Holds a table of KeyDescriptor entries, each containing keys and related
-     * information required for secured communications.
-     */
-    mac_key_table_t KeyTable[MAC_ZIP_MAX_KEY_TABLE_ENTRIES];
-    /**
-     * Holds the number of entries in macKeyTable.
-     */
-    uint8_t KeyTableEntries;
+typedef struct mac_sec_pib_tag {
+	/**
+	 * Holds a table of KeyDescriptor entries, each containing keys and
+	 *related
+	 * information required for secured communications.
+	 */
+	mac_key_table_t KeyTable[MAC_ZIP_MAX_KEY_TABLE_ENTRIES];
 
-    /**
-     * Holds a table of DeviceDescriptor entries, each indicating a remote device
-     * with which this device securely communicates.
-     */
-    mac_dev_table_t DeviceTable[MAC_ZIP_MAX_DEV_TABLE_ENTRIES];
-    /**
-     * Holds the number of entries in macDeviceTable.
-     */
-    uint8_t DeviceTableEntries;
+	/**
+	 * Holds the number of entries in macKeyTable.
+	 */
+	uint8_t KeyTableEntries;
 
-    /**
-     * Holds a table of SecurityLevelDescriptor entries, each with information
-     * about the minimum security level expected depending on incoming frame type
-     * and subtype.
-     */
-    mac_sec_lvl_table_t SecurityLevelTable[MAC_ZIP_MAX_SEC_LVL_TABLE_ENTRIES];
-    /**
-     * Holds the number of entries in macSecurityLevelTable.
-     */
-    uint8_t SecurityLevelTableEntries;
+	/**
+	 * Holds a table of DeviceDescriptor entries, each indicating a remote
+	 *device
+	 * with which this device securely communicates.
+	 */
+	mac_dev_table_t DeviceTable[MAC_ZIP_MAX_DEV_TABLE_ENTRIES];
 
-    /**
-     * Holds the outgoing frame counter for this device.
-     */
-    uint32_t FrameCounter;
+	/**
+	 * Holds the number of entries in macDeviceTable.
+	 */
+	uint8_t DeviceTableEntries;
 
-    /**
-     * Holds the originator of the default key used for key identifier mode 0x01.
-     */
-    uint8_t DefaultKeySource[8];
+	/**
+	 * Holds a table of SecurityLevelDescriptor entries, each with
+	 *information
+	 * about the minimum security level expected depending on incoming frame
+	 *type
+	 * and subtype.
+	 */
+	mac_sec_lvl_table_t SecurityLevelTable[MAC_ZIP_MAX_SEC_LVL_TABLE_ENTRIES
+	];
+
+	/**
+	 * Holds the number of entries in macSecurityLevelTable.
+	 */
+	uint8_t SecurityLevelTableEntries;
+
+	/**
+	 * Holds the outgoing frame counter for this device.
+	 */
+	uint32_t FrameCounter;
+
+	/**
+	 * Holds the originator of the default key used for key identifier mode
+	 *0x01.
+	 */
+	uint8_t DefaultKeySource[8];
 } mac_sec_pib_t;
 #endif  /* MAC_SECURITY_ZIP */
 
 #endif /* if !defined(__DOXYGEN___NO_MAC) */
 
-#ifndef UC3
+#ifdef SAM
 COMPILER_PACK_RESET()
-#endif /* UC3 */
-//! @}
+#endif /* SAM */
+/* ! @} */
 /* === Macros =============================================================== */
 
-    /**
-     * \addtogroup group_mac_def
-     * @{
-     */
-	 
+/**
+ * \addtogroup group_mac_def
+ * @{
+ */
+
 /**
  * Capacity of queue between MAC and Next Higher Layer
  */
@@ -576,12 +551,11 @@ COMPILER_PACK_RESET()
  */
 #define WPAN_NUM_EXTENDED_ADDR_PENDING(x)   (((x) >> 4) & 0x7)
 
-//! @}
+/* ! @} */
 /* === Prototypes =========================================================== */
 #ifdef __cplusplus
 extern "C" {
 #endif
-
 
 /**
  * @brief The stack initialization function.
@@ -592,7 +566,6 @@ extern "C" {
  * @ingroup group_mac_gen
  */
 retval_t wpan_init(void);
-
 
 /**
  * @brief The stack task function called by the application.
@@ -613,8 +586,6 @@ bool wpan_task(void);
  * stack at the MAC level
  */
 
-
-
 /**
  * Initiate MCPS-DATA.request service and have it placed in the MCPS-SAP queue.
  *
@@ -631,7 +602,8 @@ bool wpan_task(void);
  *
  * @param SecurityLevel Used security level; this parameter is only available
  *                      if MAC security is enabled via MAC_SECURITY_ZIP
- * @param KeyIdMode     Used mode to identify the key; this parameter is only available
+ * @param KeyIdMode     Used mode to identify the key; this parameter is only
+ *available
  *                      if MAC security is enabled via MAC_SECURITY_ZIP
  * @param KeyIndex      Used index of the key; this parameter is only available
  *                      if MAC security is enabled via MAC_SECURITY_ZIP
@@ -641,26 +613,28 @@ bool wpan_task(void);
  */
 #if defined(MAC_SECURITY_ZIP) || defined(__DOXYGEN__)
 bool wpan_mcps_data_req(uint8_t SrcAddrMode,
-                        wpan_addr_spec_t *DstAddrSpec,
-                        uint8_t msduLength,
-                        uint8_t *msdu,
-                        uint8_t msduHandle,
-                        uint8_t TxOptions,
-                        uint8_t SecurityLevel,
-                        uint8_t KeyIdMode,
-                        uint8_t KeyIndex);
+		wpan_addr_spec_t *DstAddrSpec,
+		uint8_t msduLength,
+		uint8_t *msdu,
+		uint8_t msduHandle,
+		uint8_t TxOptions,
+		uint8_t SecurityLevel,
+		uint8_t KeyIdMode,
+		uint8_t KeyIndex);
+
 #else   /* No MAC_SECURITY */
 bool wpan_mcps_data_req(uint8_t SrcAddrMode,
-                        wpan_addr_spec_t *DstAddrSpec,
-                        uint8_t msduLength,
-                        uint8_t *msdu,
-                        uint8_t msduHandle,
-                        uint8_t TxOptions);
+		wpan_addr_spec_t *DstAddrSpec,
+		uint8_t msduLength,
+		uint8_t *msdu,
+		uint8_t msduHandle,
+		uint8_t TxOptions);
+
 #endif
 
+#if ((MAC_PURGE_REQUEST_CONFIRM == 1) && (MAC_INDIRECT_DATA_BASIC == 1)) || \
+	defined(__DOXYGEN__)
 
-
-#if ((MAC_PURGE_REQUEST_CONFIRM == 1) && (MAC_INDIRECT_DATA_BASIC == 1)) || defined(__DOXYGEN__)
 /**
  * Initiate MCPS-PURGE.request service and have it placed in the MCPS-SAP queue.
  *
@@ -670,17 +644,22 @@ bool wpan_mcps_data_req(uint8_t SrcAddrMode,
  * @ingroup group_mac_req
  */
 bool wpan_mcps_purge_req(const uint8_t msduHandle);
-#endif  /* ((MAC_PURGE_REQUEST_CONFIRM == 1) && (MAC_INDIRECT_DATA_BASIC == 1)) */
 
-
+#endif  /* ((MAC_PURGE_REQUEST_CONFIRM == 1) && (MAC_INDIRECT_DATA_BASIC == 1))
+         **/
 
 #if (MAC_ASSOCIATION_REQUEST_CONFIRM == 1) || defined(__DOXYGEN__)
+
 /**
- * Initiate MLME-ASSOCIATE.request service and have it placed in the MLME-SAP queue.
+ * Initiate MLME-ASSOCIATE.request service and have it placed in the MLME-SAP
+ *queue.
  *
- * @param LogicalChannel        The logical channel on which to attempt association.
- * @param ChannelPage           The channel page on which to attempt association.
- * @param CoordAddrSpec         Pointer to wpan_addr_spec_t structure for coordinator.
+ * @param LogicalChannel        The logical channel on which to attempt
+ *association.
+ * @param ChannelPage           The channel page on which to attempt
+ *association.
+ * @param CoordAddrSpec         Pointer to wpan_addr_spec_t structure for
+ *coordinator.
  * @param CapabilityInformation Bitmap that describes the nodes capabilities.
  *                              (@ref WPAN_CAP_ALTPANCOORD |
  *                               @ref WPAN_CAP_FFD |
@@ -692,14 +671,14 @@ bool wpan_mcps_purge_req(const uint8_t msduHandle);
  * @ingroup group_mac_req
  */
 bool wpan_mlme_associate_req(uint8_t LogicalChannel,
-                             uint8_t ChannelPage,
-                             wpan_addr_spec_t *CoordAddrSpec,
-                             uint8_t CapabilityInformation);
+		uint8_t ChannelPage,
+		wpan_addr_spec_t *CoordAddrSpec,
+		uint8_t CapabilityInformation);
+
 #endif  /* (MAC_ASSOCIATION_REQUEST_CONFIRM == 1) */
 
-
-
 #if (MAC_ASSOCIATION_INDICATION_RESPONSE == 1) || defined(__DOXYGEN__)
+
 /**
  * Initiate MLME-ASSOCIATE.response service and place it in the MLME-SAP queue.
  *
@@ -715,15 +694,16 @@ bool wpan_mlme_associate_req(uint8_t LogicalChannel,
  * @ingroup group_mac_resp
  */
 bool wpan_mlme_associate_resp(uint64_t DeviceAddress,
-                              uint16_t AssocShortAddress,
-                              uint8_t status);
+		uint16_t AssocShortAddress,
+		uint8_t status);
+
 #endif  /* (MAC_ASSOCIATION_INDICATION_RESPONSE == 1) */
 
-
-
 #if (MAC_DISASSOCIATION_BASIC_SUPPORT == 1) || defined(__DOXYGEN__)
+
 /**
- * Inititate MLME-DISASSOCIATE.request service and have it placed in the MLME-SAP queue.
+ * Inititate MLME-DISASSOCIATE.request service and have it placed in the
+ *MLME-SAP queue.
  *
  * @param DeviceAddrSpec     Pointer to wpan_addr_spec_t structure for device
  *                           to which to send the disassociation notification
@@ -738,13 +718,13 @@ bool wpan_mlme_associate_resp(uint64_t DeviceAddress,
  * @ingroup group_mac_req
  */
 bool wpan_mlme_disassociate_req(wpan_addr_spec_t *DeviceAddrSpec,
-                                uint8_t DisassociateReason,
-                                bool TxIndirect);
+		uint8_t DisassociateReason,
+		bool TxIndirect);
+
 #endif  /* (MAC_DISASSOCIATION_BASIC_SUPPORT == 1) */
 
-
-
 #if (MAC_GET_SUPPORT == 1) || defined(__DOXYGEN__)
+
 /**
  * Initiate MLME-GET.request service and have it placed in the MLME-SAP queue.
  *
@@ -756,14 +736,15 @@ bool wpan_mlme_disassociate_req(wpan_addr_spec_t *DeviceAddrSpec,
  */
 #ifdef MAC_SECURITY_ZIP
 bool wpan_mlme_get_req(uint8_t PIBAttribute, uint8_t PIBAttributeIndex);
+
 #else
 bool wpan_mlme_get_req(uint8_t PIBAttribute);
+
 #endif  /* MAC_SECURITY_ZIP */
 #endif  /* (MAC_GET_SUPPORT == 1) */
 
-
-
 #if (MAC_ORPHAN_INDICATION_RESPONSE == 1) || defined(__DOXYGEN__)
+
 /**
  * Initiate MLME-ORPHAN.response service and have it placed in MLME_SAP queue.
  *
@@ -775,37 +756,36 @@ bool wpan_mlme_get_req(uint8_t PIBAttribute);
  * @ingroup group_mac_resp
  */
 bool wpan_mlme_orphan_resp(uint64_t OrphanAddress,
-                           uint16_t ShortAddress,
-                           bool AssociatedMember);
+		uint16_t ShortAddress,
+		bool AssociatedMember);
+
 #endif  /* (MAC_ORPHAN_INDICATION_RESPONSE == 1) */
 
-
-
 #if (MAC_INDIRECT_DATA_BASIC == 1) || defined(__DOXYGEN__)
+
 /**
  * Initiate MLME-POLL.request service and have it placed in the MLME-SAP queue.
  *
- * @param CoordAddrSpec   Pointer to wpan_addr_spec_t structure for the coordinator.
+ * @param CoordAddrSpec   Pointer to wpan_addr_spec_t structure for the
+ *coordinator.
  *
  * @return true - success; false - buffer not availability or queue full.
  * @ingroup group_mac_req
  */
 bool wpan_mlme_poll_req(wpan_addr_spec_t *CoordAddrSpec);
+
 #endif  /* (MAC_INDIRECT_DATA_BASIC == 1) */
-
-
 
 /**
  * Initiate MLME-RESET.request service and have it placed in the MLME-SAP queue.
  *
- * @param SetDefaultPib  Boolean to set all PIB values to their respective defaults.
+ * @param SetDefaultPib  Boolean to set all PIB values to their respective
+ *defaults.
  *
  * @return true - success; false - buffer not available or queue full.
  * @ingroup group_mac_req
  */
 bool wpan_mlme_reset_req(bool SetDefaultPib);
-
-
 
 /**
  * Initiate MLME-SET.request service and have it placed in MLME_SAP queue.
@@ -819,22 +799,26 @@ bool wpan_mlme_reset_req(bool SetDefaultPib);
  */
 #ifdef MAC_SECURITY_ZIP
 bool wpan_mlme_set_req(uint8_t PIBAttribute,
-                       uint8_t PIBAttributeIndex,
-                       void *PIBAttributeValue);
+		uint8_t PIBAttributeIndex,
+		void *PIBAttributeValue);
+
 #else
 bool wpan_mlme_set_req(uint8_t PIBAttribute,
-                       void *PIBAttributeValue);
+		void *PIBAttributeValue);
+
 #endif  /* MAC_SECURITY_ZIP */
 
-
-
 #if (MAC_RX_ENABLE_SUPPORT == 1) || defined(__DOXYGEN__)
+
 /**
- * Initiate MLME-RX-ENABLE.request service and have it placed in the MLME-SAP queue.
+ * Initiate MLME-RX-ENABLE.request service and have it placed in the MLME-SAP
+ *queue.
  *
- * @param DeferPermit     Set to true if receiver enable can be deferred until next
+ * @param DeferPermit     Set to true if receiver enable can be deferred until
+ *next
  *                        superframe if requested time has already passed.
- * @param RxOnTime        Number of symbols from start of superframe before receiver
+ * @param RxOnTime        Number of symbols from start of superframe before
+ *receiver
  *                        is enabled.
  * @param RxOnDuration    Number of symbols for which the receiver is enabled,
  *
@@ -842,16 +826,16 @@ bool wpan_mlme_set_req(uint8_t PIBAttribute,
  * @ingroup group_mac_req
  */
 bool wpan_mlme_rx_enable_req(bool DeferPermit,
-                             uint32_t RxOnTime,
-                             uint32_t RxOnDuration);
+		uint32_t RxOnTime,
+		uint32_t RxOnDuration);
+
 #endif  /* (MAC_RX_ENABLE_SUPPORT == 1) */
 
+#if ((MAC_SCAN_ED_REQUEST_CONFIRM == 1)      ||	\
+	(MAC_SCAN_ACTIVE_REQUEST_CONFIRM == 1)  || \
+	(MAC_SCAN_PASSIVE_REQUEST_CONFIRM == 1) || \
+	(MAC_SCAN_ORPHAN_REQUEST_CONFIRM == 1)) || defined(__DOXYGEN__)
 
-
-#if ((MAC_SCAN_ED_REQUEST_CONFIRM == 1)      || \
-     (MAC_SCAN_ACTIVE_REQUEST_CONFIRM == 1)  || \
-     (MAC_SCAN_PASSIVE_REQUEST_CONFIRM == 1) || \
-     (MAC_SCAN_ORPHAN_REQUEST_CONFIRM == 1)) || defined(__DOXYGEN__)
 /**
  * Initiate MLME-SCAN.request service and have it placed in the MLME-SAP queue.
  *
@@ -868,14 +852,14 @@ bool wpan_mlme_rx_enable_req(bool DeferPermit,
  * @ingroup group_mac_req
  */
 bool wpan_mlme_scan_req(uint8_t ScanType,
-                        uint32_t ScanChannels,
-                        uint8_t ScanDuration,
-                        uint8_t ChannelPage);
+		uint32_t ScanChannels,
+		uint8_t ScanDuration,
+		uint8_t ChannelPage);
+
 #endif
 
-
-
 #if (MAC_START_REQUEST_CONFIRM == 1) || defined(__DOXYGEN__)
+
 /**
  * Initiate MLME-START service and have it placed in the MLME-SAP queue.
  *
@@ -886,28 +870,33 @@ bool wpan_mlme_scan_req(uint8_t ScanType,
  *                              using the new superframe configuration.
  * @param BeaconOrder           Beacon transmission interval.
  * @param SuperframeOrder       Duration of active portion of superframe.
- * @param PANCoordinator        Indicates whether node is PAN coordinator of PAN.
- * @param BatteryLifeExtension  Boolean true disables receiver of beaconing device
- *                              for a period after interframe spacing of beacon frame.
- * @param CoordRealignment      Boolean to transmit Coordinator Realignment command
- *                              prior to changing to new superframe configuration.
+ * @param PANCoordinator        Indicates whether node is PAN coordinator of
+ *PAN.
+ * @param BatteryLifeExtension  Boolean true disables receiver of beaconing
+ *device
+ *                              for a period after interframe spacing of beacon
+ *frame.
+ * @param CoordRealignment      Boolean to transmit Coordinator Realignment
+ *command
+ *                              prior to changing to new superframe
+ *configuration.
  *
  * @return true - success; false - buffer not available or queue full.
  * @ingroup group_mac_req
  */
 bool wpan_mlme_start_req(uint16_t PANId,
-                         uint8_t LogicalChannel,
-                         uint8_t ChannelPage,
-                         uint8_t BeaconOrder,
-                         uint8_t SuperframeOrder,
-                         bool PANCoordinator,
-                         bool BatteryLifeExtension,
-                         bool CoordRealignment);
+		uint8_t LogicalChannel,
+		uint8_t ChannelPage,
+		uint8_t BeaconOrder,
+		uint8_t SuperframeOrder,
+		bool PANCoordinator,
+		bool BatteryLifeExtension,
+		bool CoordRealignment);
+
 #endif  /* (MAC_START_REQUEST_CONFIRM == 1) */
 
-
-
 #if (MAC_SYNC_REQUEST == 1) || defined(__DOXYGEN__)
+
 /**
  * Initiate MLME-SYNC.request service and have it placed in the MLME-SAP queue.
  *
@@ -921,25 +910,23 @@ bool wpan_mlme_start_req(uint16_t PANId,
  * @ingroup group_mac_req
  */
 bool wpan_mlme_sync_req(uint8_t LogicalChannel,
-                        uint8_t ChannelPage,
-                        bool TrackBeacon);
+		uint8_t ChannelPage,
+		bool TrackBeacon);
+
 #endif /* (MAC_SYNC_REQUEST == 1) */
-
-
 
 /*@}*//* apiMacReq */
 
-
-
-
 /**
- * Callback function that must be implemented by application (NHLE) for MAC service
+ * Callback function that must be implemented by application (NHLE) for MAC
+ *service
  * MCPS-DATA.confirm.
  *
  * @param msduHandle  Handle of MSDU handed over to MAC earlier.
  * @param status      Result for requested data transmission request.
  * @param Timestamp   The time, in symbols, at which the data were transmitted;
- *                    this parameter is only available if timestamping is enabled
+ *                    this parameter is only available if timestamping is
+ *enabled
  *                    via compile switch ENABLE_TSTAMP.
  *
  * @return void
@@ -948,17 +935,18 @@ bool wpan_mlme_sync_req(uint8_t LogicalChannel,
  */
 #if defined(ENABLE_TSTAMP) || defined(__DOXYGEN__)
 void usr_mcps_data_conf(uint8_t msduHandle,
-                        uint8_t status,
-                        uint32_t Timestamp);
+		uint8_t status,
+		uint32_t Timestamp);
+
 #else
 void usr_mcps_data_conf(uint8_t msduHandle,
-                        uint8_t status);
+		uint8_t status);
+
 #endif  /* ENABLE_TSTAMP */
 
-
-
 /**
- * Callback function that must be implemented by application (NHLE) for MAC service
+ * Callback function that must be implemented by application (NHLE) for MAC
+ *service
  * MCPS-DATA.indication.
  *
  * @param SrcAddrSpec      Pointer to source address specification.
@@ -967,15 +955,19 @@ void usr_mcps_data_conf(uint8_t msduHandle,
  * @param msdu             Pointer to MSDU.
  * @param mpduLinkQuality  LQI measured during reception of the MPDU.
  * @param DSN              The DSN of the received data frame.
- * @param Timestamp        The time, in symbols, at which the data were received;
- *                         this parameter is only available if timestamping is enabled
+ * @param Timestamp        The time, in symbols, at which the data were
+ *received;
+ *                         this parameter is only available if timestamping is
+ *enabled
  *                         via compile switch ENABLE_TSTAMP.
  *
  * @param SecurityLevel    Used security level; this parameter is only available
  *                         if MAC security is enabled via MAC_SECURITY_ZIP
- * @param KeyIdMode        Used mode to identify the key; this parameter is only available
+ * @param KeyIdMode        Used mode to identify the key; this parameter is only
+ *available
  *                         if MAC security is enabled via MAC_SECURITY_ZIP
- * @param KeyIndex         Used index of the key; this parameter is only available
+ * @param KeyIndex         Used index of the key; this parameter is only
+ *available
  *                         if MAC security is enabled via MAC_SECURITY_ZIP
  *
  * @return void
@@ -983,36 +975,38 @@ void usr_mcps_data_conf(uint8_t msduHandle,
  * @ingroup group_mac_ind
  */
 #if defined(MAC_SECURITY_ZIP) || defined(__DOXYGEN__)
-void usr_mcps_data_ind(wpan_addr_spec_t *SrcAddrSpec,
-                       wpan_addr_spec_t *DstAddrSpec,
-                       uint8_t msduLength,
-                       uint8_t *msdu,
-                       uint8_t mpduLinkQuality,
-                       uint8_t DSN,
+void usr_mcps_data_ind(wpan_addr_spec_t * SrcAddrSpec,
+wpan_addr_spec_t * DstAddrSpec,
+uint8_t msduLength,
+uint8_t * msdu,
+uint8_t mpduLinkQuality,
+uint8_t DSN,
     #if defined(ENABLE_TSTAMP) || defined(__DOXYGEN__)
-                       uint32_t Timestamp,
+uint32_t Timestamp,
     #endif  /* ENABLE_TSTAMP */
-                       uint8_t SecurityLevel,
-                       uint8_t KeyIdMode,
-                       uint8_t KeyIndex);
+uint8_t SecurityLevel,
+uint8_t KeyIdMode,
+uint8_t KeyIndex);
 #else   /* No MAC_SECURITY */
-void usr_mcps_data_ind(wpan_addr_spec_t *SrcAddrSpec,
-                       wpan_addr_spec_t *DstAddrSpec,
-                       uint8_t msduLength,
-                       uint8_t *msdu,
-                       uint8_t mpduLinkQuality,
+void usr_mcps_data_ind(wpan_addr_spec_t * SrcAddrSpec,
+wpan_addr_spec_t * DstAddrSpec,
+uint8_t msduLength,
+uint8_t * msdu,
+uint8_t mpduLinkQuality,
     #ifdef ENABLE_TSTAMP
-                       uint8_t DSN,
-                       uint32_t Timestamp);
+uint8_t DSN,
+uint32_t Timestamp);
     #else
-                       uint8_t DSN);
+uint8_t DSN);
     #endif  /* ENABLE_TSTAMP */
 #endif  /* MAC_SECURITY */
 
+#if ((MAC_PURGE_REQUEST_CONFIRM == 1) && (MAC_INDIRECT_DATA_BASIC == 1)) || \
+	defined(__DOXYGEN__)
 
-#if ((MAC_PURGE_REQUEST_CONFIRM == 1) && (MAC_INDIRECT_DATA_BASIC == 1)) || defined(__DOXYGEN__)
 /**
- * Callback function that must be implemented by application (NHLE) for MAC service
+ * Callback function that must be implemented by application (NHLE) for MAC
+ *service
  * MCPS-PURGE.confirm.
  *
  * @param msduHandle           Handle (id) of MSDU to be purged.
@@ -1023,14 +1017,16 @@ void usr_mcps_data_ind(wpan_addr_spec_t *SrcAddrSpec,
  * @ingroup group_mac_conf
  */
 void usr_mcps_purge_conf(uint8_t msduHandle,
-                         uint8_t status);
-#endif  /* ((MAC_PURGE_REQUEST_CONFIRM == 1) && (MAC_INDIRECT_DATA_BASIC == 1)) */
+		uint8_t status);
 
-
+#endif  /* ((MAC_PURGE_REQUEST_CONFIRM == 1) && (MAC_INDIRECT_DATA_BASIC == 1))
+         **/
 
 #if (MAC_ASSOCIATION_REQUEST_CONFIRM == 1) || defined(__DOXYGEN__)
+
 /**
- * Callback function that must be implemented by application (NHLE) for MAC service
+ * Callback function that must be implemented by application (NHLE) for MAC
+ *service
  * MLME-ASSOCIATE.confirm.
  *
  * @param AssocShortAddress    Short address allocated by the coordinator.
@@ -1041,17 +1037,19 @@ void usr_mcps_purge_conf(uint8_t msduHandle,
  * @ingroup group_mac_conf
  */
 void usr_mlme_associate_conf(uint16_t AssocShortAddress,
-                             uint8_t status);
+		uint8_t status);
+
 #endif  /* (MAC_ASSOCIATION_REQUEST_CONFIRM == 1) */
 
-
-
 #if (MAC_ASSOCIATION_INDICATION_RESPONSE == 1) || defined(__DOXYGEN__)
+
 /**
- * Callback function that must be implemented by application (NHLE) for MAC service
+ * Callback function that must be implemented by application (NHLE) for MAC
+ *service
  * MLME-ASSOCIATE.indication.
  *
- * @param DeviceAddress         Extended address of device requesting association.
+ * @param DeviceAddress         Extended address of device requesting
+ *association.
  * @param CapabilityInformation Capabilities of device requesting association.
  *                              (@ref WPAN_CAP_ALTPANCOORD |
  *                               @ref WPAN_CAP_FFD |
@@ -1064,20 +1062,22 @@ void usr_mlme_associate_conf(uint16_t AssocShortAddress,
  * @ingroup group_mac_ind
  */
 void usr_mlme_associate_ind(uint64_t DeviceAddress,
-                            uint8_t CapabilityInformation);
+		uint8_t CapabilityInformation);
+
 #endif  /* (MAC_ASSOCIATION_INDICATION_RESPONSE == 1) */
 
-
-
 #if (MAC_BEACON_NOTIFY_INDICATION == 1) || defined(__DOXYGEN__)
+
 /**
- * Callback function that must be implemented by application (NHLE) for MAC service
+ * Callback function that must be implemented by application (NHLE) for MAC
+ *service
  * MLME-BEACON-NOTIFY.indication.
  *
  * @param BSN            Beacon sequence number.
  * @param PANDescriptor  Pointer to PAN descriptor for received beacon.
  * @param PendAddrSpec   Pending address specification in received beacon.
- * @param AddrList       List of addresses of devices the coordinator has pending data.
+ * @param AddrList       List of addresses of devices the coordinator has
+ *pending data.
  * @param sduLength      Length of beacon payload.
  * @param sdu            Pointer to beacon payload.
  *
@@ -1086,18 +1086,21 @@ void usr_mlme_associate_ind(uint64_t DeviceAddress,
  * @ingroup group_mac_ind
  */
 void usr_mlme_beacon_notify_ind(uint8_t BSN,
-                                wpan_pandescriptor_t *PANDescriptor,
-                                uint8_t PendAddrSpec,
-                                uint8_t *AddrList,
-                                uint8_t sduLength,
-                                uint8_t *sdu);
+		wpan_pandescriptor_t *PANDescriptor,
+		uint8_t PendAddrSpec,
+		uint8_t *AddrList,
+		uint8_t sduLength,
+		uint8_t *sdu);
+
 #endif  /* (MAC_BEACON_NOTIFY_INDICATION == 1) */
 
+#if ((MAC_ORPHAN_INDICATION_RESPONSE == 1) || \
+	(MAC_ASSOCIATION_INDICATION_RESPONSE == 1)) || \
+	defined(__DOXYGEN__)
 
-
-#if ((MAC_ORPHAN_INDICATION_RESPONSE == 1) || (MAC_ASSOCIATION_INDICATION_RESPONSE == 1)) || defined(__DOXYGEN__)
 /**
- * Callback function that must be implemented by application (NHLE) for MAC service
+ * Callback function that must be implemented by application (NHLE) for MAC
+ *service
  * MLME-COMM-STATUS.indication.
  *
  * @param SrcAddrSpec      Pointer to source address specification.
@@ -1109,15 +1112,17 @@ void usr_mlme_beacon_notify_ind(uint8_t BSN,
  * @ingroup group_mac_ind
  */
 void usr_mlme_comm_status_ind(wpan_addr_spec_t *SrcAddrSpec,
-                              wpan_addr_spec_t *DstAddrSpec,
-                              uint8_t status);
-#endif  /* ((MAC_ORPHAN_INDICATION_RESPONSE == 1) || (MAC_ASSOCIATION_INDICATION_RESPONSE == 1)) */
+		wpan_addr_spec_t *DstAddrSpec,
+		uint8_t status);
 
-
+#endif  /* ((MAC_ORPHAN_INDICATION_RESPONSE == 1) ||
+         *(MAC_ASSOCIATION_INDICATION_RESPONSE == 1)) */
 
 #if (MAC_DISASSOCIATION_BASIC_SUPPORT == 1) || defined(__DOXYGEN__)
+
 /**
- * Callback function that must be implemented by application (NHLE) for MAC service
+ * Callback function that must be implemented by application (NHLE) for MAC
+ *service
  * MLME-DISASSOCIATE.confirm.
  *
  * @param status             Result of requested disassociate operation.
@@ -1130,14 +1135,15 @@ void usr_mlme_comm_status_ind(wpan_addr_spec_t *SrcAddrSpec,
  * @ingroup group_mac_conf
  */
 void usr_mlme_disassociate_conf(uint8_t status,
-                                wpan_addr_spec_t *DeviceAddrSpec);
+		wpan_addr_spec_t *DeviceAddrSpec);
+
 #endif /* (MAC_DISASSOCIATION_BASIC_SUPPORT == 1) || defined(__DOXYGEN__) */
 
-
-
 #if (MAC_DISASSOCIATION_BASIC_SUPPORT == 1) || defined(__DOXYGEN__)
+
 /**
- * Callback function that must be implemented by application (NHLE) for MAC service
+ * Callback function that must be implemented by application (NHLE) for MAC
+ *service
  * MLME-DISASSOCIATE.indication.
  *
  * @param DeviceAddress        Extended address of device which initiated the
@@ -1151,14 +1157,15 @@ void usr_mlme_disassociate_conf(uint8_t status,
  * @ingroup group_mac_ind
  */
 void usr_mlme_disassociate_ind(uint64_t DeviceAddress,
-                               uint8_t DisassociateReason);
+		uint8_t DisassociateReason);
+
 #endif  /* (MAC_DISASSOCIATION_BASIC_SUPPORT == 1) || defined(__DOXYGEN__) */
 
-
-
 #if (MAC_GET_SUPPORT == 1) || defined(__DOXYGEN__)
+
 /**
- * Callback function that must be implemented by application (NHLE) for MAC service
+ * Callback function that must be implemented by application (NHLE) for MAC
+ *service
  * MLME-GET.confirm.
  *
  * @param status            Result of requested PIB attribute get operation.
@@ -1171,18 +1178,18 @@ void usr_mlme_disassociate_ind(uint64_t DeviceAddress,
  * @ingroup group_mac_conf
  */
 void usr_mlme_get_conf(uint8_t status,
-                       uint8_t PIBAttribute,
+uint8_t PIBAttribute,
 #ifdef MAC_SECURITY_ZIP
-                       uint8_t PIBAttributeIndex,
+uint8_t PIBAttributeIndex,
 #endif  /* MAC_SECURITY_ZIP */
-                       void *PIBAttributeValue);
+void *PIBAttributeValue);
 #endif  /* (MAC_GET_SUPPORT == 1) || defined(__DOXYGEN__) */
 
-
-
 #if (MAC_ORPHAN_INDICATION_RESPONSE == 1) || defined(__DOXYGEN__)
+
 /**
- * Callback function that must be implemented by application (NHLE) for MAC service
+ * Callback function that must be implemented by application (NHLE) for MAC
+ *service
  * MLME-ORPHAN.indication.
  *
  * @param OrphanAddress     Address of orphaned device.
@@ -1192,13 +1199,14 @@ void usr_mlme_get_conf(uint8_t status,
  * @ingroup group_mac_ind
  */
 void usr_mlme_orphan_ind(uint64_t OrphanAddress);
+
 #endif  /* (MAC_ORPHAN_INDICATION_RESPONSE == 1) || defined(__DOXYGEN__) */
 
-
-
 #if (MAC_INDIRECT_DATA_BASIC == 1) || defined(__DOXYGEN__)
+
 /**
- * Callback function that must be implemented by application (NHLE) for MAC service
+ * Callback function that must be implemented by application (NHLE) for MAC
+ *service
  * MLME-POLL.confirm.
  *
  * @param status           Result of requested poll operation.
@@ -1208,12 +1216,12 @@ void usr_mlme_orphan_ind(uint64_t OrphanAddress);
  * @ingroup group_mac_conf
  */
 void usr_mlme_poll_conf(uint8_t status);
+
 #endif  /* (MAC_INDIRECT_DATA_BASIC == 1) || defined(__DOXYGEN__) */
 
-
-
 /**
- * Callback function that must be implemented by application (NHLE) for MAC service
+ * Callback function that must be implemented by application (NHLE) for MAC
+ *service
  * MLME-RESET.confirm.
  *
  * @param status           Result of requested reset operation.
@@ -1224,11 +1232,11 @@ void usr_mlme_poll_conf(uint8_t status);
  */
 void usr_mlme_reset_conf(uint8_t status);
 
-
-
 #if (MAC_RX_ENABLE_SUPPORT == 1) || defined(__DOXYGEN__)
+
 /**
- * Callback function that must be implemented by application (NHLE) for MAC service
+ * Callback function that must be implemented by application (NHLE) for MAC
+ *service
  * MLME-RX-ENABLE.confirm.
  *
  * @param status           Result of requested receiver enable operation.
@@ -1238,16 +1246,17 @@ void usr_mlme_reset_conf(uint8_t status);
  * @ingroup group_mac_conf
  */
 void usr_mlme_rx_enable_conf(uint8_t status);
+
 #endif  /* (MAC_RX_ENABLE_SUPPORT == 1) || defined(__DOXYGEN__) */
 
+#if ((MAC_SCAN_ED_REQUEST_CONFIRM == 1)      ||	\
+	(MAC_SCAN_ACTIVE_REQUEST_CONFIRM == 1)  || \
+	(MAC_SCAN_PASSIVE_REQUEST_CONFIRM == 1) || \
+	(MAC_SCAN_ORPHAN_REQUEST_CONFIRM == 1)) || defined(__DOXYGEN__)
 
-
-#if ((MAC_SCAN_ED_REQUEST_CONFIRM == 1)      || \
-     (MAC_SCAN_ACTIVE_REQUEST_CONFIRM == 1)  || \
-     (MAC_SCAN_PASSIVE_REQUEST_CONFIRM == 1) || \
-     (MAC_SCAN_ORPHAN_REQUEST_CONFIRM == 1)) || defined(__DOXYGEN__)
 /**
- * Callback function that must be implemented by application (NHLE) for MAC service
+ * Callback function that must be implemented by application (NHLE) for MAC
+ *service
  * MLME-SCAN.confirm.
  *
  * @param status            Result of requested scan operation.
@@ -1262,17 +1271,17 @@ void usr_mlme_rx_enable_conf(uint8_t status);
  * @ingroup group_mac_conf
  */
 void usr_mlme_scan_conf(uint8_t status,
-                        uint8_t ScanType,
-                        uint8_t ChannelPage,
-                        uint32_t UnscannedChannels,
-                        uint8_t ResultListSize,
-                        void *ResultList);
+		uint8_t ScanType,
+		uint8_t ChannelPage,
+		uint32_t UnscannedChannels,
+		uint8_t ResultListSize,
+		void *ResultList);
+
 #endif
 
-
-
 /**
- * Callback function that must be implemented by application (NHLE) for MAC service
+ * Callback function that must be implemented by application (NHLE) for MAC
+ *service
  * MLME-SET.confirm.
  *
  * @param status        Result of requested PIB attribute set operation.
@@ -1285,18 +1294,20 @@ void usr_mlme_scan_conf(uint8_t status,
  */
 #ifdef MAC_SECURITY_ZIP
 void usr_mlme_set_conf(uint8_t status,
-                       uint8_t PIBAttribute,
-                       uint8_t PIBAttributeIndex);
+		uint8_t PIBAttribute,
+		uint8_t PIBAttributeIndex);
+
 #else
 void usr_mlme_set_conf(uint8_t status,
-                       uint8_t PIBAttribute);
+		uint8_t PIBAttribute);
+
 #endif  /* MAC_SECURITY_ZIP */
 
-
-
 #if (MAC_START_REQUEST_CONFIRM == 1) || defined(__DOXYGEN__)
+
 /**
- * Callback function that must be implemented by application (NHLE) for MAC service
+ * Callback function that must be implemented by application (NHLE) for MAC
+ *service
  * MLME-START.confirm.
  *
  * @param status        Result of requested start operation.
@@ -1306,12 +1317,12 @@ void usr_mlme_set_conf(uint8_t status,
  * @ingroup group_mac_conf
  */
 void usr_mlme_start_conf(uint8_t status);
+
 #endif  /* (MAC_START_REQUEST_CONFIRM == 1) || defined(__DOXYGEN__) */
 
-
-
 /**
- * Callback function that must be implemented by application (NHLE) for MAC service
+ * Callback function that must be implemented by application (NHLE) for MAC
+ *service
  * MLME-SYNC-LOSS.indication.
  *
  * @param LossReason     Reason for synchronization loss.
@@ -1327,10 +1338,9 @@ void usr_mlme_start_conf(uint8_t status);
  * @ingroup group_mac_ind
  */
 void usr_mlme_sync_loss_ind(uint8_t LossReason,
-                            uint16_t PANId,
-                            uint8_t LogicalChannel,
-                            uint8_t ChannelPage);
-
+		uint16_t PANId,
+		uint8_t LogicalChannel,
+		uint8_t ChannelPage);
 
 uint8_t mac_get_pib_attribute_size(uint8_t pib_attribute_id);
 

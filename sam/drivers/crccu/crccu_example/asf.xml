@@ -13,6 +13,7 @@
 			<require idref="sam.services.flash"/>
 			<require idref="common.services.basic.clock"/>
 			<require idref="common.utils.stdio.stdio_serial"/>
+			<info type="gui-flag" value="move-to-root"/>
 		</module>
 		<module type="application" id="sam.drivers.crccu.crccu_example#flashcalw" caption="CRCCU Example">
 			<info type="description" value="summary">
@@ -25,6 +26,7 @@
 			<require idref="sam.drivers.flashcalw"/>
 			<require idref="common.services.basic.clock"/>
 			<require idref="common.utils.stdio.stdio_serial"/>
+			<info type="gui-flag" value="move-to-root"/>
 		</module>
 	</select-by-device>
 </asf>

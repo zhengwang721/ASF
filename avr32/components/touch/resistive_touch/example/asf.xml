@@ -4,7 +4,7 @@
 		Use the Resistive Touch screen interface to draw a pixel each time the screen is touched.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="Touch" />
+			<keyword value="Touch"/>
 		</info>
 		<build type="header-file" value="conf/conf_ebi.h"/>
 		<build type="header-file" value="conf/conf_et024006dhu.h"/>
@@ -19,5 +19,6 @@
 		<require idref="avr32.components.touch.resistive_touch"/>
 		<require idref="avr32.drivers.pm"/>
 		<require idref="avr32.utils.print_funcs"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

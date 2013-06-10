@@ -41,60 +41,46 @@
  *
  */
 
-  /**
-* \mainpage
-* \section preface Preface
-* This is the reference manual for RF4CE Serial Interface Application
-* \section toc Table of Contents
-*  - \subpage overview
-*  -  \b Application \b Interface(API)
-*    - \ref group_rf4control_ZRC
-*    - \ref group_mac
-*    - \ref group_pal
-*    - \ref group_tal
-*    - \ref group_resources
-*  - \subpage main_files
-*  - \subpage devsup
-*  - \subpage compinfo
-*  - \subpage references
-*  - \subpage contactinfo
-*/
-
 /**
- * \page overview Overview
- * \section intro Introduction
- * RF4Control ZRC Serial Interface Application running on the network co-processor can be driven by the host controller which is running the main application. Both controller use a serial interface to communicate.
- * 
- * The host controller can be implemented as a standalone microcontroller, or it can also be a personal computer.
+ * \mainpage
+ * \section preface Preface
+ * This is the reference manual for RF4CE ZRC Serial Interface Application
+ * \section main_files Application Files
+ * - main.c                      Application main file.
+ * \section intro Application Introduction
+ * RF4Control ZRC Serial Interface Application running on the network
+ *co-processor can be driven by the host controller which is running the main
+ *application. Both controller use a serial interface to communicate.
  *
- * The network co-processor receives the commands from the host, such as reset/pairing/data requests. The network co-processor will send the response to the host controller after processing the request and also
+ * The host controller can be implemented as a standalone microcontroller, or it
+ *can also be a personal computer.
+ *
+ * The network co-processor receives the commands from the host, such as
+ *reset/pairing/data requests. The network co-processor will send the response
+ *to the host controller after processing the request and also
  * indicates the data received from the prired RF4Control nodes.
  *
- * Interface between the host controller and the RF4CE client can be any interface. like UART, USB, TWI, Proprietary interface
+ * Interface between the host controller and the RF4CE client can be any
+ *interface. like UART, USB, TWI, Proprietary interface
  *
- * In this application serial interface is used for communication, whereas serial_data_handler api will handle all the incoming bytes from the serial interface.
- *
- */
-
-/** \page main_files Application Files
- * - main.c\n                      Application main file.
-
- * \page devsup Device Support
- * - \b ATXMEGA256A3BU
- *                     - <A href="http://www.atmel.com/tools/xmega-a3buxplained.aspx"> \b   XMEGA-A3BU Xplained </A>  <A href="http://store.atmel.com/PartDetail.aspx?q=p:10500293">\a Buy </A>\n
-
- * - \b UC3A3256S
- *                      - <A href="http://www.atmel.com/tools/rz600.aspx"> \b RZ600</A> <A href="http://store.atmel.com/PartDetail.aspx?q=p:10500245;c:100118">\a Buy </A>\n
- * \page compinfo Compilation Info
- * This software was written for the GNU GCC and IAR for AVR.
+ * In this application serial interface is used for communication, whereas
+ *serial_data_handler api will handle all the incoming bytes from the serial
+ *interface.
+ * \section api_modules Application Dependent Modules
+ * - \ref group_rf4control
+ * - \subpage api
+ * \section compinfo Compilation Info
+ * This software was written for the GNU GCC and IAR .
  * Other compilers may or may not work.
  *
- * \page references References
+ * \section references References
  * 1)  IEEE Std 802.15.4-2006 Part 15.4: Wireless Medium Access Control (MAC)
- *     and Physical Layer (PHY) Specifications for Low-Rate Wireless Personal Area
+ *     and Physical Layer (PHY) Specifications for Low-Rate Wireless Personal
+ *Area
  *     Networks (WPANs).\n\n
  * 2)  AVR Wireless Support <A href="http://avr@atmel.com">avr@atmel.com</A>.\n
- * \page contactinfo Contact Information
+ *
+ * \section contactinfo Contact Information
  * For further information,visit
  * <A href="http://www.atmel.com/avr">www.atmel.com</A>.\n
  */
@@ -110,7 +96,6 @@
 #include "serial_interface.h"
 #include "app_config.h"
 #include "pb_pairing.h"
-
 
 /* === Macros ============================================================== */
 
@@ -128,10 +113,9 @@ FLASH_DECLARE(uint8_t supported_cec_cmds[32]) = SUPPORTED_CEC_CMDS;
 
 extern void stack_indication_callback_init(void);
 
-
-
 /* === Prototypes ========================================================== */
 static void app_alert(void);
+
 /* === Implementation ====================================================== */
 
 /**
@@ -139,73 +123,69 @@ static void app_alert(void);
  *
  * @return error code
  */
-int main (void)
+int main(void)
 {
-    irq_initialize_vectors();
+	irq_initialize_vectors();
+	sysclk_init();
 
 	/* Initialize the board.
 	 * The board-specific conf_board.h file contains the configuration of
 	 * the board initialization.
 	 */
 	board_init();
-	sysclk_init();
 
 	sw_timer_init();
-        
-    if (nwk_init() != NWK_SUCCESS)
-    {
-        app_alert();
-    }
 
+	if (nwk_init() != NWK_SUCCESS) {
+		app_alert();
+	}
 
-    stack_indication_callback_init();
-
+	stack_indication_callback_init();
 
 #ifdef FLASH_NVRAM
-    pal_ps_set(EE_IEEE_ADDR, 8, &tal_pib.IeeeAddress);
+	pal_ps_set(EE_IEEE_ADDR, 8, &tal_pib.IeeeAddress);
 #endif
-    /* Initialize LEDs */
-    //pal_led_init();
-    cpu_irq_enable();
+	/* Initialize LEDs */
+	/* pal_led_init(); */
+	cpu_irq_enable();
 
-    /*
-     * The global interrupt has to be enabled here as TAL uses the timer
-     * delay which in turn requires interrupt to be enabled
-     */
-    //pal_global_irq_enable();
+	/*
+	 * The global interrupt has to be enabled here as TAL uses the timer
+	 * delay which in turn requires interrupt to be enabled
+	 */
+	/* pal_global_irq_enable(); */
 
-    serial_interface_init();
+	serial_interface_init();
 
-    /* Loop forever, the interrupts are doing the rest */
-    while (1)
-    {
-        nwk_task();
-        serial_data_handler();
-    }
-    /* No return statement here, because this code is unreachable */
+	/* Loop forever, the interrupts are doing the rest */
+	while (1) {
+		nwk_task();
+		serial_data_handler();
+	}
+	/* No return statement here, because this code is unreachable */
 }
 
 #ifdef PBP_REC
-bool pbp_allow_pairing(nwk_enum_t Status, uint64_t SrcIEEEAddr, uint16_t OrgVendorId,
-                       uint8_t OrgVendorString[7], uint8_t OrgUserString[15],
-                       uint8_t KeyExTransferCount)
+bool pbp_allow_pairing(nwk_enum_t Status, uint64_t SrcIEEEAddr,
+		uint16_t OrgVendorId,
+		uint8_t OrgVendorString[7], uint8_t OrgUserString[15],
+		uint8_t KeyExTransferCount)
 {
-    /* Keep compiler happy */
-    Status = Status;
-    SrcIEEEAddr = SrcIEEEAddr;
-    OrgVendorId = OrgVendorId;
-    OrgVendorString[0] = OrgVendorString[0];
-    OrgUserString[0] = OrgUserString[0];
-    KeyExTransferCount = KeyExTransferCount;
+	/* Keep compiler happy */
+	Status = Status;
+	SrcIEEEAddr = SrcIEEEAddr;
+	OrgVendorId = OrgVendorId;
+	OrgVendorString[0] = OrgVendorString[0];
+	OrgUserString[0] = OrgUserString[0];
+	KeyExTransferCount = KeyExTransferCount;
 
-    return true;
+	return true;
 }
+
 #endif
 static void app_alert(void)
 {
-    while (1)
-    {
-     
+	while (1) {
 		#if LED_COUNT > 0
 		LED_Toggle(LED0);
 		#endif
@@ -240,4 +220,5 @@ static void app_alert(void)
 		delay_us(0xFFFF);
 	}
 }
+
 /* EOF */

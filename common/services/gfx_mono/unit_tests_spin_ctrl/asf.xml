@@ -13,6 +13,6 @@
 		<require idref="common.services.gfx_mono.spinctrl"/>
 		<require idref="common.services.gfx_mono.font"/>
 		<require idref="common.services.gfx_mono"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>
-

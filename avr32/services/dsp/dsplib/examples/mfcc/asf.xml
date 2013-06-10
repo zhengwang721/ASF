@@ -4,7 +4,7 @@
 		Example application. It demonstrates how to implement the MFCC Sphinx-4 algorithm using the standard functions provided by the DSP library.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="Digital signal processing" />
+			<keyword value="Digital Signal Processing"/>
 		</info>
 		<build type="c-source" value="mfcc_example.c"/>
 		<build type="include-path" value="."/>
@@ -17,5 +17,6 @@
 		<require idref="avr32.services.dsplib.transforms"/>
 		<require idref="avr32.services.dsplib.windowing"/>
 		<require idref="avr32.services.dsplib.signal_generation"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

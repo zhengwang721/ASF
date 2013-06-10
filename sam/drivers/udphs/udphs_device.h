@@ -66,8 +66,7 @@ __always_inline static void io_pin_init(uint32_t pin, uint32_t flags,
 	IRQn_Type port_irqn, uint8_t irq_level,
 	void (*handler)(uint32_t,uint32_t), uint32_t wkup)
 {
-	// IOPORT maybe is not initialized in init.c
-	ioport_init();
+	// IOPORT must be initialized before by ioport_init(), \see ioport_group
 	pio_handler_set_pin(pin, flags, handler);
 	ioport_set_pin_sense_mode(pin, ioport_get_pin_level(pin) ?
 		IOPORT_SENSE_LEVEL_LOW : IOPORT_SENSE_LEVEL_HIGH);
@@ -125,7 +124,10 @@ __always_inline static void io_pin_init(uint32_t pin, uint32_t flags,
 //! PIO pin.
 //! This feature is optional, and it is enabled if USB_VBUS_PIN is defined in
 //! board.h and CONF_BOARD_USB_VBUS_DETECT defined in conf_board.h.
-//! 
+//!
+//! @note ioport_init() must be invoked before using vbus pin functions since
+//!       they use IOPORT API, \see ioport_group.
+//!
 //! @{
 #define UDD_VBUS_DETECT (defined(CONF_BOARD_USB_PORT) && \
  		defined(CONF_BOARD_USB_VBUS_DETECT))
@@ -417,7 +419,7 @@ typedef struct {
 
 } udphs_endpoint_status_t;
 #define  udd_get_endpoint_status(ep)                    (UDPHS->UDPHS_EPT[ep].UDPHS_EPTSTA)
-                                                       
+
 #define  udd_get_endpoint_status_byte_count(status)     ((status & UDPHS_EPTSTA_BYTE_COUNT_Msk)    >> UDPHS_EPTSTA_BYTE_COUNT_Pos)
 #define  udd_get_endpoint_status_nb_busy_bank(status)   ((status & UDPHS_EPTSTA_BUSY_BANK_STA_Msk) >> UDPHS_EPTSTA_BUSY_BANK_STA_Pos)
 #define  udd_get_endpoint_status_current_bank(status)   ((status & UDPHS_EPTSTA_CURRENT_BANK_Msk)  >> UDPHS_EPTSTA_CURRENT_BANK_Pos)
@@ -514,22 +516,22 @@ typedef struct {
 
   //! acks endpoint isochronous error flow interrupt
 #define  udd_ack_errflow_interrupt(ep)             (UDPHS->UDPHS_EPT[ep].UDPHS_EPTCLRSTA = UDPHS_EPTCLRSTA_ERR_FL_ISO)
-  //! tests if an overflow occurs                 
+  //! tests if an overflow occurs
 #define  Is_udd_errflow(ep)                        (Tst_bits(UDPHS->UDPHS_EPT[ep].UDPHS_EPTSTA, UDPHS_EPTSTA_ERR_FL_ISO))
-  //! enables overflow interrupt                  
+  //! enables overflow interrupt
 #define  udd_enable_errflow_interrupt(ep)          (UDPHS->UDPHS_EPT[ep].UDPHS_EPTCTLENB = UDPHS_EPTCTLENB_ERR_FL_ISO)
-  //! disables overflow interrupt                 
+  //! disables overflow interrupt
 #define  udd_disable_errflow_interrupt(ep)         (UDPHS->UDPHS_EPT[ep].UDPHS_EPTCTLDIS = UDPHS_EPTCTLDIS_ERR_FL_ISO)
-  //! tests if overflow interrupt is enabled      
+  //! tests if overflow interrupt is enabled
 #define  Is_udd_errflow_interrupt_enabled(ep)      (Tst_bits(UDPHS->UDPHS_EPT[ep].UDPHS_EPTCTL, UDPHS_EPTCTL_ERR_FL_ISO))
-                                                  
-  //! acks endpoint transaction error interrupt   
+
+  //! acks endpoint transaction error interrupt
 #define  udd_ack_errtran_interrupt(ep)             (UDPHS->UDPHS_EPT[ep].UDPHS_EPTCLRSTA = UDPHS_EPTSTA_ERR_TRANS)
-  //! tests if an transaction error occurs        
+  //! tests if an transaction error occurs
 #define  Is_udd_errtran(ep)                        (Tst_bits(UDPHS->UDPHS_EPT[ep].UDPHS_EPTSTA, UDPHS_EPTSTA_ERR_TRANS))
-  //! enables transaction error interrupt         
+  //! enables transaction error interrupt
 #define  udd_enable_errtran_interrupt(ep)          (UDPHS->UDPHS_EPT[ep].UDPHS_EPTCTLENB = UDPHS_EPTCTLENB_ERR_TRANS)
-  //! disables transaction error interrupt        
+  //! disables transaction error interrupt
 #define  udd_disable_errtran_interrupt(ep)         (UDPHS->UDPHS_EPT[ep].UDPHS_EPTCTLDIS = UDPHS_EPTCTLDIS_ERR_TRANS)
   //! tests if transaction error interrupt is enabled
 #define  Is_udd_errtran_interrupt_enabled(ep)      (Tst_bits(UDPHS->UDPHS_EPT[ep].UDPHS_EPTCTL, UDPHS_EPTCTL_ERR_TRANS))

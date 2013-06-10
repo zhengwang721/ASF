@@ -38,8 +38,8 @@
 		<build type="include-path" value="./enum/device/"/>
 		<build type="include-path" value="./ushell/"/>
 		<build type="include-path" value="./virtual_mem/"/>
-		<build type="c-source"  value="../../../../../../../thirdparty/freertos/freertos-7.0.0/source/portable/iar/avr32_uc3/read.c" toolchain="iarew32"/>
-		<build type="c-source"  value="../../../../../../../thirdparty/freertos/freertos-7.0.0/source/portable/iar/avr32_uc3/write.c" toolchain="iarew32"/>
+		<build type="c-source" value="../../../../../../../thirdparty/freertos/freertos-7.0.0/source/portable/iar/avr32_uc3/read.c" toolchain="iarew32"/>
+		<build type="c-source" value="../../../../../../../thirdparty/freertos/freertos-7.0.0/source/portable/iar/avr32_uc3/write.c" toolchain="iarew32"/>
 		<build type="doxygen-image-path" value="docsrc"/>
 		<require idref="avr32.drivers.cpu.cycle_counter"/>
 		<require idref="avr32.drivers.flashc"/>
@@ -59,7 +59,6 @@
 		<device-support value="uc3a"/>
 		<device-support value="uc3b"/>
 		<device-support value="uc3a3"/>
-
 		<build type="distribute" subtype="directory" value="./docsrc"/>
 		<build type="distribute" subtype="file" value="./docsrc/appli_evk1100_device.jpg"/>
 		<build type="distribute" subtype="file" value="./docsrc/appli_evk1100_host.jpg"/>

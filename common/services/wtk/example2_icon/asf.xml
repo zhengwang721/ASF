@@ -6,8 +6,8 @@
 		button widgets.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="Graphics" />
-			<keyword value="Touch" />
+			<keyword value="Graphics"/>
+			<keyword value="Touch"/>
 		</info>
 		<build type="c-source" value="example2.c"/>
 		<build type="c-source" value="widget_gui.c"/>
@@ -28,5 +28,6 @@
 		<require idref="common.services.wtk"/>
 		<require idref="common.components.touch.mxt"/>
 		<require idref="common.services.basic.clock"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

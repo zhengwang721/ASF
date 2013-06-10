@@ -3,7 +3,7 @@
  *
  * \brief Power Management Controller (PMC) driver for SAM.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -269,8 +269,8 @@ uint32_t pmc_switch_mck_to_upllck(uint32_t ul_pres)
  *
  * \note This function disables the PLLs.
  *
- * \note Switching SCLK back to 32krc is only possible by shutting down the VDDIO
- * power supply.
+ * \note Switching SCLK back to 32krc is only possible by shutting down the
+ *       VDDIO power supply.
  *
  * \param ul_bypass 0 for Xtal, 1 for bypass.
  */
@@ -278,7 +278,8 @@ void pmc_switch_sclk_to_32kxtal(uint32_t ul_bypass)
 {
 	/* Set Bypass mode if required */
 	if (ul_bypass == 1) {
-		SUPC->SUPC_MR |= SUPC_MR_KEY(SUPC_KEY_VALUE) | SUPC_MR_OSCBYPASS;
+		SUPC->SUPC_MR |= SUPC_MR_KEY(SUPC_KEY_VALUE) |
+			SUPC_MR_OSCBYPASS;
 	}
 
 	SUPC->SUPC_CR |= SUPC_CR_KEY(SUPC_KEY_VALUE) | SUPC_CR_XTALSEL;
@@ -343,7 +344,8 @@ void pmc_switch_mainck_to_fastrc(uint32_t ul_moscrcf)
  */
 void pmc_osc_enable_fastrc(uint32_t ul_rc)
 {
-	/* Enable Fast RC oscillator but DO NOT switch to RC now. Keep MOSCSEL to 1 */
+	/* Enable Fast RC oscillator but DO NOT switch to RC now.
+	 * Keep MOSCSEL to 1 */
 	PMC->CKGR_MOR = PMC_CKGR_MOR_KEY_VALUE | CKGR_MOR_MOSCSEL |
 			CKGR_MOR_MOSCXTEN | CKGR_MOR_MOSCRCEN | ul_rc;
 	/* Wait the Fast RC to stabilize */
@@ -356,15 +358,87 @@ void pmc_osc_enable_fastrc(uint32_t ul_rc)
 void pmc_osc_disable_fastrc(void)
 {
 	/* Disable Fast RC oscillator */
-	PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCRCEN & ~CKGR_MOR_MOSCRCF_Msk)
-					| PMC_CKGR_MOR_KEY_VALUE;
+	PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCRCEN &
+					~CKGR_MOR_MOSCRCF_Msk)
+				| PMC_CKGR_MOR_KEY_VALUE;
+}
+
+/**
+ * \brief Check if the main fastrc is ready.
+ *
+ * \retval 0 Xtal is not ready, otherwise ready.
+ */
+uint32_t pmc_osc_is_ready_fastrc(void)
+{
+	return (PMC->PMC_SR & PMC_SR_MOSCRCS);
+}
+
+/**
+ * \brief Enable main XTAL oscillator.
+ *
+ * \param ul_xtal_startup_time Xtal start-up time, in number of slow clocks.
+ */
+void pmc_osc_enable_main_xtal(uint32_t ul_xtal_startup_time)
+{
+	uint32_t mor = PMC->CKGR_MOR;
+	mor &= ~(CKGR_MOR_MOSCXTBY|CKGR_MOR_MOSCXTEN);
+	mor |= PMC_CKGR_MOR_KEY_VALUE | CKGR_MOR_MOSCXTEN |
+			CKGR_MOR_MOSCXTST(ul_xtal_startup_time);
+	PMC->CKGR_MOR = mor;
+	/* Wait the main Xtal to stabilize */
+	while (!(PMC->PMC_SR & PMC_SR_MOSCXTS));
+}
+
+/**
+ * \brief Bypass main XTAL.
+ */
+void pmc_osc_bypass_main_xtal(void)
+{
+	uint32_t mor = PMC->CKGR_MOR;
+	mor &= ~(CKGR_MOR_MOSCXTBY|CKGR_MOR_MOSCXTEN);
+	mor |= PMC_CKGR_MOR_KEY_VALUE | CKGR_MOR_MOSCXTBY;
+	/* Enable Crystal oscillator but DO NOT switch now. Keep MOSCSEL to 0 */
+	PMC->CKGR_MOR = mor;
+	/* The MOSCXTS in PMC_SR is automatically set */
+}
+
+/**
+ * \brief Disable the main Xtal.
+ */
+void pmc_osc_disable_main_xtal(void)
+{
+	uint32_t mor = PMC->CKGR_MOR;
+	mor &= ~(CKGR_MOR_MOSCXTBY|CKGR_MOR_MOSCXTEN);
+	PMC->CKGR_MOR = PMC_CKGR_MOR_KEY_VALUE | mor;
+}
+
+/**
+ * \brief Check if the main crystal is bypassed.
+ *
+ * \retval 0 Xtal is bypassed, otherwise not.
+ */
+uint32_t pmc_osc_is_bypassed_main_xtal(void)
+{
+	return (PMC->CKGR_MOR & CKGR_MOR_MOSCXTBY);
+}
+
+/**
+ * \brief Check if the main crystal is ready.
+ *
+ * \note If main crystal is bypassed, it's always ready.
+ *
+ * \retval 0 main crystal is not ready, otherwise ready.
+ */
+uint32_t pmc_osc_is_ready_main_xtal(void)
+{
+	return (PMC->PMC_SR & PMC_SR_MOSCXTS);
 }
 
 /**
  * \brief Switch main clock source selection to external Xtal/Bypass.
  *
- * \note The function may switch MCK to SCLK if MCK source is MAINCK to avoid any
- * system crash.
+ * \note The function may switch MCK to SCLK if MCK source is MAINCK to avoid
+ *       any system crash.
  *
  * \note If used in Xtal mode, the Xtal is automatically enabled.
  *
@@ -419,6 +493,24 @@ void pmc_osc_disable_xtal(uint32_t ul_bypass)
 uint32_t pmc_osc_is_ready_mainck(void)
 {
 	return PMC->PMC_SR & PMC_SR_MOSCSELS;
+}
+
+/**
+ * \brief Select Main Crystal or internal RC as main clock source.
+ *
+ * \note This function will not enable/disable RC or Main Crystal.
+ *
+ * \param ul_xtal_rc 0 internal RC is selected, otherwise Main Crystal.
+ */
+void pmc_mainck_osc_select(uint32_t ul_xtal_rc)
+{
+	uint32_t mor = PMC->CKGR_MOR;
+	if (ul_xtal_rc) {
+		mor |=  CKGR_MOR_MOSCSEL;
+	} else {
+		mor &= ~CKGR_MOR_MOSCSEL;
+	}
+	PMC->CKGR_MOR = PMC_CKGR_MOR_KEY_VALUE | mor;
 }
 
 /**
@@ -697,8 +789,8 @@ uint32_t pmc_switch_pck_to_sclk(uint32_t ul_id, uint32_t ul_pres)
 	uint32_t ul_timeout;
 
 	PMC->PMC_PCK[ul_id] = PMC_PCK_CSS_SLOW_CLK | ul_pres;
-	for (ul_timeout = PMC_TIMEOUT; !(PMC->PMC_SR & (PMC_SR_PCKRDY0 << ul_id));
-			--ul_timeout) {
+	for (ul_timeout = PMC_TIMEOUT;
+	!(PMC->PMC_SR & (PMC_SR_PCKRDY0 << ul_id)); --ul_timeout) {
 		if (ul_timeout == 0) {
 			return 1;
 		}
@@ -721,8 +813,8 @@ uint32_t pmc_switch_pck_to_mainck(uint32_t ul_id, uint32_t ul_pres)
 	uint32_t ul_timeout;
 
 	PMC->PMC_PCK[ul_id] = PMC_PCK_CSS_MAIN_CLK | ul_pres;
-	for (ul_timeout = PMC_TIMEOUT; !(PMC->PMC_SR & (PMC_SR_PCKRDY0 << ul_id));
-			--ul_timeout) {
+	for (ul_timeout = PMC_TIMEOUT;
+	!(PMC->PMC_SR & (PMC_SR_PCKRDY0 << ul_id)); --ul_timeout) {
 		if (ul_timeout == 0) {
 			return 1;
 		}
@@ -745,8 +837,8 @@ uint32_t pmc_switch_pck_to_pllack(uint32_t ul_id, uint32_t ul_pres)
 	uint32_t ul_timeout;
 
 	PMC->PMC_PCK[ul_id] = PMC_PCK_CSS_PLLA_CLK | ul_pres;
-	for (ul_timeout = PMC_TIMEOUT; !(PMC->PMC_SR & (PMC_SR_PCKRDY0 << ul_id));
-			--ul_timeout) {
+	for (ul_timeout = PMC_TIMEOUT;
+	!(PMC->PMC_SR & (PMC_SR_PCKRDY0 << ul_id)); --ul_timeout) {
 		if (ul_timeout == 0) {
 			return 1;
 		}
@@ -965,7 +1057,8 @@ uint32_t pmc_get_status(void)
 }
 
 /**
- * \brief Set the wake-up inputs for fast startup mode registers (event generation).
+ * \brief Set the wake-up inputs for fast startup mode registers
+ *        (event generation).
  *
  * \param ul_inputs Wake up inputs to enable.
  */
@@ -976,7 +1069,8 @@ void pmc_set_fast_startup_input(uint32_t ul_inputs)
 }
 
 /**
- * \brief Clear the wake-up inputs for fast startup mode registers (remove event generation).
+ * \brief Clear the wake-up inputs for fast startup mode registers
+ *        (remove event generation).
  *
  * \param ul_inputs Wake up inputs to disable.
  */

@@ -4,7 +4,7 @@
 			Perform a range of test on the EDMA module.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="EDMA Controller"/>
+			<keyword value="DMA Controller"/>
 		</info>
 		<build type="c-source" value="unit_tests.c"/>
 		<build type="module-config" subtype="required-header-file" value="conf_test.h"/>
@@ -14,5 +14,6 @@
 		<require idref="xmega.drivers.pmic"/>
 		<require idref="common.utils.unit_test"/>
 		<require idref="common.utils.stdio.stdio_serial"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

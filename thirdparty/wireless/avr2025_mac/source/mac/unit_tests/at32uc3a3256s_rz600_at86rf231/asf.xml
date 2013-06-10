@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project type="unit-test" caption="AT86RF212 Wireless Module unit tests for RZ600" id="thirdparty.wireless.avr2025_mac.source.mac.unit_tests.at32uc3a3256s_rz600_at86rf231">
+	<project type="unit-test" caption="Unit Tests for IEEE 802.15.4 MAC AT86RF231-RZ600" force-caption="true" id="thirdparty.wireless.avr2025_mac.source.mac.unit_tests.at32uc3a3256s_rz600_at86rf231">
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clock.h"/>
@@ -15,8 +15,6 @@
    		<require idref="common.utils.stdio.stdio_usb"/>
 		<config name="config.compiler.iarew32.dlib" value="full"/>
 		<generator value="iarew32"/>
-		<generator value="avr32gcc" />
-		<generator value="as5_32" />
 		<generator value="doxygen"/>
 		<device-support value="at32uc3a3256s"/>
 	</project>

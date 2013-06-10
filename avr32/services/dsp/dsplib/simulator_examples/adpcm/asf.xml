@@ -4,8 +4,8 @@
 		Example application. It shows how to encode and decode a vector using the ADPCM algorithm from the DSP library.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="Digital signal processing" />
-			<keyword value="Audio" />
+			<keyword value="Digital Signal Processing"/>
+			<keyword value="Audio"/>
 		</info>
 		<build type="c-source" value="adpcm_example.c"/>
 		<build type="doxygen-entry-point" value="group_avr32_services_dsplib_simulator_example_adpcm"/>
@@ -13,5 +13,6 @@
 		<require idref="common.services.basic.clock"/>
 		<require idref="avr32.drivers.cpu.cycle_counter"/>
 		<require idref="avr32.services.dsplib.adpcm"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

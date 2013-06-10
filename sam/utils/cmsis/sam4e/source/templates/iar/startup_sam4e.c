@@ -3,7 +3,7 @@
  *
  * \brief Startup file for SAM4E.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -86,12 +86,20 @@ const intvec_elem __vector_table[] = {
 	{PMC_Handler},    /* 5  Power Management Controller */
 	{EFC_Handler},    /* 6  Enhanced Embedded Flash Controller */
 	{UART0_Handler},  /* 7  UART 0 */
-	{SMC_Handler},    /* 8  Static Memory Controller */
+	{Dummy_Handler},
 	{PIOA_Handler},   /* 9  Parallel I/O Controller A */
 	{PIOB_Handler},   /* 10 Parallel I/O Controller B */
 	{PIOC_Handler},   /* 11 Parallel I/O Controller C */
+#ifdef _SAM4E_PIOD_INSTANCE_
 	{PIOD_Handler},   /* 12 Parallel I/O Controller D */
+#else
+	{Dummy_Handler},
+#endif
+#ifdef _SAM4E_PIOE_INSTANCE_
 	{PIOE_Handler},   /* 13 Parallel I/O Controller E */
+#else
+	{Dummy_Handler},
+#endif
 	{USART0_Handler}, /* 14 USART 0 */
 	{USART1_Handler}, /* 15 USART 1 */
 	{HSMCI_Handler},  /* 16 Multimedia Card Interface */
@@ -122,7 +130,11 @@ const intvec_elem __vector_table[] = {
 	{Dummy_Handler},
 	{Dummy_Handler},
 	{Dummy_Handler},
+#ifdef _SAM4E_GMAC_INSTANCE_
 	{GMAC_Handler},   /* 44 EMAC */
+#else
+	{Dummy_Handler},
+#endif
 	{UART1_Handler}   /* 45 UART */
 };
 

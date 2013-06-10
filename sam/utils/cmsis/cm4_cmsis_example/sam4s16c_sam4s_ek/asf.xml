@@ -1,6 +1,5 @@
 <asf xmlversion="1.0">
 	<project caption="CMSIS Example for SAM4S-EK" id="sam.utils.cmsis.cm4_cmsis_example.sam4s_ek">
-		<!-- <config name="config.compiler.iarewarm.optimization" value="high"/> -->
 		<require idref="sam.utils.cmsis.cm4_cmsis_example"/>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>

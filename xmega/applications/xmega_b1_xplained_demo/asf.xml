@@ -22,5 +22,6 @@
 		<require idref="xmega.drivers.adc"/>
 		<require idref="xmega.drivers.nvm"/>
 		<require idref="xmega.components.display.c42048a"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

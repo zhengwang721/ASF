@@ -1,7 +1,8 @@
 /**
  * @file pb_pairing.h
  *
- * @brief Declarations of API functions to access push button pairing functionality
+ * @brief Declarations of API functions to access push button pairing
+ *functionality
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -47,7 +48,6 @@
 #ifndef PB_PAIRING_H
 #define PB_PAIRING_H
 
-
 /* === Includes ============================================================= */
 
 #include "rf4ce.h"
@@ -57,20 +57,19 @@
 /* === Types ================================================================ */
 
 #if (defined PBP_ORG)
-typedef void (*pbp_org_pair_confirm_cb_t)(nwk_enum_t Status, uint8_t PairingRef);
+typedef void (*pbp_org_pair_confirm_cb_t)(nwk_enum_t Status,
+		uint8_t PairingRef);
 #endif
 #if (defined PBP_REC)
-typedef void (*pbp_rec_pair_confirm_cb_t)(nwk_enum_t Status, uint8_t PairingRef);
+typedef void (*pbp_rec_pair_confirm_cb_t)(nwk_enum_t Status,
+		uint8_t PairingRef);
 #endif
-
 
 /* === Externals ============================================================ */
 
 /* === Prototypes =========================================================== */
 
-
 /* Recipient of the pairing */
-
 
 /**
  * @brief Recipient pair request; target use
@@ -90,12 +89,11 @@ typedef void (*pbp_rec_pair_confirm_cb_t)(nwk_enum_t Status, uint8_t PairingRef)
  */
 #if (defined PBP_REC) || (defined DOXYGEN)
 bool pbp_rec_pair_request(uint8_t RecAppCapabilities,
-                          dev_type_t RecDevTypeList[3],
-                          profile_id_t RecProfileIdList[7]
-                          , FUNC_PTR confirm_cb
-                         );
+dev_type_t RecDevTypeList[3],
+profile_id_t RecProfileIdList[7],
+FUNC_PTR confirm_cb
+);
 #endif
-
 
 /**
  * @brief Allow pairing from application; target use
@@ -105,12 +103,13 @@ bool pbp_rec_pair_request(uint8_t RecAppCapabilities,
  * pairing procedure.
  *
  * @param Status            Status of the pair indication; here NWK_SUCCESS or
-                            NWK_DUPLICATE_PAIRING
+ *                          NWK_DUPLICATE_PAIRING
  * @param SrcIEEEAddr       IEEE address of the device requesting the pair
  * @param OrgVendorId       Vendor id  of the device requesting the pair
  * @param OrgVendorString   Vendor string of the device requesting the pair
  * @param OrgUserString     User string of the device requesting the pair
- * @param KeyExTransferCount Key exchange transfer count of the incoming pair request
+ * @param KeyExTransferCount Key exchange transfer count of the incoming pair
+ *request
  *
  * @return true if pairing is granted; else false
  *
@@ -118,13 +117,11 @@ bool pbp_rec_pair_request(uint8_t RecAppCapabilities,
  */
 #if (defined PBP_REC) || (defined DOXYGEN)
 bool pbp_allow_pairing(nwk_enum_t Status, uint64_t SrcIEEEAddr,
-                       uint16_t OrgVendorId, uint8_t OrgVendorString[7],
-                       uint8_t OrgUserString[15], uint8_t KeyExTransferCount);
+uint16_t OrgVendorId, uint8_t OrgVendorString[7],
+uint8_t OrgUserString[15], uint8_t KeyExTransferCount);
 #endif
 
-
 /* Originator of the pairing */
-
 
 /**
  * @brief Originator push pairing request; controller use
@@ -147,17 +144,13 @@ bool pbp_allow_pairing(nwk_enum_t Status, uint64_t SrcIEEEAddr,
  */
 #if (defined PBP_ORG) || (defined DOXYGEN)
 bool pbp_org_pair_request(uint8_t OrgAppCapabilities,
-                          dev_type_t OrgDevTypeList[3],
-                          profile_id_t OrgProfileIdList[7],
-                          dev_type_t SearchDevType, uint8_t DiscProfileIdListSize,
-                          profile_id_t DiscProfileIdList[7]
-                          , FUNC_PTR confirm_cb
-                         );
+dev_type_t OrgDevTypeList[3],
+profile_id_t OrgProfileIdList[7],
+dev_type_t SearchDevType, uint8_t DiscProfileIdListSize,
+profile_id_t DiscProfileIdList[7],
+FUNC_PTR confirm_cb
+);
 #endif
-
-
-
-
 
 #endif /* PB_PAIRING_H */
 

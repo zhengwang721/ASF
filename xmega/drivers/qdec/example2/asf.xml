@@ -6,7 +6,7 @@
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="Timers"/>
-			<keyword value="Event system"/>
+			<keyword value="Peripheral Event System"/>
 		</info>
 		<build type="c-source" value="qdec_example2.c"/>
 		<build type="c-source" value="generator_qenc.c"/>
@@ -20,5 +20,6 @@
 		<device-support value="xmegac"/>
 		<device-support value="xmegad"/>
 		<device-support value="xmegae"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>
