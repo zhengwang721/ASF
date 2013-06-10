@@ -93,6 +93,9 @@
  * <a href="http://www.atmel.com">http://www.atmel.com</a>.
  */
 
+/** Target OSC8M calibration frequency */
+#define TARGET_FREQUENCY         8000000
+
 /** Resolution of the calibration binary divider; higher powers of two will
  *  reduce the calibration resolution.
  */
@@ -211,8 +214,8 @@ static void setup_clock_out_pin(void)
 	system_pinmux_get_config_defaults(&pin_mux);
 
 	/* MUX out the system clock to a I/O pin of the device */
-	pin_mux.mux_position = MUX_PA30H_GCLK_IO0;
-	system_pinmux_pin_set_config(PIN_PA30H_GCLK_IO0, &pin_mux);
+	pin_mux.mux_position = MUX_PA28H_GCLK_IO0;
+	system_pinmux_pin_set_config(PIN_PA28H_GCLK_IO0, &pin_mux);
 }
 
 /** Retrieves the current system clock frequency, computed from the reference
@@ -274,7 +277,7 @@ int main(void)
 			 * ideal frequency than the previous best values
 			 */
 			uint32_t freq_current = get_osc_frequency();
-			if (abs(freq_current - 8000000UL) < abs(freq_best - 8000000UL))
+			if (abs(freq_current - TARGET_FREQUENCY) < abs(freq_best - TARGET_FREQUENCY))
 			{
 				freq_best   = freq_current;
 				comm_best   = comm_cal;
