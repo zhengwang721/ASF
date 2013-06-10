@@ -76,7 +76,7 @@
  *
  * As the SAM D20 devices do not contain any physical EEPROM memory, the storage
  * of non-volatile user data is instead emulated using a special section of the
- * device's main FLASH memory in lieu of EEPROM. The use of FLASH over EEPROM
+ * device's main FLASH memory. The use of FLASH memory technology over EEPROM
  * presents several difficulties over true EEPROM memory; data must be written
  * as a number of physical memory pages (of several bytes each) rather than
  * being individually byte addressable, and entire rows of FLASH must be erased
@@ -106,10 +106,12 @@
  *
  * \subsubsection asfdoc_samd20_eeprom_module_overview_implementation_ec Emulator Characteristics
  * This emulator is designed for <b>best reliability, with a good balance of
- * available storage and write-cycle limits</b>. It is designed to ensure no
- * data is lost (when used correctly) so that at most only the latest write to
- * physical non-volatile memory is discarded - baring a forced system reset with
- * cached data.
+ * available storage and write-cycle limits</b>. It is designed to ensure that
+ * page data is atomically updated so that in the event of a failed update the
+ * previous data is not lost (when used correctly). With the exception of a
+ * system reset with data cached to the internal write-cache buffer, at most
+ * only the latest write to physical non-volatile memory will be lost in the
+ * event of a failed write.
  *
  * This emulator scheme is tuned to give best write-cycle longevity when writes
  * are confined to the same logical EEPROM page (where possible) and when writes
@@ -156,9 +158,9 @@
  *
  * This system allows for the same logical page to be updated up to three times
  * into physical memory before a row erasure procedure is needed. In the case of
- * multiple versions of the same logical page being stored in the same physical
- * row, the right-most (highest physical page address) version is considered the
- * most current.
+ * multiple versions of the same logical EEPROM page being stored in the same
+ * physical row, the right-most (highest physical FLASH memory page address)
+ * version is considered to be the most current.
  *
  * \subsubsection asfdoc_samd20_eeprom_module_overview_implementation_wc Write Cache
  * As a typical EEPROM use case is to write to multiple sections of the same
