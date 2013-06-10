@@ -641,7 +641,7 @@ typedef union {
 #define RTC_MODE2_CLOCK_HOUR_Pos    12           /**< \brief (RTC_MODE2_CLOCK) Current Hour */
 #define RTC_MODE2_CLOCK_HOUR_Msk    (0x1Fu << RTC_MODE2_CLOCK_HOUR_Pos)
 #define RTC_MODE2_CLOCK_HOUR(value) ((RTC_MODE2_CLOCK_HOUR_Msk & ((value) << RTC_MODE2_CLOCK_HOUR_Pos)))
-#define   RTC_MODE2_CLOCK_HOUR_PM   (0x10u << 12) /**< \brief (RTC_MODE2_CLOCK) PM when CLKREP in 12-hour */
+#define   RTC_MODE2_CLOCK_HOUR_PM   (0x10u << 12) /**< \brief (RTC_MODE2_CLOCK)  */
 #define RTC_MODE2_CLOCK_DAY_Pos     17           /**< \brief (RTC_MODE2_CLOCK) Current Day */
 #define RTC_MODE2_CLOCK_DAY_Msk     (0x1Fu << RTC_MODE2_CLOCK_DAY_Pos)
 #define RTC_MODE2_CLOCK_DAY(value)  ((RTC_MODE2_CLOCK_DAY_Msk & ((value) << RTC_MODE2_CLOCK_DAY_Pos)))
