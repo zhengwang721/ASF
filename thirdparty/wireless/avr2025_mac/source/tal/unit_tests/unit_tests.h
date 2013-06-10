@@ -51,4 +51,4 @@
  */
 void main_cdc_set_dtr(bool b_enable);
 
-#endif // _UNIT_TESTS_H_
+#endif /* _UNIT_TESTS_H_ */

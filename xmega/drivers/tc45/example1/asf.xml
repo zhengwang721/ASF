@@ -4,7 +4,7 @@
 		Use the XMEGA Timer Counter 45 module : configures one TC45 module in normal mode and uses three TC45 interrupts (overflow, Capture/Compare Channels A and B).
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="Timers45"/>
+			<keyword value="Timers"/>
 		</info>
 		<build type="c-source" value="tc45_example1.c"/>
 		<device-support value="xmega"/>

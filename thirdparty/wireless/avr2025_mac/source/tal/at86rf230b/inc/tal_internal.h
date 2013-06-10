@@ -1,7 +1,8 @@
 /**
  * @file tal_internal.h
  *
- * @brief This header file contains types and variable definition that are used within the TAL only.
+ * @brief This header file contains types and variable definition that are used
+ *within the TAL only.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -39,6 +40,7 @@
  *
  * \asf_license_stop
  */
+
 /*
  * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
@@ -61,23 +63,26 @@
 #endif
 #include "mac_build_config.h"
 
-
 /**
  * \ingroup group_tal
  * \defgroup group_tal_230b AT86RF230B Transceiver Abstraction Layer
- * The AT86RF230B is a low-power 2.4 GHz radio transceiver especially designed for
+ * The AT86RF230B is a low-power 2.4 GHz radio transceiver especially designed
+ *for
  * ZigBee/IEEE 802.15.4 applications.
- * The Transceiver Abstraction Layer (TAL) implements the transceiver specific functionalities and
- * provides interfaces to the upper layers (like IEEE 802.15.4 MAC )and  uses the services of PAL.
+ * The Transceiver Abstraction Layer (TAL) implements the transceiver specific
+ *functionalities and
+ * provides interfaces to the upper layers (like IEEE 802.15.4 MAC )and  uses
+ *the services of PAL.
  */
 
 /**
  * \ingroup group_tal_230b
  * \defgroup group_tal_state_machine_230b TAL State Machine
- * The different operating states of the Transceiver are controlled by the TAL state machine.
+ * The different operating states of the Transceiver are controlled by the TAL
+ *state machine.
  *
  */
- 
+
 /**
  * \ingroup group_tal_230b
  * \defgroup group_tal_init_230b  TAL Initialization and reset
@@ -85,14 +90,12 @@
  *
  */
 
-
 /**
  * \ingroup group_tal_230b
  * \defgroup group_tal_ed_230b  TAL Energy Detection
  * Performs the ED scan functionalities.
  *
  */
-
 
 /**
  * \ingroup group_tal_230b
@@ -104,7 +107,8 @@
 /**
  * \ingroup group_tal_230b
  * \defgroup group_tal_pib_230b   TAL PIB Storage
- * The PIB(Pan Information Base) attributes related to the TAL are Stored and handled  by the TAL PIB storage.
+ * The PIB(Pan Information Base) attributes related to the TAL are Stored and
+ *handled  by the TAL PIB storage.
  *
  */
 
@@ -116,13 +120,13 @@
  */
 
 /**
-* \ingroup group_tal_tx_230b
-* \defgroup group_tal_tx_csma_230b  TAL CSMA/CA Module
-* Performs channel access mechanism for frame transmission
-* For Detailed information refer  CSMA-CA algorithm section of IEEE Std 802.15.4-2006
-*
-*/
-
+ * \ingroup group_tal_tx_230b
+ * \defgroup group_tal_tx_csma_230b  TAL CSMA/CA Module
+ * Performs channel access mechanism for frame transmission
+ * For Detailed information refer  CSMA-CA algorithm section of IEEE Std
+ *802.15.4-2006
+ *
+ */
 
 /**
  * \ingroup group_tal_230b
@@ -131,53 +135,47 @@
  *
  */
 
-
-
 /* === TYPES =============================================================== */
 
 /** TAL states */
 #if ((defined BEACON_SUPPORT) && (MAC_SCAN_ED_REQUEST_CONFIRM == 1))
-typedef enum tal_state_tag
-{
-    TAL_IDLE           = 0,
-    TAL_TX_BEACON      = 1,
-    TAL_TX_AUTO        = 2,
-    TAL_TX_BASIC       = 3,
-    TAL_SLEEP          = 4,
-    TAL_SLOTTED_CSMA   = 5,
-    TAL_ED             = 6
+typedef enum tal_state_tag {
+	TAL_IDLE           = 0,
+	TAL_TX_BEACON      = 1,
+	TAL_TX_AUTO        = 2,
+	TAL_TX_BASIC       = 3,
+	TAL_SLEEP          = 4,
+	TAL_SLOTTED_CSMA   = 5,
+	TAL_ED             = 6
 } tal_state_t;
 #endif
 
 #if ((!defined BEACON_SUPPORT) && (MAC_SCAN_ED_REQUEST_CONFIRM == 1))
-typedef enum tal_state_tag
-{
-    TAL_IDLE           = 0,
-    TAL_TX_AUTO        = 2,
-    TAL_TX_BASIC       = 3,
-    TAL_SLEEP          = 4,
-    TAL_ED             = 6
+typedef enum tal_state_tag {
+	TAL_IDLE           = 0,
+	TAL_TX_AUTO        = 2,
+	TAL_TX_BASIC       = 3,
+	TAL_SLEEP          = 4,
+	TAL_ED             = 6
 } tal_state_t;
 #endif
 
 #if ((defined BEACON_SUPPORT) && (MAC_SCAN_ED_REQUEST_CONFIRM == 0))
-typedef enum tal_state_tag
-{
-    TAL_IDLE           = 0,
-    TAL_TX_AUTO        = 2,
-    TAL_TX_BASIC       = 3,
-    TAL_SLEEP          = 4,
-    TAL_SLOTTED_CSMA   = 5
+typedef enum tal_state_tag {
+	TAL_IDLE           = 0,
+	TAL_TX_AUTO        = 2,
+	TAL_TX_BASIC       = 3,
+	TAL_SLEEP          = 4,
+	TAL_SLOTTED_CSMA   = 5
 } tal_state_t;
 #endif
 
 #if ((!defined BEACON_SUPPORT) && (MAC_SCAN_ED_REQUEST_CONFIRM == 0))
-typedef enum tal_state_tag
-{
-    TAL_IDLE           = 0,
-    TAL_TX_AUTO        = 2,
-    TAL_TX_BASIC       = 3,
-    TAL_SLEEP          = 4
+typedef enum tal_state_tag {
+	TAL_IDLE           = 0,
+	TAL_TX_AUTO        = 2,
+	TAL_TX_BASIC       = 3,
+	TAL_SLEEP          = 4
 } tal_state_t;
 #endif
 
@@ -271,13 +269,16 @@ extern bool tal_beacon_transmission;
  * \ingroup group_tal_state_machine_230b
  */
 tal_trx_status_t set_trx_state(trx_cmd_t trx_cmd);
+
 #ifdef ENABLE_FTN_PLL_CALIBRATION
+
 /**
  * \brief PLL calibration and filter tuning timer callback
  *
  * \param parameter Unused callback parameter
  */
 void calibration_timer_handler_cb(void *parameter);
+
 #endif  /* ENABLE_FTN_PLL_CALIBRATION */
 
 #endif /* TAL_INTERNAL_H */

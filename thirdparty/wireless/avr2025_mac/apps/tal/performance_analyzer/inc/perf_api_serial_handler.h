@@ -39,6 +39,7 @@
  *
  * \asf_license_stop
  */
+
 /*
  * Copyright (c) 2010, Atmel Corporation All rights reserved.
  *
@@ -68,9 +69,7 @@
 
 /* === Types ================================================================ */
 
-
 /* === Externals ============================================================ */
-
 
 /* === Prototypes =========================================================== */
 
@@ -78,25 +77,27 @@
 extern "C" {
 #endif
 
-    /**
-     * \brief This function does the initialization of the Serial handler state Machine.
-     */
-    void init_sio(void);
+/**
+ * \brief This function does the initialization of the Serial handler state
+ *Machine.
+ */
+void init_sio(void);
 
-    /**
-     *   \brief Function to handle the state machine serial data exchange.
-     */
-    void serial_data_handler(void);
-    /**
-     * \brief Function to write messages into UART/USB, used to send assert
-     *  messages
-     */
-    void sio_write(uint8_t *message);
+/**
+ *   \brief Function to handle the state machine serial data exchange.
+ */
+void serial_data_handler(void);
 
-    //! \}
+/**
+ * \brief Function to write messages into UART/USB, used to send assert
+ *  messages
+ */
+void sio_write(uint8_t *message);
+
+/* ! \} */
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
 
-# endif //PERF_API_SERIAL_HANDLER_H
+# endif /* PERF_API_SERIAL_HANDLER_H */
 /* EOF */

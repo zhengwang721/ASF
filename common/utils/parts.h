@@ -487,14 +487,14 @@
 #define MEGA_RFA1 ( \
 		AVR8_PART_IS_DEFINED(ATmega128RFA1) \
 		)
-		
+
 /** ATmegaxxRFR2 group */
 #define MEGA_RFR2 ( \
 		AVR8_PART_IS_DEFINED(ATmega64RFR2)  || \
 		AVR8_PART_IS_DEFINED(ATmega128RFR2) || \
 		AVR8_PART_IS_DEFINED(ATmega256RFR2) \
 		)
-	
+
 /** ATmegaxxRFxx group */
 #define MEGA_RF (MEGA_RFA1 || MEGA_RFR2)
 
@@ -839,6 +839,35 @@
 /** @} */
 
 /**
+ * \name SAMD20 series
+ * @{
+ */
+#define SAMD20J ( \
+		SAM_PART_IS_DEFINED(SAMD20J14) || \
+		SAM_PART_IS_DEFINED(SAMD20J15) || \
+		SAM_PART_IS_DEFINED(SAMD20J16) || \
+		SAM_PART_IS_DEFINED(SAMD20J17) || \
+		SAM_PART_IS_DEFINED(SAMD20J18) \
+	)
+
+#define SAMD20G ( \
+		SAM_PART_IS_DEFINED(SAMD20G14) || \
+		SAM_PART_IS_DEFINED(SAMD20G15) || \
+		SAM_PART_IS_DEFINED(SAMD20G16) || \
+		SAM_PART_IS_DEFINED(SAMD20G17) || \
+		SAM_PART_IS_DEFINED(SAMD20G18) \
+	)
+
+#define SAMD20E ( \
+		SAM_PART_IS_DEFINED(SAMD20E14) || \
+		SAM_PART_IS_DEFINED(SAMD20E15) || \
+		SAM_PART_IS_DEFINED(SAMD20E16) || \
+		SAM_PART_IS_DEFINED(SAMD20E17) || \
+		SAM_PART_IS_DEFINED(SAMD20E18) \
+	)
+/** @} */
+
+/**
  * \name SAM4E series
  * @{
  */
@@ -873,12 +902,16 @@
 /** SAM4L Family */
 #define SAM4L (SAM4LS || SAM4LC)
 
+/** SAMD20 Family */
+#define SAMD20 (SAMD20J || SAMD20G || SAMD20E)
+/** @} */
+
 /** SAM4E Family */
 #define SAM4E (SAM4E8 || SAM4E16)
 /** @} */
 
 /** SAM product line */
-#define SAM (SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S || SAM4L || SAM4E)
+#define SAM (SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S || SAM4L || SAM4E || SAMD20)
 
 /** @} */
 

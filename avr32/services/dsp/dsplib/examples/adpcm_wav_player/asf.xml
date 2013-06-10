@@ -4,7 +4,7 @@
 		Example application. It demonstrates, though an audio WAV player application, how to use the ADPCM decoder from the DSP library.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="Digital signal processing"/>
+			<keyword value="Digital Signal Processing"/>
 			<keyword value="Audio"/>
 		</info>
 		<build type="c-source" value="adpcm_example.c"/>

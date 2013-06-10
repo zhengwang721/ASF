@@ -39,11 +39,13 @@
  *
  * \asf_license_stop
  */
+
 /**
  * @author
  *      Atmel Corporation: http://www.atmel.com
  *      Support email: avr@atmel.com
  */
+
 /*
  * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
@@ -65,7 +67,7 @@
 
 /* values for SR_AES_DIR */
 #define AES_DIR_VOID      (AES_DIR_ENCRYPT + AES_DIR_DECRYPT + 1)
-                                /* Must be different from both summands */
+/* Must be different from both summands */
 
 /* value for SR_AES_CON */
 #define AES_START         (1)
@@ -74,7 +76,6 @@
 #define SR_MASK(SR, val)                   _SR_MASK(SR, val)
 
 /* === Types =============================================================== */
-
 
 /* === Data ============================================================= */
 
@@ -104,8 +105,6 @@ void sal_init(void)
 {
 }
 
-
-
 /**
  * @brief Setup AES unit
  *
@@ -123,106 +122,98 @@ void sal_init(void)
  * @return  False if some parameter was illegal, true else
  */
 bool sal_aes_setup(uint8_t *key,
-                   uint8_t enc_mode,
-                   uint8_t dir)
+		uint8_t enc_mode,
+		uint8_t dir)
 {
-    uint8_t i;
+	uint8_t i;
 
-    if (key != NULL)
-    {
+	if (key != NULL) {
+		/* Setup key. */
+		dec_initialized = false;
 
-        /* Setup key. */
-        dec_initialized = false;
+		last_dir = AES_DIR_VOID;
 
-        last_dir = AES_DIR_VOID;
+		/* Save key for later use after decryption or sleep. */
+		memcpy(enc_key, key, AES_KEYSIZE);
 
-        /* Save key for later use after decryption or sleep. */
-        memcpy(enc_key, key, AES_KEYSIZE);
+		/* fill in key */
+		for (i = 0; i < AES_BLOCKSIZE; ++i) {
+			pal_trx_reg_write(RG_AES_KEY, key[i]);
+		}
+	}
 
-        /* fill in key */
-        for(i = 0; i < AES_BLOCKSIZE; ++i)
-        {
-            pal_trx_reg_write(RG_AES_KEY, key[i]);
-        }
-    }
+	/* Set encryption direction. */
+	switch (dir) {
+	case AES_DIR_ENCRYPT:
+		if (last_dir == AES_DIR_DECRYPT) {
+			/*
+			 * If the last operation was decryption, the encryption
+			 * key must be stored in enc_key, so re-initialize it.
+			 */
+			for (i = 0; i < AES_BLOCKSIZE; ++i) {
+				pal_trx_reg_write(RG_AES_KEY, enc_key[i]);
+			}
+		}
 
-    /* Set encryption direction. */
-    switch(dir)
-    {
-        case AES_DIR_ENCRYPT:
-            if (last_dir == AES_DIR_DECRYPT)
-            {
-                /*
-                 * If the last operation was decryption, the encryption
-                 * key must be stored in enc_key, so re-initialize it.
-                 */
-                for(i = 0; i < AES_BLOCKSIZE; ++i)
-                {
-                    pal_trx_reg_write(RG_AES_KEY, enc_key[i]);
-                }
-            }
-            break;
+		break;
 
-        case AES_DIR_DECRYPT:
-            if (last_dir != AES_DIR_DECRYPT)
-            {
-                if (!dec_initialized)
-                {
-                    uint8_t dummy[AES_BLOCKSIZE];
+	case AES_DIR_DECRYPT:
+		if (last_dir != AES_DIR_DECRYPT) {
+			if (!dec_initialized) {
+				uint8_t dummy[AES_BLOCKSIZE];
 
-                    /* Compute decryption key and initialize unit with it. */
+				/* Compute decryption key and initialize unit
+				 *with it. */
 
-                    /* Dummy ECB encryption. */
-                    mode_byte = SR_MASK(SR_AES_MODE, AES_MODE_ECB) |
-                        SR_MASK(SR_AES_DIR, AES_DIR_ENCRYPT);
-                    pal_trx_reg_write(RG_AES_CTRL, mode_byte);
-                    sal_aes_exec(dummy);
+				/* Dummy ECB encryption. */
+				mode_byte = SR_MASK(SR_AES_MODE, AES_MODE_ECB) |
+						SR_MASK(SR_AES_DIR,
+						AES_DIR_ENCRYPT);
+				pal_trx_reg_write(RG_AES_CTRL, mode_byte);
+				sal_aes_exec(dummy);
 
-                    /* Read last round key. */
-                    for(i = 0; i < AES_BLOCKSIZE; ++i)
-                    {
-                        dec_key[i] = pal_trx_reg_read(RG_AES_KEY);
-                    }
+				/* Read last round key. */
+				for (i = 0; i < AES_BLOCKSIZE; ++i) {
+					dec_key[i]
+						= pal_trx_reg_read(RG_AES_KEY);
+				}
 
-                    dec_initialized = true;
-                }
+				dec_initialized = true;
+			}
 
-                /* Initialize the key. */
-                for(i = 0; i < AES_BLOCKSIZE; ++i)
-                {
-                    pal_trx_reg_write(RG_AES_KEY, dec_key[i]);
-                }
+			/* Initialize the key. */
+			for (i = 0; i < AES_BLOCKSIZE; ++i) {
+				pal_trx_reg_write(RG_AES_KEY, dec_key[i]);
+			}
 
-                break;
-            }
+			break;
+		}
 
-        default:
-            return false;
-    }
+	default:
+		return false;
+	}
 
-    last_dir = dir;
+	last_dir = dir;
 
-    /* Set encryption mode. */
-    switch(enc_mode)
-    {
-        case AES_MODE_ECB:
-        case AES_MODE_CBC:
-            mode_byte =
-                SR_MASK(SR_AES_MODE, enc_mode) | SR_MASK(SR_AES_DIR, dir);
-            break;
+	/* Set encryption mode. */
+	switch (enc_mode) {
+	case AES_MODE_ECB:
+	case AES_MODE_CBC:
+		mode_byte
+			= SR_MASK(SR_AES_MODE, enc_mode) | SR_MASK(SR_AES_DIR,
+				dir);
+		break;
 
-        default:
-            return (false);
-    }
+	default:
+		return (false);
+	}
 
-    /* set mode and direction */
+	/* set mode and direction */
 
-    pal_trx_reg_write(RG_AES_CTRL, mode_byte);
+	pal_trx_reg_write(RG_AES_CTRL, mode_byte);
 
-    return (true);
+	return (true);
 }
-
-
 
 /**
  * @brief Re-inits key and state after a sleep or TRX reset
@@ -235,47 +226,40 @@ bool sal_aes_setup(uint8_t *key,
  */
 void sal_aes_restart(void)
 {
-    uint8_t i;
-    uint8_t *keyp;
+	uint8_t i;
+	uint8_t *keyp;
 
-    /* Ensure that radio is awake */
-    prev_trx_status = tal_trx_status;
-    if (tal_trx_status == TRX_SLEEP)
-    {
-        tal_trx_wakeup();
-    }
+	/* Ensure that radio is awake */
+	prev_trx_status = tal_trx_status;
+	if (tal_trx_status == TRX_SLEEP) {
+		tal_trx_wakeup();
+	}
 
-    if (last_dir == AES_DIR_ENCRYPT)
-    {
-        keyp = enc_key;
-    }
-    else
-    {
-        keyp = dec_key;
-    }
+	if (last_dir == AES_DIR_ENCRYPT) {
+		keyp = enc_key;
+	} else {
+		keyp = dec_key;
+	}
 
-    /* fill in key */
-    for(i = 0; i < AES_BLOCKSIZE; ++i)
-    {
-        pal_trx_reg_write(RG_AES_KEY, *keyp++);
-    }
+	/* fill in key */
+	for (i = 0; i < AES_BLOCKSIZE; ++i) {
+		pal_trx_reg_write(RG_AES_KEY, *keyp++);
+	}
 
-    pal_trx_reg_write(RG_AES_CTRL, mode_byte);
+	pal_trx_reg_write(RG_AES_CTRL, mode_byte);
 }
-
 
 /**
  * @brief Cleans up the SAL/AES after STB has been finished
  */
 void _sal_aes_clean_up(void)
 {
-    /* Set radio to SLEEP, if it has been in SLEEP before sal_aes_restart() */
-    if (prev_trx_status == TRX_SLEEP)
-    {
-        tal_trx_sleep(SLEEP_MODE_1);
-    }
+	/* Set radio to SLEEP, if it has been in SLEEP before sal_aes_restart()
+	 **/
+	if (prev_trx_status == TRX_SLEEP) {
+		tal_trx_sleep(SLEEP_MODE_1);
+	}
 }
-
 
 /**
  * @brief En/decrypt one AES block.
@@ -286,21 +270,19 @@ void _sal_aes_clean_up(void)
  */
 void sal_aes_exec(uint8_t *data)
 {
-    uint8_t i;
+	uint8_t i;
 
-    for(i = 0; i < AES_BLOCKSIZE; ++i)
-    {
-        pal_trx_reg_write(RG_AES_STATE, *data++);
-    }
+	for (i = 0; i < AES_BLOCKSIZE; ++i) {
+		pal_trx_reg_write(RG_AES_STATE, *data++);
+	}
 
-    pal_trx_reg_write(RG_AES_CTRL,
-                      mode_byte | SR_MASK(SR_AES_REQUEST, AES_START));
+	pal_trx_reg_write(RG_AES_CTRL,
+			mode_byte | SR_MASK(SR_AES_REQUEST, AES_START));
 
-    /* Wait for the operation to finish - poll RG_AES_RY. */
-    while(!pal_trx_bit_read(SR_AES_DONE));
+	/* Wait for the operation to finish - poll RG_AES_RY. */
+	while (!pal_trx_bit_read(SR_AES_DONE)) {
+	}
 }
-
-
 
 /**
  * @brief Reads the result of previous AES en/decryption
@@ -313,12 +295,11 @@ void sal_aes_exec(uint8_t *data)
  */
 void sal_aes_read(uint8_t *data)
 {
-    uint8_t i;
+	uint8_t i;
 
-    for(i = 0; i < AES_BLOCKSIZE; ++i)
-    {
-        *data++ = pal_trx_reg_read(RG_AES_STATE);
-    }
+	for (i = 0; i < AES_BLOCKSIZE; ++i) {
+		*data++ = pal_trx_reg_read(RG_AES_STATE);
+	}
 }
 
 #endif /* AT86RFAx */

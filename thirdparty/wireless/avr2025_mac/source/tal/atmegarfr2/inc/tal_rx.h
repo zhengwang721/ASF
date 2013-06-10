@@ -41,6 +41,7 @@
  * \asf_license_stop
  *
  */
+
 /*
  * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
@@ -53,15 +54,11 @@
 
 /* === INCLUDES ============================================================ */
 
-
 /* === EXTERNALS =========================================================== */
-
 
 /* === TYPES =============================================================== */
 
-
 /* === MACROS ============================================================== */
-
 
 /* === PROTOTYPES ========================================================== */
 
@@ -69,31 +66,31 @@
 extern "C" {
 #endif
 
-    /**
-     * \addtogroup group_tal_rx_rfr2
-     * @{
-     */
+/**
+ * \addtogroup group_tal_rx_rfr2
+ * @{
+ */
 
-    /**
-     * \brief Handle received frame interrupt
-     *
-     * This function handles transceiver interrupts for received frames and
-     * uploads the frames from the trx.
-     */
+/**
+ * \brief Handle received frame interrupt
+ *
+ * This function handles transceiver interrupts for received frames and
+ * uploads the frames from the trx.
+ */
 
-    void handle_received_frame_irq(void);
+void handle_received_frame_irq(void);
 
-    /**
-     * \brief Parses received frame and create the frame_info_t structure
-     *
-     * This function parses the received frame and creates the frame_info_t
-     * structure to be sent to the MAC as a parameter of tal_rx_frame_cb().
-     *
-     * \param buf Pointer to the buffer containing the received frame
-     */
-    void process_incoming_frame(buffer_t *buf);
+/**
+ * \brief Parses received frame and create the frame_info_t structure
+ *
+ * This function parses the received frame and creates the frame_info_t
+ * structure to be sent to the MAC as a parameter of tal_rx_frame_cb().
+ *
+ * \param buf Pointer to the buffer containing the received frame
+ */
+void process_incoming_frame(buffer_t *buf);
 
-    //! @}
+/* ! @} */
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
