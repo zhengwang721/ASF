@@ -46,9 +46,9 @@
 /**
  * \defgroup asfdoc_samd20_eeprom_group SAM D20 EEPROM Emulator Service (EEPROM)
  *
- * This driver for SAM D20 devices provides an emulated EEPROM memory space,
- * for the storage and retrieval of configuration data into and out of
- * non-volatile memory.
+ * This driver for SAM D20 devices provides an emulated EEPROM memory space in
+ * the device's FLASH memory, for the storage and retrieval of user-application
+ * configuration data into and out of non-volatile memory.
  *
  * The following peripherals are used by this module:
  *
@@ -68,26 +68,58 @@
  * The SAM D20 device fuses must be configured via an external programmer or
  * debugger, so that an EEPROM section is allocated in the main NVM flash
  * memory contents. If a NVM section is not allocated for the EEPROM emulator,
- * the module will fail to initialize.
+ * or if insufficient space for the emulator is reserved, the module will fail
+ * to initialize.
  *
  *
  * \section asfdoc_samd20_eeprom_module_overview Module Overview
  *
- * This module provides an EEPROM emulation layer on top of the device's raw
- * NVM controller, to provide a standard interface for the reading and writing
- * of non-volatile configuration data.
+ * As the SAM D20 devices do not contain any physical EEPROM memory, the storage
+ * of non-volatile user data is instead emulated using a special section of the
+ * device's main FLASH memory. The use of FLASH memory technology over EEPROM
+ * presents several difficulties over true EEPROM memory; data must be written
+ * as a number of physical memory pages (of several bytes each) rather than
+ * being individually byte addressable, and entire rows of FLASH must be erased
+ * before new data may be stored. To help abstract these characteristics away
+ * from the user application an emulation scheme is implemented to present a
+ * more user-friendly API for data storage and retrieval.
  *
- * A basic wear-leveling algorithm is implemented to automatically handle the
- * transferral of data across flash rows to ensure that repeated writes to
- * locations in the same logical EEPROM page do not exhaust the physical memory
- * write cycle lifespan.
+ * This module provides an EEPROM emulation layer on top of the device's
+ * internal NVM controller, to provide a standard interface for the reading and
+ * writing of non-volatile configuration data. This data is placed into the
+ * EEPROM emulated section of the device's main FLASH memory storage section,
+ * the size of which is configured using the device's fuses. Emulated EEPROM is
+ * exempt from the usual device NVM region lock bits, so that it may be read
+ * from or written to at any point in the user application.
+ *
+ * There are many different algorithms that may be employed for EEPROM emulation
+ * using FLASH memory, to tune the write and read latencies, RAM usage, wear
+ * leveling and other characteristics. As a result, multiple different emulator
+ * schemes may be implemented, so that the most appropriate scheme for a
+ * specific application's requirements may be used.
  *
  * \subsection asfdoc_samd20_eeprom_module_overview_implementation Implementation Details
- * The following information is relevant for EEPROM emulator scheme 1, version
- * 1.0.0 as implemented by this module. Other revisions or emulation schemes may
- * vary in their implementation details.
+ * The following information is relevant for <b>EEPROM Emulator scheme 1,
+ * version 1.0.0</b>, as implemented by this module. Other revisions or
+ * emulation schemes may vary in their implementation details and may have
+ * different wear-leveling, latency and other characteristics.
  *
- * The SAM D20 non-volatile FLASH is divided into a number of rows, each
+ * \subsubsection asfdoc_samd20_eeprom_module_overview_implementation_ec Emulator Characteristics
+ * This emulator is designed for <b>best reliability, with a good balance of
+ * available storage and write-cycle limits</b>. It is designed to ensure that
+ * page data is atomically updated so that in the event of a failed update the
+ * previous data is not lost (when used correctly). With the exception of a
+ * system reset with data cached to the internal write-cache buffer, at most
+ * only the latest write to physical non-volatile memory will be lost in the
+ * event of a failed write.
+ *
+ * This emulator scheme is tuned to give best write-cycle longevity when writes
+ * are confined to the same logical EEPROM page (where possible) and when writes
+ * across multiple logical EEPROM pages are made in a linear fashion through the
+ * entire emulated EEPROM space.
+ *
+ * \subsubsection asfdoc_samd20_eeprom_module_overview_implementation_pf Physical Memory
+ * The SAM D20 non-volatile FLASH is divided into a number of physical rows, each
  * containing four identically sized flash pages. Pages may be read or written
  * to individually, however pages must be erased before being reprogrammed and
  * the smallest granularity available for erasure is one single row.
@@ -96,37 +128,85 @@
  * handle the versioning and moving of page data to different physical rows as
  * needed, erasing old rows ready for re-use by future page write operations.
  *
- * \subsubsection asfdoc_samd20_eeprom_module_overview_implementation_mp Master Page
- * One row, at the end of the emulated EEPROM memory space, is reserved for
- * use by the emulator to store configuration data. This includes a magic
- * identifier to indicate an initialized emulated EEPROM memory, as well as
- * version information and other relevant data. The master page is not
- * user-accessible, and is reserved solely for internal use by the emulator.
+ * Physically, the emulated EEPROM segment is located at the end of the physical
+ * FLASH memory space, as shown in
+ * \ref asfdoc_samd20_eeprom_module_mem_layout "the figure below".
+ *
+ * \anchor asfdoc_samd20_eeprom_module_mem_layout
+ * \dot
+ * digraph memory_layout {
+ *  size="5,5"
+ *  node [shape=plaintext]
+ *  memory [label=<
+ *   <table border="0" cellborder="1" cellspacing="0" >
+ *    <tr>
+ *     <td align="right" border="0"> End of NVM Memory </td>
+ *     <td rowspan="3" align="center"> Reserved EEPROM Section </td>
+ *    </tr>
+ *    <tr>
+ *     <td align="right" border="0"> </td>
+ *    </tr>
+ *    <tr>
+ *     <td align="right" border="0"> Start of EEPROM Memory </td>
+ *    </tr>
+ *    <tr>
+ *     <td align="right" border="0"> End of Application Memory </td>
+ *     <td rowspan="3" align="center"> Application Section </td>
+ *    </tr>
+ *    <tr>
+ *     <td height="300" align="right" border="0"> </td>
+ *    </tr>
+ *    <tr>
+ *     <td align="right" border="0"> Start of Application Memory </td>
+ *    </tr>
+ *    <tr>
+ *     <td align="right" border="0"> End of Bootloader Memory </td>
+ *     <td rowspan="3" align="center"> BOOT Section </td>
+ *    </tr>
+ *    <tr>
+ *     <td align="right" border="0"> </td>
+ *    </tr>
+ *    <tr>
+ *     <td align="right" border="0"> Start of NVM Memory</td>
+ *    </tr>
+ *   </table>
+ *  >]
+ * }
+ * \enddot
+ *
+ * \subsubsection asfdoc_samd20_eeprom_module_overview_implementation_mp Master Row
+ * One physical FLASH row at the end of the emulated EEPROM memory space is
+ * reserved for use by the emulator to store configuration data. The master row
+ * is not user-accessible, and is reserved solely for internal use by the
+ * emulator.
  *
  * \subsubsection asfdoc_samd20_eeprom_module_overview_implementation_sr Spare Row
- * As data needs to be preserved between row erasures, a spare row is tracked in
- * the NVM memory space to act as a destination for copied data when a write
- * request is made to a full row. When the write request is made any logical
- * pages in the full row that needs to be preserved is written to the spare row
+ * As data needs to be preserved between row erasures, a single FLASH row is kept
+ * unused to act as destination for copied data when a write request is made to
+ * an already full row. When the write request is made, any logical pages of
+ * data in the full row that need to be preserved are written to the spare row
  * along with the new (updated) logical page data, before the old row is erased
  * and marked as the new spare.
  *
  * \subsubsection asfdoc_samd20_eeprom_module_overview_implementation_rc Row Contents
- * Each physical row contains two logical EEPROM memory pages. This halves the
- * available storage space for the emulated EEPROM but reduces the overall
- * number of row erases that are required, by reserving two pages within each
- * row for updated versions of the logical page contents. As logical pages
- * within a physical row are updated, the new data is filled into the remaining
- * unused pages in the row. Once the entire row is full, a new write request
- * will copy the logical page not being written to in the current row to the
- * spare row with the new (updated) logical page data, before the old row is
- * erased.
+ * Each physical FLASH row initially stores the contents of two logical EEPROM
+ * memory pages. This halves the available storage space for the emulated EEPROM
+ * but reduces the overall number of row erases that are required, by reserving
+ * two pages within each row for updated versions of the logical page contents.
+ * See \ref asfdoc_samd20_eeprom_init_layout "here" for a visual layout of the
+ * EEPROM Emulator physical memory.
+ *
+ * As logical pages within a physical row are updated, the new data is filled
+ * into the remaining unused pages in the row. Once the entire row is full, a
+ * new write request will copy the logical page not being written to in the
+ * current row to the spare row with the new (updated) logical page data, before
+ * the old row is erased.
  *
  * This system allows for the same logical page to be updated up to three times
  * into physical memory before a row erasure procedure is needed. In the case of
- * multiple versions of the same logical page being stored in the same physical
- * row, the right-most (highest physical page address) version is considered the
- * most current.
+ * multiple versions of the same logical EEPROM page being stored in the same
+ * physical row, the right-most (highest physical FLASH memory page address)
+ * version is considered to be the most current.
  *
  * \subsubsection asfdoc_samd20_eeprom_module_overview_implementation_wc Write Cache
  * As a typical EEPROM use case is to write to multiple sections of the same
@@ -149,14 +229,14 @@
  * \anchor asfdoc_samd20_eeprom_init_layout
  * \image html init_layout.svg "Initial physical layout of the emulated EEPROM memory"
  *
- * Where a single EEPROM page is represented by
+ * In the above figure, a single logical EEPROM page is represented by
  * \ref asfdoc_samd20_eeprom_page_layout "the following figure".
  *
  * \anchor asfdoc_samd20_eeprom_page_layout
  * \image html page_layout.svg "Internal layout of an emulated EEPROM page"
  *
  * When an EEPROM page needs to be committed to physical memory, the next free
- * page in the same row will be chosen - this makes recovery simple, as the
+ * FLASH page in the same row will be chosen - this makes recovery simple, as the
  * right-most version of a logical page in a row is considered the most current.
  * With four pages to a physical NVM row, this allows for up to three updates to
  * the same logical page to be made before an erase is needed.
@@ -174,10 +254,10 @@
  * \image html nm1_page_write2.svg "Second write to logical EEPROM page N-1"
  *
  * A third write of the same logical page requires that the EEPROM emulator
- * erase the row, as it has become full. To this, the contents of the unmodified
- * page in the same row as the page being updated will be copied into the spare
- * row, along with the new version of the page being updated. The old (full)
- * row is then erased, resulting in the layout shown in
+ * erase the row, as it has become full. Prior to this, the contents of the
+ * unmodified page in the same row as the page being updated will be copied into
+ * the spare row, along with the new version of the page being updated. The old
+ * (full) row is then erased, resulting in the layout shown in
  * \ref asfdoc_samd20_eeprom_page_write3 "the figure below".
  *
  * \anchor asfdoc_samd20_eeprom_page_write3
@@ -193,13 +273,6 @@
  * commit a buffered page to physical memory. The manual write command must thus
  * be issued to the NVM controller whenever the user application wishes to write
  * to a NVM page for its own purposes.
- *
- * \subsection asfdoc_samd20_eeprom_special_considerations_wearlevel Wear Leveling Algorithm
- * The wear leveling algorithm is tuned to achieve best performance (and minimal
- * physical flash memory writes) when data is written to locations within the
- * same logical EEPROM page. The user application should ensure that wherever
- * possible subsequent data writes are restricted to the same logical EEPROM
- * page address to prevent premature flash write cycle exhaustion.
  *
  * \subsection asfdoc_samd20_eeprom_special_considerations_pagesize Logical EEPROM Page Size
  * As a small amount of information needs to be stored in a header before the
