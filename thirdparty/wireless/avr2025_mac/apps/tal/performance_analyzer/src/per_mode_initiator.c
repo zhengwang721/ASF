@@ -3501,7 +3501,7 @@ static void configure_range_test_frame_sending(void)
     (tmp->seq_num) = seq_num_initiator; //to be incremented for every frame
     temp_frame_ptr++;    
     range_test_frame_cnt++;
-    data->frame_count = Swap32(CCPU_ENDIAN_TO_LE32(range_test_frame_cnt));//to be checked
+    data->frame_count = (CCPU_ENDIAN_TO_LE32(range_test_frame_cnt));//to be checked
     temp_frame_ptr += 4;
     data->ed = 0;
     temp_frame_ptr++;

@@ -536,7 +536,7 @@ void per_mode_receptor_rx_cb(frame_info_t *frame_info)
                 uint8_t phy_frame_len = frame_info->mpdu[0];
                 uint32_t frame_count;
                 /* Get the frame count in correct format */
-                frame_count = Swap32(CCPU_ENDIAN_TO_LE32(msg->payload.range_tx_data.frame_count));
+                frame_count = (CCPU_ENDIAN_TO_LE32(msg->payload.range_tx_data.frame_count));
                 int8_t rssi_base_val,ed_value;
                 rssi_base_val = tal_get_rssi_base_val();
                 app_led_event(LED_EVENT_RX_FRAME);
