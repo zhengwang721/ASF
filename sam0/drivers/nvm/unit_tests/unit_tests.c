@@ -41,6 +41,64 @@
  *
  */
 
+/**
+ * \mainpage SAM D20 NVM Unit Test
+ * See \ref appdoc_main "here" for project documentation.
+ * \copydetails appdoc_preface
+ *
+ *
+ * \page appdoc_preface Overview
+ * This unit test carries out tests for NVM driver.
+ * It consists of test cases for the following functionalities:
+ *      - Test for driver initialization.
+ *      - Test for NVM parameter retrieval.
+ *      - Test for FLASH row erasure.
+ *      - Test for FLASH page read and write.
+ *      - Test for FLASH partial page update.
+ */
+
+/**
+ * \page appdoc_main SAM D20 NVM Unit Test
+ *
+ * Overview:
+ * - \ref appdoc_samd20_nvm_unit_test_intro
+ * - \ref appdoc_samd20_nvm_unit_test_setup
+ * - \ref appdoc_samd20_nvm_unit_test_usage
+ * - \ref appdoc_samd20_nvm_unit_test_compinfo
+ * - \ref appdoc_samd20_nvm_unit_test_contactinfo
+ *
+ * \section appdoc_samd20_nvm_unit_test_intro Introduction
+ * \copydetails appdoc_preface
+ *
+ * The following kit is required for carrying out the test:
+ *      - SAM D20 Xplained Pro board
+ *
+ * \section appdoc_samd20_nvm_unit_test_setup Setup
+ * The following connections has to be made using wires:
+ *  - None
+ *
+ * To run the test:
+ *  - Connect the SAM D20 Xplained Pro board to the computer using a
+ *    micro USB cable.
+ *  - Open the virtual COM port in a terminal application.
+ *    \note The USB composite firmware running on the Embedded Debugger (EDBG)
+ *          will enumerate as debugger, virtual COM port and EDBG data
+ *          gateway.
+ *  - Build the project, program the target and run the application.
+ *    The terminal shows the results of the unit test.
+ *
+ * \section appdoc_samd20_nvm_unit_test_usage Usage
+ *  - The unit tests are carried out using the internal NVM controller.
+ *
+ * \section appdoc_samd20_nvm_unit_test_compinfo Compilation Info
+ * This software was written for the GNU GCC and IAR for ARM.
+ * Other compilers may or may not work.
+ *
+ * \section appdoc_samd20_nvm_unit_test_contactinfo Contact Information
+ * For further information, visit
+ * <a href="http://www.atmel.com">http://www.atmel.com</a>.
+ */
+
 #include <asf.h>
 #include <stdio_serial.h>
 #include <string.h>
@@ -305,7 +363,7 @@ int main(void)
 	/* Define Test Cases */
 	DEFINE_TEST_CASE(nvm_paramter_test, NULL,
 			run_nvm_parameter_test, NULL,
-			"NVM Parameter check");
+			"NVM parameter check");
 
 	DEFINE_TEST_CASE(nvm_init_test, NULL,
 			run_nvm_init_test, NULL,

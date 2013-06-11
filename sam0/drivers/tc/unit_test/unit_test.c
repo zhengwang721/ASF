@@ -41,15 +41,69 @@
  *
  */
 
-/*
- * This unit test requires pin PA16 and PB31 to be connected. On the
- * Xplained Pro this corresponds to pin EXT3_PIN_17 on the EXT3 header and
- * the pin EXT3_PIN_8 on the EXT3 header.
+/**
+ * \mainpage SAM D20 TC Unit Test
+ * See \ref appdoc_main "here" for project documentation.
+ * \copydetails appdoc_preface
+ *
+ *
+ * \page appdoc_preface Overview
+ * This unit test carries out tests for TC driver.
+ * It consists of test cases for the following functionalities:
+ *      - Test for driver initialization.
+ *      - Test for TC start/stop
+ *      - Test for TC callback generation
+ *      - Test for 32-bit (chained) TC operation
+ *      - Test for compare and capture TC operation
+ */
+
+/**
+ * \page appdoc_main SAM D20 TC Unit Test
+ *
+ * Overview:
+ * - \ref appdoc_samd20_tc_unit_test_intro
+ * - \ref appdoc_samd20_tc_unit_test_setup
+ * - \ref appdoc_samd20_tc_unit_test_usage
+ * - \ref appdoc_samd20_tc_unit_test_compinfo
+ * - \ref appdoc_samd20_tc_unit_test_contactinfo
+ *
+ * \section appdoc_samd20_tc_unit_test_intro Introduction
+ * \copydetails appdoc_preface
+ *
+ * The following kit is required for carrying out the test:
+ *      - SAM D20 Xplained Pro board
+ *
+ * \section appdoc_samd20_tc_unit_test_setup Setup
+ * The following connections has to be made using wires:
+ *  - \b EXTINT 0 (PA16) <-----> TC0 WO1 (PB31)
+ *
+ * To run the test:
+ *  - Connect the SAM D20 Xplained Pro board to the computer using a
+ *    micro USB cable.
+ *  - Open the virtual COM port in a terminal application.
+ *    \note The USB composite firmware running on the Embedded Debugger (EDBG)
+ *          will enumerate as debugger, virtual COM port and EDBG data
+ *          gateway.
+ *  - Build the project, program the target and run the application.
+ *    The terminal shows the results of the unit test.
+ *
+ * \section appdoc_samd20_tc_unit_test_usage Usage
+ *  - The unit tests are carried out using the several TC modules internally
+ *    for internal checks.
+ *  - The EXTINT module is connected to a TC module so that it can detect the
+ *    correct TC waveform output.
+ *
+ * \section appdoc_samd20_tc_unit_test_compinfo Compilation Info
+ * This software was written for the GNU GCC and IAR for ARM.
+ * Other compilers may or may not work.
+ *
+ * \section appdoc_samd20_tc_unit_test_contactinfo Contact Information
+ * For further information, visit
+ * <a href="http://www.atmel.com">http://www.atmel.com</a>.
  */
 
 #include <asf.h>
 #include <stdio_serial.h>
-
 
 /* TC modules used in tests */
 struct tc_module tc0_module;

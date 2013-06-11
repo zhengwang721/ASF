@@ -44,7 +44,7 @@
 /**
  * \mainpage SAM D20 SPI Slave Bootloader
  * See \ref appdoc_main "here" for project documentation.
- * \copydetails preface
+ * \copydetails appdoc_preface
  *
  *
  * \page appdoc_preface Features
