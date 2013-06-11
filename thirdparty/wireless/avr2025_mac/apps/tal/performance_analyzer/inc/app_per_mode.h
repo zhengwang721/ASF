@@ -41,6 +41,7 @@
  *
  * \asf_license_stop
  */
+
 /*
  * Copyright (c) 2012, Atmel Corporation All rights reserved.
  *
@@ -54,7 +55,8 @@
  * \ingroup group_perf_analyzer
  * \defgroup group_per_mode  Packet error rate measurement
  *  Handles the functionalities of Packet Error Rate Measurement(PER) Mode,
- *  User can set and get various paramters of Transceiver like Channel,Antenna Diversity,CSMA
+ *  User can set and get various paramters of Transceiver like Channel,Antenna
+ *Diversity,CSMA
  *  and do the Packet Error Rate Measurement.
  */
 
@@ -75,12 +77,12 @@
 /**
  * \ingroup group_per_mode
  * \defgroup group_per_mode_utils  PER mode Common Utilities
- * This module handles the PER mode Common utilities used by Initiator and Receptor.
+ * This module handles the PER mode Common utilities used by Initiator and
+ *Receptor.
  *
  */
 
 /* === Includes ============================================================= */
-
 
 /* === Macros =============================================================== */
 
@@ -90,7 +92,7 @@
 #if ((TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B))
 #define  TX_POWER_REG     (3)
 #endif
-#if(TAL_TYPE == AT86RF233)
+#if (TAL_TYPE == AT86RF233)
 #define  FREQ_BAND_08     (4)
 #define  FREQ_BAND_09     (5)
 #endif
@@ -98,7 +100,7 @@
 #define LED_TOGGLE_COUNT_FOR_PER            (50)
 #define MIN_TX_PWR_REG_VAL                  (0x0f)
 
-#if(TAL_TYPE == AT86RF233)
+#if (TAL_TYPE == AT86RF233)
 #define BASE_ISM_FREQUENCY_MHZ              (2306)
 #define MIN_ISM_FREQUENCY_MHZ               (2322)
 #define MAX_ISM_FREQUENCY_MHZ               (2527)
@@ -114,7 +116,7 @@
 
 /**
  * \addtogroup group_per_mode
-  * \{
+ * \{
  */
 
 /**
@@ -149,62 +151,60 @@
 #define RANGE_TEST_MARKER_RSP                (0x16)
 #define RANGE_TEST_PKT_LENGTH                (19)
 #define LED_BLINK_RATE_IN_MICRO_SEC           (50000)
-//\}
+/* \} */
 
 /* === Types ================================================================ */
+
 /**
  * \brief Structure to hold all configurable parameter values
  *
  */
-typedef struct
-{
-    bool ack_request;
-    bool csma_enabled;
-    bool retry_enabled;
+typedef struct {
+	bool ack_request;
+	bool csma_enabled;
+	bool retry_enabled;
 
-#if(TAL_TYPE != AT86RF230B)
-    bool rx_desensitize;
-
+#if (TAL_TYPE != AT86RF230B)
+	bool rx_desensitize;
 #endif /* End of #if(TAL_TYPE != AT86RF230B)*/
 #ifdef CRC_SETTING_ON_REMOTE_NODE
-    bool crc_settings_on_peer;
+	bool crc_settings_on_peer;
 #endif
 
 #if (TAL_TYPE == AT86RF233)
-    bool rpc_enable;
+	bool rpc_enable;
 #endif
 
 #if (ANTENNA_DIVERSITY == 1)
-    bool antenna_diversity;
-    bool antenna_diversity_on_peer;
-    uint8_t antenna_selected;
-    uint8_t antenna_selected_on_peer;
+	bool antenna_diversity;
+	bool antenna_diversity_on_peer;
+	uint8_t antenna_selected;
+	uint8_t antenna_selected_on_peer;
 #endif
 
-    uint8_t channel;
-    uint8_t channel_page;
-#if( (TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B) )
-    uint8_t tx_power_reg;
+	uint8_t channel;
+	uint8_t channel_page;
+#if ((TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B))
+	uint8_t tx_power_reg;
 #endif
-    int8_t tx_power_dbm;
-    uint8_t trx_state;
+	int8_t tx_power_dbm;
+	uint8_t trx_state;
 
-    uint8_t phy_frame_length;
-    uint32_t number_test_frames;
+	uint8_t phy_frame_length;
+	uint32_t number_test_frames;
 
 #if (TAL_TYPE == AT86RF233)
-    float ism_frequency;
+	float ism_frequency;
 #endif
-
 } trx_config_params_t;
+
 /**
  * \brief ED scan result structure to hold the channel and its ED value
  *
  */
-typedef struct
-{
-    uint8_t channel_no;
-    int8_t p_in;
+typedef struct {
+	uint8_t channel_no;
+	int8_t p_in;
 } ed_scan_result_t;
 
 /* === Externals ============================================================ */
@@ -214,7 +214,7 @@ FLASH_EXTERN(int8_t tx_pwr_table[16]);
 
 extern trx_config_params_t curr_trx_config_params;
 
-//! \}
+/* ! \} */
 /* === Prototypes =========================================================== */
 
 /**
@@ -263,7 +263,7 @@ void per_mode_initiator_rx_cb(frame_info_t *frame);
  */
 void per_mode_initiator_ed_end_cb(uint8_t energy_level);
 
-//! \}
+/* ! \} */
 
 /**
  * \addtogroup group_per_mode_receptor
@@ -273,7 +273,7 @@ void per_mode_initiator_ed_end_cb(uint8_t energy_level);
 
 /**
  * \brief Initialize the application in PER Measurement mode as Receptor
- *\param parameter Pointer to the paramter to be carried, if any.
+ **\param parameter Pointer to the paramter to be carried, if any.
  */
 void per_mode_receptor_init(void *parameter);
 
@@ -303,9 +303,7 @@ void per_mode_receptor_tx_done_cb(retval_t status, frame_info_t *frame);
  */
 void per_mode_receptor_rx_cb(frame_info_t *frame);
 
-//! \}
-
-
+/* ! \} */
 
 /*
  * \brief To reset the application (equivalent to soft reset)
@@ -314,20 +312,23 @@ void per_mode_receptor_rx_cb(frame_info_t *frame);
 void app_reset(void);
 
 /**
- * \brief Timer Callback function  if marker response command is transmitted on air
- *  This is used to blink the LED and thus identify that the transmission is done
+ * \brief Timer Callback function  if marker response command is transmitted on
+ *air
+ *  This is used to blink the LED and thus identify that the transmission is
+ *done
  * \param parameter pass parameters to timer handler
  */
 void marker_tx_timer_handler_cb(void *parameter);
 
 /**
  * \brief Timer Callback function  if marker command is received on air
- * This is used to blink the LED and thus identify that the marker frame is received
+ * This is used to blink the LED and thus identify that the marker frame is
+ *received
  * \param parameter pass parameters to timer handler
  */
 void marker_rsp_timer_handler_cb(void *parameter);
 
-//! \}
+/* ! \} */
 #ifdef __cplusplus
 extern "C" {
 #endif

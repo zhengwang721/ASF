@@ -40,6 +40,7 @@
  *
  * \asf_license_stop
  */
+
 /*
  * Copyright (c) 2012, Atmel Corporation All rights reserved.
  *
@@ -57,42 +58,40 @@
 #include <conf_board.h>
 #include "board.h"
 
-
 /* === Macros =============================================================== */
 
 /* === Types ================================================================ */
 
-
 #define NUMBER_OF_APP_TIMERS        (5)
 
-#define TOTAL_NUMBER_OF_TIMERS      (NUMBER_OF_APP_TIMERS + NUMBER_OF_TOTAL_STACK_TIMERS)
+#define TOTAL_NUMBER_OF_TIMERS      (NUMBER_OF_APP_TIMERS + \
+	NUMBER_OF_TOTAL_STACK_TIMERS)
 
 /* Additional buffers used by the application */
 #define NUMBER_OF_LARGE_APP_BUFS    (12)
 #define NUMBER_OF_SMALL_APP_BUFS    (0)
 
-#define TOTAL_NUMBER_OF_LARGE_BUFS  (NUMBER_OF_LARGE_APP_BUFS + NUMBER_OF_LARGE_STACK_BUFS)
-#define TOTAL_NUMBER_OF_SMALL_BUFS  (NUMBER_OF_SMALL_APP_BUFS + NUMBER_OF_SMALL_STACK_BUFS)
+#define TOTAL_NUMBER_OF_LARGE_BUFS  (NUMBER_OF_LARGE_APP_BUFS +	\
+	NUMBER_OF_LARGE_STACK_BUFS)
+#define TOTAL_NUMBER_OF_SMALL_BUFS  (NUMBER_OF_SMALL_APP_BUFS +	\
+	NUMBER_OF_SMALL_STACK_BUFS)
 
-#define TOTAL_NUMBER_OF_BUFS        (TOTAL_NUMBER_OF_LARGE_BUFS + TOTAL_NUMBER_OF_SMALL_BUFS)
-
-
+#define TOTAL_NUMBER_OF_BUFS        (TOTAL_NUMBER_OF_LARGE_BUFS + \
+	TOTAL_NUMBER_OF_SMALL_BUFS)
 
 /* Offset of IEEE address storage location within EEPROM */
 #define EE_IEEE_ADDR                (0)
 
 /* Macro to enable the feature of counting wrong CRC packets */
-#if ( (TAL_TYPE == ATMEGARFR2) ||\
-      (TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B) ||\
-      (TAL_TYPE == AT86RF231)|| (TAL_TYPE == AT86RF233))
+#if ((TAL_TYPE == ATMEGARFR2) || \
+	(TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B) || \
+	(TAL_TYPE == AT86RF231) || (TAL_TYPE == AT86RF233))
 #define CRC_SETTING_ON_REMOTE_NODE
 #endif
 
 /* === Externals ============================================================ */
 
 /* === Prototypes =========================================================== */
-
-
 
 #ifdef __cplusplus
 extern "C" {

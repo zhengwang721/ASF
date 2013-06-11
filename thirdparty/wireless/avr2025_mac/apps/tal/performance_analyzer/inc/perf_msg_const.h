@@ -39,6 +39,7 @@
  *
  * \asf_license_stop
  */
+
 /*
  * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
@@ -55,7 +56,6 @@
  */
 /* === Includes ============================================================= */
 
-
 /* === Macros =============================================================== */
 
 /**
@@ -63,7 +63,9 @@
  *
  */
 
-#define PROTOCOL_ID                     (0x00) /*i.e TAL- Performance Analyzer Application*/
+#define PROTOCOL_ID                     (0x00) /*i.e TAL- Performance Analyzer
+	                                        *Application*/
+
 /**
  * \name Command Lengths
  * \{
@@ -87,7 +89,8 @@
 #define SENSOR_DATA_CONFIRM_LEN         (10)
 #define PER_TEST_START_CONFIRM_LEN      (2)
 #define RANGE_TEST_START_CONFIRM_LEN    (2)
-#define RANGE_TEST_PKT_LEN              (RANGE_TEST_PKT_LENGTH-FCS_LEN+LENGTH_FIELD_LEN+1)
+#define RANGE_TEST_PKT_LEN              (RANGE_TEST_PKT_LENGTH - FCS_LEN + \
+	LENGTH_FIELD_LEN + 1)
 #define RANGE_TEST_RSP_PKT_LEN          (5) /*Excluding ota packet*/
 #define RANGE_TEST_MARKER_IND_LEN       (3) /*Excluding ota packet*/
 #define RANGE_TEST_STOP_CONFIRM_LEN     (2)
@@ -97,13 +100,12 @@
 #define GET_CURRENT_CONFIG_CONFIRM_LEN  (24)
 #define RANGE_MEASURE_STATS_CONFIRM     (10)
 
-//! \}
+/* ! \} */
 
 /**
  * \name Error Codes
  * \{
  */
-
 
 /* error codes */
 #define INVALID_CMD                       (0x20)
@@ -119,7 +121,7 @@
 #define TRANSMISSION_FAILURE              (0x30)
 #define RANGE_TEST_IN_PROGRESS            (0x31)
 
-//! \}
+/* ! \} */
 
 /**
  * \name Parameter Identifiers
@@ -129,7 +131,7 @@
 /* Parameter Identifiers */
 #define PARAM_CHANNEL                     (0x00)
 #define PARAM_CHANNEL_PAGE                (0x01)
-#if( (TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B) )
+#if ((TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B))
 #define PARAM_TX_POWER_REG                (0x02)
 #endif
 #define PARAM_TX_POWER_DBM                (0x03)
@@ -146,7 +148,7 @@
 #define PARAM_RPC                         (0x0e)
 #define PARAM_ISM_FREQUENCY               (0x0f)
 
-//! \}
+/* ! \} */
 
 /**
  * \name MACROS to set the specific features supported
@@ -157,7 +159,7 @@
 #define MULTI_CHANNEL_SELECT              ((uint32_t)(1) << 0)
 #define PER_RANGE_TEST_MODE               ((uint32_t)(1) << 1)
 
-//! \}
+/* ! \} */
 
 /**
  * \name Generic
@@ -206,82 +208,81 @@
 #define CHANNELS_SELECT_POS               (4)
 #define MSG_LEN_ED_SCAN_REQ               (7)
 
-//! \}
+/* ! \} */
 /* === Types ================================================================ */
+
 /**
  * \name Request , Confirm and Indication Message Codes
  * \{
  */
 
-enum msg_code
-{
+enum msg_code {
+	IDENTIFY_BOARD_REQ              =     (0x00),
+	PERF_START_REQ                  =     (0x01),
+	PERF_SET_REQ                    =     (0x02),
+	PERF_GET_REQ                    =     (0x03),
+	IDENTIFY_PEER_NODE_REQ          =     (0x04),
+	CONT_PULSE_TX_REQ               =     (0x05),
+	CONT_WAVE_TX_REQ                =     (0x06),
+	REGISTER_READ_REQ               =     (0x07),
+	REGISTER_WRITE_REQ              =     (0x08),
+	REGISTER_DUMP_REQ               =     (0x09),
+	ED_SCAN_START_REQ               =     (0x0a),
+	SENSOR_DATA_REQ                 =     (0x0b),
+	PER_TEST_START_REQ              =     (0x0c),
+	PEER_DISCONNECT_REQ             =     (0x0d),
+	SET_DEFAULT_CONFIG_REQ          =     (0x0e),
+	GET_CURRENT_CONFIG_REQ          =     (0x0f),
+	RANGE_TEST_START_REQ            =     (0X50),
+	RANGE_TEST_STOP_REQ             =     (0x52),
 
-    IDENTIFY_BOARD_REQ              =     (0x00),
-    PERF_START_REQ                  =     (0x01),
-    PERF_SET_REQ                    =     (0x02),
-    PERF_GET_REQ                    =     (0x03),
-    IDENTIFY_PEER_NODE_REQ          =     (0x04),
-    CONT_PULSE_TX_REQ               =     (0x05),
-    CONT_WAVE_TX_REQ                =     (0x06),
-    REGISTER_READ_REQ               =     (0x07),
-    REGISTER_WRITE_REQ              =     (0x08),
-    REGISTER_DUMP_REQ               =     (0x09),
-    ED_SCAN_START_REQ               =     (0x0a),
-    SENSOR_DATA_REQ                 =     (0x0b),
-    PER_TEST_START_REQ              =     (0x0c),
-    PEER_DISCONNECT_REQ             =     (0x0d),
-    SET_DEFAULT_CONFIG_REQ          =     (0x0e),
-    GET_CURRENT_CONFIG_REQ          =     (0x0f),
-    RANGE_TEST_START_REQ            =     (0X50),
-    RANGE_TEST_STOP_REQ             =     (0x52),
-    
-    /* Confirms and Indications */
+	/* Confirms and Indications */
 
-    IDENTIFY_BOARD_CONFIRM          =     (0x10),
-    PERF_START_CONFIRM              =     (0x11),
-    PERF_SET_CONFIRM                =     (0x12),
-    PERF_GET_CONFIRM                =     (0x13),
-    IDENTIFY_PEER_NODE_CONFIRM      =     (0x14),
-    CONT_PULSE_TX_CONFIRM           =     (0x15),
-    CONT_WAVE_TX_CONFIRM            =     (0x16),
-    REGISTER_READ_CONFIRM           =     (0x17),
-    REGISTER_WRITE_CONFIRM          =     (0x18),
-    REGISTER_DUMP_CONFIRM           =     (0x19),
-    ED_SCAN_START_CONFIRM           =     (0x1a),
-    ED_SCAN_END_INDICATION          =     (0x1b),
-    SENSOR_DATA_CONFIRM             =     (0x1c),
-    PER_TEST_START_CONFIRM          =     (0x1d),
-    PER_TEST_END_INDICATION         =     (0x1e),
-    PEER_DISCONNECT_CONFIRM         =     (0x1f),
-    SET_DEFAULT_CONFIG_CONFIRM      =     (0x20),
-    GET_CURRENT_CONFIG_CONFIRM      =     (0x21),
-    RANGE_TEST_START_CONFIRM        =     (0x51),
-    RANGE_TEST_STOP_CONFIRM         =     (0x53),
-    RANGE_TEST_BEACON_RESPONSE      =     (0x54),    
-    RANGE_TEST_BEACON               =     (0x55), 
-    RANGE_TEST_MARKER_INDICATION    =     (0x56)
-} SHORTENUM;
+	IDENTIFY_BOARD_CONFIRM          =     (0x10),
+	PERF_START_CONFIRM              =     (0x11),
+	PERF_SET_CONFIRM                =     (0x12),
+	PERF_GET_CONFIRM                =     (0x13),
+	IDENTIFY_PEER_NODE_CONFIRM      =     (0x14),
+	CONT_PULSE_TX_CONFIRM           =     (0x15),
+	CONT_WAVE_TX_CONFIRM            =     (0x16),
+	REGISTER_READ_CONFIRM           =     (0x17),
+	REGISTER_WRITE_CONFIRM          =     (0x18),
+	REGISTER_DUMP_CONFIRM           =     (0x19),
+	ED_SCAN_START_CONFIRM           =     (0x1a),
+	ED_SCAN_END_INDICATION          =     (0x1b),
+	SENSOR_DATA_CONFIRM             =     (0x1c),
+	PER_TEST_START_CONFIRM          =     (0x1d),
+	PER_TEST_END_INDICATION         =     (0x1e),
+	PEER_DISCONNECT_CONFIRM         =     (0x1f),
+	SET_DEFAULT_CONFIG_CONFIRM      =     (0x20),
+	GET_CURRENT_CONFIG_CONFIRM      =     (0x21),
+	RANGE_TEST_START_CONFIRM        =     (0x51),
+	RANGE_TEST_STOP_CONFIRM         =     (0x53),
+	RANGE_TEST_BEACON_RESPONSE      =     (0x54),
+	RANGE_TEST_BEACON               =     (0x55),
+	RANGE_TEST_MARKER_INDICATION    =     (0x56)
+}
+SHORTENUM;
 
-//! \}
+/* ! \} */
+
 /**
  * Paramter value types
  */
-typedef union
-{
-    /** Parameter Bool */
-    bool param_value_bool;
-    /** Parameter 8-bit */
-    uint8_t param_value_8bit;
-    /** Parameter 16-bit */
-    uint16_t param_value_16bit;
-    /** Parameter 32-bit */
-    uint32_t param_value_32bit;
-    /** Parameter 64-bit */
-    uint64_t param_value_64bit;
-    /** Parameter float*/
-    float param_value_float;
+typedef union {
+	/** Parameter Bool */
+	bool param_value_bool;
+	/** Parameter 8-bit */
+	uint8_t param_value_8bit;
+	/** Parameter 16-bit */
+	uint16_t param_value_16bit;
+	/** Parameter 32-bit */
+	uint32_t param_value_32bit;
+	/** Parameter 64-bit */
+	uint64_t param_value_64bit;
+	/** Parameter float*/
+	float param_value_float;
 } param_value_t;
 
-//! \}
+/* ! \} */
 #endif
-

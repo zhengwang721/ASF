@@ -48,7 +48,5 @@
 
 #define IC_TYPE             (0x00)
 
-
-
 # include "conf_usb.h"
 #endif /* CONF_BOARD_H_INCLUDED */
