@@ -41,6 +41,68 @@
  *
  */
 
+/**
+ * \mainpage SAM D20 USART Unit Test
+ * See \ref appdoc_main "here" for project documentation.
+ * \copydetails appdoc_preface
+ *
+ *
+ * \page appdoc_preface Overview
+ * This unit test carries out tests for SERCOM USART driver.
+ * It consists of test cases for the following functionalities:
+ *      - Test for driver initialization.
+ *      - Test for single 8-bit write and read by polling.
+ *      - Test for single 9-bit write and read by polling.
+ *      - Test for multiple 8-bit write by polling and read by interrupts.
+ *      - Test for multiple 8-bit write and read by interrupts.
+ *      - Test for multiple re-intialization.
+ */
+
+/**
+ * \page appdoc_main SAM D20 USART Unit Test
+ *
+ * Overview:
+ * - \ref appdoc_samd20_usart_unit_test_intro
+ * - \ref appdoc_samd20_usart_unit_test_setup
+ * - \ref appdoc_samd20_usart_unit_test_usage
+ * - \ref appdoc_samd20_usart_unit_test_compinfo
+ * - \ref appdoc_samd20_usart_unit_test_contactinfo
+ *
+ * \section appdoc_samd20_usart_unit_test_intro Introduction
+ * \copydetails appdoc_preface
+ *
+ * The following kit is required for carrying out the test:
+ *      - SAM D20 Xplained Pro board
+ *
+ * \section appdoc_samd20_usart_unit_test_setup Setup
+ * The following connections has to be made using wires:
+ *  - \b TX/RX: EXT1 PIN17 (PA04) <--> EXT1 PIN13 (PB09)
+ *
+ * To run the test:
+ *  - Connect the SAM D20 Xplained Pro board to the computer using a
+ *    micro USB cable.
+ *  - Open the virtual COM port in a terminal application.
+ *    \note The USB composite firmware running on the Embedded Debugger (EDBG)
+ *          will enumerate as debugger, virtual COM port and EDBG data
+ *          gateway.
+ *  - Build the project, program the target and run the application.
+ *    The terminal shows the results of the unit test.
+ *
+ * \section appdoc_samd20_usart_unit_test_usage Usage
+ *  - The unit tests are carried out with SERCOM0 on EXT1 as the USART
+ *    transmitter and SERCOM4 on EXT1 as the SERCOM USART receiver.
+ *  - Data is transmitted from transmitter to receiver in lengths of a single
+ *    byte as well as multiple bytes.
+ *
+ * \section appdoc_samd20_usart_unit_test_compinfo Compilation Info
+ * This software was written for the GNU GCC and IAR for ARM.
+ * Other compilers may or may not work.
+ *
+ * \section appdoc_samd20_usart_unit_test_contactinfo Contact Information
+ * For further information, visit
+ * <a href="http://www.atmel.com">http://www.atmel.com</a>.
+ */
+
 #include <asf.h>
 #include <stdio_serial.h>
 #include <string.h>
@@ -184,10 +246,8 @@ static void run_transfer_single_9bit_char_test(const struct test_case *test)
  *
  * \param test Current test case.
  */
-static void run_buffer_write_blocking_read_interrupt_test
-		(const struct test_case *test)
+static void run_buffer_write_blocking_read_interrupt_test(const struct test_case *test)
 {
-
 	uint8_t tx_string[TEST_STRING_LEN] = TEST_STRING;
 	volatile uint8_t rx_string[TEST_STRING_LEN] = "";
 	int16_t result;
@@ -441,7 +501,7 @@ int main(void)
 
 	/* Define the test suite */
 	DEFINE_TEST_SUITE(usart_suite, usart_tests,
-			"SAM0 USART driver test suite");
+			"SAM D20 USART driver test suite");
 
 	/* Run all tests in the suite*/
 	test_suite_run(&usart_suite);
