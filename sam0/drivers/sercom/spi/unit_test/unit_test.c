@@ -430,7 +430,7 @@ static void run_transceive_buffer_test(const struct test_case *test)
  * \brief Test: Sends data at different baud rates.
  *
  * This test sends (writes) a byte to the slave and receives the data
- * at different baudrate testing upto the maximum allowed level.
+ * at different baudrate testing up to the maximum allowed level.
  *
  * Transmission and reception are carried out by polling.
  *

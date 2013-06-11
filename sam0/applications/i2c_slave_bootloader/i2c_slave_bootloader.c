@@ -131,13 +131,13 @@
  *     the data to be programmed
  *   - Read a block from I2C Master of size NVMCTRL_PAGE_SIZE
  *   - Program the data to Program memory starting APP_START_ADDRESS
- *   - Send an acknowledgment byte 's' to I2C Master to indicate it has
+ *   - Send an acknowledgement byte 's' to I2C Master to indicate it has
  *     received the data and finished programming
  *   - Repeat till entire length of data has been programmed to the device
  *
  * \subsection appdoc_samd20_i2c_slave_bootloader_start_app Start Application
  * Once the programming is completed, enable Watchdog Timer with a timeout
- * period of 256 clock cyles and wait in a loop for Watchdog to reset
+ * period of 256 clock cycles and wait in a loop for Watchdog to reset
  * the device.
  *
  * \section appdoc_samd20_i2c_slave_bootloader_compinfo Compilation Info
@@ -385,9 +385,9 @@ static void configure_i2c(void)
 }
 
 /**
- * \brief Function for sending acknowledgment to I2C Master
+ * \brief Function for sending acknowledgement to I2C Master
  *
- * This function will write an acknowledgment byte 's' on I2C bus to
+ * This function will write an acknowledgement byte 's' on I2C bus to
  * indicate the master that it has received and programmed the data.
  */
 static void send_ack(void)

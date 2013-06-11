@@ -121,7 +121,7 @@ enum status_code rtc_count_unregister_callback(
 	if (callback_type == RTC_COUNT_CALLBACK_OVERFLOW) {
 		status = STATUS_OK;
 	} else {
-		/* Make sure callback type can be uregistered */
+		/* Make sure callback type can be unregistered */
 		switch (_rtc_dev.mode) {
 		case RTC_COUNT_MODE_32BIT:
 			/* Check sanity for 32-bit mode. */

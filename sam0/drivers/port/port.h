@@ -262,7 +262,7 @@ static inline uint32_t port_group_get_input_level(
 /**
  *  \brief Retrieves the state of a group of port pins that are configured as outputs.
  *
- *  Reads the current logicical output level of a port module's pins and returns
+ *  Reads the current logical output level of a port module's pins and returns
  *  the current levels as a bitmask.
  *
  *  \param[in] port  Base of the PORT module to read from.
