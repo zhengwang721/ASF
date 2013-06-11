@@ -289,8 +289,8 @@ static enum status_code _adc_set_config(
 	}
 
 	/* Configure lower threshold */
-	adc_module->WINLT.reg = config->window.window_lower_value <<
-			ADC_WINLT_WINLT_Pos;
+	adc_module->WINLT.reg =
+			config->window.window_lower_value << ADC_WINLT_WINLT_Pos;
 
 	while (adc_is_syncing(module_inst)) {
 		/* Wait for synchronization */
@@ -402,6 +402,7 @@ enum status_code adc_init(
 		/* Module must be disabled before initialization. Abort. */
 		return STATUS_ERR_DENIED;
 	}
+
 #if ADC_CALLBACK_MODE == true
 	for (uint8_t i = 0; i < ADC_CALLBACK_N; i++) {
 		module_inst->callback[i] = NULL;
