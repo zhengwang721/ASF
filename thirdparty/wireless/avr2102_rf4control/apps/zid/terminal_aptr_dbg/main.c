@@ -23,7 +23,7 @@
 #include <ctype.h>
 #include <inttypes.h>
 #include <stdio.h>
-
+#include "conf_usb.h"
 #include "conf_board.h"
 #include <asf.h>
 #include "app_config.h"
@@ -705,59 +705,70 @@ static
 void zid_report_data_indication(uint8_t PairingRef, uint8_t num_report_records,
                                                 zid_report_data_record_t *zid_report_data_record_ptr, uint8_t RxLinkQuality, uint8_t RxFlags)
 {          
-   udi_hid_kbd_modifier_down(0x08);
-                  udi_hid_kbd_down(0x15);
-                  udi_hid_kbd_up(0x15);
-                  udi_hid_kbd_modifier_up(0x08);
-                  delay_ms(5);
-//    LED_Toggle(LED0);
-//   // printf("ZID - %d reports from pairing ref:%d\r\n",num_report_records,PairingRef);
+   
+                  
+                  
      for(uint8_t i=0;i<num_report_records;i++)
      {  
-//       udi_hid_mouse_moveY(-MOUSE_MOVE_RANGE);
-//                udi_hid_mouse_moveY(-MOUSE_MOVE_RANGE);
+    
          switch(zid_report_data_record_ptr->report_desc_identifier)
          {
          case MOUSE:
          {
-             printf("Mouse:\r\n");
+             //printf("Mouse:\r\n");
              mouse_desc_t *mouse_desc;
              mouse_desc = (mouse_desc_t *)zid_report_data_record_ptr->report_data;
+             uint8_t value;
              //printf("B0:0x%x B1:0x%x B2:0x%x X:0x%x Y:0x%x\r\n",mouse_desc->button0,mouse_desc->button1,mouse_desc->button2,\
                      mouse_desc->x_coordinate,mouse_desc->y_coordinate);
              //printf("\r\n");
-//             udi_hid_kbd_modifier_down(0x08);
-//                  udi_hid_kbd_down(0x15);
-//                  udi_hid_kbd_up(0x15);
-//                  udi_hid_kbd_modifier_up(0x08);
-//                  delay_ms(2);
-//                  udi_hid_mouse_moveY(-MOUSE_MOVE_RANGE);
-//                udi_hid_mouse_moveY(-MOUSE_MOVE_RANGE);
+             udi_hid_mouse_moveX((mouse_desc->x_coordinate));
+             udi_hid_mouse_moveY((mouse_desc->y_coordinate));
+             if(value=(mouse_desc->button0))
+             { 
+               udi_hid_mouse_btnleft(value);
+             }
+             if(value=(mouse_desc->button1))
+             { 
+               udi_hid_mouse_btnright(value);
+             }
+             if(value=(mouse_desc->button2))
+             { 
+               udi_hid_mouse_btnmiddle(value);
+             }
+             
+          
              break;
          }
          case KEYBOARD:
          {
              if(zid_report_data_record_ptr->report_type == INPUT)
              {
-                 printf("Keyboard input desc.:\r\n");
+                 //printf("Keyboard input desc.:\r\n");
                  keyboard_input_desc_t *keyboard_input_desc;
                  keyboard_input_desc = (keyboard_input_desc_t *)zid_report_data_record_ptr->report_data;
                  //printf("Mod. key:0x%x\r\n",keyboard_input_desc->modifier_keys);
-                 uint8_t u_value;
-                 u_value= keyboard_input_desc->modifier_keys;
-                  udi_hid_kbd_modifier_down(0x08);
-                  udi_hid_kbd_down(0x15);
-                  udi_hid_kbd_up(0x15);
-                  udi_hid_kbd_modifier_up(0x08);
-                  delay_ms(2);
-//                  udi_hid_mouse_moveY(-MOUSE_MOVE_RANGE);
-//                udi_hid_mouse_moveY(-MOUSE_MOVE_RANGE);
-                 //printf("Key code:\r\n");
-                 for(uint8_t j=0;j<6;j++)
-                 {
+                 uint8_t k_value;
+                    if(k_value = (keyboard_input_desc->modifier_keys))
+                    {
+                        udi_hid_kbd_modifier_down(k_value);
+                    }  
+                    for(uint8_t j=0;j<4;j++)
+                    {  
+                        if(k_value = (keyboard_input_desc->key_code[j]))
+                        {    
+                            udi_hid_kbd_down(k_value);
+                            udi_hid_kbd_up(k_value);
+                        }   
                    // printf("0x%x ",keyboard_input_desc->key_code[j]);
-                 }
-                 //printf("\r\n\r\n");
+                    }
+                    uint16_t u_value;
+                    u_value= (keyboard_input_desc->key_code[4])||(keyboard_input_desc->key_code[5]);
+                    if(u_value)
+                    {   
+                        udi_hid_mkbd_modifier_down(u_value);
+                    }
+              
              }
              else
              {
