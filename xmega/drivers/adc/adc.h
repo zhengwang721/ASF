@@ -349,7 +349,7 @@ enum adc_reference {
  *
  * \return Pointer to ADC channel
  */
-static __always_inline ADC_CH_tmpfix_t *adc_get_channel(
+static __always_inline ADC_CH_t *adc_get_channel(
 		ADC_t *adc, uint8_t ch_mask)
 {
 	uint8_t index = 0;
