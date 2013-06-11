@@ -1121,6 +1121,8 @@ static inline enum status_code spi_read(
 	/* Check if data is overflown */
 	if (spi_module->STATUS.reg & SERCOM_SPI_STATUS_BUFOVF) {
 		retval = STATUS_ERR_OVERFLOW;
+		/* Clear overflow flag */
+		spi_module->STATUS.reg |= SERCOM_SPI_STATUS_BUFOVF;
 	}
 	/* Read the character from the DATA register */
 	if (module->character_size == SPI_CHARACTER_SIZE_9BIT) {

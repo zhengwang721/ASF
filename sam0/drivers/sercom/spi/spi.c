@@ -724,6 +724,7 @@ enum status_code spi_write_buffer_wait(
 	}
 
 	uint16_t tx_pos = 0;
+	uint16_t flush_length = length;
 
 	/* Write block */
 	while (length--) {
@@ -766,15 +767,26 @@ enum status_code spi_write_buffer_wait(
 			/* Start timeout period for slave */
 			if (module->mode == SPI_MODE_SLAVE) {
 				for (uint32_t i = 0; i <= SPI_TIMEOUT; i++) {
+					if (spi_is_ready_to_write(module)) {
+						data_to_send = tx_data[tx_pos++];
+						/* If 9-bit data, get next byte to send from the buffer */
+						if (module->character_size == SPI_CHARACTER_SIZE_9BIT) {
+							data_to_send |= (tx_data[tx_pos++] << 8);
+						}
+
+						/* Write the data to send */
+						spi_write(module, data_to_send);
+						length--;
+					}
 					if (spi_is_ready_to_read(module)) {
 						break;
 					}
 				}
-			/* Check if master has ended the transaction */
-			if (spi_is_write_complete(module)) {
-				_spi_clear_tx_complete_flag(module);
-				return STATUS_ABORTED;
-			}
+				/* Check if master has ended the transaction */
+				if (spi_is_write_complete(module)) {
+					_spi_clear_tx_complete_flag(module);
+					return STATUS_ABORTED;
+				}
 
 				if (!spi_is_ready_to_read(module)) {
 					/* Not ready to read data within timeout period */
@@ -788,12 +800,30 @@ enum status_code spi_write_buffer_wait(
 			/* Flush read buffer */
 			uint16_t flush;
 			spi_read(module, &flush);
+			flush_length--;
 		}
 	}
 
 	if (module->mode == SPI_MODE_MASTER) {
 		/* Wait for last byte to be transferred */
 		while (!spi_is_write_complete(module)) {
+		}
+	} else if (module->receiver_enabled) {
+		while(flush_length) {
+			/* Start timeout period for slave */
+			for (uint32_t i = 0; i <= SPI_TIMEOUT; i++) {
+				if (spi_is_ready_to_read(module)) {
+					break;
+				}
+			}
+			if (!spi_is_ready_to_read(module)) {
+				/* Not ready to read data within timeout period */
+				return STATUS_ERR_TIMEOUT;
+			}
+			/* Flush read buffer */
+			uint16_t flush;
+			spi_read(module, &flush);
+			flush_length--;
 		}
 	}
 
@@ -858,6 +888,7 @@ enum status_code spi_transceive_buffer_wait(
 
 	uint16_t tx_pos = 0;
 	uint16_t rx_pos = 0;
+	uint16_t rx_length = length;
 
 	/* Send and receive buffer */
 	while (length--) {
@@ -898,6 +929,17 @@ enum status_code spi_transceive_buffer_wait(
 		/* Start timeout period for slave */
 		if (module->mode == SPI_MODE_SLAVE) {
 			for (uint32_t i = 0; i <= SPI_TIMEOUT; i++) {
+				if (spi_is_ready_to_write(module)) {
+					data_to_send = tx_data[tx_pos++];
+					/* If 9-bit data, get next byte to send from the buffer */
+					if (module->character_size == SPI_CHARACTER_SIZE_9BIT) {
+						data_to_send |= (tx_data[tx_pos++] << 8);
+					}
+
+					/* Write the data to send */
+					spi_write(module, data_to_send);
+					length--;
+				}
 				if (spi_is_ready_to_read(module)) {
 					break;
 				}
@@ -920,6 +962,7 @@ enum status_code spi_transceive_buffer_wait(
 
 		enum status_code retval;
 		uint16_t received_data = 0;
+		rx_length--;
 
 		retval = spi_read(module, &received_data);
 
@@ -940,6 +983,36 @@ enum status_code spi_transceive_buffer_wait(
 	if (module->mode == SPI_MODE_MASTER) {
 		/* Wait for last byte to be transferred */
 		while (!spi_is_write_complete(module)) {
+		}
+	} else {
+		while(rx_length) {
+			/* Start timeout period for slave */
+			for (uint32_t i = 0; i <= SPI_TIMEOUT; i++) {
+				if (spi_is_ready_to_read(module)) {
+					break;
+				}
+			}
+			if (!spi_is_ready_to_read(module)) {
+				/* Not ready to read data within timeout period */
+				return STATUS_ERR_TIMEOUT;
+			}
+			enum status_code retval;
+			uint16_t received_data = 0;
+			rx_length--;
+
+			retval = spi_read(module, &received_data);
+
+			if (retval != STATUS_OK) {
+				/* Overflow, abort */
+				return retval;
+			}
+			/* Read value will be at least 8-bits long */
+			rx_data[rx_pos++] = received_data;
+
+			/* If 9-bit data, write next received byte to the buffer */
+			if (module->character_size == SPI_CHARACTER_SIZE_9BIT) {
+				rx_data[rx_pos++] = (received_data >> 8);
+			}
 		}
 	}
 
