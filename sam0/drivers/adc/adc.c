@@ -60,12 +60,13 @@ static inline void _adc_configure_ain_pin(uint32_t pin)
 	config.input_pull = SYSTEM_PINMUX_PIN_PULL_NONE;
 
 	/* Pinmapping table for AINxx -> GPIO pin number */
-	const uint32_t pinmapping [ADC_INPUTCTRL_MUXPOS_PIN20] = {
+	const uint32_t pinmapping[ADC_INPUTCTRL_MUXPOS_PIN20] = {
 			PIN_PA02, PIN_PA03, PIN_PB08, PIN_PB09,
 			PIN_PA04, PIN_PA05, PIN_PA06, PIN_PA07,
 			PIN_PB00, PIN_PB01, PIN_PB02, PIN_PB03,
 			PIN_PB04, PIN_PB05, PIN_PB06, PIN_PB07,
-			PIN_PA08, PIN_PA09, PIN_PA10, PIN_PA11,};
+			PIN_PA08, PIN_PA09, PIN_PA10, PIN_PA11,
+		};
 
 	/* Analog functions are at mux setting B */
 	config.mux_position = 1;
@@ -104,7 +105,6 @@ static enum status_code _adc_set_config(
 	gclk_chan_conf.source_generator = config->clock_source;
 	system_gclk_chan_set_config(ADC_GCLK_ID, &gclk_chan_conf);
 	system_gclk_chan_enable(ADC_GCLK_ID);
-
 
 	/* Setup pinmuxing for analog inputs */
 	if (config->pin_scan.inputs_to_scan != 0) {
@@ -351,6 +351,15 @@ static enum status_code _adc_set_config(
 					ADC_OFFSETCORR_OFFSETCORR_Pos;
 		}
 	}
+
+	/* Load in the fixed device ADC calibration constants */
+	adc_module->CALIB.reg =
+			ADC_CALIB_BIAS_CAL(
+				(*(uint32_t *)ADC_FUSES_BIASCAL_ADDR >> ADC_FUSES_BIASCAL_Pos)
+			) |
+			ADC_CALIB_LINEARITY_CAL(
+				(*(uint64_t *)ADC_FUSES_LINEARITY_0_ADDR >> ADC_FUSES_LINEARITY_0_Pos)
+			);
 
 	return STATUS_OK;
 }
