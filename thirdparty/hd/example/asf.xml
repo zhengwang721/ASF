@@ -3,7 +3,6 @@
 		<info type="description" value="summary">
 		H&amp;D WIFI Stack demonstrate a basic web server using the EXTWIFI SPB104 or SPB105 hardware kits.
 		</info>
-		<build type="distribute" subtype="license" value="../license.txt"/>
 		<device-support value="uc3"/>
 		<info type="gui-flag" value="hidden"/>
 		<require idref="avr32.components.wifi.common"/>
@@ -14,7 +13,7 @@
 		<info type="description" value="summary">
 		H&amp;D WIFI Stack demonstrate a basic web server using the EXTWIFI SPB104 or SPB105 hardware kits.
 		</info>
-		<build type="distribute" subtype="license" value="../license.txt"/>
+		<require idref="avr32.components.wifi.license"/>
 		<info type="gui-flag" value="hidden"/>
 		<build type="c-source" value="net/httpd.c"/>
 		<build type="header-file" value="net/httpd.h"/>
@@ -119,8 +118,7 @@
 			<build type="c-source" value="wl/fw_download.c"/>
 			<build type="header-file" value="wl/fw_download.h"/>
 			<build type="include-path" value="."/>
-			<build type="header-file" value="../wl_fw.h"/>
-			<build type="include-path" value=".."/>
+			<require idref="avr32.components.wifi.helper"/>
 			<device-support value="uc3"/>
 		</module>
 	</select-by-config>

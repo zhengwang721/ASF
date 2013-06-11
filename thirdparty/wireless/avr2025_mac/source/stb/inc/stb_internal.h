@@ -40,6 +40,7 @@
  * \asf_license_stop
  *
  */
+
 /*
  * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
@@ -51,7 +52,6 @@
 #define STB_INTERNAL_H
 
 #ifdef STB_ON_SAL
-
 
 /* === Includes =========================================================== */
 
@@ -68,22 +68,21 @@ extern "C" {
 #endif
 
 void compute_mic(uint8_t *buffer,
-                 uint8_t *mic,
-                 uint8_t *nonce,
-                 uint8_t hdr_len,
-                 uint8_t pld_len);
+		uint8_t *mic,
+		uint8_t *nonce,
+		uint8_t hdr_len,
+		uint8_t pld_len);
 
 void encrypt_pldmic(uint8_t *buffer,
-                    uint8_t *nonce,
-                    uint8_t mic_len,
-                    uint8_t pld_len);
+		uint8_t *nonce,
+		uint8_t mic_len,
+		uint8_t pld_len);
 
 void encrypt_with_padding(uint8_t *start, uint8_t buflen);
 
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
-
 
 #endif /* #ifdef STB_ON_SAL */
 

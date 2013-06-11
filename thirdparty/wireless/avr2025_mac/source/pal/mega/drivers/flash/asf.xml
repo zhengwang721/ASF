@@ -4,7 +4,7 @@
 			Flash Drivers
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="Flash" />
+			<keyword value="Memory" />
 		</info>		
 		<build type="c-source" value="flash.c"/>
 		<build type="header-file" subtype="api" value="flash.h"/>

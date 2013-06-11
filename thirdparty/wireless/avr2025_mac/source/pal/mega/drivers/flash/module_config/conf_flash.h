@@ -45,7 +45,7 @@
 
 /*! \name Configuration
  */
-//! @{
+/* ! @{ */
 
-//! @}
+/* ! @} */
 #endif /* CONF_FLASH_H_INCLUDED */
