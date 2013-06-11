@@ -155,7 +155,7 @@ extern "C" {
  *
  * \subsubsection asfdoc_samd20_sercom_i2c_data_packets Data Packets
  * Data packets are nine bits long, consisting of one 8-bit data byte, and an
- * acknowledgment bit. Data packets follow either an address packet or another
+ * acknowledgement bit. Data packets follow either an address packet or another
  * data packet on the bus.
  *
  * \subsubsection asfdoc_samd20_sercom_i2c_trans_examples Transaction Examples

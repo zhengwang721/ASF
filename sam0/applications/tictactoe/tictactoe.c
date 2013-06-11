@@ -120,7 +120,7 @@
 /* X coordinate of strings */
 #define STRING_X (SQUARE2_X + SQUARE_SIZE*2)
 
-/* Lenght of strings */
+/* Length of strings */
 #define STRING_LENGTH 20
 
 /* X and Y coordinates for squares */
@@ -228,7 +228,7 @@ static enum button get_button(void)
 }
 
 /**
- * \brief Initalizes the display with explanatory text for the buttons
+ * \brief Initializes the display with explanatory text for the buttons
  */
 static void init_display(void)
 {

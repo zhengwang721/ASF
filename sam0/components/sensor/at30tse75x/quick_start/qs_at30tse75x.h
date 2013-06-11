@@ -58,7 +58,7 @@
  * \snippet qs_at30tse75x.c init
  *
  * \subsection asfdoc_samd20_at30tse75x_qs_workflow Workflow
- * -# Initalize system
+ * -# Initialize system
  *  \snippet qs_at30tse75x.c system_init
  * -# Initialize I2C interface
  *  \snippet qs_at30tse75x.c temp_init
@@ -76,7 +76,7 @@
  *  \snippet qs_at30tse75x.c read_tlow
  * -# Set temperature sensor resolution to 12-bit:
  *  \snippet qs_at30tse75x.c write_conf
- * -# Continously read the temperature:
+ * -# Continuously read the temperature:
  *  \snippet qs_at30tse75x.c read_temp
  *
  */
