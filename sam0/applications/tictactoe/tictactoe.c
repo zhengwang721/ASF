@@ -47,7 +47,7 @@
 /**
  * \mainpage SAM D20 Tic-Tac-Toe Example
  * See \ref appdoc_samd20_tictactoe_main "here" for project documentation.
- * \copydetails preface
+ * \copydetails appdoc_preface
  *
  * \page appdoc_preface Overview
  * This application demonstrates the use of the OLED1 Xplained Pro extension

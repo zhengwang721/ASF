@@ -43,7 +43,7 @@
 /**
  * \mainpage SAM D20 OSC8M Calibration Example
  * See \ref appdoc_main "here" for project documentation.
- * \copydetails preface
+ * \copydetails appdoc_preface
  *
  *
  * \page appdoc_preface Overview

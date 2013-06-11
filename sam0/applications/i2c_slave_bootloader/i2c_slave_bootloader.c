@@ -44,7 +44,7 @@
 /**
  * \mainpage SAM D20 I2C Slave Bootloader
  * See \ref appdoc_main "here" for project documentation.
- * \copydetails preface
+ * \copydetails appdoc_preface
  *
  *
  * \page appdoc_preface Features
