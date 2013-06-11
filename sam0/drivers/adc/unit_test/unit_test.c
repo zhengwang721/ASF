@@ -234,7 +234,7 @@ static void run_adc_init_test(const struct test_case *test)
  */
 static void run_adc_polled_mode_test(const struct test_case *test)
 {
-	volatile uint16_t adc_result = 0;
+	uint16_t adc_result = 0;
 
 	/* Skip test if ADC initialization failed */
 	test_assert_true(test, adc_init_success,
@@ -243,10 +243,12 @@ static void run_adc_polled_mode_test(const struct test_case *test)
 	/* Set 0.5V on DAC output */
 	dac_chan_write(&dac_inst, DAC_CHANNEL_0, DAC_VAL_HALF_VOLT);
 	delay_ms(1);
+
 	/* Start an ADC conversion */
 	adc_start_conversion(&adc_inst);
 	while (adc_read(&adc_inst, &adc_result) != STATUS_OK) {
 	}
+
 	/* Test result */
 	test_assert_true(test,
 			(adc_result > (ADC_VAL_DAC_HALF_OUTPUT - ADC_OFFSET)) &&
@@ -254,17 +256,43 @@ static void run_adc_polled_mode_test(const struct test_case *test)
 			"Error in ADC conversion at 0.5V input (Expected: ~%d, Result: %d)", ADC_VAL_DAC_HALF_OUTPUT, adc_result);
 
 	adc_flush(&adc_inst);
+
 	/* Set 1V on DAC output */
 	dac_chan_write(&dac_inst, DAC_CHANNEL_0, DAC_VAL_ONE_VOLT);
 	delay_ms(1);
+
 	/* Start an ADC conversion */
 	adc_start_conversion(&adc_inst);
 	while (adc_read(&adc_inst, &adc_result) != STATUS_OK) {
 	}
+
 	/* Test result */
 	test_assert_true(test,
 			adc_result > (ADC_VAL_DAC_FULL_OUTPUT - ADC_OFFSET),
 			"Error in ADC conversion at 1V input (Expected: ~%d, Result: %d)", ADC_VAL_DAC_FULL_OUTPUT, adc_result);
+
+	uint16_t adc_prev_result = 0;
+
+	/* Ensure ADC gives linearly increasing conversions for linearly increasing inputs */
+	for (uint16_t i = 0; i < DAC_VAL_ONE_VOLT; i++) {
+		adc_flush(&adc_inst);
+
+		/* Write the next highest DAC output voltage */
+		dac_chan_write(&dac_inst, DAC_CHANNEL_0, i);
+		delay_ms(1);
+
+		/* Start an ADC conversion */
+		adc_start_conversion(&adc_inst);
+		while (adc_read(&adc_inst, &adc_result) != STATUS_OK) {
+		}
+
+		/* Test result */
+		test_assert_true(test,
+				(adc_result + ADC_OFFSET) >= adc_prev_result,
+				"Error in ADC conversion at a variable input (Expected: >=%d, Result: %d)", adc_prev_result, adc_result);
+
+		adc_prev_result = adc_result;
+	}
 }
 
 /**
@@ -577,7 +605,7 @@ int main(void)
 
 	/* Define the test suite */
 	DEFINE_TEST_SUITE(adc_test_suite, adc_tests,
-			"SAM0 ADC driver test suite");
+			"SAM D20 ADC driver test suite");
 
 	/* Run all tests in the suite*/
 	test_suite_run(&adc_test_suite);
