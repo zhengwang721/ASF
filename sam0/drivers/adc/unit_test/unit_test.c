@@ -61,7 +61,7 @@
  *
  * The following connection is already available on the board.
  *
- *      - DAC VOUT (PA00) <-----> ADC2 (PA02)
+ *      - DAC VOUT (PA02) <-----> ADC2 (PB08)
  *
  * The following steps has to be done:
  *      - Connect the SAM D20 Xplained Pro board to the computer using
@@ -198,6 +198,7 @@ static void run_adc_init_test(const struct test_case *test)
 	struct adc_config config;
 	adc_get_config_defaults(&config);
 	config.positive_input = ADC_POSITIVE_INPUT_PIN2;
+	config.negative_input = ADC_NEGATIVE_INPUT_GND;
 	config.reference      = ADC_REFERENCE_INT1V;
 	config.clock_source   = GCLK_GENERATOR_3;
 	config.gain_factor    = ADC_GAIN_FACTOR_1X;
@@ -233,7 +234,8 @@ static void run_adc_init_test(const struct test_case *test)
  */
 static void run_adc_polled_mode_test(const struct test_case *test)
 {
-	uint16_t adc_result = 0;
+	volatile uint16_t adc_result = 0;
+
 	/* Skip test if ADC initialization failed */
 	test_assert_true(test, adc_init_success,
 			"Skipping test due to failed initialization");
@@ -247,8 +249,9 @@ static void run_adc_polled_mode_test(const struct test_case *test)
 	}
 	/* Test result */
 	test_assert_true(test,
-			adc_result > (ADC_VAL_DAC_HALF_OUTPUT - ADC_OFFSET),
-			"Error in ADC conversion at 0.5V input");
+			(adc_result > (ADC_VAL_DAC_HALF_OUTPUT - ADC_OFFSET)) &&
+			(adc_result < (ADC_VAL_DAC_FULL_OUTPUT - ADC_OFFSET)),
+			"Error in ADC conversion at 0.5V input (Expected: ~%d, Result: %d)", ADC_VAL_DAC_HALF_OUTPUT, adc_result);
 
 	adc_flush(&adc_inst);
 	/* Set 1V on DAC output */
@@ -261,7 +264,7 @@ static void run_adc_polled_mode_test(const struct test_case *test)
 	/* Test result */
 	test_assert_true(test,
 			adc_result > (ADC_VAL_DAC_FULL_OUTPUT - ADC_OFFSET),
-			"Error in ADC conversion at 1V input");
+			"Error in ADC conversion at 1V input (Expected: ~%d, Result: %d)", ADC_VAL_DAC_FULL_OUTPUT, adc_result);
 }
 
 /**
@@ -304,7 +307,8 @@ static void setup_adc_callback_mode_test(const struct test_case *test)
  */
 static void run_adc_callback_mode_test(const struct test_case *test)
 {
-	uint16_t timeout_cycles = 10000;
+	uint16_t timeout_cycles = 0xFFFF;
+
 	/* Set 0.5V DAC output */
 	dac_chan_write(&dac_inst, DAC_CHANNEL_0, DAC_VAL_HALF_VOLT);
 	delay_ms(1);
@@ -325,7 +329,8 @@ static void run_adc_callback_mode_test(const struct test_case *test)
 	/* Test result */
 	for (uint8_t i = 0; i < ADC_SAMPLES; i++) {
 		test_assert_true(test,
-				adc_buf[i] > (ADC_VAL_DAC_HALF_OUTPUT - ADC_OFFSET),
+				(adc_buf[i] > (ADC_VAL_DAC_HALF_OUTPUT - ADC_OFFSET)) &&
+				(adc_buf[i] < (ADC_VAL_DAC_FULL_OUTPUT - ADC_OFFSET)),
 				"Error in ADC conversion for 0.5V at index %d", i);
 	}
 }
@@ -372,6 +377,7 @@ static void setup_adc_average_mode_test(const struct test_case *test)
 	struct adc_config config;
 	adc_get_config_defaults(&config);
 	config.positive_input     = ADC_POSITIVE_INPUT_PIN2;
+	config.negative_input     = ADC_NEGATIVE_INPUT_GND;
 	config.reference          = ADC_REFERENCE_INT1V;
 	config.clock_source       = GCLK_GENERATOR_3;
 	config.gain_factor        = ADC_GAIN_FACTOR_1X;
@@ -400,6 +406,7 @@ static void setup_adc_average_mode_test(const struct test_case *test)
 static void run_adc_average_mode_test(const struct test_case *test)
 {
 	uint16_t adc_result = 0;
+
 	/* Set 0.5V DAC output */
 	dac_chan_write(&dac_inst, DAC_CHANNEL_0, DAC_VAL_HALF_VOLT);
 	delay_ms(1);
@@ -412,7 +419,8 @@ static void run_adc_average_mode_test(const struct test_case *test)
 
 	/* Test result */
 	test_assert_true(test,
-			adc_result > (ADC_VAL_DAC_HALF_OUTPUT - ADC_OFFSET),
+			(adc_result > (ADC_VAL_DAC_HALF_OUTPUT - ADC_OFFSET)) &&
+			(adc_result < (ADC_VAL_DAC_FULL_OUTPUT - ADC_OFFSET)),
 			"Error in ADC average mode conversion at 0.5V input");
 }
 
@@ -444,12 +452,13 @@ static void setup_adc_window_mode_test(const struct test_case *test)
 	adc_disable(&adc_inst);
 	struct adc_config config;
 	adc_get_config_defaults(&config);
-	config.positive_input  = ADC_POSITIVE_INPUT_PIN2;
-	config.reference       = ADC_REFERENCE_INT1V;
-	config.clock_source    = GCLK_GENERATOR_3;
-	config.gain_factor     = ADC_GAIN_FACTOR_1X;
-	config.resolution      = ADC_RESOLUTION_12BIT;
-	config.freerunning     = true;
+	config.positive_input = ADC_POSITIVE_INPUT_PIN2;
+	config.negative_input = ADC_NEGATIVE_INPUT_GND;
+	config.reference      = ADC_REFERENCE_INT1V;
+	config.clock_source   = GCLK_GENERATOR_3;
+	config.gain_factor    = ADC_GAIN_FACTOR_1X;
+	config.resolution     = ADC_RESOLUTION_12BIT;
+	config.freerunning    = true;
 	config.window.window_mode = ADC_WINDOW_MODE_BETWEEN_INVERTED;
 	config.window.window_lower_value = (ADC_VAL_DAC_HALF_OUTPUT - ADC_OFFSET);
 	config.window.window_upper_value = (ADC_VAL_DAC_HALF_OUTPUT + ADC_OFFSET);
@@ -482,7 +491,7 @@ static void setup_adc_window_mode_test(const struct test_case *test)
  */
 static void run_adc_window_mode_test(const struct test_case *test)
 {
-	uint16_t timeout_cycles = 10000;
+	uint16_t timeout_cycles = 0xFFFF;
 
 	/* Set 1V DAC output */
 	dac_chan_write(&dac_inst, DAC_CHANNEL_0, DAC_VAL_ONE_VOLT);
@@ -527,12 +536,16 @@ int main(void)
 	test_dac_init();
 
 	/* Define Test Cases */
-	DEFINE_TEST_CASE(adc_init_test, NULL,
-			run_adc_init_test, NULL,
+	DEFINE_TEST_CASE(adc_init_test,
+			NULL,
+			run_adc_init_test,
+			NULL,
 			"Testing ADC Initialization");
 
-	DEFINE_TEST_CASE(adc_polled_mode_test, NULL,
-			run_adc_polled_mode_test, NULL,
+	DEFINE_TEST_CASE(adc_polled_mode_test,
+			NULL,
+			run_adc_polled_mode_test,
+			NULL,
 			"Testing ADC single ended mode by polling");
 
 	DEFINE_TEST_CASE(adc_callback_mode_test,
@@ -543,7 +556,8 @@ int main(void)
 
 	DEFINE_TEST_CASE(adc_average_mode_test,
 			setup_adc_average_mode_test,
-			run_adc_average_mode_test, NULL,
+			run_adc_average_mode_test,
+			NULL,
 			"Testing ADC average mode");
 
 	DEFINE_TEST_CASE(adc_window_mode_test,
