@@ -44,7 +44,7 @@
 #define SYSTEM_CLOCK_H_INCLUDED
 
 /**
- * \defgroup asfdoc_samd20_system_clock_group SAM D20 Clock Management Driver (CLOCK)
+ * \defgroup asfdoc_samd20_system_clock_group SAM D20 System Clock Management Driver (SYSTEM CLOCK)
  *
  * This driver for SAM D20 devices provides an interface for the configuration
  * and management of the device's clocking related functions. This includes
