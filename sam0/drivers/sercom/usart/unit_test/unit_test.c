@@ -266,8 +266,18 @@ static void run_buffer_write_blocking_read_interrupt_test(const struct test_case
 	usart_write_buffer_wait(&usart_tx_module, tx_string,
 			TEST_STRING_LEN );
 
-	/* Wait for receive to complete */
-	while (!transfer_complete);
+	uint16_t timeout_cycles = 0xFFFF;
+
+	/* Wait until reception completes */
+	do {
+		timeout_cycles--;
+		if (transfer_complete) {
+			break;
+		}
+	} while (timeout_cycles != 0);
+
+	test_assert_true(test, timeout_cycles > 0,
+			"Timeout in reception");
 
 	usart_disable_callback(&usart_rx_module, USART_CALLBACK_BUFFER_RECEIVED);
 	usart_unregister_callback(&usart_rx_module, USART_CALLBACK_BUFFER_RECEIVED);
@@ -357,7 +367,6 @@ static void run_multiple_init_while_enabled_test(const struct test_case *test)
  */
 static void run_buffer_read_write_interrupt_test(const struct test_case *test)
 {
-
 	volatile uint8_t tx_string[TEST_STRING_LEN] = TEST_STRING;
 	volatile uint8_t rx_string[TEST_STRING_LEN] = "";
 	int16_t result;
@@ -374,8 +383,18 @@ static void run_buffer_read_write_interrupt_test(const struct test_case *test)
 	usart_read_buffer_job(&usart_rx_module, (uint8_t*)rx_string,
 			TEST_STRING_LEN);
 
-	/* Wait for receive to complete */
-	while (!transfer_complete);
+	uint16_t timeout_cycles = 0xFFFF;
+
+	/* Wait until reception completes */
+	do {
+		timeout_cycles--;
+		if (transfer_complete) {
+			break;
+		}
+	} while (timeout_cycles != 0);
+
+	test_assert_true(test, timeout_cycles > 0,
+			"Timeout in send/receive");
 
 	/* Compare strings */
 	result = strcmp((char*)tx_string, (char*)rx_string);
