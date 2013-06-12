@@ -105,11 +105,11 @@
 #include <asf.h>
 #include <stdio_serial.h>
 #include <string.h>
+#include "conf_test.h"
 
 /* GPIO pin used for testing the interrupts */
 #define GPIO_TEST_PIN_EXTINT  EXT1_PIN_10
 
-/* External interrupt channel number on PB06 */
 #define EIC_TEST_CHANNEL      EXT1_IRQ_INPUT
 #define EIC_TEST_PIN          EXT1_IRQ_PIN
 #define EIC_TEST_PIN_MUX      EXT1_IRQ_PINMUX
@@ -146,17 +146,18 @@ static void extint_user_callback(uint32_t channel)
  */
 static void cdc_uart_init(void)
 {
-	struct usart_config cdc_uart_config;
+	struct usart_config usart_conf;
 
 	/* Configure USART for unit test output */
-	usart_get_config_defaults(&cdc_uart_config);
-	cdc_uart_config.mux_setting = EDBG_CDC_SERCOM_MUX_SETTING;
-	cdc_uart_config.pinmux_pad0 = EDBG_CDC_SERCOM_PINMUX_PAD0;
-	cdc_uart_config.pinmux_pad1 = EDBG_CDC_SERCOM_PINMUX_PAD1;
-	cdc_uart_config.pinmux_pad2 = EDBG_CDC_SERCOM_PINMUX_PAD2;
-	cdc_uart_config.pinmux_pad3 = EDBG_CDC_SERCOM_PINMUX_PAD3;
-	cdc_uart_config.baudrate    = 115200;
-	stdio_serial_init(&cdc_uart_module, EDBG_CDC_MODULE, &cdc_uart_config);
+	usart_get_config_defaults(&usart_conf);
+	usart_conf.mux_setting = CONF_STDIO_MUX_SETTING;
+	usart_conf.pinmux_pad0 = CONF_STDIO_PINMUX_PAD0;
+	usart_conf.pinmux_pad1 = CONF_STDIO_PINMUX_PAD1;
+	usart_conf.pinmux_pad2 = CONF_STDIO_PINMUX_PAD2;
+	usart_conf.pinmux_pad3 = CONF_STDIO_PINMUX_PAD3;
+	usart_conf.baudrate    = CONF_STDIO_BAUDRATE;
+
+	stdio_serial_init(&cdc_uart_module, CONF_STDIO_USART, &usart_conf);
 	usart_enable(&cdc_uart_module);
 	/* Enable transceivers */
 	usart_enable_transceiver(&cdc_uart_module, USART_TRANSCEIVER_TX);
