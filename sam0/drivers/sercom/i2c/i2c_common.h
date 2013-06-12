@@ -298,12 +298,12 @@ extern "C" {
  *      <th>Master</th>
  *   </tr>
  *   <tr>
- *      <th>false</th>
+ *      <td>false</td>
  *      <td>Disabled, all reception is dropped</td>
  *      <td>GCLK disabled when master is idle</td>
  *   </tr>
  *   <tr>
- *      <th>true</th>
+ *      <td>true</td>
  *      <td>Wake on address match when enabled</td>
  *      <td>GCLK enabled while in sleep modes</td>
  *   </tr>

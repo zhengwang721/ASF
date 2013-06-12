@@ -851,25 +851,25 @@ static inline void usart_disable_transceiver(
  *      <th> XCK </th>
  *   </tr>
  *   <tr>
- *      <th> PAD0 </th>
+ *      <td> PAD0 </td>
  *      <td> x </td>
  *      <td> x </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD1 </th>
+ *      <td> PAD1 </td>
  *      <td>  </td>
  *      <td>  </td>
  *      <td> x </td>
  *   </tr>
  *   <tr>
- *      <th> PAD2 </th>
+ *      <td> PAD2 </td>
  *      <td>  </td>
  *      <td>  </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD3 </th>
+ *      <td> PAD3 </td>
  *      <td>  </td>
  *      <td>  </td>
  *      <td>  </td>
@@ -888,25 +888,25 @@ static inline void usart_disable_transceiver(
  *      <th> XCK </th>
  *   </tr>
  *   <tr>
- *      <th> PAD0 </th>
+ *      <td> PAD0 </td>
  *      <td> x </td>
  *      <td>  </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD1 </th>
+ *      <td> PAD1 </td>
  *      <td>  </td>
  *      <td>  </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD2 </th>
+ *      <td> PAD2 </td>
  *      <td>  </td>
  *      <td> x </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD3 </th>
+ *      <td> PAD3 </td>
  *      <td>  </td>
  *      <td>  </td>
  *      <td> x </td>
@@ -925,25 +925,25 @@ static inline void usart_disable_transceiver(
  *      <th> XCK </th>
  *   </tr>
  *   <tr>
- *      <th> PAD0 </th>
+ *      <td> PAD0 </td>
  *      <td>  </td>
  *      <td> x </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD1 </th>
+ *      <td> PAD1 </td>
  *      <td> x </td>
  *      <td>  </td>
  *      <td> x </td>
  *   </tr>
  *   <tr>
- *      <th> PAD2 </th>
+ *      <td> PAD2 </td>
  *      <td>  </td>
  *      <td>  </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD3 </th>
+ *      <td> PAD3 </td>
  *      <td>  </td>
  *      <td>  </td>
  *      <td>  </td>
@@ -962,25 +962,25 @@ static inline void usart_disable_transceiver(
  *      <th> XCK </th>
  *   </tr>
  *   <tr>
- *      <th> PAD0 </th>
+ *      <td> PAD0 </td>
  *      <td>  </td>
  *      <td>  </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD1 </th>
+ *      <td> PAD1 </td>
  *      <td> x </td>
  *      <td>  </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD2 </th>
+ *      <td> PAD2 </td>
  *      <td>  </td>
  *      <td> x </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD3 </th>
+ *      <td> PAD3 </td>
  *      <td>  </td>
  *      <td>  </td>
  *      <td> x </td>
@@ -999,25 +999,25 @@ static inline void usart_disable_transceiver(
  *      <th> XCK </th>
  *   </tr>
  *   <tr>
- *      <th> PAD0 </th>
+ *      <td> PAD0 </td>
  *      <td>  </td>
  *      <td> x </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD1 </th>
+ *      <td> PAD1 </td>
  *      <td>  </td>
  *      <td>  </td>
  *      <td> x </td>
  *   </tr>
  *   <tr>
- *      <th> PAD2 </th>
+ *      <td> PAD2 </td>
  *      <td> x </td>
  *      <td>  </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD3 </th>
+ *      <td> PAD3 </td>
  *      <td>  </td>
  *      <td>  </td>
  *      <td>  </td>
@@ -1036,25 +1036,25 @@ static inline void usart_disable_transceiver(
  *      <th> XCK </th>
  *   </tr>
  *   <tr>
- *      <th> PAD0 </th>
+ *      <td> PAD0 </td>
  *      <td>  </td>
  *      <td>  </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD1 </th>
+ *      <td> PAD1 </td>
  *      <td>  </td>
  *      <td>  </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD2 </th>
+ *      <td> PAD2 </td>
  *      <td> x </td>
  *      <td> x </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD3 </th>
+ *      <td> PAD3 </td>
  *      <td>  </td>
  *      <td>  </td>
  *      <td> x </td>
@@ -1073,25 +1073,25 @@ static inline void usart_disable_transceiver(
  *      <th> XCK </th>
  *   </tr>
  *   <tr>
- *      <th> PAD0 </th>
+ *      <td> PAD0 </td>
  *      <td>  </td>
  *      <td> x </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD1 </th>
+ *      <td> PAD1 </td>
  *      <td>  </td>
  *      <td>  </td>
  *      <td> x </td>
  *   </tr>
  *   <tr>
- *      <th> PAD2 </th>
+ *      <td> PAD2 </td>
  *      <td>  </td>
  *      <td>  </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD3 </th>
+ *      <td> PAD3 </td>
  *      <td> x </td>
  *      <td>  </td>
  *      <td>  </td>
@@ -1110,25 +1110,25 @@ static inline void usart_disable_transceiver(
  *      <th> XCK </th>
  *   </tr>
  *   <tr>
- *      <th> PAD0 </th>
+ *      <td> PAD0 </td>
  *      <td>  </td>
  *      <td>  </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD1 </th>
+ *      <td> PAD1 </td>
  *      <td>  </td>
  *      <td>  </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD2 </th>
+ *      <td> PAD2 </td>
  *      <td>  </td>
  *      <td> x </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD3 </th>
+ *      <td> PAD3 </td>
  *      <td> x </td>
  *      <td>  </td>
  *      <td> x </td>
