@@ -216,6 +216,20 @@ enum status_code tc_init(
 	system_gclk_chan_set_config(inst_gclk_id[instance], &gclk_chan_config);
 	system_gclk_chan_enable(inst_gclk_id[instance]);
 
+	/* Enable the slave counter if counter_size is 32 bit */
+	if ((config->counter_size == TC_COUNTER_SIZE_32BIT))
+	{
+		/* Enable the user interface clock in the PM */
+		system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC,
+				inst_pm_apbmask[instance + 1]);
+
+		/* Setup clock for module */
+		system_gclk_chan_get_config_defaults(&gclk_chan_config);
+		gclk_chan_config.source_generator = config->clock_source;
+		system_gclk_chan_set_config(inst_gclk_id[instance + 1], &gclk_chan_config);
+		system_gclk_chan_enable(inst_gclk_id[instance + 1]);
+	}
+
 	/* Set ctrla register */
 	ctrla_tmp =
 			(uint32_t)config->counter_size |
