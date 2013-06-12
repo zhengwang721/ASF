@@ -324,8 +324,8 @@ static void configure_spi(void)
 	/* Change SPI settings to slave */
 	config_spi.mode = SPI_MODE_SLAVE;
 	config_spi.mux_setting = BOOT_SPI_MUX;
-	config_spi.slave.preload_enable = true;
-	config_spi.slave.frame_format = SPI_FRAME_FORMAT_SPI_FRAME;
+	config_spi.mode_specific.slave.preload_enable = true;
+	config_spi.mode_specific.slave.frame_format = SPI_FRAME_FORMAT_SPI_FRAME;
 	config_spi.pinmux_pad0 = BOOT_SPI_PAD0;
 	config_spi.pinmux_pad1 = BOOT_SPI_PAD1;
 	config_spi.pinmux_pad2 = BOOT_SPI_PAD2;

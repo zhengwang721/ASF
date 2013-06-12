@@ -218,7 +218,7 @@ static void run_spi_init_test(const struct test_case *test)
 	config.pinmux_pad1     = PINMUX_UNUSED;
 	config.pinmux_pad2     = SPI_MASTER_DATA_OUT_PIN_MUX;
 	config.pinmux_pad3     = SPI_MASTER_SCK_PIN_MUX;
-	config.master.baudrate = TEST_SPI_BAUDRATE;
+	config.mode_specific.master.baudrate = TEST_SPI_BAUDRATE;
 	status = spi_init(&master, SPI_MASTER_MODULE, &config);
 	test_assert_true(test, status == STATUS_OK,
 			"SPI master initialization failed");
@@ -235,8 +235,8 @@ static void run_spi_init_test(const struct test_case *test)
 	config.pinmux_pad1          = SPI_SLAVE_SS_PIN_MUX;
 	config.pinmux_pad2          = SPI_SLAVE_DATA_OUT_PIN_MUX;
 	config.pinmux_pad3          = SPI_SLAVE_SCK_PIN_MUX;
-	config.slave.frame_format   = SPI_FRAME_FORMAT_SPI_FRAME;
-	config.slave.preload_enable = true;
+	config.mode_specific.slave.frame_format   = SPI_FRAME_FORMAT_SPI_FRAME;
+	config.mode_specific.slave.preload_enable = true;
 	status = spi_init(&slave, SPI_SLAVE_MODULE, &config);
 	test_assert_true(test, status == STATUS_OK,
 			"SPI slave initialization failed");
@@ -458,7 +458,7 @@ static void run_baud_test(const struct test_case *test)
 
 	do {
 		spi_disable(&master);
-		config.master.baudrate = test_baud;
+		config.mode_specific.master.baudrate = test_baud;
 		spi_init(&master, SPI_MASTER_MODULE, &config);
 		spi_enable(&master);
 
@@ -507,7 +507,7 @@ static void setup_transfer_9bit_test(const struct test_case *test)
 	config.pinmux_pad1     = PINMUX_UNUSED;
 	config.pinmux_pad2     = SPI_MASTER_DATA_OUT_PIN_MUX;
 	config.pinmux_pad3     = SPI_MASTER_SCK_PIN_MUX;
-	config.master.baudrate = TEST_SPI_BAUDRATE;
+	config.mode_specific.master.baudrate = TEST_SPI_BAUDRATE;
 	config.character_size  = SPI_CHARACTER_SIZE_9BIT;
 	status = spi_init(&master, SPI_MASTER_MODULE, &config);
 	test_assert_true(test, status == STATUS_OK,
@@ -525,8 +525,8 @@ static void setup_transfer_9bit_test(const struct test_case *test)
 	config.pinmux_pad1          = SPI_SLAVE_SS_PIN_MUX;
 	config.pinmux_pad2          = SPI_SLAVE_DATA_OUT_PIN_MUX;
 	config.pinmux_pad3          = SPI_SLAVE_SCK_PIN_MUX;
-	config.slave.frame_format   = SPI_FRAME_FORMAT_SPI_FRAME;
-	config.slave.preload_enable = true;
+	config.mode_specific.slave.frame_format   = SPI_FRAME_FORMAT_SPI_FRAME;
+	config.mode_specific.slave.preload_enable = true;
 	config.character_size       = SPI_CHARACTER_SIZE_9BIT;
 	status = spi_init(&slave, SPI_SLAVE_MODULE, &config);
 	test_assert_true(test, status == STATUS_OK,
