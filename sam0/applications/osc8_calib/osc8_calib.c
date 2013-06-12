@@ -43,7 +43,7 @@
 /**
  * \mainpage SAM D20 OSC8M Calibration Example
  * See \ref appdoc_main "here" for project documentation.
- * \copydetails preface
+ * \copydetails appdoc_preface
  *
  *
  * \page appdoc_preface Overview
@@ -203,7 +203,6 @@ static void setup_usart_channel(void)
 	stdio_serial_init(&usart_edbg, EDBG_CDC_MODULE, &cdc_uart_config);
 
 	usart_enable(&usart_edbg);
-	usart_enable_transceiver(&usart_edbg, USART_TRANSCEIVER_TX);
 }
 
 /** Set up the clock output pin so that the current system clock frequency can

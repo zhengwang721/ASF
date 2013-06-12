@@ -136,7 +136,7 @@ static struct _eeprom_module _eeprom_instance = {
 
 
 /** \internal
- *  \breif Erases a given row within the physical EEPROM memory space.
+ *  \brief Erases a given row within the physical EEPROM memory space.
  *
  *  \param[in] row  Physical row in EEPROM space to erase
  */
@@ -152,7 +152,7 @@ static void _eeprom_emulator_nvm_erase_row(
 }
 
 /** \internal
- *  \breif Fills the internal NVM controller page buffer in physical EEPROM memory space.
+ *  \brief Fills the internal NVM controller page buffer in physical EEPROM memory space.
  *
  *  \param[in] physical_page  Physical page in EEPROM space to fill
  *  \param[in] data           Data to write to the physical memory page
@@ -172,7 +172,7 @@ static void _eeprom_emulator_nvm_fill_cache(
 }
 
 /** \internal
- *  \breif Commits the internal NVM controller page buffer to physical memory.
+ *  \brief Commits the internal NVM controller page buffer to physical memory.
  *
  *  \param[in] physical_page  Physical page in EEPROM space to commit
  */
@@ -189,7 +189,7 @@ static void _eeprom_emulator_nvm_commit_cache(
 }
 
 /** \internal
- *  \breif Reads a page of data stored in physical EEPROM memory space.
+ *  \brief Reads a page of data stored in physical EEPROM memory space.
  *
  *  \param[in]  physical_page  Physical page in EEPROM space to read
  *  \param[out] data           Destination buffer to fill with the read data

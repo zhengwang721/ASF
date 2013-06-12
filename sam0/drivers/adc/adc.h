@@ -1291,7 +1291,7 @@ static inline void adc_enable_events(
 /**
  * \brief Disables an ADC event input or output.
  *
- *  DIsables one or more input or output events to or from the ADC module. See
+ *  Disables one or more input or output events to or from the ADC module. See
  *  \ref adc_events "here" for a list of events this module supports.
  *
  *  \note Events cannot be altered while the module is enabled.

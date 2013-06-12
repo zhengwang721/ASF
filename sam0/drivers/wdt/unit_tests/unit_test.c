@@ -40,10 +40,71 @@
  * \asf_license_stop
  *
  */
+
+/**
+ * \mainpage SAM D20 WDT Unit Test
+ * See \ref appdoc_main "here" for project documentation.
+ * \copydetails appdoc_preface
+ *
+ *
+ * \page appdoc_preface Overview
+ * This unit test carries out tests for WDT driver.
+ * It consists of test cases for the following functionalities:
+ *      - Test for driver initialization.
+ *      - Test for enabling and disabling.
+ *      - Test for early warning callbacks.
+ *      - Test for system reset upon timeout.
+ */
+
+/**
+ * \page appdoc_main SAM D20 WDT Unit Test
+ *
+ * Overview:
+ * - \ref appdoc_samd20_wdt_unit_test_intro
+ * - \ref appdoc_samd20_wdt_unit_test_setup
+ * - \ref appdoc_samd20_wdt_unit_test_usage
+ * - \ref appdoc_samd20_wdt_unit_test_compinfo
+ * - \ref appdoc_samd20_wdt_unit_test_contactinfo
+ *
+ * \section appdoc_samd20_wdt_unit_test_intro Introduction
+ * \copydetails appdoc_preface
+ *
+ * The following kit is required for carrying out the test:
+ *      - SAM D20 Xplained Pro board
+ *
+ * \section appdoc_samd20_wdt_unit_test_setup Setup
+ * The following connections has to be made using wires:
+ *  - None
+ *
+ * To run the test:
+ *  - Connect the SAM D20 Xplained Pro board to the computer using a
+ *    micro USB cable.
+ *  - Open the virtual COM port in a terminal application.
+ *    \note The USB composite firmware running on the Embedded Debugger (EDBG)
+ *          will enumerate as debugger, virtual COM port and EDBG data
+ *          gateway.
+ *  - Build the project, program the target and run the application.
+ *    The terminal shows the results of the unit test.
+ *
+ * \section appdoc_samd20_wdt_unit_test_usage Usage
+ *  - The unit tests are carried out using the internal Watchdog.
+ *
+ * \section appdoc_samd20_wdt_unit_test_compinfo Compilation Info
+ * This software was written for the GNU GCC and IAR for ARM.
+ * Other compilers may or may not work.
+ *
+ * \section appdoc_samd20_wdt_unit_test_contactinfo Contact Information
+ * For further information, visit
+ * <a href="http://www.atmel.com">http://www.atmel.com</a>.
+ */
+
 #include <asf.h>
 #include <stdio_serial.h>
 #include <string.h>
 #include "conf_test.h"
+
+/* Structure for UART module connected to EDBG (used for unit test output) */
+struct usart_module cdc_uart_module;
 
 /* Flag that indicates whether Watchdog was Reset cause */
 static volatile bool wdr_flag = false;
@@ -156,16 +217,14 @@ static void run_reset_cause_test(const struct test_case *test)
 }
 
 /**
- * \brief Initialize USART for unit tests
+ * \brief Initialize the USART for unit test
  *
- * Initializes the USART used by the unit test. The USART connected to
- * embedded debugger is used for outputting the results.
- *
+ * Initializes the SERCOM USART used for sending the unit test status to the
+ * computer via the EDBG CDC gateway.
  */
-static void configure_stdio_serial(void)
+static void cdc_uart_init(void)
 {
 	struct usart_config usart_conf;
-	struct usart_module unit_test_output;
 
 	/* Configure USART for unit test output */
 	usart_get_config_defaults(&usart_conf);
@@ -176,11 +235,8 @@ static void configure_stdio_serial(void)
 	usart_conf.pinmux_pad3 = CONF_STDIO_PINMUX_PAD3;
 	usart_conf.baudrate    = CONF_STDIO_BAUDRATE;
 
-	stdio_serial_init(&unit_test_output, CONF_STDIO_USART, &usart_conf);
-	usart_enable(&unit_test_output);
-	/* Enable transceivers */
-	usart_enable_transceiver(&unit_test_output, USART_TRANSCEIVER_TX);
-	usart_enable_transceiver(&unit_test_output, USART_TRANSCEIVER_RX);
+	stdio_serial_init(&cdc_uart_module, CONF_STDIO_USART, &usart_conf);
+	usart_enable(&cdc_uart_module);
 }
 
 /**
@@ -197,7 +253,7 @@ int main(void)
 
 	/* Reset the Watchdog count */
 	wdt_reset_count();
-	configure_stdio_serial();
+	cdc_uart_init();
 
 	/* Define Test Cases */
 	DEFINE_TEST_CASE(wdt_enable_disable_test, NULL,

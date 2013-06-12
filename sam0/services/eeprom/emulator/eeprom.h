@@ -94,7 +94,7 @@
  *
  * There are many different algorithms that may be employed for EEPROM emulation
  * using FLASH memory, to tune the write and read latencies, RAM usage, wear
- * leveling and other characteristics. As a result, multiple different emulator
+ * levelling and other characteristics. As a result, multiple different emulator
  * schemes may be implemented, so that the most appropriate scheme for a
  * specific application's requirements may be used.
  *
