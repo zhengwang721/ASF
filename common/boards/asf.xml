@@ -8,6 +8,7 @@
 		<build type="doxygen-entry-point" value="group_common_boards"/>
 		<device-support value="avr"/>
 		<device-support value="sam"/>
+		<device-support value="sam0"/>
 		<require idref="common.utils"/>
 	</module>
 </asf>

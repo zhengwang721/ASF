@@ -42,6 +42,7 @@
  * \asf_license_stop
  *
  */
+
 /*
  * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
@@ -65,9 +66,7 @@
 
 /* === Macros =============================================================== */
 
-
 /* === Types ================================================================ */
-
 
 /* Offset of IEEE address storage location within EEPROM */
 #define EE_IEEE_ADDR                (0)
@@ -75,9 +74,11 @@
 /** Defines the number of timers used by the application. */
 #define NUMBER_OF_APP_TIMERS        (1)
 
-#define TOTAL_STACK_TIMERS (NUMBER_OF_TAL_TIMERS + NUMBER_OF_MAC_TIMERS + NUMBER_OF_NWK_TIMERS)
+#define TOTAL_STACK_TIMERS (NUMBER_OF_TAL_TIMERS + NUMBER_OF_MAC_TIMERS + \
+	NUMBER_OF_NWK_TIMERS)
 
-/** Defines the total number of timers used by the application and the layers below. */
+/** Defines the total number of timers used by the application and the layers
+ *below. */
 #define TOTAL_NUMBER_OF_TIMERS      (NUMBER_OF_APP_TIMERS + TOTAL_STACK_TIMERS)
 
 /** Defines the number of additional large buffers used by the application */
@@ -86,37 +87,44 @@
 /** Defines the number of additional small buffers used by the application */
 #define NUMBER_OF_SMALL_APP_BUFS    (0)
 
-
 /**
  *  Defines the total number of large buffers used by the application and the
  *  layers below.
  */
-#define TOTAL_NUMBER_OF_LARGE_BUFS  (NUMBER_OF_LARGE_APP_BUFS + NUMBER_OF_LARGE_STACK_BUFS)
+#define TOTAL_NUMBER_OF_LARGE_BUFS  (NUMBER_OF_LARGE_APP_BUFS +	\
+	NUMBER_OF_LARGE_STACK_BUFS)
 
 /**
  *  Defines the total number of small buffers used by the application and the
  *  layers below.
  */
-#define TOTAL_NUMBER_OF_SMALL_BUFS  (NUMBER_OF_SMALL_APP_BUFS + NUMBER_OF_SMALL_STACK_BUFS)
+#define TOTAL_NUMBER_OF_SMALL_BUFS  (NUMBER_OF_SMALL_APP_BUFS +	\
+	NUMBER_OF_SMALL_STACK_BUFS)
 
-#define TOTAL_NUMBER_OF_BUFS        (TOTAL_NUMBER_OF_LARGE_BUFS + TOTAL_NUMBER_OF_SMALL_BUFS)
+#define TOTAL_NUMBER_OF_BUFS        (TOTAL_NUMBER_OF_LARGE_BUFS + \
+	TOTAL_NUMBER_OF_SMALL_BUFS)
 
-
-
-
-#define APP_USER_STRING                 "My Controller  "    /* 15 characters ! */
+#define APP_USER_STRING                 "My Controller  "    /* 15 characters !
+	                                                      **/
 #define USER_STRING_AVAILABLE           true
 #define NUM_SUPPORTED_DEV_TYPES         (1)
 #define NUM_SUPPORTED_PROFILES          (1)
 #if (USER_STRING_AVAILABLE == true)
-#define APP_CAPABILITIES                (0x01 | (NUM_SUPPORTED_DEV_TYPES << 1) | (NUM_SUPPORTED_PROFILES << 4))
+#define APP_CAPABILITIES                (0x01 |	\
+	(NUM_SUPPORTED_DEV_TYPES << \
+	1) | (NUM_SUPPORTED_PROFILES << 4))
 #else
-#define APP_CAPABILITIES                ((NUM_SUPPORTED_DEV_TYPES << 1) | (NUM_SUPPORTED_PROFILES << 4))
+#define APP_CAPABILITIES                ((NUM_SUPPORTED_DEV_TYPES << \
+	1) | (NUM_SUPPORTED_PROFILES << 4))
 #endif
-#define SUPPORTED_CEC_CMDS          {0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, \
-        0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, \
-        0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, \
-        0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00}
+#define SUPPORTED_CEC_CMDS          {0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, \
+				     0x00, \
+				     0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, \
+				     0x00, \
+				     0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, \
+				     0x00, \
+				     0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, \
+				     0x00}
 
 /* Define the periodic wakeup interval */
 #define WDT_WAKEUP_INTERVAL         WDT_TO_1S
@@ -124,14 +132,11 @@
 /* Define the watchdog timeout for system reset */
 #define WDT_TIMEOUT_PERIOD          WDT_TO_4S
 
-
-
 #define BOOT_LOADER_SIZE 0
 
 #define IEEE_FLASH_OFFSET (INT_FLASH_END - STACK_FLASH_SIZE  + 1)
 
 /* === Externals ============================================================ */
-
 
 /* === Prototypes =========================================================== */
 

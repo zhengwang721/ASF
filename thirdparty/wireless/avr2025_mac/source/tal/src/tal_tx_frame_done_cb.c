@@ -40,6 +40,7 @@
  *
  * \asf_license_stop
  */
+
 /*
  * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
@@ -62,9 +63,9 @@
 
 void tal_tx_frame_done_cb(retval_t status, frame_info_t *frame)
 {
-    /* Keep compiler happy. */
-    status = status;
-    frame = frame;
+	/* Keep compiler happy. */
+	status = status;
+	frame = frame;
 }
 
 /* EOF */

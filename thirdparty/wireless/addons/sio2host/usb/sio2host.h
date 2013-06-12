@@ -2,7 +2,7 @@
  * \file sio2host.h
  *
  * \brief Event handling Serial I/O  Functionalities
- 
+ *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
@@ -42,13 +42,13 @@
 
 #ifndef SIO2HOST_H
 #define SIO2HOST_H
- 
- /**
-  * \defgroup group_sio2host_usb SIO2HOST - USB
-  * This module performs serial input/output functionalities via USB
-  * @{
-  */
-  
+
+/**
+ * \defgroup group_sio2host_usb SIO2HOST - USB
+ * This module performs serial input/output functionalities via USB
+ * @{
+ */
+
 /* === INCLUDES ============================================================ */
 #include "compiler.h"
 #include "status_codes.h"
@@ -56,27 +56,28 @@
 
 #define SERIAL_RX_BUF_SIZE_HOST    264
 
+/* === PROTOTYPES ============================================================
+ **/
 
-/* === PROTOTYPES ============================================================ */
 /**
  * \brief Initializes the Serial IO Module of the Host Device
- * \return STATUS_OK for successful initialization and FAILURE incase the IO is not initialized 
-  */
+ * \return STATUS_OK for successful initialization and FAILURE incase the IO is
+ *not initialized
+ */
 void sio2host_init(void);
 
 /**
- * \brief Transmits data via USB 
+ * \brief Transmits data via USB
  * \param data Pointer to the buffer where the data to be transmitted is present
  * \param length Number of bytes to be transmitted
  *
- * \return Number of bytes actually transmitted 
+ * \return Number of bytes actually transmitted
  */
-  
+
 uint8_t sio2host_tx(uint8_t *data, uint8_t length);
 
-
 /**
- * \brief Receives data from USB 
+ * \brief Receives data from USB
  *
  * \param data pointer to the buffer where the received data is to be stored
  * \param max_length maximum length of data to be received
@@ -85,15 +86,16 @@ uint8_t sio2host_tx(uint8_t *data, uint8_t length);
  */
 uint8_t sio2host_rx(uint8_t *data, uint8_t max_length);
 
-
 /**
- * \brief This function is callled with the value set as true whenever a device is connected to the terminal
+ * \brief This function is callled with the value set as true whenever a device
+ *is connected to the terminal
  */
 void dtr_cb(bool);
 
 /**
  * \brief This function performs a non-blocking character receive functionality
- * \return '-1' if no data is recieved or returns the data if a character is received
+ * \return '-1' if no data is recieved or returns the data if a character is
+ *received
  */
 
 int sio2host_getchar_nowait(void);
@@ -102,14 +104,13 @@ int sio2host_getchar_nowait(void);
  * \brief This function performs a blocking character receive functionality
  * \return returns the data which is received
  */
- uint8_t sio2host_getchar(void);
+uint8_t sio2host_getchar(void);
 
-
- /**
-  * This function is called by the USB data receive Interrupt
-  * The Receive buffer is filled in this function
-  */
+/**
+ * This function is called by the USB data receive Interrupt
+ * The Receive buffer is filled in this function
+ */
 void usb_rx_notify(void);
 
-//! @}
+/* ! @} */
 #endif /* SIO2HOST_H */

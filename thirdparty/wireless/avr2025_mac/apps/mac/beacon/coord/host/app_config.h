@@ -54,17 +54,16 @@
 
 /* === Includes ============================================================= */
 
-
 /* === Macros =============================================================== */
 
 /** Defines the number of timers used by the application. */
 #define NUMBER_OF_APP_TIMERS        (3)
 
-/** Defines the total number of timers used by the application and the layers below. */
+/** Defines the total number of timers used by the application and the layers
+ *below. */
 #define TOTAL_NUMBER_OF_TIMERS      (NUMBER_OF_APP_TIMERS)
 
 /* === Externals ============================================================ */
-
 
 /* === Prototypes =========================================================== */
 
