@@ -703,7 +703,7 @@ struct spi_config {
 		struct spi_slave_config slave;
 		/** Master specific configuration */
 		struct spi_master_config master;
-	}; /**< Union for slave or master specific configuration */
+	} mode_specific;
 	/** GCLK generator to use as clock source. */
 	enum gclk_generator generator_source;
 	/** PAD0 pinmux */
@@ -801,11 +801,11 @@ static inline void spi_get_config_defaults(
 	config->receiver_enable  = true;
 	config->generator_source = GCLK_GENERATOR_0;
 
-	/* Clear slave config */
-	memset(&(config->slave), 0, sizeof(struct spi_slave_config));
+	/* Clear mode specific config */
+	memset(&(config->mode_specific), 0, sizeof(config->mode_specific));
 
 	/* Master config defaults */
-	config->master.baudrate = 100000;
+	config->mode_specific.master.baudrate = 100000;
 
 	/* pinmux config defaults */
 	config->pinmux_pad0 = PINMUX_DEFAULT;

@@ -175,7 +175,7 @@ static enum status_code _spi_set_config(
 
 		/* Get baud value, based on baudrate and the internal clock frequency */
 		enum status_code error_code = _sercom_get_sync_baud_val(
-				config->master.baudrate,
+				config->mode_specific.master.baudrate,
 				internal_clock, &baud);
 
 		if (error_code != STATUS_OK) {
@@ -188,17 +188,17 @@ static enum status_code _spi_set_config(
 
 	if (config->mode == SPI_MODE_SLAVE) {
 		/* Set frame format */
-		ctrla = config->slave.frame_format;
+		ctrla = config->mode_specific.slave.frame_format;
 
 		/* Set address mode */
-		ctrlb = config->slave.address_mode;
+		ctrlb = config->mode_specific.slave.address_mode;
 
 		/* Set address and address mask*/
 		spi_module->ADDR.reg |=
-				(config->slave.address      << SERCOM_SPI_ADDR_ADDR_Pos) |
-				(config->slave.address_mask << SERCOM_SPI_ADDR_ADDRMASK_Pos);
+				(config->mode_specific.slave.address      << SERCOM_SPI_ADDR_ADDR_Pos) |
+				(config->mode_specific.slave.address_mask << SERCOM_SPI_ADDR_ADDRMASK_Pos);
 
-		if (config->slave.preload_enable) {
+		if (config->mode_specific.slave.preload_enable) {
 			/* Enable pre-loading of shift register */
 			ctrlb |= SERCOM_SPI_CTRLB_PLOADEN;
 		}
@@ -325,7 +325,7 @@ static enum status_code _spi_check_config(
 	/* Find baud value and compare it */
 	if (config->mode == SPI_MODE_MASTER) {
 		enum status_code error_code = _sercom_get_sync_baud_val(
-				config->master.baudrate,
+				config->mode_specific.master.baudrate,
 				external_clock, &baud);
 
 		if (error_code != STATUS_OK) {
@@ -340,19 +340,19 @@ static enum status_code _spi_check_config(
 		ctrla |= SERCOM_SPI_CTRLA_MODE_SPI_MASTER;
 	} else {
 		/* Set frame format */
-		ctrla |= config->slave.frame_format;
+		ctrla |= config->mode_specific.slave.frame_format;
 
 		/* Set address mode */
-		ctrlb |= config->slave.address_mode;
+		ctrlb |= config->mode_specific.slave.address_mode;
 
 		/* Set address and address mask*/
-		addr |= (config->slave.address      << SERCOM_SPI_ADDR_ADDR_Pos) |
-				(config->slave.address_mask << SERCOM_SPI_ADDR_ADDRMASK_Pos);
+		addr |= (config->mode_specific.slave.address      << SERCOM_SPI_ADDR_ADDR_Pos) |
+				(config->mode_specific.slave.address_mask << SERCOM_SPI_ADDR_ADDRMASK_Pos);
 		if (spi_module->CTRLA.reg != addr) {
 			return STATUS_ERR_DENIED;
 		}
 
-		if (config->slave.preload_enable) {
+		if (config->mode_specific.slave.preload_enable) {
 			/* Enable pre-loading of shift register */
 			ctrlb |= SERCOM_SPI_CTRLB_PLOADEN;
 		}
