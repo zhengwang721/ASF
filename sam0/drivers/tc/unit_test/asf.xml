@@ -3,9 +3,10 @@
 		<info type="description" value="summary">
 		Unit test for the TC interface module testing all functionality against hardware.
 		</info>
+		<build type="module-config" subtype="required-header-file" value="conf_test.h"/>
+		<build type="include-path" value="."/>
 		<info type="gui-flag" value="move-to-root"/>
 		<build type="c-source" value="unit_test.c"/>
-		<build type="include-path" value="."/>
 		<require idref="sam0.utils" />
 		<require idref="sam0.drivers.tc"/>
 		<require idref="sam0.drivers.events"/>
