@@ -628,7 +628,7 @@
  * illegal operations are conditional. On the right side figure, the code
  * run-away is caught as it tries to unlock the peripheral.
  *
- * \section asfdoc_samd20_pac_extra_info Extra Information for PAC
+ * \section asfdoc_samd20_pac_extra_info Extra Information
  *
  * For extra information see \ref asfdoc_samd20_pac_extra. This includes:
  *  - \ref asfdoc_samd20_pac_extra_acronyms

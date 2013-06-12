@@ -153,7 +153,7 @@
  * refer to your device specific datasheet.
  *
  *
- * \section asfdoc_samd20_system_pinmux_extra_info Extra Information for pinmux
+ * \section asfdoc_samd20_system_pinmux_extra_info Extra Information
  *
  * For extra information see \ref asfdoc_samd20_system_pinmux_extra. This includes:
  *  - \ref asfdoc_samd20_system_pinmux_extra_acronyms

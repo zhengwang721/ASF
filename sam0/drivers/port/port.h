@@ -114,7 +114,7 @@
  * in pure output mode to save power; reading the pin state of a pin configured
  * in output-only mode will read the logical output state that was last set.
  *
- * \section asfdoc_samd20_port_extra_info Extra Information for PORT
+ * \section asfdoc_samd20_port_extra_info Extra Information
  *
  * For extra information see \ref asfdoc_samd20_port_extra. This includes:
  *  - \ref asfdoc_samd20_port_extra_acronyms

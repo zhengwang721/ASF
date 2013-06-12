@@ -218,7 +218,7 @@
  * There are no special considerations for this module.
  *
  *
- * \section asfdoc_samd20_system_clock_extra_info Extra Information for System Clock
+ * \section asfdoc_samd20_system_clock_extra_info Extra Information
  *
  * For extra information see \ref asfdoc_samd20_system_clock_extra. This includes:
  *  - \ref asfdoc_samd20_system_clock_extra_acronyms

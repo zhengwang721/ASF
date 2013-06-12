@@ -100,7 +100,7 @@
  * responsibility to de-multiplex the module-common interrupt to determine the
  * exact interrupt cause.
  *
- * \section asfdoc_samd20_system_interrupt_extra_info Extra Information for System Interrupt
+ * \section asfdoc_samd20_system_interrupt_extra_info Extra Information
  *
  * For extra information see \ref asfdoc_samd20_system_interrupt_extra. This includes:
  *  - \ref asfdoc_samd20_system_interrupt_extra_acronyms

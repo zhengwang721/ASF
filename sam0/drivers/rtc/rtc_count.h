@@ -238,7 +238,7 @@
  * \enddot
  *
  *
- * \section asfdoc_samd20_rtc_count_extra_info Extra Information for RTC COUNT
+ * \section asfdoc_samd20_rtc_count_extra_info Extra Information
  *
  * For extra information see \ref asfdoc_samd20_rtc_count_extra. This includes:
  *  - \ref asfdoc_samd20_rtc_count_extra_acronyms
