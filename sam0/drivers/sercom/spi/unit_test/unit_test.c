@@ -42,9 +42,12 @@
  */
 
 /**
- * \mainpage SERCOM SPI UNIT TEST
+ * \mainpage SAM D20 SPI Unit Test
+ * See \ref appdoc_main "here" for project documentation.
+ * \copydetails appdoc_preface
  *
- * \section intro Introduction
+ *
+ * \page appdoc_preface Overview
  * This unit test carries out tests for SERCOM SPI driver.
  * It consists of test cases for the following functionalities:
  *      - Test for driver initialization.
@@ -53,36 +56,54 @@
  *      - Test for buffer read & write using transceive function.
  *      - Test for 9-bit data transfer.
  *      - Test for baudrate.
+ */
+
+/**
+ * \page appdoc_main SAM D20 SPI Unit Test
+ *
+ * Overview:
+ * - \ref appdoc_samd20_spi_unit_test_intro
+ * - \ref appdoc_samd20_spi_unit_test_setup
+ * - \ref appdoc_samd20_spi_unit_test_usage
+ * - \ref appdoc_samd20_spi_unit_test_compinfo
+ * - \ref appdoc_samd20_spi_unit_test_contactinfo
+ *
+ * \section appdoc_samd20_spi_unit_test_intro Introduction
+ * \copydetails appdoc_preface
  *
  * The following kit is required for carrying out the test:
  *      - SAM D20 Xplained Pro board
  *
- * \section Setup
+ * \section appdoc_samd20_spi_unit_test_setup Setup
+ * The following connections has to be made using wires:
+ *  - \b SS_0:  EXT1 PIN15 (PA05) <--> EXT2 PIN15 (PA17)
+ *  - \b DO/DI: EXT1 PIN16 (PA06) <--> EXT2 PIN17 (PA16)
+ *  - \b DI/DO: EXT1 PIN17 (PA04) <--> EXT2 PIN16 (PA18)
+ *  - \b SCK:   EXT1 PIN18 (PA07) <--> EXT2 PIN18 (PA19)
  *
- *      - The following connections has to be made using wires:
- *            SS_0: EXT1 PIN15 (PA05) <--> EXT2 PIN15 (PA17)
- *            DO/DI: EXT1 PIN16 (PA06) <--> EXT2 PIN17 (PA16)
- *            DI/DO: EXT1 PIN17 (PA04) <--> EXT2 PIN16 (PA18)
- *            SCK: EXT1 PIN18 (PA07) <--> EXT2 PIN18 (PA19)
- *      - Connect the SAM D20 Xplained Pro board to the computer using a
- *        micro USB cable.
- *      - Open the virtual COM port in a terminal application.
- * \note  The USB composite firmware running on the Embedded Debugger (EDBG)
- *        will enumerate as debugger, virtual COM port and EDBG data
- *        gateway.
- *      - Build the project, program the target and run the application.
- *        The terminal shows the results of the unit test.
+ * To run the test:
+ *  - Connect the SAM D20 Xplained Pro board to the computer using a
+ *    micro USB cable.
+ *  - Open the virtual COM port in a terminal application.
+ *    \note The USB composite firmware running on the Embedded Debugger (EDBG)
+ *          will enumerate as debugger, virtual COM port and EDBG data
+ *          gateway.
+ *  - Build the project, program the target and run the application.
+ *    The terminal shows the results of the unit test.
  *
- * \section Description
+ * \section appdoc_samd20_spi_unit_test_usage Usage
+ *  - The unit tests are carried out with SERCOM1 on EXT2 as SPI master and
+ *    SERCOM0 on EXT1 as SPI slave.
+ *  - Data is transmitted from master to slave in lengths of a single byte
+ *    as well as multiple bytes.
  *
- *      - The unit tests are carried out with SERCOM1 on EXT2 as SPI master and
- *        SERCOM0 on EXT1 as SPI slave.
- *      - Data are transmitted from master to slave in single byte as well
- *        as in multiple bytes.
+ * \section appdoc_samd20_spi_unit_test_compinfo Compilation Info
+ * This software was written for the GNU GCC and IAR for ARM.
+ * Other compilers may or may not work.
  *
- * \section contactinfo Contact Information
- * For further information, visit <a href="http://www.atmel.com/">Atmel</a>.\n
- * Support and FAQ: http://support.atmel.no/
+ * \section appdoc_samd20_spi_unit_test_contactinfo Contact Information
+ * For further information, visit
+ * <a href="http://www.atmel.com">http://www.atmel.com</a>.
  */
 
 #include <asf.h>
@@ -100,7 +121,7 @@
 #define SPI_MASTER_MODULE             EXT2_SPI_MODULE
 #define SPI_MASTER_SPI_MUX            EXT2_SPI_SERCOM_MUX_SETTING
 #define SPI_MASTER_DATA_IN_PIN_MUX    EXT2_SPI_SERCOM_PINMUX_PAD0
-#define SPI_MASTER_DATA_OUT_PIN_MUX   EXT2_SPI_SERCOM_PINMUX_PAD1
+#define SPI_MASTER_DATA_OUT_PIN_MUX   EXT2_SPI_SERCOM_PINMUX_PAD2
 #define SPI_MASTER_SCK_PIN_MUX        EXT2_SPI_SERCOM_PINMUX_PAD3
 #define SPI_SLAVE_SS_PIN              EXT2_PIN_SPI_SS_0
 
@@ -409,7 +430,7 @@ static void run_transceive_buffer_test(const struct test_case *test)
  * \brief Test: Sends data at different baud rates.
  *
  * This test sends (writes) a byte to the slave and receives the data
- * at different baudrate testing upto the maximum allowed level.
+ * at different baudrate testing up to the maximum allowed level.
  *
  * Transmission and reception are carried out by polling.
  *

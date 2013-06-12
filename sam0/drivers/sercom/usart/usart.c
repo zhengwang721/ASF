@@ -171,7 +171,9 @@ static enum status_code _usart_check_config(
 	}
 
 	/* Check stopbits and character size */
-	ctrlb = (uint32_t)config->stopbits | (uint32_t)config->character_size;
+	ctrlb = (uint32_t)config->stopbits | (uint32_t)config->character_size |
+			(config->receiver_enable << SERCOM_USART_CTRLB_RXEN_Pos) |
+			(config->transmitter_enable << SERCOM_USART_CTRLB_TXEN_Pos);
 
 	/* Check parity mode bits */
 	if (config->parity != USART_PARITY_NONE) {
@@ -268,8 +270,10 @@ static enum status_code _usart_set_config(
 		ctrla |= SERCOM_USART_CTRLA_MODE_USART_EXT_CLK;
 	}
 
-	/* Set stopbits and character size */
-	ctrlb = (uint32_t)config->stopbits | (uint32_t)config->character_size;
+	/* Set stopbits, character size and enable transceivers */
+	ctrlb = (uint32_t)config->stopbits | (uint32_t)config->character_size |
+			(config->receiver_enable << SERCOM_USART_CTRLB_RXEN_Pos) |
+			(config->transmitter_enable << SERCOM_USART_CTRLB_TXEN_Pos);
 
 	/* Set parity mode */
 	if (config->parity != USART_PARITY_NONE) {
@@ -370,8 +374,12 @@ enum status_code usart_init(
 	system_gclk_chan_enable(gclk_index);
 	sercom_set_gclk_generator(config->generator_source, false);
 
-	/* set character size */
+	/* Set character size */
 	module->character_size = config->character_size;
+
+	/* Set transmitter and receiver status */
+	module->receiver_enabled = config->receiver_enable;
+	module->transmitter_enabled = config->transmitter_enable;
 
 	/* Configure Pins */
 	struct system_pinmux_config pin_conf;
@@ -456,9 +464,10 @@ enum status_code usart_init(
  * \param[in]  tx_data  Data to transfer
  *
  * \return Status of the operation
- * \retval STATUS_OK    If the operation was completed
- * \retval STATUS_BUSY  If the operation was not completed, due to the USART
- *                      module being busy.
+ * \retval STATUS_OK         If the operation was completed
+ * \retval STATUS_BUSY       If the operation was not completed, due to the USART
+ *                           module being busy.
+ * \retval STATUS_ERR_DENIED If the transmitter is not enabled
  */
 enum status_code usart_write_wait(
 		struct usart_module *const module,
@@ -470,6 +479,11 @@ enum status_code usart_write_wait(
 
 	/* Get a pointer to the hardware module instance */
 	SercomUsart *const usart_hw = &(module->hw->USART);
+
+	/* Check that the transmitter is enabled */
+	if (!(module->transmitter_enabled)) {
+		return STATUS_ERR_DENIED;
+	}
 
 #if USART_CALLBACK_MODE == true
 	/* Check if the USART is busy doing asynchronous operation. */
@@ -518,6 +532,7 @@ enum status_code usart_write_wait(
  *                                  system frequency being too high
  * \retval STATUS_ERR_BAD_DATA      If the operation was not completed, due to
  *                                  data being corrupted
+ * \retval STATUS_ERR_DENIED        If the receiver is not enabled
  */
 enum status_code usart_read_wait(
 		struct usart_module *const module,
@@ -532,6 +547,11 @@ enum status_code usart_read_wait(
 
 	/* Get a pointer to the hardware module instance */
 	SercomUsart *const usart_hw = &(module->hw->USART);
+
+	/* Check that the receiver is enabled */
+	if (!(module->receiver_enabled)) {
+		return STATUS_ERR_DENIED;
+	}
 
 #if USART_CALLBACK_MODE == true
 	/* Check if the USART is busy doing asynchronous operation. */
@@ -603,6 +623,7 @@ enum status_code usart_read_wait(
  *                                arguments
  * \retval STATUS_ERR_TIMEOUT     If operation was not completed, due to USART
  *                                module timing out
+ * \retval STATUS_ERR_DENIED      If the transmitter is not enabled
  */
 enum status_code usart_write_buffer_wait(
 		struct usart_module *const module,
@@ -616,6 +637,11 @@ enum status_code usart_write_buffer_wait(
 	/* Check if the buffer length is valid */
 	if (length == 0) {
 		return STATUS_ERR_INVALID_ARG;
+	}
+
+	/* Check that the transmitter is enabled */
+	if (!(module->transmitter_enabled)) {
+		return STATUS_ERR_DENIED;
 	}
 
 	/* Get a pointer to the hardware module instance */
@@ -690,6 +716,7 @@ enum status_code usart_write_buffer_wait(
  *                                  system frequency being too high
  * \retval STATUS_ERR_BAD_DATA      If the operation was not completed, due
  *                                  to data being corrupted
+ * \retval STATUS_ERR_DENIED        If the receiver is not enabled
  */
 enum status_code usart_read_buffer_wait(
 		struct usart_module *const module,
@@ -703,6 +730,11 @@ enum status_code usart_read_buffer_wait(
 	/* Check if the buffer length is valid */
 	if (length == 0) {
 		return STATUS_ERR_INVALID_ARG;
+	}
+
+		/* Check that the receiver is enabled */
+	if (!(module->receiver_enabled)) {
+		return STATUS_ERR_DENIED;
 	}
 
 	/* Get a pointer to the hardware module instance */

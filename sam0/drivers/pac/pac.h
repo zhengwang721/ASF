@@ -750,7 +750,7 @@ __no_inline enum status_code system_peripheral_unlock(
  * \page asfdoc_samd20_pac_non_write_list List of Non-Write Protected Registers
  *
  * Look in device datasheet peripheral's subsection "Register Access
- * Protection" to see which is actually availeble for your device.
+ * Protection" to see which is actually available for your device.
  * <table>
  *	<tr>
  *		<th>Module</th>

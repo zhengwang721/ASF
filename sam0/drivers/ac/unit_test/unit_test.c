@@ -42,48 +42,67 @@
  */
 
 /**
- * \mainpage AC UNIT TEST
+ * \mainpage SAM D20 AC Unit Test
+ * See \ref appdoc_main "here" for project documentation.
+ * \copydetails appdoc_preface
  *
- * \section intro Introduction
+ *
+ * \page appdoc_preface Overview
  * This unit test carries out tests for the AC driver.
  * It consists of test cases for the following functionalities:
  *      - Test for AC initialization.
  *      - Test for AC single shot comparison.
- *      - Test for ADC callback mode comparison.
- *      - Test for ADC continuous window mode comparison.
+ *      - Test for AC callback mode comparison.
+ *      - Test for AC continuous window mode comparison.
+ */
+
+/**
+ * \page appdoc_main SAM D20 AC Unit Test
+ *
+ * Overview:
+ * - \ref appdoc_samd20_ac_unit_test_intro
+ * - \ref appdoc_samd20_ac_unit_test_setup
+ * - \ref appdoc_samd20_ac_unit_test_usage
+ * - \ref appdoc_samd20_ac_unit_test_compinfo
+ * - \ref appdoc_samd20_ac_unit_test_contactinfo
+ *
+ * \section appdoc_samd20_ac_unit_test_intro Introduction
+ * \copydetails appdoc_preface
+ *
  * Input to the AC is provided with the DAC module.
  *
  * The following kit is required for carrying out the test:
  *      - SAM D20 Xplained Pro board
  *
- * \section Setup
+ * \section appdoc_samd20_ac_unit_test_setup Setup
+ * The following connections has to be made using wires:
+ *  - \b DAC VOUT (PA02) <-----> AIN0 (PA04)
  *
- * The following connection has to be made on the board.
+ * To run the test:
+ *  - Connect the SAM D20 Xplained Pro board to the computer using a
+ *    micro USB cable.
+ *  - Open the virtual COM port in a terminal application.
+ *    \note The USB composite firmware running on the Embedded Debugger (EDBG)
+ *          will enumerate as debugger, virtual COM port and EDBG data
+ *          gateway.
+ *  - Build the project, program the target and run the application.
+ *    The terminal shows the results of the unit test.
  *
- *      - DAC VOUT (PA02) <-----> AIN0 (PA04)
+ * \section appdoc_samd20_ac_unit_test_usage Usage
+ *  - The unit test configures DAC module to provide voltage to the AC positive
+ *    input.
+ *  - AC negative input is given from internal voltage scaler.
+ *  - DAC output is adjusted to generate various voltages which are compared by
+ *    the AC.
+ *  - Different modes of the AC are tested.
  *
- * The following steps has to be done:
- *      - Connect the SAM D20 Xplained Pro board to the computer using
- *        a micro USB cable.
- *      - Open the virtual COM port in a terminal application.
- * \note  The USB composite firmware running on the Embedded Debugger (EDBG)
- *        will enumerate as debugger, virtual COM port and EDBG data
- *        gateway.
- *      - Build the project, program the target and run the application.
- *        The terminal shows the results of the unit test.
+ * \section appdoc_samd20_ac_unit_test_compinfo Compilation Info
+ * This software was written for the GNU GCC and IAR for ARM.
+ * Other compilers may or may not work.
  *
- * \section Description
- *
- *      - The unit test configures DAC module to provide
- *        voltage to the AC positive input.
- *      - AC negative input is given from internal voltage scaler.
- *      - DAC output is adjusted to generate various voltages
- *        which are compared by the AC.
- *      - Different modes of the AC are tested.
- *
- * \section contactinfo Contact Information
- * For further information, visit <a href="http://www.atmel.com/">Atmel</a>.\n
- * Support and FAQ: http://support.atmel.no/
+ * \section appdoc_samd20_ac_unit_test_contactinfo Contact Information
+ * For further information, visit
+ * <a href="http://www.atmel.com">http://www.atmel.com</a>.
  */
 
 #include <asf.h>
@@ -321,7 +340,6 @@ static void setup_ac_callback_mode_test(const struct test_case *test)
 			"AC channel initialization failed");
 
 	/* Callback configuration */
-	status = STATUS_ERR_IO;
 	status = ac_register_callback(&ac_inst, ac_user_callback,
 			AC_CALLBACK_COMPARATOR_0);
 	test_assert_true(test, status == STATUS_OK,
@@ -450,11 +468,8 @@ static void setup_ac_window_mode_test(const struct test_case *test)
 	test_assert_true(test, status == STATUS_OK,
 			"AC channel 1 initialization failed");
 	/* Set the channel configuration for CHAN0 - Upper limit*/
-	status = STATUS_ERR_IO;
 	channel_config.vcc_scale_factor  = AC_SCALER_0_75_VOLT;
-	status
-		= ac_chan_set_config(&ac_inst, AC_CHAN_CHANNEL_0,
-			&channel_config);
+	status = ac_chan_set_config(&ac_inst, AC_CHAN_CHANNEL_0, &channel_config);
 	/* Check for successful initialization */
 	test_assert_true(test, status == STATUS_OK,
 			"AC channel 0 initialization failed");
@@ -471,7 +486,6 @@ static void setup_ac_window_mode_test(const struct test_case *test)
 	ac_chan_enable(&ac_inst, AC_CHAN_CHANNEL_0);
 	ac_chan_enable(&ac_inst, AC_CHAN_CHANNEL_1);
 	/* Enable window mode */
-	status = STATUS_ERR_IO;
 	status = ac_win_enable(&ac_inst, AC_WIN_CHANNEL_0);
 	/* Check for successful initialization */
 	test_assert_true(test, status == STATUS_OK,

@@ -86,17 +86,17 @@ typedef union {
 #define RTC_MODE0_CTRL_PRESCALER_Pos 8            /**< \brief (RTC_MODE0_CTRL) Prescaler */
 #define RTC_MODE0_CTRL_PRESCALER_Msk (0xFu << RTC_MODE0_CTRL_PRESCALER_Pos)
 #define RTC_MODE0_CTRL_PRESCALER(value) ((RTC_MODE0_CTRL_PRESCALER_Msk & ((value) << RTC_MODE0_CTRL_PRESCALER_Pos)))
-#define   RTC_MODE0_CTRL_PRESCALER_DIV1 (0x0u <<  8) /**< TODO: Manually added  */
-#define   RTC_MODE0_CTRL_PRESCALER_DIV2 (0x1u <<  8) /**< TODO: Manually added  */
-#define   RTC_MODE0_CTRL_PRESCALER_DIV4 (0x2u <<  8) /**< TODO: Manually added  */
-#define   RTC_MODE0_CTRL_PRESCALER_DIV8 (0x3u <<  8) /**< TODO: Manually added  */
-#define   RTC_MODE0_CTRL_PRESCALER_DIV16 (0x4u <<  8) /**< TODO: Manually added  */
-#define   RTC_MODE0_CTRL_PRESCALER_DIV32 (0x5u <<  8) /**< TODO: Manually added  */
-#define   RTC_MODE0_CTRL_PRESCALER_DIV64 (0x6u <<  8) /**< TODO: Manually added  */
-#define   RTC_MODE0_CTRL_PRESCALER_DIV128 (0x7u <<  8) /**< TODO: Manually added */
-#define   RTC_MODE0_CTRL_PRESCALER_DIV256 (0x8u <<  8) /**< TODO: Manually added */
-#define   RTC_MODE0_CTRL_PRESCALER_DIV512 (0x9u <<  8) /**< TODO: Manually added */
-#define   RTC_MODE0_CTRL_PRESCALER_DIV1024 (0xAu <<  8) /**< TODO: Manually added  */
+#define   RTC_MODE0_CTRL_PRESCALER_DIV1 (0x0u <<  8) /**< \brief (RTC_MODE0_CTRL)  */
+#define   RTC_MODE0_CTRL_PRESCALER_DIV2 (0x1u <<  8) /**< \brief (RTC_MODE0_CTRL)  */
+#define   RTC_MODE0_CTRL_PRESCALER_DIV4 (0x2u <<  8) /**< \brief (RTC_MODE0_CTRL)  */
+#define   RTC_MODE0_CTRL_PRESCALER_DIV8 (0x3u <<  8) /**< \brief (RTC_MODE0_CTRL)  */
+#define   RTC_MODE0_CTRL_PRESCALER_DIV16 (0x4u <<  8) /**< \brief (RTC_MODE0_CTRL)  */
+#define   RTC_MODE0_CTRL_PRESCALER_DIV32 (0x5u <<  8) /**< \brief (RTC_MODE0_CTRL)  */
+#define   RTC_MODE0_CTRL_PRESCALER_DIV64 (0x6u <<  8) /**< \brief (RTC_MODE0_CTRL)  */
+#define   RTC_MODE0_CTRL_PRESCALER_DIV128 (0x7u <<  8) /**< \brief (RTC_MODE0_CTRL)  */
+#define   RTC_MODE0_CTRL_PRESCALER_DIV256 (0x8u <<  8) /**< \brief (RTC_MODE0_CTRL)  */
+#define   RTC_MODE0_CTRL_PRESCALER_DIV512 (0x9u <<  8) /**< \brief (RTC_MODE0_CTRL)  */
+#define   RTC_MODE0_CTRL_PRESCALER_DIV1024 (0xAu <<  8) /**< \brief (RTC_MODE0_CTRL)  */
 #define RTC_MODE0_CTRL_MASK         0x0F8Fu      /**< \brief (RTC_MODE0_CTRL) MASK Register */
 
 /* -------- RTC_MODE1_CTRL : (RTC Offset: 0x00) (R/W 16) MODE1 MODE1 Control Register -------- */
@@ -130,17 +130,17 @@ typedef union {
 #define RTC_MODE1_CTRL_PRESCALER_Pos 8            /**< \brief (RTC_MODE1_CTRL) Prescaler */
 #define RTC_MODE1_CTRL_PRESCALER_Msk (0xFu << RTC_MODE1_CTRL_PRESCALER_Pos)
 #define RTC_MODE1_CTRL_PRESCALER(value) ((RTC_MODE1_CTRL_PRESCALER_Msk & ((value) << RTC_MODE1_CTRL_PRESCALER_Pos)))
-#define   RTC_MODE1_CTRL_PRESCALER_DIV1 (0x0u <<  8) /**< TODO: Manually added  */
-#define   RTC_MODE1_CTRL_PRESCALER_DIV2 (0x1u <<  8) /**< TODO: Manually added  */
-#define   RTC_MODE1_CTRL_PRESCALER_DIV4 (0x2u <<  8) /**< TODO: Manually added  */
-#define   RTC_MODE1_CTRL_PRESCALER_DIV8 (0x3u <<  8) /**< TODO: Manually added  */
-#define   RTC_MODE1_CTRL_PRESCALER_DIV16 (0x4u <<  8) /**< TODO: Manually added  */
-#define   RTC_MODE1_CTRL_PRESCALER_DIV32 (0x5u <<  8) /**< TODO: Manually added  */
-#define   RTC_MODE1_CTRL_PRESCALER_DIV64 (0x6u <<  8) /**< TODO: Manually added  */
-#define   RTC_MODE1_CTRL_PRESCALER_DIV128 (0x7u <<  8) /**< TODO: Manually added */
-#define   RTC_MODE1_CTRL_PRESCALER_DIV256 (0x8u <<  8) /**< TODO: Manually added */
-#define   RTC_MODE1_CTRL_PRESCALER_DIV512 (0x9u <<  8) /**< TODO: Manually added */
-#define   RTC_MODE1_CTRL_PRESCALER_DIV1024 (0xAu <<  8) /**< TODO: Manually added  */
+#define   RTC_MODE1_CTRL_PRESCALER_DIV1 (0x0u <<  8) /**< \brief (RTC_MODE1_CTRL)  */
+#define   RTC_MODE1_CTRL_PRESCALER_DIV2 (0x1u <<  8) /**< \brief (RTC_MODE1_CTRL)  */
+#define   RTC_MODE1_CTRL_PRESCALER_DIV4 (0x2u <<  8) /**< \brief (RTC_MODE1_CTRL)  */
+#define   RTC_MODE1_CTRL_PRESCALER_DIV8 (0x3u <<  8) /**< \brief (RTC_MODE1_CTRL)  */
+#define   RTC_MODE1_CTRL_PRESCALER_DIV16 (0x4u <<  8) /**< \brief (RTC_MODE1_CTRL)  */
+#define   RTC_MODE1_CTRL_PRESCALER_DIV32 (0x5u <<  8) /**< \brief (RTC_MODE1_CTRL)  */
+#define   RTC_MODE1_CTRL_PRESCALER_DIV64 (0x6u <<  8) /**< \brief (RTC_MODE1_CTRL)  */
+#define   RTC_MODE1_CTRL_PRESCALER_DIV128 (0x7u <<  8) /**< \brief (RTC_MODE1_CTRL)  */
+#define   RTC_MODE1_CTRL_PRESCALER_DIV256 (0x8u <<  8) /**< \brief (RTC_MODE1_CTRL)  */
+#define   RTC_MODE1_CTRL_PRESCALER_DIV512 (0x9u <<  8) /**< \brief (RTC_MODE1_CTRL)  */
+#define   RTC_MODE1_CTRL_PRESCALER_DIV1024 (0xAu <<  8) /**< \brief (RTC_MODE1_CTRL)  */
 #define RTC_MODE1_CTRL_MASK         0x0F0Fu      /**< \brief (RTC_MODE1_CTRL) MASK Register */
 
 /* -------- RTC_MODE2_CTRL : (RTC Offset: 0x00) (R/W 16) MODE2 MODE2 Control Register -------- */
@@ -641,7 +641,7 @@ typedef union {
 #define RTC_MODE2_CLOCK_HOUR_Pos    12           /**< \brief (RTC_MODE2_CLOCK) Current Hour */
 #define RTC_MODE2_CLOCK_HOUR_Msk    (0x1Fu << RTC_MODE2_CLOCK_HOUR_Pos)
 #define RTC_MODE2_CLOCK_HOUR(value) ((RTC_MODE2_CLOCK_HOUR_Msk & ((value) << RTC_MODE2_CLOCK_HOUR_Pos)))
-#define   RTC_MODE2_CLOCK_HOUR_PM   (0x10u << 12) /**< \brief (RTC_MODE2_CLOCK) PM when CLKREP in 12-hour */
+#define   RTC_MODE2_CLOCK_HOUR_PM   (0x10u << 12) /**< \brief (RTC_MODE2_CLOCK)  */
 #define RTC_MODE2_CLOCK_DAY_Pos     17           /**< \brief (RTC_MODE2_CLOCK) Current Day */
 #define RTC_MODE2_CLOCK_DAY_Msk     (0x1Fu << RTC_MODE2_CLOCK_DAY_Pos)
 #define RTC_MODE2_CLOCK_DAY(value)  ((RTC_MODE2_CLOCK_DAY_Msk & ((value) << RTC_MODE2_CLOCK_DAY_Pos)))

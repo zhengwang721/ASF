@@ -100,11 +100,6 @@ void configure_usart(void)
 //! [setup_enable]
 	usart_enable(&usart_instance);
 //! [setup_enable]
-
-//! [setup_enable_txrx]
-	usart_enable_transceiver(&usart_instance, USART_TRANSCEIVER_TX);
-	usart_enable_transceiver(&usart_instance, USART_TRANSCEIVER_RX);
-//! [setup_enable_txrx]
 }
 
 void configure_usart_callbacks(void)

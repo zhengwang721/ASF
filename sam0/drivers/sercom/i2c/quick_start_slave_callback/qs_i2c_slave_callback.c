@@ -62,7 +62,7 @@ static uint8_t write_buffer[DATA_LENGTH] = {
 static uint8_t read_buffer [DATA_LENGTH];
 //! [packet_data]
 
-/* Adress of the slave */
+/* Address of the slave */
 //! [address]
 #define SLAVE_ADDRESS 0x12
 //! [address]

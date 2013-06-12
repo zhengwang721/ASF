@@ -104,7 +104,7 @@ static inline void tc_enable_callback(
 	Assert(module);
 
 
-	/* Enable interupts for this TC module */
+	/* Enable interrupts for this TC module */
 	system_interrupt_enable(_tc_interrupt_get_interrupt_vector(_tc_get_inst_index(module->hw)));
 
 	/* Enable callback */

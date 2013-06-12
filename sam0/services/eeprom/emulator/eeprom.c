@@ -136,7 +136,7 @@ static struct _eeprom_module _eeprom_instance = {
 
 
 /** \internal
- *  \breif Erases a given row within the physical EEPROM memory space.
+ *  \brief Erases a given row within the physical EEPROM memory space.
  *
  *  \param[in] row  Physical row in EEPROM space to erase
  */
@@ -152,7 +152,7 @@ static void _eeprom_emulator_nvm_erase_row(
 }
 
 /** \internal
- *  \breif Fills the internal NVM controller page buffer in physical EEPROM memory space.
+ *  \brief Fills the internal NVM controller page buffer in physical EEPROM memory space.
  *
  *  \param[in] physical_page  Physical page in EEPROM space to fill
  *  \param[in] data           Data to write to the physical memory page
@@ -172,7 +172,7 @@ static void _eeprom_emulator_nvm_fill_cache(
 }
 
 /** \internal
- *  \breif Commits the internal NVM controller page buffer to physical memory.
+ *  \brief Commits the internal NVM controller page buffer to physical memory.
  *
  *  \param[in] physical_page  Physical page in EEPROM space to commit
  */
@@ -189,7 +189,7 @@ static void _eeprom_emulator_nvm_commit_cache(
 }
 
 /** \internal
- *  \breif Reads a page of data stored in physical EEPROM memory space.
+ *  \brief Reads a page of data stored in physical EEPROM memory space.
  *
  *  \param[in]  physical_page  Physical page in EEPROM space to read
  *  \param[out] data           Destination buffer to fill with the read data
@@ -524,13 +524,13 @@ static enum status_code _eeprom_emulator_verify_master_page(void)
  *
  * \retval STATUS_OK                    If the emulator parameters were retrieved
  *                                      successfully
- * \retval STATUS_ERR_NOT_INITALIZATED  If the EEPROM Emulator is not initialized
+ * \retval STATUS_ERR_NOT_INITIALIZED   If the EEPROM Emulator is not initialized
  */
 enum status_code eeprom_emulator_get_parameters(
 	struct eeprom_emulator_parameters *const parameters)
 {
 	if (_eeprom_instance.initialized == false) {
-		return STATUS_ERR_NOT_INITALIZATED;
+		return STATUS_ERR_NOT_INITIALIZED;
 	}
 
 	parameters->page_size              = EEPROM_PAGE_SIZE;
@@ -661,7 +661,7 @@ void eeprom_emulator_erase_memory(void)
  * \return Status code indicating the status of the operation.
  *
  * \retval STATUS_OK                    If the page was successfully read
- * \retval STATUS_ERR_NOT_INITALIZATED  If the EEPROM emulator is not initialized
+ * \retval STATUS_ERR_NOT_INITIALIZED   If the EEPROM emulator is not initialized
  * \retval STATUS_ERR_BAD_ADDRESS       If an address outside the valid emulated
  *                                      EEPROM memory space was supplied
  */
@@ -671,7 +671,7 @@ enum status_code eeprom_emulator_write_page(
 {
 	/* Ensure the emulated EEPROM has been initialized first */
 	if (_eeprom_instance.initialized == false) {
-		return STATUS_ERR_NOT_INITALIZATED;
+		return STATUS_ERR_NOT_INITIALIZED;
 	}
 
 	/* Make sure the write address is within the allowable address space */
@@ -740,7 +740,7 @@ enum status_code eeprom_emulator_write_page(
  * \return Status code indicating the status of the operation.
  *
  * \retval STATUS_OK                    If the page was successfully read
- * \retval STATUS_ERR_NOT_INITALIZATED  If the EEPROM emulator is not initialized
+ * \retval STATUS_ERR_NOT_INITIALIZED   If the EEPROM emulator is not initialized
  * \retval STATUS_ERR_BAD_ADDRESS       If an address outside the valid emulated
  *                                      EEPROM memory space was supplied
  */
@@ -750,7 +750,7 @@ enum status_code eeprom_emulator_read_page(
 {
 	/* Ensure the emulated EEPROM has been initialized first */
 	if (_eeprom_instance.initialized == false) {
-		return STATUS_ERR_NOT_INITALIZATED;
+		return STATUS_ERR_NOT_INITIALIZED;
 	}
 
 	/* Make sure the read address is within the allowable address space */
@@ -797,7 +797,7 @@ enum status_code eeprom_emulator_read_page(
  * \return Status code indicating the status of the operation.
  *
  * \retval STATUS_OK                    If the page was successfully read
- * \retval STATUS_ERR_NOT_INITALIZATED  If the EEPROM emulator is not initialized
+ * \retval STATUS_ERR_NOT_INITIALIZED   If the EEPROM emulator is not initialized
  * \retval STATUS_ERR_BAD_ADDRESS       If an address outside the valid emulated
  *                                      EEPROM memory space was supplied
  */
@@ -866,7 +866,7 @@ enum status_code eeprom_emulator_write_buffer(
  * \return Status code indicating the status of the operation.
  *
  * \retval STATUS_OK                    If the page was successfully read
- * \retval STATUS_ERR_NOT_INITALIZATED  If the EEPROM emulator is not initialized
+ * \retval STATUS_ERR_NOT_INITIALIZED   If the EEPROM emulator is not initialized
  * \retval STATUS_ERR_BAD_ADDRESS       If an address outside the valid emulated
  *                                      EEPROM memory space was supplied
  */

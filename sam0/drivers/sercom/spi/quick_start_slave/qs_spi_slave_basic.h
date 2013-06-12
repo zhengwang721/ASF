@@ -118,7 +118,7 @@
  * \snippet qs_spi_slave_basic.c main_use_case
  * \subsection asfdoc_samd20_sercom_spi_slave_basic_use_case_workflow Workflow
  * -# Write buffer to SPI master. Placed in a loop to retry in case of a
- * timeout before a master initates a transaction.
+ * timeout before a master initiates a transaction.
  *  \snippet qs_spi_slave_basic.c write
  * -# Infinite loop.
  *  \snippet qs_spi_slave_basic.c inf_loop
