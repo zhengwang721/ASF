@@ -545,6 +545,7 @@ void per_mode_receptor_rx_cb(frame_info_t *frame_info)
 		range_test_in_progress = false;
 		marker_seq_num = 0;
 		printf("\r\nStopping Range Test...");
+        app_led_event(LED_EVENT_PEER_SEARCH_DONE);
 	}
 	break;
 

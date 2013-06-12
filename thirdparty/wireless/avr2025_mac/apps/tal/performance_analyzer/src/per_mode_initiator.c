@@ -804,6 +804,7 @@ void per_mode_initiator_tx_done_cb(retval_t status, frame_info_t *frame)
 			usr_range_test_stop_confirm(MAC_SUCCESS);
 			/* Reset the OPMODE */
 			op_mode = TX_OP_MODE;
+            app_led_event(LED_EVENT_PEER_SEARCH_DONE);
 		} else {
 			op_mode = RANGE_TEST_TX;
 			usr_range_test_stop_confirm(UNABLE_TO_CONTACT_PEER);
