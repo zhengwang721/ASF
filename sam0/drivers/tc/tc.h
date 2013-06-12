@@ -130,17 +130,17 @@
  *    <th>Max (Decimal)</th>
  *  </tr>
  *  <tr>
- *    <th>8-bit</th>
+ *    <td>8-bit</td>
  *    <td>0xFF</td>
  *    <td>255</td>
  *  </tr>
  *  <tr>
- *    <th>16-bit</th>
+ *    <td>16-bit</td>
  *    <td>0xFFFF</td>
  *    <td>65,535</td>
  *  </tr>
  *  <tr>
- *    <th>32-bit</th>
+ *    <td>32-bit</td>
  *    <td>0xFFFFFFFF</td>
  *    <td>4,294,967,295</td>
  *  </tr>
