@@ -342,7 +342,10 @@ static inline void osc_enable_autocalibration(uint8_t id, uint8_t ref_id)
 #if XMEGA_AU || XMEGA_B || XMEGA_C || XMEGA_E
 		Assert((ref_id == OSC_ID_RC32KHZ)
 				|| (ref_id == OSC_ID_XOSC)
-				|| (ref_id == OSC_ID_USBSOF));
+# if !XMEGA_E
+				|| (ref_id == OSC_ID_USBSOF)
+#endif
+				);
 
 		OSC.DFLLCTRL &= ~(OSC_RC32MCREF_gm);
 
@@ -368,22 +371,27 @@ static inline void osc_enable_autocalibration(uint8_t id, uint8_t ref_id)
 		Assert((ref_id == OSC_ID_RC32KHZ) ||
 				(ref_id == OSC_ID_XOSC));
 
+# if defined(OSC_RC32MCREF_gm)
+		OSC.DFLLCTRL &= ~(OSC_RC32MCREF_gm);
+# endif
+
 		if (ref_id == OSC_ID_XOSC) {
 			osc_enable(OSC_ID_RC32KHZ);
-#  if defined(OSC_RC32MCREF_gm)
+# if defined(OSC_RC32MCREF_gm)
 			OSC.DFLLCTRL |= OSC_RC32MCREF_XOSC32K_gc;
-#  else
+# else
 			OSC.DFLLCTRL |= OSC_RC32MCREF_bm;
-#  endif
+# endif
 		}
 		else if (ref_id == OSC_ID_RC32KHZ) {
-#  if defined(OSC_RC32MCREF_gm)
+# if defined(OSC_RC32MCREF_gm)
 			OSC.DFLLCTRL |= OSC_RC32MCREF_RC32K_gc;
-#  else
+# else
 			OSC.DFLLCTRL &= ~(OSC_RC32MCREF_bm);
-#  endif
+# endif
 		}
 #endif
+
 		DFLLRC32M.CTRL |= DFLL_ENABLE_bm;
 		break;
 
