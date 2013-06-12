@@ -770,11 +770,12 @@ enum status_code spi_write_buffer_wait(
 						break;
 					}
 				}
-			/* Check if master has ended the transaction */
-			if (spi_is_write_complete(module)) {
-				_spi_clear_tx_complete_flag(module);
-				return STATUS_ABORTED;
-			}
+
+				/* Check if master has ended the transaction */
+				if (spi_is_write_complete(module)) {
+					_spi_clear_tx_complete_flag(module);
+					return STATUS_ABORTED;
+				}
 
 				if (!spi_is_ready_to_read(module)) {
 					/* Not ready to read data within timeout period */
@@ -846,7 +847,7 @@ enum status_code spi_transceive_buffer_wait(
 	if (length == 0) {
 		return STATUS_ERR_INVALID_ARG;
 	}
-	
+
 	if (!(module->receiver_enabled)) {
 		return STATUS_ERR_DENIED;
 	}

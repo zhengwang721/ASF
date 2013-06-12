@@ -376,7 +376,7 @@ enum status_code usart_init(
 
 	/* Set character size */
 	module->character_size = config->character_size;
-	
+
 	/* Set transmitter and receiver status */
 	module->receiver_enabled = config->receiver_enable;
 	module->transmitter_enabled = config->transmitter_enable;
@@ -547,7 +547,7 @@ enum status_code usart_read_wait(
 
 	/* Get a pointer to the hardware module instance */
 	SercomUsart *const usart_hw = &(module->hw->USART);
-	
+
 	/* Check that the receiver is enabled */
 	if (!(module->receiver_enabled)) {
 		return STATUS_ERR_DENIED;
@@ -638,7 +638,7 @@ enum status_code usart_write_buffer_wait(
 	if (length == 0) {
 		return STATUS_ERR_INVALID_ARG;
 	}
-	
+
 	/* Check that the transmitter is enabled */
 	if (!(module->transmitter_enabled)) {
 		return STATUS_ERR_DENIED;
@@ -731,7 +731,7 @@ enum status_code usart_read_buffer_wait(
 	if (length == 0) {
 		return STATUS_ERR_INVALID_ARG;
 	}
-	
+
 		/* Check that the receiver is enabled */
 	if (!(module->receiver_enabled)) {
 		return STATUS_ERR_DENIED;
@@ -747,7 +747,7 @@ enum status_code usart_read_buffer_wait(
 		/* Wait for the USART to have new data and abort operation if it
 		 * doesn't get ready within the timeout*/
 		for (uint32_t i = 0; i <= USART_TIMEOUT; i++) {
-			if (!(usart_hw->INTFLAG.reg & SERCOM_USART_INTFLAG_RXC)) {
+			if (usart_hw->INTFLAG.reg & SERCOM_USART_INTFLAG_RXC) {
 				break;
 			} else if (i == USART_TIMEOUT) {
 				return STATUS_ERR_TIMEOUT;
