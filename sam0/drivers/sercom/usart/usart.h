@@ -99,19 +99,19 @@
  *      <th>Options</th>
  *  </tr>
  *  <tr>
- *      <th>Start bit</th>
+ *      <td>Start bit</td>
  *      <td>1</td>
  *  </tr>
  *  <tr>
- *      <th>Data bits</th>
+ *      <td>Data bits</td>
  *      <td>5, 6, 7, 8, 9</td>
  *  </tr>
  *  <tr>
- *      <th>Parity bit</th>
+ *      <td>Parity bit</td>
  *      <td>None, Even, Odd</td>
  *  </tr>
  *  <tr>
- *      <th>Stop bits</th>
+ *      <td>Stop bits</td>
  *      <td>1, 2</td>
  *  </tr>
  * </table>
@@ -161,6 +161,7 @@
  * parity bit will be set if the total number of "1"s in the frame are an even
  * number. If using Odd parity the parity bit will be set if the total number
  * of "1"s are Odd.
+ *
  * When receiving a character the receiver will count the number of "1"s in the
  * frame and give an error if the received frame and parity bit disagree.
  *
@@ -180,7 +181,7 @@
  * Never execute large portions of code in the callbacks. These
  * are run from the interrupt routine, and thus having long callbacks will
  * keep the processor in the interrupt handler for an equally long time.
- * A common way to handle this is to use global flags signalling the
+ * A common way to handle this is to use global flags signaling the
  * main application that an interrupt event has happened, and only do the
  * minimal needed processing in the callback.
  * \else
@@ -850,25 +851,25 @@ static inline void usart_disable_transceiver(
  *      <th> XCK </th>
  *   </tr>
  *   <tr>
- *      <th> PAD0 </th>
+ *      <td> PAD0 </td>
  *      <td> x </td>
  *      <td> x </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD1 </th>
+ *      <td> PAD1 </td>
  *      <td>  </td>
  *      <td>  </td>
  *      <td> x </td>
  *   </tr>
  *   <tr>
- *      <th> PAD2 </th>
+ *      <td> PAD2 </td>
  *      <td>  </td>
  *      <td>  </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD3 </th>
+ *      <td> PAD3 </td>
  *      <td>  </td>
  *      <td>  </td>
  *      <td>  </td>
@@ -887,25 +888,25 @@ static inline void usart_disable_transceiver(
  *      <th> XCK </th>
  *   </tr>
  *   <tr>
- *      <th> PAD0 </th>
+ *      <td> PAD0 </td>
  *      <td> x </td>
  *      <td>  </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD1 </th>
+ *      <td> PAD1 </td>
  *      <td>  </td>
  *      <td>  </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD2 </th>
+ *      <td> PAD2 </td>
  *      <td>  </td>
  *      <td> x </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD3 </th>
+ *      <td> PAD3 </td>
  *      <td>  </td>
  *      <td>  </td>
  *      <td> x </td>
@@ -924,25 +925,25 @@ static inline void usart_disable_transceiver(
  *      <th> XCK </th>
  *   </tr>
  *   <tr>
- *      <th> PAD0 </th>
+ *      <td> PAD0 </td>
  *      <td>  </td>
  *      <td> x </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD1 </th>
+ *      <td> PAD1 </td>
  *      <td> x </td>
  *      <td>  </td>
  *      <td> x </td>
  *   </tr>
  *   <tr>
- *      <th> PAD2 </th>
+ *      <td> PAD2 </td>
  *      <td>  </td>
  *      <td>  </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD3 </th>
+ *      <td> PAD3 </td>
  *      <td>  </td>
  *      <td>  </td>
  *      <td>  </td>
@@ -961,25 +962,25 @@ static inline void usart_disable_transceiver(
  *      <th> XCK </th>
  *   </tr>
  *   <tr>
- *      <th> PAD0 </th>
+ *      <td> PAD0 </td>
  *      <td>  </td>
  *      <td>  </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD1 </th>
+ *      <td> PAD1 </td>
  *      <td> x </td>
  *      <td>  </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD2 </th>
+ *      <td> PAD2 </td>
  *      <td>  </td>
  *      <td> x </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD3 </th>
+ *      <td> PAD3 </td>
  *      <td>  </td>
  *      <td>  </td>
  *      <td> x </td>
@@ -998,25 +999,25 @@ static inline void usart_disable_transceiver(
  *      <th> XCK </th>
  *   </tr>
  *   <tr>
- *      <th> PAD0 </th>
+ *      <td> PAD0 </td>
  *      <td>  </td>
  *      <td> x </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD1 </th>
+ *      <td> PAD1 </td>
  *      <td>  </td>
  *      <td>  </td>
  *      <td> x </td>
  *   </tr>
  *   <tr>
- *      <th> PAD2 </th>
+ *      <td> PAD2 </td>
  *      <td> x </td>
  *      <td>  </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD3 </th>
+ *      <td> PAD3 </td>
  *      <td>  </td>
  *      <td>  </td>
  *      <td>  </td>
@@ -1035,25 +1036,25 @@ static inline void usart_disable_transceiver(
  *      <th> XCK </th>
  *   </tr>
  *   <tr>
- *      <th> PAD0 </th>
+ *      <td> PAD0 </td>
  *      <td>  </td>
  *      <td>  </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD1 </th>
+ *      <td> PAD1 </td>
  *      <td>  </td>
  *      <td>  </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD2 </th>
+ *      <td> PAD2 </td>
  *      <td> x </td>
  *      <td> x </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD3 </th>
+ *      <td> PAD3 </td>
  *      <td>  </td>
  *      <td>  </td>
  *      <td> x </td>
@@ -1072,25 +1073,25 @@ static inline void usart_disable_transceiver(
  *      <th> XCK </th>
  *   </tr>
  *   <tr>
- *      <th> PAD0 </th>
+ *      <td> PAD0 </td>
  *      <td>  </td>
  *      <td> x </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD1 </th>
+ *      <td> PAD1 </td>
  *      <td>  </td>
  *      <td>  </td>
  *      <td> x </td>
  *   </tr>
  *   <tr>
- *      <th> PAD2 </th>
+ *      <td> PAD2 </td>
  *      <td>  </td>
  *      <td>  </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD3 </th>
+ *      <td> PAD3 </td>
  *      <td> x </td>
  *      <td>  </td>
  *      <td>  </td>
@@ -1109,25 +1110,25 @@ static inline void usart_disable_transceiver(
  *      <th> XCK </th>
  *   </tr>
  *   <tr>
- *      <th> PAD0 </th>
+ *      <td> PAD0 </td>
  *      <td>  </td>
  *      <td>  </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD1 </th>
+ *      <td> PAD1 </td>
  *      <td>  </td>
  *      <td>  </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD2 </th>
+ *      <td> PAD2 </td>
  *      <td>  </td>
  *      <td> x </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD3 </th>
+ *      <td> PAD3 </td>
  *      <td> x </td>
  *      <td>  </td>
  *      <td> x </td>
