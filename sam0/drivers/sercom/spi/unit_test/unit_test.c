@@ -168,8 +168,8 @@ static void user_spi_callback(const struct spi_module *const module)
 /**
  * \brief Initialize the USART for unit test
  *
- * Initializes the SERCOM USART (SERCOM3) used for sending the
- * unit test status to the computer via the EDBG CDC gateway.
+ * Initializes the SERCOM USART used for sending the unit test status to the
+ * computer via the EDBG CDC gateway.
  */
 static void cdc_uart_init(void)
 {

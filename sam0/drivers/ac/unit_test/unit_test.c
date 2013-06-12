@@ -149,8 +149,8 @@ static void ac_user_callback(struct ac_module *const module_inst)
 /**
  * \brief Initialize the USART for unit test
  *
- * Initializes the SERCOM USART (SERCOM3) used for sending the
- * unit test status to the computer via the EDBG CDC gateway.
+ * Initializes the SERCOM USART used for sending the unit test status to the
+ * computer via the EDBG CDC gateway.
  */
 static void cdc_uart_init(void)
 {
