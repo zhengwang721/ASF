@@ -185,9 +185,6 @@ static void cdc_uart_init(void)
 
 	stdio_serial_init(&cdc_uart_module, CONF_STDIO_USART, &usart_conf);
 	usart_enable(&cdc_uart_module);
-	/* Enable transceivers */
-	usart_enable_transceiver(&cdc_uart_module, USART_TRANSCEIVER_TX);
-	usart_enable_transceiver(&cdc_uart_module, USART_TRANSCEIVER_RX);
 }
 
 /**
@@ -233,14 +230,12 @@ static void run_transfer_single_9bit_char_test(const struct test_case *test)
 	usart_rx_config.character_size = USART_CHARACTER_SIZE_9BIT;
 	usart_init(&usart_rx_module, RX_USART,	&usart_rx_config);
 	usart_enable(&usart_rx_module);
-	usart_enable_transceiver(&usart_rx_module, USART_TRANSCEIVER_RX);
 
 	/* Re-configure TX USART to operate with 9 bit character size */
 	usart_disable(&usart_tx_module);
 	usart_tx_config.character_size = USART_CHARACTER_SIZE_9BIT;
 	usart_init(&usart_tx_module, TX_USART,	&usart_tx_config);
 	usart_enable(&usart_tx_module);
-	usart_enable_transceiver(&usart_tx_module, USART_TRANSCEIVER_TX);
 
 	/* Write and read the data */
 	usart_write_wait(&usart_tx_module, tx_char);
@@ -255,14 +250,12 @@ static void run_transfer_single_9bit_char_test(const struct test_case *test)
 	usart_rx_config.character_size = USART_CHARACTER_SIZE_8BIT;
 	usart_init(&usart_rx_module, RX_USART,	&usart_rx_config);
 	usart_enable(&usart_rx_module);
-	usart_enable_transceiver(&usart_rx_module, USART_TRANSCEIVER_RX);
 
 	/* Put TX USART back in 8 bit mode */
 	usart_disable(&usart_tx_module);
 	usart_tx_config.character_size = USART_CHARACTER_SIZE_8BIT;
 	usart_init(&usart_tx_module, TX_USART,	&usart_tx_config);
 	usart_enable(&usart_tx_module);
-	usart_enable_transceiver(&usart_tx_module, USART_TRANSCEIVER_TX);
 }
 
 
@@ -461,10 +454,6 @@ static void test_system_init(void)
 	usart_init(&usart_tx_module, TX_USART, &usart_tx_config);
 	/* Enable USART */
 	usart_enable(&usart_tx_module);
-
-	/* Enable transceivers */
-	usart_enable_transceiver(&usart_tx_module, USART_TRANSCEIVER_TX);
-	usart_enable_transceiver(&usart_rx_module, USART_TRANSCEIVER_RX);
 }
 
 

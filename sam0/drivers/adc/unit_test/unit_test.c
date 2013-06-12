@@ -170,9 +170,6 @@ static void cdc_uart_init(void)
 
 	stdio_serial_init(&cdc_uart_module, CONF_STDIO_USART, &usart_conf);
 	usart_enable(&cdc_uart_module);
-	/* Enable transceivers */
-	usart_enable_transceiver(&cdc_uart_module, USART_TRANSCEIVER_TX);
-	usart_enable_transceiver(&cdc_uart_module, USART_TRANSCEIVER_RX);
 }
 
 /**
