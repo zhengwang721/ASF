@@ -44,7 +44,7 @@
 #define SYSTEM_INTERRUPT_H_INCLUDED
 
 /**
- * \defgroup asfdoc_samd20_system_interrupt_group SAM D20 System Interrupt Driver
+ * \defgroup asfdoc_samd20_system_interrupt_group SAM D20 System Interrupt Driver (SYSTEM INTERRUPT)
  *
  * This driver for SAM D20 devices provides an interface for the configuration
  * and management of internal software and hardware interrupts/exceptions.

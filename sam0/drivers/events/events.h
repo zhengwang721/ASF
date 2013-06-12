@@ -44,7 +44,7 @@
 #define EVENTS_H_INCLUDED
 
 /**
- * \defgroup asfdoc_samd20_events_group SAM D20 Event System Driver
+ * \defgroup asfdoc_samd20_events_group SAM D20 Event System Driver (EVENTS)
  *
  * This driver for SAM D20 devices provides an interface for the configuration
  * and management of the device's peripheral event channels and users within
