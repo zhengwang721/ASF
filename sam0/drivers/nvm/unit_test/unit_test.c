@@ -139,12 +139,10 @@ static void run_nvm_parameter_test(const struct test_case *test)
 	/* Get the NVM parameters */
 	nvm_get_parameters(&parameters);
 
-	/* Validate the page size.
-	 * nvm_get_paramters() returns PSZ bits, interpret the page size from PSZ
-	 */
-	test_assert_true(test, (1 << (parameters.page_size + 3)) == NVMCTRL_PAGE_SIZE,
+	/* Validate the page size */
+	test_assert_true(test, parameters.page_size == NVMCTRL_PAGE_SIZE,
 			"Pagesize incorrect (read: 0x%02x,"
-			" expected: 0x%02x)", (1 << (parameters.page_size + 3)),
+			" expected: 0x%02x)", parameters.page_size,
 			NVMCTRL_PAGE_SIZE);
 
 	/* Validate the page count */
@@ -286,7 +284,7 @@ static void run_nvm_update_test(const struct test_case *test)
 	test_assert_true(test, nvm_init_success == true,
 			"NVM initialization failed, skipping test");
 
-			/* Fill half of the buffer with pattern 2 */
+	/* Fill half of the buffer with pattern 2 */
 	for (i = 0; i < (NVMCTRL_PAGE_SIZE / 2); i++) {
 		buffer[i] = BYTE_PATTERN2(i);
 	}
