@@ -107,16 +107,19 @@
 #include <asf.h>
 #include <stdio_serial.h>
 #include <string.h>
+#include "conf_test.h"
 
 /* Number of ADC samples used in the test */
 #define ADC_SAMPLES 128
-/* Theoretical ADC results for DAC outputs */
+/* Theoretical ADC result for DAC half-swing output */
 #define ADC_VAL_DAC_HALF_OUTPUT 2047
+/* Theoretical ADC result for DAC full-swing output */
 #define ADC_VAL_DAC_FULL_OUTPUT 4095
 /* Offset due to ADC & DAC errors */
 #define ADC_OFFSET              50
-/* Theoretical DAC values for 0.5V & 1V output*/
+/* Theoretical DAC value for 0.5V output*/
 #define DAC_VAL_HALF_VOLT       512
+/* Theoretical DAC value for 1.0V output*/
 #define DAC_VAL_ONE_VOLT        1023
 
 /* Structure for UART module connected to EDBG (used for unit test output) */
@@ -154,19 +157,19 @@ static void adc_user_callback(const struct adc_module *const module)
  */
 static void cdc_uart_init(void)
 {
-	struct usart_config cdc_uart_config;
+	struct usart_config usart_conf;
 
 	/* Configure USART for unit test output */
-	usart_get_config_defaults(&cdc_uart_config);
-	cdc_uart_config.mux_setting = EDBG_CDC_SERCOM_MUX_SETTING;
-	cdc_uart_config.pinmux_pad0 = EDBG_CDC_SERCOM_PINMUX_PAD0;
-	cdc_uart_config.pinmux_pad1 = EDBG_CDC_SERCOM_PINMUX_PAD1;
-	cdc_uart_config.pinmux_pad2 = EDBG_CDC_SERCOM_PINMUX_PAD2;
-	cdc_uart_config.pinmux_pad3 = EDBG_CDC_SERCOM_PINMUX_PAD3;
-	cdc_uart_config.baudrate    = 115200;
-	stdio_serial_init(&cdc_uart_module, EDBG_CDC_MODULE, &cdc_uart_config);
-	usart_enable(&cdc_uart_module);
+	usart_get_config_defaults(&usart_conf);
+	usart_conf.mux_setting = CONF_STDIO_MUX_SETTING;
+	usart_conf.pinmux_pad0 = CONF_STDIO_PINMUX_PAD0;
+	usart_conf.pinmux_pad1 = CONF_STDIO_PINMUX_PAD1;
+	usart_conf.pinmux_pad2 = CONF_STDIO_PINMUX_PAD2;
+	usart_conf.pinmux_pad3 = CONF_STDIO_PINMUX_PAD3;
+	usart_conf.baudrate    = CONF_STDIO_BAUDRATE;
 
+	stdio_serial_init(&cdc_uart_module, CONF_STDIO_USART, &usart_conf);
+	usart_enable(&cdc_uart_module);
 	/* Enable transceivers */
 	usart_enable_transceiver(&cdc_uart_module, USART_TRANSCEIVER_TX);
 	usart_enable_transceiver(&cdc_uart_module, USART_TRANSCEIVER_RX);

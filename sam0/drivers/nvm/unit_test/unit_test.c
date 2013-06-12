@@ -121,6 +121,9 @@
 /* Flag to indicate NVM initialization status */
 static volatile bool nvm_init_success = false;
 
+/* Structure for UART module connected to EDBG (used for unit test output) */
+struct usart_module cdc_uart_module;
+
 /**
  * \brief Test get flash parameter function
  *
@@ -136,12 +139,10 @@ static void run_nvm_parameter_test(const struct test_case *test)
 	/* Get the NVM parameters */
 	nvm_get_parameters(&parameters);
 
-	/* Validate the page size.
-	 * nvm_get_paramters() returns PSZ bits, interpret the page size from PSZ
-	 */
-	test_assert_true(test, (1 << (parameters.page_size + 3)) == NVMCTRL_PAGE_SIZE,
+	/* Validate the page size */
+	test_assert_true(test, parameters.page_size == NVMCTRL_PAGE_SIZE,
 			"Pagesize incorrect (read: 0x%02x,"
-			" expected: 0x%02x)", (1 << (parameters.page_size + 3)),
+			" expected: 0x%02x)", parameters.page_size,
 			NVMCTRL_PAGE_SIZE);
 
 	/* Validate the page count */
@@ -283,7 +284,7 @@ static void run_nvm_update_test(const struct test_case *test)
 	test_assert_true(test, nvm_init_success == true,
 			"NVM initialization failed, skipping test");
 
-			/* Fill half of the buffer with pattern 2 */
+	/* Fill half of the buffer with pattern 2 */
 	for (i = 0; i < (NVMCTRL_PAGE_SIZE / 2); i++) {
 		buffer[i] = BYTE_PATTERN2(i);
 	}
@@ -328,10 +329,9 @@ static void run_nvm_update_test(const struct test_case *test)
  * embedded debugger is used for outputting the results.
  *
  */
-static void configure_stdio_serial(void)
+static void cdc_uart_init(void)
 {
 	struct usart_config usart_conf;
-	struct usart_module unit_test_output;
 
 	/* Configure USART for unit test output */
 	usart_get_config_defaults(&usart_conf);
@@ -342,11 +342,11 @@ static void configure_stdio_serial(void)
 	usart_conf.pinmux_pad3 = CONF_STDIO_PINMUX_PAD3;
 	usart_conf.baudrate    = CONF_STDIO_BAUDRATE;
 
-	stdio_serial_init(&unit_test_output, CONF_STDIO_USART, &usart_conf);
-	usart_enable(&unit_test_output);
+	stdio_serial_init(&cdc_uart_module, CONF_STDIO_USART, &usart_conf);
+	usart_enable(&cdc_uart_module);
 	/* Enable transceivers */
-	usart_enable_transceiver(&unit_test_output, USART_TRANSCEIVER_TX);
-	usart_enable_transceiver(&unit_test_output, USART_TRANSCEIVER_RX);
+	usart_enable_transceiver(&cdc_uart_module, USART_TRANSCEIVER_TX);
+	usart_enable_transceiver(&cdc_uart_module, USART_TRANSCEIVER_RX);
 }
 
 /**
@@ -358,7 +358,7 @@ static void configure_stdio_serial(void)
 int main(void)
 {
 	system_init();
-	configure_stdio_serial();
+	cdc_uart_init();
 
 	/* Define Test Cases */
 	DEFINE_TEST_CASE(nvm_paramter_test, NULL,

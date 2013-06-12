@@ -722,7 +722,6 @@ struct tc_config {
 	 */
 	bool enable_capture_on_channel[NUMBER_OF_COMPARE_CAPTURE_CHANNELS];
 
-
 	/** When \c true, one-shot will stop the TC on next hardware or software
 	 *  re-trigger event or overflow/underflow.
 	 */
@@ -754,8 +753,7 @@ struct tc_config {
 		struct tc_16bit_config size_16_bit;
 		/** Struct for 32-bit specific timer configuration. */
 		struct tc_32bit_config size_32_bit;
-	}
-	size_specific;
+	} size_specific;
 };
 
 #if TC_ASYNC == true

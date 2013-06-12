@@ -41,7 +41,6 @@
  *
  */
 
-
 /**
  * \mainpage SAM D20 WDT Unit Test
  * See \ref appdoc_main "here" for project documentation.
@@ -103,6 +102,9 @@
 #include <stdio_serial.h>
 #include <string.h>
 #include "conf_test.h"
+
+/* Structure for UART module connected to EDBG (used for unit test output) */
+struct usart_module cdc_uart_module;
 
 /* Flag that indicates whether Watchdog was Reset cause */
 static volatile bool wdr_flag = false;
@@ -215,16 +217,14 @@ static void run_reset_cause_test(const struct test_case *test)
 }
 
 /**
- * \brief Initialize USART for unit tests
+ * \brief Initialize the USART for unit test
  *
- * Initializes the USART used by the unit test. The USART connected to
- * embedded debugger is used for outputting the results.
- *
+ * Initializes the SERCOM USART used for sending the unit test status to the
+ * computer via the EDBG CDC gateway.
  */
-static void configure_stdio_serial(void)
+static void cdc_uart_init(void)
 {
 	struct usart_config usart_conf;
-	struct usart_module unit_test_output;
 
 	/* Configure USART for unit test output */
 	usart_get_config_defaults(&usart_conf);
@@ -235,11 +235,11 @@ static void configure_stdio_serial(void)
 	usart_conf.pinmux_pad3 = CONF_STDIO_PINMUX_PAD3;
 	usart_conf.baudrate    = CONF_STDIO_BAUDRATE;
 
-	stdio_serial_init(&unit_test_output, CONF_STDIO_USART, &usart_conf);
-	usart_enable(&unit_test_output);
+	stdio_serial_init(&cdc_uart_module, CONF_STDIO_USART, &usart_conf);
+	usart_enable(&cdc_uart_module);
 	/* Enable transceivers */
-	usart_enable_transceiver(&unit_test_output, USART_TRANSCEIVER_TX);
-	usart_enable_transceiver(&unit_test_output, USART_TRANSCEIVER_RX);
+	usart_enable_transceiver(&cdc_uart_module, USART_TRANSCEIVER_TX);
+	usart_enable_transceiver(&cdc_uart_module, USART_TRANSCEIVER_RX);
 }
 
 /**
@@ -256,7 +256,7 @@ int main(void)
 
 	/* Reset the Watchdog count */
 	wdt_reset_count();
-	configure_stdio_serial();
+	cdc_uart_init();
 
 	/* Define Test Cases */
 	DEFINE_TEST_CASE(wdt_enable_disable_test, NULL,

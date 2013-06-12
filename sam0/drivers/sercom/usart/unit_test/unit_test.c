@@ -106,6 +106,7 @@
 #include <asf.h>
 #include <stdio_serial.h>
 #include <string.h>
+#include "conf_test.h"
 
 /* RX USART to test */
 #define RX_USART              EXT1_UART_MODULE
@@ -139,6 +140,9 @@
 /* Speed to test USART at */
 #define TEST_USART_SPEED   115200
 
+/* Structure for UART module connected to EDBG (used for unit test output) */
+struct usart_module cdc_uart_module;
+
 struct usart_module usart_rx_module;
 struct usart_config usart_rx_config;
 struct usart_module usart_tx_module;
@@ -160,6 +164,31 @@ static void usart_callback(const struct usart_module *const module)
 	transfer_complete = true;
 }
 
+/**
+ * \brief Initialize the USART for unit test
+ *
+ * Initializes the SERCOM USART used for sending the unit test status to the
+ * computer via the EDBG CDC gateway.
+ */
+static void cdc_uart_init(void)
+{
+	struct usart_config usart_conf;
+
+	/* Configure USART for unit test output */
+	usart_get_config_defaults(&usart_conf);
+	usart_conf.mux_setting = CONF_STDIO_MUX_SETTING;
+	usart_conf.pinmux_pad0 = CONF_STDIO_PINMUX_PAD0;
+	usart_conf.pinmux_pad1 = CONF_STDIO_PINMUX_PAD1;
+	usart_conf.pinmux_pad2 = CONF_STDIO_PINMUX_PAD2;
+	usart_conf.pinmux_pad3 = CONF_STDIO_PINMUX_PAD3;
+	usart_conf.baudrate    = CONF_STDIO_BAUDRATE;
+
+	stdio_serial_init(&cdc_uart_module, CONF_STDIO_USART, &usart_conf);
+	usart_enable(&cdc_uart_module);
+	/* Enable transceivers */
+	usart_enable_transceiver(&cdc_uart_module, USART_TRANSCEIVER_TX);
+	usart_enable_transceiver(&cdc_uart_module, USART_TRANSCEIVER_RX);
+}
 
 /**
  * \internal
@@ -407,25 +436,6 @@ static void run_buffer_read_write_interrupt_test(const struct test_case *test)
  */
 static void test_system_init(void)
 {
-	struct usart_config usart_conf;
-	struct usart_module unit_test_output;
-
-	/* Configure USART for unit test output */
-	usart_get_config_defaults(&usart_conf);
-	usart_conf.mux_setting = EDBG_CDC_SERCOM_MUX_SETTING;
-	usart_conf.pinmux_pad0 = EDBG_CDC_SERCOM_PINMUX_PAD0;
-	usart_conf.pinmux_pad1 = EDBG_CDC_SERCOM_PINMUX_PAD1;
-	usart_conf.pinmux_pad2 = EDBG_CDC_SERCOM_PINMUX_PAD2;
-	usart_conf.pinmux_pad3 = EDBG_CDC_SERCOM_PINMUX_PAD3;
-	usart_conf.baudrate    = 38400;
-
-	stdio_serial_init(&unit_test_output, EDBG_CDC_MODULE, &usart_conf);
-	usart_enable(&unit_test_output);
-
-	/* Enable transceivers */
-	usart_enable_transceiver(&unit_test_output, USART_TRANSCEIVER_TX);
-	usart_enable_transceiver(&unit_test_output, USART_TRANSCEIVER_RX);
-
 	/* Configure RX USART */
 	usart_get_config_defaults(&usart_rx_config);
 	usart_rx_config.mux_setting = RX_USART_SERCOM_MUX;
@@ -467,6 +477,7 @@ static void test_system_init(void)
 int main(void)
 {
 	system_init();
+	cdc_uart_init();
 	test_system_init();
 
 	/* Define Test Cases */

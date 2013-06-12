@@ -108,13 +108,17 @@
 #include <asf.h>
 #include <stdio_serial.h>
 #include <string.h>
+#include "conf_test.h"
 
 #define AC_SCALER_0_25_VOLT 4
 #define AC_SCALER_0_50_VOLT 9
 #define AC_SCALER_0_75_VOLT 14
 
+/* Theoretical DAC value for 0.0V output*/
 #define DAC_VAL_ZERO_VOLT   0
+/* Theoretical DAC value for 0.5V output*/
 #define DAC_VAL_HALF_VOLT   512
+/* Theoretical DAC value for 1.0V output*/
 #define DAC_VAL_ONE_VOLT    1023
 
 /* Structure for UART module connected to EDBG (used for unit test output) */
@@ -145,20 +149,23 @@ static void ac_user_callback(struct ac_module *const module_inst)
 /**
  * \brief Initialize the USART for unit test
  *
- * Initializes the SERCOM USART (SERCOM3) used for sending the
- * unit test status to the computer via the EDBG CDC gateway.
+ * Initializes the SERCOM USART used for sending the unit test status to the
+ * computer via the EDBG CDC gateway.
  */
 static void cdc_uart_init(void)
 {
-	struct usart_config cdc_uart_config;
+	struct usart_config usart_conf;
 
 	/* Configure USART for unit test output */
-	usart_get_config_defaults(&cdc_uart_config);
-	cdc_uart_config.mux_setting     = USART_RX_3_TX_2_XCK_3;
-	cdc_uart_config.pinmux_pad3     = EDBG_UART_RX_PINMUX;
-	cdc_uart_config.pinmux_pad2     = EDBG_UART_TX_PINMUX;
-	cdc_uart_config.baudrate        = 115200;
-	stdio_serial_init(&cdc_uart_module, EDBG_CDC_MODULE, &cdc_uart_config);
+	usart_get_config_defaults(&usart_conf);
+	usart_conf.mux_setting = CONF_STDIO_MUX_SETTING;
+	usart_conf.pinmux_pad0 = CONF_STDIO_PINMUX_PAD0;
+	usart_conf.pinmux_pad1 = CONF_STDIO_PINMUX_PAD1;
+	usart_conf.pinmux_pad2 = CONF_STDIO_PINMUX_PAD2;
+	usart_conf.pinmux_pad3 = CONF_STDIO_PINMUX_PAD3;
+	usart_conf.baudrate    = CONF_STDIO_BAUDRATE;
+
+	stdio_serial_init(&cdc_uart_module, CONF_STDIO_USART, &usart_conf);
 	usart_enable(&cdc_uart_module);
 	/* Enable transceivers */
 	usart_enable_transceiver(&cdc_uart_module, USART_TRANSCEIVER_TX);
