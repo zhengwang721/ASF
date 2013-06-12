@@ -374,7 +374,7 @@ enum status_code system_clock_source_write_calibration(
 			return STATUS_ERR_INVALID_ARG;
 		}
 
-		SYSCTRL->OSC8M.bit.CALIB = calibration_value;
+		SYSCTRL->OSC8M.bit.CALIB  = calibration_value;
 		SYSCTRL->OSC8M.bit.FRANGE = freq_range;
 		break;
 
@@ -393,6 +393,7 @@ enum status_code system_clock_source_write_calibration(
 		if (calibration_value > 32) {
 			return STATUS_ERR_INVALID_ARG;
 		}
+
 		SYSCTRL->OSCULP32K.bit.CALIB = calibration_value;
 		break;
 
@@ -630,6 +631,9 @@ void system_clock_init(void)
 
 	/* OSCK32K */
 #if CONF_CLOCK_OSC32K_ENABLE == true
+	SYSCTRL->OSC32K.bit.CALIB =
+			(*(uint32_t *)SYSCTRL_FUSES_OSC32KCAL_ADDR >> SYSCTRL_FUSES_OSC32KCAL_Pos);
+
 	struct system_clock_source_osc32k_config osc32k_conf;
 	system_clock_source_osc32k_get_config_defaults(&osc32k_conf);
 
@@ -714,8 +718,8 @@ void system_clock_init(void)
 	 * is configured later after all other clock systems are set up */
 	MREPEAT(GCLK_GEN_NUM_MSB, _CONF_CLOCK_GCLK_CONFIG_NONMAIN, ~);
 
-/* Enable DFLL reference clock if in closed loop mode */
 #  if (CONF_CLOCK_DFLL_ENABLE)
+	/* Enable DFLL reference clock if in closed loop mode */
 	if (CONF_CLOCK_DFLL_LOOP_MODE == SYSTEM_CLOCK_DFLL_LOOP_MODE_CLOSED) {
 		struct system_gclk_chan_config dfll_gclk_chan_conf;
 
