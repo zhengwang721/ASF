@@ -42,48 +42,71 @@
  */
 
 /**
- * \mainpage EVENT SYSTEM UNIT TEST
+ * \mainpage SAM D20 EVENTS Unit Test
+ * See \ref appdoc_main "here" for project documentation.
+ * \copydetails appdoc_preface
  *
- * \section intro Introduction
- * This unit test carries out tests for the event system driver.
+ *
+ * \page appdoc_preface Overview
+ * This unit test carries out tests for the EVENTS driver.
  * It consists of test cases for the following functionalities:
  *      - Test for synchronous event propagation.
  *      - Test for resynchronized event propagation.
  *      - Test for asynchronous event propagation.
+ */
+
+/**
+ * \page appdoc_main SAM D20 EVENTS Unit Test
+ *
+ * Overview:
+ * - \ref appdoc_samd20_events_unit_test_intro
+ * - \ref appdoc_samd20_events_unit_test_setup
+ * - \ref appdoc_samd20_events_unit_test_usage
+ * - \ref appdoc_samd20_events_unit_test_compinfo
+ * - \ref appdoc_samd20_events_unit_test_contactinfo
+ *
+ * \section appdoc_samd20_events_unit_test_intro Introduction
+ * \copydetails appdoc_preface
  *
  * The following kit is required for carrying out the test:
  *      - SAM D20 Xplained Pro board
  *
- * \section Setup
+ * \section appdoc_samd20_events_unit_test_setup Setup
+ * The following connections has to be made using wires:
+ *  - \b DAC VOUT (PA02) <-----> AIN0 (PA04)
  *
- * The following steps has to be done:
- *      - Connect the SAM D20 Xplained Pro board to the computer using
- *        a micro USB cable.
- *      - Open the virtual COM port in a terminal application.
- * \note  The USB composite firmware running on the Embedded Debugger (EDBG)
- *        will enumerate as debugger, virtual COM port and EDBG data
- *        gateway.
- *      - Build the project, program the target and run the application.
- *        The terminal shows the results of the unit test.
+ * To run the test:
+ *  - Connect the SAM D20 Xplained Pro board to the computer using a
+ *    micro USB cable.
+ *  - Open the virtual COM port in a terminal application.
+ *    \note The USB composite firmware running on the Embedded Debugger (EDBG)
+ *          will enumerate as debugger, virtual COM port and EDBG data
+ *          gateway.
+ *  - Build the project, program the target and run the application.
+ *    The terminal shows the results of the unit test.
  *
- * \section Description
+ * \section appdoc_samd20_events_unit_test_usage Usage
+ *  - The unit test carries out test for three modes of event propagation:
+ *    Synchronous, Resynchronized & Asynchronous.
+ *  - RTC module with internal 32kHz RC oscillator is configured as
+ *    event generator and Timer (TC0) module is configured as event user.
+ *  - RTC overflow signal is sent as an event to the timer. The timer will
+ *    start counting on receiving this event.
+ *  - Timer's count register is read to detect successful event action.
  *
- *      - The unit test carries out test for three modes of event propagation:
- *        Synchronous, Resynchronized & Asynchronous.
- *      - RTC module with internal 32kHz RC oscillator is configured as
- *        event generator and Timer (TC0) module is configured as event user.
- *      - RTC overflow signal is sent as an event to the timer. The timer will
- *        start counting on receiving this event.
- *      - Timer's count register is read to detect successful event action.
+ * \section appdoc_samd20_events_unit_test_compinfo Compilation Info
+ * This software was written for the GNU GCC and IAR for ARM.
+ * Other compilers may or may not work.
  *
- * \section contactinfo Contact Information
- * For further information, visit <a href="http://www.atmel.com/">Atmel</a>.\n
- * Support and FAQ: http://support.atmel.no/
+ * \section appdoc_samd20_events_unit_test_contactinfo Contact Information
+ * For further information, visit
+ * <a href="http://www.atmel.com">http://www.atmel.com</a>.
  */
 
 #include <asf.h>
 #include <stdio_serial.h>
 #include <string.h>
+#include "conf_test.h"
 
 /* Event user being TC0 */
 #define TEST_EVENT_USER   EVSYS_ID_USER_TC0_EVU
@@ -101,25 +124,24 @@ volatile bool init_success;
 /**
  * \brief Initialize the USART for unit test
  *
- * Initializes the SERCOM USART (SERCOM3) used for sending the
- * unit test status to the computer via the EDBG CDC gateway.
+ * Initializes the SERCOM USART used for sending the unit test status to the
+ * computer via the EDBG CDC gateway.
  */
 static void cdc_uart_init(void)
 {
-	struct usart_config cdc_uart_config;
+	struct usart_config usart_conf;
 
 	/* Configure USART for unit test output */
-	usart_get_config_defaults(&cdc_uart_config);
-	cdc_uart_config.mux_setting      = EDBG_CDC_SERCOM_MUX_SETTING;
-	cdc_uart_config.pinmux_pad3      = EDBG_CDC_SERCOM_PINMUX_PAD3;
-	cdc_uart_config.pinmux_pad2      = EDBG_CDC_SERCOM_PINMUX_PAD2;
-	cdc_uart_config.baudrate         = 115200;
-	stdio_serial_init(&cdc_uart_module, EDBG_CDC_MODULE,
-			&cdc_uart_config);
+	usart_get_config_defaults(&usart_conf);
+	usart_conf.mux_setting = CONF_STDIO_MUX_SETTING;
+	usart_conf.pinmux_pad0 = CONF_STDIO_PINMUX_PAD0;
+	usart_conf.pinmux_pad1 = CONF_STDIO_PINMUX_PAD1;
+	usart_conf.pinmux_pad2 = CONF_STDIO_PINMUX_PAD2;
+	usart_conf.pinmux_pad3 = CONF_STDIO_PINMUX_PAD3;
+	usart_conf.baudrate    = CONF_STDIO_BAUDRATE;
+
+	stdio_serial_init(&cdc_uart_module, CONF_STDIO_USART, &usart_conf);
 	usart_enable(&cdc_uart_module);
-	/* Enable transceivers */
-	usart_enable_transceiver(&cdc_uart_module, USART_TRANSCEIVER_TX);
-	usart_enable_transceiver(&cdc_uart_module, USART_TRANSCEIVER_RX);
 }
 
 /**

@@ -4,6 +4,7 @@
 		Unit test for the Event System module testing all functionality against hardware.
 		</info>
 		<build type="include-path" value="."/>
+		<build type="module-config" subtype="required-header-file" value="conf_test.h"/>
 		<info type="gui-flag" value="move-to-root"/>
 		<build type="c-source" value="unit_test.c"/>
 		<require idref="sam0.drivers.events"/>
