@@ -247,7 +247,7 @@ static void run_eeprom_buffer_read_write_test(const struct test_case *test)
 			"EEPROM write buffer failed");
 
 	/* Write back to physical NVM memory */
-	eeprom_emulator_flush_page_buffer();
+	eeprom_emulator_commit_page_buffer();
 
 	/* Read buffer test */
 	status = eeprom_emulator_read_buffer(TEST_BUFFER_OFFSET,
@@ -305,7 +305,7 @@ static void run_eeprom_page_read_write_test(const struct test_case *test)
 			"EEPROM write page failed");
 
 	/* Write back to physical NVM memory */
-	eeprom_emulator_flush_page_buffer();
+	eeprom_emulator_commit_page_buffer();
 
 	/* Read page test */
 	status = eeprom_emulator_read_page(TEST_EEPROM_PAGE, verify_page);
