@@ -282,7 +282,8 @@ void per_mode_receptor_rx_cb(frame_info_t *frame_info)
 
 	case PER_TEST_PKT:
 	{
-      if(per_test_count != msg->seq_num)
+      /*Frames with length 12 doesnot accomodate seq num*/
+      if((per_test_count != msg->seq_num)&&  (frame_info->mpdu[0])!=12)
         
       {
         /*New per test was started which was not observed due to noise during previous per test end and start of this per test*/
