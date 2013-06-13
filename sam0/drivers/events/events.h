@@ -249,7 +249,7 @@
  * There are no special considerations for this module.
  *
  *
- * \section asfdoc_samd20_events_extra_info Extra Information for EVENTS
+ * \section asfdoc_samd20_events_extra_info Extra Information
  *
  * For extra information see \ref asfdoc_samd20_events_extra. This includes:
  *  - \ref asfdoc_samd20_events_extra_acronyms

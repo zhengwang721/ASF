@@ -383,7 +383,7 @@
  * device is two when running in 32-bit mode and four in 8-, and 16-bit modes.
  *
  *
- * \section asfdoc_samd20_tc_extra_info Extra Information for TC
+ * \section asfdoc_samd20_tc_extra_info Extra Information
  *
  * For extra information see \ref asfdoc_samd20_tc_extra. This includes:
  *  - \ref asfdoc_samd20_tc_extra_acronyms

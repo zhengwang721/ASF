@@ -339,6 +339,11 @@ extern "C" {
  *
  * \section asfdoc_samd20_sercom_i2c_extra Extra Information
  * For extra information see \ref asfdoc_samd20_sercom_i2c_extra_info_page.
+ * This includes:
+ *  - \ref asfdoc_samd20_sercom_i2c_acronyms
+ *  - \ref asfdoc_samd20_sercom_i2c_extra_dependencies
+ *  - \ref asfdoc_samd20_sercom_i2c_extra_errata
+ *  - \ref asfdoc_samd20_sercom_i2c_extra_history
  *
  * \section asfdoc_samd20_sercom_i2c_examples Examples
  *

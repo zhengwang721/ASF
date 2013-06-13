@@ -294,7 +294,7 @@
  * directly.
  *
  *
- * \section asfdoc_samd20_eeprom_extra_info Extra Information for EEPROM Emulator
+ * \section asfdoc_samd20_eeprom_extra_info Extra Information
  *
  * For extra information see \ref asfdoc_samd20_eeprom_extra. This includes:
  *  - \ref asfdoc_samd20_eeprom_extra_acronyms

@@ -245,7 +245,7 @@
  *       should be used.
  *
  *
- * \section asfdoc_samd20_rtc_calendar_extra_info Extra Information for RTC CAL
+ * \section asfdoc_samd20_rtc_calendar_extra_info Extra Information
  *
  * For extra information see \ref asfdoc_samd20_rtc_calendar_extra. This includes:
  *  - \ref asfdoc_samd20_rtc_calendar_extra_acronyms

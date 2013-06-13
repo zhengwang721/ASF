@@ -190,7 +190,7 @@
  * caveats; refer to your device datasheet.
  *
  *
- * \section asfdoc_samd20_system_extra_info Extra Information for SYSTEM
+ * \section asfdoc_samd20_system_extra_info Extra Information
  *
  * For extra information see \ref asfdoc_samd20_system_extra. This includes:
  *  - \ref asfdoc_samd20_system_extra_acronyms

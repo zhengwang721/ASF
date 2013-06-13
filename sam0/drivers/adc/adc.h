@@ -364,7 +364,7 @@
  * to be manually enabled by the user application before they can be measured.
  *
  *
- * \section asfdoc_samd20_adc_extra_info Extra Information for ADC
+ * \section asfdoc_samd20_adc_extra_info Extra Information
  *
  * For extra information see \ref asfdoc_samd20_adc_extra. This includes:
  *  - \ref asfdoc_samd20_adc_extra_acronyms
