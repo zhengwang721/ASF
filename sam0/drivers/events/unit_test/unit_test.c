@@ -86,9 +86,9 @@
 #include <string.h>
 
 /* Event user being TC0 */
-#define TEST_EVENT_USER   0x00
+#define TEST_EVENT_USER   EVSYS_ID_USER_TC0_EVU
 /* Event generator being RTC overflow */
-#define TEST_EVENT_GEN    0x03
+#define TEST_EVENT_GEN    EVSYS_ID_GEN_RTC_OVF
 
 /* Structure for UART module connected to EDBG (used for unit test output) */
 struct usart_module cdc_uart_module;
@@ -155,7 +155,8 @@ static void test_event_gen_user_init(void)
 
 	/* RTC configuration (Event Generator) */
 	struct rtc_count_config config_rtc_count;
-	struct rtc_count_events config_rtc_event;
+	struct rtc_count_events config_rtc_event
+		= { .generate_event_on_overflow = true };
 
 	/* Initialize the RTC module */
 	rtc_count_get_config_defaults(&config_rtc_count);
@@ -164,7 +165,7 @@ static void test_event_gen_user_init(void)
 	config_rtc_count.continuously_update = true;
 	config_rtc_count.compare_values[0]   = 50;
 	status = rtc_count_init(&config_rtc_count);
-	if (status != STATUS_OK || init_success == false) {
+	if (status != STATUS_OK) {
 		init_success = false;
 	}
 
