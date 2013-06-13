@@ -233,7 +233,7 @@
  * pairs; refer to your device specific datasheet for details.
  *
  *
- * \section asfdoc_samd20_ac_extra_info Extra Information for AC
+ * \section asfdoc_samd20_ac_extra_info Extra Information
  *
  * For extra information see \ref asfdoc_samd20_ac_extra. This includes:
  *  - \ref asfdoc_samd20_ac_extra_acronyms

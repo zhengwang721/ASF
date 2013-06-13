@@ -44,7 +44,7 @@
 #define PINMUX_H_INCLUDED
 
 /**
- * \defgroup asfdoc_samd20_system_pinmux_group SAM D20 Pin Multiplexer Driver (PINMUX)
+ * \defgroup asfdoc_samd20_system_pinmux_group SAM D20 System Pin Multiplexer Driver (SYSTEM PINMUX)
  *
  * This driver for SAM D20 devices provides an interface for the configuration
  * and management of the device's physical I/O Pins, to alter the direction and
@@ -153,7 +153,7 @@
  * refer to your device specific datasheet.
  *
  *
- * \section asfdoc_samd20_system_pinmux_extra_info Extra Information for pinmux
+ * \section asfdoc_samd20_system_pinmux_extra_info Extra Information
  *
  * For extra information see \ref asfdoc_samd20_system_pinmux_extra. This includes:
  *  - \ref asfdoc_samd20_system_pinmux_extra_acronyms

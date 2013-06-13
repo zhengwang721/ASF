@@ -44,7 +44,7 @@
 #define SYSTEM_CLOCK_H_INCLUDED
 
 /**
- * \defgroup asfdoc_samd20_system_clock_group SAM D20 Clock Management Driver (CLOCK)
+ * \defgroup asfdoc_samd20_system_clock_group SAM D20 System Clock Management Driver (SYSTEM CLOCK)
  *
  * This driver for SAM D20 devices provides an interface for the configuration
  * and management of the device's clocking related functions. This includes
@@ -218,7 +218,7 @@
  * There are no special considerations for this module.
  *
  *
- * \section asfdoc_samd20_system_clock_extra_info Extra Information for System Clock
+ * \section asfdoc_samd20_system_clock_extra_info Extra Information
  *
  * For extra information see \ref asfdoc_samd20_system_clock_extra. This includes:
  *  - \ref asfdoc_samd20_system_clock_extra_acronyms
@@ -614,7 +614,7 @@ struct system_clock_source_dfll_config {
  *
  * \param[out] config  Configuration structure to fill with default values
  */
-static inline void system_clock_source_xosc_get_default_config(
+static inline void system_clock_source_xosc_get_config_defaults(
 		struct system_clock_source_xosc_config *const config)
 {
 	config->external_clock      = SYSTEM_CLOCK_EXTERNAL_CRYSTAL;
@@ -654,7 +654,7 @@ void system_clock_source_xosc_set_config(
  *
  * \param[out] config  Configuration structure to fill with default values
  */
-static inline void system_clock_source_xosc32k_get_default_config(
+static inline void system_clock_source_xosc32k_get_config_defaults(
 		struct system_clock_source_xosc32k_config *const config)
 {
 	config->external_clock      = SYSTEM_CLOCK_EXTERNAL_CRYSTAL;
@@ -691,7 +691,7 @@ void system_clock_source_xosc32k_set_config(
  *
  * \param[out] config  Configuration structure to fill with default values
  */
-static inline void system_clock_source_osc32k_get_default_config(
+static inline void system_clock_source_osc32k_get_config_defaults(
 		struct system_clock_source_osc32k_config *const config)
 {
 	config->enable_1khz_output  = true;
@@ -724,7 +724,7 @@ void system_clock_source_osc32k_set_config(
  *
  * \param[out] config  Configuration structure to fill with default values
  */
-static inline void system_clock_source_osc8m_get_default_config(
+static inline void system_clock_source_osc8m_get_config_defaults(
 		struct system_clock_source_osc8m_config *const config)
 {
 	config->prescaler = SYSTEM_OSC8M_DIV_8;
@@ -762,7 +762,7 @@ void system_clock_source_osc8m_set_config(
  *
  * \param[out] config  Configuration structure to fill with default values
  */
-static inline void system_clock_source_dfll_get_default_config(
+static inline void system_clock_source_dfll_get_config_defaults(
 		struct system_clock_source_dfll_config *const config)
 {
 	config->loop_mode       = SYSTEM_CLOCK_DFLL_LOOP_MODE_OPEN;

@@ -628,7 +628,7 @@
  * illegal operations are conditional. On the right side figure, the code
  * run-away is caught as it tries to unlock the peripheral.
  *
- * \section asfdoc_samd20_pac_extra_info Extra Information for PAC
+ * \section asfdoc_samd20_pac_extra_info Extra Information
  *
  * For extra information see \ref asfdoc_samd20_pac_extra. This includes:
  *  - \ref asfdoc_samd20_pac_extra_acronyms
@@ -750,7 +750,7 @@ __no_inline enum status_code system_peripheral_unlock(
  * \page asfdoc_samd20_pac_non_write_list List of Non-Write Protected Registers
  *
  * Look in device datasheet peripheral's subsection "Register Access
- * Protection" to see which is actually availeble for your device.
+ * Protection" to see which is actually available for your device.
  * <table>
  *	<tr>
  *		<th>Module</th>

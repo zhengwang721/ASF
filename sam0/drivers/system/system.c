@@ -54,14 +54,16 @@ void _system_dummy_init(void)
 	return;
 }
 
-#if defined(__GNUC__)
+#if !defined(__DOXYGEN__)
+#  if defined(__GNUC__)
 void system_clock_init(void) WEAK __attribute__((alias("_system_dummy_init")));
 void system_board_init(void) WEAK __attribute__((alias("_system_dummy_init")));
-#elif defined(__ICCARM__)
+#  elif defined(__ICCARM__)
 void system_clock_init(void);
 void system_board_init(void);
-#  pragma weak system_clock_init=_system_dummy_init
-#  pragma weak system_board_init=_system_dummy_init
+#    pragma weak system_clock_init=_system_dummy_init
+#    pragma weak system_board_init=_system_dummy_init
+#  endif
 #endif
 
 

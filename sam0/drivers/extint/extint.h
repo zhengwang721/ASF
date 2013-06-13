@@ -187,7 +187,7 @@
  * your device datasheet.
  *
  *
- * \section asfdoc_samd20_extint_extra_info Extra Information for EXTINT
+ * \section asfdoc_samd20_extint_extra_info Extra Information
  *
  * For extra information see \ref asfdoc_samd20_extint_extra. This includes:
  *  - \ref asfdoc_samd20_extint_extra_acronyms
