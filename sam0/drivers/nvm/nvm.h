@@ -218,7 +218,7 @@
  * The Security Bit can only be cleared by performing a chip erase.
  *
  *
- * \section asfdoc_samd20_nvm_extra_info Extra Information for NVM
+ * \section asfdoc_samd20_nvm_extra_info Extra Information
  *
  * For extra information see \ref asfdoc_samd20_nvm_extra. This includes:
  *  - \ref asfdoc_samd20_nvm_extra_acronyms

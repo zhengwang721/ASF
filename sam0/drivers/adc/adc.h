@@ -364,7 +364,7 @@
  * to be manually enabled by the user application before they can be measured.
  *
  *
- * \section asfdoc_samd20_adc_extra_info Extra Information for ADC
+ * \section asfdoc_samd20_adc_extra_info Extra Information
  *
  * For extra information see \ref asfdoc_samd20_adc_extra. This includes:
  *  - \ref asfdoc_samd20_adc_extra_acronyms
@@ -1291,7 +1291,7 @@ static inline void adc_enable_events(
 /**
  * \brief Disables an ADC event input or output.
  *
- *  DIsables one or more input or output events to or from the ADC module. See
+ *  Disables one or more input or output events to or from the ADC module. See
  *  \ref adc_events "here" for a list of events this module supports.
  *
  *  \note Events cannot be altered while the module is enabled.

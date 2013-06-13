@@ -50,7 +50,7 @@ void configure_extosc32k(void)
 	struct system_clock_source_xosc32k_config config_ext32k;
 //! [config_extosc32k_config]
 //! [config_extosc32k_get_defaults]
-	system_clock_source_xosc32k_get_default_config(&config_ext32k);
+	system_clock_source_xosc32k_get_config_defaults(&config_ext32k);
 //! [config_extosc32k_get_defaults]
 
 //! [config_extosc32k_change_defaults]
@@ -70,7 +70,7 @@ void configure_dfll_open_loop(void)
 	struct system_clock_source_dfll_config config_dfll;
 //! [config_dfll_config]
 //! [config_dfll_get_defaults]
-	system_clock_source_dfll_get_default_config(&config_dfll);
+	system_clock_source_dfll_get_config_defaults(&config_dfll);
 //! [config_dfll_get_defaults]
 //! [config_dfll_set_config]
 	system_clock_source_dfll_set_config(&config_dfll);

@@ -87,7 +87,7 @@
  * complete within the amount of time available.
  *
  *
- * \section asfdoc_samd20_bod_extra_info Extra Information for BOD
+ * \section asfdoc_samd20_bod_extra_info Extra Information
  *
  * For extra information see \ref asfdoc_samd20_bod_extra. This includes:
  *  - \ref asfdoc_samd20_bod_extra_acronyms

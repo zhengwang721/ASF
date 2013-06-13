@@ -160,7 +160,7 @@
  * software configurable and can have its count reset and early warning state
  * checked/cleared only.
  *
- * \section asfdoc_samd20_wdt_extra_info Extra Information for WDT
+ * \section asfdoc_samd20_wdt_extra_info Extra Information
  *
  * For extra information see \ref asfdoc_samd20_wdt_extra. This includes:
  *  - \ref asfdoc_samd20_wdt_extra_acronyms

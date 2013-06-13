@@ -271,7 +271,7 @@
  * another peripheral.
  *
  *
- * \section asfdoc_samd20_dac_extra_info Extra Information for DAC
+ * \section asfdoc_samd20_dac_extra_info Extra Information
  *
  * For extra information see \ref asfdoc_samd20_dac_extra. This includes:
  *  - \ref asfdoc_samd20_dac_extra_acronyms

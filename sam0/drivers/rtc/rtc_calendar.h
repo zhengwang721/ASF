@@ -245,7 +245,7 @@
  *       should be used.
  *
  *
- * \section asfdoc_samd20_rtc_calendar_extra_info Extra Information for RTC CAL
+ * \section asfdoc_samd20_rtc_calendar_extra_info Extra Information
  *
  * For extra information see \ref asfdoc_samd20_rtc_calendar_extra. This includes:
  *  - \ref asfdoc_samd20_rtc_calendar_extra_acronyms
@@ -912,7 +912,7 @@ static inline void rtc_calendar_disable_events(
  */
 
 /**
- * \page asfdoc_samd20_rtc_calendar_exqsg Examples for RTC (CAL) Driver
+ * \page asfdoc_samd20_rtc_calendar_exqsg Examples for RTC CAL Driver
  *
  * This is a list of the available Quick Start guides (QSGs) and example
  * applications for \ref asfdoc_samd20_rtc_calendar_group. QSGs are simple

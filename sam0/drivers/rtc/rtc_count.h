@@ -238,7 +238,7 @@
  * \enddot
  *
  *
- * \section asfdoc_samd20_rtc_count_extra_info Extra Information for RTC COUNT
+ * \section asfdoc_samd20_rtc_count_extra_info Extra Information
  *
  * For extra information see \ref asfdoc_samd20_rtc_count_extra. This includes:
  *  - \ref asfdoc_samd20_rtc_count_extra_acronyms
@@ -736,7 +736,7 @@ static inline void rtc_count_disable_events(
 #endif
 
 /**
- * \page asfdoc_samd20_rtc_count_extra Extra Information for RTC (COUNT) Driver
+ * \page asfdoc_samd20_rtc_count_extra Extra Information for RTC COUNT Driver
  *
  * \section asfdoc_samd20_rtc_count_extra_acronyms Acronyms
  * Below is a table listing the acronyms used in this module, along with their

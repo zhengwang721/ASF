@@ -99,19 +99,19 @@
  *      <th>Options</th>
  *  </tr>
  *  <tr>
- *      <th>Start bit</th>
+ *      <td>Start bit</td>
  *      <td>1</td>
  *  </tr>
  *  <tr>
- *      <th>Data bits</th>
+ *      <td>Data bits</td>
  *      <td>5, 6, 7, 8, 9</td>
  *  </tr>
  *  <tr>
- *      <th>Parity bit</th>
+ *      <td>Parity bit</td>
  *      <td>None, Even, Odd</td>
  *  </tr>
  *  <tr>
- *      <th>Stop bits</th>
+ *      <td>Stop bits</td>
  *      <td>1, 2</td>
  *  </tr>
  * </table>
@@ -161,6 +161,7 @@
  * parity bit will be set if the total number of "1"s in the frame are an even
  * number. If using Odd parity the parity bit will be set if the total number
  * of "1"s are Odd.
+ *
  * When receiving a character the receiver will count the number of "1"s in the
  * frame and give an error if the received frame and parity bit disagree.
  *
@@ -174,13 +175,13 @@
  * For SERCOM pad multiplexer position documentation, see
  * \ref asfdoc_samd20_sercom_usart_mux_settings.
  *
- * \section asfdoc_samd20_sercom_usart_special_considerations Special considerations
+ * \section asfdoc_samd20_sercom_usart_special_considerations Special Considerations
  *
  * \if USART_CALLBACK_MODE
  * Never execute large portions of code in the callbacks. These
  * are run from the interrupt routine, and thus having long callbacks will
  * keep the processor in the interrupt handler for an equally long time.
- * A common way to handle this is to use global flags signalling the
+ * A common way to handle this is to use global flags signaling the
  * main application that an interrupt event has happened, and only do the
  * minimal needed processing in the callback.
  * \else
@@ -381,6 +382,10 @@ struct usart_config {
 	enum usart_signal_mux_settings mux_setting;
 	/** USART baud rate */
 	uint32_t baudrate;
+	/** Enable receiver */
+	bool receiver_enable;
+	/** Enable transmitter */
+	bool transmitter_enable;
 
 	/** USART Clock Polarity.
 	 * If true, data changes on falling XCK edge and
@@ -435,6 +440,10 @@ struct usart_module {
 	Sercom *hw;
 	/** Character size of the data being transferred */
 	enum usart_character_size character_size;
+	/** Receiver enabled */
+	bool receiver_enabled;
+	/** Transmitter enabled */
+	bool transmitter_enabled;
 #  if USART_CALLBACK_MODE == true
 	/** Array to store callback function pointers in */
 	usart_callback_t callback[USART_CALLBACK_N];
@@ -517,6 +526,8 @@ static inline bool usart_is_syncing(
  * - No parity
  * - 1 stop bit
  * - 9600 baud
+ * - Transmitter enabled
+ * - Receiver enabled
  * - GCLK generator 0 as clock source
  * - Default pin configuration
  *
@@ -538,6 +549,8 @@ static inline void usart_get_config_defaults(
 	config->stopbits         = USART_STOPBITS_1;
 	config->character_size   = USART_CHARACTER_SIZE_8BIT;
 	config->baudrate         = 9600;
+	config->receiver_enable  = true;
+	config->transmitter_enable = true;
 	config->clock_polarity_inverted = false;
 	config->use_external_clock = false;
 	config->ext_clock_freq   = 0;
@@ -674,7 +687,7 @@ enum status_code usart_read_buffer_wait(
  * \param[in]  transceiver_type  Transceiver type.
  */
 static inline void usart_enable_transceiver(
-		const struct usart_module *const module,
+		struct usart_module *const module,
 		enum usart_transceiver_type transceiver_type)
 {
 	/* Sanity check arguments */
@@ -691,11 +704,13 @@ static inline void usart_enable_transceiver(
 		case USART_TRANSCEIVER_RX:
 			/* Enable RX */
 			usart_hw->CTRLB.reg |= SERCOM_USART_CTRLB_RXEN;
+			module->receiver_enabled = true;
 			break;
 
 		case USART_TRANSCEIVER_TX:
 			/* Enable TX */
 			usart_hw->CTRLB.reg |= SERCOM_USART_CTRLB_TXEN;
+			module->transmitter_enabled = true;
 			break;
 	}
 }
@@ -709,7 +724,7 @@ static inline void usart_enable_transceiver(
  * \param[in]  transceiver_type  Transceiver type.
  */
 static inline void usart_disable_transceiver(
-		const struct usart_module *const module,
+		struct usart_module *const module,
 		enum usart_transceiver_type transceiver_type)
 {
 	/* Sanity check arguments */
@@ -726,11 +741,13 @@ static inline void usart_disable_transceiver(
 		case USART_TRANSCEIVER_RX:
 			/* Disable RX */
 			usart_hw->CTRLB.reg &= ~SERCOM_USART_CTRLB_RXEN;
+			module->receiver_enabled = false;
 			break;
 
 		case USART_TRANSCEIVER_TX:
 			/* Disable TX */
 			usart_hw->CTRLB.reg &= ~SERCOM_USART_CTRLB_TXEN;
+			module->transmitter_enabled = false;
 			break;
 	}
 }
@@ -834,25 +851,25 @@ static inline void usart_disable_transceiver(
  *      <th> XCK </th>
  *   </tr>
  *   <tr>
- *      <th> PAD0 </th>
+ *      <td> PAD0 </td>
  *      <td> x </td>
  *      <td> x </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD1 </th>
+ *      <td> PAD1 </td>
  *      <td>  </td>
  *      <td>  </td>
  *      <td> x </td>
  *   </tr>
  *   <tr>
- *      <th> PAD2 </th>
+ *      <td> PAD2 </td>
  *      <td>  </td>
  *      <td>  </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD3 </th>
+ *      <td> PAD3 </td>
  *      <td>  </td>
  *      <td>  </td>
  *      <td>  </td>
@@ -871,25 +888,25 @@ static inline void usart_disable_transceiver(
  *      <th> XCK </th>
  *   </tr>
  *   <tr>
- *      <th> PAD0 </th>
+ *      <td> PAD0 </td>
  *      <td> x </td>
  *      <td>  </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD1 </th>
+ *      <td> PAD1 </td>
  *      <td>  </td>
  *      <td>  </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD2 </th>
+ *      <td> PAD2 </td>
  *      <td>  </td>
  *      <td> x </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD3 </th>
+ *      <td> PAD3 </td>
  *      <td>  </td>
  *      <td>  </td>
  *      <td> x </td>
@@ -908,25 +925,25 @@ static inline void usart_disable_transceiver(
  *      <th> XCK </th>
  *   </tr>
  *   <tr>
- *      <th> PAD0 </th>
+ *      <td> PAD0 </td>
  *      <td>  </td>
  *      <td> x </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD1 </th>
+ *      <td> PAD1 </td>
  *      <td> x </td>
  *      <td>  </td>
  *      <td> x </td>
  *   </tr>
  *   <tr>
- *      <th> PAD2 </th>
+ *      <td> PAD2 </td>
  *      <td>  </td>
  *      <td>  </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD3 </th>
+ *      <td> PAD3 </td>
  *      <td>  </td>
  *      <td>  </td>
  *      <td>  </td>
@@ -945,25 +962,25 @@ static inline void usart_disable_transceiver(
  *      <th> XCK </th>
  *   </tr>
  *   <tr>
- *      <th> PAD0 </th>
+ *      <td> PAD0 </td>
  *      <td>  </td>
  *      <td>  </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD1 </th>
+ *      <td> PAD1 </td>
  *      <td> x </td>
  *      <td>  </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD2 </th>
+ *      <td> PAD2 </td>
  *      <td>  </td>
  *      <td> x </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD3 </th>
+ *      <td> PAD3 </td>
  *      <td>  </td>
  *      <td>  </td>
  *      <td> x </td>
@@ -982,25 +999,25 @@ static inline void usart_disable_transceiver(
  *      <th> XCK </th>
  *   </tr>
  *   <tr>
- *      <th> PAD0 </th>
+ *      <td> PAD0 </td>
  *      <td>  </td>
  *      <td> x </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD1 </th>
+ *      <td> PAD1 </td>
  *      <td>  </td>
  *      <td>  </td>
  *      <td> x </td>
  *   </tr>
  *   <tr>
- *      <th> PAD2 </th>
+ *      <td> PAD2 </td>
  *      <td> x </td>
  *      <td>  </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD3 </th>
+ *      <td> PAD3 </td>
  *      <td>  </td>
  *      <td>  </td>
  *      <td>  </td>
@@ -1019,25 +1036,25 @@ static inline void usart_disable_transceiver(
  *      <th> XCK </th>
  *   </tr>
  *   <tr>
- *      <th> PAD0 </th>
+ *      <td> PAD0 </td>
  *      <td>  </td>
  *      <td>  </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD1 </th>
+ *      <td> PAD1 </td>
  *      <td>  </td>
  *      <td>  </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD2 </th>
+ *      <td> PAD2 </td>
  *      <td> x </td>
  *      <td> x </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD3 </th>
+ *      <td> PAD3 </td>
  *      <td>  </td>
  *      <td>  </td>
  *      <td> x </td>
@@ -1056,25 +1073,25 @@ static inline void usart_disable_transceiver(
  *      <th> XCK </th>
  *   </tr>
  *   <tr>
- *      <th> PAD0 </th>
+ *      <td> PAD0 </td>
  *      <td>  </td>
  *      <td> x </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD1 </th>
+ *      <td> PAD1 </td>
  *      <td>  </td>
  *      <td>  </td>
  *      <td> x </td>
  *   </tr>
  *   <tr>
- *      <th> PAD2 </th>
+ *      <td> PAD2 </td>
  *      <td>  </td>
  *      <td>  </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD3 </th>
+ *      <td> PAD3 </td>
  *      <td> x </td>
  *      <td>  </td>
  *      <td>  </td>
@@ -1093,25 +1110,25 @@ static inline void usart_disable_transceiver(
  *      <th> XCK </th>
  *   </tr>
  *   <tr>
- *      <th> PAD0 </th>
+ *      <td> PAD0 </td>
  *      <td>  </td>
  *      <td>  </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD1 </th>
+ *      <td> PAD1 </td>
  *      <td>  </td>
  *      <td>  </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD2 </th>
+ *      <td> PAD2 </td>
  *      <td>  </td>
  *      <td> x </td>
  *      <td>  </td>
  *   </tr>
  *   <tr>
- *      <th> PAD3 </th>
+ *      <td> PAD3 </td>
  *      <td> x </td>
  *      <td>  </td>
  *      <td> x </td>
