@@ -1,13 +1,9 @@
 /**
  * \file
  *
- * \brief Dummy board header file.
+ * \brief SAM D20 Xplained PRO board configuration.
  *
- * This file contains empty definitions to support board-independent applications (e.g. bootloader)
- *
- * To use this board, define BOARD=DUMMY_BOARD.
- *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -45,7 +41,7 @@
  *
  */
 
-#ifndef _DUMMY_BOARD_H_
-#define _DUMMY_BOARD_H_
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#endif  // _DUMMY_BOARD_H_
+#endif /* CONF_BOARD_H_INCLUDED */
