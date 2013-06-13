@@ -456,6 +456,15 @@
 //@}
 
 
+//! \name IO1 temperature sensor definitions */
+//@{
+#define BOARD_AT30TSE_TWI          TWI0
+#define BOARD_AT30TSE_TWI_ID       ID_TWI0
+#define BOARD_TWI_SPEED            (400000u)
+#define BOARD_USING_AT30TSE        AT30TSE758
+#define BOARD_AT30TSE_DEVICE_ADDR  0x07
+//@}
+
 /** @} */
 
 /** @} */
