@@ -68,6 +68,14 @@
  * \section appdoc_samd20_events_unit_test_intro Introduction
  * \copydetails appdoc_preface
  *
+ * This unit test carries out test for three modes of event propagation:
+ * Synchronous, Resynchronized & Asynchronous.
+ *  - RTC module with internal 32kHz RC oscillator is configured as
+ *    event generator and Timer (TC0) module is configured as event user.
+ *  - RTC overflow signal is sent as an event to the timer. The timer will
+ *    start counting on receiving this event.
+ *  - Timer's count register is read to detect successful event action.
+ *
  * The following kit is required for carrying out the test:
  *      - SAM D20 Xplained Pro board
  *
