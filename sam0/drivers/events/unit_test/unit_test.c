@@ -81,7 +81,7 @@
  *
  * \section appdoc_samd20_events_unit_test_setup Setup
  * The following connections has to be made using wires:
- *  - \b DAC VOUT (PA02) <-----> AIN0 (PA04)
+ *  - \b None
  *
  * To run the test:
  *  - Connect the SAM D20 Xplained Pro board to the computer using a
