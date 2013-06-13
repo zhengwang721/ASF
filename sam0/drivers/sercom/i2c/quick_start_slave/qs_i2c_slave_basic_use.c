@@ -91,11 +91,9 @@ void configure_i2c_slave(void)
 
 int main(void)
 {
-	//! [run_initialize_i2c]
-	//! [system_init]
 	system_init();
-	//! [system_init]
 
+	//! [run_initialize_i2c]
 	//! [config]
 	configure_i2c_slave();
 	//! [config]
