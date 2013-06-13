@@ -42,50 +42,73 @@
  */
 
 /**
- * \mainpage EEPROM EMULATOR UNIT TEST
+ * \mainpage SAM D20 EEPROM Emulator Unit Test
+ * See \ref appdoc_main "here" for project documentation.
+ * \copydetails appdoc_preface
  *
- * \section intro Introduction
- * This unit test carries out tests for the EEPROM emulator service.
+ *
+ * \page appdoc_preface Overview
+ * This unit test carries out tests for the EEPROM Emulator service.
  * It consists of test cases for the following functionalities:
  *      - Test for EEPROM emulator initialization.
  *      - Test for EEPROM emulator buffer read/write functionality.
  *      - Test for EEPROM emulator page read/write functionality.
+ */
+
+/**
+ * \page appdoc_main SAM D20 EEPROM Emulator Unit Test
+ *
+ * Overview:
+ * - \ref appdoc_samd20_eeprom_emulator_unit_test_intro
+ * - \ref appdoc_samd20_eeprom_emulator_unit_test_setup
+ * - \ref appdoc_samd20_eeprom_emulator_unit_test_usage
+ * - \ref appdoc_samd20_eeprom_emulator_unit_test_compinfo
+ * - \ref appdoc_samd20_eeprom_emulator_unit_test_contactinfo
+ *
+ * \section appdoc_samd20_eeprom_emulator_unit_test_intro Introduction
+ * \copydetails appdoc_preface
  *
  * The following kit is required for carrying out the test:
  *      - SAM D20 Xplained Pro board
  *
- * \section Setup
+ * \section appdoc_samd20_eeprom_emulator_unit_test_setup Setup
+ * The following connections has to be made using wires:
+ *  - \b None
  *
- * The NVMCTRL_FUSES_EEPROM_SIZE has to be set to 0x00 in the fuse setting
+ * The \c NVMCTRL_FUSES_EEPROM_SIZE has to be set to 0x00 in the fuse setting
  * of the device to run this test.
  *
- * Once the connection is made the following has to be done:
- *      - Connect the SAM D20 Xplained Pro board to the computer using
- *        a micro USB cable.
- *      - Open the virtual COM port in a terminal application.
- * \note  The USB composite firmware running on the Embedded Debugger (EDBG)
- *        will enumerate as debugger, virtual COM port and EDBG data
- *        gateway.
- *      - Build the project, program the target and run the application.
- *        The terminal shows the results of the unit test.
+ * To run the test:
+ *  - Connect the SAM D20 Xplained Pro board to the computer using a
+ *    micro USB cable.
+ *  - Open the virtual COM port in a terminal application.
+ *    \note The USB composite firmware running on the Embedded Debugger (EDBG)
+ *          will enumerate as debugger, virtual COM port and EDBG data
+ *          gateway.
+ *  - Build the project, program the target and run the application.
+ *    The terminal shows the results of the unit test.
  *
- * \section Description
+ * \section appdoc_samd20_eeprom_emulator_unit_test_usage Usage
+ *  - The unit test first initializes the EEPROM emulator and formats the
+ *    memory if not previously done.
+ *  - The test writes a buffer of data to arbitrary offset and reads back
+ *    and compares
+ *  - The test then writes a page of data to a page and reads back and
+ *    compares
  *
- *      - The unit test first initializes the EEPROM emulator and formats the
- *        memory if not previously done.
- *      - The test writes a buffer of data to arbitrary offset and reads back
- *        and compares
- *      - The test then writes a page of data to a page and reads back and
- *        compares
+ * \section appdoc_samd20_eeprom_emulator_unit_test_compinfo Compilation Info
+ * This software was written for the GNU GCC and IAR for ARM.
+ * Other compilers may or may not work.
  *
- * \section contactinfo Contact Information
- * For further information, visit <a href="http://www.atmel.com/">Atmel</a>.\n
- * Support and FAQ: http://support.atmel.no/
+ * \section appdoc_samd20_eeprom_emulator_unit_test_contactinfo Contact Information
+ * For further information, visit
+ * <a href="http://www.atmel.com">http://www.atmel.com</a>.
  */
 
 #include <asf.h>
 #include <stdio_serial.h>
 #include <string.h>
+#include "conf_test.h"
 
 #define TEST_EEPROM_PAGE    1
 #define TEST_BUFFER_SIZE    19
@@ -109,24 +132,24 @@ volatile bool init_success;
 /**
  * \brief Initialize the USART for unit test
  *
- * Initializes the SERCOM USART (SERCOM4) used for sending the
- * unit test status to the computer via the EDBG CDC gateway.
+ * Initializes the SERCOM USART used for sending the unit test status to the
+ * computer via the EDBG CDC gateway.
  */
 static void cdc_uart_init(void)
 {
-	struct usart_config cdc_uart_config;
+	struct usart_config usart_conf;
 
 	/* Configure USART for unit test output */
-	usart_get_config_defaults(&cdc_uart_config);
-	cdc_uart_config.mux_setting     = EDBG_CDC_SERCOM_MUX_SETTING;
-	cdc_uart_config.pinmux_pad3     = EDBG_CDC_SERCOM_PINMUX_PAD3;
-	cdc_uart_config.pinmux_pad2     = EDBG_CDC_SERCOM_PINMUX_PAD2;
-	cdc_uart_config.baudrate        = 115200;
-	stdio_serial_init(&cdc_uart_module, EDBG_CDC_MODULE,
-			&cdc_uart_config);
-	/* Enable transceivers */
-	usart_enable_transceiver(&cdc_uart_module, USART_TRANSCEIVER_TX);
-	usart_enable_transceiver(&cdc_uart_module, USART_TRANSCEIVER_RX);
+	usart_get_config_defaults(&usart_conf);
+	usart_conf.mux_setting = CONF_STDIO_MUX_SETTING;
+	usart_conf.pinmux_pad0 = CONF_STDIO_PINMUX_PAD0;
+	usart_conf.pinmux_pad1 = CONF_STDIO_PINMUX_PAD1;
+	usart_conf.pinmux_pad2 = CONF_STDIO_PINMUX_PAD2;
+	usart_conf.pinmux_pad3 = CONF_STDIO_PINMUX_PAD3;
+	usart_conf.baudrate    = CONF_STDIO_BAUDRATE;
+
+	stdio_serial_init(&cdc_uart_module, CONF_STDIO_USART, &usart_conf);
+	usart_enable(&cdc_uart_module);
 }
 
 /**
@@ -222,10 +245,10 @@ static void run_eeprom_buffer_read_write_test(const struct test_case *test)
 			test_buffer, TEST_BUFFER_SIZE);
 	test_assert_true(test, status == STATUS_OK,
 			"EEPROM write buffer failed");
-	
+
 	/* Write back to physical NVM memory */
 	eeprom_emulator_flush_page_buffer();
-	
+
 	/* Read buffer test */
 	status = eeprom_emulator_read_buffer(TEST_BUFFER_OFFSET,
 			verify_buffer, TEST_BUFFER_SIZE);
@@ -283,7 +306,7 @@ static void run_eeprom_page_read_write_test(const struct test_case *test)
 
 	/* Write back to physical NVM memory */
 	eeprom_emulator_flush_page_buffer();
-	
+
 	/* Read page test */
 	status = eeprom_emulator_read_page(TEST_EEPROM_PAGE, verify_page);
 	test_assert_true(test, status == STATUS_OK,
