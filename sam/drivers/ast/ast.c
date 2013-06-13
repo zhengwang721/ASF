@@ -406,6 +406,9 @@ void ast_write_counter_value(Ast *ast,
 /**
  * \brief This function returns the AST current calendar value.
  *
+ * \note There maybe has a compiling warning about return a structure type
+ * value, however it is safe because ast_calendar is actually uint32_t type.
+ *
  * \param ast Base address of the AST.
  *
  * \return The AST current calendar value.
