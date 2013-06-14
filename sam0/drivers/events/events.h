@@ -113,8 +113,8 @@
  * There are many different events that can be routed in the device, which can
  * then trigger many different actions. For example, an Analog Comparator module
  * could be configured to generate an event when the input signal rises above
- * the compare threshold, which then triggers a Timer module to capture the
- * current count value for later use.
+ * the compare threshold, which then triggers a Timer Counter module to capture
+ * the current count value for later use.
  *
  * \subsection asfdoc_samd20_events_module_overview_event_channels Event Channels
  * The Event module in each device consists of several channels, which can be
