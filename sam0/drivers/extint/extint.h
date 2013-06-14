@@ -159,6 +159,12 @@
  * may in turn trigger actions in other hardware modules) or an asynchronous
  * software interrupt.
  *
+ * \note The connection of events between modules requires the use of the
+ *       \ref asfdoc_samd20_events_group "SAM D20 Event System Driver (EVENTS)"
+ *       to route output event of one module to the the input event of another.
+ *       For more information on event routing, refer to the event driver
+ *       documentation.
+ *
  * \subsection asfdoc_samd20_extint_module_overview_physical Physical Connection
  *
  * \ref asfdoc_samd20_extint_int_connections "The diagram below" shows how this
