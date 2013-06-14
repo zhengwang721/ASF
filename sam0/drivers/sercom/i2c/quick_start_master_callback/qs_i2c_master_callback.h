@@ -82,8 +82,6 @@
  * \snippet qs_i2c_master_callback.c run_initialize_i2c
  *
  * \subsection asfdoc_samd20_sercom_i2c_master_callback_use_case_setup_workflow Workflow
- * -# Initialize system.
- *  \snippet qs_i2c_master_callback.c system_init
  * -# Configure and enable module.
  *  \snippet qs_i2c_master_callback.c init_conf
  *  -# Create and initialize configuration structure.
