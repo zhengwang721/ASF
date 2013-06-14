@@ -819,17 +819,22 @@ enum status_code eeprom_emulator_write_buffer(
 		}
 	}
 
+	/* Keep track of whether the currently updated page has been written */
+	bool page_dirty = false;
+
 	/* Write the specified data to the emulated EEPROM memory space */
 	for (uint16_t c = offset; c < (length + offset); c++) {
 		/* Copy the next byte of data from the user's buffer to the temporary
 		 * buffer */
 		buffer[c % EEPROM_PAGE_SIZE] = data[c - offset];
+		page_dirty = true;
 
 		/* Check if we have written up to a new EEPROM page boundary */
 		if ((c % EEPROM_PAGE_SIZE) == 0) {
 			/* Write the current page to non-volatile memory from the temporary
 			 * buffer */
 			error_code = eeprom_emulator_write_page(logical_page, buffer);
+			page_dirty = false;
 
 			if (error_code != STATUS_OK) {
 				break;
@@ -846,6 +851,11 @@ enum status_code eeprom_emulator_write_buffer(
 				return error_code;
 			}
 		}
+	}
+
+	/* If the current page is dirty, write it */
+	if (page_dirty) {
+		error_code = eeprom_emulator_write_page(logical_page, buffer);
 	}
 
 	return error_code;
