@@ -146,6 +146,12 @@
  * events will be generated when the DAC data buffer register becomes empty and
  * new data can be loaded to the buffer.
  *
+ * \note The connection of events between modules requires the use of the
+ *       \ref asfdoc_samd20_events_group "SAM D20 Event System Driver (EVENTS)"
+ *       to route output event of one module to the the input event of another.
+ *       For more information on event routing, refer to the event driver
+ *       documentation.
+ *
  * \subsection asfdoc_samd20_dac_data_adjust Left and Right Adjusted Values
  * The 10-bit input value to the DAC is contained in a 16-bit register. This
  * can be configured to be either left or right adjusted. In

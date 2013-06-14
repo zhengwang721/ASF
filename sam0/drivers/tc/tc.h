@@ -114,6 +114,12 @@
  * generating an output event or toggling a pin when used for frequency or PWM
  * signal generation.
  *
+ * \note The connection of events between modules requires the use of the
+ *       \ref asfdoc_samd20_events_group "SAM D20 Event System Driver (EVENTS)"
+ *       to route output event of one module to the the input event of another.
+ *       For more information on event routing, refer to the event driver
+ *       documentation.
+ *
  * \subsection asfdoc_samd20_tc_module_overview_tc_size Timer/Counter Size
  * Each timer module can be configured in one of three different counter
  * sizes; 8-, 16-, and 32-bits. The size of the counter determines the maximum
@@ -266,8 +272,7 @@
  * specify the time (as a number of prescaled GCLK cycles) when an action should
  * be taken by the microcontroller. This can be an Interrupt Service Routine
  * (ISR), event generator via the event system, or a software flag that is
- *polled
- * via the user application.
+ * polled via the user application.
  *
  * \subsubsection asfdoc_samd20_tc_module_overview_compare_match_wg Waveform Generation
  *

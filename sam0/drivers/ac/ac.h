@@ -152,7 +152,7 @@
  * between each comparison result by automatically performing a comparison on
  * every cycle of the module's clock.
  *
- * \subsection asfdoc_samd20_ac_module_overview_events Input and Output Events
+ * \subsection asfdoc_samd20_ac_module_overview_events Events
  * Each comparator unit is capable of being triggered by both software and
  * hardware triggers. Hardware input events allow for other peripherals to
  * automatically trigger a comparison on demand - for example, a timer output
@@ -163,6 +163,12 @@
  * for reduced levels of CPU usage in an application and lowers the overall
  * system response latency by directly triggering hardware peripherals from one
  * another without requiring software intervention.
+ *
+ * \note The connection of events between modules requires the use of the
+ *       \ref asfdoc_samd20_events_group "SAM D20 Event System Driver (EVENTS)"
+ *       to route output event of one module to the the input event of another.
+ *       For more information on event routing, refer to the event driver
+ *       documentation.
  *
  * \subsection asfdoc_samd20_ac_module_overview_physical Physical Connection
  * Physically, the modules are interconnected within the device as shown in
