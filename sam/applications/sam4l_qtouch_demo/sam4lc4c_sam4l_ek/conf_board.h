@@ -55,4 +55,7 @@
 // Force usage of external EIC
 #define CONF_BOARD_EIC
 
+// Disable Watchdog init
+#define CONF_BOARD_KEEP_WATCHDOG_AT_INIT
+
 #endif /* CONF_BOARD_H_INCLUDED */
