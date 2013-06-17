@@ -115,6 +115,17 @@
 #define SW0_ACTIVE                false
 #define SW0_INACTIVE              !SW0_ACTIVE
 #define SW0_SUPC_INPUT            2
+
+/**
+ * Wrapper macros for SW0, to ensure common naming across all Xplained Pro
+ * boards.
+ */
+#define PIN_SW0      {PIO_PA30, PIOA, ID_PIOA, PIO_INPUT, PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE}
+#define PIN_SW0_MASK PIO_PA30
+#define PIN_SW0_PIO  PIOA
+#define PIN_SW0_ID   ID_PIOA
+#define PIN_SW0_TYPE PIO_INPUT
+#define PIN_SW0_ATTR (PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE)
 //@}
 
 /**
@@ -443,6 +454,12 @@
 #define PIN_ISO7816_RST_IDX        PIO_PA15_IDX
 #define PIN_ISO7816_RST_FLAG       (0)
 
+//! \name Light Sensor
+//@{
+#define LIGHT_SENSOR_GPIO   PIO_PA17_IDX
+#define LIGHT_SENSOR_FLAGS  PIO_INPUT
+//@}
+
 //! \name IO1 SD card definitions */
 //@{
 #define SD_MMC_SPI_MEM_CNT          1
@@ -453,6 +470,17 @@
 #define SD_MMC_SPI                  SPI
 #define SD_MMC_SPI_0_CS             0
 #define SD_MMC_0_CD_PIO_ID          ID_PIOA
+/**
+ * Wrapper macros for IO1 SD, to ensure common naming across all Xplained Pro
+ * boards.
+ */
+#define SD_MMC_0_CD_FLAGS           (PIO_INPUT | PIO_PULLUP)
+#define SD_MMC_0_CD    {PIO_PA23, PIOA, ID_PIOA, PIO_INPUT, PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE}
+#define SD_MMC_0_CD_MASK PIO_PA23
+#define SD_MMC_0_CD_PIO PIOA
+#define SD_MMC_0_CD_ID ID_PIOA
+#define SD_MMC_0_CD_TYPE PIO_INPUT
+#define SD_MMC_0_CD_ATTR (PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_EDGE)
 //@}
 
 
@@ -463,6 +491,60 @@
 #define BOARD_TWI_SPEED            (400000u)
 #define BOARD_USING_AT30TSE        AT30TSE758
 #define BOARD_AT30TSE_DEVICE_ADDR  0x07
+//@}
+
+//! \name OLED1 led definitions */
+//@{
+#define OLED1_LED1_PIN                  EXT3_PIN_7
+#define OLED1_LED1_ACTIVE               false
+#define OLED1_LED1_INACTIVE             !OLED1_LED1_ACTIVE
+
+#define OLED1_LED2_PIN                  EXT3_PIN_8
+#define OLED1_LED2_ACTIVE               false
+#define OLED1_LED2_INACTIVE             !OLED1_LED2_ACTIVE
+
+#define OLED1_LED3_PIN                  EXT3_PIN_6
+#define OLED1_LED3_ACTIVE               false
+#define OLED1_LED3_INACTIVE             !OLED1_LED3_ACTIVE
+//@}
+
+//! \name OLED1 button definitions */
+//@{
+/** Push button #1 definition. Attributes = pull-up + debounce + interrupt on rising edge. */
+#define OLED1_PUSHBUTTON_1_NAME    "BUTTON 1"
+#define OLED1_GPIO_PUSH_BUTTON_1   (PIO_PB2_IDX)
+#define OLED1_GPIO_PUSH_BUTTON_1_FLAGS    (PIO_INPUT | PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE)
+
+#define OLED1_PIN_PUSHBUTTON_1    {PIO_PB2, PIOA, ID_PIOA, PIO_INPUT, PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE}
+#define OLED1_PIN_PUSHBUTTON_1_MASK PIO_PB2
+#define OLED1_PIN_PUSHBUTTON_1_PIO PIOB
+#define OLED1_PIN_PUSHBUTTON_1_ID ID_PIOB
+#define OLED1_PIN_PUSHBUTTON_1_TYPE PIO_INPUT
+#define OLED1_PIN_PUSHBUTTON_1_ATTR (PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE)
+
+/** Push button #2 definition. Attributes = pull-up + debounce + interrupt on rising edge. */
+#define OLED1_PUSHBUTTON_2_NAME    "BUTTON 2"
+#define OLED1_GPIO_PUSH_BUTTON_2   (PIO_PC29_IDX)
+#define OLED1_GPIO_PUSH_BUTTON_2_FLAGS    (PIO_INPUT | PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE)
+
+#define OLED1_PIN_PUSHBUTTON_2    {PIO_PC29, PIOC, ID_PIOC, PIO_INPUT, PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE}
+#define OLED1_PIN_PUSHBUTTON_2_MASK PIO_PC29
+#define OLED1_PIN_PUSHBUTTON_2_PIO PIOC
+#define OLED1_PIN_PUSHBUTTON_2_ID ID_PIOC
+#define OLED1_PIN_PUSHBUTTON_2_TYPE PIO_INPUT
+#define OLED1_PIN_PUSHBUTTON_2_ATTR (PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE)
+
+/** Push button #3 definition. Attributes = pull-up + debounce + interrupt on rising edge. */
+#define OLED1_PUSHBUTTON_3_NAME    "BUTTON 3"
+#define OLED1_GPIO_PUSH_BUTTON_3   (PIO_PC30_IDX)
+#define OLED1_GPIO_PUSH_BUTTON_3_FLAGS    (PIO_INPUT | PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE)
+
+#define OLED1_PIN_PUSHBUTTON_3    {PIO_PC30, PIOC, ID_PIOC, PIO_INPUT, PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE}
+#define OLED1_PIN_PUSHBUTTON_3_MASK PIO_PC30
+#define OLED1_PIN_PUSHBUTTON_3_PIO PIOC
+#define OLED1_PIN_PUSHBUTTON_3_ID ID_PIOC
+#define OLED1_PIN_PUSHBUTTON_3_TYPE PIO_INPUT
+#define OLED1_PIN_PUSHBUTTON_3_ATTR (PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE)
 //@}
 
 /** @} */
