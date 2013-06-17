@@ -303,7 +303,7 @@ static int send_peer_rsp(uint64_t *dst_addr)
 	       (uint8_t *)(dst_addr),
 	       FCF_SHORT_ADDR,
 	       seq_num,                          /* seq_num used as msdu handle
-	                                          **/
+	                                         **/
 	       (uint8_t *)&msg,
 	       payload_length,
 	       1));
@@ -355,14 +355,16 @@ static void wait_for_conf_rx_cb(frame_info_t *frame_info)
 				app_led_event(LED_EVENT_PEER_SEARCH_DONE);
 				switch (node_info.main_state) {
 				case PEER_SEARCH_RANGE_RX:
+
 					/* Peer success - set the board to
-					 *RANGE_TEST_TX_OFF state */
+					 * RANGE_TEST_TX_OFF state */
 					set_main_state(RANGE_TEST_TX_OFF, 0);
 					break;
 
 				case PEER_SEARCH_PER_RX:
+
 					/* Peer success - set the board to
-					 *RANGE_TEST_TX_OFF state */
+					 * RANGE_TEST_TX_OFF state */
 					set_main_state(PER_TEST_RECEPTOR, 0);
 					break;
 

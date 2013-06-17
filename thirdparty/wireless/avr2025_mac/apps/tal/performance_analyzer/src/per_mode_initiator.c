@@ -252,7 +252,9 @@ static set_param_cb_t set_param_cb;
 static uint8_t num_channels;
 static void configure_range_test_frame_sending(void);
 static bool send_range_test_marker_rsp(void);
-static uint8_t per_test_count ;
+
+static uint8_t per_test_count;
+
 /**
  * This is variable is to keep track of the specific features supported
  */
@@ -281,7 +283,7 @@ static uint32_t range_test_frame_cnt = 0;
 
 /**
  * \brief The reverse_float is used for reversing a float variable for
- *supporting BIG ENDIAN systems
+ * supporting BIG ENDIAN systems
  * \param float_val Float variable to be reversed
  */
 static float reverse_float( const float float_val )
@@ -328,7 +330,7 @@ FLASH_DECLARE(uint8_t perf_config_param_size[]) = {
 trx_config_params_t default_trx_config_params;
 
 /* Database to maintain the updated/latest settings of the configurable
- *parameters */
+ * parameters */
 trx_config_params_t curr_trx_config_params;
 
 /* ! \} */
@@ -362,11 +364,11 @@ void per_mode_initiator_init(void *parameter)
 		app_led_event(LED_EVENT_POWER_ON);
 
 		/* Put the transceiver in TRX OFF state- default state for
-		 *Single node tests */
+		 * Single node tests */
 		set_trx_state(CMD_TRX_OFF);
 
 		/* Send the confirmation to the PC application via Serial
-		 *interface */
+		 * interface */
 		usr_perf_start_confirm(MAC_SUCCESS,
 				START_MODE_SINGLE_NODE,
 				&default_trx_config_params,
@@ -413,8 +415,9 @@ void per_mode_initiator_task(void)
 	} else {
 		switch (op_mode) {
 		case CONTINUOUS_TX_MODE:
+
 		/* While CW transmission wait for stop cmd to stop transmitting
-		 **/
+		**/
 		case SET_PARAMETER:
 
 			/* While setting parameter on remote node wait for call
@@ -423,8 +426,9 @@ void per_mode_initiator_task(void)
 			 */
 #if (ANTENNA_DIVERSITY == 1)
 		case DIVERSITY_STATUS_REQ:
+
 		/* While querying the diversity settings on remote node wait for
-		 *result */
+		 * result */
 		case DIVERSITY_SET_REQ:
 
 			/* While changing the diversity setting on remote node
@@ -434,8 +438,9 @@ void per_mode_initiator_task(void)
 #endif /* #if (ANTENNA_DIVERSITY == 1) */
 #ifdef CRC_SETTING_ON_REMOTE_NODE
 		case CRC_STATUS_REQ_WAIT:
+
 		/* While querying the CRC settings on remote node wait for
-		 *result */
+		 * result */
 		case CRC_SET_REQ_WAIT:
 
 			/* While changing the CRC setting on remote node wait
@@ -588,7 +593,7 @@ void per_mode_initiator_tx_done_cb(retval_t status, frame_info_t *frame)
 	case SET_PARAMETER:
 	{
 		/* After successful transmission, set the params on Initiator
-		 *node */
+		 * node */
 		set_parameter_on_transmitter_node(status);
 		op_mode = TX_OP_MODE;
 	}
@@ -597,7 +602,7 @@ void per_mode_initiator_tx_done_cb(retval_t status, frame_info_t *frame)
 	case WAIT_FOR_TEST_RES:
 	{
 		/* If no ack received from remote for the send_result_req sent
-		 **/
+		**/
 		if (MAC_SUCCESS != status) {
 			/* if PER test result request fails it is enunciated to
 			 * the user and waits for inputs from user
@@ -652,8 +657,9 @@ void per_mode_initiator_tx_done_cb(retval_t status, frame_info_t *frame)
 			 * to the user and waits for inputs from user
 			 */
 			sw_timer_stop(APP_TIMER_TO_TX);
+
 			/* Send Get confirmation with status
-			 *UNABLE_TO_CONTACT_PEER */
+			 * UNABLE_TO_CONTACT_PEER */
 			usr_perf_set_confirm(UNABLE_TO_CONTACT_PEER,
 					PARAM_ANT_DIVERSITY_ON_PEER,
 					(param_value_t *)&curr_trx_config_params.antenna_selected_on_peer);
@@ -693,8 +699,9 @@ void per_mode_initiator_tx_done_cb(retval_t status, frame_info_t *frame)
 			 * the user and waits for inputs from user
 			 */
 			sw_timer_stop(APP_TIMER_TO_TX);
+
 			/* Send Get confirmation with status
-			 *UNABLE_TO_CONTACT_PEER */
+			 * UNABLE_TO_CONTACT_PEER */
 			usr_perf_set_confirm(UNABLE_TO_CONTACT_PEER,
 					PARAM_CRC_ON_PEER,
 					(param_value_t *)&curr_trx_config_params.crc_settings_on_peer);
@@ -730,7 +737,7 @@ void per_mode_initiator_tx_done_cb(retval_t status, frame_info_t *frame)
 			usr_peer_disconnect_confirm(MAC_SUCCESS);
 
 			/* app reset on source node as the disconnect peer is
-			 *successful */
+			 * successful */
 
 			/* This is to make the node to restart as boot up and
 			 * open for fresh peer search
@@ -751,15 +758,15 @@ void per_mode_initiator_tx_done_cb(retval_t status, frame_info_t *frame)
 		op_mode = TX_OP_MODE;
 		if (MAC_SUCCESS == status) {
 			/* Set the default values for all configurable
-			 *parameters */
+			 * parameters */
 			config_per_test_parameters();
 
 			/* Send the confirmation with the status as SUCCESS */
 			usr_set_default_config_confirm(MAC_SUCCESS,
 					&default_trx_config_params);
 		} else { /* Failure */
-			/* Send the confirmation with the status as
-			 *UNABLE_TO_CONTACT_PEER */
+			 /* Send the confirmation with the status as
+			  * UNABLE_TO_CONTACT_PEER */
 			usr_set_default_config_confirm(UNABLE_TO_CONTACT_PEER,
 					&default_trx_config_params);
 		}
@@ -769,12 +776,11 @@ void per_mode_initiator_tx_done_cb(retval_t status, frame_info_t *frame)
 
 	case PER_TEST_START:
 	{
+		op_mode = TX_OP_MODE;
 
-			op_mode = TX_OP_MODE;
-			/* As start indication is successful start the actual
-			 *PER Test*/
-			start_test();
-
+		/* As start indication is successful start the actual
+		 * PER Test*/
+		start_test();
 	}
 	break;
 
@@ -782,7 +788,7 @@ void per_mode_initiator_tx_done_cb(retval_t status, frame_info_t *frame)
 	{
 		if (MAC_SUCCESS == status) {
 			/* As start indication is successful start the actual
-			 *RANGE Test in PER Mode*/
+			 * RANGE Test in PER Mode*/
 			start_range_test();
 		} else {
 			op_mode = TX_OP_MODE;
@@ -804,7 +810,7 @@ void per_mode_initiator_tx_done_cb(retval_t status, frame_info_t *frame)
 			usr_range_test_stop_confirm(MAC_SUCCESS);
 			/* Reset the OPMODE */
 			op_mode = TX_OP_MODE;
-            app_led_event(LED_EVENT_PEER_SEARCH_DONE);
+			app_led_event(LED_EVENT_PEER_SEARCH_DONE);
 		} else {
 			op_mode = RANGE_TEST_TX;
 			usr_range_test_stop_confirm(UNABLE_TO_CONTACT_PEER);
@@ -822,8 +828,9 @@ void per_mode_initiator_tx_done_cb(retval_t status, frame_info_t *frame)
 		/* Check whether the tx frame was a range test packet*/
 		if (msg->cmd_id == RANGE_TEST_PKT) {
 			app_led_event(LED_EVENT_TX_FRAME);
+
 			/* Send the transmitted OTA frame to Host UI for disply
-			 **/
+			**/
 			usr_range_test_beacon_tx(node_info.tx_frame_info->mpdu);
 		}
 	}
@@ -978,7 +985,7 @@ static void set_parameter_on_transmitter_node(retval_t status)
 		curr_trx_config_params.channel = INVALID_VALUE;
 
 		/* Send the confirmation for Set request with the status as
-		 *MAC_SUCCESS */
+		 * MAC_SUCCESS */
 		usr_perf_set_confirm(MAC_SUCCESS,
 				PARAM_ISM_FREQUENCY,
 				(param_value_t *)&frequency);
@@ -1001,8 +1008,9 @@ static void set_parameter_on_transmitter_node(retval_t status)
 		 * the channel as INVALID
 		 */
 		curr_trx_config_params.channel = INVALID_VALUE;
+
 		/* Send the confirmation for Set request with the status as
-		 *MAC_SUCCESS */
+		 * MAC_SUCCESS */
 		usr_perf_set_confirm(MAC_SUCCESS,
 				PARAM_ISM_FREQUENCY,
 				(param_value_t *)&frequency);
@@ -1047,8 +1055,9 @@ static void set_parameter_on_transmitter_node(retval_t status)
 #endif
 		tx_pwr_dbm = (int8_t)set_param_cb.param_value;
 		temp_var = CONV_DBM_TO_phyTransmitPower(tx_pwr_dbm);
+
 		/* If RPC enabled, disble RPC to change the TX power value refer
-		 *sec 9.2.4 */
+		 * sec 9.2.4 */
 #if (TAL_TYPE == AT86RF233)
 		/* Store currents RPC settings */
 		tal_trx_reg_read(RG_TRX_RPC, &previous_RPC_value);
@@ -1065,8 +1074,9 @@ static void set_parameter_on_transmitter_node(retval_t status)
 		curr_trx_config_params.tx_power_dbm = tx_pwr_dbm;
 
 #if ((TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B))
+
 		/*Tx power in dBm also need to be updated as it changes with reg
-		 *value */
+		 * value */
 		tal_get_curr_trx_config(TX_PWR,
 				&(curr_trx_config_params.tx_power_reg));
 #endif
@@ -1091,8 +1101,9 @@ static void set_parameter_on_transmitter_node(retval_t status)
 				tal_convert_reg_value_to_dBm(tx_pwr_reg,
 				&tx_pwr_dbm)) {
 			temp_var = CONV_DBM_TO_phyTransmitPower(tx_pwr_dbm);
+
 			/* If RPC enabled, disble RPC to change the TX power
-			 *value refer sec 9.2.4 */
+			 * value refer sec 9.2.4 */
 #if (TAL_TYPE == AT86RF233)
 			/* Store currents RPC settings */
 			tal_trx_reg_read(RG_TRX_RPC, &previous_RPC_value);
@@ -1103,7 +1114,7 @@ static void set_parameter_on_transmitter_node(retval_t status)
 
 			/* To make sure that TX_PWR register is updated with the
 			 * value whatever user povided.Otherwise lowest dBm
-			 *power
+			 * power
 			 * (highest reg value will be taken)
 			 */
 			tal_set_tx_pwr(REGISTER_VALUE, tx_pwr_reg);
@@ -1116,7 +1127,7 @@ static void set_parameter_on_transmitter_node(retval_t status)
 			curr_trx_config_params.tx_power_reg = tx_pwr_reg;
 
 			/*Tx power in dBm also need to be updated as it changes
-			 *with reg value */
+			 * with reg value */
 			curr_trx_config_params.tx_power_dbm = tx_pwr_dbm;
 
 			/* Send Set confirmation with status */
@@ -1180,8 +1191,9 @@ void per_mode_initiator_rx_cb(frame_info_t *frame_info)
 				frames_with_wrong_crc
 					= (msg->payload.test_result_rsp_data
 						.frames_with_wrong_crc);
+
 				/* Value of 0xffffffff means that CRC errors
-				 *were not counted */
+				 * were not counted */
 
 #else
 				frames_with_wrong_crc = 0XFFFFFFFF;
@@ -1235,20 +1247,29 @@ void per_mode_initiator_rx_cb(frame_info_t *frame_info)
 				if (msg->payload.div_stat_rsp_data.status) {
 					ant_div_settings = ANT_CTRL_0;
 				} else { /* Antenna diversity is disabled on
-					  *peer node */
+						 * peer node */
 					if (ENABLE_ANTENNA_1 ==
 							msg->payload.
 							div_stat_rsp_data
 							.ant_sel) {
 						ant_div_settings = ANT_CTRL_1; /*
+							                        *
 							                        *Antenna
+							                        *
 							                        *diversity
+							                        *
 							                        *Disabled
+							                        *
 							                        *on
+							                        *
 							                        *remote
+							                        *
 							                        *node,
+							                        *
 							                        *ant1
+							                        *
 							                        *is
+							                        *
 							                        *selected
 							                        **/
 					} else if (ENABLE_ANTENNA_2 ==
@@ -1256,20 +1277,31 @@ void per_mode_initiator_rx_cb(frame_info_t *frame_info)
 							div_stat_rsp_data
 							.ant_sel) {
 						ant_div_settings = ANT_CTRL_2; /*
+							                        *
 							                        *Antenna
+							                        *
 							                        *diversity
+							                        *
 							                        *Disabled
+							                        *
 							                        *on
+							                        *
 							                        *remote
+							                        *
 							                        *node,
+							                        *
 							                        *ant2
+							                        *
 							                        *is
+							                        *
 							                        *selected
 							                        **/
 					} else {
 						ant_div_settings
 							= INVALID_VALUE; /*
+							                  *
 							                  *Invalid
+							                  *
 							                  *settings
 							                  **/
 					}
@@ -1323,8 +1355,9 @@ void per_mode_initiator_rx_cb(frame_info_t *frame_info)
 					sizeof(general_pkt_t)) +
 					sizeof(peer_info_rsp_t)))) {
 				sw_timer_stop(APP_TIMER_TO_TX);
+
 				/* Send the confirmation with status as SUCCESS
-				 **/
+				**/
 				usr_perf_start_confirm(MAC_SUCCESS,
 						START_MODE_PER,
 						&default_trx_config_params,
@@ -1343,7 +1376,7 @@ void per_mode_initiator_rx_cb(frame_info_t *frame_info)
 	case RANGE_TEST_RSP:
 	{
 		/*Verify if the response is recieved in the correct Operating
-		 *mode*/
+		 * mode*/
 		if (op_mode == RANGE_TEST_TX) {
 			/* Verify if the frame was already processed*/
 			if (range_test_seq_num == msg->seq_num) {
@@ -1353,7 +1386,7 @@ void per_mode_initiator_rx_cb(frame_info_t *frame_info)
 			/* Calculate the ED value and LQI for the received frame
 			 * and
 			 * also derrive the LQI and ED values sent by the
-			 *receptor from the received payload */
+			 * receptor from the received payload */
 			int8_t rssi_base_val, ed_value;
 			rssi_base_val = tal_get_rssi_base_val();
 			uint8_t phy_frame_len = frame_info->mpdu[0];
@@ -1364,7 +1397,7 @@ void per_mode_initiator_rx_cb(frame_info_t *frame_info)
 			app_led_event(LED_EVENT_RX_FRAME);
 
 			/* Send the range test rsp indication to Host UI with
-			 *the two set of ED and LQI values */
+			 * the two set of ED and LQI values */
 
 			usr_range_test_beacon_rsp(frame_info->mpdu,
 					frame_info->mpdu[phy_frame_len
@@ -1381,7 +1414,7 @@ void per_mode_initiator_rx_cb(frame_info_t *frame_info)
 	{
 		if (op_mode == RANGE_TEST_TX) {
 			/* Calculate the ED value and LQI for the received
-			 *marker frame */
+			 * marker frame */
 			int8_t rssi_base_val, ed_value;
 			rssi_base_val = tal_get_rssi_base_val();
 			uint8_t phy_frame_len = frame_info->mpdu[0];
@@ -1389,15 +1422,17 @@ void per_mode_initiator_rx_cb(frame_info_t *frame_info)
 			ed_value
 				= frame_info->mpdu[phy_frame_len + LQI_LEN +
 					ED_VAL_LEN] + rssi_base_val;
+
 			/* Timer to Perform LED indication for received Marker
-			 *indication */
+			 * indication */
 			sw_timer_start(T_APP_TIMER,
 					LED_BLINK_RATE_IN_MICRO_SEC,
 					SW_TIMEOUT_RELATIVE,
 					(FUNC_PTR)marker_rsp_timer_handler_cb,
 					NULL);
+
 			/* Send response to the receptor on receiving the marker
-			 *packet */
+			 * packet */
 			send_range_test_marker_rsp();
 			/*send marker indication to Host UI */
 			usr_range_test_marker_ind(frame_info->mpdu,
@@ -1436,12 +1471,13 @@ static void config_per_test_parameters(void)
 	curr_trx_config_params.antenna_selected
 		= default_trx_config_params.antenna_selected
 				= ANT_CTRL_1;
+
 	/* This is required for set default config request command to set the
-	 *config parameters to their defaults */
+	 * config parameters to their defaults */
 	/* Disable antenna diversity by default */
 	/* Enable A1/X2 */
 	tal_ant_div_config(ANT_DIVERSITY_DISABLE, ANT_CTRL_1); /* Enable A1/X2
-	                                                        **/
+	                                                       **/
 
 #else
 	curr_trx_config_params.antenna_diversity
@@ -1498,7 +1534,7 @@ static void config_per_test_parameters(void)
 			(pib_value_t *)&default_trx_config_params.channel);
 
 	/* Make the ISM frequency as null as IEEE channel is set in default case
-	 **/
+	**/
 #if (TAL_TYPE == AT86RF233)
 	curr_trx_config_params.ism_frequency
 		= default_trx_config_params.ism_frequency = 0.0;
@@ -1511,7 +1547,7 @@ static void config_per_test_parameters(void)
 			(pib_value_t *)&default_trx_config_params.channel_page);
 
 	/* As tx power is already configure by TAL in tal_pib.c get it for
-	 *application*/
+	 * application*/
 	temp = TAL_TRANSMIT_POWER_DEFAULT;
 	tal_pib_set(phyTransmitPower, (pib_value_t *)&temp);
 
@@ -1590,7 +1626,7 @@ static void set_transceiver_state(uint8_t trx_state)
 	if (true == trx_sleep_status) {
 		switch (trx_state) {
 			/* Wake up the trasceiver as Toggle sleep cmd is
-			 *received */
+			 * received */
 #ifdef ENABLE_DEEP_SLEEP
 		case TRX_SLEEP:
 		{
@@ -1599,14 +1635,14 @@ static void set_transceiver_state(uint8_t trx_state)
 		break;
 
 		/* Wake up the trasceiver as Toggle deep sleep cmd is received
-		 **/
+		**/
 		case TRX_DEEP_SLEEP:
 		{
 			toggle_trx_sleep(DEEP_SLEEP_MODE);
 
 			/* After wakeup from deep sleep,trx registers shall be
 			 * restored, Antenna diversity is also enabled by
-			 *default,
+			 * default,
 			 * It has to be disabled to demonstrate RPC
 			 */
 			recover_all_settings();
@@ -1620,14 +1656,14 @@ static void set_transceiver_state(uint8_t trx_state)
 			toggle_trx_sleep();
 		}
 		break;
-
 #endif /* End of ENABLE_DEEP_SLEEP */
+
 		/* For any cmd other than toggle sleep, return with error code
-		 **/
+		**/
 		default:
 		{
 			/* Send confirmation with status Failure because the
-			 *transceiver is in sleep */
+			 * transceiver is in sleep */
 			usr_perf_set_confirm(TRANSCEIVER_IN_SLEEP,
 					PARAM_TRX_STATE,
 					(param_value_t *)&trx_state);
@@ -1650,8 +1686,9 @@ static void set_transceiver_state(uint8_t trx_state)
 	{
 		/* save user setting before reset */
 #if (TAL_TYPE != AT86RF230B)
+
 		/* Save user settings like antenna diversity  & Rx sensitivity
-		 **/
+		**/
 		save_all_settings();
 #endif
 		if (MAC_SUCCESS == tal_reset(false)) {
@@ -1670,7 +1707,7 @@ static void set_transceiver_state(uint8_t trx_state)
 
 		/*
 		 *  Disable antenna diversity: to reduce the power consumption
-		 *or
+		 * or
 		 *  avoid leakage current of an external RF switch during SLEEP.
 		 */
 		tal_ant_div_config(ANT_DIVERSITY_DISABLE, ANTENNA_DEFAULT);
@@ -1718,7 +1755,7 @@ static void set_transceiver_state(uint8_t trx_state)
 	case TRX_DEEP_SLEEP:
 	{
 		/* Save user settings like antenna diversity  & Rx sensitivity
-		 **/
+		**/
 		save_all_settings();
 		toggle_trx_sleep(DEEP_SLEEP_MODE);
 		curr_trx_config_params.trx_state = TRX_DEEP_SLEEP;
@@ -2000,7 +2037,7 @@ void read_trx_registers(uint16_t reg_addr)
 
 	{
 		/* Send the confirmation with status as OUT_OF_RANGE register
-		 *address */
+		 * address */
 		usr_register_read_confirm(VALUE_OUT_OF_RANGE, reg_addr,
 				reg_val);
 		return;
@@ -2030,7 +2067,7 @@ void write_trx_registers(uint16_t reg_addr, uint8_t reg_val)
 #endif
 	{
 		/* Send the confirmation with status as OUT_OF_RANGE register
-		 *address */
+		 * address */
 		usr_register_write_confirm(VALUE_OUT_OF_RANGE, reg_addr,
 				reg_val);
 		return;
@@ -2056,7 +2093,7 @@ void dump_trx_register_values(uint16_t start_reg_addr, uint16_t end_reg_addr)
 	num_of_reg_to_read = ((end_reg_addr - start_reg_addr));
 	if (num_of_reg_to_read < 0) {
 		/* Send the confirmation with status as OUT_OF_RANGE register
-		 *address */
+		 * address */
 		usr_register_dump_confirm(INVALID_REGISTER_ORDER,
 				start_reg_addr,
 				end_reg_addr,
@@ -2072,7 +2109,7 @@ void dump_trx_register_values(uint16_t start_reg_addr, uint16_t end_reg_addr)
 
 	if (status == MAC_SUCCESS) {
 		/* Send the confirmation with status as MAC_SUCCESS register
-		 *address */
+		 * address */
 		usr_register_dump_confirm(MAC_SUCCESS,
 				start_reg_addr,
 				end_reg_addr,
@@ -2184,8 +2221,8 @@ void per_mode_initiator_ed_end_cb(uint8_t energy_level)
 /*
  * *\brief Function to set the various configuration parameters for PER Test
  *
- **\param param_type   Type of the parameter to be set
- **\param param_value  Pointer to the value to be set
+ ***\param param_type   Type of the parameter to be set
+ ***\param param_value  Pointer to the value to be set
  */
 
 void perf_set_req(uint8_t param_type, param_value_t *param_value)
@@ -2228,14 +2265,14 @@ void perf_set_req(uint8_t param_type, param_value_t *param_value)
 	break;
 
 	case PARAM_FRAME_RETRY: /* Frame Retry configuration request-
-		                 *Enable/Disable */
+		                 * Enable/Disable */
 	{
 		config_frame_retry(param_value->param_value_bool);
 	}
 	break;
 
 	case PARAM_ACK_REQUEST: /* Auto Ack Request configuration request-
-		                 *Enable/Disable */
+		                 * Enable/Disable */
 	{
 		config_ack_request(param_value->param_value_bool);
 	}
@@ -2249,7 +2286,7 @@ void perf_set_req(uint8_t param_type, param_value_t *param_value)
 	break;
 
 	case PARAM_ANT_DIVERSITY_ON_PEER: /* Antenna Diversity Configuration on
-		                           *remote request */
+		                           * remote request */
 	{
 		config_antenna_diversity_peer_node(param_value->param_value_8bit);
 	}
@@ -2258,7 +2295,7 @@ void perf_set_req(uint8_t param_type, param_value_t *param_value)
 #endif /* #if (ANTENNA_DIVERSITY ==1) */
 #if (TAL_TYPE != AT86RF230B)
 	case PARAM_DESENSITIZATION: /* Configure Rx Desensitization request-
-		                     *Enable /Disable*/
+		                     * Enable /Disable*/
 	{
 		config_rx_desensitization(param_value->param_value_bool);
 	}
@@ -2280,7 +2317,7 @@ void perf_set_req(uint8_t param_type, param_value_t *param_value)
 	break;
 
 	case PARAM_NO_OF_TEST_FRAMES: /* Set No.Of test Frames for PER test
-		                       *request */
+		                       * request */
 	{
 		uint32_t no_of_test_frames;
 		MEMCPY_ENDIAN(&(no_of_test_frames),
@@ -2302,7 +2339,7 @@ void perf_set_req(uint8_t param_type, param_value_t *param_value)
 	break;
 
 	case PARAM_PHY_FRAME_LENGTH:  /* Set PHY frame length for PER test
-		                       *request */
+		                       * request */
 	{
 		set_phy_frame_length(param_value->param_value_8bit);
 	}
@@ -2334,7 +2371,7 @@ void perf_set_req(uint8_t param_type, param_value_t *param_value)
 /*
  * *\brief Function to get the various configuration parameters for PER Test
  *
- **\param param_type Parameter type to be read
+ ***\param param_type Parameter type to be read
  */
 void perf_get_req(uint8_t param_type)
 {
@@ -2400,7 +2437,7 @@ void perf_get_req(uint8_t param_type)
 	break;
 
 	case PARAM_FRAME_RETRY: /* Frame Retry configuration request-
-		                 *Enable/Disable */
+		                 * Enable/Disable */
 	{
 		/* Send Get confirmation with status SUCCESS */
 		usr_perf_get_confirm(MAC_SUCCESS,
@@ -2410,7 +2447,7 @@ void perf_get_req(uint8_t param_type)
 	break;
 
 	case PARAM_ACK_REQUEST: /* Auto Ack Request configuration request-
-		                 *Enable/Disable */
+		                 * Enable/Disable */
 	{
 		/* Send Get confirmation with status SUCCESS */
 		usr_perf_get_confirm(MAC_SUCCESS,
@@ -2430,7 +2467,7 @@ void perf_get_req(uint8_t param_type)
 	break;
 
 	case PARAM_ANT_DIVERSITY_ON_PEER: /* Antenna Diversity Configuration on
-		                           *remote request */
+		                           * remote request */
 	{
 		get_diversity_settings_peer_node();
 	}
@@ -2439,7 +2476,7 @@ void perf_get_req(uint8_t param_type)
 #endif /* #if (ANTENNA_DIVERSITY == 1) */
 #if (TAL_TYPE != AT86RF230B)
 	case PARAM_DESENSITIZATION: /* Configure Rx Desensitization request-
-		                     *Enable /Disable*/
+		                     * Enable /Disable*/
 	{
 		/* Send Get confirmation with status SUCCESS */
 		usr_perf_get_confirm(MAC_SUCCESS,
@@ -2470,7 +2507,7 @@ void perf_get_req(uint8_t param_type)
 	break;
 
 	case PARAM_NO_OF_TEST_FRAMES: /* Set No.Of test Frames for PER test
-		                       *request */
+		                       * request */
 	{
 		/* Send get confirmation with status SUCCESS */
 		usr_perf_get_confirm(MAC_SUCCESS,
@@ -2480,7 +2517,7 @@ void perf_get_req(uint8_t param_type)
 	break;
 
 	case PARAM_PHY_FRAME_LENGTH:  /* Set PHY frame length for PER test
-		                       *request */
+		                       * request */
 	{
 		/* Send get confirmation with status SUCCESS */
 		usr_perf_get_confirm(MAC_SUCCESS,
@@ -2644,8 +2681,9 @@ static void set_channel_page(uint8_t channel_page)
 				dbm_val = CONV_phyTransmitPower_TO_DBM(tx_pwr);
 				curr_trx_config_params.tx_power_dbm = dbm_val;
 #endif
+
 				/* Send the confirmation with status as SUCCESS
-				 **/
+				**/
 				usr_perf_set_confirm(MAC_SUCCESS,
 						PARAM_CHANNEL_PAGE,
 						(param_value_t *)&channel_page);
@@ -2685,12 +2723,12 @@ static void set_tx_power(uint8_t tx_power_format, int8_t power_value)
 		if (tx_pwr_reg <= MIN_TX_PWR_REG_VAL) {
 			if (true == peer_found) {
 				/* send the tx power in Reg value to remote node
-				 **/
+				**/
 				send_parameters_changed(TX_POWER_REG,
 						(uint8_t)tx_pwr_reg);
 			} else {
 				/* set the Tx power on source node in case of no
-				 *peer */
+				 * peer */
 				if (MAC_SUCCESS ==
 						tal_convert_reg_value_to_dBm(
 						tx_pwr_reg,
@@ -2703,25 +2741,25 @@ static void set_tx_power(uint8_t tx_power_format, int8_t power_value)
 					/* To make sure that TX_PWR register is
 					 * updated with the
 					 * value whatever user povided.Otherwise
-					 *lowest dBm power
+					 * lowest dBm power
 					 * (highest reg value will be taken)
 					 */
 					tal_set_tx_pwr(REGISTER_VALUE,
 							tx_pwr_reg);
 
 					/* update the data base with this value
-					 **/
+					**/
 					curr_trx_config_params.tx_power_reg
 						= tx_pwr_reg;
 
 					/*Tx power in dBm also need to be
-					 *updated as it changes with reg value
+					 * updated as it changes with reg value
 					 **/
 					curr_trx_config_params.tx_power_dbm
 						= tx_pwr_dbm;
 
 					/* Send Set confirmation with status
-					 *SUCCESS */
+					 * SUCCESS */
 					usr_perf_set_confirm(MAC_SUCCESS,
 							PARAM_TX_POWER_REG,
 							(param_value_t *)&tx_pwr_reg);
@@ -2758,7 +2796,7 @@ static void set_tx_power(uint8_t tx_power_format, int8_t power_value)
 						(uint8_t)tx_pwr_dbm);
 			} else {
 				/* set the Tx power on source node in case of no
-				 *peer */
+				 * peer */
 				temp_var = CONV_DBM_TO_phyTransmitPower(
 						tx_pwr_dbm);
 				tal_pib_set(phyTransmitPower,
@@ -2769,7 +2807,7 @@ static void set_tx_power(uint8_t tx_power_format, int8_t power_value)
 					= tx_pwr_dbm;
 
 				/*Tx power in Reg also need to be updated as it
-				 *changes with dBm value */
+				 * changes with dBm value */
 				tal_get_curr_trx_config(TX_PWR,
 						&(curr_trx_config_params
 						.tx_power_reg));
@@ -2781,13 +2819,14 @@ static void set_tx_power(uint8_t tx_power_format, int8_t power_value)
 			}
 		} else {
 			/* Send Set confirmation with status VALUE_OUT_OF_RANGE
-			 **/
+			**/
 			usr_perf_set_confirm(VALUE_OUT_OF_RANGE,
 					PARAM_TX_POWER_DBM,
 					(param_value_t *)&tx_pwr_dbm);
 		}
 
 #else   /* Handle Tx power for Rf212 & rf212B */
+
 		/* Check for the valid range of tx power in dBm based on channel
 		 *& page */
 		if (validate_tx_power(tx_pwr_dbm)) {
@@ -2797,7 +2836,7 @@ static void set_tx_power(uint8_t tx_power_format, int8_t power_value)
 						(uint8_t)tx_pwr_dbm);
 			} else {
 				/* set the Tx power on source node in case of no
-				 *peer */
+				 * peer */
 				temp_var = CONV_DBM_TO_phyTransmitPower(
 						tx_pwr_dbm);
 				tal_pib_set(phyTransmitPower,
@@ -2871,8 +2910,9 @@ void start_ed_scan(uint8_t ed_scan_duration, uint32_t channel_sel_mask)
 	if (scan_time >= 60) {
 		uint8_t scan_time_min = (uint8_t)(scan_time / 60);
 		float scan_time_sec = (scan_time -  (scan_time_min * 60));
+
 		/* Send confirm with the status as SUCCESS and scan time in
-		 *minutes and secs */
+		 * minutes and secs */
 		usr_ed_scan_start_confirm(MAC_SUCCESS, scan_time_min, reverse_float(
 				scan_time_sec));
 	} else {
@@ -2925,8 +2965,9 @@ void get_sensor_data(void)
 void set_default_configuration(void)
 {
 	trx_config_params_t dummy_params = {0};
+
 	/* Send set_default_config_req command if the peer device is connected
-	 **/
+	**/
 	if (true == peer_found) {
 		/* CRC set request sent successfully */
 		if (send_set_default_config_command()) {
@@ -2938,8 +2979,8 @@ void set_default_configuration(void)
 			op_mode = TX_OP_MODE;
 		}
 	} else { /* Single node Tests case,set default values only on source
-	          *node */
-		/* Set the default values for all configurable parameters */
+		  * node */
+		 /* Set the default values for all configurable parameters */
 		config_per_test_parameters();
 
 		/* Send the confirmation with the status as SUCCESS */
@@ -2964,8 +3005,9 @@ void get_current_configuration(void)
 	tal_pib_set(phyCurrentChannel,
 			(pib_value_t *)&curr_trx_config_params.channel);
 #else
+
 	/* If the transceiver currently not set in ism frequencies, set the IEEE
-	 *channel */
+	 * channel */
 	if (curr_trx_config_params.channel != INVALID_VALUE) {
 		/* Channel configuration */
 		tal_pib_set(phyCurrentChannel,
@@ -3107,18 +3149,18 @@ static void set_antenna_diversity_settings(uint8_t config_value)
 	uint8_t curr_state = INVALID_VALUE;
 
 	if (ENABLE_ANT_DIVERSITY == config_value) { /* Enable antenna diversity
-	                                             *request */
+		                                     * request */
 		/* Update the data base with these values*/
 		curr_trx_config_params.antenna_diversity = true;
 		curr_trx_config_params.antenna_selected = ANT_CTRL_0;
 
 		tal_ant_div_config(ANT_DIVERSITY_ENABLE, ANTENNA_DEFAULT);
 	} else { /* Disable antenna diversity request */
-		/* To avoid the transition time from antenna diversity enabled
-		 * to disabled
-		 * during receiver on state,switch off the transceiver and
-		 *restore the
-		 * state after the antenna diversity settings are done */
+		 /* To avoid the transition time from antenna diversity enabled
+		  * to disabled
+		  * during receiver on state,switch off the transceiver and
+		  * restore the
+		  * state after the antenna diversity settings are done */
 		curr_state = tal_get_trx_status();
 
 		if ((RX_ON == curr_state) || (RX_AACK_ON == curr_state)) {
@@ -3127,7 +3169,7 @@ static void set_antenna_diversity_settings(uint8_t config_value)
 
 		switch (config_value) {
 		case ENABLE_ANTENNA_1: /* Disable antenna Diversity request &
-			                *Enable ANT1 */
+			                * Enable ANT1 */
 		{
 			/* Update the data base with these values*/
 			curr_trx_config_params.antenna_diversity = false;
@@ -3136,7 +3178,7 @@ static void set_antenna_diversity_settings(uint8_t config_value)
 		break;
 
 		case ENABLE_ANTENNA_2: /* Disable antenna Diversity request &
-			                *Enable ANT2 */
+			                * Enable ANT2 */
 		{
 			/* Update the data base with these values*/
 			curr_trx_config_params.antenna_diversity = false;
@@ -3147,7 +3189,7 @@ static void set_antenna_diversity_settings(uint8_t config_value)
 		default:
 		{
 			/* Send Set confirmation with status VALUE_OUT_OF_RANGE
-			 **/
+			**/
 			usr_perf_set_confirm(VALUE_OUT_OF_RANGE,
 					PARAM_ANT_DIVERSITY,
 					(param_value_t *)&config_value);
@@ -3183,7 +3225,7 @@ static void config_antenna_diversity_peer_node(uint8_t config_value)
 		div_set_req_t div_msg;
 		switch (config_value) {
 		case ENABLE_ANT_DIVERSITY: /* Enable Antenna diversity on peer
-			                    *node request */
+			                    * node request */
 		{
 			div_msg.status = ANT_DIV_ENABLE;
 			div_msg.ant_sel = ANT_CTRL_0; /* No antenna selected */
@@ -3191,7 +3233,7 @@ static void config_antenna_diversity_peer_node(uint8_t config_value)
 		break;
 
 		case ENABLE_ANTENNA_1: /* Disable Antenna diversity on peer node
-			                *request & select ANT1*/
+			                * request & select ANT1*/
 		{
 			div_msg.status = ANT_DIV_DISABLE;
 			div_msg.ant_sel = ANT_CTRL_1;
@@ -3199,7 +3241,7 @@ static void config_antenna_diversity_peer_node(uint8_t config_value)
 		break;
 
 		case ENABLE_ANTENNA_2: /* Disable Antenna diversity on peer node
-			                *request & select ANT2*/
+			                * request & select ANT2*/
 		{
 			div_msg.status = ANT_DIV_DISABLE;
 			div_msg.ant_sel = ANT_CTRL_2;
@@ -3260,7 +3302,7 @@ static void config_crc_peer_node(bool config_value)
 			op_mode = TX_OP_MODE;
 		}
 	} else { /* The node is operating in the SINGLE NODE TESTS mode*/
-		/* Send the confirmation with status INVALID_CMD */
+		 /* Send the confirmation with status INVALID_CMD */
 		usr_perf_set_confirm(INVALID_CMD,
 				PARAM_CRC_ON_PEER,
 				(param_value_t *)&config_value);
@@ -3325,7 +3367,7 @@ void disconnect_peer_node(void)
 			op_mode = TX_OP_MODE;
 
 			/* Send confirmation with status as TRANSMISSION_FAILURE
-			 **/
+			**/
 			usr_peer_disconnect_confirm(TRANSMISSION_FAILURE);
 		}
 	} else { /* non PER mode case */
@@ -3347,7 +3389,7 @@ void initiate_per_test(void)
 {
 	if (TX_OP_MODE == op_mode) {
 		/* Initiate a packet to tell the receptor that a new PER test is
-		 *going to be started */
+		 * going to be started */
 		if (send_per_test_start_cmd()) {
 			op_mode = PER_TEST_START;
 		}
@@ -3361,7 +3403,7 @@ void initiate_range_test(void)
 {
 	if (TX_OP_MODE == op_mode) {
 		/* Initiate a packet to tell the receptor that a new Range test
-		 *is going to be started */
+		 * is going to be started */
 		if (send_range_test_start_cmd()) {
 			op_mode = RANGE_TEST_START;
 		}
@@ -3378,8 +3420,8 @@ void initiate_range_test(void)
  */
 static void start_test(void)
 {
-    /*Count/SeqNum of PerTest,will be incremented for every per test done*/
-    per_test_count++;
+	/*Count/SeqNum of PerTest,will be incremented for every per test done*/
+	per_test_count++;
 	/* Check for the current operating mode */
 	if (TX_OP_MODE == op_mode) {
 		frames_to_transmit = curr_trx_config_params.number_test_frames;
@@ -3424,7 +3466,7 @@ static void start_test(void)
 static void start_range_test(void)
 {
 	/* set the range_test_in_progress flag to true to indicate range test is
-	 *in progress */
+	 * in progress */
 	range_test_in_progress = true;
 
 	/* Send the confirmation with the status as SUCCESS */
@@ -3434,7 +3476,7 @@ static void start_range_test(void)
 	op_mode = RANGE_TEST_TX;
 
 	/* Start a Range test timer  to start the  transmission of range test
-	 *packets periodically*/
+	 * packets periodically*/
 	sw_timer_start(T_APP_TIMER_RANGE,
 			RANGE_TX_BEACON_START_INTERVAL,
 			SW_TIMEOUT_RELATIVE,
@@ -3448,13 +3490,13 @@ static void start_range_test(void)
 void stop_range_test(void)
 {
 	/* Check for the current operating mode and send stop range test command
-	 *to the receptor*/
+	 * to the receptor*/
 	if ((RANGE_TEST_TX == op_mode) && (true == range_test_in_progress) &&
 			send_range_test_stop_cmd()) {
 		/* Change the opmode to RANGE_TEST_STOP so that once the cmd is
 		 * sent succesfully
 		 * the mode can be changed back to TX_OP_MODE and flags can be
-		 *cleared and send confirmation to Host*/
+		 * cleared and send confirmation to Host*/
 		op_mode = RANGE_TEST_STOP;
 	} else {
 		/* Send the confirmation with the status as INVALID_CMD
@@ -3491,28 +3533,27 @@ static void configure_frame_sending(void)
 				= (uint8_t *)node_info.tx_frame_info +
 					LARGE_BUFFER_SIZE -
 					app_frame_length - FCS_LEN; /* Add 2
-	                                                             *octets for
-	                                                             *FCS. */
+	                                                            * octets for
+	                                                            * FCS. */
 
 	tmp = (app_payload_t *)temp_frame_ptr;
 
 	(tmp->cmd_id) = PER_TEST_PKT;
 
 	temp_frame_ptr++;
-    
-    (tmp->seq_num) = per_test_count;
-    
-    temp_frame_ptr++;
+
+	(tmp->seq_num) = per_test_count;
+
+	temp_frame_ptr++;
+
 	/*
 	 * Assign dummy payload values.
 	 * Payload is stored to the end of the buffer avoiding payload copying
-	 *by TAL.
+	 * by TAL.
 	 */
 	for (index = 0; index < (app_frame_length - 2); index++) { /* 1=> cmd ID
-	                                                            **/
-
+		                                                   **/
 		*temp_frame_ptr++ = index; /* dummy values */
-        
 	}
 
 	/* Source Address */
@@ -3585,15 +3626,16 @@ static void configure_range_test_frame_sending(void)
 
 	/* Get length of current frame. */
 	app_frame_length = (RANGE_TEST_PKT_LENGTH - FRAME_OVERHEAD); /* to be
-	                                                              * changed */
+	                                                              * changed
+	                                                              **/
 
 	/* Set payload pointer. */
 	frame_ptr = temp_frame_ptr
 				= (uint8_t *)node_info.tx_frame_info +
 					LARGE_BUFFER_SIZE -
 					app_frame_length - FCS_LEN; /* Add 2
-	                                                             *octets for
-	                                                             *FCS. */
+	                                                            * octets for
+	                                                            * FCS. */
 
 	tmp = (app_payload_t *)temp_frame_ptr;
 
@@ -3601,12 +3643,15 @@ static void configure_range_test_frame_sending(void)
 
 	(tmp->cmd_id) = RANGE_TEST_PKT;
 	temp_frame_ptr++;
-	(tmp->seq_num) = seq_num_initiator; /* to be incremented for every frame */
+	(tmp->seq_num) = seq_num_initiator; /* to be incremented for every frame
+	                                     **/
 	temp_frame_ptr++;
 	range_test_frame_cnt++;
 	data->frame_count = (CCPU_ENDIAN_TO_LE32(range_test_frame_cnt)); /* to
 	                                                                  * be
-	                                                                  * checked */
+	                                                                  *
+	                                                                  *checked
+	                                                                  **/
 	temp_frame_ptr += 4;
 	data->ed = 0;
 	temp_frame_ptr++;
@@ -3616,10 +3661,10 @@ static void configure_range_test_frame_sending(void)
 	/*
 	 * Assign dummy payload values.
 	 * Payload is stored to the end of the buffer avoiding payload copying
-	 *by TAL.
+	 * by TAL.
 	 */
 	for (index = 0; index < (app_frame_length - 8); index++) { /* 1=> cmd ID
-	                                                            **/
+		                                                   **/
 		*temp_frame_ptr++ = index; /* dummy values */
 	}
 
@@ -3747,7 +3792,7 @@ static bool send_per_test_start_cmd(void)
 
 /**
  * \brief Function to send the range test start command to the receptor to start
- *the mode in the receptor
+ * the mode in the receptor
  */
 static bool send_range_test_start_cmd(void)
 {
@@ -3784,7 +3829,7 @@ static bool send_range_test_start_cmd(void)
 
 /**
  * \brief Function to send the range test stop command to the receptor to stop
- *the mode in the receptor
+ * the mode in the receptor
  */
 static bool send_range_test_stop_cmd(void)
 {
@@ -3821,7 +3866,7 @@ static bool send_range_test_stop_cmd(void)
 
 /**
  * \brief Function to send the response packet for the marker sent from the
- *receptor
+ * receptor
  */
 static bool send_range_test_marker_rsp(void)
 {
@@ -4302,16 +4347,16 @@ uint8_t check_error_conditions(void)
 	if (true == trx_sleep_status) {
 		error_code = TRANSCEIVER_IN_SLEEP;
 	} else if (true == scanning) { /* Check whether ED scan is in progress
-	                                **/
+		                       **/
 		error_code = ED_SCAN_UNDER_PROGRESS;
 	} else if (CONTINUOUS_TX_MODE == op_mode) { /* Check CW transmission is
-	                                             *going on */
+		                                     * going on */
 		error_code = CW_TRANSMISSION_UNDER_PROGRESS;
 	} else if (frames_to_transmit > 0) { /* Check currently Transmission is
-	                                      *initiated */
+		                              * initiated */
 		error_code = TRANSMISSION_UNDER_PROGRESS;
 	} else if (true == range_test_in_progress) { /* Check if Range Mode is
-	                                              *initiated */
+		                                      * initiated */
 		error_code = RANGE_TEST_IN_PROGRESS;
 	} else {
 		error_code = MAC_SUCCESS;
@@ -4352,9 +4397,9 @@ static void config_rpc_mode(bool config_value)
 		/*
 		 *  To avoid delay in transition during RPC enabled and disabled
 		 *  continuously when trx is in RX_ON or RX_AACK_ON. Added this
-		 *code
+		 * code
 		 *  to set the trx state to TRX_OFF before enabling RPC and set
-		 *back
+		 * back
 		 * to RX_ON or RX_AACK_ON state after
 		 */
 		if ((RX_ON == curr_state) || (RX_AACK_ON == curr_state)) {
@@ -4362,11 +4407,11 @@ static void config_rpc_mode(bool config_value)
 		}
 
 		tal_rpc_mode_config(ENABLE_ALL_RPC_MODES); /* RPC feature
-		                                            *configuration. */
+		                                            * configuration. */
 #if (ANTENNA_DIVERSITY == 1)
 		/*  Disable antenna diversity */
 		tal_ant_div_config(ANT_DIVERSITY_DISABLE, ANT_CTRL_1); /* Enable
-		                                                        *A1/X2
+		                                                        * A1/X2
 		                                                        **/
 
 		/* Update this changes in the data base */
@@ -4401,14 +4446,14 @@ static void config_frequency(float frequency)
 	if ((frequency < MIN_ISM_FREQUENCY_MHZ) ||
 			(frequency > MAX_ISM_FREQUENCY_MHZ)) {
 		/* Send the confirmation for Set request with the status as
-		 *VALUE_OUT_OF_RANGE  */
+		 * VALUE_OUT_OF_RANGE  */
 		usr_perf_set_confirm(VALUE_OUT_OF_RANGE, PARAM_ISM_FREQUENCY,
 				(param_value_t *)&frequency);
 		return;
 	}
 
 	/* Calculate CC_NUMBER & CC_BAND reg values based on received frequency
-	 **/
+	**/
 	if (frequency < MID_ISM_FREQUENCY_MHZ) {
 		cc_band = CC_BAND_8;
 		cc_number = (uint8_t)((frequency - BASE_ISM_FREQUENCY_MHZ) * 2);
@@ -4427,7 +4472,7 @@ static void config_frequency(float frequency)
 		}
 	} else {
 		/* write the CC_BAND,CC_NUMBER registers as transceiver is in
-		 *TRX_OFF */
+		 * TRX_OFF */
 		pal_trx_bit_write(SR_CC_BAND, cc_band);
 		pal_trx_bit_write(SR_CC_NUMBER, cc_number);
 		tal_calculate_frequency(cc_band, cc_number,
@@ -4440,7 +4485,7 @@ static void config_frequency(float frequency)
 		curr_trx_config_params.channel = INVALID_VALUE;
 
 		/* Send the confirmation for Set request with the status as
-		 *SUCCESS */
+		 * SUCCESS */
 		usr_perf_set_confirm(MAC_SUCCESS,
 				PARAM_ISM_FREQUENCY,
 				(param_value_t *)&frequency);
@@ -4647,7 +4692,7 @@ static bool validate_tx_power(int8_t dbm_value)
 				}
 			} else { /* channels 1-10 */
 				if (dbm_value > 11) { /* MAX_TX_PWR_OQPSK_1000
-					               **/
+						      **/
 					return (false);
 				}
 			}
