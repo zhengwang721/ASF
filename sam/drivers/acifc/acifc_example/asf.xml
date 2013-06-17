@@ -4,7 +4,7 @@
 			This example is aimed to demonstrate the usage of the ACIFC peripheral.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="Analog Comparator"/>
+			<keyword value="Analog Conversion"/>
 		</info>
 		<build type="c-source" value="acifc_example.c"/>
 		<build type="include-path" value="."/>

@@ -39,6 +39,7 @@
  *
  * \asf_license_stop
  */
+
 /*
  * Copyright (c) 2012, Atmel Corporation All rights reserved.
  *
@@ -57,7 +58,6 @@
  */
 
 /* === Includes ============================================================= */
-
 
 /* === Macros =============================================================== */
 /* RANGE_TEST_TX_ON state functions */
@@ -96,7 +96,6 @@ void range_test_tx_on_exit(void);
  */
 void range_test_tx_off_task(void);
 
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -105,6 +104,6 @@ extern "C" {
 } /* extern "C" */
 #endif
 
-//! \}
+/* ! \} */
 #endif /* APP_STATE_H */
 /* EOF */

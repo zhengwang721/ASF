@@ -39,18 +39,18 @@
  *
  * \asf_license_stop
  */
+
 /**
  * \page license License
  * Copyright(c) 2013, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
- 
- /**
-  * \mainpage Serial Bridge Application
-  */
-/* === INCLUDES ============================================================ */
 
+/**
+ * \mainpage Serial Bridge Application
+ */
+/* === INCLUDES ============================================================ */
 
 #include "sio2host.h"
 #include "sio2ncp.h"
@@ -58,27 +58,30 @@
 /* === MACROS ============================================================== */
 #define SIO_RX_BUF_SIZE                 (32)
 
-/* === PROTOTYPES =============================================================== */
+/* === PROTOTYPES
+ *=============================================================== */
 
 /**
  * \defgroup group_serial_bridge SERIAL BRIDGE
- * The Serial Bridge Module acts as a bridge layer between the Host and NCP for Serial I/O Communications
+ * The Serial Bridge Module acts as a bridge layer between the Host and NCP for
+ *Serial I/O Communications
  * @{
  */
- 
- /**
-  *  \brief Initializes the Serial Bridge Module 
-  * Both Host and NCP Serial interfaces are initialized 
-  * \return STATUS_OK if initialization is succesful else FAILURE
-  */
-  
+
+/**
+ *  \brief Initializes the Serial Bridge Module
+ * Both Host and NCP Serial interfaces are initialized
+ * \return STATUS_OK if initialization is succesful else FAILURE
+ */
+
 void serial_bridge_init(void);
 
 /**
- * \brief The serial_bridge_handler performs the functionality of the serial bridge 
+ * \brief The serial_bridge_handler performs the functionality of the serial
+ *bridge
  * by pushing data that comes from the host to the NCP and vice-versa
  */
 void serial_bridge_handler(void);
 
-//! @}
+/* ! @} */
 /* EOF */

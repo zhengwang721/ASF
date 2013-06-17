@@ -4,7 +4,7 @@
 		A simple example for drawing pictures and strings on the ILI9325 LCD controller.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="Display"/>
+			<keyword value="Graphics"/>
 		</info>
 		<build type="c-source" value="ili9325_example.c"/>
 		<build type="include-path" value="."/>
