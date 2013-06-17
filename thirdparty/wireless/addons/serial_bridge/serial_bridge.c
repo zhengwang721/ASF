@@ -39,16 +39,17 @@
  *
  * \asf_license_stop
  */
+
 /**
  * \page license License
  * Copyright(c) 2013, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
- 
- /**
-  * \mainpage Serial Bridge Application
-  */
+
+/**
+ * \mainpage Serial Bridge Application
+ */
 
 /* === INCLUDES ============================================================ */
 
@@ -60,38 +61,31 @@
 
 /* === GLOBALS ============================================================== */
 
-uint8_t length_received_host , length_received_ncp;	
+uint8_t length_received_host, length_received_ncp;
 uint8_t temp[SIO_RX_BUF_SIZE];
 
 /* === IMPLEMENTATION ====================================================== */
 
 void serial_bridge_init()
 {
+	sio2host_init();
 
-	sio2host_init() ;
-    
-    sio2ncp_init();
-
-	
+	sio2ncp_init();
 }
 
 void serial_bridge_handler()
 {
-
-	length_received_host = sio2host_rx(temp,SIO_RX_BUF_SIZE);
-	if(length_received_host !=0)
-	{
-		sio2ncp_tx(temp,length_received_host);
+	length_received_host = sio2host_rx(temp, SIO_RX_BUF_SIZE);
+	if (length_received_host != 0) {
+		sio2ncp_tx(temp, length_received_host);
 		length_received_host = 0;
 	}
 
-	length_received_ncp = sio2ncp_rx(temp,SIO_RX_BUF_SIZE);
-	if(length_received_ncp !=0)
-	{
-		sio2host_tx(temp,length_received_ncp);
+	length_received_ncp = sio2ncp_rx(temp, SIO_RX_BUF_SIZE);
+	if (length_received_ncp != 0) {
+		sio2host_tx(temp, length_received_ncp);
 		length_received_ncp = 0;
-	} 
+	}
 }
-
 
 /* EOF */

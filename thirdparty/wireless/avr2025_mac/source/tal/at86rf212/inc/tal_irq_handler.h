@@ -39,6 +39,7 @@
  *
  * \asf_license_stop
  */
+
 /*
  * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
@@ -51,15 +52,11 @@
 
 /* === INCLUDES ============================================================ */
 
-
 /* === EXTERNALS =========================================================== */
-
 
 /* === TYPES =============================================================== */
 
-
 /* === MACROS ============================================================== */
-
 
 /* === PROTOTYPES ========================================================== */
 
@@ -67,44 +64,46 @@
 extern "C" {
 #endif
 
-    /**
-     * \addtogroup group_tal_irq_212
-     * @{
-     */
-    /**
-     * \brief Transceiver interrupt handler
-     *
-     * This function handles the transceiver generated interrupts.
-     */
-    void trx_irq_handler_cb(void);
+/**
+ * \addtogroup group_tal_irq_212
+ * @{
+ */
 
-    /**
-     * \brief Transceiver interrupt handler for awake end IRQ
-     *
-     * This function handles the transceiver awake end interrupt.
-     */
+/**
+ * \brief Transceiver interrupt handler
+ *
+ * This function handles the transceiver generated interrupts.
+ */
+void trx_irq_handler_cb(void);
 
-    void trx_irq_awake_handler_cb(void);
+/**
+ * \brief Transceiver interrupt handler for awake end IRQ
+ *
+ * This function handles the transceiver awake end interrupt.
+ */
+
+void trx_irq_awake_handler_cb(void);
 
 #if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP) || (defined __DOXYGEN__)
-    /**
-     * \brief Timestamp interrupt handler
-     *
-     * This function handles the interrupts handling the timestamp.
-     *
-     * The timestamping is only required for
-     * - beaconing networks or if timestamping is explicitly enabled,
-     * - and if antenna diversity is NOT enabled,
-     * - and if the time stamp interrupt is not explicitly disabled.
-     */
-    void trx_irq_timestamp_handler_cb(void);
+
+/**
+ * \brief Timestamp interrupt handler
+ *
+ * This function handles the interrupts handling the timestamp.
+ *
+ * The timestamping is only required for
+ * - beaconing networks or if timestamping is explicitly enabled,
+ * - and if antenna diversity is NOT enabled,
+ * - and if the time stamp interrupt is not explicitly disabled.
+ */
+void trx_irq_timestamp_handler_cb(void);
+
 #endif
 
-    //! @}
+/* ! @} */
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
-
 
 #endif /* TAL_IRQ_HANDLER_H */
 

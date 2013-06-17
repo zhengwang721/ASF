@@ -39,6 +39,7 @@
  *
  * \asf_license_stop
  */
+
 /*
  * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
@@ -61,17 +62,16 @@
 
 /* === Implementation ====================================================== */
 #if (defined __GNUC__)
-void __attribute__((weak))
-usr_mlme_disassociate_conf(uint8_t status,
-                           wpan_addr_spec_t *DeviceAddrSpec)
+void __attribute__((weak)) usr_mlme_disassociate_conf(uint8_t status,
+		wpan_addr_spec_t *DeviceAddrSpec)
 #else
 void usr_mlme_disassociate_conf(uint8_t status,
-                                wpan_addr_spec_t *DeviceAddrSpec)
+		wpan_addr_spec_t *DeviceAddrSpec)
 #endif
 {
-    /* Keep compiler happy. */
-    DeviceAddrSpec = DeviceAddrSpec;
-    status = status;
+	/* Keep compiler happy. */
+	DeviceAddrSpec = DeviceAddrSpec;
+	status = status;
 }
 
 #endif  /* (MAC_DISASSOCIATION_BASIC_SUPPORT == 1) */

@@ -40,6 +40,7 @@
  *
  * \asf_license_stop
  */
+
 /*
  * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
@@ -50,19 +51,15 @@
 #ifndef TAL_TX_H
 #define TAL_TX_H
 
-
 /* === INCLUDES ============================================================ */
 
 #include "tal.h"
 
 /* === EXTERNALS =========================================================== */
 
-
 /* === TYPES =============================================================== */
 
-
 /* === MACROS ============================================================== */
-
 
 /* === PROTOTYPES ========================================================== */
 
@@ -70,37 +67,37 @@
 extern "C" {
 #endif
 
-    /**
-     * \addtogroup group_tal_tx
-     * @{
-     */
+/**
+ * \addtogroup group_tal_tx
+ * @{
+ */
 
-    /**
-     * \brief Handles interrupts issued due to end of transmission
-     *
-     * \param underrun_occured  true if under-run has occurred
-     */
+/**
+ * \brief Handles interrupts issued due to end of transmission
+ *
+ * \param underrun_occured  true if under-run has occurred
+ */
 
-    void handle_tx_end_irq(bool underrun_occured);
+void handle_tx_end_irq(bool underrun_occured);
 
-    /**
-     * \brief Sends frame using trx features to handle CSMA and re-transmissions
-     *
-     * \param csma_mode Indicates the CSMA Mode used
-     * \param tx_retries Flag indicating if transmission retries are requested
-     *                   by the MAC layer
-     */
+/**
+ * \brief Sends frame using trx features to handle CSMA and re-transmissions
+ *
+ * \param csma_mode Indicates the CSMA Mode used
+ * \param tx_retries Flag indicating if transmission retries are requested
+ *                   by the MAC layer
+ */
 
-    void send_frame(csma_mode_t csma_mode, bool tx_retries);
+void send_frame(csma_mode_t csma_mode, bool tx_retries);
 
-    /**
-     * \brief Implements the handling of the transmission end.
-     *
-     * This function handles the callback for the transmission end.
-     */
-    void tx_done_handling(void);
+/**
+ * \brief Implements the handling of the transmission end.
+ *
+ * This function handles the callback for the transmission end.
+ */
+void tx_done_handling(void);
 
-    //! @}
+/* ! @} */
 
 #ifdef __cplusplus
 } /* extern "C" */
@@ -109,4 +106,3 @@ extern "C" {
 #endif /* TAL_TX_H */
 
 /* EOF */
-

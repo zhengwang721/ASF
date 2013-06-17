@@ -1,7 +1,7 @@
 /**
  * \file avr2025_mac.h
  *
- * \brief 
+ * \brief
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -39,7 +39,7 @@
  *
  * \asf_license_stop
  */
- 
+
 #ifndef AVR2025_MAC_H
 #define AVR2025_MAC_H
 
@@ -50,6 +50,5 @@
 #include "mac_api.h"
 #include "ieee_const.h"
 #include "mac_msg_const.h"
-
 
 #endif /* AVR2025_MAC_H */

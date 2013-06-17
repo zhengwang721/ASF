@@ -5,7 +5,7 @@
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="Timers"/>
-			<keyword value="Event system"/>
+			<keyword value="Peripheral Event System"/>
 		</info>
 		<build type="c-source" value="unit_tests.c"/>
 		<build type="module-config" subtype="required-header-file" value="conf_test.h"/>

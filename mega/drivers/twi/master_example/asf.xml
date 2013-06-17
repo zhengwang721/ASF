@@ -4,7 +4,7 @@
 		TWI as Master for megaRF
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="TWI_MASTER"/>
+			<keyword value="Communication"/>
 		</info>
 		<build type="c-source" value="twi_master_example.c"/>
 		<build type="module-config" subtype="required-header-file" value="conf_twi.h"/>

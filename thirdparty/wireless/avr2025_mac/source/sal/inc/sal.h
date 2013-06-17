@@ -40,6 +40,7 @@
  * \asf_license_stop
  *
  */
+
 /*
  * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
@@ -58,9 +59,8 @@
 
 /* === Macros ============================================================= */
 
-
-
 #if (SAL_TYPE != AT86RF2xx)
+
 /*
  * Values for SPI based systems are defined in the corresponding header files
  * for these transceivers.
@@ -68,12 +68,14 @@
 
 /* Values for SR_AES_DIR */
 #ifndef AES_DIR_ENCRYPT
+
 /**
  * Defines AES direction as encryption
  */
 #define AES_DIR_ENCRYPT              (0)
 #endif
 #ifndef AES_DIR_DECRYPT
+
 /**
  * Defines AES direction as decryption
  */
@@ -82,12 +84,14 @@
 
 /* Values for SR_AES_MODE */
 #ifndef AES_MODE_ECB
+
 /**
  * Defines AES mode as ECB
  */
 #define AES_MODE_ECB                 (0)
 #endif
 #ifndef AES_MODE_CBC
+
 /**
  * Defines AES mode as CBC
  */
@@ -97,9 +101,7 @@
 
 /* === Types ============================================================== */
 
-
 /* === Externals ========================================================== */
-
 
 /* === Prototypes ========================================================= */
 
@@ -107,121 +109,126 @@
 extern "C" {
 #endif
 
-    /**
-     * @brief Initialization of SAL.
-     *
-     * This functions initializes the SAL.
-     *
-     * @ingroup group_SalApi
-     */
-    void sal_init(void);
+/**
+ * @brief Initialization of SAL.
+ *
+ * This functions initializes the SAL.
+ *
+ * @ingroup group_SalApi
+ */
+void sal_init(void);
 
-    /**
-     * @brief Reads the result of previous AES en/decryption
-     *
-     * This function returns the result of the previous AES operation,
-     * so this function is needed in order to get the last result
-     * of a series of sal_aes_wrrd() calls.
-     *
-     * @param[out] data     - result of previous operation
-     *
-     * @ingroup group_SalApi
-     */
-    void sal_aes_read(uint8_t *data);
-
+/**
+ * @brief Reads the result of previous AES en/decryption
+ *
+ * This function returns the result of the previous AES operation,
+ * so this function is needed in order to get the last result
+ * of a series of sal_aes_wrrd() calls.
+ *
+ * @param[out] data     - result of previous operation
+ *
+ * @ingroup group_SalApi
+ */
+void sal_aes_read(uint8_t *data);
 
 #if defined(__DOXYGEN__)
-    /**
-     * @brief En/decrypt one AES block.
-     *
-     * The function returns after the AES operation is finished.
-     *
-     * @param[in]  data  AES block to be en/decrypted
-     *
-     * @ingroup group_SalApi
-     */
-    void sal_aes_exec(uint8_t *data);
 
-    /**
-     * @brief Writes data, reads previous result and does the AES en/decryption
-     *
-     * The function returns after the AES operation is finished.
-     *
-     * When sal_aes_wrrd() is called several times in sequence, from the
-     * second call onwards, odata contains the result of the previous operation.
-     * To obtain the last result, you must call sal_aes_read() at the end.
-     * Please note that any call of sal_aes_setup() as well as putting
-     * the transceiver to sleep state destroys the SRAM contents,
-     * i.e. the next call of sal_aes_wrrd() yields no meaningful result.
-     *
-     * @param[in]  idata  AES block to be en/decrypted
-     * @param[out] odata  Result of previous operation
-     *                    (odata may be NULL or equal to idata)
-     *
-     * @ingroup group_SalApi
-     */
-    void sal_aes_wrrd(uint8_t *idata, uint8_t *odata);
+/**
+ * @brief En/decrypt one AES block.
+ *
+ * The function returns after the AES operation is finished.
+ *
+ * @param[in]  data  AES block to be en/decrypted
+ *
+ * @ingroup group_SalApi
+ */
+void sal_aes_exec(uint8_t *data);
+
+/**
+ * @brief Writes data, reads previous result and does the AES en/decryption
+ *
+ * The function returns after the AES operation is finished.
+ *
+ * When sal_aes_wrrd() is called several times in sequence, from the
+ * second call onwards, odata contains the result of the previous operation.
+ * To obtain the last result, you must call sal_aes_read() at the end.
+ * Please note that any call of sal_aes_setup() as well as putting
+ * the transceiver to sleep state destroys the SRAM contents,
+ * i.e. the next call of sal_aes_wrrd() yields no meaningful result.
+ *
+ * @param[in]  idata  AES block to be en/decrypted
+ * @param[out] odata  Result of previous operation
+ *                    (odata may be NULL or equal to idata)
+ *
+ * @ingroup group_SalApi
+ */
+void sal_aes_wrrd(uint8_t *idata, uint8_t *odata);
 
 #else   /* !defined(__DOXYGEN__) */
 
 #if (SAL_TYPE == ATMEGARF_SAL) || (SAL_TYPE == SW_AES_SAL) || \
-    (SAL_TYPE == ATXMEGA_SAL)
-    void sal_aes_exec(uint8_t *data);
+	(SAL_TYPE == ATXMEGA_SAL)
+void sal_aes_exec(uint8_t *data);
+
 #elif (SAL_TYPE == AT86RF2xx)
-    void sal_aes_wrrd(uint8_t *idata, uint8_t *odata);
+void sal_aes_wrrd(uint8_t *idata, uint8_t *odata);
+
 #else
 #error "unknown SAL_TYPE"
 #endif  /* SAL_TYPE */
 
 #endif  /* __DOXYGEN__ */
 
-    /**
-     * @brief Re-inits key and state after a sleep or TRX reset
-     *
-     * This function re-initializes the AES key and the state of the
-     * AES engine after TRX sleep or reset.
-     * The contents of AES register AES_CON is restored,
-     * the next AES operation started with sal_aes_exec()
-     * will be executed correctly.
-     *
-     * @ingroup group_SalApi
-     */
-    void sal_aes_restart(void);
+/**
+ * @brief Re-inits key and state after a sleep or TRX reset
+ *
+ * This function re-initializes the AES key and the state of the
+ * AES engine after TRX sleep or reset.
+ * The contents of AES register AES_CON is restored,
+ * the next AES operation started with sal_aes_exec()
+ * will be executed correctly.
+ *
+ * @ingroup group_SalApi
+ */
+void sal_aes_restart(void);
 
-    /**
-     * @brief Cleans up the SAL/AES after STB has been completed
-     *
-     * This function puts the radio to SLEEP if it has been in SLEEP
-     * before sal_aes_restart().
-     *
-     * @ingroup group_SalApi
-     */
-#if (SAL_TYPE == AT86RF2xx) || (SAL_TYPE == ATMEGARF_SAL) || (defined __DOXYGEN__)
-    void _sal_aes_clean_up(void);
-    /** Route function macro to the corresponding function. */
+/**
+ * @brief Cleans up the SAL/AES after STB has been completed
+ *
+ * This function puts the radio to SLEEP if it has been in SLEEP
+ * before sal_aes_restart().
+ *
+ * @ingroup group_SalApi
+ */
+#if (SAL_TYPE == AT86RF2xx) || (SAL_TYPE == ATMEGARF_SAL) || \
+	(defined __DOXYGEN__)
+void _sal_aes_clean_up(void);
+
+/** Route function macro to the corresponding function. */
 #define sal_aes_clean_up()      _sal_aes_clean_up()
 #else
-    /** Route function macro to the corresponding function; here: no routing required. */
+/** Route function macro to the corresponding function; here: no routing
+ *required. */
 #define sal_aes_clean_up()
 #endif
 
-    /**
-     * @brief Setup AES unit
-     *
-     * This function perform the following tasks as part of the setup of the
-     * AES unit: key initialization, set encryption mode.
-     *
-     * @param[in] key AES key or NULL (NULL: use last key)
-     * @param[in] enc_mode  AES_MODE_ECB or AES_MODE_CBC
-     * @param[in] dir must be AES_DIR_ENCRYPT
-     *
-     * @return  False if some parameter was illegal, true else
-     *
-     * @ingroup group_SalApi
-     */
-    bool sal_aes_setup(uint8_t *key,
-                       uint8_t enc_mode,
-                       uint8_t dir);
+/**
+ * @brief Setup AES unit
+ *
+ * This function perform the following tasks as part of the setup of the
+ * AES unit: key initialization, set encryption mode.
+ *
+ * @param[in] key AES key or NULL (NULL: use last key)
+ * @param[in] enc_mode  AES_MODE_ECB or AES_MODE_CBC
+ * @param[in] dir must be AES_DIR_ENCRYPT
+ *
+ * @return  False if some parameter was illegal, true else
+ *
+ * @ingroup group_SalApi
+ */
+bool sal_aes_setup(uint8_t *key,
+		uint8_t enc_mode,
+		uint8_t dir);
 
 #ifdef __cplusplus
 } /* extern "C" */

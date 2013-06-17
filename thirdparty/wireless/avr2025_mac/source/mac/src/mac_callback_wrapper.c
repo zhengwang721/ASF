@@ -43,7 +43,6 @@
  *
  */
 
-
 /*
  * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
@@ -72,12 +71,9 @@
 
 /* === Macros ============================================================== */
 
-
 /* === Globals ============================================================= */
 
-
 /* === Prototypes ========================================================== */
-
 
 /* === Implementation ====================================================== */
 
@@ -90,56 +86,54 @@
  */
 void mcps_data_ind(uint8_t *m)
 {
-    mcps_data_ind_t *pmsg;
-    wpan_addr_spec_t src_addr;
-    wpan_addr_spec_t dst_addr;
+	mcps_data_ind_t *pmsg;
+	wpan_addr_spec_t src_addr;
+	wpan_addr_spec_t dst_addr;
 
-    /* Get the buffer body from buffer header */
-    pmsg = (mcps_data_ind_t *)BMM_BUFFER_POINTER(((buffer_t *)m));
+	/* Get the buffer body from buffer header */
+	pmsg = (mcps_data_ind_t *)BMM_BUFFER_POINTER(((buffer_t *)m));
 
-    /* Source address spec */
-    src_addr.AddrMode = pmsg->SrcAddrMode;
-    src_addr.PANId = pmsg->SrcPANId;
-    ADDR_COPY_DST_SRC_64(src_addr.Addr.long_address, pmsg->SrcAddr);
+	/* Source address spec */
+	src_addr.AddrMode = pmsg->SrcAddrMode;
+	src_addr.PANId = pmsg->SrcPANId;
+	ADDR_COPY_DST_SRC_64(src_addr.Addr.long_address, pmsg->SrcAddr);
 
-    /* Destination address spec */
-    dst_addr.AddrMode = pmsg->DstAddrMode;
-    dst_addr.PANId = pmsg->DstPANId;
-    ADDR_COPY_DST_SRC_64(dst_addr.Addr.long_address, pmsg->DstAddr);
+	/* Destination address spec */
+	dst_addr.AddrMode = pmsg->DstAddrMode;
+	dst_addr.PANId = pmsg->DstPANId;
+	ADDR_COPY_DST_SRC_64(dst_addr.Addr.long_address, pmsg->DstAddr);
 
-    /* Callback function */
+	/* Callback function */
 #ifdef MAC_SECURITY_ZIP
-    usr_mcps_data_ind(&src_addr,
-                      &dst_addr,
-                      pmsg->msduLength,
-                      pmsg->msdu,
-                      pmsg->mpduLinkQuality,
-                      pmsg->DSN,
+	usr_mcps_data_ind(&src_addr,
+			&dst_addr,
+			pmsg->msduLength,
+			pmsg->msdu,
+			pmsg->mpduLinkQuality,
+			pmsg->DSN,
     #ifdef ENABLE_TSTAMP
-                      pmsg->Timestamp,
+			pmsg->Timestamp,
     #endif  /* ENABLE_TSTAMP */
-                      pmsg->SecurityLevel,
-                      pmsg->KeyIdMode,
-                      pmsg->KeyIndex);
+			pmsg->SecurityLevel,
+			pmsg->KeyIdMode,
+			pmsg->KeyIndex);
 #else   /* No MAC_SECURITY */
-    usr_mcps_data_ind(&src_addr,
-                      &dst_addr,
-                      pmsg->msduLength,
-                      pmsg->msdu,
-                      pmsg->mpduLinkQuality,
+	usr_mcps_data_ind(&src_addr,
+			&dst_addr,
+			pmsg->msduLength,
+			pmsg->msdu,
+			pmsg->mpduLinkQuality,
     #ifdef ENABLE_TSTAMP
-                      pmsg->DSN,
-                      pmsg->Timestamp);
+			pmsg->DSN,
+			pmsg->Timestamp);
     #else
-                      pmsg->DSN);
+			pmsg->DSN);
     #endif  /* ENABLE_TSTAMP */
 #endif  /* MAC_SECURITY */
 
-    /* Free the buffer */
-    bmm_buffer_free((buffer_t *)m);
+	/* Free the buffer */
+	bmm_buffer_free((buffer_t *)m);
 }
-
-
 
 /**
  * @brief Wrapper function for messages of type mcps_data_conf_t
@@ -150,24 +144,23 @@ void mcps_data_ind(uint8_t *m)
  */
 void mcps_data_conf(uint8_t *m)
 {
-    mcps_data_conf_t *pmsg;
+	mcps_data_conf_t *pmsg;
 
-    /* Get the buffer body from buffer header */
-    pmsg = (mcps_data_conf_t *)BMM_BUFFER_POINTER(((buffer_t *)m));
+	/* Get the buffer body from buffer header */
+	pmsg = (mcps_data_conf_t *)BMM_BUFFER_POINTER(((buffer_t *)m));
 
 #ifdef ENABLE_TSTAMP
-    usr_mcps_data_conf(pmsg->msduHandle, pmsg->status, pmsg->Timestamp);
+	usr_mcps_data_conf(pmsg->msduHandle, pmsg->status, pmsg->Timestamp);
 #else
-    usr_mcps_data_conf(pmsg->msduHandle, pmsg->status);
+	usr_mcps_data_conf(pmsg->msduHandle, pmsg->status);
 #endif  /* ENABLE_TSTAMP */
 
-    /* Free the buffer */
-    bmm_buffer_free((buffer_t *)m);
+	/* Free the buffer */
+	bmm_buffer_free((buffer_t *)m);
 }
 
-
-
 #if ((MAC_PURGE_REQUEST_CONFIRM == 1) && (MAC_INDIRECT_DATA_BASIC == 1))
+
 /**
  * @brief Wrapper function for messages of type mcps_purge_conf_t
  *
@@ -177,21 +170,22 @@ void mcps_data_conf(uint8_t *m)
  */
 void mcps_purge_conf(uint8_t *m)
 {
-    mcps_purge_conf_t *pmsg;
+	mcps_purge_conf_t *pmsg;
 
-    /* Get the buffer body from buffer header */
-    pmsg = (mcps_purge_conf_t *)BMM_BUFFER_POINTER(((buffer_t *)m));
+	/* Get the buffer body from buffer header */
+	pmsg = (mcps_purge_conf_t *)BMM_BUFFER_POINTER(((buffer_t *)m));
 
-    usr_mcps_purge_conf(pmsg->msduHandle, pmsg->status);
+	usr_mcps_purge_conf(pmsg->msduHandle, pmsg->status);
 
-    /* Free the buffer */
-    bmm_buffer_free((buffer_t *)m);
+	/* Free the buffer */
+	bmm_buffer_free((buffer_t *)m);
 }
-#endif /* ((MAC_PURGE_REQUEST_CONFIRM == 1) && (MAC_INDIRECT_DATA_BASIC == 1)) */
 
-
+#endif /* ((MAC_PURGE_REQUEST_CONFIRM == 1) && (MAC_INDIRECT_DATA_BASIC == 1))
+        **/
 
 #if (MAC_ASSOCIATION_REQUEST_CONFIRM == 1)
+
 /**
  * @brief Wrapper function for messages of type mlme_associate_conf_t
  *
@@ -201,21 +195,21 @@ void mcps_purge_conf(uint8_t *m)
  */
 void mlme_associate_conf(uint8_t *m)
 {
-    mlme_associate_conf_t *pmsg;
+	mlme_associate_conf_t *pmsg;
 
-    /* Get the buffer body from buffer header */
-    pmsg = (mlme_associate_conf_t *)BMM_BUFFER_POINTER(((buffer_t *)m));
+	/* Get the buffer body from buffer header */
+	pmsg = (mlme_associate_conf_t *)BMM_BUFFER_POINTER(((buffer_t *)m));
 
-    usr_mlme_associate_conf(pmsg->AssocShortAddress, pmsg->status);
+	usr_mlme_associate_conf(pmsg->AssocShortAddress, pmsg->status);
 
-    /* Free the buffer */
-    bmm_buffer_free((buffer_t *)m);
+	/* Free the buffer */
+	bmm_buffer_free((buffer_t *)m);
 }
+
 #endif /* (MAC_ASSOCIATION_REQUEST_CONFIRM == 1) */
 
-
-
 #if (MAC_ASSOCIATION_INDICATION_RESPONSE == 1)
+
 /**
  * @brief Wrapper function for messages of type mlme_associate_ind_t
  *
@@ -225,21 +219,22 @@ void mlme_associate_conf(uint8_t *m)
  */
 void mlme_associate_ind(uint8_t *m)
 {
-    mlme_associate_ind_t *pmsg;
+	mlme_associate_ind_t *pmsg;
 
-    /* Get the buffer body from buffer header */
-    pmsg = (mlme_associate_ind_t *)BMM_BUFFER_POINTER(((buffer_t *)m));
+	/* Get the buffer body from buffer header */
+	pmsg = (mlme_associate_ind_t *)BMM_BUFFER_POINTER(((buffer_t *)m));
 
-    usr_mlme_associate_ind(pmsg->DeviceAddress, pmsg->CapabilityInformation);
+	usr_mlme_associate_ind(pmsg->DeviceAddress,
+			pmsg->CapabilityInformation);
 
-    /* Free the buffer */
-    bmm_buffer_free((buffer_t *)m);
+	/* Free the buffer */
+	bmm_buffer_free((buffer_t *)m);
 }
+
 #endif /* (MAC_ASSOCIATION_INDICATION_RESPONSE == 1) */
 
-
-
 #if (MAC_BEACON_NOTIFY_INDICATION == 1)
+
 /**
  * @brief Wrapper function for messages of type mlme_beacon_notify_ind_t
  *
@@ -249,27 +244,27 @@ void mlme_associate_ind(uint8_t *m)
  */
 void mlme_beacon_notify_ind(uint8_t *m)
 {
-    mlme_beacon_notify_ind_t *pmsg;
+	mlme_beacon_notify_ind_t *pmsg;
 
-    /* Get the buffer body from buffer header */
-    pmsg = (mlme_beacon_notify_ind_t *)BMM_BUFFER_POINTER(((buffer_t *)m));
+	/* Get the buffer body from buffer header */
+	pmsg = (mlme_beacon_notify_ind_t *)BMM_BUFFER_POINTER(((buffer_t *)m));
 
-    /* Callback function */
-    usr_mlme_beacon_notify_ind(pmsg->BSN,               // BSN
-                               &(pmsg->PANDescriptor),  // PANDescriptor
-                               pmsg->PendAddrSpec,      // PendAddrSpec
-                               pmsg->AddrList,          // AddrList
-                               pmsg->sduLength,         // sduLength
-                               pmsg->sdu);              // sdu
+	/* Callback function */
+	usr_mlme_beacon_notify_ind(pmsg->BSN,           /* BSN */
+			&(pmsg->PANDescriptor),         /* PANDescriptor */
+			pmsg->PendAddrSpec,             /* PendAddrSpec */
+			pmsg->AddrList,                 /* AddrList */
+			pmsg->sduLength,                /* sduLength */
+			pmsg->sdu);                     /* sdu */
 
-    /* Free the buffer */
-    bmm_buffer_free((buffer_t *)m);
+	/* Free the buffer */
+	bmm_buffer_free((buffer_t *)m);
 }
+
 #endif /* (MAC_BEACON_NOTIFY_INDICATION == 1) */
 
-
-
 #if (MAC_COMM_STATUS_INDICATION == 1)
+
 /**
  * @brief Wrapper function for messages of type mlme_comm_status_ind_t
  *
@@ -279,36 +274,36 @@ void mlme_beacon_notify_ind(uint8_t *m)
  */
 void mlme_comm_status_ind(uint8_t *m)
 {
-    mlme_comm_status_ind_t *pmsg;
-    wpan_addr_spec_t src_addr;
-    wpan_addr_spec_t dst_addr;
+	mlme_comm_status_ind_t *pmsg;
+	wpan_addr_spec_t src_addr;
+	wpan_addr_spec_t dst_addr;
 
-    /* Get the buffer body from buffer header */
-    pmsg = (mlme_comm_status_ind_t *)BMM_BUFFER_POINTER(((buffer_t *)m));
+	/* Get the buffer body from buffer header */
+	pmsg = (mlme_comm_status_ind_t *)BMM_BUFFER_POINTER(((buffer_t *)m));
 
-    /* Source address spec */
-    src_addr.PANId = pmsg->PANId;
-    src_addr.AddrMode = pmsg->SrcAddrMode;
-    ADDR_COPY_DST_SRC_64(src_addr.Addr.long_address, pmsg->SrcAddr);
+	/* Source address spec */
+	src_addr.PANId = pmsg->PANId;
+	src_addr.AddrMode = pmsg->SrcAddrMode;
+	ADDR_COPY_DST_SRC_64(src_addr.Addr.long_address, pmsg->SrcAddr);
 
-    /* Destintion address spec */
-    dst_addr.PANId = pmsg->PANId;
-    dst_addr.AddrMode = pmsg->DstAddrMode;
-    ADDR_COPY_DST_SRC_64(dst_addr.Addr.long_address, pmsg->DstAddr);
+	/* Destintion address spec */
+	dst_addr.PANId = pmsg->PANId;
+	dst_addr.AddrMode = pmsg->DstAddrMode;
+	ADDR_COPY_DST_SRC_64(dst_addr.Addr.long_address, pmsg->DstAddr);
 
-    /* Callback function */
-    usr_mlme_comm_status_ind(&src_addr,
-                             &dst_addr,
-                             pmsg->status);
+	/* Callback function */
+	usr_mlme_comm_status_ind(&src_addr,
+			&dst_addr,
+			pmsg->status);
 
-    /* Free the buffer */
-    bmm_buffer_free((buffer_t *)m);
+	/* Free the buffer */
+	bmm_buffer_free((buffer_t *)m);
 }
+
 #endif /* (MAC_COMM_STATUS_INDICATION == 1) */
 
-
-
 #if (MAC_DISASSOCIATION_BASIC_SUPPORT == 1)
+
 /**
  * @brief Wrapper function for messages of type mlme_disassociate_conf_t
  *
@@ -318,28 +313,29 @@ void mlme_comm_status_ind(uint8_t *m)
  */
 void mlme_disassociate_conf(uint8_t *m)
 {
-    mlme_disassociate_conf_t *pmsg;
-    wpan_addr_spec_t device_addr;
+	mlme_disassociate_conf_t *pmsg;
+	wpan_addr_spec_t device_addr;
 
-    /* Get the buffer body from buffer header */
-    pmsg = (mlme_disassociate_conf_t *)BMM_BUFFER_POINTER(((buffer_t *)m));
+	/* Get the buffer body from buffer header */
+	pmsg = (mlme_disassociate_conf_t *)BMM_BUFFER_POINTER(((buffer_t *)m));
 
-    /* Device address spec */
-    device_addr.AddrMode = pmsg->DeviceAddrMode;
-    device_addr.PANId = pmsg->DevicePANId;
-    ADDR_COPY_DST_SRC_64(device_addr.Addr.long_address, pmsg->DeviceAddress);
+	/* Device address spec */
+	device_addr.AddrMode = pmsg->DeviceAddrMode;
+	device_addr.PANId = pmsg->DevicePANId;
+	ADDR_COPY_DST_SRC_64(device_addr.Addr.long_address,
+			pmsg->DeviceAddress);
 
-    usr_mlme_disassociate_conf(pmsg->status,
-                               &device_addr);
+	usr_mlme_disassociate_conf(pmsg->status,
+			&device_addr);
 
-    /* Free the buffer */
-    bmm_buffer_free((buffer_t *)m);
+	/* Free the buffer */
+	bmm_buffer_free((buffer_t *)m);
 }
+
 #endif  /* (MAC_DISASSOCIATION_BASIC_SUPPORT == 1) */
 
-
-
 #if (MAC_DISASSOCIATION_BASIC_SUPPORT == 1)
+
 /**
  * @brief Wrapper function for messages of type mlme_disassociate_ind_t
  *
@@ -349,22 +345,22 @@ void mlme_disassociate_conf(uint8_t *m)
  */
 void mlme_disassociate_ind(uint8_t *m)
 {
-    mlme_disassociate_ind_t *pmsg;
+	mlme_disassociate_ind_t *pmsg;
 
-    /* Get the buffer body from buffer header */
-    pmsg = (mlme_disassociate_ind_t *)BMM_BUFFER_POINTER(((buffer_t *)m));
+	/* Get the buffer body from buffer header */
+	pmsg = (mlme_disassociate_ind_t *)BMM_BUFFER_POINTER(((buffer_t *)m));
 
-    usr_mlme_disassociate_ind(pmsg->DeviceAddress,
-                              pmsg->DisassociateReason);
+	usr_mlme_disassociate_ind(pmsg->DeviceAddress,
+			pmsg->DisassociateReason);
 
-    /* Free the buffer */
-    bmm_buffer_free((buffer_t *)m);
+	/* Free the buffer */
+	bmm_buffer_free((buffer_t *)m);
 }
+
 #endif /* (MAC_DISASSOCIATION_BASIC_SUPPORT == 1) */
 
-
-
 #if (MAC_GET_SUPPORT == 1)
+
 /**
  * @brief Wrapper function for messages of type mlme_get_conf_t
  *
@@ -374,27 +370,27 @@ void mlme_disassociate_ind(uint8_t *m)
  */
 void mlme_get_conf(uint8_t *m)
 {
-    mlme_get_conf_t *pmsg;
+	mlme_get_conf_t *pmsg;
 
-    /* Get the buffer body from buffer header */
-    pmsg = (mlme_get_conf_t *)BMM_BUFFER_POINTER(((buffer_t *)m));
+	/* Get the buffer body from buffer header */
+	pmsg = (mlme_get_conf_t *)BMM_BUFFER_POINTER(((buffer_t *)m));
 
-    /* Callback function */
-    usr_mlme_get_conf(pmsg->status,
-                      pmsg->PIBAttribute,
+	/* Callback function */
+	usr_mlme_get_conf(pmsg->status,
+			pmsg->PIBAttribute,
 #ifdef MAC_SECURITY_ZIP
-                      pmsg->PIBAttributeIndex,
+			pmsg->PIBAttributeIndex,
 #endif  /* MAC_SECURITY_ZIP */
-                      &pmsg->PIBAttributeValue);
+			&pmsg->PIBAttributeValue);
 
-    /* Free the buffer */
-    bmm_buffer_free((buffer_t *)m);
+	/* Free the buffer */
+	bmm_buffer_free((buffer_t *)m);
 }
+
 #endif  /* (MAC_GET_SUPPORT == 1) */
 
-
-
 #if (MAC_ORPHAN_INDICATION_RESPONSE == 1)
+
 /**
  * @brief Wrapper function for messages of type mlme_orphan_ind_t
  *
@@ -404,23 +400,22 @@ void mlme_get_conf(uint8_t *m)
  */
 void mlme_orphan_ind(uint8_t *m)
 {
-    mlme_orphan_ind_t *pmsg;
+	mlme_orphan_ind_t *pmsg;
 
-    /* Get the buffer body from buffer header */
-    pmsg = (mlme_orphan_ind_t *)BMM_BUFFER_POINTER(((buffer_t *)m));
+	/* Get the buffer body from buffer header */
+	pmsg = (mlme_orphan_ind_t *)BMM_BUFFER_POINTER(((buffer_t *)m));
 
-    /* Callback function */
-    usr_mlme_orphan_ind(pmsg->OrphanAddress);
+	/* Callback function */
+	usr_mlme_orphan_ind(pmsg->OrphanAddress);
 
-    /* Free the buffer */
-    bmm_buffer_free((buffer_t *)m);
-
+	/* Free the buffer */
+	bmm_buffer_free((buffer_t *)m);
 }
+
 #endif /* (MAC_ORPHAN_INDICATION_RESPONSE == 1) */
 
-
-
 #if (MAC_INDIRECT_DATA_BASIC == 1)
+
 /**
  * @brief Wrapper function for messages of type mlme_poll_conf_t
  *
@@ -430,19 +425,18 @@ void mlme_orphan_ind(uint8_t *m)
  */
 void mlme_poll_conf(uint8_t *m)
 {
-    mlme_poll_conf_t *pmsg;
+	mlme_poll_conf_t *pmsg;
 
-    /* Get the buffer body from buffer header */
-    pmsg = (mlme_poll_conf_t *)BMM_BUFFER_POINTER(((buffer_t *)m));
+	/* Get the buffer body from buffer header */
+	pmsg = (mlme_poll_conf_t *)BMM_BUFFER_POINTER(((buffer_t *)m));
 
-    usr_mlme_poll_conf(pmsg->status);
+	usr_mlme_poll_conf(pmsg->status);
 
-    /* Free the buffer */
-    bmm_buffer_free((buffer_t *)m);
+	/* Free the buffer */
+	bmm_buffer_free((buffer_t *)m);
 }
+
 #endif /* (MAC_INDIRECT_DATA_BASIC == 1) */
-
-
 
 /**
  * @brief Wrapper function for messages of type mlme_reset_conf_t
@@ -453,20 +447,19 @@ void mlme_poll_conf(uint8_t *m)
  */
 void mlme_reset_conf(uint8_t *m)
 {
-    mlme_reset_conf_t *pmsg;
+	mlme_reset_conf_t *pmsg;
 
-    /* Get the buffer body from buffer header */
-    pmsg = (mlme_reset_conf_t *)BMM_BUFFER_POINTER(((buffer_t *)m));
+	/* Get the buffer body from buffer header */
+	pmsg = (mlme_reset_conf_t *)BMM_BUFFER_POINTER(((buffer_t *)m));
 
-    usr_mlme_reset_conf(pmsg->status);
+	usr_mlme_reset_conf(pmsg->status);
 
-    /* Free the buffer */
-    bmm_buffer_free((buffer_t *)m);
+	/* Free the buffer */
+	bmm_buffer_free((buffer_t *)m);
 }
 
-
-
 #if (MAC_RX_ENABLE_SUPPORT == 1)
+
 /**
  * @brief Wrapper function for messages of type mlme_rx_enable_conf_t
  *
@@ -476,21 +469,21 @@ void mlme_reset_conf(uint8_t *m)
  */
 void mlme_rx_enable_conf(uint8_t *m)
 {
-    mlme_rx_enable_conf_t *pmsg;
+	mlme_rx_enable_conf_t *pmsg;
 
-    /* Get the buffer body from buffer header */
-    pmsg = (mlme_rx_enable_conf_t *)BMM_BUFFER_POINTER(((buffer_t *)m));
+	/* Get the buffer body from buffer header */
+	pmsg = (mlme_rx_enable_conf_t *)BMM_BUFFER_POINTER(((buffer_t *)m));
 
-    usr_mlme_rx_enable_conf(pmsg->status);
+	usr_mlme_rx_enable_conf(pmsg->status);
 
-    /* Free the buffer */
-    bmm_buffer_free((buffer_t *)m);
+	/* Free the buffer */
+	bmm_buffer_free((buffer_t *)m);
 }
+
 #endif /* (MAC_RX_ENABLE_SUPPORT == 1) */
 
-
-
 #if (MAC_SCAN_SUPPORT == 1)
+
 /**
  * @brief Wrapper function for messages of type mlme_scan_conf_t
  *
@@ -500,25 +493,24 @@ void mlme_rx_enable_conf(uint8_t *m)
  */
 void mlme_scan_conf(uint8_t *m)
 {
-    mlme_scan_conf_t *pmsg;
+	mlme_scan_conf_t *pmsg;
 
-    /* Get the buffer body from buffer header */
-    pmsg = (mlme_scan_conf_t *)BMM_BUFFER_POINTER(((buffer_t *)m));
+	/* Get the buffer body from buffer header */
+	pmsg = (mlme_scan_conf_t *)BMM_BUFFER_POINTER(((buffer_t *)m));
 
-    /* Callback */
-    usr_mlme_scan_conf(pmsg->status,
-                       pmsg->ScanType,
-                       pmsg->ChannelPage,
-                       pmsg->UnscannedChannels,
-                       pmsg->ResultListSize,
-                       &pmsg->scan_result_list);
+	/* Callback */
+	usr_mlme_scan_conf(pmsg->status,
+			pmsg->ScanType,
+			pmsg->ChannelPage,
+			pmsg->UnscannedChannels,
+			pmsg->ResultListSize,
+			&pmsg->scan_result_list);
 
-    /* Free the buffer */
-    bmm_buffer_free((buffer_t *)m);
+	/* Free the buffer */
+	bmm_buffer_free((buffer_t *)m);
 }
+
 #endif /* (MAC_SCAN_SUPPORT == 1) */
-
-
 
 /**
  * @brief Wrapper function for messages of type mlme_set_conf_t
@@ -529,24 +521,24 @@ void mlme_scan_conf(uint8_t *m)
  */
 void mlme_set_conf(uint8_t *m)
 {
-    mlme_set_conf_t *pmsg;
+	mlme_set_conf_t *pmsg;
 
-    /* Get the buffer body from buffer header */
-    pmsg = (mlme_set_conf_t *)BMM_BUFFER_POINTER(((buffer_t *)m));
+	/* Get the buffer body from buffer header */
+	pmsg = (mlme_set_conf_t *)BMM_BUFFER_POINTER(((buffer_t *)m));
 
 #ifdef MAC_SECURITY_ZIP
-    usr_mlme_set_conf(pmsg->status, pmsg->PIBAttribute, pmsg->PIBAttributeIndex);
+	usr_mlme_set_conf(pmsg->status, pmsg->PIBAttribute,
+			pmsg->PIBAttributeIndex);
 #else
-    usr_mlme_set_conf(pmsg->status, pmsg->PIBAttribute);
+	usr_mlme_set_conf(pmsg->status, pmsg->PIBAttribute);
 #endif  /* MAC_SECURITY_ZIP */
 
-    /* Free the buffer */
-    bmm_buffer_free((buffer_t *)m);
+	/* Free the buffer */
+	bmm_buffer_free((buffer_t *)m);
 }
 
-
-
 #if (MAC_START_REQUEST_CONFIRM == 1)
+
 /**
  * @brief Wrapper function for messages of type mlme_start_conf_t
  *
@@ -556,21 +548,21 @@ void mlme_set_conf(uint8_t *m)
  */
 void mlme_start_conf(uint8_t *m)
 {
-    mlme_start_conf_t *pmsg;
+	mlme_start_conf_t *pmsg;
 
-    /* Get the buffer body from buffer header */
-    pmsg = (mlme_start_conf_t *)BMM_BUFFER_POINTER(((buffer_t *)m));
+	/* Get the buffer body from buffer header */
+	pmsg = (mlme_start_conf_t *)BMM_BUFFER_POINTER(((buffer_t *)m));
 
-    usr_mlme_start_conf(pmsg->status);
+	usr_mlme_start_conf(pmsg->status);
 
-    /* Free the buffer */
-    bmm_buffer_free((buffer_t *)m);
+	/* Free the buffer */
+	bmm_buffer_free((buffer_t *)m);
 }
+
 #endif /* (MAC_START_REQUEST_CONFIRM == 1) */
 
-
-
 #if (MAC_SYNC_LOSS_INDICATION == 1)
+
 /**
  * @brief Wrapper function for messages of type mlme_sync_loss_ind_t
  *
@@ -580,19 +572,19 @@ void mlme_start_conf(uint8_t *m)
  */
 void mlme_sync_loss_ind(uint8_t *m)
 {
-    mlme_sync_loss_ind_t *pmsg;
+	mlme_sync_loss_ind_t *pmsg;
 
-    /* Get the buffer body from buffer header */
-    pmsg = (mlme_sync_loss_ind_t *)BMM_BUFFER_POINTER(((buffer_t *)m));
+	/* Get the buffer body from buffer header */
+	pmsg = (mlme_sync_loss_ind_t *)BMM_BUFFER_POINTER(((buffer_t *)m));
 
-    usr_mlme_sync_loss_ind(pmsg->LossReason,
-                           pmsg->PANId,
-                           pmsg->LogicalChannel,
-                           pmsg->ChannelPage);
+	usr_mlme_sync_loss_ind(pmsg->LossReason,
+			pmsg->PANId,
+			pmsg->LogicalChannel,
+			pmsg->ChannelPage);
 
-    /* Uses static buffer for sync loss indication and it is not freed */
+	/* Uses static buffer for sync loss indication and it is not freed */
 }
+
 #endif /* (MAC_SYNC_LOSS_INDICATION == 1) */
 
 /* EOF */
-
