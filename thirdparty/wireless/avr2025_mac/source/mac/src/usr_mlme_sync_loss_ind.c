@@ -40,6 +40,7 @@
  *
  * \asf_license_stop
  */
+
 /*
  * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
@@ -56,32 +57,28 @@
 
 /* === Macros ============================================================== */
 
-
 /* === Globals ============================================================= */
-
 
 /* === Prototypes ========================================================== */
 
-
 /* === Implementation ====================================================== */
 #if (defined __GNUC__)
-void __attribute__((weak))
-usr_mlme_sync_loss_ind(uint8_t LossReason,
-                       uint16_t PANId,
-                       uint8_t LogicalChannel,
-                       uint8_t ChannelPage)
+void __attribute__((weak)) usr_mlme_sync_loss_ind(uint8_t LossReason,
+		uint16_t PANId,
+		uint8_t LogicalChannel,
+		uint8_t ChannelPage)
 #else
 void usr_mlme_sync_loss_ind(uint8_t LossReason,
-                            uint16_t PANId,
-                            uint8_t LogicalChannel,
-                            uint8_t ChannelPage)
+		uint16_t PANId,
+		uint8_t LogicalChannel,
+		uint8_t ChannelPage)
 #endif
 {
-    /* Keep compiler happy. */
-    LossReason = LossReason;
-    PANId = PANId;
-    LogicalChannel = LogicalChannel;
-    ChannelPage = ChannelPage;
+	/* Keep compiler happy. */
+	LossReason = LossReason;
+	PANId = PANId;
+	LogicalChannel = LogicalChannel;
+	ChannelPage = ChannelPage;
 }
 
 #endif /* (MAC_SYNC_LOSS_INDICATION == 1) */

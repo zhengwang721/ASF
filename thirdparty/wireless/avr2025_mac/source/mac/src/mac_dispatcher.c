@@ -72,187 +72,187 @@
 #endif /* ENABLE_RTB */
 /* === Macros ============================================================== */
 
-
 /* === Globals ============================================================= */
 
 #if (HIGHEST_STACK_LAYER == MAC)
 /* Regular MAC Dispatcher table */
-static FLASH_DECLARE(handler_t dispatch_table[LAST_MESSAGE + 1]) =
-{
-    /* Internal message */
-    [MLME_RESET_REQUEST]                  = mlme_reset_request,
+static FLASH_DECLARE(handler_t dispatch_table[LAST_MESSAGE + 1]) = {
+	/* Internal message */
+	[MLME_RESET_REQUEST]                  = mlme_reset_request,
 
 #if (MAC_GET_SUPPORT == 1)
-    [MLME_GET_REQUEST]                    = mlme_get_request,
+	[MLME_GET_REQUEST]                    = mlme_get_request,
 #endif  /* (MAC_GET_SUPPORT == 1) */
 
-    [MLME_SET_REQUEST]                    = mlme_set_request,
+	[MLME_SET_REQUEST]                    = mlme_set_request,
 
 #if (MAC_SCAN_SUPPORT == 1)
-    [MLME_SCAN_REQUEST]                   = mlme_scan_request,
+	[MLME_SCAN_REQUEST]                   = mlme_scan_request,
 #endif /* (MAC_SCAN_SUPPORT == 1) */
 
 #if (MAC_START_REQUEST_CONFIRM == 1)
-    [MLME_START_REQUEST]                  = mlme_start_request,
+	[MLME_START_REQUEST]                  = mlme_start_request,
 #endif /* (MAC_START_REQUEST_CONFIRM== 1) */
 
 #if (MAC_ASSOCIATION_REQUEST_CONFIRM == 1)
-    [MLME_ASSOCIATE_REQUEST]              = mlme_associate_request,
+	[MLME_ASSOCIATE_REQUEST]              = mlme_associate_request,
 #endif /* (MAC_ASSOCIATION_REQUEST_CONFIRM == 1) */
 
 #if (MAC_ASSOCIATION_INDICATION_RESPONSE == 1)
-    [MLME_ASSOCIATE_RESPONSE]             = mlme_associate_response,
+	[MLME_ASSOCIATE_RESPONSE]             = mlme_associate_response,
 #endif /* (MAC_ASSOCIATION_INDICATION_RESPONSE== 1) */
 
-    [MCPS_DATA_REQUEST]                   = mcps_data_request,
+	[MCPS_DATA_REQUEST]                   = mcps_data_request,
 
 #if (MAC_DISASSOCIATION_BASIC_SUPPORT == 1)
-    [MLME_DISASSOCIATE_REQUEST]           = mlme_disassociate_request,
+	[MLME_DISASSOCIATE_REQUEST]           = mlme_disassociate_request,
 #endif  /* (MAC_DISASSOCIATION_BASIC_SUPPORT == 1) */
 
 #if (MAC_ORPHAN_INDICATION_RESPONSE == 1)
-    [MLME_ORPHAN_RESPONSE]                = mlme_orphan_response,
+	[MLME_ORPHAN_RESPONSE]                = mlme_orphan_response,
 #endif /* (MAC_ORPHAN_INDICATION_RESPONSE == 1) */
 
 #if (MAC_INDIRECT_DATA_BASIC == 1)
-    [MLME_POLL_REQUEST]                   = mlme_poll_request,
+	[MLME_POLL_REQUEST]                   = mlme_poll_request,
 #endif /* (MAC_INDIRECT_DATA_BASIC == 1) */
 
 #if (MAC_RX_ENABLE_SUPPORT == 1)
-    [MLME_RX_ENABLE_REQUEST]              = mlme_rx_enable_request,
+	[MLME_RX_ENABLE_REQUEST]              = mlme_rx_enable_request,
 #endif /* (MAC_RX_ENABLE_SUPPORT == 1) */
 
 #if (MAC_SYNC_REQUEST == 1)
-    [MLME_SYNC_REQUEST]                   = mlme_sync_request,
+	[MLME_SYNC_REQUEST]                   = mlme_sync_request,
 #endif /* (MAC_SYNC_REQUEST == 1) */
 
 #if ((MAC_PURGE_REQUEST_CONFIRM == 1) && (MAC_INDIRECT_DATA_BASIC == 1))
-    [MCPS_PURGE_REQUEST]                  = mcps_purge_request,
-#endif /* ((MAC_PURGE_REQUEST_CONFIRM == 1) && (MAC_INDIRECT_DATA_BASIC == 1)) */
+	[MCPS_PURGE_REQUEST]                  = mcps_purge_request,
+#endif /* ((MAC_PURGE_REQUEST_CONFIRM == 1) && (MAC_INDIRECT_DATA_BASIC == 1))
+	 **/
 
-    [TAL_DATA_INDICATION]                 = mac_process_tal_data_ind,
-    [MCPS_DATA_CONFIRM]                   = mcps_data_conf,
-    [MCPS_DATA_INDICATION]                = mcps_data_ind,
+	[TAL_DATA_INDICATION]                 = mac_process_tal_data_ind,
+	[MCPS_DATA_CONFIRM]                   = mcps_data_conf,
+	[MCPS_DATA_INDICATION]                = mcps_data_ind,
 
 #if ((MAC_PURGE_REQUEST_CONFIRM == 1) && (MAC_INDIRECT_DATA_BASIC == 1))
-    [MCPS_PURGE_CONFIRM]                  = mcps_purge_conf,
-#endif /* ((MAC_PURGE_REQUEST_CONFIRM == 1) && (MAC_INDIRECT_DATA_BASIC == 1)) */
+	[MCPS_PURGE_CONFIRM]                  = mcps_purge_conf,
+#endif /* ((MAC_PURGE_REQUEST_CONFIRM == 1) && (MAC_INDIRECT_DATA_BASIC == 1))
+	 **/
 
 #if (MAC_ASSOCIATION_INDICATION_RESPONSE == 1)
-    [MLME_ASSOCIATE_INDICATION]           = mlme_associate_ind,
+	[MLME_ASSOCIATE_INDICATION]           = mlme_associate_ind,
 #endif /* (MAC_ASSOCIATION_INDICATION_RESPONSE == 1) */
 
 #if (MAC_ASSOCIATION_REQUEST_CONFIRM == 1)
-    [MLME_ASSOCIATE_CONFIRM]              = mlme_associate_conf,
+	[MLME_ASSOCIATE_CONFIRM]              = mlme_associate_conf,
 #endif /* (MAC_ASSOCIATION_REQUEST_CONFIRM == 1) */
 
 #if (MAC_DISASSOCIATION_BASIC_SUPPORT == 1)
-    [MLME_DISASSOCIATE_INDICATION]        = mlme_disassociate_ind,
-    [MLME_DISASSOCIATE_CONFIRM]           = mlme_disassociate_conf,
+	[MLME_DISASSOCIATE_INDICATION]        = mlme_disassociate_ind,
+	[MLME_DISASSOCIATE_CONFIRM]           = mlme_disassociate_conf,
 #endif  /* (MAC_DISASSOCIATION_BASIC_SUPPORT == 1) */
 
 #if (MAC_BEACON_NOTIFY_INDICATION == 1)
-    [MLME_BEACON_NOTIFY_INDICATION]       = mlme_beacon_notify_ind,
+	[MLME_BEACON_NOTIFY_INDICATION]       = mlme_beacon_notify_ind,
 #endif /* (MAC_BEACON_NOTIFY_INDICATION == 1) */
 
 #if (MAC_ORPHAN_INDICATION_RESPONSE == 1)
-    [MLME_ORPHAN_INDICATION]              = mlme_orphan_ind,
+	[MLME_ORPHAN_INDICATION]              = mlme_orphan_ind,
 #endif /* (MAC_ORPHAN_INDICATION_RESPONSE == 1) */
 
 #if (MAC_SCAN_SUPPORT == 1)
-    [MLME_SCAN_CONFIRM]                   = mlme_scan_conf,
+	[MLME_SCAN_CONFIRM]                   = mlme_scan_conf,
 #endif /* (MAC_SCAN_SUPPORT == 1) */
 
 #if (MAC_COMM_STATUS_INDICATION == 1)
-    [MLME_COMM_STATUS_INDICATION]         = mlme_comm_status_ind,
+	[MLME_COMM_STATUS_INDICATION]         = mlme_comm_status_ind,
 #endif /* (MAC_COMM_STATUS_INDICATION == 1) */
 
 #if MAC_SYNC_LOSS_INDICATION == 1
-    [MLME_SYNC_LOSS_INDICATION]           = mlme_sync_loss_ind,
+	[MLME_SYNC_LOSS_INDICATION]           = mlme_sync_loss_ind,
 #endif /* (MAC_SYNC_LOSS_INDICATION == 1) */
 
 #if (MAC_GET_SUPPORT == 1)
-    [MLME_GET_CONFIRM]                    = mlme_get_conf,
+	[MLME_GET_CONFIRM]                    = mlme_get_conf,
 #endif  /* (MAC_GET_SUPPORT == 1) */
 
-    [MLME_SET_CONFIRM]                    = mlme_set_conf,
-    [MLME_RESET_CONFIRM]                  = mlme_reset_conf,
+	[MLME_SET_CONFIRM]                    = mlme_set_conf,
+	[MLME_RESET_CONFIRM]                  = mlme_reset_conf,
 
 #if (MAC_RX_ENABLE_SUPPORT == 1)
-    [MLME_RX_ENABLE_CONFIRM]              = mlme_rx_enable_conf,
+	[MLME_RX_ENABLE_CONFIRM]              = mlme_rx_enable_conf,
 #endif /* (MAC_RX_ENABLE_SUPPORT == 1) */
 
 #if (MAC_START_REQUEST_CONFIRM == 1)
-    [MLME_START_CONFIRM]                  = mlme_start_conf,
+	[MLME_START_CONFIRM]                  = mlme_start_conf,
 #endif /* (MAC_START_REQUEST_CONFIRM == 1) */
 
 #if (MAC_INDIRECT_DATA_BASIC == 1)
-    [MLME_POLL_CONFIRM]                   = mlme_poll_conf,
+	[MLME_POLL_CONFIRM]                   = mlme_poll_conf,
 #endif /* (MAC_INDIRECT_DATA_BASIC == 1) */
 };
 #else
-static FLASH_DECLARE(handler_t dispatch_table[LAST_MESSAGE + 1]) =
-{
-    /* Internal message */
-    [MLME_RESET_REQUEST]                  = mlme_reset_request,
+static FLASH_DECLARE(handler_t dispatch_table[LAST_MESSAGE + 1]) = {
+	/* Internal message */
+	[MLME_RESET_REQUEST]                  = mlme_reset_request,
 
 #if (MAC_GET_SUPPORT == 1)
-    [MLME_GET_REQUEST]                    = mlme_get_request,
+	[MLME_GET_REQUEST]                    = mlme_get_request,
 #endif  /* (MAC_GET_SUPPORT == 1) */
 
 #if (MAC_SCAN_SUPPORT == 1)
-    [MLME_SCAN_REQUEST]                   = mlme_scan_request,
+	[MLME_SCAN_REQUEST]                   = mlme_scan_request,
 #endif /* (MAC_SCAN_SUPPORT == 1) */
 
 #if (MAC_START_REQUEST_CONFIRM == 1)
-    [MLME_START_REQUEST]                  = mlme_start_request,
+	[MLME_START_REQUEST]                  = mlme_start_request,
 #endif /* (MAC_START_REQUEST_CONFIRM == 1) */
 
 #if (MAC_ASSOCIATION_REQUEST_CONFIRM == 1)
-    [MLME_ASSOCIATE_REQUEST]              = mlme_associate_request,
+	[MLME_ASSOCIATE_REQUEST]              = mlme_associate_request,
 #endif /* (MAC_ASSOCIATION_REQUEST_CONFIRM == 1) */
 
 #if (MAC_ASSOCIATION_INDICATION_RESPONSE == 1)
-    [MLME_ASSOCIATE_RESPONSE]             = mlme_associate_response,
+	[MLME_ASSOCIATE_RESPONSE]             = mlme_associate_response,
 #endif /* (MAC_ASSOCIATION_INDICATION_RESPONSE == 1) */
 
-    [MCPS_DATA_REQUEST]                   = mcps_data_request,
+	[MCPS_DATA_REQUEST]                   = mcps_data_request,
 
 #if (MAC_DISASSOCIATION_BASIC_SUPPORT == 1)
-    [MLME_DISASSOCIATE_REQUEST]           = mlme_disassociate_request,
+	[MLME_DISASSOCIATE_REQUEST]           = mlme_disassociate_request,
 #endif  /* (MAC_DISASSOCIATION_BASIC_SUPPORT == 1) */
 
 #if (MAC_ORPHAN_INDICATION_RESPONSE == 1)
-    [MLME_ORPHAN_RESPONSE]                = mlme_orphan_response,
+	[MLME_ORPHAN_RESPONSE]                = mlme_orphan_response,
 #endif /* (MAC_ORPHAN_INDICATION_RESPONSE == 1) */
 
 #if (MAC_INDIRECT_DATA_BASIC == 1)
-    [MLME_POLL_REQUEST]                   = mlme_poll_request,
+	[MLME_POLL_REQUEST]                   = mlme_poll_request,
 #endif /* (MAC_INDIRECT_DATA_BASIC == 1) */
 
 #if (MAC_RX_ENABLE_SUPPORT == 1)
-    [MLME_RX_ENABLE_REQUEST]              = mlme_rx_enable_request,
+	[MLME_RX_ENABLE_REQUEST]              = mlme_rx_enable_request,
 #endif /* (MAC_RX_ENABLE_SUPPORT == 1) */
 
 #if (MAC_SYNC_REQUEST == 1)
-    [MLME_SYNC_REQUEST]                   = mlme_sync_request,
+	[MLME_SYNC_REQUEST]                   = mlme_sync_request,
 #endif /* (MAC_SYNC_REQUEST == 1) */
 
 #if ((MAC_PURGE_REQUEST_CONFIRM == 1) && (MAC_INDIRECT_DATA_BASIC == 1))
-    [MCPS_PURGE_REQUEST]                  = mcps_purge_request,
-#endif /* ((MAC_PURGE_REQUEST_CONFIRM == 1) && (MAC_INDIRECT_DATA_BASIC == 1)) */
+	[MCPS_PURGE_REQUEST]                  = mcps_purge_request,
+#endif /* ((MAC_PURGE_REQUEST_CONFIRM == 1) && (MAC_INDIRECT_DATA_BASIC == 1))
+	 **/
 
-    [TAL_DATA_INDICATION]                 = mac_process_tal_data_ind,
+	[TAL_DATA_INDICATION]                 = mac_process_tal_data_ind,
 };
 #endif /* #if (HIGHEST_STACK_LAYER == MAC) */
 
 /* === Prototypes ========================================================== */
 
-
 /* === Implementation ====================================================== */
 
 /**
- * @brief Obtains the message type from the buffer and calls the respective handler
+ * @brief Obtains the message type from the buffer and calls the respective
+ *handler
  *
  * This function decodes all events/messages and calls the appropriate handler.
  *
@@ -261,58 +261,59 @@ static FLASH_DECLARE(handler_t dispatch_table[LAST_MESSAGE + 1]) =
  */
 void dispatch_event(uint8_t *event)
 {
-    /*
-     * A pointer to the body of the buffer is obtained from the pointer to the
-     * received header.
-     */
-    uint8_t *buffer_body = BMM_BUFFER_POINTER((buffer_t *)event);
+	/*
+	 * A pointer to the body of the buffer is obtained from the pointer to
+	 *the
+	 * received header.
+	 */
+	uint8_t *buffer_body = BMM_BUFFER_POINTER((buffer_t *)event);
 
-    /* Check is done to see if the message type is valid */
-    /* Please note:
-     * The macro PGM_READ_WORD is only relevant for AVR-GCC builds and
-     * reads a DWord from flash, which is the start address of the function.
-     *
-     * How does this work for builds that are larger than 128K?
-     *
-     * For IAR builds this statement is fine, since PGM_READ_WORD just
-     * turns to "*". The size of the function pointer is automatically
-     * 3 byte for MCUs which have more than 128K flash. The the address
-     * of the callback is properly derived from this location.
-     *
-     * AVR-GCC currently does not support function pointers larger than
-     * 16 bit. This implies that functions residing in the upper 128K
-     * cannot be addressed properly. Therefore this code does not work
-     * in these cases.
-     * In regular cases, where code is not larger than 128K, the size
-     * of a function pointer is 16 bit and properly read via PGM_READ_WORD.
-     */
-    /* Check for regular MAC requests. */
-    if (buffer_body[CMD_ID_OCTET] <= LAST_MESSAGE)
-    {
-        /*
-         * The following statement reads the address from the dispatch table
-         * of the function to be called by utilizing function pointers.
-         */
-        handler_t handler = (handler_t)PGM_READ_WORD(&dispatch_table[buffer_body[CMD_ID_OCTET]]);
+	/* Check is done to see if the message type is valid */
 
-        if (handler != NULL)
-        {
-            handler(event);
-        }
-        else
-        {
-            bmm_buffer_free((buffer_t *)event);
+	/* Please note:
+	 * The macro PGM_READ_WORD is only relevant for AVR-GCC builds and
+	 * reads a DWord from flash, which is the start address of the function.
+	 *
+	 * How does this work for builds that are larger than 128K?
+	 *
+	 * For IAR builds this statement is fine, since PGM_READ_WORD just
+	 * turns to "*". The size of the function pointer is automatically
+	 * 3 byte for MCUs which have more than 128K flash. The the address
+	 * of the callback is properly derived from this location.
+	 *
+	 * AVR-GCC currently does not support function pointers larger than
+	 * 16 bit. This implies that functions residing in the upper 128K
+	 * cannot be addressed properly. Therefore this code does not work
+	 * in these cases.
+	 * In regular cases, where code is not larger than 128K, the size
+	 * of a function pointer is 16 bit and properly read via PGM_READ_WORD.
+	 */
+	/* Check for regular MAC requests. */
+	if (buffer_body[CMD_ID_OCTET] <= LAST_MESSAGE) {
+		/*
+		 * The following statement reads the address from the dispatch
+		 *table
+		 * of the function to be called by utilizing function pointers.
+		 */
+		handler_t handler
+			= (handler_t)PGM_READ_WORD(&dispatch_table[buffer_body
+				[CMD_ID_OCTET]]);
+
+		if (handler != NULL) {
+			handler(event);
+		} else {
+			bmm_buffer_free((buffer_t *)event);
 #if (_DEBUG_ > 0)
-            Assert("Dispatch handler unavailable" == 0);
+			Assert("Dispatch handler unavailable" == 0);
 #endif
-        }
-    }
+		}
+	}
+
 #ifdef ENABLE_RTB
-    else
-    {
-        dispatch_rtb_event(event);
-}
+	else {
+		dispatch_rtb_event(event);
+	}
 #endif  /* ENABLE_RTB */
 }
-/* EOF */
 
+/* EOF */

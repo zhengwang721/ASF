@@ -40,6 +40,7 @@
  *
  * \asf_license_stop
  */
+
 /*
  * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
@@ -62,6 +63,7 @@
 
 void tal_ed_end_cb(uint8_t energy_level)
 {
-    energy_level = energy_level;    /* Keep compiler happy. */
+	energy_level = energy_level; /* Keep compiler happy. */
 }
+
 /* EOF */
