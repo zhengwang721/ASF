@@ -72,12 +72,12 @@
  *
  * -# Build the program and download it into the evaluation board. Please
  *    refer to the
- *    <a href="http://www.atmel.com/dyn/resources/prod_documents/doc6224.pdf">
+ *    <a href="http://www.atmel.com/Images/6421B.pdf">
  *    SAM-BA User Guide</a>, the
  *    <a href="http://www.atmel.com/dyn/resources/prod_documents/doc6310.pdf">
  *    GNU-Based Software Development</a>
  *    application note or the
- *    <a href="ftp://ftp.iar.se/WWWfiles/arm/Guides/EWARM_UserGuide.ENU.pdf">
+ *    <a href="ftp://ftp.iar.se/WWWfiles/arm/webic/doc/EWARM_IDEGuide.ENU.pdf">
  *    IAR EWARM User Guide</a>,
  *    depending on the solutions that users choose.
  * -# On the computer, open and configure a terminal application
@@ -342,7 +342,7 @@ int main(void)
 	dacc_set_transfer_mode(DACC_BASE, 0);
 
 	/* Initialize timing, amplitude and frequency */
-#if (SAM3N) || (SAM4L)
+#if (SAM3N) || (SAM4L) || (SAM4N)
 	/* Timing:
 	 * startup                - 0x10 (17 clocks)
 	 * internal trigger clock - 0x60 (96 clocks)
