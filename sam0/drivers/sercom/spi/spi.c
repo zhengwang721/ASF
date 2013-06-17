@@ -810,7 +810,7 @@ enum status_code spi_write_buffer_wait(
 		while (!spi_is_write_complete(module)) {
 		}
 	} else if (module->receiver_enabled) {
-		while(flush_length) {
+		while (flush_length) {
 			/* Start timeout period for slave */
 			for (uint32_t i = 0; i <= SPI_TIMEOUT; i++) {
 				if (spi_is_ready_to_read(module)) {
@@ -986,7 +986,7 @@ enum status_code spi_transceive_buffer_wait(
 		while (!spi_is_write_complete(module)) {
 		}
 	} else {
-		while(rx_length) {
+		while (rx_length) {
 			/* Start timeout period for slave */
 			for (uint32_t i = 0; i <= SPI_TIMEOUT; i++) {
 				if (spi_is_ready_to_read(module)) {
