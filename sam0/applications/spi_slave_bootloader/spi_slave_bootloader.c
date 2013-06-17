@@ -347,7 +347,7 @@ static void send_ack(void)
 {
 	uint16_t ack = (uint16_t)'s';
 	while(!spi_is_ready_to_write(&slave));
-	spi_write(&slave, ack);
+	spi_write_buffer_wait(&slave, &ack, 1);
 }
 
 /**
