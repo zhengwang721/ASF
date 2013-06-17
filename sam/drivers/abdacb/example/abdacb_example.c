@@ -52,7 +52,7 @@
  * \section Requirements
  *
  * This example can be used on SAM4L-EK boards with hardware rework. Please
- * see detail in Atmel AVR32850: ATSAM4L-EK User Guide.
+ * see detail in document: ATSAM4L-EK User Guide.
  *
  * \section Description
  *
