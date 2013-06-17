@@ -107,7 +107,7 @@ enum status_code nvm_set_config(
 	Nvmctrl *const nvm_module = NVMCTRL;
 
 	/* Turn on the digital interface clock */
-	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBB, PM_APBBMASK_NVM);
+	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBB, PM_APBBMASK_NVMCTRL);
 
 	/* Clear error flags */
 	nvm_module->STATUS.reg &= ~NVMCTRL_STATUS_MASK;
