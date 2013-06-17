@@ -376,7 +376,7 @@ static enum status_code _adc_set_config(
  * given configuration struct values.
  *
  * \param[out] module_inst Pointer to the ADC software instance struct
- * \param[in]  module      Pointer to the ADC module instance
+ * \param[in]  hw          Pointer to the ADC module instance
  * \param[in]  config      Pointer to the configuration struct
  *
  * \return Status of the initialization procedure
@@ -387,18 +387,26 @@ static enum status_code _adc_set_config(
  */
 enum status_code adc_init(
 		struct adc_module *const module_inst,
-		Adc *module,
+		Adc *hw,
 		struct adc_config *config)
 {
-	/* Associate the software module instance with the hardware module */
-	module_inst->hw = module;
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(hw);
+	Assert(config);
 
-	if (module->CTRLA.reg & ADC_CTRLA_SWRST) {
+	/* Associate the software module instance with the hardware module */
+	module_inst->hw = hw;
+
+	/* Turn on the digital interface clock */
+	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, PM_APBCMASK_ADC);
+
+	if (hw->CTRLA.reg & ADC_CTRLA_SWRST) {
 		/* We are in the middle of a reset. Abort. */
 		return STATUS_BUSY;
 	}
 
-	if (module->CTRLA.reg & ADC_CTRLA_ENABLE) {
+	if (hw->CTRLA.reg & ADC_CTRLA_ENABLE) {
 		/* Module must be disabled before initialization. Abort. */
 		return STATUS_ERR_DENIED;
 	}
@@ -415,7 +423,7 @@ enum status_code adc_init(
 
 	_adc_instances[0] = module_inst;
 
-	if(config->event_action == ADC_EVENT_ACTION_DISABLED &&
+	if (config->event_action == ADC_EVENT_ACTION_DISABLED &&
 			!config->freerunning) {
 		module_inst->software_trigger = true;
 	} else {
@@ -424,5 +432,5 @@ enum status_code adc_init(
 #endif
 
 	/* Write configuration to module */
-	return _adc_set_config(module_inst, config);;
+	return _adc_set_config(module_inst, config);
 }
