@@ -52,8 +52,9 @@
  */
 
 //! Device definition (mandatory)
+#define  USB_PID_ATMEL_ASF_HIDKEYBOARD_MOUSE       0x2435
 #define  USB_DEVICE_VENDOR_ID             USB_VID_ATMEL
-#define  USB_DEVICE_PRODUCT_ID            USB_PID_ATMEL_ASF_MSC_HIDS_CDC
+#define  USB_DEVICE_PRODUCT_ID            USB_PID_ATMEL_ASF_HIDKEYBOARD_MOUSE
 #define  USB_DEVICE_MAJOR_VERSION         1
 #define  USB_DEVICE_MINOR_VERSION         0
 #define  USB_DEVICE_POWER                 100 // Consumption on Vbus line (mA)
@@ -65,7 +66,7 @@
 
 //! USB Device string definitions (Optional)
 #define  USB_DEVICE_MANUFACTURE_NAME      "ATMEL ASF"
-#define  USB_DEVICE_PRODUCT_NAME          "HID Mouse, keyboard, CDC and MSC"
+#define  USB_DEVICE_PRODUCT_NAME          "HID Mouse, keyboard"
 #define  USB_DEVICE_SERIAL_NAME           "123123123123" // Disk SN for MSC
 
 /**
@@ -236,7 +237,7 @@
 #include "udi_hid_mouse.h"
 #include "udi_hid_kbd.h"
 //#include "uart.h"
-//#include "main.h"
+#include "app_config.h"
 //#include "ui.h"
 
 #endif // _CONF_USB_H_

@@ -85,8 +85,15 @@ typedef enum
 #define TOTAL_NUMBER_OF_SMALL_BUFS  (NUMBER_OF_SMALL_APP_BUFS + NUMBER_OF_SMALL_STACK_BUFS)
 
 #define TOTAL_NUMBER_OF_BUFS        (TOTAL_NUMBER_OF_LARGE_BUFS + TOTAL_NUMBER_OF_SMALL_BUFS)
-
-
+bool main_kbd_enable(void);
+void main_kbd_disable(void);
+bool main_mouse_enable(void);
+void main_mouse_disable(void);
+void main_remotewakeup_disable(void);
+void main_remotewakeup_enable(void);
+void main_sof_action(void);
+void main_resume_action(void);
+void main_suspend_action(void);
 /*
  * USB-specific definitions
  */

@@ -21,6 +21,7 @@
 		<require idref="board.atmega256rfr2_xplained_pro"/>
 		<generator value="iarew"/>
 		<generator value="avrgcc"/>
+		<generator value="as5_8"/>
 		<device-support value="atmega256rfr2"/>
 	</project>
 </asf>
