@@ -290,6 +290,7 @@ typedef enum zid_report_desc_tag
     SYNC,
     TOUCH_SENSOR_PROPERTIES,
     TAP_SUPPORT_PROPERTIES
+   
 } SHORTENUM zid_report_desc_t;
 
 /**
@@ -313,8 +314,8 @@ typedef struct mouse_desc_tag
     uint8_t button0;
     uint8_t button1;
     uint8_t button2;
-    uint8_t x_coordinate;
-    uint8_t y_coordinate;
+    int8_t x_coordinate;
+    int8_t y_coordinate;
 }mouse_desc_t;
 
 typedef struct keyboard_input_desc_tag
