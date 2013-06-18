@@ -72,35 +72,60 @@
 #include <string.h>
 #include "conf_example.h"
 
+/* Temperature and light sensor data buffer size. */
 #define BUFFER_SIZE 128
 
+/* IRQ priority for PIO (The lower the value, the greater the priority) */
+#define IRQ_PRIOR_PIO    0
+
+/* Structure in the font bin file. */
 struct section_info{
 	uint16_t   first;		 /* first character */
 	uint16_t   last; 		 /* last character */
 	uint32_t   first_address;		/* Address of the SECTION's first char info */
 };
-
 struct char_info{
-	uint32_t   offset_address : 26;	   //start address of the  font lib
-	uint32_t   Width : 6;	   //pixel width
+	uint32_t   offset_address : 26;	   /* start address of the  font lib */
+	uint32_t   width : 6;	   /* pixel width */
 };
 
+/* Flag to indicate if the font bin exist: 0 for no, 1 for yes */
+volatile uint32_t font_bin_flag = 0;
+
+/* laguage mode: 0 for english and 1 for chinese */
 volatile uint32_t language_mode = 0;
 
 /* These settings will force to set and refresh the temperature mode. */
 volatile uint32_t app_mode = 2;
 volatile uint32_t app_mode_switch = 1;
 
+/* SD related variants. */
 volatile uint32_t sd_update = 0;
 volatile uint32_t sd_fs_found = 0;
 volatile uint32_t sd_listing_pos = 0;
 volatile uint32_t sd_num_files = 0;
 
+/* Fatfs global variants. */
 FATFS fs;
+DIR dir;
+FIL file_object;
 
+/* Font bitmap buffer. */
 uint8_t font_bitmap_origin[32];
 uint8_t font_bitmap_show[32];
 
+/* Font bin file adress in Flash. */
+volatile uint32_t *font_bin_address = (uint32_t *)CONF_FONT_BIN_ADDRESS;
+
+/** Size of the file to write/read. */
+#define DATA_SIZE 512
+
+/* Read/write buffer */
+static uint8_t data_buffer[DATA_SIZE];
+
+/**
+ * \brief Transfer the font bitmap data to fit the display.
+ */
 static void font_bitmap_transfer(void)
 {
 	font_bitmap_show[0] = ((font_bitmap_origin[0]&0x80)>>7) |
@@ -361,6 +386,9 @@ static void font_bitmap_transfer(void)
 			((font_bitmap_origin[31]&0x01)<<7);
 }
 
+/**
+ * \brief Find the font bitmap data by given the unicode.
+ */
 static void font_bitmap_find(uint16_t uni_code)
 {
 	uint32_t i;
@@ -369,13 +397,13 @@ static void font_bitmap_find(uint16_t uni_code)
 	volatile struct char_info *p_uni_code_info;
 	volatile uint8_t *p_font_bitmap;
 
-	struct section_info *p_section_info = FONT_BIN_ADDRESS + 0x10;
+	struct section_info *p_section_info = CONF_FONT_BIN_ADDRESS  + 0x10;
 	uni_code_info_offset = p_section_info->first_address +
 			(uni_code - p_section_info->first) * sizeof(struct char_info);
 	p_uni_code_info = uni_code_info_offset;
-	p_uni_code_info = FONT_BIN_ADDRESS + uni_code_info_offset;
+	p_uni_code_info = CONF_FONT_BIN_ADDRESS  + uni_code_info_offset;
 	p_font_bitmap = (uint8_t *)(((uint32_t)(p_uni_code_info->offset_address)) & 0xffffff);
-	p_font_bitmap += FONT_BIN_ADDRESS;
+	p_font_bitmap += CONF_FONT_BIN_ADDRESS ;
 
 	for (i=0; i<32;i++) {
 		font_bitmap_origin[i] = *p_font_bitmap;
@@ -383,6 +411,12 @@ static void font_bitmap_find(uint16_t uni_code)
 	}
 }
 
+/**
+ * \brief Display the font bitmap data in the given position.
+ *
+ * \param page page address of the OLED.
+ * \param column column address of the OLED.
+ */
 static void font_bitmap_display(uint8_t page, uint8_t column)
 {
 	uint32_t i;
@@ -396,6 +430,133 @@ static void font_bitmap_display(uint8_t page, uint8_t column)
 	ssd1306_set_column_address(column);
 	for (i = 16; i < 32; i++) {
 		ssd1306_write_data(font_bitmap_show[i]);
+	}
+}
+
+/**
+ * \brief Check the font bin file.
+ */
+static void font_bin_check(void)
+{
+	uint32_t i;
+	volatile uint32_t magic;
+
+	/* First check if the font bin in Flash */
+	font_bin_address = (uint32_t *)CONF_FONT_BIN_ADDRESS;
+	magic = *font_bin_address;
+
+	if (magic == 0x104C4655) {
+		font_bin_flag = 1;
+		return;
+	}
+
+	/* Then check if the font bin in SD card */
+	uint32_t ul_rc;
+	uint8_t card_check;
+	FRESULT res;
+	UINT byte_to_read;
+	UINT byte_read;
+	TCHAR path[3];
+	TCHAR file_name[11];
+#if _LFN_UNICODE
+	path[0] = 0x0030;
+	path[1] = 0x003A;
+	path[2] = 0x0000;
+	file_name[0] = 0x0030;
+	file_name[1] = 0x003A;
+	file_name[2] = 0x0066;
+	file_name[3] = 0x006F;
+	file_name[4] = 0x006E;
+	file_name[5] = 0x0074;
+	file_name[6] = 0x002E;
+	file_name[7] = 0x0062;
+	file_name[8] = 0x0069;
+	file_name[9] = 0x006E;
+	file_name[10] = 0x0000;
+#else
+	path[0] = '0';
+	path[1] = ':';
+	path[2] = 0x00;
+	file_name[0] = '0';
+	file_name[1] = ':';
+	file_name[2] = 'f';
+	file_name[3] = 'o';
+	file_name[4] = 'n';
+	file_name[5] = 't';
+	file_name[6] = '.';
+	file_name[7] = 'b';
+	file_name[8] = 'i';
+	file_name[9] = 'n';
+	file_name[10] = 0x00;
+#endif
+
+	/* Is SD card present? */
+	if (gpio_pin_is_low(SD_MMC_0_CD_GPIO) == false) {
+		return;
+	}
+
+	sd_mmc_init();
+	card_check = sd_mmc_check(0);
+	while (card_check != SD_MMC_OK) {
+		card_check = sd_mmc_check(0);
+		delay_ms(1);
+	}
+
+	/* Try to mount file system. */
+	memset(&fs, 0, sizeof(FATFS));
+	res = f_mount(LUN_ID_SD_MMC_0_MEM, &fs);
+	if (FR_INVALID_DRIVE == res) {
+		return;
+	}
+	/* Test if the disk is formatted */
+	res = f_opendir(&dir, path);
+	if (res != FR_OK) {
+		return;
+	}
+
+	/* Open the font bin file. */
+	res = f_open(&file_object, file_name, (FA_OPEN_EXISTING | FA_READ));
+	if (res != FR_OK) {
+		return;
+	}		
+
+	/* Erase the sectors for font bin file. */
+	for (i = 0; i < 11; i++) {
+		ul_rc = flash_erase_sector((uint32_t)font_bin_address);
+		if (ul_rc != FLASH_RC_OK) {
+			return;
+		}
+		font_bin_address += (0x10000 / 4);
+	}
+	font_bin_address = (uint32_t *)CONF_FONT_BIN_ADDRESS;
+
+	/* Read file */
+	byte_to_read = file_object.fsize;
+	for (i = 0; i < byte_to_read; i += DATA_SIZE) {
+		res = f_read(&file_object, data_buffer, DATA_SIZE, &byte_read);
+		if (res != FR_OK) {
+			return;
+		}
+		ul_rc = flash_write((uint32_t)font_bin_address, data_buffer,
+					DATA_SIZE, 0);
+		if (ul_rc != FLASH_RC_OK) {
+			return;
+		}
+		font_bin_address += (DATA_SIZE / 4);
+	}
+
+	/* Close the file*/
+	res = f_close(&file_object);
+	if (res != FR_OK) {
+		return;
+	}
+
+	/* At last check again if the font bin in Flash */
+	font_bin_address = (uint32_t *)CONF_FONT_BIN_ADDRESS;
+	magic = *font_bin_address;
+
+	if (magic == 0x104C4655) {
+		font_bin_flag = 1;
 	}
 }
 
@@ -434,7 +595,7 @@ static void process_button_event(uint8_t uc_button)
  */
 static void sw0_handler(uint32_t id, uint32_t mask)
 {
-	if ((PIN_SW0_ID == id) && (PIN_SW0_MASK == mask)) {
+	if ((PIN_SW0_ID == id) && (PIN_SW0_MASK == mask) && (font_bin_flag == 1)) {
 		language_mode = (language_mode + 1) % 2;
 		app_mode_switch = 1;
 	}
@@ -493,9 +654,6 @@ static void sd_detect_handler(uint32_t id, uint32_t mask)
 		sd_update = 1;
 	}
 }
-
-/* IRQ priority for PIO (The lower the value, the greater the priority) */
-#define IRQ_PRIOR_PIO    0
 
 /**
  * \brief Configure the Pushbuttons.
@@ -827,8 +985,8 @@ static void display_sd_info_cn(void)
 			sprintf(size, ": %lu KB", sd_card_size);
 			ssd1306_write_text(size);
 
-			/* Wait 5 seconds to show the above message. */
-			delay_s(5);
+			/* Wait 3 seconds to show the above message. */
+			delay_s(3);
 
 			/* Clear screen. */
 			ssd1306_clear();
@@ -1177,15 +1335,26 @@ int main(void)
 		light[i] = 0;
 	}
 
-	/* Clear screen. */
-	ssd1306_clear();
+	/* Check and load the font bin. */
+	font_bin_check();
 
-	ssd1306_set_page_address(1);
-	ssd1306_set_column_address(0);
-	ssd1306_write_text("Push SW0 to switch language");
+	if (font_bin_flag) {
+		/* Clear screen. */
+		ssd1306_clear();
 
-	/* Wait 3 seconds to let the user to select language. */
-	delay_s(3);
+		ssd1306_set_page_address(0);
+		ssd1306_set_column_address(0);
+		ssd1306_write_text("The demo support english and");
+		ssd1306_set_page_address(1);
+		ssd1306_set_column_address(0);
+		ssd1306_write_text("chinese language.");
+		ssd1306_set_page_address(2);
+		ssd1306_set_column_address(0);
+		ssd1306_write_text("Push SW0 to switch language");
+
+		/* Wait 8 seconds to let the user to select language. */
+		delay_s(8);
+	}
 
 	/* Clear screen. */
 	ssd1306_clear();
