@@ -345,8 +345,7 @@ static void configure_spi(void)
  */
 static void send_ack(void)
 {
-	uint16_t ack = (uint16_t)'s';
-	while(!spi_is_ready_to_write(&slave));
+	uint8_t ack = 's';
 	spi_write_buffer_wait(&slave, &ack, 1);
 }
 
