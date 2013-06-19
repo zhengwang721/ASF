@@ -311,7 +311,7 @@ unsigned long ulDummy;
  * Setup the systick timer to generate the tick interrupts at the required
  * frequency.
  */
-__attribube__(( weak )) void vPortSetupTimerInterrupt( void )
+__attribute__(( weak )) void vPortSetupTimerInterrupt( void )
 {
 	/* Configure SysTick to interrupt at the requested rate. */
 	*(portNVIC_SYSTICK_VAL)  = 0; /* Load the SysTick Counter Value */
