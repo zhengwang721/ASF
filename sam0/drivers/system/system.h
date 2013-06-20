@@ -485,6 +485,10 @@ void system_init(void);
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
+ *		<td>Added new \c system_get_device_id() function to retrieved the device
+ *          ID.</td>
+ *	</tr>
+ *	<tr>
  *		<td>Initial Release</td>
  *	</tr>
  * </table>
@@ -496,6 +500,11 @@ void system_init(void);
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>B</td>
+ *		<td>06/2013</td>
+ *		<td>Corrected documentation typos.</td>
  *	</tr>
  *	<tr>
  *		<td>A</td>

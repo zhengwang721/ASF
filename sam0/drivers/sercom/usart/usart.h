@@ -809,14 +809,22 @@ static inline void usart_disable_transceiver(
 * release. The current version of this corresponds to the newest version in
 * the table.
 *
-* <table>
-* <tr>
-* <th>Changelog</th>
-* </tr>
-* <tr>
-* <td>Initial Release</td>
-* </tr>
-* </table>
+ * <table>
+ *	<tr>
+ *		<th>Changelog</th>
+ *	</tr>
+ *	<tr>
+ *		<td>\li Added new \c transmitter_enable and \c receiver_enable boolean
+ *              values to \c struct usart_config.
+ *          \li Altered \c usart_write_* and usart_read_* functions to abort with
+ *              an error code if the relevant transceiver is not enabled.
+ *          \li Fixed \c usart_write_buffer_wait() and \c usart_read_buffer_wait()
+ *              not aborting correctly when a timeout condition occurs.</td>
+ *	</tr>
+ *	<tr>
+ *		<td>Initial Release</td>
+ *	</tr>
+ * </table>
 */
 
 /**
@@ -1142,6 +1150,11 @@ static inline void usart_disable_transceiver(
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>B</td>
+ *		<td>06/2013</td>
+ *		<td>Corrected documentation typos.</td>
  *	</tr>
  *	<tr>
  *		<td>A</td>

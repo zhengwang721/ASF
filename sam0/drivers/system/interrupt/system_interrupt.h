@@ -452,6 +452,11 @@ enum system_interrupt_priority_level system_interrupt_get_priority(
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
+ *		<td>B</td>
+ *		<td>06/2013</td>
+ *		<td>Corrected documentation typos.</td>
+ *	</tr>
+ *	<tr>
  *		<td>A</td>
  *		<td>06/2013</td>
  *		<td>Initial release</td>

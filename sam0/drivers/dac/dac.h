@@ -759,6 +759,12 @@ void dac_clear_status(
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
+ *		<td>B</td>
+ *		<td>06/2013</td>
+ *		<td>Added additional documentation on the event system. Corrected
+ *          documentation typos.</td>
+ *	</tr>
+ *	<tr>
  *		<td>A</td>
  *		<td>06/2013</td>
  *		<td>Initial release</td>
