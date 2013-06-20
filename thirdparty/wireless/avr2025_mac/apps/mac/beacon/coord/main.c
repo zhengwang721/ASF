@@ -131,7 +131,7 @@ typedef enum coord_state_tag {
 /** Defines the maximum number of devices this coordinator will handle. */
 #define MAX_NUMBER_OF_DEVICES           (100)
 
-#define CHANNEL_OFFSET                  (0)
+#define CHANNEL_OFFSET                  (5)
 
 #define SCAN_CHANNEL                    (1ul << current_channel)
 

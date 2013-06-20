@@ -937,4 +937,44 @@ bool wpan_mlme_poll_req(wpan_addr_spec_t *CoordAddrSpec)
 
 #endif /* (MAC_INDIRECT_DATA_BASIC == 1) */
 
+
+#if (MAC_GTS_REQUEST == 1)
+bool wpan_mlme_gts_req(uint8_t GtsChar)
+{
+#ifdef GTS_SUPPORT
+	buffer_t *buffer_header;
+	mlme_gts_req_t *mlme_gts_req;
+
+	/* Allocate a small buffer for gts request */
+	buffer_header = bmm_buffer_alloc(LARGE_BUFFER_SIZE);
+
+	if (NULL == buffer_header) {
+		/* Buffer is not available */
+		return false;
+	}
+
+	/* Get the buffer body from buffer header */
+	mlme_gts_req = (mlme_gts_req_t *)BMM_BUFFER_POINTER(buffer_header);
+
+	/* construct mlme_poll_req_t message */
+	mlme_gts_req->cmdcode = MLME_GTS_REQUEST;
+
+	/* Other fields. */
+	mlme_gts_req->GtsChar = GtsChar;
+#ifdef ENABLE_QUEUE_CAPACITY
+	if (MAC_SUCCESS != qmm_queue_append(&nhle_mac_q, buffer_header)) {
+		/*
+		 * MLME-POLL.request is not appended into NHLE MAC
+		 * queue, hence free the buffer allocated and return false
+		 */
+		bmm_buffer_free(buffer_header);
+		return false;
+	}
+#else
+	qmm_queue_append(&nhle_mac_q, buffer_header);
+#endif  /* ENABLE_QUEUE_CAPACITY */
+	return true;
+#endif /* GTS_SUPPORT */
+}
+#endif /* MAC_GTS_REQUEST */
 /* EOF */

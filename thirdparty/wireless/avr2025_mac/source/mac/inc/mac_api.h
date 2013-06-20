@@ -433,7 +433,6 @@ typedef struct mac_sec_pib_tag {
 	uint8_t DefaultKeySource[8];
 } mac_sec_pib_t;
 #endif  /* MAC_SECURITY_ZIP */
-
 #endif /* if !defined(__DOXYGEN___NO_MAC) */
 
 #ifdef SAM
@@ -915,6 +914,11 @@ bool wpan_mlme_sync_req(uint8_t LogicalChannel,
 
 #endif /* (MAC_SYNC_REQUEST == 1) */
 
+
+#if (MAC_GTS_REQUEST == 1) || defined(__DOXYGEN__)
+bool wpan_mlme_gts_req(uint8_t GtsChar);
+#endif /* (MAC_GTS_REQUEST == 1) */
+
 /*@}*//* apiMacReq */
 
 /**
@@ -1341,6 +1345,8 @@ void usr_mlme_sync_loss_ind(uint8_t LossReason,
 		uint16_t PANId,
 		uint8_t LogicalChannel,
 		uint8_t ChannelPage);
+
+void usr_mlme_gts_conf(uint8_t GtsChar, uint8_t status);
 
 uint8_t mac_get_pib_attribute_size(uint8_t pib_attribute_id);
 

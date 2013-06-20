@@ -168,6 +168,26 @@ typedef struct parse_tag {
 	frame_payload_t mac_payload_data;
 } parse_t;
 /* ! @} */
+
+
+#ifdef GTS_SUPPORT
+/**
+ * @brief GTS specification structure
+ *
+ * @ingroup apiMacTypes
+ */
+typedef struct wpan_gts_char_tag {
+	uint8_t Length:4;
+	uint8_t Direction:1;
+	uint8_t CharType:1;
+	uint8_t Reserved:2;
+} wpan_gts_char_t;
+
+typedef struct mac_gts_mgmt_tag {
+
+
+}mac_gts_mgmt_t;
+#endif /* GTS_SUPPORT */
 /* === Externals ============================================================ */
 
 /* === Prototypes =========================================================== */

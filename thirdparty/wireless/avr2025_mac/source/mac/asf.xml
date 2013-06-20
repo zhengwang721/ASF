@@ -73,6 +73,7 @@
 		<build type="c-source"      value="src/mac_misc.c"/>
 		<build type="c-source"      value="src/mac_orphan.c"/>
 		<build type="c-source"      value="src/mac_pib.c"/>
+		<build type="c-source"      value="src/mac_gts.c"/>
 		<build type="c-source"      value="src/mac_poll.c"/>
 		<build type="c-source"      value="src/mac_process_beacon_frame.c"/>
 		<build type="c-source"      value="src/mac_process_tal_tx_frame_status.c"/>

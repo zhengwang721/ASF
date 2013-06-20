@@ -587,4 +587,31 @@ void mlme_sync_loss_ind(uint8_t *m)
 
 #endif /* (MAC_SYNC_LOSS_INDICATION == 1) */
 
+#ifdef GTS_SUPPORT
+void mlme_gts_conf(uint8_t *m)
+{
+	mlme_gts_conf_t *pmsg;
+
+	/* Get the buffer body from buffer header */
+	pmsg = (mlme_gts_conf_t *)BMM_BUFFER_POINTER(((buffer_t *)m));
+
+	usr_mlme_gts_conf(pmsg->GtsChar, pmsg->status);
+
+	/* Free the buffer */
+	bmm_buffer_free((buffer_t *)m);
+}
+
+void mlme_gts_ind(uint8_t *m)
+{
+	mlme_gts_ind_t *pmsg;
+
+	/* Get the buffer body from buffer header */
+	pmsg = (mlme_gts_ind_t *)BMM_BUFFER_POINTER(((buffer_t *)m));
+
+	usr_mlme_gts_conf(pmsg->DeviceAddr, pmsg->GtsChar);
+
+	/* Free the buffer */
+	bmm_buffer_free((buffer_t *)m);
+}
+#endif /* GTS_SUPPORT */
 /* EOF */

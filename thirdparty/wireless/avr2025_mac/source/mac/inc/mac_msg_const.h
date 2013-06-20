@@ -82,6 +82,7 @@ enum msg_code {
 	MLME_RESET_REQUEST                  = (0x09),
 	MLME_RX_ENABLE_REQUEST              = (0x0A),
 	MLME_SCAN_REQUEST                   = (0x0B),
+	MLME_GTS_REQUEST                    = (0x0C),
 	MLME_START_REQUEST                  = (0x0D),
 	MLME_POLL_REQUEST                   = (0x0E),
 	MLME_SYNC_REQUEST                   = (0x0F),
@@ -95,6 +96,8 @@ enum msg_code {
 	MLME_DISASSOCIATE_INDICATION        = (0x15),
 	MLME_DISASSOCIATE_CONFIRM           = (0x16),
 	MLME_BEACON_NOTIFY_INDICATION       = (0x17),
+	MLME_GTS_CONFIRM                    = (0x18),
+	MLME_GTS_INDICATION                 = (0x19),
 	MLME_ORPHAN_INDICATION              = (0x1A),
 	MLME_SCAN_CONFIRM                   = (0x1B),
 	MLME_COMM_STATUS_INDICATION         = (0x1C),
@@ -148,6 +151,8 @@ SHORTENUM;
 #endif  /* MAC_SECURITY_ZIP */
 #define MLME_START_CONF_LEN             (2)
 #define MLME_SYNC_LOSS_IND_LEN          (6)
+#define MLME_GTS_CONF_LEN               (3)
+#define MLME_GTS_IND_LEN                (4)
 
 #ifdef ENABLE_TSTAMP
 #define WPAN_DESCRIPTOR_LEN             (21)

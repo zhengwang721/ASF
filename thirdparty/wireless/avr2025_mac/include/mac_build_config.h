@@ -152,6 +152,21 @@
 	                                             * networks */
 #endif /* BEACON_SUPPORT / No BEACON_SUPPORT */
 
+#if (defined BEACON_SUPPORT) && (defined GTS_SUPPORT)
+
+/**
+ * FEATURE SET FOR BUILD WITH BEACON ENABLED NETWORK SUPPORT
+ */
+#define MAC_GTS_REQUEST                        (1)
+#else
+
+/**
+ * FEATURE SET FOR BUILD WITH PURE NONBEACON ONLY NETWORK SUPPORT
+ */
+#define MAC_GTS_REQUEST                        (0) 
+
+#endif /* BEACON_SUPPORT / No BEACON_SUPPORT */
+
 /*
  * Sync Loss Indication primitive is always required:
  *

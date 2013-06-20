@@ -716,6 +716,12 @@ void mlme_reset_conf(uint8_t *m);
  */
 void mlme_sync_loss_ind(uint8_t *m);
 
+#ifdef GTS_SUPPORT
+void mlme_gts_request(uint8_t *m);
+void mlme_gts_conf(uint8_t *m);
+void mlme_gts_ind(uint8_t *m);
+#endif /* GTS_SUPPORT */
+
 #if (HIGHEST_STACK_LAYER == MAC)
 
 /**

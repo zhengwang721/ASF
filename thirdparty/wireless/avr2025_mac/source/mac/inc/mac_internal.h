@@ -449,7 +449,9 @@ extern mac_scan_state_t mac_scan_state;
 extern mac_sync_state_t mac_sync_state;
 extern mac_poll_state_t mac_poll_state;
 extern mac_pib_t mac_pib;
-
+#ifdef GTS_SUPPORT
+extern mac_gts_mgmt_t mac_gts_mgmt_table[];
+#endif /* GTS_SUPPORT */
 /* === Prototypes =========================================================== */
 
 #ifdef __cplusplus
@@ -667,6 +669,11 @@ retval_t mac_unsecure(parse_t *mac_parse_data, uint8_t *mpdu,
 		uint8_t *mac_payload, uint8_t *payload_index);
 
 #endif  /* MAC_SECURITY_ZIP */
+
+#ifdef GTS_SUPPORT
+void mac_gen_mlme_gts_conf(buffer_t *buf_ptr, uint8_t status);
+void mac_process_gts_request(buffer_t *gts_req);
+#endif /* GTS_SUPPORT */
 
 #if (MAC_INDIRECT_DATA_FFD == 1)
 
