@@ -392,7 +392,7 @@ static void font_bitmap_find(uint16_t unicode)
 			(chinese_font_table[0x17] << 24);
 
 	unicode_char_info_offset = first_char_info_offset +
-			(unicode -	chinese_font_table[0x10]) * 4;
+			(unicode - chinese_font_table[0x10]) * 4;
 	unicode_char_info = chinese_font_table[unicode_char_info_offset] |
 			(chinese_font_table[unicode_char_info_offset + 1] << 8) |
 			(chinese_font_table[unicode_char_info_offset + 2] << 16) |
@@ -651,8 +651,8 @@ static void reset_handler(void)
 	uint32_t ul_last_page_addr = LAST_PAGE_ADDRESS;
 	uint32_t ul_rc;
 
-	/* The EWP command is not supported by SAM4S and SAM4E, SAM4N, so an erase
-	 * command is requried before any write operation.
+	/* The EWP command is not supported by SAM4S and SAM4E, SAM4N, so an
+	 * erase command is requried before any write operation.
 	 */
 	ul_rc = flash_erase_sector(ul_last_page_addr);
 	if (ul_rc != FLASH_RC_OK) {
