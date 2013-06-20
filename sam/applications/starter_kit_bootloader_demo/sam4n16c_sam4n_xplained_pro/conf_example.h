@@ -44,6 +44,11 @@
 #ifndef CONF_EXAMPLE_H_INCLUDED
 #define CONF_EXAMPLE_H_INCLUDED
 
-#define CONF_FONT_BIN_ADDRESS 0x450000
+/* Choose different define to generate different application. */
+#define CONF_ENGLISH_LANGUAGE
+//#define CONF_CHINESE_LANGUAGE
+
+/* Last page start address. */
+#define LAST_PAGE_ADDRESS (IFLASH_ADDR + IFLASH_SIZE - IFLASH_PAGE_SIZE * 4)
 
 #endif /* CONF_EXAMPLE_H_INCLUDED */

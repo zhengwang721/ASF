@@ -22,6 +22,11 @@
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>
 		<generator value="doxygen"/>
+		<config name="config.compiler.iarewarm.create_aux" value="no"/>
+		<config name="config.compiler.armgcc.create_aux" value="no"/>
+		<config name="config.compiler.as5_arm.create_aux" value="no"/>
+		<build type="linker-config" subtype="script" value="linker_scripts/gcc/flash.ld" toolchain="armgcc"/>
+		<build type="linker-config" subtype="script" value="linker_scripts/iar/flash.icf" toolchain="iarewarm"/>
 		<device-support value="atsam4n16c"/>
 	</project>
 </asf>
