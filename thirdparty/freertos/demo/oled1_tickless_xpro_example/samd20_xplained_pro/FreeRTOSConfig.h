@@ -74,6 +74,8 @@ standard names - or at least those used in the unmodified vector table. */
 #define vPortSVCHandler                         SVC_Handler
 #define xPortPendSVHandler                      PendSV_Handler
 
+#include <portmacro.h>
+void vPortSuppressTicksAndSleep( portTickType xExpectedIdleTime );
 #define portSUPPRESS_TICKS_AND_SLEEP             vPortSuppressTicksAndSleep
 
 #endif /* FREERTOS_CONFIG_H */
