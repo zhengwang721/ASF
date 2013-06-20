@@ -93,7 +93,7 @@ void empty_callback(struct tc_module *const module_inst);
  *
  * Function that sets up a timer to use for os tick. The same timer is also
  * used as the sleep timer.
- * The timer runs at 8MHz, i.e. with no prescaler on GCLK0. Wavegen function
+ * The timer runs at 48MHz, i.e. with no prescaler on GCLK0. Wavegen function
  * Match Frequency is chosen to reload the count register on every CC0 match.
  * 8 bit counter mode must not be chosen.
  * The function is weakly defined in freeRTOS, and redefined here.
