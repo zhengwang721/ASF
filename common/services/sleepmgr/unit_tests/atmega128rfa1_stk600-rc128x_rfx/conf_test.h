@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Ext Interrupt unit test configuration file
+ * \brief Sleep manager unit test configuration file
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *

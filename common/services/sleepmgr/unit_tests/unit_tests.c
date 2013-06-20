@@ -67,7 +67,8 @@
  *
  * \section device_info Device Info
  * This example has been tested with the following setup(s):
- * - atmega128rfa1_stk600 and atmega256rfr2_xplained_pro
+ * - atmega128rfa1_stk600-rc128x_rfx 
+ * - atmega256rfr2_xplained_pro
  *
  * \section description Description of the unit tests
  * See the documentation for the individual unit test functions
@@ -88,14 +89,57 @@
  * For further information, visit <a href="http://www.atmel.com/">Atmel</a>.\n
  */
 
-/* Timer/Counter2 Initialization */
-static void timer2_initialisation(void);
+ //! \name Unit test configuration
+//@{
+/**
+ * \def CONF_TEST_USART
+ * \brief USART to redirect STDIO to
+ */
+/**
+ * \def CONF_TEST_BAUDRATE
+ * \brief Baudrate of USART
+ */
+/**
+ * \def CONF_TEST_CHARLENGTH
+ * \brief Character length (bits) of USART
+ */
+/**
+ * \def CONF_TEST_PARITY
+ * \brief Parity mode of USART
+ */
+/**
+ * \def CONF_TEST_STOPBITS
+ * \brief Stop bit configuration of USART
+ */
+//@}
 
 /* ADC Initialization */
 static void adc_initialisation(void);
 
+/* Timer/Counter2 Initialization */
+static void timer2_initialisation(void);
+
 /* Variable for trigger counter **/
 static volatile uint8_t trigger_count = 0;
+
+/* ADC Conversion complete ISR */
+ISR(ADC_vect)
+{
+	/* Clear ADC conversion interrupt flag */
+	ADCSRA = (1 << ADIF);
+	/* Increment trigger count */
+	trigger_count++;
+}
+
+
+/* Timer/Counter2 Overflow ISR */
+ISR(TIMER2_OVF_vect)
+{
+	/* Clear Timer Overflow flag */
+	TIFR2 |= (1 << TOV2);
+	/* Increment trigger count */
+	trigger_count++;
+}
 
 /* Initialize ADC */
 static void adc_initialisation()
@@ -107,15 +151,6 @@ static void adc_initialisation()
 	/* set voltage reference, mux input and right adjustment */
 	adc_set_admux(ADC_VREF_AVCC | ADC_MUX_ADC0 | ADC_ADJUSTMENT_RIGHT);
 	adc_enable_interrupt();
-}
-
-/* ADC Conversion complete ISR */
-ISR(ADC_vect)
-{
-	/* Clear ADC conversion interrupt flag */
-	ADCSRA = (1 << ADIF);
-	/* Increment trigger count */
-	trigger_count++;
 }
 
 /* Timer/Counter2 Initialization */
@@ -135,15 +170,6 @@ static void timer2_initialisation()
 	/* wait for TCCR2B to update */
 	while (ASSR & (1 << TCR2BUB)) {
 	}
-}
-
-/* Timer/Counter2 Overflow ISR */
-ISR(TIMER2_OVF_vect)
-{
-	/* Clear Timer Overflow flag */
-	TIFR2 |= (1 << TOV2);
-	/* Increment trigger count */
-	trigger_count++;
 }
 
 /**
@@ -191,8 +217,6 @@ static void run_sleep_trigger_test(const struct test_case *test)
 	}
 	/* Start ADC Conversion */
 	adc_start_conversion();
-	/* Enable Global interrupt */
-	cpu_irq_enable();
 	/* Go to sleep in the deepest allowed mode */
 	sleepmgr_enter_sleep();
 	/* Disable ADC */
@@ -255,14 +279,14 @@ static void run_set_functions_test(const struct test_case *test)
 	/* get the deepest allowable sleep mode */
 	sleep_mode = sleepmgr_get_sleep_mode();
 	test_assert_true(test, sleep_mode == SLEEPMGR_PDOWN,
-			"Trying to unlock Power Down mode failed.");
+			"Trying to unlock Power Save Sleep mode failed.");
 
 	/* Unlock Power Down mode */
 	sleepmgr_unlock_mode(SLEEPMGR_PDOWN);
 	/* get the deepest allowable sleep mode */
 	sleep_mode = sleepmgr_get_sleep_mode();
 	test_assert_true(test, sleep_mode == (SLEEPMGR_NR_OF_MODES - 1),
-			"Trying to unlock Power Save Sleep mode failed.");
+			"Trying to unlock Power Down mode failed.");
 }
 
 /**

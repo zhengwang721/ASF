@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Ext Interrupt unit test configuration file
+ * \brief Sleep manager unit test configuration file
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -44,7 +44,10 @@
 #ifndef CONF_TEST_H
 #define CONF_TEST_H
 
-
+/*
+ * For USARTA1 connect a two wire cable for PORTD2 to connect with RXD
+ * For USARTA1 connect a two wire cable for PORTD3 to connect with TXD
+ */
 #define CONF_TEST_USART      &USARTA1
 //! \note 38400 baud
 #define CONF_TEST_BAUDRATE   38400

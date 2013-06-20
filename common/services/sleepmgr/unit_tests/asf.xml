@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="common.services.basic.sleepmgr.unit_tests" caption="Unit Tests for the MEGARF SLEEP Manager">
+	<module type="application" id="common.services.basic.sleepmgr.unit_tests" caption="Unit Tests for the Common SLEEP Manager">
 		<device-support value="mega"/>
 		<info type="description" value="summary">
 		Unit tests for the MEGARF Ext Interrupt driver.
