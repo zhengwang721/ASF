@@ -13,7 +13,7 @@ void assert_triggered( const char * file, uint32_t line );
 #include <gclk.h>
 
 #define configUSE_PREEMPTION                    1
-#define configUSE_TICKLESS_IDLE	                2
+#define configUSE_TICKLESS_IDLE                 2
 #define configUSE_IDLE_HOOK                     0
 #define configUSE_TICK_HOOK                     0
 #define configPRIO_BITS                         2
@@ -74,6 +74,6 @@ standard names - or at least those used in the unmodified vector table. */
 #define vPortSVCHandler                         SVC_Handler
 #define xPortPendSVHandler                      PendSV_Handler
 
-#define portSUPRESS_TICKS_AND_SLEEP             vPortSuppressTicksAndSleep
+#define portSUPPRESS_TICKS_AND_SLEEP             vPortSuppressTicksAndSleep
 
 #endif /* FREERTOS_CONFIG_H */
