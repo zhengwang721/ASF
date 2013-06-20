@@ -1198,6 +1198,15 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
+ *		<td>\li Fixed \c system_clock_source_is_ready not returning the correct
+ *              state for \c SYSTEM_CLOCK_SOURCE_OSC8M.
+ *          \li Renamed the various \c system_clock_source_*_get_default_config()
+ *              functions to \c system_clock_source_*_get_config_defaults() to
+ *              match the remainder of ASF.
+ *          \li Added OSC8M calibration constant loading from the device signature
+ *              row when the oscillator is initialized.</td>
+ *	</tr>
+ *	<tr>
  *		<td>Initial Release</td>
  *	</tr>
  * </table>
@@ -1222,6 +1231,11 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>B</td>
+ *		<td>06/2013</td>
+ *		<td>Corrected documentation typos.</td>
  *	</tr>
  *	<tr>
  *		<td>A</td>
