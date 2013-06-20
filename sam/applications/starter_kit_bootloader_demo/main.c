@@ -649,7 +649,51 @@ static void process_button_event(uint8_t uc_button)
 static void reset_handler(void)
 {
 	uint32_t ul_last_page_addr = LAST_PAGE_ADDRESS;
+	uint32_t *pul_last_page = (uint32_t *) ul_last_page_addr;
 	uint32_t ul_rc;
+	uint32_t ul_idx;
+	uint32_t temp_data;
+
+	for (ul_idx = 0; ul_idx < (IFLASH_PAGE_SIZE / 4); ul_idx++) {
+		temp_data = pul_last_page[ul_idx];
+		data_buffer[ul_idx * 4] = (uint8_t)(temp_data & 0xFF);
+		data_buffer[ul_idx * 4 + 1] = (uint8_t)((temp_data >> 8) & 0xFF);
+		data_buffer[ul_idx * 4 + 2] = (uint8_t)((temp_data >> 16) & 0xFF);
+		data_buffer[ul_idx * 4 + 3] = (uint8_t)((temp_data >> 24) & 0xFF);
+	}
+
+	/* Trigger */
+	data_buffer[0x14] = 0x01;
+
+#ifdef CONF_ENGLISH_LANGUAGE
+	data_buffer[0x18] = 'd';
+	data_buffer[0x19] = 'e';
+	data_buffer[0x1A] = 'm';
+	data_buffer[0x1B] = 'o';
+	data_buffer[0x1C] = '_';
+	data_buffer[0x1D] = 'c';
+	data_buffer[0x1E] = 'n';
+	data_buffer[0x1F] = '.';
+	data_buffer[0x20] = 'b';
+	data_buffer[0x21] = 'i';
+	data_buffer[0x22] = 'n';
+	data_buffer[0x23] = 0x00;
+#endif
+
+#ifdef CONF_CHINESE_LANGUAGE
+	data_buffer[0x18] = 'd';
+	data_buffer[0x19] = 'e';
+	data_buffer[0x1A] = 'm';
+	data_buffer[0x1B] = 'o';
+	data_buffer[0x1C] = '_';
+	data_buffer[0x1D] = 'e';
+	data_buffer[0x1E] = 'n';
+	data_buffer[0x1F] = '.';
+	data_buffer[0x20] = 'b';
+	data_buffer[0x21] = 'i';
+	data_buffer[0x22] = 'n';
+	data_buffer[0x23] = 0x00;
+#endif
 
 	/* The EWP command is not supported by SAM4S and SAM4E, SAM4N, so an
 	 * erase command is requried before any write operation.
@@ -658,44 +702,6 @@ static void reset_handler(void)
 	if (ul_rc != FLASH_RC_OK) {
 		return;
 	}
-
-	/* Signature */
-	data_buffer[0x00] = 0x5A;
-	data_buffer[0x01] = 0xA5;
-	data_buffer[0xFE] = 0x69;
-	data_buffer[0xFF] = 0x96;
-
-	/* Name length */
-	data_buffer[0x08] = 0x0C;
-#ifdef CONF_ENGLISH_LANGUAGE
-	data_buffer[0x10] = 'd';
-	data_buffer[0x11] = 'e';
-	data_buffer[0x12] = 'm';
-	data_buffer[0x13] = 'o';
-	data_buffer[0x14] = '_';
-	data_buffer[0x15] = 'c';
-	data_buffer[0x16] = 'n';
-	data_buffer[0x17] = '.';
-	data_buffer[0x18] = 'b';
-	data_buffer[0x19] = 'i';
-	data_buffer[0x1A] = 'n';
-	data_buffer[0x1B] = 0x00;
-#endif
-
-#ifdef CONF_CHINESE_LANGUAGE
-	data_buffer[0x10] = 'd';
-	data_buffer[0x11] = 'e';
-	data_buffer[0x12] = 'm';
-	data_buffer[0x13] = 'o';
-	data_buffer[0x14] = '_';
-	data_buffer[0x15] = 'e';
-	data_buffer[0x16] = 'n';
-	data_buffer[0x17] = '.';
-	data_buffer[0x18] = 'b';
-	data_buffer[0x19] = 'i';
-	data_buffer[0x1A] = 'n';
-	data_buffer[0x1B] = 0x00;
-#endif
 
 	ul_rc = flash_write(ul_last_page_addr, data_buffer,
 			IFLASH_PAGE_SIZE, 0);
