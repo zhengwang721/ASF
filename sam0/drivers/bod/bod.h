@@ -429,6 +429,11 @@ static inline void bod_clear_detected(
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
+ *		<td>B</td>
+ *		<td>06/2013</td>
+ *		<td>Corrected documentation typos.</td>
+ *	</tr>
+ *	<tr>
  *		<td>A</td>
  *		<td>06/2013</td>
  *		<td>Initial release</td>

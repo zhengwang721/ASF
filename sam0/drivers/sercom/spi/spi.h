@@ -1315,6 +1315,10 @@ enum status_code spi_select_slave(
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
+ *		<td>Renamed the anonymous union in \c struct spi_config to
+ *          \c mode_specific.</td>
+ *	</tr>
+ *	<tr>
  *		<td>Initial Release</td>
  *	</tr>
  * </table>
@@ -1731,6 +1735,11 @@ enum status_code spi_select_slave(
   *		<th>Doc. Rev.</td>
   *		<th>Date</td>
   *		<th>Comments</td>
+  *	</tr>
+  *	<tr>
+  *		<td>B</td>
+  *		<td>06/2013</td>
+  *		<td>Corrected documentation typos.</td>
   *	</tr>
   *	<tr>
   *		<td>A</td>

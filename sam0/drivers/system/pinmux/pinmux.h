@@ -565,6 +565,9 @@ static inline void system_pinmux_pin_set_output_drive(
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
+ *		<td>Added missing NULL pointer asserts to the PORT driver functions.</td>
+ *	</tr>
+ *	<tr>
  *		<td>Initial Release</td>
  *	</tr>
  * </table>
@@ -588,6 +591,11 @@ static inline void system_pinmux_pin_set_output_drive(
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>B</td>
+ *		<td>06/2013</td>
+ *		<td>Corrected documentation typos.</td>
  *	</tr>
  *	<tr>
  *		<td>A</td>

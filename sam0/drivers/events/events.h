@@ -665,6 +665,11 @@ static inline void events_chan_software_trigger(
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
+ *		<td>B</td>
+ *		<td>06/2013</td>
+ *		<td>Corrected documentation typos.</td>
+ *	</tr>
+ *	<tr>
  *		<td>A</td>
  *		<td>06/2013</td>
  *		<td>Initial release</td>

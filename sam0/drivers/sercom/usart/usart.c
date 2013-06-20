@@ -732,7 +732,7 @@ enum status_code usart_read_buffer_wait(
 		return STATUS_ERR_INVALID_ARG;
 	}
 
-		/* Check that the receiver is enabled */
+	/* Check that the receiver is enabled */
 	if (!(module->receiver_enabled)) {
 		return STATUS_ERR_DENIED;
 	}
