@@ -1317,7 +1317,7 @@ enum status_code spi_select_slave(
  *		<th>Changelog</th>
  *	</tr>
  *	 <tr>
- *		<td>Editet slave part of write and transceive buffer functions to ensure
+ *		<td>Edited slave part of write and transceive buffer functions to ensure
  *		that second character is sent at the right time.</td>
  *	</tr>
  *	<tr>
