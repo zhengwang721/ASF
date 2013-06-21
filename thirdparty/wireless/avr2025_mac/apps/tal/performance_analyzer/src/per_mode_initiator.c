@@ -501,12 +501,12 @@ static void  range_test_timer_handler_cb(void *parameter)
 
 		node_info.transmitting = true;
 
-		sw_timer_start(T_APP_TIMER_RANGE,
+	}
+    		sw_timer_start(T_APP_TIMER_RANGE,
 				RANGE_TX_BEACON_INTERVAL,
 				SW_TIMEOUT_RELATIVE,
 				(FUNC_PTR)range_test_timer_handler_cb,
 				NULL);
-	}
 }
 
 /**
