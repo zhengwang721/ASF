@@ -322,18 +322,18 @@ typedef void (*ac_callback_t)(struct ac_module *const module_inst);
 /** Enum for possible callback types for the AC module */
 enum ac_callback {
 	/** Callback for comparator 0 */
-	AC_CALLBACK_COMPARATOR_0,
+	AC_CALLBACK_COMPARATOR_0 = 0,
 	/** Callback for comparator 1 */
-	AC_CALLBACK_COMPARATOR_1,
+	AC_CALLBACK_COMPARATOR_1 = 1,
 	/** Callback for window 0 */
-	AC_CALLBACK_WINDOW_0,
+	AC_CALLBACK_WINDOW_0     = 4,
 #if (AC_NUM_CMP > 2)
 	/** Callback for comparator 2 */
-	AC_CALLBACK_COMPARATOR_2,
+	AC_CALLBACK_COMPARATOR_2 = 2,
 	/** Callback for comparator 3 */
-	AC_CALLBACK_COMPARATOR_3,
+	AC_CALLBACK_COMPARATOR_3 = 3,
 	/** Callback for window 1 */
-	AC_CALLBACK_WINDOW_1,
+	AC_CALLBACK_WINDOW_1     = 5,
 	/** Number of available callbacks */
 #endif /* (AC_NUM_CMP == 2) */
 #if !defined(__DOXYGEN__)
