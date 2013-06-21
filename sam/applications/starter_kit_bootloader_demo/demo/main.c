@@ -607,8 +607,8 @@ static void application_bin_check(void)
 	font_bitmap_transfer();
 	font_bitmap_display(2, 50);
 #endif
-	/* Wait 8 seconds to let the user to select language. */
-	delay_s(8);
+	/* Wait 6 seconds to let the user to select language. */
+	delay_s(6);
 
 	/* Set the flag. */
 	application_bin_flag = 1;
@@ -711,6 +711,42 @@ static void reset_handler(void)
 	if (ul_rc != FLASH_RC_OK) {
 		return;
 	}
+
+	/* Clear screen. */
+	ssd1306_clear();
+
+	/* End message on the screen. */
+#ifdef CONF_ENGLISH_LANGUAGE
+	ssd1306_set_page_address(1);
+	ssd1306_set_column_address(0);
+	ssd1306_write_text("Wait bootloader complete...");
+#endif
+#ifdef CONF_CHINESE_LANGUAGE
+	font_bitmap_find(0x7B49);
+	font_bitmap_transfer();
+	font_bitmap_display(0, 0);
+	font_bitmap_find(0x5F85);
+	font_bitmap_transfer();
+	font_bitmap_display(0, 16);
+	font_bitmap_find(0x5F15);
+	font_bitmap_transfer();
+	font_bitmap_display(0, 32);
+	font_bitmap_find(0x5BFC);
+	font_bitmap_transfer();
+	font_bitmap_display(0, 48);
+	font_bitmap_find(0x7A0B);
+	font_bitmap_transfer();
+	font_bitmap_display(0, 64);
+	font_bitmap_find(0x5E8F);
+	font_bitmap_transfer();
+	font_bitmap_display(0, 80);
+	font_bitmap_find(0x5B8C);
+	font_bitmap_transfer();
+	font_bitmap_display(0, 96);
+	font_bitmap_find(0x6210);
+	font_bitmap_transfer();
+	font_bitmap_display(0, 112);
+#endif
 
 	/* Perform the software reset. */
 	rstc_start_software_reset(RSTC);
@@ -1488,13 +1524,11 @@ int main(void)
 
 	/* Start message on the screen. */
 #ifdef CONF_ENGLISH_LANGUAGE
-	/* English language */
 	ssd1306_set_page_address(1);
 	ssd1306_set_column_address(0);
 	ssd1306_write_text("Start Kit Demo");
 #endif
 #ifdef CONF_CHINESE_LANGUAGE
-	/* Chinese language */
 	font_bitmap_find(0x5F00);
 	font_bitmap_transfer();
 	font_bitmap_display(0, 0);
