@@ -664,6 +664,9 @@ static void reset_handler(void)
 
 	/* Trigger */
 	data_buffer[0x14] = 0x01;
+	data_buffer[0x15] = 0x00;
+	data_buffer[0x16] = 0x00;
+	data_buffer[0x17] = 0x00;
 
 #ifdef CONF_ENGLISH_LANGUAGE
 	data_buffer[0x18] = 'd';
@@ -695,10 +698,10 @@ static void reset_handler(void)
 	data_buffer[0x23] = 0x00;
 #endif
 
-	/* The EWP command is not supported by SAM4S and SAM4E, SAM4N, so an
-	 * erase command is requried before any write operation.
-	 */
-	ul_rc = flash_erase_sector(ul_last_page_addr);
+	ul_rc = flash_unlock(ul_last_page_addr,
+			ul_last_page_addr + IFLASH_PAGE_SIZE, NULL, NULL);
+
+	ul_rc = flash_erase_page(ul_last_page_addr, IFLASH_ERASE_PAGES_8);
 	if (ul_rc != FLASH_RC_OK) {
 		return;
 	}

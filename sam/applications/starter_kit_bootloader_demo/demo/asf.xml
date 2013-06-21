@@ -1,6 +1,6 @@
 <asf xmlversion="1.0">
-	<select-by-device id="sam.applications.starter_kit_bootloader_demo" caption="Starter Kit Demo">
-		<module type="application" id="sam.applications.starter_kit_bootloader_demo#0" caption="Starter Kit Demo">
+	<select-by-device id="sam.applications.starter_kit_bootloader_demo.demo" caption="Starter Kit Demo">
+		<module type="application" id="sam.applications.starter_kit_bootloader_demo.demo#0" caption="Starter Kit Demo">
 			<info type="description" value="summary">
 				This demo for the SAM Xplained Pro features the following extensions: IO1, OLED1.
 			</info>
