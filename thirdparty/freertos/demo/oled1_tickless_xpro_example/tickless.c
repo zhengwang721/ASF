@@ -74,10 +74,7 @@
 struct tc_module tc;
 
 //! External declaration of freeRTOS SysTick handler
-extern void xPortSysTickHandler();
-
-//! Prototype for timer setup function
-void vPortSetupTimerInterrupt( void );
+extern void xPortSysTickHandler( void );
 
 //! Prototype for sleep function
 void vPortSuppressTicksAndSleep( portTickType xExpectedIdleTime );
@@ -113,7 +110,7 @@ void vPortSetupTimerInterrupt(void)
 	tc_init(&tc, TICK_TC, &tcconf);
 
 	// Register and enable callback for freeRTOS tick handler
-	tc_register_callback(&tc, xPortSysTickHandler, TC_CALLBACK_CC_CHANNEL0);
+	tc_register_callback(&tc, (tc_callback_t) xPortSysTickHandler, TC_CALLBACK_CC_CHANNEL0);
 	tc_enable_callback(&tc, TC_CALLBACK_CC_CHANNEL0);
 
 	// Set top value equal to one os tick
@@ -154,7 +151,7 @@ void vPortSuppressTicksAndSleep( portTickType xExpectedIdleTime )
 		// Reset the timer to act as SysTick
 		tc_disable_callback(&tc, TC_CALLBACK_CC_CHANNEL0);
 		tc_unregister_callback(&tc, TC_CALLBACK_CC_CHANNEL0);
-		tc_register_callback(&tc, xPortSysTickHandler, TC_CALLBACK_CC_CHANNEL0);
+		tc_register_callback(&tc, (tc_callback_t) xPortSysTickHandler, TC_CALLBACK_CC_CHANNEL0);
 		tc_enable_callback(&tc, TC_CALLBACK_CC_CHANNEL0);
 		tc_set_top_value(&tc, TIMER_RELOAD_VALUE_ONE_TICK);
 	}
@@ -186,7 +183,7 @@ void vPortSuppressTicksAndSleep( portTickType xExpectedIdleTime )
 		// Reset the timer to act as SysTick
 		tc_disable_callback(&tc, TC_CALLBACK_CC_CHANNEL0);
 		tc_unregister_callback(&tc, TC_CALLBACK_CC_CHANNEL0);
-		tc_register_callback(&tc, xPortSysTickHandler, TC_CALLBACK_CC_CHANNEL0);
+		tc_register_callback(&tc, (tc_callback_t) xPortSysTickHandler, TC_CALLBACK_CC_CHANNEL0);
 		tc_enable_callback(&tc, TC_CALLBACK_CC_CHANNEL0);
 		tc_set_top_value(&tc, TIMER_RELOAD_VALUE_ONE_TICK);
 
