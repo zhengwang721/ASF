@@ -134,7 +134,7 @@ void vPortSuppressTicksAndSleep( portTickType xExpectedIdleTime )
 	tc_enable_callback(&tc, TC_CALLBACK_CC_CHANNEL0);
 
 	// Check that the offset is not greater than the range of the timer
-	if (xExpectedIdleTime > TIMER_MAX_POSSIBLE_SUPPRESSED_TICKS);
+	if (xExpectedIdleTime > TIMER_MAX_POSSIBLE_SUPPRESSED_TICKS)
 	{
 		xExpectedIdleTime = TIMER_MAX_POSSIBLE_SUPPRESSED_TICKS;
 	}
