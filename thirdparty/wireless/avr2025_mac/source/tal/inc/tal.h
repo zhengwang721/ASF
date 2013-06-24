@@ -231,6 +231,9 @@ typedef enum {
 	BEACONREQUEST,
 	/* Command Frame Identifier for Coordinator Realignment */
 	COORDINATORREALIGNMENT,
+#ifdef GTS_SUPPORT
+	GTSREQUEST,
+#endif /* GTS_SUPPORT */
 
 	/*
 	 * These are not MAC command frames but listed here as they are needed

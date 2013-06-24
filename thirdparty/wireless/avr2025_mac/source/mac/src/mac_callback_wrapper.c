@@ -608,7 +608,7 @@ void mlme_gts_ind(uint8_t *m)
 	/* Get the buffer body from buffer header */
 	pmsg = (mlme_gts_ind_t *)BMM_BUFFER_POINTER(((buffer_t *)m));
 
-	usr_mlme_gts_conf(pmsg->DeviceAddr, pmsg->GtsChar);
+	usr_mlme_gts_ind(pmsg->DeviceAddr, pmsg->GtsChar);
 
 	/* Free the buffer */
 	bmm_buffer_free((buffer_t *)m);

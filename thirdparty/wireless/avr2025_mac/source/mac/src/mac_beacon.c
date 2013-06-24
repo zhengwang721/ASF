@@ -339,9 +339,23 @@ void mac_build_and_tx_beacon(bool beacon_enabled,
 	/* frame_ptr now points to the Pending Address Specification (Octet 1).
 	 **/
 
+#ifdef GTS_SUPPORT
+
+	uint8_t gts_octets = mac_add_gts_info(frame_ptr);
+	if (gts_octets > 0) {
+		frame_len += gts_octets;
+		frame_ptr -= gts_octets + 1;
+	} else {
+		/* No pending data available. */
+		frame_ptr--;
+		*frame_ptr = 0;
+	}
+
+#else
 	/* Build the (empty) GTS fields. */
 	frame_ptr--;
 	*frame_ptr = 0;
+#endif /* GTS_SUPPORT */
 
 	/* The superframe specification field is updated. */
 #ifdef BEACON_SUPPORT

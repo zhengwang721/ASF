@@ -909,8 +909,8 @@ void usr_mlme_sync_loss_ind(uint8_t LossReason,
 	*msg_buf = EOT;
 }
 
-
-void usr_mlme_gts_conf(uint8_t GtsChar, uint8_t status)
+#ifdef GTS_SUPPORT
+void usr_mlme_gts_conf(gts_char_t GtsChar, uint8_t status)
 {
 	uint8_t *msg_buf;
 
@@ -918,12 +918,12 @@ void usr_mlme_gts_conf(uint8_t GtsChar, uint8_t status)
 	*msg_buf++ = MLME_GTS_CONF_LEN + MAC_PID_LEN;
 	*msg_buf++ = MAC_PID;
 	*msg_buf++ = MLME_GTS_CONFIRM;
-	*msg_buf++ = GtsChar;
+	*msg_buf++ = *((uint8_t*)&GtsChar);
 	*msg_buf++ = status;
 	*msg_buf = EOT;
 }
 
-void usr_mlme_gts_ind(uint16_t DeviceAddr, uint8_t GtsChar)
+void usr_mlme_gts_ind(uint16_t DeviceAddr, gts_char_t GtsChar)
 {
 	uint8_t *msg_buf;
 
@@ -938,10 +938,11 @@ void usr_mlme_gts_ind(uint16_t DeviceAddr, uint8_t GtsChar)
 	*msg_buf++ = DeviceAddr;
 	*msg_buf++ = DeviceAddr >> 8;
 #endif
-	*msg_buf++ = GtsChar;
+	*msg_buf++ = *((uint8_t*)&GtsChar);
 	*msg_buf = EOT;
 }
 
+#endif /* GTS_SUPPORT */
 /**
  * \brief Parses the Received Data in the Buffer and Process the Commands
  *accordingly.
@@ -1520,7 +1521,7 @@ static void handle_incoming_msg(void)
 			 *                       uint8_t ChannelPage,
 			 *                       bool TrackBeacon);
 			 */
-			ret_val = wpan_mlme_gts_req(sio_rx_buf[3]);
+			ret_val = wpan_mlme_gts_req(*((gts_char_t*)&sio_rx_buf[3]));
 			if (ret_val == false) {
 				Assert(
 						"Test harness: GTS Request not successful" ==

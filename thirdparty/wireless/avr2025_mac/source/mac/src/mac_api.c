@@ -939,7 +939,7 @@ bool wpan_mlme_poll_req(wpan_addr_spec_t *CoordAddrSpec)
 
 
 #if (MAC_GTS_REQUEST == 1)
-bool wpan_mlme_gts_req(uint8_t GtsChar)
+bool wpan_mlme_gts_req(gts_char_t GtsChar)
 {
 #ifdef GTS_SUPPORT
 	buffer_t *buffer_header;

@@ -171,22 +171,29 @@ typedef struct parse_tag {
 
 
 #ifdef GTS_SUPPORT
+typedef struct mac_gts_desc_tag {
+	uint8_t GtsStartingSlot;
+	uint8_t GtsLength;
+	bool    GtsDirection;
+}mac_gtsDesc_t;
 /**
  * @brief GTS specification structure
  *
  * @ingroup apiMacTypes
  */
-typedef struct wpan_gts_char_tag {
-	uint8_t Length:4;
-	uint8_t Direction:1;
-	uint8_t CharType:1;
-	uint8_t Reserved:2;
-} wpan_gts_char_t;
+typedef struct mac_pan_gts_mgmt_tag {
+	uint16_t DevShortAddr;
+	uint16_t ExpiryCount;
+	uint8_t PersistenceCount;
+	mac_gtsDesc_t GtsDesc;
+}mac_pan_gts_mgmt_t;
 
-typedef struct mac_gts_mgmt_tag {
+typedef struct mac_gts_spec_tag {
+	uint8_t GtsDescCount:3;
+	uint8_t Reserved:4;
+	uint8_t GtsPermit:1;
+}mac_gts_spec_t;
 
-
-}mac_gts_mgmt_t;
 #endif /* GTS_SUPPORT */
 /* === Externals ============================================================ */
 
