@@ -159,7 +159,7 @@
 #define PIN_EBI_NCS0_ATTR  PIO_PULLUP
 
 /** EBI NLB pin */
-#define PIN_EBI_NLB           PIO_PC16_IDX
+#define PIN_EBI_NLB           PIO_PC15_IDX
 #define PIN_EBI_NLB_FLAGS     PIO_OUTPUT_0
 
 /** EBI address bus pins  */
