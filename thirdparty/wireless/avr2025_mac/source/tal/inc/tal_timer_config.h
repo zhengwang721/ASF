@@ -1,8 +1,8 @@
 /**
-* @file tal_timer_config.h
-*
-* @brief File contains TAL timer configuration parameters.
-*
+ * @file tal_timer_config.h
+ *
+ * @brief File contains TAL timer configuration parameters.
+ *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
@@ -38,12 +38,13 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
-*/
+ */
+
 /*
-* Copyright (c) 2013, Atmel Corporation All rights reserved.
-*
-* Licensed under Atmel's Limited License Agreement --> EULA.txt
-*/
+ * Copyright (c) 2013, Atmel Corporation All rights reserved.
+ *
+ * Licensed under Atmel's Limited License Agreement --> EULA.txt
+ */
 
 /* Prevent double inclusion */
 #ifndef TAL_TIMER_CONFIG_H
@@ -57,12 +58,14 @@
 /* === MACROS ============================================================== */
 
 /* === TYPES =============================================================== */
-#if ((TAL_TYPE == AT86RF231) || (TAL_TYPE == AT86RF212) || (TAL_TYPE == ATMEGARFA1) ||\
-     (TAL_TYPE == ATMEGARFR2) || (TAL_TYPE == AT86RF233) || (TAL_TYPE == AT86RF212B))
+#if ((TAL_TYPE == AT86RF231) || (TAL_TYPE == AT86RF212) || (TAL_TYPE ==	\
+	ATMEGARFA1) || \
+	(TAL_TYPE == ATMEGARFR2) || (TAL_TYPE == AT86RF233) || (TAL_TYPE == \
+	AT86RF212B))
 
 /* Timer ID's used by TAL */
 #ifdef BEACON_SUPPORT
-// Beacon Support
+/* Beacon Support */
 #ifdef ENABLE_FTN_PLL_CALIBRATION
 extern uint8_t TAL_CSMA_CCA;
 extern uint8_t TAL_CSMA_BEACON_LOSS_TIMER;
@@ -138,8 +141,8 @@ extern uint8_t TAL_CSMA_BEACON_LOSS_TIMER;
 #endif  /* ENABLE_FTN_PLL_CALIBRATION */
 #endif
 
-// ED Scan is switched on
-// No beacon support
+/* ED Scan is switched on */
+/* No beacon support */
 #if ((MAC_SCAN_ED_REQUEST_CONFIRM == 1) && (!defined BEACON_SUPPORT))
 #ifdef ENABLE_FTN_PLL_CALIBRATION
 extern uint8_t TAL_ED_SCAN_DURATION_TIMER;
@@ -155,8 +158,8 @@ extern uint8_t TAL_ED_SAMPLE_TIMER;
 #endif  /* ENABLE_FTN_PLL_CALIBRATION */
 #endif
 
-// ED Scan is switched off
-// Network with beacon support
+/* ED Scan is switched off */
+/* Network with beacon support */
 #if ((MAC_SCAN_ED_REQUEST_CONFIRM == 0) && (defined BEACON_SUPPORT))
 #ifdef ENABLE_FTN_PLL_CALIBRATION
 extern uint8_t TAL_ACK_WAIT_TIMER;
@@ -174,8 +177,8 @@ extern uint8_t TAL_CSMA_BEACON_LOSS_TIMER;
 #endif  /* ENABLE_FTN_PLL_CALIBRATION */
 #endif
 
-// ED Scan is switched off
-// No beacon support
+/* ED Scan is switched off */
+/* No beacon support */
 #if ((MAC_SCAN_ED_REQUEST_CONFIRM == 0) && (!defined BEACON_SUPPORT))
 #ifdef ENABLE_FTN_PLL_CALIBRATION
 extern uint8_t TAL_CALIBRATION;
@@ -187,8 +190,6 @@ extern uint8_t TAL_CALIBRATION;
 #endif
 #endif
 /* === PROTOTYPES ========================================================== */
-
-
 
 #endif /* TAL_TIMER_CONFIG_H */
 /* EOF */

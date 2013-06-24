@@ -45,8 +45,8 @@
 
 /*! \name Configuration
  */
-//! @{
+/* ! @{ */
 
-//! @}
+/* ! @} */
 
 #endif /* CONF_SIO2HOST_H_INCLUDED */

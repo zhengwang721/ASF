@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief USART Serial Configuration 
+ * \brief USART Serial Configuration
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *

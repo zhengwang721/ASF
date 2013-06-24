@@ -39,23 +39,27 @@
  *
  * \asf_license_stop
  */
+
 /**
  * \page license License
  * Copyright(c) 2013, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
- 
- /**
+
+/**
  * \mainpage Serial Bridge Application
  * \section preface Preface
  * This is the reference manual for Serial Bridge application
  * \section main_files Application Files
  * - main.c      Application main file.
  * \section intro Application Introduction
- * The serial Bridge Application is used in the host which acts as a bridge between the Pc and the NCP device. 
- * The serial Bridge application is used by Performance Analyzer application in 2p approach
- * and for flashing image using Bootloader application,where it transfers data from the Pc to the NCP and vice-versa.
+ * The serial Bridge Application is used in the host which acts as a bridge
+ *between the Pc and the NCP device.
+ * The serial Bridge application is used by Performance Analyzer application in
+ *2p approach
+ * and for flashing image using Bootloader application,where it transfers data
+ *from the Pc to the NCP and vice-versa.
  */
 
 /* === INCLUDES ============================================================ */
@@ -64,49 +68,41 @@
 #include "serial_bridge.h"
 #include "asf.h"
 
-/* === PROTOTYPES =============================================================== */
+/* === PROTOTYPES
+ *=============================================================== */
 
 void app_alert(void);
 
-
 /* === GLOBALS ============================================================== */
 
-
-
 /* === IMPLEMENTATION ====================================================== */
-
 
 /**
  * \brief Main function of the Serial Bridge application
  */
 int main(void)
 {
-    irq_initialize_vectors();
+	irq_initialize_vectors();
 
 	/* Initialize the board.
 	 * The board-specific conf_board.h file contains the configuration of
 	 * the board initialization.
 	 */
-    sysclk_init();
+	sysclk_init();
 	board_init();
 
-    cpu_irq_enable();
+	cpu_irq_enable();
 
-    serial_bridge_init() ;
-	
-    while (1)
-    {
-        serial_bridge_handler();
-    }
+	serial_bridge_init();
+
+	while (1) {
+		serial_bridge_handler();
+	}
 }
-
-
-
 
 void app_alert()
 {
-    while (1)
-    {
+	while (1) {
 #if LED_COUNT > 0
 		LED_Toggle(LED0);
 #endif
@@ -141,4 +137,5 @@ void app_alert()
 		delay_us(0xFFFF);
 	}
 }
+
 /* EOF */

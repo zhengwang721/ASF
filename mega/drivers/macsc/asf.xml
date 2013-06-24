@@ -5,7 +5,8 @@
 		Provides functions for configuring and using the 32-bit MAC Symbol Counter in megaRF devices.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="MAC Symbol Counter" />
+			<keyword value="Communication"/>
+			<keyword value="Wireless"/>
 		</info>
 		<build type="c-source" value="macsc_megarf.c"/>
 		<build type="header-file" subtype="api" value="macsc_megarf.h"/>

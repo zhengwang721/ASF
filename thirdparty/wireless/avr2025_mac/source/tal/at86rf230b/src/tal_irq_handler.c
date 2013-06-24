@@ -39,6 +39,7 @@
  *
  * \asf_license_stop
  */
+
 /*
  * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
@@ -67,15 +68,11 @@
 
 /* === TYPES =============================================================== */
 
-
 /* === MACROS ============================================================== */
-
 
 /* === GLOBALS ============================================================= */
 
-
 /* === PROTOTYPES ========================================================== */
-
 
 /* === IMPLEMENTATION ====================================================== */
 
@@ -86,78 +83,71 @@
  */
 void trx_irq_handler_cb(void)
 {
-    trx_irq_reason_t trx_irq_cause;
+	trx_irq_reason_t trx_irq_cause;
 
-    trx_irq_cause = (trx_irq_reason_t)pal_trx_reg_read(RG_IRQ_STATUS);
+	trx_irq_cause = (trx_irq_reason_t)pal_trx_reg_read(RG_IRQ_STATUS);
 
-    if (trx_irq_cause & TRX_IRQ_TRX_END)
-    {
-        /*
-         * TRX_END reason depends on if the trx is currently used for
-         * transmission or reception.
-         */
+	if (trx_irq_cause & TRX_IRQ_TRX_END) {
+		/*
+		 * TRX_END reason depends on if the trx is currently used for
+		 * transmission or reception.
+		 */
 #if ((MAC_START_REQUEST_CONFIRM == 1) && (defined BEACON_SUPPORT))
-        if ((tal_state == TAL_TX_AUTO) || (tal_state == TAL_TX_BASIC) || (tal_state == TAL_TX_BEACON))
+		if ((tal_state == TAL_TX_AUTO) || (tal_state == TAL_TX_BASIC) ||
+				(tal_state == TAL_TX_BEACON))
 #else
-        if ((tal_state == TAL_TX_AUTO) || (tal_state == TAL_TX_BASIC))
+		if ((tal_state == TAL_TX_AUTO) || (tal_state == TAL_TX_BASIC))
 #endif
-        {
-            /* Switch to transceiver's default state: switch receiver on. */
-            set_trx_state(CMD_RX_AACK_ON);
+		{
+			/* Switch to transceiver's default state: switch
+			 *receiver on. */
+			set_trx_state(CMD_RX_AACK_ON);
 
-            /* Get the result and push it to the queue. */
-            if (trx_irq_cause & TRX_IRQ_TRX_UR)
-            {
-                handle_tx_end_irq(true);            // see tal_tx.c
-            }
-            else
-            {
-                handle_tx_end_irq(false);            // see tal_tx.c
-            }
-        }
-        else   /* Other tal_state than TAL_TX_... */
-        {
-            /* Handle rx done interrupt. */
-            handle_received_frame_irq();    // see tal_rx.c
-        }
-    }
+			/* Get the result and push it to the queue. */
+			if (trx_irq_cause & TRX_IRQ_TRX_UR) {
+				handle_tx_end_irq(true); /* see tal_tx.c */
+			} else {
+				handle_tx_end_irq(false); /* see tal_tx.c */
+			}
+		} else { /* Other tal_state than TAL_TX_... */
+			/* Handle rx done interrupt. */
+			handle_received_frame_irq(); /* see tal_rx.c */
+		}
+	}
 
 #if (_DEBUG_ > 0)
-    /* Other IRQ than TRX_END */
-    if (trx_irq_cause != TRX_IRQ_TRX_END)
-    {
-        if (trx_irq_cause & TRX_IRQ_PLL_LOCK)
-        {
-            Assert("unexpected IRQ: TRX_IRQ_PLL_LOCK" == 0);
-        }
-        if (trx_irq_cause & TRX_IRQ_PLL_UNLOCK)
-        {
-            Assert("unexpected IRQ: TRX_IRQ_PLL_UNLOCK" == 0);
-        }
-        if (trx_irq_cause & TRX_IRQ_RX_START)
-        {
-            Assert("unexpected IRQ: TRX_IRQ_RX_START" == 0);
-        }
-        if (trx_irq_cause & TRX_IRQ_4)
-        {
-            Assert("unexpected IRQ: TRX_IRQ_4" == 0);
-        }
-        if (trx_irq_cause & TRX_IRQ_5)
-        {
-            Assert("unexpected IRQ: TRX_IRQ_5" == 0);
-        }
-        if (trx_irq_cause & TRX_IRQ_TRX_UR)
-        {
-            Assert("unexpected IRQ: TRX_IRQ_TRX_UR" == 0);
-        }
-        if (trx_irq_cause & TRX_IRQ_BAT_LOW)
-        {
-            Assert("unexpected IRQ: TRX_IRQ_BAT_LOW" == 0);
-        }
-    }
-#endif
-}/* trx_irq_handler_cb() */
+	/* Other IRQ than TRX_END */
+	if (trx_irq_cause != TRX_IRQ_TRX_END) {
+		if (trx_irq_cause & TRX_IRQ_PLL_LOCK) {
+			Assert("unexpected IRQ: TRX_IRQ_PLL_LOCK" == 0);
+		}
 
+		if (trx_irq_cause & TRX_IRQ_PLL_UNLOCK) {
+			Assert("unexpected IRQ: TRX_IRQ_PLL_UNLOCK" == 0);
+		}
+
+		if (trx_irq_cause & TRX_IRQ_RX_START) {
+			Assert("unexpected IRQ: TRX_IRQ_RX_START" == 0);
+		}
+
+		if (trx_irq_cause & TRX_IRQ_4) {
+			Assert("unexpected IRQ: TRX_IRQ_4" == 0);
+		}
+
+		if (trx_irq_cause & TRX_IRQ_5) {
+			Assert("unexpected IRQ: TRX_IRQ_5" == 0);
+		}
+
+		if (trx_irq_cause & TRX_IRQ_TRX_UR) {
+			Assert("unexpected IRQ: TRX_IRQ_TRX_UR" == 0);
+		}
+
+		if (trx_irq_cause & TRX_IRQ_BAT_LOW) {
+			Assert("unexpected IRQ: TRX_IRQ_BAT_LOW" == 0);
+		}
+	}
+
+#endif
+} /* trx_irq_handler_cb() */
 
 /* EOF */
-
