@@ -162,7 +162,7 @@ static void adc_handler(ADC_t *adc, uint8_t channel, adc_result_t result)
 		adc_enable(&BOARD_SENSOR_ADC_MODULE);
 		adcch_set_input(&adcch_conf, adc_conv[adc_mux_index],
 		ADCCH_NEG_NONE, 1);
-		adcch_write_configuration(&BOARD_SENSOR_ADC_MODULE, ADC0,
+		adcch_write_configuration(&BOARD_SENSOR_ADC_MODULE, ADC_CH0,
 		&adcch_conf);
 		adc_start_conversion(&BOARD_SENSOR_ADC_MODULE, ADC_CH0);
 	}
@@ -196,7 +196,7 @@ void adc_sensors_init(void)
 	adcch_set_input(&adcch_conf, LIGHT_SENSOR_ADC_INPUT, ADCCH_NEG_NONE, 1);
 	adcch_set_interrupt_mode(&adcch_conf, ADCCH_MODE_COMPLETE);
 	adcch_enable_interrupt(&adcch_conf);
-	adcch_write_configuration(&BOARD_SENSOR_ADC_MODULE, ADC0, &adcch_conf);
+	adcch_write_configuration(&BOARD_SENSOR_ADC_MODULE, ADC_CH0, &adcch_conf);
 }
 
 
@@ -218,7 +218,7 @@ void adc_sensors_start_conversions(void)
 	adc_write_configuration(&BOARD_SENSOR_ADC_MODULE, &adc_conf);
 	adc_enable(&BOARD_SENSOR_ADC_MODULE);
 	adcch_set_input(&adcch_conf, adc_conv[adc_mux_index],ADCCH_NEG_NONE, 1);
-	adcch_write_configuration(&BOARD_SENSOR_ADC_MODULE, ADC0, &adcch_conf);
+	adcch_write_configuration(&BOARD_SENSOR_ADC_MODULE, ADC_CH0, &adcch_conf);
 	adc_start_conversion(&BOARD_SENSOR_ADC_MODULE, ADC_CH0);
 }
 

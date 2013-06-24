@@ -154,7 +154,7 @@ static void adc_handler(ADC_t *adc, uint8_t channel, adc_result_t result)
 					,ADCCH_NEG_NONE,1);
 			adcch_write_configuration(
 					&POTENTIOMETER_ADC_MODULE
-					, ADC0, &adcch_conf);
+					, ADC_CH0, &adcch_conf);
 			adc_start_conversion(&POTENTIOMETER_ADC_MODULE
 					, ADC_CH0);
 			break;
@@ -183,7 +183,7 @@ static void tcc0_ovf_interrupt_callback(void)
 	adc_enable(&EXT_VIN_ADC_MODULE);
 	adcch_set_input(&adcch_conf, adc_conv[adc_mux_index].in
 			, ADCCH_NEG_NONE,1);
-	adcch_write_configuration(&EXT_VIN_ADC_MODULE, ADC0, &adcch_conf);
+	adcch_write_configuration(&EXT_VIN_ADC_MODULE, ADC_CH0, &adcch_conf);
 	adc_start_conversion(&EXT_VIN_ADC_MODULE, ADC_CH0);
 }
 
@@ -368,7 +368,7 @@ int main(void)
 	adcch_set_input(&adcch_conf, EXT_VIN_ADC_INPUT, ADCCH_NEG_NONE,1);
 	adcch_set_interrupt_mode(&adcch_conf, ADCCH_MODE_COMPLETE);
 	adcch_enable_interrupt(&adcch_conf);
-	adcch_write_configuration(&EXT_VIN_ADC_MODULE, ADC0, &adcch_conf);
+	adcch_write_configuration(&EXT_VIN_ADC_MODULE, ADC_CH0, &adcch_conf);
 
 	// Enable the ADC
 	adc_enable(&EXT_VIN_ADC_MODULE);
