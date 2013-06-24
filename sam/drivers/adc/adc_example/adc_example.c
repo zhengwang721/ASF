@@ -599,9 +599,9 @@ static void start_adc(void)
 	adc_configure_timing(ADC, 0);
 #elif SAM3U
 #ifdef ADC_12B
-	adc12b_configure_timing(ADC12B, 1200);
+	adc12b_configure_timing(ADC12B, 6);
 #else
-	adc_configure_timing(ADC, 1200);
+	adc_configure_timing(ADC, 6);
 #endif
 #endif
 
