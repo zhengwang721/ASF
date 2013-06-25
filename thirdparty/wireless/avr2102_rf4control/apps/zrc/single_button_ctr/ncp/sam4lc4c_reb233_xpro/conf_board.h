@@ -48,5 +48,5 @@
 #define CONF_BOARD_COM_PORT
 #define CONF_BOARD_AT86RFX
 /* Taking the battery voltage for TFA */
-#define GET_BATTERY_VOLTAGE()    tfa_get_batmon_voltage()  
+#define GET_BATTERY_VOLTAGE()    tfa_get_batmon_voltage()
 #endif  /* CONF_BOARD_H_INCLUDED */

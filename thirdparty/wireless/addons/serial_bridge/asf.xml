@@ -15,6 +15,7 @@
         <build type="header-file"   value="serial_bridge.h"/>
 		<build type="include-path" value="."/>
 		<device-support value="sam4l"/>
+		<device-support value="atmega256rfr2"/>
 		<build type="doxygen-entry-point" value="group_serial_bridge"/>
         <info type="keyword" value="technology">
             <keyword value="Wireless"/>
