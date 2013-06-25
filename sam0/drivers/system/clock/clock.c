@@ -107,7 +107,7 @@ static inline void _system_osc32k_wait_for_sync(void)
 	}
 }
 
-void _system_clock_source_dfll_set_config_errata_9905(void)
+static inline void _system_clock_source_dfll_set_config_errata_9905(void)
 {
 	SYSCTRL->DFLLCTRL.reg = _system_clock_inst.dfll.control & ~SYSCTRL_DFLLCTRL_ONDEMAND;
 	_system_dfll_wait_for_sync();
@@ -462,7 +462,7 @@ enum status_code system_clock_source_enable(
 
 		case SYSTEM_CLOCK_SOURCE_DFLL:
 			_system_clock_inst.dfll.control |= SYSCTRL_DFLLCTRL_ENABLE;
-			system_clock_source_dfll_set_config_errata_9905();
+			_system_clock_source_dfll_set_config_errata_9905();
 			break;
 
 		case SYSTEM_CLOCK_SOURCE_ULP32K:
