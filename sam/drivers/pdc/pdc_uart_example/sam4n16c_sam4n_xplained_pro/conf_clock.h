@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Serial USART service configuration.
+ * \brief SAM4N clock configuration.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -41,23 +41,42 @@
  *
  */
 
-#ifndef CONF_USART_SERIAL_H
-#define CONF_USART_SERIAL_H
+#ifndef CONF_CLOCK_H_INCLUDED
+#define CONF_CLOCK_H_INCLUDED
 
-/** UART Interface */
-#define CONF_UART            CONSOLE_UART
-/** Baudrate setting */
-#define CONF_UART_BAUDRATE   (115200UL)
-/** Parity setting */
-#define CONF_UART_PARITY     UART_MR_PAR_NO
+// ===== System Clock (MCK) Source Options
+//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_SLCK_RC
+//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_SLCK_XTAL
+//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_SLCK_BYPASS
+//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_4M_RC
+//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_8M_RC
+//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_12M_RC
+//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_XTAL
+//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_BYPASS
+#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_PLLACK
 
-/* Configure UART pins PIO */
-#define CONF_UART_PIO PINS_UART0_PIO
+// ===== System Clock (MCK) Prescaler Options   (Fmck = Fsys / (SYSCLK_PRES))
+//#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_1
+#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_2
+//#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_4
+//#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_8
+//#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_16
+//#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_32
+//#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_64
+//#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_3
 
-/* Configure UART pins */
-#define CONF_PINS_UART PINS_UART0
+// ===== PLL0 (A) Options   (Fpll = (Fclk * PLL_mul) / PLL_div)
+// Use mul and div effective values here.
+#define CONFIG_PLL0_SOURCE          PLL_SRC_MAINCK_8M_RC
+#define CONFIG_PLL0_MUL             25
+#define CONFIG_PLL0_DIV             1
 
-/* Configure UART pins flags */
-#define CONF_PINS_UART_FLAGS (PIO_PERIPH_A | PIO_DEFAULT)
+// ===== Target frequency (System clock)
+// - Internal RC frequency: 8MHz
+// - System clock source: PLLA
+// - System clock prescaler: 2 (divided by 2)
+// - PLLA source: 8M_RC
+// - PLLA output: 8M_RC * 25 / 1
+// - System clock: 8M_RC * 25 / 1 / 2 = 100MHz
 
-#endif/* CONF_USART_SERIAL_H_INCLUDED */
+#endif /* CONF_CLOCK_H_INCLUDED */

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Serial USART service configuration.
+ * \brief PDC_UART example configuration.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -41,23 +41,13 @@
  *
  */
 
-#ifndef CONF_USART_SERIAL_H
-#define CONF_USART_SERIAL_H
+#ifndef CONF_PDC_UART_EXAMPLE_H_INCLUDED
+#define CONF_PDC_UART_EXAMPLE_H_INCLUDED
 
-/** UART Interface */
-#define CONF_UART            CONSOLE_UART
-/** Baudrate setting */
-#define CONF_UART_BAUDRATE   (115200UL)
-/** Parity setting */
-#define CONF_UART_PARITY     UART_MR_PAR_NO
+/* Configuration for console uart IRQ */
+#define CONSOLE_UART_IRQn           UART0_IRQn
 
-/* Configure UART pins PIO */
-#define CONF_UART_PIO PINS_UART0_PIO
+/* Configuration for console uart IRQ handler */
+#define console_uart_irq_handler    UART0_Handler
 
-/* Configure UART pins */
-#define CONF_PINS_UART PINS_UART0
-
-/* Configure UART pins flags */
-#define CONF_PINS_UART_FLAGS (PIO_PERIPH_A | PIO_DEFAULT)
-
-#endif/* CONF_USART_SERIAL_H_INCLUDED */
+#endif /* CONF_PDC_UART_EXAMPLE_H_INCLUDED */

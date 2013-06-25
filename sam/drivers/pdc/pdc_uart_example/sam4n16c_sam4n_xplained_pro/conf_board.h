@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Serial USART service configuration.
+ * \brief Board configuration.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -41,23 +41,10 @@
  *
  */
 
-#ifndef CONF_USART_SERIAL_H
-#define CONF_USART_SERIAL_H
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-/** UART Interface */
-#define CONF_UART            CONSOLE_UART
-/** Baudrate setting */
-#define CONF_UART_BAUDRATE   (115200UL)
-/** Parity setting */
-#define CONF_UART_PARITY     UART_MR_PAR_NO
+/** Enable Com Port. */
+#define CONF_BOARD_UART_CONSOLE
 
-/* Configure UART pins PIO */
-#define CONF_UART_PIO PINS_UART0_PIO
-
-/* Configure UART pins */
-#define CONF_PINS_UART PINS_UART0
-
-/* Configure UART pins flags */
-#define CONF_PINS_UART_FLAGS (PIO_PERIPH_A | PIO_DEFAULT)
-
-#endif/* CONF_USART_SERIAL_H_INCLUDED */
+#endif /* CONF_BOARD_H_INCLUDED */
