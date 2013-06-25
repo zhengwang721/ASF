@@ -1,0 +1,58 @@
+<asf xmlversion="1.0">
+	<module type="application" id="thirdparty.lwip.http_netconn_example" caption="HTTP Netconn Example">
+		<info type="description" value="summary">
+			LwIP based example using the netconn APIs.
+		</info>
+		<info type="keyword" value="technology">
+			<keyword value="Communication" />
+		</info>
+		<build type="header-file" value="lwipopts.h"/>
+		<build type="header-file" value="logo_atmel.h"/>
+		<build type="header-file" value="task.h"/>
+		<build type="header-file" value="FreeRTOSConfig.h"/>
+		<build type="c-source"    value="main.c"/>
+		<build type="c-source"    value="task_gfx.c"/>
+		<build type="c-source"    value="task_http.c"/>
+		<build type="c-source"    value="network/ethernet.c"/>
+		<build type="header-file" value="network/ethernet.h"/>
+		<build type="c-source"    value="network/timer_mgt.c"/>
+		<build type="header-file" value="network/timer_mgt.h"/>
+		<build type="c-source"    value="network/httpserver/fs.c"/>
+		<build type="header-file" value="network/httpserver/fs.h"/>
+		<build type="c-source"    value="network/httpserver/fsdata.c"/>
+		<build type="header-file" value="network/httpserver/fsdata.h"/>
+		<build type="c-source"    value="network/httpserver/httpd.c"/>
+		<build type="header-file" value="network/httpserver/httpd.h"/>
+		<build type="c-source"    value="network/httpserver/cgi.c"/>
+		<build type="header-file" value="network/httpserver/cgi.h"/>
+		<build type="header-file" value="network/httpserver/atmel.h"/>
+		<build type="header-file" value="network/httpserver/excan.h"/>
+		<build type="header-file" value="network/httpserver/favicon.h"/>
+		<build type="header-file" value="network/httpserver/index.h"/>
+		<build type="header-file" value="network/httpserver/jqflot.h"/>
+		<build type="header-file" value="network/httpserver/jquery.h"/>
+		<build type="header-file" value="network/httpserver/style.h"/>
+		<build type="include-path" value="."/>
+		<build type="include-path" value="./network"/>
+		<build type="include-path" value="./network/httpserver"/>
+		<device-support value="sam4e"/>
+		<require idref="sam.drivers.smc"/>
+		<require idref="sam.drivers.pdc"/>
+		<require idref="sam.drivers.rstc"/>
+		<require idref="sam.drivers.pio"/>
+		<require idref="sam.drivers.gmac"/>
+		<require idref="sam.drivers.pmc"/>
+		<require idref="sam.utils.syscalls"/>
+		<require idref="sam.components.display.aat31xx"/>
+		<require idref="sam.components.display.ili9325"/>
+		<require idref="sam.components.ethernet_phy.ksz8051mnl"/>
+		<require idref="sam.services.resistive_touch"/>
+		<require idref="common.services.ioport"/>
+		<require idref="common.services.basic.gpio"/>
+		<require idref="common.services.basic.clock"/>
+		<require idref="common.utils.stdio.stdio_serial"/>
+		<require idref="thirdparty.os.freertos.version"/>
+		<require idref="thirdparty.lwip.version"/>
+		<info type="gui-flag" value="move-to-root"/>
+	</module>
+</asf>
