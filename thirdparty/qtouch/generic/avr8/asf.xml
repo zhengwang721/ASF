@@ -61,7 +61,7 @@
 			For support queries, email touch@atmel.com.
 			</info>
 			<info type="keyword" value="technology">
-				<keyword value="touch"/>
+				<keyword value="Touch"/>
 			</info>
 
 			<require idref="config.common.services.qtouch.generic.avr8.qtouch.common" />
@@ -115,7 +115,7 @@
 			</info>
 
 			<info type="keyword" value="technology">
-				<keyword value="touch" />
+				<keyword value="Touch"/>
 			</info>
 			<require idref="config.common.services.qtouch.generic.avr8.qmatrix.common" />
 			<build type="asm-source" value="qmatrix/common/qm_asm_tiny_mega.S" toolchain="avrgcc"/>
@@ -155,7 +155,7 @@
 			For support queries, email touch@atmel.com.
 			</info>
 			<info type="keyword" value="technology">
-				<keyword value="touch" />
+				<keyword value="Touch"/>
 			</info>
 
 			<require idref="config.common.services.qtouch.generic.avr8.qtouch.common" />

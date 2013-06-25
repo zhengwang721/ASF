@@ -279,7 +279,7 @@ status_code_t nvm_set_security_bit(void);
  * and optionally check its return value for STATUS_OK.
  *
  * \subsection nvm_basic_use_case_usage_code_config Example code: Reading
- *configuration of non volatile memory
+ * configuration of non volatile memory
  * Use in application C-file:
  * \code
  *   uint8_t mem_size, page_size, page_num;

@@ -3,7 +3,7 @@
  *
  * \brief All USB VIDs and PIDs from Atmel USB applications
  *
- * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -92,6 +92,8 @@
 //! \name The range 2100h to 21FFh is reserved to PIDs for AVR Tools.
 //! @{
 #define  USB_PID_ATMEL_XPLAINED                    0x2122
+#define  USB_PID_ATMEL_XMEGA_USB_ZIGBIT_2_4GHZ     0x214A
+#define  USB_PID_ATMEL_XMEGA_USB_ZIGBIT_SUBGHZ     0x214B
 //! @}
 
 //! \name The range 2300h to 23FFh is reserved to PIDs for demo from ASF1.7=>

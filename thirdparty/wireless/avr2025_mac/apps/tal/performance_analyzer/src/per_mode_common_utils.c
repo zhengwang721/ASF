@@ -40,6 +40,7 @@
  *
  * \asf_license_stop
  */
+
 /*
  * Copyright(c) 2012, Atmel Corporation All rights reserved.
  *
@@ -66,13 +67,12 @@
  */
 void app_reset(void)
 {
-    /* app reset - this is to make the node to restart applicationa as bootup */
-    set_main_state(INIT, NULL);
+	/* app reset - this is to make the node to restart applicationa as
+	 *bootup */
+	set_main_state(INIT, NULL);
 
-    /* INIT was a success - so change to WAIT_FOR_EVENT state */
-    set_main_state(WAIT_FOR_EVENT, NULL);
+	/* INIT was a success - so change to WAIT_FOR_EVENT state */
+	set_main_state(WAIT_FOR_EVENT, NULL);
 }
-
-
 
 /* EOF */

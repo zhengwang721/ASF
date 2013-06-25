@@ -120,7 +120,8 @@ extern "C" {
 #define XMEGA_RF233_ZIGBIT         56  //!< ATxmega256A3U with AT86RF233 zigbit
 #define XMEGA_RF212B_ZIGBIT        57  //!< ATxmega256A3U with AT86RF212B zigbit
 #define SAM4S_WPIR_RD              58  //!< SAM4S-WPIR-RD board.
-#define SAM4N_XPLAINED_PRO         59  //!< SAM4N-XPLAINED-PRO board.
+#define SAMD20_XPLAINED_PRO        59  //!< SAMD20 Xplained PRO board
+#define SAM4N_XPLAINED_PRO         60  //!< SAM4N-XPLAINED-PRO board.
 #define SIMULATOR_XMEGA_A1         97  //!< Simulator for XMEGA A1 devices
 #define AVR_SIMULATOR_UC3          98  //!< AVR SIMULATOR for AVR UC3 device family.
 #define USER_BOARD                 99  //!< User-reserved board (if any).
@@ -235,6 +236,8 @@ extern "C" {
 #  include "sam4l_ek/sam4l_ek.h"
 #elif BOARD == SAM4E_EK
 #  include "sam4e_ek/sam4e_ek.h"
+#elif BOARD == SAMD20_XPLAINED_PRO
+#  include "samd20_xplained_pro/samd20_xplained_pro.h"
 #elif BOARD == SAM4N_XPLAINED_PRO
 #  include "sam4n_xplained_pro/sam4n_xplained_pro.h"
 #elif BOARD == MEGA1284P_XPLAINED_BC

@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Global interrupt management for SAM3 and SAM4 (NVIC based)
+ * \brief Global interrupt management for SAM D20, SAM3 and SAM4 (NVIC based)
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -131,11 +131,19 @@
 	} while (0)
 
 typedef uint32_t irqflags_t;
+
+#if !defined(__DOXYGEN__)
 extern volatile bool g_interrupt_enabled;
+#endif
+
+#define cpu_irq_is_enabled()    (__get_PRIMASK() == 0)
+
+static volatile uint32_t cpu_irq_critical_section_counter;
+static volatile bool     cpu_irq_prev_interrupt_state;
 
 static inline irqflags_t cpu_irq_save(void)
 {
-	irqflags_t flags = g_interrupt_enabled;
+	irqflags_t flags = cpu_irq_is_enabled();
 	cpu_irq_disable();
 	return flags;
 }
@@ -151,7 +159,8 @@ static inline void cpu_irq_restore(irqflags_t flags)
 		cpu_irq_enable();
 }
 
-#define cpu_irq_is_enabled()    g_interrupt_enabled
+void cpu_irq_enter_critical(void);
+void cpu_irq_leave_critical(void);
 
 /**
  * \weakgroup interrupt_deprecated_group

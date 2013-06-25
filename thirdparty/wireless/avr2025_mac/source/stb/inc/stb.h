@@ -40,6 +40,7 @@
  * \asf_license_stop
  *
  */
+
 /*
  * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
@@ -65,24 +66,32 @@
 #include "stb_internal.h"
 
 /* === Macros ============================================================= */
+
 /**
  * \defgroup group_stb  Security toolbox
- * The STB (Security Toolbox) is a high level security abstraction layer providing an easy-
- * to-use  crypto  API for direct application access.It is placed on top of the SAL and abstracts and implements 
- * transceiver or MCU dependent functionality that encrypts or decrypts frames usimg CCM according to 802.15.4/Zigbee.
+ * The STB (Security Toolbox) is a high level security abstraction layer
+ *providing an easy-
+ * to-use  crypto  API for direct application access.It is placed on top of the
+ *SAL and abstracts and implements
+ * transceiver or MCU dependent functionality that encrypts or decrypts frames
+ *usimg CCM according to 802.15.4/Zigbee.
  */
- /**
+
+/**
  * \ingroup group_stb
- * \defgroup group_sal 
+ * \defgroup group_sal
  * SAL Security abstraction layer
- * The SAL (Security Abstraction Layer) provides an API that allows access to low level 
+ * The SAL (Security Abstraction Layer) provides an API that allows access to
+ *low level
  * AES engine functions abstraction to encrypt and  decrypt frames.
  *
  */
+
 /*
  * The following defines are taken from the ZigBee specification and can be
  * to implement ZigBee security.
  */
+
 /**
  * Length of ZigBee Frame Counter in octets.
  */
@@ -92,14 +101,17 @@
  * Position of Security Control octet in Auxiliary Security Header.
  */
 #define MSDU_POS_SEC_CTRL               (1)
+
 /**
  * Position of Frame Counter octet in Auxiliary Security Header.
  */
 #define MSDU_POS_FRM_CNTR               (2)
+
 /**
  * Position of first Source Addess octet in Auxiliary Security Header.
  */
 #define MSDU_POS_SRC_ADDR               (6)
+
 /**
  * Position of Key Sequence Number octet in Auxiliary Security Header.
  */
@@ -118,14 +130,17 @@
  * Bit 5:   Extended Nonce enabled
  * Bit 6-7: Reserved
  */
+
 /**
  * Position of Security Level bits in Security Control Field.
  */
 #define SEC_CTRL_POS_SEC_LEVEL          (0)
+
 /**
  * Position of Key identifier bits in Security Control Field.
  */
 #define SEC_CTRL_POS_KEY_ID             (3)
+
 /**
  * Position ofExtended Nonce enabled bit in Security Control Field.
  */
@@ -139,18 +154,23 @@
  * 0x01: A Key-transport key
  * 0x01: A Key-load key
  */
+
 /**
  * Key Identifier Sub-field of Security Control Field indicates Data key.
  */
 #define KEY_ID_DATA_KEY                 (0x00)
+
 /**
  * Key Identifier Sub-field of Security Control Field indicates Network key.
  */
 #define KEY_ID_NWK_KEY                  (0x01)
+
 /**
- * Key Identifier Sub-field of Security Control Field indicates Key-transport key.
+ * Key Identifier Sub-field of Security Control Field indicates Key-transport
+ *key.
  */
 #define KEY_ID_KEY_TRANSPORT_KEY        (0x02)
+
 /**
  * Key Identifier Sub-field of Security Control Field indicates Key-load key.
  */
@@ -159,6 +179,7 @@
 /**
  * Maximum length of ZigBee Auxiliary Frame Header.
  */
+
 /*
  * Format:
  * Securiy Control: 0/1 octets
@@ -170,9 +191,7 @@
 
 /* === Types ============================================================== */
 
-
 /* === Externals ========================================================== */
-
 
 /* === Prototypes ========================================================= */
 
@@ -180,21 +199,18 @@
 extern "C" {
 #endif
 
-
-    /**
-     * @brief STB Restart
-     *
-     * This function re-starts the STB after power down.
-     *
-     * @ingroup group_StbApi
-     */
-    void stb_restart(void);
-
+/**
+ * @brief STB Restart
+ *
+ * This function re-starts the STB after power down.
+ *
+ * @ingroup group_StbApi
+ */
+void stb_restart(void);
 
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
-
 
 #endif /* #ifdef STB_ON_SAL */
 

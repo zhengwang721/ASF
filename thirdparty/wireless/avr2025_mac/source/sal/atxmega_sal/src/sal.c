@@ -40,6 +40,7 @@
  * \asf_license_stop
  *
  */
+
 /*
  * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
@@ -59,13 +60,12 @@
 
 /* Values for SR_AES_DIR */
 #define AES_DIR_VOID      (AES_DIR_ENCRYPT + AES_DIR_DECRYPT + 1)
-                                /* Must be different from both summands */
+/* Must be different from both summands */
 
 /* Compute absolute value for subregister 'SUB' with value 'val' */
 #define COMP_SR(SUB, val)       (((val) << SUB ## _bp) & SUB ## _bm)
 
 /* === Types =============================================================== */
-
 
 /* === Data ============================================================= */
 
@@ -91,13 +91,11 @@ static uint8_t *keyp;
  */
 void sal_init(void)
 {
-    /* Enable the AES clock. */
-    sysclk_enable_module(SYSCLK_PORT_GEN, SYSCLK_AES);
-    /* reset AES unit - only a precaution */
-    AES_CTRL = COMP_SR(AES_RESET, 1);
+	/* Enable the AES clock. */
+	sysclk_enable_module(SYSCLK_PORT_GEN, SYSCLK_AES);
+	/* reset AES unit - only a precaution */
+	AES_CTRL = COMP_SR(AES_RESET, 1);
 }
-
-
 
 /**
  * @brief Setup AES unit
@@ -116,101 +114,96 @@ void sal_init(void)
  * @return  False if some parameter was illegal, true else
  */
 bool sal_aes_setup(uint8_t *key,
-                   uint8_t enc_mode,
-                   uint8_t dir)
+		uint8_t enc_mode,
+		uint8_t dir)
 {
-    uint8_t i;
+	uint8_t i;
 
-    /* Init mode_byte: AES low-level interrupt and autostart enabled */
+	/* Init mode_byte: AES low-level interrupt and autostart enabled */
 
-    mode_byte = COMP_SR(AES_INTLVL0, 1) | COMP_SR(AES_AUTO, 1);
+	mode_byte = COMP_SR(AES_INTLVL0, 1) | COMP_SR(AES_AUTO, 1);
 
-    if (key != NULL)
-    {
-        /* Setup for new key. */
-        dec_initialized = false;
+	if (key != NULL) {
+		/* Setup for new key. */
+		dec_initialized = false;
 
-        last_dir = AES_DIR_VOID;
+		last_dir = AES_DIR_VOID;
 
-        /* Save key for later use after decryption or sleep. */
-        memcpy(enc_key, key, AES_KEYSIZE);
+		/* Save key for later use after decryption or sleep. */
+		memcpy(enc_key, key, AES_KEYSIZE);
 
-        keyp = enc_key;
-    }
+		keyp = enc_key;
+	}
 
-    /* Set encryption direction. */
-    switch(dir)
-    {
-        case AES_DIR_ENCRYPT:
-            if (last_dir == AES_DIR_DECRYPT)
-            {
-                /*
-                 * If the last operation was decryption, the encryption
-                 * key must be stored in enc_key, so re-initialize it.
-                 */
-                keyp = enc_key;
-            }
-            break;
+	/* Set encryption direction. */
+	switch (dir) {
+	case AES_DIR_ENCRYPT:
+		if (last_dir == AES_DIR_DECRYPT) {
+			/*
+			 * If the last operation was decryption, the encryption
+			 * key must be stored in enc_key, so re-initialize it.
+			 */
+			keyp = enc_key;
+		}
 
-        case AES_DIR_DECRYPT:
-            if (last_dir != AES_DIR_DECRYPT)
-            {
-                if (!dec_initialized)
-                {
-                    uint8_t dummy[AES_BLOCKSIZE];
+		break;
 
-                    /* Compute decryption key. */
+	case AES_DIR_DECRYPT:
+		if (last_dir != AES_DIR_DECRYPT) {
+			if (!dec_initialized) {
+				uint8_t dummy[AES_BLOCKSIZE];
 
-                    /* Dummy ECB encryption. */
-                    AES_CTRL = mode_byte;
+				/* Compute decryption key. */
 
-                    keyp = enc_key;
-                    sal_aes_exec(dummy);
+				/* Dummy ECB encryption. */
+				AES_CTRL = mode_byte;
 
-                    /* Read last round key. */
-                    for(i = 0; i < AES_BLOCKSIZE; ++i)
-                    {
-                        dec_key[i] = AES_KEY;
-                    }
+				keyp = enc_key;
+				sal_aes_exec(dummy);
 
-                    dec_initialized = true;
-                }
-                keyp = dec_key;
-            }
-            break;
+				/* Read last round key. */
+				for (i = 0; i < AES_BLOCKSIZE; ++i) {
+					dec_key[i] = AES_KEY;
+				}
 
-        default:
-            return false;
-    }
+				dec_initialized = true;
+			}
 
-    last_dir = dir;
+			keyp = dec_key;
+		}
 
-    /* Set encryption mode and direction. */
-    switch(enc_mode)
-    {
-        case AES_MODE_ECB:
-        case AES_MODE_CBC:
-            {
-                uint8_t xorflag;
-                uint8_t dirflag = 0;
+		break;
 
-                xorflag = (enc_mode == AES_MODE_CBC);
-                dirflag = (dir == AES_DIR_DECRYPT);
+	default:
+		return false;
+	}
 
-                mode_byte |=
-                    COMP_SR(AES_XOR, xorflag) | COMP_SR(AES_DECRYPT, dirflag);
-                AES_CTRL = mode_byte;
-            }
-            break;
+	last_dir = dir;
 
-        default:
-            return (false);
-    }
+	/* Set encryption mode and direction. */
+	switch (enc_mode) {
+	case AES_MODE_ECB:
+	case AES_MODE_CBC:
+	{
+		uint8_t xorflag;
+		uint8_t dirflag = 0;
 
-    return (true);
+		xorflag = (enc_mode == AES_MODE_CBC);
+		dirflag = (dir == AES_DIR_DECRYPT);
+
+		mode_byte
+			|= COMP_SR(AES_XOR, xorflag) | COMP_SR(AES_DECRYPT,
+				dirflag);
+		AES_CTRL = mode_byte;
+	}
+	break;
+
+	default:
+		return (false);
+	}
+
+	return (true);
 }
-
-
 
 /**
  * @brief Re-inits key and state after a sleep or chip reset
@@ -221,10 +214,8 @@ bool sal_aes_setup(uint8_t *key,
 
 void sal_aes_restart(void)
 {
-    /* Nothing to be done for ATxmega */
+	/* Nothing to be done for ATxmega */
 }
-
-
 
 /**
  * @brief En/decrypt one AES block.
@@ -235,31 +226,28 @@ void sal_aes_restart(void)
  */
 void sal_aes_exec(uint8_t *data)
 {
-    uint8_t i;
-    uint8_t *pkeyp;
+	uint8_t i;
+	uint8_t *pkeyp;
 
-    /* Initialize key in encryption unit. */
-    for(pkeyp = keyp, i = 0; i < AES_BLOCKSIZE; ++i)
-    {
-        AES_KEY = *pkeyp++;
-    }
+	/* Initialize key in encryption unit. */
+	for (pkeyp = keyp, i = 0; i < AES_BLOCKSIZE; ++i) {
+		AES_KEY = *pkeyp++;
+	}
 
-    /* Store data to encryption to encryption unit; autostart. */
-    for(i = 0; i < AES_BLOCKSIZE; ++i)
-    {
-        AES_STATE = *data++;
-    }
+	/* Store data to encryption to encryption unit; autostart. */
+	for (i = 0; i < AES_BLOCKSIZE; ++i) {
+		AES_STATE = *data++;
+	}
 
-    /*
-     * Wait for the operation to finish - poll the
-     * AES State Ready Interrupt flag.
-     */
-    while(!(AES_STATUS & (AES_SRIF_bm | AES_ERROR_bm)));
+	/*
+	 * Wait for the operation to finish - poll the
+	 * AES State Ready Interrupt flag.
+	 */
+	while (!(AES_STATUS & (AES_SRIF_bm | AES_ERROR_bm))) {
+	}
 
-    AES_STATUS = AES_SRIF_bm;
+	AES_STATUS = AES_SRIF_bm;
 }
-
-
 
 /**
  * @brief Reads the result of previous AES en/decryption
@@ -270,12 +258,11 @@ void sal_aes_exec(uint8_t *data)
  */
 void sal_aes_read(uint8_t *data)
 {
-    uint8_t i;
+	uint8_t i;
 
-    for(i = 0; i < AES_BLOCKSIZE; ++i)
-    {
-        *data++ = AES_STATE;
-    }
+	for (i = 0; i < AES_BLOCKSIZE; ++i) {
+		*data++ = AES_STATE;
+	}
 }
 
 #endif /* ATXMEGA_SAL */

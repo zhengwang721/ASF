@@ -71,12 +71,9 @@
 
 /* === Macros ============================================================== */
 
-
 /* === Globals ============================================================= */
 
-
 /* === Prototypes ========================================================== */
-
 
 /* === Implementation ====================================================== */
 
@@ -88,25 +85,22 @@
  */
 static void gen_mlme_poll_conf(buffer_t *buf_ptr, uint8_t status)
 {
-    mlme_poll_conf_t *mpc = (mlme_poll_conf_t *)BMM_BUFFER_POINTER(buf_ptr);
+	mlme_poll_conf_t *mpc = (mlme_poll_conf_t *)BMM_BUFFER_POINTER(buf_ptr);
 
-    mpc->cmdcode = MLME_POLL_CONFIRM;
-    mpc->status = status;
+	mpc->cmdcode = MLME_POLL_CONFIRM;
+	mpc->status = status;
 
-    /*
-     * Only go to sleep if poll is not successful,
-     * otherwise stay awake until subsequent evaluation of data frame
-     */
-    if (MAC_SUCCESS != status)
-    {
-        /* Set radio to sleep if allowed */
-        mac_sleep_trans();
-    }
+	/*
+	 * Only go to sleep if poll is not successful,
+	 * otherwise stay awake until subsequent evaluation of data frame
+	 */
+	if (MAC_SUCCESS != status) {
+		/* Set radio to sleep if allowed */
+		mac_sleep_trans();
+	}
 
-    qmm_queue_append(&mac_nhle_q, buf_ptr);
+	qmm_queue_append(&mac_nhle_q, buf_ptr);
 }
-
-
 
 /**
  * @brief Implements MLME-POLL.request
@@ -120,73 +114,69 @@ static void gen_mlme_poll_conf(buffer_t *buf_ptr, uint8_t status)
  */
 void mlme_poll_request(uint8_t *m)
 {
-    /*
-     * Polling for data is only allowed, if the node
-     * 1) is not a PAN coordinator,
-     * 2) is not polling already, and
-     * 3) is not scanning.
-     */
-    if (
-        (MAC_POLL_IDLE == mac_poll_state) &&
+	/*
+	 * Polling for data is only allowed, if the node
+	 * 1) is not a PAN coordinator,
+	 * 2) is not polling already, and
+	 * 3) is not scanning.
+	 */
+	if (
+		(MAC_POLL_IDLE == mac_poll_state) &&
 #if (MAC_START_REQUEST_CONFIRM == 1)
-        (MAC_PAN_COORD_STARTED != mac_state) &&
+		(MAC_PAN_COORD_STARTED != mac_state) &&
 #endif  /* MAC_START_REQUEST_CONFIRM == 1) */
-        (MAC_SCAN_IDLE == mac_scan_state)
-       )
-    {
-        bool status;
-        address_field_t coord_addr;
+		(MAC_SCAN_IDLE == mac_scan_state)
+		) {
+		bool status;
+		address_field_t coord_addr;
 
-        /* Wake up radio first */
-        mac_trx_wakeup();
+		/* Wake up radio first */
+		mac_trx_wakeup();
 
-        /*
-         * Extract the Coordinator address information from the Poll request.
-         * This is required later for building the proper destination address
-         * information in the data request frame.
-         */
-        mlme_poll_req_t *msg = (mlme_poll_req_t *)BMM_BUFFER_POINTER((buffer_t *)m);
+		/*
+		 * Extract the Coordinator address information from the Poll
+		 *request.
+		 * This is required later for building the proper destination
+		 *address
+		 * information in the data request frame.
+		 */
+		mlme_poll_req_t *msg
+			= (mlme_poll_req_t *)BMM_BUFFER_POINTER((buffer_t
+				*)m);
 
-        {
-            uint8_t data_req_addr_mode;
+		{
+			uint8_t data_req_addr_mode;
 
-            if (msg->CoordAddrMode == FCF_SHORT_ADDR)
-            {
-                data_req_addr_mode = FCF_SHORT_ADDR;
-                ADDR_COPY_DST_SRC_16(coord_addr.short_address, msg->CoordAddress);
+			if (msg->CoordAddrMode == FCF_SHORT_ADDR) {
+				data_req_addr_mode = FCF_SHORT_ADDR;
+				ADDR_COPY_DST_SRC_16(coord_addr.short_address,
+						msg->CoordAddress);
+			} else {
+				data_req_addr_mode = FCF_LONG_ADDR;
+				ADDR_COPY_DST_SRC_64(coord_addr.long_address,
+						msg->CoordAddress);
+			}
 
-            }
-            else
-            {
-                data_req_addr_mode = FCF_LONG_ADDR;
-                ADDR_COPY_DST_SRC_64(coord_addr.long_address, msg->CoordAddress);
-            }
+			/* Build and transmit data request frame due to explicit
+			 *poll request */
+			status = mac_build_and_tx_data_req(true,
+					false,
+					data_req_addr_mode,
+					&coord_addr,
+					msg->CoordPANId);
+		}
 
-            /* Build and transmit data request frame due to explicit poll request */
-            status = mac_build_and_tx_data_req(true,
-                                               false,
-                                               data_req_addr_mode,
-                                               &coord_addr,
-                                               msg->CoordPANId);
-        }
-
-        if (status)
-        {
-            /* Store the poll request buffer to give poll confirm */
-            mac_conf_buf_ptr = m;
-        }
-        else
-        {
-            gen_mlme_poll_conf((buffer_t *)m, MAC_CHANNEL_ACCESS_FAILURE);
-        }
-    }
-    else
-    {
-        gen_mlme_poll_conf((buffer_t *)m, MAC_CHANNEL_ACCESS_FAILURE);
-    }
+		if (status) {
+			/* Store the poll request buffer to give poll confirm */
+			mac_conf_buf_ptr = m;
+		} else {
+			gen_mlme_poll_conf((buffer_t *)m,
+					MAC_CHANNEL_ACCESS_FAILURE);
+		}
+	} else {
+		gen_mlme_poll_conf((buffer_t *)m, MAC_CHANNEL_ACCESS_FAILURE);
+	}
 }
-
-
 
 /**
  * @brief T_Poll_Wait_Time timer callback
@@ -198,25 +188,24 @@ void mlme_poll_request(uint8_t *m)
  */
 void mac_t_poll_wait_time_cb(void *callback_parameter)
 {
-    if (MAC_POLL_EXPLICIT == mac_poll_state)
-    {
-        /*
-         * Data is not received on time for the poll request, hence generate
-         * the poll confirm using the poll request buffer which was stored in
-         * mac_conf_buf_ptr.
-         */
-        gen_mlme_poll_conf((buffer_t *)mac_conf_buf_ptr, MAC_NO_DATA);
-    }
+	if (MAC_POLL_EXPLICIT == mac_poll_state) {
+		/*
+		 * Data is not received on time for the poll request, hence
+		 *generate
+		 * the poll confirm using the poll request buffer which was
+		 *stored in
+		 * mac_conf_buf_ptr.
+		 */
+		gen_mlme_poll_conf((buffer_t *)mac_conf_buf_ptr, MAC_NO_DATA);
+	}
 
-    mac_poll_state = MAC_POLL_IDLE;
+	mac_poll_state = MAC_POLL_IDLE;
 
-    /* MAC was busy during poll. */
-    MAKE_MAC_NOT_BUSY();
+	/* MAC was busy during poll. */
+	MAKE_MAC_NOT_BUSY();
 
-    callback_parameter = callback_parameter;  /* Keep compiler happy. */
+	callback_parameter = callback_parameter; /* Keep compiler happy. */
 }
-
-
 
 /**
  * @brief Processes a data response to an MLME-POLL.request
@@ -228,66 +217,64 @@ void mac_t_poll_wait_time_cb(void *callback_parameter)
  */
 void mac_process_data_response(void)
 {
-    uint8_t status;
+	uint8_t status;
 
-    if (FCF_FRAMETYPE_BEACON == mac_parse_data.frame_type)
-    {
-        /*
-         * Node is currently in polling state, so only command or data frames
-         * are of interest.
-         * This is an unexpected frame type, do nothing.
-         * Note. Ack frames are not uploaded to this point.
-         * All subsequent actions are not to be done now.
-         * Instead the timer will expire and initiate the proper stuff.
-         */
-         return;
-    }
-    else
-    {
-        /* Stop the MaxFrameResponseTime timer */
-        pal_timer_stop(T_Poll_Wait_Time);
+	if (FCF_FRAMETYPE_BEACON == mac_parse_data.frame_type) {
+		/*
+		 * Node is currently in polling state, so only command or data
+		 *frames
+		 * are of interest.
+		 * This is an unexpected frame type, do nothing.
+		 * Note. Ack frames are not uploaded to this point.
+		 * All subsequent actions are not to be done now.
+		 * Instead the timer will expire and initiate the proper stuff.
+		 */
+		return;
+	} else {
+		/* Stop the MaxFrameResponseTime timer */
+		pal_timer_stop(T_Poll_Wait_Time);
 
 #if (_DEBUG_ > 0)
-        if (pal_is_timer_running(T_Poll_Wait_Time))
-        {
-            Assert("Frame resp tmr running" == 0);
-        }
+		if (pal_is_timer_running(T_Poll_Wait_Time)) {
+			Assert("Frame resp tmr running" == 0);
+		}
+
 #endif
 
-        /*
-         * For received command frames (Association response or
-         * disassociation notification) and for data frames with zero
-         * payload length the potential status for the poll.confirm message
-         * is supposed to be "No data".
-         */
-        status = MAC_NO_DATA;
+		/*
+		 * For received command frames (Association response or
+		 * disassociation notification) and for data frames with zero
+		 * payload length the potential status for the poll.confirm
+		 *message
+		 * is supposed to be "No data".
+		 */
+		status = MAC_NO_DATA;
 
-        if ((FCF_FRAMETYPE_DATA == mac_parse_data.frame_type) &&
-            (mac_parse_data.mac_payload_length > 0)
-           )
-        {
-            /*
-             * For received data frames with non-zero payload length
-             * the potential status for the poll.confirm message is
-             * supposed to be "Success".
-             */
-             status = MAC_SUCCESS;
-        }
-    }
+		if ((FCF_FRAMETYPE_DATA == mac_parse_data.frame_type) &&
+				(mac_parse_data.mac_payload_length > 0)
+				) {
+			/*
+			 * For received data frames with non-zero payload length
+			 * the potential status for the poll.confirm message is
+			 * supposed to be "Success".
+			 */
+			status = MAC_SUCCESS;
+		}
+	}
 
-    if (MAC_POLL_EXPLICIT == mac_poll_state)
-    {
-        /*
-         * Data is received on explicit poll request, hence generate the poll confirm using
-         * the buffer which was stored in mac_conf_buf_ptr.
-         */
-        gen_mlme_poll_conf((buffer_t *)mac_conf_buf_ptr, status);
-    }
+	if (MAC_POLL_EXPLICIT == mac_poll_state) {
+		/*
+		 * Data is received on explicit poll request, hence generate the
+		 *poll confirm using
+		 * the buffer which was stored in mac_conf_buf_ptr.
+		 */
+		gen_mlme_poll_conf((buffer_t *)mac_conf_buf_ptr, status);
+	}
 
-    /* MAC was busy during poll. */
-    MAKE_MAC_NOT_BUSY();
+	/* MAC was busy during poll. */
+	MAKE_MAC_NOT_BUSY();
 
-    mac_poll_state = MAC_POLL_IDLE;
+	mac_poll_state = MAC_POLL_IDLE;
 } /* mac_process_data_response() */
 
 #endif /* (MAC_INDIRECT_DATA_BASIC == 1) */
