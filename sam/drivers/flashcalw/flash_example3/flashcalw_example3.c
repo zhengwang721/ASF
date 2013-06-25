@@ -48,20 +48,21 @@
  * defines, enums, and typedefs for the FLASHCALW software driver.
  *
  * It also comes bundled with several examples. Using a Fibonacci calculation,
- * this example demonstrates how much the PicoCache feature can improve the 
+ * this example demonstrates how much the PicoCache feature can improve the
  * execution speed.
  *
- * \note The PicoCache always has a positive impact in terms of power 
- * consumption (Explanation: since the PicoCache features allows to do less 
- * access to the Flash, the power consumption is therefore reduced). Note 
- * however that the PicoCache feature may have a negligible negative impact on 
+ * \note The PicoCache always has a positive impact in terms of power
+ * consumption (Explanation: since the PicoCache features allows to do less
+ * access to the Flash, the power consumption is therefore reduced). Note
+ * however that the PicoCache feature may have a negligible negative impact on
  * the execution speed when there are no wait states on the Flash (which may be
  * the case when the CPU runs at 12MHz in some cases). See also the Flash
  * Characteristics in the electrical characteristics section of the datasheet
  * for more information.
  *
  * Operating mode of the example:
- *   -# After reset, the example will run without PicoCache.
+ *   -# After reset, the example will run without PicoCache at 48MHz with 1 wait
+ * state.
  *   -# A Fibonacci calculation will be done.
  *   -# The power consumption of the calculation without PicoCache will be
  * displayed on the board monitor.
@@ -73,11 +74,23 @@
  *   -# The time spent on the Fibonacci will be displayed on the debug monitor.
  *   -# The cache hit number will be displayed on the debug monitor, which is
  * the cause of the performance improvement and power consumption decrease.
+ *   -# Then the example will run without PicoCache at 12MHz with 0 wait state.
+ *   -# A Fibonacci calculation will be done.
+ *   -# The power consumption of the calculation without PicoCache will be
+ * displayed on the board monitor.
+ *   -# The time spent on the Fibonacci will be displayed on the debug monitor.
+ *   -# PicoCache will be enabled.
+ *   -# The Fibonacci calculation will be done again.
+ *   -# The power consumption of the calculation with PicoCache will be
+ * displayed on the board monitor. The power consuption will be lower.
+ *   -# The time spent on the Fibonacci will be displayed on the debug monitor.
+ *   -# The cache hit number will be displayed on the debug monitor, which is
+ * the cause of the performance improvement and power consumption decrease.
  *
  * \section files Main Files
  *   - flashcalw.c: FLASHCALW driver;
  *   - flashcalw.h: FLASHCALW driver header file;
- *   - time_tick_sam.c: Time tick utilities for getting the time spent on the 
+ *   - time_tick_sam.c: Time tick utilities for getting the time spent on the
  *   calculation;
  *   - time_tick.h: Time tick utilities header file;
  *   - flashcalw_example3.c: PicoCache access example application.
@@ -108,6 +121,7 @@
  */
 
 #include <asf.h>
+#include <conf_board.h>
 #include "time_tick.h"
 
 /** Fibonacci number */
@@ -193,6 +207,14 @@ static void flash_picocache_example(const char *caption, bool pico_enable)
 	}
 }
 
+static void wait_for_pushbutton(void)
+{
+	while (ioport_get_pin_level(PUSH_BUTTON));
+	delay_ms(1);
+	while (!ioport_get_pin_level(PUSH_BUTTON));
+	delay_ms(1);
+}
+
 /**
  * \brief main function. Do the Fibonacci calculation with and without
  * PicoCache and print the calculation time to the UART console.
@@ -223,6 +245,30 @@ int main(void)
 	flash_picocache_example(
 		"Fibonacci calculation with PicoCache",
 		true);
+
+	puts("From now on, System is running at 12MHz\r\n");
+	puts("And the baudrate is 28800bps\r\n");
+	puts("Please check the power consumption\r\n");
+	printf("Push %s to continue\r\n", BUTTON_0_NAME);
+	wait_for_pushbutton();
+	sysclk_set_prescalers(2, 0, 0, 0, 0);
+
+	flashcalw_set_wait_state(0);
+	/* Calculate the Fibonacci without PicoCache */
+	flash_picocache_example(
+		"Fibonacci calculation without PicoCache",
+		false);
+
+	puts("Please check the power consumption\r\n");
+	printf("Push %s to continue\r\n", BUTTON_0_NAME);
+	wait_for_pushbutton();
+
+	/* Calculate the Fibonacci with PicoCache */
+	flash_picocache_example(
+		"Fibonacci calculation with PicoCache",
+		true);
+
+	puts("End");
 
 	while (true) {
 	}

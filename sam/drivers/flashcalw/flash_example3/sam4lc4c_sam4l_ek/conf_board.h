@@ -47,4 +47,7 @@
 /** Enable Com Port. */
 #define CONF_BOARD_COM_PORT
 
+#define BUTTON_0_NAME "PB0"
+#define PUSH_BUTTON PIN_PC03
+
 #endif  /* CONF_BOARD_H_INCLUDED */
