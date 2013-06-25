@@ -136,7 +136,7 @@ static struct _eeprom_module _eeprom_instance = {
 
 
 /** \internal
- *  \breif Erases a given row within the physical EEPROM memory space.
+ *  \brief Erases a given row within the physical EEPROM memory space.
  *
  *  \param[in] row  Physical row in EEPROM space to erase
  */
@@ -152,7 +152,7 @@ static void _eeprom_emulator_nvm_erase_row(
 }
 
 /** \internal
- *  \breif Fills the internal NVM controller page buffer in physical EEPROM memory space.
+ *  \brief Fills the internal NVM controller page buffer in physical EEPROM memory space.
  *
  *  \param[in] physical_page  Physical page in EEPROM space to fill
  *  \param[in] data           Data to write to the physical memory page
@@ -172,7 +172,7 @@ static void _eeprom_emulator_nvm_fill_cache(
 }
 
 /** \internal
- *  \breif Commits the internal NVM controller page buffer to physical memory.
+ *  \brief Commits the internal NVM controller page buffer to physical memory.
  *
  *  \param[in] physical_page  Physical page in EEPROM space to commit
  */
@@ -189,7 +189,7 @@ static void _eeprom_emulator_nvm_commit_cache(
 }
 
 /** \internal
- *  \breif Reads a page of data stored in physical EEPROM memory space.
+ *  \brief Reads a page of data stored in physical EEPROM memory space.
  *
  *  \param[in]  physical_page  Physical page in EEPROM space to read
  *  \param[out] data           Destination buffer to fill with the read data
@@ -395,8 +395,8 @@ static enum status_code _eeprom_emulator_move_data_to_spare(
 		uint32_t new_page =
 				((_eeprom_instance.spare_row * NVMCTRL_ROW_PAGES) + c);
 
-		/* Flush cache buffer to write any uncommitted data */
-		eeprom_emulator_flush_page_buffer();
+		/* Commit any cached data to physical non-volatile memory */
+		eeprom_emulator_commit_page_buffer();
 
 		/* Check if we we are looking at the page the calling function wishes
 		 * to change during the move operation */
@@ -413,7 +413,7 @@ static enum status_code _eeprom_emulator_move_data_to_spare(
 		}
 
 		/* Fill the physical NVM buffer with the new data so that it can be
-		 * quickly flushed in the future if needed due to a low power
+		 * quickly committed in the future if needed due to a low power
 		 * condition */
 		_eeprom_emulator_nvm_fill_cache(new_page, &_eeprom_instance.cache);
 
@@ -524,13 +524,13 @@ static enum status_code _eeprom_emulator_verify_master_page(void)
  *
  * \retval STATUS_OK                    If the emulator parameters were retrieved
  *                                      successfully
- * \retval STATUS_ERR_NOT_INITALIZATED  If the EEPROM Emulator is not initialized
+ * \retval STATUS_ERR_NOT_INITIALIZED   If the EEPROM Emulator is not initialized
  */
 enum status_code eeprom_emulator_get_parameters(
 	struct eeprom_emulator_parameters *const parameters)
 {
 	if (_eeprom_instance.initialized == false) {
-		return STATUS_ERR_NOT_INITALIZATED;
+		return STATUS_ERR_NOT_INITIALIZED;
 	}
 
 	parameters->page_size              = EEPROM_PAGE_SIZE;
@@ -652,7 +652,7 @@ void eeprom_emulator_erase_memory(void)
  *
  * \note Data stored in pages may be cached in volatile RAM memory; to commit
  *       any cached data to physical non-volatile memory, the
- *       \ref eeprom_emulator_flush_page_buffer() function should be called.
+ *       \ref eeprom_emulator_commit_page_buffer() function should be called.
  *
  * \param[in] logical_page  Logical EEPROM page number to write to
  * \param[in] data          Pointer to the data buffer containing source data to
@@ -661,7 +661,7 @@ void eeprom_emulator_erase_memory(void)
  * \return Status code indicating the status of the operation.
  *
  * \retval STATUS_OK                    If the page was successfully read
- * \retval STATUS_ERR_NOT_INITALIZATED  If the EEPROM emulator is not initialized
+ * \retval STATUS_ERR_NOT_INITIALIZED   If the EEPROM emulator is not initialized
  * \retval STATUS_ERR_BAD_ADDRESS       If an address outside the valid emulated
  *                                      EEPROM memory space was supplied
  */
@@ -671,7 +671,7 @@ enum status_code eeprom_emulator_write_page(
 {
 	/* Ensure the emulated EEPROM has been initialized first */
 	if (_eeprom_instance.initialized == false) {
-		return STATUS_ERR_NOT_INITALIZATED;
+		return STATUS_ERR_NOT_INITIALIZED;
 	}
 
 	/* Make sure the write address is within the allowable address space */
@@ -680,12 +680,12 @@ enum status_code eeprom_emulator_write_page(
 	}
 
 	/* Check if the cache is active and the currently cached page is not the
-	 * page that is being written (if not, we need to flush and cache the new
+	 * page that is being written (if not, we need to commit and cache the new
 	 * page) */
 	if ((_eeprom_instance.cache_active == true) &&
 			(_eeprom_instance.cache.header.logical_page != logical_page)) {
-		/* Flush the currently cached data buffer to non-volatile memory */
-		eeprom_emulator_flush_page_buffer();
+		/* Commit the currently cached data buffer to non-volatile memory */
+		eeprom_emulator_commit_page_buffer();
 	}
 
 	/* Check if we have space in the current page location's physical row for
@@ -718,7 +718,7 @@ enum status_code eeprom_emulator_write_page(
 			EEPROM_PAGE_SIZE);
 
 	/* Fill the physical NVM buffer with the new data so that it can be quickly
-	 * flushed in the future if needed due to a low power condition */
+	 * committed in the future if needed due to a low power condition */
 	_eeprom_emulator_nvm_fill_cache(new_page, &_eeprom_instance.cache);
 
 	/* Update the cache parameters and mark the cache as active */
@@ -740,7 +740,7 @@ enum status_code eeprom_emulator_write_page(
  * \return Status code indicating the status of the operation.
  *
  * \retval STATUS_OK                    If the page was successfully read
- * \retval STATUS_ERR_NOT_INITALIZATED  If the EEPROM emulator is not initialized
+ * \retval STATUS_ERR_NOT_INITIALIZED   If the EEPROM emulator is not initialized
  * \retval STATUS_ERR_BAD_ADDRESS       If an address outside the valid emulated
  *                                      EEPROM memory space was supplied
  */
@@ -750,7 +750,7 @@ enum status_code eeprom_emulator_read_page(
 {
 	/* Ensure the emulated EEPROM has been initialized first */
 	if (_eeprom_instance.initialized == false) {
-		return STATUS_ERR_NOT_INITALIZATED;
+		return STATUS_ERR_NOT_INITIALIZED;
 	}
 
 	/* Make sure the read address is within the allowable address space */
@@ -787,7 +787,7 @@ enum status_code eeprom_emulator_read_page(
  *
  * \note Data stored in pages may be cached in volatile RAM memory; to commit
  *       any cached data to physical non-volatile memory, the
- *       \ref eeprom_emulator_flush_page_buffer() function should be called.
+ *       \ref eeprom_emulator_commit_page_buffer() function should be called.
  *
  * \param[in] offset  Starting byte offset to write to, in emulated EEPROM
  *                    memory space
@@ -797,7 +797,7 @@ enum status_code eeprom_emulator_read_page(
  * \return Status code indicating the status of the operation.
  *
  * \retval STATUS_OK                    If the page was successfully read
- * \retval STATUS_ERR_NOT_INITALIZATED  If the EEPROM emulator is not initialized
+ * \retval STATUS_ERR_NOT_INITIALIZED   If the EEPROM emulator is not initialized
  * \retval STATUS_ERR_BAD_ADDRESS       If an address outside the valid emulated
  *                                      EEPROM memory space was supplied
  */
@@ -819,17 +819,22 @@ enum status_code eeprom_emulator_write_buffer(
 		}
 	}
 
+	/* Keep track of whether the currently updated page has been written */
+	bool page_dirty = false;
+
 	/* Write the specified data to the emulated EEPROM memory space */
 	for (uint16_t c = offset; c < (length + offset); c++) {
 		/* Copy the next byte of data from the user's buffer to the temporary
 		 * buffer */
 		buffer[c % EEPROM_PAGE_SIZE] = data[c - offset];
+		page_dirty = true;
 
 		/* Check if we have written up to a new EEPROM page boundary */
 		if ((c % EEPROM_PAGE_SIZE) == 0) {
 			/* Write the current page to non-volatile memory from the temporary
 			 * buffer */
 			error_code = eeprom_emulator_write_page(logical_page, buffer);
+			page_dirty = false;
 
 			if (error_code != STATUS_OK) {
 				break;
@@ -846,6 +851,11 @@ enum status_code eeprom_emulator_write_buffer(
 				return error_code;
 			}
 		}
+	}
+
+	/* If the current page is dirty, write it */
+	if (page_dirty) {
+		error_code = eeprom_emulator_write_page(logical_page, buffer);
 	}
 
 	return error_code;
@@ -866,7 +876,7 @@ enum status_code eeprom_emulator_write_buffer(
  * \return Status code indicating the status of the operation.
  *
  * \retval STATUS_OK                    If the page was successfully read
- * \retval STATUS_ERR_NOT_INITALIZATED  If the EEPROM emulator is not initialized
+ * \retval STATUS_ERR_NOT_INITIALIZED   If the EEPROM emulator is not initialized
  * \retval STATUS_ERR_BAD_ADDRESS       If an address outside the valid emulated
  *                                      EEPROM memory space was supplied
  */
@@ -913,9 +923,9 @@ enum status_code eeprom_emulator_read_buffer(
 }
 
 /**
- * \brief Flushes any cached data to physical non-volatile memory
+ * \brief Commits any cached data to physical non-volatile memory
  *
- * Flushes the internal SRAM caches to physical non-volatile memory, to ensure
+ * Commits the internal SRAM caches to physical non-volatile memory, to ensure
  * that any outstanding cached data is preserved. This function should be called
  * prior to a system reset or shutdown to prevent data loss.
  *
@@ -930,11 +940,11 @@ enum status_code eeprom_emulator_read_buffer(
  *
  * \return Status code indicating the status of the operation.
  */
-enum status_code eeprom_emulator_flush_page_buffer(void)
+enum status_code eeprom_emulator_commit_page_buffer(void)
 {
 	enum status_code error_code = STATUS_OK;
 
-	/* If cache is inactive, no need to flush anything to physical memory */
+	/* If cache is inactive, no need to commit anything to physical memory */
 	if (_eeprom_instance.cache_active == false) {
 		return STATUS_OK;
 	}

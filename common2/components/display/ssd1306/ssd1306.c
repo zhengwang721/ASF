@@ -68,7 +68,7 @@ static void ssd1306_interface_init(void)
 	config.pinmux_pad1 = SSD1306_SPI_PINMUX_PAD1;
 	config.pinmux_pad2 = SSD1306_SPI_PINMUX_PAD2;
 	config.pinmux_pad3 = SSD1306_SPI_PINMUX_PAD3;
-	config.master.baudrate = SSD1306_CLOCK_SPEED;
+	config.mode_specific.master.baudrate = SSD1306_CLOCK_SPEED;
 
 	spi_init(&ssd1306_master, SSD1306_SPI, &config);
 	spi_enable(&ssd1306_master);

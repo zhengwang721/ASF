@@ -6,7 +6,7 @@
 		This display is available on SAMD20 Xplained Pro
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="Display" />
+			<keyword value="Graphics" />
 		</info>
 		<device-support value="samd20"/>
 		<build type="c-source" value="ssd1306.c"/>

@@ -332,7 +332,7 @@ enum status_code spi_read_buffer_job(
  * \brief Asynchronous buffer write and read
  *
  * Sets up the driver to write and read to and from given buffers. If registered
- * and enabled, a callback function will be called when the tranfer is finished.
+ * and enabled, a callback function will be called when the transfer is finished.
  *
  * \note If address matching is enabled for the slave, the first character
  *       received and placed in the RX buffer will be the address.

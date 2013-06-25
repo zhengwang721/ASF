@@ -657,7 +657,7 @@ enum i2c_slave_direction i2c_slave_get_direction_wait(
  *                                          transaction being processed
  * \retval I2C_SLAVE_STATUS_CLOCK_HOLD      The slave is holding the SCL line
  *                                          low
- * \retval I2C_SLAVE_STATUS_SCL_LOW_TIMEOUT An SCL low time-out has occured
+ * \retval I2C_SLAVE_STATUS_SCL_LOW_TIMEOUT An SCL low time-out has occurred
  * \retval I2C_SLAVE_STATUS_REPEATED_START  Indicates a repeated start, only
  *                                          valid if \ref
  *                                          I2C_SLAVE_STATUS_ADDRESS_MATCH is
@@ -673,8 +673,8 @@ uint32_t i2c_slave_get_status(
 		struct i2c_slave_module *const module)
 {
 	 /* Sanity check arguments */
-	Assert(module_inst);
-	Assert(module_inst->hw);
+	Assert(module);
+	Assert(module->hw);
 
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
 
@@ -737,9 +737,9 @@ void i2c_slave_clear_status(
 		struct i2c_slave_module *const module,
 		uint32_t status_flags)
 {
-		 /* Sanity check arguments */
-	Assert(module_inst);
-	Assert(module_inst->hw);
+	/* Sanity check arguments */
+	Assert(module);
+	Assert(module->hw);
 
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
 

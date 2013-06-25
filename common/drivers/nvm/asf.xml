@@ -9,7 +9,7 @@
 				Driver for NVM access. Provides functions for initializing, reading, writing, erasing NVM and getting configuration parameters. Common API.
 				</info>
 				<info type="keyword" value="technology">
-					<keyword value="NVM"/>
+					<keyword value="Memory"/>
 				</info>
 				<build type="doxygen-entry-point" value="nvm_group"/>
 				<build type="doxygen-quick-start" value="nvm_quickstart"/>
@@ -27,7 +27,7 @@
 				Driver for NVM access. Provides functions for initializing, reading, writing, erasing NVM and getting configuration parameters. Common API.
 				</info>
 				<info type="keyword" value="technology">
-					<keyword value="NVM"/>
+					<keyword value="Memory"/>
 				</info>
 				<build type="doxygen-entry-point" value="nvm_group"/>
 				<build type="doxygen-quick-start" value="nvm_quickstart"/>
@@ -49,7 +49,7 @@
 				Driver for NVM access. Provides functions for initializing, reading, writing, erasing NVM and getting configuration parameters. Common API.
 				</info>
 				<info type="keyword" value="technology">
-					<keyword value="NVM"/>
+					<keyword value="Memory"/>
 				</info>
 				<build type="doxygen-entry-point" value="nvm_group"/>
 				<build type="doxygen-quick-start" value="nvm_quickstart"/>
@@ -73,7 +73,7 @@
 				Driver for NVM access. Provides functions for initializing, reading, writing, erasing NVM and getting configuration parameters. Common API.
 				</info>
 				<info type="keyword" value="technology">
-					<keyword value="NVM"/>
+					<keyword value="Memory"/>
 				</info>
 				<build type="doxygen-entry-point" value="nvm_group"/>
 				<build type="doxygen-quick-start" value="nvm_quickstart"/>
@@ -92,7 +92,7 @@
 				Driver for NVM access. Provides functions for initializing, reading, writing, erasing NVM and getting configuration parameters. Common API.
 				</info>
 				<info type="keyword" value="technology">
-					<keyword value="NVM"/>
+					<keyword value="Memory"/>
 				</info>
 				<build type="doxygen-entry-point" value="nvm_group"/>
 				<build type="doxygen-quick-start" value="nvm_quickstart"/>
@@ -106,7 +106,7 @@
 				Driver for NVM access. Provides functions for initializing, reading, writing, erasing NVM and getting configuration parameters. Common API.
 				</info>
 				<info type="keyword" value="technology">
-					<keyword value="NVM"/>
+					<keyword value="Memory"/>
 				</info>
 				<build type="doxygen-entry-point" value="nvm_group"/>
 				<build type="doxygen-quick-start" value="nvm_quickstart"/>
@@ -121,7 +121,7 @@
 				Driver for NVM access. Includes AT45DBX external dataflash. Provides functions for initializing, reading, writing, erasing NVM and getting configuration parameters. Common API.
 				</info>
 				<info type="keyword" value="technology">
-					<keyword value="NVM"/>
+					<keyword value="Memory"/>
 				</info>
 				<build type="doxygen-entry-point" value="nvm_group"/>
 				<build type="doxygen-quick-start" value="nvm_quickstart"/>
@@ -144,7 +144,7 @@
 				Driver for NVM access. Includes AT45DBX external dataflash. Provides functions for initializing, reading, writing, erasing NVM and getting configuration parameters. Common API.
 				</info>
 				<info type="keyword" value="technology">
-					<keyword value="NVM"/>
+					<keyword value="Memory"/>
 				</info>
 				<build type="doxygen-entry-point" value="nvm_group"/>
 				<build type="doxygen-quick-start" value="nvm_quickstart"/>
@@ -168,7 +168,7 @@
 				Driver for NVM access. Includes AT45DBX external dataflash. Provides functions for initializing, reading, writing, erasing NVM and getting configuration parameters. Common API.
 				</info>
 				<info type="keyword" value="technology">
-					<keyword value="NVM"/>
+					<keyword value="Memory"/>
 				</info>
 				<build type="doxygen-entry-point" value="nvm_group"/>
 				<build type="doxygen-quick-start" value="nvm_quickstart"/>

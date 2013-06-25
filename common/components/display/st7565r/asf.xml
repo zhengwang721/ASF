@@ -6,7 +6,7 @@
 		This display is available on XMEGA-A3BU Xplained.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="Display" />
+			<keyword value="Graphics" />
 		</info>
 		<device-support value="xmega"/>
 		<build type="c-source" value="st7565r.c"/>

@@ -152,7 +152,7 @@
  * between each comparison result by automatically performing a comparison on
  * every cycle of the module's clock.
  *
- * \subsection asfdoc_samd20_ac_module_overview_events Input and Output Events
+ * \subsection asfdoc_samd20_ac_module_overview_events Events
  * Each comparator unit is capable of being triggered by both software and
  * hardware triggers. Hardware input events allow for other peripherals to
  * automatically trigger a comparison on demand - for example, a timer output
@@ -163,6 +163,12 @@
  * for reduced levels of CPU usage in an application and lowers the overall
  * system response latency by directly triggering hardware peripherals from one
  * another without requiring software intervention.
+ *
+ * \note The connection of events between modules requires the use of the
+ *       \ref asfdoc_samd20_events_group "SAM D20 Event System Driver (EVENTS)"
+ *       to route output event of one module to the the input event of another.
+ *       For more information on event routing, refer to the event driver
+ *       documentation.
  *
  * \subsection asfdoc_samd20_ac_module_overview_physical Physical Connection
  * Physically, the modules are interconnected within the device as shown in
@@ -233,7 +239,7 @@
  * pairs; refer to your device specific datasheet for details.
  *
  *
- * \section asfdoc_samd20_ac_extra_info Extra Information for AC
+ * \section asfdoc_samd20_ac_extra_info Extra Information
  *
  * For extra information see \ref asfdoc_samd20_ac_extra. This includes:
  *  - \ref asfdoc_samd20_ac_extra_acronyms
@@ -266,24 +272,68 @@ struct ac_module;
 extern struct ac_module *_ac_instance[AC_INST_NUM];
 #endif
 
+
+/**
+ * \name AC window channel status flags
+ *
+ * AC window channel status flags, returned by \ref ac_win_get_status()
+ */
+
+ /** Unknown output state; the comparator window channel was not ready. */
+#define AC_WIN_STATUS_UNKNOWN         (1UL << 0)
+/** Window Comparator's input voltage is above the window */
+#define AC_WIN_STATUS_ABOVE           (1UL << 1)
+/** Window Comparator's input voltage is inside the window */
+#define AC_WIN_STATUS_INSIDE          (1UL << 2)
+/** Window Comparator's input voltage is below the window */
+#define AC_WIN_STATUS_BELOW           (1UL << 3)
+/**
+ * This state reflects the window interrupt flag. When the interrupt flag
+ * should be set is configured in \ref ac_win_set_config(). This state needs
+ * to be cleared by the of \ref ac_win_clear_status().
+ */
+#define AC_WIN_STATUS_INTERRUPT_SET   (1UL << 4)
+
+/**
+ * \name AC channel status flags
+ *
+ * AC channel status flags, returned by \ref ac_chan_get_status()
+ */
+
+/** Unknown output state; the comparator channel was not ready. */
+#define AC_CHAN_STATUS_UNKNOWN        (1UL << 0)
+/** Comparator's negative input pin is higher in voltage than the positive
+ *  input pin. */
+#define AC_CHAN_STATUS_NEG_ABOVE_POS  (1UL << 1)
+/** Comparator's positive input pin is higher in voltage than the negative
+ *  input pin. */
+#define AC_CHAN_STATUS_POS_ABOVE_NEG  (1UL << 2)
+/**
+ * This state reflects the channel interrupt flag. When the interrupt flag
+ * should be set is configured in ac_chan_set_config(). This state needs
+ * to be cleared by the of ac_chan_clear_status().
+ */
+#define AC_CHAN_STATUS_INTERRUPT_SET  (1UL << 3)
+
+
 /** Type definition for a AC module callback function. */
 typedef void (*ac_callback_t)(struct ac_module *const module_inst);
 
 /** Enum for possible callback types for the AC module */
 enum ac_callback {
 	/** Callback for comparator 0 */
-	AC_CALLBACK_COMPARATOR_0,
+	AC_CALLBACK_COMPARATOR_0 = 0,
 	/** Callback for comparator 1 */
-	AC_CALLBACK_COMPARATOR_1,
+	AC_CALLBACK_COMPARATOR_1 = 1,
 	/** Callback for window 0 */
-	AC_CALLBACK_WINDOW_0,
+	AC_CALLBACK_WINDOW_0     = 4,
 #if (AC_NUM_CMP > 2)
 	/** Callback for comparator 2 */
-	AC_CALLBACK_COMPARATOR_2,
+	AC_CALLBACK_COMPARATOR_2 = 2,
 	/** Callback for comparator 3 */
-	AC_CALLBACK_COMPARATOR_3,
+	AC_CALLBACK_COMPARATOR_3 = 3,
 	/** Callback for window 1 */
-	AC_CALLBACK_WINDOW_1,
+	AC_CALLBACK_WINDOW_1     = 5,
 	/** Number of available callbacks */
 #endif /* (AC_NUM_CMP == 2) */
 #if !defined(__DOXYGEN__)
@@ -404,28 +454,6 @@ enum ac_chan_output {
 };
 
 /**
- * \brief AC channel output status enum.
- *
- * Enum for the possible output states of an Analog Comparator channel.
- */
-enum ac_chan_status {
-	/** Unknown output state; the comparator channel was not ready. */
-	AC_CHAN_STATUS_UNKNOWN,
-	/** Comparator's negative input pin is higher in voltage than the positive
-	 *  input pin. */
-	AC_CHAN_STATUS_NEG_ABOVE_POS,
-	/** Comparator's positive input pin is higher in voltage than the negative
-	 *  input pin. */
-	AC_CHAN_STATUS_POS_ABOVE_NEG,
-	/**
-	 * This state reflects the channel interrupt flag. When the interrupt flag
-	 * should be set is configured in ac_chan_set_config(). This state needs
-	 * to be cleared by the use of ac_chan_cleare_status().
-	 */
-	AC_CHAN_STATUS_INTERRUPT_SET,
-};
-
-/**
  * \brief AC window channel selection enum.
  *
  * Enum for the possible window comparator channels.
@@ -437,31 +465,6 @@ enum ac_win_channel {
 	/** Window channel 1 (Pair 1, Comparators 2 and 3) */
 	AC_WIN_CHANNEL_1 = 1,
 #endif
-};
-
-/**
- * \brief AC window channel output state enum.
- *
- * Enum for the possible output states of an Analog Comparator window channel.
- */
-enum ac_win_status {
-	/** Unknown output state; the comparator window channel was not ready. */
-	AC_WIN_STATUS_UNKNOWN,
-	/** Window Comparator's input voltage is above the upper window
-	 *  threshold. */
-	AC_WIN_STATUS_ABOVE,
-	/** Window Comparator's input voltage is between the lower and upper window
-	 *  thresholds. */
-	AC_WIN_STATUS_INSIDE,
-	/** Window Comparator's input voltage is below the lower window
-	 *  threshold. */
-	AC_WIN_STATUS_BELOW,
-	/**
-	 * This state reflects the window interrupt flag. When the interrupt flag
-	 * should be set is configured in \ref ac_win_set_config(). This state needs
-	 * to be cleared by the use of \ref ac_win_cleare_status().
-	 */
-	AC_WIN_STATUS_INTERRUPT_SET,
 };
 
 /**
@@ -1005,7 +1008,7 @@ static inline bool ac_chan_is_ready(
  *  \param[in] module_inst   Software instance for the Analog Comparator peripheral
  *  \param[in] channel       Comparator channel to test
  *
- *  \return Comparator channel status mask.
+ *  \return Bit mask of comparator channel status flags.
  */
 static inline uint8_t ac_chan_get_status(
 		struct ac_module *const module_inst,
@@ -1017,7 +1020,7 @@ static inline uint8_t ac_chan_get_status(
 
 	Ac *const ac_module = module_inst->hw;
 
-	uint8_t status_mask;
+	uint8_t status_mask = 0;
 
 	if (ac_module->INTFLAG.reg & (1 << channel)) {
 		status_mask = AC_CHAN_STATUS_INTERRUPT_SET;
@@ -1076,7 +1079,7 @@ static inline void ac_chan_clear_status(
  *                       default values
  */
 static inline void ac_win_get_config_defaults(
-		struct ac_chan_config *const config)
+		struct ac_win_config *const config)
 {
 	/* Sanity check arguments */
 	Assert(config);
@@ -1143,7 +1146,7 @@ static inline bool ac_win_is_ready(
 	return true;
 }
 
-uint32_t ac_win_get_status(
+uint8_t ac_win_get_status(
 		struct ac_module *const module_inst,
 		const enum ac_win_channel win_channel);
 
@@ -1248,6 +1251,12 @@ static inline void ac_win_clear_status(
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>B</td>
+ *		<td>06/2013</td>
+ *		<td>Added additional documentation on the event system. Corrected
+ *          documentation typos.</td>
  *	</tr>
  *	<tr>
  *		<td>A</td>

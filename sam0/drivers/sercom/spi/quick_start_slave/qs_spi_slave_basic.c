@@ -42,7 +42,7 @@
  */
 #include <asf.h>
 
-void configure_spi(void);
+void configure_spi_slave(void);
 
 //! [setup]
 //! [buf_length]
@@ -57,54 +57,54 @@ static const uint8_t buffer[BUF_LENGTH] = {
 //! [buffer]
 
 //! [dev_inst]
-struct spi_module slave;
+struct spi_module spi_slave_instance;
 //! [dev_inst]
 //! [setup]
 
 //! [configure_spi]
-void configure_spi(void)
+void configure_spi_slave(void)
 {
 //! [config]
-	struct spi_config config;
+	struct spi_config config_spi_slave;
 //! [config]
 	/* Configure, initialize and enable SERCOM SPI module */
 //! [conf_defaults]
-	spi_get_config_defaults(&config);
+	spi_get_config_defaults(&config_spi_slave);
 //! [conf_defaults]
-//! [conf_slave]
-	config.mode = SPI_MODE_SLAVE;
-//! [conf_slave]
+//! [conf_spi_slave_instance]
+	config_spi_slave.mode = SPI_MODE_SLAVE;
+//! [conf_spi_slave_instance]
 //! [conf_preload]
-	config.slave.preload_enable = true;
+	config_spi_slave.mode_specific.slave.preload_enable = true;
 //! [conf_preload]
 //! [conf_format]
-	config.slave.frame_format = SPI_FRAME_FORMAT_SPI_FRAME;
+	config_spi_slave.mode_specific.slave.frame_format = SPI_FRAME_FORMAT_SPI_FRAME;
 //! [conf_format]
 //! [mux_setting]
-	config.mux_setting = SPI_SIGNAL_MUX_SETTING_E;
+	config_spi_slave.mux_setting = EXT1_SPI_SERCOM_MUX_SETTING;
 //! [mux_setting]
 	/* Configure pad 0 for data in */
 //! [di]
-	config.pinmux_pad0 = EXT1_SPI_MISO_PINMUX;
+	config_spi_slave.pinmux_pad0 = EXT1_SPI_SERCOM_PINMUX_PAD0;
 //! [di]
 	/* Configure pad 1 as unused */
 //! [ss]
-	config.pinmux_pad1 = EXT1_SPI_SS_PINMUX;
+	config_spi_slave.pinmux_pad1 = EXT1_SPI_SERCOM_PINMUX_PAD1;
 //! [ss]
 	/* Configure pad 2 for data out */
 //! [do]
-	config.pinmux_pad2 = EXT1_SPI_MOSI_PINMUX;
+	config_spi_slave.pinmux_pad2 = EXT1_SPI_SERCOM_PINMUX_PAD2;
 //! [do]
 	/* Configure pad 3 for SCK */
 //! [sck]
-	config.pinmux_pad3 = EXT1_SPI_SCK_PINMUX;
+	config_spi_slave.pinmux_pad3 = EXT1_SPI_SERCOM_PINMUX_PAD3;
 //! [sck]
 //! [init]
-	spi_init(&slave, EXT1_SPI_MODULE, &config);
+	spi_init(&spi_slave_instance, EXT1_SPI_MODULE, &config_spi_slave);
 //! [init]
 
 //! [enable]
-	spi_enable(&slave);
+	spi_enable(&spi_slave_instance);
 //! [enable]
 
 }
@@ -119,13 +119,13 @@ int main(void)
 //! [system_init]
 
 //! [run_config]
-	configure_spi();
+	configure_spi_slave();
 //! [run_config]
 //! [main_start]
 
 //! [main_use_case]
 //! [write]
-	while (spi_write_buffer_wait(&slave, buffer, BUF_LENGTH != STATUS_OK)) {
+	while (spi_write_buffer_wait(&spi_slave_instance, buffer, BUF_LENGTH) != STATUS_OK) {
 		/* Wait for transfer from master */
 	}
 //! [write]

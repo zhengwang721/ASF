@@ -106,7 +106,7 @@
  *
  * \f[ COUNT_{MAX} = 2^{32}-1 \f]
  *
- * When the RTC is operated with the calendar enabled and run at the required
+ * When the RTC is operated with the calendar enabled and run using a nominal
  * 1 Hz input clock frequency, a register overflow will occur after 64 years.
  *
  * \subsection asfdoc_samd20_rtc_calendar_module_overview_periodic Periodic Events
@@ -120,9 +120,10 @@
  *
  * Where \f$f_{ASY}\f$ refers to the \e asynchronous clock set up in the RTC
  * module configuration. For the RTC to operate correctly in calendar mode, this
- * frequency must be 1024 Hz. The \b n parameter is the event source generator
- * index of the RTC module. If the asynchronous clock is operated at the
- * recommended 1KHz, the formula results in the values shown in
+ * frequency must be 1KHz, while the RTC's internal prescaler should be set to
+ * divide by 1024. The \b n parameter is the event source generator index of the
+ * RTC module. If the asynchronous clock is operated at the recommended 1KHz,
+ * the formula results in the values shown in
  * \ref asfdoc_samd20_rtc_calendar_module_rtc_hz "the table below".
  *
  * \anchor asfdoc_samd20_rtc_calendar_module_rtc_hz
@@ -157,6 +158,12 @@
  *   </tr>
  * </table>
  *
+ * \note The connection of events between modules requires the use of the
+ *       \ref asfdoc_samd20_events_group "SAM D20 Event System Driver (EVENTS)"
+ *       to route output event of one module to the the input event of another.
+ *       For more information on event routing, refer to the event driver
+ *       documentation.
+ *
  * \subsection asfdoc_samd20_rtc_calendar_module_overview_correction Digital Frequency Correction
  * The RTC module contains Digital Frequency Correction logic to compensate for
  * inaccurate source clock frequencies which would otherwise result in skewed
@@ -189,8 +196,9 @@
  * The RTC is typically clocked by a specialized GCLK generator that has a
  * smaller prescaler than the others. By default the RTC clock is on, selected
  * to use the internal 32 kHz RC-oscillator with a prescaler of 32, giving a
- * resulting clock frequency of 1024 Hz to the RTC. The internal RTC prescaler
- * is set to 1024 which yields an end-frequency of 1 Hz.
+ * resulting clock frequency of 1024 Hz to the RTC. When the internal RTC
+ * prescaler is set to 1024, this yields an end-frequency of 1Hz for correct
+ * time keeping operations.
  *
  * The implementer also has the option to set other end-frequencies.
  * \ref asfdoc_samd20_rtc_calendar_rtc_out_freq "The table below" lists the
@@ -206,17 +214,17 @@
  *     <th>RTC Prescaler</th>
  *   </tr>
  *   <tr>
- *     <td>32kHz</td>
+ *     <td>32 KHz</td>
  *     <td>1</td>
  *     <td>1</td>
  *   </tr>
  *   <tr>
- *     <td>1kHz</td>
+ *     <td>1 KHz</td>
  *     <td>32</td>
  *     <td>1</td>
  *   </tr>
  *   <tr>
- *     <td>1Hz</td>
+ *     <td>1 Hz</td>
  *     <td>32</td>
  *     <td>1024</td>
  *   </tr>
@@ -239,11 +247,11 @@
  * }
  * \enddot
  *
- * \note For the calendar to operate correctly, the default setting of 1Hz must
- *       be used.
+ * \note For the calendar to operate correctly, an asynchronous clock of 1Hz
+ *       should be used.
  *
  *
- * \section asfdoc_samd20_rtc_calendar_extra_info Extra Information for RTC CAL
+ * \section asfdoc_samd20_rtc_calendar_extra_info Extra Information
  *
  * For extra information see \ref asfdoc_samd20_rtc_calendar_extra. This includes:
  *  - \ref asfdoc_samd20_rtc_calendar_extra_acronyms
@@ -271,7 +279,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
 
 /**
  * \brief Available alarm channels.
@@ -306,31 +313,60 @@ enum rtc_calendar_alarm {
 enum rtc_calendar_callback {
 	/** Callback for alarm 0 */
 	RTC_CALENDAR_CALLBACK_ALARM_0 = 0,
-#if (RTC_NUM_OF_ALARMS > 1) || defined(__DOXYGEN__)
+#  if (RTC_NUM_OF_ALARMS > 1) || defined(__DOXYGEN__)
 	/** Callback for alarm 1 */
 	RTC_CALENDAR_CALLBACK_ALARM_1,
-#endif
-#if (RTC_NUM_OF_ALARMS > 2) || defined(__DOXYGEN__)
+#  endif
+#  if (RTC_NUM_OF_ALARMS > 2) || defined(__DOXYGEN__)
 	/** Callback for alarm 2 */
 	RTC_CALENDAR_CALLBACK_ALARM_2,
-#endif
-#if (RTC_NUM_OF_ALARMS > 3)	|| defined(__DOXYGEN__)
+#  endif
+#  if (RTC_NUM_OF_ALARMS > 3)	|| defined(__DOXYGEN__)
 	/** Callback for alarm 3 */
 	RTC_CALENDAR_CALLBACK_ALARM_3,
-#endif
+#  endif
 	/** Callback for  overflow */
 	RTC_CALENDAR_CALLBACK_OVERFLOW,
-#if !defined(__DOXYGEN__)
+#  if !defined(__DOXYGEN__)
 	/** Total number of callbacks */
 	_RTC_CALENDAR_CALLBACK_N
-#endif
+#  endif
 };
 
-#if !defined(__DOXYGEN__)
-
+#  if !defined(__DOXYGEN__)
 typedef void (*rtc_calendar_callback_t)(void);
+#  endif
 #endif
-#endif
+
+/**
+ * \brief RTC input clock prescaler settings
+ *
+ * The available input clock prescaler values for the RTC calendar module.
+ */
+enum rtc_calendar_prescaler {
+	/** RTC input clock frequency is prescaled by a factor of 1. */
+	RTC_CALENDAR_PRESCALER_DIV_1    = RTC_MODE2_CTRL_PRESCALER_DIV1,
+	/** RTC input clock frequency is prescaled by a factor of 2. */
+	RTC_CALENDAR_PRESCALER_DIV_2    = RTC_MODE2_CTRL_PRESCALER_DIV2,
+	/** RTC input clock frequency is prescaled by a factor of 4. */
+	RTC_CALENDAR_PRESCALER_DIV_4    = RTC_MODE2_CTRL_PRESCALER_DIV4,
+	/** RTC input clock frequency is prescaled by a factor of 8. */
+	RTC_CALENDAR_PRESCALER_DIV_8    = RTC_MODE2_CTRL_PRESCALER_DIV8,
+	/** RTC input clock frequency is prescaled by a factor of 16. */
+	RTC_CALENDAR_PRESCALER_DIV_16   = RTC_MODE2_CTRL_PRESCALER_DIV16,
+	/** RTC input clock frequency is prescaled by a factor of 32. */
+	RTC_CALENDAR_PRESCALER_DIV_32   = RTC_MODE2_CTRL_PRESCALER_DIV32,
+	/** RTC input clock frequency is prescaled by a factor of 64. */
+	RTC_CALENDAR_PRESCALER_DIV_64   = RTC_MODE2_CTRL_PRESCALER_DIV64,
+	/** RTC input clock frequency is prescaled by a factor of 128. */
+	RTC_CALENDAR_PRESCALER_DIV_128  = RTC_MODE2_CTRL_PRESCALER_DIV128,
+	/** RTC input clock frequency is prescaled by a factor of 256. */
+	RTC_CALENDAR_PRESCALER_DIV_256  = RTC_MODE2_CTRL_PRESCALER_DIV256,
+	/** RTC input clock frequency is prescaled by a factor of 512. */
+	RTC_CALENDAR_PRESCALER_DIV_512  = RTC_MODE2_CTRL_PRESCALER_DIV512,
+	/** RTC input clock frequency is prescaled by a factor of 1024. */
+	RTC_CALENDAR_PRESCALER_DIV_1024 = RTC_MODE2_CTRL_PRESCALER_DIV1024,
+};
 
 #if !defined(__DOXYGEN__)
 /**
@@ -343,14 +379,14 @@ struct _rtc_device {
 	bool continuously_update;
 	/** Initial year for counter value 0. */
 	uint16_t year_init_value;
-#if RTC_CALENDAR_ASYNC == true
+#  if RTC_CALENDAR_ASYNC == true
 	/** Pointers to callback functions */
 	volatile rtc_calendar_callback_t callbacks[_RTC_CALENDAR_CALLBACK_N];
 	/** Mask for registered callbacks */
 	volatile uint8_t registered_callback;
 	/** Mask for enabled callbacks */
 	volatile uint8_t enabled_callback;
-#endif
+#  endif
 };
 
 extern volatile struct _rtc_device _rtc_dev;
@@ -392,7 +428,8 @@ struct rtc_calendar_events {
 	bool generate_event_on_alarm[RTC_NUM_OF_COMP16];
 	/** Generate an output event periodically at a binary division of the RTC
 	 *  counter frequency (see
-	 * \ref asfdoc_samd20_rtc_calendar_module_overview_periodic). */
+	 *  \ref asfdoc_samd20_rtc_calendar_module_overview_periodic).
+	 */
 	bool generate_event_on_periodic[8];
 };
 
@@ -442,6 +479,8 @@ struct rtc_calendar_alarm_time {
  * user configurations are set.
  */
 struct rtc_calendar_config {
+	/** Input clock prescaler for the RTC module. */
+	enum rtc_calendar_prescaler prescaler;
 	/** If \c true, clears the clock on alarm match. */
 	bool clear_on_match;
 	/** If \c true, the digital counter registers will be continuously updated
@@ -514,13 +553,14 @@ static inline void rtc_calendar_get_time_defaults(
  * function should be called at the start of any RTC initiation.
  *
  * The default configuration is as follows:
- * - Clear on alarm match off.
- * - Continuously sync clock off.
- * - 12 hour calendar.
- * - Start year 2000 (Year 0 in the counter will be year 2000).
- * - Events off.
- * - Alarms set to January 1. 2000, 00:00:00.
- * - Alarm will match on second, minute, hour, day, month and year.
+ *  - Input clock divided by a factor of 1024.
+ *  - Clear on alarm match off.
+ *  - Continuously sync clock off.
+ *  - 12 hour calendar.
+ *  - Start year 2000 (Year 0 in the counter will be year 2000).
+ *  - Events off.
+ *  - Alarms set to January 1. 2000, 00:00:00.
+ *  - Alarm will match on second, minute, hour, day, month and year.
  *
  *  \param[out] config  Configuration structure to be initialized to default
  *                      values.
@@ -536,10 +576,11 @@ static inline void rtc_calendar_get_config_defaults(
 	rtc_calendar_get_time_defaults(&time);
 
 	/* Set defaults into configuration structure */
-	config->clear_on_match = false;
+	config->prescaler           = RTC_CALENDAR_PRESCALER_DIV_1024;
+	config->clear_on_match      = false;
 	config->continuously_update = false;
-	config->clock_24h = false;
-	config->year_init_value = 2000;
+	config->clock_24h           = false;
+	config->year_init_value     = 2000;
 	for (uint8_t i = 0; i < RTC_NUM_OF_ALARMS; i++) {
 		config->alarm[i].time = time;
 		config->alarm[i].mask = RTC_CALENDAR_ALARM_MASK_YEAR;
@@ -871,13 +912,17 @@ static inline void rtc_calendar_disable_events(
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
+ *		<td>Updated initialization function to also enable the digital interface
+ *          clock to the module if it is disabled.</td>
+ *	</tr>
+ *	<tr>
  *		<td>Initial Release</td>
  *	</tr>
  * </table>
  */
 
 /**
- * \page asfdoc_samd20_rtc_calendar_exqsg Examples for RTC (CAL) Driver
+ * \page asfdoc_samd20_rtc_calendar_exqsg Examples for RTC CAL Driver
  *
  * This is a list of the available Quick Start guides (QSGs) and example
  * applications for \ref asfdoc_samd20_rtc_calendar_group. QSGs are simple
@@ -897,6 +942,12 @@ static inline void rtc_calendar_disable_events(
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>B</td>
+ *		<td>06/2013</td>
+ *		<td>Added additional documentation on the event system. Corrected
+ *          documentation typos.</td>
  *	</tr>
  *	<tr>
  *		<td>A</td>

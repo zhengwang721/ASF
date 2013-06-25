@@ -67,7 +67,7 @@ static enum system_interrupt_vector _tc_interrupt_get_interrupt_vector(
 			MREPEAT(TC_INST_NUM, _TC_INTERRUPT_VECT_NUM, ~)
 		};
 
-	return tc_interrupt_vectors[inst_num];
+	return (enum system_interrupt_vector)tc_interrupt_vectors[inst_num];
 }
 #endif /* !defined(__DOXYGEN__) */
 
@@ -104,7 +104,7 @@ static inline void tc_enable_callback(
 	Assert(module);
 
 
-	/* Enable interupts for this TC module */
+	/* Enable interrupts for this TC module */
 	system_interrupt_enable(_tc_interrupt_get_interrupt_vector(_tc_get_inst_index(module->hw)));
 
 	/* Enable callback */

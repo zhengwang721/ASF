@@ -48,7 +48,7 @@ void configure_ac_channel(void);
 //! [setup]
 /* AC module software instance (must not go out of scope while in use) */
 //! [setup_1]
-static struct ac_module ac_dev;
+static struct ac_module ac_instance;
 //! [setup_1]
 
 /* Comparator channel that will be used */
@@ -63,17 +63,17 @@ void configure_ac(void)
 	/* Create a new configuration structure for the Analog Comparator settings
 	 * and fill with the default module settings. */
 	//! [setup_4]
-	struct ac_config ac_config;
+	struct ac_config config_ac;
 	//! [setup_4]
 	//! [setup_5]
-	ac_get_config_defaults(&ac_config);
+	ac_get_config_defaults(&config_ac);
 	//! [setup_5]
 
 	/* Alter any Analog Comparator configuration settings here if required */
 
 	/* Initialize and enable the Analog Comparator with the user settings */
 	//! [setup_6]
-	ac_init(&ac_dev, AC, &ac_config);
+	ac_init(&ac_instance, AC, &config_ac);
 	//! [setup_6]
 }
 
@@ -110,10 +110,10 @@ void configure_ac_channel(void)
 	/* Initialize and enable the Analog Comparator channel with the user
 	 * settings */
 	//! [setup_12]
-	ac_chan_set_config(&ac_dev, AC_COMPARATOR_CHANNEL, &ac_chan_conf);
+	ac_chan_set_config(&ac_instance, AC_COMPARATOR_CHANNEL, &ac_chan_conf);
 	//! [setup_12]
 	//! [setup_13]
-	ac_chan_enable(&ac_dev, AC_COMPARATOR_CHANNEL);
+	ac_chan_enable(&ac_instance, AC_COMPARATOR_CHANNEL);
 	//! [setup_13]
 }
 //! [setup]
@@ -125,38 +125,39 @@ int main(void)
 	configure_ac();
 	configure_ac_channel();
 	//! [setup_14]
-	ac_enable(&ac_dev);
+	ac_enable(&ac_instance);
 	//! [setup_14]
 	//! [setup_init]
 
 	//! [main]
 	//! [main_1]
-	ac_chan_trigger_single_shot(&ac_dev, AC_COMPARATOR_CHANNEL);
+	ac_chan_trigger_single_shot(&ac_instance, AC_COMPARATOR_CHANNEL);
 	//! [main_1]
 
 	//! [main_2]
-	enum ac_chan_status last_comparison = AC_CHAN_STATUS_UNKNOWN;
+	uint8_t last_comparison = AC_CHAN_STATUS_UNKNOWN;
 	//! [main_2]
 
 	//! [main_3]
 	while (true) {
 	//! [main_3]
 	//! [main_4]
-		if (ac_chan_is_ready(&ac_dev, AC_COMPARATOR_CHANNEL)) {
+		if (ac_chan_is_ready(&ac_instance, AC_COMPARATOR_CHANNEL)) {
 	//! [main_4]
 			//! [main_5]
-			do
-			{
-				last_comparison = ac_chan_get_status(&ac_dev, AC_COMPARATOR_CHANNEL);
-			} while (last_comparison == AC_CHAN_STATUS_UNKNOWN);
+			do {
+				last_comparison = ac_chan_get_status(&ac_instance,
+						AC_COMPARATOR_CHANNEL);
+			} while (last_comparison & AC_CHAN_STATUS_UNKNOWN);
 			//! [main_5]
 
 			//! [main_6]
-			port_pin_set_output_level(LED_0_PIN, (last_comparison == AC_CHAN_STATUS_NEG_ABOVE_POS));
+			port_pin_set_output_level(LED_0_PIN,
+					(last_comparison & AC_CHAN_STATUS_NEG_ABOVE_POS));
 			//! [main_6]
 
 			//! [main_7]
-			ac_chan_trigger_single_shot(&ac_dev, AC_COMPARATOR_CHANNEL);
+			ac_chan_trigger_single_shot(&ac_instance, AC_COMPARATOR_CHANNEL);
 			//! [main_7]
 		}
 	}

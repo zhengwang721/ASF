@@ -155,8 +155,8 @@
  * <table>
  *	<caption>Effective ADC conversion speed using oversampling</caption>
  *	<tr>
- *		<td>Resolution</td>
- *		<td>Effective conversion rate</td>
+ *		<th>Resolution</th>
+ *		<th>Effective conversion rate</th>
  *	</tr>
  *	<tr>
  *		<td>13-bits</td>
@@ -228,53 +228,53 @@
  * <table>
  *   <caption>Effective ADC resolution from various hardware averaging modes</caption>
  *   <tr>
- *     <th>Number of Samples</th>
- *     <th>Final Result</th>
+ *     <th>Number of Samples</tr>
+ *     <th>Final Result</tr>
  *   </tr>
  *   <tr>
  *     <td>1</td>
  *     <td>12-bits</td>
- *  </tr>
- *  <tr>
- *     <td>2</td>
- *     <td>13-bits</td>
- *  </tr>
- *  <tr>
- *     <td>4</td>
- *     <td>14-bits</td>
- *  </tr>
- *  <tr>
- *     <td>8</td>
- *     <td>15-bits</td>
- *  </tr>
- *  <tr>
- *     <td>16</td>
- *     <td>16-bits</td>
- *  </tr>
- *  <tr>
- *     <td>32</td>
- *     <td>16-bits</td>
- *  </tr>
- *  <tr>
- *     <td>64</td>
- *     <td>16-bits</td>
- *  </tr>
- *  <tr>
- *     <td>128</td>
- *     <td>16-bits</td>
- *  </tr>
- *  <tr>
- *     <td>256</td>
- *     <td>16-bits</td>
- *  </tr>
- *  <tr>
- *     <td>512</td>
- *     <td>16-bits</td>
- *  </tr>
- *  <tr>
- *     <td>1024</td>
- *     <td>16-bits</td>
- *  </tr>
+ *   </tr>
+ *   <tr>
+ *      <td>2</td>
+ *      <td>13-bits</td>
+ *   </tr>
+ *   <tr>
+ *      <td>4</td>
+ *      <td>14-bits</td>
+ *   </tr>
+ *   <tr>
+ *      <td>8</td>
+ *      <td>15-bits</td>
+ *   </tr>
+ *   <tr>
+ *      <td>16</td>
+ *      <td>16-bits</td>
+ *   </tr>
+ *   <tr>
+ *      <td>32</td>
+ *      <td>16-bits</td>
+ *   </tr>
+ *   <tr>
+ *      <td>64</td>
+ *      <td>16-bits</td>
+ *   </tr>
+ *   <tr>
+ *      <td>128</td>
+ *      <td>16-bits</td>
+ *   </tr>
+ *   <tr>
+ *      <td>256</td>
+ *      <td>16-bits</td>
+ *   </tr>
+ *   <tr>
+ *      <td>512</td>
+ *      <td>16-bits</td>
+ *   </tr>
+ *   <tr>
+ *      <td>1024</td>
+ *      <td>16-bits</td>
+ *   </tr>
  * </table>
  *
  *
@@ -355,6 +355,12 @@
  * If the result ready event is enabled, an event will be generated when a
  * conversion is completed.
  *
+ * \note The connection of events between modules requires the use of the
+ *       \ref asfdoc_samd20_events_group "SAM D20 Event System Driver (EVENTS)"
+ *       to route output event of one module to the the input event of another.
+ *       For more information on event routing, refer to the event driver
+ *       documentation.
+ *
  *
  * \section asfdoc_samd20_adc_special_considerations Special Considerations
  *
@@ -364,7 +370,7 @@
  * to be manually enabled by the user application before they can be measured.
  *
  *
- * \section asfdoc_samd20_adc_extra_info Extra Information for ADC
+ * \section asfdoc_samd20_adc_extra_info Extra Information
  *
  * For extra information see \ref asfdoc_samd20_adc_extra. This includes:
  *  - \ref asfdoc_samd20_adc_extra_acronyms
@@ -1024,11 +1030,11 @@ static inline void adc_get_config_defaults(struct adc_config *const config)
 	config->reference_compensation_enable = false;
 	config->correction.correction_enable  = true;
 	config->correction.gain_correction    =
-			(*(uint32_t *)(ADC_FUSES_GAINCORR_ADDR)) &
-			ADC_FUSES_GAINCORR_Msk >> ADC_FUSES_GAINCORR_Pos;
+			(*(uint32_t *)ADC_FUSES_GAINCORR_ADDR &
+			ADC_FUSES_GAINCORR_Msk) >> ADC_FUSES_GAINCORR_Pos;
 	config->correction.offset_correction  =
-			(*(uint32_t *)(ADC_FUSES_OFFSETCORR_ADDR)) &
-			ADC_FUSES_OFFSETCORR_Msk >> ADC_FUSES_OFFSETCORR_Pos;
+			(*(uint32_t *)ADC_FUSES_OFFSETCORR_ADDR &
+			ADC_FUSES_OFFSETCORR_Msk) >> ADC_FUSES_OFFSETCORR_Pos;
 	config->sample_length                 = 0;
 	config->pin_scan.offset_start_scan    = 0;
 	config->pin_scan.inputs_to_scan       = 0;
@@ -1291,7 +1297,7 @@ static inline void adc_enable_events(
 /**
  * \brief Disables an ADC event input or output.
  *
- *  DIsables one or more input or output events to or from the ADC module. See
+ *  Disables one or more input or output events to or from the ADC module. See
  *  \ref adc_events "here" for a list of events this module supports.
  *
  *  \note Events cannot be altered while the module is enabled.
@@ -1531,8 +1537,8 @@ static inline enum status_code adc_set_pin_scan_mode(
 		inputs_to_scan--;
 	}
 
-	if (inputs_to_scan > ADC_INPUTCTRL_INPUTSCAN_Msk ||
-			start_offset > ADC_INPUTCTRL_INPUTOFFSET_Msk) {
+	if (inputs_to_scan > (ADC_INPUTCTRL_INPUTSCAN_Msk >> ADC_INPUTCTRL_INPUTSCAN_Pos) ||
+			start_offset > (ADC_INPUTCTRL_INPUTOFFSET_Msk >> ADC_INPUTCTRL_INPUTOFFSET_Pos)) {
 		/* Invalid number of input pins */
 		return STATUS_ERR_INVALID_ARG;
 	}
@@ -1735,6 +1741,10 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
+ *		<td>Added ADC calibration constant loading from the device signature
+ *          row when the module is initialized.</td>
+ *	</tr>
+ *	<tr>
  *		<td>Initial Release</td>
  *	</tr>
  * </table>
@@ -1761,6 +1771,12 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>B</td>
+ *		<td>06/2013</td>
+ *		<td>Added additional documentation on the event system. Corrected
+ *          documentation typos.</td>
  *	</tr>
  *	<tr>
  *		<td>A</td>

@@ -70,22 +70,22 @@ void adc_complete_callback(
 void configure_adc(void)
 {
 //! [setup_config]
-	struct adc_config config;
+	struct adc_config config_adc;
 //! [setup_config]
 //! [setup_config_defaults]
-	adc_get_config_defaults(&config);
+	adc_get_config_defaults(&config_adc);
 //! [setup_config_defaults]
 
 //! [setup_modify_conf]
-	config.gain_factor     = ADC_GAIN_FACTOR_DIV2;
-	config.clock_prescaler = ADC_CLOCK_PRESCALER_DIV8;
-	config.reference       = ADC_REFERENCE_INTVCC1;
-	config.positive_input  = ADC_POSITIVE_INPUT_PIN4;
-	config.resolution      = ADC_RESOLUTION_12BIT;
+	config_adc.gain_factor     = ADC_GAIN_FACTOR_DIV2;
+	config_adc.clock_prescaler = ADC_CLOCK_PRESCALER_DIV8;
+	config_adc.reference       = ADC_REFERENCE_INTVCC1;
+	config_adc.positive_input  = ADC_POSITIVE_INPUT_PIN4;
+	config_adc.resolution      = ADC_RESOLUTION_12BIT;
 //! [setup_modify_conf]
 
 //! [setup_set_config]
-	adc_init(&adc_instance, ADC, &config);
+	adc_init(&adc_instance, ADC, &config_adc);
 //! [setup_set_config]
 
 //! [setup_enable]

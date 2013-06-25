@@ -40,6 +40,7 @@
  * \asf_license_stop
  *
  */
+
 /*
  * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
@@ -57,11 +58,11 @@
 
 /* === Macros ============================================================== */
 
-#define MAX_FRAMELEN    aMaxPHYPacketSize-2
-#define FULL_BLOCK(l)   ((l + AES_BLOCKSIZE-1)/AES_BLOCKSIZE * AES_BLOCKSIZE)
+#define MAX_FRAMELEN    aMaxPHYPacketSize - 2
+#define FULL_BLOCK(l)   ((l + AES_BLOCKSIZE - \
+	1) / AES_BLOCKSIZE * AES_BLOCKSIZE)
 
 /* === Types =============================================================== */
-
 
 /* === Globals ============================================================= */
 
@@ -70,7 +71,7 @@ static bool firstcall = true;
 
 static void ctr_crypt(uint8_t *nonce, uint8_t *buf, uint8_t len);
 static void compute_mic(uint8_t *nonce, uint8_t *buf,
-                        uint8_t len, uint8_t off);
+		uint8_t len, uint8_t off);
 
 /* === Implementation ====================================================== */
 
@@ -91,29 +92,28 @@ void sal_aes_restart(void)
  */
 static void ctr_crypt(uint8_t *nonce, uint8_t *buf, uint8_t len)
 {
-    nonce[0] = 1;
-    nonce[AES_BLOCKSIZE-1] = 0;         // counter value for MIC
+	nonce[0] = 1;
+	nonce[AES_BLOCKSIZE - 1] = 0;   /* counter value for MIC */
 
-    /* Set mode */
-    AT91C_BASE_AES->AES_MR = AT91C_AES_OPMOD_CTR | AT91C_AES_CIPHER |
-        AT91C_AES_SMOD_PDC;
+	/* Set mode */
+	AT91C_BASE_AES->AES_MR = AT91C_AES_OPMOD_CTR | AT91C_AES_CIPHER |
+			AT91C_AES_SMOD_PDC;
 
-    /* Init CTR*/
-    memcpy((void *)(AT91C_BASE_AES->AES_IVxR), nonce, AES_BLOCKSIZE);
+	/* Init CTR*/
+	memcpy((void *)(AT91C_BASE_AES->AES_IVxR), nonce, AES_BLOCKSIZE);
 
-    /* Set PDC */
-    AT91C_BASE_AES->AES_PTCR = AT91C_PDC_RXTDIS | AT91C_PDC_TXTDIS;
-    AT91C_BASE_AES->AES_TPR = AT91C_BASE_AES->AES_RPR = (uint32_t)(buf);
-    AT91C_BASE_AES->AES_TCR = AT91C_BASE_AES->AES_RCR = FULL_BLOCK(len)/4;
+	/* Set PDC */
+	AT91C_BASE_AES->AES_PTCR = AT91C_PDC_RXTDIS | AT91C_PDC_TXTDIS;
+	AT91C_BASE_AES->AES_TPR = AT91C_BASE_AES->AES_RPR = (uint32_t)(buf);
+	AT91C_BASE_AES->AES_TCR = AT91C_BASE_AES->AES_RCR = FULL_BLOCK(len) / 4;
 
-    /* Start encryption */
-    AT91C_BASE_AES->AES_PTCR = AT91C_PDC_RXTEN | AT91C_PDC_TXTEN;
+	/* Start encryption */
+	AT91C_BASE_AES->AES_PTCR = AT91C_PDC_RXTEN | AT91C_PDC_TXTEN;
 
-    /* Wait for end */
-    while(!(AT91C_BASE_AES->AES_ISR & AT91C_AES_ENDRX));
+	/* Wait for end */
+	while (!(AT91C_BASE_AES->AES_ISR & AT91C_AES_ENDRX)) {
+	}
 }
-
-
 
 /**
  * @brief Compute MIC of buffer
@@ -125,41 +125,41 @@ static void ctr_crypt(uint8_t *nonce, uint8_t *buf, uint8_t len)
  * @param[in]       micoff    Offset of 'buf' where MIC is stored
  */
 static void compute_mic(uint8_t *nonce,
-                        uint8_t *buf,
-                        uint8_t len,
-                        uint8_t micoff)
+		uint8_t *buf,
+		uint8_t len,
+		uint8_t micoff)
 {
-    memcpy(buf, nonce, AES_BLOCKSIZE);
+	memcpy(buf, nonce, AES_BLOCKSIZE);
 
-    /* Set mode */
-    AT91C_BASE_AES->AES_MR = AT91C_AES_LOD | AT91C_AES_CIPHER |
-        AT91C_AES_OPMOD_CBC | AT91C_AES_SMOD_PDC;
+	/* Set mode */
+	AT91C_BASE_AES->AES_MR = AT91C_AES_LOD | AT91C_AES_CIPHER |
+			AT91C_AES_OPMOD_CBC | AT91C_AES_SMOD_PDC;
 
-    memset((void *)(AT91C_BASE_AES->AES_IVxR), 0, AES_BLOCKSIZE);
+	memset((void *)(AT91C_BASE_AES->AES_IVxR), 0, AES_BLOCKSIZE);
 
-    /* Set PDC */
-    AT91C_BASE_AES->AES_PTCR = AT91C_PDC_RXTDIS | AT91C_PDC_TXTDIS;
-    AT91C_BASE_AES->AES_TPR = (uint32_t)buf;
-    AT91C_BASE_AES->AES_TCR = FULL_BLOCK(len)/4;
+	/* Set PDC */
+	AT91C_BASE_AES->AES_PTCR = AT91C_PDC_RXTDIS | AT91C_PDC_TXTDIS;
+	AT91C_BASE_AES->AES_TPR = (uint32_t)buf;
+	AT91C_BASE_AES->AES_TCR = FULL_BLOCK(len) / 4;
 
-    /* Start encryption */
-    AT91C_BASE_AES->AES_PTCR = AT91C_PDC_TXTEN;
+	/* Start encryption */
+	AT91C_BASE_AES->AES_PTCR = AT91C_PDC_TXTEN;
 
-    /* Wait for finishing */
-    while(AT91C_BASE_AES->AES_TCR);
-    while(!(AT91C_BASE_AES->AES_ISR & AT91C_AES_DATRDY));
+	/* Wait for finishing */
+	while (AT91C_BASE_AES->AES_TCR) {
+	}
+	while (!(AT91C_BASE_AES->AES_ISR & AT91C_AES_DATRDY)) {
+	}
 
-    /*
-     * Get result - write MIC before payload, so CTR encryption in ZigBee
-     * can be done in one step (the MIC is encrypted with counter value 0,
-     * the payload with 1,2,...)
-     */
-    memcpy(buf+micoff,
-           (void *)(AT91C_BASE_AES->AES_ODATAxR),
-           AES_BLOCKSIZE);
+	/*
+	 * Get result - write MIC before payload, so CTR encryption in ZigBee
+	 * can be done in one step (the MIC is encrypted with counter value 0,
+	 * the payload with 1,2,...)
+	 */
+	memcpy(buf + micoff,
+			(void *)(AT91C_BASE_AES->AES_ODATAxR),
+			AES_BLOCKSIZE);
 }
-
-
 
 /* --- End of Helper functions --------------------------------------------- */
 
@@ -170,11 +170,9 @@ static void compute_mic(uint8_t *nonce,
  */
 void stb_init(void)
 {
-    // PMC init
-    AT91C_BASE_PMC->PMC_PCER = (1 << AT91C_ID_AES);
+	/* PMC init */
+	AT91C_BASE_PMC->PMC_PCER = (1 << AT91C_ID_AES);
 }
-
-
 
 /**
  * @brief STB Restart
@@ -185,10 +183,8 @@ void stb_init(void)
  */
 void stb_restart(void)
 {
-    /* Nothing to be done here. */
+	/* Nothing to be done here. */
 }
-
-
 
 /**
  * @brief Secure one block with CCM*
@@ -217,206 +213,190 @@ void stb_restart(void)
  * @return STB CCM Status
  */
 stb_ccm_t stb_ccm_secure(uint8_t *buffer,
-                         uint8_t nonce[AES_BLOCKSIZE],
-                         uint8_t *key,
-                         uint8_t hdr_len,
-                         uint8_t pld_len,
-                         uint8_t sec_level,
-                         uint8_t aes_dir)
+		uint8_t nonce[AES_BLOCKSIZE],
+		uint8_t *key,
+		uint8_t hdr_len,
+		uint8_t pld_len,
+		uint8_t sec_level,
+		uint8_t aes_dir)
 {
-    uint8_t nonce_0;    /* nonce[0] for MIC computation. */
-    uint8_t mic_len;
-    uint8_t enc_flag;
-    uint8_t off_pld;    /* offset for payload in padbuf */
-    uint8_t off_mic;    /* offset for MIC in padbuf, before payload */
-    uint8_t padbuf[MAX_FRAMELEN+4*AES_BLOCKSIZE];
-                /* padded buffer with leading nonce and appended MIC */
+	uint8_t nonce_0; /* nonce[0] for MIC computation. */
+	uint8_t mic_len;
+	uint8_t enc_flag;
+	uint8_t off_pld; /* offset for payload in padbuf */
+	uint8_t off_mic; /* offset for MIC in padbuf, before payload */
+	uint8_t padbuf[MAX_FRAMELEN + 4 * AES_BLOCKSIZE];
+	/* padded buffer with leading nonce and appended MIC */
 
-    if(sec_level & 3)
-    {
-        mic_len = 1 << ((sec_level & 3) + 1);
-    }
-    else
-    {
-        mic_len = 0;
-    }
+	if (sec_level & 3) {
+		mic_len = 1 << ((sec_level & 3) + 1);
+	} else {
+		mic_len = 0;
+	}
 
-    enc_flag = sec_level & 4;
+	enc_flag = sec_level & 4;
 
-    /* Test on correct parameters. */
+	/* Test on correct parameters. */
 
-    if((sec_level & ~0x7) ||
-        (buffer == NULL) ||
-        (nonce == NULL) ||
-        ((uint16_t)pld_len + (uint16_t)hdr_len + (uint16_t)mic_len >
-         aMaxPHYPacketSize)
-       )
-    {
-        return (STB_CCM_ILLPARM);
-    }
+	if ((sec_level & ~0x7) ||
+			(buffer == NULL) ||
+			(nonce == NULL) ||
+			((uint16_t)pld_len + (uint16_t)hdr_len +
+			(uint16_t)mic_len >
+			aMaxPHYPacketSize)
+			) {
+		return (STB_CCM_ILLPARM);
+	}
 
-    if(firstcall)
-    {
-        if(key == NULL)
-        {
-            return (STB_CCM_KEYMISS);   /* Initial call, but no key given. */
-        }
-        /* Key must be non-NULL because of test above */
-        firstcall = false;
+	if (firstcall) {
+		if (key == NULL) {
+			return (STB_CCM_KEYMISS); /* Initial call, but no key
+			                           *given. */
+		}
 
-        memcpy((void *)(AT91C_BASE_AES->AES_KEYWxR), key, AES_KEYSIZE);
-    }
+		/* Key must be non-NULL because of test above */
+		firstcall = false;
 
-    /* Prepare nonce. */
+		memcpy((void *)(AT91C_BASE_AES->AES_KEYWxR), key, AES_KEYSIZE);
+	}
 
-    nonce[0] = 1;   /* Always 2 bytes for length field. */
+	/* Prepare nonce. */
 
-    if(mic_len > 0)
-    {
-        nonce[0] |= ((mic_len - 2) >> 1) << 3;
-    }
+	nonce[0] = 1; /* Always 2 bytes for length field. */
 
-    if(hdr_len)
-    {
-        nonce[0] |= 1 << 6;
-    }
+	if (mic_len > 0) {
+		nonce[0] |= ((mic_len - 2) >> 1) << 3;
+	}
 
-    nonce_0 = nonce[0];
-    nonce[AES_BLOCKSIZE -  2] = 0;
+	if (hdr_len) {
+		nonce[0] |= 1 << 6;
+	}
 
-    /*
-     * Fill padbuf
-     * first block for nonce (filled by compute_mic()),
-     * then optional space for header + 2 byte length, with padding,
-     * then space for payload with padding,
-     * then MIC
-     */
+	nonce_0 = nonce[0];
+	nonce[AES_BLOCKSIZE -  2] = 0;
 
-    off_pld = AES_BLOCKSIZE;
+	/*
+	 * Fill padbuf
+	 * first block for nonce (filled by compute_mic()),
+	 * then optional space for header + 2 byte length, with padding,
+	 * then space for payload with padding,
+	 * then MIC
+	 */
 
-    memset(padbuf, 0, sizeof(padbuf));
+	off_pld = AES_BLOCKSIZE;
 
-    if(hdr_len)
-    {
-        off_pld += FULL_BLOCK(hdr_len+2);
-    }
+	memset(padbuf, 0, sizeof(padbuf));
 
-    off_mic = off_pld - AES_BLOCKSIZE;
+	if (hdr_len) {
+		off_pld += FULL_BLOCK(hdr_len + 2);
+	}
 
-    if(pld_len)
-    {
-        memcpy(padbuf + off_pld, buffer + hdr_len, pld_len);
-    }
+	off_mic = off_pld - AES_BLOCKSIZE;
 
-    if(aes_dir == AES_DIR_ENCRYPT)
-    {
-        /*
-         * Authenticate -
-         * place header and result (16byte-MIC) before payload
-         */
+	if (pld_len) {
+		memcpy(padbuf + off_pld, buffer + hdr_len, pld_len);
+	}
 
-        if(hdr_len)
-        {
-            memcpy(padbuf + AES_BLOCKSIZE + 2, buffer, hdr_len);
-            padbuf[AES_BLOCKSIZE+1] = hdr_len;
-        }
+	if (aes_dir == AES_DIR_ENCRYPT) {
+		/*
+		 * Authenticate -
+		 * place header and result (16byte-MIC) before payload
+		 */
 
-        if(mic_len > 0)
-        {
-            nonce[AES_BLOCKSIZE - 1] = pld_len;
-            compute_mic(nonce, padbuf, off_pld+pld_len, off_mic);
-        }
+		if (hdr_len) {
+			memcpy(padbuf + AES_BLOCKSIZE + 2, buffer, hdr_len);
+			padbuf[AES_BLOCKSIZE + 1] = hdr_len;
+		}
 
-        /* Encrypt payload and MIC */
-        if(enc_flag)
-        {
-            ctr_crypt(nonce, padbuf+off_mic, pld_len+AES_BLOCKSIZE);
+		if (mic_len > 0) {
+			nonce[AES_BLOCKSIZE - 1] = pld_len;
+			compute_mic(nonce, padbuf, off_pld + pld_len, off_mic);
+		}
 
-            /*
-             * Copy back payload - consider case that sec_level
-             * requires encryption but pld_len is 0, hence only
-             * MIC was encrypted, no payload
-             */
-            if(pld_len)
-            {
-                memcpy(buffer+hdr_len, padbuf+off_pld, pld_len);
-            }
-        }
+		/* Encrypt payload and MIC */
+		if (enc_flag) {
+			ctr_crypt(nonce, padbuf + off_mic,
+					pld_len + AES_BLOCKSIZE);
 
-        /* Copy back encrypted MIC */
-        if(mic_len)
-        {
-            memcpy(buffer+hdr_len+pld_len, padbuf+off_mic, mic_len);
-        }
-    }
-    else                        /* Decrypt payload and MIC. */
-    {
-        if(enc_flag)
-        {
-            /*
-             * Place encrypted MIC before encrypted payload
-             * (first block is still null)
-             */
-            if(mic_len)
-            {
-                memcpy(padbuf+off_mic, buffer+hdr_len+pld_len, mic_len);
-            }
+			/*
+			 * Copy back payload - consider case that sec_level
+			 * requires encryption but pld_len is 0, hence only
+			 * MIC was encrypted, no payload
+			 */
+			if (pld_len) {
+				memcpy(buffer + hdr_len, padbuf + off_pld,
+						pld_len);
+			}
+		}
 
-            /* Decrypt */
-            ctr_crypt(nonce, padbuf+off_mic, pld_len+AES_BLOCKSIZE);
+		/* Copy back encrypted MIC */
+		if (mic_len) {
+			memcpy(buffer + hdr_len + pld_len, padbuf + off_mic,
+					mic_len);
+		}
+	} else {                /* Decrypt payload and MIC. */
+		if (enc_flag) {
+			/*
+			 * Place encrypted MIC before encrypted payload
+			 * (first block is still null)
+			 */
+			if (mic_len) {
+				memcpy(padbuf + off_mic,
+						buffer + hdr_len + pld_len,
+						mic_len);
+			}
 
-            /* Copy plaintext back to original buffer */
-            memcpy(buffer+hdr_len, padbuf+off_pld, pld_len);
+			/* Decrypt */
+			ctr_crypt(nonce, padbuf + off_mic,
+					pld_len + AES_BLOCKSIZE);
 
-            /* Copy MIC to end (just a buffer) */
-            if(mic_len)
-            {
-                memcpy(padbuf + off_pld + FULL_BLOCK(pld_len),
-                       padbuf+off_mic,
-                       mic_len);
-            }
-        }
-        else
-        {
-            memcpy(padbuf + off_pld + FULL_BLOCK(pld_len),
-                   buffer+hdr_len+pld_len, mic_len);
-        }
+			/* Copy plaintext back to original buffer */
+			memcpy(buffer + hdr_len, padbuf + off_pld, pld_len);
 
-        /* Check MIC. */
-        if(mic_len > 0)
-        {
-            nonce[0] = nonce_0;
-            nonce[AES_BLOCKSIZE - 1] = pld_len;
-            memcpy(padbuf, nonce, AES_BLOCKSIZE);
+			/* Copy MIC to end (just a buffer) */
+			if (mic_len) {
+				memcpy(padbuf + off_pld + FULL_BLOCK(pld_len),
+						padbuf + off_mic,
+						mic_len);
+			}
+		} else {
+			memcpy(padbuf + off_pld + FULL_BLOCK(pld_len),
+					buffer + hdr_len + pld_len, mic_len);
+		}
 
-            /* Copy hdr */
-            if(hdr_len)
-            {
-                memset(padbuf+AES_BLOCKSIZE, 0, FULL_BLOCK(hdr_len+2));
-                memcpy(padbuf + AES_BLOCKSIZE + 2, buffer, hdr_len);
-                padbuf[AES_BLOCKSIZE+1] = hdr_len;
-            }
+		/* Check MIC. */
+		if (mic_len > 0) {
+			nonce[0] = nonce_0;
+			nonce[AES_BLOCKSIZE - 1] = pld_len;
+			memcpy(padbuf, nonce, AES_BLOCKSIZE);
 
-            /* Pad pld */
-            if(pld_len > 0)
-            {
-                memset(padbuf+off_pld+pld_len, 0, FULL_BLOCK(pld_len)-pld_len);
-            }
+			/* Copy hdr */
+			if (hdr_len) {
+				memset(padbuf + AES_BLOCKSIZE, 0,
+						FULL_BLOCK(hdr_len + 2));
+				memcpy(padbuf + AES_BLOCKSIZE + 2, buffer,
+						hdr_len);
+				padbuf[AES_BLOCKSIZE + 1] = hdr_len;
+			}
 
-            compute_mic(nonce, padbuf, off_pld+pld_len, off_mic);
+			/* Pad pld */
+			if (pld_len > 0) {
+				memset(padbuf + off_pld + pld_len, 0, FULL_BLOCK(
+						pld_len) - pld_len);
+			}
 
-            if(memcmp(padbuf+off_mic,
-                      padbuf + off_pld + FULL_BLOCK(pld_len),
-                      mic_len))
-            {
-                return STB_CCM_MICERR;
-            }
-        }
-    }
+			compute_mic(nonce, padbuf, off_pld + pld_len, off_mic);
 
-    return (STB_CCM_OK);
+			if (memcmp(padbuf + off_mic,
+					padbuf + off_pld + FULL_BLOCK(pld_len),
+					mic_len)) {
+				return STB_CCM_MICERR;
+			}
+		}
+	}
+
+	return (STB_CCM_OK);
 }
-
 
 #endif /* #ifdef STB_ARMCRYPTO */
 

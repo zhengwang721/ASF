@@ -40,8 +40,6 @@
  * \asf_license_stop
  *
  */
- 
-
 
 /* Prevent double inclusion */
 #ifndef NWK_BUILD_CONFIG_H
@@ -67,7 +65,6 @@
 #define NWK_PAIR_IND_RESP                       (1)
 #endif
 
-
 /* === Types ================================================================ */
 
 /* === Externals ============================================================ */
@@ -82,8 +79,5 @@ extern "C" {
 } /* extern "C" */
 #endif
 
-
-
 #endif  /* NWK_BUILD_CONFIG_H */
 /* EOF */
-

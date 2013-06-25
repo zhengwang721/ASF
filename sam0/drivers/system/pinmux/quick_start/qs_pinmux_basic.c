@@ -48,20 +48,20 @@ int main(void)
 
 //! [main]
 //! [pinmux_config]
-	struct system_pinmux_config pin_conf;
+	struct system_pinmux_config config_pinmux;
 //! [pinmux_config]
 //! [pinmux_config_defaults]
-	system_pinmux_get_config_defaults(&pin_conf);
+	system_pinmux_get_config_defaults(&config_pinmux);
 //! [pinmux_config_defaults]
 
 //! [pinmux_update_config_values]
-	pin_conf.mux_position = SYSTEM_PINMUX_GPIO;
-	pin_conf.direction    = SYSTEM_PINMUX_PIN_DIR_INPUT;
-	pin_conf.input_pull   = SYSTEM_PINMUX_PIN_PULL_UP;
+	config_pinmux.mux_position = SYSTEM_PINMUX_GPIO;
+	config_pinmux.direction    = SYSTEM_PINMUX_PIN_DIR_INPUT;
+	config_pinmux.input_pull   = SYSTEM_PINMUX_PIN_PULL_UP;
 //! [pinmux_update_config_values]
 
 //! [pinmux_set_config]
-	system_pinmux_pin_set_config(10, &pin_conf);
+	system_pinmux_pin_set_config(10, &config_pinmux);
 //! [pinmux_set_config]
 
 //! [pinmux_change_input_sampling]

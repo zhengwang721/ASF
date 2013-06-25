@@ -44,7 +44,7 @@
 /**
  * \mainpage SAM D20 ADC Sleepwalking Example
  * See \ref appdoc_main "here" for project documentation.
- * \copydetails preface
+ * \copydetails appdoc_preface
  *
  *
  * \page appdoc_preface Overview
@@ -139,6 +139,7 @@ static void rtc_setup(void)
 
 	rtc_count_get_config_defaults(&conf);
 
+	conf.prescaler         = RTC_COUNT_PRESCALER_DIV_1;
 	conf.mode              = RTC_COUNT_MODE_32BIT;
 	conf.clear_on_match    = true;
 	conf.compare_values[0] = 1000;

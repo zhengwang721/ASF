@@ -99,11 +99,11 @@
  *   -# Get default configuration to edit.
  *     \snippet qs_spi_slave_callback.c conf_defaults
  *   -# Set the SPI in slave mode.
- *     \snippet qs_spi_slave_callback.c conf_slave
+ *     \snippet qs_spi_slave_callback.c conf_spi_slave_instance
  *   -# Enable preloading of shift register.
  *     \snippet qs_spi_slave_callback.c conf_preload
  *   -# Set frame format to SPI frame.
- *     \snippet qs_spi_slave_callback.c conf_preload
+ *     \snippet qs_spi_slave_callback.c conf_format
  *   -# Set mux setting E.
  *     \snippet qs_spi_slave_callback.c mux_setting
  *   -# Set pinmux for pad 0 (data in (MOSI) on extension header 1, pin 17).

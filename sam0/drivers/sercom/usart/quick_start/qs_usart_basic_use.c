@@ -45,40 +45,37 @@
 void configure_usart(void);
 
 //! [module_inst]
-struct usart_module usart_edbg;
+struct usart_module usart_instance;
 //! [module_inst]
 
 //! [setup]
 void configure_usart(void)
 {
 //! [setup_config]
-	struct usart_config config_struct;
+	struct usart_config config_usart;
 //! [setup_config]
 //! [setup_config_defaults]
-	usart_get_config_defaults(&config_struct);
+	usart_get_config_defaults(&config_usart);
 //! [setup_config_defaults]
 
 //! [setup_change_config]
-	config_struct.baudrate     = 57600;
-	config_struct.mux_settings = USART_RX_1_TX_0_XCK_1;
-	config_struct.pinout_pad3  = EDBG_CDC_RX_PINMUX;
-	config_struct.pinout_pad2  = EDBG_CDC_TX_PINMUX;
+	config_usart.baudrate    = 9600;
+	config_usart.mux_setting = EDBG_CDC_SERCOM_MUX_SETTING;
+	config_usart.pinmux_pad0 = EDBG_CDC_SERCOM_PINMUX_PAD0;
+	config_usart.pinmux_pad1 = EDBG_CDC_SERCOM_PINMUX_PAD1;
+	config_usart.pinmux_pad2 = EDBG_CDC_SERCOM_PINMUX_PAD2;
+	config_usart.pinmux_pad3 = EDBG_CDC_SERCOM_PINMUX_PAD3;
 //! [setup_change_config]
 
 //! [setup_set_config]
-	while (usart_init(&usart_edbg,
-			EDBG_CDC_MODULE, &config_struct) != STATUS_OK) {
+	while (usart_init(&usart_instance,
+			EDBG_CDC_MODULE, &config_usart) != STATUS_OK) {
 	}
 //! [setup_set_config]
 
 //! [setup_enable]
-	usart_enable(&usart_edbg);
+	usart_enable(&usart_instance);
 //! [setup_enable]
-
-//! [setup_enable_txrx]
-	usart_enable_transceiver(&usart_edbg, USART_TRANSCEIVER_TX);
-	usart_enable_transceiver(&usart_edbg, USART_TRANSCEIVER_RX);
-//! [setup_enable_txrx]
 }
 //! [setup]
 
@@ -93,7 +90,7 @@ int main(void)
 //! [main]
 //! [main_send_string]
 	uint8_t string[] = "Hello World!\r\n";
-	usart_write_buffer_wait(&usart_edbg, string, sizeof(string));
+	usart_write_buffer_wait(&usart_instance, string, sizeof(string));
 //! [main_send_string]
 
 //! [main_rec_var]
@@ -103,10 +100,10 @@ int main(void)
 //! [main_loop]
 	while (true) {
 //! [main_read]
-		if (usart_read_wait(&usart_edbg, &temp) == STATUS_OK) {
+		if (usart_read_wait(&usart_instance, &temp) == STATUS_OK) {
 //! [main_read]
 //! [main_write]
-			while (usart_write_wait(&usart_edbg, temp) != STATUS_OK) {
+			while (usart_write_wait(&usart_instance, temp) != STATUS_OK) {
 			}
 //! [main_write]
 		}

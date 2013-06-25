@@ -45,14 +45,14 @@ void configure_bod33(void);
 void configure_bod33(void)
 {
 //! [setup_config]
-	struct bod_config bod33_conf;
+	struct bod_config config_bod33;
 //! [setup_config]
 //! [setup_config_defaults]
-	bod_get_config_defaults(&bod33_conf);
+	bod_get_config_defaults(&config_bod33);
 //! [setup_config_defaults]
 
 //! [setup_set_config]
-	bod_set_config(BOD_BOD33, &bod33_conf);
+	bod_set_config(BOD_BOD33, &config_bod33);
 //! [setup_set_config]
 
 //! [setup_enable]
@@ -71,7 +71,7 @@ int main(void)
 //! [main]
 //! [main_loop]
 	while (true) {
-
+		/* Infinite loop */
 	}
 //! [main_loop]
 //! [main]

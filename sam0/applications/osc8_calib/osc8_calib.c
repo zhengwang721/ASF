@@ -43,7 +43,7 @@
 /**
  * \mainpage SAM D20 OSC8M Calibration Example
  * See \ref appdoc_main "here" for project documentation.
- * \copydetails preface
+ * \copydetails appdoc_preface
  *
  *
  * \page appdoc_preface Overview
@@ -92,6 +92,9 @@
  * For further information, visit
  * <a href="http://www.atmel.com">http://www.atmel.com</a>.
  */
+
+/** Target OSC8M calibration frequency */
+#define TARGET_FREQUENCY         8000000
 
 /** Resolution of the calibration binary divider; higher powers of two will
  *  reduce the calibration resolution.
@@ -191,14 +194,15 @@ static void setup_usart_channel(void)
 	usart_get_config_defaults(&cdc_uart_config);
 
 	/* Configure the USART settings and initialize the standard I/O library */
-	cdc_uart_config.mux_settings = USART_RX_3_TX_2_XCK_3;
-	cdc_uart_config.pinout_pad3  = EDBG_CDC_RX_PINMUX;
-	cdc_uart_config.pinout_pad2  = EDBG_CDC_TX_PINMUX;
-	cdc_uart_config.baudrate     = 115200;
+	cdc_uart_config.mux_setting = EDBG_CDC_SERCOM_MUX_SETTING;
+	cdc_uart_config.pinmux_pad0 = EDBG_CDC_SERCOM_PINMUX_PAD0;
+	cdc_uart_config.pinmux_pad1 = EDBG_CDC_SERCOM_PINMUX_PAD1;
+	cdc_uart_config.pinmux_pad2 = EDBG_CDC_SERCOM_PINMUX_PAD2;
+	cdc_uart_config.pinmux_pad3 = EDBG_CDC_SERCOM_PINMUX_PAD3;
+	cdc_uart_config.baudrate    = 115200;
 	stdio_serial_init(&usart_edbg, EDBG_CDC_MODULE, &cdc_uart_config);
 
 	usart_enable(&usart_edbg);
-	usart_enable_transceiver(&usart_edbg, USART_TRANSCEIVER_TX);
 }
 
 /** Set up the clock output pin so that the current system clock frequency can
@@ -209,8 +213,8 @@ static void setup_clock_out_pin(void)
 	system_pinmux_get_config_defaults(&pin_mux);
 
 	/* MUX out the system clock to a I/O pin of the device */
-	pin_mux.mux_position = MUX_PA30H_GCLK_IO0;
-	system_pinmux_pin_set_config(PIN_PA30H_GCLK_IO0, &pin_mux);
+	pin_mux.mux_position = MUX_PA28H_GCLK_IO0;
+	system_pinmux_pin_set_config(PIN_PA28H_GCLK_IO0, &pin_mux);
 }
 
 /** Retrieves the current system clock frequency, computed from the reference
@@ -272,7 +276,7 @@ int main(void)
 			 * ideal frequency than the previous best values
 			 */
 			uint32_t freq_current = get_osc_frequency();
-			if (abs(freq_current - 8000000UL) < abs(freq_best - 8000000UL))
+			if (abs(freq_current - TARGET_FREQUENCY) < abs(freq_best - TARGET_FREQUENCY))
 			{
 				freq_best   = freq_current;
 				comm_best   = comm_cal;
