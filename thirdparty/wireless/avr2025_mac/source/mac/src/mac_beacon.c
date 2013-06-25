@@ -345,12 +345,7 @@ void mac_build_and_tx_beacon(bool beacon_enabled,
 	if (gts_octets > 0) {
 		frame_len += gts_octets;
 		frame_ptr -= gts_octets + 1;
-	} else {
-		/* No pending data available. */
-		frame_ptr--;
-		*frame_ptr = 0;
 	}
-
 #else
 	/* Build the (empty) GTS fields. */
 	frame_ptr--;

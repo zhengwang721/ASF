@@ -134,6 +134,9 @@ static void reset_globals(void)
 	mac_last_dsn = 0;
 	mac_last_src_addr = 0xFFFFFFFFFFFFFFFF;
 	mac_rx_enabled = false;
+#ifdef GTS_SUPPORT
+	mac_curr_gts_table_len = 0;
+#endif /* GTS_SUPPORT */
 }
 
 /**
@@ -259,6 +262,10 @@ static void do_init_pib(void)
 	mac_pib.mac_BeaconPayloadLength = macBeaconPayloadLength_def;
 	mac_pib.mac_BSN = (uint8_t)rand();
 #endif  /* (MAC_START_REQUEST_CONFIRM == 1) */
+
+#ifdef GTS_SUPPORT
+	mac_pib.mac_GTSPermit = macGTSPermit_def;
+#endif /* GTS_SUPPORT */
 
 #if (MAC_INDIRECT_DATA_FFD == 1)
 	mac_pib.mac_TransactionPersistenceTime

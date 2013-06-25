@@ -531,6 +531,15 @@ static bool process_data_ind_not_transient(buffer_t *b_ptr, frame_info_t *f_ptr)
 				mac_sync_loss(MAC_PAN_ID_CONFLICT);
 				break;
 #endif  /* (MAC_PAN_ID_CONFLICT_AS_PC == 1) */
+#ifdef GTS_SUPPORT
+			case GTSREQUEST:
+				/*
+				 * Received coordinator realignment frame for
+				 * entire PAN.
+				 */
+				mac_process_gts_request(b_ptr);
+				processed_in_not_transient = true;
+#endif /* GTS_SUPPORT */
 
 			default:
 				break;
@@ -1273,6 +1282,12 @@ static bool parse_mpdu(frame_info_t *rx_frame_ptr)
 		case PANIDCONFLICTNOTIFICAION:
 #endif  /* (MAC_PAN_ID_CONFLICT_AS_PC == 1) */
 			break;
+#ifdef GTS_SUPPORT
+		case GTSREQUEST:
+			mac_parse_data.mac_payload_data.gts_req_data 
+				= *((gts_char_t*) &temp_frame_ptr[payload_index]);
+				break;
+#endif /* GTS_SUPPORT */
 
 		default:
 #if (_DEBUG_ > 0)

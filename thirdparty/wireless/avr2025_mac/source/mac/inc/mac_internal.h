@@ -312,6 +312,10 @@ typedef struct mac_pib_tag {
 	uint8_t mac_AssociationPermit;
 #endif /* (MAC_ASSOCIATION_INDICATION_RESPONSE == 1) */
 
+#ifdef GTS_SUPPORT
+	uint8_t mac_GTSPermit;
+#endif /* GTS_SUPPORT */
+
 #if (MAC_START_REQUEST_CONFIRM == 1)
 
 	/**
@@ -451,6 +455,7 @@ extern mac_poll_state_t mac_poll_state;
 extern mac_pib_t mac_pib;
 #ifdef GTS_SUPPORT
 extern mac_pan_gts_mgmt_t mac_gts_mgmt_table[];
+extern uint8_t mac_curr_gts_table_len;
 #endif /* GTS_SUPPORT */
 /* === Prototypes =========================================================== */
 

@@ -98,7 +98,7 @@ void mlme_gts_request(uint8_t *m)
 	{
 		if(GTS_ALLOCATE & mgr.GtsChar.GtsCharType)
 		{
-			if(mac_gts_allocate((gts_char_t)(mgr.GtsChar), tal_pib.ShortAddress))
+			if(mac_gts_allocate(mgr.GtsChar, tal_pib.ShortAddress))
 			{
 				mac_gen_mlme_gts_conf((buffer_t *)m, MAC_SUCCESS);
 			}
@@ -109,7 +109,7 @@ void mlme_gts_request(uint8_t *m)
 		}
 		else
 		{
-			if(mac_gts_deallocate((gts_char_t)(mgr.GtsChar), tal_pib.ShortAddress))
+			if(mac_gts_deallocate(mgr.GtsChar, tal_pib.ShortAddress))
 			{
 				mac_gen_mlme_gts_conf((buffer_t *)m, MAC_SUCCESS);
 			}
@@ -124,7 +124,7 @@ void mlme_gts_request(uint8_t *m)
 		if(MAC_NO_SHORT_ADDR_VALUE <= tal_pib.ShortAddress 
 		|| MAC_NO_SHORT_ADDR_VALUE <= mac_pib.mac_CoordShortAddress)
 		{
-			return false;
+			mac_gen_mlme_gts_conf((buffer_t *)m, MAC_INVALID_PARAMETER);
 		}
 		frame_info_t *transmit_frame
 			= (frame_info_t *)BMM_BUFFER_POINTER((buffer_t *)m);
@@ -137,7 +137,6 @@ void mlme_gts_request(uint8_t *m)
 		uint8_t *frame_ptr;
 		uint8_t *temp_frame_ptr;
 		uint16_t fcf;
-		uint16_t bc_addr = BROADCAST;
 
 		/*
 		 * Use the mlme association request buffer for transmitting an
@@ -225,10 +224,8 @@ void mlme_gts_request(uint8_t *m)
 		if (MAC_SUCCESS == tal_tx_status) {
 			MAKE_MAC_BUSY();
 		} else {
-			return false;
+			mac_gen_mlme_gts_conf((buffer_t *)m, tal_tx_status);
 		}
-
-		return true;
 	}
 	
 	/*
@@ -236,7 +233,7 @@ void mlme_gts_request(uint8_t *m)
 	 *reused
 	 * while sending MLME association confirmation to the NHLE.
 	 */
-	mac_conf_buf_ptr = m;
+//	mac_conf_buf_ptr = m;
 }
 
 
@@ -259,16 +256,28 @@ void mac_process_gts_request(buffer_t *gts_req)
 	mlme_gts_ind_t *mgi = (mlme_gts_ind_t *)BMM_BUFFER_POINTER(
 			gts_req);
 
-	///* Build the MLME association indication parameters. */
-	//mgi->CapabilityInformation
-		//= mac_parse_data.mac_payload_data.assoc_req_data.
-			//capability_info;
-	//mgi->cmdcode = MLME_GTS_INDICATION;
+	mgi->DeviceAddr = mac_parse_data.src_addr.short_address;
+	
+	mgi->GtsChar = mac_parse_data.mac_payload_data.gts_req_data;
+	mgi->cmdcode = MLME_GTS_INDICATION;
 
-	/* Append the MLME associate indication to the MAC-NHLE queue. */
-	qmm_queue_append(&mac_nhle_q, gts_req);
+	if(GTS_ALLOCATE == (mgi->GtsChar).GtsCharType)
+	{
+		if(mac_gts_allocate(mgi->GtsChar, mgi->DeviceAddr))
+		{
+			/* Append the MLME GTS indication to the MAC-NHLE queue. */
+			qmm_queue_append(&mac_nhle_q, gts_req);
+		}
+	}
+	else
+	{
+		if(mac_gts_deallocate(mgi->GtsChar, mgi->DeviceAddr))
+		{
+			/* Append the MLME GTS indication to the MAC-NHLE queue. */
+			qmm_queue_append(&mac_nhle_q, gts_req);
+		}
+	}
 }
-
 
 
 uint8_t mac_add_gts_info(uint8_t *frame_ptr)
@@ -299,11 +308,11 @@ uint8_t mac_add_gts_info(uint8_t *frame_ptr)
 		frame_ptr--;
 		*frame_ptr = direction_mask; //GTS Direction Mask
 		++update_octets_count;
-		
-		mac_gts_spec.GtsDescCount = mac_curr_gts_table_len; 
-		frame_ptr--;
-		*frame_ptr = *((uint8_t*)&mac_gts_spec);
 	}
+	mac_gts_spec.GtsDescCount = mac_curr_gts_table_len;
+	mac_gts_spec.GtsPermit = mac_pib.mac_GTSPermit;
+	frame_ptr--;
+	*frame_ptr = *((uint8_t*)&mac_gts_spec);
 	return update_octets_count;
 }
 
@@ -311,6 +320,10 @@ bool mac_gts_allocate(gts_char_t GtsCharacteristics, uint16_t DevAddress)
 {
 	uint8_t Index = 0;
 	
+	if(MAX_GTS_ON_PANC < mac_curr_gts_table_len)
+	{
+		return false;
+	}
 	for (Index = 0; Index < mac_curr_gts_table_len; Index++)
 	{
 		if(mac_gts_mgmt_table[Index].DevShortAddr == DevAddress 
@@ -333,7 +346,7 @@ bool mac_gts_allocate(gts_char_t GtsCharacteristics, uint16_t DevAddress)
 	++mac_curr_gts_table_len;
 
 	mac_gts_spec.GtsDescCount = mac_curr_gts_table_len;
-	mac_gts_spec.GtsPermit = 1;
+	mac_gts_spec.GtsPermit = mac_pib.mac_GTSPermit;
 	
 	return true;
 }

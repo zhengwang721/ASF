@@ -126,6 +126,9 @@ typedef union {
 	mac_assoc_response_t assoc_response_data;
 	mac_disassoc_req_t disassoc_req_data;
 	mac_coord_realign_t coord_realign_data;
+#ifdef GTS_SUPPORT
+	gts_char_t gts_req_data;
+#endif /* GTS_SUPPORT */	
 } frame_payload_t;
 
 /**

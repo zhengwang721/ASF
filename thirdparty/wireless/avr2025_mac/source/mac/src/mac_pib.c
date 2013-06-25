@@ -326,6 +326,13 @@ retval_t mlme_set(uint8_t attribute, pib_value_t *attribute_value,
 		break;
 #endif  /* (MAC_BEACON_NOTIFY_INDICATION == 1) */
 
+#ifdef GTS_SUPPORT
+	case macGTSPermit:
+		mac_pib.mac_GTSPermit
+			= attribute_value->pib_value_8bit;
+		break;
+#endif /* GTS_SUPPORT */
+
 	case macBattLifeExtPeriods:
 		mac_pib.mac_BattLifeExtPeriods
 			= attribute_value->pib_value_8bit;
