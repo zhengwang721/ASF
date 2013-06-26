@@ -70,9 +70,6 @@ typedef enum dacc_rc {
 //! DACC max data value
 #define DACC_MAX_DATA       ((1 << DACC_RESOLUTION) - 1)
 
-#if SAM4N
-#define ADC_PATCH_DACC_ENABLE
-#endif
 
 void dacc_reset(Dacc *p_dacc);
 uint32_t dacc_set_trigger(Dacc *p_dacc, uint32_t ul_trigger);

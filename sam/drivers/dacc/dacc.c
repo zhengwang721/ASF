@@ -112,15 +112,6 @@ extern "C" {
 void dacc_reset(Dacc *p_dacc)
 {
 	p_dacc->DACC_CR = DACC_CR_SWRST;
-	#if SAM4N
-		#ifdef ADC_PATCH_DACC_ENABLE
-			PMC->PMC_PCER0 = 1 << ID_ADC;
-			ADC->ADC_CHER = 1 << 0;
-			while(!(ADC->ADC_CHSR & (1 << 0)));
-			ADC->ADC_MR |= ADC_MR_FREERUN_ON;
-			PMC->PMC_PCDR0 = 1 << ID_ADC;
-		#endif
-	#endif
 }
 
 /**
