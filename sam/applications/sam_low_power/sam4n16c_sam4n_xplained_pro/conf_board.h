@@ -44,9 +44,6 @@
 #ifndef CONF_BOARD_H_INCLUDED
 #define CONF_BOARD_H_INCLUDED
 
-/** Usart Hw ID used by the console (UART3). */
-#define CONSOLE_UART_ID          ID_UART3
-
 /* Configure UART pins */
 #define CONF_BOARD_UART_CONSOLE
 
