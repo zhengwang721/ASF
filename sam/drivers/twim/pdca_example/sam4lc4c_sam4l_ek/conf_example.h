@@ -43,9 +43,9 @@
 
 /**
  * \defgroup twim_pdca_example_pin_defs
- *   - <b> Board  --  EEPROM</b>
- *   - TWIMS1 TWD(PB00)  --  SDA
- *   - TWIMS1 TWD(PB01)  --  SCL
+ *   - <b> Board  --  EEPROM </b>
+ *   - TWIMS1 TWD(J4 PIN1)  --  SDA
+ *   - TWIMS1 TWCK(J4 PIN2)  --  SCL
  *   - VCC  --  VCC
  *   - GND  --  GND
  */
