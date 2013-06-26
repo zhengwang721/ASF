@@ -57,7 +57,7 @@
 #define TIMER_HZ                            ( configCPU_CLOCK_HZ )
 
 //! Value per os tick of timer
-#define TIMER_RELOAD_VALUE_ONE_TICK	    ( TIMER_HZ / configTICK_RATE_HZ )
+#define TIMER_RELOAD_VALUE_ONE_TICK         ( TIMER_HZ / configTICK_RATE_HZ )
 
 //!  Maximum value of timer
 #define TIMER_MAX_COUNT                     ( 0xffffffff )
@@ -76,11 +76,14 @@ struct tc_module tc;
 //! External declaration of freeRTOS SysTick handler
 extern void xPortSysTickHandler( void );
 
-//! Prototype for sleep function
-void vPortSuppressTicksAndSleep( portTickType xExpectedIdleTime );
+//! Prototype for function setting up timer
+void vPortSetupTimerInterrupt(void);
 
 //! Prototype for empty_callback for sleep timer
 void empty_callback(struct tc_module *const module_inst);
+
+//! Global variable to control tickless operation
+bool volatile tickless_enable = false;
 
 //@}
 
@@ -127,6 +130,9 @@ void vPortSetupTimerInterrupt(void)
  */ 
 void vPortSuppressTicksAndSleep( portTickType xExpectedIdleTime )
 {
+	// Are we running tickless now?
+	if (!tickless_enable) return;
+
 	// Reconfigure the timer to act as sleep timer
 	tc_disable_callback(&tc, TC_CALLBACK_CC_CHANNEL0);
 	tc_unregister_callback(&tc, TC_CALLBACK_CC_CHANNEL0);

@@ -67,6 +67,7 @@
  * @{
  */
 
+extern bool volatile tickless_enable;
 void demotasks_init(void);
 
 /** @} */

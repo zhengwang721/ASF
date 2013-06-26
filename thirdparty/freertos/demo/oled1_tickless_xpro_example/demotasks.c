@@ -126,10 +126,16 @@ static const char menu_items_text[MENU_NUM_ITEMS][6] = {
 	"About",
 };
 
-//! Text to display on about screen
+//! Text to display on about screen when not tickless
 static const char about_text[] =
 	"FreeRTOS v7.4.2 demo."
 	"                     "
+	"Use CDC at 9.6 kBaud.";
+
+//! Text to display on about screen when tickless
+static const char about_text_tickless[] =
+	"FreeRTOS v7.4.2 demo."
+	"      TickLess       "
 	"Use CDC at 9.6 kBaud.";
 
 /**
@@ -510,6 +516,7 @@ static void about_task(void *params)
 	char c;
 	gfx_coord_t x, y;
 	uint8_t i, shift;
+	char * text_to_use = (char *)&about_text;
 
 	const uint8_t max_shift = 8;
 	shift = 1;
@@ -521,7 +528,7 @@ static void about_task(void *params)
 
 		// Print the about text in an expanding area
 		for (i = 0; i < (sizeof(about_text) - 1); i++) {
-			c = about_text[i];
+			c = text_to_use[i];
 			x = (((i % TERMINAL_COLUMNS) * SYSFONT_WIDTH) * shift
 					+ (CANVAS_WIDTH / 2) * (max_shift - shift))
 					/ max_shift;
@@ -542,6 +549,12 @@ static void about_task(void *params)
 		} else {
 			shift = 0;
 			vTaskSuspend(NULL);
+			if (tickless_enable) {
+				text_to_use = (char *)&about_text;
+			} else {
+				text_to_use = (char *)&about_text_tickless;
+			}
+			tickless_enable = !tickless_enable;
 		}
 	}
 }
