@@ -35,7 +35,7 @@
 		<build type="doxygen-entry-point" value="group_perf_analyzer"/>
 		<require idref="thirdparty.wireless.addons.sio2host"/>
 		<device-support-alias value="avr2025_mac_pal_support"/>
-		<build type="distribute" subtype="user-file" value="Performance Analyzer protocol.pdf"/>
+		<build type="distribute" subtype="user-file" value="PerformanceAnalyzerProtocol.pdf"/>
 		<!-- ++++++++++++++++++++++++++++++++++++++++++++++REQUIRE++++++++++++++++++++++++++++++++++++++++++++++. -->
 		<require idref="thirdparty.wireless.avr2025_mac.includes"/>
 		<require idref="thirdparty.wireless.avr2025_mac.source.tfa"/>
