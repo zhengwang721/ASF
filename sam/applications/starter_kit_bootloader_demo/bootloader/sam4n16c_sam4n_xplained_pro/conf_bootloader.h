@@ -60,7 +60,7 @@
 #  define DBG_USART_PIN_TX      PIO_PB11_IDX      /**< USART TX pin IO index */
 #  define DBG_USART_PIN_TX_MUX  IOPORT_MODE_MUX_B /**< USART TX periph Mux */
 
-#define DBG_USE_LED             /**< Define to use LED0 for information */
+//#define DBG_USE_LED             /**< Define to use LED0 for information */
 #  define DBG_LED_PIN           LED_0_PIN    /**< LED pin IO index */
 #  define DBG_LED_PIN_ON_LEVEL  LED_0_ACTIVE /**< Output level to make LED on */
 

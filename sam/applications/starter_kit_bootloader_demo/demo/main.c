@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Starter Kit Demo.
+ * \brief Main application of Starter Kit Demo..
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -62,6 +62,8 @@
  * When running in mode 3 (SD card content), the user can browse the SD
  * content using Button2 (previous) and Button3 (next). Filenames are directly
  * printed on the OLED screen.
+ * If there is other version language program in the SD card, the user can
+ * switch to it by push the SW0 button on the Xplain Pro board.
  *
  * IO1 extension must be connected on EXT1.
  * OLED1 extension must be connected on EXT3.
@@ -625,12 +627,16 @@ static void process_button_event(uint8_t uc_button)
 	/* Switch between temperature, light and SD mode. */
 	if (uc_button == 1) {
 		app_mode_switch = 1;
+		pio_disable_interrupt(OLED1_PIN_PUSHBUTTON_1_PIO,
+			OLED1_PIN_PUSHBUTTON_1_MASK);
 	} else if ((uc_button == 2) && (app_mode == 2) &&
 			(sd_fs_found == 1) && (sd_update == 0)) {
 		/* Page UP button in SD mode. */
 		if (sd_listing_pos > 0) {
 			sd_listing_pos -= 1;
 			sd_update = 1;
+			pio_disable_interrupt(OLED1_PIN_PUSHBUTTON_2_PIO,
+			OLED1_PIN_PUSHBUTTON_2_MASK);
 		}
 	} else if ((uc_button == 3) && (app_mode == 2) &&
 			(sd_fs_found == 1) && (sd_update == 0)) {
@@ -639,6 +645,8 @@ static void process_button_event(uint8_t uc_button)
 		if (sd_listing_pos < sd_num_files) {
 			sd_listing_pos += 1;
 			sd_update = 1;
+			pio_disable_interrupt(OLED1_PIN_PUSHBUTTON_3_PIO,
+			OLED1_PIN_PUSHBUTTON_3_MASK);
 		}
 	}
 }
@@ -1754,6 +1762,18 @@ int main(void)
 		}
 
 		/* Wait and stop screen flickers. */
-		delay_ms(50);
+		delay_ms(150);
+
+		if (app_mode_switch == 0) {
+			pio_enable_interrupt(OLED1_PIN_PUSHBUTTON_1_PIO,
+			OLED1_PIN_PUSHBUTTON_1_MASK);
+		}
+		if (sd_update == 0) {
+			pio_enable_interrupt(OLED1_PIN_PUSHBUTTON_2_PIO,
+			OLED1_PIN_PUSHBUTTON_2_MASK);
+			pio_enable_interrupt(OLED1_PIN_PUSHBUTTON_3_PIO,
+			OLED1_PIN_PUSHBUTTON_3_MASK);
+		}
+
 	}
 }

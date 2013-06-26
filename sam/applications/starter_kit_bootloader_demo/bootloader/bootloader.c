@@ -42,15 +42,20 @@
 #include "bootloader.h"
 
 /**
- * \mainpage SAM SD/MMC Bootloader
+ * \mainpage SAM starter_kit_bootloader_demo Bootloader
  *
  * \section Introduction
  *
- * SAM SD/MMC Bootloader is to facilitate firmware upgrade using SD/MMC
- * cards.
+ * SAM starter_kit_bootloader_demo Bootloader is to facilitate firmware
+ * upgrade using SD/MMC cards. The bootloader finds a firmware file on SD/MMC
+ * card and updates the application firmware from that file. Here raw binary
+ * firmware is used.
  *
- * The demo finds a firmware file on SD/MMC card and updates the application
- * firmware from that file. Here raw binary firmware is used.
+ * \section Led Indication
+ *
+ * The bootloader truns on the led at the begin to indicate it's running.
+ * The bootloader blinks the led to indicate the firmware update progress.
+ * The bootloader turns off the led before jump to the application.
  *
  * \section start Quick Start
  * - Do complete chip erase
@@ -162,8 +167,6 @@ static uint32_t _app_boot_get(void)
 	}
 }
 
-#ifdef DBG_USE_LED
-
 /** Turn LED on
  * \param led_pin The pin index that connected to LED
  */
@@ -211,8 +214,6 @@ static void _app_led_error(void)
 	_app_led_blink(20, 25);
 	_app_led_off(DBG_LED_PIN);
 }
-
-#endif
 
 #if DUMP_ENABLE
 
@@ -287,9 +288,10 @@ static uint32_t _app_save_block(void *addr, void *buf, uint32_t len)
 
 	/* Save one block */
 	memory_write(addr, buf);
-#ifdef DBG_USE_LED
+
+	/* Toggle the led when app load. */
 	_app_led_toggle(DBG_LED_PIN);
-#endif
+
 	return MEM_BLOCK_SIZE;
 }
 
@@ -315,7 +317,8 @@ static uint32_t _app_load(struct regions_info *info, bool no_partition)
 	}
 
 	/* Wait media connection */
-	while (1) {
+	i = 0;
+	while (i < MEDIA_NUM_MAX) {
 		media_select((enum media_types)i);
 		if (media_connect()) {
 			dbg_print("bl: Source media %s is ready\r\n",
@@ -327,7 +330,7 @@ static uint32_t _app_load(struct regions_info *info, bool no_partition)
 					media_get_type_str((enum media_types)i));
 		}
 
-		i = (i + 1) % MEDIA_NUM_MAX;
+		i++;
 	}
 	target_region = no_partition ? info->boot_region : (!info->boot_region);
 
@@ -782,7 +785,9 @@ static void _app_info_edit(struct regions_info *info)
 int main(void)
 {
 	uint8_t boot_region = 0; /* Real boot region at this time */
+#ifdef DBG_USE_USART
 	uint8_t load_region = 0; /* Real region to put loaded data */
+#endif
 	struct regions_info info;
 	void *app_addr = NULL;
 	uint32_t app_size = 0;
@@ -793,10 +798,9 @@ int main(void)
 	sysclk_init();
 	board_init();
 
-#ifdef DBG_USE_LED
+	/* First turn on the led to indicate the bootloader run. */
 	ioport_set_pin_dir(DBG_LED_PIN, IOPORT_DIR_OUTPUT);
-	ioport_set_pin_level(DBG_LED_PIN, !DBG_LED_PIN_ON_LEVEL);
-#endif
+	ioport_set_pin_level(DBG_LED_PIN, DBG_LED_PIN_ON_LEVEL);
 
 	dbg_init();
 	dbg_print("\r\n\n----------------------\r\n");
@@ -863,8 +867,6 @@ int main(void)
 	}
 
 	/* Now any other trigger load file to update application directly */
-	load_region = boot_region;
-
 #ifdef DBG_USE_LED
 	_app_led_blink(100, 1);
 #endif
@@ -876,7 +878,10 @@ int main(void)
 
 main_load_app:
 	/* load new firmware */
+#ifdef DBG_USE_USART
+	load_region = boot_region;
 	dbg_print("bl: download @ %d ...\r\n", load_region);
+#endif
 	app_size = _app_load(&info, true);
 	if (app_size == 0) {
 		_app_led_error();
@@ -901,10 +906,11 @@ main_run_app_check:
 
 	dbg_print("bl: application is valid, run\r\n");
 
-	/* cleanup */
-#ifdef DBG_USE_LED
+
+	/* Turn off the led before jump to the app. */
 	_app_led_off(DBG_LED_PIN);
-#endif
+
+	/* cleanup */
 	dbg_print("bl: cleanup ...\r\n");
 	media_cleanup();
 	trigger_cleanup();
@@ -914,7 +920,9 @@ main_run_app_check:
 	/* load application */
 	dbg_print("bl: load application ...\r\n\n");
 
+#ifdef DBG_USE_USART
 	delay_ms(50); /* Wait USART lines idle */
+#endif
 	dbg_cleanup();
 
 	delay_ms(50);

@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="sam.applications.starter_kit_bootloader_demo.bootloader" caption="Flash bootloader on SAM">
+	<module type="application" id="sam.applications.starter_kit_bootloader_demo.bootloader" caption="Bootloader for Starter Kit Bootloader Demo">
 		<info type="description" value="summary">
 			This demonstration program boot application located at specified address.
 		</info>
