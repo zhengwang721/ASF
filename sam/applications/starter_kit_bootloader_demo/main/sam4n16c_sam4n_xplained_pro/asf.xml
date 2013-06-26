@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="Starter Kit Demo" id="sam.applications.starter_kit_bootloader_demo.demo.sam4n_xplained_pro">
+	<project caption="Starter Kit Demo" id="sam.applications.starter_kit_bootloader_demo.main.sam4n_xplained_pro">
 		<info type="description" value="summary">
 			This demo for the SAM4N Xplained Pro features the following extensions: IO1, OLED1.
 		</info>
@@ -16,7 +16,7 @@
 		<build type="header-file" value="conf_example.h"/>
 		<config name="config.common.components.memory.sd_mmc" value="spi"/>
 		<config name="config.common.services.fs.fatfs.codepage" value="sbcs"/>
-		<require idref="sam.applications.starter_kit_bootloader_demo.demo"/>
+		<require idref="sam.applications.starter_kit_bootloader_demo.main"/>
 		<require idref="board.sam4n_xplained_pro"/>
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
