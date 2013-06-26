@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Board configuration.
+ * \brief PDC_UART example configuration.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -41,13 +41,13 @@
  *
  */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#ifndef CONF_PDC_UART_EXAMPLE_H_INCLUDED
+#define CONF_PDC_UART_EXAMPLE_H_INCLUDED
 
-/** Enable Com Port. */
-#define CONF_BOARD_UART_CONSOLE
+/* Configuration for console uart IRQ */
+#define CONSOLE_UART_IRQn           UART0_IRQn
 
-/** Configure TWI0 pins */
-#define CONF_BOARD_TWI0
+/* Configuration for console uart IRQ handler */
+#define console_uart_irq_handler    UART0_Handler
 
-#endif /* CONF_BOARD_H_INCLUDED */
+#endif /* CONF_PDC_UART_EXAMPLE_H_INCLUDED */

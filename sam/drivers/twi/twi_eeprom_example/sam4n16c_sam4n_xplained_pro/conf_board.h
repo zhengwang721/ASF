@@ -54,7 +54,4 @@
 /** Configure UART pins */
 #define CONF_BOARD_UART_CONSOLE
 
-/** Uart Hw ID used by the console (UART3). */
-#define CONSOLE_UART_ID          ID_UART3
-
 #endif /* CONF_BOARD_H_INCLUDED */

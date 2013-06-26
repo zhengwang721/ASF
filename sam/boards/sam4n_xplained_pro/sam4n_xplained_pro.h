@@ -104,7 +104,7 @@
 
 //! \name LED0 definitions
 //@{
-#define LED0_GPIO                  IOPORT_CREATE_PIN(PIOB, 14)
+#define LED0_GPIO                     PIO_PB14_IDX
 #define LED0_ACTIVE_LEVEL               false
 #define LED0_INACTIVE_LEVEL             !LED0_ACTIVE_LEVEL
 //@}
@@ -243,8 +243,19 @@
 #define EDBG_TWI_MODULE           TWI2
 //@}
 
-#define CONSOLE_UART              UART3
-#define CONSOLE_UART_ID        ID_UART3
+#define CONSOLE_UART              UART0
+#define CONSOLE_UART_ID        ID_UART0
+
+/** UART0 pins (UTXD0 and URXD0) definitions, PA9,10. */
+#define PINS_UART0        (PIO_PA9A_URXD0 | PIO_PA10A_UTXD0)
+#define PINS_UART0_FLAGS  (IOPORT_MODE_MUX_A)
+
+#define PINS_UART0_PORT   IOPORT_PIOA
+#define PINS_UART0_MASK   (PIO_PA9A_URXD0 | PIO_PA10A_UTXD0)
+#define PINS_UART0_PIO    PIOA
+#define PINS_UART0_ID     ID_PIOA
+#define PINS_UART0_TYPE   PIO_PERIPH_A
+#define PINS_UART0_ATTR   PIO_DEFAULT
 
 /** UART3 pins (UTXD3 and URXD3) definitions, PB10,11. */
 #define PINS_UART3        (PIO_PB10B_URXD3 | PIO_PB11B_UTXD3)
