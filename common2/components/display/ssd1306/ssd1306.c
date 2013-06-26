@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SSD1306 display controller driver.
+ * \brief SSD1306 OLED display controller driver.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
