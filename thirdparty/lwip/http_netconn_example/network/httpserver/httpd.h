@@ -79,6 +79,6 @@ int http_tokenizeGetRequest(char *raw_buf, size_t raw_len);
 int http_getValue(char *tolenized_buf, size_t tolenized_buf_len,
 		const char *key, char *value, size_t len);
 const char *get_ext(const char *name);
-void http_request(struct netconn *conn);
+void http_request(void *pvParameters);
 
 #endif /* __HTTPD_H__ */

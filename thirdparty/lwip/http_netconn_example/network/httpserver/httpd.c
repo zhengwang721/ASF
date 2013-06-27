@@ -342,8 +342,9 @@ static int start = 0;
  *
  * \return ERR_OK.
  */
-void http_request(struct netconn *conn)
+void http_request(void *pvParameters)
 {
+	struct netconn *conn;
 	struct netbuf *inbuf;
 	char *buf;
 	u16_t buflen;
@@ -351,6 +352,8 @@ void http_request(struct netconn *conn)
 	struct fs_file file;
 	http_handler_t cgi;
 	uint32_t i;
+
+	conn = pvParameters;
 
 	/* Read the data from the port, blocking if nothing yet there. */
 	/* We assume the request (the part we care about) is in one netbuf. */
@@ -366,7 +369,7 @@ void http_request(struct netconn *conn)
 		if (req_string[0] == '\0')
 			strcpy(req_string, HTTP_DEFAULT_PAGE);
 
-		printf("Requested page = %s\r\n", req_string);
+		printf("Requested pageZ = %s\r\n", req_string);
 
 		cgi = cgi_search(req_string, cgi_table);
 		if (cgi)
@@ -415,4 +418,10 @@ void http_request(struct netconn *conn)
 	/* Delete the buffer (netconn_recv gives us ownership, */
 	/* so we have to make sure to deallocate the buffer). */
 	netbuf_delete(inbuf);
+
+	/* Free resource. */
+	netconn_delete(conn);
+
+	/* The calling task will be deleted. */
+	vTaskDelete(NULL);
 }

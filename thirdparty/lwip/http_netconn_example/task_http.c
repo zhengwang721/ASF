@@ -48,6 +48,8 @@
 #include "lwip/tcpip.h"
 #include "httpd.h"
 
+#include "lwip/stats.h"
+
 static void http_task(void *pvParameters);
 
 /**
@@ -97,10 +99,15 @@ static void http_task(void *pvParameters)
 	do {
 		err = netconn_accept(conn, &newconn);
 		if (err == ERR_OK) {
-			http_request(newconn);
-			netconn_delete(newconn);
+
+			stats_display();
+
+			/* Instanciate a new task to handle the HTTP request. */
+			xTaskCreate(http_request, (const signed char *const) "HTTP",
+					mainHTTP_TASK_STACK_SIZE, newconn, mainHTTP_TASK_PRIORITY,
+					NULL);
 		}
-	} while(err == ERR_OK);
+	} while (err == ERR_OK);
 
 	printf("http_server_netconn_thread: netconn_accept received error %d, shutting down\r\n", err);
 

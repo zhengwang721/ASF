@@ -59,6 +59,18 @@
 #include <pmc.h>
 #include <sysclk.h>
 
+/** The priorities at which various tasks will get created. */
+#define mainGFX_TASK_PRIORITY          (tskIDLE_PRIORITY + 1)
+
+/** The stack sizes allocated to the DSP stack: (1048 * 4) = 4096 bytes. */
+#define mainGFX_TASK_STACK_SIZE        (1048)
+
+/** The priorities at which various tasks will get created. */
+#define mainHTTP_TASK_PRIORITY         (tskIDLE_PRIORITY + 2)
+
+/** The stack sizes allocated to the DSP stack: (1048 * 4) = 4096 bytes. */
+#define mainHTTP_TASK_STACK_SIZE       (256)
+
 /** Small delay to hold tasks, during instruction screen. */
 extern const portTickType instructions_delay;
 

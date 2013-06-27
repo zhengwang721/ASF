@@ -66,10 +66,33 @@
 					  dataType :'json',
 					  success: function(data){
 
-						 $('#potentiometer').width(200*(parseInt(data['volt'])/4095));
-						 $('#potentiometer-value').text(data['volt'])
+						 $('#lwip_mem_heap').width(350*(parseInt(data['lwip_m_heap'])/parseInt(data['lwip_m_heap_s'])));
+						 $('#lwip_mem_heap-value').text(data['lwip_m_heap'])
+						 $('#lwip_mem_heap-value_size').text(data['lwip_m_heap_s'])
+						 $('#lwip_mem_heap-value_max').text(data['lwip_m_heap_m'])
+
+						 $('#lwip_pbuf_pool').width(350*(parseInt(data['lwip_pp'])/parseInt(data['lwip_pp_s'])));
+						 $('#lwip_pbuf_pool-value').text(data['lwip_pp'])
+						 $('#lwip_pbuf_pool-value_size').text(data['lwip_pp_s'])
+						 $('#lwip_pbuf_pool-value_max').text(data['lwip_pp_m'])
+
+						 $('#lwip_pbuf_ref').width(350*(parseInt(data['lwip_pr'])/parseInt(data['lwip_pr_s'])));
+						 $('#lwip_pbuf_ref-value').text(data['lwip_pr'])
+						 $('#lwip_pbuf_ref-value_size').text(data['lwip_pr_s'])
+						 $('#lwip_pbuf_ref-value_max').text(data['lwip_pr_m'])
+
+						 $('#lwip_tcp_pcb').width(350*(parseInt(data['lwip_tcp_pcb'])/parseInt(data['lwip_tcp_pcb_s'])));
+						 $('#lwip_tcp_pcb-value').text(data['lwip_tcp_pcb'])
+						 $('#lwip_tcp_pcb-value_size').text(data['lwip_tcp_pcb_s'])
+						 $('#lwip_tcp_pcb-value_max').text(data['lwip_tcp_pcb_m'])
+
+						 $('#lwip_tcp_seg').width(350*(parseInt(data['lwip_tcp_seg'])/parseInt(data['lwip_tcp_seg_s'])));
+						 $('#lwip_tcp_seg-value').text(data['lwip_tcp_seg'])
+						 $('#lwip_tcp_seg-value_size').text(data['lwip_tcp_seg_s'])
+						 $('#lwip_tcp_seg-value_max').text(data['lwip_tcp_seg_m'])
+
+
 						 $('#uptime').text(data['up_time'] +' sec');
-						 $('#temperature').text(data['temp']+' °C');
 						 $('#local_ip').text(data['local_ip']);
 						 $('#last_connected_ip').text(data['last_connected_ip']);
 						 $('#tot_req').text(data['tot_req']);
@@ -85,7 +108,7 @@
 						 plot_magnitude.setData([{label: "Magnitude", data:magnitude_data}]);
 						 plot_magnitude.setupGrid();
 						 plot_magnitude.draw();
-						 setTimeout(updateStatus, 250);
+						 setTimeout(updateStatus, 500);
 					  }
 					});
 			    }
@@ -101,8 +124,8 @@
 				<div id="header">
 					<img src="etc/img/atmel.png" alt="ATMEL Logo" />
 					<div>
-						<h1>Web server and DSP demo</h1><br>
-						<h3>Remotely control your board via web browser</h3>
+						<h1>LwIP HTTP netconn example</h1><br>
+						<h3>System and network monitor</h3>
 					</div>
 				</div>
 				<div class="content">
@@ -110,16 +133,35 @@
 					<b>CPU Core: </b><span id="core_name">--</span><br>
 					<b>Chip name: </b><span id="arch_name">--</span><br>
 					<b>SRAM size: </b><span id="sram_size">--</span><br>
-					<b>Flash size: </b><span id="flash_size">--</span><br>
-					<b>Audio out: </b>J10 audio jack<br>
-					<b>Boot from memory: </b><span id="mem_boot_type">--</span><br><br>
+					<b>Flash size: </b><span id="flash_size">--</span><br><br>
+
 					<b>Connections Info:</b><br>
 					<b>Board IP: </b><span id="local_ip">--</span><br>
 					<b>Your IP: </b><span id="last_connected_ip">--</span><br>
 					<b>Total status requests: </b><span id="tot_req">--</span><br><br>
 					Press button "BP3" to switch between wave file loopback and generated sinus mode.<br>
 					Potentiometer can be used to change sinus frequency in sinus mode.<br>
-					Use QTouch slider to change audio out pitch.<br>
+					Use QTouch slider to change audio out pitch.<br><br>
+					<div class="control">
+						<b class="label">LwIP memory heap:</b>
+						<span class="trigger"><span id="lwip_mem_heap">&nbsp;</span></span>&nbsp;<div class="label2">Cur:<span id="lwip_mem_heap-value">0</span></div>&nbsp;<div class="label2">Size:<span id="lwip_mem_heap-value_size">0</span></div>&nbsp;<div class="label2">Max:<span id="lwip_mem_heap-value_max">0</span></div><br>
+					</div>
+					<div class="control">
+						<b class="label">LwIP PBUF pool:</b>
+						<span class="trigger"><span id="lwip_pbuf_pool">&nbsp;</span></span>&nbsp;<div class="label2">Cur:<span id="lwip_pbuf_pool-value">0</span></div>&nbsp;<div class="label2">Size:<span id="lwip_pbuf_pool-value_size">0</span></div>&nbsp;<div class="label2">Max:<span id="lwip_pbuf_pool-value_max">0</span></div><br>
+					</div>
+					<div class="control">
+						<b class="label">LwIP PBUF ref:</b>
+						<span class="trigger"><span id="lwip_pbuf_ref">&nbsp;</span></span>&nbsp;<div class="label2">Cur:<span id="lwip_pbuf_ref-value">0</span></div>&nbsp;<div class="label2">Size:<span id="lwip_pbuf_ref-value_size">0</span></div>&nbsp;<div class="label2">Max:<span id="lwip_pbuf_ref-value_max">0</span></div><br>
+					</div>
+					<div class="control">
+						<b class="label">LwIP TCP PCB:</b>
+						<span class="trigger"><span id="lwip_tcp_pcb">&nbsp;</span></span>&nbsp;<div class="label2">Cur:<span id="lwip_tcp_pcb-value">0</span></div>&nbsp;<div class="label2">Size:<span id="lwip_tcp_pcb-value_size">0</span></div>&nbsp;<div class="label2">Max:<span id="lwip_tcp_pcb-value_max">0</span></div><br>
+					</div>
+					<div class="control">
+						<b class="label">LwIP queued TCP seg:</b>
+						<span class="trigger"><span id="lwip_tcp_seg">&nbsp;</span></span>&nbsp;<div class="label2">Cur:<span id="lwip_tcp_seg-value">0</span></div>&nbsp;<div class="label2">Size:<span id="lwip_tcp_seg-value_size">0</span></div>&nbsp;<div class="label2">Max:<span id="lwip_tcp_seg-value_max">0</span></div><br>
+					</div>
 				</div>
 				<div class="content">
 					<div class="control">

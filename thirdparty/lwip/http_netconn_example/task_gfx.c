@@ -225,8 +225,13 @@ static void gfx_task(void *pvParameters)
 
 	/* Display ATMEL logo. */
 	ili9325_set_cursor_position(0,0);
-	gfx_draw_bmpfile(logo_atmel_bmp);
+/*	gfx_draw_bmpfile(logo_atmel_bmp);
 	vTaskDelay(presentation_delay);
+
+
+	FIXME: COMMENTE temporairement pour que ca charge vite ;-)
+
+*/
 
 	/* Initialize touchscreen without calibration */
 	pmc_enable_periph_clk(ID_PIOA);

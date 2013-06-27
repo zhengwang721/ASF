@@ -75,22 +75,22 @@
 
 /* MEM_SIZE: the size of the heap memory. If the application will send
 a lot of data that needs to be copied, this should be set high. */
-#define MEM_SIZE                4 * 1024
+#define MEM_SIZE                8 * 1024
 
 /* MEMP_NUM_PBUF: the number of memp struct pbufs. If the application
    sends a lot of data out of ROM (or other static memory), this
    should be set high. */
-#define MEMP_NUM_PBUF           16
+#define MEMP_NUM_PBUF           32
 
 /* Number of raw connection PCBs */
-#define MEMP_NUM_RAW_PCB          8
+#define MEMP_NUM_RAW_PCB        8
 
 /* ---------- UDP options ---------- */
 #define LWIP_UDP                1
 #define UDP_TTL                 255
 /* MEMP_NUM_UDP_PCB: the number of UDP protocol control blocks. One
  per active UDP "connection". */
-#define MEMP_NUM_UDP_PCB        8
+#define MEMP_NUM_UDP_PCB        4
 
 ///**
 // * DEFAULT_RAW_RECVMBOX_SIZE: The mailbox size for the incoming packets on a
@@ -123,7 +123,7 @@ a lot of data that needs to be copied, this should be set high. */
 
 /* ---------- Pbuf options ---------- */
 /* PBUF_POOL_SIZE: the number of buffers in the pbuf pool. */
-#define PBUF_POOL_SIZE          8
+#define PBUF_POOL_SIZE          16
 /* PBUF_POOL_BUFSIZE: the size of each pbuf in the pbuf pool. */
 #define PBUF_POOL_BUFSIZE       512
 
@@ -162,9 +162,9 @@ a lot of data that needs to be copied, this should be set high. */
 #define TCP_SLOW_INTERVAL       800
 /* -------- MEM ---------- */
 /* MEMP_NUM_TCP_PCB: the number of simultaneously active TCP connections. */
-#define MEMP_NUM_TCP_PCB        8
+#define MEMP_NUM_TCP_PCB        16
 /* MEMP_NUM_TCP_PCB_LISTEN: the number of listening TCP connections. */
-#define MEMP_NUM_TCP_PCB_LISTEN 8
+#define MEMP_NUM_TCP_PCB_LISTEN 2
 /* MEMP_NUM_TCP_SEG: the number of simultaneously queued TCP segments. */
 #define MEMP_NUM_TCP_SEG        TCP_SND_QUEUELEN
 /* MEMP_NUM_SYS_TIMEOUT: the number of simulateously active timeouts. */
@@ -173,9 +173,9 @@ a lot of data that needs to be copied, this should be set high. */
 /* The following four are used only with the sequential API and can be
    set to 0 if the application only will use the raw API. */
 /* MEMP_NUM_NETBUF: the number of struct netbufs. */
-#define MEMP_NUM_NETBUF         8
+#define MEMP_NUM_NETBUF         10
 /* MEMP_NUM_NETCONN: the number of struct netconns. */
-#define MEMP_NUM_NETCONN        8
+#define MEMP_NUM_NETCONN        10
 
 
 /* ---------- ARP options ---------- */
@@ -211,7 +211,8 @@ a lot of data that needs to be copied, this should be set high. */
 
 /* ---------- Statistics options ---------- */
 #define LWIP_STATS 1
-#define LWIP_STATS_DISPLAY 0
+#define LWIP_STATS_DISPLAY 1
+#define LWIP_STATS_LARGE 1
 
 #if LWIP_STATS
 #define LINK_STATS 1

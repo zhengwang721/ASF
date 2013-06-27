@@ -48,6 +48,8 @@
 #include <lwip/ip_addr.h>
 #include <lwip/netif.h>
 #include <lwip/tcpip.h>
+#include <lwip/stats.h>
+#include <lwip/opt.h>
 #include "httpd.h"
 #include "cgi.h"
 #include "led.h"
@@ -457,12 +459,9 @@ static int cgi_status(struct netconn *client, const char *name, char *recv_buf, 
 	(void)recv_buf;
 	(void)recv_len;
 	(void)name;
-	volatile uint16_t volt;
 	uint32_t length = 0;
 	uint32_t i;
 	status.tot_req++;
-
-	volt = 0;//afec_get_channel_value(AFEC0, AFE_CHANNEL_5);
 
 	status.up_time = xTaskGetTickCount() / 1000;
 
@@ -480,8 +479,13 @@ static int cgi_status(struct netconn *client, const char *name, char *recv_buf, 
 	length += sprintf((char *)tx_buf + length, "%d\"", 10);//mag_in_buffer_int[i]);
 
 	/* Remaining board status. */
-	length += sprintf((char *)tx_buf + length, ",\"volt\":%d,\"up_time\":%ld,\"tot_req\":%d, \"leds\":{ \"0\":\"%d\", \"1\":\"%d\", \"2\":\"%d\"}}",
-								volt, status.up_time, status.tot_req,
+	length += sprintf((char *)tx_buf + length, ",\"lwip_m_heap\":%d,\"lwip_m_heap_s\":%d,\"lwip_m_heap_m\":%d,\"lwip_pp\":%d,\"lwip_pp_s\":%d,\"lwip_pp_m\":%d,\"lwip_pr\":%d,\"lwip_pr_s\":%d,\"lwip_pr_m\":%d,\"lwip_tcp_pcb\":%d,\"lwip_tcp_pcb_s\":%d,\"lwip_tcp_pcb_m\":%d,\"lwip_tcp_seg\":%d,\"lwip_tcp_seg_s\":%d,\"lwip_tcp_seg_m\":%d,\"up_time\":%ld,\"tot_req\":%d, \"leds\":{ \"0\":\"%d\", \"1\":\"%d\", \"2\":\"%d\"}}",
+								lwip_stats.mem.used, lwip_stats.mem.avail, lwip_stats.mem.max,
+								lwip_stats.memp[12].used, lwip_stats.memp[12].avail, lwip_stats.memp[12].max,
+								lwip_stats.memp[11].used, lwip_stats.memp[11].avail, lwip_stats.memp[11].max,
+								lwip_stats.memp[1].used, lwip_stats.memp[1].avail, lwip_stats.memp[1].max,
+								lwip_stats.memp[3].used, lwip_stats.memp[3].avail, lwip_stats.memp[3].max,
+								status.up_time, status.tot_req,
 								GET_LED_STATUS(status.led_status, 0),
 								GET_LED_STATUS(status.led_status, 1),
 								GET_LED_STATUS(status.led_status, 2));

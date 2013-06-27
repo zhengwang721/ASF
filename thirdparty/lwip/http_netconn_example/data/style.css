@@ -133,7 +133,7 @@ body {
 
 
 .trigger {
-	width:200px;
+	width:350px;
 	display:inline-block;
 	border: 1px solid #047ac4;
 	padding: 1px;
@@ -175,6 +175,12 @@ body {
 }
 
 .label {
- 	width: 150px;
+ 	width: 170px;
+ 	display: inline-block;
+}
+
+.label2 {
+ 	width: 65px;
+	text-align:left;
  	display: inline-block;
 }

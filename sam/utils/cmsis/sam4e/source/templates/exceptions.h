@@ -60,6 +60,61 @@ typedef void (*IntFunc) (void);
 /* Default empty handler */
 void Dummy_Handler(void);
 
+void Reset_Handlerz(void);
+void NMI_Handlerz(void);
+void HardFault_Handlerz(void);
+void MemManage_Handlerz(void);
+void BusFault_Handlerz(void);
+void UsageFault_Handlerz(void);
+void SVC_Handlerz(void);
+void DebugMon_Handlerz(void);
+void PendSV_Handlerz(void);
+void SysTick_Handlerz(void);
+
+/* Peripherals handlers */
+void SUPC_Handlerz(void);
+void RSTC_Handlerz(void);
+void RTC_Handlerz(void);
+void RTT_Handlerz(void);
+void WDT_Handlerz(void);
+void PMC_Handlerz(void);
+void EFC_Handlerz(void);
+void UART0_Handlerz(void);
+void SMC_Handlerz(void);
+void PIOA_Handlerz(void);
+void PIOB_Handlerz(void);
+void PIOC_Handlerz(void);
+void PIOD_Handlerz(void);
+void PIOE_Handlerz(void);
+void USART0_Handlerz(void);
+void USART1_Handlerz(void);
+void HSMCI_Handlerz(void);
+void TWI0_Handlerz(void);
+void TWI1_Handlerz(void);
+void SPI_Handlerz(void);
+void DMAC_Handlerz(void);
+void TC0_Handlerz(void);
+void TC1_Handlerz(void);
+void TC2_Handlerz(void);
+void TC3_Handlerz(void);
+void TC4_Handlerz(void);
+void TC5_Handlerz(void);
+void TC6_Handlerz(void);
+void TC7_Handlerz(void);
+void TC8_Handlerz(void);
+void AFEC0_Handlerz(void);
+void AFEC1_Handlerz(void);
+void DACC_Handlerz(void);
+void ACC_Handlerz(void);
+void ARM_Handlerz(void);
+void UDP_Handlerz(void);
+void PWM_Handlerz(void);
+void CAN0_Handlerz(void);
+void CAN1_Handlerz(void);
+void AES_Handlerz(void);
+void GMAC_Handlerz(void);
+void UART1_Handlerz(void);
+
 /* @cond 0 */
 /**INDENT-OFF**/
 #ifdef __cplusplus
