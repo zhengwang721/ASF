@@ -113,18 +113,6 @@
 #include "uart_serial.h"
 #include "stdio_serial.h"
 
-/** The priorities at which various tasks will get created. */
-#define mainGFX_TASK_PRIORITY          (tskIDLE_PRIORITY + 1)
-
-/** The stack sizes allocated to the DSP stack: (1048 * 4) = 4096 bytes. */
-#define mainGFX_TASK_STACK_SIZE        (1048)
-
-/** The priorities at which various tasks will get created. */
-#define mainHTTP_TASK_PRIORITY         (tskIDLE_PRIORITY + 2)
-
-/** The stack sizes allocated to the DSP stack: (1048 * 4) = 4096 bytes. */
-#define mainHTTP_TASK_STACK_SIZE       (1048)
-
 /*
  * FreeRTOS hook (or callback) functions that are defined in this file.
  */
@@ -176,6 +164,8 @@ int main(void)
 
 	/** Initialize the console uart */
 	configure_console();
+
+	printf("Program started...!\r\n");
 
 	/** Create GFX task. */
 	create_gfx_task(mainGFX_TASK_STACK_SIZE, mainGFX_TASK_PRIORITY);

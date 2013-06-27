@@ -48,16 +48,16 @@
 
 #include "board.h"
 
-/** define stack size for netif task */
+/** The stack sizes allocated to the netif stack: (1048 * 4) = 4096 bytes. */
 #define netifINTERFACE_TASK_STACK_SIZE    1024
 
-/** define netif task priority */
+/** The priority of the netif stack. */
 #define netifINTERFACE_TASK_PRIORITY      (tskIDLE_PRIORITY + 5)
 
-/** define stack size for netif task */
+/** The stack sizes allocated to the TCPIP stack: (1048 * 4) = 4096 bytes. */
 #define TCPIP_THREAD_STACKSIZE            1024
 
-/** define netif task priority */
+/** The priority of the TCPIP stack. */
 #define TCPIP_THREAD_PRIO                 (tskIDLE_PRIORITY + 4)
 
 /** Number of threads that can be started with sys_thread_new() */
@@ -66,6 +66,7 @@
 /** LED used by the ethernet task, toggled on each activation */
 #define webCONN_LED                       LED1_GPIO
 
+/** FIXME: these are mandatory, else CPU will hang... WHY??? */
 #define TCPIP_MBOX_SIZE                 16
 #define DEFAULT_ACCEPTMBOX_SIZE         16
 #define DEFAULT_RAW_RECVMBOX_SIZE       16

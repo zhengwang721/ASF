@@ -95,8 +95,8 @@ typedef u32_t mem_ptr_t;
     to let sys.h use binary semaphores instead of mutexes - as before in 1.3.2
     Refer CHANGELOG
 */
-#define  LWIP_COMPAT_MUTEX  1
-#define LWIP_PLATFORM_DIAG(x)
+#define LWIP_COMPAT_MUTEX 1
+#define LWIP_PLATFORM_DIAG(x) printf x
 
 #define LWIP_PLATFORM_ASSERT(x) do {/*printf("Assertion \"%s\" failed at line %d in %s\n", x, __LINE__, __FILE__); \
                                       fflush(NULL); abort();*/} while(1)
