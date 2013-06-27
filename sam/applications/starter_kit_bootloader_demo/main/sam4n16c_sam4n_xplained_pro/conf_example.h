@@ -47,6 +47,9 @@
 /* Choose different define to generate different application. */
 #define CONF_ENGLISH_LANGUAGE
 //#define CONF_CHINESE_LANGUAGE
+//#define CONF_JAPANESE_LANGUAGE
+//#define CONF_FRENCH_LANGUAGE
+//#define CONF_SPANISH_LANGUAGE
 
 /* Last page start address. */
 #define LAST_PAGE_ADDRESS (IFLASH_ADDR + IFLASH_SIZE - IFLASH_PAGE_SIZE * 8)

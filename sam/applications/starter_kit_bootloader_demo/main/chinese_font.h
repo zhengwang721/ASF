@@ -45,8 +45,8 @@
 #ifndef _CHINESE_FONT_H_
 #define _CHINESE_FONT_H_
 
-#ifdef CONF_CHINESE_LANGUAGE
-const uint8_t chinese_font_table[] = {
+#ifndef CONF_ENGLISH_LANGUAGE
+const uint8_t unicode_font_table[] = {
 	85, 70, 76, 16, 200, 138, 9, 0, 1, 16, 139, 0, 0, 0, 0, 0,
 	32, 0, 255, 255, 24, 0, 0, 0, 152, 255, 3, 16, 168, 255, 3, 16,
 	184, 255, 3, 24, 200, 255, 3, 36, 232, 255, 3, 36, 8, 0, 4, 56,
