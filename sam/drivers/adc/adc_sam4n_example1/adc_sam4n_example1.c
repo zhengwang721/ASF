@@ -94,7 +94,6 @@
  */
 
 #include <stdio.h>
-#include <string.h>
 #include <assert.h>
 #include "asf.h"
 
@@ -126,7 +125,6 @@ static void configure_console(void)
 	};
 
 	/* Configure console UART. */
-	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
 	stdio_serial_init(CONF_UART, &uart_serial_options);
 }
 
@@ -165,7 +163,7 @@ int main(void)
 	adc_get_config_defaults(&adc_cfg);
 
 	adc_init(ADC, &adc_cfg);
-        adc_channel_enable(ADC,ADC_TEMPERATURE_SENSOR);
+	adc_channel_enable(ADC,ADC_TEMPERATURE_SENSOR);
 
 	adc_set_trigger(ADC, ADC_TRIG_SW);
 
@@ -177,23 +175,22 @@ int main(void)
 
 	adc_set_callback(ADC, ADC_INTERRUPT_EOC_16,
 			adc_temp_sensor_end_conversion, 1);
-        
-        adc_start_software_conversion(ADC);
-        
+
+	adc_start_software_conversion(ADC);
+
 	while (1) {
-                
-		if(is_conversion_done == true) {
-
+		if (is_conversion_done == true) {
+			is_conversion_done = false;
 			ul_vol = g_ul_value * VOLT_REF / MAX_DIGITAL;
-
-		/*
-	         * According to datasheet, The output voltage VT = 1.44V at 27C
-	         * and the temperature slope dVT/dT = 4.7 mV/C
-	         */
+			/*
+			* According to datasheet, The output voltage VT = 1.44V at 27C
+			* and the temperature slope dVT/dT = 4.7 mV/C
+			*/
 			ul_temp = (ul_vol - 1440)  * 100 / 470 + 27;
 
-			printf("-- Temperature is: %4d\r", (int)ul_temp);
-			is_conversion_done = false;
+			printf("-- Temperature is: %4d\r\n", (int)ul_temp);
+			delay_ms(1000);
+			adc_start_software_conversion(ADC);
 		}
 	}
 }
