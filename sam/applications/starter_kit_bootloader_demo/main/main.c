@@ -73,9 +73,9 @@
 #include <asf.h>
 #include <string.h>
 #include "conf_example.h"
-#include "chinese_font.h"
+#include "unicode_font_table.h"
 
-enum language_mode{
+enum language_mode {
 	LANGUAGE_ENGLISH = 0,
 	LANGUAGE_CHINESE,
 	LANGUAGE_FRENCH,
@@ -133,21 +133,21 @@ FIL file_object;
 /* Include the path at begin. */
 TCHAR file_name_unicode[5][14] = {
 	{0x0030, 0x003A, 0x0064, 0x0065, 0x006D, 0x006F, 0x005F,
-	0x0065, 0x006E, 0x002E, 0x0062, 0x0069, 0x006E, 0x0000},
+	 0x0065, 0x006E, 0x002E, 0x0062, 0x0069, 0x006E, 0x0000},
 	{0x0030, 0x003A, 0x0064, 0x0065, 0x006D, 0x006F, 0x005F,
-	0x0063, 0x006E, 0x002E, 0x0062, 0x0069, 0x006E, 0x0000},
+	 0x0063, 0x006E, 0x002E, 0x0062, 0x0069, 0x006E, 0x0000},
 	{0x0030, 0x003A, 0x0064, 0x0065, 0x006D, 0x006F, 0x005F,
-	0x0067, 0x0072, 0x002E, 0x0062, 0x0069, 0x006E, 0x0000},
+	 0x0066, 0x0072, 0x002E, 0x0062, 0x0069, 0x006E, 0x0000},
 	{0x0030, 0x003A, 0x0064, 0x0065, 0x006D, 0x006F, 0x005F,
-	0x006A, 0x0070, 0x002E, 0x0062, 0x0069, 0x006E, 0x0000},
+	 0x006A, 0x0070, 0x002E, 0x0062, 0x0069, 0x006E, 0x0000},
 	{0x0030, 0x003A, 0x0064, 0x0065, 0x006D, 0x006F, 0x005F,
-	0x0073, 0x0070, 0x002E, 0x0062, 0x0069, 0x006E, 0x0000}
+	 0x0073, 0x0070, 0x002E, 0x0062, 0x0069, 0x006E, 0x0000}
 };
 /* Only name. */
 uint8_t file_name_ascii[5][12] = {
 	{0x64, 0x65, 0x6D, 0x6F, 0x5F, 0x65, 0x6E, 0x2E, 0x62, 0x69, 0x6E, 0x00},
 	{0x64, 0x65, 0x6D, 0x6F, 0x5F, 0x63, 0x6E, 0x2E, 0x62, 0x69, 0x6E, 0x00},
-	{0x64, 0x65, 0x6D, 0x6F, 0x5F, 0x67, 0x72, 0x2E, 0x62, 0x69, 0x6E, 0x00},
+	{0x64, 0x65, 0x6D, 0x6F, 0x5F, 0x66, 0x72, 0x2E, 0x62, 0x69, 0x6E, 0x00},
 	{0x64, 0x65, 0x6D, 0x6F, 0x5F, 0x6A, 0x70, 0x2E, 0x62, 0x69, 0x6E, 0x00},
 	{0x64, 0x65, 0x6D, 0x6F, 0x5F, 0x73, 0x70, 0x2E, 0x62, 0x69, 0x6E, 0x00}
 };
@@ -591,6 +591,7 @@ static void font_bitmap_find(uint16_t unicode)
 	} else {
 		font_bitmap_width = 1;
 	}
+
 	for (i = 0; i < 32; i++) {
 		font_bitmap_origin[i] = unicode_font_table[font_bitmap_offset];
 		font_bitmap_offset++;
@@ -915,13 +916,13 @@ static void application_bin_check(void)
 		res = f_open(&file_object, file_name_unicode[i],
 				(FA_OPEN_EXISTING | FA_READ));
 		if (res != FR_OK) {
-			break;
+			continue;
 		}
 
 		/* Close the file*/
 		res = f_close(&file_object);
 		if (res != FR_OK) {
-			break;
+			continue;
 		}
 
 		/* Set the exist flag */
@@ -1149,7 +1150,7 @@ static void multi_language_show_end_info(void)
 static void reset_handler(void)
 {
 	uint32_t ul_last_page_addr = LAST_PAGE_ADDRESS;
-	uint32_t *pul_last_page = (uint32_t *) ul_last_page_addr;
+	uint32_t *pul_last_page = (uint32_t *)ul_last_page_addr;
 	uint32_t ul_rc;
 	uint32_t ul_idx;
 	uint32_t temp_data;
@@ -1241,7 +1242,7 @@ static void process_button_event(uint8_t uc_button)
 	if (uc_button == 1) {
 		app_mode_switch = 1;
 		pio_disable_interrupt(OLED1_PIN_PUSHBUTTON_1_PIO,
-			OLED1_PIN_PUSHBUTTON_1_MASK);
+				OLED1_PIN_PUSHBUTTON_1_MASK);
 	} else if ((uc_button == 2) && (app_mode == 2) &&
 			(sd_fs_found == 1) && (sd_update == 0)) {
 		/* Page UP button in SD mode. */
@@ -1249,7 +1250,7 @@ static void process_button_event(uint8_t uc_button)
 			sd_listing_pos -= 1;
 			sd_update = 1;
 			pio_disable_interrupt(OLED1_PIN_PUSHBUTTON_2_PIO,
-			OLED1_PIN_PUSHBUTTON_2_MASK);
+					OLED1_PIN_PUSHBUTTON_2_MASK);
 		}
 	} else if ((uc_button == 3) && (app_mode == 2) &&
 			(sd_fs_found == 1) && (sd_update == 0)) {
@@ -1259,7 +1260,7 @@ static void process_button_event(uint8_t uc_button)
 			sd_listing_pos += 1;
 			sd_update = 1;
 			pio_disable_interrupt(OLED1_PIN_PUSHBUTTON_3_PIO,
-			OLED1_PIN_PUSHBUTTON_3_MASK);
+					OLED1_PIN_PUSHBUTTON_3_MASK);
 		}
 	}
 }
@@ -2390,14 +2391,14 @@ static void display_sd_info_fr(void)
 					colume_index += (font_bitmap_width * 8);
 					font_bitmap_find(0x0033);
 					font_bitmap_transfer();
-					font_bitmap_display(0, colume_index);	
+					font_bitmap_display(0, colume_index);
 
 					colume_index = 0;
 					font_bitmap_find(0x00E0);
 					font_bitmap_transfer();
 					font_bitmap_display(2, colume_index);
 					colume_index += (font_bitmap_width * 8);
-					colume_index += 4;	
+					colume_index += 4;
 					font_bitmap_find(0x0070);
 					font_bitmap_transfer();
 					font_bitmap_display(2, colume_index);
@@ -2960,7 +2961,7 @@ static void ssd1306_write_text_unicode(uint8_t page, uint8_t column,
 			}
 			column += char_ptr[0];
 			column++;
-		}	
+		}
 #else
 		unicode_16 = unicode_8[0] | (unicode_8[1] << 8);
 		font_bitmap_find(unicode_16);
@@ -3286,7 +3287,7 @@ static void multi_language_show_start_info(void)
 	font_bitmap_transfer();
 	font_bitmap_display(2, colume_index);
 	colume_index += (font_bitmap_width * 8);
-	colume_index += 8;	
+	colume_index += 8;
 	font_bitmap_find(0x004B);
 	font_bitmap_transfer();
 	font_bitmap_display(2, colume_index);
@@ -3326,7 +3327,7 @@ static void multi_language_show_start_info(void)
 	font_bitmap_transfer();
 	font_bitmap_display(0, colume_index);
 	colume_index += (font_bitmap_width * 8);
-	colume_index += 8;	
+	colume_index += 8;
 	font_bitmap_find(0x0044);
 	font_bitmap_transfer();
 	font_bitmap_display(0, colume_index);
@@ -3784,13 +3785,13 @@ int main(void)
 
 		if (app_mode_switch == 0) {
 			pio_enable_interrupt(OLED1_PIN_PUSHBUTTON_1_PIO,
-			OLED1_PIN_PUSHBUTTON_1_MASK);
+					OLED1_PIN_PUSHBUTTON_1_MASK);
 		}
 		if (sd_update == 0) {
 			pio_enable_interrupt(OLED1_PIN_PUSHBUTTON_2_PIO,
-			OLED1_PIN_PUSHBUTTON_2_MASK);
+					OLED1_PIN_PUSHBUTTON_2_MASK);
 			pio_enable_interrupt(OLED1_PIN_PUSHBUTTON_3_PIO,
-			OLED1_PIN_PUSHBUTTON_3_MASK);
+					OLED1_PIN_PUSHBUTTON_3_MASK);
 		}
 
 	}

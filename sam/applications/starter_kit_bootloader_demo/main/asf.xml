@@ -22,7 +22,7 @@
 			<require idref="common.components.memory.sd_mmc.ctrl_access"/>
 			<require idref="common.services.fs.fatfs"/>
 			<build type="c-source" value="main.c"/>
-			<build type="header-file" value="chinese_font.h"/>
+			<build type="header-file" value="unicode_font_table.h"/>
 			<info type="gui-flag" value="move-to-root"/>
 		</module>
 	</select-by-device>
