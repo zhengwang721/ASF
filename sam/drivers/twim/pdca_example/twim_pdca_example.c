@@ -60,9 +60,9 @@
  * At first, the specified TWIM write some data pattern to the EEPROM, then
  * read it back and check if the written and the read match in the end.
  *
- * par Usage
+ * \par Usage
  *
- * -# Build the program and download it into the two evaluation boards.
+ * -# Build the program and download it into the evaluation board.
  * -# Connect a serial cable to the UART port for each evaluation kit.
  * -# On the computer, open and configure a terminal application (e.g.,
  *    HyperTerminal on Microsoft Windows) with these settings:
