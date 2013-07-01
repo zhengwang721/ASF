@@ -273,7 +273,7 @@ uint32_t twi_master_read(Twi *p_twi, twi_packet_t *p_packet)
 	/* Send a START Condition */
 	p_twi->TWI_CR = TWI_CR_START;
 
-	 do {
+	 while (cnt > 0) {
 		status = p_twi->TWI_SR;
 		if (status & TWI_SR_NACK) {
 			return TWI_RECEIVE_NACK;
@@ -290,7 +290,7 @@ uint32_t twi_master_read(Twi *p_twi, twi_packet_t *p_packet)
 		*buffer++ = p_twi->TWI_RHR;
 
 		cnt--;
-	} while (cnt > 0);
+	}
 
 	while (!(p_twi->TWI_SR & TWI_SR_TXCOMP)) {
 	}
@@ -331,7 +331,7 @@ uint32_t twi_master_write(Twi *p_twi, twi_packet_t *p_packet)
 	p_twi->TWI_IADR = twi_mk_addr(p_packet->addr, p_packet->addr_length);
 
 	/* Send all bytes */
-	 do {
+	 while (cnt > 0) {
 		status = p_twi->TWI_SR;
 		if (status & TWI_SR_NACK) {
 			return TWI_RECEIVE_NACK;
@@ -343,7 +343,7 @@ uint32_t twi_master_write(Twi *p_twi, twi_packet_t *p_packet)
 		p_twi->TWI_THR = *buffer++;
 
 		cnt--;
-	} while (cnt > 0);
+	}
 
 	p_twi->TWI_CR = TWI_CR_STOP;
 
