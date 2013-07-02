@@ -199,7 +199,7 @@ static void main_adc_init(void)
 	 * Manual conversion triggering
 	 */
 	adc_read_configuration(&ADCA, &adc_conf); /* Initialize structures. */
-	adc_set_conversion_parameters(&adc_conf, ADC_SIGN_ON, ADC_RES_12,
+	adc_set_conversion_parameters(&adc_conf, ADC_SIGN_ON, ADC_RES_MT12,
 			ADC_REF_BANDGAP);
 	adc_set_clock_rate(&adc_conf, 125000UL);
 	adc_set_conversion_trigger(&adc_conf, ADC_TRIG_MANUAL, 1, 0);
