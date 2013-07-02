@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="TWI EEPROM Example for SAM4N-XPLAINED-PRO" id="sam.drivers.twi.twi_eeprom_example.sam4n_xplained_pro">
+	<project caption="TWI EEPROM Example for SAM4N-Xplained-Pro" id="sam.drivers.twi.twi_eeprom_example.sam4n_xplained_pro">
 		<info type="description" value="summary">
 		The application demonstrates how to use the SAM TWI driver to access an external serial EEPROM chip.
 		</info>

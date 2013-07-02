@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="Chipid example for SAM4N_XPLAINED_PRO" id="sam.drivers.chipid.example.sam4n_xplained_pro">
+	<project caption="Chipid example for SAM4N-Xplained-Pro" id="sam.drivers.chipid.example.sam4n_xplained_pro">
 		<info type="description" value="summary">
 		Read chipid and dump it to debug output.
 		</info>

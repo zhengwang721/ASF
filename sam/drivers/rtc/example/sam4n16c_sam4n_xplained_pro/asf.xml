@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="Drivers RTC Example for SAM4N-XPLAINED-PRO" id="sam.drivers.rtc.example.sam4n_xplained_pro">
+	<project caption="Drivers RTC Example for SAM4N-Xplained-Pro" id="sam.drivers.rtc.example.sam4n_xplained_pro">
 		<build type="include-path" value="."/>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
