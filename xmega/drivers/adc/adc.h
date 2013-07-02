@@ -3,7 +3,7 @@
  *
  * \brief AVR XMEGA Analog to Digital Converter driver
  *
- * Copyright (C) 2010-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -208,6 +208,14 @@ struct adc_config {
 #define TEMPSENSE0    offsetof(NVM_PROD_SIGNATURES_t, TEMPSENSE0)
 /** Temperature sensor calibration byte 1. */
 #define TEMPSENSE1    offsetof(NVM_PROD_SIGNATURES_t, TEMPSENSE1)
+/** Temperature at which TEMPSENSE1/TEMPSENSE0 is measured. */
+#define HOTTEMP       offsetof(NVM_PROD_SIGNATURES_t, HOTTEMP)
+/** Temperature sensor calibration byte 2. */
+#define TEMPSENSE2    offsetof(NVM_PROD_SIGNATURES_t, TEMPSENSE2)
+/** Temperature sensor calibration byte 3. */
+#define TEMPSENSE3    offsetof(NVM_PROD_SIGNATURES_t, TEMPSENSE3)
+/** Temperature at which TEMPSENSE3/TEMPSENSE2 is measured. */
+#define ROOMTEMP      offsetof(NVM_PROD_SIGNATURES_t, ROOMTEMP)
 
 /** @} */
 
@@ -220,8 +228,19 @@ enum adc_calibration_data {
 	 * \brief Temperature sensor calibration data.
 	 * \note 12-bit unsigned, measured at 85 degrees Celsius, equivalent to
 	 * 358.15 kelvin.
+	 *
+	 * For Xmega E devices, the calibration reading is 12 Bit signed.
+	 * Xmega E production signature row contains data for two 
+	 * calibration points. Each calibration point has one byte for
+	 * temperature and two bytes for the corresponding ADC reading.
 	 */
-	ADC_CAL_TEMPSENSE,
+	ADC_CAL_TEMPSENSE,	/**< ADC reading at HOTTEMP */
+	ADC_CAL_HOTTEMP,    /**< Normally done at 85 Deg C, 
+						but the excat value is given 
+						in this signature row*/
+	ADC_CAL_TEMPSENSE2,  /**< ADC reading at ROOMTEMP */
+	ADC_CAL_ROOMTEMP    /**< The room temperature measured 
+						during device manufacturing */
 };
 
 /** \name ADC channel masks */
@@ -758,8 +777,23 @@ static inline uint16_t adc_get_calibration_data(enum adc_calibration_data cal)
 		data <<= 8;
 		data |= nvm_read_production_signature_row(TEMPSENSE0);
 		break;
+
+
+#if XMEGA_E
+	case ADC_CAL_HOTTEMP:
+		data = nvm_read_production_signature_row(HOTTEMP);
+		break;
+	case ADC_CAL_ROOMTEMP:
+		data = nvm_read_production_signature_row(ROOMTEMP);
+		break;
+	case ADC_CAL_TEMPSENSE2:
+		data = nvm_read_production_signature_row(TEMPSENSE3);
+		data <<= 8;
+		data |= nvm_read_production_signature_row(TEMPSENSE2);
+		break;
 #endif
 
+#endif
 	default:
 		Assert(0);
 		data = 0;
