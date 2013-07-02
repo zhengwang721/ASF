@@ -78,11 +78,11 @@
 #define mma7341l_adc_z_conversion_end()       while ((adc_get_status(ADC) & MMA7341L_EOC_Z) != MMA7341L_EOC_Z)
 #define mma7341l_adc_start()                  adc_start(ADC)
 #define mma7341l_adc_enable_clock()           pmc_enable_periph_clk(ID_ADC)
-#define mma7341l_adc_init()                   adc_init(ADC, sysclk_get_cpu_hz(), MMA7341L_ADC_CLK, 8)
+#define mma7341l_adc_init()                   adc_init(ADC, sysclk_get_cpu_hz(), MMA7341L_ADC_CLK, ADC_STARTUP_TIME_4)
 #if SAM3S || SAM4S || SAM3XA
-#define mma7341l_adc_configure_timing()       adc_configure_timing(ADC, 0, ADC_SETTLING_TIME_3, 1)
+#define mma7341l_adc_configure_timing()       adc_configure_timing(ADC, TRACKING_TIME, ADC_SETTLING_TIME_3, TRANSFER_PERIOD)
 #elif SAM3N
-#define mma7341l_adc_configure_timing()       adc_configure_timing(ADC, 0)
+#define mma7341l_adc_configure_timing()       adc_configure_timing(ADC, TRACKING_TIME)
 #endif
 #define mma7341l_adc_configure_power_save()   adc_configure_power_save(ADC, 0, 0)
 #define mma7341l_adc_configure_trigger()      adc_configure_trigger(ADC, ADC_TRIG_SW, 0)
@@ -116,9 +116,9 @@
 #define mma7341l_adc_start()                  adc12b_start(ADC12B)
 #define mma7341l_adc_enable_clock()           pmc_enable_periph_clk(ID_ADC12B)
 #define mma7341l_adc_init() \
-		adc12b_init(ADC12B, sysclk_get_cpu_hz(), MMA7341L_ADC_CLK, 10, 10)
+		adc12b_init(ADC12B, sysclk_get_cpu_hz(), MMA7341L_ADC_CLK, STARTUP_TIME, OFF_MODE_STARTUP_TIME)
 #define mma7341l_adc_configure_timing() \
-		adc12b_configure_timing(ADC12B, 2400)
+		adc12b_configure_timing(ADC12B, SAMPLE_HOLD_TIME)
 #define mma7341l_adc_configure_power_save() \
 		adc12b_configure_power_save(ADC12B, 0, 0)
 #define mma7341l_adc_configure_trigger() \
@@ -157,8 +157,8 @@
 #define mma7341l_adc_start()                  adc_start(ADC)
 #define mma7341l_adc_enable_clock()           pmc_enable_periph_clk(ID_ADC)
 #define mma7341l_adc_init() \
-		adc_init(ADC, sysclk_get_cpu_hz(), MMA7341L_ADC_CLK, 10)
-#define mma7341l_adc_configure_timing()       adc_configure_timing(ADC, 2400)
+		adc_init(ADC, sysclk_get_cpu_hz(), MMA7341L_ADC_CLK, STARTUP_TIME)
+#define mma7341l_adc_configure_timing()       adc_configure_timing(ADC, SAMPLE_HOLD_TIME)
 #define mma7341l_adc_configure_power_save()   adc_configure_power_save(ADC, 0)
 #define mma7341l_adc_configure_trigger() \
 		adc_configure_trigger(ADC, ADC_TRIG_SW)

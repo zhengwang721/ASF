@@ -544,6 +544,7 @@ static uint32_t adc_read_buffer(Adc * p_adc, uint16_t * p_s_buffer, uint32_t ul_
 }
 #endif
 #endif
+
 /**
  * \brief Start ADC sample.
  * Initialize ADC, set clock and timing, and set ADC to given mode.
@@ -563,45 +564,59 @@ static void start_adc(void)
 #endif
 
 	/* Initialize ADC. */
+	/*
+	 * Formula: ADCClock = MCK / ( (PRESCAL+1) * 2 )
+	 * For example, MCK = 64MHZ, PRESCAL = 4, then:
+	 * ADCClock = 64 / ((4+1) * 2) = 6.4MHz;
+	 */
 #if SAM3S || SAM3N || SAM3XA || SAM4S
-	adc_init(ADC, sysclk_get_cpu_hz(), 6400000, 8);
+	/* Formula:
+	 *     Startup  Time = startup value / ADCClock
+	 *     Startup time = 64 / 6.4MHz = 10 us
+	 */
+	adc_init(ADC, sysclk_get_cpu_hz(), 6400000, ADC_STARTUP_TIME_4);
 #elif SAM3U
 #ifdef ADC_12B
-	adc12b_init(ADC12B, sysclk_get_cpu_hz(), 6400000, 10, 10);
+	/* Formula:
+	 *     Startup  Time = (startup value + 1) * 8 / ADCClock
+	 *     Startup time = (7 + 1) * 8 / 6.4MHz = 10 us
+	 */
+	adc12b_init(ADC12B, sysclk_get_cpu_hz(), 6400000, STARTUP_TIME, OFF_MODE_STARTUP_TIME);
 #else
-	adc_init(ADC, sysclk_get_cpu_hz(), 6400000, 10);
+	/* Formula:
+	 *     Startup  Time = (startup value + 1) * 8 / ADCClock
+	 *     Startup time = (3 + 1) * 8 / 3.2MHz = 10 us
+	 */ 
+	adc_init(ADC, sysclk_get_cpu_hz(), 3200000, STARTUP_TIME);
 #endif
 #endif
 
 	memset((void *)&g_adc_sample_data, 0, sizeof(g_adc_sample_data));
 
-	/*
-	 * Formula: ADCClock = MCK / ( (PRESCAL+1) * 2 )
-	 * For example, MCK = 64MHZ, PRESCAL = 4, then:
-	 *     ADCClock = 64 / ((4+1) * 2) = 6.4MHz;
-	 */
-	/* Set ADC clock. */
+	/* Set ADC timing. */
+#if SAM3S ||  SAM3XA || SAM4S
 	/* Formula:
-	 *     Startup  Time = startup value / ADCClock
 	 *     Transfer Time = (TRANSFER * 2 + 3) / ADCClock
 	 *     Tracking Time = (TRACKTIM + 1) / ADCClock
 	 *     Settling Time = settling value / ADCClock
-	 * For example, ADC clock = 6MHz (166.7 ns)
-	 *     Startup time = 512 / 6MHz = 85.3 us
-	 *     Transfer Time = (1 * 2 + 3) / 6MHz = 833.3 ns
-	 *     Tracking Time = (0 + 1) / 6MHz = 166.7 ns
-	 *     Settling Time = 3 / 6MHz = 500 ns
+	 *
+	 *     Transfer Time = (1 * 2 + 3) / 6.4MHz = 781 ns
+	 *     Tracking Time = (1 + 1) / 6.4MHz = 312 ns
+	 *     Settling Time = 3 / 6.4MHz = 469 ns
 	 */
-	/* Set ADC timing. */
-#if SAM3S ||  SAM3XA || SAM4S
-	adc_configure_timing(ADC, 0, ADC_SETTLING_TIME_3, 1);
+	adc_configure_timing(ADC, TRACKING_TIME, ADC_SETTLING_TIME_3, TRANSFER_PERIOD);
 #elif  SAM3N
-	adc_configure_timing(ADC, 0);
+	adc_configure_timing(ADC, TRACKING_TIME);
 #elif SAM3U
+	/* Formula:
+	 *     Sample & Hold Time = SHTIM/ADCClock
+	 *
+	 *     Sample & Hold Time = 6 / 6.4 = 938 ns 
+	 */
 #ifdef ADC_12B
-	adc12b_configure_timing(ADC12B, 6);
+	adc12b_configure_timing(ADC12B, SAMPLE_HOLD_TIME);
 #else
-	adc_configure_timing(ADC, 6);
+	adc_configure_timing(ADC, SAMPLE_HOLD_TIME);
 #endif
 #endif
 

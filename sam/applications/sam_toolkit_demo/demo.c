@@ -487,16 +487,26 @@ static void demo_config_adc( void )
 	/* Enable peripheral clock. */
 	pmc_enable_periph_clk(ID_ADC);
 	/* Initialize ADC. */
-
-	/* startup = 10:    640 periods of ADCClock
-	 * for prescale = 4
-	 *     prescale: ADCClock = MCK / ( (PRESCAL+1) * 2 ) => 64MHz /
-	 * ((4+1)*2) = 6.4MHz
-	 *     ADC clock = 6.4 MHz
+	/*
+	 * Formula: ADCClock = MCK / ( (PRESCAL+1) * 2 )
+	 * For example, MCK = 64MHZ, PRESCAL = 4, then:
+	 * ADCClock = 64 / ((4+1) * 2) = 6.4MHz;
 	 */
-	adc_init(ADC, sysclk_get_cpu_hz(), 6400000, 10);
-
-	adc_configure_timing(ADC, 0, ADC_SETTLING_TIME_3, 1);
+	/* Formula:
+	 *     Startup  Time = startup value / ADCClock
+	 *     Startup time = 64 / 6.4MHz = 10 us
+	 */
+	adc_init(ADC, sysclk_get_cpu_hz(), 6400000, ADC_STARTUP_TIME_4);
+	/* Formula:
+	 *     Transfer Time = (TRANSFER * 2 + 3) / ADCClock
+	 *     Tracking Time = (TRACKTIM + 1) / ADCClock
+	 *     Settling Time = settling value / ADCClock
+	 *
+	 *     Transfer Time = (1 * 2 + 3) / 6.4MHz = 781 ns
+	 *     Tracking Time = (1 + 1) / 6.4MHz = 312 ns
+	 *     Settling Time = 3 / 6.4MHz = 469 ns
+	 */
+	adc_configure_timing(ADC, TRACKING_TIME, ADC_SETTLING_TIME_3, TRANSFER_PERIOD);
 	adc_check(ADC, sysclk_get_cpu_hz());
 
 	/* Hardware trigger TIOA0. */
