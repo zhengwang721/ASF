@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="SD/MMC card example for SAM4N Xplained Pro" id="common.components.memory.sd_mmc.unit_tests.sam4n_xplained_pro" type="unit-test">
+	<project caption="SD/MMC card example for SAM4N-Xplained-Pro" id="common.components.memory.sd_mmc.unit_tests.sam4n_xplained_pro" type="unit-test">
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_spi_master.h"/>
 		<build type="header-file" value="conf_sd_mmc.h"/>
