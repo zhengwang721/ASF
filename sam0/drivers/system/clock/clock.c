@@ -345,7 +345,6 @@ void system_clock_source_dfll_set_config(
 		system_clock_source_disable(SYSTEM_CLOCK_SOURCE_DFLL);
 	} else {
 		_system_clock_source_dfll_set_config_errata_9905();
-		//SYSCTRL->DFLLCTRL.reg = _system_clock_inst.dfll.control;
 	}
 }
 
