@@ -23,7 +23,7 @@
 		<build type="header-file" subtype="api" value="bod.h"/>
 		<build type="c-source" value="bod.c"/>
 
-		<build type="doxygen-entry-point" value="asfdoc_samd20_bod"/>
+		<build type="doxygen-entry-point" value="asfdoc_samd20_bod_group"/>
 		<build type="doxygen-example-path" value="quick_start"/>
 
 		<build type="header-file" value="quick_start/qs_bod_basic_use.h"/>

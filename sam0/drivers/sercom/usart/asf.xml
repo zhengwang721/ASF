@@ -17,7 +17,7 @@
 
 			<build type="define" name="USART_CALLBACK_MODE" value="false"/>
 
-			<build type="doxygen-entry-point" value="sam0_usart_group"/>
+			<build type="doxygen-entry-point" value="asfdoc_samd20_sercom_usart_group"/>
 			<build type="doxygen-image-path" value="docimg"/>
 			<build type="doxygen-example-path" value="quick_start"/>
 
@@ -58,7 +58,7 @@
 			<build type="define" name="USART_CALLBACK_MODE" value="true"/>
 			<build type="doxygen-enable-section" value="USART_CALLBACK_MODE"/>
 
-			<build type="doxygen-entry-point" value="sam0_usart_group"/>
+			<build type="doxygen-entry-point" value="asfdoc_samd20_sercom_usart_group"/>
 			<build type="doxygen-image-path" value="docimg"/>
 			<build type="doxygen-example-path" value="quick_start"/>
 			<build type="doxygen-example-path" value="quick_start_callback"/>

@@ -8,8 +8,8 @@
 		</info>
 		<build type="header-file" subtype="api" value="gfx_mono.h"/>
 		<build type="include-path" value="."/>
-		<build type="doxygen-entry-point" value="sam0_gfx_mono"/>
-		<build type="doxygen-quick-start" value="gfx_mono_quickstart"/>
+		<build type="doxygen-entry-point" value="asfdoc_common2_gfx_mono"/>
+		<build type="doxygen-quick-start" value="asfdoc_common2_gfx_mono_quickstart"/>
 		<device-support value="samd20"/>
 		<generator value="doxygen-module" default-mcu="unspecified-samd20"/>
 		<require idref="common2.services.gfx_mono.display"/>
@@ -61,7 +61,7 @@
 		<build type="module-config" subtype="path" value="module_config"/>
 		<build type="distribute" subtype="file" value="docsrc/gfx_mono_overview.png"/>
 		<build type="doxygen-image-path" value="docsrc"/>
-		<build type="doxygen-entry-point" value="sam0_gfx_mono_sysfont"/>
+		<build type="doxygen-entry-point" value="asfdoc_common2_gfx_mono_sysfont"/>
 		<require idref="common2.services.gfx_mono"/>
 		<require idref="common2.services.gfx_mono.generic"/>
 		<device-support value="samd20"/>
@@ -80,7 +80,7 @@
 		<build type="module-config" subtype="path" value="module_config"/>
 		<build type="module-config" subtype="required-header-file" value="conf_menu.h"/>
 		<build type="c-source" value="gfx_mono_menu.c"/>
-		<build type="doxygen-entry-point" value="gfx_mono_menu"/>
+		<build type="doxygen-entry-point" value="asfdoc_common2_gfx_mono_menu"/>
 		<require idref="common2.services.gfx_mono"/>
 		<require idref="common2.services.gfx_mono.font"/>
 		<device-support value="samd20"/>
@@ -99,7 +99,7 @@
 		<build type="module-config" subtype="path" value="module_config"/>
 		<build type="module-config" subtype="required-header-file" value="conf_spinctrl.h"/>
 		<build type="c-source" value="gfx_mono_spinctrl.c"/>
-		<build type="doxygen-entry-point" value="gfx_mono_spinctrl"/>
+		<build type="doxygen-entry-point" value="asfdoc_common2_gfx_mono_spinctrl"/>
 		<require idref="common2.services.gfx_mono"/>
 		<require idref="common2.services.gfx_mono.font"/>
 		<device-support value="samd20"/>
