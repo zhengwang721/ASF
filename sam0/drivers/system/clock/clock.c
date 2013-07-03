@@ -49,6 +49,8 @@
  */
 struct _system_clock_dfll_config {
 	uint32_t control;
+	uint32_t val;
+	uint32_t mul;
 };
 
 /**
@@ -76,6 +78,8 @@ struct _system_clock_module {
 static struct _system_clock_module _system_clock_inst = {
 		.dfll = {
 			.control     = 0,
+			.val     = 0,
+			.mul     = 0,
 		},
 		.xosc = {
 			.frequency   = 0,
@@ -105,6 +109,20 @@ static inline void _system_osc32k_wait_for_sync(void)
 	while (!(SYSCTRL->PCLKSR.reg & SYSCTRL_PCLKSR_OSC32KRDY)) {
 		/* Wait for OSC32K sync */
 	}
+}
+
+static inline void _system_clock_source_dfll_set_config_errata_9905(void)
+{
+
+	/* Disable ONDEMAND mode while writing configurations */
+	SYSCTRL->DFLLCTRL.reg = _system_clock_inst.dfll.control & ~SYSCTRL_DFLLCTRL_ONDEMAND;
+	_system_dfll_wait_for_sync();
+
+	SYSCTRL->DFLLMUL.reg = _system_clock_inst.dfll.mul;
+	SYSCTRL->DFLLVAL.reg = _system_clock_inst.dfll.val;
+
+	/* Write full configuration to DFLL control register */
+	SYSCTRL->DFLLCTRL.reg = _system_clock_inst.dfll.control;
 }
 
 /**
@@ -145,10 +163,8 @@ uint32_t system_clock_source_get_hz(
 		_system_dfll_wait_for_sync();
 
 		/* Check if operating in closed loop mode */
-		if (SYSCTRL->DFLLCTRL.reg & SYSCTRL_DFLLCTRL_MODE) {
-			SYSCTRL->DFLLSYNC.bit.READREQ = 1;
-			_system_dfll_wait_for_sync();
-			return system_gclk_chan_get_hz(SYSCTRL_GCLK_ID_DFLL48) * SYSCTRL->DFLLMUL.bit.MUL;
+		if (_system_clock_inst.dfll.control & SYSCTRL_DFLLCTRL_MODE) {
+			return system_gclk_chan_get_hz(SYSCTRL_GCLK_ID_DFLL48) * _system_clock_inst.dfll.mul;
 		}
 
 		return 48000000UL;
@@ -300,16 +316,7 @@ void system_clock_source_xosc32k_set_config(
 void system_clock_source_dfll_set_config(
 		struct system_clock_source_dfll_config *const config)
 {
-	/* Store away the enable bit state */
-	uint32_t old_dfll_enable_bit_state = _system_clock_inst.dfll.control & SYSCTRL_DFLLCTRL_ENABLE;
-
-	/* Make sure that the DFLL module is enabled before writing the DFLL registers */
-	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_DFLL);
-
-	/* Wait for the module to become ready */
-	_system_dfll_wait_for_sync();
-
-	SYSCTRL->DFLLVAL.reg =
+	_system_clock_inst.dfll.val =
 			SYSCTRL_DFLLVAL_COARSE(config->coarse_value) |
 			SYSCTRL_DFLLVAL_FINE(config->fine_value);
 
@@ -319,24 +326,16 @@ void system_clock_source_dfll_set_config(
 			(uint32_t)config->quick_lock      |
 			(uint32_t)config->chill_cycle     |
 			(uint32_t)config->run_in_standby << SYSCTRL_DFLLCTRL_RUNSTDBY_Pos |
-			(uint32_t)config->on_demand << SYSCTRL_DFLLCTRL_ONDEMAND_Pos |
-			old_dfll_enable_bit_state;
+			(uint32_t)config->on_demand << SYSCTRL_DFLLCTRL_ONDEMAND_Pos;
 
 	if (config->loop_mode == SYSTEM_CLOCK_DFLL_LOOP_MODE_CLOSED) {
-		SYSCTRL->DFLLMUL.reg =
+		_system_clock_inst.dfll.mul =
 				SYSCTRL_DFLLMUL_CSTEP(config->coarse_max_step) |
 				SYSCTRL_DFLLMUL_FSTEP(config->fine_max_step)   |
 				SYSCTRL_DFLLMUL_MUL(config->multiply_factor);
 
 		/* Enable the closed loop mode */
 		_system_clock_inst.dfll.control |= config->loop_mode;
-	}
-
-	/* Restore old DFLL enable state */
-	if (!(old_dfll_enable_bit_state)) {
-		system_clock_source_disable(SYSTEM_CLOCK_SOURCE_DFLL);
-	} else {
-		SYSCTRL->DFLLCTRL.reg = _system_clock_inst.dfll.control;
 	}
 }
 
@@ -442,7 +441,7 @@ enum status_code system_clock_source_enable(
 
 	case SYSTEM_CLOCK_SOURCE_DFLL:
 		_system_clock_inst.dfll.control |= SYSCTRL_DFLLCTRL_ENABLE;
-		SYSCTRL->DFLLCTRL.reg = _system_clock_inst.dfll.control;
+		_system_clock_source_dfll_set_config_errata_9905();
 		break;
 
 	case SYSTEM_CLOCK_SOURCE_ULP32K:
@@ -591,6 +590,11 @@ bool system_clock_source_is_ready(
  */
 void system_clock_init(void)
 {
+        /* Workaround for errata 10558 */
+        SYSCTRL->INTFLAG.reg = SYSCTRL_INTFLAG_BOD12RDY | SYSCTRL_INTFLAG_BOD33RDY |
+                        SYSCTRL_INTFLAG_BOD12DET | SYSCTRL_INTFLAG_BOD33DET |
+                        SYSCTRL_INTFLAG_DFLLRDY;
+
 	system_flash_set_waitstates(CONF_CLOCK_FLASH_WAIT_STATES);
 
 	/* XOSC */
