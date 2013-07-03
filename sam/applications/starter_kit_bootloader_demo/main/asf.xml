@@ -21,8 +21,10 @@
 			<require idref="common.components.memory.eeprom.at30tse75x"/>
 			<require idref="common.components.memory.sd_mmc.ctrl_access"/>
 			<require idref="common.services.fs.fatfs"/>
-			<build type="c-source" value="main.c"/>
 			<build type="header-file" value="unicode_font_table.h"/>
+			<build type="header-file" value="multi_language_display.h"/>
+			<build type="c-source" value="multi_language_display.c"/>
+			<build type="c-source" value="main.c"/>
 			<info type="gui-flag" value="move-to-root"/>
 		</module>
 	</select-by-device>
