@@ -345,12 +345,21 @@ uint32_t twi_master_write(Twi *p_twi, twi_packet_t *p_packet)
 		cnt--;
 	}
 
+	while (1) {
+		status = p_twi->TWI_SR;
+		if (status & TWI_SR_NACK) {
+			return TWI_RECEIVE_NACK;
+		}
+
+		if (status & TWI_SR_TXRDY) {
+			break;
+		}
+	}
+
 	p_twi->TWI_CR = TWI_CR_STOP;
 
 	while (!(p_twi->TWI_SR & TWI_SR_TXCOMP)) {
 	}
-
-	p_twi->TWI_SR;
 
 	return TWI_SUCCESS;
 }

@@ -91,11 +91,9 @@ void configure_i2c_master(void)
 
 int main(void)
 {
-	//! [init]
-	//! [system_init]
 	system_init();
-	//! [system_init]
 
+	//! [init]
 	/* Configure device and enable. */
 	//! [config]
 	configure_i2c_master();

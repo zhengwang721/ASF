@@ -167,9 +167,10 @@ void usart_unregister_callback(
  * \param[in]  tx_data  Data to transfer
  *
  * \returns Status of the operation
- * \retval STATUS_OK    If operation was completed
- * \retval STATUS_BUSY  If operation was not completed, due to the USART module
- *                      being busy.
+ * \retval STATUS_OK         If operation was completed
+ * \retval STATUS_BUSY       If operation was not completed, due to the
+ *                           USART module being busy
+ * \retval STATUS_ERR_DENIED If the transmitter is not enabled
  */
 enum status_code usart_write_job(
 		struct usart_module *const module,
@@ -181,6 +182,11 @@ enum status_code usart_write_job(
 	/* Check if the USART transmitter is busy */
 	if (module->remaining_tx_buffer_length > 0) {
 		return STATUS_BUSY;
+	}
+
+	/* Check that the transmitter is enabled */
+	if (!(module->transmitter_enabled)) {
+		return STATUS_ERR_DENIED;
 	}
 
 	/* Call internal write buffer function with length 1 */
@@ -232,8 +238,12 @@ enum status_code usart_read_job(
  * \param[in]  length   Length of the data to transmit
  *
  * \returns Status of the operation
- * \retval STATUS_OK    If operation was completed successfully.
- * \retval STATUS_BUSY  If operation was not completed,
+ * \retval STATUS_OK              If operation was completed successfully.
+ * \retval STATUS_BUSY            If operation was not completed, due to the
+ *                                USART module being busy
+ * \retval STATUS_ERR_INVALID_ARG If operation was not completed, due to invalid
+ *                                arguments
+ * \retval STATUS_ERR_DENIED      If the transmitter is not enabled
  */
 enum status_code usart_write_buffer_job(
 		struct usart_module *const module,
@@ -250,6 +260,11 @@ enum status_code usart_write_buffer_job(
 	/* Check if the USART transmitter is busy */
 	if (module->remaining_tx_buffer_length > 0) {
 		return STATUS_BUSY;
+	}
+	
+	/* Check that the receiver is enabled */
+	if (!(module->transmitter_enabled)) {
+		return STATUS_ERR_DENIED;
 	}
 
 	/* Issue internal asynchronous write */
@@ -269,8 +284,12 @@ enum status_code usart_write_buffer_job(
  * \param[in]  length   Data buffer length
  *
  * \returns Status of the operation
- * \retval STATUS_OK    If operation was completed.
- * \retval STATUS_BUSY  If operation was not completed,
+ * \retval STATUS_OK              If operation was completed
+ * \retval STATUS_BUSY            If operation was not completed, due to the
+ *                                USART module being busy
+ * \retval STATUS_ERR_INVALID_ARG If operation was not completed, due to invalid
+ *                                arguments
+ * \retval STATUS_ERR_DENIED      If the transmitter is not enabled
  */
 enum status_code usart_read_buffer_job(
 		struct usart_module *const module,
@@ -283,6 +302,11 @@ enum status_code usart_read_buffer_job(
 
 	if (length == 0) {
 		return STATUS_ERR_INVALID_ARG;
+	}
+	
+	/* Check that the receiver is enabled */
+	if (!(module->receiver_enabled)) {
+		return STATUS_ERR_DENIED;
 	}
 
 	/* Check if the USART receiver is busy */

@@ -207,28 +207,28 @@
  *      <th>Trailing Edge</th>
  *   </tr>
  *   <tr>
- *      <th> 0 </th>
+ *      <td> 0 </td>
  *      <td> 0 </td>
  *      <td> 0 </td>
  *      <td> Rising, Sample </td>
  *      <td> Falling, Setup </td>
  *   </tr>
  *   <tr>
- *      <th> 1 </th>
+ *      <td> 1 </td>
  *      <td> 0 </td>
  *      <td> 1 </td>
  *      <td> Rising, Setup </td>
  *      <td> Falling, Sample </td>
  *   </tr>
  *   <tr>
- *      <th> 2 </th>
+ *      <td> 2 </td>
  *      <td> 1 </td>
  *      <td> 0 </td>
  *      <td> Falling, Sample </td>
  *      <td> Rising, Setup </td>
  *   </tr>
  *   <tr>
- *      <th> 3 </th>
+ *      <td> 3 </td>
  *      <td> 1 </td>
  *      <td> 1 </td>
  *      <td> Falling, Setup </td>
@@ -255,22 +255,22 @@
  *      <th> Slave SPI </th>
  *   </tr>
  *   <tr>
- *      <th> MOSI </th>
+ *      <td> MOSI </td>
  *      <td> Output </td>
  *      <td> Input </td>
  *   </tr>
  *   <tr>
- *      <th> MISO </th>
+ *      <td> MISO </td>
  *      <td> Input </td>
  *      <td> Output </td>
  *   </tr>
  *   <tr>
- *      <th> SCK </th>
+ *      <td> SCK </td>
  *      <td> Output </td>
  *      <td> Input </td>
  *   </tr>
  *   <tr>
- *      <th> SS </th>
+ *      <td> SS </td>
  *      <td> User defined output enable </td>
  *      <td> Input </td>
  *   </tr>
@@ -290,12 +290,12 @@
  *      <th> Master </th>
  *   </tr>
  *   <tr>
- *      <th> false </th>
+ *      <td> false </td>
  *      <td> Disabled, all reception is dropped </td>
  *      <td> GCLK disabled when master is idle, wake on transmit complete </td>
  *   </tr>
  *   <tr>
- *      <th> true </th>
+ *      <td> true </td>
  *      <td> Wake on reception </td>
  *      <td> GCLK is enabled while in sleep modes, wake on all interrupts </td>
  *   </tr>
@@ -703,7 +703,7 @@ struct spi_config {
 		struct spi_slave_config slave;
 		/** Master specific configuration */
 		struct spi_master_config master;
-	}; /**< Union for slave or master specific configuration */
+	} mode_specific;
 	/** GCLK generator to use as clock source. */
 	enum gclk_generator generator_source;
 	/** PAD0 pinmux */
@@ -801,11 +801,11 @@ static inline void spi_get_config_defaults(
 	config->receiver_enable  = true;
 	config->generator_source = GCLK_GENERATOR_0;
 
-	/* Clear slave config */
-	memset(&(config->slave), 0, sizeof(struct spi_slave_config));
+	/* Clear mode specific config */
+	memset(&(config->mode_specific), 0, sizeof(config->mode_specific));
 
 	/* Master config defaults */
-	config->master.baudrate = 100000;
+	config->mode_specific.master.baudrate = 100000;
 
 	/* pinmux config defaults */
 	config->pinmux_pad0 = PINMUX_DEFAULT;
@@ -1121,6 +1121,8 @@ static inline enum status_code spi_read(
 	/* Check if data is overflown */
 	if (spi_module->STATUS.reg & SERCOM_SPI_STATUS_BUFOVF) {
 		retval = STATUS_ERR_OVERFLOW;
+		/* Clear overflow flag */
+		spi_module->STATUS.reg |= SERCOM_SPI_STATUS_BUFOVF;
 	}
 	/* Read the character from the DATA register */
 	if (module->character_size == SPI_CHARACTER_SIZE_9BIT) {
@@ -1314,6 +1316,14 @@ enum status_code spi_select_slave(
  *	<tr>
  *		<th>Changelog</th>
  *	</tr>
+ *	 <tr>
+ *		<td>Edited slave part of write and transceive buffer functions to ensure
+ *		that second character is sent at the right time.</td>
+ *	</tr>
+ *	<tr>
+ *		<td>Renamed the anonymous union in \c struct spi_config to
+ *          \c mode_specific.</td>
+ *	</tr>
  *	<tr>
  *		<td>Initial Release</td>
  *	</tr>
@@ -1386,28 +1396,28 @@ enum status_code spi_select_slave(
   *      <th> Pad3 </th>
   *   </tr>
   *   <tr>
-  *      <th> SCK </th>
+  *      <td> SCK </td>
   *      <td>  </td>
   *      <td> x </td>
   *      <td>  </td>
   *      <td>  </td>
   *   </tr>
   *   <tr>
-  *      <th> SLAVE_SS </th>
+  *      <td> SLAVE_SS </td>
   *      <td>  </td>
   *      <td>  </td>
   *      <td> x </td>
   *      <td>  </td>
   *   </tr>
   *   <tr>
-  *      <th> DO </th>
+  *      <td> DO </td>
   *      <td> x </td>
   *      <td>  </td>
   *      <td>  </td>
   *      <td>  </td>
   *   </tr>
   *   <tr>
-  *      <th> DI </th>
+  *      <td> DI </td>
   *      <td> x </td>
   *      <td>  </td>
   *      <td>  </td>
@@ -1430,28 +1440,28 @@ enum status_code spi_select_slave(
   *      <th> Pad3 </th>
   *   </tr>
   *   <tr>
-  *      <th> SCK </th>
+  *      <td> SCK </td>
   *      <td>  </td>
   *      <td> x </td>
   *      <td>  </td>
   *      <td>  </td>
   *   </tr>
   *   <tr>
-  *      <th> SLAVE_SS </th>
+  *      <td> SLAVE_SS </td>
   *      <td>  </td>
   *      <td>  </td>
   *      <td> x </td>
   *      <td>  </td>
   *   </tr>
   *   <tr>
-  *      <th> DO </th>
+  *      <td> DO </td>
   *      <td> x </td>
   *      <td>  </td>
   *      <td>  </td>
   *      <td>  </td>
   *   </tr>
   *   <tr>
-  *      <th> DI </th>
+  *      <td> DI </td>
   *      <td>  </td>
   *      <td> x </td>
   *      <td>  </td>
@@ -1474,28 +1484,28 @@ enum status_code spi_select_slave(
   *      <th> Pad3 </th>
   *   </tr>
   *   <tr>
-  *      <th> SCK </th>
+  *      <td> SCK </td>
   *      <td>  </td>
   *      <td> x </td>
   *      <td>  </td>
   *      <td>  </td>
   *   </tr>
   *   <tr>
-  *      <th> SLAVE_SS </th>
+  *      <td> SLAVE_SS </td>
   *      <td>  </td>
   *      <td>  </td>
   *      <td> x </td>
   *      <td>  </td>
   *   </tr>
   *   <tr>
-  *      <th> DO </th>
+  *      <td> DO </td>
   *      <td> x </td>
   *      <td>  </td>
   *      <td>  </td>
   *      <td>  </td>
   *   </tr>
   *   <tr>
-  *      <th> DI </th>
+  *      <td> DI </td>
   *      <td>  </td>
   *      <td>  </td>
   *      <td> x </td>
@@ -1518,7 +1528,7 @@ enum status_code spi_select_slave(
   *      <th> Pad3 </th>
   *   </tr>
   *   <tr>
-  *      <th> SCK </th>
+  *      <td> SCK </td>
   *      <td>  </td>
   *      <td> x </td>
   *      <td>  </td>
@@ -1526,21 +1536,21 @@ enum status_code spi_select_slave(
 
   *   </tr>
   *   <tr>
-  *      <th> SLAVE_SS </th>
+  *      <td> SLAVE_SS </td>
   *      <td>  </td>
   *      <td>  </td>
   *      <td> x </td>
   *      <td>  </td>
   *   </tr>
   *   <tr>
-  *      <th> DO </th>
+  *      <td> DO </td>
   *      <td> x </td>
   *      <td>  </td>
   *      <td>  </td>
   *      <td>  </td>
   *   </tr>
   *   <tr>
-  *      <th> DI </th>
+  *      <td> DI </td>
   *      <td>  </td>
   *      <td>  </td>
   *      <td>  </td>
@@ -1563,28 +1573,28 @@ enum status_code spi_select_slave(
   *      <th> Pad3 </th>
   *   </tr>
   *   <tr>
-  *      <th> SCK </th>
+  *      <td> SCK </td>
   *      <td>  </td>
   *      <td>  </td>
   *      <td>  </td>
   *      <td> x </td>
   *   </tr>
   *   <tr>
-  *      <th> SLAVE_SS </th>
+  *      <td> SLAVE_SS </td>
   *      <td>  </td>
   *      <td> x </td>
   *      <td>  </td>
   *      <td>  </td>
   *   </tr>
   *   <tr>
-  *      <th> DO </th>
+  *      <td> DO </td>
   *      <td>  </td>
   *      <td>  </td>
   *      <td> x </td>
   *      <td>  </td>
   *   </tr>
   *   <tr>
-  *      <th> DI </th>
+  *      <td> DI </td>
   *      <td> x </td>
   *      <td>  </td>
   *      <td>  </td>
@@ -1607,28 +1617,28 @@ enum status_code spi_select_slave(
   *      <th> Pad3 </th>
   *   </tr>
   *   <tr>
-  *      <th> SCK </th>
+  *      <td> SCK </td>
   *      <td>  </td>
   *      <td>  </td>
   *      <td>  </td>
   *      <td> x </td>
   *   </tr>
   *   <tr>
-  *      <th> SLAVE_SS </th>
+  *      <td> SLAVE_SS </td>
   *      <td>  </td>
   *      <td> x </td>
   *      <td>  </td>
   *      <td>  </td>
   *   </tr>
   *   <tr>
-  *      <th> DO </th>
+  *      <td> DO </td>
   *      <td>  </td>
   *      <td>  </td>
   *      <td> x </td>
   *      <td>  </td>
   *   </tr>
   *   <tr>
-  *      <th> DI </th>
+  *      <td> DI </td>
   *      <td>  </td>
   *      <td> x </td>
   *      <td>  </td>
@@ -1651,28 +1661,28 @@ enum status_code spi_select_slave(
   *      <th> Pad3 </th>
   *   </tr>
   *   <tr>
-  *      <th> SCK </th>
+  *      <td> SCK </td>
   *      <td>  </td>
   *      <td>  </td>
   *      <td>  </td>
   *      <td> x </td>
   *   </tr>
   *   <tr>
-  *      <th> SLAVE_SS </th>
+  *      <td> SLAVE_SS </td>
   *      <td>  </td>
   *      <td> x </td>
   *      <td>  </td>
   *      <td>  </td>
   *   </tr>
   *   <tr>
-  *      <th> DO </th>
+  *      <td> DO </td>
   *      <td>  </td>
   *      <td>  </td>
   *      <td> x </td>
   *      <td>  </td>
   *   </tr>
   *   <tr>
-  *      <th> DI </th>
+  *      <td> DI </td>
   *      <td>  </td>
   *      <td>  </td>
   *      <td> x </td>
@@ -1695,28 +1705,28 @@ enum status_code spi_select_slave(
   *      <th> Pad3 </th>
   *   </tr>
   *   <tr>
-  *      <th> SCK </th>
+  *      <td> SCK </td>
   *      <td>  </td>
   *      <td>  </td>
   *      <td>  </td>
   *      <td> x </td>
   *   </tr>
   *   <tr>
-  *      <th> SLAVE_SS </th>
+  *      <td> SLAVE_SS </td>
   *      <td>  </td>
   *      <td> x </td>
   *      <td>  </td>
   *      <td>  </td>
   *   </tr>
   *   <tr>
-  *      <th> DO </th>
+  *      <td> DO </td>
   *      <td>  </td>
   *      <td>  </td>
   *      <td> x </td>
   *      <td>  </td>
   *   </tr>
   *   <tr>
-  *      <th> DI </th>
+  *      <td> DI </td>
   *      <td>  </td>
   *      <td>  </td>
   *      <td>  </td>
@@ -1731,6 +1741,11 @@ enum status_code spi_select_slave(
   *		<th>Doc. Rev.</td>
   *		<th>Date</td>
   *		<th>Comments</td>
+  *	</tr>
+  *	<tr>
+  *		<td>B</td>
+  *		<td>06/2013</td>
+  *		<td>Corrected documentation typos.</td>
   *	</tr>
   *	<tr>
   *		<td>A</td>

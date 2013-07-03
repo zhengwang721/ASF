@@ -197,6 +197,8 @@ void EIC_Handler(void)
 	/* Find any triggered channels, run associated callback handlers */
 	for (uint32_t i = 0; i < (32 * EIC_INST_NUM); i++) {
 		if (extint_chan_is_detected(i)) {
+			/* Clear flag */
+			extint_chan_clear_detected(i);
 			/* Find any associated callback entries in the callback table */
 			for (uint8_t j = 0; j < EXTINT_CALLBACKS_MAX; j++) {
 				if (_extint_dev.callbacks[j] != NULL) {
@@ -204,8 +206,6 @@ void EIC_Handler(void)
 					_extint_dev.callbacks[j](i);
 				}
 			}
-
-			extint_chan_clear_detected(i);
 		}
 	}
 }
