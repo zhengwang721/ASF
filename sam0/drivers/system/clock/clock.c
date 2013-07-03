@@ -113,13 +113,11 @@ static inline void _system_osc32k_wait_for_sync(void)
 
 static inline void _system_clock_source_dfll_set_config_errata_9905(void)
 {
-	SYSCTRL->DFLLCTRL.reg = SYSCTRL_DFLLCTRL_ENABLE;
-	_system_dfll_wait_for_sync();
 
+	// Ondemand mode for the DFLL module is non-functional
 	SYSCTRL->DFLLCTRL.reg = _system_clock_inst.dfll.control & ~SYSCTRL_DFLLCTRL_ONDEMAND;
 	_system_dfll_wait_for_sync();
 
-	SYSCTRL->DFLLCTRL.reg = _system_clock_inst.dfll.control;
 	SYSCTRL->DFLLMUL.reg = _system_clock_inst.dfll.mul;
 	SYSCTRL->DFLLVAL.reg = _system_clock_inst.dfll.val;
 }
