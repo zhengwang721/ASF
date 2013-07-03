@@ -136,6 +136,26 @@
 	#define ADC_CHANNEL_POTENTIOMETER  ADC_CHANNEL_5
 #endif
 
+#if SAM3S || SAM4S || SAM3XA || SAM3N
+/* Tracking Time*/
+#define  TRACKING_TIME            1
+/* Transfer Period */
+#define  TRANSFER_PERIOD       1 
+#endif
+
+#if SAM3U
+#ifdef ADC_12B
+/* Start Up Time */
+#define   STARTUP_TIME                           7
+/* Off Mode Startup Time */
+#define   OFF_MODE_STARTUP_TIME      7
+#else
+#define   STARTUP_TIME                           3
+#endif
+/* Sample & Hold Time */
+#define   SAMPLE_HOLD_TIME   6
+#endif
+
 /* A message is posted each time the values goes outside the [-5,+5] interval
  * around the previous measure */
 #define NB_INTERVALS 5

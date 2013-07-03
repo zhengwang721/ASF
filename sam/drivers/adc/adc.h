@@ -63,26 +63,6 @@ extern "C" {
 /* The fast adc startup time*/
 #define ADC_STARTUP_FAST     12
 
-#if SAM3S || SAM4S || SAM3XA || SAM3N
-/* Tracking Time*/
-#define  TRACKING_TIME            1
-/* Transfer Period */
-#define  TRANSFER_PERIOD       1 
-#endif
-
-#if SAM3U
-#ifdef ADC_12B
-/* Start Up Time */
-#define   STARTUP_TIME                           7
-/* Off Mode Startup Time */
-#define   OFF_MODE_STARTUP_TIME      7
-#else
-#define   STARTUP_TIME                           3
-#endif
-/* Sample & Hold Time */
-#define   SAMPLE_HOLD_TIME   6
-#endif
-
 /* Definitions for ADC resolution */
 #if SAM3S || SAM4S || SAM3XA
 enum adc_resolution_t {

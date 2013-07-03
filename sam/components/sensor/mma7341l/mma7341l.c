@@ -70,6 +70,26 @@
 #define MMA7341L_SAMPLES  16
 
 #if SAM3S || SAM4S || SAM3XA || SAM3N
+/* Tracking Time*/
+#define  TRACKING_TIME            1
+/* Transfer Period */
+#define  TRANSFER_PERIOD       1 
+#endif
+
+#if SAM3U
+#ifdef MMA7341L_USE_ADC12
+/* Start Up Time */
+#define   STARTUP_TIME                           7
+/* Off Mode Startup Time */
+#define   OFF_MODE_STARTUP_TIME      7
+#else
+#define   STARTUP_TIME                           3
+#endif
+/* Sample & Hold Time */
+#define   SAMPLE_HOLD_TIME   6
+#endif
+
+#if SAM3S || SAM4S || SAM3XA || SAM3N
 #define mma7341l_adc_get_x_channel_value()    adc_get_channel_value(ADC, (enum adc_channel_num_t)uc_adc_channel_x)
 #define mma7341l_adc_get_y_channel_value()    adc_get_channel_value(ADC, (enum adc_channel_num_t)uc_adc_channel_y)
 #define mma7341l_adc_get_z_channel_value()    adc_get_channel_value(ADC, (enum adc_channel_num_t)uc_adc_channel_z)
