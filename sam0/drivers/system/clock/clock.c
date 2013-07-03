@@ -325,8 +325,7 @@ void system_clock_source_dfll_set_config(
 			(uint32_t)config->quick_lock      |
 			(uint32_t)config->chill_cycle     |
 			(uint32_t)config->run_in_standby << SYSCTRL_DFLLCTRL_RUNSTDBY_Pos |
-			(uint32_t)config->on_demand << SYSCTRL_DFLLCTRL_ONDEMAND_Pos |
-			old_dfll_enable_bit_state;
+			(uint32_t)config->on_demand << SYSCTRL_DFLLCTRL_ONDEMAND_Pos;
 
 	if (config->loop_mode == SYSTEM_CLOCK_DFLL_LOOP_MODE_CLOSED) {
 		_system_clock_inst.dfll.mul =
@@ -336,11 +335,6 @@ void system_clock_source_dfll_set_config(
 
 		/* Enable the closed loop mode */
 		_system_clock_inst.dfll.control |= config->loop_mode;
-	}
-
-	/* Restore old DFLL enable state */
-	if (_system_clock_inst.dfll.control & SYSCTRL_DFLLCTRL_ENABLE) {
-		_system_clock_source_dfll_set_config_errata_9905();
 	}
 }
 
