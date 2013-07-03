@@ -49,6 +49,8 @@
  */
 struct _system_clock_dfll_config {
 	uint32_t control;
+	uint32_t val;
+	uint32_t mul;
 };
 
 /**
