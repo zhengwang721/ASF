@@ -42,6 +42,7 @@
 #include "conf_example.h"
 #include "multi_language_display.h"
 #include "unicode_font_table.h"
+#include "unicode_string.h"
 #include "ssd1306.h"
 #include "font.h"
 #include "delay.h"
@@ -505,6 +506,52 @@ static void font_bitmap_display(uint8_t page, uint8_t column)
 		ssd1306_write_data(font_bitmap_show[i + 16]);
 	}
 }
+
+/**
+ * \brief Display SD card file name on OLED screen.
+ *
+ * \param page page address of the OLED, 0 or 2 for 16*16 font unicode.
+ * \param column column address of the OLED.
+ * \param string String to display(unicode format).
+ *
+ * \return column address reached
+ */
+static uint8_t unicode_show_one_line(uint8_t page, uint8_t column,
+		const uint16_t *p_unicode_string)
+{
+	uint16_t unicode_16;
+	uint8_t column_address;
+
+	column_address = column;
+
+	unicode_16 = *p_unicode_string;
+	p_unicode_string++;
+	while ((unicode_16 != 0) && (column_address < 128)) {
+		if (unicode_16 == 0xFFFF) {
+			/* unicode 0xFFFF redefined as a space. */
+			column_address += 4;
+		} else {
+			font_bitmap_find(unicode_16);
+			font_bitmap_transfer();
+			if ((column_address + 8 * font_bitmap_width) <= 128) {
+				font_bitmap_display(page, column_address);
+			}
+			column_address += (8 * font_bitmap_width);
+			/* For better display, some 16*16 font only */
+			if ((unicode_16 == 0x0050) || (unicode_16 == 0x0061) ||
+					(unicode_16 == 0x0062) || (unicode_16 == 0x0064) ||
+					(unicode_16 == 0x0065) || (unicode_16 == 0x0067) ||
+					(unicode_16 == 0x006E) || (unicode_16 == 0x006F) ||
+					(unicode_16 == 0x0070) || (unicode_16 == 0x0075)) {
+				column_address -= 4;
+			}
+		}
+		unicode_16 = *p_unicode_string;
+		p_unicode_string++;
+	}
+
+	return column_address;
+}
 #endif
 
 /**
@@ -528,231 +575,38 @@ void multi_language_show_switch_info(void)
 	ssd1306_write_text("Push SW0 to switch.");
 #endif
 #ifdef CONF_CHINESE_LANGUAGE
-	font_bitmap_find(0x5361);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 0);
-	font_bitmap_find(0x4E2D);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 16);
-	font_bitmap_find(0x6709);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 32);
-	font_bitmap_find(0x5176);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 48);
-	font_bitmap_find(0x5B83);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 64);
-	font_bitmap_find(0x7248);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 80);
-	font_bitmap_find(0x7A0B);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 96);
-	font_bitmap_find(0x5E8F);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 112);
-	font_bitmap_find(0x6309);
-	font_bitmap_transfer();
-	font_bitmap_display(2, 0);
+	unicode_show_one_line(0, 0, switch_info_1_cn);
+	unicode_show_one_line(2, 0, switch_info_2_cn);
 	ssd1306_set_page_address(3);
 	ssd1306_set_column_address(17);
 	ssd1306_write_text("SW0");
-	font_bitmap_find(0x5207);
-	font_bitmap_transfer();
-	font_bitmap_display(2, 34);
-	font_bitmap_find(0x6362);
-	font_bitmap_transfer();
-	font_bitmap_display(2, 50);
+	unicode_show_one_line(2, 34, switch_info_3_cn);
 #endif
 #ifdef CONF_JAPANESE_LANGUAGE
-	font_bitmap_find(0x62BC);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 0);
-	font_bitmap_find(0x3059);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 16);
+	unicode_show_one_line(0, 0, switch_info_1_jp);
 	ssd1306_set_page_address(1);
 	ssd1306_set_column_address(33);
 	ssd1306_write_text("SW0");
-	font_bitmap_find(0x30B9);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 50);
-	font_bitmap_find(0x30A4);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 66);
-	font_bitmap_find(0x30C3);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 82);
-	font_bitmap_find(0x30C1);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 98);
+	unicode_show_one_line(0, 50, switch_info_2_jp);
 #endif
 #ifdef CONF_FRENCH_LANGUAGE
 	uint8_t colume_index;
-	colume_index = 0;
-	font_bitmap_find(0x0050);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8 - 4);
-	font_bitmap_find(0x006F);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8 - 4);
-	font_bitmap_find(0x0075);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8 - 4);
-	font_bitmap_find(0x0073);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0073);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0065);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8 - 4);
-	font_bitmap_find(0x0072);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	colume_index += 4;
-	font_bitmap_find(0x0070);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8 - 4);
-	font_bitmap_find(0x006F);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8 - 4);
-	font_bitmap_find(0x0075);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8 - 4);
-	font_bitmap_find(0x0072);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
+	unicode_show_one_line(0, 0, switch_info_1_fr);
+	colume_index = unicode_show_one_line(2, 0, switch_info_2_fr);
 
-	colume_index = 0;
-	font_bitmap_find(0x0063);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x006F);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8 - 4);
-	font_bitmap_find(0x006D);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x006D);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0075);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8 - 4);
-	font_bitmap_find(0x0074);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0065);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8 - 4);
-	font_bitmap_find(0x0072);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
 	ssd1306_set_page_address(3);
 	ssd1306_set_column_address(colume_index);
 	ssd1306_write_text("SW0");
 #endif
 #ifdef CONF_SPANISH_LANGUAGE
 	uint8_t colume_index;
-	colume_index = 0;
-	font_bitmap_find(0x0050);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0072);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0065);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0073);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0069);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x006F);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x006E);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8) + 1;
+	colume_index = unicode_show_one_line(0, 0, switch_info_1_sp);;
+	colume_index += 1;
 	ssd1306_set_page_address(1);
 	ssd1306_set_column_address(colume_index);
 	ssd1306_write_text("SW0");
 
-	colume_index = 0;
-	font_bitmap_find(0x0070);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8 - 4);
-	font_bitmap_find(0x0061);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8 - 4);
-	font_bitmap_find(0x0072);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0061);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8 - 4);
-	colume_index += 4;
-	font_bitmap_find(0x0063);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0061);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8 - 4);
-	font_bitmap_find(0x006D);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0062);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8 - 4);
-	font_bitmap_find(0x0069);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0061);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8 - 4);
-	font_bitmap_find(0x0072);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
+	unicode_show_one_line(2, 0, switch_info_2_sp);
 #endif
 }
 
@@ -771,183 +625,18 @@ void multi_language_show_start_info(void)
 	ssd1306_write_text("Start Kit Demo");
 #endif
 #ifdef CONF_CHINESE_LANGUAGE
-	font_bitmap_find(0x5F00);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 0);
-	font_bitmap_find(0x53D1);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 16);
-	font_bitmap_find(0x677F);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 32);
-	font_bitmap_find(0x6F14);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 48);
-	font_bitmap_find(0x793A);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 64);
-	font_bitmap_find(0x7A0B);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 80);
-	font_bitmap_find(0x5E8F);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 96);
+	unicode_show_one_line(0, 0, start_info_1_cn);
 #endif
 #ifdef CONF_JAPANESE_LANGUAGE
-	font_bitmap_find(0x958B);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 0);
-	font_bitmap_find(0x767A);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 16);
-	font_bitmap_find(0x30DC);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 32);
-	font_bitmap_find(0x30FC);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 48);
-	font_bitmap_find(0x30C9);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 64);
-	font_bitmap_find(0x306E);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 80);
-	font_bitmap_find(0x30C7);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 96);
-	font_bitmap_find(0x30E2);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 112);
+	unicode_show_one_line(0, 0, start_info_1_jp);
 #endif
 #ifdef CONF_FRENCH_LANGUAGE
-	uint8_t colume_index;
-	colume_index = 0;
-	font_bitmap_find(0x0043);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x006F);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8 - 4);
-	font_bitmap_find(0x006D);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x006D);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0065);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8 - 4);
-	font_bitmap_find(0x006E);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8 - 4);
-	font_bitmap_find(0x006C);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0063);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0065);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8 - 4);
-	font_bitmap_find(0x007A);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-
-	colume_index = 0;
-	font_bitmap_find(0x0044);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0065);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x006D);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x006F);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	colume_index += 8;
-	font_bitmap_find(0x004B);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0069);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0074);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
+	unicode_show_one_line(0, 0, start_info_1_fr);
+	unicode_show_one_line(2, 0, start_info_2_fr);
 #endif
 #ifdef CONF_SPANISH_LANGUAGE
-	uint8_t colume_index;
-	colume_index = 0;
-	font_bitmap_find(0x0049);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x006E);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8 - 4);
-	font_bitmap_find(0x0069);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0063);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0069);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x006F);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	colume_index += 8;
-	font_bitmap_find(0x0044);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0065);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8 - 4);
-	font_bitmap_find(0x006D);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x006F);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-
-	colume_index = 0;
-	font_bitmap_find(0x004B);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0069);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0074);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
+	unicode_show_one_line(0, 0, start_info_1_sp);
+	unicode_show_one_line(2, 0, start_info_2_sp);
 #endif
 }
 
@@ -960,106 +649,16 @@ void multi_language_show_temperature_info(void)
 	ssd1306_write_text("Temperature sensor:");
 #endif
 #ifdef CONF_CHINESE_LANGUAGE
-	font_bitmap_find(0x6E29);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 0);
-	font_bitmap_find(0x5EA6);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 16);
-	font_bitmap_find(0x4F20);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 32);
-	font_bitmap_find(0x611F);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 48);
-	font_bitmap_find(0x5668);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 64);
-	font_bitmap_find(0x503C);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 80);
+	unicode_show_one_line(0, 0, temperature_info_1_cn);
 #endif
 #ifdef CONF_JAPANESE_LANGUAGE
-	font_bitmap_find(0x6E29);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 0);
-	font_bitmap_find(0x5EA6);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 16);
-	font_bitmap_find(0x30BB);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 32);
-	font_bitmap_find(0x30F3);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 48);
-	font_bitmap_find(0x30B5);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 64);
-	font_bitmap_find(0x5024);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 80);
+	unicode_show_one_line(0, 0, temperature_info_1_jp);
 #endif
 #ifdef CONF_FRENCH_LANGUAGE
-	uint8_t colume_index;
-	colume_index = 0;
-	font_bitmap_find(0x0054);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0065);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x006D);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0070);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x00E9);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0072);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0061);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
+	unicode_show_one_line(0, 0, temperature_info_1_fr);
 #endif
 #ifdef CONF_SPANISH_LANGUAGE
-	uint8_t colume_index;
-	colume_index = 0;
-	font_bitmap_find(0x0054);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0065);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x006D);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0070);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0065);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0072);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0061);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
+	unicode_show_one_line(0, 0, temperature_info_1_sp);
 #endif
 }
 
@@ -1072,90 +671,16 @@ void multi_language_show_light_info(void)
 	ssd1306_write_text("Light sensor:");
 #endif
 #ifdef CONF_CHINESE_LANGUAGE
-	font_bitmap_find(0x4EAE);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 0);
-	font_bitmap_find(0x5EA6);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 16);
-	font_bitmap_find(0x4F20);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 32);
-	font_bitmap_find(0x611F);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 48);
-	font_bitmap_find(0x5668);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 64);
-	font_bitmap_find(0x503C);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 80);
+	unicode_show_one_line(0, 0, light_info_1_cn);
 #endif
 #ifdef CONF_JAPANESE_LANGUAGE
-	font_bitmap_find(0x660E);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 0);
-	font_bitmap_find(0x308B);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 16);
-	font_bitmap_find(0x3055);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 32);
-	font_bitmap_find(0x30BB);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 48);
-	font_bitmap_find(0x30F3);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 64);
-	font_bitmap_find(0x30B5);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 80);
+	unicode_show_one_line(0, 0, light_info_1_jp);
 #endif
 #ifdef CONF_FRENCH_LANGUAGE
-	uint8_t colume_index;
-	colume_index = 0;
-	font_bitmap_find(0x004C);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0075);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x006D);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0069);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x00E8);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0072);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0065);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
+	unicode_show_one_line(0, 0, light_info_1_fr);
 #endif
 #ifdef CONF_SPANISH_LANGUAGE
-	uint8_t colume_index;
-	colume_index = 0;
-	font_bitmap_find(0x004C);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0075);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x007A);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
+	unicode_show_one_line(0, 0, light_info_1_sp);
 #endif
 }
 
@@ -1174,188 +699,19 @@ void multi_language_show_end_info(void)
 	ssd1306_write_text("Wait bootloader complete...");
 #endif
 #ifdef CONF_CHINESE_LANGUAGE
-	font_bitmap_find(0x7B49);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 0);
-	font_bitmap_find(0x5F85);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 16);
-	font_bitmap_find(0x5F15);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 32);
-	font_bitmap_find(0x5BFC);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 48);
-	font_bitmap_find(0x7A0B);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 64);
-	font_bitmap_find(0x5E8F);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 80);
-	font_bitmap_find(0x5B8C);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 96);
-	font_bitmap_find(0x6210);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 112);
+	unicode_show_one_line(0, 0, end_info_1_cn);
 #endif
 #ifdef CONF_JAPANESE_LANGUAGE
-	font_bitmap_find(0x30D6);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 0);
-	font_bitmap_find(0x30FC);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 16);
-	font_bitmap_find(0x30C8);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 32);
-	font_bitmap_find(0x30ED);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 48);
-	font_bitmap_find(0x30FC);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 64);
-	font_bitmap_find(0x30C0);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 80);
-
-	font_bitmap_find(0x304C);
-	font_bitmap_transfer();
-	font_bitmap_display(2, 0);
-	font_bitmap_find(0x5B8C);
-	font_bitmap_transfer();
-	font_bitmap_display(2, 16);
-	font_bitmap_find(0x4E86);
-	font_bitmap_transfer();
-	font_bitmap_display(2, 32);
-	font_bitmap_find(0x5F85);
-	font_bitmap_transfer();
-	font_bitmap_display(2, 48);
-	font_bitmap_find(0x3061);
-	font_bitmap_transfer();
-	font_bitmap_display(2, 64);
+	unicode_show_one_line(0, 0, end_info_1_jp);
+	unicode_show_one_line(2, 0, end_info_2_jp);
 #endif
 #ifdef CONF_FRENCH_LANGUAGE
-	uint8_t colume_index;
-	colume_index = 0;
-	font_bitmap_find(0x0041);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0074);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0074);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0065);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x006E);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0064);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0065);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x007A);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-
-	colume_index = 0;
-	font_bitmap_find(0x0063);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x006F);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x006D);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0070);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x006C);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0065);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0074);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
+	unicode_show_one_line(0, 0, end_info_1_fr);
+	unicode_show_one_line(2, 0, end_info_2_fr);
 #endif
 #ifdef CONF_SPANISH_LANGUAGE
-	uint8_t colume_index;
-	colume_index = 0;
-	font_bitmap_find(0x0045);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0073);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0070);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0065);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0072);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0065);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-
-	colume_index = 0;
-	font_bitmap_find(0x0063);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x006F);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x006D);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	font_bitmap_find(0x0070);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x006C);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0065);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	font_bitmap_find(0x0074);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0061);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
+	unicode_show_one_line(0, 0, end_info_1_sp);
+	unicode_show_one_line(2, 0, end_info_2_sp);
 #endif
 }
 
@@ -1368,175 +724,18 @@ void multi_language_show_no_sd_info(void)
 	ssd1306_write_text("Please insert SD card...");
 #endif
 #ifdef CONF_CHINESE_LANGUAGE
-	font_bitmap_find(0x8BF7);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 0);
-	font_bitmap_find(0x63D2);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 16);
-	font_bitmap_find(0x5361);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 32);
+	unicode_show_one_line(0, 0, no_sd_info_1_cn);
 #endif
 #ifdef CONF_JAPANESE_LANGUAGE
-	font_bitmap_find(0x30AB);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 0);
-	font_bitmap_find(0x30FC);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 16);
-	font_bitmap_find(0x30C9);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 32);
-	font_bitmap_find(0x3092);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 48);
-	font_bitmap_find(0x304F);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 64);
-	font_bitmap_find(0x3061);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 80);
-	font_bitmap_find(0x3055);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 96);
-	font_bitmap_find(0x3044);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 112);
+	unicode_show_one_line(0, 0, no_sd_info_1_jp);
 #endif
 #ifdef CONF_FRENCH_LANGUAGE
-	uint8_t colume_index;
-	colume_index = 0;
-	font_bitmap_find(0x0069);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x006E);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0073);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x00E9);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0072);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0065);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0072);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	
-	colume_index = 0;
-	font_bitmap_find(0x006C);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0061);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	colume_index += 4;
-	font_bitmap_find(0x0063);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0061);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0072);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0074);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0065);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
+	unicode_show_one_line(0, 0, no_sd_info_1_fr);
+	unicode_show_one_line(2, 0, no_sd_info_2_fr);
 #endif
 #ifdef CONF_SPANISH_LANGUAGE
-	uint8_t colume_index;
-	colume_index = 0;
-	font_bitmap_find(0x0069);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x006E);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0073);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0065);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0072);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0074);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0061);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0072);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	
-	colume_index = 0;
-	font_bitmap_find(0x006C);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0061);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	colume_index += 4;
-	font_bitmap_find(0x0074);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0061);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0072);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x006A);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0065);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0074);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0061);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
+	unicode_show_one_line(0, 0, no_sd_info_1_sp);
+	unicode_show_one_line(2, 0, no_sd_info_2_sp);
 #endif
 }
 
@@ -1551,123 +750,27 @@ void multi_language_show_sd_info(void)
 	ssd1306_set_column_address(0);
 #endif
 #ifdef CONF_CHINESE_LANGUAGE
-	font_bitmap_find(0x5361);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 0);
-	font_bitmap_find(0x4FE1);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 16);
-	font_bitmap_find(0x606F);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 32);
+	unicode_show_one_line(0, 0, sd_info_1_cn);
 	ssd1306_set_page_address(1);
 	ssd1306_set_column_address(48);
 	ssd1306_write_text(":");
 #endif
 #ifdef CONF_JAPANESE_LANGUAGE
-	font_bitmap_find(0x30AB);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 0);
-	font_bitmap_find(0x30FC);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 16);
-	font_bitmap_find(0x30C9);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 32);
-	font_bitmap_find(0x60C5);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 48);
-	font_bitmap_find(0x5831);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 64);
+	unicode_show_one_line(0, 0, sd_info_1_jp);
 	ssd1306_set_page_address(1);
 	ssd1306_set_column_address(80);
 	ssd1306_write_text(":");
 #endif
 #ifdef CONF_FRENCH_LANGUAGE
 	uint8_t colume_index;
-	colume_index = 0;
-	font_bitmap_find(0x0074);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0079);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0070);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8 - 4);
-	font_bitmap_find(0x0065);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8 - 4);
-	colume_index += 4;
-	font_bitmap_find(0x0064);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8 - 4);
-	font_bitmap_find(0x0065);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8 - 4);
-	colume_index += 4;
-	font_bitmap_find(0x0063);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0061);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8 - 4);
-	font_bitmap_find(0x0072);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0074);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0065);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8 - 4);
+	colume_index = unicode_show_one_line(0, 0, sd_info_1_fr);
 	ssd1306_set_page_address(1);
 	ssd1306_set_column_address(colume_index);
 	ssd1306_write_text(":");
 #endif
 #ifdef CONF_SPANISH_LANGUAGE
 	uint8_t colume_index;
-	colume_index = 0;
-	font_bitmap_find(0x0074);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0061);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0072);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x006A);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0065);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0074);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0061);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
+	colume_index = unicode_show_one_line(0, 0, sd_info_1_sp);
 	ssd1306_set_page_address(1);
 	ssd1306_set_column_address(colume_index);
 	ssd1306_write_text(":");
@@ -1683,82 +786,16 @@ void multi_language_show_normal_card_info(void)
 	ssd1306_write_text("- Type: Normal SD card");
 #endif
 #ifdef CONF_CHINESE_LANGUAGE
-	font_bitmap_find(0x666E);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 56);
-	font_bitmap_find(0x901A);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 72);
-	font_bitmap_find(0x5361);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 88);
+	unicode_show_one_line(0, 56, normal_card_info_1_cn);
 #endif
 #ifdef CONF_JAPANESE_LANGUAGE
-	font_bitmap_find(0x666E);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 88);
-	font_bitmap_find(0x901A);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 104);
+	unicode_show_one_line(0, 88, normal_card_info_1_jp);
 #endif
 #ifdef CONF_FRENCH_LANGUAGE
-	uint8_t colume_index;
-	colume_index = 0;
-	font_bitmap_find(0x004E);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x006F);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0072);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x006D);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0061);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x006C);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0065);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
+	unicode_show_one_line(2, 0, normal_card_info_1_fr);
 #endif
 #ifdef CONF_SPANISH_LANGUAGE
-	uint8_t colume_index;
-	colume_index = 0;
-	font_bitmap_find(0x004E);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x006F);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0072);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x006D);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0061);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x006C);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
+	unicode_show_one_line(2, 0, normal_card_info_1_sp);
 #endif
 }
 
@@ -1771,75 +808,16 @@ void multi_language_show_high_capacity_card_info(void)
 	ssd1306_write_text("- Type: High Capacity card");
 #endif
 #ifdef CONF_CHINESE_LANGUAGE
-	font_bitmap_find(0x5927);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 56);
-	font_bitmap_find(0x5BB9);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 72);
-	font_bitmap_find(0x91CF);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 88);
-	font_bitmap_find(0x5361);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 104);
+	unicode_show_one_line(0, 56, high_capacity_card_info_1_cn);
 #endif
 #ifdef CONF_JAPANESE_LANGUAGE
-	font_bitmap_find(0x5927);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 88);
+	unicode_show_one_line(0, 88, high_capacity_card_info_1_jp);
 #endif
 #ifdef CONF_FRENCH_LANGUAGE
-	uint8_t colume_index;
-	colume_index = 0;
-	font_bitmap_find(0x0047);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0072);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0061);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x006E);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0064);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
+	unicode_show_one_line(2, 0, high_capacity_card_info_1_fr);
 #endif
 #ifdef CONF_SPANISH_LANGUAGE
-	uint8_t colume_index;
-	colume_index = 0;
-	font_bitmap_find(0x0047);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0072);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0061);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x006E);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0064);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0065);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
+	unicode_show_one_line(2, 0, high_capacity_card_info_1_sp);
 #endif
 }
 
@@ -1852,95 +830,16 @@ void multi_language_show_unknow_card_info(void)
 	ssd1306_write_text("- Type: unknown");
 #endif
 #ifdef CONF_CHINESE_LANGUAGE
-	font_bitmap_find(0x672A);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 56);
-	font_bitmap_find(0x77E5);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 72);
+	unicode_show_one_line(0, 56, unknow_card_info_1_cn);
 #endif
 #ifdef CONF_JAPANESE_LANGUAGE
-	font_bitmap_find(0x4E0D);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 88);
-	font_bitmap_find(0x660E);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 104);
+	unicode_show_one_line(0, 88, unknow_card_info_1_jp);
 #endif
 #ifdef CONF_FRENCH_LANGUAGE
-	uint8_t colume_index;
-	colume_index = 0;
-	font_bitmap_find(0x0069);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x006E);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0063);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x006F);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x006E);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x006E);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0075);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0065);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
+	unicode_show_one_line(2, 0, unknow_card_info_1_fr);
 #endif
 #ifdef CONF_SPANISH_LANGUAGE
-	uint8_t colume_index;
-	colume_index = 0;
-	font_bitmap_find(0x0069);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x006E);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0063);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x00F3);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0067);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x006E);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0069);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0074);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0061);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
+	unicode_show_one_line(2, 0, unknow_card_info_1_sp);
 #endif
 }
 
@@ -1961,15 +860,7 @@ void multi_language_show_card_size_info(char *p_string,
 	ssd1306_set_column_address(0);
 #endif
 #ifdef CONF_CHINESE_LANGUAGE
-	font_bitmap_find(0x5361);
-	font_bitmap_transfer();
-	font_bitmap_display(2, 0);
-	font_bitmap_find(0x5BB9);
-	font_bitmap_transfer();
-	font_bitmap_display(2, 16);
-	font_bitmap_find(0x91CF);
-	font_bitmap_transfer();
-	font_bitmap_display(2, 32);
+	unicode_show_one_line(2, 0, card_size_info_1_cn);
 	
 	ssd1306_set_page_address(3);
 	ssd1306_set_column_address(48);
@@ -1981,17 +872,9 @@ void multi_language_show_card_size_info(char *p_string,
 	
 	/* Clear screen. */
 	ssd1306_clear();
-	
+
 	/* scroll one line to show file info */
-	font_bitmap_find(0x5361);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 0);
-	font_bitmap_find(0x5BB9);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 16);
-	font_bitmap_find(0x91CF);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 32);
+	unicode_show_one_line(0, 0, card_size_info_1_cn);
 	
 	ssd1306_set_page_address(1);
 	ssd1306_set_column_address(48);
@@ -1999,12 +882,7 @@ void multi_language_show_card_size_info(char *p_string,
 	ssd1306_write_text(p_string);
 #endif
 #ifdef CONF_JAPANESE_LANGUAGE
-	font_bitmap_find(0x5BB9);
-	font_bitmap_transfer();
-	font_bitmap_display(2, 0);
-	font_bitmap_find(0x91CF);
-	font_bitmap_transfer();
-	font_bitmap_display(2, 16);
+	unicode_show_one_line(2, 0, card_size_info_1_jp);
 	
 	ssd1306_set_page_address(3);
 	ssd1306_set_column_address(32);
@@ -2018,12 +896,7 @@ void multi_language_show_card_size_info(char *p_string,
 	ssd1306_clear();
 	
 	/* scroll one line to show file info */
-	font_bitmap_find(0x5BB9);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 0);
-	font_bitmap_find(0x91CF);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 16);
+	unicode_show_one_line(0, 0, card_size_info_1_jp);
 	
 	ssd1306_set_page_address(1);
 	ssd1306_set_column_address(32);
@@ -2037,48 +910,17 @@ void multi_language_show_card_size_info(char *p_string,
 	
 	/* Clear screen. */
 	ssd1306_clear();
-	
-	colume_index = 0;
-	font_bitmap_find(0x0043);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0061);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0070);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0061);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0063);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0069);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0074);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x00E9);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	
+
+	unicode_show_one_line(0, 0, card_size_info_1_fr);
+
 	ssd1306_set_page_address(2);
 	ssd1306_set_column_address(0);
 	sprintf(p_string, ": %lu KB", sd_card_size);
 	ssd1306_write_text(p_string);
-	
+
 	/* Wait 1.5 seconds to show the above message. */
 	delay_ms(1500);
-	
+
 	/* Clear screen. */
 	ssd1306_clear();
 #endif
@@ -2086,55 +928,20 @@ void multi_language_show_card_size_info(char *p_string,
 	uint8_t colume_index;
 	/* Wait 1.5 seconds to show the above message. */
 	delay_ms(1500);
-	
+
 	/* Clear screen. */
 	ssd1306_clear();
-	
-	colume_index = 0;
-	font_bitmap_find(0x0043);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0061);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0070);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0061);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0063);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0069);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0064);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0061);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0064);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	
+
+	unicode_show_one_line(0, 0, card_size_info_1_sp);
+
 	ssd1306_set_page_address(2);
 	ssd1306_set_column_address(0);
 	sprintf(p_string, ": %lu KB", sd_card_size);
 	ssd1306_write_text(p_string);
-	
+
 	/* Wait 1.5 seconds to show the above message. */
 	delay_ms(1500);
-	
+
 	/* Clear screen. */
 	ssd1306_clear();
 #endif
@@ -2149,147 +956,16 @@ void multi_language_show_no_fatfs_info(void)
 	ssd1306_write_text("   <No FAT FS found on SD>");
 #endif
 #ifdef CONF_CHINESE_LANGUAGE
-	font_bitmap_find(0x65E0);
-	font_bitmap_transfer();
-	font_bitmap_display(2, 0);
-	font_bitmap_find(0x6587);
-	font_bitmap_transfer();
-	font_bitmap_display(2, 16);
-	font_bitmap_find(0x4EF6);
-	font_bitmap_transfer();
-	font_bitmap_display(2, 32);
-	font_bitmap_find(0x7CFB);
-	font_bitmap_transfer();
-	font_bitmap_display(2, 48);
-	font_bitmap_find(0x7EDF);
-	font_bitmap_transfer();
-	font_bitmap_display(2, 64);
+	unicode_show_one_line(2, 0, no_fatfs_info_1_cn);
 #endif
 #ifdef CONF_JAPANESE_LANGUAGE
-	font_bitmap_find(0x30CE);
-	font_bitmap_transfer();
-	font_bitmap_display(2, 0);
-	font_bitmap_find(0x30FC);
-	font_bitmap_transfer();
-	font_bitmap_display(2, 16);
-	font_bitmap_find(0x30D5);
-	font_bitmap_transfer();
-	font_bitmap_display(2, 32);
-	font_bitmap_find(0x30A9);
-	font_bitmap_transfer();
-	font_bitmap_display(2, 48);
-	font_bitmap_find(0x30FC);
-	font_bitmap_transfer();
-	font_bitmap_display(2, 64);
-	font_bitmap_find(0x30DE);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 80);
-	font_bitmap_find(0x30C3);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 96);
-	font_bitmap_find(0x30C8);
-	font_bitmap_transfer();
-	font_bitmap_display(0, 112);
+	unicode_show_one_line(2, 0, no_fatfs_info_1_jp);
 #endif
 #ifdef CONF_FRENCH_LANGUAGE
-	uint8_t colume_index;
-	colume_index = 0;
-	font_bitmap_find(0x0050);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0061);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0073);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	colume_index += 4;
-	font_bitmap_find(0x0066);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x006F);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0072);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x006D);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0061);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0074);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x00E9);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0065);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
+	unicode_show_one_line(0, 0, no_fatfs_info_1_fr);
 #endif
 #ifdef CONF_SPANISH_LANGUAGE
-	uint8_t colume_index;
-	colume_index = 0;
-	font_bitmap_find(0x004E);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x006F);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	colume_index += 4;
-	font_bitmap_find(0x0066);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x006F);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0072);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x006D);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0061);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0074);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0065);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0061);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0064);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x006F);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
+	unicode_show_one_line(0, 0, no_fatfs_info_1_sp);
 #endif
 }
 
@@ -2302,146 +978,16 @@ void multi_language_show_no_files_info(void)
 	ssd1306_write_text("		 <no content>");
 #endif
 #ifdef CONF_CHINESE_LANGUAGE
-	font_bitmap_find(0x6CA1);
-	font_bitmap_transfer();
-	font_bitmap_display(2, 0);
-	font_bitmap_find(0x6709);
-	font_bitmap_transfer();
-	font_bitmap_display(2, 16);
-	font_bitmap_find(0x6587);
-	font_bitmap_transfer();
-	font_bitmap_display(2, 32);
-	font_bitmap_find(0x4EF6);
-	font_bitmap_transfer();
-	font_bitmap_display(2, 48);
+	unicode_show_one_line(2, 0, no_files_info_1_cn);
 #endif
 #ifdef CONF_JAPANESE_LANGUAGE
-	font_bitmap_find(0x30CE);
-	font_bitmap_transfer();
-	font_bitmap_display(2, 0);
-	font_bitmap_find(0x30FC);
-	font_bitmap_transfer();
-	font_bitmap_display(2, 16);
-	font_bitmap_find(0x30D5);
-	font_bitmap_transfer();
-	font_bitmap_display(2, 32);
-	font_bitmap_find(0x30A1);
-	font_bitmap_transfer();
-	font_bitmap_display(2, 48);
-	font_bitmap_find(0x30A4);
-	font_bitmap_transfer();
-	font_bitmap_display(2, 64);
-	font_bitmap_find(0x30EB);
-	font_bitmap_transfer();
-	font_bitmap_display(2, 80);
+	unicode_show_one_line(2, 0, no_files_info_1_jp);
 #endif
 #ifdef CONF_FRENCH_LANGUAGE
-	uint8_t colume_index;
-	colume_index = 0;
-	font_bitmap_find(0x0040);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0075);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0063);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0075);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x006E);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	colume_index += 4;
-	font_bitmap_find(0x0066);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0069);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0063);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0068);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0069);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0065);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0072);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
+	unicode_show_one_line(0, 0, no_files_info_1_fr);
 #endif
 #ifdef CONF_SPANISH_LANGUAGE
-	uint8_t colume_index;
-	colume_index = 0;
-	font_bitmap_find(0x004E);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0069);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x006E);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0067);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x00FA);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x006E);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	colume_index += 4;
-	font_bitmap_find(0x0061);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0072);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0063);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0068);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0069);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0076);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x006F);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
+	unicode_show_one_line(0, 0, no_files_info_1_sp);
 #endif
 }
 
@@ -2454,210 +1000,18 @@ void multi_language_show_browse_info(void)
 	ssd1306_write_text("  <Press B2-3 to browse SD>");
 #endif
 #ifdef CONF_CHINESE_LANGUAGE
-	font_bitmap_find(0x4F7F);
-	font_bitmap_transfer();
-	font_bitmap_display(2, 0);
-	font_bitmap_find(0x7528);
-	font_bitmap_transfer();
-	font_bitmap_display(2, 16);
-	font_bitmap_find(0x6309);
-	font_bitmap_transfer();
-	font_bitmap_display(2, 32);
-	font_bitmap_find(0x952E);
-	font_bitmap_transfer();
-	font_bitmap_display(2, 48);
-	font_bitmap_find(0x4E8C);
-	font_bitmap_transfer();
-	font_bitmap_display(2, 64);
-	font_bitmap_find(0x4E09);
-	font_bitmap_transfer();
-	font_bitmap_display(2, 80);
-	font_bitmap_find(0x6D4F);
-	font_bitmap_transfer();
-	font_bitmap_display(2, 96);
-	font_bitmap_find(0x89C8);
-	font_bitmap_transfer();
-	font_bitmap_display(2, 112);
+	unicode_show_one_line(2, 0, browse_info_1_cn);
 #endif
 #ifdef CONF_JAPANESE_LANGUAGE
-	font_bitmap_find(0x4F7F);
-	font_bitmap_transfer();
-	font_bitmap_display(2, 0);
-	font_bitmap_find(0x7528);
-	font_bitmap_transfer();
-	font_bitmap_display(2, 16);
-	font_bitmap_find(0x30DC);
-	font_bitmap_transfer();
-	font_bitmap_display(2, 32);
-	font_bitmap_find(0x30BF);
-	font_bitmap_transfer();
-	font_bitmap_display(2, 48);
-	font_bitmap_find(0x30F3);
-	font_bitmap_transfer();
-	font_bitmap_display(2, 64);
-	font_bitmap_find(0x4E8C);
-	font_bitmap_transfer();
-	font_bitmap_display(2, 80);
-	font_bitmap_find(0x4E09);
-	font_bitmap_transfer();
-	font_bitmap_display(2, 96);
-	font_bitmap_find(0x898B);
-	font_bitmap_transfer();
-	font_bitmap_display(2, 112);
+	unicode_show_one_line(2, 0, browse_info_1_jp);
 #endif
 #ifdef CONF_FRENCH_LANGUAGE
-	uint8_t colume_index;
-	colume_index = 0;
-	font_bitmap_find(0x0042);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x006F);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0075);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0074);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x006F);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x006E);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0032);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0033);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	
-	colume_index = 0;
-	font_bitmap_find(0x00E0);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	colume_index += 4;
-	font_bitmap_find(0x0070);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0061);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0072);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0063);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x006F);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0075);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0072);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0069);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0072);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
+	unicode_show_one_line(0, 0, browse_info_1_fr);
+	unicode_show_one_line(2, 0, browse_info_2_fr);
 #endif
 #ifdef CONF_SPANISH_LANGUAGE
-	uint8_t colume_index;
-	colume_index = 0;
-	font_bitmap_find(0x0042);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x006F);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0074);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x00F3);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x006E);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0032);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0033);
-	font_bitmap_transfer();
-	font_bitmap_display(0, colume_index);
-	
-	colume_index = 0;
-	font_bitmap_find(0x0070);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8 - 4);
-	font_bitmap_find(0x0061);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8 - 4);
-	font_bitmap_find(0x0072);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0061);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8 - 4);
-	colume_index += 4;	
-	font_bitmap_find(0x006E);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8 - 4);
-	font_bitmap_find(0x0061);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8 - 4);
-	font_bitmap_find(0x0076);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8);
-	font_bitmap_find(0x0065);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8 - 4);
-	font_bitmap_find(0x0067);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8 - 4);
-	font_bitmap_find(0x0061);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
-	colume_index += (font_bitmap_width * 8 - 4);
-	font_bitmap_find(0x0072);
-	font_bitmap_transfer();
-	font_bitmap_display(2, colume_index);
+	unicode_show_one_line(0, 0, browse_info_1_sp);
+	unicode_show_one_line(2, 0, browse_info_2_sp);
 #endif
 }
 

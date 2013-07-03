@@ -22,6 +22,7 @@
 			<require idref="common.components.memory.sd_mmc.ctrl_access"/>
 			<require idref="common.services.fs.fatfs"/>
 			<build type="header-file" value="unicode_font_table.h"/>
+			<build type="header-file" value="unicode_string.h"/>
 			<build type="header-file" value="multi_language_display.h"/>
 			<build type="c-source" value="multi_language_display.c"/>
 			<build type="c-source" value="main.c"/>

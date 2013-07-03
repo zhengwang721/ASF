@@ -44,6 +44,7 @@
 
 #include "compiler.h"
 
+/* Interface functions. */
 void multi_language_show_switch_info(void);
 void multi_language_show_start_info(void);
 void multi_language_show_temperature_info(void);
