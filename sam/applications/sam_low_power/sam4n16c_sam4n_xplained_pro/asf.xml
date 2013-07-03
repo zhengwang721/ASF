@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="Low Power demo for SAM4N-XPLAINED-PRO" id="sam.applications.low_power.sam4n_xplained_pro">
+	<project caption="Low Power Demo for SAM4N-Xplained-Pro" id="sam.applications.low_power.sam4n_xplained_pro">
 		<!-- Summary Description -->
 		<info type="description" value="summary">
 			This demo shows all the different low power modes with several types of wake-up sources.

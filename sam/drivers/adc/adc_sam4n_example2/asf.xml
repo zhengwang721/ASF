@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="sam.drivers.adc.sam4n.example2" caption="ADC SAM4N Enhanced Resolution Example">
+	<module type="application" id="sam.drivers.adc.sam4n.example2" caption="ADC Enhanced Resolution Example for SAM4N">
 		<info type="description" value="summary">
 		This example demonstrates how to use the enhanced resolution feature inside the microcontroller.
 		</info>

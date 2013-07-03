@@ -46,8 +46,7 @@
  *
  * \section Purpose
  *
- * This example demonstrates how to use the enhanced resolution feature inside
- *the microcontroller.
+ * This example demonstrates how to use the enhanced resolution feature of SAM4N.
  *
  * \section Requirements
  *
@@ -55,33 +54,18 @@
  *
  * \section Description
  *
- * The example is aimed to demonstrate the enhanced resolution feature
- * inside the device.
- *
- * The ADC supports an 8-bit or 10-bit resolution mode, and conversion results
- * are reported in a common register for all channels, as well as in a channel-
- * dedicated register.
- * The 11-bit and 12-bit resolution modes are obtained by interpolating multiple 
- * samples to acquire better accuracy.
+ * The ADC on SAM4N normally operates in 8-bit or 10-bit resolution mode. But
+ * obtained by interpolating multiple samples, the 11-bit and 12-bit resolution
+ * mode can be achieved, which is so called enhanced resolution mode.
  * For 11-bit mode, 4 samples are used, which gives an effective sample rate of
- * 1/4 of the actual sample
- * frequency. For 12-bitmode, 16 samples are used, giving an effective sample
- * rate of 1/16 of the actual
- * sample frequency. This arrangement allows conversion speed to be traded for
- * better accuracy.
+ * 1/4 of the actual sample frequency.
+ * For 12-bit mode, 16 samples are used, giving an effective sample rate of 1/16
+ * of the actual sample frequency. This arrangement allows conversion speed to
+ * be traded for better accuracy.
  *
  * \section Usage
  *
- * -# Build the program and download it into the evaluation board. Please
- *    refer to the
- *    <a href="http://www.atmel.com/dyn/resources/prod_documents/6421B.pdf">
- *    SAM-BA User Guide</a>, the
- *    <a href="http://www.atmel.com/dyn/resources/prod_documents/doc6310.pdf">
- *    GNU-Based Software Development</a>
- *    application note or the
- *    <a href="http://www.iar.com/website1/1.0.1.0/78/1/">
- *    IAR EWARM User and reference guides</a>,
- *    depending on the solutions that users choose.
+ * -# Build the program and download it into the evaluation board.
  * -# On the computer, open and configure a terminal application
  *    (e.g., HyperTerminal on Microsoft Windows) with these settings:
  *   - 115200 bauds

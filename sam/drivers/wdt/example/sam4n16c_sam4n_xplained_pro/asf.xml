@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
-	<project caption="Watchdog Timer Example on SAM4N-XPAINED-PRO" id="sam.drivers.wdt.example.sam4n_xplained_pro">
+	<project caption="Watchdog Timer Example on SAM4N-Xplained-Pro" id="sam.drivers.wdt.example.sam4n_xplained_pro">
 		<info type="description" value="summary">
-		Basic example of watchdog timer on SAM4N-XPAINED-PRO.
+		Basic example of watchdog timer on SAM4N-Xplained-Pro.
 		</info>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>

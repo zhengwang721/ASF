@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
-	<project caption="RTT example for SAM4N-XPLAINED-PRO" id="sam.drivers.rtt.example.sam4n_xplained_pro">
+	<project caption="RTT example for SAM4N-Xplained-Pro" id="sam.drivers.rtt.example.sam4n_xplained_pro">
 		<info type="description" value="summary">
-		Basic example of RTT on SAM4N_XPLAINED_PRO.
+		Basic example of RTT on SAM4N Xplained Pro.
 		</info>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
