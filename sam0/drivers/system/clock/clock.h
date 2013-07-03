@@ -1184,7 +1184,15 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *
  *
  * \section asfdoc_samd20_system_clock_extra_errata Errata
- * There are no errata related to this driver.
+ *	<tr>
+ *	<td>
+ *	 \li This driver implements a workaround for errata 9905<br>
+ *	     "The DFLL clock must be requested before being configured otherwise a
+ *	     write access to a DFLL register can freeze the device."<br>
+ *	     This driver will enable and configure the DFLL before the ONDEMAND bit is set.
+ *	</td>
+ *	</tr>
+ *	
  *
  *
  * \section asfdoc_samd20_system_clock_extra_history Module History
@@ -1197,6 +1205,9 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *	<tr>
  *		<th>Changelog</th>
  *	</tr>
+	<tr>
+	</tr>
+		<td>\li Updated dfll configuration function to implement workaround for errata 9905 in the DFLL module.</td>
  *	<tr>
  *		<td>\li Fixed \c system_clock_source_is_ready not returning the correct
  *              state for \c SYSTEM_CLOCK_SOURCE_OSC8M.
