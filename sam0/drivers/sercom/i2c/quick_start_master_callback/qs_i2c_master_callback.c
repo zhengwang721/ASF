@@ -134,11 +134,9 @@ void configure_i2c_callbacks(void)
 
 int main(void)
 {
-	//! [run_initialize_i2c]
-	//! [system_init]
 	system_init();
-	//! [system_init]
 
+	//! [run_initialize_i2c]
 	/* Configure device and enable. */
 	//! [config]
 	configure_i2c();

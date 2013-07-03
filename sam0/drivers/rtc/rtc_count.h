@@ -162,6 +162,12 @@
  *   </tr>
  * </table>
  *
+ * \note The connection of events between modules requires the use of the
+ *       \ref asfdoc_samd20_events_group "SAM D20 Event System Driver (EVENTS)"
+ *       to route output event of one module to the the input event of another.
+ *       For more information on event routing, refer to the event driver
+ *       documentation.
+ *
  * \subsection asfdoc_samd20_rtc_count_module_overview_correction Digital Frequency Correction
  * The RTC module contains Digital Frequency Correction logic to compensate for
  * inaccurate source clock frequencies which would otherwise result in skewed
@@ -238,7 +244,7 @@
  * \enddot
  *
  *
- * \section asfdoc_samd20_rtc_count_extra_info Extra Information for RTC COUNT
+ * \section asfdoc_samd20_rtc_count_extra_info Extra Information
  *
  * For extra information see \ref asfdoc_samd20_rtc_count_extra. This includes:
  *  - \ref asfdoc_samd20_rtc_count_extra_acronyms
@@ -736,7 +742,7 @@ static inline void rtc_count_disable_events(
 #endif
 
 /**
- * \page asfdoc_samd20_rtc_count_extra Extra Information for RTC (COUNT) Driver
+ * \page asfdoc_samd20_rtc_count_extra Extra Information for RTC COUNT Driver
  *
  * \section asfdoc_samd20_rtc_count_extra_acronyms Acronyms
  * Below is a table listing the acronyms used in this module, along with their
@@ -783,6 +789,10 @@ static inline void rtc_count_disable_events(
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
+ *		<td>Updated initialization function to also enable the digital interface
+ *          clock to the module if it is disabled.</td>
+ *	</tr>
+ *	<tr>
  *		<td>Initial Release</td>
  *	</tr>
  * </table>
@@ -809,6 +819,12 @@ static inline void rtc_count_disable_events(
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>B</td>
+ *		<td>06/2013</td>
+ *		<td>Added additional documentation on the event system. Corrected
+ *          documentation typos.</td>
  *	</tr>
  *	<tr>
  *		<td>A</td>

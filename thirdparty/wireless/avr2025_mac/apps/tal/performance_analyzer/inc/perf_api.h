@@ -93,12 +93,17 @@ void perf_get_req(uint8_t param_type);
 void initiate_per_test(void);
 
 /**
+ * \brief Initiates the Range test procedure
+ */
+void initiate_range_test(void);
+
+/**
  * \brief Function to start the ED scan
  *
  * \param scan_duration paramter which is used to calculate the scan time
  *        on each channel
  */
-void start_ed_scan(uint8_t scan_duration);
+void start_ed_scan(uint8_t scan_duration, uint32_t channel_sel_mask);
 
 /**
  * \brief Function to get the Sensor data like Battery volatge
@@ -109,6 +114,29 @@ void get_sensor_data(void);
  * \brief prints the hardware details
  */
 void get_board_details(void);
+
+/** Function to  Stop the  range Test in PER Mode */
+void stop_range_test(void);
+
+/**
+ * \brief Function to send  the Received Range Test Response frame to the Host
+ *application
+ * \param frame Pointer to the actual frame Received
+ * \param lqi_h LQI of the received response calculated at host
+ * \param ed_h ED value  of the received response calculated at host
+ * \param lqi_r LQI of the sent range test packet calculated at receptor
+ * \param ed_r ED value  of the sent range test packet calculated at receptor
+ */
+void usr_range_test_beacon_rsp(uint8_t *mpdu, uint8_t lqi_h, int8_t ed_h,
+		uint8_t lqi_r, int8_t ed_r);
+
+/**
+ * \brief Function to send  the Marker Indication frame to the Host application
+ * \param mpdu Pointer to the actual marker frame Received
+ * \param lqi LQI of the received marker packet
+ * \param ed_value ED value  of the received marker packet
+ */
+void usr_range_test_marker_ind(uint8_t *mpdu, uint8_t lqi, int8_t ed_value);
 
 /**
  * \brief Identifying peer node
@@ -237,6 +265,34 @@ void usr_perf_start_confirm(uint8_t status,
 void usr_per_test_start_confirm(uint8_t status);
 
 /**
+ * Function to generate Range Test Start confirmation frame that must be sent to
+ * host application via serial interface.
+ * Called by Performance application as confirmation for range_test_start_req
+ *request
+ * \param status      Result for requested range_test_start_req
+ *
+ * \return void
+ */
+void usr_range_test_start_confirm(uint8_t status);
+
+/**
+ * Function to generate Range Test Stop confirmation frame that must be sent to
+ * host application via serial interface.
+ * Called by Performance application as confirmation for range_test_start_req
+ *request
+ * \param status      Result for requested range_test_stop_req
+ *
+ * \return void
+ */
+void usr_range_test_stop_confirm(uint8_t status);
+
+/**
+ * \brief Function to send  the transmitted frame to the Host application
+ * \param frame Pointer to the actual frame transmitted
+ */
+void usr_range_test_beacon_tx(uint8_t *frame);
+
+/**
  * Function to generate Per test End Indication frame that must be sent to
  * host application via serial interface.
  * Called by Performance application as Indication afetr completion of PER test
@@ -328,7 +384,7 @@ void usr_sensor_data_get_confirm(uint8_t status, float bat_voltage,
 void usr_identify_board_confirm(uint8_t status, uint8_t ic_type,
 		char *mcu_soc_name, char *trx_name,
 		char *board_name, uint64_t mac_address,
-		float fw_version);
+		float fw_version, uint32_t fw_feature_mask);
 
 /**
  * Function to generate Perf Set confirmation frame that must be sent to
