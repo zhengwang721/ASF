@@ -128,7 +128,7 @@ void mlme_sync_request(uint8_t *m)
 		/* Free the buffer allocated for MLME-SYNC-Request */
 		bmm_buffer_free((buffer_t *)m);
 
-		mac_sync_loss(MAC_BEACON_LOSS);
+	mac_sync_loss(MAC_BEACON_LOSS);
 
 		return;
 	}

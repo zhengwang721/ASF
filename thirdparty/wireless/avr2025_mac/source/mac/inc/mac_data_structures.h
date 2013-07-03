@@ -70,6 +70,10 @@
 typedef struct mac_beacon_payload_tag {
 	uint16_t superframe_spec;
 	uint8_t gts_spec;
+#ifdef GTS_SUPPORT
+	uint8_t gts_direction;
+	uint8_t *gts_list;
+#endif /* GTS_SUPPORT */
 	uint8_t pending_addr_spec;
 	uint8_t *pending_addr_list;
 	uint8_t beacon_payload_len;
@@ -180,7 +184,7 @@ typedef struct mac_gts_desc_tag {
 	bool    GtsDirection;
 }mac_gtsDesc_t;
 /**
- * @brief GTS specification structure
+ * @brief PANC GTS table structure
  *
  * @ingroup apiMacTypes
  */
@@ -191,11 +195,28 @@ typedef struct mac_pan_gts_mgmt_tag {
 	mac_gtsDesc_t GtsDesc;
 }mac_pan_gts_mgmt_t;
 
+/**
+ * @brief Device GTS table structure
+ *
+ * @ingroup apiMacTypes
+ */
+typedef struct mac_dev_gts_mgmt_tag {
+	uint16_t DevShortAddr;
+	uint8_t PersistenceCount;
+	mac_gtsDesc_t GtsDesc;
+}mac_dev_gts_mgmt_t;
+
 typedef struct mac_gts_spec_tag {
 	uint8_t GtsDescCount:3;
 	uint8_t Reserved:4;
 	uint8_t GtsPermit:1;
 }mac_gts_spec_t;
+
+typedef struct mac_gts_list_tag {
+	uint16_t dev_addr;
+	uint8_t starting_slot:4;
+	uint8_t length:4;
+}mac_gts_list_t;
 
 #endif /* GTS_SUPPORT */
 /* === Externals ============================================================ */

@@ -121,6 +121,12 @@ uint8_t mac_final_cap_slot;
  * indicated pending broadcast data to be received.
  */
 bool mac_bc_data_indicated;
+#ifdef GTS_SUPPORT
+/**
+ * Current state of GTS request to PANC
+ */
+mac_gts_state_t mac_gts_state = MAC_GTS_IDLE;
+#endif  /* GTS_SUPPORT */
 #endif  /* BEACON_SUPPORT */
 
 /**

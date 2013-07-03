@@ -126,6 +126,8 @@ typedef enum
 	                                     *802.15.4 */
 	MAC_CHANNEL_ACCESS_FAILURE  = 0xE1, /**< Channel access failure defined
 	                                     *by 802.15.4 */
+	MAC_DENIED                  = 0xE3, /**< GTS Request denied by PANC defined
+	                                     *by 802.15.4 */
 	MAC_DISABLE_TRX_FAILURE     = 0xE3, /**< Disabling of TRX failed defined
 	                                     *by 802.15.4 */
 	MAC_SECURITY_ERROR          = 0xE4, /**< Failed cryptographic processing

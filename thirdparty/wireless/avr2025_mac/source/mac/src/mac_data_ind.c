@@ -1104,8 +1104,15 @@ static bool parse_mpdu(frame_info_t *rx_frame_ptr)
 				&
 				GTS_DESCRIPTOR_COUNTER_MASK);
 		if (temp_byte > 0) {
-			/* 1 octet GTS diresctions + GTS address list */
-			payload_index += 1 + temp_byte;
+			/* 1 octet GTS direction */
+			mac_parse_data.mac_payload_data.beacon_data.gts_direction
+				= &temp_frame_ptr[payload_index];
+			payload_index++;
+
+			/* GTS address list */
+			mac_parse_data.mac_payload_data.beacon_data.gts_list
+				= &temp_frame_ptr[payload_index];
+			payload_index += (temp_byte * 3);
 		}
 
 		/* Get the Pending address specification */

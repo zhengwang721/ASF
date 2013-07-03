@@ -135,7 +135,7 @@ static void reset_globals(void)
 	mac_last_src_addr = 0xFFFFFFFFFFFFFFFF;
 	mac_rx_enabled = false;
 #ifdef GTS_SUPPORT
-	mac_curr_gts_table_len = 0;
+	mac_pan_gts_table_len = 0;
 #endif /* GTS_SUPPORT */
 }
 

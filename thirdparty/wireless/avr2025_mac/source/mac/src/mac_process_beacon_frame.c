@@ -90,6 +90,10 @@
  */
 #define GET_FINAL_CAP(spec)             (((spec) & 0x0F00) >> 8)
 
+/*
+ * Extract the GTS permit from GTS Spec.
+ */
+#define GET_GTS_PERMIT(spec)            (((spec) & 0x80) >> 7)
 /* === Globals ============================================================= */
 
 /* === Prototypes ========================================================== */
@@ -224,6 +228,16 @@ void mac_process_beacon_frame(buffer_t *beacon)
 					+= mac_pib.mac_BattLifeExtPeriods *
 						aUnitBackoffPeriod;
 			}
+#ifdef GTS_SUPPORT
+			mac_pib.mac_GTSPermit = GET_GTS_PERMIT(mac_parse_data.mac_payload_data.beacon_data.gts_spec);
+
+			if(mac_parse_data.mac_payload_data.beacon_data.gts_spec & 0x07)
+			{
+				mac_parse_bcn_gts_info(mac_parse_data.mac_payload_data.beacon_data.gts_spec & 0x07,
+									   mac_parse_data.mac_payload_data.beacon_data.gts_direction,
+									   mac_parse_data.mac_payload_data.beacon_data.gts_list);
+			}
+#endif /* GTS_SUPPORT */
 		} /* (MAC_PAN_COORD_STARTED != mac_state) */
 	} /* (MAC_SCAN_IDLE == mac_scan_state) */
 

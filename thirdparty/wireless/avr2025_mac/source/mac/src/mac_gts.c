@@ -75,18 +75,29 @@
 
 #ifdef GTS_SUPPORT
 
+#ifdef FFD
 static bool mac_gts_allocate(gts_char_t GtsCharacteristics, uint16_t DevAddress);
 static bool mac_gts_deallocate(gts_char_t GtsCharacteristics, uint16_t DevAddress);
-
 
 #define GTS_REQ_PAYLOAD_LEN  (2)
 #define MAX_GTS_ON_PANC      (7)
 
-mac_pan_gts_mgmt_t mac_gts_mgmt_table[MAX_GTS_ON_PANC];
-
-uint8_t mac_curr_gts_table_len = 0;
-
+mac_pan_gts_mgmt_t mac_pan_gts_table[MAX_GTS_ON_PANC];
+uint8_t mac_pan_gts_table_len = 0;
 mac_gts_spec_t mac_gts_spec;
+#endif /* FFD */
+
+/**
+ * Holds the mlme gts request buffer pointer, used to give the respective
+ * confirmation.
+ */
+uint8_t *mac_gts_buf_ptr;
+
+#define MAX_GTS_ON_DEV       (4)
+
+mac_dev_gts_mgmt_t mac_dev_gts_table[MAX_GTS_ON_DEV];
+uint8_t mac_dev_gts_table_len = 0;
+gts_char_t requested_gts_char;
 
 void mlme_gts_request(uint8_t *m)
 {
@@ -94,37 +105,77 @@ void mlme_gts_request(uint8_t *m)
 	memcpy(&mgr, BMM_BUFFER_POINTER((buffer_t *)m),
 			sizeof(mlme_gts_req_t));
 
-	if(MAC_PAN_COORD_STARTED == mac_state)
+	/*
+	 * Store the buffer which was received from the NHLE as it will be
+	 *reused
+	 * while sending MLME association confirmation to the NHLE.
+	 */
+	mac_gts_buf_ptr = m;
+	requested_gts_char = mgr.GtsChar;
+
+	if(MAC_NO_SHORT_ADDR_VALUE <= tal_pib.ShortAddress 
+	|| (MAC_NO_SHORT_ADDR_VALUE <= mac_pib.mac_CoordShortAddress 
+	&& MAC_PAN_COORD_STARTED != mac_state))
+	{
+		mac_gen_mlme_gts_conf((buffer_t *)m, MAC_NO_SHORT_ADDRESS,
+		mgr.GtsChar);
+		return;
+	}
+	else if(true != mac_pib.mac_GTSPermit)
+	{
+		mac_gen_mlme_gts_conf((buffer_t *)m, MAC_INVALID_PARAMETER,
+		mgr.GtsChar);
+		return;
+	}
+#ifdef FFD
+	else if(MAC_PAN_COORD_STARTED == mac_state)
 	{
 		if(GTS_ALLOCATE & mgr.GtsChar.GtsCharType)
 		{
 			if(mac_gts_allocate(mgr.GtsChar, tal_pib.ShortAddress))
 			{
-				mac_gen_mlme_gts_conf((buffer_t *)m, MAC_SUCCESS);
+				mac_gen_mlme_gts_conf((buffer_t *)m, MAC_SUCCESS,
+				mgr.GtsChar);
+				return;
 			}
 			else
 			{
-				mac_gen_mlme_gts_conf((buffer_t *)m, MAC_NO_DATA);
+				mac_gen_mlme_gts_conf((buffer_t *)m, MAC_NO_DATA,
+				mgr.GtsChar);
+				return;
 			}
 		}
 		else
 		{
 			if(mac_gts_deallocate(mgr.GtsChar, tal_pib.ShortAddress))
 			{
-				mac_gen_mlme_gts_conf((buffer_t *)m, MAC_SUCCESS);
+				mac_gen_mlme_gts_conf((buffer_t *)m, MAC_SUCCESS,
+				mgr.GtsChar);
+				return;
 			}
 			else
 			{
-				mac_gen_mlme_gts_conf((buffer_t *)m, MAC_NO_DATA);
+				mac_gen_mlme_gts_conf((buffer_t *)m, MAC_NO_DATA,
+				mgr.GtsChar);
+				return;
 			}
 		}
 	}
+#endif /* FFD */
 	else if(MAC_ASSOCIATED == mac_state)
 	{
+		if(0x00 == mgr.GtsChar.GtsLength)
+		{
+			mac_gen_mlme_gts_conf((buffer_t *)m, MAC_INVALID_PARAMETER,
+			mgr.GtsChar);
+			return;
+		}
 		if(MAC_NO_SHORT_ADDR_VALUE <= tal_pib.ShortAddress 
 		|| MAC_NO_SHORT_ADDR_VALUE <= mac_pib.mac_CoordShortAddress)
 		{
-			mac_gen_mlme_gts_conf((buffer_t *)m, MAC_INVALID_PARAMETER);
+			mac_gen_mlme_gts_conf((buffer_t *)m, MAC_INVALID_PARAMETER,
+			mgr.GtsChar);
+			return;
 		}
 		frame_info_t *transmit_frame
 			= (frame_info_t *)BMM_BUFFER_POINTER((buffer_t *)m);
@@ -222,34 +273,35 @@ void mlme_gts_request(uint8_t *m)
 #endif  /* BEACON_SUPPORT / No BEACON_SUPPORT */
 
 		if (MAC_SUCCESS == tal_tx_status) {
+			mac_gts_state = MAC_GTS_REQ_SENT;
 			MAKE_MAC_BUSY();
 		} else {
-			mac_gen_mlme_gts_conf((buffer_t *)m, tal_tx_status);
+			mac_gen_mlme_gts_conf((buffer_t *)m, tal_tx_status,
+			mgr.GtsChar);
 		}
 	}
-	
-	/*
-	 * Store the buffer which was received from the NHLE as it will be
-	 *reused
-	 * while sending MLME association confirmation to the NHLE.
-	 */
-//	mac_conf_buf_ptr = m;
+	else
+	{
+		mac_gen_mlme_gts_conf((buffer_t *)m, MAC_INVALID_PARAMETER,
+		mgr.GtsChar);
+		return;
+	}
 }
 
-
-void mac_gen_mlme_gts_conf(buffer_t *buf_ptr, uint8_t status)
+void mac_gen_mlme_gts_conf(buffer_t *buf_ptr, uint8_t status, gts_char_t gts_char)
 {
 	mlme_gts_conf_t *gts_conf
 	= (mlme_gts_conf_t *)BMM_BUFFER_POINTER(buf_ptr);
 
 	gts_conf->cmdcode = MLME_GTS_CONFIRM;
 	gts_conf->status = status;
+	gts_conf->GtsChar = gts_char;
 
 	/* Append the associate confirm message to MAC-NHLE queue. */
 	qmm_queue_append(&mac_nhle_q, buf_ptr);
 }
 
-
+#ifdef FFD
 void mac_process_gts_request(buffer_t *gts_req)
 {
 	/* Use the frame reception buffer for association indication. */
@@ -268,6 +320,10 @@ void mac_process_gts_request(buffer_t *gts_req)
 			/* Append the MLME GTS indication to the MAC-NHLE queue. */
 			qmm_queue_append(&mac_nhle_q, gts_req);
 		}
+		else
+		{
+			bmm_buffer_free(gts_req);
+		}
 	}
 	else
 	{
@@ -276,31 +332,36 @@ void mac_process_gts_request(buffer_t *gts_req)
 			/* Append the MLME GTS indication to the MAC-NHLE queue. */
 			qmm_queue_append(&mac_nhle_q, gts_req);
 		}
+		else
+		{
+			bmm_buffer_free(gts_req);
+		}
 	}
 }
+#endif /* FFD */
 
-
+#ifdef FFD
 uint8_t mac_add_gts_info(uint8_t *frame_ptr)
 {
 	uint8_t table_index;
 	uint8_t update_octets_count = 0;
 
-	if(mac_curr_gts_table_len > 0)
+	if(mac_pan_gts_table_len > 0)
 	{
 		uint8_t direction_mask = 0;
-		for(table_index = 0; table_index < mac_curr_gts_table_len; table_index++)
+		for(table_index = 0; table_index < mac_pan_gts_table_len; table_index++)
 		{
 			frame_ptr--;
-			*frame_ptr = (mac_gts_mgmt_table[table_index].GtsDesc.GtsLength << 4) 
-							| mac_gts_mgmt_table[table_index].GtsDesc.GtsStartingSlot; 
+			*frame_ptr = (mac_pan_gts_table[table_index].GtsDesc.GtsLength << 4) 
+							| mac_pan_gts_table[table_index].GtsDesc.GtsStartingSlot; 
 			frame_ptr--;
-			*frame_ptr = mac_gts_mgmt_table[table_index].DevShortAddr >> 8; //GTS List
+			*frame_ptr = mac_pan_gts_table[table_index].DevShortAddr >> 8; //GTS List
 			frame_ptr--;
-			*frame_ptr = mac_gts_mgmt_table[table_index].DevShortAddr; //GTS List
+			*frame_ptr = mac_pan_gts_table[table_index].DevShortAddr; //GTS List
 
 			update_octets_count += 3;
 
-			if(mac_gts_mgmt_table[table_index].GtsDesc.GtsDirection & GTS_RX_SLOT)
+			if(mac_pan_gts_table[table_index].GtsDesc.GtsDirection & GTS_RX_SLOT)
 			{
 				direction_mask |= (1 << table_index);
 			}
@@ -308,189 +369,144 @@ uint8_t mac_add_gts_info(uint8_t *frame_ptr)
 		frame_ptr--;
 		*frame_ptr = direction_mask; //GTS Direction Mask
 		++update_octets_count;
+		frame_ptr--;
 	}
-	mac_gts_spec.GtsDescCount = mac_curr_gts_table_len;
+	mac_gts_spec.GtsDescCount = mac_pan_gts_table_len;
 	mac_gts_spec.GtsPermit = mac_pib.mac_GTSPermit;
-	frame_ptr--;
 	*frame_ptr = *((uint8_t*)&mac_gts_spec);
 	return update_octets_count;
 }
+#endif /* FFD */
 
+#ifdef FFD
 bool mac_gts_allocate(gts_char_t GtsCharacteristics, uint16_t DevAddress)
 {
 	uint8_t Index = 0;
 	
-	if(MAX_GTS_ON_PANC < mac_curr_gts_table_len)
+	if(MAX_GTS_ON_PANC < mac_pan_gts_table_len)
 	{
 		return false;
 	}
-	for (Index = 0; Index < mac_curr_gts_table_len; Index++)
+	for (Index = 0; Index < mac_pan_gts_table_len; Index++)
 	{
-		if(mac_gts_mgmt_table[Index].DevShortAddr == DevAddress 
-		&& mac_gts_mgmt_table[Index].GtsDesc.GtsDirection == GtsCharacteristics.GtsDirection)
+		if(mac_pan_gts_table[Index].DevShortAddr == DevAddress 
+		&& mac_pan_gts_table[Index].GtsDesc.GtsDirection == GtsCharacteristics.GtsDirection)
 		{
 			return false;
 		}
 	}
 	
-	mac_gts_mgmt_table[mac_curr_gts_table_len].DevShortAddr = DevAddress;
+	mac_pan_gts_table[mac_pan_gts_table_len].DevShortAddr = DevAddress;
 	
-	mac_gts_mgmt_table[mac_curr_gts_table_len].GtsDesc.GtsLength = GtsCharacteristics.GtsLength;
+	mac_pan_gts_table[mac_pan_gts_table_len].GtsDesc.GtsLength = GtsCharacteristics.GtsLength;
 	
-	mac_gts_mgmt_table[mac_curr_gts_table_len].GtsDesc.GtsStartingSlot = (mac_final_cap_slot - GtsCharacteristics.GtsLength) + 1;
+	mac_pan_gts_table[mac_pan_gts_table_len].GtsDesc.GtsStartingSlot = (mac_final_cap_slot - GtsCharacteristics.GtsLength) + 1;
 	
-	mac_gts_mgmt_table[mac_curr_gts_table_len].GtsDesc.GtsDirection = GtsCharacteristics.GtsDirection;
+	mac_pan_gts_table[mac_pan_gts_table_len].GtsDesc.GtsDirection = GtsCharacteristics.GtsDirection;
 	
 	mac_final_cap_slot -= GtsCharacteristics.GtsLength;
 
-	++mac_curr_gts_table_len;
+	++mac_pan_gts_table_len;
 
-	mac_gts_spec.GtsDescCount = mac_curr_gts_table_len;
+	mac_gts_spec.GtsDescCount = mac_pan_gts_table_len;
 	mac_gts_spec.GtsPermit = mac_pib.mac_GTSPermit;
 	
 	return true;
 }
+#endif /* FFD */
 
-
+#ifdef FFD
 bool mac_gts_deallocate(gts_char_t GtsCharacteristics, uint16_t DevAddress)
 {
 	uint8_t table_index, table_index1;
 	uint8_t temp_slot = 0x10;
 	
-	for(table_index = 0; table_index < mac_curr_gts_table_len; table_index++)
+	for(table_index = 0; table_index < mac_pan_gts_table_len; table_index++)
 	{
-		if(mac_gts_mgmt_table[table_index].DevShortAddr == DevAddress
-		&& mac_gts_mgmt_table[table_index].GtsDesc.GtsDirection == GtsCharacteristics.GtsDirection
-		&& mac_gts_mgmt_table[table_index].GtsDesc.GtsLength == GtsCharacteristics.GtsLength)
+		if(mac_pan_gts_table[table_index].DevShortAddr == DevAddress
+		&& mac_pan_gts_table[table_index].GtsDesc.GtsDirection == GtsCharacteristics.GtsDirection
+		&& mac_pan_gts_table[table_index].GtsDesc.GtsLength == GtsCharacteristics.GtsLength)
 		{
-			for(table_index1 = table_index; table_index1 < (mac_curr_gts_table_len - 1); table_index1++)
+			for(table_index1 = table_index; table_index1 < (mac_pan_gts_table_len - 1); table_index1++)
 			{
-				mac_gts_mgmt_table[table_index1].DevShortAddr = mac_gts_mgmt_table[table_index1 + 1].DevShortAddr;
+				mac_pan_gts_table[table_index1].DevShortAddr = mac_pan_gts_table[table_index1 + 1].DevShortAddr;
 				
-				mac_gts_mgmt_table[table_index1].GtsDesc.GtsDirection = mac_gts_mgmt_table[table_index1 + 1].GtsDesc.GtsDirection;
+				mac_pan_gts_table[table_index1].GtsDesc.GtsDirection = mac_pan_gts_table[table_index1 + 1].GtsDesc.GtsDirection;
 				
-				mac_gts_mgmt_table[table_index1].GtsDesc.GtsLength = mac_gts_mgmt_table[table_index1 + 1].GtsDesc.GtsLength;
+				mac_pan_gts_table[table_index1].GtsDesc.GtsLength = mac_pan_gts_table[table_index1 + 1].GtsDesc.GtsLength;
 				
-				mac_gts_mgmt_table[table_index1].GtsDesc.GtsStartingSlot = 
-					temp_slot - mac_gts_mgmt_table[table_index1 + 1].GtsDesc.GtsLength;
+				mac_pan_gts_table[table_index1].GtsDesc.GtsStartingSlot = 
+					temp_slot - mac_pan_gts_table[table_index1 + 1].GtsDesc.GtsLength;
 					
-				mac_gts_mgmt_table[table_index1].ExpiryCount = mac_gts_mgmt_table[table_index1 + 1].ExpiryCount;
+				mac_pan_gts_table[table_index1].ExpiryCount = mac_pan_gts_table[table_index1 + 1].ExpiryCount;
 				
-				mac_gts_mgmt_table[table_index1].PersistenceCount = mac_gts_mgmt_table[table_index1 + 1].PersistenceCount;
+				mac_pan_gts_table[table_index1].PersistenceCount = mac_pan_gts_table[table_index1 + 1].PersistenceCount;
 				
-				temp_slot -= mac_gts_mgmt_table[table_index1].GtsDesc.GtsLength;
+				temp_slot -= mac_pan_gts_table[table_index1].GtsDesc.GtsLength;
 			}
 			
-			--mac_curr_gts_table_len;
+			--mac_pan_gts_table_len;
 
 			mac_final_cap_slot = temp_slot - 1;
 			
 			for(; table_index1 < MAX_GTS_ON_PANC; table_index1++)
 			{
-				mac_gts_mgmt_table[table_index1].DevShortAddr = mac_gts_mgmt_table[table_index1 + 1].DevShortAddr;
+				mac_pan_gts_table[table_index1].DevShortAddr = mac_pan_gts_table[table_index1 + 1].DevShortAddr;
 				
-				mac_gts_mgmt_table[table_index1].GtsDesc.GtsDirection = mac_gts_mgmt_table[table_index1 + 1].GtsDesc.GtsDirection;
+				mac_pan_gts_table[table_index1].GtsDesc.GtsDirection = mac_pan_gts_table[table_index1 + 1].GtsDesc.GtsDirection;
 				
-				mac_gts_mgmt_table[table_index1].GtsDesc.GtsLength = mac_gts_mgmt_table[table_index1 + 1].GtsDesc.GtsLength;
+				mac_pan_gts_table[table_index1].GtsDesc.GtsLength = mac_pan_gts_table[table_index1 + 1].GtsDesc.GtsLength;
 				
-				mac_gts_mgmt_table[table_index1].GtsDesc.GtsStartingSlot = mac_gts_mgmt_table[table_index1 + 1].GtsDesc.GtsLength;
+				mac_pan_gts_table[table_index1].GtsDesc.GtsStartingSlot = mac_pan_gts_table[table_index1 + 1].GtsDesc.GtsLength;
 				
-				mac_gts_mgmt_table[table_index1].ExpiryCount = mac_gts_mgmt_table[table_index1 + 1].ExpiryCount;
+				mac_pan_gts_table[table_index1].ExpiryCount = mac_pan_gts_table[table_index1 + 1].ExpiryCount;
 				
-				mac_gts_mgmt_table[table_index1].PersistenceCount = mac_gts_mgmt_table[table_index1 + 1].PersistenceCount;
+				mac_pan_gts_table[table_index1].PersistenceCount = mac_pan_gts_table[table_index1 + 1].PersistenceCount;
 			}
 			
 			
-			mac_gts_mgmt_table[MAX_GTS_ON_PANC - 1].DevShortAddr = DevAddress;
-			mac_gts_mgmt_table[MAX_GTS_ON_PANC - 1].GtsDesc.GtsDirection = GtsCharacteristics.GtsDirection;
-			mac_gts_mgmt_table[MAX_GTS_ON_PANC - 1].GtsDesc.GtsLength = GtsCharacteristics.GtsLength;
-			mac_gts_mgmt_table[MAX_GTS_ON_PANC - 1].GtsDesc.GtsStartingSlot = 0;
-			mac_gts_mgmt_table[MAX_GTS_ON_PANC - 1].PersistenceCount = aGTSDescPersistenceTime;
+			mac_pan_gts_table[MAX_GTS_ON_PANC - 1].DevShortAddr = DevAddress;
+			mac_pan_gts_table[MAX_GTS_ON_PANC - 1].GtsDesc.GtsDirection = GtsCharacteristics.GtsDirection;
+			mac_pan_gts_table[MAX_GTS_ON_PANC - 1].GtsDesc.GtsLength = GtsCharacteristics.GtsLength;
+			mac_pan_gts_table[MAX_GTS_ON_PANC - 1].GtsDesc.GtsStartingSlot = 0;
+			mac_pan_gts_table[MAX_GTS_ON_PANC - 1].PersistenceCount = aGTSDescPersistenceTime;
 			
 			return true;
 		}
 		else
 		{
-			temp_slot -= mac_gts_mgmt_table[table_index].GtsDesc.GtsLength;
+			temp_slot -= mac_pan_gts_table[table_index].GtsDesc.GtsLength;
 		}
 	}
 	return false;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#endif /* FFD */
+
+void mac_parse_bcn_gts_info(uint8_t gts_count, uint8_t gts_dir, uint8_t *gts_list_ptr)
+{
+	uint8_t loop_index;
+	mac_gts_list_t *gts_list = (mac_gts_list_t *) gts_list_ptr;
+
+	for(loop_index = 0; loop_index < gts_count; loop_index++)
+	{
+		if(MAC_GTS_REQ_SENT == mac_gts_state
+		&& gts_list->dev_addr == tal_pib.ShortAddress)
+		{
+			if(0 == gts_list->starting_slot)
+			{
+				mac_gen_mlme_gts_conf((buffer_t *)mac_gts_buf_ptr, MAC_DENIED,
+				requested_gts_char);
+			}
+			else if(gts_list->length == requested_gts_char.GtsLength)
+			{
+						
+				mac_gen_mlme_gts_conf((buffer_t *)mac_gts_buf_ptr, MAC_SUCCESS,
+				requested_gts_char);
+			}
+			mac_gts_state = MAC_GTS_IDLE;
+		}
+		gts_list++;
+	}
+}
 
 #endif /* GTS_SUPPORT */
-
