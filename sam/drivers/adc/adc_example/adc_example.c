@@ -252,8 +252,10 @@ static void display_menu(void)
 	uc_char = (g_adc_test_mode.uc_sequence_en) ? 'E' : 'D';
 	printf("[%c] S: Enable/Disable to use user sequence mode.\n\r", uc_char);
 #endif
+#if  SAM3S8 || SAM3SD8 || SAM4S || SAM3N || SAM3U
 	uc_char = (g_adc_test_mode.uc_power_save_en) ? 'E' : 'D';
 	printf("[%c] P: Enable/Disable ADC power save mode.\n\r", uc_char);
+#endif	
 #if SAM3S || SAM3U || SAM3XA || SAM4S
 	uc_char = (g_adc_test_mode.uc_gain_en) ? 'E' : 'D';
 	printf("[%c] G: Enable/Disable to set gain=2 for potentiometer channel.\n\r",
