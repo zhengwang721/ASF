@@ -192,7 +192,7 @@ static inline enum sleepmgr_mode sleepmgr_get_sleep_mode(void)
 	// Find first non-zero lock count, starting with the shallowest modes.
 	while (!(*lock_ptr)) {
 		lock_ptr++;
-		sleep_mode++;
+		sleep_mode = (enum sleepmgr_mode)(sleep_mode + 1);
 	}
 
 	// Catch the case where one too many sleepmgr_unlock_mode() call has been

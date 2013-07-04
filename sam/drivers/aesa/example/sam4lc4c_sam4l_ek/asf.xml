@@ -8,7 +8,6 @@
 		<build type="header-file" value="conf_aesa.h"/>
 		<require idref="sam.drivers.aesa.example"/>
 		<require idref="board.sam4l_ek" />
-		<config name="config.board.sam4l_ek.led" value="yes"/>
 		<generator value="iarewarm" />
 		<generator value="armgcc" />
 		<generator value="doxygen" />
