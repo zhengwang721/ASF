@@ -446,7 +446,7 @@ static void run_flashcalw_picocache_test(const struct test_case *test)
 	uint32_t tick_start, time_ms_nocache, time_ms_cache;
 
 	flashcalw_set_wait_state(1);
-    /* Disable PicoCache */
+	/* Disable PicoCache */
 	flashcalw_picocache_disable();
 	flashcalw_picocache_disable_monitor();
 
@@ -461,9 +461,6 @@ static void run_flashcalw_picocache_test(const struct test_case *test)
 
 	/* Enable PicoCache */
 	flashcalw_picocache_enable();
-	flashcalw_picocache_set_monitor_mode(HCACHE_MCFG_MODE_IHIT);
-	flashcalw_picocache_enable_monitor();
-	flashcalw_picocache_reset_monitor();
 
 	/* Get current time tick */
 	tick_start = time_tick_get();

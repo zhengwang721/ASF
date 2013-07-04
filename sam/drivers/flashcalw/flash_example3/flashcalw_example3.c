@@ -82,7 +82,7 @@
  *   -# PicoCache will be enabled.
  *   -# The Fibonacci calculation will be done again.
  *   -# The power consumption of the calculation with PicoCache will be
- * displayed on the board monitor. The power consuption will be lower.
+ * displayed on the board monitor. The power consumption will be lower.
  *   -# The time spent on the Fibonacci will be displayed on the debug monitor.
  *   -# The cache hit number will be displayed on the debug monitor, which is
  * the cause of the performance improvement and power consumption decrease.
@@ -127,6 +127,8 @@
 /** Fibonacci number */
 #define FIBONACCI_NUM    32
 
+#define LOWER_SYS_CLK 12000000
+
 /**
  *  \brief Configure serial console.
  */
@@ -145,6 +147,23 @@ static void configure_console(void)
 
 	/* Configure console UART. */
 	stdio_serial_init(CONF_UART, &uart_serial_options);
+}
+
+/**
+ *  \brief Reconfigure serial console.
+ */
+static void reconfigure_com_port(void)
+{
+	const sam_usart_opt_t opt = {
+		.baudrate = CONF_UART_BAUDRATE,
+		.char_length = CONF_UART_CHAR_LENGTH,
+		.parity_type = CONF_UART_PARITY,
+		.stop_bits = CONF_UART_STOP_BITS,
+		.channel_mode = US_MR_CHMODE_NORMAL,
+		.irda_filter = 0,
+	};
+	usart_init_rs232(CONF_UART, &opt, LOWER_SYS_CLK);
+	usart_enable_tx(CONF_UART);
 }
 
 /**
@@ -238,34 +257,34 @@ int main(void)
 
 	/* Calculate the Fibonacci without PicoCache */
 	flash_picocache_example(
-		"Fibonacci calculation without PicoCache",
+		"Fibonacci calculation without PicoCache at 48MHz",
 		false);
 
 	/* Calculate the Fibonacci with PicoCache */
 	flash_picocache_example(
-		"Fibonacci calculation with PicoCache",
+		"Fibonacci calculation with PicoCache at 48MHz",
 		true);
 
-	puts("From now on, System is running at 12MHz\r\n");
-	puts("And the baudrate is 28800bps\r\n");
-	puts("Please check the power consumption\r\n");
+	puts("From now on, System is running at 12MHz\r");
+	puts("Please check the power consumption\r");
 	printf("Push %s to continue\r\n", BUTTON_0_NAME);
 	wait_for_pushbutton();
 	sysclk_set_prescalers(2, 0, 0, 0, 0);
+	reconfigure_com_port();
 
 	flashcalw_set_wait_state(0);
 	/* Calculate the Fibonacci without PicoCache */
 	flash_picocache_example(
-		"Fibonacci calculation without PicoCache",
+		"Fibonacci calculation without PicoCache at 12MHz",
 		false);
 
-	puts("Please check the power consumption\r\n");
+	puts("Please check the power consumption\r");
 	printf("Push %s to continue\r\n", BUTTON_0_NAME);
 	wait_for_pushbutton();
 
 	/* Calculate the Fibonacci with PicoCache */
 	flash_picocache_example(
-		"Fibonacci calculation with PicoCache",
+		"Fibonacci calculation with PicoCache at 12MHz",
 		true);
 
 	puts("End");
