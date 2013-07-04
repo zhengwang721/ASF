@@ -169,14 +169,10 @@ void mlme_gts_request(uint8_t *m)
 #endif /* FFD */
 	else if(MAC_ASSOCIATED == mac_state)
 	{
-		if(0x00 == mgr.GtsChar.GtsLength)
-		{
-			mac_gen_mlme_gts_conf((buffer_t *)m, MAC_INVALID_PARAMETER,
-			mgr.GtsChar);
-			return;
-		}
-		if(MAC_NO_SHORT_ADDR_VALUE <= tal_pib.ShortAddress 
-		|| MAC_NO_SHORT_ADDR_VALUE <= mac_pib.mac_CoordShortAddress)
+		if(0x00 == mgr.GtsChar.GtsLength
+		|| (MAC_NO_SHORT_ADDR_VALUE <= tal_pib.ShortAddress 
+			|| MAC_NO_SHORT_ADDR_VALUE <= mac_pib.mac_CoordShortAddress)
+		|| MAC_SYNC_TRACKING_BEACON != mac_sync_state)
 		{
 			mac_gen_mlme_gts_conf((buffer_t *)m, MAC_INVALID_PARAMETER,
 			mgr.GtsChar);
@@ -280,13 +276,24 @@ void mlme_gts_request(uint8_t *m)
 		if (MAC_SUCCESS == tal_tx_status) {
 			if(GTS_DEALLOCATE == mgr.GtsChar.GtsCharType)
 			{
-				mac_gen_mlme_gts_conf((buffer_t *)m, MAC_SUCCESS,
-				mgr.GtsChar);
+				uint8_t updating_index;
+				if(GTS_RX_SLOT == mgr.GtsChar.GtsDirection)
+				{
+					updating_index = DEV_RX_SLOT_INDEX;
+				}
+				else
+				{
+					updating_index = DEV_TX_SLOT_INDEX;
+				}
+
+				mac_dev_gts_table[updating_index].GtsLength	= 0;
+				mac_dev_gts_table[updating_index].GtsStartingSlot = 0;
+				mac_gen_mlme_gts_conf((buffer_t *)m, MAC_SUCCESS, mgr.GtsChar);
 				return;
 			}
 			else
 			{
-				mac_gts_state = MAC_GTS_REQ_SENT;
+				mac_gts_state = MAC_GTS_ALLOC_REQ_SENT;
 				MAKE_MAC_BUSY();
 			}
 		} else {
@@ -507,7 +514,7 @@ void mac_parse_bcn_gts_info(uint8_t gts_count, uint8_t gts_dir, uint8_t *gts_lis
 	{
 		curr_gts_dir = ((gts_dir >> loop_index) && 0x01);
 
-		if(MAC_GTS_REQ_SENT == mac_gts_state
+		if(MAC_GTS_ALLOC_REQ_SENT == mac_gts_state
 		&& gts_list->dev_addr == tal_pib.ShortAddress)
 		{
 			if(0 == gts_list->starting_slot)
@@ -525,7 +532,6 @@ void mac_parse_bcn_gts_info(uint8_t gts_count, uint8_t gts_dir, uint8_t *gts_lis
 				{
 					updating_index = DEV_TX_SLOT_INDEX;
 				}
-
 				mac_dev_gts_table[updating_index].GtsLength
 				= gts_list->length;
 				mac_dev_gts_table[updating_index].GtsStartingSlot
@@ -546,7 +552,6 @@ void mac_parse_bcn_gts_info(uint8_t gts_count, uint8_t gts_dir, uint8_t *gts_lis
 			{
 				updating_index = PAN_TX_SLOT_INDEX;
 			}
-
 			mac_dev_gts_table[updating_index].GtsLength
 			= gts_list->length;
 			mac_dev_gts_table[updating_index].GtsStartingSlot

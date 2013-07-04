@@ -226,7 +226,7 @@ typedef enum mac_gts_state_tag {
 	/** NO GTS request sent */
 	MAC_GTS_IDLE = 0,
 	/** GTS request sent to PANC */
-	MAC_GTS_REQ_SENT,
+	MAC_GTS_ALLOC_REQ_SENT,
 } SHORTENUM mac_gts_state_t;
 
 /**
