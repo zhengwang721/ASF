@@ -600,7 +600,7 @@ void multi_language_show_switch_info(void)
 #endif
 #ifdef CONF_SPANISH_LANGUAGE
 	uint8_t colume_index;
-	colume_index = unicode_show_one_line(0, 0, switch_info_1_sp);;
+	colume_index = unicode_show_one_line(0, 0, switch_info_1_sp);
 	colume_index += 1;
 	ssd1306_set_page_address(1);
 	ssd1306_set_column_address(colume_index);
@@ -852,30 +852,30 @@ void multi_language_show_card_size_info(char *p_string,
 #ifdef CONF_ENGLISH_LANGUAGE
 	ssd1306_set_page_address(2);
 	ssd1306_set_column_address(0);
-	
+
 	sprintf(p_string, "- Total size: %lu KB", sd_card_size);
 	ssd1306_write_text(p_string);
-	
+
 	ssd1306_set_page_address(3);
 	ssd1306_set_column_address(0);
 #endif
 #ifdef CONF_CHINESE_LANGUAGE
 	unicode_show_one_line(2, 0, card_size_info_1_cn);
-	
+
 	ssd1306_set_page_address(3);
 	ssd1306_set_column_address(48);
 	sprintf(p_string, ": %lu KB", sd_card_size);
 	ssd1306_write_text(p_string);
-	
+
 	/* Wait 3 seconds to show the above message. */
 	delay_s(3);
-	
+
 	/* Clear screen. */
 	ssd1306_clear();
 
 	/* scroll one line to show file info */
 	unicode_show_one_line(0, 0, card_size_info_1_cn);
-	
+
 	ssd1306_set_page_address(1);
 	ssd1306_set_column_address(48);
 	sprintf(p_string, ": %lu KB", sd_card_size);
@@ -883,31 +883,30 @@ void multi_language_show_card_size_info(char *p_string,
 #endif
 #ifdef CONF_JAPANESE_LANGUAGE
 	unicode_show_one_line(2, 0, card_size_info_1_jp);
-	
+
 	ssd1306_set_page_address(3);
 	ssd1306_set_column_address(32);
 	sprintf(p_string, ": %lu KB", sd_card_size);
 	ssd1306_write_text(p_string);
-	
+
 	/* Wait 3 seconds to show the above message. */
 	delay_s(3);
-	
+
 	/* Clear screen. */
 	ssd1306_clear();
-	
+
 	/* scroll one line to show file info */
 	unicode_show_one_line(0, 0, card_size_info_1_jp);
-	
+
 	ssd1306_set_page_address(1);
 	ssd1306_set_column_address(32);
 	sprintf(p_string, ": %lu KB", sd_card_size);
 	ssd1306_write_text(p_string);
 #endif
 #ifdef CONF_FRENCH_LANGUAGE
-	uint8_t colume_index;
 	/* Wait 1.5 seconds to show the above message. */
 	delay_ms(1500);
-	
+
 	/* Clear screen. */
 	ssd1306_clear();
 
@@ -925,7 +924,6 @@ void multi_language_show_card_size_info(char *p_string,
 	ssd1306_clear();
 #endif
 #ifdef CONF_SPANISH_LANGUAGE
-	uint8_t colume_index;
 	/* Wait 1.5 seconds to show the above message. */
 	delay_ms(1500);
 

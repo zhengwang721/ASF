@@ -672,9 +672,9 @@ static void display_sd_files_unicode(void)
 
 			if ((pos >= sd_listing_pos) && (line < 4)) {
 				multi_language_show_file_name(line, pc_fn);
-				line ++;
+				line++;
 #ifndef CONF_ENGLISH_LANGUAGE
-				line ++;
+				line++;
 #endif
 			}
 
