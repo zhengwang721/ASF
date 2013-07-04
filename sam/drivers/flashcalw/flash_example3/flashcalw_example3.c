@@ -124,7 +124,6 @@
  */
 
 #include <asf.h>
-#include <conf_board.h>
 #include "time_tick.h"
 
 /** Fibonacci number */
@@ -231,9 +230,9 @@ static void flash_picocache_example(const char *caption, bool pico_enable)
 
 static void wait_for_pushbutton(void)
 {
-	while (ioport_get_pin_level(PUSH_BUTTON));
+	while (ioport_get_pin_level(GPIO_PUSH_BUTTON_0));
 	delay_ms(1);
-	while (!ioport_get_pin_level(PUSH_BUTTON));
+	while (!ioport_get_pin_level(GPIO_PUSH_BUTTON_0));
 	delay_ms(1);
 }
 
