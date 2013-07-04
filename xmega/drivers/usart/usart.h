@@ -108,7 +108,7 @@ static PROGMEM_DECLARE(uint16_t, baudctrl_32mhz[]) = {
 	0xC5AC, // Baud: 38400
 	0x6EA8, // Baud: 57600
 };
-//! @}
+
 
 //! Input parameters when initializing RS232 and similar modes.
 typedef struct usart_rs232_options {
