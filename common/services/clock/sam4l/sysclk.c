@@ -186,9 +186,9 @@ void sysclk_priv_disable_module(uint32_t bus_id, uint32_t module_index)
 
 /**
  * \brief Enable a module clock derived from the PBA clock
- * \param index Index of the module clock in the PBAMASK register
+ * \param module_index Index of the module clock in the PBAMASK register
  */
-void sysclk_enable_pba_module(uint32_t index)
+void sysclk_enable_pba_module(uint32_t module_index)
 {
 	irqflags_t flags;
 
@@ -202,19 +202,19 @@ void sysclk_enable_pba_module(uint32_t index)
 	cpu_irq_restore(flags);
 
 	/* Enable the module */
-	sysclk_priv_enable_module(PM_CLK_GRP_PBA, index);
+	sysclk_priv_enable_module(PM_CLK_GRP_PBA, module_index);
 }
 
 /**
  * \brief Disable a module clock derived from the PBA clock
- * \param index Index of the module clock in the PBAMASK register
+ * \param module_index Index of the module clock in the PBAMASK register
  */
-void sysclk_disable_pba_module(uint32_t index)
+void sysclk_disable_pba_module(uint32_t module_index)
 {
 	irqflags_t flags;
 
 	/* Disable the module */
-	sysclk_priv_disable_module(PM_CLK_GRP_PBA, index);
+	sysclk_priv_disable_module(PM_CLK_GRP_PBA, module_index);
 
 	/* Disable the bridge if possible */
 	flags = cpu_irq_save();
@@ -228,9 +228,9 @@ void sysclk_disable_pba_module(uint32_t index)
 
 /**
  * \brief Enable a module clock derived from the PBB clock
- * \param index Index of the module clock in the PBBMASK register
+ * \param module_index Index of the module clock in the PBBMASK register
  */
-void sysclk_enable_pbb_module(uint32_t index)
+void sysclk_enable_pbb_module(uint32_t module_index)
 {
 	irqflags_t flags;
 
@@ -244,19 +244,19 @@ void sysclk_enable_pbb_module(uint32_t index)
 	cpu_irq_restore(flags);
 
 	/* Enable the module */
-	sysclk_priv_enable_module(PM_CLK_GRP_PBB, index);
+	sysclk_priv_enable_module(PM_CLK_GRP_PBB, module_index);
 }
 
 /**
  * \brief Disable a module clock derived from the PBB clock
- * \param index Index of the module clock in the PBBMASK register
+ * \param module_index Index of the module clock in the PBBMASK register
  */
-void sysclk_disable_pbb_module(uint32_t index)
+void sysclk_disable_pbb_module(uint32_t module_index)
 {
 	irqflags_t flags;
 
 	/* Disable the module */
-	sysclk_priv_disable_module(PM_CLK_GRP_PBB, index);
+	sysclk_priv_disable_module(PM_CLK_GRP_PBB, module_index);
 
 	/* Disable the bridge if possible */
 	flags = cpu_irq_save();

@@ -100,13 +100,16 @@
  * for Atmel. Other compilers may or may not work.
  *
  * \section deviceinfo Device Information
- * SAM4L-EK devices with a FLASHCALW module can be used.
+ * SAM4L devices with a FLASHCALW module can be used.
  *
  * \section configinfo Configuration Information
+ * This example has been tested with the following kits:
+ * - SAM4L-EK evaluation kit;
+ * - SAM4L Xplained Pro
+ * - SAM4L8 Xplained Pro
  * This example has been tested with the following configuration:
- * - SAM4L_EK evaluation kit;
  * - CPU clock: 48 MHz;
- * - USART2 (on SAM4L_EK) abstracted with a USB CDC connection to a PC;
+ * - USARTx abstracted with a USB CDC connection to a PC;
  * - PC terminal settings:
  *   - 115200 bps,
  *   - 8 data bits,

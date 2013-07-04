@@ -145,8 +145,7 @@ int main(void)
 		if (ac_chan_is_ready(&ac_instance, AC_COMPARATOR_CHANNEL)) {
 	//! [main_4]
 			//! [main_5]
-			do
-			{
+			do {
 				last_comparison = ac_chan_get_status(&ac_instance,
 						AC_COMPARATOR_CHANNEL);
 			} while (last_comparison & AC_CHAN_STATUS_UNKNOWN);
