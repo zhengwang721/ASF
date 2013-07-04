@@ -49,10 +49,9 @@
 #include "exceptions.h"
 
 
-#define BOARD_REV_A
-/*
+//#define BOARD_REV_A
 #define BOARD_REV_B
-*/
+
 /*----------------------------------------------------------------------------*/
 /**
  *  \page sam4s_xplained_opfreq "SAM4S-XPLAINED - Operating frequencies"
