@@ -93,6 +93,11 @@ mac_gts_spec_t mac_gts_spec;
  */
 uint8_t *mac_gts_buf_ptr;
 
+#define DEV_RX_SLOT_INDEX    (0)
+#define DEV_TX_SLOT_INDEX    (1)
+#define PAN_RX_SLOT_INDEX    (2)
+#define PAN_TX_SLOT_INDEX    (3)
+
 #define MAX_GTS_ON_DEV       (4)
 
 mac_dev_gts_mgmt_t mac_dev_gts_table[MAX_GTS_ON_DEV];
@@ -273,8 +278,17 @@ void mlme_gts_request(uint8_t *m)
 #endif  /* BEACON_SUPPORT / No BEACON_SUPPORT */
 
 		if (MAC_SUCCESS == tal_tx_status) {
-			mac_gts_state = MAC_GTS_REQ_SENT;
-			MAKE_MAC_BUSY();
+			if(GTS_DEALLOCATE == mgr.GtsChar.GtsCharType)
+			{
+				mac_gen_mlme_gts_conf((buffer_t *)m, MAC_SUCCESS,
+				mgr.GtsChar);
+				return;
+			}
+			else
+			{
+				mac_gts_state = MAC_GTS_REQ_SENT;
+				MAKE_MAC_BUSY();
+			}
 		} else {
 			mac_gen_mlme_gts_conf((buffer_t *)m, tal_tx_status,
 			mgr.GtsChar);
@@ -486,9 +500,13 @@ void mac_parse_bcn_gts_info(uint8_t gts_count, uint8_t gts_dir, uint8_t *gts_lis
 {
 	uint8_t loop_index;
 	mac_gts_list_t *gts_list = (mac_gts_list_t *) gts_list_ptr;
+	uint8_t updating_index;
+	uint8_t curr_gts_dir;
 
 	for(loop_index = 0; loop_index < gts_count; loop_index++)
 	{
+		curr_gts_dir = ((gts_dir >> loop_index) && 0x01);
+
 		if(MAC_GTS_REQ_SENT == mac_gts_state
 		&& gts_list->dev_addr == tal_pib.ShortAddress)
 		{
@@ -499,11 +517,40 @@ void mac_parse_bcn_gts_info(uint8_t gts_count, uint8_t gts_dir, uint8_t *gts_lis
 			}
 			else if(gts_list->length == requested_gts_char.GtsLength)
 			{
-						
+				if(GTS_RX_SLOT == curr_gts_dir)
+				{
+					updating_index = DEV_RX_SLOT_INDEX;
+				}
+				else
+				{
+					updating_index = DEV_TX_SLOT_INDEX;
+				}
+
+				mac_dev_gts_table[updating_index].GtsLength
+				= gts_list->length;
+				mac_dev_gts_table[updating_index].GtsStartingSlot
+				= gts_list->starting_slot;
+
 				mac_gen_mlme_gts_conf((buffer_t *)mac_gts_buf_ptr, MAC_SUCCESS,
 				requested_gts_char);
 			}
 			mac_gts_state = MAC_GTS_IDLE;
+		}
+		else if(gts_list->dev_addr == mac_pib.mac_CoordShortAddress)
+		{
+			if(GTS_RX_SLOT == curr_gts_dir)
+			{
+				updating_index = PAN_RX_SLOT_INDEX;
+			}
+			else
+			{
+				updating_index = PAN_TX_SLOT_INDEX;
+			}
+
+			mac_dev_gts_table[updating_index].GtsLength
+			= gts_list->length;
+			mac_dev_gts_table[updating_index].GtsStartingSlot
+			= gts_list->starting_slot;
 		}
 		gts_list++;
 	}

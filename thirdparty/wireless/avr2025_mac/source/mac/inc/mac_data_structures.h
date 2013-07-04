@@ -201,9 +201,8 @@ typedef struct mac_pan_gts_mgmt_tag {
  * @ingroup apiMacTypes
  */
 typedef struct mac_dev_gts_mgmt_tag {
-	uint16_t DevShortAddr;
-	uint8_t PersistenceCount;
-	mac_gtsDesc_t GtsDesc;
+	uint8_t GtsStartingSlot;
+	uint8_t GtsLength;
 }mac_dev_gts_mgmt_t;
 
 typedef struct mac_gts_spec_tag {
