@@ -52,7 +52,8 @@
  *
  * \section Requirements
  *
- * This package can be used with SAM4N Xplained Pro evaluation kits.
+ * This package can be used with SAM4N Xplained Pro evaluation kits
+ * with I/O1 and OLED Xplained Pro extension boards.
  *
  * \section Description
  *
