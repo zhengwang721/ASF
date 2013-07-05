@@ -402,11 +402,22 @@ static inline void system_sleep(void)
  * @}
  */
 
-
 /**
- * \name Reset cause
+ * \name Device reset
  * @{
  */
+
+/**
+ * \brief Trigger software reset
+ *
+ * Trigger a device reset from application code
+ *
+ */
+static inline void system_reset(void)
+{
+	NVIC_SystemReset();
+}
+
 
 /**
  * \brief Return the reset cause

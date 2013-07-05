@@ -1214,7 +1214,9 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
-		<td>Changed default value for CONF_CLOCK_DFLL_ON_DEMAND from true to false
+ *		<td>
+ *			\li Changed default value for CONF_CLOCK_DFLL_ON_DEMAND from true to false
+ *		</td>
  *	</tr>
  *	<tr>
  *		<td>\li Updated dfll configuration function to implement workaround for errata 9905 in the DFLL module.
