@@ -366,15 +366,17 @@ uint8_t mac_add_gts_info(uint8_t *frame_ptr)
 {
 	uint8_t table_index;
 	uint8_t update_octets_count = 0;
+	uint8_t direction_mask = 0;
 
-	if(mac_pan_gts_table_len > 0)
+	mac_gts_spec.GtsDescCount = 0;
+
+	for(table_index = 0; table_index < MAX_GTS_ON_PANC; table_index++)
 	{
-		uint8_t direction_mask = 0;
-		for(table_index = 0; table_index < mac_pan_gts_table_len; table_index++)
+		if(mac_pan_gts_table[table_index].PersistenceCount > 0)
 		{
 			frame_ptr--;
-			*frame_ptr = (mac_pan_gts_table[table_index].GtsDesc.GtsLength << 4) 
-							| mac_pan_gts_table[table_index].GtsDesc.GtsStartingSlot; 
+			*frame_ptr = (mac_pan_gts_table[table_index].GtsDesc.GtsLength << 4)
+			| mac_pan_gts_table[table_index].GtsDesc.GtsStartingSlot;
 			frame_ptr--;
 			*frame_ptr = mac_pan_gts_table[table_index].DevShortAddr >> 8; //GTS List
 			frame_ptr--;
@@ -384,15 +386,25 @@ uint8_t mac_add_gts_info(uint8_t *frame_ptr)
 
 			if(mac_pan_gts_table[table_index].GtsDesc.GtsDirection & GTS_RX_SLOT)
 			{
-				direction_mask |= (1 << table_index);
+				direction_mask = (direction_mask << 1) | 1;
 			}
+			else
+			{
+				direction_mask = direction_mask << 1;
+			}
+			mac_pan_gts_table[table_index].PersistenceCount--;
+			mac_gts_spec.GtsDescCount++;
 		}
+	}
+	if(mac_gts_spec.GtsDescCount > 0)
+	{
 		frame_ptr--;
 		*frame_ptr = direction_mask; //GTS Direction Mask
 		++update_octets_count;
 		frame_ptr--;
 	}
-	mac_gts_spec.GtsDescCount = mac_pan_gts_table_len;
+
+//	mac_gts_spec.GtsDescCount = mac_pan_gts_table_len;
 	mac_gts_spec.GtsPermit = mac_pib.mac_GTSPermit;
 	*frame_ptr = *((uint8_t*)&mac_gts_spec);
 	return update_octets_count;
@@ -425,13 +437,12 @@ bool mac_gts_allocate(gts_char_t GtsCharacteristics, uint16_t DevAddress)
 	
 	mac_pan_gts_table[mac_pan_gts_table_len].GtsDesc.GtsDirection = GtsCharacteristics.GtsDirection;
 	
+	mac_pan_gts_table[mac_pan_gts_table_len].PersistenceCount = aGTSDescPersistenceTime;
+	
 	mac_final_cap_slot -= GtsCharacteristics.GtsLength;
 
 	++mac_pan_gts_table_len;
 
-	mac_gts_spec.GtsDescCount = mac_pan_gts_table_len;
-	mac_gts_spec.GtsPermit = mac_pib.mac_GTSPermit;
-	
 	return true;
 }
 #endif /* FFD */
