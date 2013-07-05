@@ -40,6 +40,7 @@
  *
  * \asf_license_stop
  */
+
 /*
  * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
@@ -50,32 +51,29 @@
 #ifndef TAL_TX_H
 #define TAL_TX_H
 
-
 /* === INCLUDES ============================================================ */
 
 #include "tal.h"
 
 /* === EXTERNALS =========================================================== */
 
-
 /* === TYPES =============================================================== */
 
-
 /* === MACROS ============================================================== */
+
 /**
  * \addtogroup group_tal_tx_230b
  * @{
  */
 
 /* States used by TX state machine */
-typedef enum tal_tx_sub_state_tag
-{
-    TAL_TX_FRAME_PENDING            = (1 << 4),
-    TAL_TX_SUCCESS                  = (2 << 4),
-    TAL_TX_ACCESS_FAILURE           = (3 << 4),
-    TAL_TX_NO_ACK                   = (4 << 4),
-    TAL_TX_FAILURE                  = (5 << 4),
-    TAL_TX_ACK_REQUIRED             = (6 << 4)
+typedef enum tal_tx_sub_state_tag {
+	TAL_TX_FRAME_PENDING            = (1 << 4),
+	TAL_TX_SUCCESS                  = (2 << 4),
+	TAL_TX_ACCESS_FAILURE           = (3 << 4),
+	TAL_TX_NO_ACK                   = (4 << 4),
+	TAL_TX_FAILURE                  = (5 << 4),
+	TAL_TX_ACK_REQUIRED             = (6 << 4)
 } tal_tx_sub_state_t;
 
 /* === PROTOTYPES ========================================================== */
@@ -84,29 +82,31 @@ typedef enum tal_tx_sub_state_tag
 extern "C" {
 #endif
 
-    /**
-     * \brief Handles interrupts issued due to end of transmission
-     *
-     * \param underrun_occured  true if under-run has occurred
-     */
+/**
+ * \brief Handles interrupts issued due to end of transmission
+ *
+ * \param underrun_occured  true if under-run has occurred
+ */
 
-    void handle_tx_end_irq(bool underrun_occured);
-    /**
-     * \brief Sends frame using trx features to handle CSMA and re-transmissions
-     *
-     * \param csma_mode Indicates the CSMA Mode used
-     * \param tx_retries Flag indicating if transmission retries are requested
-     *                   by the MAC layer
-     */
-    void send_frame(csma_mode_t csma_mode, bool tx_retries);
-    /**
-     * \brief Implements the TAL tx state machine.
-     *
-     * This function implements the TAL tx state machine.
-     */
-    void tx_state_handling(void);
-    //! @}
+void handle_tx_end_irq(bool underrun_occured);
 
+/**
+ * \brief Sends frame using trx features to handle CSMA and re-transmissions
+ *
+ * \param csma_mode Indicates the CSMA Mode used
+ * \param tx_retries Flag indicating if transmission retries are requested
+ *                   by the MAC layer
+ */
+void send_frame(csma_mode_t csma_mode, bool tx_retries);
+
+/**
+ * \brief Implements the TAL tx state machine.
+ *
+ * This function implements the TAL tx state machine.
+ */
+void tx_state_handling(void);
+
+/* ! @} */
 
 #ifdef __cplusplus
 } /* extern "C" */
@@ -115,4 +115,3 @@ extern "C" {
 #endif /* TAL_TX_H */
 
 /* EOF */
-

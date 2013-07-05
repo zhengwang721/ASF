@@ -7,7 +7,7 @@
  ******************************************************************************/
 
 /**
- * Copyright (c) 2010 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -61,7 +61,7 @@
  * All AVR devices can be used. This example has been tested
  * with the following setup:
  *   - Evaluation kits with a dataflash connecting through a SPI interface.
- *   (this example does not work on STK600).
+ * To make this example work on STK600 define AT45DB041 in config file.
  *
  * \section exampledescription Description of the example
  *   - Send "Read Status" command to the dataflash.
@@ -101,7 +101,11 @@ uint16_t status; // Status value for dataflash.
  */
 //! @{
 #define AT45DBX_MSK_DENSITY               0x3C      //!< Device density bit-mask
+#ifdef AT45DB041
+#define AT45DBX_DENSITY                   0x1C      //!< Device density value.
+#else
 #define AT45DBX_DENSITY                   0x3C      //!< Device density value.
+#endif
 //! @}
 
 //! First Status Command Register - Second Dummy Data

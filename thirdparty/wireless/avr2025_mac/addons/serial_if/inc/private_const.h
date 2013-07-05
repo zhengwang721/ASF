@@ -40,7 +40,7 @@
  *
  * \asf_license_stop
  */
- 
+
 /*
  * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
@@ -53,13 +53,13 @@
 
 /* === Includes ============================================================= */
 
-
 /* === Macros =============================================================== */
 
 /*
  * Private test PIB attributes, will only be implemented (in the MAC
  * layer) if TEST_HARNESS > 0.
  */
+
 /**
  * Private MAC PIB attribute to disable ACK sending.
  *
@@ -132,12 +132,9 @@
  */
 #define macPrivateMACSyncState          (0xF8)
 
-
 /* === Types ================================================================ */
 
-
 /* === Externals ============================================================ */
-
 
 /* === Prototypes =========================================================== */
 
