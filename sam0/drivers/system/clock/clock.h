@@ -1214,11 +1214,14 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
+		<td>Changed default value for CONF_CLOCK_DFLL_ON_DEMAND from true to false
  *	</tr>
+ *	<tr>
  *		<td>\li Updated dfll configuration function to implement workaround for errata 9905 in the DFLL module.
  *		    \li Updated \c system_clock_init() to reset interrupt flags before they are used, errata 10558.
  *		    \li Fixed \c system_clock_source_get_hz() to return correcy DFLL frequency number.
  *		</td>
+ *	</tr>
  *	<tr>
  *		<td>\li Fixed \c system_clock_source_is_ready not returning the correct
  *              state for \c SYSTEM_CLOCK_SOURCE_OSC8M.
