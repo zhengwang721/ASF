@@ -40,6 +40,7 @@
  *
  * \asf_license_stop
  */
+
 /*
  * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
@@ -62,8 +63,8 @@
 
 void tal_rx_frame_cb(frame_info_t *rx_frame)
 {
-    /* Keep compiler happy. */
-    rx_frame = rx_frame;
+	/* Keep compiler happy. */
+	rx_frame = rx_frame;
 }
 
 /* EOF */

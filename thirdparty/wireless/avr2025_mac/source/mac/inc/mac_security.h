@@ -57,10 +57,12 @@
 
 #include "mac_api.h"
 
-/* === Macros =============================================================== */    /**
-     * \addtogroup group_mac_def
-     * @{
-     */
+/* === Macros =============================================================== */
+ *    /**
+ * \addtogroup group_mac_def
+ * @{
+ */
+
 /**
  * Default value for PIB macKeyTableEntries
  */
@@ -84,7 +86,8 @@
 /**
  * Default value for PIB macDefaultKeySource
  */
-#define macDefaultKeySource_def             {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF}
+#define macDefaultKeySource_def             {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, \
+					     0xFF, 0xFF}
 
 /**
  * Default value for KeyIdLookupListEntries
@@ -100,7 +103,7 @@
  * Default value for KeyUsageListEntries
  */
 #define KeyUsageListEntries_def             (0)
-//! @}
+/* ! @} */
 /* === Externals ============================================================ */
 
 extern mac_sec_pib_t mac_sec_pib;
@@ -111,8 +114,6 @@ extern mac_sec_pib_t mac_sec_pib;
 extern "C" {
 #endif
 /*@{*/
-
-
 
 /*@}*/
 

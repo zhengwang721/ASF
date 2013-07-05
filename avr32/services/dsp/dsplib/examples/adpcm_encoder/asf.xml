@@ -4,7 +4,7 @@
 		Example application. It demonstrates the use, through a real-time application, of the ADPCM encoder from the DSP library.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="Digital signal processing"/>
+			<keyword value="Digital Signal Processing"/>
 			<keyword value="Audio"/>
 		</info>
 		<build type="c-source" value="adpcm_example.c"/>

@@ -3,7 +3,7 @@
  *
  * \brief FLASHCALW example3 for SAM.
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -48,13 +48,13 @@
  * defines, enums, and typedefs for the FLASHCALW software driver.
  *
  * It also comes bundled with several examples. Using a Fibonacci calculation,
- * this example demonstrates how much the PicoCache feature can improve the 
+ * this example demonstrates how much the PicoCache feature can improve the
  * execution speed.
  *
- * \note The PicoCache always has a positive impact in terms of power 
- * consumption (Explanation: since the PicoCache features allows to do less 
- * access to the Flash, the power consumption is therefore reduced). Note 
- * however that the PicoCache feature may have a negligible negative impact on 
+ * \note The PicoCache always has a positive impact in terms of power
+ * consumption (Explanation: since the PicoCache features allows to do less
+ * access to the Flash, the power consumption is therefore reduced). Note
+ * however that the PicoCache feature may have a negligible negative impact on
  * the execution speed when there are no wait states on the Flash (which may be
  * the case when the CPU runs at 12MHz in some cases). See also the Flash
  * Characteristics in the electrical characteristics section of the datasheet
@@ -77,7 +77,7 @@
  * \section files Main Files
  *   - flashcalw.c: FLASHCALW driver;
  *   - flashcalw.h: FLASHCALW driver header file;
- *   - time_tick_sam.c: Time tick utilities for getting the time spent on the 
+ *   - time_tick_sam.c: Time tick utilities for getting the time spent on the
  *   calculation;
  *   - time_tick.h: Time tick utilities header file;
  *   - flashcalw_example3.c: PicoCache access example application.
@@ -87,13 +87,16 @@
  * for Atmel. Other compilers may or may not work.
  *
  * \section deviceinfo Device Information
- * SAM4L-EK devices with a FLASHCALW module can be used.
+ * SAM4L devices with a FLASHCALW module can be used.
  *
  * \section configinfo Configuration Information
+ * This example has been tested with the following kits:
+ * - SAM4L-EK evaluation kit;
+ * - SAM4L Xplained Pro
+ * - SAM4L8 Xplained Pro
  * This example has been tested with the following configuration:
- * - SAM4L_EK evaluation kit;
  * - CPU clock: 48 MHz;
- * - USART2 (on SAM4L_EK) abstracted with a USB CDC connection to a PC;
+ * - USARTx abstracted with a USB CDC connection to a PC;
  * - PC terminal settings:
  *   - 115200 bps,
  *   - 8 data bits,

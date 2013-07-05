@@ -48,7 +48,7 @@
 			This module is part of the DSP library and provides various functions to manipulate 16 or 32-bit fixed-point formatted numbers.
 			</info>
 			<info type="keyword" value="technology">
-				<keyword value="Digital signal processing"/>
+				<keyword value="Digital Signal Processing"/>
 			</info>
 			<build type="doxygen-entry-point" value="group_operators"/>
 			<require idref="avr32.services.dsplib.uc3.operators"/>
@@ -61,7 +61,7 @@
 			This module is part of the DSP library and provides various functions to manipulate 16 or 32-bit fixed-point formatted numbers.
 			</info>
 			<info type="keyword" value="technology">
-				<keyword value="Digital signal processing"/>
+				<keyword value="Digital Signal Processing"/>
 			</info>
 			<build type="define" name="FORCE_ALL_GENERICS" value="true"/>
 			<build type="doxygen-entry-point" value="group_operators"/>
@@ -75,7 +75,7 @@
 		<module type="service" id="avr32.services.dsplib.vectors#device_optimized" caption="DSPLIB - Vectors - Device optimized">
 			<info type="gui-flag" value="hidden"/>
 			<info type="keyword" value="technology">
-				<keyword value="Digital signal processing"/>
+				<keyword value="Digital Signal Processing"/>
 			</info>
 			<info type="description" value="summary">
 			This module is part of the DSP library and provides various functions to manipulate vectors represented with 16 or 32-bit fixed-point formatted numbers.
@@ -88,7 +88,7 @@
 		<module type="service" id="avr32.services.dsplib.vectors#generic" caption="DSPLIB - Vectors - Generic">
 			<info type="gui-flag" value="hidden"/>
 			<info type="keyword" value="technology">
-				<keyword value="Digital signal processing"/>
+				<keyword value="Digital Signal Processing"/>
 			</info>
 			<info type="description" value="summary">
 			This module is part of the DSP library and provides various functions to manipulate vectors represented with 16 or 32-bit fixed-point formatted numbers.
@@ -108,7 +108,7 @@
 			This module is part of the DSP library and provides various functions to generate windows using 16 or 32-bit fixed-point formatted numbers.
 			</info>
 			<info type="keyword" value="technology">
-				<keyword value="Digital signal processing"/>
+				<keyword value="Digital Signal Processing"/>
 			</info>
 			<build type="doxygen-entry-point" value="group_windowing"/>
 			<require idref="avr32.services.dsplib.uc3.windowing"/>
@@ -121,7 +121,7 @@
 			This module is part of the DSP library and provides various functions to generate windows using 16 or 32-bit fixed-point formatted numbers.
 			</info>
 			<info type="keyword" value="technology">
-				<keyword value="Digital signal processing"/>
+				<keyword value="Digital Signal Processing"/>
 			</info>
 			<build type="define" name="FORCE_ALL_GENERICS" value="true"/>
 			<require idref="avr32.services.dsplib.generic.windowing"/>
@@ -138,7 +138,7 @@
 			This module is part of the DSP library and provides various filters to process 16 or 32-bit fixed-point signal.
 			</info>
 			<info type="keyword" value="technology">
-				<keyword value="Digital signal processing"/>
+				<keyword value="Digital Signal Processing"/>
 			</info>
 			<build type="doxygen-entry-point" value="group_filters"/>
 			<require idref="avr32.services.dsplib.uc3.filters"/>
@@ -151,7 +151,7 @@
 			This module is part of the DSP library and provides various filters to process 16 or 32-bit fixed-point signal.
 			</info>
 			<info type="keyword" value="technology">
-				<keyword value="Digital signal processing"/>
+				<keyword value="Digital Signal Processing"/>
 			</info>
 			<build type="define" name="FORCE_ALL_GENERICS" value="true"/>
 			<require idref="avr32.services.dsplib.generic.filters"/>
@@ -168,7 +168,7 @@
 			This module is part of the DSP library and provides a useful function set to generate different signals represented with 16 or 32-bit fixed-point numbers.
 			</info>
 			<info type="keyword" value="technology">
-				<keyword value="Digital signal processing"/>
+				<keyword value="Digital Signal Processing"/>
 			</info>
 			<build type="doxygen-entry-point" value="group_signal_generation"/>
 			<require idref="avr32.services.dsplib.uc3.signal_generation"/>
@@ -181,7 +181,7 @@
 			This module is part of the DSP library and provides a useful function set to generate different signals represented with 16 or 32-bit fixed-point numbers.
 			</info>
 			<info type="keyword" value="technology">
-				<keyword value="Digital signal processing"/>
+				<keyword value="Digital Signal Processing"/>
 			</info>
 			<build type="define" name="FORCE_ALL_GENERICS" value="true"/>
 			<require idref="avr32.services.dsplib.generic.signal_generation"/>
@@ -198,7 +198,7 @@
 			This module is part of the DSP library and provides a useful function set to perform DSP transformations on a signal coded with 16 or 32-bit fixed-point numbers.
 			</info>
 			<info type="keyword" value="technology">
-				<keyword value="Digital signal processing"/>
+				<keyword value="Digital Signal Processing"/>
 			</info>
 			<require idref="avr32.services.dsplib.uc3.transforms"/>
 			<build type="doxygen-entry-point" value="group_transforms"/>
@@ -211,7 +211,7 @@
 			This module is part of the DSP library and provides a useful function set to perform DSP transformations on a signal coded with 16 or 32-bit fixed-point numbers.
 			</info>
 			<info type="keyword" value="technology">
-				<keyword value="Digital signal processing"/>
+				<keyword value="Digital Signal Processing"/>
 			</info>
 			<build type="define" name="FORCE_ALL_GENERICS" value="true"/>
 			<require idref="avr32.services.dsplib.generic.transforms"/>
@@ -229,7 +229,7 @@
 			This module is part of the DSP library and provides a useful function set to decode and/or encode a buffer using the ADPCM method.
 			</info>
 			<info type="keyword" value="technology">
-				<keyword value="Digital signal processing"/>
+				<keyword value="Digital Signal Processing"/>
 			</info>
 			<require idref="avr32.services.dsplib.uc3"/>
 			<require idref="avr32.services.dsplib.generic.adpcm"/>
@@ -243,7 +243,7 @@
 			This module is part of the DSP library and provides a useful function set to decode and/or encode a buffer using the ADPCM method.
 			</info>
 			<info type="keyword" value="technology">
-				<keyword value="Digital signal processing"/>
+				<keyword value="Digital Signal Processing"/>
 			</info>
 			<build type="define" name="FORCE_ALL_GENERICS" value="true"/>
 			<require idref="avr32.services.dsplib.generic.adpcm"/>
@@ -260,7 +260,7 @@
 			This module is part of the DSP library and provides a useful function set to re-sample a 16-bit fixed-point formatted signal.
 			</info>
 			<info type="keyword" value="technology">
-				<keyword value="Digital signal processing"/>
+				<keyword value="Digital Signal Processing"/>
 			</info>
 			<build type="doxygen-entry-point" value="group_resampling"/>
 			<require idref="avr32.services.dsplib.uc3"/>
@@ -274,7 +274,7 @@
 			This module is part of the DSP library and provides a useful function set to re-sample a 16-bit fixed-point formatted signal.
 			</info>
 			<info type="keyword" value="technology">
-				<keyword value="Digital signal processing"/>
+				<keyword value="Digital Signal Processing"/>
 			</info>
 			<build type="define" name="FORCE_ALL_GENERICS" value="true"/>
 			<require idref="avr32.services.dsplib.generic.resampling"/>
@@ -305,7 +305,7 @@
 		This is the source code for the DSP library.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="Digital signal processing" />
+			<keyword value="Digital Signal Processing" />
 		</info>		
 		<require idref="avr32.services.dsplib.all"/>
 		<build type="doxygen-entry-point" value="group_dsplib"/>

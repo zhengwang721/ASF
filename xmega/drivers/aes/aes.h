@@ -3,7 +3,7 @@
  *
  * \brief AVR XMEGA Advanced Encryption Standard (AES) driver
  *
- * Copyright (c) 2010-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -179,8 +179,8 @@ static inline void aes_clear_error_flag(void)
 	AES.STATUS |= AES_ERROR_bm;
 }
 
-void aes_configure(enum aes_dec decrypt, enum aes_auto _start,
-	enum aes_xor xor);
+void aes_configure(enum aes_dec decrypt, enum aes_auto auto_start,
+	enum aes_xor xor_mode);
 
 void aes_set_key(t_key k_in);
 

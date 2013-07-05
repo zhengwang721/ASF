@@ -49,12 +49,11 @@
 
 #include "status_codes.h"
 
-//! \internal Local storage of Timer Counter TCC1  interrupt callback function
+/* ! \internal Local storage of Timer Counter TCC1  interrupt callback function */
 static tc_callback_t tc_tccr1_ovf_callback;
 static tc_callback_t tc_tccr1_compa_callback;
 static tc_callback_t tc_tccr1_compb_callback;
 static tc_callback_t tc_tccr1_compc_callback;
-
 
 /**
  * \internal
@@ -97,7 +96,7 @@ ISR(TIMER1_COMPC_vect)
 	}
 }
 
-//!  Local storage of Timer Counter  TCC3 interrupt callback function
+/* !  Local storage of Timer Counter  TCC3 interrupt callback function */
 static tc_callback_t tc_tccr3_ovf_callback;
 static tc_callback_t tc_tccr3_compa_callback;
 static tc_callback_t tc_tccr3_compb_callback;
@@ -109,7 +108,6 @@ ISR(TIMER3_OVF_vect)
 		tc_tccr3_ovf_callback();
 	}
 }
-
 
 ISR(TIMER3_COMPA_vect)
 {
@@ -132,7 +130,7 @@ ISR(TIMER3_COMPC_vect)
 	}
 }
 
-//!  Local storage of Timer Counter  TCC4 interrupt callback function
+/* !  Local storage of Timer Counter  TCC4 interrupt callback function */
 static tc_callback_t tc_tccr4_ovf_callback;
 static tc_callback_t tc_tccr4_compa_callback;
 static tc_callback_t tc_tccr4_compb_callback;
@@ -144,7 +142,6 @@ ISR(TIMER4_OVF_vect)
 		tc_tccr4_ovf_callback();
 	}
 }
-
 
 ISR(TIMER4_COMPA_vect)
 {
@@ -167,7 +164,7 @@ ISR(TIMER4_COMPC_vect)
 	}
 }
 
-//!  Local storage of Timer Counter  TCC5 interrupt callback function
+/* !  Local storage of Timer Counter  TCC5 interrupt callback function */
 static tc_callback_t tc_tccr5_ovf_callback;
 static tc_callback_t tc_tccr5_compa_callback;
 static tc_callback_t tc_tccr5_compb_callback;
@@ -179,7 +176,6 @@ ISR(TIMER5_OVF_vect)
 		tc_tccr5_ovf_callback();
 	}
 }
-
 
 ISR(TIMER5_COMPA_vect)
 {
@@ -204,11 +200,10 @@ ISR(TIMER5_COMPC_vect)
 
 void tc_enable(volatile void *tc)
 {
-
 	irqflags_t iflags = cpu_irq_save();
 
-        sysclk_enable_peripheral_clock(tc);
-	
+	sysclk_enable_peripheral_clock(tc);
+
 	cpu_irq_restore(iflags);
 }
 
@@ -216,89 +211,60 @@ void tc_disable(volatile void *tc)
 {
 	irqflags_t iflags = cpu_irq_save();
 
-        sysclk_disable_peripheral_clock(tc);
-	
+	sysclk_disable_peripheral_clock(tc);
+
 	cpu_irq_restore(iflags);
 }
-
-
 
 void tc_set_overflow_interrupt_callback(volatile void *tc,
 		tc_callback_t callback)
 {
-
-	if ((uintptr_t) tc == (uintptr_t) & TCCR1A) {
+	if ((uintptr_t)tc == (uintptr_t)&TCCR1A) {
 		tc_tccr1_ovf_callback = callback;
-	} 
-        else if ((uintptr_t) tc == (uintptr_t) & TCCR3A) {
+	} else if ((uintptr_t)tc == (uintptr_t)&TCCR3A) {
 		tc_tccr3_ovf_callback = callback;
-	} 
-        else if ((uintptr_t) tc == (uintptr_t) & TCCR4A) {
-              tc_tccr4_ovf_callback = callback;
-        }
-        else if ((uintptr_t) tc == (uintptr_t) & TCCR5A) {
+	} else if ((uintptr_t)tc == (uintptr_t)&TCCR4A) {
+		tc_tccr4_ovf_callback = callback;
+	} else if ((uintptr_t)tc == (uintptr_t)&TCCR5A) {
 		tc_tccr5_ovf_callback = callback;
-	} else 
-
-        {}
-          
+	} else {}
 }
-
 
 void tc_set_compa_interrupt_callback(volatile void *tc, tc_callback_t callback)
 {
-
-	if ((uintptr_t) tc == (uintptr_t) & TCCR1A) {
+	if ((uintptr_t)tc == (uintptr_t)&TCCR1A) {
 		tc_tccr1_compa_callback = callback;
-	} 
-        else if   ((uintptr_t) tc == (uintptr_t) & TCCR3A) {
+	} else if ((uintptr_t)tc == (uintptr_t)&TCCR3A) {
 		tc_tccr3_compa_callback = callback;
-	}
-        else if ((uintptr_t) tc == (uintptr_t) & TCCR4A) {
-              tc_tccr4_compa_callback = callback;
-        }
-        else if ((uintptr_t) tc == (uintptr_t) & TCCR5A) {
+	} else if ((uintptr_t)tc == (uintptr_t)&TCCR4A) {
+		tc_tccr4_compa_callback = callback;
+	} else if ((uintptr_t)tc == (uintptr_t)&TCCR5A) {
 		tc_tccr5_compa_callback = callback;
-	} else
-
-        {}
+	} else {}
 }
 
 void tc_set_compb_interrupt_callback(volatile void *tc, tc_callback_t callback)
 {
-
-	if ((uintptr_t) tc == (uintptr_t) & TCCR1A) {
+	if ((uintptr_t)tc == (uintptr_t)&TCCR1A) {
 		tc_tccr1_compb_callback = callback;
-	} 
-        else if ((uintptr_t) tc == (uintptr_t) & TCCR3A) {
+	} else if ((uintptr_t)tc == (uintptr_t)&TCCR3A) {
 		tc_tccr3_compb_callback = callback;
-	} 
-        else if ((uintptr_t) tc == (uintptr_t) & TCCR4A) {
-              tc_tccr4_compb_callback = callback;
-        } 
-        else if ((uintptr_t) tc == (uintptr_t) & TCCR5A) {
+	} else if ((uintptr_t)tc == (uintptr_t)&TCCR4A) {
+		tc_tccr4_compb_callback = callback;
+	} else if ((uintptr_t)tc == (uintptr_t)&TCCR5A) {
 		tc_tccr5_compb_callback = callback;
-	} else
-
-        {}
+	} else {}
 }
 
 void tc_set_compc_interrupt_callback(volatile void *tc, tc_callback_t callback)
 {
-
-	if ((uintptr_t) tc == (uintptr_t) & TCCR1A) {
+	if ((uintptr_t)tc == (uintptr_t)&TCCR1A) {
 		tc_tccr1_compc_callback = callback;
-	} 
-        else if ((uintptr_t) tc == (uintptr_t) & TCCR3A) {
+	} else if ((uintptr_t)tc == (uintptr_t)&TCCR3A) {
 		tc_tccr3_compc_callback = callback;
-	} 
-        else  if ((uintptr_t) tc == (uintptr_t) & TCCR4A) {
-              tc_tccr4_compc_callback = callback;
-        } 
-        else if ((uintptr_t) tc == (uintptr_t) & TCCR5A) {
+	} else if ((uintptr_t)tc == (uintptr_t)&TCCR4A) {
+		tc_tccr4_compc_callback = callback;
+	} else if ((uintptr_t)tc == (uintptr_t)&TCCR5A) {
 		tc_tccr5_compc_callback = callback;
-	} else
-
-        {}
+	} else {}
 }
-

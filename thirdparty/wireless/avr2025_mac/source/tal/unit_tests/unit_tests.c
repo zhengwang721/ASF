@@ -112,19 +112,24 @@
 int main(void)
 {
 	irq_initialize_vectors();
-	board_init();
 	sysclk_init();
 
+	/* Initialize the board.
+	 * The board-specific conf_board.h file contains the configuration of
+	 * the board initialization.
+	 */
+	board_init();
+
 	sw_timer_init();
-    tal_init();
-	// Enable interrupts
+	tal_init();
+	/* Enable interrupts */
 	cpu_irq_enable();
 
 	stdio_usb_init();
 
 	while (1) {
 		tal_task();
-	};
+	}
 }
 
 /**
@@ -149,61 +154,56 @@ static void run_tal_pib_set_test(const struct test_case *test)
 {
 	retval_t status;
 
-    uint8_t temp;
+	uint8_t temp;
 
-    temp = DEFAULT_CHANNEL;
-    
+	temp = DEFAULT_CHANNEL;
+
 	status = tal_pib_set(phyCurrentChannel, (pib_value_t *)&temp);
 
 	test_assert_true(test, status == MAC_SUCCESS,
-					"AVR2025_MAC - TAL Setting Current Channel failed");
-    temp = DEFAULT_CHANNEL_PAGE;
+			"AVR2025_MAC - TAL Setting Current Channel failed");
+	temp = DEFAULT_CHANNEL_PAGE;
 	status = tal_pib_set(phyCurrentPage, (pib_value_t *)&temp);
 	test_assert_true(test, status == MAC_SUCCESS,
-					"AVR2025_MAC - TAL Setting Current Page failed");
+			"AVR2025_MAC - TAL Setting Current Page failed");
 }
-
 
 void main_cdc_set_dtr(bool b_enable)
 {
 	if (b_enable) {
-
-      DEFINE_TEST_CASE(tal_reset_test, NULL, run_tal_reset_test,
+		DEFINE_TEST_CASE(tal_reset_test, NULL, run_tal_reset_test,
 				NULL, "AVR2025_MAC - TAL Reset request");
 		DEFINE_TEST_CASE(tal_pib_set_test, NULL,
 				run_tal_pib_set_test, NULL,
 				"AVR2025_MAC - TAL PIB Set test");
 
-		// Put test case addresses in an array.
+		/* Put test case addresses in an array. */
 		DEFINE_TEST_ARRAY(tal_tests) = {
 			&tal_reset_test,
-			&tal_pib_set_test};
+			&tal_pib_set_test
+		};
 
-		// Define the test suite.
+		/* Define the test suite. */
 		DEFINE_TEST_SUITE(tal_suite, tal_tests,
 				"AVR2025_MAC - TAL unit test suite");
 
-		// Run all tests in the test suite.
+		/* Run all tests in the test suite. */
 		test_suite_run(&tal_suite);
 	} else {
-
 	}
 }
 
 #if (MAC_SCAN_ED_REQUEST_CONFIRM == 1) || defined(__DOXYGEN__)
 void tal_ed_end_cb(uint8_t energy_level)
 {
-	
 }
-#endif /* (MAC_SCAN_ED_REQUEST_CONFIRM == 1) */
 
+#endif /* (MAC_SCAN_ED_REQUEST_CONFIRM == 1) */
 
 void tal_rx_frame_cb(frame_info_t *rx_frame)
 {
-	
 }
 
 void tal_tx_frame_done_cb(retval_t status, frame_info_t *frame)
 {
-	
 }

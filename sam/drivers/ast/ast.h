@@ -236,6 +236,32 @@ static inline uint32_t ast_read_interrupt_mask(Ast *ast)
 	return ast->AST_IMR;
 }
 
+/**
+ * \brief Start AST counter.
+ *
+ * \param ast  Base address of the AST.
+ */
+static inline void ast_start(Ast *ast)
+{
+	/* Wait until the ast CTRL register is up-to-date */
+	while (ast_is_busy(ast)) {
+	}
+	ast->AST_CR |= AST_CR_EN;
+}
+
+/**
+ * \brief Stop AST counter.
+ *
+ * \param ast  Base address of the AST.
+ */
+static inline void ast_stop(Ast *ast)
+{
+	/* Wait until the ast CTRL register is up-to-date */
+	while (ast_is_busy(ast)) {
+	}
+	ast->AST_CR &= ~(AST_CR_EN);
+}
+
 void ast_write_alarm0_value(Ast *ast, uint32_t alarm_value);
 void ast_write_periodic0_value(Ast *ast, uint32_t pir);
 
@@ -304,7 +330,7 @@ void ast_disable_event(Ast *ast, ast_event_source_t source);
  * ast_conf.osc_type = AST_OSC_32KHZ;
  * ast_conf.psel = AST_PSEL_32KHZ_1HZ;
  * ast_conf.counter = 0;
- * ast_set_config(AST, &ast_conf)
+ * ast_set_config(AST, &ast_conf);
  * \endcode
  * -# Or initialize the AST to calendar mode
  *  - \code

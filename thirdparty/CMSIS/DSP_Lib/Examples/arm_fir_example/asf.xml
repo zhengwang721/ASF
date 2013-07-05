@@ -5,13 +5,11 @@
 		</info>
 		<build type="c-source" value="arm_fir_example_f32.c"/>
 		<build type="c-source" value="arm_fir_data.c"/>
-		<build type="c-source" value="../Common/Source/math_helper.c"/>
-		<build type="header-file" value="../Common/Include/math_helper.h"/>
 		<build type="header-file" value="documentation.h"/>
 		<build type="include-path" value="."/>
-		<build type="include-path" value="../Common/Include"/>
+		<require idref="sam.utils.cmsis.dsp_lib.examples.common"/>
 		<device-support value="sam4"/>
-		<build type="distribute" subtype="license" value="../../../license.txt"/>
+		<require idref="thirdparty.cmsis.license"/>
 		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>
