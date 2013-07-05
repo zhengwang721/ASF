@@ -40,6 +40,7 @@
  * \asf_license_stop
  *
  */
+
 /*
  * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
@@ -67,13 +68,13 @@
 
 /* === TYPES =============================================================== */
 
-
 /* === MACROS ============================================================== */
 
 /** Conversion factor: us per symbol for 2,4 GHz. */
 #define PAL_US_PER_SYMBOLS              (16)
 
 #if defined(__DOXYGEN__)
+
 /**
  * \brief Reads the 32-bit timer register in the required order of bytes
  *
@@ -85,52 +86,57 @@
  * \returns uint32_t Value of timer register
  */
 static inline uint32_t sc_read32(volatile uint8_t *hh,
-                                 volatile uint8_t *hl,
-                                 volatile uint8_t *lh,
-                                 volatile uint8_t *ll);
+		volatile uint8_t *hl,
+		volatile uint8_t *lh,
+		volatile uint8_t *ll);
+
 #else
 static inline uint32_t sc_read32(volatile uint8_t *hh,
-             volatile uint8_t *hl,
-             volatile uint8_t *lh,
-             volatile uint8_t *ll)
+		volatile uint8_t *hl,
+		volatile uint8_t *lh,
+		volatile uint8_t *ll)
 {
-    union
-    {
-        uint8_t a[4];
-        uint32_t rv;
-    }
-    x;
+	union {
+		uint8_t a[4];
+		uint32_t rv;
+	}
+	x;
 
-    x.a[0] = *ll;
-    x.a[1] = *lh;
-    x.a[2] = *hl;
-    x.a[3] = *hh;
+	x.a[0] = *ll;
+	x.a[1] = *lh;
+	x.a[2] = *hl;
+	x.a[3] = *hh;
 
-    return x.rv;
+	return x.rv;
 }
+
 #endif /* __DOXYGEN__ */
 
-/** String concatenation by preprocessor used to create proper register names. */
-#define CONCAT(a,b) a##b
+/** String concatenation by preprocessor used to create proper register names.
+ **/
+#define CONCAT(a, b) a ## b
 
 /** Creates proper subregister names and reads the corresponding values. */
-#define SC_READ32(reg)                  sc_read32(&CONCAT(reg,HH), \
-                                                  &CONCAT(reg,HL), \
-                                                  &CONCAT(reg,LH), \
-                                                  &CONCAT(reg,LL))
+#define SC_READ32(reg)                  sc_read32(&CONCAT(reg, HH), \
+		&CONCAT(reg, HL), \
+		&CONCAT(reg, LH), \
+		&CONCAT(reg, LL))
 
 /** Creates proper subregister names and writes the corresponding values. */
-#define SC_WRITE32(reg,val) \
-    do { \
-        union { uint8_t a[4]; uint32_t v; } x; \
-        x.v = val; \
-        CONCAT(reg,HH) = x.a[3]; \
-        CONCAT(reg,HL) = x.a[2]; \
-        CONCAT(reg,LH) = x.a[1]; \
-        CONCAT(reg,LL) = x.a[0]; \
-    } while(0)
+#define SC_WRITE32(reg, val) \
+	do { \
+		union { uint8_t a[4]; uint32_t v; } \
+		x; \
+		x.v = val; \
+		CONCAT(reg, HH) = x.a[3]; \
+		CONCAT(reg, HL) = x.a[2]; \
+		CONCAT(reg, LH) = x.a[1]; \
+		CONCAT(reg, LL) = x.a[0]; \
+	} \
+	while (0)
 
 /* === Globals ============================================================= */
+
 /*
  * Function pointers to store the callback function of
  * the transceiver interrupt
@@ -145,7 +151,8 @@ static irq_handler_t irq_hdl_trx_cca_ed;
 static irq_handler_t irq_hdl_trx_awake;
 
 #if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP) || (defined __DOXYGEN__)
-/** Function pointer to store callback for transceiver timestamp (RX_START) interrupt. */
+/** Function pointer to store callback for transceiver timestamp (RX_START)
+ *interrupt. */
 static irq_handler_t irq_hdl_trx_tstamp;
 #endif
 
@@ -179,7 +186,6 @@ uint32_t pal_tx_timestamp;
 
 /* === Prototypes ========================================================== */
 
-
 /* === Implementation ====================================================== */
 
 /*
@@ -192,9 +198,8 @@ uint32_t pal_tx_timestamp;
  */
 void pal_trx_irq_init_tx_end(FUNC_PTR trx_irq_cb)
 {
-    irq_hdl_trx_tx_end = (irq_handler_t)trx_irq_cb;
+	irq_hdl_trx_tx_end = (irq_handler_t)trx_irq_cb;
 }
-
 
 /*
  * \brief Initializes the transceiver RX END interrupt
@@ -206,9 +211,8 @@ void pal_trx_irq_init_tx_end(FUNC_PTR trx_irq_cb)
  */
 void pal_trx_irq_init_rx_end(FUNC_PTR trx_irq_cb)
 {
-    irq_hdl_trx_rx_end = (irq_handler_t)trx_irq_cb;
+	irq_hdl_trx_rx_end = (irq_handler_t)trx_irq_cb;
 }
-
 
 /*
  * \brief Initializes the transceiver CCA ED END interrupt
@@ -220,26 +224,27 @@ void pal_trx_irq_init_rx_end(FUNC_PTR trx_irq_cb)
  */
 void pal_trx_irq_init_cca_ed(FUNC_PTR trx_irq_cb)
 {
-    irq_hdl_trx_cca_ed = (irq_handler_t)trx_irq_cb;
+	irq_hdl_trx_cca_ed = (irq_handler_t)trx_irq_cb;
 }
 
-
 #if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP) || defined(__DOXYGEN__)
+
 /*
  * \brief Initializes the transceiver timestamp interrupt (RX START interrupt)
  *
  * This function sets the microcontroller specific registers
- * responsible for handling the transceiver timestamp interrupt (RX START interrupt)
+ * responsible for handling the transceiver timestamp interrupt (RX START
+ *interrupt)
  *
  * \param trx_irq_cb Callback function for the transceiver
  * timestamp interrupt (RX START interrupt)
  */
 void pal_trx_irq_init_tstamp(FUNC_PTR trx_irq_cb)
 {
-    irq_hdl_trx_tstamp = (irq_handler_t)trx_irq_cb;
+	irq_hdl_trx_tstamp = (irq_handler_t)trx_irq_cb;
 }
-#endif  /* #if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP) */
 
+#endif  /* #if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP) */
 
 /*
  * \brief Initializes the transceiver AWAKE interrupt
@@ -251,11 +256,11 @@ void pal_trx_irq_init_tstamp(FUNC_PTR trx_irq_cb)
  */
 void pal_trx_irq_init_awake(FUNC_PTR trx_irq_cb)
 {
-    irq_hdl_trx_awake = (irq_handler_t)trx_irq_cb;
+	irq_hdl_trx_awake = (irq_handler_t)trx_irq_cb;
 }
 
-
 #if defined(ENABLE_ALL_TRX_IRQS) || defined(__DOXYGEN__)
+
 /*
  * \brief Initializes the transceiver AMI interrupt
  *
@@ -266,9 +271,8 @@ void pal_trx_irq_init_awake(FUNC_PTR trx_irq_cb)
  */
 void pal_trx_irq_init_ami(FUNC_PTR trx_irq_cb)
 {
-    irq_hdl_trx_ami = (irq_handler_t)trx_irq_cb;
+	irq_hdl_trx_ami = (irq_handler_t)trx_irq_cb;
 }
-
 
 /*
  * \brief Initializes the transceiver BATMON interrupt
@@ -280,9 +284,8 @@ void pal_trx_irq_init_ami(FUNC_PTR trx_irq_cb)
  */
 void pal_trx_irq_init_batmon(FUNC_PTR trx_irq_cb)
 {
-    irq_hdl_trx_batmon = (irq_handler_t)trx_irq_cb;
+	irq_hdl_trx_batmon = (irq_handler_t)trx_irq_cb;
 }
-
 
 /*
  * \brief Initializes the transceiver PLL_LOCK interrupt
@@ -294,9 +297,8 @@ void pal_trx_irq_init_batmon(FUNC_PTR trx_irq_cb)
  */
 void pal_trx_irq_init_pll_lock(FUNC_PTR trx_irq_cb)
 {
-    irq_hdl_trx_pll_lock = (irq_handler_t)trx_irq_cb;
+	irq_hdl_trx_pll_lock = (irq_handler_t)trx_irq_cb;
 }
-
 
 /*
  * \brief Initializes the transceiver PLL_UNLOCK interrupt
@@ -308,9 +310,8 @@ void pal_trx_irq_init_pll_lock(FUNC_PTR trx_irq_cb)
  */
 void pal_trx_irq_init_pll_unlock(FUNC_PTR trx_irq_cb)
 {
-    irq_hdl_trx_pll_unlock = (irq_handler_t)trx_irq_cb;
+	irq_hdl_trx_pll_unlock = (irq_handler_t)trx_irq_cb;
 }
-
 
 /*
  * \brief Initializes the transceiver AES_READY interrupt
@@ -322,9 +323,8 @@ void pal_trx_irq_init_pll_unlock(FUNC_PTR trx_irq_cb)
  */
 void pal_trx_irq_init_aes_ready(FUNC_PTR trx_irq_cb)
 {
-    irq_hdl_trx_aes_ready = (irq_handler_t)trx_irq_cb;
+	irq_hdl_trx_aes_ready = (irq_handler_t)trx_irq_cb;
 }
-
 
 /*
  * \brief Initializes the transceiver TX_START interrupt
@@ -336,9 +336,8 @@ void pal_trx_irq_init_aes_ready(FUNC_PTR trx_irq_cb)
  */
 void pal_trx_irq_init_tx_start(FUNC_PTR trx_irq_cb)
 {
-    irq_hdl_trx_tx_start = (irq_handler_t)trx_irq_cb;
+	irq_hdl_trx_tx_start = (irq_handler_t)trx_irq_cb;
 }
-
 
 /*
  * \brief Initializes the transceiver MAF AMI0 interrupt
@@ -350,9 +349,8 @@ void pal_trx_irq_init_tx_start(FUNC_PTR trx_irq_cb)
  */
 void pal_trx_irq_init_maf_0_ami(FUNC_PTR trx_irq_cb)
 {
-    irq_hdl_trx_ami0 = (irq_handler_t)trx_irq_cb;
+	irq_hdl_trx_ami0 = (irq_handler_t)trx_irq_cb;
 }
-
 
 /*
  * \brief Initializes the transceiver MAF AMI1 interrupt
@@ -364,9 +362,8 @@ void pal_trx_irq_init_maf_0_ami(FUNC_PTR trx_irq_cb)
  */
 void pal_trx_irq_init_maf_1_ami(FUNC_PTR trx_irq_cb)
 {
-    irq_hdl_trx_ami1 = (irq_handler_t)trx_irq_cb;
+	irq_hdl_trx_ami1 = (irq_handler_t)trx_irq_cb;
 }
-
 
 /*
  * \brief Initializes the transceiver MAF AMI2 interrupt
@@ -378,9 +375,8 @@ void pal_trx_irq_init_maf_1_ami(FUNC_PTR trx_irq_cb)
  */
 void pal_trx_irq_init_maf_2_ami(FUNC_PTR trx_irq_cb)
 {
-    irq_hdl_trx_ami2 = (irq_handler_t)trx_irq_cb;
+	irq_hdl_trx_ami2 = (irq_handler_t)trx_irq_cb;
 }
-
 
 /*
  * \brief Initializes the transceiver MAF AMI3 interrupt
@@ -392,43 +388,43 @@ void pal_trx_irq_init_maf_2_ami(FUNC_PTR trx_irq_cb)
  */
 void pal_trx_irq_init_maf_3_ami(FUNC_PTR trx_irq_cb)
 {
-    irq_hdl_trx_ami3 = (irq_handler_t)trx_irq_cb;
+	irq_hdl_trx_ami3 = (irq_handler_t)trx_irq_cb;
 }
 
 #endif  /* ENABLE_ALL_TRX_IRQS */
 
-
-
 #ifdef PAL_XTD_IRQ_API
+
 /*
- * \brief Returns the current callback function for the transceiver RX END interrupt
+ * \brief Returns the current callback function for the transceiver RX END
+ *interrupt
  *
  * \return Current callback function for the transceiver RX END interrupt
  */
 FUNC_PTR pal_trx_irq_get_hdlr_rx_end(void)
 {
-    return irq_hdl_trx_rx_end;
+	return irq_hdl_trx_rx_end;
 }
 
-
 /*
- * \brief Returns the current callback function for the transceiver TX END interrupt
+ * \brief Returns the current callback function for the transceiver TX END
+ *interrupt
  *
  * \return Current callback function for the transceiver TX END interrupt
  */
 FUNC_PTR pal_trx_irq_get_hdlr_tx_end(void)
 {
-    return irq_hdl_trx_tx_end;
+	return irq_hdl_trx_tx_end;
 }
-#endif  /* PAL_XTD_IRQ_API */
 
+#endif  /* PAL_XTD_IRQ_API */
 
 /**
  * \brief ISR for transceiver's transmit end interrupt
  */
 ISR(TRX24_TX_END_vect)
 {
-    irq_hdl_trx_tx_end();
+	irq_hdl_trx_tx_end();
 }
 
 /**
@@ -436,7 +432,7 @@ ISR(TRX24_TX_END_vect)
  */
 ISR(TRX24_RX_END_vect)
 {
-    irq_hdl_trx_rx_end();
+	irq_hdl_trx_rx_end();
 }
 
 /**
@@ -444,7 +440,7 @@ ISR(TRX24_RX_END_vect)
  */
 ISR(TRX24_CCA_ED_DONE_vect)
 {
-    irq_hdl_trx_cca_ed();
+	irq_hdl_trx_cca_ed();
 }
 
 /**
@@ -452,7 +448,7 @@ ISR(TRX24_CCA_ED_DONE_vect)
  */
 ISR(TRX24_AWAKE_vect)
 {
-    irq_hdl_trx_awake();
+	irq_hdl_trx_awake();
 }
 
 /**
@@ -464,7 +460,7 @@ ISR(TRX24_AWAKE_vect)
 ISR(TRX24_RX_START_vect)
 {
 #if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP)
-    irq_hdl_trx_tstamp();
+	irq_hdl_trx_tstamp();
 #endif  /* #if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP) */
 }
 
@@ -474,7 +470,7 @@ ISR(TRX24_RX_START_vect)
 ISR(TRX24_PLL_LOCK_vect)
 {
 #ifdef ENABLE_ALL_TRX_IRQS
-    irq_hdl_trx_pll_lock();
+	irq_hdl_trx_pll_lock();
 #endif  /*  ENABLE_ALL_TRX_IRQS*/
 }
 
@@ -484,7 +480,7 @@ ISR(TRX24_PLL_LOCK_vect)
 ISR(TRX24_PLL_UNLOCK_vect)
 {
 #ifdef ENABLE_ALL_TRX_IRQS
-    irq_hdl_trx_pll_unlock();
+	irq_hdl_trx_pll_unlock();
 #endif  /*  ENABLE_ALL_TRX_IRQS*/
 }
 
@@ -494,7 +490,7 @@ ISR(TRX24_PLL_UNLOCK_vect)
 ISR(TRX24_XAH_AMI_vect)
 {
 #ifdef ENABLE_ALL_TRX_IRQS
-    irq_hdl_trx_ami();
+	irq_hdl_trx_ami();
 #endif  /*  ENABLE_ALL_TRX_IRQS*/
 }
 
@@ -504,7 +500,7 @@ ISR(TRX24_XAH_AMI_vect)
 ISR(BAT_LOW_vect)
 {
 #ifdef ENABLE_ALL_TRX_IRQS
-    irq_hdl_trx_batmon();
+	irq_hdl_trx_batmon();
 #endif  /*  ENABLE_ALL_TRX_IRQS*/
 }
 
@@ -514,7 +510,7 @@ ISR(BAT_LOW_vect)
 ISR(AES_READY_vect)
 {
 #ifdef ENABLE_ALL_TRX_IRQS
-    irq_hdl_trx_aes_ready();
+	irq_hdl_trx_aes_ready();
 #endif  /*  ENABLE_ALL_TRX_IRQS*/
 }
 
@@ -524,10 +520,10 @@ ISR(AES_READY_vect)
 ISR(TRX24_TX_START_vect)
 {
 #if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP)
-    pal_tx_timestamp = PAL_US_PER_SYMBOLS * SC_READ32(SCCNT);
+	pal_tx_timestamp = PAL_US_PER_SYMBOLS * SC_READ32(SCCNT);
 #endif
 #ifdef ENABLE_ALL_TRX_IRQS
-    irq_hdl_trx_tx_start();
+	irq_hdl_trx_tx_start();
 #endif  /*  ENABLE_ALL_TRX_IRQS*/
 }
 
@@ -537,7 +533,7 @@ ISR(TRX24_TX_START_vect)
 ISR(TRX24_AMI0_vect)
 {
 #ifdef ENABLE_ALL_TRX_IRQS
-    irq_hdl_trx_ami0();
+	irq_hdl_trx_ami0();
 #endif  /*  ENABLE_ALL_TRX_IRQS*/
 }
 
@@ -547,7 +543,7 @@ ISR(TRX24_AMI0_vect)
 ISR(TRX24_AMI1_vect)
 {
 #ifdef ENABLE_ALL_TRX_IRQS
-    irq_hdl_trx_ami1();
+	irq_hdl_trx_ami1();
 #endif  /*  ENABLE_ALL_TRX_IRQS*/
 }
 
@@ -557,7 +553,7 @@ ISR(TRX24_AMI1_vect)
 ISR(TRX24_AMI2_vect)
 {
 #ifdef ENABLE_ALL_TRX_IRQS
-    irq_hdl_trx_ami2();
+	irq_hdl_trx_ami2();
 #endif  /*  ENABLE_ALL_TRX_IRQS*/
 }
 
@@ -567,7 +563,7 @@ ISR(TRX24_AMI2_vect)
 ISR(TRX24_AMI3_vect)
 {
 #ifdef ENABLE_ALL_TRX_IRQS
-    irq_hdl_trx_ami3();
+	irq_hdl_trx_ami3();
 #endif  /*  ENABLE_ALL_TRX_IRQS*/
 }
 
@@ -578,14 +574,13 @@ ISR(TRX24_AMI3_vect)
  */
 void trx_rx_end_handler_cb(void)
 {
-    ENTER_CRITICAL_REGION();
+	ENTER_CRITICAL_REGION();
 
-    /* Handle rx interrupt. */
-    handle_received_frame_irq();    // see tal_rx.c
+	/* Handle rx interrupt. */
+	handle_received_frame_irq(); /* see tal_rx.c */
 
-    LEAVE_CRITICAL_REGION();
-}/* trx_rx_end_handler_cb() */
-
+	LEAVE_CRITICAL_REGION();
+} /* trx_rx_end_handler_cb() */
 
 /*
  * \brief Transceiver interrupt handler
@@ -594,16 +589,16 @@ void trx_rx_end_handler_cb(void)
  */
 void trx_tx_end_handler_cb(void)
 {
-    ENTER_CRITICAL_REGION();
+	ENTER_CRITICAL_REGION();
 
-    /* Get the result and push it to the queue. */
-    handle_tx_end_irq();            // see tal_tx.c
+	/* Get the result and push it to the queue. */
+	handle_tx_end_irq();        /* see tal_tx.c */
 
-    LEAVE_CRITICAL_REGION();
-}/* trx_tx_end_handler_cb() */
-
+	LEAVE_CRITICAL_REGION();
+} /* trx_tx_end_handler_cb() */
 
 #if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP)
+
 /*
  * \brief Timestamp interrupt handler
  *
@@ -613,11 +608,12 @@ void trx_tx_end_handler_cb(void)
  */
 void trx_irq_timestamp_handler_cb(void)
 {
-    /* The timestamping is only required for beaconing networks
-     * or if timestamping is explicitly enabled.
-     */
-    pal_trx_read_timestamp(&tal_rx_timestamp);
+	/* The timestamping is only required for beaconing networks
+	 * or if timestamping is explicitly enabled.
+	 */
+	pal_trx_read_timestamp(&tal_rx_timestamp);
 }
+
 #endif /* (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP) */
 
 /*
@@ -627,8 +623,8 @@ void trx_irq_timestamp_handler_cb(void)
  */
 void trx_awake_handler_cb(void)
 {
-    /* Set the wake-up flag. */
-    tal_awake_end_flag = true;
+	/* Set the wake-up flag. */
+	tal_awake_end_flag = true;
 }
-/* EOF */
 
+/* EOF */

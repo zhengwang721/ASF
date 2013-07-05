@@ -40,6 +40,7 @@
  * \asf_license_stop
  *
  */
+
 /*
  * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
@@ -55,9 +56,10 @@
 /* SAL types for security: */
 /** Dummy SAL type */
 #define NO_SAL                          (0x00)
+
 /** SAL with transceiver based AES via SPI,
-  * such as AT86RF231, AT86RF212, etc.
-  */
+ * such as AT86RF231, AT86RF212, etc.
+ */
 #define AT86RF2xx                       (0x01)
 /** SAL with single chip transceiver based AES */
 #define ATMEGARF_SAL                    (0x02)

@@ -9,11 +9,8 @@
 			</info>
 			<build type="c-source" value="at24cxx_example.c"/>
 			<device-support value="sam"/>
-			<require idref="sam.utils.syscalls"/>
 			<require idref="common.services.basic.clock"/>
-			<require idref="common.services.basic.gpio"/>
 			<require idref="common.components.memory.eeprom.at24cxx"/>
-			<require idref="sam.drivers.pmc"/>
 			<require idref="common.utils.stdio.stdio_serial"/>
 			<info type="gui-flag" value="move-to-root"/>
 		</module>

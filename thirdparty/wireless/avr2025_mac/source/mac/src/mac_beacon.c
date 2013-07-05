@@ -45,7 +45,6 @@
  *
  */
 
-
 /*
  * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
@@ -98,6 +97,7 @@
 #if (MAC_START_REQUEST_CONFIRM == 1)
 
 #ifdef BEACON_SUPPORT
+
 /*
  * Static buffer used for beacon transmission in a BEACON build.
  * In a build without beacon suppport, in order to save the static buffer,
@@ -124,20 +124,24 @@ static uint8_t vpan_no;
 static uint8_t add_pending_extended_address_cb(void *buf_ptr, void *handle);
 static uint8_t add_pending_short_address_cb(void *buf_ptr, void *handle);
 static uint8_t mac_buffer_add_pending(uint8_t *buf_ptr);
+
 #endif
 
 #ifdef BEACON_SUPPORT
 static void mac_t_beacon_cb(void *callback_parameter);
 static void mac_t_prepare_beacon_cb(void *callback_parameter);
+
 /* TODO */
+
 /*
-static void mac_t_superframe_cb(void *callback_parameter);
+ * static void mac_t_superframe_cb(void *callback_parameter);
  */
 #endif  /* BEACON_SUPPORT */
 
 /* === Implementation ======================================================= */
 
 #if (MAC_INDIRECT_DATA_FFD == 1)
+
 /*
  * @brief Populates the beacon frame with pending addresses
  *
@@ -152,86 +156,87 @@ static void mac_t_superframe_cb(void *callback_parameter);
  */
 static uint8_t mac_buffer_add_pending(uint8_t *buf_ptr)
 {
-    search_t find_buf;
-    uint8_t number_of_ext_address = 0;
+	search_t find_buf;
+	uint8_t number_of_ext_address = 0;
 
-    /*
-     * Set pointer to beacon to proper place. Currently it is still
-     * pointing at the first octet of the beacon payload (if there
-     * is any included.
-     * The beacon_ptr pointer will be updated (i.e. decreased) in
-     * the functions add_pending_short_address_cb() &
-     * add_pending_extended_address_cb() according to the included
-     * octets containing the pending addresses.
-     *
-     * Note: Since the pending addresses is filled from the back,
-     * the extended are filled in first.
-     */
-    beacon_ptr = buf_ptr;
+	/*
+	 * Set pointer to beacon to proper place. Currently it is still
+	 * pointing at the first octet of the beacon payload (if there
+	 * is any included.
+	 * The beacon_ptr pointer will be updated (i.e. decreased) in
+	 * the functions add_pending_short_address_cb() &
+	 * add_pending_extended_address_cb() according to the included
+	 * octets containing the pending addresses.
+	 *
+	 * Note: Since the pending addresses is filled from the back,
+	 * the extended are filled in first.
+	 */
+	beacon_ptr = buf_ptr;
 
-    /* Initialize extended address count. */
-    pending_address_count = 0;
+	/* Initialize extended address count. */
+	pending_address_count = 0;
 
-    /*
-     * This callback function traverses through the indirect queue and
-     * updates the beacon buffer with the pending extended addresses.
-     */
-    find_buf.criteria_func = add_pending_extended_address_cb;
+	/*
+	 * This callback function traverses through the indirect queue and
+	 * updates the beacon buffer with the pending extended addresses.
+	 */
+	find_buf.criteria_func = add_pending_extended_address_cb;
 
-    /*
-     * At the end of this function call (qmm_queue_read), the beacon buffer
-     * will be updated with the short address (if any) of the indirect
-     * data (if any) present in the indirect queue.
-     */
-    qmm_queue_read(&indirect_data_q, &find_buf);
+	/*
+	 * At the end of this function call (qmm_queue_read), the beacon buffer
+	 * will be updated with the short address (if any) of the indirect
+	 * data (if any) present in the indirect queue.
+	 */
+	qmm_queue_read(&indirect_data_q, &find_buf);
 
-    /*
-     * The count of extended addresses added in the beacon frame is backed up
-     * (as the same variable will be used to count the number of added
-     * short addresses).
-     */
-    number_of_ext_address = pending_address_count;
+	/*
+	 * The count of extended addresses added in the beacon frame is backed
+	 *up
+	 * (as the same variable will be used to count the number of added
+	 * short addresses).
+	 */
+	number_of_ext_address = pending_address_count;
 
-    /* Initialize extended address count. */
-    pending_address_count = 0;
+	/* Initialize extended address count. */
+	pending_address_count = 0;
 
-    /*
-     * This callback function traverses through the indirect queue and
-     * updates the beacon buffer with the pending short addresses.
-     */
-    find_buf.criteria_func = add_pending_short_address_cb;
+	/*
+	 * This callback function traverses through the indirect queue and
+	 * updates the beacon buffer with the pending short addresses.
+	 */
+	find_buf.criteria_func = add_pending_short_address_cb;
 
-    /*
-     * At the end of this function call (qmm_queue_read), the beacon buffer
-     * will be updated with the extended address (if any) of the indirect
-     * data (if any) present in the indirect queue.
-     */
-    qmm_queue_read(&indirect_data_q, &find_buf);
+	/*
+	 * At the end of this function call (qmm_queue_read), the beacon buffer
+	 * will be updated with the extended address (if any) of the indirect
+	 * data (if any) present in the indirect queue.
+	 */
+	qmm_queue_read(&indirect_data_q, &find_buf);
 
-    /*
-     * Update buf_ptr to current position of beginning of
-     * pending address specifications filled above.
-     * Fill in Pending Address Specification (see IEEE 802.15.4-2006 Table 46).
-     * In order to this buf_ptr needs to be decremented.
-     */
-    buf_ptr = beacon_ptr - 1;
-    *buf_ptr = (pending_address_count) | (number_of_ext_address  << 4);
+	/*
+	 * Update buf_ptr to current position of beginning of
+	 * pending address specifications filled above.
+	 * Fill in Pending Address Specification (see IEEE 802.15.4-2006 Table
+	 *46).
+	 * In order to this buf_ptr needs to be decremented.
+	 */
+	buf_ptr = beacon_ptr - 1;
+	*buf_ptr = (pending_address_count) | (number_of_ext_address  << 4);
 
+	/*
+	 * Total number of bytes used for pending address in beacon frame.
+	 * Note: The length of the one octet for the Pending Address
+	 *Specification
+	 * is already included in the default beacon frame length
+	 * (see BEACON_PAYLOAD_LEN).
+	 */
+	pending_address_count = (pending_address_count * sizeof(uint16_t)) +
+			(number_of_ext_address * sizeof(uint64_t));
 
-    /*
-     * Total number of bytes used for pending address in beacon frame.
-     * Note: The length of the one octet for the Pending Address Specification
-     * is already included in the default beacon frame length
-     * (see BEACON_PAYLOAD_LEN).
-     */
-    pending_address_count = (pending_address_count * sizeof(uint16_t)) +
-                            (number_of_ext_address * sizeof(uint64_t));
-
-    return pending_address_count;
+	return pending_address_count;
 } /* mac_buffer_add_pending() */
+
 #endif /* (MAC_INDIRECT_DATA_FFD == 1) */
-
-
 
 /**
  * @brief Builds and transmits the beacon frame
@@ -248,247 +253,241 @@ static uint8_t mac_buffer_add_pending(uint8_t *buf_ptr)
 void mac_build_and_tx_beacon(bool beacon_enabled)
 #else   /* No BEACON_SUPPORT */
 void mac_build_and_tx_beacon(bool beacon_enabled,
-                             buffer_t *beacon_buffer_header)
+		buffer_t *beacon_buffer_header)
 #endif  /* BEACON_SUPPORT / No BEACON_SUPPORT */
 {
-    frame_info_t *transmit_frame;
-    uint16_t superframe_spec = 0;
-    uint16_t fcf;
-    uint8_t frame_len;
-    uint8_t *frame_ptr;
+	frame_info_t *transmit_frame;
+	uint16_t superframe_spec = 0;
+	uint16_t fcf;
+	uint8_t frame_len;
+	uint8_t *frame_ptr;
 
 #ifdef BEACON_SUPPORT
-    /*
-     * The frame is given to the TAL in the 'frame_info_t' format,
-     * hence an instance of the frame_info_t is created.
-     */
-    transmit_frame = (frame_info_t *)beacon_buffer;
 
-    /* Buffer header not required in BEACON build. */
-    transmit_frame->buffer_header = NULL;
+	/*
+	 * The frame is given to the TAL in the 'frame_info_t' format,
+	 * hence an instance of the frame_info_t is created.
+	 */
+	transmit_frame = (frame_info_t *)beacon_buffer;
+
+	/* Buffer header not required in BEACON build. */
+	transmit_frame->buffer_header = NULL;
 #else   /* No BEACON_SUPPORT */
-    uint8_t *beacon_buffer = BMM_BUFFER_POINTER(beacon_buffer_header);
+	uint8_t *beacon_buffer = BMM_BUFFER_POINTER(beacon_buffer_header);
 
-    /*
-     * The frame is given to the TAL in the 'frame_info_t' format,
-     * hence an instance of the frame_info_t is created.
-     */
-    transmit_frame = (frame_info_t *)beacon_buffer;
+	/*
+	 * The frame is given to the TAL in the 'frame_info_t' format,
+	 * hence an instance of the frame_info_t is created.
+	 */
+	transmit_frame = (frame_info_t *)beacon_buffer;
 
-    /* Store buffer header to be able to release it later properly. */
-    transmit_frame->buffer_header = beacon_buffer_header;
+	/* Store buffer header to be able to release it later properly. */
+	transmit_frame->buffer_header = beacon_buffer_header;
 #endif  /* BEACON_SUPPORT / No BEACON_SUPPORT */
 
-    transmit_frame->msg_type = BEACON_MESSAGE;
+	transmit_frame->msg_type = BEACON_MESSAGE;
 
-    /* Update the payload length. */
-    frame_len = BEACON_PAYLOAD_LEN +
-                2 + // Add 2 octets for FCS
-                2 + // 2 octets for short Source Address
-                2 + // 2 octets for short Source PAN-Id
-                3;  // 3 octets DSN and FCF
+	/* Update the payload length. */
+	frame_len = BEACON_PAYLOAD_LEN +
+			2 + /* Add 2 octets for FCS */
+			2 + /* 2 octets for short Source Address */
+			2 + /* 2 octets for short Source PAN-Id */
+			3; /* 3 octets DSN and FCF */
 
-    /* Get the payload pointer. */
-    frame_ptr = (uint8_t *)transmit_frame +
-                LARGE_BUFFER_SIZE - 2;   /* Add 2 octets for FCS. */
+	/* Get the payload pointer. */
+	frame_ptr = (uint8_t *)transmit_frame +
+			LARGE_BUFFER_SIZE - 2; /* Add 2 octets for FCS. */
 
-    /* Build the beacon payload if it exists. */
-    if (mac_pib.mac_BeaconPayloadLength > 0)
-    {
-        frame_ptr -= mac_pib.mac_BeaconPayloadLength;
-        frame_len += mac_pib.mac_BeaconPayloadLength;
+	/* Build the beacon payload if it exists. */
+	if (mac_pib.mac_BeaconPayloadLength > 0) {
+		frame_ptr -= mac_pib.mac_BeaconPayloadLength;
+		frame_len += mac_pib.mac_BeaconPayloadLength;
 
-        memcpy(frame_ptr, mac_beacon_payload, mac_pib.mac_BeaconPayloadLength);
-    }
+		memcpy(frame_ptr, mac_beacon_payload,
+				mac_pib.mac_BeaconPayloadLength);
+	}
 
-
-    /* Build the Pending address field. */
+	/* Build the Pending address field. */
 #if (MAC_INDIRECT_DATA_FFD == 1)
-    {
-        /*
-         * Check if the indirect queue has entries, otherwise there is nothing
-         * to add as far as pending addresses is concerned.
-         */
-        if (indirect_data_q.size > 0)
-        {
-            uint8_t pending_addr_octets = mac_buffer_add_pending(frame_ptr);
-            frame_len += pending_addr_octets;
-            frame_ptr -= pending_addr_octets + 1;
-        }
-        else
-        {
-            /* No pending data available. */
-            frame_ptr--;
-            *frame_ptr = 0;
-        }
-    }
+	{
+		/*
+		 * Check if the indirect queue has entries, otherwise there is
+		 *nothing
+		 * to add as far as pending addresses is concerned.
+		 */
+		if (indirect_data_q.size > 0) {
+			uint8_t pending_addr_octets = mac_buffer_add_pending(
+					frame_ptr);
+			frame_len += pending_addr_octets;
+			frame_ptr -= pending_addr_octets + 1;
+		} else {
+			/* No pending data available. */
+			frame_ptr--;
+			*frame_ptr = 0;
+		}
+	}
 #else
-    /*
-     * If indirect transmission is not enabled, the Pending Address Spec
-     * field is always 0.
-     */
-    frame_ptr--;
-    *frame_ptr = 0;
+
+	/*
+	 * If indirect transmission is not enabled, the Pending Address Spec
+	 * field is always 0.
+	 */
+	frame_ptr--;
+	*frame_ptr = 0;
 #endif
 
-    /* frame_ptr now points to the Pending Address Specification (Octet 1). */
+	/* frame_ptr now points to the Pending Address Specification (Octet 1).
+	 **/
 
-    /* Build the (empty) GTS fields. */
-    frame_ptr--;
-    *frame_ptr = 0;
+	/* Build the (empty) GTS fields. */
+	frame_ptr--;
+	*frame_ptr = 0;
 
-
-    /* The superframe specification field is updated. */
+	/* The superframe specification field is updated. */
 #ifdef BEACON_SUPPORT
-    superframe_spec = tal_pib.BeaconOrder;
-    superframe_spec |= (tal_pib.SuperFrameOrder << 4);
-    superframe_spec |= (mac_final_cap_slot << 8);
+	superframe_spec = tal_pib.BeaconOrder;
+	superframe_spec |= (tal_pib.SuperFrameOrder << 4);
+	superframe_spec |= (mac_final_cap_slot << 8);
 
-    if (tal_pib.BattLifeExt)
-    {
-        superframe_spec |= (1U << BATT_LIFE_EXT_BIT_POS);
-    }
+	if (tal_pib.BattLifeExt) {
+		superframe_spec |= (1U << BATT_LIFE_EXT_BIT_POS);
+	}
+
 #else
-    superframe_spec = NON_BEACON_NWK;
-    superframe_spec |= (NON_BEACON_NWK << 4);
-    superframe_spec |= (FINAL_CAP_SLOT_DEFAULT << 8);
+	superframe_spec = NON_BEACON_NWK;
+	superframe_spec |= (NON_BEACON_NWK << 4);
+	superframe_spec |= (FINAL_CAP_SLOT_DEFAULT << 8);
 #endif
 
-    if (MAC_PAN_COORD_STARTED == mac_state)
-    {
-        superframe_spec |= (1U << PAN_COORD_BIT_POS);
-    }
+	if (MAC_PAN_COORD_STARTED == mac_state) {
+		superframe_spec |= (1U << PAN_COORD_BIT_POS);
+	}
 
 #if (MAC_ASSOCIATION_INDICATION_RESPONSE == 1)
-    if (mac_pib.mac_AssociationPermit)
-    {
-        superframe_spec |= (1U << ASSOC_PERMIT_BIT_POS);
-    }
+	if (mac_pib.mac_AssociationPermit) {
+		superframe_spec |= (1U << ASSOC_PERMIT_BIT_POS);
+	}
+
 #endif
 
-    /* Set the Superframe Specification Field. */
-    frame_ptr -= 2;
-    convert_spec_16_bit_to_byte_array(superframe_spec, frame_ptr);
+	/* Set the Superframe Specification Field. */
+	frame_ptr -= 2;
+	convert_spec_16_bit_to_byte_array(superframe_spec, frame_ptr);
 
+	/*
+	 * Source address.
+	 */
+	if (CCPU_ENDIAN_TO_LE16(MAC_NO_SHORT_ADDR_VALUE) ==
+			tal_pib.ShortAddress) {
+		frame_ptr -= 8;
+		frame_len += 6; /* Add further 6 octets for long Source Address */
+		convert_64_bit_to_byte_array(tal_pib.IeeeAddress, frame_ptr);
 
-    /*
-     * Source address.
-     */
-    if (CCPU_ENDIAN_TO_LE16(MAC_NO_SHORT_ADDR_VALUE) == tal_pib.ShortAddress)
-    {
-        frame_ptr -= 8;
-        frame_len += 6; // Add further 6 octets for long Source Address
-        convert_64_bit_to_byte_array(tal_pib.IeeeAddress, frame_ptr);
+		fcf = FCF_SET_SOURCE_ADDR_MODE((uint16_t)FCF_LONG_ADDR);
+	} else {
+		frame_ptr -= 2;
+		convert_16_bit_to_byte_array(tal_pib.ShortAddress, frame_ptr);
 
-        fcf = FCF_SET_SOURCE_ADDR_MODE((uint16_t)FCF_LONG_ADDR);
-    }
-    else
-    {
-        frame_ptr -= 2;
-        convert_16_bit_to_byte_array(tal_pib.ShortAddress, frame_ptr);
+		fcf = FCF_SET_SOURCE_ADDR_MODE((uint16_t)FCF_SHORT_ADDR);
+	}
 
-        fcf = FCF_SET_SOURCE_ADDR_MODE((uint16_t)FCF_SHORT_ADDR);
-    }
-
-
-    /* Source PAN-Id */
-    frame_ptr -= 2;
-    convert_16_bit_to_byte_array(tal_pib.PANId, frame_ptr);
+	/* Source PAN-Id */
+	frame_ptr -= 2;
+	convert_16_bit_to_byte_array(tal_pib.PANId, frame_ptr);
 
 #ifdef TEST_HARNESS
-    if (mac_pib.privateVirtualPANs > 0)
-    {
+	if (mac_pib.privateVirtualPANs > 0) {
 		uint16_t temp = CCPU_ENDIAN_TO_LE16(tal_pib.PANId);
-    /*
-         * This changes the PAN-ID of subsequent beacon frames to simulate
-         * virtual PANs for testing purposes.
-     */
+
+		/*
+		 * This changes the PAN-ID of subsequent beacon frames to
+		 *simulate
+		 * virtual PANs for testing purposes.
+		 */
 		temp += vpan_no;
-        convert_16_bit_to_byte_array(CCPU_ENDIAN_TO_LE16(temp), frame_ptr);
-        vpan_no++;
-        vpan_no = vpan_no % mac_pib.privateVirtualPANs;
-    }
+		convert_16_bit_to_byte_array(CCPU_ENDIAN_TO_LE16(
+				temp), frame_ptr);
+		vpan_no++;
+		vpan_no = vpan_no % mac_pib.privateVirtualPANs;
+	}
+
 #endif /* TEST_HARNESS */
 
+	/* Set BSN. */
+	frame_ptr--;
+	*frame_ptr = mac_pib.mac_BSN++;
 
-    /* Set BSN. */
-    frame_ptr--;
-    *frame_ptr = mac_pib.mac_BSN++;
-
-
-    fcf = fcf | FCF_SET_FRAMETYPE(FCF_FRAMETYPE_BEACON);
+	fcf = fcf | FCF_SET_FRAMETYPE(FCF_FRAMETYPE_BEACON);
 
 #if (MAC_START_REQUEST_CONFIRM == 1)
 #ifdef BEACON_SUPPORT
-        /*
-     * In case
-     * 1) the node is a PAN Coordinator or Coordinator, and
-     * 2) this is beacon-enabled network, and
-     * 3) there is a broadcast frame to be transmitted,
-     * the frame pending bit in the frame control field of the beacon frame
-     * to be transmitted needs to be set in order to indicate this to all
-     * listening children nodes.
-         */
-    if (
-        ((MAC_PAN_COORD_STARTED == mac_state) || (MAC_COORDINATOR == mac_state)) &&
-        (tal_pib.BeaconOrder < NON_BEACON_NWK) &&
-        (broadcast_q.size > 0)
-       )
-    {
-        fcf |= FCF_FRAME_PENDING;
-    }
+
+	/*
+	 * In case
+	 * 1) the node is a PAN Coordinator or Coordinator, and
+	 * 2) this is beacon-enabled network, and
+	 * 3) there is a broadcast frame to be transmitted,
+	 * the frame pending bit in the frame control field of the beacon frame
+	 * to be transmitted needs to be set in order to indicate this to all
+	 * listening children nodes.
+	 */
+	if (
+		((MAC_PAN_COORD_STARTED == mac_state) ||
+		(MAC_COORDINATOR == mac_state)) &&
+		(tal_pib.BeaconOrder < NON_BEACON_NWK) &&
+		(broadcast_q.size > 0)
+		) {
+		fcf |= FCF_FRAME_PENDING;
+	}
 #endif  /* BEACON_SUPPORT */
 #endif /* (MAC_START_REQUEST_CONFIRM == 1) */
 
+	/* Set the FCF. */
+	frame_ptr -= 2;
+	convert_spec_16_bit_to_byte_array(fcf, frame_ptr);
 
-    /* Set the FCF. */
-    frame_ptr -= 2;
-    convert_spec_16_bit_to_byte_array(fcf, frame_ptr);
+	/* First element shall be length of PHY frame. */
+	frame_ptr--;
+	*frame_ptr = frame_len;
 
-
-    /* First element shall be length of PHY frame. */
-    frame_ptr--;
-    *frame_ptr = frame_len;
-
-    /* Finished building of frame. */
-    transmit_frame->mpdu = frame_ptr;
+	/* Finished building of frame. */
+	transmit_frame->mpdu = frame_ptr;
 
 #ifdef BEACON_SUPPORT
-    if (!beacon_enabled)
-    {
-        /* Buffer header not required in BEACON build. */
-        transmit_frame->buffer_header = NULL;
+	if (!beacon_enabled) {
+		/* Buffer header not required in BEACON build. */
+		transmit_frame->buffer_header = NULL;
 
-        /*
-         * In a beaconless network the beacon is transmitted with
-         * unslotted CSMA-CA.
-         */
-        tal_tx_frame(transmit_frame, CSMA_UNSLOTTED, false);
+		/*
+		 * In a beaconless network the beacon is transmitted with
+		 * unslotted CSMA-CA.
+		 */
+		tal_tx_frame(transmit_frame, CSMA_UNSLOTTED, false);
 
-        MAKE_MAC_BUSY();
+		MAKE_MAC_BUSY();
+	}
 
-    }
-    /*
-     * In case beaconing mode is enabled, the beacon will be transmitted
-     * using function tal_tx_beacon once the beacon timer has expired.
-     * Therefore there is nothing to be done here.
-     */
+	/*
+	 * In case beaconing mode is enabled, the beacon will be transmitted
+	 * using function tal_tx_beacon once the beacon timer has expired.
+	 * Therefore there is nothing to be done here.
+	 */
 #else   /* No Beacon support */
-    /*
-     * In a beaconless network the beacon is transmitted with
-     * unslotted CSMA-CA.
-     */
-    tal_tx_frame(transmit_frame, CSMA_UNSLOTTED, false);
 
-    MAKE_MAC_BUSY();
+	/*
+	 * In a beaconless network the beacon is transmitted with
+	 * unslotted CSMA-CA.
+	 */
+	tal_tx_frame(transmit_frame, CSMA_UNSLOTTED, false);
 
-    beacon_enabled = beacon_enabled;    /* Keep compiler happy. */
+	MAKE_MAC_BUSY();
+
+	beacon_enabled = beacon_enabled; /* Keep compiler happy. */
 #endif  /* BEACON_SUPPORT */
 } /* mac_build_and_tx_beacon() */
 
-
-
 #if (MAC_INDIRECT_DATA_BASIC == 1)
+
 /*
  * @brief Appends the pending short addresses into the beacon frame
  *
@@ -503,33 +502,36 @@ void mac_build_and_tx_beacon(bool beacon_enabled,
  */
 static uint8_t add_pending_short_address_cb(void *buf_ptr, void *handle)
 {
-    frame_info_t *frame = (frame_info_t *)buf_ptr;
+	frame_info_t *frame = (frame_info_t *)buf_ptr;
 
-    /* Only 7 short addresses are allowed in one Beacon frame. */
-    if (pending_address_count < BEACON_MAX_PEND_ADDR_CNT)
-    {
-        /*
-         * Only if the destination addressing mode is short address mode then the
-         * indirect data is used to populate the beacon buffer with short
-         * destination address.
-         */
-        if (FCF_SHORT_ADDR == ((frame->mpdu[PL_POS_FCF_2] >> FCF_2_DEST_ADDR_OFFSET) & FCF_ADDR_MASK))
-        {
-            beacon_ptr -= sizeof(uint16_t);
-            memcpy(beacon_ptr, &frame->mpdu[PL_POS_DST_ADDR_START], sizeof(uint16_t));
-            pending_address_count++;
-        }
-    }
+	/* Only 7 short addresses are allowed in one Beacon frame. */
+	if (pending_address_count < BEACON_MAX_PEND_ADDR_CNT) {
+		/*
+		 * Only if the destination addressing mode is short address mode
+		 *then the
+		 * indirect data is used to populate the beacon buffer with
+		 *short
+		 * destination address.
+		 */
+		if (FCF_SHORT_ADDR ==
+				((frame->mpdu[PL_POS_FCF_2] >>
+				FCF_2_DEST_ADDR_OFFSET) & FCF_ADDR_MASK)) {
+			beacon_ptr -= sizeof(uint16_t);
+			memcpy(beacon_ptr, &frame->mpdu[PL_POS_DST_ADDR_START],
+					sizeof(uint16_t));
+			pending_address_count++;
+		}
+	}
 
-    handle = handle;    /* Keep compiler happy. */
+	handle = handle; /* Keep compiler happy. */
 
-    return 0;
+	return 0;
 }
+
 #endif /* (MAC_INDIRECT_DATA_BASIC == 1) */
 
-
-
 #if (MAC_INDIRECT_DATA_BASIC == 1)
+
 /*
  * @brief Appends the pending extended address into beacon
  *
@@ -544,31 +546,33 @@ static uint8_t add_pending_short_address_cb(void *buf_ptr, void *handle)
  */
 static uint8_t add_pending_extended_address_cb(void *buf_ptr, void *handle)
 {
-    frame_info_t *frame = (frame_info_t *)buf_ptr;
+	frame_info_t *frame = (frame_info_t *)buf_ptr;
 
-    /* Only 7 extended addresses are allowed in one Beacon frame. */
-    if (pending_address_count < BEACON_MAX_PEND_ADDR_CNT)
-    {
-        /*
-         * Only if the destination addressing mode is extended address mode then the
-         * indirect data is used to populate the beacon buffer with extended
-         * destination address.
-         */
-        if (FCF_LONG_ADDR == ((frame->mpdu[PL_POS_FCF_2] >> FCF_2_DEST_ADDR_OFFSET) & FCF_ADDR_MASK))
-        {
-            beacon_ptr -= sizeof(uint64_t);
-            memcpy(beacon_ptr, &frame->mpdu[PL_POS_DST_ADDR_START], sizeof(uint64_t));
-            pending_address_count++;
-        }
-    }
+	/* Only 7 extended addresses are allowed in one Beacon frame. */
+	if (pending_address_count < BEACON_MAX_PEND_ADDR_CNT) {
+		/*
+		 * Only if the destination addressing mode is extended address
+		 *mode then the
+		 * indirect data is used to populate the beacon buffer with
+		 *extended
+		 * destination address.
+		 */
+		if (FCF_LONG_ADDR ==
+				((frame->mpdu[PL_POS_FCF_2] >>
+				FCF_2_DEST_ADDR_OFFSET) & FCF_ADDR_MASK)) {
+			beacon_ptr -= sizeof(uint64_t);
+			memcpy(beacon_ptr, &frame->mpdu[PL_POS_DST_ADDR_START],
+					sizeof(uint64_t));
+			pending_address_count++;
+		}
+	}
 
-    handle = handle;    /* Keep compiler happy. */
+	handle = handle; /* Keep compiler happy. */
 
-    return 0;
+	return 0;
 }
+
 #endif /* (MAC_INDIRECT_DATA_BASIC == 1) */
-
-
 
 /**
  * @brief Processes a beacon request
@@ -583,30 +587,31 @@ static uint8_t add_pending_extended_address_cb(void *buf_ptr, void *handle)
 void mac_process_beacon_request(buffer_t *msg)
 {
 #ifdef BEACON_SUPPORT
-    /*
-     * The buffer in which the beacon request was received is freed up.
-     * This is only done in a BEACON build, since a static buffer is used
-     * to transmit the beacon frame.
-     */
-    bmm_buffer_free((buffer_t *)msg);
 
-    /*
-     * If the network is a beacon enabled network then the beacons will not be
-     * transmitted.
-     */
-    if (tal_pib.BeaconOrder == NON_BEACON_NWK)
-    {
-        /* The beacon is transmitted using CSMA-CA. */
-        mac_build_and_tx_beacon(false);
-    }
+	/*
+	 * The buffer in which the beacon request was received is freed up.
+	 * This is only done in a BEACON build, since a static buffer is used
+	 * to transmit the beacon frame.
+	 */
+	bmm_buffer_free((buffer_t *)msg);
+
+	/*
+	 * If the network is a beacon enabled network then the beacons will not
+	 *be
+	 * transmitted.
+	 */
+	if (tal_pib.BeaconOrder == NON_BEACON_NWK) {
+		/* The beacon is transmitted using CSMA-CA. */
+		mac_build_and_tx_beacon(false);
+	}
+
 #else   /* No BEACON_SUPPORT */
-    mac_build_and_tx_beacon(false, (buffer_t *)msg);
+	mac_build_and_tx_beacon(false, (buffer_t *)msg);
 #endif  /* BEACON_SUPPORT / No BEACON_SUPPORT */
 }
 
-
-
 #ifdef BEACON_SUPPORT
+
 /**
  * @brief Starts the beacon timer
  *
@@ -629,67 +634,77 @@ void mac_process_beacon_request(buffer_t *msg)
  */
 void mac_start_beacon_timer(void)
 {
-    uint32_t beacon_tx_time;
-    uint32_t beacon_int_symbols;
-    /*
-     * This is a beacon enabled network.
-     * The First beacon in a beacon enabled network is transmitted
-     * directly without CSMA-CA.
-     * This function call, to transmit the beacon frame without
-     * CSMA-CA (direct), will cause it to store the beacon at the TAL.
-     */
-    mac_build_and_tx_beacon(true);
+	uint32_t beacon_tx_time;
+	uint32_t beacon_int_symbols;
 
-    /*
-     * For the first beacon the current time is used as beacon transmission
-     * time. For consecutive beacon transmissions, this beacon transmission
-     * time is added to the beacon interval and then used.
-     */
-    pal_get_current_time(&beacon_tx_time);
+	/*
+	 * This is a beacon enabled network.
+	 * The First beacon in a beacon enabled network is transmitted
+	 * directly without CSMA-CA.
+	 * This function call, to transmit the beacon frame without
+	 * CSMA-CA (direct), will cause it to store the beacon at the TAL.
+	 */
+	mac_build_and_tx_beacon(true);
 
-    /*
-     * Timer gives the time in microseconds, but the PIB value at the TAL is in
-     * symbols. Hence a coversion is done before setting the PIB at the TAL.
-     */
-    beacon_tx_time = TAL_CONVERT_US_TO_SYMBOLS(beacon_tx_time);
+	/*
+	 * For the first beacon the current time is used as beacon transmission
+	 * time. For consecutive beacon transmissions, this beacon transmission
+	 * time is added to the beacon interval and then used.
+	 */
+	pal_get_current_time(&beacon_tx_time);
 
-    /* Now it gets tricky:
-     * Since teh PIB attribute macBeaconTxTime is supposed to hold the time
-     * of the last transmitted beacon frame, but we are going to transmit
-     * our first beacon frame just now (in teh subsequentially called function
-     * mac_t_beacon_cb(), we need to actually substract the time of one entire
-     * beacon period from this time.
-     * Otherwise we would leave out the second beacon in function
-     * mac_t_beacon_cb().
-     */
-    beacon_int_symbols = TAL_GET_BEACON_INTERVAL_TIME(tal_pib.BeaconOrder);
+	/*
+	 * Timer gives the time in microseconds, but the PIB value at the TAL is
+	 *in
+	 * symbols. Hence a coversion is done before setting the PIB at the TAL.
+	 */
+	beacon_tx_time = TAL_CONVERT_US_TO_SYMBOLS(beacon_tx_time);
 
-    beacon_tx_time = tal_sub_time_symbols(beacon_tx_time, beacon_int_symbols);
+	/* Now it gets tricky:
+	 * Since teh PIB attribute macBeaconTxTime is supposed to hold the time
+	 * of the last transmitted beacon frame, but we are going to transmit
+	 * our first beacon frame just now (in teh subsequentially called
+	 *function
+	 * mac_t_beacon_cb(), we need to actually substract the time of one
+	 *entire
+	 * beacon period from this time.
+	 * Otherwise we would leave out the second beacon in function
+	 * mac_t_beacon_cb().
+	 */
+	beacon_int_symbols = TAL_GET_BEACON_INTERVAL_TIME(tal_pib.BeaconOrder);
 
-    set_tal_pib_internal(macBeaconTxTime, (void *)&beacon_tx_time);
+	beacon_tx_time
+		= tal_sub_time_symbols(beacon_tx_time,
+			beacon_int_symbols);
 
-    /*
-     * Now start the handling of all relevant beacon timers:
-     * 1) T_Beacon: The regular beacon timer
-     * 2) T_Beacon_Preparation: The Pre-beacon timer is used to give the node
-     *    sufficient time prior to the actual beacon timer in order to prepare
-     *    the next beacon frame or wake-up before the next beacon reception.
-     * 3) T_Superframe: The timer when the inactive portion of the superframe
-     *    starts; if there is not inactive portion, this timer is NOT running.
-     *
-     * This is simply done by calling the same function that will later be
-     * called upon expiration of the main beacon timer and will handle alle
-     * other timers as well to have a common time base for beacon related
-     * timers.
-     */
-    /* This will also actually transmit the beacon. */
-    mac_t_beacon_cb(NULL);
+	set_tal_pib_internal(macBeaconTxTime, (void *)&beacon_tx_time);
+
+	/*
+	 * Now start the handling of all relevant beacon timers:
+	 * 1) T_Beacon: The regular beacon timer
+	 * 2) T_Beacon_Preparation: The Pre-beacon timer is used to give the
+	 *node
+	 *    sufficient time prior to the actual beacon timer in order to
+	 *prepare
+	 *    the next beacon frame or wake-up before the next beacon reception.
+	 * 3) T_Superframe: The timer when the inactive portion of the
+	 *superframe
+	 *    starts; if there is not inactive portion, this timer is NOT
+	 *running.
+	 *
+	 * This is simply done by calling the same function that will later be
+	 * called upon expiration of the main beacon timer and will handle alle
+	 * other timers as well to have a common time base for beacon related
+	 * timers.
+	 */
+	/* This will also actually transmit the beacon. */
+	mac_t_beacon_cb(NULL);
 } /* mac_start_beacon_timer() */
+
 #endif /* BEACON_SUPPORT */
 
-
-
 #ifdef BEACON_SUPPORT
+
 /*
  * @brief Callback function of the beacon preparation time timer
  *
@@ -704,19 +719,19 @@ void mac_start_beacon_timer(void)
  */
 static void mac_t_prepare_beacon_cb(void *callback_parameter)
 {
-    /* Wake up radio first */
-    mac_trx_wakeup();
+	/* Wake up radio first */
+	mac_trx_wakeup();
 
-    /* For a beacon enabled network, the beacon is stored at the TAL. */
-    mac_build_and_tx_beacon(true);
+	/* For a beacon enabled network, the beacon is stored at the TAL. */
+	mac_build_and_tx_beacon(true);
 
-    callback_parameter = callback_parameter;  /* Keep compiler happy. */
+	callback_parameter = callback_parameter; /* Keep compiler happy. */
 } /* mac_t_prepare_beacon_cb() */
+
 #endif  /* BEACON_SUPPORT */
 
-
-
 #ifdef BEACON_SUPPORT
+
 /*
  * @brief Transmits beacon frame after beacon interval
  *
@@ -728,155 +743,175 @@ static void mac_t_prepare_beacon_cb(void *callback_parameter)
  */
 static void mac_t_beacon_cb(void *callback_parameter)
 {
-    /*
-     * This check here is done in order to stop beacon timing in case
-     * the network has transitioned from a beacon-enabled network to
-     * nonbeacon-enabled network.
-     */
-    if (tal_pib.BeaconOrder < NON_BEACON_NWK)
-    {
-        /*
-         * In case the node is currently scanning, no beacon will be transmitted.
-         */
-        if (MAC_SCAN_IDLE == mac_scan_state)
-        {
-            /*
-             * The frame is given to the TAL in the 'frame_info_t' format,
-             * hence an instance of the frame_info_t is created.
-             */
-            frame_info_t *transmit_frame = (frame_info_t *)beacon_buffer;
+	/*
+	 * This check here is done in order to stop beacon timing in case
+	 * the network has transitioned from a beacon-enabled network to
+	 * nonbeacon-enabled network.
+	 */
+	if (tal_pib.BeaconOrder < NON_BEACON_NWK) {
+		/*
+		 * In case the node is currently scanning, no beacon will be
+		 *transmitted.
+		 */
+		if (MAC_SCAN_IDLE == mac_scan_state) {
+			/*
+			 * The frame is given to the TAL in the 'frame_info_t'
+			 *format,
+			 * hence an instance of the frame_info_t is created.
+			 */
+			frame_info_t *transmit_frame
+				= (frame_info_t *)beacon_buffer;
 
-            /* This TAL function transmits the beacon fame. */
-            tal_tx_beacon(transmit_frame);
-        }
+			/* This TAL function transmits the beacon fame. */
+			tal_tx_beacon(transmit_frame);
+		}
 
-        uint32_t beacon_int_us;
-        uint32_t beacon_tx_time_symbols;
-        uint32_t beacon_tx_time_us;
-        uint32_t next_beacon_tx_time;
-        retval_t status = FAILURE;
+		uint32_t beacon_int_us;
+		uint32_t beacon_tx_time_symbols;
+		uint32_t beacon_tx_time_us;
+		uint32_t next_beacon_tx_time;
+		retval_t status = FAILURE;
 
-        /* 1) Start with main beacon timer. */
-        beacon_int_us =
-            TAL_CONVERT_SYMBOLS_TO_US(
-                TAL_GET_BEACON_INTERVAL_TIME(tal_pib.BeaconOrder));
+		/* 1) Start with main beacon timer. */
+		beacon_int_us
+			= TAL_CONVERT_SYMBOLS_TO_US(
+				TAL_GET_BEACON_INTERVAL_TIME(
+				tal_pib.BeaconOrder));
 
-        /* This was the time when when transmitted the previous beacon frame. */
-        beacon_tx_time_us = TAL_CONVERT_SYMBOLS_TO_US(tal_pib.BeaconTxTime);
+		/* This was the time when when transmitted the previous beacon
+		 *frame. */
+		beacon_tx_time_us = TAL_CONVERT_SYMBOLS_TO_US(
+				tal_pib.BeaconTxTime);
 
-        /*
-         * This is supposed to be the time when we just had transmitted this
-         * beacon frame (see calling of tal_tx_beacon() above).
-         */
-        next_beacon_tx_time = pal_add_time_us(beacon_tx_time_us,
-                                              beacon_int_us);
+		/*
+		 * This is supposed to be the time when we just had transmitted
+		 *this
+		 * beacon frame (see calling of tal_tx_beacon() above).
+		 */
+		next_beacon_tx_time = pal_add_time_us(beacon_tx_time_us,
+				beacon_int_us);
 
-        /*
-         * In order to get the proper timeout value for the next beacon timer,
-         * we have to add one more beacon interval time.
-         * If the timer cannot be started, then we add more beacon intervals,
-         * until we finally succeed.
-         */
-        while (MAC_SUCCESS != status)
-        {
-            next_beacon_tx_time = pal_add_time_us(next_beacon_tx_time, beacon_int_us);
+		/*
+		 * In order to get the proper timeout value for the next beacon
+		 *timer,
+		 * we have to add one more beacon interval time.
+		 * If the timer cannot be started, then we add more beacon
+		 *intervals,
+		 * until we finally succeed.
+		 */
+		while (MAC_SUCCESS != status) {
+			next_beacon_tx_time = pal_add_time_us(
+					next_beacon_tx_time, beacon_int_us);
 
-            status = pal_timer_start(T_Beacon,
-                                     next_beacon_tx_time,
-                                     TIMEOUT_ABSOLUTE,
-                                     (FUNC_PTR)mac_t_beacon_cb,
-                                     NULL);
-        }
+			status = pal_timer_start(T_Beacon,
+					next_beacon_tx_time,
+					TIMEOUT_ABSOLUTE,
+					(FUNC_PTR)mac_t_beacon_cb,
+					NULL);
+		}
 
-        /*
-         * Even if this may look odd, since we already had added a beacon
-         * interval time to this variable before the while loop above,
-         * we need to manually substract one beacon interval time,
-         * in order to keep pace with the new value of macBeaconTxTime
-         * just in case several calls of pal_add_time_us() had to be done
-         * in the while loop before the timer could be started.
-         */
-        beacon_tx_time_us = pal_sub_time_us(next_beacon_tx_time,
-                                            beacon_int_us);
+		/*
+		 * Even if this may look odd, since we already had added a
+		 *beacon
+		 * interval time to this variable before the while loop above,
+		 * we need to manually substract one beacon interval time,
+		 * in order to keep pace with the new value of macBeaconTxTime
+		 * just in case several calls of pal_add_time_us() had to be
+		 *done
+		 * in the while loop before the timer could be started.
+		 */
+		beacon_tx_time_us = pal_sub_time_us(next_beacon_tx_time,
+				beacon_int_us);
 
-        beacon_tx_time_symbols =
-            TAL_CONVERT_US_TO_SYMBOLS(beacon_tx_time_us);
+		beacon_tx_time_symbols
+			= TAL_CONVERT_US_TO_SYMBOLS(beacon_tx_time_us);
 
-        /* The beacon transmission time is updated at TAL. */
-        set_tal_pib_internal(macBeaconTxTime, (void *)&beacon_tx_time_symbols);
+		/* The beacon transmission time is updated at TAL. */
+		set_tal_pib_internal(macBeaconTxTime,
+				(void *)&beacon_tx_time_symbols);
 
-        {
-            /* 2) Beacon preparation timer for building the new beacon frame. */
-            uint32_t next_beacon_prep_time;
+		{
+			/* 2) Beacon preparation timer for building the new
+			 *beacon frame. */
+			uint32_t next_beacon_prep_time;
 
-            /*
-             * A regular but absolute timer is started which will expire
-             * ADVNC_BCN_PREP_TIME symbols prior to beacon interval. On its expiry
-             * the beacon frame is created and given to TAL.
-             * The absolute time at which the beacon is to be prepared is calculated by
-             * subtracting the beacon preparation time from the absolute time value of
-             * the beacon transmission.
-             */
-            next_beacon_prep_time = pal_sub_time_us(next_beacon_tx_time,
-                                                    TAL_CONVERT_SYMBOLS_TO_US(ADVNC_BCN_PREP_TIME));
+			/*
+			 * A regular but absolute timer is started which will
+			 *expire
+			 * ADVNC_BCN_PREP_TIME symbols prior to beacon interval.
+			 *On its expiry
+			 * the beacon frame is created and given to TAL.
+			 * The absolute time at which the beacon is to be
+			 *prepared is calculated by
+			 * subtracting the beacon preparation time from the
+			 *absolute time value of
+			 * the beacon transmission.
+			 */
+			next_beacon_prep_time = pal_sub_time_us(
+					next_beacon_tx_time,
+					TAL_CONVERT_SYMBOLS_TO_US(
+					ADVNC_BCN_PREP_TIME));
 
-            /* This is the timer started for preparing the beacon. */
-            status = FAILURE;
+			/* This is the timer started for preparing the beacon.
+			 **/
+			status = FAILURE;
 
-            while (MAC_SUCCESS != status)
-            {
-                status = pal_timer_start(T_Beacon_Preparation,
-                                         next_beacon_prep_time,
-                                         TIMEOUT_ABSOLUTE,
-                                         (FUNC_PTR)mac_t_prepare_beacon_cb,
-                                         NULL);
+			while (MAC_SUCCESS != status) {
+				status = pal_timer_start(T_Beacon_Preparation,
+						next_beacon_prep_time,
+						TIMEOUT_ABSOLUTE,
+						(FUNC_PTR)mac_t_prepare_beacon_cb,
+						NULL);
 
-                next_beacon_prep_time = pal_add_time_us(next_beacon_prep_time,
-                                                        beacon_int_us);
-            }
-        }
+				next_beacon_prep_time = pal_add_time_us(
+						next_beacon_prep_time,
+						beacon_int_us);
+			}
+		}
 
-        /* 3) Superframe timer for determining end of active portion. */
-        /* TODO */
-        /*
-        if (tal_pib.SuperFrameOrder < tal_pib.BeaconOrder)
-        {
-                pal_timer_start(T_Superframe,
-                                TAL_CONVERT_SYMBOLS_TO_US(
-                                    TAL_GET_SUPERFRAME_DURATION_TIME(
-                                        tal_pib.SuperFrameOrder)),
-                                TIMEOUT_RELATIVE,
-                                (FUNC_PTR)mac_t_superframe_cb,
-                                NULL);
-        }
-        */
+		/* 3) Superframe timer for determining end of active portion. */
+		/* TODO */
 
-        /*
-         * Once the timing calculation for the next beacon has been finished,
-         * a pending broadcast frame will be transmitted.
-         * Of course this is only done if the node is not scanning.
-         */
-        if (MAC_SCAN_IDLE == mac_scan_state)
-        {
-            /*
-             * Check for pending broadcast data frames in the broadcast queue
-             * and transmit exactly one broadcast data frame in case there
-             * are pending broadcast frames.
-             */
-            if (broadcast_q.size > 0)
-            {
-                mac_tx_pending_bc_data();
-            }
-        }
-    }   /* (tal_pib.BeaconOrder < NON_BEACON_NWK) */
+		/*
+		 * if (tal_pib.SuperFrameOrder < tal_pib.BeaconOrder)
+		 * {
+		 *      pal_timer_start(T_Superframe,
+		 *                      TAL_CONVERT_SYMBOLS_TO_US(
+		 *                          TAL_GET_SUPERFRAME_DURATION_TIME(
+		 *                              tal_pib.SuperFrameOrder)),
+		 *                      TIMEOUT_RELATIVE,
+		 *                      (FUNC_PTR)mac_t_superframe_cb,
+		 *                      NULL);
+		 * }
+		 */
 
-    callback_parameter = callback_parameter;  /* Keep compiler happy. */
+		/*
+		 * Once the timing calculation for the next beacon has been
+		 *finished,
+		 * a pending broadcast frame will be transmitted.
+		 * Of course this is only done if the node is not scanning.
+		 */
+		if (MAC_SCAN_IDLE == mac_scan_state) {
+			/*
+			 * Check for pending broadcast data frames in the
+			 *broadcast queue
+			 * and transmit exactly one broadcast data frame in case
+			 *there
+			 * are pending broadcast frames.
+			 */
+			if (broadcast_q.size > 0) {
+				mac_tx_pending_bc_data();
+			}
+		}
+	} /* (tal_pib.BeaconOrder < NON_BEACON_NWK) */
+
+	callback_parameter = callback_parameter; /* Keep compiler happy. */
 } /* mac_t_beacon_cb() */
+
 #endif  /* BEACON_SUPPORT */
 
-
-
 #ifdef BEACON_SUPPORT
+
 /*
  * @brief Handles the superframe timer expiry
  *
@@ -887,24 +922,23 @@ static void mac_t_beacon_cb(void *callback_parameter)
  * @param callback_parameter Callback parameter
  */
 /* TODO */
-//static void mac_t_superframe_cb(void *callback_parameter)
-//{
-//    /*
-//     * Go to sleep (independent of the value of macRxOnWhenIdle)
-//     * because we enter the incative portion now.
-//     * Note: Do not use mac_sleep_trans() here, because this would check
-//     * macRxOnWhenIdle first.
-//     */
-//    mac_trx_init_sleep();
-//
-//    callback_parameter = callback_parameter;  /* Keep compiler happy. */
-//}
+/* static void mac_t_superframe_cb(void *callback_parameter) */
+/* { */
+/*    / * */
+/*     * Go to sleep (independent of the value of macRxOnWhenIdle) */
+/*     * because we enter the incative portion now. */
+/*     * Note: Do not use mac_sleep_trans() here, because this would check */
+/*     * macRxOnWhenIdle first. */
+/*     * / */
+/*    mac_trx_init_sleep(); */
+/*  */
+/*    callback_parameter = callback_parameter;  / * Keep compiler happy. * / */
+/* } */
 
 #endif /* BEACON_SUPPORT */
 
-
-
 #ifdef BEACON_SUPPORT
+
 /*
  * @brief Handles transmission of pending broadcast data
  *
@@ -917,43 +951,41 @@ static void mac_t_beacon_cb(void *callback_parameter)
  */
 void mac_tx_pending_bc_data(void)
 {
-    buffer_t *buf_ptr;
-    frame_info_t *transmit_frame;
-    retval_t tal_tx_status;
+	buffer_t *buf_ptr;
+	frame_info_t *transmit_frame;
+	retval_t tal_tx_status;
 
-    buf_ptr = qmm_queue_remove(&broadcast_q, NULL);
+	buf_ptr = qmm_queue_remove(&broadcast_q, NULL);
 
-    Assert(buf_ptr != NULL);
+	Assert(buf_ptr != NULL);
 
-    if (NULL == buf_ptr)
-    {
-        /* Nothing ot be done. */
-        return;
-    }
+	if (NULL == buf_ptr) {
+		/* Nothing ot be done. */
+		return;
+	}
 
-    /* Broadcast data present and to be sent. */
-    transmit_frame = (frame_info_t *)BMM_BUFFER_POINTER(buf_ptr);
+	/* Broadcast data present and to be sent. */
+	transmit_frame = (frame_info_t *)BMM_BUFFER_POINTER(buf_ptr);
 
-    transmit_frame->buffer_header = buf_ptr;
+	transmit_frame->buffer_header = buf_ptr;
 
-    tal_tx_status = tal_tx_frame(transmit_frame, NO_CSMA_WITH_IFS, false);
+	tal_tx_status = tal_tx_frame(transmit_frame, NO_CSMA_WITH_IFS, false);
 
-    if (MAC_SUCCESS == tal_tx_status)
-    {
-        MAKE_MAC_BUSY();
-    }
-    else
-    {
-        mac_gen_mcps_data_conf((buffer_t *)transmit_frame->buffer_header,
-                               (uint8_t)MAC_CHANNEL_ACCESS_FAILURE,
+	if (MAC_SUCCESS == tal_tx_status) {
+		MAKE_MAC_BUSY();
+	} else {
+		mac_gen_mcps_data_conf(
+				(buffer_t *)transmit_frame->buffer_header,
+				(uint8_t)MAC_CHANNEL_ACCESS_FAILURE,
 #ifdef ENABLE_TSTAMP
-                               transmit_frame->msduHandle,
-                               0);
+				transmit_frame->msduHandle,
+				0);
 #else
-                               transmit_frame->msduHandle);
+				transmit_frame->msduHandle);
 #endif  /* ENABLE_TSTAMP */
-     }
+	}
 }
+
 #endif /* BEACON_SUPPORT */
 
 #endif /* MAC_START_REQUEST_CONFIRM */
