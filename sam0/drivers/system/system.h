@@ -402,7 +402,6 @@ static inline void system_sleep(void)
  * @}
  */
 
-
 /**
  * \name Reset cause
  * @{
