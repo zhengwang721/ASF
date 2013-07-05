@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="Bootloader for Starter Kit Bootloader Demo on SAM4N Xplained Pro" id="sam.applications.starter_kit_bootloader_demo.bootloader.sam4n_xplained_pro">
+	<project caption="Bootloader for Starter Kit Bootloader Demo for SAM4N-Xplained-Pro" id="sam.applications.starter_kit_bootloader_demo.bootloader.sam4n_xplained_pro">
 		<info type="description" value="summary">
 			Boot application located at flash + 32KB.
 		</info>

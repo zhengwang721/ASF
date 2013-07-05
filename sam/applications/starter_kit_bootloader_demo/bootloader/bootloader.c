@@ -42,29 +42,61 @@
 #include "bootloader.h"
 
 /**
- * \mainpage SAM starter_kit_bootloader_demo Bootloader
+ * \mainpage Bootloader of Starter Kit Bootloader Demo
  *
  * \section Introduction
  *
- * SAM starter_kit_bootloader_demo Bootloader is to facilitate firmware
- * upgrade using SD/MMC cards. The bootloader finds a firmware file on SD/MMC
- * card and updates the application firmware from that file. Here raw binary
- * firmware is used.
+ * Bootloader of Starter Kit Bootloader Demo is a part of Starter Kit
+ * Bootloader Demo. It is to facilitate firmware upgrade using SD/MMC cards.
+ * The bootloader checks the trigger in the trigger area first. The trigger
+ * area is normally at the end of the Flash which size is defined by
+ * MEM_ERASE_SIZE in the conf_bootloader.h. If the trigger matched,
+ * it will try to find a firmware file on SD/MMC card and updates the
+ * application firmware from that file.
+ *
+ * \section start Quick Start
+ * - Do complete chip erase
+ * - Program the bootloader
+ * - Load the application firmware into SD/MMC card
+ *   - Default binary name is "demo_en.bin"
+ *     (see \ref MEDIA_FILE_LIST_DEFAULT in conf_bootloader.h)
+ * - Insert the card to demo board
+ * - Press RESET to start the bootloader
+ *
+ * \section boot_op Bootloader Operation
+ * The bootloader occupies the first part of the flash memory. The size is
+ * defined by BOOT_SIZE which is configurable in conf_bootloader.h.
+ * The application has to be shifted by the same offset so that the bootloader
+ * can load and execute it rightly. It need to modify the linker scripts for
+ * the application project: Increase the flash origion address by BOOT_SIZE
+ * and decrease the flash size by BOOT_SIZE and MEM_ERASE_SIZE.
+ *
+ * On startup, the bootloader will check the trigger, if one of the trigger case
+ * is found, it will start firmware update. If there is no trigger, it will
+ * validate the application and execute it.
+ *
+ * Software trigger offers a method for application to start a customized
+ * firmware upgrade. The application can modified the boot information block to
+ * enable once trigger for update and set the update source file name. Once the
+ * system is reset the bootloader will use this specified setting to upgrade.
+ * Note that once the boot file name in boot information block is changed, it
+ * will replace the default boot file list and the file name will not be cleared
+ * after upgrade, only the trigger is cleared after upgrade.
+ *
+ * \subsection boot_edit Boot Information Editor
+ * When debug input/output is enabled (by \ref DBG_USE_USART), Boot Information
+ * Editor can be enabled (by \ref DBG_USE_INFO_EDIT).
+ *
+ * To enter boot information editor, reset the board with specific button down
+ * (button pin is defined by \ref DBG_INFO_EDIT_TRIGGER_PIN). Then you can
+ * modify the boot software trigger and boot file name. For boot information
+ * block struct, refer to \ref regions_info_t in regions.h.
  *
  * \section Led Indication
  *
  * The bootloader truns on the led at the begin to indicate it's running.
  * The bootloader blinks the led to indicate the firmware update progress.
  * The bootloader turns off the led before jump to the application.
- *
- * \section start Quick Start
- * - Do complete chip erase
- * - Program the bootloader
- * - Load the application firmware into SD/MMC card
- *   - Default binary name is "demo_en.bin" or "demo_cn.bin"
- *     (see \ref MEDIA_FILE_LIST_DEFAULT in conf_bootloader.h)
- * - Insert the card to demo board
- * - Press RESET to start the bootloader
  *
  * \section boot_cfg Bootloader Configurations
  * Bootloader configuration is in conf_bootloader.h.
@@ -80,9 +112,10 @@
  *    - \ref TRIGGER_USE_BUTTONS : Enable/Disable push button triggers
  *      - If buttons triggers are enabled, reset the board with push button
  *        down will trigger firmware upgrade
- *    - \ref TRIGGER_USE_FLAG : Enable/Disable software flag in boot information
- *      to trigger firmware update (in application the boot information could
- *      be modified, then on reset the firmware is updated and trigger cleared)
+ *    - \ref TRIGGER_USE_FLAG : Enable/Disable software flag in boot
+ *      information to trigger firmware update (in application the boot
+ *      information could be modified, then on reset the firmware is updated
+ *      and trigger cleared)
  * -# Memory configurations
  *    - \ref MEM_LOCK_BOOT_REGION : Enable/Disable boot region lock
  *    - \ref MEM_USE_FLASH : Must be defined to use internal flash
@@ -105,33 +138,6 @@
  *   - \ref CONF_BOARD_SD_MMC_SPI : Enable IO initialization for SPI
  *   - \ref CONF_BOARD_SPI_NPCS0 : Enable IO initialization for SPI CS0
  *
- * \section boot_op Bootloader Operation
- * The bootloader occupies the first part of the flash memory. The application
- * has to be shifted by the same offset. To offset the application, increase the
- * flash origion address and decrease the flash size by the boot region size and
- * information block size in application linker scripts for the application
- * project.
- *
- * On startup, the bootloader will check the trigger, if one of the trigger case
- * is found, it will start firmware update. If there is no trigger, it will
- * validate the application and execute it.
- *
- * Software trigger offers a method for application to start a customized
- * firmware upgrade. The application can modified the boot information block to
- * enable once trigger for update and set the update source file name. Once the
- * system is reset the bootloader will use this specified setting to upgrade.
- * Note that once the boot file name in boot information block is changed, it
- * will replace the default boot file list and the file name will not be cleared
- * after upgrade, only the trigger is cleared after upgrade.
- *
- * \subsection boot_edit Boot Information Editor
- * When debug input/output is enabled (by \ref DBG_USE_USART), Boot Information
- * Editor can be enabled (by \ref DBG_USE_INFO_EDIT).
- *
- * To enter boot information editor, reset the board with specific button down
- * (button pin is defined by \ref DBG_INFO_EDIT_TRIGGER_PIN). Then you can
- * modify the boot software trigger and boot file name. For boot information
- * block struct, refer to \ref regions_info_t in regions.h.
  */
 
 /* Dump written data after load */
@@ -922,10 +928,11 @@ main_run_app_check:
 
 #ifdef DBG_USE_USART
 	delay_ms(50); /* Wait USART lines idle */
-#endif
+
 	dbg_cleanup();
 
 	delay_ms(50);
+#endif
 
 	/* run application */
 	_app_exec(app_addr);

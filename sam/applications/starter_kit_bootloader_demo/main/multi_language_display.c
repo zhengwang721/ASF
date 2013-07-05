@@ -622,7 +622,7 @@ void multi_language_show_start_info(void)
 #ifdef CONF_ENGLISH_LANGUAGE
 	ssd1306_set_page_address(1);
 	ssd1306_set_column_address(0);
-	ssd1306_write_text("Start Kit Demo");
+	ssd1306_write_text("Starter Kit Bootloader Demo");
 #endif
 #ifdef CONF_CHINESE_LANGUAGE
 	unicode_show_one_line(0, 0, start_info_1_cn);
@@ -973,7 +973,7 @@ void multi_language_show_no_fatfs_info(void)
 void multi_language_show_no_files_info(void)
 {
 #ifdef CONF_ENGLISH_LANGUAGE
-	ssd1306_write_text("		 <no content>");
+	ssd1306_write_text("         <no content>");
 #endif
 #ifdef CONF_CHINESE_LANGUAGE
 	unicode_show_one_line(2, 0, no_files_info_1_cn);

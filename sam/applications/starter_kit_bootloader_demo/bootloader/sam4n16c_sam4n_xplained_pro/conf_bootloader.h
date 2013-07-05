@@ -80,8 +80,8 @@
 #define MEDIA_USE_SD /**< Define to use SD/MMC (must) */
 /* Default file list (modify to customize default list) */
 #  define MEDIA_FILE_LIST_DEFAULT  \
-	"demo_en.bin","demo_cn.bin"
-#  define MEDIA_FILE_LIST_LEN      2
+	"demo_en.bin"
+#  define MEDIA_FILE_LIST_LEN      1
 
 /*
  * Trigger config
@@ -117,7 +117,7 @@
 /** memory block size */
 #define MEM_BLOCK_SIZE (IFLASH_PAGE_SIZE)
 /** memory erase block size (4K) */
-#define MEM_ERASE_SIZE (IFLASH_PAGE_SIZE*8)
+#define MEM_ERASE_SIZE (IFLASH_PAGE_SIZE * 8)
 /* memory aligned (8 pages to erase) */
 #define mem_align(addr) \
 	(((addr) % MEM_ERASE_SIZE) ? ((addr) - ((addr) % MEM_ERASE_SIZE)) : (addr))
