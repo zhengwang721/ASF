@@ -1483,62 +1483,195 @@ enum status_code spi_select_slave(
   *			<td>SCK</td>
   *		</tr>
   *		<tr>
-  *			<td>I</td>
+  *			<td>I <sup>\b (1)</sup></td>
   *			<td>MISO</td>
   *			<td>SCK</td>
   *			<td>-</td>
   *			<td>MOSI</td>
   *		</tr>
   *		<tr>
-  *			<td>J</td>
+  *			<td>J <sup>\b (1)</sup></td>
   *			<td>-</td>
   *			<td>SCK</td>
   *			<td>-</td>
   *			<td>MOSI</td>
   *		</tr>
   *		<tr>
-  *			<td>K</td>
+  *			<td>K <sup>\b (1)</sup></td>
   *			<td>-</td>
   *			<td>SCK</td>
   *			<td>MISO</td>
   *			<td>MOSI</td>
   *		</tr>
   *		<tr>
-  *			<td>L</td>
+  *			<td>L <sup>\b (1)</sup></td>
   *			<td>-</td>
   *			<td>SCK</td>
   *			<td>-</td>
   *			<td>MOSI</td>
   *		</tr>
   *		<tr>
-  *			<td>M</td>
+  *			<td>M <sup>\b (1)</sup></td>
   *			<td>MOSI</td>
   *			<td>-</td>
   *			<td>-</td>
   *			<td>SCK</td>
   *		</tr>
   *		<tr>
-  *			<td>N</td>
+  *			<td>N <sup>\b (1)</sup></td>
   *			<td>MOSI</td>
   *			<td>MISO</td>
   *			<td>-</td>
   *			<td>SCK</td>
   *		</tr>
   *		<tr>
-  *			<td>O</td>
+  *			<td>O <sup>\b (1)</sup></td>
   *			<td>MOSI</td>
   *			<td>-</td>
   *			<td>MISO</td>
   *			<td>SCK</td>
   *		</tr>
   *		<tr>
-  *			<td>P</td>
+  *			<td>P <sup>\b (1)</sup></td>
   *			<td>MOSI</td>
   *			<td>-</td>
   *			<td>-</td>
   *			<td>SCK</td>
   *		</tr>
   * </table>
+  *
+  * <i>\b (1) Not available in all silicon revisions.</i>
+  *
+  * \section asfdoc_samd20_sercom_spi_mux_settings_slave Slave Mode Settings
+  * The following table describes the SERCOM pin functionalities for the various
+  * MUX settings, whilst in SPI Slave mode.
+  *
+  * \note If MISO is unlisted, the SPI receiver must not be enabled for the
+  *       given MUX setting.
+  *
+  * <table>
+  *		<tr>
+  *			<th>Mux/Pad</th>
+  *			<th>PAD 0</th>
+  *			<th>PAD 1</th>
+  *			<th>PAD 2</th>
+  *			<th>PAD 3</th>
+  *		</tr>
+  *		<tr>
+  *			<td>A</td>
+  *			<td>MISO</td>
+  *			<td>SCK</td>
+  *			<td>/SS</td>
+  *			<td>-</td>
+  *		</tr>
+  *		<tr>
+  *			<td>B</td>
+  *			<td>MISO</td>
+  *			<td>SCK</td>
+  *			<td>/SS</td>
+  *			<td>-</td>
+  *		</tr>
+  *		<tr>
+  *			<td>C</td>
+  *			<td>MISO</td>
+  *			<td>SCK</td>
+  *			<td>/SS</td>
+  *			<td>-</td>
+  *		</tr>
+  *		<tr>
+  *			<td>D</td>
+  *			<td>MISO</td>
+  *			<td>SCK</td>
+  *			<td>/SS</td>
+  *			<td>MOSI</td>
+  *		</tr>
+  *		<tr>
+  *			<td>E</td>
+  *			<td>MOSI</td>
+  *			<td>/SS</td>
+  *			<td>MISO</td>
+  *			<td>SCK</td>
+  *		</tr>
+  *		<tr>
+  *			<td>F</td>
+  *			<td>-</td>
+  *			<td>/SS</td>
+  *			<td>MISO</td>
+  *			<td>SCK</td>
+  *		</tr>
+  *		<tr>
+  *			<td>G</td>
+  *			<td>-</td>
+  *			<td>/SS</td>
+  *			<td>MISO</td>
+  *			<td>SCK</td>
+  *		</tr>
+  *		<tr>
+  *			<td>H</td>
+  *			<td>-</td>
+  *			<td>/SS</td>
+  *			<td>MISO</td>
+  *			<td>SCK</td>
+  *		</tr>
+  *		<tr>
+  *			<td>I <sup>\b (1)</sup></td>
+  *			<td>MOSI</td>
+  *			<td>SCK</td>
+  *			<td>/SS</td>
+  *			<td>MISO</td>
+  *		</tr>
+  *		<tr>
+  *			<td>J <sup>\b (1)</sup></td>
+  *			<td>-</td>
+  *			<td>SCK</td>
+  *			<td>/SS</td>
+  *			<td>MISO</td>
+  *		</tr>
+  *		<tr>
+  *			<td>K <sup>\b (1)</sup></td>
+  *			<td>-</td>
+  *			<td>SCK</td>
+  *			<td>/SS</td>
+  *			<td>MISO</td>
+  *		</tr>
+  *		<tr>
+  *			<td>L <sup>\b (1)</sup></td>
+  *			<td>-</td>
+  *			<td>SCK</td>
+  *			<td>/SS</td>
+  *			<td>MISO</td>
+  *		</tr>
+  *		<tr>
+  *			<td>M <sup>\b (1)</sup></td>
+  *			<td>MISO</td>
+  *			<td>/SS</td>
+  *			<td>-</td>
+  *			<td>SCK</td>
+  *		</tr>
+  *		<tr>
+  *			<td>N <sup>\b (1)</sup></td>
+  *			<td>MISO</td>
+  *			<td>/SS</td>
+  *			<td>-</td>
+  *			<td>SCK</td>
+  *		</tr>
+  *		<tr>
+  *			<td>O <sup>\b (1)</sup></td>
+  *			<td>MISO</td>
+  *			<td>/SS</td>
+  *			<td>MOSI</td>
+  *			<td>SCK</td>
+  *		</tr>
+  *		<tr>
+  *			<td>P <sup>\b (1)</sup></td>
+  *			<td>MISO</td>
+  *			<td>/SS</td>
+  *			<td>-</td>
+  *			<td>SCK</td>
+  *		</tr>
+  * </table>
+  *
+  * <i>\b (1) Not available in all silicon revisions.</i>
   */
 
 #endif /* SPI_H_INCLUDED */
