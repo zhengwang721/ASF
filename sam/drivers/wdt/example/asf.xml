@@ -29,6 +29,7 @@
 			</info>
 			<build type="c-source" value="wdt_example_sam4l.c"/>
 			<build type="include-path" value="."/>
+			<build type="module-config" subtype="required-header-file" value="conf_example.h"/>
 			<device-support value="sam4l"/>
 			<require idref="sam.drivers.wdt"/>
 			<require idref="sam.drivers.eic"/>

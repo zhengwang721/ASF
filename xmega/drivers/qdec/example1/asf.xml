@@ -5,7 +5,7 @@
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="Timers"/>
-			<keyword value="Event system"/>
+			<keyword value="Peripheral Event System"/>
 		</info>
 		<build type="c-source" value="qdec_example1.c"/>
 		<require idref="xmega.drivers.qdec"/>

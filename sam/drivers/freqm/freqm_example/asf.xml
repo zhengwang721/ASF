@@ -4,7 +4,7 @@
 			This example demonstrates how to use frequency meter.
 			</info>
 		<info type="keyword" value="technology">
-			<keyword value="Meter"/>
+			<keyword value="Clocks"/>
 		</info>
 		<build type="c-source" value="freqm_example.c"/>
 		<build type="include-path" value="."/>

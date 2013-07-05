@@ -4,7 +4,7 @@
 		Example application. It demonstrates how to perform a 32-bit fixed-point convolution using the DSP library.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="Digital signal processing"/>
+			<keyword value="Digital Signal Processing"/>
 		</info>
 		<build type="c-source" value="convolution_example.c"/>
 		<device-support value="uc3"/>

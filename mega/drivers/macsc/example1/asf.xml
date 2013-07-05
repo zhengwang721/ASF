@@ -4,7 +4,8 @@
 		Configure the megaRF MAC Symbol Counter module to generate overflow interrupt,compare matches(1,2,3) and use the back-off slot counter.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="MAC Symbol Counter"/>
+			<keyword value="Communication"/>
+			<keyword value="Wireless"/>
 		</info>
 		<build type="include-path" value="."/>
 		<build type="c-source" value="macsc_megarf_example1.c"/>

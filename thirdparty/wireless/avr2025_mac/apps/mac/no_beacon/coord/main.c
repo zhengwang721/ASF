@@ -43,22 +43,34 @@
 /**
  * \mainpage
  * \section preface Preface
- * This is the reference manual for the IEEE 802.15.4 MAC No-Beacon Application - Coordinator
+ * This is the reference manual for the IEEE 802.15.4 MAC No-Beacon Application
+ *- Coordinator
  * \section main_files Application Files
- * 	- main.c                 Application main file.
+ *      - main.c                 Application main file.
  * \section intro Application Introduction
- * The basic MAC Example Nobeacon Application deploys a nonbeacon-enabled network.
- * The coordinator starts a PAN at channel DEFAULT_CHANNEL with the PAN ID DEFAULT_PAN_ID.
+ * The basic MAC Example Nobeacon Application deploys a nonbeacon-enabled
+ *network.
+ * The coordinator starts a PAN at channel DEFAULT_CHANNEL with the PAN ID
+ *DEFAULT_PAN_ID.
  * The device scans for this network and associates to the coordinator.
- * Once the device is associated, it uses a timer that fires every 5 seconds to poll for pending data at the coordinator by means of transmitting a data request frame to the coordinator.
- * On the other hand every 5 seconds the coordinator queues a dummy data frame for each associated device into its indirect frame queue.
- * If the coordinator receives a data request frame from a particular device, it transmits the pending data frame to the device.
- * Device after receiving the data from the Coordinator sends back the same data to the Coordinator itself by direct data transmission
- * The results of the proper data transmission/reception are printed to a terminal program via Serial I/O (UART or USB).
- * \note For Two Processor Approach the Application needs to be flashed in the Host board(eg.SAM4L-Xplained Pro) and the Serial-if application(NoBeacon FFD) (MAC Stack)
+ * Once the device is associated, it uses a timer that fires every 5 seconds to
+ *poll for pending data at the coordinator by means of transmitting a data
+ *request frame to the coordinator.
+ * On the other hand every 5 seconds the coordinator queues a dummy data frame
+ *for each associated device into its indirect frame queue.
+ * If the coordinator receives a data request frame from a particular device, it
+ *transmits the pending data frame to the device.
+ * Device after receiving the data from the Coordinator sends back the same data
+ *to the Coordinator itself by direct data transmission
+ * The results of the proper data transmission/reception are printed to a
+ *terminal program via Serial I/O (UART or USB).
+ * \note For Two Processor Approach the Application needs to be flashed in the
+ *Host board(eg.SAM4L-Xplained Pro) and the Serial-if application(NoBeacon FFD)
+ *(MAC Stack)
  * needs to be flashed in the NCP(Network CoProcessor) board.
  *
- * For demonstration purposes the coordinator's configuration is limited to associate six devices at maximum .
+ * For demonstration purposes the coordinator's configuration is limited to
+ *associate six devices at maximum .
  * \section api_modules Application Dependent Modules
  * - \subpage api
  * \section compinfo Compilation Info
@@ -67,7 +79,8 @@
  *
  * \section references References
  * 1)  IEEE Std 802.15.4-2006 Part 15.4: Wireless Medium Access Control (MAC)
- *     and Physical Layer (PHY) Specifications for Low-Rate Wireless Personal Area
+ *     and Physical Layer (PHY) Specifications for Low-Rate Wireless Personal
+ *Area
  *     Networks (WPANs).\n\n
  * 2)  AVR Wireless Support <A href="http://avr@atmel.com">avr@atmel.com</A>.\n
  *
@@ -76,7 +89,7 @@
  * <A href="http://www.atmel.com/avr">www.atmel.com</A>.\n
  */
 
- /* === INCLUDES ============================================================ */
+/* === INCLUDES ============================================================ */
 #include <string.h>
 #include <inttypes.h>
 #include <stdio.h>
@@ -93,10 +106,9 @@
 /** This type definition of a structure stores the short address and the
  *  extended address of a device.
  */
-typedef struct associated_device_tag
-{
-    uint16_t short_addr;
-    uint64_t ieee_addr;
+typedef struct associated_device_tag {
+	uint16_t short_addr;
+	uint64_t ieee_addr;
 } associated_device_t;
 
 /* === MACROS ============================================================== */
@@ -155,7 +167,7 @@ static uint32_t rx_cnt;
 
 #ifdef GPIO_PUSH_BUTTON_0
 static wpan_addr_spec_t dst_addr;
-#endif //GPIO_PUSH_BUTTON_0
+#endif /* GPIO_PUSH_BUTTON_0 */
 
 static uint8_t current_channel;
 static uint8_t current_channel_page;
@@ -165,6 +177,7 @@ static uint8_t TIMER_LED_OFF;
 static uint8_t APP_TIMER_INDIRECT_DATA;
 
 /* === PROTOTYPES ========================================================== */
+
 /**
  * @brief Application specific function to assign a short address
  *
@@ -179,6 +192,7 @@ static bool assign_new_short_addr(uint64_t addr64, uint16_t *addr16);
  *                  to indicated LED to be switched off)
  */
 static void indirect_data_cb(void *parameter);
+
 /**
  * @brief Callback function switching off the LED
  *
@@ -201,72 +215,71 @@ static void app_alert(void);
  */
 int main(void)
 {
+	irq_initialize_vectors();
+	sysclk_init();
+
 	/* Initialize the board.
 	 * The board-specific conf_board.h file contains the configuration of
 	 * the board initialization.
 	 */
-	irq_initialize_vectors();
 	board_init();
-	sysclk_init();
 
 	sw_timer_init();
 
-	if(MAC_SUCCESS != wpan_init())
-	{
+	if (MAC_SUCCESS != wpan_init()) {
 		app_alert();
 	}
 
-    /* Initialize LEDs. */
-    LED_On(LED_START);         // indicating application is started
-    LED_Off(LED_NWK_SETUP);    // indicating network is started
-    LED_Off(LED_DATA);         // indicating data reception
+	/* Initialize LEDs. */
+	LED_On(LED_START);     /* indicating application is started */
+	LED_Off(LED_NWK_SETUP); /* indicating network is started */
+	LED_Off(LED_DATA);     /* indicating data reception */
 
 	cpu_irq_enable();
 
 #ifdef SIO_HUB
-    /* Initialize the serial interface used for communication with terminal program. */
-    sio2host_init();
-    /* To make sure the Hyper Terminal Connected to the system*/
-    sio2host_getchar();
+	/* Initialize the serial interface used for communication with terminal
+	 *program. */
+	sio2host_init();
+	/* To make sure the Hyper Terminal Connected to the system*/
+	sio2host_getchar();
 
-    printf("\nNobeacon_Application\r\n\n");
-    printf("\nCoordinator\r\n\n");
+	printf("\nNobeacon_Application\r\n\n");
+	printf("\nCoordinator\r\n\n");
 #endif /* SIO_HUB */
 
 	sw_timer_get_id(&TIMER_LED_OFF);
 	sw_timer_get_id(&APP_TIMER_INDIRECT_DATA);
 
-
-    /*
-     * Reset the MAC layer to the default values.
-     * This request will cause a mlme reset confirm message ->
-     * usr_mlme_reset_conf
-     */
-    wpan_mlme_reset_req(true);
+	/*
+	 * Reset the MAC layer to the default values.
+	 * This request will cause a mlme reset confirm message ->
+	 * usr_mlme_reset_conf
+	 */
+	wpan_mlme_reset_req(true);
 
 #ifdef GPIO_PUSH_BUTTON_0
 	dst_addr.AddrMode = 2;
 	dst_addr.PANId = DEFAULT_PAN_ID;
-#endif //GPIO_PUSH_BUTTON_0
+#endif /* GPIO_PUSH_BUTTON_0 */
 
-	while (true)
-	{
+	while (true) {
 		wpan_task();
 #ifdef GPIO_PUSH_BUTTON_0
-		if (!ioport_get_pin_level(GPIO_PUSH_BUTTON_0))
-		{
+		if (!ioport_get_pin_level(GPIO_PUSH_BUTTON_0)) {
 			delay_ms(DEBOUNCE_DELAY_MS);
-			if (!ioport_get_pin_level(GPIO_PUSH_BUTTON_0))
-			{
+			if (!ioport_get_pin_level(GPIO_PUSH_BUTTON_0)) {
 				dst_addr.Addr.short_address = BROADCAST;
-				wpan_mcps_data_req(FCF_SHORT_ADDR, &dst_addr, 14, 
-								   (uint8_t *)"Broadcast Data", 1, WPAN_TXOPT_OFF);
+				wpan_mcps_data_req(FCF_SHORT_ADDR, &dst_addr,
+						14,
+						(uint8_t *)"Broadcast Data", 1,
+						WPAN_TXOPT_OFF);
 			}
 		}
-#endif //GPIO_PUSH_BUTTON_0
+
+#endif /* GPIO_PUSH_BUTTON_0 */
 	}
 }
-
 
 #if defined(ENABLE_TSTAMP)
 
@@ -280,48 +293,44 @@ int main(void)
  *
  */
 void usr_mcps_data_conf(uint8_t msduHandle,
-                        uint8_t status,
-                        uint32_t Timestamp)
+		uint8_t status,
+		uint32_t Timestamp)
 #else
 void usr_mcps_data_conf(uint8_t msduHandle,
-                        uint8_t status)
+		uint8_t status)
 #endif  /* ENABLE_TSTAMP */
 {
 #ifdef SIO_HUB
-    char sio_array[255];
+	char sio_array[255];
 
-    sprintf(sio_array, "Result frame with handle %" PRIu8 ": ", msduHandle);
-    printf(sio_array);
+	sprintf(sio_array, "Result frame with handle %" PRIu8 ": ", msduHandle);
+	printf(sio_array);
 #endif
 
-    if (status == MAC_SUCCESS)
-    {
+	if (status == MAC_SUCCESS) {
 #ifdef SIO_HUB
-        printf("Success\r\n");
+		printf("Success\r\n");
 #endif
-    }
-    else if (status == MAC_TRANSACTION_OVERFLOW)
-    {
+	} else if (status == MAC_TRANSACTION_OVERFLOW) {
 #ifdef SIO_HUB
-        /* Frame could not be placed into the indirect queue. */
-        printf("Transaction overflow\r\n");
+		/* Frame could not be placed into the indirect queue. */
+		printf("Transaction overflow\r\n");
 #endif
-    }
-    else if (status == MAC_TRANSACTION_EXPIRED)
-    {
+	} else if (status == MAC_TRANSACTION_EXPIRED) {
 #ifdef SIO_HUB
-        /*
-         * Frame could not be delivered to the target node within
-         * the proper time.
-         */
-        printf("Transaction expired\r\n");
-#endif
-    }
 
-    /* Keep compiler happy. */
-    msduHandle = msduHandle;
+		/*
+		 * Frame could not be delivered to the target node within
+		 * the proper time.
+		 */
+		printf("Transaction expired\r\n");
+#endif
+	}
+
+	/* Keep compiler happy. */
+	msduHandle = msduHandle;
 #ifdef ENABLE_TSTAMP
-    Timestamp = Timestamp;
+	Timestamp = Timestamp;
 #endif  /* ENABLE_TSTAMP */
 }
 
@@ -338,57 +347,57 @@ void usr_mcps_data_conf(uint8_t msduHandle,
  *                         (only if timestamping is enabled).
  */
 void usr_mcps_data_ind(wpan_addr_spec_t *SrcAddrSpec,
-                       wpan_addr_spec_t *DstAddrSpec,
-                       uint8_t msduLength,
-                       uint8_t *msdu,
-                       uint8_t mpduLinkQuality,
+		wpan_addr_spec_t *DstAddrSpec,
+		uint8_t msduLength,
+		uint8_t *msdu,
+		uint8_t mpduLinkQuality,
 #ifdef ENABLE_TSTAMP
-                       uint8_t DSN,
-                       uint32_t Timestamp)
+		uint8_t DSN,
+		uint32_t Timestamp)
 #else
-                       uint8_t DSN)
+		uint8_t DSN)
 #endif  /* ENABLE_TSTAMP */
 {
 #ifdef SIO_HUB
-    char sio_array[255];
+	char sio_array[255];
 #endif
 
-    /* Increments the receive count*/
-    rx_cnt++;
+	/* Increments the receive count*/
+	rx_cnt++;
 
-    /*
-     * Dummy data has been received successfully.
-     */
-    LED_On(LED_DATA);
+	/*
+	 * Dummy data has been received successfully.
+	 */
+	LED_On(LED_DATA);
 
-    /* Start a timer switching off the LED. */
-    sw_timer_start(TIMER_LED_OFF,
-                    LED_ON_DURATION,
-                    SW_TIMEOUT_RELATIVE,
-                    (FUNC_PTR)led_off_cb,
-                    NULL);
+	/* Start a timer switching off the LED. */
+	sw_timer_start(TIMER_LED_OFF,
+			LED_ON_DURATION,
+			SW_TIMEOUT_RELATIVE,
+			(FUNC_PTR)led_off_cb,
+			NULL);
 #ifdef SIO_HUB
-    sprintf(sio_array, "Frame received: %" PRIu32 ",data: %" PRIu8 "\r\n",
-            rx_cnt, *msdu);
-    printf(sio_array);
+	sprintf(sio_array, "Frame received: %" PRIu32 ",data: %" PRIu8 "\r\n",
+			rx_cnt, *msdu);
+	printf(sio_array);
 #endif
-    /* Keep compiler happy. */
-    SrcAddrSpec = SrcAddrSpec;
-    DstAddrSpec = DstAddrSpec;
-    msduLength = msduLength;
-    msdu = msdu;
-    mpduLinkQuality = mpduLinkQuality;
-    DSN = DSN;
+	/* Keep compiler happy. */
+	SrcAddrSpec = SrcAddrSpec;
+	DstAddrSpec = DstAddrSpec;
+	msduLength = msduLength;
+	msdu = msdu;
+	mpduLinkQuality = mpduLinkQuality;
+	DSN = DSN;
 #ifdef ENABLE_TSTAMP
-    Timestamp = Timestamp;
+	Timestamp = Timestamp;
 #endif  /* ENABLE_TSTAMP */
 }
-
 
 #if ((MAC_PURGE_REQUEST_CONFIRM == 1) && (MAC_INDIRECT_DATA_BASIC == 1))
 
 /*
- * Callback function that must be implemented by application (NHLE) for MAC service
+ * Callback function that must be implemented by application (NHLE) for MAC
+ *service
  * MCPS-PURGE.confirm.
  *
  * @param msduHandle           Handle (id) of MSDU to be purged.
@@ -397,12 +406,12 @@ void usr_mcps_data_ind(wpan_addr_spec_t *SrcAddrSpec,
  * @return void
  */
 void usr_mcps_purge_conf(uint8_t msduHandle,
-                         uint8_t status)
+		uint8_t status)
 {
-	
 }
-#endif  /* ((MAC_PURGE_REQUEST_CONFIRM == 1) && (MAC_INDIRECT_DATA_BASIC == 1)) */
 
+#endif  /* ((MAC_PURGE_REQUEST_CONFIRM == 1) && (MAC_INDIRECT_DATA_BASIC == 1))
+         **/
 
 #if (MAC_ASSOCIATION_REQUEST_CONFIRM == 1)
 
@@ -416,52 +425,53 @@ void usr_mcps_purge_conf(uint8_t msduHandle,
  *
  */
 void usr_mlme_associate_conf(uint16_t AssocShortAddress,
-                             uint8_t status)
+		uint8_t status)
 {
-    /* Keep compiler happy. */
-    AssocShortAddress = AssocShortAddress;
+	/* Keep compiler happy. */
+	AssocShortAddress = AssocShortAddress;
 }
+
 #endif  /* (MAC_ASSOCIATION_REQUEST_CONFIRM == 1) */
 
-
 #if (MAC_ASSOCIATION_INDICATION_RESPONSE == 1)
+
 /*
  * @brief Callback function usr_mlme_associate_ind
  *
- * @param DeviceAddress         Extended address of device requesting association
+ * @param DeviceAddress         Extended address of device requesting
+ *association
  * @param CapabilityInformation Capabilities of device requesting association
  */
 void usr_mlme_associate_ind(uint64_t DeviceAddress,
-                            uint8_t CapabilityInformation)
+		uint8_t CapabilityInformation)
 {
-    /*
-     * Any device is allowed to join the network.
-     * Use: bool wpan_mlme_associate_resp(uint64_t DeviceAddress,
-     *                                    uint16_t AssocShortAddress,
-     *                                    uint8_t status);
-     *
-     * This response leads to comm status indication -> usr_mlme_comm_status_ind
-     * Get the next available short address for this device.
-     */
-    uint16_t associate_short_addr = macShortAddress_def;
+	/*
+	 * Any device is allowed to join the network.
+	 * Use: bool wpan_mlme_associate_resp(uint64_t DeviceAddress,
+	 *                                    uint16_t AssocShortAddress,
+	 *                                    uint8_t status);
+	 *
+	 * This response leads to comm status indication ->
+	 *usr_mlme_comm_status_ind
+	 * Get the next available short address for this device.
+	 */
+	uint16_t associate_short_addr = macShortAddress_def;
 
-    if (assign_new_short_addr(DeviceAddress, &associate_short_addr) == true)
-    {
-        wpan_mlme_associate_resp(DeviceAddress,
-                                 associate_short_addr,
-                                 ASSOCIATION_SUCCESSFUL);
-    }
-    else
-    {
-        wpan_mlme_associate_resp(DeviceAddress, associate_short_addr,
-                                 PAN_AT_CAPACITY);
-    }
+	if (assign_new_short_addr(DeviceAddress,
+			&associate_short_addr) == true) {
+		wpan_mlme_associate_resp(DeviceAddress,
+				associate_short_addr,
+				ASSOCIATION_SUCCESSFUL);
+	} else {
+		wpan_mlme_associate_resp(DeviceAddress, associate_short_addr,
+				PAN_AT_CAPACITY);
+	}
 
-    /* Keep compiler happy. */
-    CapabilityInformation = CapabilityInformation;
+	/* Keep compiler happy. */
+	CapabilityInformation = CapabilityInformation;
 }
-#endif  /* (MAC_ASSOCIATION_INDICATION_RESPONSE == 1) */
 
+#endif  /* (MAC_ASSOCIATION_INDICATION_RESPONSE == 1) */
 
 #if (MAC_BEACON_NOTIFY_INDICATION == 1)
 
@@ -471,7 +481,8 @@ void usr_mlme_associate_ind(uint64_t DeviceAddress,
  * @param BSN            Beacon sequence number.
  * @param PANDescriptor  Pointer to PAN descriptor for received beacon.
  * @param PendAddrSpec   Pending address specification in received beacon.
- * @param AddrList       List of addresses of devices the coordinator has pending data.
+ * @param AddrList       List of addresses of devices the coordinator has
+ *pending data.
  * @param sduLength      Length of beacon payload.
  * @param sdu            Pointer to beacon payload.
  *
@@ -479,18 +490,19 @@ void usr_mlme_associate_ind(uint64_t DeviceAddress,
  *
  */
 void usr_mlme_beacon_notify_ind(uint8_t BSN,
-                                wpan_pandescriptor_t *PANDescriptor,
-                                uint8_t PendAddrSpec,
-                                uint8_t *AddrList,
-                                uint8_t sduLength,
-                                uint8_t *sdu)
+		wpan_pandescriptor_t *PANDescriptor,
+		uint8_t PendAddrSpec,
+		uint8_t *AddrList,
+		uint8_t sduLength,
+		uint8_t *sdu)
 {
-	
 }
+
 #endif  /* (MAC_BEACON_NOTIFY_INDICATION == 1) */
 
+#if ((MAC_ORPHAN_INDICATION_RESPONSE == 1) || \
+	(MAC_ASSOCIATION_INDICATION_RESPONSE == 1))
 
-#if ((MAC_ORPHAN_INDICATION_RESPONSE == 1) || (MAC_ASSOCIATION_INDICATION_RESPONSE == 1))
 /*
  * @brief Callback function usr_mlme_comm_status_ind
  *
@@ -499,33 +511,33 @@ void usr_mlme_beacon_notify_ind(uint8_t BSN,
  * @param status           Result for related response operation
  */
 void usr_mlme_comm_status_ind(wpan_addr_spec_t *SrcAddrSpec,
-                              wpan_addr_spec_t *DstAddrSpec,
-                              uint8_t status)
+		wpan_addr_spec_t *DstAddrSpec,
+		uint8_t status)
 {
-    if (status == MAC_SUCCESS)
-    {
-        /*
-         * Now the association of the device has been successful and its
-         * information, like address, could  be stored.
-         * But for the sake of simple handling it has been done
-         * during assignment of the short address within the function
-         * assign_new_short_addr()
-         */
+	if (status == MAC_SUCCESS) {
+		/*
+		 * Now the association of the device has been successful and its
+		 * information, like address, could  be stored.
+		 * But for the sake of simple handling it has been done
+		 * during assignment of the short address within the function
+		 * assign_new_short_addr()
+		 */
 
-        /* Start timer to initiate indirect data transmission. */
-        sw_timer_start(APP_TIMER_INDIRECT_DATA,
-                        ((uint32_t)APP_INDIRECT_DATA_DURATION_MS * 1000),
-                        SW_TIMEOUT_RELATIVE,
-                        (FUNC_PTR)indirect_data_cb,
-                        NULL);
-    }
+		/* Start timer to initiate indirect data transmission. */
+		sw_timer_start(APP_TIMER_INDIRECT_DATA,
+				((uint32_t)APP_INDIRECT_DATA_DURATION_MS * 1000),
+				SW_TIMEOUT_RELATIVE,
+				(FUNC_PTR)indirect_data_cb,
+				NULL);
+	}
 
-    /* Keep compiler happy. */
-    SrcAddrSpec = SrcAddrSpec;
-    DstAddrSpec = DstAddrSpec;
+	/* Keep compiler happy. */
+	SrcAddrSpec = SrcAddrSpec;
+	DstAddrSpec = DstAddrSpec;
 }
-#endif  /* ((MAC_ORPHAN_INDICATION_RESPONSE == 1) || (MAC_ASSOCIATION_INDICATION_RESPONSE == 1)) */
 
+#endif  /* ((MAC_ORPHAN_INDICATION_RESPONSE == 1) ||
+         *(MAC_ASSOCIATION_INDICATION_RESPONSE == 1)) */
 
 #if (MAC_DISASSOCIATION_BASIC_SUPPORT == 1)
 
@@ -540,12 +552,11 @@ void usr_mlme_comm_status_ind(wpan_addr_spec_t *SrcAddrSpec,
  * @return void
  */
 void usr_mlme_disassociate_conf(uint8_t status,
-                                wpan_addr_spec_t *DeviceAddrSpec)
+		wpan_addr_spec_t *DeviceAddrSpec)
 {
-	
 }
-#endif /* (MAC_DISASSOCIATION_BASIC_SUPPORT == 1)*/
 
+#endif /* (MAC_DISASSOCIATION_BASIC_SUPPORT == 1)*/
 
 #if (MAC_DISASSOCIATION_BASIC_SUPPORT == 1)
 
@@ -561,12 +572,11 @@ void usr_mlme_disassociate_conf(uint8_t status,
  * @return void
  */
 void usr_mlme_disassociate_ind(uint64_t DeviceAddress,
-                               uint8_t DisassociateReason)
+		uint8_t DisassociateReason)
 {
-	
 }
-#endif  /* (MAC_DISASSOCIATION_BASIC_SUPPORT == 1) */
 
+#endif  /* (MAC_DISASSOCIATION_BASIC_SUPPORT == 1) */
 
 #if (MAC_GET_SUPPORT == 1)
 
@@ -581,44 +591,42 @@ void usr_mlme_disassociate_ind(uint64_t DeviceAddress,
  * @return void
  */
 void usr_mlme_get_conf(uint8_t status,
-                       uint8_t PIBAttribute,
-                       void *PIBAttributeValue)
+		uint8_t PIBAttribute,
+		void *PIBAttributeValue)
 {
-	if((status == MAC_SUCCESS) && (PIBAttribute == phyCurrentPage))
-	{
+	if ((status == MAC_SUCCESS) && (PIBAttribute == phyCurrentPage)) {
 		current_channel_page = *(uint8_t *)PIBAttributeValue;
 		wpan_mlme_get_req(phyChannelsSupported);
-	}
-	else if((status == MAC_SUCCESS) && (PIBAttribute == phyChannelsSupported))
-	{
+	} else if ((status == MAC_SUCCESS) &&
+			(PIBAttribute == phyChannelsSupported)) {
 		uint8_t index;
-		
+
 		channels_supported = *(uint32_t *)PIBAttributeValue;
-		
-		for(index = 0; index < 32; index++)
-		{
-			if(channels_supported & (1 << index))
-			{
+
+		for (index = 0; index < 32; index++) {
+			if (channels_supported & (1 << index)) {
 				current_channel = index + CHANNEL_OFFSET;
 				break;
 			}
 		}
-        /*
-         * Set the short address of this node.
-         * Use: bool wpan_mlme_set_req(uint8_t PIBAttribute,
-         *                             void *PIBAttributeValue);
-         *
-         * This request leads to a set confirm message -> usr_mlme_set_conf
-         */
-        uint8_t short_addr[2];
 
-        short_addr[0] = (uint8_t)COORD_SHORT_ADDR;          // low byte
-        short_addr[1] = (uint8_t)(COORD_SHORT_ADDR >> 8);   // high byte
-        wpan_mlme_set_req(macShortAddress, short_addr);
+		/*
+		 * Set the short address of this node.
+		 * Use: bool wpan_mlme_set_req(uint8_t PIBAttribute,
+		 *                             void *PIBAttributeValue);
+		 *
+		 * This request leads to a set confirm message ->
+		 *usr_mlme_set_conf
+		 */
+		uint8_t short_addr[2];
+
+		short_addr[0] = (uint8_t)COORD_SHORT_ADDR;  /* low byte */
+		short_addr[1] = (uint8_t)(COORD_SHORT_ADDR >> 8); /* high byte */
+		wpan_mlme_set_req(macShortAddress, short_addr);
 	}
 }
-#endif  /* (MAC_GET_SUPPORT == 1) */
 
+#endif  /* (MAC_GET_SUPPORT == 1) */
 
 #if (MAC_ORPHAN_INDICATION_RESPONSE == 1)
 
@@ -632,15 +640,15 @@ void usr_mlme_get_conf(uint8_t status,
  */
 void usr_mlme_orphan_ind(uint64_t OrphanAddress)
 {
-	
 }
-#endif  /* (MAC_ORPHAN_INDICATION_RESPONSE == 1) */
 
+#endif  /* (MAC_ORPHAN_INDICATION_RESPONSE == 1) */
 
 #if (MAC_INDIRECT_DATA_BASIC == 1)
 
 /*
- * Callback function that must be implemented by application (NHLE) for MAC service
+ * Callback function that must be implemented by application (NHLE) for MAC
+ *service
  * MLME-POLL.confirm.
  *
  * @param status           Result of requested poll operation.
@@ -650,8 +658,8 @@ void usr_mlme_orphan_ind(uint64_t OrphanAddress)
  */
 void usr_mlme_poll_conf(uint8_t status)
 {
-	
 }
+
 #endif  /* (MAC_INDIRECT_DATA_BASIC == 1) */
 
 /*
@@ -661,17 +669,13 @@ void usr_mlme_poll_conf(uint8_t status)
  */
 void usr_mlme_reset_conf(uint8_t status)
 {
-    if (status == MAC_SUCCESS)
-    {
+	if (status == MAC_SUCCESS) {
 		wpan_mlme_get_req(phyCurrentPage);
-    }
-    else
-    {
-        /* Something went wrong; restart. */
-        wpan_mlme_reset_req(true);
-    }
+	} else {
+		/* Something went wrong; restart. */
+		wpan_mlme_reset_req(true);
+	}
 }
-
 
 #if (MAC_RX_ENABLE_SUPPORT == 1)
 
@@ -684,16 +688,15 @@ void usr_mlme_reset_conf(uint8_t status)
  */
 void usr_mlme_rx_enable_conf(uint8_t status)
 {
-	
 }
+
 #endif  /* (MAC_RX_ENABLE_SUPPORT == 1) */
 
+#if ((MAC_SCAN_ED_REQUEST_CONFIRM == 1)      ||	\
+	(MAC_SCAN_ACTIVE_REQUEST_CONFIRM == 1)  || \
+	(MAC_SCAN_PASSIVE_REQUEST_CONFIRM == 1) || \
+	(MAC_SCAN_ORPHAN_REQUEST_CONFIRM == 1))
 
-#if ((MAC_SCAN_ED_REQUEST_CONFIRM == 1)      || \
-     (MAC_SCAN_ACTIVE_REQUEST_CONFIRM == 1)  || \
-     (MAC_SCAN_PASSIVE_REQUEST_CONFIRM == 1) || \
-     (MAC_SCAN_ORPHAN_REQUEST_CONFIRM == 1))
-	 
 /*
  * @brief Callback function usr_mlme_scan_conf
  *
@@ -705,42 +708,43 @@ void usr_mlme_rx_enable_conf(uint8_t status)
  * @param ResultList        Pointer to array of scan results
  */
 void usr_mlme_scan_conf(uint8_t status,
-                        uint8_t ScanType,
-                        uint8_t ChannelPage,
-                        uint32_t UnscannedChannels,
-                        uint8_t ResultListSize,
-                        void *ResultList)
+		uint8_t ScanType,
+		uint8_t ChannelPage,
+		uint32_t UnscannedChannels,
+		uint8_t ResultListSize,
+		void *ResultList)
 {
-    /*
-     * We are not interested in the actual scan result,
-     * because we start our network on the pre-defined channel anyway.
-     * Start a nonbeacon-enabled network
-     * Use: bool wpan_mlme_start_req(uint16_t PANId,
-     *                               uint8_t LogicalChannel,
-     *                               uint8_t ChannelPage,
-     *                               uint8_t BeaconOrder,
-     *                               uint8_t SuperframeOrder,
-     *                               bool PANCoordinator,
-     *                               bool BatteryLifeExtension,
-     *                               bool CoordRealignment)
-     *
-     * This request leads to a start confirm message -> usr_mlme_start_conf
-     */
-    wpan_mlme_start_req(DEFAULT_PAN_ID,
-                        current_channel,
-                        current_channel_page,
-                        NOBEACON_BO,
-                        NOBEACON_SO,
-                        true, false, false);
+	/*
+	 * We are not interested in the actual scan result,
+	 * because we start our network on the pre-defined channel anyway.
+	 * Start a nonbeacon-enabled network
+	 * Use: bool wpan_mlme_start_req(uint16_t PANId,
+	 *                               uint8_t LogicalChannel,
+	 *                               uint8_t ChannelPage,
+	 *                               uint8_t BeaconOrder,
+	 *                               uint8_t SuperframeOrder,
+	 *                               bool PANCoordinator,
+	 *                               bool BatteryLifeExtension,
+	 *                               bool CoordRealignment)
+	 *
+	 * This request leads to a start confirm message -> usr_mlme_start_conf
+	 */
+	wpan_mlme_start_req(DEFAULT_PAN_ID,
+			current_channel,
+			current_channel_page,
+			NOBEACON_BO,
+			NOBEACON_SO,
+			true, false, false);
 
-    /* Keep compiler happy. */
-    status = status;
-    ScanType = ScanType;
-    ChannelPage = ChannelPage;
-    UnscannedChannels = UnscannedChannels;
-    ResultListSize = ResultListSize;
-    ResultList = ResultList;
+	/* Keep compiler happy. */
+	status = status;
+	ScanType = ScanType;
+	ChannelPage = ChannelPage;
+	UnscannedChannels = UnscannedChannels;
+	ResultListSize = ResultListSize;
+	ResultList = ResultList;
 }
+
 #endif
 
 /*
@@ -750,63 +754,61 @@ void usr_mlme_scan_conf(uint8_t status,
  * @param PIBAttribute  Updated PIB attribute
  */
 void usr_mlme_set_conf(uint8_t status,
-                       uint8_t PIBAttribute)
+		uint8_t PIBAttribute)
 {
-    if ((status == MAC_SUCCESS) && (PIBAttribute == macShortAddress))
-    {
-        /*
-         * Allow other devices to associate to this coordinator.
-         * Use: bool wpan_mlme_set_req(uint8_t PIBAttribute,
-         *                             void *PIBAttributeValue);
-         *
-         * This request leads to a set confirm message -> usr_mlme_set_conf
-         */
-        uint8_t association_permit = true;
+	if ((status == MAC_SUCCESS) && (PIBAttribute == macShortAddress)) {
+		/*
+		 * Allow other devices to associate to this coordinator.
+		 * Use: bool wpan_mlme_set_req(uint8_t PIBAttribute,
+		 *                             void *PIBAttributeValue);
+		 *
+		 * This request leads to a set confirm message ->
+		 *usr_mlme_set_conf
+		 */
+		uint8_t association_permit = true;
 
-        wpan_mlme_set_req(macAssociationPermit, &association_permit);
-    }
-    else if ((status == MAC_SUCCESS) && (PIBAttribute == macAssociationPermit))
-    {
-        /*
-         * Set RX on when idle to enable the receiver as default.
-         * Use: bool wpan_mlme_set_req(uint8_t PIBAttribute,
-         *                             void *PIBAttributeValue);
-         *
-         * This request leads to a set confirm message -> usr_mlme_set_conf
-         */
-        bool rx_on_when_idle = true;
+		wpan_mlme_set_req(macAssociationPermit, &association_permit);
+	} else if ((status == MAC_SUCCESS) &&
+			(PIBAttribute == macAssociationPermit)) {
+		/*
+		 * Set RX on when idle to enable the receiver as default.
+		 * Use: bool wpan_mlme_set_req(uint8_t PIBAttribute,
+		 *                             void *PIBAttributeValue);
+		 *
+		 * This request leads to a set confirm message ->
+		 *usr_mlme_set_conf
+		 */
+		bool rx_on_when_idle = true;
 
-        wpan_mlme_set_req(macRxOnWhenIdle, &rx_on_when_idle);
-    }
-    else if ((status == MAC_SUCCESS) && (PIBAttribute == macRxOnWhenIdle))
-    {
-        /*
-         * Initiate an active scan over all channels to determine
-         * which channel to use.
-         * Use: bool wpan_mlme_scan_req(uint8_t ScanType,
-         *                              uint32_t ScanChannels,
-         *                              uint8_t ScanDuration,
-         *                              uint8_t ChannelPage);
-         *
-         * This request leads to a scan confirm message -> usr_mlme_scan_conf
-         * Scan for about 50 ms on each channel -> ScanDuration = 1
-         * Scan for about 1/2 second on each channel -> ScanDuration = 5
-         * Scan for about 1 second on each channel -> ScanDuration = 6
-         */
-        wpan_mlme_scan_req(MLME_SCAN_TYPE_ACTIVE,
-                           current_channel,
-                           SCAN_DURATION_COORDINATOR,
-                           current_channel_page);
-    }
-    else
-    {
-        /* Something went wrong; restart. */
-        wpan_mlme_reset_req(true);
-    }
+		wpan_mlme_set_req(macRxOnWhenIdle, &rx_on_when_idle);
+	} else if ((status == MAC_SUCCESS) &&
+			(PIBAttribute == macRxOnWhenIdle)) {
+		/*
+		 * Initiate an active scan over all channels to determine
+		 * which channel to use.
+		 * Use: bool wpan_mlme_scan_req(uint8_t ScanType,
+		 *                              uint32_t ScanChannels,
+		 *                              uint8_t ScanDuration,
+		 *                              uint8_t ChannelPage);
+		 *
+		 * This request leads to a scan confirm message ->
+		 *usr_mlme_scan_conf
+		 * Scan for about 50 ms on each channel -> ScanDuration = 1
+		 * Scan for about 1/2 second on each channel -> ScanDuration = 5
+		 * Scan for about 1 second on each channel -> ScanDuration = 6
+		 */
+		wpan_mlme_scan_req(MLME_SCAN_TYPE_ACTIVE,
+				current_channel,
+				SCAN_DURATION_COORDINATOR,
+				current_channel_page);
+	} else {
+		/* Something went wrong; restart. */
+		wpan_mlme_reset_req(true);
+	}
 }
 
-
 #if (MAC_START_REQUEST_CONFIRM == 1)
+
 /*
  * @brief Callback function usr_mlme_start_conf
  *
@@ -814,25 +816,24 @@ void usr_mlme_set_conf(uint8_t status,
  */
 void usr_mlme_start_conf(uint8_t status)
 {
-    if (status == MAC_SUCCESS)
-    {
+	if (status == MAC_SUCCESS) {
 #ifdef SIO_HUB
-        printf("Started nonbeacon-enabled network in Channel - %d\r\n",
-			   current_channel);
+		printf("Started nonbeacon-enabled network in Channel - %d\r\n",
+				current_channel);
 #endif
-        /*
-         * Network is established.
-         * Waiting for association indication from a device.
-         * -> usr_mlme_associate_ind
-         */
-        LED_On(LED_NWK_SETUP);
-    }
-    else
-    {
-        /* Something went wrong; restart. */
-        wpan_mlme_reset_req(true);
-    }
+
+		/*
+		 * Network is established.
+		 * Waiting for association indication from a device.
+		 * -> usr_mlme_associate_ind
+		 */
+		LED_On(LED_NWK_SETUP);
+	} else {
+		/* Something went wrong; restart. */
+		wpan_mlme_reset_req(true);
+	}
 }
+
 #endif  /* (MAC_START_REQUEST_CONFIRM == 1) */
 
 /*
@@ -850,13 +851,11 @@ void usr_mlme_start_conf(uint8_t status)
  *
  */
 void usr_mlme_sync_loss_ind(uint8_t LossReason,
-                            uint16_t PANId,
-                            uint8_t LogicalChannel,
-                            uint8_t ChannelPage)
+		uint16_t PANId,
+		uint8_t LogicalChannel,
+		uint8_t ChannelPage)
 {
-	
 }
-
 
 /*
  * @brief Application specific function to assign a short address
@@ -864,50 +863,55 @@ void usr_mlme_sync_loss_ind(uint8_t LossReason,
  */
 static bool assign_new_short_addr(uint64_t addr64, uint16_t *addr16)
 {
-    uint8_t i;
+	uint8_t i;
 #ifdef SIO_HUB
-    char sio_array[255];
+	char sio_array[255];
 #endif
-    /* Check if device has been associated before. */
-    for (i = 0; i < MAX_NUMBER_OF_DEVICES; i++)
-    {
-        if (device_list[i].short_addr == 0x0000)
-        {
-            /* If the short address is 0x0000, it has not been used before. */
-            continue;
-        }
-        if (device_list[i].ieee_addr == addr64)
-        {
-            /* Assign the previously assigned short address again. */
-            *addr16 = device_list[i].short_addr;
-            return true;
-        }
-    }
+	/* Check if device has been associated before. */
+	for (i = 0; i < MAX_NUMBER_OF_DEVICES; i++) {
+		if (device_list[i].short_addr == 0x0000) {
+			/* If the short address is 0x0000, it has not been used
+			 *before. */
+			continue;
+		}
 
-    for (i = 0; i < MAX_NUMBER_OF_DEVICES; i++)
-    {
-        if (device_list[i].short_addr == 0x0000)
-        {
-            *addr16 = CPU_ENDIAN_TO_LE16(i + 0x0001);
-            device_list[i].short_addr = CPU_ENDIAN_TO_LE16(i + 0x0001); /* Get next short address. */
-            device_list[i].ieee_addr = addr64;      /* Store extended address. */
-            no_of_assoc_devices++;
+		if (device_list[i].ieee_addr == addr64) {
+			/* Assign the previously assigned short address again.
+			 **/
+			*addr16 = device_list[i].short_addr;
+			return true;
+		}
+	}
+
+	for (i = 0; i < MAX_NUMBER_OF_DEVICES; i++) {
+		if (device_list[i].short_addr == 0x0000) {
+			*addr16 = CPU_ENDIAN_TO_LE16(i + 0x0001);
+			device_list[i].short_addr = CPU_ENDIAN_TO_LE16(
+					i + 0x0001);                    /* Get
+			                                                 *next
+			                                                 *short
+			                                                 *address.
+			                                                 **/
+			device_list[i].ieee_addr = addr64; /* Store extended
+			                                    *address. */
+			no_of_assoc_devices++;
 #ifdef SIO_HUB
-            sprintf(sio_array, "Device %" PRIu8 " associated\r\n", i + 1);
-            printf(sio_array);
+			sprintf(sio_array, "Device %" PRIu8 " associated\r\n",
+					i + 1);
+			printf(sio_array);
 #endif
-            return true;
-        }
-    }
+			return true;
+		}
+	}
 
-    /* If we are here, no short address could be assigned. */
-    return false;
+	/* If we are here, no short address could be assigned. */
+	return false;
 }
+
 /* Alert to indicate something has gone wrong in the application */
 static void app_alert(void)
 {
-    while (1)
-    {
+	while (1) {
 		#if LED_COUNT > 0
 		LED_Toggle(LED0);
 		#endif
@@ -952,64 +956,66 @@ static void app_alert(void)
  */
 static void indirect_data_cb(void *parameter)
 {
-    uint8_t cur_device;
-    uint8_t src_addr_mode;
-    wpan_addr_spec_t dst_addr;
-    uint8_t payload;
+	uint8_t cur_device;
+	uint8_t src_addr_mode;
+	wpan_addr_spec_t dst_addr;
+	uint8_t payload;
 #ifdef SIO_HUB
-    char sio_array[255];
+	char sio_array[255];
 #endif
 
-    /* Loop over all associated devices. */
-    for (cur_device = 0; cur_device < no_of_assoc_devices; cur_device++)
-    {
+	/* Loop over all associated devices. */
+	for (cur_device = 0; cur_device < no_of_assoc_devices; cur_device++) {
 #ifdef SIO_HUB
-        sprintf(sio_array, "Queue data for device %" PRIu8 " ", cur_device + 1);
-        printf(sio_array);
+		sprintf(sio_array, "Queue data for device %" PRIu8 " ",
+				cur_device + 1);
+		printf(sio_array);
 #endif
 
-        /*
-         * Request transmission of indirect data to device.
-         * This will just queue this frame into the indirect data queue.
-         * Once this particular device polls for pending data,
-         * the frame will be delivered to the device.
-         */
-        src_addr_mode = WPAN_ADDRMODE_SHORT;
-        dst_addr.AddrMode = WPAN_ADDRMODE_SHORT;
-        dst_addr.PANId = DEFAULT_PAN_ID;
-        dst_addr.Addr.short_address = device_list[cur_device].short_addr;
+		/*
+		 * Request transmission of indirect data to device.
+		 * This will just queue this frame into the indirect data queue.
+		 * Once this particular device polls for pending data,
+		 * the frame will be delivered to the device.
+		 */
+		src_addr_mode = WPAN_ADDRMODE_SHORT;
+		dst_addr.AddrMode = WPAN_ADDRMODE_SHORT;
+		dst_addr.PANId = DEFAULT_PAN_ID;
+		dst_addr.Addr.short_address
+			= device_list[cur_device].short_addr;
 
-        payload = (uint8_t)rand();  // Any dummy data
-        curr_msdu_handle++;         // Increment handle
+		payload = (uint8_t)rand(); /* Any dummy data */
+		curr_msdu_handle++; /* Increment handle */
 #ifdef SIO_HUB
-        sprintf(sio_array, "(MSDU handle: %" PRIu8 ") data: %" PRIu8 "\r\n",
-                curr_msdu_handle, payload);
-        printf(sio_array);
+		sprintf(sio_array,
+				"(MSDU handle: %" PRIu8 ") data: %" PRIu8 "\r\n",
+				curr_msdu_handle, payload);
+		printf(sio_array);
 #endif
-        if (!wpan_mcps_data_req(src_addr_mode,
-                                &dst_addr,
-                                1,  // One octet
-                                &payload,
-                                curr_msdu_handle,
-                                WPAN_TXOPT_INDIRECT_ACK)
-           )
-        {
-            /*
-             * Data could not be queued into the indirect queue.
-             * Add error handling if required.
-             */
-        }
-    }
+		if (!wpan_mcps_data_req(src_addr_mode,
+				&dst_addr,
+				1,  /* One octet */
+				&payload,
+				curr_msdu_handle,
+				WPAN_TXOPT_INDIRECT_ACK)
+				) {
+			/*
+			 * Data could not be queued into the indirect queue.
+			 * Add error handling if required.
+			 */
+		}
+	}
 
-    /* Start timer to initiate indirect data transmission. */
-    sw_timer_start(APP_TIMER_INDIRECT_DATA,
-                    ((uint32_t)APP_INDIRECT_DATA_DURATION_MS * 1000),
-                    SW_TIMEOUT_RELATIVE,
-                    (FUNC_PTR)indirect_data_cb,
-                    NULL);
+	/* Start timer to initiate indirect data transmission. */
+	sw_timer_start(APP_TIMER_INDIRECT_DATA,
+			((uint32_t)APP_INDIRECT_DATA_DURATION_MS * 1000),
+			SW_TIMEOUT_RELATIVE,
+			(FUNC_PTR)indirect_data_cb,
+			NULL);
 
-    parameter = parameter;  /* Keep compiler happy. */
+	parameter = parameter; /* Keep compiler happy. */
 }
+
 /*
  * @brief Callback function switching off the LED
  *
@@ -1019,7 +1025,7 @@ static void indirect_data_cb(void *parameter)
  */
 static void led_off_cb(void *parameter)
 {
-    LED_Off(LED_DATA);
+	LED_Off(LED_DATA);
 
-    parameter = parameter;  /* Keep compiler happy. */
+	parameter = parameter; /* Keep compiler happy. */
 }

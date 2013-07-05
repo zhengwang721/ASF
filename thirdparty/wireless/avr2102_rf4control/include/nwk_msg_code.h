@@ -40,6 +40,7 @@
  * \asf_license_stop
  *
  */
+
 /*
  * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
@@ -56,101 +57,97 @@
 
 /* === Types ================================================================ */
 
-
 /**
  * This type contains the service primitives of the Network-layer
  * as well the command-interface primitives
  *
  * DO NOT CHANGE ORDER OF ENUM!
  */
-typedef enum nwk_msg_code_tag
-{
-    NLDE_DATA_REQUEST                   = 0x24, /**< */
-    NLME_AUTO_DISCOVERY_REQUEST         = 0x25, /**< */
-    NLME_DISCOVERY_REQUEST              = 0x26, /**< */
-    NLME_DISCOVERY_RESPONSE             = 0x27, /**< */
-    NLME_PAIR_REQUEST                   = 0x28, /**< */
-    NLME_PAIR_RESPONSE                  = 0x29, /**< */
-    NLME_RESET_REQUEST                  = 0x2A, /**< */
-    NLME_GET_REQUEST                    = 0x2B, /**< */
-    NLME_RX_ENABLE_REQUEST              = 0x2C, /**< */
-    NLME_SET_REQUEST                    = 0x2D, /**< */
-    NLME_START_REQUEST                  = 0x2E, /**< */
-    NLME_UNPAIR_REQUEST                 = 0x2F, /**< */
-    NLME_UNPAIR_RESPONSE                = 0x30, /**< */
-    NLME_UPDATE_KEY_REQUEST             = 0x31, /**< */
-    NWK_CH_AGILITY_REQUEST              = 0x32, /**< */
+typedef enum nwk_msg_code_tag {
+	NLDE_DATA_REQUEST                   = 0x24, /**< */
+	NLME_AUTO_DISCOVERY_REQUEST         = 0x25, /**< */
+	NLME_DISCOVERY_REQUEST              = 0x26, /**< */
+	NLME_DISCOVERY_RESPONSE             = 0x27, /**< */
+	NLME_PAIR_REQUEST                   = 0x28, /**< */
+	NLME_PAIR_RESPONSE                  = 0x29, /**< */
+	NLME_RESET_REQUEST                  = 0x2A, /**< */
+	NLME_GET_REQUEST                    = 0x2B, /**< */
+	NLME_RX_ENABLE_REQUEST              = 0x2C, /**< */
+	NLME_SET_REQUEST                    = 0x2D, /**< */
+	NLME_START_REQUEST                  = 0x2E, /**< */
+	NLME_UNPAIR_REQUEST                 = 0x2F, /**< */
+	NLME_UNPAIR_RESPONSE                = 0x30, /**< */
+	NLME_UPDATE_KEY_REQUEST             = 0x31, /**< */
+	NWK_CH_AGILITY_REQUEST              = 0x32, /**< */
 
-    MAC_DATA_INDICATION                 = 0x33, /**< */
+	MAC_DATA_INDICATION                 = 0x33, /**< */
 
-    NLDE_DATA_INDICATION                = 0x34, /**< */
-    NLDE_DATA_CONFIRM                   = 0x35, /**< */
-    NLME_AUTO_DISCOVERY_CONFIRM         = 0x36, /**< */
-    NLME_COMM_STATUS_INDICATION         = 0x37, /**< */
-    NLME_DISCOVERY_INDICATION           = 0x38, /**< */
-    NLME_DISCOVERY_CONFIRM              = 0x39, /**< */
-    NLME_GET_CONFIRM                    = 0x3A, /**< */
-    NLME_PAIR_INDICATION                = 0x3B, /**< */
-    NLME_PAIR_CONFIRM                   = 0x3C, /**< */
-    NLME_RESET_CONFIRM                  = 0x3D, /**< */
-    NLME_RX_ENABLE_CONFIRM              = 0x3E, /**< */
-    NLME_SET_CONFIRM                    = 0x3F, /**< */
-    NLME_START_CONFIRM                  = 0x40, /**< */
-    NLME_UNPAIR_INDICATION              = 0x41, /**< */
-    NLME_UNPAIR_CONFIRM                 = 0x42, /**< */
-    NLME_UPDATE_KEY_CONFIRM             = 0x43, /**< */
-    NWK_CH_AGILITY_INDICATION           = 0x44, /**< */
-    NWK_CH_AGILITY_CONFIRM              = 0x45 /**< */
+	NLDE_DATA_INDICATION                = 0x34, /**< */
+	NLDE_DATA_CONFIRM                   = 0x35, /**< */
+	NLME_AUTO_DISCOVERY_CONFIRM         = 0x36, /**< */
+	NLME_COMM_STATUS_INDICATION         = 0x37, /**< */
+	NLME_DISCOVERY_INDICATION           = 0x38, /**< */
+	NLME_DISCOVERY_CONFIRM              = 0x39, /**< */
+	NLME_GET_CONFIRM                    = 0x3A, /**< */
+	NLME_PAIR_INDICATION                = 0x3B, /**< */
+	NLME_PAIR_CONFIRM                   = 0x3C, /**< */
+	NLME_RESET_CONFIRM                  = 0x3D, /**< */
+	NLME_RX_ENABLE_CONFIRM              = 0x3E, /**< */
+	NLME_SET_CONFIRM                    = 0x3F, /**< */
+	NLME_START_CONFIRM                  = 0x40, /**< */
+	NLME_UNPAIR_INDICATION              = 0x41, /**< */
+	NLME_UNPAIR_CONFIRM                 = 0x42, /**< */
+	NLME_UPDATE_KEY_CONFIRM             = 0x43, /**< */
+	NWK_CH_AGILITY_INDICATION           = 0x44, /**< */
+	NWK_CH_AGILITY_CONFIRM              = 0x45 /**< */
 #ifdef PBP_ORG
-                                          ,
-    PBP_ORG_PAIR_REQUEST                = 0x46, /**< */
-    PBP_ORG_PAIR_CONFIRM                = 0x47 /**< */
+	,
+	PBP_ORG_PAIR_REQUEST                = 0x46, /**< */
+	PBP_ORG_PAIR_CONFIRM                = 0x47 /**< */
 #endif
 #ifdef PBP_REC
-                                          ,
-    PBP_REC_PAIR_REQUEST                = 0x48, /**< */
-    PBP_REC_PAIR_CONFIRM                = 0x49 /**< */
+	,
+	PBP_REC_PAIR_REQUEST                = 0x48, /**< */
+	PBP_REC_PAIR_CONFIRM                = 0x49 /**< */
 #endif
 #ifdef ZRC_PROFILE
-                                          ,
-    ZRC_CMD_REQUEST                     = 0x4A, /**< */
-    ZRC_CMD_INDICATION                  = 0x4B, /**< */
-    ZRC_CMD_CONFIRM                     = 0x4C /**< */
+	,
+	ZRC_CMD_REQUEST                     = 0x4A, /**< */
+	ZRC_CMD_INDICATION                  = 0x4B, /**< */
+	ZRC_CMD_CONFIRM                     = 0x4C /**< */
 #endif
 #ifdef ZRC_CMD_DISCOVERY
-                                          ,
-    ZRC_CMD_DISCOVERY_REQUEST           = 0x4D, /**< */
-    ZRC_CMD_DISCOVERY_INDICATION        = 0x4E, /**< */
-    ZRC_CMD_DISCOVERY_CONFIRM           = 0x4F, /**< */
-    ZRC_CMD_DISCOVERY_RESPONSE          = 0x50 /**< */
+	,
+	ZRC_CMD_DISCOVERY_REQUEST           = 0x4D, /**< */
+	ZRC_CMD_DISCOVERY_INDICATION        = 0x4E, /**< */
+	ZRC_CMD_DISCOVERY_CONFIRM           = 0x4F, /**< */
+	ZRC_CMD_DISCOVERY_RESPONSE          = 0x50 /**< */
 #endif
 #ifdef VENDOR_DATA
-                                          ,
-    VENDOR_DATA_REQUEST                 = 0x51, /**< */
-    VENDOR_DATA_INDICATION              = 0x52, /**< */
-    VENDOR_DATA_CONFIRM                 = 0x53, /**< */
-    VENDOR_DATA_RESPONSE                = 0x54 /**< */
+	,
+	VENDOR_DATA_REQUEST                 = 0x51, /**< */
+	VENDOR_DATA_INDICATION              = 0x52, /**< */
+	VENDOR_DATA_CONFIRM                 = 0x53, /**< */
+	VENDOR_DATA_RESPONSE                = 0x54 /**< */
 #endif
 } SHORTENUM nwk_msg_code_t;
 
-
-
 /** The following defines describe the minimum length of a primitive message. */
-#define NLDE_DATA_REQ_LEN             7/**< */
-#define NLME_AUTO_DISCOVERY_REQ_LEN   16/**< */
-#define NLME_DISCOVERY_REQ_LEN        29/**< */
-#define NLME_DISCOVERY_RESP_LEN       22/**< */
-#define NLME_PAIR_REQ_LEN             24/**< */
-#define NLME_PAIR_RESP_LEN            24/**< */
-#define NLME_RESET_REQ_LEN            2/**< */
-#define NLME_GET_REQ_LEN              3/**< */
-#define NLME_RX_ENABLE_REQ_LEN        5/**< */
-#define NLME_SET_REQ_LEN              4/**< */
-#define NLME_START_REQ_LEN            1/**< */
-#define NLME_UNPAIR_REQ_LEN           2/**< */
-#define NLME_UNPAIR_RESP_LEN          2/**< */
-#define NLME_UPDATE_KEY_REQ_LEN       18/**< */
-#define NWK_CH_AGILITY_REQ_LEN        2/**< */
+#define NLDE_DATA_REQ_LEN             7 /**< */
+#define NLME_AUTO_DISCOVERY_REQ_LEN   16 /**< */
+#define NLME_DISCOVERY_REQ_LEN        29 /**< */
+#define NLME_DISCOVERY_RESP_LEN       22 /**< */
+#define NLME_PAIR_REQ_LEN             24 /**< */
+#define NLME_PAIR_RESP_LEN            24 /**< */
+#define NLME_RESET_REQ_LEN            2 /**< */
+#define NLME_GET_REQ_LEN              3 /**< */
+#define NLME_RX_ENABLE_REQ_LEN        5 /**< */
+#define NLME_SET_REQ_LEN              4 /**< */
+#define NLME_START_REQ_LEN            1 /**< */
+#define NLME_UNPAIR_REQ_LEN           2 /**< */
+#define NLME_UNPAIR_RESP_LEN          2 /**< */
+#define NLME_UPDATE_KEY_REQ_LEN       18 /**< */
+#define NWK_CH_AGILITY_REQ_LEN        2 /**< */
 
 #define MAC_DATA_IND_LEN             /**< */
 
@@ -180,8 +177,8 @@ typedef enum nwk_msg_code_tag
 #define ZRC_CMD_DISCOVERY_REQ_LEN       2
 #define ZRC_CMD_DISCOVERY_RESP_LEN      35
 #define VENDOR_DATA_REQ_LEN             7
-   
-#define PBP_ORG_PAIR_CON_LEN            3 
+
+#define PBP_ORG_PAIR_CON_LEN            3
 #define PBP_REC_PAIR_CONF_LEN           3
 #define ZRC_CMD_IND_LEN                 5
 #define ZRC_CMD_CONF_LEN                4
@@ -190,7 +187,6 @@ typedef enum nwk_msg_code_tag
 #define VENDOR_DATA_IND_LEN             8
 #define VENDOR_DATA_CONF_LEN            3
 /* === Externals ============================================================ */
-
 
 /* === Prototypes =========================================================== */
 

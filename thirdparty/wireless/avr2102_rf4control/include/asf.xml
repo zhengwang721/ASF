@@ -14,6 +14,5 @@
 		<build type="header-file" value="mac_user_build_config.h"/>
 		<build type="doxygen-entry-point" value="group_rf4control"/>
 		<require idref="thirdparty.wireless.avr2025_mac.includes"/>
-		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

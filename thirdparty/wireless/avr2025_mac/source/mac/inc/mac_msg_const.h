@@ -53,61 +53,62 @@
 
 /* === Includes ============================================================= */
 
-
 /* === Macros =============================================================== */
-    /**
-     * \addtogroup group_mac_def
-     * @{
-     */
+
+/**
+ * \addtogroup group_mac_def
+ * @{
+ */
+
 /**
  * This type contains the service primitives of the PHY-, MAC- and Network-layer
  * as well the command-interface primitives
  */
-enum msg_code
-{
-    TAL_DATA_INDICATION                 = (0x00),
+enum msg_code {
+	TAL_DATA_INDICATION                 = (0x00),
 
-    MLME_ASSOCIATE_REQUEST              = (0x01),
-    MLME_ASSOCIATE_RESPONSE             = (0x02),
+	MLME_ASSOCIATE_REQUEST              = (0x01),
+	MLME_ASSOCIATE_RESPONSE             = (0x02),
 
-    MCPS_DATA_REQUEST                   = (0x03),
-    MCPS_PURGE_REQUEST                  = (0x04),
+	MCPS_DATA_REQUEST                   = (0x03),
+	MCPS_PURGE_REQUEST                  = (0x04),
 
-    MLME_DISASSOCIATE_REQUEST           = (0x05),
+	MLME_DISASSOCIATE_REQUEST           = (0x05),
 #if (HIGHEST_STACK_LAYER == MAC)
-    MLME_SET_REQUEST                    = (0x06),
+	MLME_SET_REQUEST                    = (0x06),
 #endif /* (HIGHEST_STACK_LAYER == MAC) */
-    MLME_ORPHAN_RESPONSE                = (0x07),
-    MLME_GET_REQUEST                    = (0x08),
-    MLME_RESET_REQUEST                  = (0x09),
-    MLME_RX_ENABLE_REQUEST              = (0x0A),
-    MLME_SCAN_REQUEST                   = (0x0B),
-    MLME_START_REQUEST                  = (0x0D),
-    MLME_POLL_REQUEST                   = (0x0E),
-    MLME_SYNC_REQUEST                   = (0x0F),
+	MLME_ORPHAN_RESPONSE                = (0x07),
+	MLME_GET_REQUEST                    = (0x08),
+	MLME_RESET_REQUEST                  = (0x09),
+	MLME_RX_ENABLE_REQUEST              = (0x0A),
+	MLME_SCAN_REQUEST                   = (0x0B),
+	MLME_START_REQUEST                  = (0x0D),
+	MLME_POLL_REQUEST                   = (0x0E),
+	MLME_SYNC_REQUEST                   = (0x0F),
 
-    MCPS_DATA_CONFIRM                   = (0x10),
-    MCPS_DATA_INDICATION                = (0x11),
-    MCPS_PURGE_CONFIRM                  = (0x12),
+	MCPS_DATA_CONFIRM                   = (0x10),
+	MCPS_DATA_INDICATION                = (0x11),
+	MCPS_PURGE_CONFIRM                  = (0x12),
 
-    MLME_ASSOCIATE_INDICATION           = (0x13),
-    MLME_ASSOCIATE_CONFIRM              = (0x14),
-    MLME_DISASSOCIATE_INDICATION        = (0x15),
-    MLME_DISASSOCIATE_CONFIRM           = (0x16),
-    MLME_BEACON_NOTIFY_INDICATION       = (0x17),
-    MLME_ORPHAN_INDICATION              = (0x1A),
-    MLME_SCAN_CONFIRM                   = (0x1B),
-    MLME_COMM_STATUS_INDICATION         = (0x1C),
-    MLME_SYNC_LOSS_INDICATION           = (0x1D),
-    MLME_GET_CONFIRM                    = (0x1E),
+	MLME_ASSOCIATE_INDICATION           = (0x13),
+	MLME_ASSOCIATE_CONFIRM              = (0x14),
+	MLME_DISASSOCIATE_INDICATION        = (0x15),
+	MLME_DISASSOCIATE_CONFIRM           = (0x16),
+	MLME_BEACON_NOTIFY_INDICATION       = (0x17),
+	MLME_ORPHAN_INDICATION              = (0x1A),
+	MLME_SCAN_CONFIRM                   = (0x1B),
+	MLME_COMM_STATUS_INDICATION         = (0x1C),
+	MLME_SYNC_LOSS_INDICATION           = (0x1D),
+	MLME_GET_CONFIRM                    = (0x1E),
 #if (HIGHEST_STACK_LAYER == MAC)
-    MLME_SET_CONFIRM                    = (0x1F),
+	MLME_SET_CONFIRM                    = (0x1F),
 #endif /* (HIGHEST_STACK_LAYER == MAC) */
-    MLME_RESET_CONFIRM                  = (0x20),
-    MLME_RX_ENABLE_CONFIRM              = (0x21),
-    MLME_START_CONFIRM                  = (0x22),
-    MLME_POLL_CONFIRM                   = (0x23)
-} SHORTENUM;
+	MLME_RESET_CONFIRM                  = (0x20),
+	MLME_RX_ENABLE_CONFIRM              = (0x21),
+	MLME_START_CONFIRM                  = (0x22),
+	MLME_POLL_CONFIRM                   = (0x23)
+}
+SHORTENUM;
 
 /**
  * Bump this when extending the list!
@@ -153,12 +154,10 @@ enum msg_code
 #else   /* ENABLE_TSTAMP not enabled */
 #define WPAN_DESCRIPTOR_LEN             (21 - 4)
 #endif  /* ENABLE_TSTAMP */
-//! @}
+/* ! @} */
 /* === Types ================================================================ */
 
-
 /* === Externals ============================================================ */
-
 
 /* === Prototypes =========================================================== */
 
