@@ -392,8 +392,48 @@ uint8_t mac_add_gts_info(uint8_t *frame_ptr)
 			{
 				direction_mask = direction_mask << 1;
 			}
-			mac_pan_gts_table[table_index].PersistenceCount--;
+			if(mac_pan_gts_table[table_index].PersistenceCount > 0
+			&& --mac_pan_gts_table[table_index].PersistenceCount == 0)
+			{
+				if (tal_pib.BeaconOrder >= 9)
+				{
+					mac_pan_gts_table[table_index].ExpiryCount = 2 + 1;
+				} 
+				else
+				{
+					mac_pan_gts_table[table_index].ExpiryCount = (1 << ((8 - tal_pib.BeaconOrder) + 1)) + 1;
+				}
+			}
 			mac_gts_spec.GtsDescCount++;
+		}
+		if(mac_pan_gts_table[table_index].ExpiryCount > 0
+		&& --mac_pan_gts_table[table_index].ExpiryCount == 0)
+		{
+			gts_char_t gts_char;
+			gts_char.GtsDirection = mac_pan_gts_table[table_index].GtsDesc.GtsDirection;
+			gts_char.GtsLength = mac_pan_gts_table[table_index].GtsDesc.GtsLength;
+			gts_char.GtsCharType = GTS_DEALLOCATE;
+			if(mac_gts_deallocate(gts_char, mac_pan_gts_table[table_index].DevShortAddr))
+			{
+				buffer_t *buffer_header;
+				mlme_gts_ind_t *mgi;
+					
+				buffer_header = bmm_buffer_alloc(LARGE_BUFFER_SIZE);
+
+				if (NULL == buffer_header) {
+					/* Buffer is not available */
+					return false;
+				}
+				mgi = (mlme_gts_ind_t *)BMM_BUFFER_POINTER(buffer_header);
+
+				mgi->DeviceAddr = mac_pan_gts_table[table_index].DevShortAddr;
+					
+				mgi->GtsChar = gts_char;
+				mgi->cmdcode = MLME_GTS_INDICATION;
+
+				/* Append the MLME GTS indication to the MAC-NHLE queue. */
+				qmm_queue_append(&mac_nhle_q, buffer_header);
+			}
 		}
 	}
 	if(mac_gts_spec.GtsDescCount > 0)
