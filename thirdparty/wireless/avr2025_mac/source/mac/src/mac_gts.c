@@ -78,7 +78,7 @@
 #ifdef FFD
 static bool mac_gts_allocate(gts_char_t GtsCharacteristics, uint16_t DevAddress);
 static bool mac_gts_deallocate(gts_char_t GtsCharacteristics, uint16_t DevAddress, bool persist);
-static void mac_update_dev_gts_table(bool gts_dir, uint8_t slot_len, uint8_t start_slot, bool panc_slot);
+static void mac_update_dev_gts_table(bool gts_dir, uint8_t slot_len, uint8_t start_slot, bool panc_slot, bool send_ind);
 
 #define GTS_REQ_PAYLOAD_LEN  (2)
 #define MAX_GTS_ON_PANC      (7)
@@ -413,9 +413,11 @@ uint8_t mac_add_gts_info(uint8_t *frame_ptr)
 		&& --mac_pan_gts_table[table_index].ExpiryCount == 0)
 		{
 			gts_char_t gts_char;
+			uint16_t dev_addr = mac_pan_gts_table[table_index].DevShortAddr;
 			gts_char.GtsDirection = mac_pan_gts_table[table_index].GtsDesc.GtsDirection;
 			gts_char.GtsLength = mac_pan_gts_table[table_index].GtsDesc.GtsLength;
 			gts_char.GtsCharType = GTS_DEALLOCATE;
+			gts_char.Reserved = 0;
 			if(mac_gts_deallocate(gts_char, mac_pan_gts_table[table_index].DevShortAddr, true))
 			{
 				buffer_t *buffer_header;
@@ -429,7 +431,7 @@ uint8_t mac_add_gts_info(uint8_t *frame_ptr)
 				}
 				mgi = (mlme_gts_ind_t *)BMM_BUFFER_POINTER(buffer_header);
 
-				mgi->DeviceAddr = mac_pan_gts_table[table_index].DevShortAddr;
+				mgi->DeviceAddr = dev_addr;
 					
 				mgi->GtsChar = gts_char;
 				mgi->cmdcode = MLME_GTS_INDICATION;
@@ -583,7 +585,7 @@ void mac_parse_bcn_gts_info(uint8_t gts_count, uint8_t gts_dir, uint8_t *gts_lis
 			}
 			else if(gts_list->length == requested_gts_char.GtsLength)
 			{
-				mac_update_dev_gts_table(curr_gts_dir,gts_list->length, gts_list->starting_slot, false);
+				mac_update_dev_gts_table(curr_gts_dir,gts_list->length, gts_list->starting_slot, false, false);
 
 				mac_gen_mlme_gts_conf((buffer_t *)mac_gts_buf_ptr, MAC_SUCCESS,
 				requested_gts_char);
@@ -592,45 +594,62 @@ void mac_parse_bcn_gts_info(uint8_t gts_count, uint8_t gts_dir, uint8_t *gts_lis
 		}
 		else if(gts_list->dev_addr == mac_pib.mac_CoordShortAddress)
 		{
-			mac_update_dev_gts_table(curr_gts_dir,gts_list->length, gts_list->starting_slot, true);
+			mac_update_dev_gts_table(curr_gts_dir,gts_list->length, gts_list->starting_slot, true, true);
 		}
 		if (0 == gts_list->starting_slot
 		&& tal_pib.ShortAddress == gts_list->dev_addr)
 		{
-			gts_char_t gts_char;
-			buffer_t *buffer_header;
-			mlme_gts_ind_t *mgi;
-
-			mac_update_dev_gts_table(curr_gts_dir, gts_list->length, gts_list->starting_slot, false);
-
-			buffer_header = bmm_buffer_alloc(LARGE_BUFFER_SIZE);
-
-			if (NULL == buffer_header) {
-				/* Buffer is not available */
-				Assert("Buffer not allocated..." == 0);
-			}
-
-			mgi = (mlme_gts_ind_t *)BMM_BUFFER_POINTER(buffer_header);
-
-			gts_char.GtsCharType = GTS_DEALLOCATE;
-			gts_char.GtsDirection = curr_gts_dir;
-			gts_char.GtsLength = gts_list->length;
-
-			mgi->DeviceAddr = gts_list->dev_addr;
-			mgi->GtsChar = gts_char;
-			mgi->cmdcode = MLME_GTS_INDICATION;
-
-			/* Append the MLME GTS indication to the MAC-NHLE queue. */
-			qmm_queue_append(&mac_nhle_q, buffer_header);
+			mac_update_dev_gts_table(curr_gts_dir, gts_list->length, gts_list->starting_slot, false, true);
 		}
 		gts_list++;
 	}
 }
 
-void mac_update_dev_gts_table(bool gts_dir, uint8_t slot_len, uint8_t start_slot, bool panc_slot)
+void mac_update_dev_gts_table(bool gts_dir, uint8_t slot_len, uint8_t start_slot, bool panc_slot, bool send_ind)
 {
 	uint8_t updating_index = (panc_slot << 1) | gts_dir;
+	if((mac_dev_gts_table[updating_index].GtsLength != slot_len
+			|| mac_dev_gts_table[updating_index].GtsStartingSlot != start_slot)
+		&& true == send_ind)
+	{
+		gts_char_t gts_char;
+		buffer_t *buffer_header;
+		mlme_gts_ind_t *mgi;
 
+		buffer_header = bmm_buffer_alloc(LARGE_BUFFER_SIZE);
+
+		if (NULL == buffer_header) {
+			/* Buffer is not available */
+			Assert("Buffer not allocated..." == 0);
+		}
+
+		mgi = (mlme_gts_ind_t *)BMM_BUFFER_POINTER(buffer_header);
+
+		if(0 == start_slot)
+		{
+			gts_char.GtsCharType = GTS_DEALLOCATE;
+		}
+		else
+		{
+			gts_char.GtsCharType = GTS_ALLOCATE;
+		}
+		gts_char.GtsDirection = gts_dir;
+		gts_char.GtsLength = slot_len;
+		gts_char.Reserved = 0;
+		if(panc_slot)
+		{
+			mgi->DeviceAddr = mac_pib.mac_CoordShortAddress;
+		}
+		else
+		{
+			mgi->DeviceAddr = tal_pib.ShortAddress;
+		}
+		mgi->GtsChar = gts_char;
+		mgi->cmdcode = MLME_GTS_INDICATION;
+
+		/* Append the MLME GTS indication to the MAC-NHLE queue. */
+		qmm_queue_append(&mac_nhle_q, buffer_header);
+	}
 	mac_dev_gts_table[updating_index].GtsLength
 	= slot_len;
 	mac_dev_gts_table[updating_index].GtsStartingSlot
