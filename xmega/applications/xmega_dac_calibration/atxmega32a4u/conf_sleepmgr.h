@@ -1,11 +1,13 @@
 /**
  * \file
  *
- * \brief Chip-specific sleep manager configuration
+ * \brief Sleep manager configuration
  *
- * Copyright (c) 2010 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:

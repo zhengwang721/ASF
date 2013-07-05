@@ -3,9 +3,11 @@
  *
  * \brief Chip-specific system clock manager configuration
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -60,33 +62,37 @@
 //#define CONFIG_PLL0_DIV             1
 
 /* External oscillator frequency range */
-//! 0.4 to 2 MHz frequency range
-//define CONFIG_XOSC_RANGE XOSC_RANGE_04TO2
-//! 2 to 9 MHz frequency range
-//define CONFIG_XOSC_RANGE XOSC_RANGE_2TO9
-//! 9 to 12 MHz frequency range
-//define CONFIG_XOSC_RANGE XOSC_RANGE_9TO12
-//! 12 to 16 MHz frequency range
-//define CONFIG_XOSC_RANGE XOSC_RANGE_12TO16
+/** 0.4 to 2 MHz frequency range */
+//#define CONFIG_XOSC_RANGE XOSC_RANGE_04TO2
+/** 2 to 9 MHz frequency range */
+//#define CONFIG_XOSC_RANGE XOSC_RANGE_2TO9
+/** 9 to 12 MHz frequency range */
+//#define CONFIG_XOSC_RANGE XOSC_RANGE_9TO12
+/** 12 to 16 MHz frequency range */
+//#define CONFIG_XOSC_RANGE XOSC_RANGE_12TO16
 
-// ***************************************************************
-// **                  CONFIGURATION WITH USB                   **
-// ***************************************************************
-//! The following clock configuraiton can be used for USB operation
-//! It allows to operate USB using On-Chip RC oscillator at 48MHz
-//! The RC oscillator is calibrated via USB Start Of Frame
-//! Clk USB     = 48MHz (used by USB)
-//! Clk sys     = 48MHz
-//! Clk cpu/per = 24MHz
-#define CONFIG_USBCLK_SOURCE     USBCLK_SRC_RCOSC
-//#define CONFIG_OSC_RC32_CAL      48000000UL
-//#define CONFIG_OSC_AUTOCAL          OSC_ID_RC32MHZ
-//#define CONFIG_OSC_AUTOCAL_REF_OSC  OSC_ID_USBSOF
-//#define CONFIG_SYSCLK_SOURCE     SYSCLK_SRC_RC32MHZ
-//#define CONFIG_SYSCLK_PSADIV     SYSCLK_PSADIV_2
-//#define CONFIG_SYSCLK_PSBCDIV    SYSCLK_PSBCDIV_1_1
+/* DFLL autocalibration */
+//#define CONFIG_OSC_AUTOCAL_RC2MHZ_REF_OSC  OSC_ID_RC32KHZ
+//#define CONFIG_OSC_AUTOCAL_RC32MHZ_REF_OSC OSC_ID_XOSC
 
-// ********** END OF USB CLOCK CONFIGURATION **********************
+/* The following example clock configuration definitions can be used in XMEGA
+ * devices that contain a USB controller. It configures the USB controller clock
+ * source to use the internal (nominally) 32MHz RC oscillator, up-calibrated to
+ * run at 48MHz via the periodic 1ms USB Start Of Frame packets sent by the
+ * host. The USB controller requires 48MHz for Full Speed operation, or 6MHz
+ * for USB Low Speed operation.
+ *
+ * Note that when the 32MHz RC oscillator is tuned to 48MHz, it cannot be used
+ * directly as the system clock source; it must either be prescaled down to a
+ * speed below the maximum operating frequency given in the datasheet, or an
+ * alternative clock source (e.g. the internal 2MHz RC Oscillator, multiplied
+ * to a higher frequency via the internal PLL module) must be used instead.
+ */
+#define CONFIG_USBCLK_SOURCE                USBCLK_SRC_RCOSC
+//#define CONFIG_OSC_RC32_CAL                 48000000UL
+//#define CONFIG_OSC_AUTOCAL_RC32MHZ_REF_OSC  OSC_ID_USBSOF
 
+/* Use to enable and select RTC clock source */
+//#define CONFIG_RTC_SOURCE           SYSCLK_RTCSRC_ULP
 
 #endif /* CONF_CLOCK_H_INCLUDED */
