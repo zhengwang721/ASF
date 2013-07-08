@@ -65,6 +65,7 @@
 			</info>
 			<build type="c-source" value="sleepmgr_example_sam4l_ast.c"/>
 			<device-support value="sam4l"/>
+			<require idref="sam.drivers.ast"/>
 			<require idref="common.services.ioport"/>
 			<require idref="common.services.delay"/>
 			<require idref="common.services.basic.clock"/>

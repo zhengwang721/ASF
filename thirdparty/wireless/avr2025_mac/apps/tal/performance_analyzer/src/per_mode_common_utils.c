@@ -68,7 +68,7 @@
 void app_reset(void)
 {
 	/* app reset - this is to make the node to restart applicationa as
-	 *bootup */
+	 * bootup */
 	set_main_state(INIT, NULL);
 
 	/* INIT was a success - so change to WAIT_FOR_EVENT state */

@@ -114,7 +114,7 @@
  * in pure output mode to save power; reading the pin state of a pin configured
  * in output-only mode will read the logical output state that was last set.
  *
- * \section asfdoc_samd20_port_extra_info Extra Information for PORT
+ * \section asfdoc_samd20_port_extra_info Extra Information
  *
  * For extra information see \ref asfdoc_samd20_port_extra. This includes:
  *  - \ref asfdoc_samd20_port_extra_acronyms
@@ -262,7 +262,7 @@ static inline uint32_t port_group_get_input_level(
 /**
  *  \brief Retrieves the state of a group of port pins that are configured as outputs.
  *
- *  Reads the current logicical output level of a port module's pins and returns
+ *  Reads the current logical output level of a port module's pins and returns
  *  the current levels as a bitmask.
  *
  *  \param[in] port  Base of the PORT module to read from.
@@ -518,6 +518,11 @@ static inline void port_pin_toggle_output_level(
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>B</td>
+ *		<td>06/2013</td>
+ *		<td>Corrected documentation typos.</td>
  *	</tr>
  *	<tr>
  *		<td>A</td>

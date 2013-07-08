@@ -210,7 +210,7 @@ static void tc_waveform_initialize(void)
 			| TC_CMR_ACPA_SET /* RA Compare Effect: set */
 			| TC_CMR_ACPC_CLEAR /* RC Compare Effect: clear */
 			| TC_CMR_CPCTRG /* UP mode with automatic trigger on RC Compare */
-			);
+	);
 
 	/* Configure waveform frequency and duty cycle. */
 	rc = (sysclk_get_peripheral_bus_hz(TC) /
@@ -242,7 +242,7 @@ static void tc_capture_initialize(void)
 			| TC_CMR_LDRB_FALLING /* RB Loading: falling edge of TIOA */
 			| TC_CMR_ABETRG /* External Trigger: TIOA */
 			| TC_CMR_ETRGEDG_FALLING /* External Trigger Edge: Falling edge */
-			);
+	);
 }
 
 /**
@@ -301,9 +301,11 @@ int main(void)
 
 	/* Configure PIO Pins for TC */
 	ioport_set_pin_mode(PIN_TC_WAVEFORM, PIN_TC_WAVEFORM_MUX);
-	ioport_disable_pin(PIN_TC_WAVEFORM); // Disable IO (but enable peripheral mode)
+	/* Disable IO to enable peripheral mode) */
+	ioport_disable_pin(PIN_TC_WAVEFORM);
 	ioport_set_pin_mode(PIN_TC_CAPTURE, PIN_TC_CAPTURE_MUX);
-	ioport_disable_pin(PIN_TC_CAPTURE); // Disable IO (but enable peripheral mode)
+	/* Disable IO to enable peripheral mode) */
+	ioport_disable_pin(PIN_TC_CAPTURE);
 
 	/* Configure TC TC_CHANNEL_WAVEFORM as waveform operating mode */
 	printf("Configure TC%d channel %d as waveform operating mode \n\r",

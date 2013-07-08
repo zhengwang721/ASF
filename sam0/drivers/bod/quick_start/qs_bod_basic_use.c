@@ -71,7 +71,7 @@ int main(void)
 //! [main]
 //! [main_loop]
 	while (true) {
-
+		/* Infinite loop */
 	}
 //! [main_loop]
 //! [main]

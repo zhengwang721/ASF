@@ -47,7 +47,7 @@
 /**
  * \mainpage SAM D20 Tic-Tac-Toe Example
  * See \ref appdoc_samd20_tictactoe_main "here" for project documentation.
- * \copydetails preface
+ * \copydetails appdoc_preface
  *
  * \page appdoc_preface Overview
  * This application demonstrates the use of the OLED1 Xplained Pro extension
@@ -120,7 +120,7 @@
 /* X coordinate of strings */
 #define STRING_X (SQUARE2_X + SQUARE_SIZE*2)
 
-/* Lenght of strings */
+/* Length of strings */
 #define STRING_LENGTH 20
 
 /* X and Y coordinates for squares */
@@ -228,7 +228,7 @@ static enum button get_button(void)
 }
 
 /**
- * \brief Initalizes the display with explanatory text for the buttons
+ * \brief Initializes the display with explanatory text for the buttons
  */
 static void init_display(void)
 {

@@ -100,16 +100,16 @@
 #include "conf_dacc_sinewave_example.h"
 
 
-//! Analog control value
+/** Analog control value */
 #define DACC_ANALOG_CONTROL (DACC_ACR_IBCTLCH0(0x02) \
-						  | DACC_ACR_IBCTLCH1(0x02) \
-						  | DACC_ACR_IBCTLDACCORE(0x01))
+		| DACC_ACR_IBCTLCH1(0x02) \
+		| DACC_ACR_IBCTLDACCORE(0x01))
 
-//! The maximal sine wave sample data (no sign)
+/** The maximal sine wave sample data (no sign) */
 #define MAX_DIGITAL   (0x7ff)
-//! The maximal (peak-peak) amplitude value
+/** The maximal (peak-peak) amplitude value */
 #define MAX_AMPLITUDE (DACC_MAX_DATA)
-//! The minimal (peak-peak) amplitude value
+/** The minimal (peak-peak) amplitude value */
 #define MIN_AMPLITUDE (100)
 
 /** SAMPLES per cycle */
@@ -138,7 +138,7 @@
  *  \param max_amplitude Maximal amplitude value
  */
 #define wave_to_dacc(wave, amplitude, max_digital, max_amplitude) \
-	(((int)(wave)*(amplitude)/(max_digital)) + (max_amplitude/2))
+	(((int)(wave) * (amplitude) / (max_digital)) + (max_amplitude / 2))
 
 /** Current g_ul_index_sample */
 uint32_t g_ul_index_sample = 0;
@@ -378,9 +378,9 @@ int main(void)
 
 		switch (uc_key) {
 		case '0':
-			puts("Frequency:");
+			printf("Frequency:\t");
 			ul_freq = get_input_value(MIN_FREQUENCY, MAX_FREQUENCY);
-			puts("\r");
+			printf("\r\n");
 
 			if (ul_freq != VAL_INVALID) {
 				printf("Set frequency to : %luHz\n\r", (unsigned long)ul_freq);
@@ -390,9 +390,9 @@ int main(void)
 			break;
 
 		case '1':
-			puts("Amplitude:");
+			printf("Amplitude:\t");
 			ul_amp = get_input_value(MIN_AMPLITUDE, MAX_AMPLITUDE);
-			puts("\r");
+			printf("\r\n");
 			if (ul_amp != VAL_INVALID) {
 				printf("Set amplitude to : %lu\n\r", (unsigned long)ul_amp);
 				g_l_amplitude = ul_amp;
