@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="ACIFC unit Test for SAM4L" id="sam.drivers.acifc.unit_tests.sam4l_ek" type="unit-test">
+	<project caption="ACIFC unit Test for SAM4L-EK" id="sam.drivers.acifc.unit_tests.sam4l_ek" type="unit-test">
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clock.h"/>
