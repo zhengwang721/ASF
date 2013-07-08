@@ -104,7 +104,9 @@
 #elif SAM3N
 #define mma7341l_adc_configure_timing()       adc_configure_timing(ADC, TRACKING_TIME)
 #endif
+#if SAM3S8 || SAM4S || SAM3N || SAM3SD8
 #define mma7341l_adc_configure_power_save()   adc_configure_power_save(ADC, 0, 0)
+#endif
 #define mma7341l_adc_configure_trigger()      adc_configure_trigger(ADC, ADC_TRIG_SW, 0)
 #define mma7341l_adc_set_resolution()         adc_set_resolution(ADC, (enum adc_resolution_t)ADC_MR_LOWRES_BITS_10)
 #define mma7341l_adc_enable_channel();        adc_enable_channel(ADC,(enum adc_channel_num_t) uc_adc_channel_x);  \
@@ -310,7 +312,9 @@ void mma7341l_init(void)
 	mma7341l_adc_enable_clock();
 	mma7341l_adc_init();
 	mma7341l_adc_configure_timing();
+#if SAM3S8 || SAM4S || SAM3N || SAM3SD8 || SAM3U	
 	mma7341l_adc_configure_power_save();
+#endif
 	mma7341l_adc_configure_trigger();
 	mma7341l_adc_set_resolution();
 

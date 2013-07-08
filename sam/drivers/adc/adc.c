@@ -172,7 +172,7 @@ void adc_configure_trigger(Adc *p_adc, const enum adc_trigger_t trigger)
 }
 #endif
 
-#if SAM3S || SAM4S || SAM3N || SAM3XA
+#if SAM3S8 || SAM4S || SAM3N || SAM3SD8
 /**
  * \brief Configures ADC power saving mode.
  *

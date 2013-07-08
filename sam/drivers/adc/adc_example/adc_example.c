@@ -206,7 +206,9 @@ struct {
 	uint8_t uc_sequence_en;
 	uint8_t uc_gain_en;
 	uint8_t uc_offset_en;
+#if  SAM3S8 || SAM3SD8 || SAM4S || SAM3N || SAM3U	
 	uint8_t uc_power_save_en;
+#endif
 #if  SAM3S8 || SAM3SD8 || SAM4S
 	uint8_t uc_auto_calib_en;
 #endif
@@ -343,7 +345,7 @@ static void set_adc_test_mode(void)
 			}
 			break;
 #endif
-
+#if  SAM3S8 || SAM3SD8 || SAM4S || SAM3N || SAM3U
 		case 'p':
 		case 'P':
 			if (g_adc_test_mode.uc_power_save_en) {
@@ -352,7 +354,7 @@ static void set_adc_test_mode(void)
 				g_adc_test_mode.uc_power_save_en = 1;
 			}
 			break;
-
+#endif
 #if SAM3S || SAM3U || SAM3XA || SAM4S
 		case 'g':
 		case 'G':
@@ -746,14 +748,33 @@ static void start_adc(void)
 	}
 #endif
 
-#if SAM3S || SAM3N || SAM3XA || SAM4S
+#if SAM3S8 || SAM4S || SAM3N || SAM3SD8
 	/* Set power save. */
 	if (g_adc_test_mode.uc_power_save_en) {
 		adc_configure_power_save(ADC, 1, 0);
 	} else {
 		adc_configure_power_save(ADC, 0, 0);;
 	}
+#elif SAM3U
+#ifdef ADC_12B
+	/* Set power save. */
+	if (g_adc_test_mode.uc_power_save_en) {
+		adc12b_configure_power_save(ADC12B, 1, 0);
+	} else {
+		adc12b_configure_power_save(ADC12B, 0, 0);;
+	}
 
+#else
+	/* Set power save. */
+	if (g_adc_test_mode.uc_power_save_en) {
+		adc_configure_power_save(ADC, 1);
+	} else {
+		adc_configure_power_save(ADC, 0);;
+	}
+#endif
+#endif
+
+#if SAM3S || SAM3N || SAM3XA || SAM4S
 	/* Transfer with/without PDC. */
 	if (g_adc_test_mode.uc_pdc_en) {
 		adc_read_buffer(ADC, g_adc_sample_data.us_value, BUFFER_SIZE);
@@ -767,13 +788,6 @@ static void start_adc(void)
 	NVIC_EnableIRQ(ADC_IRQn);
 #elif SAM3U
 #ifdef ADC_12B
-	/* Set power save. */
-	if (g_adc_test_mode.uc_power_save_en) {
-		adc12b_configure_power_save(ADC12B, 1, 0);
-	} else {
-		adc12b_configure_power_save(ADC12B, 0, 0);;
-	}
-
 	/* Transfer with/without PDC. */
 	if (g_adc_test_mode.uc_pdc_en) {
 		adc12_read_buffer(ADC12B, g_adc_sample_data.us_value, BUFFER_SIZE);
@@ -787,13 +801,6 @@ static void start_adc(void)
 	/* Enable ADC interrupt. */
 	NVIC_EnableIRQ(ADC12B_IRQn);
 #else
-	/* Set power save. */
-	if (g_adc_test_mode.uc_power_save_en) {
-		adc_configure_power_save(ADC, 1);
-	} else {
-		adc_configure_power_save(ADC, 0);;
-	}
-
 	/* Transfer with/without PDC. */
 	if (g_adc_test_mode.uc_pdc_en) {
 		adc_read_buffer(ADC, g_adc_sample_data.us_value, BUFFER_SIZE);

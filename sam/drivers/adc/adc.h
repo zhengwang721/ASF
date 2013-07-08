@@ -199,8 +199,6 @@ uint32_t adc_init(Adc *p_adc, const uint32_t ul_mck,
 		const uint32_t ul_adc_clock, const enum adc_startup_time startup);
 void adc_configure_trigger(Adc *p_adc, const enum adc_trigger_t trigger,
 		const uint8_t uc_freerun);
-void adc_configure_power_save(Adc *p_adc, const uint8_t uc_sleep,
-		const uint8_t uc_fwup);
 void adc_configure_sequence(Adc *p_adc, const enum adc_channel_num_t ch_list[],
 		const uint8_t uc_num);
 void adc_enable_tag(Adc *p_adc);
@@ -224,6 +222,12 @@ void adc_configure_trigger(Adc *p_adc, const enum adc_trigger_t trigger);
 void adc_configure_power_save(Adc *p_adc, const uint8_t uc_sleep);
 #endif
 
+#if SAM3S8 || SAM4S || SAM3N || SAM3SD8
+void adc_configure_power_save(Adc *p_adc, const uint8_t uc_sleep,
+		const uint8_t uc_fwup);
+#elif SAM3U
+void adc_configure_power_save(Adc *p_adc, const uint8_t uc_sleep);
+#endif
 void adc_set_resolution(Adc *p_adc, const enum adc_resolution_t resolution);
 void adc_start(Adc *p_adc);
 void adc_stop(Adc *p_adc);
