@@ -169,11 +169,6 @@ void afec_ch_set_config(Afec *const afec, const enum afec_channel_num channel,
 	afec_ch_sanity_check(afec, channel);
 	uint32_t reg = 0;
 
-	reg = afec->AFEC_CDOR;
-	reg &= ~(0x1u << channel);
-	reg |= (config->offset) ? (0x1u << channel) : 0;
-	afec->AFEC_CDOR = reg;
-
 	reg = afec->AFEC_DIFFR;
 	reg &= ~(0x1u << channel);
 	reg |= (config->diff) ? (0x1u << channel) : 0;
@@ -251,7 +246,6 @@ void afec_get_config_defaults(struct afec_config *const cfg)
  * Use to initialize the configuration structure to known default values.
  *
  * The default configuration is as follows:
- * - No Offset
  * - Single Ended Mode
  * - Gain value is 1
  *
@@ -263,7 +257,6 @@ void afec_ch_get_config_defaults(struct afec_ch_config *const cfg)
 	Assert(cfg);
 
 	cfg->diff = false;
-	cfg->offset = false;
 	cfg->gain = AFEC_GAINVALUE_1;
 }
 

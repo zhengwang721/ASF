@@ -406,6 +406,9 @@ void ast_write_counter_value(Ast *ast,
 /**
  * \brief This function returns the AST current calendar value.
  *
+ * \note There maybe has a compiling warning about return a structure type
+ * value, however it is safe because ast_calendar is actually uint32_t type.
+ *
  * \param ast Base address of the AST.
  *
  * \return The AST current calendar value.
@@ -598,6 +601,11 @@ void ast_set_callback(Ast *ast, ast_interrupt_source_t source,
 	ast_enable_interrupt(ast, source);
 }
 
+#if (defined(AST_PER_ENABLE)      || \
+	defined(AST_ALARM_ENABLE)     || \
+	defined(AST_OVF_ENABLE)       || \
+	defined(AST_READY_ENABLE)     || \
+	defined(AST_CLKREADY_ENABLE))
 /**
  * \brief Interrupt handler for AST.
  */
@@ -628,6 +636,7 @@ static void ast_interrupt_handler(void)
 		ast_callback_pointer[AST_INTERRUPT_CLKREADY]();
 	}
 }
+#endif
 
 /**
  * \brief Interrupt handler for AST periodic.
@@ -637,7 +646,6 @@ void AST_PER_Handler(void)
 {
 	ast_interrupt_handler();
 }
-
 #endif
 
 /**
@@ -648,7 +656,6 @@ void AST_ALARM_Handler(void)
 {
 	ast_interrupt_handler();
 }
-
 #endif
 
 /**
@@ -659,7 +666,6 @@ void AST_OVF_Handler(void)
 {
 	ast_interrupt_handler();
 }
-
 #endif
 
 /**
@@ -670,7 +676,6 @@ void AST_READY_Handler(void)
 {
 	ast_interrupt_handler();
 }
-
 #endif
 
 /**
@@ -681,7 +686,6 @@ void AST_CLKREADY_Handler(void)
 {
 	ast_interrupt_handler();
 }
-
 #endif
 
 /**

@@ -89,8 +89,6 @@
 #include "avr2025_mac.h"
 #include "common_sw_timer.h"
 
-
-
 #if ((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B))
 #ifdef CHINESE_BAND
 #define DEFAULT_CHANNEL                 (0)
@@ -123,19 +121,24 @@ static uint8_t wpan_scan_conf_status = FAILURE;
 int main(void)
 {
 	irq_initialize_vectors();
-	board_init();
 	sysclk_init();
 
+	/* Initialize the board.
+	 * The board-specific conf_board.h file contains the configuration of
+	 * the board initialization.
+	 */
+	board_init();
+
 	sw_timer_init();
-    wpan_init();
-	// Enable interrupts
+	wpan_init();
+	/* Enable interrupts */
 	cpu_irq_enable();
 
 	stdio_usb_init();
 
 	while (1) {
 		wpan_task();
-	};
+	}
 }
 
 /**
@@ -149,8 +152,7 @@ int main(void)
 static void run_wpan_reset_test(const struct test_case *test)
 {
 	wpan_mlme_reset_req(true);
-	while(!wpan_reset_conf_rcvd)
-	{
+	while (!wpan_reset_conf_rcvd) {
 		wpan_task();
 	}
 	test_assert_true(test, wpan_reset_conf_status == MAC_SUCCESS,
@@ -160,17 +162,16 @@ static void run_wpan_reset_test(const struct test_case *test)
 static void run_wpan_scan_test(const struct test_case *test)
 {
 	wpan_mlme_scan_req(MLME_SCAN_TYPE_ACTIVE,
-					   SCAN_CHANNEL,
-					   SCAN_DURATION,
-					   DEFAULT_CHANNEL_PAGE);
-	while(!wpan_scan_conf_rcvd)
-	{
+			SCAN_CHANNEL,
+			SCAN_DURATION,
+			DEFAULT_CHANNEL_PAGE);
+	while (!wpan_scan_conf_rcvd) {
 		wpan_task();
 	}
-	test_assert_true(test, 
-					 (wpan_scan_conf_status == MAC_SUCCESS) ||
-						 (wpan_scan_conf_status == MAC_NO_BEACON),
-					"AVR2025_MAC - MAC Scan test failed");
+	test_assert_true(test,
+			(wpan_scan_conf_status == MAC_SUCCESS) ||
+			(wpan_scan_conf_status == MAC_NO_BEACON),
+			"AVR2025_MAC - MAC Scan test failed");
 }
 
 void usr_mlme_reset_conf(uint8_t status)
@@ -180,16 +181,15 @@ void usr_mlme_reset_conf(uint8_t status)
 }
 
 void usr_mlme_scan_conf(uint8_t status,
-                        uint8_t ScanType,
-                        uint8_t ChannelPage,
-                        uint32_t UnscannedChannels,
-                        uint8_t ResultListSize,
-                        void *ResultList)
+		uint8_t ScanType,
+		uint8_t ChannelPage,
+		uint32_t UnscannedChannels,
+		uint8_t ResultListSize,
+		void *ResultList)
 {
 	wpan_scan_conf_rcvd = true;
 	wpan_scan_conf_status = status;
 }
-
 
 void main_cdc_set_dtr(bool b_enable)
 {
@@ -200,38 +200,38 @@ void main_cdc_set_dtr(bool b_enable)
 				run_wpan_scan_test, NULL,
 				"AVR2025_MAC - MAC Scan test (this covers all ASF drivers/services used)");
 
-		// Put test case addresses in an array.
+		/* Put test case addresses in an array. */
 		DEFINE_TEST_ARRAY(wpan_tests) = {
 			&wpan_reset_test,
-            &wpan_scan_test};
+			&wpan_scan_test
+		};
 
-		// Define the test suite.
+		/* Define the test suite. */
 		DEFINE_TEST_SUITE(wpan_suite, wpan_tests,
 				"AVR2025_MAC - MAC unit test suite");
 
-		// Run all tests in the test suite.
+		/* Run all tests in the test suite. */
 		test_suite_run(&wpan_suite);
 	} else {
-
 	}
 }
 
 void usr_mcps_data_ind(wpan_addr_spec_t *SrcAddrSpec,
-                       wpan_addr_spec_t *DstAddrSpec,
-                       uint8_t msduLength,
-                       uint8_t *msdu,
-                       uint8_t mpduLinkQuality,
+		wpan_addr_spec_t *DstAddrSpec,
+		uint8_t msduLength,
+		uint8_t *msdu,
+		uint8_t mpduLinkQuality,
 #ifdef ENABLE_TSTAMP
-                       uint8_t DSN,
-                       uint32_t Timestamp)
+		uint8_t DSN,
+		uint32_t Timestamp)
 #else
-                       uint8_t DSN)
+		uint8_t DSN)
 #endif  /* ENABLE_TSTAMP */
 {
-
 }
 
 #if defined(ENABLE_TSTAMP)
+
 /*
  * Callback function usr_mcps_data_conf
  *
@@ -242,17 +242,17 @@ void usr_mcps_data_ind(wpan_addr_spec_t *SrcAddrSpec,
  *
  */
 void usr_mcps_data_conf(uint8_t msduHandle,
-                        uint8_t status,
-                        uint32_t Timestamp)
+		uint8_t status,
+		uint32_t Timestamp)
 #else
 void usr_mcps_data_conf(uint8_t msduHandle,
-                        uint8_t status)
+		uint8_t status)
 #endif  /* ENABLE_TSTAMP */
 {
-
 }
 
 #if ((MAC_PURGE_REQUEST_CONFIRM == 1) && (MAC_INDIRECT_DATA_BASIC == 1))
+
 /*
  * Callback function usr_mcps_purge_conf
  *
@@ -260,17 +260,18 @@ void usr_mcps_data_conf(uint8_t msduHandle,
  * @param status               Result of requested purge operation.
  *
  * @return void
-
+ *
  */
 void usr_mcps_purge_conf(uint8_t msduHandle,
-                         uint8_t status)
+		uint8_t status)
 {
-	
 }
-#endif  /* ((MAC_PURGE_REQUEST_CONFIRM == 1) && (MAC_INDIRECT_DATA_BASIC == 1)) */
 
+#endif  /* ((MAC_PURGE_REQUEST_CONFIRM == 1) && (MAC_INDIRECT_DATA_BASIC == 1))
+         **/
 
 #if (MAC_ASSOCIATION_REQUEST_CONFIRM == 1)
+
 /*
  * Callback function usr_mlme_associate_conf.
  *
@@ -281,28 +282,29 @@ void usr_mcps_purge_conf(uint8_t msduHandle,
  *
  */
 void usr_mlme_associate_conf(uint16_t AssocShortAddress,
-                             uint8_t status)
+		uint8_t status)
 {
-    /* Keep compiler happy. */
-    AssocShortAddress = AssocShortAddress;
+	/* Keep compiler happy. */
+	AssocShortAddress = AssocShortAddress;
 }
+
 #endif  /* (MAC_ASSOCIATION_REQUEST_CONFIRM == 1) */
 
-
 #if (MAC_ASSOCIATION_INDICATION_RESPONSE == 1)
+
 /*
  * @brief Callback function usr_mlme_associate_ind
  *
- * @param DeviceAddress         Extended address of device requesting association
+ * @param DeviceAddress         Extended address of device requesting
+ *association
  * @param CapabilityInformation Capabilities of device requesting association
  */
 void usr_mlme_associate_ind(uint64_t DeviceAddress,
-                            uint8_t CapabilityInformation)
+		uint8_t CapabilityInformation)
 {
-
 }
-#endif  /* (MAC_ASSOCIATION_INDICATION_RESPONSE == 1) */
 
+#endif  /* (MAC_ASSOCIATION_INDICATION_RESPONSE == 1) */
 
 #if (MAC_BEACON_NOTIFY_INDICATION == 1)
 
@@ -312,7 +314,8 @@ void usr_mlme_associate_ind(uint64_t DeviceAddress,
  * @param BSN            Beacon sequence number.
  * @param PANDescriptor  Pointer to PAN descriptor for received beacon.
  * @param PendAddrSpec   Pending address specification in received beacon.
- * @param AddrList       List of addresses of devices the coordinator has pending data.
+ * @param AddrList       List of addresses of devices the coordinator has
+ *pending data.
  * @param sduLength      Length of beacon payload.
  * @param sdu            Pointer to beacon payload.
  *
@@ -320,18 +323,18 @@ void usr_mlme_associate_ind(uint64_t DeviceAddress,
  *
  */
 void usr_mlme_beacon_notify_ind(uint8_t BSN,
-                                wpan_pandescriptor_t *PANDescriptor,
-                                uint8_t PendAddrSpec,
-                                uint8_t *AddrList,
-                                uint8_t sduLength,
-                                uint8_t *sdu)
+		wpan_pandescriptor_t *PANDescriptor,
+		uint8_t PendAddrSpec,
+		uint8_t *AddrList,
+		uint8_t sduLength,
+		uint8_t *sdu)
 {
-	
 }
+
 #endif  /* (MAC_BEACON_NOTIFY_INDICATION == 1) */
 
-
-#if ((MAC_ORPHAN_INDICATION_RESPONSE == 1) || (MAC_ASSOCIATION_INDICATION_RESPONSE == 1))
+#if ((MAC_ORPHAN_INDICATION_RESPONSE == 1) || \
+	(MAC_ASSOCIATION_INDICATION_RESPONSE == 1))
 
 /*
  * @brief Callback function usr_mlme_comm_status_ind
@@ -341,13 +344,13 @@ void usr_mlme_beacon_notify_ind(uint8_t BSN,
  * @param status           Result for related response operation
  */
 void usr_mlme_comm_status_ind(wpan_addr_spec_t *SrcAddrSpec,
-                              wpan_addr_spec_t *DstAddrSpec,
-                              uint8_t status)
+		wpan_addr_spec_t *DstAddrSpec,
+		uint8_t status)
 {
-
 }
-#endif  /* ((MAC_ORPHAN_INDICATION_RESPONSE == 1) || (MAC_ASSOCIATION_INDICATION_RESPONSE == 1)) */
 
+#endif  /* ((MAC_ORPHAN_INDICATION_RESPONSE == 1) ||
+         *(MAC_ASSOCIATION_INDICATION_RESPONSE == 1)) */
 
 #if (MAC_DISASSOCIATION_BASIC_SUPPORT == 1)
 
@@ -362,12 +365,11 @@ void usr_mlme_comm_status_ind(wpan_addr_spec_t *SrcAddrSpec,
  * @return void
  */
 void usr_mlme_disassociate_conf(uint8_t status,
-                                wpan_addr_spec_t *DeviceAddrSpec)
+		wpan_addr_spec_t *DeviceAddrSpec)
 {
-	
 }
-#endif /* (MAC_DISASSOCIATION_BASIC_SUPPORT == 1)*/
 
+#endif /* (MAC_DISASSOCIATION_BASIC_SUPPORT == 1)*/
 
 #if (MAC_DISASSOCIATION_BASIC_SUPPORT == 1)
 
@@ -383,12 +385,11 @@ void usr_mlme_disassociate_conf(uint8_t status,
  * @return void
  */
 void usr_mlme_disassociate_ind(uint64_t DeviceAddress,
-                               uint8_t DisassociateReason)
+		uint8_t DisassociateReason)
 {
-	
 }
-#endif  /* (MAC_DISASSOCIATION_BASIC_SUPPORT == 1) */
 
+#endif  /* (MAC_DISASSOCIATION_BASIC_SUPPORT == 1) */
 
 #if (MAC_GET_SUPPORT == 1)
 
@@ -403,13 +404,12 @@ void usr_mlme_disassociate_ind(uint64_t DeviceAddress,
  * @return void
  */
 void usr_mlme_get_conf(uint8_t status,
-                       uint8_t PIBAttribute,
-                       void *PIBAttributeValue)
+		uint8_t PIBAttribute,
+		void *PIBAttributeValue)
 {
-	
 }
-#endif  /* (MAC_GET_SUPPORT == 1) */
 
+#endif  /* (MAC_GET_SUPPORT == 1) */
 
 #if (MAC_ORPHAN_INDICATION_RESPONSE == 1)
 
@@ -423,15 +423,15 @@ void usr_mlme_get_conf(uint8_t status,
  */
 void usr_mlme_orphan_ind(uint64_t OrphanAddress)
 {
-	
 }
-#endif  /* (MAC_ORPHAN_INDICATION_RESPONSE == 1) */
 
+#endif  /* (MAC_ORPHAN_INDICATION_RESPONSE == 1) */
 
 #if (MAC_INDIRECT_DATA_BASIC == 1)
 
 /*
- * Callback function that must be implemented by application (NHLE) for MAC service
+ * Callback function that must be implemented by application (NHLE) for MAC
+ *service
  * MLME-POLL.confirm.
  *
  * @param status           Result of requested poll operation.
@@ -441,10 +441,9 @@ void usr_mlme_orphan_ind(uint64_t OrphanAddress)
  */
 void usr_mlme_poll_conf(uint8_t status)
 {
-	
 }
-#endif  /* (MAC_INDIRECT_DATA_BASIC == 1) */
 
+#endif  /* (MAC_INDIRECT_DATA_BASIC == 1) */
 
 #if (MAC_RX_ENABLE_SUPPORT == 1)
 
@@ -457,30 +456,25 @@ void usr_mlme_poll_conf(uint8_t status)
  */
 void usr_mlme_rx_enable_conf(uint8_t status)
 {
-	
 }
+
 #endif  /* (MAC_RX_ENABLE_SUPPORT == 1) */
 
 void usr_mlme_set_conf(uint8_t status,
-                       uint8_t PIBAttribute)
+		uint8_t PIBAttribute)
 {
-
 }
-
 
 #if (MAC_START_REQUEST_CONFIRM == 1)
 void usr_mlme_start_conf(uint8_t status)
 {
-
 }
+
 #endif
 
-
 void usr_mlme_sync_loss_ind(uint8_t LossReason,
-                            uint16_t PANId,
-                            uint8_t LogicalChannel,
-                            uint8_t ChannelPage)
+		uint16_t PANId,
+		uint8_t LogicalChannel,
+		uint8_t ChannelPage)
 {
-	
 }
-

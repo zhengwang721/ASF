@@ -40,6 +40,7 @@
  * \asf_license_stop
  *
  */
+
 /*
  * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
@@ -70,12 +71,14 @@
 
 /* Values for SR_AES_DIR */
 #ifndef AES_DIR_ENCRYPT
+
 /**
  * Defines AES direction as encryption
  */
 #define AES_DIR_ENCRYPT              (0)
 #endif
 #ifndef AES_DIR_DECRYPT
+
 /**
  * Defines AES direction as decryption
  */
@@ -84,9 +87,7 @@
 
 /* === Types ============================================================== */
 
-
 /* === Externals ========================================================== */
-
 
 /* === Prototypes ========================================================= */
 
@@ -99,7 +100,6 @@ void sal_aes_restart(void);
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
-
 
 #endif /* #ifdef STB_ARMCRYPTO */
 

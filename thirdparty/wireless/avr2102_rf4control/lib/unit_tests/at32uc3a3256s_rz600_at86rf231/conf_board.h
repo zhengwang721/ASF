@@ -44,5 +44,4 @@
 
 #define CONF_BOARD_AT86RFX
 
-
 #endif /* CONF_BOARD_H_INCLUDED */
