@@ -439,6 +439,7 @@ int main(void)
 	 * Power ON - so set the board to INIT state. All hardware, PAL, TAL and
 	 * stack level initialization must be done using this function
 	 */
+
 	set_main_state(INIT, NULL);
 
 	cpu_irq_enable();

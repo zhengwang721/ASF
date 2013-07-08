@@ -253,7 +253,7 @@ static uint8_t num_channels;
 static void configure_range_test_frame_sending(void);
 static bool send_range_test_marker_rsp(void);
 
-static uint8_t per_test_count;
+
 
 /**
  * This is variable is to keep track of the specific features supported
@@ -3417,8 +3417,7 @@ void initiate_range_test(void)
  */
 static void start_test(void)
 {
-	/*Count/SeqNum of PerTest,will be incremented for every per test done*/
-	per_test_count++;
+
 	/* Check for the current operating mode */
 	if (TX_OP_MODE == op_mode) {
 		frames_to_transmit = curr_trx_config_params.number_test_frames;
@@ -3539,16 +3538,14 @@ static void configure_frame_sending(void)
 
 	temp_frame_ptr++;
 
-	(tmp->seq_num) = per_test_count;
 
-	temp_frame_ptr++;
 
 	/*
 	 * Assign dummy payload values.
 	 * Payload is stored to the end of the buffer avoiding payload copying
 	 * by TAL.
 	 */
-	for (index = 0; index < (app_frame_length - 2); index++) { /* 1=> cmd ID
+	for (index = 0; index < (app_frame_length - 1); index++) { /* 1=> cmd ID
 		                                                   **/
 		*temp_frame_ptr++ = index; /* dummy values */
 	}
@@ -4380,7 +4377,7 @@ static void config_rpc_mode(bool config_value)
 
 #if (ANTENNA_DIVERSITY == 1)
 		/*  Enable antenna diversity */
-		tal_ant_div_config(ANT_DIVERSITY_ENABLE, ANTENNA_DEFAULT)
+		tal_ant_div_config(ANT_DIVERSITY_ENABLE, ANTENNA_DEFAULT);
 
 		/* Update this changes in the data base */
 		curr_trx_config_params.antenna_diversity = true;

@@ -82,6 +82,7 @@
     </select-by-device>
 
     <device-alias-map name="xmega_hw_timer_support">
+        <device-support value="atxmega256a3"/>
         <device-support value="atxmega256a3u"/>
         <device-support value="atxmega256a3bu"/>
     </device-alias-map>

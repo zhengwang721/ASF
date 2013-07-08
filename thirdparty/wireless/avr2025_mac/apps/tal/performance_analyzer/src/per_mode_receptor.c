@@ -227,7 +227,6 @@ void per_mode_receptor_rx_cb(frame_info_t *frame_info)
 {
 	app_payload_t *msg;
 	static uint8_t rx_count;
-	static uint8_t per_test_count;
 	uint8_t expected_frame_size;
 
 	/* Point to the message : 1 =>size is first byte and 2=>FCS*/
@@ -257,7 +256,6 @@ void per_mode_receptor_rx_cb(frame_info_t *frame_info)
 				 * test packet */
 				return;
 			}
-
 			frames_with_wrong_crc++;
 		}
 	}
@@ -282,22 +280,7 @@ void per_mode_receptor_rx_cb(frame_info_t *frame_info)
 
 	case PER_TEST_PKT:
 	{
-		/*Frames with length 12 doesnot accomodate seq num*/
-		if ((per_test_count != msg->seq_num) &&
-				(frame_info->mpdu[0]) != 12) {
-			/*New per test was started which was not observed due to
-			 *noise during previous per test end and start of this
-			 *per test*/
-	#ifdef CRC_SETTING_ON_REMOTE_NODE
-			frames_with_wrong_crc = 0;
-#endif /* #ifdef CRC_SETTING_ON_REMOTE_NODE */
-			number_rx_frames = 0;
-			aver_lqi = 0;
-			aver_rssi = 0;
-			rx_count = 0;
-		}
 
-		per_test_count = msg->seq_num;
 		static uint8_t cur_seq_no, prev_seq_no;
 
 		/* if PER test frames received then increment number_rx_frames
