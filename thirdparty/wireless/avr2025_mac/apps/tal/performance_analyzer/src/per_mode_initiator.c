@@ -2142,11 +2142,11 @@ void per_mode_initiator_ed_end_cb(uint8_t energy_level)
 #if ((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B))
 	float reg_val = (float)(62 / 255) * energy_level;
 	int8_t p_in = (uint8_t)((reg_val * 1.03) - 99);
-#elif (TAL_TYPE == ATMEGARFR2)
+#elif (TAL_TYPE == ATMEGARFA1)||(TAL_TYPE == ATMEGARFR2)
 	float reg_val = (float)(55 / 255) * energy_level;
 	int8_t p_in =  (int8_t)reg_val + (RSSI_BASE_VAL_DBM));
 #elif (TAL_TYPE == AT86RF230B) || (TAL_TYPE == AT86RF231) || \
-	(TAL_TYPE == AT86RF233)
+	(TAL_TYPE == AT86RF233) || (TAL_TYPE == AT86RF232)
 	float reg_val = (float)(56 / 255) * energy_level;
 	int8_t p_in = (int8_t)(reg_val + (RSSI_BASE_VAL_DBM));
 #endif
@@ -2155,10 +2155,10 @@ void per_mode_initiator_ed_end_cb(uint8_t energy_level)
 	/* Use Pure reg values */
 #if  ((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B))
 	int8_t p_in = (uint8_t)(energy_level - 99);
-#elif (TAL_TYPE == ATMEGARFR2)
+#elif (TAL_TYPE == ATMEGARFA1)||(TAL_TYPE == ATMEGARFR2)
 	int8_t p_in = (energy_level + (RSSI_BASE_VAL_DBM));
 
-#elif  (TAL_TYPE == AT86RF230B) || (TAL_TYPE == AT86RF231) || (TAL_TYPE == \
+#elif  (TAL_TYPE == AT86RF230B) || (TAL_TYPE == AT86RF231) || (TAL_TYPE == AT86RF232) || (TAL_TYPE == \
 	AT86RF233)
 	int8_t p_in = (energy_level + (RSSI_BASE_VAL_DBM));
 #endif /* End of ((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B) */
@@ -2634,7 +2634,7 @@ static void set_channel(uint8_t channel)
  */
 static void set_channel_page(uint8_t channel_page)
 {
-#if ((TAL_TYPE == AT86RF230B))
+#if ((TAL_TYPE == AT86RF230B)|| (TAL_TYPE == AT86RF232) )
 	if (channel_page != 0) {
 		/* Send the confirmation with status as VALUE_OUT_OF_RANGE */
 		usr_perf_set_confirm(VALUE_OUT_OF_RANGE,
