@@ -135,7 +135,7 @@ static void reset_globals(void)
 	mac_last_src_addr = 0xFFFFFFFFFFFFFFFF;
 	mac_rx_enabled = false;
 #ifdef GTS_SUPPORT
-	mac_pan_gts_table_len = 0;
+	reset_gts_globals();
 #endif /* GTS_SUPPORT */
 }
 
@@ -183,6 +183,9 @@ retval_t mac_init(void)
     #if (MAC_START_REQUEST_CONFIRM == 1)
     #ifdef BEACON_SUPPORT
 	qmm_queue_init(&broadcast_q, BROADCAST_QUEUE_CAPACITY);
+		#ifdef GTS_SUPPORT
+	qmm_queue_init(&gts_q, GTS_QUEUE_CAPACITY);
+		#endif /* GTS_SUPPORT */
     #endif  /* BEACON_SUPPORT */
     #endif /* (MAC_START_REQUEST_CONFIRM == 1) */
 #else

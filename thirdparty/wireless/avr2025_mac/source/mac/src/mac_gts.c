@@ -73,6 +73,7 @@
 #include "mac_security.h"
 #endif  /* MAC_SECURITY_ZIP */
 
+
 #ifdef GTS_SUPPORT
 
 #ifdef FFD
@@ -175,7 +176,8 @@ void mlme_gts_request(uint8_t *m)
 		if(0x00 == mgr.GtsChar.GtsLength
 		|| (MAC_NO_SHORT_ADDR_VALUE <= tal_pib.ShortAddress 
 			|| MAC_NO_SHORT_ADDR_VALUE <= mac_pib.mac_CoordShortAddress)
-		|| MAC_SYNC_TRACKING_BEACON != mac_sync_state)
+		|| MAC_SYNC_TRACKING_BEACON != mac_sync_state
+		|| true != mac_pib.mac_GTSPermit)
 		{
 			mac_gen_mlme_gts_conf((buffer_t *)m, MAC_INVALID_PARAMETER,
 			mgr.GtsChar);
@@ -257,7 +259,6 @@ void mlme_gts_request(uint8_t *m)
 		/* Finished building of frame. */
 		gts_req_frame->mpdu = frame_ptr;
 
-
 #ifdef BEACON_SUPPORT
 		csma_mode_t cur_csma_mode;
 
@@ -271,9 +272,6 @@ void mlme_gts_request(uint8_t *m)
 		}
 
 		tal_tx_status = tal_tx_frame(transmit_frame, cur_csma_mode, true);
-#else   /* No BEACON_SUPPORT */
-		/* In Nonbeacon build the frame is sent with unslotted CSMA-CA. */
-		tal_tx_status = tal_tx_frame(transmit_frame, CSMA_UNSLOTTED, true);
 #endif  /* BEACON_SUPPORT / No BEACON_SUPPORT */
 
 		if (MAC_SUCCESS == tal_tx_status) {
@@ -474,6 +472,8 @@ bool mac_gts_allocate(gts_char_t GtsCharacteristics, uint16_t DevAddress)
 		}
 	}
 	
+	ENTER_CRITICAL_REGION();
+
 	mac_pan_gts_table[mac_pan_gts_table_len].DevShortAddr = DevAddress;
 	
 	mac_pan_gts_table[mac_pan_gts_table_len].GtsDesc.GtsLength = GtsCharacteristics.GtsLength;
@@ -488,6 +488,7 @@ bool mac_gts_allocate(gts_char_t GtsCharacteristics, uint16_t DevAddress)
 
 	++mac_pan_gts_table_len;
 
+	LEAVE_CRITICAL_REGION();
 	return true;
 }
 #endif /* FFD */
@@ -504,6 +505,7 @@ bool mac_gts_deallocate(gts_char_t GtsCharacteristics, uint16_t DevAddress, bool
 		&& mac_pan_gts_table[table_index].GtsDesc.GtsDirection == GtsCharacteristics.GtsDirection
 		&& mac_pan_gts_table[table_index].GtsDesc.GtsLength == GtsCharacteristics.GtsLength)
 		{
+			ENTER_CRITICAL_REGION();
 			for(table_index1 = table_index; table_index1 < (mac_pan_gts_table_len - 1); table_index1++)
 			{
 				mac_pan_gts_table[table_index1].DevShortAddr = mac_pan_gts_table[table_index1 + 1].DevShortAddr;
@@ -534,7 +536,7 @@ bool mac_gts_deallocate(gts_char_t GtsCharacteristics, uint16_t DevAddress, bool
 				
 				mac_pan_gts_table[table_index1].GtsDesc.GtsLength = mac_pan_gts_table[table_index1 + 1].GtsDesc.GtsLength;
 				
-				mac_pan_gts_table[table_index1].GtsDesc.GtsStartingSlot = mac_pan_gts_table[table_index1 + 1].GtsDesc.GtsLength;
+				mac_pan_gts_table[table_index1].GtsDesc.GtsStartingSlot = mac_pan_gts_table[table_index1 + 1].GtsDesc.GtsStartingSlot;
 				
 				mac_pan_gts_table[table_index1].ExpiryCount = mac_pan_gts_table[table_index1 + 1].ExpiryCount;
 				
@@ -554,6 +556,7 @@ bool mac_gts_deallocate(gts_char_t GtsCharacteristics, uint16_t DevAddress, bool
 			{
 				mac_pan_gts_table[MAX_GTS_ON_PANC - 1].PersistenceCount = 0;
 			}
+			LEAVE_CRITICAL_REGION();
 			return true;
 		}
 		else
@@ -655,5 +658,54 @@ void mac_update_dev_gts_table(bool gts_dir, uint8_t slot_len, uint8_t start_slot
 	mac_dev_gts_table[updating_index].GtsStartingSlot
 	= start_slot;
 }
+
+uint8_t handle_gts_data_req(mcps_data_req_t *data_req, uint8_t *msg)
+{
+	uint16_t dst_addr;
+	ADDR_COPY_DST_SRC_16(dst_addr, data_req->DstAddr);
+	if(MAC_PAN_COORD_STARTED == mac_state)
+	{
+		uint8_t loop_index;
+		for(loop_index = 0; loop_index < mac_pan_gts_table_len; loop_index++)
+		{
+			if(dst_addr == mac_pan_gts_table[loop_index].DevShortAddr)
+			{
+				/* Append the MCPS data request into the broadcast queue */
+				#ifdef ENABLE_QUEUE_CAPACITY
+				if (QUEUE_FULL == qmm_queue_append(&gts_q,(buffer_t *)msg)) {
+						mac_gen_mcps_data_conf((buffer_t *)msg,
+						(uint8_t)MAC_CHANNEL_ACCESS_FAILURE,
+						#ifdef ENABLE_TSTAMP
+						data_req->msduHandle,
+						0);
+						#else
+						data_req->msduHandle);
+						#endif  /* ENABLE_TSTAMP */
+					return;
+				}
+				#else
+				qmm_queue_append(&gts_q, (buffer_t *)msg);
+				#endif   /* ENABLE_QUEUE_CAPACITY */
+
+				return;
+			}
+		}
+	}
+	else
+	{
+		
+	}
+}
+
+void reset_gts_globals(void)
+{
+#ifdef FFD
+	mac_pan_gts_table_len = 0;
+	memset(&mac_pan_gts_table, 0, sizeof(mac_pan_gts_mgmt_t) * MAX_GTS_ON_PANC);
+#endif /* FFD */
+	mac_dev_gts_table_len = 0;
+	memset(&mac_dev_gts_table, 0, sizeof(mac_pan_gts_mgmt_t) * MAX_GTS_ON_DEV);
+}
+
 
 #endif /* GTS_SUPPORT */

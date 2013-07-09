@@ -168,6 +168,7 @@ extern uint8_t T_Rx_Enable;
 #define NHLE_MAC_QUEUE_CAPACITY             (255)
 #define INDIRECT_DATA_QUEUE_CAPACITY        (255)
 #define BROADCAST_QUEUE_CAPACITY            (255)
+#define GTS_QUEUE_CAPACITY                  (255)
 #endif /* ENABLE_QUEUE_CAPACITY */
 
 /* ! @} */

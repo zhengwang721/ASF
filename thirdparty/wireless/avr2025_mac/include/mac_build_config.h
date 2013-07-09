@@ -350,5 +350,9 @@ extern "C" {
 	user_build_config.h since MAC_PAN_ID_CONFLICT_NON_PC is 1")
 #endif
 
+#if (defined GTS_SUPPORT) && (!defined BEACON_SUPPORT)
+#error "GTS can be used along with Beacon mode only. Add BEACON_SUPPORT symbol..."
+#endif /* (defined GTS_SUPPORT) && (!defined BEACON_SUPPORT) */
+
 #endif  /* BUILD_CONFIG_H */
 /* EOF */

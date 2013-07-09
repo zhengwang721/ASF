@@ -223,6 +223,9 @@ queue_t tal_mac_q;
  * in a beacon-enabled network is placed here by MAC.
  */
 queue_t broadcast_q;
+#ifdef GTS_SUPPORT
+queue_t gts_q;
+#endif /* GTS_SUPPORT */
 #endif  /* BEACON_SUPPORT */
 #endif /* (MAC_START_REQUEST_CONFIRM == 1) */
 

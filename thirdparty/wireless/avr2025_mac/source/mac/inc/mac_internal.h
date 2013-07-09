@@ -448,6 +448,9 @@ extern queue_t indirect_data_q;
 #if (MAC_START_REQUEST_CONFIRM == 1)
 #ifdef BEACON_SUPPORT
 extern queue_t broadcast_q;
+#ifdef GTS_SUPPORT
+extern queue_t gts_q;
+#endif /* GTS_SUPPORT */
 #endif  /* BEACON_SUPPORT */
 #endif /* (MAC_START_REQUEST_CONFIRM == 1) */
 
@@ -695,6 +698,8 @@ void mac_gen_mlme_gts_conf(buffer_t *buf_ptr, uint8_t status, gts_char_t gts_cha
 void mac_process_gts_request(buffer_t *gts_req);
 uint8_t mac_add_gts_info(uint8_t *frame_ptr);
 void mac_parse_bcn_gts_info(uint8_t gts_count, uint8_t gts_dir, uint8_t *gts_list_ptr);
+uint8_t handle_gts_data_req(mcps_data_req_t *data_req, uint8_t *msg);
+void reset_gts_globals(void);
 #endif /* GTS_SUPPORT */
 
 #if (MAC_INDIRECT_DATA_FFD == 1)

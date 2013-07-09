@@ -954,28 +954,40 @@ typedef enum phy_enum_tag {
 #define MLME_SCAN_TYPE_ORPHAN           (0x03)
 
 /**
- * Value for TxOptions parameter im @ref wpan_mcps_data_req().
+ * Value for TxOptions parameter in @ref wpan_mcps_data_req().
  * @ingroup apiConst
  */
 #define WPAN_TXOPT_OFF                  (0x00)
 
 /**
- * Value for TxOptions parameter im @ref wpan_mcps_data_req().
+ * Value for TxOptions parameter in @ref wpan_mcps_data_req().
  * @ingroup apiConst
  */
 #define WPAN_TXOPT_ACK                  (0x01)
 
 /**
- * Value for TxOptions parameter im @ref wpan_mcps_data_req().
+ * Value for TxOptions parameter in @ref wpan_mcps_data_req().
  * @ingroup apiConst
  */
 #define WPAN_TXOPT_INDIRECT             (0x04)
 
 /**
- * Value for TxOptions parameter im @ref wpan_mcps_data_req().
+ * Value for TxOptions parameter in @ref wpan_mcps_data_req().
  * @ingroup apiConst
  */
 #define WPAN_TXOPT_INDIRECT_ACK         (0x05)
+
+/**
+ * Value for TxOptions parameter in @ref wpan_mcps_data_req().
+ * @ingroup apiConst
+ */
+#define WPAN_TXOPT_GTS                  (0x02)
+
+/**
+ * Value for TxOptions parameter in @ref wpan_mcps_data_req().
+ * @ingroup apiConst
+ */
+#define WPAN_TXOPT_GTS_ACK              (0x03)
 
 /* Various constants */
 
