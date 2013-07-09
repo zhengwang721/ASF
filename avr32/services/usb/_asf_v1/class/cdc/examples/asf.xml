@@ -10,7 +10,6 @@
 		<device-support value="uc3b"/>
 		<device-support value="uc3a3"/>
 		<require idref="avr32.services.usb.cdc.example.main"/>
-		<info type="gui-flag" value="move-to-root"/>
 	</module>
 	<module type="meta" id="avr32.services.usb.cdc.example.main" caption="Main module for examples">
 		<build type="c-source" value="cdc_example.c"/>
@@ -62,6 +61,5 @@
 		<build type="distribute" subtype="file" value="./docsrc/install_4.jpg"/>
 		<build type="distribute" subtype="file" value="./docsrc/install_5.jpg"/>
 		<build type="distribute" subtype="file" value="./docsrc/usb_cdc_device_manager.jpg"/>
-		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

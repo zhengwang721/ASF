@@ -6,6 +6,16 @@
 		<require idref="common.applications.user_application"/>
 	</module>
 
+	<project id="common.applications.user_application.user_board.megarf" caption="User board project template for MegaRF" type="template" default-mcu="atmega256rfr2">
+		<info type="description" value="summary">
+		User board project template for MEGA RF.
+		</info>
+		<require idref="board.user_board.megarf"/>
+		<require idref="common.applications.user_application.user_board.common"/>
+		<generator value="as5_8_template"/>
+		<generator value="doxygen"/>
+		<device-support value="megarf"/>
+	</project>
 	<project id="common.applications.user_application.user_board.xmegaa" caption="User board project template for XMEGA A" type="template" default-mcu="unspecified-xmegaa">
 		<info type="description" value="summary">
 		User board project template for XMEGA A.
