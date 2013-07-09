@@ -45,6 +45,11 @@
 #include <system_interrupt.h>
 #include <string.h>
 
+
+
+#define NVM_USER_ROW		0x804000
+#define NVM_CALIBRATION_ROW	0x806020
+
 /**
  * \internal Internal device instance struct
  *
@@ -631,3 +636,51 @@ bool nvm_is_page_locked(uint16_t page_number)
 
 	return !(nvm_module->LOCK.reg & (1 << region_number));
 }
+
+enum status_code nvm_get_fuses(struct nvm_user_row *user_row)
+{
+	enum status_code error_code = STATUS_OK;
+
+	do {
+		error_code = nvm_read_buffer(NVMCTRL_USER, (uint8_t*)user_row, sizeof(struct nvm_user_row)); 
+	} while (error_code == STATUS_BUSY);
+
+
+	return error_code;
+}
+
+enum status_code nvm_set_fuses(struct nvm_user_row *user_row)
+{
+	Nvmctrl *const nvm_module = NVMCTRL;
+	enum status_code error_code = STATUS_OK;
+
+	system_interrupt_enter_critical_section();
+
+	/* Wait for the nvm controller to become ready */
+	while(!nvm_is_ready()) {
+	}
+
+	/* Erase the page buffer before buffering new data */
+	nvm_module->CTRLA.reg = NVM_COMMAND_PAGE_BUFFER_CLEAR | NVMCTRL_CTRLA_CMDEX_KEY;
+
+	do {
+		error_code = nvm_write_buffer(NVMCTRL_USER, (uint8_t*)user_row, sizeof(struct nvm_user_row));
+	} while (error_code == STATUS_BUSY);
+
+	if(error_code != STATUS_OK) {
+		return error_code;
+	}
+
+	do {
+		error_code = nvm_execute_command(NVM_COMMAND_WRITE_PAGE, NVMCTRL_USER, 0);
+	} while (error_code == STATUS_BUSY);
+
+	if(error_code != STATUS_OK) {
+		return error_code;
+	}
+
+	system_interrupt_leave_critical_section();
+
+	return error_code;
+}
+

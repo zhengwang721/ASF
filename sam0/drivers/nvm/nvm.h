@@ -380,6 +380,40 @@ struct nvm_parameters {
 	uint32_t bootloader_number_of_pages;
 };
 
+struct nvm_user_row {
+	uint64_t boodprot:3;
+	uint64_t :1;
+	uint64_t eeprom:3;
+	uint64_t :1;
+	uint64_t bod33_level:6;
+	uint64_t bod33_enable:1;
+	uint64_t bod33_action:2;
+	uint64_t bod12_level:5;
+	uint64_t bod12_enable:1;
+	uint64_t bod12_action:2;
+	uint64_t wdt_enable:1;
+	uint64_t wdt_always_on:1;
+	uint64_t wdt_period:4;
+	uint64_t wdt_window:4;
+	uint64_t wdt_early_warning_offset:4;
+	uint64_t wdt_window_mode_enable_at_poweron:1;
+	uint64_t :8;
+	uint64_t lock:16;
+};
+
+struct nvm_calibration_row {
+	uint64_t :3;
+	uint64_t adc_gain_correction:12;
+	uint64_t adc_offset_correction:12;
+	uint64_t adc_linearity_calibration:8;
+	uint64_t adc_bias_calibration:3;
+};
+
+/**
+ *
+ *@sl
+ */
+
 /**
  * \name Configuration and Initialization
  * @{
@@ -469,6 +503,11 @@ enum status_code nvm_execute_command(
 		const enum nvm_command command,
 		const uint32_t address,
 		const uint32_t parameter);
+
+enum status_code nvm_get_fuses(struct nvm_user_row *user_row);
+
+enum status_code nvm_set_fuses(struct nvm_user_row *user_row);
+
 
 bool nvm_is_page_locked(uint16_t page_number);
 

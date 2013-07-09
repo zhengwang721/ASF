@@ -70,6 +70,7 @@ int main(void)
 //! [main]
 	//! [main_1]
 	uint8_t page_buffer[NVMCTRL_PAGE_SIZE];
+	struct  nvm_user_row user_row;
 	//! [main_1]
 
 	//! [main_2]
@@ -107,6 +108,17 @@ int main(void)
 				page_buffer, NVMCTRL_PAGE_SIZE);
 	} while (error_code == STATUS_BUSY);
 	//! [main_6]
+	error_code = nvm_get_fuses(&user_row);
+
+	user_row.eeprom = 2;
+
+	error_code = nvm_set_fuses(&user_row);
+	//! [main_6]
+
+	//! [main_7]
+	
+	//! [main_7]
+
 //! [main]
 
 	while (true) {
