@@ -47,6 +47,7 @@
 //! Sequence process running each \c SEQUENCE_PERIOD ms
 #define SEQUENCE_PERIOD 150
 
+//! Wakeup, ignore button change until button is back to default state
 static bool btn_wakeup = false;
 
 static struct {
