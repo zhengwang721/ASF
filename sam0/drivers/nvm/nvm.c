@@ -658,69 +658,74 @@ enum status_code nvm_get_fuses(struct nvm_user_row *user_row)
 	return error_code;
 }
 
+#define NVM_SET_FUSES_STATE_ERASE_ROW         0
+#define NVM_SET_FUSES_STATE_ERASE_PAGE_BUFFER 1
+#define NVM_SET_FUSES_STATE_WRITE_FUSES       2
+#define NVM_SET_FUSES_STATE_END               3
+
+
 enum status_code nvm_set_fuses(struct nvm_user_row *user_row)
 {
 	Nvmctrl *const nvm_module = NVMCTRL;
 	enum status_code error_code = STATUS_OK;
+	uint8_t state = NVM_SET_FUSES_STATE_ERASE_ROW;
 
 	/* If the security bit is set, the auxiliary space cannot be written */
 	if (nvm_module->STATUS.reg & NVMCTRL_STATUS_SB) {
 		return STATUS_ERR_DENIED;
 	}
 
-	/* Wait for the nvm controller to become ready */
-	while(!nvm_is_ready()) {
-	}
-
 	/* Enter critcal section to avoid context switching */
 	system_interrupt_enter_critical_section();
 
-	/* Make sure there is no pending status flags */
-	nvm_module->STATUS.reg |= ~NVMCTRL_STATUS_MASK;
+	do {
 
-	/* Erase AUX row */
-	nvm_module->PARAM.reg = 0;
-	nvm_module->ADDR.reg = NVMCTRL_USER / 2;
-	nvm_module->CTRLA.reg = NVM_COMMAND_ERASE_AUX_ROW | NVMCTRL_CTRLA_CMDEX_KEY;
+		/* Wait for the nvm controller to become ready */
+		while(!nvm_is_ready()) {
+		}
 
-	/* Wait for the module to finish erasing the AUX row */
-	while(!nvm_is_ready()) {
-	}
+		/* Has something gone wrong? */
+		if(nvm_module->INTFLAG.reg & NVMCTRL_INTFLAG_ERROR) {
+			/* Don't bother about what, just clear status flags and return error status*/
+			nvm_module->STATUS.reg |= ~NVMCTRL_STATUS_MASK;
+			nvm_module->INTFLAG.reg |= NVMCTRL_INTFLAG_ERROR;
+			return STATUS_ERROR_IO
+		}
 
-	/* Something went wrong */
-	if(nvm_module->INTFLAG.reg & NVMCTRL_INTFLAG_ERROR) {
-		/* Don't bother about what, just clear status flags and return error status*/
-		nvm_module->STATUS.reg |= ~NVMCTRL_STATUS_MASK;
-		nvm_module->INTFLAG.reg |= NVMCTRL_INTFLAG_ERROR;
-		return STATUS_ERROR_IO
-	}
+		switch (state) {
 
-	/* Erase the page buffer before buffering new data */
-	nvm_module->CTRLA.reg = NVM_COMMAND_PAGE_BUFFER_CLEAR | NVMCTRL_CTRLA_CMDEX_KEY;
+		case NVM_SET_FUSES_STATE_ERASE_ROW:
+			/* Make sure there is no pending status flags */
+			nvm_module->STATUS.reg |= ~NVMCTRL_STATUS_MASK;
 
-	/* Wait for module to finish erasing the pagebuffer */
-	while(!nvm_is_ready()) {
-	}
+			/* Erase AUX row */
+			nvm_module->PARAM.reg = 0;
+			nvm_module->ADDR.reg = NVMCTRL_USER / 2;
+			nvm_module->CTRLA.reg = NVM_COMMAND_ERASE_AUX_ROW | NVMCTRL_CTRLA_CMDEX_KEY;
+			break;
 
-	/* Write new user row content 64bit */
-	NVM_MEMORY[NVMCTRL_USER / 2] = ((uint16_t*)user_row)[0];
-	NVM_MEMORY[(NVMCTRL_USER / 2) + 1] = ((uint16_t*)user_row)[1];
-	NVM_MEMORY[(NVMCTRL_USER / 2) + 2] = ((uint16_t*)user_row)[2];
-	NVM_MEMORY[(NVMCTRL_USER / 2) + 3] = ((uint16_t*)user_row)[3];
+		case NVM_SET_FUSES_STATE_ERASE_PAGE_BUFFER:
+			/* Erase the page buffer before buffering new data */
+			nvm_module->CTRLA.reg = NVM_COMMAND_PAGE_BUFFER_CLEAR | NVMCTRL_CTRLA_CMDEX_KEY;
+			break;
 
-	nvm_module->CTRLA.reg = NVM_COMMAND_WRITE_AUX_ROW | NVMCTRL_CTRLA_CMDEX_KEY;
+		case NVM_SET_FUSES_STATE_WRITE_FUSES:
+			/* Write new user row content 64bit */
+			NVM_MEMORY[NVMCTRL_USER / 2] = ((uint16_t*)user_row)[0];
+			NVM_MEMORY[(NVMCTRL_USER / 2) + 1] = ((uint16_t*)user_row)[1];
+			NVM_MEMORY[(NVMCTRL_USER / 2) + 2] = ((uint16_t*)user_row)[2];
+			NVM_MEMORY[(NVMCTRL_USER / 2) + 3] = ((uint16_t*)user_row)[3];
 
-	/* Wait for the module to write the content in the page buffer to user row */
-	while(!nvm_is_ready()) {
-	}
+			nvm_module->CTRLA.reg = NVM_COMMAND_WRITE_AUX_ROW | NVMCTRL_CTRLA_CMDEX_KEY;
+			break;
 
-	/* Did something go wrong? */
-	if(nvm_module->INTFLAG.reg & NVMCTRL_INTFLAG_ERROR) {
-		/* Don't bother about what, just clear status flags and return error status*/
-		nvm_module->STATUS.reg |= ~NVMCTRL_STATUS_MASK;
-		nvm_module->INTFLAG.reg |= NVMCTRL_INTFLAG_ERROR;
-		return STATUS_ERROR_IO
-	}
+		default:
+			break;
+
+		/* Goto next state */
+		state++;
+
+	} while (state != NVM_SET_FUSES_STATE_END);
 
 	system_interrupt_leave_critical_section();
 
