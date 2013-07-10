@@ -70,7 +70,6 @@ int main(void)
 //! [main]
 	//! [main_1]
 	uint8_t page_buffer[NVMCTRL_PAGE_SIZE];
-	struct  nvm_user_row user_row;
 	//! [main_1]
 
 	//! [main_2]
