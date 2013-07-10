@@ -57,7 +57,9 @@
 #include "app_per_mode.h"
 #include "app_range_mode.h"
 #include "perf_api_serial_handler.h"
-#include "asf.h"
+#ifdef __SAMD20J18__
+#include "system.h"
+#endif
 #include "sio2host.h"
 #include "conf_board.h"
 

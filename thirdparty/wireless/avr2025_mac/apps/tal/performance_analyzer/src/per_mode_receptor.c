@@ -59,7 +59,6 @@
 #include "app_frame_format.h"
 #include "app_per_mode.h"
 #include "conf_board.h"
-#include "asf.h"
 
 /**
  * \addtogroup group_per_mode_receptor

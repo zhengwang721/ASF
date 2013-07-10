@@ -87,9 +87,8 @@
             <build type="c-source"      value="sam0/hw_timer.c"/>
             <build type="header-file"   value="sam0/hw_timer.h"/>
             <build type="include-path"  value="sam0/"/>
-            <build type="library" subtype="user" value="sam0/lib/sam0_lib_hw_timer.r90" toolchain="iarewarm"/>
             <build type="library" subtype="user" value="sam0/lib/libsam0_lib_hw_timer.a" toolchain="armgcc"/>
-            <build type="library" subtype="user" value="sam0/lib/libsam0_lib_hw_timer.a" toolchain="as5_arm"/>
+            <build type="library" subtype="user" value="sam0/lib/sam0_lib_hw_timer.a" toolchain="iarewarm"/>
             <build type="module-config" subtype="required-header-file" value="conf_hw_timer.h"/>
             <build type="module-config" subtype="path" value="module_config"/>
             <build type="doxygen-entry-point" value="common_hw_timer_group"/>
