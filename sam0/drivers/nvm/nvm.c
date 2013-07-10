@@ -708,7 +708,7 @@ enum status_code nvm_set_fuses(struct nvm_user_row *user_row)
 			/* Don't bother about what, just clear status flags and return error status*/
 			nvm_module->STATUS.reg  |= ~NVMCTRL_STATUS_MASK;
 			nvm_module->INTFLAG.reg |= NVMCTRL_INTFLAG_ERROR;
-			return STATUS_ERR_IO
+			return STATUS_ERR_IO;
 		}
 
 		switch (state) {
