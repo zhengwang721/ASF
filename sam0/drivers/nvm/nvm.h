@@ -381,7 +381,7 @@ struct nvm_parameters {
 };
 
 struct nvm_user_row {
-	uint64_t boodprot:3;
+	uint64_t bootprot:3;
 	uint64_t :1;
 	uint64_t eeprom:3;
 	uint64_t :1;
@@ -399,14 +399,6 @@ struct nvm_user_row {
 	uint64_t wdt_window_mode_enable_at_poweron:1;
 	uint64_t :8;
 	uint64_t lock:16;
-};
-
-struct nvm_calibration_row {
-	uint64_t :3;
-	uint64_t adc_gain_correction:12;
-	uint64_t adc_offset_correction:12;
-	uint64_t adc_linearity_calibration:8;
-	uint64_t adc_bias_calibration:3;
 };
 
 /**
