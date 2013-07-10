@@ -403,9 +403,21 @@ static inline void system_sleep(void)
  */
 
 /**
- * \name Reset cause
+ * \name Reset control
  * @{
  */
+
+/**
+ * \brief Reset the MCU
+ *
+ * This function will reset the complete MCU except RTC, All 32kHz sources,
+ * WDT with ALWAYSON feature and GCLK with WRTLOCK feature.
+ *
+ */
+static inline void system_reset(void)
+{
+	NVIC_SystemReset();
+}
 
 /**
  * \brief Return the reset cause
