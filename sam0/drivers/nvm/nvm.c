@@ -46,10 +46,6 @@
 #include <string.h>
 
 
-
-#define NVM_USER_ROW		0x804000
-#define NVM_CALIBRATION_ROW	0x806020
-
 /**
  * \internal Internal device instance struct
  *
