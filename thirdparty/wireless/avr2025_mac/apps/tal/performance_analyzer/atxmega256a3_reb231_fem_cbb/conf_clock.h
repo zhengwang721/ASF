@@ -1,7 +1,7 @@
 /**
- * @file tal_pib.h
+ * \file
  *
- * @brief This file contains the prototypes for TAL PIB functions.
+ * \brief Chip-specific system clock manager configuration
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -38,60 +38,38 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
+ *
  */
+#ifndef CONF_CLOCK_H_INCLUDED
+#define CONF_CLOCK_H_INCLUDED
+
+//! Configuration using On-Chip RC oscillator at 48MHz
+//! The RC oscillator is calibrated via USB Start Of Frame
+//! Clk USB     = 48MHz (used by USB)
+//! Clk sys     = 48MHz
+//! Clk cpu/per = 24MHz
+
+
+#define CONFIG_SYSCLK_SOURCE     SYSCLK_SRC_RC32MHZ
+#define CONFIG_SYSCLK_PSADIV     SYSCLK_PSADIV_2
+#define CONFIG_SYSCLK_PSBCDIV    SYSCLK_PSBCDIV_1_1
 
 /*
- * Copyright (c) 2013, Atmel Corporation All rights reserved.
- *
- * Licensed under Atmel's Limited License Agreement --> EULA.txt
- */
+//! Use external board OSC (8MHz)
+//! Clk pll     = 48MHz (used by USB)
+//! Clk sys     = 48MHz
+//! Clk cpu/per = 12MHz
 
-/* Prevent double inclusion */
-#ifndef TAL_PIB_H
-#define TAL_PIB_H
+#define CONFIG_PLL0_SOURCE       PLL_SRC_XOSC
+#define CONFIG_PLL0_MUL          6
+#define CONFIG_PLL0_DIV          1
 
-/* === INCLUDES ============================================================ */
+#define CONFIG_USBCLK_SOURCE     USBCLK_SRC_PLL
 
-/* === EXTERNALS =========================================================== */
+#define CONFIG_SYSCLK_SOURCE     SYSCLK_SRC_PLL
+#define CONFIG_SYSCLK_PSADIV     SYSCLK_PSADIV_2
+#define CONFIG_SYSCLK_PSBCDIV    SYSCLK_PSBCDIV_1_2
+*/
 
-/* === TYPES =============================================================== */
 
-/* === MACROS ============================================================== */
-
-
-/* === PROTOTYPES ========================================================== */
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-/**
- * \addtogroup group_tal_pib_231
- * @{
- */
-
-/**
- * \brief Initialize the TAL PIB
- *
- * This function initializes the TAL information base attributes
- * to their default values.
- */
-void init_tal_pib(void);
-
-/**
- * \brief Write all shadow PIB variables to the transceiver
- *
- * This function writes all shadow PIB variables to the transceiver.
- * It is assumed that the radio does not sleep.
- */
-void write_all_tal_pib_to_trx(void);
-
-/* ! @} */
-
-#ifdef __cplusplus
-} /* extern "C" */
-#endif
-
-#endif /* TAL_PIB_H */
-
-/* EOF */
+#endif /* CONF_CLOCK_H_INCLUDED */

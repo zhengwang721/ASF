@@ -1,7 +1,7 @@
 /**
- * @file tal_pib.h
+ * \file
  *
- * @brief This file contains the prototypes for TAL PIB functions.
+ * \brief Board configuration
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -38,60 +38,37 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
+ *
  */
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
+#define CONF_BOARD_ENABLE_USARTD0
+#define CONF_BOARD_AT86RFX
+
+# include "compiler.h"
+#define IC_TYPE             (0x00)
+
+
+/*Board Has an External PA Connected to the Radio ,Following are the constatnts related to the Exxt PA */
+
+#ifdef EXT_RF_FRONT_END_CTRL /*For External PA for 231FEM-EK*/
 /*
- * Copyright (c) 2013, Atmel Corporation All rights reserved.
- *
- * Licensed under Atmel's Limited License Agreement --> EULA.txt
+ * Value of an external LNA gain.
+ * If no external LNA is available, the value is 0.
  */
+#define EXT_LNA_HIGH_GAIN    (14)
+#define EXT_LNA_LOW_GAIN     (-2)
 
-/* Prevent double inclusion */
-#ifndef TAL_PIB_H
-#define TAL_PIB_H
-
-/* === INCLUDES ============================================================ */
-
-/* === EXTERNALS =========================================================== */
-
-/* === TYPES =============================================================== */
-
-/* === MACROS ============================================================== */
-
-
-/* === PROTOTYPES ========================================================== */
-
-#ifdef __cplusplus
-extern "C" {
 #endif
 
-/**
- * \addtogroup group_tal_pib_231
- * @{
+#ifdef CUSTOM_DEFAULT_TX_PWR /*For External PA for 231FEM-EK*/
+/*
+ * Default value of transmit power of transceiver: Preset
+ *    - definition acct. IEEE802.15.4 PHY PIB attribute phyTransmitPower
+ *    - TX Pout init value based on validation
  */
-
-/**
- * \brief Initialize the TAL PIB
- *
- * This function initializes the TAL information base attributes
- * to their default values.
- */
-void init_tal_pib(void);
-
-/**
- * \brief Write all shadow PIB variables to the transceiver
- *
- * This function writes all shadow PIB variables to the transceiver.
- * It is assumed that the radio does not sleep.
- */
-void write_all_tal_pib_to_trx(void);
-
-/* ! @} */
-
-#ifdef __cplusplus
-} /* extern "C" */
+#define TAL_TRANSMIT_POWER_DEFAULT      (TX_PWR_TOLERANCE | 0x14)
 #endif
 
-#endif /* TAL_PIB_H */
-
-/* EOF */
+#endif /* CONF_BOARD_H_INCLUDED */

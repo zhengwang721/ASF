@@ -161,6 +161,13 @@ void peer_search_initiator_init(void *arg)
 		/* Make sure random number is not zero */
 	} while (!node_info.peer_short_addr);
 
+#ifdef EXT_RF_FRONT_END_CTRL
+    /* Disable RF front end control during peer search process*/
+    pal_trx_bit_write(SR_PA_EXT_EN, PA_EXT_DISABLE);
+    /* Make sure that Tx power is at max, when PA_EXT is disabled */
+    pal_trx_bit_write(SR_TX_PWR, 0x00);
+#endif
+    
 	/* Reduce the TX power level to minium,if configuration mode is enabled
 	**/
 	if (true == node_info.configure_mode) {

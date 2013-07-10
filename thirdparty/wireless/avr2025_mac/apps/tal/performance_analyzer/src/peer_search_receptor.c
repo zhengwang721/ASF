@@ -136,6 +136,13 @@ void peer_search_receptor_init(void *arg)
 
 	/* Set my address which my peer send me */
 	tal_pib_set(macShortAddress, (pib_value_t *)&(arg_ptr->my_short_addr));
+    
+#ifdef EXT_RF_FRONT_END_CTRL
+    /* Disable RF front end control during peer search process*/
+    pal_trx_bit_write(SR_PA_EXT_EN, PA_EXT_DISABLE);
+    /* Make sure that Tx power is at max, when PA_EXT is disabled */
+    pal_trx_bit_write(SR_TX_PWR, 0x00);
+#endif    
 }
 
 /*

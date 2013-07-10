@@ -1,7 +1,7 @@
 /**
- * @file tal_pib.h
+ * \file *********************************************************************
  *
- * @brief This file contains the prototypes for TAL PIB functions.
+ * \brief Serial Input & Output configuration
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -40,58 +40,20 @@
  * \asf_license_stop
  */
 
-/*
- * Copyright (c) 2013, Atmel Corporation All rights reserved.
- *
- * Licensed under Atmel's Limited License Agreement --> EULA.txt
+#ifndef CONF_SIO2HOST_H_INCLUDED
+#define CONF_SIO2HOST_H_INCLUDED
+
+/*! \name Configuration
  */
+//! @{
+#define USART_HOST                (&USARTD0)
+#define USART_HOST_BAUDRATE       9600
+#define USART_HOST_CHAR_LENGTH    USART_CHSIZE_8BIT_gc
+#define USART_HOST_PARITY         USART_PMODE_DISABLED_gc
+#define USART_HOST_STOP_BITS       1
+//! @}
 
-/* Prevent double inclusion */
-#ifndef TAL_PIB_H
-#define TAL_PIB_H
+#define USART_HOST_RX_ISR_ENABLE() usart_set_rx_interrupt_level(USART_HOST, USART_INT_LVL_HI)
+#define USART_HOST_ISR_VECT()     ISR(USARTD0_RXC_vect)
 
-/* === INCLUDES ============================================================ */
-
-/* === EXTERNALS =========================================================== */
-
-/* === TYPES =============================================================== */
-
-/* === MACROS ============================================================== */
-
-
-/* === PROTOTYPES ========================================================== */
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-/**
- * \addtogroup group_tal_pib_231
- * @{
- */
-
-/**
- * \brief Initialize the TAL PIB
- *
- * This function initializes the TAL information base attributes
- * to their default values.
- */
-void init_tal_pib(void);
-
-/**
- * \brief Write all shadow PIB variables to the transceiver
- *
- * This function writes all shadow PIB variables to the transceiver.
- * It is assumed that the radio does not sleep.
- */
-void write_all_tal_pib_to_trx(void);
-
-/* ! @} */
-
-#ifdef __cplusplus
-} /* extern "C" */
-#endif
-
-#endif /* TAL_PIB_H */
-
-/* EOF */
+#endif /* CONF_SIO2HOST_H_INCLUDED */

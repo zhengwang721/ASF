@@ -1,7 +1,7 @@
 /**
- * @file tal_pib.h
+ * \file
  *
- * @brief This file contains the prototypes for TAL PIB functions.
+ * \brief Spi Master configuration
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -38,60 +38,28 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- */
-
-/*
- * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
- * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
+#ifndef CONF_SPI_MASTER_H_INCLUDED
+#define CONF_SPI_MASTER_H_INCLUDED
 
-/* Prevent double inclusion */
-#ifndef TAL_PIB_H
-#define TAL_PIB_H
+/* Possibility to change low-level configurations here */
 
-/* === INCLUDES ============================================================ */
+#define AT86RFX_SPI_BAUDRATE 3000000
 
-/* === EXTERNALS =========================================================== */
+//! Default Config Spi Master Delay BCS
+// #define CONFIG_SPI_MASTER_DELAY_BCS            0
 
-/* === TYPES =============================================================== */
+//! Default Config Spi Master Bits per Transfer Definition
+// #define CONFIG_SPI_MASTER_BITS_PER_TRANSFER    8
 
-/* === MACROS ============================================================== */
+//! Default Config Spi Master Delay BCT
+// #define CONFIG_SPI_MASTER_DELAY_BCT            0
 
+//! Default Config Spi Master Delay BS
+// #define CONFIG_SPI_MASTER_DELAY_BS             0
 
-/* === PROTOTYPES ========================================================== */
+//! Default Config Spi Master Dummy Field
+// #define CONFIG_SPI_MASTER_DUMMY                0xFF
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-/**
- * \addtogroup group_tal_pib_231
- * @{
- */
-
-/**
- * \brief Initialize the TAL PIB
- *
- * This function initializes the TAL information base attributes
- * to their default values.
- */
-void init_tal_pib(void);
-
-/**
- * \brief Write all shadow PIB variables to the transceiver
- *
- * This function writes all shadow PIB variables to the transceiver.
- * It is assumed that the radio does not sleep.
- */
-void write_all_tal_pib_to_trx(void);
-
-/* ! @} */
-
-#ifdef __cplusplus
-} /* extern "C" */
-#endif
-
-#endif /* TAL_PIB_H */
-
-/* EOF */
+#endif /* CONF_SPI_MASTER_H_INCLUDED */

@@ -126,11 +126,23 @@ static uint8_t marker_seq_num = 0;
  */
 void per_mode_receptor_init(void *parameter)
 {
+  
+#ifdef EXT_RF_FRONT_END_CTRL
+    uint8_t config_tx_pwr;
+#endif  
 	/* PER TEST Receptor sequence number */
 	seq_num_receptor = rand();
 
 	printf("\r\n Starting PER Measurement mode as Reflector");
 
+#ifdef EXT_RF_FRONT_END_CTRL
+    /* Enable RF front end control in PER Measurement mode*/
+    pal_trx_bit_write(SR_PA_EXT_EN, PA_EXT_ENABLE);
+    /* set the TX power to default level */
+    config_tx_pwr = TAL_TRANSMIT_POWER_DEFAULT;
+    tal_pib_set(phyTransmitPower, (pib_value_t *)&config_tx_pwr);
+#endif
+    
 	/* keep the compiler happy */
 	parameter = parameter;
 }
@@ -617,6 +629,10 @@ static void set_paramter_on_recptor_node(app_payload_t *msg)
 	switch (msg->payload.set_parm_req_data.param_type) {
 	case CHANNEL: /* Parameter = channel */
 	{
+#ifdef EXT_RF_FRONT_END_CTRL
+                uint8_t chn_before_set;
+                tal_pib_get(phyCurrentChannel, &chn_before_set);
+#endif      
 		param_val = msg->payload.set_parm_req_data.param_value;
 
 #if (TAL_TYPE == AT86RF233)
@@ -626,6 +642,11 @@ static void set_paramter_on_recptor_node(app_payload_t *msg)
 		tal_pib_set(phyCurrentChannel, (pib_value_t *)&param_val);
 
 		printf("\r\n Channel changed to %d", param_val);
+#ifdef EXT_RF_FRONT_END_CTRL
+                /* Limit the tx power below the default power for ch26 to meet
+                   FCC Compliance */
+                limit_tx_power_in_ch26(param_val, chn_before_set);
+#endif        
 	}
 	break;
 

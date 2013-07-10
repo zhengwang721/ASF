@@ -31,6 +31,7 @@
             <device-support-alias value="avr2025_mac_pal_spi_support"/>
 			<build type="doxygen-entry-point" value="group_tfa"/>
 		</module>
+
 		
 		<module type="driver" id="config.thirdparty.wireless.avr2025_mac.source.tfa.ext#at86rf232"     caption="at86rf232 tfa  support enabled">
 			<info type="description" value="summary">

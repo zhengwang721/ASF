@@ -1,7 +1,7 @@
 /**
- * @file tal_pib.h
+ * \file *********************************************************************
  *
- * @brief This file contains the prototypes for TAL PIB functions.
+ * \brief USART Serial configuration
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -40,58 +40,16 @@
  * \asf_license_stop
  */
 
-/*
- * Copyright (c) 2013, Atmel Corporation All rights reserved.
- *
- * Licensed under Atmel's Limited License Agreement --> EULA.txt
+#ifndef CONF_HW_TIMER_H_INCLUDED
+#define CONF_HW_TIMER_H_INCLUDED
+
+
+
+/*! \name Configuration
  */
-
-/* Prevent double inclusion */
-#ifndef TAL_PIB_H
-#define TAL_PIB_H
-
-/* === INCLUDES ============================================================ */
-
-/* === EXTERNALS =========================================================== */
-
-/* === TYPES =============================================================== */
-
-/* === MACROS ============================================================== */
+//! @{
+#define TIMER     (&TCC0)
+//! @}
 
 
-/* === PROTOTYPES ========================================================== */
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-/**
- * \addtogroup group_tal_pib_231
- * @{
- */
-
-/**
- * \brief Initialize the TAL PIB
- *
- * This function initializes the TAL information base attributes
- * to their default values.
- */
-void init_tal_pib(void);
-
-/**
- * \brief Write all shadow PIB variables to the transceiver
- *
- * This function writes all shadow PIB variables to the transceiver.
- * It is assumed that the radio does not sleep.
- */
-void write_all_tal_pib_to_trx(void);
-
-/* ! @} */
-
-#ifdef __cplusplus
-} /* extern "C" */
-#endif
-
-#endif /* TAL_PIB_H */
-
-/* EOF */
+#endif /* CONF_HW_TIMER_H_INCLUDED */
