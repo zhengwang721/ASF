@@ -380,6 +380,12 @@ struct nvm_parameters {
 	uint32_t bootloader_number_of_pages;
 };
 
+/**
+ * \brief NVM user row fuse setting structure
+ *
+ * This structure contain the layout of the first 64 bits of the user row
+ * which contain the fuse settings.
+ */
 struct nvm_user_row {
 	uint64_t bootprot:3;
 	uint64_t :1;
