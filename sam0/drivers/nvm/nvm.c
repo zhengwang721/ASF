@@ -639,8 +639,15 @@ bool nvm_is_page_locked(uint16_t page_number)
 
 /**
  * \brief Get fuses from user row
+ *
+ * Read out the fuse settings from the user row
+ *
+ * \param[in] user_row Pointer to a 64bit wide memory buffer of type struct nvm_user_row
+ *
+ * \return             Status of read fuses attempt
+ *
+ * \retval STATUS_OK   This function will always return STATUS_OK
  */
-
 enum status_code nvm_get_fuses(struct nvm_user_row *user_row)
 {
 	enum status_code error_code = STATUS_OK;
@@ -658,16 +665,28 @@ enum status_code nvm_get_fuses(struct nvm_user_row *user_row)
 	return error_code;
 }
 
-#define NVM_SET_FUSES_STATE_ERASE_ROW         0
-#define NVM_SET_FUSES_STATE_ERASE_PAGE_BUFFER 1
-#define NVM_SET_FUSES_STATE_WRITE_FUSES       2
-#define NVM_SET_FUSES_STATE_END               3
-
-
+#define _NVM_SET_FUSES_STATE_ERASE_ROW         0
+#define _NVM_SET_FUSES_STATE_ERASE_PAGE_BUFFER 1
+#define _NVM_SET_FUSES_STATE_WRITE_FUSES       2
+#define _NVM_SET_FUSES_STATE_END               3
+/**
+ * \brief Set fuses in user row
+ *
+ * Write new fuse setting to user row
+ *
+ * \param[in] user_row Pointer to a 64bit wide memory buffer with new fuse settings
+ *
+ * \return Status of write attempt
+ *
+ * \retval STATUS_OK       New fuse settings where written sucessfully to user row
+ *
+ * \retval STATUS_DENIED   Secitity bit is set, user row can not be written
+ *
+ * \retval STATUS_ERROR_IO Writing of fuses to user row failed
+ */
 enum status_code nvm_set_fuses(struct nvm_user_row *user_row)
 {
 	Nvmctrl *const nvm_module = NVMCTRL;
-	enum status_code error_code = STATUS_OK;
 	uint8_t state = NVM_SET_FUSES_STATE_ERASE_ROW;
 
 	/* If the security bit is set, the auxiliary space cannot be written */
@@ -687,31 +706,28 @@ enum status_code nvm_set_fuses(struct nvm_user_row *user_row)
 		/* Has something gone wrong? */
 		if(nvm_module->INTFLAG.reg & NVMCTRL_INTFLAG_ERROR) {
 			/* Don't bother about what, just clear status flags and return error status*/
-			nvm_module->STATUS.reg |= ~NVMCTRL_STATUS_MASK;
+			nvm_module->STATUS.reg  |= ~NVMCTRL_STATUS_MASK;
 			nvm_module->INTFLAG.reg |= NVMCTRL_INTFLAG_ERROR;
 			return STATUS_ERROR_IO
 		}
 
 		switch (state) {
 
-		case NVM_SET_FUSES_STATE_ERASE_ROW:
-			/* Make sure there is no pending status flags */
-			nvm_module->STATUS.reg |= ~NVMCTRL_STATUS_MASK;
-
+		case _NVM_SET_FUSES_STATE_ERASE_ROW:
 			/* Erase AUX row */
 			nvm_module->PARAM.reg = 0;
 			nvm_module->ADDR.reg = NVMCTRL_USER / 2;
 			nvm_module->CTRLA.reg = NVM_COMMAND_ERASE_AUX_ROW | NVMCTRL_CTRLA_CMDEX_KEY;
 			break;
 
-		case NVM_SET_FUSES_STATE_ERASE_PAGE_BUFFER:
+		case _NVM_SET_FUSES_STATE_ERASE_PAGE_BUFFER:
 			/* Erase the page buffer before buffering new data */
 			nvm_module->CTRLA.reg = NVM_COMMAND_PAGE_BUFFER_CLEAR | NVMCTRL_CTRLA_CMDEX_KEY;
 			break;
 
-		case NVM_SET_FUSES_STATE_WRITE_FUSES:
-			/* Write new user row content 64bit */
-			NVM_MEMORY[NVMCTRL_USER / 2] = ((uint16_t*)user_row)[0];
+		case _NVM_SET_FUSES_STATE_WRITE_FUSES:
+			/* Write new user row content (address much be converted from 8-bit to 16-bit aligned) */
+			NVM_MEMORY[NVMCTRL_USER / 2]       = ((uint16_t*)user_row)[0];
 			NVM_MEMORY[(NVMCTRL_USER / 2) + 1] = ((uint16_t*)user_row)[1];
 			NVM_MEMORY[(NVMCTRL_USER / 2) + 2] = ((uint16_t*)user_row)[2];
 			NVM_MEMORY[(NVMCTRL_USER / 2) + 3] = ((uint16_t*)user_row)[3];
@@ -720,15 +736,18 @@ enum status_code nvm_set_fuses(struct nvm_user_row *user_row)
 			break;
 
 		default:
+			/* Should never be executed */
+			Assert(false);
 			break;
+		}
 
 		/* Goto next state */
 		state++;
 
-	} while (state != NVM_SET_FUSES_STATE_END);
+	} while (state != _NVM_SET_FUSES_STATE_END);
 
 	system_interrupt_leave_critical_section();
 
-	return error_code;
+	return STATUS_OK;
 }
 
