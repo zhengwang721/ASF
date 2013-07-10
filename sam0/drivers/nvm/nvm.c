@@ -678,16 +678,16 @@ enum status_code nvm_get_fuses(struct nvm_user_row *user_row)
  *
  * \return Status of write attempt
  *
- * \retval STATUS_OK       New fuse settings where written sucessfully to user row
+ * \retval STATUS_OK          New fuse settings where written sucessfully to user row
  *
- * \retval STATUS_DENIED   Secitity bit is set, user row can not be written
+ * \retval STATUS_ERR_DENIED  Secitity bit is set, user row can not be written
  *
- * \retval STATUS_ERROR_IO Writing of fuses to user row failed
+ * \retval STATUS_ERR_IO      Writing of fuses to user row failed
  */
 enum status_code nvm_set_fuses(struct nvm_user_row *user_row)
 {
 	Nvmctrl *const nvm_module = NVMCTRL;
-	uint8_t state = NVM_SET_FUSES_STATE_ERASE_ROW;
+	uint8_t state = _NVM_SET_FUSES_STATE_ERASE_ROW;
 
 	/* If the security bit is set, the auxiliary space cannot be written */
 	if (nvm_module->STATUS.reg & NVMCTRL_STATUS_SB) {
@@ -708,7 +708,7 @@ enum status_code nvm_set_fuses(struct nvm_user_row *user_row)
 			/* Don't bother about what, just clear status flags and return error status*/
 			nvm_module->STATUS.reg  |= ~NVMCTRL_STATUS_MASK;
 			nvm_module->INTFLAG.reg |= NVMCTRL_INTFLAG_ERROR;
-			return STATUS_ERROR_IO
+			return STATUS_ERR_IO
 		}
 
 		switch (state) {
