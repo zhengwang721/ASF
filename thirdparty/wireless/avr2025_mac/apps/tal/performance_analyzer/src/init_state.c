@@ -78,6 +78,7 @@ static void configuration_mode_selection(void);
 static void app_timers_init(void);
 
 uint8_t T_APP_TIMER;
+uint8_t T_APP_TIMER_RANGE;
 uint8_t APP_TIMER_TO_TX;
 uint8_t APP_TIMER_TO_TX_LED_OFF;
 uint8_t APP_TIMER_TO_RX_LED_OFF;
@@ -131,7 +132,7 @@ static void configuration_mode_selection(void)
 	/*
 	 * Wait for the user to release the button to proceed further, otherwise
 	 * button press will start Peer search in Range measurement mode which
-	 *is
+	 * is
 	 * not an intended behavior
 	 */
 	while (button_pressed()) {
@@ -153,6 +154,10 @@ static void app_timers_init(void)
 	}
 
 	if (STATUS_OK != sw_timer_get_id(&APP_TIMER_TO_RX_LED_OFF)) {
+		app_alert();
+	}
+
+	if (STATUS_OK != sw_timer_get_id(&T_APP_TIMER_RANGE)) {
 		app_alert();
 	}
 }

@@ -3,7 +3,7 @@
  *
  * \brief Watchdog Timer (WDT) driver for SAM4L.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -75,11 +75,7 @@ extern "C" {
  */
 enum wdt_period {
 	WDT_PERIOD_NONE           = 0,
-	WDT_PERIOD_MIN_CLK        = 3,
-	WDT_PERIOD_16_CLK         = 3,   /* PSEL = TBAN = 3 */
-	WDT_PERIOD_32_CLK         = 4,   /* PSEL = TBAN = 4 */
-	WDT_PERIOD_64_CLK         = 5,   /* PSEL = TBAN = 5 */
-	WDT_PERIOD_128_CLK        = 6,   /* PSEL = TBAN = 6 */
+	WDT_PERIOD_MIN_CLK        = 7,
 	WDT_PERIOD_256_CLK        = 7,   /* PSEL = TBAN = 7 */
 	WDT_PERIOD_512_CLK        = 8,   /* PSEL = TBAN = 8 */
 	WDT_PERIOD_1024_CLK       = 9,   /* PSEL = TBAN = 9 */

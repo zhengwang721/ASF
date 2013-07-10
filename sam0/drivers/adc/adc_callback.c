@@ -156,7 +156,7 @@ void adc_unregister_callback(
  * If there is no hardware trigger defined (event action) the
  * driver will retrigger the ADC conversion whenever a conversion
  * is complete until \c samples samples has been acquired. To avoid
- * jitter in the sampling frequency using an event trigger is adviced.
+ * jitter in the sampling frequency using an event trigger is advised.
  *
  * \param[in]  module_inst  Pointer to the ADC software instance struct
  * \param[in]  samples      Number of samples to acquire

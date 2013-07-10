@@ -49,7 +49,7 @@
  * - Asynchronous mode
  * - 9600 Baudrate
  * - 8-bits, No Parity and 1 Stop Bit
- * - TX and RX connected to the Xplained PRO Embedded Debugger virtual COM port
+ * - TX and RX enabled and connected to the Xplained PRO Embedded Debugger virtual COM port
  *
  * \section asfdoc_samd20_sercom_usart_basic_use_case_setup Setup
  *
@@ -89,10 +89,8 @@
  *  -# Configure the USART module with the desired settings, retrying while the
  *     driver is busy until the configuration is stressfully set.
  *     \snippet qs_usart_basic_use.c setup_set_config
- *  -# Enable the USART module so that the transceivers can be configured.
+ *  -# Enable the USART module.
  *     \snippet qs_usart_basic_use.c setup_enable
- * -# Enable the RX and TX transceivers for bidirectional USART communications.
- *    \snippet qs_usart_basic_use.c setup_enable_txrx
  *
  *
  * \section asfdoc_samd20_usart_basic_use_case_main Use Case

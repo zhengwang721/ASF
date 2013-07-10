@@ -5,7 +5,7 @@
  *
  * This file defines a useful set of functions for the TWIM on SAM4L devices.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -399,7 +399,7 @@ status_code_t twim_probe(Twim *twim, uint32_t chip_addr)
  * \brief Read multiple bytes from a TWI compatible slave device
  *
  * \param twim            Base address of the TWIM
- * \param package         Package information and data (see \ref twim_package_t)
+ * \param package         Package information and data
  *
  * \retval STATUS_OK      If all bytes were read successfully
  * \retval ERR_IO_ERROR   NACK received or Bus Arbitration lost
@@ -578,7 +578,7 @@ status_code_t twi_master_read(Twim *twim, struct twim_package *package)
  * \brief Write multiple bytes to a TWI compatible slave device
  *
  * \param twim            Base address of the TWIM
- * \param *package        Package information and data (see \ref twim_package_t)
+ * \param *package        Package information and data
  *
  * \retval STATUS_OK      If all bytes were send successfully
  * \retval ERR_IO_ERROR   NACK received or Bus Arbitration lost
@@ -682,9 +682,8 @@ void twim_clear_status(Twim *twim, uint32_t clear_status)
  * \brief Set callback for TWIM
  *
  * \param twim       Base address of the TWIM
- * \param source     TWIM interrupt source
+ * \param interrupt_source     TWIM interrupt source
  * \param callback   Callback function pointer
- * \param irq_line   Interrupt line
  * \param irq_level  Interrupt level
  */
 void twim_set_callback(Twim *twim, uint32_t interrupt_source,
