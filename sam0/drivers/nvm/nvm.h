@@ -387,23 +387,41 @@ struct nvm_parameters {
  * which contain the fuse settings.
  */
 struct nvm_user_row {
+	/** Bootloader size. */
 	uint64_t bootprot:3;
+	/** Reserved */
 	uint64_t :1;
+	/** EEPROM emulation area size */
 	uint64_t eeprom:3;
+	/** Reserved */
 	uint64_t :1;
+	/** BOD33 Threshold level at power on */
 	uint64_t bod33_level:6;
+	/** BOD33 Enable at power on */
 	uint64_t bod33_enable:1;
+	/** BOD33 Action at power on */
 	uint64_t bod33_action:2;
+	/** BOD12 Threshold level at power on */
 	uint64_t bod12_level:5;
+	/** BOD12 Enable at power on */
 	uint64_t bod12_enable:1;
+	/** BOD12 Action at power on */
 	uint64_t bod12_action:2;
+	/** WDT Enable at power on */
 	uint64_t wdt_enable:1;
+	/** WDT Always-on at power on */
 	uint64_t wdt_always_on:1;
+	/** WDT Period at power on */
 	uint64_t wdt_period:4;
+	/** WDT Window mode time-out at power on */
 	uint64_t wdt_window:4;
+	/** WDT Early warning interrupt time offset at power on */
 	uint64_t wdt_early_warning_offset:4;
+	/** WDT Window mode enabled at power on */
 	uint64_t wdt_window_mode_enable_at_poweron:1;
+	/** Reserved */
 	uint64_t :8;
+	/** NVM Lock bits */
 	uint64_t lock:16;
 };
 

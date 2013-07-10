@@ -110,13 +110,14 @@ int main(void)
 	//! [main_6]
 	error_code = nvm_get_fuses(&user_row);
 
-	user_row.eeprom = 2;
+	user_row.eeprom   = 2;
+	user_row.bootprot = 0;
 
 	error_code = nvm_set_fuses(&user_row);
 	//! [main_6]
 
 	//! [main_7]
-	
+
 	//! [main_7]
 
 //! [main]
