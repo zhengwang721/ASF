@@ -44,6 +44,7 @@
 			<build type="c-source"      value="src/mac_callback_wrapper.c"/>
 			<require idref="config.thirdparty.wireless.avr2025_mac.source.mac.callbacks"/>
             <device-support-alias value="avr2025_mac_pal_spi_support"/>
+			<device-support-alias value="avr2025_mac_pal_spi_sam0_support"/>
             <device-support-alias value="avr2025_mac_pal_soc_support"/>
 		</module>
 		<module type="driver" id="config.thirdparty.wireless.avr2025_mac.source.mac.api#no" caption="MAC Api support disabled">
@@ -52,6 +53,7 @@
 			</info>
 			<info type="gui-flag" value="hidden"/>
             <device-support-alias value="avr2025_mac_pal_spi_support"/>
+			<device-support-alias value="avr2025_mac_pal_spi_sam0_support"/>
             <device-support-alias value="avr2025_mac_pal_soc_support"/>
 		</module>
 	</select-by-config>
@@ -94,6 +96,7 @@
 		<require idref="thirdparty.wireless.avr2025_mac.source.tal"/>
 		<require idref="thirdparty.wireless.avr2025_mac.source.mac.inc"/>
         <device-support-alias value="avr2025_mac_pal_spi_support"/>
+		<device-support-alias value="avr2025_mac_pal_spi_sam0_support"/>
         <device-support-alias value="avr2025_mac_pal_soc_support"/>
 	</module>
 	
@@ -110,6 +113,7 @@
 		<build type="include-path"  value="inc/"/>
 		<build type="doxygen-entry-point" value="group_mac"/>
         <device-support-alias value="avr2025_mac_pal_spi_support"/>
+		<device-support-alias value="avr2025_mac_pal_spi_sam0_support"/>
         <device-support-alias value="avr2025_mac_pal_soc_support"/>
 	</module>
 </asf>

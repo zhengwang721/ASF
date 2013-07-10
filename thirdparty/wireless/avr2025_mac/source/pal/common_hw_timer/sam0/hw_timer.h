@@ -1,9 +1,9 @@
 /**
- * \file *********************************************************************
+ * @file hw_timer.h
  *
- * \brief Common Hardware Timer configuration
+ * @brief
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ *  Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -36,47 +36,26 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * \asf_license_stop
  */
 
-#ifndef CONF_HW_TIMER_H_INCLUDED
-#define CONF_HW_TIMER_H_INCLUDED
+/* Prevent double inclusion */
+#ifndef HW_TIMER_H
+#define HW_TIMER_H
 
-/* ! \name Configuration for XMEGA */
-/* ! @{ */
-#if (XMEGA)
-#define TIMER     (&TCC0)
-#endif /* XMEGA */
-/* ! @} */
+typedef void (*tmr_callback_t) (void);
 
-/* ! \name Configuration for UC3 */
-/* ! @{ */
-#if (UC3)
-#define TIMER                (&AVR32_TC0)
-#define TIMER_CHANNEL_ID     0
-#endif /* UC3 */
-/* ! @} */
 
-/* ! \name Configuration for SAM4L */
-/* ! @{ */
-#if (SAM4L)
-#define TIMER                (TC0)
-#define TIMER_CHANNEL_ID     (0)
-#endif /* SAM4L */
-/* ! @} */
+uint16_t tmr_read_count(void);
+void tmr_disable_cc_interrupt(void);
+void tmr_enable_cc_interrupt(void);
+void tmr_disable_ovf_interrupt(void);
+void tmr_enable_ovf_interrupt(void);
+void tmr_stop(void);
+void tmr_write_cmpreg(uint16_t compare_value);
+uint8_t save_cpu_interrupt(void);
+void restore_cpu_interrupt(uint8_t flags);
+uint8_t tmr_init(void);
+void tmr_write_cmpreg(uint16_t compare_value);
 
-/* ! \name Configuration for MEGARF */
-/* ! @{ */
-#if (MEGA_RF)
-#define TIMER     (&TCCR1A)
-#endif /* MEGA_RF */
-/* ! @} */
-//! \name Configuration for SAMD20
-//! @{
-#if (SAMD20)
-#define TIMER     (TC0)
-#endif //SAMD20
-//! @}
-
-#endif /* CONF_HW_TIMER_H_INCLUDED */
+#endif /* HW_TIMER_H */
+/* EOF */

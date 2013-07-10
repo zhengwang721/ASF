@@ -1,9 +1,9 @@
 /**
- * \file *********************************************************************
+ * \file
  *
- * \brief Common Hardware Timer configuration
+ * \brief SAM D20 External Interrupt Driver Configuration Header
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,45 +38,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
+ *
  */
+#ifndef CONF_EXTINT_H_INCLUDED
+#define CONF_EXTINT_H_INCLUDED
 
-#ifndef CONF_HW_TIMER_H_INCLUDED
-#define CONF_HW_TIMER_H_INCLUDED
+#  define EXTINT_CALLBACKS_MAX     10
 
-/* ! \name Configuration for XMEGA */
-/* ! @{ */
-#if (XMEGA)
-#define TIMER     (&TCC0)
-#endif /* XMEGA */
-/* ! @} */
-
-/* ! \name Configuration for UC3 */
-/* ! @{ */
-#if (UC3)
-#define TIMER                (&AVR32_TC0)
-#define TIMER_CHANNEL_ID     0
-#endif /* UC3 */
-/* ! @} */
-
-/* ! \name Configuration for SAM4L */
-/* ! @{ */
-#if (SAM4L)
-#define TIMER                (TC0)
-#define TIMER_CHANNEL_ID     (0)
-#endif /* SAM4L */
-/* ! @} */
-
-/* ! \name Configuration for MEGARF */
-/* ! @{ */
-#if (MEGA_RF)
-#define TIMER     (&TCCR1A)
-#endif /* MEGA_RF */
-/* ! @} */
-//! \name Configuration for SAMD20
-//! @{
-#if (SAMD20)
-#define TIMER     (TC0)
-#endif //SAMD20
-//! @}
-
-#endif /* CONF_HW_TIMER_H_INCLUDED */
+#endif

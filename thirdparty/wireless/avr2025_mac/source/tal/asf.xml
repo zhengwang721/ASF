@@ -7,6 +7,7 @@
             <info type="gui-flag" value="hidden"/>
             <require idref="config.thirdparty.wireless.avr2025_mac.source.tal.ext"/>
             <device-support-alias value="avr2025_mac_pal_spi_support"/>
+			<device-support-alias value="avr2025_mac_pal_spi_sam0_support"/>
 		</module>
 
 		<module type="driver" id="config.thirdparty.wireless.avr2025_mac.source.tal#2"     caption="atmegarfr2 tal support enabled">
@@ -27,6 +28,7 @@
             <info type="gui-flag" value="hidden"/>
             <require idref="config.thirdparty.wireless.avr2025_mac.source.tal.at86rf212"/>
             <device-support-alias value="avr2025_mac_pal_spi_support"/>
+			<device-support-alias value="avr2025_mac_pal_spi_sam0_support"/>
         </module>
 
         <module type="driver" id="config.thirdparty.wireless.avr2025_mac.source.tal.ext#at86rf212b"     caption="at86rf212b tal support enabled">
@@ -36,6 +38,7 @@
             <info type="gui-flag" value="hidden"/>
             <require idref="config.thirdparty.wireless.avr2025_mac.source.tal.at86rf212b"/>
             <device-support-alias value="avr2025_mac_pal_spi_support"/>
+			<device-support-alias value="avr2025_mac_pal_spi_sam0_support"/>
         </module>
 
         <module type="driver" id="config.thirdparty.wireless.avr2025_mac.source.tal.ext#at86rf230b"    caption="at86rf230b tal support enabled">
@@ -45,6 +48,7 @@
             <info type="gui-flag" value="hidden"/>
             <require idref="config.thirdparty.wireless.avr2025_mac.source.tal.at86rf230b"/>
             <device-support-alias value="avr2025_mac_pal_spi_support"/>
+			<device-support-alias value="avr2025_mac_pal_spi_sam0_support"/>
         </module>
 
         <module type="driver" id="config.thirdparty.wireless.avr2025_mac.source.tal.ext#at86rf231"     caption="at86rf231 tal support enabled">
@@ -54,6 +58,7 @@
             <info type="gui-flag" value="hidden"/>
             <require idref="config.thirdparty.wireless.avr2025_mac.source.tal.at86rf231"/>
             <device-support-alias value="avr2025_mac_pal_spi_support"/>
+			<device-support-alias value="avr2025_mac_pal_spi_sam0_support"/>
         </module>
 
         <module type="driver" id="config.thirdparty.wireless.avr2025_mac.source.tal.ext#at86rf233"     caption="at86rf233 tal support enabled">
@@ -63,6 +68,7 @@
             <info type="gui-flag" value="hidden"/>
             <require idref="config.thirdparty.wireless.avr2025_mac.source.tal.at86rf233"/>
             <device-support-alias value="avr2025_mac_pal_spi_support"/>
+			<device-support-alias value="avr2025_mac_pal_spi_sam0_support"/>
         </module>
     </select-by-config>
 
@@ -75,6 +81,7 @@
         <require idref="thirdparty.wireless.avr2025_mac.source.pal"/>
         <require idref="thirdparty.wireless.avr2025_mac.source.resources"/>
         <device-support-alias value="avr2025_mac_pal_spi_support"/>
+		<device-support-alias value="avr2025_mac_pal_spi_sam0_support"/>
     </module>
 
     <module type="driver" id="config.thirdparty.wireless.avr2025_mac.source.tal.at86rf212b"     caption="at86rf212b tal support enabled">
@@ -86,6 +93,7 @@
         <require idref="thirdparty.wireless.avr2025_mac.source.pal"/>
         <require idref="thirdparty.wireless.avr2025_mac.source.resources"/>
         <device-support-alias value="avr2025_mac_pal_spi_support"/>
+		<device-support-alias value="avr2025_mac_pal_spi_sam0_support"/>
     </module>
 
     <module type="driver" id="config.thirdparty.wireless.avr2025_mac.source.tal.at86rf230b"    caption="at86rf230b tal support enabled">
@@ -97,6 +105,7 @@
         <require idref="thirdparty.wireless.avr2025_mac.source.pal"/>
         <require idref="thirdparty.wireless.avr2025_mac.source.resources"/>
         <device-support-alias value="avr2025_mac_pal_spi_support"/>
+		<device-support-alias value="avr2025_mac_pal_spi_sam0_support"/>
     </module>
 
     <module type="driver" id="config.thirdparty.wireless.avr2025_mac.source.tal.at86rf231"     caption="at86rf231 tal support enabled">
@@ -108,6 +117,7 @@
         <require idref="thirdparty.wireless.avr2025_mac.source.pal"/>
         <require idref="thirdparty.wireless.avr2025_mac.source.resources"/>
         <device-support-alias value="avr2025_mac_pal_spi_support"/>
+		<device-support-alias value="avr2025_mac_pal_spi_sam0_support"/>
     </module>
 
     <module type="driver" id="config.thirdparty.wireless.avr2025_mac.source.tal.at86rf233"     caption="at86rf233 tal support enabled">
@@ -119,6 +129,7 @@
         <require idref="thirdparty.wireless.avr2025_mac.source.pal"/>
         <require idref="thirdparty.wireless.avr2025_mac.source.resources"/>
         <device-support-alias value="avr2025_mac_pal_spi_support"/>
+		<device-support-alias value="avr2025_mac_pal_spi_sam0_support"/>
     </module>
 
     <module type="driver" id="config.thirdparty.wireless.avr2025_mac.source.tal.atmegarfr2"     caption="atmegarfr2 tal support enabled">
@@ -141,6 +152,7 @@
 		<require idref="thirdparty.wireless.avr2025_mac.source.tal.generic"/>
 		<build type="doxygen-entry-point" value="group_tal"/>
         <device-support-alias value="avr2025_mac_pal_spi_support"/>
+		<device-support-alias value="avr2025_mac_pal_spi_sam0_support"/>
         <device-support-alias value="avr2025_mac_pal_soc_support"/>
 	</module>
 

@@ -46,7 +46,11 @@
 
 #include "pal.h"
 #include "delay.h"
+#ifdef __SAMD20J18__
+#include "port.h"
+#else
 #include "ioport.h"
+#endif
 
 bool pal_calibrate_rc_osc(void)
 {

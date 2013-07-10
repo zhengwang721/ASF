@@ -427,6 +427,10 @@ volatile node_ib_t node_info;
 int main(void)
 {
 	irq_initialize_vectors();
+	#ifdef __SAMD20J18__
+	system_init();
+	delay_init();
+	#else
 	sysclk_init();
 
 	/* Initialize the board.
@@ -434,7 +438,9 @@ int main(void)
 	 * the board initialization.
 	 */
 	board_init();
+	#endif
 
+	sio2host_init();
 	/*
 	 * Power ON - so set the board to INIT state. All hardware, PAL, TAL and
 	 * stack level initialization must be done using this function
@@ -443,7 +449,7 @@ int main(void)
 
 	cpu_irq_enable();
 
-	sio2host_init();
+
 
 	/* INIT was a success - so change to WAIT_FOR_EVENT state */
 	set_main_state(WAIT_FOR_EVENT, NULL);

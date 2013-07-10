@@ -200,7 +200,20 @@ bool app_debounce_button(void)
  */
 bool button_pressed(void)
 {
-#if defined GPIO_PUSH_BUTTON_0
+//SAMD20
+#ifdef __SAMD20J18__
+	if(port_pin_get_input_level(SW0_PIN))
+	{
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+#elif defined GPIO_PUSH_BUTTON_0
+
+//#if defined GPIO_PUSH_BUTTON_0
+//SAMD20
 	/*Read the current state of the button*/
 	if (ioport_get_pin_level(GPIO_PUSH_BUTTON_0)) {
 		return false;

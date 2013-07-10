@@ -9,6 +9,7 @@
 			</info>
 			<require idref="thirdparty.wireless.avr2025_mac.source.mac"/>
             <device-support-alias value="avr2025_mac_pal_spi_support"/>
+			<device-support-alias value="avr2025_mac_pal_spi_sam0_support"/>
             <device-support-alias value="avr2025_mac_pal_soc_support"/>
 			<build type="doxygen-entry-point" value="group_mac"/>
             <info type="keyword" value="technology">

@@ -1,7 +1,7 @@
 /**
- * \file sio2host.h
+ * \file *********************************************************************
  *
- * \brief Event handling Serial I/O  Functionalities
+ * \brief Serial Input & Output configuration
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -39,65 +39,22 @@
  *
  * \asf_license_stop
  */
+#define EDBG_CDC
+#ifndef CONF_SIO2HOST_H_INCLUDED
+#define CONF_SIO2HOST_H_INCLUDED
+#ifdef EDBG_CDC
+#define USART_HOST                 EDBG_CDC_MODULE
+// /** Baudrate setting */
 
-#ifndef SIO2HOST_H
-#define SIO2HOST_H
+#define USART_HOST_RX_ISR_ENABLE()  _sercom_set_handler(3, USART_HOST_ISR_VECT);\
+USART_HOST->USART.INTENSET.reg = SERCOM_USART_INTFLAG_RXC;\
+system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_SERCOM3);
 
-/**
- * \defgroup group_sio2host_uart SIO2HOST - UART
- * This module performs serial input/output functionalities via UART
- * @{
- */
-
-/* === INCLUDES ============================================================ */
-
-#include "compiler.h"
-#include "status_codes.h"
-
-#define SERIAL_RX_BUF_SIZE_HOST    156
-
-/* === PROTOTYPES ============================================================
- **/
-
-/**
- * \brief Initializes the Serial IO Module
- * \return STATUS_OK for successful initialization and FAILURE incase the IO is
- *not initialized
- */
-void sio2host_init(void);
-
-/**
- * \brief Transmits data via UART
- * \param data Pointer to the buffer where the data to be transmitted is present
- * \param length Number of bytes to be transmitted
- *
- * \return Number of bytes actually transmitted
- */
-uint8_t sio2host_tx(uint8_t *data, uint8_t length);
-
-/**
- * \brief Receives data from UART
- *
- * \param data pointer to the buffer where the received data is to be stored
- * \param max_length maximum length of data to be received
- *
- * \return actual number of bytes received
- */
-uint8_t sio2host_rx(uint8_t *data, uint8_t max_length);
-
-/**
- * \brief This function performs a blocking character receive functionality
- * \return returns the data which is received
- */
-uint8_t sio2host_getchar(void);
-
-/**
- * \brief This function performs a non-blocking character receive functionality
- * \return '-1' if no data is recieved or returns the data if a character is
- *received
- */
-int sio2host_getchar_nowait(void);
-
-void USART_HOST_ISR_VECT(uint8_t instance);
-
-#endif /* SIO2HOST_H */
+#else
+#define USART_HOST                 SERCOM2
+#define USART_HOST_RX_ISR_ENABLE()  _sercom_set_handler(2, USART_HOST_ISR_VECT);\
+USART_HOST->USART.INTENSET.reg = SERCOM_USART_INTFLAG_RXC;\
+system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_SERCOM2);
+#endif
+#define USART_HOST_BAUDRATE        9600
+#endif /* CONF_SIO2HOST_H_INCLUDED */
