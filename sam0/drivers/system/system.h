@@ -496,6 +496,9 @@ void system_init(void);
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
+ *		<td>Added new \c system_reset() to reset the complete MCU with some exceptions</td>
+ *	</tr>
+ *	<tr>
  *		<td>Added new \c system_get_device_id() function to retrieved the device
  *          ID.</td>
  *	</tr>
