@@ -381,6 +381,106 @@ struct nvm_parameters {
 };
 
 /**
+ * \brief Bootloader size.
+ *
+ * Available bootloader protection sizes in kilobytes.
+ *
+ */
+enum nvm_bootloader_size {
+	NVM_BOOTLOADER_SIZE_128 = 0,
+	NVM_BOOTLOADER_SIZE_64,
+	NVM_BOOTLOADER_SIZE_32,
+	NVM_BOOTLOADER_SIZE_16,
+	NVM_BOOTLOADER_SIZE_8,
+	NVM_BOOTLOADER_SIZE_4,
+	NVM_BOOTLOADER_SIZE_2,
+	NVM_BOOTLOADER_SIZE_0,
+};
+
+/**
+ * \brief EEPROM emulator size.
+ *
+ * Available space in flash dedicated for EEPROM emulator in bytes.
+ *
+ */
+enum nvm_eeprom_emulator_size {
+	NVM_EEPROM_EMULATOR_SIZE_16384 = 0,
+	NVM_EEPROM_EMULATOR_SIZE_8192,
+	NVM_EEPROM_EMULATOR_SIZE_4096,
+	NVM_EEPROM_EMULATOR_SIZE_2048,
+	NVM_EEPROM_EMULATOR_SIZE_1024,
+	NVM_EEPROM_EMULATOR_SIZE_512,
+	NVM_EEPROM_EMULATOR_SIZE_0,
+};
+
+/**
+ * \brief BOD33 Action.
+ *
+ * What action should be triggered when BOD33 is detected.
+ *
+ */
+enum nvm_bod33_action {
+	NVM_BOD33_ACTION_NONE = 0,
+	NVM_BOD33_ACTION_RESET,
+	NVM_BOD33_ACTION_INTERRUPT,
+};
+
+/**
+ * \brief BOD12 Action
+ *
+ * What action should be triggered when BOD12 is detected.
+ *
+ */
+enum nvm_bod12_action {
+	NVM_BOD12_ACTION_NONE = 0,
+	NVM_BOD12_ACTION_RESET,
+	NVM_BOD12_ACTION_INTERRUPT,
+};
+
+/**
+ * \brief WDT Window time-out period
+ *
+ * Windows mode time-out period in clock cycles.
+ *
+ */
+enum nvm_wdt_window_timeout {
+	NVM_WDT_WINDOW_TIMEOUT_PERIOD_8 = 0,
+	NVM_WDT_WINDOW_TIMEOUT_PERIOD_16,
+	NVM_WDT_WINDOW_TIMEOUT_PERIOD_32,
+	NVM_WDT_WINDOW_TIMEOUT_PERIOD_64,
+	NVM_WDT_WINDOW_TIMEOUT_PERIOD_128,
+	NVM_WDT_WINDOW_TIMEOUT_PERIOD_256,
+	NVM_WDT_WINDOW_TIMEOUT_PERIOD_512,
+	NVM_WDT_WINDOW_TIMEOUT_PERIOD_1024,
+	NVM_WDT_WINDOW_TIMEOUT_PERIOD_2048,
+	NVM_WDT_WINDOW_TIMEOUT_PERIOD_4096,
+	NVM_WDT_WINDOW_TIMEOUT_PERIOD_8192,
+	NVM_WDT_WINDOW_TIMEOUT_PERIOD_16384,
+};
+
+/**
+ * \brief WDT Early warning offset
+ *
+ * This setting determine how many GCLK_WDT cycles before a watchdog time-out period
+ * an early warning interrupt should be triggered.
+ *
+ */
+enum nvm_wdt_early_warning_offset {
+	NVM_WDT_EARLY_WARNING_OFFSET_8 = 0,
+	NVM_WDT_EARLY_WARNING_OFFSET_16,
+	NVM_WDT_EARLY_WARNING_OFFSET_32,
+	NVM_WDT_EARLY_WARNING_OFFSET_64,
+	NVM_WDT_EARLY_WARNING_OFFSET_128,
+	NVM_WDT_EARLY_WARNING_OFFSET_256,
+	NVM_WDT_EARLY_WARNING_OFFSET_512,
+	NVM_WDT_EARLY_WARNING_OFFSET_1024,
+	NVM_WDT_EARLY_WARNING_OFFSET_2048,
+	NVM_WDT_EARLY_WARNING_OFFSET_4096,
+	NVM_WDT_EARLY_WARNING_OFFSET_8192,
+	NVM_WDT_EARLY_WARNING_OFFSET_16384,
+};
+
+/**
  * \brief NVM user row fuse setting structure
  *
  * This structure contain the layout of the first 64 bits of the user row
@@ -388,41 +488,35 @@ struct nvm_parameters {
  */
 struct nvm_user_row {
 	/** Bootloader size. */
-	uint64_t bootprot:3;
-	/** Reserved */
-	uint64_t :1;
+	enum nvm_bootloader_size          bootloader_size;
 	/** EEPROM emulation area size */
-	uint64_t eeprom:3;
-	/** Reserved */
-	uint64_t :1;
+	enum nvm_eeprom_emulator_size     eeprom_size;
 	/** BOD33 Threshold level at power on */
-	uint64_t bod33_level:6;
+	uint8_t                           bod33_level;
 	/** BOD33 Enable at power on */
-	uint64_t bod33_enable:1;
+	bool                              bod33_enable;
 	/** BOD33 Action at power on */
-	uint64_t bod33_action:2;
+	enum nvm_bod33_action             bod33_action;
 	/** BOD12 Threshold level at power on */
-	uint64_t bod12_level:5;
+	uint8_t                           bod12_level;
 	/** BOD12 Enable at power on */
-	uint64_t bod12_enable:1;
+	bool                              bod12_enable;
 	/** BOD12 Action at power on */
-	uint64_t bod12_action:2;
+	enum nvm_bod12_action             bod12_action;
 	/** WDT Enable at power on */
-	uint64_t wdt_enable:1;
+	bool                              wdt_enable;
 	/** WDT Always-on at power on */
-	uint64_t wdt_always_on:1;
+	bool                              wdt_always_on;
 	/** WDT Period at power on */
-	uint64_t wdt_period:4;
+	uint8_t                           wdt_timeout_period;
 	/** WDT Window mode time-out at power on */
-	uint64_t wdt_window:4;
+	enum nvm_wdt_window_timeout       wdt_window_timeout;
 	/** WDT Early warning interrupt time offset at power on */
-	uint64_t wdt_early_warning_offset:4;
+	enum nvm_wdt_early_warning_offset wdt_early_warning_offset;
 	/** WDT Window mode enabled at power on */
-	uint64_t wdt_window_mode_enable_at_poweron:1;
-	/** Reserved */
-	uint64_t :8;
+	bool                              wdt_window_mode_enable_at_poweron;
 	/** NVM Lock bits */
-	uint64_t lock:16;
+	uint16_t                          lockbits;
 };
 
 /**

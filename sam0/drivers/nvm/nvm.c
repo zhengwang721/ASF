@@ -633,6 +633,85 @@ bool nvm_is_page_locked(uint16_t page_number)
 	return !(nvm_module->LOCK.reg & (1 << region_number));
 }
 
+static void _nvm_translate_fusebits_to_struct(uint32_t *raw_user_row, struct nvm_user_row *user_row)
+{
+	user_row->bootloader_size = (enum nvm_bootloader_size)
+			((raw_user_row[0] & NVMCTRL_FUSES_BOOTPROT_Msk) >> NVMCTRL_FUSES_BOOTPROT_Pos);
+
+	user_row->eeprom_size = (enum nvm_eeprom_emulator_size)
+			((raw_user_row[0] & NVMCTRL_FUSES_EEPROM_SIZE_Msk) >> NVMCTRL_FUSES_EEPROM_SIZE_Pos);
+
+	user_row->bod33_level = (uint8_t)
+			((raw_user_row[0] & SYSCTRL_FUSES_BOD33USERLEVEL_Msk) >> SYSCTRL_FUSES_BOD33USERLEVEL_Pos);
+
+	user_row->bod33_enable = (bool)
+			((raw_user_row[0] & SYSCTRL_FUSES_BOD33_EN_Msk) >> SYSCTRL_FUSES_BOD33_EN_Pos);
+
+	user_row->bod33_action = (enum nvm_bod33_action)
+			((raw_user_row[0] & SYSCTRL_FUSES_BOD33_ACTION_Msk) >> SYSCTRL_FUSES_BOD33_ACTION_Pos);
+
+	user_row->bod12_level = (uint8_t)
+			((raw_user_row[0] & SYSCTRL_FUSES_BOD12USERLEVEL_Msk) >> SYSCTRL_FUSES_BOD12USERLEVEL_Pos);
+
+	user_row->bod12_enable = (bool)
+			((raw_user_row[0] & SYSCTRL_FUSES_BOD12_EN_Msk) >> SYSCTRL_FUSES_BOD12_EN_Pos);
+
+	user_row->bod12_action = (enum nvm_bod12_action)
+			((raw_user_row[0] & SYSCTRL_FUSES_BOD12_ACTION_Msk) >> SYSCTRL_FUSES_BOD12_ACTION_Pos);
+
+	user_row->wdt_enable = (bool)
+			((raw_user_row[0] & WDT_FUSES_ENABLE_Msk) >> WDT_FUSES_ENABLE_Pos);
+
+	user_row->wdt_always_on = (bool)
+			((raw_user_row[0] & WDT_FUSES_ALWAYSON_Msk) >> WDT_FUSES_ALWAYSON_Pos);
+
+	user_row->wdt_timeout_period = (uint8_t)
+			((raw_user_row[0] & WDT_FUSES_PER_Msk) >> WDT_FUSES_PER_Pos);
+
+	/* WDT Windows timout lay between two 32-bit words in the user row. Because only one bit lays in word[0],
+	   bits in word[1] must be left sifted by one to make the correct number */
+	user_row->wdt_window_timeout = (enum nvm_wdt_window_timeout)
+			((raw_user_row[0] & WDT_FUSES_WINDOW_0_Msk) >> WDT_FUSES_WINDOW_0_Pos) |
+			((raw_user_row[1] & WDT_FUSES_WINDOW_1_Msk) << 1);
+
+	user_row->wdt_early_warning_offset = (enum nvm_wdt_early_warning_offset)
+			((raw_user_row[1] & WDT_FUSES_EWOFFSET_Msk) >> WDT_FUSES_EWOFFSET_Pos);
+
+	user_row->wdt_window_mode_enable_at_poweron = (bool)
+			((raw_user_row[1] & WDT_FUSES_WEN_Msk) >> WDT_FUSES_WEN_Pos);
+
+	user_row->lockbits = (uint16_t)
+			((raw_user_row[1] & NVMCTRL_FUSES_REGION_LOCKS_Msk) >> NVMCTRL_FUSES_REGION_LOCKS_Pos);
+
+}
+
+
+static void _nvm_translate_struct_to_fusebits(struct nvm_user_row *user_row, uint32_t *raw_user_row)
+{
+	raw_user_row[0] = NVMCTRL_FUSES_BOOTPROT((uint8_t)(user_row->bootloader_size));
+	raw_user_row[0] = NVMCTRL_FUSES_EEPROM_SIZE((uint8_t)(user_row->eeprom_size));
+
+	raw_user_row[0] = SYSCTRL_FUSES_BOD33USERLEVEL(user_row->bod33_level);
+	raw_user_row[0] = ((uint32_t)(user_row->bod33_enable)) << SYSCTRL_FUSES_BOD33_EN_Pos;
+	raw_user_row[0] = SYSCTRL_FUSES_BOD33_ACTION((uint8_t)(user_row->bod33_action));
+
+	raw_user_row[0] = SYSCTRL_FUSES_BOD12USERLEVEL(user_row->bod12_level);
+	raw_user_row[0] = ((uint32_t)(user_row->bod33_enable)) << SYSCTRL_FUSES_BOD12_EN_Pos;
+	raw_user_row[0] = SYSCTRL_FUSES_BOD12_ACTION((uint8_t)(user_row->bod12_action));
+
+	raw_user_row[0] = ((uint32_t)(user_row->wdt_enable)) << WDT_FUSES_ENABLE_Pos;
+	raw_user_row[0] = ((uint32_t)(user_row->wdt_always_on)) << WDT_FUSES_ALWAYSON_Pos;
+	raw_user_row[0] = WDT_FUSES_PER(user_row->wdt_timeout_period);
+
+	raw_user_row[0] = (((uint32_t)(user_row->wdt_window_timeout)) & 0x01) << WDT_FUSES_WINDOW_0_Pos;
+	raw_user_row[1] = (((uint32_t)(user_row->wdt_window_timeout)) & 0x07) << WDT_FUSES_WINDOW_1_Pos;
+
+	raw_user_row[1] = WDT_FUSES_EWOFFSET((uint32_t)(user_row->wdt_early_warning_offset));
+	raw_user_row[1] = ((uint32_t)(user_row->wdt_window_mode_enable_at_poweron)) << WDT_FUSES_WEN_Pos;
+
+	raw_user_row[1] = NVMCTRL_FUSES_REGION_LOCKS(user_row->lockbits);
+}
+
 /**
  * \brief Get fuses from user row
  *
@@ -647,16 +726,19 @@ bool nvm_is_page_locked(uint16_t page_number)
 enum status_code nvm_get_fuses(struct nvm_user_row *user_row)
 {
 	enum status_code error_code = STATUS_OK;
+	uint32_t fusebits[2];
 
 	/* Make sure the module is ready */
 	while(!nvm_is_ready()) {
 	};
 
 	/* Read the fuse settings in the user row, 64 bit */
-	((uint16_t*)user_row)[0] = (uint16_t)NVM_MEMORY[NVMCTRL_USER / 2];
-	((uint16_t*)user_row)[1] = (uint16_t)NVM_MEMORY[(NVMCTRL_USER / 2) + 1];
-	((uint16_t*)user_row)[2] = (uint16_t)NVM_MEMORY[(NVMCTRL_USER / 2) + 2];
-	((uint16_t*)user_row)[3] = (uint16_t)NVM_MEMORY[(NVMCTRL_USER / 2) + 3];
+	((uint16_t*)&fusebits)[0] = (uint16_t)NVM_MEMORY[NVMCTRL_USER / 2];
+	((uint16_t*)&fusebits)[1] = (uint16_t)NVM_MEMORY[(NVMCTRL_USER / 2) + 1];
+	((uint16_t*)&fusebits)[2] = (uint16_t)NVM_MEMORY[(NVMCTRL_USER / 2) + 2];
+	((uint16_t*)&fusebits)[3] = (uint16_t)NVM_MEMORY[(NVMCTRL_USER / 2) + 3];
+
+	_nvm_translate_fusebits_to_struct(fusebits, user_row);
 
 	return error_code;
 }
@@ -684,6 +766,7 @@ enum status_code nvm_set_fuses(struct nvm_user_row *user_row)
 {
 	Nvmctrl *const nvm_module = NVMCTRL;
 	uint8_t state = _NVM_SET_FUSES_STATE_ERASE_ROW;
+	uint32_t fusebits[2];
 
 	/* If the security bit is set, the auxiliary space cannot be written */
 	if (nvm_module->STATUS.reg & NVMCTRL_STATUS_SB) {
@@ -722,11 +805,13 @@ enum status_code nvm_set_fuses(struct nvm_user_row *user_row)
 			break;
 
 		case _NVM_SET_FUSES_STATE_WRITE_FUSES:
+			_nvm_translate_struct_to_fusebits(user_row, fusebits);
+
 			/* Write new user row content (address much be converted from 8-bit to 16-bit aligned) */
-			NVM_MEMORY[NVMCTRL_USER / 2]       = ((uint16_t*)user_row)[0];
-			NVM_MEMORY[(NVMCTRL_USER / 2) + 1] = ((uint16_t*)user_row)[1];
-			NVM_MEMORY[(NVMCTRL_USER / 2) + 2] = ((uint16_t*)user_row)[2];
-			NVM_MEMORY[(NVMCTRL_USER / 2) + 3] = ((uint16_t*)user_row)[3];
+			NVM_MEMORY[NVMCTRL_USER / 2]       = ((uint16_t*)fusebits)[0];
+			NVM_MEMORY[(NVMCTRL_USER / 2) + 1] = ((uint16_t*)fusebits)[1];
+			NVM_MEMORY[(NVMCTRL_USER / 2) + 2] = ((uint16_t*)fusebits)[2];
+			NVM_MEMORY[(NVMCTRL_USER / 2) + 3] = ((uint16_t*)fusebits)[3];
 
 			nvm_module->CTRLA.reg = NVM_COMMAND_WRITE_AUX_ROW | NVMCTRL_CTRLA_CMDEX_KEY;
 			break;
