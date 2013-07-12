@@ -577,23 +577,6 @@ retval_t tal_reset(bool set_default_pib)
 	ENTER_CRITICAL_REGION();
 	tal_timers_stop();
 	LEAVE_CRITICAL_REGION();
-    
-#if (NUMBER_OF_TAL_TIMERS > 0)
-    /* Clear all running TAL timers. */
-    {
-        uint8_t timer_id;
-
-        ENTER_CRITICAL_REGION();
-
-        for (timer_id = TAL_FIRST_TIMER_ID; timer_id <= TAL_LAST_TIMER_ID;
-             timer_id++)
-        {
-            pal_timer_stop(timer_id);
-        }
-
-        LEAVE_CRITICAL_REGION();
-    }
-#endif
 
 	/* Clear TAL Incoming Frame queue and free used buffers. */
 	while (tal_incoming_frame_queue.size > 0) {
