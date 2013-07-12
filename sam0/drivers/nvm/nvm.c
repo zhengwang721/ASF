@@ -94,7 +94,7 @@ static struct _nvm_module _nvm_dev;
  *
  * \retval STATUS_OK          If the initialization was a success
  * \retval STATUS_BUSY        If the module was busy when the operation was attempted
- * \retval STATUS_ERR_DENIED  If the security bit has been set, preventing the
+ * \retval STATUS_ERR_IO      If the security bit has been set, preventing the
  *                            EEPROM and/or auxiliary space configuration from being
  *                            altered
  */
@@ -766,7 +766,7 @@ enum status_code nvm_get_fuses(struct nvm_user_row *user_row)
  *
  * \retval STATUS_OK          New fuse settings where written sucessfully to user row
  *
- * \retval STATUS_ERR_DENIED  Secitity bit is set, user row can not be written
+ * \retval STATUS_ERR_IO  Secitity bit is set, user row can not be written
  *
  * \retval STATUS_ERR_IO      Writing of fuses to user row failed
  */
