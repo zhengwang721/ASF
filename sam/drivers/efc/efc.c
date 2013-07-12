@@ -3,7 +3,7 @@
  *
  * \brief Enhanced Embedded Flash Controller (EEFC) driver for SAM.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -200,49 +200,13 @@ uint32_t efc_perform_command(Efc *p_efc, uint32_t ul_command,
 	if (ul_command == EFC_FCMD_STUI || ul_command == EFC_FCMD_SPUI) {
 		return EFC_RC_NOT_SUPPORT;
 	}
-
-#if (SAM3XA || SAM3U4)
-	/* Use IAP function with 2 parameters in ROM. */
-	static uint32_t(*iap_perform_command) (uint32_t, uint32_t);
-	uint32_t ul_efc_nb = (p_efc == EFC0) ? 0 : 1;
-
-	iap_perform_command =
-			(uint32_t(*)(uint32_t, uint32_t))
-			*((uint32_t *) CHIP_FLASH_IAP_ADDRESS);
-	iap_perform_command(ul_efc_nb,
-			EEFC_FCR_FKEY(FWP_KEY) | EEFC_FCR_FARG(ul_argument) |
-			EEFC_FCR_FCMD(ul_command));
-	return (p_efc->EEFC_FSR & EEFC_ERROR_FLAGS);
-
-#elif (SAM3N || SAM3S || SAM4S || SAM3U || SAM4E)
-	/* Use IAP function with 2 parameter in ROM. */
-	static uint32_t(*iap_perform_command) (uint32_t, uint32_t);
-
-	iap_perform_command =
-			(uint32_t(*)(uint32_t, uint32_t))
-			*((uint32_t *) CHIP_FLASH_IAP_ADDRESS);
-#if SAM4S
-	uint32_t ul_efc_nb = (p_efc == EFC0) ? 0 : 1;
-	iap_perform_command(ul_efc_nb,
-			EEFC_FCR_FKEY_PASSWD | EEFC_FCR_FARG(ul_argument) |
-			EEFC_FCR_FCMD(ul_command));
-#elif SAM4E
-	iap_perform_command(0,
-			EEFC_FCR_FKEY_PASSWD | EEFC_FCR_FARG(ul_argument) |
-			EEFC_FCR_FCMD(ul_command));
-#else
-	iap_perform_command(0,
-			EEFC_FCR_FKEY(FWP_KEY) | EEFC_FCR_FARG(ul_argument) |
-			EEFC_FCR_FCMD(ul_command));
+#ifdef EEFC_FCR_FKEY_PASSWD
+#define EEFC_FCR_FKEY(FWP_KEY) EEFC_FCR_FKEY_PASSWD
 #endif
-	return (p_efc->EEFC_FSR & EEFC_ERROR_FLAGS);
-#else
 	/* Use RAM Function. */
 	return efc_perform_fcr(p_efc,
 			EEFC_FCR_FKEY(FWP_KEY) | EEFC_FCR_FARG(ul_argument) |
 			EEFC_FCR_FCMD(ul_command));
-
-#endif
 }
 
 /**
