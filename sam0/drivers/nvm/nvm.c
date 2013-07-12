@@ -696,6 +696,8 @@ static void _nvm_translate_fusebits_to_struct (
 
 }
 
+#define NVM_FUSEBITS_0_RESERVED_BITS 0x00000088
+#define NVM_FUSEBITS_1_RESERVED_BITS 0x0000ff00
 
 static void _nvm_translate_struct_to_fusebits (
 		struct nvm_user_row *user_row,
@@ -708,7 +710,7 @@ static void _nvm_translate_struct_to_fusebits (
 			    NVMCTRL_FUSES_EEPROM_SIZE((uint8_t)(user_row->eeprom_size))         |
 
 			/* Reserved bits should be 1 */
-			0x00000088                                                              |
+			NVM_FUSEBITS_0_RESERVED_BITS                                            |
 
 			/* Setting BOD33 fuses */
 			    SYSCTRL_FUSES_BOD33USERLEVEL(user_row->bod33_level)                 |
@@ -733,7 +735,7 @@ static void _nvm_translate_struct_to_fusebits (
 			  ((uint32_t)(user_row->wdt_window_mode_enable_at_poweron)) << WDT_FUSES_WEN_Pos |
 
 			/* Reserved bits should be 1 */
-			0x0000ff00                                                                       |
+			NVM_FUSEBITS_1_RESERVED_BITS                                                     |
 
 			/* Setting flash region lock bits */
 			  NVMCTRL_FUSES_REGION_LOCKS(user_row->lockbits));
