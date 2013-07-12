@@ -387,7 +387,7 @@ struct nvm_parameters {
  *
  */
 enum nvm_bootloader_size {
-	NVM_BOOTLOADER_SIZE_128 = 0,
+	NVM_BOOTLOADER_SIZE_128,
 	NVM_BOOTLOADER_SIZE_64,
 	NVM_BOOTLOADER_SIZE_32,
 	NVM_BOOTLOADER_SIZE_16,
@@ -404,7 +404,7 @@ enum nvm_bootloader_size {
  *
  */
 enum nvm_eeprom_emulator_size {
-	NVM_EEPROM_EMULATOR_SIZE_16384 = 0,
+	NVM_EEPROM_EMULATOR_SIZE_16384,
 	NVM_EEPROM_EMULATOR_SIZE_8192,
 	NVM_EEPROM_EMULATOR_SIZE_4096,
 	NVM_EEPROM_EMULATOR_SIZE_2048,
@@ -421,7 +421,7 @@ enum nvm_eeprom_emulator_size {
  *
  */
 enum nvm_bod33_action {
-	NVM_BOD33_ACTION_NONE = 0,
+	NVM_BOD33_ACTION_NONE,
 	NVM_BOD33_ACTION_RESET,
 	NVM_BOD33_ACTION_INTERRUPT,
 };
@@ -433,7 +433,7 @@ enum nvm_bod33_action {
  *
  */
 enum nvm_bod12_action {
-	NVM_BOD12_ACTION_NONE = 0,
+	NVM_BOD12_ACTION_NONE,
 	NVM_BOD12_ACTION_RESET,
 	NVM_BOD12_ACTION_INTERRUPT,
 };
@@ -445,7 +445,7 @@ enum nvm_bod12_action {
  *
  */
 enum nvm_wdt_window_timeout {
-	NVM_WDT_WINDOW_TIMEOUT_PERIOD_8 = 0,
+	NVM_WDT_WINDOW_TIMEOUT_PERIOD_8,
 	NVM_WDT_WINDOW_TIMEOUT_PERIOD_16,
 	NVM_WDT_WINDOW_TIMEOUT_PERIOD_32,
 	NVM_WDT_WINDOW_TIMEOUT_PERIOD_64,
@@ -467,7 +467,7 @@ enum nvm_wdt_window_timeout {
  *
  */
 enum nvm_wdt_early_warning_offset {
-	NVM_WDT_EARLY_WARNING_OFFSET_8 = 0,
+	NVM_WDT_EARLY_WARNING_OFFSET_8,
 	NVM_WDT_EARLY_WARNING_OFFSET_16,
 	NVM_WDT_EARLY_WARNING_OFFSET_32,
 	NVM_WDT_EARLY_WARNING_OFFSET_64,
