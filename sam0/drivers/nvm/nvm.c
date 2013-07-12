@@ -633,32 +633,41 @@ bool nvm_is_page_locked(uint16_t page_number)
 	return !(nvm_module->LOCK.reg & (1 << region_number));
 }
 
-static void _nvm_translate_fusebits_to_struct(uint32_t *raw_user_row, struct nvm_user_row *user_row)
+static void _nvm_translate_fusebits_to_struct (
+		uint32_t *raw_user_row,
+		struct nvm_user_row *user_row)
 {
 
 	user_row->bootloader_size = (enum nvm_bootloader_size)
-			((raw_user_row[0] & NVMCTRL_FUSES_BOOTPROT_Msk) >> NVMCTRL_FUSES_BOOTPROT_Pos);
+			((raw_user_row[0] & NVMCTRL_FUSES_BOOTPROT_Msk)
+			>> NVMCTRL_FUSES_BOOTPROT_Pos);
 
 	user_row->eeprom_size = (enum nvm_eeprom_emulator_size)
-			((raw_user_row[0] & NVMCTRL_FUSES_EEPROM_SIZE_Msk) >> NVMCTRL_FUSES_EEPROM_SIZE_Pos);
+			((raw_user_row[0] & NVMCTRL_FUSES_EEPROM_SIZE_Msk)
+			>> NVMCTRL_FUSES_EEPROM_SIZE_Pos);
 
 	user_row->bod33_level = (uint8_t)
-			((raw_user_row[0] & SYSCTRL_FUSES_BOD33USERLEVEL_Msk) >> SYSCTRL_FUSES_BOD33USERLEVEL_Pos);
+			((raw_user_row[0] & SYSCTRL_FUSES_BOD33USERLEVEL_Msk)
+			>> SYSCTRL_FUSES_BOD33USERLEVEL_Pos);
 
 	user_row->bod33_enable = (bool)
-			((raw_user_row[0] & SYSCTRL_FUSES_BOD33_EN_Msk) >> SYSCTRL_FUSES_BOD33_EN_Pos);
+			((raw_user_row[0] & SYSCTRL_FUSES_BOD33_EN_Msk)
+			>> SYSCTRL_FUSES_BOD33_EN_Pos);
 
 	user_row->bod33_action = (enum nvm_bod33_action)
-			((raw_user_row[0] & SYSCTRL_FUSES_BOD33_ACTION_Msk) >> SYSCTRL_FUSES_BOD33_ACTION_Pos);
+			((raw_user_row[0] & SYSCTRL_FUSES_BOD33_ACTION_Msk)
+			>> SYSCTRL_FUSES_BOD33_ACTION_Pos);
 
 	user_row->bod12_level = (uint8_t)
-			((raw_user_row[0] & SYSCTRL_FUSES_BOD12USERLEVEL_Msk) >> SYSCTRL_FUSES_BOD12USERLEVEL_Pos);
+			((raw_user_row[0] & SYSCTRL_FUSES_BOD12USERLEVEL_Msk)
+			>> SYSCTRL_FUSES_BOD12USERLEVEL_Pos);
 
 	user_row->bod12_enable = (bool)
 			((raw_user_row[0] & SYSCTRL_FUSES_BOD12_EN_Msk) >> SYSCTRL_FUSES_BOD12_EN_Pos);
 
 	user_row->bod12_action = (enum nvm_bod12_action)
-			((raw_user_row[0] & SYSCTRL_FUSES_BOD12_ACTION_Msk) >> SYSCTRL_FUSES_BOD12_ACTION_Pos);
+			((raw_user_row[0] & SYSCTRL_FUSES_BOD12_ACTION_Msk)
+			>> SYSCTRL_FUSES_BOD12_ACTION_Pos);
 
 	user_row->wdt_enable = (bool)
 			((raw_user_row[0] & WDT_FUSES_ENABLE_Msk) >> WDT_FUSES_ENABLE_Pos);
@@ -682,42 +691,53 @@ static void _nvm_translate_fusebits_to_struct(uint32_t *raw_user_row, struct nvm
 			((raw_user_row[1] & WDT_FUSES_WEN_Msk) >> WDT_FUSES_WEN_Pos);
 
 	user_row->lockbits = (uint16_t)
-			((raw_user_row[1] & NVMCTRL_FUSES_REGION_LOCKS_Msk) >> NVMCTRL_FUSES_REGION_LOCKS_Pos);
+			((raw_user_row[1] & NVMCTRL_FUSES_REGION_LOCKS_Msk)
+			>> NVMCTRL_FUSES_REGION_LOCKS_Pos);
 
 }
 
 
-static void _nvm_translate_struct_to_fusebits(struct nvm_user_row *user_row, uint32_t *raw_user_row)
+static void _nvm_translate_struct_to_fusebits (
+		struct nvm_user_row *user_row,
+		uint32_t *raw_user_row)
 {
 
-	raw_user_row[0] = NVMCTRL_FUSES_BOOTPROT((uint8_t)(user_row->bootloader_size));
-	raw_user_row[0] |= NVMCTRL_FUSES_EEPROM_SIZE((uint8_t)(user_row->eeprom_size));
+	/* Make sure all bits not accessed is set to 1 */
+	raw_user_row[0] = 0xffffffff;
 
-	/* Reserved bits should read 1 */
-	raw_user_row[0] |= 0x88;
+	/* Make sure all bits not accessed is set to 1 */
+	raw_user_row[1] = 0xffffffff;
 
-	raw_user_row[0] |= SYSCTRL_FUSES_BOD33USERLEVEL(user_row->bod33_level);
-	raw_user_row[0] |= ((uint32_t)(user_row->bod33_enable)) << SYSCTRL_FUSES_BOD33_EN_Pos;
-	raw_user_row[0] |= SYSCTRL_FUSES_BOD33_ACTION((uint8_t)(user_row->bod33_action));
+	/* Generating 32-bit word 1 */
+			/* Setting EEPROM emulator area size and bootloader size */
+	raw_user_row[0] &= (NVMCTRL_FUSES_BOOTPROT((uint8_t)(user_row->bootloader_size))        |
+			    NVMCTRL_FUSES_EEPROM_SIZE((uint8_t)(user_row->eeprom_size))         |
 
-	raw_user_row[0] |= SYSCTRL_FUSES_BOD12USERLEVEL(user_row->bod12_level);
-	raw_user_row[0] |= ((uint32_t)(user_row->bod33_enable)) << SYSCTRL_FUSES_BOD12_EN_Pos;
-	raw_user_row[0] |= SYSCTRL_FUSES_BOD12_ACTION((uint8_t)(user_row->bod12_action));
+			/* Setting BOD33 fuses */
+			    SYSCTRL_FUSES_BOD33USERLEVEL(user_row->bod33_level)                 |
+			    ((uint32_t)(user_row->bod33_enable)) << SYSCTRL_FUSES_BOD33_EN_Pos  |
+			    SYSCTRL_FUSES_BOD33_ACTION((uint8_t)(user_row->bod33_action))       |
 
-	raw_user_row[0] |= ((uint32_t)(user_row->wdt_enable)) << WDT_FUSES_ENABLE_Pos;
-	raw_user_row[0] |= ((uint32_t)(user_row->wdt_always_on)) << WDT_FUSES_ALWAYSON_Pos;
-	raw_user_row[0] |= WDT_FUSES_PER(user_row->wdt_timeout_period);
+			/* Setting BOD12 fuses */
+			    SYSCTRL_FUSES_BOD12USERLEVEL(user_row->bod12_level)                 |
+			    ((uint32_t)(user_row->bod33_enable)) << SYSCTRL_FUSES_BOD12_EN_Pos  |
+			    SYSCTRL_FUSES_BOD12_ACTION((uint8_t)(user_row->bod12_action))       |
 
-	raw_user_row[0] |= (((uint32_t)(user_row->wdt_window_timeout)) & 0x01) << WDT_FUSES_WINDOW_0_Pos;
-	raw_user_row[1] = (((uint32_t)(user_row->wdt_window_timeout)) & 0x0E) >> 1;
+			/* Setting WDT fuses */
+			    ((uint32_t)(user_row->wdt_enable)) << WDT_FUSES_ENABLE_Pos          |
+			    ((uint32_t)(user_row->wdt_always_on)) << WDT_FUSES_ALWAYSON_Pos     |
+			    WDT_FUSES_PER(user_row->wdt_timeout_period)                         |
+			    (((uint32_t)(user_row->wdt_window_timeout)) & 0x01) << WDT_FUSES_WINDOW_0_Pos);
 
-	raw_user_row[1] |= WDT_FUSES_EWOFFSET((uint32_t)(user_row->wdt_early_warning_offset));
-	raw_user_row[1] |= ((uint32_t)(user_row->wdt_window_mode_enable_at_poweron)) << WDT_FUSES_WEN_Pos;
+	/* Generating 32-bit word 2 */
+			/* WDT fuse settings continued */
+	raw_user_row[1] = ((((uint32_t)(user_row->wdt_window_timeout)) & 0x0E) >> 1                      |
+			  WDT_FUSES_EWOFFSET((uint32_t)(user_row->wdt_early_warning_offset))             |
+			  ((uint32_t)(user_row->wdt_window_mode_enable_at_poweron)) << WDT_FUSES_WEN_Pos |
 
-	raw_user_row[1] |= NVMCTRL_FUSES_REGION_LOCKS(user_row->lockbits);
+			/* Setting flash region lock bits */
+			  NVMCTRL_FUSES_REGION_LOCKS(user_row->lockbits));
 
-	/* Reserved bits should read 1 */
-	raw_user_row[1] |= 0xff00;
 }
 
 /**
@@ -731,13 +751,14 @@ static void _nvm_translate_struct_to_fusebits(struct nvm_user_row *user_row, uin
  *
  * \retval STATUS_OK   This function will always return STATUS_OK
  */
-enum status_code nvm_get_fuses(struct nvm_user_row *user_row)
+enum status_code nvm_get_fuses (
+		struct nvm_user_row *user_row)
 {
 	enum status_code error_code = STATUS_OK;
 	uint32_t fusebits[2];
 
 	/* Make sure the module is ready */
-	while(!nvm_is_ready()) {
+	while (!nvm_is_ready()) {
 	};
 
 	/* Read the fuse settings in the user row, 64 bit */
@@ -770,7 +791,8 @@ enum status_code nvm_get_fuses(struct nvm_user_row *user_row)
  *
  * \retval STATUS_ERR_IO      Writing of fuses to user row failed
  */
-enum status_code nvm_set_fuses(struct nvm_user_row *user_row)
+enum status_code nvm_set_fuses(
+		struct nvm_user_row *user_row)
 {
 	Nvmctrl *const nvm_module = NVMCTRL;
 	uint8_t state = _NVM_SET_FUSES_STATE_ERASE_ROW;
@@ -787,11 +809,11 @@ enum status_code nvm_set_fuses(struct nvm_user_row *user_row)
 	do {
 
 		/* Wait for the nvm controller to become ready */
-		while(!nvm_is_ready()) {
+		while (!nvm_is_ready()) {
 		}
 
 		/* Has something gone wrong? */
-		if(nvm_module->INTFLAG.reg & NVMCTRL_INTFLAG_ERROR) {
+		if (nvm_module->INTFLAG.reg & NVMCTRL_INTFLAG_ERROR) {
 			/* Don't bother about what, just clear status flags and return error status*/
 			nvm_module->STATUS.reg  |= ~NVMCTRL_STATUS_MASK;
 			nvm_module->INTFLAG.reg |= NVMCTRL_INTFLAG_ERROR;
