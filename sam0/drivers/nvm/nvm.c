@@ -635,6 +635,7 @@ bool nvm_is_page_locked(uint16_t page_number)
 
 static void _nvm_translate_fusebits_to_struct(uint32_t *raw_user_row, struct nvm_user_row *user_row)
 {
+
 	user_row->bootloader_size = (enum nvm_bootloader_size)
 			((raw_user_row[0] & NVMCTRL_FUSES_BOOTPROT_Msk) >> NVMCTRL_FUSES_BOOTPROT_Pos);
 
@@ -688,28 +689,35 @@ static void _nvm_translate_fusebits_to_struct(uint32_t *raw_user_row, struct nvm
 
 static void _nvm_translate_struct_to_fusebits(struct nvm_user_row *user_row, uint32_t *raw_user_row)
 {
+
 	raw_user_row[0] = NVMCTRL_FUSES_BOOTPROT((uint8_t)(user_row->bootloader_size));
-	raw_user_row[0] = NVMCTRL_FUSES_EEPROM_SIZE((uint8_t)(user_row->eeprom_size));
+	raw_user_row[0] |= NVMCTRL_FUSES_EEPROM_SIZE((uint8_t)(user_row->eeprom_size));
 
-	raw_user_row[0] = SYSCTRL_FUSES_BOD33USERLEVEL(user_row->bod33_level);
-	raw_user_row[0] = ((uint32_t)(user_row->bod33_enable)) << SYSCTRL_FUSES_BOD33_EN_Pos;
-	raw_user_row[0] = SYSCTRL_FUSES_BOD33_ACTION((uint8_t)(user_row->bod33_action));
+	/* Reserved bits should read 1 */
+	raw_user_row[0] |= 0x88;
 
-	raw_user_row[0] = SYSCTRL_FUSES_BOD12USERLEVEL(user_row->bod12_level);
-	raw_user_row[0] = ((uint32_t)(user_row->bod33_enable)) << SYSCTRL_FUSES_BOD12_EN_Pos;
-	raw_user_row[0] = SYSCTRL_FUSES_BOD12_ACTION((uint8_t)(user_row->bod12_action));
+	raw_user_row[0] |= SYSCTRL_FUSES_BOD33USERLEVEL(user_row->bod33_level);
+	raw_user_row[0] |= ((uint32_t)(user_row->bod33_enable)) << SYSCTRL_FUSES_BOD33_EN_Pos;
+	raw_user_row[0] |= SYSCTRL_FUSES_BOD33_ACTION((uint8_t)(user_row->bod33_action));
 
-	raw_user_row[0] = ((uint32_t)(user_row->wdt_enable)) << WDT_FUSES_ENABLE_Pos;
-	raw_user_row[0] = ((uint32_t)(user_row->wdt_always_on)) << WDT_FUSES_ALWAYSON_Pos;
-	raw_user_row[0] = WDT_FUSES_PER(user_row->wdt_timeout_period);
+	raw_user_row[0] |= SYSCTRL_FUSES_BOD12USERLEVEL(user_row->bod12_level);
+	raw_user_row[0] |= ((uint32_t)(user_row->bod33_enable)) << SYSCTRL_FUSES_BOD12_EN_Pos;
+	raw_user_row[0] |= SYSCTRL_FUSES_BOD12_ACTION((uint8_t)(user_row->bod12_action));
 
-	raw_user_row[0] = (((uint32_t)(user_row->wdt_window_timeout)) & 0x01) << WDT_FUSES_WINDOW_0_Pos;
-	raw_user_row[1] = (((uint32_t)(user_row->wdt_window_timeout)) & 0x07) << WDT_FUSES_WINDOW_1_Pos;
+	raw_user_row[0] |= ((uint32_t)(user_row->wdt_enable)) << WDT_FUSES_ENABLE_Pos;
+	raw_user_row[0] |= ((uint32_t)(user_row->wdt_always_on)) << WDT_FUSES_ALWAYSON_Pos;
+	raw_user_row[0] |= WDT_FUSES_PER(user_row->wdt_timeout_period);
 
-	raw_user_row[1] = WDT_FUSES_EWOFFSET((uint32_t)(user_row->wdt_early_warning_offset));
-	raw_user_row[1] = ((uint32_t)(user_row->wdt_window_mode_enable_at_poweron)) << WDT_FUSES_WEN_Pos;
+	raw_user_row[0] |= (((uint32_t)(user_row->wdt_window_timeout)) & 0x01) << WDT_FUSES_WINDOW_0_Pos;
+	raw_user_row[1] = (((uint32_t)(user_row->wdt_window_timeout)) & 0x0E) >> 1;
 
-	raw_user_row[1] = NVMCTRL_FUSES_REGION_LOCKS(user_row->lockbits);
+	raw_user_row[1] |= WDT_FUSES_EWOFFSET((uint32_t)(user_row->wdt_early_warning_offset));
+	raw_user_row[1] |= ((uint32_t)(user_row->wdt_window_mode_enable_at_poweron)) << WDT_FUSES_WEN_Pos;
+
+	raw_user_row[1] |= NVMCTRL_FUSES_REGION_LOCKS(user_row->lockbits);
+
+	/* Reserved bits should read 1 */
+	raw_user_row[1] |= 0xff00;
 }
 
 /**
@@ -807,7 +815,7 @@ enum status_code nvm_set_fuses(struct nvm_user_row *user_row)
 		case _NVM_SET_FUSES_STATE_WRITE_FUSES:
 			_nvm_translate_struct_to_fusebits(user_row, fusebits);
 
-			/* Write new user row content (address much be converted from 8-bit to 16-bit aligned) */
+			/* Write new user row content (address must be converted from 8-bit to 16-bit aligned) */
 			NVM_MEMORY[NVMCTRL_USER / 2]       = ((uint16_t*)fusebits)[0];
 			NVM_MEMORY[(NVMCTRL_USER / 2) + 1] = ((uint16_t*)fusebits)[1];
 			NVM_MEMORY[(NVMCTRL_USER / 2) + 2] = ((uint16_t*)fusebits)[2];
@@ -830,5 +838,6 @@ enum status_code nvm_set_fuses(struct nvm_user_row *user_row)
 	system_interrupt_leave_critical_section();
 
 	return STATUS_OK;
+
 }
 
