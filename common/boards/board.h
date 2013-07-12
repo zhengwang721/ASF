@@ -123,6 +123,7 @@ extern "C" {
 #define SAMD20_XPLAINED_PRO        59  //!< SAMD20 Xplained PRO board
 #define SAM4L8_XPLAINED_PRO        60  //!< SAM4L8 Xplained Pro board.
 #define XMEGA_A3_REB_CBB           61  //!< SAM4L8 Xplained Pro board.
+#define ATMEGA256RFR2_RCB          62  //!< RFR2 RCB
 #define SIMULATOR_XMEGA_A1         97  //!< Simulator for XMEGA A1 devices
 #define AVR_SIMULATOR_UC3          98  //!< AVR SIMULATOR for AVR UC3 device family.
 #define USER_BOARD                 99  //!< User-reserved board (if any).
@@ -271,6 +272,8 @@ extern "C" {
 #  include "xmega_rf233_zigbit/xmega_rf233_zigbit.h"
 #elif BOARD == XMEGA_A3_REB_CBB
 #  include "xmega_a3_reb_cbb/xmega_a3_reb_cbb.h"
+#elif BOARD == ATMEGA256RFR2_RCB
+#  include "atmega256rfr2_rcb/atmega256rfr2_rcb.h"
 #elif BOARD == XMEGA_RF212B_ZIGBIT
 #  include "xmega_rf212b_zigbit/xmega_rf212b_zigbit.h"
 #elif BOARD == AVR_SIMULATOR_UC3
