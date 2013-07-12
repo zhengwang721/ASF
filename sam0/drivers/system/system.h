@@ -410,8 +410,8 @@ static inline void system_sleep(void)
 /**
  * \brief Reset the MCU
  *
- * This function will reset the complete MCU except RTC, All 32kHz sources,
- * WDT with ALWAYSON feature and GCLK with WRTLOCK feature.
+ * Resets the MCU and all associated peripherals and registers, except RTC, all 32kHz sources,
+ * WDT (if ALWAYSON is set) and GCLK (if WRTLOCK is set).
  *
  */
 static inline void system_reset(void)
