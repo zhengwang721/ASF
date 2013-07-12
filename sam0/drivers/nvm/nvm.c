@@ -131,7 +131,7 @@ enum status_code nvm_set_config(
 
 	/* If the security bit is set, the auxiliary space cannot be written */
 	if (nvm_module->STATUS.reg & NVMCTRL_STATUS_SB) {
-		return STATUS_ERR_DENIED;
+		return STATUS_ERR_IO;
 	}
 
 	return STATUS_OK;
@@ -778,7 +778,7 @@ enum status_code nvm_set_fuses(struct nvm_user_row *user_row)
 
 	/* If the security bit is set, the auxiliary space cannot be written */
 	if (nvm_module->STATUS.reg & NVMCTRL_STATUS_SB) {
-		return STATUS_ERR_DENIED;
+		return STATUS_ERR_IO;
 	}
 
 	/* Enter critcal section to avoid context switching */
