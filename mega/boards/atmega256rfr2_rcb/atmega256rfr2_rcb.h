@@ -58,7 +58,7 @@
     #define BOARD_NAME          "ATmega128RFA1 RCB" 
     
     #elif defined SENSOR_TERMINAL_BOARD
-    #define BOARD_NAME          "ATmega128RFA1-EK"
+    #define BOARD_NAME          "RF4CE-EK"
     #endif
 
 #elif AVR8_PART_IS_DEFINED(ATmega256RFR2) 
