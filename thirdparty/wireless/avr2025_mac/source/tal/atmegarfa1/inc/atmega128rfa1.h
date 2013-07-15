@@ -1,9 +1,9 @@
 /**
  * @file atmega128rfa1.h
  *
- * @brief File contains register and command defines specific for AT86RF231.
+ * @brief File contains register and command defines specific for atmegarfa1.
  *
- * Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,9 +38,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
+ *
  */
+
 /*
- * Copyright (c) 2011, Atmel Corporation All rights reserved.
+ * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
