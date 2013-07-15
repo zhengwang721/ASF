@@ -459,7 +459,7 @@ struct i2c_packet {
  *	<tr>
  *		<td>B</td>
  *		<td>06/2013</td>
- *		<td>Corrected documentation typos.</td>
+ *		<td>Corrected documentation typos. Updated I2C Bus State Diagram.</td>
  *	</tr>
  *	<tr>
  *		<td>A</td>

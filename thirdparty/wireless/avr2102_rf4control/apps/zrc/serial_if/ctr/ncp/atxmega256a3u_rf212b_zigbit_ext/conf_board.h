@@ -48,5 +48,4 @@
 
 #define BOARD_NAME          "Xmega Zigbit 900Mhz UART"
 
-
 #endif /* CONF_BOARD_H_INCLUDED */

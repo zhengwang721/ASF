@@ -655,6 +655,10 @@ static inline void extint_nmi_clear_detected(
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
+ *		<td>Updated interrupt handler to clear interrupt flag before calling
+ *          callback function.</td>
+ *	</tr>
+ *	<tr>
  *		<td>Updated initialization function to also enable the digital interface
  *          clock to the module if it is disabled.</td>
  *	</tr>

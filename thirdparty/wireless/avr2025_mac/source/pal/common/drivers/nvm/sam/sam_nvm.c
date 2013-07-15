@@ -131,13 +131,13 @@ status_code_t nvm_write_char(mem_type_t mem, uint32_t address, uint8_t data)
 				false)) {
 			return ERR_INVALID_ARG;
 		}
+
 #elif SAM4L
-     /* To Do*/
+		/* To Do*/
 #else
 		if (flash_write(address, (const void *)&data, 1, true)) {
 			return ERR_INVALID_ARG;
 		}
-
 #endif
 		break;
 
@@ -235,14 +235,14 @@ status_code_t nvm_write(mem_type_t mem, uint32_t address, void *buffer,
 		if (flash_write(address, (const void *)buffer, len, false)) {
 			return ERR_INVALID_ARG;
 		}
+
 #elif SAM4L
-        flashcalw_memcpy((volatile void *)address,(const void *)buffer,
-			len, true);
+		flashcalw_memcpy((volatile void *)address, (const void *)buffer,
+				len, true);
 #else
 		if (flash_write(address, (const void *)buffer, len, true)) {
 			return ERR_INVALID_ARG;
 		}
-
 #endif
 		break;
 
@@ -287,8 +287,9 @@ status_code_t nvm_page_erase(mem_type_t mem, uint32_t page_number)
 				IFLASH_ERASE_PAGES_8)) {
 			return ERR_INVALID_ARG;
 		}
+
 #elif SAM4L
-       /* TO Do*/
+		/* TO Do*/
 #else
 		uint32_t buffer[IFLASH_PAGE_SIZE], byte_address;
 		for (uint16_t i = 0; i < IFLASH_PAGE_SIZE; i++) {
@@ -302,7 +303,6 @@ status_code_t nvm_page_erase(mem_type_t mem, uint32_t page_number)
 				IFLASH_PAGE_SIZE, true)) {
 			return ERR_INVALID_ARG;
 		}
-
 #endif
 		break;
 	}
@@ -379,9 +379,9 @@ status_code_t nvm_get_pagenumber(mem_type_t mem, uint32_t address,
 }
 
 status_code_t nvm_set_security_bit(void)
-{   
+{
 #if SAM4L
-    /*To Do */
+	/*To Do */
 #else
 	if (!flash_enable_security_bit()) {
 		return ERR_INVALID_ARG;

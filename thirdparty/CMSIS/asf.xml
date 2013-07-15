@@ -39,9 +39,7 @@ and reduces time-to-market for new embedded applications.
 			<build type="header-file" value="Include/core_cmInstr.h" toolchain="armgcc"/>
 			<device-support value="sam4s"/>
 			<device-support value="sam4l"/>
-			<build type="distribute" subtype="file" value="CMSIS END USER LICENCE AGREEMENT.pdf"/>
-			<build type="distribute" subtype="file" value="README.txt"/>
-			<build type="distribute" subtype="license" value="license.txt"/>
+			<require idref="thirdparty.cmsis.license"/>
 			<info type="gui-flag" value="hidden"/>
 		</module>
 		<module type="library" id="thirdparty.cmsis#2" caption="CMSIS thirdparty sources">
@@ -61,9 +59,7 @@ and reduces time-to-market for new embedded applications.
 			<build type="header-file" value="Include/core_cmInstr.h" toolchain="armgcc"/>
 			<require idref="sam.utils.fpu_used"/>
 			<device-support value="sam4e"/>
-			<build type="distribute" subtype="file" value="CMSIS END USER LICENCE AGREEMENT.pdf"/>
-			<build type="distribute" subtype="file" value="README.txt"/>
-			<build type="distribute" subtype="license" value="license.txt"/>
+			<require idref="thirdparty.cmsis.license"/>
 			<info type="gui-flag" value="hidden"/>
 		</module>
 		<module type="library" id="thirdparty.cmsis#3" caption="CMSIS thirdparty sources">
@@ -81,9 +77,7 @@ and reduces time-to-market for new embedded applications.
 			<build type="header-file" value="Include/core_cmFunc.h" toolchain="armgcc"/>
 			<build type="header-file" value="Include/core_cmInstr.h" toolchain="armgcc"/>
 			<device-support value="sam0"/>
-			<build type="distribute" subtype="file" value="CMSIS END USER LICENCE AGREEMENT.pdf"/>
-			<build type="distribute" subtype="file" value="README.txt"/>
-			<build type="distribute" subtype="license" value="license.txt"/>
+			<require idref="thirdparty.cmsis.license"/>
 			<info type="gui-flag" value="hidden"/>
 		</module>
 	</select-by-device>
@@ -99,4 +93,10 @@ and reduces time-to-market for new embedded applications.
 			<build type="build-config" subtype="c++-compiler-flags" value="-mfloat-abi=softfp" toolchain="armgcc"/>
 		</module>
 	</select-by-config>
+
+	<module type="meta" id="thirdparty.cmsis.license" caption="CMSIS license">
+		<build type="distribute" subtype="file" value="CMSIS END USER LICENCE AGREEMENT.pdf"/>
+		<build type="distribute" subtype="file" value="README.txt"/>
+		<build type="distribute" subtype="license" value="license.txt"/>
+	</module>
 </asf>

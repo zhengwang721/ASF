@@ -14,7 +14,6 @@
 		<require idref="thirdparty.wireless.avr2025_mac.source.stb.inc"/>
 		<build type="doxygen-entry-point" value="group_stb"/>
 		<device-support value="avr"/>
-		<info type="gui-flag" value="move-to-root"/>
 	</module>
 	<module type="meta" id="thirdparty.wireless.avr2025_mac.source.stb.inc" caption="STB Includes">
 		<info type="description" value="summary">

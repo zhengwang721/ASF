@@ -1121,6 +1121,8 @@ static inline enum status_code spi_read(
 	/* Check if data is overflown */
 	if (spi_module->STATUS.reg & SERCOM_SPI_STATUS_BUFOVF) {
 		retval = STATUS_ERR_OVERFLOW;
+		/* Clear overflow flag */
+		spi_module->STATUS.reg |= SERCOM_SPI_STATUS_BUFOVF;
 	}
 	/* Read the character from the DATA register */
 	if (module->character_size == SPI_CHARACTER_SIZE_9BIT) {
@@ -1313,6 +1315,10 @@ enum status_code spi_select_slave(
  * <table>
  *	<tr>
  *		<th>Changelog</th>
+ *	</tr>
+ *	 <tr>
+ *		<td>Edited slave part of write and transceive buffer functions to ensure
+ *		that second character is sent at the right time.</td>
  *	</tr>
  *	<tr>
  *		<td>Renamed the anonymous union in \c struct spi_config to

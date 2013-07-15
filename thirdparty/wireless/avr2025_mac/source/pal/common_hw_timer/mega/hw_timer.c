@@ -1,9 +1,9 @@
 /**
  * @file hw_timer.c
  *
- * @brief 
+ * @brief
  *
- 
+ *
  *  Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
@@ -52,113 +52,122 @@
 void tc_ovf_callback(void);
 void tc_cca_callback(void);
 static void configure_tc_callback(volatile void *timer);
+
 /*! \brief  read the actual timer count from register
  */
 uint16_t tmr_read_count(void)
 {
-    return tc_read_count(TIMER);  
+	return tc_read_count(TIMER);
 }
-/*! \brief  to disable compare interrupt 
+
+/*! \brief  to disable compare interrupt
  */
 void tmr_disable_cc_interrupt(void)
 {
-    tc_disable_compa_int(TIMER);
-    clear_compa_flag(TIMER); 
+	tc_disable_compa_int(TIMER);
+	clear_compa_flag(TIMER);
 }
-/*! \brief  to enable compare interrupt 
+
+/*! \brief  to enable compare interrupt
  */
 void tmr_enable_cc_interrupt(void)
 {
-    clear_compa_flag(TIMER);
-    tc_enable_compa_int(TIMER); 
+	clear_compa_flag(TIMER);
+	tc_enable_compa_int(TIMER);
 }
-/*! \brief  to disable overflow interrupt 
+
+/*! \brief  to disable overflow interrupt
  */
 void tmr_disable_ovf_interrupt(void)
 {
-    tc_enable_ovf_int(TIMER);
-    clear_ovf_flag(TIMER);
+	tc_enable_ovf_int(TIMER);
+	clear_ovf_flag(TIMER);
 }
+
 /*! \brief  to stop the running timer
  */
 void tmr_stop(void)
 {
-    tc_disable(TIMER); 
+	tc_disable(TIMER);
 }
+
 /*! \brief  to load compare value in channel compare register
  */
 void tmr_write_cmpreg(uint16_t compare_value)
 {
-    tc_write_cc(TIMER, TC_COMPA, compare_value); 
+	tc_write_cc(TIMER, TC_COMPA, compare_value);
 }
+
 /*! \brief  to save current interrupts status
  */
 uint8_t save_cpu_interrupt(void)
 {
-    return cpu_irq_save();  
+	return cpu_irq_save();
 }
+
 /*! \brief  to restore saved interrupts status
  *  \param  saved interrupt status
  */
 void restore_cpu_interrupt(uint8_t flags)
 {
-   cpu_irq_restore(flags);
+	cpu_irq_restore(flags);
 }
+
 /*! \brief  to initialiaze hw timer
  */
 uint8_t tmr_init(void)
 {
-    uint8_t timer_multiplier; 
-    
-    tc_enable(TIMER);
+	uint8_t timer_multiplier;
 
-    tc_set_overflow_interrupt_callback(TIMER, tc_ovf_callback);
+	tc_enable(TIMER);
 
-    tc_set_mode(TIMER, NORMAL);
+	tc_set_overflow_interrupt_callback(TIMER, tc_ovf_callback);
 
-    tc_enable_ovf_int(TIMER);
-    
-    configure_tc_callback(TIMER);
+	tc_set_mode(TIMER, NORMAL);
 
-    tc_disable_compa_int(TIMER);
+	tc_enable_ovf_int(TIMER);
 
-    tc_write_clock_source(TIMER, TC_CLKSEL_DIV1_gc);
-    
-    timer_multiplier = sysclk_get_peripheral_bus_hz(TIMER) / DEF_1MHZ;
-    
-    return timer_multiplier;
+	configure_tc_callback(TIMER);
+
+	tc_disable_compa_int(TIMER);
+
+	tc_write_clock_source(TIMER, TC_CLKSEL_DIV1_gc);
+
+	timer_multiplier = sysclk_get_peripheral_bus_hz(TIMER) / DEF_1MHZ;
+
+	return timer_multiplier;
 }
-/*! \brief to set compare interrupt callback according to the timer channel input
- *  \param timer - hw timer channel 
+
+/*! \brief to set compare interrupt callback according to the timer channel
+ * input
+ *  \param timer - hw timer channel
  */
 static void configure_tc_callback(volatile void *timer)
 {
-    if((&TCCR1A == timer) || (&TCCR3A == timer) ||
-       (&TCCR4A == timer) || (&TCCR5A == timer))
-    {
-        tc_set_compa_interrupt_callback(TIMER, tc_cca_callback);  
-    }
-    else if((&TCCR1B == timer) || (&TCCR3B == timer) ||
-       (&TCCR4B == timer) || (&TCCR5B == timer))
-    {
-        tc_set_compb_interrupt_callback(TIMER, tc_cca_callback);  
-    }
-    else if((&TCCR1C == timer) || (&TCCR3C == timer) ||
-       (&TCCR4C == timer) || (&TCCR5C == timer))
-    {
-        tc_set_compc_interrupt_callback(TIMER, tc_cca_callback);  
-    }
+	if ((&TCCR1A == timer) || (&TCCR3A == timer) ||
+			(&TCCR4A == timer) || (&TCCR5A == timer)) {
+		tc_set_compa_interrupt_callback(TIMER, tc_cca_callback);
+	} else if ((&TCCR1B == timer) || (&TCCR3B == timer) ||
+			(&TCCR4B == timer) || (&TCCR5B == timer)) {
+		tc_set_compb_interrupt_callback(TIMER, tc_cca_callback);
+	} else if ((&TCCR1C == timer) || (&TCCR3C == timer) ||
+			(&TCCR4C == timer) || (&TCCR5C == timer)) {
+		tc_set_compc_interrupt_callback(TIMER, tc_cca_callback);
+	}
 }
+
 /*! \brief  hw timer overflow callback
  */
 void tc_ovf_callback(void)
 {
-    tmr_ovf_callback();
+	tmr_ovf_callback();
 }
+
 /*! \brief  hw timer compare callback
  */
 void tc_cca_callback(void)
 {
-    tmr_cca_callback();  
+	tmr_cca_callback();
 }
+
 /*EOF*/

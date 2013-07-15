@@ -1,7 +1,8 @@
 /**
  * @file tal_internal.h
  *
- * @brief This header file contains types and variable definition that are used within the TAL only.
+ * @brief This header file contains types and variable definition that are used
+ *within the TAL only.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -39,6 +40,7 @@
  *
  * \asf_license_stop
  */
+
 /*
  * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
@@ -61,23 +63,27 @@
 #endif
 #include "mac_build_config.h"
 
-
 /**
  * \ingroup group_tal
  * \defgroup group_tal_212b AT86RF212B Transceiver Abstraction Layer
- * The AT86RF212B is a  low-power ,low voltage 700/800/900 MHz radio transceiver designed for industrial
- * and consumer ZigBee/IEEE 802.15.4, 6LoWPAN, RF4CE and high data rate sub 1GHz  ISM band applications.
- * The Transceiver Abstraction Layer (TAL) implements the transceiver specific functionalities and
- * provides interfaces to the upper layers (like IEEE 802.15.4 MAC )and  uses the services of PAL.
+ * The AT86RF212B is a  low-power ,low voltage 700/800/900 MHz radio transceiver
+ *designed for industrial
+ * and consumer ZigBee/IEEE 802.15.4, 6LoWPAN, RF4CE and high data rate sub 1GHz
+ * ISM band applications.
+ * The Transceiver Abstraction Layer (TAL) implements the transceiver specific
+ *functionalities and
+ * provides interfaces to the upper layers (like IEEE 802.15.4 MAC )and  uses
+ *the services of PAL.
  */
 
 /**
  * \ingroup group_tal_212b
  * \defgroup group_tal_state_machine_212b  TAL State Machine
- * The different operating states of the Transceiver are controlled by the TAL state machine.
+ * The different operating states of the Transceiver are controlled by the TAL
+ *state machine.
  *
  */
- 
+
 /**
  * \ingroup group_tal_212b
  * \defgroup group_tal_init_212b  TAL Initialization and reset
@@ -85,14 +91,12 @@
  *
  */
 
-
 /**
  * \ingroup group_tal_212b
  * \defgroup group_tal_ed_212b   TAL Energy Detection
  * Performs the ED scan functionalities.
  *
  */
-
 
 /**
  * \ingroup group_tal_212b
@@ -104,7 +108,8 @@
 /**
  * \ingroup group_tal_212b
  * \defgroup group_tal_pib_212b   TAL PIB Storage
- * The PIB(Pan Information Base) attributes related to the TAL are Stored and handled  by the TAL PIB storage.
+ * The PIB(Pan Information Base) attributes related to the TAL are Stored and
+ *handled  by the TAL PIB storage.
  *
  */
 
@@ -116,13 +121,13 @@
  */
 
 /**
-* \ingroup group_tal_tx_212b
-* \defgroup group_tal_tx_csma_212b   TAL CSMA/CA Module
-* Performs channel access mechanism for frame transmission
-* For Detailed information refer  CSMA-CA algorithm section of IEEE Std 802.15.4-2006
-*
-*/
-
+ * \ingroup group_tal_tx_212b
+ * \defgroup group_tal_tx_csma_212b   TAL CSMA/CA Module
+ * Performs channel access mechanism for frame transmission
+ * For Detailed information refer  CSMA-CA algorithm section of IEEE Std
+ *802.15.4-2006
+ *
+ */
 
 /**
  * \ingroup group_tal_212b
@@ -131,77 +136,71 @@
  *
  */
 
-
-
 /* === TYPES =============================================================== */
 
 /** TAL states */
 #if ((defined BEACON_SUPPORT) && (MAC_SCAN_ED_REQUEST_CONFIRM == 1))
-typedef enum tal_state_tag
-{
-    TAL_IDLE           = 0,
-    TAL_TX_AUTO        = 1,
-    TAL_TX_DONE        = 2,
-    TAL_SLOTTED_CSMA   = 3,
-    TAL_ED_RUNNING     = 4,
-    TAL_ED_DONE        = 5
+typedef enum tal_state_tag {
+	TAL_IDLE           = 0,
+	TAL_TX_AUTO        = 1,
+	TAL_TX_DONE        = 2,
+	TAL_SLOTTED_CSMA   = 3,
+	TAL_ED_RUNNING     = 4,
+	TAL_ED_DONE        = 5
 #ifdef SW_CONTROLLED_CSMA
-                         ,
-    TAL_BACKOFF,
-    TAL_CCA,
-    TAL_CSMA_CONTINUE,
-    TAL_CCA_DONE
+	,
+	TAL_BACKOFF,
+	TAL_CCA,
+	TAL_CSMA_CONTINUE,
+	TAL_CCA_DONE
 #endif
 } SHORTENUM tal_state_t;
 #endif
 
 #if ((!defined BEACON_SUPPORT) && (MAC_SCAN_ED_REQUEST_CONFIRM == 1))
-typedef enum tal_state_tag
-{
-    TAL_IDLE           = 0,
-    TAL_TX_AUTO        = 1,
-    TAL_TX_DONE        = 2,
-    TAL_ED_RUNNING     = 4,
-    TAL_ED_DONE        = 5
+typedef enum tal_state_tag {
+	TAL_IDLE           = 0,
+	TAL_TX_AUTO        = 1,
+	TAL_TX_DONE        = 2,
+	TAL_ED_RUNNING     = 4,
+	TAL_ED_DONE        = 5
 #ifdef SW_CONTROLLED_CSMA
-                         ,
-    TAL_BACKOFF,
-    TAL_CCA,
-    TAL_CSMA_CONTINUE,
-    TAL_CCA_DONE
+	,
+	TAL_BACKOFF,
+	TAL_CCA,
+	TAL_CSMA_CONTINUE,
+	TAL_CCA_DONE
 #endif
 } SHORTENUM tal_state_t;
 #endif
 
 #if ((defined BEACON_SUPPORT) && (MAC_SCAN_ED_REQUEST_CONFIRM == 0))
-typedef enum tal_state_tag
-{
-    TAL_IDLE           = 0,
-    TAL_TX_AUTO        = 1,
-    TAL_TX_DONE        = 2,
-    TAL_SLOTTED_CSMA   = 3
+typedef enum tal_state_tag {
+	TAL_IDLE           = 0,
+	TAL_TX_AUTO        = 1,
+	TAL_TX_DONE        = 2,
+	TAL_SLOTTED_CSMA   = 3
 #ifdef SW_CONTROLLED_CSMA
-                         ,
-    TAL_BACKOFF,
-    TAL_CCA,
-    TAL_CSMA_CONTINUE,
-    TAL_CCA_DONE
+	,
+	TAL_BACKOFF,
+	TAL_CCA,
+	TAL_CSMA_CONTINUE,
+	TAL_CCA_DONE
 #endif
 } SHORTENUM tal_state_t;
 #endif
 
 #if ((!defined BEACON_SUPPORT) && (MAC_SCAN_ED_REQUEST_CONFIRM == 0))
-typedef enum tal_state_tag
-{
-    TAL_IDLE           = 0,
-    TAL_TX_AUTO        = 1,
-    TAL_TX_DONE        = 2
+typedef enum tal_state_tag {
+	TAL_IDLE           = 0,
+	TAL_TX_AUTO        = 1,
+	TAL_TX_DONE        = 2
 #ifdef SW_CONTROLLED_CSMA
-                         ,
-    TAL_BACKOFF,
-    TAL_CCA,
-    TAL_CSMA_CONTINUE,
-    TAL_CCA_DONE
+	,
+	TAL_BACKOFF,
+	TAL_CCA,
+	TAL_CSMA_CONTINUE,
+	TAL_CCA_DONE
 #endif
 } SHORTENUM tal_state_t;
 #endif
@@ -240,41 +239,50 @@ extern bool tal_beacon_transmission;
  * Conversion of number of PSDU octets to duration in microseconds
  */
 #ifdef HIGH_DATA_RATE_SUPPORT
-#define TAL_PSDU_US_PER_OCTET(octets)                                       \
-    (                                                                                                   \
-            tal_pib.CurrentPage == 0 ?                                                                      \
-            (tal_pib.CurrentChannel == 0 ? (uint16_t)(octets) * 400 : (uint16_t)(octets) * 200) :       \
-                (                                                                                           \
-                        tal_pib.CurrentPage == 2 ?                                                                \
-                        (tal_pib.CurrentChannel == 0 ? (uint16_t)(octets) * 80 : (uint16_t)(octets) * 32) :   \
-                        (                                                                                     \
-                                tal_pib.CurrentPage == 5 ?                                                          \
-                                ((uint16_t)(octets) * 32) :                                                     \
-                                (                                                                               \
-                                        tal_pib.CurrentPage == 16 ?                                                 \
-                                        (tal_pib.CurrentChannel == 0 ? (uint16_t)(octets) * 40 : (uint16_t)(octets) * 16) : \
-                                        (                                                                       \
-                                            /* tal_pib.CurrentPage == 17 ? */                                   \
-                                                (tal_pib.CurrentChannel == 0 ? (uint16_t)(octets) * 20 : (uint16_t)(octets) * 8) \
-                                        )                                                                       \
-                                )                                                                               \
-                        )                                                                                     \
-                )                                                                                           \
-        )
+#define TAL_PSDU_US_PER_OCTET(octets) \
+	( \
+		tal_pib.CurrentPage == 0 ? \
+		(tal_pib.CurrentChannel == 0 ? (uint16_t)(octets) * \
+		400 : (uint16_t)(octets) * 200) : \
+		( \
+			tal_pib.CurrentPage == 2 ? \
+			(tal_pib.CurrentChannel == 0 ? (uint16_t)(octets) * \
+			80 : (uint16_t)(octets) * 32) :	\
+			( \
+				tal_pib.CurrentPage == 5 ? \
+				((uint16_t)(octets) * 32) : \
+				( \
+					tal_pib.CurrentPage == 16 ? \
+					(tal_pib.CurrentChannel == \
+					0 ? (uint16_t)(octets) * \
+					40 : (uint16_t)(octets) * 16) :	\
+					( \
+                                                /* tal_pib.CurrentPage == 17 ?
+                                                 **/ \
+						(tal_pib.CurrentChannel == \
+						0 ? (uint16_t)(octets) * \
+						20 : (uint16_t)(octets) * 8) \
+					) \
+				) \
+			) \
+		) \
+	)
 #else   /* #ifdef not HIGH_DATA_RATE_SUPPORT */
-#define TAL_PSDU_US_PER_OCTET(octets)                                                                           \
-    (                                                                                                   \
-            tal_pib.CurrentPage == 0 ?                                                                      \
-            (tal_pib.CurrentChannel == 0 ? (uint16_t)(octets) * 400 : (uint16_t)(octets) * 200) :       \
-                (                                                                                           \
-                        tal_pib.CurrentPage == 2 ?                                                                \
-                        (tal_pib.CurrentChannel == 0 ? (uint16_t)(octets) * 80 : (uint16_t)(octets) * 32) :   \
-                        (                                                                                     \
-                            /* tal_pib.CurrentPage == 5 ? */                                                    \
-                                (uint16_t)(octets) * 32                                                             \
-                        )                                                                                     \
-                )                                                                                           \
-        )
+#define TAL_PSDU_US_PER_OCTET(octets) \
+	( \
+		tal_pib.CurrentPage == 0 ? \
+		(tal_pib.CurrentChannel == 0 ? (uint16_t)(octets) * \
+		400 : (uint16_t)(octets) * 200) : \
+		( \
+			tal_pib.CurrentPage == 2 ? \
+			(tal_pib.CurrentChannel == 0 ? (uint16_t)(octets) * \
+			80 : (uint16_t)(octets) * 32) :	\
+			( \
+                                /* tal_pib.CurrentPage == 5 ? */ \
+				(uint16_t)(octets) * 32	\
+			) \
+		) \
+	)
 #endif
 
 /*
@@ -328,7 +336,8 @@ extern bool tal_beacon_transmission;
 #define PIN_NO_ACK_END()
 #endif
 
-#if ((defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP)) && (DISABLE_TSTAMP_IRQ == 1)
+#if ((defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP)) && \
+	(DISABLE_TSTAMP_IRQ == 1)
 #define TRX_IRQ_DEFAULT     TRX_IRQ_3_TRX_END | TRX_IRQ_2_RX_START
 #else
 #define TRX_IRQ_DEFAULT     TRX_IRQ_3_TRX_END
@@ -349,19 +358,23 @@ extern bool tal_beacon_transmission;
  * \ingroup group_tal_state_machine_212b
  */
 tal_trx_status_t set_trx_state(trx_cmd_t trx_cmd);
+
 #ifdef ENABLE_FTN_PLL_CALIBRATION
+
 /**
  * \brief PLL calibration and filter tuning timer callback
  *
  * \param parameter Unused callback parameter
  */
 void calibration_timer_handler_cb(void *parameter);
+
 #endif  /* ENABLE_FTN_PLL_CALIBRATION */
 
 /*
  * Prototypes from tal_ed.c
  */
 #if (MAC_SCAN_ED_REQUEST_CONFIRM == 1)
+
 /**
  * \brief Scan done
  *
@@ -372,6 +385,7 @@ void calibration_timer_handler_cb(void *parameter);
  * \ingroup group_tal_ed_212b
  */
 void ed_scan_done(void);
+
 #endif /* (MAC_SCAN_ED_REQUEST_CONFIRM == 1) */
 
 #endif /* TAL_INTERNAL_H */
