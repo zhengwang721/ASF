@@ -45,7 +45,6 @@
 #include "conf_sio2host.h"
 #include "sio2host.h"
 #include "board.h"
-#include "pal.h"
 #include "stdio.h"
 
 /* === TYPES =============================================================== */
@@ -54,11 +53,6 @@
 
 /* === PROTOTYPES ========================================================== */
 
-/*
- * This is the time interval in us after which the USB Tx is considered busy
- * and all USB tx handling will be suspended.
- */
-#define USB_TX_BUSY_TIME            (5000)
 
 /*
  * Various helper macros for the individual IO ports related to

@@ -84,7 +84,7 @@ typedef enum led_action_tag
 #define LED_BIT_MASK                    ((1 << LED_BIT_0) | (1 << LED_BIT_1))
 #define LED_PORT                        (PORTB)
 #define LED_PORT_DIR                    (DDRB)
- //#ifdef BREAKOUT_BOARD
+#ifdef SENSOR_TERMINAL_BOARD
 /*! \brief Turns off the specified LEDs.
  *
  * \param led_gpio LED to turn off (LEDx_GPIO).
@@ -211,5 +211,5 @@ static inline void pal_led(led_id_t led_no, led_action_t led_setting)
 
                 led_helper_func();
 }
-
+#endif //STB
 #endif /* _LED_H_ */

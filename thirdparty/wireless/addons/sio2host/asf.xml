@@ -63,6 +63,7 @@
 			<build type="module-config" subtype="required-header-file" value="conf_sio2host.h"/>
 			<build type="module-config" subtype="path" value="module_config"/>
             <device-support value="atmega256rfr2"/>
+            <device-support value="atmega128rfa1"/>
 			<build type="doxygen-entry-point" value="group_sio2host_usb-ftdi"/>
 		</module>
 	</select-by-config>

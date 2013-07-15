@@ -62,7 +62,7 @@
 #include "tal_constants.h"
 #include "tal_internal.h"
 #include "ieee_const.h"
-#include "atmega256rfr2.h"
+#include "atmega128rfa1.h"
 #include "tfa.h"
 
 /* === TYPES =============================================================== */
@@ -175,6 +175,7 @@ retval_t tfa_pib_set(tfa_pib_t tfa_pib_attribute, void *value)
 		}
 
 		pal_trx_bit_write(SR_RX_PDT_LEVEL, reg_val);
+		CONF_REG_WRITE();
 	}
 	break;
 
@@ -279,7 +280,7 @@ phy_enum_t tfa_cca_perform(void)
 
 	/* Enable frame reception again. */
 	pal_trx_bit_write(SR_RX_PDT_DIS, RX_ENABLE);
-	
+	CONF_REG_WRITE();
 	return (phy_enum_t)cca_status;
 }
 
@@ -310,7 +311,7 @@ uint8_t tfa_ed_sample(void)
 	 * while performing ED scan.
 	 */
 	pal_trx_bit_write(SR_RX_PDT_DIS, RX_DISABLE);
-
+	CONF_REG_WRITE();
 	/* Write dummy value to start measurement. */
 	pal_trx_reg_write(RG_PHY_ED_LEVEL, 0xFF);
 

@@ -48,32 +48,49 @@
 #ifndef _ATMEGA256RFR2_RCB_
 #define _ATMEGA256RFR2_RCB_
 #include "compiler.h"
-# include "conf_board.h"
-//# include "led.h"
+#include "conf_board.h"
 
+#if AVR8_PART_IS_DEFINED(ATmega128RFA1) 
+#define MCU_SOC_NAME        "ATMEGA128RFA1"
+    #ifdef BREAKOUT_BOARD
+     /*! \name GPIO Connections of LED
+     */ 
+    #define BOARD_NAME          "ATmega128RFA1 RCB" 
+    
+    #elif defined SENSOR_TERMINAL_BOARD
+    #define BOARD_NAME          "ATmega128RFA1-EK"
+    #endif
+
+#elif AVR8_PART_IS_DEFINED(ATmega256RFR2) 
 #define MCU_SOC_NAME        "ATMEGA256RFR2"
 
-#define _BV(x) (1 << (x))
+
 #ifdef BREAKOUT_BOARD
  /*! \name GPIO Connections of LED
- */
- 
+ */ 
 #define BOARD_NAME          "ATmega256RFR2 RCB" 
- #define LED0                 LED0_GPIO
- #define LED1                 LED1_GPIO
- #define LED2                 LED2_GPIO
- #define LED0_GPIO			  IOPORT_CREATE_PIN(PORTE, 2)	  
- #define LED1_GPIO			  IOPORT_CREATE_PIN(PORTE, 3)	  
- #define LED2_GPIO			  IOPORT_CREATE_PIN(PORTE, 4)	  
 
-#define LED_COUNT 3
- /*!  \name GPIO Connections of Switch
- */
+#elif defined SENSOR_TERMINAL_BOARD
+#define BOARD_NAME          "ATmega256RFR2-EK"
+#endif
+#endif
 
- #define GPIO_PUSH_BUTTON_0			  IOPORT_CREATE_PIN(PORTE, 5)
+#ifdef BREAKOUT_BOARD
+
+    #define LED0                 LED0_GPIO
+    #define LED1                 LED1_GPIO
+    #define LED2                 LED2_GPIO
+    #define LED0_GPIO			  IOPORT_CREATE_PIN(PORTE, 2)	  
+    #define LED1_GPIO			  IOPORT_CREATE_PIN(PORTE, 3)	  
+    #define LED2_GPIO			  IOPORT_CREATE_PIN(PORTE, 4)	  
+    
+    #define LED_COUNT 3
+    #define GPIO_PUSH_BUTTON_0			  IOPORT_CREATE_PIN(PORTE, 5)
+
 #endif 
 
 #ifdef SENSOR_TERMINAL_BOARD
+#define _BV(x) (1 << (x))
 /* LED address decoding port output register */
 #define LED_ADDR_DEC_PORT               (PORTD)
 /* Button address decoding port output register */
@@ -91,7 +108,7 @@
  * PINs where buttons are connected
  */
 #define BUTTON_PIN_0                    (PB0)
-#define BOARD_NAME          "ATmega256RFR2-EK"
+
  #define LED0                 LED0_GPIO
  #define LED1                 LED1_GPIO
 

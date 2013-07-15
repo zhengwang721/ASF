@@ -18,6 +18,16 @@
             <device-support value="atmega256rfr2"/>
 			<build type="doxygen-entry-point" value="group_tfa"/>
 		</module>	
+		
+		<module type="driver" id="config.thirdparty.wireless.avr2025_mac.source.tfa#3"     caption="atmegarfa1 tfa  support enabled">
+			<info type="description" value="summary">
+			ATMEGARFR2 Transceiver Feature Access
+			</info>
+			<require idref="thirdparty.wireless.avr2025_mac.source.tfa.atmegarfa1"/>
+			<require idref="config.thirdparty.wireless.avr2025_mac.source.tal.atmegarfa1"/>
+            <device-support value="atmega128rfa1"/>
+			<build type="doxygen-entry-point" value="group_tfa"/>
+		</module>			
     </select-by-device>
 
 	<select-by-config id="config.thirdparty.wireless.avr2025_mac.source.tfa.ext" name="config.thirdparty.wireless.avr2025_mac.source.tfa" caption="TFA Configuration" default="at86rf212">

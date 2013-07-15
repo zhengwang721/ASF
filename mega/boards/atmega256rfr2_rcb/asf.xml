@@ -11,5 +11,6 @@
 		<require idref="common.services.basic.gpio"/>
 		<require idref="common.boards"/>
 		<device-support value="atmega256rfr2"/>
+		<device-support value="atmega128rfa1"/>
 	</board>
 </asf>
