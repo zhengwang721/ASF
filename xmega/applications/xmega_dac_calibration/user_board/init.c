@@ -1,12 +1,6 @@
 /**
  * \file
  *
- * \brief 
- *
- */
-/**
- * \file
- *
  * \brief User board initialization template
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
@@ -45,6 +39,7 @@
  *
  * \asf_license_stop
  *
+ */
 #include <board.h>
 #include <conf_board.h>
 
