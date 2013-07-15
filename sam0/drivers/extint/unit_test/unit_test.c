@@ -42,56 +42,74 @@
  */
 
 /**
- * \mainpage EXTERNAL INTERRUPT UNIT TEST
+ * \mainpage SAM D20 EXTINT Unit Test
+ * See \ref appdoc_main "here" for project documentation.
+ * \copydetails appdoc_preface
  *
- * \section intro Introduction
- * This unit test carries out tests for the external interrupt driver.
+ *
+ * \page appdoc_preface Overview
+ * This unit test carries out tests for the External Interrupt driver.
  * It consists of test cases for the following functionalities:
  *      - Test for polled mode detection of external interrupt.
  *      - Test for callback mode detection of external interrupt.
- * Tests will be done for rising and falling edges of external signal.
+ */
+
+/**
+ * \page appdoc_main SAM D20 EXTINT Unit Test
+ *
+ * Overview:
+ * - \ref appdoc_samd20_extint_unit_test_intro
+ * - \ref appdoc_samd20_extint_unit_test_setup
+ * - \ref appdoc_samd20_extint_unit_test_usage
+ * - \ref appdoc_samd20_extint_unit_test_compinfo
+ * - \ref appdoc_samd20_extint_unit_test_contactinfo
+ *
+ * \section appdoc_samd20_extint_unit_test_intro Introduction
+ * \copydetails appdoc_preface
+ *
+ * Tests will be performed for rising and falling edges of the external signal.
  *
  * The following kit is required for carrying out the test:
  *      - SAM D20 Xplained Pro board
  *
- * \section Setup
+ * \section appdoc_samd20_extint_unit_test_setup Setup
+ * The following connections has to be made using wires:
+ *  - \b Pin 9 (PB06) <-----> Pin 10 (PB07)
  *
- * The following connection has to be made on the EXT1 header of the
- * SAM D20 Xplained Pro board using a jumper/wire.
- * EXT1 Header:
- *      - Pin 9 (PB06) <-----> Pin 10 (PB07)
+ * To run the test:
+ *  - Connect the SAM D20 Xplained Pro board to the computer using a
+ *    micro USB cable.
+ *  - Open the virtual COM port in a terminal application.
+ *    \note The USB composite firmware running on the Embedded Debugger (EDBG)
+ *          will enumerate as debugger, virtual COM port and EDBG data
+ *          gateway.
+ *  - Build the project, program the target and run the application.
+ *    The terminal shows the results of the unit test.
  *
- * Once the connection is made the following has to be done:
- *      - Connect the SAM D20 Xplained Pro board to the computer using
- *        a micro USB cable.
- *      - Open the virtual COM port in a terminal application.
- * \note  The USB composite firmware running on the Embedded Debugger (EDBG)
- *        will enumerate as debugger, virtual COM port and EDBG data
- *        gateway.
- *      - Build the project, program the target and run the application.
- *        The terminal shows the results of the unit test.
+ * \section appdoc_samd20_extint_unit_test_usage Usage
+ *  - The unit test configures external interrupt on PB06 pin (channel 10)
+ *    to detect falling edge.
+ *  - Logic level on PB07 is changed from high to low (falling edge) and the
+ *    channel is checked for interrupt detection.
+ *  - The test is repeated for rising edge and with callback enabled.
  *
- * \section Description
+ * \section appdoc_samd20_extint_unit_test_compinfo Compilation Info
+ * This software was written for the GNU GCC and IAR for ARM.
+ * Other compilers may or may not work.
  *
- *      - The unit test configures external interrupt on PB06 pin (channel 10)
- *        to detect falling edge.
- *      - Logic level on PB07 is changed from high to low (falling edge) and
- *        the channel is checked for interrupt detection.
- *      - The test is repeated for rising edge and with callback enabled.
- *
- * \section contactinfo Contact Information
- * For further information, visit <a href="http://www.atmel.com/">Atmel</a>.\n
- * Support and FAQ: http://support.atmel.no/
+ * \section appdoc_samd20_extint_unit_test_contactinfo Contact Information
+ * For further information, visit
+ * <a href="http://www.atmel.com">http://www.atmel.com</a>.
  */
 
 #include <asf.h>
 #include <stdio_serial.h>
 #include <string.h>
+#include "conf_test.h"
 
 /* GPIO pin used for testing the interrupts */
 #define GPIO_TEST_PIN_EXTINT  EXT1_PIN_10
 
-/* External interrupt channel number on PB06 */
 #define EIC_TEST_CHANNEL      EXT1_IRQ_INPUT
 #define EIC_TEST_PIN          EXT1_IRQ_PIN
 #define EIC_TEST_PIN_MUX      EXT1_IRQ_PINMUX
@@ -128,21 +146,19 @@ static void extint_user_callback(uint32_t channel)
  */
 static void cdc_uart_init(void)
 {
-	struct usart_config cdc_uart_config;
+	struct usart_config usart_conf;
 
 	/* Configure USART for unit test output */
-	usart_get_config_defaults(&cdc_uart_config);
-	cdc_uart_config.mux_setting = EDBG_CDC_SERCOM_MUX_SETTING;
-	cdc_uart_config.pinmux_pad0 = EDBG_CDC_SERCOM_PINMUX_PAD0;
-	cdc_uart_config.pinmux_pad1 = EDBG_CDC_SERCOM_PINMUX_PAD1;
-	cdc_uart_config.pinmux_pad2 = EDBG_CDC_SERCOM_PINMUX_PAD2;
-	cdc_uart_config.pinmux_pad3 = EDBG_CDC_SERCOM_PINMUX_PAD3;
-	cdc_uart_config.baudrate    = 115200;
-	stdio_serial_init(&cdc_uart_module, EDBG_CDC_MODULE, &cdc_uart_config);
+	usart_get_config_defaults(&usart_conf);
+	usart_conf.mux_setting = CONF_STDIO_MUX_SETTING;
+	usart_conf.pinmux_pad0 = CONF_STDIO_PINMUX_PAD0;
+	usart_conf.pinmux_pad1 = CONF_STDIO_PINMUX_PAD1;
+	usart_conf.pinmux_pad2 = CONF_STDIO_PINMUX_PAD2;
+	usart_conf.pinmux_pad3 = CONF_STDIO_PINMUX_PAD3;
+	usart_conf.baudrate    = CONF_STDIO_BAUDRATE;
+
+	stdio_serial_init(&cdc_uart_module, CONF_STDIO_USART, &usart_conf);
 	usart_enable(&cdc_uart_module);
-	/* Enable transceivers */
-	usart_enable_transceiver(&cdc_uart_module, USART_TRANSCEIVER_TX);
-	usart_enable_transceiver(&cdc_uart_module, USART_TRANSCEIVER_RX);
 }
 
 /**

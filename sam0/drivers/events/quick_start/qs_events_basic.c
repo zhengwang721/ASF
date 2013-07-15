@@ -89,6 +89,8 @@ void configure_event_user(void)
 
 int main(void)
 {
+	system_init();
+
 	//! [setup_init]
 	events_init();
 

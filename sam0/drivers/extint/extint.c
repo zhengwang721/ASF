@@ -90,6 +90,9 @@ void extint_enable(void)
 	system_gclk_chan_set_config(EIC_GCLK_ID, &gclk_chan_conf);
 	system_gclk_chan_enable(EIC_GCLK_ID);
 
+	/* Turn on the digital interface clock */
+	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBA, PM_APBAMASK_EIC);
+
 	/* Enable all EIC hardware modules. */
 	for (uint32_t i = 0; i < EIC_INST_NUM; i++) {
 		eics[i]->CTRL.reg |= EIC_CTRL_ENABLE;

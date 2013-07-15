@@ -76,8 +76,6 @@
  * \snippet qs_i2c_master_basic_use.c init
  *
  * \subsection asfdoc_samd20_sercom_i2c_master_basic_use_setup_workflow Workflow
- * -# Initialize system.
- *  \snippet qs_i2c_master_basic_use.c system_init
  * -# Configure and enable module:
  *  \snippet qs_i2c_master_basic_use.c initialize_i2c
  *   -# Create and initialize configuration structure.

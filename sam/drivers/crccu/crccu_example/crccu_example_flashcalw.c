@@ -3,7 +3,7 @@
  *
  * \brief Cyclic Redundancy Check Calculation Unit (CRCCU) example for SAM.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -48,12 +48,12 @@
  * \par Purpose
  *
  * This example demonstrates the Cyclic Redundancy Check Calculation Unit (CRCCU)
- * provided on SAM serials' microcontrollers. It shows how to use CRCCU
+ * provided on SAM series microcontrollers. It shows how to use CRCCU
  * to compute CRC on a memory area.
  *
  * \par Requirements
  *
- * This package can be used with SAM4L evaluation kits
+ * This package can be used with SAM4L series.
  *
  * \par Description
  *
@@ -108,7 +108,7 @@
 #include "conf_crccu_example.h"
 
 /** Flash buffer address */
-#define FLASH_BUFFER_ADDRESS   (FLASH_ADDR + FLASH_SIZE/2 - FLASH_BUFFER_SIZE)
+#define FLASH_BUFFER_ADDRESS   (FLASH_ADDR + FLASH_SIZE / 2 - FLASH_BUFFER_SIZE)
 
 /** CRC data buffer size (in byte) */
 #define BUFFER_LENGTH   64
@@ -191,10 +191,10 @@ static uint32_t compute_crc(uint8_t *p_buffer, uint32_t ul_length,
 /**
  * \brief Compute CRC of a buffer and compare it with the reference CRC.
  *
- * \param p_Buffer         The buffer holding the data.
- * \param ul_length          The buffer length.
+ * \param p_Buffer  The buffer holding the data.
+ * \param ul_length  The buffer length.
  * \param ul_type  The polynomial type(CRCCU_MR_PTYPE_XXX).
- * \param ul_ref_crc          Reference CRC for the buffer.
+ * \param ul_ref_crc  Reference CRC for the buffer.
  *
  * \return CRC of the buffer.
  */

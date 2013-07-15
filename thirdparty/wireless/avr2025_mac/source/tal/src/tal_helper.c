@@ -893,4 +893,5 @@ retval_t tal_rxsafe_mode_ctrl(bool safe_mode_ctrl)
 }
 
 #endif /* End of (TAL_TYPE != AT86RF230B) */
+
 /* EOF */

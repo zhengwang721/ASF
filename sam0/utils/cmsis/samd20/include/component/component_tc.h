@@ -182,9 +182,9 @@ typedef union {
 #define TC_CTRLBSET_CMD_Pos         6            /**< \brief (TC_CTRLBSET) Command */
 #define TC_CTRLBSET_CMD_Msk         (0x3u << TC_CTRLBSET_CMD_Pos)
 #define TC_CTRLBSET_CMD(value)      ((TC_CTRLBSET_CMD_Msk & ((value) << TC_CTRLBSET_CMD_Pos)))
-#define   TC_CTRLBSET_CMD_NONE      (0x0u <<  6) /** TODO: Manually Added */
-#define   TC_CTRLBSET_CMD_RETRIGGER (0x1u <<  6) /** TODO: Manually Added */
-#define   TC_CTRLBSET_CMD_STOP      (0x2u <<  6) /** TODO: Manually Added */
+#define   TC_CTRLBSET_CMD_NONE      (0x0u <<  6) /**< \brief (TC_CTRLBSET)  */
+#define   TC_CTRLBSET_CMD_RETRIGGER (0x1u <<  6) /**< \brief (TC_CTRLBSET)  */
+#define   TC_CTRLBSET_CMD_STOP      (0x2u <<  6) /**< \brief (TC_CTRLBSET)  */
 #define TC_CTRLBSET_MASK            0xC5u        /**< \brief (TC_CTRLBSET) MASK Register */
 
 /* -------- TC_CTRLC : (TC Offset: 0x06) (R/W  8) Control C Register -------- */

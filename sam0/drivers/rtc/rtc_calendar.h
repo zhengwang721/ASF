@@ -158,6 +158,12 @@
  *   </tr>
  * </table>
  *
+ * \note The connection of events between modules requires the use of the
+ *       \ref asfdoc_samd20_events_group "SAM D20 Event System Driver (EVENTS)"
+ *       to route output event of one module to the the input event of another.
+ *       For more information on event routing, refer to the event driver
+ *       documentation.
+ *
  * \subsection asfdoc_samd20_rtc_calendar_module_overview_correction Digital Frequency Correction
  * The RTC module contains Digital Frequency Correction logic to compensate for
  * inaccurate source clock frequencies which would otherwise result in skewed
@@ -245,7 +251,7 @@
  *       should be used.
  *
  *
- * \section asfdoc_samd20_rtc_calendar_extra_info Extra Information for RTC CAL
+ * \section asfdoc_samd20_rtc_calendar_extra_info Extra Information
  *
  * For extra information see \ref asfdoc_samd20_rtc_calendar_extra. This includes:
  *  - \ref asfdoc_samd20_rtc_calendar_extra_acronyms
@@ -906,13 +912,17 @@ static inline void rtc_calendar_disable_events(
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
+ *		<td>Updated initialization function to also enable the digital interface
+ *          clock to the module if it is disabled.</td>
+ *	</tr>
+ *	<tr>
  *		<td>Initial Release</td>
  *	</tr>
  * </table>
  */
 
 /**
- * \page asfdoc_samd20_rtc_calendar_exqsg Examples for RTC (CAL) Driver
+ * \page asfdoc_samd20_rtc_calendar_exqsg Examples for RTC CAL Driver
  *
  * This is a list of the available Quick Start guides (QSGs) and example
  * applications for \ref asfdoc_samd20_rtc_calendar_group. QSGs are simple
@@ -932,6 +942,12 @@ static inline void rtc_calendar_disable_events(
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>B</td>
+ *		<td>06/2013</td>
+ *		<td>Added additional documentation on the event system. Corrected
+ *          documentation typos.</td>
  *	</tr>
  *	<tr>
  *		<td>A</td>

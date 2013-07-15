@@ -210,6 +210,14 @@ enum status_code tc_init(
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC,
 			inst_pm_apbmask[instance]);
 
+	/* Enable the slave counter if counter_size is 32 bit */
+	if ((config->counter_size == TC_COUNTER_SIZE_32BIT))
+	{
+		/* Enable the user interface clock in the PM */
+		system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC,
+				inst_pm_apbmask[instance + 1]);
+	}
+
 	/* Setup clock for module */
 	system_gclk_chan_get_config_defaults(&gclk_chan_config);
 	gclk_chan_config.source_generator = config->clock_source;

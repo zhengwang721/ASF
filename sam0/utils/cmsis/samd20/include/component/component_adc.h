@@ -93,12 +93,12 @@ typedef union {
 
 #define ADC_REFCTRL_REFSEL_Pos      0            /**< \brief (ADC_REFCTRL) Reference Selection */
 #define ADC_REFCTRL_REFSEL_Msk      (0xFu << ADC_REFCTRL_REFSEL_Pos)
-#define ADC_REFCTRL_REFSEL_INT1V    (0x0u << ADC_REFCTRL_REFSEL_Pos) /** TODO: Manually added */
-#define ADC_REFCTRL_REFSEL_INTVCC0  (0x1u << ADC_REFCTRL_REFSEL_Pos) /** TODO: Manually added */
-#define ADC_REFCTRL_REFSEL_INTVCC1  (0x2u << ADC_REFCTRL_REFSEL_Pos) /** TODO: Manually added */
-#define ADC_REFCTRL_REFSEL_AREFA    (0x3u << ADC_REFCTRL_REFSEL_Pos) /** TODO: Manually added */
-#define ADC_REFCTRL_REFSEL_AREFB    (0x4u << ADC_REFCTRL_REFSEL_Pos) /** TODO: Manually added */
 #define ADC_REFCTRL_REFSEL(value)   ((ADC_REFCTRL_REFSEL_Msk & ((value) << ADC_REFCTRL_REFSEL_Pos)))
+#define   ADC_REFCTRL_REFSEL_INT1V  (0x0u <<  0) /**< \brief (ADC_REFCTRL)  */
+#define   ADC_REFCTRL_REFSEL_INTVCC0 (0x1u <<  0) /**< \brief (ADC_REFCTRL)  */
+#define   ADC_REFCTRL_REFSEL_INTVCC1 (0x2u <<  0) /**< \brief (ADC_REFCTRL)  */
+#define   ADC_REFCTRL_REFSEL_AREFA  (0x3u <<  0) /**< \brief (ADC_REFCTRL)  */
+#define   ADC_REFCTRL_REFSEL_AREFB  (0x4u <<  0) /**< \brief (ADC_REFCTRL)  */
 #define ADC_REFCTRL_REFCOMP_Pos     7            /**< \brief (ADC_REFCTRL) Reference Buffer Offset Compensation Enable */
 #define ADC_REFCTRL_REFCOMP         (0x1u << ADC_REFCTRL_REFCOMP_Pos)
 #define ADC_REFCTRL_MASK            0x8Fu        /**< \brief (ADC_REFCTRL) MASK Register */
@@ -121,17 +121,17 @@ typedef union {
 #define ADC_AVGCTRL_SAMPLENUM_Pos   0            /**< \brief (ADC_AVGCTRL) Number of Samples to be Collected */
 #define ADC_AVGCTRL_SAMPLENUM_Msk   (0xFu << ADC_AVGCTRL_SAMPLENUM_Pos)
 #define ADC_AVGCTRL_SAMPLENUM(value) ((ADC_AVGCTRL_SAMPLENUM_Msk & ((value) << ADC_AVGCTRL_SAMPLENUM_Pos)))
-#define ADC_AVGCTRL_SAMPLENUM_1     (0x0u << ADC_AVGCTRL_SAMPLENUM_Pos) /** TODO: Manually added */
-#define ADC_AVGCTRL_SAMPLENUM_2     (0x1u << ADC_AVGCTRL_SAMPLENUM_Pos) /** TODO: Manually added */
-#define ADC_AVGCTRL_SAMPLENUM_4     (0x2u << ADC_AVGCTRL_SAMPLENUM_Pos) /** TODO: Manually added */
-#define ADC_AVGCTRL_SAMPLENUM_8     (0x3u << ADC_AVGCTRL_SAMPLENUM_Pos) /** TODO: Manually added */
-#define ADC_AVGCTRL_SAMPLENUM_16    (0x4u << ADC_AVGCTRL_SAMPLENUM_Pos) /** TODO: Manually added */
-#define ADC_AVGCTRL_SAMPLENUM_32    (0x5u << ADC_AVGCTRL_SAMPLENUM_Pos) /** TODO: Manually added */
-#define ADC_AVGCTRL_SAMPLENUM_64    (0x6u << ADC_AVGCTRL_SAMPLENUM_Pos) /** TODO: Manually added */
-#define ADC_AVGCTRL_SAMPLENUM_128   (0x7u << ADC_AVGCTRL_SAMPLENUM_Pos) /** TODO: Manually added */
-#define ADC_AVGCTRL_SAMPLENUM_256   (0x8u << ADC_AVGCTRL_SAMPLENUM_Pos) /** TODO: Manually added */
-#define ADC_AVGCTRL_SAMPLENUM_512   (0x9u << ADC_AVGCTRL_SAMPLENUM_Pos) /** TODO: Manually added */
-#define ADC_AVGCTRL_SAMPLENUM_1024  (0xAu << ADC_AVGCTRL_SAMPLENUM_Pos) /** TODO: Manually added */
+#define   ADC_AVGCTRL_SAMPLENUM_1   (0x0u <<  0) /**< \brief (ADC_AVGCTRL)  */
+#define   ADC_AVGCTRL_SAMPLENUM_2   (0x1u <<  0) /**< \brief (ADC_AVGCTRL)  */
+#define   ADC_AVGCTRL_SAMPLENUM_4   (0x2u <<  0) /**< \brief (ADC_AVGCTRL)  */
+#define   ADC_AVGCTRL_SAMPLENUM_8   (0x3u <<  0) /**< \brief (ADC_AVGCTRL)  */
+#define   ADC_AVGCTRL_SAMPLENUM_16  (0x4u <<  0) /**< \brief (ADC_AVGCTRL)  */
+#define   ADC_AVGCTRL_SAMPLENUM_32  (0x5u <<  0) /**< \brief (ADC_AVGCTRL)  */
+#define   ADC_AVGCTRL_SAMPLENUM_64  (0x6u <<  0) /**< \brief (ADC_AVGCTRL)  */
+#define   ADC_AVGCTRL_SAMPLENUM_128 (0x7u <<  0) /**< \brief (ADC_AVGCTRL)  */
+#define   ADC_AVGCTRL_SAMPLENUM_256 (0x8u <<  0) /**< \brief (ADC_AVGCTRL)  */
+#define   ADC_AVGCTRL_SAMPLENUM_512 (0x9u <<  0) /**< \brief (ADC_AVGCTRL)  */
+#define   ADC_AVGCTRL_SAMPLENUM_1024 (0xAu <<  0) /**< \brief (ADC_AVGCTRL)  */
 #define ADC_AVGCTRL_ADJRES_Pos      4            /**< \brief (ADC_AVGCTRL) Adjusting Result / Division Coefficient */
 #define ADC_AVGCTRL_ADJRES_Msk      (0x7u << ADC_AVGCTRL_ADJRES_Pos)
 #define ADC_AVGCTRL_ADJRES(value)   ((ADC_AVGCTRL_ADJRES_Msk & ((value) << ADC_AVGCTRL_ADJRES_Pos)))
@@ -187,21 +187,21 @@ typedef union {
 #define ADC_CTRLB_RESSEL_Pos        4            /**< \brief (ADC_CTRLB) Conversion Result Resolution */
 #define ADC_CTRLB_RESSEL_Msk        (0x3u << ADC_CTRLB_RESSEL_Pos)
 #define ADC_CTRLB_RESSEL(value)     ((ADC_CTRLB_RESSEL_Msk & ((value) << ADC_CTRLB_RESSEL_Pos)))
-#define ADC_CTRLB_RESSEL_12BIT     (0x0u << ADC_CTRLB_RESSEL_Pos) /** TODO: Manually added */
-#define ADC_CTRLB_RESSEL_16BIT     (0x1u << ADC_CTRLB_RESSEL_Pos) /** TODO: Manually added */
-#define ADC_CTRLB_RESSEL_10BIT     (0x2u << ADC_CTRLB_RESSEL_Pos) /** TODO: Manually added */
-#define ADC_CTRLB_RESSEL_8BIT      (0x3u << ADC_CTRLB_RESSEL_Pos) /** TODO: Manually added */
+#define   ADC_CTRLB_RESSEL_12BIT    (0x0u <<  4) /**< \brief (ADC_CTRLB)  */
+#define   ADC_CTRLB_RESSEL_16BIT    (0x1u <<  4) /**< \brief (ADC_CTRLB)  */
+#define   ADC_CTRLB_RESSEL_10BIT    (0x2u <<  4) /**< \brief (ADC_CTRLB)  */
+#define   ADC_CTRLB_RESSEL_8BIT     (0x3u <<  4) /**< \brief (ADC_CTRLB)  */
 #define ADC_CTRLB_PRESCALER_Pos     8            /**< \brief (ADC_CTRLB) Prescaler Configuration */
 #define ADC_CTRLB_PRESCALER_Msk     (0x7u << ADC_CTRLB_PRESCALER_Pos)
 #define ADC_CTRLB_PRESCALER(value)  ((ADC_CTRLB_PRESCALER_Msk & ((value) << ADC_CTRLB_PRESCALER_Pos)))
-#define ADC_CTRLB_PRESCALER_DIV4    (0x0u << ADC_CTRLB_PRESCALER_Pos) /** TODO: Manually added */
-#define ADC_CTRLB_PRESCALER_DIV8    (0x1u << ADC_CTRLB_PRESCALER_Pos) /** TODO: Manually added */
-#define ADC_CTRLB_PRESCALER_DIV16   (0x2u << ADC_CTRLB_PRESCALER_Pos) /** TODO: Manually added */
-#define ADC_CTRLB_PRESCALER_DIV32   (0x3u << ADC_CTRLB_PRESCALER_Pos) /** TODO: Manually added */
-#define ADC_CTRLB_PRESCALER_DIV64   (0x4u << ADC_CTRLB_PRESCALER_Pos) /** TODO: Manually added */
-#define ADC_CTRLB_PRESCALER_DIV128  (0x5u << ADC_CTRLB_PRESCALER_Pos) /** TODO: Manually added */
-#define ADC_CTRLB_PRESCALER_DIV256  (0x6u << ADC_CTRLB_PRESCALER_Pos) /** TODO: Manually added */
-#define ADC_CTRLB_PRESCALER_DIV512  (0x7u << ADC_CTRLB_PRESCALER_Pos) /** TODO: Manually added */
+#define   ADC_CTRLB_PRESCALER_DIV4  (0x0u <<  8) /**< \brief (ADC_CTRLB)  */
+#define   ADC_CTRLB_PRESCALER_DIV8  (0x1u <<  8) /**< \brief (ADC_CTRLB)  */
+#define   ADC_CTRLB_PRESCALER_DIV16 (0x2u <<  8) /**< \brief (ADC_CTRLB)  */
+#define   ADC_CTRLB_PRESCALER_DIV32 (0x3u <<  8) /**< \brief (ADC_CTRLB)  */
+#define   ADC_CTRLB_PRESCALER_DIV64 (0x4u <<  8) /**< \brief (ADC_CTRLB)  */
+#define   ADC_CTRLB_PRESCALER_DIV128 (0x5u <<  8) /**< \brief (ADC_CTRLB)  */
+#define   ADC_CTRLB_PRESCALER_DIV256 (0x6u <<  8) /**< \brief (ADC_CTRLB)  */
+#define   ADC_CTRLB_PRESCALER_DIV512 (0x7u <<  8) /**< \brief (ADC_CTRLB)  */
 #define ADC_CTRLB_MASK              0x073Fu      /**< \brief (ADC_CTRLB) MASK Register */
 
 /* -------- ADC_WINCTRL : (ADC Offset: 0x08) (R/W  8) Window Monitor Control Register -------- */
@@ -221,11 +221,11 @@ typedef union {
 #define ADC_WINCTRL_WINMODE_Pos     0            /**< \brief (ADC_WINCTRL) Window Monitor Mode */
 #define ADC_WINCTRL_WINMODE_Msk     (0x7u << ADC_WINCTRL_WINMODE_Pos)
 #define ADC_WINCTRL_WINMODE(value)  ((ADC_WINCTRL_WINMODE_Msk & ((value) << ADC_WINCTRL_WINMODE_Pos)))
-#define ADC_WINCTRL_WINMODE_DISABLE (0x0u << ADC_WINCTRL_WINMODE_Pos) /** TODO: Manually added */
-#define ADC_WINCTRL_WINMODE_MODE1   (0x1u << ADC_WINCTRL_WINMODE_Pos) /** TODO: Manually added */
-#define ADC_WINCTRL_WINMODE_MODE2   (0x2u << ADC_WINCTRL_WINMODE_Pos) /** TODO: Manually added */
-#define ADC_WINCTRL_WINMODE_MODE3   (0x3u << ADC_WINCTRL_WINMODE_Pos) /** TODO: Manually added */
-#define ADC_WINCTRL_WINMODE_MODE4   (0x4u << ADC_WINCTRL_WINMODE_Pos) /** TODO: Manually added */
+#define   ADC_WINCTRL_WINMODE_DISABLE (0x0u <<  0) /**< \brief (ADC_WINCTRL)  */
+#define   ADC_WINCTRL_WINMODE_MODE1 (0x1u <<  0) /**< \brief (ADC_WINCTRL)  */
+#define   ADC_WINCTRL_WINMODE_MODE2 (0x2u <<  0) /**< \brief (ADC_WINCTRL)  */
+#define   ADC_WINCTRL_WINMODE_MODE3 (0x3u <<  0) /**< \brief (ADC_WINCTRL)  */
+#define   ADC_WINCTRL_WINMODE_MODE4 (0x4u <<  0) /**< \brief (ADC_WINCTRL)  */
 #define ADC_WINCTRL_MASK            0x07u        /**< \brief (ADC_WINCTRL) MASK Register */
 
 /* -------- ADC_SWTRIG : (ADC Offset: 0x0C) (R/W  8) Control Register B -------- */
@@ -272,64 +272,64 @@ typedef union {
 #define ADC_INPUTCTRL_MUXPOS_Pos    0            /**< \brief (ADC_INPUTCTRL) Positive Mux Input Selection */
 #define ADC_INPUTCTRL_MUXPOS_Msk    (0x1Fu << ADC_INPUTCTRL_MUXPOS_Pos)
 #define ADC_INPUTCTRL_MUXPOS(value) ((ADC_INPUTCTRL_MUXPOS_Msk & ((value) << ADC_INPUTCTRL_MUXPOS_Pos)))
-#define ADC_INPUTCTRL_MUXPOS_PIN0   (0x0u << ADC_INPUTCTRL_MUXPOS_Pos) /** TODO: Manually added */
-#define ADC_INPUTCTRL_MUXPOS_PIN1   (0x1u << ADC_INPUTCTRL_MUXPOS_Pos) /** TODO: Manually added */
-#define ADC_INPUTCTRL_MUXPOS_PIN2   (0x2u << ADC_INPUTCTRL_MUXPOS_Pos) /** TODO: Manually added */
-#define ADC_INPUTCTRL_MUXPOS_PIN3   (0x3u << ADC_INPUTCTRL_MUXPOS_Pos) /** TODO: Manually added */
-#define ADC_INPUTCTRL_MUXPOS_PIN4   (0x4u << ADC_INPUTCTRL_MUXPOS_Pos) /** TODO: Manually added */
-#define ADC_INPUTCTRL_MUXPOS_PIN5   (0x5u << ADC_INPUTCTRL_MUXPOS_Pos) /** TODO: Manually added */
-#define ADC_INPUTCTRL_MUXPOS_PIN6   (0x6u << ADC_INPUTCTRL_MUXPOS_Pos) /** TODO: Manually added */
-#define ADC_INPUTCTRL_MUXPOS_PIN7   (0x7u << ADC_INPUTCTRL_MUXPOS_Pos) /** TODO: Manually added */
-#define ADC_INPUTCTRL_MUXPOS_PIN8   (0x8u << ADC_INPUTCTRL_MUXPOS_Pos) /** TODO: Manually added */
-#define ADC_INPUTCTRL_MUXPOS_PIN9   (0x9u << ADC_INPUTCTRL_MUXPOS_Pos) /** TODO: Manually added */
-#define ADC_INPUTCTRL_MUXPOS_PIN10  (0xAu << ADC_INPUTCTRL_MUXPOS_Pos) /** TODO: Manually added */
-#define ADC_INPUTCTRL_MUXPOS_PIN11  (0xBu << ADC_INPUTCTRL_MUXPOS_Pos) /** TODO: Manually added */
-#define ADC_INPUTCTRL_MUXPOS_PIN12  (0xCu << ADC_INPUTCTRL_MUXPOS_Pos) /** TODO: Manually added */
-#define ADC_INPUTCTRL_MUXPOS_PIN13  (0xDu << ADC_INPUTCTRL_MUXPOS_Pos) /** TODO: Manually added */
-#define ADC_INPUTCTRL_MUXPOS_PIN14  (0xEu << ADC_INPUTCTRL_MUXPOS_Pos) /** TODO: Manually added */
-#define ADC_INPUTCTRL_MUXPOS_PIN15  (0xFu << ADC_INPUTCTRL_MUXPOS_Pos) /** TODO: Manually added */
-#define ADC_INPUTCTRL_MUXPOS_PIN16  (0x10u << ADC_INPUTCTRL_MUXPOS_Pos) /** TODO: Manually added */
-#define ADC_INPUTCTRL_MUXPOS_PIN17  (0x11u << ADC_INPUTCTRL_MUXPOS_Pos) /** TODO: Manually added */
-#define ADC_INPUTCTRL_MUXPOS_PIN18  (0x12u << ADC_INPUTCTRL_MUXPOS_Pos) /** TODO: Manually added */
-#define ADC_INPUTCTRL_MUXPOS_PIN19  (0x13u << ADC_INPUTCTRL_MUXPOS_Pos) /** TODO: Manually added */
-#define ADC_INPUTCTRL_MUXPOS_PIN20  (0x14u << ADC_INPUTCTRL_MUXPOS_Pos) /** TODO: Manually added */
-#define ADC_INPUTCTRL_MUXPOS_PIN21  (0x15u << ADC_INPUTCTRL_MUXPOS_Pos) /** TODO: Manually added */
-#define ADC_INPUTCTRL_MUXPOS_PIN22  (0x16u << ADC_INPUTCTRL_MUXPOS_Pos) /** TODO: Manually added */
-#define ADC_INPUTCTRL_MUXPOS_PIN23  (0x17u << ADC_INPUTCTRL_MUXPOS_Pos) /** TODO: Manually added */
-#define ADC_INPUTCTRL_MUXPOS_TEMP   (0x18u << ADC_INPUTCTRL_MUXPOS_Pos) /** TODO: Manually added */
-#define ADC_INPUTCTRL_MUXPOS_BANDGAP (0x19u << ADC_INPUTCTRL_MUXPOS_Pos) /** TODO: Manually added */
-#define ADC_INPUTCTRL_MUXPOS_SCALEDCOREVCC (0x1Au << ADC_INPUTCTRL_MUXPOS_Pos) /** TODO: Manually  added */
-#define ADC_INPUTCTRL_MUXPOS_SCALEDIOVCC (0x1Bu << ADC_INPUTCTRL_MUXPOS_Pos) /** TODO: Manually  added */
-#define ADC_INPUTCTRL_MUXPOS_DAC  (0x1Cu << ADC_INPUTCTRL_MUXPOS_Pos) /** TODO: Manually added */
+#define   ADC_INPUTCTRL_MUXPOS_PIN0 (0x0u <<  0) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_MUXPOS_PIN1 (0x1u <<  0) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_MUXPOS_PIN2 (0x2u <<  0) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_MUXPOS_PIN3 (0x3u <<  0) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_MUXPOS_PIN4 (0x4u <<  0) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_MUXPOS_PIN5 (0x5u <<  0) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_MUXPOS_PIN6 (0x6u <<  0) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_MUXPOS_PIN7 (0x7u <<  0) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_MUXPOS_PIN8 (0x8u <<  0) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_MUXPOS_PIN9 (0x9u <<  0) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_MUXPOS_PIN10 (0xAu <<  0) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_MUXPOS_PIN11 (0xBu <<  0) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_MUXPOS_PIN12 (0xCu <<  0) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_MUXPOS_PIN13 (0xDu <<  0) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_MUXPOS_PIN14 (0xEu <<  0) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_MUXPOS_PIN15 (0xFu <<  0) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_MUXPOS_PIN16 (0x10u <<  0) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_MUXPOS_PIN17 (0x11u <<  0) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_MUXPOS_PIN18 (0x12u <<  0) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_MUXPOS_PIN19 (0x13u <<  0) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_MUXPOS_PIN20 (0x14u <<  0) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_MUXPOS_PIN21 (0x15u <<  0) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_MUXPOS_PIN22 (0x16u <<  0) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_MUXPOS_PIN23 (0x17u <<  0) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_MUXPOS_TEMP (0x18u <<  0) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_MUXPOS_BANDGAP (0x19u <<  0) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_MUXPOS_SCALEDCOREVCC (0x1Au <<  0) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_MUXPOS_SCALEDIOVCC (0x1Bu <<  0) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_MUXPOS_DAC  (0x1Cu <<  0) /**< \brief (ADC_INPUTCTRL)  */
 #define ADC_INPUTCTRL_MUXNEG_Pos    8            /**< \brief (ADC_INPUTCTRL) Negative Mux Input Selection */
 #define ADC_INPUTCTRL_MUXNEG_Msk    (0x1Fu << ADC_INPUTCTRL_MUXNEG_Pos)
 #define ADC_INPUTCTRL_MUXNEG(value) ((ADC_INPUTCTRL_MUXNEG_Msk & ((value) << ADC_INPUTCTRL_MUXNEG_Pos)))
-#define ADC_INPUTCTRL_MUXNEG_PIN0   (0x0u << ADC_INPUTCTRL_MUXNEG_Pos) /** TODO: Manually added */
-#define ADC_INPUTCTRL_MUXNEG_PIN1   (0x1u << ADC_INPUTCTRL_MUXNEG_Pos) /** TODO: Manually added */
-#define ADC_INPUTCTRL_MUXNEG_PIN2   (0x2u << ADC_INPUTCTRL_MUXNEG_Pos) /** TODO: Manually added */
-#define ADC_INPUTCTRL_MUXNEG_PIN3   (0x3u << ADC_INPUTCTRL_MUXNEG_Pos) /** TODO: Manually added */
-#define ADC_INPUTCTRL_MUXNEG_PIN4   (0x4u << ADC_INPUTCTRL_MUXNEG_Pos) /** TODO: Manually added */
-#define ADC_INPUTCTRL_MUXNEG_PIN5   (0x5u << ADC_INPUTCTRL_MUXNEG_Pos) /** TODO: Manually added */
-#define ADC_INPUTCTRL_MUXNEG_PIN6   (0x6u << ADC_INPUTCTRL_MUXNEG_Pos) /** TODO: Manually added */
-#define ADC_INPUTCTRL_MUXNEG_PIN7   (0x7u << ADC_INPUTCTRL_MUXNEG_Pos) /** TODO: Manually added */
-#define ADC_INPUTCTRL_MUXNEG_PIN8   (0x8u << ADC_INPUTCTRL_MUXNEG_Pos) /** TODO: Manually added */
-#define ADC_INPUTCTRL_MUXNEG_PIN9   (0x9u << ADC_INPUTCTRL_MUXNEG_Pos) /** TODO: Manually added */
-#define ADC_INPUTCTRL_MUXNEG_PIN10  (0xAu << ADC_INPUTCTRL_MUXNEG_Pos) /** TODO: Manually added */
-#define ADC_INPUTCTRL_MUXNEG_PIN11  (0xBu << ADC_INPUTCTRL_MUXNEG_Pos) /** TODO: Manually added */
-#define ADC_INPUTCTRL_MUXNEG_PIN12  (0xCu << ADC_INPUTCTRL_MUXNEG_Pos) /** TODO: Manually added */
-#define ADC_INPUTCTRL_MUXNEG_PIN13  (0xDu << ADC_INPUTCTRL_MUXNEG_Pos) /** TODO: Manually added */
-#define ADC_INPUTCTRL_MUXNEG_PIN14  (0xEu << ADC_INPUTCTRL_MUXNEG_Pos) /** TODO: Manually added */
-#define ADC_INPUTCTRL_MUXNEG_PIN15  (0xFu << ADC_INPUTCTRL_MUXNEG_Pos) /** TODO: Manually added */
-#define ADC_INPUTCTRL_MUXNEG_PIN16  (0x10u << ADC_INPUTCTRL_MUXNEG_Pos) /** TODO: Manually added */
-#define ADC_INPUTCTRL_MUXNEG_PIN17  (0x11u << ADC_INPUTCTRL_MUXNEG_Pos) /** TODO: Manually added */
-#define ADC_INPUTCTRL_MUXNEG_PIN18  (0x12u << ADC_INPUTCTRL_MUXNEG_Pos) /** TODO: Manually added */
-#define ADC_INPUTCTRL_MUXNEG_PIN19  (0x13u << ADC_INPUTCTRL_MUXNEG_Pos) /** TODO: Manually added */
-#define ADC_INPUTCTRL_MUXNEG_PIN20  (0x14u << ADC_INPUTCTRL_MUXNEG_Pos) /** TODO: Manually added */
-#define ADC_INPUTCTRL_MUXNEG_PIN21  (0x15u << ADC_INPUTCTRL_MUXNEG_Pos) /** TODO: Manually added */
-#define ADC_INPUTCTRL_MUXNEG_PIN22  (0x16u << ADC_INPUTCTRL_MUXNEG_Pos) /** TODO: Manually added */
-#define ADC_INPUTCTRL_MUXNEG_PIN23  (0x17u << ADC_INPUTCTRL_MUXNEG_Pos) /** TODO: Manually added */
-#define ADC_INPUTCTRL_MUXNEG_GND    (0x18u << ADC_INPUTCTRL_MUXNEG_Pos) /** TODO: Manually added */
-#define ADC_INPUTCTRL_MUXNEG_IOGND  (0x19u << ADC_INPUTCTRL_MUXNEG_Pos) /** TODO: Manually added */
+#define   ADC_INPUTCTRL_MUXNEG_PIN0 (0x0u <<  8) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_MUXNEG_PIN1 (0x1u <<  8) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_MUXNEG_PIN2 (0x2u <<  8) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_MUXNEG_PIN3 (0x3u <<  8) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_MUXNEG_PIN4 (0x4u <<  8) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_MUXNEG_PIN5 (0x5u <<  8) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_MUXNEG_PIN6 (0x6u <<  8) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_MUXNEG_PIN7 (0x7u <<  8) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_MUXNEG_PIN8 (0x8u <<  8) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_MUXNEG_PIN9 (0x9u <<  8) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_MUXNEG_PIN10 (0xAu <<  8) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_MUXNEG_PIN11 (0xBu <<  8) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_MUXNEG_PIN12 (0xCu <<  8) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_MUXNEG_PIN13 (0xDu <<  8) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_MUXNEG_PIN14 (0xEu <<  8) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_MUXNEG_PIN15 (0xFu <<  8) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_MUXNEG_PIN16 (0x10u <<  8) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_MUXNEG_PIN17 (0x11u <<  8) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_MUXNEG_PIN18 (0x12u <<  8) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_MUXNEG_PIN19 (0x13u <<  8) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_MUXNEG_PIN20 (0x14u <<  8) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_MUXNEG_PIN21 (0x15u <<  8) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_MUXNEG_PIN22 (0x16u <<  8) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_MUXNEG_PIN23 (0x17u <<  8) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_MUXNEG_GND  (0x18u <<  8) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_MUXNEG_IOGND (0x19u <<  8) /**< \brief (ADC_INPUTCTRL)  */
 #define ADC_INPUTCTRL_INPUTSCAN_Pos 16           /**< \brief (ADC_INPUTCTRL) Number of Input Channels Included in Scan */
 #define ADC_INPUTCTRL_INPUTSCAN_Msk (0xFu << ADC_INPUTCTRL_INPUTSCAN_Pos)
 #define ADC_INPUTCTRL_INPUTSCAN(value) ((ADC_INPUTCTRL_INPUTSCAN_Msk & ((value) << ADC_INPUTCTRL_INPUTSCAN_Pos)))
@@ -339,12 +339,12 @@ typedef union {
 #define ADC_INPUTCTRL_GAIN_Pos      24           /**< \brief (ADC_INPUTCTRL) Gain Value */
 #define ADC_INPUTCTRL_GAIN_Msk      (0xFu << ADC_INPUTCTRL_GAIN_Pos)
 #define ADC_INPUTCTRL_GAIN(value)   ((ADC_INPUTCTRL_GAIN_Msk & ((value) << ADC_INPUTCTRL_GAIN_Pos)))
-#define ADC_INPUTCTRL_GAIN_1X       (0x0u << ADC_INPUTCTRL_GAIN_Pos) /** TODO: Manually added */
-#define ADC_INPUTCTRL_GAIN_2X       (0x1u << ADC_INPUTCTRL_GAIN_Pos) /** TODO: Manually added */
-#define ADC_INPUTCTRL_GAIN_4X       (0x2u << ADC_INPUTCTRL_GAIN_Pos) /** TODO: Manually added */
-#define ADC_INPUTCTRL_GAIN_8X       (0x3u << ADC_INPUTCTRL_GAIN_Pos) /** TODO: Manually added */
-#define ADC_INPUTCTRL_GAIN_16X      (0x4u << ADC_INPUTCTRL_GAIN_Pos) /** TODO: Manually added */
-#define ADC_INPUTCTRL_GAIN_DIV2     (0xFu << ADC_INPUTCTRL_GAIN_Pos) /** TODO: Manually added */
+#define   ADC_INPUTCTRL_GAIN_1X     (0x0u << 24) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_GAIN_2X     (0x1u << 24) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_GAIN_4X     (0x2u << 24) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_GAIN_8X     (0x3u << 24) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_GAIN_16X    (0x4u << 24) /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_GAIN_DIV2   (0xFu << 24) /**< \brief (ADC_INPUTCTRL)  */
 #define ADC_INPUTCTRL_MASK          0x0FFF1F1Fu  /**< \brief (ADC_INPUTCTRL) MASK Register */
 
 /* -------- ADC_EVCTRL : (ADC Offset: 0x14) (R/W  8) Event Control Register -------- */
