@@ -359,6 +359,8 @@ int8_t tal_get_rssi_base_val(void);
  */
 retval_t tal_rxsafe_mode_ctrl(bool safe_mode_ctrl);
 
+    
+
 #ifdef __cplusplus
 } /* extern "C" */
 #endif

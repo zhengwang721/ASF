@@ -657,7 +657,7 @@ enum i2c_slave_direction i2c_slave_get_direction_wait(
  *                                          transaction being processed
  * \retval I2C_SLAVE_STATUS_CLOCK_HOLD      The slave is holding the SCL line
  *                                          low
- * \retval I2C_SLAVE_STATUS_SCL_LOW_TIMEOUT An SCL low time-out has occured
+ * \retval I2C_SLAVE_STATUS_SCL_LOW_TIMEOUT An SCL low time-out has occurred
  * \retval I2C_SLAVE_STATUS_REPEATED_START  Indicates a repeated start, only
  *                                          valid if \ref
  *                                          I2C_SLAVE_STATUS_ADDRESS_MATCH is

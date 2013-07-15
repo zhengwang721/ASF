@@ -44,7 +44,7 @@
 /**
  * \mainpage SAM D20 SPI Master Bootloader
  * See \ref appdoc_main "here" for project documentation.
- * \copydetails preface
+ * \copydetails appdoc_preface
  *
  *
  * \page appdoc_preface Features
@@ -143,7 +143,7 @@
  *
  * \subsection appdoc_samd20_spi_master_bootloader_start_app Start Application
  * Once the programming is completed, enable Watchdog Timer with a timeout
- * period of 256 clock cyles and wait in a loop for Watchdog to reset
+ * period of 256 clock cycles and wait in a loop for Watchdog to reset
  * the device.
  *
  * \section appdoc_samd20_spi_master_bootloader_compinfo Compilation Info

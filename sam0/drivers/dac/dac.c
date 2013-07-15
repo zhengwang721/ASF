@@ -71,7 +71,7 @@ static void _dac_set_config(
 	uint32_t new_config = 0;
 
 	/* Set reference voltage */
-	new_config     |= config->reference;
+	new_config |= config->reference;
 
 	/* Left adjust data if configured */
 	if (config->left_adjust) {
@@ -311,7 +311,7 @@ void dac_chan_enable_output_buffer(
 		struct dac_module *const module_inst,
 		enum dac_channel channel)
 {
-	/*Sanity check arguments*/
+	/* Sanity check arguments */
 	Assert(module_inst);
 	Assert(module_inst->hw);
 
@@ -422,7 +422,7 @@ enum status_code dac_chan_write(
 uint32_t dac_get_status(
 		struct dac_module *const module_inst)
 {
-	 /* Sanity check arguments */
+	/* Sanity check arguments */
 	Assert(module_inst);
 	Assert(module_inst->hw);
 
@@ -455,7 +455,7 @@ void dac_clear_status(
 		struct dac_module *const module_inst,
 		uint32_t status_flags)
 {
-	 /* Sanity check arguments */
+	/* Sanity check arguments */
 	Assert(module_inst);
 	Assert(module_inst->hw);
 

@@ -40,10 +40,6 @@
 			<build type="module-config" subtype="required-header-file" value="conf_twi_master.h"/>
 			<build type="c-source" value="twi_master_example.c"/>
 			<device-support value="sam"/>
-			<require idref="sam.drivers.pmc"/>
-			<require idref="sam.drivers.pio"/>
-			<require idref="sam.drivers.uart"/>
-			<require idref="common.services.basic.gpio"/>
 			<require idref="common.services.basic.clock"/>
 			<require idref="common.services.basic.twi"/>
 			<info type="gui-flag" value="move-to-root"/>
