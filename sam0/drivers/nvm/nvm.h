@@ -487,7 +487,7 @@ enum nvm_wdt_early_warning_offset {
  * This structure contain the layout of the first 64 bits of the user row
  * which contain the fuse settings.
  */
-struct nvm_user_row {
+struct nvm_fusebits {
 	/** Bootloader size. */
 	enum nvm_bootloader_size          bootloader_size;
 	/** EEPROM emulation area size */
@@ -519,11 +519,6 @@ struct nvm_user_row {
 	/** NVM Lock bits */
 	uint16_t                          lockbits;
 };
-
-/**
- *
- *@sl
- */
 
 /**
  * \name Configuration and Initialization
@@ -615,9 +610,9 @@ enum status_code nvm_execute_command(
 		const uint32_t address,
 		const uint32_t parameter);
 
-enum status_code nvm_get_fuses(struct nvm_user_row *user_row);
+enum status_code nvm_get_fuses(struct nvm_fusebits *fusebits);
 
-enum status_code nvm_set_fuses(struct nvm_user_row *user_row);
+enum status_code nvm_set_fuses(struct nvm_fusebits *fusebits);
 
 
 bool nvm_is_page_locked(uint16_t page_number);
