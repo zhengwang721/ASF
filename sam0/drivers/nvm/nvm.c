@@ -696,8 +696,13 @@ static void _nvm_translate_fusebits_to_struct (
 
 }
 
-#define NVM_FUSEBITS_0_RESERVED_BITS 0x00000088
-#define NVM_FUSEBITS_1_RESERVED_BITS 0x0000ff00
+#define NVM_FUSEBITS_0_RESERVED_BITS ~(NVMCTRL_FUSES_BOOTPROT_Msk | NVMCTRL_FUSES_EEPROM_SIZE_Msk | \
+	SYSCTRL_FUSES_BOD33USERLEVEL_Msk | SYSCTRL_FUSES_BOD33_EN_Msk | SYSCTRL_FUSES_BOD33_ACTION_Msk | \
+	SYSCTRL_FUSES_BOD12USERLEVEL_Msk | SYSCTRL_FUSES_BOD12_EN_Msk | SYSCTRL_FUSES_BOD12_ACTION_Msk | \
+	WDT_FUSES_ENABLE_Msk | WDT_FUSES_ALWAYSON_Msk | WDT_FUSES_PER_Msk | WDT_FUSES_WINDOW_0_Msk)
+
+#define NVM_FUSEBITS_1_RESERVED_BITS ~(WDT_FUSES_WINDOW_1_Msk | WDT_FUSES_EWOFFSET_Msk | \
+	WDT_FUSES_WEN_Msk | NVMCTRL_FUSES_REGION_LOCKS_Msk)
 
 static void _nvm_translate_struct_to_fusebits (
 		struct nvm_user_row *user_row,
@@ -710,7 +715,7 @@ static void _nvm_translate_struct_to_fusebits (
 			    NVMCTRL_FUSES_EEPROM_SIZE((uint8_t)(user_row->eeprom_size))         |
 
 			/* Reserved bits should be 1 */
-			NVM_FUSEBITS_0_RESERVED_BITS                                            |
+			    NVM_FUSEBITS_0_RESERVED_BITS                                        |
 
 			/* Setting BOD33 fuses */
 			    SYSCTRL_FUSES_BOD33USERLEVEL(user_row->bod33_level)                 |
@@ -735,7 +740,7 @@ static void _nvm_translate_struct_to_fusebits (
 			  ((uint32_t)(user_row->wdt_window_mode_enable_at_poweron)) << WDT_FUSES_WEN_Pos |
 
 			/* Reserved bits should be 1 */
-			NVM_FUSEBITS_1_RESERVED_BITS                                                     |
+			  NVM_FUSEBITS_1_RESERVED_BITS                                                   |
 
 			/* Setting flash region lock bits */
 			  NVMCTRL_FUSES_REGION_LOCKS(user_row->lockbits));
