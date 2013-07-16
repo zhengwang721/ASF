@@ -51,8 +51,9 @@
 
 /* === INCLUDES ============================================================ */
 #include "compiler.h"
-//#include "status_codes.h"
-//#include "stdio_usb.h"
+#include "conf_board.h"
+
+#ifdef SENSOR_TERMINAL_BOARD
 
 #define SERIAL_RX_BUF_SIZE_HOST    156
 
@@ -125,5 +126,7 @@ uint8_t sio2host_getchar(void);
      * a byte on USB.
      */
     void usb_handler(void);
+    
+#endif //#ifdef SENSOR_TERMINAL_BOARD    
 /* ! @} */
 #endif /* SIO2HOST_H */

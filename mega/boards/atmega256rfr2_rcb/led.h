@@ -53,6 +53,7 @@
 # include "atmega256rfr2_rcb.h"
 
 static uint8_t led_state = 0x00;
+
 typedef enum led_id_tag
 {
     LED_0,

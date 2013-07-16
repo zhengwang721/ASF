@@ -112,8 +112,8 @@
  #define LED0                 LED0_GPIO
  #define LED1                 LED1_GPIO
 
-#define LED0_GPIO			  0  
- #define LED1_GPIO			  1  
+#define LED0_GPIO			  LED_0  
+ #define LED1_GPIO			  LED_1 
  #define LED_COUNT            2
  #define GPIO_PUSH_BUTTON_0			  IOPORT_CREATE_PIN(PORTB, 2)
 /**

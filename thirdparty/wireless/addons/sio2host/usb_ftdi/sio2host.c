@@ -47,6 +47,7 @@
 #include "board.h"
 #include "stdio.h"
 
+#ifdef SENSOR_TERMINAL_BOARD
 /* === TYPES =============================================================== */
 
 /* === MACROS ============================================================== */
@@ -483,10 +484,7 @@ _STD_BEGIN
 
 size_t __write(int handle, const unsigned char *buffer, size_t size)
 {
-
-
-	if (buffer == 0) {
-		// This means that we should flush internal buffers.
+  if (buffer == 0) {
 		return 0;
 	}
 	// This implementation only writes to stdout and stderr.
@@ -538,4 +536,6 @@ int _read (int *f)
 }
 
 #endif
+
+#endif //#ifdef SENSOR_TERMINAL_BOARD
 /** EOF */
