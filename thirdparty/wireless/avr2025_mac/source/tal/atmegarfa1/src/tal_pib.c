@@ -52,7 +52,6 @@
 #include <stdint.h>
 #include <string.h>
 #include <stdbool.h>
-#include "pal.h"
 #include "return_val.h"
 #include "tal.h"
 #include "ieee_const.h"

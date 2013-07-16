@@ -67,8 +67,7 @@
 #include "tal_internal.h"
 #include "tal_constants.h"
 #include "atmega128rfa1.h"
-#include "tal_timer_config.h"
-#include "app_config.h"
+#include "tal_config.h"
 #ifdef BEACON_SUPPORT
 #include "tal_slotted_csma.h"
 #endif  /* BEACON_SUPPORT */

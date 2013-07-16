@@ -53,7 +53,6 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <stddef.h>
-#include "pal.h"
 #include "return_val.h"
 #include "tal.h"
 #include "tal_constants.h"
