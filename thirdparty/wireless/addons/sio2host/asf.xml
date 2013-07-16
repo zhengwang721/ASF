@@ -53,7 +53,7 @@
             <device-support value="sam4e"/>
 			<build type="doxygen-entry-point" value="group_sio2host_usb"/>
 		</module>
-		<module type="component" id="thirdparty.wireless.addons.sio2host#usb-ftdi"     caption="Serial I/O - Host using USB-FTDI">
+		<module type="meta" id="thirdparty.wireless.addons.sio2host#usb-ftdi"     caption="Serial I/O - Host using USB-FTDI">
 			<info type="description" value="summary">
 			Enables Support for  USB communication
 			</info>
@@ -64,7 +64,6 @@
 			<build type="module-config" subtype="path" value="module_config"/>
             <device-support value="atmega256rfr2"/>
             <device-support value="atmega128rfa1"/>
-			<build type="doxygen-entry-point" value="group_sio2host_usb-ftdi"/>
 		</module>
 	</select-by-config>
 </asf>
