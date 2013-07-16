@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief  ATMEGA256RFR2 Xplained Pro board LEDs support package.
+ * \brief  ATMEGA256RFR2 RCB board LEDs support package.
  *
  * This file contains definitions and services related to the LED features of
  * the ATMEGA256RFR2 XPLAINED PRO board.
@@ -50,7 +50,7 @@
 #define _LED_H_
 
 #include "gpio.h"
-# include "atmega256rfr2_rcb.h"
+# include "board.h"
 
 static uint8_t led_state = 0x00;
 
@@ -146,71 +146,71 @@ static inline void led_helper_func(void)
 
 static inline void pal_led(led_id_t led_no, led_action_t led_setting)
 {
-                   uint8_t pin;
-                /* New values of LED pins based on new LED state. */
-                uint8_t led_pin_value;
-                /*
-                 * Original value of LED port before writing new value.
-                 * This value needs to be restored.
-                 */
-                uint8_t orig_led_port = LED_PORT & ~LED_BIT_MASK;
+uint8_t pin;
+/* New values of LED pins based on new LED state. */
+uint8_t led_pin_value;
+/*
+* Original value of LED port before writing new value.
+* This value needs to be restored.
+*/
+uint8_t orig_led_port = LED_PORT & ~LED_BIT_MASK;
 
-                /* Both LEDs need to be updated, since several peripherals
-                 * are dealing with the same port for this board
-                 * (USB, EEPROM, LEDs, Button).
-                 */
-                LED_PORT_DIR |= (1 << LED_BIT_0);
-                LED_PORT_DIR |= (1 << LED_BIT_1);
+/* Both LEDs need to be updated, since several peripherals
+* are dealing with the same port for this board
+* (USB, EEPROM, LEDs, Button).
+*/
+LED_PORT_DIR |= (1 << LED_BIT_0);
+LED_PORT_DIR |= (1 << LED_BIT_1);
 
-                switch (led_no)
-                {
-                    case LED_0:
-                        pin = LED_BIT_0;
-                        break;
-                    case LED_1:
-                        pin = LED_BIT_1;
-                        break;
-                    default:
-                        return;
-                }
+switch (led_no)
+{
+case LED_0:
+    pin = LED_BIT_0;
+    break;
+case LED_1:
+    pin = LED_BIT_1;
+    break;
+default:
+    return;
+}
 
-                switch (led_setting)
-                {
-                    case LED_ON:
-                        led_state |= _BV(pin);
-                        break;
+switch (led_setting)
+{
+case LED_ON:
+    led_state |= _BV(pin);
+    break;
 
-                    case LED_OFF:
-                        led_state &= ~_BV(pin);
-                        break;
+case LED_OFF:
+    led_state &= ~_BV(pin);
+    break;
 
-                    case LED_TOGGLE:
-                    default:
-                        if (led_state & _BV(pin))
-                        {
-                            /*
-                             * LED is currently on,
-                             * Switch it off
-                             */
-                            led_state &= ~_BV(pin);
-                        }
-                        else
-                        {
-                            /*
-                             * LED is currently off,
-                             * Switch it on
-                             */
-                            led_state |= _BV(pin);
-                        }
-                        break;
-                }
+case LED_TOGGLE:
+default:
+    if (led_state & _BV(pin))
+    {
+        /*
+         * LED is currently on,
+         * Switch it off
+         */
+        led_state &= ~_BV(pin);
+    }
+    else
+    {
+        /*
+         * LED is currently off,
+         * Switch it on
+         */
+        led_state |= _BV(pin);
+    }
+    break;
+}
 
-                led_pin_value = (uint8_t)(~(uint16_t)led_state);  // Implicit casting required to avoid IAR Pa091.
-                led_pin_value &= LED_BIT_MASK;
+led_pin_value = (uint8_t)(~(uint16_t)led_state);  // Implicit casting required to avoid IAR Pa091.
+led_pin_value &= LED_BIT_MASK;
 
-                LED_PORT = orig_led_port | led_pin_value;
+LED_PORT = orig_led_port | led_pin_value;
 
-                led_helper_func();
+led_helper_func();
 }
 #endif //STB
 #endif /* _LED_H_ */

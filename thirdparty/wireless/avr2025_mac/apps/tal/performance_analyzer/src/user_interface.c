@@ -203,50 +203,11 @@ bool button_pressed(void)
   
 #ifdef SENSOR_TERMINAL_BOARD
 
-                uint8_t cur_button_state;
-
-                /*
-                 * Enable button address decoding.
-                 * This is similar to USB, but with other settings.
-                 */
-                BUTTON_ADDR_DEC_PORT |= _BV(6);    // Different to USB
-                BUTTON_ADDR_DEC_DDR |= _BV(6);
-                BUTTON_ADDR_DEC_PORT &= ~_BV(7);
-                BUTTON_ADDR_DEC_DDR |= _BV(7);
-
-
-                PORTE &= ~_BV(5);
-                DDRE |= _BV(5);
-
-                /* Switch port to input. */
-                BUTTON_PORT |= (1 << BUTTON_PIN_0);
-                BUTTON_PORT_DIR &= ~(1 << BUTTON_PIN_0);
-
-                cur_button_state = BUTTON_INPUT_PINS;
-
-                PORTE |= _BV(5);
-
-                /* Switch port back to output. */
-                BUTTON_PORT_DIR |= (1 << BUTTON_PIN_0);
-
-                /*
-                 * Disable button address decoding.
-                 * This enables USB-FTDI again.
-                 */
-                BUTTON_ADDR_DEC_PORT &= ~_BV(6);
-                BUTTON_ADDR_DEC_DDR |= _BV(6);
-                BUTTON_ADDR_DEC_PORT &= ~_BV(7);
-                BUTTON_ADDR_DEC_DDR |= _BV(7);
-
-                if (cur_button_state & 0x01)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-                
+  	if (stb_button_read()) {
+		return false;
+	} else {
+		return true;
+	}
 
 #elif defined GPIO_PUSH_BUTTON_0
 	/*Read the current state of the button*/

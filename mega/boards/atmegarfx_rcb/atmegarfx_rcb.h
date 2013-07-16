@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief ATmega256RFR2 Xplained Pro board header file.
+ * \brief ATmegaRFX RCB board header file.
  *
  * This file contains definitions and services related to the features of the
  * ATmega256RFR2 Xplained Pro board.
@@ -45,10 +45,11 @@
  * \asf_license_stop
  *
  */
-#ifndef _ATMEGA256RFR2_RCB_
-#define _ATMEGA256RFR2_RCB_
+#ifndef _ATMEGARFX_RCB_
+#define _ATMEGARFX_RCB_
 #include "compiler.h"
 #include "conf_board.h"
+
 
 #if AVR8_PART_IS_DEFINED(ATmega128RFA1) 
 #define MCU_SOC_NAME        "ATMEGA128RFA1"
@@ -113,9 +114,10 @@
  #define LED1                 LED1_GPIO
 
 #define LED0_GPIO			  LED_0  
- #define LED1_GPIO			  LED_1 
- #define LED_COUNT            2
- #define GPIO_PUSH_BUTTON_0			  IOPORT_CREATE_PIN(PORTB, 2)
+#define LED1_GPIO			  LED_1 
+#define LED_COUNT             2
+#define GPIO_PUSH_BUTTON_0	  IOPORT_CREATE_PIN(PORTB, 2)
+
 /**
  * \name FTDI based USB macros
  * \{
@@ -186,9 +188,56 @@
     } while (0)
 
 
+static inline bool stb_button_read(void)
+{
 
+                uint8_t cur_button_state;
+
+                /*
+                 * Enable button address decoding.
+                 * This is similar to USB, but with other settings.
+                 */
+                BUTTON_ADDR_DEC_PORT |= _BV(6);    // Different to USB
+                BUTTON_ADDR_DEC_DDR |= _BV(6);
+                BUTTON_ADDR_DEC_PORT &= ~_BV(7);
+                BUTTON_ADDR_DEC_DDR |= _BV(7);
+
+
+                PORTE &= ~_BV(5);
+                DDRE |= _BV(5);
+
+                /* Switch port to input. */
+                BUTTON_PORT |= (1 << BUTTON_PIN_0);
+                BUTTON_PORT_DIR &= ~(1 << BUTTON_PIN_0);
+
+                cur_button_state = BUTTON_INPUT_PINS;
+
+                PORTE |= _BV(5);
+
+                /* Switch port back to output. */
+                BUTTON_PORT_DIR |= (1 << BUTTON_PIN_0);
+
+                /*
+                 * Disable button address decoding.
+                 * This enables USB-FTDI again.
+                 */
+                BUTTON_ADDR_DEC_PORT &= ~_BV(6);
+                BUTTON_ADDR_DEC_DDR |= _BV(6);
+                BUTTON_ADDR_DEC_PORT &= ~_BV(7);
+                BUTTON_ADDR_DEC_DDR |= _BV(7);
+
+                if (cur_button_state & 0x01)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+
+}
 
 
 #endif //STB
 
-#endif  /* _ATMEGA256RFR2_RCB_ */
+#endif  /* _ATMEGARFX_RCB_ */
