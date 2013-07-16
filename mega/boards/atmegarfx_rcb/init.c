@@ -50,17 +50,18 @@
 
 void board_init(void)
 {
+#ifndef SENSOR_TERMINAL_BOARD  
 	/* On board LED initialization */
 	ioport_configure_pin(LED0_GPIO,IOPORT_DIR_OUTPUT |  IOPORT_INIT_HIGH);
 	ioport_configure_pin(LED1_GPIO,IOPORT_DIR_OUTPUT |  IOPORT_INIT_HIGH);
-#ifdef BREAKOUT_BOARD
+
 	ioport_configure_pin(LED2_GPIO,IOPORT_DIR_OUTPUT |  IOPORT_INIT_HIGH);
-#endif    
-		
+
 	/* On board Switch initialization */
 	ioport_configure_pin(GPIO_PUSH_BUTTON_0,IOPORT_DIR_INPUT | IOPORT_PULL_UP);
 
-	
+#endif	
+
 #ifdef BREAKOUT_BOARD
   //Enable RCB_BB RS232 level converter
 

@@ -204,9 +204,9 @@ bool button_pressed(void)
 #ifdef SENSOR_TERMINAL_BOARD
 
   	if (stb_button_read()) {
-		return false;
-	} else {
 		return true;
+	} else {
+		return false;
 	}
 
 #elif defined GPIO_PUSH_BUTTON_0

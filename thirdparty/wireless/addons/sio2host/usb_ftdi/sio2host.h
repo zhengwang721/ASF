@@ -55,6 +55,7 @@
 
 #ifdef SENSOR_TERMINAL_BOARD
 
+
 #define SERIAL_RX_BUF_SIZE_HOST    156
 
 /*

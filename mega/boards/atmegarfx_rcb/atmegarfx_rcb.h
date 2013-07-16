@@ -51,44 +51,26 @@
 #include "conf_board.h"
 
 
-#if AVR8_PART_IS_DEFINED(ATmega128RFA1) 
+#if AVR8_PART_IS_DEFINED(ATmega128RFA1)
 #define MCU_SOC_NAME        "ATMEGA128RFA1"
-    #ifdef BREAKOUT_BOARD
-     /*! \name GPIO Connections of LED
-     */ 
-    #define BOARD_NAME          "ATmega128RFA1 RCB" 
-    
-    #elif defined SENSOR_TERMINAL_BOARD
+
+#ifdef  SENSOR_TERMINAL_BOARD
     #define BOARD_NAME          "RF4CE-EK"
-    #endif
+#else    
+   #define BOARD_NAME          "ATmega128RFA1 RCB"   
+#endif
 
 #elif AVR8_PART_IS_DEFINED(ATmega256RFR2) 
 #define MCU_SOC_NAME        "ATMEGA256RFR2"
 
-
-#ifdef BREAKOUT_BOARD
- /*! \name GPIO Connections of LED
- */ 
-#define BOARD_NAME          "ATmega256RFR2 RCB" 
-
-#elif defined SENSOR_TERMINAL_BOARD
-#define BOARD_NAME          "ATmega256RFR2-EK"
+#ifdef  SENSOR_TERMINAL_BOARD
+    #define BOARD_NAME          "ATmega256RFR2-EK"
+#else
+    #define BOARD_NAME          "ATmega256RFR2 RCB" 
 #endif
 #endif
 
-#ifdef BREAKOUT_BOARD
 
-    #define LED0                 LED0_GPIO
-    #define LED1                 LED1_GPIO
-    #define LED2                 LED2_GPIO
-    #define LED0_GPIO			  IOPORT_CREATE_PIN(PORTE, 2)	  
-    #define LED1_GPIO			  IOPORT_CREATE_PIN(PORTE, 3)	  
-    #define LED2_GPIO			  IOPORT_CREATE_PIN(PORTE, 4)	  
-    
-    #define LED_COUNT 3
-    #define GPIO_PUSH_BUTTON_0			  IOPORT_CREATE_PIN(PORTE, 5)
-
-#endif 
 
 #ifdef SENSOR_TERMINAL_BOARD
 #define _BV(x) (1 << (x))
@@ -116,7 +98,6 @@
 #define LED0_GPIO			  LED_0  
 #define LED1_GPIO			  LED_1 
 #define LED_COUNT             2
-#define GPIO_PUSH_BUTTON_0	  IOPORT_CREATE_PIN(PORTB, 2)
 
 /**
  * \name FTDI based USB macros
@@ -237,7 +218,18 @@ static inline bool stb_button_read(void)
 
 }
 
+#else
 
-#endif //STB
+    #define LED0                 LED0_GPIO
+    #define LED1                 LED1_GPIO
+    #define LED2                 LED2_GPIO
+    #define LED0_GPIO			  IOPORT_CREATE_PIN(PORTE, 2)	  
+    #define LED1_GPIO			  IOPORT_CREATE_PIN(PORTE, 3)	  
+    #define LED2_GPIO			  IOPORT_CREATE_PIN(PORTE, 4)	  
+    
+    #define LED_COUNT 3
+    #define GPIO_PUSH_BUTTON_0			  IOPORT_CREATE_PIN(PORTE, 5)
+
+#endif 
 
 #endif  /* _ATMEGARFX_RCB_ */
