@@ -122,6 +122,7 @@ extern "C" {
 #define SAM4S_WPIR_RD              58  //!< SAM4S-WPIR-RD board.
 #define SAMD20_XPLAINED_PRO        59  //!< SAMD20 Xplained PRO board
 #define SAM4L8_XPLAINED_PRO        60  //!< SAM4L8 Xplained Pro board.
+#define SAM4C_EK                   62  //!< SAM4C-EK board.
 #define SIMULATOR_XMEGA_A1         97  //!< Simulator for XMEGA A1 devices
 #define AVR_SIMULATOR_UC3          98  //!< AVR SIMULATOR for AVR UC3 device family.
 #define USER_BOARD                 99  //!< User-reserved board (if any).
@@ -262,6 +263,8 @@ extern "C" {
 #  include "sam4l_xplained_pro/sam4l_xplained_pro.h"
 #elif BOARD == SAM4L8_XPLAINED_PRO
 #  include "sam4l8_xplained_pro/sam4l8_xplained_pro.h"
+#elif BOARD == SAM4C_EK
+#  include "sam4c_ek/sam4c_ek.h"
 #elif BOARD == SIMULATOR_XMEGA_A1
 #  include "simulator/xmega_a1/simulator_xmega_a1.h"
 #elif BOARD == XMEGA_C3_XPLAINED
