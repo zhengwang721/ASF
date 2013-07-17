@@ -126,13 +126,13 @@ static const char menu_items_text[MENU_NUM_ITEMS][6] = {
 	"About",
 };
 
-//! Text to display on about screen when not tickless
+//! Text to display on about screen when tickless operation is disabled
 static const char about_text[] =
 	"FreeRTOS v7.4.2 demo."
 	"                     "
 	"Use CDC at 9.6 kBaud.";
 
-//! Text to display on about screen when tickless
+//! Text to display on about screen when tickless operation is enabled
 static const char about_text_tickless[] =
 	"FreeRTOS v7.4.2 demo."
 	"      TickLess       "

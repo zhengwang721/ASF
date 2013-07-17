@@ -45,7 +45,7 @@
 #define DOCUMENTATION_H
 
 /**
- * \mainpage FreeRTOS v7.4.2 demo for SAM D20 Xplained Pro
+ * \mainpage FreeRTOS v7.4.2 tickless demo for SAM D20 Xplained Pro
  *
  * \section appdoc_overview Overview
  * - \ref appdoc_intro
@@ -58,7 +58,9 @@
  * This application demonstrates basic use of the
  * <a href="http://www.freertos.org">FreeRTOS</a> real-time operating system
  * on SAM D20 devices. More specifically, it demonstrates use of tasks, queues
- * and mutexes (semaphores).
+ * and mutexes (semaphores). In addition the tickless feature, which allows
+ * longer sleep periods by shutting down the OS tick when it is not needed,
+ * can be toggled on or off to compare power consumption.
  *
  * The application is designed to run on a SAM D20 Xplained Pro board with a
  * OLED1 Xplained Pro wing board connected to EXT3.
@@ -71,6 +73,7 @@
  * - "Graph": pseudo-random graph.
  * - "Term.": text received from terminal, i.e., the EDBG Virtual COM Port.
  * - "About": short description of the application and use of terminal-screen.
+ *   This also toggles tickless operation on or off.
  *
  * Further, the LEDs on the OLED1 Xplained Pro wing board are lit up for the
  * duration of the various tasks' loops, simply to give a visual representation

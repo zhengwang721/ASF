@@ -45,7 +45,19 @@
 #include <conf_demo.h>
 
 /**
- * \addtogroup freertos-v7_4_2_sam_d20_tickless_group
+ * \defgroup freertos-v7_4_2_sam_d20_tickless_group FreeRTOS tickless
+ *
+ * The tickless feature of FreeRTOS allows the device to sleep for peroids
+ * longer than the predefined OS tick rate. This is useful when no tasks
+ * are ready to execute for more than one OS tick. The benefit
+ * of this is lower power consumption.
+ *
+ * The tickless feature is implemented using a timer, configured with the
+ * desired timeout value, to wake the device. The same timer is also used to
+ * generate the system tick, so that time is kept in the optimal way,
+ * eliminating drift in most cases. If some other source wakes the device
+ * before the sleep period is complete, but after more than one OS tick,
+ * there will be a slight drift, as the timers count value must be corrected.
  *
  * @{
  */
@@ -62,7 +74,7 @@
 //!  Maximum value of timer
 #define TIMER_MAX_COUNT                     ( 0xffffffff )
 
-//! Max possible suppressed ticks with timer
+//! Maximum possible suppressed ticks with timer
 #define TIMER_MAX_POSSIBLE_SUPPRESSED_TICKS ( TIMER_MAX_COUNT / TIMER_RELOAD_VALUE_ONE_TICK )
 
 //@}
@@ -76,7 +88,7 @@ struct tc_module tc;
 //! External declaration of freeRTOS SysTick handler
 extern void xPortSysTickHandler( void );
 
-//! Prototype for function setting up timer
+//! Function for setting up timer
 void vPortSetupTimerInterrupt(void);
 
 //! Prototype for empty_callback for sleep timer
