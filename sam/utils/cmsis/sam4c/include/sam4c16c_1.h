@@ -176,7 +176,7 @@ typedef struct _DeviceVectors
   void* pfnSLCDC_Handler;  /* 32 Segment LCD Controller */
   void* pfnTRNG_Handler;   /* 33 True Random Generator */
   void* pfnICM_Handler;    /* 34 Integrity Check Module */
-  void* pvReserved35;
+  void* pfnCPKCC_Handler;  /* 35 Public Key Cryptography Controller */
   void* pfnAES_Handler;    /* 36 Advanced Enhanced Standard */
   void* pfnPIOC_Handler;   /* 37 Parallel I/O Controller C */
   void* pfnUART1_Handler;  /* 38 UART 1 */
@@ -201,6 +201,7 @@ void SysTick_Handler    ( void );
 void ADC_Handler        ( void );
 void AES_Handler        ( void );
 void ARM1_Handler       ( void );
+void CPKCC_Handler      ( void );
 void EFC_Handler        ( void );
 void ICM_Handler        ( void );
 void IPC0_Handler       ( void );

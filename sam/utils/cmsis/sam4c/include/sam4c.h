@@ -52,12 +52,4 @@
   #include "sam4c_1.h"
 #endif
 
-/****************** SAM4C patch (SAM4C_TBD) ********************/
-// PMC
-#define CKGR_PLLAR_PLLAEN (0x1u << 0) /**< \brief (CKGR_PLLAR) PLLA Control */
-
-// 35 Public Key Cryptography Controller
-void CPKCC_Handler        ( void );
-
 #endif /* _SAM4C_ */
-

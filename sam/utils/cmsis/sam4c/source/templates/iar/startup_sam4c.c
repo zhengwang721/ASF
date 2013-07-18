@@ -174,9 +174,6 @@ const DeviceVectors __vector_table = {
 	(void*) IPC1_Handler,   /* 39 Interprocessor communication 1 */
 	(void*) SPI1_Handler,   /* 40 Serial Peripheral Interface 1 */
 	(void*) PWM_Handler,    /* 41 Pulse Width Modulation */
-// SAM4C_TBD: waiting for DeviceVectors update
-//	(void*) (0UL),          /* 42 Reserved */
-//	(void*) (0UL)           /* 43 Reserved */
 };
 
 /**------------------------------------------------------------------------------
