@@ -509,7 +509,18 @@ void tfa_continuous_tx_start(continuous_tx_mode_t tx_mode, bool random_content)
 	pal_trx_reg_write(0x36, 0x0F);
 	if (tx_mode == CW_MODE) {
 		/* step 8: Register access: CW at Fc +/- 0.1 MHz */
-		pal_trx_reg_write(RG_TRX_CTRL_2, 0x0A); /* 400 kbit mode, step 8 */
+		if (((tal_pib.CurrentPage == 0) || (tal_pib.CurrentPage == 2) || \
+				(tal_pib.CurrentPage == 16) ||
+				(tal_pib.CurrentPage == 17)) &&
+				(tal_pib.CurrentChannel == 0)) {                                          /* 868.3MHz */
+			pal_trx_reg_write(RG_TRX_CTRL_2, 0x0A); /* 400 kchip/s
+			                                         * mode, step 8
+			                                         * ,SUB_MODE = 0 */
+		} else {
+			pal_trx_reg_write(RG_TRX_CTRL_2, 0x0E); /* 1000kchip/s
+			                                         * ,SUB_MODE = 1 */
+		}
+
 		txcwdata[0] = 1; /* length */
 		txcwdata[1] = 0;
 		/* step 9: Frame buffer access */

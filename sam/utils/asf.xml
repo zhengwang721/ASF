@@ -20,6 +20,7 @@
 		<device-support value="sam"/>
 	</module>
 
+	<!-- GCC printf configuration -->
 	<select-by-config id="sam.utils.printf" name="config.compiler.armgcc.printf" caption="SAM printf selection" default="iprintf">
 		<module type="meta" id="sam.utils.printf#printf" caption="Full printf for SAM"/>
 		<module type="meta" id="sam.utils.printf#iprintf" caption="Integer iprintf for SAM">
@@ -146,6 +147,9 @@
 			</info>
 			<require idref="sam.utils.common"/>
 			<require idref="sam.utils.cmsis.sam4l.include"/>
+			<require idref="sam.utils.cmsis.sam4l.include.component"/>
+			<require idref="sam.utils.cmsis.sam4l.include.instance"/>
+			<require idref="sam.utils.cmsis.sam4l.include.pio"/>
 			<require idref="sam.utils.cmsis.sam4l.source.template"/>
 			<info type="gui-flag" value="hidden"/>
 			<device-support value="sam4l"/>
