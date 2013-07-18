@@ -287,7 +287,7 @@ static uint32_t erase_block(const struct nand_flash_raw *raw, uint16_t block)
 			nand_flash_model_get_block_size_in_pages(MODEL(raw));
 
 	nfc_translate_address(raw, 0, row_address, 0, &address_cycle1234,
-			CONF_NF_NEED_FIVE_ADDRESS_CYCLES);
+			0);
 
 	/* Start erase */
 	smc_nfc_send_command(SMC, 
