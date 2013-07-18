@@ -43,6 +43,6 @@
 #ifndef CONF_BOARD_H
 #define CONF_BOARD_H
 
-//#define BREAKOUT_BOARD
-//#define SENSOR_TERMINAL_BOARD
+//#define BREAKOUT_BOARD //For wireless applications select sio2host->uart module
+//#define SENSOR_TERMINAL_BOARD //For wireless applications select sio2host->usb-ftdi module
 #endif // CONF_BOARD_H

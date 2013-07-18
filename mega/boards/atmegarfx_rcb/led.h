@@ -92,7 +92,7 @@ typedef enum led_action_tag
  *
  * \note The pins of the specified LEDs are set to GPIO output mode.
  */
-#define LED_Off(led_gpio)     pal_led(led_gpio,LED_OFF)
+#define LED_Off(led_gpio)     led_ctrl(led_gpio,LED_OFF)
 
                                   
 
@@ -102,7 +102,7 @@ typedef enum led_action_tag
  *
  * \note The pins of the specified LEDs are set to GPIO output mode.
  */
-#define LED_On(led_gpio)      pal_led(led_gpio,LED_ON)
+#define LED_On(led_gpio)      led_ctrl(led_gpio,LED_ON)
 
 /*! \brief Toggles the specified LEDs.
  *
@@ -110,7 +110,7 @@ typedef enum led_action_tag
  *
  * \note The pins of the specified LEDs are set to GPIO output mode.
  */
-#define LED_Toggle(led_gpio)  pal_led(led_gpio,LED_TOGGLE)
+#define LED_Toggle(led_gpio)  led_ctrl(led_gpio,LED_TOGGLE)
 //#endif
 
 /**
@@ -144,7 +144,7 @@ static inline void led_helper_func(void)
 }
 
 
-static inline void pal_led(led_id_t led_no, led_action_t led_setting)
+static inline void led_ctrl(led_id_t led_no, led_action_t led_setting)
 {
 uint8_t pin;
 /* New values of LED pins based on new LED state. */
