@@ -633,6 +633,8 @@ bool nvm_is_page_locked(uint16_t page_number)
 	return !(nvm_module->LOCK.reg & (1 << region_number));
 }
 
+///@cond INTERNAL
+
 /**
  * \internal Translate fusebits into struct content
  *
@@ -703,7 +705,8 @@ static void _nvm_translate_raw_fusebits_to_struct (
 }
 
 /**
- * \internal Fusebit mask for reserved bits
+ * \internal
+ * \ brief Fusebit mask for reserved bits
  *
  * These macros create a fuse bit mask for reserved bits. These bits should always read 1.
  *
@@ -765,12 +768,14 @@ static void _nvm_translate_struct_to_raw_fusebits (
 
 }
 
+///@endcond
+
 /**
  * \brief Get fuses from user row
  *
  * Read out the fuse settings from the user row
  *
- * \param[in] user_row Pointer to a 64bit wide memory buffer of type struct nvm_user_row
+ * \param[in] fusebits Pointer to a 64bit wide memory buffer of type struct nvm_fusebits
  *
  * \return             Status of read fuses attempt
  *
@@ -814,13 +819,13 @@ enum status_code nvm_get_fuses (
  *
  * Write new fuse setting to user row
  *
- * \param[in] user_row Pointer to a 64bit wide memory buffer with new fuse settings
+ * \param[in] fusebits Pointer to a 64bit wide memory buffer with new fuse settings
  *
  * \return Status of write attempt
  *
  * \retval STATUS_OK          New fuse settings where written sucessfully to user row
  *
- * \retval STATUS_ERR_IO  Secitity bit is set, user row can not be written
+ * \retval STATUS_ERR_IO      Secitity bit is set, user row can not be written
  *
  * \retval STATUS_ERR_IO      Writing of fuses to user row failed
  */
@@ -830,6 +835,7 @@ enum status_code nvm_set_fuses(
 	Nvmctrl *const nvm_module = NVMCTRL;
 	uint8_t state = _NVM_SET_FUSES_STATE_ERASE_ROW;
 	uint32_t raw_fusebits[2];
+	enum status_code err = STATUS_OK;
 
 	/* If the security bit is set, the auxiliary space cannot be written */
 	if (nvm_module->STATUS.reg & NVMCTRL_STATUS_SB) {
@@ -850,7 +856,9 @@ enum status_code nvm_set_fuses(
 			/* Don't bother about what, just clear status flags and return error status*/
 			nvm_module->STATUS.reg  |= ~NVMCTRL_STATUS_MASK;
 			nvm_module->INTFLAG.reg |= NVMCTRL_INTFLAG_ERROR;
-			return STATUS_ERR_IO;
+
+			err = STATUS_ERR_IO;
+			break;
 		}
 
 		switch (state) {
@@ -892,7 +900,6 @@ enum status_code nvm_set_fuses(
 
 	system_interrupt_leave_critical_section();
 
-	return STATUS_OK;
-
+	return err;
 }
 
