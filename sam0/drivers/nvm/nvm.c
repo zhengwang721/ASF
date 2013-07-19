@@ -92,11 +92,11 @@ static struct _nvm_module _nvm_dev;
  *
  * \return Status of the configuration procedure.
  *
- * \retval STATUS_OK          If the initialization was a success
- * \retval STATUS_BUSY        If the module was busy when the operation was attempted
- * \retval STATUS_ERR_IO      If the security bit has been set, preventing the
- *                            EEPROM and/or auxiliary space configuration from being
- *                            altered
+ * \retval STATUS_OK      If the initialization was a success
+ * \retval STATUS_BUSY    If the module was busy when the operation was attempted
+ * \retval STATUS_ERR_IO  If the security bit has been set, preventing the
+ *                        EEPROM and/or auxiliary space configuration from being
+ *                        altered
  */
 enum status_code nvm_set_config(
 		const struct nvm_config *const config)
