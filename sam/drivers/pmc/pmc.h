@@ -69,7 +69,7 @@ extern "C" {
 #else
   #define PMC_CKGR_MOR_KEY_VALUE  CKGR_MOR_KEY(0x37)
 #endif
-	
+
 /** Key used to write SUPC registers */
 #define SUPC_KEY_VALUE          ((uint32_t) 0xA5)
 
@@ -82,7 +82,7 @@ extern "C" {
 #else
   #define PMC_WPMR_WPKEY_VALUE    PMC_WPMR_WPKEY((uint32_t) 0x504D43)
 #endif
-	
+
 /** Using external oscillator */
 #define PMC_OSC_XTAL            0
 
@@ -316,8 +316,8 @@ uint32_t pmc_get_writeprotect_status(void);
 /**
  * \page sam_pmc_quickstart Quick start guide for the SAM PMC module
  *
- * This is the quick start guide for the \ref pmc_group "PMC module", with
- * step-by-step instructions on how to configure and use the driver in a
+ * This is the quick start guide for the \ref sam_drivers_pmc_group "PMC module",
+ * with step-by-step instructions on how to configure and use the driver in a
  * selection of use cases.
  *
  * The use cases contain several code fragments. The code fragments in the
@@ -407,10 +407,8 @@ uint32_t pmc_get_writeprotect_status(void);
  *   pmc_switch_mainck_to_xtal(0, BOARD_OSC_STARTUP_US);
  *   flash_led(FLASH_TICK_COUNT, 5);
  *   \endcode
- */
-
-/**
- * \page pmc_use_case_2 Use case #2 - Configure Programmable Clocks
+ *
+ * \section pmc_use_case_2 Use case #2 - Configure Programmable Clocks
  * In this use case, the PMC module is configured to start the Slow Clock from
  * an attached 32KHz crystal, and start one of the Programmable Clock modules
  * sourced from the Slow Clock divided down with a prescale factor of 64.

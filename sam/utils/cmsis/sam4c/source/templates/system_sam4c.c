@@ -43,7 +43,6 @@
  */
 
 #include "sam4c.h"
-#include "board.h"
 
 /* @cond 0 */
 /**INDENT-OFF**/
@@ -124,7 +123,7 @@ void SystemCoreClockUpdate(void)
 		break;
 	case PMC_MCKR_CSS_MAIN_CLK: /* Main clock */
 		if (PMC->CKGR_MOR & CKGR_MOR_MOSCSEL) {
-			SystemCoreClock = BOARD_FREQ_MAINCK_XTAL;
+			SystemCoreClock = CHIP_FREQ_XTAL_8M;
 		} else {
 			SystemCoreClock = CHIP_FREQ_MAINCK_RC_4MHZ;
 
@@ -147,7 +146,7 @@ void SystemCoreClockUpdate(void)
 		break;
 	case PMC_MCKR_CSS_PLLB_CLK: /* PLLB clock */
 		if (PMC->CKGR_MOR & CKGR_MOR_MOSCSEL) {
-			SystemCoreClock = BOARD_FREQ_MAINCK_XTAL;
+			SystemCoreClock = CHIP_FREQ_XTAL_8M;
 		} else {
 			SystemCoreClock = CHIP_FREQ_MAINCK_RC_4MHZ;
 

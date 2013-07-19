@@ -77,13 +77,32 @@
 #define CONFIG_PLL1_MUL             (400000000UL / BOARD_FREQ_MAINCK_XTAL)
 #define CONFIG_PLL1_DIV             2
 
-// ===== Target frequency (System clock)
+// ===== Coprocessor System Clock (CPMCK) Options
+// Fcpmck = Fcpclk_source / CPCLK_PRES
+#define CONFIG_CPCLK_ENABLE
+
+// Coprocessor System Clock Source Options
+//#define CONFIG_CPCLK_SOURCE         CPCLK_SRC_SLCK
+//#define CONFIG_CPCLK_SOURCE         CPCLK_SRC_MAINCK
+//#define CONFIG_CPCLK_SOURCE         CPCLK_SRC_PLLACK
+//#define CONFIG_CPCLK_SOURCE         CPCLK_SRC_PLLBCK
+#define CONFIG_CPCLK_SOURCE         CPCLK_SRC_MCK
+
+// Coprocessor System Clock Prescaler Options (CPCLK_PRES may be 1 to 16).
+#define CONFIG_CPCLK_PRES           1
+
+// ===== Main processor frequency (MCK)
 // - XTAL frequency: 8MHz
 // - System clock source: PLLB
 // - System clock prescaler: 2 (divided by 2)
 // - PLLB source: XTAL
 // - PLLB output: XTAL * 50 / 2
 // - System clock: 8 * 50 / 2 / 2 = 100MHz
+//
+// ===== Coprocessor frequency (CPMCK)
+// - Coprocessor system clock source: MCK
+// - Coprocessor system clock prescaler: 1 (divided by 1)
+// - Coprocessor system clock: 100MHz / 1 = 100MHz
 
 #endif /* CONF_CLOCK_H_INCLUDED */
 

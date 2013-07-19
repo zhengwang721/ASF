@@ -44,6 +44,7 @@
 #include "compiler.h"
 #include "board.h"
 #include "conf_board.h"
+#include "conf_clock.h"
 #include "ioport.h"
 
 /**
@@ -90,43 +91,8 @@
 		ioport_set_pin_sense_mode(pin, sense);\
 	} while (0)
 
-//sam4c_tbd
-static void configure_coprocessor(void)
-{
-
-   unsigned int  read_reg;
-
-
-
-
-   //Enables Coprocessor Bus Master Clock
-   PMC->PMC_SCER = PMC_SCER_CPBMCK | PMC_SCER_CPKEY_PASSWD; //CPBMCK+KEY
-  //Enables the  Coprocessor Clocks
-   PMC->PMC_SCER = PMC_SCER_CPCK | PMC_SCER_CPKEY_PASSWD;   //CPCK+KEY
-
-      //Set co-p Prescaler
-   read_reg = REG_PMC_MCKR;
-   read_reg &= ~PMC_MCKR_CPPRES_Msk;      //Reset co-p Prescaler
-   read_reg |= PMC_MCKR_CPPRES(0) ;     //Selected clock devided by 1(CPRES_VALUE+1)
-   REG_PMC_MCKR = read_reg;
-
-      //Choose MAINCK
-   read_reg = REG_PMC_MCKR;
-   read_reg &= ~PMC_MCKR_CPCSS_Msk;
-   read_reg |= PMC_MCKR_CPCSS_MAIN_CLK;
-   REG_PMC_MCKR = read_reg;
-
-  //Release c1 peripheral reset
-   RSTC->RSTC_CPMR = RSTC_CPMR_CPKEY(0x5Au/*RSTC_CP_KEY_VAL*/)|RSTC_CPMR_CPEREN;
-
-   pmc_enable_periph_clk(42/*ID_SRAM1_2*/);
-
-}
-
 void board_init(void)
 {
-	configure_coprocessor(); ///
-
 #ifndef CONF_BOARD_KEEP_WATCHDOG_AT_INIT
 	/* Disable the watchdog */
 	WDT->WDT_MR = WDT_MR_WDDIS;
@@ -138,6 +104,10 @@ void board_init(void)
 	 */
 	ioport_init();
 
+#ifndef CONFIG_CPCLK_ENABLE
+#error Please enable CONFIG_CPCLK_ENABLE in conf_clock.h because LEDs use \
+	pins on PIOC which is connected to bus matrix 1.
+#endif
 	/* Configure the pins connected to LEDs as output and set their
 	 * default initial state to high (LEDs off).
 	 */

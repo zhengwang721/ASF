@@ -558,6 +558,7 @@ void WDT_Handler        ( void );
 #define CHIP_FREQ_MAINCK_RC_12MHZ       (12000000UL)
 #define CHIP_FREQ_CPU_MAX               (100000000UL)
 #define CHIP_FREQ_XTAL_32K              (32768UL)
+#define CHIP_FREQ_XTAL_8M               (8000000UL)
 #define CHIP_FREQ_XTAL_12M              (12000000UL)
 
 /* Embedded Flash Write Wait State */

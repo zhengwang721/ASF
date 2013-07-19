@@ -71,7 +71,7 @@ uint32_t sysclk_initialized = 0;
  *
  * \note The parameters to this function are device-specific.
  *
- * \param cpu_shift The CPU clock will be divided by \f$2^{mck\_pres}\f$
+ * \param ul_pres The CPU clock will be divided by \f$2^{mck\_pres}\f$
  */
 void sysclk_set_prescalers(uint32_t ul_pres)
 {
@@ -82,7 +82,7 @@ void sysclk_set_prescalers(uint32_t ul_pres)
 /**
  * \brief Change the source of the main system clock.
  *
- * \param src The new system clock source. Must be one of the constants
+ * \param ul_src The new system clock source. Must be one of the constants
  * from the <em>System Clock Sources</em> section.
  */
 void sysclk_set_source(uint32_t ul_src)
@@ -113,6 +113,44 @@ void sysclk_set_source(uint32_t ul_src)
 
 	SystemCoreClockUpdate();
 }
+
+#ifdef CONFIG_CPCLK_ENABLE
+/**
+ * \brief Configure clock for coprocessor.
+ */
+static void sysclk_configure_cpclk(void)
+{
+#if ((CONFIG_CPCLK_PRES < CPCLK_PRES_MIN) || (CONFIG_CPCLK_PRES > CPCLK_PRES_MAX))
+#error Invalid CONFIG_CPCLK_PRES setting.
+#endif
+
+	uint32_t  read_reg;
+
+	/* Enables Coprocessor Bus Master Clock */
+	PMC->PMC_SCER = PMC_SCER_CPBMCK | PMC_SCER_CPKEY_PASSWD;
+
+	/* Enables the Coprocessor Clocks */
+	PMC->PMC_SCER = PMC_SCER_CPCK | PMC_SCER_CPKEY_PASSWD;
+
+	/* Set coprocessor clock prescaler and source */
+	read_reg = REG_PMC_MCKR;
+	read_reg &= ~PMC_MCKR_CPPRES_Msk;
+	read_reg |= PMC_MCKR_CPPRES(CONFIG_CPCLK_PRES - 1);
+	REG_PMC_MCKR = read_reg;
+
+	/* Choose coprocessor main clock source */
+	read_reg = REG_PMC_MCKR;
+	read_reg &= ~PMC_MCKR_CPCSS_Msk;
+	read_reg |= CONFIG_CPCLK_SOURCE;
+	REG_PMC_MCKR = read_reg;
+
+	/* Release coprocessor peripheral reset */
+	RSTC->RSTC_CPMR = RSTC_CPMR_CPKEY(0x5Au) | RSTC_CPMR_CPEREN;
+
+	/* Enable Core 1 SRAM1 and SRAM2 memories */
+	pmc_enable_periph_clk(42); /* ID_SRAM1_2 */
+}
+#endif
 
 void sysclk_init(void)
 {
@@ -196,6 +234,11 @@ void sysclk_init(void)
 #if (defined CONFIG_SYSCLK_DEFAULT_RETURNS_SLOW_OSC)
 	/* Signal that the internal frequencies are setup */
 	sysclk_initialized = 1;
+#endif
+
+#ifdef CONFIG_CPCLK_ENABLE
+	/* Enable coprocessor clock */
+	sysclk_configure_cpclk();
 #endif
 }
 

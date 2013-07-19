@@ -93,21 +93,19 @@
  * \subsection sysclk_quickstart_use_case_1_example_workflow Workflow
  *  -# Configure the main system clock to use the output of the PLL module as its source:
  *   \code #define CONFIG_SYSCLK_SOURCE          SYSCLK_SRC_PLLBCK \endcode
- *  -# Configure the PLL module to use the fast external fast crystal oscillator as its source:
+ *  -# Configure the PLL module to use the external crystal oscillator as its source:
  *   \code #define CONFIG_PLL1_SOURCE            PLLB_SRC_MAINCK_XTAL \endcode
- *  -# Configure the PLL module to multiply the external fast crystal oscillator frequency up to 200MHz:
+ *  -# Configure the PLL module to multiply the external crystal oscillator frequency up to 200MHz:
  *   \code
  *   #define CONFIG_PLL1_MUL             (400000000UL / BOARD_FREQ_MAINCK_XTAL)
  *   #define CONFIG_PLL1_DIV             2
  *   \endcode
  *   \note For user boards, \c BOARD_FREQ_MAINCK_XTAL should be defined in the board \c conf_board.h configuration
  *         file as the frequency of the fast crystal attached to the microcontroller.
- *  -# Configure the main clock to run at the full 100MHz, disable scaling of the main system clock speed:
+ *  -# Configure the main clock to run at the full 100MHz, set prescaler to 2:
  *    \code
  *    #define CONFIG_SYSCLK_PRES         SYSCLK_PRES_2
  *    \endcode
- *    \note Some dividers are powers of two, while others are integer division factors. Refer to the
- *          formulas in the conf_clock.h template commented above each division define.
  */
 
 /// @cond 0
@@ -175,6 +173,21 @@ extern "C" {
 #define SYSCLK_PRES_32          PMC_MCKR_PRES_CLK_32    //!< Set master clock prescaler to 32
 #define SYSCLK_PRES_64          PMC_MCKR_PRES_CLK_64    //!< Set master clock prescaler to 64
 #define SYSCLK_PRES_3           PMC_MCKR_PRES_CLK_3     //!< Set master clock prescaler to 3
+//@}
+
+//! \name Coprocessor Master Clock Sources (CPMCK)
+//@{
+#define CPCLK_SRC_SLCK           0   //!< 32kHz Slow Clock as coprocessor master source clock
+#define CPCLK_SRC_MAINCK         1   //!< Main Clock as coprocessor master source clock
+#define CPCLK_SRC_PLLACK         2   //!< Use PLLACK as coprocessor master source clock
+#define CPCLK_SRC_PLLBCK         3   //!< Use PLLBCK as coprocessor master source clock
+#define CPCLK_SRC_MCK            4   //!< Use PLLBCK as coprocessor master source clock
+//@}
+
+//! \name Coprocessor Master Clock Prescalers (CPMCK)
+//@{
+#define CPCLK_PRES_MIN          1     //!< Minimal value for coprocessor master clock prescaler
+#define CPCLK_PRES_MAX          16    //!< Maximal value for coprocessor master clock prescaler
 //@}
 
 /**

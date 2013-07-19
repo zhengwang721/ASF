@@ -993,7 +993,7 @@ void pmc_switch_udpck_to_pllbck(uint32_t ul_usbdiv)
 /**
  * \brief Switch UDP (USB) clock source selection to UPLL clock.
  *
- * \param dw_usbdiv Clock divisor.
+ * \param ul_usbdiv Clock divisor.
  */
 void pmc_switch_udpck_to_upllck(uint32_t ul_usbdiv)
 {
