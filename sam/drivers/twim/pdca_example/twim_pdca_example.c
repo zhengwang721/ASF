@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief TWIM Master Example for SAM.
+ * \brief TWIM PDCA Example for SAM.
  *
- * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,62 +42,57 @@
  */
 
 /**
- *  \mainpage TWIM Master Example
+ * \mainpage TWIM PDCA Example
  *
- *  \par Purpose
+ * \par Purpose
  *
- *  This application gives an example of how to use TWIM driver of SAM to
- *  access an TWI-compatible EEPROM.
+ * This application gives an example of how to use TWIM driver of SAM to
+ * access an TWI-compatible EEPROM via PDCA.
  *
- *  \par Requirements
+ * \par Requirements
  *
- *  The program needs a TWI-compatible EEPROM connected with the TWIM module.
- *  See the connection below:
- *  \copydoc twim_master_example_pin_defs
+ * The program needs a TWI-compatible EEPROM connected with the TWIM module.
+ * See the connection below:
+ * \copydoc twim_pdca_example_pin_defs
  *
- *  \par Description
+ * \par Description
  *
- *  At first, the specified TWIM write some data pattern to the EEPROM, then
- *  read it back and check if the written and the read match.
+ * At first, the specified TWIM write some data pattern to the EEPROM, then
+ * read it back and check if the written and the read match in the end.
  *
  * \par Usage
  *
- *  -# Build the program and download it into the evaluation board.
- *  -# Connect a serial cable to the UART port for each evaluation kit.
- *  -# On the computer, open and configure a terminal application (e.g.,
- *     HyperTerminal on Microsoft Windows) with these settings:
- *        - 115200 bauds
- *        - 8 data bits
- *        - No parity
- *        - 1 stop bit
- *        - No flow control
- *  -# Start the application. The following traces shall appear on the terminal:
- *     \code
- *     -- TWIM Master Example --
- *     -- xxxxxx-xx
- *     -- Compiled: xxx xx xxxx xx:xx:xx --
+ * -# Build the program and download it into the evaluation board.
+ * -# Connect a serial cable to the UART port for each evaluation kit.
+ * -# On the computer, open and configure a terminal application (e.g.,
+ *    HyperTerminal on Microsoft Windows) with these settings:
+ *       - 115200 bauds
+ *       - 8 data bits
+ *       - No parity
+ *       - 1 stop bit
+ *       - No flow control
+ * -# Start the application. The following traces shall appear on the terminal:
+ *    \code
+ *    -- TWIM PDCA Example --
+ *    -- xxxxxx-xx
+ *    -- Compiled: xxx xx xxxx xx:xx:xx --
  *
- *     \endcode
- *
+ *    \endcode
  */
 
-
 #include <asf.h>
+#include <string.h>
 #include "conf_example.h"
-#include "sleepmgr.h"
 
-#define PATTERN_TEST_LENGTH (sizeof(write_data)/sizeof(uint8_t))
-//! Array to store the test data for sending
-const uint8_t write_data[] = {
-	'S', 'A', 'M', '4', 'L', ' ', 'T', 'W', 'I', 'M', ' ', 'M',
-	'a', 's', 't', 'e', 'r', ' ', 'E', 'x', 'a', 'm', 'p', 'l', 'e'
-};
-//! Array to store the received test data
+#define PATTERN_TEST          "SAM4L TWIM PDCA Example"
+#define PATTERN_TEST_LENGTH   (sizeof(PATTERN_TEST)/sizeof(uint8_t))
+
+/** Array to store the test data for sending */
+uint8_t write_data[PATTERN_TEST_LENGTH + TARGET_ADDR_LGT];
+/** Array to store the received test data */
 uint8_t read_data[PATTERN_TEST_LENGTH];
-//! TWI data package
+/** TWI data package */
 twi_package_t packet_tx, packet_rx;
-uint32_t cpu_speed = 0;
-
 
 /**
  *  Configure serial console.
@@ -126,6 +121,7 @@ static void configure_console(void)
  */
 static status_code_t init_test(void)
 {
+	uint32_t cpu_speed = 0;
 	/* Set TWIM options */
 	cpu_speed = sysclk_get_peripheral_bus_hz(EXAMPLE_TWIM);
 	struct twim_config opts = {
@@ -151,12 +147,21 @@ static status_code_t init_test(void)
 	return twim_set_config(EXAMPLE_TWIM, &opts);
 }
 
-/**
- * \brief Write the data pattern to the target.
- *
- * \return STATUS_OK   if all bytes were written, error code otherwise.
- */
-static status_code_t write_test(void)
+#define PDCA_TX_CHANNEL     0
+#define PDCA_PID_TWIM1_TX   24
+
+/* PDCA channel options */
+static const pdca_channel_config_t PDCA_TX_CONFIGS = {
+	.addr = (void *)write_data,   /* memory address */
+	.pid = PDCA_PID_TWIM1_TX,     /* select peripheral */
+	.size = PATTERN_TEST_LENGTH + TARGET_ADDR_LGT,   /* transfer counter */
+	.r_addr = 0,                   /* next memory address */
+	.r_size = 0,                   /* next transfer counter */
+	.ring = false,                 /* disable ring buffer mode */
+	.transfer_size = PDCA_MR_SIZE_BYTE  /* select size of the transfer */
+};
+
+static void write_test_pdca(void)
 {
 	/* TWI chip address to communicate with */
 	packet_tx.chip = TARGET_ADDRESS;
@@ -170,31 +175,61 @@ static status_code_t write_test(void)
 	/* How many bytes do we want to write */
 	packet_tx.length = PATTERN_TEST_LENGTH;
 	printf("Writing data to TARGET\r\n");
-	/* Write data to TARGET */
-	return twi_master_write(EXAMPLE_TWIM, &packet_tx);
+	twim_pdca_transfer_prepare(EXAMPLE_TWIM, &packet_tx, false);
+
+	memcpy(write_data, packet_tx.addr, TARGET_ADDR_LGT);
+	memcpy(write_data + TARGET_ADDR_LGT, PATTERN_TEST, PATTERN_TEST_LENGTH);
+
+	/* Init PDCA channel with the pdca_options.*/
+	pdca_channel_set_config(PDCA_TX_CHANNEL, &PDCA_TX_CONFIGS);
+	/* Enable PDCA channel */
+	pdca_channel_enable(PDCA_TX_CHANNEL);
+
+	while (pdca_get_channel_status(PDCA_TX_CHANNEL)
+			!= PDCA_CH_TRANSFER_COMPLETED);
 }
 
-/**
- * \brief Read the data pattern from the target.
- *
- * \return STATUS_OK   If all bytes were read, error code otherwise
- */
-static status_code_t read_test(void)
+#define PDCA_RX_CHANNEL     1
+#define PDCA_PID_TWIM1_RX   6
+
+/* PDCA channel options */
+static const pdca_channel_config_t PDCA_RX_CONFIGS = {
+	.addr = (void *)read_data,   /* memory address */
+	.pid = PDCA_PID_TWIM1_RX,     /* select peripheral */
+	.size = PATTERN_TEST_LENGTH,   /* transfer counter */
+	.r_addr = 0,                   /* next memory address */
+	.r_size = 0,                   /* next transfer counter */
+	.ring = false,                 /* disable ring buffer mode */
+	.transfer_size = PDCA_MR_SIZE_BYTE  /* select size of the transfer */
+};
+
+static void read_test_pdca(void)
 {
 	/* TWI chip address to communicate with */
 	packet_rx.chip = TARGET_ADDRESS;
 	/* Length of the TWI data address segment (1-3 bytes) */
 	packet_rx.addr_length = TARGET_ADDR_LGT;
-	/* How many bytes do we want to write */
-	packet_rx.length = PATTERN_TEST_LENGTH;
 	/* TWI address/commands to issue to the other chip (node) */
 	packet_rx.addr[0] = (VIRTUALMEM_ADDR >> 16) & 0xFF;
 	packet_rx.addr[1] = (VIRTUALMEM_ADDR >> 8) & 0xFF;
 	/* Where to find the data to be written */
 	packet_rx.buffer = read_data;
 	printf("Reading data from TARGET\r\n");
-	/* Read data from TARGET */
-	return twi_master_read(EXAMPLE_TWIM, &packet_rx);
+	/* Specify the internal address to be read */
+	packet_rx.length = 0;
+	twi_master_write(EXAMPLE_TWIM, &packet_rx);
+
+	/* How many bytes do we want to read */
+	packet_rx.length = PATTERN_TEST_LENGTH;
+	twim_pdca_transfer_prepare(EXAMPLE_TWIM, &packet_rx, true);
+
+	/* Init PDCA channel with the pdca_options.*/
+	pdca_channel_set_config(PDCA_RX_CHANNEL, &PDCA_RX_CONFIGS);
+	/* Enable PDCA channel */
+	pdca_channel_enable(PDCA_RX_CHANNEL);
+
+	while (pdca_get_channel_status(PDCA_RX_CHANNEL)
+			!= PDCA_CH_TRANSFER_COMPLETED);
 }
 
 /**
@@ -203,7 +238,6 @@ static status_code_t read_test(void)
  */
 int main (void)
 {
-	uint8_t i;
 	status_code_t status;
 
 	/* Initialize the SAM system */
@@ -212,9 +246,11 @@ int main (void)
 
 	/* Initialize the console USART */
 	configure_console();
+	/* Enable PDCA module clock */
+	pdca_enable(PDCA);
 
 	/* Output example information */
-	printf("-- TWIM Master Example --\r\n");
+	printf("-- TWIM PDCA Example --\r\n");
 	printf("-- %s\n\r", BOARD_NAME);
 	printf("-- Compiled: %s %s --\n\r", __DATE__, __TIME__);
 
@@ -222,54 +258,33 @@ int main (void)
 	status = init_test();
 	/* Check whether the TWIM module is initialized */
 	if (status == STATUS_OK) {
-		printf("TWIM module has be initialized successfully.\r\n");
+		puts("TWIM module has be initialized successfully.\r\n");
 	} else {
-		printf("TWIM module failed to be initialized.r\n");
+		puts("TWIM module failed to be initialized.r\n");
 		while (1) {
-			sleepmgr_enter_sleep();
 		}
 	}
 
-	/* Perform Write Test */
-	status = write_test();
-	/* Check status of transfer */
-	if (status == STATUS_OK) {
-		printf("WRITE TEST:\tPASS\r\n");
-	} else {
-		printf("WRITE TEST:\tFAILED\r\n");
-		while (1) {
-			sleepmgr_enter_sleep();
-		}
-	}
+	/* Perform write Test */
+	write_test_pdca();
+	puts("PDC write over.\r\n");
 
-	/* Perform Read Test */
-	status = read_test();
-	/* Check Status */
-	if (status == STATUS_OK) {
-		printf("READ TEST:\tPASS\r\n");
-	} else {
-		printf("READ TEST:\tFAILED\r\n");
-		while (1) {
-			sleepmgr_enter_sleep();
-		}
-	}
+	/* Perform read Test */
+	read_test_pdca();
+	puts("PDC read over.\r\n");
 
 	/* Check received data against sent data */
-	printf("Checking data...\r\n");
-	for (i = 0; i < PATTERN_TEST_LENGTH; i++) {
-		if (read_data[i] != write_data[i]) {
-			/* Error */
-			printf("Check Data:\tFAIL\r\n");
-			while (1) {
-				sleepmgr_enter_sleep();
-			}
+	puts("Checking data...\r\n");
+	if (memcmp(read_data, PATTERN_TEST, PATTERN_TEST_LENGTH)) {
+		/* Error */
+		puts("Check Data:\tFAIL\r\n");
+		while (1) {
 		}
 	}
 
 	/* No errors in communication */
-	printf("No errors in communication\r\nDone\r\n");
+	puts("No errors in communication\r\nDone\r\n");
 	while (1) {
-		sleepmgr_enter_sleep();
 	}
 }
 //! @}

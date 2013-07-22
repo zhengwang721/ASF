@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief  Configuration File for SAM4L-EK Board.
+ * \brief Example configuration header file.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -41,28 +41,31 @@
  *
  */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+/**
+ * \defgroup twim_pdca_example_pin_defs
+ *   - <b> Board  --  EEPROM </b>
+ *   - TWIMS1 TWD(J4 PIN1)  --  SDA
+ *   - TWIMS1 TWCK(J4 PIN2)  --  SCL
+ *   - VCC  --  VCC
+ *   - GND  --  GND
+ */
 
-/* Auto-initialize USART GPIOs when board_init() is called */
-//#define CONF_BOARD_COM_PORT
+#ifndef CONF_EXAMPLE_H_INCLUDED
+#define CONF_EXAMPLE_H_INCLUDED
 
-/* Enable EIC for PB0 */
-#define CONF_BOARD_EIC
+//! TWIM Interrupt Number
+#define EXAMPLE_TWIM_IRQn    TWIM1_IRQn
+//! TWIM Module Used
+#define EXAMPLE_TWIM         TWIM1
+//! Target's TWI address
+#define TARGET_ADDRESS       0x50
+//! Internal Address length
+#define TARGET_ADDR_LGT      2
+//! Internal Address
+#define VIRTUALMEM_ADDR      0x50
+//! Speed of TWI
+#define TWIM_MASTER_SPEED    TWI_STD_MODE_SPEED
+//! TWIM Interrupt Handler
+#define EXAMPLE_TWIM_Handler TWIM1_Handler
 
-/* Enable USB interface (USB) */
-#define CONF_BOARD_USB_PORT
-/* ID detect enabled,  uncomment it if jumper PB05/USB set */
-#define CONF_BOARD_USB_ID_DETECT
-/* Host VBUS control enabled,  uncomment it if jumper PC08/USB set */
-#define CONF_BOARD_USB_VBUS_CONTROL
-/* Host VBUS control enabled,  uncomment it if jumper PC08/USB set */
-#define CONF_BOARD_USB_VBUS_ERR_DETECT
-
-/* Enable USART to control Board Monitoring */
-//#define CONF_BOARD_BM_USART
-
-/* Initialize the LCD Backlight */
-#define CONF_BOARD_BL
-
-#endif /* CONF_BOARD_H_INCLUDED */
+#endif /* CONF_EXAMPLE_H_INCLUDED */
