@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief  Configuration File for SAM4L-EK Board.
+ * \brief Board configuration.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -44,25 +44,10 @@
 #ifndef CONF_BOARD_H_INCLUDED
 #define CONF_BOARD_H_INCLUDED
 
-/* Auto-initialize USART GPIOs when board_init() is called */
-//#define CONF_BOARD_COM_PORT
+/** Enable Com Port. */
+#define CONF_BOARD_COM_PORT
 
-/* Enable EIC for PB0 */
-#define CONF_BOARD_EIC
-
-/* Enable USB interface (USB) */
-#define CONF_BOARD_USB_PORT
-/* ID detect enabled,  uncomment it if jumper PB05/USB set */
-#define CONF_BOARD_USB_ID_DETECT
-/* Host VBUS control enabled,  uncomment it if jumper PC08/USB set */
-#define CONF_BOARD_USB_VBUS_CONTROL
-/* Host VBUS control enabled,  uncomment it if jumper PC08/USB set */
-#define CONF_BOARD_USB_VBUS_ERR_DETECT
-
-/* Enable USART to control Board Monitoring */
-//#define CONF_BOARD_BM_USART
-
-/* Initialize the LCD Backlight */
-#define CONF_BOARD_BL
+/** Enable TWIM1 pins. */
+#define CONF_BOARD_TWIMS1
 
 #endif /* CONF_BOARD_H_INCLUDED */
