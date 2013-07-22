@@ -636,9 +636,9 @@ bool nvm_is_page_locked(uint16_t page_number)
 ///@cond INTERNAL
 
 /**
- * \internal Translate fusebits into struct content
+ * \internal
  *
- * Translate fusebit words into struct content. 
+ * \brief Translate fusebit words into struct content. 
  *
  */
 static void _nvm_translate_raw_fusebits_to_struct (
@@ -706,10 +706,11 @@ static void _nvm_translate_raw_fusebits_to_struct (
 
 /**
  * \internal
- * \ brief Fusebit mask for reserved bits
+ * \name Fusebit mask for reserved bits
  *
  * These macros create a fuse bit mask for reserved bits. These bits should always read 1.
  *
+ * @{
  */
 #define _NVM_FUSEBITS_0_RESERVED_BITS ~(NVMCTRL_FUSES_BOOTPROT_Msk | NVMCTRL_FUSES_EEPROM_SIZE_Msk | \
 	SYSCTRL_FUSES_BOD33USERLEVEL_Msk | SYSCTRL_FUSES_BOD33_EN_Msk | SYSCTRL_FUSES_BOD33_ACTION_Msk | \
@@ -719,10 +720,12 @@ static void _nvm_translate_raw_fusebits_to_struct (
 #define _NVM_FUSEBITS_1_RESERVED_BITS ~(WDT_FUSES_WINDOW_1_Msk | WDT_FUSES_EWOFFSET_Msk | \
 	WDT_FUSES_WEN_Msk | NVMCTRL_FUSES_REGION_LOCKS_Msk)
 
+/** @} */
+
 /**
- * \internal Translate struct content to fusebit settings
+ * \internal
  *
- * Translate struct content into a 2*32bit word bit pattern.
+ * \brief Translate struct content into a 2*32bit word bit pattern.
  *
  */
 static void _nvm_translate_struct_to_raw_fusebits (
@@ -803,16 +806,23 @@ enum status_code nvm_get_fuses (
 }
 
 
+///@cond INTERNAL
+
 /**
- * \internal Fuse write function states
+ * \internal
+ * \name Fuse write function states
  *
  * This defines internal states for the fuse write function
  *
+ * @{
  */
 #define _NVM_SET_FUSES_STATE_ERASE_ROW         0
 #define _NVM_SET_FUSES_STATE_ERASE_PAGE_BUFFER 1
 #define _NVM_SET_FUSES_STATE_WRITE_FUSES       2
 #define _NVM_SET_FUSES_STATE_END               3
+/** @} */
+
+///@endcond
 
 /**
  * \brief Set fuses in user row
