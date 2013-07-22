@@ -108,7 +108,7 @@ typedef struct {
 #define RANGE_TST_PKT_SEQ_POS                    (11)
 
 #if (TAL_TYPE == ATMEGARFR2)
-#define MAX_REG_ADDRESS                         (0x16f)
+#define MAX_REG_ADDRESS                         (0x1ff)
 #define MIN_REG_ADDRESS                         (0x141)
 #else
 #define MAX_REG_ADDRESS                         (0x3f)
@@ -385,7 +385,7 @@ void per_mode_initiator_init(void *parameter)
 	}
 #ifdef EXT_RF_FRONT_END_CTRL
     /* Enable RF front end control in PER Measurement mode*/
-    pal_trx_bit_write(SR_PA_EXT_EN, PA_EXT_ENABLE);
+    tal_ext_pa_ctrl(PA_EXT_ENABLE);
     /* set the TX power to default level */
     config_tx_pwr = TAL_TRANSMIT_POWER_DEFAULT;
     tal_pib_set(phyTransmitPower, (pib_value_t *)&config_tx_pwr);

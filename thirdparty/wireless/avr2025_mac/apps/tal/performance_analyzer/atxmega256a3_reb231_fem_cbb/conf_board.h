@@ -46,13 +46,14 @@
 #define CONF_BOARD_ENABLE_USARTD0
 #define CONF_BOARD_AT86RFX
 
-# include "compiler.h"
 #define IC_TYPE             (0x00)
 
 
 /*Board Has an External PA Connected to the Radio ,Following are the constatnts related to the Exxt PA */
 
 #ifdef EXT_RF_FRONT_END_CTRL /*For External PA for 231FEM-EK*/
+
+#define EXT_PA_SE2431L
 /*
  * Value of an external LNA gain.
  * If no external LNA is available, the value is 0.

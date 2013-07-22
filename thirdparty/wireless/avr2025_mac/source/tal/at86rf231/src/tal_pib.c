@@ -71,7 +71,7 @@
 /* === MACROS ============================================================== */
 
 #ifdef CUSTOM_PWR_TABLE /*Power Table For External PA for 231FEM-EK*/
-
+#ifdef EXT_PA_SE2431L
 /*
  * Mapping table for FEM TX Pout (dBm).
  *     based on board characterization
@@ -97,7 +97,7 @@ FLASH_DECLARE(int8_t tx_pwr_table[16]) =
     4,  /*  -17  */  /*  0x0F  */
 };
 
-
+#endif
 #else
 
 /*
