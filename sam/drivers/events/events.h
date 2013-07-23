@@ -131,8 +131,8 @@ struct events_ch_conf {
 	uint32_t channel_id;
 	/** Event generator to connect to the channel */
 	uint32_t generator_id;
-	/** Enable event sharper or not */
-	bool sharper_enable;
+	/** Enable event shaper or not */
+	bool shaper_enable;
 	/** Edge detection for event channels */
 	enum events_igf_edge   igf_edge;
 };
@@ -326,7 +326,7 @@ static inline void events_ch_clear_overrun_status(uint32_t channel_id)
  * on SAM4L_EK. In this use case, one event channel is configured as:
  * - Configure AST periodic event 0 as a generator.
  * - Configure PDCA channel 0 as a user to transfer one word.
- * - Enable the event sharper for the generator.
+ * - Enable the event shaper for the generator.
  *
  * \section event_basic_setup Setup Steps
  *
@@ -359,7 +359,7 @@ static inline void events_ch_clear_overrun_status(uint32_t channel_id)
  *   events_ch_get_config_defaults(&ch_config);
  *   ch_config.channel_id = PEVC_ID_USER_PDCA_0;
  *   ch_config.generator_id = PEVC_ID_GEN_AST_2;
- *   ch_config.sharper_enable = true;
+ *   ch_config.shaper_enable = true;
  *   ch_config.igf_edge = EVENT_IGF_EDGE_NONE;
  *   events_ch_configure(&ch_config);
  *
@@ -395,7 +395,7 @@ static inline void events_ch_clear_overrun_status(uint32_t channel_id)
  *   events_ch_get_config_defaults(&ch_config);
  *   ch_config.channel_id = PEVC_ID_USER_PDCA_0;
  *   ch_config.generator_id = PEVC_ID_GEN_AST_2;
- *   ch_config.sharper_enable = true;
+ *   ch_config.shaper_enable = true;
  *   ch_config.igf_edge = EVENT_IGF_EDGE_NONE;
  *   events_ch_configure(&ch_config);
  *   events_ch_enable(PEVC_ID_USER_PDCA_0);

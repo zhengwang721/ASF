@@ -75,8 +75,9 @@
  * For further information, visit
  * <A href="http://www.atmel.com/">Atmel</A>.\n
  */
-/* 
-=== INCLUDES ============================================================ */
+
+/*
+ * === INCLUDES ============================================================ */
 
 #include <stddef.h>
 #include <stdint.h>
@@ -86,7 +87,6 @@
 #include <ctype.h>
 #include <inttypes.h>
 #include <stdio.h>
-
 
 #include <asf.h>
 
@@ -129,94 +129,88 @@ int main(void)
 	sysclk_init();
 
 	sw_timer_init();
-        nwk_init();
-	// Enable interrupts
+	nwk_init();
+	/* Enable interrupts */
 	cpu_irq_enable();
 
 	stdio_usb_init();
 
 	while (1) {
-        
 		nwk_task();
-	};
+	}
 }
-
 
 static void run_nlme_reset_test(const struct test_case *test)
 {
 	nlme_reset_request(true
 #ifdef RF4CE_CALLBACK_PARAM
-                               , (FUNC_PTR)nlme_reset_confirm
+			, (FUNC_PTR)nlme_reset_confirm
 #endif
-                              );
-        printf("reset");
-	while(!nlme_reset_conf_rcvd)
-	{
+			);
+	while (!nlme_reset_conf_rcvd) {
 		nwk_task();
 	}
 	test_assert_true(test, nlme_reset_conf_status == NWK_SUCCESS,
 			"NWK Reset request failed");
 }
-static void run_nlme_auto_discovery_test(const struct test_case *test)
-{      
-        dev_type_t RecDevTypeList[DEVICE_TYPE_LIST_SIZE];
-        profile_id_t RecProfileIdList[PROFILE_ID_LIST_SIZE];
 
-        RecDevTypeList[0] = (dev_type_t)SUPPORTED_DEV_TYPE_0;
-        RecProfileIdList[0] = SUPPORTED_PROFILE_ID_0;
+static void run_nlme_auto_discovery_test(const struct test_case *test)
+{
+	dev_type_t RecDevTypeList[DEVICE_TYPE_LIST_SIZE];
+	profile_id_t RecProfileIdList[PROFILE_ID_LIST_SIZE];
+
+	RecDevTypeList[0] = (dev_type_t)SUPPORTED_DEV_TYPE_0;
+	RecProfileIdList[0] = SUPPORTED_PROFILE_ID_0;
 	nlme_auto_discovery_request( 0x13,
-                            RecDevTypeList,
-                           RecProfileIdList,
-                            0x08,
+			RecDevTypeList,
+			RecProfileIdList,
+			0x08,
 #ifdef RF4CE_CALLBACK_PARAM
-                (FUNC_PTR)nlme_auto_discovery_confirm
+			(FUNC_PTR)nlme_auto_discovery_confirm
 #endif
-  );
-  printf("start");
-	while(!nlme_auto_discovery_conf_rcvd)
-	{
+			);
+	while (!nlme_auto_discovery_conf_rcvd) {
 		nwk_task();
 	}
 	test_assert_true(test, (nlme_auto_discovery_conf_status == NWK_SUCCESS) ||
-						 (nlme_auto_discovery_conf_status == NWK_DISCOVERY_TIMEOUT),
-					"NWK DISCOVERY test failed");
+			(nlme_auto_discovery_conf_status ==
+			NWK_DISCOVERY_TIMEOUT),
+			"NWK DISCOVERY test failed");
 }
 
 static void nlme_reset_confirm(nwk_enum_t Status)
 {
- nlme_reset_conf_rcvd = true;
- nlme_reset_conf_status = Status;
+	nlme_reset_conf_rcvd = true;
+	nlme_reset_conf_status = Status;
 }
 
 static void nlme_auto_discovery_confirm(nwk_enum_t Status)
 {
-nlme_auto_discovery_conf_rcvd = true;
-nlme_auto_discovery_conf_status = Status;
+	nlme_auto_discovery_conf_rcvd = true;
+	nlme_auto_discovery_conf_status = Status;
 }
 
 void main_cdc_set_dtr(bool b_enable)
-{      
+{
 	if (b_enable) {
-		
 		DEFINE_TEST_CASE(nlme_reset_test, NULL, run_nlme_reset_test,
 				NULL, "NWK Reset request");
 		DEFINE_TEST_CASE(nlme_auto_discovery_test, NULL,
 				run_nlme_auto_discovery_test, NULL,
 				"NWK DISCOVERY test (this covers all ASF drivers/services used");
 
-		// Put test case addresses in an array.
+		/* Put test case addresses in an array. */
 		DEFINE_TEST_ARRAY(nwk_tests) = {
 			&nlme_reset_test,
 			&nlme_auto_discovery_test
-                };
+		};
 
-		// Define the test suite.
+		/* Define the test suite. */
 		DEFINE_TEST_SUITE(nwk_suite, nwk_tests,
 				"NWK unit test suite");
 
-		// Run all tests in the test suite.
+		/* Run all tests in the test suite. */
 		test_suite_run(&nwk_suite);
 	} else {
-
 	}
 }

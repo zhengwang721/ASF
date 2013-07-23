@@ -4,7 +4,7 @@
 		The Analog Comparator compares two voltages and the result of this comparison gives a compare output. The user can select a high-speed or low-power option. Additionally, the hysteresis level are configurable.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="Analog Comparator" />
+			<keyword value="Analog Conversion" />
 		</info>
 		<build type="c-source" value="acifc.c"/>
 		<build type="header-file" subtype="api" value="acifc.h"/>

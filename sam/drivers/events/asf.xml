@@ -5,7 +5,7 @@
 			the event channels within the device.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="Events" />
+			<keyword value="Peripheral Event System" />
 		</info>
 		<build type="c-source" value="events.c"/>
 		<build type="header-file" subtype="api" value="events.h"/>

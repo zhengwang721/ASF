@@ -1,7 +1,7 @@
 /**
  * @file common_sw_timer.h
  *
- * @brief 
+ * @brief
  *
  *  Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -37,7 +37,7 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
- 
+
 /* Prevent double inclusion */
 #ifndef COMMON_SW_TIMER_H
 #define COMMON_SW_TIMER_H
@@ -52,7 +52,7 @@
  * Implements the software Algorithm for Timer Handling in the Stack
  * @{
  */
- 
+
 /*
  * Type definition for callbacks for timer functions
  */
@@ -99,99 +99,96 @@ typedef void (*timer_expiry_cb_t)(void *);
 /**
  * Timeout type
  */
-typedef enum sw_timeout_type_tag
-{
-    /** The timeout is relative to the current time. */
-    SW_TIMEOUT_RELATIVE,
-    /** The timeout is an absolute value. */
-    SW_TIMEOUT_ABSOLUTE
+typedef enum sw_timeout_type_tag {
+	/** The timeout is relative to the current time. */
+	SW_TIMEOUT_RELATIVE,
+	/** The timeout is an absolute value. */
+	SW_TIMEOUT_ABSOLUTE
 } sw_timeout_type_t;
 
 /*
  * This defines the structure of the time type.
  */
-typedef struct timer_info_tag
-{
-    /* Timeout in microseconds */
-    uint32_t abs_exp_timer;
+typedef struct timer_info_tag {
+	/* Timeout in microseconds */
+	uint32_t abs_exp_timer;
 
-    /* Callback function to be executed on expiry of the timer */
-    FUNC_PTR timer_cb;
+	/* Callback function to be executed on expiry of the timer */
+	FUNC_PTR timer_cb;
 
-    /* Parameter to be passed to the callback function of the expired timer */
-    void *param_cb;
+	/* Parameter to be passed to the callback function of the expired timer
+	 **/
+	void *param_cb;
 
-    /* Next timer which was started or has expired */
-    uint8_t next_timer_in_queue;
-	
-    bool loaded;
-	
+	/* Next timer which was started or has expired */
+	uint8_t next_timer_in_queue;
+
+	bool loaded;
 } timer_info_t;
-
 
 /**
  * @brief Returns a timer id to be used before starting a timer
  * @param timer_id Value of the id returned by the function
  */
-status_code_t sw_timer_get_id(uint8_t* timer_id);
+status_code_t sw_timer_get_id(uint8_t *timer_id);
 
-    /**
-     * \brief Starts a  timer
-     *
-     * This function starts a regular timer and installs the corresponding
-     * callback function handle the timeout event.
-     *
-     * \param timer_id Timer identifier
-     * \param timer_count Timeout in microseconds
-     * \param timeout_type \ref TIMEOUT_RELATIVE or \ref TIMEOUT_ABSOLUTE
-     * \param timer_cb Callback handler invoked upon timer expiry
-     * \param param_cb Argument for the callback handler
-     *
-     */
-status_code_t sw_timer_start(uint8_t timer_id, 
-							uint32_t timer_count,  
-							sw_timeout_type_t timeout_type, 
-							FUNC_PTR timer_cb, 
-							void* param_cb);
-							
-							    /**
-     * \brief Stops a running timer
-     *
-     * This function stops a running timer with specified timer_id
-     *
-     * \param timer_id Timer identifier
-     *
-     */
-status_code_t sw_timer_stop (uint8_t timer_id);
+/**
+ * \brief Starts a  timer
+ *
+ * This function starts a regular timer and installs the corresponding
+ * callback function handle the timeout event.
+ *
+ * \param timer_id Timer identifier
+ * \param timer_count Timeout in microseconds
+ * \param timeout_type \ref TIMEOUT_RELATIVE or \ref TIMEOUT_ABSOLUTE
+ * \param timer_cb Callback handler invoked upon timer expiry
+ * \param param_cb Argument for the callback handler
+ *
+ */
+status_code_t sw_timer_start(uint8_t timer_id,
+		uint32_t timer_count,
+		sw_timeout_type_t timeout_type,
+		FUNC_PTR timer_cb,
+		void *param_cb);
 
-    /**
-     * \brief Gets current time
-     *
-     * This function returns the current time.
-     *
-     * \param[out] current_time Returns current system time
-     */
+/**
+ * \brief Stops a running timer
+ *
+ * This function stops a running timer with specified timer_id
+ *
+ * \param timer_id Timer identifier
+ *
+ */
+status_code_t sw_timer_stop(uint8_t timer_id);
+
+/**
+ * \brief Gets current time
+ *
+ * This function returns the current time.
+ *
+ * \param[out] current_time Returns current system time
+ */
 uint32_t sw_timer_get_time(void);
 
-    /**
-     * \brief Checks whether a given timer is running or not
-     *
-     *
-     * \param[out] True if the timer is running else False
-     */
+/**
+ * \brief Checks whether a given timer is running or not
+ *
+ *
+ * \param[out] True if the timer is running else False
+ */
 bool sw_timer_is_running(uint8_t timer_id);
 
-    /**
-     * \brief Handles Queues and Callbacks for Expired Timers
-     */
+/**
+ * \brief Handles Queues and Callbacks for Expired Timers
+ */
 void sw_timer_service(void);
 
-    /**
-     * \brief Initializes the Software Timer module
-
-     */
+/**
+ * \brief Initializes the Software Timer module
+ *
+ */
 void sw_timer_init(void);
 
-//! @}
+/* ! @} */
 #endif /* COMMON_SW_TIMER_H */
 /* EOF */
