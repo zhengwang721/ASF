@@ -291,7 +291,7 @@ enum adc_trigger {
 	 * \note These will start as soon as the ADC is enabled.
 	 */
 	ADC_TRIG_FREERUN_SWEEP,
-	
+
 	/**
 	 * \brief Event-triggered conversion sweeps
 	 * \note Only the base event channel is used in this mode.
@@ -368,9 +368,8 @@ enum adc_reference {
  *
  * \return Pointer to ADC channel
  */
-__always_inline ADC_CH_t *adc_get_channel(ADC_t *adc, uint8_t ch_mask);
-
-__always_inline ADC_CH_t *adc_get_channel(ADC_t *adc, uint8_t ch_mask)
+static __always_inline ADC_CH_t *adc_get_channel(
+		ADC_t *adc, uint8_t ch_mask)
 {
 	uint8_t index = 0;
 
