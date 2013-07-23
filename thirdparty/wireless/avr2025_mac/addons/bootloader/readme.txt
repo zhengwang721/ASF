@@ -55,6 +55,8 @@
 Supported NCP boards: 
     atxmega256a3u_zigbit_ext
     atmega256rfr2_zigbit_ext
+	
+Other Supported Boards:	
 	atmega256a3_reb_cbb
 	atmegarfa1_stb
 	atmegarfr2_stb
@@ -78,5 +80,6 @@ Steps to use this bootloader:
    he will be prompted as "please restart the device".Reset button can be released at this time and the upload will start.
 8. Wait till the upload gets completed.  
 9. After this completion, flash the desired application in the host board. For example, choose "thirdparty\wireless\avr2025_mac\apps\mac\beacon\coord\host" for operating it as beacon coordinator host.
+10.For other boards(atmega256a3_reb_cbb,atmegarfa1_stb,atmegarfr2_stb) follow steps 1,4 - 9 .
 
 		 
