@@ -343,7 +343,7 @@ uint32_t twi_master_write(Twi *p_twi, twi_packet_t *p_packet)
 		p_twi->TWI_THR = *buffer++;
 
 		cnt--;
-	};
+	}
 
 	while (1) {
 		status = p_twi->TWI_SR;
