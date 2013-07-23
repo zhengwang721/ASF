@@ -112,7 +112,7 @@ static void adc_handler(ADC_t *adc, uint8_t ch_mask, adc_result_t result)
 {
 	volatile uint16_t temperature;
 	
-	temperature = (m * result) + c;
+	temperature = (uint16_t)((m * result) + c);
 	/* Display values */
 	printf("The temperature is now %u Deg C\n\r", temperature);
 }
