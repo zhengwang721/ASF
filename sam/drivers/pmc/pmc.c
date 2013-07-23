@@ -53,6 +53,8 @@
 # define MAX_PERIPH_ID    34
 #elif (SAM4E)
 # define MAX_PERIPH_ID    47
+#elif (SAM4N)
+# define MAX_PERIPH_ID    31
 #elif (SAM4C)
 # define MAX_PERIPH_ID    43
 #endif
@@ -1101,12 +1103,12 @@ void pmc_clr_fast_startup_input(uint32_t ul_inputs)
  */
 void pmc_enable_sleepmode(uint8_t uc_type)
 {
-#if !(SAM4S || SAM4E || SAM4C)
+#if !(SAM4S || SAM4E || SAM4N || SAM4C)
 	PMC->PMC_FSMR &= (uint32_t) ~ PMC_FSMR_LPM; // Enter Sleep mode
 #endif
 	SCB->SCR &= (uint32_t) ~ SCB_SCR_SLEEPDEEP_Msk; // Deep sleep
 
-#if (SAM4S || SAM4E || SAM4C)
+#if (SAM4S || SAM4E || SAM4N || SAM4C)
 	UNUSED(uc_type);
 	__WFI();
 #else
@@ -1118,7 +1120,7 @@ void pmc_enable_sleepmode(uint8_t uc_type)
 #endif
 }
 
-#if (SAM4S || SAM4E || SAM4C)
+#if (SAM4S || SAM4E || SAM4N || SAM4C)
 static uint32_t ul_flash_in_wait_mode = PMC_WAIT_MODE_FLASH_DEEP_POWERDOWN;
 /**
  * \brief Set the embedded flash state in wait mode
@@ -1220,7 +1222,7 @@ void pmc_enable_waitmode(void)
 void pmc_enable_backupmode(void)
 {
 	SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
-#if (SAM4S || SAM4E || SAM4C)
+#if (SAM4S || SAM4E || SAM4N || SAM4C)
 	SUPC->SUPC_CR = SUPC_CR_KEY(0xA5u) | SUPC_CR_VROFF_STOP_VREG;
 #else
 	__WFE();
@@ -1246,6 +1248,28 @@ void pmc_disable_clock_failure_detector(void)
 
 	PMC->CKGR_MOR = PMC_CKGR_MOR_KEY_VALUE | ul_reg;
 }
+
+#if SAM4N
+/**
+ * \brief Enable Slow Crystal Oscillator Frequency Monitoring.
+ */
+void pmc_enable_sclk_osc_freq_monitor(void)
+{
+	uint32_t ul_reg = PMC->CKGR_MOR;
+
+	PMC->CKGR_MOR = PMC_CKGR_MOR_KEY_VALUE | CKGR_MOR_XT32KFME | ul_reg;
+}
+
+/**
+ * \brief Disable Slow Crystal Oscillator Frequency Monitoring.
+ */
+void pmc_disable_sclk_osc_freq_monitor(void)
+{
+	uint32_t ul_reg = PMC->CKGR_MOR & (~CKGR_MOR_XT32KFME);
+
+	PMC->CKGR_MOR = PMC_CKGR_MOR_KEY_VALUE | ul_reg;
+}
+#endif
 
 /**
  * \brief Enable or disable write protect of PMC registers.
