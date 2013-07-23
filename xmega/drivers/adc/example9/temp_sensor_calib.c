@@ -128,12 +128,12 @@ int main(void)
 	/* ADC channel configuration structure */
 	struct adc_channel_config adcch_conf;
 
-	/* The sample data should be removed once the device
-	 * with two calibration points is available */
-	int16_t calib_hottemp=85;
-	int16_t calib_roomtemp=25;
-	int16_t adc_val_hottemp = 1112;
-	int16_t adc_val_roomtemp = 930;
+	/* To load data from the production signature row */
+	int16_t calib_hottemp = 0;
+	int16_t calib_roomtemp = 0;
+	int16_t adc_val_hottemp = 0;
+	int16_t adc_val_roomtemp = 0;
+
 	
 	/* Initializations */
 	board_init();
@@ -147,12 +147,10 @@ int main(void)
 	printf("  (Compiled: %s %s)\n\r", __DATE__, __TIME__);
 
 	/* Get the calibration point data from production signature row into the device*/
-	/* Once this is tested on the new XmegaE device, this comment should be removed
-	 * and the below 4 lines should be uncommented */
-// 	calib_hottemp = adc_get_calibration_data(ADC_CAL_HOTTEMP);
-// 	calib_roomtemp = adc_get_calibration_data(ADC_CAL_ROOMTEMP);
-// 	adc_val_hottemp = adc_get_calibration_data(ADC_CAL_TEMPSENSE);
-// 	adc_val_roomtemp = adc_get_calibration_data(ADC_CAL_TEMPSENSE2);
+	calib_hottemp = adc_get_calibration_data(ADC_CAL_HOTTEMP);
+	calib_roomtemp = adc_get_calibration_data(ADC_CAL_ROOMTEMP);
+	adc_val_hottemp = adc_get_calibration_data(ADC_CAL_TEMPSENSE);
+	adc_val_roomtemp = adc_get_calibration_data(ADC_CAL_TEMPSENSE2);
 
 	/* Find the slope of the line m = (y2-y1)/(x2-x1)*/
 	m = (float) (calib_hottemp - calib_roomtemp) / (adc_val_hottemp - adc_val_roomtemp);
@@ -172,11 +170,15 @@ int main(void)
 	adc_enable(&ADCA);
 	adc_start_conversion(&ADCA, ADC_CH0);
 	
-	uint16_t i;
+	uint16_t i,j;
 	while (1) {
 		// Allow a small delay to finish the previous printf from ISR
-		i = 0xFFF;
-		while(i--);
+		i = 0xFFFF;
+		j = 0x9;
+		while(j--){
+			while(i--);
+		}
+		
 		// Start next conversion.
 		adc_start_conversion(&ADCA, ADC_CH0);
 	}
@@ -242,7 +244,7 @@ static void main_adc_averaging(void)
 
 	/* Enable averaging */
 	adcch_read_configuration(&ADCA, ADC_CH0, &adcch_conf);
-	adcch_enable_averaging(&adcch_conf, ADC_SAMPNUM_256X);
+	adcch_enable_averaging(&adcch_conf, ADC_SAMPNUM_512X);
 	adcch_write_configuration(&ADCA, ADC_CH0, &adcch_conf);
 
 	adc_enable(&ADCA);
