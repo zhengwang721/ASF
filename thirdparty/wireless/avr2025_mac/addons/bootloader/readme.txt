@@ -55,6 +55,9 @@
 Supported NCP boards: 
     atxmega256a3u_zigbit_ext
     atmega256rfr2_zigbit_ext
+	atmega256a3_reb_cbb
+	atmegarfa1_stb
+	atmegarfr2_stb
 
 Steps to use this bootloader:
 1. Flash the corresponding bootloader .hex file. Example: For atxmega256a3u device, flash atxmega256a3u_zigbit_ext.hex 
@@ -65,7 +68,7 @@ Steps to use this bootloader:
    Install Bootloader_PC_Tool_Setup_1.2.2.235.exe from th location "\thirdparty\wireless\avr2025_mac\addons\bootloader"
 4. Open the installed Bootloader PC tool, select the corresponding com port of the host board. 
 5. Keep the serial port settings as
-    Bit rate       9600
+    Bit rate       9600(atxmega256a3u_zigbit_ext,atmega256rfr2_zigbit_ext) ,38400 (atmega256a3_reb_cbb)
 	Data bits      8
 	Stop bits      1
 	Parity         None
