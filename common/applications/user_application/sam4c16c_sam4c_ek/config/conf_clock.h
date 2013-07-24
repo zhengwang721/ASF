@@ -79,6 +79,9 @@
 
 // ===== Coprocessor System Clock (CPMCK) Options
 // Fcpmck = Fcpclk_source / CPCLK_PRES
+
+// Note:
+// CONFIG_CPCLK_ENABLE  MUST be defined if using peripherals on bus matrix 1.
 #define CONFIG_CPCLK_ENABLE
 
 // Coprocessor System Clock Source Options

@@ -62,14 +62,14 @@ extern "C" {
 
 //! \name Oscillator identifiers
 //@{
-#define OSC_SLCK_32K_RC             0    //!< Internal 32kHz RC oscillator.
-#define OSC_SLCK_32K_XTAL           1    //!< External 32kHz crystal oscillator.
-#define OSC_SLCK_32K_BYPASS         2    //!< External 32kHz bypass oscillator.
-#define OSC_MAINCK_4M_RC            3    //!< Internal 4MHz RC oscillator.
-#define OSC_MAINCK_8M_RC            4    //!< Internal 8MHz RC oscillator.
-#define OSC_MAINCK_12M_RC           5    //!< Internal 12MHz RC oscillator.
-#define OSC_MAINCK_XTAL             6    //!< External crystal oscillator.
-#define OSC_MAINCK_BYPASS           7    //!< External bypass oscillator.
+#define OSC_SLCK_32K_RC             0U  //!< Internal 32kHz RC oscillator.
+#define OSC_SLCK_32K_XTAL           1U  //!< External 32kHz crystal oscillator.
+#define OSC_SLCK_32K_BYPASS         2U  //!< External 32kHz bypass oscillator.
+#define OSC_MAINCK_4M_RC            3U  //!< Internal 4MHz RC oscillator.
+#define OSC_MAINCK_8M_RC            4U  //!< Internal 8MHz RC oscillator.
+#define OSC_MAINCK_12M_RC           5U  //!< Internal 12MHz RC oscillator.
+#define OSC_MAINCK_XTAL             6U  //!< External crystal oscillator.
+#define OSC_MAINCK_BYPASS           7U  //!< External bypass oscillator.
 //@}
 
 //! \name Oscillator clock speed in hertz

@@ -104,10 +104,7 @@ void board_init(void)
 	 */
 	ioport_init();
 
-#ifndef CONFIG_CPCLK_ENABLE
-#error Please enable CONFIG_CPCLK_ENABLE in conf_clock.h because LEDs use \
-	pins on PIOC which is connected to bus matrix 1.
-#endif
+#ifdef CONFIG_CPCLK_ENABLE
 	/* Configure the pins connected to LEDs as output and set their
 	 * default initial state to high (LEDs off).
 	 */
@@ -117,6 +114,9 @@ void board_init(void)
 	ioport_set_pin_level(LED1_GPIO, LED0_INACTIVE_LEVEL);
 	ioport_set_pin_dir(LED2_GPIO, IOPORT_DIR_OUTPUT);
 	ioport_set_pin_level(LED2_GPIO, LED0_INACTIVE_LEVEL);
+#else
+#warning Please enable CONFIG_CPCLK_ENABLE in conf_clock.h to use LEDs (PIOC).
+#endif
 
 	/* Configure Push Button pins */
 	ioport_set_pin_input_mode(GPIO_PUSH_BUTTON_1, GPIO_PUSH_BUTTON_1_FLAGS,

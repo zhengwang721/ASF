@@ -45,6 +45,7 @@
 #define CHIP_PLL_H_INCLUDED
 
 #include <osc.h>
+#include <conf_clock.h>
 
 /// @cond 0
 /**INDENT-OFF**/
@@ -86,6 +87,7 @@ enum pll_source {
 	PLLB_SRC_MAINCK_12M_RC   = OSC_MAINCK_12M_RC,    //!< Internal 12MHz RC oscillator.
 	PLLB_SRC_MAINCK_XTAL     = OSC_MAINCK_XTAL,      //!< External crystal oscillator.
 	PLLB_SRC_MAINCK_BYPASS   = OSC_MAINCK_BYPASS,    //!< External bypass oscillator.
+	PLLB_SRC_PLLA            = 99U,                  //!< PLLA output.
 };
 
 struct pll_config {
@@ -128,6 +130,11 @@ static inline void pll_config_init(struct pll_config *p_cfg,
 		/* PMC hardware will automatically make it mul+1 */
 		p_cfg->ctrl = CKGR_PLLBR_MULB(ul_mul - 1) | CKGR_PLLBR_DIVB(ul_div) |
 			CKGR_PLLBR_PLLBCOUNT(PLL_COUNT);
+#ifdef CONFIG_PLL1_SOURCE
+		if (CONFIG_PLL1_SOURCE == PLLB_SRC_PLLA) {
+			p_cfg->ctrl |= CKGR_PLLBR_SRCB_PLLA_IN_PLLB;
+		}
+#endif
 	}
 }
 
@@ -212,6 +219,20 @@ static inline void pll_enable_source(enum pll_source e_src)
 	case PLLB_SRC_MAINCK_BYPASS:
 		osc_enable(e_src);
 		osc_wait_ready(e_src);
+		break;
+
+	case PLLB_SRC_PLLA:
+#ifdef CONFIG_PLL0_SOURCE
+		osc_enable(CONFIG_PLL0_SOURCE);
+		osc_wait_ready(CONFIG_PLL0_SOURCE);
+
+		struct pll_config pllcfg;
+		pll_config_defaults(&pllcfg, 0);
+		pll_enable(&pllcfg, 0);
+		while (!pll_is_locked(0)) {
+			/* Do nothing */
+		}
+#endif
 		break;
 
 	default:

@@ -45,7 +45,7 @@
 #include "sleep.h"
 
 /* SAM3 and SAM4 series */
-#if (SAM3S || SAM3N || SAM3XA || SAM3U || SAM4S || SAM4E || SAM4N)
+#if (SAM3S || SAM3N || SAM3XA || SAM3U || SAM4S || SAM4E || SAM4N || SAM4C)
 # include "pmc.h"
 # include "board.h"
 
@@ -71,7 +71,7 @@ __always_inline static void pmc_save_clock_settings(
 		*p_pll0_setting = PMC->CKGR_PLLAR;
 	}
 	if (p_pll1_setting) {
-#if (SAM3S || SAM4S)
+#if (SAM3S || SAM4S || SAM4C)
 		*p_pll1_setting = PMC->CKGR_PLLBR;
 #elif (SAM3U || SAM3XA)
 		*p_pll1_setting = PMC->CKGR_UCKR;
@@ -89,7 +89,7 @@ __always_inline static void pmc_save_clock_settings(
 	pmc_switch_mainck_to_fastrc(CKGR_MOR_MOSCRCF_4_MHz);
 	pmc_osc_disable_xtal(0);
 	pmc_disable_pllack();
-#if (SAM3S || SAM4S)
+#if (SAM3S || SAM4S || SAM4C)
 	pmc_disable_pllbck();
 #elif (SAM3U || SAM3XA)
 	pmc_disable_upll_clock();
@@ -127,10 +127,14 @@ __always_inline static void pmc_restore_clock_setting(
 	}
 
 	if (pll0_setting & CKGR_PLLAR_MULA_Msk) {
+#if (SAM4C)
+		PMC->CKGR_PLLAR = pll0_setting;
+#else
 		PMC->CKGR_PLLAR = CKGR_PLLAR_ONE | pll0_setting;
+#endif
 		pll_sr |= PMC_SR_LOCKA;
 	}
-#if (SAM3S || SAM4S)
+#if (SAM3S || SAM4S || SAM4C)
 	if (pll1_setting & CKGR_PLLBR_MULB_Msk) {
 		PMC->CKGR_PLLBR = pll1_setting;
 		pll_sr |= PMC_SR_LOCKB;
@@ -148,7 +152,7 @@ __always_inline static void pmc_restore_clock_setting(
 	case PMC_MCKR_CSS_PLLA_CLK:
 		while (!(PMC->PMC_SR & PMC_SR_LOCKA));
 		break;
-#if (SAM3S || SAM4S)
+#if (SAM3S || SAM4S || SAM4C)
 	case PMC_MCKR_CSS_PLLB_CLK:
 		while (!(PMC->PMC_SR & PMC_SR_LOCKB));
 		break;
@@ -182,7 +186,7 @@ void pmc_sleep(int sleep_mode)
 	switch (sleep_mode) {
 	case SAM_PM_SMODE_SLEEP_WFI:
 	case SAM_PM_SMODE_SLEEP_WFE:
-#if (SAM4S || SAM4E || SAM4N)
+#if (SAM4S || SAM4E || SAM4N || SAM4C)
 		SCB->SCR &= (uint32_t)~SCR_SLEEPDEEP;
 		cpu_irq_enable();
 		__WFI();
@@ -220,7 +224,7 @@ void pmc_sleep(int sleep_mode)
 
 	case SAM_PM_SMODE_BACKUP:
 		SCB->SCR |= SCR_SLEEPDEEP;
-#if (SAM4S || SAM4E || SAM4N)
+#if (SAM4S || SAM4E || SAM4N || SAM4C)
 		SUPC->SUPC_CR = SUPC_CR_KEY(0xA5u) | SUPC_CR_VROFF_STOP_VREG;
 		cpu_irq_enable();
 		__WFI() ;
@@ -248,4 +252,4 @@ void pmc_wait_wakeup_clocks_restore(
 	}
 }
 
-#endif /* #if (SAM3S || SAM3N || SAM3XA || SAM3U || SAM4S || SAM4E || SAM4N) */
+#endif
