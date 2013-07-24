@@ -123,6 +123,22 @@ void board_init(void)
 			GPIO_PUSH_BUTTON_1_SENSE);
 	ioport_set_pin_input_mode(GPIO_PUSH_BUTTON_2, GPIO_PUSH_BUTTON_2_FLAGS,
 			GPIO_PUSH_BUTTON_2_SENSE);
+
+	/* Configure UART0 pins */
+
+	/* Configure PWM LED pins */
+
+	/* Configure SPI pins */
+
+	/* Configure TWI pins */
+
+	/* Configure PCK pins */
+
+	/* Configure USART pins */
+
+	/* Configure ADC pins */
+
+	/* Configure EBI pins */
 }
 
 /* @} */

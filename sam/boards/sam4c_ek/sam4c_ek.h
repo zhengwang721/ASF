@@ -205,6 +205,63 @@
 /** List of all push button definitions. */
 #define PINS_PUSHBUTTONS    {PIN_PUSHBUTTON_1, PIN_PUSHBUTTON_2}
 
+/**
+ * \name UART0 pis (UTXD0 and URXD0) definitions
+ * @{
+ */
+// TBD
+/* @} */
+
+/**
+ * \name PWM LEDx pin definitions
+ * @{
+ */
+// TBD
+/* @} */
+
+/**
+ * \name SPI pin definitions
+ * @{
+ */
+// TBD
+/* @} */
+
+/**
+ * \name TWIx pin definitions
+ * @{
+ */
+// TBD
+/* @} */
+
+/**
+ * \name PCKx pin definitions
+ * @{
+ */
+// TBD
+/* @} */
+
+/**
+ * \name USARTx pin definitions
+ * @{
+ */
+// TBD
+/* @} */
+
+/**
+ * \name ADC pin definitions
+ * @{
+ */
+// TBD
+/* @} */
+
+/**
+ * \name EBI pin definitions
+ * @{
+ */
+// TBD
+/* @} */
+
+
 /* @} */ /* End of sam4c_ek_features_group */
 
 /* @} */ /* End of sam4c_ek_group */
