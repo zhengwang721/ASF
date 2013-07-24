@@ -98,7 +98,9 @@
 #include <stdio.h>
 #include "conf_board.h"
 #include "avr2025_mac.h"
-#include "led.h"
+#ifdef __SAMD20J18__
+#include "system.h"
+#endif
 #include "delay.h"
 #include "common_sw_timer.h"
 #include "sio2host.h"
@@ -258,6 +260,10 @@ static void app_alert(void);
 int main(void)
 {
 	irq_initialize_vectors();
+	#ifdef __SAMD20J18__
+	system_init();
+	delay_init();
+	#else
 	sysclk_init();
 
 	/* Initialize the board.
@@ -265,7 +271,7 @@ int main(void)
 	 * the board initialization.
 	 */
 	board_init();
-
+	#endif
 	sw_timer_init();
 
 	if (MAC_SUCCESS != wpan_init()) {
