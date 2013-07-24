@@ -66,6 +66,10 @@ extern "C" {
 #define PLLA_DIV             1U
 #define PLLA_MUL             250U
 
+/* PLL0(PLLA) has fix MUL and DIV */
+#define CONFIG_PLL0_MUL      PLLA_MUL
+#define CONFIG_PLL0_DIV      PLLA_DIV
+
 #define PLLB_OUTPUT_MIN_HZ   80000000U
 #define PLLB_OUTPUT_MAX_HZ   240000000U
 
@@ -77,6 +81,8 @@ extern "C" {
 #define PLLB_ID              1U
 
 #define PLL_COUNT            0x3fU
+
+
 
 enum pll_source {
 	PLLA_SRC_SLCK_32K_RC     = OSC_SLCK_32K_RC,      //!< Internal 32kHz RC oscillator.

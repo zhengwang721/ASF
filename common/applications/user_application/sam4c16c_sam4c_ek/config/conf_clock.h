@@ -68,8 +68,6 @@
 
 // ===== PLL0 (A) Options   (8.192M = (32.768K * 250) / 1)
 //#define CONFIG_PLL0_SOURCE          PLLA_SRC_SLCK_32K_RC
-//#define CONFIG_PLL0_MUL             250
-//#define CONFIG_PLL0_DIV             1
 
 // ===== PLL1 (B) Options   (Fpll = (Fclk * PLL_mul) / PLL_div)
 // Use mul and div effective values here.

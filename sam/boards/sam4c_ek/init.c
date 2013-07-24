@@ -132,8 +132,6 @@ void board_init(void)
 
 	/* Configure TWI pins */
 
-	/* Configure PCK pins */
-
 	/* Configure USART pins */
 
 	/* Configure ADC pins */

@@ -53,12 +53,12 @@
 //#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_12M_RC
 //#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_XTAL
 //#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_BYPASS
-//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_PLLACK
-#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_PLLBCK
+#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_PLLACK
+//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_PLLBCK
 
 // ===== System Clock (MCK) Prescaler Options   (Fmck = Fsys / (SYSCLK_PRES))
-//#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_1
-#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_2
+#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_1
+//#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_2
 //#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_4
 //#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_8
 //#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_16
@@ -67,13 +67,13 @@
 //#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_3
 
 // ===== PLL0 (A) Options   (8.192M = (32.768K * 250) / 1)
-//#define CONFIG_PLL0_SOURCE          PLLA_SRC_SLCK_32K_RC
+#define CONFIG_PLL0_SOURCE          PLLA_SRC_SLCK_32K_RC
 
 // ===== PLL1 (B) Options   (Fpll = (Fclk * PLL_mul) / PLL_div)
 // Use mul and div effective values here.
-#define CONFIG_PLL1_SOURCE          PLLB_SRC_MAINCK_XTAL
-#define CONFIG_PLL1_MUL             (400000000UL / BOARD_FREQ_MAINCK_XTAL)
-#define CONFIG_PLL1_DIV             2
+//#define CONFIG_PLL1_SOURCE          PLLB_SRC_MAINCK_XTAL
+//#define CONFIG_PLL1_MUL             (400000000UL / BOARD_FREQ_MAINCK_XTAL)
+//#define CONFIG_PLL1_DIV             2
 
 // ===== Coprocessor System Clock (CPMCK) Options
 // Fcpmck = Fcpclk_source / CPCLK_PRES

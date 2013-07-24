@@ -234,10 +234,11 @@
 /* @} */
 
 /**
- * \name PCKx pin definitions
+ * \name PCK pin definitions
  * @{
  */
-// TBD
+#define PIN_PCK2        (PIO_PA0_IDX)
+#define PIN_PCK2_MUX    (IOPORT_MODE_MUX_B)
 /* @} */
 
 /**
