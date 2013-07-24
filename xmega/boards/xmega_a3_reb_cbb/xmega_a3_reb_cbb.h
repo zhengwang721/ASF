@@ -51,7 +51,7 @@
 #include <compiler.h>
 
 #define MCU_SOC_NAME        "ATxmega256A3"
-#define BOARD_NAME          "REB-CBB"
+
 /**
  * \defgroup xmega_a3_cbb_group XMEGA-A3 REB-CBB board
  * @{
