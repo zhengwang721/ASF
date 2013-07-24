@@ -47,6 +47,7 @@
 #define CONF_BOARD_AT86RFX
 
 #define IC_TYPE             (0x00)
+#define BOARD_NAME          "REB231FE2-EK"
 
 
 /*Board Has an External PA Connected to the Radio ,Following are the constatnts related to the Exxt PA */
