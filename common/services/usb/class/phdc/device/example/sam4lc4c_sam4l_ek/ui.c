@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D20 Non Volatile Memory Driver Quick Start
+ * \brief User Interface
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,78 +40,76 @@
  * \asf_license_stop
  *
  */
+
 #include <asf.h>
+#include "ui.h"
+#include "ieee11073_skeleton.h"
 
-void configure_nvm(void);
+static bool associated = false;
 
-//! [setup]
-void configure_nvm(void)
+void ui_init(void)
 {
-//! [setup_1]
-	struct nvm_config config_nvm;
-//! [setup_1]
-
-//! [setup_2]
-	nvm_get_config_defaults(&config_nvm);
-//! [setup_2]
-
-//! [setup_3]
-	nvm_set_config(&config_nvm);
-//! [setup_3]
+	// Initialize LEDs
+	LED_Off(LED0);
 }
-//! [setup]
 
-int main(void)
+void ui_powerdown(void)
 {
-	//! [setup_init]
-	configure_nvm();
-	//! [setup_init]
+	LED_Off(LED0);
+}
 
-//! [main]
-	//! [main_1]
-	uint8_t page_buffer[NVMCTRL_PAGE_SIZE];
-	//! [main_1]
 
-	//! [main_2]
-	for (uint32_t i = 0; i < NVMCTRL_PAGE_SIZE; i++) {
-		page_buffer[i] = i;
+void ui_wakeup(void)
+{
+	LED_On(LED0);
+}
+
+void ui_association(bool state)
+{
+	associated = state;
+}
+
+void ui_process(uint16_t framenumber)
+{
+	static uint8_t cpt_sof = 0;
+	bool b_btn_state;
+	static bool btn0_last_state = false;
+
+	if (!associated) {
+		if ((framenumber % 1000) == 0) {
+			LED_On(LED0);
+		}
+		if ((framenumber % 1000) == 500) {
+			LED_Off(LED0);
+		}
+	} else {
+		LED_On(LED0);
 	}
-	//! [main_2]
 
-	//! [main_3]
-	enum status_code error_code;
-	//! [main_3]
+	/* Scan process running each 20ms */
+	cpt_sof++;
+	if (20 > cpt_sof) {
+		return;
+	}
 
-	//! [main_4]
-	do
-	{
-		error_code = nvm_erase_row(
-				100 * NVMCTRL_ROW_PAGES * NVMCTRL_PAGE_SIZE);
-	} while (error_code == STATUS_BUSY);
-	//! [main_4]
+	cpt_sof = 0;
 
-	//! [main_5]
-	do
-	{
-		error_code = nvm_write_buffer(
-				100 * NVMCTRL_ROW_PAGES * NVMCTRL_PAGE_SIZE,
-				page_buffer, NVMCTRL_PAGE_SIZE);
-	} while (error_code == STATUS_BUSY);
-	//! [main_5]
-
-	//! [main_6]
-	do
-	{
-		error_code = nvm_read_buffer(
-				100 * NVMCTRL_ROW_PAGES * NVMCTRL_PAGE_SIZE,
-				page_buffer, NVMCTRL_PAGE_SIZE);
-	} while (error_code == STATUS_BUSY);
-	//! [main_6]
-
-//! [main]
-
-	while (true) {
-		/* Do nothing */
+	/* Use buttons to send measures */
+	b_btn_state = !ioport_get_pin_level(GPIO_PUSH_BUTTON_0);
+	if (b_btn_state != btn0_last_state) {
+		btn0_last_state = b_btn_state;
+		if (b_btn_state) {
+			ieee11073_skeleton_send_measure_1();
+		}
 	}
 }
 
+/**
+ * \defgroup UI User Interface
+ *
+ * Human interface on SAM4L-EK:
+ * - LED0 blinks when USB host has checked and enabled PHDC interface
+ * - LED0 is on when PHDC has validated association
+ * - PB0 is used to send a measure
+ *
+ */

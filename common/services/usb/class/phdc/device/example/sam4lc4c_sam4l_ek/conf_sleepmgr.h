@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief MMA7341L configuration.
+ * \brief Sleep manager configuration
  *
- * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,43 +41,9 @@
  *
  */
 
-/* Configuration of the mma7341 accelerometer driver */
+#ifndef CONF_SLEEPMGR_H_INCLUDED
+#define CONF_SLEEPMGR_H_INCLUDED
 
-#ifndef CONF_MMA7341L_H_INCLUDED
-#define CONF_MMA7341L_H_INCLUDED
+#define CONFIG_SLEEPMGR_ENABLE
 
-/**
- * \name Pin configurations
- *
- * The SAM4S Xplained Pro does not have any defined interface for the MMA7341L,
- * so this file contains the required configuration macros for the user's
- * convenience.
- *
- * The example values have been copied from the SAM4S Xplained Pro board
- * definition.
- */
-//@{
-// Definition of MMA7341L x,y,z axis channel number
-#define MMA7341L_ADC_CHANNEL_X    2
-#define MMA7341L_ADC_CHANNEL_Y    6
-#define MMA7341L_ADC_CHANNEL_Z    7
-
-// MMA7341L mode set pin definitions
-#define PIN_MMA7341L_MODE         PIO_PC13_IDX
-#define PIN_MMA7341L_MODE_FLAG    (PIO_OUTPUT_1 | PIO_DEFAULT)
-
-// MMA7341L X,Y,Z axis pin definitions
-#define PIN_MMA7341L_X_AXIS       PIO_PB3_IDX
-#define PIN_MMA7341L_X_AXIS_FLAG  (PIO_INPUT | PIO_DEFAULT)
-#define PIN_MMA7341L_Y_AXIS       PIO_PC17_IDX
-#define PIN_MMA7341L_Y_AXIS_FLAG  (PIO_INPUT | PIO_DEFAULT)
-#define PIN_MMA7341L_Z_AXIS       PIO_PC18_IDX
-#define PIN_MMA7341L_Z_AXIS_FLAG  (PIO_INPUT | PIO_DEFAULT)
-//@}
-
-#define MMA7341L_ADC_CLK   100000
-
-#define MMA7341L_USE_ADC12
-//#define MMA7341L_USE_ADC10
-
-#endif /* CONF_MMA7341L_H_INCLUDED */
+#endif /* CONF_SLEEPMGR_H_INCLUDED */
