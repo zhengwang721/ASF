@@ -70,15 +70,16 @@ static board_t board_type;
 
 
 #define NUM_CHECK 10
-static bool board;
 
-uint8_t xram_read(uint16_t addr);
+
 
 /**
  * \brief Read XRAM
  *
  * \param
  */
+ uint8_t xram_read(uint16_t addr);
+ 
 void xram_write(uint16_t addr, uint8_t data);
 
 void board_identify(void);
@@ -86,5 +87,6 @@ void board_identify(void);
 bool stb_button_read(void);
 
 void led_helper_func(void);
+
 void led_ctrl(led_id_t led_no, led_action_t led_setting);
 #endif  /* _HELPER_ */

@@ -74,9 +74,8 @@
 
 
 
-
 #define NUM_CHECK 10
-static bool board;
+
 /*
  * Various helper macros for accessing the memory mapped External RAM on the
  * Sensor Terminal Board
@@ -231,10 +230,7 @@ static bool board;
         USB_ADDR_DEC_DDR |= _BV(7);          \
     } while (0)           
 
-#endif
-
-
-
+#endif //STB
 
 
 #endif  /* _ATMEGARFX_RCB_ */

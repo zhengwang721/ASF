@@ -51,8 +51,8 @@
 
 void board_init(void)
 {
-  
-  board_identify();
+    /* To identify if it is a plain or STB*/
+    board_identify();
 
 	/* On board LED initialization */
 	ioport_configure_pin(LED0_RCB,IOPORT_DIR_OUTPUT |  IOPORT_INIT_HIGH);

@@ -50,10 +50,6 @@
 #include "conf_board.h"
 # include "helper.h"
 
-
-
-
-
 /**
  * \brief Read XRAM
  *
@@ -142,7 +138,6 @@ void xram_write(uint16_t addr, uint8_t data)
 
  void board_identify(void)
 {
-
     uint8_t i;
     uint8_t count = 0;
     mem_test_t mem_vals[NUM_CHECK];
@@ -166,11 +161,8 @@ void xram_write(uint16_t addr, uint8_t data)
     }
     else
     {
-        board_type = PLAIN;
-
-    
-    }
-    
+        board_type = PLAIN;    
+    }   
 
 
 }
@@ -228,14 +220,14 @@ switch (board_type)
                 //break;
             }
 
-        case PLAIN:
-            {
-                if (ioport_get_pin_level(GPIO_PUSH_BUTTON_0)) {
+		case PLAIN:
+		{
+		if (ioport_get_pin_level(GPIO_PUSH_BUTTON_0)) {
 		return false;
-	} else {
+		} else {
 		return true;
-	}
-            }
+			}
+        }
 
         default:
             {
