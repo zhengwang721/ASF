@@ -40,6 +40,7 @@ and reduces time-to-market for new embedded applications.
 			<device-support value="sam4s"/>
 			<device-support value="sam4l"/>
 			<device-support value="sam4n"/>
+			<device-support value="sam4c"/>
 			<require idref="thirdparty.cmsis.license"/>
 			<info type="gui-flag" value="hidden"/>
 		</module>

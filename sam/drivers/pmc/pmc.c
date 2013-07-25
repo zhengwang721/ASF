@@ -55,6 +55,8 @@
 # define MAX_PERIPH_ID    47
 #elif (SAM4N)
 # define MAX_PERIPH_ID    31
+#elif (SAM4C)
+# define MAX_PERIPH_ID    43
 #endif
 
 /// @cond 0
@@ -198,7 +200,7 @@ uint32_t pmc_switch_mck_to_pllack(uint32_t ul_pres)
 	return 0;
 }
 
-#if (SAM3S || SAM4S)
+#if (SAM3S || SAM4S || SAM4C)
 /**
  * \brief Switch master clock source selection to PLLB clock.
  *
@@ -527,8 +529,13 @@ void pmc_enable_pllack(uint32_t mula, uint32_t pllacount, uint32_t diva)
 	/* first disable the PLL to unlock the lock */
 	pmc_disable_pllack();
 
-	PMC->CKGR_PLLAR = CKGR_PLLAR_ONE | CKGR_PLLAR_DIVA(diva) |
+#if (SAM4C)
+	PMC->CKGR_PLLAR = diva |
 			CKGR_PLLAR_PLLACOUNT(pllacount) | CKGR_PLLAR_MULA(mula);
+#else
+	PMC->CKGR_PLLAR = CKGR_PLLAR_ONE | CKGR_PLLAR_DIVA(diva) |
+		CKGR_PLLAR_PLLACOUNT(pllacount) | CKGR_PLLAR_MULA(mula);
+#endif
 	while ((PMC->PMC_SR & PMC_SR_LOCKA) == 0);
 }
 
@@ -537,7 +544,11 @@ void pmc_enable_pllack(uint32_t mula, uint32_t pllacount, uint32_t diva)
  */
 void pmc_disable_pllack(void)
 {
+#if (SAM4C)
+	PMC->CKGR_PLLAR = CKGR_PLLAR_MULA(0);
+#else
 	PMC->CKGR_PLLAR = CKGR_PLLAR_ONE | CKGR_PLLAR_MULA(0);
+#endif
 }
 
 /**
@@ -551,7 +562,7 @@ uint32_t pmc_is_locked_pllack(void)
 	return (PMC->PMC_SR & PMC_SR_LOCKA);
 }
 
-#if (SAM3S || SAM4S)
+#if (SAM3S || SAM4S || SAM4C)
 /**
  * \brief Enable PLLB clock.
  *
@@ -642,7 +653,7 @@ uint32_t pmc_enable_periph_clk(uint32_t ul_id)
 		if ((PMC->PMC_PCSR0 & (1u << ul_id)) != (1u << ul_id)) {
 			PMC->PMC_PCER0 = 1 << ul_id;
 		}
-#if (SAM3S || SAM3XA || SAM4S || SAM4E)
+#if (SAM3S || SAM3XA || SAM4S || SAM4E || SAM4C)
 	} else {
 		ul_id -= 32;
 		if ((PMC->PMC_PCSR1 & (1u << ul_id)) != (1u << ul_id)) {
@@ -674,7 +685,7 @@ uint32_t pmc_disable_periph_clk(uint32_t ul_id)
 		if ((PMC->PMC_PCSR0 & (1u << ul_id)) == (1u << ul_id)) {
 			PMC->PMC_PCDR0 = 1 << ul_id;
 		}
-#if (SAM3S || SAM3XA || SAM4S || SAM4E)
+#if (SAM3S || SAM3XA || SAM4S || SAM4E || SAM4C)
 	} else {
 		ul_id -= 32;
 		if ((PMC->PMC_PCSR1 & (1u << ul_id)) == (1u << ul_id)) {
@@ -693,7 +704,7 @@ void pmc_enable_all_periph_clk(void)
 	PMC->PMC_PCER0 = PMC_MASK_STATUS0;
 	while ((PMC->PMC_PCSR0 & PMC_MASK_STATUS0) != PMC_MASK_STATUS0);
 
-#if (SAM3S || SAM3XA || SAM4S || SAM4E)
+#if (SAM3S || SAM3XA || SAM4S || SAM4E || SAM4C)
 	PMC->PMC_PCER1 = PMC_MASK_STATUS1;
 	while ((PMC->PMC_PCSR1 & PMC_MASK_STATUS1) != PMC_MASK_STATUS1);
 #endif
@@ -707,7 +718,7 @@ void pmc_disable_all_periph_clk(void)
 	PMC->PMC_PCDR0 = PMC_MASK_STATUS0;
 	while ((PMC->PMC_PCSR0 & PMC_MASK_STATUS0) != 0);
 
-#if (SAM3S || SAM3XA || SAM4S || SAM4E)
+#if (SAM3S || SAM3XA || SAM4S || SAM4E || SAM4C)
 	PMC->PMC_PCDR1 = PMC_MASK_STATUS1;
 	while ((PMC->PMC_PCSR1 & PMC_MASK_STATUS1) != 0);
 #endif
@@ -729,7 +740,7 @@ uint32_t pmc_is_periph_clk_enabled(uint32_t ul_id)
 		return 0;
 	}
 
-#if (SAM3S || SAM3XA || SAM4S || SAM4E)
+#if (SAM3S || SAM3XA || SAM4S || SAM4E || SAM4C)
 	if (ul_id < 32) {
 #endif
 		if ((PMC->PMC_PCSR0 & (1u << ul_id))) {
@@ -737,7 +748,7 @@ uint32_t pmc_is_periph_clk_enabled(uint32_t ul_id)
 		} else {
 			return 0;
 		}
-#if (SAM3S || SAM3XA || SAM4S || SAM4E)
+#if (SAM3S || SAM3XA || SAM4S || SAM4E || SAM4C)
 	} else {
 		ul_id -= 32;
 		if ((PMC->PMC_PCSR1 & (1u << ul_id))) {
@@ -849,7 +860,7 @@ uint32_t pmc_switch_pck_to_pllack(uint32_t ul_id, uint32_t ul_pres)
 	return 0;
 }
 
-#if (SAM3S || SAM4S)
+#if (SAM3S || SAM4S || SAM4C)
 /**
  * \brief Switch programmable clock source selection to PLLB clock.
  *
@@ -984,7 +995,7 @@ void pmc_switch_udpck_to_pllbck(uint32_t ul_usbdiv)
 /**
  * \brief Switch UDP (USB) clock source selection to UPLL clock.
  *
- * \param dw_usbdiv Clock divisor.
+ * \param ul_usbdiv Clock divisor.
  */
 void pmc_switch_udpck_to_upllck(uint32_t ul_usbdiv)
 {
@@ -1087,17 +1098,17 @@ void pmc_clr_fast_startup_input(uint32_t ul_inputs)
  * Enter condition: (WFE or WFI) + (SLEEPDEEP bit = 0) + (LPM bit = 0)
  *
  * \param uc_type 0 for wait for interrupt, 1 for wait for event.
- * \note For SAM4S and SAM4E series, since only WFI is effective, uc_type = 1
- * will be treated as uc_type = 0.
+ * \note For SAM4S, SAM4C and SAM4E series, since only WFI is effective,
+ * uc_type = 1 will be treated as uc_type = 0.
  */
 void pmc_enable_sleepmode(uint8_t uc_type)
 {
-#if !defined(SAM4S) || !defined(SAM4E) || !defined(SAM4N)
+#if !(SAM4S || SAM4E || SAM4N || SAM4C)
 	PMC->PMC_FSMR &= (uint32_t) ~ PMC_FSMR_LPM; // Enter Sleep mode
 #endif
 	SCB->SCR &= (uint32_t) ~ SCB_SCR_SLEEPDEEP_Msk; // Deep sleep
 
-#if (SAM4S || SAM4E || SAM4N)
+#if (SAM4S || SAM4E || SAM4N || SAM4C)
 	UNUSED(uc_type);
 	__WFI();
 #else
@@ -1109,7 +1120,7 @@ void pmc_enable_sleepmode(uint8_t uc_type)
 #endif
 }
 
-#if (SAM4S || SAM4E || SAM4N)
+#if (SAM4S || SAM4E || SAM4N || SAM4C)
 static uint32_t ul_flash_in_wait_mode = PMC_WAIT_MODE_FLASH_DEEP_POWERDOWN;
 /**
  * \brief Set the embedded flash state in wait mode
@@ -1157,7 +1168,7 @@ void pmc_enable_waitmode(void)
 #endif
 
 	/* Set the WAITMODE bit = 1 */
-	PMC->CKGR_MOR |= CKGR_MOR_KEY(0x37u) | CKGR_MOR_WAITMODE;
+	PMC->CKGR_MOR |= PMC_CKGR_MOR_KEY_VALUE | CKGR_MOR_WAITMODE;
 
 	/* Waiting for Master Clock Ready MCKRDY = 1 */
 	while (!(PMC->PMC_SR & PMC_SR_MCKRDY));
@@ -1211,7 +1222,7 @@ void pmc_enable_waitmode(void)
 void pmc_enable_backupmode(void)
 {
 	SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
-#if (SAM4S || SAM4E || SAM4N)
+#if (SAM4S || SAM4E || SAM4N || SAM4C)
 	SUPC->SUPC_CR = SUPC_CR_KEY(0xA5u) | SUPC_CR_VROFF_STOP_VREG;
 #else
 	__WFE();
