@@ -51,10 +51,10 @@
 /** \brief Cmcc hardware registers */
 typedef struct {
   __I  uint32_t CMCC_TYPE;    /**< \brief (Cmcc Offset: 0x00) Cache Type Register */
-  __IO uint32_t CMCC_CFG;     /**< \brief (Cmcc Offset: 0x04) Cache Configuration Register */
+  __I  uint32_t Reserved1[1];
   __O  uint32_t CMCC_CTRL;    /**< \brief (Cmcc Offset: 0x08) Cache Control Register */
   __I  uint32_t CMCC_SR;      /**< \brief (Cmcc Offset: 0x0C) Cache Status Register */
-  __I  uint32_t Reserved1[4];
+  __I  uint32_t Reserved2[4];
   __O  uint32_t CMCC_MAINT0;  /**< \brief (Cmcc Offset: 0x20) Cache Maintenance Register 0 */
   __O  uint32_t CMCC_MAINT1;  /**< \brief (Cmcc Offset: 0x24) Cache Maintenance Register 1 */
   __IO uint32_t CMCC_MCFG;    /**< \brief (Cmcc Offset: 0x28) Cache Monitor Configuration Register */
@@ -64,8 +64,6 @@ typedef struct {
 } Cmcc;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 /* -------- CMCC_TYPE : (CMCC Offset: 0x00) Cache Type Register -------- */
-#define CMCC_TYPE_AP (0x1u << 0) /**< \brief (CMCC_TYPE) Access Port Access Allowed */
-#define CMCC_TYPE_GCLK (0x1u << 1) /**< \brief (CMCC_TYPE) Dynamic Clock Gating Supported */
 #define CMCC_TYPE_RANDP (0x1u << 2) /**< \brief (CMCC_TYPE) Random Selection Policy Supported */
 #define CMCC_TYPE_LRUP (0x1u << 3) /**< \brief (CMCC_TYPE) Least Recently Used Policy Supported */
 #define CMCC_TYPE_RRP (0x1u << 4) /**< \brief (CMCC_TYPE) Random Selection Policy Supported */
@@ -84,12 +82,10 @@ typedef struct {
 #define   CMCC_TYPE_CSIZE_CSIZE_8KB (0x3u << 8) /**< \brief (CMCC_TYPE) Cache Size 8 Kbytes */
 #define CMCC_TYPE_CLSIZE_Pos 11
 #define CMCC_TYPE_CLSIZE_Msk (0x7u << CMCC_TYPE_CLSIZE_Pos) /**< \brief (CMCC_TYPE) Cache Size */
-#define   CMCC_TYPE_CLSIZE_CLSIZE_1KB (0x0u << 11) /**< \brief (CMCC_TYPE) 4 bytes */
-#define   CMCC_TYPE_CLSIZE_CLSIZE_2KB (0x1u << 11) /**< \brief (CMCC_TYPE) 8 bytes */
-#define   CMCC_TYPE_CLSIZE_CLSIZE_4KB (0x2u << 11) /**< \brief (CMCC_TYPE) 16 bytes */
-#define   CMCC_TYPE_CLSIZE_CLSIZE_8KB (0x3u << 11) /**< \brief (CMCC_TYPE) 32 bytes */
-/* -------- CMCC_CFG : (CMCC Offset: 0x04) Cache Configuration Register -------- */
-#define CMCC_CFG_GCLKDIS (0x1u << 0) /**< \brief (CMCC_CFG) Disable Clock Gating */
+#define   CMCC_TYPE_CLSIZE_CLSIZE_1KB (0x0u << 11) /**< \brief (CMCC_TYPE) 4 Bytes */
+#define   CMCC_TYPE_CLSIZE_CLSIZE_2KB (0x1u << 11) /**< \brief (CMCC_TYPE) 8 Bytes */
+#define   CMCC_TYPE_CLSIZE_CLSIZE_4KB (0x2u << 11) /**< \brief (CMCC_TYPE) 16 Bytes */
+#define   CMCC_TYPE_CLSIZE_CLSIZE_8KB (0x3u << 11) /**< \brief (CMCC_TYPE) 32 Bytes */
 /* -------- CMCC_CTRL : (CMCC Offset: 0x08) Cache Control Register -------- */
 #define CMCC_CTRL_CEN (0x1u << 0) /**< \brief (CMCC_CTRL) Cache Controller Enable */
 /* -------- CMCC_SR : (CMCC Offset: 0x0C) Cache Status Register -------- */

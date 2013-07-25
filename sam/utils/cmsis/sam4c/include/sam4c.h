@@ -52,4 +52,8 @@
   #include "sam4c_1.h"
 #endif
 
+/* TODO: SAM4C header file patch (SAM4C_TBD) */
+#define SUPC_CR_KEY(value) ((SUPC_CR_KEY_Msk & ((value) << SUPC_CR_KEY_Pos)))
+#define SUPC_MR_KEY(value) ((SUPC_MR_KEY_Msk & ((value) << SUPC_MR_KEY_Pos)))
+
 #endif /* _SAM4C_ */
