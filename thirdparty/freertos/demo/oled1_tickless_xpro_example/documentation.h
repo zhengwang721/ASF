@@ -41,8 +41,8 @@
  *
  */
 
-#ifndef DOCUMENTATION_H
-#define DOCUMENTATION_H
+#ifndef DOCUMENTATION_H_INCLUDED
+#define DOCUMENTATION_H_INCLUDED
 
 /**
  * \mainpage FreeRTOS v7.4.2 tickless demo for SAM D20 Xplained Pro
@@ -108,4 +108,4 @@
  * For further information, visit <a href="http://www.atmel.com/">Atmel</a>.
  */
 
-#endif // DOCUMENTATION_H
+#endif // DOCUMENTATION_H_INCLUDED

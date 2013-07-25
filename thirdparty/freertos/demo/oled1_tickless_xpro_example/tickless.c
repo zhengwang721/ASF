@@ -83,7 +83,7 @@
 //@{
 
 //! Timer instance
-struct tc_module tc;
+static struct tc_module tc;
 
 //! External declaration of freeRTOS SysTick handler
 extern void xPortSysTickHandler( void );
@@ -92,13 +92,22 @@ extern void xPortSysTickHandler( void );
 void vPortSetupTimerInterrupt(void);
 
 //! Prototype for empty_callback for sleep timer
-void empty_callback(struct tc_module *const module_inst);
+static void empty_callback(struct tc_module *const module_inst);
 
 //! Global variable to control tickless operation
 bool volatile tickless_enable = false;
 
 //@}
 
+/*
+ * \brief Empty callback
+ *
+ * An empty callback, just to wake the device.
+ */
+static void empty_callback(struct tc_module *const module_inst)
+{
+	// Empty, just to wake the device
+}
 
 /* 
  * \brief Initialize and start timer for tick
@@ -160,7 +169,7 @@ void vPortSuppressTicksAndSleep( portTickType xExpectedIdleTime )
 	// Set sleep time, -1 because we want to wake up before the last tick
 	tc_set_top_value(&tc, (xExpectedIdleTime - 1) * TIMER_RELOAD_VALUE_ONE_TICK);
 
-	// CLear overflow interrupt flag
+	// Clear overflow interrupt flag
 	tc.hw->COUNT32.INTFLAG.bit.OVF = 1;
 
 	// Check if we still should sleep
@@ -213,15 +222,5 @@ void vPortSuppressTicksAndSleep( portTickType xExpectedIdleTime )
 			vTaskStepTick(1);
 		}
 	}
-}
-
-/*
- * \brief Empty callback
- *
- * An empty callback, just to wake the device.
- */
-void empty_callback(struct tc_module *const module_inst)
-{
-	// Empty, just to wake the device
 }
 
