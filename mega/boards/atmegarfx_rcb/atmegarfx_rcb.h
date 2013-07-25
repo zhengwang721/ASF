@@ -49,6 +49,8 @@
 #define _ATMEGARFX_RCB_
 #include "compiler.h"
 #include "conf_board.h"
+#include "helper.h"
+
 
 
 #if AVR8_PART_IS_DEFINED(ATmega128RFA1)
@@ -72,10 +74,83 @@
 
 
 
-#ifdef SENSOR_TERMINAL_BOARD
+
+#define NUM_CHECK 10
+static bool board;
+/*
+ * Various helper macros for accessing the memory mapped External RAM on the
+ * Sensor Terminal Board
+ */
+#define XRAM_DATA_SETINP()   do{ XRAM_DATA_DDR = 0x00; XRAM_DATA_PORT = 0x00; }while(0)
+#define XRAM_DATA_SETOUTP()  do{ XRAM_DATA_DDR = 0xFF; }while(0)
+#define XRAM_CTRL_RD_LO()    do{ XRAM_CTRL_PORT &= ~XRAM_RD; }while(0)
+#define XRAM_CTRL_RD_HI()    do{ XRAM_CTRL_PORT |= XRAM_RD; }while(0)
+#define XRAM_CTRL_WR_LO()    do{ XRAM_CTRL_PORT &= ~XRAM_WR; }while(0)
+#define XRAM_CTRL_WR_HI()    do{ XRAM_CTRL_PORT |= XRAM_WR; }while(0)
+
+/**
+ * \name Macros for XRAM access
+ * \{
+ */
+
+/* XRAM specific port macros */
+
+/* XRAM control port output register */
+#define XRAM_CTRL_PORT                   (PORTE)
+
+/* XRAM control port direction register */
+#define XRAM_CTRL_DDR                    (DDRE)
+
+/* Port pin which is used to signal a read access from the XRAM */
+#define XRAM_RD                          (0x20)  /* PE5 */
+
+/* Port pin which is used to signal a write access to the XRAM */
+#define XRAM_WR                          (0x10)  /* PE4 */
+
+/* XRAM data port output register */
+#define XRAM_DATA_PORT                   (PORTB)
+
+/* XRAM data port direction register */
+#define XRAM_DATA_DDR                    (DDRB)
+
+/* XRAM data port input register */
+#define XRAM_DATA_PIN                    (PINB)
+
+/* Port where the latch's ALE signal is connected to */
+#define XRAM_ALE_PORT                    (PORTG)
+
+/* Data direction register used to activate the ALE signal */
+#define XRAM_ALE_DDR                     (DDRG)
+
+/* Pin where the latch's ALE signal is connected to */
+#define XRAM_ALE_PIN                     (0x04)  /* PG2 */
+
+/*
+ * PINs where buttons are connected
+ */
+#define BUTTON_PIN_0                    (PB0)
+
+#define LED0                 LED0_GPIO
+#define LED1                 LED1_GPIO
+#define LED2                 LED2_GPIO
+#define LED0_GPIO			  LED_0  
+#define LED1_GPIO			  LED_1 
+#define LED2_GPIO			  LED_2 
+#define LED_COUNT             3
+
+#define LED0_RCB			  IOPORT_CREATE_PIN(PORTE, 2)	  
+#define LED1_RCB		      IOPORT_CREATE_PIN(PORTE, 3)	  
+#define LED2_RCB			  IOPORT_CREATE_PIN(PORTE, 4)	  
+
+#define LED_ADDR_DEC_DDR                (DDRD)
 #define _BV(x) (1 << (x))
 /* LED address decoding port output register */
 #define LED_ADDR_DEC_PORT               (PORTD)
+
+#define GPIO_PUSH_BUTTON_0			  IOPORT_CREATE_PIN(PORTE, 5)
+
+#ifdef SENSOR_TERMINAL_BOARD
+
 /* Button address decoding port output register */
 #define BUTTON_ADDR_DEC_PORT            (PORTD)
 #define BUTTON_PORT                     (PORTB)
@@ -84,20 +159,8 @@
 /* Button address decoding port direction register */
 #define BUTTON_ADDR_DEC_DDR             (DDRD)
 /* LED address decoding port direction register */
-#define LED_ADDR_DEC_DDR                (DDRD)
+
 #define BUTTON_INPUT_PINS               (PINB)
-
-/*
- * PINs where buttons are connected
- */
-#define BUTTON_PIN_0                    (PB0)
-
- #define LED0                 LED0_GPIO
- #define LED1                 LED1_GPIO
-
-#define LED0_GPIO			  LED_0  
-#define LED1_GPIO			  LED_1 
-#define LED_COUNT             2
 
 /**
  * \name FTDI based USB macros
@@ -166,70 +229,12 @@
         USB_ADDR_DEC_DDR |= _BV(6);          \
         USB_ADDR_DEC_PORT &= ~_BV(7);        \
         USB_ADDR_DEC_DDR |= _BV(7);          \
-    } while (0)
+    } while (0)           
+
+#endif
 
 
-static inline bool stb_button_read(void)
-{
-
-                uint8_t cur_button_state;
-
-                /*
-                 * Enable button address decoding.
-                 * This is similar to USB, but with other settings.
-                 */
-                BUTTON_ADDR_DEC_PORT |= _BV(6);    // Different to USB
-                BUTTON_ADDR_DEC_DDR |= _BV(6);
-                BUTTON_ADDR_DEC_PORT &= ~_BV(7);
-                BUTTON_ADDR_DEC_DDR |= _BV(7);
 
 
-                PORTE &= ~_BV(5);
-                DDRE |= _BV(5);
-
-                /* Switch port to input. */
-                BUTTON_PORT |= (1 << BUTTON_PIN_0);
-                BUTTON_PORT_DIR &= ~(1 << BUTTON_PIN_0);
-
-                cur_button_state = BUTTON_INPUT_PINS;
-
-                PORTE |= _BV(5);
-
-                /* Switch port back to output. */
-                BUTTON_PORT_DIR |= (1 << BUTTON_PIN_0);
-
-                /*
-                 * Disable button address decoding.
-                 * This enables USB-FTDI again.
-                 */
-                BUTTON_ADDR_DEC_PORT &= ~_BV(6);
-                BUTTON_ADDR_DEC_DDR |= _BV(6);
-                BUTTON_ADDR_DEC_PORT &= ~_BV(7);
-                BUTTON_ADDR_DEC_DDR |= _BV(7);
-
-                if (cur_button_state & 0x01)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-
-}
-
-#else
-
-    #define LED0                 LED0_GPIO
-    #define LED1                 LED1_GPIO
-    #define LED2                 LED2_GPIO
-    #define LED0_GPIO			  IOPORT_CREATE_PIN(PORTE, 2)	  
-    #define LED1_GPIO			  IOPORT_CREATE_PIN(PORTE, 3)	  
-    #define LED2_GPIO			  IOPORT_CREATE_PIN(PORTE, 4)	  
-    
-    #define LED_COUNT 3
-    #define GPIO_PUSH_BUTTON_0			  IOPORT_CREATE_PIN(PORTE, 5)
-
-#endif 
 
 #endif  /* _ATMEGARFX_RCB_ */

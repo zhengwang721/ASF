@@ -1,9 +1,12 @@
 /**
  * \file
  *
- * \brief ATMEGA256RFR2 Xplained Pro board init.
+ * \brief ATmegaRFX RCB board header file.
  *
- * To use this board, define BOARD=ATMEGA256RFR2_XPLAINED_PRO.
+ * This file contains definitions and services related to the features of the
+ * ATmega256RFR2 Xplained Pro board.
+ *
+ * To use this board, define BOARD= ATMEGA256RFR2_XPLAINED_PRO.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -42,36 +45,46 @@
  * \asf_license_stop
  *
  */
-#include <board.h>
-#include <compiler.h>
-#include <conf_board.h>
-#include "gpio.h"
-#include "led.h"
-#include "helper.h"
+#ifndef _HELPER_
+#define _HELPER_
+#include "compiler.h"
+#include "conf_board.h"
+#include "board.h"
+# include "gpio.h"
+# include "led.h"
 
-void board_init(void)
+
+typedef enum
 {
-  
-  board_identify();
+    PLAIN,
+    SENSOR_TERM_BOARD
+} board_t;
 
-	/* On board LED initialization */
-	ioport_configure_pin(LED0_RCB,IOPORT_DIR_OUTPUT |  IOPORT_INIT_HIGH);
-	ioport_configure_pin(LED1_RCB,IOPORT_DIR_OUTPUT |  IOPORT_INIT_HIGH);
+typedef struct
+{
+    uint16_t addr;
+    uint8_t val;
+} mem_test_t;
 
-	ioport_configure_pin(LED2_RCB,IOPORT_DIR_OUTPUT |  IOPORT_INIT_HIGH);
-
-	/* On board Switch initialization */
-	ioport_configure_pin(GPIO_PUSH_BUTTON_0,IOPORT_DIR_INPUT | IOPORT_PULL_UP);
-
-    
-
-#ifdef BREAKOUT_BOARD
-  //Enable RCB_BB RS232 level converter
-
-    DDRD = 0XD0; 	//(1 << 4) | (1 << 6) | (1 << 7);
-    PORTD = 0XC0 ;  //(0 << 4) | (1 << 6) | (1 << 7);
-#endif
-
-}
+static board_t board_type;
 
 
+#define NUM_CHECK 10
+static bool board;
+
+uint8_t xram_read(uint16_t addr);
+
+/**
+ * \brief Read XRAM
+ *
+ * \param
+ */
+void xram_write(uint16_t addr, uint8_t data);
+
+void board_identify(void);
+
+bool stb_button_read(void);
+
+void led_helper_func(void);
+void led_ctrl(led_id_t led_no, led_action_t led_setting);
+#endif  /* _HELPER_ */

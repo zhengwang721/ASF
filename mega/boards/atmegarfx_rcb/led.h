@@ -73,6 +73,7 @@ typedef enum led_action_tag
     LED_TOGGLE
 } SHORTENUM led_action_t;
 
+
 /*
  * Bit numbers address where LEDs are mapped to.
  */
@@ -85,7 +86,7 @@ typedef enum led_action_tag
 #define LED_BIT_MASK                    ((1 << LED_BIT_0) | (1 << LED_BIT_1))
 #define LED_PORT                        (PORTB)
 #define LED_PORT_DIR                    (DDRB)
-#ifdef SENSOR_TERMINAL_BOARD
+
 /*! \brief Turns off the specified LEDs.
  *
  * \param led_gpio LED to turn off (LEDx_GPIO).
@@ -113,131 +114,34 @@ typedef enum led_action_tag
 #define LED_Toggle(led_gpio)  led_ctrl(led_gpio,LED_TOGGLE)
 //#endif
 
-/**
- * \brief Helper function for LEDs
- */
-static inline void led_helper_func(void)
-{
-    /*
-     * Enable LED address decoding.
-     * This is similar to USB, but with other settings.
-     */
-    LED_ADDR_DEC_PORT |= _BV(6);    // Different to USB
-    LED_ADDR_DEC_DDR |= _BV(6);
-    LED_ADDR_DEC_PORT &= ~_BV(7);
-    LED_ADDR_DEC_DDR |= _BV(7);
-
-    /* Enable desired LED state. */
-    DDRE |= _BV(4);
-    /* Set PE4 to 0 and back to 1. */
-    PORTE &= ~_BV(4);
-    PORTE |= _BV(4);
-
-    /*
-     * Disable LED address decoding.
-     * This enables USB again.
-     */
-    LED_ADDR_DEC_PORT &= ~_BV(6);
-    LED_ADDR_DEC_DDR |= _BV(6);
-    LED_ADDR_DEC_PORT &= ~_BV(7);
-    LED_ADDR_DEC_DDR |= _BV(7);
-}
 
 
-static inline void led_ctrl(led_id_t led_no, led_action_t led_setting)
-{
-uint8_t pin;
-/* New values of LED pins based on new LED state. */
-uint8_t led_pin_value;
-/*
-* Original value of LED port before writing new value.
-* This value needs to be restored.
-*/
-uint8_t orig_led_port = LED_PORT & ~LED_BIT_MASK;
-
-/* Both LEDs need to be updated, since several peripherals
-* are dealing with the same port for this board
-* (USB, EEPROM, LEDs, Button).
-*/
-LED_PORT_DIR |= (1 << LED_BIT_0);
-LED_PORT_DIR |= (1 << LED_BIT_1);
-
-switch (led_no)
-{
-case LED_0:
-    pin = LED_BIT_0;
-    break;
-case LED_1:
-    pin = LED_BIT_1;
-    break;
-default:
-    return;
-}
-
-switch (led_setting)
-{
-case LED_ON:
-    led_state |= _BV(pin);
-    break;
-
-case LED_OFF:
-    led_state &= ~_BV(pin);
-    break;
-
-case LED_TOGGLE:
-default:
-    if (led_state & _BV(pin))
-    {
-        /*
-         * LED is currently on,
-         * Switch it off
-         */
-        led_state &= ~_BV(pin);
-    }
-    else
-    {
-        /*
-         * LED is currently off,
-         * Switch it on
-         */
-        led_state |= _BV(pin);
-    }
-    break;
-}
-
-led_pin_value = (uint8_t)(~(uint16_t)led_state);  // Implicit casting required to avoid IAR Pa091.
-led_pin_value &= LED_BIT_MASK;
-
-LED_PORT = orig_led_port | led_pin_value;
-
-led_helper_func();
-}
-
-#else
-
-/*! \brief Turns off the specified LEDs.
- *
- * \param led_gpio LED to turn off (LEDx_GPIO).
- *
- * \note The pins of the specified LEDs are set to GPIO output mode.
- */
-#define LED_Off(led_gpio)     gpio_set_pin_high(led_gpio)
-
-/*! \brief Turns on the specified LEDs.
- *
- * \param led_gpio LED to turn on (LEDx_GPIO).
- *
- * \note The pins of the specified LEDs are set to GPIO output mode.
- */
-#define LED_On(led_gpio)      gpio_set_pin_low(led_gpio)
-
-/*! \brief Toggles the specified LEDs.
- *
- * \param led_gpio LED to toggle (LEDx_GPIO).
- *
- * \note The pins of the specified LEDs are set to GPIO output mode.
- */
-#define LED_Toggle(led_gpio)  gpio_toggle_pin(led_gpio)
-
-#endif //STB
+//
+//
+//
+///*! \brief Turns off the specified LEDs.
+// *
+// * \param led_gpio LED to turn off (LEDx_GPIO).
+// *
+// * \note The pins of the specified LEDs are set to GPIO output mode.
+// */
+//#define LED_Off(led_gpio)     gpio_set_pin_high(led_gpio)
+//
+///*! \brief Turns on the specified LEDs.
+// *
+// * \param led_gpio LED to turn on (LEDx_GPIO).
+// *
+// * \note The pins of the specified LEDs are set to GPIO output mode.
+// */
+//#define LED_On(led_gpio)      gpio_set_pin_low(led_gpio)
+//
+///*! \brief Toggles the specified LEDs.
+// *
+// * \param led_gpio LED to toggle (LEDx_GPIO).
+// *
+// * \note The pins of the specified LEDs are set to GPIO output mode.
+// */
+//#define LED_Toggle(led_gpio)  gpio_toggle_pin(led_gpio)
+//
+//#endif //STB
 #endif /* _LED_H_ */
