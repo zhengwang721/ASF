@@ -249,7 +249,11 @@ static inline uint32_t sysclk_get_main_hz(void)
 
 #ifdef CONFIG_PLL1_SOURCE
 	else if (CONFIG_SYSCLK_SOURCE == SYSCLK_SRC_PLLBCK) {
-		return pll_get_default_rate(1);
+		if (CONFIG_PLL1_SOURCE == PLLB_SRC_PLLA) {
+			return (PLLA_OUTPUT_HZ * CONFIG_PLL0_MUL / CONFIG_PLL0_DIV);
+		} else {
+			return pll_get_default_rate(1);
+		}
 	}
 #endif
 
