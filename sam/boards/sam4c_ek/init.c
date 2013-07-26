@@ -129,6 +129,7 @@ void board_init(void)
 	ioport_set_pin_peripheral_mode(PIO_PB4_IDX, IOPORT_MODE_MUX_A);
 	ioport_set_pin_peripheral_mode(PIO_PB5_IDX, IOPORT_MODE_MUX_A);
 #endif
+
 	/* Configure PWM LED pins */
 
 	/* Configure SPI pins */

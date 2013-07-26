@@ -3,7 +3,7 @@
  *
  * \brief Universal Asynchronous Receiver Transceiver (UART) driver for SAM.
  *
- * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -432,6 +432,54 @@ Pdc *uart_get_pdc_base(Uart *p_uart)
 
 	return p_pdc_base;
 }
+
+#if SAM4C
+/**
+ * \brief Enable UART optical interface.
+ *
+ * \param p_uart Pointer to a UART instance.
+ */
+void uart_enable_optical_interface(Uart *p_uart)
+{
+	Assert(p_uart == UART1);
+	p_uart->UART_MR |= UART_MR_OPT_EN;
+}
+
+/**
+ * \brief Disable UART optical interface.
+ *
+ * \param p_uart Pointer to a UART instance.
+ */
+void uart_disable_optical_interface(Uart *p_uart)
+{
+	Assert(p_uart == UART1);
+	p_uart->UART_MR &= ~UART_MR_OPT_EN;
+}
+
+/**
+ * \brief Enable UART optical interface.
+ *
+ * \param p_uart Pointer to a UART instance.
+ * \param cfg Pointer to a UART optical interface configuration.
+ */
+void uart_config_optical_interface(Uart *p_uart,
+		struct uart_config_optical *cfg)
+{
+	Assert(p_uart == UART1);
+	uint32_t reg = p_uart->UART_MR;
+
+	reg &= ~(UART_MR_OPT_RXINV | UART_MR_OPT_MDINV | UART_MR_FILTER
+			| UART_MR_OPT_CLKDIV_Msk | UART_MR_OPT_DUTY_Msk
+			| UART_MR_OPT_CMPTH_Msk);
+	reg |= (cfg->rx_inverted ? UART_MR_OPT_RXINV : 0)
+			| (cfg->tx_inverted ? UART_MR_OPT_MDINV : 0)
+			| (cfg->rx_filter ? UART_MR_FILTER : 0)
+			| UART_MR_OPT_CLKDIV(cfg->clk_div)
+			| cfg->duty | cfg->threshold;
+
+	p_uart->UART_MR = reg;
+}
+#endif
 
 //@}
 
