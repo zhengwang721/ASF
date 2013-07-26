@@ -54,6 +54,17 @@ extern "C" {
 /**INDENT-ON**/
 /// @endcond
 
+/** Key used to write SUPC registers */
+#define SUPC_KEY_VALUE          ((uint32_t) 0xA5)
+
+#if (SAM4C)
+#define SUPC_CR_KEY_VALUE    SUPC_CR_KEY_PASSWD
+#define SUPC_MR_KEY_VALUE    SUPC_MR_KEY_PASSWD
+#else
+#define SUPC_CR_KEY_VALUE    SUPC_CR_KEY(SUPC_KEY_VALUE)
+#define SUPC_MR_KEY_VALUE    SUPC_MR_KEY(SUPC_KEY_VALUE)
+#endif
+
 void supc_enable_backup_mode(Supc *p_supc);
 void supc_switch_sclk_to_32kxtal(Supc *p_supc, uint32_t ul_bypass);
 void supc_enable_voltage_regulator(Supc *p_supc);
