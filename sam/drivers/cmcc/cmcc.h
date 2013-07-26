@@ -101,6 +101,7 @@ static inline void cmcc_set_config(Cmcc *const p_cmcc,
 	p_cmcc->CMCC_MCFG = cfg->cmcc_mcfg_mode;
 }
 
+#if SAM4E
 /**
  * \brief Enable Clock gating.
  *
@@ -122,6 +123,7 @@ static inline void cmcc_disable_clock_gating(Cmcc *const p_cmcc)
 {
 	p_cmcc->CMCC_CFG |= CMCC_CFG_GCLKDIS;
 }
+#endif
 
 /**
  * \brief Enable Cache Controller monitor.
