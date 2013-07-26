@@ -44,7 +44,7 @@
 #ifndef CONF_BOARD_H_INCLUDED
 #define CONF_BOARD_H_INCLUDED
 
-/** Enable Com Port. */
+/* Intentionally empty */
 #define CONF_BOARD_UART_CONSOLE
 
 #endif /* CONF_BOARD_H_INCLUDED */

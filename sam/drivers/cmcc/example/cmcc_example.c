@@ -142,15 +142,23 @@ int main(void)
 
 	/* Enable the CMCC module. */
 	cmcc_get_config_defaults(&g_cmcc_cfg);
+#if !SAM4C
 	cmcc_init(CMCC, &g_cmcc_cfg);
 	cmcc_enable(CMCC);
+#else
+        cmcc_init(CMCC0, &g_cmcc_cfg);
+	cmcc_enable(CMCC0);
+#endif
 
 	/* Do the Fibonacci calculation. */
 	recfibo(FIBONACCI_NUM);
 
 	printf("Fibonacci calculation completed \r\n");
+#if !SAM4C
 	printf("Cache Data hit: %ul \r\n", cmcc_get_monitor_cnt(CMCC));
-
+#else
+        printf("Cache Data hit: %ul \r\n", cmcc_get_monitor_cnt(CMCC0));
+#endif
 	while (true) {
 	}
 }
