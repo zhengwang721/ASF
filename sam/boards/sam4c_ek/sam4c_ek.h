@@ -205,11 +205,37 @@
 /** List of all push button definitions. */
 #define PINS_PUSHBUTTONS    {PIN_PUSHBUTTON_1, PIN_PUSHBUTTON_2}
 
+#define CONSOLE_UART      UART0
+#define CONSOLE_UART_ID   ID_UART0
+
 /**
  * \name UART0 pis (UTXD0 and URXD0) definitions
  * @{
  */
-// TBD
+#define PINS_UART0        (PIO_PB4A_URXD0 | PIO_PB5A_UTXD0)
+#define PINS_UART0_FLAGS  (IOPORT_MODE_MUX_A)
+
+#define PINS_UART0_PORT   IOPORT_PIOB
+#define PINS_UART0_MASK   (PIO_PB4A_URXD0 | PIO_PB5A_UTXD0)
+#define PINS_UART0_PIO    PIOB
+#define PINS_UART0_ID     ID_PIOB
+#define PINS_UART0_TYPE   PIO_PERIPH_A
+#define PINS_UART0_ATTR   PIO_DEFAULT
+/* @} */
+
+/**
+ * \name UART1 pis (UTXD1 and URXD1) definitions
+ * @{
+ */
+#define PINS_UART1        (PIO_PC0A_URXD0 | PIO_PC1A_UTXD0)
+#define PINS_UART1_FLAGS  (IOPORT_MODE_MUX_A)
+
+#define PINS_UART1_PORT   IOPORT_PIOC
+#define PINS_UART1_MASK   (PIO_PC0A_URXD0 | PIO_PC1A_UTXD0)
+#define PINS_UART1_PIO    PIOC
+#define PINS_UART1_ID     ID_PIOC
+#define PINS_UART1_TYPE   PIO_PERIPH_A
+#define PINS_UART1_ATTR   PIO_DEFAULT
 /* @} */
 
 /**
