@@ -52,12 +52,12 @@ extern "C" {
 /**INDENT-ON**/
 /* @endcond */
 
-/* Clock Settings (100MHz) */
+/* Clock Settings (120MHz) */
 #define SYS_BOARD_OSCOUNT   (CKGR_MOR_MOSCXTST(0x8U))
-#define SYS_BOARD_PLLBR     (CKGR_PLLBR_MULB(50U) \
+#define SYS_BOARD_PLLBR     (CKGR_PLLBR_MULB(30U) \
 							| CKGR_PLLBR_PLLBCOUNT(0x3fU) \
 							| CKGR_PLLBR_DIVB(2U))
-#define SYS_BOARD_MCKR      (PMC_MCKR_PRES_CLK_2 | PMC_MCKR_CSS_PLLB_CLK)
+#define SYS_BOARD_MCKR      (PMC_MCKR_PRES_CLK_1 | PMC_MCKR_CSS_PLLB_CLK)
 
 #define SYS_CKGR_MOR_KEY_VALUE  CKGR_MOR_KEY_PASSWD /* Key to unlock MOR register */
 

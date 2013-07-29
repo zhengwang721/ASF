@@ -72,7 +72,7 @@
 // ===== PLL1 (B) Options   (Fpll = (Fclk * PLL_mul) / PLL_div)
 // Use mul and div effective values here.
 //#define CONFIG_PLL1_SOURCE          PLLB_SRC_MAINCK_XTAL
-//#define CONFIG_PLL1_MUL             (400000000UL / BOARD_FREQ_MAINCK_XTAL)
+//#define CONFIG_PLL1_MUL             (240000000UL / BOARD_FREQ_MAINCK_XTAL)
 //#define CONFIG_PLL1_DIV             2
 
 // ===== Coprocessor System Clock (CPMCK) Options
@@ -95,14 +95,15 @@
 // ===== Main processor frequency (MCK)
 // - XTAL frequency: 8MHz
 // - System clock source: PLLB
-// - System clock prescaler: 2 (divided by 2)
+// - System clock prescaler: 1 (divided by 1)
 // - PLLB source: XTAL
-// - PLLB output: XTAL * 50 / 2
-// - System clock: 8 * 50 / 2 / 2 = 100MHz
+// - PLLB output: XTAL * 30 / 2
+// - System clock: 8 * 30 / 2 / 1 = 120MHz
 //
 // ===== Coprocessor frequency (CPMCK)
 // - Coprocessor system clock source: MCK
 // - Coprocessor system clock prescaler: 1 (divided by 1)
-// - Coprocessor system clock: 100MHz / 1 = 100MHz
+// - Coprocessor system clock: 120MHz / 1 = 120MHz
+
 
 #endif /* CONF_CLOCK_H_INCLUDED */
