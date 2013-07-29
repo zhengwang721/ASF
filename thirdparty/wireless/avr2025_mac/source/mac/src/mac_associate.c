@@ -125,7 +125,12 @@ void mac_gen_mlme_associate_conf(buffer_t *buf_ptr,
  *
  * @param m Pointer to MLME association request parameters
  */
+#ifdef __ALIGNED_ACCESS__
+void mlme_associate_request(uint32_t *m)
+#else
 void mlme_associate_request(uint8_t *m)
+#endif
+
 {
 	mlme_associate_req_t mar;
 	memcpy(&mar, BMM_BUFFER_POINTER((buffer_t *)m),
@@ -133,10 +138,10 @@ void mlme_associate_request(uint8_t *m)
 
 	/*
 	 * Store the buffer which was received from the NHLE as it will be
-	 *reused
+	 * reused
 	 * while sending MLME association confirmation to the NHLE.
 	 */
-	mac_conf_buf_ptr = m;
+	mac_conf_buf_ptr = m; //@mathi-w
 
 #ifndef REDUCED_PARAM_CHECK
 	if ((FCF_SHORT_ADDR != mar.CoordAddrMode) &&
@@ -174,6 +179,7 @@ void mlme_associate_request(uint8_t *m)
 
 #if (_DEBUG_ > 0)
 	Assert(MAC_SUCCESS == set_status);
+	set_status = set_status; //Keep Compiler Happy
 #endif
 
 	mac_trx_wakeup();
@@ -391,7 +397,11 @@ void mac_process_associate_request(buffer_t *assoc_req)
  *
  * @param m Pointer to association response parameters
  */
-void mlme_associate_response(uint8_t *m)
+#ifdef __ALIGNED_ACCESS__
+ void mlme_associate_response(uint32_t *m)
+#else
+ void mlme_associate_response(uint8_t *m)
+#endif 
 {
 	uint8_t frame_len;
 	uint8_t *frame_ptr;
@@ -551,6 +561,7 @@ void mac_process_associate_response(buffer_t *assoc_resp)
 
 #if (_DEBUG_ > 0)
 		Assert(MAC_SUCCESS == set_status);
+		set_status = set_status;
 #endif
 		short_addr
 			= mac_parse_data.mac_payload_data.assoc_response_data.
@@ -581,7 +592,9 @@ void mac_process_associate_response(buffer_t *assoc_resp)
 		Assert(MAC_SUCCESS == set_status);
 #endif
 		mac_pib.mac_CoordShortAddress = macCoordShortAddress_def;
-		mac_pib.mac_CoordExtendedAddress = CLEAR_ADDR_64;
+		memset((uint8_t *)&mac_pib.mac_CoordExtendedAddress, 0, 
+		        sizeof(mac_pib.mac_CoordExtendedAddress));
+		//mac_pib.mac_CoordExtendedAddress = CLEAR_ADDR_64;	//@mathi-long
 
 		short_addr = INVALID_SHORT_ADDRESS;
 	}
@@ -703,9 +716,12 @@ void mac_t_assocresponsetime_cb(void *callback_parameter)
 
 #if (_DEBUG_ > 0)
 	Assert(MAC_SUCCESS == set_status);
+	set_status = set_status;
 #endif
 	mac_pib.mac_CoordShortAddress = macCoordShortAddress_def;
-	mac_pib.mac_CoordExtendedAddress = CLEAR_ADDR_64;
+	memset((uint8_t *)&mac_pib.mac_CoordExtendedAddress, 0,
+			sizeof(mac_pib.mac_CoordExtendedAddress));
+	//mac_pib.mac_CoordExtendedAddress = CLEAR_ADDR_64;	 //@mathi-long
 
 	/* Set radio to sleep if allowed */
 	mac_sleep_trans();

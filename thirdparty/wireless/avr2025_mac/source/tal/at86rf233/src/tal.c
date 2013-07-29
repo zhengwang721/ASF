@@ -587,8 +587,8 @@ tal_trx_status_t set_trx_state(trx_cmd_t trx_cmd)
 	}
 
 	do {
-		tal_trx_status = (tal_trx_status_t)pal_trx_bit_read(
-				SR_TRX_STATUS);
+		tal_trx_status = /* (tal_trx_status_t) */ pal_trx_bit_read(
+				SR_TRX_STATUS);//@mathi-w
 	} while (tal_trx_status == STATE_TRANSITION_IN_PROGRESS);
 
 	return tal_trx_status;

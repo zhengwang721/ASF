@@ -413,7 +413,7 @@ void handle_tx_end_irq(bool underrun_occured)
 		if (underrun_occured) {
 			trx_trac_status = TRAC_INVALID;
 		} else {
-			trx_trac_status = (trx_trac_status_t)pal_trx_bit_read(
+			trx_trac_status = /*(trx_trac_status_t)*/pal_trx_bit_read(
 					SR_TRAC_STATUS);
 		}
 

@@ -62,7 +62,6 @@
 #else
 #include "ioport.h"
 #endif
-#include "pal.h"
 /* === Macros =============================================================== */
 
 /**
@@ -119,10 +118,10 @@
 //#endif
 
 /* Wait for 1 us. */
-//#define PAL_WAIT_1_US()               delay_us(1); 
+//#define PAL_WAIT_1_US()               delay_us(1);
 
 /* Wait for 65 ns. */
-//#define  PAL_WAIT_65_NS()  {nop(); nop();} 
+//#define  PAL_WAIT_65_NS()  {nop(); nop();}
 
 /**
  * This macro is used for handling endianness among the different CPUs.
@@ -137,15 +136,15 @@
 //#define ENABLE_GLOBAL_IRQ()                  Enable_global_interrupt()
 
 /* Disables the global interrupt */
-//#define DISABLE_GLOBAL_IRQ()                 Disable_global_interrupt() 
+//#define DISABLE_GLOBAL_IRQ()                 Disable_global_interrupt()
 
 /* This macro saves the global interrupt status */
-//#define ENTER_CRITICAL_REGION()              {uint8_t flags = cpu_irq_save(); 
+//#define ENTER_CRITICAL_REGION()              {uint8_t flags = cpu_irq_save();
 
 /* This macro restores the global interrupt status */
-//#define LEAVE_CRITICAL_REGION()              cpu_irq_restore(flags);} 
+//#define LEAVE_CRITICAL_REGION()              cpu_irq_restore(flags);}
 
-//#define STACK_FLASH_SIZE (1024) 
+//define STACK_FLASH_SIZE (1024)
 
 
 /* === Types =============================================================== */
@@ -153,7 +152,7 @@
 /*
  * The smallest timeout in microseconds
  */
-//#define MIN_TIMEOUT                     (0x80) 
+//#define MIN_TIMEOUT                     (0x80)
 
 
 
@@ -180,9 +179,6 @@ extern "C" {
     /** Macro to get the transceiver's main IRQ status */
 #define PAL_TRX_IRQ_HIGH()              IRQ_PINGET()
 
-#ifdef __SAMD20J18__
-void AT86RFX_ISR(uint32_t ) ;
-#endif
     /**
      * @brief Reads frame buffer of the transceiver
      *

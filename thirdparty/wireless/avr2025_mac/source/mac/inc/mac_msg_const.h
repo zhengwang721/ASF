@@ -52,13 +52,18 @@
 #define MAC_MSG_CONST_H
 
 /* === Includes ============================================================= */
+#include <stdint.h>
+#include <stdbool.h>
 
+//#include "stack_config.h"
 /* === Macros =============================================================== */
 
 /**
  * \addtogroup group_mac_def
  * @{
  */
+
+#define MAC                                 (4)
 
 /**
  * This type contains the service primitives of the PHY-, MAC- and Network-layer
@@ -107,8 +112,7 @@ enum msg_code {
 	MLME_RX_ENABLE_CONFIRM              = (0x21),
 	MLME_START_CONFIRM                  = (0x22),
 	MLME_POLL_CONFIRM                   = (0x23)
-}
-SHORTENUM;
+}SHORTENUM COMPILER_WORD_ALIGNED;
 
 /**
  * Bump this when extending the list!

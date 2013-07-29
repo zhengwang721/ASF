@@ -98,13 +98,11 @@
 #include <stdio.h>
 #include "conf_board.h"
 #include "avr2025_mac.h"
-#ifdef __SAMD20J18__
-#include "system.h"
-#endif
+//#include "led.h" siva
 #include "delay.h"
 #include "common_sw_timer.h"
 #include "sio2host.h"
-#include "ioport.h"
+//#include "ioport.h" siva
 #include <asf.h>
 /* === TYPES =============================================================== */
 
@@ -133,7 +131,7 @@ typedef enum coord_state_tag {
 /** Defines the maximum number of devices this coordinator will handle. */
 #define MAX_NUMBER_OF_DEVICES           (100)
 
-#define CHANNEL_OFFSET                  (0)
+#define CHANNEL_OFFSET                  (1)
 
 #define SCAN_CHANNEL                    (1ul << current_channel)
 
@@ -260,17 +258,17 @@ static void app_alert(void);
 int main(void)
 {
 	irq_initialize_vectors();
-	#ifdef __SAMD20J18__
-	system_init();
-	delay_init();
-	#else
-	sysclk_init();
+	//sysclk_init();
 
 	/* Initialize the board.
 	 * The board-specific conf_board.h file contains the configuration of
 	 * the board initialization.
 	 */
-	board_init();
+	//board_init();
+	system_init();
+	delay_init();
+	#ifdef SIO_HUB
+		sio2host_init();
 	#endif
 	sw_timer_init();
 
@@ -288,7 +286,7 @@ int main(void)
 #ifdef SIO_HUB
 	/* Initialize the serial interface used for communication with terminal
 	 *program. */
-	sio2host_init();
+	//sio2host_init(); siva
 
 	/* To make sure the Hyper Terminal Connected to the system*/
 	sio2host_getchar();
@@ -339,9 +337,12 @@ int main(void)
  * @param msduHandle  Handle of MSDU handed over to MAC earlier
  * @param status      Result for requested data transmission request
  * @param Timestamp   The time, in symbols, at which the data were transmitted
- *                    (only if timestamping is enabled).
+ *                    (only if time stamping is enabled).
  *
  */
+#ifdef SIO_HUB
+const char Dispaly_Result_Frame[] = "Result frame with handle %u : ";
+#endif
 void usr_mcps_data_conf(uint8_t msduHandle,
 		uint8_t status,
 		uint32_t Timestamp)
@@ -351,10 +352,11 @@ void usr_mcps_data_conf(uint8_t msduHandle,
 #endif  /* ENABLE_TSTAMP */
 {
 #ifdef SIO_HUB
-	char sio_array[255];
+	/* char sio_array[255];
 
 	sprintf(sio_array, "Result frame with handle %" PRIu8 ": ", msduHandle);
-	printf(sio_array);
+	printf((const char *)sio_array); */
+	printf(Dispaly_Result_Frame, msduHandle);
 #endif
 
 	/*Led_data is turned off after the confirmation*/
@@ -398,6 +400,9 @@ void usr_mcps_data_conf(uint8_t msduHandle,
  * @param Timestamp        The time, in symbols, at which the data were received
  *                         (only if timestamping is enabled).
  */
+#ifdef SIO_HUB
+ const char Display_Rx_Frame_Address[] = "Rx frame from Device Address-%u: ";
+#endif
 void usr_mcps_data_ind(wpan_addr_spec_t *SrcAddrSpec,
 		wpan_addr_spec_t *DstAddrSpec,
 		uint8_t msduLength,
@@ -413,15 +418,17 @@ void usr_mcps_data_ind(wpan_addr_spec_t *SrcAddrSpec,
 #ifdef SIO_HUB
 	char sio_array[255];
 
-	sprintf(sio_array, "Rx frame from Device Addr%" PRIx16 ": ", LE16_TO_CPU_ENDIAN(
+	/*sprintf(sio_array, "Rx frame from Device Addr%" PRIx16 ": ", LE16_TO_CPU_ENDIAN(
 			SrcAddrSpec->Addr.short_address));
-	printf(sio_array);
-
-	for (uint8_t i = 0; i < msduLength; i++) {
-		sio_array[i] = msdu[i];
+	printf(sio_array); */
+	printf(Display_Rx_Frame_Address, LE16_TO_CPU_ENDIAN(
+	        SrcAddrSpec->Addr.short_address));
+     
+	for (uint8_t i = 0; i < msduLength; i++) {		
+		sio_array[i] = (char)msdu[i];
 	}
 	sio_array[msduLength] = '\0';
-	printf(sio_array);
+	printf(sio_array);	
 	printf("\r\n");
 #endif
 
@@ -950,11 +957,14 @@ void usr_mlme_sync_loss_ind(uint8_t LossReason,
  * @brief Application specific function to assign a short address
  *
  */
+#ifdef SIO_HUB
+const char Display_Associated_Device[] = "Device %u associated\r\n";
+#endif
 static bool assign_new_short_addr(uint64_t addr64, uint16_t *addr16)
 {
 	uint8_t i;
 #ifdef SIO_HUB
-	char sio_array[255];
+	/*char sio_array[255];*/
 #endif
 
 	/* Check if device has been associated before */
@@ -984,9 +994,10 @@ static bool assign_new_short_addr(uint64_t addr64, uint16_t *addr16)
 			                                    * address */
 			no_of_assoc_devices++;
 #ifdef SIO_HUB
-			sprintf(sio_array, "Device %" PRIu8 " associated\r\n",
+			/*sprintf(sio_array, "Device %" PRIu8 " associated\r\n",
 					i + 1);
-			printf(sio_array);
+			printf(sio_array); */
+			printf(Display_Associated_Device, (i + 1));
 #endif
 			return true;
 		}
@@ -1042,16 +1053,18 @@ static void app_alert(void)
  *                  (not used in this application, but could be used
  *                  to indicated LED to be switched off)
  */
+#ifdef SIO_HUB
+const char Diaplay_Broadcast_Tx_Count[] = "Broadcast frame Tx count:  %lu\r\n";
+#endif
 static void bc_data_cb(void *parameter)
 {
 	/* Store the current MSDU handle to be used for a broadcast data frame.
 	 **/
-	static uint8_t curr_msdu_handle;
 	uint8_t src_addr_mode;
 	wpan_addr_spec_t dst_addr;
 	uint8_t payload;
 #ifdef SIO_HUB
-	char sio_array[255];
+	/*char sio_array[255];*/
 #endif
 
 	/*
@@ -1080,12 +1093,14 @@ static void bc_data_cb(void *parameter)
 	tx_cnt++;
 
 #ifdef SIO_HUB
-	sprintf(sio_array, "Broadcast frame Tx count:  %" PRIu32 "\r\n",
+	/*sprintf(sio_array, "Broadcast frame Tx count:  %" PRIu32 "\r\n",
 			tx_cnt);
-	printf(sio_array);
+	printf(sio_array);*/
+	printf(Diaplay_Broadcast_Tx_Count, tx_cnt);
+	
 #endif
 
-	/* The transmission is direct, but without acknowledgement. */
+	/* The transmission is direct, but without acknowledgment. */
 	if (wpan_mcps_data_req(src_addr_mode,
 			&dst_addr,
 			1,     /* One octet */
@@ -1118,6 +1133,10 @@ static void bc_data_cb(void *parameter)
  *                  (not used in this application, but could be used
  *                  to indicated LED to be switched off)
  */
+#ifdef SIO_HUB
+const char Display_Queue_Device_Data[] = "Queue data for device %u ";
+const char Display_MSDU_Handle[] = "(MSDU handle:  %u)\r\n";
+#endif
 static void indirect_data_cb(void *parameter)
 {
 	uint8_t cur_device;
@@ -1125,15 +1144,16 @@ static void indirect_data_cb(void *parameter)
 	wpan_addr_spec_t dst_addr;
 	uint8_t payload;
 #ifdef SIO_HUB
-	char sio_array[255];
+	/*char sio_array[255];*/
 #endif
 
 	/* Loop over all associated devices. */
 	for (cur_device = 0; cur_device < no_of_assoc_devices; cur_device++) {
 #ifdef SIO_HUB
-		sprintf(sio_array, "Queue data for device %" PRIu8 " ",
+		/*sprintf(sio_array, "Queue data for device %" PRIu8 " ",
 				cur_device + 1);
-		printf(sio_array);
+		printf(sio_array);*/
+		printf(Display_Queue_Device_Data, (cur_device + 1));
 #endif
 
 		/*
@@ -1152,9 +1172,10 @@ static void indirect_data_cb(void *parameter)
 		curr_msdu_handle++; /* Increment handle */
 
 #ifdef SIO_HUB
-		sprintf(sio_array, "(MSDU handle:  %" PRIu8 ")\r\n",
+		/*sprintf(sio_array, "(MSDU handle:  %" PRIu8 ")\r\n",
 				curr_msdu_handle);
-		printf(sio_array);
+		printf(sio_array);*/
+		printf(Display_MSDU_Handle, curr_msdu_handle);
 #endif
 
 		if (!wpan_mcps_data_req(src_addr_mode,

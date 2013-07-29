@@ -74,21 +74,21 @@ typedef struct mac_beacon_payload_tag {
 	uint8_t *pending_addr_list;
 	uint8_t beacon_payload_len;
 	uint8_t *beacon_payload;
-} mac_beacon_payload_t;
+} mac_beacon_payload_t COMPILER_WORD_ALIGNED;//@mathi
 
 /**
  * Data Payload type
  */
 typedef struct mac_data_payload_tag {
 	uint8_t *payload;
-} mac_data_payload_t;
+} mac_data_payload_t COMPILER_WORD_ALIGNED;//@mathi
 
 /**
  * Association Request type
  */
 typedef struct mac_assoc_req_tag {
 	uint8_t capability_info;
-} mac_assoc_req_t;
+} mac_assoc_req_t COMPILER_WORD_ALIGNED;//@mathi
 
 /**
  * Association Response type
@@ -96,14 +96,14 @@ typedef struct mac_assoc_req_tag {
 typedef struct mac_assoc_response_tag {
 	uint16_t short_addr;
 	uint8_t assoc_status;
-} mac_assoc_response_t;
+} mac_assoc_response_t COMPILER_WORD_ALIGNED;//@mathi
 
 /**
  * Disassociation Request type
  */
 typedef struct mac_disassoc_req_tag {
 	uint8_t disassoc_reason;
-} mac_disassoc_req_t;
+} mac_disassoc_req_t COMPILER_WORD_ALIGNED;//@mathi
 
 /**
  * Coordinator Realignment type
@@ -114,7 +114,7 @@ typedef struct mac_coord_realign_tag {
 	uint8_t logical_channel;
 	uint16_t short_addr;
 	uint8_t channel_page;
-} mac_coord_realign_t;
+} mac_coord_realign_t COMPILER_WORD_ALIGNED;//@mathi
 
 /**
  * General Command frame payload type
@@ -126,7 +126,7 @@ typedef union {
 	mac_assoc_response_t assoc_response_data;
 	mac_disassoc_req_t disassoc_req_data;
 	mac_coord_realign_t coord_realign_data;
-} frame_payload_t;
+} frame_payload_t COMPILER_WORD_ALIGNED;//@mathi
 
 /**
  * Structure containing auxiliary security header information
@@ -135,7 +135,7 @@ typedef struct sec_ctrl_tag {
 	uint8_t sec_level : 3;
 	uint8_t key_id_mode : 2;
 	uint8_t /* reserved */ : 3;
-} sec_ctrl_t;
+} sec_ctrl_t COMPILER_WORD_ALIGNED;//@mathi
 
 typedef struct parse_tag {
 	uint16_t fcf;
@@ -166,7 +166,7 @@ typedef struct parse_tag {
 #endif  /* #if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP) */
 	uint8_t mac_payload_length; /* Length of the MAC payload without FCS */
 	frame_payload_t mac_payload_data;
-} parse_t;
+} parse_t COMPILER_WORD_ALIGNED;//@mathi
 /* ! @} */
 /* === Externals ============================================================ */
 

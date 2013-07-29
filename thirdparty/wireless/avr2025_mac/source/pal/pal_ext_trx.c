@@ -70,10 +70,12 @@ struct spi_device SPI_AT86RFX_DEVICE = {
 #endif
 
 #ifdef __SAMD20J18__
-void AT86RFX_ISR(uint32_t i) 
+void AT86RFX_ISR(uint32_t i);
+void AT86RFX_ISR(uint32_t i)
 #else
 AT86RFX_ISR()
 #endif
+ 
 {
     /*Clearing the RF interrupt*/
     pal_trx_irq_flag_clr();
@@ -94,7 +96,7 @@ void pal_spi_init(void)
         spi_attach_slave(&slave, &slave_dev_config);
         spi_get_config_defaults(&config);
         config.mux_setting = EXT2_SPI_SERCOM_MUX_SETTING;
-		config.mode_specific.master.baudrate = AT86RFX_SPI_BAUDRATE;
+	  config.master.baudrate = AT86RFX_SPI_BAUDRATE;
         config.pinmux_pad0 = PINMUX_PA16C_SERCOM1_PAD0; //SPI MISO
         config.pinmux_pad1 = PINMUX_UNUSED;
         config.pinmux_pad2 = PINMUX_PA18C_SERCOM1_PAD2; //SPI MOSI
@@ -113,12 +115,7 @@ void pal_spi_init(void)
 
 uint8_t pal_trx_reg_read(uint8_t addr)
 {
-  
-  #ifdef __SAMD20J18__
 	uint16_t register_value = 0;
-#else
-    uint8_t register_value = 0;
-#endif
 
 	/*Saving the current interrupt status & disabling the global interrupt */
 	ENTER_CRITICAL_REGION();
@@ -245,13 +242,12 @@ void pal_trx_bit_write(uint8_t reg_addr, uint8_t mask, uint8_t pos, uint8_t new_
 
 void pal_trx_frame_read(uint8_t *data, uint8_t length)
 {
-	
+	uint16_t temp;
 
 	/*Saving the current interrupt status & disabling the global interrupt */
 	ENTER_CRITICAL_REGION();
 
 #ifdef __SAMD20J18__
-    uint16_t temp;
         /* Start SPI transaction by pulling SEL low */
 	spi_select_slave(&master, &slave, true);
 
@@ -279,7 +275,6 @@ void pal_trx_frame_read(uint8_t *data, uint8_t length)
 	/* Stop the SPI transaction by setting SEL high */
 	spi_select_slave(&master, &slave, false);
 #else
-    uint8_t temp;
 	/* Start SPI transaction by pulling SEL low */
 	spi_select_device(AT86RFX_SPI, &SPI_AT86RFX_DEVICE);
 
@@ -431,14 +426,13 @@ void pal_trx_sram_write(uint8_t addr, uint8_t *data, uint8_t length)
  */
 void pal_trx_sram_read(uint8_t addr, uint8_t *data, uint8_t length)
 {
-    
+    uint16_t temp;
 
     PAL_WAIT_1_US();  // wap_rf4ce
 
     /*Saving the current interrupt status & disabling the global interrupt */
     ENTER_CRITICAL_REGION();
 #ifdef __SAMD20J18__
-    uint16_t temp;
     /* Start SPI transaction by pulling SEL low */
     spi_select_slave(&master, &slave, true);
 
@@ -475,7 +469,6 @@ void pal_trx_sram_read(uint8_t addr, uint8_t *data, uint8_t length)
     /* Stop the SPI transaction by setting SEL high */
     spi_select_slave(&master, &slave, false);
 #else
-    uint8_t temp;
     /* Start SPI transaction by pulling SEL low */
     spi_select_device(AT86RFX_SPI, &SPI_AT86RFX_DEVICE);
 
@@ -514,6 +507,9 @@ void pal_trx_sram_read(uint8_t addr, uint8_t *data, uint8_t length)
 void pal_trx_aes_wrrd(uint8_t addr, uint8_t *idata, uint8_t length)
 {
     uint8_t *odata;
+#ifdef __ALIGNED_ACCESS__
+	uint16_t odata_var = 0;
+#endif
     uint8_t temp;
 
 
@@ -567,7 +563,13 @@ void pal_trx_aes_wrrd(uint8_t addr, uint8_t *idata, uint8_t length)
         spi_write(&master,*idata++);
         while(!spi_is_write_complete(&master));
         while(!spi_is_ready_to_read(&master));
+		
+#ifdef __ALIGNED_ACCESS__
+       spi_read(&master, &odata_var);
+	   *odata++ = (uint8_t)odata_var;	    //@mathi   
+#else		
         spi_read(&master, (uint16_t*)odata++);
+#endif		
         length--;
     }
 
@@ -576,7 +578,12 @@ void pal_trx_aes_wrrd(uint8_t addr, uint8_t *idata, uint8_t length)
 	spi_write(&master,0);
 	while(!spi_is_write_complete(&master));
 	while(!spi_is_ready_to_read(&master));
-	spi_read(&master, (uint16_t*)odata);
+#ifdef __ALIGNED_ACCESS__
+    spi_read(&master, &odata_var);
+    *odata = (uint8_t)odata_var;	    //@mathi
+#else
+    spi_read(&master, (uint16_t*)odata);
+#endif
 
     /* Stop the SPI transaction by setting SEL high */
     spi_select_slave(&master, &slave, false);

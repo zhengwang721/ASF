@@ -596,7 +596,7 @@ void sw_timer_service(void)
 
 		/* Expired timer if any will be processed here */
 		while (NO_TIMER != expired_timer_queue_head) {
-			uint8_t flags = cpu_irq_save();
+			  flags = cpu_irq_save();
 
 			next_expired_timer
 				= timer_array[expired_timer_queue_head].

@@ -59,6 +59,11 @@
 #include "ieee_const.h"
 #include "app_config.h"
 
+
+#define BUILD_BUG_ON(condition) ((void)sizeof(uint8_t[1 - 2*!!(condition)]))
+
+#define UNALIGNED_BUG_ON(data_struct) BUILD_BUG_ON(data_struct % 4)
+
 #if (TOTAL_NUMBER_OF_BUFS > 0)
 
 /*
@@ -84,19 +89,49 @@
 #endif
 
 /* === Globals ============================================================= */
-
+/* definition to expand macro then apply to pragma message */
+#define VALUE_TO_STRING(x) #x
+#define VALUE(x) VALUE_TO_STRING(x)
+#define VAR_NAME_VALUE(var) #var "="  VALUE(var)
 /**
  * Common Buffer pool holding the buffer user area
  */
-#if (TOTAL_NUMBER_OF_SMALL_BUFS > 0)
-static uint8_t buf_pool[(TOTAL_NUMBER_OF_LARGE_BUFS * LARGE_BUFFER_SIZE) +
-(TOTAL_NUMBER_OF_SMALL_BUFS * SMALL_BUFFER_SIZE)];
+
+#ifdef __ALIGNED_ACCESS__    //@mathi-align
+	#if (TOTAL_NUMBER_OF_SMALL_BUFS > 0)  
+	static uint32_t buf_pool[(((TOTAL_NUMBER_OF_LARGE_BUFS * LARGE_BUFFER_SIZE) +
+	(TOTAL_NUMBER_OF_SMALL_BUFS * SMALL_BUFFER_SIZE)))];//@mathi-b
+
+	#pragma message(VAR_NAME_VALUE((TOTAL_NUMBER_OF_LARGE_BUFS * LARGE_BUFFER_SIZE) + \
+	(TOTAL_NUMBER_OF_SMALL_BUFS * SMALL_BUFFER_SIZE)))
+	#else
+	static uint32_t buf_pool[((TOTAL_NUMBER_OF_LARGE_BUFS * LARGE_BUFFER_SIZE))];//@mathi-b
+	#pragma message(VAR_NAME_VALUE(TOTAL_NUMBER_OF_LARGE_BUFS))
+	#pragma message(VAR_NAME_VALUE(LARGE_BUFFER_SIZE))
+	#endif
 #else
-static uint8_t buf_pool[(TOTAL_NUMBER_OF_LARGE_BUFS * LARGE_BUFFER_SIZE)];
+	#if (TOTAL_NUMBER_OF_SMALL_BUFS > 0)  
+	static uint8_t buf_pool[(TOTAL_NUMBER_OF_LARGE_BUFS * LARGE_BUFFER_SIZE) +
+	(TOTAL_NUMBER_OF_SMALL_BUFS * SMALL_BUFFER_SIZE)];
+
+	#pragma message(VAR_NAME_VALUE((TOTAL_NUMBER_OF_LARGE_BUFS * LARGE_BUFFER_SIZE) + \
+	(TOTAL_NUMBER_OF_SMALL_BUFS * SMALL_BUFFER_SIZE)))	 
+	#else
+	static uint8_t buf_pool[(TOTAL_NUMBER_OF_LARGE_BUFS * LARGE_BUFFER_SIZE)];
+	#pragma message(VAR_NAME_VALUE(TOTAL_NUMBER_OF_LARGE_BUFS))
+	#pragma message(VAR_NAME_VALUE(LARGE_BUFFER_SIZE))
+	#endif
 #endif
 
+
+
+
+
+
+
 /*
- * Array of buffer headers
+ * Array of buffer head
+}
  */
 static buffer_t buf_header[TOTAL_NUMBER_OF_LARGE_BUFS +
 TOTAL_NUMBER_OF_SMALL_BUFS];
@@ -129,6 +164,8 @@ static queue_t free_small_buffer_q;
 void bmm_buffer_init(void)
 {
 	uint8_t index;
+
+	UNALIGNED_BUG_ON(sizeof(buf_pool));
 
 	/* Initialize free buffer queue for large buffers */
 #if (TOTAL_NUMBER_OF_LARGE_BUFS > 0)

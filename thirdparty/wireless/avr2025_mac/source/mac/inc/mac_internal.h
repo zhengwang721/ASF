@@ -147,7 +147,7 @@ typedef enum mac_state_tag {
 
 	/** PAN coordinator successfully started */
 	MAC_PAN_COORD_STARTED = 3
-} SHORTENUM mac_state_t;
+} SHORTENUM mac_state_t COMPILER_WORD_ALIGNED;//@mathi
 
 /**
  * MAC poll states.
@@ -178,7 +178,7 @@ typedef enum mac_poll_state_tag {
 	 * data frame),
 	 * awaiting data response, */
 	MAC_POLL_IMPLICIT
-} SHORTENUM mac_poll_state_t;
+} SHORTENUM mac_poll_state_t COMPILER_WORD_ALIGNED;//@mathi
 
 /**
  * Device or coordinator scan states.
@@ -198,7 +198,7 @@ typedef enum mac_scan_state_tag {
 	MAC_SCAN_ORPHAN,
 	/** Passive scan proceeding */
 	MAC_SCAN_PASSIVE
-} SHORTENUM mac_scan_state_t;
+} SHORTENUM mac_scan_state_t COMPILER_WORD_ALIGNED;//@mathi
 
 /**
  * Device or coordinator sync states.
@@ -217,7 +217,7 @@ typedef enum mac_sync_state_tag {
 	 * synchronization with desired network
 	 */
 	MAC_SYNC_BEFORE_ASSOC
-} SHORTENUM mac_sync_state_t;
+} SHORTENUM mac_sync_state_t COMPILER_WORD_ALIGNED;//@mathi
 
 /**
  * MAC sleep state type.
@@ -227,10 +227,10 @@ typedef enum mac_radio_sleep_state_tag {
 	RADIO_AWAKE = 0,
 	/**< Radio is in sleep mode */
 	RADIO_SLEEPING
-} SHORTENUM mac_radio_sleep_state_t;
+} SHORTENUM mac_radio_sleep_state_t COMPILER_WORD_ALIGNED;//@mathi
 
 /* ! @} */
-typedef void (*handler_t)(uint8_t *);
+typedef void (*handler_t)(uint32_t *);
 
 /**
  * \addtogroup group_mac_ds
@@ -399,19 +399,28 @@ typedef struct mac_pib_tag {
 	 */
 	uint8_t privateVirtualPANs;
 #endif /* TEST_HARNESS */
-} mac_pib_t;
+} mac_pib_t COMPILER_WORD_ALIGNED;//@mathi
 /* ! @} */
 /* === Externals ============================================================ */
 
 /* Global data variables */
-extern uint8_t *mac_conf_buf_ptr;
+#ifdef __ALIGNED_ACCESS__
+ extern uint32_t *mac_conf_buf_ptr; //@mathi
+#else
+ extern uint8_t *mac_conf_buf_ptr;
+#endif
+ 
 #ifdef BEACON_SUPPORT
 extern uint8_t mac_final_cap_slot;
 extern bool mac_bc_data_indicated;
 #endif  /* BEACON_SUPPORT */
 
 #if (MAC_SCAN_SUPPORT == 1)
-extern uint8_t *mac_scan_cmd_buf_ptr;
+#ifdef __ALIGNED_ACCESS__
+ extern uint32_t *mac_scan_cmd_buf_ptr;
+#else
+ extern uint8_t *mac_scan_cmd_buf_ptr;
+#endif 
 extern uint8_t mac_scan_orig_channel;
 extern uint8_t mac_scan_orig_page;
 #if ((MAC_SCAN_ACTIVE_REQUEST_CONFIRM == 1) || \
@@ -586,7 +595,11 @@ void mac_process_orphan_notification(buffer_t *buf_ptr);
 
 #endif /* (MAC_ORPHAN_INDICATION_RESPONSE == 1) */
 
-void mac_process_tal_data_ind(uint8_t *msg);
+#ifdef __ALIGNED_ACCESS__				  //@mathi-align
+ void mac_process_tal_data_ind(uint32_t *msg);
+#else
+ void mac_process_tal_data_ind(uint8_t *msg);
+#endif
 
 void mac_sleep_trans(void);
 
@@ -654,7 +667,11 @@ void mac_t_tracking_beacons_cb(void *callback_parameter);
 
 #endif /* (MAC_SYNC_REQUEST == 1) */
 
-void dispatch_event(uint8_t *event);
+#ifdef __ALIGNED_ACCESS__
+ void dispatch_event(uint32_t *event);
+#else
+ void dispatch_event(uint8_t *event);
+#endif
 
 retval_t set_tal_pib_internal(uint8_t attribute, pib_value_t *attribute_value);
 

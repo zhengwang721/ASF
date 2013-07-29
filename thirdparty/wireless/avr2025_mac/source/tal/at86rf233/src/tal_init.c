@@ -52,6 +52,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
+#include <string.h>
 #include "pal.h"
 #include "return_val.h"
 #include "tal.h"
@@ -209,8 +210,10 @@ retval_t tal_init(void)
 	 * rare case that such an address is randomly
 	 * generated again, we must repeat this.
 	 */
+	uint64_t invalid_ieee_address;
+	memset((uint8_t *)&invalid_ieee_address, 0xFF, 8);
 	while ((tal_pib.IeeeAddress == 0x0000000000000000) ||
-			(tal_pib.IeeeAddress == 0xFFFFFFFFFFFFFFFF)) {
+			(tal_pib.IeeeAddress == invalid_ieee_address)) {
 		/*
 		 * In case no valid IEEE address is available, a random
 		 * IEEE address will be generated to be able to run the
@@ -226,13 +229,13 @@ retval_t tal_init(void)
 		uint8_t *ptr_pib = (uint8_t *)&tal_pib.IeeeAddress;
 
 		for (uint8_t i = 0; i < 8; i++) {
-			*ptr_pib++ = (uint8_t)rand();
+			*ptr_pib++ = rand(); //@mathi
 
 			/*
 			 * Note:
 			 * Even if casting the 16 bit rand value back to 8 bit,
 			 * and running the loop 8 timers (instead of only 4
-			 *times)
+			 * times)
 			 * may look cumbersome, it turns out that the code gets
 			 * smaller using 8-bit here.
 			 * And timing is not an issue at this place...
@@ -259,7 +262,7 @@ retval_t tal_init(void)
 #endif
 
 	/* Initialize the buffer management module and get a buffer to store
-	 *reveived frames. */
+	 *received frames. */
 	bmm_buffer_init();
 	tal_rx_buffer = bmm_buffer_alloc(LARGE_BUFFER_SIZE);
 #if _DEBUG_ > 0
@@ -333,7 +336,7 @@ static retval_t trx_init(void)
 		/* Wait a short time interval. */
 		pal_timer_delay(TRX_POLL_WAIT_TIME_US);
 
-		trx_status = (tal_trx_status_t)pal_trx_bit_read(SR_TRX_STATUS);
+		trx_status = /*(tal_trx_status_t)*/pal_trx_bit_read(SR_TRX_STATUS);//@mathi-w
 
 		/* Wait not more than max. value of TR15. */
 		if (poll_counter == P_ON_TO_TRX_OFF_ATTEMPTS) {
@@ -461,9 +464,9 @@ void trx_config(void)
 #endif  /* ANTENNA_DIVERSITY */
 #if (DISABLE_TSTAMP_IRQ == 0)
 #if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP)
-	/* Enable Rx timestamping */
+	/* Enable Rx time stamping */
 	pal_trx_bit_write(SR_IRQ_2_EXT_EN, RX_TIMESTAMPING_ENABLE);
-	/* Enable Tx timestamping */
+	/* Enable Tx time stamping */
 	pal_trx_bit_write(SR_ARET_TX_TS_EN, TX_ARET_TIMESTAMPING_ENABLE);
 #endif  /* #if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP) */
 #endif
@@ -516,7 +519,7 @@ static retval_t trx_reset(void)
 		/* Wait a short time interval. */
 		pal_timer_delay(TRX_POLL_WAIT_TIME_US);
 
-		trx_status = (tal_trx_status_t)pal_trx_bit_read(SR_TRX_STATUS);
+		trx_status = /*(tal_trx_status_t)*/pal_trx_bit_read(SR_TRX_STATUS);//@mathi-w
 
 		/* Wait not more than max. value of TR2. */
 		if (poll_counter == SLEEP_TO_TRX_OFF_ATTEMPTS) {

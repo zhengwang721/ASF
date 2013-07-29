@@ -137,7 +137,7 @@ COMPILER_PACK_SET(1)
 typedef union {
 	uint16_t short_address;
 	uint64_t long_address;
-} address_field_t;
+} address_field_t;//@mathi
 
 /**
  * \addtogroup group_mac_ds
@@ -169,7 +169,7 @@ typedef struct wpan_addr_spec_tag {
 	 * 16 bit address.
 	 */
 	address_field_t Addr;
-} wpan_addr_spec_t;
+} wpan_addr_spec_t COMPILER_WORD_ALIGNED;//@mathi
 
 /**
  * @brief PAN descriptor information structure
@@ -221,7 +221,7 @@ typedef struct wpan_pandescriptor_tag {
 	 */
 	uint32_t TimeStamp;
 #endif  /* ENABLE_TSTAMP */
-} wpan_pandescriptor_t;
+} wpan_pandescriptor_t COMPILER_WORD_ALIGNED;//@mathi
 
 #ifdef MAC_SECURITY_ZIP
 
@@ -260,7 +260,7 @@ typedef struct mac_device_desc_tag {
 	 * level settings defined in Table 92.
 	 */
 	bool Exempt;
-} mac_device_desc_t;
+} mac_device_desc_t COMPILER_WORD_ALIGNED;//@mathi
 
 /**
  * Structure implementing a KeyUsageDescriptor.
@@ -272,7 +272,7 @@ typedef struct mac_key_usage_tag {
 
 	/** See Table 82. */
 	uint8_t CommandFrameIdentifier;
-} mac_key_usage_t;
+} mac_key_usage_t COMPILER_WORD_ALIGNED;//@mathi
 
 /**
  * Structure implementing a KeyDeviceDescriptor.
@@ -298,7 +298,7 @@ typedef struct mac_key_device_desc_tag {
 	 * with this key.
 	 */
 	bool BlackListed;
-} mac_key_device_desc_t;
+} mac_key_device_desc_t COMPILER_WORD_ALIGNED;//@mathi
 
 /**
  * Structure implementing a KeyIdLookupDescriptor.
@@ -314,7 +314,7 @@ typedef struct mac_key_id_lookup_desc_tag {
 	 * a set of 9 octets.
 	 */
 	uint8_t LookupDataSize;
-} mac_key_id_lookup_desc_t;
+} mac_key_id_lookup_desc_t COMPILER_WORD_ALIGNED;//@mathi
 
 /**
  * Structure implementing the macKeyTable
@@ -339,7 +339,7 @@ typedef struct mac_key_table_tag {
 
 	/** Set of 16 octets - the actual value of the key. */
 	uint8_t Key[16];
-} mac_key_table_t;
+} mac_key_table_t COMPILER_WORD_ALIGNED;//@mathi
 
 /**
  * Structure implementing the macSecurityLevelTable
@@ -370,7 +370,7 @@ typedef struct mac_sec_lvl_table_tag {
 	 * indicated by the SecurityMinimum element.
 	 */
 	bool DeviceOverrideSecurityMinimum;
-} mac_sec_lvl_table_t;
+} mac_sec_lvl_table_t COMPILER_WORD_ALIGNED;//@mathi
 
 /**
  * Structure implementing the macDeviceTable
@@ -378,7 +378,7 @@ typedef struct mac_sec_lvl_table_tag {
  */
 typedef struct mac_dev_table_tag {
 	mac_device_desc_t DeviceDescriptor[1];
-} mac_dev_table_t;
+} mac_dev_table_t COMPILER_WORD_ALIGNED;//@mathi
 
 /* Structure implementing the MAC Security related PIB attributes */
 typedef struct mac_sec_pib_tag {
@@ -431,7 +431,7 @@ typedef struct mac_sec_pib_tag {
 	 *0x01.
 	 */
 	uint8_t DefaultKeySource[8];
-} mac_sec_pib_t;
+} mac_sec_pib_t COMPILER_WORD_ALIGNED;//@mathi
 #endif  /* MAC_SECURITY_ZIP */
 
 #endif /* if !defined(__DOXYGEN___NO_MAC) */

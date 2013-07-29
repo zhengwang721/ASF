@@ -128,8 +128,13 @@ retval_t wpan_init(void)
 
 bool wpan_task(void)
 {
-	bool event_processed;
-	uint8_t *event = NULL;
+	bool event_processed; 	
+#ifdef __ALIGNED_ACCESS__
+	 uint32_t *event = NULL;
+#else
+	 uint8_t *event = NULL;
+#endif	
+	
 
 	/* mac_task returns true if a request was processed completely */
 	event_processed = mac_task();
@@ -138,7 +143,12 @@ bool wpan_task(void)
 	 * MAC to NHLE event queue should be dispatched
 	 * irrespective of the dispatcher state.
 	 */
+#ifdef __ALIGNED_ACCESS__
+	event = (uint32_t *)qmm_queue_remove(&mac_nhle_q, NULL);
+#else
 	event = (uint8_t *)qmm_queue_remove(&mac_nhle_q, NULL);
+#endif	
+	
 
 	/* If an event has been detected, handle it. */
 	if (NULL != event) {
@@ -176,7 +186,7 @@ bool wpan_mcps_data_req(uint8_t SrcAddrMode,
 		uint8_t TxOptions)
 #endif  /* MAC_SECURITY */
 {
-	buffer_t *buffer_header;
+	buffer_t *buffer_header COMPILER_WORD_ALIGNED;
 	mcps_data_req_t *mcps_data_req;
 	uint8_t *payload_pos;
 
@@ -194,7 +204,8 @@ bool wpan_mcps_data_req(uint8_t SrcAddrMode,
 	}
 
 	/* Get the buffer body from buffer header */
-	mcps_data_req = (mcps_data_req_t *)BMM_BUFFER_POINTER(buffer_header);
+	
+	mcps_data_req =  (mcps_data_req_t *)BMM_BUFFER_POINTER(buffer_header); 
 
 	/* Construct mcps_data_req_t message */
 	mcps_data_req->cmdcode = MCPS_DATA_REQUEST;

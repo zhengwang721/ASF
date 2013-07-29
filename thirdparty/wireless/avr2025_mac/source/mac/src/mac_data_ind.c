@@ -126,7 +126,11 @@ static bool tx_pan_id_conf_notif(void);
  *
  * @param msg Pointer to the buffer header.
  */
-void mac_process_tal_data_ind(uint8_t *msg)
+#ifdef __ALIGNED_ACCESS__				   //@mathi-align
+	void mac_process_tal_data_ind(uint32_t *msg)
+#else 
+	void mac_process_tal_data_ind(uint8_t *msg)
+#endif
 {
 	buffer_t *buf_ptr = (buffer_t *)msg;
 	frame_info_t *frameptr = (frame_info_t *)BMM_BUFFER_POINTER(buf_ptr);

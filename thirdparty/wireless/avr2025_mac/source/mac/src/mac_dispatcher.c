@@ -259,14 +259,18 @@ static FLASH_DECLARE(handler_t dispatch_table[LAST_MESSAGE + 1]) = {
  * @param event Pointer to the buffer header whose body part holds the message
  * type and message elemnets
  */
-void dispatch_event(uint8_t *event)
+#ifdef __ALIGNED_ACCESS__
+ void dispatch_event(uint32_t *event)
+#else
+ void dispatch_event(uint8_t *event)
+#endif
 {
 	/*
 	 * A pointer to the body of the buffer is obtained from the pointer to
 	 *the
 	 * received header.
 	 */
-	uint8_t *buffer_body = BMM_BUFFER_POINTER((buffer_t *)event);
+	uint8_t *buffer_body = (uint8_t *)BMM_BUFFER_POINTER((buffer_t *)event);
 
 	/* Check is done to see if the message type is valid */
 

@@ -89,7 +89,12 @@ static void mac_t_rx_on_cb(void *req_buffer);
 #endif  /* BEACON_SUPPORT */
 static uint8_t mac_rx_enable(void);
 static void gen_rx_enable_conf(buffer_t *buf, uint8_t status);
-static void handle_rx_on(uint32_t rx_on_duration_symbols, uint8_t *m);
+
+#ifdef __ALIGNED_ACCESS__
+ static void handle_rx_on(uint32_t rx_on_duration_symbols, uint32_t *m);
+#else
+ static void handle_rx_on(uint32_t rx_on_duration_symbols, uint8_t *m);
+#endif
 
 /* === Implementation ====================================================== */
 
@@ -105,9 +110,13 @@ static void handle_rx_on(uint32_t rx_on_duration_symbols, uint8_t *m);
  *
  * @param m Pointer to the MLME-RX-ENABLE.request message
  */
-void mlme_rx_enable_request(uint8_t *m)
+#ifdef __ALIGNED_ACCESS__
+ void mlme_rx_enable_request(uint32_t *m)
+#else
+ void mlme_rx_enable_request(uint8_t *m)
+#endif
 {
-	mlme_rx_enable_req_t *rxe;
+	mlme_rx_enable_req_t *rxe COMPILER_WORD_ALIGNED;
 
 	rxe = (mlme_rx_enable_req_t *)BMM_BUFFER_POINTER((buffer_t *)m);
 
@@ -384,7 +393,11 @@ static void mac_t_rx_off_cb(void *callback_parameter)
  * @param rx_on_duration_symbols Duration in symbols that the reciever is
  *                               switched on.
  */
-static void handle_rx_on(uint32_t rx_on_duration_symbols, uint8_t *m)
+#ifdef __ALIGNED_ACCESS__
+ static void handle_rx_on(uint32_t rx_on_duration_symbols, uint32_t *m)
+#else
+ static void handle_rx_on(uint32_t rx_on_duration_symbols, uint8_t *m)
+#endif 
 {
 	retval_t timer_status;
 	uint8_t rx_enable_status = mac_rx_enable();

@@ -534,7 +534,7 @@ static void remove_frame_from_indirect_q(frame_info_t *f_ptr)
 
 static uint8_t find_buffer_cb(void *buf, void *buffer)
 {
-	uint8_t *buf_body = BMM_BUFFER_POINTER((buffer_t *)buffer);
+	uint8_t *buf_body = (uint8_t *)BMM_BUFFER_POINTER((buffer_t *)buffer);
 	if (buf == buf_body) {
 		return 1;
 	}

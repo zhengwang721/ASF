@@ -136,18 +136,18 @@ void restore_cpu_interrupt(uint8_t flags)
 	cpu_irq_restore((uint32_t)flags);
 }
 
-static void tc_ovf_callback(struct tc_module *const module_inst)
+static void tc_ovf_callback(struct tc_module *const module_instance)
 {
 	tmr_ovf_callback();
 }
 /*! \brief  hw timer compare callback
  */
-static void tc_cca_callback(struct tc_module *const module_inst)
+static void tc_cca_callback(struct tc_module *const module_instance)
 {
 	tmr_cca_callback();
 }
 
-/*! \brief  to initialiaze hw timer
+/*! \brief  to initialize hw timer
  */
 uint8_t tmr_init(void)
 {

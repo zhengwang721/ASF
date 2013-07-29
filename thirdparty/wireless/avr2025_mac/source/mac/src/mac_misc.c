@@ -79,29 +79,29 @@
 
 #if (NUMBER_OF_MAC_TIMERS > 0)
 #ifdef BEACON_SUPPORT
-uint8_t T_Beacon_Tracking_Period;
-uint8_t T_Superframe;
-uint8_t T_Missed_Beacon;
+uint8_t T_Beacon_Tracking_Period COMPILER_WORD_ALIGNED;//@mathi
+uint8_t T_Superframe COMPILER_WORD_ALIGNED;//@mathi
+uint8_t T_Missed_Beacon COMPILER_WORD_ALIGNED;//@mathi
     #if (MAC_START_REQUEST_CONFIRM == 1)
-uint8_t T_Beacon;
+uint8_t T_Beacon COMPILER_WORD_ALIGNED;//@mathi
 
-uint8_t T_Beacon_Preparation;
+uint8_t T_Beacon_Preparation COMPILER_WORD_ALIGNED;//@mathi
     #endif /* (MAC_START_REQUEST_CONFIRM == 1) */
 #endif  /* BEACON_SUPPORT / No BEACON_SUPPORT */
 
 #if (MAC_INDIRECT_DATA_BASIC == 1)
-uint8_t T_Poll_Wait_Time;
+uint8_t T_Poll_Wait_Time COMPILER_WORD_ALIGNED;//@mathi
     #if (MAC_INDIRECT_DATA_FFD == 1)
-uint8_t T_Data_Persistence;
+uint8_t T_Data_Persistence COMPILER_WORD_ALIGNED;//@mathi
     #endif  /* (MAC_INDIRECT_DATA_FFD == 1) */
 #endif  /* (MAC_INDIRECT_DATA_BASIC == 1) */
 
 #if (MAC_SCAN_SUPPORT == 1)
-uint8_t T_Scan_Duration;
+uint8_t T_Scan_Duration COMPILER_WORD_ALIGNED;//@mathi
 #endif  /* MAC_SCAN_SUPPORT */
 
 #if (MAC_RX_ENABLE_SUPPORT == 1)
-uint8_t T_Rx_Enable;
+uint8_t T_Rx_Enable COMPILER_WORD_ALIGNED;//@mathi
 #endif  /* MAC_RX_ENABLE_SUPPORT */
 #endif /* (NUMBER_OF_MAC_TIMERS != 0) */
 
@@ -132,14 +132,15 @@ static void reset_globals(void)
 	mac_bc_data_indicated = false;
 #endif  /* BEACON_SUPPORT */
 	mac_last_dsn = 0;
-	mac_last_src_addr = 0xFFFFFFFFFFFFFFFF;
+	// Set MAC Last Src Address as 0xFFFFFFFFFFFFFFFF
+	memset((uint8_t *)&mac_last_src_addr, 0xFF, 8); //@mathi-l
 	mac_rx_enabled = false;
 }
 
 /**
  * @brief Initializes the MAC sublayer
  *
- * @return MAC_SUCCESS  if TAL is intialized successfully else FAILURE
+ * @return MAC_SUCCESS  if TAL is initialized successfully else FAILURE
  */
 retval_t mac_init(void)
 {
@@ -225,6 +226,7 @@ void mac_idle_trans(void)
 
 #if (_DEBUG_ > 0)
 		Assert(MAC_SUCCESS == set_status);
+		set_status = set_status;
 #endif
 	}
 
@@ -267,7 +269,9 @@ static void do_init_pib(void)
 
 	mac_pib.mac_AutoRequest = macAutoRequest_def;
 	mac_pib.mac_BattLifeExtPeriods = macBattLifeExtPeriods_def;
-	mac_pib.mac_CoordExtendedAddress = CLEAR_ADDR_64;
+	memset((uint8_t *)&mac_pib.mac_CoordExtendedAddress, 0,
+	        sizeof(mac_pib.mac_CoordExtendedAddress));
+	//mac_pib.mac_CoordExtendedAddress = (uint64_t)CLEAR_ADDR_64;	//@mathi-long
 	mac_pib.mac_CoordShortAddress = macCoordShortAddress_def;
 	mac_pib.mac_DSN = (uint8_t)rand();
 	mac_pib.mac_RxOnWhenIdle = macRxOnWhenIdle_def;
@@ -295,7 +299,11 @@ static void do_init_pib(void)
  *
  * @param m Pointer to the MLME_RESET.request given by the NHLE
  */
-void mlme_reset_request(uint8_t *m)
+#ifdef __ALIGNED_ACCESS__
+ void mlme_reset_request(uint32_t *m)
+#else
+ void mlme_reset_request(uint8_t *m)
+#endif
 {
 	mlme_reset_req_t *mrr
 		= (mlme_reset_req_t *)BMM_BUFFER_POINTER((buffer_t *)m);

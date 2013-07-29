@@ -149,7 +149,11 @@ static void mac_gen_mlme_disassociate_conf(buffer_t *buf,
  *
  * @param m Pointer to the MLME-DISASSOCIATION.Request message passed by NHLE
  */
-void mlme_disassociate_request(uint8_t *m)
+#ifdef __ALIGNED_ACCESS__
+ void mlme_disassociate_request(uint32_t *m)
+#else
+ void mlme_disassociate_request(uint8_t *m)
+#endif 
 {
 	mlme_disassociate_req_t disassoc_req;
 
@@ -431,7 +435,9 @@ void mac_process_disassociate_notification(buffer_t *msg)
 	 * Once a device is disassociated from a coordinator, the coordinator's
 	 * address info should be cleared.
 	 */
-	mac_pib.mac_CoordExtendedAddress = CLEAR_ADDR_64;
+	memset((uint8_t *)&mac_pib.mac_CoordExtendedAddress, 0,
+	        sizeof(mac_pib.mac_CoordExtendedAddress));	
+	//mac_pib.mac_CoordExtendedAddress = (uint64_t)CLEAR_ADDR_64;	 //@mathi-long
 
 	/* The default short address is 0xFFFF. */
 	mac_pib.mac_CoordShortAddress = INVALID_SHORT_ADDRESS;
@@ -557,7 +563,7 @@ void mac_prep_disassoc_conf(buffer_t *buf,
 						status,
 						FCF_SHORT_ADDR,
 						tal_pib.PANId,
-						(address_field_t *)&tal_pib.ShortAddress);
+						(address_field_t *)&tal_pib.ShortAddress);//@mathi
 			}
 		} else {
 			/*

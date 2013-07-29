@@ -55,7 +55,7 @@ void tmr_write_cmpreg(uint16_t compare_value);
 uint8_t save_cpu_interrupt(void);
 void restore_cpu_interrupt(uint8_t flags);
 uint8_t tmr_init(void);
-void tmr_write_cmpreg(uint16_t compare_value);
+//void tmr_write_cmpreg(uint16_t compare_value);
 
 #endif /* HW_TIMER_H */
 /* EOF */

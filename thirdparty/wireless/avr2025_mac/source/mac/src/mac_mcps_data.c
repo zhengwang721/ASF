@@ -138,7 +138,11 @@ void mac_gen_mcps_data_conf(buffer_t *buf, uint8_t status, uint8_t handle)
  *
  * @param msg Pointer to the MCPS-DATA.request parameter
  */
-void mcps_data_request(uint8_t *msg)
+#ifdef __ALIGNED_ACCESS__
+ void mcps_data_request(uint32_t *msg)
+#else
+ void mcps_data_request(uint8_t *msg)
+#endif
 {
 	retval_t status = FAILURE;
 	mcps_data_req_t mdr;
@@ -1066,7 +1070,7 @@ static void handle_exp_persistence_timer(buffer_t *buf_ptr)
  */
 static bool mac_buffer_purge(uint8_t msdu_handle)
 {
-	uint8_t *buf_ptr;
+	uint32_t *buf_ptr;
 	search_t find_buf;
 	uint8_t handle = msdu_handle;
 
@@ -1080,7 +1084,7 @@ static bool mac_buffer_purge(uint8_t msdu_handle)
 	find_buf.handle = &handle;
 
 	/* Remove from indirect queue if the short address matches */
-	buf_ptr = (uint8_t *)qmm_queue_remove(&indirect_data_q, &find_buf);
+	buf_ptr = (uint32_t *)qmm_queue_remove(&indirect_data_q, &find_buf);
 
 	if (NULL != buf_ptr) {
 		/* Free the buffer allocated, after purging */
@@ -1110,7 +1114,11 @@ static bool mac_buffer_purge(uint8_t msdu_handle)
  *
  * @param msg Pointer to the MCPS-PURGE.request parameter
  */
-void mcps_purge_request(uint8_t *msg)
+#ifdef __ALIGNED_ACCESS__
+ void mcps_purge_request(uint32_t *msg)
+#else
+ void mcps_purge_request(uint8_t *msg)
+#endif  
 {
 	mcps_purge_req_t *mpr
 		= (mcps_purge_req_t *)BMM_BUFFER_POINTER(((buffer_t *)msg));

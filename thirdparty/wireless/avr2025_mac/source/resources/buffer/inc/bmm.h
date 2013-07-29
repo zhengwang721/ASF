@@ -76,7 +76,8 @@
  * This macro provides the pointer to the corresponding body of the supplied
  *buffer header.
  */
-#define BMM_BUFFER_POINTER(buf) ((buf)->body)
+
+#define BMM_BUFFER_POINTER(buf)  ((buf)->body) 
 
 /* === Types =============================================================== */
 
@@ -89,11 +90,17 @@ typedef struct
 		buffer_tag
 #endif
 {
+#ifdef __ALIGNED_ACCESS__	   //@mathi-align	
+	/** Pointer to the buffer body */
+	uint32_t *body;
+#else
 	/** Pointer to the buffer body */
 	uint8_t *body;
+#endif
+	
 	/** Pointer to next free buffer */
 	struct buffer_tag *next;
-} buffer_t;
+} buffer_t COMPILER_WORD_ALIGNED;//@mathi
 
 /* === Externals =========================================================== */
 
