@@ -161,8 +161,15 @@ void peer_search_initiator_init(void *arg)
 		/* Make sure random number is not zero */
 	} while (!node_info.peer_short_addr);
 
+#ifdef EXT_RF_FRONT_END_CTRL
+    /* Disable RF front end control during peer search process*/
+    tal_ext_pa_ctrl(PA_EXT_DISABLE);
+    /* Make sure that Tx power is at max, when PA_EXT is disabled */
+    tal_set_tx_pwr(REGISTER_VALUE, 0x00);
+#endif
+    
 	/* Reduce the TX power level to minium,if configuration mode is enabled
-	 **/
+	**/
 	if (true == node_info.configure_mode) {
 		/* set the tx power to lowest in configuration mode */
 		uint8_t config_tx_pwr = CONFIG_MODE_TX_PWR;
@@ -301,14 +308,14 @@ static void peer_req_send_task()
 		case PEER_SEARCH_PER_TX:
 		{
 			/* In confiuration mode allow the user to do peer search
-			 *again */
+			 * again */
 			if (node_info.configure_mode == true) {
 				/* PEER REQ command failed - so change to
-				 *WAIT_FOR_EVENT state */
+				 * WAIT_FOR_EVENT state */
 				set_main_state(WAIT_FOR_EVENT, NULL);
 			} else {
 				/* Peer search was failed in PER mode - so
-				 *change to SINGLE_NODE_TESTS state */
+				 * change to SINGLE_NODE_TESTS state */
 				set_main_state(SINGLE_NODE_TESTS, NULL);
 			}
 		}
@@ -317,8 +324,9 @@ static void peer_req_send_task()
 		case PEER_SEARCH_RANGE_TX:
 		{
 			print_event(PRINT_PEER_SEARCH_FAILED);
+
 			/* PEER REQ command failed - so change to WAIT_FOR_EVENT
-			 *state */
+			 * state */
 			set_main_state(WAIT_FOR_EVENT, NULL);
 		}
 		break;
@@ -364,24 +372,24 @@ static void peer_req_send_task()
  * PEER_REQ_SEND State.
  * \param frame Pointer to received frame
  */
-static void peer_req_send_rx_cb(frame_info_t *mac_frame_info)
+static void peer_req_send_rx_cb(frame_info_t *frame_info)
 {
 	app_payload_t *msg;
 	uint16_t my_addr_from_peer;
 
-	if (*(mac_frame_info->mpdu) == (FRAME_OVERHEAD_DST_IEEE_ADDR
+	if (*(frame_info->mpdu) == (FRAME_OVERHEAD_DST_IEEE_ADDR
 			+ ((sizeof(app_payload_t)
 			- sizeof(general_pkt_t))
 			+ sizeof(peer_rsp_t)))) {
 		/* Point to the message : 1 =>size is first byte and 2=>FCS*/
-		msg = (app_payload_t *)(mac_frame_info->mpdu + LENGTH_FIELD_LEN
+		msg = (app_payload_t *)(frame_info->mpdu + LENGTH_FIELD_LEN
 				+ FRAME_OVERHEAD_DST_IEEE_ADDR - FCS_LEN);
 		if (PEER_RESPONSE == (msg->cmd_id)) {
 			my_addr_from_peer
 				= (msg->payload.peer_rsp_data.nwk_addr);
 
 			/* PEER_RESPONSE received - so change to PEER_RSP_RCVD
-			 *state */
+			 * state */
 			peer_search_initiator_set_sub_state(PEER_RSP_RCVD,
 					&my_addr_from_peer);
 		}
@@ -469,9 +477,9 @@ static retval_t send_peer_req(void)
 	return(transmit_frame(FCF_SHORT_ADDR,
 	       (uint8_t *)(&dst_addr),            /* dst_addr is braodcast */
 	       FCF_LONG_ADDR,                     /* src_addr_mode use IEEE addr
-	                                           **/
+	                                          **/
 	       seq_num,                           /* seq_num used as msdu handle
-	                                           **/
+	                                          **/
 	       (uint8_t *)&msg,
 	       payload_length,
 	       0));
@@ -493,7 +501,7 @@ static void peer_rsp_rcvd_init(void *arg)
 			print_event(PRINT_PEER_SEARCH_FAILED);
 		} else if (PEER_SEARCH_PER_TX == node_info.main_state) {
 			/* Send the confirmation to the PC application via
-			 *Serial interface */
+			 * Serial interface */
 			usr_perf_start_confirm(NO_PEER_FOUND,
 					START_MODE_PER,
 					NULL,
@@ -526,8 +534,9 @@ static void peer_rsp_rcvd_tx_cb(retval_t status, frame_info_t *frame)
 		case PEER_SEARCH_RANGE_TX:
 		{
 			print_event(PRINT_PEER_SEARCH_SUCCESS);
+
 			/* Peer success - set the board to RANGE_TEST_TX_ON
-			 *state */
+			 * state */
 			set_main_state(RANGE_TEST_TX_ON, NULL);
 		}
 		break;
@@ -535,7 +544,7 @@ static void peer_rsp_rcvd_tx_cb(retval_t status, frame_info_t *frame)
 		case PEER_SEARCH_PER_TX:
 		{
 			/* Peer success - set the board to PER_TEST_INITIATOR
-			 *state */
+			 * state */
 			set_main_state(PER_TEST_INITIATOR, NULL);
 		}
 		break;
@@ -563,7 +572,7 @@ static void peer_rsp_rcvd_tx_cb(retval_t status, frame_info_t *frame)
 			print_event(PRINT_PEER_SEARCH_FAILED);
 		} else if (PEER_SEARCH_PER_TX == node_info.main_state) {
 			/* Send the confirmation to the PC application via
-			 *Serial interface */
+			 * Serial interface */
 			usr_perf_start_confirm(NO_PEER_FOUND,
 					START_MODE_PER,
 					NULL,
@@ -602,7 +611,7 @@ static void peer_rsp_rcvd_exit()
 
 /**
  * \brief Send the peer confirmation confirming the node which has been
- *connected
+ * connected
  *        This frame is sent as a unicast to peer node. All other nodes which
  *        took part in the peer search process times out and resets peer search
  */
@@ -632,7 +641,7 @@ static retval_t send_peer_conf(void)
 	       (uint8_t *)(&node_info.peer_short_addr),
 	       FCF_SHORT_ADDR,
 	       seq_num,                           /* seq_num used as msdu handle
-	                                           **/
+	                                          **/
 	       (uint8_t *)&msg,
 	       payload_length,
 	       1));

@@ -41,7 +41,7 @@
 
 /**
  * \mainpage
- * \copydetails preface
+ * \copydetails appdoc_preface
  */
 
 /**

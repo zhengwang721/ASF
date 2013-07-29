@@ -160,7 +160,7 @@
  * software configurable and can have its count reset and early warning state
  * checked/cleared only.
  *
- * \section asfdoc_samd20_wdt_extra_info Extra Information for WDT
+ * \section asfdoc_samd20_wdt_extra_info Extra Information
  *
  * For extra information see \ref asfdoc_samd20_wdt_extra. This includes:
  *  - \ref asfdoc_samd20_wdt_extra_acronyms
@@ -454,6 +454,11 @@ void wdt_reset_count(void);
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>B</td>
+ *		<td>06/2013</td>
+ *		<td>Corrected documentation typos.</td>
  *	</tr>
  *	<tr>
  *		<td>A</td>

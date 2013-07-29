@@ -5,8 +5,7 @@
 		<build type="header-file" value="conf_clock.h"/>
 		<build type="header-file" value="conf_example.h"/>
 		<build type="header-file" value="conf_sleepmgr.h"/>
-		<build type="header-file" value="ast.h"/>
-		<build type="c-source" value="ast.c"/>
+		<build type="header-file" value="conf_ast.h"/>
 		<require idref="common.services.basic.sleepmgr.example"/>
 		<require idref="board.sam4l_ek"/>
 		<generator value="iarewarm"/>

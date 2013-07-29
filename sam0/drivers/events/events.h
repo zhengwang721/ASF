@@ -44,7 +44,7 @@
 #define EVENTS_H_INCLUDED
 
 /**
- * \defgroup asfdoc_samd20_events_group SAM D20 Event System Driver
+ * \defgroup asfdoc_samd20_events_group SAM D20 Event System Driver (EVENTS)
  *
  * This driver for SAM D20 devices provides an interface for the configuration
  * and management of the device's peripheral event channels and users within
@@ -113,8 +113,8 @@
  * There are many different events that can be routed in the device, which can
  * then trigger many different actions. For example, an Analog Comparator module
  * could be configured to generate an event when the input signal rises above
- * the compare threshold, which then triggers a Timer module to capture the
- * current count value for later use.
+ * the compare threshold, which then triggers a Timer Counter module to capture
+ * the current count value for later use.
  *
  * \subsection asfdoc_samd20_events_module_overview_event_channels Event Channels
  * The Event module in each device consists of several channels, which can be
@@ -249,7 +249,7 @@
  * There are no special considerations for this module.
  *
  *
- * \section asfdoc_samd20_events_extra_info Extra Information for EVENTS
+ * \section asfdoc_samd20_events_extra_info Extra Information
  *
  * For extra information see \ref asfdoc_samd20_events_extra. This includes:
  *  - \ref asfdoc_samd20_events_extra_acronyms
@@ -663,6 +663,11 @@ static inline void events_chan_software_trigger(
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>B</td>
+ *		<td>06/2013</td>
+ *		<td>Corrected documentation typos.</td>
  *	</tr>
  *	<tr>
  *		<td>A</td>

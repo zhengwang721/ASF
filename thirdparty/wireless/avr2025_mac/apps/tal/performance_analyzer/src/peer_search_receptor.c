@@ -136,6 +136,13 @@ void peer_search_receptor_init(void *arg)
 
 	/* Set my address which my peer send me */
 	tal_pib_set(macShortAddress, (pib_value_t *)&(arg_ptr->my_short_addr));
+    
+#ifdef EXT_RF_FRONT_END_CTRL
+    /* Disable RF front end control during peer search process*/
+    tal_ext_pa_ctrl(PA_EXT_DISABLE);
+    /* Make sure that Tx power is at max, when PA_EXT is disabled */
+    tal_set_tx_pwr(REGISTER_VALUE, 0x00);
+#endif    
 }
 
 /*
@@ -303,7 +310,7 @@ static int send_peer_rsp(uint64_t *dst_addr)
 	       (uint8_t *)(dst_addr),
 	       FCF_SHORT_ADDR,
 	       seq_num,                          /* seq_num used as msdu handle
-	                                          **/
+	                                         **/
 	       (uint8_t *)&msg,
 	       payload_length,
 	       1));
@@ -334,18 +341,19 @@ static void wait_for_conf_init(void *arg)
  * \param status    Status of the transmission procedure
  * \param frame     Pointer to the transmitted frame structure
  */
-static void wait_for_conf_rx_cb(frame_info_t *mac_frame_info)
+static void wait_for_conf_rx_cb(frame_info_t *frame_info)
 {
 	app_payload_t *msg;
 
-	if (*(mac_frame_info->mpdu) == (FRAME_OVERHEAD
+	if (*(frame_info->mpdu) == (FRAME_OVERHEAD
 			+ ((sizeof(app_payload_t)
 			- sizeof(general_pkt_t))
 			+ sizeof(peer_conf_t)))) {
 		/* Point to the message : 1 =>size is first byte and 2=>FCS*/
 		msg
-			= (app_payload_t *)(mac_frame_info->mpdu + 1 +
-				FRAME_OVERHEAD - 2);
+			= (app_payload_t *)(frame_info->mpdu + 1 +
+				FRAME_OVERHEAD -
+				2);
 		if ((msg->cmd_id) == PEER_CONFIRM) {
 			if (node_info.peer_short_addr ==
 					(msg->payload.peer_conf_data.nwk_addr))
@@ -354,14 +362,16 @@ static void wait_for_conf_rx_cb(frame_info_t *mac_frame_info)
 				app_led_event(LED_EVENT_PEER_SEARCH_DONE);
 				switch (node_info.main_state) {
 				case PEER_SEARCH_RANGE_RX:
+
 					/* Peer success - set the board to
-					 *RANGE_TEST_TX_OFF state */
+					 * RANGE_TEST_TX_OFF state */
 					set_main_state(RANGE_TEST_TX_OFF, 0);
 					break;
 
 				case PEER_SEARCH_PER_RX:
+
 					/* Peer success - set the board to
-					 *RANGE_TEST_TX_OFF state */
+					 * RANGE_TEST_TX_OFF state */
 					set_main_state(PER_TEST_RECEPTOR, 0);
 					break;
 

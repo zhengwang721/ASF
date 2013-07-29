@@ -175,7 +175,7 @@ static enum status_code _spi_set_config(
 
 		/* Get baud value, based on baudrate and the internal clock frequency */
 		enum status_code error_code = _sercom_get_sync_baud_val(
-				config->master.baudrate,
+				config->mode_specific.master.baudrate,
 				internal_clock, &baud);
 
 		if (error_code != STATUS_OK) {
@@ -188,17 +188,17 @@ static enum status_code _spi_set_config(
 
 	if (config->mode == SPI_MODE_SLAVE) {
 		/* Set frame format */
-		ctrla = config->slave.frame_format;
+		ctrla = config->mode_specific.slave.frame_format;
 
 		/* Set address mode */
-		ctrlb = config->slave.address_mode;
+		ctrlb = config->mode_specific.slave.address_mode;
 
 		/* Set address and address mask*/
 		spi_module->ADDR.reg |=
-				(config->slave.address      << SERCOM_SPI_ADDR_ADDR_Pos) |
-				(config->slave.address_mask << SERCOM_SPI_ADDR_ADDRMASK_Pos);
+				(config->mode_specific.slave.address      << SERCOM_SPI_ADDR_ADDR_Pos) |
+				(config->mode_specific.slave.address_mask << SERCOM_SPI_ADDR_ADDRMASK_Pos);
 
-		if (config->slave.preload_enable) {
+		if (config->mode_specific.slave.preload_enable) {
 			/* Enable pre-loading of shift register */
 			ctrlb |= SERCOM_SPI_CTRLB_PLOADEN;
 		}
@@ -325,7 +325,7 @@ static enum status_code _spi_check_config(
 	/* Find baud value and compare it */
 	if (config->mode == SPI_MODE_MASTER) {
 		enum status_code error_code = _sercom_get_sync_baud_val(
-				config->master.baudrate,
+				config->mode_specific.master.baudrate,
 				external_clock, &baud);
 
 		if (error_code != STATUS_OK) {
@@ -340,19 +340,19 @@ static enum status_code _spi_check_config(
 		ctrla |= SERCOM_SPI_CTRLA_MODE_SPI_MASTER;
 	} else {
 		/* Set frame format */
-		ctrla |= config->slave.frame_format;
+		ctrla |= config->mode_specific.slave.frame_format;
 
 		/* Set address mode */
-		ctrlb |= config->slave.address_mode;
+		ctrlb |= config->mode_specific.slave.address_mode;
 
 		/* Set address and address mask*/
-		addr |= (config->slave.address      << SERCOM_SPI_ADDR_ADDR_Pos) |
-				(config->slave.address_mask << SERCOM_SPI_ADDR_ADDRMASK_Pos);
+		addr |= (config->mode_specific.slave.address      << SERCOM_SPI_ADDR_ADDR_Pos) |
+				(config->mode_specific.slave.address_mask << SERCOM_SPI_ADDR_ADDRMASK_Pos);
 		if (spi_module->CTRLA.reg != addr) {
 			return STATUS_ERR_DENIED;
 		}
 
-		if (config->slave.preload_enable) {
+		if (config->mode_specific.slave.preload_enable) {
 			/* Enable pre-loading of shift register */
 			ctrlb |= SERCOM_SPI_CTRLB_PLOADEN;
 		}
@@ -724,6 +724,7 @@ enum status_code spi_write_buffer_wait(
 	}
 
 	uint16_t tx_pos = 0;
+	uint16_t flush_length = length;
 
 	/* Write block */
 	while (length--) {
@@ -766,15 +767,27 @@ enum status_code spi_write_buffer_wait(
 			/* Start timeout period for slave */
 			if (module->mode == SPI_MODE_SLAVE) {
 				for (uint32_t i = 0; i <= SPI_TIMEOUT; i++) {
+					if (spi_is_ready_to_write(module)) {
+						data_to_send = tx_data[tx_pos++];
+						/* If 9-bit data, get next byte to send from the buffer */
+						if (module->character_size == SPI_CHARACTER_SIZE_9BIT) {
+							data_to_send |= (tx_data[tx_pos++] << 8);
+						}
+
+						/* Write the data to send */
+						spi_write(module, data_to_send);
+						length--;
+					}
 					if (spi_is_ready_to_read(module)) {
 						break;
 					}
 				}
-			/* Check if master has ended the transaction */
-			if (spi_is_write_complete(module)) {
-				_spi_clear_tx_complete_flag(module);
-				return STATUS_ABORTED;
-			}
+
+				/* Check if master has ended the transaction */
+				if (spi_is_write_complete(module)) {
+					_spi_clear_tx_complete_flag(module);
+					return STATUS_ABORTED;
+				}
 
 				if (!spi_is_ready_to_read(module)) {
 					/* Not ready to read data within timeout period */
@@ -788,12 +801,30 @@ enum status_code spi_write_buffer_wait(
 			/* Flush read buffer */
 			uint16_t flush;
 			spi_read(module, &flush);
+			flush_length--;
 		}
 	}
 
 	if (module->mode == SPI_MODE_MASTER) {
 		/* Wait for last byte to be transferred */
 		while (!spi_is_write_complete(module)) {
+		}
+	} else if (module->receiver_enabled) {
+		while (flush_length) {
+			/* Start timeout period for slave */
+			for (uint32_t i = 0; i <= SPI_TIMEOUT; i++) {
+				if (spi_is_ready_to_read(module)) {
+					break;
+				}
+			}
+			if (!spi_is_ready_to_read(module)) {
+				/* Not ready to read data within timeout period */
+				return STATUS_ERR_TIMEOUT;
+			}
+			/* Flush read buffer */
+			uint16_t flush;
+			spi_read(module, &flush);
+			flush_length--;
 		}
 	}
 
@@ -846,7 +877,7 @@ enum status_code spi_transceive_buffer_wait(
 	if (length == 0) {
 		return STATUS_ERR_INVALID_ARG;
 	}
-	
+
 	if (!(module->receiver_enabled)) {
 		return STATUS_ERR_DENIED;
 	}
@@ -858,6 +889,7 @@ enum status_code spi_transceive_buffer_wait(
 
 	uint16_t tx_pos = 0;
 	uint16_t rx_pos = 0;
+	uint16_t rx_length = length;
 
 	/* Send and receive buffer */
 	while (length--) {
@@ -898,6 +930,17 @@ enum status_code spi_transceive_buffer_wait(
 		/* Start timeout period for slave */
 		if (module->mode == SPI_MODE_SLAVE) {
 			for (uint32_t i = 0; i <= SPI_TIMEOUT; i++) {
+				if (spi_is_ready_to_write(module)) {
+					data_to_send = tx_data[tx_pos++];
+					/* If 9-bit data, get next byte to send from the buffer */
+					if (module->character_size == SPI_CHARACTER_SIZE_9BIT) {
+						data_to_send |= (tx_data[tx_pos++] << 8);
+					}
+
+					/* Write the data to send */
+					spi_write(module, data_to_send);
+					length--;
+				}
 				if (spi_is_ready_to_read(module)) {
 					break;
 				}
@@ -920,6 +963,7 @@ enum status_code spi_transceive_buffer_wait(
 
 		enum status_code retval;
 		uint16_t received_data = 0;
+		rx_length--;
 
 		retval = spi_read(module, &received_data);
 
@@ -940,6 +984,36 @@ enum status_code spi_transceive_buffer_wait(
 	if (module->mode == SPI_MODE_MASTER) {
 		/* Wait for last byte to be transferred */
 		while (!spi_is_write_complete(module)) {
+		}
+	} else {
+		while (rx_length) {
+			/* Start timeout period for slave */
+			for (uint32_t i = 0; i <= SPI_TIMEOUT; i++) {
+				if (spi_is_ready_to_read(module)) {
+					break;
+				}
+			}
+			if (!spi_is_ready_to_read(module)) {
+				/* Not ready to read data within timeout period */
+				return STATUS_ERR_TIMEOUT;
+			}
+			enum status_code retval;
+			uint16_t received_data = 0;
+			rx_length--;
+
+			retval = spi_read(module, &received_data);
+
+			if (retval != STATUS_OK) {
+				/* Overflow, abort */
+				return retval;
+			}
+			/* Read value will be at least 8-bits long */
+			rx_data[rx_pos++] = received_data;
+
+			/* If 9-bit data, write next received byte to the buffer */
+			if (module->character_size == SPI_CHARACTER_SIZE_9BIT) {
+				rx_data[rx_pos++] = (received_data >> 8);
+			}
 		}
 	}
 

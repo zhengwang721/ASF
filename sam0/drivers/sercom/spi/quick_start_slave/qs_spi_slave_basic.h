@@ -92,11 +92,11 @@
  *   -# Get default configuration to edit.
  *     \snippet qs_spi_slave_basic.c conf_defaults
  *   -# Set the SPI in slave mode.
- *     \snippet qs_spi_slave_basic.c conf_slave
+ *     \snippet qs_spi_slave_basic.c conf_spi_slave_instance
  *   -# Enable preloading of shift register.
  *     \snippet qs_spi_slave_basic.c conf_preload
  *   -# Set frame format to SPI frame.
- *     \snippet qs_spi_slave_basic.c conf_preload
+ *     \snippet qs_spi_slave_basic.c conf_format
  *   -# Set mux setting E.
  *     \snippet qs_spi_slave_basic.c mux_setting
  *   -# Set pinmux for pad 0 (data in (MOSI) on extension header 1, pin 17).
@@ -118,7 +118,7 @@
  * \snippet qs_spi_slave_basic.c main_use_case
  * \subsection asfdoc_samd20_sercom_spi_slave_basic_use_case_workflow Workflow
  * -# Write buffer to SPI master. Placed in a loop to retry in case of a
- * timeout before a master initates a transaction.
+ * timeout before a master initiates a transaction.
  *  \snippet qs_spi_slave_basic.c write
  * -# Infinite loop.
  *  \snippet qs_spi_slave_basic.c inf_loop
