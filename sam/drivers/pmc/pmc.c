@@ -1093,6 +1093,32 @@ void pmc_clr_fast_startup_input(uint32_t ul_inputs)
 	PMC->PMC_FSMR &= ~ul_inputs;
 }
 
+#if SAM4C
+/**
+ * \brief Set the wake-up inputs of coprocessor for fast startup mode registers
+ *        (event generation).
+ *
+ * \param ul_inputs Wake up inputs to enable.
+ */
+void pmc_cp_set_fast_startup_input(uint32_t ul_inputs)
+{
+	ul_inputs &= PMC_FAST_STARTUP_Msk;
+	PMC->PMC_CPFSMR |= ul_inputs;
+}
+
+/**
+ * \brief Clear the wake-up inputs of coprocessor for fast startup mode registers
+ *        (remove event generation).
+ *
+ * \param ul_inputs Wake up inputs to disable.
+ */
+void pmc_cp_clr_fast_startup_input(uint32_t ul_inputs)
+{
+	ul_inputs &= PMC_FAST_STARTUP_Msk;
+	PMC->PMC_CPFSMR &= ~ul_inputs;
+}
+#endif
+
 /**
  * \brief Enable Sleep Mode.
  * Enter condition: (WFE or WFI) + (SLEEPDEEP bit = 0) + (LPM bit = 0)
@@ -1249,7 +1275,7 @@ void pmc_disable_clock_failure_detector(void)
 	PMC->CKGR_MOR = PMC_CKGR_MOR_KEY_VALUE | ul_reg;
 }
 
-#if SAM4N
+#if SAM4N || SAM4C
 /**
  * \brief Enable Slow Crystal Oscillator Frequency Monitoring.
  */

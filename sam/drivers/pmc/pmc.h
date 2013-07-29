@@ -275,6 +275,10 @@ uint32_t pmc_get_status(void);
 
 void pmc_set_fast_startup_input(uint32_t ul_inputs);
 void pmc_clr_fast_startup_input(uint32_t ul_inputs);
+#if SAM4C
+void pmc_cp_set_fast_startup_input(uint32_t ul_inputs);
+void pmc_cp_clr_fast_startup_input(uint32_t ul_inputs);
+#endif
 void pmc_enable_sleepmode(uint8_t uc_type);
 void pmc_enable_waitmode(void);
 void pmc_enable_backupmode(void);
@@ -292,7 +296,7 @@ void pmc_disable_clock_failure_detector(void);
 
 //@}
 
-#if SAM4N
+#if SAM4N || SAM4C
 /**
  * \name Slow Crystal Oscillator Frequency Monitoring
  *

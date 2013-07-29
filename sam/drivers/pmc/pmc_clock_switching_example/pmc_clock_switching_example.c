@@ -117,8 +117,13 @@ extern "C" {
 /** PMC External Xtal 12Mhz */
 #define PMC_CLOCK_SWITCHING_EXAMPLE_BAUDRATE (2400)
 
+#if SAM4C
+/** Fixed PLLA test clock, 8.192Mhz */
+#define PMC_CLOCK_SWITCHING_EXAMPLE_FIXED_PLLA	(8192000)
+#else
 /** Fixed PLLA test clock, 128Mhz */
 #define PMC_CLOCK_SWITCHING_EXAMPLE_FIXED_PLLA	(128000000)
+#endif
 
 #define STRING_EOL    "\r"
 #define STRING_HEADER "-- Pmc Clock Switching Example --\r\n" \
@@ -360,7 +365,15 @@ int main(void)
 
 	for (gs_uc_wait_button = 1; gs_uc_wait_button;) {
 	}
+#if SAM4C
+	puts("-I- Switch to 8.192Mhz PLLA clock as the source of the master clock \n\r"
+			"-I- The master clock is PLLA clock divided by 2 \n\r"
+			"-I- Press Button "BUTTON_NAME" to switch next clock configuration... \r\n");
+	delay_ticks(8000);
 
+	/* Enable the PLLA clock, the mainck equals 32.768K * 250 = 8.192Mhz */
+	pmc_enable_pllack((250 - 1), 0x3f, 1);
+#else
 	puts("-I- Switch to 128Mhz PLLA clock as the source of the master clock \n\r"
 			"-I- The master clock is PLLA clock divided by 2 \n\r"
 			"-I- Press Button "BUTTON_NAME" to switch next clock configuration... \r\n");
@@ -368,7 +381,7 @@ int main(void)
 
 	/* Enable the PLLA clock, the mainck equals 12Mhz * (32-1+1) / 3 = 128Mhz */
 	pmc_enable_pllack((32 - 1), 0x3f, 3);
-
+#endif
 	/* If a new value for CSS field corresponds to PLL Clock, Program the PRES
 	 * field first.
 	 */
@@ -434,11 +447,17 @@ int main(void)
 	 */
 	config_uart_and_pck(PMC_PCK_CSS_MAIN_CLK, PMC_PCK_PRES_CLK_16,
 			(BOARD_FREQ_MAINCK_XTAL / 16));
+#if SAM4C
+	puts("\n\r-I- Switch the external 8MHz crystal oscillator to be the source of the main clock\n\r"
+			"-I- The master clock is main  clock divided by 16\n\r"
+			"-I- Press Button "BUTTON_NAME" to switch next clock configuration...\r\n");
+#else
 	puts("\n\r-I- Switch the external 12MHz crystal oscillator to be the source of the main clock\n\r"
 			"-I- The master clock is main  clock divided by 16\n\r"
 			"-I- Press Button "BUTTON_NAME" to switch next clock configuration...\r\n");
+#endif
 
-#if SAM3S
+#if (SAM3S || SAM4S || SAM4C)
 	for (gs_uc_wait_button = 1; gs_uc_wait_button;) {
 	}
 
@@ -446,10 +465,17 @@ int main(void)
 			"-I- The master clock is PLLB clock divided by 2 \r\n");
 	delay_ticks(5000);
 
+#if SAM4C
+	/* Enable the PLLB clock, the mainck equals (8Mhz * (11+1) / 1) = 96Mhz
+	 * with the initialize counter be 0x3f
+	 */
+	 pmc_enable_pllbck(11, 0x3f, 1);
+#else
 	/* Enable the PLLB clock, the mainck equals (12Mhz * (7+1) / 1) = 96Mhz
-	 * with Initialize counter 0x3f.
+	 * with the initialize counter be 0x3f
 	 */
 	pmc_enable_pllbck(7, 0x3f, 1);
+#endif
 
 	/* If a new value for CSS field corresponds to PLL Clock, Program the PRES
 	 * field first.
@@ -462,8 +488,13 @@ int main(void)
 	/* The clock source for the UART is the PCK, so the uart needs
 	 * re-configuration.
 	 */
+#if SAM4C	 
+	config_uart_and_pck(PMC_PCK_CSS_PLLB_CLK, PMC_PCK_PRES_CLK_2,
+			(BOARD_FREQ_MAINCK_XTAL * 12 / 2));
+#else
 	config_uart_and_pck(PMC_PCK_CSS_PLLB_CLK, PMC_PCK_PRES_CLK_2,
 			(BOARD_FREQ_MAINCK_XTAL * 8 / 2));
+#endif
 	puts("-I- Press Button "BUTTON_NAME" to switch next clock configuration...\r\n");
 #endif
 
