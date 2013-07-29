@@ -3,7 +3,7 @@
  *
  * \brief Supply Controller (SUPC) driver for SAM.
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -54,13 +54,11 @@ extern "C" {
 /**
  * \defgroup sam_drivers_supc_group Supply Controller (SUPC)
  *
- * Driver for the SUPC (Supply Controller). This driver provides access to the main 
+ * Driver for the SUPC (Supply Controller). This driver provides access to the main
  * features of the Supply Controller.
  *
  * @{
  */
-
-#define SUPC_KEY   0xA5u
 
 /**
  * \brief Switch off the voltage regulator to put the device in backup mode.
@@ -69,7 +67,7 @@ extern "C" {
  */
 void supc_enable_backup_mode(Supc *p_supc)
 {
-	p_supc->SUPC_CR = SUPC_CR_KEY(SUPC_KEY) | SUPC_CR_VROFF;
+	p_supc->SUPC_CR = SUPC_CR_KEY_VALUE | SUPC_CR_VROFF;
 }
 
 /**
@@ -84,10 +82,10 @@ void supc_switch_sclk_to_32kxtal(Supc *p_supc, uint32_t ul_bypass)
 {
 	/* Set Bypass mode if required */
 	if (ul_bypass == 1) {
-		p_supc->SUPC_MR |= SUPC_MR_KEY(SUPC_KEY) | SUPC_MR_OSCBYPASS;
+		p_supc->SUPC_MR |= SUPC_MR_KEY_VALUE | SUPC_MR_OSCBYPASS;
 	}
 
-	p_supc->SUPC_CR |= SUPC_CR_KEY(SUPC_KEY) | SUPC_CR_XTALSEL;
+	p_supc->SUPC_CR |= SUPC_CR_KEY_VALUE | SUPC_CR_XTALSEL;
 }
 
 /**
@@ -99,10 +97,10 @@ void supc_enable_voltage_regulator(Supc *p_supc)
 {
 #if (SAM3U || SAM3XA)
 	uint32_t ul_mr = p_supc->SUPC_MR & (~(SUPC_MR_KEY_Msk | SUPC_MR_VDDIORDYONREG));
-	p_supc->SUPC_MR = SUPC_MR_KEY(SUPC_KEY) | ul_mr | SUPC_MR_VDDIORDYONREG;
+	p_supc->SUPC_MR = SUPC_MR_KEY_VALUE | ul_mr | SUPC_MR_VDDIORDYONREG;
 #else
 	uint32_t ul_mr = p_supc->SUPC_MR & (~(SUPC_MR_KEY_Msk | SUPC_MR_ONREG));
-	p_supc->SUPC_MR = SUPC_MR_KEY(SUPC_KEY) | ul_mr | SUPC_MR_ONREG;
+	p_supc->SUPC_MR = SUPC_MR_KEY_VALUE | ul_mr | SUPC_MR_ONREG;
 #endif
 }
 
@@ -118,7 +116,7 @@ void supc_disable_voltage_regulator(Supc *p_supc)
 #else
 	uint32_t ul_mr = p_supc->SUPC_MR & (~(SUPC_MR_KEY_Msk | SUPC_MR_ONREG));
 #endif
-	p_supc->SUPC_MR = SUPC_MR_KEY(SUPC_KEY) | ul_mr;
+	p_supc->SUPC_MR = SUPC_MR_KEY_VALUE | ul_mr;
 }
 
 /**
@@ -129,7 +127,7 @@ void supc_disable_voltage_regulator(Supc *p_supc)
 void supc_enable_brownout_detector(Supc *p_supc)
 {
 	uint32_t ul_mr = p_supc->SUPC_MR & (~(SUPC_MR_KEY_Msk | SUPC_MR_BODDIS));
-	p_supc->SUPC_MR = SUPC_MR_KEY(SUPC_KEY) | ul_mr;
+	p_supc->SUPC_MR = SUPC_MR_KEY_VALUE | ul_mr;
 }
 
 /**
@@ -140,7 +138,7 @@ void supc_enable_brownout_detector(Supc *p_supc)
 void supc_disable_brownout_detector(Supc *p_supc)
 {
 	uint32_t ul_mr = p_supc->SUPC_MR & (~(SUPC_MR_KEY_Msk | SUPC_MR_BODDIS));
-	p_supc->SUPC_MR = SUPC_MR_KEY(SUPC_KEY) | ul_mr | SUPC_MR_BODDIS;
+	p_supc->SUPC_MR = SUPC_MR_KEY_VALUE | ul_mr | SUPC_MR_BODDIS;
 }
 
 /**
@@ -151,7 +149,7 @@ void supc_disable_brownout_detector(Supc *p_supc)
 void supc_enable_brownout_reset(Supc *p_supc)
 {
 	uint32_t ul_mr = p_supc->SUPC_MR & (~(SUPC_MR_KEY_Msk | SUPC_MR_BODRSTEN));
-	p_supc->SUPC_MR = SUPC_MR_KEY(SUPC_KEY) | ul_mr | SUPC_MR_BODRSTEN;
+	p_supc->SUPC_MR = SUPC_MR_KEY_VALUE | ul_mr | SUPC_MR_BODRSTEN;
 }
 
 /**
@@ -162,7 +160,7 @@ void supc_enable_brownout_reset(Supc *p_supc)
 void supc_disable_brownout_reset(Supc *p_supc)
 {
 	uint32_t ul_mr = p_supc->SUPC_MR & (~(SUPC_MR_KEY_Msk | SUPC_MR_BODRSTEN));
-	p_supc->SUPC_MR = SUPC_MR_KEY(SUPC_KEY) | ul_mr;
+	p_supc->SUPC_MR = SUPC_MR_KEY_VALUE | ul_mr;
 }
 
 /**
@@ -202,7 +200,7 @@ void supc_enable_monitor_reset(Supc *p_supc)
 /**
  * \brief Disable the assertion of core reset signal when a supply monitor detection occurs.
  *
- * \param p_supc Pointer to a SUPC instance. 
+ * \param p_supc Pointer to a SUPC instance.
  */
 void supc_disable_monitor_reset(Supc *p_supc)
 {
@@ -244,10 +242,10 @@ void supc_set_wakeup_mode(Supc *p_supc, uint32_t ul_mode)
  * \brief Set system controller wake up inputs.
  *
  * \param p_supc Pointer to a SUPC instance.
- * \param ul_inputs Bitmask of wake-up inputs that can force wake up of 
+ * \param ul_inputs Bitmask of wake-up inputs that can force wake up of
  * the core power supply.
  * \param ul_transition Bitmask of level transition of the wake-up inputs.
- * 1 means a high-to-low level transition forces the wake up of core power supply. 
+ * 1 means a high-to-low level transition forces the wake up of core power supply.
  * 0 means a low-to-high level transition forces the wake up of core power supply.
  */
 void supc_set_wakeup_inputs(Supc *p_supc, uint32_t ul_inputs,

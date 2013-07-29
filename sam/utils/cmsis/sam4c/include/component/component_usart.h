@@ -68,8 +68,8 @@ typedef struct {
   __IO uint32_t US_IF;         /**< \brief (Usart Offset: 0x004C) IrDA Filter Register */
   __IO uint32_t US_MAN;        /**< \brief (Usart Offset: 0x0050) Manchester Encoder Decoder Register */
   __I  uint32_t Reserved3[36];
-  __IO uint32_t US_WPMR;       /**< \brief (Usart Offset: 0xE4) Write Protect Mode Register */
-  __I  uint32_t US_WPSR;       /**< \brief (Usart Offset: 0xE8) Write Protect Status Register */
+  __IO uint32_t US_WPMR;       /**< \brief (Usart Offset: 0x00E4) Write Protect Mode Register */
+  __I  uint32_t US_WPSR;       /**< \brief (Usart Offset: 0x00E8) Write Protect Status Register */
   __I  uint32_t Reserved4[5];
   __IO uint32_t US_RPR;        /**< \brief (Usart Offset: 0x100) Receive Pointer Register */
   __IO uint32_t US_RCR;        /**< \brief (Usart Offset: 0x104) Receive Counter Register */
@@ -227,7 +227,7 @@ typedef struct {
 #define US_CSR_PARE (0x1u << 7) /**< \brief (US_CSR) Parity Error */
 #define US_CSR_TIMEOUT (0x1u << 8) /**< \brief (US_CSR) Receiver Time-out */
 #define US_CSR_TXEMPTY (0x1u << 9) /**< \brief (US_CSR) Transmitter Empty */
-#define US_CSR_ITER (0x1u << 10) /**< \brief (US_CSR) MaxNumber of Repetitions Reached */
+#define US_CSR_ITER (0x1u << 10) /**< \brief (US_CSR) Max Number of Repetitions Reached */
 #define US_CSR_TXBUFE (0x1u << 11) /**< \brief (US_CSR) Transmission Buffer Empty */
 #define US_CSR_RXBUFF (0x1u << 12) /**< \brief (US_CSR) Reception Buffer Full */
 #define US_CSR_NACK (0x1u << 13) /**< \brief (US_CSR) Non AcknowledgeInterrupt */
@@ -293,12 +293,12 @@ typedef struct {
 #define US_MAN_RX_MPOL (0x1u << 28) /**< \brief (US_MAN) Receiver Manchester Polarity */
 #define US_MAN_ONE (0x1u << 29) /**< \brief (US_MAN) Must Be Set to 1 */
 #define US_MAN_DRIFT (0x1u << 30) /**< \brief (US_MAN) Drift Compensation */
-/* -------- US_WPMR : (USART Offset: 0xE4) Write Protect Mode Register -------- */
+/* -------- US_WPMR : (USART Offset: 0x00E4) Write Protect Mode Register -------- */
 #define US_WPMR_WPEN (0x1u << 0) /**< \brief (US_WPMR) Write Protect Enable */
 #define US_WPMR_WPKEY_Pos 8
-#define US_WPMR_WPKEY_Msk (0xffffffu << US_WPMR_WPKEY_Pos) /**< \brief (US_WPMR) Write Protect KEY */
-#define US_WPMR_WPKEY(value) ((US_WPMR_WPKEY_Msk & ((value) << US_WPMR_WPKEY_Pos)))
-/* -------- US_WPSR : (USART Offset: 0xE8) Write Protect Status Register -------- */
+#define US_WPMR_WPKEY_Msk (0xffffffu << US_WPMR_WPKEY_Pos) /**< \brief (US_WPMR) Write Protect KEY. */
+#define   US_WPMR_WPKEY_PASSWD (0x555341u << 8) /**< \brief (US_WPMR) Writing any other value in this field aborts the write operation of the WPEN bit. Always reads as 0. */
+/* -------- US_WPSR : (USART Offset: 0x00E8) Write Protect Status Register -------- */
 #define US_WPSR_WPVS (0x1u << 0) /**< \brief (US_WPSR) Write Protect Violation Status */
 #define US_WPSR_WPVSRC_Pos 8
 #define US_WPSR_WPVSRC_Msk (0xffffu << US_WPSR_WPVSRC_Pos) /**< \brief (US_WPSR) Write Protect Violation Source */

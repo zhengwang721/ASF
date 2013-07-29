@@ -103,7 +103,7 @@ typedef struct {
 #define   ADC_MR_TRGSEL_ADC_TRIG5 (0x5u << 1) /**< \brief (ADC_MR) Timer Counter Channel  4 Output */
 #define   ADC_MR_TRGSEL_ADC_TRIG6 (0x6u << 1) /**< \brief (ADC_MR) Timer Counter Channel  5 Output */
 #define ADC_MR_LOWRES (0x1u << 4) /**< \brief (ADC_MR) Resolution */
-#define   ADC_MR_LOWRES_BITS_10 (0x0u << 4) /**< \brief (ADC_MR) 10-bit resolution. For higher resolution by interpolation, please refer to "ADC Extended Mode Register" on page 79 */
+#define   ADC_MR_LOWRES_BITS_10 (0x0u << 4) /**< \brief (ADC_MR) 10-bit resolution. For higher resolution by interpolation, please refer to "ADC Extended Mode Register" on page 81 */
 #define   ADC_MR_LOWRES_BITS_8 (0x1u << 4) /**< \brief (ADC_MR) 8-bit resolution */
 #define ADC_MR_SLEEP (0x1u << 5) /**< \brief (ADC_MR) Sleep Mode */
 #define   ADC_MR_SLEEP_NORMAL (0x0u << 5) /**< \brief (ADC_MR) Normal Mode: The ADC Core and reference voltage circuitry are kept ON between conversions */
@@ -312,8 +312,8 @@ typedef struct {
 #define ADC_CDR_DATA_Msk (0xfffu << ADC_CDR_DATA_Pos) /**< \brief (ADC_CDR[8]) Converted Data */
 /* -------- ADC_ACR : (ADC Offset: 0x94) Analog Control Register -------- */
 #define ADC_ACR_IRVCE (0x1u << 2) /**< \brief (ADC_ACR) Internal Reference Voltage Change Enable */
-#define   ADC_ACR_IRVCE_STUCK_AT_DEFAULT (0x0u << 2) /**< \brief (ADC_ACR) the internal reference voltage is stuck at the default value (see the product electrical charac-teristics for further details). */
-#define   ADC_ACR_IRVCE_SELECTION (0x1u << 2) /**< \brief (ADC_ACR) the internal reference voltage is defined by field IRVS. */
+#define   ADC_ACR_IRVCE_STUCK_AT_DEFAULT (0x0u << 2) /**< \brief (ADC_ACR) The internal reference voltage is stuck at the default value (see the product electrical charac-teristics for further details). */
+#define   ADC_ACR_IRVCE_SELECTION (0x1u << 2) /**< \brief (ADC_ACR) The internal reference voltage is defined by field IRVS. */
 #define ADC_ACR_IRVS_Pos 3
 #define ADC_ACR_IRVS_Msk (0xfu << ADC_ACR_IRVS_Pos) /**< \brief (ADC_ACR) Internal Reference Voltage Selection */
 #define ADC_ACR_IRVS(value) ((ADC_ACR_IRVS_Msk & ((value) << ADC_ACR_IRVS_Pos)))
@@ -323,7 +323,7 @@ typedef struct {
 #define ADC_WPMR_WPEN (0x1u << 0) /**< \brief (ADC_WPMR) Write Protect Enable */
 #define ADC_WPMR_WPKEY_Pos 8
 #define ADC_WPMR_WPKEY_Msk (0xffffffu << ADC_WPMR_WPKEY_Pos) /**< \brief (ADC_WPMR) Write Protect KEY */
-#define ADC_WPMR_WPKEY(value) ((ADC_WPMR_WPKEY_Msk & ((value) << ADC_WPMR_WPKEY_Pos)))
+#define   ADC_WPMR_WPKEY_PASSWD (0x414443u << 8) /**< \brief (ADC_WPMR) Writing any other value in this field aborts the write operation of the WPEN bit.Always reads as 0 */
 /* -------- ADC_WPSR : (ADC Offset: 0xE8) Write Protect Status Register -------- */
 #define ADC_WPSR_WPVS (0x1u << 0) /**< \brief (ADC_WPSR) Write Protect Violation Status */
 #define ADC_WPSR_WPVSRC_Pos 8

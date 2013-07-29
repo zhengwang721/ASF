@@ -73,6 +73,12 @@ extern "C" {
 /* The write protect key value. */
 #define US_WPKEY_VALUE                0x555341
 
+#if (SAM4C)
+#define US_WPMR_WPKEY_VALUE           US_WPMR_WPKEY_PASSWD
+#else
+#define US_WPMR_WPKEY_VALUE           US_WPMR_WPKEY(US_WPKEY_VALUE);
+#endif
+	
 /* The CD value scope programmed in MR register. */
 #define MIN_CD_VALUE                  0x01
 #define MIN_CD_VALUE_SPI              0x04
@@ -1579,7 +1585,7 @@ Pdc *usart_get_pdc_base(Usart *p_usart)
  */
 void usart_enable_writeprotect(Usart *p_usart)
 {
-	p_usart->US_WPMR = US_WPMR_WPEN | US_WPMR_WPKEY(US_WPKEY_VALUE);
+	p_usart->US_WPMR = US_WPMR_WPEN | US_WPMR_WPKEY_VALUE;
 }
 
 /**
@@ -1589,7 +1595,7 @@ void usart_enable_writeprotect(Usart *p_usart)
  */
 void usart_disable_writeprotect(Usart *p_usart)
 {
-	p_usart->US_WPMR = US_WPMR_WPKEY(US_WPKEY_VALUE);
+	p_usart->US_WPMR = US_WPMR_WPKEY_VALUE;
 }
 
 /**

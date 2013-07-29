@@ -124,7 +124,6 @@ typedef struct {
 #define   CHIPID_CIDR_ARCH_AT91SAM7AQxx (0x61u << 20) /**< \brief (CHIPID_CIDR) AT91SAM7AQxx Series */
 #define   CHIPID_CIDR_ARCH_AT91x63 (0x63u << 20) /**< \brief (CHIPID_CIDR) AT91x63 Series */
 #define   CHIPID_CIDR_ARCH_SAM4CxxC (0x64u << 20) /**< \brief (CHIPID_CIDR) SAM4CxC Series (100-pin version) */
-#define   CHIPID_CIDR_ARCH_SAM4CxxE (0x66u << 20) /**< \brief (CHIPID_CIDR) SAM4CxE Series (144-pin version) */
 #define   CHIPID_CIDR_ARCH_AT91SAM7Sxx (0x70u << 20) /**< \brief (CHIPID_CIDR) AT91SAM7Sxx Series */
 #define   CHIPID_CIDR_ARCH_AT91SAM7XCxx (0x71u << 20) /**< \brief (CHIPID_CIDR) AT91SAM7XCxx Series */
 #define   CHIPID_CIDR_ARCH_AT91SAM7SExx (0x72u << 20) /**< \brief (CHIPID_CIDR) AT91SAM7SExx Series */
@@ -159,7 +158,7 @@ typedef struct {
 #define   CHIPID_EXID_EXID_SAM4C (0x0u << 0) /**< \brief (CHIPID_EXID) Dual Core */
 #define   CHIPID_EXID_EXID_SAM4CMP (0x1u << 0) /**< \brief (CHIPID_EXID) SAM4C (A301) */
 #define   CHIPID_EXID_EXID_SAM4CMS (0x2u << 0) /**< \brief (CHIPID_EXID) SAM4C (A101) */
-#define   CHIPID_EXID_EXID_SAM4CP (0x4u << 0) /**< \brief (CHIPID_EXID) SAM4C (CPL250) */
+#define   CHIPID_EXID_EXID_SAM4CP (0x4u << 0) /**< \brief (CHIPID_EXID) SAM4C (CPL1025) */
 
 /*@}*/
 

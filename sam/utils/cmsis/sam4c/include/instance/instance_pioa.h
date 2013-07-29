@@ -86,7 +86,6 @@
   #define REG_PIOA_FELLSR                   (0x400E0ED0U) /**< \brief (PIOA) Falling Edge/Low Level Select Register */
   #define REG_PIOA_REHLSR                   (0x400E0ED4U) /**< \brief (PIOA) Rising Edge/ High Level Select Register */
   #define REG_PIOA_FRLHSR                   (0x400E0ED8U) /**< \brief (PIOA) Fall/Rise - Low/High Status Register */
-  #define REG_PIOA_LOCKSR                   (0x400E0EE0U) /**< \brief (PIOA) Lock Status */
   #define REG_PIOA_WPMR                     (0x400E0EE4U) /**< \brief (PIOA) Write Protect Mode Register */
   #define REG_PIOA_WPSR                     (0x400E0EE8U) /**< \brief (PIOA) Write Protect Status Register */
   #define REG_PIOA_SCHMITT                  (0x400E0F00U) /**< \brief (PIOA) Schmitt Trigger Register */
@@ -136,7 +135,6 @@
   #define REG_PIOA_FELLSR  (*(__O  uint32_t*)0x400E0ED0U) /**< \brief (PIOA) Falling Edge/Low Level Select Register */
   #define REG_PIOA_REHLSR  (*(__O  uint32_t*)0x400E0ED4U) /**< \brief (PIOA) Rising Edge/ High Level Select Register */
   #define REG_PIOA_FRLHSR  (*(__I  uint32_t*)0x400E0ED8U) /**< \brief (PIOA) Fall/Rise - Low/High Status Register */
-  #define REG_PIOA_LOCKSR  (*(__I  uint32_t*)0x400E0EE0U) /**< \brief (PIOA) Lock Status */
   #define REG_PIOA_WPMR    (*(__IO uint32_t*)0x400E0EE4U) /**< \brief (PIOA) Write Protect Mode Register */
   #define REG_PIOA_WPSR    (*(__I  uint32_t*)0x400E0EE8U) /**< \brief (PIOA) Write Protect Status Register */
   #define REG_PIOA_SCHMITT (*(__IO uint32_t*)0x400E0F00U) /**< \brief (PIOA) Schmitt Trigger Register */
