@@ -18,7 +18,7 @@
 		<require idref="sam0.drivers.system"/>
 		<require idref="sam0.drivers.sercom.usart"/>
 		<require idref="sam0.drivers.tc"/>
-		<require idref="thirdparty.os.freertos-7_4_2"/>
+		<require idref="thirdparty.os.freertos-7_5_2"/>
 	</module>
 	<module type="driver" id="common.services.freertos.oled1_tickless_xpro_example.user_io" caption="User I/O driver for FreeRTOS demo">
 		<build type="header-file" subtype="api" value="cdc.h"/>
