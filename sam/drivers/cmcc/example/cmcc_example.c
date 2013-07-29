@@ -96,7 +96,7 @@ struct cmcc_config g_cmcc_cfg;
  */
 static uint32_t recfibo(uint32_t n)
 {
-	if (n == 0 || n == 1) {
+        if (n == 0 || n == 1) {
 		return n;
 	}
 
@@ -147,12 +147,14 @@ int main(void)
 	cmcc_enable(CMCC);
 #else
         cmcc_init(CMCC0, &g_cmcc_cfg);
-	cmcc_enable(CMCC0);
+        cmcc_enable(CMCC0);
+        cmcc_reset_monitor(CMCC0);
+	
 #endif
 
 	/* Do the Fibonacci calculation. */
 	recfibo(FIBONACCI_NUM);
-
+         
 	printf("Fibonacci calculation completed \r\n");
 #if !SAM4C
 	printf("Cache Data hit: %ul \r\n", cmcc_get_monitor_cnt(CMCC));
