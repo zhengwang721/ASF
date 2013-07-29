@@ -44,7 +44,6 @@
 /* ========== Register definition for CMCC0 peripheral ========== */
 #if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
   #define REG_CMCC0_TYPE                    (0x4007C000U) /**< \brief (CMCC0) Cache Type Register */
-  #define REG_CMCC0_CFG                     (0x4007C004U) /**< \brief (CMCC0) Cache Configuration Register */
   #define REG_CMCC0_CTRL                    (0x4007C008U) /**< \brief (CMCC0) Cache Control Register */
   #define REG_CMCC0_SR                      (0x4007C00CU) /**< \brief (CMCC0) Cache Status Register */
   #define REG_CMCC0_MAINT0                  (0x4007C020U) /**< \brief (CMCC0) Cache Maintenance Register 0 */
@@ -55,7 +54,6 @@
   #define REG_CMCC0_MSR                     (0x4007C034U) /**< \brief (CMCC0) Cache Monitor Status Register */
 #else
   #define REG_CMCC0_TYPE   (*(__I  uint32_t*)0x4007C000U) /**< \brief (CMCC0) Cache Type Register */
-  #define REG_CMCC0_CFG    (*(__IO uint32_t*)0x4007C004U) /**< \brief (CMCC0) Cache Configuration Register */
   #define REG_CMCC0_CTRL   (*(__O  uint32_t*)0x4007C008U) /**< \brief (CMCC0) Cache Control Register */
   #define REG_CMCC0_SR     (*(__I  uint32_t*)0x4007C00CU) /**< \brief (CMCC0) Cache Status Register */
   #define REG_CMCC0_MAINT0 (*(__O  uint32_t*)0x4007C020U) /**< \brief (CMCC0) Cache Maintenance Register 0 */

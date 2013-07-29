@@ -83,13 +83,15 @@ typedef struct {
   __I  uint32_t PMC_PCSR1;     /**< \brief (Pmc Offset: 0x0108) Peripheral Clock Status Register 1 */
   __I  uint32_t Reserved7[1];
   __IO uint32_t PMC_OCR;       /**< \brief (Pmc Offset: 0x0110) Oscillator Calibration Register */
+  __I  uint32_t Reserved8[7];
+  __IO uint32_t PMC_PMMR;      /**< \brief (Pmc Offset: 0x130) PLL Maximum Multiplier Value Register */
 } Pmc;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 /* -------- PMC_SCER : (PMC Offset: 0x0000) System Clock Enable Register -------- */
 #define PMC_SCER_PCK0 (0x1u << 8) /**< \brief (PMC_SCER) Programmable Clock 0 Output Enable */
 #define PMC_SCER_PCK1 (0x1u << 9) /**< \brief (PMC_SCER) Programmable Clock 1 Output Enable */
 #define PMC_SCER_PCK2 (0x1u << 10) /**< \brief (PMC_SCER) Programmable Clock 2 Output Enable */
-#define PMC_SCER_CPCK (0x1u << 16) /**< \brief (PMC_SCER) Coprocessor (second processor) Clocks Enable */
+#define PMC_SCER_CPCK (0x1u << 16) /**< \brief (PMC_SCER) Coprocessor (Second Processor) Clocks Enable */
 #define PMC_SCER_CPBMCK (0x1u << 17) /**< \brief (PMC_SCER) Coprocessor Bus Master Clocks Enable */
 #define PMC_SCER_CPKEY_Pos 20
 #define PMC_SCER_CPKEY_Msk (0xfu << PMC_SCER_CPKEY_Pos) /**< \brief (PMC_SCER) Coprocessor Clocks Enable Key */
@@ -107,7 +109,7 @@ typedef struct {
 #define PMC_SCSR_PCK0 (0x1u << 8) /**< \brief (PMC_SCSR) Programmable Clock 0 Output Status */
 #define PMC_SCSR_PCK1 (0x1u << 9) /**< \brief (PMC_SCSR) Programmable Clock 1 Output Status */
 #define PMC_SCSR_PCK2 (0x1u << 10) /**< \brief (PMC_SCSR) Programmable Clock 2 Output Status */
-#define PMC_SCSR_CPCK (0x1u << 16) /**< \brief (PMC_SCSR) Coprocessor (second processor) Clocks Status */
+#define PMC_SCSR_CPCK (0x1u << 16) /**< \brief (PMC_SCSR) Coprocessor (Second Processor) Clocks Status */
 #define PMC_SCSR_CPBMCK (0x1u << 17) /**< \brief (PMC_SCSR) Coprocessor Bus Master Clock Status */
 /* -------- PMC_PCER0 : (PMC Offset: 0x0010) Peripheral Clock Enable Register 0 -------- */
 #define PMC_PCER0_PID8 (0x1u << 8) /**< \brief (PMC_PCER0) Peripheral Clock 8 Enable */
@@ -204,6 +206,9 @@ typedef struct {
 #define CKGR_MCFR_MAINFRDY (0x1u << 16) /**< \brief (CKGR_MCFR) Main Clock Ready */
 #define CKGR_MCFR_RCMEAS (0x1u << 20) /**< \brief (CKGR_MCFR) RC Oscillator Frequency Measure (write-only) */
 /* -------- CKGR_PLLAR : (PMC Offset: 0x0028) PLLA Register -------- */
+#define CKGR_PLLAR_PLLAEN_Pos 0
+#define CKGR_PLLAR_PLLAEN_Msk (0xffu << CKGR_PLLAR_PLLAEN_Pos) /**< \brief (CKGR_PLLAR) PLLA Control */
+#define CKGR_PLLAR_PLLAEN(value) ((CKGR_PLLAR_PLLAEN_Msk & ((value) << CKGR_PLLAR_PLLAEN_Pos)))
 #define CKGR_PLLAR_PLLACOUNT_Pos 8
 #define CKGR_PLLAR_PLLACOUNT_Msk (0x3fu << CKGR_PLLAR_PLLACOUNT_Pos) /**< \brief (CKGR_PLLAR) PLLA Counter */
 #define CKGR_PLLAR_PLLACOUNT(value) ((CKGR_PLLAR_PLLACOUNT_Msk & ((value) << CKGR_PLLAR_PLLACOUNT_Pos)))
@@ -212,7 +217,7 @@ typedef struct {
 #define CKGR_PLLAR_MULA(value) ((CKGR_PLLAR_MULA_Msk & ((value) << CKGR_PLLAR_MULA_Pos)))
 /* -------- CKGR_PLLBR : (PMC Offset: 0x002C) PLLB Register -------- */
 #define CKGR_PLLBR_DIVB_Pos 0
-#define CKGR_PLLBR_DIVB_Msk (0xffu << CKGR_PLLBR_DIVB_Pos) /**< \brief (CKGR_PLLBR) Divider */
+#define CKGR_PLLBR_DIVB_Msk (0xffu << CKGR_PLLBR_DIVB_Pos) /**< \brief (CKGR_PLLBR) PLLB Front-End Divider */
 #define CKGR_PLLBR_DIVB(value) ((CKGR_PLLBR_DIVB_Msk & ((value) << CKGR_PLLBR_DIVB_Pos)))
 #define CKGR_PLLBR_PLLBCOUNT_Pos 8
 #define CKGR_PLLBR_PLLBCOUNT_Msk (0x3fu << CKGR_PLLBR_PLLBCOUNT_Pos) /**< \brief (CKGR_PLLBR) PLLB Counter */

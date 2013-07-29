@@ -59,7 +59,7 @@
  *
  * \section sysclk_quickstart_basic Basic usage of the System Clock Management service
  * This section will present a basic use case for the System Clock Management service.
- * This use case will configure the main system clock to 100MHz, using an internal PLLB
+ * This use case will configure the main system clock to 120MHz, using an internal PLLB
  * module to multiply the frequency of a crystal attached to the microcontroller.
  *
  * \subsection sysclk_quickstart_use_case_1_prereq Prerequisites
@@ -83,11 +83,11 @@
  *
  *   // Fpll1 = (Fclk * PLL_mul) / PLL_div
  *   #define CONFIG_PLL1_SOURCE          PLLB_SRC_MAINCK_XTAL
- *   #define CONFIG_PLL1_MUL             (400000000UL / BOARD_FREQ_MAINCK_XTAL)
+ *   #define CONFIG_PLL1_MUL             (240000000UL / BOARD_FREQ_MAINCK_XTAL)
  *   #define CONFIG_PLL1_DIV             2
  *
  *   // Fbus = Fsys / BUS_div
- *   #define CONFIG_SYSCLK_PRES          SYSCLK_PRES_2
+ *   #define CONFIG_SYSCLK_PRES          SYSCLK_PRES_1
  *   \endcode
  *
  * \subsection sysclk_quickstart_use_case_1_example_workflow Workflow
@@ -97,14 +97,14 @@
  *   \code #define CONFIG_PLL1_SOURCE            PLLB_SRC_MAINCK_XTAL \endcode
  *  -# Configure the PLL module to multiply the external crystal oscillator frequency up to 200MHz:
  *   \code
- *   #define CONFIG_PLL1_MUL             (400000000UL / BOARD_FREQ_MAINCK_XTAL)
- *   #define CONFIG_PLL1_DIV             2
+ *   #define CONFIG_PLL1_MUL             (240000000UL / BOARD_FREQ_MAINCK_XTAL)
+ *   #define CONFIG_PLL1_DIV             1
  *   \endcode
  *   \note For user boards, \c BOARD_FREQ_MAINCK_XTAL should be defined in the board \c conf_board.h configuration
  *         file as the frequency of the fast crystal attached to the microcontroller.
- *  -# Configure the main clock to run at the full 100MHz, set prescaler to 2:
+ *  -# Configure the main clock to run at the full 120MHz, set prescaler to 1:
  *    \code
- *    #define CONFIG_SYSCLK_PRES         SYSCLK_PRES_2
+ *    #define CONFIG_SYSCLK_PRES         SYSCLK_PRES_1
  *    \endcode
  */
 
@@ -249,7 +249,11 @@ static inline uint32_t sysclk_get_main_hz(void)
 
 #ifdef CONFIG_PLL1_SOURCE
 	else if (CONFIG_SYSCLK_SOURCE == SYSCLK_SRC_PLLBCK) {
-		return pll_get_default_rate(1);
+		if (CONFIG_PLL1_SOURCE == PLLB_SRC_PLLA) {
+			return (PLLA_OUTPUT_HZ * CONFIG_PLL1_MUL / CONFIG_PLL1_DIV);
+		} else {
+			return pll_get_default_rate(1);
+		}
 	}
 #endif
 
