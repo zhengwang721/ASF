@@ -42,9 +42,9 @@
 #define _SAM4C_IPC_COMPONENT_
 
 /* ============================================================================= */
-/**  SOFTWARE API DEFINITION FOR Inter-processor Communication */
+/**  SOFTWARE API DEFINITION FOR Interprocessor Communication */
 /* ============================================================================= */
-/** \addtogroup SAM4C_IPC Inter-processor Communication */
+/** \addtogroup SAM4C_IPC Interprocessor Communication */
 /*@{*/
 
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))

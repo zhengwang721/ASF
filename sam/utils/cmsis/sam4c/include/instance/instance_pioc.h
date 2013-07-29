@@ -86,7 +86,6 @@
   #define REG_PIOC_FELLSR                   (0x4800C0D0U) /**< \brief (PIOC) Falling Edge/Low Level Select Register */
   #define REG_PIOC_REHLSR                   (0x4800C0D4U) /**< \brief (PIOC) Rising Edge/ High Level Select Register */
   #define REG_PIOC_FRLHSR                   (0x4800C0D8U) /**< \brief (PIOC) Fall/Rise - Low/High Status Register */
-  #define REG_PIOC_LOCKSR                   (0x4800C0E0U) /**< \brief (PIOC) Lock Status */
   #define REG_PIOC_WPMR                     (0x4800C0E4U) /**< \brief (PIOC) Write Protect Mode Register */
   #define REG_PIOC_WPSR                     (0x4800C0E8U) /**< \brief (PIOC) Write Protect Status Register */
   #define REG_PIOC_SCHMITT                  (0x4800C100U) /**< \brief (PIOC) Schmitt Trigger Register */
@@ -136,7 +135,6 @@
   #define REG_PIOC_FELLSR  (*(__O  uint32_t*)0x4800C0D0U) /**< \brief (PIOC) Falling Edge/Low Level Select Register */
   #define REG_PIOC_REHLSR  (*(__O  uint32_t*)0x4800C0D4U) /**< \brief (PIOC) Rising Edge/ High Level Select Register */
   #define REG_PIOC_FRLHSR  (*(__I  uint32_t*)0x4800C0D8U) /**< \brief (PIOC) Fall/Rise - Low/High Status Register */
-  #define REG_PIOC_LOCKSR  (*(__I  uint32_t*)0x4800C0E0U) /**< \brief (PIOC) Lock Status */
   #define REG_PIOC_WPMR    (*(__IO uint32_t*)0x4800C0E4U) /**< \brief (PIOC) Write Protect Mode Register */
   #define REG_PIOC_WPSR    (*(__I  uint32_t*)0x4800C0E8U) /**< \brief (PIOC) Write Protect Status Register */
   #define REG_PIOC_SCHMITT (*(__IO uint32_t*)0x4800C100U) /**< \brief (PIOC) Schmitt Trigger Register */

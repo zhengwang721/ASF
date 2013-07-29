@@ -44,7 +44,6 @@
 /* ========== Register definition for CMCC1 peripheral ========== */
 #if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
   #define REG_CMCC1_TYPE                    (0x48018000U) /**< \brief (CMCC1) Cache Type Register */
-  #define REG_CMCC1_CFG                     (0x48018004U) /**< \brief (CMCC1) Cache Configuration Register */
   #define REG_CMCC1_CTRL                    (0x48018008U) /**< \brief (CMCC1) Cache Control Register */
   #define REG_CMCC1_SR                      (0x4801800CU) /**< \brief (CMCC1) Cache Status Register */
   #define REG_CMCC1_MAINT0                  (0x48018020U) /**< \brief (CMCC1) Cache Maintenance Register 0 */
@@ -55,7 +54,6 @@
   #define REG_CMCC1_MSR                     (0x48018034U) /**< \brief (CMCC1) Cache Monitor Status Register */
 #else
   #define REG_CMCC1_TYPE   (*(__I  uint32_t*)0x48018000U) /**< \brief (CMCC1) Cache Type Register */
-  #define REG_CMCC1_CFG    (*(__IO uint32_t*)0x48018004U) /**< \brief (CMCC1) Cache Configuration Register */
   #define REG_CMCC1_CTRL   (*(__O  uint32_t*)0x48018008U) /**< \brief (CMCC1) Cache Control Register */
   #define REG_CMCC1_SR     (*(__I  uint32_t*)0x4801800CU) /**< \brief (CMCC1) Cache Status Register */
   #define REG_CMCC1_MAINT0 (*(__O  uint32_t*)0x48018020U) /**< \brief (CMCC1) Cache Maintenance Register 0 */
