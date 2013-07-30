@@ -63,6 +63,18 @@ extern "C" {
  * @{
  */
 
+#if SAM4C
+#if __MPU_PRESENT == 1
+#define MATRIX MATRIX0
+#elif
+#define MATRIX MATRIX1
+#endif
+#endif
+
+#ifndef MATRIX_WPMR_WPKEY_PASSWD
+#define MATRIX_WPMR_WPKEY_PASSWD MATRIX_WPMR_WPKEY(MATRIX_WPKEY)
+#endif
+
 /**
  * \brief Set undefined length burst type of the specified master.
  *
@@ -190,7 +202,7 @@ uint32_t matrix_get_slave_fixed_default_master(uint32_t ul_id)
 	return (ul_reg >> MATRIX_SCFG_FIXED_DEFMSTR_Pos);
 }
 
-#if !SAM4E
+#if !SAM4E && !SAM4C
 
 /**
  * \brief Set slave arbitration type of the specified slave.
@@ -296,7 +308,7 @@ uint32_t matrix_get_master_remap(void)
 
 #endif /* (SAM3XA || SAM3U || SAM4E) */
 
-#if (SAM3S || SAM3XA || SAM3N || SAM4S || SAM4E || SAM4N)
+#if (SAM3S || SAM3XA || SAM3N || SAM4S || SAM4E || SAM4N || SAM4C)
 
 /**
  * \brief Set system IO.
@@ -322,7 +334,7 @@ uint32_t matrix_get_system_io(void)
 	return (p_matrix->CCFG_SYSIO);
 }
 
-#endif /* (SAM3S || SAM3XA || SAM3N || SAM4S || SAM4E) */
+#endif /* (SAM3S || SAM3XA || SAM3N || SAM4S || SAM4E || SAM4C) */
 
 #if (SAM3S || SAM4S || SAM4E)
 
@@ -365,10 +377,9 @@ void matrix_set_writeprotect(uint32_t ul_enable)
 	Matrix *p_matrix = MATRIX;
 
 	if (ul_enable) {
-		p_matrix->MATRIX_WPMR = MATRIX_WPMR_WPKEY(MATRIX_WPKEY) |
-				MATRIX_WPMR_WPEN;
+		p_matrix->MATRIX_WPMR = MATRIX_WPMR_WPKEY_PASSWD | MATRIX_WPMR_WPEN;
 	} else {
-		p_matrix->MATRIX_WPMR = MATRIX_WPMR_WPKEY(MATRIX_WPKEY);
+		p_matrix->MATRIX_WPMR = MATRIX_WPMR_WPKEY_PASSWD;
 	}
 }
 

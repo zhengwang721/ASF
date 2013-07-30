@@ -108,10 +108,10 @@ void pio_set_debounce_filter(Pio *p_pio, const uint32_t ul_mask,
 #error "Unsupported device"
 #endif
 
-	/* 
+	/*
 	 * The debouncing filter can filter a pulse of less than 1/2 Period of a
 	 * programmable Divided Slow Clock:
-	 * Tdiv_slclk = ((DIV+1)*2).Tslow_clock 
+	 * Tdiv_slclk = ((DIV+1)*2).Tslow_clock
 	 */
 	p_pio->PIO_SCDR = PIO_SCDR_DIV((FREQ_SLOW_CLOCK_EXT /
 					(2 * (ul_cut_off))) - 1);
@@ -670,7 +670,11 @@ void pio_set_additional_interrupt_mode(Pio *p_pio,
 	}
 }
 
+#ifdef PIO_WPMR_WPKEY
 #define PIO_WPMR_WPKEY_VALUE PIO_WPMR_WPKEY(0x50494Fu)
+#else
+#define PIO_WPMR_WPKEY_VALUE PIO_WPMR_WPKEY_PASSWD
+#endif
 
 /**
  * \brief Enable or disable write protect of PIO registers.
@@ -1103,6 +1107,27 @@ Pdc *pio_capture_get_pdc_base(const Pio *p_pio)
 {
 	UNUSED(p_pio); /* Stop warning */
 	return PDC_PIOA;
+}
+#endif
+
+#if SAM4C
+/**
+ * \brief Set PIO IO drive.
+ *
+ * \param p_pio Pointer to an PIO peripheral.
+ * \param ul_pin Pin index.
+ * \param mode IO drive mode.
+ */
+void pio_set_io_drive(Pio *p_pio, uint32_t ul_pin,
+		enum pio_io_drive_mode mode)
+{
+	if (ul_pin > 15) {
+		p_pio->PIO_DRIVER2 &= ~(3 << ((ul_pin - 15) * 2));
+		p_pio->PIO_DRIVER2 |= mode << ((ul_pin - 15) * 2);
+	} else {
+		p_pio->PIO_DRIVER1 &= ~(3 << (ul_pin * 2));
+		p_pio->PIO_DRIVER1 |= mode << (ul_pin * 2);
+	}
 }
 #endif
 
