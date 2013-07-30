@@ -102,7 +102,11 @@ static void mac_t_missed_beacons_cb(void *callback_parameter);
  *
  * @param m Pointer to the MLME sync request parameters.
  */
+#ifdef __ALIGNED_ACCESS__
+void mlme_sync_request(uint32_t *m)
+#else
 void mlme_sync_request(uint8_t *m)
+#endif
 {
 #if (_DEBUG_ > 0)
 	retval_t set_status, set_status_2;
@@ -363,7 +367,7 @@ void mac_sync_loss(uint8_t loss_reason)
 	 * The buffer pointer is stored into the begin of the same static
 	 *buffer.
 	 */
-	static uint8_t mac_sync_loss_buffer[sizeof(buffer_t) +
+	static uint32_t mac_sync_loss_buffer[sizeof(buffer_t) +
 	sizeof(mlme_sync_loss_ind_t)];
 	mlme_sync_loss_ind_t *sync_loss_ind;
 	buffer_t *msg_ptr;

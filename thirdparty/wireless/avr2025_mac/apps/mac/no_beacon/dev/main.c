@@ -95,14 +95,10 @@
 #include <stdio.h>
 #include "conf_board.h"
 #include "avr2025_mac.h"
-#ifdef __SAMD20J18__
-#include "system.h"
-#endif
 #include "delay.h"
 #include "common_sw_timer.h"
 #include "sio2host.h"
 #include <asf.h>
-
 
 /* === TYPES =============================================================== */
 
@@ -118,7 +114,7 @@
 #define MAX_NUMBER_OF_DEVICES           (1)
 
 /** This is the time period in micro seconds for polling transmissions. */
-#define APP_POLL_PERIOD_MS              (5000)
+#define APP_POLL_PERIOD_MS              (1000)
 
 /** Define the LED on duration time. */
 #define LED_ON_DURATION                 (500000)
@@ -207,19 +203,17 @@ static void app_alert(void);
 int main(void)
 {
 	irq_initialize_vectors();
-#ifdef __SAMD20J18__
-	system_init();
-	delay_init();
-#else
-	sysclk_init();
 
 	/* Initialize the board.
 	 * The board-specific conf_board.h file contains the configuration of
 	 * the board initialization.
 	 */
-	board_init();
-#endif
 
+	system_init();
+	delay_init();
+#ifdef SIO_HUB
+	sio2host_init();
+#endif
 	sw_timer_init();
 
 	if (MAC_SUCCESS != wpan_init()) {
@@ -236,7 +230,6 @@ int main(void)
 #ifdef SIO_HUB
 	/* Initialize the serial interface used for communication with terminal
 	 *program. */
-	sio2host_init();
 
 	/* To make sure the hyper terminal gets connected to the system */
 	sio2host_getchar();
@@ -288,6 +281,7 @@ void usr_mcps_data_conf(uint8_t msduHandle,
  * @param Timestamp        The time, in symbols, at which the data were received
  *                         (only if timestamping is enabled).
  */
+const char Display_Received_Frame[] = "Frame received: %lu, data: %u\r\n";
 void usr_mcps_data_ind(wpan_addr_spec_t *SrcAddrSpec,
 		wpan_addr_spec_t *DstAddrSpec,
 		uint8_t msduLength,
@@ -301,16 +295,17 @@ void usr_mcps_data_ind(wpan_addr_spec_t *SrcAddrSpec,
 #endif  /* ENABLE_TSTAMP */
 {
 #ifdef SIO_HUB
-	char sio_array[255];
+	//char sio_array[255];
 #endif
 
 	/*increments the receive count*/
 	rx_cnt++;
 
 #ifdef SIO_HUB
-	sprintf(sio_array, "Frame received: %" PRIu32 ",data: %" PRIu8 "\r\n",
+	/* sprintf(sio_array, "Frame received: %" PRIu32 ",data: %" PRIu8 "\r\n",
 			rx_cnt, *msdu);
-	printf(sio_array);
+	printf(sio_array); */ //@mathi
+	printf(Display_Received_Frame, rx_cnt, *msdu);
 #endif
 
 	/*

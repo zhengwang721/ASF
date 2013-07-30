@@ -112,7 +112,7 @@ struct usart_config cdc_uart_config;
 
 uint8_t sio2host_tx(uint8_t *data, uint8_t length)
 {
-	status_code_t status;
+	status_code_genare_t status;
 	do {
 #ifdef __SAMD20J18__
 status = usart_serial_write_packet(&cdc_uart_module,(const uint8_t *)data,length);

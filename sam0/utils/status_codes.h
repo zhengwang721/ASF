@@ -112,6 +112,7 @@ enum status_code {
 
 	STATUS_ERR_PIN_MUX_INVALID        = STATUS_CATEGORY_IO     | 0x00,
 };
+typedef enum status_code status_code_genare_t;
 
 /**
   Status codes used by MAC stack.

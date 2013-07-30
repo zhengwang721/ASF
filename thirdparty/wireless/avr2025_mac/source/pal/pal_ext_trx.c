@@ -96,7 +96,7 @@ void pal_spi_init(void)
         spi_attach_slave(&slave, &slave_dev_config);
         spi_get_config_defaults(&config);
         config.mux_setting = EXT2_SPI_SERCOM_MUX_SETTING;
-	  config.master.baudrate = AT86RFX_SPI_BAUDRATE;
+        config.mode_specific.master.baudrate = AT86RFX_SPI_BAUDRATE;
         config.pinmux_pad0 = PINMUX_PA16C_SERCOM1_PAD0; //SPI MISO
         config.pinmux_pad1 = PINMUX_UNUSED;
         config.pinmux_pad2 = PINMUX_PA18C_SERCOM1_PAD2; //SPI MOSI

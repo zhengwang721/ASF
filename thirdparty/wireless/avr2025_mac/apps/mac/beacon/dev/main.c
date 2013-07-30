@@ -93,19 +93,15 @@
  */
 
 #include <string.h>
-#include "tal.h"
 #include <inttypes.h>
 #include <stdio.h>
 #include "conf_board.h"
 #include "avr2025_mac.h"
-//#include "led.h"
-#ifdef __SAMD20J18__
-#include "system.h"
-#endif
+//#include "led.h" siva
 #include "delay.h"
 #include "common_sw_timer.h"
 #include "sio2host.h"
-#include <board.h>
+#include <asf.h>
 
 /* === TYPES =============================================================== */
 
@@ -127,7 +123,7 @@ app_state_t;
 /** Defines the short address of the coordinator. */
 #define COORD_SHORT_ADDR                CCPU_ENDIAN_TO_LE16(0x0000)
 
-#define CHANNEL_OFFSET                  (0)
+#define CHANNEL_OFFSET                  (1)
 
 #define SCAN_CHANNEL                    (1ul << current_channel)
 
@@ -214,25 +210,18 @@ static void app_alert(void);
 int main(void)
 {
 	irq_initialize_vectors();
-#ifdef __SAMD20J18__
-	system_init();
-	delay_init();
-#else
-	sysclk_init();
+	//sysclk_init();
 
 	/* Initialize the board.
 	 * The board-specific conf_board.h file contains the configuration of
 	 * the board initialization.
 	 */
-	board_init();
-#endif
+	//board_init();
+	system_init();
+	delay_init();
 #ifdef SIO_HUB
-	/* Initialize the serial interface used for communication with terminal
-	 *program. */
-	sio2host_init();
-
+	sio2host_init(); 
 #endif
-
 	sw_timer_init();
 
 	if (MAC_SUCCESS != wpan_init()) {
@@ -247,6 +236,9 @@ int main(void)
 	cpu_irq_enable();
 
 #ifdef SIO_HUB
+	/* Initialize the serial interface used for communication with terminal
+	 *program. */
+	//sio2host_init(); siva
 
 	/* To Make sure the Hyper Terminal to the System */
 	sio2host_getchar();
@@ -272,7 +264,7 @@ int main(void)
  * @param msduHandle  Handle of MSDU handed over to MAC earlier
  * @param status      Result for requested data transmission request
  * @param Timestamp   The time, in symbols, at which the data were transmitted
- *                    (only if timestamping is enabled).
+ *                    (only if time stamping is enabled).
  *
  */
 void usr_mcps_data_conf(uint8_t msduHandle,
@@ -298,6 +290,9 @@ void usr_mcps_data_conf(uint8_t msduHandle,
  *received.
  *                         (only if timestamping is enabled).
  */
+#ifdef SIO_HUB
+const char Display_Frame_Received[] = "Frame received: %lu\r\n";
+#endif
 void usr_mcps_data_ind(wpan_addr_spec_t *SrcAddrSpec,
 		wpan_addr_spec_t *DstAddrSpec,
 		uint8_t msduLength,
@@ -311,27 +306,30 @@ void usr_mcps_data_ind(wpan_addr_spec_t *SrcAddrSpec,
 #endif  /* ENABLE_TSTAMP */
 {
 #ifdef SIO_HUB
-	char sio_array[255];
+	//char sio_array[255];
 #endif
 
 	if (DstAddrSpec->Addr.short_address == BROADCAST) {
 		bc_rx_cnt++;
 #ifdef SIO_HUB
 		printf("Broadcast ");
-		sprintf(sio_array, "Frame received: %" PRIu32 "\r\n",
-				bc_rx_cnt);
+		/*sprintf(sio_array, "Frame received: %" PRIu32 "\r\n",
+				bc_rx_cnt);*/
+		printf(Display_Frame_Received, bc_rx_cnt);
+		
 #endif
 	} else {
 		indirect_rx_cnt++;
 #ifdef SIO_HUB
 		printf("Indirect Data ");
-		sprintf(sio_array, "Frame received: %" PRIu32 "\r\n",
-				indirect_rx_cnt);
+		/*sprintf(sio_array, "Frame received: %" PRIu32 "\r\n",
+				indirect_rx_cnt);*/
+		printf(Display_Frame_Received, indirect_rx_cnt);
 #endif
 	}
 
 #ifdef SIO_HUB
-	printf(sio_array);
+	/* printf(sio_array);*/
 #endif
 
 	/*
@@ -448,6 +446,9 @@ void usr_mlme_associate_ind(uint64_t DeviceAddress,
  * @param sduLength      Length of beacon payload.
  * @param sdu            Pointer to beacon payload.
  */
+#ifdef SIO_HUB
+const char Display_Rx_Beacon_Payload[] = "Rx beacon payload (%lu): ";
+#endif
 void usr_mlme_beacon_notify_ind(uint8_t BSN,
 		wpan_pandescriptor_t *PANDescriptor,
 		uint8_t PendAddrSpec,
@@ -482,7 +483,7 @@ void usr_mlme_beacon_notify_ind(uint8_t BSN,
 		/*
 		 * Extract the beacon payload from our coordinator and feed it
 		 *back
-		 * to the coordiantor via a data frame.
+		 * to the coordinator via a data frame.
 		 */
 
 		/* Use: bool wpan_mcps_data_req(uint8_t SrcAddrMode,
@@ -516,13 +517,14 @@ void usr_mlme_beacon_notify_ind(uint8_t BSN,
 #ifdef SIO_HUB
 		{
 			static uint32_t rx_cnt;
-			char sio_array[255]; /* sizeof(uint32_t) + 1 */
+			//char sio_array[255]; /* sizeof(uint32_t) + 1 */
 
 			/* Print received payload. */
 			rx_cnt++;
-			sprintf(sio_array, "Rx beacon payload (%" PRIu32 "): ",
+			/*sprintf(sio_array, "Rx beacon payload (%" PRIu32 "): ",
 					rx_cnt);
-			printf(sio_array);
+			printf(sio_array);*/
+			printf(Display_Rx_Beacon_Payload, rx_cnt);
 
 			/* Set last element to 0. */
 			if (sduLength == PAYLOAD_LEN) {
