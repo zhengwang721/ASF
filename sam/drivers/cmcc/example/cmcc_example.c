@@ -148,8 +148,7 @@ int main(void)
 #else
         cmcc_init(CMCC0, &g_cmcc_cfg);
         cmcc_enable(CMCC0);
-        cmcc_reset_monitor(CMCC0);
-	
+        //cmcc_reset_monitor(CMCC0);	
 #endif
 
 	/* Do the Fibonacci calculation. */
@@ -159,7 +158,7 @@ int main(void)
 #if !SAM4C
 	printf("Cache Data hit: %ul \r\n", cmcc_get_monitor_cnt(CMCC));
 #else
-        printf("Cache Data hit: %ul \r\n", cmcc_get_monitor_cnt(CMCC0));
+        printf("Cache Data hit: %u \r\n", cmcc_get_monitor_cnt(CMCC0));
 #endif
 	while (true) {
 	}
