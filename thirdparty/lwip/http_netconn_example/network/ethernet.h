@@ -68,12 +68,6 @@ void init_ethernet(void);
  */
 void status_callback(struct netif *netif);
 
-/**
- * \brief Manage the ethernet packets, if any received process them.
- *
- */
-void ethernet_task(void);
-
 /// @cond 0
 /**INDENT-OFF**/
 #ifdef __cplusplus

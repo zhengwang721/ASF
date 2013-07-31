@@ -65,10 +65,8 @@ typedef int (*http_handler_t)(struct netconn *client,
 typedef struct BoardStatus {
 	char local_ip[sizeof("123.123.123.123")];
 	char last_connected_ip[sizeof("123.123.123.123")];
-	u8_t led_status;
-	signed short internal_temp;
-	u32_t up_time;
-	size_t tot_req;
+	uint32_t up_time;
+	uint32_t tot_req;
 } BoardStatus;
 
 extern BoardStatus status;

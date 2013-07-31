@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<title>ATMEL SAM web server and DSP demo</title>
+		<title>ATMEL SAM HTTP netconn example</title>
 		<link rel="stylesheet" type="text/css" media="screen" href="etc/style.css" />
 		<script type="text/javascript" src="etc/js/jquery.js"></script>
 		<script type="text/javascript" src="etc/js/excan.js"></script>
@@ -39,42 +39,33 @@
 						cache: false,
 						dataType :'json',
 						success: function(data) {
-
-							$('#lwip_mem_heap').width(350*(parseInt(data['lwip_m_heap'])/parseInt(data['lwip_m_heap_s'])));
-							$('#lwip_mem_heap-value').text(data['lwip_m_heap'])
-							$('#lwip_mem_heap-value_size').text(data['lwip_m_heap_s'])
-							$('#lwip_mem_heap-value_max').text(data['lwip_m_heap_m'])
-
-							$('#lwip_pbuf_pool').width(350*(parseInt(data['lwip_pp'])/parseInt(data['lwip_pp_s'])));
-							$('#lwip_pbuf_pool-value').text(data['lwip_pp'])
-							$('#lwip_pbuf_pool-value_size').text(data['lwip_pp_s'])
-							$('#lwip_pbuf_pool-value_max').text(data['lwip_pp_m'])
-
-							$('#lwip_pbuf_ref').width(350*(parseInt(data['lwip_pr'])/parseInt(data['lwip_pr_s'])));
-							$('#lwip_pbuf_ref-value').text(data['lwip_pr'])
-							$('#lwip_pbuf_ref-value_size').text(data['lwip_pr_s'])
-							$('#lwip_pbuf_ref-value_max').text(data['lwip_pr_m'])
-
-							$('#lwip_tcp_pcb').width(350*(parseInt(data['lwip_tcp_pcb'])/parseInt(data['lwip_tcp_pcb_s'])));
-							$('#lwip_tcp_pcb-value').text(data['lwip_tcp_pcb'])
-							$('#lwip_tcp_pcb-value_size').text(data['lwip_tcp_pcb_s'])
-							$('#lwip_tcp_pcb-value_max').text(data['lwip_tcp_pcb_m'])
-
-							$('#lwip_tcp_seg').width(350*(parseInt(data['lwip_tcp_seg'])/parseInt(data['lwip_tcp_seg_s'])));
-							$('#lwip_tcp_seg-value').text(data['lwip_tcp_seg'])
-							$('#lwip_tcp_seg-value_size').text(data['lwip_tcp_seg_s'])
-							$('#lwip_tcp_seg-value_max').text(data['lwip_tcp_seg_m'])
-
 							$('#board_ip').text(data['board_ip']);
 							$('#remote_ip').text(data['remote_ip']);
 							$('#tot_req').text(data['tot_req']);
 
 							var html = '';
 							$.each(data['rtos'], function (thread, usage) {
-								html += '<tr><td>' + thread.substring(2) + '</td><td>' + usage + '</td></tr>';
+								html += '<tr><td class="label">' + thread.substring(2) + '</td><td>' + usage + '</td></tr>';
 							});
 							$('#rtostab tr').not(':first').remove();
 							$('#rtostab tr').first().after(html);
+
+							var html = '';
+							var cur = 0;
+							var size = 0;
+							$.each(data['lwip'], function (name, data) {
+								html += '<tr><td class="label">' + name + '</td>';
+								$.each(data, function (k, v) {
+									html += '<td class="label3">' + k + ':' + v + '</td>';
+									if(k == "Cur")
+										cur = v;
+									if(k == "Size")
+										size = v;
+								});
+								html += '<td class="label3">Usage:' + Math.round(cur * 100 / size) + '%</td></tr>';
+							});
+							$('#lwiptab tr').not(':first').remove();
+							$('#lwiptab tr').first().after(html);
 
 							dl_rate_data.push([data['up_time'],data['download']]);
 							ul_rate_data.push([data['up_time'],data['upload']]);
@@ -85,7 +76,7 @@
 							data_rate_graph.setData([{label: "Download (B/s)", data:dl_rate_data}, {label: "Upload (B/s)", data:ul_rate_data}]);
 							data_rate_graph.setupGrid();
 							data_rate_graph.draw();
-							setTimeout(updateStatus, 500);
+							setTimeout(updateStatus, 1000);
 						}
 					});
 			    }
@@ -118,11 +109,9 @@
 						<b>Total status requests: </b><span id="tot_req">--</span><br><br>
 					</div>
 					<div class="control">
-						<b>FreeRTOS threads status:</b><br>
+						<b>FreeRTOS thread usage:</b><br>
 						<table id="rtostab">
 							<tr>
-								<th>Thread ID - </th>
-								<th>CPU Usage</th>
 							</tr>
 						</table>
 						<br><br>
@@ -130,24 +119,12 @@
 				</div>
 				<div class="content">
 					<div class="control">
-						<b class="label">LwIP memory heap:</b>
-						<span class="trigger"><span id="lwip_mem_heap">&nbsp;</span></span>&nbsp;<div class="label2">Cur:<span id="lwip_mem_heap-value">0</span></div>&nbsp;<div class="label2">Size:<span id="lwip_mem_heap-value_size">0</span></div>&nbsp;<div class="label2">Max:<span id="lwip_mem_heap-value_max">0</span></div><br>
-					</div>
-					<div class="control">
-						<b class="label">LwIP PBUF pool:</b>
-						<span class="trigger"><span id="lwip_pbuf_pool">&nbsp;</span></span>&nbsp;<div class="label2">Cur:<span id="lwip_pbuf_pool-value">0</span></div>&nbsp;<div class="label2">Size:<span id="lwip_pbuf_pool-value_size">0</span></div>&nbsp;<div class="label2">Max:<span id="lwip_pbuf_pool-value_max">0</span></div><br>
-					</div>
-					<div class="control">
-						<b class="label">LwIP PBUF ref:</b>
-						<span class="trigger"><span id="lwip_pbuf_ref">&nbsp;</span></span>&nbsp;<div class="label2">Cur:<span id="lwip_pbuf_ref-value">0</span></div>&nbsp;<div class="label2">Size:<span id="lwip_pbuf_ref-value_size">0</span></div>&nbsp;<div class="label2">Max:<span id="lwip_pbuf_ref-value_max">0</span></div><br>
-					</div>
-					<div class="control">
-						<b class="label">LwIP TCP PCB:</b>
-						<span class="trigger"><span id="lwip_tcp_pcb">&nbsp;</span></span>&nbsp;<div class="label2">Cur:<span id="lwip_tcp_pcb-value">0</span></div>&nbsp;<div class="label2">Size:<span id="lwip_tcp_pcb-value_size">0</span></div>&nbsp;<div class="label2">Max:<span id="lwip_tcp_pcb-value_max">0</span></div><br>
-					</div>
-					<div class="control">
-						<b class="label">LwIP queued TCP seg:</b>
-						<span class="trigger"><span id="lwip_tcp_seg">&nbsp;</span></span>&nbsp;<div class="label2">Cur:<span id="lwip_tcp_seg-value">0</span></div>&nbsp;<div class="label2">Size:<span id="lwip_tcp_seg-value_size">0</span></div>&nbsp;<div class="label2">Max:<span id="lwip_tcp_seg-value_max">0</span></div><br>
+						<b>LwIP stats:</b><br>
+						<table id="lwiptab">
+							<tr>
+							</tr>
+						</table>
+						<br>
 					</div>
 				</div>
 				<div class="content">

@@ -52,20 +52,12 @@
 #include <lwip/opt.h>
 #include "httpd.h"
 #include "cgi.h"
-#include "led.h"
 #include "sysclk.h"
 
 #define CGI_MATCH_NONE   0
 #define CGI_MATCH_WORD   1  /* Select item in table only if string match */
 #define CGI_MATCH_EXT    2  /* Select item in table if the extention match */
 #define CGI_MATCH_NAME   3  /* Select item in table if the string is content */
-
-#define CGI_LED_ID_KEY    "n"
-#define CGI_LED_CMD_KEY   "set"
-#define GET_LED_STATUS(status, \
-			led_id) (((status) & (1 << (led_id))) >> (led_id))
-#define CLEAR_LED_STATUS(status, led_id)   ((status) &= ~(1 << (led_id)))
-#define SET_LED_STATUS(status, led_id)     ((status) |= (1 << (led_id)))
 
 #define CHIPID_NVTYP   (((CHIPID->CHIPID_CIDR) & \
 	CHIPID_CIDR_NVPTYP_Msk) >>  CHIPID_CIDR_NVPTYP_Pos)
@@ -84,8 +76,6 @@
 	(int)((addr) >>  8 & 0xff), \
 	(int)((addr) >> 16 & 0xff), \
 	(int)((addr) >> 24 & 0xff)
-
-#define CGI_MSG_CMD_KEY   "msg"
 
 static const char _unknown[] = "unknown";
 
@@ -171,261 +161,31 @@ chip_id_archnames[] = {
 	{ 0x92, "AT91x92 Series" },
 	{ 0x95, "ATSAM3NxC Series (100-pin version)" },
 	{ 0xF0, "AT75Cxx Series" },
-	{ -1, NULL },
+	{ 0, NULL },
 };
 
-static const char *const chip_id_nvptype[] = {
-	"rom", /* 0 */
-	"romless or onchip flash", /* 1 */
-	"embedded flash memory", /* 2 */
-	"rom(nvpsiz) + embedded flash (nvpsiz2)", /* 3 */
-	"sram emulating flash", /* 4 */
-};
+/* TX buffer size to answer HTTP request. */
+#define TX_REQ_BUFLEN 			1024
+static uint8_t tx_buf[TX_REQ_BUFLEN];
 
-/* HTTP buffer to store key value. */
-static char key_value[80];
-
-/* FIFO tx buffer. */
-#define CONFIG_AFSK_TX_BUFLEN			1024
-static u8_t tx_buf[CONFIG_AFSK_TX_BUFLEN];
+/* FreeRTOS buffer size to list tasks and CPU usage. */
+#define FREERTOS_STATS_BUFLEN 	512
+static int8_t freertos_stats[FREERTOS_STATS_BUFLEN];
 
 /* Function declarations */
-static int cgi_echo(struct netconn *client, const char *name, char *recv_buf, size_t recv_len);
-static int cgi_temp(struct netconn *client, const char *name, char *recv_buf, size_t recv_len);
-static int cgi_uptime(struct netconn *client, const char *name, char *recv_buf, size_t recv_len);
-static int cgi_resistor(struct netconn *client, const char *name, char *recv_buf, size_t recv_len);
-static int cgi_led(struct netconn *client, const char *name, char *recv_buf, size_t recv_len);
-static int cgi_ledStatus(struct netconn *client, const char *name, char *recv_buf, size_t recv_len);
 static int cgi_error(struct netconn *client, const char *name, char *recv_buf, size_t recv_len);
 static int cgi_status(struct netconn *client, const char *name, char *recv_buf, size_t recv_len);
 static int cgi_chipInfo(struct netconn *client, const char *name, char *recv_buf, size_t recv_len);
-static int cgi_displayMsg(struct netconn *client, const char *name, char *recv_buf, size_t recv_len);
 
 /*
  * CGI table where we associate one callback to one page.
  */
 HttpCGI cgi_table[] = {
-	{ CGI_MATCH_NAME, "echo", cgi_echo },
-	{ CGI_MATCH_NAME, "get_temperature", cgi_temp },
-	{ CGI_MATCH_NAME, "get_uptime", cgi_uptime },
-	{ CGI_MATCH_NAME, "get_resistor", cgi_resistor },
-	{ CGI_MATCH_NAME, "set_led", cgi_led },
-	{ CGI_MATCH_NAME, "get_ledStatus", cgi_ledStatus },
 	{ CGI_MATCH_NAME, "error", cgi_error },
 	{ CGI_MATCH_NAME, "status", cgi_status },
 	{ CGI_MATCH_NAME, "get_chipinfo", cgi_chipInfo },
-	{ CGI_MATCH_NAME, "display", cgi_displayMsg },
 	{ CGI_MATCH_NONE, NULL, NULL }
 };
-
-/**
- * \brief Send back the input string.
- *
- * \param name Not used.
- * \param recv_buf Receive buffer to send back.
- * \param recv_len Receive buffer length.
- *
- * \return 0.
- */
-static int cgi_echo(struct netconn *client, const char *name, char *recv_buf, size_t recv_len)
-{
-	(void)name;
-
-	http_sendOk(client, HTTP_CONTENT_PLAIN);
-	netconn_write(client, recv_buf, recv_len, NETCONN_COPY);
-	return 0;
-}
-
-/**
- * \brief Send the internal core temperature in string format.
- *
- * \param name Not used.
- * \param recv_buf Receive buffer.
- * \param recv_len Receive buffer length.
- *
- * \return 0.
- */
-static int cgi_temp(struct netconn *client, const char *name, char *recv_buf, size_t recv_len)
-{
-	(void)recv_buf;
-	(void)recv_len;
-	(void)name;
-
-	sprintf((char *)tx_buf, "[%d.%d]", status.internal_temp / 100,
-			status.internal_temp % 100);
-
-	http_sendOk(client, HTTP_CONTENT_JSON);
-	netconn_write(client, (const char*)tx_buf, strlen((char *)tx_buf), NETCONN_COPY);
-
-	return 0;
-}
-
-/**
- * \brief convert seconds to day/hour/minute/sec.
- *
- * \param sec_time Time value.
- * \param str Buffer to store date.
- * \param len Buffer length.
- *
- * \return 0 on success, -1 otherwise.
- */
-static int sec_to_strDhms(u32_t sec_time, char *str, size_t len)
-{
-	u32_t h = (sec_time / 3600);
-	u32_t d = h / 24;
-	u32_t m = ((sec_time - (h * 3600)) / 60);
-	u32_t s = (sec_time - (m * 60) - (h * 3600));
-
-	if (len < sizeof("xxxxd xxh xxm xxs")) {
-		return -1;
-	}
-
-	sprintf(str, "%ldd %ldh %ldm %lds", (long)d, (h >= 24) ? (long)(h - 24) : (long)h, (long)m, (long)s);
-
-	return 0;
-}
-
-/**
- * \brief Send system uptime.
- *
- * \param name Not used.
- * \param recv_buf Receive buffer.
- * \param recv_len Receive buffer length.
- *
- * \return 0.
- */
-static int cgi_uptime(struct netconn *client, const char *name, char *recv_buf, size_t recv_len)
-{
-	(void)recv_buf;
-	(void)recv_len;
-	(void)name;
-
-	sec_to_strDhms(status.up_time, (char *)tx_buf, sizeof(tx_buf));
-
-	http_sendOk(client, HTTP_CONTENT_JSON);
-	netconn_write(client, (const char*)tx_buf, strlen((char *)tx_buf), NETCONN_COPY);
-
-	return 0;
-}
-
-/**
- * \brief Send the potentiometer voltage.
- *
- * \param name Not used.
- * \param recv_buf Receive buffer.
- * \param recv_len Receive buffer length.
- *
- * \return 0.
- */
-static int cgi_resistor(struct netconn *client, const char *name, char *recv_buf, size_t recv_len)
-{
-	(void)recv_buf;
-	(void)recv_len;
-	(void)name;
-
-	u16_t volt;
-
-	volt = 0;//afec_get_channel_value(AFEC0, AFE_CHANNEL_5) * 10000 / 4096;
-
-	sprintf((char *)tx_buf, "[ \"%d.%dV\" ]", volt / 1000, volt % 1000);
-
-	http_sendOk(client, HTTP_CONTENT_JSON);
-	netconn_write(client, (const char*)tx_buf, strlen((char *)tx_buf), NETCONN_COPY);
-
-	return 0;
-}
-
-/**
- * \brief Set the led status and send back the new status.
- *
- * \param name String containing the led status request.
- * \param recv_buf Receive buffer.
- * \param recv_len Receive buffer length.
- *
- * \return 0.
- */
-static int cgi_led(struct netconn *client, const char *name, char *recv_buf, size_t recv_len)
-{
-	(void)recv_buf;
-	(void)recv_len;
-	(void)name;
-
-	char *query_str = strstr(name, "?") + 1;
-	size_t query_str_len = strlen(query_str);
-	int led_id;
-	int led_pio;
-	int led_cmd;
-
-	http_tokenizeGetRequest(query_str, query_str_len);
-
-	if (http_getValue(query_str, query_str_len, CGI_LED_ID_KEY, key_value,
-			sizeof(key_value)) < 0) {
-		goto error;
-	}
-
-	led_id = atoi(key_value);
-
-	if (http_getValue(query_str, query_str_len, CGI_LED_CMD_KEY, key_value,
-			sizeof(key_value)) < 0) {
-		goto error;
-	}
-
-	led_cmd = atoi(key_value);
-
-	if (led_id == 0) {
-		led_pio = LED2_GPIO;
-	} else if (led_id == 1) {
-		led_pio = LED1_GPIO;
-	} else if (led_id == 2) {
-		led_pio = LED0_GPIO;
-	} else if (led_id == 3) {
-		led_pio = LED3_GPIO;
-	}
-
-	if (led_cmd) {
-	/////////////	ioport_set_pin_level(led_pio, LED2_ACTIVE_LEVEL);
-	/////////////	SET_LED_STATUS(status.led_status, led_id);
-	} else {
-	/////////////	ioport_set_pin_level(led_pio, LED2_INACTIVE_LEVEL);
-	/////////	CLEAR_LED_STATUS(status.led_status, led_id);
-	}
-
-	sprintf((char *)tx_buf, "{\"n\":%d, \"set\":,%d}", led_id, led_cmd);
-
-	http_sendOk(client, HTTP_CONTENT_JSON);
-	netconn_write(client, (const char*)tx_buf, strlen((char *)tx_buf), NETCONN_COPY);
-	return 0;
-
-error:
-	http_sendInternalErr(client, HTTP_CONTENT_JSON);
-	return 0;
-}
-
-/**
- * \brief Send the led status.
- *
- * \param name Not used.
- * \param recv_buf Receive buffer.
- * \param recv_len Receive buffer length.
- *
- * \return 0.
- */
-static int cgi_ledStatus(struct netconn *client, const char *name, char *recv_buf, size_t recv_len)
-{
-	(void)recv_buf;
-	(void)recv_len;
-	(void)name;
-
-	sprintf((char *)tx_buf, "{ \"0\":\"%d\", \"1\":\"%d\", \"2\":\"%d\"}",
-			GET_LED_STATUS(status.led_status, 0),
-			GET_LED_STATUS(status.led_status, 1),
-			GET_LED_STATUS(status.led_status, 2));
-
-	http_sendOk(client, HTTP_CONTENT_JSON);
-	netconn_write(client, (const char*)tx_buf, strlen((char *)tx_buf), NETCONN_COPY);
-
-	return 0;
-}
 
 /**
  * \brief Used to handle unsupported CGI requests.
@@ -438,15 +198,13 @@ static int cgi_ledStatus(struct netconn *client, const char *name, char *recv_bu
  */
 static int cgi_error(struct netconn *client, const char *name, char *recv_buf, size_t recv_len)
 {
+	(void)client;
 	(void)name;
 	(void)recv_buf;
 	(void)recv_len;
 
 	return -1;
 }
-
-#define FREERTOS_STATS_SIZE 512
-static char freertos_stats[FREERTOS_STATS_SIZE];
 
 /**
  * \brief Send a JSON string representing the board status.
@@ -482,7 +240,7 @@ static int cgi_status(struct netconn *client, const char *name, char *recv_buf, 
 	/* Update board status. */
 	sprintf(status.last_connected_ip, "%d.%d.%d.%d", IP_ADDR_TO_INT_TUPLE(client->pcb.ip->remote_ip.addr));
 	sprintf(status.local_ip, "%d.%d.%d.%d", IP_ADDR_TO_INT_TUPLE(client->pcb.ip->local_ip.addr));
-	length += sprintf((char *)tx_buf, "{\"board_ip\":\"%s\",\"remote_ip\":\"%s\",\"download\":%d,\"upload\":%d",
+	length += sprintf((char *)tx_buf, "{\"board_ip\":\"%s\",\"remote_ip\":\"%s\",\"download\":%u,\"upload\":%u",
 								status.local_ip, status.last_connected_ip,
 								rx_rate, tx_rate);
 
@@ -490,7 +248,7 @@ static int cgi_status(struct netconn *client, const char *name, char *recv_buf, 
 	vTaskGetRunTimeStats(freertos_stats);
 	length += sprintf((char *)tx_buf + length, ",\"rtos\":{\"10");
 	// i = 2 to skip first 13 10 sequence.
-	for (i = 2, count = 0, new_entry = 0; i < FREERTOS_STATS_SIZE && freertos_stats[i]; ++i) {
+	for (i = 2, count = 0, new_entry = 0; i < FREERTOS_STATS_BUFLEN && freertos_stats[i]; ++i) {
 		if (freertos_stats[i] == 13) {
 			tx_buf[length++] = '\"';
 			new_entry = 1;
@@ -524,18 +282,25 @@ static int cgi_status(struct netconn *client, const char *name, char *recv_buf, 
 	}
 	tx_buf[length++] = '}';
 
+	char * memp_names[] = {
+#define LWIP_MEMPOOL(name,num,size,desc) desc,
+#include "lwip/memp_std.h"
+	};
+	length += sprintf((char *)tx_buf + length, ",\"lwip\":{");
+#if MEM_STATS || MEMP_STATS
+	length += sprintf((char *)tx_buf + length, "\"HEAP\":{\"Cur\":%d,\"Size\":%d,\"Max\":%d,\"Err\":%u}", lwip_stats.mem.used, lwip_stats.mem.avail, lwip_stats.mem.max, lwip_stats.mem.err);
+	if (MEMP_MAX > 0)
+		tx_buf[length++] = ',';
+#endif
+	for (uint32_t z= 0; z < MEMP_MAX; ++z) {
+		length += sprintf((char *)tx_buf + length, "\"%s\":{\"Cur\":%d,\"Size\":%d,\"Max\":%d,\"Err\":%u}", memp_names[z], lwip_stats.memp[z].used, lwip_stats.memp[z].avail, lwip_stats.memp[z].max, lwip_stats.memp[z].err);
+		if (z + 1 < MEMP_MAX)
+			tx_buf[length++] = ',';
+	}
+	tx_buf[length++] = '}';
+
 	/* Remaining board status. */
-	length += sprintf((char *)tx_buf + length, ",\"lwip_m_heap\":%d,\"lwip_m_heap_s\":%d,\"lwip_m_heap_m\":%d,\"lwip_pp\":%d,\"lwip_pp_s\":%d,\"lwip_pp_m\":%d,\"lwip_pr\":%d,\"lwip_pr_s\":%d,\"lwip_pr_m\":%d,\"lwip_tcp_pcb\":%d,\"lwip_tcp_pcb_s\":%d,\"lwip_tcp_pcb_m\":%d,\"lwip_tcp_seg\":%d,\"lwip_tcp_seg_s\":%d,\"lwip_tcp_seg_m\":%d,\"up_time\":%ld,\"tot_req\":%d}",
-								lwip_stats.mem.used, lwip_stats.mem.avail, lwip_stats.mem.max,
-								lwip_stats.memp[12].used, lwip_stats.memp[12].avail, lwip_stats.memp[12].max,
-								lwip_stats.memp[11].used, lwip_stats.memp[11].avail, lwip_stats.memp[11].max,
-								lwip_stats.memp[1].used, lwip_stats.memp[1].avail, lwip_stats.memp[1].max,
-								lwip_stats.memp[3].used, lwip_stats.memp[3].avail, lwip_stats.memp[3].max,
-								status.up_time, status.tot_req);
-
-
-tx_buf[length] = 0;
-	printf("%s\r\n", tx_buf);
+	length += sprintf((char *)tx_buf + length, ",\"up_time\":%u,\"tot_req\":%u}", status.up_time, status.tot_req);
 
 	/* Send answer. */
 	http_sendOk(client, HTTP_CONTENT_JSON);
@@ -611,22 +376,6 @@ static const char *chipid_archnames(unsigned value)
 }
 
 /**
- * \brief Return the chip volatile programmable memory type.
- *
- * \param idx Index in the chip_id_nvptype table.
- *
- * \return The chip non volatile programmable memory type.
- */
-static const char *chipid_nvptype(int idx)
-{
-	if (idx <= 4) {
-		return chip_id_nvptype[idx];
-	}
-
-	return _unknown;
-}
-
-/**
  * \brief Send the chip ID information.
  *
  * \param name Not used.
@@ -642,63 +391,15 @@ static int cgi_chipInfo(struct netconn *client, const char *name, char *recv_buf
 	(void)name;
 
 	sprintf((char *)tx_buf,
-			"{ \"core_name\":\"%s\", \"arch_name\":\"%s\", \"sram_size\":\"%s\",\"flash_size\":\"%s\", \"mem_boot_type\":\"%s\" }",
+			"{\"core_name\":\"%s\",\"arch_name\":\"%s\",\"sram_size\":\"%s\",\"flash_size\":\"%s\"}",
 			chipid_eproc_name(CHIPID_EPRCOC),
 			chipid_archnames(CHIPID_ARCH),
 			chipid_sramsize(CHIPID_SRAMSIZ),
-			chipid_nvpsize(CHIPID_NVPSIZ),
-			chipid_nvptype(CHIPID_NVTYP));
+			chipid_nvpsize(CHIPID_NVPSIZ));
 
 	http_sendOk(client, HTTP_CONTENT_JSON);
 	netconn_write(client, (const char*)tx_buf, strlen((char *)tx_buf), NETCONN_COPY);
 
-	return 0;
-}
-
-/**
- * \brief Read a message.
- *
- * \param name Request containing the message.
- * \param recv_buf Receive buffer.
- * \param recv_len Receive buffer length.
- *
- * \return 0.
- */
-static int cgi_displayMsg(struct netconn *client, const char *name, char *recv_buf, size_t recv_len)
-{
-	(void)recv_buf;
-	(void)recv_len;
-	(void)name;
-
-	char *query_str = strstr(name, "?") + 1;
-	size_t query_str_len = strlen(query_str);
-
-	http_tokenizeGetRequest(query_str, query_str_len);
-
-	if (http_getValue(query_str, query_str_len, CGI_MSG_CMD_KEY, key_value,
-			sizeof(key_value)) > 0) {
-		/*		gfx_bitmapClear(lcd_bitmap); */
-
-		/*		text_style(lcd_bitmap, STYLEF_BOLD |
-		 * STYLEF_UNDERLINE, STYLEF_BOLD | STYLEF_UNDERLINE); */
-
-		/*		text_xprintf(lcd_bitmap, 0, 0, TEXT_CENTER |
-		 * TEXT_FILL, "BeRTOS Simple Http Server"); */
-		/*		text_style(lcd_bitmap, 0, STYLEF_MASK); */
-
-		/*		text_xprintf(lcd_bitmap, 2, 0, TEXT_CENTER |
-		 * TEXT_FILL, "Your message:"); */
-
-		/*		text_xprintf(lcd_bitmap, 10, 0, TEXT_CENTER,
-		 * "%s", key_value); */
-		/*  */
-		/*		lcd_hx8347_blitBitmap(lcd_bitmap); */
-
-		http_sendOk(client, HTTP_CONTENT_JSON);
-		return 0;
-	}
-
-	http_sendInternalErr(client, HTTP_CONTENT_JSON);
 	return 0;
 }
 

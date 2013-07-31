@@ -85,7 +85,7 @@ void http_sendOk(struct netconn *client, int content_type)
 {
 	/* ASSERT(content_type < HTTP_CONTENT_CNT); */
 
-	netconn_write(client, http_html_hdr_200, sizeof(http_html_hdr_200) - 1, NETCONN_COPY);
+ 	netconn_write(client, http_html_hdr_200, sizeof(http_html_hdr_200) - 1, NETCONN_COPY);
 	netconn_write(client, http_content_type[content_type].content,
 			strlen(http_content_type[content_type].content), NETCONN_COPY);
 }
@@ -367,7 +367,7 @@ void http_request(void *pvParameters)
 		if (req_string[0] == '\0')
 			strcpy(req_string, HTTP_DEFAULT_PAGE);
 
-		printf("Requested pageZ = [%s]\r\n", req_string);
+		printf("Requested page = [%s]\r\n", req_string);
 
 		cgi = cgi_search(req_string, cgi_table);
 		if (cgi)
@@ -401,8 +401,11 @@ void http_request(void *pvParameters)
 				/* Send the HTML content. */
 				if (req_string[0] == 't' && req_string[1] == 'e' && req_string[2] == 's' && req_string[3] == 't')
 				{
-				  	for (i = 0; i < 100; ++i)
+				  	for (i = 0; i < 1000; ++i)
+					{
 						netconn_write(conn, file.data, file.len, NETCONN_NOCOPY);
+						vTaskDelay(50UL / portTICK_RATE_MS);
+					}
 				}
 				else
 					netconn_write(conn, file.data, file.len, NETCONN_NOCOPY);

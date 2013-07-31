@@ -40,7 +40,22 @@
  * \asf_license_stop
  *
  */
- 
+
+#ifdef FREERTOS_USED
+#include <FreeRTOS.h>
+#include <FreeRTOS_CLI.h>
+#include <StackMacros.h>
+#include <croutine.h>
+#include <list.h>
+#include <mpu_wrappers.h>
+#include <portable.h>
+#include <projdefs.h>
+#include <queue.h>
+#include <semphr.h>
+#include <task.h>
+#include <timers.h>
+#endif
+
 #include  "compiler.h"
 #include "gmac.h"
 #include <string.h>
@@ -113,7 +128,7 @@ typedef struct gmac_dev_mem {
 
 /*
  * Return space available, from 0 to size-1.
- * Always leave one free char as a completely full buffer that has (head == tail), 
+ * Always leave one free char as a completely full buffer that has (head == tail),
  * which is the same as empty.
  */
 #define CIRC_SPACE(head,tail,size) CIRC_CNT((tail),((head)+1),(size))
@@ -122,6 +137,11 @@ typedef struct gmac_dev_mem {
 #define CIRC_EMPTY(head, tail)     (head == tail)
 /** Clear circular buffer */
 #define CIRC_CLEAR(head, tail)     (head = tail = 0)
+
+#ifdef FREERTOS_USED
+/* Notification semaphore for lwIP stack. */
+xSemaphoreHandle netif_notification_semaphore = NULL;
+#endif
 
 /** Increment head or tail */
 static void circ_inc(uint16_t *headortail, uint32_t size)
@@ -220,7 +240,6 @@ static void gmac_reset_rx_mem(gmac_device_t* p_dev)
 	gmac_set_rx_queue(p_hw, (uint32_t) pRd);
 }
 
-
 /**
  * \brief Initialize the allocated buffer lists for GMAC driver to transfer data.
  * Must be invoked after gmac_dev_init() but before RX/TX starts.
@@ -228,7 +247,7 @@ static void gmac_reset_rx_mem(gmac_device_t* p_dev)
  * \note If input address is not 8-byte aligned, the address is automatically
  *       adjusted and the list size is reduced by one.
  *
- * \param p_gmac Pointer to GMAC instance. 
+ * \param p_gmac Pointer to GMAC instance.
  * \param p_gmac_dev Pointer to GMAC device instance.
  * \param p_dev_mm Pointer to the GMAC memory management control block.
  * \param p_tx_cb Pointer to allocated TX callback list.
@@ -251,7 +270,7 @@ static uint8_t gmac_init_mem(Gmac* p_gmac, gmac_device_t* p_gmac_dev,
 	p_gmac_dev->p_rx_buffer =
 			(uint8_t *) ((uint32_t) p_dev_mm->p_rx_buffer & 0xFFFFFFF8);
 	p_gmac_dev->p_rx_dscr =
-			(gmac_rx_descriptor_t *) ((uint32_t) p_dev_mm->p_rx_dscr 
+			(gmac_rx_descriptor_t *) ((uint32_t) p_dev_mm->p_rx_dscr
 			& 0xFFFFFFF8);
 	p_gmac_dev->us_rx_list_size = p_dev_mm->us_rx_size;
 
@@ -263,7 +282,7 @@ static uint8_t gmac_init_mem(Gmac* p_gmac, gmac_device_t* p_gmac_dev,
 	p_gmac_dev->p_tx_buffer =
 			(uint8_t *) ((uint32_t) p_dev_mm->p_tx_buffer & 0xFFFFFFF8);
 	p_gmac_dev->p_tx_dscr =
-			(gmac_tx_descriptor_t *) ((uint32_t) p_dev_mm->p_tx_dscr 
+			(gmac_tx_descriptor_t *) ((uint32_t) p_dev_mm->p_tx_dscr
 			& 0xFFFFFFF8);
 	p_gmac_dev->us_tx_list_size = p_dev_mm->us_tx_size;
 	p_gmac_dev->func_tx_cb_list = p_tx_cb;
@@ -278,15 +297,16 @@ static uint8_t gmac_init_mem(Gmac* p_gmac, gmac_device_t* p_gmac_dev,
 	gmac_enable_statistics_write(p_gmac, true);
 
 	/* Set up the interrupts for transmission and errors */
-	gmac_enable_interrupt(p_gmac, 
+	gmac_enable_interrupt(p_gmac,
+			GMAC_IER_RLEX  | /* Enable retry limit exceeded interrupt. */
+			GMAC_IER_RCOMP | /* Enable receive complete interrupt. */
 			GMAC_IER_RXUBR | /* Enable receive used bit read interrupt. */
-			GMAC_IER_TUR  | /* Enable transmit underrun interrupt. */
-			GMAC_IER_RLEX   | /* Enable retry limit  exceeded interrupt. */
-			GMAC_IER_TFC | /* Enable transmit buffers exhausted in mid-frame interrupt. */
-			GMAC_IER_TCOMP | /* Enable transmit complete interrupt. */
 			GMAC_IER_ROVR  | /* Enable receive overrun interrupt. */
+			GMAC_IER_TCOMP | /* Enable transmit complete interrupt. */
+			GMAC_IER_TUR   | /* Enable transmit underrun interrupt. */
+			GMAC_IER_TFC   | /* Enable transmit buffers exhausted in mid-frame interrupt. */
 			GMAC_IER_HRESP | /* Enable Hresp not OK interrupt. */
-			GMAC_IER_PFNZ   | /* Enable pause frame received interrupt. */
+			GMAC_IER_PFNZ  | /* Enable pause frame received interrupt. */
 			GMAC_IER_PTZ);   /* Enable pause time zero interrupt. */
 
 	return GMAC_OK;
@@ -295,7 +315,7 @@ static uint8_t gmac_init_mem(Gmac* p_gmac, gmac_device_t* p_gmac_dev,
 /**
  * \brief Read the PHY register.
  *
- * \param p_gmac   Pointer to the GMAC instance. 
+ * \param p_gmac   Pointer to the GMAC instance.
  * \param uc_phy_address PHY address.
  * \param uc_address Register address.
  * \param p_value Pointer to a 32-bit location to store read data.
@@ -317,7 +337,7 @@ uint8_t gmac_phy_read(Gmac* p_gmac, uint8_t uc_phy_address, uint8_t uc_address,
 /**
  * \brief Write the PHY register.
  *
- * \param p_gmac   Pointer to the GMAC instance. 
+ * \param p_gmac   Pointer to the GMAC instance.
  * \param uc_phy_address PHY Address.
  * \param uc_address Register Address.
  * \param ul_value Data to write, actually 16-bit data.
@@ -338,8 +358,8 @@ uint8_t gmac_phy_write(Gmac* p_gmac, uint8_t uc_phy_address,
 /**
  * \brief Initialize the GMAC driver.
  *
- * \param p_gmac   Pointer to the GMAC instance. 
- * \param p_gmac_dev Pointer to the GMAC device instance. 
+ * \param p_gmac   Pointer to the GMAC instance.
+ * \param p_gmac_dev Pointer to the GMAC device instance.
  * \param p_opt GMAC configure options.
  */
 void gmac_dev_init(Gmac* p_gmac, gmac_device_t* p_gmac_dev,
@@ -351,11 +371,11 @@ void gmac_dev_init(Gmac* p_gmac, gmac_device_t* p_gmac_dev,
 	gmac_network_control(p_gmac, 0);
 	gmac_disable_interrupt(p_gmac, ~0u);
 
-
 	gmac_clear_statistics(p_gmac);
 
 	/* Clear all status bits in the receive status register. */
-	gmac_clear_rx_status(p_gmac, GMAC_RSR_RXOVR | GMAC_RSR_REC | GMAC_RSR_BNA);
+	gmac_clear_rx_status(p_gmac, GMAC_RSR_RXOVR | GMAC_RSR_REC | GMAC_RSR_BNA
+			| GMAC_RSR_HNO);
 
 	/* Clear all status bits in the transmit status register */
 	gmac_clear_tx_status(p_gmac, GMAC_TSR_UBR | GMAC_TSR_COL | GMAC_TSR_RLE
@@ -366,9 +386,7 @@ void gmac_dev_init(Gmac* p_gmac, gmac_device_t* p_gmac_dev,
 
 	/* Enable the copy of data into the buffers
 	   ignore broadcasts, and not copy FCS. */
-	gmac_set_configure(p_gmac,
-			gmac_get_configure(p_gmac) | GMAC_NCFGR_RFCS| GMAC_NCFGR_PEN);
-
+	gmac_set_config(p_gmac, gmac_get_config(p_gmac) | GMAC_NCFGR_PEN);
 	gmac_enable_copy_all(p_gmac, p_opt->uc_copy_all_frame);
 	gmac_disable_broadcast(p_gmac, p_opt->uc_no_boardcast);
 
@@ -385,6 +403,15 @@ void gmac_dev_init(Gmac* p_gmac, gmac_device_t* p_gmac_dev,
 
 	gmac_set_address(p_gmac, 0, p_opt->uc_mac_addr);
 
+#ifdef FREERTOS_USED
+	/* Asynchronous operation requires a notification semaphore.  First,
+	 * create the semaphore. */
+	vSemaphoreCreateBinary(netif_notification_semaphore);
+	vQueueAddToRegistry(netif_notification_semaphore, "GMAC Sem");
+
+	/* Then set the semaphore into the correct initial state. */
+	xSemaphoreTake(netif_notification_semaphore, 0);
+#endif
 }
 
 /**
@@ -394,7 +421,7 @@ void gmac_dev_init(Gmac* p_gmac, gmac_device_t* p_gmac_dev,
  * will be repeatedly called until the sum of all the ul_frame_size equals
  * the value of p_rcv_size.
  *
- * \param p_gmac_dev Pointer to the GMAC device instance. 
+ * \param p_gmac_dev Pointer to the GMAC device instance.
  * \param p_frame Address of the frame buffer.
  * \param ul_frame_size  Length of the frame.
  * \param p_rcv_size   Received frame size.
@@ -446,7 +473,7 @@ uint32_t gmac_dev_read(gmac_device_t* p_gmac_dev, uint8_t* p_frame,
 					p_rx_td = &p_gmac_dev->p_rx_dscr[p_gmac_dev->us_rx_idx];
 					p_rx_td->addr.val &= ~(GMAC_RXD_OWNERSHIP);
 					circ_inc(&p_gmac_dev->us_rx_idx, p_gmac_dev->us_rx_list_size);
-							
+
 				} while (us_tmp_idx != p_gmac_dev->us_rx_idx);
 
 				return GMAC_RX_NULL;
@@ -512,7 +539,6 @@ uint32_t gmac_dev_read(gmac_device_t* p_gmac_dev, uint8_t* p_frame,
 uint32_t gmac_dev_write(gmac_device_t* p_gmac_dev, void *p_buffer,
 		uint32_t ul_size, gmac_dev_tx_cb_t func_tx_cb)
 {
-
 	volatile gmac_tx_descriptor_t *p_tx_td;
 	volatile gmac_dev_tx_cb_t *p_func_tx_cb;
 
@@ -567,12 +593,74 @@ uint32_t gmac_dev_write(gmac_device_t* p_gmac_dev, void *p_buffer,
 	return GMAC_OK;
 }
 
+uint32_t gmac_dev_write_nocopy(gmac_device_t* p_gmac_dev,
+		uint32_t ul_size, gmac_dev_tx_cb_t func_tx_cb)
+{
+	volatile gmac_tx_descriptor_t *p_tx_td;
+	volatile gmac_dev_tx_cb_t *p_func_tx_cb;
+
+	Gmac *p_hw = p_gmac_dev->p_hw;
+
+
+	/* Check parameter */
+	if (ul_size > GMAC_TX_UNITSIZE) {
+		return GMAC_PARAM;
+	}
+
+	/* Pointers to the current transmit descriptor */
+	p_tx_td = &p_gmac_dev->p_tx_dscr[p_gmac_dev->us_tx_head];
+
+	/* Pointers to the current Tx callback */
+	p_func_tx_cb = &p_gmac_dev->func_tx_cb_list[p_gmac_dev->us_tx_head];
+
+	/* Tx callback */
+	*p_func_tx_cb = func_tx_cb;
+
+	/* Update transmit descriptor status */
+
+	/* The buffer size defined is the length of ethernet frame,
+	   so it's always the last buffer of the frame. */
+	if (p_gmac_dev->us_tx_head == p_gmac_dev->us_tx_list_size - 1) {
+		p_tx_td->status.val =
+				(ul_size & GMAC_TXD_LEN_MASK) | GMAC_TXD_LAST
+				| GMAC_TXD_WRAP;
+	} else {
+		p_tx_td->status.val =
+				(ul_size & GMAC_TXD_LEN_MASK) | GMAC_TXD_LAST;
+	}
+
+	circ_inc(&p_gmac_dev->us_tx_head, p_gmac_dev->us_tx_list_size);
+
+	/* Now start to transmit if it is still not done */
+	gmac_start_transmission(p_hw);
+
+	return GMAC_OK;
+}
+
+uint8_t *gmac_dev_get_tx_buffer(gmac_device_t* p_gmac_dev)
+{
+	volatile gmac_tx_descriptor_t *p_tx_td;
+
+	/* Pointers to the current transmit descriptor */
+	p_tx_td = &p_gmac_dev->p_tx_dscr[p_gmac_dev->us_tx_head];
+
+	/* If no free TxTd, forget it */
+	if (CIRC_SPACE(p_gmac_dev->us_tx_head, p_gmac_dev->us_tx_tail,
+					p_gmac_dev->us_tx_list_size) == 0) {
+		if (p_tx_td[p_gmac_dev->us_tx_head].status.val & GMAC_TXD_USED)
+			return 0;
+	}
+
+	return (uint8_t *)p_tx_td->addr;
+}
+
+
 /**
  * \brief Get current load of transmit.
  *
  * \param p_gmac_dev Pointer to the GMAC device instance.
  *
- * \return Current load of transmit. 
+ * \return Current load of transmit.
  */
 uint32_t gmac_dev_get_tx_load(gmac_device_t* p_gmac_dev)
 {
@@ -680,6 +768,9 @@ void gmac_handler(gmac_device_t* p_gmac_dev)
 	volatile uint32_t ul_tsr;
 	uint32_t ul_rx_status_flag;
 	uint32_t ul_tx_status_flag;
+#ifdef FREERTOS_USED
+	portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
+#endif
 
 	ul_isr = gmac_get_interrupt_status(p_hw);
 	ul_rsr = gmac_get_rx_status(p_hw);
@@ -710,16 +801,12 @@ void gmac_handler(gmac_device_t* p_gmac_dev)
 
 	/* TX packet */
 	if ((ul_isr & GMAC_ISR_TCOMP) || (ul_tsr & GMAC_TSR_TXCOMP)) {
-
 		ul_tx_status_flag = GMAC_TSR_TXCOMP;
-
-		/* A frame transmitted */
 
 		/* Check RLE */
 		if (ul_tsr & GMAC_TSR_RLE) {
-			/* Status RLE & Number of discarded buffers */
-			ul_tx_status_flag = GMAC_TSR_RLE | CIRC_CNT(p_gmac_dev->us_tx_head,
-					p_gmac_dev->us_tx_tail, p_gmac_dev->us_tx_list_size);
+			/* Status RLE */
+			ul_tx_status_flag = GMAC_TSR_RLE;
 			p_tx_cb = &p_gmac_dev->func_tx_cb_list[p_gmac_dev->us_tx_tail];
 			gmac_reset_tx_mem(p_gmac_dev);
 			gmac_enable_transmit(p_hw, 1);
@@ -755,13 +842,6 @@ void gmac_handler(gmac_device_t* p_gmac_dev)
 							p_gmac_dev->us_tx_list_size));
 		}
 
-		if (ul_tsr & GMAC_TSR_RLE) {
-			/* Notify upper layer RLE */
-			if (*p_tx_cb) {
-				(*p_tx_cb) (ul_tx_status_flag);
-			}
-		}
-
 		/* If a wakeup has been scheduled, notify upper layer that it can
 		   send other packets, and the sending will be successful. */
 		if ((CIRC_SPACE(p_gmac_dev->us_tx_head, p_gmac_dev->us_tx_tail,
@@ -770,6 +850,15 @@ void gmac_handler(gmac_device_t* p_gmac_dev)
 			p_gmac_dev->func_wakeup_cb();
 		}
 	}
+
+#ifdef FREERTOS_USED
+		/* Notify TCP/IP task to start data processing. */
+		/* LwIP works on top of GMAC driver, hence this semaphore locks */
+		/* the complete IP stack. */
+		xSemaphoreGiveFromISR(netif_notification_semaphore,
+				&xHigherPriorityTaskWoken);
+		portEND_SWITCHING_ISR(xHigherPriorityTaskWoken);
+#endif
 }
 
 //@}
