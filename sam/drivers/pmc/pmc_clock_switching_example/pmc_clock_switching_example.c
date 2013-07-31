@@ -142,11 +142,11 @@ extern "C" {
 
 /** Programmable Clock ID for the example by default */
 #ifndef GCLK_ID
-#define GCLK_ID                PMC_PCK_0
+#define GCLK_ID         PMC_PCK_0
 #endif
 /** Programmable Clock Pin for the example by default */
 #ifndef GCLK_PIN
-#define GCLK_PIN              PIN_PCK0
+#define GCLK_PIN        PIN_PCK0
 #endif
 /** Programmable Clock Pin Mux for the example by default */
 #ifndef GCLK_PIN_MUX
