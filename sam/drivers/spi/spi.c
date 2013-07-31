@@ -55,8 +55,11 @@
  *
  * @{
  */
-
+#ifdef SPI_WPMR_WPKEY
 #define SPI_WPMR_WPKEY_VALUE SPI_WPMR_WPKEY((uint32_t) 0x535049)
+#else
+#define SPI_WPMR_WPKEY_VALUE SPI_WPMR_WPKEY_PASSWD
+#endif
 
 /**
  * \brief Enable SPI clock.
@@ -68,7 +71,7 @@ void spi_enable_clock(Spi *p_spi)
 #if (SAM4S || SAM3S || SAM3N || SAM3U || SAM4E || SAM4N)
 	UNUSED(p_spi);
 	sysclk_enable_peripheral_clock(ID_SPI);
-#elif (SAM3XA)
+#elif (SAM3XA || SAM4C)
 	if (p_spi == SPI0) {
 		sysclk_enable_peripheral_clock(ID_SPI0);
 	}
@@ -92,7 +95,7 @@ void spi_disable_clock(Spi *p_spi)
 #if (SAM4S || SAM3S || SAM3N || SAM3U || SAM4E || SAM4N)
 	UNUSED(p_spi);
 	sysclk_disable_peripheral_clock(ID_SPI);
-#elif (SAM3XA)
+#elif (SAM3XA || SAM4C)
 	if (p_spi == SPI0) {
 		sysclk_disable_peripheral_clock(ID_SPI0);
 	}
@@ -261,7 +264,7 @@ void spi_configure_cs_behavior(Spi *p_spi, uint32_t ul_pcs_ch,
  *
  * \param p_spi Pointer to an SPI instance.
  * \param ul_pcs_ch Peripheral Chip Select channel (0~3).
- * \param ul_bits Number of bits (8~16), use the pattern defined 
+ * \param ul_bits Number of bits (8~16), use the pattern defined
  *        in the device header file.
  */
 void spi_set_bits_per_transfer(Spi *p_spi, uint32_t ul_pcs_ch,

@@ -77,6 +77,7 @@
  * - sam3n4c_sam3n_ek
  * - sam4lc4c_sam4l_ek
  * - sam4e16e_sam4e_ek
+ * - sam4c16c_sam4c_ek
  *
  * \section compinfo Compilation info
  * This software was written for the GNU GCC and IAR for ARM. Other compilers
