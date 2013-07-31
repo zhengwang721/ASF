@@ -286,7 +286,7 @@ void pmc_switch_sclk_to_32kxtal(uint32_t ul_bypass)
 			SUPC_MR_OSCBYPASS;
 	}
 
-	SUPC->SUPC_CR |= SUPC_CR_KEY_VALUE | SUPC_CR_XTALSEL;
+	SUPC->SUPC_CR = SUPC_CR_KEY_VALUE | SUPC_CR_XTALSEL;
 }
 
 /**
