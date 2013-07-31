@@ -7,7 +7,6 @@
 		<build type="header-file" value="conf_sleepmgr.h"/>
 		<build type="header-file" value="conf_eth.h"/>
 		<build type="header-file" value="conf_uart_serial.h"/>
-		<build type="header-file" value="conf_lwip_threads.h"/>
 		<build type="header-file" value="conf_aat31xx.h"/>
 		<build type="header-file" value="conf_ads7843.h"/>
 		<build type="header-file" value="conf_ili9325.h"/>

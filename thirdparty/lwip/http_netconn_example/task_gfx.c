@@ -79,13 +79,10 @@ static void gfx_draw_bmpfile(const uint8_t *bmpImage);
 /** IRQ priority for PIO (The lower the value, the greater the priority) */
 #define IRQ_PRIOR_PIO        13
 
-/** Refresh rate in frames per second. */
-#define GFX_REFRESH_RATE     24
-
 const portTickType instructions_delay = 50UL / portTICK_RATE_MS;
 static const portTickType presentation_delay = 2000UL / portTICK_RATE_MS;
 static const portTickType touch_delay = 10UL / portTICK_RATE_MS;
-static const portTickType gfx_refresh_rate = 1000UL / GFX_REFRESH_RATE / portTICK_RATE_MS;
+static const portTickType gfx_refresh_rate = 1000UL / portTICK_RATE_MS;
 
 /* Hold the instructions screen and prevent other task from running. */
 uint32_t app_hold = 1;
@@ -220,6 +217,8 @@ void create_gfx_task(uint16_t stack_depth_words,
  */
 static void gfx_task(void *pvParameters)
 {
+	uint32_t blink = 0;
+
 	/* Get rid of this compiler warning. */
 	pvParameters = pvParameters;
 
@@ -269,14 +268,9 @@ static void gfx_task(void *pvParameters)
 	ili9325_draw_filled_rectangle(21,171,221,231);
 	ili9325_set_foreground_color(COLOR_BLACK);
 	ili9325_draw_string(102, 191, (uint8_t *)"DHCP");
-
 	ili9325_draw_string(22, 30, (uint8_t *)"IP Configuration");
-
-//	ili9325_draw_line(15, 110, 225, 110);
-
 	ili9325_draw_string(20, 260, (uint8_t *)"Assigned IP:");
 	ili9325_draw_rectangle(20,280,220,310);
-
 
 	while (g_ip_mode == 0) {
 		rtouch_process();
@@ -299,43 +293,27 @@ static void gfx_task(void *pvParameters)
 	ili9325_draw_filled_rectangle(0,0,240,60);
 	ili9325_set_foreground_color(COLOR_BLACK);
 	ili9325_draw_rectangle(20,280,220,310);
-	ili9325_draw_string(30, 290, g_c_ipconfig);
-	ili9325_draw_string(5, 30, (uint8_t *)"HTTP server running!");
-
-	//while (rtouch_is_pressed() == false) {
-	//	vTaskDelay(touch_delay);
-	//}
-////
-	///* Draw application context. */
-	//ili9325_set_foreground_color(COLOR_WHITE);
-	//ili9325_draw_filled_rectangle(0, 0, ILI9325_LCD_WIDTH, ILI9325_LCD_HEIGHT);
-	//ili9325_set_foreground_color(COLOR_BLACK);
-#//if SAM4S
-	//ili9325_draw_string(10, 30, (uint8_t *)"SAM4S Web/DSP Demo");
-#//elif SAM4E
-	//ili9325_draw_string(10, 30, (uint8_t *)"SAM4E Web/DSP Demo");
-#//else
-#// error No proper title found!
-#//endif
-	//ili9325_draw_rectangle(20,60,220,160);
-	//ili9325_draw_line(15, 110, 225, 110);
-	//ili9325_draw_rectangle(20,180,220,280);
-	//ili9325_draw_string(15, 295, (uint8_t *)"0Hz");
-	//ili9325_draw_string(165, 295, (uint8_t *)"10kHz");
+	ili9325_draw_string(30, 290, (uint8_t const*)g_c_ipconfig);
 
 	/* GFX task Loop. */
 	while (1)
 	{
+		/* Make HTTP text to blink to show GFX task activity. */
+		if (blink == 0)
+		{
+			ili9325_draw_string(5, 30, (uint8_t *)"HTTP server running!");
+			blink = 1;
+		}
+		else
+		{
+			ili9325_set_foreground_color(COLOR_WHITE);
+			ili9325_draw_filled_rectangle(0,0,240,60);
+			ili9325_set_foreground_color(COLOR_BLACK);
+			blink = 0;
+		}
 
 
-		/* Display cycle count for STOPWATCH macro */
-		/*ili9325_set_foreground_color(COLOR_WHITE);
-		ili9325_draw_filled_rectangle(60, 285, 160, 315);
-		ili9325_set_foreground_color(COLOR_RED);
-		sprintf(cyclenum, "%dc", cnt);
-		ili9325_draw_string(70, 295, cyclenum);*/
-
-		/* Sleep to reach the expected refresh rate. */
+		/* Sleep to reach the expected blink rate. */
 		/* Leave some CPU time for other tasks. */
 		vTaskDelay(gfx_refresh_rate);
 	}

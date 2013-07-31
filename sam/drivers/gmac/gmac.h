@@ -163,7 +163,7 @@ typedef struct gmac_rx_descriptor {
 		uint32_t val;
 		struct gmac_rx_status_bm {
 			uint32_t len:13,       /** Length of frame including FCS */
-			b_fcs:1,              /** Receive buffer offset,  bits 13:12 of frame length for jumbo frame */
+			b_fcs:1,               /** Receive buffer offset, bits 13:12 of frame length for jumbo frame */
 			b_sof:1,               /** Start of frame */
 			b_eof:1,               /** End of frame */
 			b_cfi:1,               /** Concatenation Format Indicator */
@@ -171,8 +171,8 @@ typedef struct gmac_rx_descriptor {
 			b_priority_detected:1, /** Priority tag detected */
 			b_vlan_detected:1,     /**< VLAN tag detected */
 			b_type_id_match:2,     /**< Type ID match */
-			b_checksumoffload:1,        /**< Checksum offload specific function */
-			b_addrmatch:2,        /**< Address register match */
+			b_checksumoffload:1,   /**< Checksum offload specific function */
+			b_addrmatch:2,         /**< Address register match */
 			b_ext_addr_match:1,    /**< External address match found */
 			reserved:1,
 			b_uni_hash_match:1,    /**< Unicast hash match */
@@ -491,7 +491,7 @@ static inline void gmac_flush_next_packet(Gmac* p_gmac)
  * \param p_gmac   Pointer to the GMAC instance.
   * \param ul_cfg   Network configuration value.
  */
-static inline void gmac_set_configure(Gmac* p_gmac, uint32_t ul_cfg)
+static inline void gmac_set_config(Gmac* p_gmac, uint32_t ul_cfg)
 {
 	p_gmac->GMAC_NCFGR = ul_cfg;
 }
@@ -503,7 +503,7 @@ static inline void gmac_set_configure(Gmac* p_gmac, uint32_t ul_cfg)
  *
  * \return Network configuration.
  */
-static inline uint32_t gmac_get_configure(Gmac* p_gmac)
+static inline uint32_t gmac_get_config(Gmac* p_gmac)
 {
 	return p_gmac->GMAC_NCFGR;
 }
@@ -624,7 +624,7 @@ static inline void gmac_enable_big_frame(Gmac* p_gmac, uint8_t uc_enable)
 static inline uint8_t gmac_set_mdc_clock(Gmac* p_gmac, uint32_t ul_mck)
 {
 	uint32_t ul_clk;
-	
+
 	if (ul_mck > GMAC_MCK_SPEED_240MHZ) {
 		return GMAC_INVALID;
 	} else if (ul_mck > GMAC_MCK_SPEED_160MHZ) {
@@ -937,7 +937,7 @@ static inline void gmac_maintain_phy(Gmac* p_gmac,
 	while ((p_gmac->GMAC_NSR & GMAC_NSR_IDLE) == 0);
 	/* Write maintain register */
 	p_gmac->GMAC_MAN = GMAC_MAN_WTN(GMAC_MAN_CODE_VALUE)
-			| GMAC_MAN_CLTTO 
+			| GMAC_MAN_CLTTO
 			| GMAC_MAN_PHYA(uc_phy_addr)
 			| GMAC_MAN_REGA(uc_reg_addr)
 			| GMAC_MAN_OP((uc_rw ? GMAC_MAN_RW_TYPE : GMAC_MAN_READ_ONLY))
@@ -1062,6 +1062,9 @@ uint32_t gmac_dev_read(gmac_device_t* p_gmac_dev, uint8_t* p_frame,
 		uint32_t ul_frame_size, uint32_t* p_rcv_size);
 uint32_t gmac_dev_write(gmac_device_t* p_gmac_dev, void *p_buffer,
 		uint32_t ul_size, gmac_dev_tx_cb_t func_tx_cb);
+uint32_t gmac_dev_write_nocopy(gmac_device_t* p_gmac_dev,
+		uint32_t ul_size, gmac_dev_tx_cb_t func_tx_cb);
+uint8_t *gmac_dev_get_tx_buffer(gmac_device_t* p_gmac_dev);
 uint32_t gmac_dev_get_tx_load(gmac_device_t* p_gmac_dev);
 void gmac_dev_set_rx_callback(gmac_device_t* p_gmac_dev,
 		gmac_dev_tx_cb_t func_rx_cb);
@@ -1168,7 +1171,7 @@ void gmac_handler(gmac_device_t* p_gmac_dev);
  *       NVIC_EnableIRQ(GMAC_IRQn);
  *
  *       ethernet_phy_init(GMAC, BOARD_GMAC_PHY_ADDR, sysclk_get_cpu_hz());
- * 
+ *
  *       ethernet_phy_auto_negotiate(GMAC, BOARD_GMAC_PHY_ADDR);
  *
  *       ethernet_phy_set_link(GMAC, BOARD_GMAC_PHY_ADDR, 1);

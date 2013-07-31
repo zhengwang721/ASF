@@ -15,8 +15,6 @@
 		<build type="c-source"    value="task_http.c"/>
 		<build type="c-source"    value="network/ethernet.c"/>
 		<build type="header-file" value="network/ethernet.h"/>
-		<build type="c-source"    value="network/timer_mgt.c"/>
-		<build type="header-file" value="network/timer_mgt.h"/>
 		<build type="c-source"    value="network/httpserver/fs.c"/>
 		<build type="header-file" value="network/httpserver/fs.h"/>
 		<build type="c-source"    value="network/httpserver/fsdata.c"/>

@@ -43,9 +43,8 @@
 
 #include <string.h>
 #include "board.h"
-//#include "gpio.h"
 #include "ethernet.h"
-# include "ethernet_phy.h"
+#include "ethernet_phy.h"
 #if SAM3XA
 # include "emac.h"
 #elif SAM4E
@@ -53,7 +52,6 @@
 #else
 # error Unsupported chip type
 #endif
-#include "timer_mgt.h"
 #include "sysclk.h"
 /* lwIP includes */
 #include "lwip/sys.h"
@@ -75,74 +73,11 @@
 #include "netif/etharp.h"
 #include "netif/ethernetif.h"
 
-#if defined(HTTP_RAW_USED)
-#include "httpd.h"
-#endif
-
 //#define TRACE_DEBUG(...)     printf(__VA_ARGS__)
 #define TRACE_DEBUG(...)
 
 /* Global variable containing MAC Config (hw addr, IP, GW, ...) */
 struct netif gs_net_if;
-
-/* Timer for calling lwIP tmr functions without system */
-typedef struct timers_info {
-	uint32_t timer;
-	uint32_t timer_interval;
-	void (*timer_func)(void);
-} timers_info_t;
-
-/* LwIP tmr functions list */
-static timers_info_t gs_timers_table[] = {
-	{0, TCP_TMR_INTERVAL, tcp_tmr},
-	{0, IP_TMR_INTERVAL, ip_reass_tmr},
-#if 0
-	/* LWIP_TCP */
-	{0, TCP_FAST_INTERVAL, tcp_fasttmr},
-	{0, TCP_SLOW_INTERVAL, tcp_slowtmr},
-#endif
-	/* LWIP_ARP */
-	{0, ARP_TMR_INTERVAL, etharp_tmr},
-	/* LWIP_DHCP */
-#if LWIP_DHCP
-	{0, DHCP_COARSE_TIMER_SECS, dhcp_coarse_tmr},
-	{0, DHCP_FINE_TIMER_MSECS, dhcp_fine_tmr},
-#endif
-};
-
-/**
- * \brief Process timing functions.
- */
-static void timers_update(void)
-{
-	static uint32_t ul_last_time;
-	uint32_t ul_cur_time, ul_time_diff, ul_idx_timer;
-	timers_info_t *p_tmr_inf;
-
-	ul_cur_time = sys_get_ms();
-	if (ul_cur_time >= ul_last_time) {
-		ul_time_diff = ul_cur_time - ul_last_time;
-	} else {
-		ul_time_diff = 0xFFFFFFFF - ul_last_time + ul_cur_time;
-	}
-
-	if (ul_time_diff) {
-		ul_last_time = ul_cur_time;
-		for (ul_idx_timer = 0;
-			 ul_idx_timer < (sizeof(gs_timers_table) / sizeof(timers_info_t));
-			 ul_idx_timer++) {
-			p_tmr_inf = &gs_timers_table[ul_idx_timer];
-			p_tmr_inf->timer += ul_time_diff;
-			if (p_tmr_inf->timer > p_tmr_inf->timer_interval) {
-				if (p_tmr_inf->timer_func) {
-					p_tmr_inf->timer_func();
-				}
-
-				p_tmr_inf->timer -= p_tmr_inf->timer_interval;
-			}
-		}
-	}
-}
 
 extern uint32_t g_ip_mode;
 extern int8_t g_c_ipconfig[];
@@ -217,22 +152,11 @@ static void ethernet_configure_interface(void)
 void init_ethernet(void)
 {
 	/* Initialize lwIP. */
-	/* Call lwip_init for standalone lwIP mode. */
 	/* Call tcpip_init for threaded lwIP mode. */
-	//lwip_init();
 	tcpip_init(NULL, NULL);
 
 	/* Set hw and IP parameters, initialize MAC too */
 	ethernet_configure_interface();
-
-	/* Init timer service */
-	/* NOTE: Timer service is already configured, using FreeRTOS APIs. */
-	//sys_init_timing();
-
-#if defined(HTTP_RAW_USED)
-	/* Bring up the web server */
-	http_init();
-#endif
 }
 
 /**
@@ -251,20 +175,4 @@ void status_callback(struct netif *netif)
 	} else {
 		TRACE_DEBUG("Network down");
 	}
-}
-
-/**
- * \brief Manage the ethernet packets.
- * Process input ouput TCP/IP connections then manage LwIP timers.
- *
- * \note This function should be called periodically from within a task
- * to manage the LwIP stack.
- */
-void ethernet_task(void)
-{
-	/* Run polling tasks */
-	ethernetif_input(&gs_net_if);
-
-	/* Run periodic tasks */
-	timers_update();
 }

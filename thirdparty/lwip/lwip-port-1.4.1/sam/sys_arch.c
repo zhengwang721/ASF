@@ -162,7 +162,7 @@ void sys_sem_signal(sys_sem_t *sem)
  * function should block before returning; if the function times out, it should
  * return SYS_ARCH_TIMEOUT. If timeout=0, then the function should block
  * indefinitely. If the function acquires the semaphore, it should return how
- * many milliseconds expired while waiting for the semaphore. 
+ * many milliseconds expired while waiting for the semaphore.
  *
  * \return SYS_ARCH_TIMEOUT if times out, ERR_MEM for semaphore erro otherwise
  * return the milliseconds expired while waiting for the semaphore.
@@ -238,7 +238,7 @@ void sys_sem_set_invalid(sys_sem_t *sem)
 
 /**
  * \brief Creates an empty mailbox for maximum "size" elements. Elements stored
- * in mailboxes are pointers. 
+ * in mailboxes are pointers.
  *
  * \param mBoxNew Pointer to the new mailbox.
  * \param size Maximum "size" elements.

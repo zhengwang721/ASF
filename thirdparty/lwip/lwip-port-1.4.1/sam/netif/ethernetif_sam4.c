@@ -241,9 +241,14 @@ static void low_level_init(struct netif *netif)
 static err_t low_level_output(struct netif *netif, struct pbuf *p)
 {
 	struct pbuf *q = NULL;
-	int8_t pc_buf[NET_RW_BUFF_SIZE];
-	int8_t *bufptr = &pc_buf[0];
+	uint8_t *bufptr = NULL;
 	uint8_t uc_rc;
+	
+	(void)netif;
+	
+	bufptr = gmac_dev_get_tx_buffer(&gs_gmac_dev);
+	if (bufptr == NULL)
+		return ERR_BUF;
 
 #if ETH_PAD_SIZE
 	pbuf_header(p, -ETH_PAD_SIZE);    /* Drop the padding word */
@@ -268,7 +273,7 @@ static err_t low_level_output(struct netif *netif, struct pbuf *p)
 	}
 
 	/* Signal that packet should be sent(); */
-	uc_rc = gmac_dev_write(&gs_gmac_dev, pc_buf, p->tot_len, NULL);
+	uc_rc = gmac_dev_write_nocopy(&gs_gmac_dev, p->tot_len, NULL);
 	if (uc_rc != GMAC_OK) {
 		return ERR_BUF;
 	}
@@ -301,10 +306,11 @@ static struct pbuf *low_level_input(struct netif *netif)
 	u16_t s_len;
 	uint8_t pc_buf[NET_RW_BUFF_SIZE];
 	int8_t *bufptr = (int8_t *)&pc_buf[0];
-
 	uint32_t ul_frmlen;
 	uint8_t uc_rc;
 
+	(void)netif;
+	
 	/* Obtain the size of the packet and put it into the "len"
 	 * variable. */
 	uc_rc = gmac_dev_read(&gs_gmac_dev, pc_buf, sizeof(pc_buf), &ul_frmlen);
@@ -356,6 +362,10 @@ static struct pbuf *low_level_input(struct netif *netif)
 	return p;
 }
 
+#ifdef FREERTOS_USED
+extern xSemaphoreHandle netif_notification_semaphore;
+#endif
+
 /**
  * \brief This function should be called when a packet is ready to be
  * read from the interface. It uses the function low_level_input()
@@ -369,36 +379,43 @@ static struct pbuf *low_level_input(struct netif *netif)
 void ethernetif_input(void * pvParameters)
 {
 	struct netif      *netif = (struct netif *)pvParameters;
-	struct pbuf       *p;
+	struct pbuf       *p = NULL;
 
 #ifdef FREERTOS_USED
-	for( ;; ) {
-		do {
-#endif
-			/* move received packet into a new pbuf */
-			p = low_level_input( netif );
-			if( p == NULL ) {
-#ifdef FREERTOS_USED
-				/* No packet could be read.  Wait a for an interrupt to tell us
-				there is more data available. */
-				vTaskDelay(100);
+	for ( ;; )
+	{
+		while (p == NULL)
+		{
+			if (xSemaphoreTake(netif_notification_semaphore, portMAX_DELAY))
+			{
+				/* Move received packet into a new pbuf. */
+				p = low_level_input(netif);
 			}
-		}while( p == NULL );
-#else
-				return;
-			}
-#endif
-
-		if( ERR_OK != netif->input( p, netif ) ) {
-			pbuf_free(p);
-			p = NULL;
 		}
-#ifdef FREERTOS_USED
+
+		if (ERR_OK != netif->input(p, netif))
+		{
+			pbuf_free(p);
+		}
+
+		/* At this point, buffer is either consumed or freed, so don't care. */
+		p = NULL;
+	}
+#else
+	/* Move received packet into a new pbuf. */
+	p = low_level_input(netif);
+	if (p == NULL)
+	{
+		return;
+	}
+
+	if (ERR_OK != netif->input(p, netif))
+	{
+		pbuf_free(p);
+		p = NULL;
 	}
 #endif
 }
-
-
 
 /**
  * \brief Should be called at the beginning of the program to set up the
