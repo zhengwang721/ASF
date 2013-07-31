@@ -140,6 +140,19 @@ extern "C" {
 #define PMC_PCK_PRES_CLK_64  PMC_PCK_PRES(6)
 #endif
 
+/** Programmable Clock ID for the example by default */
+#ifndef GCLK_ID
+#define GCLK_ID                PMC_PCK_0
+#endif
+/** Programmable Clock Pin for the example by default */
+#ifndef GCLK_PIN
+#define GCLK_PIN              PIN_PCK0
+#endif
+/** Programmable Clock Pin Mux for the example by default */
+#ifndef GCLK_PIN_MUX
+#define GCLK_PIN_MUX    PIN_PCK0_MUX
+#endif
+
 /**
  * \brief Handler for Button 1 rising edge interrupt.
  *
@@ -216,65 +229,36 @@ static void config_uart_and_pck(uint32_t ul_clock_source,
 		/* Configure UART */
 		uart_init(CONSOLE_UART, &uart_console_settings);
 	}
-#if SAM4C
-	/* Programmable clock 2 output disabled */
-	pmc_disable_pck(PMC_PCK_2);
+
+	/* Programmable clock output disabled */
+	pmc_disable_pck(GCLK_ID);
 
 	/* Configure PMC Programmable Clock */
 	switch (ul_clock_source) {
 	case PMC_PCK_CSS_MAIN_CLK:
-		pmc_switch_pck_to_mainck(PMC_PCK_2, ul_prescaler);
+		pmc_switch_pck_to_mainck(GCLK_ID, ul_prescaler);
 		break;
 
 	case PMC_PCK_CSS_SLOW_CLK:
-		pmc_switch_pck_to_sclk(PMC_PCK_2, ul_prescaler);
+		pmc_switch_pck_to_sclk(GCLK_ID, ul_prescaler);
 		break;
 
 	case PMC_PCK_CSS_PLLA_CLK:
-		pmc_switch_pck_to_pllack(PMC_PCK_2, ul_prescaler);
+		pmc_switch_pck_to_pllack(GCLK_ID, ul_prescaler);
 		break;
 
+#if (SAM3S || SAM4S || SAM4C) 
 	case PMC_PCK_CSS_PLLB_CLK:
-		pmc_switch_pck_to_pllbck(PMC_PCK_2, ul_prescaler);
-		break;
-
-	default:
-		pmc_switch_pck_to_mainck(PMC_PCK_2, ul_prescaler);
-	}
-
-	/* Enable the PCK again */
-	pmc_enable_pck(PMC_PCK_2);
-#else
-	/* Programmable clock 0 output disabled */
-	pmc_disable_pck(PMC_PCK_0);
-
-	/* Configure PMC Programmable Clock */
-	switch (ul_clock_source) {
-	case PMC_PCK_CSS_MAIN_CLK:
-		pmc_switch_pck_to_mainck(PMC_PCK_0, ul_prescaler);
-		break;
-
-	case PMC_PCK_CSS_SLOW_CLK:
-		pmc_switch_pck_to_sclk(PMC_PCK_0, ul_prescaler);
-		break;
-
-	case PMC_PCK_CSS_PLLA_CLK:
-		pmc_switch_pck_to_pllack(PMC_PCK_0, ul_prescaler);
-		break;
-
-#if (SAM3S || SAM4S) 
-	case PMC_PCK_CSS_PLLB_CLK:
-		pmc_switch_pck_to_pllbck(PMC_PCK_0, ul_prescaler);
+		pmc_switch_pck_to_pllbck(GCLK_ID, ul_prescaler);
 		break;
 #endif
 
 	default:
-		pmc_switch_pck_to_mainck(PMC_PCK_0, ul_prescaler);
+		pmc_switch_pck_to_mainck(GCLK_ID, ul_prescaler);
 	}
 
 	/* Enable the PCK again */
-	pmc_enable_pck(PMC_PCK_0);
-#endif
+	pmc_enable_pck(GCLK_ID);
 }
 
 /**
@@ -314,15 +298,9 @@ int main(void)
 	/* Output example information */
 	puts(STRING_HEADER);
 
-#if SAM4C
-	/* Configure PCK2 */
-	ioport_set_pin_mode(PIN_PCK2, PIN_PCK2_MUX);
-	ioport_disable_pin(PIN_PCK2);
-#else
-	/* Configure PCK0 */
-	ioport_set_pin_mode(PIN_PCK0, PIN_PCK0_MUX);
-	ioport_disable_pin(PIN_PCK0);
-#endif
+	/* Configure PCK */
+	ioport_set_pin_mode(GCLK_PIN, GCLK_PIN_MUX);
+	ioport_disable_pin(GCLK_PIN);
 
 	/* Configure the push button */
 	configure_buttons();

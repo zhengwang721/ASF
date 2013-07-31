@@ -992,7 +992,11 @@ void pmc_disable_cpck(void)
  */
 bool pmc_is_cpck_enabled(void)
 {
-	return (PMC->PMC_SCSR & PMC_SCSR_CPCK);
+	if(PMC->PMC_SCSR & PMC_SCSR_CPCK) {
+		return 1;
+	} else {
+		return 0;
+	}
 }
 
 /**
@@ -1019,7 +1023,11 @@ void pmc_disable_cpbmck(void)
  */
 bool pmc_is_cpbmck_enabled(void)
 {
-	return (PMC->PMC_SCSR & PMC_SCSR_CPBMCK);
+	if(PMC->PMC_SCSR & PMC_SCSR_CPBMCK) {
+		return 1;
+	} else {
+		return 0;
+	}
 }
 
 /**

@@ -46,4 +46,8 @@
 
 #define BUTTON_NAME  "SCROLL_DOWN BP5"
 
+#define GCLK_PIN        PIN_PCK2
+#define GCLK_PIN_MUX    PIN_PCK2_MUX
+#define GCLK_ID         PMC_PCK_2
+
 #endif /* CONF_PMC_CLOCK_SWITCHING_EXAMPLE_H_INCLUDED */
