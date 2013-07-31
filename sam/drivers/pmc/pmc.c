@@ -967,6 +967,84 @@ uint32_t pmc_is_pck_enabled(uint32_t ul_id)
 	return (PMC->PMC_SCSR & (PMC_SCSR_PCK0 << ul_id));
 }
 
+#if SAM4C
+/**
+ * \brief Enable Coprocessor Clocks.
+ */
+void pmc_enable_cpck(void)
+{
+	PMC->PMC_SCER = PMC_SCER_CPCK | PMC_SCER_CPKEY_PASSWD;
+}
+
+/**
+ * \brief Disable Coprocessor Clocks.
+ */
+void pmc_disable_cpck(void)
+{
+	PMC->PMC_SCDR = PMC_SCDR_CPCK | PMC_SCDR_CPKEY_PASSWD;
+}
+
+/**
+ * \brief Check if the Coprocessor Clocks is enabled.
+ *
+ * \retval 0 Coprocessor Clocks is disabled.
+ * \retval 1 Coprocessor Clocks is enabled.
+ */
+bool pmc_is_cpck_enabled(void)
+{
+	return (PMC->PMC_SCSR & PMC_SCSR_CPCK);
+}
+
+/**
+ * \brief Enable Coprocessor Bus Master Clocks.
+ */
+void pmc_enable_cpbmck(void)
+{
+	PMC->PMC_SCER = PMC_SCER_CPCK | PMC_SCER_CPKEY_PASSWD;
+}
+
+/**
+ * \brief Disable Coprocessor Bus Master Clocks.
+ */
+void pmc_disable_cpbmck(void)
+{
+	PMC->PMC_SCDR = PMC_SCDR_CPCK | PMC_SCDR_CPKEY_PASSWD;
+}
+
+/**
+ * \brief Check if the Coprocessor Bus Master Clocks is enabled.
+ *
+ * \retval 0 Coprocessor Bus Master Clocks is disabled.
+ * \retval 1 Coprocessor Bus Master Clocks is enabled.
+ */
+bool pmc_is_cpbmck_enabled(void)
+{
+	return (PMC->PMC_SCSR & PMC_SCSR_CPBMCK);
+}
+
+/**
+ * \brief Set the prescaler for the Coprocessor Master Clock.
+ *
+ * \param ul_pres Prescaler value.
+ */
+void pmc_cpck_set_prescaler(uint32_t ul_pres)
+{
+	PMC->PMC_MCKR =
+			(PMC->PMC_MCKR & (~PMC_MCKR_CPPRES_Msk)) | PMC_MCKR_CPPRES(ul_pres);
+}
+
+/**
+ * \brief Set the source for the Coprocessor Master Clock.
+ *
+ * \param ul_source Source selection value.
+ */
+void pmc_cpck_set_source(uint32_t ul_source)
+{
+	PMC->PMC_MCKR =
+			(PMC->PMC_MCKR & (~PMC_MCKR_CPCSS_Msk)) | ul_source;
+}
+#endif
+
 #if (SAM3S || SAM3XA || SAM4S || SAM4E)
 /**
  * \brief Switch UDP (USB) clock source selection to PLLA clock.

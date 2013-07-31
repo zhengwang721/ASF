@@ -224,6 +224,16 @@ void pmc_pck_set_source(uint32_t ul_id, uint32_t ul_source);
 uint32_t pmc_switch_pck_to_sclk(uint32_t ul_id, uint32_t ul_pres);
 uint32_t pmc_switch_pck_to_mainck(uint32_t ul_id, uint32_t ul_pres);
 uint32_t pmc_switch_pck_to_pllack(uint32_t ul_id, uint32_t ul_pres);
+#if SAM4C
+void pmc_enable_cpck(void);
+void pmc_disable_cpck(void);
+bool pmc_is_cpck_enabled(void);
+void pmc_enable_cpbmck(void);
+void pmc_disable_cpbmck(void);
+bool pmc_is_cpbmck_enabled(void);
+void pmc_cpck_set_prescaler(uint32_t ul_pres);
+void pmc_cpck_set_source(uint32_t ul_source);
+#endif
 #if (SAM3S || SAM4S || SAM4C)
 uint32_t pmc_switch_pck_to_pllbck(uint32_t ul_id, uint32_t ul_pres);
 #endif

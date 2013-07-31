@@ -64,8 +64,8 @@
  * printf actions with the current configuration (except 32KHz slow clock )
  * and waits for the button pressed to switch to the next configuration. The
  * PCK clock can be selected among PLLA, UPLL, SLCK, MAINCK and driven on the
- * PCK0 pin. After the clock switches, the PCK output signal can be measured by
- * oscilloscope and compared with the clock configuration.
+ * PCK0(For SAM4C_EK, PCK2 is used) pin. After the clock switches, the PCK output
+ * signal can be measured by oscilloscope and compared with the clock configuration.
  *
  * <ul>
  * <li> The Clock Generator integrates a 32,768 Hz low-power oscillator.
@@ -216,7 +216,35 @@ static void config_uart_and_pck(uint32_t ul_clock_source,
 		/* Configure UART */
 		uart_init(CONSOLE_UART, &uart_console_settings);
 	}
+#if SAM4C
+	/* Programmable clock 2 output disabled */
+	pmc_disable_pck(PMC_PCK_2);
 
+	/* Configure PMC Programmable Clock */
+	switch (ul_clock_source) {
+	case PMC_PCK_CSS_MAIN_CLK:
+		pmc_switch_pck_to_mainck(PMC_PCK_2, ul_prescaler);
+		break;
+
+	case PMC_PCK_CSS_SLOW_CLK:
+		pmc_switch_pck_to_sclk(PMC_PCK_2, ul_prescaler);
+		break;
+
+	case PMC_PCK_CSS_PLLA_CLK:
+		pmc_switch_pck_to_pllack(PMC_PCK_2, ul_prescaler);
+		break;
+
+	case PMC_PCK_CSS_PLLB_CLK:
+		pmc_switch_pck_to_pllbck(PMC_PCK_2, ul_prescaler);
+		break;
+
+	default:
+		pmc_switch_pck_to_mainck(PMC_PCK_2, ul_prescaler);
+	}
+
+	/* Enable the PCK again */
+	pmc_enable_pck(PMC_PCK_2);
+#else
 	/* Programmable clock 0 output disabled */
 	pmc_disable_pck(PMC_PCK_0);
 
@@ -234,7 +262,7 @@ static void config_uart_and_pck(uint32_t ul_clock_source,
 		pmc_switch_pck_to_pllack(PMC_PCK_0, ul_prescaler);
 		break;
 
-#if SAM3S
+#if (SAM3S || SAM4S) 
 	case PMC_PCK_CSS_PLLB_CLK:
 		pmc_switch_pck_to_pllbck(PMC_PCK_0, ul_prescaler);
 		break;
@@ -246,6 +274,7 @@ static void config_uart_and_pck(uint32_t ul_clock_source,
 
 	/* Enable the PCK again */
 	pmc_enable_pck(PMC_PCK_0);
+#endif
 }
 
 /**
@@ -285,9 +314,15 @@ int main(void)
 	/* Output example information */
 	puts(STRING_HEADER);
 
+#if SAM4C
+	/* Configure PCK2 */
+	ioport_set_pin_mode(PIN_PCK2, PIN_PCK2_MUX);
+	ioport_disable_pin(PIN_PCK2);
+#else
 	/* Configure PCK0 */
 	ioport_set_pin_mode(PIN_PCK0, PIN_PCK0_MUX);
 	ioport_disable_pin(PIN_PCK0);
+#endif
 
 	/* Configure the push button */
 	configure_buttons();
@@ -306,7 +341,7 @@ int main(void)
 	/* First switch to slow clock */
 	pmc_switch_mck_to_sclk(PMC_MCKR_PRES_CLK_1);
 
-#if SAM3S
+#if (SAM3S || SAM4S || SAM4C)
 	/* Then cut the PLL B */
 	pmc_disable_pllbck();
 #endif
