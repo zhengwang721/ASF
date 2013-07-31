@@ -49,6 +49,59 @@ typedef union { intfunc __fun; void * __ptr; } intvec_elem;
 void __iar_program_start(void);
 int __low_level_init(void);
 
+/* Default empty handler */
+void Dummy_Handler(void);
+
+/* Cortex-M4 core handlers */
+#pragma weak NMI_Handler=Dummy_Handler
+#pragma weak HardFault_Handler=Dummy_Handler
+#pragma weak MemManage_Handler=Dummy_Handler
+#pragma weak BusFault_Handler=Dummy_Handler
+#pragma weak UsageFault_Handler=Dummy_Handler
+#pragma weak SVC_Handler=Dummy_Handler
+#pragma weak DebugMon_Handler=Dummy_Handler
+#pragma weak PendSV_Handler=Dummy_Handler
+#pragma weak SysTick_Handler=Dummy_Handler
+
+/* Peripherals handlers */
+#pragma weak SUPC_Handler=Dummy_Handler
+#pragma weak RSTC_Handler=Dummy_Handler
+#pragma weak RTC_Handler=Dummy_Handler
+#pragma weak RTT_Handler=Dummy_Handler
+#pragma weak WDT_Handler=Dummy_Handler
+#pragma weak PMC_Handler=Dummy_Handler
+#pragma weak EFC_Handler=Dummy_Handler
+#pragma weak UART0_Handler=Dummy_Handler
+#pragma weak PIOA_Handler=Dummy_Handler
+#pragma weak PIOB_Handler=Dummy_Handler
+#pragma weak USART0_Handler=Dummy_Handler
+#pragma weak USART1_Handler=Dummy_Handler
+#pragma weak USART2_Handler=Dummy_Handler
+#pragma weak USART3_Handler=Dummy_Handler
+#pragma weak USART4_Handler=Dummy_Handler
+#pragma weak TWI0_Handler=Dummy_Handler
+#pragma weak TWI1_Handler=Dummy_Handler
+#pragma weak SPI0_Handler=Dummy_Handler
+#pragma weak TC0_Handler=Dummy_Handler
+#pragma weak TC1_Handler=Dummy_Handler
+#pragma weak TC2_Handler=Dummy_Handler
+#pragma weak TC3_Handler=Dummy_Handler
+#pragma weak TC4_Handler=Dummy_Handler
+#pragma weak TC5_Handler=Dummy_Handler
+#pragma weak ADC_Handler=Dummy_Handler
+#pragma weak ARM1_Handler=Dummy_Handler
+#pragma weak IPC0_Handler=Dummy_Handler
+#pragma weak SLCDC_Handler=Dummy_Handler
+#pragma weak TRNG_Handler=Dummy_Handler
+#pragma weak ICM_Handler=Dummy_Handler
+#pragma weak CPKCC_Handler=Dummy_Handler
+#pragma weak AES_Handler=Dummy_Handler
+#pragma weak PIOC_Handler=Dummy_Handler
+#pragma weak UART1_Handler=Dummy_Handler
+#pragma weak IPC1_Handler=Dummy_Handler
+#pragma weak SPI1_Handler=Dummy_Handler
+#pragma weak PWM_Handler=Dummy_Handler
+
 /* Exception Table */
 #pragma language = extended
 #pragma segment = "CSTACK"
@@ -143,4 +196,13 @@ int __low_level_init(void)
 void Reset_Handler(void)
 {
 	__iar_program_start();
+}
+
+/**
+ * \brief Default interrupt handler for unused IRQs.
+ */
+void Dummy_Handler(void)
+{
+	while (1) {
+	}
 }

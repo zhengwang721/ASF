@@ -57,6 +57,59 @@ int main(void);
 
 void __libc_init_array(void);
 
+/* Default empty handler */
+void Dummy_Handler(void);
+
+/* Cortex-M4 core handlers */
+void NMI_Handler        ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void HardFault_Handler  ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void MemManage_Handler  ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void BusFault_Handler   ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void UsageFault_Handler ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void SVC_Handler        ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void DebugMon_Handler   ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void PendSV_Handler     ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void SysTick_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+
+/* Peripherals handlers */
+void SUPC_Handler   ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void RSTC_Handler   ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void RTC_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void RTT_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void WDT_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void PMC_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void EFC_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void UART0_Handler  ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void PIOA_Handler   ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void PIOB_Handler   ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void USART0_Handler ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void USART1_Handler ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void USART2_Handler ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void USART3_Handler ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void USART4_Handler ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void TWI0_Handler   ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void TWI1_Handler   ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void SPI0_Handler   ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void TC0_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void TC1_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void TC2_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void TC3_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void TC4_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void TC5_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void ADC_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void ARM1_Handler   ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void IPC0_Handler   ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void SLCDC_Handler  ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void TRNG_Handler   ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void ICM_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void CPKCC_Handler  ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void AES_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void PIOC_Handler   ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void UART1_Handler  ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void IPC1_Handler   ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void SPI1_Handler   ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void PWM_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+
 /* Exception Table */
 __attribute__ ((section(".vectors")))
 const DeviceVectors exception_table = {
@@ -160,4 +213,13 @@ void Reset_Handler(void)
 
 	/* Infinite loop */
 	while (1);
+}
+
+/**
+ * \brief Default interrupt handler for unused IRQs.
+ */
+void Dummy_Handler(void)
+{
+	while (1) {
+	}
 }
