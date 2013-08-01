@@ -225,7 +225,7 @@ void pmc_sleep(int sleep_mode)
 	case SAM_PM_SMODE_BACKUP:
 		SCB->SCR |= SCR_SLEEPDEEP;
 #if (SAM4S || SAM4E || SAM4N || SAM4C)
-		SUPC->SUPC_CR = SUPC_CR_KEY_VALUE | SUPC_CR_VROFF_STOP_VREG;
+		SUPC->SUPC_CR = SUPC_CR_KEY_PASSWD | SUPC_CR_VROFF_STOP_VREG;
 		cpu_irq_enable();
 		__WFI() ;
 #else

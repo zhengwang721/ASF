@@ -109,7 +109,7 @@ __always_inline static ioport_port_t arch_ioport_pin_to_port_id(ioport_pin_t pin
 __always_inline static Pio *arch_ioport_port_to_base(ioport_port_t port)
 {
 #if (SAM4C)
-	if (port == 2) {
+	if (port == IOPORT_PIOC) {
 		return (Pio *)(uintptr_t)PIOC;
 	} else {
 		return (Pio *)((uintptr_t)IOPORT_BASE_ADDRESS +
