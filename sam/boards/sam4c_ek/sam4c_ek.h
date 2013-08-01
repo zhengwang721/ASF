@@ -115,7 +115,7 @@
 #define LED0_INACTIVE_LEVEL  IOPORT_PIN_LEVEL_HIGH
 
 /* Wrapper macros to ensure common naming across all boards */
-#define LED_0_NAME      "blue LED D8"
+#define LED_0_NAME      "green LED (D10)"
 #define PIN_LED_0       {PIO_PC6, PIOC, ID_PIOC, PIO_OUTPUT_1, PIO_DEFAULT}
 #define PIN_LED_0_MASK   PIO_PC6
 #define PIN_LED_0_PIO    PIOC
@@ -133,7 +133,7 @@
 #define LED1_INACTIVE_LEVEL  IOPORT_PIN_LEVEL_HIGH
 
 /* Wrapper macros to ensure common naming across all boards */
-#define LED_1_NAME      "amber LED D9"
+#define LED_1_NAME      "amber LED (D9)"
 #define PIN_LED_1       {PIO_PC7, PIOC, ID_PIOC, PIO_OUTPUT_1, PIO_DEFAULT}
 #define PIN_LED_1_MASK   PIO_PC7
 #define PIN_LED_1_PIO    PIOC
@@ -151,7 +151,7 @@
 #define LED2_INACTIVE_LEVEL  IOPORT_PIN_LEVEL_HIGH
 
 /* Wrapper macros to ensure common naming across all boards */
-#define LED_2_NAME      "blue LED D8"
+#define LED_2_NAME      "blue LED (D8)"
 #define PIN_LED_2       {PIO_PC8, PIOC, ID_PIOC, PIO_OUTPUT_1, PIO_DEFAULT}
 #define PIN_LED_2_MASK   PIO_PC8
 #define PIN_LED_2_PIO    PIOC
@@ -165,7 +165,7 @@
  * Attributes = pull-up + debounce + interrupt on rising edge.
  * @{
  */
-#define PUSHBUTTON_1_NAME        "Scroll down"
+#define PUSHBUTTON_1_NAME        "SCROLL_DOWN (BP5)"
 #define GPIO_PUSH_BUTTON_1       (PIO_PA20_IDX)
 #define GPIO_PUSH_BUTTON_1_FLAGS (IOPORT_MODE_PULLUP | IOPORT_MODE_DEBOUNCE)
 #define GPIO_PUSH_BUTTON_1_SENSE (IOPORT_SENSE_RISING)
@@ -185,7 +185,7 @@
  * Attributes = pull-up + debounce + interrupt on rising edge.
  * @{
  */
-#define PUSHBUTTON_2_NAME        "Scroll up"
+#define PUSHBUTTON_2_NAME        "SCROLL_UP (BP4)"
 #define PUSHBUTTON_2_WKUP_LINE   (4)
 #define PUSHBUTTON_2_WKUP_FSTT   (PMC_FSMR_FSTT4)
 #define GPIO_PUSH_BUTTON_2       (PIO_PA19_IDX)
