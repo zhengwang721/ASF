@@ -282,11 +282,11 @@ void pmc_switch_sclk_to_32kxtal(uint32_t ul_bypass)
 {
 	/* Set Bypass mode if required */
 	if (ul_bypass == 1) {
-		SUPC->SUPC_MR |= SUPC_MR_KEY_VALUE |
+		SUPC->SUPC_MR |= SUPC_MR_KEY_PASSWD |
 			SUPC_MR_OSCBYPASS;
 	}
 
-	SUPC->SUPC_CR = SUPC_CR_KEY_VALUE | SUPC_CR_XTALSEL;
+	SUPC->SUPC_CR = SUPC_CR_KEY_PASSWD | SUPC_CR_XTALSEL;
 }
 
 /**
@@ -317,12 +317,12 @@ void pmc_switch_mainck_to_fastrc(uint32_t ul_moscrcf)
 	/* Enable Fast RC oscillator but DO NOT switch to RC now */
 	if (PMC->CKGR_MOR & CKGR_MOR_MOSCXTEN) {
 		PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCRCF_Msk) |
-				PMC_CKGR_MOR_KEY_VALUE | CKGR_MOR_MOSCRCEN |
+				CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCRCEN |
 				ul_moscrcf;
 	} else {
 		ul_needXTEN = 1;
 		PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCRCF_Msk) |
-				PMC_CKGR_MOR_KEY_VALUE | CKGR_MOR_MOSCRCEN |
+				CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCRCEN |
 				CKGR_MOR_MOSCXTEN | CKGR_MOR_MOSCXTST_Msk |
 				ul_moscrcf;
 	}
@@ -332,12 +332,12 @@ void pmc_switch_mainck_to_fastrc(uint32_t ul_moscrcf)
 
 	/* Switch to Fast RC */
 	PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCSEL) |
-			PMC_CKGR_MOR_KEY_VALUE;
+			CKGR_MOR_KEY_PASSWD;
 
 	/* Disable xtal oscillator */
 	if (ul_needXTEN) {
 		PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCXTEN) |
-				PMC_CKGR_MOR_KEY_VALUE;
+				CKGR_MOR_KEY_PASSWD;
 	}
 }
 
@@ -350,7 +350,7 @@ void pmc_osc_enable_fastrc(uint32_t ul_rc)
 {
 	/* Enable Fast RC oscillator but DO NOT switch to RC now.
 	 * Keep MOSCSEL to 1 */
-	PMC->CKGR_MOR = PMC_CKGR_MOR_KEY_VALUE | CKGR_MOR_MOSCSEL |
+	PMC->CKGR_MOR = CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCSEL |
 			CKGR_MOR_MOSCXTEN | CKGR_MOR_MOSCRCEN | ul_rc;
 	/* Wait the Fast RC to stabilize */
 	while (!(PMC->PMC_SR & PMC_SR_MOSCRCS));
@@ -364,7 +364,7 @@ void pmc_osc_disable_fastrc(void)
 	/* Disable Fast RC oscillator */
 	PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCRCEN &
 					~CKGR_MOR_MOSCRCF_Msk)
-				| PMC_CKGR_MOR_KEY_VALUE;
+				| CKGR_MOR_KEY_PASSWD;
 }
 
 /**
@@ -386,7 +386,7 @@ void pmc_osc_enable_main_xtal(uint32_t ul_xtal_startup_time)
 {
 	uint32_t mor = PMC->CKGR_MOR;
 	mor &= ~(CKGR_MOR_MOSCXTBY|CKGR_MOR_MOSCXTEN);
-	mor |= PMC_CKGR_MOR_KEY_VALUE | CKGR_MOR_MOSCXTEN |
+	mor |= CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCXTEN |
 			CKGR_MOR_MOSCXTST(ul_xtal_startup_time);
 	PMC->CKGR_MOR = mor;
 	/* Wait the main Xtal to stabilize */
@@ -400,7 +400,7 @@ void pmc_osc_bypass_main_xtal(void)
 {
 	uint32_t mor = PMC->CKGR_MOR;
 	mor &= ~(CKGR_MOR_MOSCXTBY|CKGR_MOR_MOSCXTEN);
-	mor |= PMC_CKGR_MOR_KEY_VALUE | CKGR_MOR_MOSCXTBY;
+	mor |= CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCXTBY;
 	/* Enable Crystal oscillator but DO NOT switch now. Keep MOSCSEL to 0 */
 	PMC->CKGR_MOR = mor;
 	/* The MOSCXTS in PMC_SR is automatically set */
@@ -413,7 +413,7 @@ void pmc_osc_disable_main_xtal(void)
 {
 	uint32_t mor = PMC->CKGR_MOR;
 	mor &= ~(CKGR_MOR_MOSCXTBY|CKGR_MOR_MOSCXTEN);
-	PMC->CKGR_MOR = PMC_CKGR_MOR_KEY_VALUE | mor;
+	PMC->CKGR_MOR = CKGR_MOR_KEY_PASSWD | mor;
 }
 
 /**
@@ -457,16 +457,16 @@ void pmc_switch_mainck_to_xtal(uint32_t ul_bypass,
 	/* Enable Main Xtal oscillator */
 	if (ul_bypass) {
 		PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCXTEN) |
-				PMC_CKGR_MOR_KEY_VALUE | CKGR_MOR_MOSCXTBY |
+				CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCXTBY |
 				CKGR_MOR_MOSCSEL;
 	} else {
 		PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCXTBY) |
-				PMC_CKGR_MOR_KEY_VALUE | CKGR_MOR_MOSCXTEN |
+				CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCXTEN |
 				CKGR_MOR_MOSCXTST(ul_xtal_startup_time);
 		/* Wait the Xtal to stabilize */
 		while (!(PMC->PMC_SR & PMC_SR_MOSCXTS));
 
-		PMC->CKGR_MOR |= PMC_CKGR_MOR_KEY_VALUE | CKGR_MOR_MOSCSEL;
+		PMC->CKGR_MOR |= CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCSEL;
 	}
 }
 
@@ -480,10 +480,10 @@ void pmc_osc_disable_xtal(uint32_t ul_bypass)
 	/* Disable xtal oscillator */
 	if (ul_bypass) {
 		PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCXTBY) |
-				PMC_CKGR_MOR_KEY_VALUE;
+				CKGR_MOR_KEY_PASSWD;
 	} else {
 		PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCXTEN) |
-				PMC_CKGR_MOR_KEY_VALUE;
+				CKGR_MOR_KEY_PASSWD;
 	}
 }
 
@@ -514,7 +514,7 @@ void pmc_mainck_osc_select(uint32_t ul_xtal_rc)
 	} else {
 		mor &= ~CKGR_MOR_MOSCSEL;
 	}
-	PMC->CKGR_MOR = PMC_CKGR_MOR_KEY_VALUE | mor;
+	PMC->CKGR_MOR = CKGR_MOR_KEY_PASSWD | mor;
 }
 
 /**
@@ -1280,7 +1280,7 @@ void pmc_enable_waitmode(void)
 #endif
 
 	/* Set the WAITMODE bit = 1 */
-	PMC->CKGR_MOR |= PMC_CKGR_MOR_KEY_VALUE | CKGR_MOR_WAITMODE;
+	PMC->CKGR_MOR |= CKGR_MOR_KEY_PASSWD | CKGR_MOR_WAITMODE;
 
 	/* Waiting for Master Clock Ready MCKRDY = 1 */
 	while (!(PMC->PMC_SR & PMC_SR_MCKRDY));
@@ -1335,7 +1335,7 @@ void pmc_enable_backupmode(void)
 {
 	SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
 #if (SAM4S || SAM4E || SAM4N || SAM4C)
-	SUPC->SUPC_CR = SUPC_CR_KEY_VALUE | SUPC_CR_VROFF_STOP_VREG;
+	SUPC->SUPC_CR = SUPC_CR_KEY_PASSWD | SUPC_CR_VROFF_STOP_VREG;
 #else
 	__WFE();
 #endif
@@ -1348,7 +1348,7 @@ void pmc_enable_clock_failure_detector(void)
 {
 	uint32_t ul_reg = PMC->CKGR_MOR;
 
-	PMC->CKGR_MOR = PMC_CKGR_MOR_KEY_VALUE | CKGR_MOR_CFDEN | ul_reg;
+	PMC->CKGR_MOR = CKGR_MOR_KEY_PASSWD | CKGR_MOR_CFDEN | ul_reg;
 }
 
 /**
@@ -1358,7 +1358,7 @@ void pmc_disable_clock_failure_detector(void)
 {
 	uint32_t ul_reg = PMC->CKGR_MOR & (~CKGR_MOR_CFDEN);
 
-	PMC->CKGR_MOR = PMC_CKGR_MOR_KEY_VALUE | ul_reg;
+	PMC->CKGR_MOR = CKGR_MOR_KEY_PASSWD | ul_reg;
 }
 
 #if SAM4N || SAM4C
@@ -1369,7 +1369,7 @@ void pmc_enable_sclk_osc_freq_monitor(void)
 {
 	uint32_t ul_reg = PMC->CKGR_MOR;
 
-	PMC->CKGR_MOR = PMC_CKGR_MOR_KEY_VALUE | CKGR_MOR_XT32KFME | ul_reg;
+	PMC->CKGR_MOR = CKGR_MOR_KEY_PASSWD | CKGR_MOR_XT32KFME | ul_reg;
 }
 
 /**
@@ -1379,7 +1379,7 @@ void pmc_disable_sclk_osc_freq_monitor(void)
 {
 	uint32_t ul_reg = PMC->CKGR_MOR & (~CKGR_MOR_XT32KFME);
 
-	PMC->CKGR_MOR = PMC_CKGR_MOR_KEY_VALUE | ul_reg;
+	PMC->CKGR_MOR = CKGR_MOR_KEY_PASSWD | ul_reg;
 }
 #endif
 

@@ -70,7 +70,7 @@ typedef enum {
 	MATRIX_DEFMSTR_FIXED_DEFAULT_MASTER = MATRIX_SCFG_DEFMSTR_TYPE(2)
 } defaut_master_t;
 
-#if !SAM4E
+#if !SAM4E && !SAM4C
 /** \brief Matrix slave: arbitration type */
 typedef enum {
 	MATRIX_ARBT_ROUND_ROBIN    = MATRIX_SCFG_ARBT(0),
@@ -88,7 +88,7 @@ void matrix_set_slave_fixed_default_master(uint32_t ul_id,
 		uint32_t ul_fixed_id);
 uint32_t matrix_get_slave_fixed_default_master(uint32_t ul_id);
 
-#if !SAM4E
+#if !SAM4E && !SAM4C
 void matrix_set_slave_arbitration_type(uint32_t ul_id, arbitration_type_t type);
 arbitration_type_t matrix_get_slave_arbitration_type(uint32_t ul_id);
 #endif
@@ -102,11 +102,11 @@ uint32_t matrix_get_master_remap(void);
 
 #endif /* (SAM3XA || SAM3U || SAM4E) */
 
-#if (SAM3S || SAM3XA || SAM3N || SAM4S || SAM4E || SAM4N)
+#if (SAM3S || SAM3XA || SAM3N || SAM4S || SAM4E || SAM4N || SAM4C)
 void matrix_set_system_io(uint32_t ul_io);
 uint32_t matrix_get_system_io(void);
 
-#endif /* (SAM3S || SAM3XA || SAM3N || SAM4S || SAM4E || SAM4N) */
+#endif /* (SAM3S || SAM3XA || SAM3N || SAM4S || SAM4E || SAM4N || SAM4C) */
 
 #if (SAM3S || SAM4S || SAM4E)
 void matrix_set_nandflash_cs(uint32_t ul_cs);
