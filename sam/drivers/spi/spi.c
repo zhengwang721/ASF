@@ -55,10 +55,8 @@
  *
  * @{
  */
-#ifdef SPI_WPMR_WPKEY
-#define SPI_WPMR_WPKEY_VALUE SPI_WPMR_WPKEY((uint32_t) 0x535049)
-#else
-#define SPI_WPMR_WPKEY_VALUE SPI_WPMR_WPKEY_PASSWD
+#ifndef SPI_WPMR_WPKEY_PASSWD
+#define SPI_WPMR_WPKEY_PASSWD SPI_WPMR_WPKEY((uint32_t) 0x535049)
 #endif
 
 /**
@@ -343,9 +341,9 @@ void spi_set_writeprotect(Spi *p_spi, uint32_t ul_enable)
 	}
 #else
 	if (ul_enable) {
-		p_spi->SPI_WPMR = SPI_WPMR_WPKEY_VALUE | SPI_WPMR_WPEN;
+		p_spi->SPI_WPMR = SPI_WPMR_WPKEY_PASSWD | SPI_WPMR_WPEN;
 	} else {
-		p_spi->SPI_WPMR = SPI_WPMR_WPKEY_VALUE;
+		p_spi->SPI_WPMR = SPI_WPMR_WPKEY_PASSWD;
 	}
 #endif
 }

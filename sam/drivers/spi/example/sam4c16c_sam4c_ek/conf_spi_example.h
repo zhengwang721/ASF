@@ -45,10 +45,10 @@
  * \defgroup spi_example_pin_defs
  *  - <b> SAM4C-EK  --  SAM4C-EK </b>
  *  - VCC -- VCC
- *  - NPCS0(PC2) -- NPCS0(PC2)
- *  - MISO(PC3)  -- MISO(PC3)
- *  - MOSI(PC4)  -- MOSI(PC4)
- *  - SPCK(PC5)  -- SPCK(PC5)
+ *  - NPCS0(PA5) -- NPCS0(PA5)
+ *  - MISO(PA6)  -- MISO(PA6)
+ *  - MOSI(PA7)  -- MOSI(PA7)
+ *  - SPCK(PA8)  -- SPCK(PA8)
  *  - GND -- GND
  */
 

@@ -72,7 +72,6 @@
  * - \ref conf_at25dfx.h
  *
  * \section device_info Device Info
- * SAM3N, SAM4L and SAM4E devices can be used.
  * This example has been tested with the following setup:
  * - sam3n4c_sam3n_ek
  * - sam4lc4c_sam4l_ek
