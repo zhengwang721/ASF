@@ -14,6 +14,7 @@
 		<config name="config.compiler.iarewarm.create_aux" value="no"/>
 		<config name="config.compiler.armgcc.create_aux" value="no"/>
 		<config name="config.compiler.as5_arm.create_aux" value="no"/>
+		<build type="linker-config" subtype="script" value="linker_scripts/iar/flash.icf" toolchain="iarewarm"/>
 		<device-support value="atsam4c16c"/>
 	</project>
 </asf>
