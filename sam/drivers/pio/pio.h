@@ -213,7 +213,7 @@ enum pio_io_drive_mode {
 	PIO_IO_DRIVE_MEDIUM,
 	PIO_IO_DRIVE_LOW,
 };
-void pio_set_io_drive(Pio *p_pio, uint32_t ul_mask,
+void pio_set_io_drive(Pio *p_pio, uint32_t ul_line,
 		enum pio_io_drive_mode mode);
 #endif
 
