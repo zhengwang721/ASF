@@ -1,0 +1,18 @@
+<asf xmlversion="1.0">
+	<module type="service" id="common.services.xplained_pro_wing_manager" caption="XPlained PRO Wing Manager">
+		<info type="description" value="summary">
+			XPlained PRO Wing manager for automatic detection and setup on correct extention port.
+		</info>
+		<info type="keyword" value="technology">
+			<keyword value="Graphics"/>
+		</info>
+
+		<build type="include-path" value="."/>
+		<build type="header-file" subtype="api" value="xplained_pro_wing_manager.h"/>
+		<build type="header-file" subtype="api" value="xplained_pro_wing_manager_common.h"/>
+		<build type="c-source" value="xplained_pro_wing_manager_common.c"/>
+		<require idref="common.components.xplained_pro_wings"/>
+		<device-support value="sam"/>
+		<device-support value="sam0"/>
+	</module>
+</asf>

@@ -1,0 +1,13 @@
+<asf xmlversion="1.0">
+	<module type="component" id="common.components.xplained_pro_wings" caption="XPlained PRO Wings">
+		<info type="description" value="summary">
+			Support for Xplained PRO Wings
+		</info>
+		<build type="c-source" value="xplained_pro_wings.c"/>
+		<build type="header-file" subtype="api" value="xplained_pro_wings.h"/>
+		<build type="include-path" value="."/>
+
+		<device-support value="sam"/>
+		<device-support value="sam0"/>
+	</module>
+</asf>

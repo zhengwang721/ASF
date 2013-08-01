@@ -1,0 +1,19 @@
+<asf xmlversion="1.0">
+	<module type="service" id="common.services.xplained_pro_wing_manager.samd20" caption="XPlained PRO Wing Manager for SAM D20">
+		<info type="description" value="summary">
+			XPlained PRO Wing manager for automatic detection and setup on correct extention port.
+		</info>
+		<info type="keyword" value="technology">
+			<keyword value="IO"/>
+		</info>
+
+		<build type="include-path" value="."/>
+		<!-- <build type="header-file" subtype="api" value="xplained_pro_wing_manager_samd20.h"/> -->
+		<build type="c-source" value="xplained_pro_wing_manager_samd20.c"/>
+
+		<require idref="common.services.xplained_pro_wing_manager"/>
+		<require idref="sam0.drivers.sercom.i2c.master"/>
+
+		<device-support value="sam0"/>
+	</module>
+</asf>
