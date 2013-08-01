@@ -72,7 +72,7 @@ extern "C" {
 #endif
 
 #ifndef MATRIX_WPMR_WPKEY_PASSWD
-#define MATRIX_WPMR_WPKEY_PASSWD MATRIX_WPMR_WPKEY(MATRIX_WPKEY)
+#define MATRIX_WPMR_WPKEY_PASSWD    MATRIX_WPMR_WPKEY(0x4D4154U)
 #endif
 
 /**
@@ -364,8 +364,6 @@ uint32_t matrix_get_nandflash_cs(void)
 }
 
 #endif /* (SAM3S || SAM4S || SAM4E) */
-
-#define MATRIX_WPKEY    0x4D4154u       /* Write Protect KEY */
 
 /**
  * \brief Enable or disable write protect of MATRIX registers.

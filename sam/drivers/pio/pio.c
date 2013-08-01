@@ -670,10 +670,8 @@ void pio_set_additional_interrupt_mode(Pio *p_pio,
 	}
 }
 
-#ifdef PIO_WPMR_WPKEY
-#define PIO_WPMR_WPKEY_VALUE PIO_WPMR_WPKEY(0x50494Fu)
-#else
-#define PIO_WPMR_WPKEY_VALUE PIO_WPMR_WPKEY_PASSWD
+#ifndef PIO_WPMR_WPKEY_PASSWD
+#define PIO_WPMR_WPKEY_PASSWD    PIO_WPMR_WPKEY(0x50494FU)
 #endif
 
 /**
@@ -684,7 +682,7 @@ void pio_set_additional_interrupt_mode(Pio *p_pio,
  */
 void pio_set_writeprotect(Pio *p_pio, const uint32_t ul_enable)
 {
-	p_pio->PIO_WPMR = PIO_WPMR_WPKEY_VALUE | ul_enable;
+	p_pio->PIO_WPMR = PIO_WPMR_WPKEY_PASSWD | ul_enable;
 }
 
 /**

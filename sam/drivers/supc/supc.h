@@ -55,14 +55,12 @@ extern "C" {
 /// @endcond
 
 /** Key used to write SUPC registers */
-#define SUPC_KEY_VALUE          ((uint32_t) 0xA5)
+#ifndef SUPC_CR_KEY_PASSWD
+#define SUPC_CR_KEY_PASSWD    SUPC_CR_KEY(0xA5U)
+#endif
 
-#if (SAM4C)
-#define SUPC_CR_KEY_VALUE    SUPC_CR_KEY_PASSWD
-#define SUPC_MR_KEY_VALUE    SUPC_MR_KEY_PASSWD
-#else
-#define SUPC_CR_KEY_VALUE    SUPC_CR_KEY(SUPC_KEY_VALUE)
-#define SUPC_MR_KEY_VALUE    SUPC_MR_KEY(SUPC_KEY_VALUE)
+#ifndef SUPC_MR_KEY_PASSWD
+#define SUPC_MR_KEY_PASSWD    SUPC_MR_KEY(0xA5U)
 #endif
 
 void supc_enable_backup_mode(Supc *p_supc);
