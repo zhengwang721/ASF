@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Supply Controller (SUPC) driver for SAM.
+ * \brief Configuration for PIO example.
  *
- * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,53 +41,25 @@
  *
  */
 
-#ifndef SUPC_H_INCLUDED
-#define SUPC_H_INCLUDED
+#ifndef CONF_PIO_EXAMPLE_H_INCLUDED
+#define CONF_PIO_EXAMPLE_H_INCLUDED
 
-#include "compiler.h"
+/** Button name. */
+#define BUTTON_STRING            "BP5 SCROLL_DOWN"
 
-/// @cond 0
-/**INDENT-OFF**/
-#ifdef __cplusplus
-extern "C" {
-#endif
-/**INDENT-ON**/
-/// @endcond
+/** Push button pin definition. */
+#define PUSH_BUTTON_PIO          PIOA
+#define PUSH_BUTTON_ID           ID_PIOA
+#define PUSH_BUTTON_PIN_MSK      (1 << 20)
+#define PUSH_BUTTON_ATTR         (PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE)
 
-/** Key used to write SUPC registers */
-#ifndef SUPC_CR_KEY_PASSWD
-#define SUPC_CR_KEY_PASSWD    SUPC_CR_KEY(0xA5U)
-#endif
+/** The erase pin mask value in the PIO mode and erase mode. */
+#define PIN_PIO_MODE_MSK         CCFG_SYSIO_SYSIO9
+#define PIN_ERASE_MODE_MSK       (0)
 
-#ifndef SUPC_MR_KEY_PASSWD
-#define SUPC_MR_KEY_PASSWD    SUPC_MR_KEY(0xA5U)
-#endif
+/** Last page start address. */
+#define IFLASH_ADDR IFLASH_CNC_ADDR
+#define LAST_PAGE_ADDRESS        (IFLASH_ADDR \
+		+ IFLASH_SIZE - IFLASH_PAGE_SIZE * 4)
 
-void supc_enable_backup_mode(Supc *p_supc);
-void supc_switch_sclk_to_32kxtal(Supc *p_supc, uint32_t ul_bypass);
-void supc_enable_voltage_regulator(Supc *p_supc);
-void supc_disable_voltage_regulator(Supc *p_supc);
-void supc_enable_brownout_detector(Supc *p_supc);
-void supc_disable_brownout_detector(Supc *p_supc);
-void supc_enable_brownout_reset(Supc *p_supc);
-void supc_disable_brownout_reset(Supc *p_supc);
-void supc_set_monitor_threshold(Supc *p_supc, uint32_t ul_threshold);
-void supc_set_monitor_sampling_period(Supc *p_supc, uint32_t ul_period);
-void supc_enable_monitor_reset(Supc *p_supc);
-void supc_disable_monitor_reset(Supc *p_supc);
-void supc_enable_monitor_interrupt(Supc *p_supc);
-void supc_disable_monitor_interrupt(Supc *p_supc);
-void supc_set_wakeup_mode(Supc *p_supc, uint32_t ul_mode);
-void supc_set_wakeup_inputs(Supc *p_supc, uint32_t ul_inputs,
-		uint32_t ul_transition);
-uint32_t supc_get_status(Supc *p_supc);
-
-/// @cond 0
-/**INDENT-OFF**/
-#ifdef __cplusplus
-}
-#endif
-/**INDENT-ON**/
-/// @endcond
-
-#endif /* SUPC_H_INCLUDED */
+#endif /* CONF_PIO_EXAMPLE_H_INCLUDED */

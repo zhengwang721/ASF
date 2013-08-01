@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Supply Controller (SUPC) driver for SAM.
+ * \brief PMC_CLOCK_SWITCHING example configuration.
  *
- * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,53 +41,13 @@
  *
  */
 
-#ifndef SUPC_H_INCLUDED
-#define SUPC_H_INCLUDED
+#ifndef CONF_PMC_CLOCK_SWITCHING_EXAMPLE_H_INCLUDED
+#define CONF_PMC_CLOCK_SWITCHING_EXAMPLE_H_INCLUDED
 
-#include "compiler.h"
+#define BUTTON_NAME  "SCROLL_DOWN BP5"
 
-/// @cond 0
-/**INDENT-OFF**/
-#ifdef __cplusplus
-extern "C" {
-#endif
-/**INDENT-ON**/
-/// @endcond
+#define GCLK_PIN        PIN_PCK2
+#define GCLK_PIN_MUX    PIN_PCK2_MUX
+#define GCLK_ID         PMC_PCK_2
 
-/** Key used to write SUPC registers */
-#ifndef SUPC_CR_KEY_PASSWD
-#define SUPC_CR_KEY_PASSWD    SUPC_CR_KEY(0xA5U)
-#endif
-
-#ifndef SUPC_MR_KEY_PASSWD
-#define SUPC_MR_KEY_PASSWD    SUPC_MR_KEY(0xA5U)
-#endif
-
-void supc_enable_backup_mode(Supc *p_supc);
-void supc_switch_sclk_to_32kxtal(Supc *p_supc, uint32_t ul_bypass);
-void supc_enable_voltage_regulator(Supc *p_supc);
-void supc_disable_voltage_regulator(Supc *p_supc);
-void supc_enable_brownout_detector(Supc *p_supc);
-void supc_disable_brownout_detector(Supc *p_supc);
-void supc_enable_brownout_reset(Supc *p_supc);
-void supc_disable_brownout_reset(Supc *p_supc);
-void supc_set_monitor_threshold(Supc *p_supc, uint32_t ul_threshold);
-void supc_set_monitor_sampling_period(Supc *p_supc, uint32_t ul_period);
-void supc_enable_monitor_reset(Supc *p_supc);
-void supc_disable_monitor_reset(Supc *p_supc);
-void supc_enable_monitor_interrupt(Supc *p_supc);
-void supc_disable_monitor_interrupt(Supc *p_supc);
-void supc_set_wakeup_mode(Supc *p_supc, uint32_t ul_mode);
-void supc_set_wakeup_inputs(Supc *p_supc, uint32_t ul_inputs,
-		uint32_t ul_transition);
-uint32_t supc_get_status(Supc *p_supc);
-
-/// @cond 0
-/**INDENT-OFF**/
-#ifdef __cplusplus
-}
-#endif
-/**INDENT-ON**/
-/// @endcond
-
-#endif /* SUPC_H_INCLUDED */
+#endif /* CONF_PMC_CLOCK_SWITCHING_EXAMPLE_H_INCLUDED */

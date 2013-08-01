@@ -282,11 +282,11 @@ void pmc_switch_sclk_to_32kxtal(uint32_t ul_bypass)
 {
 	/* Set Bypass mode if required */
 	if (ul_bypass == 1) {
-		SUPC->SUPC_MR |= SUPC_MR_KEY_VALUE |
+		SUPC->SUPC_MR |= SUPC_MR_KEY_PASSWD |
 			SUPC_MR_OSCBYPASS;
 	}
 
-	SUPC->SUPC_CR = SUPC_CR_KEY_VALUE | SUPC_CR_XTALSEL;
+	SUPC->SUPC_CR = SUPC_CR_KEY_PASSWD | SUPC_CR_XTALSEL;
 }
 
 /**
@@ -317,12 +317,12 @@ void pmc_switch_mainck_to_fastrc(uint32_t ul_moscrcf)
 	/* Enable Fast RC oscillator but DO NOT switch to RC now */
 	if (PMC->CKGR_MOR & CKGR_MOR_MOSCXTEN) {
 		PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCRCF_Msk) |
-				PMC_CKGR_MOR_KEY_VALUE | CKGR_MOR_MOSCRCEN |
+				CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCRCEN |
 				ul_moscrcf;
 	} else {
 		ul_needXTEN = 1;
 		PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCRCF_Msk) |
-				PMC_CKGR_MOR_KEY_VALUE | CKGR_MOR_MOSCRCEN |
+				CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCRCEN |
 				CKGR_MOR_MOSCXTEN | CKGR_MOR_MOSCXTST_Msk |
 				ul_moscrcf;
 	}
@@ -332,12 +332,12 @@ void pmc_switch_mainck_to_fastrc(uint32_t ul_moscrcf)
 
 	/* Switch to Fast RC */
 	PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCSEL) |
-			PMC_CKGR_MOR_KEY_VALUE;
+			CKGR_MOR_KEY_PASSWD;
 
 	/* Disable xtal oscillator */
 	if (ul_needXTEN) {
 		PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCXTEN) |
-				PMC_CKGR_MOR_KEY_VALUE;
+				CKGR_MOR_KEY_PASSWD;
 	}
 }
 
@@ -350,7 +350,7 @@ void pmc_osc_enable_fastrc(uint32_t ul_rc)
 {
 	/* Enable Fast RC oscillator but DO NOT switch to RC now.
 	 * Keep MOSCSEL to 1 */
-	PMC->CKGR_MOR = PMC_CKGR_MOR_KEY_VALUE | CKGR_MOR_MOSCSEL |
+	PMC->CKGR_MOR = CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCSEL |
 			CKGR_MOR_MOSCXTEN | CKGR_MOR_MOSCRCEN | ul_rc;
 	/* Wait the Fast RC to stabilize */
 	while (!(PMC->PMC_SR & PMC_SR_MOSCRCS));
@@ -364,7 +364,7 @@ void pmc_osc_disable_fastrc(void)
 	/* Disable Fast RC oscillator */
 	PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCRCEN &
 					~CKGR_MOR_MOSCRCF_Msk)
-				| PMC_CKGR_MOR_KEY_VALUE;
+				| CKGR_MOR_KEY_PASSWD;
 }
 
 /**
@@ -386,7 +386,7 @@ void pmc_osc_enable_main_xtal(uint32_t ul_xtal_startup_time)
 {
 	uint32_t mor = PMC->CKGR_MOR;
 	mor &= ~(CKGR_MOR_MOSCXTBY|CKGR_MOR_MOSCXTEN);
-	mor |= PMC_CKGR_MOR_KEY_VALUE | CKGR_MOR_MOSCXTEN |
+	mor |= CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCXTEN |
 			CKGR_MOR_MOSCXTST(ul_xtal_startup_time);
 	PMC->CKGR_MOR = mor;
 	/* Wait the main Xtal to stabilize */
@@ -400,7 +400,7 @@ void pmc_osc_bypass_main_xtal(void)
 {
 	uint32_t mor = PMC->CKGR_MOR;
 	mor &= ~(CKGR_MOR_MOSCXTBY|CKGR_MOR_MOSCXTEN);
-	mor |= PMC_CKGR_MOR_KEY_VALUE | CKGR_MOR_MOSCXTBY;
+	mor |= CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCXTBY;
 	/* Enable Crystal oscillator but DO NOT switch now. Keep MOSCSEL to 0 */
 	PMC->CKGR_MOR = mor;
 	/* The MOSCXTS in PMC_SR is automatically set */
@@ -413,7 +413,7 @@ void pmc_osc_disable_main_xtal(void)
 {
 	uint32_t mor = PMC->CKGR_MOR;
 	mor &= ~(CKGR_MOR_MOSCXTBY|CKGR_MOR_MOSCXTEN);
-	PMC->CKGR_MOR = PMC_CKGR_MOR_KEY_VALUE | mor;
+	PMC->CKGR_MOR = CKGR_MOR_KEY_PASSWD | mor;
 }
 
 /**
@@ -457,16 +457,16 @@ void pmc_switch_mainck_to_xtal(uint32_t ul_bypass,
 	/* Enable Main Xtal oscillator */
 	if (ul_bypass) {
 		PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCXTEN) |
-				PMC_CKGR_MOR_KEY_VALUE | CKGR_MOR_MOSCXTBY |
+				CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCXTBY |
 				CKGR_MOR_MOSCSEL;
 	} else {
 		PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCXTBY) |
-				PMC_CKGR_MOR_KEY_VALUE | CKGR_MOR_MOSCXTEN |
+				CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCXTEN |
 				CKGR_MOR_MOSCXTST(ul_xtal_startup_time);
 		/* Wait the Xtal to stabilize */
 		while (!(PMC->PMC_SR & PMC_SR_MOSCXTS));
 
-		PMC->CKGR_MOR |= PMC_CKGR_MOR_KEY_VALUE | CKGR_MOR_MOSCSEL;
+		PMC->CKGR_MOR |= CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCSEL;
 	}
 }
 
@@ -480,10 +480,10 @@ void pmc_osc_disable_xtal(uint32_t ul_bypass)
 	/* Disable xtal oscillator */
 	if (ul_bypass) {
 		PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCXTBY) |
-				PMC_CKGR_MOR_KEY_VALUE;
+				CKGR_MOR_KEY_PASSWD;
 	} else {
 		PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCXTEN) |
-				PMC_CKGR_MOR_KEY_VALUE;
+				CKGR_MOR_KEY_PASSWD;
 	}
 }
 
@@ -514,7 +514,7 @@ void pmc_mainck_osc_select(uint32_t ul_xtal_rc)
 	} else {
 		mor &= ~CKGR_MOR_MOSCSEL;
 	}
-	PMC->CKGR_MOR = PMC_CKGR_MOR_KEY_VALUE | mor;
+	PMC->CKGR_MOR = CKGR_MOR_KEY_PASSWD | mor;
 }
 
 /**
@@ -967,6 +967,92 @@ uint32_t pmc_is_pck_enabled(uint32_t ul_id)
 	return (PMC->PMC_SCSR & (PMC_SCSR_PCK0 << ul_id));
 }
 
+#if SAM4C
+/**
+ * \brief Enable Coprocessor Clocks.
+ */
+void pmc_enable_cpck(void)
+{
+	PMC->PMC_SCER = PMC_SCER_CPCK | PMC_SCER_CPKEY_PASSWD;
+}
+
+/**
+ * \brief Disable Coprocessor Clocks.
+ */
+void pmc_disable_cpck(void)
+{
+	PMC->PMC_SCDR = PMC_SCDR_CPCK | PMC_SCDR_CPKEY_PASSWD;
+}
+
+/**
+ * \brief Check if the Coprocessor Clocks is enabled.
+ *
+ * \retval 0 Coprocessor Clocks is disabled.
+ * \retval 1 Coprocessor Clocks is enabled.
+ */
+bool pmc_is_cpck_enabled(void)
+{
+	if(PMC->PMC_SCSR & PMC_SCSR_CPCK) {
+		return 1;
+	} else {
+		return 0;
+	}
+}
+
+/**
+ * \brief Enable Coprocessor Bus Master Clocks.
+ */
+void pmc_enable_cpbmck(void)
+{
+	PMC->PMC_SCER = PMC_SCER_CPCK | PMC_SCER_CPKEY_PASSWD;
+}
+
+/**
+ * \brief Disable Coprocessor Bus Master Clocks.
+ */
+void pmc_disable_cpbmck(void)
+{
+	PMC->PMC_SCDR = PMC_SCDR_CPCK | PMC_SCDR_CPKEY_PASSWD;
+}
+
+/**
+ * \brief Check if the Coprocessor Bus Master Clocks is enabled.
+ *
+ * \retval 0 Coprocessor Bus Master Clocks is disabled.
+ * \retval 1 Coprocessor Bus Master Clocks is enabled.
+ */
+bool pmc_is_cpbmck_enabled(void)
+{
+	if(PMC->PMC_SCSR & PMC_SCSR_CPBMCK) {
+		return 1;
+	} else {
+		return 0;
+	}
+}
+
+/**
+ * \brief Set the prescaler for the Coprocessor Master Clock.
+ *
+ * \param ul_pres Prescaler value.
+ */
+void pmc_cpck_set_prescaler(uint32_t ul_pres)
+{
+	PMC->PMC_MCKR =
+			(PMC->PMC_MCKR & (~PMC_MCKR_CPPRES_Msk)) | PMC_MCKR_CPPRES(ul_pres);
+}
+
+/**
+ * \brief Set the source for the Coprocessor Master Clock.
+ *
+ * \param ul_source Source selection value.
+ */
+void pmc_cpck_set_source(uint32_t ul_source)
+{
+	PMC->PMC_MCKR =
+			(PMC->PMC_MCKR & (~PMC_MCKR_CPCSS_Msk)) | ul_source;
+}
+#endif
+
 #if (SAM3S || SAM3XA || SAM4S || SAM4E)
 /**
  * \brief Switch UDP (USB) clock source selection to PLLA clock.
@@ -1093,6 +1179,32 @@ void pmc_clr_fast_startup_input(uint32_t ul_inputs)
 	PMC->PMC_FSMR &= ~ul_inputs;
 }
 
+#if SAM4C
+/**
+ * \brief Set the wake-up inputs of coprocessor for fast startup mode registers
+ *        (event generation).
+ *
+ * \param ul_inputs Wake up inputs to enable.
+ */
+void pmc_cp_set_fast_startup_input(uint32_t ul_inputs)
+{
+	ul_inputs &= PMC_FAST_STARTUP_Msk;
+	PMC->PMC_CPFSMR |= ul_inputs;
+}
+
+/**
+ * \brief Clear the wake-up inputs of coprocessor for fast startup mode registers
+ *        (remove event generation).
+ *
+ * \param ul_inputs Wake up inputs to disable.
+ */
+void pmc_cp_clr_fast_startup_input(uint32_t ul_inputs)
+{
+	ul_inputs &= PMC_FAST_STARTUP_Msk;
+	PMC->PMC_CPFSMR &= ~ul_inputs;
+}
+#endif
+
 /**
  * \brief Enable Sleep Mode.
  * Enter condition: (WFE or WFI) + (SLEEPDEEP bit = 0) + (LPM bit = 0)
@@ -1168,7 +1280,7 @@ void pmc_enable_waitmode(void)
 #endif
 
 	/* Set the WAITMODE bit = 1 */
-	PMC->CKGR_MOR |= PMC_CKGR_MOR_KEY_VALUE | CKGR_MOR_WAITMODE;
+	PMC->CKGR_MOR |= CKGR_MOR_KEY_PASSWD | CKGR_MOR_WAITMODE;
 
 	/* Waiting for Master Clock Ready MCKRDY = 1 */
 	while (!(PMC->PMC_SR & PMC_SR_MCKRDY));
@@ -1223,7 +1335,7 @@ void pmc_enable_backupmode(void)
 {
 	SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
 #if (SAM4S || SAM4E || SAM4N || SAM4C)
-	SUPC->SUPC_CR = SUPC_CR_KEY_VALUE | SUPC_CR_VROFF_STOP_VREG;
+	SUPC->SUPC_CR = SUPC_CR_KEY_PASSWD | SUPC_CR_VROFF_STOP_VREG;
 #else
 	__WFE();
 #endif
@@ -1236,7 +1348,7 @@ void pmc_enable_clock_failure_detector(void)
 {
 	uint32_t ul_reg = PMC->CKGR_MOR;
 
-	PMC->CKGR_MOR = PMC_CKGR_MOR_KEY_VALUE | CKGR_MOR_CFDEN | ul_reg;
+	PMC->CKGR_MOR = CKGR_MOR_KEY_PASSWD | CKGR_MOR_CFDEN | ul_reg;
 }
 
 /**
@@ -1246,10 +1358,10 @@ void pmc_disable_clock_failure_detector(void)
 {
 	uint32_t ul_reg = PMC->CKGR_MOR & (~CKGR_MOR_CFDEN);
 
-	PMC->CKGR_MOR = PMC_CKGR_MOR_KEY_VALUE | ul_reg;
+	PMC->CKGR_MOR = CKGR_MOR_KEY_PASSWD | ul_reg;
 }
 
-#if SAM4N
+#if SAM4N || SAM4C
 /**
  * \brief Enable Slow Crystal Oscillator Frequency Monitoring.
  */
@@ -1257,7 +1369,7 @@ void pmc_enable_sclk_osc_freq_monitor(void)
 {
 	uint32_t ul_reg = PMC->CKGR_MOR;
 
-	PMC->CKGR_MOR = PMC_CKGR_MOR_KEY_VALUE | CKGR_MOR_XT32KFME | ul_reg;
+	PMC->CKGR_MOR = CKGR_MOR_KEY_PASSWD | CKGR_MOR_XT32KFME | ul_reg;
 }
 
 /**
@@ -1267,7 +1379,7 @@ void pmc_disable_sclk_osc_freq_monitor(void)
 {
 	uint32_t ul_reg = PMC->CKGR_MOR & (~CKGR_MOR_XT32KFME);
 
-	PMC->CKGR_MOR = PMC_CKGR_MOR_KEY_VALUE | ul_reg;
+	PMC->CKGR_MOR = CKGR_MOR_KEY_PASSWD | ul_reg;
 }
 #endif
 

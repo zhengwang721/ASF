@@ -67,7 +67,7 @@ extern "C" {
  */
 void supc_enable_backup_mode(Supc *p_supc)
 {
-	p_supc->SUPC_CR = SUPC_CR_KEY_VALUE | SUPC_CR_VROFF;
+	p_supc->SUPC_CR = SUPC_CR_KEY_PASSWD | SUPC_CR_VROFF;
 }
 
 /**
@@ -82,10 +82,10 @@ void supc_switch_sclk_to_32kxtal(Supc *p_supc, uint32_t ul_bypass)
 {
 	/* Set Bypass mode if required */
 	if (ul_bypass == 1) {
-		p_supc->SUPC_MR |= SUPC_MR_KEY_VALUE | SUPC_MR_OSCBYPASS;
+		p_supc->SUPC_MR |= SUPC_MR_KEY_PASSWD | SUPC_MR_OSCBYPASS;
 	}
 
-	p_supc->SUPC_CR |= SUPC_CR_KEY_VALUE | SUPC_CR_XTALSEL;
+	p_supc->SUPC_CR |= SUPC_CR_KEY_PASSWD | SUPC_CR_XTALSEL;
 }
 
 /**
@@ -97,10 +97,10 @@ void supc_enable_voltage_regulator(Supc *p_supc)
 {
 #if (SAM3U || SAM3XA)
 	uint32_t ul_mr = p_supc->SUPC_MR & (~(SUPC_MR_KEY_Msk | SUPC_MR_VDDIORDYONREG));
-	p_supc->SUPC_MR = SUPC_MR_KEY_VALUE | ul_mr | SUPC_MR_VDDIORDYONREG;
+	p_supc->SUPC_MR = SUPC_MR_KEY_PASSWD | ul_mr | SUPC_MR_VDDIORDYONREG;
 #else
 	uint32_t ul_mr = p_supc->SUPC_MR & (~(SUPC_MR_KEY_Msk | SUPC_MR_ONREG));
-	p_supc->SUPC_MR = SUPC_MR_KEY_VALUE | ul_mr | SUPC_MR_ONREG;
+	p_supc->SUPC_MR = SUPC_MR_KEY_PASSWD | ul_mr | SUPC_MR_ONREG;
 #endif
 }
 
@@ -116,7 +116,7 @@ void supc_disable_voltage_regulator(Supc *p_supc)
 #else
 	uint32_t ul_mr = p_supc->SUPC_MR & (~(SUPC_MR_KEY_Msk | SUPC_MR_ONREG));
 #endif
-	p_supc->SUPC_MR = SUPC_MR_KEY_VALUE | ul_mr;
+	p_supc->SUPC_MR = SUPC_MR_KEY_PASSWD | ul_mr;
 }
 
 /**
@@ -127,7 +127,7 @@ void supc_disable_voltage_regulator(Supc *p_supc)
 void supc_enable_brownout_detector(Supc *p_supc)
 {
 	uint32_t ul_mr = p_supc->SUPC_MR & (~(SUPC_MR_KEY_Msk | SUPC_MR_BODDIS));
-	p_supc->SUPC_MR = SUPC_MR_KEY_VALUE | ul_mr;
+	p_supc->SUPC_MR = SUPC_MR_KEY_PASSWD | ul_mr;
 }
 
 /**
@@ -138,7 +138,7 @@ void supc_enable_brownout_detector(Supc *p_supc)
 void supc_disable_brownout_detector(Supc *p_supc)
 {
 	uint32_t ul_mr = p_supc->SUPC_MR & (~(SUPC_MR_KEY_Msk | SUPC_MR_BODDIS));
-	p_supc->SUPC_MR = SUPC_MR_KEY_VALUE | ul_mr | SUPC_MR_BODDIS;
+	p_supc->SUPC_MR = SUPC_MR_KEY_PASSWD | ul_mr | SUPC_MR_BODDIS;
 }
 
 /**
@@ -149,7 +149,7 @@ void supc_disable_brownout_detector(Supc *p_supc)
 void supc_enable_brownout_reset(Supc *p_supc)
 {
 	uint32_t ul_mr = p_supc->SUPC_MR & (~(SUPC_MR_KEY_Msk | SUPC_MR_BODRSTEN));
-	p_supc->SUPC_MR = SUPC_MR_KEY_VALUE | ul_mr | SUPC_MR_BODRSTEN;
+	p_supc->SUPC_MR = SUPC_MR_KEY_PASSWD | ul_mr | SUPC_MR_BODRSTEN;
 }
 
 /**
@@ -160,7 +160,7 @@ void supc_enable_brownout_reset(Supc *p_supc)
 void supc_disable_brownout_reset(Supc *p_supc)
 {
 	uint32_t ul_mr = p_supc->SUPC_MR & (~(SUPC_MR_KEY_Msk | SUPC_MR_BODRSTEN));
-	p_supc->SUPC_MR = SUPC_MR_KEY_VALUE | ul_mr;
+	p_supc->SUPC_MR = SUPC_MR_KEY_PASSWD | ul_mr;
 }
 
 /**
