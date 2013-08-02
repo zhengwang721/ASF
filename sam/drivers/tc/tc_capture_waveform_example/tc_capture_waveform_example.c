@@ -314,13 +314,13 @@ int main(void)
 	/* Configure TC TC_CHANNEL_CAPTURE as capture operating mode */
 	printf("Configure TC%d channel %d as capture operating mode \n\r",
 			TC_PERIPHERAL, TC_CHANNEL_CAPTURE);
-	tc_capture_initialize();
-
-	/* Configure TC interrupts for TC TC_CHANNEL_CAPTURE only */
-	NVIC_DisableIRQ(TC_IRQn);
-	NVIC_ClearPendingIRQ(TC_IRQn);
-	NVIC_SetPriority(TC_IRQn, 0);
-	NVIC_EnableIRQ(TC_IRQn);
+//	tc_capture_initialize();
+//
+//	/* Configure TC interrupts for TC TC_CHANNEL_CAPTURE only */
+//	NVIC_DisableIRQ(TC_IRQn);
+//	NVIC_ClearPendingIRQ(TC_IRQn);
+//	NVIC_SetPriority(TC_IRQn, 0);
+//	NVIC_EnableIRQ(TC_IRQn);
 
 	/* Display menu */
 	display_menu();
