@@ -282,7 +282,7 @@ static void configure_console(void)
  *
  * \return Unused (ANSI-C compatibility).
  */
-int main(void)
+1int main(void)
 {
 	uint8_t key;
 	uint16_t frequence, dutycycle;
@@ -311,16 +311,17 @@ int main(void)
 	printf("Configure TC%d channel %d as waveform operating mode \n\r",
 			TC_PERIPHERAL, TC_CHANNEL_WAVEFORM);
 	tc_waveform_initialize();
+        
 	/* Configure TC TC_CHANNEL_CAPTURE as capture operating mode */
 	printf("Configure TC%d channel %d as capture operating mode \n\r",
 			TC_PERIPHERAL, TC_CHANNEL_CAPTURE);
-//	tc_capture_initialize();
-//
-//	/* Configure TC interrupts for TC TC_CHANNEL_CAPTURE only */
-//	NVIC_DisableIRQ(TC_IRQn);
-//	NVIC_ClearPendingIRQ(TC_IRQn);
-//	NVIC_SetPriority(TC_IRQn, 0);
-//	NVIC_EnableIRQ(TC_IRQn);
+	tc_capture_initialize();
+
+	/* Configure TC interrupts for TC TC_CHANNEL_CAPTURE only */
+	NVIC_DisableIRQ(TC_IRQn);
+	NVIC_ClearPendingIRQ(TC_IRQn);
+	NVIC_SetPriority(TC_IRQn, 0);
+	NVIC_EnableIRQ(TC_IRQn);
 
 	/* Display menu */
 	display_menu();
