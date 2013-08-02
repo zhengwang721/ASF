@@ -273,8 +273,38 @@
  * \name SPI pin definitions
  * @{
  */
-// TBD
+/** SPI0 MISO pin definition. */
+#define SPI0_MISO_GPIO         (PIO_PA6_IDX)
+#define SPI0_MISO_FLAGS        (IOPORT_MODE_MUX_A)
+/** SPI0 MOSI pin definition. */
+#define SPI0_MOSI_GPIO         (PIO_PA7_IDX)
+#define SPI0_MOSI_FLAGS        (IOPORT_MODE_MUX_A)
+/** SPI0 SPCK pin definition. */
+#define SPI0_SPCK_GPIO         (PIO_PA8_IDX)
+#define SPI0_SPCK_FLAGS        (IOPORT_MODE_MUX_A)
+/** SPI0 chip select 0 pin definition. */
+#define SPI0_NPCS0_GPIO        (PIO_PA5_IDX)
+#define SPI0_NPCS0_FLAGS       (IOPORT_MODE_MUX_A)
+
+/** SPI1 MISO pin definition. */
+#define SPI1_MISO_GPIO         (PIO_PC3_IDX)
+#define SPI1_MISO_FLAGS        (IOPORT_MODE_MUX_A)
+/** SPI1 MOSI pin definition. */
+#define SPI1_MOSI_GPIO         (PIO_PC4_IDX)
+#define SPI1_MOSI_FLAGS        (IOPORT_MODE_MUX_A)
+/** SPI1 SPCK pin definition. */
+#define SPI1_SPCK_GPIO         (PIO_PC5_IDX)
+#define SPI1_SPCK_FLAGS        (IOPORT_MODE_MUX_A)
+/** SPI1 chip select 0 pin definition. */
+#define SPI1_NPCS0_GPIO        (PIO_PC2_IDX)
+#define SPI1_NPCS0_FLAGS       (IOPORT_MODE_MUX_A)
 /* @} */
+
+/* Select the SPI module that AT25DFx is connected to */
+#define AT25DFX_SPI_MODULE     SPI0
+
+/* Chip select used by AT25DFx components on the SPI module instance */
+#define AT25DFX_CS             0
 
 /**
  * \name TWIx pin definitions
