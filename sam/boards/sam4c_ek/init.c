@@ -133,7 +133,25 @@ void board_init(void)
 	/* Configure PWM LED pins */
 
 	/* Configure SPI pins */
+#ifdef CONF_BOARD_SPI0
+	ioport_set_pin_peripheral_mode(SPI0_MISO_GPIO, SPI0_MISO_FLAGS);
+	ioport_set_pin_peripheral_mode(SPI0_MOSI_GPIO, SPI0_MOSI_FLAGS);
+	ioport_set_pin_peripheral_mode(SPI0_SPCK_GPIO, SPI0_SPCK_FLAGS);
 
+#ifdef CONF_BOARD_SPI0_NPCS0
+	ioport_set_pin_peripheral_mode(SPI0_NPCS0_GPIO, SPI0_NPCS0_FLAGS);
+#endif
+#endif
+
+#ifdef CONF_BOARD_SPI1
+	ioport_set_pin_peripheral_mode(SPI1_MISO_GPIO, SPI1_MISO_FLAGS);
+	ioport_set_pin_peripheral_mode(SPI1_MOSI_GPIO, SPI1_MOSI_FLAGS);
+	ioport_set_pin_peripheral_mode(SPI1_SPCK_GPIO, SPI1_SPCK_FLAGS);
+
+#ifdef CONF_BOARD_SPI1_NPCS0
+	ioport_set_pin_peripheral_mode(SPI1_NPCS0_GPIO, SPI1_NPCS0_FLAGS);
+#endif
+#endif
 	/* Configure TWI pins */
 
 	/* Configure USART pins */
