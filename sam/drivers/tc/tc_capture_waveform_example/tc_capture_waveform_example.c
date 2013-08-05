@@ -282,7 +282,7 @@ static void configure_console(void)
  *
  * \return Unused (ANSI-C compatibility).
  */
-1int main(void)
+int main(void)
 {
 	uint8_t key;
 	uint16_t frequence, dutycycle;
