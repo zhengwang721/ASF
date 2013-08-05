@@ -83,8 +83,6 @@ extern "C" {
 /**INDENT-ON**/
 /// @endcond
 
-#define CONSOLE_BAUD_RATE  115200
-
 /** Memory Start Address of AT24CXX chips */
 #define AT24C_MEM_ADDR  0x0
 /** TWI Bus Clock 400kHz */

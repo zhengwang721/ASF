@@ -100,9 +100,6 @@ extern "C" {
 /**INDENT-ON**/
 /// @endcond
 
-/** */
-#define CONSOLE_BAUD_RATE  115200
-
 /** EEPROM Wait Time */
 #define WAIT_TIME   10
 /** TWI Bus Clock 400kHz */
