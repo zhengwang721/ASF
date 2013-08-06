@@ -286,7 +286,32 @@
  * \name TWIx pin definitions
  * @{
  */
-// TBD
+/*! TWI ID for EEPROM application to use */
+#define BOARD_ID_TWI_EEPROM       ID_TWI0
+/*! TWI Base for TWI EEPROM application to use */
+#define BOARD_BASE_TWI_EEPROM     TWI0
+#define BOARD_AT24C_TWI_INSTANCE  TWI0
+#define BOARD_AT24C_ADDRESS       0x50u
+#define BOARD_AT30TSE_TWI         TWI0
+#define BOARD_AT30TSE_DEVICE_ADDR 0
+#define BOARD_AT30TSE_TWI_ID      ID_TWI0
+#define BOARD_USING_AT30TSE       AT30TSE758
+
+/*! TWI0 Data pin for EEPROM */
+#define TWIO_DATA_GPIO            PIO_PA24_IDX
+#define TWIO_DATA_FLAG            IOPORT_MODE_MUX_A
+/*! TWI0 Clock pin for EEPROM */
+#define TWIO_CLK_GPIO             PIO_PA25_IDX
+#define TWIO_CLK_FLAG             IOPORT_MODE_MUX_A
+#define BOARD_CLK_TWI_EEPROM      TWIO_CLK_GPIO
+#define BOARD_CLK_TWI_MUX_EEPROM  TWIO_CLK_FLAG
+
+/*! TWI1 Data pin for EEPROM */
+#define TWI1_DATA_GPIO            PIO_PB0_IDX
+#define TWI1_DATA_FLAG            IOPORT_MODE_MUX_A
+/*! TWI1 Clock pin for EEPROM */
+#define TWI1_CLK_GPIO             PIO_PB1_IDX
+#define TWI1_CLK_FLAG             IOPORT_MODE_MUX_A
 /* @} */
 
 /**
