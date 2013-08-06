@@ -6,7 +6,7 @@
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clocks.h"/>
 		<generator value="armgcc"/>
-		<generator value="as5_8"/>
+		<generator value="as5_arm"/>
 		<!-- <generator value="iarew"/> -->
 		<!-- <generator value="doxygen"/> -->
 		<device-support value="atsamd20j18"/>
