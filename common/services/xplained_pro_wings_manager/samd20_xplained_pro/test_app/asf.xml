@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<asf xmlversion="1.0">
+	<module type="application" id="common.services.xplained_pro_wing_manager.example" caption="Xplained PRO wing Service Example">
+		<require idref="common.services.xplained_pro_wing_manager.samd20"/>
+		<require idref="common.components.xplained_pro_wings.oled1"/>
+
+		<info type="description" value="summary">
+		</info>
+
+		<build type="c-source" value="wing_example.c"/>
+
+		<device-support value="samd20"/>
+	</module>
+</asf>
