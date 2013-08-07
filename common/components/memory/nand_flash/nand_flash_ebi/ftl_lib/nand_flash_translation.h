@@ -74,8 +74,10 @@ struct nand_flash_translation {
  * \param data_address  Address at which data is sent.
  * \param base_block Basic physical block address of mapped area.
  * \param size_in_block Number of blocks that is mapped.
- * \param p_page_write_buffer  Pointer to buffer for page write.
- * \param p_page_read_buffer  Pointer to buffer for page read.
+ * \param p_page_write_buffer  Pointer to buffer for page write, must be
+ *  allocated with the same size of the NAND Flash page size used.
+ * \param p_page_read_buffer  Pointer to buffer for page read, must be
+ *  allocated with the same size of the NAND Flash page size used.
  *
  * \return 0 if successful; otherwise return the error code.
  */
