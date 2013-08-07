@@ -6,7 +6,7 @@
 		<build type="c-source" value="oled1.c"/>
 		<build type="header-file" subtype="api" value="oled1.h"/>
 		<build type="include-path" value="."/>
-		<build type="define" name="OLED1_WING_CRC" value="0x12345678"/>
+		<build type="define" name="OLED1_WING_CRC" value="0xe5a25880"/>
 
 		<require idref="common.components.xplained_pro_wings"/>
 

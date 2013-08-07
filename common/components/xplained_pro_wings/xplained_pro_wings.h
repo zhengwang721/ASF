@@ -7,13 +7,29 @@
 #include "oled1.h"
 #endif
 
+#define WING_NUMBER_OF_LEDS     5
+#define WING_NUMBER_OF_BUTTONS  5
+#define WING_MAX                10
+
 enum wing_type {
 	WING_UNKNOWN,
 	WING_OLED1,
 	WING_IO1,
 };
 
-typedef void(*wing_init_prototype)(uint8_t position);
+struct wing_object {
+
+	uint8_t        position;
+	enum wing_type type;
+
+	struct {
+		uint8_t led[WING_NUMBER_OF_LEDS];
+		uint8_t button[WING_NUMBER_OF_BUTTONS];
+	} pins;
+
+};
+
+typedef void(*wing_init_prototype)(struct wing_object *wing, uint8_t position);
 
 struct wing_support_entry {
 	enum wing_type      type;

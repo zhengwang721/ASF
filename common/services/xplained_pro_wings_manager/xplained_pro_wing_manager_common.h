@@ -34,6 +34,7 @@ uint8_t  wing_find_by_type(enum wing_type type);
 uint8_t  wing_find_compability(uint32_t crc);
 void     wing_find_strings(uint8_t *buf, struct wing_ebdg_strings *strings);
 
+uint32_t wing_generate_crc(uint8_t *buf, uint8_t length);
 
 #endif /* _XPLAINED_PRO_WING_MANAGER_COMMON_H_INCLUDED_ */
 

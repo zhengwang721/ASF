@@ -115,13 +115,14 @@ void wing_probe(struct wing_list *list)
 				/* Split buffer into 4 strings */
 				wing_find_strings(wing_data.buffer[ext_count], &ebdg_strings);
 
-				crc = _wing_generate_crc((uint8_t*)ebdg_strings.string[WING_EBDG_STRING_PRODUCT_NAME],
+				crc = wing_generate_crc((uint8_t*)ebdg_strings.string[WING_EBDG_STRING_PRODUCT_NAME],
 						ebdg_strings.string_length[WING_EBDG_STRING_PRODUCT_NAME]);
 
 				index = wing_find_compability(crc);
 
 				if(index != WING_INVALID) {
 
+					list->wing[ext_count].index    = index;
 					list->wing[ext_count].position = c;
 					list->wing[ext_count].type     = wing_support_table[index].type;
 
@@ -154,4 +155,21 @@ void wing_probe(struct wing_list *list)
 
 void wing_spawn(enum wing_type type, struct wing_object *object)
 {
+	int c;
+	enum status_code err = STATUS_OK;
+
+	for(c = 0;c<list->count;++c) {
+
+		if(type == list->wing[c].type) {
+			break;
+		} else if (c == list->count)
+		{
+			return STATUS_ERR_UNSUPPORTED_DEV;
+		}
+
+	}
+
+	wing_support_table[c].init(wing, list->wing[c].position);
+
+	return err;
 }

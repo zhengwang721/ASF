@@ -3,30 +3,19 @@
 
 #include "xplained_pro_wings.h"
 
-#define WING_NUMBER_OF_LEDS     5
-#define WING_NUMBER_OF_BUTTONS  5
-#define WING_MAX                10
-
-struct wing_object {
-
+struct wing_list_entry {
 	uint8_t        position;
+	uint8_t        index;
 	enum wing_type type;
-
-	struct {
-		uint8_t led[WING_NUMBER_OF_LEDS];
-		uint8_t button[WING_NUMBER_OF_BUTTONS];
-	} pins;
-
 };
 
 struct wing_list {
 	uint8_t count;
 
-	struct wing_object wing[WING_MAX];
+	struct wing_list_entry wing[WING_MAX];
 };
 
-void wing_probe(struct wing_list *list);
-void wing_spawn(enum wing_type type, struct wing_object *object);
-
+enum status_code wing_probe(struct wing_list *list);
+enum status_code wing_spawn(struct wing_list *list, enum wing_type type, struct wing_object *wing);
 
 #endif /* _XPLAINED_PRO_WING_MANAGER_H_INCLUDED_ */
