@@ -113,7 +113,6 @@ static uint8_t *beacon_ptr;
 /* Variable to hold number the pending addresses. */
 static uint8_t pending_address_count;
 #endif  /* (MAC_INDIRECT_DATA_FFD == 1) */
-
 #ifdef TEST_HARNESS
 static uint8_t vpan_no;
 #endif  /* TEST_HARNESS */
@@ -338,8 +337,7 @@ void mac_build_and_tx_beacon(bool beacon_enabled,
 
 	/* frame_ptr now points to the Pending Address Specification (Octet 1).
 	 **/
-	frame_ptr--;
-	*frame_ptr = 0;
+	
 
 #ifdef GTS_SUPPORT
 
@@ -348,6 +346,15 @@ void mac_build_and_tx_beacon(bool beacon_enabled,
 		frame_len += gts_octets;
 		frame_ptr -= gts_octets + 1;
 	}
+	else
+	{
+		
+	frame_ptr--;
+		
+	}
+#else
+    frame_ptr--;
+   *frame_ptr = 0;
 #endif /* GTS_SUPPORT */
 
 	/* The superframe specification field is updated. */

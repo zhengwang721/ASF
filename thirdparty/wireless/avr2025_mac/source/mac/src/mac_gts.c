@@ -406,6 +406,7 @@ uint8_t mac_add_gts_info(uint8_t *frame_ptr)
 				}
 			}
 			mac_gts_spec.GtsDescCount++;
+			
 		}
 		if(mac_pan_gts_table[table_index].ExpiryCount > 0
 		&& --mac_pan_gts_table[table_index].ExpiryCount == 0)
@@ -444,12 +445,13 @@ uint8_t mac_add_gts_info(uint8_t *frame_ptr)
 		frame_ptr--;
 		*frame_ptr = direction_mask; //GTS Direction Mask
 		++update_octets_count;
-		frame_ptr--;
+		
 	}
-
-//	mac_gts_spec.GtsDescCount = mac_pan_gts_table_len;
+	frame_ptr--;
+	//mac_gts_spec.GtsDescCount = mac_pan_gts_table_len;
 	mac_gts_spec.GtsPermit = mac_pib.mac_GTSPermit;
 	*frame_ptr = *((uint8_t*)&mac_gts_spec);
+    
 	return update_octets_count;
 }
 #endif /* FFD */
