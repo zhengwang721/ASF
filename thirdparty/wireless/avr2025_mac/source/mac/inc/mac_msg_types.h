@@ -877,7 +877,7 @@ typedef struct mlme_poll_conf_tag {
 typedef struct mlme_gts_req_tag {
 	/** This identifies the message as \ref MLME_GTS_REQUEST */
 	enum msg_code cmdcode;
-
+	uint16_t DeviceShortAddr;
 	gts_char_t GtsChar;
 } mlme_gts_req_t;
 

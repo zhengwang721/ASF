@@ -70,6 +70,7 @@
 #include "mac_config.h"
 #include "mac_build_config.h"
 
+#include "sio2host.h" //vk
 /* === Macros =============================================================== */
 
 /*
@@ -700,11 +701,8 @@ static bool process_data_ind_not_transient(buffer_t *b_ptr, frame_info_t *f_ptr)
 										beacon_tx_time_symb,
 										TAL_RADIO_WAKEUP_TIME_SYM <<
 										(
-											tal_pib
-											.
-											BeaconOrder
-											+
-											2));
+											tal_pib.BeaconOrder
+											+ 2));
 
 								tmr_start_res
 									=
@@ -730,23 +728,34 @@ static bool process_data_ind_not_transient(buffer_t *b_ptr, frame_info_t *f_ptr)
 						 */
 						/* TODO */
 
-						/*
-						 * if (MAC_COORDINATOR !=
-						 * mac_state)
-						 * {
-						 *  if (tal_pib.SuperFrameOrder
-						 * < tal_pib.BeaconOrder)
-						 *  {
-						 *          pal_timer_start(T_Superframe,
-						 *                          TAL_CONVERT_SYMBOLS_TO_US(
-						 *                              TAL_GET_SUPERFRAME_DURATION_TIME(
-						 *                                  tal_pib.SuperFrameOrder)),
-						 *                          TIMEOUT_RELATIVE,
-						 *                          (FUNC_PTR)mac_t_start_inactive_device_cb,
-						 *                          NULL);
-						 *  }
-						 * }
-						 */
+						if (MAC_ASSOCIATED == mac_state)
+						{
+							if (tal_pib.SuperFrameOrder < tal_pib.BeaconOrder)
+							{
+								pal_timer_start(T_Superframe,
+									TAL_CONVERT_SYMBOLS_TO_US(
+									TAL_GET_SUPERFRAME_DURATION_TIME(
+									tal_pib.SuperFrameOrder)),
+									TIMEOUT_RELATIVE,
+									(FUNC_PTR)mac_t_start_inactive_device_cb,
+									NULL);
+									mac_superframe_state = MAC_ACTIVE_CAP;
+									//sio2host_tx("Device - Active CAP...\n\r",sizeof("Device - Active CAP...\n\r")); //vk
+							}
+#ifdef GTS_SUPPORT
+						if (mac_final_cap_slot < FINAL_CAP_SLOT_DEFAULT)
+						{
+							uint32_t cap_end_duration = (TAL_CONVERT_SYMBOLS_TO_US(
+											 TAL_GET_SUPERFRAME_DURATION_TIME(tal_pib.SuperFrameOrder)) >> 4) * mac_final_cap_slot;
+
+							 pal_timer_start(T_CAP, cap_end_duration,
+											 TIMEOUT_RELATIVE,
+											 (FUNC_PTR)mac_t_gts_cb,
+											 NULL);
+	 						ioport_set_value(DEBUG_PIN3, 1);//vk
+						}
+#endif /* GTS_SUPPORT */
+						}
 
 						/* Initialize missed beacon
 						 *timer. */
@@ -1105,6 +1114,7 @@ static bool parse_mpdu(frame_info_t *rx_frame_ptr)
 				GTS_DESCRIPTOR_COUNTER_MASK);
 		if (temp_byte > 0) {
 			/* 1 octet GTS direction */
+#ifdef GTS_SUPPORT
 			mac_parse_data.mac_payload_data.beacon_data.gts_direction
 				= temp_frame_ptr[payload_index++];
 
@@ -1112,6 +1122,9 @@ static bool parse_mpdu(frame_info_t *rx_frame_ptr)
 			mac_parse_data.mac_payload_data.beacon_data.gts_list
 				= &temp_frame_ptr[payload_index];
 			payload_index += (temp_byte * 3);
+#else
+			payload_index += 1 + temp_byte;
+#endif  /* GTS_SUPPORT */
 		}
 
 		/* Get the Pending address specification */

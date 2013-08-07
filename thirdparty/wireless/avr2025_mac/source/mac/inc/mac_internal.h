@@ -68,6 +68,16 @@
 
 /* === Macros =============================================================== */
 
+/* vk debug */ //vk
+#define DEBUG_PIN1 IOPORT_CREATE_PIN(PORTE, 6)
+#define DEBUG_PIN2 IOPORT_CREATE_PIN(PORTD, 4)
+#define DEBUG_PIN3 IOPORT_CREATE_PIN(PORTD, 1)
+#define DEBUG_PIN4 IOPORT_CREATE_PIN(PORTD, 0)
+//#define DEBUG_PIN5 IOPORT_CREATE_PIN(PORTD, 4)
+//#define DEBUG_PIN6 IOPORT_CREATE_PIN(PORTD, 6)
+//#define DEBUG_PIN7 IOPORT_CREATE_PIN(PORTE, 6)
+//#define DEBUG_PIN8 IOPORT_CREATE_PIN(PORTD, 4)
+//
 /**
  * \addtogroup group_mac_def
  * @{
@@ -148,6 +158,29 @@ typedef enum mac_state_tag {
 	/** PAN coordinator successfully started */
 	MAC_PAN_COORD_STARTED = 3
 } SHORTENUM mac_state_t;
+
+/**
+ * MAC state type.
+ */
+typedef enum mac_superframe_state_tag {
+	/*
+	 * IEEE 802.15.4-defined Superframe states.
+	 */
+	MAC_ACTIVE_CAP = 0,
+#ifdef GTS_SUPPORT
+	/* Warning!!! Do not change the order
+	   of below GTS state definitions */
+	MAC_ACTIVE_CFP_GTS1,
+	MAC_ACTIVE_CFP_GTS2,
+	MAC_ACTIVE_CFP_GTS3,
+	MAC_ACTIVE_CFP_GTS4,
+	MAC_ACTIVE_CFP_GTS5,
+	MAC_ACTIVE_CFP_GTS6,
+	MAC_ACTIVE_CFP_GTS7,
+#endif
+	MAC_INACTIVE,
+	MAC_NOBEACON
+} SHORTENUM mac_superframe_state_t;
 
 /**
  * MAC poll states.
@@ -445,12 +478,13 @@ extern queue_t tal_mac_q;
 extern queue_t indirect_data_q;
 #endif /* (MAC_INDIRECT_DATA_FFD == 1) */
 
-#if (MAC_START_REQUEST_CONFIRM == 1)
-#ifdef BEACON_SUPPORT
-extern queue_t broadcast_q;
 #ifdef GTS_SUPPORT
 extern queue_t gts_q;
 #endif /* GTS_SUPPORT */
+
+#if (MAC_START_REQUEST_CONFIRM == 1)
+#ifdef BEACON_SUPPORT
+extern queue_t broadcast_q;
 #endif  /* BEACON_SUPPORT */
 #endif /* (MAC_START_REQUEST_CONFIRM == 1) */
 
@@ -466,15 +500,14 @@ extern mac_scan_state_t mac_scan_state;
 extern mac_sync_state_t mac_sync_state;
 extern mac_poll_state_t mac_poll_state;
 extern mac_pib_t mac_pib;
+#ifdef BEACON_SUPPORT
+extern mac_superframe_state_t mac_superframe_state;
 #ifdef GTS_SUPPORT
-extern mac_pan_gts_mgmt_t mac_pan_gts_table[];
-extern uint8_t mac_pan_gts_table_len;
-extern mac_dev_gts_mgmt_t mac_dev_gts_table[];
-extern uint8_t mac_dev_gts_table_len;
 extern mac_gts_state_t mac_gts_state;
 extern uint8_t *mac_gts_buf_ptr;
 extern gts_char_t requested_gts_char;
 #endif /* GTS_SUPPORT */
+#endif /* BEACON_SUPPORT*/
 /* === Prototypes =========================================================== */
 
 #ifdef __cplusplus
@@ -700,6 +733,7 @@ uint8_t mac_add_gts_info(uint8_t *frame_ptr);
 void mac_parse_bcn_gts_info(uint8_t gts_count, uint8_t gts_dir, uint8_t *gts_list_ptr);
 uint8_t handle_gts_data_req(mcps_data_req_t *data_req, uint8_t *msg);
 void reset_gts_globals(void);
+void mac_t_gts_cb(void *callback_parameter);
 #endif /* GTS_SUPPORT */
 
 #if (MAC_INDIRECT_DATA_FFD == 1)

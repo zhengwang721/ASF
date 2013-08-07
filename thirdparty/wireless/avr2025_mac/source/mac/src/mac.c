@@ -121,6 +121,8 @@ uint8_t mac_final_cap_slot;
  * indicated pending broadcast data to be received.
  */
 bool mac_bc_data_indicated;
+
+mac_superframe_state_t mac_superframe_state = MAC_NOBEACON;
 #ifdef GTS_SUPPORT
 /**
  * Current state of GTS request to PANC
@@ -214,6 +216,10 @@ queue_t nhle_mac_q;
  */
 queue_t tal_mac_q;
 
+#ifdef GTS_SUPPORT
+queue_t gts_q;
+#endif /* GTS_SUPPORT */
+
 #if (MAC_START_REQUEST_CONFIRM == 1)
 #ifdef BEACON_SUPPORT
 
@@ -223,9 +229,6 @@ queue_t tal_mac_q;
  * in a beacon-enabled network is placed here by MAC.
  */
 queue_t broadcast_q;
-#ifdef GTS_SUPPORT
-queue_t gts_q;
-#endif /* GTS_SUPPORT */
 #endif  /* BEACON_SUPPORT */
 #endif /* (MAC_START_REQUEST_CONFIRM == 1) */
 

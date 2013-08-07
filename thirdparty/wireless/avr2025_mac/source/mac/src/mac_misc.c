@@ -84,9 +84,11 @@ uint8_t T_Superframe;
 uint8_t T_Missed_Beacon;
     #if (MAC_START_REQUEST_CONFIRM == 1)
 uint8_t T_Beacon;
-
 uint8_t T_Beacon_Preparation;
     #endif /* (MAC_START_REQUEST_CONFIRM == 1) */
+#ifdef GTS_SUPPORT
+uint8_t T_CAP;
+#endif /* GTS_SUPPORT */
 #endif  /* BEACON_SUPPORT / No BEACON_SUPPORT */
 
 #if (MAC_INDIRECT_DATA_BASIC == 1)
@@ -146,6 +148,11 @@ static void reset_globals(void)
  */
 retval_t mac_init(void)
 {
+	ioport_configure_pin(DEBUG_PIN1, IOPORT_DIR_OUTPUT |  IOPORT_INIT_LOW);//vk
+	ioport_configure_pin(DEBUG_PIN2, IOPORT_DIR_OUTPUT |  IOPORT_INIT_LOW);
+	ioport_configure_pin(DEBUG_PIN3, IOPORT_DIR_OUTPUT |  IOPORT_INIT_LOW);
+	ioport_configure_pin(DEBUG_PIN4, IOPORT_DIR_OUTPUT |  IOPORT_INIT_LOW);
+
 	/* Initialize TAL */
 	if (tal_init() != MAC_SUCCESS) {
 		return FAILURE;
@@ -576,6 +583,11 @@ retval_t mac_timers_init(void)
 		return FAILURE;
 	}
     #endif /* (MAC_START_REQUEST_CONFIRM == 1) */
+#ifdef GTS_SUPPORT
+	if (MAC_SUCCESS != pal_timer_get_id(&T_CAP)) {
+		return FAILURE;
+	}
+#endif /* GTS_SUPPORT */
 #endif  /* BEACON_SUPPORT / No BEACON_SUPPORT */
 
 #if (MAC_INDIRECT_DATA_BASIC == 1)
@@ -617,6 +629,9 @@ retval_t mac_timers_stop(void)
 	pal_timer_stop(T_Beacon);
 	pal_timer_stop(T_Beacon_Preparation);
     #endif /* (MAC_START_REQUEST_CONFIRM == 1) */
+#ifdef GTS_SUPPORT
+	pal_timer_stop(T_CAP);
+#endif /* GTS_SUPPORT */
 #endif  /* BEACON_SUPPORT / No BEACON_SUPPORT */
 
 #if (MAC_INDIRECT_DATA_BASIC == 1)
