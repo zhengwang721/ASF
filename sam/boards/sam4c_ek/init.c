@@ -155,7 +155,59 @@ void board_init(void)
 	/* Configure TWI pins */
 
 	/* Configure USART pins */
+#ifdef CONF_BOARD_USART_RXD
+	/* Configure USART RXD pin */
+	ioport_set_pin_peripheral_mode(PIN_USART2_RXD_IDX,
+			PIN_USART2_RXD_FLAGS);
+#endif
 
+#ifdef CONF_BOARD_USART_TXD
+	/* Configure USART TXD pin */
+	ioport_set_pin_peripheral_mode(PIN_USART2_TXD_IDX,
+			PIN_USART2_TXD_FLAGS);
+#endif
+
+#ifdef CONF_BOARD_USART_CTS
+	/* Configure USART CTS pin */
+	ioport_set_pin_peripheral_mode(PIN_USART2_CTS_IDX,
+			PIN_USART2_CTS_FLAGS);
+#endif
+
+#ifdef CONF_BOARD_USART_RTS
+	/* Configure USART RTS pin */
+	ioport_set_pin_peripheral_mode(PIN_USART2_RTS_IDX,
+			PIN_USART2_RTS_FLAGS);
+#endif
+
+#ifdef CONF_BOARD_USART_SCK
+	/* Configure USART synchronous communication SCK pin */
+	ioport_set_pin_peripheral_mode(PIN_USART2_SCK_IDX,
+			PIN_USART2_SCK_FLAGS);
+#endif
+
+#ifdef CONF_BOARD_TFDU4300_SD
+	/* Configure IrDA transceiver shutdown pin */
+	ioport_set_pin_dir(PIN_IRDA_SD_IDX, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(PIN_IRDA_SD_IDX, IOPORT_PIN_LEVEL_HIGH);
+#endif
+
+#ifdef CONF_BOARD_ADM3485_RE
+	/* Configure RS485 transceiver RE pin */
+	ioport_set_pin_dir(PIN_RE_IDX, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(PIN_RE_IDX, IOPORT_PIN_LEVEL_LOW);
+#endif
+
+#ifdef CONF_BOARD_ISO7816_RST
+	/* Configure ISO7816 card reset pin */
+	ioport_set_pin_dir(PIN_ISO7816_RST_IDX, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(PIN_ISO7816_RST_IDX, IOPORT_PIN_LEVEL_LOW);
+#endif
+
+#ifdef CONF_BOARD_ISO7816
+	/* Configure ISO7816 interface TXD & SCK pin */
+	ioport_set_pin_peripheral_mode(PIN_USART2_TXD_IDX, PIN_USART2_TXD_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_USART2_SCK_IDX, PIN_USART2_SCK_FLAGS);
+#endif
 	/* Configure ADC pins */
 
 	/* Configure EBI pins */

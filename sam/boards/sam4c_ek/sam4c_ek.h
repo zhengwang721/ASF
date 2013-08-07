@@ -301,7 +301,71 @@
  * \name USARTx pin definitions
  * @{
  */
-// TBD
+/** USART0 pin RX */
+#define PIN_USART0_RXD_IDX    (PIO_PB16_IDX)
+#define PIN_USART0_RXD_FLAGS  (IOPORT_MODE_MUX_A)
+/** USART0 pin TX */
+#define PIN_USART0_TXD_IDX    (PIO_PB17_IDX)
+#define PIN_USART0_TXD_FLAGS  (IOPORT_MODE_MUX_A)
+/** USART0 pin CTS */
+#define PIN_USART0_CTS_IDX    (PIO_PA20_IDX)
+#define PIN_USART0_CTS_FLAGS  (IOPORT_MODE_MUX_A)
+/** USART0 pin RTS */
+#define PIN_USART0_RTS_IDX    (PIO_PA19_IDX)
+#define PIN_USART0_RTS_FLAGS  (IOPORT_MODE_MUX_A)
+/** USART0 pin SCK */
+#define PIN_USART0_SCK_IDX    (PIO_PB18_IDX)
+#define PIN_USART0_SCK_FLAGS  (IOPORT_MODE_MUX_A)
+
+/** USART1 pin CTS */
+#define PIN_USART1_CTS_IDX    (PIO_PA18_IDX)
+#define PIN_USART1_CTS_FLAGS  (IOPORT_MODE_MUX_A)
+/** USART1 pin RTS */
+#define PIN_USART1_RTS_IDX    (PIO_PA17_IDX)
+#define PIN_USART1_RTS_FLAGS  (IOPORT_MODE_MUX_A)
+/** USART1 pin RX */
+#define PIN_USART1_RXD_IDX    (PIO_PA11_IDX)
+#define PIN_USART1_RXD_FLAGS  (IOPORT_MODE_MUX_A)
+/** USART1 pin SCK */
+#define PIN_USART1_SCK_IDX    (PIO_PA16_IDX)
+#define PIN_USART1_SCK_FLAGS  (IOPORT_MODE_MUX_A)
+/** USART1 pin TX */
+#define PIN_USART1_TXD_IDX    (PIO_PA12_IDX)
+#define PIN_USART1_TXD_FLAGS  (IOPORT_MODE_MUX_A)
+
+/** USART2 pin CTS */
+#define PIN_USART2_CTS_IDX    (PIO_PA15_IDX)
+#define PIN_USART2_CTS_FLAGS  (IOPORT_MODE_MUX_A)
+/** USART2 pin RTS */
+#define PIN_USART2_RTS_IDX    (PIO_PA14_IDX)
+#define PIN_USART2_RTS_FLAGS  (IOPORT_MODE_MUX_A)
+/** USART2 pin RX */
+#define PIN_USART2_RXD_IDX    (PIO_PA9_IDX)
+#define PIN_USART2_RXD_FLAGS  (IOPORT_MODE_MUX_A)
+/** USART2 pin SCK */
+#define PIN_USART2_SCK_IDX    (PIO_PA13_IDX)
+#define PIN_USART2_SCK_FLAGS  (IOPORT_MODE_MUX_A)
+/** USART2 pin TX */
+#define PIN_USART2_TXD_IDX    (PIO_PA10_IDX)
+#define PIN_USART2_TXD_FLAGS  (IOPORT_MODE_MUX_A)
+
+/* IRDA SD pin. */
+#define PIN_IRDA_SD_IDX       PIN_USART2_CTS_IDX
+#define PIN_IRDA_SD_FLAGS     (0)
+/* TXD pin configuration. */
+#define PIN_USART_TXD_IDX          PIN_USART2_TXD_IDX
+#define PIN_USART_TXD_FLAGS        (IOPORT_MODE_MUX_A)
+#define PIN_USART_TXD_IO_FLAGS     (0)
+
+/* RS485 RE pin. */
+#define PIN_RE_IDX                 PIN_USART2_CTS_IDX
+#define PIN_RE_FLAGS               (0)
+
+/* ISO7816 pin. */
+#define ISO7816_USART_ID           ID_USART2
+#define ISO7816_USART              USART2
+#define PIN_ISO7816_RST_IDX        PIO_PA15_IDX
+#define PIN_ISO7816_RST_FLAG       (0)
 /* @} */
 
 /**
