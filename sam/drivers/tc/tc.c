@@ -55,7 +55,7 @@ extern "C" {
 #ifndef TC_WPMR_WPKEY_PASSWD
 #define TC_WPMR_WPKEY_PASSWD TC_WPMR_WPKEY((uint32_t)0x54494D)
 #endif
-
+  
 /**
  * \defgroup sam_drivers_tc_group Timer Counter (TC)
  *

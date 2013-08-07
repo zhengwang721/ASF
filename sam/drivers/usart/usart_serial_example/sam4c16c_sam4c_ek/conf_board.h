@@ -48,7 +48,7 @@
 /** Enable Com Port. */
 #define CONF_BOARD_UART_CONSOLE
 
-/* USART1 module is used in serial mode. */
+/* USART2 module is used in serial mode. */
 #define CONF_BOARD_USART_RXD
 #define CONF_BOARD_USART_TXD
 
