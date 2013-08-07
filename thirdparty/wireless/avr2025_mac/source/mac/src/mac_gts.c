@@ -446,9 +446,9 @@ uint8_t mac_add_gts_info(uint8_t *frame_ptr)
 		frame_ptr--;
 		*frame_ptr = direction_mask; //GTS Direction Mask
 		++update_octets_count;
-		frame_ptr--;
 	}
 
+	frame_ptr--;
 	mac_gts_spec.GtsPermit = mac_pib.mac_GTSPermit;
 	*frame_ptr = *((uint8_t*)&mac_gts_spec);
 	return update_octets_count;
