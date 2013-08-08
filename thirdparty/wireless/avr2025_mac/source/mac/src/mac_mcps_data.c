@@ -195,7 +195,8 @@ void mcps_data_request(uint8_t *msg)
 	/* Check whether somebody requests an ACK of broadcast frames */
 	if ((mdr.TxOptions & WPAN_TXOPT_GTS) &&
 	((FCF_SHORT_ADDR != mdr.DstAddrMode) ||
-	 (FCF_SHORT_ADDR != mdr.SrcAddrMode))) {
+	 (FCF_SHORT_ADDR != mdr.SrcAddrMode) || 
+	 (MAC_ASSOCIATED == mac_state && mdr.DstAddr != mac_pib.mac_CoordShortAddress))) {
 		mac_gen_mcps_data_conf((buffer_t *)msg,
 		(uint8_t)MAC_INVALID_PARAMETER,
 #ifdef ENABLE_TSTAMP

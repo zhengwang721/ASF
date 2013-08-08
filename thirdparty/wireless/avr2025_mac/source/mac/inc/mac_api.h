@@ -925,7 +925,7 @@ bool wpan_mlme_sync_req(uint8_t LogicalChannel,
 
 
 #if (MAC_GTS_REQUEST == 1) || defined(__DOXYGEN__)
-bool wpan_mlme_gts_req(gts_char_t GtsChar);
+bool wpan_mlme_gts_req(uint16_t DevShortAddr, gts_char_t GtsChar);
 #endif /* (MAC_GTS_REQUEST == 1) */
 
 /*@}*//* apiMacReq */

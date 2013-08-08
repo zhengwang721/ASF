@@ -1506,14 +1506,14 @@ static void handle_incoming_msg(void)
 
 #if (MAC_GTS_REQUEST == 1)
 		case MLME_GTS_REQUEST:
-
+		{
+			uint16_t DevAddr = ((uint16_t)sio_rx_buf[3] |
+						((uint16_t)sio_rx_buf[4] << 8));
 			/* Order of reception:
 			 * size;
 			 * ProtocolId,
 			 * cmdCode;
-			 * GtsLength uint8_t;
-			 * GtsDirection bool;
-			 * GtsAlloc bool;
+			 
 			 */
 
 			/*
@@ -1521,13 +1521,14 @@ static void handle_incoming_msg(void)
 			 *                       uint8_t ChannelPage,
 			 *                       bool TrackBeacon);
 			 */
-			ret_val = wpan_mlme_gts_req(*((gts_char_t*)&sio_rx_buf[3]));
+			ret_val = wpan_mlme_gts_req(DevAddr, *((gts_char_t*)&sio_rx_buf[5]));
 			if (ret_val == false) {
 				Assert(
 						"Test harness: GTS Request not successful" ==
 						0);
 			}
 			break;
+		}
 #endif /* (MAC_SYNC_REQUEST == 1) */
 
 		default:

@@ -939,7 +939,7 @@ bool wpan_mlme_poll_req(wpan_addr_spec_t *CoordAddrSpec)
 
 
 #if (MAC_GTS_REQUEST == 1)
-bool wpan_mlme_gts_req(gts_char_t GtsChar)
+bool wpan_mlme_gts_req(uint16_t DevShortAddr, gts_char_t GtsChar)
 {
 #ifdef GTS_SUPPORT
 	buffer_t *buffer_header;
@@ -956,9 +956,10 @@ bool wpan_mlme_gts_req(gts_char_t GtsChar)
 	/* Get the buffer body from buffer header */
 	mlme_gts_req = (mlme_gts_req_t *)BMM_BUFFER_POINTER(buffer_header);
 
-	/* construct mlme_poll_req_t message */
+	/* construct mlme_gts_req_t message */
 	mlme_gts_req->cmdcode = MLME_GTS_REQUEST;
 
+	mlme_gts_req->DeviceShortAddr = CPU_ENDIAN_TO_LE16(DevShortAddr);
 	/* Other fields. */
 	mlme_gts_req->GtsChar = GtsChar;
 #ifdef ENABLE_QUEUE_CAPACITY

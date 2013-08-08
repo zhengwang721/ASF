@@ -71,6 +71,8 @@
 #include "mac.h"
 #include "mac_build_config.h"
 
+#include "sio2host.h" //vk
+
 /* === Macros =============================================================== */
 
 /*
@@ -113,6 +115,7 @@ static uint8_t *beacon_ptr;
 /* Variable to hold number the pending addresses. */
 static uint8_t pending_address_count;
 #endif  /* (MAC_INDIRECT_DATA_FFD == 1) */
+
 #ifdef TEST_HARNESS
 static uint8_t vpan_no;
 #endif  /* TEST_HARNESS */
@@ -132,9 +135,9 @@ static void mac_t_prepare_beacon_cb(void *callback_parameter);
 
 /* TODO */
 
-/*
- * static void mac_t_superframe_cb(void *callback_parameter);
- */
+
+static void mac_t_superframe_cb(void *callback_parameter);
+
 #endif  /* BEACON_SUPPORT */
 
 /* === Implementation ======================================================= */
@@ -335,12 +338,7 @@ void mac_build_and_tx_beacon(bool beacon_enabled,
 	*frame_ptr = 0;
 #endif
 
-	/* frame_ptr now points to the Pending Address Specification (Octet 1).
-	 **/
-	
-
 #ifdef GTS_SUPPORT
-
 	uint8_t gts_octets = mac_add_gts_info(frame_ptr);
 	if (gts_octets > 0) {
 		frame_len += gts_octets;
@@ -348,13 +346,13 @@ void mac_build_and_tx_beacon(bool beacon_enabled,
 	}
 	else
 	{
-		
-	frame_ptr--;
-		
+		frame_ptr--;
 	}
 #else
-    frame_ptr--;
-   *frame_ptr = 0;
+	/* frame_ptr now points to the Pending Address Specification (Octet 1).
+	 **/
+	frame_ptr--;
+	*frame_ptr = 0;
 #endif /* GTS_SUPPORT */
 
 	/* The superframe specification field is updated. */
@@ -823,6 +821,9 @@ static void mac_t_beacon_cb(void *callback_parameter)
 					(FUNC_PTR)mac_t_beacon_cb,
 					NULL);
 		}
+		ioport_toggle_pin(DEBUG_PIN1); //vk
+		mac_superframe_state = MAC_ACTIVE_CAP;
+//		sio2host_tx("-CAP-",sizeof("-CAP-"));
 
 		/*
 		 * Even if this may look odd, since we already had added a
@@ -886,18 +887,31 @@ static void mac_t_beacon_cb(void *callback_parameter)
 		/* 3) Superframe timer for determining end of active portion. */
 		/* TODO */
 
-		/*
-		 * if (tal_pib.SuperFrameOrder < tal_pib.BeaconOrder)
-		 * {
-		 *      pal_timer_start(T_Superframe,
-		 *                      TAL_CONVERT_SYMBOLS_TO_US(
-		 *                          TAL_GET_SUPERFRAME_DURATION_TIME(
-		 *                              tal_pib.SuperFrameOrder)),
-		 *                      TIMEOUT_RELATIVE,
-		 *                      (FUNC_PTR)mac_t_superframe_cb,
-		 *                      NULL);
-		 * }
-		 */
+		if (tal_pib.SuperFrameOrder < tal_pib.BeaconOrder)
+		{
+		     pal_timer_start(T_Superframe,
+		                     TAL_CONVERT_SYMBOLS_TO_US(
+		                     TAL_GET_SUPERFRAME_DURATION_TIME(
+		                            tal_pib.SuperFrameOrder)),
+		                     TIMEOUT_RELATIVE,
+		                     (FUNC_PTR)mac_t_superframe_cb,
+		                     NULL);
+	 		ioport_set_value(DEBUG_PIN2, 1);//vk
+		}
+
+#ifdef GTS_SUPPORT
+		if (mac_final_cap_slot < FINAL_CAP_SLOT_DEFAULT)
+		{
+			uint32_t cap_end_duration = (TAL_CONVERT_SYMBOLS_TO_US(
+							 TAL_GET_SUPERFRAME_DURATION_TIME(tal_pib.SuperFrameOrder)) >> 4) * mac_final_cap_slot;
+
+		     pal_timer_start(T_CAP, cap_end_duration,
+							 TIMEOUT_RELATIVE,
+							 (FUNC_PTR)mac_t_gts_cb,
+							 NULL);
+	 		ioport_set_value(DEBUG_PIN3, 1);//vk
+		}
+#endif /* GTS_SUPPORT */
 
 		/*
 		 * Once the timing calculation for the next beacon has been
@@ -936,18 +950,22 @@ static void mac_t_beacon_cb(void *callback_parameter)
  * @param callback_parameter Callback parameter
  */
 /* TODO */
-/* static void mac_t_superframe_cb(void *callback_parameter) */
-/* { */
-/*    / * */
+static void mac_t_superframe_cb(void *callback_parameter)
+{
 /*     * Go to sleep (independent of the value of macRxOnWhenIdle) */
-/*     * because we enter the incative portion now. */
+/*     * because we enter the inactive portion now. */
 /*     * Note: Do not use mac_sleep_trans() here, because this would check */
 /*     * macRxOnWhenIdle first. */
 /*     * / */
 /*    mac_trx_init_sleep(); */
 /*  */
 /*    callback_parameter = callback_parameter;  / * Keep compiler happy. * / */
-/* } */
+	ioport_set_value(DEBUG_PIN2, 0);//vk
+	ioport_set_value(DEBUG_PIN4, 0);//vk
+
+	mac_superframe_state = MAC_INACTIVE;
+	//sio2host_tx("-Inactive-",sizeof("-Inactive-"));
+}
 
 #endif /* BEACON_SUPPORT */
 
