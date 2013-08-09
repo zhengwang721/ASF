@@ -124,6 +124,29 @@ static void sysclk_configure_cpclk(void)
 #error Invalid CONFIG_CPCLK_PRES setting.
 #endif
 
+#ifdef CONFIG_PLL0_SOURCE
+	if ((CONFIG_CPCLK_SOURCE == CPCLK_SRC_PLLACK) &&
+			(pll_is_locked(0) == 0)) {
+		struct pll_config pllcfg;
+
+		pll_enable_source(CONFIG_PLL0_SOURCE);
+		pll_config_defaults(&pllcfg, 0);
+		pll_enable(&pllcfg, 0);
+		pll_wait_for_lock(0);
+	}
+#endif
+#ifdef CONFIG_PLL1_SOURCE
+	if ((CONFIG_CPCLK_SOURCE == CPCLK_SRC_PLLBCK) &&
+			(pll_is_locked(1) == 0)) {
+		struct pll_config pllcfg;
+
+		pll_enable_source(CONFIG_PLL1_SOURCE);
+		pll_config_defaults(&pllcfg, 1);
+		pll_enable(&pllcfg, 1);
+		pll_wait_for_lock(1);
+	}
+#endif
+
 	uint32_t  read_reg;
 
 	/* Enables Coprocessor Bus Master Clock */
