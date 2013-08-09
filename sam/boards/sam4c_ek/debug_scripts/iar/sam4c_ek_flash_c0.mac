@@ -24,6 +24,9 @@ execUserReset()
 
     // peripheral reset RSTC_CR
     __writeMemory32(0xA5000004,0x400e1400,"Memory");
+
+    // Coprocessor and coprocessor peripheral reset RSTC_CPMR
+    __writeMemory32(0x5A000000,0x400e140c,"Memory");
 }
 
 /*********************************************************************
@@ -38,4 +41,7 @@ execUserPreload()
 
     // peripheral reset RSTC_CR
     __writeMemory32(0xA5000004,0x400e1400,"Memory");
+
+    // Coprocessor and coprocessor peripheral reset RSTC_CPMR
+    __writeMemory32(0x5A000000,0x400e140c,"Memory");
 }

@@ -141,11 +141,11 @@ static void sysclk_configure_cpclk(void)
 	/* Choose coprocessor main clock source */
 	read_reg = REG_PMC_MCKR;
 	read_reg &= ~PMC_MCKR_CPCSS_Msk;
-	read_reg |= CONFIG_CPCLK_SOURCE;
+	read_reg |= (CONFIG_CPCLK_SOURCE << PMC_MCKR_CPCSS_Pos);
 	REG_PMC_MCKR = read_reg;
 
 	/* Release coprocessor peripheral reset */
-	RSTC->RSTC_CPMR = RSTC_CPMR_CPKEY(0x5Au) | RSTC_CPMR_CPEREN;
+	RSTC->RSTC_CPMR |= (RSTC_CPMR_CPKEY(0x5Au) | RSTC_CPMR_CPEREN);
 
 	/* Enable Core 1 SRAM1 and SRAM2 memories */
 	pmc_enable_periph_clk(42); /* ID_SRAM1_2 */
