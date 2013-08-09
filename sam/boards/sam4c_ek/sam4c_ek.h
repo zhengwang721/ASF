@@ -357,7 +357,8 @@
  * \name ADC pin definitions
  * @{
  */
-// TBD
+#define PINS_ADC_TRIG       PIO_PB23_IDX
+#define PINS_ADC_TRIG_FLAG  IOPORT_MODE_MUX_A
 /* @} */
 
 /**
