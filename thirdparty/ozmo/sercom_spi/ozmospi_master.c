@@ -33,13 +33,16 @@ static void _ozmospi_int_handler(uint8_t not_used);
 
 enum status_code ozmospi_init(void)
 {
+	enum status_code status;
 	SercomSpi *const spi_hw = OZMOSPI_SERCOM_SPI;
 	struct port_config portpin_conf;
 	struct system_gclk_chan_config gclk_chan_conf;
 	struct system_pinmux_config pin_conf;
+	uint16_t tmp_baud;
 	uint32_t sercom_index = _sercom_get_sercom_inst_index((Sercom *)spi_hw);
 	uint32_t pm_index = sercom_index + PM_APBCMASK_SERCOM0_Pos;
 	uint32_t gclk_index = sercom_index + SERCOM0_GCLK_ID_CORE;
+	uint32_t gclk_hz;
 
 	/* Enable clock for the module interface */
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, 1 << pm_index);
@@ -54,6 +57,17 @@ enum status_code ozmospi_init(void)
 	/* Set up the SERCOM SPI module as master */
 	spi_hw->CTRLA.reg = SERCOM_SPI_CTRLA_MODE_SPI_MASTER;
 	spi_hw->CTRLA.reg |= OZMOSPI_TRANSFER_MODE | CONF_OZMOSPI_SIGNAL_MUX;
+
+	/* Get baud value, based on baudrate and the internal clock frequency */
+	gclk_hz = system_gclk_chan_get_hz(gclk_index);
+	status = _sercom_get_sync_baud_val(CONF_OZMOSPI_BAUDRATE, gclk_hz, &tmp_baud);
+
+	if (status != STATUS_OK) {
+		/* Baud rate calculation error, return status code */
+		return STATUS_ERR_INVALID_ARG;
+	}
+
+	spi_hw->BAUD.reg = (uint8_t)tmp_baud;
 
 	/* Register our interrupt handler */
 	_sercom_set_handler(sercom_index, _ozmospi_int_handler);
