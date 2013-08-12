@@ -1,18 +1,28 @@
 #include "ozmospi_master.h"
 #include <sercom_interrupt.h>
 
+/**
+ * \ingroup ozmo_sercom_spi_master_group
+ *
+ * @{
+ */
 
+/**
+ * \name Internal defines and types
+ * @{
+ */
+/** Convenience macro for the SERCOM SPI */
 #define OZMOSPI_SERCOM_SPI     (SercomSpi *)(CONF_OZMOSPI_SERCOM)
+/** Transfer mode to use (CPOL = 1, CPHA = 1) */
 #define OZMOSPI_TRANSFER_MODE  (SERCOM_SPI_CTRLA_CPOL | SERCOM_SPI_CTRLA_CPHA)
-
-
+/** Transfer direction indicator */
 enum _ozmospi_direction {
 	OZMOSPI_DIRECTION_READ,
 	OZMOSPI_DIRECTION_WRITE,
 	OZMOSPI_DIRECTION_BOTH,
 	OZMOSPI_DIRECTION_IDLE,
 };
-
+/** Struct to contain driver instance state */
 struct ozmospi_module {
 	enum _ozmospi_direction direction;
 	enum status_code status;
@@ -23,14 +33,27 @@ struct ozmospi_module {
 	struct ozmospi_bufdesc *rx_bufdesc_ptr;
 	struct ozmospi_bufdesc *tx_bufdesc_ptr;
 };
+/** @} */
 
-
+/** Internal driver state */
 volatile struct ozmospi_module _ozmospi_module;
 
 
 static void _ozmospi_int_handler(uint8_t not_used);
 
 
+/**
+ * \brief Initialize hardware and driver state
+ *
+ * This function initializes the SERCOM SPI module and the internal driver state
+ * structure. It assumes \ref system_init() has been called.
+ *
+ * The SERCOM SPI module is left disabled after initialization, and must be
+ * enabled by \ref ozmospi_enable() before a transfer can be done.
+ *
+ * \retval STATUS_OK if initialization succeeded.
+ * \retval STATUS_ERR_INVALID_ARG if driver has been misconfigured.
+ */
 enum status_code ozmospi_init(void)
 {
 	enum status_code status;
@@ -58,27 +81,28 @@ enum status_code ozmospi_init(void)
 	spi_hw->CTRLA.reg = SERCOM_SPI_CTRLA_MODE_SPI_MASTER;
 	spi_hw->CTRLA.reg |= OZMOSPI_TRANSFER_MODE | CONF_OZMOSPI_SIGNAL_MUX;
 
-	/* Get baud value, based on baudrate and the internal clock frequency */
+	/* Get baud value from configured baudrate and internal clock rate */
 	gclk_hz = system_gclk_chan_get_hz(gclk_index);
-	status = _sercom_get_sync_baud_val(CONF_OZMOSPI_BAUDRATE, gclk_hz, &tmp_baud);
+	status = _sercom_get_sync_baud_val(CONF_OZMOSPI_BAUDRATE, gclk_hz,
+			&tmp_baud);
 
 	if (status != STATUS_OK) {
-		/* Baud rate calculation error, return status code */
+		/* Baud rate calculation error! */
 		return STATUS_ERR_INVALID_ARG;
 	}
 
 	spi_hw->BAUD.reg = (uint8_t)tmp_baud;
 
-	/* Register our interrupt handler */
+	/* Register our custom interrupt handler */
 	_sercom_set_handler(sercom_index, _ozmospi_int_handler);
 
-	/* Configure the slave select pin */
+	/* Configure the slave select pin as output, driven high */
 	port_get_config_defaults(&portpin_conf);
 	portpin_conf.direction = PORT_PIN_DIR_OUTPUT;
 	port_pin_set_config(CONF_OZMOSPI_SS_PIN, &portpin_conf);
 	port_pin_set_output_level(CONF_OZMOSPI_SS_PIN, true);
 
-	/* Configure the pin MUXes */
+	/* Configure the pin multiplexers */
 	system_pinmux_get_config_defaults(&pin_conf);
 
 	pin_conf.mux_position = CONF_OZMOSPI_PINMUX_PAD0 & 0xFFFF;
@@ -93,13 +117,21 @@ enum status_code ozmospi_init(void)
 	pin_conf.mux_position = CONF_OZMOSPI_PINMUX_PAD3 & 0xFFFF;
 	system_pinmux_pin_set_config(CONF_OZMOSPI_PINMUX_PAD3 >> 16, &pin_conf);
 
-	/* Initialize our struct */
+	/* Lastly, initialize our struct */
+	_ozmospi_module.rx_bufdesc_ptr = NULL;
+	_ozmospi_module.tx_bufdesc_ptr = NULL;
+	_ozmospi_module.direction = OZMOSPI_DIRECTION_IDLE;
 	_ozmospi_module.status = STATUS_OK;
 
-	/* Wait for the SERCOM to finish synchronizing */
 	return STATUS_OK;
 }
 
+/**
+ * \brief Enable the SERCOM SPI module
+ *
+ * This function must be called after \ref ozmospi_init() before a transfer can
+ * be done.
+ */
 void ozmospi_enable(void)
 {
 	SercomSpi *const spi_hw = OZMOSPI_SERCOM_SPI;
@@ -116,6 +148,9 @@ void ozmospi_enable(void)
 	system_interrupt_enable(_sercom_get_interrupt_vector((Sercom *)OZMOSPI_SERCOM_SPI));
 }
 
+/**
+ * \brief Disable the SERCOM SPI module
+ */
 void ozmospi_disable(void)
 {
 	SercomSpi *const spi_hw = OZMOSPI_SERCOM_SPI;
@@ -130,6 +165,40 @@ void ozmospi_disable(void)
 	spi_hw->CTRLA.reg &= ~SERCOM_SPI_CTRLA_ENABLE;
 }
 
+/**
+ * \brief Start scatter/gather SPI transfer and wait for completion
+ *
+ * This function initiates a SPI transfer from/to an arbitrary number of data
+ * buffers.
+ *
+ * An array of buffer descriptors must be specified for the transmission and/or
+ * reception.
+ * The lists \e must end with a descriptor that specifies zero buffer
+ * length.
+ * The first descriptor in the list can \e not specify zero length.
+ *
+ * To initiate a simplex transfer, pass \c NULL as the address of either buffer
+ * descriptor list, like this:
+ * \code
+ *     // Transmit some buffers
+ *     ozmospi_transceive_buffers_wait(tx_buffers, NULL);
+ *
+ *     // Receive some buffers
+ *     ozmospi_transceive_buffers_wait(NULL, rx_buffers);
+ * \endcode
+ *
+ * Note that \ref ozmospi_init() and \ref ozmospi_enable() must be called before
+ * this function to ensure correct operation.
+ *
+ * \param[in] tx_bufdescs address of array with descriptors of buffers to
+ * read bytes to transmit from.
+ * \arg \c NULL if the transfer is a simplex read.
+ * \param[out] rx_bufdescs address of array with descriptors of buffers to
+ * write received bytes into.
+ * \arg \c NULL if the transfer is a simplex write.
+ *
+ * \retval STATUS_OK if transfer succeeded. Other status codes upon failure.
+ */
 enum status_code ozmospi_transceive_buffers_wait(
 	struct ozmospi_bufdesc tx_bufdescs[],
 	struct ozmospi_bufdesc rx_bufdescs[])
@@ -150,6 +219,9 @@ enum status_code ozmospi_transceive_buffers_wait(
 	_ozmospi_module.rx_bufdesc_ptr = rx_bufdescs;
 
 	if (tx_bufdescs && rx_bufdescs) {
+		Assert(tx_bufdescs[0].length);
+		Assert(rx_bufdescs[0].length);
+
 		_ozmospi_module.direction = OZMOSPI_DIRECTION_BOTH;
 		_ozmospi_module.tx_length = tx_bufdescs[0].length;
 		_ozmospi_module.tx_head_ptr = tx_bufdescs[0].data;
@@ -160,12 +232,16 @@ enum status_code ozmospi_transceive_buffers_wait(
 		tmp_intenset = SERCOM_SPI_INTFLAG_DRE | SERCOM_SPI_INTFLAG_RXC;
 	} else {
 		if (tx_bufdescs) {
+			Assert(tx_bufdescs[0].length);
+
 			_ozmospi_module.direction = OZMOSPI_DIRECTION_WRITE;
 			_ozmospi_module.tx_length = tx_bufdescs[0].length;
 			_ozmospi_module.tx_head_ptr = tx_bufdescs[0].data;
 
 			tmp_intenset = SERCOM_SPI_INTFLAG_DRE;
 		} else {
+			Assert(rx_bufdescs[0].length);
+
 			_ozmospi_module.direction = OZMOSPI_DIRECTION_READ;
 			_ozmospi_module.rx_length = rx_bufdescs[0].length;
 			_ozmospi_module.rx_head_ptr = rx_bufdescs[0].data;
@@ -184,12 +260,16 @@ enum status_code ozmospi_transceive_buffers_wait(
 	return status;
 }
 
+/**
+ * \brief Interrupt handler
+ *
+ * \param not_used SERCOM instance number passed from the master SERCOM driver.
+ */
 static void _ozmospi_int_handler(uint8_t not_used)
 {
 	enum _ozmospi_direction dir = _ozmospi_module.direction;
 	SercomSpi *const spi_hw = OZMOSPI_SERCOM_SPI;
 	uint8_t int_status;
-
 	uint8_t *tx_head_ptr;
 	uint8_t *rx_head_ptr;
 	ozmospi_buflen_t tx_length;
@@ -198,9 +278,11 @@ static void _ozmospi_int_handler(uint8_t not_used)
 	int_status = spi_hw->INTFLAG.reg & spi_hw->INTENSET.reg;
 
 	if (int_status & SERCOM_SPI_INTFLAG_DRE) {
+		/* If doing a READ, just send 0 to trigger the transfer */
 		if (dir == OZMOSPI_DIRECTION_READ) {
 			spi_hw->DATA.reg = 0;
 
+			/* Check if this send will fetch the last byte to read */
 check_for_read_end:
 			tx_length = _ozmospi_module.rx_length - 1;
 
@@ -208,22 +290,24 @@ check_for_read_end:
 				tx_length = (_ozmospi_module.rx_bufdesc_ptr + 1)->length;
 
 				if (!tx_length) {
-					// disable DRE -- end of read transaction
+					/* Disable DRE to stop future transfers */
 					spi_hw->INTENCLR.reg = SERCOM_SPI_INTFLAG_DRE;
 				}
 			}
 
-			// OZMOSPI_DIRECTION_WRITE || OZMOSPI_DIRECTION_BOTH
+		/* For WRITE and BOTH, output current byte */
 		} else {
 			tx_head_ptr = _ozmospi_module.tx_head_ptr;
 			spi_hw->DATA.reg = *(tx_head_ptr++);
 
+			/* Check if this was the last byte to send */
 			tx_length = _ozmospi_module.tx_length - 1;
 
 			if (tx_length) {
 				_ozmospi_module.tx_head_ptr = tx_head_ptr;
 				_ozmospi_module.tx_length = tx_length;
 			} else {
+				/* Any more buffers left to send, perhaps? */
 				tx_length = (++_ozmospi_module.tx_bufdesc_ptr)->length;
 
 				if (tx_length) {
@@ -231,11 +315,11 @@ check_for_read_end:
 					_ozmospi_module.tx_length = tx_length;
 				} else {
 					if (dir == OZMOSPI_DIRECTION_WRITE) {
-						// disable DRE and enable TXC -- end of write transaction
+						/* Disable DRE and enable TXC to end WRITE */
 						spi_hw->INTENCLR.reg = SERCOM_SPI_INTFLAG_DRE;
 						spi_hw->INTENSET.reg = SERCOM_SPI_INTFLAG_TXC;
 					} else {
-						// bidirectional transaction has become a read
+						/* For BOTH, check if we still have bytes left to read */
 						dir = OZMOSPI_DIRECTION_READ;
 						_ozmospi_module.direction = dir;
 						goto check_for_read_end;
@@ -245,33 +329,37 @@ check_for_read_end:
 		}
 	}
 
+	/* For READ and BOTH, store the received byte */
 	if (int_status & SERCOM_SPI_INTFLAG_RXC) {
 		rx_head_ptr = _ozmospi_module.rx_head_ptr;
 		*(rx_head_ptr++) = spi_hw->DATA.reg;
 
+		/* Check if this was the last byte to receive */
 		rx_length = _ozmospi_module.rx_length - 1;
 
 		if (rx_length) {
 			_ozmospi_module.rx_head_ptr = rx_head_ptr;
 			_ozmospi_module.rx_length = rx_length;
 		} else {
+			/* Any more buffers left to receive into? */
 			rx_length = (++_ozmospi_module.rx_bufdesc_ptr)->length;
 
 			if (rx_length) {
 				_ozmospi_module.rx_head_ptr = _ozmospi_module.rx_bufdesc_ptr->data;
 				_ozmospi_module.rx_length = rx_length;
 			} else {
-				// Disable receiver (instant -- no need to sync)
+				/* Disable the SPI received (instant effect) */
 				spi_hw->CTRLB.reg = 0;
 
 				if (dir == OZMOSPI_DIRECTION_READ) {
-					// disable RXC, update direction and status
+					/* If doing READ, end the transaction here */
 					spi_hw->INTENCLR.reg = SERCOM_SPI_INTFLAG_RXC;
 
 					dir = OZMOSPI_DIRECTION_IDLE;
 					_ozmospi_module.direction = dir;
 					_ozmospi_module.status = STATUS_OK;
 				} else {
+					/* If doing BOTH, change direction to WRITE */
 					dir = OZMOSPI_DIRECTION_WRITE;
 					_ozmospi_module.direction = dir;
 				}
@@ -279,8 +367,9 @@ check_for_read_end:
 		}
 	}
 
+	/* For WRITE */
 	if (int_status & SERCOM_SPI_INTFLAG_TXC) {
-		// disable TXC, update direction and status
+		/* End transaction here, since last byte has been sent */
 		spi_hw->INTENCLR.reg = SERCOM_SPI_INTFLAG_TXC;
 
 		dir = OZMOSPI_DIRECTION_IDLE;
@@ -288,3 +377,7 @@ check_for_read_end:
 		_ozmospi_module.status = STATUS_OK;
 	}
 }
+
+/**
+ * @}
+ */
