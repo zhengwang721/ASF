@@ -16,10 +16,10 @@ enum _ozmospi_direction {
 struct ozmospi_module {
 	enum _ozmospi_direction direction;
 	enum status_code status;
-	ozmospi_buflen_t rx_head;
 	ozmospi_buflen_t rx_length;
-	ozmospi_buflen_t tx_head;
 	ozmospi_buflen_t tx_length;
+	uint8_t *rx_head_ptr;
+	uint8_t *tx_head_ptr;
 	struct ozmospi_bufdesc *rx_bufdesc_ptr;
 	struct ozmospi_bufdesc *tx_bufdesc_ptr;
 };
@@ -148,13 +148,13 @@ enum status_code ozmospi_transceive_buffers_wait(
 
 	_ozmospi_module.tx_bufdesc_ptr = tx_bufdescs;
 	_ozmospi_module.rx_bufdesc_ptr = rx_bufdescs;
-	_ozmospi_module.tx_head = 0;
-	_ozmospi_module.rx_head = 0;
 
 	if (tx_bufdescs && rx_bufdescs) {
 		_ozmospi_module.direction = OZMOSPI_DIRECTION_BOTH;
 		_ozmospi_module.tx_length = tx_bufdescs[0].length;
+		_ozmospi_module.tx_head_ptr = tx_bufdescs[0].data;
 		_ozmospi_module.rx_length = rx_bufdescs[0].length;
+		_ozmospi_module.rx_head_ptr = rx_bufdescs[0].data;
 		spi_hw->CTRLB.reg = SERCOM_SPI_CTRLB_RXEN;
 
 		tmp_intenset = SERCOM_SPI_INTFLAG_DRE | SERCOM_SPI_INTFLAG_RXC;
@@ -162,11 +162,13 @@ enum status_code ozmospi_transceive_buffers_wait(
 		if (tx_bufdescs) {
 			_ozmospi_module.direction = OZMOSPI_DIRECTION_WRITE;
 			_ozmospi_module.tx_length = tx_bufdescs[0].length;
+			_ozmospi_module.tx_head_ptr = tx_bufdescs[0].data;
 
 			tmp_intenset = SERCOM_SPI_INTFLAG_DRE;
 		} else {
 			_ozmospi_module.direction = OZMOSPI_DIRECTION_READ;
 			_ozmospi_module.rx_length = rx_bufdescs[0].length;
+			_ozmospi_module.rx_head_ptr = rx_bufdescs[0].data;
 			spi_hw->CTRLB.reg = SERCOM_SPI_CTRLB_RXEN;
 
 			tmp_intenset = SERCOM_SPI_INTFLAG_DRE | SERCOM_SPI_INTFLAG_RXC;
@@ -188,11 +190,9 @@ static void _ozmospi_int_handler(uint8_t not_used)
 	SercomSpi *const spi_hw = OZMOSPI_SERCOM_SPI;
 	uint8_t int_status;
 
-	uint8_t *tx_data;
-	uint8_t *rx_data;
-	ozmospi_buflen_t tx_head;
+	uint8_t *tx_head_ptr;
+	uint8_t *rx_head_ptr;
 	ozmospi_buflen_t tx_length;
-	ozmospi_buflen_t rx_head;
 	ozmospi_buflen_t rx_length;
 
 	int_status = spi_hw->INTFLAG.reg & spi_hw->INTENSET.reg;
@@ -215,20 +215,19 @@ check_for_read_end:
 
 			// OZMOSPI_DIRECTION_WRITE || OZMOSPI_DIRECTION_BOTH
 		} else {
-			tx_data = _ozmospi_module.tx_bufdesc_ptr->data;
-			tx_head = _ozmospi_module.tx_head;
-			spi_hw->DATA.reg = tx_data[tx_head];
+			tx_head_ptr = _ozmospi_module.tx_head_ptr;
+			spi_hw->DATA.reg = *(tx_head_ptr++);
 
 			tx_length = _ozmospi_module.tx_length - 1;
 
 			if (tx_length) {
-				_ozmospi_module.tx_head = tx_head + 1;
+				_ozmospi_module.tx_head_ptr = tx_head_ptr;
 				_ozmospi_module.tx_length = tx_length;
 			} else {
 				tx_length = (++_ozmospi_module.tx_bufdesc_ptr)->length;
 
 				if (tx_length) {
-					_ozmospi_module.tx_head = 0;
+					_ozmospi_module.tx_head_ptr = _ozmospi_module.tx_bufdesc_ptr->data;
 					_ozmospi_module.tx_length = tx_length;
 				} else {
 					if (dir == OZMOSPI_DIRECTION_WRITE) {
@@ -247,22 +246,22 @@ check_for_read_end:
 	}
 
 	if (int_status & SERCOM_SPI_INTFLAG_RXC) {
-		rx_data = _ozmospi_module.rx_bufdesc_ptr->data;
-		rx_head = _ozmospi_module.rx_head;
-		rx_data[rx_head] = spi_hw->DATA.reg;
+		rx_head_ptr = _ozmospi_module.rx_head_ptr;
+		*(rx_head_ptr++) = spi_hw->DATA.reg;
 
 		rx_length = _ozmospi_module.rx_length - 1;
 
 		if (rx_length) {
-			_ozmospi_module.rx_head = rx_head + 1;
+			_ozmospi_module.rx_head_ptr = rx_head_ptr;
 			_ozmospi_module.rx_length = rx_length;
 		} else {
 			rx_length = (++_ozmospi_module.rx_bufdesc_ptr)->length;
 
 			if (rx_length) {
-				_ozmospi_module.rx_head = 0;
+				_ozmospi_module.rx_head_ptr = _ozmospi_module.rx_bufdesc_ptr->data;
 				_ozmospi_module.rx_length = rx_length;
 			} else {
+				// Disable receiver (instant -- no need to sync)
 				spi_hw->CTRLB.reg = 0;
 
 				if (dir == OZMOSPI_DIRECTION_READ) {
