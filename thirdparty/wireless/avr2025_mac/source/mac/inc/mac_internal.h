@@ -73,11 +73,10 @@
 #define DEBUG_PIN2 IOPORT_CREATE_PIN(PORTD, 4)
 #define DEBUG_PIN3 IOPORT_CREATE_PIN(PORTD, 1)
 #define DEBUG_PIN4 IOPORT_CREATE_PIN(PORTD, 0)
-//#define DEBUG_PIN5 IOPORT_CREATE_PIN(PORTD, 4)
-//#define DEBUG_PIN6 IOPORT_CREATE_PIN(PORTD, 6)
-//#define DEBUG_PIN7 IOPORT_CREATE_PIN(PORTE, 6)
-//#define DEBUG_PIN8 IOPORT_CREATE_PIN(PORTD, 4)
-//
+#define DEBUG_PIN5 IOPORT_CREATE_PIN(PORTD, 6)
+#define DEBUG_PIN6 IOPORT_CREATE_PIN(PORTB, 2)
+#define DEBUG_PIN7 IOPORT_CREATE_PIN(PORTB, 3)
+#define DEBUG_PIN8 IOPORT_CREATE_PIN(PORTB, 1)
 /**
  * \addtogroup group_mac_def
  * @{
@@ -479,7 +478,7 @@ extern queue_t indirect_data_q;
 #endif /* (MAC_INDIRECT_DATA_FFD == 1) */
 
 #ifdef GTS_SUPPORT
-extern queue_t gts_q;
+extern queue_t gts_q[];
 #endif /* GTS_SUPPORT */
 
 #if (MAC_START_REQUEST_CONFIRM == 1)
@@ -734,6 +733,7 @@ void mac_parse_bcn_gts_info(uint8_t gts_count, uint8_t gts_dir, uint8_t *gts_lis
 uint8_t handle_gts_data_req(mcps_data_req_t *data_req, uint8_t *msg);
 void reset_gts_globals(void);
 void mac_t_gts_cb(void *callback_parameter);
+void init_gts_queues(void);
 #endif /* GTS_SUPPORT */
 
 #if (MAC_INDIRECT_DATA_FFD == 1)

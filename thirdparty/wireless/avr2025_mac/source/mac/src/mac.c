@@ -216,10 +216,6 @@ queue_t nhle_mac_q;
  */
 queue_t tal_mac_q;
 
-#ifdef GTS_SUPPORT
-queue_t gts_q;
-#endif /* GTS_SUPPORT */
-
 #if (MAC_START_REQUEST_CONFIRM == 1)
 #ifdef BEACON_SUPPORT
 

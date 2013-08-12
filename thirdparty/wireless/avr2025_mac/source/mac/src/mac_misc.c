@@ -190,9 +190,6 @@ retval_t mac_init(void)
     #if (MAC_START_REQUEST_CONFIRM == 1)
     #ifdef BEACON_SUPPORT
 	qmm_queue_init(&broadcast_q, BROADCAST_QUEUE_CAPACITY);
-		#ifdef GTS_SUPPORT
-	qmm_queue_init(&gts_q, GTS_QUEUE_CAPACITY);
-		#endif /* GTS_SUPPORT */
     #endif  /* BEACON_SUPPORT */
     #endif /* (MAC_START_REQUEST_CONFIRM == 1) */
 #else
@@ -207,6 +204,11 @@ retval_t mac_init(void)
     #endif  /* BEACON_SUPPORT */
     #endif /* (MAC_START_REQUEST_CONFIRM == 1) */
 #endif  /* ENABLE_QUEUE_CAPACITY */
+
+#ifdef GTS_SUPPORT
+	init_gts_queues();
+#endif /* GTS_SUPPORT */
+
 	return MAC_SUCCESS;
 }
 
@@ -437,6 +439,11 @@ static void flush_queues(void)
 	/* Flush MAC-NHLE queue */
 	qmm_queue_flush(&mac_nhle_q);
 #endif
+
+#ifdef GTS_SUPPORT
+	/* Flush MAC GTS queue */
+	qmm_queue_flush(&gts_q); //vk
+#endif /* GTS_SUPPORT */
 
 #if (MAC_INDIRECT_DATA_FFD == 1)
 	/* Flush MAC indirect queue */
