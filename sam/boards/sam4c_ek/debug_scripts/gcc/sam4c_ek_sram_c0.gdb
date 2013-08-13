@@ -18,6 +18,9 @@ load
 # Reset peripheral  (RSTC_CR)
 set *0x400e1400 = 0xA5000004
 
+# Reset coprocessor and its peripheral  (RSTC_CPMR)
+set *0x400e140C = 0x5A000000
+
 # Initializing PC and stack pointer
 mon reg sp=(0x20000000)
 mon reg pc=(0x20000004)

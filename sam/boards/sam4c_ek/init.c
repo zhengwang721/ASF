@@ -159,7 +159,15 @@ void board_init(void)
 #endif
 #endif
 	/* Configure TWI pins */
+#if  defined(CONF_BOARD_TWI0) || defined(CONF_BOARD_AT30TSE)
+	ioport_set_pin_peripheral_mode(TWIO_DATA_GPIO, TWIO_DATA_FLAG);
+	ioport_set_pin_peripheral_mode(TWIO_CLK_GPIO, TWIO_CLK_FLAG);
+#endif
 
+#ifdef CONF_BOARD_TWI1
+	ioport_set_pin_peripheral_mode(TWI1_DATA_GPIO, TWI1_DATA_FLAG);
+	ioport_set_pin_peripheral_mode(TWI1_CLK_GPIO, TWI1_CLK_FLAG);
+#endif
 	/* Configure USART pins */
 
 	/* Configure ADC pins */
