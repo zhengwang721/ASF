@@ -205,9 +205,10 @@
 /** List of all push button definitions. */
 #define PINS_PUSHBUTTONS    {PIN_PUSHBUTTON_1, PIN_PUSHBUTTON_2}
 
-#define CONSOLE_UART      UART0
-#define CONSOLE_UART_ID   ID_UART0
-
+/**
+ * \name TC pins definition
+ * @{
+ */
 #define PIN_TC0_TIOA0        (PIO_PA13_IDX)
 #define PIN_TC0_TIOA0_MUX    (IOPORT_MODE_MUX_B)
 #define PIN_TC0_TIOA0_FLAGS  (IOPORT_MODE_MUX_B)
@@ -231,6 +232,15 @@
 #define PIN_TC0_TIOA2_ID     ID_PIOB
 #define PIN_TC0_TIOA2_TYPE   PIO_PERIPH_A
 #define PIN_TC0_TIOA2_ATTR   PIO_DEFAULT
+/* @} */
+
+/**
+ * \name Console UART definitions
+ * @{
+ */
+#define CONSOLE_UART      UART0
+#define CONSOLE_UART_ID   ID_UART0
+/* @} */
 
 /**
  * \name UART0 pis (UTXD0 and URXD0) definitions
