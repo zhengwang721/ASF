@@ -369,7 +369,7 @@ void mac_sync_loss(uint8_t loss_reason)
 	 */
 #ifdef __ALIGNED_ACCESS__	
 	static uint32_t mac_sync_loss_buffer[sizeof(buffer_t) +
-	sizeof(mlme_sync_loss_ind_t)]; //@mathi
+	sizeof(mlme_sync_loss_ind_t)]; 
 #else
 	static uint8_t mac_sync_loss_buffer[sizeof(buffer_t) +
 	sizeof(mlme_sync_loss_ind_t)];

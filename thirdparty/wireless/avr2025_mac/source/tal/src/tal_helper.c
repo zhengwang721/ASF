@@ -89,7 +89,7 @@ retval_t  tal_ext_pa_ctrl(bool pa_ext_sw_ctrl)
 	CONF_REG_WRITE();
 #endif /* TAL_TYPE == ATMEGA128RFA1 */
 	/* Read the PA_EXT_EN bit to check the configuration */
-	temp = /*(bool)*/pal_trx_bit_read(SR_PA_EXT_EN); //@mathi-w
+	temp = /*(bool)*/pal_trx_bit_read(SR_PA_EXT_EN);
 	if (pa_ext_sw_ctrl == temp) {
 		/* return success if the configuration is done correctly */
 		return MAC_SUCCESS;
@@ -600,7 +600,7 @@ tal_trx_status_t tal_get_trx_status(void)
 {
 	tal_trx_status_t trx_status;
 	/* Read the status from trx_status bits */
-	trx_status = /* (tal_trx_status_t) */ pal_trx_bit_read(SR_TRX_STATUS); //@mathi-w
+	trx_status = /* (tal_trx_status_t) */ pal_trx_bit_read(SR_TRX_STATUS);
 	return trx_status; 
 }
 

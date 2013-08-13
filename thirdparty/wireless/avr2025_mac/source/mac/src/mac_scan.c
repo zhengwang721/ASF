@@ -404,7 +404,7 @@ static void mac_awake_scan(buffer_t *scan_buf)
 		/* Allocate a large size buffer for scan confirm. */
 #ifdef __ALIGNED_ACCESS__		
 		mac_conf_buf_ptr
-			= (uint32_t *)bmm_buffer_alloc(LARGE_BUFFER_SIZE); //@mathi-w
+			= (uint32_t *)bmm_buffer_alloc(LARGE_BUFFER_SIZE);
 #else
         mac_conf_buf_ptr
             = (uint8_t *)bmm_buffer_alloc(LARGE_BUFFER_SIZE);

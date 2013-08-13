@@ -90,7 +90,7 @@ typedef struct
 		buffer_tag
 #endif
 {
-#ifdef __ALIGNED_ACCESS__	   //@mathi-align	
+#ifdef __ALIGNED_ACCESS__
 	/** Pointer to the buffer body */
 	uint32_t *body;
 #else
@@ -100,7 +100,7 @@ typedef struct
 	
 	/** Pointer to next free buffer */
 	struct buffer_tag *next;
-} buffer_t COMPILER_WORD_ALIGNED;//@mathi
+} buffer_t COMPILER_WORD_ALIGNED;
 
 /* === Externals =========================================================== */
 

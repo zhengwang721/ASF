@@ -304,7 +304,7 @@ void usr_mcps_data_ind(wpan_addr_spec_t *SrcAddrSpec,
 #ifdef SIO_HUB
 	/* sprintf(sio_array, "Frame received: %" PRIu32 ",data: %" PRIu8 "\r\n",
 			rx_cnt, *msdu);
-	printf(sio_array); */ //@mathi
+	printf(sio_array); */
 	printf(Display_Received_Frame, rx_cnt, *msdu);
 #endif
 

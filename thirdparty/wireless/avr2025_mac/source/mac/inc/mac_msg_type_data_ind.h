@@ -73,7 +73,7 @@
  * is packed, i.e.,for ARM(GCC & IAR) and AVR32(GCC)
  */
 #if ((defined __ICCARM__) || (defined __GNUARM__) || (defined __GNUAVR32__))
-//#pragma pack(1) //@mathi
+//#pragma pack(1) 
 #endif /* __ICCARM__, __GNUARM__ , __GNUAVR32__*/
 typedef struct mcps_data_ind_tag {
 	/**< This identifies the message as \ref MCPS_DATA_INDICATION */
@@ -175,10 +175,10 @@ typedef struct mcps_data_ind_tag {
 	 * MAC sublayer entity.
 	 */
 	uint8_t *msdu;
-} mcps_data_ind_t  COMPILER_WORD_ALIGNED;//@mathi
+} mcps_data_ind_t  COMPILER_WORD_ALIGNED;
 /*End packing for ARM(GCC & IAR) and AVR32(GCC) */
 #if ((defined __ICCARM__) || (defined __GNUARM__) || (defined __GNUAVR32__))
-//#pragma pack() //@mathi
+//#pragma pack() 
 #endif /* __ICCARM__, __GNUARM__ , __GNUAVR32__*/
 /* ! @} */
 /* === Externals ============================================================ */

@@ -566,7 +566,7 @@ void pal_trx_aes_wrrd(uint8_t addr, uint8_t *idata, uint8_t length)
 		
 #ifdef __ALIGNED_ACCESS__
        spi_read(&master, &odata_var);
-	   *odata++ = (uint8_t)odata_var;	    //@mathi   
+	   *odata++ = (uint8_t)odata_var;	       
 #else		
         spi_read(&master, (uint16_t*)odata++);
 #endif		
@@ -580,7 +580,7 @@ void pal_trx_aes_wrrd(uint8_t addr, uint8_t *idata, uint8_t length)
 	while(!spi_is_ready_to_read(&master));
 #ifdef __ALIGNED_ACCESS__
     spi_read(&master, &odata_var);
-    *odata = (uint8_t)odata_var;	    //@mathi
+    *odata = (uint8_t)odata_var;	    
 #else
     spi_read(&master, (uint16_t*)odata);
 #endif

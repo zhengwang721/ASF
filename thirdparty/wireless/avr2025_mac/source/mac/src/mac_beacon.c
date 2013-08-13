@@ -104,7 +104,7 @@
  * a new buffer will be allocated to transmit the beacon frame.
  */
 #ifdef __ALIGNED_ACCESS__
-static uint32_t beacon_buffer[LARGE_BUFFER_SIZE];//@mathi-b
+static uint32_t beacon_buffer[LARGE_BUFFER_SIZE];
 #else
 static uint8_t beacon_buffer[LARGE_BUFFER_SIZE];
 #endif
@@ -115,12 +115,12 @@ static uint8_t beacon_buffer[LARGE_BUFFER_SIZE];
 static uint8_t *beacon_ptr;
 
 /* Variable to hold number the pending addresses. */
-static uint8_t pending_address_count COMPILER_WORD_ALIGNED;//@mathi
+static uint8_t pending_address_count COMPILER_WORD_ALIGNED;
 
 #endif  /* (MAC_INDIRECT_DATA_FFD == 1) */
 
 #ifdef TEST_HARNESS
-static uint8_t vpan_no COMPILER_WORD_ALIGNED;//@mathi;
+static uint8_t vpan_no COMPILER_WORD_ALIGNED;
 #endif  /* TEST_HARNESS */
 
 /* === Prototypes =========================================================== */

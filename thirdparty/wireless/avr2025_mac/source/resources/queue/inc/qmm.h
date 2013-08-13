@@ -78,7 +78,7 @@ typedef struct
 	uint8_t (*criteria_func)(void *buf, void *handle);
 	/** Handle to callbck parameter */
 	void *handle;
-} search_t COMPILER_WORD_ALIGNED;//@mathi
+} search_t COMPILER_WORD_ALIGNED;
 
 /**
  * @brief Queue structure
@@ -112,7 +112,7 @@ typedef struct
 	 * Number of buffers present in the current queue
 	 */
 	uint8_t size;
-} queue_t COMPILER_WORD_ALIGNED; //@mathi
+} queue_t COMPILER_WORD_ALIGNED; 
 
 /* === Externals =========================================================== */
 

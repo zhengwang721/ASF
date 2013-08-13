@@ -147,7 +147,7 @@ typedef enum mac_state_tag {
 
 	/** PAN coordinator successfully started */
 	MAC_PAN_COORD_STARTED = 3
-} SHORTENUM mac_state_t COMPILER_WORD_ALIGNED;//@mathi
+} SHORTENUM mac_state_t COMPILER_WORD_ALIGNED;
 
 /**
  * MAC poll states.
@@ -178,7 +178,7 @@ typedef enum mac_poll_state_tag {
 	 * data frame),
 	 * awaiting data response, */
 	MAC_POLL_IMPLICIT
-} SHORTENUM mac_poll_state_t COMPILER_WORD_ALIGNED;//@mathi
+} SHORTENUM mac_poll_state_t COMPILER_WORD_ALIGNED;
 
 /**
  * Device or coordinator scan states.
@@ -198,7 +198,7 @@ typedef enum mac_scan_state_tag {
 	MAC_SCAN_ORPHAN,
 	/** Passive scan proceeding */
 	MAC_SCAN_PASSIVE
-} SHORTENUM mac_scan_state_t  COMPILER_WORD_ALIGNED;//@mathi
+} SHORTENUM mac_scan_state_t  COMPILER_WORD_ALIGNED;
 
 /**
  * Device or coordinator sync states.
@@ -217,7 +217,7 @@ typedef enum mac_sync_state_tag {
 	 * synchronization with desired network
 	 */
 	MAC_SYNC_BEFORE_ASSOC
-} SHORTENUM mac_sync_state_t  COMPILER_WORD_ALIGNED;//@mathi
+} SHORTENUM mac_sync_state_t  COMPILER_WORD_ALIGNED;
 
 /**
  * MAC sleep state type.
@@ -227,7 +227,7 @@ typedef enum mac_radio_sleep_state_tag {
 	RADIO_AWAKE = 0,
 	/**< Radio is in sleep mode */
 	RADIO_SLEEPING
-} SHORTENUM mac_radio_sleep_state_t  COMPILER_WORD_ALIGNED;//@mathi
+} SHORTENUM mac_radio_sleep_state_t  COMPILER_WORD_ALIGNED;
 
 /* ! @} */
 typedef void (*handler_t)(uint32_t *);
@@ -399,14 +399,14 @@ typedef struct mac_pib_tag {
 	 */
 	uint8_t privateVirtualPANs;
 #endif /* TEST_HARNESS */
-} mac_pib_t; // COMPILER_WORD_ALIGNED;//@mathi //Anupama
+} mac_pib_t;
 
 /* ! @} */
 /* === Externals ============================================================ */
 
 /* Global data variables */
 #ifdef __ALIGNED_ACCESS__
- extern uint32_t *mac_conf_buf_ptr; //@mathi
+ extern uint32_t *mac_conf_buf_ptr;
 #else
  extern uint8_t *mac_conf_buf_ptr;
 #endif
@@ -596,7 +596,7 @@ void mac_process_orphan_notification(buffer_t *buf_ptr);
 
 #endif /* (MAC_ORPHAN_INDICATION_RESPONSE == 1) */
 
-#ifdef __ALIGNED_ACCESS__				  //@mathi-align
+#ifdef __ALIGNED_ACCESS__				  
  void mac_process_tal_data_ind(uint32_t *msg);
 #else
  void mac_process_tal_data_ind(uint8_t *msg);

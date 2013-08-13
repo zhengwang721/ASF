@@ -79,29 +79,29 @@
 
 #if (NUMBER_OF_MAC_TIMERS > 0)
 #ifdef BEACON_SUPPORT
-uint8_t T_Beacon_Tracking_Period COMPILER_WORD_ALIGNED;//@mathi
-uint8_t T_Superframe COMPILER_WORD_ALIGNED;//@mathi
-uint8_t T_Missed_Beacon COMPILER_WORD_ALIGNED;//@mathi
+uint8_t T_Beacon_Tracking_Period COMPILER_WORD_ALIGNED;
+uint8_t T_Superframe COMPILER_WORD_ALIGNED;
+uint8_t T_Missed_Beacon COMPILER_WORD_ALIGNED;
     #if (MAC_START_REQUEST_CONFIRM == 1)
-uint8_t T_Beacon COMPILER_WORD_ALIGNED;//@mathi
+uint8_t T_Beacon COMPILER_WORD_ALIGNED;
 
-uint8_t T_Beacon_Preparation COMPILER_WORD_ALIGNED;//@mathi
+uint8_t T_Beacon_Preparation COMPILER_WORD_ALIGNED;
     #endif /* (MAC_START_REQUEST_CONFIRM == 1) */
 #endif  /* BEACON_SUPPORT / No BEACON_SUPPORT */
 
 #if (MAC_INDIRECT_DATA_BASIC == 1)
-uint8_t T_Poll_Wait_Time COMPILER_WORD_ALIGNED;//@mathi
+uint8_t T_Poll_Wait_Time COMPILER_WORD_ALIGNED;
     #if (MAC_INDIRECT_DATA_FFD == 1)
-uint8_t T_Data_Persistence COMPILER_WORD_ALIGNED;//@mathi
+uint8_t T_Data_Persistence COMPILER_WORD_ALIGNED;
     #endif  /* (MAC_INDIRECT_DATA_FFD == 1) */
 #endif  /* (MAC_INDIRECT_DATA_BASIC == 1) */
 
 #if (MAC_SCAN_SUPPORT == 1)
-uint8_t T_Scan_Duration COMPILER_WORD_ALIGNED;//@mathi
+uint8_t T_Scan_Duration COMPILER_WORD_ALIGNED;
 #endif  /* MAC_SCAN_SUPPORT */
 
 #if (MAC_RX_ENABLE_SUPPORT == 1)
-uint8_t T_Rx_Enable COMPILER_WORD_ALIGNED;//@mathi
+uint8_t T_Rx_Enable COMPILER_WORD_ALIGNED;
 #endif  /* MAC_RX_ENABLE_SUPPORT */
 #endif /* (NUMBER_OF_MAC_TIMERS != 0) */
 
@@ -133,7 +133,7 @@ static void reset_globals(void)
 #endif  /* BEACON_SUPPORT */
 	mac_last_dsn = 0;
 	memset((uint8_t *)&mac_last_src_addr, 0xFF, sizeof(mac_last_src_addr));
-	//mac_last_src_addr = 0xFFFFFFFFFFFFFFFFULL;  //@mathi-long
+	//mac_last_src_addr = 0xFFFFFFFFFFFFFFFFULL;
 	mac_rx_enabled = false;
 }
 
@@ -271,7 +271,7 @@ static void do_init_pib(void)
 	mac_pib.mac_BattLifeExtPeriods = macBattLifeExtPeriods_def;
 	memset((uint8_t *)&mac_pib.mac_CoordExtendedAddress, 0,
 	        sizeof(mac_pib.mac_CoordExtendedAddress));
-	//mac_pib.mac_CoordExtendedAddress = (uint64_t)CLEAR_ADDR_64;	//@mathi-long
+	//mac_pib.mac_CoordExtendedAddress = (uint64_t)CLEAR_ADDR_64;
 	mac_pib.mac_CoordShortAddress = macCoordShortAddress_def;
 	mac_pib.mac_DSN = (uint8_t)rand();
 	mac_pib.mac_RxOnWhenIdle = macRxOnWhenIdle_def;

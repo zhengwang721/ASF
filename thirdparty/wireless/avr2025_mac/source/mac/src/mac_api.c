@@ -391,7 +391,7 @@ bool wpan_mlme_associate_resp(uint64_t DeviceAddress,
 
 	/* Get the buffer body from buffer header */
 	mlme_associate_resp = (mlme_associate_resp_t *)BMM_BUFFER_POINTER(
-			buffer_header);//@mathi-a
+			buffer_header);
 
 	/* Construct mlme_associate_resp_t message */
 	mlme_associate_resp->cmdcode = MLME_ASSOCIATE_RESPONSE;

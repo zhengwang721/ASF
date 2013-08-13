@@ -85,7 +85,7 @@
  *
  * @param m Pointer to message structure
  */
-#ifdef __ALIGNED_ACCESS__		  //@mathi-align
+#ifdef __ALIGNED_ACCESS__		  
  void mcps_data_ind(uint32_t *m)
 #else
  void mcps_data_ind(uint8_t *m)

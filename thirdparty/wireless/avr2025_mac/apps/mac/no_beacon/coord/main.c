@@ -354,7 +354,7 @@ void usr_mcps_data_conf(uint8_t msduHandle,
  */
 
 #ifdef SIO_HUB
-const char rxd_frame_cnt[] = "Frame received: %lu, data: %u\r\n"; //@Mathi
+const char rxd_frame_cnt[] = "Frame received: %lu, data: %u\r\n";
 #endif
 void usr_mcps_data_ind(wpan_addr_spec_t *SrcAddrSpec,
 		wpan_addr_spec_t *DstAddrSpec,
@@ -388,7 +388,7 @@ void usr_mcps_data_ind(wpan_addr_spec_t *SrcAddrSpec,
 			NULL);
 #ifdef SIO_HUB
 	/* sprintf(sio_array, "Frame received: %" PRIu32 ",data: %" PRIu8 "\r\n",rx_cnt, *msdu); */
-	printf(rxd_frame_cnt, rx_cnt, *msdu); //@Mathi
+	printf(rxd_frame_cnt, rx_cnt, *msdu);
 #endif
 	/* Keep compiler happy. */
 	SrcAddrSpec = SrcAddrSpec;
@@ -910,7 +910,7 @@ static bool assign_new_short_addr(uint64_t addr64, uint16_t *addr16)
 #ifdef SIO_HUB
 /*			sprintf(sio_array, "Device %" PRIu8 " associated\r\n",
 					i + 1);
-			printf(sio_array); */ //@mathi
+			printf(sio_array); */ 
 			printf(display_associated_device, (i + 1));
 #endif
 			return true;

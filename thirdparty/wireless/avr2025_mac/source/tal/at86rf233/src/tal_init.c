@@ -229,7 +229,7 @@ retval_t tal_init(void)
 		uint8_t *ptr_pib = (uint8_t *)&tal_pib.IeeeAddress;
 
 		for (uint8_t i = 0; i < 8; i++) {
-			*ptr_pib++ = rand(); //@mathi
+			*ptr_pib++ = rand();
 
 			/*
 			 * Note:
@@ -336,7 +336,7 @@ static retval_t trx_init(void)
 		/* Wait a short time interval. */
 		pal_timer_delay(TRX_POLL_WAIT_TIME_US);
 
-		trx_status = /*(tal_trx_status_t)*/pal_trx_bit_read(SR_TRX_STATUS);//@mathi-w
+		trx_status = /*(tal_trx_status_t)*/pal_trx_bit_read(SR_TRX_STATUS);
 
 		/* Wait not more than max. value of TR15. */
 		if (poll_counter == P_ON_TO_TRX_OFF_ATTEMPTS) {
@@ -519,7 +519,7 @@ static retval_t trx_reset(void)
 		/* Wait a short time interval. */
 		pal_timer_delay(TRX_POLL_WAIT_TIME_US);
 
-		trx_status = /*(tal_trx_status_t)*/pal_trx_bit_read(SR_TRX_STATUS);//@mathi-w
+		trx_status = /*(tal_trx_status_t)*/pal_trx_bit_read(SR_TRX_STATUS);
 
 		/* Wait not more than max. value of TR2. */
 		if (poll_counter == SLEEP_TO_TRX_OFF_ATTEMPTS) {

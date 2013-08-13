@@ -437,7 +437,7 @@ void mac_process_disassociate_notification(buffer_t *msg)
 	 */
 	memset((uint8_t *)&mac_pib.mac_CoordExtendedAddress, 0,
 	        sizeof(mac_pib.mac_CoordExtendedAddress));	
-	//mac_pib.mac_CoordExtendedAddress = (uint64_t)CLEAR_ADDR_64;	 //@mathi-long
+	//mac_pib.mac_CoordExtendedAddress = (uint64_t)CLEAR_ADDR_64;
 
 	/* The default short address is 0xFFFF. */
 	mac_pib.mac_CoordShortAddress = INVALID_SHORT_ADDRESS;
@@ -563,7 +563,7 @@ void mac_prep_disassoc_conf(buffer_t *buf,
 						status,
 						FCF_SHORT_ADDR,
 						tal_pib.PANId,
-						(address_field_t *)&tal_pib.ShortAddress);//@mathi
+						(address_field_t *)&tal_pib.ShortAddress);
 			}
 		} else {
 			/*

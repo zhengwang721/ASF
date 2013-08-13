@@ -141,7 +141,7 @@ void mlme_associate_request(uint8_t *m)
 	 * reused
 	 * while sending MLME association confirmation to the NHLE.
 	 */
-	mac_conf_buf_ptr = m; //@mathi-w
+	mac_conf_buf_ptr = m;
 
 #ifndef REDUCED_PARAM_CHECK
 	if ((FCF_SHORT_ADDR != mar.CoordAddrMode) &&
@@ -359,7 +359,7 @@ void mac_process_associate_request(buffer_t *assoc_req)
 {
 	/* Use the frame reception buffer for association indication. */
 	mlme_associate_ind_t *mai = (mlme_associate_ind_t *)BMM_BUFFER_POINTER(
-			assoc_req);//@mathi-a
+			assoc_req);
 
 	/*
 	 * If the coordinator has macAssociationPermit set to false, and
@@ -592,7 +592,7 @@ void mac_process_associate_response(buffer_t *assoc_resp)
 		mac_pib.mac_CoordShortAddress = macCoordShortAddress_def;
 		memset((uint8_t *)&mac_pib.mac_CoordExtendedAddress, 0, 
 		        sizeof(mac_pib.mac_CoordExtendedAddress));
-		//mac_pib.mac_CoordExtendedAddress = CLEAR_ADDR_64;	//@mathi-long
+		//mac_pib.mac_CoordExtendedAddress = CLEAR_ADDR_64;
 
 		short_addr = INVALID_SHORT_ADDRESS;
 	}
@@ -719,7 +719,7 @@ void mac_t_assocresponsetime_cb(void *callback_parameter)
 	mac_pib.mac_CoordShortAddress = macCoordShortAddress_def;
 	memset((uint8_t *)&mac_pib.mac_CoordExtendedAddress, 0,
 			sizeof(mac_pib.mac_CoordExtendedAddress));
-	//mac_pib.mac_CoordExtendedAddress = CLEAR_ADDR_64;	 //@mathi-long
+	//mac_pib.mac_CoordExtendedAddress = CLEAR_ADDR_64;
 
 	/* Set radio to sleep if allowed */
 	mac_sleep_trans();
