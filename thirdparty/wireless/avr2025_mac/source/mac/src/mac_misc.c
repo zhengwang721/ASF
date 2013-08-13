@@ -442,7 +442,7 @@ static void flush_queues(void)
 
 #ifdef GTS_SUPPORT
 	/* Flush MAC GTS queue */
-	qmm_queue_flush(&gts_q); //vk
+	//qmm_queue_flush(&gts_q); //vk
 #endif /* GTS_SUPPORT */
 
 #if (MAC_INDIRECT_DATA_FFD == 1)

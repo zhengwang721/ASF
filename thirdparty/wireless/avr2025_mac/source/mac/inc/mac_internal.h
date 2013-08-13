@@ -505,6 +505,10 @@ extern mac_superframe_state_t mac_superframe_state;
 extern mac_gts_state_t mac_gts_state;
 extern uint8_t *mac_gts_buf_ptr;
 extern gts_char_t requested_gts_char;
+#ifdef FFD
+extern mac_pan_gts_mgmt_t mac_pan_gts_table[];
+extern uint8_t mac_pan_gts_table_len;
+#endif /* FFD */
 #endif /* GTS_SUPPORT */
 #endif /* BEACON_SUPPORT*/
 /* === Prototypes =========================================================== */
@@ -734,6 +738,8 @@ uint8_t handle_gts_data_req(mcps_data_req_t *data_req, uint8_t *msg);
 void reset_gts_globals(void);
 void mac_t_gts_cb(void *callback_parameter);
 void init_gts_queues(void);
+void mac_tx_gts_data(queue_t *gts_data);
+uint8_t handle_gts_data_tx_end(void);
 #endif /* GTS_SUPPORT */
 
 #if (MAC_INDIRECT_DATA_FFD == 1)
