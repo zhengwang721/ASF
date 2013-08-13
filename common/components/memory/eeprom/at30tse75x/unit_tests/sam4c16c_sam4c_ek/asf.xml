@@ -15,6 +15,6 @@
 		<config name="config.compiler.armgcc.create_aux" value="no"/>
 		<config name="config.compiler.iarewarm.create_aux" value="no"/>
 		<config name="config.compiler.as5_arm.create_aux" value="no"/>
-		<device-support value="atsam4c16c_core0"/>
+		<device-support value="atsam4c16c_0"/>
 	</project>
 </asf>

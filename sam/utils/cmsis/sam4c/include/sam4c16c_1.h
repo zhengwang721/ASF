@@ -38,8 +38,8 @@
  * \asf_license_stop
  *
  */
-#ifndef _SAM4C16C_
-#define _SAM4C16C_
+#ifndef _SAM4C16C_1_
+#define _SAM4C16C_1_
 
 /** \addtogroup SAM4C16C_definitions SAM4C16C definitions
   This file defines all structures and symbols for SAM4C16C:
