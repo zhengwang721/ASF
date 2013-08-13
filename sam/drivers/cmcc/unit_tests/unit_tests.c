@@ -105,7 +105,7 @@ static void run_cache_data_hit_test(const struct test_case *test)
 #if !SAM4C
 	if (0 == cmcc_get_monitor_cnt(CMCC)) {
 #else
-        if (0 == cmcc_get_monitor_cnt(CMCC0)) { 
+	if (0 == cmcc_get_monitor_cnt(CMCC0)) { 
 #endif 
 		flag = false;
 	} else {
@@ -135,7 +135,7 @@ int main(void)
 	cmcc_init(CMCC, &g_cmcc_cfg);
 	cmcc_enable(CMCC);
 #else
-        cmcc_init(CMCC0, &g_cmcc_cfg);
+	cmcc_init(CMCC0, &g_cmcc_cfg);
 	cmcc_enable(CMCC0);
 #endif
 	/* Define all the test cases. */
