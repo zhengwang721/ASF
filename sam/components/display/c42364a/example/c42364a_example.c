@@ -3,7 +3,7 @@
  *
  * \brief C42364A LCD Glass component example for SAM.
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -52,7 +52,8 @@
  * 32 KHz oscillator crystal.
  *
  * \section files Main Files
- * - c42364a.c: C42364A LCD Glass component driver;
+ * - c42364a_lcdca.c: C42364A LCD Glass component driver using LCDCA;
+ * - c42364a_slcdc.c: C42364A LCD Glass component driver using SLCDC;
  * - c42364a.h: C42364A LCD Glass component driver header file;
  * - c42364a_example.c: C42364A LCD Glass component example application.
  *
@@ -61,14 +62,10 @@
  * for Atmel. Other compilers may or may not work.
  *
  * \section deviceinfo Device Information
- * All SAM devices with an LCDCA connected to C42364A LCD Glass component
+ * All SAM devices with an LCDCA or SLCDC connected to C42364A LCD Glass component
  * and a USART module can be used.
  *
  * \section configinfo Configuration Information
- * This example has been tested with the following configuration:
- * - SAM4L_EK evaluation kit;
- * - CPU clock: 12 MHz;
- * - USART2 (on SAM4L_EK) abstracted with a USB CDC connection to a PC;
  * - PC terminal settings:
  *   - 115200 bps,
  *   - 8 data bits,
