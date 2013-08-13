@@ -211,9 +211,9 @@ retval_t tal_init(void)
 	 * generated again, we must repeat this.
 	 */
 	uint64_t invalid_ieee_address;
-	memset((uint8_t *)&invalid_ieee_address, 0xFF, 8);
+	memset((uint8_t *)&invalid_ieee_address, 0xFF, sizeof(invalid_ieee_address));
 	while ((tal_pib.IeeeAddress == 0x0000000000000000) ||
-			(tal_pib.IeeeAddress == invalid_ieee_address)) {
+	(tal_pib.IeeeAddress == invalid_ieee_address)){
 		/*
 		 * In case no valid IEEE address is available, a random
 		 * IEEE address will be generated to be able to run the
@@ -464,9 +464,9 @@ void trx_config(void)
 #endif  /* ANTENNA_DIVERSITY */
 #if (DISABLE_TSTAMP_IRQ == 0)
 #if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP)
-	/* Enable Rx time stamping */
+	/* Enable Rx timestamping */
 	pal_trx_bit_write(SR_IRQ_2_EXT_EN, RX_TIMESTAMPING_ENABLE);
-	/* Enable Tx time stamping */
+	/* Enable Tx timestamping */
 	pal_trx_bit_write(SR_ARET_TX_TS_EN, TX_ARET_TIMESTAMPING_ENABLE);
 #endif  /* #if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP) */
 #endif

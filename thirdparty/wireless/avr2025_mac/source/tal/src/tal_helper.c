@@ -257,7 +257,6 @@ retval_t tal_set_frequency(float frequency)
 {
 	float epsilon = 0.000000001;
 	double dummy = 0.0;
-	
 	uint8_t cc_number = 0;
 	uint8_t cc_band = 0;
 	tal_trx_status_t previous_trx_status = TRX_OFF;

@@ -179,7 +179,6 @@ void mlme_associate_request(uint8_t *m)
 
 #if (_DEBUG_ > 0)
 	Assert(MAC_SUCCESS == set_status);
-	set_status = set_status; //Keep Compiler Happy
 #endif
 
 	mac_trx_wakeup();
@@ -360,7 +359,7 @@ void mac_process_associate_request(buffer_t *assoc_req)
 {
 	/* Use the frame reception buffer for association indication. */
 	mlme_associate_ind_t *mai = (mlme_associate_ind_t *)BMM_BUFFER_POINTER(
-			assoc_req);
+			assoc_req);//@mathi-a
 
 	/*
 	 * If the coordinator has macAssociationPermit set to false, and
@@ -561,7 +560,6 @@ void mac_process_associate_response(buffer_t *assoc_resp)
 
 #if (_DEBUG_ > 0)
 		Assert(MAC_SUCCESS == set_status);
-		set_status = set_status;
 #endif
 		short_addr
 			= mac_parse_data.mac_payload_data.assoc_response_data.

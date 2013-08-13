@@ -252,7 +252,7 @@ typedef struct mlme_associate_req_tag {
 	address_field_t CoordAddress;
 	/** Specifies the operational capabilities of the associating device. */
 	uint8_t CapabilityInformation;
-} mlme_associate_req_t COMPILER_WORD_ALIGNED;
+} mlme_associate_req_t; //COMPILER_WORD_ALIGNED;//@mathi //Anupama
 
 /**
  * @brief This is the MLME-ASSOCIATE.indication message structure.
@@ -261,11 +261,11 @@ typedef struct mlme_associate_ind_tag {
 	/** This identifies the message as \ref MLME_ASSOCIATE_INDICATION */
 	enum msg_code cmdcode;
 	/** The address of the device requesting association. */
-	uint64_t DeviceAddress COMPILER_ALIGNED(8);
+	uint64_t DeviceAddress; //COMPILER_ALIGNED(8);//@mathi //Anupama
 	/** The operational capabilities of the device requesting association.
 	 **/
 	uint8_t CapabilityInformation;
-} mlme_associate_ind_t COMPILER_WORD_ALIGNED;//@mathi
+} mlme_associate_ind_t COMPILER_WORD_ALIGNED;//@mathi-a //Anupama
 
 /**
  * @brief This is the MLME-ASSOCIATE.response message structure.
@@ -284,7 +284,7 @@ typedef struct mlme_associate_resp_tag {
 	uint16_t AssocShortAddress;
 	/** The status of the association attempt. */
 	uint8_t status;
-} mlme_associate_resp_t COMPILER_WORD_ALIGNED;//@mathi
+} mlme_associate_resp_t COMPILER_WORD_ALIGNED;//@mathi-a //Anupama
 
 /**
  * @brief This is the MLME-ASSOCIATE.confirm message structure.
@@ -302,7 +302,7 @@ typedef struct mlme_associate_conf_tag {
 	uint16_t AssocShortAddress;
 	/** The status of the association attempt. */
 	uint8_t status;
-} mlme_associate_conf_t COMPILER_WORD_ALIGNED;//@mathi
+} mlme_associate_conf_t; //COMPILER_WORD_ALIGNED;//@mathi //Anupama
 
 /**
  * @brief This is the MLME-DISASSOCIATE.request message structure.

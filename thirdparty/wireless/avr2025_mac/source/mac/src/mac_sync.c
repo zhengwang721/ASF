@@ -367,8 +367,13 @@ void mac_sync_loss(uint8_t loss_reason)
 	 * The buffer pointer is stored into the begin of the same static
 	 *buffer.
 	 */
+#ifdef __ALIGNED_ACCESS__	
 	static uint32_t mac_sync_loss_buffer[sizeof(buffer_t) +
+	sizeof(mlme_sync_loss_ind_t)]; //@mathi
+#else
+	static uint8_t mac_sync_loss_buffer[sizeof(buffer_t) +
 	sizeof(mlme_sync_loss_ind_t)];
+#endif		
 	mlme_sync_loss_ind_t *sync_loss_ind;
 	buffer_t *msg_ptr;
 

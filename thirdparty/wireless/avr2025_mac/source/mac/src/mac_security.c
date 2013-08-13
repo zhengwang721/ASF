@@ -506,30 +506,30 @@ retval_t mac_unsecure(parse_t *mac_parse_data, uint8_t *mpdu,
  *
  * @return Status of generation of Auxiliary Security Header fields
  */
-static inline retval_t parse_aux_sec_header(parse_t *mac_parse_data,
+static inline retval_t parse_aux_sec_header(parse_t *mac_parse_data_instance,
 		uint8_t *mac_payload)
 {
-	memcpy(&mac_parse_data->sec_ctrl, &mac_payload[0], 1);
-	memcpy(&mac_parse_data->frame_cnt, &mac_payload[1], 4);
-	mac_parse_data->key_id_len = get_key_id_field_len(
-			mac_parse_data->sec_ctrl.key_id_mode);
+	memcpy(&mac_parse_data_instance->sec_ctrl, &mac_payload[0], 1);
+	memcpy(&mac_parse_data_instance->frame_cnt, &mac_payload[1], 4);
+	mac_parse_data_instance->key_id_len = get_key_id_field_len(
+			mac_parse_data_instance->sec_ctrl.key_id_mode);
 
-	if (mac_parse_data->sec_ctrl.key_id_mode != 0) {
-		if (mac_parse_data->key_id_len > 1) {
+	if (mac_parse_data_instance->sec_ctrl.key_id_mode != 0) {
+		if (mac_parse_data_instance->key_id_len > 1) {
 			/* Key Id Len must not be larger than 1 for ZIP.
 			 * @Todo: Handle other modes */
 			return MAC_UNSUPPORTED_SECURITY;
 		}
 
-		mac_parse_data->key_id[0] = mac_payload[5]; /* =
+		mac_parse_data_instance->key_id[0] = mac_payload[5]; /* =
 		                                             * mac_parse_data->key_id_len
 		                                             * + 4;    // 4 =
 		                                             * frame counter len */
 	}
 
 	/* See 802.15.4-2006 section 7.5.8.2.3 b) */
-	if ((mac_parse_data->fcf & FCF_SECURITY_ENABLED) &&
-			(!(mac_parse_data->fcf & FCF_FRAME_VERSION_2006))
+	if ((mac_parse_data_instance->fcf & FCF_SECURITY_ENABLED) &&
+			(!(mac_parse_data_instance->fcf & FCF_FRAME_VERSION_2006))
 			) {
 		return MAC_UNSUPPORTED_LEGACY;
 	}
@@ -547,7 +547,7 @@ static inline retval_t parse_aux_sec_header(parse_t *mac_parse_data,
  *
  * @return retval_t MAC_SUCCESS, MAC_UNSUPPORTED_SECURITY or MAC_SECURITY_ERROR
  */
-static inline retval_t unsecure_frame(parse_t *mac_parse_data, uint8_t *mpdu,
+static inline retval_t unsecure_frame(parse_t *mac_parse_data_instance, uint8_t *mpdu,
 		uint8_t *mac_payload,
 		uint8_t *payload_index)
 {
@@ -558,7 +558,7 @@ static inline retval_t unsecure_frame(parse_t *mac_parse_data, uint8_t *mpdu,
 	/* Incoming key retrieval */
 	uint8_t *key;
 
-	retval_t status = incoming_sec_material_retrieval(mac_parse_data, &key,
+	retval_t status = incoming_sec_material_retrieval(mac_parse_data_instance, &key,
 			&src_ieee_addr);
 	if (status != MAC_SUCCESS) {
 		return status;
@@ -575,23 +575,23 @@ static inline retval_t unsecure_frame(parse_t *mac_parse_data, uint8_t *mpdu,
 	/* Standard way of extracting Src IEEE address. */
 	addr_ptr = src_ieee_addr;
 
-	uint8_t m = get_mic_length(mac_parse_data->sec_ctrl.sec_level);
+	uint8_t m = get_mic_length(mac_parse_data_instance->sec_ctrl.sec_level);
 
-	create_nonce(addr_ptr, (uint8_t *)&mac_parse_data->frame_cnt,
-			mac_parse_data->sec_ctrl.sec_level, nonce);
+	create_nonce(addr_ptr, (uint8_t *)&mac_parse_data_instance->frame_cnt,
+			mac_parse_data_instance->sec_ctrl.sec_level, nonce);
 
-	switch (mac_parse_data->frame_type) {
+	switch (mac_parse_data_instance->frame_type) {
 	case FCF_FRAMETYPE_DATA:                  /* (0x01) */
 	{
 		/* Shall the real key be used or rather a test key? */
 		current_key = key;
 
-		uint8_t sec_hdr_len = 5 + mac_parse_data->key_id_len; /* 5 = sec
+		uint8_t sec_hdr_len = 5 + mac_parse_data_instance->key_id_len; /* 5 = sec
 			                                               * ctrl +
 			                                               * frame
 			                                               * counter */
 		uint8_t mhr_len = mac_payload - mpdu + sec_hdr_len;
-		uint8_t encryp_payload_len = mac_parse_data->mpdu_length -
+		uint8_t encryp_payload_len = mac_parse_data_instance->mpdu_length -
 				mhr_len - m - 2;                                         /*
 			                                                                  * 2
 			                                                                  * =
@@ -604,14 +604,14 @@ static inline retval_t unsecure_frame(parse_t *mac_parse_data, uint8_t *mpdu,
 				mhr_len, /* plaintext header length */
 				encryp_payload_len, /* Length of payload to be
 			                             *encrypted */
-				mac_parse_data->sec_ctrl.sec_level, /* security
+				mac_parse_data_instance->sec_ctrl.sec_level, /* security
 			                                             *level */
 				AES_DIR_DECRYPT)
 				== STB_CCM_OK) {
 			/* Adjust payload by secured payload */
 			*payload_index = sec_hdr_len;
 			/* Substract the MIC length from the payload length. */
-			mac_parse_data->mac_payload_length = encryp_payload_len;
+			mac_parse_data_instance->mac_payload_length = encryp_payload_len;
 			return MAC_SUCCESS;
 		} else {
 			return MAC_SECURITY_ERROR;
@@ -625,7 +625,7 @@ static inline retval_t unsecure_frame(parse_t *mac_parse_data, uint8_t *mpdu,
 	}
 }
 
-static inline retval_t incoming_sec_material_retrieval(parse_t *mac_parse_data,
+static inline retval_t incoming_sec_material_retrieval(parse_t *mac_parse_data_instance,
 		uint8_t **key,
 		uint8_t **addr)
 {
@@ -634,26 +634,26 @@ static inline retval_t incoming_sec_material_retrieval(parse_t *mac_parse_data,
 	uint8_t lookup_data_size;
 	uint8_t lookup_data[9];
 
-	if (mac_parse_data->sec_ctrl.key_id_mode == 0x00) { /* implicit */
-		switch (mac_parse_data->src_addr_mode) {
+	if (mac_parse_data_instance->sec_ctrl.key_id_mode == 0x00) { /* implicit */
+		switch (mac_parse_data_instance->src_addr_mode) {
 		/* 1) is not applicabled for ZIP */
 		/* 2) is not applicabled for ZIP */
 
 		case FCF_SHORT_ADDR:
 			/* PAN Id: TAL handles PAN ID compression issue */
-			lookup_data[1] = (uint8_t)mac_parse_data->src_panid; /*
+			lookup_data[1] = (uint8_t)mac_parse_data_instance->src_panid; /*
 			                                                      * LSB */
 			lookup_data[0]
-				= (uint8_t)(mac_parse_data->src_panid >>
+				= (uint8_t)(mac_parse_data_instance->src_panid >>
 					8);                                 /*
 			                                                     * MSB */
 			/* 2-octet dest addr right-concatenated */
 			lookup_data[3]
-				= (uint8_t)mac_parse_data->src_addr.
+				= (uint8_t)mac_parse_data_instance->src_addr.
 					short_address;                            /*
 			                                                           * LSB */
 			lookup_data[2]
-				= (uint8_t)(mac_parse_data->src_addr.
+				= (uint8_t)(mac_parse_data_instance->src_addr.
 					short_address
 					>> 8);                                           /*
 			                                                                  * MSB */
@@ -665,7 +665,7 @@ static inline retval_t incoming_sec_material_retrieval(parse_t *mac_parse_data,
 		case FCF_LONG_ADDR:
 			/* lookup_data: 8-octet dest addr right-concatenated */
 			memcpy(&lookup_data[0],
-					&mac_parse_data->src_addr.long_address,
+					&mac_parse_data_instance->src_addr.long_address,
 					8);
 			lookup_data[8] = 0x00; /* single octet 0x00 */
 			lookup_data_size = 1; /* key lookup size = 9 -> key
@@ -675,14 +675,14 @@ static inline retval_t incoming_sec_material_retrieval(parse_t *mac_parse_data,
 		default:
 			return MAC_UNSUPPORTED_SECURITY;
 		}
-	} else if (mac_parse_data->sec_ctrl.key_id_mode == 0x01) {
+	} else if (mac_parse_data_instance->sec_ctrl.key_id_mode == 0x01) {
 		/* lookup_data: 8-octet of macDefaultKeySource
 		 * right-concatenated */
 		/* single octet: Key Index parameter */
 		for (uint8_t i = 0; i < 8; i++) {
 			lookup_data[i] = mac_sec_pib.DefaultKeySource[i];
 		}
-		lookup_data[8] = mac_parse_data->key_id[0];
+		lookup_data[8] = mac_parse_data_instance->key_id[0];
 		lookup_data_size = 1; /* key lookup size = 9 -> key lookup data
 		                       * size = 1 */
 	} else {

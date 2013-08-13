@@ -132,15 +132,15 @@ static void reset_globals(void)
 	mac_bc_data_indicated = false;
 #endif  /* BEACON_SUPPORT */
 	mac_last_dsn = 0;
-	// Set MAC Last Src Address as 0xFFFFFFFFFFFFFFFF
-	memset((uint8_t *)&mac_last_src_addr, 0xFF, 8); //@mathi-l
+	memset((uint8_t *)&mac_last_src_addr, 0xFF, sizeof(mac_last_src_addr));
+	//mac_last_src_addr = 0xFFFFFFFFFFFFFFFFULL;  //@mathi-long
 	mac_rx_enabled = false;
 }
 
 /**
  * @brief Initializes the MAC sublayer
  *
- * @return MAC_SUCCESS  if TAL is initialized successfully else FAILURE
+ * @return MAC_SUCCESS  if TAL is intialized successfully else FAILURE
  */
 retval_t mac_init(void)
 {

@@ -239,7 +239,7 @@ queue_t indirect_data_q;
 
 extern volatile bool timer_trigger;
 
-mac_pib_t mac_pib;
+volatile mac_pib_t mac_pib;
 
 /* === Prototypes =========================================================== */
 

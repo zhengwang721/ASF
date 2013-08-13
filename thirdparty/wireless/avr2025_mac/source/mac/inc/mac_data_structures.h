@@ -88,7 +88,7 @@ typedef struct mac_data_payload_tag {
  */
 typedef struct mac_assoc_req_tag {
 	uint8_t capability_info;
-} mac_assoc_req_t COMPILER_WORD_ALIGNED;//@mathi
+} mac_assoc_req_t  COMPILER_WORD_ALIGNED;//@mathi
 
 /**
  * Association Response type
@@ -103,7 +103,7 @@ typedef struct mac_assoc_response_tag {
  */
 typedef struct mac_disassoc_req_tag {
 	uint8_t disassoc_reason;
-} mac_disassoc_req_t COMPILER_WORD_ALIGNED;//@mathi
+} mac_disassoc_req_t  COMPILER_WORD_ALIGNED;//@mathi
 
 /**
  * Coordinator Realignment type
@@ -126,7 +126,7 @@ typedef union {
 	mac_assoc_response_t assoc_response_data;
 	mac_disassoc_req_t disassoc_req_data;
 	mac_coord_realign_t coord_realign_data;
-} frame_payload_t COMPILER_WORD_ALIGNED;//@mathi
+} frame_payload_t  COMPILER_WORD_ALIGNED;//@mathi
 
 /**
  * Structure containing auxiliary security header information
@@ -166,7 +166,7 @@ typedef struct parse_tag {
 #endif  /* #if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP) */
 	uint8_t mac_payload_length; /* Length of the MAC payload without FCS */
 	frame_payload_t mac_payload_data;
-} parse_t COMPILER_WORD_ALIGNED;//@mathi
+} parse_t;  //COMPILER_WORD_ALIGNED;//@mathi//Anupama
 /* ! @} */
 /* === Externals ============================================================ */
 
