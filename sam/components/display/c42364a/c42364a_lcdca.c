@@ -3,7 +3,7 @@
  *
  * \brief Management of C42364A LCD Glass component.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,6 +43,7 @@
 
 #include "compiler.h"
 #include "c42364a.h"
+#include "conf_c42364a_lcdca.h"
 #include "lcdca.h"
 
 void c42364a_init(void)
@@ -67,6 +68,18 @@ void c42364a_init(void)
 	lcdca_enable_timer(LCDCA_TIMER_FC2);
 }
 
+void c42364a_write_alphanum_packet(const uint8_t *data)
+{
+	lcdca_write_packet(LCDCA_TDG_14SEG4COM, C42364A_FIRST_14SEG_4C, data,
+			C42364A_WIDTH_14SEG_4C, LCDCA_CMCFG_DREV_LEFT);
+}
+
+void c42364a_write_num_packet(const uint8_t *data)
+{
+	lcdca_write_packet(LCDCA_TDG_7SEG4COM, C42364A_FIRST_7SEG_4C, data,
+			C42364A_WIDTH_7SEG_4C, LCDCA_CMCFG_DREV_LEFT);
+}
+
 void c42364a_show_all(void)
 {
 	lcdca_blink_disable();
@@ -83,6 +96,12 @@ void c42364a_clear_all(void)
 	lcdca_clear_display_memory();
 }
 
+void c42364a_show_text(const uint8_t *data)
+{
+	lcdca_write_packet(LCDCA_TDG_14SEG4COM, C42364A_FIRST_14SEG_4C, data,
+			C42364A_WIDTH_14SEG_4C, LCDCA_CMCFG_DREV_LEFT);
+}
+
 void c42364a_clear_text(void)
 {
 	uint8_t clear_data[7] = {0x0F, 0x0F, 0x0F, 0x0F, 0x0F, 0x0F, 0x0F};
@@ -91,15 +110,18 @@ void c42364a_clear_text(void)
 			clear_data, C42364A_WIDTH_14SEG_4C, LCDCA_CMCFG_DREV_LEFT);
 }
 
-void c42364a_clear_numeric_dec(void)
+void c42364a_show_icon(uint8_t icon_com, uint8_t icon_seg)
 {
-	uint8_t clear_data[4] = {0x0F, 0x0F, 0x0F, 0x0F};
+	if (icon_com < 2) {
+		lcdca_clear_blink_pixel(icon_com, icon_seg);
+	}
 
-	lcdca_clear_pixel(C42364A_ICON_MINUS);
-	lcdca_clear_pixel(C42364A_ICON_MINUS_SEG1);
-	lcdca_clear_pixel(C42364A_ICON_MINUS_SEG2);
-	lcdca_write_packet(LCDCA_TDG_7SEG4COM, C42364A_FIRST_7SEG_4C,
-			clear_data, C42364A_WIDTH_7SEG_4C, LCDCA_CMCFG_DREV_LEFT);
+	lcdca_set_pixel(icon_com, icon_seg);
+}
+
+void c42364a_clear_icon(uint8_t icon_com, uint8_t icon_seg)
+{
+	lcdca_clear_pixel(icon_com, icon_seg);
 }
 
 void c42364a_blink_icon_start(uint8_t icon_com, uint8_t icon_seg)
@@ -119,6 +141,11 @@ void c42364a_blink_icon_start(uint8_t icon_com, uint8_t icon_seg)
 	lcdca_set_pixel(icon_com, icon_seg);
 }
 
+void c42364a_blink_icon_stop(uint8_t icon_com, uint8_t icon_seg)
+{
+	lcdca_clear_blink_pixel(icon_com, icon_seg);
+}
+
 void c42364a_blink_screen(void)
 {
 	struct lcdca_blink_config blink_cfg;
@@ -130,6 +157,16 @@ void c42364a_blink_screen(void)
 	lcdca_blink_set_config(&blink_cfg);
 
 	lcdca_blink_enable();
+}
+
+void c42364a_blink_disable(void)
+{
+	lcdca_blink_disable();
+}
+
+void c42364a_set_contrast(int8_t contrast)
+{
+	lcdca_set_contrast(contrast);
 }
 
 void c42364a_circular_animation_start(uint8_t csr_dir,
@@ -144,6 +181,11 @@ void c42364a_circular_animation_start(uint8_t csr_dir,
 	lcdca_circular_shift_set_config(&cs_cfg);
 
 	lcdca_circular_shift_enable();
+}
+
+void c42364a_circular_animation_stop(void)
+{
+	lcdca_circular_shift_disable();
 }
 
 void c42364a_show_battery(enum c42364a_battery_value val)
@@ -192,6 +234,17 @@ void c42364a_show_numeric_dec(int32_t value)
 	c42364a_write_num_packet((uint8_t const*)&lcd_num);
 }
 
+void c42364a_clear_numeric_dec(void)
+{
+	uint8_t clear_data[4] = {0x0F, 0x0F, 0x0F, 0x0F};
+
+	lcdca_clear_pixel(C42364A_ICON_MINUS);
+	lcdca_clear_pixel(C42364A_ICON_MINUS_SEG1);
+	lcdca_clear_pixel(C42364A_ICON_MINUS_SEG2);
+	lcdca_write_packet(LCDCA_TDG_7SEG4COM, C42364A_FIRST_7SEG_4C,
+			clear_data, C42364A_WIDTH_7SEG_4C, LCDCA_CMCFG_DREV_LEFT);
+}
+
 void c42364a_text_scrolling_start(const uint8_t *data, uint32_t length)
 {
 	/* Settings of automated display */
@@ -210,3 +263,7 @@ void c42364a_text_scrolling_start(const uint8_t *data, uint32_t length)
 	lcdca_automated_char_start(data, length);
 }
 
+void c42364a_text_scrolling_stop(void)
+{
+	lcdca_automated_char_stop();
+}

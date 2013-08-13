@@ -161,6 +161,18 @@
 /* @} */
 
 /**
+ * \name LCD Backlight
+ */
+//@{
+#define LCD_BL                        PA13
+#define LCD_BL_GPIO                   PIO_PA13_IDX
+#define LCD_BL_GPIO_MASK              PIO_PA13
+
+#define LCD_BL_ACTIVE_LEVEL             IOPORT_PIN_LEVEL_LOW
+#define LCD_BL_INACTIVE_LEVEL           IOPORT_PIN_LEVEL_HIGH
+//@}
+
+/**
  * \name Push button #1 definition
  * Attributes = pull-up + debounce + interrupt on rising edge.
  * @{
