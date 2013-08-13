@@ -102,7 +102,11 @@ static uint32_t recfibo(uint32_t n)
 static void run_cache_data_hit_test(const struct test_case *test)
 {
 	recfibo(FIBONACCI_NUM);
+#if !SAM4C
 	if (0 == cmcc_get_monitor_cnt(CMCC)) {
+#else
+        if (0 == cmcc_get_monitor_cnt(CMCC0)) { 
+#endif 
 		flag = false;
 	} else {
 		flag = true;
@@ -127,9 +131,13 @@ int main(void)
 
 	/* Enable the CMCC module. */
 	cmcc_get_config_defaults(&g_cmcc_cfg);
+#if !SAM4C
 	cmcc_init(CMCC, &g_cmcc_cfg);
 	cmcc_enable(CMCC);
-
+#else
+        cmcc_init(CMCC0, &g_cmcc_cfg);
+	cmcc_enable(CMCC0);
+#endif
 	/* Define all the test cases. */
 	DEFINE_TEST_CASE(dhit_mode_test, NULL, run_cache_data_hit_test, NULL,
 			"SAM CMCC Data Hit Mode test.");

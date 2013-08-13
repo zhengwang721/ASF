@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Chip-specific sleep manager configuration
+ * \brief Unit test configuration.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -40,9 +40,18 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_SLEEPMGR_INCLUDED
-#define CONF_SLEEPMGR_INCLUDED
 
-/* Intentionally empty */
+#ifndef CONF_TEST_H
+#define CONF_TEST_H
 
-#endif /* CONF_SLEEPMGR_INCLUDED */
+/** USART Interface */
+#define CONF_TEST_USART      CONSOLE_UART
+/** Baudrate setting */
+#define CONF_TEST_BAUDRATE   115200
+/** Parity setting */
+#define CONF_TEST_PARITY     UART_MR_PAR_NO
+
+/* Last page start address. */
+#define LAST_PAGE_ADDRESS (IFLASH_ADDR + IFLASH_SIZE / 4 - IFLASH_PAGE_SIZE)
+
+#endif /* CONF_TEST_H_INCLUDED */

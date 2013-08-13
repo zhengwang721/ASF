@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Chip-specific sleep manager configuration
+ * \brief Serial USART service configuration.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,9 +40,10 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_SLEEPMGR_INCLUDED
-#define CONF_SLEEPMGR_INCLUDED
+
+#ifndef CONF_USART_SERIAL_H
+#define CONF_USART_SERIAL_H
 
 /* Intentionally empty */
 
-#endif /* CONF_SLEEPMGR_INCLUDED */
+#endif/* CONF_USART_SERIAL_H_INCLUDED */

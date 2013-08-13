@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Chip-specific sleep manager configuration
+ * \brief Board configuration.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -40,9 +40,11 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_SLEEPMGR_INCLUDED
-#define CONF_SLEEPMGR_INCLUDED
 
-/* Intentionally empty */
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#endif /* CONF_SLEEPMGR_INCLUDED */
+/** Enable Com Port. */
+#define CONF_BOARD_UART_CONSOLE
+
+#endif /* CONF_BOARD_H_INCLUDED */
