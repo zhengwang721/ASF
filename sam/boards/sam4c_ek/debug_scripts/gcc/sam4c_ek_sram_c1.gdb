@@ -15,9 +15,6 @@ monitor reset
 # Load the program
 load
 
-# Reset peripheral  (RSTC_CR)
-#set *0x400e1400 = 0xA5000004
-
 # Initializing PC and stack pointer
 mon reg sp=(0x20080000)
 mon reg pc=(0x20080004)
