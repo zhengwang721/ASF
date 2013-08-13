@@ -123,9 +123,10 @@ extern "C" {
 
 //! \name Configuration Symbols
 //@{
+
 /**
  * \def CONFIG_SYSCLK_SOURCE
- * \brief Initial/static main system clock source
+ * \brief Initial/static main system clock source for core 0
  *
  * The main system clock will be configured to use this clock during
  * initialization.
@@ -133,9 +134,10 @@ extern "C" {
 #ifndef CONFIG_SYSCLK_SOURCE
 # define CONFIG_SYSCLK_SOURCE   SYSCLK_SRC_MAINCK_4M_RC
 #endif
+
 /**
  * \def CONFIG_SYSCLK_PRES
- * \brief Initial CPU clock divider (mck)
+ * \brief Initial CPU clock divider for core 0 (mck)
  *
  * The MCK will run at
  * \f[
@@ -145,6 +147,31 @@ extern "C" {
  */
 #ifndef CONFIG_SYSCLK_PRES
 # define CONFIG_SYSCLK_PRES  SYSCLK_PRES_1
+#endif
+
+/**
+ * \def CONFIG_CPCLK_SOURCE
+ * \brief Initial/static main system clock source for core 1
+ *
+ * The main system clock will be configured to use this clock during
+ * initialization.
+ */
+#ifndef CONFIG_CPCLK_SOURCE
+# define CONFIG_CPCLK_SOURCE   CPCLK_SRC_MCK
+#endif
+
+/**
+ * \def CONFIG_CPCLK_PRES
+ * \brief Initial CPU clock divider for core 1 (mck)
+ *
+ * The MCK will run at
+ * \f[
+ *   f_{MCK} = \frac{f_{sys}}{\mathrm{CONFIG\_CPCLK\_PRES}}\,\mbox{Hz}
+ * \f]
+ * after initialization.
+ */
+#ifndef CONFIG_CPCLK_PRES
+# define CONFIG_CPCLK_PRES  1
 #endif
 
 //@}
@@ -203,7 +230,7 @@ extern "C" {
 //@{
 
 /**
- * \brief Return the current rate in Hz of the main system clock
+ * \brief Return the current rate in Hz of the main system clock (Core 0)
  *
  * \todo This function assumes that the main clock source never changes
  * once it's been set up, and that PLL always runs at the compile-time
@@ -215,7 +242,7 @@ extern "C" {
 #if (defined CONFIG_SYSCLK_DEFAULT_RETURNS_SLOW_OSC)
 extern uint32_t sysclk_initialized;
 #endif
-static inline uint32_t sysclk_get_main_hz(void)
+static inline uint32_t sysclk_get_main_hz_core0(void)
 {
 #if (defined CONFIG_SYSCLK_DEFAULT_RETURNS_SLOW_OSC)
 	if (!sysclk_initialized ) {
@@ -263,6 +290,88 @@ static inline uint32_t sysclk_get_main_hz(void)
 	}
 }
 
+#ifdef CONFIG_CPCLK_ENABLE
+/**
+ * \brief Return the current rate in Hz of the main system clock (Core 1)
+ *
+ * \todo This function assumes that the main clock source never changes
+ * once it's been set up, and that PLL always runs at the compile-time
+ * configured default rate. While this is probably the most common
+ * configuration, which we want to support as a special case for
+ * performance reasons, we will at some point need to support more
+ * dynamic setups as well.
+ */
+static inline uint32_t sysclk_get_main_hz_core1(void)
+{
+	/* Config system clock setting */
+	if (CONFIG_CPCLK_SOURCE == CPCLK_SRC_SLCK) {
+		if (SUPC->SUPC_SR & SUPC_SR_OSCSEL) {
+			return CHIP_FREQ_XTAL_32K;
+		} else {
+			return CHIP_FREQ_SLCK_RC;
+		}
+	} else if (CONFIG_CPCLK_SOURCE == CPCLK_SRC_MAINCK) {
+		if (PMC->CKGR_MOR & CKGR_MOR_MOSCSEL) {
+			return CHIP_FREQ_XTAL_8M;
+		} else {
+			uint32_t mor_moscrcf = PMC->CKGR_MOR & CKGR_MOR_MOSCRCF_Msk;
+			if (mor_moscrcf == CKGR_MOR_MOSCRCF_4_MHz) {
+				return CHIP_FREQ_MAINCK_RC_4MHZ;
+			} else if (mor_moscrcf == CKGR_MOR_MOSCRCF_8_MHz) {
+				return CHIP_FREQ_MAINCK_RC_8MHZ;
+			} else if (mor_moscrcf == CKGR_MOR_MOSCRCF_12_MHz) {
+				return CHIP_FREQ_MAINCK_RC_12MHZ;
+			} else {
+				/* unhandled_case(CONFIG_CPSCLK_SOURCE); */
+				return 0;
+			}
+		}
+#ifdef CONFIG_PLL0_SOURCE
+	} else if (CONFIG_CPCLK_SOURCE == CPCLK_SRC_PLLACK) {
+		return pll_get_default_rate(0);
+#endif
+#ifdef CONFIG_PLL1_SOURCE
+	} else if (CONFIG_CPCLK_SOURCE == CPCLK_SRC_PLLBCK) {
+		if (CONFIG_PLL1_SOURCE == PLLB_SRC_PLLA) {
+			return (PLLA_OUTPUT_HZ * CONFIG_PLL1_MUL / CONFIG_PLL1_DIV);
+		} else {
+			return pll_get_default_rate(1);
+		}
+#endif
+	} else if (CONFIG_CPCLK_SOURCE == CPCLK_SRC_MCK) {
+		return sysclk_get_main_hz_core0() /
+				((CONFIG_SYSCLK_PRES == SYSCLK_PRES_3) ? 3 :
+				(1 << (CONFIG_SYSCLK_PRES >> PMC_MCKR_PRES_Pos)));
+	}
+
+	else {
+		/* unhandled_case(CONFIG_CPSCLK_SOURCE); */
+		return 0;
+	}
+}
+#endif
+
+/**
+ * \brief Return the current rate in Hz of the main system clock
+ *
+ * \todo This function assumes that the main clock source never changes
+ * once it's been set up, and that PLL always runs at the compile-time
+ * configured default rate. While this is probably the most common
+ * configuration, which we want to support as a special case for
+ * performance reasons, we will at some point need to support more
+ * dynamic setups as well.
+ */
+static inline uint32_t sysclk_get_main_hz(void)
+{
+#if (defined __SAM4C_CORE0__)
+	return sysclk_get_main_hz_core0();
+#elif (defined __SAM4C_CORE1__) && (defined CONFIG_CPCLK_ENABLE)
+	return sysclk_get_main_hz_core1();
+#else
+#error "No specifid core 0 or core 1 for clock service."
+#endif
+}
+
 /**
  * \brief Return the current rate in Hz of the CPU clock
  *
@@ -276,11 +385,17 @@ static inline uint32_t sysclk_get_main_hz(void)
  */
 static inline uint32_t sysclk_get_cpu_hz(void)
 {
+#if (defined __SAM4C_CORE0__)
 	/* CONFIG_SYSCLK_PRES is the register value for setting the expected */
 	/* prescaler, not an immediate value. */
 	return sysclk_get_main_hz() /
 		((CONFIG_SYSCLK_PRES == SYSCLK_PRES_3) ? 3 :
 			(1 << (CONFIG_SYSCLK_PRES >> PMC_MCKR_PRES_Pos)));
+#elif (defined __SAM4C_CORE1__)
+	return sysclk_get_main_hz() / CONFIG_CPCLK_PRES;
+#else
+#error "No specifid core 0 or core 1 for clock service."
+#endif
 }
 
 /**
@@ -290,11 +405,7 @@ static inline uint32_t sysclk_get_cpu_hz(void)
  */
 static inline uint32_t sysclk_get_peripheral_hz(void)
 {
-	/* CONFIG_SYSCLK_PRES is the register value for setting the expected */
-	/* prescaler, not an immediate value. */
-	return sysclk_get_main_hz() /
-		((CONFIG_SYSCLK_PRES == SYSCLK_PRES_3) ? 3 :
-			(1 << (CONFIG_SYSCLK_PRES >> PMC_MCKR_PRES_Pos)));
+	return sysclk_get_cpu_hz();
 }
 
 /**

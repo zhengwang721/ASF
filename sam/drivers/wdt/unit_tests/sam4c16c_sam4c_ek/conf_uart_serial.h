@@ -1,6 +1,8 @@
 /**
  * \file
  *
+ * \brief Serial USART service configuration.
+ *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
@@ -38,15 +40,10 @@
  * \asf_license_stop
  *
  */
-#ifndef _SAM4C_
-#define _SAM4C_
 
-#if defined __SAM4C_CORE0__
-  #include "sam4c_0.h"
-#elif defined __SAM4C_CORE1__
-  #include "sam4c_1.h"
-#else
-  #error Library does not support the specified device.
-#endif
+#ifndef CONF_USART_SERIAL_H_INCLUDED
+#define CONF_USART_SERIAL_H_INCLUDED
 
-#endif /* _SAM4C_ */
+/* Intentionally empty */
+
+#endif/* CONF_USART_SERIAL_H_INCLUDED */

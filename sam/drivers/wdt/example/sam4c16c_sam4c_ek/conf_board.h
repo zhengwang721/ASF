@@ -1,6 +1,8 @@
 /**
  * \file
  *
+ * \brief Board configuration.
+ *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
@@ -38,15 +40,30 @@
  * \asf_license_stop
  *
  */
-#ifndef _SAM4C_
-#define _SAM4C_
 
-#if defined __SAM4C_CORE0__
-  #include "sam4c_0.h"
-#elif defined __SAM4C_CORE1__
-  #include "sam4c_1.h"
-#else
-  #error Library does not support the specified device.
-#endif
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#endif /* _SAM4C_ */
+/** Enable Com Port. */
+#define CONF_BOARD_UART_CONSOLE
+
+/** Don't change WDT mode register in init.c */
+#define CONF_BOARD_KEEP_WATCHDOG_AT_INIT
+
+/** Push button definition */
+#define PUSHBUTTON_STRING  PUSHBUTTON_1_NAME
+#define PUSHBUTTON_IRQn    PIN_PUSHBUTTON_1_IRQn
+#define PUSHBUTTON_MASK    PIN_PUSHBUTTON_1_MASK
+#define PUSHBUTTON_PIO     PIN_PUSHBUTTON_1_PIO
+#define PUSHBUTTON_ID      PIN_PUSHBUTTON_1_ID
+#define PUSHBUTTON_TYPE    PIN_PUSHBUTTON_1_TYPE
+#define PUSHBUTTON_ATTR    PIN_PUSHBUTTON_1_ATTR
+
+/** LED definition */
+#define LED_MASK           PIN_LED_0_MASK
+#define LED_PIO            PIN_LED_0_PIO
+#define LED_ID             PIN_LED_0_ID
+#define LED_TYPE           PIN_LED_0_TYPE
+#define LED_ATTR           PIN_LED_0_ATTR
+
+#endif /* CONF_BOARD_H_INCLUDED */
