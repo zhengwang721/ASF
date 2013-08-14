@@ -968,6 +968,11 @@ static void mac_t_superframe_cb(void *callback_parameter)
 /*    callback_parameter = callback_parameter;  / * Keep compiler happy. * / */
     #ifdef GTS_DEBUG
 	ioport_set_value(DEBUG_PIN2, 0);//vk
+	ioport_set_value(DEBUG_PIN4, 0);//vk
+	ioport_set_value(DEBUG_PIN5, 0);//vk
+	ioport_set_value(DEBUG_PIN6, 0);//vk
+	ioport_set_value(DEBUG_PIN7, 0);//vk
+	ioport_set_value(DEBUG_PIN8, 0);//vk
 	#endif
 	//ioport_set_value(DEBUG_PIN4, 0);//vk
 
