@@ -55,6 +55,11 @@
 /* === Includes ============================================================ */
 #include "compiler.h"
 
+#ifdef __SAMD20J18__
+ typedef uint32_t arch_data_t;
+#else
+ typedef uint8_t arch_data_t;
+#endif 
 /**
  * \ingroup group_inc
  * \defgroup group_ret Return Values

@@ -405,11 +405,8 @@ typedef struct mac_pib_tag {
 /* === Externals ============================================================ */
 
 /* Global data variables */
-#ifdef __ALIGNED_ACCESS__
- extern uint32_t *mac_conf_buf_ptr;
-#else
- extern uint8_t *mac_conf_buf_ptr;
-#endif
+extern arch_data_t *mac_conf_buf_ptr;
+
  
 #ifdef BEACON_SUPPORT
 extern uint8_t mac_final_cap_slot;
@@ -417,11 +414,7 @@ extern bool mac_bc_data_indicated;
 #endif  /* BEACON_SUPPORT */
 
 #if (MAC_SCAN_SUPPORT == 1)
-#ifdef __ALIGNED_ACCESS__
- extern uint32_t *mac_scan_cmd_buf_ptr;
-#else
- extern uint8_t *mac_scan_cmd_buf_ptr;
-#endif 
+extern arch_data_t *mac_scan_cmd_buf_ptr;
 extern uint8_t mac_scan_orig_channel;
 extern uint8_t mac_scan_orig_page;
 #if ((MAC_SCAN_ACTIVE_REQUEST_CONFIRM == 1) || \
@@ -596,11 +589,8 @@ void mac_process_orphan_notification(buffer_t *buf_ptr);
 
 #endif /* (MAC_ORPHAN_INDICATION_RESPONSE == 1) */
 
-#ifdef __ALIGNED_ACCESS__				  
- void mac_process_tal_data_ind(uint32_t *msg);
-#else
- void mac_process_tal_data_ind(uint8_t *msg);
-#endif
+void mac_process_tal_data_ind(arch_data_t *msg);
+
 
 void mac_sleep_trans(void);
 
@@ -668,11 +658,8 @@ void mac_t_tracking_beacons_cb(void *callback_parameter);
 
 #endif /* (MAC_SYNC_REQUEST == 1) */
 
-#ifdef __ALIGNED_ACCESS__
- void dispatch_event(uint32_t *event);
-#else
- void dispatch_event(uint8_t *event);
-#endif
+void dispatch_event(arch_data_t *event);
+
 
 retval_t set_tal_pib_internal(uint8_t attribute, pib_value_t *attribute_value);
 

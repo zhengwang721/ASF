@@ -114,11 +114,7 @@ void mac_process_orphan_notification(buffer_t *msg)
  *
  * @param m Pointer to the message.
  */
-#ifdef __ALIGNED_ACCESS__
- void mlme_orphan_response(uint32_t *m)
-#else
- void mlme_orphan_response(uint8_t *m)
-#endif
+void mlme_orphan_response(arch_data_t *m)
 {
 	bool transmission_status = mac_tx_coord_realignment_command(
 			ORPHANREALIGNMENT,

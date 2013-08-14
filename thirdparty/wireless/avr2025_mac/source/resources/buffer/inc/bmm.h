@@ -90,13 +90,8 @@ typedef struct
 		buffer_tag
 #endif
 {
-#ifdef __ALIGNED_ACCESS__
 	/** Pointer to the buffer body */
-	uint32_t *body;
-#else
-	/** Pointer to the buffer body */
-	uint8_t *body;
-#endif
+	arch_data_t *body;
 	
 	/** Pointer to next free buffer */
 	struct buffer_tag *next;

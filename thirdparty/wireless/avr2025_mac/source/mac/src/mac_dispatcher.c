@@ -259,11 +259,7 @@ static FLASH_DECLARE(handler_t dispatch_table[LAST_MESSAGE + 1]) = {
  * @param event Pointer to the buffer header whose body part holds the message
  * type and message elemnets
  */
-#ifdef __ALIGNED_ACCESS__
- void dispatch_event(uint32_t *event)
-#else
- void dispatch_event(uint8_t *event)
-#endif
+void dispatch_event(arch_data_t *event)
 {
 	/*
 	 * A pointer to the body of the buffer is obtained from the pointer to

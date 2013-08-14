@@ -125,12 +125,7 @@ void mac_gen_mlme_associate_conf(buffer_t *buf_ptr,
  *
  * @param m Pointer to MLME association request parameters
  */
-#ifdef __ALIGNED_ACCESS__
-void mlme_associate_request(uint32_t *m)
-#else
-void mlme_associate_request(uint8_t *m)
-#endif
-
+void mlme_associate_request(arch_data_t *m)
 {
 	mlme_associate_req_t mar;
 	memcpy(&mar, BMM_BUFFER_POINTER((buffer_t *)m),
@@ -396,11 +391,7 @@ void mac_process_associate_request(buffer_t *assoc_req)
  *
  * @param m Pointer to association response parameters
  */
-#ifdef __ALIGNED_ACCESS__
- void mlme_associate_response(uint32_t *m)
-#else
- void mlme_associate_response(uint8_t *m)
-#endif 
+void mlme_associate_response(arch_data_t *m)
 {
 	uint8_t frame_len;
 	uint8_t *frame_ptr;

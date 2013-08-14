@@ -161,11 +161,8 @@ mac_sec_pib_t mac_sec_pib;
  * Holds the mlme request buffer pointer, used to give the respective
  * confirmation in scan, poll and association.
  */
-#ifdef __ALIGNED_ACCESS__
- uint32_t *mac_conf_buf_ptr COMPILER_WORD_ALIGNED;
-#else
- uint8_t *mac_conf_buf_ptr;
-#endif  
+arch_data_t *mac_conf_buf_ptr COMPILER_WORD_ALIGNED;
+ 
 
 #if (MAC_SCAN_SUPPORT == 1)
 
@@ -192,11 +189,7 @@ uint16_t mac_scan_orig_panid COMPILER_WORD_ALIGNED;
 /**
  * Holds the buffer pointer which is used to send scan command.
  */
-#ifdef __ALIGNED_ACCESS__
- uint32_t *mac_scan_cmd_buf_ptr;
-#else
- uint8_t *mac_scan_cmd_buf_ptr; 
-#endif
+arch_data_t *mac_scan_cmd_buf_ptr;
 #endif /* (MAC_SCAN_SUPPORT == 1) */
 
 /**
@@ -256,23 +249,13 @@ volatile mac_pib_t mac_pib;
  */
 bool mac_task(void)
 {
-#ifdef __ALIGNED_ACCESS__
-	uint32_t *event = NULL;
-#else
-    uint32_t *event = NULL;
-#endif		
+	arch_data_t *event = NULL;		
 	bool processed_event = false;
 
 	if (!mac_busy) {
 		/* Check whether queue is empty */
 		if (nhle_mac_q.size != 0) {
-			
-#ifdef __ALIGNED_ACCESS__
-           event = (uint32_t *)qmm_queue_remove(&nhle_mac_q, NULL);
-#else
-           event = (uint8_t *)qmm_queue_remove(&nhle_mac_q, NULL);
-#endif			
-			
+           event = (arch_data_t *)qmm_queue_remove(&nhle_mac_q, NULL);
 
 			/* If an event has been detected, handle it. */
 			if (NULL != event) {
@@ -290,11 +273,8 @@ bool mac_task(void)
 	/* Check whether queue is empty */
 	if (tal_mac_q.size != 0) {
 		
-#ifdef __ALIGNED_ACCESS__
-	   event = (uint32_t *)qmm_queue_remove(&tal_mac_q, NULL);
-#else
-	   event = (uint8_t *)qmm_queue_remove(&tal_mac_q, NULL);
-#endif	
+event = (arch_data_t *)qmm_queue_remove(&tal_mac_q, NULL);
+	
 
 		/* If an event has been detected, handle it. */
 		if (NULL != event) {

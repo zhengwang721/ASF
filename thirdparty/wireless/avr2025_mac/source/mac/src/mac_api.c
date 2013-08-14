@@ -129,12 +129,7 @@ retval_t wpan_init(void)
 bool wpan_task(void)
 {
 	bool event_processed; 	
-#ifdef __ALIGNED_ACCESS__
-	 uint32_t *event = NULL;
-#else
-	 uint8_t *event = NULL;
-#endif	
-	
+	arch_data_t *event = NULL;
 
 	/* mac_task returns true if a request was processed completely */
 	event_processed = mac_task();
@@ -143,12 +138,7 @@ bool wpan_task(void)
 	 * MAC to NHLE event queue should be dispatched
 	 * irrespective of the dispatcher state.
 	 */
-#ifdef __ALIGNED_ACCESS__
-	event = (uint32_t *)qmm_queue_remove(&mac_nhle_q, NULL);
-#else
-	event = (uint8_t *)qmm_queue_remove(&mac_nhle_q, NULL);
-#endif	
-	
+	event = (arch_data_t *)qmm_queue_remove(&mac_nhle_q, NULL);
 
 	/* If an event has been detected, handle it. */
 	if (NULL != event) {

@@ -149,11 +149,7 @@ static void mac_gen_mlme_disassociate_conf(buffer_t *buf,
  *
  * @param m Pointer to the MLME-DISASSOCIATION.Request message passed by NHLE
  */
-#ifdef __ALIGNED_ACCESS__
- void mlme_disassociate_request(uint32_t *m)
-#else
- void mlme_disassociate_request(uint8_t *m)
-#endif 
+void mlme_disassociate_request(arch_data_t *m)
 {
 	mlme_disassociate_req_t disassoc_req;
 

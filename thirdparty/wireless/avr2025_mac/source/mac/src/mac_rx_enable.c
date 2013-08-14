@@ -90,11 +90,7 @@ static void mac_t_rx_on_cb(void *req_buffer);
 static uint8_t mac_rx_enable(void);
 static void gen_rx_enable_conf(buffer_t *buf, uint8_t status);
 
-#ifdef __ALIGNED_ACCESS__
- static void handle_rx_on(uint32_t rx_on_duration_symbols, uint32_t *m);
-#else
- static void handle_rx_on(uint32_t rx_on_duration_symbols, uint8_t *m);
-#endif
+static void handle_rx_on(uint32_t rx_on_duration_symbols, arch_data_t *m);
 
 /* === Implementation ====================================================== */
 
@@ -110,11 +106,7 @@ static void gen_rx_enable_conf(buffer_t *buf, uint8_t status);
  *
  * @param m Pointer to the MLME-RX-ENABLE.request message
  */
-#ifdef __ALIGNED_ACCESS__
- void mlme_rx_enable_request(uint32_t *m)
-#else
- void mlme_rx_enable_request(uint8_t *m)
-#endif
+void mlme_rx_enable_request(arch_data_t *m)
 {
 	mlme_rx_enable_req_t *rxe COMPILER_WORD_ALIGNED;
 
@@ -393,11 +385,7 @@ static void mac_t_rx_off_cb(void *callback_parameter)
  * @param rx_on_duration_symbols Duration in symbols that the reciever is
  *                               switched on.
  */
-#ifdef __ALIGNED_ACCESS__
- static void handle_rx_on(uint32_t rx_on_duration_symbols, uint32_t *m)
-#else
- static void handle_rx_on(uint32_t rx_on_duration_symbols, uint8_t *m)
-#endif 
+static void handle_rx_on(uint32_t rx_on_duration_symbols, arch_data_t *m)
 {
 	retval_t timer_status;
 	uint8_t rx_enable_status = mac_rx_enable();

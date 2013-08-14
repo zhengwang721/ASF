@@ -112,11 +112,7 @@ static void gen_mlme_poll_conf(buffer_t *buf_ptr, uint8_t status)
  *
  * @param m Pointer to the message
  */
-#ifdef __ALIGNED_ACCESS__
- void mlme_poll_request(uint32_t *m)
-#else
- void mlme_poll_request(uint8_t *m)
-#endif
+void mlme_poll_request(arch_data_t *m)
 {
 	/*
 	 * Polling for data is only allowed, if the node

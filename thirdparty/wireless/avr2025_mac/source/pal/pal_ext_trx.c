@@ -507,9 +507,9 @@ void pal_trx_sram_read(uint8_t addr, uint8_t *data, uint8_t length)
 void pal_trx_aes_wrrd(uint8_t addr, uint8_t *idata, uint8_t length)
 {
     uint8_t *odata;
-#ifdef __ALIGNED_ACCESS__
+#ifdef __SAMD20J18__	
 	uint16_t odata_var = 0;
-#endif
+#endif	
     uint8_t temp;
 
 
@@ -564,7 +564,7 @@ void pal_trx_aes_wrrd(uint8_t addr, uint8_t *idata, uint8_t length)
         while(!spi_is_write_complete(&master));
         while(!spi_is_ready_to_read(&master));
 		
-#ifdef __ALIGNED_ACCESS__
+#ifdef __SAMD20J18__
        spi_read(&master, &odata_var);
 	   *odata++ = (uint8_t)odata_var;	       
 #else		
@@ -578,7 +578,7 @@ void pal_trx_aes_wrrd(uint8_t addr, uint8_t *idata, uint8_t length)
 	spi_write(&master,0);
 	while(!spi_is_write_complete(&master));
 	while(!spi_is_ready_to_read(&master));
-#ifdef __ALIGNED_ACCESS__
+#ifdef __SAMD20J18__
     spi_read(&master, &odata_var);
     *odata = (uint8_t)odata_var;	    
 #else

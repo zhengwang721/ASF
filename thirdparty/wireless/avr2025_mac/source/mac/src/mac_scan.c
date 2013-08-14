@@ -402,15 +402,10 @@ static void mac_awake_scan(buffer_t *scan_buf)
 		}
 
 		/* Allocate a large size buffer for scan confirm. */
-#ifdef __ALIGNED_ACCESS__		
 		mac_conf_buf_ptr
-			= (uint32_t *)bmm_buffer_alloc(LARGE_BUFFER_SIZE);
-#else
-        mac_conf_buf_ptr
-            = (uint8_t *)bmm_buffer_alloc(LARGE_BUFFER_SIZE);
-#endif						
+			= (arch_data_t *)bmm_buffer_alloc(LARGE_BUFFER_SIZE);
 
-		if (NULL == mac_conf_buf_ptr) {
+			if (NULL == mac_conf_buf_ptr) {
 			/*
 			 * Large buffer is not available for sending scan
 			 *confirmation,
@@ -948,11 +943,7 @@ static void mac_t_scan_duration_cb(void *callback_parameter)
  *
  * @param m The MLME_SCAN.request message
  */
-#ifdef __ALIGNED_ACCESS__
- void mlme_scan_request(uint32_t *m)
-#else
- void mlme_scan_request(uint8_t *m)
-#endif
+void mlme_scan_request(arch_data_t *m)
 {
 	mlme_scan_req_t *msr = (mlme_scan_req_t *)BMM_BUFFER_POINTER(
 			(buffer_t *)m);

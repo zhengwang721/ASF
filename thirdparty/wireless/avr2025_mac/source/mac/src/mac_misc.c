@@ -299,11 +299,7 @@ static void do_init_pib(void)
  *
  * @param m Pointer to the MLME_RESET.request given by the NHLE
  */
-#ifdef __ALIGNED_ACCESS__
- void mlme_reset_request(uint32_t *m)
-#else
- void mlme_reset_request(uint8_t *m)
-#endif
+void mlme_reset_request(arch_data_t *m)
 {
 	mlme_reset_req_t *mrr
 		= (mlme_reset_req_t *)BMM_BUFFER_POINTER((buffer_t *)m);

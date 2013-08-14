@@ -138,11 +138,7 @@ void mac_gen_mcps_data_conf(buffer_t *buf, uint8_t status, uint8_t handle)
  *
  * @param msg Pointer to the MCPS-DATA.request parameter
  */
-#ifdef __ALIGNED_ACCESS__
- void mcps_data_request(uint32_t *msg)
-#else
- void mcps_data_request(uint8_t *msg)
-#endif
+void mcps_data_request(arch_data_t *msg)
 {
 	retval_t status = FAILURE;
 	mcps_data_req_t mdr;
@@ -1114,11 +1110,7 @@ static bool mac_buffer_purge(uint8_t msdu_handle)
  *
  * @param msg Pointer to the MCPS-PURGE.request parameter
  */
-#ifdef __ALIGNED_ACCESS__
- void mcps_purge_request(uint32_t *msg)
-#else
- void mcps_purge_request(uint8_t *msg)
-#endif  
+void mcps_purge_request(arch_data_t *msg)
 {
 	mcps_purge_req_t *mpr
 		= (mcps_purge_req_t *)BMM_BUFFER_POINTER(((buffer_t *)msg));

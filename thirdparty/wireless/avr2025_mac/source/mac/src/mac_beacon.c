@@ -103,11 +103,7 @@
  * In a build without beacon suppport, in order to save the static buffer,
  * a new buffer will be allocated to transmit the beacon frame.
  */
-#ifdef __ALIGNED_ACCESS__
-static uint32_t beacon_buffer[LARGE_BUFFER_SIZE];
-#else
-static uint8_t beacon_buffer[LARGE_BUFFER_SIZE];
-#endif
+static arch_data_t beacon_buffer[LARGE_BUFFER_SIZE];
 #endif  /* BEACON_SUPPORT */
 
 #if (MAC_INDIRECT_DATA_FFD == 1)
@@ -278,11 +274,8 @@ void mac_build_and_tx_beacon(bool beacon_enabled,
 	/* Buffer header not required in BEACON build. */
 	transmit_frame->buffer_header = NULL;
 #else   /* No BEACON_SUPPORT */
-#ifdef __ALIGNED_ACCESS__
-	uint32_t *beacon_buffer = (uint32_t *)BMM_BUFFER_POINTER(beacon_buffer_header);
-#else
-	uint8_t *beacon_buffer = (uint8_t *)BMM_BUFFER_POINTER(beacon_buffer_header);
-#endif	
+
+	arch_data_t *beacon_buffer = (arch_data_t *)BMM_BUFFER_POINTER(beacon_buffer_header);
 
 	/*
 	 * The frame is given to the TAL in the 'frame_info_t' format,

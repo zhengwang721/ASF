@@ -85,11 +85,7 @@
  *
  * @param m Pointer to message structure
  */
-#ifdef __ALIGNED_ACCESS__		  
- void mcps_data_ind(uint32_t *m)
-#else
- void mcps_data_ind(uint8_t *m)
-#endif 
+void mcps_data_ind(arch_data_t *m)
 {
 	mcps_data_ind_t *pmsg;
 	wpan_addr_spec_t src_addr;
@@ -148,11 +144,7 @@
  *
  * @param m Pointer to message structure
  */
-#ifdef __ALIGNED_ACCESS__
- void mcps_data_conf(uint32_t *m)
-#else
- void mcps_data_conf(uint8_t *m)
-#endif 
+void mcps_data_conf(arch_data_t *m)
 {
 	mcps_data_conf_t *pmsg;
 
@@ -178,11 +170,7 @@
  *
  * @param m Pointer to message structure
  */
-#ifdef __ALIGNED_ACCESS__
- void mcps_purge_conf(uint32_t *m)
-#else
- void mcps_purge_conf(uint8_t *m)
-#endif
+void mcps_purge_conf(arch_data_t *m)
 {
 	mcps_purge_conf_t *pmsg;
 
@@ -207,11 +195,7 @@
  *
  * @param m Pointer to message structure
  */
-#ifdef __ALIGNED_ACCESS__
- void mlme_associate_conf(uint32_t *m)
-#else
- void mlme_associate_conf(uint8_t *m)
-#endif
+void mlme_associate_conf(arch_data_t *m)
 {
 	mlme_associate_conf_t *pmsg;
 
@@ -235,11 +219,7 @@
  *
  * @param m Pointer to message structure
  */
-#ifdef __ALIGNED_ACCESS__
- void mlme_associate_ind(uint32_t *m)
-#else
- void mlme_associate_ind(uint8_t *m)
-#endif  
+void mlme_associate_ind(arch_data_t *m)
 {
 	mlme_associate_ind_t *pmsg;
 
@@ -264,11 +244,7 @@
  *
  * @param m Pointer to message structure
  */
-#ifdef __ALIGNED_ACCESS__
- void mlme_beacon_notify_ind(uint32_t *m)
-#else
- void mlme_beacon_notify_ind(uint8_t *m)
-#endif 
+void mlme_beacon_notify_ind(arch_data_t *m)
 {
 	mlme_beacon_notify_ind_t *pmsg;
 
@@ -298,11 +274,7 @@
  *
  * @param m Pointer to message structure
  */
-#ifdef __ALIGNED_ACCESS__
- void mlme_comm_status_ind(uint32_t *m)
-#else
- void mlme_comm_status_ind(uint8_t *m)
-#endif  
+void mlme_comm_status_ind(arch_data_t *m)
 {
 	mlme_comm_status_ind_t *pmsg;
 	wpan_addr_spec_t src_addr;
@@ -341,11 +313,7 @@
  *
  * @param m Pointer to message structure
  */
-#ifdef __ALIGNED_ACCESS__
- void mlme_disassociate_conf(uint32_t *m)
-#else
- void mlme_disassociate_conf(uint8_t *m)
-#endif
+void mlme_disassociate_conf(arch_data_t *m)
 {
 	mlme_disassociate_conf_t *pmsg;
 	wpan_addr_spec_t device_addr;
@@ -377,11 +345,7 @@
  *
  * @param m Pointer to message structure
  */
-#ifdef __ALIGNED_ACCESS__
- void mlme_disassociate_ind(uint32_t *m)
-#else
- void mlme_disassociate_ind(uint8_t *m)
-#endif  
+void mlme_disassociate_ind(arch_data_t *m)
 {
 	mlme_disassociate_ind_t *pmsg;
 
@@ -406,11 +370,7 @@
  *
  * @param m Pointer to message structure
  */
-#ifdef __ALIGNED_ACCESS__
- void mlme_get_conf(uint32_t *m)
-#else 
- void mlme_get_conf(uint8_t *m)
-#endif 
+void mlme_get_conf(arch_data_t *m)
 {
 	mlme_get_conf_t *pmsg;
 
@@ -440,11 +400,7 @@
  *
  * @param m Pointer to message structure
  */
-#ifdef __ALIGNED_ACCESS__
- void mlme_orphan_ind(uint32_t *m)
-#else 
- void mlme_orphan_ind(uint8_t *m)
-#endif 
+void mlme_orphan_ind(arch_data_t *m)
 {
 	mlme_orphan_ind_t *pmsg;
 
@@ -469,11 +425,7 @@
  *
  * @param m Pointer to message structure
  */
-#ifdef __ALIGNED_ACCESS__
- void mlme_poll_conf(uint32_t *m)
-#else
- void mlme_poll_conf(uint8_t *m)
-#endif  
+void mlme_poll_conf(arch_data_t *m)
 {
 	mlme_poll_conf_t *pmsg;
 
@@ -495,11 +447,7 @@
  *
  * @param m Pointer to message structure
  */
-#ifdef __ALIGNED_ACCESS__
- void mlme_reset_conf(uint32_t *m)
-#else
- void mlme_reset_conf(uint8_t *m)
-#endif  
+void mlme_reset_conf(arch_data_t *m)
 {
 	mlme_reset_conf_t *pmsg;
 
@@ -521,11 +469,7 @@
  *
  * @param m Pointer to message structure
  */
-#ifdef __ALIGNED_ACCESS__
- void mlme_rx_enable_conf(uint32_t *m)
-#else 
- void mlme_rx_enable_conf(uint8_t *m)
-#endif 
+void mlme_rx_enable_conf(arch_data_t *m)
 {
 	mlme_rx_enable_conf_t *pmsg;
 
@@ -549,11 +493,7 @@
  *
  * @param m Pointer to message structure
  */
-#ifdef __ALIGNED_ACCESS__
- void mlme_scan_conf(uint32_t *m)
-#else 
- void mlme_scan_conf(uint8_t *m)
-#endif 
+void mlme_scan_conf(arch_data_t *m)
 {
 	mlme_scan_conf_t *pmsg;
 
@@ -581,11 +521,7 @@
  *
  * @param m Pointer to message structure
  */
-#ifdef __ALIGNED_ACCESS__
- void mlme_set_conf(uint32_t *m)
-#else 
- void mlme_set_conf(uint8_t *m)
-#endif 
+void mlme_set_conf(arch_data_t *m)
 {
 	mlme_set_conf_t *pmsg;
 
@@ -612,11 +548,7 @@
  *
  * @param m Pointer to message structure
  */
-#ifdef __ALIGNED_ACCESS__
- void mlme_start_conf(uint32_t *m)
-#else 
- void mlme_start_conf(uint8_t *m)
-#endif
+void mlme_start_conf(arch_data_t *m)
 {
 	mlme_start_conf_t *pmsg;
 
@@ -640,11 +572,7 @@
  *
  * @param m Pointer to message structure
  */
-#ifdef __ALIGNED_ACCESS__
- void mlme_sync_loss_ind(uint32_t *m)
-#else 
- void mlme_sync_loss_ind(uint8_t *m)
-#endif
+void mlme_sync_loss_ind(arch_data_t *m)
 {
 	mlme_sync_loss_ind_t *pmsg;
 
