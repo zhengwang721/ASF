@@ -276,7 +276,7 @@ uint32_t supc_get_status(Supc *p_supc)
  */
 enum slcdc_power_mode supc_get_slcd_power_mode(Supc *p_supc)
 {
-    return p_supc->SUPC_MR & SUPC_MR_LCDMODE_Msk;
+	return (enum slcdc_power_mode)(p_supc->SUPC_MR & SUPC_MR_LCDMODE_Msk);
 }
 
 /**
@@ -287,26 +287,28 @@ enum slcdc_power_mode supc_get_slcd_power_mode(Supc *p_supc)
  */
 void supc_set_slcd_power_mode(Supc *p_supc, enum slcdc_power_mode mode)
 {
-   enum slcdc_power_mode pre_mode;
-   uint32_t tmp;
+	enum slcdc_power_mode pre_mode;
+	uint32_t tmp;
 
-   pre_mode = supc_get_slcd_power_mode(p_supc);
+	pre_mode = supc_get_slcd_power_mode(p_supc);
 
-   if ((pre_mode == SLCDC_POWER_MODE_1) && (mode == SLCDC_POWER_MODE_2)) {
-         return;
-   } else if ((pre_mode == SLCDC_POWER_MODE_2) && (mode == SLCDC_POWER_MODE_1)) {
-        return;
-   }
-   tmp = p_supc->SUPC_MR;
-   tmp &= ~SUPC_MR_LCDMODE_Msk;
-   tmp |=  SUPC_MR_KEY_PASSWD | mode;
-   p_supc->SUPC_MR = tmp;
+	if ((pre_mode == SLCDC_POWER_MODE_LCDON_EXTVR) &&
+			(mode == SLCDC_POWER_MODE_LCDON_INVR)) {
+		return;
+	} else if ((pre_mode == SLCDC_POWER_MODE_LCDON_INVR) &&
+			(mode == SLCDC_POWER_MODE_LCDON_EXTVR)) {
+		return;
+	}
+	tmp = p_supc->SUPC_MR;
+	tmp &= ~SUPC_MR_LCDMODE_Msk;
+	tmp |=  SUPC_MR_KEY_PASSWD | mode;
+	p_supc->SUPC_MR = tmp;
 
-   if (mode == SUPC_MR_LCDMODE_LCDOFF) {
-        while(supc_get_status(p_supc) & SUPC_SR_LCDS_ENABLED);
-   } else {
-        while(!(supc_get_status(p_supc) & SUPC_SR_LCDS_ENABLED));
-   }
+	if (mode == SLCDC_POWER_MODE_LCDOFF) {
+		while(supc_get_status(p_supc) & SUPC_SR_LCDS_ENABLED);
+	} else {
+		while(!(supc_get_status(p_supc) & SUPC_SR_LCDS_ENABLED));
+	}
 }
 
 /**
@@ -317,10 +319,10 @@ void supc_set_slcd_power_mode(Supc *p_supc, enum slcdc_power_mode mode)
  */
 void supc_set_slcd_vol(Supc *p_supc, uint32_t vol)
 {
-    uint32_t tmp= p_supc->SUPC_MR;
-    tmp &= ~SUPC_MR_LCDVROUT_Msk;
-    tmp |=  SUPC_MR_KEY_PASSWD |  SUPC_MR_LCDVROUT(vol);
-    p_supc->SUPC_MR = tmp;
+	uint32_t tmp= p_supc->SUPC_MR;
+	tmp &= ~SUPC_MR_LCDVROUT_Msk;
+	tmp |=  SUPC_MR_KEY_PASSWD |  SUPC_MR_LCDVROUT(vol);
+	p_supc->SUPC_MR = tmp;
 
 }
 #endif

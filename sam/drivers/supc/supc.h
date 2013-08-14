@@ -67,11 +67,11 @@ extern "C" {
 /** Power Mode */
 enum slcdc_power_mode {
 	/** The internal supply source and the external supply source are both deselected. */
-	SLCDC_POWER_MODE_0 = SUPC_MR_LCDMODE_LCDOFF,
+	SLCDC_POWER_MODE_LCDOFF = SUPC_MR_LCDMODE_LCDOFF,
 	/** The external supply source for LCD is selected */
-	SLCDC_POWER_MODE_1 = SUPC_MR_LCDMODE_LCDON_EXTVR,
+	SLCDC_POWER_MODE_LCDON_EXTVR = SUPC_MR_LCDMODE_LCDON_EXTVR,
 	/** The internal supply source for LCD is selected */
-	SLCDC_POWER_MODE_2 = SUPC_MR_LCDMODE_LCDON_INVR,
+	SLCDC_POWER_MODE_LCDON_INVR = SUPC_MR_LCDMODE_LCDON_INVR,
 };
 #endif
 
@@ -98,7 +98,7 @@ enum slcdc_power_mode supc_get_slcd_power_mode(Supc *p_supc);
 void supc_set_slcd_power_mode(Supc *p_supc, enum slcdc_power_mode mode);
 void supc_set_slcd_vol(Supc *p_supc, uint32_t vol);
 #endif
-	
+
 /// @cond 0
 /**INDENT-OFF**/
 #ifdef __cplusplus

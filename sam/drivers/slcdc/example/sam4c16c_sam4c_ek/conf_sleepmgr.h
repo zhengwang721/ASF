@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief  Configuration File for SAM4L-EK Board.
+ * \brief Chip-specific sleep manager configuration
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,17 +40,10 @@
  * \asf_license_stop
  *
  */
+#ifndef CONF_SLEEPMGR_INCLUDED
+#define CONF_SLEEPMGR_INCLUDED
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+// Sleep manager options
+#define CONFIG_SLEEPMGR_ENABLE
 
-/** Enable Com Port. */
-#define CONF_BOARD_COM_PORT
-
-/** Enable USART used to communicate with Board Monitor. */
-#define CONF_BOARD_BM_USART
-
-/** Force usage of backlight. */
-#define CONF_BOARD_BL
-
-#endif  /* CONF_BOARD_H_INCLUDED */
+#endif /* CONF_SLEEPMGR_INCLUDED */

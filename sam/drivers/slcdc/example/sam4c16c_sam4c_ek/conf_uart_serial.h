@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief  Configuration File for SAM4L-EK Board.
+ * \brief Serial USART service configuration.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,16 +41,14 @@
  *
  */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#ifndef CONF_USART_SERIAL_H
+#define CONF_USART_SERIAL_H
 
-/** Enable Com Port. */
-#define CONF_BOARD_COM_PORT
+/** UART Interface */
+#define CONF_UART            CONSOLE_UART
+/** Baudrate setting */
+#define CONF_UART_BAUDRATE   115200
+/** Parity setting */
+#define CONF_UART_PARITY     UART_MR_PAR_NO
 
-/** Enable USART used to communicate with Board Monitor. */
-#define CONF_BOARD_BM_USART
-
-/** Force usage of backlight. */
-#define CONF_BOARD_BL
-
-#endif  /* CONF_BOARD_H_INCLUDED */
+#endif/* CONF_USART_SERIAL_H_INCLUDED */

@@ -27,6 +27,7 @@
 			</info>
 			<build type="c-source" value="c42364a_slcdc.c"/>
 			<build type="header-file" subtype="api" value="c42364a.h"/>
+			<build type="header-file" subtype="api" value="c42364a_font.h"/>
 			<build type="include-path" value="."/>
 			<build type="doxygen-entry-point" value="c42364a_display_group"/>
 			<build type="doxygen-quick-start" value="sam_component_c42364a_quick_start"/>

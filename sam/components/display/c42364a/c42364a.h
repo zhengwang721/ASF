@@ -45,7 +45,6 @@
 #define C42364A_H_INCLUDED
 
 #include "compiler.h"
-#include "conf_board.h"
 
 #ifdef __cplusplus
 extern "C" {

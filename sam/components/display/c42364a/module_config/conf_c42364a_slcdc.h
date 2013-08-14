@@ -46,4 +46,13 @@
 #ifndef CONF_C42364A_SLCDC_H_INCLUDED
 #define CONF_C42364A_SLCDC_H_INCLUDED
 
+/** LCD frame rate value */
+#define CONF_C42364A_FRAME_RATE     64
+
+/** LCD blinking frequency */
+#define CONF_C42364A_BLINK_FREQ     2
+
+/** LCD Contrast value */
+#define CONF_C4236A_CONTRAST        8
+ 
 #endif /* CONF_C42364A_SLCDC_H_INCLUDED */
