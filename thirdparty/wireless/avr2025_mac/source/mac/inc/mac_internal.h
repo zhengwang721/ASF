@@ -451,7 +451,7 @@ extern mac_state_t mac_state;
 extern mac_scan_state_t mac_scan_state;
 extern mac_sync_state_t mac_sync_state;
 extern mac_poll_state_t mac_poll_state;
-extern volatile mac_pib_t mac_pib;
+extern mac_pib_t mac_pib;
 
 /* === Prototypes =========================================================== */
 

@@ -443,6 +443,7 @@ void mlme_reset_request(arch_data_t *m);
  */
 
 void mlme_scan_request(arch_data_t *m);
+#endif
 
 
 /**
