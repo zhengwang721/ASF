@@ -502,7 +502,7 @@ int main(void)
 	adc_set_comparison_mode(ADC, ADC_EMR_CMPMODE_IN);
 
 	/* Set up Threshold. */
-	adc_set_comparison_window(ADC, gs_us_high_threshold, gs_us_low_threshold);
+	adc_set_comparison_window(ADC, gs_us_low_threshold, gs_us_high_threshold);
 
 	/* Enable ADC interrupt. */
 	NVIC_EnableIRQ(ADC_IRQn);
