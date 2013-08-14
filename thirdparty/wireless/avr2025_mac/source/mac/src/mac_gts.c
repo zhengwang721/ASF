@@ -727,7 +727,9 @@ void mac_t_gts_cb(void *callback_parameter)
 	uint32_t next_timer_dur = 0;
 	queue_t *temp_ptr = NULL;
 	uint8_t temp_index = 0;
+	#ifdef GTS_DEBUG
 	ioport_set_value(DEBUG_PIN3, 0);
+	#endif
 	ENTER_CRITICAL_REGION();
 #ifdef FFD
 	if (MAC_PAN_COORD_STARTED == mac_state && mac_pan_gts_table_len > 0)
