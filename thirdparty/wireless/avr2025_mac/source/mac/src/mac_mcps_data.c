@@ -252,6 +252,10 @@ void mcps_data_request(uint8_t *msg)
 	transmit_frame->indirect_in_transit = false;
 #endif  /* (MAC_INDIRECT_DATA_FFD == 1) */
 
+#ifdef GTS_SUPPORT
+	transmit_frame->gts_queue = NULL;
+#endif /* GTS_SUPPORT */
+
 	status = build_data_frame(&mdr, transmit_frame);
 
 	if (MAC_SUCCESS != status) {

@@ -81,15 +81,14 @@ static bool mac_gts_allocate(gts_char_t GtsCharacteristics, uint16_t DevAddress)
 static bool mac_gts_deallocate(gts_char_t GtsCharacteristics, uint16_t DevAddress, bool persist);
 #endif /* FFD */
 static void mac_update_dev_gts_table(bool gts_dir, uint8_t slot_len, uint8_t start_slot, bool panc_slot, bool send_ind);
-static void mac_tx_gts_data(queue_t *gts_data);
 #ifdef FFD
 #define MAX_GTS_ON_PANC       (7)
 #define GTS_EXPIRY_BO_0_TO_8  ((1 << ((8 - tal_pib.BeaconOrder) + 1)) + 1 + 1)
 #define GTS_EXPIRY_BO_9_TO_14 (2 + 1 + 1)
 
 
-static mac_pan_gts_mgmt_t mac_pan_gts_table[MAX_GTS_ON_PANC];
-static uint8_t mac_pan_gts_table_len = 0;
+mac_pan_gts_mgmt_t mac_pan_gts_table[MAX_GTS_ON_PANC];
+uint8_t mac_pan_gts_table_len = 0;
 mac_gts_spec_t mac_gts_spec;
 
 #endif /* FFD */
@@ -728,9 +727,7 @@ void mac_t_gts_cb(void *callback_parameter)
 	uint32_t next_timer_dur = 0;
 	queue_t *temp_ptr = NULL;
 	uint8_t temp_index = 0;
-	#ifdef GTS_DEBUG
-	ioport_set_value(DEBUG_PIN3, 0);//vk
-	#endif
+	ioport_set_value(DEBUG_PIN3, 0);
 	ENTER_CRITICAL_REGION();
 #ifdef FFD
 	if (MAC_PAN_COORD_STARTED == mac_state && mac_pan_gts_table_len > 0)
@@ -742,10 +739,8 @@ void mac_t_gts_cb(void *callback_parameter)
 			next_timer_dur = slot_duration * (mac_pan_gts_table[temp_index].GtsDesc.GtsLength);
 			mac_superframe_state = MAC_ACTIVE_CFP_GTS1;
 			temp_ptr = mac_pan_gts_table[temp_index].gts_data_q;
-			//sio2host_tx("-GTS1-",sizeof("-GTS1-"));
-			#ifdef GTS_DEBUG
+			sio2host_tx("-GTS1-",sizeof("-GTS1-"));
 			ioport_set_value(DEBUG_PIN4, 1);//vk
-			#endif
 		}
 		else if(MAC_ACTIVE_CFP_GTS1 == mac_superframe_state && (mac_pan_gts_table_len >= 2))
 		{
@@ -753,11 +748,9 @@ void mac_t_gts_cb(void *callback_parameter)
 			next_timer_dur = slot_duration * (mac_pan_gts_table[mac_pan_gts_table_len - 2].GtsDesc.GtsLength);
 			mac_superframe_state = MAC_ACTIVE_CFP_GTS2;
 			temp_ptr = mac_pan_gts_table[temp_index].gts_data_q;
-			//sio2host_tx("-GTS2-",sizeof("-GTS1-"));
-			#ifdef GTS_DEBUG
+			sio2host_tx("-GTS2-",sizeof("-GTS1-"));
 			ioport_set_value(DEBUG_PIN4, 0);//vk
 			ioport_set_value(DEBUG_PIN5, 1);//vk
-			#endif
 		}
 		else if(MAC_ACTIVE_CFP_GTS2 == mac_superframe_state && (mac_pan_gts_table_len >= 3))
 		{
@@ -765,11 +758,9 @@ void mac_t_gts_cb(void *callback_parameter)
 			next_timer_dur = slot_duration * (mac_pan_gts_table[mac_pan_gts_table_len - 3].GtsDesc.GtsLength);
 			mac_superframe_state = MAC_ACTIVE_CFP_GTS3;
 			temp_ptr = mac_pan_gts_table[temp_index].gts_data_q;
-			//sio2host_tx("-GTS3-",sizeof("-GTS1-"));
-			#ifdef GTS_DEBUG
+			sio2host_tx("-GTS3-",sizeof("-GTS1-"));
 			ioport_set_value(DEBUG_PIN5, 0);//vk
 			ioport_set_value(DEBUG_PIN6, 1);//vk
-			#endif
 		}
 		else if(MAC_ACTIVE_CFP_GTS3 == mac_superframe_state && (mac_pan_gts_table_len >= 4))
 		{
@@ -777,11 +768,9 @@ void mac_t_gts_cb(void *callback_parameter)
 			next_timer_dur = slot_duration * (mac_pan_gts_table[mac_pan_gts_table_len - 4].GtsDesc.GtsLength);
 			mac_superframe_state = MAC_ACTIVE_CFP_GTS4;
 			temp_ptr = mac_pan_gts_table[temp_index].gts_data_q;
-			//sio2host_tx("-GTS4-",sizeof("-GTS1-"));
-			#ifdef GTS_DEBUG
+			sio2host_tx("-GTS4-",sizeof("-GTS1-"));
 			ioport_set_value(DEBUG_PIN6, 0);//vk
 			ioport_set_value(DEBUG_PIN7, 1);//vk
-			#endif
 		}
 		else if(MAC_ACTIVE_CFP_GTS4 == mac_superframe_state && (mac_pan_gts_table_len >= 5))
 		{
@@ -789,11 +778,9 @@ void mac_t_gts_cb(void *callback_parameter)
 			next_timer_dur = slot_duration * (mac_pan_gts_table[mac_pan_gts_table_len - 5].GtsDesc.GtsLength);
 			mac_superframe_state = MAC_ACTIVE_CFP_GTS5;
 			temp_ptr = mac_pan_gts_table[temp_index].gts_data_q;
-			//sio2host_tx("-GTS5-",sizeof("-GTS1-"));
-			#ifdef GTS_DEBUG
+			sio2host_tx("-GTS5-",sizeof("-GTS1-"));
 			ioport_set_value(DEBUG_PIN7, 0);//vk
 			ioport_set_value(DEBUG_PIN8, 1);//vk
-			#endif
 		}
 		else if(MAC_ACTIVE_CFP_GTS5 == mac_superframe_state && (mac_pan_gts_table_len >= 6))
 		{
@@ -801,11 +788,8 @@ void mac_t_gts_cb(void *callback_parameter)
 			next_timer_dur = slot_duration * (mac_pan_gts_table[mac_pan_gts_table_len - 6].GtsDesc.GtsLength);
 			mac_superframe_state = MAC_ACTIVE_CFP_GTS6;
 			temp_ptr = mac_pan_gts_table[temp_index].gts_data_q;
-			//sio2host_tx("-GTS6-",sizeof("-GTS1-"));
-			#ifdef GTS_DEBUG
+			sio2host_tx("-GTS6-",sizeof("-GTS1-"));
 			ioport_set_value(DEBUG_PIN8, 0);//vk
-			ioport_set_value(DEBUG_PIN9, 1);//vk
-			#endif
 		}
 		else if(MAC_ACTIVE_CFP_GTS6 == mac_superframe_state && (mac_pan_gts_table_len == 7))
 		{
@@ -813,23 +797,11 @@ void mac_t_gts_cb(void *callback_parameter)
 			next_timer_dur = slot_duration * (mac_pan_gts_table[mac_pan_gts_table_len - 7].GtsDesc.GtsLength);
 			mac_superframe_state = MAC_ACTIVE_CFP_GTS7;
 			temp_ptr = mac_pan_gts_table[temp_index].gts_data_q;
-			//sio2host_tx("-GTS7-",sizeof("-GTS1-"));
-			#ifdef GTS_DEBUG
-			ioport_set_value(DEBUG_PIN9, 0);//vk
-			ioport_set_value(DEBUG_PIN10, 1);//vk
-			#endif
+			sio2host_tx("-GTS7-",sizeof("-GTS1-"));
+			//ioport_set_value(DEBUG_PIN4, 0);//vk
 		}
 		else
-		{   
-			#ifdef GTS_DEBUG
-			ioport_set_value(DEBUG_PIN4, 0);//vk
-			ioport_set_value(DEBUG_PIN5, 0);//vk
-			ioport_set_value(DEBUG_PIN6, 0);//vk
-			ioport_set_value(DEBUG_PIN7, 0);//vk
-			ioport_set_value(DEBUG_PIN8, 0);//vk
-			ioport_set_value(DEBUG_PIN9, 0);//vk
-			ioport_set_value(DEBUG_PIN10, 0);//vk
-			#endif
+		{
 			//if(tal_pib.SuperFrameOrder < tal_pib.BeaconOrder)
 			//{
 				//mac_superframe_state = MAC_INACTIVE;
@@ -840,10 +812,7 @@ void mac_t_gts_cb(void *callback_parameter)
 			//}
 		}
 		if(NULL != temp_ptr && (*temp_ptr).size > 0)
-		{   
-			#ifdef GTS_DEBUG
-			ioport_toggle_pin(DEBUG_PIN11);
-			#endif
+		{
 			//if (tal_pib.BeaconOrder >= 9)
 			//{
 				//mac_pan_gts_table[temp_index].ExpiryCount = GTS_EXPIRY_BO_9_TO_14;
@@ -923,6 +892,8 @@ void mac_tx_gts_data(queue_t *gts_data)
 
 	transmit_frame->buffer_header = buf_ptr;
 
+	transmit_frame->gts_queue = gts_data;
+
 	tal_tx_status = tal_tx_frame(transmit_frame, NO_CSMA_WITH_IFS, false);
 
 	if (MAC_SUCCESS == tal_tx_status) {
@@ -939,4 +910,13 @@ void mac_tx_gts_data(queue_t *gts_data)
 		#endif  /* ENABLE_TSTAMP */
 	}
 }
+
+uint8_t handle_gts_data_tx_end(void)
+{
+	if(MAC_ACTIVE_CFP_GTS1 <= mac_superframe_state && MAC_ACTIVE_CFP_GTS7 >= mac_superframe_state)
+	{
+		mac_tx_gts_data(mac_pan_gts_table[mac_pan_gts_table_len - ((mac_superframe_state - MAC_ACTIVE_CFP_GTS1) + 1)].gts_data_q);
+	}
+}
+
 #endif /* GTS_SUPPORT */
