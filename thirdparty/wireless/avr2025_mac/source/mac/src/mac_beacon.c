@@ -821,9 +821,11 @@ static void mac_t_beacon_cb(void *callback_parameter)
 					(FUNC_PTR)mac_t_beacon_cb,
 					NULL);
 		}
+		#ifdef GTS_DEBUG
 		ioport_toggle_pin(DEBUG_PIN1); //vk
+		#endif
 		mac_superframe_state = MAC_ACTIVE_CAP;
-		sio2host_tx("-CAP-",sizeof("-CAP-"));
+		
 
 		/*
 		 * Even if this may look odd, since we already had added a
@@ -896,7 +898,9 @@ static void mac_t_beacon_cb(void *callback_parameter)
 		                     TIMEOUT_RELATIVE,
 		                     (FUNC_PTR)mac_t_superframe_cb,
 		                     NULL);
+		    #ifdef GTS_DEBUG
 	 		ioport_set_value(DEBUG_PIN2, 1);//vk
+			#endif
 		}
 
 #ifdef GTS_SUPPORT
@@ -909,7 +913,9 @@ static void mac_t_beacon_cb(void *callback_parameter)
 							 TIMEOUT_RELATIVE,
 							 (FUNC_PTR)mac_t_gts_cb,
 							 NULL);
+			#ifdef GTS_DEBUG				 
 	 		ioport_set_value(DEBUG_PIN3, 1);//vk
+			#endif
 		}
 #endif /* GTS_SUPPORT */
 
@@ -960,11 +966,13 @@ static void mac_t_superframe_cb(void *callback_parameter)
 /*    mac_trx_init_sleep(); */
 /*  */
 /*    callback_parameter = callback_parameter;  / * Keep compiler happy. * / */
+    #ifdef GTS_DEBUG
 	ioport_set_value(DEBUG_PIN2, 0);//vk
+	#endif
 	//ioport_set_value(DEBUG_PIN4, 0);//vk
 
 	mac_superframe_state = MAC_INACTIVE;
-	sio2host_tx("-Inactive-",sizeof("-Inactive-"));
+	//sio2host_tx("-Inactive-",sizeof("-Inactive-"));
 }
 
 #endif /* BEACON_SUPPORT */

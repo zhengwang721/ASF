@@ -752,7 +752,9 @@ static bool process_data_ind_not_transient(buffer_t *b_ptr, frame_info_t *f_ptr)
 											 TIMEOUT_RELATIVE,
 											 (FUNC_PTR)mac_t_gts_cb,
 											 NULL);
+							#ifdef GTS_DEBUG
 	 						ioport_set_value(DEBUG_PIN3, 1);//vk
+							#endif
 						}
 #endif /* GTS_SUPPORT */
 						}
