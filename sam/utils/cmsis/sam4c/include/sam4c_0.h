@@ -41,9 +41,9 @@
 #ifndef _SAM4C_0_
 #define _SAM4C_0_
 
-#if defined __SAM4C8C__
+#if defined __SAM4C8C_0__
   #include "sam4c8c_0.h"
-#elif defined __SAM4C16C__
+#elif defined __SAM4C16C_0__
   #include "sam4c16c_0.h"
 #else
   #error Library does not support the specified device.
