@@ -4,7 +4,6 @@
 		<build type="c-source" value="gcc/startup_sam4c.c" toolchain="armgcc"/>
 		<build type="c-source" value="iar/startup_sam4c.c" toolchain="iarewarm"/>
 		<build type="include-path" value="."/>
-		<build type="include-path" value="../../include"/>
 		<info type="gui-flag" value="hidden"/>
 		<device-support value="sam4c"/>
 	</module>
