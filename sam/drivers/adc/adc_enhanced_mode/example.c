@@ -51,14 +51,14 @@
  *
  * \section Requirements
  *
- * This example can be used on SAM4E-EK boards.
+ * This example can be used on SAM4C-EK boards.
  *
  * \section Description
  *
  * The example is aimed to demonstrate the enhanced resolution mode
- * inside the microcontroller. To use this feature, the channel 5 which is connected to
- * the potentiometer should be enabled. Users can select different resolution modes
- * by configuration menu in the terminal.
+ * inside the microcontroller. To use this feature, the ADC channel connected to
+ * the potentiometer should be enabled. Users can select different resolution
+ * modes by configuration menu in the terminal.
  *
  * \section Usage
  *
@@ -83,7 +83,8 @@
  *     -- e: Enhanced Resolution Mode--
  *     -- q: Quit Configuration--
  *    \endcode
- * -# The application will output current voltage of potentiometer on the terminal.
+ * -# The application will output the raw ADC result and the current voltage of
+ * potentiometer on the terminal.
  */
 
 #include <stdio.h>
@@ -215,8 +216,8 @@ int main(void)
     adc_enable_interrupt(ADC, ADC_IER_DRDY);
 	NVIC_EnableIRQ(ADC_IRQn);
 
-	adc_start(ADC);
 	while (1) {
+		adc_start(ADC);
 		delay_ms(1000);
 
 		/* Check if ADC sample is done. */
@@ -235,7 +236,6 @@ int main(void)
 			set_adc_resolution();
 			adc_enable_interrupt(ADC, ADC_IER_DRDY);
 		}
-		adc_start(ADC);
 	}
 }
 
