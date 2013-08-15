@@ -148,21 +148,21 @@ typedef void (*slcdc_callback_t)(void);
 status_code_t slcdc_init(Slcdc *p_slcdc, struct slcdc_config *slcdc_cfg);
 
 /**
- * \brief  SLCDC enter low power mode.
+ * \brief  Enable SLCDC low power wave mode.
  *
  * \param p_slcdc Pointer to an SLCDC instance.
  */
-static inline void slcdc_enter_lp_mode(Slcdc *p_slcdc)
+static inline void slcdc_enable_lp_mode(Slcdc *p_slcdc)
 {
 	p_slcdc->SLCDC_MR |= SLCDC_MR_LPMODE;
 }
 
 /**
- * \brief  SLCDC exit from low power mode.
+ * \brief  Disable SLCDC low power wave mode.
  *
  * \param p_slcdc Pointer to an SLCDC instance.
  */
-static inline void slcdc_exit_lp_mode(Slcdc *p_slcdc)
+static inline void slcdc_disable_lp_mode(Slcdc *p_slcdc)
 {
 	p_slcdc->SLCDC_MR &= ~SLCDC_MR_LPMODE;
 }
@@ -185,7 +185,7 @@ static inline void slcdc_set_display_mode(Slcdc *p_slcdc,
  *
  * \param p_slcdc Pointer to an SLCDC instance.
  * \param value  Blinking frequency or period value.
- * \param is_freq_period   Select frequency or period as parameter value.
+ * \param is_freq_period   Selection of frequency or period as parameter value.
  */
 status_code_t slcdc_set_blink_freq(Slcdc *p_slcdc, uint32_t value,
 		bool is_period_freq);
@@ -371,7 +371,7 @@ static inline uint32_t slcdc_get_writeprotect_status(Slcdc *p_slcdc)
  * \brief Set LSB Pixels memory associated to COMx terminal.
  *
  * \param p_slcdc Pointer to an SLCDC instance.
- * \param index COM terminal index.
+ * \param index   COM terminal index.
  * \param val    SEG terminal value
  */
 static inline void slcdc_set_lsb_memory(Slcdc *p_slcdc,
@@ -384,7 +384,7 @@ static inline void slcdc_set_lsb_memory(Slcdc *p_slcdc,
  * \brief Set MSB Pixels memory associated to COMx terminal.
  *
  * \param p_slcdc Pointer to an SLCDC instance.
- * \param index COM terminal index.
+ * \param index   COM terminal index.
  * \param val    SEG terminal value
  */
 static inline void slcdc_set_msb_memory(Slcdc *p_slcdc,
@@ -397,7 +397,7 @@ static inline void slcdc_set_msb_memory(Slcdc *p_slcdc,
  * \brief Clear LSB Pixels memory associated to COMx terminal.
  *
  * \param p_slcdc Pointer to an SLCDC instance.
- * \param index COM terminal index.
+ * \param index   COM terminal index.
  * \param val    SEG terminal value
  */
 static inline void slcdc_clear_lsb_memory(Slcdc *p_slcdc,
@@ -410,7 +410,7 @@ static inline void slcdc_clear_lsb_memory(Slcdc *p_slcdc,
  * \brief Clear MSB Pixels memory associated to COMx terminal.
  *
  * \param p_slcdc Pointer to an SLCDC instance.
- * \param index COM terminal index.
+ * \param index   COM terminal index.
  * \param val    SEG terminal value
  */
 static inline void slcdc_clear_msb_memory(Slcdc *p_slcdc,

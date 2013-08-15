@@ -81,9 +81,10 @@ static void init_mask(void)
 {
 	uint32_t tmp = 1;
 	uint8_t index = 0;
-	for (index =0; index <32; index ++) {
+
+	for(index = 0; index < 32; index++) {
 		mask[index] = tmp;
-		tmp <<=1;
+		tmp <<= 1;
 	}
 }
 
@@ -136,9 +137,11 @@ static void c42364a_slcdc_display_symbol(Slcdc *p_slcdc,
 {
 	while(number--) {
 		if (plot & mask[number])
-			c42364a_slcdc_set_pixel(p_slcdc, (*(p_symbol+number)) & 0x03, (*(p_symbol+number)) >> 2);
+			c42364a_slcdc_set_pixel(p_slcdc, (*(p_symbol+number)) & 0x03,
+					(*(p_symbol+number)) >> 2);
 		else
-			c42364a_slcdc_clear_pixel(p_slcdc, (*(p_symbol+number)) & 0x03, (*(p_symbol+number)) >> 2);
+			c42364a_slcdc_clear_pixel(p_slcdc, (*(p_symbol+number)) & 0x03,
+					(*(p_symbol+number)) >> 2);
 	}
 }
 
@@ -147,13 +150,14 @@ static void c42364a_slcdc_display_symbol(Slcdc *p_slcdc,
  *
  * \param p_slcdc Pointer to an SLCDC instance.
  * \param p_symbol  Pointer to an symbol_pixel array.
- * \param number Symbol pixel array number.
+ * \param number   Symbol pixel array number.
  */
 static void c42364a_slcdc_efface_symbol(Slcdc *p_slcdc,
-const enum symbol_pixel *p_symbol, uint8_t number)
+		const enum symbol_pixel *p_symbol, uint8_t number)
 {
 	while(number --) {
-		c42364a_slcdc_clear_pixel(p_slcdc, (*(p_symbol+number)) & 0x03, (*(p_symbol+number)) >> 2);
+		c42364a_slcdc_clear_pixel(p_slcdc, (*(p_symbol+number)) & 0x03,
+				(*(p_symbol+number)) >> 2);
 	}
 }
 

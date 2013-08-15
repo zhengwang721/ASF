@@ -62,8 +62,8 @@
  * for Atmel. Other compilers may or may not work.
  *
  * \section deviceinfo Device Information
- * All SAM devices with an LCDCA or SLCDC connected to C42364A LCD Glass component
- * and a USART module can be used.
+ * All SAM devices with an LCDCA or SLCDC connected to C42364A LCD Glass
+ * component and a USART module can be used.
  *
  * \section configinfo Configuration Information
  * - PC terminal settings:

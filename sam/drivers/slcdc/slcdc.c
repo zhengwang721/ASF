@@ -95,8 +95,8 @@ status_code_t slcdc_set_frame_rate(Slcdc *p_slcdc, uint32_t ul_sclk,
 
 	/* Find prescaler and divisor values */
 	ul_div = (ul_sclk / ul_divisors[ul_pre])
-			 / frame_rate
-			 / uc_ncom[CONF_SLCDC_COM_NUM];
+			/ frame_rate
+			/ uc_ncom[CONF_SLCDC_COM_NUM];
 
 	while ((ul_div > SLCDC_CLOCK_DIV_MAX) && (ul_pre < SLCDC_CLOCK_PRE_MAX)) {
 		ul_pre++;

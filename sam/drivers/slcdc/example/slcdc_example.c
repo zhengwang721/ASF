@@ -45,21 +45,20 @@
  * \mainpage
  * \section intro Introduction
  * This example demonstrates how to use SLCDC driver to address an external
- * LCD segment (C42364A) and LCD still display in steady state after core
+ * LCD segment (C42364A). The LCD still display in steady state after core
  * entering backup mode.
  *
  * \section files Main Files
  *  - slcdc.c SLCDC driver implementation
  *  - slcdc.h SLCDC driver definitions
  *  - slcdc_example.c example application
- *  - conf_example.h: configuration of the example
  *
  * \section compilinfo Compilation Information
  * This software is written for GNU GCC and IAR Embedded Workbench
  * for Atmel. Other compilers may or may not work.
  *
  * \section deviceinfo Device Information
- * All SAM devices with a SLCDC and a USART module can be used.
+ * All SAM devices with a SLCDC can be used.
  *
  * \section exampledescription Description of the example
  * After an initialization phase, the display memory in SLCDC will be set.
@@ -161,6 +160,8 @@ int main(void)
 	/* Display all SLCDC memory*/
 	slcdc_set_display_memory(SLCDC);
 
+	printf("-- Enter Backup Mode! --\r\n");
+	
 	/* Enter in sleep mode */
 	sleepmgr_enter_sleep();
 
