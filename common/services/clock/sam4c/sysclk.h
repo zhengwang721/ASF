@@ -363,9 +363,9 @@ static inline uint32_t sysclk_get_main_hz_core1(void)
  */
 static inline uint32_t sysclk_get_main_hz(void)
 {
-#if (defined __SAM4C_CORE0__)
+#if (SAM4C8_0 || SAM4C16_0)
 	return sysclk_get_main_hz_core0();
-#elif (defined __SAM4C_CORE1__) && (defined CONFIG_CPCLK_ENABLE)
+#elif ((SAM4C8_1 || SAM4C16_1)) && (defined CONFIG_CPCLK_ENABLE)
 	return sysclk_get_main_hz_core1();
 #else
 #error "No specifid core 0 or core 1 for clock service."
@@ -385,13 +385,13 @@ static inline uint32_t sysclk_get_main_hz(void)
  */
 static inline uint32_t sysclk_get_cpu_hz(void)
 {
-#if (defined __SAM4C_CORE0__)
+#if (SAM4C8_0 || SAM4C16_0)
 	/* CONFIG_SYSCLK_PRES is the register value for setting the expected */
 	/* prescaler, not an immediate value. */
 	return sysclk_get_main_hz() /
 		((CONFIG_SYSCLK_PRES == SYSCLK_PRES_3) ? 3 :
 			(1 << (CONFIG_SYSCLK_PRES >> PMC_MCKR_PRES_Pos)));
-#elif (defined __SAM4C_CORE1__)
+#elif (SAM4C8_1 || SAM4C16_1)
 	return sysclk_get_main_hz() / CONFIG_CPCLK_PRES;
 #else
 #error "No specifid core 0 or core 1 for clock service."
