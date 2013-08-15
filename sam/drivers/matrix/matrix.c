@@ -66,7 +66,7 @@ extern "C" {
 #if SAM4C
 #if __MPU_PRESENT == 1
 #define MATRIX MATRIX0
-#elif
+#else
 #define MATRIX MATRIX1
 #endif
 #endif

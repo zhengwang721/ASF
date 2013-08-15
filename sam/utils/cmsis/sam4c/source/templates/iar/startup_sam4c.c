@@ -184,7 +184,7 @@ int __low_level_init(void)
 {
 	uint32_t *pSrc = __section_begin(".intvec");
 
-	SCB->VTOR = ((uint32_t) pSrc & SCB_VTOR_TBLOFF_Msk);
+	SCB->VTOR = (uint32_t)pSrc;
 
 	return 1; /* if return 0, the data sections will not be initialized */
 }
