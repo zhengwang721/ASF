@@ -137,7 +137,7 @@ uint32_t pwm_init(Pwm *p_pwm, pwm_clock_t *clock_config)
 
 		clock |= (result << 16);
 	}
-#if (SAM3N || SAM4N)
+#if (SAM3N || SAM4N || SAM4C)
 	p_pwm->PWM_MR = clock;
 #else
 	p_pwm->PWM_CLK = clock;
@@ -157,7 +157,9 @@ uint32_t pwm_channel_init(Pwm *p_pwm, pwm_channel_t *p_channel)
 {
 	uint32_t ch_mode_reg = 0;
 	uint32_t ch_num = p_channel->channel;
+#if !SAM4C
 	uint32_t channel = (1 << ch_num);
+#endif
 
 	/* Channel Mode/Clock Register */
 	ch_mode_reg = (p_channel->ul_prescaler & 0xF) |
@@ -300,7 +302,7 @@ uint32_t pwm_channel_update_period(Pwm *p_pwm, pwm_channel_t *p_channel,
 		/* Save new period value */
 		p_channel->ul_period = ul_period;
 
-#if (SAM3N || SAM4N)
+#if (SAM3N || SAM4N || SAM4C)
 		/* Set CPD bit to change period value */
 		p_pwm->PWM_CH_NUM[ch_num].PWM_CMR |= PWM_CMR_CPD;
 
@@ -334,7 +336,7 @@ uint32_t pwm_channel_update_duty(Pwm *p_pwm, pwm_channel_t *p_channel,
 		/* Save new duty cycle value */
 		p_channel->ul_duty = ul_duty;
 
-#if (SAM3N || SAM4N)
+#if (SAM3N || SAM4N || SAM4C)
 		/* Clear CPD bit to change duty cycle value */
 		uint32_t mode = p_pwm->PWM_CH_NUM[ch_num].PWM_CMR;
 		mode &= ~PWM_CMR_CPD;
@@ -412,7 +414,7 @@ uint32_t pwm_channel_get_status(Pwm *p_pwm)
  */
 uint32_t pwm_channel_get_interrupt_status(Pwm *p_pwm)
 {
-#if (SAM3N || SAM4N)
+#if (SAM3N || SAM4N || SAM4C)
 	return p_pwm->PWM_ISR;
 #else
 	return p_pwm->PWM_ISR1;
@@ -428,7 +430,7 @@ uint32_t pwm_channel_get_interrupt_status(Pwm *p_pwm)
  */
 uint32_t pwm_channel_get_interrupt_mask(Pwm *p_pwm)
 {
-#if (SAM3N || SAM4N)
+#if (SAM3N || SAM4N || SAM4C)
 	return p_pwm->PWM_IMR;
 #else
 	return p_pwm->PWM_IMR1;
@@ -446,7 +448,7 @@ uint32_t pwm_channel_get_interrupt_mask(Pwm *p_pwm)
 void pwm_channel_enable_interrupt(Pwm *p_pwm, uint32_t ul_event,
 		uint32_t ul_fault)
 {
-#if (SAM3N || SAM4N)
+#if (SAM3N || SAM4N || SAM4C)
 	p_pwm->PWM_IER = (1 << ul_event);
 	/* avoid Cppcheck Warning */
 	UNUSED(ul_fault);
@@ -467,7 +469,7 @@ void pwm_channel_enable_interrupt(Pwm *p_pwm, uint32_t ul_event,
 void pwm_channel_disable_interrupt(Pwm *p_pwm, uint32_t ul_event,
 		uint32_t ul_fault)
 {
-#if (SAM3N || SAM4N)
+#if (SAM3N || SAM4N || SAM4C)
 	p_pwm->PWM_IDR = (1 << ul_event);
 	/* avoid Cppcheck Warning */
 	UNUSED(ul_fault);

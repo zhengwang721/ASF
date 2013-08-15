@@ -153,7 +153,7 @@ void board_init(void)
 #endif
 #endif
 	/* Configure TWI pins */
-#if  defined(CONF_BOARD_TWI0) || defined(CONF_BOARD_AT30TSE)
+#if defined(CONF_BOARD_TWI0) || defined(CONF_BOARD_AT30TSE)
 	ioport_set_pin_peripheral_mode(TWIO_DATA_GPIO, TWIO_DATA_FLAG);
 	ioport_set_pin_peripheral_mode(TWIO_CLK_GPIO, TWIO_CLK_FLAG);
 #endif
@@ -217,7 +217,13 @@ void board_init(void)
 	ioport_set_pin_peripheral_mode(PIN_USART2_SCK_IDX, PIN_USART2_SCK_FLAGS);
 #endif
 	/* Configure ADC pins */
+#ifdef CONF_BOARD_ADC
+	/* TC TIOA configuration */
+	ioport_set_pin_peripheral_mode(PIN_TC0_TIOA0,PIN_TC0_TIOA0_FLAGS);
 
+	/* ADC Trigger configuration */
+	ioport_set_pin_peripheral_mode(PINS_ADC_TRIG, PINS_ADC_TRIG_FLAG);
+#endif
 	/* Configure EBI pins */
 }
 
