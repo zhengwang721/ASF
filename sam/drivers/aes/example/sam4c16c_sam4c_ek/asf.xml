@@ -1,22 +1,20 @@
 <asf xmlversion="1.0">
-	<project caption="AES - Advanced Encryption Standard Module unit tests on SAM4E-EK" id="sam.drivers.aesa.unit_tests.sam4e_ek" type="unit-test">
+	<project caption="AES Example for SAM4C_EK" id="sam.drivers.aes.example.sam4c_ek">
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clock.h"/>
 		<build type="header-file" value="conf_sleepmgr.h"/>
-		<build type="header-file" value="conf_test.h"/>
 		<build type="header-file" value="conf_uart_serial.h"/>
-		<require idref="sam.drivers.dmac"/>
-		<require idref="sam.drivers.aes.unit_tests"/>
-		<require idref="board.sam4e_ek"/>
-		<generator value="iarewarm"/>
-		<generator value="armgcc"/>
+		<require idref="sam.drivers.aes.example"/>
+		<require idref="board.sam4c_ek" />
+		<generator value="iarewarm" />
+		<generator value="armgcc" />
+		<generator value="doxygen" />
 		<generator value="as5_arm"/>
-		<generator value="doxygen"/>
-		<config name="config.compiler.iarewarm.dlib" value="full"/>
 		<config name="config.compiler.iarewarm.create_aux" value="no"/>
 		<config name="config.compiler.armgcc.create_aux" value="no"/>
 		<config name="config.compiler.as5_arm.create_aux" value="no"/>
-		<device-support value="atsam4e16e"/>
+		<device-support value="atsam4c16c_core0"/>
 	</project>
 </asf>
+
