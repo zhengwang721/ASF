@@ -182,8 +182,8 @@ int main(void)
 	}
 
 #if (SAM4S || SAM4E || SAM4N)
-	/* The EWP command is not supported by SAM4S and SAM4E, SAM4N, so an erase
-	 * command is requried before any write operation.
+	/* The EWP command is not supported for non-8KByte sectors in SAM4S, SAM4E
+	 * and SAM4N, so an erase command is requried before the write operation.
 	 */
 	ul_rc = flash_erase_sector(ul_last_page_addr);
 	if (ul_rc != FLASH_RC_OK) {
@@ -213,9 +213,9 @@ int main(void)
 	}
 	printf("OK\n\r");
 
-#if (SAM4S || SAM4E)
-	/* The EWP command is not supported by SAM4S and SAM4E, so an erase
-	 * command is requried before any write operation.
+#if (SAM4S || SAM4E || SAM4N)
+	/* The EWP command is not supported for non-8KByte sectors in SAM4S, SAM4E
+	 * and SAM4N, so an erase command is requried before the write operation.
 	 */
 	ul_rc = flash_erase_sector(ul_last_page_addr);
 	if (ul_rc != FLASH_RC_OK) {
@@ -237,7 +237,7 @@ int main(void)
 	printf("-I- Try to program the locked page ...\n\r");
 	ul_rc = flash_write(ul_last_page_addr, ul_page_buffer,
 			IFLASH_PAGE_SIZE,
-#if (SAM4S || SAM4E)
+#if (SAM4S || SAM4E || SAM4N)
 			0);
 #else
 			1);
