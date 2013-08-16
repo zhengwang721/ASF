@@ -284,7 +284,7 @@ void pmc_switch_sclk_to_32kxtal(uint32_t ul_bypass)
 			SUPC_MR_OSCBYPASS;
 	}
 
-	SUPC->SUPC_CR |= SUPC_CR_KEY(SUPC_KEY_VALUE) | SUPC_CR_XTALSEL;
+	SUPC->SUPC_CR = SUPC_CR_KEY(SUPC_KEY_VALUE) | SUPC_CR_XTALSEL;
 }
 
 /**
@@ -1212,7 +1212,7 @@ void pmc_enable_backupmode(void)
 {
 	SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
 #if (SAM4S || SAM4E || SAM4N)
-	SUPC->SUPC_CR = SUPC_CR_KEY(0xA5u) | SUPC_CR_VROFF_STOP_VREG;
+	SUPC->SUPC_CR = SUPC_CR_KEY(SUPC_KEY_VALUE) | SUPC_CR_VROFF_STOP_VREG;
 #else
 	__WFE();
 #endif
