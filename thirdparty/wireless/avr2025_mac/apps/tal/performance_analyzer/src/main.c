@@ -691,17 +691,17 @@ retval_t transmit_frame(uint8_t dst_addr_mode,
 	/* Destination address */
 	if (FCF_SHORT_ADDR == dst_addr_mode) {
 		frame_ptr -= SHORT_ADDR_LEN;
-		convert_16_bit_to_byte_array(*((uint16_t *)dst_addr),
-				frame_ptr);
-
+		//convert_16_bit_to_byte_array(*((uint16_t *)dst_addr),
+		//		frame_ptr);
+	memcpy(frame_ptr, (uint8_t *)dst_addr, sizeof(uint16_t));
 		fcf |= FCF_SET_DEST_ADDR_MODE(FCF_SHORT_ADDR);
 	} else {
 		frame_ptr -= EXT_ADDR_LEN;
 		frame_length += PL_POS_DST_ADDR_START;
 
-		convert_64_bit_to_byte_array(*((uint64_t *)dst_addr),
-				frame_ptr);
-
+		//convert_64_bit_to_byte_array(*((uint64_t *)dst_addr),
+		//		frame_ptr);
+		memcpy(frame_ptr, (uint8_t *)dst_addr, sizeof(uint64_t));
 		fcf |= FCF_SET_DEST_ADDR_MODE(FCF_LONG_ADDR);
 	}
 
