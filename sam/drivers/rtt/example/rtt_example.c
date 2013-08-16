@@ -159,8 +159,8 @@ static void configure_rtt(void)
 
 	/* Configure RTT for a 1 second tick interrupt */
 #if SAM4N || SAM4S || SAM4E
-	rtt_sel_source(RTT, false);
-#endif	
+	rtt_sel_source(RTT, false);
+#endif
 	rtt_init(RTT, 32768);
 
 	ul_previous_time = rtt_read_timer_value(RTT);
@@ -183,7 +183,7 @@ static void configure_console(void)
 		.baudrate = CONF_UART_BAUDRATE,
 		.paritytype = CONF_UART_PARITY
 	};
-	
+
 	/* Configure console UART. */
 	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
 	stdio_serial_init(CONF_UART, &uart_serial_options);
