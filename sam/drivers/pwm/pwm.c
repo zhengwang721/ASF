@@ -80,7 +80,7 @@ extern "C" {
  * \param ul_mck Master clock frequency in Hz.
  *
  * \retval Return the value to be set in the PWM Clock Register (PWM Mode Register for
- * SAM3N/SAM4N) or PWM_INVALID_ARGUMENT if the configuration cannot be met.
+ * SAM3N/SAM4N/SAM4C) or PWM_INVALID_ARGUMENT if the configuration cannot be met.
  */
 static uint32_t pwm_clocks_generate(uint32_t ul_frequency, uint32_t ul_mck)
 {
@@ -157,9 +157,6 @@ uint32_t pwm_channel_init(Pwm *p_pwm, pwm_channel_t *p_channel)
 {
 	uint32_t ch_mode_reg = 0;
 	uint32_t ch_num = p_channel->channel;
-#if !SAM4C
-	uint32_t channel = (1 << ch_num);
-#endif
 
 	/* Channel Mode/Clock Register */
 	ch_mode_reg = (p_channel->ul_prescaler & 0xF) |
@@ -178,7 +175,7 @@ uint32_t pwm_channel_init(Pwm *p_pwm, pwm_channel_t *p_channel)
 
 	/* Channel Period Register */
 	p_pwm->PWM_CH_NUM[ch_num].PWM_CPRD = p_channel->ul_period;
-
+	
 #if (SAM3U || SAM3S || SAM3XA || SAM4S || SAM4E)
 	/* Channel Dead Time Register */
 	if (p_channel->b_deadtime_generator) {
@@ -201,6 +198,7 @@ uint32_t pwm_channel_init(Pwm *p_pwm, pwm_channel_t *p_channel)
 					ch_num) << 16);
 
 	/* Sync Channels Mode Register */
+	uint32_t channel = (1 << ch_num);
 	if (p_channel->b_sync_ch) {
 		p_pwm->PWM_SCM |= channel;
 	} else {
@@ -443,7 +441,7 @@ uint32_t pwm_channel_get_interrupt_mask(Pwm *p_pwm)
  * \param p_pwm Pointer to a PWM instance.
  * \param ul_event Channel number to enable counter event interrupt.
  * \param ul_fault Channel number to enable fault protection interrupt(ignored
- * by SAM3N/SAM4N).
+ * by SAM3N/SAM4N/SAM4C).
  */
 void pwm_channel_enable_interrupt(Pwm *p_pwm, uint32_t ul_event,
 		uint32_t ul_fault)
@@ -464,7 +462,7 @@ void pwm_channel_enable_interrupt(Pwm *p_pwm, uint32_t ul_event,
  * \param p_pwm Pointer to a PWM instance.
  * \param ul_event Bitmask of channel number to disable counter event interrupt.
  * \param ul_fault Bitmask of channel number to disable fault protection
- * interrupt(ignored by SAM3N/SAM4N).
+ * interrupt(ignored by SAM3N/SAM4N/SAM4C).
  */
 void pwm_channel_disable_interrupt(Pwm *p_pwm, uint32_t ul_event,
 		uint32_t ul_fault)

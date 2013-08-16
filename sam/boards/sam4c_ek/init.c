@@ -131,6 +131,20 @@ void board_init(void)
 #endif
 
 	/* Configure PWM LED pins */
+#ifdef CONF_BOARD_PWM_LED0
+	/* Configure PWM LED0 pin */
+	ioport_set_pin_peripheral_mode(PIN_PWM_LED0_GPIO, PIN_PWM_LED0_FLAGS);
+#endif
+
+#ifdef CONF_BOARD_PWM_LED1
+	/* Configure PWM LED1 pin */
+	ioport_set_pin_peripheral_mode(PIN_PWM_LED1_GPIO, PIN_PWM_LED1_FLAGS);
+#endif
+
+#ifdef CONF_BOARD_PWM_LED2
+	/* Configure PWM LED2 pin */
+	ioport_set_pin_peripheral_mode(PIN_PWM_LED2_GPIO, PIN_PWM_LED2_FLAGS);
+#endif
 
 	/* Configure SPI pins */
 #ifdef CONF_BOARD_SPI0
