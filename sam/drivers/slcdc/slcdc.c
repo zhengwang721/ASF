@@ -68,13 +68,11 @@ status_code_t slcdc_init(Slcdc *p_slcdc, struct slcdc_config *slcdc_cfg)
 	sysclk_enable_peripheral_clock(ID_SLCDC);
 
 	/* SLCDC basic configuration */
-	supc_set_slcd_power_mode(SUPC, slcdc_cfg->power_mode);
-	slcdc_set_contrast(slcdc_cfg->contrast);
 	p_slcdc->SLCDC_MR = (CONF_SLCDC_BIAS << SLCDC_MR_BIAS_Pos) |
 			(CONF_SLCDC_COM_NUM << SLCDC_MR_COMSEL_Pos) |
 			SLCDC_MR_SEGSEL(CONF_SLCDC_SEG_NUM) |
 			slcdc_cfg->buf_time;
-	if(slcdc_set_frame_rate(p_slcdc, BOARD_FREQ_SLCK_XTAL, slcdc_cfg->frame_rate)
+	if(slcdc_set_frame_rate(p_slcdc, slcdc_cfg->frame_rate)
 				!= STATUS_OK) {
 		return ERR_INVALID_ARG;
 	}
@@ -83,8 +81,7 @@ status_code_t slcdc_init(Slcdc *p_slcdc, struct slcdc_config *slcdc_cfg)
 	return STATUS_OK;
 }
 
-status_code_t slcdc_set_frame_rate(Slcdc *p_slcdc, uint32_t ul_sclk,
-		uint32_t frame_rate)
+status_code_t slcdc_set_frame_rate(Slcdc *p_slcdc, uint32_t frame_rate)
 {
 	uint32_t ul_divisors[SLCDC_CLOCK_PRE_MAX] =
 			{8, 16, 32, 64, 128, 256, 512, 1024};
@@ -94,13 +91,13 @@ status_code_t slcdc_set_frame_rate(Slcdc *p_slcdc, uint32_t ul_sclk,
 	uint32_t ul_div;
 
 	/* Find prescaler and divisor values */
-	ul_div = (ul_sclk / ul_divisors[ul_pre])
+	ul_div = (BOARD_FREQ_SLCK_XTAL / ul_divisors[ul_pre])
 			/ frame_rate
 			/ uc_ncom[CONF_SLCDC_COM_NUM];
 
 	while ((ul_div > SLCDC_CLOCK_DIV_MAX) && (ul_pre < SLCDC_CLOCK_PRE_MAX)) {
 		ul_pre++;
-		ul_div = (ul_sclk / ul_divisors[ul_pre])
+		ul_div = (BOARD_FREQ_SLCK_XTAL / ul_divisors[ul_pre])
 				/ frame_rate
 				/ uc_ncom[CONF_SLCDC_COM_NUM];
 	}
@@ -136,14 +133,6 @@ status_code_t slcdc_set_blink_freq(Slcdc *p_slcdc, uint32_t value,
 	} else {
 		return ERR_INVALID_ARG;
 	}
-}
-
-void slcdc_set_contrast(uint8_t contrast)
-{
-	Assert(contrast < 16);
-	uint8_t voltage[16] = {7, 6, 5, 4, 3, 2, 1, 0, 15, 14, 13, 12, 11, 10, 9, 8};
-
-	supc_set_slcd_vol(SUPC, voltage[contrast]);
 }
 
 void slcdc_enable(Slcdc *p_slcdc)

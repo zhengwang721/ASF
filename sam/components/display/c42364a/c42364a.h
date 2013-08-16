@@ -208,7 +208,8 @@ void c42364a_blink_disable(void);
  *
  *  This function allows to adjust the contrast of the C42364A LCD glass.
  *
- *  \param contrast  -32 <= signed contrast value <= 31.
+ *  \param contrast  -32 <= signed contrast value <= 31(Using LCDCA)
+ *                                0 <= contrast value <= 15(Using SLCDC).
  */
 void c42364a_set_contrast(int8_t contrast);
 

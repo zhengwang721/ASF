@@ -43,40 +43,57 @@
 
 #include "compiler.h"
 #include "board.h"
+#include "slcdc.h"
 #include "c42364a.h"
 #include "c42364a_font.h"
 #include "conf_c42364a_slcdc.h"
-#include "slcdc.h"
+
+/** ASCII definition for char space. */
+#define   ASCII_SP                       0x20
+/** ASCII char definition for char '0'. */
+#define   ASCII_0                         0x30
+/** ASCII char definition for char 'A'. */
+#define   ASCII_BIG_A                0x41
+/** ASCII char definition for char 'a'. */
+#define   ASCII_LITTLE_A          0x61
 
 /* Symbol pixel array definition */
-const enum symbol_pixel Symbol_D0[7] = PATTERN_SYMBOL_D0;
-const enum symbol_pixel Symbol_D1[7] = PATTERN_SYMBOL_D1;
-const enum symbol_pixel Symbol_D2[7] = PATTERN_SYMBOL_D2;
-const enum symbol_pixel Symbol_D3[7] = PATTERN_SYMBOL_D3;
+const enum c42364a_symbol_pixel symbol_d0[7] = C42364A_PATTERN_SYMBOL_D0;
+const enum c42364a_symbol_pixel symbol_d1[7] = C42364A_PATTERN_SYMBOL_D1;
+const enum c42364a_symbol_pixel symbol_d2[7] = C42364A_PATTERN_SYMBOL_D2;
+const enum c42364a_symbol_pixel symbol_d3[7] = C42364A_PATTERN_SYMBOL_D3;
 
-const enum symbol_pixel Symbol_A2[14] = PATTERN_SYMBOL_A2;
-const enum symbol_pixel Symbol_A3[14] = PATTERN_SYMBOL_A3;
-const enum symbol_pixel Symbol_A4[14] = PATTERN_SYMBOL_A4;
-const enum symbol_pixel Symbol_A5[14] = PATTERN_SYMBOL_A5;
-const enum symbol_pixel Symbol_A6[14] = PATTERN_SYMBOL_A6;
+const enum c42364a_symbol_pixel symbol_a2[14] = C42364A_PATTERN_SYMBOL_A2;
+const enum c42364a_symbol_pixel symbol_a3[14] = C42364A_PATTERN_SYMBOL_A3;
+const enum c42364a_symbol_pixel symbol_a4[14] = C42364A_PATTERN_SYMBOL_A4;
+const enum c42364a_symbol_pixel symbol_a5[14] = C42364A_PATTERN_SYMBOL_A5;
+const enum c42364a_symbol_pixel symbol_a6[14] = C42364A_PATTERN_SYMBOL_A6;
 
 /* Symbol plot value definition */
-const uint8_t Plot_Number[10] = {PLOT_NUMBER_0, PLOT_NUMBER_1, PLOT_NUMBER_2,
-		PLOT_NUMBER_3, PLOT_NUMBER_4, PLOT_NUMBER_5, PLOT_NUMBER_6, PLOT_NUMBER_7,
-		PLOT_NUMBER_8, PLOT_NUMBER_9};
-const uint32_t Plot_Letter[26] = {PLOT_LETTER_A, PLOT_LETTER_B, PLOT_LETTER_C,
-		PLOT_LETTER_D, PLOT_LETTER_E, PLOT_LETTER_F, PLOT_LETTER_G, PLOT_LETTER_H,
-		PLOT_LETTER_I, PLOT_LETTER_J, PLOT_LETTER_K, PLOT_LETTER_L, PLOT_LETTER_M,
-		PLOT_LETTER_N, PLOT_LETTER_O, PLOT_LETTER_P, PLOT_LETTER_Q, PLOT_LETTER_R,
-		PLOT_LETTER_S, PLOT_LETTER_T, PLOT_LETTER_U, PLOT_LETTER_V, PLOT_LETTER_W,
-		PLOT_LETTER_X, PLOT_LETTER_Y, PLOT_LETTER_Z};
-const uint32_t Plot_Letter_Num[10] = {PLOT_LETTER_0, PLOT_LETTER_1, PLOT_LETTER_2,
-		PLOT_LETTER_3, PLOT_LETTER_4, PLOT_LETTER_5, PLOT_LETTER_6, PLOT_LETTER_7,
-		PLOT_LETTER_8, PLOT_LETTER_9};
+const uint8_t plot_number[10] = {C42364A_PLOT_NUMBER_0, C42364A_PLOT_NUMBER_1,
+		C42364A_PLOT_NUMBER_2, C42364A_PLOT_NUMBER_3, C42364A_PLOT_NUMBER_4,
+		C42364A_PLOT_NUMBER_5, C42364A_PLOT_NUMBER_6, C42364A_PLOT_NUMBER_7,
+		C42364A_PLOT_NUMBER_8, C42364A_PLOT_NUMBER_9};
+const uint32_t plot_letter[26] = {C42364A_PLOT_LETTER_A, C42364A_PLOT_LETTER_B,
+		C42364A_PLOT_LETTER_C, C42364A_PLOT_LETTER_D, C42364A_PLOT_LETTER_E,
+		C42364A_PLOT_LETTER_F, C42364A_PLOT_LETTER_G, C42364A_PLOT_LETTER_H,
+		C42364A_PLOT_LETTER_I, C42364A_PLOT_LETTER_J, C42364A_PLOT_LETTER_K,
+		C42364A_PLOT_LETTER_L, C42364A_PLOT_LETTER_M, C42364A_PLOT_LETTER_N,
+		C42364A_PLOT_LETTER_O, C42364A_PLOT_LETTER_P, C42364A_PLOT_LETTER_Q,
+		C42364A_PLOT_LETTER_R, C42364A_PLOT_LETTER_S, C42364A_PLOT_LETTER_T,
+		C42364A_PLOT_LETTER_U, C42364A_PLOT_LETTER_V, C42364A_PLOT_LETTER_W,
+		C42364A_PLOT_LETTER_X, C42364A_PLOT_LETTER_Y, C42364A_PLOT_LETTER_Z};
+const uint32_t plot_letter_num[10] = {C42364A_PLOT_LETTER_0, C42364A_PLOT_LETTER_1,
+		C42364A_PLOT_LETTER_2, C42364A_PLOT_LETTER_3, C42364A_PLOT_LETTER_4,
+		C42364A_PLOT_LETTER_5, C42364A_PLOT_LETTER_6, C42364A_PLOT_LETTER_7,
+		C42364A_PLOT_LETTER_8, C42364A_PLOT_LETTER_9};
 
 /*Each bit mask of uint32 */
 static uint32_t mask[32];
 
+/**
+ * \brief Initialize mask[32] value.
+ */
 static void init_mask(void)
 {
 	uint32_t tmp = 1;
@@ -133,7 +150,7 @@ static void c42364a_slcdc_clear_pixel(Slcdc *p_slcdc,
  * \param plot   Symbol plot definition value
  */
 static void c42364a_slcdc_display_symbol(Slcdc *p_slcdc,
-		const enum symbol_pixel *p_symbol, uint8_t number, uint32_t plot)
+		const enum c42364a_symbol_pixel *p_symbol, uint8_t number, uint32_t plot)
 {
 	while(number--) {
 		if (plot & mask[number])
@@ -153,7 +170,7 @@ static void c42364a_slcdc_display_symbol(Slcdc *p_slcdc,
  * \param number   Symbol pixel array number.
  */
 static void c42364a_slcdc_efface_symbol(Slcdc *p_slcdc,
-		const enum symbol_pixel *p_symbol, uint8_t number)
+		const enum c42364a_symbol_pixel *p_symbol, uint8_t number)
 {
 	while(number --) {
 		c42364a_slcdc_clear_pixel(p_slcdc, (*(p_symbol+number)) & 0x03,
@@ -171,65 +188,65 @@ static void c42364a_slcdc_efface_symbol(Slcdc *p_slcdc,
  */
 static void c42364a_slcdc_display_alphanum_string(const uint8_t *data)
 {
-	if(data[0] == 0x20) {
-		c42364a_slcdc_efface_symbol(SLCDC, Symbol_A2, sizeof(Symbol_A2));
-	} else if((0x30 < data[0]) && (data[0] < 0x41)) {
-		c42364a_slcdc_display_symbol(SLCDC, Symbol_A2, sizeof(Symbol_A2),
-				Plot_Letter_Num[data[0] - 0x30]);
-	} else if((0x40 < data[0]) && (data[0] < 0x61)) {
-		c42364a_slcdc_display_symbol(SLCDC, Symbol_A2, sizeof(Symbol_A2),
-				Plot_Letter[data[0] - 0x41]);
+	if(data[0] == ASCII_SP) {
+		c42364a_slcdc_efface_symbol(SLCDC, symbol_a2, sizeof(symbol_a2));
+	} else if((ASCII_0 <= data[0]) && (data[0] < ASCII_BIG_A)) {
+		c42364a_slcdc_display_symbol(SLCDC, symbol_a2, sizeof(symbol_a2),
+				plot_letter_num[data[0] - ASCII_0]);
+	} else if((ASCII_BIG_A <= data[0]) && (data[0] < ASCII_LITTLE_A)) {
+		c42364a_slcdc_display_symbol(SLCDC, symbol_a2, sizeof(symbol_a2),
+				plot_letter[data[0] - ASCII_BIG_A]);
 	} else {
-		c42364a_slcdc_display_symbol(SLCDC, Symbol_A2, sizeof(Symbol_A2),
-				Plot_Letter[data[0] - 0x61]);
+		c42364a_slcdc_display_symbol(SLCDC, symbol_a2, sizeof(symbol_a2),
+				plot_letter[data[0] - ASCII_LITTLE_A]);
 	}
-	if(data[1] == 0x20) {
-		c42364a_slcdc_efface_symbol(SLCDC, Symbol_A3, sizeof(Symbol_A3));
-	} else if((0x30 < data[1]) && (data[1] < 0x41)) {
-		c42364a_slcdc_display_symbol(SLCDC, Symbol_A3, sizeof(Symbol_A3),
-				Plot_Letter_Num[data[1] - 0x30]);
-	} else if((0x40 < data[1]) && (data[1] < 0x61)) {
-		c42364a_slcdc_display_symbol(SLCDC, Symbol_A3, sizeof(Symbol_A3),
-				Plot_Letter[data[1] - 0x41]);
+	if(data[1] == ASCII_SP) {
+		c42364a_slcdc_efface_symbol(SLCDC, symbol_a3, sizeof(symbol_a3));
+	} else if((ASCII_0 <= data[1]) && (data[1] < ASCII_BIG_A)) {
+		c42364a_slcdc_display_symbol(SLCDC, symbol_a3, sizeof(symbol_a3),
+				plot_letter_num[data[1] - ASCII_0]);
+	} else if((ASCII_BIG_A <= data[1]) && (data[1] < ASCII_LITTLE_A)) {
+		c42364a_slcdc_display_symbol(SLCDC, symbol_a3, sizeof(symbol_a3),
+				plot_letter[data[1] - ASCII_BIG_A]);
 	} else {
-		c42364a_slcdc_display_symbol(SLCDC, Symbol_A3, sizeof(Symbol_A3),
-				Plot_Letter[data[1] - 0x61]);
+		c42364a_slcdc_display_symbol(SLCDC, symbol_a3, sizeof(symbol_a3),
+				plot_letter[data[1] - ASCII_LITTLE_A]);
 	}
-	if(data[2] == 0x20) {
-		c42364a_slcdc_efface_symbol(SLCDC, Symbol_A4, sizeof(Symbol_A4));
-	} else if((0x30 < data[2]) && (data[2] < 0x41)) {
-		c42364a_slcdc_display_symbol(SLCDC, Symbol_A4, sizeof(Symbol_A4),
-				Plot_Letter_Num[data[2] - 0x30]);
-	} else if((0x40 < data[2]) && (data[2] < 0x61)) {
-		c42364a_slcdc_display_symbol(SLCDC, Symbol_A4, sizeof(Symbol_A4),
-				Plot_Letter[data[2] - 0x41]);
+	if(data[2] == ASCII_SP) {
+		c42364a_slcdc_efface_symbol(SLCDC, symbol_a4, sizeof(symbol_a4));
+	} else if((ASCII_0 <= data[2]) && (data[2] < ASCII_BIG_A)) {
+		c42364a_slcdc_display_symbol(SLCDC, symbol_a4, sizeof(symbol_a4),
+				plot_letter_num[data[2] - ASCII_0]);
+	} else if((ASCII_BIG_A <= data[2]) && (data[2] < ASCII_LITTLE_A)) {
+		c42364a_slcdc_display_symbol(SLCDC, symbol_a4, sizeof(symbol_a4),
+				plot_letter[data[2] - ASCII_BIG_A]);
 	} else {
-		c42364a_slcdc_display_symbol(SLCDC, Symbol_A4, sizeof(Symbol_A4),
-				Plot_Letter[data[2] - 0x61]);
+		c42364a_slcdc_display_symbol(SLCDC, symbol_a4, sizeof(symbol_a4),
+				plot_letter[data[2] - ASCII_LITTLE_A]);
 	}
-	if(data[3] == 0x20) {
-		c42364a_slcdc_efface_symbol(SLCDC, Symbol_A5, sizeof(Symbol_A5));
-	} else if((0x30 < data[3]) && (data[3] < 0x41)) {
-		c42364a_slcdc_display_symbol(SLCDC, Symbol_A5, sizeof(Symbol_A5),
-				Plot_Letter_Num[data[3] - 0x30]);
-	} else if((0x40 < data[3]) && (data[3] < 0x61)) {
-		c42364a_slcdc_display_symbol(SLCDC, Symbol_A5, sizeof(Symbol_A5),
-				Plot_Letter[data[3] - 0x41]);
+	if(data[3] == ASCII_SP) {
+		c42364a_slcdc_efface_symbol(SLCDC, symbol_a5, sizeof(symbol_a5));
+	} else if((ASCII_0 <= data[3]) && (data[3] < ASCII_BIG_A)) {
+		c42364a_slcdc_display_symbol(SLCDC, symbol_a5, sizeof(symbol_a5),
+				plot_letter_num[data[3] - ASCII_0]);
+	} else if((ASCII_BIG_A <= data[3]) && (data[3] < ASCII_LITTLE_A)) {
+		c42364a_slcdc_display_symbol(SLCDC, symbol_a5, sizeof(symbol_a5),
+				plot_letter[data[3] - ASCII_BIG_A]);
 	} else {
-		c42364a_slcdc_display_symbol(SLCDC, Symbol_A5, sizeof(Symbol_A5),
-				Plot_Letter[data[3] - 0x61]);
+		c42364a_slcdc_display_symbol(SLCDC, symbol_a5, sizeof(symbol_a5),
+				plot_letter[data[3] - ASCII_LITTLE_A]);
 	}
-	if(data[4] == 0x20) {
-		c42364a_slcdc_efface_symbol(SLCDC, Symbol_A6, sizeof(Symbol_A6));
-	} else if((0x30 < data[4]) && (data[4] < 0x41)) {
-		c42364a_slcdc_display_symbol(SLCDC, Symbol_A6, sizeof(Symbol_A6),
-				Plot_Letter_Num[data[4] - 0x30]);
-	} else if((0x40 < data[4]) && (data[4] < 0x61)) {
-		c42364a_slcdc_display_symbol(SLCDC, Symbol_A6, sizeof(Symbol_A6),
-				Plot_Letter[data[4] - 0x41]);
+	if(data[4] == ASCII_SP) {
+		c42364a_slcdc_efface_symbol(SLCDC, symbol_a6, sizeof(symbol_a6));
+	} else if((ASCII_0 <= data[4]) && (data[4] < ASCII_BIG_A)) {
+		c42364a_slcdc_display_symbol(SLCDC, symbol_a6, sizeof(symbol_a6),
+				plot_letter_num[data[4] - ASCII_0]);
+	} else if((ASCII_BIG_A <= data[4]) && (data[4] < ASCII_LITTLE_A)) {
+		c42364a_slcdc_display_symbol(SLCDC, symbol_a6, sizeof(symbol_a6),
+				plot_letter[data[4] - ASCII_BIG_A]);
 	} else {
-		c42364a_slcdc_display_symbol(SLCDC, Symbol_A6, sizeof(Symbol_A6),
-				Plot_Letter[data[4] - 0x61]);
+		c42364a_slcdc_display_symbol(SLCDC, symbol_a6, sizeof(symbol_a6),
+				plot_letter[data[4] - ASCII_LITTLE_A]);
 	}
 }
 
@@ -243,29 +260,29 @@ static void c42364a_slcdc_display_alphanum_string(const uint8_t *data)
  */
 static void c42364a_slcdc_display_num_string(const uint8_t *data)
 {
-	if(data[0] == 0x20) {
-		c42364a_slcdc_efface_symbol(SLCDC, Symbol_D0, sizeof(Symbol_D0));
+	if(data[0] == ASCII_SP) {
+		c42364a_slcdc_efface_symbol(SLCDC, symbol_d0, sizeof(symbol_d0));
 	} else {
-		c42364a_slcdc_display_symbol(SLCDC, Symbol_D0, sizeof(Symbol_D0),
-				Plot_Number[data[0] - 0x30]);
+		c42364a_slcdc_display_symbol(SLCDC, symbol_d0, sizeof(symbol_d0),
+				plot_number[data[0] - ASCII_0]);
 	}
-	if(data[1] == 0x20) {
-		c42364a_slcdc_efface_symbol(SLCDC, Symbol_D1, sizeof(Symbol_D1));
+	if(data[1] == ASCII_SP) {
+		c42364a_slcdc_efface_symbol(SLCDC, symbol_d1, sizeof(symbol_d1));
 	} else {
-		c42364a_slcdc_display_symbol(SLCDC, Symbol_D1, sizeof(Symbol_D1),
-				Plot_Number[data[1] - 0x30]);
+		c42364a_slcdc_display_symbol(SLCDC, symbol_d1, sizeof(symbol_d1),
+				plot_number[data[1] - ASCII_0]);
 	}
-	if(data[2] == 0x20) {
-		c42364a_slcdc_efface_symbol(SLCDC, Symbol_D2, sizeof(Symbol_D2));
+	if(data[2] == ASCII_SP) {
+		c42364a_slcdc_efface_symbol(SLCDC, symbol_d2, sizeof(symbol_d2));
 	} else {
-		c42364a_slcdc_display_symbol(SLCDC, Symbol_D2, sizeof(Symbol_D2),
-				Plot_Number[data[2] - 0x30]);
+		c42364a_slcdc_display_symbol(SLCDC, symbol_d2, sizeof(symbol_d2),
+				plot_number[data[2] - ASCII_0]);
 	}
-	if(data[3] == 0x20) {
-		c42364a_slcdc_efface_symbol(SLCDC, Symbol_D3, sizeof(Symbol_D3));
+	if(data[3] == ASCII_SP) {
+		c42364a_slcdc_efface_symbol(SLCDC, symbol_d3, sizeof(symbol_d3));
 	} else {
-		c42364a_slcdc_display_symbol(SLCDC, Symbol_D3, sizeof(Symbol_D3),
-				Plot_Number[data[3] - 0x30]);
+		c42364a_slcdc_display_symbol(SLCDC, symbol_d3, sizeof(symbol_d3),
+				plot_number[data[3] - ASCII_0]);
 	}
 }
 
@@ -276,20 +293,21 @@ void c42364a_init(void)
 
 	init_mask();
 
+	/* Set LCD power mode: Internal supply */
+	supc_set_slcd_power_mode(SUPC, CONF_C42364A_POWER_MODE);
+
 	/* SLCDC Reset */
 	slcdc_reset(SLCDC);
 
 	/* SLCDC initialization */
-	slcdc_cfg.buf_time = SLCDC_BUFTIME_X64_SCLK;
+	slcdc_cfg.buf_time = CONF_C42364A_BUF_TIME;
 	slcdc_cfg.frame_rate= CONF_C42364A_FRAME_RATE;
-	slcdc_cfg.disp_mode = SLCDC_DISPMODE_NORMAL;
-	slcdc_cfg.power_mode = SLCDC_POWER_MODE_LCDON_INVR;
-	slcdc_cfg.contrast = CONF_C4236A_CONTRAST;
+	slcdc_cfg.disp_mode = CONF_C42364A_DISP_MODE;
 	slcdc_init(SLCDC, &slcdc_cfg);
 
 	/*LCD seg 17, 20~22, and 24 ~49 mapped on SEGx I/O pin */
-	slcdc_set_segmap0(SLCDC,0xff720000);
-	slcdc_set_segmap1(SLCDC,0x3ffff);
+	slcdc_set_segmap0(SLCDC, C42364A_SEGMAP_NUM_0);
+	slcdc_set_segmap1(SLCDC, C42364A_SEGMAP_NUM_1);
 
 	/* Enable SLCDC */
  	slcdc_enable(SLCDC);
@@ -328,12 +346,14 @@ void c42364a_show_icon(uint8_t icon_com, uint8_t icon_seg)
 
 void c42364a_blink_icon_start(uint8_t icon_com, uint8_t icon_seg)
 {
+	/* SLCDC not support this feature */
 	UNUSED(icon_com);
 	UNUSED(icon_seg);
 }
 
 void c42364a_blink_icon_stop(uint8_t icon_com, uint8_t icon_seg)
 {
+	/* SLCDC not support this feature */
 	UNUSED(icon_com);
 	UNUSED(icon_seg);
 }
@@ -341,7 +361,7 @@ void c42364a_blink_icon_stop(uint8_t icon_com, uint8_t icon_seg)
 void c42364a_blink_screen(void)
 {
 	slcdc_set_display_mode(SLCDC, SLCDC_DISPMODE_BLINKING);
-	slcdc_set_blink_freq(SLCDC, CONF_C42364A_BLINK_FREQ, 1);
+	slcdc_set_blink_freq(SLCDC, CONF_C42364A_BLINK_FREQ, SLCDC_SEL_FREQ);
 }
 
 void c42364a_blink_disable(void)
@@ -351,12 +371,16 @@ void c42364a_blink_disable(void)
 
 void c42364a_set_contrast(int8_t contrast)
 {
-	slcdc_set_contrast(contrast);
+	Assert((0<=contrast) && (contrast < 16));
+	uint8_t voltage[16] = {7, 6, 5, 4, 3, 2, 1, 0, 15, 14, 13, 12, 11, 10, 9, 8};
+
+	supc_set_slcd_vol(SUPC, voltage[contrast]);
 }
 
 void c42364a_circular_animation_start(uint8_t csr_dir,
 		uint8_t size, uint8_t data)
 {
+	/* SLCDC not support this feature */
 	UNUSED(csr_dir);
 	UNUSED(size);
 	UNUSED(data);
@@ -364,18 +388,19 @@ void c42364a_circular_animation_start(uint8_t csr_dir,
 
 void c42364a_circular_animation_stop(void)
 {
-
+	/* SLCDC not support this feature */
 }
 
 void c42364a_text_scrolling_start(const uint8_t *data, uint32_t length)
 {
+	/* SLCDC not support this feature */
 	UNUSED(data);
 	UNUSED(length);
 }
 
 void c42364a_text_scrolling_stop(void)
 {
-
+	/* SLCDC not support this feature */
 }
 
 void c42364a_show_all(void)

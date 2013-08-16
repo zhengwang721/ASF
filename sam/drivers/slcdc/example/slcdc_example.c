@@ -80,7 +80,17 @@
 
 #include <asf.h>
 
-#define  SLCDC_FRAME_RATE     64
+/** LCD buffer on-time */
+#define LCD_BUF_TIME         SLCDC_BUFTIME_X64_SCLK
+
+/** LCD frame rate value */
+#define LCD_FRAME_RATE     64
+
+/** LCD display mode */
+#define LCD_DISP_MODE         SLCDC_DISPMODE_NORMAL
+
+/** LCD power mode */
+#define LCD_POWER_MODE         SLCDC_POWER_MODE_LCDON_INVR
 
 /**
  *  Configure serial console.
@@ -129,6 +139,9 @@ int main(void)
 	/* Turn on LCD back light */
 	ioport_set_pin_level(LCD_BL_GPIO, IOPORT_PIN_LEVEL_LOW);
 
+	/* Set LCD power mode: Internal supply */
+	supc_set_slcd_power_mode(SUPC, LCD_POWER_MODE);
+	
 	/* SLCDC Reset */
 	slcdc_reset(SLCDC);
 	/*
@@ -136,12 +149,10 @@ int main(void)
 	 * - Clock,
 	 * - Display mode: Normal
 	 * - Frame Rate:  64Hz
-	 * - Power mode: Internal supply
 	 */
-	slcdc_cfg.buf_time = SLCDC_BUFTIME_X64_SCLK;
-	slcdc_cfg.frame_rate= SLCDC_FRAME_RATE;
-	slcdc_cfg.disp_mode = SLCDC_DISPMODE_NORMAL;
-	slcdc_cfg.power_mode = SLCDC_POWER_MODE_LCDON_INVR;
+	slcdc_cfg.buf_time = LCD_BUF_TIME;
+	slcdc_cfg.frame_rate= LCD_FRAME_RATE;
+	slcdc_cfg.disp_mode = LCD_DISP_MODE;
 
 	status = slcdc_init(SLCDC, &slcdc_cfg);
 	if (status != STATUS_OK) {
@@ -150,8 +161,8 @@ int main(void)
 		}
 	}
 	/*LCD seg 17, 20~22, and 24 ~49 mapped on SEGx I/O pin */
-	slcdc_set_segmap0(SLCDC,0xff720000);
-	slcdc_set_segmap1(SLCDC,0x3ffff);
+	slcdc_set_segmap0(SLCDC, C42364A_SEGMAP_NUM_0);
+	slcdc_set_segmap1(SLCDC, C42364A_SEGMAP_NUM_1);
 
 	/* Enable SLCDC */
 	slcdc_enable(SLCDC);

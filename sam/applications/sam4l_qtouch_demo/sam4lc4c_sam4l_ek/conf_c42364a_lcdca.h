@@ -3,7 +3,7 @@
  *
  * \brief C42364A configuration.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,8 +43,8 @@
 
 /** Configuration of the C42364A LCD glass driver */
 
-#ifndef CONF_C42364A_H_INCLUDED
-#define CONF_C42364A_H_INCLUDED
+#ifndef CONF_C42364A_LCDCA_H_INCLUDED
+#define CONF_C42364A_LCDCA_H_INCLUDED
 
 /** Bias configuration. */
 #define CONF_C42364A_X_BIAS    false
@@ -77,4 +77,33 @@
 /** Text scrolling configuration. */
 #define CONF_C42364A_TEXT_SCROLLING_TIMER        LCDCA_TIMER_FC0
 
-#endif /* CONF_C42364A_H_INCLUDED */
+/**
+ * \name C42364A LCD Glass Common and Segment number
+ * @{
+ */
+#define C42364A_NB_OF_COM 4
+#define C42364A_NB_OF_SEG 40
+/** @} */
+
+/**
+ * \name C42364A LCD Glass Connection Initialization
+ * @{
+ */
+#define C42364A_PORT_MASK C42364A_NB_OF_SEG
+#define C42364A_LCD_DUTY  (C42364A_NB_OF_COM % 4)
+/** @} */
+
+/**
+ * \name Digit Decoder
+ * @{
+ */
+/** 7-segment with 4 commons terminals */
+#define C42364A_FIRST_7SEG_4C 10
+#define C42364A_WIDTH_7SEG_4C 4
+
+/** 14-segment with 4 commons terminals */
+#define C42364A_FIRST_14SEG_4C 36
+#define C42364A_WIDTH_14SEG_4C 7
+/** @} */
+
+#endif /* CONF_C42364A_LCDCA_H_INCLUDED */

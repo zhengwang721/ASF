@@ -46,13 +46,22 @@
 #ifndef CONF_C42364A_SLCDC_H_INCLUDED
 #define CONF_C42364A_SLCDC_H_INCLUDED
 
+/** LCD buffer on-time */
+#define CONF_C42364A_BUF_TIME         SLCDC_BUFTIME_X64_SCLK
+
 /** LCD frame rate value */
-#define CONF_C42364A_FRAME_RATE     64
+#define CONF_C42364A_FRAME_RATE       64
+
+/** LCD display mode */
+#define CONF_C42364A_DISP_MODE        SLCDC_DISPMODE_NORMAL
+
+/** LCD power mode */
+#define CONF_C42364A_POWER_MODE       SLCDC_POWER_MODE_LCDON_INVR
 
 /** LCD blinking frequency */
-#define CONF_C42364A_BLINK_FREQ     2
+#define CONF_C42364A_BLINK_FREQ       2
 
 /** LCD Contrast value */
-#define CONF_C4236A_CONTRAST        8
- 
+#define CONF_C4236A_CONTRAST          8
+
 #endif /* CONF_C42364A_SLCDC_H_INCLUDED */

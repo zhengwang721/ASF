@@ -61,7 +61,6 @@ extern "C" {
  *
  * The SLCDC module depends on the following modules:
  * - \ref sysclk_group for SLCDC clock control.
- * - \ref supc_group for SLCDC power management.
  * - \ref interrupt_group for enabling or disabling interrupts.
  * - \ref sleepmgr_group to unlock SLCDC
  * @{
@@ -121,10 +120,6 @@ struct slcdc_config {
 	uint32_t frame_rate;
 	/** Display Mode. */
 	enum slcdc_disp_mode disp_mode;
-	/** Power Mode */
-	enum slcdc_power_mode power_mode;
-	/** Contrast value */
-	uint8_t contrast;
 };
 
 /**
@@ -136,8 +131,13 @@ struct slcdc_config {
  */
 typedef void (*slcdc_callback_t)(void);
 
-#define SLCDC_CLOCK_DIV_MAX  8
-#define SLCDC_CLOCK_PRE_MAX  8
+/* The maxium clock prescaler and divider */
+#define SLCDC_CLOCK_DIV_MAX          8
+#define SLCDC_CLOCK_PRE_MAX          8
+
+/* The selection frequency or period when setting frame rate */
+#define SLCDC_SEL_FREQ               true
+#define SLCDC_SEL_PERIOD             false
 
 /**
  * \brief Initialize SLCDC with specified configuration.
@@ -207,18 +207,9 @@ static inline void slcdc_set_buf_time(Slcdc *p_slcdc,
  * \brief  Set frame rate for SLCDC.
  *
  * \param p_slcdc Pointer to an SLCDC instance.
- * \param ul_sclk Slow clock frequency in Hz.
  * \param frame_rate  Frame rate value .
  */
-status_code_t slcdc_set_frame_rate(Slcdc *p_slcdc, uint32_t ul_sclk,
-		uint32_t frame_rate);
-
-/**
- * \brief Set the SLCDC contrast.
- *
- * \param  contrast  0 <= contrast value <= 15.
- */
-void slcdc_set_contrast(uint8_t contrast);
+status_code_t slcdc_set_frame_rate(Slcdc *p_slcdc, uint32_t frame_rate);
 
 /**
  * \brief Enable SLCDC.
@@ -473,6 +464,8 @@ void slcdc_set_display_memory(Slcdc *p_slcdc);
  *
  * Add this to the main loop or a setup function:
  * \code
+ *   // Set LCD power mode: Internal supply
+ *   supc_set_slcd_power_mode(SUPC, SLCDC_POWER_MODE_LCDON_INVR);
  *
  *   struct slcdc_config slcdc_cfg;
  *
@@ -480,11 +473,9 @@ void slcdc_set_display_memory(Slcdc *p_slcdc);
  *   // - Clock,
  *   // - Display mode: Normal
  *   // - Frame Rate:  64Hz
- *   // - Power mode: Internal supply
  *   slcdc_cfg.buf_time = SLCDC_BUFTIME_X64_SCLK;
  *   slcdc_cfg.frame_rate= 64;
  *   slcdc_cfg.disp_mode = SLCDC_DISPMODE_NORMAL;
- *   slcdc_cfg.power_mode = SLCDC_POWER_MODE_LCDON_INVR;
  *   slcdc_init(&slcdc_cfg);
  *   slcdc_enable();
  *
@@ -494,6 +485,8 @@ void slcdc_set_display_memory(Slcdc *p_slcdc);
  *
  * \subsection slcdc_basic_setup_workflow Basic Setup Workflow
  *
+ * -# Set LCD power mode
+ *  - \code supc_set_slcd_power_mode(SUPC, SLCDC_POWER_MODE_LCDON_INVR); \endcode
  * -# Initialize SLCDC with basic configuration
  *  - \code slcdc_init(&slcdc_cfg); \endcode
  * -# Enable SLCDC module

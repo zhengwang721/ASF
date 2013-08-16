@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<module type="application" id="sam.drivers.slcdc.example" caption="SLCDC Example">
 		<info type="description" value="summary">
-		This examples illustrates how to use the SAM4C LCD module to write characters, set or clear icons on display.
+		This examples demonstrates how to use SLCDC driver to address an external LCD segment (C42364A). The LCD still display in steady state after core entering backup mode.
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="Graphics"/>
@@ -9,6 +9,7 @@
 		<build type="c-source" value="slcdc_example.c"/>
 		<device-support value="sam4c"/>
 		<require idref="sam.drivers.slcdc"/>
+		<require idref="sam.drivers.supc"/>
 		<require idref="common.services.ioport"/>
 		<require idref="common.services.delay"/>
 		<require idref="common.utils.stdio.stdio_serial"/>

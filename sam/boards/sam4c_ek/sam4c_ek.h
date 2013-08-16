@@ -373,36 +373,36 @@
  * @{
  */
  /** Seg Num of Pixel */
-#define PIXEL_G1_SEG_NUM            48
-#define PIXEL_G4_SEG_NUM            49
-#define PIXEL_D3A_SEG_NUM           27
-#define PIXEL_D3F_SEG_NUM           26
-#define PIXEL_D2A_SEG_NUM           25
-#define PIXEL_D2F_SEG_NUM           24
-#define PIXEL_D1A_SEG_NUM           22
-#define PIXEL_D1F_SEG_NUM           21
-#define PIXEL_D0A_SEG_NUM           20
-#define PIXEL_D0F_SEG_NUM           17
-#define PIXEL_A6H_SEG_NUM           47
-#define PIXEL_B14_SEG_NUM           46
-#define PIXEL_A6A_SEG_NUM           45
-#define PIXEL_A6G_SEG_NUM           44
-#define PIXEL_A5H_SEG_NUM           43
-#define PIXEL_B5_SEG_NUM            42
-#define PIXEL_A5A_SEG_NUM           41
-#define PIXEL_A5G_SEG_NUM           40
-#define PIXEL_A4H_SEG_NUM           39
-#define PIXEL_B6_SEG_NUM            38
-#define PIXEL_A4A_SEG_NUM           37
-#define PIXEL_A4G_SEG_NUM           36
-#define PIXEL_A3H_SEG_NUM           35
-#define PIXEL_B4_SEG_NUM            34
-#define PIXEL_A3A_SEG_NUM           33
-#define PIXEL_A3G_SEG_NUM           32
-#define PIXEL_A2H_SEG_NUM           31
-#define PIXEL_B3_SEG_NUM            30
-#define PIXEL_A2A_SEG_NUM           29
-#define PIXEL_A2G_SEG_NUM           28
+#define C42364A_G1_SEG_NUM            48
+#define C42364A_G4_SEG_NUM            49
+#define C42364A_D3A_SEG_NUM           27
+#define C42364A_D3F_SEG_NUM           26
+#define C42364A_D2A_SEG_NUM           25
+#define C42364A_D2F_SEG_NUM           24
+#define C42364A_D1A_SEG_NUM           22
+#define C42364A_D1F_SEG_NUM           21
+#define C42364A_D0A_SEG_NUM           20
+#define C42364A_D0F_SEG_NUM           17
+#define C42364A_A6H_SEG_NUM           47
+#define C42364A_B14_SEG_NUM           46
+#define C42364A_A6A_SEG_NUM           45
+#define C42364A_A6G_SEG_NUM           44
+#define C42364A_A5H_SEG_NUM           43
+#define C42364A_B5_SEG_NUM            42
+#define C42364A_A5A_SEG_NUM           41
+#define C42364A_A5G_SEG_NUM           40
+#define C42364A_A4H_SEG_NUM           39
+#define C42364A_B6_SEG_NUM            38
+#define C42364A_A4A_SEG_NUM           37
+#define C42364A_A4G_SEG_NUM           36
+#define C42364A_A3H_SEG_NUM           35
+#define C42364A_B4_SEG_NUM            34
+#define C42364A_A3A_SEG_NUM           33
+#define C42364A_A3G_SEG_NUM           32
+#define C42364A_A2H_SEG_NUM           31
+#define C42364A_B3_SEG_NUM            30
+#define C42364A_A2A_SEG_NUM           29
+#define C42364A_A2G_SEG_NUM           28
 
 /* SEG and COM Num of ICON */
 #define C42364A_ICON_USB            1,48
@@ -431,6 +431,10 @@
 #define C42364A_ICON_DEGREE_F       3,41
 #define C42364A_ICON_VOLT           3,45
 #define C42364A_ICON_MILLI_VOLT     0,46
+
+/* The LCD segment map number */
+#define C42364A_SEGMAP_NUM_0     0xff720000
+#define C42364A_SEGMAP_NUM_1     0x3ffff
 /* @} */
 
 /**

@@ -32,6 +32,7 @@
 			<build type="doxygen-entry-point" value="c42364a_display_group"/>
 			<build type="doxygen-quick-start" value="sam_component_c42364a_quick_start"/>
 			<require idref="sam.drivers.slcdc"/>
+			<require idref="sam.drivers.supc"/>
 			<device-support value="sam4c"/>
 			<build type="module-config" subtype="required-header-file" value="conf_c42364a_slcdc.h"/>
 			<build type="module-config" subtype="path" value="module_config"/>
