@@ -62,7 +62,7 @@ extern "C" {
  * @{
  */
 
-#if SAM4E || SAM4N || SAM4C
+#if SAM4E || SAM4N || SAM4S || SAM4C
 /* User signature size */
 # define FLASH_USER_SIG_SIZE   (512)
 #endif
@@ -70,17 +70,20 @@ extern "C" {
 #if SAM4S
 /* Internal Flash Controller 0. */
 # define EFC     EFC0
-/* User signature size */
-# define FLASH_USER_SIG_SIZE   (512)
+#if (SAM4SD16 || SAM4SD32)
+/* The max GPNVM number. */
+# define GPNVM_NUM_MAX        3
+#else
+/* The max GPNVM number. */
+# define GPNVM_NUM_MAX        2
+#endif
 /* Internal Flash 0 base address. */
 # define IFLASH_ADDR     IFLASH0_ADDR
 /* Internal flash page size. */
 # define IFLASH_PAGE_SIZE     IFLASH0_PAGE_SIZE
 /* Internal flash lock region size. */
 # define IFLASH_LOCK_REGION_SIZE     IFLASH0_LOCK_REGION_SIZE
-#endif
-
-#if (SAM3XA || SAM3U4 || SAM4SD16 || SAM4SD32)
+#elif (SAM3XA || SAM3U4)
 /* Internal Flash Controller 0. */
 # define EFC     EFC0
 /* The max GPNVM number. */
