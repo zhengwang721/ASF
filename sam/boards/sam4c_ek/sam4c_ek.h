@@ -276,7 +276,20 @@
  * \name PWM LEDx pin definitions
  * @{
  */
-// TBD
+/** PWM LED Green pin definitions. */
+#define PIN_PWM_LED0_GPIO     PIO_PC6_IDX
+#define PIN_PWM_LED0_FLAGS    (IOPORT_MODE_MUX_A)
+#define PIN_PWM_LED0_CHANNEL  PWM_CHANNEL_0
+
+/** PWM LED Amber pin definitions. */
+#define PIN_PWM_LED1_GPIO     PIO_PC7_IDX
+#define PIN_PWM_LED1_FLAGS    (IOPORT_MODE_MUX_A)
+#define PIN_PWM_LED1_CHANNEL  PWM_CHANNEL_1
+
+/** PWM LED Blue pin definitions. */
+#define PIN_PWM_LED2_GPIO     PIO_PC8_IDX
+#define PIN_PWM_LED2_FLAGS    (IOPORT_MODE_MUX_A)
+#define PIN_PWM_LED2_CHANNEL  PWM_CHANNEL_2
 /* @} */
 
 /**
@@ -431,7 +444,8 @@
  * \name ADC pin definitions
  * @{
  */
-// TBD
+#define PINS_ADC_TRIG       PIO_PB23_IDX
+#define PINS_ADC_TRIG_FLAG  IOPORT_MODE_MUX_A
 /* @} */
 
 /**

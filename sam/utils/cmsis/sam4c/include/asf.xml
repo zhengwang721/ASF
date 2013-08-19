@@ -11,6 +11,7 @@
 		<build type="header-file" value="sam4c16c_0.h"/>
 		<build type="header-file" value="sam4c16c_1.h"/>
 		<build type="header-file" value="system_sam4c.h"/>
+		<build type="include-path" value="."/>
 		<info type="gui-flag" value="hidden"/>
 		<device-support value="sam4c"/>
 	</module>

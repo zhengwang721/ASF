@@ -907,13 +907,25 @@
  * \name SAM4C series
  * @{
  */
-#define SAM4C8 ( \
-		SAM_PART_IS_DEFINED(SAM4C8C) \
+#define SAM4C8_0 ( \
+		SAM_PART_IS_DEFINED(SAM4C8C_0) \
 		)
 
-#define SAM4C16 ( \
-		SAM_PART_IS_DEFINED(SAM4C16C) \
+#define SAM4C8_1 ( \
+		SAM_PART_IS_DEFINED(SAM4C8C_1) \
 		)
+
+#define SAM4C8 (SAM4C8_0 || SAM4C8_1)
+
+#define SAM4C16_0 ( \
+		SAM_PART_IS_DEFINED(SAM4C16C_0) \
+		)
+
+#define SAM4C16_1 ( \
+		SAM_PART_IS_DEFINED(SAM4C16C_1) \
+		)
+
+#define SAM4C16 (SAM4C16_0 || SAM4C16_1)
 /** @} */
 
 /**
