@@ -97,7 +97,7 @@
             <device-support-alias value="megarfa1_hw_timer_support"/>
 		</module>
 
-		<module type="meta" id="thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer#4" caption="Common HW Timer - SAM0 implementation">
+		<module type="meta" id="thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer#5" caption="Common HW Timer - SAM0 implementation">
             <build type="header-file"   value="common_hw_timer.h"/>
             <build type="include-path"  value="."/>
 
@@ -128,7 +128,8 @@
     </device-alias-map>
     <device-alias-map name="sam0_hw_timer_support">
         <device-support value="atsamd20j18"/>
-    </device-alias-map>    <device-alias-map name="megarfr2_hw_timer_support">
+    </device-alias-map>    
+	<device-alias-map name="megarfr2_hw_timer_support">
         <device-support value="atmega256rfr2"/>
     </device-alias-map>
     <device-alias-map name="megarfa1_hw_timer_support">
