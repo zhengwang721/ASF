@@ -547,6 +547,28 @@ void mac_process_data_frame(buffer_t *buf_ptr)
 
 			/* Append MCPS data indication to MAC-NHLE queue */
 			qmm_queue_append(&mac_nhle_q, buf_ptr);
+#ifdef GTS_SUPPORT
+			{
+				uint8_t loop_index;
+				for(loop_index = 0; loop_index < mac_pan_gts_table_len; loop_index++)
+				{
+					if(FCF_SHORT_ADDR == mdi->SrcAddrMode
+					&& (uint16_t)(mdi->SrcAddr) == mac_pan_gts_table[loop_index].DevShortAddr)
+					{
+						if (tal_pib.BeaconOrder >= 9)
+						{
+							mac_pan_gts_table[loop_index].ExpiryCount = GTS_EXPIRY_BO_9_TO_14;
+						}
+						else
+						{
+							mac_pan_gts_table[loop_index].ExpiryCount = GTS_EXPIRY_BO_0_TO_8;
+						}
+						break;
+					}
+				}
+			}
+
+#endif /* GTS_SUPPORT */
 		} /* End of duplicate detection. */
 
 		/* Continue with checking the frame pending bit in the received
