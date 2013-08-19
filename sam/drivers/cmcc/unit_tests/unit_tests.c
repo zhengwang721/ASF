@@ -61,6 +61,7 @@
  * All SAM devices with an CMCC module can be used.
  * This example has been tested with the following setup:
  * - sam4e16e_sam4e_ek
+ * - sam4c16c_sam4c_ek
  *
  * \section compinfo Compilation info
  * This software was written for the GNU GCC and IAR for ARM. Other compilers

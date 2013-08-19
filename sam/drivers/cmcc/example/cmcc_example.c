@@ -63,10 +63,11 @@
  * All SAM devices with an CMCC module can be used. This example has been
  * tested with the following setup:<BR>
  * - SAM4E evaluation kit.
+ * - SAM4C evaluation kit.
  *
  * \section setupinfo Setup Information
  * <BR>CPU speed: <i> 120 MHz </i>
- * - Connect the SAM4E DBGU port com to a PC
+ * - Please connect the DBGU port com to a PC
  * - PC terminal settings:
  *     - 115200 bps,
  *     - 8 data bits,
