@@ -11,10 +11,10 @@
 			<build type="header-file" subtype="api" value="sleep_megarf.h"/>
 			<build type="include-path" value="."/>
 			<require idref="mega.utils"/>
-			<device-support value="megarf"/>		
+			<device-support value="mega"/>		
 			<build type="doxygen-entry-point" value="sleep_group"/>
 			<build type="doxygen-quick-start" value="mega_sleep_quickstart"/>
-			<generator value="doxygen-module" default-mcu="atmega128rfa1"/>
+			<generator value="doxygen-module" default-mcu="unspecified-mega"/>
 		</module>
 	</select-by-device>
 </asf>

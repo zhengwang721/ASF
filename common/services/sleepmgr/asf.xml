@@ -97,7 +97,7 @@
 			<build type="include-path" value="."/>
 			<build type="module-config" subtype="path" value="mega/module_config"/>
 			<build type="doxygen-entry-point" value="sleepmgr_group"/>
-			<device-support value="mega"/>
+			<device-support value="megarf"/>
 			<require idref="mega.drivers.sleep"/>
 			<generator value="doxygen-module" default-mcu="unspecified-mega"/>
 		</module>	
