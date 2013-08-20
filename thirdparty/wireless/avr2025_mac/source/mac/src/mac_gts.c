@@ -104,8 +104,9 @@ mac_gts_spec_t mac_gts_spec;
  * confirmation.
  */
 uint8_t *mac_gts_buf_ptr;
-
+#ifdef GTS_DEBUG
 uint8_t debug_pins[7][2] = {{DEBUG_PIN4,DEBUG_PIN11},{DEBUG_PIN5,DEBUG_PIN12},{DEBUG_PIN6,DEBUG_PIN13},{DEBUG_PIN7,DEBUG_PIN14},{DEBUG_PIN8,DEBUG_PIN15},{DEBUG_PIN9,DEBUG_PIN16},{DEBUG_PIN10,DEBUG_PIN17}};
+#endif
 /* !!! Warning !!!
  Do not change the index, mapping for update is done based on this...*/
 #define DEV_TX_SLOT_INDEX    (0)
