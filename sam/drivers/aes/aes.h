@@ -53,7 +53,7 @@
  * Driver for the AES (Advanced Encryption Standard) module.
  * Provides functions for configuring and initiating ciphering/deciphering
  * with AES algorithms.
- * Several modes(ECB, CBC, OFB, CFB or CTR) and
+ * Several modes(ECB, CBC, OFB, CFB, CTR or GCM) and
  * key sizes(128-, 192- or 256-bit) are supported,
  * in addition to manual, auto or DMA-based data input to the AES module.
  *

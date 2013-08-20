@@ -55,6 +55,7 @@
  * - OFB ciphering and deciphering.
  * - CTR ciphering and deciphering.
  * - ECB ciphering and deciphering with DMA.<BR>
+ * - GCM ciphering and deciphering.
  *
  * \section files Main Files
  * - aes.c : AES driver
@@ -69,10 +70,11 @@
  * All SAM devices with an AES module can be used. This example has been
  * tested with the following setup:<BR>
  * - SAM4E evaluation kit.
+ * - SAM4C evaluation kit.
  *
  * \section setupinfo Setup Information
  * <BR>CPU speed: <i> 120 MHz </i>
- * - Connect the SAM4E DBGU port com to a PC
+ * - Connect the DBGU port com to a PC
  * - PC terminal settings:
  *     - 115200 bps,
  *     - 8 data bits,
@@ -863,6 +865,7 @@ static void display_menu(void)
 			"  4: OFB mode test. \n\r"
 			"  5: CTR mode test. \n\r"
 			"  d: ECB mode test with DMA \n\r"
+			"  6: GCM mode test. \n\r"
 			"\n\r\n\r");
 }
 
@@ -931,9 +934,18 @@ int main(void)
 			break;
 
 		case 'd':
+			#if !SAM4C
 			printf("ECB mode encryption and decryption test with DMA.\r\n");
 			ecb_mode_test_dma();
+			#else
+			printf(" This mode is not supported by device.\r\n");
 			break;
+
+		case '6':
+			#if SAM4C
+			printf("GCM mode encryption and decryption test.\r\n");
+			#else 
+			printf(" This mode is not supported by device.\r\n");
 
 		default:
 			break;
