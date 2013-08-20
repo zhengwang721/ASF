@@ -81,7 +81,7 @@ static bool mac_gts_allocate(gts_char_t GtsCharacteristics, uint16_t DevAddress)
 static bool mac_gts_deallocate(gts_char_t GtsCharacteristics, uint16_t DevAddress, bool persist);
 #endif /* FFD */
 static void mac_update_dev_gts_table(bool gts_dir, uint8_t slot_len, uint8_t start_slot, bool panc_slot, bool send_ind);
-
+static void process_deallocate_data_q(queue_t *q_ptr);
 #ifdef FFD
 mac_pan_gts_mgmt_t mac_pan_gts_table[MAX_GTS_ON_PANC];
 uint8_t mac_pan_gts_table_len = 0;
@@ -479,6 +479,16 @@ bool mac_gts_allocate(gts_char_t GtsCharacteristics, uint16_t DevAddress)
 
 	++mac_pan_gts_table_len;
 
+	for(Index = mac_pan_gts_table_len; Index < MAX_GTS_ON_PANC; Index ++)
+	{
+		if(mac_pan_gts_table[Index].DevShortAddr == DevAddress
+		&& mac_pan_gts_table[Index].GtsDesc.GtsDirection == GtsCharacteristics.GtsDirection)
+		{
+			mac_pan_gts_table[Index].PersistenceCount = 0;
+			mac_pan_gts_table[Index].ExpiryCount = 0;
+		}
+	}
+
 	LEAVE_CRITICAL_REGION();
 	return true;
 }
@@ -487,8 +497,10 @@ bool mac_gts_allocate(gts_char_t GtsCharacteristics, uint16_t DevAddress)
 #ifdef FFD
 bool mac_gts_deallocate(gts_char_t GtsCharacteristics, uint16_t DevAddress, bool persist)
 {
-	uint8_t table_index, table_index1;
-	uint8_t temp_slot = 0x10;
+	uint8_t table_index;
+	uint8_t table_index1;
+	uint8_t temp_slot = FINAL_CAP_SLOT_DEFAULT + 1;
+	queue_t *temp_ptr_q;
 	
 	for(table_index = 0; table_index < mac_pan_gts_table_len; table_index++)
 	{
@@ -498,6 +510,8 @@ bool mac_gts_deallocate(gts_char_t GtsCharacteristics, uint16_t DevAddress, bool
 		&& mac_pan_gts_table[table_index].GtsDesc.GtsLength == GtsCharacteristics.GtsLength)
 		{
 			ENTER_CRITICAL_REGION();
+			temp_ptr_q = mac_pan_gts_table[table_index].gts_data_q;
+			
 			for(table_index1 = table_index; table_index1 < (mac_pan_gts_table_len - 1); table_index1++)
 			{
 				mac_pan_gts_table[table_index1].DevShortAddr = mac_pan_gts_table[table_index1 + 1].DevShortAddr;
@@ -513,8 +527,12 @@ bool mac_gts_deallocate(gts_char_t GtsCharacteristics, uint16_t DevAddress, bool
 				
 				mac_pan_gts_table[table_index1].PersistenceCount = mac_pan_gts_table[table_index1 + 1].PersistenceCount;
 				
+				mac_pan_gts_table[table_index1].gts_data_q = mac_pan_gts_table[table_index1 + 1].gts_data_q;
+				
 				temp_slot -= mac_pan_gts_table[table_index1].GtsDesc.GtsLength;
 			}
+			
+			mac_pan_gts_table[table_index1].gts_data_q = temp_ptr_q;
 			
 			--mac_pan_gts_table_len;
 
@@ -534,14 +552,13 @@ bool mac_gts_deallocate(gts_char_t GtsCharacteristics, uint16_t DevAddress, bool
 				
 				mac_pan_gts_table[table_index1].PersistenceCount = mac_pan_gts_table[table_index1 + 1].PersistenceCount;
 			}
-			
-			
-			mac_pan_gts_table[MAX_GTS_ON_PANC - 1].DevShortAddr = DevAddress;
-			mac_pan_gts_table[MAX_GTS_ON_PANC - 1].GtsDesc.GtsDirection = GtsCharacteristics.GtsDirection;
-			mac_pan_gts_table[MAX_GTS_ON_PANC - 1].GtsDesc.GtsLength = GtsCharacteristics.GtsLength;
-			mac_pan_gts_table[MAX_GTS_ON_PANC - 1].GtsDesc.GtsStartingSlot = 0;
+
 			if(persist)
 			{
+				mac_pan_gts_table[MAX_GTS_ON_PANC - 1].DevShortAddr = DevAddress;
+				mac_pan_gts_table[MAX_GTS_ON_PANC - 1].GtsDesc.GtsDirection = GtsCharacteristics.GtsDirection;
+				mac_pan_gts_table[MAX_GTS_ON_PANC - 1].GtsDesc.GtsLength = GtsCharacteristics.GtsLength;
+				mac_pan_gts_table[MAX_GTS_ON_PANC - 1].GtsDesc.GtsStartingSlot = 0;
 				mac_pan_gts_table[MAX_GTS_ON_PANC - 1].PersistenceCount = aGTSDescPersistenceTime;
 			}
 			else
@@ -549,6 +566,7 @@ bool mac_gts_deallocate(gts_char_t GtsCharacteristics, uint16_t DevAddress, bool
 				mac_pan_gts_table[MAX_GTS_ON_PANC - 1].PersistenceCount = 0;
 			}
 			LEAVE_CRITICAL_REGION();
+			process_deallocate_data_q(temp_ptr_q);
 			return true;
 		}
 		else
@@ -570,31 +588,32 @@ void mac_parse_bcn_gts_info(uint8_t gts_count, uint8_t gts_dir, uint8_t *gts_lis
 	{
 		curr_gts_dir = ((gts_dir >> loop_index) && 0x01);
 
-		if(MAC_GTS_ALLOC_REQ_SENT == mac_gts_state
-		&& gts_list->dev_addr == tal_pib.ShortAddress)
+		if(gts_list->dev_addr == tal_pib.ShortAddress)
 		{
-			if(0 == gts_list->starting_slot)
+			if(MAC_GTS_ALLOC_REQ_SENT == mac_gts_state)
 			{
-				mac_gen_mlme_gts_conf((buffer_t *)mac_gts_buf_ptr, MAC_DENIED,
-				requested_gts_char);
-			}
-			else if(gts_list->length == requested_gts_char.GtsLength)
-			{
-				mac_update_dev_gts_table(curr_gts_dir,gts_list->length, gts_list->starting_slot, false, false);
+				if(0 == gts_list->starting_slot)
+				{
+					mac_gen_mlme_gts_conf((buffer_t *)mac_gts_buf_ptr, MAC_DENIED,
+					requested_gts_char);
+				}
+				else if(gts_list->length == requested_gts_char.GtsLength)
+				{
+					mac_update_dev_gts_table(curr_gts_dir,gts_list->length, gts_list->starting_slot, false, false);
 
-				mac_gen_mlme_gts_conf((buffer_t *)mac_gts_buf_ptr, MAC_SUCCESS,
-				requested_gts_char);
+					mac_gen_mlme_gts_conf((buffer_t *)mac_gts_buf_ptr, MAC_SUCCESS,
+					requested_gts_char);
+				}
+				mac_gts_state = MAC_GTS_IDLE;
 			}
-			mac_gts_state = MAC_GTS_IDLE;
+			else
+			{
+				mac_update_dev_gts_table(curr_gts_dir,gts_list->length, gts_list->starting_slot, false, true);
+			}
 		}
 		else if(gts_list->dev_addr == mac_pib.mac_CoordShortAddress)
 		{
 			mac_update_dev_gts_table(curr_gts_dir,gts_list->length, gts_list->starting_slot, true, true);
-		}
-		if (0 == gts_list->starting_slot
-		&& tal_pib.ShortAddress == gts_list->dev_addr)
-		{
-			mac_update_dev_gts_table(curr_gts_dir, gts_list->length, gts_list->starting_slot, false, true);
 		}
 		gts_list++;
 	}
@@ -649,6 +668,10 @@ void mac_update_dev_gts_table(bool gts_dir, uint8_t slot_len, uint8_t start_slot
 	= slot_len;
 	mac_dev_gts_table[updating_index].GtsStartingSlot
 	= start_slot;
+	if (DEV_TX_SLOT_INDEX == updating_index)
+	{
+		process_deallocate_data_q(&dev_tx_gts_q);
+	}
 }
 
 uint8_t handle_gts_data_req(mcps_data_req_t *data_req, uint8_t *msg)
@@ -941,6 +964,28 @@ uint8_t handle_gts_data_tx_end(void)
 	if (MAC_ASSOCIATED == mac_state && MAC_ACTIVE_CFP_GTS1 == mac_superframe_state)
 	{
 		mac_tx_gts_data(&dev_tx_gts_q);
+	}
+}
+
+static void process_deallocate_data_q(queue_t *q_ptr)
+{
+	buffer_t *buf_ptr;
+	frame_info_t *transmit_frame;
+	while(q_ptr->size > 0)
+	{
+		buf_ptr = qmm_queue_remove(q_ptr, NULL);
+
+		transmit_frame = (frame_info_t *)BMM_BUFFER_POINTER(buf_ptr);
+
+		mac_gen_mcps_data_conf(
+			(buffer_t *)buf_ptr,
+			(uint8_t)MAC_INVALID_GTS,
+			#ifdef ENABLE_TSTAMP
+			transmit_frame->msduHandle,
+			0);
+			#else
+			transmit_frame->msduHandle);
+			#endif  /* ENABLE_TSTAMP */
 	}
 }
 
