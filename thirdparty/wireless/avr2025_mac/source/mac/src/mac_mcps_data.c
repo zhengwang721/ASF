@@ -567,7 +567,6 @@ void mac_process_data_frame(buffer_t *buf_ptr)
 					}
 				}
 			}
-
 #endif /* GTS_SUPPORT */
 		} /* End of duplicate detection. */
 
