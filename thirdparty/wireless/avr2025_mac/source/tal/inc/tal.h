@@ -232,6 +232,8 @@ typedef enum {
 	/* Command Frame Identifier for Coordinator Realignment */
 	COORDINATORREALIGNMENT,
 
+	GTSREQUEST,
+
 	/*
 	 * These are not MAC command frames but listed here as they are needed
 	 * in the msgtype field
@@ -289,6 +291,9 @@ typedef struct
 	uint16_t persistence_time;
 	/** Indirect frame transmission ongoing */
 	bool indirect_in_transit;
+#ifdef GTS_SUPPORT
+	void *gts_queue;
+#endif /* GTS_SUPPORT */
 #if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP)
 
 	/** Timestamp information of frame

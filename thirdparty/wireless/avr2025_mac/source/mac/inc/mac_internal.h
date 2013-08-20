@@ -62,12 +62,32 @@
 #include "tal_internal.h"
 #endif
 
-#ifdef MAC_SECURITY_ZIP
+#if MAC_SECURITY_ZIP || GTS_SUPPORT
 #include "mac_msg_types.h"
 #endif
 
 /* === Macros =============================================================== */
 
+/* vk debug */ //vk
+#ifdef GTS_DEBUG
+#define DEBUG_PIN1 IOPORT_CREATE_PIN(PORTE, 6)
+#define DEBUG_PIN2 IOPORT_CREATE_PIN(PORTD, 4)
+#define DEBUG_PIN3 IOPORT_CREATE_PIN(PORTD, 1)
+#define DEBUG_PIN4 IOPORT_CREATE_PIN(PORTD, 0)
+#define DEBUG_PIN5 IOPORT_CREATE_PIN(PORTD, 6)
+#define DEBUG_PIN6 IOPORT_CREATE_PIN(PORTB, 2)
+#define DEBUG_PIN7 IOPORT_CREATE_PIN(PORTB, 3)
+#define DEBUG_PIN8 IOPORT_CREATE_PIN(PORTB, 1)
+#define DEBUG_PIN9 IOPORT_CREATE_PIN(PORTE, 5)
+#define DEBUG_PIN10 IOPORT_CREATE_PIN(PORTG, 0)
+#define DEBUG_PIN11 IOPORT_CREATE_PIN(PORTD, 7)
+#define DEBUG_PIN12 IOPORT_CREATE_PIN(PORTG, 2)
+#define DEBUG_PIN13 IOPORT_CREATE_PIN(PORTE, 7)
+#define DEBUG_PIN14 IOPORT_CREATE_PIN(PORTD, 5)
+#define DEBUG_PIN15 IOPORT_CREATE_PIN(PORTE, 2)//
+#define DEBUG_PIN16 IOPORT_CREATE_PIN(PORTE, 3)//
+#define DEBUG_PIN17 IOPORT_CREATE_PIN(PORTB, 7)
+#endif
 /**
  * \addtogroup group_mac_def
  * @{
@@ -150,6 +170,29 @@ typedef enum mac_state_tag {
 } SHORTENUM mac_state_t COMPILER_WORD_ALIGNED;
 
 /**
+ * MAC state type.
+ */
+typedef enum mac_superframe_state_tag {
+	/*
+	 * IEEE 802.15.4-defined Superframe states.
+	 */
+	MAC_ACTIVE_CAP = 0,
+#ifdef GTS_SUPPORT
+	/* Warning!!! Do not change the order
+	   of below GTS state definitions */
+	MAC_ACTIVE_CFP_GTS1,
+	MAC_ACTIVE_CFP_GTS2,
+	MAC_ACTIVE_CFP_GTS3,
+	MAC_ACTIVE_CFP_GTS4,
+	MAC_ACTIVE_CFP_GTS5,
+	MAC_ACTIVE_CFP_GTS6,
+	MAC_ACTIVE_CFP_GTS7,
+#endif
+	MAC_INACTIVE,
+	MAC_NOBEACON
+} SHORTENUM mac_superframe_state_t;
+
+/**
  * MAC poll states.
  * These states describe the current status of the MAC for polling
  * for devices or coordinators, not for PAN coordinator.
@@ -218,6 +261,16 @@ typedef enum mac_sync_state_tag {
 	 */
 	MAC_SYNC_BEFORE_ASSOC
 } SHORTENUM mac_sync_state_t  COMPILER_WORD_ALIGNED;
+
+/**
+ * Device GTS states.
+ */
+typedef enum mac_gts_state_tag {
+	/** NO GTS request sent */
+	MAC_GTS_IDLE = 0,
+	/** GTS request sent to PANC */
+	MAC_GTS_ALLOC_REQ_SENT,
+} SHORTENUM mac_gts_state_t;
 
 /**
  * MAC sleep state type.
@@ -311,6 +364,10 @@ typedef struct mac_pib_tag {
 	 */
 	uint8_t mac_AssociationPermit;
 #endif /* (MAC_ASSOCIATION_INDICATION_RESPONSE == 1) */
+
+#ifdef GTS_SUPPORT
+	uint8_t mac_GTSPermit;
+#endif /* GTS_SUPPORT */
 
 #if (MAC_START_REQUEST_CONFIRM == 1)
 
@@ -434,6 +491,10 @@ extern queue_t tal_mac_q;
 extern queue_t indirect_data_q;
 #endif /* (MAC_INDIRECT_DATA_FFD == 1) */
 
+#ifdef GTS_SUPPORT
+extern queue_t gts_q[];
+#endif /* GTS_SUPPORT */
+
 #if (MAC_START_REQUEST_CONFIRM == 1)
 #ifdef BEACON_SUPPORT
 extern queue_t broadcast_q;
@@ -452,7 +513,18 @@ extern mac_scan_state_t mac_scan_state;
 extern mac_sync_state_t mac_sync_state;
 extern mac_poll_state_t mac_poll_state;
 extern mac_pib_t mac_pib;
-
+#ifdef BEACON_SUPPORT
+extern mac_superframe_state_t mac_superframe_state;
+#ifdef GTS_SUPPORT
+extern mac_gts_state_t mac_gts_state;
+extern uint8_t *mac_gts_buf_ptr;
+extern gts_char_t requested_gts_char;
+#ifdef FFD
+extern mac_pan_gts_mgmt_t mac_pan_gts_table[];
+extern uint8_t mac_pan_gts_table_len;
+#endif /* FFD */
+#endif /* GTS_SUPPORT */
+#endif /* BEACON_SUPPORT*/
 /* === Prototypes =========================================================== */
 
 #ifdef __cplusplus
@@ -672,6 +744,19 @@ retval_t mac_unsecure(parse_t *mac_parse_data, uint8_t *mpdu,
 		uint8_t *mac_payload, uint8_t *payload_index);
 
 #endif  /* MAC_SECURITY_ZIP */
+
+#ifdef GTS_SUPPORT
+void mac_gen_mlme_gts_conf(buffer_t *buf_ptr, uint8_t status, gts_char_t gts_char);
+void mac_process_gts_request(buffer_t *gts_req);
+uint8_t mac_add_gts_info(uint8_t *frame_ptr);
+void mac_parse_bcn_gts_info(uint8_t gts_count, uint8_t gts_dir, uint8_t *gts_list_ptr);
+uint8_t handle_gts_data_req(mcps_data_req_t *data_req, uint8_t *msg);
+void reset_gts_globals(void);
+void mac_t_gts_cb(void *callback_parameter);
+void init_gts_queues(void);
+void mac_tx_gts_data(queue_t *gts_data);
+uint8_t handle_gts_data_tx_end(void);
+#endif /* GTS_SUPPORT */
 
 #if (MAC_INDIRECT_DATA_FFD == 1)
 

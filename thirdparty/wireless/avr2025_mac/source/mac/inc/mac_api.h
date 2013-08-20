@@ -434,6 +434,14 @@ typedef struct mac_sec_pib_tag {
 } mac_sec_pib_t;
 #endif  /* MAC_SECURITY_ZIP */
 
+#ifdef GTS_SUPPORT
+typedef struct gts_char_tag {
+	uint8_t GtsLength:4;
+	uint8_t GtsDirection:1;
+	uint8_t GtsCharType:1;
+	uint8_t Reserved:2;
+}gts_char_t;
+#endif /* GTS_SUPPORT */
 #endif /* if !defined(__DOXYGEN___NO_MAC) */
 
 #ifdef SAM
@@ -915,6 +923,11 @@ bool wpan_mlme_sync_req(uint8_t LogicalChannel,
 
 #endif /* (MAC_SYNC_REQUEST == 1) */
 
+
+#if (MAC_GTS_REQUEST == 1) || defined(__DOXYGEN__)
+bool wpan_mlme_gts_req(uint16_t DevShortAddr, gts_char_t GtsChar);
+#endif /* (MAC_GTS_REQUEST == 1) */
+
 /*@}*//* apiMacReq */
 
 /**
@@ -1341,6 +1354,11 @@ void usr_mlme_sync_loss_ind(uint8_t LossReason,
 		uint16_t PANId,
 		uint8_t LogicalChannel,
 		uint8_t ChannelPage);
+#ifdef GTS_SUPPORT
+void usr_mlme_gts_conf(gts_char_t GtsChar, uint8_t status);
+
+void usr_mlme_gts_ind(uint16_t DeviceAddr, gts_char_t GtsChar);
+#endif /* GTS_SUPPORT */
 
 uint8_t mac_get_pib_attribute_size(uint8_t pib_attribute_id);
 

@@ -869,6 +869,40 @@ typedef struct mlme_poll_conf_tag {
 	/** The status of the data request. */
 	uint8_t status;
 } mlme_poll_conf_t COMPILER_WORD_ALIGNED;
+
+#ifdef GTS_SUPPORT
+/**
+ * @brief This is the MLME-GTS.request message structure.
+ */
+typedef struct mlme_gts_req_tag {
+	/** This identifies the message as \ref MLME_GTS_REQUEST */
+	enum msg_code cmdcode;
+	uint16_t DeviceShortAddr;
+	gts_char_t GtsChar;
+} mlme_gts_req_t;
+
+/**
+ * @brief This is the MLME-GTS.confirm message structure.
+ */
+typedef struct mlme_gts_conf_tag {
+	/** This identifies the message as \ref MLME_GTS_CONFIRM */
+	enum msg_code cmdcode;
+	gts_char_t GtsChar;
+	/** The status of the data request. */
+	uint8_t status;
+} mlme_gts_conf_t;
+
+/**
+ * @brief This is the MLME-GTS.indication message structure.
+ */
+typedef struct mlme_gts_ind_tag {
+	/** This identifies the message as \ref MLME_GTS_INDICATION */
+	enum msg_code cmdcode;
+	uint16_t DeviceAddr;
+	/** The status of the data request. */
+	gts_char_t GtsChar;
+} mlme_gts_ind_t;
+#endif /* GTS_SUPPORT */
 /* ! @} */
 /* === Externals ============================================================ */
 

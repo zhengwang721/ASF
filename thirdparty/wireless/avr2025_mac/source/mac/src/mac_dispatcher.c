@@ -189,6 +189,12 @@ static FLASH_DECLARE(handler_t dispatch_table[LAST_MESSAGE + 1]) = {
 #if (MAC_INDIRECT_DATA_BASIC == 1)
 	[MLME_POLL_CONFIRM]                   = mlme_poll_conf,
 #endif /* (MAC_INDIRECT_DATA_BASIC == 1) */
+
+#ifdef GTS_SUPPORT
+	[MLME_GTS_REQUEST]                    = mlme_gts_request,
+	[MLME_GTS_CONFIRM]                    = mlme_gts_conf,
+	[MLME_GTS_INDICATION]                 = mlme_gts_ind,
+#endif /* GTS_SUPPORT */
 };
 #else
 static FLASH_DECLARE(handler_t dispatch_table[LAST_MESSAGE + 1]) = {
@@ -241,6 +247,12 @@ static FLASH_DECLARE(handler_t dispatch_table[LAST_MESSAGE + 1]) = {
 	[MCPS_PURGE_REQUEST]                  = mcps_purge_request,
 #endif /* ((MAC_PURGE_REQUEST_CONFIRM == 1) && (MAC_INDIRECT_DATA_BASIC == 1))
 	 **/
+
+#ifdef GTS_SUPPORT
+	[MLME_GTS_REQUEST]                    = mlme_gts_request,
+	[MLME_GTS_CONFIRM]                    = mlme_gts_conf,
+	[MLME_GTS_INDICATION]                 = mlme_gts_ind,
+#endif /* GTS_SUPPORT */
 
 	[TAL_DATA_INDICATION]                 = mac_process_tal_data_ind,
 };

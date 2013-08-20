@@ -68,6 +68,7 @@
 #include "mac_config.h"
 #include "mac_build_config.h"
 
+#include "sio2host.h" //vk
 /* === Macros =============================================================== */
 
 /* === Globals ============================================================= */
@@ -128,7 +129,7 @@ void mlme_sync_request(arch_data_t *m)
 		/* Free the buffer allocated for MLME-SYNC-Request */
 		bmm_buffer_free((buffer_t *)m);
 
-		mac_sync_loss(MAC_BEACON_LOSS);
+	mac_sync_loss(MAC_BEACON_LOSS);
 
 		return;
 	}
@@ -236,7 +237,7 @@ void mac_t_tracking_beacons_cb(void *callback_parameter)
  * @brief Timer function at start of the inactive portion at an end device.
  *
  * This function is a callback from the superframe beacon timer for an
- * end deviceand implements the functionality required for entering the
+ * end device and implements the functionality required for entering the
  * inactive portion for an end device.
  *
  * @param callback_parameter Callback parameter of the superframe timer
@@ -249,7 +250,10 @@ void mac_t_start_inactive_device_cb(void *callback_parameter)
 	 * Note: Do not use mac_sleep_trans() here, because this would check
 	 * macRxOnWhenIdle first.
 	 */
-	mac_trx_init_sleep();
+	//mac_trx_init_sleep();
+
+	mac_superframe_state = MAC_INACTIVE;
+	//sio2host_tx("Device - Inactive...\n\r",sizeof("Device - Inactive...\n\r")); //vk
 
 	callback_parameter = callback_parameter; /* Keep compiler happy. */
 }

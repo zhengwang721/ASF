@@ -146,7 +146,11 @@ void mcps_data_request(arch_data_t *msg)
 	memcpy(&mdr, BMM_BUFFER_POINTER(
 			(buffer_t *)msg), sizeof(mcps_data_req_t));
 
-	if ((mdr.TxOptions & WPAN_TXOPT_INDIRECT) == 0) {
+	if ((mdr.TxOptions & WPAN_TXOPT_INDIRECT) == 0
+#ifdef GTS_SUPPORT
+		|| (mdr.TxOptions & WPAN_TXOPT_GTS) == 0
+#endif /* GTS_SUPPORT */
+	) {
 		/*
 		 * Data Requests for a coordinator using direct transmission are
 		 * accepted in all non-transient states (no polling and no
@@ -186,6 +190,24 @@ void mcps_data_request(arch_data_t *msg)
 #endif  /* ENABLE_TSTAMP */
 		return;
 	}
+
+#ifdef GTS_SUPPORT
+	/* Check whether somebody requests an ACK of broadcast frames */
+	if ((mdr.TxOptions & WPAN_TXOPT_GTS) &&
+	((FCF_SHORT_ADDR != mdr.DstAddrMode) ||
+	 (FCF_SHORT_ADDR != mdr.SrcAddrMode) || 
+	 (MAC_ASSOCIATED == mac_state && mdr.DstAddr != mac_pib.mac_CoordShortAddress))) {
+		mac_gen_mcps_data_conf((buffer_t *)msg,
+		(uint8_t)MAC_INVALID_PARAMETER,
+#ifdef ENABLE_TSTAMP
+		mdr.msduHandle,
+		0);
+#else
+		mdr.msduHandle);
+#endif  /* ENABLE_TSTAMP */
+		return;
+	}
+#endif /* GTS_SUPPORT */
 
 	/* Check whether both Src and Dst Address are not present */
 	if ((FCF_NO_ADDR == mdr.SrcAddrMode) &&
@@ -229,6 +251,10 @@ void mcps_data_request(arch_data_t *msg)
 	/* Indirect transmission not ongoing yet. */
 	transmit_frame->indirect_in_transit = false;
 #endif  /* (MAC_INDIRECT_DATA_FFD == 1) */
+
+#ifdef GTS_SUPPORT
+	transmit_frame->gts_queue = NULL;
+#endif /* GTS_SUPPORT */
 
 	status = build_data_frame(&mdr, transmit_frame);
 
@@ -324,6 +350,12 @@ void mcps_data_request(arch_data_t *msg)
 	} else
 #endif /* (MAC_INDIRECT_DATA_FFD == 1) */
 
+#ifdef GTS_SUPPORT
+	if(mdr.TxOptions & WPAN_TXOPT_GTS)
+	{
+		handle_gts_data_req(&mdr, msg);
+	} else
+#endif /* GTS_SUPPORT */
 	/*
 	 * We are NOT indirect, so we need to transmit using
 	 * CSMA_CA in the CAP (for beacon enabled) or immediately (for

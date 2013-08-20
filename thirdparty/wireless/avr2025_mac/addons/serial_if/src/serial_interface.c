@@ -909,6 +909,40 @@ void usr_mlme_sync_loss_ind(uint8_t LossReason,
 	*msg_buf = EOT;
 }
 
+#ifdef GTS_SUPPORT
+void usr_mlme_gts_conf(gts_char_t GtsChar, uint8_t status)
+{
+	uint8_t *msg_buf;
+
+	msg_buf = get_next_tx_buffer();
+	*msg_buf++ = MLME_GTS_CONF_LEN + MAC_PID_LEN;
+	*msg_buf++ = MAC_PID;
+	*msg_buf++ = MLME_GTS_CONFIRM;
+	*msg_buf++ = *((uint8_t*)&GtsChar);
+	*msg_buf++ = status;
+	*msg_buf = EOT;
+}
+
+void usr_mlme_gts_ind(uint16_t DeviceAddr, gts_char_t GtsChar)
+{
+	uint8_t *msg_buf;
+
+	msg_buf = get_next_tx_buffer();
+	*msg_buf++ = MLME_GTS_IND_LEN + MAC_PID_LEN;
+	*msg_buf++ = MAC_PID;
+	*msg_buf++ = MLME_GTS_INDICATION;
+#ifdef TEST_HARNESS_BIG_ENDIAN
+	*msg_buf++ = DeviceAddr >> 8;
+	*msg_buf++ = DeviceAddr;
+#else
+	*msg_buf++ = DeviceAddr;
+	*msg_buf++ = DeviceAddr >> 8;
+#endif
+	*msg_buf++ = *((uint8_t*)&GtsChar);
+	*msg_buf = EOT;
+}
+
+#endif /* GTS_SUPPORT */
 /**
  * \brief Parses the Received Data in the Buffer and Process the Commands
  *accordingly.
@@ -1468,6 +1502,33 @@ static void handle_incoming_msg(void)
 						0);
 			}
 			break;
+#endif /* (MAC_SYNC_REQUEST == 1) */
+
+#if (MAC_GTS_REQUEST == 1)
+		case MLME_GTS_REQUEST:
+		{
+			uint16_t DevAddr = ((uint16_t)sio_rx_buf[3] |
+						((uint16_t)sio_rx_buf[4] << 8));
+			/* Order of reception:
+			 * size;
+			 * ProtocolId,
+			 * cmdCode;
+			 
+			 */
+
+			/*
+			 * bool wpan_mlme_sync_req(uint8_t LogicalChannel,
+			 *                       uint8_t ChannelPage,
+			 *                       bool TrackBeacon);
+			 */
+			ret_val = wpan_mlme_gts_req(DevAddr, *((gts_char_t*)&sio_rx_buf[5]));
+			if (ret_val == false) {
+				Assert(
+						"Test harness: GTS Request not successful" ==
+						0);
+			}
+			break;
+		}
 #endif /* (MAC_SYNC_REQUEST == 1) */
 
 		default:

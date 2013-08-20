@@ -79,14 +79,19 @@
 
 #if (NUMBER_OF_MAC_TIMERS > 0)
 #ifdef BEACON_SUPPORT
+uint8_t T_Beacon_Tracking_Period;
+uint8_t T_Superframe;
+uint8_t T_Missed_Beacon;
 uint8_t T_Beacon_Tracking_Period COMPILER_WORD_ALIGNED;
 uint8_t T_Superframe COMPILER_WORD_ALIGNED;
 uint8_t T_Missed_Beacon COMPILER_WORD_ALIGNED;
     #if (MAC_START_REQUEST_CONFIRM == 1)
 uint8_t T_Beacon COMPILER_WORD_ALIGNED;
-
 uint8_t T_Beacon_Preparation COMPILER_WORD_ALIGNED;
     #endif /* (MAC_START_REQUEST_CONFIRM == 1) */
+#ifdef GTS_SUPPORT
+uint8_t T_CAP;
+#endif /* GTS_SUPPORT */
 #endif  /* BEACON_SUPPORT / No BEACON_SUPPORT */
 
 #if (MAC_INDIRECT_DATA_BASIC == 1)
@@ -135,6 +140,9 @@ static void reset_globals(void)
 	memset((uint8_t *)&mac_last_src_addr, 0xFF, sizeof(mac_last_src_addr));
 	//mac_last_src_addr = 0xFFFFFFFFFFFFFFFFULL;
 	mac_rx_enabled = false;
+#ifdef GTS_SUPPORT
+	reset_gts_globals();
+#endif /* GTS_SUPPORT */
 }
 
 /**
@@ -143,7 +151,14 @@ static void reset_globals(void)
  * @return MAC_SUCCESS  if TAL is intialized successfully else FAILURE
  */
 retval_t mac_init(void)
-{
+{   
+	#ifdef GTS_DEBUG
+	ioport_configure_pin(DEBUG_PIN1, IOPORT_DIR_OUTPUT |  IOPORT_INIT_LOW);//vk
+	ioport_configure_pin(DEBUG_PIN2, IOPORT_DIR_OUTPUT |  IOPORT_INIT_LOW);
+	ioport_configure_pin(DEBUG_PIN3, IOPORT_DIR_OUTPUT |  IOPORT_INIT_LOW);
+	ioport_configure_pin(DEBUG_PIN4, IOPORT_DIR_OUTPUT |  IOPORT_INIT_LOW);
+	#endif
+   
 	/* Initialize TAL */
 	if (tal_init() != MAC_SUCCESS) {
 		return FAILURE;
@@ -195,6 +210,11 @@ retval_t mac_init(void)
     #endif  /* BEACON_SUPPORT */
     #endif /* (MAC_START_REQUEST_CONFIRM == 1) */
 #endif  /* ENABLE_QUEUE_CAPACITY */
+
+#ifdef GTS_SUPPORT
+	init_gts_queues();
+#endif /* GTS_SUPPORT */
+
 	return MAC_SUCCESS;
 }
 
@@ -261,6 +281,10 @@ static void do_init_pib(void)
 	mac_pib.mac_BeaconPayloadLength = macBeaconPayloadLength_def;
 	mac_pib.mac_BSN = (uint8_t)rand();
 #endif  /* (MAC_START_REQUEST_CONFIRM == 1) */
+
+#ifdef GTS_SUPPORT
+	mac_pib.mac_GTSPermit = macGTSPermit_def;
+#endif /* GTS_SUPPORT */
 
 #if (MAC_INDIRECT_DATA_FFD == 1)
 	mac_pib.mac_TransactionPersistenceTime
@@ -425,6 +449,11 @@ static void flush_queues(void)
 	qmm_queue_flush(&mac_nhle_q);
 #endif
 
+#ifdef GTS_SUPPORT
+	/* Flush MAC GTS queue */
+	//qmm_queue_flush(&gts_q); //vk
+#endif /* GTS_SUPPORT */
+
 #if (MAC_INDIRECT_DATA_FFD == 1)
 	/* Flush MAC indirect queue */
 	qmm_queue_flush(&indirect_data_q);
@@ -570,6 +599,11 @@ retval_t mac_timers_init(void)
 		return FAILURE;
 	}
     #endif /* (MAC_START_REQUEST_CONFIRM == 1) */
+#ifdef GTS_SUPPORT
+	if (MAC_SUCCESS != pal_timer_get_id(&T_CAP)) {
+		return FAILURE;
+	}
+#endif /* GTS_SUPPORT */
 #endif  /* BEACON_SUPPORT / No BEACON_SUPPORT */
 
 #if (MAC_INDIRECT_DATA_BASIC == 1)
@@ -611,6 +645,9 @@ retval_t mac_timers_stop(void)
 	pal_timer_stop(T_Beacon);
 	pal_timer_stop(T_Beacon_Preparation);
     #endif /* (MAC_START_REQUEST_CONFIRM == 1) */
+#ifdef GTS_SUPPORT
+	pal_timer_stop(T_CAP);
+#endif /* GTS_SUPPORT */
 #endif  /* BEACON_SUPPORT / No BEACON_SUPPORT */
 
 #if (MAC_INDIRECT_DATA_BASIC == 1)

@@ -121,6 +121,14 @@ uint8_t mac_final_cap_slot COMPILER_WORD_ALIGNED;
  * indicated pending broadcast data to be received.
  */
 bool mac_bc_data_indicated COMPILER_WORD_ALIGNED;
+
+mac_superframe_state_t mac_superframe_state = MAC_NOBEACON;
+#ifdef GTS_SUPPORT
+/**
+ * Current state of GTS request to PANC
+ */
+mac_gts_state_t mac_gts_state = MAC_GTS_IDLE;
+#endif  /* GTS_SUPPORT */
 #endif  /* BEACON_SUPPORT */
 
 /**
