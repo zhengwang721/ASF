@@ -54,7 +54,7 @@
  * - CFB ciphering and deciphering.
  * - OFB ciphering and deciphering.
  * - CTR ciphering and deciphering.
- * - ECB ciphering and deciphering with DMA.<BR>
+ * - ECB ciphering and deciphering with DMA/PDC .<BR>
  * - GCM ciphering and deciphering.
  *
  * \section files Main Files
@@ -195,6 +195,7 @@ static void aes_callback(void)
 	state = true;
 }
 
+#if SAM4E
 /**
  * \brief DMAC driver configuration.
  */
@@ -395,6 +396,123 @@ static void ecb_mode_test_dma(void)
 	/* Disable DMAC module */
 	dmac_disable(DMAC);
 }
+#endif
+
+#if SAM4C
+/**
+ * \brief ECB mode encryption and decryption test with PDC.
+ */
+static ecb_mode_test_pdc(void)
+{
+/* Configure DMAC. */
+	configure_dmac();
+	/* Disable DMAC channel. */
+	dmac_channel_disable(DMAC, AES_DMA_TX_CH);
+	dmac_channel_disable(DMAC, AES_DMA_RX_CH);
+
+	printf("\r\n-----------------------------------\r\n");
+	printf("- 128bit cryptographic key\r\n");
+	printf("- ECB cipher mode\r\n");
+	printf("- PDC mode\r\n");
+	printf("- input of 4 32bit words with PDC\r\n");
+	printf("-----------------------------------\r\n");
+
+	state = false;
+
+	/* Configure the AES. */
+	g_aes_cfg.encrypt_mode = AES_ENCRYPTION;
+	g_aes_cfg.key_size = AES_KEY_SIZE_128;
+	g_aes_cfg.start_mode =  AES_PDC_MODE;
+	g_aes_cfg.opmode = AES_ECB_MODE;
+	g_aes_cfg.cfb_size = AES_CFB_SIZE_128;
+	g_aes_cfg.lod = false;
+	aes_set_config(AES, &g_aes_cfg);
+
+	/* Set the cryptographic key. */
+	aes_write_key(AES, key128);
+
+	/* The initialization vector is not used by the ECB cipher mode. */
+
+	/* Write the data to be ciphered by DMA. */
+	aes_dma_transmit_config(ref_plain_text, AES_EXAMPLE_REFBUF_SIZE);
+	aes_dma_receive_config(output_data, AES_EXAMPLE_REFBUF_SIZE);
+        
+	/* Enable DMAC channel. */
+	dmac_channel_enable(DMAC, AES_DMA_RX_CH);
+	dmac_channel_enable(DMAC, AES_DMA_TX_CH);
+
+	/* Wait for the end of the encryption process. */
+	while (false == state) {
+	}
+
+	/* Disable DMAC channel. */
+	dmac_channel_disable(DMAC, AES_DMA_TX_CH);
+	dmac_channel_disable(DMAC, AES_DMA_RX_CH);
+
+	if ((ref_cipher_text_ecb[0] != output_data[0]) ||
+			(ref_cipher_text_ecb[1] != output_data[1]) ||
+			(ref_cipher_text_ecb[2] != output_data[2]) ||
+			(ref_cipher_text_ecb[3] != output_data[3])) {
+		printf("\r\nKO!!!\r\n");
+	} else {
+		printf("\r\nOK!!!\r\n");
+	}
+
+	printf("\r\n-----------------------------------\r\n");
+	printf("- 128bit cryptographic key\r\n");
+	printf("- ECB decipher mode\r\n");
+	printf("- DMA mode\r\n");
+	printf("- input of 4 32bit words with DMA\r\n");
+	printf("-----------------------------------\r\n");
+
+	state = false;
+
+	/* Configure the AES. */
+	g_aes_cfg.encrypt_mode = AES_DECRYPTION;
+	g_aes_cfg.key_size = AES_KEY_SIZE_128;
+	g_aes_cfg.start_mode = AES_DMA_MODE;
+	g_aes_cfg.opmode = AES_ECB_MODE;
+	g_aes_cfg.cfb_size = AES_CFB_SIZE_128;
+	g_aes_cfg.lod = false;
+	aes_set_config(AES, &g_aes_cfg);
+
+	/* Set the cryptographic key. */
+	aes_write_key(AES, key128);
+
+	/* The initialization vector is not used by the ECB cipher mode. */
+
+	/* Write the data to be ciphered by DMA. */
+	aes_dma_transmit_config(ref_cipher_text_ecb, AES_EXAMPLE_REFBUF_SIZE);
+	aes_dma_receive_config(output_data, AES_EXAMPLE_REFBUF_SIZE);
+	/* Enable DMAC channel. */
+	dmac_channel_enable(DMAC, AES_DMA_RX_CH);
+	dmac_channel_enable(DMAC, AES_DMA_TX_CH);
+
+	/* Wait for the end of the decryption process. */
+	while (false == state) {
+	}
+
+	/* Disable DMAC channel. */
+	dmac_channel_disable(DMAC, AES_DMA_TX_CH);
+	dmac_channel_disable(DMAC, AES_DMA_RX_CH);
+
+	/* check the result. */
+	if ((ref_plain_text[0] != output_data[0]) ||
+			(ref_plain_text[1] != output_data[1]) ||
+			(ref_plain_text[2] != output_data[2]) ||
+			(ref_plain_text[3] != output_data[3])) {
+		printf("\r\nKO!!!\r\n");
+	} else {
+		printf("\r\nOK!!!\r\n");
+	}
+
+	/* Disable DMAC module */
+	dmac_disable(DMAC);
+  
+  
+  
+}
+#endif
 
 /**
  * \brief ECB mode encryption and decryption test.
@@ -865,7 +983,8 @@ static void display_menu(void)
 			"  4: OFB mode test. \n\r"
 			"  5: CTR mode test. \n\r"
 			"  d: ECB mode test with DMA \n\r"
-			"  6: GCM mode test. \n\r"
+                        "  p: ECB mode test with PDC \n\r"  
+			"  g: GCM mode test. \n\r"
 			"\n\r\n\r");
 }
 
@@ -934,19 +1053,29 @@ int main(void)
 			break;
 
 		case 'd':
-			#if !SAM4C
+			#if SAM4E
 			printf("ECB mode encryption and decryption test with DMA.\r\n");
 			ecb_mode_test_dma();
 			#else
-			printf(" This mode is not supported by device.\r\n");
+			printf("This mode is not supported by device.\r\n");
 			break;
+                        #endif
+                        
+                case 'p':
+                        #if SAM4C
+                        printf("ECB mode encryption and decryption test with PDC.\r\n"); 
+                        ecb_mode_test_pdc();
+                        #else
+                        printf("This mode is not supported by device.\r\n");
+			break;
+                        #endif
 
-		case '6':
+		case 'g':
 			#if SAM4C
 			printf("GCM mode encryption and decryption test.\r\n");
 			#else 
-			printf(" This mode is not supported by device.\r\n");
-
+			printf("This mode is not supported by device.\r\n");
+                        #endif
 		default:
 			break;
 		}

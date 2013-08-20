@@ -87,6 +87,7 @@ enum aes_start_mode {
 	AES_MANUAL_MODE = 0,
 	AES_AUTO_MODE,
 	AES_DMA_MODE,
+        AES_PDC_MODE,
 };
 
 /** AES Confidentiality mode */

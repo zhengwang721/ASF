@@ -173,7 +173,11 @@ void aes_set_config(Aes *const p_aes, struct aes_config *const p_cfg)
 
 	ul_mode |= AES_MR_PROCDLY(p_cfg->processing_delay);
 
-	ul_mode |= AES_MR_CKEY(0xE);
+        #if SAM4C
+        ul_mode |= AES_MR_CKEY_PASSWD;
+        #else   
+        ul_mode |= AES_MR_CKEY(0xE);
+        #endif
 
 	p_aes->AES_MR = ul_mode;
 }
