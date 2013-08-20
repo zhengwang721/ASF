@@ -45,6 +45,7 @@
 #define C42364A_H_INCLUDED
 
 #include "compiler.h"
+#include "status_codes.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -99,7 +100,7 @@ enum c42364a_battery_value {
  * It perform LCD module intialization according to the C42364A characteristics.
  *
  */
-void c42364a_init(void);
+status_code_t c42364a_init(void);
 
 /**
  * \brief Write string to c42364a lcd glass alphanumeric field.

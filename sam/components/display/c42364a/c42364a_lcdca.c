@@ -46,7 +46,7 @@
 #include "conf_c42364a_lcdca.h"
 #include "lcdca.h"
 
-void c42364a_init(void)
+status_code_t c42364a_init(void)
 {
 	struct lcdca_config lcdca_cfg;
 
@@ -66,6 +66,8 @@ void c42364a_init(void)
 	lcdca_enable_timer(LCDCA_TIMER_FC0);
 	lcdca_enable_timer(LCDCA_TIMER_FC1);
 	lcdca_enable_timer(LCDCA_TIMER_FC2);
+
+	return STATUS_OK;
 }
 
 void c42364a_write_alphanum_packet(const uint8_t *data)

@@ -126,6 +126,7 @@ int main(void)
 	uint8_t key;
 	uint8_t const scrolling_str[] = "C42364A Example  ";
 	int32_t value = -12345;
+	status_code_t status;
 
 	/* Initialize the SAM system */
 	sysclk_init();
@@ -143,7 +144,12 @@ int main(void)
 	ioport_set_pin_level(LCD_BL_GPIO, LCD_BL_ACTIVE_LEVEL);
 
 	/* Initialize the C42364A LCD glass component. */
-	c42364a_init();
+	status = c42364a_init();
+	if (status != STATUS_OK) {
+		printf("-- LCD Initialization fails! --\r\n");
+		while (1) {
+		}
+	}
 
 	printf("Show all the components on the glass.\r\n");
 	c42364a_show_all();

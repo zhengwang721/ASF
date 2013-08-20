@@ -286,7 +286,7 @@ static void c42364a_slcdc_display_num_string(const uint8_t *data)
 	}
 }
 
-void c42364a_init(void)
+status_code_t c42364a_init(void)
 {
 	/* SLCDC configuration */
 	struct slcdc_config slcdc_cfg;
@@ -303,7 +303,9 @@ void c42364a_init(void)
 	slcdc_cfg.buf_time = CONF_C42364A_BUF_TIME;
 	slcdc_cfg.frame_rate= CONF_C42364A_FRAME_RATE;
 	slcdc_cfg.disp_mode = CONF_C42364A_DISP_MODE;
-	slcdc_init(SLCDC, &slcdc_cfg);
+	if(slcdc_init(SLCDC, &slcdc_cfg) != STATUS_OK) {
+		return STATUS_ERR_BUSY;
+	}
 
 	/*LCD seg 17, 20~22, and 24 ~49 mapped on SEGx I/O pin */
 	slcdc_set_segmap0(SLCDC, C42364A_SEGMAP_NUM_0);
@@ -312,6 +314,8 @@ void c42364a_init(void)
 	/* Enable SLCDC */
  	slcdc_enable(SLCDC);
 	while(!slcdc_get_status(SLCDC));
+
+	return STATUS_OK;
 }
 
 void c42364a_write_alphanum_packet(const uint8_t *data)

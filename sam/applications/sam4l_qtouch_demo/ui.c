@@ -142,14 +142,20 @@ void ui_bm_send_mcu_status(void)
 void ui_lcd_init(void)
 {
 	uint8_t const scrolling_str[] = "SAM4L-EK DEMO";
-
+	status_code_t status;
+	
 	/*
 	 * LCDCA Controller Initialization and display SAM4L-EK DEMO texts on 
 	 * segment LCD
 	 */
 
 	// Initialize the C42364A LCD glass component.
-	c42364a_init();
+	status = c42364a_init();
+	if (status != STATUS_OK) {
+		printf("-- LCD Initialization fails! --\r\n");
+		while (1) {
+		}
+	}
 	// Start autonomous animation.
 	c42364a_circular_animation_start(C42364A_CSR_RIGHT, 7, 0x03);
 	// Show ARM Icon.
