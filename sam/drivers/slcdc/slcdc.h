@@ -135,9 +135,19 @@ typedef void (*slcdc_callback_t)(void);
 #define SLCDC_CLOCK_DIV_MAX          8
 #define SLCDC_CLOCK_PRE_MAX          8
 
-/* The selection frequency or period when setting frame rate */
-#define SLCDC_SEL_FREQ               true
-#define SLCDC_SEL_PERIOD             false
+#if CONF_SLCDC_COM_NUM == 1
+#define SLCDC_NCOM_VALUE                  16
+#elif CONF_SLCDC_COM_NUM == 2
+#define SLCDC_NCOM_VALUE                  16
+#elif CONF_SLCDC_COM_NUM == 3
+#define SLCDC_NCOM_VALUE                  15
+#elif CONF_SLCDC_COM_NUM == 4
+#define SLCDC_NCOM_VALUE                  16
+#elif CONF_SLCDC_COM_NUM == 5
+#define SLCDC_NCOM_VALUE                  15
+#elif CONF_SLCDC_COM_NUM == 6
+#define SLCDC_NCOM_VALUE                  18
+#endif
 
 /**
  * \brief Initialize SLCDC with specified configuration.
@@ -185,7 +195,7 @@ static inline void slcdc_set_display_mode(Slcdc *p_slcdc,
  *
  * \param p_slcdc Pointer to an SLCDC instance.
  * \param value  Blinking frequency or period value.
- * \param is_freq_period   Selection of frequency or period as parameter value.
+ * \param is_freq_period   Select frequency if true.
  */
 status_code_t slcdc_set_blink_freq(Slcdc *p_slcdc, uint32_t value,
 		bool is_period_freq);

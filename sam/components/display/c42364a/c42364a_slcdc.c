@@ -365,7 +365,7 @@ void c42364a_blink_icon_stop(uint8_t icon_com, uint8_t icon_seg)
 void c42364a_blink_screen(void)
 {
 	slcdc_set_display_mode(SLCDC, SLCDC_DISPMODE_BLINKING);
-	slcdc_set_blink_freq(SLCDC, CONF_C42364A_BLINK_FREQ, SLCDC_SEL_FREQ);
+	slcdc_set_blink_freq(SLCDC, CONF_C42364A_BLINK_FREQ, true);
 }
 
 void c42364a_blink_disable(void)
@@ -462,9 +462,12 @@ void c42364a_show_battery(enum c42364a_battery_value val)
 	c42364a_slcdc_set_pixel(SLCDC, C42364A_ICON_BAT);
 	if (val > 2) {
 		c42364a_slcdc_set_pixel(SLCDC, C42364A_ICON_BAT_LEVEL_3);
+		c42364a_slcdc_set_pixel(SLCDC, C42364A_ICON_BAT_LEVEL_2);
+		c42364a_slcdc_set_pixel(SLCDC, C42364A_ICON_BAT_LEVEL_1);
 	}
 	if (val > 1) {
 		c42364a_slcdc_set_pixel(SLCDC, C42364A_ICON_BAT_LEVEL_2);
+		c42364a_slcdc_set_pixel(SLCDC, C42364A_ICON_BAT_LEVEL_1);
 	}
 	if (val > 0) {
 		c42364a_slcdc_set_pixel(SLCDC, C42364A_ICON_BAT_LEVEL_1);

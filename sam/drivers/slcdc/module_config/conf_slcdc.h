@@ -44,8 +44,8 @@
 #define CONF_SLCDC_H_INCLUDED
 
 /** SLCDC Com, Seg and Bias config */
-#define CONF_SLCDC_COM_NUM      3
-#define CONF_SLCDC_SEG_NUM      39
+#define CONF_SLCDC_COM_NUM      4
+#define CONF_SLCDC_SEG_NUM      40
 #define CONF_SLCDC_BIAS         2
 
 #endif /* CONF_SLCDC_H_INCLUDED */

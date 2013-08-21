@@ -111,10 +111,16 @@ static void display_menu(void)
 			"  -- Select operation:\n\r"
 			"  c: Clear the screen \n\r"
 			"  h: Display menu \n\r"
+		#if SAM4C
+			"  1: Basic show feature \n\r"
+		#else
 			"  1: Basic show feature(need 'c' first if '4' selected) \n\r"
+		#endif
 			"  2: Blink feature \n\r"
+		#if !SAM4C
 			"  3: Circular animation feature \n\r"
 			"  4: Text scrolling feature \n\r"
+		#endif
 			"\n\r\n\r");
 }
 
@@ -124,7 +130,9 @@ static void display_menu(void)
 int main(void)
 {
 	uint8_t key;
+#if !SAM4C
 	uint8_t const scrolling_str[] = "C42364A Example  ";
+#endif
 	int32_t value = -12345;
 	status_code_t status;
 
@@ -179,11 +187,19 @@ int main(void)
 			printf("Show icons, number and string.\r\n");
 			c42364a_show_icon(C42364A_ICON_ARM);
 			c42364a_show_numeric_dec(value);
+		#if SAM4C
+			c42364a_show_text((const uint8_t *)"SAM4C");
+		#else
 			c42364a_show_text((const uint8_t *)"Welcome");
+		#endif
 			c42364a_show_battery(C42364A_BATTERY_TWO);
 			break;
 
 		case '2':
+		#if SAM4C
+			printf("Blink Full Screen.\r\n");
+			c42364a_blink_screen();
+		#else
 			printf("Blink colon icon, show a time.\r\n");
 			c42364a_clear_icon(C42364A_ICON_MINUS);
 			c42364a_clear_icon(C42364A_ICON_MINUS_SEG1);
@@ -191,8 +207,9 @@ int main(void)
 			c42364a_write_num_packet((const uint8_t *)"1023");
 			c42364a_show_icon(C42364A_ICON_AM);
 			c42364a_blink_icon_start(C42364A_ICON_COLON);
+		#endif
 			break;
-
+	#if !SAM4C
 		case '3':
 			printf("Show the two dots circular animation.\r\n");
 			c42364a_circular_animation_start(C42364A_CSR_RIGHT, 7, 0x03);
@@ -203,7 +220,7 @@ int main(void)
 			c42364a_text_scrolling_start(scrolling_str,
 					strlen((char const *)scrolling_str));
 			break;
-
+	#endif
 		default:
 			break;
 		}

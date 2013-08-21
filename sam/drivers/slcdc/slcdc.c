@@ -56,6 +56,8 @@
  * \brief SLCDC callback function pointer.
  */
 slcdc_callback_t slcdc_callback_pointer = NULL;
+
+/** The actual frame rate value */
 static uint32_t g_frame_rate = 0;
 
 status_code_t slcdc_init(Slcdc *p_slcdc, struct slcdc_config *slcdc_cfg)
@@ -69,8 +71,8 @@ status_code_t slcdc_init(Slcdc *p_slcdc, struct slcdc_config *slcdc_cfg)
 
 	/* SLCDC basic configuration */
 	p_slcdc->SLCDC_MR = (CONF_SLCDC_BIAS << SLCDC_MR_BIAS_Pos) |
-			(CONF_SLCDC_COM_NUM << SLCDC_MR_COMSEL_Pos) |
-			SLCDC_MR_SEGSEL(CONF_SLCDC_SEG_NUM) |
+			((CONF_SLCDC_COM_NUM - 1) << SLCDC_MR_COMSEL_Pos) |
+			SLCDC_MR_SEGSEL(CONF_SLCDC_SEG_NUM - 1) |
 			slcdc_cfg->buf_time;
 	if(slcdc_set_frame_rate(p_slcdc, slcdc_cfg->frame_rate)
 				!= STATUS_OK) {
@@ -84,22 +86,20 @@ status_code_t slcdc_init(Slcdc *p_slcdc, struct slcdc_config *slcdc_cfg)
 status_code_t slcdc_set_frame_rate(Slcdc *p_slcdc, uint32_t frame_rate)
 {
 	uint32_t ul_divisors[SLCDC_CLOCK_PRE_MAX] =
-			{8, 16, 32, 64, 128, 256, 512, 1024};
-	uint8_t uc_ncom[6] =
-			{16, 16, 15, 16, 15, 18};
+		{8, 16, 32, 64, 128, 256, 512, 1024};
 	uint32_t ul_pre = 0;
 	uint32_t ul_div;
 
 	/* Find prescaler and divisor values */
 	ul_div = (BOARD_FREQ_SLCK_XTAL / ul_divisors[ul_pre])
 			/ frame_rate
-			/ uc_ncom[CONF_SLCDC_COM_NUM];
+			/ SLCDC_NCOM_VALUE;
 
 	while ((ul_div > SLCDC_CLOCK_DIV_MAX) && (ul_pre < SLCDC_CLOCK_PRE_MAX)) {
 		ul_pre++;
 		ul_div = (BOARD_FREQ_SLCK_XTAL / ul_divisors[ul_pre])
 				/ frame_rate
-				/ uc_ncom[CONF_SLCDC_COM_NUM];
+				/ SLCDC_NCOM_VALUE;
 	}
 
 	/* Return result */
@@ -107,7 +107,8 @@ status_code_t slcdc_set_frame_rate(Slcdc *p_slcdc, uint32_t frame_rate)
 		p_slcdc->SLCDC_FRR = 0;
 		p_slcdc->SLCDC_FRR = ((ul_div - 1) << SLCDC_FRR_DIV_Pos) |
 			(ul_pre << SLCDC_FRR_PRESC_Pos);
-		g_frame_rate = frame_rate;
+		g_frame_rate = (BOARD_FREQ_SLCK_XTAL / ul_divisors[ul_pre])
+			/ ul_div / SLCDC_NCOM_VALUE;
 		return STATUS_OK;
 	} else {
 		return ERR_INVALID_ARG;
@@ -119,12 +120,14 @@ status_code_t slcdc_set_blink_freq(Slcdc *p_slcdc, uint32_t value,
 {
 	uint32_t ul_div;
 
-	if(value == 0)
-		return ERR_INVALID_ARG;
-	if(is_period_freq) {
-		ul_div = (g_frame_rate / value);
+	if(value == 0) {
+		ul_div = 0;
 	} else {
-		ul_div = (g_frame_rate * value);
+		if(is_period_freq) {
+			ul_div = (g_frame_rate / value);
+		} else {
+			ul_div = (g_frame_rate * value);
+		}
 	}
 	if(ul_div < 256) {
 		p_slcdc->SLCDC_DR &= ~SLCDC_DR_LCDBLKFREQ_Msk;
@@ -149,7 +152,7 @@ void slcdc_disable(Slcdc *p_slcdc)
 
 void slcdc_set_display_memory(Slcdc *p_slcdc)
 {
-	uint8_t tmp =  CONF_SLCDC_COM_NUM + 1;
+	uint8_t tmp =  CONF_SLCDC_COM_NUM;
 
 	while(tmp--) {
 		slcdc_set_lsb_memory(p_slcdc, tmp, ~0UL);
@@ -159,7 +162,7 @@ void slcdc_set_display_memory(Slcdc *p_slcdc)
 
 void slcdc_clear_display_memory(Slcdc *p_slcdc)
 {
-	uint8_t tmp =  CONF_SLCDC_COM_NUM + 1;
+	uint8_t tmp =  CONF_SLCDC_COM_NUM;
 
 	while(tmp--) {
 		slcdc_clear_lsb_memory(p_slcdc, tmp, ~0UL);
