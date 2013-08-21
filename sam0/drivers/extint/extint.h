@@ -159,6 +159,12 @@
  * may in turn trigger actions in other hardware modules) or an asynchronous
  * software interrupt.
  *
+ * \note The connection of events between modules requires the use of the
+ *       \ref asfdoc_samd20_events_group "SAM D20 Event System Driver (EVENTS)"
+ *       to route output event of one module to the the input event of another.
+ *       For more information on event routing, refer to the event driver
+ *       documentation.
+ *
  * \subsection asfdoc_samd20_extint_module_overview_physical Physical Connection
  *
  * \ref asfdoc_samd20_extint_int_connections "The diagram below" shows how this
@@ -187,7 +193,7 @@
  * your device datasheet.
  *
  *
- * \section asfdoc_samd20_extint_extra_info Extra Information for EXTINT
+ * \section asfdoc_samd20_extint_extra_info Extra Information
  *
  * For extra information see \ref asfdoc_samd20_extint_extra. This includes:
  *  - \ref asfdoc_samd20_extint_extra_acronyms
@@ -649,6 +655,14 @@ static inline void extint_nmi_clear_detected(
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
+ *		<td>Updated interrupt handler to clear interrupt flag before calling
+ *          callback function.</td>
+ *	</tr>
+ *	<tr>
+ *		<td>Updated initialization function to also enable the digital interface
+ *          clock to the module if it is disabled.</td>
+ *	</tr>
+ *	<tr>
  *		<td>Initial Release</td>
  *	</tr>
  * </table>
@@ -675,6 +689,12 @@ static inline void extint_nmi_clear_detected(
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>B</td>
+ *		<td>06/2013</td>
+ *		<td>Added additional documentation on the event system. Corrected
+ *          documentation typos.</td>
  *	</tr>
  *	<tr>
  *		<td>A</td>

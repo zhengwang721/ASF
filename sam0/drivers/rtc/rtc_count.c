@@ -167,6 +167,9 @@ enum status_code rtc_count_init(
 	/* Sanity check. */
 	Assert(config);
 
+	/* Turn on the digital interface clock */
+	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBA, PM_APBAMASK_RTC);
+
 	/* Set up GCLK */
 	struct system_gclk_chan_config gclk_chan_conf;
 	system_gclk_chan_get_config_defaults(&gclk_chan_conf);

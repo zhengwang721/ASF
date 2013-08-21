@@ -361,7 +361,7 @@ static inline void ac_user_trigger_single_comparison(
  */
 static inline bool ac_is_comparison_done(struct ac_dev_inst *const dev_inst)
 {
-	return (dev_inst->hw_dev->ACIFC_CTRL & ACIFC_CTRL_USTART !=
+	return ((dev_inst->hw_dev->ACIFC_CTRL & ACIFC_CTRL_USTART) !=
 			ACIFC_CTRL_USTART);
 }
 

@@ -2,7 +2,7 @@
  * \file range_measure.c
  *
  * \brief Range Measurement mode functionaities - Performance Anallyzer
- *application
+ * application
  *
  * This implements the range measurement mode functionality
  *
@@ -143,16 +143,16 @@ void range_test_tx_on_task(void)
  * states
  * \param frame Pointer to received frame
  */
-void range_test_rx_cb(frame_info_t *mac_frame_info)
+void range_test_rx_cb(frame_info_t *frame_info)
 {
 	app_payload_t *msg;
-	if (*(mac_frame_info->mpdu) == (FRAME_OVERHEAD +
+	if (*(frame_info->mpdu) == (FRAME_OVERHEAD +
 			((sizeof(app_payload_t) -
 			sizeof(general_pkt_t)) +
 			sizeof(data_pkt_range_test_t)))) {
 		/* Point to the message : 1 =>size is first byte and 2=>FCS*/
 		msg
-			= (app_payload_t *)(mac_frame_info->mpdu +
+			= (app_payload_t *)(frame_info->mpdu +
 				LENGTH_FIELD_LEN +
 				FRAME_OVERHEAD - FCS_LEN);
 		if ((msg->cmd_id) == DATA_PKT) {
@@ -256,7 +256,7 @@ static int range_test_frame_tx(void)
 	       (uint8_t *)(&node_info.peer_short_addr),
 	       FCF_SHORT_ADDR,
 	       seq_num,                          /* seq_num used as msdu handle
-	                                          **/
+	                                         **/
 	       (uint8_t *)&msg,
 	       payload_length,
 	       1));

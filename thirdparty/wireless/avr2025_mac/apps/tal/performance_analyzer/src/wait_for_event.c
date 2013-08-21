@@ -57,12 +57,15 @@
 
 /* === MACROS ============================================================== */
 /* ED threshold to accept a frame in the configuaration mode  */
-
+#ifdef EXT_RF_FRONT_END_CTRL
+#define CONFIG_ED_THRESHOLD             (0x10)
+#else
 #if ((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B))
 #define CONFIG_ED_THRESHOLD             (0x3a)
 #else
 #define CONFIG_ED_THRESHOLD             (0x1f)
 #endif /* End of ((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B)) */
+#endif /* End of EXT_RF_FRONT_END_CTRL */
 
 /* === PROTOTYPES ========================================================== */
 static void configure_pibs(void);
@@ -107,8 +110,9 @@ void wait_for_event_task(void)
 
 	if (key_press != 0) {
 		print_event(PRINT_KEY_PRESS_PEER_SEARCH_INITIATOR);
+
 		/* key press detected - so change to state PEER_SEARCH_RANGE_TX
-		 **/
+		**/
 		set_main_state(PEER_SEARCH_RANGE_TX, NULL);
 	}
 }
@@ -120,7 +124,7 @@ void wait_for_event_task(void)
  *
  * \param frame Pointer to received frame
  */
-void wait_for_event_rx_cb(frame_info_t *mac_frame_info)
+void wait_for_event_rx_cb(frame_info_t *frame_info)
 {
 	app_payload_t *msg;
 	peer_search_receptor_arg_t peer_info;
@@ -130,20 +134,20 @@ void wait_for_event_rx_cb(frame_info_t *mac_frame_info)
 			+ sizeof(peer_req_t));
 
 	/* Frame received on air: Processing the same */
-	if (*(mac_frame_info->mpdu) == expected_frame_size) {
+	if (*(frame_info->mpdu) == expected_frame_size) {
 		/* Point to the message : 1 =>size is first byte and 2=>FCS*/
-		msg = (app_payload_t *)(mac_frame_info->mpdu + LENGTH_FIELD_LEN
+		msg = (app_payload_t *)(frame_info->mpdu + LENGTH_FIELD_LEN
 				+ FRAME_OVERHEAD_SRC_IEEE_ADDR - FCS_LEN);
 
 		/* Is this a peer request cmd */
 		if ((msg->cmd_id) == PEER_REQUEST) {
-			uint8_t frame_len = mac_frame_info->mpdu[0];
+			uint8_t frame_len = frame_info->mpdu[0];
 			uint8_t ed_val
-				= mac_frame_info->mpdu[frame_len +
-					LQI_LEN + ED_VAL_LEN];
+				= frame_info->mpdu[frame_len + LQI_LEN +
+					ED_VAL_LEN];
 
 			/* Check the threshold if the configuarion mode is
-			 *enabled, not otherwise */
+			 * enabled, not otherwise */
 			if (((msg->payload.peer_req_data.config_mode == true) &&
 					(ed_val > CONFIG_ED_THRESHOLD)) ||
 					(msg->payload.peer_req_data.config_mode
@@ -152,7 +156,7 @@ void wait_for_event_rx_cb(frame_info_t *mac_frame_info)
 					= (msg->payload.peer_req_data.
 						nwk_addr);
 				memcpy(&(peer_info.peer_ieee_addr),
-						(mac_frame_info->mpdu +
+						(frame_info->mpdu +
 						LENGTH_FIELD_LEN +
 						OFFSET_FOR_SRC_IEEE_ADDR),
 						sizeof(peer_info.peer_ieee_addr));
@@ -162,9 +166,9 @@ void wait_for_event_rx_cb(frame_info_t *mac_frame_info)
 
 					/*
 					 * Frame found to be peer search for
-					 *range test
+					 * range test
 					 * so change to state
-					 *PEER_SEARCH_RANGE_RX
+					 * PEER_SEARCH_RANGE_RX
 					 */
 					set_main_state(PEER_SEARCH_RANGE_RX,
 							&peer_info);
@@ -176,7 +180,7 @@ void wait_for_event_rx_cb(frame_info_t *mac_frame_info)
 
 					/*
 					 * Frame found to be peer search for
-					 *range test
+					 * range test
 					 * so change to state PEER_SEARCH_PER_RX
 					 */
 					set_main_state(PEER_SEARCH_PER_RX,
@@ -186,8 +190,9 @@ void wait_for_event_rx_cb(frame_info_t *mac_frame_info)
 					break;
 
 				default:
+
 					/* The node has got a wrong frame: No
-					 *change of mode */
+					 * change of mode */
 					print_event(
 							PRINT_PEER_SEARCH_RECEPTOR_BAD_FRAME);
 					break;
@@ -199,7 +204,7 @@ void wait_for_event_rx_cb(frame_info_t *mac_frame_info)
 
 /**
  * \brief Configure the TAL PIB's relevant to the Performance analyzer
- *application
+ * application
  * \ingroup group_app_init
  */
 static void configure_pibs(void)
@@ -220,6 +225,6 @@ static void configure_pibs(void)
 	tal_pib_set(phyCurrentChannel, (pib_value_t *)&temp_byte);
 
 	/* Set IEEE address - To make sure that trx registers written properly
-	 **/
+	**/
 	tal_pib_set(macIeeeAddress, (pib_value_t *)&tal_pib.IeeeAddress);
 }

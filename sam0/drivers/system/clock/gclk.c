@@ -53,6 +53,9 @@
  */
 void system_gclk_init(void)
 {
+	/* Turn on the digital interface clock */
+	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBA, PM_APBAMASK_GCLK);
+
 	/* Software reset the module to ensure it is re-initialized correctly */
 	GCLK->CTRL.reg = GCLK_CTRL_SWRST;
 	while (GCLK->CTRL.reg & GCLK_CTRL_SWRST) {

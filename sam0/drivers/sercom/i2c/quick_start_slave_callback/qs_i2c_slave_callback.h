@@ -86,8 +86,6 @@
  * \snippet qs_i2c_slave_callback.c run_initialize_i2c
  *
  * \subsection asfdoc_samd20_sercom_i2c_slave_callback_use_setup_workflow Workflow
- * -# Initialize system.
- *  \snippet qs_i2c_slave_callback.c system_init
  * -# Configure and enable module:
  *  \snippet qs_i2c_slave_callback.c config
  *   -# Create and initialize configuration structure.
