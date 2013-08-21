@@ -44,8 +44,10 @@
 #ifndef CONF_BOARD_H_INCLUDED
 #define CONF_BOARD_H_INCLUDED
 
+// [conf_board_uart_enable]
 /** Enable Com Port. */
 #define CONF_BOARD_UART_CONSOLE
+// [conf_board_uart_enable]
 
 /* Configure ADC example pins */
 //#define CONF_BOARD_ADC
