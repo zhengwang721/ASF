@@ -94,7 +94,7 @@
 #define IRQ_PRIOR_PIO    0
 
 /** LED0 blink time, LED1 blink half this time, in ms */
-#define BLINK_PERIOD        1000
+#define BLINK_PERIOD     1000
 
 #define STRING_EOL    "\r"
 #define STRING_HEADER "-- Getting Started Example --\r\n" \
