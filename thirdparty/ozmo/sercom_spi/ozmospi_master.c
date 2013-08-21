@@ -151,11 +151,20 @@ enum status_code ozmospi_init(void)
 	pin_conf.mux_position = CONF_OZMOSPI_PINMUX_PAD0 & 0xFFFF;
 	system_pinmux_pin_set_config(CONF_OZMOSPI_PINMUX_PAD0 >> 16, &pin_conf);
 
-	pin_conf.mux_position = CONF_OZMOSPI_PINMUX_PAD1 & 0xFFFF;
-	system_pinmux_pin_set_config(CONF_OZMOSPI_PINMUX_PAD1 >> 16, &pin_conf);
-
-	pin_conf.mux_position = CONF_OZMOSPI_PINMUX_PAD2 & 0xFFFF;
-	system_pinmux_pin_set_config(CONF_OZMOSPI_PINMUX_PAD2 >> 16, &pin_conf);
+	/* SERCOM PAD1 and PAD2 are used for slave SS.
+	 * This is a SPI master driver, so control of slave SS must be left to
+	 * the PORT module, so peripheral MUX should not be set for that pin.
+	 * DOPO controls which PAD is used for slave SS:
+	 * If DOPO is odd, SERCOM_PAD1 is SS: SERCOM_PAD2 can be MUXed.
+	 * If DOPO is even, SERCOM_PAD2 is SS: SERCOM_PAD1 can be MUXed.
+	 */
+	if (CONF_OZMOSPI_SIGNAL_MUX & (1 << SERCOM_SPI_CTRLA_DOPO_Pos)) {
+		pin_conf.mux_position = CONF_OZMOSPI_PINMUX_PAD2 & 0xFFFF;
+		system_pinmux_pin_set_config(CONF_OZMOSPI_PINMUX_PAD2 >> 16, &pin_conf);
+	} else {
+		pin_conf.mux_position = CONF_OZMOSPI_PINMUX_PAD1 & 0xFFFF;
+		system_pinmux_pin_set_config(CONF_OZMOSPI_PINMUX_PAD1 >> 16, &pin_conf);
+	}
 
 	pin_conf.mux_position = CONF_OZMOSPI_PINMUX_PAD3 & 0xFFFF;
 	system_pinmux_pin_set_config(CONF_OZMOSPI_PINMUX_PAD3 >> 16, &pin_conf);
