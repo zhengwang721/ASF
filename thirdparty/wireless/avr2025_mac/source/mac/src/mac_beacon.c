@@ -986,7 +986,7 @@ static void mac_t_superframe_cb(void *callback_parameter)
 	//ioport_set_value(DEBUG_PIN4, 0);//vk
 
 	mac_superframe_state = MAC_INACTIVE;
-	//sio2host_tx("-Inactive-",sizeof("-Inactive-"));
+	sio2host_tx("-Inactive-",sizeof("-Inactive-"));
 }
 
 #endif /* BEACON_SUPPORT */

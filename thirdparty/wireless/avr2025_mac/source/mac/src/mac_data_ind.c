@@ -731,6 +731,13 @@ static bool process_data_ind_not_transient(buffer_t *b_ptr, frame_info_t *f_ptr)
 						if (MAC_ASSOCIATED == mac_state)
 						{
 							mac_superframe_state = MAC_ACTIVE_CAP;
+
+							/* Check whether the radio needs to be woken up. */
+							mac_trx_wakeup();
+							/* Set transceiver in rx mode, otherwise it may stay in
+							 *TRX_OFF). */
+							tal_rx_enable(PHY_RX_ON);
+
 							sio2host_tx("-DCAP-",sizeof("-DCAP-")); //vk
 							if (tal_pib.SuperFrameOrder < tal_pib.BeaconOrder)
 							{
@@ -741,7 +748,7 @@ static bool process_data_ind_not_transient(buffer_t *b_ptr, frame_info_t *f_ptr)
 									TIMEOUT_RELATIVE,
 									(FUNC_PTR)mac_t_start_inactive_device_cb,
 									NULL);
-								ioport_set_value(DEBUG_PIN2, 1);//vk
+								//ioport_set_value(DEBUG_PIN2, 1);//vk
 							}
 #ifdef GTS_SUPPORT
 						if (mac_final_cap_slot < FINAL_CAP_SLOT_DEFAULT && 0 != mac_dev_gts_table[DEV_TX_SLOT_INDEX].GtsStartingSlot)
@@ -788,9 +795,7 @@ static bool process_data_ind_not_transient(buffer_t *b_ptr, frame_info_t *f_ptr)
 							 *broadcast data has
 							 *been received.
 							 */
-							if (!
-									mac_bc_data_indicated)
-							{
+							if (!mac_bc_data_indicated)	{
 								/* Set radio to
 								 *sleep if
 								 *allowed */

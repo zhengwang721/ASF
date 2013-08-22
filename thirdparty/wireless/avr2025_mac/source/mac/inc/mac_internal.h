@@ -767,6 +767,7 @@ void mac_t_gts_cb(void *callback_parameter);
 void init_gts_queues(void);
 void mac_tx_gts_data(queue_t *gts_data);
 uint8_t handle_gts_data_tx_end(void);
+void flush_gts_queues(void);
 #endif /* GTS_SUPPORT */
 
 #if (MAC_INDIRECT_DATA_FFD == 1)

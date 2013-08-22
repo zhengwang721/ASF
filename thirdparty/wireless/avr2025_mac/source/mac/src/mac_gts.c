@@ -775,7 +775,7 @@ void mac_t_gts_cb(void *callback_parameter)
 #ifdef FFD
 	if (MAC_PAN_COORD_STARTED == mac_state && mac_pan_gts_table_len > 0)
 	{
-		ioport_set_value(DEBUG_PIN3, 0); //vk
+		//ioport_set_value(DEBUG_PIN3, 0); //vk
 		if(MAC_ACTIVE_CAP == mac_superframe_state)
 		{
 			temp_index = mac_pan_gts_table_len - 1;
@@ -784,7 +784,7 @@ void mac_t_gts_cb(void *callback_parameter)
 			temp_ptr = mac_pan_gts_table[temp_index].gts_data_q;
 			//sio2host_tx("-GTS1-",sizeof("-GTS1-"));
 			#ifdef GTS_DEBUG
-		 gts_debug(MAC_ACTIVE_CAP,0,1,1);//vk
+			gts_debug(MAC_ACTIVE_CAP,0,1,1);//vk
 		
 			#endif
 		}
@@ -897,19 +897,19 @@ void mac_t_gts_cb(void *callback_parameter)
 #endif /* FFD */
 	if (MAC_ASSOCIATED == mac_state)
 	{
-		ioport_set_value(DEBUG_PIN2, 0); //vk
+		//ioport_set_value(DEBUG_PIN2, 0); //vk
 		if(MAC_ACTIVE_CAP == mac_superframe_state)
 		{
 			next_timer_dur = slot_duration * (mac_dev_gts_table[DEV_TX_SLOT_INDEX].GtsLength);
 			mac_superframe_state = MAC_ACTIVE_CFP_GTS1;
 			sio2host_tx("-DGTS TX-",sizeof("-DGTS TX-"));
-			ioport_set_value(DEBUG_PIN3, 1);//vk
+			//ioport_set_value(DEBUG_PIN3, 1);//vk
 			mac_tx_gts_data(&dev_tx_gts_q);
 		}
 		else if(MAC_ACTIVE_CFP_GTS1 == mac_superframe_state)
 		{
 			mac_superframe_state = MAC_ACTIVE_CAP;
-			ioport_set_value(DEBUG_PIN3, 0); //vk
+			//ioport_set_value(DEBUG_PIN3, 0); //vk
 		}
 	}
 	if(0 != next_timer_dur)
@@ -1052,6 +1052,18 @@ static void process_deallocate_data_q(queue_t *q_ptr)
 			transmit_frame->msduHandle);
 			#endif  /* ENABLE_TSTAMP */
 	}
+}
+
+void flush_gts_queues(void)
+{
+#ifdef FFD
+	uint8_t Index;
+	for (Index = 0; Index < MAX_GTS_ON_PANC; Index++)
+	{
+		qmm_queue_flush(&gts_q[Index]);
+	}
+#endif /* FFD */
+	qmm_queue_flush(&dev_tx_gts_q);
 }
 
 #endif /* GTS_SUPPORT */

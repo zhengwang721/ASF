@@ -253,8 +253,9 @@ void mac_t_start_inactive_device_cb(void *callback_parameter)
 	//mac_trx_init_sleep();
 
 	mac_superframe_state = MAC_INACTIVE;
+	mac_sleep_trans();
 	//ioport_set_value(DEBUG_PIN2, 0);//vk
-	//sio2host_tx("-D Inactive-",sizeof("-D Inactive-")); //vk
+	sio2host_tx("-D Inactive-",sizeof("-D Inactive-")); //vk
 
 	callback_parameter = callback_parameter; /* Keep compiler happy. */
 }
