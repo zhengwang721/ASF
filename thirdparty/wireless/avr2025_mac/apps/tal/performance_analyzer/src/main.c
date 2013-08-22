@@ -57,6 +57,7 @@
 #include "app_per_mode.h"
 #include "app_range_mode.h"
 #include "perf_api_serial_handler.h"
+#include "led.h"
 #ifdef __SAMD20J18__
 #include "system.h"
 #endif
@@ -439,7 +440,7 @@ int main(void)
 	 * The board-specific conf_board.h file contains the configuration of
 	 * the board initialization.
 	 */
-	board_init();
+	board_init();    
 	#endif
 
 	sio2host_init();
@@ -447,11 +448,12 @@ int main(void)
 	 * Power ON - so set the board to INIT state. All hardware, PAL, TAL and
 	 * stack level initialization must be done using this function
 	 */
+
 	set_main_state(INIT, NULL);
 
 	cpu_irq_enable();
 
-
+    
 
 	/* INIT was a success - so change to WAIT_FOR_EVENT state */
 	set_main_state(WAIT_FOR_EVENT, NULL);
@@ -463,6 +465,7 @@ int main(void)
 		tal_task(); /* Handle transceiver specific tasks */
 		app_task(); /* Application task */
 		serial_data_handler();
+        
 	}
 }
 
@@ -691,17 +694,17 @@ retval_t transmit_frame(uint8_t dst_addr_mode,
 	/* Destination address */
 	if (FCF_SHORT_ADDR == dst_addr_mode) {
 		frame_ptr -= SHORT_ADDR_LEN;
-		convert_16_bit_to_byte_array(*((uint16_t *)dst_addr),
-				frame_ptr);
-
+		//convert_16_bit_to_byte_array(*((uint16_t *)dst_addr),
+		//		frame_ptr);
+	memcpy(frame_ptr, (uint8_t *)dst_addr, sizeof(uint16_t));
 		fcf |= FCF_SET_DEST_ADDR_MODE(FCF_SHORT_ADDR);
 	} else {
 		frame_ptr -= EXT_ADDR_LEN;
 		frame_length += PL_POS_DST_ADDR_START;
 
-		convert_64_bit_to_byte_array(*((uint64_t *)dst_addr),
-				frame_ptr);
-
+		//convert_64_bit_to_byte_array(*((uint64_t *)dst_addr),
+		//		frame_ptr);
+		memcpy(frame_ptr, (uint8_t *)dst_addr, sizeof(uint64_t));
 		fcf |= FCF_SET_DEST_ADDR_MODE(FCF_LONG_ADDR);
 	}
 

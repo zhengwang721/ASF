@@ -47,6 +47,7 @@
  */
 
 /* === INCLUDES ============================================================ */
+#include "compiler.h"
 #include "tal.h"
 #include "return_val.h"
 #include "ieee_const.h"
@@ -325,6 +326,7 @@ static uint8_t *get_next_tx_buffer(void)
 static inline void handle_incoming_msg(void)
 {
 	uint8_t error_code = MAC_SUCCESS;
+	param_value_t param_value_temp;
 
 	/* Check for protocol id is Perofomance Analyzer */
 	if (PROTOCOL_ID != sio_rx_buf[1]) { /* protocol id */
@@ -454,10 +456,10 @@ static inline void handle_incoming_msg(void)
 			/* Send the confirmation with status as Failure
 			 * with error code as the reason for failure
 			 */
+			param_value_temp.param_value_8bit = sio_rx_buf[PARAM_VALUE_POS];
 			usr_perf_set_confirm(error_code,
 					sio_rx_buf[PARAM_TYPE_POS],
-					(param_value_t *)&sio_rx_buf[
-						PARAM_VALUE_POS]);
+					&param_value_temp);
 			return;
 		}
 
@@ -467,10 +469,12 @@ static inline void handle_incoming_msg(void)
 		if ((PER_TEST_INITIATOR == node_info.main_state) ||
 				(SINGLE_NODE_TESTS == node_info.main_state)
 				) {
+			MEMCPY_ENDIAN(&param_value_temp, &sio_rx_buf[PARAM_VALUE_POS], 
+			       get_param_length(sio_rx_buf[PARAM_TYPE_POS]));
+				   			
 			perf_set_req(sio_rx_buf[PARAM_TYPE_POS],
-					(param_value_t *)&sio_rx_buf[
-						PARAM_VALUE_POS]);                /*
-				                                                   *
+					&param_value_temp
+						);                /*
 				                                                   *parameter
 				                                                   *
 				                                                   *type
@@ -487,10 +491,10 @@ static inline void handle_incoming_msg(void)
 			/* Send the confirmation with status as INVALID_CMD as
 			 * this command is not allowed in this state
 			 */
+			param_value_temp.param_value_8bit = sio_rx_buf[PARAM_VALUE_POS]; 
 			usr_perf_set_confirm(INVALID_CMD,
 					sio_rx_buf[PARAM_TYPE_POS],
-					(param_value_t *)&sio_rx_buf[
-						PARAM_VALUE_POS]);
+					&param_value_temp);
 		}
 	}
 	break;
@@ -537,8 +541,8 @@ static inline void handle_incoming_msg(void)
 	}
 	break;
 
-	case IDENTIFY_PEER_NODE_REQ: /* 0x04  - Process Peer identification
-		                      * command*/
+	/* Process Peer Identification command */
+	case IDENTIFY_PEER_NODE_REQ: /* 0x04 */
 	{
 		/* Order of reception:
 		 * size;
@@ -2162,9 +2166,9 @@ void usr_set_default_config_confirm(uint8_t status,
  */
 void usr_identify_board_confirm(uint8_t status,
 		uint8_t ic_type,
-		char *mcu_soc_name,
-		char *trx_name,
-		char *board_name,
+		const char *mcu_soc_name,
+		const char *trx_name,
+		const char *board_name,
 		uint64_t mac_address,
 		float fw_version,
 		uint32_t fw_feature_mask)

@@ -337,7 +337,7 @@ tal_trx_status_t set_trx_state(trx_cmd_t trx_cmd)
 		/* Check if trx has left deep sleep. */
 		tal_trx_status_t trx_state;
 		do {
-			trx_state = (tal_trx_status_t)pal_trx_reg_read(
+			trx_state = pal_trx_reg_read(
 					RG_TRX_STATUS);
 		} while (trx_state != TRX_OFF);
 		tal_trx_status = TRX_OFF;

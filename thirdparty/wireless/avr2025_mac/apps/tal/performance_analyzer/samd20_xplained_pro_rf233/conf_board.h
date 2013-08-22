@@ -40,14 +40,17 @@
  * \asf_license_stop
  *
  */
+
 #ifndef CONF_BOARD_H_INCLUDED
 #define CONF_BOARD_H_INCLUDED
 
+/** Enable Com Port. */
+#define CONF_BOARD_COM_PORT
 #define CONF_BOARD_AT86RFX
-
 #define IC_TYPE             (0x00)
+#define TRANSCEIVER_NAME    "AT86RF233"
 #define MCU_SOC_NAME        "ATSAMD20J18"
 
-#define AT86RFX_SPI_BAUDRATE		 1000000UL
+#define AT86RFX_SPI_BAUDRATE		 4000000UL
 //# include "conf_usb.h"
 #endif /* CONF_BOARD_H_INCLUDED */

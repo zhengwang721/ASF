@@ -606,7 +606,7 @@ void tal_ed_end_cb(uint8_t energy_level);
  *         MAC_SUCCESS otherwise
  * \ingroup group_tal_pib
  */
-retval_t tal_pib_get(uint8_t attribute, uint8_t *value);
+retval_t tal_pib_get(uint8_t attribute, arch_data_t *value);
 
 /**
  * \brief Sets a TAL PIB attribute
