@@ -51,6 +51,6 @@
 #define TRANSCEIVER_NAME    "AT86RF233"
 #define MCU_SOC_NAME        "ATSAMD20J18"
 
-#define AT86RFX_SPI_BAUDRATE		 1000000UL
+#define AT86RFX_SPI_BAUDRATE		 4000000UL
 //# include "conf_usb.h"
 #endif /* CONF_BOARD_H_INCLUDED */
