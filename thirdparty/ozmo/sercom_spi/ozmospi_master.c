@@ -73,6 +73,7 @@ struct ozmospi_module {
 	ozmospi_buflen_t tx_length;
 	uint8_t *rx_head_ptr;
 	uint8_t *tx_head_ptr;
+	uint_fast8_t tx_lead_on_rx;
 	struct ozmospi_bufdesc *rx_bufdesc_ptr;
 	struct ozmospi_bufdesc *tx_bufdesc_ptr;
 };
@@ -257,6 +258,7 @@ enum status_code ozmospi_transceive_buffers_wait(
 {
 	enum status_code status;
 	SercomSpi *const spi_hw = OZMOSPI_SERCOM_SPI;
+	uint32_t tmp_ctrlb;
 	uint8_t tmp_intenset;
 
 	Assert(tx_bufdescs || rx_bufdescs);
@@ -279,8 +281,8 @@ enum status_code ozmospi_transceive_buffers_wait(
 		_ozmospi_module.tx_head_ptr = tx_bufdescs[0].data;
 		_ozmospi_module.rx_length = rx_bufdescs[0].length;
 		_ozmospi_module.rx_head_ptr = rx_bufdescs[0].data;
-		spi_hw->CTRLB.reg = SERCOM_SPI_CTRLB_RXEN;
-
+		_ozmospi_module.tx_lead_on_rx = 0;
+		tmp_ctrlb = SERCOM_SPI_CTRLB_RXEN;
 		tmp_intenset = SERCOM_SPI_INTFLAG_DRE | SERCOM_SPI_INTFLAG_RXC;
 	} else {
 		if (tx_bufdescs) {
@@ -289,7 +291,7 @@ enum status_code ozmospi_transceive_buffers_wait(
 			_ozmospi_module.direction = OZMOSPI_DIRECTION_WRITE;
 			_ozmospi_module.tx_length = tx_bufdescs[0].length;
 			_ozmospi_module.tx_head_ptr = tx_bufdescs[0].data;
-
+			tmp_ctrlb = 0;
 			tmp_intenset = SERCOM_SPI_INTFLAG_DRE;
 		} else {
 			Assert(rx_bufdescs[0].length);
@@ -297,12 +299,18 @@ enum status_code ozmospi_transceive_buffers_wait(
 			_ozmospi_module.direction = OZMOSPI_DIRECTION_READ;
 			_ozmospi_module.rx_length = rx_bufdescs[0].length;
 			_ozmospi_module.rx_head_ptr = rx_bufdescs[0].data;
-			spi_hw->CTRLB.reg = SERCOM_SPI_CTRLB_RXEN;
-
+			_ozmospi_module.tx_lead_on_rx = 0;
+			tmp_ctrlb = SERCOM_SPI_CTRLB_RXEN;
 			tmp_intenset = SERCOM_SPI_INTFLAG_DRE | SERCOM_SPI_INTFLAG_RXC;
 		}
 	}
 
+	/* Ensure the SERCOM is sync'ed before writing these registers */
+	while (spi_hw->STATUS.reg & SERCOM_SPI_STATUS_SYNCBUSY) {
+		/* Intentionally left empty */
+	}
+
+	spi_hw->CTRLB.reg = tmp_ctrlb;
 	spi_hw->INTENSET.reg = tmp_intenset;
 
 	do {
@@ -322,26 +330,35 @@ static void _ozmospi_int_handler(uint8_t not_used)
 	enum _ozmospi_direction dir = _ozmospi_module.direction;
 	SercomSpi *const spi_hw = OZMOSPI_SERCOM_SPI;
 	uint8_t int_status;
-	uint8_t *tx_head_ptr;
-	uint8_t *rx_head_ptr;
-	ozmospi_buflen_t tx_length;
-	ozmospi_buflen_t rx_length;
 
 	int_status = spi_hw->INTFLAG.reg & spi_hw->INTENSET.reg;
 
 	if (int_status & SERCOM_SPI_INTFLAG_DRE) {
 		/* If doing a READ, just send 0 to trigger the transfer */
 		if (dir == OZMOSPI_DIRECTION_READ) {
+			uint32_t tx_lead_limit;
+
 			spi_hw->DATA.reg = 0;
+			_ozmospi_module.tx_lead_on_rx++;
 
-			/* Check if this send will fetch the last byte to read */
+			/* With current TX'ed bytes, will we get the last RX byte? */
 check_for_read_end:
-			tx_length = _ozmospi_module.rx_length - 1;
+			/* As the TX lead may be up to 2 bytes, and the buffers may
+			 * be as short as 1 byte, we must check three cases:
+			 * 1) current RX buffer is the last one
+			 * 2) next RX buffer is the last one
+			 * 3) next RX buffer is _not_ the last one
+			 */
+			tx_lead_limit = (_ozmospi_module.rx_bufdesc_ptr + 1)->length;
 
-			if (!tx_length) {
-				tx_length = (_ozmospi_module.rx_bufdesc_ptr + 1)->length;
+			/* Checking descriptor at location +2 is fine even if the one at +1
+			 * is the last one because +1 will specify zero length, in which case
+			 * the length found at the invalid location +2 does not matter.
+			 */
+			if (!tx_lead_limit || !(_ozmospi_module.rx_bufdesc_ptr + 2)->length) {
+				tx_lead_limit += _ozmospi_module.rx_length;
 
-				if (!tx_length) {
+				if (_ozmospi_module.tx_lead_on_rx >= tx_lead_limit) {
 					/* Disable DRE to stop future transfers */
 					spi_hw->INTENCLR.reg = SERCOM_SPI_INTFLAG_DRE;
 				}
@@ -349,8 +366,12 @@ check_for_read_end:
 
 		/* For WRITE and BOTH, output current byte */
 		} else {
+			ozmospi_buflen_t tx_length;
+			uint8_t *tx_head_ptr;
+
 			tx_head_ptr = _ozmospi_module.tx_head_ptr;
 			spi_hw->DATA.reg = *(tx_head_ptr++);
+			_ozmospi_module.tx_lead_on_rx++;
 
 			/* Check if this was the last byte to send */
 			tx_length = _ozmospi_module.tx_length - 1;
@@ -383,8 +404,12 @@ check_for_read_end:
 
 	/* For READ and BOTH, store the received byte */
 	if (int_status & SERCOM_SPI_INTFLAG_RXC) {
+		ozmospi_buflen_t rx_length;
+		uint8_t *rx_head_ptr;
+
 		rx_head_ptr = _ozmospi_module.rx_head_ptr;
 		*(rx_head_ptr++) = spi_hw->DATA.reg;
+		_ozmospi_module.tx_lead_on_rx--;
 
 		/* Check if this was the last byte to receive */
 		rx_length = _ozmospi_module.rx_length - 1;
@@ -400,13 +425,12 @@ check_for_read_end:
 				_ozmospi_module.rx_head_ptr = _ozmospi_module.rx_bufdesc_ptr->data;
 				_ozmospi_module.rx_length = rx_length;
 			} else {
-				/* Disable the SPI received (instant effect) */
+				/* Disable the SPI receiver (instant effect) and RX interrupt */
 				spi_hw->CTRLB.reg = 0;
+				spi_hw->INTENCLR.reg = SERCOM_SPI_INTFLAG_RXC;
 
 				if (dir == OZMOSPI_DIRECTION_READ) {
 					/* If doing READ, end the transaction here */
-					spi_hw->INTENCLR.reg = SERCOM_SPI_INTFLAG_RXC;
-
 					dir = OZMOSPI_DIRECTION_IDLE;
 					_ozmospi_module.direction = dir;
 					_ozmospi_module.status = STATUS_OK;
