@@ -421,25 +421,8 @@ void c42364a_show_numeric_dec(int32_t value)
 {
 	uint8_t lcd_num[5];
 
-	Assert(value > -20000);
-	Assert(value < 20000);
-
-	if(value < 0) {
-		c42364a_slcdc_set_pixel(SLCDC, C42364A_ICON_MINUS);
-	} else {
-		c42364a_slcdc_clear_pixel(SLCDC, C42364A_ICON_MINUS);
-	}
-
-	value = Abs(value);
-
-	if(value > 9999) {
-		value -= 10000;
-		c42364a_slcdc_set_pixel(SLCDC, C42364A_ICON_MINUS_SEG1);
-		c42364a_slcdc_set_pixel(SLCDC, C42364A_ICON_MINUS_SEG2);
-	} else {
-		c42364a_slcdc_clear_pixel(SLCDC, C42364A_ICON_MINUS_SEG1);
-		c42364a_slcdc_clear_pixel(SLCDC, C42364A_ICON_MINUS_SEG2);
-	}
+	Assert(value >= 0);
+	Assert(value <= 9999);
 
 	sprintf((char*)lcd_num, "%4d", (int)value);
 
@@ -448,9 +431,6 @@ void c42364a_show_numeric_dec(int32_t value)
 
 void c42364a_clear_numeric_dec(void)
 {
-	c42364a_slcdc_clear_pixel(SLCDC, C42364A_ICON_MINUS);
-	c42364a_slcdc_clear_pixel(SLCDC, C42364A_ICON_MINUS_SEG1);
-	c42364a_slcdc_clear_pixel(SLCDC, C42364A_ICON_MINUS_SEG2);
 	c42364a_write_num_packet("    ");
 }
 

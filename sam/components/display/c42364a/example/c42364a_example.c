@@ -133,7 +133,11 @@ int main(void)
 #if !SAM4C
 	uint8_t const scrolling_str[] = "C42364A Example  ";
 #endif
+#if SAM4C
+	int32_t value = 23;
+#else
 	int32_t value = -12345;
+#endif
 	status_code_t status;
 
 	/* Initialize the SAM system */
@@ -185,6 +189,10 @@ int main(void)
 
 		case '1':
 			printf("Show icons, number and string.\r\n");
+		#if SAM4C
+			c42364a_clear_all();
+			c42364a_blink_disable();
+		#endif
 			c42364a_show_icon(C42364A_ICON_ARM);
 			c42364a_show_numeric_dec(value);
 		#if SAM4C
@@ -198,6 +206,10 @@ int main(void)
 		case '2':
 		#if SAM4C
 			printf("Blink Full Screen.\r\n");
+			c42364a_clear_all();
+			c42364a_write_num_packet((const uint8_t *)"1023");
+			c42364a_show_icon(C42364A_ICON_AM);
+			c42364a_show_icon(C42364A_ICON_COLON);
 			c42364a_blink_screen();
 		#else
 			printf("Blink colon icon, show a time.\r\n");

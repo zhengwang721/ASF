@@ -426,9 +426,6 @@
 #define C42364A_ICON_ERROR          1,49
 #define C42364A_ICON_CHINESE        2,49
 #define C42364A_ICON_ARM            3,49
-#define C42364A_ICON_MINUS          0,21
-#define C42364A_ICON_MINUS_SEG1     3,29
-#define C42364A_ICON_MINUS_SEG2     0,26
 #define C42364A_ICON_DOT_1          0,30
 #define C42364A_ICON_DOT_2          3,20
 #define C42364A_ICON_DOT_3          3,22
@@ -436,8 +433,6 @@
 #define C42364A_ICON_BAT_LEVEL_1    0,38
 #define C42364A_ICON_BAT_LEVEL_2    0,42
 #define C42364A_ICON_BAT_LEVEL_3    0,34
-#define C42364A_ICON_AUDIO_PAUSE    3,21
-#define C42364A_ICON_AUDIO_PLAY     3,25
 #define C42364A_ICON_AM             3,27
 #define C42364A_ICON_PM             3,33
 #define C42364A_ICON_DEGREE_C       3,37
