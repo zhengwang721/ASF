@@ -80,7 +80,7 @@ The SAM4C-EK features six push-buttons, FWUP, NRST, TMP0, TMP2, SCROLL-UP and
 SCROLL-DOWN, connected to pins FWUP, NRST, TMP0, PB27, PA19, and PA20 respectively.
 
 Usually, the NRST is used to reset the MCU and the FWUP is usded to wakeup MCU 
-from low power modes, while the other five are used for general purpose,
+from low power modes, while the other four are used for general purpose,
 which can force a logical low level on the corresponding PIO line when pressed.
 
 The Getting-started example uses SCROLL-UP and SCROLL-DOWN buttons with the
@@ -91,7 +91,7 @@ internal hardware debouncing circuitry embedded in the SAM4C.
 \defgroup LEDS LEDs on the board
 There are four LEDs on the SAM4C Evaluation Kit. D8, D9, D10 are used for
 general purpose, which are connected to PC8, PC7, and PC6 respectively. D5 is
-the power LED.
+the power LED. 
 
 Both D9 and D10 are used in the getting-started example.
 */

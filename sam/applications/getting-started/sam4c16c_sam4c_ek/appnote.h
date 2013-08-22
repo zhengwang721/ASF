@@ -290,7 +290,7 @@ associated with the exception handler entries
 On reset, the vector table is located at CODE partition. The table’s current
 location can be determined or relocated in the CODE or SRAM partitions of the
 memory map using the Vector Table Offset Register (VTOR). Details on the
-register can be found in the "Cortex™-M4 TechnicalRef-erence Manual".
+register can be found in the "Cortex™-M4 Technical Reference Manual".
 
 In the getting-started example, a full vector table looks like this:
 
