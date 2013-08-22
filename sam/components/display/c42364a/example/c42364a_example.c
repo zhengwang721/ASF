@@ -134,7 +134,7 @@ int main(void)
 	uint8_t const scrolling_str[] = "C42364A Example  ";
 #endif
 #if SAM4C
-	int32_t value = 23;
+	int32_t value = 1234;
 #else
 	int32_t value = -12345;
 #endif
