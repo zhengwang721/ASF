@@ -477,17 +477,17 @@ static inline retval_t outgoing_key_retrieval(mcps_data_req_t *pmdr,
  *
  * @return Status of extraction of Auxiliary Security Header fields
  */
-retval_t mac_unsecure(parse_t *mac_parse_data, uint8_t *mpdu,
+retval_t mac_unsecure(parse_t *mac_parse_data_buf, uint8_t *mpdu,
 		uint8_t *mac_payload, uint8_t *payload_index)
 {
 	retval_t status;
-	status = parse_aux_sec_header(mac_parse_data, mac_payload);
+	status = parse_aux_sec_header(mac_parse_data_buf, mac_payload);
 	if (status != MAC_SUCCESS) {
 		return status;
 	}
 
 	status
-		= unsecure_frame(mac_parse_data, mpdu, mac_payload,
+		= unsecure_frame(mac_parse_data_buf, mpdu, mac_payload,
 			payload_index);
 	return status;
 }

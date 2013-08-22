@@ -97,10 +97,13 @@
 #include <stdio.h>
 #include "conf_board.h"
 #include "avr2025_mac.h"
-//#include "led.h" siva
 #include "delay.h"
 #include "common_sw_timer.h"
 #include "sio2host.h"
+#include "mac.h"
+#include "tal.h"
+#include "ieee_const.h"
+#include "mac_internal.h"
 #include <asf.h>
 
 /* === TYPES =============================================================== */
@@ -121,9 +124,9 @@ app_state_t;
 #define DEFAULT_PAN_ID                  CCPU_ENDIAN_TO_LE16(0xBABE)
 
 /** Defines the short address of the coordinator. */
-#define COORD_SHORT_ADDR                CCPU_ENDIAN_TO_LE16(0x0000)
+#define COORD_SHORT_ADDR                CCPU_ENDIAN_TO_LE16(0XCAFE)
 
-#define CHANNEL_OFFSET                  (1)
+#define CHANNEL_OFFSET                  (6)
 
 #define SCAN_CHANNEL                    (1ul << current_channel)
 
@@ -158,6 +161,16 @@ app_state_t;
 #define LED_DATA                        (LED0)
 #endif
 
+#ifdef MAC_SECURITY_ZIP
+/* MAC security macros */
+#define KEY_INDEX_1                     (1)
+#define LOOKUP_DATA_SIZE_1              (1) // Size is 9 octets
+#define FRAME_TYPE_DATA                 (1)
+#define CMD_FRAME_ID_NA                 (0) // CommandFrameIdentifier is n/a
+#define ZIP_SEC_MIN                     (5) // SecurityMinimum for ZIP is 5
+#define DEV_OVERRIDE_SEC_MIN            (1) // DeviceOverrideSecurityMinimum: True
+#define ZIP_KEY_ID_MODE                 (1) // ZIP uses KeyIdMode 1
+#endif
 /* === GLOBALS ============================================================= */
 
 /* This structure stores the short and extended address of the coordinator. */
@@ -180,6 +193,20 @@ static uint8_t current_channel_page;
 static uint32_t channels_supported;
 
 static uint8_t APP_TIMER;
+
+#ifdef MAC_SECURITY_ZIP
+/*
+ * This is implemented as an array of bytes, but actually this is a
+ * 128-bit variable. This is the reason why the array needs to be filled
+ * in in reverse order than expected.
+ */
+static uint8_t default_key[16] = {0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7,
+                                  0xC8, 0xC9, 0xCA, 0xCB, 0xCC, 0xCD, 0xCE, 0xCF
+                                 };
+
+static uint8_t default_key_source[8] = {0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+#endif
 
 /* === PROTOTYPES ========================================================== */
 
@@ -290,9 +317,21 @@ void usr_mcps_data_conf(uint8_t msduHandle,
  *received.
  *                         (only if timestamping is enabled).
  */
-#ifdef SIO_HUB
-const char Display_Frame_Received[] = "Frame received: %lu\r\n";
-#endif
+#ifdef MAC_SECURITY_ZIP
+void usr_mcps_data_ind(wpan_addr_spec_t *SrcAddrSpec,
+				wpan_addr_spec_t *DstAddrSpec,
+				uint8_t msduLength,
+				uint8_t *msdu,
+				uint8_t mpduLinkQuality,
+				uint8_t DSN,
+#ifdef ENABLE_TSTAMP
+				uint32_t Timestamp,
+				#endif  /* ENABLE_TSTAMP */
+				uint8_t SecurityLevel,
+				uint8_t KeyIdMode,
+				uint8_t KeyIndex)
+#else /* No MAC_SECURITY */
+
 void usr_mcps_data_ind(wpan_addr_spec_t *SrcAddrSpec,
 		wpan_addr_spec_t *DstAddrSpec,
 		uint8_t msduLength,
@@ -304,27 +343,32 @@ void usr_mcps_data_ind(wpan_addr_spec_t *SrcAddrSpec,
 #else
 		uint8_t DSN)
 #endif  /* ENABLE_TSTAMP */
+#endif
 {
 #ifdef SIO_HUB
 	//char sio_array[255];
+#ifdef SIO_HUB
+const char Display_Received_Frame[] = "Frame received: %lu\r\n";
+#endif
 #endif
 
 	if (DstAddrSpec->Addr.short_address == BROADCAST) {
 		bc_rx_cnt++;
 #ifdef SIO_HUB
 		printf("Broadcast ");
-		/*sprintf(sio_array, "Frame received: %" PRIu32 "\r\n",
-				bc_rx_cnt);*/
-		printf(Display_Frame_Received, bc_rx_cnt);
-		
+		printf(Display_Received_Frame, bc_rx_cnt);
 #endif
 	} else {
 		indirect_rx_cnt++;
 #ifdef SIO_HUB
 		printf("Indirect Data ");
+		printf("Frame received: ");
+		for (uint8_t i = 0; i < msduLength; i++) {
+			printf("%c", msdu[i]);
+		}
 		/*sprintf(sio_array, "Frame received: %" PRIu32 "\r\n",
-				indirect_rx_cnt);*/
-		printf(Display_Frame_Received, indirect_rx_cnt);
+			//	indirect_rx_cnt);
+			*msdu); //Anupama  */
 #endif
 	}
 
@@ -398,6 +442,13 @@ void usr_mlme_associate_conf(uint16_t AssocShortAddress,
 		sw_timer_stop(APP_TIMER);
 
 		LED_On(LED_NWK_SETUP);
+	 
+		   uint8_t mac_dev_table_entries = 1;
+
+	                 wpan_mlme_set_req(macDeviceTableEntries,
+	                 NO_PIB_INDEX,
+	                 &mac_dev_table_entries);
+		  
 	} else {
 		LED_Off(LED_NWK_SETUP);
 
@@ -446,9 +497,6 @@ void usr_mlme_associate_ind(uint64_t DeviceAddress,
  * @param sduLength      Length of beacon payload.
  * @param sdu            Pointer to beacon payload.
  */
-#ifdef SIO_HUB
-const char Display_Rx_Beacon_Payload[] = "Rx beacon payload (%lu): ";
-#endif
 void usr_mlme_beacon_notify_ind(uint8_t BSN,
 		wpan_pandescriptor_t *PANDescriptor,
 		uint8_t PendAddrSpec,
@@ -507,24 +555,37 @@ void usr_mlme_beacon_notify_ind(uint8_t BSN,
 		static uint8_t msdu_handle = 0;
 
 		msdu_handle++;      /* Increment handle */
+		
+#ifdef MAC_SECURITY_ZIP
+		wpan_mcps_data_req(src_addr_mode,
+				&coord_addr_spec,
+				sduLength,  // msduLength
+				&msdu_payload[0],
+				msdu_handle,
+				WPAN_TXOPT_ACK,
+				ZIP_SEC_MIN,     // SecurityLevel
+				ZIP_KEY_ID_MODE, // KeyIdMode
+				1);  // KeyIndex
+#else		
 		wpan_mcps_data_req(src_addr_mode,
 				&coord_addr_spec,
 				sduLength,
 				&msdu_payload[0],
 				msdu_handle,
 				WPAN_TXOPT_ACK);
+#endif
 
 #ifdef SIO_HUB
 		{
 			static uint32_t rx_cnt;
+			const char Rx_Beacon_Payload[] = "Rx beacon payload (%lu): ";
 			//char sio_array[255]; /* sizeof(uint32_t) + 1 */
 
 			/* Print received payload. */
 			rx_cnt++;
 			/*sprintf(sio_array, "Rx beacon payload (%" PRIu32 "): ",
-					rx_cnt);
-			printf(sio_array);*/
-			printf(Display_Rx_Beacon_Payload, rx_cnt);
+					rx_cnt);*/
+			printf(Rx_Beacon_Payload, rx_cnt);
 
 			/* Set last element to 0. */
 			if (sduLength == PAYLOAD_LEN) {
@@ -532,8 +593,12 @@ void usr_mlme_beacon_notify_ind(uint8_t BSN,
 			} else {
 				msdu_payload[sduLength] = '\0';
 			}
+			
+			for (uint8_t i = 0; i < sduLength; i++) {
+				printf("%c", msdu_payload[i]);
+			}			
 
-			printf((char *)msdu_payload);
+			//printf((char *)msdu_payload);
 			printf("\r\n");
 		}
 #endif  /* SIO_HUB */
@@ -632,12 +697,19 @@ void usr_mlme_disassociate_ind(uint64_t DeviceAddress,
  * @return void
  */
 void usr_mlme_get_conf(uint8_t status,
-		uint8_t PIBAttribute,
-		void *PIBAttributeValue)
+			uint8_t PIBAttribute,
+#ifdef MAC_SECURITY_ZIP
+			uint8_t PIBAttributeIndex,
+#endif  /* MAC_SECURITY_ZIP */
+			void *PIBAttributeValue)
 {
 	if ((status == MAC_SUCCESS) && (PIBAttribute == phyCurrentPage)) {
 		current_channel_page = *(uint8_t *)PIBAttributeValue;
+#ifdef MAC_SECURITY_ZIP
+		wpan_mlme_get_req(phyChannelsSupported,NO_PIB_INDEX);
+#else
 		wpan_mlme_get_req(phyChannelsSupported);
+#endif
 	} else if ((status == MAC_SUCCESS) &&
 			(PIBAttribute == phyChannelsSupported)) {
 		uint8_t index;
@@ -727,7 +799,11 @@ void usr_mlme_poll_conf(uint8_t status)
 void usr_mlme_reset_conf(uint8_t status)
 {
 	if (status == MAC_SUCCESS) {
+#ifdef MAC_SECURITY_ZIP
+		wpan_mlme_get_req(phyCurrentPage,NO_PIB_INDEX);
+#else
 		wpan_mlme_get_req(phyCurrentPage);
+#endif
 	} else {
 		/* Set proper state of application. */
 		app_state = APP_IDLE;
@@ -830,8 +906,8 @@ void usr_mlme_scan_conf(uint8_t status,
 				 */
 				uint16_t pan_id;
 				pan_id = DEFAULT_PAN_ID;
-				wpan_mlme_set_req(macPANId, &pan_id);
-
+				wpan_mlme_set_req(macPANId,NO_PIB_INDEX, &pan_id);
+				
 				return;
 			}
 
@@ -879,47 +955,226 @@ void usr_mlme_scan_conf(uint8_t status,
  * @param status        Result of requested PIB attribute set operation
  * @param PIBAttribute  Updated PIB attribute
  */
-void usr_mlme_set_conf(uint8_t status,
-		uint8_t PIBAttribute)
-{
-	if ((status == MAC_SUCCESS) && (PIBAttribute == macPANId)) {
-		/*
-		 * Set the Coordinator Short Address of the scanned network.
-		 * This is required in order to perform a proper sync
-		 * before assocation.
-		 */
-		wpan_mlme_set_req(macCoordShortAddress, &coord_addr_spec.Addr);
-	} else if ((status == MAC_SUCCESS) &&
-			(PIBAttribute == macCoordShortAddress)) {
-		/*
-		 * Sync with beacon frames from our coordinator.
-		 * Use: bool wpan_mlme_sync_req(uint8_t LogicalChannel,
-		 *                              uint8_t ChannelPage,
-		 *                              bool TrackBeacon);
-		 *
-		 * This does not lead to an immediate reaction.
-		 *
-		 * In case we receive beacon frames from our coordinator
-		 *including
-		 * a beacon payload, this is indicated in the callback function
-		 * usr_mlme_beacon_notify_ind().
-		 *
-		 * In case the device cannot find its coordinator or later
-		 *looses
-		 * synchronization with its parent, this is indicated in the
-		 * callback function usr_mlme_sync_loss_ind().
-		 */
-		wpan_mlme_sync_req(current_channel,
-				current_channel_page,
-				1);
-	} else {
-		/* Set proper state of application. */
-		app_state = APP_IDLE;
 
-		/* Something went wrong; restart. */
-		wpan_mlme_reset_req(true);
-	}
+void usr_mlme_set_conf(uint8_t status, uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
+{
+    if (status != MAC_SUCCESS)
+    {
+        // something went wrong; restart
+        wpan_mlme_reset_req(true);
+    }
+    else
+    {
+        switch (PIBAttribute)
+        {
+            case macPANId:
+            {
+				/*
+				 * Set the Coordinator Short Address of the scanned network.
+				 * This is required in order to perform a proper sync
+				 * before assocation.
+				 */
+				wpan_mlme_set_req(macCoordShortAddress,NO_PIB_INDEX, &coord_addr_spec.Addr);
+				
+			}
+            break;
+
+            case macCoordShortAddress:
+                 {
+	           
+				     /* Set security PIB attributes now. */
+	                 wpan_mlme_set_req(macDefaultKeySource,
+	                 NO_PIB_INDEX,
+	                 &default_key_source); 
+                }
+                 break;
+
+            case macDefaultKeySource:
+                 {
+	                 uint8_t mac_sec_level_table_entries = 1;
+
+	                 wpan_mlme_set_req(macSecurityLevelTableEntries,
+	                 NO_PIB_INDEX,
+	                 &mac_sec_level_table_entries);
+                 }
+                 break;
+
+             case macSecurityLevelTableEntries:
+                 {
+	                 uint8_t mac_sec_level_table[4] = {FRAME_TYPE_DATA,      // FrameType: Data
+		                 CMD_FRAME_ID_NA,      // CommandFrameIdentifier: N/A
+		                 ZIP_SEC_MIN,          // SecurityMinimum: 5
+		                 DEV_OVERRIDE_SEC_MIN  // DeviceOverrideSecurityMinimum: True
+	                 };
+
+	                 wpan_mlme_set_req(macSecurityLevelTable,
+	                 0,    // Index: 0
+	                 &mac_sec_level_table);
+                 }
+                 break;
+
+             case macSecurityLevelTable:
+                 {
+	                 uint8_t mac_key_table_entries = 1;
+
+	                 wpan_mlme_set_req(macKeyTableEntries,
+	                 NO_PIB_INDEX,
+	                 &mac_key_table_entries);
+                 }
+                 break;
+
+             case macKeyTableEntries:
+                 {
+	                 uint8_t mac_key_table[34] =
+	                 {
+		                 // KeyIdLookupList[1].LookupData : macDefaultKeySource || g_Sec_KeyIndex_1
+		                 default_key_source[0], // LookupData[0]
+		                 default_key_source[1], // LookupData[1]
+		                 default_key_source[2], // LookupData[2]
+		                 default_key_source[3], // LookupData[3]
+		                 default_key_source[4], // LookupData[4]
+		                 default_key_source[5], // LookupData[5]
+		                 default_key_source[6], // LookupData[6]
+		                 default_key_source[7], // LookupData[7]
+		                 KEY_INDEX_1,           // LookupData[8]
+		                 LOOKUP_DATA_SIZE_1, // LookupDataSize: 0x01 : Size 9 octets
+		                 1,              // KeyIdLookupListEntries = 1
+		                 // KeyDeviceList[1]
+		                 0,              // DeviceDescriptorHandle
+		                 0,              // UniqueDevice - Key is unique per node
+		                 0,              // Blacklisted
+		                 1,              // KeyDeviceListEntries
+		                 //  KeyUsageList
+		                 FRAME_TYPE_DATA,    // FrameType - Data frames
+		                 CMD_FRAME_ID_NA,    // CommandFrameIdentifier not used in ZIP
+		                 1,                  // KeyUsageListEntries
+		                 // Key
+		                 default_key[0],
+		                 default_key[1],
+		                 default_key[2],
+		                 default_key[3],
+		                 default_key[4],
+		                 default_key[5],
+		                 default_key[6],
+		                 default_key[7],
+		                 default_key[8],
+		                 default_key[9],
+		                 default_key[10],
+		                 default_key[11],
+		                 default_key[12],
+		                 default_key[13],
+		                 default_key[14],
+		                 default_key[15],
+	                 };
+
+	                 wpan_mlme_set_req(macKeyTable,
+	                 0,    // Index: 0
+	                 &mac_key_table);
+                 }
+                 break;
+
+             case macKeyTable:
+                 {
+	                 uint8_t mac_dev_table_entries = 1;
+
+	                 wpan_mlme_set_req(macDeviceTableEntries,
+	                 NO_PIB_INDEX,
+	                 &mac_dev_table_entries);  
+                 }
+                 break;
+
+              case macDeviceTableEntries:
+                 {
+	                 uint8_t mac_dev_table[17] =
+	                 {
+		                 // DeviceDescriptor
+		                 // PANId
+		                 (uint8_t)tal_pib.PANId,
+		                 (uint8_t)(tal_pib.PANId >> 8),
+		                 // Device ShortAddress
+		                 (uint8_t)mac_pib.mac_CoordShortAddress,
+		                 (uint8_t)(mac_pib.mac_CoordShortAddress >> 8),
+		                 // Device ExtAddress
+		                 (uint8_t)mac_pib.mac_CoordExtendedAddress,
+		                 (uint8_t)(mac_pib.mac_CoordExtendedAddress >> 8),
+		                 (uint8_t)(mac_pib.mac_CoordExtendedAddress >> 16),
+		                 (uint8_t)(mac_pib.mac_CoordExtendedAddress >> 24),
+		                 (uint8_t)(mac_pib.mac_CoordExtendedAddress >> 32),
+		                 (uint8_t)(mac_pib.mac_CoordExtendedAddress >> 40),
+		                 (uint8_t)(mac_pib.mac_CoordExtendedAddress >> 48),
+		                 (uint8_t)(mac_pib.mac_CoordExtendedAddress >> 56),
+		                 // FrameCounter
+		                 0, 0, 0, 0,
+		                 // Exempt
+		                 0
+	                 };
+
+	                 wpan_mlme_set_req(macDeviceTable,
+	                 0,    // Index: 0
+	                 &mac_dev_table);
+                 }
+                 break;
+
+             case macDeviceTable:
+                 {
+	                 /* Use DSN start value as in ZIP test spec. */
+	                 uint8_t new_dsn = 0x0;
+
+	                 wpan_mlme_set_req(macDSN,
+	                 NO_PIB_INDEX,
+	                 &new_dsn);
+                 }
+                 break;
+
+              case macDSN:
+                 {
+	                 /* Use DSN start value as in ZIP test spec. */
+	                 uint32_t frame_counter = 1;
+
+	                 wpan_mlme_set_req(macFrameCounter,
+	                 NO_PIB_INDEX,
+	                 &frame_counter);
+                 }
+                 break;
+
+              case macFrameCounter:
+				 {
+					/*
+					* Sync with beacon frames from our coordinator.
+					* Use: bool wpan_mlme_sync_req(uint8_t LogicalChannel,
+					*                              uint8_t ChannelPage,
+					*                              bool TrackBeacon);
+					*
+					* This does not lead to an immediate reaction.
+					*
+					* In case we receive beacon frames from our coordinator
+					*including
+					* a beacon payload, this is indicated in the callback function
+					* usr_mlme_beacon_notify_ind().
+					*
+					* In case the device cannot find its coordinator or later
+					*looses
+					* synchronization with its parent, this is indicated in the
+					* callback function usr_mlme_sync_loss_ind().
+					*/
+				wpan_mlme_sync_req(current_channel,
+						current_channel_page,
+						1);
+				}
+                 break;
+
+                 default:
+                 // undesired PIB attribute; restart
+                 wpan_mlme_reset_req(true);
+                 break;
+        }
+    }
+
+    /* Keep compiler happy. */
+    PIBAttributeIndex = PIBAttributeIndex;
 }
+
+
 
 #if (MAC_START_REQUEST_CONFIRM == 1)
 void usr_mlme_start_conf(uint8_t status)

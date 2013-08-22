@@ -668,7 +668,7 @@ retval_t mac_build_aux_sec_header(uint8_t **frame_ptr, mcps_data_req_t *pmdr,
 		uint8_t *frame_len);
 retval_t mac_secure(frame_info_t *frame, uint8_t *mac_payload_ptr,
 		mcps_data_req_t *pmdr);
-retval_t mac_unsecure(parse_t *mac_parse_data, uint8_t *mpdu,
+retval_t mac_unsecure(parse_t *mac_parse_data_buf, uint8_t *mpdu,
 		uint8_t *mac_payload, uint8_t *payload_index);
 
 #endif  /* MAC_SECURITY_ZIP */

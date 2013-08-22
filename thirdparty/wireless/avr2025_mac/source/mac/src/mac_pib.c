@@ -944,12 +944,16 @@ retval_t mlme_set(uint8_t attribute, pib_value_t *attribute_value,
 	return status;
 }
 
+#ifdef MATHI
 retval_t mlme_get(uint8_t attribute, pib_value_t *attribute_value)
 {
 	/*
 	 * Variables indicates whether the transceiver has been woken up for
 	 * setting a TAL PIB attribute.
 	 */
+#ifdef MAC_SECURITY_ZIP
+	uint8_t attribute_index = msr->PIBAttributeIndex;
+#endif
 
 	retval_t status = MAC_SUCCESS;
 
@@ -1271,6 +1275,7 @@ retval_t mlme_get(uint8_t attribute, pib_value_t *attribute_value)
 	}
 	return status;
 }
+#endif
 
 #if (HIGHEST_STACK_LAYER == MAC)
 
