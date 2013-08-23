@@ -99,6 +99,9 @@
 #include "serial_interface.h"
 #include "common_sw_timer.h"
 #include <asf.h>
+#ifdef __SAMD20J18__
+#include "system.h"
+#endif
 
 /** Alert to indicate something has gone wrong in the application */
 static void app_alert(void);
@@ -110,13 +113,18 @@ static void app_alert(void);
 int main(void)
 {
 	irq_initialize_vectors();
+	#ifdef __SAMD20J18__
+	system_init();
+	delay_init();
+	#else
 	sysclk_init();
 
 	/* Initialize the board.
 	 * The board-specific conf_board.h file contains the configuration of
 	 * the board initialization.
 	 */
-	board_init();
+	board_init();    
+	#endif
 
 	sw_timer_init();
 
