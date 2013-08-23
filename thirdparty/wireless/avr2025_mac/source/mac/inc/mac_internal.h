@@ -139,6 +139,24 @@
 #error "You have got no license for that RF band."
 #endif /* RF_BAND */
 
+#ifdef GTS_SUPPORT
+#ifdef FFD
+#define MAX_GTS_ON_PANC       (7)
+#define GTS_EXPIRY_BO_0_TO_8  ((1 << ((8 - tal_pib.BeaconOrder) + 1)) + 1 + 1)
+#define GTS_EXPIRY_BO_9_TO_14 (2 + 1 + 1)
+#endif /* FFD */
+#define GTS_REQ_PAYLOAD_LEN  (2)
+/* !!! Warning !!!
+ Do not change the index, mapping for update is done based on this...*/
+#define DEV_TX_SLOT_INDEX    (0)
+#define DEV_RX_SLOT_INDEX    (1)
+#define PAN_TX_SLOT_INDEX    (2)
+#define PAN_RX_SLOT_INDEX    (3)
+
+#define MAX_GTS_ON_DEV       (4)
+
+#endif /* GTS_SUPPORT */
+
 /* === Types ================================================================ */
 
 /**
@@ -491,10 +509,6 @@ extern queue_t tal_mac_q;
 extern queue_t indirect_data_q;
 #endif /* (MAC_INDIRECT_DATA_FFD == 1) */
 
-#ifdef GTS_SUPPORT
-extern queue_t gts_q[];
-#endif /* GTS_SUPPORT */
-
 #if (MAC_START_REQUEST_CONFIRM == 1)
 #ifdef BEACON_SUPPORT
 extern queue_t broadcast_q;
@@ -518,6 +532,8 @@ extern mac_superframe_state_t mac_superframe_state;
 #ifdef GTS_SUPPORT
 extern mac_gts_state_t mac_gts_state;
 extern uint8_t *mac_gts_buf_ptr;
+extern mac_dev_gts_mgmt_t mac_dev_gts_table[];
+extern uint8_t mac_dev_gts_table_len;
 extern gts_char_t requested_gts_char;
 #ifdef FFD
 extern mac_pan_gts_mgmt_t mac_pan_gts_table[];
@@ -756,6 +772,7 @@ void mac_t_gts_cb(void *callback_parameter);
 void init_gts_queues(void);
 void mac_tx_gts_data(queue_t *gts_data);
 uint8_t handle_gts_data_tx_end(void);
+void flush_gts_queues(void);
 #endif /* GTS_SUPPORT */
 
 #if (MAC_INDIRECT_DATA_FFD == 1)

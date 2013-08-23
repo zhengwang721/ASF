@@ -81,49 +81,32 @@ static bool mac_gts_allocate(gts_char_t GtsCharacteristics, uint16_t DevAddress)
 static bool mac_gts_deallocate(gts_char_t GtsCharacteristics, uint16_t DevAddress, bool persist);
 #endif /* FFD */
 static void mac_update_dev_gts_table(bool gts_dir, uint8_t slot_len, uint8_t start_slot, bool panc_slot, bool send_ind);
+static void process_deallocate_data_q(queue_t *q_ptr);
 #ifdef GTS_DEBUG
 void gts_debug(uint8_t gts_index,bool data_pin,bool set,bool val);
 #endif
 #ifdef FFD
-#define MAX_GTS_ON_PANC       (7)
-#define GTS_EXPIRY_BO_0_TO_8  ((1 << ((8 - tal_pib.BeaconOrder) + 1)) + 1 + 1)
-#define GTS_EXPIRY_BO_9_TO_14 (2 + 1 + 1)
-
-
 mac_pan_gts_mgmt_t mac_pan_gts_table[MAX_GTS_ON_PANC];
 uint8_t mac_pan_gts_table_len = 0;
 mac_gts_spec_t mac_gts_spec;
-
 #endif /* FFD */
-
-
-#define GTS_REQ_PAYLOAD_LEN  (2)
 
 /**
  * Holds the mlme gts request buffer pointer, used to give the respective
  * confirmation.
  */
 uint8_t *mac_gts_buf_ptr;
-
+#ifdef GTS_DEBUG
 uint8_t debug_pins[7][2] = {{DEBUG_PIN4,DEBUG_PIN11},{DEBUG_PIN5,DEBUG_PIN12},{DEBUG_PIN6,DEBUG_PIN13},{DEBUG_PIN7,DEBUG_PIN14},{DEBUG_PIN8,DEBUG_PIN15},{DEBUG_PIN9,DEBUG_PIN16},{DEBUG_PIN10,DEBUG_PIN17}};
-/* !!! Warning !!!
- Do not change the index, mapping for update is done based on this...*/
-#define DEV_TX_SLOT_INDEX    (0)
-#define DEV_RX_SLOT_INDEX    (1)
-#define PAN_TX_SLOT_INDEX    (2)
-#define PAN_RX_SLOT_INDEX    (3)
-
-#define MAX_GTS_ON_DEV       (4)
-
-static mac_dev_gts_mgmt_t mac_dev_gts_table[MAX_GTS_ON_DEV];
-static uint8_t mac_dev_gts_table_len = 0;
+#endif
+mac_dev_gts_mgmt_t mac_dev_gts_table[MAX_GTS_ON_DEV];
+uint8_t mac_dev_gts_table_len = 0;
 gts_char_t requested_gts_char;
 
 #ifdef FFD
-queue_t gts_q[MAX_GTS_ON_PANC];
-#else
-queue_t gts_q[MAX_GTS_ON_DEV];
+static queue_t gts_q[MAX_GTS_ON_PANC];
 #endif /* FFD */
+static queue_t dev_tx_gts_q;
 
 void mlme_gts_request(uint8_t *m)
 {
@@ -407,18 +390,18 @@ uint8_t mac_add_gts_info(uint8_t *frame_ptr)
 			{
 				direction_mask |= 1 << mac_gts_spec.GtsDescCount;
 			}
-			//if(mac_pan_gts_table[table_index].PersistenceCount > 0
-			//&& --mac_pan_gts_table[table_index].PersistenceCount == 0)
-			//{
-				//if (tal_pib.BeaconOrder >= 9)
-				//{
-					//mac_pan_gts_table[table_index].ExpiryCount = GTS_EXPIRY_BO_9_TO_14;
-				//}
-				//else
-				//{
-					//mac_pan_gts_table[table_index].ExpiryCount = GTS_EXPIRY_BO_0_TO_8;
-				//}
-			//}
+			if(mac_pan_gts_table[table_index].PersistenceCount > 0
+			&& --mac_pan_gts_table[table_index].PersistenceCount == 0)
+			{
+				if (tal_pib.BeaconOrder >= 9)
+				{
+					mac_pan_gts_table[table_index].ExpiryCount = GTS_EXPIRY_BO_9_TO_14;
+				}
+				else
+				{
+					mac_pan_gts_table[table_index].ExpiryCount = GTS_EXPIRY_BO_0_TO_8;
+				}
+			}
 			mac_gts_spec.GtsDescCount++;
 		}
 		if(mac_pan_gts_table[table_index].ExpiryCount > 0
@@ -501,6 +484,16 @@ bool mac_gts_allocate(gts_char_t GtsCharacteristics, uint16_t DevAddress)
 
 	++mac_pan_gts_table_len;
 
+	for(Index = mac_pan_gts_table_len; Index < MAX_GTS_ON_PANC; Index ++)
+	{
+		if(mac_pan_gts_table[Index].DevShortAddr == DevAddress
+		&& mac_pan_gts_table[Index].GtsDesc.GtsDirection == GtsCharacteristics.GtsDirection)
+		{
+			mac_pan_gts_table[Index].PersistenceCount = 0;
+			mac_pan_gts_table[Index].ExpiryCount = 0;
+		}
+	}
+
 	LEAVE_CRITICAL_REGION();
 	return true;
 }
@@ -509,8 +502,10 @@ bool mac_gts_allocate(gts_char_t GtsCharacteristics, uint16_t DevAddress)
 #ifdef FFD
 bool mac_gts_deallocate(gts_char_t GtsCharacteristics, uint16_t DevAddress, bool persist)
 {
-	uint8_t table_index, table_index1;
-	uint8_t temp_slot = 0x10;
+	uint8_t table_index;
+	uint8_t table_index1;
+	uint8_t temp_slot = FINAL_CAP_SLOT_DEFAULT + 1;
+	queue_t *temp_ptr_q;
 	
 	for(table_index = 0; table_index < mac_pan_gts_table_len; table_index++)
 	{
@@ -520,6 +515,8 @@ bool mac_gts_deallocate(gts_char_t GtsCharacteristics, uint16_t DevAddress, bool
 		&& mac_pan_gts_table[table_index].GtsDesc.GtsLength == GtsCharacteristics.GtsLength)
 		{
 			ENTER_CRITICAL_REGION();
+			temp_ptr_q = mac_pan_gts_table[table_index].gts_data_q;
+			
 			for(table_index1 = table_index; table_index1 < (mac_pan_gts_table_len - 1); table_index1++)
 			{
 				mac_pan_gts_table[table_index1].DevShortAddr = mac_pan_gts_table[table_index1 + 1].DevShortAddr;
@@ -535,8 +532,12 @@ bool mac_gts_deallocate(gts_char_t GtsCharacteristics, uint16_t DevAddress, bool
 				
 				mac_pan_gts_table[table_index1].PersistenceCount = mac_pan_gts_table[table_index1 + 1].PersistenceCount;
 				
+				mac_pan_gts_table[table_index1].gts_data_q = mac_pan_gts_table[table_index1 + 1].gts_data_q;
+				
 				temp_slot -= mac_pan_gts_table[table_index1].GtsDesc.GtsLength;
 			}
+			
+			mac_pan_gts_table[table_index1].gts_data_q = temp_ptr_q;
 			
 			--mac_pan_gts_table_len;
 
@@ -556,14 +557,13 @@ bool mac_gts_deallocate(gts_char_t GtsCharacteristics, uint16_t DevAddress, bool
 				
 				mac_pan_gts_table[table_index1].PersistenceCount = mac_pan_gts_table[table_index1 + 1].PersistenceCount;
 			}
-			
-			
-			mac_pan_gts_table[MAX_GTS_ON_PANC - 1].DevShortAddr = DevAddress;
-			mac_pan_gts_table[MAX_GTS_ON_PANC - 1].GtsDesc.GtsDirection = GtsCharacteristics.GtsDirection;
-			mac_pan_gts_table[MAX_GTS_ON_PANC - 1].GtsDesc.GtsLength = GtsCharacteristics.GtsLength;
-			mac_pan_gts_table[MAX_GTS_ON_PANC - 1].GtsDesc.GtsStartingSlot = 0;
+
 			if(persist)
 			{
+				mac_pan_gts_table[MAX_GTS_ON_PANC - 1].DevShortAddr = DevAddress;
+				mac_pan_gts_table[MAX_GTS_ON_PANC - 1].GtsDesc.GtsDirection = GtsCharacteristics.GtsDirection;
+				mac_pan_gts_table[MAX_GTS_ON_PANC - 1].GtsDesc.GtsLength = GtsCharacteristics.GtsLength;
+				mac_pan_gts_table[MAX_GTS_ON_PANC - 1].GtsDesc.GtsStartingSlot = 0;
 				mac_pan_gts_table[MAX_GTS_ON_PANC - 1].PersistenceCount = aGTSDescPersistenceTime;
 			}
 			else
@@ -571,6 +571,7 @@ bool mac_gts_deallocate(gts_char_t GtsCharacteristics, uint16_t DevAddress, bool
 				mac_pan_gts_table[MAX_GTS_ON_PANC - 1].PersistenceCount = 0;
 			}
 			LEAVE_CRITICAL_REGION();
+			process_deallocate_data_q(temp_ptr_q);
 			return true;
 		}
 		else
@@ -592,31 +593,32 @@ void mac_parse_bcn_gts_info(uint8_t gts_count, uint8_t gts_dir, uint8_t *gts_lis
 	{
 		curr_gts_dir = ((gts_dir >> loop_index) && 0x01);
 
-		if(MAC_GTS_ALLOC_REQ_SENT == mac_gts_state
-		&& gts_list->dev_addr == tal_pib.ShortAddress)
+		if(gts_list->dev_addr == tal_pib.ShortAddress)
 		{
-			if(0 == gts_list->starting_slot)
+			if(MAC_GTS_ALLOC_REQ_SENT == mac_gts_state)
 			{
-				mac_gen_mlme_gts_conf((buffer_t *)mac_gts_buf_ptr, MAC_DENIED,
-				requested_gts_char);
-			}
-			else if(gts_list->length == requested_gts_char.GtsLength)
-			{
-				mac_update_dev_gts_table(curr_gts_dir,gts_list->length, gts_list->starting_slot, false, false);
+				if(0 == gts_list->starting_slot)
+				{
+					mac_gen_mlme_gts_conf((buffer_t *)mac_gts_buf_ptr, MAC_DENIED,
+					requested_gts_char);
+				}
+				else if(gts_list->length == requested_gts_char.GtsLength)
+				{
+					mac_update_dev_gts_table(curr_gts_dir,gts_list->length, gts_list->starting_slot, false, false);
 
-				mac_gen_mlme_gts_conf((buffer_t *)mac_gts_buf_ptr, MAC_SUCCESS,
-				requested_gts_char);
+					mac_gen_mlme_gts_conf((buffer_t *)mac_gts_buf_ptr, MAC_SUCCESS,
+					requested_gts_char);
+				}
+				mac_gts_state = MAC_GTS_IDLE;
 			}
-			mac_gts_state = MAC_GTS_IDLE;
+			else
+			{
+				mac_update_dev_gts_table(curr_gts_dir,gts_list->length, gts_list->starting_slot, false, true);
+			}
 		}
 		else if(gts_list->dev_addr == mac_pib.mac_CoordShortAddress)
 		{
 			mac_update_dev_gts_table(curr_gts_dir,gts_list->length, gts_list->starting_slot, true, true);
-		}
-		if (0 == gts_list->starting_slot
-		&& tal_pib.ShortAddress == gts_list->dev_addr)
-		{
-			mac_update_dev_gts_table(curr_gts_dir, gts_list->length, gts_list->starting_slot, false, true);
 		}
 		gts_list++;
 	}
@@ -671,22 +673,27 @@ void mac_update_dev_gts_table(bool gts_dir, uint8_t slot_len, uint8_t start_slot
 	= slot_len;
 	mac_dev_gts_table[updating_index].GtsStartingSlot
 	= start_slot;
+	if (DEV_TX_SLOT_INDEX == updating_index)
+	{
+		process_deallocate_data_q(&dev_tx_gts_q);
+	}
 }
 
 uint8_t handle_gts_data_req(mcps_data_req_t *data_req, uint8_t *msg)
 {
 	uint16_t dst_addr;
+	bool data_queued = false;
 	ADDR_COPY_DST_SRC_16(dst_addr, data_req->DstAddr);
-	ENTER_CRITICAL_REGION();
 #ifdef FFD
 	if(MAC_PAN_COORD_STARTED == mac_state)
 	{
 		uint8_t loop_index;
 		for(loop_index = 0; loop_index < mac_pan_gts_table_len; loop_index++)
 		{
-			if(dst_addr == mac_pan_gts_table[loop_index].DevShortAddr)
+			if(dst_addr == mac_pan_gts_table[loop_index].DevShortAddr
+			&& GTS_RX_SLOT == mac_pan_gts_table[loop_index].GtsDesc.GtsDirection)
 			{
-				/* Append the MCPS data request into the broadcast queue */
+				/* Append the MCPS data request into the GTS queue */
 				#ifdef ENABLE_QUEUE_CAPACITY
 				if (QUEUE_FULL == qmm_queue_append(mac_pan_gts_table[loop_index].gts_data_q,
 													(buffer_t *)msg)) {
@@ -698,20 +705,47 @@ uint8_t handle_gts_data_req(mcps_data_req_t *data_req, uint8_t *msg)
 						#else
 						data_req->msduHandle);
 						#endif  /* ENABLE_TSTAMP */
-					return;
 				}
 				#else
 				qmm_queue_append(mac_pan_gts_table[loop_index].gts_data_q, (buffer_t *)msg);
 				#endif   /* ENABLE_QUEUE_CAPACITY */
+				data_queued = true;
+				break;
 			}
 		}
 	}
 	else
 #endif /* FFD */
+	if(MAC_ASSOCIATED == mac_state && mac_pib.mac_CoordShortAddress == data_req->DstAddr
+	&& 0 != mac_dev_gts_table[DEV_TX_SLOT_INDEX].GtsStartingSlot)
 	{
-		
+		/* Append the MCPS data request into the GTS queue */
+		#ifdef ENABLE_QUEUE_CAPACITY
+		if (QUEUE_FULL == qmm_queue_append(&dev_tx_gts_q, (buffer_t *)msg)) {
+			mac_gen_mcps_data_conf((buffer_t *)msg,
+			(uint8_t)MAC_CHANNEL_ACCESS_FAILURE,
+			#ifdef ENABLE_TSTAMP
+			data_req->msduHandle,
+			0);
+			#else
+			data_req->msduHandle);
+			#endif  /* ENABLE_TSTAMP */
+		}
+		#else
+		qmm_queue_append(&dev_tx_gts_q, (buffer_t *)msg);
+		#endif   /* ENABLE_QUEUE_CAPACITY */
+		data_queued = true;
 	}
-	LEAVE_CRITICAL_REGION();
+	if(!data_queued)
+	{
+		mac_gen_mcps_data_conf((buffer_t *)msg,
+			(uint8_t)MAC_INVALID_GTS,
+			#ifdef ENABLE_TSTAMP
+			data_req->msduHandle, 0);
+			#else
+			data_req->msduHandle);
+			#endif  /* ENABLE_TSTAMP */
+	}
 	return 0;
 }
 
@@ -731,14 +765,17 @@ void mac_t_gts_cb(void *callback_parameter)
 	uint32_t next_timer_dur = 0;
 	queue_t *temp_ptr = NULL;
 	uint8_t temp_index = 0;
+	uint32_t slot_duration;
+
 	#ifdef GTS_DEBUG
 	ioport_set_value(DEBUG_PIN3, 0);
 	#endif
 	ENTER_CRITICAL_REGION();
+	slot_duration = (TAL_CONVERT_SYMBOLS_TO_US(TAL_GET_SUPERFRAME_DURATION_TIME(tal_pib.SuperFrameOrder)) >> 4);
 #ifdef FFD
 	if (MAC_PAN_COORD_STARTED == mac_state && mac_pan_gts_table_len > 0)
 	{
-		uint32_t slot_duration = (TAL_CONVERT_SYMBOLS_TO_US(TAL_GET_SUPERFRAME_DURATION_TIME(tal_pib.SuperFrameOrder)) >> 4);
+		//ioport_set_value(DEBUG_PIN3, 0); //vk
 		if(MAC_ACTIVE_CAP == mac_superframe_state)
 		{
 			temp_index = mac_pan_gts_table_len - 1;
@@ -747,7 +784,7 @@ void mac_t_gts_cb(void *callback_parameter)
 			temp_ptr = mac_pan_gts_table[temp_index].gts_data_q;
 			//sio2host_tx("-GTS1-",sizeof("-GTS1-"));
 			#ifdef GTS_DEBUG
-		 gts_debug(MAC_ACTIVE_CAP,0,1,1);//vk
+			gts_debug(MAC_ACTIVE_CAP,0,1,1);//vk
 		
 			#endif
 		}
@@ -787,7 +824,6 @@ void mac_t_gts_cb(void *callback_parameter)
 			#ifdef GTS_DEBUG
 			gts_debug(MAC_ACTIVE_CFP_GTS2,0,1,0);//vk
 			gts_debug(MAC_ACTIVE_CFP_GTS3,0,1,1);//vk
-			
 			#endif
 		}
 		else if(MAC_ACTIVE_CFP_GTS4 == mac_superframe_state && (mac_pan_gts_table_len >= 5))
@@ -810,9 +846,10 @@ void mac_t_gts_cb(void *callback_parameter)
 			mac_superframe_state = MAC_ACTIVE_CFP_GTS6;
 			temp_ptr = mac_pan_gts_table[temp_index].gts_data_q;
 			//sio2host_tx("-GTS6-",sizeof("-GTS1-"));
+			//ioport_set_value(DEBUG_PIN8, 0);//vk
 			#ifdef GTS_DEBUG
-		gts_debug(MAC_ACTIVE_CFP_GTS4,0,1,0);//vk
-		gts_debug(MAC_ACTIVE_CFP_GTS5,0,1,1);//vk
+			gts_debug(MAC_ACTIVE_CFP_GTS4,0,1,0);//vk
+			gts_debug(MAC_ACTIVE_CFP_GTS5,0,1,1);//vk
 		
 			#endif
 		}
@@ -842,14 +879,14 @@ void mac_t_gts_cb(void *callback_parameter)
 		}
 		if(NULL != temp_ptr && (*temp_ptr).size > 0)
 		{
-			//if (tal_pib.BeaconOrder >= 9)
-			//{
-				//mac_pan_gts_table[temp_index].ExpiryCount = GTS_EXPIRY_BO_9_TO_14;
-			//}
-			//else
-			//{
-				//mac_pan_gts_table[temp_index].ExpiryCount = GTS_EXPIRY_BO_0_TO_8;
-			//}
+			if (tal_pib.BeaconOrder >= 9)
+			{
+				mac_pan_gts_table[temp_index].ExpiryCount = GTS_EXPIRY_BO_9_TO_14;
+			}
+			else
+			{
+				mac_pan_gts_table[temp_index].ExpiryCount = GTS_EXPIRY_BO_0_TO_8;
+			}
 			#ifdef GTS_DEBUG
 			gts_debug((mac_pan_gts_table_len - ((mac_superframe_state - MAC_ACTIVE_CFP_GTS1) + 1)),1,0,0);
 			#endif
@@ -860,12 +897,20 @@ void mac_t_gts_cb(void *callback_parameter)
 #endif /* FFD */
 	if (MAC_ASSOCIATED == mac_state)
 	{
-		//if(MAC_ACTIVE_CAP == mac_superframe_state)
-		//{
-			//next_timer_dur = slot_duration * (mac_dev_gts_table[mac_dev_gts_table_len - 1].GtsDesc.GtsLength);
-			//mac_superframe_state = MAC_ACTIVE_CFP_GTS1;
-			//ioport_set_value(DEBUG_PIN4, 1);//vk
-		//}
+		//ioport_set_value(DEBUG_PIN2, 0); //vk
+		if(MAC_ACTIVE_CAP == mac_superframe_state)
+		{
+			next_timer_dur = slot_duration * (mac_dev_gts_table[DEV_TX_SLOT_INDEX].GtsLength);
+			mac_superframe_state = MAC_ACTIVE_CFP_GTS1;
+			sio2host_tx("-DGTS TX-",sizeof("-DGTS TX-"));
+			//ioport_set_value(DEBUG_PIN3, 1);//vk
+			mac_tx_gts_data(&dev_tx_gts_q);
+		}
+		else if(MAC_ACTIVE_CFP_GTS1 == mac_superframe_state)
+		{
+			mac_superframe_state = MAC_ACTIVE_CAP;
+			//ioport_set_value(DEBUG_PIN3, 0); //vk
+		}
 	}
 	if(0 != next_timer_dur)
 	{
@@ -892,15 +937,11 @@ void init_gts_queues(void)
 		mac_pan_gts_table[loop_index].gts_data_q = &gts_q[loop_index];
 	}
 #else
-	for(loop_index = 0; loop_index < MAX_GTS_ON_DEV; loop_index ++)
-	{
 #ifdef ENABLE_QUEUE_CAPACITY
-		qmm_queue_init(&gts_q[loop_index], GTS_QUEUE_CAPACITY);
+		qmm_queue_init(&dev_tx_gts_q, GTS_QUEUE_CAPACITY);
 #else
-		qmm_queue_init(&gts_q[loop_index]);
+		qmm_queue_init(&dev_tx_gts_q);
 #endif  /* ENABLE_QUEUE_CAPACITY */
-		mac_pan_gts_table[loop_index].gts_data_q = &gts_q[loop_index];
-	}
 #endif
 }
 
@@ -909,7 +950,7 @@ void mac_tx_gts_data(queue_t *gts_data)
 	buffer_t *buf_ptr;
 	frame_info_t *transmit_frame;
 	retval_t tal_tx_status;
-
+//	ioport_toggle_pin(DEBUG_PIN8);
 	buf_ptr = qmm_queue_remove(gts_data, NULL);
 
 	Assert(buf_ptr != NULL);
@@ -949,9 +990,19 @@ void mac_tx_gts_data(queue_t *gts_data)
 
 uint8_t handle_gts_data_tx_end(void)
 {
-	if(MAC_ACTIVE_CFP_GTS1 <= mac_superframe_state && MAC_ACTIVE_CFP_GTS7 >= mac_superframe_state)
+#ifdef FFD	
+	if(MAC_PAN_COORD_STARTED == mac_state)
 	{
-		mac_tx_gts_data(mac_pan_gts_table[mac_pan_gts_table_len - ((mac_superframe_state - MAC_ACTIVE_CFP_GTS1) + 1)].gts_data_q);
+		if(MAC_ACTIVE_CFP_GTS1 <= mac_superframe_state && MAC_ACTIVE_CFP_GTS7 >= mac_superframe_state)
+		{
+			mac_tx_gts_data(mac_pan_gts_table[mac_pan_gts_table_len - ((mac_superframe_state - MAC_ACTIVE_CFP_GTS1) + 1)].gts_data_q);
+		}
+	}
+	else
+#endif /* FFD */
+	if (MAC_ASSOCIATED == mac_state && MAC_ACTIVE_CFP_GTS1 == mac_superframe_state)
+	{
+		mac_tx_gts_data(&dev_tx_gts_q);
 	}
 }
 #ifdef GTS_DEBUG
@@ -981,4 +1032,38 @@ void gts_debug(uint8_t gts_index,bool data_pin,bool set,bool val)
 	}
 }
 #endif
+static void process_deallocate_data_q(queue_t *q_ptr)
+{
+	buffer_t *buf_ptr;
+	frame_info_t *transmit_frame;
+	while(q_ptr->size > 0)
+	{
+		buf_ptr = qmm_queue_remove(q_ptr, NULL);
+
+		transmit_frame = (frame_info_t *)BMM_BUFFER_POINTER(buf_ptr);
+
+		mac_gen_mcps_data_conf(
+			(buffer_t *)buf_ptr,
+			(uint8_t)MAC_INVALID_GTS,
+			#ifdef ENABLE_TSTAMP
+			transmit_frame->msduHandle,
+			0);
+			#else
+			transmit_frame->msduHandle);
+			#endif  /* ENABLE_TSTAMP */
+	}
+}
+
+void flush_gts_queues(void)
+{
+#ifdef FFD
+	uint8_t Index;
+	for (Index = 0; Index < MAX_GTS_ON_PANC; Index++)
+	{
+		qmm_queue_flush(&gts_q[Index]);
+	}
+#endif /* FFD */
+	qmm_queue_flush(&dev_tx_gts_q);
+}
+
 #endif /* GTS_SUPPORT */

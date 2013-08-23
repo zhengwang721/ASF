@@ -410,7 +410,11 @@ static void mac_soft_reset(uint8_t init_pib)
 void mac_sleep_trans(void)
 {
 	/* Go to sleep? */
-	if ((!mac_pib.mac_RxOnWhenIdle) && (!mac_rx_enabled)) {
+	if (
+#ifdef BEACON_SUPPORT
+		MAC_INACTIVE == mac_superframe_state &&
+#endif /* BEACON_SUPPORT */	
+	(!mac_pib.mac_RxOnWhenIdle) && (!mac_rx_enabled)) {
 #if (MAC_SYNC_REQUEST == 1)
 
 		/*
@@ -451,7 +455,7 @@ static void flush_queues(void)
 
 #ifdef GTS_SUPPORT
 	/* Flush MAC GTS queue */
-	//qmm_queue_flush(&gts_q); //vk
+	flush_gts_queues();
 #endif /* GTS_SUPPORT */
 
 #if (MAC_INDIRECT_DATA_FFD == 1)

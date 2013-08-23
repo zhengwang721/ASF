@@ -827,8 +827,15 @@ static void mac_t_beacon_cb(void *callback_parameter)
 		ioport_toggle_pin(DEBUG_PIN1); //vk
 		#endif
 		mac_superframe_state = MAC_ACTIVE_CAP;
-		
+		pal_timer_stop(T_CAP);
+		sio2host_tx("-CAP-",sizeof("-CAP-"));
 
+		#ifdef GTS_DEBUG
+		ioport_set_value(DEBUG_PIN4, 0);//vk
+		ioport_set_value(DEBUG_PIN5, 0);//vk
+		ioport_set_value(DEBUG_PIN6, 0);//vk
+		ioport_set_value(DEBUG_PIN7, 0);//vk
+		#endif
 		/*
 		 * Even if this may look odd, since we already had added a
 		 *beacon
@@ -974,14 +981,14 @@ static void mac_t_superframe_cb(void *callback_parameter)
 	ioport_set_value(DEBUG_PIN5, 0);//vk
 	ioport_set_value(DEBUG_PIN6, 0);//vk
 	ioport_set_value(DEBUG_PIN7, 0);//vk
-	ioport_set_value(DEBUG_PIN8, 0);//vk
+	//ioport_set_value(DEBUG_PIN8, 0);//vk
 	ioport_set_value(DEBUG_PIN9, 0);//vk
 	ioport_set_value(DEBUG_PIN10, 0);//vk
 	#endif
 	//ioport_set_value(DEBUG_PIN4, 0);//vk
 
 	mac_superframe_state = MAC_INACTIVE;
-	//sio2host_tx("-Inactive-",sizeof("-Inactive-"));
+	sio2host_tx("-Inactive-",sizeof("-Inactive-"));
 }
 
 #endif /* BEACON_SUPPORT */

@@ -534,10 +534,6 @@ static bool process_data_ind_not_transient(buffer_t *b_ptr, frame_info_t *f_ptr)
 #endif  /* (MAC_PAN_ID_CONFLICT_AS_PC == 1) */
 #ifdef GTS_SUPPORT
 			case GTSREQUEST:
-				/*
-				 * Received coordinator realignment frame for
-				 * entire PAN.
-				 */
 				mac_process_gts_request(b_ptr);
 				processed_in_not_transient = true;
 #endif /* GTS_SUPPORT */
@@ -716,6 +712,10 @@ static bool process_data_ind_not_transient(buffer_t *b_ptr, frame_info_t *f_ptr)
 										NULL);
 							} while (MAC_SUCCESS !=
 									tmr_start_res);
+							#ifdef GTS_DEBUG
+	 						ioport_toggle_pin(DEBUG_PIN1);//vk
+ 	 						ioport_set_value(DEBUG_PIN2, 0);//vk
+							#endif
 						}
 
 						/*
@@ -730,6 +730,15 @@ static bool process_data_ind_not_transient(buffer_t *b_ptr, frame_info_t *f_ptr)
 
 						if (MAC_ASSOCIATED == mac_state)
 						{
+							mac_superframe_state = MAC_ACTIVE_CAP;
+
+							/* Check whether the radio needs to be woken up. */
+							mac_trx_wakeup();
+							/* Set transceiver in rx mode, otherwise it may stay in
+							 *TRX_OFF). */
+							tal_rx_enable(PHY_RX_ON);
+
+							sio2host_tx("-DCAP-",sizeof("-DCAP-")); //vk
 							if (tal_pib.SuperFrameOrder < tal_pib.BeaconOrder)
 							{
 								pal_timer_start(T_Superframe,
@@ -739,16 +748,15 @@ static bool process_data_ind_not_transient(buffer_t *b_ptr, frame_info_t *f_ptr)
 									TIMEOUT_RELATIVE,
 									(FUNC_PTR)mac_t_start_inactive_device_cb,
 									NULL);
-									mac_superframe_state = MAC_ACTIVE_CAP;
-									//sio2host_tx("Device - Active CAP...\n\r",sizeof("Device - Active CAP...\n\r")); //vk
+								//ioport_set_value(DEBUG_PIN2, 1);//vk
 							}
 #ifdef GTS_SUPPORT
-						if (mac_final_cap_slot < FINAL_CAP_SLOT_DEFAULT)
+						if (mac_final_cap_slot < FINAL_CAP_SLOT_DEFAULT && 0 != mac_dev_gts_table[DEV_TX_SLOT_INDEX].GtsStartingSlot)
 						{
-							uint32_t cap_end_duration = (TAL_CONVERT_SYMBOLS_TO_US(
-											 TAL_GET_SUPERFRAME_DURATION_TIME(tal_pib.SuperFrameOrder)) >> 4) * mac_final_cap_slot;
+							uint32_t gts_tx_time = (TAL_CONVERT_SYMBOLS_TO_US(
+											 TAL_GET_SUPERFRAME_DURATION_TIME(tal_pib.SuperFrameOrder)) >> 4) * mac_dev_gts_table[DEV_TX_SLOT_INDEX].GtsStartingSlot;
 
-							 pal_timer_start(T_CAP, cap_end_duration,
+							 pal_timer_start(T_CAP, gts_tx_time,
 											 TIMEOUT_RELATIVE,
 											 (FUNC_PTR)mac_t_gts_cb,
 											 NULL);
@@ -787,9 +795,7 @@ static bool process_data_ind_not_transient(buffer_t *b_ptr, frame_info_t *f_ptr)
 							 *broadcast data has
 							 *been received.
 							 */
-							if (!
-									mac_bc_data_indicated)
-							{
+							if (!mac_bc_data_indicated)	{
 								/* Set radio to
 								 *sleep if
 								 *allowed */

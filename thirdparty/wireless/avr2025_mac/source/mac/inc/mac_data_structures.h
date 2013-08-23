@@ -203,7 +203,6 @@ typedef struct mac_pan_gts_mgmt_tag {
  * @ingroup apiMacTypes
  */
 typedef struct mac_dev_gts_mgmt_tag {
-	queue_t *gts_data_q;
 	uint8_t GtsStartingSlot;
 	uint8_t GtsLength;
 }mac_dev_gts_mgmt_t;
