@@ -106,7 +106,7 @@ void mcps_data_ind(arch_data_t *m)
 	ADDR_COPY_DST_SRC_64(dst_addr.Addr.long_address, pmsg->DstAddr);
 
 	/* Callback function */
-#ifdef MAC_SECURITY_ZIP
+#if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
 	usr_mcps_data_ind(&src_addr,
 			&dst_addr,
 			pmsg->msduLength,
@@ -380,9 +380,9 @@ void mlme_get_conf(arch_data_t *m)
 	/* Callback function */
 	usr_mlme_get_conf(pmsg->status,
 			pmsg->PIBAttribute,
-#ifdef MAC_SECURITY_ZIP
+#if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
 			pmsg->PIBAttributeIndex,
-#endif  /* MAC_SECURITY_ZIP */
+#endif  /* (MAC_SECURITY_ZIP || MAC_SECURITY_2006) */
 			&pmsg->PIBAttributeValue);
 
 	/* Free the buffer */
@@ -528,12 +528,12 @@ void mlme_set_conf(arch_data_t *m)
 	/* Get the buffer body from buffer header */
 	pmsg = (mlme_set_conf_t *)BMM_BUFFER_POINTER(((buffer_t *)m));
 
-#ifdef MAC_SECURITY_ZIP
+#if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
 	usr_mlme_set_conf(pmsg->status, pmsg->PIBAttribute,
 			pmsg->PIBAttributeIndex);
 #else
 	usr_mlme_set_conf(pmsg->status, pmsg->PIBAttribute);
-#endif  /* MAC_SECURITY_ZIP */
+#endif  /* (MAC_SECURITY_ZIP || MAC_SECURITY_2006) */
 
 	/* Free the buffer */
 	bmm_buffer_free((buffer_t *)m);
