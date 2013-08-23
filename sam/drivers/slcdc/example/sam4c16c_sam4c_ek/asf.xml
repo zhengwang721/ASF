@@ -1,14 +1,13 @@
 <asf xmlversion="1.0">
-	<project caption="C42364A LCD Glass Example for SAM4L_EK" id="sam.components.display.c42364a.example.sam4l_ek">
+	<project caption="SLCDC Example for SAM4C_EK" id="sam.drivers.slcdc.example.sam4c_ek">
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clock.h"/>
 		<build type="header-file" value="conf_sleepmgr.h"/>
 		<build type="header-file" value="conf_uart_serial.h"/>
-		<build type="header-file" value="conf_lcdca.h"/>
-		<build type="header-file" value="conf_c42364a_lcdca.h"/>
-		<require idref="sam.components.display.c42364a.example"/>
-		<require idref="board.sam4l_ek"/>
+		<build type="header-file" value="conf_slcdc.h"/>
+		<require idref="sam.drivers.slcdc.example"/>
+		<require idref="board.sam4c_ek"/>
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
 		<generator value="doxygen"/>
@@ -16,6 +15,6 @@
 		<config name="config.compiler.iarewarm.create_aux" value="no"/>
 		<config name="config.compiler.armgcc.create_aux" value="no"/>
 		<config name="config.compiler.as5_arm.create_aux" value="no"/>
-		<device-support value="atsam4lc4c"/>
+		<device-support value="atsam4c16c_0"/>
 	</project>
 </asf>

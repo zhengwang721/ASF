@@ -3,7 +3,7 @@
  *
  * \brief C42364A configuration.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,38 +43,25 @@
 
 /** Configuration of the C42364A LCD glass driver */
 
-#ifndef CONF_C42364A_H_INCLUDED
-#define CONF_C42364A_H_INCLUDED
+#ifndef CONF_C42364A_SLCDC_H_INCLUDED
+#define CONF_C42364A_SLCDC_H_INCLUDED
 
-/** Bias configuration. */
-#define CONF_C42364A_X_BIAS    false
+/** LCD buffer on-time */
+#define CONF_C42364A_BUF_TIME          SLCDC_BUFTIME_X64_SCLK
 
-/** Init contrast configuration. */
-#define CONF_C42364A_CONTRAST  30
+/** LCD frame rate value */
+#define CONF_C42364A_FRAME_RATE        64
 
-/**
- * \name Init timing definition
- * @{
- */
-/** Clock prescaler configuration. */
-#define CONF_C42364A_PRES    false
-/** Clock divider configuration. */
-#define CONF_C42364A_CLKDIV  7
-/** Frame count 0 configuration. */
-#define CONF_C42364A_FC0     2
-/** Frame count 1 configuration. */
-#define CONF_C42364A_FC1     2
-/** Frame count 1 configuration. */
-#define CONF_C42364A_FC2     1
-/** @} */
+/** LCD display mode */
+#define CONF_C42364A_DISP_MODE         SLCDC_DISPMODE_NORMAL
 
-/** Blink timer configuration. */
-#define CONF_C42364A_BLINK_TIMER                 LCDCA_TIMER_FC0
+/** LCD power mode */
+#define CONF_C42364A_POWER_MODE        SLCDC_POWER_MODE_LCDON_INVR
 
-/** Circular animation configuration. */
-#define CONF_C42364A_CIRCULAR_ANIMATION_TIMER    LCDCA_TIMER_FC0
+/** LCD blinking frequency */
+#define CONF_C42364A_BLINK_FREQ        2
 
-/** Text scrolling configuration. */
-#define CONF_C42364A_TEXT_SCROLLING_TIMER        LCDCA_TIMER_FC0
-
-#endif /* CONF_C42364A_H_INCLUDED */
+/** LCD Contrast value */
+#define CONF_C4236A_CONTRAST           8
+ 
+#endif /* CONF_C42364A_SLCDC_H_INCLUDED */
