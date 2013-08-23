@@ -130,6 +130,12 @@ void board_init(void)
 	ioport_set_pin_peripheral_mode(PIO_PB5_IDX, IOPORT_MODE_MUX_A);
 #endif
 
+	/* Configure LCD backlight */
+#ifdef CONF_BOARD_BL
+	ioport_set_pin_dir(LCD_BL_GPIO, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(LCD_BL_GPIO, LCD_BL_INACTIVE_LEVEL);
+#endif
+
 	/* Configure PWM LED pins */
 #ifdef CONF_BOARD_PWM_LED0
 	/* Configure PWM LED0 pin */
