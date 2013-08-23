@@ -170,6 +170,47 @@ const uint32_t init_vector_ctr[4] = {
 
 /* @} */
 
+#if SAM4C
+/* GCM Mode Test Key, 128-bits */
+const uint32_t gcm_key128[4] = {
+        0x00000000,
+        0x00000000,
+        0x00000000,
+        0x00000000
+};
+
+const uint32_t gcm_init_vector[4] = {
+        0x00000000,
+        0x00000000,
+        0x00000000,
+        0x00000000
+};
+
+uint32_t ref_plain_text_gcm[AES_EXAMPLE_REFBUF_SIZE] = {
+        0x00000000,
+        0x00000000,
+        0x00000000,
+        0x00000000
+};
+
+uint32_t gcm_aad[AES_EXAMPLE_REFBUF_SIZE] = {
+        0x00000000,
+        0x00000000,
+        0x00000000,
+        0x00000000
+};
+
+
+/* Reference GCM cipher data */
+uint32_t ref_cipher_text_gcm[AES_EXAMPLE_REFBUF_SIZE] = {
+        0xceda8803,
+        0x92a3b660,
+        0xb9c228f3,
+        0x78feb271
+};
+
+#endif
+
 /* Output data array */
 static uint32_t output_data[AES_EXAMPLE_REFBUF_SIZE];
 
@@ -179,11 +220,13 @@ volatile bool state = false;
 /** AES configuration */
 struct aes_config   g_aes_cfg;
 
+#if SAM4E
 /** DMAC transmit channel. */
 #define AES_DMA_TX_CH    0
 
 /** DMAC receive channel. */
 #define AES_DMA_RX_CH    1
+#endif
 
 /**
  * \brief The AES interrupt call back function.
@@ -310,7 +353,7 @@ static void ecb_mode_test_dma(void)
 	/* Configure the AES. */
 	g_aes_cfg.encrypt_mode = AES_ENCRYPTION;
 	g_aes_cfg.key_size = AES_KEY_SIZE_128;
-	g_aes_cfg.start_mode = AES_DMA_MODE;
+	g_aes_cfg.start_mode = AES_IDATAR0_START;
 	g_aes_cfg.opmode = AES_ECB_MODE;
 	g_aes_cfg.cfb_size = AES_CFB_SIZE_128;
 	g_aes_cfg.lod = false;
@@ -357,7 +400,7 @@ static void ecb_mode_test_dma(void)
 	/* Configure the AES. */
 	g_aes_cfg.encrypt_mode = AES_DECRYPTION;
 	g_aes_cfg.key_size = AES_KEY_SIZE_128;
-	g_aes_cfg.start_mode = AES_DMA_MODE;
+	g_aes_cfg.start_mode = AES_IDATAR0_START;
 	g_aes_cfg.opmode = AES_ECB_MODE;
 	g_aes_cfg.cfb_size = AES_CFB_SIZE_128;
 	g_aes_cfg.lod = false;
@@ -399,16 +442,43 @@ static void ecb_mode_test_dma(void)
 #endif
 
 #if SAM4C
+
+/* PDC data packet for transfer */
+pdc_packet_t g_pdc_tx_packet;
+pdc_packet_t g_pdc_rx_packet;
+        
+/* Pointer to AES PDC register base */
+Pdc *g_p_aes_pdc;
+        
+/**
+ * \brief The AES interrupt call back function under PDC mode.
+ */
+static void aes_pdc_callback(void)
+{
+        state = true;
+        pdc_tx_init(g_p_aes_pdc, &g_pdc_tx_packet, NULL);
+        pdc_rx_init(g_p_aes_pdc, &g_pdc_rx_packet, NULL);
+        pdc_disable_transfer(g_p_aes_pdc, PERIPH_PTCR_RXTDIS | PERIPH_PTCR_TXTDIS);
+}
+
 /**
  * \brief ECB mode encryption and decryption test with PDC.
  */
-static ecb_mode_test_pdc(void)
-{
-/* Configure DMAC. */
-	configure_dmac();
-	/* Disable DMAC channel. */
-	dmac_channel_disable(DMAC, AES_DMA_TX_CH);
-	dmac_channel_disable(DMAC, AES_DMA_RX_CH);
+static void ecb_mode_test_pdc(void)
+{       
+        /* Configure PDC. */
+	g_pdc_tx_packet.ul_addr = (uint32_t) ref_plain_text;
+        g_pdc_tx_packet.ul_size = AES_EXAMPLE_REFBUF_SIZE;
+        g_pdc_rx_packet.ul_addr = (uint32_t) output_data;
+        g_pdc_rx_packet.ul_size = AES_EXAMPLE_REFBUF_SIZE;
+        g_p_aes_pdc = aes_get_pdc_base(AES);
+        
+        /* Configure PDC for data receive & transfer */
+	pdc_tx_init(g_p_aes_pdc, &g_pdc_tx_packet, NULL);
+        pdc_rx_init(g_p_aes_pdc, &g_pdc_rx_packet, NULL);
+        
+        /* Disable PDC transfers. */
+	pdc_disable_transfer(g_p_aes_pdc,PERIPH_PTCR_RXTDIS | PERIPH_PTCR_TXTDIS);
 
 	printf("\r\n-----------------------------------\r\n");
 	printf("- 128bit cryptographic key\r\n");
@@ -422,7 +492,7 @@ static ecb_mode_test_pdc(void)
 	/* Configure the AES. */
 	g_aes_cfg.encrypt_mode = AES_ENCRYPTION;
 	g_aes_cfg.key_size = AES_KEY_SIZE_128;
-	g_aes_cfg.start_mode =  AES_PDC_MODE;
+	g_aes_cfg.start_mode =  AES_IDATAR0_START;
 	g_aes_cfg.opmode = AES_ECB_MODE;
 	g_aes_cfg.cfb_size = AES_CFB_SIZE_128;
 	g_aes_cfg.lod = false;
@@ -430,24 +500,19 @@ static ecb_mode_test_pdc(void)
 
 	/* Set the cryptographic key. */
 	aes_write_key(AES, key128);
+        
+        /* Enable AES interrupt. */
+        aes_set_callback(AES, AES_INTERRUPT_END_OF_RECEIVE_BUFFER,
+                        aes_pdc_callback, 1);   
 
 	/* The initialization vector is not used by the ECB cipher mode. */
-
-	/* Write the data to be ciphered by DMA. */
-	aes_dma_transmit_config(ref_plain_text, AES_EXAMPLE_REFBUF_SIZE);
-	aes_dma_receive_config(output_data, AES_EXAMPLE_REFBUF_SIZE);
         
-	/* Enable DMAC channel. */
-	dmac_channel_enable(DMAC, AES_DMA_RX_CH);
-	dmac_channel_enable(DMAC, AES_DMA_TX_CH);
-
+	/* Enable PDC transfers. */
+	pdc_enable_transfer(g_p_aes_pdc, PERIPH_PTCR_RXTEN | PERIPH_PTCR_TXTEN);
+        
 	/* Wait for the end of the encryption process. */
 	while (false == state) {
 	}
-
-	/* Disable DMAC channel. */
-	dmac_channel_disable(DMAC, AES_DMA_TX_CH);
-	dmac_channel_disable(DMAC, AES_DMA_RX_CH);
 
 	if ((ref_cipher_text_ecb[0] != output_data[0]) ||
 			(ref_cipher_text_ecb[1] != output_data[1]) ||
@@ -461,8 +526,8 @@ static ecb_mode_test_pdc(void)
 	printf("\r\n-----------------------------------\r\n");
 	printf("- 128bit cryptographic key\r\n");
 	printf("- ECB decipher mode\r\n");
-	printf("- DMA mode\r\n");
-	printf("- input of 4 32bit words with DMA\r\n");
+	printf("- PDC mode\r\n");
+	printf("- input of 4 32bit words with PDC\r\n");
 	printf("-----------------------------------\r\n");
 
 	state = false;
@@ -470,7 +535,7 @@ static ecb_mode_test_pdc(void)
 	/* Configure the AES. */
 	g_aes_cfg.encrypt_mode = AES_DECRYPTION;
 	g_aes_cfg.key_size = AES_KEY_SIZE_128;
-	g_aes_cfg.start_mode = AES_DMA_MODE;
+	g_aes_cfg.start_mode = AES_IDATAR0_START;
 	g_aes_cfg.opmode = AES_ECB_MODE;
 	g_aes_cfg.cfb_size = AES_CFB_SIZE_128;
 	g_aes_cfg.lod = false;
@@ -481,20 +546,19 @@ static ecb_mode_test_pdc(void)
 
 	/* The initialization vector is not used by the ECB cipher mode. */
 
-	/* Write the data to be ciphered by DMA. */
-	aes_dma_transmit_config(ref_cipher_text_ecb, AES_EXAMPLE_REFBUF_SIZE);
-	aes_dma_receive_config(output_data, AES_EXAMPLE_REFBUF_SIZE);
-	/* Enable DMAC channel. */
-	dmac_channel_enable(DMAC, AES_DMA_RX_CH);
-	dmac_channel_enable(DMAC, AES_DMA_TX_CH);
+	/* Configure PDC for data transfer */
+	g_pdc_tx_packet.ul_addr = (uint32_t) ref_cipher_text_ecb;
+        
+        /* Configure PDC for data receive & transfer */
+        pdc_tx_init(g_p_aes_pdc, &g_pdc_tx_packet, NULL);
+        pdc_rx_init(g_p_aes_pdc, &g_pdc_rx_packet, NULL);
+        
+	/* Enable PDC transfers. */
+	pdc_enable_transfer(g_p_aes_pdc, PERIPH_PTCR_RXTEN | PERIPH_PTCR_TXTEN);
 
 	/* Wait for the end of the decryption process. */
 	while (false == state) {
 	}
-
-	/* Disable DMAC channel. */
-	dmac_channel_disable(DMAC, AES_DMA_TX_CH);
-	dmac_channel_disable(DMAC, AES_DMA_RX_CH);
 
 	/* check the result. */
 	if ((ref_plain_text[0] != output_data[0]) ||
@@ -505,12 +569,112 @@ static ecb_mode_test_pdc(void)
 	} else {
 		printf("\r\nOK!!!\r\n");
 	}
+}
 
-	/* Disable DMAC module */
-	dmac_disable(DMAC);
-  
-  
-  
+/**
+ * \brief GCM mode encryption and decryption test.
+ */
+static void gcm_mode_test(void)
+{
+        printf("\r\n-----------------------------------\r\n");
+	printf("- 128bit cryptographic key\r\n");
+	printf("- GCM cipher mode\r\n");
+	printf("- Auto start mode\r\n");
+	printf("- input of 4 32bit words\r\n");
+	printf("-----------------------------------\r\n");
+
+        state = false;
+        
+	/* Configure the AES. */
+	g_aes_cfg.encrypt_mode = AES_ENCRYPTION;
+	g_aes_cfg.key_size = AES_KEY_SIZE_128;
+	g_aes_cfg.start_mode = AES_AUTO_START;
+	g_aes_cfg.opmode = AES_GCM_MODE;
+	g_aes_cfg.cfb_size = AES_CFB_SIZE_128;
+	g_aes_cfg.lod = false;
+        g_aes_cfg.gtag_en = true;
+	aes_set_config(AES, &g_aes_cfg);
+
+	/* Set the cryptographic key. */
+	aes_write_key(AES, gcm_key128);
+        
+        /* Wait GCM H subkey generation complete */
+        while (false == state) {
+	}
+
+	/* Set the initialization vector. */
+	aes_write_initvector(AES, gcm_init_vector);
+        
+        /* Set AADLEN and CLEN */
+        aes_write_authen_datalength(AES,0);
+        aes_write_pctext_length(AES,16);
+        
+//        state = false;
+//        aes_write_input_data(AES, gcm_aad);
+//        /* Wait for the end of the encryption process. */
+//        while (false == state) {
+//        }
+        
+        state = false;
+        aes_write_input_data(AES, ref_plain_text_gcm);
+        /* Wait for the end of the encryption process. */
+	while (false == state) {
+	}
+        
+        uint32_t status = aes_read_interrupt_status(AES);
+        while (!(status & AES_ISR_TAGRDY)) {
+        }
+        
+	/* check the result. */
+	if ((ref_cipher_text_gcm[0] != output_data[0]) ||
+			(ref_cipher_text_gcm[1] != output_data[1]) ||
+			(ref_cipher_text_gcm[2] != output_data[2]) ||
+			(ref_cipher_text_gcm[3] != output_data[3])) {
+		printf("\r\nKO!!!\r\n");
+	} else {
+		printf("\r\nOK!!!\r\n");
+	}
+
+//	printf("\r\n-----------------------------------\r\n");
+//	printf("- 128bit cryptographic key\r\n");
+//	printf("- GCM decipher mode\r\n");
+//	printf("- Auto start mode\r\n");
+//	printf("- input of 4 32bit words\r\n");
+//	printf("-----------------------------------\r\n");
+//
+//	state = false;
+//
+//	/* Configure the AES. */
+//	g_aes_cfg.encrypt_mode = AES_DECRYPTION;
+//	g_aes_cfg.key_size = AES_KEY_SIZE_128;
+//	g_aes_cfg.start_mode = AES_AUTO_START;
+//	g_aes_cfg.opmode = AES_CTR_MODE;
+//	g_aes_cfg.cfb_size = AES_CFB_SIZE_128;
+//	g_aes_cfg.lod = false;
+//	aes_set_config(AES, &g_aes_cfg);
+//
+//	/* Set the cryptographic key. */
+//	aes_write_key(AES, key128);
+//
+//	/* Set the initialization vector. */
+//	aes_write_initvector(AES, init_vector_ctr);
+//
+//	/* Write the data to be deciphered to the input data registers. */
+//	aes_write_input_data(AES, ref_cipher_text_ctr);
+//
+//	/* Wait for the end of the decryption process. */
+//	while (false == state) {
+//	}
+//
+//	/* check the result. */
+//	if ((ref_plain_text[0] != output_data[0]) ||
+//			(ref_plain_text[1] != output_data[1]) ||
+//			(ref_plain_text[2] != output_data[2]) ||
+//			(ref_plain_text[3] != output_data[3])) {
+//		printf("\r\nKO!!!\r\n");
+//	} else {
+//		printf("\r\nOK!!!\r\n");
+//	}
 }
 #endif
 
@@ -531,7 +695,7 @@ static void ecb_mode_test(void)
 	/* Configure the AES. */
 	g_aes_cfg.encrypt_mode = AES_ENCRYPTION;
 	g_aes_cfg.key_size = AES_KEY_SIZE_128;
-	g_aes_cfg.start_mode = AES_AUTO_MODE;
+	g_aes_cfg.start_mode = AES_AUTO_START;
 	g_aes_cfg.opmode = AES_ECB_MODE;
 	g_aes_cfg.cfb_size = AES_CFB_SIZE_128;
 	g_aes_cfg.lod = false;
@@ -570,7 +734,7 @@ static void ecb_mode_test(void)
 	/* Configure the AES. */
 	g_aes_cfg.encrypt_mode = AES_DECRYPTION;
 	g_aes_cfg.key_size = AES_KEY_SIZE_128;
-	g_aes_cfg.start_mode = AES_AUTO_MODE;
+	g_aes_cfg.start_mode = AES_AUTO_START;
 	g_aes_cfg.opmode = AES_ECB_MODE;
 	g_aes_cfg.cfb_size = AES_CFB_SIZE_128;
 	g_aes_cfg.lod = false;
@@ -616,7 +780,7 @@ static void cbc_mode_test(void)
 	/* Configure the AES. */
 	g_aes_cfg.encrypt_mode = AES_ENCRYPTION;
 	g_aes_cfg.key_size = AES_KEY_SIZE_128;
-	g_aes_cfg.start_mode = AES_AUTO_MODE;
+	g_aes_cfg.start_mode = AES_AUTO_START;
 	g_aes_cfg.opmode = AES_CBC_MODE;
 	g_aes_cfg.cfb_size = AES_CFB_SIZE_128;
 	g_aes_cfg.lod = false;
@@ -656,7 +820,7 @@ static void cbc_mode_test(void)
 	/* Configure the AES. */
 	g_aes_cfg.encrypt_mode = AES_DECRYPTION;
 	g_aes_cfg.key_size = AES_KEY_SIZE_128;
-	g_aes_cfg.start_mode = AES_AUTO_MODE;
+	g_aes_cfg.start_mode = AES_AUTO_START;
 	g_aes_cfg.opmode = AES_CBC_MODE;
 	g_aes_cfg.cfb_size = AES_CFB_SIZE_128;
 	g_aes_cfg.lod = false;
@@ -702,7 +866,7 @@ static void cfb128_mode_test(void)
 	/* Configure the AES. */
 	g_aes_cfg.encrypt_mode = AES_ENCRYPTION;
 	g_aes_cfg.key_size = AES_KEY_SIZE_128;
-	g_aes_cfg.start_mode = AES_AUTO_MODE;
+	g_aes_cfg.start_mode = AES_AUTO_START;
 	g_aes_cfg.opmode = AES_CFB_MODE;
 	g_aes_cfg.cfb_size = AES_CFB_SIZE_128;
 	g_aes_cfg.lod = false;
@@ -743,7 +907,7 @@ static void cfb128_mode_test(void)
 	/* Configure the AES. */
 	g_aes_cfg.encrypt_mode = AES_DECRYPTION;
 	g_aes_cfg.key_size = AES_KEY_SIZE_128;
-	g_aes_cfg.start_mode = AES_AUTO_MODE;
+	g_aes_cfg.start_mode = AES_AUTO_START;
 	g_aes_cfg.opmode = AES_CFB_MODE;
 	g_aes_cfg.cfb_size = AES_CFB_SIZE_128;
 	g_aes_cfg.lod = false;
@@ -790,7 +954,7 @@ static void ofb_mode_test(void)
 	/* Configure the AES. */
 	g_aes_cfg.encrypt_mode = AES_ENCRYPTION;
 	g_aes_cfg.key_size = AES_KEY_SIZE_128;
-	g_aes_cfg.start_mode = AES_AUTO_MODE;
+	g_aes_cfg.start_mode = AES_AUTO_START;
 	g_aes_cfg.opmode = AES_OFB_MODE;
 	g_aes_cfg.cfb_size = AES_CFB_SIZE_128;
 	g_aes_cfg.lod = false;
@@ -831,7 +995,7 @@ static void ofb_mode_test(void)
 	/* Configure the AES. */
 	g_aes_cfg.encrypt_mode = AES_DECRYPTION;
 	g_aes_cfg.key_size = AES_KEY_SIZE_128;
-	g_aes_cfg.start_mode = AES_AUTO_MODE;
+	g_aes_cfg.start_mode = AES_AUTO_START;
 	g_aes_cfg.opmode = AES_OFB_MODE;
 	g_aes_cfg.cfb_size = AES_CFB_SIZE_128;
 	g_aes_cfg.lod = false;
@@ -878,7 +1042,7 @@ static void ctr_mode_test(void)
 	/* Configure the AES. */
 	g_aes_cfg.encrypt_mode = AES_ENCRYPTION;
 	g_aes_cfg.key_size = AES_KEY_SIZE_128;
-	g_aes_cfg.start_mode = AES_AUTO_MODE;
+	g_aes_cfg.start_mode = AES_AUTO_START;
 	g_aes_cfg.opmode = AES_CTR_MODE;
 	g_aes_cfg.cfb_size = AES_CFB_SIZE_128;
 	g_aes_cfg.lod = false;
@@ -919,7 +1083,7 @@ static void ctr_mode_test(void)
 	/* Configure the AES. */
 	g_aes_cfg.encrypt_mode = AES_DECRYPTION;
 	g_aes_cfg.key_size = AES_KEY_SIZE_128;
-	g_aes_cfg.start_mode = AES_AUTO_MODE;
+	g_aes_cfg.start_mode = AES_AUTO_START;
 	g_aes_cfg.opmode = AES_CTR_MODE;
 	g_aes_cfg.cfb_size = AES_CFB_SIZE_128;
 	g_aes_cfg.lod = false;
@@ -1014,7 +1178,7 @@ int main(void)
 
 	/* Enable AES interrupt. */
 	aes_set_callback(AES, AES_INTERRUPT_DATA_READY,
-			aes_callback, 1);
+                        aes_callback, 1);
 
 	/* Display menu */
 	display_menu();
@@ -1058,24 +1222,26 @@ int main(void)
 			ecb_mode_test_dma();
 			#else
 			printf("This mode is not supported by device.\r\n");
-			break;
                         #endif
-                        
+			break;
+                                         
                 case 'p':
                         #if SAM4C
                         printf("ECB mode encryption and decryption test with PDC.\r\n"); 
                         ecb_mode_test_pdc();
                         #else
                         printf("This mode is not supported by device.\r\n");
-			break;
                         #endif
-
+			break;
+                        
 		case 'g':
 			#if SAM4C
 			printf("GCM mode encryption and decryption test.\r\n");
+                        gcm_mode_test();
 			#else 
 			printf("This mode is not supported by device.\r\n");
                         #endif
+                        break;
 		default:
 			break;
 		}
