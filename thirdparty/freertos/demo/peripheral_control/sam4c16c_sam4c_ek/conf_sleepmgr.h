@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Unit test configuration.
+ * \brief Chip-specific sleep manager configuration
  *
- * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,17 +40,10 @@
  * \asf_license_stop
  *
  */
+#ifndef CONF_SLEEPMGR_H
+#define CONF_SLEEPMGR_H
 
-#ifndef CONF_TEST_H
-#define CONF_TEST_H
+// Sleep manager options
+#define CONFIG_SLEEPMGR_ENABLE
 
-/** USART Interface */
-#define CONF_TEST_USART      CONSOLE_UART
-/** Baudrate setting */
-#define CONF_TEST_BAUDRATE   115200
-/** Parity setting */
-#define CONF_TEST_PARITY     UART_MR_PAR_NO
-
-#define CONF_TEST_CS         3
-
-#endif /* CONF_TEST_H_INCLUDED */
+#endif /* CONF_SLEEPMGR_H */

@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Unit test configuration.
+ * \brief Board configuration.
  *
- * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,16 +41,62 @@
  *
  */
 
-#ifndef CONF_TEST_H
-#define CONF_TEST_H
+#ifndef CONF_BOARD_H
+#define CONF_BOARD_H
 
-/** USART Interface */
-#define CONF_TEST_USART      CONSOLE_UART
-/** Baudrate setting */
-#define CONF_TEST_BAUDRATE   115200
-/** Parity setting */
-#define CONF_TEST_PARITY     UART_MR_PAR_NO
+/* Configure UART pins */
+#define CONF_BOARD_UART_CONSOLE
 
-#define CONF_TEST_CS         3
+/* Configure ADC example pins */
+//#define CONF_BOARD_ADC
 
-#endif /* CONF_TEST_H_INCLUDED */
+/* Configure PWM LED0 pin */
+//#define CONF_BOARD_PWM_LED0
+
+/* Configure PWM LED1 pin */
+//#define CONF_BOARD_PWM_LED1
+
+/* Configure PWM LED2 pin */
+//#define CONF_BOARD_PWM_LED2
+
+/* Configure SPI pins */
+//#define CONF_BOARD_SPI
+//#define CONF_BOARD_SPI_NPCS0
+//#define CONF_BOARD_SPI_NPCS1
+//#define CONF_BOARD_SPI_NPCS2
+//#define CONF_BOARD_SPI_NPCS3
+
+/* Configure USART RXD pin */
+#define CONF_BOARD_USART_RXD
+
+/* Configure USART TXD pin */
+#define CONF_BOARD_USART_TXD
+
+/* Configure USART CTS pin */
+//#define CONF_BOARD_USART_CTS
+
+/* Configure USART RTS pin */
+//#define CONF_BOARD_USART_RTS
+
+/* Configure USART synchronous communication SCK pin */
+//#define CONF_BOARD_USART_SCK
+
+/* Configure ADM33312 enable pin */
+//#define CONF_BOARD_ADM3312_EN
+
+/* Configure IrDA transceiver shutdown pin */
+//#define CONF_BOARD_TFDU4300_SD
+
+/* Configure RS485 transceiver RE pin */
+//#define CONF_BOARD_ADM3485_RE
+
+/* Configure LCD EBI pins */
+//#define CONF_BOARD_ILI9325
+
+/* Configure Backlight control pin */
+//#define CONF_BOARD_AAT3155
+
+/* Configure Touchscreen SPI pins */
+//#define CONF_BOARD_ADS7843
+
+#endif // CONF_BOARD_H
