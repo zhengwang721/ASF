@@ -1128,7 +1128,7 @@ static bool parse_mpdu(frame_info_t *rx_frame_ptr)
 
 			/* GTS address list */
 			mac_parse_data.mac_payload_data.beacon_data.gts_list
-				= &temp_frame_ptr[payload_index];
+				= (mac_gts_list_t *)&temp_frame_ptr[payload_index];
 			payload_index += (temp_byte * 3);
 #else
 			payload_index += 1 + temp_byte;

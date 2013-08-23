@@ -95,7 +95,7 @@ mac_gts_spec_t mac_gts_spec;
  * Holds the mlme gts request buffer pointer, used to give the respective
  * confirmation.
  */
-uint8_t *mac_gts_buf_ptr;
+uint32_t *mac_gts_buf_ptr;
 #ifdef GTS_DEBUG
 uint8_t debug_pins[7][2] = {{DEBUG_PIN4,DEBUG_PIN11},{DEBUG_PIN5,DEBUG_PIN12},{DEBUG_PIN6,DEBUG_PIN13},{DEBUG_PIN7,DEBUG_PIN14},{DEBUG_PIN8,DEBUG_PIN15},{DEBUG_PIN9,DEBUG_PIN16},{DEBUG_PIN10,DEBUG_PIN17}};
 #endif
@@ -108,7 +108,7 @@ static queue_t gts_q[MAX_GTS_ON_PANC];
 #endif /* FFD */
 static queue_t dev_tx_gts_q;
 
-void mlme_gts_request(uint8_t *m)
+void mlme_gts_request(arch_data_t *m)
 {
 	mlme_gts_req_t mgr;
 	memcpy(&mgr, BMM_BUFFER_POINTER((buffer_t *)m),
@@ -583,7 +583,7 @@ bool mac_gts_deallocate(gts_char_t GtsCharacteristics, uint16_t DevAddress, bool
 }
 #endif /* FFD */
 
-void mac_parse_bcn_gts_info(uint8_t gts_count, uint8_t gts_dir, uint8_t *gts_list_ptr)
+void mac_parse_bcn_gts_info(uint8_t gts_count, uint8_t gts_dir, mac_gts_list_t *gts_list_ptr)
 {
 	uint8_t loop_index;
 	mac_gts_list_t *gts_list = (mac_gts_list_t *) gts_list_ptr;
@@ -679,7 +679,7 @@ void mac_update_dev_gts_table(bool gts_dir, uint8_t slot_len, uint8_t start_slot
 	}
 }
 
-uint8_t handle_gts_data_req(mcps_data_req_t *data_req, uint8_t *msg)
+uint8_t handle_gts_data_req(mcps_data_req_t *data_req, arch_data_t *msg)
 {
 	uint16_t dst_addr;
 	bool data_queued = false;
@@ -1004,6 +1004,7 @@ uint8_t handle_gts_data_tx_end(void)
 	{
 		mac_tx_gts_data(&dev_tx_gts_q);
 	}
+	return 0;
 }
 #ifdef GTS_DEBUG
 void gts_debug(uint8_t gts_index,bool data_pin,bool set,bool val)

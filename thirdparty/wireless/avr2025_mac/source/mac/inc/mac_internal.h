@@ -62,7 +62,11 @@
 #include "tal_internal.h"
 #endif
 
-#if MAC_SECURITY_ZIP || GTS_SUPPORT
+#ifdef MAC_SECURITY_ZIP
+#include "mac_msg_types.h"
+#endif
+
+#if GTS_SUPPORT
 #include "mac_msg_types.h"
 #endif
 
@@ -531,7 +535,7 @@ extern mac_pib_t mac_pib;
 extern mac_superframe_state_t mac_superframe_state;
 #ifdef GTS_SUPPORT
 extern mac_gts_state_t mac_gts_state;
-extern uint8_t *mac_gts_buf_ptr;
+extern uint32_t *mac_gts_buf_ptr;
 extern mac_dev_gts_mgmt_t mac_dev_gts_table[];
 extern uint8_t mac_dev_gts_table_len;
 extern gts_char_t requested_gts_char;
@@ -765,8 +769,8 @@ retval_t mac_unsecure(parse_t *mac_parse_data, uint8_t *mpdu,
 void mac_gen_mlme_gts_conf(buffer_t *buf_ptr, uint8_t status, gts_char_t gts_char);
 void mac_process_gts_request(buffer_t *gts_req);
 uint8_t mac_add_gts_info(uint8_t *frame_ptr);
-void mac_parse_bcn_gts_info(uint8_t gts_count, uint8_t gts_dir, uint8_t *gts_list_ptr);
-uint8_t handle_gts_data_req(mcps_data_req_t *data_req, uint8_t *msg);
+void mac_parse_bcn_gts_info(uint8_t gts_count, uint8_t gts_dir, mac_gts_list_t *gts_list_ptr);
+uint8_t handle_gts_data_req(mcps_data_req_t *data_req, arch_data_t *msg);
 void reset_gts_globals(void);
 void mac_t_gts_cb(void *callback_parameter);
 void init_gts_queues(void);

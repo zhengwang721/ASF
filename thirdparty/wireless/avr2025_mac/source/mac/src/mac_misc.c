@@ -79,9 +79,6 @@
 
 #if (NUMBER_OF_MAC_TIMERS > 0)
 #ifdef BEACON_SUPPORT
-uint8_t T_Beacon_Tracking_Period;
-uint8_t T_Superframe;
-uint8_t T_Missed_Beacon;
 uint8_t T_Beacon_Tracking_Period COMPILER_WORD_ALIGNED;
 uint8_t T_Superframe COMPILER_WORD_ALIGNED;
 uint8_t T_Missed_Beacon COMPILER_WORD_ALIGNED;

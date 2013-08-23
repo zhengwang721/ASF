@@ -590,7 +590,7 @@ void mlme_sync_loss_ind(arch_data_t *m)
 #endif /* (MAC_SYNC_LOSS_INDICATION == 1) */
 
 #ifdef GTS_SUPPORT
-void mlme_gts_conf(uint8_t *m)
+void mlme_gts_conf(arch_data_t *m)
 {
 	mlme_gts_conf_t *pmsg;
 
@@ -603,7 +603,7 @@ void mlme_gts_conf(uint8_t *m)
 	bmm_buffer_free((buffer_t *)m);
 }
 
-void mlme_gts_ind(uint8_t *m)
+void mlme_gts_ind(arch_data_t *m)
 {
 	mlme_gts_ind_t *pmsg;
 
