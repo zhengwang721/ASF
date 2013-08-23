@@ -1,7 +1,7 @@
 /**
- * \file
+ * \file *********************************************************************
  *
- * \brief Board configuration
+ * \brief USART Serial configuration
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -38,16 +38,18 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- *
  */
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
 
-#define CONF_BOARD_AT86RFX
+#ifndef CONF_HW_TIMER_H_INCLUDED
+#define CONF_HW_TIMER_H_INCLUDED
 
-#define IC_TYPE             (0x00)
-#define MCU_SOC_NAME        "ATSAMD20J18"
 
-#define AT86RFX_SPI_BAUDRATE		 4000000UL
-//# include "conf_usb.h"
-#endif /* CONF_BOARD_H_INCLUDED */
+
+/*! \name Configuration
+ */
+//! @{
+#define TIMER     TC0
+//! @}
+
+
+#endif /* CONF_HW_TIMER_H_INCLUDED */

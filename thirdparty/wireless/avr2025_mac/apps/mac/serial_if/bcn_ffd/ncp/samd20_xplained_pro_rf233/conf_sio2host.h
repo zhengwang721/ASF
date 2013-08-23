@@ -1,7 +1,7 @@
 /**
- * \file
+ * \file *********************************************************************
  *
- * \brief Board configuration
+ * \brief Serial Input & Output configuration
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -38,16 +38,23 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- *
  */
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#define EDBG_CDC
+#ifndef CONF_SIO2HOST_H_INCLUDED
+#define CONF_SIO2HOST_H_INCLUDED
+#ifdef EDBG_CDC
+#define USART_HOST                 EDBG_CDC_MODULE
+// /** Baudrate setting */
 
-#define CONF_BOARD_AT86RFX
+#define USART_HOST_RX_ISR_ENABLE()  _sercom_set_handler(3, USART_HOST_ISR_VECT);\
+USART_HOST->USART.INTENSET.reg = SERCOM_USART_INTFLAG_RXC;\
+system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_SERCOM3);
 
-#define IC_TYPE             (0x00)
-#define MCU_SOC_NAME        "ATSAMD20J18"
-
-#define AT86RFX_SPI_BAUDRATE		 4000000UL
-//# include "conf_usb.h"
-#endif /* CONF_BOARD_H_INCLUDED */
+#else
+#define USART_HOST                 SERCOM2
+#define USART_HOST_RX_ISR_ENABLE()  _sercom_set_handler(2, USART_HOST_ISR_VECT);\
+USART_HOST->USART.INTENSET.reg = SERCOM_USART_INTFLAG_RXC;\
+system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_SERCOM2);
+#endif
+#define USART_HOST_BAUDRATE        9600
+#endif /* CONF_SIO2HOST_H_INCLUDED */
