@@ -144,7 +144,7 @@ typedef struct mcps_data_ind_tag {
 	 */
 	uint32_t Timestamp;
 #endif  /* ENABLE_TSTAMP */
-#ifdef MAC_SECURITY_ZIP
+#if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
 
 	/**
 	 * The security level purportedly used by the received data frame.
@@ -162,7 +162,7 @@ typedef struct mcps_data_ind_tag {
 	 * of the received frame.
 	 */
 	uint8_t KeyIndex;
-#endif  /* MAC_SECURITY_ZIP */
+#endif  /* ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006)) */
 
 	/**
 	 * The number of octets contained in the MSDU being indicated by the

@@ -760,7 +760,7 @@ void mlme_set_request(arch_data_t *m);
 void mlme_set_conf(arch_data_t *m);
 
 #endif  /* (HIGHEST_STACK_LAYER == MAC) */
-#ifdef MAC_SECURITY_ZIP
+#ifdef (MAC_SECURITY_ZIP || MAC_SECURITY_2006) 
 
 /**
  * @brief Setting of MAC PIB attributes via functional access
@@ -803,7 +803,7 @@ retval_t mlme_set(uint8_t attribute, uint8_t attribute_index,
 retval_t mlme_set(uint8_t attribute, pib_value_t *attribute_value,
 		bool set_trx_to_sleep);
 
-#endif  /* MAC_SECURITY_ZIP */
+#endif  /* (MAC_SECURITY_ZIP || MAC_SECURITY_2006)  */
 
 /**
  * \ingroup group_mac_gen_int

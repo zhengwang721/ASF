@@ -80,7 +80,7 @@
 typedef union {
 	uint8_t ed_value[1];
 	wpan_pandescriptor_t wpan_pan_desc;
-} scan_result_list_t  COMPILER_WORD_ALIGNED;;
+} scan_result_list_t  COMPILER_WORD_ALIGNED;
 
 /* === MCPS-SAP messages ==================================================== */
 
@@ -135,7 +135,7 @@ typedef struct mcps_data_req_tag {
 	 * 0 x 04 = indirect transmission.
 	 */
 	uint8_t TxOptions;
-#ifdef MAC_SECURITY_ZIP
+#if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
 
 	/**
 	 * The security level to be used.
@@ -146,12 +146,15 @@ typedef struct mcps_data_req_tag {
 	 * The mode used to identify the key to be used.
 	 */
 	uint8_t KeyIdMode;
-
+    /**
+     * The KeySource to find the key.
+     */
+    uint8_t *KeySource;
 	/**
 	 * The index of the key to be used.
 	 */
 	uint8_t KeyIndex;
-#endif  /* MAC_SECURITY_ZIP */
+#endif  /* ((MAC_SECURITY_ZIP)  || (MAC_SECURITY_2006)) */
 
 	/**
 	 * The number of octets contained in the MSDU to be transmitted by the
@@ -478,11 +481,11 @@ typedef struct mlme_get_req_tag {
 	enum msg_code cmdcode;
 	/**< The identifier of the MAC PIB attribute to get. */
 	uint8_t PIBAttribute;
-#ifdef MAC_SECURITY_ZIP
+#if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
 	/**< The index within the table of the specified MAC PIB attribute to
 	 *set. */
 	uint8_t PIBAttributeIndex;
-#endif  /* MAC_SECURITY_ZIP */
+#endif  /* (MAC_SECURITY_ZIP || MAC_SECURITY_2006) */
 } mlme_get_req_t COMPILER_WORD_ALIGNED;
 
 /**
@@ -495,11 +498,11 @@ typedef struct mlme_get_conf_tag {
 	uint8_t status;
 	/**< The identifier of the MAC PIB attribute to get. */
 	uint8_t PIBAttribute;
-#ifdef MAC_SECURITY_ZIP
+#if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
 	/**< The index within the table of the specified MAC PIB attribute to
 	 *set. */
 	uint8_t PIBAttributeIndex;
-#endif  /* MAC_SECURITY_ZIP */
+#endif  /* (MAC_SECURITY_ZIP || MAC_SECURITY_2006) */
 	/**< The value of the indicated MAC PIB attribute that was read. */
 	pib_value_t PIBAttributeValue;
 } mlme_get_conf_t COMPILER_WORD_ALIGNED;
@@ -514,11 +517,11 @@ typedef struct mlme_set_req_tag {
 	enum msg_code cmdcode;
 	/**< The identifier of the MAC PIB attribute to set. */
 	uint8_t PIBAttribute;
-#ifdef MAC_SECURITY_ZIP
+#if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
 	/**< The index within the table of the specified MAC PIB attribute to
 	 *set. */
 	uint8_t PIBAttributeIndex;
-#endif  /* MAC_SECURITY_ZIP */
+#endif  /* (MAC_SECURITY_ZIP || MAC_SECURITY_2006) */
 	/**< The value to write to the indicated MAC PIB attribute. */
 	pib_value_t PIBAttributeValue;
 } mlme_set_req_t COMPILER_WORD_ALIGNED;
@@ -536,11 +539,11 @@ typedef struct mlme_set_conf_tag {
 	uint8_t status;
 	/**< The identifier of the MAC PIB attribute that was written. */
 	uint8_t PIBAttribute;
-#ifdef MAC_SECURITY_ZIP
+#if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
 	/**< The index within the table of the specified MAC PIB attribute to
 	 *set. */
 	uint8_t PIBAttributeIndex;
-#endif  /* MAC_SECURITY_ZIP */
+#endif  /* (MAC_SECURITY_ZIP || MAC_SECURITY_2006) */
 } mlme_set_conf_t  COMPILER_WORD_ALIGNED;
 #endif /* (HIGHEST_STACK_LAYER == MAC) */
 

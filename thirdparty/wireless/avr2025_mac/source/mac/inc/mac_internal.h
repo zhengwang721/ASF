@@ -62,7 +62,7 @@
 #include "tal_internal.h"
 #endif
 
-#ifdef MAC_SECURITY_ZIP
+#if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
 #include "mac_msg_types.h"
 #endif
 
@@ -663,7 +663,7 @@ void dispatch_event(arch_data_t *event);
 
 retval_t set_tal_pib_internal(uint8_t attribute, pib_value_t *attribute_value);
 
-#ifdef MAC_SECURITY_ZIP
+#if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
 retval_t mac_build_aux_sec_header(uint8_t **frame_ptr, mcps_data_req_t *pmdr,
 		uint8_t *frame_len);
 retval_t mac_secure(frame_info_t *frame, uint8_t *mac_payload_ptr,
@@ -671,7 +671,7 @@ retval_t mac_secure(frame_info_t *frame, uint8_t *mac_payload_ptr,
 retval_t mac_unsecure(parse_t *mac_parse_data_buf, uint8_t *mpdu,
 		uint8_t *mac_payload, uint8_t *payload_index);
 
-#endif  /* MAC_SECURITY_ZIP */
+#endif  /* (MAC_SECURITY_ZIP || MAC_SECURITY_2006) */
 
 #if (MAC_INDIRECT_DATA_FFD == 1)
 

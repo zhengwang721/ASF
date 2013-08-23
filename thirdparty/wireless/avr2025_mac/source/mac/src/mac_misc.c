@@ -69,9 +69,9 @@
 #include "mac.h"
 #include "mac_config.h"
 #include "mac_build_config.h"
-#ifdef MAC_SECURITY_ZIP
+#if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
 #include "mac_security.h"
-#endif  /* MAC_SECURITY_ZIP */
+#endif  /* (MAC_SECURITY_ZIP || MAC_SECURITY_2006) */
 
 /* === Macros =============================================================== */
 
@@ -276,13 +276,13 @@ static void do_init_pib(void)
 	mac_pib.mac_DSN = (uint8_t)rand();
 	mac_pib.mac_RxOnWhenIdle = macRxOnWhenIdle_def;
 
-#ifdef MAC_SECURITY_ZIP
+#if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
 	/* TODO: Create a specific function for security PIB initialization? */
 	mac_sec_pib.KeyTableEntries = macKeyTableEntries_def;
 	mac_sec_pib.DeviceTableEntries = macDeviceTable_def;
 	mac_sec_pib.SecurityLevelTableEntries = macSecurityLevelTable_def;
 	mac_sec_pib.FrameCounter = macFrameCounter_def;
-#endif  /* MAC_SECURITY_ZIP */
+#endif  /* (MAC_SECURITY_ZIP || MAC_SECURITY_2006) */
 
 #ifdef TEST_HARNESS
 	mac_pib.privateIllegalFrameType = 1;

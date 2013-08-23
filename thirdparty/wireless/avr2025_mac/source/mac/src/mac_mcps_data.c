@@ -66,7 +66,7 @@
 #include "mac_internal.h"
 #include "mac.h"
 #include "mac_build_config.h"
-#ifdef MAC_SECURITY_ZIP
+#if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
 #include "mac_security.h"
 #endif
 
@@ -499,11 +499,11 @@ void mac_process_data_frame(buffer_t *buf_ptr)
 
 			mdi->mpduLinkQuality = mac_parse_data.ppdu_link_quality;
 
-#ifdef MAC_SECURITY_ZIP
+#if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
 			mdi->SecurityLevel = mac_parse_data.sec_ctrl.sec_level;
 			mdi->KeyIdMode = mac_parse_data.sec_ctrl.key_id_mode;
 			mdi->KeyIndex = mac_parse_data.key_id[0];
-#endif  /* MAC_SECURITY_ZIP */
+#endif  /* (MAC_SECURITY_ZIP || MAC_SECURITY_2006)  */
 
 			mdi->msduLength = mac_parse_data.mac_payload_length;
 
@@ -626,7 +626,7 @@ static retval_t build_data_frame(mcps_data_req_t *pmdr,
 			LARGE_BUFFER_SIZE -
 			pmdr->msduLength - 2; /* Add 2 octets for FCS. */
 
-#ifdef MAC_SECURITY_ZIP
+#if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
 	uint8_t *mac_payload_ptr = frame_ptr;
 
 	/*
@@ -641,7 +641,7 @@ static retval_t build_data_frame(mcps_data_req_t *pmdr,
 		}
 	}
 
-#endif  /* MAC_SECURITY_ZIP */
+#endif  /* (MAC_SECURITY_ZIP || MAC_SECURITY_2006) */
 
 	/*
 	 * Set Source Address.
@@ -712,7 +712,7 @@ static retval_t build_data_frame(mcps_data_req_t *pmdr,
 		fcf |= FCF_SET_FRAMETYPE(FCF_FRAMETYPE_DATA);
 	}
 
-#ifdef MAC_SECURITY_ZIP
+#if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
 	if (pmdr->SecurityLevel > 0) {
 		fcf |= FCF_SECURITY_ENABLED | FCF_FRAME_VERSION_2006;
 	}
@@ -755,7 +755,7 @@ static retval_t build_data_frame(mcps_data_req_t *pmdr,
 	/* Finished building of frame. */
 	frame->mpdu = frame_ptr;
 
-#ifdef MAC_SECURITY_ZIP
+#if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
 	if (pmdr->SecurityLevel > 0) {
 		retval_t build_sec = mac_secure(frame, mac_payload_ptr, pmdr);
 		if (MAC_SUCCESS != build_sec) {
@@ -763,7 +763,7 @@ static retval_t build_data_frame(mcps_data_req_t *pmdr,
 		}
 	}
 
-#endif  /* MAC_SECURITY_ZIP */
+#endif  /* (MAC_SECURITY_ZIP || MAC_SECURITY_2006) */
 
 	return MAC_SUCCESS;
 } /* build_data_frame() */

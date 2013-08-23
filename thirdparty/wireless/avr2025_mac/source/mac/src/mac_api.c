@@ -232,7 +232,7 @@ bool wpan_mcps_data_req(uint8_t SrcAddrMode,
     mcps_data_req->KeySource = KeySource;
     mcps_data_req->KeyIdMode = KeyIdMode;
     mcps_data_req->KeyIndex = KeyIndex;
-#endif  /* MAC_SECURITY_ZIP */
+#endif  /* (MAC_SECURITY_ZIP || MAC_SECURITY_2006) */
 
 	mcps_data_req->msduLength = msduLength;
 
