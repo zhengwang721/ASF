@@ -334,68 +334,73 @@ static void _ozmospi_int_handler(uint8_t not_used)
 	int_status = spi_hw->INTFLAG.reg & spi_hw->INTENSET.reg;
 
 	if (int_status & SERCOM_SPI_INTFLAG_DRE) {
-		/* If doing a READ, just send 0 to trigger the transfer */
-		if (dir == OZMOSPI_DIRECTION_READ) {
-			uint32_t tx_lead_limit;
+		uint_fast8_t tx_lead_on_rx = _ozmospi_module.tx_lead_on_rx;
 
-			spi_hw->DATA.reg = 0;
-			_ozmospi_module.tx_lead_on_rx++;
-
-			/* With current TX'ed bytes, will we get the last RX byte? */
-check_for_read_end:
-			/* As the TX lead may be up to 2 bytes, and the buffers may
-			 * be as short as 1 byte, we must check three cases:
-			 * 1) current RX buffer is the last one
-			 * 2) next RX buffer is the last one
-			 * 3) next RX buffer is _not_ the last one
-			 */
-			tx_lead_limit = (_ozmospi_module.rx_bufdesc_ptr + 1)->length;
-
-			/* Checking descriptor at location +2 is fine even if the one at +1
-			 * is the last one because +1 will specify zero length, in which case
-			 * the length found at the invalid location +2 does not matter.
-			 */
-			if (!tx_lead_limit || !(_ozmospi_module.rx_bufdesc_ptr + 2)->length) {
-				tx_lead_limit += _ozmospi_module.rx_length;
-
-				if (_ozmospi_module.tx_lead_on_rx >= tx_lead_limit) {
-					/* Disable DRE to stop future transfers */
-					spi_hw->INTENCLR.reg = SERCOM_SPI_INTFLAG_DRE;
-				}
-			}
-
-		/* For WRITE and BOTH, output current byte */
+		/* If TX is ahead of RX by 2+ bytes, allow RX to catch up.
+		 * Note: will only happen _once_ per READ or BOTH.
+		 */
+		if ((tx_lead_on_rx >= 2) && (dir != OZMOSPI_DIRECTION_WRITE)) {
+			Assert((dir == OZMOSPI_DIRECTION_READ) || (dir == OZMOSPI_DIRECTION_BOTH));
+			Assert(int_status & SERCOM_SPI_INTFLAG_RXC);
+		/* Otherwise, we can send more bytes */
 		} else {
-			ozmospi_buflen_t tx_length;
-			uint8_t *tx_head_ptr;
+			_ozmospi_module.tx_lead_on_rx = ++tx_lead_on_rx;
 
-			tx_head_ptr = _ozmospi_module.tx_head_ptr;
-			spi_hw->DATA.reg = *(tx_head_ptr++);
-			_ozmospi_module.tx_lead_on_rx++;
+			/* If doing a READ, just send 0 to trigger the transfer */
+			if (dir == OZMOSPI_DIRECTION_READ) {
+				uint32_t tx_lead_limit;
 
-			/* Check if this was the last byte to send */
-			tx_length = _ozmospi_module.tx_length - 1;
+				spi_hw->DATA.reg = 0;
 
-			if (tx_length) {
-				_ozmospi_module.tx_head_ptr = tx_head_ptr;
-				_ozmospi_module.tx_length = tx_length;
+check_for_read_end:
+				/* With current TX'ed bytes, will we get the last RX byte?
+				 * If so, we can disable the DRE interrupt to stop transmitting.
+				 *
+				 * Since a buffer can have minimum 1 byte length, this check is
+				 * simplified by first checking if the RX end is so close that
+				 * the max. 2 byte lead of TX may actually fill the buffers.
+				 */
+				tx_lead_limit = (_ozmospi_module.rx_bufdesc_ptr + 1)->length;
+
+				if (!tx_lead_limit || !(_ozmospi_module.rx_bufdesc_ptr + 2)->length) {
+					tx_lead_limit += _ozmospi_module.rx_length;
+
+					if (tx_lead_on_rx >= tx_lead_limit) {
+						spi_hw->INTENCLR.reg = SERCOM_SPI_INTFLAG_DRE;
+					}
+				}
+			/* For WRITE and BOTH, output current byte */
 			} else {
-				/* Any more buffers left to send, perhaps? */
-				tx_length = (++_ozmospi_module.tx_bufdesc_ptr)->length;
+				ozmospi_buflen_t tx_length;
+				uint8_t *tx_head_ptr;
+
+				tx_head_ptr = _ozmospi_module.tx_head_ptr;
+				spi_hw->DATA.reg = *(tx_head_ptr++);
+
+				/* Check if this was the last byte to send */
+				tx_length = _ozmospi_module.tx_length - 1;
 
 				if (tx_length) {
-					_ozmospi_module.tx_head_ptr = _ozmospi_module.tx_bufdesc_ptr->data;
+					_ozmospi_module.tx_head_ptr = tx_head_ptr;
 					_ozmospi_module.tx_length = tx_length;
 				} else {
-					if (dir == OZMOSPI_DIRECTION_WRITE) {
-						/* Disable DRE and enable TXC to end WRITE */
-						spi_hw->INTENCLR.reg = SERCOM_SPI_INTFLAG_DRE;
-						spi_hw->INTENSET.reg = SERCOM_SPI_INTFLAG_TXC;
+				/* Any more buffers left to send, perhaps? */
+					tx_length = (++_ozmospi_module.tx_bufdesc_ptr)->length;
+
+					if (tx_length) {
+						_ozmospi_module.tx_head_ptr = _ozmospi_module.tx_bufdesc_ptr->data;
+						_ozmospi_module.tx_length = tx_length;
 					} else {
+						if (dir == OZMOSPI_DIRECTION_WRITE) {
+						/* Disable DRE and enable TXC to end WRITE */
+							spi_hw->INTENCLR.reg = SERCOM_SPI_INTFLAG_DRE;
+							spi_hw->INTENSET.reg = SERCOM_SPI_INTFLAG_TXC;
+						} else {
 						/* For BOTH, check if we still have bytes left to read */
-						dir = OZMOSPI_DIRECTION_READ;
-						_ozmospi_module.direction = dir;
-						goto check_for_read_end;
+							dir = OZMOSPI_DIRECTION_READ;
+							_ozmospi_module.direction = dir;
+							goto check_for_read_end;
+						}
 					}
 				}
 			}
