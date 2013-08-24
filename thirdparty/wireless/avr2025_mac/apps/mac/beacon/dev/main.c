@@ -126,7 +126,7 @@ app_state_t;
 /** Defines the short address of the coordinator. */
 #define COORD_SHORT_ADDR                CCPU_ENDIAN_TO_LE16(0XCAFE)
 
-#define CHANNEL_OFFSET                  (6)
+#define CHANNEL_OFFSET                  (11)
 
 #define SCAN_CHANNEL                    (1ul << current_channel)
 
@@ -200,11 +200,30 @@ static uint8_t APP_TIMER;
  * 128-bit variable. This is the reason why the array needs to be filled
  * in in reverse order than expected.
  */
-static uint8_t default_key[16] = {0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7,
-                                  0xC8, 0xC9, 0xCA, 0xCB, 0xCC, 0xCD, 0xCE, 0xCF
-                                 };
+static uint8_t default_key[3][16] = {{
+	0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7,
+	0xC8, 0xC9, 0xCA, 0xCB, 0xCC, 0xCD, 0xCE, 0xCF
+},
+{
+	0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7,
+	0xC8, 0xC9, 0xCA, 0xCB, 0xCC, 0xCD, 0xCE, 0xD0
+},
+{
+	0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7,
+	0xC8, 0xC9, 0xCA, 0xCB, 0xCC, 0xCD, 0xCE, 0xD1
+}
+};
+
+#define INDEX_0                         (0)
+#define INDEX_1                         (1)
+#define INDEX_2                         (2)
+#define EMPTY_DEV_HANDLE                (0xFF) // key device desc is invalid
+#define KEY_INFO_FRAME                  (0xDE)
+#define NO_SECURITY                     (0)
 
 static uint8_t default_key_source[8] = {0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+static uint8_t deviceShortAddress = 0xFF;
 
 #endif
 
@@ -366,6 +385,7 @@ const char Display_Received_Frame[] = "Frame received: %lu\r\n";
 		for (uint8_t i = 0; i < msduLength; i++) {
 			printf("%c", msdu[i]);
 		}
+		printf("\n\r");
 		/*sprintf(sio_array, "Frame received: %" PRIu32 "\r\n",
 			//	indirect_rx_cnt);
 			*msdu); //Anupama  */
@@ -442,13 +462,12 @@ void usr_mlme_associate_conf(uint16_t AssocShortAddress,
 		sw_timer_stop(APP_TIMER);
 
 		LED_On(LED_NWK_SETUP);
-	 
 		   uint8_t mac_dev_table_entries = 1;
 
 	                 wpan_mlme_set_req(macDeviceTableEntries,
 	                 NO_PIB_INDEX,
 	                 &mac_dev_table_entries);
-		  
+
 	} else {
 		LED_Off(LED_NWK_SETUP);
 
@@ -461,6 +480,9 @@ void usr_mlme_associate_conf(uint16_t AssocShortAddress,
 
 	/* Keep compiler happy. */
 	AssocShortAddress = AssocShortAddress;
+#ifdef MAC_SECURITY_ZIP
+    deviceShortAddress = AssocShortAddress;
+#endif
 }
 
 #endif  /* (MAC_ASSOCIATION_REQUEST_CONFIRM == 1) */
@@ -519,6 +541,7 @@ void usr_mlme_beacon_notify_ind(uint8_t BSN,
 		 * This request will cause a mlme associate confirm message ->
 		 * usr_mlme_associate_conf.
 		 */
+		printf("assoc request\n\r");
 		wpan_mlme_associate_req(current_channel,
 				current_channel_page,
 				&coord_addr_spec,
@@ -564,6 +587,7 @@ void usr_mlme_beacon_notify_ind(uint8_t BSN,
 				msdu_handle,
 				WPAN_TXOPT_ACK,
 				ZIP_SEC_MIN,     // SecurityLevel
+				NULL,
 				ZIP_KEY_ID_MODE, // KeyIdMode
 				1);  // KeyIndex
 #else		
@@ -703,6 +727,9 @@ void usr_mlme_get_conf(uint8_t status,
 #endif  /* MAC_SECURITY_ZIP */
 			void *PIBAttributeValue)
 {
+#ifdef MAC_SECURITY_ZIP
+mac_key_table_t *key_table = (mac_key_table_t *)PIBAttributeValue;
+#endif
 	if ((status == MAC_SUCCESS) && (PIBAttribute == phyCurrentPage)) {
 		current_channel_page = *(uint8_t *)PIBAttributeValue;
 #ifdef MAC_SECURITY_ZIP
@@ -753,6 +780,20 @@ void usr_mlme_get_conf(uint8_t status,
 				(FUNC_PTR)network_search_indication_cb,
 				NULL);
 	}
+	else if((status == MAC_SUCCESS) &&
+	     (PIBAttribute == macKeyTable)){
+			 for (uint8_t i = 0; i < key_table->KeyDeviceListEntries; i++)
+			 {
+				 if (EMPTY_DEV_HANDLE == (key_table->KeyDeviceList[i].DeviceDescriptorHandle))
+				 {
+					 key_table->KeyDeviceList[i].DeviceDescriptorHandle = 0x00;
+					 key_table->KeyDeviceList[i].UniqueDevice = true;
+					 break;
+				 }
+			 }
+			 wpan_mlme_set_req(macKeyTable, deviceShortAddress - 1, (uint8_t *)PIBAttributeValue);
+		
+	}
 }
 
 #endif  /* (MAC_GET_SUPPORT == 1) */
@@ -800,7 +841,10 @@ void usr_mlme_reset_conf(uint8_t status)
 {
 	if (status == MAC_SUCCESS) {
 #ifdef MAC_SECURITY_ZIP
-		wpan_mlme_get_req(phyCurrentPage,NO_PIB_INDEX);
+	/*	wpan_mlme_get_req(phyCurrentPage,NO_PIB_INDEX);*/
+		wpan_mlme_set_req(macDefaultKeySource,
+		NO_PIB_INDEX,
+		&default_key_source);
 #else
 		wpan_mlme_get_req(phyCurrentPage);
 #endif
@@ -958,6 +1002,7 @@ void usr_mlme_scan_conf(uint8_t status,
 
 void usr_mlme_set_conf(uint8_t status, uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
 {
+	printf("set_conf\n\r");
     if (status != MAC_SUCCESS)
     {
         // something went wrong; restart
@@ -983,9 +1028,12 @@ void usr_mlme_set_conf(uint8_t status, uint8_t PIBAttribute, uint8_t PIBAttribut
                  {
 	           
 				     /* Set security PIB attributes now. */
-	                 wpan_mlme_set_req(macDefaultKeySource,
+	            /*     wpan_mlme_set_req(macDefaultKeySource,
 	                 NO_PIB_INDEX,
-	                 &default_key_source); 
+	                 &default_key_source); */ 
+				wpan_mlme_sync_req(current_channel,
+						current_channel_page,
+						1);
                 }
                  break;
 
@@ -1015,7 +1063,7 @@ void usr_mlme_set_conf(uint8_t status, uint8_t PIBAttribute, uint8_t PIBAttribut
 
              case macSecurityLevelTable:
                  {
-	                 uint8_t mac_key_table_entries = 1;
+	               uint8_t mac_key_table_entries = 3;
 
 	                 wpan_mlme_set_req(macKeyTableEntries,
 	                 NO_PIB_INDEX,
@@ -1025,61 +1073,165 @@ void usr_mlme_set_conf(uint8_t status, uint8_t PIBAttribute, uint8_t PIBAttribut
 
              case macKeyTableEntries:
                  {
-	                 uint8_t mac_key_table[34] =
-	                 {
-		                 // KeyIdLookupList[1].LookupData : macDefaultKeySource || g_Sec_KeyIndex_1
-		                 default_key_source[0], // LookupData[0]
-		                 default_key_source[1], // LookupData[1]
-		                 default_key_source[2], // LookupData[2]
-		                 default_key_source[3], // LookupData[3]
-		                 default_key_source[4], // LookupData[4]
-		                 default_key_source[5], // LookupData[5]
-		                 default_key_source[6], // LookupData[6]
-		                 default_key_source[7], // LookupData[7]
-		                 KEY_INDEX_1,           // LookupData[8]
-		                 LOOKUP_DATA_SIZE_1, // LookupDataSize: 0x01 : Size 9 octets
-		                 1,              // KeyIdLookupListEntries = 1
-		                 // KeyDeviceList[1]
-		                 0,              // DeviceDescriptorHandle
-		                 0,              // UniqueDevice - Key is unique per node
-		                 0,              // Blacklisted
-		                 1,              // KeyDeviceListEntries
-		                 //  KeyUsageList
-		                 FRAME_TYPE_DATA,    // FrameType - Data frames
-		                 CMD_FRAME_ID_NA,    // CommandFrameIdentifier not used in ZIP
-		                 1,                  // KeyUsageListEntries
-		                 // Key
-		                 default_key[0],
-		                 default_key[1],
-		                 default_key[2],
-		                 default_key[3],
-		                 default_key[4],
-		                 default_key[5],
-		                 default_key[6],
-		                 default_key[7],
-		                 default_key[8],
-		                 default_key[9],
-		                 default_key[10],
-		                 default_key[11],
-		                 default_key[12],
-		                 default_key[13],
-		                 default_key[14],
-		                 default_key[15],
-	                 };
+	                                    uint8_t mac_key_table[34] = {
+		                                    // KeyIdLookupList[1].LookupData : macDefaultKeySource || g_Sec_KeyIndex_1
+		                                    default_key_source[0], // LookupData[0]
+		                                    default_key_source[1], // LookupData[1]
+		                                    default_key_source[2], // LookupData[2]
+		                                    default_key_source[3], // LookupData[3]
+		                                    default_key_source[4], // LookupData[4]
+		                                    default_key_source[5], // LookupData[5]
+		                                    default_key_source[6], // LookupData[6]
+		                                    default_key_source[7], // LookupData[7]
+		                                    KEY_INDEX_1,           // LookupData[8]
+		                                    LOOKUP_DATA_SIZE_1, // LookupDataSize: 0x01 : Size 9 octets
+		                                    
+		                                    1,              // KeyIdLookupListEntries = 1
+		                                    // KeyDeviceList[1]
+		                                    EMPTY_DEV_HANDLE, // DeviceDescriptorHandle
+		                                    0,              // UniqueDevice - Key is unique per node
+		                                    0,              // Blacklisted
+		                                    1,              // KeyDeviceListEntries
+		                                    //  KeyUsageList
+		                                    FRAME_TYPE_DATA,    // FrameType - Data frames
+		                                    CMD_FRAME_ID_NA,    // CommandFrameIdentifier not used in ZIP
+		                                    1,                  // KeyUsageListEntries
+		                                    // Key
+		                                    default_key[0][0],
+		                                    default_key[0][1],
+		                                    default_key[0][2],
+		                                    default_key[0][3],
+		                                    default_key[0][4],
+		                                    default_key[0][5],
+		                                    default_key[0][6],
+		                                    default_key[0][7],
+		                                    default_key[0][8],
+		                                    default_key[0][9],
+		                                    default_key[0][10],
+		                                    default_key[0][11],
+		                                    default_key[0][12],
+		                                    default_key[0][13],
+		                                    default_key[0][14],
+		                                    default_key[0][15]
+	                                    };
+	                                    uint8_t mac_key_table1[34] = {
+		                                    // KeyIdLookupList[1].LookupData : macDefaultKeySource || g_Sec_KeyIndex_1
+		                                    default_key_source[0], // LookupData[0]
+		                                    default_key_source[1], // LookupData[1]
+		                                    default_key_source[2], // LookupData[2]
+		                                    default_key_source[3], // LookupData[3]
+		                                    default_key_source[4], // LookupData[4]
+		                                    default_key_source[5], // LookupData[5]
+		                                    default_key_source[6], // LookupData[6]
+		                                    default_key_source[7], // LookupData[7]
+		                                    KEY_INDEX_1,           // LookupData[8]
+		                                    LOOKUP_DATA_SIZE_1, // LookupDataSize: 0x01 : Size 9 octets
+		                                    
+		                                    1,              // KeyIdLookupListEntries = 1
+		                                    // KeyDeviceList[1]
+		                                    EMPTY_DEV_HANDLE, // DeviceDescriptorHandle
+		                                    0,              // UniqueDevice - Key is unique per node
+		                                    0,              // Blacklisted
+		                                    1,              // KeyDeviceListEntries
+		                                    //  KeyUsageList
+		                                    FRAME_TYPE_DATA,    // FrameType - Data frames
+		                                    CMD_FRAME_ID_NA,    // CommandFrameIdentifier not used in ZIP
+		                                    1,                  // KeyUsageListEntries
+		                                    // Key
+		                                    default_key[1][0],
+		                                    default_key[1][1],
+		                                    default_key[1][2],
+		                                    default_key[1][3],
+		                                    default_key[1][4],
+		                                    default_key[1][5],
+		                                    default_key[1][6],
+		                                    default_key[1][7],
+		                                    default_key[1][8],
+		                                    default_key[1][9],
+		                                    default_key[1][10],
+		                                    default_key[1][11],
+		                                    default_key[1][12],
+		                                    default_key[1][13],
+		                                    default_key[1][14],
+		                                    default_key[1][15],
+	                                    };
+	                                    uint8_t mac_key_table2[34] = {
+		                                    // KeyIdLookupList[1].LookupData : macDefaultKeySource || g_Sec_KeyIndex_1
+		                                    default_key_source[0], // LookupData[0]
+		                                    default_key_source[1], // LookupData[1]
+		                                    default_key_source[2], // LookupData[2]
+		                                    default_key_source[3], // LookupData[3]
+		                                    default_key_source[4], // LookupData[4]
+		                                    default_key_source[5], // LookupData[5]
+		                                    default_key_source[6], // LookupData[6]
+		                                    default_key_source[7], // LookupData[7]
+		                                    KEY_INDEX_1,           // LookupData[8]
+		                                    LOOKUP_DATA_SIZE_1, // LookupDataSize: 0x01 : Size 9 octets
+		                                    
+		                                    1,              // KeyIdLookupListEntries = 1
+		                                    // KeyDeviceList[1]
+		                                    EMPTY_DEV_HANDLE, // DeviceDescriptorHandle
+		                                    0,              // UniqueDevice - Key is unique per node
+		                                    0,              // Blacklisted
+		                                    1,              // KeyDeviceListEntries
+		                                    //  KeyUsageList
+		                                    FRAME_TYPE_DATA,    // FrameType - Data frames
+		                                    CMD_FRAME_ID_NA,    // CommandFrameIdentifier not used in ZIP
+		                                    1,                  // KeyUsageListEntries
+		                                    // Key
+		                                    default_key[2][0],
+		                                    default_key[2][1],
+		                                    default_key[2][2],
+		                                    default_key[2][3],
+		                                    default_key[2][4],
+		                                    default_key[2][5],
+		                                    default_key[2][6],
+		                                    default_key[2][7],
+		                                    default_key[2][8],
+		                                    default_key[2][9],
+		                                    default_key[2][10],
+		                                    default_key[2][11],
+		                                    default_key[2][12],
+		                                    default_key[2][13],
+		                                    default_key[2][14],
+		                                    default_key[2][15]
+	                                    };
+	                                    wpan_mlme_set_req(macKeyTable,
+	                                    INDEX_0,    // Index: 0
+	                                    &mac_key_table);
 
-	                 wpan_mlme_set_req(macKeyTable,
-	                 0,    // Index: 0
-	                 &mac_key_table);
-                 }
+	                                    wpan_mlme_set_req(macKeyTable,
+	                                    INDEX_1,    // Index: 1
+	                                    &mac_key_table1);
+	                                    wpan_mlme_set_req(macKeyTable,
+	                                    INDEX_2,    // Index: 2
+	                                    &mac_key_table2);
+                                    }
                  break;
 
              case macKeyTable:
                  {
-	                 uint8_t mac_dev_table_entries = 1;
-
-	                 wpan_mlme_set_req(macDeviceTableEntries,
-	                 NO_PIB_INDEX,
-	                 &mac_dev_table_entries);  
+					/*
+					* Sync with beacon frames from our coordinator.
+					* Use: bool wpan_mlme_sync_req(uint8_t LogicalChannel,
+					*                              uint8_t ChannelPage,
+					*                              bool TrackBeacon);
+					*
+					* This does not lead to an immediate reaction.
+					*
+					* In case we receive beacon frames from our coordinator
+					*including
+					* a beacon payload, this is indicated in the callback function
+					* usr_mlme_beacon_notify_ind().
+					*
+					* In case the device cannot find its coordinator or later
+					*looses
+					* synchronization with its parent, this is indicated in the
+					* callback function usr_mlme_sync_loss_ind().
+					*/
+					if(PIBAttributeIndex == INDEX_2 && app_state == APP_IDLE){
+						wpan_mlme_get_req(phyCurrentPage,NO_PIB_INDEX);
+				    }
                  }
                  break;
 
@@ -1139,28 +1291,8 @@ void usr_mlme_set_conf(uint8_t status, uint8_t PIBAttribute, uint8_t PIBAttribut
 
               case macFrameCounter:
 				 {
-					/*
-					* Sync with beacon frames from our coordinator.
-					* Use: bool wpan_mlme_sync_req(uint8_t LogicalChannel,
-					*                              uint8_t ChannelPage,
-					*                              bool TrackBeacon);
-					*
-					* This does not lead to an immediate reaction.
-					*
-					* In case we receive beacon frames from our coordinator
-					*including
-					* a beacon payload, this is indicated in the callback function
-					* usr_mlme_beacon_notify_ind().
-					*
-					* In case the device cannot find its coordinator or later
-					*looses
-					* synchronization with its parent, this is indicated in the
-					* callback function usr_mlme_sync_loss_ind().
-					*/
-				wpan_mlme_sync_req(current_channel,
-						current_channel_page,
-						1);
-				}
+					 wpan_mlme_get_req(macKeyTable,deviceShortAddress-1);
+				 }
                  break;
 
                  default:
