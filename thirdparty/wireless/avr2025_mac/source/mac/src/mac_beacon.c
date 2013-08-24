@@ -113,12 +113,12 @@ static arch_data_t beacon_buffer[LARGE_BUFFER_SIZE];
 static uint8_t *beacon_ptr;
 
 /* Variable to hold number the pending addresses. */
-static uint8_t pending_address_count COMPILER_WORD_ALIGNED;
+static uint8_t pending_address_count __ALIGN_WORD_ADDR__;
 
 #endif  /* (MAC_INDIRECT_DATA_FFD == 1) */
 
 #ifdef TEST_HARNESS
-static uint8_t vpan_no COMPILER_WORD_ALIGNED;
+static uint8_t vpan_no __ALIGN_WORD_ADDR__;
 #endif  /* TEST_HARNESS */
 
 /* === Prototypes =========================================================== */

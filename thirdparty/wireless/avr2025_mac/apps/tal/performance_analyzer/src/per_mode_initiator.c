@@ -2733,7 +2733,8 @@ static void set_channel_page(uint8_t channel_page)
 {
 	param_value_t param_value;
 	pib_value_t pib_value;
-#if ((TAL_TYPE == AT86RF230B)|| (TAL_TYPE == AT86RF232) )	if (channel_page != 0) {
+#if ((TAL_TYPE == AT86RF230B)|| (TAL_TYPE == AT86RF232) )	
+if (channel_page != 0) {
 		/* Send the confirmation with status as VALUE_OUT_OF_RANGE */
 		usr_perf_set_confirm(VALUE_OUT_OF_RANGE,
 				PARAM_CHANNEL_PAGE,

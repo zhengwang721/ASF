@@ -79,12 +79,12 @@
 
 #if (NUMBER_OF_MAC_TIMERS > 0)
 #ifdef BEACON_SUPPORT
-uint8_t T_Beacon_Tracking_Period COMPILER_WORD_ALIGNED;
-uint8_t T_Superframe COMPILER_WORD_ALIGNED;
-uint8_t T_Missed_Beacon COMPILER_WORD_ALIGNED;
+uint8_t T_Beacon_Tracking_Period __ALIGN_WORD_ADDR__;
+uint8_t T_Superframe __ALIGN_WORD_ADDR__;
+uint8_t T_Missed_Beacon __ALIGN_WORD_ADDR__;
     #if (MAC_START_REQUEST_CONFIRM == 1)
-uint8_t T_Beacon COMPILER_WORD_ALIGNED;
-uint8_t T_Beacon_Preparation COMPILER_WORD_ALIGNED;
+uint8_t T_Beacon __ALIGN_WORD_ADDR__;
+uint8_t T_Beacon_Preparation __ALIGN_WORD_ADDR__;
     #endif /* (MAC_START_REQUEST_CONFIRM == 1) */
 #ifdef GTS_SUPPORT
 uint8_t T_CAP;
@@ -92,18 +92,18 @@ uint8_t T_CAP;
 #endif  /* BEACON_SUPPORT / No BEACON_SUPPORT */
 
 #if (MAC_INDIRECT_DATA_BASIC == 1)
-uint8_t T_Poll_Wait_Time COMPILER_WORD_ALIGNED;
+uint8_t T_Poll_Wait_Time __ALIGN_WORD_ADDR__;
     #if (MAC_INDIRECT_DATA_FFD == 1)
-uint8_t T_Data_Persistence COMPILER_WORD_ALIGNED;
+uint8_t T_Data_Persistence __ALIGN_WORD_ADDR__;
     #endif  /* (MAC_INDIRECT_DATA_FFD == 1) */
 #endif  /* (MAC_INDIRECT_DATA_BASIC == 1) */
 
 #if (MAC_SCAN_SUPPORT == 1)
-uint8_t T_Scan_Duration COMPILER_WORD_ALIGNED;
+uint8_t T_Scan_Duration __ALIGN_WORD_ADDR__;
 #endif  /* MAC_SCAN_SUPPORT */
 
 #if (MAC_RX_ENABLE_SUPPORT == 1)
-uint8_t T_Rx_Enable COMPILER_WORD_ALIGNED;
+uint8_t T_Rx_Enable __ALIGN_WORD_ADDR__;
 #endif  /* MAC_RX_ENABLE_SUPPORT */
 #endif /* (NUMBER_OF_MAC_TIMERS != 0) */
 

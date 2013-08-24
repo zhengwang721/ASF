@@ -211,7 +211,8 @@ bool button_pressed(void)
 	{
 		return true;
 	}
-#endif#ifdef SENSOR_TERMINAL_BOARD
+#endif
+#ifdef SENSOR_TERMINAL_BOARD
 
   	if (stb_button_read()) {
 		return true;

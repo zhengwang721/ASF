@@ -100,21 +100,21 @@ typedef struct mac_beacon_payload_tag {
 	uint8_t *pending_addr_list;
 	uint8_t beacon_payload_len;
 	uint8_t *beacon_payload;
-} mac_beacon_payload_t COMPILER_WORD_ALIGNED;
+} mac_beacon_payload_t __ALIGN_WORD_ADDR__;
 
 /**
  * Data Payload type
  */
 typedef struct mac_data_payload_tag {
 	uint8_t *payload;
-} mac_data_payload_t COMPILER_WORD_ALIGNED;
+} mac_data_payload_t __ALIGN_WORD_ADDR__;
 
 /**
  * Association Request type
  */
 typedef struct mac_assoc_req_tag {
 	uint8_t capability_info;
-} mac_assoc_req_t  COMPILER_WORD_ALIGNED;
+} mac_assoc_req_t  __ALIGN_WORD_ADDR__;
 
 /**
  * Association Response type
@@ -122,14 +122,14 @@ typedef struct mac_assoc_req_tag {
 typedef struct mac_assoc_response_tag {
 	uint16_t short_addr;
 	uint8_t assoc_status;
-} mac_assoc_response_t COMPILER_WORD_ALIGNED;
+} mac_assoc_response_t __ALIGN_WORD_ADDR__;
 
 /**
  * Disassociation Request type
  */
 typedef struct mac_disassoc_req_tag {
 	uint8_t disassoc_reason;
-} mac_disassoc_req_t  COMPILER_WORD_ALIGNED;
+} mac_disassoc_req_t  __ALIGN_WORD_ADDR__;
 
 /**
  * Coordinator Realignment type
@@ -140,7 +140,7 @@ typedef struct mac_coord_realign_tag {
 	uint8_t logical_channel;
 	uint16_t short_addr;
 	uint8_t channel_page;
-} mac_coord_realign_t COMPILER_WORD_ALIGNED;
+} mac_coord_realign_t __ALIGN_WORD_ADDR__;
 
 /**
  * General Command frame payload type
@@ -152,7 +152,7 @@ typedef union {
 	mac_assoc_response_t assoc_response_data;
 	mac_disassoc_req_t disassoc_req_data;
 	mac_coord_realign_t coord_realign_data;
-
+} frame_payload_t  __ALIGN_WORD_ADDR__;
 #ifdef GTS_SUPPORT
 	gts_char_t gts_req_data;
 #endif /* GTS_SUPPORT */	
@@ -165,7 +165,7 @@ typedef struct sec_ctrl_tag {
 	uint8_t sec_level : 3;
 	uint8_t key_id_mode : 2;
 	uint8_t /* reserved */ : 3;
-} sec_ctrl_t COMPILER_WORD_ALIGNED;
+} sec_ctrl_t __ALIGN_WORD_ADDR__;
 
 typedef struct parse_tag {
 	uint16_t fcf;

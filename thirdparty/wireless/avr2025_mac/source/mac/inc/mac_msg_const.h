@@ -115,7 +115,7 @@ enum msg_code {
 	MLME_RX_ENABLE_CONFIRM              = (0x21),
 	MLME_START_CONFIRM                  = (0x22),
 	MLME_POLL_CONFIRM                   = (0x23)
-}SHORTENUM COMPILER_WORD_ALIGNED;
+}SHORTENUM __ALIGN_WORD_ADDR__;
 
 /**
  * Bump this when extending the list!

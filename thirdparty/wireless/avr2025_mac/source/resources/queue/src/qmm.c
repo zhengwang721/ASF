@@ -69,7 +69,7 @@
 typedef enum buffer_mode_tag {
 	REMOVE_MODE,
 	READ_MODE
-} buffer_mode_t COMPILER_WORD_ALIGNED;
+} buffer_mode_t __ALIGN_WORD_ADDR__;
 
 /* === Macros ============================================================== */
 

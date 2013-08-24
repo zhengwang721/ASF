@@ -304,7 +304,7 @@ typedef struct
 #endif  /* #if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP) */
 	/** Pointer to MPDU */
 	uint8_t *mpdu;
-} frame_info_t COMPILER_WORD_ALIGNED;
+} frame_info_t __ALIGN_WORD_ADDR__;
 
 /**
  * Sleep Mode supported by transceiver
