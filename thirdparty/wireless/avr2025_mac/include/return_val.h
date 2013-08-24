@@ -55,13 +55,18 @@
 /* === Includes ============================================================ */
 #include "compiler.h"
 
-#ifdef __SAMD20J18__
+#if (defined __SAMD20J18__) || (defined __SAM4LC4C__)
  typedef uint32_t arch_data_t;
  #define __ALIGN_WORD_ADDR__ COMPILER_WORD_ALIGNED
+#ifdef __SAM4LC4C__
+#define status_code_genare_t status_code_t 
+#endif
 #else
  typedef uint8_t arch_data_t;
  #define __ALIGN_WORD_ADDR__ 
+ #define status_code_genare_t status_code_t
 #endif 
+
 /**
  * \ingroup group_inc
  * \defgroup group_ret Return Values
