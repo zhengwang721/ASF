@@ -1399,7 +1399,7 @@ static void bc_data_cb(void *parameter)
 			1,     /* One octet */
 			&payload,
 			curr_msdu_handle_temp,
-			WPAN_TXOPT_OFF,0,0,0)
+			WPAN_TXOPT_OFF,0,NULL,0,0)
 			) {
 		LED_On(LED_DATA);
 	} else {
@@ -1477,7 +1477,7 @@ static void indirect_data_cb(void *parameter)
  	 		 
 				&payload,
 				curr_msdu_handle,
-				WPAN_TXOPT_INDIRECT_ACK,ZIP_SEC_MIN,ZIP_KEY_ID_MODE,KEY_INDEX_1)
+				WPAN_TXOPT_INDIRECT_ACK,ZIP_SEC_MIN,NULL,ZIP_KEY_ID_MODE,KEY_INDEX_1)
 	//			WPAN_TXOPT_INDIRECT_ACK,0,0,0) //Anupama
 				) {
 	  		 

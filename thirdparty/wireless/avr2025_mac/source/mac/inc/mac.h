@@ -760,7 +760,7 @@ void mlme_set_request(arch_data_t *m);
 void mlme_set_conf(arch_data_t *m);
 
 #endif  /* (HIGHEST_STACK_LAYER == MAC) */
-#ifdef (MAC_SECURITY_ZIP || MAC_SECURITY_2006) 
+#if (defined MAC_SECURITY_ZIP) || (defined MAC_SECURITY_2006) 
 
 /**
  * @brief Setting of MAC PIB attributes via functional access

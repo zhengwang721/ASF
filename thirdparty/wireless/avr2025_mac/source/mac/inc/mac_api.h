@@ -56,6 +56,7 @@
 
 #include "return_val.h"
 #include "mac_build_config.h"
+#include "app_config.h"
 
 /* === Macros =============================================================== */
 
@@ -763,7 +764,7 @@ bool wpan_mlme_reset_req(bool SetDefaultPib);
  * @return true - success; false - buffer not available or queue full.
  * @ingroup group_mac_req
  */
-#ifdef (MAC_SECURITY_ZIP || MAC_SECURITY_2006) 
+#if (defined MAC_SECURITY_ZIP) || (defined MAC_SECURITY_2006) 
 bool wpan_mlme_set_req(uint8_t PIBAttribute,
 		uint8_t PIBAttributeIndex,
 		void *PIBAttributeValue);
@@ -940,7 +941,7 @@ void usr_mcps_data_conf(uint8_t msduHandle,
  *
  * @ingroup group_mac_ind
  */
-#if (defined(MAC_SECURITY_ZIP) || defined(MAC_SECURITY_2006) || defined(__DOXYGEN__)
+#if (defined(MAC_SECURITY_ZIP) || defined(MAC_SECURITY_2006) || defined(__DOXYGEN__))
 void usr_mcps_data_ind(wpan_addr_spec_t * SrcAddrSpec,
 wpan_addr_spec_t * DstAddrSpec,
 uint8_t msduLength,
@@ -1145,7 +1146,7 @@ void usr_mlme_disassociate_ind(uint64_t DeviceAddress,
  */
 void usr_mlme_get_conf(uint8_t status,
 uint8_t PIBAttribute,
-#ifdef ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
+#if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
 uint8_t PIBAttributeIndex,
 #endif  /* ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006)) */
 void *PIBAttributeValue);

@@ -148,7 +148,7 @@ typedef struct parse_tag {
 	uint8_t src_addr_mode;
 	uint16_t src_panid;
 	address_field_t src_addr;
-##if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
+#if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
 	sec_ctrl_t sec_ctrl;
 	uint8_t key_id_len;
 	uint32_t frame_cnt;
