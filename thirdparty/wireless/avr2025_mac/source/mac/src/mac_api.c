@@ -176,7 +176,7 @@ bool wpan_mcps_data_req(uint8_t SrcAddrMode,
 		uint8_t TxOptions)
 #endif  /* MAC_SECURITY */
 {
-	buffer_t *buffer_header COMPILER_WORD_ALIGNED;
+	buffer_t *buffer_header __ALIGN_WORD_ADDR__;
 	mcps_data_req_t *mcps_data_req;
 	uint8_t *payload_pos;
 

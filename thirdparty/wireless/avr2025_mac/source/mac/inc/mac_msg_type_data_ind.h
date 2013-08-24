@@ -175,7 +175,7 @@ typedef struct mcps_data_ind_tag {
 	 * MAC sublayer entity.
 	 */
 	uint8_t *msdu;
-} mcps_data_ind_t  COMPILER_WORD_ALIGNED;
+} mcps_data_ind_t  __ALIGN_WORD_ADDR__;
 /*End packing for ARM(GCC & IAR) and AVR32(GCC) */
 #if ((defined __ICCARM__) || (defined __GNUARM__) || (defined __GNUAVR32__))
 //#pragma pack() 

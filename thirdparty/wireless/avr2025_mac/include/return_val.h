@@ -57,8 +57,10 @@
 
 #ifdef __SAMD20J18__
  typedef uint32_t arch_data_t;
+ #define __ALIGN_WORD_ADDR__ COMPILER_WORD_ALIGNED
 #else
  typedef uint8_t arch_data_t;
+ #define __ALIGN_WORD_ADDR__ 
 #endif 
 /**
  * \ingroup group_inc

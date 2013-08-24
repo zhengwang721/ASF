@@ -108,7 +108,7 @@ static void handle_rx_on(uint32_t rx_on_duration_symbols, arch_data_t *m);
  */
 void mlme_rx_enable_request(arch_data_t *m)
 {
-	mlme_rx_enable_req_t *rxe COMPILER_WORD_ALIGNED;
+	mlme_rx_enable_req_t *rxe __ALIGN_WORD_ADDR__;
 
 	rxe = (mlme_rx_enable_req_t *)BMM_BUFFER_POINTER((buffer_t *)m);
 
