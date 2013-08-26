@@ -127,6 +127,7 @@ int main(void)
 	#endif
 
 	sw_timer_init();
+	serial_interface_init();
 
 	if (MAC_SUCCESS != wpan_init()) {
 		app_alert();
@@ -134,7 +135,7 @@ int main(void)
 
 	LED_On(LED_POWER);
 	cpu_irq_enable();
-	serial_interface_init();
+	
 
 	while (1) {
 		wpan_task();

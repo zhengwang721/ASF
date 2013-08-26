@@ -59,6 +59,8 @@
 #include "perf_api_serial_handler.h"
 #ifdef __SAMD20J18__
 #include "system.h"
+#else
+#include "led.h"
 #endif
 #include "sio2host.h"
 #include "conf_board.h"

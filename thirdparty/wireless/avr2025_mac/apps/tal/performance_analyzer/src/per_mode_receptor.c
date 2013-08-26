@@ -59,6 +59,9 @@
 #include "app_frame_format.h"
 #include "app_per_mode.h"
 #include "conf_board.h"
+#ifndef __SAMD20J18__
+#include "led.h"
+#endif
 
 
 /**

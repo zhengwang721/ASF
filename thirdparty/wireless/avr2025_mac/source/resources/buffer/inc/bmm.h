@@ -95,7 +95,7 @@ typedef struct
 	
 	/** Pointer to next free buffer */
 	struct buffer_tag *next;
-} buffer_t COMPILER_WORD_ALIGNED;
+} buffer_t __ALIGN_WORD_ADDR__;
 
 /* === Externals =========================================================== */
 
