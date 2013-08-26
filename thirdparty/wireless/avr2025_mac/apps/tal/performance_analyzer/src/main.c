@@ -311,7 +311,7 @@ typedef struct {
 /* === MACROS ============================================================== */
 
 /* === LOCALS ============================================================== */
-static uint8_t storage_buffer[LARGE_BUFFER_SIZE];
+static arch_data_t storage_buffer[LARGE_BUFFER_SIZE];
 
 /* === PROTOTYPES ========================================================== */
 static void app_task(void);
