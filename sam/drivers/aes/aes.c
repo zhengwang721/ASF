@@ -225,7 +225,7 @@ void aes_write_key(Aes *const p_aes, const uint32_t *p_key)
 }
 
 /**
- * \brief Write the initialization vector (for the CBC, CFB, OFB & CTR
+ * \brief Write the initialization vector (for the CBC, CFB, OFB, CTR & GCM
  * cipher modes)
  *
  * \param  p_aes Base address of the AES instance.

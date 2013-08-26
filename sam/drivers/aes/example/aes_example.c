@@ -171,8 +171,12 @@ const uint32_t init_vector_ctr[4] = {
 /* @} */
 
 #if SAM4C
-/* GCM Mode Test Key, 128-bits */
-const uint32_t gcm_key128[4] = {
+/* GCM Mode Test Key, 256-bits */
+const uint32_t gcm_key256[8] = {
+        0x00000000,
+        0x00000000,
+        0x00000000,
+        0x00000000,
         0x00000000,
         0x00000000,
         0x00000000,
@@ -577,17 +581,47 @@ static void ecb_mode_test_pdc(void)
 static void gcm_mode_test(void)
 {
         printf("\r\n-----------------------------------\r\n");
-	printf("- 128bit cryptographic key\r\n");
+	printf("- 256bit cryptographic key\r\n");
 	printf("- GCM cipher mode\r\n");
 	printf("- Auto start mode\r\n");
 	printf("- input of 4 32bit words\r\n");
 	printf("-----------------------------------\r\n");
 
         state = false;
+
+	/* Configure the AES. */
+	g_aes_cfg.encrypt_mode = AES_ENCRYPTION;
+	g_aes_cfg.key_size = AES_KEY_SIZE_256;
+	g_aes_cfg.start_mode = AES_AUTO_START;
+	g_aes_cfg.opmode = AES_CTR_MODE;
+	g_aes_cfg.cfb_size = AES_CFB_SIZE_128;
+	g_aes_cfg.lod = false;
+        g_aes_cfg.gtag_en = false;
+	aes_set_config(AES, &g_aes_cfg);
+
+	/* Set the cryptographic key. */
+	aes_write_key(AES, gcm_key256);
+
+	/* Set the initialization vector. */
+	aes_write_initvector(AES, gcm_init_vector);
+
+	/* Write the data to be ciphered to the input data registers. */
+	aes_write_input_data(AES, ref_plain_text_gcm);
+
+	/* Wait for the end of the encryption process. */
+	while (false == state) {
+	}
+
+        ref_plain_text_gcm[0] = output_data[0];
+        ref_plain_text_gcm[1] = output_data[1];
+        ref_plain_text_gcm[2] = output_data[2];
+        ref_plain_text_gcm[3] = output_data[3];
+        
+        state = false;
         
 	/* Configure the AES. */
 	g_aes_cfg.encrypt_mode = AES_ENCRYPTION;
-	g_aes_cfg.key_size = AES_KEY_SIZE_128;
+	g_aes_cfg.key_size = AES_KEY_SIZE_256;
 	g_aes_cfg.start_mode = AES_AUTO_START;
 	g_aes_cfg.opmode = AES_GCM_MODE;
 	g_aes_cfg.cfb_size = AES_CFB_SIZE_128;
@@ -596,7 +630,7 @@ static void gcm_mode_test(void)
 	aes_set_config(AES, &g_aes_cfg);
 
 	/* Set the cryptographic key. */
-	aes_write_key(AES, gcm_key128);
+	aes_write_key(AES, gcm_key256);
         
         /* Wait GCM H subkey generation complete */
         while (false == state) {
@@ -606,14 +640,14 @@ static void gcm_mode_test(void)
 	aes_write_initvector(AES, gcm_init_vector);
         
         /* Set AADLEN and CLEN */
-        aes_write_authen_datalength(AES,0);
+        aes_write_authen_datalength(AES,16);
         aes_write_pctext_length(AES,16);
         
-//        state = false;
-//        aes_write_input_data(AES, gcm_aad);
-//        /* Wait for the end of the encryption process. */
-//        while (false == state) {
-//        }
+        state = false;
+        aes_write_input_data(AES, gcm_aad);
+        /* Wait for the end of the encryption process. */
+        while (false == state) {
+        }
         
         state = false;
         aes_write_input_data(AES, ref_plain_text_gcm);
