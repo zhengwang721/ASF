@@ -107,7 +107,6 @@
 #include <asf.h>
 
 /* === TYPES =============================================================== */
-
 /**
  * This enum stores the current state of the application.
  */
@@ -164,6 +163,8 @@ app_state_t;
 #ifdef MAC_SECURITY_ZIP
 /* MAC security macros */
 #define KEY_INDEX_1                     (1)
+#define KEY_INDEX_2                     (2)
+#define KEY_INDEX_3                     (3)
 #define LOOKUP_DATA_SIZE_1              (1) // Size is 9 octets
 #define FRAME_TYPE_DATA                 (1)
 #define CMD_FRAME_ID_NA                 (0) // CommandFrameIdentifier is n/a
@@ -256,18 +257,15 @@ static void app_alert(void);
 int main(void)
 {
 	irq_initialize_vectors();
-	#ifdef __SAMD20J18__
-	system_init();
-	delay_init();
-	#else
-	sysclk_init();
+	//sysclk_init();
 
 	/* Initialize the board.
 	 * The board-specific conf_board.h file contains the configuration of
 	 * the board initialization.
 	 */
-	board_init();    
-	#endif
+	//board_init();
+	system_init();
+	delay_init();
 #ifdef SIO_HUB
 	sio2host_init(); 
 #endif
@@ -287,7 +285,6 @@ int main(void)
 #ifdef SIO_HUB
 	/* Initialize the serial interface used for communication with terminal
 	 *program. */
-	//sio2host_init(); siva
 
 	/* To Make sure the Hyper Terminal to the System */
 	sio2host_getchar();
@@ -389,15 +386,8 @@ const char Display_Received_Frame[] = "Frame received: %lu\r\n";
 			printf("%c", msdu[i]);
 		}
 		printf("\n\r");
-		/*sprintf(sio_array, "Frame received: %" PRIu32 "\r\n",
-			//	indirect_rx_cnt);
-			*msdu); //Anupama  */
 #endif
 	}
-
-#ifdef SIO_HUB
-	/* printf(sio_array);*/
-#endif
 
 	/*
 	 * Dummy data has been received successfully.
@@ -544,7 +534,6 @@ void usr_mlme_beacon_notify_ind(uint8_t BSN,
 		 * This request will cause a mlme associate confirm message ->
 		 * usr_mlme_associate_conf.
 		 */
-		printf("assoc request\n\r");
 		wpan_mlme_associate_req(current_channel,
 				current_channel_page,
 				&coord_addr_spec,
@@ -592,7 +581,7 @@ void usr_mlme_beacon_notify_ind(uint8_t BSN,
 				ZIP_SEC_MIN,     // SecurityLevel
 				NULL,
 				ZIP_KEY_ID_MODE, // KeyIdMode
-				1);  // KeyIndex
+				deviceShortAddress);  // KeyIndex
 #else		
 		wpan_mcps_data_req(src_addr_mode,
 				&coord_addr_spec,
@@ -606,12 +595,9 @@ void usr_mlme_beacon_notify_ind(uint8_t BSN,
 		{
 			static uint32_t rx_cnt;
 			const char Rx_Beacon_Payload[] = "Rx beacon payload (%lu): ";
-			//char sio_array[255]; /* sizeof(uint32_t) + 1 */
 
 			/* Print received payload. */
 			rx_cnt++;
-			/*sprintf(sio_array, "Rx beacon payload (%" PRIu32 "): ",
-					rx_cnt);*/
 			printf(Rx_Beacon_Payload, rx_cnt);
 
 			/* Set last element to 0. */
@@ -624,8 +610,6 @@ void usr_mlme_beacon_notify_ind(uint8_t BSN,
 			for (uint8_t i = 0; i < sduLength; i++) {
 				printf("%c", msdu_payload[i]);
 			}			
-
-			//printf((char *)msdu_payload);
 			printf("\r\n");
 		}
 #endif  /* SIO_HUB */
@@ -1005,7 +989,6 @@ void usr_mlme_scan_conf(uint8_t status,
 
 void usr_mlme_set_conf(uint8_t status, uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
 {
-	printf("set_conf\n\r");
     if (status != MAC_SUCCESS)
     {
         // something went wrong; restart
@@ -1029,14 +1012,9 @@ void usr_mlme_set_conf(uint8_t status, uint8_t PIBAttribute, uint8_t PIBAttribut
 
             case macCoordShortAddress:
                  {
-	           
-				     /* Set security PIB attributes now. */
-	            /*     wpan_mlme_set_req(macDefaultKeySource,
-	                 NO_PIB_INDEX,
-	                 &default_key_source); */ 
-				wpan_mlme_sync_req(current_channel,
-						current_channel_page,
-						1);
+					wpan_mlme_sync_req(current_channel,
+							current_channel_page,
+							1);
                 }
                  break;
 
@@ -1076,7 +1054,8 @@ void usr_mlme_set_conf(uint8_t status, uint8_t PIBAttribute, uint8_t PIBAttribut
 
              case macKeyTableEntries:
                  {
-	                                    uint8_t mac_key_table[34] = {
+	                                    uint8_t mac_key_table[40] =
+	                                    {
 		                                    // KeyIdLookupList[1].LookupData : macDefaultKeySource || g_Sec_KeyIndex_1
 		                                    default_key_source[0], // LookupData[0]
 		                                    default_key_source[1], // LookupData[1]
@@ -1088,13 +1067,18 @@ void usr_mlme_set_conf(uint8_t status, uint8_t PIBAttribute, uint8_t PIBAttribut
 		                                    default_key_source[7], // LookupData[7]
 		                                    KEY_INDEX_1,           // LookupData[8]
 		                                    LOOKUP_DATA_SIZE_1, // LookupDataSize: 0x01 : Size 9 octets
-		                                    
 		                                    1,              // KeyIdLookupListEntries = 1
 		                                    // KeyDeviceList[1]
-		                                    EMPTY_DEV_HANDLE, // DeviceDescriptorHandle
-		                                    0,              // UniqueDevice - Key is unique per node
-		                                    0,              // Blacklisted
-		                                    1,              // KeyDeviceListEntries
+		                                    EMPTY_DEV_HANDLE,              // DeviceDescriptorHandle
+		                                    false,              // UniqueDevice - Key is unique per node
+		                                    false,              // Blacklisted
+		                                    EMPTY_DEV_HANDLE,              // DeviceDescriptorHandle
+		                                    false,              // UniqueDevice - Key is unique per node
+		                                    false,              // Blacklisted
+		                                    EMPTY_DEV_HANDLE,              // DeviceDescriptorHandle
+		                                    false,              // UniqueDevice - Key is unique per node
+		                                    false,              // Blacklisted
+		                                    MAC_ZIP_MAX_KEY_DEV_LIST_ENTRIES,              // KeyDeviceListEntries
 		                                    //  KeyUsageList
 		                                    FRAME_TYPE_DATA,    // FrameType - Data frames
 		                                    CMD_FRAME_ID_NA,    // CommandFrameIdentifier not used in ZIP
@@ -1115,9 +1099,10 @@ void usr_mlme_set_conf(uint8_t status, uint8_t PIBAttribute, uint8_t PIBAttribut
 		                                    default_key[0][12],
 		                                    default_key[0][13],
 		                                    default_key[0][14],
-		                                    default_key[0][15]
+		                                    default_key[0][15],
 	                                    };
-	                                    uint8_t mac_key_table1[34] = {
+	                                    uint8_t mac_key_table1[40] =
+	                                    {
 		                                    // KeyIdLookupList[1].LookupData : macDefaultKeySource || g_Sec_KeyIndex_1
 		                                    default_key_source[0], // LookupData[0]
 		                                    default_key_source[1], // LookupData[1]
@@ -1127,15 +1112,20 @@ void usr_mlme_set_conf(uint8_t status, uint8_t PIBAttribute, uint8_t PIBAttribut
 		                                    default_key_source[5], // LookupData[5]
 		                                    default_key_source[6], // LookupData[6]
 		                                    default_key_source[7], // LookupData[7]
-		                                    KEY_INDEX_1,           // LookupData[8]
+		                                    KEY_INDEX_2,           // LookupData[8]
 		                                    LOOKUP_DATA_SIZE_1, // LookupDataSize: 0x01 : Size 9 octets
-		                                    
 		                                    1,              // KeyIdLookupListEntries = 1
 		                                    // KeyDeviceList[1]
-		                                    EMPTY_DEV_HANDLE, // DeviceDescriptorHandle
-		                                    0,              // UniqueDevice - Key is unique per node
-		                                    0,              // Blacklisted
-		                                    1,              // KeyDeviceListEntries
+		                                    EMPTY_DEV_HANDLE,              // DeviceDescriptorHandle
+		                                    false,              // UniqueDevice - Key is unique per node
+		                                    false,              // Blacklisted
+		                                    EMPTY_DEV_HANDLE,              // DeviceDescriptorHandle
+		                                    false,              // UniqueDevice - Key is unique per node
+		                                    false,              // Blacklisted
+		                                    EMPTY_DEV_HANDLE,              // DeviceDescriptorHandle
+		                                    false,              // UniqueDevice - Key is unique per node
+		                                    false,              // Blacklisted
+		                                    MAC_ZIP_MAX_KEY_DEV_LIST_ENTRIES,              // KeyDeviceListEntries
 		                                    //  KeyUsageList
 		                                    FRAME_TYPE_DATA,    // FrameType - Data frames
 		                                    CMD_FRAME_ID_NA,    // CommandFrameIdentifier not used in ZIP
@@ -1158,7 +1148,8 @@ void usr_mlme_set_conf(uint8_t status, uint8_t PIBAttribute, uint8_t PIBAttribut
 		                                    default_key[1][14],
 		                                    default_key[1][15],
 	                                    };
-	                                    uint8_t mac_key_table2[34] = {
+	                                    uint8_t mac_key_table2[40] =
+	                                    {
 		                                    // KeyIdLookupList[1].LookupData : macDefaultKeySource || g_Sec_KeyIndex_1
 		                                    default_key_source[0], // LookupData[0]
 		                                    default_key_source[1], // LookupData[1]
@@ -1168,15 +1159,20 @@ void usr_mlme_set_conf(uint8_t status, uint8_t PIBAttribute, uint8_t PIBAttribut
 		                                    default_key_source[5], // LookupData[5]
 		                                    default_key_source[6], // LookupData[6]
 		                                    default_key_source[7], // LookupData[7]
-		                                    KEY_INDEX_1,           // LookupData[8]
+		                                    KEY_INDEX_3,           // LookupData[8]
 		                                    LOOKUP_DATA_SIZE_1, // LookupDataSize: 0x01 : Size 9 octets
-		                                    
 		                                    1,              // KeyIdLookupListEntries = 1
 		                                    // KeyDeviceList[1]
-		                                    EMPTY_DEV_HANDLE, // DeviceDescriptorHandle
-		                                    0,              // UniqueDevice - Key is unique per node
-		                                    0,              // Blacklisted
-		                                    1,              // KeyDeviceListEntries
+		                                    EMPTY_DEV_HANDLE,              // DeviceDescriptorHandle
+		                                    false,              // UniqueDevice - Key is unique per node
+		                                    false,              // Blacklisted
+		                                    EMPTY_DEV_HANDLE,              // DeviceDescriptorHandle
+		                                    false,              // UniqueDevice - Key is unique per node
+		                                    false,              // Blacklisted
+		                                    EMPTY_DEV_HANDLE,              // DeviceDescriptorHandle
+		                                    false,              // UniqueDevice - Key is unique per node
+		                                    false,              // Blacklisted
+		                                    MAC_ZIP_MAX_KEY_DEV_LIST_ENTRIES,              // KeyDeviceListEntries
 		                                    //  KeyUsageList
 		                                    FRAME_TYPE_DATA,    // FrameType - Data frames
 		                                    CMD_FRAME_ID_NA,    // CommandFrameIdentifier not used in ZIP
@@ -1197,7 +1193,7 @@ void usr_mlme_set_conf(uint8_t status, uint8_t PIBAttribute, uint8_t PIBAttribut
 		                                    default_key[2][12],
 		                                    default_key[2][13],
 		                                    default_key[2][14],
-		                                    default_key[2][15]
+		                                    default_key[2][15],
 	                                    };
 	                                    wpan_mlme_set_req(macKeyTable,
 	                                    INDEX_0,    // Index: 0
