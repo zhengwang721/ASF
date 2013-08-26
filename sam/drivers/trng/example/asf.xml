@@ -7,6 +7,7 @@
 			<build type="c-source" value="trng_example.c"/>
 			<build type="include-path" value="."/>
 			<device-support value="sam3x"/>
+			<device-support value="sam4c"/>
 			<require idref="sam.utils.cmsis.sam3x.source.template"/>
 			<require idref="sam.drivers.trng"/>
 			<require idref="sam.drivers.pmc"/>
