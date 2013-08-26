@@ -214,7 +214,9 @@ int main(void)
 	 * The board-specific conf_board.h file contains the configuration of
 	 * the board initialization.
 	 */
-	board_init();   
+	board_init(); 
+#endif
+	
 #ifdef SIO_HUB
 	sio2host_init();
 #endif

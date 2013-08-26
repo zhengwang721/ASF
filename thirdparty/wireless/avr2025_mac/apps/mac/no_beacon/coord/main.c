@@ -228,7 +228,7 @@ int main(void)
 	 * the board initialization.
 	 */
 	board_init();    
-	#endif
+#endif
 #ifdef SIO_HUB
 	sio2host_init();
 #endif
