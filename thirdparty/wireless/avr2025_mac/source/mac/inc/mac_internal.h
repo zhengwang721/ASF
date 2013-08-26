@@ -147,7 +147,7 @@ typedef enum mac_state_tag {
 
 	/** PAN coordinator successfully started */
 	MAC_PAN_COORD_STARTED = 3
-} SHORTENUM mac_state_t COMPILER_WORD_ALIGNED;
+} SHORTENUM mac_state_t __ALIGN_WORD_ADDR__;
 
 /**
  * MAC poll states.
@@ -178,7 +178,7 @@ typedef enum mac_poll_state_tag {
 	 * data frame),
 	 * awaiting data response, */
 	MAC_POLL_IMPLICIT
-} SHORTENUM mac_poll_state_t COMPILER_WORD_ALIGNED;
+} SHORTENUM mac_poll_state_t __ALIGN_WORD_ADDR__;
 
 /**
  * Device or coordinator scan states.
@@ -198,7 +198,7 @@ typedef enum mac_scan_state_tag {
 	MAC_SCAN_ORPHAN,
 	/** Passive scan proceeding */
 	MAC_SCAN_PASSIVE
-} SHORTENUM mac_scan_state_t  COMPILER_WORD_ALIGNED;
+} SHORTENUM mac_scan_state_t  __ALIGN_WORD_ADDR__;
 
 /**
  * Device or coordinator sync states.
@@ -217,7 +217,7 @@ typedef enum mac_sync_state_tag {
 	 * synchronization with desired network
 	 */
 	MAC_SYNC_BEFORE_ASSOC
-} SHORTENUM mac_sync_state_t  COMPILER_WORD_ALIGNED;
+} SHORTENUM mac_sync_state_t  __ALIGN_WORD_ADDR__;
 
 /**
  * MAC sleep state type.
@@ -227,7 +227,7 @@ typedef enum mac_radio_sleep_state_tag {
 	RADIO_AWAKE = 0,
 	/**< Radio is in sleep mode */
 	RADIO_SLEEPING
-} SHORTENUM mac_radio_sleep_state_t  COMPILER_WORD_ALIGNED;
+} SHORTENUM mac_radio_sleep_state_t  __ALIGN_WORD_ADDR__;
 
 /* ! @} */
 typedef void (*handler_t)(uint32_t *);

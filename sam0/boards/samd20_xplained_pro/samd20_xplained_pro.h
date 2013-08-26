@@ -530,7 +530,8 @@ void system_board_init(void);
 #define AT86RFX_SPI_MOSI             EXT2_PIN_16
 #define AT86RFX_SPI_MISO             EXT2_PIN_17
 #define AT86RFX_SPI_SCK              EXT2_PIN_18
-
+#define AT86RFX_CSD     		     EXT2_PIN_5
+#define AT86RFX_CPS 	             EXT2_PIN_8
 #define LED0 LED0_PIN
 
 #define AT86RFX_IRQ_CHAN             EXT2_IRQ_INPUT //13

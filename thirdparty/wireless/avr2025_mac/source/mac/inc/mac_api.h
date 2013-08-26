@@ -129,7 +129,7 @@ typedef struct wpan_addr_spec_tag {
 	 * 16 bit address.
 	 */
 	address_field_t Addr;
-} wpan_addr_spec_t COMPILER_WORD_ALIGNED;
+} wpan_addr_spec_t __ALIGN_WORD_ADDR__;
 
 /**
  * @brief PAN descriptor information structure
@@ -181,7 +181,7 @@ typedef struct wpan_pandescriptor_tag {
 	 */
 	uint32_t TimeStamp;
 #endif  /* ENABLE_TSTAMP */
-} wpan_pandescriptor_t  COMPILER_WORD_ALIGNED;
+} wpan_pandescriptor_t  __ALIGN_WORD_ADDR__;
 
 #if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
 

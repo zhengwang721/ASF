@@ -59,10 +59,10 @@
 #include "ieee_const.h"
 #include "app_config.h"
 
-
+#if  (defined __SAMD20J18__) || (defined __SAM4LC4C__)
 #define BUILD_BUG_ON(condition) ((void)sizeof(uint8_t[1 - 2*!!(condition)]))
-
 #define UNALIGNED_BUG_ON(data_struct) BUILD_BUG_ON(data_struct % 4)
+#endif
 
 #if (TOTAL_NUMBER_OF_BUFS > 0)
 
@@ -144,8 +144,10 @@ static queue_t free_small_buffer_q;
 void bmm_buffer_init(void)
 {
 	uint8_t index;
-
+	
+#if  (defined __SAMD20J18__) || (defined __SAM4LC4C__)
 	UNALIGNED_BUG_ON(sizeof(buf_pool));
+#endif
 
 	/* Initialize free buffer queue for large buffers */
 #if (TOTAL_NUMBER_OF_LARGE_BUFS > 0)

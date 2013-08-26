@@ -80,7 +80,7 @@
 typedef union {
 	uint8_t ed_value[1];
 	wpan_pandescriptor_t wpan_pan_desc;
-} scan_result_list_t  COMPILER_WORD_ALIGNED;
+} scan_result_list_t  __ALIGN_WORD_ADDR__;
 
 /* === MCPS-SAP messages ==================================================== */
 
@@ -167,7 +167,7 @@ typedef struct mcps_data_req_tag {
 	 * sublayer entity.
 	 */
 	uint8_t *msdu;
-} mcps_data_req_t COMPILER_WORD_ALIGNED;
+} mcps_data_req_t __ALIGN_WORD_ADDR__;
 
 /**
  * @brief This is the MCPS-DATA.confirm message structure.
@@ -197,7 +197,7 @@ typedef struct mcps_data_conf_tag {
 	 */
 	uint32_t Timestamp;
 #endif  /* ENABLE_TSTAMP */
-} mcps_data_conf_t COMPILER_WORD_ALIGNED;
+} mcps_data_conf_t __ALIGN_WORD_ADDR__;
 
 /**
  * @brief This is the MCPS-PURGE.request message structure.
@@ -207,7 +207,7 @@ typedef struct mcps_purge_req_tag {
 	enum msg_code cmdcode;
 	/** The handle of the MSDU to be purged from the transaction queue. */
 	uint8_t msduHandle;
-} mcps_purge_req_t COMPILER_WORD_ALIGNED;
+} mcps_purge_req_t __ALIGN_WORD_ADDR__;
 
 /**
  * @brief This is the MCPS-PURGE.confirm message structure.
@@ -227,7 +227,7 @@ typedef struct mcps_purge_conf_tag {
 	 * transaction queue.
 	 */
 	uint8_t status;
-} mcps_purge_conf_t COMPILER_WORD_ALIGNED;
+} mcps_purge_conf_t __ALIGN_WORD_ADDR__;
 
 /* === MLME-SAP messages ==================================================== */
 
@@ -268,7 +268,7 @@ typedef struct mlme_associate_ind_tag {
 	/** The operational capabilities of the device requesting association.
 	 **/
 	uint8_t CapabilityInformation;
-} mlme_associate_ind_t COMPILER_WORD_ALIGNED;
+} mlme_associate_ind_t __ALIGN_WORD_ADDR__;
 
 /**
  * @brief This is the MLME-ASSOCIATE.response message structure.
@@ -287,7 +287,7 @@ typedef struct mlme_associate_resp_tag {
 	uint16_t AssocShortAddress;
 	/** The status of the association attempt. */
 	uint8_t status;
-} mlme_associate_resp_t COMPILER_WORD_ALIGNED;
+} mlme_associate_resp_t __ALIGN_WORD_ADDR__;
 
 /**
  * @brief This is the MLME-ASSOCIATE.confirm message structure.
@@ -331,7 +331,7 @@ typedef struct mlme_disassociate_req_tag {
 	/** TRUE if the disassociation notification command is to be sent
 	 *indirectly. */
 	uint8_t TxIndirect;
-} mlme_disassociate_req_t COMPILER_WORD_ALIGNED;
+} mlme_disassociate_req_t __ALIGN_WORD_ADDR__;
 
 /**
  * @brief This is the MLME-DISASSOCIATE.indication message structure.
@@ -343,7 +343,7 @@ typedef struct mlme_disassociate_ind_tag {
 	uint64_t DeviceAddress;
 	/** The reason for the disassociation (see 7.3.1.3.2). */
 	uint8_t DisassociateReason;
-} mlme_disassociate_ind_t COMPILER_WORD_ALIGNED;
+} mlme_disassociate_ind_t __ALIGN_WORD_ADDR__;
 
 /**
  * @brief This is the MLME-DISASSOCIATE.confirm message structure.
@@ -371,7 +371,7 @@ typedef struct mlme_disassociate_conf_tag {
 	 *  been instructed to disassociate by its coordinator.
 	 */
 	uint64_t DeviceAddress;
-} mlme_disassociate_conf_t COMPILER_WORD_ALIGNED;
+} mlme_disassociate_conf_t __ALIGN_WORD_ADDR__;
 
 /**
  * @brief This is the MLME-BEACON-NOTIFY.indication message structure.
@@ -404,7 +404,7 @@ typedef struct mlme_beacon_notify_ind_tag {
 	 * MAC sublayerentity to the next higher layer.
 	 */
 	uint8_t *sdu;
-} mlme_beacon_notify_ind_t COMPILER_WORD_ALIGNED;
+} mlme_beacon_notify_ind_t __ALIGN_WORD_ADDR__;
 
 /**
  * @brief This is the MLME-ORPHAN.indication message structure.
@@ -414,7 +414,7 @@ typedef struct mlme_orphan_ind_tag {
 	enum msg_code cmdcode;
 	/** The address of the orphaned device. */
 	uint64_t OrphanAddress;
-} mlme_orphan_ind_t COMPILER_WORD_ALIGNED;
+} mlme_orphan_ind_t __ALIGN_WORD_ADDR__;
 
 /**
  * @brief This is the MLME-ORPHAN.response message structure.
@@ -443,7 +443,7 @@ typedef struct mlme_orphan_resp_tag {
 	 * FALSE otherwise.
 	 */
 	uint8_t AssociatedMember;
-} mlme_orphan_resp_t COMPILER_WORD_ALIGNED;
+} mlme_orphan_resp_t __ALIGN_WORD_ADDR__;
 
 /**
  * @brief This is the MLME-RESET.request message structure.
@@ -461,7 +461,7 @@ typedef struct mlme_reset_req_tag {
 	 * MLME-RESET.request primitive.
 	 */
 	uint8_t SetDefaultPIB;
-} mlme_reset_req_t COMPILER_WORD_ALIGNED;
+} mlme_reset_req_t __ALIGN_WORD_ADDR__;
 
 /**
  * @brief This is the MLME-RESET.confirm message structure.
@@ -471,7 +471,7 @@ typedef struct mlme_reset_conf_tag {
 	enum msg_code cmdcode;
 	/** The result of the reset operation. */
 	uint8_t status;
-} mlme_reset_conf_t COMPILER_WORD_ALIGNED;
+} mlme_reset_conf_t __ALIGN_WORD_ADDR__;
 
 /**
  * @brief This is the MLME-GET.request message structure.
@@ -486,7 +486,7 @@ typedef struct mlme_get_req_tag {
 	 *set. */
 	uint8_t PIBAttributeIndex;
 #endif  /* (MAC_SECURITY_ZIP || MAC_SECURITY_2006) */
-} mlme_get_req_t COMPILER_WORD_ALIGNED;
+} mlme_get_req_t __ALIGN_WORD_ADDR__;
 
 /**
  * @brief This is the MLME-GET.confirm message structure.
@@ -505,7 +505,7 @@ typedef struct mlme_get_conf_tag {
 #endif  /* (MAC_SECURITY_ZIP || MAC_SECURITY_2006) */
 	/**< The value of the indicated MAC PIB attribute that was read. */
 	pib_value_t PIBAttributeValue;
-} mlme_get_conf_t COMPILER_WORD_ALIGNED;
+} mlme_get_conf_t __ALIGN_WORD_ADDR__;
 
 #if (HIGHEST_STACK_LAYER == MAC)
 
@@ -524,7 +524,7 @@ typedef struct mlme_set_req_tag {
 #endif  /* (MAC_SECURITY_ZIP || MAC_SECURITY_2006) */
 	/**< The value to write to the indicated MAC PIB attribute. */
 	pib_value_t PIBAttributeValue;
-} mlme_set_req_t COMPILER_WORD_ALIGNED;
+} mlme_set_req_t __ALIGN_WORD_ADDR__;
 #endif /* (HIGHEST_STACK_LAYER == MAC) */
 
 #if (HIGHEST_STACK_LAYER == MAC)
@@ -544,7 +544,7 @@ typedef struct mlme_set_conf_tag {
 	 *set. */
 	uint8_t PIBAttributeIndex;
 #endif  /* (MAC_SECURITY_ZIP || MAC_SECURITY_2006) */
-} mlme_set_conf_t  COMPILER_WORD_ALIGNED;
+} mlme_set_conf_t  __ALIGN_WORD_ADDR__;
 #endif /* (HIGHEST_STACK_LAYER == MAC) */
 
 /**
@@ -572,7 +572,7 @@ typedef struct mlme_rx_enable_req_tag {
 	uint32_t RxOnTime;
 	/** The number of symbols for which the receiver is to be enabled. */
 	uint32_t RxOnDuration;
-} mlme_rx_enable_req_t COMPILER_WORD_ALIGNED;
+} mlme_rx_enable_req_t __ALIGN_WORD_ADDR__;
 
 /**
  * @brief This is the MLME-RX-ENABLE.confirm message structure.
@@ -582,7 +582,7 @@ typedef struct mlme_rx_enable_conf_tag {
 	enum msg_code cmdcode;
 	/** The result of the receiver enable request. */
 	uint8_t status;
-} mlme_rx_enable_conf_t COMPILER_WORD_ALIGNED;
+} mlme_rx_enable_conf_t __ALIGN_WORD_ADDR__;
 
 /**
  * @brief This is the MLME-SCAN.request message structure.
@@ -623,7 +623,7 @@ typedef struct mlme_scan_req_tag {
 	 * The channel page on which to perform the scan.
 	 */
 	uint8_t ChannelPage;
-} mlme_scan_req_t  COMPILER_WORD_ALIGNED;
+} mlme_scan_req_t  __ALIGN_WORD_ADDR__;
 
 /**
  * @brief This is the MLME-SCAN.confirm  message structure.
@@ -670,7 +670,7 @@ typedef struct mlme_scan_conf_tag {
 	 * and orphan scans.
 	 */
 	scan_result_list_t scan_result_list[1];
-} mlme_scan_conf_t COMPILER_WORD_ALIGNED;
+} mlme_scan_conf_t __ALIGN_WORD_ADDR__;
 
 /**
  * @brief This is the MLME-COMM-STATUS.indication message structure.
@@ -717,7 +717,7 @@ typedef struct mlme_comm_status_ind_tag {
 	uint64_t DstAddr;
 	/** The communications status. */
 	uint8_t status;
-} mlme_comm_status_ind_t COMPILER_WORD_ALIGNED;
+} mlme_comm_status_ind_t __ALIGN_WORD_ADDR__;
 
 /**
  * @brief This is the MLME-START.request message structure.
@@ -781,7 +781,7 @@ typedef struct mlme_start_req_tag {
 	 * changing the superframe configuration or FALSE otherwise.
 	 */
 	uint8_t CoordRealignment;
-} mlme_start_req_t COMPILER_WORD_ALIGNED;
+} mlme_start_req_t __ALIGN_WORD_ADDR__;
 
 /**
  * @brief This is the MLME-START.confirm message structure.
@@ -793,7 +793,7 @@ typedef struct mlme_start_conf_tag {
 	/** The result of the attempt to start using an updated superframe
 	 * configuration. */
 	uint8_t status;
-} mlme_start_conf_t COMPILER_WORD_ALIGNED;
+} mlme_start_conf_t __ALIGN_WORD_ADDR__;
 
 /**
  * @brief This is the MLME-SYNC.request message structure.
@@ -815,7 +815,7 @@ typedef struct mlme_sync_req_tag {
 	 * the next beacon.
 	 */
 	uint8_t TrackBeacon;
-} mlme_sync_req_t COMPILER_WORD_ALIGNED;
+} mlme_sync_req_t __ALIGN_WORD_ADDR__;
 
 /**
  * @brief This is the MLME-SYNC-LOSS.indication message structure.
@@ -840,7 +840,7 @@ typedef struct mlme_sync_loss_ind_tag {
 	 * to which it was realigned.
 	 */
 	uint8_t ChannelPage;
-} mlme_sync_loss_ind_t COMPILER_WORD_ALIGNED;
+} mlme_sync_loss_ind_t __ALIGN_WORD_ADDR__;
 
 /**
  * @brief This is the MLME-POLL.request message structure.
@@ -861,7 +861,7 @@ typedef struct mlme_poll_req_tag {
 	                      *poll is intended. */
 	/** The address of the coordinator to which the poll is intended. */
 	uint64_t CoordAddress;
-} mlme_poll_req_t COMPILER_WORD_ALIGNED;
+} mlme_poll_req_t __ALIGN_WORD_ADDR__;
 
 /**
  * @brief This is the MLME-POLL.confirm message structure.
@@ -871,7 +871,7 @@ typedef struct mlme_poll_conf_tag {
 	enum msg_code cmdcode;
 	/** The status of the data request. */
 	uint8_t status;
-} mlme_poll_conf_t COMPILER_WORD_ALIGNED;
+} mlme_poll_conf_t __ALIGN_WORD_ADDR__;
 /* ! @} */
 /* === Externals ============================================================ */
 

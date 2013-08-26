@@ -1,7 +1,7 @@
 /**
- * \file *********************************************************************
+ * \file
  *
- * \brief Serial Input & Output configuration
+ * \brief Board configuration
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -38,18 +38,33 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
+ *
  */
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#ifndef CONF_SIO2HOST_H_INCLUDED
-#define CONF_SIO2HOST_H_INCLUDED
+#define CONF_BOARD_AT86RFX
 
-#define USART_HOST                 EDBG_CDC_MODULE
+#ifdef EXT_RF_FRONT_END_CTRL /*For External PA for 233FEM*/
 
-/** Baudrate setting */
-#define USART_HOST_BAUDRATE        115200
-									 
+#define EXT_PA_SE2431L
+/*
+ * Value of an external LNA gain.
+ * If no external LNA is available, the value is 0.
+ */
+#define EXT_LNA_HIGH_GAIN    (14)
 
-#define USART_HOST_RX_ISR_ENABLE()  _sercom_set_handler(3, USART_HOST_ISR_VECT);\
-									USART_HOST->USART.INTENSET.reg = SERCOM_USART_INTFLAG_RXC;\
-									system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_SERCOM3);
-#endif /* CONF_SIO2HOST_H_INCLUDED */
+#endif
+
+#ifdef CUSTOM_DEFAULT_TX_PWR /*For External PA for 233FEM*/
+/*
+ * Default value of transmit power of transceiver: Preset
+ *    - definition acct. IEEE802.15.4 PHY PIB attribute phyTransmitPower
+ *    - TX Pout init value based on validation
+ */
+#define TAL_TRANSMIT_POWER_DEFAULT      (TX_PWR_TOLERANCE | 0x14)
+#endif
+
+#define AT86RFX_SPI_BAUDRATE		 1000000UL
+//# include "conf_usb.h"
+#endif /* CONF_BOARD_H_INCLUDED */

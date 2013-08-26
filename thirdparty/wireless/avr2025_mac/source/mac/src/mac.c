@@ -114,13 +114,13 @@ mac_radio_sleep_state_t mac_radio_sleep_state;
 /**
  * Final Cap Slot of current Superframe
  */
-uint8_t mac_final_cap_slot COMPILER_WORD_ALIGNED;
+uint8_t mac_final_cap_slot __ALIGN_WORD_ADDR__;
 
 /**
  * Flag stating that the last received beacon frame from the parent
  * indicated pending broadcast data to be received.
  */
-bool mac_bc_data_indicated COMPILER_WORD_ALIGNED;
+bool mac_bc_data_indicated __ALIGN_WORD_ADDR__;
 #endif  /* BEACON_SUPPORT */
 
 /**
@@ -131,22 +131,22 @@ parse_t mac_parse_data;
 /*
  * Flag indicating that RxEnable is still active.
  */
-bool mac_rx_enabled COMPILER_WORD_ALIGNED;
+bool mac_rx_enabled __ALIGN_WORD_ADDR__;
 
 /*
  * Variables for duplicate detection.
  * In order to detect duplicated frames, the DSN and Source Address of the
  * last received data frame need to be stored.
  */
-uint8_t mac_last_dsn COMPILER_WORD_ALIGNED;
-uint64_t mac_last_src_addr COMPILER_WORD_ALIGNED;
+uint8_t mac_last_dsn __ALIGN_WORD_ADDR__;
+uint64_t mac_last_src_addr __ALIGN_WORD_ADDR__;
 
 #if (MAC_START_REQUEST_CONFIRM == 1)
 
 /**
  * Holds the contents of the beacon payload.
  */
-uint8_t mac_beacon_payload[aMaxBeaconPayloadLength] COMPILER_WORD_ALIGNED;
+uint8_t mac_beacon_payload[aMaxBeaconPayloadLength] __ALIGN_WORD_ADDR__;
 #endif  /* (MAC_START_REQUEST_CONFIRM == 1) */
 
 #if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
@@ -160,7 +160,7 @@ mac_sec_pib_t mac_sec_pib;
  * Holds the mlme request buffer pointer, used to give the respective
  * confirmation in scan, poll and association.
  */
-arch_data_t *mac_conf_buf_ptr COMPILER_WORD_ALIGNED;
+arch_data_t *mac_conf_buf_ptr __ALIGN_WORD_ADDR__;
  
 
 #if (MAC_SCAN_SUPPORT == 1)
@@ -168,12 +168,12 @@ arch_data_t *mac_conf_buf_ptr COMPILER_WORD_ALIGNED;
 /**
  * Stores the original channel before start of scanning.
  */
-uint8_t mac_scan_orig_channel COMPILER_WORD_ALIGNED;
+uint8_t mac_scan_orig_channel __ALIGN_WORD_ADDR__;
 
 /**
  * Stores the original channel page before start of scanning.
  */
-uint8_t mac_scan_orig_page COMPILER_WORD_ALIGNED;
+uint8_t mac_scan_orig_page __ALIGN_WORD_ADDR__;
 
 #if ((MAC_SCAN_ACTIVE_REQUEST_CONFIRM == 1) || \
 	(MAC_SCAN_PASSIVE_REQUEST_CONFIRM == 1))
@@ -181,7 +181,7 @@ uint8_t mac_scan_orig_page COMPILER_WORD_ALIGNED;
 /**
  * Stores the original PAN-Id before start of scanning.
  */
-uint16_t mac_scan_orig_panid COMPILER_WORD_ALIGNED;
+uint16_t mac_scan_orig_panid __ALIGN_WORD_ADDR__;
 #endif /* ((MAC_SCAN_ACTIVE_REQUEST_CONFIRM == 1) ||
         *(MAC_SCAN_PASSIVE_REQUEST_CONFIRM == 1)) */
 
@@ -195,7 +195,7 @@ arch_data_t *mac_scan_cmd_buf_ptr;
  * MAC busy state, indicates whether MAC can process any
  * request from NHLE.
  */
-bool mac_busy COMPILER_WORD_ALIGNED;
+bool mac_busy __ALIGN_WORD_ADDR__;
 
 /**
  * NHLE to MAC queue in which NHLE pushes all the requests to the MAC layer
@@ -290,7 +290,7 @@ event = (arch_data_t *)qmm_queue_remove(&tal_mac_q, NULL);
  */
 bool mac_ready_to_sleep(void)
 {
-	bool idle COMPILER_WORD_ALIGNED;
+	bool idle __ALIGN_WORD_ADDR__;
 
 	if (mac_busy ||
 			(mac_nhle_q.size != 0) ||

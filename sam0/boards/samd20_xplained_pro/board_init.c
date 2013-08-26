@@ -81,8 +81,15 @@ void system_board_init(void)
 	port_pin_set_output_level(AT86RFX_SPI_CS, true);
 	port_pin_set_output_level(AT86RFX_RST_PIN, true);
 	port_pin_set_output_level(AT86RFX_SLP_PIN, true);
+#ifdef EXT_RF_FRONT_END_CTRL	
+	port_pin_set_config(AT86RFX_CPS, &pin_conf);
+	port_pin_set_output_level(AT86RFX_CPS, HIGH);	
+	port_pin_set_config(AT86RFX_CSD, &pin_conf);
+	port_pin_set_output_level(AT86RFX_CSD, HIGH);	
+#endif		
 
 	pin_conf.direction  = PORT_PIN_DIR_INPUT;
 	port_pin_set_config(AT86RFX_SPI_MISO, &pin_conf);
+	
 #endif
 }
