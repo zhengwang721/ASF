@@ -360,7 +360,7 @@ static void at25dfx_send_command(freertos_spi_if freertos_spi,
 {
 	/* Select the AT25 chip. */
 	spi_set_peripheral_chip_select_value(freertos_spi,
-			(~(1 << CHIP_SELECT)));
+			(~(1U << CHIP_SELECT)));
 
 	/* Send actual command. */
 	at25dfx_spi_write(freertos_spi, cmd_buffer, cmd_size);
