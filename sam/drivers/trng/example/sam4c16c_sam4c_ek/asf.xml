@@ -5,7 +5,6 @@
 		<build type="header-file" value="conf_clock.h"/>
 		<build type="header-file" value="conf_uart_serial.h"/>
 		<require idref="sam.drivers.trng.example"/>
-		<require idref="sam.utils.cmsis.sam4c.source.template"/>
 		<require idref="board.sam4c_ek"/>
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
