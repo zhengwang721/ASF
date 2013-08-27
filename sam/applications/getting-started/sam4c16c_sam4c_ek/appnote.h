@@ -23,9 +23,9 @@
 <b>Description</b>
 
 This applaiction note aims at helpling the readers to get start with the Atmel
-ARM Cortex®-M4 based SAM4C microcontroller. It will provide information on how to
-get datasheet, tools and software, and give a step-by-step instruction on how to
-load and buildup a single example project to SAM4C-EK.
+ARM Cortex®-M4 based SAM4C microcontroller. It will provide information on how
+to get datasheet, tools and software, and give a step-by-step instruction on
+how to load and buildup a single example project to SAM4C-EK.
 */
 /**
 \page appdoc_chap_00_title1 Get the Device Datasheet

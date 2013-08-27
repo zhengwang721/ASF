@@ -23,9 +23,9 @@
 <b>Description</b>
 
 This applaiction note aims at helpling the readers to get start with the Atmel
-ARM Cortex®-M4 based CHIP_NAME microcontroller. It will provide information on how to
-get datasheet, tools and software, and give a step-by-step instruction on how to
-load and buildup a single example project to BOARD_NAME.
+ARM Cortex®-M4 based CHIP_NAME microcontroller. It will provide information on
+how to get datasheet, tools and software, and give a step-by-step instruction
+on how to load and buildup a single example project to BOARD_NAME.
 */
 /**
 \page appdoc_chap_00_title1 Get the Device Datasheet
@@ -54,8 +54,8 @@ Document/file:
 
 \copydoc BOARD_FEATURE
 
-The BOARD_NAME User Guide introduces the BOARD_NAME and describes its development
-and debugging capabilities.
+The BOARD_NAME User Guide introduces the BOARD_NAME and describes its
+development and debugging capabilities.
 */
 
 /**
@@ -92,7 +92,8 @@ of <i>main()</i>. To execute it, click on <i>Debug->Continue</i>.
 \section appdoc_chap_04_section2 Load the Example
 - Open the an example project file for BOARD_NAME
 - Build the project: <i>Project->Make</i>
-- Load the code in CHIP_NAME and start debugging: <i>Project->Download and Debug</i>
+- Load the code in CHIP_NAME and start debugging: <i>Project->Download and
+Debug</i>
 
 Now the application has been programmed and the debugger stops at the beginning
 of <i>main()</i>. To execute it, click on <i>Debug->Go</i>.
@@ -290,7 +291,7 @@ associated with the exception handler entries
 On reset, the vector table is located at CODE partition. The table’s current
 location can be determined or relocated in the CODE or SRAM partitions of the
 memory map using the Vector Table Offset Register (VTOR). Details on the
-register can be found in the "Cortex™-M4 TechnicalRef-erence Manual".
+register can be found in the "Cortex™-M4 Technical Reference Manual".
 
 In the getting-started example, a full vector table looks like this:
 
@@ -328,8 +329,8 @@ by performing the following actions:
 
 \subsection appdoc_chap_06_section4_sub2 System Clock Initialization
 At the very beginning of the getting-started example <i>main()</i>,
-<i>sysclk_init()</i> is called to initialized the system clock of CHIP_NAME. In this
-function, Power Management Controller (PMC) is set according to the clock
+<i>sysclk_init()</i> is called to initialized the system clock of CHIP_NAME. In
+this function, Power Management Controller (PMC) is set according to the clock
 configuration file, <i>conf_clock.h</i>.
 
 \copydoc CONF_CLOCK
@@ -347,8 +348,8 @@ frequency (SYSCLK) is
 \par
 \copydoc CLOCK_FORMULA
 
-Note that on the BOARD_NAME, 12MHz crystal oscillator is connected to XIN and XOUT
-pins.
+Note that on the BOARD_NAME, 12MHz crystal oscillator is connected to XIN and
+XOUT pins.
 
 \subsection appdoc_chap_06_section4_sub3 Board Initialization
 To contol the on-board components, buttons, LEDs and COM port in the case of the
@@ -374,9 +375,10 @@ getting-started example. To display characters on PC terminal software
 correctly, several parameters must be configured before calling <i>puts()</i>
 and <i>printf()</i>.
 
-In CHIP_NAME, the UART peripheral operates in asynchronous mode only and supports
-only 8-bit character handling (with no parity) and 1 stop bit. No flow control
-is supported. So there are the baudrate and parity left to be configured.
+In CHIP_NAME, the UART peripheral operates in asynchronous mode only and
+supports only 8-bit character handling (with no parity) and 1 stop bit. No flow
+control is supported. So there are the baudrate and parity left to be
+configured.
 
 \anchor code_com_parameters
 <b>Code: UART Parameters</b>
@@ -451,16 +453,16 @@ PIO detects the change and triggers an interrupt.
 
 \anchor code_pio_configuration
 <b>Code: PIO Configuration for one button (one pin)</b>
-\snippet main.c main_button0_configure
+\snippet main.c main_button1_configure
 
 The PIO peripheral clock is enabled at first so that the configuration below can
 take effect.
 
 Usually in an application with the button inputs, there are some glitches on the
-input lines of the buttons. In PIO of CHIP_NAME, the debouncing filter can be set to
-reject these unwanted pulses. In the getting-started example, if the period of a
-glitch is less than 10 slow clock cycles (slow clock frequency is 32768Hz in
-this case), the glitch will be ignored by PIO.
+input lines of the buttons. In PIO of CHIP_NAME, the debouncing filter can be
+set to reject these unwanted pulses. In the getting-started example, if the
+period of a glitch is less than 10 slow clock cycles (slow clock frequency is
+32768Hz in this case), the glitch will be ignored by PIO.
 
 Pressing different button leads to different action, so there should be a
 specified handler for a specified button pressing. Before enabling the PIO
@@ -472,10 +474,10 @@ is chosen here.
 
 \anchor code_button_press_process
 <b>Code: Button Pressing Process</b>
-\snippet main.c main_button0_evnt_process
-\snippet main.c main_button0_handler
 \snippet main.c main_button1_evnt_process
 \snippet main.c main_button1_handler
+\snippet main.c main_button2_evnt_process
+\snippet main.c main_button2_handler
 */
 
 /**

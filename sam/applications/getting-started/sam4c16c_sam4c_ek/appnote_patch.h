@@ -62,7 +62,8 @@ The SAM4C-EK is an evaluation kit featuring
 - In SAM-BA GUI, choose \a Flash tab
 - For <i>Send File Name</i>, choose the binary file
   (i.e., <i>getting-started_flash.bin</i>) generated previously
-- Specify the address (e.g., 0x01000000 if non-cached), then press <i>Send File</i>
+- Specify the address (e.g., 0x01000000 if non-cached), then press
+  <i>Send File</i>
 - For Scripts, select <i>Boot from Flash (GPNVM1)</i>, then press \a Execute
 */
 
@@ -77,7 +78,8 @@ buttons - one for each LED.
 /**
 \defgroup BUTTONS buttons on the board
 The SAM4C-EK features six push-buttons, FWUP, NRST, TMP0, TMP2, SCROLL-UP and
-SCROLL-DOWN, connected to pins FWUP, NRST, TMP0, PB27, PA19, and PA20 respectively.
+SCROLL-DOWN, connected to pins FWUP, NRST, TMP0, PB27, PA19, and PA20
+respectively.
 
 Usually, the NRST is used to reset the MCU and the FWUP is usded to wakeup MCU 
 from low power modes, while the other four are used for general purpose,
@@ -113,7 +115,8 @@ are defined.
 /**
 \defgroup SYS_CLOCK system clock setting
 As shown in the code above, the exteneral crystal oscillator
-(\c PLLB_SRC_MAINCK_XTAL) is selected as the PLLB source (\c CONFIG_PLL1_SOURCE).
+(\c PLLB_SRC_MAINCK_XTAL) is selected as the PLLB source
+(\c CONFIG_PLL1_SOURCE).
 The factor (\c CONFIG_PLL1_MUL) and divider (\c CONFIG_PLL1_DIV) are defined
 respectively. PLLB (\c SYSCLK_SRC_PLLBCK) is chosen as the system clock
 source (\c CONFIG_SYSCLK_SOURCE), the prescaler of which (\c CONFIG_SYSCLK_PRES)
