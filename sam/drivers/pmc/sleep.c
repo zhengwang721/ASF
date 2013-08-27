@@ -89,7 +89,7 @@
 #endif
 
 /* SAM3 and SAM4 series */
-#if (SAM3S || SAM3N || SAM3XA || SAM3U || SAM4S || SAM4E)
+#if (SAM3S || SAM3N || SAM3XA || SAM3U || SAM4S || SAM4E || SAM4N)
 # include "pmc.h"
 # include "board.h"
 
@@ -314,7 +314,7 @@ void pmc_sleep(int sleep_mode)
 	switch (sleep_mode) {
 	case SAM_PM_SMODE_SLEEP_WFI:
 	case SAM_PM_SMODE_SLEEP_WFE:
-#if (SAM4S || SAM4E)
+#if (SAM4S || SAM4E || SAM4N)
 		SCB->SCR &= (uint32_t)~SCR_SLEEPDEEP;
 		cpu_irq_enable();
 		__WFI();
@@ -365,7 +365,7 @@ void pmc_sleep(int sleep_mode)
 
 	case SAM_PM_SMODE_BACKUP:
 		SCB->SCR |= SCR_SLEEPDEEP;
-#if (SAM4S || SAM4E)
+#if (SAM4S || SAM4E || SAM4N)
 		SUPC->SUPC_CR = SUPC_CR_KEY(0xA5u) | SUPC_CR_VROFF_STOP_VREG;
 		cpu_irq_enable();
 		__WFI() ;
@@ -393,4 +393,4 @@ void pmc_wait_wakeup_clocks_restore(
 	}
 }
 
-#endif /* #if (SAM3S || SAM3N || SAM3XA || SAM3U || SAM4S || SAM4E) */
+#endif /* #if (SAM3S || SAM3N || SAM3XA || SAM3U || SAM4S || SAM4E || SAM4N) */
