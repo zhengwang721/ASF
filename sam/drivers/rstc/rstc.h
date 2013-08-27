@@ -103,8 +103,9 @@ static inline void rstc_assert_reset_of_coprocessor(Rstc* p_rstc,
 		const uint32_t reset)
 {
 	uint32_t tmp = p_rstc->RSTC_CPMR;
-	tmp &= ~(RSTC_CPMR_CPKEY_Msk | RSTC_CPMR_CPEREN | RSTC_CPMR_CPROCEN);
-	tmp |= reset | RSTC_CPMR_KEY_PASSWD;
+	tmp &= ~(RSTC_CPMR_CPKEY_Msk | (reset & (RSTC_CPMR_CPEREN |
+			RSTC_CPMR_CPROCEN)));
+	tmp |= RSTC_CPMR_KEY_PASSWD;
 	p_rstc->RSTC_CPMR = tmp;
 }
 #endif
