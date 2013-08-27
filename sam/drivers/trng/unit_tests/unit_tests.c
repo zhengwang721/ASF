@@ -156,7 +156,7 @@ static void run_trng_test(const struct test_case *test)
 }
 
 /**
- * \brief Run ili9325 driver unit tests.
+ * \brief Run TRNG driver unit tests.
  */
 int main(void)
 {
