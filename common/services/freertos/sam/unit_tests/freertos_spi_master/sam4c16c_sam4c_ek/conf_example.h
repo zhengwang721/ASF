@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Unit test configuration.
+ * \brief Task configurations.
  *
- * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,16 +41,9 @@
  *
  */
 
-#ifndef CONF_TEST_H
-#define CONF_TEST_H
+#ifndef CONF_EXAMPLE_H
+#define CONF_EXAMPLE_H
 
-/** USART Interface */
-#define CONF_TEST_USART      CONSOLE_UART
-/** Baudrate setting */
-#define CONF_TEST_BAUDRATE   115200
-/** Parity setting */
-#define CONF_TEST_PARITY     UART_MR_PAR_NO
+#define BOARD_SPI	SPI0
 
-#define CONF_TEST_CS         3
-
-#endif /* CONF_TEST_H_INCLUDED */
+#endif/* CONF_EXAMPLE_H */
