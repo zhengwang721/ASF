@@ -257,15 +257,18 @@ static void app_alert(void);
 int main(void)
 {
 	irq_initialize_vectors();
-	//sysclk_init();
+	#ifdef __SAMD20J18__
+	system_init();
+	delay_init();
+	#else
+	sysclk_init();
 
 	/* Initialize the board.
 	 * The board-specific conf_board.h file contains the configuration of
 	 * the board initialization.
 	 */
-	//board_init();
-	system_init();
-	delay_init();
+	board_init();    
+	#endif
 #ifdef SIO_HUB
 	sio2host_init(); 
 #endif
