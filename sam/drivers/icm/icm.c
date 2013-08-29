@@ -62,6 +62,9 @@ void icm_init(Icm *p_icm, struct icm_config *icm_cfg)
 	/* Clock initialization */
 	sysclk_enable_peripheral_clock(ID_ICM);
 
+	/* ICM Reset */
+	icm_reset(ICM);
+
 	/* ICM basic configuration */
 	p_icm->ICM_CFG = (icm_cfg->is_write_back ? ICM_CFG_WBDIS : 0) |
 			(icm_cfg->is_dis_end_mon ? ICM_CFG_EOMDIS : 0) |
@@ -72,8 +75,9 @@ void icm_init(Icm *p_icm, struct icm_config *icm_cfg)
 			ICM_CFG_HAPROT(icm_cfg->hash_area_val) |
 			ICM_CFG_DAPROT(icm_cfg->des_area_val);
 
-	if(icm_cfg->is_user_hash)
+	if(icm_cfg->is_user_hash) {
 		icm_set_algo(p_icm, icm_cfg->ualgo);
+	}
 }
 
 void icm_enable(Icm *p_icm)
@@ -140,12 +144,18 @@ void ICM_Handler(void)
 	volatile uint32_t status;
 	uint8_t i, j;
 
-	status = icm_get_interrupt_status(ICM);
+	status = (icm_get_interrupt_status(ICM) & icm_get_interrupt_mask(ICM));
 
 	for (i = 0; i < _ICM_NUM_OF_INTERRUPT_SOURCE; i++) {
-		for (j = 0; j < _ICM_NUM_OF_REGION; j++) {
-			if (status & (1 << (_ICM_NUM_OF_REGION * i + j))) {
-				icm_interrupt((enum icm_interrupt_source)i, (enum icm_region_num)j);
+		if(i == ICM_INTERRUPT_URAD) {
+			if (status & (1 << (_ICM_NUM_OF_REGION * i))) {
+				icm_interrupt((enum icm_interrupt_source)i, (enum icm_region_num)0);
+			}
+		} else {
+			for (j = 0; j < _ICM_NUM_OF_REGION; j++) {
+				if (status & (1 << (_ICM_NUM_OF_REGION * i + j))) {
+					icm_interrupt((enum icm_interrupt_source)i, (enum icm_region_num)j);
+				}
 			}
 		}
 	}
@@ -165,30 +175,37 @@ void icm_set_algo(Icm *p_icm, enum icm_algo algo)
 		case ICM_SHA_256:
 			p_icm->ICM_CFG |= ICM_CFG_UALGO_SHA256;
 			break;
+		default:
+			break;
 	}
 }
 
 void icm_set_hash_value(Icm *p_icm, uint32_t *p_value)
 {
-	uint8_t algo = p_icm->ICM_CFG & ICM_CFG_UALGO_Msk;;
+	uint32_t algo = p_icm->ICM_CFG & ICM_CFG_UALGO_Msk;
 
 	p_icm->ICM_UIHVAL[0] = p_value[0];
 	p_icm->ICM_UIHVAL[1] = p_value[1];
 	p_icm->ICM_UIHVAL[2] = p_value[2];
 	p_icm->ICM_UIHVAL[3] = p_value[3];
 	p_icm->ICM_UIHVAL[4] = p_value[4];
+	p_icm->ICM_UIHVAL[5] = 0;
+	p_icm->ICM_UIHVAL[6] = 0;
+	p_icm->ICM_UIHVAL[7] = 0;
 
 	switch(algo) {
-		case ICM_SHA_1:
+		case (ICM_SHA_1 << ICM_CFG_UALGO_Pos):
 			break;
-		case ICM_SHA_224:
+		case (ICM_SHA_224 << ICM_CFG_UALGO_Pos):
 			p_icm->ICM_UIHVAL[5] = p_value[5];
 			p_icm->ICM_UIHVAL[6] = p_value[6];
 			break;
-		case ICM_SHA_256:
+		case (ICM_SHA_256 << ICM_CFG_UALGO_Pos):
 			p_icm->ICM_UIHVAL[5] = p_value[5];
 			p_icm->ICM_UIHVAL[6] = p_value[6];
 			p_icm->ICM_UIHVAL[7] = p_value[7];
+			break;
+		default:
 			break;
 	}
 }

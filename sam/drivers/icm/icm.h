@@ -135,8 +135,10 @@ struct icm_config {
 struct icm_region_descriptor_sec_list {
 	/** The first byte address of the region */
 	uint32_t start_addr;
+	uint32_t reserved;
 	/**
 	 * The number of blocks(512 bits) transferred from the memory to the SHA engine.
+	 * Transfer size = (tran_size + 1) * 512bits
 	 * The maxium size is 65536.
 	 */
 	uint32_t tran_size;
@@ -186,6 +188,7 @@ struct icm_region_descriptor_main_list {
 	}cfg;
 	/**
 	 * The number of blocks(512 bits) transferred from the memory to the SHA engine.
+	 * Transfer size = (tran_size + 1) * 512bits
 	 * The maxium size is 65536.
 	 */
 	uint32_t tran_size;
@@ -422,7 +425,7 @@ void icm_set_hash_value(Icm *p_icm, uint32_t *p_value);
  * \section icm_basic ICM basic usage
  *
  * This use case will demonstrate how to configure and use of the on-chip
- * ICM controller to check the integrity of internal SRAM and Flash
+ * ICM controller to check the integrity of internal SRAM.
 .*
  * \section icm_basic_setup Setup steps
  *
@@ -436,7 +439,7 @@ void icm_set_hash_value(Icm *p_icm, uint32_t *p_value);
  *
  * Add this to the main loop or a setup function:
  * \code
- *   const uint32_t message_sha[] = {
+ *   uint32_t message_sha[] @0x20000a00 = {
  *   0x80636261,
  *   0x00000000,
  *   0x00000000,
@@ -453,8 +456,8 @@ void icm_set_hash_value(Icm *p_icm, uint32_t *p_value);
  *   0x00000000,
  *   0x00000000,
  *   0x18000000
- *	};
- *   const uint32_t output_sha[0x40];
+ *};
+ *   uint32_t output_sha[0x20] @ 0x20000800;
  *
  *   // Set region descriptor value
  *   struct icm_region_descriptor reg_descriptor;
@@ -473,9 +476,6 @@ void icm_set_hash_value(Icm *p_icm, uint32_t *p_value);
  *   reg_descriptor.cfg.algo = ICM_SHA_1;
  *   reg_descriptor.tran_size = 0;
  *   reg_descriptor.next_addr = 0;
- *
- *    // Reset ICM
- *    icm_reset(ICM);
  *
  *   // Initialize ICM with specified value
  *   struct icm_config icm_cfg;
@@ -503,12 +503,12 @@ void icm_set_hash_value(Icm *p_icm, uint32_t *p_value);
  *   // Check region hash is completed
  *   while(!(icm_get_interrupt_status(ICM) & 1));
  *
- *	if ((output_sha[0] == 0x363E99A9) && \
- *			(output_sha[1] == 0x6A810647) && \
- *			(output_sha[2] == 0x71253EBA) && \
- *			(output_sha[3] == 0x6CC25078) && \
- *			(output_sha[4] == 0x9DD8D09C))
- *		printf( " ICM SHA TEST PASS \n\r");
+ *   if((output_sha[0] == 0x363E99A9) && \
+ *           (output_sha[1] == 0x6A810647) && \
+ *           (output_sha[2] == 0x71253EBA) && \
+ *           (output_sha[3] == 0x6CC25078) && \
+ *           (output_sha[4] == 0x9DD8D09C))
+ *       printf( " ICM SHA1 TEST PASS \n\r");
  *
  * \endcode
  */

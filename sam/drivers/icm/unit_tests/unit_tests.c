@@ -51,8 +51,9 @@
  * \section intro Introduction
  * This is the unit test application for the ICM driver.
  * It consists of test cases for the following functionality:
- * - ICM init
- * - ICM region hash
+ * - ICM region SHA1 hash
+ * - ICM region SHA224 hash
+ * - ICM region SHA256 hash
  *
  * \section files Main Files
  * - \ref unit_tests.c
@@ -77,13 +78,15 @@
  */
 
 /* Is set to 1 when a ICM interrupt happens */
-static volatile uint32_t gs_icm_triggered = 0U;
+static volatile uint32_t gs_icm_triggered1 = 0U;
+static volatile uint32_t gs_icm_triggered2 = 0U;
+static volatile uint32_t gs_icm_triggered3 = 0U;
 
 /* Memory region area */
 uint32_t message_sha[16] @ 0x20000a00 = {
- 	0x80636261,
- 	0x00000000,
- 	0x00000000,
+	0x80636261,
+	0x00000000,
+	0x00000000,
 	0x00000000,
 	0x00000000,
 	0x00000000,
@@ -108,12 +111,32 @@ struct icm_region_descriptor_main_list reg_descriptor @ 0x20000900;
 static void reg_hash_complete_handler(uint8_t reg_num)
 {
 	UNUSED(reg_num);
-	if ((output_sha[0] == 0x363E99A9) &&
+	if((output_sha[0] == 0x363E99A9) &&
 			(output_sha[1] == 0x6A810647) &&
 			(output_sha[2] == 0x71253EBA) &&
 			(output_sha[3] == 0x6CC25078) &&
-			(output_sha[4] == 0x9DD8D09C) )
-		gs_icm_triggered = 1;
+			(output_sha[4] == 0x9DD8D09C)) {
+		gs_icm_triggered1 = 1;
+	}
+	if((output_sha[0] == 0x227D0923) &&
+			(output_sha[1] == 0x22D80534) &&
+			(output_sha[2] == 0x77A44286) &&
+			(output_sha[3] == 0xB355A2BD) &&
+			(output_sha[4] == 0xE4BCAD2A) &&
+			(output_sha[5] == 0xF7B3A0BD) &&
+			(output_sha[6] == 0xA79D6CE3)) {
+		gs_icm_triggered2 = 1;
+	}
+	if((output_sha[0] == 0xBF1678BA) &&
+			(output_sha[1] == 0xEACF018F) &&
+			(output_sha[2] == 0xDE404141) &&
+			(output_sha[3] == 0x2322AE5D) &&
+			(output_sha[4] == 0xA36103B0) &&
+			(output_sha[5] == 0x9C7A1796) &&
+			(output_sha[6] == 0x61FF10B4) &&
+			(output_sha[7] == 0xAD1500F2)) {
+		gs_icm_triggered3 = 1;
+	}
 }
 
 /**
@@ -127,9 +150,6 @@ static void run_icm_test(const struct test_case *test)
 {
 	/* ICM configuration */
 	struct icm_config icm_cfg;
-
-	/* ICM Reset */
-	icm_reset(ICM);
 
 	/* ICM initialization */
 	icm_cfg.is_write_back= false;
@@ -158,14 +178,14 @@ static void run_icm_test(const struct test_case *test)
 	reg_descriptor.cfg.is_pro_dly = false;
 	reg_descriptor.cfg.mem_reg_val = 0;
 	reg_descriptor.cfg.algo = ICM_SHA_1;
- 	reg_descriptor.tran_size = 0;
- 	reg_descriptor.next_addr = 0;
+	reg_descriptor.tran_size = 0;
+	reg_descriptor.next_addr = 0;
 
 	/* Set region descriptor start addres */
 	icm_set_reg_des_addr(ICM, (uint32_t)&reg_descriptor);
 
- 	/* Set hash area start addres */
- 	icm_set_hash_area_addr(ICM, (uint32_t)output_sha);
+	/* Set hash area start addres */
+	icm_set_hash_area_addr(ICM, (uint32_t)output_sha);
 
 	/* Set callback function for region hash complete interrupt handler */
 	icm_set_callback(ICM, reg_hash_complete_handler,
@@ -175,7 +195,21 @@ static void run_icm_test(const struct test_case *test)
 	icm_enable(ICM);
 
 	delay_ms(50);
-	test_assert_true(test, gs_icm_triggered == 1, "Test1: Region hash not complete!");
+	test_assert_true(test, gs_icm_triggered1 == 1, "Test1: SHA1 hash not complete!");
+
+	reg_descriptor.cfg.algo = ICM_SHA_224;
+	/* Enable ICM */
+	icm_enable(ICM);
+
+	delay_ms(50);
+	test_assert_true(test, gs_icm_triggered2 == 1, "Test2: SHA224 hash not complete!");
+
+	reg_descriptor.cfg.algo = ICM_SHA_256;
+	/* Enable ICM */
+	icm_enable(ICM);
+
+	delay_ms(50);
+	test_assert_true(test, gs_icm_triggered3 == 1, "Test3: SHA256 hash not complete!");
 }
 
 /**

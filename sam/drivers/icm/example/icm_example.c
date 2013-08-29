@@ -59,10 +59,9 @@
  * All SAM devices with a ICM can be used.
  *
  * \section exampledescription Description of the example
- * After an initialization phase, the ICM will compute memory region hash value
- * and write back to hash area. Next set the region monitoring mode to
- * compare mode and modify memory region value, then the mismatch interrupt
- * will be generated.
+ * After an initialization phase, the ICM will compute memory region0 and region1 hash value
+ * and write back to hash area. Next set the region monitoring mode to compare mode and
+ * modify memory region0 and region1 value, then the mismatch interrupt will be generated.
  *
  * \section configinfo Configuration Information
  * - PC terminal settings:
@@ -80,11 +79,11 @@
 
 #include <asf.h>
 
-/* Memory region area */
-volatile uint32_t message_sha[16] @ 0x20000a00 = {
- 	0x80636261,
- 	0x00000000,
- 	0x00000000,
+/* Memory region0 area */
+volatile uint32_t message_sha_0[16] @ 0x20000a00 = {
+	0x80636261,
+	0x00000000,
+	0x00000000,
 	0x00000000,
 	0x00000000,
 	0x00000000,
@@ -99,12 +98,53 @@ volatile uint32_t message_sha[16] @ 0x20000a00 = {
 	0x00000000,
 	0x18000000
 };
+/* Memory region1 main list area */
+volatile uint32_t message_sha_1_main[16] @ 0x20000b00 = {
+	0x80636261,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x18000000,
+};
+/* Memory region1 secondary list area */
+volatile uint32_t message_sha_1_sec[16] @ 0x20000b80 = {
+	0x80636261,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x18000000,
+};
 
 /* Hash area */
 uint32_t output_sha[0x20] @ 0x20000800;
 
-/* Region descriptor */
-struct icm_region_descriptor_main_list reg_descriptor @ 0x20000900;
+/* Region descriptor in main list */
+struct icm_region_descriptor_main_list reg_descriptor[2] @ 0x20000900;
+
+/* Region descriptor in secondary list */
+struct icm_region_descriptor_sec_list reg_descriptor_sec @ 0x20000c00;
 
 /**
  *  Configure serial console.
@@ -128,8 +168,11 @@ static void configure_console(void)
 
 static void reg_dig_mismatch_handler(uint8_t reg_num)
 {
-	UNUSED(reg_num);
-	printf( " Memory region is modified \n\r");
+	if(reg_num == ICM_REGION_NUM_0) {
+		printf( " Memory region0 is modified \n\r");
+	} else if(reg_num == ICM_REGION_NUM_1) {
+		printf( " Memory region1 is modified \n\r");
+	}
 }
 
 /**
@@ -155,13 +198,10 @@ int main(void)
 	printf("-- %s\n\r", BOARD_NAME);
 	printf("-- Compiled: %s %s --\n\r", __DATE__, __TIME__);
 
-	/* ICM Reset */
-	icm_reset(ICM);
-
 	/* ICM initialization */
 	icm_cfg.is_write_back= false;
 	icm_cfg.is_dis_end_mon = false;
-	icm_cfg.is_sec_list_branch = true;
+	icm_cfg.is_sec_list_branch = false;
 	icm_cfg.bbc = 0;
 	icm_cfg.is_auto_mode = false;
 	icm_cfg.is_dual_buf = false;
@@ -171,28 +211,50 @@ int main(void)
 	icm_cfg.des_area_val = 0;
 	icm_init(ICM, &icm_cfg);
 
-	/* Set region descriptor */
-	reg_descriptor.start_addr = (uint32_t)message_sha;
-	reg_descriptor.cfg.is_compare_mode = false;
-	reg_descriptor.cfg.is_wrap = false;
-	reg_descriptor.cfg.is_end_mon = true;
-	reg_descriptor.cfg.reg_hash_int_en = false;
-	reg_descriptor.cfg.dig_mis_int_en = false;
-	reg_descriptor.cfg.bus_err_int_en = false;
-	reg_descriptor.cfg.wrap_con_int_en = false;
-	reg_descriptor.cfg.ebit_con_int_en = false;
-	reg_descriptor.cfg.status_upt_con_int_en = false;
-	reg_descriptor.cfg.is_pro_dly = false;
-	reg_descriptor.cfg.mem_reg_val = 0;
-	reg_descriptor.cfg.algo = ICM_SHA_1;
- 	reg_descriptor.tran_size = 0;
- 	reg_descriptor.next_addr = 0;
+	/* Set region0 descriptor */
+	reg_descriptor[0].start_addr = (uint32_t)message_sha_0;
+	reg_descriptor[0].cfg.is_compare_mode = false;
+	reg_descriptor[0].cfg.is_wrap = false;
+	reg_descriptor[0].cfg.is_end_mon = false;
+	reg_descriptor[0].cfg.reg_hash_int_en = false;
+	reg_descriptor[0].cfg.dig_mis_int_en = false;
+	reg_descriptor[0].cfg.bus_err_int_en = false;
+	reg_descriptor[0].cfg.wrap_con_int_en = false;
+	reg_descriptor[0].cfg.ebit_con_int_en = false;
+	reg_descriptor[0].cfg.status_upt_con_int_en = false;
+	reg_descriptor[0].cfg.is_pro_dly = false;
+	reg_descriptor[0].cfg.mem_reg_val = 0;
+	reg_descriptor[0].cfg.algo = ICM_SHA_1;
+	reg_descriptor[0].tran_size = 0;
+	reg_descriptor[0].next_addr = 0;
+
+	/* Set region1 descriptor in main list */
+	reg_descriptor[1].start_addr = (uint32_t)message_sha_1_main;
+	reg_descriptor[1].cfg.is_compare_mode = false;
+	reg_descriptor[1].cfg.is_wrap = false;
+	reg_descriptor[1].cfg.is_end_mon = true;
+	reg_descriptor[1].cfg.reg_hash_int_en = false;
+	reg_descriptor[1].cfg.dig_mis_int_en = false;
+	reg_descriptor[1].cfg.bus_err_int_en = false;
+	reg_descriptor[1].cfg.wrap_con_int_en = false;
+	reg_descriptor[1].cfg.ebit_con_int_en = false;
+	reg_descriptor[1].cfg.status_upt_con_int_en = false;
+	reg_descriptor[1].cfg.is_pro_dly = false;
+	reg_descriptor[1].cfg.mem_reg_val = 0;
+	reg_descriptor[1].cfg.algo = ICM_SHA_1;
+	reg_descriptor[1].tran_size = 0;
+	reg_descriptor[1].next_addr = &reg_descriptor_sec;
+
+	/* Set region1 descriptor in secondary list */
+	reg_descriptor_sec.start_addr = (uint32_t)message_sha_1_sec;
+	reg_descriptor_sec.tran_size = 0;
+	reg_descriptor_sec.next_addr = 0;
 
 	/* Set region descriptor start addres */
-	icm_set_reg_des_addr(ICM, (uint32_t)&reg_descriptor);
+	icm_set_reg_des_addr(ICM, (uint32_t)&reg_descriptor[0]);
 
- 	/* Set hash area start addres */
- 	icm_set_hash_area_addr(ICM, (uint32_t)output_sha);
+	/* Set hash area start addres */
+	icm_set_hash_area_addr(ICM, (uint32_t)output_sha);
 
 	/* Enable ICM */
 	icm_enable(ICM);
@@ -200,18 +262,22 @@ int main(void)
 	delay_ms(200);
 
 	/* Set region monitoring mode to compare mode */
-	reg_descriptor.cfg.is_compare_mode = true;
+	reg_descriptor[0].cfg.is_compare_mode = true;
+	reg_descriptor[1].cfg.is_compare_mode = true;
 
 	/* Set callback function for digest mismatch interrupt handler */
 	icm_set_callback(ICM, reg_dig_mismatch_handler, ICM_REGION_NUM_0,
 			ICM_INTERRUPT_RDM, 1);
+	icm_set_callback(ICM, reg_dig_mismatch_handler, ICM_REGION_NUM_1,
+			ICM_INTERRUPT_RDM, 1);
+
+	/* Modify memory region value */
+	message_sha_0[0] = 0x12345678;
+	message_sha_1_sec[0] = 0x12345678;
 
 	/* Enable ICM */
 	icm_enable(ICM);
 
-	/* Modify memory region value */
-	message_sha[0] = 0x12345678;
-		
 	while (1) {
 	}
 }
