@@ -68,7 +68,9 @@
 #include "mac_internal.h"
 #include "mac.h"
 #include "mac_build_config.h"
+#ifdef __SAMD20J18__
 #include "unaligned.h"
+#endif
 
 /* === Macros ============================================================== */
 
