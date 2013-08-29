@@ -4,7 +4,7 @@
 			This example shows how to use BPM to change power mode.
 			</info>
 		<info type="keyword" value="technology">
-			<keyword value="Backup Power Manager"/>
+			<keyword value="Power Management"/>
 		</info>
 		<build type="c-source" value="bpm_example.c"/>
 		<build type="include-path" value="."/>

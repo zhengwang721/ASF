@@ -4,7 +4,8 @@
 		Configure the megaRF MAC Symbol Counter module for implementing a scheduled sleep-wakeup scheme using the beacon timestamp register and relative compare modes.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="MAC Symbol Counter"/>
+			<keyword value="Communication"/>
+			<keyword value="Wireless"/>
 		</info>
 		<build type="include-path" value="."/>
 		<build type="c-source" value="macsc_megarf_example2.c"/>

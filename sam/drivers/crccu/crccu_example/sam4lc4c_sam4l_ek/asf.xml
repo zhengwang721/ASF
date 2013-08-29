@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="CRCCU example for SAM4S_EK" id="sam.drivers.crccu.crccu_example.sam4l_ek">
+	<project caption="CRCCU example for SAM4L_EK" id="sam.drivers.crccu.crccu_example.sam4l_ek">
 		<info type="description" value="summary">
 		The example shows how to use CRCCU to compute CRC on a memory area.
 		</info>
