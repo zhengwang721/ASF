@@ -62,7 +62,9 @@
 #include "pal_config.h"
 #endif
 #include "mac_build_config.h"
-
+#if (defined MAC_SECURITY_ZIP || defined MAC_SECURITY_2006)
+#include "tal.h"
+#endif
 /**
  * \ingroup group_tal
  * \defgroup group_tal_233 AT86RF233 Transceiver Abstraction Layer
