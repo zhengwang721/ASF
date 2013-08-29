@@ -63,6 +63,13 @@
  * \addtogroup group_mac_ds
  * @{
  */
+#ifdef GTS_SUPPORT
+
+typedef enum gts_state_tag{
+	GTS_STATE_IDLE = 0,
+	GTS_STATE_REQ_SENT,
+	GTS_STATE_ALLOCATED
+}gts_state_t;
 
 /**
  * @brief Device GTS table structure
@@ -70,8 +77,11 @@
  * @ingroup apiMacTypes
  */
 typedef struct mac_dev_gts_mgmt_tag {
+	uint8_t *GtsReq_ptr;
 	uint8_t GtsStartingSlot;
 	uint8_t GtsLength;
+	uint8_t GtsPersistCount;
+	gts_state_t GtsState;
 }mac_dev_gts_mgmt_t;
 
 typedef struct mac_gts_spec_tag {
@@ -81,10 +91,11 @@ typedef struct mac_gts_spec_tag {
 }mac_gts_spec_t;
 
 typedef struct mac_gts_list_tag {
-	uint16_t dev_addr;
+	uint8_t dev_addr[2];
 	uint8_t starting_slot:4;
 	uint8_t length:4;
 }mac_gts_list_t COMPILER_WORD_ALIGNED;
+#endif /* GTS_SUPPORT */
 
 /**
  * Beacon Payload type
@@ -152,11 +163,10 @@ typedef union {
 	mac_assoc_response_t assoc_response_data;
 	mac_disassoc_req_t disassoc_req_data;
 	mac_coord_realign_t coord_realign_data;
-} frame_payload_t  __ALIGN_WORD_ADDR__;
 #ifdef GTS_SUPPORT
 	gts_char_t gts_req_data;
 #endif /* GTS_SUPPORT */	
-} frame_payload_t  COMPILER_WORD_ALIGNED;
+} frame_payload_t  __ALIGN_WORD_ADDR__;
 
 /**
  * Structure containing auxiliary security header information
@@ -206,6 +216,7 @@ typedef struct mac_gts_desc_tag {
 	uint8_t GtsLength;
 	bool    GtsDirection;
 }mac_gtsDesc_t;
+
 /**
  * @brief PANC GTS table structure
  *
@@ -215,10 +226,9 @@ typedef struct mac_pan_gts_mgmt_tag {
 	queue_t *gts_data_q;
 	uint16_t DevShortAddr;
 	uint16_t ExpiryCount;
-	uint8_t PersistenceCount;
 	mac_gtsDesc_t GtsDesc;
+	uint8_t PersistenceCount;
 }mac_pan_gts_mgmt_t;
-
 #endif /* GTS_SUPPORT */
 /* === Externals ============================================================ */
 

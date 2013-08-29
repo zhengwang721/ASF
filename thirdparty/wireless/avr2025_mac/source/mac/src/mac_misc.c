@@ -208,10 +208,6 @@ retval_t mac_init(void)
     #endif /* (MAC_START_REQUEST_CONFIRM == 1) */
 #endif  /* ENABLE_QUEUE_CAPACITY */
 
-#ifdef GTS_SUPPORT
-	init_gts_queues();
-#endif /* GTS_SUPPORT */
-
 	return MAC_SUCCESS;
 }
 

@@ -126,7 +126,6 @@ static void mac_process_tal_tx_status(retval_t tx_status, frame_info_t *frame)
 #endif /* (MAC_INDIRECT_DATA_FFD == 1) */
 #ifdef GTS_SUPPORT
 		if (frame->gts_queue) {
-			frame->gts_queue = NULL;
 			if ((tx_status == MAC_SUCCESS) ||
 			(tx_status == TAL_FRAME_PENDING)) {
 				

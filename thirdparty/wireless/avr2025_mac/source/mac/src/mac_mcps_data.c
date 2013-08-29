@@ -553,16 +553,18 @@ void mac_process_data_frame(buffer_t *buf_ptr)
 				for(loop_index = 0; loop_index < mac_pan_gts_table_len; loop_index++)
 				{
 					if(FCF_SHORT_ADDR == mdi->SrcAddrMode
-					&& (uint16_t)(mdi->SrcAddr) == mac_pan_gts_table[loop_index].DevShortAddr)
+					&& (uint16_t)(mdi->SrcAddr) == mac_pan_gts_table[loop_index].DevShortAddr
+					&& GTS_TX_SLOT == mac_pan_gts_table[loop_index].GtsDesc.GtsDirection)
 					{
-						if (tal_pib.BeaconOrder >= 9)
-						{
-							mac_pan_gts_table[loop_index].ExpiryCount = GTS_EXPIRY_BO_9_TO_14;
-						}
-						else
-						{
-							mac_pan_gts_table[loop_index].ExpiryCount = GTS_EXPIRY_BO_0_TO_8;
-						}
+						reset_gts_expiry(&mac_pan_gts_table[loop_index]);
+						//if (tal_pib.BeaconOrder >= 9)
+						//{
+							//mac_pan_gts_table[loop_index].ExpiryCount = GTS_EXPIRY_BO_9_TO_14;
+						//}
+						//else
+						//{
+							//mac_pan_gts_table[loop_index].ExpiryCount = GTS_EXPIRY_BO_0_TO_8;
+						//}
 						break;
 					}
 				}
