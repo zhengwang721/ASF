@@ -56,6 +56,7 @@
 #include "tal.h"
 #include "ieee_const.h"
 #include "mac_data_structures.h"
+#include "return_val.h"
 
 #if (_DEBUG_ > 0)
 /* Needs to be included for make_mac_disp_not_busy() while debugging */
@@ -305,7 +306,7 @@ typedef enum mac_radio_sleep_state_tag {
 } SHORTENUM mac_radio_sleep_state_t  __ALIGN_WORD_ADDR__;
 
 /* ! @} */
-typedef void (*handler_t)(uint32_t *);
+typedef void (*handler_t)(arch_data_t *);
 
 /**
  * \addtogroup group_mac_ds
