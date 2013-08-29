@@ -87,11 +87,10 @@ COMPILER_ALIGNED(128)
 uint32_t output_sha[0x20];
 
 /* Region descriptor */
-COMPILER_ALIGNED(16)
+COMPILER_ALIGNED(64)
 struct icm_region_descriptor_main_list reg_descriptor;
 
 /* Memory region area */
-COMPILER_ALIGNED(64)
 uint32_t message_sha[16] = {
 	0x80636261,
 	0x00000000,

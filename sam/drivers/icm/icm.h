@@ -425,7 +425,9 @@ void icm_set_hash_value(Icm *p_icm, uint32_t *p_value);
  * \section icm_basic ICM basic usage
  *
  * This use case will demonstrate how to configure and use of the on-chip
- * ICM controller to check the integrity of internal SRAM.
+ * ICM controller to check the integrity of internal SRAM. The region decriptor
+ * structure address in main list must be 64 byte alignment and in secondary list
+ * must be 4 byte alignment. The hash area start address must be 128 byte alignment.
 .*
  * \section icm_basic_setup Setup steps
  *
@@ -439,7 +441,7 @@ void icm_set_hash_value(Icm *p_icm, uint32_t *p_value);
  *
  * Add this to the main loop or a setup function:
  * \code
- *   uint32_t message_sha[] @0x20000a00 = {
+ *   uint32_t message_sha[] = {
  *   0x80636261,
  *   0x00000000,
  *   0x00000000,
@@ -457,10 +459,14 @@ void icm_set_hash_value(Icm *p_icm, uint32_t *p_value);
  *   0x00000000,
  *   0x18000000
  *};
- *   uint32_t output_sha[0x20] @ 0x20000800;
+ *
+ *   COMPILER_ALIGNED(128)
+ *   uint32_t output_sha[0x20];
  *
  *   // Set region descriptor value
+ *   COMPILER_ALIGNED(64)
  *   struct icm_region_descriptor reg_descriptor;
+ *
  *   reg_descriptor.start_addr = (uint32_t)message_sha;
  *   reg_descriptor.cfg.is_compare_mode = false;
  *   reg_descriptor.cfg.is_wrap = false;

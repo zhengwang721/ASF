@@ -80,10 +80,10 @@
 #include <asf.h>
 
 /* Region descriptor in main list */
-COMPILER_ALIGNED(32)
+COMPILER_ALIGNED(64)
 struct icm_region_descriptor_main_list reg_descriptor[2];
 
-COMPILER_ALIGNED(16)
+COMPILER_ALIGNED(4)
 /* Region descriptor in secondary list */
 struct icm_region_descriptor_sec_list reg_descriptor_sec;
 
@@ -92,7 +92,6 @@ COMPILER_ALIGNED(128)
 uint32_t output_sha[0x20];
 
 /* Memory region0 area */
-COMPILER_ALIGNED(64)
 volatile uint32_t message_sha_0[16] = {
 	0x80636261,
 	0x00000000,
@@ -113,7 +112,6 @@ volatile uint32_t message_sha_0[16] = {
 };
 
 /* Memory region1 main list area */
-COMPILER_ALIGNED(64)
 volatile uint32_t message_sha_1_main[16] = {
 	0x80636261,
 	0x00000000,
@@ -134,7 +132,6 @@ volatile uint32_t message_sha_1_main[16] = {
 };
 
 /* Memory region1 secondary list area */
-COMPILER_ALIGNED(64)
 volatile uint32_t message_sha_1_sec[16] = {
 	0x80636261,
 	0x00000000,
