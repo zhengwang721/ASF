@@ -344,7 +344,7 @@ void per_mode_initiator_init(void *parameter)
 {
   
 #ifdef EXT_RF_FRONT_END_CTRL
-    uint8_t config_tx_pwr;
+    pib_value_t pib_value;
 #endif
     
 	/* PER TEST Initiator sequence number */
@@ -387,8 +387,8 @@ void per_mode_initiator_init(void *parameter)
     /* Enable RF front end control in PER Measurement mode*/
     tal_ext_pa_ctrl(PA_EXT_ENABLE);
     /* set the TX power to default level */
-    config_tx_pwr = TAL_TRANSMIT_POWER_DEFAULT;
-    tal_pib_set(phyTransmitPower, (pib_value_t *)&config_tx_pwr);
+	pib_value.pib_value_8bit = TAL_TRANSMIT_POWER_DEFAULT;
+    tal_pib_set(phyTransmitPower, &pib_value);
 #endif /* End of EXT_RF_FRONT_END_CTRL */
     
 	/* keep the compiler happy */
@@ -951,7 +951,7 @@ static void set_parameter_on_transmitter_node(retval_t status)
      * the channel changed from 26 to other channel
      */
 #ifdef EXT_RF_FRONT_END_CTRL
-                uint8_t chn_before_set;
+                arch_data_t chn_before_set;
                 tal_pib_get(phyCurrentChannel, &chn_before_set);
 #endif
                 
@@ -2281,10 +2281,10 @@ void per_mode_initiator_ed_end_cb(uint8_t energy_level)
  ***\param param_value  Pointer to the value to be set
  */
 
-void perf_set_req(uint8_t param_type, param_value_t *param_value)
+void perf_set_req(uint8_t set_param_type, param_value_t *param_value)
 {
 	param_value_t param_value_temp;
-	switch (param_type) { /* parameter type */
+	switch (set_param_type) { /* parameter type */
 	case PARAM_CHANNEL: /* Channel Set request */
 	{
 		set_channel(param_value->param_value_8bit);
@@ -2377,22 +2377,23 @@ void perf_set_req(uint8_t param_type, param_value_t *param_value)
 		                       *request */
 	{
 		uint32_t no_of_test_frames = 0;
-		MEMCPY_ENDIAN(&(no_of_test_frames),
-				&(param_value->param_value_32bit), 4);
+		CCPU_ENDIAN_TO_LE32((param_value->param_value_32bit));
+		memcpy(&(no_of_test_frames),
+		&(param_value->param_value_32bit), 4);
 
 		if ((no_of_test_frames) == NUL_VAL) {
 			param_value_temp.param_value_32bit = no_of_test_frames;
 			usr_perf_set_confirm(VALUE_OUT_OF_RANGE,
-					PARAM_NO_OF_TEST_FRAMES,
-					&param_value_temp);
-		} else {
+			PARAM_NO_OF_TEST_FRAMES,
+			&param_value_temp);
+			} else {
 			curr_trx_config_params.number_test_frames
-				= no_of_test_frames;
+			= no_of_test_frames;
 			/* Send Set confirmation with status SUCCESS */
 			param_value_temp.param_value_32bit = curr_trx_config_params.number_test_frames;
 			usr_perf_set_confirm(MAC_SUCCESS,
-					PARAM_NO_OF_TEST_FRAMES,
-					&param_value_temp);
+			PARAM_NO_OF_TEST_FRAMES,
+			&param_value_temp);
 		}
 	}
 	break;
@@ -2421,7 +2422,7 @@ void perf_set_req(uint8_t param_type, param_value_t *param_value)
 	default:
 	{
 		/* Send Set confirmation with status INVALID ARGUMENT */
-		usr_perf_set_confirm(INVALID_ARGUMENT, param_type, param_value);
+		usr_perf_set_confirm(INVALID_ARGUMENT,set_param_type, param_value);
 	}
 	break;
 	}
@@ -2680,7 +2681,7 @@ static void set_channel(uint8_t channel)
              * the channel changed from 26 to other channel
              */
 #ifdef EXT_RF_FRONT_END_CTRL
-            uint8_t chn_before_set;
+            arch_data_t chn_before_set;
             tal_pib_get(phyCurrentChannel, &chn_before_set);
 #endif          
 #if ((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B))
@@ -3054,7 +3055,7 @@ void start_ed_scan(uint8_t ed_scan_duration, uint32_t channel_sel_mask)
 		usr_ed_scan_start_confirm(MAC_SUCCESS, NUL_VAL,
 				reverse_float(scan_time));
 	}
-    uint32_t temp_var;
+    arch_data_t temp_var;
 	tal_pib_get(phyCurrentChannel, &temp_var);
 	channel_before_scan = (uint8_t)temp_var;
 
@@ -4429,6 +4430,7 @@ static float calculate_time_duration(void)
 {
 	uint32_t duration;
 	float duration_s;
+	uint64_t ll_temp = 1;
 
 	if (0 == no_of_roll_overs) {
 		duration = (SUB_TIME(end_time, start_time));
@@ -4437,7 +4439,7 @@ static float calculate_time_duration(void)
 		if (end_time >= start_time) {
 			uint64_t total_duration
 				= (((no_of_roll_overs) *
-					((1LL) << 32)) +
+					((ll_temp) << 32)) +
 					((end_time) - (start_time)) +
 					(no_of_roll_overs * (1000000)));
 
@@ -4446,8 +4448,8 @@ static float calculate_time_duration(void)
 		} else {
 			uint64_t total_duration
 				= (((no_of_roll_overs) *
-					((1LL) << 32))  +
-					((((1LL) <<
+					((ll_temp) << 32))  +
+					((((ll_temp) <<
 					32) - start_time) + (end_time))
 					+ (no_of_roll_overs * (1000000)));
 
@@ -4651,9 +4653,9 @@ static void config_frequency(float frequency)
  *
  * \param param_type    parameter type
  */
-uint8_t get_param_length(uint8_t param_type)
+uint8_t get_param_length(uint8_t parameter_type)
 {
-	return (uint8_t)PGM_READ_BYTE(&perf_config_param_size[param_type]);
+	return (uint8_t)PGM_READ_BYTE(&perf_config_param_size[parameter_type]);
 }
 
 #if ((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B))
