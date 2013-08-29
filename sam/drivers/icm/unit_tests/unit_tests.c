@@ -82,8 +82,17 @@ static volatile uint32_t gs_icm_triggered1 = 0U;
 static volatile uint32_t gs_icm_triggered2 = 0U;
 static volatile uint32_t gs_icm_triggered3 = 0U;
 
+/* Hash area */
+COMPILER_ALIGNED(128)
+uint32_t output_sha[0x20];
+
+/* Region descriptor */
+COMPILER_ALIGNED(16)
+struct icm_region_descriptor_main_list reg_descriptor;
+
 /* Memory region area */
-uint32_t message_sha[16] @ 0x20000a00 = {
+COMPILER_ALIGNED(64)
+uint32_t message_sha[16] = {
 	0x80636261,
 	0x00000000,
 	0x00000000,
@@ -101,12 +110,6 @@ uint32_t message_sha[16] @ 0x20000a00 = {
 	0x00000000,
 	0x18000000
 };
-
-/* Hash area */
-uint32_t output_sha[0x20] @ 0x20000800;
-
-/* Region descriptor */
-struct icm_region_descriptor_main_list reg_descriptor @ 0x20000900;
 
 static void reg_hash_complete_handler(uint8_t reg_num)
 {

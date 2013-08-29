@@ -112,10 +112,11 @@ void icm_set_callback(Icm *p_icm, icm_callback_t callback,
 	icm_callback_pointer[interrupt_source] = callback;
 	irq_register_handler(ICM_IRQn, irq_level);
 	if(interrupt_source == ICM_INTERRUPT_URAD) {
-		icm_enable_interrupt(p_icm, 1 << (_ICM_NUM_OF_REGION * interrupt_source));
+		icm_enable_interrupt(p_icm,
+				1 << (uint32_t)(_ICM_NUM_OF_REGION * (uint32_t)interrupt_source));
 	} else {
 		icm_enable_interrupt(p_icm,
-				1 << (_ICM_NUM_OF_REGION * interrupt_source + reg_num));
+				1 << (_ICM_NUM_OF_REGION * (uint32_t)interrupt_source + reg_num));
 	}
 }
 

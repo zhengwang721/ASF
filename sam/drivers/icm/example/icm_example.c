@@ -79,8 +79,21 @@
 
 #include <asf.h>
 
+/* Region descriptor in main list */
+COMPILER_ALIGNED(32)
+struct icm_region_descriptor_main_list reg_descriptor[2];
+
+COMPILER_ALIGNED(16)
+/* Region descriptor in secondary list */
+struct icm_region_descriptor_sec_list reg_descriptor_sec;
+
+/* Hash area */
+COMPILER_ALIGNED(128)
+uint32_t output_sha[0x20];
+
 /* Memory region0 area */
-volatile uint32_t message_sha_0[16] @ 0x20000a00 = {
+COMPILER_ALIGNED(64)
+volatile uint32_t message_sha_0[16] = {
 	0x80636261,
 	0x00000000,
 	0x00000000,
@@ -98,8 +111,10 @@ volatile uint32_t message_sha_0[16] @ 0x20000a00 = {
 	0x00000000,
 	0x18000000
 };
+
 /* Memory region1 main list area */
-volatile uint32_t message_sha_1_main[16] @ 0x20000b00 = {
+COMPILER_ALIGNED(64)
+volatile uint32_t message_sha_1_main[16] = {
 	0x80636261,
 	0x00000000,
 	0x00000000,
@@ -117,8 +132,10 @@ volatile uint32_t message_sha_1_main[16] @ 0x20000b00 = {
 	0x00000000,
 	0x18000000,
 };
+
 /* Memory region1 secondary list area */
-volatile uint32_t message_sha_1_sec[16] @ 0x20000b80 = {
+COMPILER_ALIGNED(64)
+volatile uint32_t message_sha_1_sec[16] = {
 	0x80636261,
 	0x00000000,
 	0x00000000,
@@ -136,15 +153,6 @@ volatile uint32_t message_sha_1_sec[16] @ 0x20000b80 = {
 	0x00000000,
 	0x18000000,
 };
-
-/* Hash area */
-uint32_t output_sha[0x20] @ 0x20000800;
-
-/* Region descriptor in main list */
-struct icm_region_descriptor_main_list reg_descriptor[2] @ 0x20000900;
-
-/* Region descriptor in secondary list */
-struct icm_region_descriptor_sec_list reg_descriptor_sec @ 0x20000c00;
 
 /**
  *  Configure serial console.
