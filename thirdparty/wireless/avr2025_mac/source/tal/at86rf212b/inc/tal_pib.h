@@ -58,6 +58,40 @@
 
 /* === MACROS ============================================================== */
 
+#define MAX_TX_PWR                  (11)
+#define MIN_TX_PWR                  (-25)
+#define MAX_TX_PWR_CHINA_CH_1_2     (MAX_TX_PWR)
+#define MAX_TX_PWR_CHINA_CH_0_3     (4)
+
+
+/* \todo use one max power for each band (EU, NA, China) */
+/* max power of standard compliant modes */
+#define MAX_TX_PWR_BPSK_40          MAX_TX_PWR  /* NA, band: 915MHz */
+#define MAX_TX_PWR_OQPSK_SIN_250    MAX_TX_PWR  /* NA, band: 915MHz */
+#define MAX_TX_PWR_BPSK_20          (MAX_TX_PWR)         /* EU, band: 868MHz */
+#define DEFAULT_TX_PWR_BPSK_20          (6)         /* EU, band: 868MHz */
+#define MAX_TX_PWR_OQPSK_SIN_RC_100 (MAX_TX_PWR)         /* EU, band: 868MHz */
+#define MAX_TX_PWR_OQPSK_RC_250     (10)        /* China, band: 780MHz */
+
+
+/* max power of proprietary modes */
+#ifdef HIGH_DATA_RATE_SUPPORT
+#define MAX_TX_PWR_OQPSK_SIN_500    MAX_TX_PWR  /* NA, band: 915MHz */
+#define MAX_TX_PWR_OQPSK_SIN_1000   MAX_TX_PWR  /* NA, band: 915MHz */
+#define MAX_TX_PWR_OQPSK_SIN_RC_200 (MAX_TX_PWR)         /* EU, band: 868MHz */
+#define MAX_TX_PWR_OQPSK_SIN_RC_400 (MAX_TX_PWR)         /* EU, band: 868MHz */
+#define DEFAULT_TX_PWR_OQPSK_SIN_RC_100_200_400 (3)         /* EU, band: 868MHz */
+#define MAX_TX_PWR_OQPSK_RC_500     (10)        /* China, band: 780MHz */
+#define MAX_TX_PWR_OQPSK_RC_1000    (MAX_TX_PWR)        /* China, band: 780MHz */
+
+
+/* old stuff
+#define MAX_TX_PWR_OQPSK_200        MAX_TX_PWR_OQPSK_100
+#define MAX_TX_PWR_OQPSK_400        MAX_TX_PWR_OQPSK_100
+#define MAX_TX_PWR_OQPSK_SIN_500    (7)
+#define MAX_TX_PWR_OQPSK_SIN_1000   (4)
+*/
+#endif /* #ifdef HIGH_DATA_RATE_SUPPORT */
 /* === PROTOTYPES ========================================================== */
 
 #ifdef __cplusplus
