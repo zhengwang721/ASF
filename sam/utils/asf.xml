@@ -36,7 +36,8 @@
 			<device-support value="sam4s"/>
 			<device-support value="sam4l"/>
 			<device-support value="sam4n"/>
-			<device-support value="sam4c"/>
+			<device-support value="atsam4c8c_0"/>
+			<device-support value="atsam4c16c_0"/>
 		</module>
 		<!-- VFPv4 -->
 		<module type="driver" id="sam.utils.fpu#vfpv4" caption="SAM FPU driver">
@@ -48,6 +49,8 @@
 			<build type="build-config" subtype="c++-compiler-flags" value="-mfpu=vfpv4" toolchain="armgcc"/>
 			<require idref="sam.utils.fpu_used"/>
 			<device-support value="sam4e"/>
+			<device-support value="atsam4c8c_1"/>
+			<device-support value="atsam4c16c_1"/>
 		</module>
 	</select-by-device>
 
