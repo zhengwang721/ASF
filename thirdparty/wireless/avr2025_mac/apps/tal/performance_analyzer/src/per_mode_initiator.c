@@ -2377,22 +2377,23 @@ void perf_set_req(uint8_t set_param_type, param_value_t *param_value)
 		                       *request */
 	{
 		uint32_t no_of_test_frames = 0;
-		MEMCPY_ENDIAN(&(no_of_test_frames),
-				&(param_value->param_value_32bit), 4);
+		CCPU_ENDIAN_TO_LE32((param_value->param_value_32bit));
+		memcpy(&(no_of_test_frames),
+		&(param_value->param_value_32bit), 4);
 
 		if ((no_of_test_frames) == NUL_VAL) {
 			param_value_temp.param_value_32bit = no_of_test_frames;
 			usr_perf_set_confirm(VALUE_OUT_OF_RANGE,
-					PARAM_NO_OF_TEST_FRAMES,
-					&param_value_temp);
-		} else {
+			PARAM_NO_OF_TEST_FRAMES,
+			&param_value_temp);
+			} else {
 			curr_trx_config_params.number_test_frames
-				= no_of_test_frames;
+			= no_of_test_frames;
 			/* Send Set confirmation with status SUCCESS */
 			param_value_temp.param_value_32bit = curr_trx_config_params.number_test_frames;
 			usr_perf_set_confirm(MAC_SUCCESS,
-					PARAM_NO_OF_TEST_FRAMES,
-					&param_value_temp);
+			PARAM_NO_OF_TEST_FRAMES,
+			&param_value_temp);
 		}
 	}
 	break;
@@ -3054,7 +3055,7 @@ void start_ed_scan(uint8_t ed_scan_duration, uint32_t channel_sel_mask)
 		usr_ed_scan_start_confirm(MAC_SUCCESS, NUL_VAL,
 				reverse_float(scan_time));
 	}
-    uint32_t temp_var;
+    arch_data_t temp_var;
 	tal_pib_get(phyCurrentChannel, &temp_var);
 	channel_before_scan = (uint8_t)temp_var;
 
