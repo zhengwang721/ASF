@@ -132,7 +132,7 @@ void per_mode_receptor_init(void *parameter)
 {
   
 #ifdef EXT_RF_FRONT_END_CTRL
-    uint8_t config_tx_pwr;
+pib_value_t pib_value;
 #endif  
 	/* PER TEST Receptor sequence number */
 	seq_num_receptor = rand();
@@ -143,8 +143,8 @@ void per_mode_receptor_init(void *parameter)
     /* Enable RF front end control in PER Measurement mode*/
     pal_trx_bit_write(SR_PA_EXT_EN, PA_EXT_ENABLE);
     /* set the TX power to default level */
-    config_tx_pwr = TAL_TRANSMIT_POWER_DEFAULT;
-    tal_pib_set(phyTransmitPower, (pib_value_t *)&config_tx_pwr);
+	pib_value.pib_value_8bit = TAL_TRANSMIT_POWER_DEFAULT;
+    tal_pib_set(phyTransmitPower,&pib_value);
 #endif
     
 	/* keep the compiler happy */
@@ -258,7 +258,12 @@ void per_mode_receptor_rx_cb(frame_info_t *mac_frame_info)
 		uint16_t dest_addr;
 		memcpy(&dest_addr, &mac_frame_info->mpdu[PL_POS_DST_ADDR_START],
 				SHORT_ADDR_LEN);
+#ifdef __SAMD20J18__        
 		tal_pib_get(macShortAddress, &my_addr_temp);
+#else
+		tal_pib_get(macShortAddress, (uint8_t *)&my_addr_temp);
+#endif
+        
 		my_addr = (uint16_t)my_addr_temp;
 		/* Check the destination address of the packet is my address  */
 		if (dest_addr != (uint16_t)my_addr) {
@@ -637,7 +642,7 @@ static void set_paramter_on_recptor_node(app_payload_t *msg)
 	case CHANNEL: /* Parameter = channel */
 	{
 #ifdef EXT_RF_FRONT_END_CTRL
-                uint8_t chn_before_set;
+                arch_data_t chn_before_set;
                 tal_pib_get(phyCurrentChannel, &chn_before_set);
 #endif      
 		param_val = msg->payload.set_parm_req_data.param_value;
@@ -959,9 +964,10 @@ static bool crc_check_ok(frame_info_t *mac_frame_info)
 	/* Calculate CRC manually since we are bypassing hardware CRC */
 	uint8_t number_of_bytes_rec = (mac_frame_info->mpdu)[0];
 	uint16_t cal_crc = 0;
-	uint16_t *rec_crc_ptr
-		= (uint16_t *)&(mac_frame_info->mpdu)[number_of_bytes_rec - 1 ];
-	uint16_t rec_crc = CCPU_ENDIAN_TO_LE16(*rec_crc_ptr);
+	uint8_t *rec_crc_ptr
+		= (uint8_t *)&(mac_frame_info->mpdu)[number_of_bytes_rec - 1 ];
+	uint16_t rec_crc;
+	memcpy((uint8_t *)&rec_crc, rec_crc_ptr, sizeof(rec_crc));
 	uint8_t i;
 	for (i = 1; i <= (number_of_bytes_rec - FCS_LEN); i++) {
 		cal_crc = crc_test(cal_crc, (mac_frame_info->mpdu)[i]);

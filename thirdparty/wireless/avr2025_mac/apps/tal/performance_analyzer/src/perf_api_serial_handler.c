@@ -1513,8 +1513,7 @@ void usr_range_test_stop_confirm(uint8_t status)
  * \param param_value   Pointer to the value of the parameter that has been set
  * \return void
  */
-void usr_perf_set_confirm(uint8_t status, uint8_t param_type,
-		param_value_t *param_value)
+void usr_perf_set_confirm(uint8_t status, uint8_t param_type,param_value_t *param_value)
 {
 	uint8_t *msg_buf;
 	uint8_t param_len;
@@ -2260,7 +2259,7 @@ void usr_identify_board_confirm(uint8_t status,
  * \return void
  */
 void usr_get_current_config_confirm(uint8_t status,
-		trx_config_params_t *curr_trx_config_params)
+		trx_config_params_t *curr_trx_conf_params)
 {
 	uint8_t *msg_buf;
 
@@ -2279,20 +2278,20 @@ void usr_get_current_config_confirm(uint8_t status,
 	/* Copy confirmation payload */
 	*msg_buf++ = status;
 	/* configuration parameters */
-	*msg_buf++ = curr_trx_config_params->channel;
-	*msg_buf++ = curr_trx_config_params->channel_page;
-	*msg_buf++ = curr_trx_config_params->tx_power_dbm;
+	*msg_buf++ = curr_trx_conf_params->channel;
+	*msg_buf++ = curr_trx_conf_params->channel_page;
+	*msg_buf++ = curr_trx_conf_params->tx_power_dbm;
 #if ((TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B))
-	*msg_buf++ = curr_trx_config_params->tx_power_reg;
+	*msg_buf++ = curr_trx_conf_params->tx_power_reg;
 #else
 	*msg_buf++ = FIELD_DOES_NOT_EXIST; /* Tx Power in reg support is given
 	                                   * for RF212 and 212B transceivers */
 #endif
-	*msg_buf++ = (uint8_t)curr_trx_config_params->csma_enabled;
-	*msg_buf++ = (uint8_t)curr_trx_config_params->retry_enabled;
-	*msg_buf++ = (uint8_t)curr_trx_config_params->ack_request;
+	*msg_buf++ = (uint8_t)curr_trx_conf_params->csma_enabled;
+	*msg_buf++ = (uint8_t)curr_trx_conf_params->retry_enabled;
+	*msg_buf++ = (uint8_t)curr_trx_conf_params->ack_request;
 #if (TAL_TYPE != AT86RF230B)
-	*msg_buf++ = (uint8_t)curr_trx_config_params->rx_desensitize;
+	*msg_buf++ = (uint8_t)curr_trx_conf_params->rx_desensitize;
 #else
 	*msg_buf++ = FIELD_DOES_NOT_EXIST; /*Filled with 0xff to indicate this
 	                                    * parameter is not available for
@@ -2301,7 +2300,7 @@ void usr_get_current_config_confirm(uint8_t status,
 #endif
 
 #if (TAL_TYPE == AT86RF233)
-	*msg_buf++ = (uint8_t)curr_trx_config_params->rpc_enable;
+	*msg_buf++ = (uint8_t)curr_trx_conf_params->rpc_enable;
 #else
 	*msg_buf++ = FIELD_DOES_NOT_EXIST; /*Filled with 0xff to indicate this
 	                                    * parameter is not available for
@@ -2310,35 +2309,35 @@ void usr_get_current_config_confirm(uint8_t status,
 #endif
 
 #if (ANTENNA_DIVERSITY == 1)
-	*msg_buf++ = curr_trx_config_params->antenna_selected;
+	*msg_buf++ = curr_trx_conf_params->antenna_selected;
 #else
 	*msg_buf++ = FIELD_DOES_NOT_EXIST;
 #endif
 
-	*msg_buf++ = curr_trx_config_params->trx_state;
-	*msg_buf++ = (uint8_t)curr_trx_config_params->number_test_frames;
-	*msg_buf++ = (uint8_t)(curr_trx_config_params->number_test_frames >> 8);
+	*msg_buf++ = curr_trx_conf_params->trx_state;
+	*msg_buf++ = (uint8_t)curr_trx_conf_params->number_test_frames;
+	*msg_buf++ = (uint8_t)(curr_trx_conf_params->number_test_frames >> 8);
 	*msg_buf++
-		= (uint8_t)(curr_trx_config_params->number_test_frames >> 16);
+		= (uint8_t)(curr_trx_conf_params->number_test_frames >> 16);
 	*msg_buf++
-		= (uint8_t)(curr_trx_config_params->number_test_frames >> 24);
-	*msg_buf++ = curr_trx_config_params->phy_frame_length;
+		= (uint8_t)(curr_trx_conf_params->number_test_frames >> 24);
+	*msg_buf++ = curr_trx_conf_params->phy_frame_length;
 
 	/*peer node settings need to be added */
 	/*Peer settings for parameters like CRC and ant diversity */
 #if (ANTENNA_DIVERSITY == 1)
-	*msg_buf++ = curr_trx_config_params->antenna_selected_on_peer;
+	*msg_buf++ = curr_trx_conf_params->antenna_selected_on_peer;
 #else
 	*msg_buf++ = FIELD_DOES_NOT_EXIST;
 #endif
 #ifdef CRC_SETTING_ON_REMOTE_NODE
-	*msg_buf++ = curr_trx_config_params->crc_settings_on_peer;
+	*msg_buf++ = curr_trx_conf_params->crc_settings_on_peer;
 #else
 	*msg_buf++ = FIELD_DOES_NOT_EXIST;
 #endif
 
 #if (TAL_TYPE == AT86RF233)
-	memcpy(msg_buf, &curr_trx_config_params->ism_frequency, sizeof(float));
+	memcpy(msg_buf, &curr_trx_conf_params->ism_frequency, sizeof(float));
 #else
 	float temp = 0.0;
 	memcpy(msg_buf, &temp, sizeof(float));

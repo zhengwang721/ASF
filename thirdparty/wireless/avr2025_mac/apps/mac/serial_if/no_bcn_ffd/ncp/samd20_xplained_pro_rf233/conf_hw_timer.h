@@ -1,7 +1,7 @@
 /**
- * \file sio2host.h
+ * \file *********************************************************************
  *
- * \brief Event handling Serial I/O  Functionalities
+ * \brief USART Serial configuration
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -40,66 +40,16 @@
  * \asf_license_stop
  */
 
-#ifndef SIO2HOST_H
-#define SIO2HOST_H
+#ifndef CONF_HW_TIMER_H_INCLUDED
+#define CONF_HW_TIMER_H_INCLUDED
 
-/**
- * \defgroup group_sio2host_uart SIO2HOST - UART
- * This module performs serial input/output functionalities via UART
- * @{
+
+
+/*! \name Configuration
  */
+//! @{
+#define TIMER     TC0
+//! @}
 
-/* === INCLUDES ============================================================ */
 
-#include "compiler.h"
-#include "status_codes.h"
-
-#define SERIAL_RX_BUF_SIZE_HOST    156
-
-/* === PROTOTYPES ============================================================
- **/
-
-/**
- * \brief Initializes the Serial IO Module
- * \return STATUS_OK for successful initialization and FAILURE incase the IO is
- *not initialized
- */
-void sio2host_init(void);
-
-/**
- * \brief Transmits data via UART
- * \param data Pointer to the buffer where the data to be transmitted is present
- * \param length Number of bytes to be transmitted
- *
- * \return Number of bytes actually transmitted
- */
-uint8_t sio2host_tx(uint8_t *data, uint8_t length);
-
-/**
- * \brief Receives data from UART
- *
- * \param data pointer to the buffer where the received data is to be stored
- * \param max_length maximum length of data to be received
- *
- * \return actual number of bytes received
- */
-uint8_t sio2host_rx(uint8_t *data, uint8_t max_length);
-
-/**
- * \brief This function performs a blocking character receive functionality
- * \return returns the data which is received
- */
-uint8_t sio2host_getchar(void);
-
-/**
- * \brief This function performs a non-blocking character receive functionality
- * \return '-1' if no data is recieved or returns the data if a character is
- *received
- */
-int sio2host_getchar_nowait(void);
-
-#ifdef __SAMD20J18__
-void USART_HOST_ISR_VECT(uint8_t instance);
-#endif
-
-#endif /* SIO2HOST_H */
+#endif /* CONF_HW_TIMER_H_INCLUDED */
