@@ -484,12 +484,14 @@ static bool process_data_ind_not_transient(buffer_t *b_ptr, frame_info_t *f_ptr)
 	 */
 	switch (mac_state) {
 #if (MAC_START_REQUEST_CONFIRM == 1)
-	case MAC_PAN_COORD_STARTED:
-	{
-		switch (mac_parse_data.frame_type) {
-		case FCF_FRAMETYPE_MAC_CMD:
-		{
-			switch (mac_parse_data.mac_command) {
+        case MAC_PAN_COORD_STARTED:
+            {
+                switch (mac_parse_data.frame_type)
+                {
+                    case FCF_FRAMETYPE_MAC_CMD:
+                        {
+                            switch (mac_parse_data.mac_command)
+                            {
 #if (MAC_ASSOCIATION_INDICATION_RESPONSE == 1)
 			case ASSOCIATIONREQUEST:
 				mac_process_associate_request(b_ptr);
@@ -1017,7 +1019,7 @@ static bool parse_mpdu(frame_info_t *rx_frame_ptr)
 	 * if available.
 	 */
 
-#ifndef MAC_SECURITY_ZIP
+#if(!defined MAC_SECURITY_ZIP && !defined MAC_SECURITY_2006)
 	if (fcf & FCF_SECURITY_ENABLED) {
 		return false;
 	}
@@ -1037,7 +1039,7 @@ static bool parse_mpdu(frame_info_t *rx_frame_ptr)
 	mac_parse_data.time_stamp = rx_frame_ptr->time_stamp;
 #endif  /* BEACON_SUPPORT */
 
-#ifdef MAC_SECURITY_ZIP
+#if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
 	if (fcf & FCF_SECURITY_ENABLED) {
 		retval_t status;
 		status = mac_unsecure(&mac_parse_data, &rx_frame_ptr->mpdu[1],
@@ -1092,7 +1094,7 @@ static bool parse_mpdu(frame_info_t *rx_frame_ptr)
 		mac_parse_data.sec_ctrl.sec_level = 0;
 	}
 
-#endif  /* MAC_SECURITY_ZIP */
+#endif  /* (MAC_SECURITY_ZIP || MAC_SECURITY_2006) */
 
 	/* temp_frame_ptr still points to the first octet of the MAC payload. */
 	switch (mac_parse_data.frame_type) {

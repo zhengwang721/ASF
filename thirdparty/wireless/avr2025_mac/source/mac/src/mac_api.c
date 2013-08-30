@@ -157,16 +157,17 @@ bool wpan_task(void)
 
 /* MAC level API */
 
-#ifdef MAC_SECURITY_ZIP
+#if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
 bool wpan_mcps_data_req(uint8_t SrcAddrMode,
-		wpan_addr_spec_t *DstAddrSpec,
-		uint8_t msduLength,
-		uint8_t *msdu,
-		uint8_t msduHandle,
-		uint8_t TxOptions,
-		uint8_t SecurityLevel,
-		uint8_t KeyIdMode,
-		uint8_t KeyIndex)
+                        wpan_addr_spec_t *DstAddrSpec,
+                        uint8_t msduLength,
+                        uint8_t *msdu,
+                        uint8_t msduHandle,
+                        uint8_t TxOptions,
+                        uint8_t SecurityLevel,
+                        uint8_t *KeySource,
+                        uint8_t KeyIdMode,
+                        uint8_t KeyIndex)
 #else   /* No MAC_SECURITY */
 bool wpan_mcps_data_req(uint8_t SrcAddrMode,
 		wpan_addr_spec_t *DstAddrSpec,
@@ -226,11 +227,12 @@ bool wpan_mcps_data_req(uint8_t SrcAddrMode,
 	/* Other fields */
 	mcps_data_req->msduHandle = msduHandle;
 	mcps_data_req->TxOptions = TxOptions;
-#ifdef MAC_SECURITY_ZIP
-	mcps_data_req->SecurityLevel = SecurityLevel;
-	mcps_data_req->KeyIdMode = KeyIdMode;
-	mcps_data_req->KeyIndex = KeyIndex;
-#endif  /* MAC_SECURITY_ZIP */
+#if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
+    mcps_data_req->SecurityLevel = SecurityLevel;
+    mcps_data_req->KeySource = KeySource;
+    mcps_data_req->KeyIdMode = KeyIdMode;
+    mcps_data_req->KeyIndex = KeyIndex;
+#endif  /* (MAC_SECURITY_ZIP || MAC_SECURITY_2006) */
 
 	mcps_data_req->msduLength = msduLength;
 
@@ -558,11 +560,11 @@ bool wpan_mlme_reset_req(bool SetDefaultPib)
 }
 
 #if (MAC_GET_SUPPORT == 1)
-#ifdef MAC_SECURITY_ZIP
+#if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
 bool wpan_mlme_get_req(uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
 #else
 bool wpan_mlme_get_req(uint8_t PIBAttribute)
-#endif  /* MAC_SECURITY_ZIP */
+#endif  /* (MAC_SECURITY_ZIP || MAC_SECURITY_2006) */
 {
 	buffer_t *buffer_header;
 	mlme_get_req_t *mlme_get_req;
@@ -582,9 +584,9 @@ bool wpan_mlme_get_req(uint8_t PIBAttribute)
 	/* Update the get request structure */
 	mlme_get_req->cmdcode = MLME_GET_REQUEST;
 	mlme_get_req->PIBAttribute = PIBAttribute;
-#ifdef MAC_SECURITY_ZIP
-	mlme_get_req->PIBAttributeIndex = PIBAttributeIndex;
-#endif  /* MAC_SECURITY_ZIP */
+#if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
+    mlme_get_req->PIBAttributeIndex = PIBAttributeIndex;
+#endif  /* (MAC_SECURITY_ZIP || MAC_SECURITY_2006) */
 
 #ifdef ENABLE_QUEUE_CAPACITY
 	if (MAC_SUCCESS != qmm_queue_append(&nhle_mac_q, buffer_header)) {
@@ -605,14 +607,16 @@ bool wpan_mlme_get_req(uint8_t PIBAttribute)
 
 #endif  /* (MAC_GET_SUPPORT == 1) */
 
-#ifdef MAC_SECURITY_ZIP
+
+
+#if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
 bool wpan_mlme_set_req(uint8_t PIBAttribute,
 		uint8_t PIBAttributeIndex,
 		void *PIBAttributeValue)
 #else
 bool wpan_mlme_set_req(uint8_t PIBAttribute,
-		void *PIBAttributeValue)
-#endif  /* MAC_SECURITY_ZIP */
+                       void *PIBAttributeValue)
+#endif  /* (MAC_SECURITY_ZIP || MAC_SECURITY_2006) */
 {
 	buffer_t *buffer_header;
 	mlme_set_req_t *mlme_set_req;
@@ -640,9 +644,9 @@ bool wpan_mlme_set_req(uint8_t PIBAttribute,
 
 	/* Attribute and attribute value length */
 	mlme_set_req->PIBAttribute = PIBAttribute;
-#ifdef MAC_SECURITY_ZIP
-	mlme_set_req->PIBAttributeIndex = PIBAttributeIndex;
-#endif  /* MAC_SECURITY_ZIP */
+#if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
+    mlme_set_req->PIBAttributeIndex = PIBAttributeIndex;
+#endif  /* (MAC_SECURITY_ZIP || MAC_SECURITY_2006) */
 
 	/* Attribute value */
 
@@ -651,7 +655,7 @@ bool wpan_mlme_set_req(uint8_t PIBAttribute,
 			(macResponseWaitTime == PIBAttribute)           ||
 			(macTransactionPersistenceTime == PIBAttribute) ||
 			(macBeaconTxTime == PIBAttribute)
-#ifdef MAC_SECURITY_ZIP
+#if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
 			||
 			(macFrameCounter == PIBAttribute)               ||
 			(macDefaultKey == PIBAttribute)

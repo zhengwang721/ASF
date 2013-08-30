@@ -188,12 +188,12 @@ typedef struct parse_tag {
 	uint8_t src_addr_mode;
 	uint16_t src_panid;
 	address_field_t src_addr;
-#ifdef MAC_SECURITY_ZIP
+#if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
 	sec_ctrl_t sec_ctrl;
 	uint8_t key_id_len;
 	uint32_t frame_cnt;
 	uint8_t key_id[MAX_KEY_ID_FIELD_LEN];
-#endif  /* MAC_SECURITY_ZIP */
+#endif  /* #if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006)) */
 	uint8_t mac_command;
 	uint8_t ppdu_link_quality;
 #if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP)

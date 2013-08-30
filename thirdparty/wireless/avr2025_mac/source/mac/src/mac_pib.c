@@ -66,9 +66,9 @@
 #include "mac_internal.h"
 #include "mac.h"
 #include "mac_build_config.h"
-#ifdef MAC_SECURITY_ZIP
+#if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
 #include "mac_security.h"
-#endif  /* MAC_SECURITY_ZIP */
+#endif  /* (MAC_SECURITY_ZIP || MAC_SECURITY_2006) */
 #ifdef TEST_HARNESS
 #include "private_const.h"
 #endif /* TEST_HARNESS */
@@ -134,7 +134,8 @@ static FLASH_DECLARE(uint8_t mac_pib_size[]) = {
 #define MIN_MAC_PIB_ATTRIBUTE_ID            (macAckWaitDuration)
 #define MAX_MAC_PIB_ATTRIBUTE_ID            (macMinSIFSPeriod)
 
-#ifdef MAC_SECURITY_ZIP
+
+#if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
 /* Size constants for MAC Security PIB attributes */
 static FLASH_DECLARE(uint8_t mac_sec_pib_size[]) =
 {
@@ -151,14 +152,15 @@ static FLASH_DECLARE(uint8_t mac_sec_pib_size[]) =
     sizeof(uint8_t),                // 0x7A: macAutoRequestKeySource        // Not used in ZIP
     sizeof(uint8_t),                // 0x7B: macAutoRequestKeyIndex         // Not used in ZIP
     (8 * sizeof(uint8_t)),          // 0x7C: macDefaultKeySource - 8 octets
-    sizeof(uint16_t),               // 0x7D: macPANCoordExtendedAddress     // Not used in ZIP
+    (8 * sizeof(uint8_t)),               // 0x7D: macPANCoordExtendedAddress     // Not used in ZIP
     sizeof(uint16_t)                // 0x7E: macPANCoordShortAddress        // Not used in ZIP
 };
 
 /* Update this one the arry mac_pib_size is updated. */
 #define MIN_MAC_SEC_PIB_ATTRIBUTE_ID        (macKeyTable)
 #define MAX_MAC_SEC_PIB_ATTRIBUTE_ID        (macPANCoordShortAddress)
-#endif  /* MAC_SECURITY_ZIP */
+#endif  /* (MAC_SECURITY_ZIP || MAC_SECURITY_2006) */
+
 
 /* Size constants for Private PIB attributes */
 static FLASH_DECLARE(uint8_t private_pib_size[]) = {
@@ -204,9 +206,9 @@ void mlme_get_request(arch_data_t *m)
 	/* Use the mlme get request buffer for mlme get confirmation */
 	mlme_get_conf_t *mgc = (mlme_get_conf_t *)BMM_BUFFER_POINTER(
 			(buffer_t *)m);
-#ifdef MAC_SECURITY_ZIP
+#if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
 	uint8_t attribute_index = ((mlme_get_req_t *)mgc)->PIBAttributeIndex;
-#endif /* MAC_SECURITY_ZIP */
+#endif /* (MAC_SECURITY_ZIP || MAC_SECURITY_2006) */
 
     /* Do actual PIB attribute reading */
     {
@@ -399,7 +401,7 @@ void mlme_get_request(arch_data_t *m)
                 status = MAC_UNSUPPORTED_ATTRIBUTE;
                 break;
 
-#ifdef MAC_SECURITY_ZIP
+#if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
             case macKeyTable:
                 if (attribute_index >= mac_sec_pib.KeyTableEntries)
                 {
@@ -497,7 +499,7 @@ void mlme_get_request(arch_data_t *m)
                 memcpy(attribute_value, mac_sec_pib.DefaultKeySource, 8);
                 break;
 
-#endif  /* MAC_SECURITY_ZIP */
+#endif  /* (MAC_SECURITY_ZIP || MAC_SECURITY_2006) */
 
 #ifdef TEST_HARNESS
                 /*
@@ -527,9 +529,9 @@ void mlme_get_request(arch_data_t *m)
         }
 
         mgc->PIBAttribute = ((mlme_get_req_t *)mgc)->PIBAttribute;
-#ifdef MAC_SECURITY_ZIP
+#if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
         mgc->PIBAttributeIndex = attribute_index;
-#endif  /* MAC_SECURITY_ZIP */
+#endif  /* (MAC_SECURITY_ZIP || MAC_SECURITY_2006) */
         mgc->cmdcode      = MLME_GET_CONFIRM;
         mgc->status       = status;
     }
@@ -572,7 +574,7 @@ void mlme_get_request(arch_data_t *m)
  *         MAC_SUCCESS if the attempt to set the PIB attribute was successful
  *         TAL_BUSY if the TAL is not in an idle state to change PIB attributes
  */
-#ifdef MAC_SECURITY_ZIP
+#if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
 retval_t mlme_set(uint8_t attribute, uint8_t attribute_index,
 		pib_value_t *attribute_value, bool set_trx_to_sleep)
 #else
@@ -799,7 +801,7 @@ retval_t mlme_set(uint8_t attribute, pib_value_t *attribute_value,
 		status = MAC_UNSUPPORTED_ATTRIBUTE;
 		break;
 
-#ifdef MAC_SECURITY_ZIP
+#if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
         case macSecurityEnabled:
             mac_pib.mac_SecurityEnabled = attribute_value->pib_value_8bit;
             break;
@@ -916,7 +918,15 @@ retval_t mlme_set(uint8_t attribute, pib_value_t *attribute_value,
             memcpy(mac_sec_pib.DefaultKeySource, attribute_value, 8);
             break;
 
-#endif  /* MAC_SECURITY_ZIP */
+        case macPANCoordExtendedAddress:
+            memcpy(mac_sec_pib.PANCoordExtendedAddress, attribute_value, 8);
+            break;
+
+        case macPANCoordShortAddress:
+            mac_sec_pib.PANCoordShortAddress = attribute_value->pib_value_16bit;
+            break;
+
+#endif  /* (MAC_SECURITY_ZIP || MAC_SECURITY_2006) */
 
 #ifdef TEST_HARNESS
 	case macPrivateIllegalFrameType:
@@ -951,12 +961,16 @@ retval_t mlme_set(uint8_t attribute, pib_value_t *attribute_value,
 	return status;
 }
 
+#ifdef MATHI
 retval_t mlme_get(uint8_t attribute, pib_value_t *attribute_value)
 {
 	/*
 	 * Variables indicates whether the transceiver has been woken up for
 	 * setting a TAL PIB attribute.
 	 */
+#if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
+	uint8_t attribute_index = msr->PIBAttributeIndex;
+#endif
 
 	retval_t status = MAC_SUCCESS;
 
@@ -1147,7 +1161,7 @@ retval_t mlme_get(uint8_t attribute, pib_value_t *attribute_value)
 		status = MAC_UNSUPPORTED_ATTRIBUTE;
 		break;
 
-#ifdef MAC_SECURITY_ZIP
+#if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
 	case macKeyTable:
 		if (attribute_index >= mac_sec_pib.KeyTableEntries) {
 			status = MAC_INVALID_INDEX;
@@ -1245,7 +1259,7 @@ retval_t mlme_get(uint8_t attribute, pib_value_t *attribute_value)
 		/* Key Source length is 8 octets. */
 		memcpy(attribute_value, mac_sec_pib.DefaultKeySource, 8);
 		break;
-#endif  /* MAC_SECURITY_ZIP */
+#endif  /* (MAC_SECURITY_ZIP || MAC_SECURITY_2006) */
 
 #ifdef TEST_HARNESS
 
@@ -1278,6 +1292,7 @@ retval_t mlme_get(uint8_t attribute, pib_value_t *attribute_value)
 	}
 	return status;
 }
+#endif
 
 #if (HIGHEST_STACK_LAYER == MAC)
 
@@ -1299,21 +1314,21 @@ void mlme_set_request(arch_data_t *m)
 		pib_value_t *attribute_value = &msr->PIBAttributeValue;
 		retval_t status = MAC_SUCCESS;
 		mlme_set_conf_t *msc;
-#ifdef MAC_SECURITY_ZIP
+#if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
 
 		/*
 		 * Store attribute index in local var, because
 		 * it will be overwritten later.
 		 */
 		uint8_t attribute_index = msr->PIBAttributeIndex;
-#endif  /* MAC_SECURITY_ZIP */
+#endif  /* (MAC_SECURITY_ZIP || MAC_SECURITY_2006) */
 
 		/*
 		 * Call internal PIB attribute handling function. Always force
 		 * the trx back to sleep when using request primitives via the
 		 * MLME queue.
 		 */
-#ifdef MAC_SECURITY_ZIP
+#if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
 		status = mlme_set(msr->PIBAttribute, msr->PIBAttributeIndex,
 				attribute_value, true);
 #else
@@ -1430,14 +1445,14 @@ uint8_t mac_get_pib_attribute_size(uint8_t pib_attribute_id)
 		       MIN_MAC_PIB_ATTRIBUTE_ID]));
 	}
 
-#ifdef MAC_SECURITY_ZIP
+#if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
 	if (MIN_MAC_SEC_PIB_ATTRIBUTE_ID <= pib_attribute_id &&
 			MAX_MAC_SEC_PIB_ATTRIBUTE_ID >= pib_attribute_id) {
 		return(PGM_READ_BYTE(&mac_sec_pib_size[pib_attribute_id -
 		       MIN_MAC_SEC_PIB_ATTRIBUTE_ID]));
 	}
 
-#endif  /* MAC_SECURITY_ZIP */
+#endif  /* (MAC_SECURITY_ZIP || MAC_SECURITY_2006) */
 
 	if (MIN_PRIVATE_PIB_ATTRIBUTE_ID <= pib_attribute_id) {
 		return(PGM_READ_BYTE(&private_pib_size[pib_attribute_id -
