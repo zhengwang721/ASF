@@ -827,7 +827,7 @@ resolution_t;
   */
 typedef enum tag_recal_threshold_t
 {
-  RECAL_100,
+  RECAL_100 = 0,
   RECAL_50,
   RECAL_25,
   RECAL_12_5,
@@ -956,8 +956,6 @@ sensor_t;
 extern qt_touch_lib_config_data_t qt_config_data;
 //! measurement data.
 extern qt_touch_lib_measure_data_t qt_measure_data;
-//! Get sensor delta values.
-extern int16_t qt_get_sensor_delta (uint8_t sensor);
 //! variable holding the status flags.
 extern uint16_t lib_status_flags;
 //! the library sensors.
