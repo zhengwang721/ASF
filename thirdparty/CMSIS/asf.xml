@@ -61,6 +61,7 @@ and reduces time-to-market for new embedded applications.
 			<build type="header-file" value="Include/core_cmInstr.h" toolchain="armgcc"/>
 			<require idref="sam.utils.fpu_used"/>
 			<device-support value="sam4e"/>
+			<device-support value="atsam4c16c_1"/>
 			<require idref="thirdparty.cmsis.license"/>
 			<info type="gui-flag" value="hidden"/>
 		</module>
