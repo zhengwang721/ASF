@@ -113,6 +113,7 @@ static FLASH_DECLARE( uint8_t tx_pwr_table_China[TX_PWR_TABLE_SIZE])
 /* === PROTOTYPES ========================================================== */
 
 static void limit_tx_pwr(void);
+static void set_default_tx_pwr(void);
 static uint8_t convert_phyTransmitPower_to_reg_value(
 		uint8_t phyTransmitPower_value);
 static bool apply_channel_page_configuration(uint8_t ch_page);
@@ -221,7 +222,6 @@ void write_all_tal_pib_to_trx(void)
 	if (tal_pib.PromiscuousMode) {
 		set_trx_state(CMD_RX_ON);
 	}
-
 #endif
 }
 
@@ -257,7 +257,6 @@ retval_t tal_pib_get(uint8_t attribute, uint8_t *value)
 	case macPromiscuousMode:
 		*(uint16_t *)value = tal_pib.PromiscuousMode;
 		break;
-
 #endif
 	case macShortAddress:
 		*(uint16_t *)value = tal_pib.ShortAddress;
@@ -323,7 +322,6 @@ retval_t tal_pib_get(uint8_t attribute, uint8_t *value)
 	case macBeaconTxTime:
 		*(uint32_t *)value = tal_pib.BeaconTxTime;
 		break;
-
 #endif  /* BEACON_SUPPORT */
 	case mac_i_pan_coordinator:
 		*(bool *)value = tal_pib.PrivatePanCoordinator;
@@ -374,7 +372,6 @@ retval_t tal_pib_set(uint8_t attribute, pib_value_t *value)
 		Assert("TAL is busy" == 0);
 		return TAL_BUSY;
 	}
-
 #endif /* (MAC_SCAN_ED_REQUEST_CONFIRM == 1) */
 
 	/*
@@ -419,7 +416,6 @@ retval_t tal_pib_set(uint8_t attribute, pib_value_t *value)
 	case macBeaconTxTime:
 		tal_pib.BeaconTxTime = value->pib_value_32bit;
 		break;
-
 #endif  /* BEACON_SUPPORT */
 #ifdef PROMISCUOUS_MODE
 	case macPromiscuousMode:
@@ -428,7 +424,7 @@ retval_t tal_pib_set(uint8_t attribute, pib_value_t *value)
 			tal_trx_wakeup();
 
 			/* Check if receive buffer is available or queue is not
-			 *full. */
+			 * full. */
 			if (NULL == tal_rx_buffer) {
 				set_trx_state(CMD_PLL_ON);
 				tal_rx_on_required = true;
@@ -451,7 +447,7 @@ retval_t tal_pib_set(uint8_t attribute, pib_value_t *value)
 
 		if (tal_trx_status == TRX_SLEEP) {
 			/* While trx is in SLEEP, register cannot be accessed.
-			 **/
+			**/
 			return TAL_TRX_ASLEEP;
 		}
 
@@ -462,13 +458,12 @@ retval_t tal_pib_set(uint8_t attribute, pib_value_t *value)
 
 			/*
 			 * macMinBE must not be larger than macMaxBE or
-			 *calculation
+			 * calculation
 			 * of macMaxFrameWaitTotalTime will fail.
 			 */
 			if (tal_pib.MinBE > tal_pib.MaxBE) {
 				tal_pib.MinBE = tal_pib.MaxBE;
 			}
-
 #endif  /* REDUCED_PARAM_CHECK */
 #ifndef SW_CONTROLLED_CSMA
 			pal_trx_bit_write(SR_MIN_BE, tal_pib.MinBE);
@@ -530,20 +525,7 @@ retval_t tal_pib_set(uint8_t attribute, pib_value_t *value)
 
 				previous_channel = tal_pib.CurrentChannel;
 				tal_pib.CurrentChannel = value->pib_value_8bit;
-//#ifdef HIGH_DATA_RATE_SUPPORT
-//				if ((tal_pib.CurrentPage == 5) ||
-//						(tal_pib.CurrentPage == 18) ||
-//						(tal_pib.CurrentPage == 19))
-//#else
-//				if (tal_pib.CurrentPage == 5)
-//#endif
-//                {
-//                if((tal_pib.CurrentChannel == 0 )||(tal_pib.CurrentChannel == 3))
-//                {
-//                tal_pib.TransmitPower = TX_PWR_TOLERANCE | CONV_DBM_TO_phyTransmitPower(MAX_TX_PWR_CHINA_CH_0_3);
-//				pal_trx_reg_write(RG_PHY_TX_PWR, convert_phyTransmitPower_to_reg_value(tal_pib.TransmitPower));
-//                }
-//                }
+                set_default_tx_pwr();
                
 				/*
 				 * Set trx to "soft" off avoiding that ongoing
@@ -576,9 +558,7 @@ retval_t tal_pib_set(uint8_t attribute, pib_value_t *value)
 				{
 					pal_trx_bit_write(SR_CC_NUMBER, GET_CHINA_FREQ(
 							tal_pib.CurrentChannel));
-					/* Set modulation and channel */
-					apply_channel_page_configuration(
-							tal_pib.CurrentPage);                    
+                  
 				} else if ((tal_pib.CurrentChannel > 0) &&
 						(previous_channel > 0)) {
 					pal_trx_bit_write(SR_CHANNEL,
@@ -610,10 +590,10 @@ retval_t tal_pib_set(uint8_t attribute, pib_value_t *value)
 			if (tal_state != TAL_IDLE) {
 				return TAL_BUSY;
 			} else {
+              
 				uint8_t page;
 				tal_trx_status_t previous_trx_status = TRX_OFF;
 				bool ret_val;
-				uint8_t reg_value;
 
 				/*
 				 * Changing the channel, channel page or
@@ -653,12 +633,8 @@ retval_t tal_pib_set(uint8_t attribute, pib_value_t *value)
 				} else {
 					return MAC_INVALID_PARAMETER;
 				}
-
-				limit_tx_pwr();
-				reg_value
-					= convert_phyTransmitPower_to_reg_value(
-						tal_pib.TransmitPower);
-				pal_trx_reg_write(RG_PHY_TX_PWR, reg_value);
+                
+                set_default_tx_pwr();
 			}
 
 			break;
@@ -739,6 +715,58 @@ retval_t tal_pib_set(uint8_t attribute, pib_value_t *value)
 	return MAC_SUCCESS;
 } /* tal_pib_set() */
 
+static void set_default_tx_pwr(void)
+{
+ 
+int8_t dbm_value;
+
+dbm_value = CONV_phyTransmitPower_TO_DBM(tal_pib.TransmitPower);
+
+#ifdef HIGH_DATA_RATE_SUPPORT
+    if ((tal_pib.CurrentPage == 5) ||
+    (tal_pib.CurrentPage == 18) ||
+    (tal_pib.CurrentPage == 19))
+#else
+    
+#endif
+    {
+        if((tal_pib.CurrentChannel == 0 )||(tal_pib.CurrentChannel == 3))
+        {
+            if(dbm_value > MAX_TX_PWR_CHINA_CH_0_3)
+                {
+                dbm_value = MAX_TX_PWR_CHINA_CH_0_3;
+                }
+        }
+    }
+    else if(tal_pib.CurrentPage == 0)
+    {
+        if(tal_pib.CurrentChannel == 0 )
+        {
+            if(dbm_value > DEFAULT_TX_PWR_BPSK_20)
+            {
+            dbm_value = DEFAULT_TX_PWR_BPSK_20;
+            }
+        }
+    
+    }
+    else
+    {
+        if(tal_pib.CurrentChannel == 0 )
+        {   
+            if(dbm_value > DEFAULT_TX_PWR_OQPSK_SIN_RC_100_200_400)
+            {
+            
+            dbm_value = DEFAULT_TX_PWR_OQPSK_SIN_RC_100_200_400;
+            
+            }
+        }                 
+    } 
+    
+    tal_pib.TransmitPower = TX_PWR_TOLERANCE | CONV_DBM_TO_phyTransmitPower(dbm_value);
+    pal_trx_reg_write(RG_PHY_TX_PWR, convert_phyTransmitPower_to_reg_value(tal_pib.TransmitPower));
+  
+}
+
 /**
  * \brief Limit the phyTransmitPower to the trx limits
  *
@@ -750,6 +778,8 @@ static void limit_tx_pwr(void)
     int8_t dbm_value;
 
     dbm_value = CONV_phyTransmitPower_TO_DBM(tal_pib.TransmitPower);
+    
+             
 
     /* Limit to the transceiver's absolute maximum/minimum. */
     if (dbm_value <= MIN_TX_PWR)
@@ -794,26 +824,54 @@ static void limit_tx_pwr(void)
                 }
                 break;
             case 5: /* China, O-QPSK: only channels 0 to 3 allowed */
-                if (tal_pib.CurrentChannel == 0)
+                if ((tal_pib.CurrentChannel == 0)||(tal_pib.CurrentChannel == 3))
                 {
-                if(dbm_value > MAX_TX_PWR_OQPSK_RC_250)
+                if(dbm_value > MAX_TX_PWR_CHINA_CH_0_3)
+                  {
+                    dbm_value = MAX_TX_PWR_CHINA_CH_0_3;
+                  }
+                }
+                else
+                {
+                  if(dbm_value > MAX_TX_PWR_OQPSK_RC_250)
                   {
                     dbm_value = MAX_TX_PWR_OQPSK_RC_250;
                   }
+                }
 
 				
                 break;
 #ifdef HIGH_DATA_RATE_SUPPORT
             case 18: /* Chinese O-QPSK 500 */
- if (dbm_value > MAX_TX_PWR_OQPSK_RC_500)
+                if ((tal_pib.CurrentChannel == 0)||(tal_pib.CurrentChannel == 3))
                 {
+                if(dbm_value > MAX_TX_PWR_CHINA_CH_0_3)
+                  {
+                    dbm_value = MAX_TX_PWR_CHINA_CH_0_3;
+                  }
+                }
+                else
+                {
+                  if(dbm_value > MAX_TX_PWR_OQPSK_RC_500)
+                  {
                     dbm_value = MAX_TX_PWR_OQPSK_RC_500;
+                  }
                 }
                 break;
             case 19: /* Chinese O-QPSK 1000 */
- if  (dbm_value > MAX_TX_PWR_OQPSK_RC_1000)
+                if ((tal_pib.CurrentChannel == 0)||(tal_pib.CurrentChannel == 3))
                 {
+                if(dbm_value > MAX_TX_PWR_OQPSK_RC_1000)
+                  {
                     dbm_value = MAX_TX_PWR_OQPSK_RC_1000;
+                  }
+                }
+                else
+                {
+                  if(dbm_value > MAX_TX_PWR_OQPSK_RC_250)
+                  {
+                    dbm_value = MAX_TX_PWR_OQPSK_RC_250;
+                  }
                 }
                 break;
             case 16: /* O-QPSK 200, 500 */
@@ -855,7 +913,7 @@ static void limit_tx_pwr(void)
     tal_pib.TransmitPower = TX_PWR_TOLERANCE | CONV_DBM_TO_phyTransmitPower(dbm_value);
 
 }
-}
+
 
 
 /**
@@ -927,8 +985,6 @@ static bool apply_channel_page_configuration(uint8_t ch_page)
 		pal_trx_bit_write(SR_ALT_SPECTRUM, ALT_SPECTRUM_DISABLE);
 		if (tal_pib.CurrentChannel == 0) { /* BPSK20, EU */
 			pal_trx_bit_write(SR_SUB_MODE, LOW_DATA_RATE);
-       		int8_t temp_var = CONV_DBM_TO_phyTransmitPower(DEFAULT_TX_PWR_BPSK_20);
-    		tal_pib_set(phyTransmitPower, (pib_value_t *)&temp_var);
 		} else { /* BPSK40, NA */
 			pal_trx_bit_write(SR_SUB_MODE, HIGH_DATA_RATE);
 		}
@@ -948,8 +1004,7 @@ static bool apply_channel_page_configuration(uint8_t ch_page)
 		pal_trx_bit_write(SR_ALT_SPECTRUM, ALT_SPECTRUM_DISABLE);
 		if (tal_pib.CurrentChannel == 0) { /* OQPSK100, EU */
 			pal_trx_bit_write(SR_SUB_MODE, LOW_DATA_RATE);
-       		int8_t temp_var = CONV_DBM_TO_phyTransmitPower(DEFAULT_TX_PWR_OQPSK_SIN_RC_100_200_400);
-    		tal_pib_set(phyTransmitPower, (pib_value_t *)&temp_var);            
+      
 		} else { /* OQPSK250, NA */
 			pal_trx_bit_write(SR_SUB_MODE, HIGH_DATA_RATE);
 		}
@@ -979,12 +1034,7 @@ static bool apply_channel_page_configuration(uint8_t ch_page)
 		pal_trx_bit_write(SR_CC_BAND, 4);
 		pal_trx_bit_write(SR_CC_NUMBER,
 				GET_CHINA_FREQ(tal_pib.CurrentChannel));
-        if ((tal_pib.CurrentChannel == 0) ||(tal_pib.CurrentChannel == 3))
-        {
-			int8_t temp_var = CONV_DBM_TO_phyTransmitPower(MAX_TX_PWR_CHINA_CH_0_3);
-    		tal_pib_set(phyTransmitPower, (pib_value_t *)&temp_var);
-
-		}        
+      
         
 		break;
 
@@ -997,8 +1047,7 @@ static bool apply_channel_page_configuration(uint8_t ch_page)
 				ALTRATE_200_KBPS_OR_500_KBPS);
 		if (tal_pib.CurrentChannel == 0) { /* 200kbps, EU */
 			pal_trx_bit_write(SR_SUB_MODE, LOW_DATA_RATE);
-       		int8_t temp_var = CONV_DBM_TO_phyTransmitPower(DEFAULT_TX_PWR_OQPSK_SIN_RC_100_200_400);
-    		tal_pib_set(phyTransmitPower, (pib_value_t *)&temp_var);            
+           
 		} else { /* 500kbps, NA */
 			pal_trx_bit_write(SR_SUB_MODE, HIGH_DATA_RATE);
 		}
@@ -1018,8 +1067,7 @@ static bool apply_channel_page_configuration(uint8_t ch_page)
 				ALTRATE_400_KBPS_OR_1_MBPS);
 		if (tal_pib.CurrentChannel == 0) { /* 400kbps, EU */
 			pal_trx_bit_write(SR_SUB_MODE, LOW_DATA_RATE);
-       		int8_t temp_var = CONV_DBM_TO_phyTransmitPower(DEFAULT_TX_PWR_OQPSK_SIN_RC_100_200_400);
-    		tal_pib_set(phyTransmitPower, (pib_value_t *)&temp_var);            
+          
 		} else { /* 1000kbps, NA */
 			pal_trx_bit_write(SR_SUB_MODE, HIGH_DATA_RATE);
 		}
@@ -1045,12 +1093,7 @@ static bool apply_channel_page_configuration(uint8_t ch_page)
 		if (tal_pib.CurrentChannel > 3) {
 			tal_pib.CurrentChannel = 0;
 		}
-        if ((tal_pib.CurrentChannel == 0) ||(tal_pib.CurrentChannel == 3))
-        {
-			int8_t temp_var = CONV_DBM_TO_phyTransmitPower(MAX_TX_PWR_CHINA_CH_0_3);
-    		tal_pib_set(phyTransmitPower, (pib_value_t *)&temp_var);
-            
-        }
+
 		pal_trx_bit_write(SR_CC_BAND, 4);
 		pal_trx_bit_write(SR_CC_NUMBER,
 				GET_CHINA_FREQ(tal_pib.CurrentChannel));
@@ -1070,12 +1113,6 @@ static bool apply_channel_page_configuration(uint8_t ch_page)
 		if (tal_pib.CurrentChannel > 3) {
 			tal_pib.CurrentChannel = 0;
 		}
-        if ((tal_pib.CurrentChannel == 0) ||(tal_pib.CurrentChannel == 3))
-        {
-			int8_t temp_var = CONV_DBM_TO_phyTransmitPower(MAX_TX_PWR_CHINA_CH_0_3);
-    		tal_pib_set(phyTransmitPower, (pib_value_t *)&temp_var);
-            
-        }
 		pal_trx_bit_write(SR_CC_BAND, 4);
 		pal_trx_bit_write(SR_CC_NUMBER,
 				GET_CHINA_FREQ(tal_pib.CurrentChannel));
