@@ -548,6 +548,7 @@ void mac_process_data_frame(buffer_t *buf_ptr)
 			/* Append MCPS data indication to MAC-NHLE queue */
 			qmm_queue_append(&mac_nhle_q, buf_ptr);
 #ifdef GTS_SUPPORT
+#ifdef FFD
 			{
 				uint8_t loop_index;
 				for(loop_index = 0; loop_index < mac_pan_gts_table_len; loop_index++)
@@ -557,18 +558,11 @@ void mac_process_data_frame(buffer_t *buf_ptr)
 					&& GTS_TX_SLOT == mac_pan_gts_table[loop_index].GtsDesc.GtsDirection)
 					{
 						reset_gts_expiry(&mac_pan_gts_table[loop_index]);
-						//if (tal_pib.BeaconOrder >= 9)
-						//{
-							//mac_pan_gts_table[loop_index].ExpiryCount = GTS_EXPIRY_BO_9_TO_14;
-						//}
-						//else
-						//{
-							//mac_pan_gts_table[loop_index].ExpiryCount = GTS_EXPIRY_BO_0_TO_8;
-						//}
 						break;
 					}
 				}
 			}
+#endif /* FFD */
 #endif /* GTS_SUPPORT */
 		} /* End of duplicate detection. */
 

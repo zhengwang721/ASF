@@ -3,7 +3,7 @@
 		<info type="description" value="summary">
 		MAC Serial Interface Application - No Beacon RFD
 		</info>	
-		<require idref="thirdparty.wireless.avr2025_mac.apps.mac.serial_if.no_bcn_rfd.ncp"/>
+		<require idref="thirdparty.wireless.avr2025_mac.apps.mac.serial_if.nobcn_rfd.ncp"/>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clocks.h"/>

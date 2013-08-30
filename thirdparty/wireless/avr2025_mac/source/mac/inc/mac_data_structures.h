@@ -77,7 +77,7 @@ typedef enum gts_state_tag{
  * @ingroup apiMacTypes
  */
 typedef struct mac_dev_gts_mgmt_tag {
-	uint8_t *GtsReq_ptr;
+	arch_data_t *GtsReq_ptr;
 	uint8_t GtsStartingSlot;
 	uint8_t GtsLength;
 	uint8_t GtsPersistCount;
