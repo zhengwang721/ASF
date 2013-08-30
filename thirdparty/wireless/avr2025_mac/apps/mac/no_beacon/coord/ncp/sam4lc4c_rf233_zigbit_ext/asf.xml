@@ -10,7 +10,7 @@
 		<build type="header-file" value="conf_uart_serial.h"/>
 		<build type="header-file" value="conf_hw_timer.h"/>
 		<build type="header-file" value="conf_spi_master.h"/>
-		<build type="header-file" value="unaligned.h"/>
+
 		
 		
 		<build type="define" name="_DEBUG_" value="0"/>
