@@ -929,7 +929,7 @@ void usr_mlme_set_conf(uint8_t status,
 
 #else
 void usr_mlme_set_conf(uint8_t status,
-                        uint8_t PIBAttribute);
+                        uint8_t PIBAttribute)
 #endif  /* (MAC_SECURITY_ZIP || MAC_SECURITY_2006) */
 {
 	uint8_t *msg_buf;

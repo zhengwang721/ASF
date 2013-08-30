@@ -122,7 +122,7 @@
 /**
  * The maximum number of entries supported in the KeyDeviceList
  */
-#define MAC_ZIP_MAX_KEY_DEV_LIST_ENTRIES        (3)
+#define MAC_ZIP_MAX_KEY_DEV_LIST_ENTRIES        (1)
 
 /**
  * The maximum number of entries supported in the KeyUsageList
