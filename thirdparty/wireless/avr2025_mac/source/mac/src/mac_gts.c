@@ -672,8 +672,7 @@ void mac_parse_bcn_gts_info(uint8_t gts_count, uint8_t gts_dir, mac_gts_list_t *
 			mac_dev_gts_table[loop_index].GtsState = GTS_STATE_IDLE;
 			mac_dev_gts_table[loop_index].GtsLength = 0;
 			mac_gen_mlme_gts_conf((buffer_t *)mac_dev_gts_table[loop_index].
-			GtsReq_ptr, MAC_NO_DATA,
-			gts_char);
+			GtsReq_ptr, MAC_NO_DATA, gts_char);
 		}
 	}
 }
