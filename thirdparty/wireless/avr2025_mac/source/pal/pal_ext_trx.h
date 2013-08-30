@@ -59,6 +59,7 @@
 #include "pal_generic.h"
 #ifdef __SAMD20J18__
 #include "port.h"
+#include "extint.h"
 #else
 #include "ioport.h"
 #endif

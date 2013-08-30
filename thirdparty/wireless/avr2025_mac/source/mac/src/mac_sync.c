@@ -255,7 +255,7 @@ void mac_t_start_inactive_device_cb(void *callback_parameter)
 	mac_superframe_state = MAC_INACTIVE;
 	mac_sleep_trans();
 	//ioport_set_value(DEBUG_PIN2, 0);//vk
-	sio2host_tx("-D Inactive-",sizeof("-D Inactive-")); //vk
+	//sio2host_tx("-D Inactive-",sizeof("-D Inactive-")); //vk
 
 	callback_parameter = callback_parameter; /* Keep compiler happy. */
 }
@@ -405,6 +405,10 @@ void mac_sync_loss(uint8_t loss_reason)
 
 	/* Append the associate confirm message to MAC-NHLE queue. */
 	qmm_queue_append(&mac_nhle_q, msg_ptr);
+
+#ifdef GTS_SUPPORT
+	handle_gts_sync_loss();
+#endif /* GTS_SUPPORT */
 
 	/* A device that is neither scanning nor polling shall go to sleep now.
 	 **/

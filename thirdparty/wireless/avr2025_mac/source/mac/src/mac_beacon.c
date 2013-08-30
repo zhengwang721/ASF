@@ -341,6 +341,7 @@ void mac_build_and_tx_beacon(bool beacon_enabled,
 #endif
 
 #ifdef GTS_SUPPORT
+	mac_gts_table_update();
 	uint8_t gts_octets = mac_add_gts_info(frame_ptr);
 	if (gts_octets > 0) {
 		frame_len += gts_octets;
@@ -828,7 +829,7 @@ static void mac_t_beacon_cb(void *callback_parameter)
 		#endif
 		mac_superframe_state = MAC_ACTIVE_CAP;
 		pal_timer_stop(T_CAP);
-		sio2host_tx("-CAP-",sizeof("-CAP-"));
+		//sio2host_tx("-CAP-",sizeof("-CAP-"));
 
 		#ifdef GTS_DEBUG
 		ioport_set_value(DEBUG_PIN4, 0);//vk
@@ -988,7 +989,7 @@ static void mac_t_superframe_cb(void *callback_parameter)
 	//ioport_set_value(DEBUG_PIN4, 0);//vk
 
 	mac_superframe_state = MAC_INACTIVE;
-	sio2host_tx("-Inactive-",sizeof("-Inactive-"));
+	//sio2host_tx("-Inactive-",sizeof("-Inactive-"));
 }
 
 #endif /* BEACON_SUPPORT */

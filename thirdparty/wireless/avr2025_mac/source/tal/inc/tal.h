@@ -62,6 +62,7 @@
 #include "return_val.h"
 #include "tal_types.h"
 #include "mac_build_config.h"
+#include "qmm.h"
 
 /**
  * \defgroup group_tal  Transceiver Abstraction Layer
@@ -292,7 +293,7 @@ typedef struct
 	/** Indirect frame transmission ongoing */
 	bool indirect_in_transit;
 #ifdef GTS_SUPPORT
-	void *gts_queue;
+	queue_t *gts_queue;
 #endif /* GTS_SUPPORT */
 #if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP)
 

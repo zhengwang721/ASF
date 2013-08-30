@@ -443,7 +443,6 @@ void mlme_reset_request(arch_data_t *m);
  */
 
 void mlme_scan_request(arch_data_t *m);
-#endif
 
 
 /**
@@ -456,6 +455,7 @@ void mlme_scan_request(arch_data_t *m);
  */
 void mlme_scan_conf(arch_data_t *m);
 
+#endif
 
 #if (MAC_START_REQUEST_CONFIRM == 1)
 

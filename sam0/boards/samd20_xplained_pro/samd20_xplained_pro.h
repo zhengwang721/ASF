@@ -517,8 +517,7 @@ void system_board_init(void);
 /** @} */
 
 /** @} */
-#include "extint.h"
-#include "port.h"
+
 
 
 #define AT86RFX_SPI                  EXT2_SPI_MODULE

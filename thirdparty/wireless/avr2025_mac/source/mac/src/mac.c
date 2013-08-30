@@ -123,12 +123,6 @@ uint8_t mac_final_cap_slot __ALIGN_WORD_ADDR__;
 bool mac_bc_data_indicated __ALIGN_WORD_ADDR__;
 
 mac_superframe_state_t mac_superframe_state = MAC_NOBEACON;
-#ifdef GTS_SUPPORT
-/**
- * Current state of GTS request to PANC
- */
-mac_gts_state_t mac_gts_state = MAC_GTS_IDLE;
-#endif  /* GTS_SUPPORT */
 #endif  /* BEACON_SUPPORT */
 
 /**
@@ -281,8 +275,7 @@ bool mac_task(void)
 	/* Check whether queue is empty */
 	if (tal_mac_q.size != 0) {
 		
-event = (arch_data_t *)qmm_queue_remove(&tal_mac_q, NULL);
-	
+		event = (arch_data_t *)qmm_queue_remove(&tal_mac_q, NULL);
 
 		/* If an event has been detected, handle it. */
 		if (NULL != event) {

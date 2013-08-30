@@ -738,7 +738,7 @@ static bool process_data_ind_not_transient(buffer_t *b_ptr, frame_info_t *f_ptr)
 							 *TRX_OFF). */
 							tal_rx_enable(PHY_RX_ON);
 
-							sio2host_tx("-DCAP-",sizeof("-DCAP-")); //vk
+							//sio2host_tx("-DCAP-",sizeof("-DCAP-")); //vk
 							if (tal_pib.SuperFrameOrder < tal_pib.BeaconOrder)
 							{
 								pal_timer_start(T_Superframe,
@@ -751,10 +751,10 @@ static bool process_data_ind_not_transient(buffer_t *b_ptr, frame_info_t *f_ptr)
 								//ioport_set_value(DEBUG_PIN2, 1);//vk
 							}
 #ifdef GTS_SUPPORT
-						if (mac_final_cap_slot < FINAL_CAP_SLOT_DEFAULT && 0 != mac_dev_gts_table[DEV_TX_SLOT_INDEX].GtsStartingSlot)
+						if (mac_final_cap_slot < FINAL_CAP_SLOT_DEFAULT)
 						{
 							uint32_t gts_tx_time = (TAL_CONVERT_SYMBOLS_TO_US(
-											 TAL_GET_SUPERFRAME_DURATION_TIME(tal_pib.SuperFrameOrder)) >> 4) * mac_dev_gts_table[DEV_TX_SLOT_INDEX].GtsStartingSlot;
+											 TAL_GET_SUPERFRAME_DURATION_TIME(tal_pib.SuperFrameOrder)) >> 4) * (mac_final_cap_slot + 1);
 
 							 pal_timer_start(T_CAP, gts_tx_time,
 											 TIMEOUT_RELATIVE,

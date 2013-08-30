@@ -63,11 +63,7 @@
 #include "tal_internal.h"
 #endif
 
-#ifdef MAC_SECURITY_ZIP
-#include "mac_msg_types.h"
-#endif
-
-#if GTS_SUPPORT
+#if (defined MAC_SECURITY_ZIP) || (defined GTS_SUPPORT)
 #include "mac_msg_types.h"
 #endif
 
@@ -147,16 +143,17 @@
 #ifdef GTS_SUPPORT
 #ifdef FFD
 #define MAX_GTS_ON_PANC       (7)
-#define GTS_EXPIRY_BO_0_TO_8  ((1 << ((8 - tal_pib.BeaconOrder) + 1)) + 1 + 1)
-#define GTS_EXPIRY_BO_9_TO_14 (2 + 1 + 1)
+#define GTS_EXPIRY_BO_0_TO_8  ((1 << ((8 - tal_pib.BeaconOrder) + 1)) + 1)
+#define GTS_EXPIRY_BO_9_TO_14 (2 + 1)
 #endif /* FFD */
 #define GTS_REQ_PAYLOAD_LEN  (2)
+#define PANC_SLOT            (1)
 /* !!! Warning !!!
  Do not change the index, mapping for update is done based on this...*/
-#define DEV_TX_SLOT_INDEX    (0)
-#define DEV_RX_SLOT_INDEX    (1)
-#define PAN_TX_SLOT_INDEX    (2)
-#define PAN_RX_SLOT_INDEX    (3)
+#define DEV_TX_SLOT_INDEX    (GTS_TX_SLOT)
+#define DEV_RX_SLOT_INDEX    (GTS_RX_SLOT)
+#define PAN_TX_SLOT_INDEX    ((PANC_SLOT << 1) | GTS_TX_SLOT)
+#define PAN_RX_SLOT_INDEX    ((PANC_SLOT << 1) | GTS_RX_SLOT)
 
 #define MAX_GTS_ON_DEV       (4)
 
@@ -203,6 +200,7 @@ typedef enum mac_superframe_state_tag {
 #ifdef GTS_SUPPORT
 	/* Warning!!! Do not change the order
 	   of below GTS state definitions */
+#ifdef FFD
 	MAC_ACTIVE_CFP_GTS1,
 	MAC_ACTIVE_CFP_GTS2,
 	MAC_ACTIVE_CFP_GTS3,
@@ -210,6 +208,11 @@ typedef enum mac_superframe_state_tag {
 	MAC_ACTIVE_CFP_GTS5,
 	MAC_ACTIVE_CFP_GTS6,
 	MAC_ACTIVE_CFP_GTS7,
+#endif /* FFD */
+	MAC_DEV_GTS_TX,
+	MAC_DEV_GTS_IDLE,
+	MAC_DEV_GTS_IDLE1,
+	MAC_DEV_GTS_IDLE2,
 #endif
 	MAC_INACTIVE,
 	MAC_NOBEACON
@@ -285,15 +288,6 @@ typedef enum mac_sync_state_tag {
 	MAC_SYNC_BEFORE_ASSOC
 } SHORTENUM mac_sync_state_t  __ALIGN_WORD_ADDR__;
 
-/**
- * Device GTS states.
- */
-typedef enum mac_gts_state_tag {
-	/** NO GTS request sent */
-	MAC_GTS_IDLE = 0,
-	/** GTS request sent to PANC */
-	MAC_GTS_ALLOC_REQ_SENT,
-} SHORTENUM mac_gts_state_t;
 
 /**
  * MAC sleep state type.
@@ -535,11 +529,8 @@ extern mac_pib_t mac_pib;
 #ifdef BEACON_SUPPORT
 extern mac_superframe_state_t mac_superframe_state;
 #ifdef GTS_SUPPORT
-extern mac_gts_state_t mac_gts_state;
-extern uint32_t *mac_gts_buf_ptr;
 extern mac_dev_gts_mgmt_t mac_dev_gts_table[];
 extern uint8_t mac_dev_gts_table_len;
-extern gts_char_t requested_gts_char;
 #ifdef FFD
 extern mac_pan_gts_mgmt_t mac_pan_gts_table[];
 extern uint8_t mac_pan_gts_table_len;
@@ -770,14 +761,17 @@ retval_t mac_unsecure(parse_t *mac_parse_data, uint8_t *mpdu,
 void mac_gen_mlme_gts_conf(buffer_t *buf_ptr, uint8_t status, gts_char_t gts_char);
 void mac_process_gts_request(buffer_t *gts_req);
 uint8_t mac_add_gts_info(uint8_t *frame_ptr);
+void mac_gts_table_update(void);
 void mac_parse_bcn_gts_info(uint8_t gts_count, uint8_t gts_dir, mac_gts_list_t *gts_list_ptr);
 uint8_t handle_gts_data_req(mcps_data_req_t *data_req, arch_data_t *msg);
 void reset_gts_globals(void);
 void mac_t_gts_cb(void *callback_parameter);
 void init_gts_queues(void);
 void mac_tx_gts_data(queue_t *gts_data);
-uint8_t handle_gts_data_tx_end(void);
+void handle_gts_data_tx_end(void);
 void flush_gts_queues(void);
+void reset_gts_expiry(mac_pan_gts_mgmt_t *mac_pan_gts_entry);
+void handle_gts_sync_loss(void);
 #endif /* GTS_SUPPORT */
 
 #if (MAC_INDIRECT_DATA_FFD == 1)
