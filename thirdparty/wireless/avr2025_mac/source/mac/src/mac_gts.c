@@ -250,20 +250,7 @@ void mlme_gts_request(arch_data_t *m)
 		/* Finished building of frame. */
 		gts_req_frame->mpdu = frame_ptr;
 
-#ifdef BEACON_SUPPORT
-		csma_mode_t cur_csma_mode;
-
-		if (NON_BEACON_NWK == tal_pib.BeaconOrder) {
-			/* In Nonbeacon network the frame is sent with unslotted
-			 *CSMA-CA. */
-			cur_csma_mode = CSMA_UNSLOTTED;
-		} else {
-			/* In Beacon network the frame is sent with slotted CSMA-CA. */
-			cur_csma_mode = CSMA_SLOTTED;
-		}
-
-		tal_tx_status = tal_tx_frame(transmit_frame, cur_csma_mode, true);
-#endif  /* BEACON_SUPPORT / No BEACON_SUPPORT */
+		tal_tx_status = tal_tx_frame(transmit_frame, CSMA_SLOTTED, true);
 
 		if (MAC_SUCCESS == tal_tx_status) {
 			uint8_t updating_index = mgr.GtsChar.GtsDirection;
@@ -378,7 +365,7 @@ void mac_gts_table_update(void)
 
 				if (NULL == buffer_header) {
 					/* Buffer is not available */
-					return false;
+					return;
 				}
 				mgi = (mlme_gts_ind_t *)BMM_BUFFER_POINTER(buffer_header);
 
@@ -678,13 +665,14 @@ void mac_parse_bcn_gts_info(uint8_t gts_count, uint8_t gts_dir, mac_gts_list_t *
 	}
 	for(loop_index = 0; loop_index < MAX_GTS_ON_DEV; loop_index++)
 	{
-		if(GTS_STATE_REQ_SENT == mac_dev_gts_table[table_index].GtsState 
+		if(GTS_STATE_REQ_SENT == mac_dev_gts_table[loop_index].GtsState 
 		&& 0 < mac_dev_gts_table[loop_index].GtsPersistCount
 		&& 0 == --mac_dev_gts_table[loop_index].GtsPersistCount)
 		{
-			mac_dev_gts_table[table_index].GtsState = GTS_STATE_IDLE;
-			mac_dev_gts_table[table_index].GtsLength = 0;
-			mac_gen_mlme_gts_conf((buffer_t *)mac_dev_gts_table[table_index].GtsReq_ptr, MAC_NO_DATA,
+			mac_dev_gts_table[loop_index].GtsState = GTS_STATE_IDLE;
+			mac_dev_gts_table[loop_index].GtsLength = 0;
+			mac_gen_mlme_gts_conf((buffer_t *)mac_dev_gts_table[loop_index].
+			GtsReq_ptr, MAC_NO_DATA,
 			gts_char);
 		}
 	}
@@ -748,7 +736,7 @@ uint8_t handle_gts_data_req(mcps_data_req_t *data_req, arch_data_t *msg)
 	}
 	else
 #endif /* FFD */
-	if(MAC_ASSOCIATED == mac_state && mac_pib.mac_CoordShortAddress == data_req->DstAddr
+	if(MAC_ASSOCIATED == mac_state && mac_pib.mac_CoordShortAddress == dst_addr
 	&& 0 != mac_dev_gts_table[DEV_TX_SLOT_INDEX].GtsStartingSlot)
 	{
 		/* Append the MCPS data request into the GTS queue */
@@ -795,8 +783,6 @@ void reset_gts_globals(void)
 void mac_t_gts_cb(void *callback_parameter)
 {
 	uint32_t next_timer_dur = 0;
-	queue_t *temp_ptr = NULL;
-	uint8_t temp_index = 0;
 	uint32_t slot_duration;
 
 	#ifdef GTS_DEBUG
@@ -807,6 +793,8 @@ void mac_t_gts_cb(void *callback_parameter)
 #ifdef FFD
 	if (MAC_PAN_COORD_STARTED == mac_state && mac_pan_gts_table_len > 0)
 	{
+		queue_t *temp_ptr = NULL;
+		uint8_t temp_index = 0;
 		//ioport_set_value(DEBUG_PIN3, 0); //vk
 		if(MAC_ACTIVE_CAP == mac_superframe_state)
 		{
@@ -940,7 +928,7 @@ void mac_t_gts_cb(void *callback_parameter)
 			}
 			else if((mac_final_cap_slot + 1) == mac_dev_gts_table[DEV_TX_SLOT_INDEX].GtsStartingSlot)
 			{
-			next_timer_dur = slot_duration * (mac_dev_gts_table[DEV_TX_SLOT_INDEX].GtsLength);
+				next_timer_dur = slot_duration * (mac_dev_gts_table[DEV_TX_SLOT_INDEX].GtsLength);
 				mac_superframe_state = MAC_DEV_GTS_TX;
 				//sio2host_tx("-DGTS TX-",sizeof("-DGTS TX-"));
 			//ioport_set_value(DEBUG_PIN3, 1);//vk
@@ -982,8 +970,8 @@ void mac_t_gts_cb(void *callback_parameter)
 
 void init_gts_queues(void)
 {
-	uint8_t loop_index;
 #ifdef FFD
+	uint8_t loop_index;
 	for(loop_index = 0; loop_index < MAX_GTS_ON_PANC; loop_index ++)
 	{
 #ifdef ENABLE_QUEUE_CAPACITY
@@ -1123,6 +1111,7 @@ void flush_gts_queues(void)
 	qmm_queue_flush(&dev_tx_gts_q);
 }
 
+#ifdef FFD
 void reset_gts_expiry(mac_pan_gts_mgmt_t *mac_pan_gts_entry)
 {
 	if (tal_pib.BeaconOrder >= 9 && mac_pan_gts_entry->ExpiryCount < GTS_EXPIRY_BO_9_TO_14)
@@ -1134,6 +1123,7 @@ void reset_gts_expiry(mac_pan_gts_mgmt_t *mac_pan_gts_entry)
 		mac_pan_gts_entry->ExpiryCount = GTS_EXPIRY_BO_0_TO_8;
 	}
 }
+#endif /* FFD */
 
 void handle_gts_sync_loss(void)
 {
