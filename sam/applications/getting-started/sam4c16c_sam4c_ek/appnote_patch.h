@@ -1,12 +1,12 @@
-/**
+﻿/**
 \defgroup BOARD_FEATURE board feature
 The SAM4C-EK is an evaluation kit featuring
 - SAM4C16C device LQFP100 package with optional socket footprint
-- On-board 8MHz and 32.769Hz crystal
-- a segment LCD display with backlight
-- a USB-to-COM port for debugging
+- On-board 8MHz and 32.769KHz crystal
+- A segment LCD display with backlight
+- A USB-to-COM port for debugging
 - Serial Flash memory
-- an AT24C1024 EEPROM and an AT30TS758 temperature sensor
+- An AT24C1024 EEPROM and an AT30TS758 temperature sensor
 - LEDs, push buttons
 - JTAG/ICE port
 - USART port with RS232 driver multiplexed with RS485 function with driver.
