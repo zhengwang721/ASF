@@ -41,22 +41,24 @@
  *
  */
 
-#ifndef OZMOSPI_MASTER_H
-#define OZMOSPI_MASTER_H
+#ifndef SPI_MASTER_VECTOR_H
+#define SPI_MASTER_VECTOR_H
 
-#include <conf_ozmospi_master.h>
+#include <conf_spi_master_vector.h>
 #include <port.h>
 #include <status_codes.h>
 
 /**
- * \defgroup ozmo_sercom_spi_master_group SERCOM SPI master driver for OZMO stack
+ * \defgroup sercom_spi_master_vector_group SERCOM SPI master driver with
+ * vectored I/O
  *
  * This driver is a single-instance, compile-time configured SPI master driver.
- * It supports both simplex and duplex transfers with scatter/gather.
+ * It supports both simplex and duplex transfers with vectored I/O, also know
+ * as scatter/gather.
  *
  * Scatter/gather is implemented by the use of buffer descriptor arrays, which
  * must be passed to the driver to start a transfer.
- * See \ref ozmospi_transceive_buffers_wait() for more information.
+ * See \ref spi_master_vector_transceive_buffers_wait() for more information.
  *
  * @{
  */
@@ -66,50 +68,50 @@
  * @{
  */
 /**
- * \def CONF_OZMOSPI_SERCOM
+ * \def CONF_SPI_MASTER_VECTOR_SERCOM
  * \brief SERCOM module to use for this SPI driver.
  */
 /**
- * \def CONF_OZMOSPI_BAUDRATE
+ * \def CONF_SPI_MASTER_VECTOR_BAUDRATE
  * \brief Baudrate to configure the SERCOM SPI module for.
  */
 /**
- * \def CONF_OZMOSPI_SS_PIN
+ * \def CONF_SPI_MASTER_VECTOR_SS_PIN
  * \brief Number of IO pin to use as Slave Select line.
  */
 /**
- * \def CONF_OZMOSPI_GCLK_SOURCE
+ * \def CONF_SPI_MASTER_VECTOR_GCLK_SOURCE
  * \brief Generic clock generator to use for the SERCOM module.
  */
 /**
- * \def CONF_OZMOSPI_SIGNAL_MUX
+ * \def CONF_SPI_MASTER_VECTOR_SIGNAL_MUX
  * \brief Signal multiplexing setting, i.e., pad multiplexing.
  */
 /**
- * \def CONF_OZMOSPI_PINMUX_PAD0
+ * \def CONF_SPI_MASTER_VECTOR_PINMUX_PAD0
  * \brief First IO pin function multiplexing setting.
  */
 /**
- * \def CONF_OZMOSPI_PINMUX_PAD1
+ * \def CONF_SPI_MASTER_VECTOR_PINMUX_PAD1
  * \brief Second IO pin function multiplexing setting.
  */
 /**
- * \def CONF_OZMOSPI_PINMUX_PAD2
+ * \def CONF_SPI_MASTER_VECTOR_PINMUX_PAD2
  * \brief Third IO pin function multiplexing setting.
  */
 /**
- * \def CONF_OZMOSPI_PINMUX_PAD3
+ * \def CONF_SPI_MASTER_VECTOR_PINMUX_PAD3
  * \brief Fourth IO pin function multiplexing setting.
  */
 /** @} */
 
 /** Type to contain length of described buffers */
-typedef uint16_t ozmospi_buflen_t;
+typedef uint16_t spi_master_vector_buflen_t;
 
 /** Struct to describe a buffer for writing or reading */
-struct ozmospi_bufdesc {
+struct spi_master_vector_bufdesc {
 	uint8_t *data;
-	ozmospi_buflen_t length;
+	spi_master_vector_buflen_t length;
 };
 
 /**
@@ -122,24 +124,24 @@ struct ozmospi_bufdesc {
  * \arg \c true to select the slave.
  * \arg \c false to deselect the slave.
  */
-static inline void ozmospi_select_slave(bool select)
+static inline void spi_master_vector_select_slave(bool select)
 {
 	if (select) {
-		port_pin_set_output_level(CONF_OZMOSPI_SS_PIN, false);
+		port_pin_set_output_level(CONF_SPI_MASTER_VECTOR_SS_PIN, false);
 		} else {
-		port_pin_set_output_level(CONF_OZMOSPI_SS_PIN, true);
+		port_pin_set_output_level(CONF_SPI_MASTER_VECTOR_SS_PIN, true);
 	}
 }
 
-enum status_code ozmospi_init(void);
-void ozmospi_enable(void);
-void ozmospi_disable(void);
-enum status_code ozmospi_transceive_buffers_wait(
-		struct ozmospi_bufdesc tx_bufdescs[],
-		struct ozmospi_bufdesc rx_bufdescs[]);
+enum status_code spi_master_vector_init(void);
+void spi_master_vector_enable(void);
+void spi_master_vector_disable(void);
+enum status_code spi_master_vector_transceive_buffers_wait(
+		struct spi_master_vector_bufdesc tx_bufdescs[],
+		struct spi_master_vector_bufdesc rx_bufdescs[]);
 
 /**
  * @}
  */
 
-#endif /* OZMOSPI_MASTER_H */
+#endif /* SPI_MASTER_VECTOR_H */
