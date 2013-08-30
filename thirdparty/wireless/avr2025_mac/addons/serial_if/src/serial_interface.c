@@ -1707,7 +1707,8 @@ static void handle_incoming_msg(void)
 			}
 			break;
 		}
-#endif /* (MAC_SYNC_REQUEST == 1) */		default:
+#endif /* (MAC_GTS_REQUEST == 1) */		
+		default:
 			Assert("???" == 0);
 			break;
 		}

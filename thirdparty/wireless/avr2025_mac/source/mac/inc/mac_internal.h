@@ -63,7 +63,7 @@
 #include "tal_internal.h"
 #endif
 
-#if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
+#if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006) || (defined GTS_SUPPORT))
 #include "mac_msg_types.h"
 #endif
 
