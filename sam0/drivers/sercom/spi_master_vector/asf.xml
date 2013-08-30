@@ -1,11 +1,20 @@
 <asf xmlversion="1.0">
-	<module type="driver" id="thirdparty.ozmo.sercom_spi" caption="SERCOM SPI master driver for OZMO stack">
-		<build type="c-source" value="ozmospi_master.c"/>
-		<build type="header-file" subtype="api" value="ozmospi_master.h"/>
+	<module type="driver" id="sam0.drivers.sercom.spi_master_vector" caption="SERCOM SPI master w/ vectored I/O (interrupt based)">
+		<info type="description" value="summary">
+			SPI master driver for the SAM D20 SERCOM module with vectored
+			memory addressing, also known as scatter-gather functionality.
+			This driver requires interrupts to be enabled.
+		</info>
+		<info type="keyword" value="technology">
+			<keyword value="Communication"/>
+		</info>
+
+		<build type="c-source" value="spi_master_vector.c"/>
+		<build type="header-file" subtype="api" value="spi_master_vector.h"/>
 		<build type="include-path" value="."/>
 		<build type="module-config" subtype="path" value="module_config"/>
-		<build type="module-config" subtype="required-header-file" value="conf_ozmospi_master.h"/>
-		<build type="doxygen-entry-point" value="ozmo_sercom_spi_master_group"/>
+		<build type="module-config" subtype="required-header-file" value="conf_spi_master_vector.h"/>
+		<build type="doxygen-entry-point" value="sercom_spi_master_vector_group"/>
 		<device-support value="samd20"/>
 
 		<require idref="sam0.utils"/>
