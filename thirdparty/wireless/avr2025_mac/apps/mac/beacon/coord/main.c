@@ -101,10 +101,6 @@
 #include "delay.h"
 #include "common_sw_timer.h"
 #include "sio2host.h"
-#include "mac.h"
-#include "mac_api.h"
-#include "tal.h"
-#include "ieee_const.h"
 #include <asf.h>
 /* === TYPES =============================================================== */
 
@@ -129,11 +125,11 @@ typedef enum coord_state_tag {
 #define DEFAULT_PAN_ID                  CCPU_ENDIAN_TO_LE16(0xBABE)
 
 /** Defines the short address of the coordinator. */
-#define COORD_SHORT_ADDR                (0xCAFE)
+#define COORD_SHORT_ADDR                (0x0000)
 /** Defines the maximum number of devices this coordinator will handle. */
 #define MAX_NUMBER_OF_DEVICES           (100)
 
-#define CHANNEL_OFFSET                  (11)
+#define CHANNEL_OFFSET                  (0)
 
 #define SCAN_CHANNEL                    (1ul << current_channel)
 
@@ -150,7 +146,7 @@ typedef enum coord_state_tag {
  * This is the text "Atmel beacon demo" + one space + one uin8t_t variable.
  */
 #define BEACON_PAYLOAD_LEN              (17 + 1 + 1)
-
+#define GTS_PAYLOAD_LEN                 (22 + 1 + 1 +1)
 /**
  * Defines the time in ms to iniate an update of the beacon payload.
  */
@@ -164,7 +160,10 @@ typedef enum coord_state_tag {
 
 /** Defines the time to iniate a indirect data transmission to the device. */
 #define APP_INDIRECT_DATA_DURATION_MS   (6000)
-
+#ifdef GTS_SUPPORT
+/** Defines the time to iniate a GTS data transmission to the device. */
+#define APP_GTS_DATA_DURATION_MS        (2000)
+#endif
 #define DEBOUNCE_DELAY_MS               (200)
 
 #if (LED_COUNT >= 3)
@@ -211,7 +210,9 @@ static uint8_t no_of_assoc_devices;
 
 /** This array stores the current beacon payload. */
 static uint8_t beacon_payload[BEACON_PAYLOAD_LEN] = {"Atmel beacon demo 0"};
-
+#ifdef GTS_SUPPORT
+static uint8_t gts_payload[GTS_PAYLOAD_LEN] = {"GTS Data from coordinator"};
+#endif /* GTS_SUPPORT */
 /** This variable stores the current state of the node. */
 static coord_state_t coord_state = COORD_STARTING;
 
@@ -220,11 +221,15 @@ static uint32_t tx_cnt;
 
 /** Store the current MSDU handle to be used for a data frame. */
 static uint8_t curr_msdu_handle;
-
+#ifdef GTS_SUPPORT
+static uint8_t gts_msdu_handle;
+#endif /* GTS_SUPPORT */
 static uint8_t current_channel;
 static uint8_t current_channel_page;
 static uint32_t channels_supported;
-
+#ifdef GTS_SUPPORT
+static uint8_t APP_TIMER_GTS_DATA;
+#endif /* GTS_SUPPORT */
 static uint8_t APP_TIMER_INDIRECT_DATA;
 static uint8_t APP_TIMER_BCN_PAYLOAD_UPDATE;
 static uint8_t APP_TIMER_BC_DATA;
@@ -279,6 +284,14 @@ static void bc_data_cb(void *parameter);
  *                  to indicated LED to be switched off)
  */
 static void indirect_data_cb(void *parameter);
+/**
+ * @brief Callback function for initiation of gts data transmission
+ *
+ * @param parameter Pointer to callback parameter
+ *                  (not used in this application, but could be used
+ *                  to indicated LED to be switched off)
+ */
+static void gts_data_cb(void *parameter);
 
 /**
  * @brief Callback function for updating the beacon payload
@@ -346,7 +359,9 @@ int main(void)
 	sw_timer_get_id(&APP_TIMER_INDIRECT_DATA);
 	sw_timer_get_id(&APP_TIMER_BCN_PAYLOAD_UPDATE);
 	sw_timer_get_id(&APP_TIMER_BC_DATA);
-
+	#ifdef GTS_SUPPORT
+	sw_timer_get_id(&APP_TIMER_GTS_DATA);
+    #endif
 	/*
 	 * Reset the MAC layer to the default values.
 	 * This request will cause a mlme reset confirm message ->
@@ -520,7 +535,25 @@ void usr_mlme_associate_conf(uint16_t AssocShortAddress,
 }
 
 #endif  /* (MAC_ASSOCIATION_REQUEST_CONFIRM == 1) */
-
+#ifdef GTS_SUPPORT
+void usr_mlme_gts_conf(gts_char_t GtsChar, 
+        uint8_t status)
+{   
+	status = status;
+}
+#endif
+#ifdef GTS_SUPPORT
+void usr_mlme_gts_ind(uint16_t DeviceAddr, gts_char_t GtsChar)
+{  
+	sw_timer_start(APP_TIMER_GTS_DATA,
+					((uint32_t)APP_GTS_DATA_DURATION_MS * 1000),
+					SW_TIMEOUT_RELATIVE,
+					(FUNC_PTR)gts_data_cb,
+					NULL);
+	DeviceAddr =DeviceAddr;
+	GtsChar = GtsChar;
+}
+#endif
 #if (MAC_ASSOCIATION_INDICATION_RESPONSE == 1)
 
 /*
@@ -1159,8 +1192,8 @@ void usr_mlme_set_conf(uint8_t status, uint8_t PIBAttribute, uint8_t PIBAttribut
 	                    uint8_t mac_dev_table[17];
 	                    for (uint8_t i = Temp; i < no_of_assoc_devices; i++) // Temp is used to not update the already device table again
 	                    {
-		                    mac_dev_table[0] = (uint8_t)tal_pib.PANId;
-		                    mac_dev_table[1] = (uint8_t)(tal_pib.PANId >> 8);
+		                    mac_dev_table[0] = (uint8_t)DEFAULT_PAN_ID;
+		                    mac_dev_table[1] = (uint8_t)(DEFAULT_PAN_ID >> 8);
 		                    mac_dev_table[2] = (uint8_t)device_list[i].short_addr;
 		                    mac_dev_table[3] = (uint8_t)(device_list[i].short_addr >> 8);
 		                    mac_dev_table[4] = (uint8_t)device_list[i].ieee_addr;
@@ -1607,7 +1640,76 @@ static void indirect_data_cb(void *parameter)
 
 	parameter = parameter; /* Keep compiler happy. */
 }
+#ifdef GTS_SUPPORT
 
+#ifdef SIO_HUB
+const char Display_GTS_Data[] = "GTS data for device %" PRIu8 " ";
+#endif
+/*
+ * @brief Callback function for initiation of gts data transmission
+ *
+ * @param parameter Pointer to callback parameter
+ *                  (not used in this application, but could be used
+ *                  to indicated LED to be switched off)
+ */
+static void gts_data_cb(void *parameter)
+{
+	uint8_t cur_device;
+	uint8_t src_addr_mode;
+	wpan_addr_spec_t dst_addr;
+
+	/* Loop over all associated devices. */
+	for (cur_device = 0; cur_device < no_of_assoc_devices; cur_device++) {
+#ifdef SIO_HUB
+		printf(Display_GTS_Data, cur_device + 1);
+#endif
+
+		/*
+		 * Request transmission of indirect data to device.
+		 * This will just queue this frame into the indirect data queue.
+		 * Once this particular device polls for pending data,
+		 * the frame will be delivered to the device.
+		 */
+		src_addr_mode = WPAN_ADDRMODE_SHORT;
+		dst_addr.AddrMode = WPAN_ADDRMODE_SHORT;
+		dst_addr.PANId = DEFAULT_PAN_ID;
+		dst_addr.Addr.short_address
+			= device_list[cur_device].short_addr;
+
+		//payload = (uint8_t)rand(); /* Any dummy data */
+		gts_msdu_handle++; /* Increment handle */
+
+#ifdef SIO_HUB
+		printf(Display_MSDU_Handle, gts_msdu_handle);
+#endif
+		if (!wpan_mcps_data_req(src_addr_mode,
+				&dst_addr,
+				GTS_PAYLOAD_LEN,  /* One octet */
+				&gts_payload,
+				gts_msdu_handle,
+				WPAN_TXOPT_GTS_ACK
+#ifdef MAC_SECURITY_ZIP
+				,ZIP_SEC_MIN,NULL,ZIP_KEY_ID_MODE,device_list[cur_device].short_addr
+#endif /*  */
+				)) {
+			/*
+			 * Data could not be queued into the indirect queue.
+			 * Add error handling if required.
+			 */
+		}
+	}
+    
+	/* Start timer to initiate indirect data transmission. */
+	sw_timer_start(APP_TIMER_GTS_DATA,
+			((uint32_t)APP_GTS_DATA_DURATION_MS * 1000),
+			SW_TIMEOUT_RELATIVE,
+			(FUNC_PTR)gts_data_cb,
+			NULL);
+	
+
+	parameter = parameter; /* Keep compiler happy. */
+}
+#endif
 /*
  * @brief Callback function for updating the beacon payload
  *

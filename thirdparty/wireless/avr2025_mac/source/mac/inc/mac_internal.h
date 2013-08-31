@@ -69,7 +69,6 @@
 
 /* === Macros =============================================================== */
 
-/* vk debug */ //vk
 #ifdef GTS_DEBUG
 #define DEBUG_PIN1 IOPORT_CREATE_PIN(PORTE, 6)
 #define DEBUG_PIN2 IOPORT_CREATE_PIN(PORTD, 4)
@@ -89,6 +88,7 @@
 #define DEBUG_PIN16 IOPORT_CREATE_PIN(PORTE, 3)//
 #define DEBUG_PIN17 IOPORT_CREATE_PIN(PORTB, 7)
 #endif
+
 /**
  * \addtogroup group_mac_def
  * @{
@@ -146,8 +146,11 @@
 #define GTS_EXPIRY_BO_0_TO_8  ((1 << ((8 - tal_pib.BeaconOrder) + 1)) + 1)
 #define GTS_EXPIRY_BO_9_TO_14 (2 + 1)
 #endif /* FFD */
+
 #define GTS_REQ_PAYLOAD_LEN  (2)
+
 #define PANC_SLOT            (1)
+
 /* !!! Warning !!!
  Do not change the index, mapping for update is done based on this...*/
 #define DEV_TX_SLOT_INDEX    (GTS_TX_SLOT)

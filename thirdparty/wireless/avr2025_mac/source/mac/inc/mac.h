@@ -187,12 +187,6 @@
 #define FCF_GET_DEST_ADDR_MODE(x) \
 	(((x) >> FCF_DEST_ADDR_OFFSET) & FCF_ADDR_MASK)
 
-/*
- * PIB attribute without relevant index, i.e. PIB attribute not
- * contained in 802.15.4-2006 table 88.
- */
-#define NO_PIB_INDEX                    (0)
-
 /* === Types ================================================================ */
 
 /* === Externals ============================================================ */

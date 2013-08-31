@@ -94,7 +94,7 @@ typedef struct mac_gts_list_tag {
 	uint8_t dev_addr[2];
 	uint8_t starting_slot:4;
 	uint8_t length:4;
-}mac_gts_list_t COMPILER_WORD_ALIGNED;
+}mac_gts_list_t __ALIGN_WORD_ADDR__;
 #endif /* GTS_SUPPORT */
 
 /**

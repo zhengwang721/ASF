@@ -150,7 +150,7 @@ static void reset_globals(void)
 retval_t mac_init(void)
 {   
 	#ifdef GTS_DEBUG
-	ioport_configure_pin(DEBUG_PIN1, IOPORT_DIR_OUTPUT |  IOPORT_INIT_LOW);//vk
+	ioport_configure_pin(DEBUG_PIN1, IOPORT_DIR_OUTPUT |  IOPORT_INIT_LOW);
 	ioport_configure_pin(DEBUG_PIN2, IOPORT_DIR_OUTPUT |  IOPORT_INIT_LOW);
 	ioport_configure_pin(DEBUG_PIN3, IOPORT_DIR_OUTPUT |  IOPORT_INIT_LOW);
 	ioport_configure_pin(DEBUG_PIN4, IOPORT_DIR_OUTPUT |  IOPORT_INIT_LOW);

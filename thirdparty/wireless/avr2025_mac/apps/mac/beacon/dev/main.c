@@ -100,9 +100,7 @@
 #include "delay.h"
 #include "common_sw_timer.h"
 #include "sio2host.h"
-#include "mac.h"
 #include "tal.h"
-#include "ieee_const.h"
 #include "mac_internal.h"
 #include <asf.h>
 
@@ -123,9 +121,9 @@ app_state_t;
 #define DEFAULT_PAN_ID                  CCPU_ENDIAN_TO_LE16(0xBABE)
 
 /** Defines the short address of the coordinator. */
-#define COORD_SHORT_ADDR                CCPU_ENDIAN_TO_LE16(0XCAFE)
+#define COORD_SHORT_ADDR                CCPU_ENDIAN_TO_LE16(0x0000)
 
-#define CHANNEL_OFFSET                  (11)
+#define CHANNEL_OFFSET                  (0)
 
 #define SCAN_CHANNEL                    (1ul << current_channel)
 
@@ -144,7 +142,10 @@ app_state_t;
 #define TIMER_SYNC_BEFORE_ASSOC_MS      (3000)
 
 #define PAYLOAD_LEN                     (104)
-
+#define INDIRECT_PAYLOAD_LEN            (14)
+#ifdef GTS_SUPPORT
+#define GTS_PAYLOAD_LEN                 (18)
+#endif
 #if (LED_COUNT >= 3)
 #define LED_START                       (LED0)
 #define LED_NWK_SETUP                   (LED1)
@@ -306,7 +307,6 @@ int main(void)
 }
 
 #if defined(ENABLE_TSTAMP)
-
 /*
  * Callback function usr_mcps_data_conf
  *
@@ -325,6 +325,23 @@ void usr_mcps_data_conf(uint8_t msduHandle,
 #endif  /* ENABLE_TSTAMP */
 {
 }
+
+#ifdef GTS_SUPPORT
+void usr_mlme_gts_ind(uint16_t DeviceAddr, gts_char_t GtsChar)
+{
+	
+	DeviceAddr = DeviceAddr;
+	GtsChar = GtsChar;
+}
+#endif
+
+#ifdef GTS_SUPPORT
+void usr_mlme_gts_conf(gts_char_t GtsChar, uint8_t status)
+{   
+	GtsChar = GtsChar;
+	status = status;
+}
+#endif
 
 /*
  * @brief Callback function usr_mcps_data_ind
@@ -383,7 +400,7 @@ const char Display_Received_Frame[] = "Frame received: %lu\r\n";
 	} else {
 		indirect_rx_cnt++;
 #ifdef SIO_HUB
-		printf("Indirect Data ");
+
 		printf("Frame received: ");
 		for (uint8_t i = 0; i < msduLength; i++) {
 			printf("%c", msdu[i]);
@@ -463,6 +480,13 @@ void usr_mlme_associate_conf(uint16_t AssocShortAddress,
 	                 wpan_mlme_set_req(macDeviceTableEntries,
 	                 NO_PIB_INDEX,
 	                 &mac_dev_table_entries);
+	#ifdef GTS_SUPPORT
+		gts_char_t gts_spec;
+		gts_spec.GtsLength=2;
+		gts_spec.GtsDirection=GTS_RX_SLOT;
+		gts_spec.GtsCharType=GTS_ALLOCATE;
+		wpan_mlme_gts_req(AssocShortAddress,gts_spec);
+	#endif
 
 	} else {
 		LED_Off(LED_NWK_SETUP);
