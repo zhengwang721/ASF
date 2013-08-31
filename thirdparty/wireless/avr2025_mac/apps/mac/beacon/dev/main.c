@@ -100,7 +100,9 @@
 #include "delay.h"
 #include "common_sw_timer.h"
 #include "sio2host.h"
+#include "mac.h"
 #include "tal.h"
+#include "ieee_const.h"
 #include "mac_internal.h"
 #include <asf.h>
 
@@ -142,7 +144,7 @@ app_state_t;
 #define TIMER_SYNC_BEFORE_ASSOC_MS      (3000)
 
 #define PAYLOAD_LEN                     (104)
-#define INDIRECT_PAYLOAD_LEN            (14)
+
 #ifdef GTS_SUPPORT
 #define GTS_PAYLOAD_LEN                 (18)
 #endif
@@ -475,11 +477,13 @@ void usr_mlme_associate_conf(uint16_t AssocShortAddress,
 		sw_timer_stop(APP_TIMER);
 
 		LED_On(LED_NWK_SETUP);
+#ifdef MAC_SECURITY_ZIP			
 		   uint8_t mac_dev_table_entries = 1;
 
 	                 wpan_mlme_set_req(macDeviceTableEntries,
 	                 NO_PIB_INDEX,
 	                 &mac_dev_table_entries);
+#endif
 	#ifdef GTS_SUPPORT
 		gts_char_t gts_spec;
 		gts_spec.GtsLength=2;
@@ -794,6 +798,7 @@ mac_key_table_t *key_table = (mac_key_table_t *)PIBAttributeValue;
 				(FUNC_PTR)network_search_indication_cb,
 				NULL);
 	}
+#ifdef MAC_SECURITY_ZIP		
 	else if((status == MAC_SUCCESS) &&
 	     (PIBAttribute == macKeyTable)){
 			 for (uint8_t i = 0; i < key_table->KeyDeviceListEntries; i++)
@@ -805,9 +810,12 @@ mac_key_table_t *key_table = (mac_key_table_t *)PIBAttributeValue;
 					 break;
 				 }
 			 }
-			 wpan_mlme_set_req(macKeyTable, deviceShortAddress - 1, (uint8_t *)PIBAttributeValue);
+			 wpan_mlme_set_req(macKeyTable,	 
+			 deviceShortAddress - 1, 		 
+			 (uint8_t *)PIBAttributeValue);
 		
 	}
+#endif	
 }
 
 #endif  /* (MAC_GET_SUPPORT == 1) */
@@ -964,7 +972,11 @@ void usr_mlme_scan_conf(uint8_t status,
 				 */
 				uint16_t pan_id;
 				pan_id = DEFAULT_PAN_ID;
-				wpan_mlme_set_req(macPANId,NO_PIB_INDEX, &pan_id);
+				wpan_mlme_set_req(macPANId,
+#ifdef MAC_SECURITY_ZIP				
+				NO_PIB_INDEX, 
+#endif				
+				&pan_id);
 				
 				return;
 			}
@@ -1013,7 +1025,7 @@ void usr_mlme_scan_conf(uint8_t status,
  * @param status        Result of requested PIB attribute set operation
  * @param PIBAttribute  Updated PIB attribute
  */
-
+#ifdef MAC_SECURITY_ZIP
 void usr_mlme_set_conf(uint8_t status, uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
 {
     if (status != MAC_SUCCESS)
@@ -1032,7 +1044,9 @@ void usr_mlme_set_conf(uint8_t status, uint8_t PIBAttribute, uint8_t PIBAttribut
 				 * This is required in order to perform a proper sync
 				 * before assocation.
 				 */
-				wpan_mlme_set_req(macCoordShortAddress,NO_PIB_INDEX, &coord_addr_spec.Addr);
+				wpan_mlme_set_req(macCoordShortAddress,			
+				NO_PIB_INDEX, 
+				&coord_addr_spec.Addr);
 				
 			}
             break;
@@ -1330,6 +1344,55 @@ void usr_mlme_set_conf(uint8_t status, uint8_t PIBAttribute, uint8_t PIBAttribut
 
     /* Keep compiler happy. */
     PIBAttributeIndex = PIBAttributeIndex;
+}
+#endif
+
+/*
+ * @brief Callback function usr_mlme_set_conf
+ *
+ * @param status        Result of requested PIB attribute set operation
+ * @param PIBAttribute  Updated PIB attribute
+ */
+void usr_mlme_set_conf(uint8_t status,
+		uint8_t PIBAttribute)
+{
+	if ((status == MAC_SUCCESS) && (PIBAttribute == macPANId)) {
+		/*
+		 * Set the Coordinator Short Address of the scanned network.
+		 * This is required in order to perform a proper sync
+		 * before assocation.
+		 */
+		wpan_mlme_set_req(macCoordShortAddress, &coord_addr_spec.Addr);
+	} else if ((status == MAC_SUCCESS) &&
+			(PIBAttribute == macCoordShortAddress)) {
+		/*
+		 * Sync with beacon frames from our coordinator.
+		 * Use: bool wpan_mlme_sync_req(uint8_t LogicalChannel,
+		 *                              uint8_t ChannelPage,
+		 *                              bool TrackBeacon);
+		 *
+		 * This does not lead to an immediate reaction.
+		 *
+		 * In case we receive beacon frames from our coordinator
+		 *including
+		 * a beacon payload, this is indicated in the callback function
+		 * usr_mlme_beacon_notify_ind().
+		 *
+		 * In case the device cannot find its coordinator or later
+		 *looses
+		 * synchronization with its parent, this is indicated in the
+		 * callback function usr_mlme_sync_loss_ind().
+		 */
+		wpan_mlme_sync_req(current_channel,
+				current_channel_page,
+				1);
+	} else {
+		/* Set proper state of application. */
+		app_state = APP_IDLE;
+
+		/* Something went wrong; restart. */
+		wpan_mlme_reset_req(true);
+	}
 }
 
 

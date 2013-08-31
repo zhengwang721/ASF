@@ -101,6 +101,10 @@
 #include "delay.h"
 #include "common_sw_timer.h"
 #include "sio2host.h"
+#include "mac.h"
+#include "mac_api.h"
+#include "tal.h"
+#include "ieee_const.h"
 #include <asf.h>
 /* === TYPES =============================================================== */
 
@@ -469,11 +473,14 @@ uint8_t * msdu,
 uint8_t mpduLinkQuality,
 uint8_t DSN,
 #if defined(ENABLE_TSTAMP) || defined(__DOXYGEN__)
-uint32_t Timestamp,
+uint32_t Timestamp
 #endif  /* ENABLE_TSTAMP */
-uint8_t SecurityLevel,
+#if (defined MAC_SECURITY_ZIP) || (defined MAC_SECURITY_2006)
+,uint8_t SecurityLevel,
 uint8_t KeyIdMode,
-uint8_t KeyIndex)
+uint8_t KeyIndex
+#endif
+)
 {
 #ifdef SIO_HUB
 	printf(Display_Rx_Frame_Address, LE16_TO_CPU_ENDIAN(
@@ -636,14 +643,13 @@ void usr_mlme_comm_status_ind(wpan_addr_spec_t *SrcAddrSpec,
 		uint8_t status)
 {
 	if (status == MAC_SUCCESS) {
+#if (defined MAC_SECURITY_ZIP) || (defined MAC_SECURITY_2006)		
 		 recent_assoc_dev_no++;
-		 printf("comm_status\n\r");
-#ifdef MAC_SECURITY_ZIP
         wpan_mlme_set_req(macDeviceTableEntries,
                           NO_PIB_INDEX,
                           &no_of_assoc_devices);
-#endif
 		 wpan_mlme_get_req(macKeyTable, recent_assoc_dev_no);
+#endif		 
 		/*
 		 * Now the association of the device has been successful and its
 		 * information, like address, could  be stored.
@@ -723,15 +729,21 @@ void usr_mlme_disassociate_ind(uint64_t DeviceAddress,
  */
 void usr_mlme_get_conf(uint8_t status,
 		uint8_t PIBAttribute,
+#if (defined MAC_SECURITY_ZIP) || (defined MAC_SECURITY_2006)		
 		uint8_t PIBAttributeIndex,
+#endif		
 		void *PIBAttributeValue)
 {
-#ifdef MAC_SECURITY_ZIP
+#if (defined MAC_SECURITY_ZIP) || (defined MAC_SECURITY_2006)
 	 mac_key_table_t *key_table = (mac_key_table_t *)PIBAttributeValue;
 #endif
 	if ((status == MAC_SUCCESS) && (PIBAttribute == phyCurrentPage)) {
 		current_channel_page = *(uint8_t *)PIBAttributeValue;
-		wpan_mlme_get_req(phyChannelsSupported ,0);
+		wpan_mlme_get_req(phyChannelsSupported 
+#if (defined MAC_SECURITY_ZIP) || (defined MAC_SECURITY_2006)		
+		,0
+#endif		
+		);
 	} else if ((status == MAC_SUCCESS) &&
 			(PIBAttribute == phyChannelsSupported)) {
 		uint8_t index;
@@ -757,7 +769,11 @@ void usr_mlme_get_conf(uint8_t status,
 		short_addr[0] = (uint8_t)COORD_SHORT_ADDR;  /* low byte */
 		short_addr[1] = (uint8_t)(COORD_SHORT_ADDR >> 8); /* high byte */
 		printf("set short addr\n\r");
-		wpan_mlme_set_req(macShortAddress,0, short_addr);
+		wpan_mlme_set_req(macShortAddress,
+#if (defined MAC_SECURITY_ZIP) || (defined MAC_SECURITY_2006)		
+		0, 
+#endif		
+		short_addr);
 	}
 #ifdef MAC_SECURITY_ZIP
     else if((status == MAC_SUCCESS) &&
@@ -821,7 +837,11 @@ void usr_mlme_poll_conf(uint8_t status)
 void usr_mlme_reset_conf(uint8_t status)
 {
 	if (status == MAC_SUCCESS) {
-		wpan_mlme_get_req(phyCurrentPage,0);
+		wpan_mlme_get_req(phyCurrentPage
+#if (defined MAC_SECURITY_ZIP) || (defined MAC_SECURITY_2006)		
+		,0
+#endif		
+		);
 	} else {
 		/* Something went wrong; restart. */
 		wpan_mlme_reset_req(true);
@@ -1192,8 +1212,8 @@ void usr_mlme_set_conf(uint8_t status, uint8_t PIBAttribute, uint8_t PIBAttribut
 	                    uint8_t mac_dev_table[17];
 	                    for (uint8_t i = Temp; i < no_of_assoc_devices; i++) // Temp is used to not update the already device table again
 	                    {
-		                    mac_dev_table[0] = (uint8_t)DEFAULT_PAN_ID;
-		                    mac_dev_table[1] = (uint8_t)(DEFAULT_PAN_ID >> 8);
+		                    mac_dev_table[0] = (uint8_t)tal_pib.PANId;
+		                    mac_dev_table[1] = (uint8_t)(tal_pib.PANId >> 8);
 		                    mac_dev_table[2] = (uint8_t)device_list[i].short_addr;
 		                    mac_dev_table[3] = (uint8_t)(device_list[i].short_addr >> 8);
 		                    mac_dev_table[4] = (uint8_t)device_list[i].ieee_addr;
@@ -1268,7 +1288,11 @@ void usr_mlme_set_conf(uint8_t status,
 		 */
 		uint8_t association_permit = true;
 
-		wpan_mlme_set_req(macAssociationPermit,0, &association_permit);
+		wpan_mlme_set_req(macAssociationPermit,
+#if (defined MAC_SECURITY_ZIP) || (defined MAC_SECURITY_2006)		
+		0,
+#endif		
+		&association_permit);
 	} else if ((status == MAC_SUCCESS) &&
 			(PIBAttribute == macAssociationPermit)) {
 		/*
@@ -1281,19 +1305,31 @@ void usr_mlme_set_conf(uint8_t status,
 		 */
 		bool rx_on_when_idle = true;
 
-		wpan_mlme_set_req(macRxOnWhenIdle, 0,&rx_on_when_idle);
+		wpan_mlme_set_req(macRxOnWhenIdle, 
+#if (defined MAC_SECURITY_ZIP) || (defined MAC_SECURITY_2006)		
+		0,
+#endif		
+		&rx_on_when_idle);
 	} else if ((status == MAC_SUCCESS) &&
 			(PIBAttribute == macRxOnWhenIdle)) {
 		/* Set the beacon payload length. */
 		uint8_t beacon_payload_len = BEACON_PAYLOAD_LEN;
-		wpan_mlme_set_req(macBeaconPayloadLength,0, &beacon_payload_len);
+		wpan_mlme_set_req(macBeaconPayloadLength,
+#if (defined MAC_SECURITY_ZIP) || (defined MAC_SECURITY_2006)		
+		0, 
+#endif		
+		&beacon_payload_len);
 	} else if ((status == MAC_SUCCESS) &&
 			(PIBAttribute == macBeaconPayloadLength)) {
 		/*
 		 * Once the length of the beacon payload has been defined,
 		 * set the actual beacon payload.
 		 */
-		wpan_mlme_set_req(macBeaconPayload, 0,&beacon_payload);
+		wpan_mlme_set_req(macBeaconPayload,
+#if (defined MAC_SECURITY_ZIP) || (defined MAC_SECURITY_2006)		 
+		0,
+#endif		
+		&beacon_payload);
 	} else if ((status == MAC_SUCCESS) &&
 			(PIBAttribute == macBeaconPayload)) {
 		if (COORD_STARTING == coord_state) {
@@ -1338,12 +1374,12 @@ void usr_mlme_set_conf(uint8_t status,
 void usr_mlme_start_conf(uint8_t status)
 {
 	if (status == MAC_SUCCESS) {
-		
+#if (defined MAC_SECURITY_ZIP) || (defined MAC_SECURITY_2006) 		
 		/* Set security PIB attributes now. */
 		wpan_mlme_set_req(macDefaultKeySource,
 		NO_PIB_INDEX,
 		&default_key_source);
-		
+#endif		
 		coord_state = COORD_RUNNING;
 #ifdef SIO_HUB
 		printf("Started beacon-enabled network in Channel - %d\r\n",
@@ -1560,7 +1596,11 @@ static void bc_data_cb(void *parameter)
 			1,     /* One octet */
 			&payload,
 			curr_msdu_handle_temp,
-			WPAN_TXOPT_OFF,0,NULL,0,0)
+			WPAN_TXOPT_OFF
+#if (defined MAC_SECURITY_ZIP) || (defined MAC_SECURITY_2006)			
+			,0,NULL,0,0
+#endif			
+			)
 			) {
 		LED_On(LED_DATA);
 	} else {
@@ -1626,8 +1666,13 @@ static void indirect_data_cb(void *parameter)
 				31,  /* One octet */ 	 		 
 				(uint8_t*)payload,
 				curr_msdu_handle,
-				WPAN_TXOPT_INDIRECT_ACK,ZIP_SEC_MIN,NULL,ZIP_KEY_ID_MODE,device_list[cur_device].short_addr)
-				) {
+				WPAN_TXOPT_INDIRECT_ACK
+#if (defined MAC_SECURITY_ZIP) || (defined MAC_SECURITY_2006)				
+				,ZIP_SEC_MIN,NULL,ZIP_KEY_ID_MODE,device_list[cur_device].short_addr
+#endif					
+				)
+				)
+				 {
 		}
 	}
 
@@ -1737,7 +1782,11 @@ static void bcn_payload_update_cb(void *parameter)
 	bcn_payload_cnt %= 10;
 	/* Create printable character. */
 	beacon_payload[BEACON_PAYLOAD_LEN - 1] = bcn_payload_cnt + 0x30;
-	wpan_mlme_set_req(macBeaconPayload,  0,&beacon_payload);
+	wpan_mlme_set_req(macBeaconPayload, 
+#if (defined MAC_SECURITY_ZIP) || (defined MAC_SECURITY_2006)
+	 0,
+#endif	 
+	 &beacon_payload);
 
 	/* Restart timer for updating beacon payload. */
 	sw_timer_start(APP_TIMER_BCN_PAYLOAD_UPDATE,
