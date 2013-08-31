@@ -1345,8 +1345,7 @@ void usr_mlme_set_conf(uint8_t status, uint8_t PIBAttribute, uint8_t PIBAttribut
     /* Keep compiler happy. */
     PIBAttributeIndex = PIBAttributeIndex;
 }
-#endif
-
+#else
 /*
  * @brief Callback function usr_mlme_set_conf
  *
@@ -1394,7 +1393,7 @@ void usr_mlme_set_conf(uint8_t status,
 		wpan_mlme_reset_req(true);
 	}
 }
-
+#endif
 
 
 #if (MAC_START_REQUEST_CONFIRM == 1)

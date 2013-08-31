@@ -1730,7 +1730,7 @@ static void gts_data_cb(void *parameter)
 		if (!wpan_mcps_data_req(src_addr_mode,
 				&dst_addr,
 				GTS_PAYLOAD_LEN,  /* One octet */
-				&gts_payload,
+				gts_payload,
 				gts_msdu_handle,
 				WPAN_TXOPT_GTS_ACK
 #ifdef MAC_SECURITY_ZIP
