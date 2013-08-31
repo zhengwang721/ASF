@@ -87,7 +87,7 @@ uint8_t T_Beacon __ALIGN_WORD_ADDR__;
 uint8_t T_Beacon_Preparation __ALIGN_WORD_ADDR__;
     #endif /* (MAC_START_REQUEST_CONFIRM == 1) */
 #ifdef GTS_SUPPORT
-uint8_t T_CAP;
+uint8_t T_CAP __ALIGN_WORD_ADDR__;
 #endif /* GTS_SUPPORT */
 #endif  /* BEACON_SUPPORT / No BEACON_SUPPORT */
 
