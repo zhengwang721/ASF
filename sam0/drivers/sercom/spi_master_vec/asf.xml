@@ -1,8 +1,12 @@
 <asf xmlversion="1.0">
-	<module type="driver" id="sam0.drivers.sercom.spi_master_vec" caption="SERCOM SPI master, vectored (interrupt based)">
+	<module type="driver" id="sam0.drivers.sercom.spi_master_vec" caption="SERCOM SPI - Master Mode, Vectored">
 		<info type="description" value="summary">
-			SPI master driver for the SAM D20 SERCOM module with vectored
-			memory addressing, also known as scatter-gather functionality.
+			SPI master driver for the SAM D20 SERCOM module with vectored I/O,
+			also known as scatter/gather I/O.
+			Vectored I/O means that the driver can transfer bytes to and/or from
+			a series of non-contiguous buffers in a single transaction, without
+			the need to split it up into one transaction per buffer.
+
 			This driver requires interrupts to be enabled.
 		</info>
 		<info type="keyword" value="technology">
