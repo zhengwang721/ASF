@@ -112,6 +112,7 @@ void Dummy_Handler(void);
 
 #pragma section = ".intvec"
 #pragma location = ".intvec"
+// [startup_vector_table]
 const DeviceVectors __vector_table = {
 	(void*) __sfe("CSTACK"),
 
@@ -162,7 +163,8 @@ const DeviceVectors __vector_table = {
 	(void*) TC4_Handler,    /* 27 Timer/Counter 4 */
 	(void*) TC5_Handler,    /* 28 Timer/Counter 5 */
 	(void*) ADC_Handler,    /* 29 Analog To Digital Converter */
-	(void*) ARM1_Handler,   /* 30 FPU signals : FPIXC, FPOFC, FPUFC, FPIOC, FPDZC, FPIDC, FPIXC */
+	(void*) ARM1_Handler,   /* 30 FPU signals : FPIXC, FPOFC, FPUFC, FPIOC,
+			FPDZC, FPIDC, FPIXC */
 	(void*) IPC0_Handler,   /* 31 Interprocessor communication 0 */
 	(void*) SLCDC_Handler,  /* 32 Segment LCD Controller */
 	(void*) TRNG_Handler,   /* 33 True Random Generator */
@@ -175,6 +177,7 @@ const DeviceVectors __vector_table = {
 	(void*) SPI1_Handler,   /* 40 Serial Peripheral Interface 1 */
 	(void*) PWM_Handler,    /* 41 Pulse Width Modulation */
 };
+// [startup_vector_table]
 
 /**------------------------------------------------------------------------------
  * This is the code that gets called on processor reset. To initialize the

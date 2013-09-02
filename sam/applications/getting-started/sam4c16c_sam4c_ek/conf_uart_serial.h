@@ -44,11 +44,13 @@
 #ifndef CONF_USART_SERIAL_H_INCLUDED
 #define CONF_USART_SERIAL_H_INCLUDED
 
+// [conf_uart_serial_settings]
 /** UART Interface */
 #define CONF_UART            CONSOLE_UART
 /** Baudrate setting */
 #define CONF_UART_BAUDRATE   115200UL
 /** Parity setting */
 #define CONF_UART_PARITY     UART_MR_PAR_NO
+// [conf_uart_serial_settings]
 
 #endif/* CONF_USART_SERIAL_H_INCLUDED */
