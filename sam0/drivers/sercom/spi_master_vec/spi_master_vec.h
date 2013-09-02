@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SERCOM SPI driver include for OZMO stack
+ * \brief SERCOM SPI master with vectored I/O driver include
  *
  * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
@@ -41,15 +41,15 @@
  *
  */
 
-#ifndef SPI_MASTER_VECTOR_H
-#define SPI_MASTER_VECTOR_H
+#ifndef SPI_MASTER_VEC_H
+#define SPI_MASTER_VEC_H
 
-#include <conf_spi_master_vector.h>
+#include <conf_spi_master_vec.h>
 #include <port.h>
 #include <status_codes.h>
 
 /**
- * \defgroup sercom_spi_master_vector_group SERCOM SPI master driver with
+ * \defgroup sercom_spi_master_vec_group SERCOM SPI master driver with
  * vectored I/O
  *
  * This driver is a single-instance, compile-time configured SPI master driver.
@@ -58,7 +58,7 @@
  *
  * Scatter/gather is implemented by the use of buffer descriptor arrays, which
  * must be passed to the driver to start a transfer.
- * See \ref spi_master_vector_transceive_buffers_wait() for more information.
+ * See \ref spi_master_vec_transceive_buffers_wait() for more information.
  *
  * @{
  */
@@ -68,50 +68,50 @@
  * @{
  */
 /**
- * \def CONF_SPI_MASTER_VECTOR_SERCOM
+ * \def CONF_SPI_MASTER_VEC_SERCOM
  * \brief SERCOM module to use for this SPI driver.
  */
 /**
- * \def CONF_SPI_MASTER_VECTOR_BAUDRATE
+ * \def CONF_SPI_MASTER_VEC_BAUDRATE
  * \brief Baudrate to configure the SERCOM SPI module for.
  */
 /**
- * \def CONF_SPI_MASTER_VECTOR_SS_PIN
+ * \def CONF_SPI_MASTER_VEC_SS_PIN
  * \brief Number of IO pin to use as Slave Select line.
  */
 /**
- * \def CONF_SPI_MASTER_VECTOR_GCLK_SOURCE
+ * \def CONF_SPI_MASTER_VEC_GCLK_SOURCE
  * \brief Generic clock generator to use for the SERCOM module.
  */
 /**
- * \def CONF_SPI_MASTER_VECTOR_SIGNAL_MUX
+ * \def CONF_SPI_MASTER_VEC_SIGNAL_MUX
  * \brief Signal multiplexing setting, i.e., pad multiplexing.
  */
 /**
- * \def CONF_SPI_MASTER_VECTOR_PINMUX_PAD0
+ * \def CONF_SPI_MASTER_VEC_PINMUX_PAD0
  * \brief First IO pin function multiplexing setting.
  */
 /**
- * \def CONF_SPI_MASTER_VECTOR_PINMUX_PAD1
+ * \def CONF_SPI_MASTER_VEC_PINMUX_PAD1
  * \brief Second IO pin function multiplexing setting.
  */
 /**
- * \def CONF_SPI_MASTER_VECTOR_PINMUX_PAD2
+ * \def CONF_SPI_MASTER_VEC_PINMUX_PAD2
  * \brief Third IO pin function multiplexing setting.
  */
 /**
- * \def CONF_SPI_MASTER_VECTOR_PINMUX_PAD3
+ * \def CONF_SPI_MASTER_VEC_PINMUX_PAD3
  * \brief Fourth IO pin function multiplexing setting.
  */
 /** @} */
 
 /** Type to contain length of described buffers */
-typedef uint16_t spi_master_vector_buflen_t;
+typedef uint16_t spi_master_vec_buflen_t;
 
 /** Struct to describe a buffer for writing or reading */
-struct spi_master_vector_bufdesc {
+struct spi_master_vec_bufdesc {
 	uint8_t *data;
-	spi_master_vector_buflen_t length;
+	spi_master_vec_buflen_t length;
 };
 
 /**
@@ -124,24 +124,24 @@ struct spi_master_vector_bufdesc {
  * \arg \c true to select the slave.
  * \arg \c false to deselect the slave.
  */
-static inline void spi_master_vector_select_slave(bool select)
+static inline void spi_master_vec_select_slave(bool select)
 {
 	if (select) {
-		port_pin_set_output_level(CONF_SPI_MASTER_VECTOR_SS_PIN, false);
+		port_pin_set_output_level(CONF_SPI_MASTER_VEC_SS_PIN, false);
 		} else {
-		port_pin_set_output_level(CONF_SPI_MASTER_VECTOR_SS_PIN, true);
+		port_pin_set_output_level(CONF_SPI_MASTER_VEC_SS_PIN, true);
 	}
 }
 
-enum status_code spi_master_vector_init(void);
-void spi_master_vector_enable(void);
-void spi_master_vector_disable(void);
-enum status_code spi_master_vector_transceive_buffers_wait(
-		struct spi_master_vector_bufdesc tx_bufdescs[],
-		struct spi_master_vector_bufdesc rx_bufdescs[]);
+enum status_code spi_master_vec_init(void);
+void spi_master_vec_enable(void);
+void spi_master_vec_disable(void);
+enum status_code spi_master_vec_transceive_buffers_wait(
+		struct spi_master_vec_bufdesc tx_bufdescs[],
+		struct spi_master_vec_bufdesc rx_bufdescs[]);
 
 /**
  * @}
  */
 
-#endif /* SPI_MASTER_VECTOR_H */
+#endif /* SPI_MASTER_VEC_H */
