@@ -133,12 +133,20 @@ static inline void spi_master_vec_select_slave(bool select)
 	}
 }
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 enum status_code spi_master_vec_init(void);
 void spi_master_vec_enable(void);
 void spi_master_vec_disable(void);
 enum status_code spi_master_vec_transceive_buffers_wait(
 		struct spi_master_vec_bufdesc tx_bufdescs[],
 		struct spi_master_vec_bufdesc rx_bufdescs[]);
+
+#ifdef __cplusplus
+}
+#endif
 
 /**
  * @}
