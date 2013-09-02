@@ -85,7 +85,7 @@ __always_inline static void fpu_disable(void)
  */
 __always_inline static bool fpu_is_enabled(void)
 {
-	return !!(REG_CPACR & (0xFu << 20));
+	return (REG_CPACR & (0xFu << 20));
 }
 
 #endif /* _FPU_H_INCLUDED_ */
