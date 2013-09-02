@@ -114,7 +114,8 @@ enum msg_code {
 	MLME_RESET_CONFIRM                  = (0x20),
 	MLME_RX_ENABLE_CONFIRM              = (0x21),
 	MLME_START_CONFIRM                  = (0x22),
-	MLME_POLL_CONFIRM                   = (0x23)
+    MLME_POLL_CONFIRM                   = (0x23),
+    MAC_INC_FRAME                       = (0x24)
 }SHORTENUM __ALIGN_WORD_ADDR__;
 
 /**
@@ -138,21 +139,21 @@ enum msg_code {
 #define MLME_COMM_STATUS_IND_LEN        (22)
 #define MLME_DISASSOCIATE_CONF_LEN      (13)
 #define MLME_DISASSOCIATE_IND_LEN       (10)
-#ifdef MAC_SECURITY_ZIP
+#if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
 #define MLME_GET_CONF_LEN               (5)
 #else
 #define MLME_GET_CONF_LEN               (4)
-#endif  /* MAC_SECURITY_ZIP */
+#endif  /* (MAC_SECURITY_ZIP || MAC_SECURITY_2006) */
 #define MLME_ORPHAN_IND_LEN             (9)
 #define MLME_POLL_CONF_LEN              (2)
 #define MLME_RESET_CONF_LEN             (2)
 #define MLME_RX_ENABLE_CONF_LEN         (2)
 #define MLME_SCAN_CONF_LEN              (10)
-#ifdef MAC_SECURITY_ZIP
+#if ((defined MAC_SECURITY_ZIP) || (defined MAC_SECURITY_2006))
 #define MLME_SET_CONF_LEN               (4)
 #else
 #define MLME_SET_CONF_LEN               (3)
-#endif  /* MAC_SECURITY_ZIP */
+#endif  /* (MAC_SECURITY_ZIP || MAC_SECURITY_2006) */
 #define MLME_START_CONF_LEN             (2)
 #define MLME_SYNC_LOSS_IND_LEN          (6)
 #define MLME_GTS_CONF_LEN               (3)

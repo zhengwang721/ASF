@@ -63,13 +63,12 @@
 #include "tal_internal.h"
 #endif
 
-#if (defined MAC_SECURITY_ZIP) || (defined GTS_SUPPORT)
+#if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006) || (defined GTS_SUPPORT))
 #include "mac_msg_types.h"
 #endif
 
 /* === Macros =============================================================== */
 
-/* vk debug */ //vk
 #ifdef GTS_DEBUG
 #define DEBUG_PIN1 IOPORT_CREATE_PIN(PORTE, 6)
 #define DEBUG_PIN2 IOPORT_CREATE_PIN(PORTD, 4)
@@ -89,6 +88,7 @@
 #define DEBUG_PIN16 IOPORT_CREATE_PIN(PORTE, 3)//
 #define DEBUG_PIN17 IOPORT_CREATE_PIN(PORTB, 7)
 #endif
+
 /**
  * \addtogroup group_mac_def
  * @{
@@ -146,8 +146,11 @@
 #define GTS_EXPIRY_BO_0_TO_8  ((1 << ((8 - tal_pib.BeaconOrder) + 1)) + 1)
 #define GTS_EXPIRY_BO_9_TO_14 (2 + 1)
 #endif /* FFD */
+
 #define GTS_REQ_PAYLOAD_LEN  (2)
+
 #define PANC_SLOT            (1)
+
 /* !!! Warning !!!
  Do not change the index, mapping for update is done based on this...*/
 #define DEV_TX_SLOT_INDEX    (GTS_TX_SLOT)
@@ -747,15 +750,15 @@ void dispatch_event(arch_data_t *event);
 
 retval_t set_tal_pib_internal(uint8_t attribute, pib_value_t *attribute_value);
 
-#ifdef MAC_SECURITY_ZIP
+#if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
 retval_t mac_build_aux_sec_header(uint8_t **frame_ptr, mcps_data_req_t *pmdr,
 		uint8_t *frame_len);
 retval_t mac_secure(frame_info_t *frame, uint8_t *mac_payload_ptr,
 		mcps_data_req_t *pmdr);
-retval_t mac_unsecure(parse_t *mac_parse_data, uint8_t *mpdu,
+retval_t mac_unsecure(parse_t *mac_parse_data_buf, uint8_t *mpdu,
 		uint8_t *mac_payload, uint8_t *payload_index);
 
-#endif  /* MAC_SECURITY_ZIP */
+#endif  /* (MAC_SECURITY_ZIP || MAC_SECURITY_2006) */
 
 #ifdef GTS_SUPPORT
 void mac_gen_mlme_gts_conf(buffer_t *buf_ptr, uint8_t status, gts_char_t gts_char);

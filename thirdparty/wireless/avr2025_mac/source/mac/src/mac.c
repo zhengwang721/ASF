@@ -74,11 +74,12 @@
 #include "mac_internal.h"
 #include "mac.h"
 #include "mac_build_config.h"
-#ifdef MAC_SECURITY_ZIP
+#if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
 #include "mac_security.h"
-#endif  /* MAC_SECURITY_ZIP */
+#endif  /* (MAC_SECURITY_ZIP || MAC_SECURITY_2006) */
 
 /* === Macros =============================================================== */
+
 
 /* === Globals ============================================================== */
 
@@ -110,7 +111,6 @@ mac_poll_state_t mac_poll_state;
 mac_radio_sleep_state_t mac_radio_sleep_state;
 
 #ifdef BEACON_SUPPORT
-
 /**
  * Final Cap Slot of current Superframe
  */
@@ -151,13 +151,12 @@ uint64_t mac_last_src_addr __ALIGN_WORD_ADDR__;
 uint8_t mac_beacon_payload[aMaxBeaconPayloadLength] __ALIGN_WORD_ADDR__;
 #endif  /* (MAC_START_REQUEST_CONFIRM == 1) */
 
-#ifdef MAC_SECURITY_ZIP
-
+#if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
 /**
  * Holds the values of all security related PIB attributes.
  */
 mac_sec_pib_t mac_sec_pib;
-#endif  /* MAC_SECURITY_ZIP */
+#endif  /* (MAC_SECURITY_ZIP || MAC_SECURITY_2006) */
 
 /**
  * Holds the mlme request buffer pointer, used to give the respective

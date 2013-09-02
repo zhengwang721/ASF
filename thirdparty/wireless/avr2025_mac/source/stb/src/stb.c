@@ -59,7 +59,7 @@
 #include "stb_internal.h"
 
 /* === Macros ============================================================== */
-
+#define NO_HDR_MIC             (0x00)
 /* === Types =============================================================== */
 
 /* === Globals ============================================================= */
@@ -206,10 +206,14 @@ stb_ccm_t stb_ccm_secure(uint8_t *buffer,
 		if (mic_len > 0) {
 			nonce[AES_BLOCKSIZE - 1] = pld_len;
 
-			compute_mic(buffer,
+			compute_mic(buffer + hdr_len,
 					buffer + hdr_len + pld_len,
 					nonce,
-					hdr_len,
+#if (HIGHEST_STACK_LAYER==MAC)
+                    NO_HDR_MIC,
+#else
+                    hdr_len,
+#endif
 					pld_len);
 		}
 
@@ -234,10 +238,14 @@ stb_ccm_t stb_ccm_secure(uint8_t *buffer,
 			nonce[0] = nonce_0;
 			nonce[AES_BLOCKSIZE - 1] = pld_len;
 
-			compute_mic(buffer,
+			compute_mic(buffer + hdr_len,
 					rcvd_mic,
 					nonce,
-					hdr_len,
+#if (HIGHEST_STACK_LAYER==MAC)
+                    NO_HDR_MIC,
+#else
+                    hdr_len,
+#endif
 					pld_len);
 
 			buffer += hdr_len + pld_len;

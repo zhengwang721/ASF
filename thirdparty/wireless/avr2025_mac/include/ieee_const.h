@@ -708,6 +708,12 @@
 #define macSecurityEnabled_def          (false)
 #endif  /* No MAC_SECURITY */
 
+/*
+ * PIB attribute without relevant index, i.e. PIB attribute not
+ * contained in 802.15.4-2006 table 88.
+ */
+#define NO_PIB_INDEX                    (0)
+
 /**
  * The minimum number of symbols forming a LIFS period.
  *

@@ -237,6 +237,27 @@ void mac_process_beacon_frame(buffer_t *beacon)
 									   mac_parse_data.mac_payload_data.beacon_data.gts_direction,
 									   mac_parse_data.mac_payload_data.beacon_data.gts_list);
 			}
+			{
+				uint8_t table_index;
+				gts_char_t gts_char;
+				for(table_index = 0; table_index < MAX_GTS_ON_DEV; table_index++)
+				{
+					if(GTS_STATE_REQ_SENT == mac_dev_gts_table[table_index].GtsState
+					&& 0 < mac_dev_gts_table[table_index].GtsPersistCount
+					&& 0 == --mac_dev_gts_table[table_index].GtsPersistCount)
+					{
+						gts_char.GtsCharType = GTS_ALLOCATE;
+						gts_char.GtsDirection = table_index & 0x01;
+						gts_char.GtsLength = mac_dev_gts_table[table_index].GtsLength;
+						gts_char.Reserved = 0;
+						mac_dev_gts_table[table_index].GtsState = GTS_STATE_IDLE;
+						mac_dev_gts_table[table_index].GtsLength = 0;
+						mac_gen_mlme_gts_conf((buffer_t *)mac_dev_gts_table[table_index].
+						GtsReq_ptr, MAC_NO_DATA, gts_char);
+					}
+				}
+			}
+
 #endif /* GTS_SUPPORT */
 		} /* (MAC_PAN_COORD_STARTED != mac_state) */
 	} /* (MAC_SCAN_IDLE == mac_scan_state) */

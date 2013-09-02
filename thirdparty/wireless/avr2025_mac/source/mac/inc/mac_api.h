@@ -56,6 +56,7 @@
 
 #include "return_val.h"
 #include "mac_build_config.h"
+#include "app_config.h"
 
 /* === Macros =============================================================== */
 
@@ -82,48 +83,7 @@
 
 /* === Macros =============================================================== */
 
-/**
- * \addtogroup group_mac_def
- * @{
- */
 
-/**
- * The maximum number of entries supported in the macKeyTable.
- * This value is mplementation specific.
- */
-#define MAC_ZIP_MAX_KEY_TABLE_ENTRIES           (3)
-
-/**
- * The maximum number of entries supported in the macDeviceTable.
- * This value is mplementation specific.
- */
-#if (MAC_START_REQUEST_CONFIRM == 1)    /* FFD like device */
-#define MAC_ZIP_MAX_DEV_TABLE_ENTRIES           (10)
-#else
-#define MAC_ZIP_MAX_DEV_TABLE_ENTRIES           (3)
-#endif  /* (MAC_START_REQUEST_CONFIRM == 1) */
-
-/**
- * The maximum number of entries supported in the macSecurityLevelTable.
- * This value is mplementation specific.
- */
-#define MAC_ZIP_MAX_SEC_LVL_TABLE_ENTRIES       (2)
-
-/**
- * The maximum number of entries supported in the KeyIdLookupList
- */
-#define MAC_ZIP_MAX_KEY_ID_LOOKUP_LIST_ENTRIES  (1)
-
-/**
- * The maximum number of entries supported in the KeyDeviceList
- */
-#define MAC_ZIP_MAX_KEY_DEV_LIST_ENTRIES        (1)
-
-/**
- * The maximum number of entries supported in the KeyUsageList
- */
-#define MAC_ZIP_MAX_KEY_USAGE_LIST_ENTRIES      (1)
-/* ! @} */
 /* === Externals ============================================================ */
 
 /* === Types ================================================================ */
@@ -223,7 +183,7 @@ typedef struct wpan_pandescriptor_tag {
 #endif  /* ENABLE_TSTAMP */
 } wpan_pandescriptor_t  __ALIGN_WORD_ADDR__;
 
-#ifdef MAC_SECURITY_ZIP
+#if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
 
 /**
  * Structure implementing a DeviceDescriptor.
@@ -431,8 +391,17 @@ typedef struct mac_sec_pib_tag {
 	 *0x01.
 	 */
 	uint8_t DefaultKeySource[8];
+
+    /**
+     * Holds the 64-bit extended address of the PAN coordinator
+     */
+    uint8_t PANCoordExtendedAddress[8];
+    /**
+     * Holds the 16-bit short address of the PAN coordinator
+     */
+    uint16_t PANCoordShortAddress;
 } mac_sec_pib_t;
-#endif  /* MAC_SECURITY_ZIP */
+#endif  /* (MAC_SECURITY_ZIP || MAC_SECURITY_2006) */
 
 #ifdef GTS_SUPPORT
 typedef struct gts_char_tag {
@@ -594,49 +563,47 @@ bool wpan_task(void);
  * stack at the MAC level
  */
 
-/**
- * Initiate MCPS-DATA.request service and have it placed in the MCPS-SAP queue.
- *
- * @param SrcAddrMode   Address Mode of the source address.
- * @param DstAddrSpec   Pointer to wpan_addr_spec_t structure for destination.
- * @param msduHandle    Handle (identification) of the MSDU.
- * @param TxOptions     Bitmap for transmission options. Valid values:
- *                      - @ref WPAN_TXOPT_OFF,
- *                      - @ref WPAN_TXOPT_ACK,
- *                      - @ref WPAN_TXOPT_INDIRECT,
- *                      - @ref WPAN_TXOPT_INDIRECT_ACK.
- * @param msdu          Pointer to the data to be transmitted.
- * @param msduLength    Length of the data to be transmitted.
- *
- * @param SecurityLevel Used security level; this parameter is only available
- *                      if MAC security is enabled via MAC_SECURITY_ZIP
- * @param KeyIdMode     Used mode to identify the key; this parameter is only
- *available
- *                      if MAC security is enabled via MAC_SECURITY_ZIP
- * @param KeyIndex      Used index of the key; this parameter is only available
- *                      if MAC security is enabled via MAC_SECURITY_ZIP
- *
- * @return true - success; false - buffer not available or queue full.
- * @ingroup group_mac_req
- */
-#if defined(MAC_SECURITY_ZIP) || defined(__DOXYGEN__)
-bool wpan_mcps_data_req(uint8_t SrcAddrMode,
-		wpan_addr_spec_t *DstAddrSpec,
-		uint8_t msduLength,
-		uint8_t *msdu,
-		uint8_t msduHandle,
-		uint8_t TxOptions,
-		uint8_t SecurityLevel,
-		uint8_t KeyIdMode,
-		uint8_t KeyIndex);
-
+    /**
+     * Initiate MCPS-DATA.request service and have it placed in the MCPS-SAP queue.
+     *
+     * @param SrcAddrMode   Address Mode of the source address.
+     * @param DstAddrSpec   Pointer to wpan_addr_spec_t structure for destination.
+     * @param msduHandle    Handle (identification) of the MSDU.
+     * @param TxOptions     Bitmap for transmission options. Valid values:
+     *                      - @ref WPAN_TXOPT_OFF,
+     *                      - @ref WPAN_TXOPT_ACK,
+     *                      - @ref WPAN_TXOPT_INDIRECT,
+     *                      - @ref WPAN_TXOPT_INDIRECT_ACK.
+     * @param msdu          Pointer to the data to be transmitted.
+     * @param msduLength    Length of the data to be transmitted.
+     *
+     * @param SecurityLevel Used security level; this parameter is only available
+     *                      if MAC security is enabled via MAC_SECURITY_ZIP
+     * @param KeyIdMode     Used mode to identify the key; this parameter is only available
+     *                      if MAC security is enabled via MAC_SECURITY_ZIP
+     * @param KeyIndex      Used index of the key; this parameter is only available
+     *                      if MAC security is enabled via MAC_SECURITY_ZIP
+     *
+     * @return true - success; false - buffer not available or queue full.
+     */
+#if (defined(MAC_SECURITY_ZIP) || defined(MAC_SECURITY_2006) || defined(DOXYGEN))
+    bool wpan_mcps_data_req(uint8_t SrcAddrMode,
+                            wpan_addr_spec_t *DstAddrSpec,
+                            uint8_t msduLength,
+                            uint8_t *msdu,
+                            uint8_t msduHandle,
+                            uint8_t TxOptions,
+                            uint8_t SecurityLevel,
+                            uint8_t *KeySource,
+                            uint8_t KeyIdMode,
+                            uint8_t KeyIndex);
 #else   /* No MAC_SECURITY */
-bool wpan_mcps_data_req(uint8_t SrcAddrMode,
-		wpan_addr_spec_t *DstAddrSpec,
-		uint8_t msduLength,
-		uint8_t *msdu,
-		uint8_t msduHandle,
-		uint8_t TxOptions);
+    bool wpan_mcps_data_req(uint8_t SrcAddrMode,
+                            wpan_addr_spec_t *DstAddrSpec,
+                            uint8_t msduLength,
+                            uint8_t *msdu,
+                            uint8_t msduHandle,
+                            uint8_t TxOptions);
 
 #endif
 
@@ -742,13 +709,13 @@ bool wpan_mlme_disassociate_req(wpan_addr_spec_t *DeviceAddrSpec,
  * @return true - success; false - buffer not availability or queue full.
  * @ingroup group_mac_req
  */
-#ifdef MAC_SECURITY_ZIP
+#if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
 bool wpan_mlme_get_req(uint8_t PIBAttribute, uint8_t PIBAttributeIndex);
 
 #else
 bool wpan_mlme_get_req(uint8_t PIBAttribute);
 
-#endif  /* MAC_SECURITY_ZIP */
+#endif  /* (MAC_SECURITY_ZIP || MAC_SECURITY_2006) */
 #endif  /* (MAC_GET_SUPPORT == 1) */
 
 #if (MAC_ORPHAN_INDICATION_RESPONSE == 1) || defined(__DOXYGEN__)
@@ -805,7 +772,7 @@ bool wpan_mlme_reset_req(bool SetDefaultPib);
  * @return true - success; false - buffer not available or queue full.
  * @ingroup group_mac_req
  */
-#ifdef MAC_SECURITY_ZIP
+#if (defined MAC_SECURITY_ZIP) || (defined MAC_SECURITY_2006) 
 bool wpan_mlme_set_req(uint8_t PIBAttribute,
 		uint8_t PIBAttributeIndex,
 		void *PIBAttributeValue);
@@ -814,7 +781,7 @@ bool wpan_mlme_set_req(uint8_t PIBAttribute,
 bool wpan_mlme_set_req(uint8_t PIBAttribute,
 		void *PIBAttributeValue);
 
-#endif  /* MAC_SECURITY_ZIP */
+#endif  /* (MAC_SECURITY_ZIP || MAC_SECURITY_2006)  */
 
 #if (MAC_RX_ENABLE_SUPPORT == 1) || defined(__DOXYGEN__)
 
@@ -987,7 +954,7 @@ void usr_mcps_data_conf(uint8_t msduHandle,
  *
  * @ingroup group_mac_ind
  */
-#if defined(MAC_SECURITY_ZIP) || defined(__DOXYGEN__)
+#if (defined(MAC_SECURITY_ZIP) || defined(MAC_SECURITY_2006) || defined(__DOXYGEN__))
 void usr_mcps_data_ind(wpan_addr_spec_t * SrcAddrSpec,
 wpan_addr_spec_t * DstAddrSpec,
 uint8_t msduLength,
@@ -1012,7 +979,7 @@ uint32_t Timestamp);
     #else
 uint8_t DSN);
     #endif  /* ENABLE_TSTAMP */
-#endif  /* MAC_SECURITY */
+#endif  /* (MAC_SECURITY_ZIP) || (MAC_SECURITY_2006) */
 
 #if ((MAC_PURGE_REQUEST_CONFIRM == 1) && (MAC_INDIRECT_DATA_BASIC == 1)) || \
 	defined(__DOXYGEN__)
@@ -1192,9 +1159,9 @@ void usr_mlme_disassociate_ind(uint64_t DeviceAddress,
  */
 void usr_mlme_get_conf(uint8_t status,
 uint8_t PIBAttribute,
-#ifdef MAC_SECURITY_ZIP
+#if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
 uint8_t PIBAttributeIndex,
-#endif  /* MAC_SECURITY_ZIP */
+#endif  /* ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006)) */
 void *PIBAttributeValue);
 #endif  /* (MAC_GET_SUPPORT == 1) || defined(__DOXYGEN__) */
 
@@ -1305,7 +1272,7 @@ void usr_mlme_scan_conf(uint8_t status,
  *
  * @ingroup group_mac_conf
  */
-#ifdef MAC_SECURITY_ZIP
+#if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
 void usr_mlme_set_conf(uint8_t status,
 		uint8_t PIBAttribute,
 		uint8_t PIBAttributeIndex);
@@ -1314,7 +1281,7 @@ void usr_mlme_set_conf(uint8_t status,
 void usr_mlme_set_conf(uint8_t status,
 		uint8_t PIBAttribute);
 
-#endif  /* MAC_SECURITY_ZIP */
+#endif  /* (MAC_SECURITY_ZIP || MAC_SECURITY_2006) */
 
 #if (MAC_START_REQUEST_CONFIRM == 1) || defined(__DOXYGEN__)
 

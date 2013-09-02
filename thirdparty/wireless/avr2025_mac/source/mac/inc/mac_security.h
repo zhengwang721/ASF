@@ -51,7 +51,7 @@
 #ifndef MAC_SECURITY_H
 #define MAC_SECURITY_H
 
-#ifdef MAC_SECURITY_ZIP
+#if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
 
 /* === Includes ============================================================= */
 
@@ -121,7 +121,7 @@ extern "C" {
 } /* extern "C" */
 #endif
 
-#endif  /* MAC_SECURITY_ZIP */
+#endif  /* (MAC_SECURITY_ZIP || MAC_SECURITY_2006) */
 
 #endif /* MAC_SECURITY_H */
 /* EOF */

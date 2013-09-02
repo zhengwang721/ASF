@@ -70,7 +70,6 @@
 #include "mac_config.h"
 #include "mac_build_config.h"
 
-#include "sio2host.h" //vk
 /* === Macros =============================================================== */
 
 /*
@@ -484,12 +483,14 @@ static bool process_data_ind_not_transient(buffer_t *b_ptr, frame_info_t *f_ptr)
 	 */
 	switch (mac_state) {
 #if (MAC_START_REQUEST_CONFIRM == 1)
-	case MAC_PAN_COORD_STARTED:
-	{
-		switch (mac_parse_data.frame_type) {
-		case FCF_FRAMETYPE_MAC_CMD:
-		{
-			switch (mac_parse_data.mac_command) {
+        case MAC_PAN_COORD_STARTED:
+            {
+                switch (mac_parse_data.frame_type)
+                {
+                    case FCF_FRAMETYPE_MAC_CMD:
+                        {
+                            switch (mac_parse_data.mac_command)
+                            {
 #if (MAC_ASSOCIATION_INDICATION_RESPONSE == 1)
 			case ASSOCIATIONREQUEST:
 				mac_process_associate_request(b_ptr);
@@ -713,8 +714,8 @@ static bool process_data_ind_not_transient(buffer_t *b_ptr, frame_info_t *f_ptr)
 							} while (MAC_SUCCESS !=
 									tmr_start_res);
 							#ifdef GTS_DEBUG
-	 						ioport_toggle_pin(DEBUG_PIN1);//vk
- 	 						ioport_set_value(DEBUG_PIN2, 0);//vk
+	 						ioport_toggle_pin(DEBUG_PIN1);
+ 	 						ioport_set_value(DEBUG_PIN2, 0);
 							#endif
 						}
 
@@ -738,7 +739,6 @@ static bool process_data_ind_not_transient(buffer_t *b_ptr, frame_info_t *f_ptr)
 							 *TRX_OFF). */
 							tal_rx_enable(PHY_RX_ON);
 
-							//sio2host_tx("-DCAP-",sizeof("-DCAP-")); //vk
 							if (tal_pib.SuperFrameOrder < tal_pib.BeaconOrder)
 							{
 								pal_timer_start(T_Superframe,
@@ -748,7 +748,7 @@ static bool process_data_ind_not_transient(buffer_t *b_ptr, frame_info_t *f_ptr)
 									TIMEOUT_RELATIVE,
 									(FUNC_PTR)mac_t_start_inactive_device_cb,
 									NULL);
-								//ioport_set_value(DEBUG_PIN2, 1);//vk
+								//ioport_set_value(DEBUG_PIN2, 1);
 							}
 #ifdef GTS_SUPPORT
 						if (mac_final_cap_slot < FINAL_CAP_SLOT_DEFAULT)
@@ -761,7 +761,7 @@ static bool process_data_ind_not_transient(buffer_t *b_ptr, frame_info_t *f_ptr)
 											 (FUNC_PTR)mac_t_gts_cb,
 											 NULL);
 							#ifdef GTS_DEBUG
-	 						ioport_set_value(DEBUG_PIN3, 1);//vk
+	 						ioport_set_value(DEBUG_PIN3, 1);
 							#endif
 						}
 #endif /* GTS_SUPPORT */
@@ -1017,7 +1017,7 @@ static bool parse_mpdu(frame_info_t *rx_frame_ptr)
 	 * if available.
 	 */
 
-#ifndef MAC_SECURITY_ZIP
+#if(!defined MAC_SECURITY_ZIP && !defined MAC_SECURITY_2006)
 	if (fcf & FCF_SECURITY_ENABLED) {
 		return false;
 	}
@@ -1037,7 +1037,7 @@ static bool parse_mpdu(frame_info_t *rx_frame_ptr)
 	mac_parse_data.time_stamp = rx_frame_ptr->time_stamp;
 #endif  /* BEACON_SUPPORT */
 
-#ifdef MAC_SECURITY_ZIP
+#if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
 	if (fcf & FCF_SECURITY_ENABLED) {
 		retval_t status;
 		status = mac_unsecure(&mac_parse_data, &rx_frame_ptr->mpdu[1],
@@ -1092,7 +1092,7 @@ static bool parse_mpdu(frame_info_t *rx_frame_ptr)
 		mac_parse_data.sec_ctrl.sec_level = 0;
 	}
 
-#endif  /* MAC_SECURITY_ZIP */
+#endif  /* (MAC_SECURITY_ZIP || MAC_SECURITY_2006) */
 
 	/* temp_frame_ptr still points to the first octet of the MAC payload. */
 	switch (mac_parse_data.frame_type) {

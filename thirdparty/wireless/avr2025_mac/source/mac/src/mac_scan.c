@@ -122,7 +122,7 @@ static void mac_t_scan_duration_cb(void *callback_parameter);
 static void mac_awake_scan(buffer_t *buff_ptr);
 static void scan_set_complete(retval_t set_status);
 static void scan_clean_up(buffer_t *buf);
-static void scan_proceed(uint8_t scan_type, buffer_t *buf);
+static void scan_proceed(uint8_t scanning_type, buffer_t *buf);
 static bool send_scan_cmd(bool beacon_req);
 
 /* === Implementation ====================================================== */
@@ -138,7 +138,7 @@ static bool send_scan_cmd(bool beacon_req);
  * @param scanning_type The type of the scan operation to proceed with.
  * @param buf Buffer to send mlme scan confirm to NHLE.
  */
-static void scan_proceed(uint8_t scan_type, buffer_t *buf) //doubt
+static void scan_proceed(uint8_t scanning_type, buffer_t *buf) //doubt
 {
 	retval_t set_status;
 	mlme_scan_conf_t *msc = (mlme_scan_conf_t *)BMM_BUFFER_POINTER(buf);
@@ -177,7 +177,7 @@ static void scan_proceed(uint8_t scan_type, buffer_t *buf) //doubt
 #endif /* ((MAC_SCAN_PASSIVE_REQUEST_CONFIRM == 1) ||
 		 *(MAC_SCAN_ACTIVE_REQUEST_CONFIRM == 1)) */
 #if (MAC_SCAN_ORPHAN_REQUEST_CONFIRM == 1)
-		if (MLME_SCAN_TYPE_ORPHAN == scan_type) {
+		if (MLME_SCAN_TYPE_ORPHAN == scanning_type) {
 			/*
 			 * In an orphan scan, terminate if any coordinator
 			 * realignment packet has been received.
@@ -192,18 +192,18 @@ static void scan_proceed(uint8_t scan_type, buffer_t *buf) //doubt
 		if ((msc->UnscannedChannels & (1UL << scan_curr_channel)) !=
 				0) {
 #if (MAC_SCAN_ACTIVE_REQUEST_CONFIRM == 1)
-			if (MLME_SCAN_TYPE_ACTIVE == scan_type) {
+			if (MLME_SCAN_TYPE_ACTIVE == scanning_type) {
 				mac_scan_state = MAC_SCAN_ACTIVE;
 			}
 
 #endif /* (MAC_SCAN_ACTIVE_REQUEST_CONFIRM == 1) */
 #if (MAC_SCAN_PASSIVE_REQUEST_CONFIRM == 1)
-			if (MLME_SCAN_TYPE_PASSIVE == scan_type) {
+			if (MLME_SCAN_TYPE_PASSIVE == scanning_type) {
 				mac_scan_state = MAC_SCAN_PASSIVE;
 			}
 
 #endif /* (MAC_SCAN_PASSIVE_REQUEST_CONFIRM == 1) */
-			if (MLME_SCAN_TYPE_ORPHAN == scan_type) {
+			if (MLME_SCAN_TYPE_ORPHAN == scanning_type) {
 				mac_scan_state = MAC_SCAN_ORPHAN;
 			}
 
@@ -245,7 +245,7 @@ static void scan_proceed(uint8_t scan_type, buffer_t *buf) //doubt
 	}
 
 	/* All channels were scanned. The confirm needs to be prepared */
-	switch (scan_type) {
+	switch (scanning_type) {
 #if (MAC_SCAN_ED_REQUEST_CONFIRM == 1)
 	case MLME_SCAN_TYPE_ED:
 		msc->status = MAC_SUCCESS;
