@@ -3,21 +3,18 @@
 #  Connect to J-Link and debug application in sram.
 #
 
+# Note:
+# Use below command line to start GDB server for core 1 debug:
+# > jlinkgdbserver -scriptfile ../SAM4C.JLinkScript -port 2345 -noreset
+
 # define 'reset' command
 define reset
 
 # Connect to the J-Link gdb server
-target remote localhost:2331
-
-# Reset the chip to get to a known state
-monitor reset
+target remote localhost:2345
 
 # Load the program
-load
-
-# Initializing PC and stack pointer
-mon reg sp=(0x20080000)
-mon reg pc=(0x20080004)
+# The core 1 image should be loaded by core 0 application already.
 info reg
 
 # end of 'reset' command
