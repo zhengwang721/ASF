@@ -128,8 +128,17 @@
 	"-- "BOARD_NAME " --\r\n" \
 	"-- Compiled: "__DATE__ " "__TIME__ " --"STRING_EOL
 
-/** PLLA count */
-#define PLLA_COUNT    0x3Fu
+#ifndef PLL_DEFAULT_MUL
+#define PLL_DEFAULT_MUL  7
+#endif
+
+#ifndef PLL_DEFAULT_DIV
+#define PLL_DEFAULT_DIV  1
+#endif
+
+#ifndef MCK_DEFAULT_DIV
+#define MCK_DEFAULT_DIV  PMC_MCKR_PRES_CLK_4
+#endif
 
 /** Current MCK in Hz */
 uint32_t g_ul_current_mck;
@@ -149,11 +158,17 @@ static void set_default_working_clock(void)
 	pmc_switch_mainck_to_xtal(0, BOARD_OSC_STARTUP_US);
 
 	/*
-	 * Configure PLLA and switch clock.
-	 * MCK = 12000000 * (7+1) / 1 / 4 = 24 MHz
+	 * Configure PLL and switch clock.
+	 * MCK = XTAL * (PLL_DEFAULT_MUL+1) / PLL_DEFAULT_DIV / MCK_DEFAULT_DIV 
+	 *     = 24 MHz
 	 */
-	pmc_enable_pllack(7, PLLA_COUNT, 1);
-	pmc_switch_mck_to_pllack(PMC_MCKR_PRES_CLK_4);
+#if SAM4C
+	pmc_enable_pllbck(PLL_DEFAULT_MUL, PLL_COUNT, PLL_DEFAULT_DIV);
+	pmc_switch_mck_to_pllbck(MCK_DEFAULT_DIV);
+#else
+	pmc_enable_pllack(PLL_DEFAULT_MUL, PLL_COUNT, PLL_DEFAULT_DIV);
+	pmc_switch_mck_to_pllack(MCK_DEFAULT_DIV);
+#endif
 
 	/* Disable unused clock to save power */
 	pmc_osc_disable_fastrc();
@@ -257,7 +272,11 @@ static void user_change_clock(uint8_t *p_uc_str)
 
 		/* Disable unused clock to save power */
 		pmc_osc_disable_xtal(0);
+#if SAM4C
+		pmc_disable_pllbck();
+#else
 		pmc_disable_pllack();
+#endif
 	} else if ((uc_key >= MIN_CLOCK_PLL_ITEM) &&
 			(uc_key <= MAX_CLOCK_PLL_ITEM)) {
 		ul_id = uc_key - MIN_CLOCK_PLL_ITEM;
@@ -270,11 +289,16 @@ static void user_change_clock(uint8_t *p_uc_str)
 
 		/* Switch mainck to external xtal */
 		pmc_switch_mainck_to_xtal(0, BOARD_OSC_STARTUP_US);
-		/* Configure PLLA and switch clock */
-		pmc_enable_pllack(g_pll_clock_list[ul_id][1], PLLA_COUNT,
+		/* Configure PLL and switch clock */
+#if SAM4C
+		pmc_enable_pllbck(g_pll_clock_list[ul_id][1], PLL_COUNT,
+				g_pll_clock_list[ul_id][2]);
+		pmc_switch_mck_to_pllbck(g_pll_clock_list[ul_id][3]);
+#else
+		pmc_enable_pllack(g_pll_clock_list[ul_id][1], PLL_COUNT,
 				g_pll_clock_list[ul_id][2]);
 		pmc_switch_mck_to_pllack(g_pll_clock_list[ul_id][3]);
-
+#endif
 		/* Disable unused clock to save power */
 		pmc_osc_disable_fastrc();
 	} else {
@@ -396,14 +420,17 @@ static void test_wait_mode(void)
 	/* Configure 4Mhz fast RC oscillator */
 	pmc_switch_mck_to_sclk(PMC_MCKR_PRES_CLK_1);
 	pmc_switch_mainck_to_fastrc(CKGR_MOR_MOSCRCF_4_MHz);
-    pmc_switch_mck_to_mainck(PMC_PCK_PRES_CLK_1);
+	pmc_switch_mck_to_mainck(PMC_PCK_PRES_CLK_1);
 
 	g_ul_current_mck = 4000000; /* 4MHz */
 
 	/* Disable unused clock to save power */
 	pmc_osc_disable_xtal(0);
+#if SAM4C
+	pmc_disable_pllbck();
+#else
 	pmc_disable_pllack();
-
+#endif
 	/* Set wakeup input for fast startup */
 	pmc_set_fast_startup_input(WAKEUP_WAIT_INPUT_ID);
 
@@ -434,7 +461,7 @@ static void test_backup_mode(void)
 	gpbr_write(GPBR0, gpbr_read(GPBR0) + 1);
 
 	/* Enable the PIO for wake-up */
-#if (BOARD == SAM3U_EK)
+#if (BOARD == SAM3U_EK || BOARD == SAM4C_EK)
 	supc_set_wakeup_mode(SUPC, SUPC_WUMR_FWUPEN_ENABLE);
 #else
 	supc_set_wakeup_inputs(SUPC, WAKEUP_BACKUP_INPUT_ID,
@@ -446,7 +473,11 @@ static void test_backup_mode(void)
 
 	/* Disable unused clock to save power */
 	pmc_osc_disable_xtal(0);
+#if SAM4C
+	pmc_disable_pllbck();
+#else
 	pmc_disable_pllack();
+#endif
 
 	/* Enter into backup mode */
 	pmc_enable_backupmode();
