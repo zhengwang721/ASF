@@ -5,8 +5,7 @@
  * \brief Example that demonstrates FreeRTOS USART peripheral control functions
  * and FreeRTOS+CLI
  *
- *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
