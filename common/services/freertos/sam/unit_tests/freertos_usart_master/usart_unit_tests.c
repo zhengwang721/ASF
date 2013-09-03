@@ -3,7 +3,7 @@
  *
  * \brief Unit tests for FreeRTOS USART Interface Layer.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -82,6 +82,7 @@
  * - sam3u4e_sam3u_ek
  * - sam3x8h_sam3x_ek
  * - sam4s16c_sam4s_ek
+ * - sam4c16c_sam4c_ek
  *
  * \section compinfo Compilation info
  * This software was written for the GNU GCC and IAR for ARM. Other compilers
