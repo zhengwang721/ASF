@@ -121,10 +121,6 @@ typedef struct {
 #define INVALID_VALUE                           (0xff)
 
 #if (TAL_TYPE == AT86RF233)
-#define ENABLE_ALL_RPC_MODES                     (0xff)
-#define DISABLE_ALL_RPC_MODES                    (0xC1)
-#define ENABLE_RX_SAFE_MODE                      (0xA0)
-#define DISABLE_RX_SAFE_MODE                     (0x60)
 #define FREQUENCY_MULTIPLIER                     (2)
 #endif /* End of (TAL_TYPE == AT86RF233) */
 
@@ -193,8 +189,10 @@ static void toggle_trx_sleep(void);
 
 #endif /* End of ENABLE_DEEP_SLEEP */
 
-#if (TAL_TYPE == AT86RF233)
+#if ((TAL_TYPE == AT86RF233) || (TAL_TYPE == ATMEGARFR2))
 static void config_rpc_mode(bool config_value);
+#endif
+#if (TAL_TYPE == AT86RF233)
 static void config_frequency(float frequency);
 
 #endif /*End of #if (TAL_TYPE == AT86RF233) */
@@ -269,6 +267,7 @@ static uint8_t phy_tx_power;
 static uint8_t ant_sel_before_ct;
 static uint8_t ant_div_before_ct;
 #endif /* End of #if (ANTENNA_DIVERSITY == 1) */
+
 
 #if (TAL_TYPE == AT86RF233)
 /* Backup for ISM frequency related registers for CW Transmission */
@@ -1076,7 +1075,7 @@ static void set_parameter_on_transmitter_node(retval_t status)
 	case TX_POWER_DBM:
 	{
 		int8_t tx_pwr_dbm;
-#if (TAL_TYPE == AT86RF233)
+#if ((TAL_TYPE == AT86RF233))
 		uint8_t previous_RPC_value;
 #endif
 		tx_pwr_dbm = (int8_t)set_param_cb.param_value;
@@ -1526,7 +1525,7 @@ static void config_per_test_parameters(void)
 	tal_set_rx_sensitivity_level(NO_RX_DESENSITIZE_LEVEL);
 #endif /* End of #if(TAL_TYPE != AT86RF230B)*/
 
-#if (TAL_TYPE == AT86RF233)
+#if ((TAL_TYPE == AT86RF233) || (TAL_TYPE == ATMEGARFR2))
 	curr_trx_config_params.rpc_enable
 		= default_trx_config_params.rpc_enable = true;
 
@@ -1897,6 +1896,21 @@ static void recover_all_settings(void)
 	}
 
 #endif /* End of #if(TAL_TYPE == AT86RF233) */
+
+    /*RPC settings are resetted during tal_reset,hence reconfiguring based on old config*/
+#if (TAL_TYPE == ATMEGARFR2)    
+
+	if (true == curr_trx_config_params.rpc_enable) {
+		tal_rpc_mode_config(ENABLE_ALL_RPC_MODES); /* RPC feature
+		                                            * configuration. */
+	}    
+    else
+    {
+    tal_rpc_mode_config(DISABLE_ALL_RPC_MODES); 
+    
+    }
+    
+#endif    
 
 #if (TAL_TYPE != AT86RF230B)
 	/* set the desensitization settings back */
@@ -2375,13 +2389,14 @@ void perf_set_req(uint8_t param_type, param_value_t *param_value)
 	}
 	break;
 
-#if (TAL_TYPE == AT86RF233)
+#if ((TAL_TYPE == AT86RF233) || (TAL_TYPE == ATMEGARFR2))
 	case PARAM_RPC:
 	{
 		config_rpc_mode(param_value->param_value_bool);
 	}
 	break;
-
+#endif
+#if (TAL_TYPE == AT86RF233)
 	case PARAM_ISM_FREQUENCY:
 	{
 		config_frequency(param_value->param_value_float);
@@ -2556,7 +2571,7 @@ void perf_get_req(uint8_t param_type)
 	}
 	break;
 
-#if (TAL_TYPE == AT86RF233)
+#if ((TAL_TYPE == AT86RF233) || (TAL_TYPE == ATMEGARFR2))
 	case PARAM_RPC:
 	{
 		/* Send Get confirmation with status SUCCESS */
@@ -2565,7 +2580,8 @@ void perf_get_req(uint8_t param_type)
 				(param_value_t *)&curr_trx_config_params.rpc_enable);
 	}
 	break;
-
+#endif
+#if ((TAL_TYPE == AT86RF233))    
 	case PARAM_ISM_FREQUENCY:
 	{
 		usr_perf_get_confirm(MAC_SUCCESS,
@@ -4434,7 +4450,7 @@ uint8_t check_error_conditions(void)
 	return error_code;
 }
 
-#if (TAL_TYPE == AT86RF233)
+#if ((TAL_TYPE == AT86RF233) || (TAL_TYPE == ATMEGARFR2))
 
 /**
  * \brief toggle RPC mode request
@@ -4503,7 +4519,8 @@ static void config_rpc_mode(bool config_value)
 			PARAM_RPC,
 			(param_value_t *)&curr_trx_config_params.rpc_enable);
 }
-
+#endif 
+#if ((TAL_TYPE == AT86RF233))
 /**
  * \brief Function to configure the ISM frequency based on the request.
  * \param frequency   Frequency value to be configured
