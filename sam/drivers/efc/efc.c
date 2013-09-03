@@ -205,9 +205,7 @@ uint32_t efc_perform_command(Efc *p_efc, uint32_t ul_command,
 	if (ul_command == EFC_FCMD_STUI || ul_command == EFC_FCMD_SPUI) {
 		return EFC_RC_NOT_SUPPORT;
 	}
-#ifdef EEFC_FCR_FKEY_PASSWD
-#define EEFC_FCR_FKEY(FWP_KEY) EEFC_FCR_FKEY_PASSWD
-#endif
+
 	/* Use RAM Function. */
 	return efc_perform_fcr(p_efc,
 			EEFC_FCR_FKEY_PASSWD | EEFC_FCR_FARG(ul_argument) |

@@ -1,10 +1,9 @@
 /**
- *
  * \file
  *
- * \brief Generic FreeRTOS peripheral control functions
+ * \brief Board configuration.
  *
- * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,47 +41,10 @@
  *
  */
 
-#ifndef DEMO_TASKS_H
-#define DEMO_TASKS_H
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#include "conf_example.h"
+/** Enable debug uart pins */
+#define CONF_BOARD_UART_CONSOLE
 
-void vRegisterCLICommands(void);
-
-#if (defined confINCLUDE_USART_ECHO_TASKS) || (defined confINCLUDE_USART_CLI)
-#include "usart.h"
-void create_usart_cli_task(Usart *usart_base, uint16_t stack_depth_words,
-		unsigned portBASE_TYPE task_priority);
-void usart_cli_output(const uint8_t *message_string);
-void create_usart_echo_test_tasks(Usart *pxUsart, uint16_t stack_depth_words,
-		unsigned portBASE_TYPE task_priority);
-portBASE_TYPE are_usart_echo_tasks_still_running(void);
-
-#endif
-
-#if (defined confINCLUDE_CDC_CLI)
-void create_usb_cdc_cli_task(uint16_t stack_depth_words,
-		unsigned portBASE_TYPE task_priority);
-void cdc_cli_output(const uint8_t const *message_string);
-
-#endif
-
-#if (defined confINCLUDE_SPI_FLASH_TASK)
-#include "spi.h"
-void create_spi_flash_test_task(Spi *spi_base, uint16_t stack_depth_words,
-		unsigned portBASE_TYPE task_priority,
-		portBASE_TYPE set_asynchronous_api);
-portBASE_TYPE did_spi_flash_test_pass(void);
-
-#endif
-
-#if (defined confINCLUDE_TWI_EEPROM_TASK)
-#include "freertos_twi_master.h"
-void create_twi_eeprom_test_task(Twi *twi_base, uint16_t stack_depth_words,
-		unsigned portBASE_TYPE task_priority,
-		portBASE_TYPE set_asynchronous_api);
-portBASE_TYPE did_twi_eeprom_test_pass(void);
-
-#endif
-
-#endif /* DEMO_TASKS_H */
+#endif /* CONF_BOARD_H_INCLUDED */
