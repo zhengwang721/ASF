@@ -676,7 +676,7 @@ void rtc_get_tamper_time(Rtc *p_rtc, uint32_t *pul_hour, uint32_t *pul_minute,
 	uint32_t ul_time;
 	uint32_t ul_temp;
 
-	/* Get the current RTC time (multiple reads are necessary to insure a stable value). */
+	/* Get the current RTC time (multiple reads are to insure a stable value). */
 	ul_time = p_rtc->RTC_TS[reg_num].RTC_TSTR;
 	while (ul_time != p_rtc->RTC_TS[reg_num].RTC_TSTR) {
 		ul_time = p_rtc->RTC_TS[reg_num].RTC_TSTR;
@@ -725,7 +725,7 @@ void rtc_get_tamper_date(Rtc *p_rtc, uint32_t *pul_year, uint32_t *pul_month,
 	uint32_t ul_cent;
 	uint32_t ul_temp;
 
-	/* Get the current date (multiple reads are necessary to insure a stable value). */
+	/* Get the current date (multiple reads are to insure a stable value). */
 	ul_date = p_rtc->RTC_TS[reg_num].RTC_TSDR;
 	while (ul_date != p_rtc->RTC_TS[reg_num].RTC_TSDR) {
 		ul_date = p_rtc->RTC_TS[reg_num].RTC_TSDR;
@@ -784,7 +784,8 @@ uint32_t rtc_get_tamper_source(Rtc *p_rtc, uint8_t reg_num)
  */
 uint32_t rtc_get_tamper_event_counter(Rtc *p_rtc)
 {
-	return (p_rtc->RTC_TS[0].RTC_TSTR & RTC_TSTR_TEVCNT_Msk) >> RTC_TSTR_TEVCNT_Pos;
+	return (p_rtc->RTC_TS[0].RTC_TSTR & RTC_TSTR_TEVCNT_Msk) >>
+			RTC_TSTR_TEVCNT_Pos;
 }
 
 /**
