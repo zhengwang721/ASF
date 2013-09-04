@@ -80,7 +80,8 @@
  * preset values; the date alarm is triggered only when the month and date match
  * the preset values.
  *
- * Generating waveform is done by using Menu option "w" and a menu to perform the following:
+ * Generating waveform is done by using Menu option "w" and a menu to perform
+ * the following:
  *     \code
  *     Menu:
  *     0 - No Waveform
@@ -98,6 +99,9 @@
  * problem for the RTC if not calibrated. It is recommended to use an external 32KHz
  * crystal to get high accuracy. How to initialize RTC with external 32KHz crystal can be
  * referred at \ref sam_rtc_quickstart.
+ *
+ * \note In sam4c_ek board, please use SWD instead of JTAG because RTCOUT share pin with
+ * JTAG interface. Otherwise there is a debug issue when enable wave output.
  *
  * \section Usage
  *
@@ -214,7 +218,8 @@ static void configure_console(void)
 }
 
 /**
- * \brief Get new time. Successful value is put in gs_ul_new_hour, gs_ul_new_minute, gs_ul_new_second.
+ * \brief Get new time. Successful value is put in gs_ul_new_hour,
+ * gs_ul_new_minute, gs_ul_new_second.
  */
 static uint32_t get_new_time(void)
 {
@@ -308,7 +313,8 @@ static uint32_t calculate_week(uint32_t ul_year, uint32_t ul_month,
 }
 
 /**
- * \brief Get new time. Successful value is put in gs_ul_new_year, gs_ul_new_month, gs_ul_new_day, gs_ul_new_week.
+ * \brief Get new time. Successful value is put in gs_ul_new_year,
+ * gs_ul_new_month, gs_ul_new_day, gs_ul_new_week.
  */
 static uint32_t get_new_date(void)
 {
@@ -424,7 +430,8 @@ static void refresh_display(void)
 		/* Update current date and time */
 		puts("\r");
 		printf(" [Time/Date: %02u:%02u:%02u, %02u/%02u/%04u %s ][Alarm status:%s]",
-			ul_hour, ul_minute, ul_second, ul_month, ul_day, ul_year,
+			(unsigned int)ul_hour, (unsigned int)ul_minute, (unsigned int)ul_second,
+			(unsigned int)ul_month, (unsigned int)ul_day, (unsigned int)ul_year,
 			gs_uc_day_names[ul_week-1], gs_ul_alarm_triggered?"Triggered!":"");
 	}
 }
@@ -574,7 +581,8 @@ int main(void)
 					puts("\n\r Time alarm not set, invalid input!\r");
 				} else {
 					printf("\n\r Time alarm is set at %02u:%02u:%02u!",
-						gs_ul_new_hour, gs_ul_new_minute, gs_ul_new_second);
+						(unsigned int)gs_ul_new_hour, (unsigned int)gs_ul_new_minute,
+						(unsigned int)gs_ul_new_second);
 				}
 			} else {
 				gs_uc_rtc_time[2] = ':';
@@ -603,7 +611,8 @@ int main(void)
 					puts("\n\r Date alarm not set, invalid input!\r");
 				} else {
 					printf("\n\r Date alarm is set on %02u/%02u/%4u!",
-							gs_ul_new_month, gs_ul_new_day, gs_ul_new_year);
+							(unsigned int)gs_ul_new_month, (unsigned int)gs_ul_new_day,
+							(unsigned int)gs_ul_new_year);
 				}
 			} else {
 				gs_uc_date[2] = '/';

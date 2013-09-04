@@ -662,7 +662,7 @@ void rtc_set_writeprotect(Rtc *p_rtc, uint32_t ul_enable)
  * \brief Get the RTC tamper time value.
  *
  * \note This function should be called before rtc_get_tamper_source()
- *       function call, else the tamper time will be cleared.
+ *       function call, Otherwise the tamper time will be cleared.
  *
  * \param p_rtc Pointer to an RTC instance.
  * \param pul_hour Current hour, 24-hour mode.
@@ -709,7 +709,7 @@ void rtc_get_tamper_time(Rtc *p_rtc, uint32_t *pul_hour, uint32_t *pul_minute,
  * \brief Get the RTC tamper date.
  *
  * \note This function should be called before rtc_get_tamper_source()
- *       function call, else the tamper date will be cleared.
+ *       function call, Otherwise the tamper date will be cleared.
  *
  * \param p_rtc Pointer to an RTC instance.
  * \param pul_year Current year.
@@ -776,7 +776,7 @@ uint32_t rtc_get_tamper_source(Rtc *p_rtc, uint8_t reg_num)
  * \brief Get the RTC tamper event counter.
  *
  * \note This function should be called before rtc_get_tamper_source()
- *       function call, else the tamper event counter will be cleared.
+ *       function call, Otherwise the tamper event counter will be cleared.
  *
  * \param p_rtc Pointer to an RTC instance.
  *
@@ -792,7 +792,7 @@ uint32_t rtc_get_tamper_event_counter(Rtc *p_rtc)
  * \brief Check the system is in backup mode when RTC tamper event happen.
  *
  * \note This function should be called before rtc_get_tamper_source()
- *       function call, else the flag indicates tamper occur in backup
+ *       function call, Otherwise the flag indicates tamper occur in backup
  *       mode will be cleared.
  *
  * \param p_rtc Pointer to an RTC instance.

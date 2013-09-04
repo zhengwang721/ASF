@@ -177,8 +177,10 @@ int main(void)
 		tmp_cnt = rtc_get_tamper_event_counter(RTC);
 		tmp_src = rtc_get_tamper_source(RTC, 0);
 		printf("The tamper event TMP%u happen in %02u:%02u:%02u,%02u/%02u/%04u\r\n",
-				tmp_src, ul_hour, ul_minute, ul_second, ul_month, ul_day, ul_year);
-		printf("The tamper event counter is %u \r\n", tmp_cnt);
+				(unsigned int)tmp_src, (unsigned int)ul_hour, (unsigned int)ul_minute,
+				(unsigned int)ul_second, (unsigned int)ul_month, (unsigned int)ul_day,
+				(unsigned int)ul_year);
+		printf("The tamper event counter is %u \r\n", (unsigned int)tmp_cnt);
 	}
 
 	printf("Press any key to Enter Backup Mode!\r\n");
