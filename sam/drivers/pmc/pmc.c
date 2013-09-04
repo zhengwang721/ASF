@@ -1344,6 +1344,11 @@ void pmc_enable_waitmode(void)
  */
 void pmc_enable_backupmode(void)
 {
+#if SAM4C
+	uint32_t tmp = SUPC->SUPC_MR & ~(SUPC_MR_BUPPOREN | SUPC_MR_KEY_Msk);
+	SUPC->SUPC_MR = tmp | SUPC_MR_KEY_PASSWD;
+	while (SUPC->SUPC_SR & SUPC_SR_BUPPORS);
+#endif
 	SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
 #if (SAM4S || SAM4E || SAM4N || SAM4C)
 	SUPC->SUPC_CR = SUPC_CR_KEY_PASSWD | SUPC_CR_VROFF_STOP_VREG;
