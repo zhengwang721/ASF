@@ -272,7 +272,7 @@ uint32_t supc_get_status(Supc *p_supc)
  *
  * \param p_supc Pointer to a SUPC instance.
  */
-void supc_enable_backup_por_reset(Supc *p_supc)
+void supc_enable_backup_power_on_reset(Supc *p_supc)
 {
 	uint32_t ul_mr = p_supc->SUPC_MR & (~(SUPC_MR_KEY_Msk | SUPC_MR_BUPPOREN));
 	p_supc->SUPC_MR = SUPC_MR_KEY_PASSWD | ul_mr | SUPC_MR_BUPPOREN;
@@ -283,7 +283,7 @@ void supc_enable_backup_por_reset(Supc *p_supc)
  *
  * \param p_supc Pointer to a SUPC instance.
  */
-void supc_disable_backup_por_reset(Supc *p_supc)
+void supc_disable_backup_power_on_reset(Supc *p_supc)
 {
 	uint32_t ul_mr = p_supc->SUPC_MR & (~(SUPC_MR_KEY_Msk | SUPC_MR_BUPPOREN));
 	p_supc->SUPC_MR = SUPC_MR_KEY_PASSWD | ul_mr;
