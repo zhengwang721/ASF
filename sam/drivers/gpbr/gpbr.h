@@ -60,6 +60,7 @@ typedef enum gpbr_num_type {
 	GPBR1,
 	GPBR2,
 	GPBR3,
+#if !SAM3U	
 	GPBR4,
 	GPBR5,
 	GPBR6,
@@ -87,6 +88,7 @@ typedef enum gpbr_num_type {
 	GPRB17,
 	GPBR18,
 	GPBR19,
+#endif
 #endif
 } gpbr_num_t;
 
