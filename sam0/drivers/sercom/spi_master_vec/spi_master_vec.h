@@ -103,6 +103,14 @@
  * \def CONF_SPI_MASTER_VEC_PINMUX_PAD3
  * \brief Fourth IO pin function multiplexing setting.
  */
+/**
+ * \def CONF_SPI_MASTER_VEC_TRANSFER_MODE
+ * \brief Transfer mode, i.e., clock polarity (CPOL) and phase (CPHA).
+ */
+/**
+ * \def CONF_SPI_MASTER_VEC_DATA_ORDER
+ * \brief Data order, LSB or MSB first.
+ */
 /** @} */
 
 /** Type to contain length of described buffers */

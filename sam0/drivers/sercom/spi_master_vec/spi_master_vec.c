@@ -55,9 +55,7 @@
  * @{
  */
 /** Convenience macro for the SERCOM SPI */
-#define SPI_MASTER_VEC_SERCOM_SPI     (SercomSpi *)(CONF_SPI_MASTER_VEC_SERCOM)
-/** Transfer mode to use (CPOL = 1, CPHA = 1) */
-#define SPI_MASTER_VEC_TRANSFER_MODE  (SERCOM_SPI_CTRLA_CPOL | SERCOM_SPI_CTRLA_CPHA)
+#define SPI_MASTER_VEC_SERCOM_SPI  (SercomSpi *)(CONF_SPI_MASTER_VEC_SERCOM)
 /** Transfer direction indicator */
 enum _spi_master_vec_direction {
 	SPI_MASTER_VEC_DIRECTION_READ,
@@ -82,9 +80,7 @@ struct spi_master_vec_module {
 /** Internal driver state */
 volatile struct spi_master_vec_module _spi_master_vec_module;
 
-
 static void _spi_master_vec_int_handler(uint8_t not_used);
-
 
 /**
  * \brief Initialize hardware and driver state
@@ -123,7 +119,9 @@ enum status_code spi_master_vec_init(void)
 
 	/* Set up the SERCOM SPI module as master */
 	spi_hw->CTRLA.reg = SERCOM_SPI_CTRLA_MODE_SPI_MASTER;
-	spi_hw->CTRLA.reg |= SPI_MASTER_VEC_TRANSFER_MODE | CONF_SPI_MASTER_VEC_SIGNAL_MUX;
+	spi_hw->CTRLA.reg |= CONF_SPI_MASTER_VEC_TRANSFER_MODE
+			| CONF_SPI_MASTER_VEC_SIGNAL_MUX
+			| CONF_SPI_MASTER_VEC_DATA_ORDER;
 
 	/* Get baud value from configured baudrate and internal clock rate */
 	gclk_hz = system_gclk_chan_get_hz(gclk_index);
