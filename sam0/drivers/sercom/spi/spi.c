@@ -111,48 +111,29 @@ static enum status_code _spi_set_config(
 	Assert(module->hw);
 
 	SercomSpi *const spi_module = &(module->hw->SPI);
-	Sercom *const sercom_module = module->hw;
+	Sercom *const hw = module->hw;
 
 	struct system_pinmux_config pin_conf;
 	system_pinmux_get_config_defaults(&pin_conf);
+	pin_conf.direction = SYSTEM_PINMUX_PIN_DIR_INPUT;
 
-	uint32_t pad0 = config->pinmux_pad0;
-	uint32_t pad1 = config->pinmux_pad1;
-	uint32_t pad2 = config->pinmux_pad2;
-	uint32_t pad3 = config->pinmux_pad3;
+	uint32_t pad_pinmuxes[] = {
+			config->pinmux_pad0, config->pinmux_pad1,
+			config->pinmux_pad2, config->pinmux_pad3
+		};
 
-	/* SERCOM PAD0 */
-	if (pad0 == PINMUX_DEFAULT) {
-		pad0 = _sercom_get_default_pad(sercom_module, 0);
-	}
-	pin_conf.mux_position = pad0 & 0xFFFF;
-	system_pinmux_pin_set_config(pad0 >> 16, &pin_conf);
+	/* Configure the SERCOM pins according to the user configuration */
+	for (uint8_t pad = 0; pad < 4; pad++) {
+		uint32_t current_pinmux = pad_pinmuxes[pad];
 
-	/* SERCOM PAD1 */
-	if (pad1 == PINMUX_DEFAULT) {
-		pad1 = _sercom_get_default_pad(sercom_module, 1);
-	}
-	if (pad1 != PINMUX_UNUSED) {
-		pin_conf.mux_position = pad1 & 0xFFFF;
-		system_pinmux_pin_set_config(pad1 >> 16, &pin_conf);
-	}
+		if (current_pinmux == PINMUX_DEFAULT) {
+			current_pinmux = _sercom_get_default_pad(hw, pad);
+		}
 
-	/* SERCOM PAD2 */
-	if (pad2 == PINMUX_DEFAULT) {
-		pad2 = _sercom_get_default_pad(sercom_module, 2);
-	}
-	if (pad2 != PINMUX_UNUSED) {
-		pin_conf.mux_position = pad2 & 0xFFFF;
-		system_pinmux_pin_set_config(pad2 >> 16, &pin_conf);
-	}
-
-	/* SERCOM PAD3 */
-	if (pad3 == PINMUX_DEFAULT) {
-		pad3 = _sercom_get_default_pad(sercom_module, 3);
-	}
-	if (pad3 != PINMUX_UNUSED) {
-		pin_conf.mux_position = pad3 & 0xFFFF;
-		system_pinmux_pin_set_config(pad3 >> 16, &pin_conf);
+		if (current_pinmux != PINMUX_UNUSED) {
+			pin_conf.mux_position = current_pinmux & 0xFFFF;
+			system_pinmux_pin_set_config(current_pinmux >> 16, &pin_conf);
+		}
 	}
 
 	module->mode             = config->mode;
@@ -263,50 +244,21 @@ static enum status_code _spi_check_config(
 	SercomSpi *const spi_module = &(module->hw->SPI);
 	Sercom *const sercom_module = module->hw;
 
-	uint32_t pad0 = config->pinmux_pad0;
-	uint32_t pad1 = config->pinmux_pad1;
-	uint32_t pad2 = config->pinmux_pad2;
-	uint32_t pad3 = config->pinmux_pad3;
+	uint32_t pad_pinmuxes[] = {
+		config->pinmux_pad0, config->pinmux_pad1,
+		config->pinmux_pad2, config->pinmux_pad3
+	};
 
-	/* SERCOM PAD0 */
-	if (pad0 == PINMUX_DEFAULT) {
-		pad0 = _sercom_get_default_pad(sercom_module, 0);
-	}
-	if (pad0 != PINMUX_UNUSED) {
-		if ((pad0 & 0xFFFF) != system_pinmux_pin_get_mux_position(pad0 >> 16)) {
-			module->hw = NULL;
-			return STATUS_ERR_DENIED;
+	/* Compare the current SERCOM pins against the user configuration */
+	for (uint8_t pad = 0; pad < 4; pad++) {
+		uint32_t current_pinmux = pad_pinmuxes[pad];
+
+		if (current_pinmux == PINMUX_DEFAULT) {
+			current_pinmux = _sercom_get_default_pad(hw, pad);
 		}
-	}
 
-	/* SERCOM PAD1 */
-	if (pad1 == PINMUX_DEFAULT) {
-		pad1 = _sercom_get_default_pad(sercom_module, 1);
-	}
-	if (pad1 != PINMUX_UNUSED) {
-		if ((pad1 & 0xFFFF) != system_pinmux_pin_get_mux_position(pad1 >> 16)) {
-			module->hw = NULL;
-			return STATUS_ERR_DENIED;
-		}
-	}
-
-	/* SERCOM PAD2 */
-	if (pad2 == PINMUX_DEFAULT) {
-		pad2 = _sercom_get_default_pad(sercom_module, 2);
-	}
-	if (pad2 != PINMUX_UNUSED) {
-		if ((pad2 & 0xFFFF) != system_pinmux_pin_get_mux_position(pad2 >> 16)) {
-			module->hw = NULL;
-			return STATUS_ERR_DENIED;
-		}
-	}
-
-	/* SERCOM PAD3 */
-	if (pad3 == PINMUX_DEFAULT) {
-		pad3 = _sercom_get_default_pad(sercom_module, 3);
-	}
-	if (pad3 != PINMUX_UNUSED) {
-		if ((pad3 & 0xFFFF) != system_pinmux_pin_get_mux_position(pad3 >> 16)) {
+		if ((current_pinmux & 0xFFFF) !=
+				system_pinmux_pin_get_mux_position(current_pinmux >> 16)) {
 			module->hw = NULL;
 			return STATUS_ERR_DENIED;
 		}
