@@ -54,8 +54,6 @@
  * \name Internal defines and types
  * @{
  */
-/** Convenience macro for the SERCOM SPI */
-#define SPI_MASTER_VEC_SERCOM_SPI  (SercomSpi *)(CONF_SPI_MASTER_VEC_SERCOM)
 /** Transfer direction indicator */
 enum _spi_master_vec_direction {
 	SPI_MASTER_VEC_DIRECTION_READ,
@@ -65,6 +63,7 @@ enum _spi_master_vec_direction {
 };
 /** Struct to contain driver instance state */
 struct spi_master_vec_module {
+	Sercom *sercom;
 	enum _spi_master_vec_direction direction;
 	enum status_code status;
 	spi_master_vec_buflen_t rx_length;
@@ -94,10 +93,10 @@ static void _spi_master_vec_int_handler(uint8_t not_used);
  * \retval STATUS_OK if initialization succeeded.
  * \retval STATUS_ERR_INVALID_ARG if driver has been misconfigured.
  */
-enum status_code spi_master_vec_init(void)
+enum status_code spi_master_vec_init(Sercom *const sercom)
 {
 	enum status_code status;
-	SercomSpi *const spi_hw = SPI_MASTER_VEC_SERCOM_SPI;
+	SercomSpi *const spi_hw = &(sercom->SPI);
 	struct port_config portpin_conf;
 	struct system_gclk_chan_config gclk_chan_conf;
 	struct system_pinmux_config pin_conf;
@@ -106,6 +105,8 @@ enum status_code spi_master_vec_init(void)
 	uint32_t pm_index = sercom_index + PM_APBCMASK_SERCOM0_Pos;
 	uint32_t gclk_index = sercom_index + SERCOM0_GCLK_ID_CORE;
 	uint32_t gclk_hz;
+
+	_spi_master_vec_module.sercom = sercom;
 
 	/* Enable clock for the module interface */
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, 1 << pm_index);
@@ -185,7 +186,7 @@ enum status_code spi_master_vec_init(void)
  */
 void spi_master_vec_enable(void)
 {
-	SercomSpi *const spi_hw = SPI_MASTER_VEC_SERCOM_SPI;
+	SercomSpi *const spi_hw = &(_spi_master_vec_module.sercom->SPI);
 
 	spi_hw->INTENCLR.reg = SERCOM_SPI_INTFLAG_DRE | SERCOM_SPI_INTFLAG_RXC
 			| SERCOM_SPI_INTFLAG_TXC;
@@ -196,7 +197,7 @@ void spi_master_vec_enable(void)
 
 	spi_hw->CTRLA.reg |= SERCOM_SPI_CTRLA_ENABLE;
 
-	system_interrupt_enable(_sercom_get_interrupt_vector((Sercom *)SPI_MASTER_VEC_SERCOM_SPI));
+	system_interrupt_enable(_sercom_get_interrupt_vector(_spi_master_vec_module.sercom));
 }
 
 /**
@@ -204,9 +205,9 @@ void spi_master_vec_enable(void)
  */
 void spi_master_vec_disable(void)
 {
-	SercomSpi *const spi_hw = SPI_MASTER_VEC_SERCOM_SPI;
+	SercomSpi *const spi_hw = &(_spi_master_vec_module.sercom->SPI);
 
-	system_interrupt_disable(_sercom_get_interrupt_vector((Sercom *)SPI_MASTER_VEC_SERCOM_SPI));
+	system_interrupt_disable(_sercom_get_interrupt_vector(_spi_master_vec_module.sercom));
 
 	while (spi_hw->STATUS.reg & SERCOM_SPI_STATUS_SYNCBUSY) {
 		/* Intentionally left empty */
@@ -255,7 +256,7 @@ enum status_code spi_master_vec_transceive_buffers_wait(
 	struct spi_master_vec_bufdesc rx_bufdescs[])
 {
 	enum status_code status;
-	SercomSpi *const spi_hw = SPI_MASTER_VEC_SERCOM_SPI;
+	SercomSpi *const spi_hw = &(_spi_master_vec_module.sercom->SPI);
 	uint32_t tmp_ctrlb;
 	uint8_t tmp_intenset;
 
@@ -326,7 +327,7 @@ enum status_code spi_master_vec_transceive_buffers_wait(
 static void _spi_master_vec_int_handler(uint8_t not_used)
 {
 	enum _spi_master_vec_direction dir = _spi_master_vec_module.direction;
-	SercomSpi *const spi_hw = SPI_MASTER_VEC_SERCOM_SPI;
+	SercomSpi *const spi_hw = &(_spi_master_vec_module.sercom->SPI);
 	uint8_t int_status;
 
 	int_status = spi_hw->INTFLAG.reg & spi_hw->INTENSET.reg;

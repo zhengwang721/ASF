@@ -145,7 +145,7 @@ static inline void spi_master_vec_select_slave(bool select)
 extern "C" {
 #endif
 
-enum status_code spi_master_vec_init(void);
+enum status_code spi_master_vec_init(Sercom *const sercom);
 void spi_master_vec_enable(void);
 void spi_master_vec_disable(void);
 enum status_code spi_master_vec_transceive_buffers_wait(
