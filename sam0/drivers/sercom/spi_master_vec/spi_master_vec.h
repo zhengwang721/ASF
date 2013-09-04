@@ -45,6 +45,7 @@
 #define SPI_MASTER_VEC_H
 
 #include <conf_spi_master_vec.h>
+#include <gclk.h>
 #include <port.h>
 #include <status_codes.h>
 
@@ -64,54 +65,138 @@
  */
 
 /**
- * \name Configuration macros
+ * \name Configuration types and macros
  * @{
  */
+
 /**
- * \def CONF_SPI_MASTER_VEC_SERCOM
- * \brief SERCOM module to use for this SPI driver.
+ * \def PINMUX_DEFAULT
+ * \brief Specify that default pin MUX setting should be used for pad.
+ *
+ * \note See \ref spi_master_vec_config for details about the behavior of this
+ * pin MUX value.
  */
+#ifndef PINMUX_DEFAULT
+#  define PINMUX_DEFAULT 0
+#endif
+
 /**
- * \def CONF_SPI_MASTER_VEC_BAUDRATE
- * \brief Baudrate to configure the SERCOM SPI module for.
+ * \def PINMUX_UNUSED
+ * \brief Specify that pin MUX should be skipped.
  */
+#ifndef PINMUX_UNUSED
+#  define PINMUX_UNUSED 0xFFFFFFFF
+#endif
+
+/** SERCOM PAD multiplexing */
+enum spi_master_vec_padmux_setting {
+	/**
+	 * See \ref asfdoc_samd20_sercom_spi_mux_setting_a
+	 */
+	SPI_MASTER_VEC_PADMUX_SETTING_A =
+			(0x0 << SERCOM_SPI_CTRLA_DOPO_Pos) |
+			(0x0 << SERCOM_SPI_CTRLA_DIPO_Pos),
+	/**
+	 * See \ref asfdoc_samd20_sercom_spi_mux_setting_b
+	 */
+	SPI_MASTER_VEC_PADMUX_SETTING_B =
+			(0x0 << SERCOM_SPI_CTRLA_DOPO_Pos) |
+			(0x1 << SERCOM_SPI_CTRLA_DIPO_Pos),
+	/**
+	 * See \ref asfdoc_samd20_sercom_spi_mux_setting_c
+	 */
+	SPI_MASTER_VEC_PADMUX_SETTING_C =
+			(0x0 << SERCOM_SPI_CTRLA_DOPO_Pos) |
+			(0x2 << SERCOM_SPI_CTRLA_DIPO_Pos),
+	/**
+	 * See \ref asfdoc_samd20_sercom_spi_mux_setting_d
+	 */
+	SPI_MASTER_VEC_PADMUX_SETTING_D =
+			(0x0 << SERCOM_SPI_CTRLA_DOPO_Pos) |
+			(0x3 << SERCOM_SPI_CTRLA_DIPO_Pos),
+	/**
+	 * See \ref asfdoc_samd20_sercom_spi_mux_setting_e
+	 */
+	SPI_MASTER_VEC_PADMUX_SETTING_E =
+			(0x1 << SERCOM_SPI_CTRLA_DOPO_Pos) |
+			(0x0 << SERCOM_SPI_CTRLA_DIPO_Pos),
+	/**
+	 * See \ref asfdoc_samd20_sercom_spi_mux_setting_f
+	 */
+	SPI_MASTER_VEC_PADMUX_SETTING_F =
+			(0x1 << SERCOM_SPI_CTRLA_DOPO_Pos) |
+			(0x1 << SERCOM_SPI_CTRLA_DIPO_Pos),
+	/**
+	 * See \ref asfdoc_samd20_sercom_spi_mux_setting_g
+	 */
+	SPI_MASTER_VEC_PADMUX_SETTING_G =
+			(0x1 << SERCOM_SPI_CTRLA_DOPO_Pos) |
+			(0x2 << SERCOM_SPI_CTRLA_DIPO_Pos),
+	/**
+	 * See \ref asfdoc_samd20_sercom_spi_mux_setting_h
+	 */
+	SPI_MASTER_VEC_PADMUX_SETTING_H =
+			(0x1 << SERCOM_SPI_CTRLA_DOPO_Pos) |
+			(0x3 << SERCOM_SPI_CTRLA_DIPO_Pos),
+};
+
+/** SPI transfer mode */
+enum spi_master_vec_transfer_mode {
+	/** Mode 0. Leading edge: rising, sample. Trailing edge: falling, setup */
+	SPI_MASTER_VEC_TRANSFER_MODE_0 = 0,
+	/** Mode 1. Leading edge: rising, setup. Trailing edge: falling, sample */
+	SPI_MASTER_VEC_TRANSFER_MODE_1 = SERCOM_SPI_CTRLA_CPHA,
+	/** Mode 2. Leading edge: falling, sample. Trailing edge: rising, setup */
+	SPI_MASTER_VEC_TRANSFER_MODE_2 = SERCOM_SPI_CTRLA_CPOL,
+	/** Mode 3. Leading edge: falling, setup. Trailing edge: rising, sample */
+	SPI_MASTER_VEC_TRANSFER_MODE_3 = SERCOM_SPI_CTRLA_CPHA | SERCOM_SPI_CTRLA_CPOL,
+};
+
+/** SPI data transfer order */
+enum spi_master_vec_data_order {
+	/** LSB of data is transmitted first */
+	SPI_MASTER_VEC_DATA_ORDER_LSB  = SERCOM_SPI_CTRLA_DORD,
+	/** MSB of data is transmitted first */
+	SPI_MASTER_VEC_DATA_ORDER_MSB  = 0,
+};
+
 /**
- * \def CONF_SPI_MASTER_VEC_SS_PIN
- * \brief Number of IO pin to use as Slave Select line.
+ * \brief Driver configuration structure
+ *
+ * \note The order of the pin MUX values in the \e pinmux_N members only matters
+ * when the \ref PINMUX_DEFAULT is used: In this case, N signifies which SERCOM
+ * pad to multiplex to its default pin. For example, if \e pinmux_0 is set to
+ * \ref PINMUX_DEFAULT, then SERCOM pad 0 will be multiplexed to its default pin
+ * and it is left to the user to ensure that the other \e pinmux_N do not
+ * configure the same pin.
  */
-/**
- * \def CONF_SPI_MASTER_VEC_GCLK_SOURCE
- * \brief Generic clock generator to use for the SERCOM module.
- */
-/**
- * \def CONF_SPI_MASTER_VEC_SIGNAL_MUX
- * \brief Signal multiplexing setting, i.e., pad multiplexing.
- */
-/**
- * \def CONF_SPI_MASTER_VEC_PINMUX_PAD0
- * \brief First IO pin function multiplexing setting.
- */
-/**
- * \def CONF_SPI_MASTER_VEC_PINMUX_PAD1
- * \brief Second IO pin function multiplexing setting.
- */
-/**
- * \def CONF_SPI_MASTER_VEC_PINMUX_PAD2
- * \brief Third IO pin function multiplexing setting.
- */
-/**
- * \def CONF_SPI_MASTER_VEC_PINMUX_PAD3
- * \brief Fourth IO pin function multiplexing setting.
- */
-/**
- * \def CONF_SPI_MASTER_VEC_TRANSFER_MODE
- * \brief Transfer mode, i.e., clock polarity (CPOL) and phase (CPHA).
- */
-/**
- * \def CONF_SPI_MASTER_VEC_DATA_ORDER
- * \brief Data order, LSB or MSB first.
- */
+struct spi_master_vec_config {
+	/** Baud rate in Hertz */
+	uint32_t baudrate;
+	/** GCLK generator to use for the SERCOM */
+	enum gclk_generator gclk_source;
+	/** SERCOM Pad MUX setting */
+	enum spi_master_vec_padmux_setting padmux_setting;
+	/** Transfer mode */
+	enum spi_master_vec_transfer_mode transfer_mode;
+	/** Data order */
+	enum spi_master_vec_data_order data_order;
+	/** Pin MUX setting #0 */
+	uint32_t pinmux_0;
+	/** Pin MUX setting #1 */
+	uint32_t pinmux_1;
+	/** Pin MUX setting #2 */
+	uint32_t pinmux_2;
+	/** Pin MUX setting #4*/
+	uint32_t pinmux_3;
+};
+
 /** @} */
+
+/**
+ * \name Buffer description
+ * @{
+ */
 
 /** Type to contain length of described buffers */
 typedef uint16_t spi_master_vec_buflen_t;
@@ -121,6 +206,8 @@ struct spi_master_vec_bufdesc {
 	uint8_t *data;
 	spi_master_vec_buflen_t length;
 };
+
+/** @} */
 
 /**
  * \brief Select or deselect slave
@@ -139,6 +226,25 @@ static inline void spi_master_vec_select_slave(bool select)
 		} else {
 		port_pin_set_output_level(CONF_SPI_MASTER_VEC_SS_PIN, true);
 	}
+}
+
+/**
+ * \brief Initialize configuration with default values
+ *
+ * \param[out] config struct to initialize.
+ */
+static inline void spi_master_vec_get_config_defaults(
+		struct spi_master_vec_config *const config)
+{
+	config->baudrate = 100000;
+	config->gclk_source = GCLK_GENERATOR_0;
+	config->padmux_setting = SPI_MASTER_VEC_PADMUX_SETTING_D;
+	config->transfer_mode = SPI_MASTER_VEC_TRANSFER_MODE_0;
+	config->data_order = SPI_MASTER_VEC_DATA_ORDER_MSB;
+	config->pinmux_0 = PINMUX_DEFAULT;
+	config->pinmux_1 = PINMUX_DEFAULT;
+	config->pinmux_2 = PINMUX_DEFAULT;
+	config->pinmux_3 = PINMUX_DEFAULT;
 }
 
 #ifdef __cplusplus
