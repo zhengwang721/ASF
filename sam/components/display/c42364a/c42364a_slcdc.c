@@ -43,12 +43,10 @@
 
 #include "compiler.h"
 #include "board.h"
-#ifndef SAM4C_EK
-#include "c42364a_template.h"
-#endif
 #include "slcdc.h"
 #include "supc.h"
 #include "c42364a.h"
+#include "c42364a_segmap.h"
 #include "c42364a_font.h"
 #include "conf_c42364a_slcdc.h"
 

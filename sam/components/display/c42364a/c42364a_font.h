@@ -44,6 +44,8 @@
 #ifndef C42364A_FONT_H_INCLUDED
 #define C42364A_FONT_H_INCLUDED
 
+#include "c42364a_segmap.h"
+
 /* LCD symbol pixel mapping, seg remap to chip seg */
 enum c42364a_symbol_pixel{
 G1  = 4 * C42364A_G1_SEG_NUM, G0, G2, G3,            // 0 ==> 48

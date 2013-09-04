@@ -51,6 +51,7 @@
 #include "sleepmgr.h"
 #include "sysclk.h"
 #include "board.h"
+#include "c42364a_segmap.h"
 #include "c42364a.h"
 #include "board_monitor.h"
 #include "touch_api_sam4l.h"
