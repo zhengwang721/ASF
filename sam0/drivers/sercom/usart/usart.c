@@ -560,14 +560,13 @@ enum status_code usart_read_wait(
 	if (module->remaining_rx_buffer_length > 0) {
 		return STATUS_BUSY;
 	}
+#endif
 
-#else
 	/* Check if USART has new data */
 	if (!(usart_hw->INTFLAG.reg & SERCOM_USART_INTFLAG_RXC)) {
 		/* Return error code */
 		return STATUS_BUSY;
 	}
-#endif
 
 	/* Wait until synchronization is complete */
 	_usart_wait_for_sync(module);
