@@ -56,9 +56,9 @@
  * \section Description
  *
  * Upon startup, the system set the tamper pin TMP0 and TMP2 as wake-up
- * source. After press any key, the system will enter backup mode. By pressing the
- * BP3(TMP0) or BP6(TMP2) button, the system will wake up and clear GPBR0 ~7
- * register automatically, display the tamper event happen time/date.
+ * source. After press any key, the system will enter backup mode. By
+ * pressing the BP3(TMP0) or BP6(TMP2) button, the system will wake up and clear
+ * GPBR0~7 register automatically, display the tamper event happen time/date.
  *
  * \note Because this example need use RTCOUT pin, which is common PIO with TDO,
  * To debug normally, please select SWD interface.
@@ -93,22 +93,8 @@ extern "C" {
 /**INDENT-ON**/
 /// @endcond
 
-/** Flash wait state number. */
-#define FLASH_WAIT_STATE_NBR         6
-
-/** Backup mode flag. */
-#define BACKUP_MODE_FLAG             0xAA55AA55
-
-/** Normal mode flag. */
-#define NORMAL_MODE_FLAG             0xffffffff
-
 /** GPBR const written data */
 #define GPBR_CONST_DATA              (0xdeadbeef)
-
-/** The initial RTC time */
-#define RTC_TIME_HOUR                13
-#define RTC_TIME_MIN                 30
-#define RTC_TIME_SEC                 0
 
 /** The RTC output config */
 #define RTC_OUT_CHN                  0
@@ -142,13 +128,9 @@ static void configure_console(void)
 int main(void)
 {
 	uint32_t ul_read_value[8] = {0, 0 ,0, 0, 0, 0, 0, 0};
-	uint32_t ul_last_page_addr = LAST_PAGE_ADDRESS;
-	uint32_t *ul_back_mode_flag_addr = (uint32_t *) ul_last_page_addr;
-	uint32_t ul_normal_mode_flag = NORMAL_MODE_FLAG;
-	uint32_t ul_backup_mode_flag = BACKUP_MODE_FLAG;
 	uint32_t ul_hour, ul_minute, ul_second;
 	uint32_t ul_year, ul_month, ul_day, ul_week;
-	uint32_t tmp_src;
+	uint32_t tmp_src, tmp_cnt;
 	uint8_t uc_key;
 
 	/* Initialize the SAM system */
@@ -163,17 +145,9 @@ int main(void)
 
 	/* Default RTC configuration, 24-hour mode */
 	rtc_set_hour_mode(RTC, 0);
-	rtc_set_time(RTC, RTC_TIME_HOUR, RTC_TIME_MIN, RTC_TIME_SEC);
 	rtc_set_waveform(RTC, RTC_OUT_CHN, RTC_OUT_SRC);
 
-	/* Initialize flash: 6 wait states for flash writing. */
-	flash_init(FLASH_ACCESS_MODE_128, FLASH_WAIT_STATE_NBR);
-
-	/* Unlock flash page. */
-	flash_unlock(ul_last_page_addr,
-			ul_last_page_addr + IFLASH_PAGE_SIZE - 1, NULL, NULL);
-
-	if ((*ul_back_mode_flag_addr) == BACKUP_MODE_FLAG) {
+	if(rstc_get_reset_cause(RSTC) == RSTC_SR_RSTTYP_BackupReset) {
 		/* Read the data from GPBR0 ~ 7 */
 		ul_read_value[0] = gpbr_read(GPBR0);
 		ul_read_value[1] = gpbr_read(GPBR1);
@@ -184,32 +158,27 @@ int main(void)
 		ul_read_value[6] = gpbr_read(GPBR6);
 		ul_read_value[7] = gpbr_read(GPBR7);
 
-		if((ul_read_value[0] != GPBR_CONST_DATA) &&
-				(ul_read_value[1] != GPBR_CONST_DATA) &&
-				(ul_read_value[2] != GPBR_CONST_DATA) &&
-				(ul_read_value[3] != GPBR_CONST_DATA) &&
-				(ul_read_value[4] != GPBR_CONST_DATA) &&
-				(ul_read_value[5] != GPBR_CONST_DATA) &&
-				(ul_read_value[6] != GPBR_CONST_DATA) &&
-				(ul_read_value[7] != GPBR_CONST_DATA)) {
+		if((ul_read_value[0] == 0) &&
+				(ul_read_value[1] == 0) &&
+				(ul_read_value[2] == 0) &&
+				(ul_read_value[3] == 0) &&
+				(ul_read_value[4] == 0) &&
+				(ul_read_value[5] == 0) &&
+				(ul_read_value[6] == 0) &&
+				(ul_read_value[7] == 0)) {
 			printf("The backup register is cleared when tamper event happen!\r\n");
+		} else {
+			printf("The backup register is not cleared when tamper event happen!\r\n");
 		}
 
 		/* Retrieve tamper date and time */
 		rtc_get_tamper_time(RTC, &ul_hour, &ul_minute, &ul_second, 0);
 		rtc_get_tamper_date(RTC, &ul_year, &ul_month, &ul_day, &ul_week, 0);
+		tmp_cnt = rtc_get_tamper_event_counter(RTC);
 		tmp_src = rtc_get_tamper_source(RTC, 0);
-		printf("The tamper event TMP%u happen in %02u:%02u:%02u, %02u/%02u/%04u",
+		printf("The tamper event TMP%u happen in %02u:%02u:%02u,%02u/%02u/%04u\r\n",
 				tmp_src, ul_hour, ul_minute, ul_second, ul_month, ul_day, ul_year);
-
-		/* Erase flag page */
-		flash_erase_page(ul_last_page_addr, IFLASH_ERASE_PAGES_8);
-
-		/* Clear backup mode flag */
-		if (flash_write(ul_last_page_addr, (uint8_t *)&ul_normal_mode_flag,
-				sizeof(uint32_t), 0) != FLASH_RC_OK) {
-			printf("Flash Write failed!\r\n");
-		}
+		printf("The tamper event counter is %u \r\n", tmp_cnt);
 	}
 
 	printf("Press any key to Enter Backup Mode!\r\n");
@@ -226,25 +195,20 @@ int main(void)
 	gpbr_write(GPBR6, GPBR_CONST_DATA);
 	gpbr_write(GPBR7, GPBR_CONST_DATA);
 
-	/* Enable TMP0 and TMP2 wake up */
+	/* Enable TMP0 and TMP2 low power debouncer and clear GPBR when event happen */
 	supc_set_wakeup_mode(SUPC, SUPC_WUMR_LPDBCEN0_ENABLE |
 			SUPC_WUMR_LPDBCCLR_ENABLE | SUPC_WUMR_LPDBCEN2_ENABLE |
 			SUPC_WUMR_LPDBC_2_RTCOUT0);
+	/* Enable TMP0 and TMP2 wake-up input and set input type*/
 	supc_set_wakeup_inputs(SUPC, SUPC_WUIR_WKUPEN0_ENABLE |
 			SUPC_WUIR_WKUPEN14_ENABLE,
 			SUPC_WUIR_WKUPT0_LOW | SUPC_WUIR_WKUPT14_LOW);
 
-	if(flash_erase_page(ul_last_page_addr, IFLASH_ERASE_PAGES_8) != FLASH_RC_OK) {
-		printf("Erase page failed!\r\n");
-	}
+	printf("Enter Backup Mode!\r\n\r\n");
 
-	/* Write backup mode flag */
-	if (flash_write(ul_last_page_addr, (uint8_t *)&ul_backup_mode_flag,
-					sizeof(uint32_t), 0) != FLASH_RC_OK) {
-		printf("Flash Write failed!\r\n");
+	/* Ensure TX is done before enter backup mode */
+	while (!uart_is_tx_empty(CONSOLE_UART)) {
 	}
-
-	printf("Enter Backup Mode!\r\n");
 
 	/* Enter backup mode */
 	pmc_enable_backupmode();

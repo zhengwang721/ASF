@@ -661,6 +661,9 @@ void rtc_set_writeprotect(Rtc *p_rtc, uint32_t ul_enable)
 /**
  * \brief Get the RTC tamper time value.
  *
+ * \note This function should be called before rtc_get_tamper_source()
+ *       function call, else the tamper time will be cleared.
+ *
  * \param p_rtc Pointer to an RTC instance.
  * \param pul_hour Current hour, 24-hour mode.
  * \param pul_minute Current minute.
@@ -704,6 +707,9 @@ void rtc_get_tamper_time(Rtc *p_rtc, uint32_t *pul_hour, uint32_t *pul_minute,
 
 /**
  * \brief Get the RTC tamper date.
+ *
+ * \note This function should be called before rtc_get_tamper_source()
+ *       function call, else the tamper date will be cleared.
  *
  * \param p_rtc Pointer to an RTC instance.
  * \param pul_year Current year.
@@ -757,18 +763,26 @@ void rtc_get_tamper_date(Rtc *p_rtc, uint32_t *pul_year, uint32_t *pul_month,
  *
  * \param p_rtc Pointer to an RTC instance.
  * \param reg_num Current tamper register set number.
+ *
+ * \return Tamper source.
  */
 uint32_t rtc_get_tamper_source(Rtc *p_rtc, uint8_t reg_num)
 {
-	return (p_rtc->RTC_TS[reg_num].RTC_TSSR & RTC_TSSR_TSRC_Msk) >> RTC_TSSR_TSRC_Pos;
+	return (p_rtc->RTC_TS[reg_num].RTC_TSSR & RTC_TSSR_TSRC_Msk) >>
+			RTC_TSSR_TSRC_Pos;
 }
 
 /**
- * \brief Get the RTC tamper event number.
+ * \brief Get the RTC tamper event counter.
+ *
+ * \note This function should be called before rtc_get_tamper_source()
+ *       function call, else the tamper event counter will be cleared.
  *
  * \param p_rtc Pointer to an RTC instance.
+ *
+ * \return Tamper event counter
  */
-uint8_t rtc_get_tamper_event_num(Rtc *p_rtc)
+uint32_t rtc_get_tamper_event_counter(Rtc *p_rtc)
 {
 	return (p_rtc->RTC_TS[0].RTC_TSTR & RTC_TSTR_TEVCNT_Msk) >> RTC_TSTR_TEVCNT_Pos;
 }
@@ -776,10 +790,17 @@ uint8_t rtc_get_tamper_event_num(Rtc *p_rtc)
 /**
  * \brief Check the system is in backup mode when RTC tamper event happen.
  *
+ * \note This function should be called before rtc_get_tamper_source()
+ *       function call, else the flag indicates tamper occur in backup
+ *       mode will be cleared.
+ *
  * \param p_rtc Pointer to an RTC instance.
  * \param reg_num Current tamper register set number.
+ *
+ * \return True - The system is in backup mode when the tamper event occurs.
+ *         Flase - The system is different from backup mode.
  */
-bool rtc_tamper_in_backup(Rtc *p_rtc, uint8_t reg_num)
+bool rtc_is_tamper_occur_in_backup_mode(Rtc *p_rtc, uint8_t reg_num)
 {
 	if(p_rtc->RTC_TS[reg_num].RTC_TSTR & RTC_TSTR_BACKUP) {
 		return true;

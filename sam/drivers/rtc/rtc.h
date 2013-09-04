@@ -101,8 +101,8 @@ void rtc_get_tamper_time(Rtc *p_rtc, uint32_t *pul_hour, uint32_t *pul_minute,
 void rtc_get_tamper_date(Rtc *p_rtc, uint32_t *pul_year, uint32_t *pul_month,
 		uint32_t *pul_day, uint32_t *pul_week, uint8_t reg_num);
 uint32_t rtc_get_tamper_source(Rtc *p_rtc, uint8_t reg_num);
-uint8_t rtc_get_tamper_event_num(Rtc *p_rtc);
-bool rtc_tamper_in_backup(Rtc *p_rtc, uint8_t reg_num);
+uint32_t rtc_get_tamper_event_counter(Rtc *p_rtc);
+bool rtc_is_tamper_occur_in_backup_mode(Rtc *p_rtc, uint8_t reg_num);
 #endif
 
 /**
