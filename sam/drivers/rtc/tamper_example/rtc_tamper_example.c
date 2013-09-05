@@ -206,7 +206,8 @@ int main(void)
 			SUPC_WUIR_WKUPEN14_ENABLE,
 			SUPC_WUIR_WKUPT0_LOW | SUPC_WUIR_WKUPT14_LOW);
 
-	printf("Enter Backup Mode!\r\n\r\n");
+	printf("Enter Backup Mode!\r\n");
+	printf("Please press button TMP0 or TMP2 to wake up!\r\n\r\n");
 
 	/* Ensure TX is done before enter backup mode */
 	while (!uart_is_tx_empty(CONSOLE_UART)) {
