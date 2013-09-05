@@ -55,6 +55,7 @@ MEMORY
 
 /* The stack size used by the application. NOTE: you need to adjust according to your application. */
 __stack_size__ = DEFINED(__stack_size__) ? __stack_size__ : 0x200;
+__ram_end__ = 0x20000800;
 
 /* Section Definitions */
 SECTIONS
