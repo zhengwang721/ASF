@@ -61,7 +61,7 @@ extern "C" {
  * @{
  */
 
-#if ((SAM3S) || (SAM3U) || (SAM3XA) || (SAM4S) || (SAM4E))
+#if ((SAM3S) || (SAM3U) || (SAM3XA) || (SAM4S) || (SAM4E) || (SAM4C))
 #define SMC_WPKEY_VALUE (0x534D43)
 /**
  * \brief Configure the SMC Setup timing for the specified Chip Select.
