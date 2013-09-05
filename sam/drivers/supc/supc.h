@@ -94,6 +94,8 @@ void supc_set_wakeup_inputs(Supc *p_supc, uint32_t ul_inputs,
 		uint32_t ul_transition);
 uint32_t supc_get_status(Supc *p_supc);
 #if SAM4C
+void supc_enable_backup_power_on_reset(Supc *p_supc);
+void supc_disable_backup_power_on_reset(Supc *p_supc);
 enum slcdc_power_mode supc_get_slcd_power_mode(Supc *p_supc);
 void supc_set_slcd_power_mode(Supc *p_supc, enum slcdc_power_mode mode);
 void supc_set_slcd_vol(Supc *p_supc, uint32_t vol);
