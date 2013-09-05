@@ -108,7 +108,7 @@ __always_inline static void pmc_save_clock_settings(
 #endif
 
 	/* Enable FAST RC */
-	PMC->CKGR_MOR = PMC_CKGR_MOR_KEY_VALUE | mor | CKGR_MOR_MOSCRCEN;
+	PMC->CKGR_MOR = CKGR_MOR_KEY_PASSWD | mor | CKGR_MOR_MOSCRCEN;
 	/* if MCK source is PLL, switch to mainck */
 	if ((mckr & PMC_MCKR_CSS_Msk) > PMC_MCKR_CSS_MAIN_CLK) {
 		/* MCK -> MAINCK */
@@ -136,7 +136,7 @@ __always_inline static void pmc_save_clock_settings(
 
 	/* Switch mainck to FAST RC */
 	PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCSEL) |
-			PMC_CKGR_MOR_KEY_VALUE;
+			CKGR_MOR_KEY_PASSWD;
 	while (!(PMC->PMC_SR & PMC_SR_MOSCSELS));
 
 	/* FWS update */
@@ -148,7 +148,7 @@ __always_inline static void pmc_save_clock_settings(
 	/* Disable XTALs */
 	if (disable_xtal) {
 		PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCXTEN) |
-				PMC_CKGR_MOR_KEY_VALUE;
+				CKGR_MOR_KEY_PASSWD;
 	}
 }
 
@@ -173,28 +173,28 @@ __always_inline static void pmc_restore_clock_setting(
 	if (CKGR_MOR_MOSCXTBY == (osc_setting & CKGR_MOR_MOSCXTBY)) {
 		/* Bypass mode */
 		PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCXTEN) |
-				PMC_CKGR_MOR_KEY_VALUE | CKGR_MOR_MOSCXTBY |
+				CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCXTBY |
 				CKGR_MOR_MOSCSEL;
 		PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCRCEN &
 					~CKGR_MOR_MOSCRCF_Msk)
-				| PMC_CKGR_MOR_KEY_VALUE;
+				| CKGR_MOR_KEY_PASSWD;
 	} else if (CKGR_MOR_MOSCXTEN == (osc_setting & CKGR_MOR_MOSCXTEN)) {
 		/* Enable External XTAL */
 		if (!(PMC->CKGR_MOR & CKGR_MOR_MOSCXTEN)) {
 			PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCXTBY) |
-					PMC_CKGR_MOR_KEY_VALUE | CKGR_MOR_MOSCXTEN;
+					CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCXTEN;
 			/* Wait the Xtal to stabilize */
 			while (!(PMC->PMC_SR & PMC_SR_MOSCXTS));
 		}
 		/* Select External XTAL */
 		if (!(PMC->CKGR_MOR & CKGR_MOR_MOSCSEL)) {
-			PMC->CKGR_MOR |= PMC_CKGR_MOR_KEY_VALUE | CKGR_MOR_MOSCSEL;
+			PMC->CKGR_MOR |= CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCSEL;
 			while (!(PMC->PMC_SR & PMC_SR_MOSCSELS));
 		}
 		/* Disable Fast RC */
 		PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCRCEN &
 						~CKGR_MOR_MOSCRCF_Msk)
-					| PMC_CKGR_MOR_KEY_VALUE;
+					| CKGR_MOR_KEY_PASSWD;
 	}
 
 	if (pll0_setting & CKGR_PLLAR_MULA_Msk) {

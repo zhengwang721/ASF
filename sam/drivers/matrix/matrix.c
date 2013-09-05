@@ -64,7 +64,7 @@ extern "C" {
  */
 
 #if SAM4C
-#ifdef _SAM4C_0_
+#ifdef SAM4C_0
 #define MATRIX MATRIX0
 #else
 #define MATRIX MATRIX1
