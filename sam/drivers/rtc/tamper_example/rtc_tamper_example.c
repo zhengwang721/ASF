@@ -127,9 +127,11 @@ static void configure_console(void)
 int main(void)
 {
 	uint32_t ul_read_value[8] = {0, 0 ,0, 0, 0, 0, 0, 0};
-	uint32_t ul_hour, ul_minute, ul_second;
-	uint32_t ul_year, ul_month, ul_day, ul_week;
-	uint32_t tmp_src, tmp_cnt;
+	uint32_t ul_hour0, ul_minute0, ul_second0;
+	uint32_t ul_year0, ul_month0, ul_day0, ul_week0;
+	uint32_t ul_hour1, ul_minute1, ul_second1;
+	uint32_t ul_year1, ul_month1, ul_day1, ul_week1;
+	uint32_t tmp_src0, tmp_src1, tmp_cnt;
 	uint8_t uc_key;
 
 	/* Initialize the SAM system */
@@ -171,14 +173,21 @@ int main(void)
 		}
 
 		/* Retrieve tamper date and time */
-		rtc_get_tamper_time(RTC, &ul_hour, &ul_minute, &ul_second, 0);
-		rtc_get_tamper_date(RTC, &ul_year, &ul_month, &ul_day, &ul_week, 0);
+		rtc_get_tamper_time(RTC, &ul_hour0, &ul_minute0, &ul_second0, 0);
+		rtc_get_tamper_date(RTC, &ul_year0, &ul_month0, &ul_day0, &ul_week0, 0);
+		rtc_get_tamper_time(RTC, &ul_hour1, &ul_minute1, &ul_second1, 1);
+		rtc_get_tamper_date(RTC, &ul_year1, &ul_month1, &ul_day1, &ul_week1, 1);
 		tmp_cnt = rtc_get_tamper_event_counter(RTC);
-		tmp_src = rtc_get_tamper_source(RTC, 0);
-		printf("The tamper event TMP%u happen in %02u:%02u:%02u,%02u/%02u/%04u\r\n",
-				(unsigned int)tmp_src, (unsigned int)ul_hour, (unsigned int)ul_minute,
-				(unsigned int)ul_second, (unsigned int)ul_month, (unsigned int)ul_day,
-				(unsigned int)ul_year);
+		tmp_src0 = rtc_get_tamper_source(RTC, 0);
+		tmp_src1 = rtc_get_tamper_source(RTC, 1);
+		printf("The first tamper event TMP%u happen in %02u:%02u:%02u,%02u/%02u/%04u\r\n",
+				(unsigned int)tmp_src0, (unsigned int)ul_hour0, (unsigned int)ul_minute0,
+				(unsigned int)ul_second0, (unsigned int)ul_month0, (unsigned int)ul_day0,
+				(unsigned int)ul_year0);
+		printf("The last tamper event TMP%u happen in %02u:%02u:%02u,%02u/%02u/%04u\r\n",
+				(unsigned int)tmp_src1, (unsigned int)ul_hour1, (unsigned int)ul_minute1,
+				(unsigned int)ul_second1, (unsigned int)ul_month1, (unsigned int)ul_day1,
+				(unsigned int)ul_year1);
 		printf("The tamper event counter is %u \r\n", (unsigned int)tmp_cnt);
 	}
 
