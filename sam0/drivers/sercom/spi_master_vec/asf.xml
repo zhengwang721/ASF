@@ -14,19 +14,15 @@
 		</info>
 
 		<build type="c-source" value="spi_master_vec.c"/>
+		<build type="doxygen-entry-point" value="sercom_spi_master_vec_group"/>
 		<build type="header-file" subtype="api" value="spi_master_vec.h"/>
 		<build type="include-path" value="."/>
-		<build type="module-config" subtype="path" value="module_config"/>
-		<build type="module-config" subtype="required-header-file" value="conf_spi_master_vec.h"/>
-		<build type="doxygen-entry-point" value="sercom_spi_master_vec_group"/>
 		<device-support value="samd20"/>
 
 		<require idref="sam0.utils"/>
 		<require idref="sam0.drivers.sercom"/>
 		<require idref="sam0.drivers.port"/>
 		<require idref="sam0.drivers.system"/>
-		<require idref="sam0.drivers.system.pinmux"/>
-		<require idref="sam0.drivers.system.interrupt"/>
 
 		<generator value="doxygen-module" default-mcu="unspecified-samd20"/>
 	</module>

@@ -44,7 +44,7 @@
 #ifndef SPI_MASTER_VEC_H
 #define SPI_MASTER_VEC_H
 
-#include <conf_spi_master_vec.h>
+#include <compiler.h>
 #include <gclk.h>
 #include <port.h>
 #include <status_codes.h>
@@ -53,13 +53,14 @@
  * \defgroup sercom_spi_master_vec_group SERCOM SPI master driver with
  * vectored I/O
  *
- * This driver is a single-instance, compile-time configured SPI master driver.
- * It supports both simplex and duplex transfers with vectored I/O, also know
- * as scatter/gather.
+ * This driver is a SPI master driver that supports uni- and bidirectional
+ * transfers of 8-bit data with vectored I/O, also know as scatter/gather.
+ * It does not implement slave selection or addressing since the intended usage
+ * is in stacks which usually have their own protocols and handshaking schemes.
  *
  * Scatter/gather is implemented by the use of buffer descriptor arrays, which
  * must be passed to the driver to start a transfer.
- * See \ref spi_master_vec_transceive_buffers_wait() for more information.
+ * See \ref spi_master_vec_transceive_buffer_job() for more information.
  *
  * @{
  */
@@ -73,8 +74,8 @@
  * \def PINMUX_DEFAULT
  * \brief Specify that default pin MUX setting should be used for pad.
  *
- * \note See \ref spi_master_vec_config for details about the behavior of this
- * pin MUX value.
+ * \note If this specifier is used, it is up to the user to ensure that the
+ * configuration does not try to use the same pin for another SERCOM pad.
  */
 #ifndef PINMUX_DEFAULT
 #  define PINMUX_DEFAULT 0
@@ -88,107 +89,75 @@
 #  define PINMUX_UNUSED 0xFFFFFFFF
 #endif
 
-/** SERCOM PAD multiplexing */
+/** SERCOM pad multiplexing */
 enum spi_master_vec_padmux_setting {
-	/**
-	 * See \ref asfdoc_samd20_sercom_spi_mux_setting_a
-	 */
+	/** SCK on pad 1, MOSI on pad 0, MISO on pad 2 */
 	SPI_MASTER_VEC_PADMUX_SETTING_A =
 			(0x0 << SERCOM_SPI_CTRLA_DOPO_Pos) |
-			(0x0 << SERCOM_SPI_CTRLA_DIPO_Pos),
-	/**
-	 * See \ref asfdoc_samd20_sercom_spi_mux_setting_b
-	 */
+			(0x2 << SERCOM_SPI_CTRLA_DIPO_Pos),
+	/** SCK on pad 1, MOSI on pad 0, MISO on pad 3 */
 	SPI_MASTER_VEC_PADMUX_SETTING_B =
 			(0x0 << SERCOM_SPI_CTRLA_DOPO_Pos) |
-			(0x1 << SERCOM_SPI_CTRLA_DIPO_Pos),
-	/**
-	 * See \ref asfdoc_samd20_sercom_spi_mux_setting_c
-	 */
-	SPI_MASTER_VEC_PADMUX_SETTING_C =
-			(0x0 << SERCOM_SPI_CTRLA_DOPO_Pos) |
-			(0x2 << SERCOM_SPI_CTRLA_DIPO_Pos),
-	/**
-	 * See \ref asfdoc_samd20_sercom_spi_mux_setting_d
-	 */
-	SPI_MASTER_VEC_PADMUX_SETTING_D =
-			(0x0 << SERCOM_SPI_CTRLA_DOPO_Pos) |
 			(0x3 << SERCOM_SPI_CTRLA_DIPO_Pos),
-	/**
-	 * See \ref asfdoc_samd20_sercom_spi_mux_setting_e
-	 */
-	SPI_MASTER_VEC_PADMUX_SETTING_E =
+	/** SCK on pad 3, MOSI on pad 2, MISO on pad 0 */
+	SPI_MASTER_VEC_PADMUX_SETTING_C =
 			(0x1 << SERCOM_SPI_CTRLA_DOPO_Pos) |
 			(0x0 << SERCOM_SPI_CTRLA_DIPO_Pos),
-	/**
-	 * See \ref asfdoc_samd20_sercom_spi_mux_setting_f
-	 */
-	SPI_MASTER_VEC_PADMUX_SETTING_F =
+	/** SCK on pad 3, MOSI on pad 2, MISO on pad 1 */
+	SPI_MASTER_VEC_PADMUX_SETTING_D =
 			(0x1 << SERCOM_SPI_CTRLA_DOPO_Pos) |
 			(0x1 << SERCOM_SPI_CTRLA_DIPO_Pos),
-	/**
-	 * See \ref asfdoc_samd20_sercom_spi_mux_setting_g
-	 */
-	SPI_MASTER_VEC_PADMUX_SETTING_G =
-			(0x1 << SERCOM_SPI_CTRLA_DOPO_Pos) |
-			(0x2 << SERCOM_SPI_CTRLA_DIPO_Pos),
-	/**
-	 * See \ref asfdoc_samd20_sercom_spi_mux_setting_h
-	 */
-	SPI_MASTER_VEC_PADMUX_SETTING_H =
-			(0x1 << SERCOM_SPI_CTRLA_DOPO_Pos) |
-			(0x3 << SERCOM_SPI_CTRLA_DIPO_Pos),
 };
 
-/** SPI transfer mode */
+/** SPI transfer mode. */
 enum spi_master_vec_transfer_mode {
-	/** Mode 0. Leading edge: rising, sample. Trailing edge: falling, setup */
+	/** Mode 0. Leading edge: rising, sample. Trailing edge: falling, setup. */
 	SPI_MASTER_VEC_TRANSFER_MODE_0 = 0,
-	/** Mode 1. Leading edge: rising, setup. Trailing edge: falling, sample */
+	/** Mode 1. Leading edge: rising, setup. Trailing edge: falling, sample. */
 	SPI_MASTER_VEC_TRANSFER_MODE_1 = SERCOM_SPI_CTRLA_CPHA,
-	/** Mode 2. Leading edge: falling, sample. Trailing edge: rising, setup */
+	/** Mode 2. Leading edge: falling, sample. Trailing edge: rising, setup. */
 	SPI_MASTER_VEC_TRANSFER_MODE_2 = SERCOM_SPI_CTRLA_CPOL,
-	/** Mode 3. Leading edge: falling, setup. Trailing edge: rising, sample */
+	/** Mode 3. Leading edge: falling, setup. Trailing edge: rising, sample. */
 	SPI_MASTER_VEC_TRANSFER_MODE_3 = SERCOM_SPI_CTRLA_CPHA | SERCOM_SPI_CTRLA_CPOL,
 };
 
-/** SPI data transfer order */
+/** SPI data transfer order. */
 enum spi_master_vec_data_order {
-	/** LSB of data is transmitted first */
+	/** LSB of data is transmitted first. */
 	SPI_MASTER_VEC_DATA_ORDER_LSB  = SERCOM_SPI_CTRLA_DORD,
-	/** MSB of data is transmitted first */
+	/** MSB of data is transmitted first. */
 	SPI_MASTER_VEC_DATA_ORDER_MSB  = 0,
 };
 
 /**
  * \brief Driver configuration structure
  *
- * \note The order of the pin MUX values in the \e pinmux_N members only matters
- * when the \ref PINMUX_DEFAULT is used: In this case, N signifies which SERCOM
- * pad to multiplex to its default pin. For example, if \e pinmux_0 is set to
- * \ref PINMUX_DEFAULT, then SERCOM pad 0 will be multiplexed to its default pin
- * and it is left to the user to ensure that the other \e pinmux_N do not
- * configure the same pin.
+ * \note There are two layers of multiplexing for the SPI signals: first the
+ * pad MUX in the SERCOM, and then the pin MUX in the PORT. This means that
+ * \c padmux_setting must be set in combination with the \c pinmux_padN.
+ * And for \ref spi_master_vec_init() to function properly, the order of the
+ * values in \c pinmux_padN must be correct, i.e., \c pinmux_pad0 must contain
+ * the pin MUX setting for multiplexing SERCOM pad 0, and so on.
  */
 struct spi_master_vec_config {
-	/** Baud rate in Hertz */
+	/** Baud rate in Hertz. */
 	uint32_t baudrate;
-	/** GCLK generator to use for the SERCOM */
-	enum gclk_generator gclk_source;
-	/** SERCOM Pad MUX setting */
+	/** GCLK generator to use for the SERCOM. */
+	enum gclk_generator gclk_generator;
+	/** SERCOM Pad MUX setting. */
 	enum spi_master_vec_padmux_setting padmux_setting;
-	/** Transfer mode */
+	/** Transfer mode. */
 	enum spi_master_vec_transfer_mode transfer_mode;
-	/** Data order */
+	/** Data order. */
 	enum spi_master_vec_data_order data_order;
-	/** Pin MUX setting #0 */
-	uint32_t pinmux_0;
-	/** Pin MUX setting #1 */
-	uint32_t pinmux_1;
-	/** Pin MUX setting #2 */
-	uint32_t pinmux_2;
-	/** Pin MUX setting #4*/
-	uint32_t pinmux_3;
+	/** Pin MUX setting for SERCOM pad 0. */
+	uint32_t pinmux_pad0;
+	/** Pin MUX setting for SERCOM pad 1. */
+	uint32_t pinmux_pad1;
+	/** Pin MUX setting for SERCOM pad 2. */
+	uint32_t pinmux_pad2;
+	/** Pin MUX setting for SERCOM pad 4. */
+	uint32_t pinmux_pad3;
 };
 
 /** @} */
@@ -198,10 +167,10 @@ struct spi_master_vec_config {
  * @{
  */
 
-/** Type to contain length of described buffers */
+/** Buffer length container. */
 typedef uint16_t spi_master_vec_buflen_t;
 
-/** Struct to describe a buffer for writing or reading */
+/** Buffer descriptor structure. */
 struct spi_master_vec_bufdesc {
 	uint8_t *data;
 	spi_master_vec_buflen_t length;
@@ -210,54 +179,77 @@ struct spi_master_vec_bufdesc {
 /** @} */
 
 /**
- * \brief Select or deselect slave
- *
- * Drive the configured Slave Select line low or high, depending on whether the
- * slave is being selected or deselected.
- *
- * \param[in] select
- * \arg \c true to select the slave.
- * \arg \c false to deselect the slave.
+ * \internal
+ * \brief Transfer direction.
  */
-static inline void spi_master_vec_select_slave(bool select)
-{
-	if (select) {
-		port_pin_set_output_level(CONF_SPI_MASTER_VEC_SS_PIN, false);
-		} else {
-		port_pin_set_output_level(CONF_SPI_MASTER_VEC_SS_PIN, true);
-	}
-}
+enum _spi_master_vec_direction {
+	SPI_MASTER_VEC_DIRECTION_READ,
+	SPI_MASTER_VEC_DIRECTION_WRITE,
+	SPI_MASTER_VEC_DIRECTION_BOTH,
+	SPI_MASTER_VEC_DIRECTION_IDLE,
+};
+
+/** Driver instance. */
+struct spi_master_vec_module {
+	Sercom *volatile sercom;
+	volatile enum _spi_master_vec_direction direction;
+	volatile enum status_code status;
+	volatile spi_master_vec_buflen_t rx_length;
+	volatile spi_master_vec_buflen_t tx_length;
+	uint8_t *volatile rx_head_ptr;
+	uint8_t *volatile tx_head_ptr;
+	volatile uint_fast8_t tx_lead_on_rx;
+	struct spi_master_vec_bufdesc *volatile rx_bufdesc_ptr;
+	struct spi_master_vec_bufdesc *volatile tx_bufdesc_ptr;
+};
 
 /**
- * \brief Initialize configuration with default values
+ * \brief Initialize configuration with default values.
  *
- * \param[out] config struct to initialize.
+ * \param[out] config Configuration struct to initialize.
  */
 static inline void spi_master_vec_get_config_defaults(
 		struct spi_master_vec_config *const config)
 {
 	config->baudrate = 100000;
-	config->gclk_source = GCLK_GENERATOR_0;
+	config->gclk_generator = GCLK_GENERATOR_0;
 	config->padmux_setting = SPI_MASTER_VEC_PADMUX_SETTING_D;
 	config->transfer_mode = SPI_MASTER_VEC_TRANSFER_MODE_0;
 	config->data_order = SPI_MASTER_VEC_DATA_ORDER_MSB;
-	config->pinmux_0 = PINMUX_DEFAULT;
-	config->pinmux_1 = PINMUX_DEFAULT;
-	config->pinmux_2 = PINMUX_DEFAULT;
-	config->pinmux_3 = PINMUX_DEFAULT;
+	config->pinmux_pad0 = PINMUX_DEFAULT;
+	config->pinmux_pad1 = PINMUX_DEFAULT;
+	config->pinmux_pad2 = PINMUX_DEFAULT;
+	config->pinmux_pad3 = PINMUX_DEFAULT;
+}
+
+/**
+ * \brief Get current status of instance.
+ *
+ * \param[in] module Driver instance to operate on.
+ *
+ * \retval \c STATUS_OK if idle and previous transfer succeeded.
+ * \retval \c STATUS_BUSY if a transfer is ongoing.
+ * \return Other status codes upon failure.
+ */
+static inline enum status_code spi_master_vec_get_job_status(
+		const struct spi_master_vec_module *const module)
+{
+	return module->status;
 }
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-enum status_code spi_master_vec_init(Sercom *const sercom);
-void spi_master_vec_enable(void);
-void spi_master_vec_disable(void);
-enum status_code spi_master_vec_transceive_buffers_wait(
+enum status_code spi_master_vec_init(struct spi_master_vec_module *const module,
+		Sercom *const sercom, struct spi_master_vec_config *const config);
+void spi_master_vec_enable(const struct spi_master_vec_module *const module);
+void spi_master_vec_disable(const struct spi_master_vec_module *const module);
+enum status_code spi_master_vec_transceive_buffer_job(
+		struct spi_master_vec_module *const module,
 		struct spi_master_vec_bufdesc tx_bufdescs[],
 		struct spi_master_vec_bufdesc rx_bufdescs[]);
-
+void spi_master_vec_reset(const struct spi_master_vec_module *const module);
 #ifdef __cplusplus
 }
 #endif
