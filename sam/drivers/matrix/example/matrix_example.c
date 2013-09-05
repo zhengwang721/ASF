@@ -103,6 +103,8 @@
 #define MATRIX_SLAVE_NUM    6
 #elif (SAM4N)
 #define MATRIX_SLAVE_NUM    4
+#elif (SAM4C)
+#define MATRIX_SLAVE_NUM    8
 #else
 #warning "Not define matrix slave number, set 1 for default."
 #define MATRIX_SLAVE_NUM    1
@@ -171,8 +173,7 @@ void SysTick_Handler(void)
  */
 int main(void)
 {
-	uint32_t ul_slave_id;
-	int32_t ul_cnt;
+	uint32_t ul_slave_id, ul_cnt;
 
 	/* Initialize the system */
 	sysclk_init();
@@ -195,10 +196,10 @@ int main(void)
 	/* First, test with Round-Robin arbitration without default master */
 	puts("-- Test1: configure Round-Robin arbitration without default master. --\r");
 	for (ul_slave_id = 0; ul_slave_id < MATRIX_SLAVE_NUM; ul_slave_id++) {
-		#if !SAM4E
+#if (!SAM4E) && (!SAM4C)
 		matrix_set_slave_arbitration_type(ul_slave_id,
 				MATRIX_ARBT_ROUND_ROBIN);
-		#endif
+#endif
 		matrix_set_slave_default_master_type(ul_slave_id,
 				MATRIX_DEFMSTR_NO_DEFAULT_MASTER);
 	}
@@ -208,10 +209,10 @@ int main(void)
 	/* Second, test with Round-Robin arbitration with last access master */
 	puts("-- Test2: configure Round-Robin arbitration with last access master. --\r");
 	for (ul_slave_id = 0; ul_slave_id < MATRIX_SLAVE_NUM; ul_slave_id++) {
-		#if !SAM4E
+#if (!SAM4E) && (!SAM4C)
 		matrix_set_slave_arbitration_type(ul_slave_id,
 				MATRIX_ARBT_ROUND_ROBIN);
-		#endif
+#endif
 		matrix_set_slave_default_master_type(ul_slave_id,
 				MATRIX_DEFMSTR_LAST_DEFAULT_MASTER);
 	}
