@@ -83,7 +83,6 @@
  */
 
 #include "asf.h"
-#include "conf_example.h"
 
 /// @cond 0
 /**INDENT-OFF**/
