@@ -77,7 +77,7 @@ extern "C" {
  */
 uint32_t rtt_init(Rtt *p_rtt, uint16_t us_prescaler)
 {
-#if SAM4N || SAM4S || SAM4E
+#if SAM4N || SAM4S || SAM4E || SAM4C
 	uint32_t sel_src;
 	sel_src = p_rtt->RTT_MR & RTT_MR_RTC1HZ;
 	if(sel_src) {
@@ -91,7 +91,7 @@ uint32_t rtt_init(Rtt *p_rtt, uint16_t us_prescaler)
 	return 0;
 }
 
-#if SAM4N || SAM4S || SAM4E
+#if SAM4N || SAM4S || SAM4E || SAM4C
 /**
  * \brief Select RTT counter source.
  *
