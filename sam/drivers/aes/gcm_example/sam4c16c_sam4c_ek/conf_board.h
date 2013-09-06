@@ -47,24 +47,4 @@
 /** Enable Com Port. */
 #define CONF_BOARD_UART_CONSOLE
 
-/** Use TC Peripheral 0 **/
-#define TC             TC0
-#define TC_PERIPHERAL  0
-
-/** Configure TC0 channel 1 as waveform output. **/
-#define TC_CHANNEL_WAVEFORM 1
-#define ID_TC_WAVEFORM      ID_TC1
-#define PIN_TC_WAVEFORM     PIN_TC0_TIOA1
-#define PIN_TC_WAVEFORM_MUX PIN_TC0_TIOA1_MUX
-
-/** Configure TC0 channel 2 as capture input. **/
-#define TC_CHANNEL_CAPTURE  2
-#define ID_TC_CAPTURE       ID_TC2
-#define PIN_TC_CAPTURE      PIN_TC0_TIOA2
-#define PIN_TC_CAPTURE_MUX  PIN_TC0_TIOA2_MUX
-
-/** Use TC2_Handler for TC capture interrupt**/
-#define TC_Handler  TC2_Handler
-#define TC_IRQn     TC2_IRQn
-
 #endif /* CONF_BOARD_H_INCLUDED */
