@@ -64,6 +64,7 @@
  * All SAM devices with an AES module can be used.
  * This example has been tested with the following setup:
  * - sam4e16e_sam4e_ek
+ * - sam4c16c_sam4c_ek
  *
  * \section compinfo Compilation info
  * This software was written for the GNU GCC and IAR for ARM. Other compilers
@@ -162,11 +163,13 @@ struct aes_config   g_aes_cfg;
 
 volatile bool flag = false;
 
+#if SAM4E
 /** DMAC transmit channel. */
 #define AES_DMA_TX_CH    0
 
 /** DMAC receive channel. */
 #define AES_DMA_RX_CH    1
+#endif
 
 /**
  * \brief The AES interrupt call back function.
@@ -177,6 +180,7 @@ static void aes_callback(void)
 	aes_read_output_data(AES, output_data);
 }
 
+#if SAM4E
 /**
  * \brief DMAC driver configuration.
  */
@@ -267,7 +271,7 @@ static void run_ecb_mode_test_dma(const struct test_case *test)
 	/* Configure the AES. */
 	g_aes_cfg.encrypt_mode = AES_ENCRYPTION;
 	g_aes_cfg.key_size = AES_KEY_SIZE_128;
-	g_aes_cfg.start_mode = AES_DMA_MODE;
+	g_aes_cfg.start_mode = IDATAR0_START;
 	g_aes_cfg.opmode = AES_ECB_MODE;
 	g_aes_cfg.cfb_size = AES_CFB_SIZE_128;
 	g_aes_cfg.lod = false;
@@ -306,7 +310,7 @@ static void run_ecb_mode_test_dma(const struct test_case *test)
 	/* Configure the AES. */
 	g_aes_cfg.encrypt_mode = AES_DECRYPTION;
 	g_aes_cfg.key_size = AES_KEY_SIZE_128;
-	g_aes_cfg.start_mode = AES_DMA_MODE;
+	g_aes_cfg.start_mode = IDATAR0_START;
 	g_aes_cfg.opmode = AES_ECB_MODE;
 	g_aes_cfg.cfb_size = AES_CFB_SIZE_128;
 	g_aes_cfg.lod = false;
@@ -346,6 +350,108 @@ static void run_ecb_mode_test_dma(const struct test_case *test)
 	/* Disable DMAC module */
 	dmac_disable(DMAC);
 }
+#endif
+
+#if SAM4C
+/* PDC data packet for transfer */
+pdc_packet_t g_pdc_tx_packet;
+pdc_packet_t g_pdc_rx_packet;
+
+/* Pointer to AES PDC register base */
+Pdc *g_p_aes_pdc;
+
+/**
+ * \brief ECB mode encryption and decryption test with PDC.
+ */
+static void run_ecb_mode_test_pdc(const struct test_case *test)
+{
+	/* Configure PDC. */
+	g_pdc_tx_packet.ul_addr = (uint32_t) ref_plain_text;
+	g_pdc_tx_packet.ul_size = AES_EXAMPLE_REFBUF_SIZE;
+	g_pdc_rx_packet.ul_addr = (uint32_t) output_data;
+	g_pdc_rx_packet.ul_size = AES_EXAMPLE_REFBUF_SIZE;
+	g_p_aes_pdc = aes_get_pdc_base(AES);
+
+	/* Configure PDC for data receive & transfer */
+	pdc_tx_init(g_p_aes_pdc, &g_pdc_tx_packet, NULL);
+	pdc_rx_init(g_p_aes_pdc, &g_pdc_rx_packet, NULL);
+
+	/* Disable PDC transfers. */
+	pdc_disable_transfer(g_p_aes_pdc,PERIPH_PTCR_RXTDIS | PERIPH_PTCR_TXTDIS);
+
+	/* Configure the AES. */
+	g_aes_cfg.encrypt_mode = AES_ENCRYPTION;
+	g_aes_cfg.key_size = AES_KEY_SIZE_128;
+	g_aes_cfg.start_mode =  AES_IDATAR0_START;
+	g_aes_cfg.opmode = AES_ECB_MODE;
+	g_aes_cfg.cfb_size = AES_CFB_SIZE_128;
+	g_aes_cfg.lod = false;
+	aes_set_config(AES, &g_aes_cfg);
+
+	/* Set the cryptographic key. */
+	aes_write_key(AES, key128);
+        
+	/* Enable PDC transfers. */
+	pdc_enable_transfer(g_p_aes_pdc, PERIPH_PTCR_RXTEN | PERIPH_PTCR_TXTEN);
+
+	/* Wait for the end of the decryption process. */
+	delay_ms(30);
+
+	pdc_tx_init(g_p_aes_pdc, &g_pdc_tx_packet, NULL);
+	pdc_rx_init(g_p_aes_pdc, &g_pdc_rx_packet, NULL);
+	pdc_disable_transfer(g_p_aes_pdc, PERIPH_PTCR_RXTDIS | PERIPH_PTCR_TXTDIS);
+
+	if ((ref_cipher_text_ecb[0] != output_data[0]) ||
+			(ref_cipher_text_ecb[1] != output_data[1]) ||
+			(ref_cipher_text_ecb[2] != output_data[2]) ||
+			(ref_cipher_text_ecb[3] != output_data[3])) {
+		flag = false;
+	} else {
+		flag = true;
+	}
+	test_assert_true(test, flag == true, "ECB mode with pdc encryption not work!");
+
+	/* Configure the AES. */
+	g_aes_cfg.encrypt_mode = AES_DECRYPTION;
+	g_aes_cfg.key_size = AES_KEY_SIZE_128;
+	g_aes_cfg.start_mode = AES_IDATAR0_START;
+	g_aes_cfg.opmode = AES_ECB_MODE;
+	g_aes_cfg.cfb_size = AES_CFB_SIZE_128;
+	g_aes_cfg.lod = false;
+	aes_set_config(AES, &g_aes_cfg);
+
+	/* Set the cryptographic key. */
+	aes_write_key(AES, key128);
+
+	/* Configure PDC for data transfer */
+	g_pdc_tx_packet.ul_addr = (uint32_t) ref_cipher_text_ecb;
+
+	/* Configure PDC for data receive & transfer */
+	pdc_tx_init(g_p_aes_pdc, &g_pdc_tx_packet, NULL);
+	pdc_rx_init(g_p_aes_pdc, &g_pdc_rx_packet, NULL);
+        
+	/* Enable PDC transfers. */
+	pdc_enable_transfer(g_p_aes_pdc, PERIPH_PTCR_RXTEN | PERIPH_PTCR_TXTEN);
+
+	/* Wait for the end of the decryption process. */
+	delay_ms(30);
+
+	pdc_tx_init(g_p_aes_pdc, &g_pdc_tx_packet, NULL);
+	pdc_rx_init(g_p_aes_pdc, &g_pdc_rx_packet, NULL);
+	pdc_disable_transfer(g_p_aes_pdc, PERIPH_PTCR_RXTDIS | PERIPH_PTCR_TXTDIS);
+
+	/* check the result. */
+	if ((ref_plain_text[0] != output_data[0]) ||
+			(ref_plain_text[1] != output_data[1]) ||
+			(ref_plain_text[2] != output_data[2]) ||
+			(ref_plain_text[3] != output_data[3])) {
+		flag = false;
+	} else {
+		flag = true;
+	}
+	test_assert_true(test, flag == true, "ECB mode with pdc decryption not work!");
+}
+#endif
 
 /**
  * \brief Test ECB mode encryption and decryption.
@@ -357,7 +463,7 @@ static void run_ecb_mode_test(const struct test_case *test)
 	/* Configure the AES. */
 	g_aes_cfg.encrypt_mode = AES_ENCRYPTION;
 	g_aes_cfg.key_size = AES_KEY_SIZE_128;
-	g_aes_cfg.start_mode = AES_AUTO_MODE;
+	g_aes_cfg.start_mode = AES_AUTO_START;
 	g_aes_cfg.opmode = AES_ECB_MODE;
 	g_aes_cfg.cfb_size = AES_CFB_SIZE_128;
 	g_aes_cfg.lod = false;
@@ -388,7 +494,7 @@ static void run_ecb_mode_test(const struct test_case *test)
 	/* Configure the AES. */
 	g_aes_cfg.encrypt_mode = AES_DECRYPTION;
 	g_aes_cfg.key_size = AES_KEY_SIZE_128;
-	g_aes_cfg.start_mode = AES_AUTO_MODE;
+	g_aes_cfg.start_mode = AES_AUTO_START;
 	g_aes_cfg.opmode = AES_ECB_MODE;
 	g_aes_cfg.cfb_size = AES_CFB_SIZE_128;
 	g_aes_cfg.lod = false;
@@ -428,7 +534,7 @@ static void run_cbc_mode_test(const struct test_case *test)
 	/* Configure the AES. */
 	g_aes_cfg.encrypt_mode = AES_ENCRYPTION;
 	g_aes_cfg.key_size = AES_KEY_SIZE_128;
-	g_aes_cfg.start_mode = AES_AUTO_MODE;
+	g_aes_cfg.start_mode = AES_AUTO_START;
 	g_aes_cfg.opmode = AES_CBC_MODE;
 	g_aes_cfg.cfb_size = AES_CFB_SIZE_128;
 	g_aes_cfg.lod = false;
@@ -460,7 +566,7 @@ static void run_cbc_mode_test(const struct test_case *test)
 	/* Configure the AES. */
 	g_aes_cfg.encrypt_mode = AES_DECRYPTION;
 	g_aes_cfg.key_size = AES_KEY_SIZE_128;
-	g_aes_cfg.start_mode = AES_AUTO_MODE;
+	g_aes_cfg.start_mode = AES_AUTO_START;
 	g_aes_cfg.opmode = AES_CBC_MODE;
 	g_aes_cfg.cfb_size = AES_CFB_SIZE_128;
 	g_aes_cfg.lod = false;
@@ -500,7 +606,7 @@ static void run_cfb128_mode_test(const struct test_case *test)
 	/* Configure the AES. */
 	g_aes_cfg.encrypt_mode = AES_ENCRYPTION;
 	g_aes_cfg.key_size = AES_KEY_SIZE_128;
-	g_aes_cfg.start_mode = AES_AUTO_MODE;
+	g_aes_cfg.start_mode = AES_AUTO_START;
 	g_aes_cfg.opmode = AES_CFB_MODE;
 	g_aes_cfg.cfb_size = AES_CFB_SIZE_128;
 	g_aes_cfg.lod = false;
@@ -533,7 +639,7 @@ static void run_cfb128_mode_test(const struct test_case *test)
 	/* Configure the AES. */
 	g_aes_cfg.encrypt_mode = AES_DECRYPTION;
 	g_aes_cfg.key_size = AES_KEY_SIZE_128;
-	g_aes_cfg.start_mode = AES_AUTO_MODE;
+	g_aes_cfg.start_mode = AES_AUTO_START;
 	g_aes_cfg.opmode = AES_CFB_MODE;
 	g_aes_cfg.cfb_size = AES_CFB_SIZE_128;
 	g_aes_cfg.lod = false;
@@ -574,7 +680,7 @@ static void run_ofb_mode_test(const struct test_case *test)
 	/* Configure the AES. */
 	g_aes_cfg.encrypt_mode = AES_ENCRYPTION;
 	g_aes_cfg.key_size = AES_KEY_SIZE_128;
-	g_aes_cfg.start_mode = AES_AUTO_MODE;
+	g_aes_cfg.start_mode = AES_AUTO_START;
 	g_aes_cfg.opmode = AES_OFB_MODE;
 	g_aes_cfg.cfb_size = AES_CFB_SIZE_128;
 	g_aes_cfg.lod = false;
@@ -607,7 +713,7 @@ static void run_ofb_mode_test(const struct test_case *test)
 	/* Configure the AES. */
 	g_aes_cfg.encrypt_mode = AES_DECRYPTION;
 	g_aes_cfg.key_size = AES_KEY_SIZE_128;
-	g_aes_cfg.start_mode = AES_AUTO_MODE;
+	g_aes_cfg.start_mode = AES_AUTO_START;
 	g_aes_cfg.opmode = AES_OFB_MODE;
 	g_aes_cfg.cfb_size = AES_CFB_SIZE_128;
 	g_aes_cfg.lod = false;
@@ -648,7 +754,7 @@ static void run_ctr_mode_test(const struct test_case *test)
 	/* Configure the AES. */
 	g_aes_cfg.encrypt_mode = AES_ENCRYPTION;
 	g_aes_cfg.key_size = AES_KEY_SIZE_128;
-	g_aes_cfg.start_mode = AES_AUTO_MODE;
+	g_aes_cfg.start_mode = AES_AUTO_START;
 	g_aes_cfg.opmode = AES_CTR_MODE;
 	g_aes_cfg.cfb_size = AES_CFB_SIZE_128;
 	g_aes_cfg.lod = false;
@@ -681,7 +787,7 @@ static void run_ctr_mode_test(const struct test_case *test)
 	/* Configure the AES. */
 	g_aes_cfg.encrypt_mode = AES_DECRYPTION;
 	g_aes_cfg.key_size = AES_KEY_SIZE_128;
-	g_aes_cfg.start_mode = AES_AUTO_MODE;
+	g_aes_cfg.start_mode = AES_AUTO_START;
 	g_aes_cfg.opmode = AES_CTR_MODE;
 	g_aes_cfg.cfb_size = AES_CFB_SIZE_128;
 	g_aes_cfg.lod = false;
@@ -746,8 +852,13 @@ int main(void)
 			"SAM AES OFB mode encryption and decryption test.");
 	DEFINE_TEST_CASE(ctr_mode_test, NULL, run_ctr_mode_test, NULL,
 			"SAM AES CTR mode encryption and decryption test.");
+#if SAM4E
 	DEFINE_TEST_CASE(ecb_mode_test_dma, NULL, run_ecb_mode_test_dma, NULL,
-			"SAM AES ECB mode encryption and decryption with PDCA test.");
+			"SAM AES ECB mode encryption and decryption with DMA test.");
+#elif SAM4C
+	DEFINE_TEST_CASE(ecb_mode_test_pdc, NULL, run_ecb_mode_test_pdc, NULL,
+			"SAM AES ECB mode encryption and decryption with pdc test.");
+#endif
 
 	/* Put test case addresses in an array. */
 	DEFINE_TEST_ARRAY(aes_tests) = {
@@ -756,7 +867,11 @@ int main(void)
 		&cfb128_mode_test,
 		&ofb_mode_test,
 		&ctr_mode_test,
+#if SAM4E
 		&ecb_mode_test_dma,
+#elif SAM4C
+		&ecb_mode_test_pdc,
+#endif
 	};
 
 	/* Define the test suite. */

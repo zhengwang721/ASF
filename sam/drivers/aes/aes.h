@@ -98,7 +98,7 @@ enum aes_opmode {
 	AES_OFB_MODE,
 	AES_CFB_MODE,
 	AES_CTR_MODE,
-        AES_GCM_MODE,
+	AES_GCM_MODE,
 };
 
 /** AES CFB size */
@@ -114,10 +114,10 @@ enum aes_cfb_size {
 typedef enum aes_interrupt_source {
 	AES_INTERRUPT_DATA_READY = AES_IER_DATRDY,
 	AES_INTERRUPT_UNSPECIFIED_REGISTER_ACCESS = AES_IER_URAD,
-        AES_INTERRUPT_END_OF_RECEIVE_BUFFER = AES_IER_ENDRX,
-        AES_INTERRUPT_END_OF_TRANSMIT_BUFFER = AES_IER_ENDTX,
-        AES_INTERRUPT_RECEIVE_BUFFER_FULL = AES_IER_RXBUFF,
-        AES_INTERRUPT_TRANSMIT_BUFFER_FULL = AES_IER_TXBUFE,
+	AES_INTERRUPT_END_OF_RECEIVE_BUFFER = AES_IER_ENDRX,
+	AES_INTERRUPT_END_OF_TRANSMIT_BUFFER = AES_IER_ENDTX,
+	AES_INTERRUPT_RECEIVE_BUFFER_FULL = AES_IER_RXBUFF,
+	AES_INTERRUPT_TRANSMIT_BUFFER_FULL = AES_IER_TXBUFE,
 } aes_interrupt_source_t;
 
 #if SAM4E
@@ -149,8 +149,8 @@ struct aes_config {
 	enum aes_cfb_size cfb_size;
 	/* last output data mode. */
 	bool lod;
-        /* GCM Automatic Tag Generation Enable */
-        bool gtag_en;
+	/* GCM Automatic Tag Generation Enable */
+	bool gtag_en;
 	/* processing delay parameter */
 	uint32_t processing_delay;
 };
@@ -267,7 +267,7 @@ Pdc *aes_get_pdc_base(Aes *p_aes);
  */
 static inline uint32_t aes_read_authen_datalength(Aes *const p_aes)
 {
-          return p_aes->AES_AADLENR;
+		return p_aes->AES_AADLENR;
 }
 
 
@@ -281,7 +281,7 @@ static inline uint32_t aes_read_authen_datalength(Aes *const p_aes)
  */
 static inline void aes_write_authen_datalength(Aes *const p_aes, uint32_t length)
 {
-          p_aes->AES_AADLENR = length;
+		p_aes->AES_AADLENR = length;
 }
 
 
@@ -295,7 +295,7 @@ static inline void aes_write_authen_datalength(Aes *const p_aes, uint32_t length
  */
 static inline uint32_t aes_read_pctext_length(Aes *const p_aes)
 {
-          return p_aes->AES_CLENR;
+		return p_aes->AES_CLENR;
 }
 
 
@@ -309,7 +309,7 @@ static inline uint32_t aes_read_pctext_length(Aes *const p_aes)
  */
 static inline void aes_write_pctext_length(Aes *const p_aes, uint32_t length)
 {
-          p_aes->AES_CLENR = length;
+		p_aes->AES_CLENR = length;
 }
 
 
@@ -323,7 +323,7 @@ static inline void aes_write_pctext_length(Aes *const p_aes, uint32_t length)
  */
 static inline uint32_t aes_read_gcm_counter(Aes *const p_aes)
 {
-          return p_aes->AES_CTRR;
+		return p_aes->AES_CTRR;
 }
 
 
@@ -338,7 +338,7 @@ static inline uint32_t aes_read_gcm_counter(Aes *const p_aes)
  */
 static inline uint32_t aes_read_ghash(Aes *const p_aes, uint32_t id)
 {
-          return p_aes->AES_GHASHR[id];
+		return p_aes->AES_GHASHR[id];
 }
 
 
@@ -352,7 +352,7 @@ static inline uint32_t aes_read_ghash(Aes *const p_aes, uint32_t id)
  */
 static inline void aes_write_ghash(Aes *const p_aes, uint32_t id, uint32_t ghash)
 {
-          p_aes->AES_GHASHR[id] = ghash;
+		p_aes->AES_GHASHR[id] = ghash;
 }
 
 
@@ -367,7 +367,7 @@ static inline void aes_write_ghash(Aes *const p_aes, uint32_t id, uint32_t ghash
  */
 static inline uint32_t aes_read_tag(Aes *const p_aes, uint32_t id)
 {
-          return p_aes->AES_TAGR[id];
+		return p_aes->AES_TAGR[id];
 }
 
 
@@ -382,7 +382,7 @@ static inline uint32_t aes_read_tag(Aes *const p_aes, uint32_t id)
  */
 static inline uint32_t aes_read_gcmh(Aes *const p_aes, uint32_t id)
 {
-          return p_aes->AES_GCMHR[id];
+		return p_aes->AES_GCMHR[id];
 }
 
 
@@ -396,9 +396,8 @@ static inline uint32_t aes_read_gcmh(Aes *const p_aes, uint32_t id)
  */
 static inline void aes_write_gcmh(Aes *const p_aes, uint32_t id, uint32_t hword)
 {
-          p_aes->AES_GCMHR[id] = hword;
+		p_aes->AES_GCMHR[id] = hword;
 }
-
 #endif
 
 

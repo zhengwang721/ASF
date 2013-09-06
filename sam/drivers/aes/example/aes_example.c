@@ -508,8 +508,8 @@ static void ecb_mode_test_pdc(void)
 	g_pdc_tx_packet.ul_addr = (uint32_t) ref_cipher_text_ecb;
 
 	/* Configure PDC for data receive & transfer */
-		pdc_tx_init(g_p_aes_pdc, &g_pdc_tx_packet, NULL);
-		pdc_rx_init(g_p_aes_pdc, &g_pdc_rx_packet, NULL);
+	pdc_tx_init(g_p_aes_pdc, &g_pdc_tx_packet, NULL);
+	pdc_rx_init(g_p_aes_pdc, &g_pdc_rx_packet, NULL);
 
 	/* Enable PDC transfers. */
 	pdc_enable_transfer(g_p_aes_pdc, PERIPH_PTCR_RXTEN | PERIPH_PTCR_TXTEN);

@@ -85,7 +85,7 @@ void aes_get_config_defaults(struct aes_config *const p_cfg)
 	p_cfg->opmode = AES_ECB_MODE;
 	p_cfg->cfb_size = AES_CFB_SIZE_128;
 	p_cfg->lod = false;
-        p_cfg->gtag_en = false;
+	p_cfg->gtag_en = false;
 	p_cfg->processing_delay = 0;
 }
 
@@ -171,18 +171,18 @@ void aes_set_config(Aes *const p_aes, struct aes_config *const p_cfg)
 	if (p_cfg->lod) {
 		ul_mode |= AES_MR_LOD;
 	}
-        
-        if ((p_cfg->opmode == AES_GCM_MODE) && (p_cfg->gtag_en == true)) {
-                ul_mode |= AES_MR_GTAGEN;
-        }
+
+	if ((p_cfg->opmode == AES_GCM_MODE) && (p_cfg->gtag_en == true)) {
+		ul_mode |= AES_MR_GTAGEN;
+	}
 
 	ul_mode |= AES_MR_PROCDLY(p_cfg->processing_delay);
 
-        #if SAM4C
-        ul_mode |= AES_MR_CKEY_PASSWD;
-        #else   
-        ul_mode |= AES_MR_CKEY(0xE);
-        #endif
+	#if SAM4C
+	ul_mode |= AES_MR_CKEY_PASSWD;
+	#else   
+	ul_mode |= AES_MR_CKEY(0xE);
+	#endif
 
 	p_aes->AES_MR = ul_mode;
 }
@@ -288,14 +288,14 @@ void aes_read_output_data(Aes *const p_aes,
  */
 Pdc *aes_get_pdc_base(Aes *p_aes)
 {
-    Pdc* p_pdc_base;
-    if (p_aes == AES) {
-      p_pdc_base = PDC_AES;
-    } else {
-      p_pdc_base = NULL;
-    }
-    
-    return p_pdc_base;
+	Pdc* p_pdc_base;
+	if (p_aes == AES) {
+		p_pdc_base = PDC_AES;
+	} else {
+		p_pdc_base = NULL;
+	}
+
+	return p_pdc_base;
 }
 #endif
 
@@ -323,8 +323,8 @@ void aes_set_callback(Aes *const p_aes,
 		aes_callback_pointer[4] = callback;
 	} else if (source == AES_INTERRUPT_TRANSMIT_BUFFER_FULL) {
 		aes_callback_pointer[5] = callback;
-	} 
-        
+	}
+
 	irq_register_handler((IRQn_Type)AES_IRQn, irq_level);
 	aes_enable_interrupt(p_aes, source);
 }
@@ -348,26 +348,26 @@ void AES_Handler(void)
 			aes_callback_pointer[1]();
 		}
 	}
-        
-        if ((status & AES_ISR_ENDRX) && (mask & AES_IMR_ENDRX)) {
+
+	if ((status & AES_ISR_ENDRX) && (mask & AES_IMR_ENDRX)) {
 		if(aes_callback_pointer[2]) {
 			aes_callback_pointer[2]();
 		}
 	}
-        
-        if ((status & AES_ISR_ENDTX) && (mask & AES_IMR_ENDTX)) {
+
+	if ((status & AES_ISR_ENDTX) && (mask & AES_IMR_ENDTX)) {
 		if(aes_callback_pointer[3]) {
 			aes_callback_pointer[3]();
 		}
 	}
-        
-        if ((status & AES_ISR_RXBUFF) && (mask & AES_IMR_RXBUFF)) {
+
+	if ((status & AES_ISR_RXBUFF) && (mask & AES_IMR_RXBUFF)) {
 		if(aes_callback_pointer[4]) {
 			aes_callback_pointer[4]();
 		}
 	}
-        
-        if ((status & AES_ISR_TXBUFE) && (mask & AES_IMR_TXBUFE)) {
+
+	if ((status & AES_ISR_TXBUFE) && (mask & AES_IMR_TXBUFE)) {
 		if(aes_callback_pointer[5]) {
 			aes_callback_pointer[5]();
 		}
