@@ -38,6 +38,7 @@
 			<device-support value="sam4n"/>
 			<device-support value="atsam4c8c_0"/>
 			<device-support value="atsam4c16c_0"/>
+			<device-support value="unspecified-sam4c"/>    <!-- A workaround for Jenkin doxygen-module check -->
 		</module>
 		<!-- VFPv4 -->
 		<module type="driver" id="sam.utils.fpu#vfpv4" caption="SAM FPU driver">
