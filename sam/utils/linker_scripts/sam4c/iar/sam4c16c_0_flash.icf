@@ -9,8 +9,12 @@ define symbol __ICFEDIT_region_RAM_end__   = 0x20020000;
 define symbol __ICFEDIT_region_ROM_start__ = 0x01000000;
 define symbol __ICFEDIT_region_ROM_end__   = 0x01100000;
 /*-Sizes-*/
+if (!isdefinedsymbol(__ICFEDIT_size_cstack__)) {
 define symbol __ICFEDIT_size_cstack__      = 0x2000;
+}
+if (!isdefinedsymbol(__ICFEDIT_size_heap__)) {
 define symbol __ICFEDIT_size_heap__        = 0x200;
+}
 /**** End of ICF editor section. ###ICF###*/
 
 define memory mem with size = 4G;

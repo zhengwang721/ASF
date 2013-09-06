@@ -64,7 +64,7 @@ extern "C" {
  */
 
 #if SAM4C
-#if __MPU_PRESENT == 1
+#ifdef SAM4C_0
 #define MATRIX MATRIX0
 #else
 #define MATRIX MATRIX1
@@ -336,7 +336,7 @@ uint32_t matrix_get_system_io(void)
 
 #endif /* (SAM3S || SAM3XA || SAM3N || SAM4S || SAM4E || SAM4C) */
 
-#if (SAM3S || SAM4S || SAM4E)
+#if (SAM3S || SAM4S || SAM4E || SAM4C)
 
 /**
  * \brief Set NAND Flash Chip Select configuration register.
@@ -363,7 +363,7 @@ uint32_t matrix_get_nandflash_cs(void)
 	return (p_matrix->CCFG_SMCNFCS);
 }
 
-#endif /* (SAM3S || SAM4S || SAM4E) */
+#endif /* (SAM3S || SAM4S || SAM4E || SAM4C) */
 
 /**
  * \brief Enable or disable write protect of MATRIX registers.

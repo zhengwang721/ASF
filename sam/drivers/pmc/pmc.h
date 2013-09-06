@@ -81,10 +81,8 @@ extern "C" {
 #define PMC_FAST_STARTUP_Msk    (0x7FFFFu)
 
 /** PMC_WPMR Write Protect KEY, unlock it */
-#if (SAM4C)
-  #define PMC_WPMR_WPKEY_VALUE    PMC_WPMR_WPKEY_PASSWD
-#else
-  #define PMC_WPMR_WPKEY_VALUE    PMC_WPMR_WPKEY((uint32_t) 0x504D43)
+#ifndef PMC_WPMR_WPKEY_PASSWD
+#define PMC_WPMR_WPKEY_PASSWD    PMC_WPMR_WPKEY((uint32_t) 0x504D43)
 #endif
 
 /** Using external oscillator */

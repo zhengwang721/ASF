@@ -279,6 +279,40 @@
 #define TWIMS1_TWI_SCL_MUX   MUX_PB01A_TWIMS1_TWCK
 // @}
 
+/**
+ * \name LCD componet C42364A definitions
+ * @{
+  */
+/* name Icon with selected segments blinking feature */
+#define C42364A_ICON_USB            1,0
+#define C42364A_ICON_COLON          0,0
+#define C42364A_ICON_WLESS          2,0
+#define C42364A_ICON_AUDIO          3,0
+#define C42364A_ICON_BAT            0,1
+#define C42364A_ICON_ERROR          1,1
+#define C42364A_ICON_CHINESE        2,1
+#define C42364A_ICON_ARM            3,1
+ /* name Icon without selected segments blinking feature */
+ #define C42364A_ICON_MINUS         0,37
+#define C42364A_ICON_MINUS_SEG1     3,30
+#define C42364A_ICON_MINUS_SEG2     0,33
+#define C42364A_ICON_DOT_1          0,29
+#define C42364A_ICON_DOT_2          3,10
+#define C42364A_ICON_DOT_3          3,8
+#define C42364A_ICON_DOT_4          3,6
+#define C42364A_ICON_BAT_LEVEL_1    0,21
+#define C42364A_ICON_BAT_LEVEL_2    0,17
+#define C42364A_ICON_BAT_LEVEL_3    0,25
+#define C42364A_ICON_AUDIO_PAUSE    3,38
+#define C42364A_ICON_AUDIO_PLAY     3,34
+#define C42364A_ICON_AM             3,4
+#define C42364A_ICON_PM             3,26
+#define C42364A_ICON_DEGREE_C       3,22
+#define C42364A_ICON_DEGREE_F       3,18
+#define C42364A_ICON_VOLT           3,14
+#define C42364A_ICON_MILLI_VOLT     0,13
+ /* @} */
+
 //! \name USART0 pins
 // @{
 #define USART0_RX_PIN   PIN_PC02C_USART0_RXD

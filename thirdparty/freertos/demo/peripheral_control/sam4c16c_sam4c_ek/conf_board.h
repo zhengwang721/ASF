@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief C42364A configuration.
+ * \brief Board configuration.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,40 +41,65 @@
  *
  */
 
-/** Configuration of the C42364A LCD glass driver */
+#ifndef CONF_BOARD_H
+#define CONF_BOARD_H
 
-#ifndef CONF_C42364A_H_INCLUDED
-#define CONF_C42364A_H_INCLUDED
+/* Configure UART pins */
+//#define CONF_BOARD_UART_CONSOLE
 
-/** Bias configuration. */
-#define CONF_C42364A_X_BIAS    false
+/* Configure ADC example pins */
+//#define CONF_BOARD_ADC
 
-/** Init contrast configuration. */
-#define CONF_C42364A_CONTRAST  30
+/* Configure PWM LED0 pin */
+//#define CONF_BOARD_PWM_LED0
 
-/**
- * \name Init timing definition
- * @{
- */
-/** Clock prescaler configuration. */
-#define CONF_C42364A_PRES    false
-/** Clock divider configuration. */
-#define CONF_C42364A_CLKDIV  7
-/** Frame count 0 configuration. */
-#define CONF_C42364A_FC0     2
-/** Frame count 1 configuration. */
-#define CONF_C42364A_FC1     2
-/** Frame count 1 configuration. */
-#define CONF_C42364A_FC2     1
-/** @} */
+/* Configure PWM LED1 pin */
+//#define CONF_BOARD_PWM_LED1
 
-/** Blink timer configuration. */
-#define CONF_C42364A_BLINK_TIMER                 LCDCA_TIMER_FC0
+/* Configure PWM LED2 pin */
+//#define CONF_BOARD_PWM_LED2
 
-/** Circular animation configuration. */
-#define CONF_C42364A_CIRCULAR_ANIMATION_TIMER    LCDCA_TIMER_FC0
+/* Configure TWI pins */
+#define CONF_BOARD_TWI0
 
-/** Text scrolling configuration. */
-#define CONF_C42364A_TEXT_SCROLLING_TIMER        LCDCA_TIMER_FC0
+/* Configure SPI pins */
+#define CONF_BOARD_SPI0
+#define CONF_BOARD_SPI0_NPCS0
+//#define CONF_BOARD_SPI_NPCS1
+//#define CONF_BOARD_SPI_NPCS2
+//#define CONF_BOARD_SPI_NPCS3
 
-#endif /* CONF_C42364A_H_INCLUDED */
+/* Configure USART RXD pin */
+#define CONF_BOARD_USART_RXD
+
+/* Configure USART TXD pin */
+#define CONF_BOARD_USART_TXD
+
+/* Configure USART CTS pin */
+//#define CONF_BOARD_USART_CTS
+
+/* Configure USART RTS pin */
+//#define CONF_BOARD_USART_RTS
+
+/* Configure USART synchronous communication SCK pin */
+//#define CONF_BOARD_USART_SCK
+
+/* Configure ADM33312 enable pin */
+//#define CONF_BOARD_ADM3312_EN
+
+/* Configure IrDA transceiver shutdown pin */
+//#define CONF_BOARD_TFDU4300_SD
+
+/* Configure RS485 transceiver RE pin */
+//#define CONF_BOARD_ADM3485_RE
+
+/* Configure LCD EBI pins */
+//#define CONF_BOARD_ILI9325
+
+/* Configure Backlight control pin */
+//#define CONF_BOARD_AAT3155
+
+/* Configure Touchscreen SPI pins */
+//#define CONF_BOARD_ADS7843
+
+#endif // CONF_BOARD_H

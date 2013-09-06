@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief C42364A configuration.
+ * \brief Serial USART service configuration.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,40 +41,9 @@
  *
  */
 
-/** Configuration of the C42364A LCD glass driver */
+#ifndef CONF_UART_SERIAL_H_INCLUDED
+#define CONF_UART_SERIAL_H_INCLUDED
 
-#ifndef CONF_C42364A_H_INCLUDED
-#define CONF_C42364A_H_INCLUDED
+/* Intentionally empty */
 
-/** Bias configuration. */
-#define CONF_C42364A_X_BIAS    false
-
-/** Init contrast configuration. */
-#define CONF_C42364A_CONTRAST  30
-
-/**
- * \name Init timing definition
- * @{
- */
-/** Clock prescaler configuration. */
-#define CONF_C42364A_PRES    false
-/** Clock divider configuration. */
-#define CONF_C42364A_CLKDIV  7
-/** Frame count 0 configuration. */
-#define CONF_C42364A_FC0     2
-/** Frame count 1 configuration. */
-#define CONF_C42364A_FC1     2
-/** Frame count 1 configuration. */
-#define CONF_C42364A_FC2     1
-/** @} */
-
-/** Blink timer configuration. */
-#define CONF_C42364A_BLINK_TIMER                 LCDCA_TIMER_FC0
-
-/** Circular animation configuration. */
-#define CONF_C42364A_CIRCULAR_ANIMATION_TIMER    LCDCA_TIMER_FC0
-
-/** Text scrolling configuration. */
-#define CONF_C42364A_TEXT_SCROLLING_TIMER        LCDCA_TIMER_FC0
-
-#endif /* CONF_C42364A_H_INCLUDED */
+#endif/* CONF_UART_SERIAL_H_INCLUDED */
