@@ -43,6 +43,7 @@
 
 #include "spi_master_vec.h"
 #include <sercom_interrupt.h>
+#include <system_interrupt.h>
 
 /**
  * \ingroup sercom_spi_master_vec_group
@@ -276,10 +277,13 @@ enum status_code spi_master_vec_transceive_buffer_job(
 	uint32_t tmp_ctrlb;
 	uint8_t tmp_intenset;
 
+	system_interrupt_enter_critical_section();
 	if (module->status == STATUS_BUSY) {
+		system_interrupt_leave_critical_section();
 		return STATUS_BUSY;
 	} else {
 		module->status = STATUS_BUSY;
+		system_interrupt_leave_critical_section();
 	}
 
 	module->tx_bufdesc_ptr = tx_bufdescs;
