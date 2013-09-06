@@ -58,9 +58,14 @@ extern "C" {
 typedef enum {
 	MATRIX_ULBT_INFINITE_LENGTH_BURST = MATRIX_MCFG_ULBT(0),
 	MATRIX_ULBT_SINGLE_ACCESS         = MATRIX_MCFG_ULBT(1),
-	MATRIX_ULBT_FOUR_BEAT_BURST       = MATRIX_MCFG_ULBT(2),
-	MATRIX_ULBT_EIGHT_BEAT_BURST      = MATRIX_MCFG_ULBT(3),
-	MATRIX_ULBT_SIXTEEN_BEAT_BURST    = MATRIX_MCFG_ULBT(4)
+	MATRIX_ULBT_4_BEAT_BURST          = MATRIX_MCFG_ULBT(2),
+	MATRIX_ULBT_8_BEAT_BURST          = MATRIX_MCFG_ULBT(3),
+	MATRIX_ULBT_16_BEAT_BURST         = MATRIX_MCFG_ULBT(4),
+#if SAM4C
+	MATRIX_ULBT_32_BEAT_BURST  = MATRIX_MCFG_ULBT(5),
+	MATRIX_ULBT_64_BEAT_BURST  = MATRIX_MCFG_ULBT(6),
+	MATRIX_ULBT_128_BEAT_BURST = MATRIX_MCFG_ULBT(7),
+#endif
 } burst_type_t;
 
 /** \brief Matrix slave: default master type */
@@ -108,11 +113,10 @@ uint32_t matrix_get_system_io(void);
 
 #endif /* (SAM3S || SAM3XA || SAM3N || SAM4S || SAM4E || SAM4N || SAM4C) */
 
-#if (SAM3S || SAM4S || SAM4E)
+#if (SAM3S || SAM4S || SAM4E || SAM4C)
 void matrix_set_nandflash_cs(uint32_t ul_cs);
 uint32_t matrix_get_nandflash_cs(void);
-
-#endif /* (SAM3S || SAM4S || SAM4E) */
+#endif /* (SAM3S || SAM4S || SAM4E || SAM4C) */
 
 void matrix_set_writeprotect(uint32_t ul_enable);
 uint32_t matrix_get_writeprotect_status(void);

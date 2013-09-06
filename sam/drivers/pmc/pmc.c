@@ -1268,23 +1268,6 @@ void pmc_enable_waitmode(void)
 	/* Clear SLEEPDEEP bit */
 	SCB->SCR &= (uint32_t) ~ SCB_SCR_SLEEPDEEP_Msk;
 
-	/* Backup FWS setting and set Flash Wait State at 0 */
-#if defined(ID_EFC)
-	uint32_t fmr_backup;
-	fmr_backup = EFC->EEFC_FMR;
-	EFC->EEFC_FMR &= (uint32_t) ~ EEFC_FMR_FWS_Msk;
-#endif
-#if defined(ID_EFC0)
-	uint32_t fmr0_backup;
-	fmr0_backup = EFC0->EEFC_FMR;
-	EFC0->EEFC_FMR &= (uint32_t) ~ EEFC_FMR_FWS_Msk;
-#endif
-#if defined(ID_EFC1)
-	uint32_t fmr1_backup;
-	fmr1_backup = EFC1->EEFC_FMR;
-	EFC1->EEFC_FMR &= (uint32_t) ~ EEFC_FMR_FWS_Msk;
-#endif
-
 	/* Set the WAITMODE bit = 1 */
 	PMC->CKGR_MOR |= CKGR_MOR_KEY_PASSWD | CKGR_MOR_WAITMODE;
 
@@ -1299,16 +1282,6 @@ void pmc_enable_waitmode(void)
 	}
 	while (!(PMC->CKGR_MOR & CKGR_MOR_MOSCRCEN));
 
-	/* Restore EFC FMR setting */
-#if defined(ID_EFC)
-	EFC->EEFC_FMR = fmr_backup;
-#endif
-#if defined(ID_EFC0)
-	EFC0->EEFC_FMR = fmr0_backup;
-#endif
-#if defined(ID_EFC1)
-	EFC1->EEFC_FMR = fmr1_backup;
-#endif
 
 #if SAM4C
 	/* Restore the sub-system 1 */
@@ -1326,6 +1299,7 @@ void pmc_enable_waitmode(void)
 
 	PMC->PMC_FSMR |= PMC_FSMR_LPM; /* Enter Wait mode */
 	SCB->SCR &= (uint32_t) ~ SCB_SCR_SLEEPDEEP_Msk; /* Deep sleep */
+
 	__WFE();
 
 	/* Waiting for MOSCRCEN bit cleared is strongly recommended
@@ -1335,6 +1309,7 @@ void pmc_enable_waitmode(void)
 		__NOP();
 	}
 	while (!(PMC->CKGR_MOR & CKGR_MOR_MOSCRCEN));
+
 }
 #endif
 
@@ -1407,9 +1382,9 @@ void pmc_disable_sclk_osc_freq_monitor(void)
 void pmc_set_writeprotect(uint32_t ul_enable)
 {
 	if (ul_enable) {
-		PMC->PMC_WPMR = PMC_WPMR_WPKEY_VALUE | PMC_WPMR_WPEN;
+		PMC->PMC_WPMR = PMC_WPMR_WPKEY_PASSWD | PMC_WPMR_WPEN;
 	} else {
-		PMC->PMC_WPMR = PMC_WPMR_WPKEY_VALUE;
+		PMC->PMC_WPMR = PMC_WPMR_WPKEY_PASSWD;
 	}
 }
 
