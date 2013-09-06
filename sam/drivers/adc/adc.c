@@ -56,7 +56,7 @@ extern "C" {
  *
  * See \ref sam_adc_quickstart.
  *
- * Driver for the Analog-to-digital Converter. This driver provides access to the main 
+ * Driver for the Analog-to-digital Converter. This driver provides access to the main
  * features of the ADC controller.
  *
  * @{
@@ -69,7 +69,7 @@ extern "C" {
  * \param p_adc Pointer to an ADC instance.
  * \param ul_mck Main clock of the device (value in Hz).
  * \param ul_adc_clock Analog-to-Digital conversion clock (value in Hz).
- * \param uc_startup ADC start up time. Please refer to the product datasheet 
+ * \param uc_startup ADC start up time. Please refer to the product datasheet
  * for details.
  *
  * \return 0 on success.
@@ -101,11 +101,11 @@ uint32_t adc_init(Adc *p_adc, const uint32_t ul_mck,
  * \param p_adc Pointer to an ADC instance.
  * \param ul_mck Main clock of the device (value in Hz).
  * \param ul_adc_clock Analog-to-Digital conversion clock (in Hz).
- * \param ul_startuptime ADC startup time value (value in us). 
+ * \param ul_startuptime ADC startup time value (value in us).
  * Please refer to the product datasheet for details.
- * \param ul_offmode_startuptime  ADC off mode startup time value (in us). 
+ * \param ul_offmode_startuptime  ADC off mode startup time value (in us).
  * Please refer to the product datasheet for details.
- *   
+ *
  * \return 0 on success.
  */
 uint32_t adc_init(Adc *p_adc, const uint32_t ul_mck, const uint32_t ul_adc_clock,
@@ -150,7 +150,7 @@ void adc_set_resolution(Adc *p_adc,const enum adc_resolution_t resolution)
  *
  * \param p_adc Pointer to an ADC instance.
  * \param trigger Conversion trigger.
- * \param uc_freerun ADC_MR_FREERUN_ON enables freerun mode, 
+ * \param uc_freerun ADC_MR_FREERUN_ON enables freerun mode,
  * ADC_MR_FREERUN_OFF disables freerun mode.
  *
  */
@@ -177,11 +177,11 @@ void adc_configure_trigger(Adc *p_adc, const enum adc_trigger_t trigger)
  * \brief Configures ADC power saving mode.
  *
  * \param p_adc Pointer to an ADC instance.
- * \param uc_sleep ADC_MR_SLEEP_NORMAL keeps the ADC Core and reference voltage 
+ * \param uc_sleep ADC_MR_SLEEP_NORMAL keeps the ADC Core and reference voltage
  * circuitry ON between conversions.
- * ADC_MR_SLEEP_SLEEP keeps the ADC Core and reference voltage circuitry OFF 
+ * ADC_MR_SLEEP_SLEEP keeps the ADC Core and reference voltage circuitry OFF
  * between conversions.
- * \param uc_fwup ADC_MR_FWUP_OFF configures sleep mode as uc_sleep setting, 
+ * \param uc_fwup ADC_MR_FWUP_OFF configures sleep mode as uc_sleep setting,
  * ADC_MR_FWUP_ON keeps voltage reference ON and ADC Core OFF between conversions.
  */
 void adc_configure_power_save(Adc *p_adc, const uint8_t uc_sleep, const uint8_t uc_fwup)
@@ -194,9 +194,9 @@ void adc_configure_power_save(Adc *p_adc, const uint8_t uc_sleep, const uint8_t 
  * \brief Configure ADC power saving mode.
  *
  * \param p_adc Pointer to an ADC instance.
- * \param uc_sleep ADC_MR_SLEEP_NORMAL keeps the ADC Core and reference 
+ * \param uc_sleep ADC_MR_SLEEP_NORMAL keeps the ADC Core and reference
  * voltage circuitry ON between conversions.
- * ADC_MR_SLEEP_SLEEP keeps the ADC Core and reference voltage circuitry 
+ * ADC_MR_SLEEP_SLEEP keeps the ADC Core and reference voltage circuitry
  * OFF between conversions.
  * \param uc_offmode 0 for Standby Mode (if Sleep Bit = 1), 1 for Off Mode.
  */
@@ -218,18 +218,23 @@ void adc_configure_sequence(Adc *p_adc, const enum adc_channel_num_t ch_list[],
 		uint8_t uc_num)
 {
 	uint8_t uc_counter;
+#if SAM4S
+	volatile uint32_t *adc_seqr = &p_adc->ADC_SEQR[0];
+#else
+	volatile uint32_t *adc_seqr = &p_adc->ADC_SEQR1;
+#endif
 	if (uc_num < 8) {
 		for (uc_counter = 0; uc_counter < uc_num; uc_counter++) {
-			p_adc->ADC_SEQR1 |=
+			adc_seqr[0] |=
 					ch_list[uc_counter] << (4 * uc_counter);
 		}
 	} else {
 		for (uc_counter = 0; uc_counter < 8; uc_counter++) {
-			p_adc->ADC_SEQR1 |=
+			adc_seqr[0] |=
 					ch_list[uc_counter] << (4 * uc_counter);
 		}
 		for (uc_counter = 0; uc_counter < uc_num - 8; uc_counter++) {
-			p_adc->ADC_SEQR2 |=
+			adc_seqr[1] |=
 					ch_list[uc_counter] << (4 * uc_counter);
 		}
 	}
@@ -292,7 +297,7 @@ void adc_enable_anch(Adc *p_adc)
 #if SAM3S || SAM4S || SAM3XA
 /**
  * \brief Disable analog change.
- * 
+ *
  * \note DIFF0, GAIN0 and OFF0 are used for all channels.
  *
  * \param p_Adc Pointer to an ADC instance.
@@ -306,7 +311,7 @@ void adc_disable_anch(Adc *p_adc)
 /**
  * \brief Start analog-to-digital conversion.
  *
- * \note If one of the hardware event is selected as ADC trigger, 
+ * \note If one of the hardware event is selected as ADC trigger,
  * this function can NOT start analog to digital conversion.
  *
  * \param p_adc Pointer to an ADC instance.
@@ -424,7 +429,7 @@ uint32_t adc_get_latest_value(const Adc *p_adc)
 
 #if SAM3S || SAM4S || SAM3N || SAM3XA
 /**
- * \brief Enable TAG option so that the number of the last converted channel 
+ * \brief Enable TAG option so that the number of the last converted channel
  * can be indicated.
  *
  * \param p_adc Pointer to an ADC instance.
@@ -451,7 +456,7 @@ void adc_disable_tag(Adc *p_adc)
 /**
  * \brief Indicate the last converted channel.
  *
- * \note If TAG option is NOT enabled before, an incorrect channel 
+ * \note If TAG option is NOT enabled before, an incorrect channel
  * number is returned.
  *
  * \param p_adc Pointer to an ADC instance.
@@ -732,7 +737,7 @@ uint32_t adc_get_interrupt_mask(const Adc *p_adc)
 /**
  * \brief Adapt performance versus power consumption.
  *
- * \note Please refer to ADC Characteristics in the product datasheet 
+ * \note Please refer to ADC Characteristics in the product datasheet
  * for more details.
  *
  * \param p_adc Pointer to an ADC instance.
@@ -787,7 +792,7 @@ void adc_set_writeprotect(Adc *p_adc, const uint32_t ul_enable)
  *
  * \param p_adc Pointer to an ADC instance.
  *
- * \return 0 if the peripheral is not protected, or 16-bit write protect 
+ * \return 0 if the peripheral is not protected, or 16-bit write protect
  * violation Status.
  */
 uint32_t adc_get_writeprotect_status(const Adc *p_adc)
@@ -859,11 +864,11 @@ void adc_check(Adc *p_adc, const uint32_t ul_mck)
 	printf("ADC clock frequency = %d Hz\r\n", (int)ul_adcfreq);
 
 	if (ul_adcfreq < ADC_FREQ_MIN) {
-		printf("adc frequency too low (out of specification: %d Hz)\r\n", 
+		printf("adc frequency too low (out of specification: %d Hz)\r\n",
 			(int)ADC_FREQ_MIN);
 	}
 	if (ul_adcfreq > ADC_FREQ_MAX) {
-		printf("adc frequency too high (out of specification: %d Hz)\r\n", 
+		printf("adc frequency too high (out of specification: %d Hz)\r\n",
 			(int)ADC_FREQ_MAX);
 	}
 
@@ -886,8 +891,8 @@ void adc_check(Adc *p_adc, const uint32_t ul_mck)
 			/* Sleep 40ms */
 			if (ADC_STARTUP_NORM * ul_adcfreq / 1000000 >
 					calcul_startup(ul_startup)) {
-				printf("Startup time too small: %d, programmed: %d\r\n", 
-					(int)(ADC_STARTUP_NORM * ul_adcfreq / 1000000), 
+				printf("Startup time too small: %d, programmed: %d\r\n",
+					(int)(ADC_STARTUP_NORM * ul_adcfreq / 1000000),
 					(int)(calcul_startup(ul_startup)));
 			}
 		} else {
@@ -895,8 +900,8 @@ void adc_check(Adc *p_adc, const uint32_t ul_mck)
 				/* Fast Wake Up Sleep Mode: 12ms */
 				if (ADC_STARTUP_FAST * ul_adcfreq / 1000000 >
 						calcul_startup(ul_startup)) {
-					printf("Startup time too small: %d, programmed: %d\r\n", 
-						(int)(ADC_STARTUP_NORM * ul_adcfreq / 1000000), 
+					printf("Startup time too small: %d, programmed: %d\r\n",
+						(int)(ADC_STARTUP_NORM * ul_adcfreq / 1000000),
 						(int)(calcul_startup(ul_startup)));
 				}
 			}

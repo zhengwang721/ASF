@@ -3,7 +3,7 @@
  *
  * \brief Startup file for SAM4S.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -97,11 +97,7 @@ IntFunc exception_table[] = {
 #endif
 	UART0_Handler,  /* 8  UART0 */
 	UART1_Handler,  /* 9  UART1 */
-#ifdef ID_SMC
-	SMC_Handler,    /* 10 SMC */
-#else
 	Dummy_Handler,
-#endif
 	PIOA_Handler,   /* 11 Parallel IO Controller A */
 	PIOB_Handler,   /* 12 Parallel IO Controller B */
 #ifdef ID_PIOC

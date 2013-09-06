@@ -3,7 +3,7 @@
  *
  * \brief This file contains the default exception handlers.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,7 +41,7 @@
  *
  * \par Purpose
  *
- * This file provides basic support for Cortex-M processor based 
+ * This file provides basic support for Cortex-M processor based
  * microcontrollers.
  *
  * \note
@@ -96,9 +96,6 @@ void PWM_Handler(void) __attribute__ ((weak, alias("Dummy_Handler")));
 void RSTC_Handler(void) __attribute__ ((weak, alias("Dummy_Handler")));
 void RTC_Handler(void) __attribute__ ((weak, alias("Dummy_Handler")));
 void RTT_Handler(void) __attribute__ ((weak, alias("Dummy_Handler")));
-#ifdef ID_SMC
-void SMC_Handler(void) __attribute__ ((weak, alias("Dummy_Handler")));
-#endif
 void SPI_Handler(void) __attribute__ ((weak, alias("Dummy_Handler")));
 void SSC_Handler(void) __attribute__ ((weak, alias("Dummy_Handler")));
 void SUPC_Handler(void) __attribute__ ((weak, alias("Dummy_Handler")));
@@ -161,9 +158,6 @@ void WDT_Handler(void) __attribute__ ((weak, alias("Dummy_Handler")));
 #pragma weak RSTC_Handler=Dummy_Handler
 #pragma weak RTC_Handler=Dummy_Handler
 #pragma weak RTT_Handler=Dummy_Handler
-#ifdef ID_SMC
-#pragma weak SMC_Handler=Dummy_Handler
-#endif
 #pragma weak SPI_Handler=Dummy_Handler
 #pragma weak SSC_Handler=Dummy_Handler
 #pragma weak SUPC_Handler=Dummy_Handler
