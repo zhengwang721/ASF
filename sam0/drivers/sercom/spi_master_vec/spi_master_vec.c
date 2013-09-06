@@ -46,7 +46,7 @@
 #include <system_interrupt.h>
 
 /**
- * \ingroup sercom_spi_master_vec_group
+ * \ingroup asfdoc_samd20_sercom_spi_master_vec_group
  *
  * @{
  */
@@ -97,6 +97,7 @@ static inline void _spi_master_vec_pinmux_helper(uint32_t pinmux,
  * instance with.
  * \param[in] config Driver configuration to use.
  *
+ * \return Status of initialization.
  * \retval \c STATUS_OK if initialization succeeded.
  * \retval \c STATUS_ERR_INVALID_ARG if driver has been misconfigured.
  */
@@ -238,7 +239,8 @@ void spi_master_vec_disable(const struct spi_master_vec_module *const module)
  * The buffers to transmit from or receive into must be described in arrays of
  * buffer descriptors. These arrays \e must end with descriptors that specify
  * zero buffer length. The first descriptor in an array can \e not specify zero
- * length.
+ * length. The number of bytes to transmit and to receive do not have to be
+ * equal.
  *
  * To initiate a unidirectional transfer, pass \c NULL as the address of either
  * buffer descriptor array, like this:
@@ -261,6 +263,7 @@ void spi_master_vec_disable(const struct spi_master_vec_module *const module)
  * received bytes.
  * \arg \c NULL if the transfer is a simplex write.
  *
+ * \return Status of transfer start.
  * \retval \c STATUS_OK if transfer was started.
  * \retval \c STATUS_BUSY if a transfer is on-going.
  */

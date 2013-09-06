@@ -50,17 +50,81 @@
 #include <status_codes.h>
 
 /**
- * \defgroup sercom_spi_master_vec_group SERCOM SPI master driver with
- * vectored I/O
+ * \defgroup asfdoc_samd20_sercom_spi_master_vec_group  SERCOM SPI master with vectored I/O
  *
- * This driver is a SPI master driver that supports uni- and bidirectional
- * transfers of 8-bit data with vectored I/O, also know as scatter/gather.
+ * This driver for SAM D20 devices provides an interface for the configuration
+ * and operation of the SERCOM module in SPI master mode and uses vectored I/O
+ * for data transfers.
+ *
+ * The following peripherals are used by this driver:
+ * - SERCOM (Serial Communication Interface)
+ *
+ *
+ * \section asfdoc_samd20_sercom_spi_master_vec_prerequisites Prerequisites
+ *
+ * This driver uses the \ref asfdoc_samd20_system_clock_group "SYSTEM clock driver"
+ * to select the SERCOM's clock source and to configure the SERCOM for the
+ * desired baud rate. Ensure that the selected clock source is configured and
+ * that the clock system is initialized -- this is typically done indirectly
+ * with \ref system_init(), or directly with \ref system_clock_init().
+ *
+ * Refer to the datasheet for details on the limits of SERCOM SPI baud rate.
+ *
+ *
+ * \section asfdoc_samd20_sercom_spi_master_vec_module_overview Module Overview
+ *
+ * This SERCOM SPI master driver supports uni- and bidirectional transfers of
+ * 8-bit data with vectored I/O, also know as scatter/gather.
  * It does not implement slave selection or addressing since the intended usage
  * is in stacks which usually have their own protocols and handshaking schemes.
  *
- * Scatter/gather is implemented by the use of buffer descriptor arrays, which
- * must be passed to the driver to start a transfer.
- * See \ref spi_master_vec_transceive_buffer_job() for more information.
+ * Vectored I/O enables the transfer of data from/to any number of buffers with
+ * arbitrary memory locations without having to do several transfers, i.e., one
+ * buffer at a time. This feature is useful in stacks because it allows each
+ * layer of the stack to have a dedicated data buffer, thus avoiding the need
+ * for a "master" data buffer that the different layers must use in cooperation.
+ *
+ * The vectored I/O relies on arrays of buffer descriptors which must be passed
+ * to the driver to start a transfer. These buffer descriptors specify where in
+ * memory each buffer is, and how large they are.
+ *
+ * \sa spi_master_vec_transceive_buffer_job()
+ *
+ *
+ * \section asfdoc_samd20_sercom_spi_master_vec_special_considerations Special Considerations
+ *
+ * The SERCOM module has two layers of signal multiplexing in SPI mode:
+ * -# SERCOM pad MUX: This routes the SPI signals to internal lines.
+ * -# PORT pin MUX: This routes the internal line to a device pin.
+ *
+ * Both of these layers are configured in the \ref spi_master_vec_config
+ * "configuration structure", but driver-supplied settings are only available
+ * for the \ref spi_master_vec_config::padmux_setting "SERCOM pad MUX".
+ *
+ * For the PORT pin MUX configuration, refer to the peripheral include file for
+ * the device (\c pio_samd20XNN.h ) and use the macros that are prefixed with
+ * \c PINMUX_, such as \c PINMUX_PA04D_SERCOM0_PAD0. It is also possible to use
+ * the default pin MUX setting for a SERCOM pad by using the \ref PINMUX_DEFAULT
+ * macro. The defaults are defined in the file \ref sercom_pinout.h.
+ *
+ *
+ * \section asfdoc_samd20_sercom_spi_master_vec_extra_info Extra Information
+ *
+ * For extra information, see
+ * \subpage asfdoc_samd20_sercom_spi_master_vec_extra. This includes:
+ * - \ref asfdoc_samd20_sercom_spi_master_vec_extra_acronyms
+ * - \ref asfdoc_samd20_sercom_spi_master_vec_extra_dependencies
+ * - \ref asfdoc_samd20_sercom_spi_master_vec_extra_errata
+ * - \ref asfdoc_samd20_sercom_spi_master_vec_extra_history
+ *
+ *
+ * \section asfdoc_samd20_sercom_spi_master_vec_examples Examples
+ *
+ * For a list of examples related to this driver, see
+ * \ref asfdoc_samd20_sercom_spi_master_vec_exqsg.
+ *
+ *
+ * \section asfdoc_samd20_sercom_spi_master_vec_api_overview API Overview
  *
  * @{
  */
@@ -204,6 +268,11 @@ struct spi_master_vec_module {
 };
 
 /**
+ * \name Configuration and Initialization
+ * @{
+ */
+
+/**
  * \brief Initialize configuration with default values.
  *
  * \param[out] config Configuration struct to initialize.
@@ -227,6 +296,7 @@ static inline void spi_master_vec_get_config_defaults(
  *
  * \param[in] module Driver instance to operate on.
  *
+ * \return Current status of driver instance.
  * \retval \c STATUS_OK if idle and previous transfer succeeded.
  * \retval \c STATUS_BUSY if a transfer is ongoing.
  * \return Other status codes upon failure.
@@ -245,11 +315,19 @@ enum status_code spi_master_vec_init(struct spi_master_vec_module *const module,
 		Sercom *const sercom, struct spi_master_vec_config *const config);
 void spi_master_vec_enable(const struct spi_master_vec_module *const module);
 void spi_master_vec_disable(const struct spi_master_vec_module *const module);
+void spi_master_vec_reset(const struct spi_master_vec_module *const module);
+/** @} */
+
+/**
+ * \name SPI transfer
+ * @{
+ */
 enum status_code spi_master_vec_transceive_buffer_job(
 		struct spi_master_vec_module *const module,
 		struct spi_master_vec_bufdesc tx_bufdescs[],
 		struct spi_master_vec_bufdesc rx_bufdescs[]);
-void spi_master_vec_reset(const struct spi_master_vec_module *const module);
+/** @} */
+
 #ifdef __cplusplus
 }
 #endif
@@ -257,5 +335,110 @@ void spi_master_vec_reset(const struct spi_master_vec_module *const module);
 /**
  * @}
  */
+
+/**
+ * \page asfdoc_samd20_sercom_spi_master_vec_extra Extra Information for SERCOM SPI master driver with vectored I/O
+ *
+ *
+ * \section asfdoc_samd20_sercom_spi_master_vec_extra_acronyms Acronyms
+ *
+ * The table below presents the acronyms used in this module.
+ *
+ * <table>
+ *     <tr>
+ *         <th>Acronym</td>
+ *         <th>Description</td>
+ *     </tr>
+ *     <tr>
+ *         <td>GCLK</td>
+ *         <td>Generic Clock</td>
+ *     </tr>
+ *     <tr>
+ *         <td>MISO</td>
+ *         <td>Master Input, Slave Output</td>
+ *     </tr>
+ *     <tr>
+ *         <td>MOSI</td>
+ *         <td>Master Output, Slave Input</td>
+ *     </tr>
+ *     <tr>
+ *         <td>SCK</td>
+ *         <td>Serial Clock</td>
+ *     </tr>
+ *     <tr>
+ *         <td>SPI</td>
+ *         <td>Serial Peripheral Interface</td>
+ *     </tr>
+ *     <tr>
+ *         <td>SS</td>
+ *         <td>Slave Select</td>
+ *     </tr>
+ * </table>
+ *
+ *
+ * \section asfdoc_samd20_sercom_spi_master_vec_extra_dependencies Dependencies
+ *
+ * This driver has the following dependencies:
+ * - \ref asfdoc_samd20_system_group "System driver"
+ * - \ref group_sam0_utils "Compiler driver"
+ * - \ref asfdoc_samd20_port_group "Port driver"
+ * - \ref Common SERCOM driver base
+ *
+ *
+ * \section asfdoc_samd20_sercom_spi_master_vec_extra_errata Errata
+ *
+ * There are no errata related to this driver.
+ *
+ *
+ * \section asfdoc_samd20_sercom_spi_master_vec_extra_history Module History
+ *
+ * An overview of the module history is presented in the table below, with
+ * details on the enhancements and fixes made to the module since its first
+ * release. The current version of this corresponds to the newest version in the
+ * table.
+ *
+ * <table>
+ *     <tr>
+ *         <th>Changelog</th>
+ *     </tr>
+ *     <tr>
+ *         <td>Initial Release</td>
+ *     </tr>
+ * </table>
+ */
+
+/**
+ * \page asfdoc_samd20_sercom_spi_master_vec_exqsg Examples for SERCOM SPI master driver with vectored I/O
+ *
+ * This is a list of the available Quick Start guides (QSGs) and example
+ * applications for \ref asfdoc_samd20_sercom_spi_master_vec_group. QSGs are
+ * simple examples with step-by-step instructions to configure and use this
+ * driver in a selection of use cases. Note that QSGs can be compiled as a
+ * standalone application or be added to the user application.
+ *
+ * - \subpage asfdoc_samd20_sercom_spi_master_vec_basic_use_case
+ */
+
+/**
+ * \page asfdoc_samd20_sercom_spi_master_vec_basic_use_case Basic use case
+ *
+ */
+
+ /**
+  * \page asfdoc_samd20_sercom_spi_master_vec_document_revision_history Document Revision History
+  *
+  * <table>
+  *     <tr>
+  *         <th>Doc. Rev.</td>
+  *         <th>Date</td>
+  *         <th>Comments</td>
+  *	    </tr>
+  *	    <tr>
+  *         <td>A</td>
+  *         <td>XX/2013</td>
+  *         <td>Initial release</td>
+  *     </tr>
+  * </table>
+  */
 
 #endif /* SPI_MASTER_VEC_H */
