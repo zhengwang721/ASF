@@ -54,14 +54,19 @@ extern "C" {
 /**
  * \defgroup sam_drivers_rtt_group Real-time Timer (RTT)
  *
- * The Real-time Timer is built around a 32-bit counter used to count 
- * roll-over events of the programmable 16-bit prescaler, which enables 
- * counting elapsed seconds from a 32 kHz slow clock source. 
+ * The Real-time Timer is built around a 32-bit counter used to count
+ * roll-over events of the programmable 16-bit prescaler, which enables
+ * counting elapsed seconds from a 32 kHz slow clock source.
  * This is a driver for configuration and use of the RTT peripheral.
  *
  * @{
  */
 
+/*
+ * In SAM4 series chip, the bit RTC1HZ and RTTDIS in RTT_MR is write only,
+ * so this value is used to indicate these bits.
+ */
+static uint32_t g_ul_reg = 0;
 
 /**
  * \brief Initialize the given RTT.
@@ -78,13 +83,7 @@ extern "C" {
 uint32_t rtt_init(Rtt *p_rtt, uint16_t us_prescaler)
 {
 #if SAM4N || SAM4S || SAM4E || SAM4C
-	uint32_t sel_src;
-	sel_src = p_rtt->RTT_MR & RTT_MR_RTC1HZ;
-	if(sel_src) {
-		p_rtt->RTT_MR = RTT_MR_RTTRST | sel_src;
-	} else {
-		p_rtt->RTT_MR = (us_prescaler | RTT_MR_RTTRST);
-	}
+	p_rtt->RTT_MR = (us_prescaler | RTT_MR_RTTRST | g_ul_reg);
 #else
 	p_rtt->RTT_MR = (us_prescaler | RTT_MR_RTTRST);
 #endif
@@ -95,6 +94,8 @@ uint32_t rtt_init(Rtt *p_rtt, uint16_t us_prescaler)
 /**
  * \brief Select RTT counter source.
  *
+ * \note This function should be called before rtt_init().
+ *
  * \param p_rtt Pointer to an RTT instance.
  * \param is_rtc_sel RTC 1Hz Clock Selection.
  */
@@ -102,8 +103,10 @@ void rtt_sel_source(Rtt *p_rtt, bool is_rtc_sel)
 {
 	if(is_rtc_sel) {
 		p_rtt->RTT_MR |= RTT_MR_RTC1HZ;
+		g_ul_reg |= RTT_MR_RTC1HZ;
 	} else {
 		p_rtt->RTT_MR &= ~RTT_MR_RTC1HZ;
+		g_ul_reg &= ~RTT_MR_RTC1HZ;
 	}
 }
 
@@ -114,7 +117,8 @@ void rtt_sel_source(Rtt *p_rtt, bool is_rtc_sel)
  */
 void rtt_enable(Rtt *p_rtt)
 {
-	p_rtt->RTT_MR &= ~RTT_MR_RTTDIS;
+	g_ul_reg &= ~RTT_MR_RTTDIS;
+	p_rtt->RTT_MR |= g_ul_reg;
 }
 /**
  * \brief Disable RTT.
@@ -123,7 +127,8 @@ void rtt_enable(Rtt *p_rtt)
  */
 void rtt_disable(Rtt *p_rtt)
 {
-	p_rtt->RTT_MR |= RTT_MR_RTTDIS;
+	g_ul_reg |= RTT_MR_RTTDIS;
+	p_rtt->RTT_MR |= g_ul_reg;
 }
 #endif
 
@@ -135,7 +140,8 @@ void rtt_disable(Rtt *p_rtt)
  */
 void rtt_enable_interrupt(Rtt *p_rtt, uint32_t ul_sources)
 {
-	p_rtt->RTT_MR |= ul_sources;
+	g_ul_reg |= ul_sources;
+	p_rtt->RTT_MR |= g_ul_reg;
 }
 
 /**
@@ -146,7 +152,8 @@ void rtt_enable_interrupt(Rtt *p_rtt, uint32_t ul_sources)
  */
 void rtt_disable_interrupt(Rtt *p_rtt, uint32_t ul_sources)
 {
-	p_rtt->RTT_MR &= (~ul_sources);
+	g_ul_reg &= (~ul_sources);
+	p_rtt->RTT_MR |= g_ul_reg;
 }
 
 /**
