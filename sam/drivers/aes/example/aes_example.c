@@ -55,7 +55,6 @@
  * - OFB ciphering and deciphering.
  * - CTR ciphering and deciphering.
  * - ECB ciphering and deciphering with DMA/PDC .<BR>
- * - GCM ciphering and deciphering.
  *
  * \section files Main Files
  * - aes.c : AES driver
@@ -170,50 +169,6 @@ const uint32_t init_vector_ctr[4] = {
 
 /* @} */
 
-#if SAM4C
-/* GCM Mode Test Key, 256-bits */
-const uint32_t gcm_key256[8] = {
-        0x00000000,
-        0x00000000,
-        0x00000000,
-        0x00000000,
-        0x00000000,
-        0x00000000,
-        0x00000000,
-        0x00000000
-};
-
-const uint32_t gcm_init_vector[4] = {
-        0x00000000,
-        0x00000000,
-        0x00000000,
-        0x00000000
-};
-
-uint32_t ref_plain_text_gcm[AES_EXAMPLE_REFBUF_SIZE] = {
-        0x00000000,
-        0x00000000,
-        0x00000000,
-        0x00000000
-};
-
-uint32_t gcm_aad[AES_EXAMPLE_REFBUF_SIZE] = {
-        0x00000000,
-        0x00000000,
-        0x00000000,
-        0x00000000
-};
-
-
-/* Reference GCM cipher data */
-uint32_t ref_cipher_text_gcm[AES_EXAMPLE_REFBUF_SIZE] = {
-        0xceda8803,
-        0x92a3b660,
-        0xb9c228f3,
-        0x78feb271
-};
-
-#endif
 
 /* Output data array */
 static uint32_t output_data[AES_EXAMPLE_REFBUF_SIZE];
@@ -446,42 +401,41 @@ static void ecb_mode_test_dma(void)
 #endif
 
 #if SAM4C
-
 /* PDC data packet for transfer */
 pdc_packet_t g_pdc_tx_packet;
 pdc_packet_t g_pdc_rx_packet;
-        
+
 /* Pointer to AES PDC register base */
 Pdc *g_p_aes_pdc;
-        
+
 /**
  * \brief The AES interrupt call back function under PDC mode.
  */
 static void aes_pdc_callback(void)
 {
-        state = true;
-        pdc_tx_init(g_p_aes_pdc, &g_pdc_tx_packet, NULL);
-        pdc_rx_init(g_p_aes_pdc, &g_pdc_rx_packet, NULL);
-        pdc_disable_transfer(g_p_aes_pdc, PERIPH_PTCR_RXTDIS | PERIPH_PTCR_TXTDIS);
+		state = true;
+		pdc_tx_init(g_p_aes_pdc, &g_pdc_tx_packet, NULL);
+		pdc_rx_init(g_p_aes_pdc, &g_pdc_rx_packet, NULL);
+		pdc_disable_transfer(g_p_aes_pdc, PERIPH_PTCR_RXTDIS | PERIPH_PTCR_TXTDIS);
 }
 
 /**
  * \brief ECB mode encryption and decryption test with PDC.
  */
 static void ecb_mode_test_pdc(void)
-{       
-        /* Configure PDC. */
+{
+	/* Configure PDC. */
 	g_pdc_tx_packet.ul_addr = (uint32_t) ref_plain_text;
-        g_pdc_tx_packet.ul_size = AES_EXAMPLE_REFBUF_SIZE;
-        g_pdc_rx_packet.ul_addr = (uint32_t) output_data;
-        g_pdc_rx_packet.ul_size = AES_EXAMPLE_REFBUF_SIZE;
-        g_p_aes_pdc = aes_get_pdc_base(AES);
-        
-        /* Configure PDC for data receive & transfer */
+	g_pdc_tx_packet.ul_size = AES_EXAMPLE_REFBUF_SIZE;
+	g_pdc_rx_packet.ul_addr = (uint32_t) output_data;
+	g_pdc_rx_packet.ul_size = AES_EXAMPLE_REFBUF_SIZE;
+	g_p_aes_pdc = aes_get_pdc_base(AES);
+
+	/* Configure PDC for data receive & transfer */
 	pdc_tx_init(g_p_aes_pdc, &g_pdc_tx_packet, NULL);
-        pdc_rx_init(g_p_aes_pdc, &g_pdc_rx_packet, NULL);
-        
-        /* Disable PDC transfers. */
+	pdc_rx_init(g_p_aes_pdc, &g_pdc_rx_packet, NULL);
+
+	/* Disable PDC transfers. */
 	pdc_disable_transfer(g_p_aes_pdc,PERIPH_PTCR_RXTDIS | PERIPH_PTCR_TXTDIS);
 
 	printf("\r\n-----------------------------------\r\n");
@@ -504,16 +458,16 @@ static void ecb_mode_test_pdc(void)
 
 	/* Set the cryptographic key. */
 	aes_write_key(AES, key128);
-        
-        /* Enable AES interrupt. */
-        aes_set_callback(AES, AES_INTERRUPT_END_OF_RECEIVE_BUFFER,
-                        aes_pdc_callback, 1);   
+
+	/* Enable AES interrupt. */
+	aes_set_callback(AES, AES_INTERRUPT_END_OF_RECEIVE_BUFFER,
+					aes_pdc_callback, 1);   
 
 	/* The initialization vector is not used by the ECB cipher mode. */
         
 	/* Enable PDC transfers. */
 	pdc_enable_transfer(g_p_aes_pdc, PERIPH_PTCR_RXTEN | PERIPH_PTCR_TXTEN);
-        
+
 	/* Wait for the end of the encryption process. */
 	while (false == state) {
 	}
@@ -552,11 +506,11 @@ static void ecb_mode_test_pdc(void)
 
 	/* Configure PDC for data transfer */
 	g_pdc_tx_packet.ul_addr = (uint32_t) ref_cipher_text_ecb;
-        
-        /* Configure PDC for data receive & transfer */
-        pdc_tx_init(g_p_aes_pdc, &g_pdc_tx_packet, NULL);
-        pdc_rx_init(g_p_aes_pdc, &g_pdc_rx_packet, NULL);
-        
+
+	/* Configure PDC for data receive & transfer */
+		pdc_tx_init(g_p_aes_pdc, &g_pdc_tx_packet, NULL);
+		pdc_rx_init(g_p_aes_pdc, &g_pdc_rx_packet, NULL);
+
 	/* Enable PDC transfers. */
 	pdc_enable_transfer(g_p_aes_pdc, PERIPH_PTCR_RXTEN | PERIPH_PTCR_TXTEN);
 
@@ -573,142 +527,6 @@ static void ecb_mode_test_pdc(void)
 	} else {
 		printf("\r\nOK!!!\r\n");
 	}
-}
-
-/**
- * \brief GCM mode encryption and decryption test.
- */
-static void gcm_mode_test(void)
-{
-        printf("\r\n-----------------------------------\r\n");
-	printf("- 256bit cryptographic key\r\n");
-	printf("- GCM cipher mode\r\n");
-	printf("- Auto start mode\r\n");
-	printf("- input of 4 32bit words\r\n");
-	printf("-----------------------------------\r\n");
-
-        state = false;
-
-	/* Configure the AES. */
-	g_aes_cfg.encrypt_mode = AES_ENCRYPTION;
-	g_aes_cfg.key_size = AES_KEY_SIZE_256;
-	g_aes_cfg.start_mode = AES_AUTO_START;
-	g_aes_cfg.opmode = AES_CTR_MODE;
-	g_aes_cfg.cfb_size = AES_CFB_SIZE_128;
-	g_aes_cfg.lod = false;
-        g_aes_cfg.gtag_en = false;
-	aes_set_config(AES, &g_aes_cfg);
-
-	/* Set the cryptographic key. */
-	aes_write_key(AES, gcm_key256);
-
-	/* Set the initialization vector. */
-	aes_write_initvector(AES, gcm_init_vector);
-
-	/* Write the data to be ciphered to the input data registers. */
-	aes_write_input_data(AES, ref_plain_text_gcm);
-
-	/* Wait for the end of the encryption process. */
-	while (false == state) {
-	}
-
-        ref_plain_text_gcm[0] = output_data[0];
-        ref_plain_text_gcm[1] = output_data[1];
-        ref_plain_text_gcm[2] = output_data[2];
-        ref_plain_text_gcm[3] = output_data[3];
-        
-        state = false;
-        
-	/* Configure the AES. */
-	g_aes_cfg.encrypt_mode = AES_ENCRYPTION;
-	g_aes_cfg.key_size = AES_KEY_SIZE_256;
-	g_aes_cfg.start_mode = AES_AUTO_START;
-	g_aes_cfg.opmode = AES_GCM_MODE;
-	g_aes_cfg.cfb_size = AES_CFB_SIZE_128;
-	g_aes_cfg.lod = false;
-        g_aes_cfg.gtag_en = true;
-	aes_set_config(AES, &g_aes_cfg);
-
-	/* Set the cryptographic key. */
-	aes_write_key(AES, gcm_key256);
-        
-        /* Wait GCM H subkey generation complete */
-        while (false == state) {
-	}
-
-	/* Set the initialization vector. */
-	aes_write_initvector(AES, gcm_init_vector);
-        
-        /* Set AADLEN and CLEN */
-        aes_write_authen_datalength(AES,16);
-        aes_write_pctext_length(AES,16);
-        
-        state = false;
-        aes_write_input_data(AES, gcm_aad);
-        /* Wait for the end of the encryption process. */
-        while (false == state) {
-        }
-        
-        state = false;
-        aes_write_input_data(AES, ref_plain_text_gcm);
-        /* Wait for the end of the encryption process. */
-	while (false == state) {
-	}
-        
-        uint32_t status = aes_read_interrupt_status(AES);
-        while (!(status & AES_ISR_TAGRDY)) {
-        }
-        
-	/* check the result. */
-	if ((ref_cipher_text_gcm[0] != output_data[0]) ||
-			(ref_cipher_text_gcm[1] != output_data[1]) ||
-			(ref_cipher_text_gcm[2] != output_data[2]) ||
-			(ref_cipher_text_gcm[3] != output_data[3])) {
-		printf("\r\nKO!!!\r\n");
-	} else {
-		printf("\r\nOK!!!\r\n");
-	}
-
-//	printf("\r\n-----------------------------------\r\n");
-//	printf("- 128bit cryptographic key\r\n");
-//	printf("- GCM decipher mode\r\n");
-//	printf("- Auto start mode\r\n");
-//	printf("- input of 4 32bit words\r\n");
-//	printf("-----------------------------------\r\n");
-//
-//	state = false;
-//
-//	/* Configure the AES. */
-//	g_aes_cfg.encrypt_mode = AES_DECRYPTION;
-//	g_aes_cfg.key_size = AES_KEY_SIZE_128;
-//	g_aes_cfg.start_mode = AES_AUTO_START;
-//	g_aes_cfg.opmode = AES_CTR_MODE;
-//	g_aes_cfg.cfb_size = AES_CFB_SIZE_128;
-//	g_aes_cfg.lod = false;
-//	aes_set_config(AES, &g_aes_cfg);
-//
-//	/* Set the cryptographic key. */
-//	aes_write_key(AES, key128);
-//
-//	/* Set the initialization vector. */
-//	aes_write_initvector(AES, init_vector_ctr);
-//
-//	/* Write the data to be deciphered to the input data registers. */
-//	aes_write_input_data(AES, ref_cipher_text_ctr);
-//
-//	/* Wait for the end of the decryption process. */
-//	while (false == state) {
-//	}
-//
-//	/* check the result. */
-//	if ((ref_plain_text[0] != output_data[0]) ||
-//			(ref_plain_text[1] != output_data[1]) ||
-//			(ref_plain_text[2] != output_data[2]) ||
-//			(ref_plain_text[3] != output_data[3])) {
-//		printf("\r\nKO!!!\r\n");
-//	} else {
-//		printf("\r\nOK!!!\r\n");
-//	}
 }
 #endif
 
@@ -1181,8 +999,7 @@ static void display_menu(void)
 			"  4: OFB mode test. \n\r"
 			"  5: CTR mode test. \n\r"
 			"  d: ECB mode test with DMA \n\r"
-                        "  p: ECB mode test with PDC \n\r"  
-			"  g: GCM mode test. \n\r"
+			"  p: ECB mode test with PDC \n\r"  
 			"\n\r\n\r");
 }
 
@@ -1212,7 +1029,7 @@ int main(void)
 
 	/* Enable AES interrupt. */
 	aes_set_callback(AES, AES_INTERRUPT_DATA_READY,
-                        aes_callback, 1);
+					aes_callback, 1);
 
 	/* Display menu */
 	display_menu();
@@ -1256,26 +1073,18 @@ int main(void)
 			ecb_mode_test_dma();
 			#else
 			printf("This mode is not supported by device.\r\n");
-                        #endif
-			break;
-                                         
-                case 'p':
-                        #if SAM4C
-                        printf("ECB mode encryption and decryption test with PDC.\r\n"); 
-                        ecb_mode_test_pdc();
-                        #else
-                        printf("This mode is not supported by device.\r\n");
-                        #endif
-			break;
-                        
-		case 'g':
+			#endif
+			break;                                         
+
+		case 'p':
 			#if SAM4C
-			printf("GCM mode encryption and decryption test.\r\n");
-                        gcm_mode_test();
-			#else 
+			printf("ECB mode encryption and decryption test with PDC.\r\n"); 
+			ecb_mode_test_pdc();
+			#else
 			printf("This mode is not supported by device.\r\n");
-                        #endif
-                        break;
+			#endif
+			break;
+
 		default:
 			break;
 		}
