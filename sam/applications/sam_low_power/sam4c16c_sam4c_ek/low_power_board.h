@@ -105,6 +105,15 @@
 #define PLL_DEFAULT_DIV  2
 #define MCK_DEFAULT_DIV  PMC_MCKR_PRES_CLK_4
 
+#define example_switch_clock(a, b, c, d) \
+	do {                                 \
+		pmc_enable_pllbck(a, b, c);      \
+		pmc_switch_mck_to_pllbck(d);     \
+	} while (0)
+
+#define example_set_wakeup_from_backup_mode() \
+	supc_set_wakeup_mode(SUPC, SUPC_WUMR_FWUPEN_ENABLE)
+
 extern uint32_t g_fastrc_clock_list[][3];
 extern uint32_t g_pll_clock_list[][4];
 

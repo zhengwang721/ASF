@@ -140,6 +140,24 @@
 #define MCK_DEFAULT_DIV  PMC_MCKR_PRES_CLK_4
 #endif
 
+#ifndef example_switch_clock
+#define example_switch_clock(a, b, c, d) \
+	do {                                 \
+		pmc_enable_pllack(a, b, c);      \
+		pmc_switch_mck_to_pllack(d);     \
+	} while (0)
+#endif
+
+#ifndef example_disable_pll
+#define example_disable_pll()  pmc_disable_pllack()
+#endif
+
+#ifndef example_set_wakeup_from_backup_mode
+#define example_set_wakeup_from_backup_mode() \
+	supc_set_wakeup_inputs(SUPC, WAKEUP_BACKUP_INPUT_ID, \
+			WAKEUP_BACKUP_INPUT_ID)
+#endif
+
 /** Current MCK in Hz */
 uint32_t g_ul_current_mck;
 
@@ -159,16 +177,11 @@ static void set_default_working_clock(void)
 
 	/*
 	 * Configure PLL and switch clock.
-	 * MCK = XTAL * (PLL_DEFAULT_MUL+1) / PLL_DEFAULT_DIV / MCK_DEFAULT_DIV 
+	 * MCK = XTAL * (PLL_DEFAULT_MUL+1) / PLL_DEFAULT_DIV / MCK_DEFAULT_DIV
 	 *     = 24 MHz
 	 */
-#if SAM4C
-	pmc_enable_pllbck(PLL_DEFAULT_MUL, PLL_COUNT, PLL_DEFAULT_DIV);
-	pmc_switch_mck_to_pllbck(MCK_DEFAULT_DIV);
-#else
-	pmc_enable_pllack(PLL_DEFAULT_MUL, PLL_COUNT, PLL_DEFAULT_DIV);
-	pmc_switch_mck_to_pllack(MCK_DEFAULT_DIV);
-#endif
+	example_switch_clock(PLL_DEFAULT_MUL, PLL_COUNT, PLL_DEFAULT_DIV,
+			MCK_DEFAULT_DIV);
 
 	/* Disable unused clock to save power */
 	pmc_osc_disable_fastrc();
@@ -189,7 +202,8 @@ static void configure_console(void)
 
 	/* Configure console UART. */
 	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
-	pio_configure_pin_group(CONF_UART_PIO, CONF_PINS_UART, CONF_PINS_UART_FLAGS);
+	pio_configure_pin_group(CONF_UART_PIO, CONF_PINS_UART,
+			CONF_PINS_UART_FLAGS);
 	stdio_serial_init(CONF_UART, &uart_serial_options);
 }
 
@@ -205,7 +219,8 @@ static void reconfigure_console(uint32_t ul_mck, uint32_t ul_baudrate)
 	pmc_enable_periph_clk(CONSOLE_UART_ID);
 
 	/* Configure PIO */
-	pio_configure_pin_group(CONF_UART_PIO, CONF_PINS_UART, CONF_PINS_UART_FLAGS);
+	pio_configure_pin_group(CONF_UART_PIO, CONF_PINS_UART,
+			CONF_PINS_UART_FLAGS);
 
 	/* Configure UART */
 	uart_init(CONF_UART, &uart_console_settings);
@@ -272,11 +287,8 @@ static void user_change_clock(uint8_t *p_uc_str)
 
 		/* Disable unused clock to save power */
 		pmc_osc_disable_xtal(0);
-#if SAM4C
-		pmc_disable_pllbck();
-#else
-		pmc_disable_pllack();
-#endif
+		example_disable_pll();
+
 	} else if ((uc_key >= MIN_CLOCK_PLL_ITEM) &&
 			(uc_key <= MAX_CLOCK_PLL_ITEM)) {
 		ul_id = uc_key - MIN_CLOCK_PLL_ITEM;
@@ -290,15 +302,9 @@ static void user_change_clock(uint8_t *p_uc_str)
 		/* Switch mainck to external xtal */
 		pmc_switch_mainck_to_xtal(0, BOARD_OSC_STARTUP_US);
 		/* Configure PLL and switch clock */
-#if SAM4C
-		pmc_enable_pllbck(g_pll_clock_list[ul_id][1], PLL_COUNT,
-				g_pll_clock_list[ul_id][2]);
-		pmc_switch_mck_to_pllbck(g_pll_clock_list[ul_id][3]);
-#else
-		pmc_enable_pllack(g_pll_clock_list[ul_id][1], PLL_COUNT,
-				g_pll_clock_list[ul_id][2]);
-		pmc_switch_mck_to_pllack(g_pll_clock_list[ul_id][3]);
-#endif
+		example_switch_clock(g_pll_clock_list[ul_id][1], PLL_COUNT,
+				g_pll_clock_list[ul_id][2], g_pll_clock_list[ul_id][3]);
+
 		/* Disable unused clock to save power */
 		pmc_osc_disable_fastrc();
 	} else {
@@ -426,11 +432,8 @@ static void test_wait_mode(void)
 
 	/* Disable unused clock to save power */
 	pmc_osc_disable_xtal(0);
-#if SAM4C
-	pmc_disable_pllbck();
-#else
-	pmc_disable_pllack();
-#endif
+	example_disable_pll();
+
 	/* Set wakeup input for fast startup */
 	pmc_set_fast_startup_input(WAKEUP_WAIT_INPUT_ID);
 
@@ -461,23 +464,14 @@ static void test_backup_mode(void)
 	gpbr_write(GPBR0, gpbr_read(GPBR0) + 1);
 
 	/* Enable the PIO for wake-up */
-#if (BOARD == SAM3U_EK || BOARD == SAM4C_EK)
-	supc_set_wakeup_mode(SUPC, SUPC_WUMR_FWUPEN_ENABLE);
-#else
-	supc_set_wakeup_inputs(SUPC, WAKEUP_BACKUP_INPUT_ID,
-			WAKEUP_BACKUP_INPUT_ID);
-#endif
+	example_set_wakeup_from_backup_mode();
 
 	/* Switch MCK to slow clock  */
 	pmc_switch_mck_to_sclk(PMC_MCKR_PRES_CLK_1);
 
 	/* Disable unused clock to save power */
 	pmc_osc_disable_xtal(0);
-#if SAM4C
-	pmc_disable_pllbck();
-#else
-	pmc_disable_pllack();
-#endif
+	example_disable_pll();
 
 	/* Enter into backup mode */
 	pmc_enable_backupmode();
