@@ -1366,9 +1366,9 @@ void pmc_disable_sclk_osc_freq_monitor(void)
 void pmc_set_writeprotect(uint32_t ul_enable)
 {
 	if (ul_enable) {
-		PMC->PMC_WPMR = PMC_WPMR_WPKEY_VALUE | PMC_WPMR_WPEN;
+		PMC->PMC_WPMR = PMC_WPMR_WPKEY_PASSWD | PMC_WPMR_WPEN;
 	} else {
-		PMC->PMC_WPMR = PMC_WPMR_WPKEY_VALUE;
+		PMC->PMC_WPMR = PMC_WPMR_WPKEY_PASSWD;
 	}
 }
 
