@@ -1,4 +1,4 @@
- /**
+/**
  * \file
  *
  * \brief GMAC (Ethernet MAC) driver for SAM.
@@ -58,6 +58,7 @@
 
 #include  "compiler.h"
 #include "gmac.h"
+#include "gmac_raw.h"
 #include <string.h>
 #include "conf_eth.h"
 
@@ -150,32 +151,6 @@ static void circ_inc(uint16_t *headortail, uint32_t size)
         if((*headortail) >= size) {
             (*headortail) = 0;
         }
-}
-
-/**
- * \brief Wait PHY operation to be completed.
- *
- * \param p_gmac HW controller address.
- * \param ul_retry The retry times, 0 to wait forever until completeness.
- *
- * Return GMAC_OK if the operation is completed successfully.
- */
-static uint8_t gmac_wait_phy(Gmac* p_gmac, const uint32_t ul_retry)
-{
-	volatile uint32_t ul_retry_count = 0;
-
-	while (!gmac_is_phy_idle(p_gmac)) {
-		if (ul_retry == 0) {
-			continue;
-		}
-
-		ul_retry_count++;
-
-		if (ul_retry_count >= ul_retry) {
-			return GMAC_TIMEOUT;
-		}
-	}
-	return GMAC_OK;
 }
 
 /**
@@ -313,49 +288,6 @@ static uint8_t gmac_init_mem(Gmac* p_gmac, gmac_device_t* p_gmac_dev,
 }
 
 /**
- * \brief Read the PHY register.
- *
- * \param p_gmac   Pointer to the GMAC instance.
- * \param uc_phy_address PHY address.
- * \param uc_address Register address.
- * \param p_value Pointer to a 32-bit location to store read data.
- *
- * \Return GMAC_OK if successfully, GMAC_TIMEOUT if timeout.
- */
-uint8_t gmac_phy_read(Gmac* p_gmac, uint8_t uc_phy_address, uint8_t uc_address,
-		uint32_t* p_value)
-{
-	gmac_maintain_phy(p_gmac, uc_phy_address, uc_address, 1, 0);
-
-	if (gmac_wait_phy(p_gmac, MAC_PHY_RETRY_MAX) == GMAC_TIMEOUT) {
-		return GMAC_TIMEOUT;
-	}
-	*p_value = gmac_get_phy_data(p_gmac);
-	return GMAC_OK;
-}
-
-/**
- * \brief Write the PHY register.
- *
- * \param p_gmac   Pointer to the GMAC instance.
- * \param uc_phy_address PHY Address.
- * \param uc_address Register Address.
- * \param ul_value Data to write, actually 16-bit data.
- *
- * \Return GMAC_OK if successfully, GMAC_TIMEOUT if timeout.
- */
-uint8_t gmac_phy_write(Gmac* p_gmac, uint8_t uc_phy_address,
-		uint8_t uc_address, uint32_t ul_value)
-{
-	gmac_maintain_phy(p_gmac, uc_phy_address, uc_address, 0, ul_value);
-
-	if (gmac_wait_phy(p_gmac, MAC_PHY_RETRY_MAX) == GMAC_TIMEOUT) {
-		return GMAC_TIMEOUT;
-	}
-	return GMAC_OK;
-}
-
-/**
  * \brief Initialize the GMAC driver.
  *
  * \param p_gmac   Pointer to the GMAC instance.
@@ -415,6 +347,25 @@ void gmac_dev_init(Gmac* p_gmac, gmac_device_t* p_gmac_dev,
 }
 
 /**
+ * \brief Return the number of RX buffer full.
+ *
+ * \param p_gmac_dev Pointer to the GMAC device instance.
+ *
+ * \return The number of RX buffer full.
+ */
+uint32_t gmac_dev_rx_buf_used(gmac_device_t* p_gmac_dev)
+{
+	uint32_t used = 0;
+
+	for (uint32_t i = 0; i < p_gmac_dev->us_rx_list_size; ++i) {
+		if (p_gmac_dev->p_rx_dscr[i].addr.val & GMAC_RXD_OWNERSHIP)
+			used += 1;
+	}
+
+	return used;
+}
+
+/**
  * \brief Frames can be read from the GMAC in multiple sections.
  * Read ul_frame_size bytes from the GMAC receive buffers to pcTo.
  * p_rcv_size is the size of the entire frame.  Generally gmac_read
@@ -468,6 +419,7 @@ uint32_t gmac_dev_read(gmac_device_t* p_gmac_dev, uint8_t* p_frame,
 
 		/* Copy data in the frame buffer */
 		if (c_is_frame) {
+			/* A complete turn has been made but no EOF found */
 			if (us_tmp_idx == p_gmac_dev->us_rx_idx) {
 				do {
 					p_rx_td = &p_gmac_dev->p_rx_dscr[p_gmac_dev->us_rx_idx];
@@ -476,7 +428,7 @@ uint32_t gmac_dev_read(gmac_device_t* p_gmac_dev, uint8_t* p_frame,
 
 				} while (us_tmp_idx != p_gmac_dev->us_rx_idx);
 
-				return GMAC_RX_NULL;
+				return GMAC_RX_ERROR;
 			}
 			/* Copy the buffer into the application frame */
 			us_buffer_length = GMAC_RX_UNITSIZE;
@@ -520,7 +472,26 @@ uint32_t gmac_dev_read(gmac_device_t* p_gmac_dev, uint8_t* p_frame,
 		p_rx_td = &p_gmac_dev->p_rx_dscr[us_tmp_idx];
 	}
 
-	return GMAC_RX_NULL;
+	return GMAC_RX_NO_DATA;
+}
+
+/**
+ * \brief Return the number of TX buffer waiting for transfer.
+ *
+ * \param p_gmac_dev Pointer to the GMAC device instance.
+ *
+ * \return The number of TX buffer used.
+ */
+uint32_t gmac_dev_tx_buf_used(gmac_device_t* p_gmac_dev)
+{
+	uint32_t used = 0;
+
+	for (uint32_t i = 0; i < p_gmac_dev->us_tx_list_size; ++i) {
+		if (p_gmac_dev->p_tx_dscr[i].status.val & GMAC_TXD_USED == 0)
+			used += 1;
+	}
+
+	return used;
 }
 
 /**

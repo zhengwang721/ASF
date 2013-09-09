@@ -53,6 +53,7 @@
 #include "httpd.h"
 #include "cgi.h"
 #include "sysclk.h"
+#include "conf_eth.h"
 
 #define CGI_MATCH_NONE   0
 #define CGI_MATCH_WORD   1  /* Select item in table only if string match */
@@ -164,6 +165,9 @@ chip_id_archnames[] = {
 	{ 0, NULL },
 };
 
+/* CGI handlers are not thread safe: tx_buf must be protected. */
+static sys_sem_t cgi_sem;
+
 /* TX buffer size to answer HTTP request. */
 #define TX_REQ_BUFLEN 			1024
 static uint8_t tx_buf[TX_REQ_BUFLEN];
@@ -227,12 +231,13 @@ static int cgi_status(struct netconn *client, const char *name, char *recv_buf, 
 #if LWIP_STATS
 	extern uint32_t lwip_tx_rate;
 	extern uint32_t lwip_rx_rate;
-	volatile uint32_t tx_rate = lwip_tx_rate;
-	volatile uint32_t rx_rate = lwip_rx_rate;
 #else
-	volatile uint32_t tx_rate = 0;
-	volatile uint32_t rx_rate = 0;
+	volatile uint32_t lwip_tx_rate = 0;
+	volatile uint32_t lwip_rx_rate = 0;
 #endif
+
+	/* Protect tx_buf buffer from concurrent access. */
+	sys_arch_sem_wait(&cgi_sem, 0);
 
 	status.tot_req++;
 	status.up_time = xTaskGetTickCount() / 1000;
@@ -242,7 +247,7 @@ static int cgi_status(struct netconn *client, const char *name, char *recv_buf, 
 	sprintf(status.local_ip, "%d.%d.%d.%d", IP_ADDR_TO_INT_TUPLE(client->pcb.ip->local_ip.addr));
 	length += sprintf((char *)tx_buf, "{\"board_ip\":\"%s\",\"remote_ip\":\"%s\",\"download\":%u,\"upload\":%u",
 								status.local_ip, status.last_connected_ip,
-								rx_rate, tx_rate);
+								lwip_rx_rate, lwip_tx_rate);
 
 	/* Turn FreeRTOS stats into JSON. */
 	vTaskGetRunTimeStats(freertos_stats);
@@ -304,7 +309,11 @@ static int cgi_status(struct netconn *client, const char *name, char *recv_buf, 
 
 	/* Send answer. */
 	http_sendOk(client, HTTP_CONTENT_JSON);
+	/* Use NETCONN_COPY to avoid corrupting the buffer after releasing the semaphore. */
 	netconn_write(client, tx_buf, strlen((char *)tx_buf), NETCONN_COPY);
+
+	/* Release semaphore to allow further use of tx_buf. */
+	sys_sem_signal(&cgi_sem);
 
 	return 0;
 }
@@ -390,6 +399,9 @@ static int cgi_chipInfo(struct netconn *client, const char *name, char *recv_buf
 	(void)recv_len;
 	(void)name;
 
+	/* Protect tx_buf buffer from concurrent access. */
+	sys_arch_sem_wait(&cgi_sem, 0);
+
 	sprintf((char *)tx_buf,
 			"{\"core_name\":\"%s\",\"arch_name\":\"%s\",\"sram_size\":\"%s\",\"flash_size\":\"%s\"}",
 			chipid_eproc_name(CHIPID_EPRCOC),
@@ -397,8 +409,13 @@ static int cgi_chipInfo(struct netconn *client, const char *name, char *recv_buf
 			chipid_sramsize(CHIPID_SRAMSIZ),
 			chipid_nvpsize(CHIPID_NVPSIZ));
 
+	/* Send answer. */
 	http_sendOk(client, HTTP_CONTENT_JSON);
-	netconn_write(client, (const char*)tx_buf, strlen((char *)tx_buf), NETCONN_COPY);
+	/* Use NETCONN_COPY to avoid corrupting the buffer after releasing the semaphore. */
+	netconn_write(client, tx_buf, strlen((char *)tx_buf), NETCONN_COPY);
+
+	/* Release semaphore to allow further use of tx_buf. */
+	sys_sem_signal(&cgi_sem);
 
 	return 0;
 }
@@ -412,6 +429,12 @@ static int cgi_chipInfo(struct netconn *client, const char *name, char *recv_buf
  */
 http_handler_t cgi_search(const char *name, HttpCGI *table)
 {
+	/* Allocate the CGI semaphore. */
+	/* This is necessary to avoid race conditions on tx_buf.*/
+	if (!sys_sem_valid(&cgi_sem)) {
+		sys_sem_new(&cgi_sem, 1);
+	}
+
 	if (!table) {
 		return NULL;
 	}

@@ -73,7 +73,6 @@
 			This lwIP port uses FreeRTOS and is dedicated to the SAM hardware module.
 			</info>
 			<info type="gui-flag" value="hidden"/>
-			<build type="module-config" subtype="required-header-file" value="conf_lwip_threads.h"/>
 			<build type="module-config" subtype="path" value="sam/module_config"/>
 			<build type="header-file" subtype="api" value="sam/include/arch/cc.h"/>
 			<build type="header-file" subtype="api" value="sam/include/arch/perf.h"/>
@@ -95,17 +94,15 @@
 			This lwIP port uses FreeRTOS and is dedicated to the SAM hardware module.
 			</info>
 			<info type="gui-flag" value="hidden"/>
-			<build type="module-config" subtype="required-header-file" value="conf_lwip_threads.h"/>
 			<build type="module-config" subtype="path" value="sam/module_config"/>
 			<build type="header-file" subtype="api" value="sam/include/arch/cc.h"/>
 			<build type="header-file" subtype="api" value="sam/include/arch/perf.h"/>
-			<build type="header-file" subtype="api" value="sam/include/netif/ethernetif.h"/>
+			<build type="header-file" subtype="api" value="sam/include/netif/sam4e_gmac.h"/>
 			<build type="header-file" subtype="api" value="sam/include/arch/sys_arch.h"/>
 			<build type="include-path" value="sam/include"/>
-			<build type="c-source" value="sam/netif/ethernetif_sam4.c"/>
+			<build type="c-source" value="sam/netif/sam4e_gmac.c"/>
 			<build type="c-source" value="sam/sys_arch.c"/>
 			<device-support value="sam4e"/>
-			<require idref="sam.drivers.gmac"/>
 			<require idref="sam.drivers.tc"/>
 			<require idref="sam.drivers.pmc"/>
 			<require idref="sam.components.ethernet_phy.ksz8051mnl"/>
@@ -137,12 +134,11 @@
 			<info type="gui-flag" value="hidden"/>
 			<build type="header-file" subtype="api" value="sam/include/arch/cc.h"/>
 			<build type="header-file" subtype="api" value="sam/include/arch/perf.h"/>
-			<build type="header-file" subtype="api" value="sam/include/netif/ethernetif.h"/>
+			<build type="header-file" subtype="api" value="sam/include/netif/sam4e_gmac.h"/>
 			<build type="include-path" value="sam/include"/>
 			<build type="include-path" value="sam/include/netif"/>
-			<build type="c-source" value="sam/netif/ethernetif_sam4.c"/>
+			<build type="c-source" value="sam/netif/sam4e_gmac.c"/>
 			<device-support value="sam4e"/>
-			<require idref="sam.drivers.gmac"/>
 			<require idref="sam.drivers.tc"/>
 			<require idref="sam.drivers.pmc"/>
 			<require idref="sam.components.ethernet_phy.ksz8051mnl"/>

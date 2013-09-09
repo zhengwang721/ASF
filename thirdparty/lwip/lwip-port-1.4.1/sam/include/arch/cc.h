@@ -44,29 +44,27 @@
 #ifndef CC_H_INCLUDED
 #define CC_H_INCLUDED
 
+#include <stdint.h>
+
 /* Define platform endianness */
 #define BYTE_ORDER LITTLE_ENDIAN
 
-/* The unsigned data types */
-typedef unsigned char u8_t;
-typedef unsigned short u16_t;
-typedef unsigned int u32_t;
+/* Types based on stdint.h */
+typedef uint8_t            u8_t;
+typedef int8_t             s8_t;
+typedef uint16_t           u16_t;
+typedef int16_t            s16_t;
+typedef uint32_t           u32_t;
+typedef int32_t            s32_t;
+typedef uintptr_t          mem_ptr_t;
 
-/* The signed counterparts */
-typedef signed char s8_t;
-typedef signed short s16_t;
-typedef signed int s32_t;
-
-/* A generic pointer type */
-typedef u32_t mem_ptr_t;
-
-/* Display name of types */
-#define U16_F           "hu"
-#define S16_F           "hd"
-#define X16_F           "hx"
-#define U32_F           "u"
-#define S32_F           "d"
-#define X32_F           "x"
+/* Define (sn)printf formatters for these lwIP types */
+#define U16_F "hu"
+#define S16_F "hd"
+#define X16_F "hx"
+#define U32_F "u"
+#define S32_F "d"
+#define X32_F "x"
 
 /* Compiler hints for packing lwip's structures */
 #if defined(__CC_ARM)
@@ -95,12 +93,18 @@ typedef u32_t mem_ptr_t;
     to let sys.h use binary semaphores instead of mutexes - as before in 1.3.2
     Refer CHANGELOG
 */
-#define LWIP_COMPAT_MUTEX 1
-#define LWIP_PLATFORM_DIAG(x) printf x
+#define  LWIP_COMPAT_MUTEX  1
 
-#define LWIP_PLATFORM_ASSERT(x) do {/*printf("Assertion \"%s\" failed at line %d in %s\n", x, __LINE__, __FILE__); \
-                                      fflush(NULL); abort();*/} while(1)
+/* Make lwip/arch.h define the codes which are used throughout */
+#define LWIP_PROVIDE_ERRNO
 
-#define LWIP_PROVIDE_ERRNO /* Make lwip/arch.h define the codes which are used throughout */
+/* Debug facilities. LWIP_DEBUG must be defined to read output */
+#ifdef LWIP_DEBUG
+#define LWIP_PLATFORM_DIAG(x)   {printf x;}
+#define LWIP_PLATFORM_ASSERT(x) {printf("Assertion \"%s\" failed at line %d in %s\n", x, __LINE__, __FILE__); while(1);}
+#else
+#define LWIP_PLATFORM_DIAG(x)   {;}
+#define LWIP_PLATFORM_ASSERT(x) {while (1);}
+#endif
 
 #endif /* CC_H_INCLUDED */

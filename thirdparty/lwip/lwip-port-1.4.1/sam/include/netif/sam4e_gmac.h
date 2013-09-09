@@ -1,7 +1,8 @@
 /**
+ *
  * \file
  *
- * \brief CGI request function handlers.
+ * \brief Ethernet Interface Skeleton.
  *
  * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
@@ -41,17 +42,16 @@
  *
  */
 
-#ifndef CGI_H_INCLUDED
-#define CGI_H_INCLUDED
+#ifndef ETHERNETIF_H_INCLUDED
+#define ETHERNETIF_H_INCLUDED
 
-typedef struct HttpCGI {
-	unsigned type;          /* Strategy to find string in the CGI table. */
-	const char *name;       /* Request string from GET request */
-	http_handler_t handler; /* Callback to process the special request */
-} HttpCGI;
+#include "lwip/netif.h"
+#include "lwip/ip_addr.h"
+#include "lwip/err.h"
+#include "netif/etharp.h"
 
-http_handler_t cgi_search(const char *name, HttpCGI *table);
+err_t ethernetif_init(struct netif *netif);
 
-extern HttpCGI cgi_table[];
+void ethernetif_input(struct netif *netif);
 
-#endif /* CGI_H_INCLUDED */
+#endif /* ETHERNETIF_H_INCLUDED */

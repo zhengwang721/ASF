@@ -41,8 +41,8 @@
  *
  */
 
-#ifndef ETHERNET_SAM_H_INCLUDED
-#define ETHERNET_SAM_H_INCLUDED
+#ifndef ETHERNET_H_INCLUDED
+#define ETHERNET_H_INCLUDED
 
 #include <lwip/netif.h>
 
@@ -76,4 +76,4 @@ void status_callback(struct netif *netif);
 /**INDENT-ON**/
 /// @endcond
 
-#endif /* ETHERNET_SAM_H_INCLUDED */
+#endif /* ETHERNET_H_INCLUDED */

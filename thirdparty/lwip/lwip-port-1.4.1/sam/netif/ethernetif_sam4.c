@@ -90,6 +90,12 @@ uint32_t lwip_tx_count = 0;
 uint32_t lwip_rx_count = 0;
 uint32_t lwip_tx_rate = 0;
 uint32_t lwip_rx_rate = 0;
+uint32_t lwip_eth_tx_cur = 0;
+uint32_t lwip_eth_tx_max = 0;
+uint32_t lwip_eth_tx_err = 0;
+uint32_t lwip_eth_rx_cur = 0;
+uint32_t lwip_eth_rx_max = 0;
+uint32_t lwip_eth_rx_err = 0;
 #endif
 
 /** The MAC address used for the test */
@@ -197,19 +203,19 @@ static void low_level_init(struct netif *netif)
 
 	/* Init MAC PHY driver */
 	if (ethernet_phy_init(GMAC, BOARD_GMAC_PHY_ADDR, sysclk_get_cpu_hz()) != GMAC_OK) {
-		LWIP_DEBUGF(LWIP_DBG_TRACE, "PHY Initialize ERROR!\r");
+		LWIP_DEBUGF(LWIP_DBG_TRACE, ("PHY Initialize ERROR!\r\n"));
 		return;
 	}
 
 	/* Auto Negotiate, work in RMII mode */
 	if (ethernet_phy_auto_negotiate(GMAC, BOARD_GMAC_PHY_ADDR) != GMAC_OK) {
-		LWIP_DEBUGF(LWIP_DBG_TRACE, "Auto Negotiate ERROR!\r");
+		LWIP_DEBUGF(LWIP_DBG_TRACE, ("Auto Negotiate ERROR!\r\n"));
 		return;
 	}
 
 	/* Establish ethernet link */
 	while (ethernet_phy_set_link(GMAC, BOARD_GMAC_PHY_ADDR, 1) != GMAC_OK) {
-		LWIP_DEBUGF(LWIP_DBG_TRACE, "Set link ERROR!\r");
+		LWIP_DEBUGF(LWIP_DBG_TRACE, ("Set link ERROR!\r\n"));
 	}
 
 #ifdef FREERTOS_USED
@@ -241,14 +247,9 @@ static void low_level_init(struct netif *netif)
 static err_t low_level_output(struct netif *netif, struct pbuf *p)
 {
 	struct pbuf *q = NULL;
-	uint8_t *bufptr = NULL;
+	int8_t pc_buf[NET_RW_BUFF_SIZE];
+	int8_t *bufptr = &pc_buf[0];
 	uint8_t uc_rc;
-	
-	(void)netif;
-	
-	bufptr = gmac_dev_get_tx_buffer(&gs_gmac_dev);
-	if (bufptr == NULL)
-		return ERR_BUF;
 
 #if ETH_PAD_SIZE
 	pbuf_header(p, -ETH_PAD_SIZE);    /* Drop the padding word */
@@ -260,7 +261,7 @@ static err_t low_level_output(struct netif *netif, struct pbuf *p)
 	}
 
 	/* Clear the output buffer */
-	memset(bufptr, 0x0, NET_RW_BUFF_SIZE);
+//	memset(bufptr, 0x0, NET_RW_BUFF_SIZE);
 
 	for (q = p; q != NULL; q = q->next) {
 		/* Send the data from the pbuf to the interface, one pbuf at a
@@ -273,13 +274,19 @@ static err_t low_level_output(struct netif *netif, struct pbuf *p)
 	}
 
 	/* Signal that packet should be sent(); */
-	uc_rc = gmac_dev_write_nocopy(&gs_gmac_dev, p->tot_len, NULL);
+	uc_rc = gmac_dev_write(&gs_gmac_dev, pc_buf, p->tot_len, NULL);
 	if (uc_rc != GMAC_OK) {
+#if LWIP_STATS
+		lwip_eth_tx_err += 1;
+#endif
 		return ERR_BUF;
 	}
 
 #if LWIP_STATS
 	lwip_tx_count += p->tot_len;
+	lwip_eth_tx_cur = gmac_dev_tx_buf_used(&gs_gmac_dev);
+	if (lwip_eth_tx_cur > lwip_eth_tx_max)
+		lwip_eth_tx_max = lwip_eth_tx_cur;
 #endif
 
 #if ETH_PAD_SIZE
@@ -310,16 +317,23 @@ static struct pbuf *low_level_input(struct netif *netif)
 	uint8_t uc_rc;
 
 	(void)netif;
-	
+
 	/* Obtain the size of the packet and put it into the "len"
 	 * variable. */
 	uc_rc = gmac_dev_read(&gs_gmac_dev, pc_buf, sizeof(pc_buf), &ul_frmlen);
 	if (uc_rc != GMAC_OK) {
+#if LWIP_STATS
+		if (uc_rc == GMAC_RX_ERROR)
+			lwip_eth_rx_err += 1;
+#endif
 		return NULL;
 	}
 
 #if LWIP_STATS
 	lwip_rx_count += ul_frmlen;
+	lwip_eth_rx_cur = gmac_dev_rx_buf_used(&gs_gmac_dev);
+	if (lwip_eth_rx_cur > lwip_eth_rx_max)
+		lwip_eth_rx_max = lwip_eth_rx_cur;
 #endif
 
 	s_len = ul_frmlen;

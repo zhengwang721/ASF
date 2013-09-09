@@ -38,7 +38,6 @@
 		<require idref="sam.drivers.pdc"/>
 		<require idref="sam.drivers.rstc"/>
 		<require idref="sam.drivers.pio"/>
-		<require idref="sam.drivers.gmac"/>
 		<require idref="sam.drivers.pmc"/>
 		<require idref="sam.drivers.tc"/>
 		<require idref="sam.utils.syscalls"/>
