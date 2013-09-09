@@ -66,7 +66,7 @@ extern "C" {
  * In SAM4 series chip, the bit RTC1HZ and RTTDIS in RTT_MR is write only,
  * so this value is used to indicate these bits.
  */
-static uint32_t g_ul_reg = 0;
+static uint32_t g_reg_mr_bak = 0;
 
 /**
  * \brief Initialize the given RTT.
@@ -83,7 +83,7 @@ static uint32_t g_ul_reg = 0;
 uint32_t rtt_init(Rtt *p_rtt, uint16_t us_prescaler)
 {
 #if SAM4N || SAM4S || SAM4E || SAM4C
-	p_rtt->RTT_MR = (us_prescaler | RTT_MR_RTTRST | g_ul_reg);
+	p_rtt->RTT_MR = (us_prescaler | RTT_MR_RTTRST | g_reg_mr_bak);
 #else
 	p_rtt->RTT_MR = (us_prescaler | RTT_MR_RTTRST);
 #endif
@@ -103,10 +103,10 @@ void rtt_sel_source(Rtt *p_rtt, bool is_rtc_sel)
 {
 	if(is_rtc_sel) {
 		p_rtt->RTT_MR |= RTT_MR_RTC1HZ;
-		g_ul_reg |= RTT_MR_RTC1HZ;
+		g_reg_mr_bak |= RTT_MR_RTC1HZ;
 	} else {
 		p_rtt->RTT_MR &= ~RTT_MR_RTC1HZ;
-		g_ul_reg &= ~RTT_MR_RTC1HZ;
+		g_reg_mr_bak &= ~RTT_MR_RTC1HZ;
 	}
 }
 
@@ -117,8 +117,8 @@ void rtt_sel_source(Rtt *p_rtt, bool is_rtc_sel)
  */
 void rtt_enable(Rtt *p_rtt)
 {
-	g_ul_reg &= ~RTT_MR_RTTDIS;
-	p_rtt->RTT_MR |= g_ul_reg;
+	g_reg_mr_bak &= ~RTT_MR_RTTDIS;
+	p_rtt->RTT_MR |= g_reg_mr_bak;
 }
 /**
  * \brief Disable RTT.
@@ -127,8 +127,8 @@ void rtt_enable(Rtt *p_rtt)
  */
 void rtt_disable(Rtt *p_rtt)
 {
-	g_ul_reg |= RTT_MR_RTTDIS;
-	p_rtt->RTT_MR |= g_ul_reg;
+	g_reg_mr_bak |= RTT_MR_RTTDIS;
+	p_rtt->RTT_MR |= g_reg_mr_bak;
 }
 #endif
 
@@ -140,8 +140,12 @@ void rtt_disable(Rtt *p_rtt)
  */
 void rtt_enable_interrupt(Rtt *p_rtt, uint32_t ul_sources)
 {
-	p_rtt->RTT_MR |= ul_sources;
-	p_rtt->RTT_MR |= g_ul_reg;
+	uint32_t temp;
+
+	temp = p_rtt->RTT_MR;
+	temp |= ul_sources;
+	temp |= g_reg_mr_bak;
+	p_rtt->RTT_MR = temp;
 }
 
 /**
@@ -152,8 +156,12 @@ void rtt_enable_interrupt(Rtt *p_rtt, uint32_t ul_sources)
  */
 void rtt_disable_interrupt(Rtt *p_rtt, uint32_t ul_sources)
 {
-	p_rtt->RTT_MR &= (~ul_sources);
-	p_rtt->RTT_MR |= g_ul_reg;
+	uint32_t temp;
+
+	temp = p_rtt->RTT_MR;
+	temp &= (~ul_sources);
+	temp |= g_reg_mr_bak;
+	p_rtt->RTT_MR = temp;
 }
 
 /**
