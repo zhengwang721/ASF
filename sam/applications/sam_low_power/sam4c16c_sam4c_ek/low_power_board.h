@@ -3,7 +3,7 @@
  *
  * \brief Board specific definition for low power example.
  *
- * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -48,33 +48,30 @@
  * Push button definitions for sleep mode and active mode
  * @{
  */
-#define PIN_PUSHBUTTON_WAKEUP_PIO    PIN_PUSHBUTTON_1_PIO
-#define PIN_PUSHBUTTON_WAKEUP_MASK   PIN_PUSHBUTTON_1_MASK
-#define PIN_PUSHBUTTON_WAKEUP_ID     PIN_PUSHBUTTON_1_ID
-#define PIN_PUSHBUTTON_WAKEUP_ATTR   PIN_PUSHBUTTON_1_ATTR
+#define PIN_PUSHBUTTON_WAKEUP_PIO    PIN_PUSHBUTTON_2_PIO
+#define PIN_PUSHBUTTON_WAKEUP_MASK   PIN_PUSHBUTTON_2_MASK
+#define PIN_PUSHBUTTON_WAKEUP_ID     PIN_PUSHBUTTON_2_ID
+#define PIN_PUSHBUTTON_WAKEUP_ATTR   PIN_PUSHBUTTON_2_ATTR
 /** @} */
 
-/** Wakeup pin for wait mode: USR-LEFT button */
-#define WAKEUP_WAIT_INPUT_ID     (1u << 7)
-
-/** Internal Flash Controller 0. */
-#define EFC     EFC0
+/** Wakeup pin for wait mode: FWUP pin */
+#define WAKEUP_WAIT_INPUT_ID    (1u << 4)
 
 /** Hint message for active mode */
 #define STRING_ACTIVE \
 		"Enter into active mode.\n\r" \
-		"- Press USR-LEFT button to go out.\n\r"
+		"- Press SCROLL_UP button to exit.\n\r"
 
 /** Hint message for sleep mode */
 #define STRING_SLEEP \
 		"Enter into sleep mode.\n\r" \
-		"- Press USR-LEFT button to wake up.\n\r"
+		"- Press SCROLL_UP button to wake up.\n\r"
 
 /** Hint message for wait mode */
 #define STRING_WAIT \
 		"Enter into wait mode.\n\r" \
 		"- Switch to 4MHz Fast RC oscillator, PLL stopped.\n\r" \
-		"- Press USR-LEFT button to wake up.\n\r"
+		"- Press SCROLL_UP button to wake up.\n\r"
 
 /** Hint message for backup mode */
 #define STRING_BACKUP \
@@ -94,15 +91,25 @@
 		"  a: 24MHz from PLL clock\n\r"                    \
 		"  b: 32MHz from PLL clock\n\r"                    \
 		"  c: 48MHz from PLL clock\n\r"                    \
-		"  d: 60MHz from PLL clock\n\r"                    \
-		"  e: 72MHz from PLL clock\n\r"                    \
-		"  f: 84MHz from PLL clock\n\r"                    \
-		"  g: 96MHz from PLL clock\n\r"
+		"  d: 64MHz from PLL clock\n\r"                    \
+		"  e: 84MHz from PLL clock\n\r"                    \
+		"  f: 100MHz from PLL clock\n\r"                   \
+		"  g: 120MHz from PLL clock\n\r"                   \
 
 #define MIN_CLOCK_FAST_RC_ITEM '1'
 #define MAX_CLOCK_FAST_RC_ITEM '8'
 #define MIN_CLOCK_PLL_ITEM     'a'
 #define MAX_CLOCK_PLL_ITEM     'g'
+
+#define PLL_DEFAULT_MUL  23
+#define PLL_DEFAULT_DIV  2
+#define MCK_DEFAULT_DIV  PMC_MCKR_PRES_CLK_4
+
+#define example_switch_clock(a, b, c, d) \
+	do {                                 \
+		pmc_enable_pllbck(a, b, c);      \
+		pmc_switch_mck_to_pllbck(d);     \
+	} while (0)
 
 #define example_set_wakeup_from_backup_mode() \
 	supc_set_wakeup_mode(SUPC, SUPC_WUMR_FWUPEN_ENABLE)
