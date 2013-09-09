@@ -50,7 +50,7 @@
 #include <status_codes.h>
 
 /**
- * \defgroup asfdoc_samd20_sercom_spi_master_vec_group  SERCOM SPI master with vectored I/O
+ * \defgroup asfdoc_samd20_sercom_spi_master_vec_group Vectored SERCOM SPI Master
  *
  * This driver for SAM D20 devices provides an interface for the configuration
  * and operation of the SERCOM module in SPI master mode and uses vectored I/O
@@ -349,7 +349,7 @@ enum status_code spi_master_vec_transceive_buffer_job(
  */
 
 /**
- * \page asfdoc_samd20_sercom_spi_master_vec_extra Extra Information for SERCOM SPI master driver with vectored I/O
+ * \page asfdoc_samd20_sercom_spi_master_vec_extra Extra Information for Vectored SERCOM SPI Master
  *
  *
  * \section asfdoc_samd20_sercom_spi_master_vec_extra_acronyms Acronyms
@@ -420,7 +420,7 @@ enum status_code spi_master_vec_transceive_buffer_job(
  */
 
 /**
- * \page asfdoc_samd20_sercom_spi_master_vec_exqsg Examples for SERCOM SPI master driver with vectored I/O
+ * \page asfdoc_samd20_sercom_spi_master_vec_exqsg Examples for Vectored SERCOM SPI Master
  *
  * This is a list of the available Quick Start guides (QSGs) and example
  * applications for \ref asfdoc_samd20_sercom_spi_master_vec_group. QSGs are
