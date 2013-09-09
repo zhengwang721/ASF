@@ -42,6 +42,7 @@
  */
 #include <clock.h>
 #include <conf_clocks.h>
+#include <system.h>
 
 /**
  * \internal
@@ -394,12 +395,12 @@ void system_clock_source_dfll_set_config(
 			_system_clock_inst.dfll.mul =
 					_SYSTEM_OLD_DFLLMUL_CSTEP(config->coarse_max_step) |
 					_SYSTEM_OLD_DFLLMUL_FSTEP(config->fine_max_step)   |
-					_SYSTEM_OLD_DFLLMUL_MUL(config->multiply_factor);
+					SYSCTRL_DFLLMUL_MUL(config->multiply_factor);
 		} else {
 			_system_clock_inst.dfll.mul =
 					_SYSTEM_NEW_DFLLMUL_CSTEP(config->coarse_max_step) |
 					_SYSTEM_NEW_DFLLMUL_FSTEP(config->fine_max_step)   |
-					_SYSTEM_NEW_DFLLMUL_MUL(config->multiply_factor);
+					SYSCTRL_DFLLMUL_MUL(config->multiply_factor);
 		}
 
 		/* Enable the closed loop mode */
