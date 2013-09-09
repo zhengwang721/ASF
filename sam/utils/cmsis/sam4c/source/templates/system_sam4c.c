@@ -86,10 +86,10 @@ void SystemCoreClockUpdate(void)
 	/*
 	 * TODO:
 	 * Add code to calculate the system frequency based upon the current
-     * register settings.
+	 * register settings.
 	 *
-     * This function can be used to retrieve the system core clock frequeny
-     * after user changed register sittings.
+	 * This function can be used to retrieve the system core clock frequeny
+	 * after user changed register sittings.
 	 */
 }
 
