@@ -42,9 +42,8 @@
 #ifndef __LWIPOPTS_H__
 #define __LWIPOPTS_H__
 
-/* Include user defined options first */
+/* Include ethernet configuration first */
 #include "conf_eth.h"
-//#include "lwip/debug.h"
 
 /*
    -----------------------------------------------
@@ -60,9 +59,16 @@
 #define LWIP_RAW                  	0
 #define LWIP_NETIF_STATUS_CALLBACK	1
 
+/**
+ * SYS_LIGHTWEIGHT_PROT==1: if you want inter-task protection for certain
+ * critical regions during buffer allocation, deallocation and memory
+ * allocation and deallocation.
+ */
+#define SYS_LIGHTWEIGHT_PROT        1
+
 /* These are not available when using "NO_SYS" */
 #define LWIP_NETCONN            	1
-#define LWIP_SOCKET             	1
+#define LWIP_SOCKET             	0
 
 /* Enable DHCP support */
 #define DHCP_USED
@@ -84,52 +90,43 @@
  * MEM_SIZE: the size of the heap memory. If the application will send
  * a lot of data that needs to be copied, this should be set high.
  */
-#define MEM_SIZE                		8 * 1024
+#define MEM_SIZE                		14 * 1024
 
 /**
  * MEMP_NUM_TCP_PCB: the number of simulatenously active TCP connections.
  * (requires the LWIP_TCP option)
  */
-#ifndef MEMP_NUM_TCP_PCB
 #define MEMP_NUM_TCP_PCB                16
-#endif
 
 /**
  * MEMP_NUM_TCP_PCB_LISTEN: the number of listening TCP connections.
  * (requires the LWIP_TCP option)
  */
-#ifndef MEMP_NUM_TCP_PCB_LISTEN
 #define MEMP_NUM_TCP_PCB_LISTEN         1
-#endif
+
+/**
+ * MEMP_NUM_PBUF: the number of memp struct pbufs (used for PBUF_ROM and PBUF_REF).
+ * If the application sends a lot of data out of ROM (or other static memory),
+ * this should be set high.
+ */
+#define MEMP_NUM_PBUF                   10
 
 /**
  * MEMP_NUM_NETBUF: the number of struct netbufs.
  * (only needed if you use the sequential API, like api_lib.c)
  */
-#ifndef MEMP_NUM_NETBUF
-#define MEMP_NUM_NETBUF                 10
-#endif
+#define MEMP_NUM_NETBUF                 8
 
 /**
  * MEMP_NUM_NETCONN: the number of struct netconns.
  * (only needed if you use the sequential API, like api_lib.c)
  */
-#ifndef MEMP_NUM_NETCONN
-#define MEMP_NUM_NETCONN                10
-#endif
+#define MEMP_NUM_NETCONN                16
 
-/*
-   ---------------------------------
-   ---------- ARP options ----------
-   ---------------------------------
-*/
-
-/** ETH_PAD_SIZE: number of bytes added before the ethernet header to ensure
- * alignment of payload after that header. Since the header is 14 bytes long,
- * without this padding e.g. addresses in the IP header will not be aligned
- * on a 32-bit boundary, so setting this to 2 can speed up 32-bit-platforms.
+/**
+ * PBUF_POOL_SIZE: the number of buffers in the pbuf pool.
  */
-#define ETH_PAD_SIZE            2
+#define PBUF_POOL_SIZE                  10
 
 /*
    ----------------------------------
@@ -166,32 +163,52 @@
  */
 #define LWIP_TCP                1
 
+/**
+ * TCP_MSS: The maximum segment size controls the maximum amount of
+ * payload bytes per packet. For maximum throughput, set this as
+ * high as possible for your network (i.e. 1460 bytes for standard
+ * ethernet).
+ * For the receive side, this MSS is advertised to the remote side
+ * when opening a connection. For the transmit size, this MSS sets
+ * an upper limit on the MSS advertised by the remote host.
+ */
+#define TCP_MSS                 1500
+
+/**
+ * TCP_WND: The size of a TCP window.  This must be at least
+ * (2 * TCP_MSS) for things to work well
+ */
+#define TCP_WND                 (2 * TCP_MSS)
+
+/**
+ * TCP_SND_BUF: TCP sender buffer space (bytes).
+ * To achieve good performance, this should be at least 2 * TCP_MSS.
+ */
+#define TCP_SND_BUF             (2 * TCP_MSS)
+
 /*
    ------------------------------------
    ---------- Thread options ----------
    ------------------------------------
 */
 
-/** The stack sizes allocated to the netif stack: (1048 * 4) = 4096 bytes. */
-#define netifINTERFACE_TASK_STACK_SIZE    1024
+/** The stack sizes allocated to the netif stack: (256 * 4) = 1048 bytes. */
+#define GMAC_TASK_STACKSIZE               256
 
 /** The priority of the netif stack. */
-#define netifINTERFACE_TASK_PRIORITY      (tskIDLE_PRIORITY + 4)
+#define GMAC_TASK_PRIORITY                (tskIDLE_PRIORITY + 4)
 
-/** The stack sizes allocated to the TCPIP stack: (1048 * 4) = 4096 bytes. */
-#define TCPIP_THREAD_STACKSIZE            1024
+/** The stack sizes allocated to the TCPIP stack: (256 * 4) = 1048 bytes. */
+#define TCPIP_THREAD_STACKSIZE            256
 
 /** The priority of the TCPIP stack. */
-#define TCPIP_THREAD_PRIO                 (tskIDLE_PRIORITY + 4)
-
-/** Number of threads that can be started with sys_thread_new() */
-#define SYS_THREAD_MAX                    8
+#define TCPIP_THREAD_PRIO                 (tskIDLE_PRIORITY + 5)
 
 /** The mailbox size for the tcpip thread messages */
-#define TCPIP_MBOX_SIZE                 16
-#define DEFAULT_ACCEPTMBOX_SIZE         16
-#define DEFAULT_RAW_RECVMBOX_SIZE       16
-#define DEFAULT_TCP_RECVMBOX_SIZE       16
+#define TCPIP_MBOX_SIZE                   16
+#define DEFAULT_ACCEPTMBOX_SIZE           16
+#define DEFAULT_RAW_RECVMBOX_SIZE         16
+#define DEFAULT_TCP_RECVMBOX_SIZE         16
 
 /*
    ----------------------------------------
@@ -222,12 +239,12 @@
    ---------------------------------------
 */
 
-/* Define default values for unconfigured parameters. */
-// 1 == To suppress some errors for now (no debug output)
-#define LWIP_NOASSERT 					1
+#define LWIP_NOASSERT
 
-#define LWIP_DBG_MIN_LEVEL              LWIP_DBG_LEVEL_SEVERE
-#define LWIP_DBG_TYPES_ON               LWIP_DBG_ON
+//#define LWIP_DEBUG
+#define LWIP_DBG_MIN_LEVEL              LWIP_DBG_LEVEL_ALL
+#define LWIP_DBG_TYPES_ON               LWIP_DBG_OFF
+
 #define ETHARP_DEBUG                    LWIP_DBG_OFF
 #define NETIF_DEBUG                     LWIP_DBG_OFF
 #define PBUF_DEBUG                      LWIP_DBG_OFF

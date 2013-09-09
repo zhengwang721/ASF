@@ -139,7 +139,7 @@ static void http_send_data(struct tcp_pcb *pcb, struct http_state *hs)
 {
 	err_t err;
 	u32_t len;
-	
+
 	/* We cannot send more data than space available in the send buffer. */
 	if (tcp_sndbuf(pcb) < hs->left) {
 		len = tcp_sndbuf(pcb);
@@ -148,7 +148,8 @@ static void http_send_data(struct tcp_pcb *pcb, struct http_state *hs)
 	}
 
 	do {
-		err = tcp_write(pcb, hs->file, len, 0);
+		/* Use copy flag to avoid using flash as a DMA source (forbidden). */
+		err = tcp_write(pcb, hs->file, len, TCP_WRITE_FLAG_COPY);
 		if (err == ERR_MEM) {
 			len /= 2;
 		}
@@ -236,9 +237,9 @@ void http_write(const char *buf, u32_t len)
 
 	http_send_data(g_pcb, g_hs);
 
-	/* 
+	/*
 	 * Tell TCP that we wish be to informed of buf that has been
-	 * successfully sent by a call to the http_sent() callback. 
+	 * successfully sent by a call to the http_sent() callback.
 	 */
 	tcp_sent(g_pcb, http_sent);
 }
@@ -625,8 +626,8 @@ static err_t http_accept(void *arg, struct tcp_pcb *pcb, err_t err)
 	/* Tell TCP that this is the structure we wish to be passed to our callback. */
 	tcp_arg(pcb, hs);
 
-	/* 
-	 * Tell TCP that we wish to be informed of incoming data using 
+	/*
+	 * Tell TCP that we wish to be informed of incoming data using
 	 * http_recv() callback.
 	 */
 	tcp_recv(pcb, http_recv);

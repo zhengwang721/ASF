@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief FreeRTOS Web/DSP Demo.
+ * \brief HTTP Netconn Example.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -42,11 +42,11 @@
  */
 
 /**
- * \mainpage web_dsp_demo FreeRTOS Web/DSP Demo
+ * \mainpage http_netconn_example HTTP Netconn Example
  *
  * \section Purpose
  *
- * This demo demonstrates how to use the DACC, TC, GMAC, SPI, SMC in a real-time
+ * This example demonstrates how to use GMAC, TC, SPI in a real-time
  * context, using the FreeRTOS kernel. The demo also features the LwIP stack on
  * top of the GMAC driver.
  *
@@ -58,19 +58,12 @@
  * \section Description
  *
  * The demo relies on several FreeRTOS task to work:
- * - DSP task : based on the selected source mode, the DSP task will process data
- *   from a wave file (loopback mode) or from a generated sinus wave (its frequency
- *   can be changed using the potentiometer). The input signal is then modulated
- *   based on the QTouch slider last known position.
- *   The DSP task then performs a Fast Fourrier Transform to compute the magnitude
- *   of the signal.
- * - GFX task : draws the IP configuration menu, then the input signal source and
- *   magnitude on screen.
- * - HTTP task : handles the LwIP stack and HTTPD callbacks to answer remote
- *   client request.
+ * - GFX task : draws the IP configuration menu on screen.
  *   The device IP can either be configured statically (192.168.0.100) or
  *   dynamically using DHCP.
- * - QTouch task : used to compute the slider's position.
+ * - HTTP task : handles the LwIP stack to accept remote client request.
+ * - HTTP-req task : instanciated by the HTTP task to answer the client
+ *   request.
  *
  * Once the IP address is configured from the touch screen interface, the board
  * ressources can be accessed from any web browser providing the IP address. For
@@ -82,27 +75,14 @@
  * - Chip name.
  * - SRAM size.
  * - Flash size.
- * - Audio out connector.
- * - Boot from memory.
  * - Board IP.
  * - Your IP.
  * - Total number of HTTP status requests.
- * - FreeRTOS uptime.
- * - Temperature sensor value.
- * - Led status.
- * - Potentiometer value.
- * - Graph of the FFT input signal magnitude (range from 0 to 10 khz).
+ * - FreeRTOS thread usage.
+ * - LwIP stats.
+ * - GMAC transfer rate graph.
  *
  * The web page is periodically refreshed to keep the board status up-to-date.
- * With Chrome browser (V25), sometimes two http webpage requests are needed to
- * get correct status periodical update on browser. This is a known issue.
- * And please refer to the datasheet for the temperature sensor accuracy.
- *
- * For IAR Embedded Workbench IDE project, the source supports both FPU on
- * and FPU off cases. FPU on or FPU off can be configured in
- * IAR project "General Options" by selecting "VFPv4" or "None" respectively.
- * With FPU on, hardware floating-point instruction is used, which can improve
- * the performance of floating-point arithmetic in the DSP task.
  *
  */
 
@@ -114,6 +94,11 @@
 #include "stdio_serial.h"
 #include "tc.h"
 
+#define STRING_EOL    "\n"
+#define STRING_HEADER "-- HTTP Netconn Example --"STRING_EOL \
+		"-- "BOARD_NAME" --"STRING_EOL \
+		"-- Compiled: "__DATE__" "__TIME__" --"STRING_EOL
+
 /*
  * FreeRTOS hook (or callback) functions that are defined in this file.
  */
@@ -122,6 +107,21 @@ void vApplicationIdleHook(void);
 void vApplicationStackOverflowHook(xTaskHandle pxTask,
 		signed char *pcTaskName);
 void vApplicationTickHook(void);
+
+/**
+ * Configure UART console.
+ */
+static void configure_console(void)
+{
+	const usart_serial_options_t uart_serial_options = {
+		.baudrate = CONF_UART_BAUDRATE,
+		.paritytype = CONF_UART_PARITY
+	};
+
+	/** Configure console UART. */
+	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
+	stdio_serial_init(CONF_UART, &uart_serial_options);
+}
 
 static void prvSetupHardware(void)
 {
@@ -133,6 +133,9 @@ static void prvSetupHardware(void)
 
 	/* Atmel library function to setup for the evaluation kit being used. */
 	board_init();
+
+	/** Initialize the console uart */
+	configure_console();
 }
 
 uint32_t get_run_time_counter_value(void)
@@ -153,36 +156,13 @@ void configure_timer_for_run_time_stats(void)
 	tc_start(TC0, 0);					// Start Timer counter 0 channel 0.
 }
 
-/**
- * Configure UART console.
- */
-static void configure_console(void)
+void main(void)
 {
-	const usart_serial_options_t uart_serial_options = {
-		.baudrate = CONF_UART_BAUDRATE,
-		.paritytype = CONF_UART_PARITY
-	};
-
-	/** Configure console UART. */
-	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
-	stdio_serial_init(CONF_UART, &uart_serial_options);
-}
-
-int main(void)
-{
-	/* Prepare the hardware to run this demo. */
+	/** Prepare the hardware to run this demo. */
 	prvSetupHardware();
-#if SAM4E
-	NVIC_DisableIRQ(ARM_IRQn);
-#endif
-	/** Initilize the SAM system */
-	sysclk_init();
-	board_init();
 
-	/** Initialize the console uart */
-	configure_console();
-
-	printf("Program started...!\r\n");
+	/** Print example information. */
+	puts(STRING_HEADER);
 
 	/** Create GFX task. */
 	create_gfx_task(mainGFX_TASK_STACK_SIZE, mainGFX_TASK_PRIORITY);
@@ -200,8 +180,6 @@ int main(void)
 	for more details. */
 	for (;;) {
 	}
-
-	return 0;
 }
 
 void vApplicationMallocFailedHook(void)

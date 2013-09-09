@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief GFX task from the FreeRTOS Web/DSP Demo.
+ * \brief GFX task from the HTTP Netconn Example.
  *
  * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
  *
@@ -224,13 +224,8 @@ static void gfx_task(void *pvParameters)
 
 	/* Display ATMEL logo. */
 	ili9325_set_cursor_position(0,0);
-/*	gfx_draw_bmpfile(logo_atmel_bmp);
+	gfx_draw_bmpfile(logo_atmel_bmp);
 	vTaskDelay(presentation_delay);
-
-
-	FIXME: COMMENTE temporairement pour que ca charge vite ;-)
-
-*/
 
 	/* Initialize touchscreen without calibration */
 	pmc_enable_periph_clk(ID_PIOA);
@@ -311,7 +306,6 @@ static void gfx_task(void *pvParameters)
 			ili9325_set_foreground_color(COLOR_BLACK);
 			blink = 0;
 		}
-
 
 		/* Sleep to reach the expected blink rate. */
 		/* Leave some CPU time for other tasks. */

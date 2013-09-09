@@ -326,18 +326,10 @@ static int http_searchContentType(const char *name)
 	return 0;
 }
 
-static int start = 0;
-
 /**
- * \brief Core HTTP server receive function. Handle the requests and process
- * them.
+ * \brief Core HTTP server function processing the request.
  *
- * \param arg Pointer to structure representing the HTTP state.
- * \param pcb Pointer to a TCP connection structure.
- * \param p Incoming connection request.
- * \param err Connection status.
- *
- * \return ERR_OK.
+ * \param pvParameters Netconn socket to use.
  */
 void http_request(void *pvParameters)
 {
@@ -346,7 +338,6 @@ void http_request(void *pvParameters)
 	struct netbuf *inbuf;
 	char *buf;
 	u16_t buflen;
-	err_t err;
 	struct fs_file file;
 	http_handler_t cgi;
 	uint32_t i;
@@ -354,61 +345,47 @@ void http_request(void *pvParameters)
 	conn = pvParameters;
 
 	/* Read the data from the port, blocking if nothing yet there. */
-	/* We assume the request (the part we care about) is in one netbuf. */
-	err = netconn_recv(conn, &inbuf);
-
-	if (err == ERR_OK)
-	{
+	/* We assume the request is in one netbuf. */
+	if (ERR_OK == netconn_recv(conn, &inbuf)) {
+		/* Read data from netbuf to the provided buffer. */
 		netbuf_data(inbuf, (void**)&buf, &buflen);
 
 		memset(req_string, 0, sizeof(req_string));
 		http_getPageName(buf, buflen, req_string, sizeof(req_string));
 
-		if (req_string[0] == '\0')
+		if (req_string[0] == '\0') {
 			strcpy(req_string, HTTP_DEFAULT_PAGE);
+		}
 
-		printf("Requested page = [%s]\r\n", req_string);
-
+		/* Try to get a CGI handler for the request. */
 		cgi = cgi_search(req_string, cgi_table);
-		if (cgi)
-		{
-			if (cgi(conn, req_string, buf, buflen) < 0)
-			{
-				printf("Internal server error\n");
+		if (cgi) {
+			/* Answer CGI request. */
+			if (cgi(conn, req_string, buf, buflen) < 0) {
 				http_sendInternalErr(conn, HTTP_CONTENT_HTML);
-				netconn_write(conn, http_server_error, sizeof(http_server_error) - 1, NETCONN_NOCOPY);
+				netconn_write(conn, http_server_error, sizeof(http_server_error) - 1, NETCONN_COPY);
 			}
 		}
-		else
-		{
-			if (fs_open(req_string, &file) == 0)
-			{
-				printf("File not Found!!!\r\n");
+		/* Normal HTTP page request. */
+		else {
+			if (fs_open(req_string, &file) == 0) {
 				netconn_write(conn, http_html_hdr_404, sizeof(http_html_hdr_404) - 1, NETCONN_COPY);
 			}
-			else
-			{
-				/* Send the HTML header. */
+			else {
+				/* Send the HTML header for file type. */
 				int type = http_searchContentType(req_string);
 				http_sendOk(conn, type);
 
-				if (!start)
-				{
-			//		uiTraceStart();
-					start = 1;
-				}
-
 				/* Send the HTML content. */
-				if (req_string[0] == 't' && req_string[1] == 'e' && req_string[2] == 's' && req_string[3] == 't')
-				{
-				  	for (i = 0; i < 1000; ++i)
-					{
-						netconn_write(conn, file.data, file.len, NETCONN_NOCOPY);
-						vTaskDelay(50UL / portTICK_RATE_MS);
+				/* Transfer speed test: wget.exe http://192.168.0.100/test */
+				if (req_string[0] == 't' && req_string[1] == 'e' && req_string[2] == 's' && req_string[3] == 't') {
+				  	for (i = 0; i < 1000; ++i) {
+						netconn_write(conn, file.data, file.len, NETCONN_COPY);
 					}
 				}
-				else
-					netconn_write(conn, file.data, file.len, NETCONN_NOCOPY);
+				else {
+					netconn_write(conn, file.data, file.len, NETCONN_COPY);
+				}
 			}
 		}
 	}
@@ -423,6 +400,6 @@ void http_request(void *pvParameters)
 	/* Free resource. */
 	netconn_delete(conn);
 
-	/* The calling task will be deleted. */
+	/* Delete the calling task. */
 	vTaskDelete(NULL);
 }

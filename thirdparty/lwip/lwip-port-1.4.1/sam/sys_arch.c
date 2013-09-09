@@ -49,34 +49,11 @@
 
 #define SYS_ARCH_BLOCKING_TICKTIMEOUT    ((portTickType)10000)
 
-/* Structure associating a thread to a struct sys_timeouts */
-struct TimeoutlistPerThread {
-	sys_thread_t pid;        /* The thread id */
-};
-
-/* Thread & struct sys_timeouts association statically allocated per thread.
-   Note: SYS_THREAD_MAX is the max number of thread created by sys_thread_new()
-   that can run simultaneously; it is defined in conf_lwip_threads.h. */
-static struct TimeoutlistPerThread Threads_TimeoutsList[SYS_THREAD_MAX];
-
-/* Number of active threads. */
-static u16_t NbActiveThreads = 0;
-
 /**
  * \brief Initialize the sys_arch layer.
  */
 void sys_init(void)
 {
-	int i;
-
-	/* Initialize the the per-thread sys_timeouts structures
-	   make sure there are no valid pids in the list */
-	for (i = 0; i < SYS_THREAD_MAX; i++) {
-		Threads_TimeoutsList[i].pid = 0;
-	}
-
-	/* Keep track of how many threads have been created */
-	NbActiveThreads = 0;
 }
 
 /**
@@ -164,7 +141,7 @@ void sys_sem_signal(sys_sem_t *sem)
  * indefinitely. If the function acquires the semaphore, it should return how
  * many milliseconds expired while waiting for the semaphore.
  *
- * \return SYS_ARCH_TIMEOUT if times out, ERR_MEM for semaphore erro otherwise
+ * \return SYS_ARCH_TIMEOUT if times out otherwise
  * return the milliseconds expired while waiting for the semaphore.
  */
 u32_t sys_arch_sem_wait(sys_sem_t *sem, u32_t timeout)
@@ -174,39 +151,34 @@ u32_t sys_arch_sem_wait(sys_sem_t *sem, u32_t timeout)
 	/* Express the timeout in OS tick. */
 	portTickType TickElapsed = (portTickType)(timeout / portTICK_RATE_MS);
 
-	/* Sanity check */
-	if (sem != NULL) {
-		if (timeout && !TickElapsed) {
-			TickElapsed = 1; /* Wait at least one tick */
-		}
-
-		if (0 == TickElapsed) {
-			TickStart = xTaskGetTickCount();
-			/* If timeout=0, then the function should block indefinitely */
-			while (pdFALSE == xSemaphoreTake( *sem,	SYS_ARCH_BLOCKING_TICKTIMEOUT )) {
-			}
-		} else {
-			TickStart = xTaskGetTickCount();
-			if (pdFALSE == xSemaphoreTake( *sem, TickElapsed )) {
-				/* if the function times out, it should return SYS_ARCH_TIMEOUT */
-				return(SYS_ARCH_TIMEOUT);
-			}
-		}
-
-		/* If the function acquires the semaphore, it should return how
-		  many milliseconds expired while waiting for the semaphore */
-		TickStop = xTaskGetTickCount();
-		/* Take care of wrap-around */
-		if (TickStop >= TickStart) {
-			TickElapsed = TickStop - TickStart;
-		} else {
-			TickElapsed = portMAX_DELAY - TickStart + TickStop;
-		}
-
-		return(TickElapsed * portTICK_RATE_MS);
-	} else {
-		return ERR_MEM;
+	if (timeout && !TickElapsed) {
+		TickElapsed = 1; /* Wait at least one tick */
 	}
+
+	if (0 == TickElapsed) {
+		TickStart = xTaskGetTickCount();
+		/* If timeout=0, then the function should block indefinitely */
+		while (pdFALSE == xSemaphoreTake( *sem,	SYS_ARCH_BLOCKING_TICKTIMEOUT )) {
+		}
+	} else {
+		TickStart = xTaskGetTickCount();
+		if (pdFALSE == xSemaphoreTake( *sem, TickElapsed )) {
+			/* if the function times out, it should return SYS_ARCH_TIMEOUT */
+			return(SYS_ARCH_TIMEOUT);
+		}
+	}
+
+	/* If the function acquires the semaphore, it should return how
+	  many milliseconds expired while waiting for the semaphore */
+	TickStop = xTaskGetTickCount();
+	/* Take care of wrap-around */
+	if (TickStop >= TickStart) {
+		TickElapsed = TickStop - TickStart;
+	} else {
+		TickElapsed = portMAX_DELAY - TickStart + TickStop;
+	}
+
+	return(TickElapsed * portTICK_RATE_MS);
 }
 
 #ifndef sys_sem_valid
@@ -338,7 +310,7 @@ err_t sys_mbox_trypost(sys_mbox_t *mbox, void *msg)
  * \timeout 0 indicates the thread should be blocked until a message arrives.
  *
  * \return Number of milliseconds spent waiting or SYS_ARCH_TIMEOUT if there was
- * a timeout. Or ERR_MEM if invalid pointer to message box.
+ * a timeout.
  */
 u32_t sys_arch_mbox_fetch(sys_mbox_t *mbox, void **msg, u32_t timeout)
 {
@@ -348,49 +320,44 @@ u32_t sys_arch_mbox_fetch(sys_mbox_t *mbox, void **msg, u32_t timeout)
 	/* Express the timeout in OS tick. */
 	portTickType TickElapsed = (portTickType)(timeout / portTICK_RATE_MS);
 
-	/* Sanity check */
-	if (mbox != NULL) {
-		if (timeout && !TickElapsed) {
-			TickElapsed = 1; /* Wait at least one tick */
-		}
-
-		if (msg == NULL) {
-			msg = &tempoptr;
-		}
-
-		/* NOTE: INCLUDE_xTaskGetSchedulerState must be set to 1 in
-		 * FreeRTOSConfig.h for xTaskGetTickCount() to be available */
-		if (0 == TickElapsed) {
-			TickStart = xTaskGetTickCount();
-			/* If "timeout" is 0, the thread should be blocked until
-			 * a message arrives */
-			while (pdFALSE == xQueueReceive( *mbox, &(*msg),
-					SYS_ARCH_BLOCKING_TICKTIMEOUT )) {
-			}
-		} else {
-			TickStart = xTaskGetTickCount();
-			if (pdFALSE == xQueueReceive( *mbox, &(*msg), TickElapsed )) {
-				*msg = NULL;
-				/* if the function times out, it should return
-				 * SYS_ARCH_TIMEOUT. */
-				return(SYS_ARCH_TIMEOUT);
-			}
-		}
-
-		/* If the function gets a msg, it should return the number of ms
-		 * spent waiting. */
-		TickStop = xTaskGetTickCount();
-		/* Take care of wrap-around. */
-		if (TickStop >= TickStart) {
-			TickElapsed = TickStop - TickStart;
-		} else {
-			TickElapsed = portMAX_DELAY - TickStart + TickStop;
-		}
-
-		return(TickElapsed * portTICK_RATE_MS);
-	} else {
-		return ERR_MEM;
+	if (timeout && !TickElapsed) {
+		TickElapsed = 1; /* Wait at least one tick */
 	}
+
+	if (msg == NULL) {
+		msg = &tempoptr;
+	}
+
+	/* NOTE: INCLUDE_xTaskGetSchedulerState must be set to 1 in
+	 * FreeRTOSConfig.h for xTaskGetTickCount() to be available */
+	if (0 == TickElapsed) {
+		TickStart = xTaskGetTickCount();
+		/* If "timeout" is 0, the thread should be blocked until
+		 * a message arrives */
+		while (pdFALSE == xQueueReceive( *mbox, &(*msg),
+				SYS_ARCH_BLOCKING_TICKTIMEOUT )) {
+		}
+	} else {
+		TickStart = xTaskGetTickCount();
+		if (pdFALSE == xQueueReceive( *mbox, &(*msg), TickElapsed )) {
+			*msg = NULL;
+			/* if the function times out, it should return
+			 * SYS_ARCH_TIMEOUT. */
+			return(SYS_ARCH_TIMEOUT);
+		}
+	}
+
+	/* If the function gets a msg, it should return the number of ms
+	 * spent waiting. */
+	TickStop = xTaskGetTickCount();
+	/* Take care of wrap-around. */
+	if (TickStop >= TickStart) {
+		TickElapsed = TickStop - TickStart;
+	} else {
+		TickElapsed = portMAX_DELAY - TickStart + TickStop;
+	}
+
+	return(TickElapsed * portTICK_RATE_MS);
 }
 
 /**
@@ -473,23 +440,13 @@ sys_thread_t sys_thread_new(const char *name, lwip_thread_fn thread, void *arg,
 {
 	sys_thread_t newthread;
 	portBASE_TYPE result;
-	SYS_ARCH_DECL_PROTECT(protectionLevel);
 
 	result = xTaskCreate( thread, (signed portCHAR *)name, stacksize, arg,
 			prio, &newthread );
 
-	/* Need to protect this -- preemption here could be a problem! */
-	SYS_ARCH_PROTECT(protectionLevel);
-	if (pdPASS == result) {
-		/* For each task created, store the task handle (pid) in the
-		 * timers array. */
-		/* This scheme doesn't allow for threads to be deleted */
-		Threads_TimeoutsList[NbActiveThreads++].pid = newthread;
-	} else {
+	if (pdPASS != result) {
 		newthread = NULL;
 	}
-
-	SYS_ARCH_UNPROTECT(protectionLevel);
 
 	return(newthread);
 }
@@ -507,7 +464,7 @@ sys_thread_t sys_thread_new(const char *name, lwip_thread_fn thread, void *arg,
  *
  * \return A new mutex.
  */
-err_t sys_mutex_new(sys_mutex_t *mutex)
+err_t sys_mutex_new(sys_mutex_t *pxMutex)
 {
 }
 
@@ -516,7 +473,7 @@ err_t sys_mutex_new(sys_mutex_t *mutex)
  *
  * \param mutex the mutex to lock.
  */
-void sys_mutex_lock(sys_mutex_t *mutex)
+void sys_mutex_lock(sys_mutex_t *pxMutex)
 {
 }
 
@@ -525,7 +482,7 @@ void sys_mutex_lock(sys_mutex_t *mutex)
  *
  * \param mutex the mutex to unlock.
  */
-void sys_mutex_unlock(sys_mutex_t *mutex)
+void sys_mutex_unlock(sys_mutex_t *pxMutex)
 {
 }
 
@@ -534,7 +491,7 @@ void sys_mutex_unlock(sys_mutex_t *mutex)
  *
  * \param mutex the mutex to delete.
  */
-void sys_mutex_free(sys_mutex_t *mutex)
+void sys_mutex_free(sys_mutex_t *pxMutex)
 {
 }
 
@@ -594,5 +551,6 @@ sys_prot_t sys_arch_protect(void)
  */
 void sys_arch_unprotect(sys_prot_t pval)
 {
+	(void) pval;
 	vPortExitCritical();
 }

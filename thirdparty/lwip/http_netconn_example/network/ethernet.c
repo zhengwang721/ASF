@@ -71,10 +71,6 @@
 #include "lwip/tcp_impl.h"
 #endif
 #include "netif/etharp.h"
-#include "netif/ethernetif.h"
-
-//#define TRACE_DEBUG(...)     printf(__VA_ARGS__)
-#define TRACE_DEBUG(...)
 
 /* Global variable containing MAC Config (hw addr, IP, GW, ...) */
 struct netif gs_net_if;
@@ -90,16 +86,14 @@ static void ethernet_configure_interface(void)
 	struct ip_addr x_ip_addr, x_net_mask, x_gateway;
 	extern err_t ethernetif_init(struct netif *netif);
 
-	if (g_ip_mode == 2)
-	{
+	if (g_ip_mode == 2) {
 		/* DHCP mode. */
 		x_ip_addr.addr = 0;
 		x_net_mask.addr = 0;
 	}
-	else
-	{
-		/* Static mode. */
-		/* Default ip addr */
+	else {
+		/* Fixed IP mode. */
+		/* Default IP addr */
 		IP4_ADDR(&x_ip_addr, ETHERNET_CONF_IPADDR0, ETHERNET_CONF_IPADDR1,
 				ETHERNET_CONF_IPADDR2, ETHERNET_CONF_IPADDR3);
 
@@ -117,11 +111,11 @@ static void ethernet_configure_interface(void)
 	/* Add data to netif */
 	/* Use ethernet_input as input method for standalone lwIP mode. */
 	/* Use tcpip_input as input method for threaded lwIP mode. */
-	if( NULL == netif_add(&gs_net_if, &x_ip_addr, &x_net_mask, &x_gateway, NULL,
-						  ethernetif_init, tcpip_input) ) {
-		TRACE_DEBUG("ERROR");
-		while(1);
+	if (NULL == netif_add(&gs_net_if, &x_ip_addr, &x_net_mask, &x_gateway, NULL,
+			ethernetif_init, tcpip_input)) {
+		LWIP_ASSERT("NULL == netif_add", 0);
 	}
+
 	/* Make it the default interface */
 	netif_set_default(&gs_net_if);
 
@@ -129,17 +123,13 @@ static void ethernet_configure_interface(void)
 	netif_set_status_callback(&gs_net_if, status_callback);
 
 	/* Bring it up */
-	if (g_ip_mode == 2)
-	{
+	if (g_ip_mode == 2) {
 		/* DHCP mode. */
-		if (ERR_OK != dhcp_start(&gs_net_if))
-		{
-			TRACE_DEBUG("ERROR");
-			while(1);
+		if (ERR_OK != dhcp_start(&gs_net_if)) {
+			LWIP_ASSERT("ERR_OK != dhcp_start", 0);
 		}
 	}
-	else
-	{
+	else {
 		/* Static mode. */
 		netif_set_up(&gs_net_if);
 	}
@@ -167,12 +157,7 @@ void init_ethernet(void)
 void status_callback(struct netif *netif)
 {
 	if (netif_is_up(netif)) {
-		TRACE_DEBUG("Network up");
-		TRACE_DEBUG("IP=");
 		strcat((char*)g_c_ipconfig, inet_ntoa(*(struct in_addr *)&(netif->ip_addr)));
-		TRACE_DEBUG((char const*)g_c_ipconfig);
 		g_ip_mode = 3;
-	} else {
-		TRACE_DEBUG("Network down");
 	}
 }

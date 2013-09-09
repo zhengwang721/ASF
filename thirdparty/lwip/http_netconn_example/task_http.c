@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief HTTP component task for the FreeRTOS Web/DSP Demo.
+ * \brief HTTP component task for the HTTP Netconn Example.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -71,7 +71,7 @@ extern uint32_t lwip_rx_rate;
 void create_http_task(uint16_t stack_depth_words,
 		unsigned portBASE_TYPE task_priority)
 {
-	/** Create the task as described above. */
+	/* Create the task as described above. */
 	xTaskCreate(http_task, (const signed char *const) "HTTP",
 			stack_depth_words, NULL, task_priority,
 			NULL);
@@ -90,7 +90,7 @@ void TC3_Handler(void)
 }
 
 /**
- * \brief Enable TC1 channel 0 to trigger each second.
+ * \brief Enable TC1 channel 0 to trigger each second to compute GMAC stats.
  */
 static void configure_timer_for_bandwidth_stats(void)
 {
@@ -102,7 +102,7 @@ static void configure_timer_for_bandwidth_stats(void)
 			TC_CMR_TCCLKS_TIMER_CLOCK5	// Use slow clock to avoid overflow.
 	);
 
-	tc_write_rc(TC1, 0, 32768);	// Load the highest possible value into TC.
+	tc_write_rc(TC1, 0, 32768);			// Load the highest possible value into TC.
 
 	/* Configure TC interrupts for TC TC_CHANNEL_CAPTURE only */
 	NVIC_SetPriority(TC3_IRQn, 0);		// TC3 means TC1 channel 0.
@@ -124,7 +124,7 @@ static void http_task(void *pvParameters)
 	/* Just to avoid compiler warnings. */
 	UNUSED(pvParameters);
 
-	/** Wait for user to read instructions. */
+	/* Wait for user to read instructions. */
 	WAIT_FOR_TOUCH_EVENT;
 
 #if LWIP_STATS
@@ -135,8 +135,10 @@ static void http_task(void *pvParameters)
 	conn = netconn_new(NETCONN_TCP);
 	if (conn == NULL)
 	{
-		printf("http_server: invalid conn");
-		return;
+		printf("http_task: invalid conn\n");
+
+		/* Delete the calling task. */
+		vTaskDelete(NULL);
 	}
 
 	/* Bind to port 80 (HTTP) with default IP address */
@@ -148,18 +150,22 @@ static void http_task(void *pvParameters)
 	do {
 		err = netconn_accept(conn, &newconn);
 		if (err == ERR_OK) {
-
-		//	stats_display();
-
-			/* Instanciate a new task to handle the HTTP request. */
-			xTaskCreate(http_request, (const signed char *const) "HTTP-req",
-					mainHTTP_TASK_STACK_SIZE, newconn, mainHTTP_TASK_PRIORITY,
-					NULL);
+		/* Try to instanciate a new HTTP-req task to handle the HTTP request. */
+			if (NULL == sys_thread_new("HTTP-req", http_request, newconn,
+					mainHTTP_TASK_STACK_SIZE, mainHTTP_TASK_PRIORITY)) {
+				/* Failed to instanciate task, free netconn socket. */
+				netconn_close(newconn);
+				netconn_delete(newconn);
+			}
 		}
 	} while (err == ERR_OK);
 
-	printf("http_server_netconn_thread: netconn_accept received error %d, shutting down\r\n", err);
+	printf("http_task: netconn_accept received error %d, shutting down\n", err);
 
+	/* Free Netconn resource. */
 	netconn_close(conn);
 	netconn_delete(conn);
+
+	/* Delete the calling task. */
+	vTaskDelete(NULL);
 }
