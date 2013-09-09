@@ -140,7 +140,7 @@ void rtt_disable(Rtt *p_rtt)
  */
 void rtt_enable_interrupt(Rtt *p_rtt, uint32_t ul_sources)
 {
-	g_ul_reg |= ul_sources;
+	p_rtt->RTT_MR |= ul_sources;
 	p_rtt->RTT_MR |= g_ul_reg;
 }
 
@@ -152,7 +152,7 @@ void rtt_enable_interrupt(Rtt *p_rtt, uint32_t ul_sources)
  */
 void rtt_disable_interrupt(Rtt *p_rtt, uint32_t ul_sources)
 {
-	g_ul_reg &= (~ul_sources);
+	p_rtt->RTT_MR &= (~ul_sources);
 	p_rtt->RTT_MR |= g_ul_reg;
 }
 
