@@ -155,19 +155,31 @@
 
 /** SERCOM pad multiplexing */
 enum spi_master_vec_padmux_setting {
-	/** SCK on pad 1, MOSI on pad 0, MISO on pad 2 */
+	/**
+	 * \brief SCK on pad 1, MOSI on pad 0, MISO on pad 2
+	 * \note Corresponds to \c SPI_SIGNAL_MUX_SETTING_C
+	 */
 	SPI_MASTER_VEC_PADMUX_SETTING_A =
 			(0x0 << SERCOM_SPI_CTRLA_DOPO_Pos) |
 			(0x2 << SERCOM_SPI_CTRLA_DIPO_Pos),
-	/** SCK on pad 1, MOSI on pad 0, MISO on pad 3 */
+	/**
+	 * \brief SCK on pad 1, MOSI on pad 0, MISO on pad 3
+	 * \note Corresponds to \c SPI_SIGNAL_MUX_SETTING_D
+	 */
 	SPI_MASTER_VEC_PADMUX_SETTING_B =
 			(0x0 << SERCOM_SPI_CTRLA_DOPO_Pos) |
 			(0x3 << SERCOM_SPI_CTRLA_DIPO_Pos),
-	/** SCK on pad 3, MOSI on pad 2, MISO on pad 0 */
+	/**
+	 * \brief SCK on pad 3, MOSI on pad 2, MISO on pad 0
+	 * \note Corresponds to \c SPI_SIGNAL_MUX_SETTING_E
+	 */
 	SPI_MASTER_VEC_PADMUX_SETTING_C =
 			(0x1 << SERCOM_SPI_CTRLA_DOPO_Pos) |
 			(0x0 << SERCOM_SPI_CTRLA_DIPO_Pos),
-	/** SCK on pad 3, MOSI on pad 2, MISO on pad 1 */
+	/**
+	 * \brief SCK on pad 3, MOSI on pad 2, MISO on pad 1
+	 * \note Corresponds to \c SPI_SIGNAL_MUX_SETTING_F
+	 */
 	SPI_MASTER_VEC_PADMUX_SETTING_D =
 			(0x1 << SERCOM_SPI_CTRLA_DOPO_Pos) |
 			(0x1 << SERCOM_SPI_CTRLA_DIPO_Pos),
@@ -416,12 +428,7 @@ enum status_code spi_master_vec_transceive_buffer_job(
  * driver in a selection of use cases. Note that QSGs can be compiled as a
  * standalone application or be added to the user application.
  *
- * - \subpage asfdoc_samd20_sercom_spi_master_vec_basic_use_case
- */
-
-/**
- * \page asfdoc_samd20_sercom_spi_master_vec_basic_use_case Basic use case
- *
+ * - \subpage asfdoc_samd20_sercom_spi_master_vec_basic
  */
 
  /**

@@ -15,7 +15,10 @@
 
 		<build type="c-source" value="spi_master_vec.c"/>
 		<build type="doxygen-entry-point" value="asfdoc_samd20_sercom_spi_master_vec_group"/>
+		<build type="doxygen-example-path" value="quick_start_basic"/>
 		<build type="header-file" subtype="api" value="spi_master_vec.h"/>
+		<build type="header-file" value="quick_start_basic/qs_spi_master_vec_basic.h"/>
+
 		<build type="include-path" value="."/>
 		<device-support value="samd20"/>
 
