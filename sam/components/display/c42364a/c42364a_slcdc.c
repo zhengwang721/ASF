@@ -46,18 +46,17 @@
 #include "slcdc.h"
 #include "supc.h"
 #include "c42364a.h"
-#include "c42364a_segmap.h"
 #include "c42364a_font.h"
 #include "conf_c42364a_slcdc.h"
 
 /** ASCII definition for char space. */
-#define   ASCII_SP                       0x20
+#define   ASCII_SP                        0x20
 /** ASCII char definition for char '0'. */
 #define   ASCII_0                         0x30
 /** ASCII char definition for char 'A'. */
-#define   ASCII_BIG_A                0x41
+#define   ASCII_BIG_A                     0x41
 /** ASCII char definition for char 'a'. */
-#define   ASCII_LITTLE_A          0x61
+#define   ASCII_LITTLE_A                  0x61
 
 /* Symbol pixel array definition */
 const enum c42364a_symbol_pixel symbol_d0[7] = C42364A_PATTERN_SYMBOL_D0;

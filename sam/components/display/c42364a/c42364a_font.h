@@ -48,36 +48,36 @@
 
 /* LCD symbol pixel mapping, seg remap to chip seg */
 enum c42364a_symbol_pixel{
-G1  = 4 * C42364A_G1_SEG_NUM, G0, G2, G3,            // 0 ==> 48
-G4  = 4 * C42364A_G4_SEG_NUM, G5, G6, G7,            // 1 ==> 49
-D3A = 4 * C42364A_D3A_SEG_NUM, D3B, D3C, B9,         // 4 ==> 27
-D3F = 4 * C42364A_D3F_SEG_NUM, D3G, D3E, D3D,        // 5 ==> 26
-D2A = 4 * C42364A_D2A_SEG_NUM, D2B, D2C, D2P,        // 6 ==> 25
-D2F = 4 * C42364A_D2F_SEG_NUM, D2G, D2E, D2D,        // 7 ==> 24
-D1A = 4 * C42364A_D1A_SEG_NUM, D1B, D1C, D1P,        // 8 ==> 22
-D1F = 4 * C42364A_D1F_SEG_NUM, D1G, D1E, D1D,        // 9 ==> 21
-D0A = 4 * C42364A_D0A_SEG_NUM, D0B, D0C, D0P,        // 10 ==> 20
-D0F = 4 * C42364A_D0F_SEG_NUM, D0G, D0E, D0D,        // 11 ==> 17
-A6H = 4 * C42364A_A6H_SEG_NUM, A6I, A6K, A6N,        // 12 ==> 47
-B14 = 4 * C42364A_B14_SEG_NUM, A6F, A6E, A6D,        // 13 ==> 46
-A6A = 4 * C42364A_A6A_SEG_NUM, A6B, A6C, B13,        // 14 ==> 45
-A6G = 4 * C42364A_A6G_SEG_NUM, A6J, A6L, A6M,        // 15 ==> 44
-A5H = 4 * C42364A_A5H_SEG_NUM, A5I, A5K, A5N,        // 16 ==> 43
-B5  = 4 * C42364A_B5_SEG_NUM, A5F, A5E, A5D,         // 17 ==> 42
-A5A = 4 * C42364A_A5A_SEG_NUM, A5B, A5C, B12,        // 18 ==> 41
-A5G = 4 * C42364A_A5G_SEG_NUM, A5J, A5L, A5M,        // 19 ==> 40
-A4H = 4 * C42364A_A4H_SEG_NUM, A4I, A4K, A4N,        // 20 ==> 39
-B6  = 4 * C42364A_B6_SEG_NUM, A4F, A4E, A4D,         // 21 ==> 38
-A4A = 4 * C42364A_A4A_SEG_NUM, A4B, A4C, B11,        // 22 ==> 37
-A4G = 4 * C42364A_A4G_SEG_NUM, A4J, A4L, A4M,        // 23 ==> 36
-A3H = 4 * C42364A_A3H_SEG_NUM, A3I, A3K, A3N,        // 24 ==> 35
-B4  = 4 * C42364A_B4_SEG_NUM, A3F, A3E, A3D,         // 25 ==> 34
-A3A = 4 * C42364A_A3A_SEG_NUM, A3B, A3C, B10,        // 26 ==> 33
-A3G = 4 * C42364A_A3G_SEG_NUM, A3J, A3L, A3M,        // 27 ==> 32
-A2H = 4 * C42364A_A2H_SEG_NUM, A2I, A2K, A2N,        // 28 ==> 31
-B3  = 4 * C42364A_B3_SEG_NUM, A2F, A2E, A2D,         // 29 ==> 30
-A2A = 4 * C42364A_A2A_SEG_NUM, A2B, A2C, B1,         // 30 ==> 29
-A2G = 4 * C42364A_A2G_SEG_NUM, A2J, A2L, A2M,        // 31 ==> 28
+	G1  = 4 * C42364A_G1_SEG_NUM, G0, G2, G3,            // 0 ==> 48
+	G4  = 4 * C42364A_G4_SEG_NUM, G5, G6, G7,            // 1 ==> 49
+	D3A = 4 * C42364A_D3A_SEG_NUM, D3B, D3C, B9,         // 4 ==> 27
+	D3F = 4 * C42364A_D3F_SEG_NUM, D3G, D3E, D3D,        // 5 ==> 26
+	D2A = 4 * C42364A_D2A_SEG_NUM, D2B, D2C, D2P,        // 6 ==> 25
+	D2F = 4 * C42364A_D2F_SEG_NUM, D2G, D2E, D2D,        // 7 ==> 24
+	D1A = 4 * C42364A_D1A_SEG_NUM, D1B, D1C, D1P,        // 8 ==> 22
+	D1F = 4 * C42364A_D1F_SEG_NUM, D1G, D1E, D1D,        // 9 ==> 21
+	D0A = 4 * C42364A_D0A_SEG_NUM, D0B, D0C, D0P,        // 10 ==> 20
+	D0F = 4 * C42364A_D0F_SEG_NUM, D0G, D0E, D0D,        // 11 ==> 17
+	A6H = 4 * C42364A_A6H_SEG_NUM, A6I, A6K, A6N,        // 12 ==> 47
+	B14 = 4 * C42364A_B14_SEG_NUM, A6F, A6E, A6D,        // 13 ==> 46
+	A6A = 4 * C42364A_A6A_SEG_NUM, A6B, A6C, B13,        // 14 ==> 45
+	A6G = 4 * C42364A_A6G_SEG_NUM, A6J, A6L, A6M,        // 15 ==> 44
+	A5H = 4 * C42364A_A5H_SEG_NUM, A5I, A5K, A5N,        // 16 ==> 43
+	B5  = 4 * C42364A_B5_SEG_NUM, A5F, A5E, A5D,         // 17 ==> 42
+	A5A = 4 * C42364A_A5A_SEG_NUM, A5B, A5C, B12,        // 18 ==> 41
+	A5G = 4 * C42364A_A5G_SEG_NUM, A5J, A5L, A5M,        // 19 ==> 40
+	A4H = 4 * C42364A_A4H_SEG_NUM, A4I, A4K, A4N,        // 20 ==> 39
+	B6  = 4 * C42364A_B6_SEG_NUM, A4F, A4E, A4D,         // 21 ==> 38
+	A4A = 4 * C42364A_A4A_SEG_NUM, A4B, A4C, B11,        // 22 ==> 37
+	A4G = 4 * C42364A_A4G_SEG_NUM, A4J, A4L, A4M,        // 23 ==> 36
+	A3H = 4 * C42364A_A3H_SEG_NUM, A3I, A3K, A3N,        // 24 ==> 35
+	B4  = 4 * C42364A_B4_SEG_NUM, A3F, A3E, A3D,         // 25 ==> 34
+	A3A = 4 * C42364A_A3A_SEG_NUM, A3B, A3C, B10,        // 26 ==> 33
+	A3G = 4 * C42364A_A3G_SEG_NUM, A3J, A3L, A3M,        // 27 ==> 32
+	A2H = 4 * C42364A_A2H_SEG_NUM, A2I, A2K, A2N,        // 28 ==> 31
+	B3  = 4 * C42364A_B3_SEG_NUM, A2F, A2E, A2D,         // 29 ==> 30
+	A2A = 4 * C42364A_A2A_SEG_NUM, A2B, A2C, B1,         // 30 ==> 29
+	A2G = 4 * C42364A_A2G_SEG_NUM, A2J, A2L, A2M,        // 31 ==> 28
 };
 
 /*Multiple pixels symbols*/

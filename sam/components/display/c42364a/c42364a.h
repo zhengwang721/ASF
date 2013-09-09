@@ -46,6 +46,7 @@
 
 #include "compiler.h"
 #include "status_codes.h"
+#include "c42364a_segmap.h"
 
 #ifdef __cplusplus
 extern "C" {
