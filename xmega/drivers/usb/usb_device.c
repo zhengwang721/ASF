@@ -1016,7 +1016,6 @@ static void udd_ctrl_init(void)
 	udd_control_in_set_bytecnt(0);
 	udd_control_in_ack_tc();
 	udd_control_ack_in_underflow();
-	udd_control_out_ack_tc();
 	udd_control_ack_out_overflow();
 
 	udd_g_ctrlreq.callback = NULL;
@@ -1071,6 +1070,7 @@ static void udd_ctrl_setup_received(void)
 		udd_ep_control_state = UDD_EPCTRL_DATA_OUT;
 		// Clear packet to receive first packet
 		udd_control_out_clear_NACK0();
+		udd_control_out_ack_tc();
 	}
 }
 
@@ -1194,6 +1194,7 @@ static void udd_ctrl_out_received(void)
 	}
 	// Free buffer of OUT control endpoint to authorize next reception
 	udd_control_out_clear_NACK0();
+	udd_control_out_ack_tc();
 }
 
 static void udd_ctrl_underflow(void)
