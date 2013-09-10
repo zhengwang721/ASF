@@ -63,12 +63,12 @@ extern "C" {
  */
 
 /*
- * In SAM4 series chip, the bit RTC1HZ and RTTDIS in RTT_MR are write only,
- * so this flag value is used to indicate these two bits is set.
+ * In SAM4 series chip, the bit RTC1HZ and RTTDIS in RTT_MR are write only.
+ * So we use a variable to record status of these bits.
  */
- #if SAM4N || SAM4S || SAM4E || SAM4C
-static uint32_t g_wobits_set_flag = 0;
- #endif
+#if SAM4N || SAM4S || SAM4E || SAM4C
+static uint32_t g_wobits_in_rtt_mr = 0;
+#endif
 
 /**
  * \brief Initialize the given RTT.
@@ -85,7 +85,7 @@ static uint32_t g_wobits_set_flag = 0;
 uint32_t rtt_init(Rtt *p_rtt, uint16_t us_prescaler)
 {
 #if SAM4N || SAM4S || SAM4E || SAM4C
-	p_rtt->RTT_MR = (us_prescaler | RTT_MR_RTTRST | g_wobits_set_flag);
+	p_rtt->RTT_MR = (us_prescaler | RTT_MR_RTTRST | g_wobits_in_rtt_mr);
 #else
 	p_rtt->RTT_MR = (us_prescaler | RTT_MR_RTTRST);
 #endif
@@ -96,19 +96,17 @@ uint32_t rtt_init(Rtt *p_rtt, uint16_t us_prescaler)
 /**
  * \brief Select RTT counter source.
  *
- * \note This function should be called before rtt_init().
- *
  * \param p_rtt Pointer to an RTT instance.
  * \param is_rtc_sel RTC 1Hz Clock Selection.
  */
 void rtt_sel_source(Rtt *p_rtt, bool is_rtc_sel)
 {
 	if(is_rtc_sel) {
-		p_rtt->RTT_MR |= RTT_MR_RTC1HZ;
-		g_wobits_set_flag |= RTT_MR_RTC1HZ;
+		g_wobits_in_rtt_mr |= RTT_MR_RTC1HZ;
+		p_rtt->RTT_MR |= g_wobits_in_rtt_mr;
 	} else {
-		p_rtt->RTT_MR &= ~RTT_MR_RTC1HZ;
-		g_wobits_set_flag &= ~RTT_MR_RTC1HZ;
+		g_wobits_in_rtt_mr &= ~RTT_MR_RTC1HZ;
+		p_rtt->RTT_MR |= g_wobits_in_rtt_mr;
 	}
 }
 
@@ -119,8 +117,8 @@ void rtt_sel_source(Rtt *p_rtt, bool is_rtc_sel)
  */
 void rtt_enable(Rtt *p_rtt)
 {
-	g_wobits_set_flag &= ~RTT_MR_RTTDIS;
-	p_rtt->RTT_MR |= g_wobits_set_flag;
+	g_wobits_in_rtt_mr &= ~RTT_MR_RTTDIS;
+	p_rtt->RTT_MR |= g_wobits_in_rtt_mr;
 }
 /**
  * \brief Disable RTT.
@@ -129,8 +127,8 @@ void rtt_enable(Rtt *p_rtt)
  */
 void rtt_disable(Rtt *p_rtt)
 {
-	g_wobits_set_flag |= RTT_MR_RTTDIS;
-	p_rtt->RTT_MR |= g_wobits_set_flag;
+	g_wobits_in_rtt_mr |= RTT_MR_RTTDIS;
+	p_rtt->RTT_MR |= g_wobits_in_rtt_mr;
 }
 #endif
 
@@ -142,12 +140,12 @@ void rtt_disable(Rtt *p_rtt)
  */
 void rtt_enable_interrupt(Rtt *p_rtt, uint32_t ul_sources)
 {
-	uint32_t temp = 0;
+	uint32_t temp;
 
 	temp = p_rtt->RTT_MR;
 	temp |= ul_sources;
-#if SAM4N || SAM4S || SAM4E || SAM4C	
-	temp |= g_wobits_set_flag;
+#if SAM4N || SAM4S || SAM4E || SAM4C
+	temp |= g_wobits_in_rtt_mr;
 #endif
 	p_rtt->RTT_MR = temp;
 }
@@ -164,8 +162,8 @@ void rtt_disable_interrupt(Rtt *p_rtt, uint32_t ul_sources)
 
 	temp = p_rtt->RTT_MR;
 	temp &= (~ul_sources);
-#if SAM4N || SAM4S || SAM4E || SAM4C	
-	temp |= g_wobits_set_flag;
+#if SAM4N || SAM4S || SAM4E || SAM4C
+	temp |= g_wobits_in_rtt_mr;
 #endif
 	p_rtt->RTT_MR = temp;
 }
