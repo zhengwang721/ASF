@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<!-- +++++++++++++++++++++++++++++++++++++++++++++++MODULE+++++++++++++++++++++++++++++++++++++++++++++++. -->
 	<!-- **************************************************************************************************** -->
-	<module type="application" id="thirdparty.wireless.avr2025_mac.apps.tal.performance_analyzer" caption="Performance Analyzer">
+	<module type="application" id="thirdparty.wireless.avr2025_mac.apps.tal.performance_analyzer_2" caption="Performance Analyzer">
 		<info type="description" value="summary">
 			A Serial interface based application,which communicates with Wireless Analyzer to demonstrate
 			various features and capabilities of the of Atmel Transceivers.
