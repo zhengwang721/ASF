@@ -92,7 +92,8 @@
 #define DEFAULT_TX_PWR_BPSK_20      (6)         /* EU, band: 868MHz */
 #define MAX_TX_PWR_OQPSK_SIN_RC_100 (MAX_TX_PWR)         /* EU, band: 868MHz */
 #define MAX_TX_PWR_OQPSK_RC_250     (MAX_TX_PWR)        /* China, band: 780MHz */
-
+#define DEFAULT_TX_PWR_OQPSK_RC_250_500     (10)        /* China, band: 780MHz */
+#define DEFAULT_TX_PWR_OQPSK_SIN_RC_100_200_400 (3)         /* EU, band: 868MHz */
 
 
 /* max power of proprietary modes */
@@ -101,9 +102,7 @@
 #define MAX_TX_PWR_OQPSK_SIN_1000   MAX_TX_PWR  /* NA, band: 915MHz */
 #define MAX_TX_PWR_OQPSK_SIN_RC_200 (MAX_TX_PWR)         /* EU, band: 868MHz */
 #define MAX_TX_PWR_OQPSK_SIN_RC_400 (MAX_TX_PWR)         /* EU, band: 868MHz */
-#define DEFAULT_TX_PWR_OQPSK_SIN_RC_100_200_400 (3)         /* EU, band: 868MHz */
 #define MAX_TX_PWR_OQPSK_RC_500     (MAX_TX_PWR)        /* China, band: 780MHz */
-#define DEFAULT_TX_PWR_OQPSK_RC_250_500     (10)        /* China, band: 780MHz */
 #define MAX_TX_PWR_OQPSK_RC_1000    (MAX_TX_PWR)        /* China, band: 780MHz */
 
 

@@ -705,13 +705,10 @@ int8_t dbm_value;
 
 dbm_value = CONV_phyTransmitPower_TO_DBM(tal_pib.TransmitPower);
 
-#ifdef HIGH_DATA_RATE_SUPPORT
     if ((tal_pib.CurrentPage == 5) ||
     (tal_pib.CurrentPage == 18) ||
     (tal_pib.CurrentPage == 19))
-#else
-    
-#endif
+
     {
         if((tal_pib.CurrentChannel == 0 )||(tal_pib.CurrentChannel == 3))
         {
