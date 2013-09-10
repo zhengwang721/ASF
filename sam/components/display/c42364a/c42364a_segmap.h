@@ -44,6 +44,8 @@
 #ifndef C42364A_TEMPLATE_H_INCLUDED
 #define C42364A_TEMPLATE_H_INCLUDED
 
+#include "board.h"
+
 /**
  * \name LCD component C42364A segment map definitions in SAM4L-EK
  * @{

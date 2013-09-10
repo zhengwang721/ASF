@@ -42,7 +42,6 @@
  */
 
 #include "compiler.h"
-#include "board.h"
 #include "slcdc.h"
 #include "supc.h"
 #include "c42364a.h"
