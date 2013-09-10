@@ -1109,7 +1109,7 @@ void system_clock_init(void);
  *
  * \param[in] wait_states Number of wait states to use for internal flash
  */
-static inline void system_flash_set_waitstates(uint32_t wait_states)
+static inline void system_flash_set_waitstates(uint8_t wait_states)
 {
 	Assert(NVMCTRL_CTRLB_RWS(wait_states) == (wait_states << NVMCTRL_CTRLB_RWS_Pos));
 	NVMCTRL->CTRLB.bit.RWS = wait_states;
