@@ -242,7 +242,7 @@ static enum status_code _spi_check_config(
 	Assert(module->hw);
 
 	SercomSpi *const spi_module = &(module->hw->SPI);
-	Sercom *const sercom_module = module->hw;
+	Sercom *const hw = module->hw;
 
 	uint32_t pad_pinmuxes[] = {
 		config->pinmux_pad0, config->pinmux_pad1,
