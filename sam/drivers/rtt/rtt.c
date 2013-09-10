@@ -63,10 +63,12 @@ extern "C" {
  */
 
 /*
- * In SAM4 series chip, the bit RTC1HZ and RTTDIS in RTT_MR is write only,
- * so this value is used to indicate these bits.
+ * In SAM4 series chip, the bit RTC1HZ and RTTDIS in RTT_MR are write only,
+ * so this flag value is used to indicate these two bits is set.
  */
-static uint32_t g_reg_mr_bak = 0;
+ #if SAM4N || SAM4S || SAM4E || SAM4C
+static uint32_t g_wobits_set_flag = 0;
+ #endif
 
 /**
  * \brief Initialize the given RTT.
@@ -83,7 +85,7 @@ static uint32_t g_reg_mr_bak = 0;
 uint32_t rtt_init(Rtt *p_rtt, uint16_t us_prescaler)
 {
 #if SAM4N || SAM4S || SAM4E || SAM4C
-	p_rtt->RTT_MR = (us_prescaler | RTT_MR_RTTRST | g_reg_mr_bak);
+	p_rtt->RTT_MR = (us_prescaler | RTT_MR_RTTRST | g_wobits_set_flag);
 #else
 	p_rtt->RTT_MR = (us_prescaler | RTT_MR_RTTRST);
 #endif
@@ -103,10 +105,10 @@ void rtt_sel_source(Rtt *p_rtt, bool is_rtc_sel)
 {
 	if(is_rtc_sel) {
 		p_rtt->RTT_MR |= RTT_MR_RTC1HZ;
-		g_reg_mr_bak |= RTT_MR_RTC1HZ;
+		g_wobits_set_flag |= RTT_MR_RTC1HZ;
 	} else {
 		p_rtt->RTT_MR &= ~RTT_MR_RTC1HZ;
-		g_reg_mr_bak &= ~RTT_MR_RTC1HZ;
+		g_wobits_set_flag &= ~RTT_MR_RTC1HZ;
 	}
 }
 
@@ -117,8 +119,8 @@ void rtt_sel_source(Rtt *p_rtt, bool is_rtc_sel)
  */
 void rtt_enable(Rtt *p_rtt)
 {
-	g_reg_mr_bak &= ~RTT_MR_RTTDIS;
-	p_rtt->RTT_MR |= g_reg_mr_bak;
+	g_wobits_set_flag &= ~RTT_MR_RTTDIS;
+	p_rtt->RTT_MR |= g_wobits_set_flag;
 }
 /**
  * \brief Disable RTT.
@@ -127,8 +129,8 @@ void rtt_enable(Rtt *p_rtt)
  */
 void rtt_disable(Rtt *p_rtt)
 {
-	g_reg_mr_bak |= RTT_MR_RTTDIS;
-	p_rtt->RTT_MR |= g_reg_mr_bak;
+	g_wobits_set_flag |= RTT_MR_RTTDIS;
+	p_rtt->RTT_MR |= g_wobits_set_flag;
 }
 #endif
 
@@ -140,11 +142,13 @@ void rtt_disable(Rtt *p_rtt)
  */
 void rtt_enable_interrupt(Rtt *p_rtt, uint32_t ul_sources)
 {
-	uint32_t temp;
+	uint32_t temp = 0;
 
 	temp = p_rtt->RTT_MR;
 	temp |= ul_sources;
-	temp |= g_reg_mr_bak;
+#if SAM4N || SAM4S || SAM4E || SAM4C	
+	temp |= g_wobits_set_flag;
+#endif
 	p_rtt->RTT_MR = temp;
 }
 
@@ -156,11 +160,13 @@ void rtt_enable_interrupt(Rtt *p_rtt, uint32_t ul_sources)
  */
 void rtt_disable_interrupt(Rtt *p_rtt, uint32_t ul_sources)
 {
-	uint32_t temp;
+	uint32_t temp = 0;
 
 	temp = p_rtt->RTT_MR;
 	temp &= (~ul_sources);
-	temp |= g_reg_mr_bak;
+#if SAM4N || SAM4S || SAM4E || SAM4C	
+	temp |= g_wobits_set_flag;
+#endif
 	p_rtt->RTT_MR = temp;
 }
 
