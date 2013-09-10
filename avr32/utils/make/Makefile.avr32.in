@@ -22,8 +22,9 @@
 # cleandoc                Clean up the documentation
 # rebuilddoc              Rebuild the documentation
 #
+# \file
 #
-# Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
+# Copyright (c) 2009 - 2013 Atmel Corporation. All rights reserved.
 #
 # \asf_license_start
 #
@@ -59,7 +60,7 @@
 #
 # \asf_license_stop
 #
-#
+
 # Include the config.mk file from the current working path, e.g., where the
 # user called make.
 include config.mk
@@ -143,6 +144,11 @@ ifeq ($(os),Windows)
 RMDIR           := rmdir /S /Q
 else
 RMDIR           := rmdir -p --ignore-fail-on-non-empty
+endif
+
+# On Windows, we need to override the shell to force the use of cmd.exe
+ifeq ($(os),Windows)
+SHELL           := cmd
 endif
 
 PROGRAM         := avr32program
@@ -381,7 +387,7 @@ objfiles: $(obj-y)
 $(build-dir)%.o: %.c $(MAKEFILE_PATH) config.mk
 	$(Q)test -d $(dir $@) || echo $(MSG_MKDIR)
 ifeq ($(os),Windows)
-	$(Q)test -d $(dir $@) || mkdir $(subst /,\,$(dir $@))
+	$(Q)test -d $(patsubst %/,%,$(dir $@)) || mkdir $(subst /,\,$(dir $@))
 else
 	$(Q)test -d $(dir $@) || mkdir -p $(dir $@)
 endif
@@ -392,7 +398,7 @@ endif
 $(build-dir)%.o: %.cpp $(MAKEFILE_PATH) config.mk
 	$(Q)test -d $(dir $@) || echo $(MSG_MKDIR)
 ifeq ($(os),Windows)
-	$(Q)test -d $(dir $@) || mkdir $(subst /,\,$(dir $@))
+	$(Q)test -d $(patsubst %/,%,$(dir $@)) || mkdir $(subst /,\,$(dir $@))
 else
 	$(Q)test -d $(dir $@) || mkdir -p $(dir $@)
 endif
@@ -403,7 +409,7 @@ endif
 $(build-dir)%.o: %.s $(MAKEFILE_PATH) config.mk
 	$(Q)test -d $(dir $@) || echo $(MSG_MKDIR)
 ifeq ($(os),Windows)
-	$(Q)test -d $(dir $@) || mkdir $(subst /,\,$(dir $@))
+	$(Q)test -d $(patsubst %/,%,$(dir $@)) || mkdir $(subst /,\,$(dir $@))
 else
 	$(Q)test -d $(dir $@) || mkdir -p $(dir $@)
 endif
@@ -414,7 +420,7 @@ endif
 $(build-dir)%.o: %.S $(MAKEFILE_PATH) config.mk
 	$(Q)test -d $(dir $@) || echo $(MSG_MKDIR)
 ifeq ($(os),Windows)
-	$(Q)test -d $(dir $@) || mkdir $(subst /,\,$(dir $@))
+	$(Q)test -d $(patsubst %/,%,$(dir $@)) || mkdir $(subst /,\,$(dir $@))
 else
 	$(Q)test -d $(dir $@) || mkdir -p $(dir $@)
 endif

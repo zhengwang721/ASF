@@ -45,13 +45,13 @@
 
 /*! \name Configuration
  */
-//! @{
+/* ! @{ */
 #define USART_HOST                &USARTE0
 #define USART_HOST_BAUDRATE       57600
 #define USART_HOST_CHAR_LENGTH    USART_CHSIZE_8BIT_gc
 #define USART_HOST_PARITY         USART_PMODE_DISABLED_gc
 #define USART_HOST_STOP_BIT       1
-//! @}
+/* ! @} */
 
 #define USART_HOST_ISR_VECT()     ISR(USARTE0_RXC_vect)
 

@@ -40,7 +40,6 @@
  * \asf_license_stop
  *
  */
- 
 
 /* Prevent double inclusion */
 #ifndef MAC_USER_BUILD_CONFIG_H
@@ -51,8 +50,9 @@
 /* === Types ================================================================ */
 
 /* === Macros =============================================================== */
+
 /**
-  * \ingroup group_rf4control 
+ * \ingroup group_rf4control
  * \defgroup group_mac_user_build MAC User Build Configurations
  * All Build configuration Macros are defined in this module
  * @{
@@ -112,7 +112,7 @@
 /* === Externals ============================================================ */
 
 /* === Prototypes =========================================================== */
-//! @}
+/* ! @} */
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -121,11 +121,8 @@ extern "C" {
 } /* extern "C" */
 #endif
 
-
-
 #endif  /* MAC_USER_BUILD_CONFIG_H */
 
 #endif /* #ifdef MAC_USER_BUILD_CONFIG */
 
 /* EOF */
-

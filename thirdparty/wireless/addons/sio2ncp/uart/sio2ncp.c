@@ -1,7 +1,7 @@
 /**
  * \file sio2ncp.c
  *
- * \brief Handles Serial I/O  Functionalities 
+ * \brief Handles Serial I/O  Functionalities
  *
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
@@ -41,7 +41,6 @@
  * \asf_license_stop
  */
 
-
 /* === INCLUDES ============================================================ */
 
 #include "asf.h"
@@ -51,18 +50,15 @@
 
 /* === MACROS ============================================================== */
 
-
 /* === PROTOTYPES ========================================================== */
 
 /* === GLOBALS ========================================================== */
-static usart_serial_options_t usart_serial_options =
-	{
-		.baudrate     = USART_NCP_BAUDRATE,
-		.charlength   = USART_NCP_CHAR_LENGTH,
-		.paritytype   = USART_NCP_PARITY,
-		.stopbits     = USART_NCP_STOP_BITS
-	};
-
+static usart_serial_options_t usart_serial_options = {
+	.baudrate     = USART_NCP_BAUDRATE,
+	.charlength   = USART_NCP_CHAR_LENGTH,
+	.paritytype   = USART_NCP_PARITY,
+	.stopbits     = USART_NCP_STOP_BITS
+};
 
 /**
  * Receive buffer
@@ -85,157 +81,139 @@ static uint8_t serial_rx_buf_tail;
  */
 static uint8_t serial_rx_count;
 
-
 /* === IMPLEMENTATION ====================================================== */
-
 
 void sio2ncp_init(void)
 {
 #ifdef (NCP_RESET_GPIO)
 	ioport_set_pin_dir(NCP_RESET_GPIO, IOPORT_DIR_OUTPUT);
 	ioport_set_pin_level(NCP_RESET_GPIO, IOPORT_PIN_LEVEL_HIGH);
+<<<<<<< HEAD
 #endif //(NCP_RESET_GPIO)
+=======
+#endif /* (BOARD == SAM4L_XPLAINED_PRO) */
+>>>>>>> c6e838ad80797100e0d101fe137ec9d9c244b8f5
 
 	usart_serial_init(USART_NCP, &usart_serial_options);
 	USART_NCP_RX_ISR_ENABLE();
 }
 
-
-
 uint8_t sio2ncp_tx(uint8_t *data, uint8_t length)
 {
 	status_code_t status;
-	do
-	{
-		status = usart_serial_write_packet(USART_NCP,(const uint8_t *)data,length);
-	}while(status!= STATUS_OK);
-	return length;  
+	do {
+		status = usart_serial_write_packet(USART_NCP,
+				(const uint8_t *)data,
+				length);
+	} while (status != STATUS_OK);
+	return length;
 }
-
-
 
 uint8_t sio2ncp_rx(uint8_t *data, uint8_t max_length)
 {
-    uint8_t data_received = 0;
-    if ( 0 == serial_rx_count)
-    {
-        
-        return 0;
-    }
-    if (SERIAL_RX_BUF_SIZE_NCP <= serial_rx_count)
-    {
-      
-        /*
-         * Bytes between head and tail are overwritten by new data.
-         * The oldest data in buffer is the one to which the tail is
-         * pointing. So reading operation should start from the tail.
-         */
-        serial_rx_buf_head = serial_rx_buf_tail;
+	uint8_t data_received = 0;
+	if (0 == serial_rx_count) {
+		return 0;
+	}
 
-        /*
-         * This is a buffer overflow case. But still only the number of bytes equivalent to
-         * full buffer size are useful.
-         */
-        serial_rx_count = SERIAL_RX_BUF_SIZE_NCP;
+	if (SERIAL_RX_BUF_SIZE_NCP <= serial_rx_count) {
+		/*
+		 * Bytes between head and tail are overwritten by new data.
+		 * The oldest data in buffer is the one to which the tail is
+		 * pointing. So reading operation should start from the tail.
+		 */
+		serial_rx_buf_head = serial_rx_buf_tail;
 
-        /* Bytes received is more than or equal to buffer. */
-        if (SERIAL_RX_BUF_SIZE_NCP <= max_length)
-        {
-            /*
-             * Requested receive length (max_length) is more than the
-             * max size of receive buffer, but at max the full
-             * buffer can be read.
-             */
-            max_length = SERIAL_RX_BUF_SIZE_NCP;
-        }
-    }
-    else
-    {
-        /* Bytes received is less than receive buffer maximum length. */
-        if (max_length > serial_rx_count)
-        {
-            /*
-             * Requested receive length (max_length) is more than the data
-             * present in receive buffer. Hence only the number of bytes
-             * present in receive buffer are read.
-             */
-            max_length = serial_rx_count;
-        }
-    }
+		/*
+		 * This is a buffer overflow case. But still only the number of
+		 *bytes equivalent to
+		 * full buffer size are useful.
+		 */
+		serial_rx_count = SERIAL_RX_BUF_SIZE_NCP;
 
-    data_received = max_length;
-    while (max_length > 0)
-    {
-        /* Start to copy from head. */
-        *data = serial_rx_buf[serial_rx_buf_head];
-        serial_rx_buf_head++;
-        serial_rx_count--;
-        data++;
-        max_length--;
-        if ((SERIAL_RX_BUF_SIZE_NCP) == serial_rx_buf_head)
-        {
-            serial_rx_buf_head = 0;
-        }
-    }
-    return data_received;
+		/* Bytes received is more than or equal to buffer. */
+		if (SERIAL_RX_BUF_SIZE_NCP <= max_length) {
+			/*
+			 * Requested receive length (max_length) is more than
+			 *the
+			 * max size of receive buffer, but at max the full
+			 * buffer can be read.
+			 */
+			max_length = SERIAL_RX_BUF_SIZE_NCP;
+		}
+	} else {
+		/* Bytes received is less than receive buffer maximum length. */
+		if (max_length > serial_rx_count) {
+			/*
+			 * Requested receive length (max_length) is more than
+			 *the data
+			 * present in receive buffer. Hence only the number of
+			 *bytes
+			 * present in receive buffer are read.
+			 */
+			max_length = serial_rx_count;
+		}
+	}
 
+	data_received = max_length;
+	while (max_length > 0) {
+		/* Start to copy from head. */
+		*data = serial_rx_buf[serial_rx_buf_head];
+		serial_rx_buf_head++;
+		serial_rx_count--;
+		data++;
+		max_length--;
+		if ((SERIAL_RX_BUF_SIZE_NCP) == serial_rx_buf_head) {
+			serial_rx_buf_head = 0;
+		}
+	}
+	return data_received;
 }
-
 
 uint8_t sio2ncp_getchar(void)
 {
-    uint8_t c;
+	uint8_t c;
 
-	while (0 == sio2ncp_rx(&c, 1));
+	while (0 == sio2ncp_rx(&c, 1)) {
+	}
 	return c;
 }
 
 int sio2ncp_getchar_nowait(void)
-
 {
-    uint8_t c;
+	uint8_t c;
 
 	int back = sio2ncp_rx(&c, 1);
-    if (back >= 1)
-    {
-      return c;
-    }
-    else
-    {
-      
-        return (-1);
-    }
-
+	if (back >= 1) {
+		return c;
+	} else {
+		return (-1);
+	}
 }
-
 
 USART_NCP_ISR_VECT()
 {
 	uint8_t temp;
-	
+
 	usart_serial_read_packet(USART_NCP, &temp, 1);
 	/* Introducing critical section to avoid buffer corruption. */
 	cpu_irq_disable();
-	
-	/* The number of data in the receive buffer is incremented and the buffer is updated. */
+
+	/* The number of data in the receive buffer is incremented and the
+	 *buffer is updated. */
 	serial_rx_count++;
-	
-	
+
 	serial_rx_buf[serial_rx_buf_tail] = temp;
-	
-	if ((SERIAL_RX_BUF_SIZE_NCP - 1) == serial_rx_buf_tail)
-	{
-		/* Reached the end of buffer, revert back to beginning of buffer. */
+
+	if ((SERIAL_RX_BUF_SIZE_NCP - 1) == serial_rx_buf_tail) {
+		/* Reached the end of buffer, revert back to beginning of
+		 *buffer. */
 		serial_rx_buf_tail = 0x00;
-	}
-	else
-	{
+	} else {
 		serial_rx_buf_tail++;
 	}
 
 	cpu_irq_enable();
 }
 
-
 /** EOF */
-

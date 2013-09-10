@@ -43,35 +43,34 @@
 #ifndef CONF_HW_TIMER_H_INCLUDED
 #define CONF_HW_TIMER_H_INCLUDED
 
-//! \name Configuration for XMEGA
-//! @{
+/* ! \name Configuration for XMEGA */
+/* ! @{ */
 #if (XMEGA)
 #define TIMER     (&TCC0)
-#endif //XMEGA
-//! @}
+#endif /* XMEGA */
+/* ! @} */
 
-//! \name Configuration for UC3
-//! @{
+/* ! \name Configuration for UC3 */
+/* ! @{ */
 #if (UC3)
 #define TIMER                (&AVR32_TC0)
 #define TIMER_CHANNEL_ID     0
-#endif //UC3
-//! @}
+#endif /* UC3 */
+/* ! @} */
 
-//! \name Configuration for SAM4L
-//! @{
+/* ! \name Configuration for SAM4L */
+/* ! @{ */
 #if (SAM4L)
 #define TIMER                (TC0)
 #define TIMER_CHANNEL_ID     (0)
-#endif //SAM4L
-//! @}
+#endif /* SAM4L */
+/* ! @} */
 
-//! \name Configuration for MEGARF
-//! @{
+/* ! \name Configuration for MEGARF */
+/* ! @{ */
 #if (MEGA_RF)
 #define TIMER     (&TCCR1A)
-#endif //MEGA_RF
-//! @}
-
+#endif /* MEGA_RF */
+/* ! @} */
 
 #endif /* CONF_HW_TIMER_H_INCLUDED */

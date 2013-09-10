@@ -41,6 +41,7 @@
  *
  * \asf_license_stop
  */
+
 /*
  * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
@@ -53,18 +54,16 @@
 
 /* === Includes ============================================================= */
 
-
 /* === Macros =============================================================== */
-
 
 /** Defines the number of timers used by the application. */
 #define NUMBER_OF_APP_TIMERS        (2)
 
-/** Defines the total number of timers used by the application and the layers below. */
+/** Defines the total number of timers used by the application and the layers
+ *below. */
 #define TOTAL_NUMBER_OF_TIMERS      (NUMBER_OF_APP_TIMERS)
 
 /* === Externals ============================================================ */
-
 
 /* === Prototypes =========================================================== */
 

@@ -40,6 +40,7 @@
  *
  * \asf_license_stop
  */
+
 /*
  * Copyright (c) 2012, Atmel Corporation All rights reserved.
  *
@@ -52,9 +53,11 @@
 # include "tal.h"
 #include "string.h"
 # include "app_config.h"
+
 /**
  * \defgroup group_perf_analyzer Performance Analyzer Application
- * This  application Performance Analyzer  is a Serial interface based application,
+ * This  application Performance Analyzer  is a Serial interface based
+ *application,
  * which communicates with Wireless Analyzer to demonstrate various features and
  * capabilities of Atmel Transceivers
  *
@@ -68,44 +71,89 @@
  */
 /* === Includes ============================================================= */
 
-
 /* === Macros =============================================================== */
+/* Version of the software */
+#define FIRMWARE_VERSION    2.2f
 
+#if ((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B))
+#define DEFAULT_CHANNEL         (1)
+#else
+#define DEFAULT_CHANNEL         (21)
+#endif
+#define DEFAULT_PAN_ID          (0xCAFE)
+#define DST_PAN_ID              (DEFAULT_PAN_ID)
+#define SRC_PAN_ID              (DEFAULT_PAN_ID)
+#define DEFAULT_ADDR            (0xFFFF)
+#define DST_SHORT_ADDR          (0xFFFF)
+
+/* Frame overhead due to selected address scheme incl. FCS */
+#if (DST_PAN_ID == SRC_PAN_ID)
+#define FRAME_OVERHEAD          (11)
+#else
+#define FRAME_OVERHEAD          (13)
+#endif
+
+#define FRAME_OVERHEAD_SRC_IEEE_ADDR (FRAME_OVERHEAD + 6)
+#define FRAME_OVERHEAD_DST_IEEE_ADDR (FRAME_OVERHEAD + 6)
+
+#define OFFSET_FOR_SRC_IEEE_ADDR    (7)
+
+#if (LED_COUNT >= 3)
+#define STATUS_LED              LED0
+#define TX_LED                  LED1
+#define RX_LED                  LED2
+#elif (LED_COUNT >= 2)
+#define STATUS_LED              LED0
+#define TX_LED                  LED0
+#define RX_LED                  LED1
+#else
+#define STATUS_LED              LED0
+#define TX_LED                  LED0
+#define RX_LED                  LED0
+#endif
+
+/* Macro to enable the feature of counting wrong CRC packets */
+#if ((TAL_TYPE == ATMEGARFR2) || \
+	(TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B) || \
+	(TAL_TYPE == AT86RF231) || (TAL_TYPE == AT86RF233))
+#define CRC_SETTING_ON_REMOTE_NODE
+#endif
 /* === Types ================================================================ */
 /* Main states */
-typedef enum
-{
-    INIT = 0,
-    WAIT_FOR_EVENT,
-    PEER_SEARCH_RANGE_TX,
-    PEER_SEARCH_PER_TX,
-    PEER_SEARCH_RANGE_RX,
-    PEER_SEARCH_PER_RX,
-    RANGE_TEST_TX_ON,
-    RANGE_TEST_TX_OFF,
-    SINGLE_NODE_TESTS,
-    PER_TEST_INITIATOR,
-    PER_TEST_RECEPTOR,
-    NUM_MAIN_STATES
+typedef enum {
+	INIT = 0,
+	WAIT_FOR_EVENT,
+	PEER_SEARCH_RANGE_TX,
+	PEER_SEARCH_PER_TX,
+	PEER_SEARCH_RANGE_RX,
+	PEER_SEARCH_PER_RX,
+	RANGE_TEST_TX_ON,
+	RANGE_TEST_TX_OFF,
+	SINGLE_NODE_TESTS,
+	PER_TEST_INITIATOR,
+	PER_TEST_RECEPTOR,
+	NUM_MAIN_STATES
 } main_state_t;
+
+#define DUMMY_PAYLOAD                           (0xAA)
 
 /**
  * \brief Structure to holds the information base for the node
  *
  */
-typedef struct
-{
-    bool configure_mode;
-    bool peer_found;
-    uint8_t sub_state;
-    uint8_t transmitting ;
-    uint8_t msg_seq_num;
-    uint16_t peer_short_addr;
-    frame_info_t *tx_frame_info;
-    main_state_t main_state;
+typedef struct {
+	bool configure_mode;
+	bool peer_found;
+	uint8_t sub_state;
+	uint8_t transmitting;
+	uint8_t msg_seq_num;
+	uint16_t peer_short_addr;
+	frame_info_t *tx_frame_info;
+	main_state_t main_state;
 } node_ib_t;
 
 /* State change functions */
+
 /**
  * \brief Function to set the main state of state machine
  *
@@ -114,7 +162,6 @@ typedef struct
  */
 
 void set_main_state(main_state_t state, void *arg);
-
 
 /* Application Alert to indicate something has gone wrong */
 
@@ -153,7 +200,6 @@ void wait_for_event_init(void *arg);
  */
 void wait_for_event_task(void);
 
-
 /**
  * \brief Callback that is called if data has been received by trx
  * in WAIT_FOR_EVENT state. This allow the node to participate in
@@ -164,10 +210,10 @@ void wait_for_event_task(void);
 void wait_for_event_rx_cb(frame_info_t *frame);
 
 extern uint8_t T_APP_TIMER;
+extern uint8_t T_APP_TIMER_RANGE;
 extern uint8_t APP_TIMER_TO_TX;
 extern uint8_t APP_TIMER_TO_TX_LED_OFF;
 extern uint8_t APP_TIMER_TO_RX_LED_OFF;
-
 
 /* === Externals ============================================================ */
 
@@ -184,17 +230,17 @@ extern volatile node_ib_t node_info;
  * \param payload_length    data length
  * \param ack_req           specifies ack requested for frame if set to 1
  *
- * \return MAC_SUCCESS      if the TAL has accepted the data for frame transmission
+ * \return MAC_SUCCESS      if the TAL has accepted the data for frame
+ *transmission
  *         TAL_BUSY         if the TAL is busy servicing the previous tx request
  */
 extern retval_t transmit_frame( uint8_t dst_addr_mode,
-                                uint8_t *dst_addr,
-                                uint8_t src_addr_mode,
-                                uint8_t msdu_handle,
-                                uint8_t *payload,
-                                uint8_t payload_length,
-                                uint8_t ack_req);
-
+		uint8_t *dst_addr,
+		uint8_t src_addr_mode,
+		uint8_t msdu_handle,
+		uint8_t *payload,
+		uint8_t payload_length,
+		uint8_t ack_req);
 
 #ifdef __cplusplus
 extern "C" {
@@ -204,7 +250,7 @@ extern "C" {
 } /* extern "C" */
 #endif
 
-//! \}
+/* ! \} */
 
 #endif /* APP_STATE_H */
 /* EOF */

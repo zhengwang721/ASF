@@ -13,7 +13,7 @@
 				</info>
 				<device-support value="ucr1" />
 				<info type="keyword" value="technology">
-					<keyword value="digital signal processing" />
+					<keyword value="Digital Signal Processing"/>
 				</info>
 				<build type="library" subtype="user" value="at32ucr1/gcc/libdsp-at32ucr1-dspaccandsize_opt.a" toolchain="avr32gcc" />
 				<build type="library" subtype="user" value="at32ucr1/iar/libdsp-at32ucr1-dspaccandsize_opt.r82" toolchain="iarew32" />
@@ -26,7 +26,7 @@
 				</info>
 				<device-support value="ucr2" />
 				<info type="keyword" value="technology">
-					<keyword value="digital signal processing" />
+					<keyword value="Digital Signal Processing"/>
 				</info>
 				<build type="library" subtype="user" value="at32ucr2/gcc/libdsp-at32ucr2-dspaccandsize_opt.a" toolchain="avr32gcc" />
 				<build type="library" subtype="user" value="at32ucr2/iar/libdsp-at32ucr2-dspaccandsize_opt.r82" toolchain="iarew32" />
@@ -39,7 +39,7 @@
 				</info>
 				<device-support value="ucr3" />
 				<info type="keyword" value="technology">
-					<keyword value="digital signal processing" />
+					<keyword value="Digital Signal Processing"/>
 				</info>
 				<build type="library" subtype="user" value="at32ucr3/gcc/libdsp-at32ucr3-dspaccandsize_opt.a" toolchain="avr32gcc" />
 				<build type="library" subtype="user" value="at32ucr3/iar/libdsp-at32ucr3-dspaccandsize_opt.r82" toolchain="iarew32" />
@@ -52,7 +52,7 @@
 				</info>
 				<device-support value="ucr3fp" />
 				<info type="keyword" value="technology">
-					<keyword value="digital signal processing" />
+					<keyword value="Digital Signal Processing"/>
 				</info>
 				<build type="library" subtype="user" value="at32ucr3fp/gcc/libdsp-at32ucr3fp-dspaccandsize_opt.a" toolchain="avr32gcc" />
 				<build type="library" subtype="user" value="at32ucr3fp/iar/libdsp-at32ucr3fp-dspaccandsize_opt.r82" toolchain="iarew32" />
@@ -67,7 +67,7 @@
 				</info>
 				<device-support value="ucr1" />
 				<info type="keyword" value="technology">
-					<keyword value="digital signal processing" />
+					<keyword value="Digital Signal Processing"/>
 				</info>
 				<build type="library" subtype="user" value="at32ucr1/gcc/libdsp-at32ucr1-dspaccuracy_opt.a" toolchain="avr32gcc" />
 				<build type="library" subtype="user" value="at32ucr1/iar/libdsp-at32ucr1-dspaccuracy_opt.r82" toolchain="iarew32" />
@@ -80,7 +80,7 @@
 				</info>
 				<device-support value="ucr2" />
 				<info type="keyword" value="technology">
-					<keyword value="digital signal processing" />
+					<keyword value="Digital Signal Processing"/>
 				</info>
 				<build type="library" subtype="user" value="at32ucr2/gcc/libdsp-at32ucr2-dspaccuracy_opt.a" toolchain="avr32gcc" />
 				<build type="library" subtype="user" value="at32ucr2/iar/libdsp-at32ucr2-dspaccuracy_opt.r82" toolchain="iarew32" />
@@ -93,7 +93,7 @@
 				</info>
 				<device-support value="ucr3" />
 				<info type="keyword" value="technology">
-					<keyword value="digital signal processing" />
+					<keyword value="Digital Signal Processing"/>
 				</info>
 				<build type="library" subtype="user" value="at32ucr3/gcc/libdsp-at32ucr3-dspaccuracy_opt.a" toolchain="avr32gcc" />
 				<build type="library" subtype="user" value="at32ucr3/iar/libdsp-at32ucr3-dspaccuracy_opt.r82" toolchain="iarew32" />
@@ -106,7 +106,7 @@
 				</info>
 				<device-support value="ucr3fp" />
 				<info type="keyword" value="technology">
-					<keyword value="digital signal processing" />
+					<keyword value="Digital Signal Processing"/>
 				</info>
 				<build type="library" subtype="user" value="at32ucr3fp/gcc/libdsp-at32ucr3fp-dspaccuracy_opt.a" toolchain="avr32gcc" />
 				<build type="library" subtype="user" value="at32ucr3fp/iar/libdsp-at32ucr3fp-dspaccuracy_opt.r82" toolchain="iarew32" />
@@ -121,7 +121,7 @@
 				</info>
 				<device-support value="ucr1" />
 				<info type="keyword" value="technology">
-					<keyword value="digital signal processing" />
+					<keyword value="Digital Signal Processing"/>
 				</info>
 				<build type="library" subtype="user" value="at32ucr1/gcc/libdsp-at32ucr1-dspsize_opt.a" toolchain="avr32gcc" />
 				<build type="library" subtype="user" value="at32ucr1/iar/libdsp-at32ucr1-dspsize_opt.r82" toolchain="iarew32" />
@@ -134,7 +134,7 @@
 				</info>
 				<device-support value="ucr2" />
 				<info type="keyword" value="technology">
-					<keyword value="digital signal processing" />
+					<keyword value="Digital Signal Processing"/>
 				</info>
 				<build type="library" subtype="user" value="at32ucr2/gcc/libdsp-at32ucr2-dspsize_opt.a" toolchain="avr32gcc" />
 				<build type="library" subtype="user" value="at32ucr2/iar/libdsp-at32ucr2-dspsize_opt.r82" toolchain="iarew32" />
@@ -147,7 +147,7 @@
 				</info>
 				<device-support value="ucr3" />
 				<info type="keyword" value="technology">
-					<keyword value="digital signal processing" />
+					<keyword value="Digital Signal Processing"/>
 				</info>
 				<build type="library" subtype="user" value="at32ucr3/gcc/libdsp-at32ucr3-dspsize_opt.a" toolchain="avr32gcc" />
 				<build type="library" subtype="user" value="at32ucr3/iar/libdsp-at32ucr3-dspsize_opt.r82" toolchain="iarew32" />
@@ -160,7 +160,7 @@
 				</info>
 				<device-support value="ucr3fp" />
 				<info type="keyword" value="technology">
-					<keyword value="digital signal processing" />
+					<keyword value="Digital Signal Processing"/>
 				</info>
 				<build type="library" subtype="user" value="at32ucr3fp/gcc/libdsp-at32ucr3fp-dspsize_opt.a" toolchain="avr32gcc" />
 				<build type="library" subtype="user" value="at32ucr3fp/iar/libdsp-at32ucr3fp-dspsize_opt.r82" toolchain="iarew32" />
@@ -175,7 +175,7 @@
 				</info>
 				<device-support value="ucr1" />
 				<info type="keyword" value="technology">
-					<keyword value="digital signal processing" />
+					<keyword value="Digital Signal Processing"/>
 				</info>
 				<build type="library" subtype="user" value="at32ucr1/gcc/libdsp-at32ucr1-dspspeed_opt.a" toolchain="avr32gcc" />
 				<build type="library" subtype="user" value="at32ucr1/iar/libdsp-at32ucr1-dspspeed_opt.r82" toolchain="iarew32" />
@@ -188,7 +188,7 @@
 				</info>
 				<device-support value="ucr2" />
 				<info type="keyword" value="technology">
-					<keyword value="digital signal processing" />
+					<keyword value="Digital Signal Processing"/>
 				</info>
 				<build type="library" subtype="user" value="at32ucr2/gcc/libdsp-at32ucr2-dspspeed_opt.a" toolchain="avr32gcc" />
 				<build type="library" subtype="user" value="at32ucr2/iar/libdsp-at32ucr2-dspspeed_opt.r82" toolchain="iarew32" />
@@ -201,7 +201,7 @@
 				</info>
 				<device-support value="ucr3" />
 				<info type="keyword" value="technology">
-					<keyword value="digital signal processing" />
+					<keyword value="Digital Signal Processing"/>
 				</info>
 				<build type="library" subtype="user" value="at32ucr3/gcc/libdsp-at32ucr3-dspspeed_opt.a" toolchain="avr32gcc" />
 				<build type="library" subtype="user" value="at32ucr3/iar/libdsp-at32ucr3-dspspeed_opt.r82" toolchain="iarew32" />
@@ -214,7 +214,7 @@
 				</info>
 				<device-support value="ucr3fp" />
 				<info type="keyword" value="technology">
-					<keyword value="digital signal processing" />
+					<keyword value="Digital Signal Processing"/>
 				</info>
 				<build type="library" subtype="user" value="at32ucr3fp/gcc/libdsp-at32ucr3fp-dspspeed_opt.a" toolchain="avr32gcc" />
 				<build type="library" subtype="user" value="at32ucr3fp/iar/libdsp-at32ucr3fp-dspspeed_opt.r82" toolchain="iarew32" />

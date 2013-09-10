@@ -40,6 +40,7 @@
  *
  * \asf_license_stop
  */
+
 /*
  * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
@@ -50,14 +51,14 @@
 #ifndef TFA_H
 #define TFA_H
 
-
-
 #if (defined ENABLE_TFA) || (defined TFA_BAT_MON) || (defined __DOXYGEN__)
+
 /**
  * \defgroup group_tfa           Transceiver Feature Access
  * The Atmel transceivers provide a variety of additional hardware features
  * features that are not reflected in the IEEE 802.15.4 standard.
- * These features are for eg .Reading battery voltage, Continuous wave transmission etc .
+ * These features are for eg .Reading battery voltage, Continuous wave
+ *transmission etc .
  * @{
  */
 
@@ -69,16 +70,14 @@
 /* === TYPES =============================================================== */
 
 /** Transceiver commands */
-typedef enum tfa_pib_t
-{
-    TFA_PIB_RX_SENS         = 0
+typedef enum tfa_pib_t {
+	TFA_PIB_RX_SENS         = 0
 } SHORTENUM tfa_pib_t;
 
 /** Continuous Transmission modes */
-typedef enum continuous_tx_mode_tag
-{
-    CW_MODE = 0,
-    PRBS_MODE = 1
+typedef enum continuous_tx_mode_tag {
+	CW_MODE = 0,
+	PRBS_MODE = 1
 } SHORTENUM continuous_tx_mode_t;
 
 /* === MACROS ============================================================== */
@@ -105,9 +104,7 @@ typedef enum continuous_tx_mode_tag
  */
 #define SUPPLY_VOLTAGE_BELOW_LOWER_LIMIT    (0)
 
-
 /* === GLOBALS ============================================================= */
-
 
 /* === PROTOTYPES ========================================================== */
 
@@ -116,133 +113,155 @@ extern "C" {
 #endif
 
 #if (defined ENABLE_TFA) || (defined __DOXYGEN__)
-    /**
-     * \brief Initializes the TFA
-     *
-     * This function is called to initialize the TFA.
-     *
-     * \return MAC_SUCCESS if everything went correct;
-     *         FAILURE otherwise
-     *
-     */
-    retval_t tfa_init(void);
+
+/**
+ * \brief Initializes the TFA
+ *
+ * This function is called to initialize the TFA.
+ *
+ * \return MAC_SUCCESS if everything went correct;
+ *         FAILURE otherwise
+ *
+ */
+retval_t tfa_init(void);
+
 #endif
 
 #if (defined ENABLE_TFA) || (defined __DOXYGEN__)
-    /**
-     * \brief Reset the TFA
-     *
-     * This function is called to reset the TFA.
-     *
-     * \param set_default_pib Defines whether PIB values need to be set
-     *                        to its default values
-     *
-     */
-    void tfa_reset(bool set_default_pib);
+
+/**
+ * \brief Reset the TFA
+ *
+ * This function is called to reset the TFA.
+ *
+ * \param set_default_pib Defines whether PIB values need to be set
+ *                        to its default values
+ *
+ */
+void tfa_reset(bool set_default_pib);
+
 #endif
 
 #if (defined ENABLE_TFA) || (defined __DOXYGEN__)
-    /**
-     * \brief Gets a TFA PIB attribute
-     *
-     * This function is called to retrieve the transceiver information base
-     * attributes.
-     *
-     * \param[in] tfa_pib_attribute TAL infobase attribute ID
-     * \param[out] value TFA infobase attribute value
-     *
-     * \return MAC_UNSUPPORTED_ATTRIBUTE if the TFA infobase attribute is not found
-     *         MAC_SUCCESS otherwise
-     *
-     */
-    retval_t tfa_pib_get(tfa_pib_t tfa_pib_attribute, void *value);
+
+/**
+ * \brief Gets a TFA PIB attribute
+ *
+ * This function is called to retrieve the transceiver information base
+ * attributes.
+ *
+ * \param[in] tfa_pib_attribute TAL infobase attribute ID
+ * \param[out] value TFA infobase attribute value
+ *
+ * \return MAC_UNSUPPORTED_ATTRIBUTE if the TFA infobase attribute is not found
+ *         MAC_SUCCESS otherwise
+ *
+ */
+retval_t tfa_pib_get(tfa_pib_t tfa_pib_attribute, void *value);
+
 #endif
 
 #if (defined ENABLE_TFA) || (defined __DOXYGEN__)
-    /**
-     * \brief Sets a TFA PIB attribute
-     *
-     * This function is called to set the transceiver information base
-     * attributes.
-     *
-     * \param[in] tfa_pib_attribute TFA infobase attribute ID
-     * \param[in] value TFA infobase attribute value to be set
-     *
-     * \return MAC_UNSUPPORTED_ATTRIBUTE if the TFA info base attribute is not found
-     *         TAL_BUSY if the TAL is not in TAL_IDLE state.
-     *         MAC_SUCCESS if the attempt to set the PIB attribute was successful
-     *
-     */
-    retval_t tfa_pib_set(tfa_pib_t tfa_pib_attribute, void *value);
+
+/**
+ * \brief Sets a TFA PIB attribute
+ *
+ * This function is called to set the transceiver information base
+ * attributes.
+ *
+ * \param[in] tfa_pib_attribute TFA infobase attribute ID
+ * \param[in] value TFA infobase attribute value to be set
+ *
+ * \return MAC_UNSUPPORTED_ATTRIBUTE if the TFA info base attribute is not found
+ *         TAL_BUSY if the TAL is not in TAL_IDLE state.
+ *         MAC_SUCCESS if the attempt to set the PIB attribute was successful
+ *
+ */
+retval_t tfa_pib_set(tfa_pib_t tfa_pib_attribute, void *value);
+
 #endif
 
 #if (defined ENABLE_TFA) || (defined __DOXYGEN__)
-    /**
-     * \brief Perform a CCA
-     *
-     * This function performs a CCA request.
-     *
-     * \return phy_enum_t PHY_IDLE or PHY_BUSY
-     *
-     */
-    phy_enum_t tfa_cca_perform(void);
+
+/**
+ * \brief Perform a CCA
+ *
+ * This function performs a CCA request.
+ *
+ * \return phy_enum_t PHY_IDLE or PHY_BUSY
+ *
+ */
+phy_enum_t tfa_cca_perform(void);
+
 #endif
 
 #if (defined ENABLE_TFA) || (defined __DOXYGEN__)
-    /**
-     * \brief Perform a single ED measurement
-     *
-     * \return ed_value Result of the measurement (transceiver's register value)
-     *
-     */
-    uint8_t tfa_ed_sample(void);
+
+/**
+ * \brief Perform a single ED measurement
+ *
+ * \return ed_value Result of the measurement (transceiver's register value)
+ *
+ */
+uint8_t tfa_ed_sample(void);
+
 #endif
 
 #if (defined ENABLE_TFA) || (defined TFA_BAT_MON) || (defined __DOXYGEN__)
-    /**
-     * \brief Get the transceiver's supply voltage
-     *
-     * \return mv Milli Volt; 0 if below threshold, 0xFFFF if above threshold
-     *
-     */
-    uint16_t tfa_get_batmon_voltage(void);
+
+/**
+ * \brief Get the transceiver's supply voltage
+ *
+ * \return mv Milli Volt; 0 if below threshold, 0xFFFF if above threshold
+ *
+ */
+uint16_t tfa_get_batmon_voltage(void);
+
 #endif
 
-#if (defined ENABLE_TFA) || (PAL_GENERIC_TYPE == MEGA_RF) || (defined __DOXYGEN__)
-    /**
-     * \brief Get the temperature value from the integrated sensor
-     *
-     * \return temperature value in degree Celsius
-     *
-     */
-    double tfa_get_temperature(void);
-#endif
+#if (defined ENABLE_TFA) || (PAL_GENERIC_TYPE == MEGA_RF) || \
+	(defined __DOXYGEN__)
 
-#if ((defined ENABLE_TFA) || (TAL_TYPE != AT86RF230B) || \
-     ((TAL_TYPE == AT86RF230B) && (defined CW_SUPPORTED))  || defined(__DOXYGEN__))
-    /**
-     * \brief Starts continuous transmission on current channel
-     *
-     * \param tx_mode Transmission mode
-     * \param random_content Use random content if true
-     */
-    void tfa_continuous_tx_start(continuous_tx_mode_t tx_mode, bool random_content);
+/**
+ * \brief Get the temperature value from the integrated sensor
+ *
+ * \return temperature value in degree Celsius
+ *
+ */
+double tfa_get_temperature(void);
+
 #endif
 
 #if ((defined ENABLE_TFA) || (TAL_TYPE != AT86RF230B) || \
-     ((TAL_TYPE == AT86RF230B) && (defined CW_SUPPORTED))  || defined(__DOXYGEN__))
-    /**
-     * \brief Stops CW transmission
-     */
-    void tfa_continuous_tx_stop(void);
+	((TAL_TYPE == AT86RF230B) && (defined CW_SUPPORTED))  || \
+	defined(__DOXYGEN__))
+
+/**
+ * \brief Starts continuous transmission on current channel
+ *
+ * \param tx_mode Transmission mode
+ * \param random_content Use random content if true
+ */
+void tfa_continuous_tx_start(continuous_tx_mode_t tx_mode, bool random_content);
+
 #endif
 
+#if ((defined ENABLE_TFA) || (TAL_TYPE != AT86RF230B) || \
+	((TAL_TYPE == AT86RF230B) && (defined CW_SUPPORTED))  || \
+	defined(__DOXYGEN__))
+
+/**
+ * \brief Stops CW transmission
+ */
+void tfa_continuous_tx_stop(void);
+
+#endif
 
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
 
-//! @}
+/* ! @} */
 
 #endif /* #ifdef ENABLE_TFA */
 

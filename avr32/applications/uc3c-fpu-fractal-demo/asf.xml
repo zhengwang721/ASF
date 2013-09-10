@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<module type="application" id="avr32.applications.uc3c-fpu-demo" caption="UC3C Fractal Display using the FPU Application">
 		<info type="keyword" value="technology">
-			<keyword value="FPU"/>
+			<keyword value="Graphics"/>
 		</info>
 		<info type="description" value="summary">
 		This application is aimed to demonstrate the AVR UC3 C series FPU capabilities, using a fractal algorithm.
