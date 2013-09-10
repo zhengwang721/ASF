@@ -177,7 +177,7 @@ typedef uint16_t spi_master_vec_buflen_t;
 /** Buffer descriptor structure. */
 struct spi_master_vec_bufdesc {
 	/** Pointer to buffer start. */
-	uint8_t *data;
+	void *data;
 	/** Length of buffer. */
 	spi_master_vec_buflen_t length;
 };
