@@ -51,6 +51,11 @@
  * @{
  */
 
+/**
+ * \name Internal functions
+ * @{
+ */
+
 static void _spi_master_vec_int_handler(uint8_t sercom_index);
 
 /**
@@ -80,6 +85,8 @@ static inline void _spi_master_vec_pinmux_helper(uint32_t pinmux,
 	system_pinmux_pin_set_config(pinmux >> 16, &pin_conf);
 };
 
+/** @} */
+
 /**
  * \brief Initialize hardware and driver instance
  *
@@ -98,8 +105,8 @@ static inline void _spi_master_vec_pinmux_helper(uint32_t pinmux,
  * \param[in] config Driver configuration to use.
  *
  * \return Status of initialization.
- * \retval \c STATUS_OK if initialization succeeded.
- * \retval \c STATUS_ERR_INVALID_ARG if driver has been misconfigured.
+ * \retval STATUS_OK if initialization succeeded.
+ * \retval STATUS_ERR_INVALID_ARG if driver has been misconfigured.
  */
 enum status_code spi_master_vec_init(struct spi_master_vec_module *const module,
 		Sercom *const sercom, struct spi_master_vec_config *const config)
@@ -136,7 +143,7 @@ enum status_code spi_master_vec_init(struct spi_master_vec_module *const module,
 
 	/* Set up the SERCOM SPI module as master */
 	spi_hw->CTRLA.reg = SERCOM_SPI_CTRLA_MODE_SPI_MASTER;
-	spi_hw->CTRLA.reg |= (uint32_t)config->padmux_setting
+	spi_hw->CTRLA.reg |= (uint32_t)config->mux_setting
 			| config->transfer_mode
 			| config->data_order;
 
@@ -162,7 +169,7 @@ enum status_code spi_master_vec_init(struct spi_master_vec_module *const module,
 	 * If DOPO is odd, SERCOM_PAD1 is SS: SERCOM_PAD2 can be MUXed.
 	 * If DOPO is even, SERCOM_PAD2 is SS: SERCOM_PAD1 can be MUXed.
 	 */
-	if (config->padmux_setting & (1 << SERCOM_SPI_CTRLA_DOPO_Pos)) {
+	if (config->mux_setting & (1 << SERCOM_SPI_CTRLA_DOPO_Pos)) {
 		_spi_master_vec_pinmux_helper(config->pinmux_pad2, sercom, 2);
 	} else {
 		_spi_master_vec_pinmux_helper(config->pinmux_pad1, sercom, 1);
@@ -171,7 +178,7 @@ enum status_code spi_master_vec_init(struct spi_master_vec_module *const module,
 	/* Initialize our instance and register interrupt handler + data */
 	module->rx_bufdesc_ptr = NULL;
 	module->tx_bufdesc_ptr = NULL;
-	module->direction = SPI_MASTER_VEC_DIRECTION_IDLE;
+	module->direction = SPI_DIRECTION_IDLE;
 	module->status = STATUS_OK;
 
 	_sercom_set_handler(sercom_index, _spi_master_vec_int_handler);
@@ -186,7 +193,7 @@ enum status_code spi_master_vec_init(struct spi_master_vec_module *const module,
  * This function must be called after \ref spi_master_vec_init() before a
  * transfer can be started.
  *
- * \param[in] module Driver instance to operate on.
+ * \param[in,out] module Driver instance to operate on.
  */
 void spi_master_vec_enable(const struct spi_master_vec_module *const module)
 {
@@ -210,7 +217,7 @@ void spi_master_vec_enable(const struct spi_master_vec_module *const module)
 /**
  * \brief Disable the SERCOM SPI module
  *
- * \param[in] module Driver instance to operate on.
+ * \param[in,out] module Driver instance to operate on.
  */
 void spi_master_vec_disable(const struct spi_master_vec_module *const module)
 {
@@ -264,8 +271,8 @@ void spi_master_vec_disable(const struct spi_master_vec_module *const module)
  * \arg \c NULL if the transfer is a simplex write.
  *
  * \return Status of transfer start.
- * \retval \c STATUS_OK if transfer was started.
- * \retval \c STATUS_BUSY if a transfer is on-going.
+ * \retval STATUS_OK if transfer was started.
+ * \retval STATUS_BUSY if a transfer is already on-going.
  */
 enum status_code spi_master_vec_transceive_buffer_job(
 		struct spi_master_vec_module *const module,
@@ -296,7 +303,7 @@ enum status_code spi_master_vec_transceive_buffer_job(
 		Assert(tx_bufdescs[0].length);
 		Assert(rx_bufdescs[0].length);
 
-		module->direction = SPI_MASTER_VEC_DIRECTION_BOTH;
+		module->direction = SPI_DIRECTION_BOTH;
 		module->tx_length = tx_bufdescs[0].length;
 		module->tx_head_ptr = tx_bufdescs[0].data;
 		module->rx_length = rx_bufdescs[0].length;
@@ -308,7 +315,7 @@ enum status_code spi_master_vec_transceive_buffer_job(
 		if (tx_bufdescs) {
 			Assert(tx_bufdescs[0].length);
 
-			module->direction = SPI_MASTER_VEC_DIRECTION_WRITE;
+			module->direction = SPI_DIRECTION_WRITE;
 			module->tx_length = tx_bufdescs[0].length;
 			module->tx_head_ptr = tx_bufdescs[0].data;
 			tmp_ctrlb = 0;
@@ -316,7 +323,7 @@ enum status_code spi_master_vec_transceive_buffer_job(
 		} else {
 			Assert(rx_bufdescs[0].length);
 
-			module->direction = SPI_MASTER_VEC_DIRECTION_READ;
+			module->direction = SPI_DIRECTION_READ;
 			module->rx_length = rx_bufdescs[0].length;
 			module->rx_head_ptr = rx_bufdescs[0].data;
 			module->tx_lead_on_rx = 0;
@@ -337,7 +344,7 @@ enum status_code spi_master_vec_transceive_buffer_job(
 }
 
 /**
- * \brief Reset the SPI module
+ * \brief Reset the SERCOM SPI module
  *
  * This function will disable and reset the SPI module to its power on default
  * values.
@@ -374,7 +381,7 @@ static void _spi_master_vec_int_handler(uint8_t sercom_index)
 {
 	struct spi_master_vec_module *const module =
 			_sercom_instances[sercom_index];
-	enum _spi_master_vec_direction dir = module->direction;
+	enum _spi_direction dir = module->direction;
 	SercomSpi *const spi_hw = &(module->sercom->SPI);
 	uint8_t int_status;
 
@@ -386,16 +393,16 @@ static void _spi_master_vec_int_handler(uint8_t sercom_index)
 		/* If TX is ahead of RX by 2+ bytes, allow RX to catch up.
 		 * Note: will only happen _once_ per READ or BOTH.
 		 */
-		if ((tx_lead_on_rx >= 2) && (dir != SPI_MASTER_VEC_DIRECTION_WRITE)) {
-			Assert((dir == SPI_MASTER_VEC_DIRECTION_READ)
-					|| (dir == SPI_MASTER_VEC_DIRECTION_BOTH));
+		if ((tx_lead_on_rx >= 2) && (dir != SPI_DIRECTION_WRITE)) {
+			Assert((dir == SPI_DIRECTION_READ)
+					|| (dir == SPI_DIRECTION_BOTH));
 			Assert(int_status & SERCOM_SPI_INTFLAG_RXC);
 		/* Otherwise, we can send more bytes */
 		} else {
 			module->tx_lead_on_rx = ++tx_lead_on_rx;
 
 			/* If doing a READ, just send 0 to trigger the transfer */
-			if (dir == SPI_MASTER_VEC_DIRECTION_READ) {
+			if (dir == SPI_DIRECTION_READ) {
 				uint32_t tx_lead_limit;
 
 				spi_hw->DATA.reg = 0;
@@ -439,13 +446,13 @@ check_for_read_end:
 						module->tx_head_ptr = module->tx_bufdesc_ptr->data;
 						module->tx_length = tx_length;
 					} else {
-						if (dir == SPI_MASTER_VEC_DIRECTION_WRITE) {
+						if (dir == SPI_DIRECTION_WRITE) {
 						/* Disable DRE and enable TXC to end WRITE */
 							spi_hw->INTENCLR.reg = SERCOM_SPI_INTFLAG_DRE;
 							spi_hw->INTENSET.reg = SERCOM_SPI_INTFLAG_TXC;
 						} else {
 						/* For BOTH, check if we still have bytes to read */
-							dir = SPI_MASTER_VEC_DIRECTION_READ;
+							dir = SPI_DIRECTION_READ;
 							module->direction = dir;
 							goto check_for_read_end;
 						}
@@ -482,14 +489,14 @@ check_for_read_end:
 				spi_hw->CTRLB.reg = 0;
 				spi_hw->INTENCLR.reg = SERCOM_SPI_INTFLAG_RXC;
 
-				if (dir == SPI_MASTER_VEC_DIRECTION_READ) {
+				if (dir == SPI_DIRECTION_READ) {
 					/* If doing READ, end the transaction here */
-					dir = SPI_MASTER_VEC_DIRECTION_IDLE;
+					dir = SPI_DIRECTION_IDLE;
 					module->direction = dir;
 					module->status = STATUS_OK;
 				} else {
 					/* If doing BOTH, change direction to WRITE */
-					dir = SPI_MASTER_VEC_DIRECTION_WRITE;
+					dir = SPI_DIRECTION_WRITE;
 					module->direction = dir;
 				}
 			}
@@ -501,7 +508,7 @@ check_for_read_end:
 		/* End transaction here, since last byte has been sent */
 		spi_hw->INTENCLR.reg = SERCOM_SPI_INTFLAG_TXC;
 
-		dir = SPI_MASTER_VEC_DIRECTION_IDLE;
+		dir = SPI_DIRECTION_IDLE;
 		module->direction = dir;
 		module->status = STATUS_OK;
 	}

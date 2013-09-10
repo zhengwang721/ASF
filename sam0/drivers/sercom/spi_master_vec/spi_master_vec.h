@@ -47,10 +47,11 @@
 #include <compiler.h>
 #include <gclk.h>
 #include <port.h>
+#include <spi.h>
 #include <status_codes.h>
 
 /**
- * \defgroup asfdoc_samd20_sercom_spi_master_vec_group Vectored SERCOM SPI Master
+ * \defgroup asfdoc_samd20_sercom_spi_master_vec_group SAM D20 Serial Peripheral Interface Master Driver w/ Vectored I/O (SERCOM SPI)
  *
  * This driver for SAM D20 devices provides an interface for the configuration
  * and operation of the SERCOM module in SPI master mode and uses vectored I/O
@@ -75,8 +76,9 @@
  *
  * This SERCOM SPI master driver supports uni- and bidirectional transfers of
  * 8-bit data with vectored I/O, also know as scatter/gather.
- * It does not implement slave selection or addressing since the intended usage
- * is in stacks which usually have their own protocols and handshaking schemes.
+ * It does not implement control of SS or slave addressing since the intended
+ * usage is in stacks which usually have their own protocols and handshaking
+ * schemes.
  *
  * Vectored I/O enables the transfer of data from/to any number of buffers with
  * arbitrary memory locations without having to do several transfers, i.e., one
@@ -98,14 +100,22 @@
  * -# PORT pin MUX: This routes the internal line to a device pin.
  *
  * Both of these layers are configured in the \ref spi_master_vec_config
- * "configuration structure", but driver-supplied settings are only available
- * for the \ref spi_master_vec_config::padmux_setting "SERCOM pad MUX".
+ * "configuration structure", using the members named \c mux_setting and
+ * \c pinmux_padN. These must be set in combination.
  *
- * For the PORT pin MUX configuration, refer to the peripheral include file for
- * the device (\c pio_samd20XNN.h ) and use the macros that are prefixed with
- * \c PINMUX_, such as \c PINMUX_PA04D_SERCOM0_PAD0. It is also possible to use
- * the default pin MUX setting for a SERCOM pad by using the \ref PINMUX_DEFAULT
- * macro. The defaults are defined in the file \ref sercom_pinout.h.
+ * The driver supplies values for the
+ * \ref spi_master_vec_config::mux_setting "SERCOM pad MUX" from the standard
+ * ASF SERCOM SPI driver. For the PORT pin MUX configuration, refer to the
+ * peripheral include file for the device (\c pio_samd20XNN.h ) and use the
+ * macros that are prefixed with \c PINMUX_, such as
+ * \c PINMUX_PA04D_SERCOM0_PAD0. It is also possible to use the default pin MUX
+ * setting for a SERCOM pad by using the \ref PINMUX_DEFAULT macro. The defaults
+ * are defined in the file \ref sercom_pinout.h.
+ *
+ * Note that for \ref spi_master_vec_init() to function properly with the macro
+ * \ref PINMUX_DEFAULT, the order of the values in \c pinmux_padN \e must be
+ * correct, i.e., \c pinmux_pad0 must contain the pin MUX setting for
+ * multiplexing SERCOM pad 0, and so on.
  *
  *
  * \section asfdoc_samd20_sercom_spi_master_vec_extra_info Extra Information
@@ -130,102 +140,22 @@
  */
 
 /**
- * \name Configuration types and macros
- * @{
- */
-
-/**
- * \def PINMUX_DEFAULT
- * \brief Specify that default pin MUX setting should be used for pad.
- *
- * \note If this specifier is used, it is up to the user to ensure that the
- * configuration does not try to use the same pin for another SERCOM pad.
- */
-#ifndef PINMUX_DEFAULT
-#  define PINMUX_DEFAULT 0
-#endif
-
-/**
- * \def PINMUX_UNUSED
- * \brief Specify that pin MUX should be skipped.
- */
-#ifndef PINMUX_UNUSED
-#  define PINMUX_UNUSED 0xFFFFFFFF
-#endif
-
-/** SERCOM pad multiplexing */
-enum spi_master_vec_padmux_setting {
-	/**
-	 * \brief SCK on pad 1, MOSI on pad 0, MISO on pad 2
-	 * \note Corresponds to \c SPI_SIGNAL_MUX_SETTING_C
-	 */
-	SPI_MASTER_VEC_PADMUX_SETTING_A =
-			(0x0 << SERCOM_SPI_CTRLA_DOPO_Pos) |
-			(0x2 << SERCOM_SPI_CTRLA_DIPO_Pos),
-	/**
-	 * \brief SCK on pad 1, MOSI on pad 0, MISO on pad 3
-	 * \note Corresponds to \c SPI_SIGNAL_MUX_SETTING_D
-	 */
-	SPI_MASTER_VEC_PADMUX_SETTING_B =
-			(0x0 << SERCOM_SPI_CTRLA_DOPO_Pos) |
-			(0x3 << SERCOM_SPI_CTRLA_DIPO_Pos),
-	/**
-	 * \brief SCK on pad 3, MOSI on pad 2, MISO on pad 0
-	 * \note Corresponds to \c SPI_SIGNAL_MUX_SETTING_E
-	 */
-	SPI_MASTER_VEC_PADMUX_SETTING_C =
-			(0x1 << SERCOM_SPI_CTRLA_DOPO_Pos) |
-			(0x0 << SERCOM_SPI_CTRLA_DIPO_Pos),
-	/**
-	 * \brief SCK on pad 3, MOSI on pad 2, MISO on pad 1
-	 * \note Corresponds to \c SPI_SIGNAL_MUX_SETTING_F
-	 */
-	SPI_MASTER_VEC_PADMUX_SETTING_D =
-			(0x1 << SERCOM_SPI_CTRLA_DOPO_Pos) |
-			(0x1 << SERCOM_SPI_CTRLA_DIPO_Pos),
-};
-
-/** SPI transfer mode. */
-enum spi_master_vec_transfer_mode {
-	/** Mode 0. Leading edge: rising, sample. Trailing edge: falling, setup. */
-	SPI_MASTER_VEC_TRANSFER_MODE_0 = 0,
-	/** Mode 1. Leading edge: rising, setup. Trailing edge: falling, sample. */
-	SPI_MASTER_VEC_TRANSFER_MODE_1 = SERCOM_SPI_CTRLA_CPHA,
-	/** Mode 2. Leading edge: falling, sample. Trailing edge: rising, setup. */
-	SPI_MASTER_VEC_TRANSFER_MODE_2 = SERCOM_SPI_CTRLA_CPOL,
-	/** Mode 3. Leading edge: falling, setup. Trailing edge: rising, sample. */
-	SPI_MASTER_VEC_TRANSFER_MODE_3 = SERCOM_SPI_CTRLA_CPHA | SERCOM_SPI_CTRLA_CPOL,
-};
-
-/** SPI data transfer order. */
-enum spi_master_vec_data_order {
-	/** LSB of data is transmitted first. */
-	SPI_MASTER_VEC_DATA_ORDER_LSB  = SERCOM_SPI_CTRLA_DORD,
-	/** MSB of data is transmitted first. */
-	SPI_MASTER_VEC_DATA_ORDER_MSB  = 0,
-};
-
-/**
  * \brief Driver configuration structure
  *
- * \note There are two layers of multiplexing for the SPI signals: first the
- * pad MUX in the SERCOM, and then the pin MUX in the PORT. This means that
- * \c padmux_setting must be set in combination with the \c pinmux_padN.
- * And for \ref spi_master_vec_init() to function properly, the order of the
- * values in \c pinmux_padN must be correct, i.e., \c pinmux_pad0 must contain
- * the pin MUX setting for multiplexing SERCOM pad 0, and so on.
+ * \sa asfdoc_samd20_sercom_spi_master_vec_special_considerations for more
+ * information regarding SERCOM pad and pin MUX.
  */
 struct spi_master_vec_config {
 	/** Baud rate in Hertz. */
 	uint32_t baudrate;
 	/** GCLK generator to use for the SERCOM. */
 	enum gclk_generator gclk_generator;
-	/** SERCOM Pad MUX setting. */
-	enum spi_master_vec_padmux_setting padmux_setting;
+	/** SERCOM pad MUX setting. */
+	enum spi_signal_mux_setting mux_setting;
 	/** Transfer mode. */
-	enum spi_master_vec_transfer_mode transfer_mode;
+	enum spi_transfer_mode transfer_mode;
 	/** Data order. */
-	enum spi_master_vec_data_order data_order;
+	enum spi_data_order data_order;
 	/** Pin MUX setting for SERCOM pad 0. */
 	uint32_t pinmux_pad0;
 	/** Pin MUX setting for SERCOM pad 1. */
@@ -236,10 +166,8 @@ struct spi_master_vec_config {
 	uint32_t pinmux_pad3;
 };
 
-/** @} */
-
 /**
- * \name Buffer description
+ * \name Buffer Description
  * @{
  */
 
@@ -248,27 +176,18 @@ typedef uint16_t spi_master_vec_buflen_t;
 
 /** Buffer descriptor structure. */
 struct spi_master_vec_bufdesc {
+	/** Pointer to buffer start. */
 	uint8_t *data;
+	/** Length of buffer. */
 	spi_master_vec_buflen_t length;
 };
 
 /** @} */
 
-/**
- * \internal
- * \brief Transfer direction.
- */
-enum _spi_master_vec_direction {
-	SPI_MASTER_VEC_DIRECTION_READ,
-	SPI_MASTER_VEC_DIRECTION_WRITE,
-	SPI_MASTER_VEC_DIRECTION_BOTH,
-	SPI_MASTER_VEC_DIRECTION_IDLE,
-};
-
 /** Driver instance. */
 struct spi_master_vec_module {
 	Sercom *volatile sercom;
-	volatile enum _spi_master_vec_direction direction;
+	volatile enum _spi_direction direction;
 	volatile enum status_code status;
 	volatile spi_master_vec_buflen_t rx_length;
 	volatile spi_master_vec_buflen_t tx_length;
@@ -294,29 +213,13 @@ static inline void spi_master_vec_get_config_defaults(
 {
 	config->baudrate = 100000;
 	config->gclk_generator = GCLK_GENERATOR_0;
-	config->padmux_setting = SPI_MASTER_VEC_PADMUX_SETTING_D;
-	config->transfer_mode = SPI_MASTER_VEC_TRANSFER_MODE_0;
-	config->data_order = SPI_MASTER_VEC_DATA_ORDER_MSB;
+	config->mux_setting = SPI_SIGNAL_MUX_SETTING_D;
+	config->transfer_mode = SPI_TRANSFER_MODE_0;
+	config->data_order = SPI_DATA_ORDER_MSB;
 	config->pinmux_pad0 = PINMUX_DEFAULT;
 	config->pinmux_pad1 = PINMUX_DEFAULT;
 	config->pinmux_pad2 = PINMUX_DEFAULT;
 	config->pinmux_pad3 = PINMUX_DEFAULT;
-}
-
-/**
- * \brief Get current status of instance.
- *
- * \param[in] module Driver instance to operate on.
- *
- * \return Current status of driver instance.
- * \retval \c STATUS_OK if idle and previous transfer succeeded.
- * \retval \c STATUS_BUSY if a transfer is ongoing.
- * \return Other status codes upon failure.
- */
-static inline enum status_code spi_master_vec_get_job_status(
-		const struct spi_master_vec_module *const module)
-{
-	return module->status;
 }
 
 #ifdef __cplusplus
@@ -325,19 +228,46 @@ extern "C" {
 
 enum status_code spi_master_vec_init(struct spi_master_vec_module *const module,
 		Sercom *const sercom, struct spi_master_vec_config *const config);
-void spi_master_vec_enable(const struct spi_master_vec_module *const module);
-void spi_master_vec_disable(const struct spi_master_vec_module *const module);
-void spi_master_vec_reset(const struct spi_master_vec_module *const module);
+
 /** @} */
 
 /**
- * \name SPI transfer
+ * \name Enable/Disable and Reset
  * @{
  */
+
+void spi_master_vec_enable(const struct spi_master_vec_module *const module);
+void spi_master_vec_disable(const struct spi_master_vec_module *const module);
+void spi_master_vec_reset(const struct spi_master_vec_module *const module);
+
+/** @} */
+
+/**
+ * \name Read/Write and Status
+ * @{
+ */
+
 enum status_code spi_master_vec_transceive_buffer_job(
 		struct spi_master_vec_module *const module,
 		struct spi_master_vec_bufdesc tx_bufdescs[],
 		struct spi_master_vec_bufdesc rx_bufdescs[]);
+
+/**
+ * \brief Get current status of transfer.
+ *
+ * \param[in] module Driver instance to operate on.
+ *
+ * \return Current status of driver instance.
+ * \retval STATUS_OK if idle and previous transfer succeeded.
+ * \retval STATUS_BUSY if a transfer is ongoing.
+ * \retval <other> if previous transfer failed.
+ */
+static inline enum status_code spi_master_vec_get_job_status(
+		const struct spi_master_vec_module *const module)
+{
+	return module->status;
+}
+
 /** @} */
 
 #ifdef __cplusplus
@@ -349,7 +279,7 @@ enum status_code spi_master_vec_transceive_buffer_job(
  */
 
 /**
- * \page asfdoc_samd20_sercom_spi_master_vec_extra Extra Information for Vectored SERCOM SPI Master
+ * \page asfdoc_samd20_sercom_spi_master_vec_extra Extra Information for SERCOM SPI Master Driver w/ Vectored I/O
  *
  *
  * \section asfdoc_samd20_sercom_spi_master_vec_extra_acronyms Acronyms
@@ -420,7 +350,7 @@ enum status_code spi_master_vec_transceive_buffer_job(
  */
 
 /**
- * \page asfdoc_samd20_sercom_spi_master_vec_exqsg Examples for Vectored SERCOM SPI Master
+ * \page asfdoc_samd20_sercom_spi_master_vec_exqsg Examples for SERCOM SPI Master Driver w/ Vectored I/O
  *
  * This is a list of the available Quick Start guides (QSGs) and example
  * applications for \ref asfdoc_samd20_sercom_spi_master_vec_group. QSGs are

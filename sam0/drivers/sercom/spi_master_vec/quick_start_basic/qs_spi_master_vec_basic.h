@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_samd20_sercom_spi_master_vec_basic Quick Start Guide for Vectored SERCOM SPI Master
+ * \page asfdoc_samd20_sercom_spi_master_vec_basic Quick Start Guide for SERCOM SPI Master Driver w/ Vectored I/O
  *
  * This quick start will receive, transmit and transceive bytes on the EXT1
  * header. In this use case the SERCOM SPI will be configured with the following

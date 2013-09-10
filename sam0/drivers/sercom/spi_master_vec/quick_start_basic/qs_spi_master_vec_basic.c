@@ -111,8 +111,8 @@ int main (void)
 	spi_master_vec_get_config_defaults(&spi_config);
 
 	spi_config.baudrate = 200000;
-	spi_config.transfer_mode = SPI_MASTER_VEC_TRANSFER_MODE_3;
-	spi_config.padmux_setting = SPI_MASTER_VEC_PADMUX_SETTING_C;
+	spi_config.transfer_mode = SPI_TRANSFER_MODE_3;
+	spi_config.mux_setting = EXT1_SPI_SERCOM_MUX_SETTING;
 	spi_config.pinmux_pad0 = EXT1_SPI_SERCOM_PINMUX_PAD0;
 	spi_config.pinmux_pad1 = EXT1_SPI_SERCOM_PINMUX_PAD1;
 	spi_config.pinmux_pad2 = EXT1_SPI_SERCOM_PINMUX_PAD2;
