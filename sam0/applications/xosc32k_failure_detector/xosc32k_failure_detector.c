@@ -58,6 +58,7 @@
  * Overview:
  * - \ref appdoc_samd20_xosc32k_fail_detect_intro
  * - \ref appdoc_samd20_xosc32k_fail_detect_compinfo
+ * - \ref appdoc_samd20_xosc32k_fail_detect_usageinfo
  * - \ref appdoc_samd20_xosc32k_fail_detect_contactinfo
  *
  * \section appdoc_samd20_xosc32k_fail_detect_intro Introduction
@@ -66,13 +67,31 @@
  * SAM D20 event system.
  *
  * A pair of timers are linked together; one with a clock source from the
- * XOSC32K clock, and another from the Ultra Low Power 32KHz (ULP) internal RC
- * clock source. Each time the XOSC32K timer reaches a configurable count value,
- * a hardware event resets the second timer using the ULP clock source.
+ * XOSC32K 32.768KHz external clock, and another from the OSC32K 32.768KHz
+ * internal internal RC clock source. Each time the XOSC32K timer reaches a
+ * configurable count value, a hardware event resets the second timer using
+ * the OSC32K clock source.
  *
- * If the ULP clocked timer reaches a configurable count value before it is
+ * If the OSC32K clocked timer reaches a configurable count value before it is
  * reset by the XOSC32K timer, the XOSC32K clock source is considered failed and
- * a callback function is executed.
+ * a callback function is executed. If instead the XOSC32K closed clocked timer
+ * resets the OSC32K clocked timer, the oscillator is considered OK and a second
+ * callback function is executed.
+ *
+ * In the example application, the DFLL reference clock is automatically
+ * switched between the internal and external 32KHz clock sources depending on
+ * the external reference availability.
+ *
+ * \section appdoc_samd20_xosc32k_fail_detect_usageinfo Usage
+ * Connect an oscilloscope to to PA27 of the SAM D20 Xplained Pro. Run the
+ * example application, and press and hold the board button to turn off the
+ * external XOSC32K crystal clock source to observe the fail-over to the
+ * internal clock source. Releasing the button will re-enable the external
+ * crystal.
+ *
+ * The board LED will be lit when the external crystal is used, and will be
+ * turned off when the internal source is used due to a crystal failure
+ * detection.
  *
  * \section appdoc_samd20_xosc32k_fail_detect_compinfo Compilation Info
  * This software was written for the GNU GCC and IAR for ARM.
@@ -87,15 +106,15 @@
 
 /** Number of cycles on the XOSC32K before resetting the reference timer */
 #define CRYSTAL_RESET_CYCLES   200
-/** Number of cycles on the ULP32K before assuming a XOSC32K failure */
+/** Number of cycles on the OSC32K before assuming a XOSC32K failure */
 #define REFERENCE_FAIL_CYCLES  (CRYSTAL_RESET_CYCLES * 2)
 /** Generator index configured to source from the XOSC32K crystal. */
 #define GCLK_GEN_XOSC32K       GCLK_GENERATOR_2
-/** Generator index configured to source from the internal ULP32K oscillator. */
-#define GCLK_GEN_REFERENCE     GCLK_GENERATOR_3
+/** Generator index configured to source from the internal OSC32K oscillator. */
+#define GCLK_GEN_REFERENCE     GCLK_GENERATOR_1
 /** Timer configured to source from the XOSC32K crystal generator */
 #define TC_CRYSTAL             TC0
-/** Timer configured to source from the ULP32K oscillator generator */
+/** Timer configured to source from the OSC32K oscillator generator */
 #define TC_REFERENCE           TC2
 /** Event system channel to use to link the crystal and reference timers */
 #define EVSYS_XTAL_CHAN        EVENT_CHANNEL_0
@@ -103,26 +122,70 @@
 #define EVSYS_XTAL_TC_GEN      EVSYS_ID_GEN_TC0_OVF
 /** Event user ID of the reference timer's configurable action */
 #define EVSYS_XTAL_TC_USR      EVSYS_ID_USER_TC2_EVU
-
+/** If \c true, the CPU clock will be routed out to the PA27 GPIO pin */
+#define ENABLE_CPU_CLOCK_OUT   true
 
 /** Software instance of the XOSC32K timer */
 static struct tc_module tc_crystal;
-/** Software instance of the ULP32K timer */
+/** Software instance of the OSC32K timer */
 static struct tc_module tc_reference;
 
 
-/** Callback run when a XOSC32K crystal failure is detected.
+/** Configures and starts the DFLL in closed loop mode with the given reference
+ *  generator.
  *
- *  \param[in]  instance  Timer instance that triggered the failure (\ref TC_REFERENCE)
+ *  \param[in]  source_generator  Reference generator to use for the DFLL
  */
-static void xosc32k_fail_callback(
-		struct tc_module *instance)
+static void init_dfll(
+		const enum system_clock_source source_generator)
 {
-	for (;;)
-	{
-		/* Crystal failed - act accordingly */
-		Assert(false);
+	struct system_gclk_gen_config cpu_clock_conf;
+	system_gclk_gen_get_config_defaults(&cpu_clock_conf);
+	cpu_clock_conf.output_enable = ENABLE_CPU_CLOCK_OUT;
+
+	/* Switch to OSC8M while the DFLL is being reconfigured */
+	cpu_clock_conf.source_clock = SYSTEM_CLOCK_SOURCE_OSC8M;
+	system_gclk_gen_set_config(GCLK_GENERATOR_0, &cpu_clock_conf);
+
+	/* Turn off DFLL before adjusting its configuration */
+	system_clock_source_disable(SYSTEM_CLOCK_SOURCE_DFLL);
+
+	/* Configure DFLL reference clock, use raw register write to
+	 * force-configure the channel even if the currently selected generator clock
+	 * has failed */
+	GCLK->CLKCTRL.reg =
+			GCLK_CLKCTRL_ID(SYSCTRL_GCLK_ID_DFLL48) |
+			GCLK_CLKCTRL_GEN(source_generator);
+	system_gclk_chan_enable(SYSCTRL_GCLK_ID_DFLL48);
+
+	/* Configure DFLL */
+	struct system_clock_source_dfll_config config_dfll;
+	system_clock_source_dfll_get_config_defaults(&config_dfll);
+	config_dfll.on_demand = false;
+	config_dfll.loop_mode = SYSTEM_CLOCK_DFLL_LOOP_MODE_CLOSED;
+	config_dfll.multiply_factor =
+			(48000000UL / system_gclk_chan_get_hz(SYSCTRL_GCLK_ID_DFLL48));
+	system_clock_source_dfll_set_config(&config_dfll);
+
+	/* Restart DFLL */
+	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_DFLL);
+	while (system_clock_source_is_ready(SYSTEM_CLOCK_SOURCE_DFLL) == false) {
+		/* Wait for DFLL to be stable before switch back */
 	}
+
+	/* Switch back to the DFLL as the CPU clock source */
+	cpu_clock_conf.source_clock = SYSTEM_CLOCK_SOURCE_DFLL;
+	system_gclk_gen_set_config(GCLK_GENERATOR_0, &cpu_clock_conf);
+};
+
+/** Configures and starts the OSC32K internal clock. */
+static void init_osc32k(void)
+{
+	/* Configure and enable the OSC32K clock source */
+	struct system_clock_source_osc32k_config osc32k_conf;
+	system_clock_source_osc32k_get_config_defaults(&osc32k_conf);
+	system_clock_source_osc32k_set_config(&osc32k_conf);
+	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_OSC32K);
 }
 
 /** Configures and starts the XOSC32K external crystal. */
@@ -131,18 +194,51 @@ static void init_xosc32k(void)
 	/* Configure and enable the XOSC32K clock source */
 	struct system_clock_source_xosc32k_config xosc32k_conf;
 	system_clock_source_xosc32k_get_config_defaults(&xosc32k_conf);
-	xosc32k_conf.on_demand = false;
 	xosc32k_conf.auto_gain_control = false;
 	system_clock_source_xosc32k_set_config(&xosc32k_conf);
 	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_XOSC32K);
 }
 
+/** Callback run when a XOSC32K crystal operation is detected.
+ *
+ *  \param[in]  instance  Timer instance that triggered the operation (\ref TC_CRYSTAL)
+ */
+static void xosc32k_ok_callback(
+		struct tc_module *instance)
+{
+	/* Turn off the oscillator OK callback, turn on the fail callback */
+	tc_disable_callback(&tc_crystal, TC_CALLBACK_CC_CHANNEL0);
+	tc_enable_callback(&tc_reference, TC_CALLBACK_CC_CHANNEL0);
+
+	/* Crystal OK - switch DFLL to XOSC32K */
+	init_dfll(GCLK_GEN_XOSC32K);
+	port_pin_set_output_level(LED_0_PIN, LED_0_ACTIVE);
+}
+
+/** Callback run when a XOSC32K crystal failure is detected.
+ *
+ *  \param[in]  instance  Timer instance that triggered the failure (\ref TC_REFERENCE)
+ */
+static void xosc32k_fail_callback(
+		struct tc_module *instance)
+{
+	/* Turn on the oscillator OK callback, turn off the fail callback */
+	tc_enable_callback(&tc_crystal, TC_CALLBACK_CC_CHANNEL0);
+	tc_disable_callback(&tc_reference, TC_CALLBACK_CC_CHANNEL0);
+
+	/* Crystal failed - switch DFLL to OSC32K */
+	init_dfll(GCLK_GEN_REFERENCE);
+	port_pin_set_output_level(LED_0_PIN, LED_0_INACTIVE);
+}
+
 /** Initializes the XOSC32K crystal failure detector, and starts it.
  *
- *  \param[in]  failure_callback  Callback function to run upon XOSC32K failure
+ *  \param[in]  ok_callback    Callback function to run upon XOSC32K operational
+ *  \param[in]  fail_callback  Callback function to run upon XOSC32K failure
  */
 static void init_xosc32k_fail_detector(
-		tc_callback_t failure_callback)
+		const tc_callback_t ok_callback,
+		const tc_callback_t fail_callback)
 {
 	/* TC pairs share the same clock, ensure reference and crystal timers use
 	 * different clocks */
@@ -169,7 +265,7 @@ static void init_xosc32k_fail_detector(
 	/* Configure and enable the reference clock GCLK generator */
 	struct system_gclk_gen_config ref_gen_conf;
 	system_gclk_gen_get_config_defaults(&ref_gen_conf);
-	ref_gen_conf.source_clock = SYSTEM_CLOCK_SOURCE_ULP32K;
+	ref_gen_conf.source_clock = SYSTEM_CLOCK_SOURCE_OSC32K;
 	system_gclk_gen_set_config(GCLK_GEN_REFERENCE, &ref_gen_conf);
 	system_gclk_gen_enable(GCLK_GEN_REFERENCE);
 
@@ -213,12 +309,15 @@ static void init_xosc32k_fail_detector(
 	struct tc_events tc_ref_events = { .on_event_perform_action = true };
 	tc_enable_events(&tc_reference, &tc_ref_events);
 
+	/* Enable overflow callback for the crystal counter - if crystal count
+	 * has been reached, crystal is operational */
+	tc_register_callback(&tc_crystal, ok_callback, TC_CALLBACK_CC_CHANNEL0);
+	tc_enable_callback(&tc_crystal, TC_CALLBACK_CC_CHANNEL0);
+
 	/* Enable compare callback for the reference counter - if reference count
 	 * has been reached, crystal has failed */
-	tc_register_callback(&tc_reference, failure_callback,
-			TC_CALLBACK_CC_CHANNEL0);
-	tc_enable_callback(&tc_reference,
-			TC_CALLBACK_CC_CHANNEL0);
+	tc_register_callback(&tc_reference, fail_callback, TC_CALLBACK_CC_CHANNEL0);
+	tc_enable_callback(&tc_reference, TC_CALLBACK_CC_CHANNEL0);
 
 	/* Start both crystal and reference counters */
 	tc_enable(&tc_crystal);
@@ -234,10 +333,41 @@ int main(void)
 	system_init();
 	events_init();
 
+	system_flash_set_waitstates(2);
+
+	init_osc32k();
 	init_xosc32k();
-	init_xosc32k_fail_detector(xosc32k_fail_callback);
+	init_xosc32k_fail_detector(
+			xosc32k_ok_callback, xosc32k_fail_callback);
 
-	while (1) {
+#if ENABLE_CPU_CLOCK_OUT == true
+	/* Configure a GPIO pin as the CPU clock output */
+	struct system_pinmux_config clk_out_pin;
+	system_pinmux_get_config_defaults(&clk_out_pin);
+	clk_out_pin.direction    = SYSTEM_PINMUX_PIN_DIR_OUTPUT;
+	clk_out_pin.mux_position = MUX_PA27H_GCLK_IO0;
+	system_pinmux_pin_set_config(PIN_PA27H_GCLK_IO0, &clk_out_pin);
+#endif
 
+	for (;;) {
+#if ENABLE_CPU_CLOCK_OUT == true
+		static bool old_run_osc = true;
+		bool new_run_osc =
+				(port_pin_get_input_level(BUTTON_0_PIN) == BUTTON_0_INACTIVE);
+
+		/* Check if the XOSC32K needs to be started or stopped when the board
+		 * button is pressed or released */
+		if (new_run_osc != old_run_osc)
+		{
+			if (new_run_osc) {
+				system_clock_source_enable(SYSTEM_CLOCK_SOURCE_XOSC32K);
+			}
+			else {
+				system_clock_source_disable(SYSTEM_CLOCK_SOURCE_XOSC32K);
+			}
+
+			old_run_osc = new_run_osc;
+		}
+#endif
 	}
 }
