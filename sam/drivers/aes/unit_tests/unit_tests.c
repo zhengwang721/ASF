@@ -159,7 +159,7 @@ const uint32_t init_vector_ctr[4] = {
 static uint32_t output_data[AES_EXAMPLE_REFBUF_SIZE];
 
 /** AES configuration */
-struct aes_config   g_aes_cfg;
+struct aes_config g_aes_cfg;
 
 volatile bool flag = false;
 
@@ -181,6 +181,7 @@ static void aes_callback(void)
 }
 
 #if SAM4E
+
 /**
  * \brief DMAC driver configuration.
  */
@@ -219,8 +220,8 @@ static void aes_dma_receive_config(void *p_buf, uint32_t ul_size)
 {
 	dma_transfer_descriptor_t dmac_trans;
 
-	dmac_trans.ul_source_addr = (uint32_t) & AES->AES_ODATAR[0];
-	dmac_trans.ul_destination_addr = (uint32_t) p_buf;
+	dmac_trans.ul_source_addr = (uint32_t)&AES->AES_ODATAR[0];
+	dmac_trans.ul_destination_addr = (uint32_t)p_buf;
 	dmac_trans.ul_ctrlA = ul_size | DMAC_CTRLA_SRC_WIDTH_WORD |
 			DMAC_CTRLA_DST_WIDTH_WORD;
 	dmac_trans.ul_ctrlB = DMAC_CTRLB_SRC_DSCR | DMAC_CTRLB_DST_DSCR |
@@ -229,7 +230,7 @@ static void aes_dma_receive_config(void *p_buf, uint32_t ul_size)
 			DMAC_CTRLB_DST_INCR_INCREMENTING;
 	dmac_trans.ul_descriptor_addr = 0;
 	dmac_channel_single_buf_transfer_init(DMAC, AES_DMA_RX_CH,
-			(dma_transfer_descriptor_t *) & dmac_trans);
+			(dma_transfer_descriptor_t *)&dmac_trans);
 }
 
 /**
@@ -242,8 +243,8 @@ static void aes_dma_transmit_config(void *p_buf, uint32_t ul_size)
 {
 	dma_transfer_descriptor_t dmac_trans;
 
-	dmac_trans.ul_source_addr = (uint32_t) p_buf;
-	dmac_trans.ul_destination_addr = (uint32_t) & AES->AES_IDATAR[0];
+	dmac_trans.ul_source_addr = (uint32_t)p_buf;
+	dmac_trans.ul_destination_addr = (uint32_t)&AES->AES_IDATAR[0];
 	dmac_trans.ul_ctrlA = ul_size | DMAC_CTRLA_SRC_WIDTH_WORD |
 			DMAC_CTRLA_DST_WIDTH_WORD;
 	dmac_trans.ul_ctrlB = DMAC_CTRLB_SRC_DSCR | DMAC_CTRLB_DST_DSCR |
@@ -252,7 +253,7 @@ static void aes_dma_transmit_config(void *p_buf, uint32_t ul_size)
 			DMAC_CTRLB_DST_INCR_FIXED;
 	dmac_trans.ul_descriptor_addr = 0;
 	dmac_channel_single_buf_transfer_init(DMAC, AES_DMA_TX_CH,
-			(dma_transfer_descriptor_t *) & dmac_trans);
+			(dma_transfer_descriptor_t *)&dmac_trans);
 }
 
 /**
@@ -350,6 +351,7 @@ static void run_ecb_mode_test_dma(const struct test_case *test)
 	/* Disable DMAC module */
 	dmac_disable(DMAC);
 }
+
 #endif
 
 #if SAM4C
@@ -366,9 +368,9 @@ Pdc *g_p_aes_pdc;
 static void run_ecb_mode_test_pdc(const struct test_case *test)
 {
 	/* Configure PDC. */
-	g_pdc_tx_packet.ul_addr = (uint32_t) ref_plain_text;
+	g_pdc_tx_packet.ul_addr = (uint32_t)ref_plain_text;
 	g_pdc_tx_packet.ul_size = AES_EXAMPLE_REFBUF_SIZE;
-	g_pdc_rx_packet.ul_addr = (uint32_t) output_data;
+	g_pdc_rx_packet.ul_addr = (uint32_t)output_data;
 	g_pdc_rx_packet.ul_size = AES_EXAMPLE_REFBUF_SIZE;
 	g_p_aes_pdc = aes_get_pdc_base(AES);
 
@@ -377,7 +379,8 @@ static void run_ecb_mode_test_pdc(const struct test_case *test)
 	pdc_rx_init(g_p_aes_pdc, &g_pdc_rx_packet, NULL);
 
 	/* Disable PDC transfers. */
-	pdc_disable_transfer(g_p_aes_pdc,PERIPH_PTCR_RXTDIS | PERIPH_PTCR_TXTDIS);
+	pdc_disable_transfer(g_p_aes_pdc,
+			PERIPH_PTCR_RXTDIS | PERIPH_PTCR_TXTDIS);
 
 	/* Configure the AES. */
 	g_aes_cfg.encrypt_mode = AES_ENCRYPTION;
@@ -390,7 +393,7 @@ static void run_ecb_mode_test_pdc(const struct test_case *test)
 
 	/* Set the cryptographic key. */
 	aes_write_key(AES, key128);
-        
+
 	/* Enable PDC transfers. */
 	pdc_enable_transfer(g_p_aes_pdc, PERIPH_PTCR_RXTEN | PERIPH_PTCR_TXTEN);
 
@@ -399,7 +402,8 @@ static void run_ecb_mode_test_pdc(const struct test_case *test)
 
 	pdc_tx_init(g_p_aes_pdc, &g_pdc_tx_packet, NULL);
 	pdc_rx_init(g_p_aes_pdc, &g_pdc_rx_packet, NULL);
-	pdc_disable_transfer(g_p_aes_pdc, PERIPH_PTCR_RXTDIS | PERIPH_PTCR_TXTDIS);
+	pdc_disable_transfer(g_p_aes_pdc,
+			PERIPH_PTCR_RXTDIS | PERIPH_PTCR_TXTDIS);
 
 	if ((ref_cipher_text_ecb[0] != output_data[0]) ||
 			(ref_cipher_text_ecb[1] != output_data[1]) ||
@@ -409,7 +413,9 @@ static void run_ecb_mode_test_pdc(const struct test_case *test)
 	} else {
 		flag = true;
 	}
-	test_assert_true(test, flag == true, "ECB mode with pdc encryption not work!");
+
+	test_assert_true(test, flag == true,
+			"ECB mode with pdc encryption not work!");
 
 	/* Configure the AES. */
 	g_aes_cfg.encrypt_mode = AES_DECRYPTION;
@@ -424,12 +430,12 @@ static void run_ecb_mode_test_pdc(const struct test_case *test)
 	aes_write_key(AES, key128);
 
 	/* Configure PDC for data transfer */
-	g_pdc_tx_packet.ul_addr = (uint32_t) ref_cipher_text_ecb;
+	g_pdc_tx_packet.ul_addr = (uint32_t)ref_cipher_text_ecb;
 
 	/* Configure PDC for data receive & transfer */
 	pdc_tx_init(g_p_aes_pdc, &g_pdc_tx_packet, NULL);
 	pdc_rx_init(g_p_aes_pdc, &g_pdc_rx_packet, NULL);
-        
+
 	/* Enable PDC transfers. */
 	pdc_enable_transfer(g_p_aes_pdc, PERIPH_PTCR_RXTEN | PERIPH_PTCR_TXTEN);
 
@@ -438,7 +444,8 @@ static void run_ecb_mode_test_pdc(const struct test_case *test)
 
 	pdc_tx_init(g_p_aes_pdc, &g_pdc_tx_packet, NULL);
 	pdc_rx_init(g_p_aes_pdc, &g_pdc_rx_packet, NULL);
-	pdc_disable_transfer(g_p_aes_pdc, PERIPH_PTCR_RXTDIS | PERIPH_PTCR_TXTDIS);
+	pdc_disable_transfer(g_p_aes_pdc,
+			PERIPH_PTCR_RXTDIS | PERIPH_PTCR_TXTDIS);
 
 	/* check the result. */
 	if ((ref_plain_text[0] != output_data[0]) ||
@@ -449,8 +456,11 @@ static void run_ecb_mode_test_pdc(const struct test_case *test)
 	} else {
 		flag = true;
 	}
-	test_assert_true(test, flag == true, "ECB mode with pdc decryption not work!");
+
+	test_assert_true(test, flag == true,
+			"ECB mode with pdc decryption not work!");
 }
+
 #endif
 
 /**
@@ -634,7 +644,8 @@ static void run_cfb128_mode_test(const struct test_case *test)
 		flag = true;
 	}
 
-	test_assert_true(test, flag == true, "CFB128 mode encryption not work!");
+	test_assert_true(test, flag == true,
+			"CFB128 mode encryption not work!");
 
 	/* Configure the AES. */
 	g_aes_cfg.encrypt_mode = AES_DECRYPTION;
@@ -667,7 +678,8 @@ static void run_cfb128_mode_test(const struct test_case *test)
 		flag = true;
 	}
 
-	test_assert_true(test, flag == true, "CFB128 mode decryption not work!");
+	test_assert_true(test, flag == true,
+			"CFB128 mode decryption not work!");
 }
 
 /**

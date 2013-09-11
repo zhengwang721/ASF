@@ -114,10 +114,12 @@ enum aes_cfb_size {
 typedef enum aes_interrupt_source {
 	AES_INTERRUPT_DATA_READY = AES_IER_DATRDY,
 	AES_INTERRUPT_UNSPECIFIED_REGISTER_ACCESS = AES_IER_URAD,
+#if SAM4C
 	AES_INTERRUPT_END_OF_RECEIVE_BUFFER = AES_IER_ENDRX,
 	AES_INTERRUPT_END_OF_TRANSMIT_BUFFER = AES_IER_ENDTX,
 	AES_INTERRUPT_RECEIVE_BUFFER_FULL = AES_IER_RXBUFF,
 	AES_INTERRUPT_TRANSMIT_BUFFER_FULL = AES_IER_TXBUFE,
+#endif
 } aes_interrupt_source_t;
 
 #if SAM4E
@@ -253,7 +255,6 @@ void aes_write_input_data(Aes *const p_aes,
 void aes_read_output_data(Aes *const p_aes,
 		uint32_t *p_output_data_buffer);
 
-
 #if SAM4C
 Pdc *aes_get_pdc_base(Aes *p_aes);
 
@@ -267,9 +268,8 @@ Pdc *aes_get_pdc_base(Aes *p_aes);
  */
 static inline uint32_t aes_read_authen_datalength(Aes *const p_aes)
 {
-		return p_aes->AES_AADLENR;
+	return p_aes->AES_AADLENR;
 }
-
 
 /**
  * \brief Set the AES Additional Authenticated Data Length.
@@ -279,11 +279,11 @@ static inline uint32_t aes_read_authen_datalength(Aes *const p_aes)
  * \param  length length in bytes of the AAD data that is to be processed.
  *
  */
-static inline void aes_write_authen_datalength(Aes *const p_aes, uint32_t length)
+static inline void aes_write_authen_datalength(Aes *const p_aes,
+		uint32_t length)
 {
-		p_aes->AES_AADLENR = length;
+	p_aes->AES_AADLENR = length;
 }
-
 
 /**
  * \brief Get the AES Plaintext / Ciphertext Length.
@@ -295,23 +295,22 @@ static inline void aes_write_authen_datalength(Aes *const p_aes, uint32_t length
  */
 static inline uint32_t aes_read_pctext_length(Aes *const p_aes)
 {
-		return p_aes->AES_CLENR;
+	return p_aes->AES_CLENR;
 }
-
 
 /**
  * \brief Set the AES Plaintext / Ciphertext Length.
  *
  * \param p_aes Pointer to an AES instance.
  *
- * \param length Length in bytes of the plaintext/ciphertext data that is to be processed
+ * \param length Length in bytes of the plaintext/ciphertext data that is to be
+ *processed
  *
  */
 static inline void aes_write_pctext_length(Aes *const p_aes, uint32_t length)
 {
-		p_aes->AES_CLENR = length;
+	p_aes->AES_CLENR = length;
 }
-
 
 /**
  * \brief  Get AES GCM Encryption Counter.
@@ -323,9 +322,8 @@ static inline void aes_write_pctext_length(Aes *const p_aes, uint32_t length)
  */
 static inline uint32_t aes_read_gcm_counter(Aes *const p_aes)
 {
-		return p_aes->AES_CTRR;
+	return p_aes->AES_CTRR;
 }
-
 
 /**
  * \brief  Get AES GCM Intermediate Hash Word.
@@ -338,9 +336,8 @@ static inline uint32_t aes_read_gcm_counter(Aes *const p_aes)
  */
 static inline uint32_t aes_read_ghash(Aes *const p_aes, uint32_t id)
 {
-		return p_aes->AES_GHASHR[id];
+	return p_aes->AES_GHASHR[id];
 }
-
 
 /**
  * \brief  Set AES GCM Intermediate Hash Word.
@@ -350,26 +347,25 @@ static inline uint32_t aes_read_ghash(Aes *const p_aes, uint32_t id)
  * \param  ghash Intermediate GCM Hash Word x
  *
  */
-static inline void aes_write_ghash(Aes *const p_aes, uint32_t id, uint32_t ghash)
+static inline void aes_write_ghash(Aes *const p_aes, uint32_t id,
+		uint32_t ghash)
 {
-		p_aes->AES_GHASHR[id] = ghash;
+	p_aes->AES_GHASHR[id] = ghash;
 }
-
 
 /**
  * \brief  Get AES GCM Authentication Tag Word.
  *
  * \param  p_aes Pointer to an AES instance.
- * \param  id  The sequency of GCM Authentication Tag 
+ * \param  id  The sequency of GCM Authentication Tag
  *
  * \return the content of the AES_TAGRx[x = 0...3] register.
  *
  */
 static inline uint32_t aes_read_tag(Aes *const p_aes, uint32_t id)
 {
-		return p_aes->AES_TAGR[id];
+	return p_aes->AES_TAGR[id];
 }
-
 
 /**
  * \brief  Get AES GCM H Word.
@@ -382,9 +378,8 @@ static inline uint32_t aes_read_tag(Aes *const p_aes, uint32_t id)
  */
 static inline uint32_t aes_read_gcmh(Aes *const p_aes, uint32_t id)
 {
-		return p_aes->AES_GCMHR[id];
+	return p_aes->AES_GCMHR[id];
 }
-
 
 /**
  * \brief  Set AES GCM H Word.
@@ -396,10 +391,10 @@ static inline uint32_t aes_read_gcmh(Aes *const p_aes, uint32_t id)
  */
 static inline void aes_write_gcmh(Aes *const p_aes, uint32_t id, uint32_t hword)
 {
-		p_aes->AES_GCMHR[id] = hword;
+	p_aes->AES_GCMHR[id] = hword;
 }
-#endif
 
+#endif
 
 #ifdef __cplusplus
 }

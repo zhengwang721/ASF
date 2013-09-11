@@ -169,7 +169,6 @@ const uint32_t init_vector_ctr[4] = {
 
 /* @} */
 
-
 /* Output data array */
 static uint32_t output_data[AES_EXAMPLE_REFBUF_SIZE];
 
@@ -177,7 +176,7 @@ static uint32_t output_data[AES_EXAMPLE_REFBUF_SIZE];
 volatile bool state = false;
 
 /** AES configuration */
-struct aes_config   g_aes_cfg;
+struct aes_config g_aes_cfg;
 
 #if SAM4E
 /** DMAC transmit channel. */
@@ -198,6 +197,7 @@ static void aes_callback(void)
 }
 
 #if SAM4E
+
 /**
  * \brief DMAC driver configuration.
  */
@@ -240,8 +240,8 @@ static void aes_dma_receive_config(void *p_buf, uint32_t ul_size)
 {
 	dma_transfer_descriptor_t dmac_trans;
 
-	dmac_trans.ul_source_addr = (uint32_t) & AES->AES_ODATAR[0];
-	dmac_trans.ul_destination_addr = (uint32_t) p_buf;
+	dmac_trans.ul_source_addr = (uint32_t)&AES->AES_ODATAR[0];
+	dmac_trans.ul_destination_addr = (uint32_t)p_buf;
 	dmac_trans.ul_ctrlA = ul_size | DMAC_CTRLA_SRC_WIDTH_WORD |
 			DMAC_CTRLA_DST_WIDTH_WORD;
 	dmac_trans.ul_ctrlB = DMAC_CTRLB_SRC_DSCR | DMAC_CTRLB_DST_DSCR |
@@ -250,7 +250,7 @@ static void aes_dma_receive_config(void *p_buf, uint32_t ul_size)
 			DMAC_CTRLB_DST_INCR_INCREMENTING;
 	dmac_trans.ul_descriptor_addr = 0;
 	dmac_channel_single_buf_transfer_init(DMAC, AES_DMA_RX_CH,
-			(dma_transfer_descriptor_t *) & dmac_trans);
+			(dma_transfer_descriptor_t *)&dmac_trans);
 }
 
 /**
@@ -263,8 +263,8 @@ static void aes_dma_transmit_config(void *p_buf, uint32_t ul_size)
 {
 	dma_transfer_descriptor_t dmac_trans;
 
-	dmac_trans.ul_source_addr = (uint32_t) p_buf;
-	dmac_trans.ul_destination_addr = (uint32_t) & AES->AES_IDATAR[0];
+	dmac_trans.ul_source_addr = (uint32_t)p_buf;
+	dmac_trans.ul_destination_addr = (uint32_t)&AES->AES_IDATAR[0];
 	dmac_trans.ul_ctrlA = ul_size | DMAC_CTRLA_SRC_WIDTH_WORD |
 			DMAC_CTRLA_DST_WIDTH_WORD;
 	dmac_trans.ul_ctrlB = DMAC_CTRLB_SRC_DSCR | DMAC_CTRLB_DST_DSCR |
@@ -273,7 +273,7 @@ static void aes_dma_transmit_config(void *p_buf, uint32_t ul_size)
 			DMAC_CTRLB_DST_INCR_FIXED;
 	dmac_trans.ul_descriptor_addr = 0;
 	dmac_channel_single_buf_transfer_init(DMAC, AES_DMA_TX_CH,
-			(dma_transfer_descriptor_t *) & dmac_trans);
+			(dma_transfer_descriptor_t *)&dmac_trans);
 }
 
 /**
@@ -398,6 +398,7 @@ static void ecb_mode_test_dma(void)
 	/* Disable DMAC module */
 	dmac_disable(DMAC);
 }
+
 #endif
 
 #if SAM4C
@@ -413,10 +414,11 @@ Pdc *g_p_aes_pdc;
  */
 static void aes_pdc_callback(void)
 {
-		state = true;
-		pdc_tx_init(g_p_aes_pdc, &g_pdc_tx_packet, NULL);
-		pdc_rx_init(g_p_aes_pdc, &g_pdc_rx_packet, NULL);
-		pdc_disable_transfer(g_p_aes_pdc, PERIPH_PTCR_RXTDIS | PERIPH_PTCR_TXTDIS);
+	state = true;
+	pdc_tx_init(g_p_aes_pdc, &g_pdc_tx_packet, NULL);
+	pdc_rx_init(g_p_aes_pdc, &g_pdc_rx_packet, NULL);
+	pdc_disable_transfer(g_p_aes_pdc,
+			PERIPH_PTCR_RXTDIS | PERIPH_PTCR_TXTDIS);
 }
 
 /**
@@ -425,9 +427,9 @@ static void aes_pdc_callback(void)
 static void ecb_mode_test_pdc(void)
 {
 	/* Configure PDC. */
-	g_pdc_tx_packet.ul_addr = (uint32_t) ref_plain_text;
+	g_pdc_tx_packet.ul_addr = (uint32_t)ref_plain_text;
 	g_pdc_tx_packet.ul_size = AES_EXAMPLE_REFBUF_SIZE;
-	g_pdc_rx_packet.ul_addr = (uint32_t) output_data;
+	g_pdc_rx_packet.ul_addr = (uint32_t)output_data;
 	g_pdc_rx_packet.ul_size = AES_EXAMPLE_REFBUF_SIZE;
 	g_p_aes_pdc = aes_get_pdc_base(AES);
 
@@ -436,7 +438,8 @@ static void ecb_mode_test_pdc(void)
 	pdc_rx_init(g_p_aes_pdc, &g_pdc_rx_packet, NULL);
 
 	/* Disable PDC transfers. */
-	pdc_disable_transfer(g_p_aes_pdc,PERIPH_PTCR_RXTDIS | PERIPH_PTCR_TXTDIS);
+	pdc_disable_transfer(g_p_aes_pdc,
+			PERIPH_PTCR_RXTDIS | PERIPH_PTCR_TXTDIS);
 
 	printf("\r\n-----------------------------------\r\n");
 	printf("- 128bit cryptographic key\r\n");
@@ -461,10 +464,10 @@ static void ecb_mode_test_pdc(void)
 
 	/* Enable AES interrupt. */
 	aes_set_callback(AES, AES_INTERRUPT_END_OF_RECEIVE_BUFFER,
-					aes_pdc_callback, 1);   
+			aes_pdc_callback, 1);
 
 	/* The initialization vector is not used by the ECB cipher mode. */
-        
+
 	/* Enable PDC transfers. */
 	pdc_enable_transfer(g_p_aes_pdc, PERIPH_PTCR_RXTEN | PERIPH_PTCR_TXTEN);
 
@@ -505,7 +508,7 @@ static void ecb_mode_test_pdc(void)
 	/* The initialization vector is not used by the ECB cipher mode. */
 
 	/* Configure PDC for data transfer */
-	g_pdc_tx_packet.ul_addr = (uint32_t) ref_cipher_text_ecb;
+	g_pdc_tx_packet.ul_addr = (uint32_t)ref_cipher_text_ecb;
 
 	/* Configure PDC for data receive & transfer */
 	pdc_tx_init(g_p_aes_pdc, &g_pdc_tx_packet, NULL);
@@ -528,6 +531,7 @@ static void ecb_mode_test_pdc(void)
 		printf("\r\nOK!!!\r\n");
 	}
 }
+
 #endif
 
 /**
@@ -999,7 +1003,7 @@ static void display_menu(void)
 			"  4: OFB mode test. \n\r"
 			"  5: CTR mode test. \n\r"
 			"  d: ECB mode test with DMA \n\r"
-			"  p: ECB mode test with PDC \n\r"  
+			"  p: ECB mode test with PDC \n\r"
 			"\n\r\n\r");
 }
 
@@ -1029,7 +1033,7 @@ int main(void)
 
 	/* Enable AES interrupt. */
 	aes_set_callback(AES, AES_INTERRUPT_DATA_READY,
-					aes_callback, 1);
+			aes_callback, 1);
 
 	/* Display menu */
 	display_menu();
@@ -1069,16 +1073,18 @@ int main(void)
 
 		case 'd':
 			#if SAM4E
-			printf("ECB mode encryption and decryption test with DMA.\r\n");
+			printf(
+					"ECB mode encryption and decryption test with DMA.\r\n");
 			ecb_mode_test_dma();
 			#else
 			printf("This mode is not supported by device.\r\n");
 			#endif
-			break;                                         
+			break;
 
 		case 'p':
 			#if SAM4C
-			printf("ECB mode encryption and decryption test with PDC.\r\n"); 
+			printf(
+					"ECB mode encryption and decryption test with PDC.\r\n");
 			ecb_mode_test_pdc();
 			#else
 			printf("This mode is not supported by device.\r\n");

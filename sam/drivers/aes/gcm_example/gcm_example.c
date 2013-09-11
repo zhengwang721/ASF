@@ -4,7 +4,8 @@
  *
  * \brief AES-GCM example for SAM.
  *
- * This file defines a useful set of functions for the AES-GCM mode on SAM devices.
+ * This file defines a useful set of functions for the AES-GCM mode on SAM
+ *devices.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -84,25 +85,25 @@
 #include <string.h>
 
 /* Key Sizes in bytes - 256 bits */
-#define AES_KEY_SIZE		32
+#define AES_KEY_SIZE            8
 
 /* IV Size in bytes - 96 bits */
-#define AES_IV_SIZE		12
+#define AES_IV_SIZE             3
 
 /* TAG size in bytes - 128 bits */
-#define AES_TAG_SIZE		16
+#define AES_TAG_SIZE            4
 
 /* Max Plain Text Size (16 byte aligned for padding) used in bytes -  bits */
-#define AES_PDATA_SIZE		32
+#define AES_PDATA_SIZE          8
 
 /* Max AAD Size (16 byte aligned for padding) used in bytes -  bits */
-#define AES_AAD_SIZE		32
+#define AES_AAD_SIZE            8
 
 /* Effective AAD Size */
-#define AES_AAD_EFFECTIVE_SIZE		20
+#define AES_AAD_EFFECTIVE_SIZE          20
 
 /* Effective Plain Text Size */
-#define AES_PDATA_EFFECTIVE_SIZE	20
+#define AES_PDATA_EFFECTIVE_SIZE        20
 
 /**
  * \name reference data for AES-GCM mode
@@ -110,91 +111,101 @@
 /* @{ */
 
 /* GCM Mode Test Key, 256-bits */
-uint8_t aes_key[AES_KEY_SIZE] = {
-	0xf8, 0xd4, 0x76, 0xcf, 0xd6, 0x46, 0xea, 0x6c, 
-	0x23, 0x84, 0xcb, 0x1c, 0x27, 0xd6, 0x19, 0x5d, 
-	0xfe, 0xf1, 0xa9, 0xf3, 0x7b, 0x9c, 0x8d, 0x21, 
-	0xa7, 0x9c, 0x21, 0xf8, 0xcb, 0x90, 0xd2, 0x89
+uint32_t aes_key[AES_KEY_SIZE] = {
+	0xcf76d4f8,
+	0x6cea46d6,
+	0x1ccb8423,
+	0x5d19d627,
+	0xf3a9f1fe,
+	0x218d9c7b,
+	0xf8219ca7,
+	0x89d290cb
 };
 
 /* GCM Mode Test Iv, 96-bits */
-uint8_t aes_iv[AES_IV_SIZE] = {
-	0xdb, 0xd1, 0xa3, 0x63, 0x60, 0x24, 
-	0xb7, 0xb4, 0x02, 0xda, 0x7d, 0x6f
+uint32_t aes_iv[AES_IV_SIZE] = {
+	0x63a3d1db,
+	0xb4b72460,
+	0x6f7dda02
 };
 
-/* GCM Mode Test plain text, 160-bits */ 
-uint8_t aes_plain_text[AES_PDATA_SIZE] = {
-	0x90, 0xae, 0x61, 0xcf, 0x7b, 0xae, 0xbd, 0x4c, 
-	0xad, 0xe4, 0x94, 0xc5, 0x4a, 0x29, 0xae, 0x70, 
-	0x26, 0x9a, 0xec, 0x71
+/* GCM Mode Test plain text, 160-bits */
+uint32_t aes_plain_text[AES_PDATA_SIZE] = {
+	0xcf61ae90,
+	0x4cbdae7b,
+	0xc594e4ad,
+	0x70ae294a,
+	0x71ec9a26
 };
 
 /* GCM Mode Test AAD, 160-bits */
-uint8_t aes_aad[AES_AAD_SIZE] = {
-	0x7b, 0xd8, 0x59, 0xa2, 0x47, 0x96, 0x1a, 0x21, 
-	0x82, 0x3b, 0x38, 0x0e, 0x9f, 0xe8, 0xb6, 0x50, 
-	0x82, 0xba, 0x61, 0xd3
+uint32_t aes_aad[AES_AAD_SIZE] = {
+	0xa259d87b,
+	0x211a9647,
+	0x0e383b82,
+	0x50b6e89f,
+	0xd361ba82
 };
 
 /* Reference GCM cipher data */
-uint8_t aes_cipher_text[AES_PDATA_SIZE] = {
-	0xce, 0x20, 0x27, 0xb4, 0x7a, 0x84, 0x32, 0x52, 
-	0x01, 0x34, 0x65, 0x83, 0x4d, 0x75, 0xfd, 0x0f, 
-	0x07, 0x29, 0x75, 0x2e
+uint32_t aes_cipher_text[AES_PDATA_SIZE] = {
+	0xb42720ce,
+	0x5232847a,
+	0x83653401,
+	0x0ffd754d,
+	0x2e752907
 };
 
 /* Reference GCM Tag data */
-uint8_t aes_tag[AES_TAG_SIZE] = {
-	0xac, 0xd8, 0x83, 0x38, 0x37, 0xab, 0x0e, 0xde, 
-	0x84, 0xf4, 0x74, 0x8d, 0xa8, 0x89, 0x9c, 0x15
+uint32_t aes_tag[AES_TAG_SIZE] = {
+	0x3883d8ac,
+	0xde0eab37,
+	0x8d74f484,
+	0x159c89a8
 };
 
 /* @} */
 
 /* GCM Input Structure */
-struct gcm_input{
+struct gcm_input {
 	uint32_t iv_len;
 	uint32_t text_len;
 	uint32_t aad_len;
-	uint8_t  key_len;
-	uint8_t  *key;
-	uint8_t  *iv;
-	uint8_t  *input;
-	uint8_t  *output;
-	uint8_t  *aad;
-	uint8_t  *tag;
+	uint32_t key_len;
+	uint32_t *key;
+	uint32_t *iv;
+	uint32_t *input;
+	uint32_t *output;
+	uint32_t *aad;
+	uint32_t *tag;
 };
 
 /* Output data array */
-static uint8_t output_data[AES_PDATA_SIZE];
+static uint32_t output_data[AES_PDATA_SIZE];
 
 /* Tag data array */
-static uint8_t tag_data[AES_TAG_SIZE];
-
-/* J0 data array */
-static uint8_t j0[16];
+static uint32_t tag_data[AES_TAG_SIZE];
 
 /** AES configuration */
-struct aes_config   g_aes_cfg;
+struct aes_config g_aes_cfg;
 
 /** GCM Input */
-struct gcm_input    gcm_input_data;
-
+struct gcm_input gcm_input_data;
 
 /**
  * \brief Read the GCM Authentication Tag "T" generated in AES_TAGRx registers.
  *
  * \param p_aes             Base address of the AES instance.
- * \param p_auth_tag_buffer Pointer to output buffer of 4 contiguous 32-bit words.
+ * \param p_auth_tag_buffer Pointer to output buffer of 4 contiguous 32-bit
+ *words.
  *
  */
 static void aes_read_gcm_auth_tag(Aes *const p_aes, uint32_t *p_auth_tag_buffer)
 {
-        uint8_t i;
-        for (i = 0; i < 4 ;i++) {
-            p_auth_tag_buffer[i] = aes_read_tag(p_aes, i);
-        }
+	uint8_t i;
+	for (i = 0; i < 4; i++) {
+		p_auth_tag_buffer[i] = aes_read_tag(p_aes, i);
+	}
 }
 
 /**
@@ -234,21 +245,24 @@ static void gcm_mode_encryption_test(void)
 	aes_set_config(AES, &g_aes_cfg);
 
 	/* Write the key to generate GCMH Subkey */
-	aes_write_key(AES, (const uint32_t *)gcm_input_data.key);
-	
+	aes_write_key(AES, gcm_input_data.key);
+
 	/* Wait for the GCMH to generate */
-	while(!(aes_read_interrupt_status(AES)& AES_ISR_DATRDY));
+	while (!(aes_read_interrupt_status(AES) & AES_ISR_DATRDY)) {
+	}
 
 	/* Generate J0 using IV(96 Bits) */
 	uint32_t i;
-	for (i = 0; i < 12; i++) {
+	/* J0 data array */
+	uint32_t j0[4];
+
+	for (i = 0; i < 3; i++) {
 		j0[i] = gcm_input_data.iv[i];
 	}
-	j0[15] = 1;
-
 	/* Write the j0 + 1 in IV register */
-	j0[15] += 1;
-	aes_write_initvector(AES, (uint32_t *)j0);
+	j0[3] = 0x02000000;
+
+	aes_write_initvector(AES, j0);
 
 	/* set AADLEN */
 	aes_write_authen_datalength(AES, gcm_input_data.aad_len);
@@ -259,40 +273,45 @@ static void gcm_mode_encryption_test(void)
 	/* Write AAD Data for TAG generation */
 	uint32_t offset = 0;
 
-	for (i = 0; i < (AES_AAD_SIZE/16); i++) {
-	/* write the input data */
-	aes_write_input_data(AES, (const uint32_t *)(gcm_input_data.aad + offset)); 
-	/* Wait till TAG is ready */
-	while(!(aes_read_interrupt_status(AES)& AES_ISR_DATRDY));
-	/* 16-Byte Boundaries */
-	offset += 16;  
+	for (i = 0; i < (AES_AAD_SIZE / 4); i++) {
+		/* write the input data */
+		aes_write_input_data(AES, (gcm_input_data.aad + offset));
+		/* Wait till TAG is ready */
+		while (!(aes_read_interrupt_status(AES) & AES_ISR_DATRDY)) {
+		}
+		/* 16-Byte Boundaries */
+		offset += 4;
 	}
 
 	/* Reset offset to zero */
 	offset = 0;
 
 	/* Write plain text for cipher text generation */
-	for (i = 0; i < (AES_PDATA_SIZE/16); i++) {
+	for (i = 0; i < (AES_PDATA_SIZE / 4); i++) {
 		/* write the input data */
-		aes_write_input_data(AES, (const uint32_t *)(gcm_input_data.input + offset)); 
+		aes_write_input_data(AES, (gcm_input_data.input + offset));
 		/* Wait for the operation to complete */
-		while(!(aes_read_interrupt_status(AES)& AES_ISR_DATRDY));
-		aes_read_output_data(AES, (uint32_t *)(gcm_input_data.output + offset));
-		offset += 16;
+		while (!(aes_read_interrupt_status(AES) & AES_ISR_DATRDY)) {
+		}
+		aes_read_output_data(AES,
+				(uint32_t *)(gcm_input_data.output + offset));
+		offset += 4;
 	}
 
 	/* Wait for the operation to complete */
-	while(!(aes_read_interrupt_status(AES)& AES_ISR_TAGRDY));
+	while (!(aes_read_interrupt_status(AES) & AES_ISR_TAGRDY)) {
+	}
 	/* Read the generated tag */
-	aes_read_gcm_auth_tag(AES, (uint32_t *)gcm_input_data.tag);
+	aes_read_gcm_auth_tag(AES, gcm_input_data.tag);
 
-	if( memcmp((uint8_t *)tag_data,(uint8_t *)aes_tag, AES_TAG_SIZE) != 0) {
+	if (memcmp(tag_data, aes_tag, AES_TAG_SIZE) != 0) {
 		printf("\n\rTAG GENERATE FAILED! ");
 	} else {
 		printf("\n\rTAG GENERATE SUCCESS! ");
-	}	
+	}
 
-	if ( memcmp((uint8_t *)output_data,(uint8_t *)aes_cipher_text,AES_PDATA_EFFECTIVE_SIZE) != 0) {
+	if (memcmp(output_data, aes_cipher_text,
+			AES_PDATA_EFFECTIVE_SIZE) != 0) {
 		printf("\n\rENC COMPARE FAILED! ");
 	} else {
 		printf("\n\rENC COMPARE SUCCESS! ");
@@ -334,53 +353,60 @@ static void gcm_mode_decryption_test(void)
 	gcm_input_data.tag = tag_data;
 
 	/* Write the key to generate GCMH Subkey */
-	aes_write_key(AES, (const uint32_t *)gcm_input_data.key);
+	aes_write_key(AES, gcm_input_data.key);
 
 	/* Wait for the GCMH to generate */
-	while(!(aes_read_interrupt_status(AES)& AES_ISR_DATRDY));
+	while (!(aes_read_interrupt_status(AES) & AES_ISR_DATRDY)) {
+	}
 
 	/* Generate J0 using IV(96 Bits) */
 	uint32_t i;
-	for (i = 0; i < 12; i++) {
+	/* J0 data array */
+	uint32_t j0[4];
+
+	for (i = 0; i < 3; i++) {
 		j0[i] = gcm_input_data.iv[i];
 	}
-	j0[15] = 1;
-
 	/* Write the j0 + 1 in IV register */
-	j0[15] += 1;
+	j0[3] = 0x02000000;
+
 	aes_write_initvector(AES, (uint32_t *)j0);
- 
+
 	/* set AADLEN */
 	aes_write_authen_datalength(AES, gcm_input_data.aad_len);
 
 	/* Set CLEN */
 	aes_write_pctext_length(AES, gcm_input_data.text_len);
- 
+
 	/* Write AAD Data for TAG generation */
 	uint32_t offset = 0;
-	for (i = 0; i < (AES_AAD_SIZE/16); i++) {
+	for (i = 0; i < (AES_AAD_SIZE / 4); i++) {
 		/* write the input data */
-		aes_write_input_data(AES, (const uint32_t *)(gcm_input_data.aad + offset)); 
+		aes_write_input_data(AES, (gcm_input_data.aad + offset));
 		/* Wait till TAG is ready */
-		while(!(aes_read_interrupt_status(AES)& AES_ISR_DATRDY));
+		while (!(aes_read_interrupt_status(AES) & AES_ISR_DATRDY)) {
+		}
 		/* 16-Byte Boundaries */
-		offset += 16;  
+		offset += 4;
 	}
- 
+
 	/* Reset offset to zero */
 	offset = 0;
 
 	/* Write plain text for cipher text generation */
-	for (i = 0; i < (AES_PDATA_SIZE/16); i++) {
+	for (i = 0; i < (AES_PDATA_SIZE / 4); i++) {
 		/* write the input data */
-		aes_write_input_data(AES, (const uint32_t *)(gcm_input_data.input + offset)); 
+		aes_write_input_data(AES, (gcm_input_data.input + offset));
 		/* Wait for the operation to complete */
-		while(!(aes_read_interrupt_status(AES)& AES_ISR_DATRDY));
-		aes_read_output_data(AES, (uint32_t *)(gcm_input_data.output + offset));
-		offset += 16;
+		while (!(aes_read_interrupt_status(AES) & AES_ISR_DATRDY)) {
+		}
+		aes_read_output_data(AES,
+				(uint32_t *)(gcm_input_data.output + offset));
+		offset += 4;
 	}
 
-	if ( memcmp((uint8_t *)output_data,(uint8_t *)aes_plain_text,AES_PDATA_EFFECTIVE_SIZE) != 0) {
+	if (memcmp(output_data, aes_plain_text,
+			AES_PDATA_EFFECTIVE_SIZE) != 0) {
 		printf("\n\rDEC COMPARE FAILED! ");
 	} else {
 		printf("\n\rDEC COMPARE SUCCESS! ");
@@ -445,7 +471,7 @@ int main(void)
 	aes_enable();
 
 	/* Enable AES interrupt. */
-	aes_enable_interrupt(AES,AES_INTERRUPT_DATA_READY);
+	aes_enable_interrupt(AES, AES_INTERRUPT_DATA_READY);
 
 	/* Display menu */
 	display_menu();
