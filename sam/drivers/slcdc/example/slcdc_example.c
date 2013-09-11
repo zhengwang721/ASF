@@ -92,6 +92,10 @@
 /** LCD power mode */
 #define LCD_POWER_MODE         SLCDC_POWER_MODE_LCDON_INVR
 
+/* The LCD segment map number */
+#define LCD_SEGMAP_NUM_0     0xff720000
+#define LCD_SEGMAP_NUM_1     0x3ffff
+
 /**
  *  Configure serial console.
  */
@@ -161,8 +165,8 @@ int main(void)
 		}
 	}
 	/*LCD seg 17, 20~22, and 24 ~49 mapped on SEGx I/O pin */
-	slcdc_set_segmap0(SLCDC, C42364A_SEGMAP_NUM_0);
-	slcdc_set_segmap1(SLCDC, C42364A_SEGMAP_NUM_1);
+	slcdc_set_segmap0(SLCDC, LCD_SEGMAP_NUM_0);
+	slcdc_set_segmap1(SLCDC, LCD_SEGMAP_NUM_1);
 
 	/* Enable SLCDC */
 	slcdc_enable(SLCDC);

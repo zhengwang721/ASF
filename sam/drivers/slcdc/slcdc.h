@@ -49,7 +49,6 @@ extern "C" {
 
 #include "compiler.h"
 #include "status_codes.h"
-#include "supc.h"
 #include "conf_slcdc.h"
 
 /**
