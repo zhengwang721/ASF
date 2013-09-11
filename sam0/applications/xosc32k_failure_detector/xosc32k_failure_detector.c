@@ -87,11 +87,11 @@
 
 /** Number of cycles on the XOSC32K before resetting the reference timer */
 #define CRYSTAL_RESET_CYCLES   200
-/** Number of cycles on the ULP32K before assumine a XOSC32K failure */
+/** Number of cycles on the ULP32K before assuming a XOSC32K failure */
 #define REFERENCE_FAIL_CYCLES  (CRYSTAL_RESET_CYCLES * 2)
 /** Generator index configured to source from the XOSC32K crystal. */
 #define GCLK_GEN_XOSC32K       GCLK_GENERATOR_2
-/** Generator index configured to source from the interal ULP32K oscillator. */
+/** Generator index configured to source from the internal ULP32K oscillator. */
 #define GCLK_GEN_REFERENCE     GCLK_GENERATOR_3
 /** Timer configured to source from the XOSC32K crystal generator */
 #define TC_CRYSTAL             TC0
