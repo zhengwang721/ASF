@@ -272,7 +272,7 @@ static void run_ecb_mode_test_dma(const struct test_case *test)
 	/* Configure the AES. */
 	g_aes_cfg.encrypt_mode = AES_ENCRYPTION;
 	g_aes_cfg.key_size = AES_KEY_SIZE_128;
-	g_aes_cfg.start_mode = IDATAR0_START;
+	g_aes_cfg.start_mode = AES_IDATAR0_START;
 	g_aes_cfg.opmode = AES_ECB_MODE;
 	g_aes_cfg.cfb_size = AES_CFB_SIZE_128;
 	g_aes_cfg.lod = false;
@@ -311,7 +311,7 @@ static void run_ecb_mode_test_dma(const struct test_case *test)
 	/* Configure the AES. */
 	g_aes_cfg.encrypt_mode = AES_DECRYPTION;
 	g_aes_cfg.key_size = AES_KEY_SIZE_128;
-	g_aes_cfg.start_mode = IDATAR0_START;
+	g_aes_cfg.start_mode = AES_IDATAR0_START;
 	g_aes_cfg.opmode = AES_ECB_MODE;
 	g_aes_cfg.cfb_size = AES_CFB_SIZE_128;
 	g_aes_cfg.lod = false;
