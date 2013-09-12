@@ -69,7 +69,9 @@
  * that the clock system is initialized -- this is typically done indirectly
  * with \ref system_init(), or directly with \ref system_clock_init().
  *
- * Refer to the datasheet for details on the limits of SERCOM SPI baud rate.
+ * According to the datasheet, the minimum and maximum limits for the baud rate
+ * is given by: \f$ \frac{1}{2^{17}} \times f_{clk} \le f_{baud}
+ * \le \frac{1}{2} \times f_{clk} \f$.
  *
  *
  * \section asfdoc_samd20_sercom_spi_master_vec_module_overview Module Overview
