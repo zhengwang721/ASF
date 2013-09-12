@@ -1111,7 +1111,9 @@ void system_clock_init(void);
  */
 static inline void system_flash_set_waitstates(uint8_t wait_states)
 {
-	Assert(NVMCTRL_CTRLB_RWS(wait_states) == (wait_states << NVMCTRL_CTRLB_RWS_Pos));
+	Assert(NVMCTRL_CTRLB_RWS((uint32_t)wait_states) ==
+			((uint32_t)wait_states << NVMCTRL_CTRLB_RWS_Pos));
+
 	NVMCTRL->CTRLB.bit.RWS = wait_states;
 }
 /**
