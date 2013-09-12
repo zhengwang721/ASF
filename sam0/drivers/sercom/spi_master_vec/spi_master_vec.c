@@ -234,6 +234,10 @@ void spi_master_vec_disable(const struct spi_master_vec_module *const module)
 
 	spi_hw->CTRLB.reg = 0;
 	spi_hw->CTRLA.reg &= ~SERCOM_SPI_CTRLA_ENABLE;
+	module->rx_bufdesc_ptr = NULL;
+	module->tx_bufdesc_ptr = NULL;
+	module->direction = SPI_DIRECTION_IDLE;
+	module->status = STATUS_OK;
 }
 
 /**
