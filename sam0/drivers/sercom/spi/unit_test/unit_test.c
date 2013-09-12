@@ -42,9 +42,12 @@
  */
 
 /**
- * \mainpage SERCOM SPI UNIT TEST
+ * \mainpage SAM D20 SPI Unit Test
+ * See \ref appdoc_main "here" for project documentation.
+ * \copydetails appdoc_preface
  *
- * \section intro Introduction
+ *
+ * \page appdoc_preface Overview
  * This unit test carries out tests for SERCOM SPI driver.
  * It consists of test cases for the following functionalities:
  *      - Test for driver initialization.
@@ -53,41 +56,60 @@
  *      - Test for buffer read & write using transceive function.
  *      - Test for 9-bit data transfer.
  *      - Test for baudrate.
+ */
+
+/**
+ * \page appdoc_main SAM D20 SPI Unit Test
+ *
+ * Overview:
+ * - \ref appdoc_samd20_spi_unit_test_intro
+ * - \ref appdoc_samd20_spi_unit_test_setup
+ * - \ref appdoc_samd20_spi_unit_test_usage
+ * - \ref appdoc_samd20_spi_unit_test_compinfo
+ * - \ref appdoc_samd20_spi_unit_test_contactinfo
+ *
+ * \section appdoc_samd20_spi_unit_test_intro Introduction
+ * \copydetails appdoc_preface
  *
  * The following kit is required for carrying out the test:
  *      - SAM D20 Xplained Pro board
  *
- * \section Setup
+ * \section appdoc_samd20_spi_unit_test_setup Setup
+ * The following connections has to be made using wires:
+ *  - \b SS_0:  EXT1 PIN15 (PA05) <--> EXT2 PIN15 (PA17)
+ *  - \b DO/DI: EXT1 PIN16 (PA06) <--> EXT2 PIN17 (PA16)
+ *  - \b DI/DO: EXT1 PIN17 (PA04) <--> EXT2 PIN16 (PA18)
+ *  - \b SCK:   EXT1 PIN18 (PA07) <--> EXT2 PIN18 (PA19)
  *
- *      - The following connections has to be made using wires:
- *            SS_0: EXT1 PIN15 (PA05) <--> EXT2 PIN15 (PA17)
- *            DO/DI: EXT1 PIN16 (PA06) <--> EXT2 PIN17 (PA16)
- *            DI/DO: EXT1 PIN17 (PA04) <--> EXT2 PIN16 (PA18)
- *            SCK: EXT1 PIN18 (PA07) <--> EXT2 PIN18 (PA19)
- *      - Connect the SAM D20 Xplained Pro board to the computer using a
- *        micro USB cable.
- *      - Open the virtual COM port in a terminal application.
- * \note  The USB composite firmware running on the Embedded Debugger (EDBG)
- *        will enumerate as debugger, virtual COM port and EDBG data
- *        gateway.
- *      - Build the project, program the target and run the application.
- *        The terminal shows the results of the unit test.
+ * To run the test:
+ *  - Connect the SAM D20 Xplained Pro board to the computer using a
+ *    micro USB cable.
+ *  - Open the virtual COM port in a terminal application.
+ *    \note The USB composite firmware running on the Embedded Debugger (EDBG)
+ *          will enumerate as debugger, virtual COM port and EDBG data
+ *          gateway.
+ *  - Build the project, program the target and run the application.
+ *    The terminal shows the results of the unit test.
  *
- * \section Description
+ * \section appdoc_samd20_spi_unit_test_usage Usage
+ *  - The unit tests are carried out with SERCOM1 on EXT2 as SPI master and
+ *    SERCOM0 on EXT1 as SPI slave.
+ *  - Data is transmitted from master to slave in lengths of a single byte
+ *    as well as multiple bytes.
  *
- *      - The unit tests are carried out with SERCOM1 on EXT2 as SPI master and
- *        SERCOM0 on EXT1 as SPI slave.
- *      - Data are transmitted from master to slave in single byte as well
- *        as in multiple bytes.
+ * \section appdoc_samd20_spi_unit_test_compinfo Compilation Info
+ * This software was written for the GNU GCC and IAR for ARM.
+ * Other compilers may or may not work.
  *
- * \section contactinfo Contact Information
- * For further information, visit <a href="http://www.atmel.com/">Atmel</a>.\n
- * Support and FAQ: http://support.atmel.no/
+ * \section appdoc_samd20_spi_unit_test_contactinfo Contact Information
+ * For further information, visit
+ * <a href="http://www.atmel.com">http://www.atmel.com</a>.
  */
 
 #include <asf.h>
 #include <stdio_serial.h>
 #include <string.h>
+#include "conf_test.h"
 
 /* SERCOM SPI pin-out defines for SPI slave */
 #define SPI_SLAVE_MODULE              EXT1_SPI_MODULE
@@ -100,7 +122,7 @@
 #define SPI_MASTER_MODULE             EXT2_SPI_MODULE
 #define SPI_MASTER_SPI_MUX            EXT2_SPI_SERCOM_MUX_SETTING
 #define SPI_MASTER_DATA_IN_PIN_MUX    EXT2_SPI_SERCOM_PINMUX_PAD0
-#define SPI_MASTER_DATA_OUT_PIN_MUX   EXT2_SPI_SERCOM_PINMUX_PAD1
+#define SPI_MASTER_DATA_OUT_PIN_MUX   EXT2_SPI_SERCOM_PINMUX_PAD2
 #define SPI_MASTER_SCK_PIN_MUX        EXT2_SPI_SERCOM_PINMUX_PAD3
 #define SPI_SLAVE_SS_PIN              EXT2_PIN_SPI_SS_0
 
@@ -146,27 +168,24 @@ static void user_spi_callback(const struct spi_module *const module)
 /**
  * \brief Initialize the USART for unit test
  *
- * Initializes the SERCOM USART (SERCOM4) used for sending the
- * unit test status to the computer via the EDBG CDC gateway.
+ * Initializes the SERCOM USART used for sending the unit test status to the
+ * computer via the EDBG CDC gateway.
  */
 static void cdc_uart_init(void)
 {
-	struct usart_config cdc_uart_config;
+	struct usart_config usart_conf;
 
 	/* Configure USART for unit test output */
-	usart_get_config_defaults(&cdc_uart_config);
-	cdc_uart_config.mux_setting = EDBG_CDC_SERCOM_MUX_SETTING;
-	cdc_uart_config.pinmux_pad0 = EDBG_CDC_SERCOM_PINMUX_PAD0;
-	cdc_uart_config.pinmux_pad1 = EDBG_CDC_SERCOM_PINMUX_PAD1;
-	cdc_uart_config.pinmux_pad2 = EDBG_CDC_SERCOM_PINMUX_PAD2;
-	cdc_uart_config.pinmux_pad3 = EDBG_CDC_SERCOM_PINMUX_PAD3;
-	cdc_uart_config.baudrate    = 115200;
-	stdio_serial_init(&cdc_uart_module, EDBG_CDC_MODULE, &cdc_uart_config);
-	usart_enable(&cdc_uart_module);
+	usart_get_config_defaults(&usart_conf);
+	usart_conf.mux_setting = CONF_STDIO_MUX_SETTING;
+	usart_conf.pinmux_pad0 = CONF_STDIO_PINMUX_PAD0;
+	usart_conf.pinmux_pad1 = CONF_STDIO_PINMUX_PAD1;
+	usart_conf.pinmux_pad2 = CONF_STDIO_PINMUX_PAD2;
+	usart_conf.pinmux_pad3 = CONF_STDIO_PINMUX_PAD3;
+	usart_conf.baudrate    = CONF_STDIO_BAUDRATE;
 
-	/* Enable transceivers */
-	usart_enable_transceiver(&cdc_uart_module, USART_TRANSCEIVER_TX);
-	usart_enable_transceiver(&cdc_uart_module, USART_TRANSCEIVER_RX);
+	stdio_serial_init(&cdc_uart_module, CONF_STDIO_USART, &usart_conf);
+	usart_enable(&cdc_uart_module);
 }
 
 /**
@@ -199,7 +218,7 @@ static void run_spi_init_test(const struct test_case *test)
 	config.pinmux_pad1     = PINMUX_UNUSED;
 	config.pinmux_pad2     = SPI_MASTER_DATA_OUT_PIN_MUX;
 	config.pinmux_pad3     = SPI_MASTER_SCK_PIN_MUX;
-	config.master.baudrate = TEST_SPI_BAUDRATE;
+	config.mode_specific.master.baudrate = TEST_SPI_BAUDRATE;
 	status = spi_init(&master, SPI_MASTER_MODULE, &config);
 	test_assert_true(test, status == STATUS_OK,
 			"SPI master initialization failed");
@@ -216,8 +235,8 @@ static void run_spi_init_test(const struct test_case *test)
 	config.pinmux_pad1          = SPI_SLAVE_SS_PIN_MUX;
 	config.pinmux_pad2          = SPI_SLAVE_DATA_OUT_PIN_MUX;
 	config.pinmux_pad3          = SPI_SLAVE_SCK_PIN_MUX;
-	config.slave.frame_format   = SPI_FRAME_FORMAT_SPI_FRAME;
-	config.slave.preload_enable = true;
+	config.mode_specific.slave.frame_format   = SPI_FRAME_FORMAT_SPI_FRAME;
+	config.mode_specific.slave.preload_enable = true;
 	status = spi_init(&slave, SPI_SLAVE_MODULE, &config);
 	test_assert_true(test, status == STATUS_OK,
 			"SPI slave initialization failed");
@@ -409,7 +428,7 @@ static void run_transceive_buffer_test(const struct test_case *test)
  * \brief Test: Sends data at different baud rates.
  *
  * This test sends (writes) a byte to the slave and receives the data
- * at different baudrate testing upto the maximum allowed level.
+ * at different baudrate testing up to the maximum allowed level.
  *
  * Transmission and reception are carried out by polling.
  *
@@ -439,7 +458,7 @@ static void run_baud_test(const struct test_case *test)
 
 	do {
 		spi_disable(&master);
-		config.master.baudrate = test_baud;
+		config.mode_specific.master.baudrate = test_baud;
 		spi_init(&master, SPI_MASTER_MODULE, &config);
 		spi_enable(&master);
 
@@ -488,7 +507,7 @@ static void setup_transfer_9bit_test(const struct test_case *test)
 	config.pinmux_pad1     = PINMUX_UNUSED;
 	config.pinmux_pad2     = SPI_MASTER_DATA_OUT_PIN_MUX;
 	config.pinmux_pad3     = SPI_MASTER_SCK_PIN_MUX;
-	config.master.baudrate = TEST_SPI_BAUDRATE;
+	config.mode_specific.master.baudrate = TEST_SPI_BAUDRATE;
 	config.character_size  = SPI_CHARACTER_SIZE_9BIT;
 	status = spi_init(&master, SPI_MASTER_MODULE, &config);
 	test_assert_true(test, status == STATUS_OK,
@@ -506,8 +525,8 @@ static void setup_transfer_9bit_test(const struct test_case *test)
 	config.pinmux_pad1          = SPI_SLAVE_SS_PIN_MUX;
 	config.pinmux_pad2          = SPI_SLAVE_DATA_OUT_PIN_MUX;
 	config.pinmux_pad3          = SPI_SLAVE_SCK_PIN_MUX;
-	config.slave.frame_format   = SPI_FRAME_FORMAT_SPI_FRAME;
-	config.slave.preload_enable = true;
+	config.mode_specific.slave.frame_format   = SPI_FRAME_FORMAT_SPI_FRAME;
+	config.mode_specific.slave.preload_enable = true;
 	config.character_size       = SPI_CHARACTER_SIZE_9BIT;
 	status = spi_init(&slave, SPI_SLAVE_MODULE, &config);
 	test_assert_true(test, status == STATUS_OK,

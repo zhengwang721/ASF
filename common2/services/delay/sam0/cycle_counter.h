@@ -65,11 +65,13 @@ extern "C" {
 static inline void delay_cycles(
 		const uint32_t n)
 {
-	SysTick->LOAD = n;
-	SysTick->VAL = 0;
+	if (n > 0) {
+		SysTick->LOAD = n;
+		SysTick->VAL = 0;
 
-	while (!(SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk)) {
-	};
+		while (!(SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk)) {
+		};
+	}
 }
 
 void delay_cycles_us(uint32_t n);

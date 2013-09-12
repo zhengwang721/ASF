@@ -44,7 +44,7 @@
 #define SYSTEM_INTERRUPT_H_INCLUDED
 
 /**
- * \defgroup asfdoc_samd20_system_interrupt_group SAM D20 System Interrupt Driver
+ * \defgroup asfdoc_samd20_system_interrupt_group SAM D20 System Interrupt Driver (SYSTEM INTERRUPT)
  *
  * This driver for SAM D20 devices provides an interface for the configuration
  * and management of internal software and hardware interrupts/exceptions.
@@ -100,7 +100,7 @@
  * responsibility to de-multiplex the module-common interrupt to determine the
  * exact interrupt cause.
  *
- * \section asfdoc_samd20_system_interrupt_extra_info Extra Information for System Interrupt
+ * \section asfdoc_samd20_system_interrupt_extra_info Extra Information
  *
  * For extra information see \ref asfdoc_samd20_system_interrupt_extra. This includes:
  *  - \ref asfdoc_samd20_system_interrupt_extra_acronyms
@@ -450,6 +450,11 @@ enum system_interrupt_priority_level system_interrupt_get_priority(
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>B</td>
+ *		<td>06/2013</td>
+ *		<td>Corrected documentation typos.</td>
  *	</tr>
  *	<tr>
  *		<td>A</td>

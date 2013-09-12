@@ -48,7 +48,9 @@
  */
 /* === INCLUDES ============================================================ */
 #include "tal.h"
-# include "asf.h"
+# include "led.h"
+#include <stdio.h>
+#include <stdlib.h>
 # include "app_init.h"
 
 /**
@@ -77,7 +79,7 @@ static void app_switch_off_rx_led_cb(void *parameter);
 
 /**
  * This table holds the Messages to be printed on the UART Terminal at each
- *event
+ * event
  */
 print_event_msg_t print_event_table[NUM_MAX_PRINT_EVENTS] = {
 	{ /* PRINT_KEY_PRESS_WHILE_POWER_ON_CONFIG_MODE */
@@ -177,8 +179,11 @@ bool app_debounce_button(void)
 			key_cnt++;
 		}
 	} else if (!(button_pressed()) &&
-			(key_cnt == COUNT_FOR_VALID_KEY_PRESS)) {           /* Button
-	                                                                     * released */
+			(key_cnt == COUNT_FOR_VALID_KEY_PRESS)) {           /*
+		                                                             * Button
+		                                                             *
+		                                                             *released
+		                                                             **/
 		ret = 1;
 		key_cnt = 0;
 	} else {
@@ -195,7 +200,16 @@ bool app_debounce_button(void)
  */
 bool button_pressed(void)
 {
-#if defined GPIO_PUSH_BUTTON_0
+  
+#ifdef SENSOR_TERMINAL_BOARD
+
+  	if (stb_button_read()) {
+		return true;
+	} else {
+		return false;
+	}
+
+#elif defined GPIO_PUSH_BUTTON_0
 	/*Read the current state of the button*/
 	if (ioport_get_pin_level(GPIO_PUSH_BUTTON_0)) {
 		return false;
@@ -205,7 +219,6 @@ bool button_pressed(void)
 
 #else
 	return false;
-
 #endif
 }
 
@@ -240,8 +253,8 @@ void app_led_event(led_event_t ev)
 
 	case LED_EVENT_POWER_ON:
 		LED_Off(STATUS_LED);
-		LED_On(TX_LED);
 		LED_Off(RX_LED);
+		LED_On(TX_LED);
 		break;
 
 	case LED_EVENT_START_PEER_SEARCH:
@@ -253,8 +266,8 @@ void app_led_event(led_event_t ev)
 	case LED_EVENT_PEER_SEARCH_DONE:
 
 		LED_Off(TX_LED);
-		LED_On(STATUS_LED);
 		LED_Off(RX_LED);
+		LED_On(STATUS_LED);
 		break;
 
 	case LED_EVENT_ALL_ON:

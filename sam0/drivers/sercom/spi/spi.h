@@ -207,28 +207,28 @@
  *      <th>Trailing Edge</th>
  *   </tr>
  *   <tr>
- *      <th> 0 </th>
+ *      <td> 0 </td>
  *      <td> 0 </td>
  *      <td> 0 </td>
  *      <td> Rising, Sample </td>
  *      <td> Falling, Setup </td>
  *   </tr>
  *   <tr>
- *      <th> 1 </th>
+ *      <td> 1 </td>
  *      <td> 0 </td>
  *      <td> 1 </td>
  *      <td> Rising, Setup </td>
  *      <td> Falling, Sample </td>
  *   </tr>
  *   <tr>
- *      <th> 2 </th>
+ *      <td> 2 </td>
  *      <td> 1 </td>
  *      <td> 0 </td>
  *      <td> Falling, Sample </td>
  *      <td> Rising, Setup </td>
  *   </tr>
  *   <tr>
- *      <th> 3 </th>
+ *      <td> 3 </td>
  *      <td> 1 </td>
  *      <td> 1 </td>
  *      <td> Falling, Setup </td>
@@ -255,22 +255,22 @@
  *      <th> Slave SPI </th>
  *   </tr>
  *   <tr>
- *      <th> MOSI </th>
+ *      <td> MOSI </td>
  *      <td> Output </td>
  *      <td> Input </td>
  *   </tr>
  *   <tr>
- *      <th> MISO </th>
+ *      <td> MISO </td>
  *      <td> Input </td>
  *      <td> Output </td>
  *   </tr>
  *   <tr>
- *      <th> SCK </th>
+ *      <td> SCK </td>
  *      <td> Output </td>
  *      <td> Input </td>
  *   </tr>
  *   <tr>
- *      <th> SS </th>
+ *      <td> SS </td>
  *      <td> User defined output enable </td>
  *      <td> Input </td>
  *   </tr>
@@ -290,12 +290,12 @@
  *      <th> Master </th>
  *   </tr>
  *   <tr>
- *      <th> false </th>
+ *      <td> false </td>
  *      <td> Disabled, all reception is dropped </td>
  *      <td> GCLK disabled when master is idle, wake on transmit complete </td>
  *   </tr>
  *   <tr>
- *      <th> true </th>
+ *      <td> true </td>
  *      <td> Wake on reception </td>
  *      <td> GCLK is enabled while in sleep modes, wake on all interrupts </td>
  *   </tr>
@@ -703,7 +703,7 @@ struct spi_config {
 		struct spi_slave_config slave;
 		/** Master specific configuration */
 		struct spi_master_config master;
-	}; /**< Union for slave or master specific configuration */
+	} mode_specific;
 	/** GCLK generator to use as clock source. */
 	enum gclk_generator generator_source;
 	/** PAD0 pinmux */
@@ -801,11 +801,11 @@ static inline void spi_get_config_defaults(
 	config->receiver_enable  = true;
 	config->generator_source = GCLK_GENERATOR_0;
 
-	/* Clear slave config */
-	memset(&(config->slave), 0, sizeof(struct spi_slave_config));
+	/* Clear mode specific config */
+	memset(&(config->mode_specific), 0, sizeof(config->mode_specific));
 
 	/* Master config defaults */
-	config->master.baudrate = 100000;
+	config->mode_specific.master.baudrate = 100000;
 
 	/* pinmux config defaults */
 	config->pinmux_pad0 = PINMUX_DEFAULT;
@@ -1110,18 +1110,22 @@ static inline enum status_code spi_read(
 
 	SercomSpi *const spi_module = &(module->hw->SPI);
 
-	/* Return value */
-	enum status_code retval = STATUS_OK;
 	/* Check if data is ready to be read */
 	if (!spi_is_ready_to_read(module)) {
 		/* No data has been received, return */
 		return STATUS_ERR_IO;
 	}
 
+	/* Return value */
+	enum status_code retval = STATUS_OK;
+
 	/* Check if data is overflown */
 	if (spi_module->STATUS.reg & SERCOM_SPI_STATUS_BUFOVF) {
 		retval = STATUS_ERR_OVERFLOW;
+		/* Clear overflow flag */
+		spi_module->STATUS.reg |= SERCOM_SPI_STATUS_BUFOVF;
 	}
+
 	/* Read the character from the DATA register */
 	if (module->character_size == SPI_CHARACTER_SIZE_9BIT) {
 		*rx_data = (spi_module->DATA.reg & SERCOM_SPI_DATA_MASK);
@@ -1138,98 +1142,10 @@ enum status_code spi_read_buffer_wait(
 		uint16_t length,
 		uint16_t dummy);
 
-/**
- * \brief Sends and reads a single SPI character
- *
- * This function will transfer a single SPI character via SPI and return the
- * SPI character that is shifted into the shift register.
- *
- * In master mode the SPI character will be sent immediately and the received
- * SPI character will be read as soon as the shifting of the data is
- * complete.
- *
- * In slave mode this function will place the data to be sent into the transmit
- * buffer. It will then block until an SPI master has shifted a complete
- * SPI character, and the received data is available.
- *
- * \note The data to be sent might not be sent before the next transfer, as
- *       loading of the shift register is dependent on SCK.
- * \note If address matching is enabled for the slave, the first character
- *       received and placed in the buffer will be the address.
- *
- * \param[in]  module   Pointer to the software instance struct
- * \param[in]  tx_data  SPI character to transmit
- * \param[out] rx_data  Pointer to store the received SPI character
- *
- * \return Status of the operation.
- * \retval STATUS_OK            If the operation was completed
- * \retval STATUS_ERR_TIMEOUT   If the operation was not completed within the
- *                              timeout in slave mode
- * \retval STATUS_ERR_DENIED    If the receiver is not enabled
- * \retval STATUS_ERR_OVERFLOW  If the incoming data is overflown
- */
-static inline enum status_code spi_transceive_wait(
+enum status_code spi_transceive_wait(
 		struct spi_module *const module,
 		uint16_t tx_data,
-		uint16_t *rx_data)
-{
-	/* Sanity check arguments */
-	Assert(module);
-
-	if (!(module->receiver_enabled)) {
-		return STATUS_ERR_DENIED;
-	}
-
-#  if SPI_CALLBACK_MODE == true
-	if (module->status == STATUS_BUSY) {
-		/* Check if the SPI module is busy with a job */
-		return STATUS_BUSY;
-	}
-#  endif
-
-	uint16_t j;
-	enum status_code retval = STATUS_OK;
-
-	/* Start timeout period for slave */
-	if (module->mode == SPI_MODE_SLAVE) {
-		for (j = 0; j <= SPI_TIMEOUT; j++) {
-			if (spi_is_ready_to_write(module)) {
-				break;
-			} else if (j == SPI_TIMEOUT) {
-				/* Not ready to write data within timeout period */
-				return STATUS_ERR_TIMEOUT;
-			}
-		}
-	}
-
-	/* Wait until the module is ready to write the character */
-	while (!spi_is_ready_to_write(module)) {
-	}
-
-	/* Write data */
-	spi_write(module, tx_data);
-
-	/* Start timeout period for slave */
-	if (module->mode == SPI_MODE_SLAVE) {
-		for (j = 0; j <= SPI_TIMEOUT; j++) {
-			if (spi_is_ready_to_read(module)) {
-				break;
-			} else if (j == SPI_TIMEOUT) {
-				/* Not ready to read data within timeout period */
-				return STATUS_ERR_TIMEOUT;
-			}
-		}
-	}
-
-	/* Wait until the module is ready to read the character */
-	while (!spi_is_ready_to_read(module)) {
-	}
-
-	/* Read data */
-	retval = spi_read(module, rx_data);
-
-	return retval;
-}
+		uint16_t *rx_data);
 
 enum status_code spi_transceive_buffer_wait(
 		struct spi_module *const module,
@@ -1314,6 +1230,14 @@ enum status_code spi_select_slave(
  *	<tr>
  *		<th>Changelog</th>
  *	</tr>
+ *	 <tr>
+ *		<td>Edited slave part of write and transceive buffer functions to ensure
+ *		that second character is sent at the right time.</td>
+ *	</tr>
+ *	<tr>
+ *		<td>Renamed the anonymous union in \c struct spi_config to
+ *          \c mode_specific.</td>
+ *	</tr>
  *	<tr>
  *		<td>Initial Release</td>
  *	</tr>
@@ -1386,28 +1310,28 @@ enum status_code spi_select_slave(
   *      <th> Pad3 </th>
   *   </tr>
   *   <tr>
-  *      <th> SCK </th>
+  *      <td> SCK </td>
   *      <td>  </td>
   *      <td> x </td>
   *      <td>  </td>
   *      <td>  </td>
   *   </tr>
   *   <tr>
-  *      <th> SLAVE_SS </th>
+  *      <td> SLAVE_SS </td>
   *      <td>  </td>
   *      <td>  </td>
   *      <td> x </td>
   *      <td>  </td>
   *   </tr>
   *   <tr>
-  *      <th> DO </th>
+  *      <td> DO </td>
   *      <td> x </td>
   *      <td>  </td>
   *      <td>  </td>
   *      <td>  </td>
   *   </tr>
   *   <tr>
-  *      <th> DI </th>
+  *      <td> DI </td>
   *      <td> x </td>
   *      <td>  </td>
   *      <td>  </td>
@@ -1430,28 +1354,28 @@ enum status_code spi_select_slave(
   *      <th> Pad3 </th>
   *   </tr>
   *   <tr>
-  *      <th> SCK </th>
+  *      <td> SCK </td>
   *      <td>  </td>
   *      <td> x </td>
   *      <td>  </td>
   *      <td>  </td>
   *   </tr>
   *   <tr>
-  *      <th> SLAVE_SS </th>
+  *      <td> SLAVE_SS </td>
   *      <td>  </td>
   *      <td>  </td>
   *      <td> x </td>
   *      <td>  </td>
   *   </tr>
   *   <tr>
-  *      <th> DO </th>
+  *      <td> DO </td>
   *      <td> x </td>
   *      <td>  </td>
   *      <td>  </td>
   *      <td>  </td>
   *   </tr>
   *   <tr>
-  *      <th> DI </th>
+  *      <td> DI </td>
   *      <td>  </td>
   *      <td> x </td>
   *      <td>  </td>
@@ -1474,28 +1398,28 @@ enum status_code spi_select_slave(
   *      <th> Pad3 </th>
   *   </tr>
   *   <tr>
-  *      <th> SCK </th>
+  *      <td> SCK </td>
   *      <td>  </td>
   *      <td> x </td>
   *      <td>  </td>
   *      <td>  </td>
   *   </tr>
   *   <tr>
-  *      <th> SLAVE_SS </th>
+  *      <td> SLAVE_SS </td>
   *      <td>  </td>
   *      <td>  </td>
   *      <td> x </td>
   *      <td>  </td>
   *   </tr>
   *   <tr>
-  *      <th> DO </th>
+  *      <td> DO </td>
   *      <td> x </td>
   *      <td>  </td>
   *      <td>  </td>
   *      <td>  </td>
   *   </tr>
   *   <tr>
-  *      <th> DI </th>
+  *      <td> DI </td>
   *      <td>  </td>
   *      <td>  </td>
   *      <td> x </td>
@@ -1518,7 +1442,7 @@ enum status_code spi_select_slave(
   *      <th> Pad3 </th>
   *   </tr>
   *   <tr>
-  *      <th> SCK </th>
+  *      <td> SCK </td>
   *      <td>  </td>
   *      <td> x </td>
   *      <td>  </td>
@@ -1526,21 +1450,21 @@ enum status_code spi_select_slave(
 
   *   </tr>
   *   <tr>
-  *      <th> SLAVE_SS </th>
+  *      <td> SLAVE_SS </td>
   *      <td>  </td>
   *      <td>  </td>
   *      <td> x </td>
   *      <td>  </td>
   *   </tr>
   *   <tr>
-  *      <th> DO </th>
+  *      <td> DO </td>
   *      <td> x </td>
   *      <td>  </td>
   *      <td>  </td>
   *      <td>  </td>
   *   </tr>
   *   <tr>
-  *      <th> DI </th>
+  *      <td> DI </td>
   *      <td>  </td>
   *      <td>  </td>
   *      <td>  </td>
@@ -1563,28 +1487,28 @@ enum status_code spi_select_slave(
   *      <th> Pad3 </th>
   *   </tr>
   *   <tr>
-  *      <th> SCK </th>
+  *      <td> SCK </td>
   *      <td>  </td>
   *      <td>  </td>
   *      <td>  </td>
   *      <td> x </td>
   *   </tr>
   *   <tr>
-  *      <th> SLAVE_SS </th>
+  *      <td> SLAVE_SS </td>
   *      <td>  </td>
   *      <td> x </td>
   *      <td>  </td>
   *      <td>  </td>
   *   </tr>
   *   <tr>
-  *      <th> DO </th>
+  *      <td> DO </td>
   *      <td>  </td>
   *      <td>  </td>
   *      <td> x </td>
   *      <td>  </td>
   *   </tr>
   *   <tr>
-  *      <th> DI </th>
+  *      <td> DI </td>
   *      <td> x </td>
   *      <td>  </td>
   *      <td>  </td>
@@ -1607,28 +1531,28 @@ enum status_code spi_select_slave(
   *      <th> Pad3 </th>
   *   </tr>
   *   <tr>
-  *      <th> SCK </th>
+  *      <td> SCK </td>
   *      <td>  </td>
   *      <td>  </td>
   *      <td>  </td>
   *      <td> x </td>
   *   </tr>
   *   <tr>
-  *      <th> SLAVE_SS </th>
+  *      <td> SLAVE_SS </td>
   *      <td>  </td>
   *      <td> x </td>
   *      <td>  </td>
   *      <td>  </td>
   *   </tr>
   *   <tr>
-  *      <th> DO </th>
+  *      <td> DO </td>
   *      <td>  </td>
   *      <td>  </td>
   *      <td> x </td>
   *      <td>  </td>
   *   </tr>
   *   <tr>
-  *      <th> DI </th>
+  *      <td> DI </td>
   *      <td>  </td>
   *      <td> x </td>
   *      <td>  </td>
@@ -1651,28 +1575,28 @@ enum status_code spi_select_slave(
   *      <th> Pad3 </th>
   *   </tr>
   *   <tr>
-  *      <th> SCK </th>
+  *      <td> SCK </td>
   *      <td>  </td>
   *      <td>  </td>
   *      <td>  </td>
   *      <td> x </td>
   *   </tr>
   *   <tr>
-  *      <th> SLAVE_SS </th>
+  *      <td> SLAVE_SS </td>
   *      <td>  </td>
   *      <td> x </td>
   *      <td>  </td>
   *      <td>  </td>
   *   </tr>
   *   <tr>
-  *      <th> DO </th>
+  *      <td> DO </td>
   *      <td>  </td>
   *      <td>  </td>
   *      <td> x </td>
   *      <td>  </td>
   *   </tr>
   *   <tr>
-  *      <th> DI </th>
+  *      <td> DI </td>
   *      <td>  </td>
   *      <td>  </td>
   *      <td> x </td>
@@ -1695,28 +1619,28 @@ enum status_code spi_select_slave(
   *      <th> Pad3 </th>
   *   </tr>
   *   <tr>
-  *      <th> SCK </th>
+  *      <td> SCK </td>
   *      <td>  </td>
   *      <td>  </td>
   *      <td>  </td>
   *      <td> x </td>
   *   </tr>
   *   <tr>
-  *      <th> SLAVE_SS </th>
+  *      <td> SLAVE_SS </td>
   *      <td>  </td>
   *      <td> x </td>
   *      <td>  </td>
   *      <td>  </td>
   *   </tr>
   *   <tr>
-  *      <th> DO </th>
+  *      <td> DO </td>
   *      <td>  </td>
   *      <td>  </td>
   *      <td> x </td>
   *      <td>  </td>
   *   </tr>
   *   <tr>
-  *      <th> DI </th>
+  *      <td> DI </td>
   *      <td>  </td>
   *      <td>  </td>
   *      <td>  </td>
@@ -1731,6 +1655,11 @@ enum status_code spi_select_slave(
   *		<th>Doc. Rev.</td>
   *		<th>Date</td>
   *		<th>Comments</td>
+  *	</tr>
+  *	<tr>
+  *		<td>B</td>
+  *		<td>06/2013</td>
+  *		<td>Corrected documentation typos.</td>
   *	</tr>
   *	<tr>
   *		<td>A</td>
