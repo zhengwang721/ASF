@@ -1253,17 +1253,11 @@ void pmc_enable_waitmode(void)
 {
 	uint32_t i;
 
-	/* Flash in Deep Power Down mode */
+	/* Flash in wait mode */
 	i = PMC->PMC_FSMR;
 	i &= ~PMC_FSMR_FLPM_Msk;
 	i |= ul_flash_in_wait_mode;
 	PMC->PMC_FSMR = i;
-
-#if SAM4C
-	/* Backup the sub-system 1 status and stop sub-system 1 */
-	uint32_t cpclk_backup = PMC->PMC_SCSR & (PMC_SCSR_CPCK | PMC_SCSR_CPBMCK);
-	PMC->PMC_SCDR = cpclk_backup | PMC_SCDR_CPKEY_PASSWD;
-#endif
 
 	/* Clear SLEEPDEEP bit */
 	SCB->SCR &= (uint32_t) ~ SCB_SCR_SLEEPDEEP_Msk;
@@ -1282,11 +1276,11 @@ void pmc_enable_waitmode(void)
 	}
 	while (!(PMC->CKGR_MOR & CKGR_MOR_MOSCRCEN));
 
-
-#if SAM4C
-	/* Restore the sub-system 1 */
-	PMC->PMC_SCER = cpclk_backup | PMC_SCER_CPKEY_PASSWD;
-#endif
+	/* Restore Flash in idle mode */
+	i = PMC->PMC_FSMR;
+	i &= ~PMC_FSMR_FLPM_Msk;
+	i |= PMC_WAIT_MODE_FLASH_IDLE;
+	PMC->PMC_FSMR = i;
 }
 #else
 /**

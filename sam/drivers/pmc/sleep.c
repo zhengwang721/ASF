@@ -288,9 +288,20 @@ void pmc_sleep(int sleep_mode)
 #if defined(EFC1)
 		uint32_t fmr1;
 #endif
-
+#if (SAM4S || SAM4E || SAM4N || SAM4C)
+		(sleep_mode == SAM_PM_SMODE_WAIT_FAST) ?
+				pmc_set_flash_in_wait_mode(PMC_FSMR_FLPM_FLASH_STANDBY) :
+				pmc_set_flash_in_wait_mode(PMC_FSMR_FLPM_FLASH_DEEP_POWERDOWN);
+#endif
 		cpu_irq_disable();
 		b_is_sleep_clock_used = true;
+
+#if SAM4C
+		/* Backup the sub-system 1 status and stop sub-system 1 */
+		uint32_t cpclk_backup = PMC->PMC_SCSR &
+				(PMC_SCSR_CPCK | PMC_SCSR_CPBMCK);
+		PMC->PMC_SCDR = cpclk_backup | PMC_SCDR_CPKEY_PASSWD;
+#endif
 		pmc_save_clock_settings(&mor, &pllr0, &pllr1, &mckr, &fmr,
 #if defined(EFC1)
 				&fmr1,
@@ -308,6 +319,11 @@ void pmc_sleep(int sleep_mode)
 				, fmr1
 #endif
 				);
+
+#if SAM4C
+		/* Restore the sub-system 1 */
+		PMC->PMC_SCER = cpclk_backup | PMC_SCER_CPKEY_PASSWD;
+#endif
 		b_is_sleep_clock_used = false;
 		if (callback_clocks_restored) {
 			callback_clocks_restored();

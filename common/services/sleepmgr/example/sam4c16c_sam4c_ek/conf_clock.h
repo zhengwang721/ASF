@@ -80,17 +80,17 @@
 
 // Note:
 // CONFIG_CPCLK_ENABLE  MUST be defined if using peripherals on bus matrix 1.
-//#define CONFIG_CPCLK_ENABLE
+#define CONFIG_CPCLK_ENABLE
 
 // Coprocessor System Clock Source Options
 //#define CONFIG_CPCLK_SOURCE         CPCLK_SRC_SLCK
 //#define CONFIG_CPCLK_SOURCE         CPCLK_SRC_MAINCK
 //#define CONFIG_CPCLK_SOURCE         CPCLK_SRC_PLLACK
 //#define CONFIG_CPCLK_SOURCE         CPCLK_SRC_PLLBCK
-//#define CONFIG_CPCLK_SOURCE         CPCLK_SRC_MCK
+#define CONFIG_CPCLK_SOURCE         CPCLK_SRC_MCK
 
 // Coprocessor System Clock Prescaler Options (CPCLK_PRES may be 1 to 16).
-//#define CONFIG_CPCLK_PRES           1
+#define CONFIG_CPCLK_PRES           1
 
 // ===== Main processor frequency (MCK)
 // - XTAL frequency: 8MHz
