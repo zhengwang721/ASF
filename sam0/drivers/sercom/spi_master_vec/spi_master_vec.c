@@ -219,7 +219,7 @@ void spi_master_vec_enable(const struct spi_master_vec_module *const module)
  *
  * \param[in,out] module Driver instance to operate on.
  */
-void spi_master_vec_disable(const struct spi_master_vec_module *const module)
+void spi_master_vec_disable(struct spi_master_vec_module *const module)
 {
 	Assert(module);
 	Assert(module->sercom);
