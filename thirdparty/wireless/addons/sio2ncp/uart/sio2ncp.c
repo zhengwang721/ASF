@@ -85,14 +85,10 @@ static uint8_t serial_rx_count;
 
 void sio2ncp_init(void)
 {
-#ifdef (NCP_RESET_GPIO)
+#if defined (NCP_RESET_GPIO)
 	ioport_set_pin_dir(NCP_RESET_GPIO, IOPORT_DIR_OUTPUT);
 	ioport_set_pin_level(NCP_RESET_GPIO, IOPORT_PIN_LEVEL_HIGH);
-<<<<<<< HEAD
 #endif //(NCP_RESET_GPIO)
-=======
-#endif /* (BOARD == SAM4L_XPLAINED_PRO) */
->>>>>>> c6e838ad80797100e0d101fe137ec9d9c244b8f5
 
 	usart_serial_init(USART_NCP, &usart_serial_options);
 	USART_NCP_RX_ISR_ENABLE();

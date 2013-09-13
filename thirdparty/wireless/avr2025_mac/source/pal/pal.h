@@ -70,7 +70,9 @@
 #include "board.h"
 #include "delay.h"
 #include "conf_pal.h"
-
+#ifdef SAM4L
+#include "gpio.h"
+#endif
 #if (PAL_USE_SPI_TRX == 1)
 #include "pal_ext_trx.h"
 #else

@@ -237,10 +237,9 @@ void GPIO_10_Handler(void)
 /**
  * GPIO handler 11 (PC 24..31)
  */
-/*
 void GPIO_11_Handler(void)
 {
 	gpio_common_handler(IOPORT_GPIOC, (GPIO_INT_GROUP_MASK << 24));
-}*/
+}
 
 /** @} */

@@ -57,6 +57,7 @@
             <build type="module-config" subtype="path" value="module_config"/>
             <build type="doxygen-entry-point" value="common_hw_timer_group"/>
 			<require idref="sam.drivers.tc"/>
+			<require idref="sam.drivers.gpio"/>
             <require idref="common.services.basic.clock"/>
             <require idref="common.utils"/>
             <device-support-alias value="sam_hw_timer_support"/>

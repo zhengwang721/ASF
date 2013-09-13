@@ -49,7 +49,7 @@
 #define CONF_BOARD_AT86RFX
 #define IC_TYPE             (0x00)
 
-/*Board Has an External PA Connected to the Radio ,Following are the constatnts related to the Exxt PA */
+/*Board Has an External PA Connected to the Radio ,Following are the constants related to the Exxt PA */
 
 #ifdef EXT_RF_FRONT_END_CTRL /*For External PA for 233FEM*/
 
