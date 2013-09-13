@@ -282,8 +282,8 @@ static void display_info(void)
 	uint32_t ul_low_threshold = f_to_int(f_low_threshold);
 	uint32_t ul_high_threshold = f_to_int(f_high_threshold);
 
-	printf("-I- Thresholds: %u mv - %u mv.\n\r", ul_low_threshold,
-			ul_high_threshold);
+	printf("-I- Thresholds: %u mv - %u mv.\n\r", (unsigned int)ul_low_threshold,
+			(unsigned int)ul_high_threshold);
 	printf("-I- Voltage on potentiometer: %u mv.\n\r",
 			(unsigned int)(ul_adc_value * VOLT_REF / MAX_DIGITAL));
 	printf("-I- Comparison mode is %u\n\r.",
@@ -543,7 +543,7 @@ int main(void)
 						VOLT_REF / MAX_DIGITAL;
 				uint32_t ul_low_threshold = f_to_int(f_low_threshold);
 				printf("Setting low threshold to %u mv (reg value to 0x%x ~%d%%)\n\r",
-						ul_low_threshold,
+						(unsigned int)ul_low_threshold,
 						gs_us_low_threshold,
 						gs_us_low_threshold * 100 / MAX_DIGITAL);
 			}
@@ -565,7 +565,7 @@ int main(void)
 						VOLT_REF / MAX_DIGITAL;
 				uint32_t ul_high_threshold = f_to_int(f_high_threshold);
 				printf("Setting high threshold to %u mv (reg value to 0x%x ~%d%%)\n\r",
-						ul_high_threshold,
+						(unsigned int)ul_high_threshold,
 						gs_us_high_threshold,
 						gs_us_high_threshold * 100 / MAX_DIGITAL);
 			}

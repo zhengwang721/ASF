@@ -225,7 +225,7 @@ int main(void)
 			printf("Potentiometer Voltage: %4d mv.\r\n",
 					(int)(g_adc_sample_data.value * VOLT_REF
 					/ g_max_digital));
-			printf("Raw ADC result: 0x%04x\r\n\r\n", g_adc_sample_data.value);
+			printf("Raw ADC result: 0x%04x\r\n\r\n", (unsigned int)g_adc_sample_data.value);
 			g_adc_sample_data.is_done = false;
 		}
 
