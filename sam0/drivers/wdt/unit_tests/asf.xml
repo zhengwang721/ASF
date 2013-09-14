@@ -3,9 +3,10 @@
 		<info type="description" value="summary">
 		Unit test for the Watchdog driver
 		</info>
-		<info type="gui-flag" value="move-to-root"/>
-		<build type="c-source" value="unit_tests.c"/>
+		<build type="module-config" subtype="required-header-file" value="conf_test.h"/>
 		<build type="include-path" value="."/>
+		<info type="gui-flag" value="move-to-root"/>
+		<build type="c-source" value="unit_test.c"/>
 		<build type="module-config" subtype="required-header-file" value="conf_test.h"/>
 		<require idref="sam0.drivers.wdt"/>
 		<require idref="sam0.drivers.system"/>

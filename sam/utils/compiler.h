@@ -1080,11 +1080,11 @@ typedef U8                  Byte;       //!< 8-bit unsigned integer.
  */
 static inline void convert_64_bit_to_byte_array(uint64_t value, uint8_t *data)
 {
-    uint8_t index = 0;
+    uint8_t val_index = 0;
 
-    while (index < 8)
+    while (val_index < 8)
     {
-        data[index++] = value & 0xFF;
+        data[val_index++] = value & 0xFF;
         value = value >> 8;
     }
 }
@@ -1145,11 +1145,11 @@ static inline uint64_t convert_byte_array_to_64_bit(uint8_t *data)
         uint8_t u8[8];
     } long_addr;
 
-    uint8_t index;
+    uint8_t val_index;
 
-    for (index = 0; index < 8; index++)
+    for (val_index = 0; val_index < 8; val_index++)
     {
-        long_addr.u8[index] = *data++;
+        long_addr.u8[val_index] = *data++;
     }
 
     return long_addr.u64;

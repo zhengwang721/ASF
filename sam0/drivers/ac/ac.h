@@ -152,7 +152,7 @@
  * between each comparison result by automatically performing a comparison on
  * every cycle of the module's clock.
  *
- * \subsection asfdoc_samd20_ac_module_overview_events Input and Output Events
+ * \subsection asfdoc_samd20_ac_module_overview_events Events
  * Each comparator unit is capable of being triggered by both software and
  * hardware triggers. Hardware input events allow for other peripherals to
  * automatically trigger a comparison on demand - for example, a timer output
@@ -163,6 +163,12 @@
  * for reduced levels of CPU usage in an application and lowers the overall
  * system response latency by directly triggering hardware peripherals from one
  * another without requiring software intervention.
+ *
+ * \note The connection of events between modules requires the use of the
+ *       \ref asfdoc_samd20_events_group "SAM D20 Event System Driver (EVENTS)"
+ *       to route output event of one module to the the input event of another.
+ *       For more information on event routing, refer to the event driver
+ *       documentation.
  *
  * \subsection asfdoc_samd20_ac_module_overview_physical Physical Connection
  * Physically, the modules are interconnected within the device as shown in
@@ -233,7 +239,7 @@
  * pairs; refer to your device specific datasheet for details.
  *
  *
- * \section asfdoc_samd20_ac_extra_info Extra Information for AC
+ * \section asfdoc_samd20_ac_extra_info Extra Information
  *
  * For extra information see \ref asfdoc_samd20_ac_extra. This includes:
  *  - \ref asfdoc_samd20_ac_extra_acronyms
@@ -316,18 +322,18 @@ typedef void (*ac_callback_t)(struct ac_module *const module_inst);
 /** Enum for possible callback types for the AC module */
 enum ac_callback {
 	/** Callback for comparator 0 */
-	AC_CALLBACK_COMPARATOR_0,
+	AC_CALLBACK_COMPARATOR_0 = 0,
 	/** Callback for comparator 1 */
-	AC_CALLBACK_COMPARATOR_1,
+	AC_CALLBACK_COMPARATOR_1 = 1,
 	/** Callback for window 0 */
-	AC_CALLBACK_WINDOW_0,
+	AC_CALLBACK_WINDOW_0     = 4,
 #if (AC_NUM_CMP > 2)
 	/** Callback for comparator 2 */
-	AC_CALLBACK_COMPARATOR_2,
+	AC_CALLBACK_COMPARATOR_2 = 2,
 	/** Callback for comparator 3 */
-	AC_CALLBACK_COMPARATOR_3,
+	AC_CALLBACK_COMPARATOR_3 = 3,
 	/** Callback for window 1 */
-	AC_CALLBACK_WINDOW_1,
+	AC_CALLBACK_WINDOW_1     = 5,
 	/** Number of available callbacks */
 #endif /* (AC_NUM_CMP == 2) */
 #if !defined(__DOXYGEN__)
@@ -1245,6 +1251,12 @@ static inline void ac_win_clear_status(
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>B</td>
+ *		<td>06/2013</td>
+ *		<td>Added additional documentation on the event system. Corrected
+ *          documentation typos.</td>
  *	</tr>
  *	<tr>
  *		<td>A</td>

@@ -53,6 +53,8 @@
 # define MAX_PERIPH_ID    34
 #elif (SAM4E)
 # define MAX_PERIPH_ID    47
+#elif (SAM4N)
+# define MAX_PERIPH_ID    31
 #endif
 
 /// @cond 0
@@ -282,7 +284,7 @@ void pmc_switch_sclk_to_32kxtal(uint32_t ul_bypass)
 			SUPC_MR_OSCBYPASS;
 	}
 
-	SUPC->SUPC_CR |= SUPC_CR_KEY(SUPC_KEY_VALUE) | SUPC_CR_XTALSEL;
+	SUPC->SUPC_CR = SUPC_CR_KEY(SUPC_KEY_VALUE) | SUPC_CR_XTALSEL;
 }
 
 /**
@@ -1090,12 +1092,12 @@ void pmc_clr_fast_startup_input(uint32_t ul_inputs)
  */
 void pmc_enable_sleepmode(uint8_t uc_type)
 {
-#if !defined(SAM4S) || !defined(SAM4E)
+#if !defined(SAM4S) || !defined(SAM4E) || !defined(SAM4N)
 	PMC->PMC_FSMR &= (uint32_t) ~ PMC_FSMR_LPM; // Enter Sleep mode
 #endif
 	SCB->SCR &= (uint32_t) ~ SCB_SCR_SLEEPDEEP_Msk; // Deep sleep
 
-#if (SAM4S || SAM4E)
+#if (SAM4S || SAM4E || SAM4N)
 	UNUSED(uc_type);
 	__WFI();
 #else
@@ -1107,7 +1109,7 @@ void pmc_enable_sleepmode(uint8_t uc_type)
 #endif
 }
 
-#if (SAM4S || SAM4E)
+#if (SAM4S || SAM4E || SAM4N)
 static uint32_t ul_flash_in_wait_mode = PMC_WAIT_MODE_FLASH_DEEP_POWERDOWN;
 /**
  * \brief Set the embedded flash state in wait mode
@@ -1137,23 +1139,6 @@ void pmc_enable_waitmode(void)
 	/* Clear SLEEPDEEP bit */
 	SCB->SCR &= (uint32_t) ~ SCB_SCR_SLEEPDEEP_Msk;
 
-	/* Backup FWS setting and set Flash Wait State at 0 */
-#if defined(ID_EFC)
-	uint32_t fmr_backup;
-	fmr_backup = EFC->EEFC_FMR;
-	EFC->EEFC_FMR &= (uint32_t) ~ EEFC_FMR_FWS_Msk;
-#endif
-#if defined(ID_EFC0)
-	uint32_t fmr0_backup;
-	fmr0_backup = EFC0->EEFC_FMR;
-	EFC0->EEFC_FMR &= (uint32_t) ~ EEFC_FMR_FWS_Msk;
-#endif
-#if defined(ID_EFC1)
-	uint32_t fmr1_backup;
-	fmr1_backup = EFC1->EEFC_FMR;
-	EFC1->EEFC_FMR &= (uint32_t) ~ EEFC_FMR_FWS_Msk;
-#endif
-
 	/* Set the WAITMODE bit = 1 */
 	PMC->CKGR_MOR |= CKGR_MOR_KEY(0x37u) | CKGR_MOR_WAITMODE;
 
@@ -1168,16 +1153,6 @@ void pmc_enable_waitmode(void)
 	}
 	while (!(PMC->CKGR_MOR & CKGR_MOR_MOSCRCEN));
 
-	/* Restore EFC FMR setting */
-#if defined(ID_EFC)
-	EFC->EEFC_FMR = fmr_backup;
-#endif
-#if defined(ID_EFC0)
-	EFC0->EEFC_FMR = fmr0_backup;
-#endif
-#if defined(ID_EFC1)
-	EFC1->EEFC_FMR = fmr1_backup;
-#endif
 }
 #else
 /**
@@ -1190,6 +1165,7 @@ void pmc_enable_waitmode(void)
 
 	PMC->PMC_FSMR |= PMC_FSMR_LPM; /* Enter Wait mode */
 	SCB->SCR &= (uint32_t) ~ SCB_SCR_SLEEPDEEP_Msk; /* Deep sleep */
+
 	__WFE();
 
 	/* Waiting for MOSCRCEN bit cleared is strongly recommended
@@ -1199,6 +1175,7 @@ void pmc_enable_waitmode(void)
 		__NOP();
 	}
 	while (!(PMC->CKGR_MOR & CKGR_MOR_MOSCRCEN));
+
 }
 #endif
 
@@ -1209,8 +1186,8 @@ void pmc_enable_waitmode(void)
 void pmc_enable_backupmode(void)
 {
 	SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
-#if (SAM4S || SAM4E)
-	SUPC->SUPC_CR = SUPC_CR_KEY(0xA5u) | SUPC_CR_VROFF_STOP_VREG;
+#if (SAM4S || SAM4E || SAM4N)
+	SUPC->SUPC_CR = SUPC_CR_KEY(SUPC_KEY_VALUE) | SUPC_CR_VROFF_STOP_VREG;
 #else
 	__WFE();
 #endif
@@ -1235,6 +1212,28 @@ void pmc_disable_clock_failure_detector(void)
 
 	PMC->CKGR_MOR = PMC_CKGR_MOR_KEY_VALUE | ul_reg;
 }
+
+#if SAM4N
+/**
+ * \brief Enable Slow Crystal Oscillator Frequency Monitoring.
+ */
+void pmc_enable_sclk_osc_freq_monitor(void)
+{
+	uint32_t ul_reg = PMC->CKGR_MOR;
+
+	PMC->CKGR_MOR = PMC_CKGR_MOR_KEY_VALUE | CKGR_MOR_XT32KFME | ul_reg;
+}
+
+/**
+ * \brief Disable Slow Crystal Oscillator Frequency Monitoring.
+ */
+void pmc_disable_sclk_osc_freq_monitor(void)
+{
+	uint32_t ul_reg = PMC->CKGR_MOR & (~CKGR_MOR_XT32KFME);
+
+	PMC->CKGR_MOR = PMC_CKGR_MOR_KEY_VALUE | ul_reg;
+}
+#endif
 
 /**
  * \brief Enable or disable write protect of PMC registers.

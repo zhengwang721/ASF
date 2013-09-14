@@ -82,8 +82,6 @@
  * \snippet qs_i2c_master_callback.c run_initialize_i2c
  *
  * \subsection asfdoc_samd20_sercom_i2c_master_callback_use_case_setup_workflow Workflow
- * -# Initialize system.
- *  \snippet qs_i2c_master_callback.c system_init
  * -# Configure and enable module.
  *  \snippet qs_i2c_master_callback.c init_conf
  *  -# Create and initialize configuration structure.
@@ -94,7 +92,7 @@
  *   \snippet qs_i2c_master_callback.c init_module
  *  -# Enable the module.
  *   \snippet qs_i2c_master_callback.c enable_module
- * -# Configure callback funtionality.
+ * -# Configure callback functionality.
  *  \snippet qs_i2c_master_callback.c config_callback
  *  -# Register write complete callback.
  *   \snippet qs_i2c_master_callback.c callback_reg
@@ -118,7 +116,7 @@
  *
  * \subsection asfdoc_samd20_sercom_i2c_master_callback_use_case_callback_workflow Workflow
  * - Write complete callback:
- *  -# Send every other packet in reversed orded.
+ *  -# Send every other packet in reversed order.
  *   \snippet qs_i2c_master_callback.c revert_order
  *  -# Write new packet to slave.
  *   \snippet qs_i2c_master_callback.c write_next
