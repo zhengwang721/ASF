@@ -1,5 +1,8 @@
 <asf xmlversion="1.0">
-	<project caption="HTTP Netconn Example for SAM4E-EK" id="thirdparty.lwip.http_netconn_example.sam4e_ek">
+	<project id="thirdparty.lwip.http_netconn_example.sam4e_ek" caption="lwIP TCP/IP Stack HTTP stats example using Netconn API for SAM4E-EK">
+		<info type="description" value="summary">
+			HTTP web server using the lwIP TCP/IP stack Netconn API (i.e. with RTOS support). The home page provides RTOS and lwIP stats information.
+		</info>
 		<build type="include-path" value="."/>
 		<build type="include-path" value=".."/>
 		<build type="header-file" value="conf_board.h"/>

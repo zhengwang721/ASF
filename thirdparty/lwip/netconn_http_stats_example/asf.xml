@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
-	<module type="application" id="thirdparty.lwip.http_netconn_example" caption="HTTP Netconn Example">
+	<module type="application" id="thirdparty.lwip.http_netconn_example" caption="lwIP TCP/IP Stack HTTP stats example using Netconn API">
 		<info type="description" value="summary">
-			LwIP based example using the netconn APIs.
+			HTTP web server using the lwIP TCP/IP stack Netconn API (i.e. with RTOS support). The home page provides RTOS and lwIP stats information.
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="Communication" />
