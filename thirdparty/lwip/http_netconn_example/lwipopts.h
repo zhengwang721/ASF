@@ -193,10 +193,10 @@
 */
 
 /** The stack sizes allocated to the netif stack: (256 * 4) = 1048 bytes. */
-#define GMAC_TASK_STACKSIZE               256
+#define netifINTERFACE_TASK_STACK_SIZE    256
 
 /** The priority of the netif stack. */
-#define GMAC_TASK_PRIORITY                (tskIDLE_PRIORITY + 4)
+#define netifINTERFACE_TASK_PRIORITY      (tskIDLE_PRIORITY + 4)
 
 /** The stack sizes allocated to the TCPIP stack: (256 * 4) = 1048 bytes. */
 #define TCPIP_THREAD_STACKSIZE            256

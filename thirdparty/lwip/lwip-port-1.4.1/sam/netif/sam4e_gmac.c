@@ -642,7 +642,7 @@ err_t ethernetif_init(struct netif *netif)
 		return ERR_MEM;
 
 	id = sys_thread_new("GMAC", gmac_task, &gs_gmac_dev,
-			GMAC_TASK_STACKSIZE, GMAC_TASK_PRIORITY);
+			netifINTERFACE_TASK_STACK_SIZE, netifINTERFACE_TASK_PRIORITY);
 	LWIP_ASSERT("ethernetif_init: GMAC Task allocation ERROR!\n",
 			(id != 0));
 	if (id == 0)
