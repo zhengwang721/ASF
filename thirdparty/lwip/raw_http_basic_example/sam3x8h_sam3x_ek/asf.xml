@@ -1,18 +1,17 @@
 <asf xmlversion="1.0">
-	<project caption="LwIP example for SAM3X_EK" id="common.services.network.tcpip.lwip.example.sam3x_ek">
+	<project id="thirdparty.lwip.raw_basic_http_example.sam3x_ek" caption="lwIP TCP/IP Stack basic HTTP example using Raw API for SAM3X-EK">
 		<info type="description" value="summary">
-		Ethernet example with ethernet MAC, process simple ethernet packets.
+			Basic HTTP web server using the lwIP TCP/IP stack Raw API in standalone mode (i.e. without RTOS support).
 		</info>
 		<build type="include-path" value="."/>
+		<build type="header-file" value="lwipopts.h"/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clock.h"/>
 		<build type="header-file" value="conf_eth.h"/>
-		<build type="include-path" value="."/>
-		<config name="config.board.sam3x_ek.init" value="no"/>
-		<config name="config.thirdparty.lwip-port.140" value="standalone_sam3x"/>
-		<config name="config.thirdparty.lwip.version" value="1.4.0"/>
-		<require idref="common.services.network.tcpip.lwip.example"/>
 		<build type="header-file" value="conf_uart_serial.h"/>
+		<config name="config.thirdparty.lwip-port.141" value="standalone_sam3x"/>
+		<config name="config.thirdparty.lwip.version" value="1.4.1"/>
+		<require idref="thirdparty.lwip.raw_basic_http_example"/>
 		<require idref="board.sam3x_ek"/>
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
