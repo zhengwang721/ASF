@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Timer management for lwIP example.
+ * \brief Timer management for the lwIP Raw HTTP basic example.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,75 +42,71 @@
  */
 
 #include "board.h"
-#include "timer_mgt_sam.h"
+#include "timer_mgt.h"
 #include "tc.h"
 #include "pmc.h"
 #include "sysclk.h"
+#include "lwip/init.h"
 #include "lwip/sys.h"
-/** Clock tick count */
+
+/* Clock tick count. */
 static volatile uint32_t gs_ul_clk_tick;
 
 /**
- *  Interrupt handler for TC0 interrupt.
+ * TC0 Interrupt handler.
  */
 void TC0_Handler(void)
 {
-	/* Remove warnings */
+	/* Remove warnings. */
 	volatile uint32_t ul_dummy;
 
-	/* Clear status bit to acknowledge interrupt */
+	/* Clear status bit to acknowledge interrupt. */
 	ul_dummy = TC0->TC_CHANNEL[0].TC_SR;
 
-	/* Increase tick */
+	/* Increase tick. */
 	gs_ul_clk_tick++;
 }
 
 /**
- * \brief Initialize for timing operation.
+ * \brief Initialize the timer counter (TC0).
  */
 void sys_init_timing(void)
 {
 	uint32_t ul_div;
 	uint32_t ul_tcclks;
 
-	/* Clear tick value */
+	/* Clear tick value. */
 	gs_ul_clk_tick = 0;
 
-	/* Configure PMC */
+	/* Configure PMC. */
 	pmc_enable_periph_clk(ID_TC0);
 
-	/** Configure TC for a 4Hz frequency and trigger on RC compare. */
+	/* Configure TC for a 1Hz frequency and trigger on RC compare. */
 	tc_find_mck_divisor(1000,
 			sysclk_get_main_hz(), &ul_div, &ul_tcclks,
 			sysclk_get_main_hz());
 	tc_init(TC0, 0, ul_tcclks | TC_CMR_CPCTRG);
 	tc_write_rc(TC0, 0, (sysclk_get_main_hz() / ul_div) / 1000);
 
-	/* Configure and enable interrupt on RC compare */
+	/* Configure and enable interrupt on RC compare. */
 	NVIC_EnableIRQ((IRQn_Type)ID_TC0);
 	tc_enable_interrupt(TC0, 0, TC_IER_CPCS);
 
-	/* Start timer */
+	/* Start timer. */
 	tc_start(TC0, 0);
 }
 
 /**
- * \brief Read for clock time (ms).
+ * \brief Return the number of timer ticks (ms).
  */
 uint32_t sys_get_ms(void)
 {
 	return gs_ul_clk_tick;
 }
 
-#if (THIRDPARTY_LWIP_VERSION != 132)
-
-/* See lwip/sys.h for more information
-   Returns number of milliseconds expired
-   since lwip is initialized
-*/
+#if ((LWIP_VERSION) != ((1U << 24) | (3U << 16) | (2U << 8) | (LWIP_VERSION_RC)))
 u32_t sys_now(void)
 {
 	return (sys_get_ms());
 }
-
 #endif

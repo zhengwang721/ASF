@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Standalone lwIP example for SAM.
+ * \brief lwIP Raw HTTP basic example.
  *
  * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -42,13 +42,13 @@
  */
 
 /**
- *  \mainpage Standalone lwIP example
+ *  \mainpage lwIP Raw HTTP basic example
  *
  *  \section Purpose
  *  This documents data structures, functions, variables, defines, enums, and
- *  typedefs in the software for the lwIP standalone example.
+ *  typedefs in the software for the lwIP Raw HTTP basic example.
  *
- *  The given example is a lwIP example using the current lwIP stack and EMAC driver.
+ *  The given example is a lwIP example using the current lwIP stack and MAC driver.
  *
  *  \section Requirements
  *
@@ -56,7 +56,7 @@
  *
  *  \section Description
  *
- *  This example features simple lwIP web server.
+ *  This example features a simple lwIP web server.
  *  - Plug the Ethernet cable directly into the evaluation kit to connect to the PC.
  *  - Configuring the PC network port to local mode to setup a 'point to point' network.
  *  - Start the example.
@@ -83,44 +83,24 @@
  *    - 1 stop bit
  *    - No flow control
  *  -# In the terminal window, the
- *     following text should appear (values depend on the board and the chip used):
+ *     following text should appear (if DHCP mode is not enabled):
  *     \code
- *      LwIP: DHCP StartedNetwork upIP=xxx.xxx.xxx.xxx
+ *      Network up IP==xxx.xxx.xxx.xxx
+ *      Static IP Address Assigned
  *     \endcode
- *  -# The application will output converted value to hyperterminal and display
- *     a menu for users to set different modes.
  *
  */
 
-#include "ethernet_sam.h"
 #include "sysclk.h"
 #include "ioport.h"
 #include "stdio_serial.h"
+#include "ethernet.h"
+#include "httpd.h"
 
-/**
- * \brief Set peripheral mode for IOPORT pins.
- * It will configure port mode and disable pin mode (but enable peripheral).
- * \param port IOPORT port to configure
- * \param masks IOPORT pin masks to configure
- * \param mode Mode masks to configure for the specified pin (\ref ioport_modes)
- */
-#define ioport_set_port_peripheral_mode(port, masks, mode) \
-	do {\
-		ioport_set_port_mode(port, masks, mode);\
-		ioport_disable_port(port, masks);\
-	} while (0)
-/**
- *  \brief Configure board PIOs.
- */
-static void init_board(void)
-{
-	/* Disable the watchdog */
-	WDT->WDT_MR = WDT_MR_WDDIS;
-
-	/* Configure UART pins */
-	ioport_set_port_peripheral_mode(PINS_UART0_PORT, PINS_UART0,
-			PINS_UART0_MASK);
-}
+#define STRING_EOL    "\n"
+#define STRING_HEADER "-- Raw HTTP Basic Example --"STRING_EOL \
+		"-- "BOARD_NAME" --"STRING_EOL \
+		"-- Compiled: "__DATE__" "__TIME__" --"STRING_EOL
 
 /**
  *  \brief Configure UART console.
@@ -132,7 +112,7 @@ static void configure_console(void)
 		.paritytype = CONF_UART_PARITY
 	};
 
-	/* Configure console UART. */
+	/* Configure UART console. */
 	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
 	stdio_serial_init(CONF_UART, &uart_serial_options);
 #if defined(__GNUC__)
@@ -141,26 +121,30 @@ static void configure_console(void)
 }
 
 /**
- * \brief Main function: Responsible for configuring the hardware,
- * ethernet, and other services. It also maintains the lwIP timers,
- * and processes any packets that are received.
+ * \brief Main program function. Configure the hardware, initialize lwIP
+ * TCP/IP stack, and start HTTP service.
  */
 int main(void)
 {
-	/* Initialize the SAM system */
+	/* Initialize the SAM system. */
 	sysclk_init();
-	init_board();
+	board_init();
 
-	/* Configure debug uart */
+	/* Configure debug UART */
 	configure_console();
 
-	/* Bring up the ethernet interface & initializes timer0, channel0 */
+	/* Print example information. */
+	puts(STRING_HEADER);
+
+	/* Bring up the ethernet interface & initialize timer0, channel0. */
 	init_ethernet();
 
-	/* This is the main polling loop */
+	/* Bring up the web server. */
+	httpd_init();
+
+	/* Program main loop. */
 	while (1) {
-		/* Check if any packets are available and process if they are
-		 * ready. That function also manages the lwIP timers */
+		/* Check for input packet and process it. */
 		ethernet_task();
 	}
 }

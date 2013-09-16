@@ -17,6 +17,13 @@
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>
 		<generator value="doxygen"/>
+		<config name="config.compiler.armgcc.create_aux" value="no"/>
+		<config name="config.compiler.iarewarm.create_aux" value="no"/>
+		<config name="config.compiler.as5_arm.create_aux" value="no"/>
+		<config name="config.compiler.armgcc.stack_size" value="0x200"/>
+		<config name="config.compiler.armgcc.heap_size" value="0"/>
+		<config name="config.compiler.iarewarm.sys_stack_size" value="0x200"/>
+		<config name="config.compiler.iarewarm.heap_size" value="0"/>
 		<device-support value="atsam4e16e"/>
 	</project>
 </asf>

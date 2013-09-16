@@ -57,6 +57,10 @@
 #include "lwip/igmp.h"
 #include "lwip/dns.h"
 
+/** Fix lwIP warning in standalone mode */
+#if NO_SYS
+#include "lwip/sys.h"
+#endif
 
 /** The one and only timeout list */
 static struct sys_timeo *next_timeout;
@@ -241,7 +245,6 @@ void sys_timeouts_init(void)
 #endif /* LWIP_DNS */
 
 #if NO_SYS
-#include "lwip/sys.h"
   /* Initialise timestamp for sys_check_timeouts */
   timeouts_last_time = sys_now();
 #endif

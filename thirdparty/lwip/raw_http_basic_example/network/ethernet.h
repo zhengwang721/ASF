@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Ethernet management definitions for the Standalone lwIP example.
+ * \brief Ethernet management for the lwIP Raw HTTP basic example.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,8 +41,8 @@
  *
  */
 
-#ifndef ETHERNET_SAM_H_INCLUDED
-#define ETHERNET_SAM_H_INCLUDED
+#ifndef ETHERNET_H_INCLUDED
+#define ETHERNET_H_INCLUDED
 
 #include <lwip/netif.h>
 
@@ -54,24 +54,8 @@ extern "C" {
 /**INDENT-ON**/
 /// @endcond
 
-/**
- * \brief Initialize the ethernet interface.
- *
- */
 void init_ethernet(void);
-
-/**
- * \brief Status callback used to print address given by DHCP.
- *
- * \param netif Instance to network interface.
- *
- */
 void status_callback(struct netif *netif);
-
-/**
- * \brief Manage the ethernet packets, if any received process them.
- *
- */
 void ethernet_task(void);
 
 /// @cond 0
@@ -82,4 +66,4 @@ void ethernet_task(void);
 /**INDENT-ON**/
 /// @endcond
 
-#endif /* ETHERNET_SAM_H_INCLUDED */
+#endif /* ETHERNET_H_INCLUDED */

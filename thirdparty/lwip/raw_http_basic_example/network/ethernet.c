@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Ethernet management for the standalone lwIP example.
+ * \brief Ethernet management for the lwIP Raw HTTP basic example.
  *
  * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -43,14 +43,18 @@
 
 #include <string.h>
 #include "board.h"
-#include "ethernet_sam.h"
-#if SAM3XA
-#include "emac.h"
-#else
-#include "gmac.h"
-#endif
+#include "ethernet.h"
 #include "ethernet_phy.h"
-#include "timer_mgt_sam.h"
+#if SAM3XA
+# include "emac.h"
+# include "netif/ethernetif.h"
+#elif SAM4E
+# include "gmac.h"
+# include "netif/sam4e_gmac.h"
+#else
+# error Unsupported chip type
+#endif
+#include "timer_mgt.h"
 #include "sysclk.h"
 /* lwIP includes */
 #include "lwip/sys.h"
@@ -64,29 +68,24 @@
 #include "lwip/init.h"
 #include "lwip/ip_frag.h"
 #if ( (LWIP_VERSION) == ((1U << 24) | (3U << 16) | (2U << 8) | (LWIP_VERSION_RC)) )
-#include "netif/loopif.h"
+# include "netif/loopif.h"
 #else
-#include "lwip/inet.h"
-#include "lwip/tcp_impl.h"
+# include "lwip/inet.h"
+# include "lwip/tcp_impl.h"
 #endif
 #include "netif/etharp.h"
-#include "netif/ethernetif.h"
 
-#if defined(HTTP_RAW_USED)
-#include "httpd.h"
-#endif
-
-/* Global variable containing MAC Config (hw addr, IP, GW, ...) */
+/* Global variable containing MAC configuration (hw addr, IP, GW, etc). */
 struct netif gs_net_if;
 
-/* Timer for calling lwIP tmr functions without system */
+/* Timer structure for calling lwIP tmr functions without RTOS. */
 typedef struct timers_info {
 	uint32_t timer;
 	uint32_t timer_interval;
 	void (*timer_func)(void);
 } timers_info_t;
 
-/* LwIP tmr functions list */
+/* LwIP tmr functions list. */
 static timers_info_t gs_timers_table[] = {
 	{0, TCP_TMR_INTERVAL, tcp_tmr},
 	{0, IP_TMR_INTERVAL, ip_reass_tmr},
@@ -105,7 +104,7 @@ static timers_info_t gs_timers_table[] = {
 };
 
 /**
- * \brief Process timing functions.
+ * \brief Timer management function.
  */
 static void timers_update(void)
 {
@@ -139,7 +138,7 @@ static void timers_update(void)
 }
 
 /**
- *  \brief Set ethernet config.
+ * \brief Configure network interface driver.
  */
 static void ethernet_configure_interface(void)
 {
@@ -147,9 +146,11 @@ static void ethernet_configure_interface(void)
 	extern err_t ethernetif_init(struct netif *netif);
 
 #if defined(DHCP_USED)
+		/* DHCP mode. */
 	x_ip_addr.addr = 0;
 	x_net_mask.addr = 0;
 #else
+	/* Fixed IP mode. */
 	/* Default ip addr */
 	IP4_ADDR(&x_ip_addr, ETHERNET_CONF_IPADDR0, ETHERNET_CONF_IPADDR1,
 			ETHERNET_CONF_IPADDR2, ETHERNET_CONF_IPADDR3);
@@ -166,8 +167,10 @@ static void ethernet_configure_interface(void)
 #endif
 
 	/* Add data to netif */
-	netif_add(&gs_net_if, &x_ip_addr, &x_net_mask, &x_gateway, NULL,
-			ethernetif_init, ethernet_input);
+	if (NULL == netif_add(&gs_net_if, &x_ip_addr, &x_net_mask, &x_gateway, NULL,
+			ethernetif_init, ethernet_input)) {
+		LWIP_ASSERT("NULL == netif_add", 0);
+	}
 
 	/* Make it the default interface */
 	netif_set_default(&gs_net_if);
@@ -177,61 +180,59 @@ static void ethernet_configure_interface(void)
 
 	/* Bring it up */
 #if defined(DHCP_USED)
-	printf("LwIP: DHCP Started");
-	dhcp_start(&gs_net_if);
+	/* DHCP mode. */
+	if (ERR_OK != dhcp_start(&gs_net_if)) {
+		LWIP_ASSERT("ERR_OK != dhcp_start", 0);
+	}
+	printf("DHCP Started\n");
 #else
-	printf("LwIP: Static IP Address Assigned");
+	/* Static mode. */
 	netif_set_up(&gs_net_if);
-#endif
-}
-
-/** \brief Create ethernet task, for ethernet management.
- *
- */
-void init_ethernet(void)
-{
-	/* Initialize lwIP */
-	lwip_init();
-
-	/* Set hw and IP parameters, initialize MAC too */
-	ethernet_configure_interface();
-
-	/* Init timer service */
-	sys_init_timing();
-
-#if defined(HTTP_RAW_USED)
-	/* Bring up the web server */
-	httpd_init();
+	printf("Static IP Address Assigned\n");
 #endif
 }
 
 /**
- *  \brief Status callback used to print address given by DHCP.
+ * \brief Initialize the lwIP TCP/IP stack with the network interface driver.
+ */
+void init_ethernet(void)
+{
+	/* Initialize lwIP. */
+	lwip_init();
+
+	/* Set hw and IP parameters, initialize MAC too. */
+	ethernet_configure_interface();
+
+	/* Initialize timer. */
+	sys_init_timing();
+}
+
+/**
+ * \brief Callback function used to print the given IP address when the link
+ * is up.
  *
- * \param netif Instance to network interface.
+ * \param netif The network interface instance.
  */
 void status_callback(struct netif *netif)
 {
-	int8_t c_mess[25];
+	int8_t c_mess[20];
 	if (netif_is_up(netif)) {
-		printf("Network up");
 		strcpy((char*)c_mess, "IP=");
 		strcat((char*)c_mess, inet_ntoa(*(struct in_addr *)&(netif->ip_addr)));
-		printf((char const*)c_mess);
+		printf("Network up %s\n", (char const*)c_mess);
 	} else {
-		printf("Network down");
+		printf("Network down\n");
 	}
 }
 
 /**
- *  \brief Manage the Ethernet packets, if any received process them.
- *  After processing any packets, manage the lwIP timers.
+ * \brief Process incoming ethernet frames, then update timers.
  */
 void ethernet_task(void)
 {
-	/* Run polling tasks */
+	/* Poll the network interface driver for incoming ethernet frames. */
 	ethernetif_input(&gs_net_if);
 
-	/* Run periodic tasks */
+	/* Update the periodic timer. */
 	timers_update();
 }
