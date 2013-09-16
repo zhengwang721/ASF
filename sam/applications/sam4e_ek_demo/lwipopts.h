@@ -121,9 +121,7 @@
 /**
  * PBUF_POOL_SIZE: the number of buffers in the pbuf pool.
  */
-#ifndef PBUF_POOL_SIZE
 #define PBUF_POOL_SIZE                  10
-#endif
 
 /**
  * PBUF_POOL_BUFSIZE: the size of each pbuf in the pbuf pool. The default is

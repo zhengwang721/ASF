@@ -49,6 +49,6 @@ struct fs_file {
 	int len;
 };
 
-extern int fs_open(char *name, struct fs_file *file);
+int fs_open(char *name, struct fs_file *file);
 
 #endif /* __FS_H__ */
