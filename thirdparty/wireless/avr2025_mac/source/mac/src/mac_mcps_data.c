@@ -556,7 +556,10 @@ void mac_process_data_frame(buffer_t *buf_ptr)
 					if(FCF_SHORT_ADDR == mdi->SrcAddrMode
 					&& (uint16_t)(mdi->SrcAddr) == mac_pan_gts_table[loop_index].DevShortAddr
 					&& GTS_TX_SLOT == mac_pan_gts_table[loop_index].GtsDesc.GtsDirection)
-					{
+					{   
+						#ifdef GTS_DEBUG
+						port_pin_toggle_output_level(DEBUG_PIN11);//coord rx
+						#endif
 						reset_gts_expiry(&mac_pan_gts_table[loop_index]);
 						break;
 					}
