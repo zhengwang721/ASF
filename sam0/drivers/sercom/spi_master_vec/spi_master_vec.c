@@ -241,6 +241,33 @@ void spi_master_vec_disable(struct spi_master_vec_module *const module)
 }
 
 /**
+ * \brief Reset the SERCOM SPI module
+ *
+ * This function will disable and reset the SPI module to its power on default
+ * values.
+ *
+ * \param[in,out] module Pointer to a driver instance.
+ */
+void spi_master_vec_reset(struct spi_master_vec_module *const module)
+{
+	/* Sanity check arguments */
+	Assert(module);
+	Assert(module->sercom);
+
+	SercomSpi *const spi_hw = &(module->sercom->SPI);
+
+	/* Disable the module */
+	spi_master_vec_disable(module);
+
+	while (spi_hw->STATUS.reg & SERCOM_SPI_STATUS_SYNCBUSY) {
+		/* Intentionally left empty */
+	}
+
+	/* Software reset the module */
+	spi_hw->CTRLA.reg |= SERCOM_SPI_CTRLA_SWRST;
+}
+
+/**
  * \brief Start vectored I/O transfer
  *
  * This function initiates a uni- or bidirectional SPI transfer from/to any
@@ -345,33 +372,6 @@ enum status_code spi_master_vec_transceive_buffer_job(
 	spi_hw->INTENSET.reg = tmp_intenset;
 
 	return STATUS_OK;
-}
-
-/**
- * \brief Reset the SERCOM SPI module
- *
- * This function will disable and reset the SPI module to its power on default
- * values.
- *
- * \param[in,out] module Pointer to a driver instance.
- */
-void spi_master_vec_reset(const struct spi_master_vec_module *const module)
-{
-	/* Sanity check arguments */
-	Assert(module);
-	Assert(module->sercom);
-
-	SercomSpi *const spi_hw = &(module->sercom->SPI);
-
-	/* Disable the module */
-	spi_master_vec_disable(module);
-
-	while (spi_hw->STATUS.reg & SERCOM_SPI_STATUS_SYNCBUSY) {
-		/* Intentionally left empty */
-	}
-
-	/* Software reset the module */
-	spi_hw->CTRLA.reg |= SERCOM_SPI_CTRLA_SWRST;
 }
 
 /**

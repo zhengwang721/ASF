@@ -240,7 +240,7 @@ enum status_code spi_master_vec_init(struct spi_master_vec_module *const module,
 
 void spi_master_vec_enable(const struct spi_master_vec_module *const module);
 void spi_master_vec_disable(struct spi_master_vec_module *const module);
-void spi_master_vec_reset(const struct spi_master_vec_module *const module);
+void spi_master_vec_reset(struct spi_master_vec_module *const module);
 
 /** @} */
 
