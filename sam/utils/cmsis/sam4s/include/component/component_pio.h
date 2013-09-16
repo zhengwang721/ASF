@@ -104,9 +104,8 @@ typedef struct {
   __O  uint32_t PIO_FELLSR;     /**< \brief (Pio Offset: 0x00D0) Falling Edge/Low Level Select Register */
   __O  uint32_t PIO_REHLSR;     /**< \brief (Pio Offset: 0x00D4) Rising Edge/ High Level Select Register */
   __I  uint32_t PIO_FRLHSR;     /**< \brief (Pio Offset: 0x00D8) Fall/Rise - Low/High Status Register */
-  __I  uint32_t Reserved11[2];
+  __I  uint32_t Reserved11[1];
   __I  uint32_t PIO_LOCKSR;     /**< \brief (Pio Offset: 0x00E0) Lock Status */
-  //RoReg PIO_LOCKSR;     /**< \brief (Pio Offset: 0x00E0) Lock Status */
   __IO uint32_t PIO_WPMR;       /**< \brief (Pio Offset: 0x00E4) Write Protect Mode Register */
   __I  uint32_t PIO_WPSR;       /**< \brief (Pio Offset: 0x00E8) Write Protect Status Register */
   __I  uint32_t Reserved12[5];
