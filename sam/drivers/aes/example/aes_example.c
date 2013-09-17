@@ -415,10 +415,10 @@ Pdc *g_p_aes_pdc;
 static void aes_pdc_callback(void)
 {
 	state = true;
-	pdc_tx_init(g_p_aes_pdc, &g_pdc_tx_packet, NULL);
-	pdc_rx_init(g_p_aes_pdc, &g_pdc_rx_packet, NULL);
 	pdc_disable_transfer(g_p_aes_pdc,
 			PERIPH_PTCR_RXTDIS | PERIPH_PTCR_TXTDIS);
+	pdc_tx_init(g_p_aes_pdc, &g_pdc_tx_packet, NULL);
+	pdc_rx_init(g_p_aes_pdc, &g_pdc_rx_packet, NULL);
 }
 
 /**
