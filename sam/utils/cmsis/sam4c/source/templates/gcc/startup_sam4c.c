@@ -182,10 +182,6 @@ const DeviceVectors exception_table = {
 	.pfnPWM_Handler    = (void*) PWM_Handler,    /* 41 Pulse Width Modulation */
 };
 
-/* TEMPORARY PATCH FOR SCB */
-#define SCB_VTOR_TBLBASE_Pos               29                            /*!< SCB VTOR: TBLBASE Position */
-#define SCB_VTOR_TBLBASE_Msk               (1UL << SCB_VTOR_TBLBASE_Pos) /*!< SCB VTOR: TBLBASE Mask */
-
 /**
  * \brief This is the code that gets called on processor reset.
  * To initialize the device, and call the main() routine.
@@ -211,12 +207,7 @@ void Reset_Handler(void)
 
 	/* Set the vector table base address */
 	pSrc = (uint32_t *) & _sfixed;
-	SCB->VTOR = ((uint32_t) pSrc & SCB_VTOR_TBLOFF_Msk);
-#if defined(SAM4C_0)
-	if (((uint32_t) pSrc >= IRAM0_ADDR) && ((uint32_t) pSrc < IRAM0_ADDR + IRAM0_SIZE)) {
-		SCB->VTOR |= 1 << SCB_VTOR_TBLBASE_Pos;
-	}
-#endif
+	SCB->VTOR = (uint32_t)pSrc;
 
 #if __FPU_USED
 	/* Enable FPU */
