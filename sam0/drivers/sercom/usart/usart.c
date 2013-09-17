@@ -72,45 +72,28 @@ static enum status_code _usart_check_config(
 	SercomUsart *const usart_hw = &(module->hw->USART);
 	Sercom *const hw = (module->hw);
 
-	uint32_t pad0 = config->pinmux_pad0;
-	uint32_t pad1 = config->pinmux_pad1;
-	uint32_t pad2 = config->pinmux_pad2;
-	uint32_t pad3 = config->pinmux_pad3;
+	uint32_t pad_pinmuxes[] = {
+		config->pinmux_pad0, config->pinmux_pad1,
+		config->pinmux_pad2, config->pinmux_pad3
+	};
 
-	/* SERCOM PAD0 */
-	if (pad0 == PINMUX_DEFAULT) {
-		pad0 = _sercom_get_default_pad(hw, 0);
-	}
-	if ((pad0 != PINMUX_UNUSED) && ((pad0 & 0xFFFF)!=
-			system_pinmux_pin_get_mux_position(pad0 >> 16))) {
-		return STATUS_ERR_DENIED;
-	}
+	/* Compare the current SERCOM pins against the user configuration */
+	for (uint8_t pad = 0; pad < 4; pad++) {
+		uint32_t current_pinmux = pad_pinmuxes[pad];
 
-	/* SERCOM PAD1 */
-	if (pad1 == PINMUX_DEFAULT) {
-		pad1 = _sercom_get_default_pad(hw, 1);
-	}
-	if ((pad1 != PINMUX_UNUSED) && ((pad1 & 0xFFFF) !=
-			system_pinmux_pin_get_mux_position(pad1 >> 16))) {
-		return STATUS_ERR_DENIED;
-	}
+		if (current_pinmux == PINMUX_DEFAULT) {
+			current_pinmux = _sercom_get_default_pad(hw, pad);
+		}
 
-	/* SERCOM PAD2 */
-	if (pad2 == PINMUX_DEFAULT) {
-		pad2 = _sercom_get_default_pad(hw, 2);
-	}
-	if ((pad2 != PINMUX_UNUSED) && ((pad2 & 0xFFFF) !=
-			system_pinmux_pin_get_mux_position(pad2 >> 16))) {
-		return STATUS_ERR_DENIED;
-	}
+		if (current_pinmux == PINMUX_UNUSED) {
+			continue;
+		}
 
-	/* SERCOM PAD3 */
-	if (pad3 == PINMUX_DEFAULT) {
-		pad3 = _sercom_get_default_pad(hw, 3);
-	}
-	if ((pad3 != PINMUX_UNUSED) && ((pad3 & 0xFFFF) !=
-			system_pinmux_pin_get_mux_position(pad3 >> 16))) {
-		return STATUS_ERR_DENIED;
+		if ((current_pinmux & 0xFFFF) !=
+				system_pinmux_pin_get_mux_position(current_pinmux >> 16)) {
+			module->hw = NULL;
+			return STATUS_ERR_DENIED;
+		}
 	}
 
 	/* Find baud value and compare it */

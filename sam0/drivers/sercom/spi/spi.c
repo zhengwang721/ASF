@@ -257,6 +257,10 @@ static enum status_code _spi_check_config(
 			current_pinmux = _sercom_get_default_pad(hw, pad);
 		}
 
+		if (current_pinmux == PINMUX_UNUSED) {
+			continue;
+		}
+
 		if ((current_pinmux & 0xFFFF) !=
 				system_pinmux_pin_get_mux_position(current_pinmux >> 16)) {
 			module->hw = NULL;
