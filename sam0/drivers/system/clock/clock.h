@@ -1200,7 +1200,7 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *	     This driver will enable and configure the DFLL before the ONDEMAND bit is set.
  *	</td>
  *	</tr>
- *	
+ *
  *
  *
  * \section asfdoc_samd20_system_clock_extra_history Module History
@@ -1213,9 +1213,13 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *	<tr>
  *		<th>Changelog</th>
  *	</tr>
+ *  <tr>
+ *      <td>Fixed \c system_gclk_chan_disable() deadlocking if a channel is enabled
+ *          and configured to a failed/not running clock generator.</td>
+ *  </tr>
  *	<tr>
  *		<td>
- *			\li Changed default value for CONF_CLOCK_DFLL_ON_DEMAND from true to false
+ *			\li Changed default value for CONF_CLOCK_DFLL_ON_DEMAND from \c true to \c false.
  *		</td>
  *	</tr>
  *	<tr>
