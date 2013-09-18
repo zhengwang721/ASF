@@ -73,10 +73,6 @@ void configure_dfll_open_loop(void)
 	system_clock_source_dfll_get_config_defaults(&config_dfll);
 //! [config_dfll_get_defaults]
 
-//! [config_dfll_change_defaults]
-	config_dfll.on_demand = false;
-//! [config_dfll_change_defaults]
-
 //! [config_dfll_set_config]
 	system_clock_source_dfll_set_config(&config_dfll);
 //! [config_dfll_set_config]

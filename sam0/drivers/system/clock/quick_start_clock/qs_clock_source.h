@@ -94,10 +94,6 @@
  *
  *  \snippet qs_clock_source.c config_dfll_get_defaults
  *
- * -# Alter the DFLL module configuration struct to leave the DFLL enabled at
- *    all times.
- *  \snippet qs_clock_source.c config_dfll_change_defaults
- *
  * -# Write the new configuration to the DFLL module.
  *  \snippet qs_clock_source.c config_extosc32k_set_config
  *
