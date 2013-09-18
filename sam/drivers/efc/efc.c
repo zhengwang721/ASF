@@ -183,7 +183,7 @@ uint32_t efc_get_wait_state(Efc *p_efc)
 /**
  * \brief Perform the given command and wait until its completion (or an error).
  *
- * \note Unique ID commands are not supported, use efc_read_unique_id.
+ * \note Unique ID commands are not supported, use efc_perform_read_sequence.
  *
  * \param p_efc Pointer to an EFC instance.
  * \param ul_command Command to perform.
