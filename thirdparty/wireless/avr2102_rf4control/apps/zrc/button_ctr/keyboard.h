@@ -46,12 +46,11 @@
 
 #include "xmega_a3bu_xplained.h"
 
-typedef enum key_id_tag
-{
-  BUTTON_0,
-  BUTTON_1,
-  BUTTON_2
-}SHORTENUM key_id_t;
+typedef enum key_id_tag {
+	BUTTON_0,
+	BUTTON_1,
+	BUTTON_2
+} SHORTENUM key_id_t;
 
 #define MAX_KEYS 3
 
@@ -70,14 +69,11 @@ typedef enum key_id_tag
 /**
  * @brief Button action
  */
-typedef enum key_state_tag
-{
-    /** Button is pressed. */
-    KEY_PRESSED,
-    /** Button is released. */
-    KEY_RELEASED
+typedef enum key_state_tag {
+	/** Button is pressed. */
+	KEY_PRESSED,
+	/** Button is released. */
+	KEY_RELEASED
 } SHORTENUM key_state_t;
-
-
 
 #endif /* KEYBOARD_H_INCLUDED */

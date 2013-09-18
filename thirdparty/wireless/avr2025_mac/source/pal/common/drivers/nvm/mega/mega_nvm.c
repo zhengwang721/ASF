@@ -62,7 +62,7 @@ status_code_t nvm_read_char(mem_type_t mem, uint32_t address, uint8_t *data)
 {
 	switch (mem) {
 	case INT_FLASH:
-		flash_read(address,1,data);
+		flash_read(address, 1, data);
 		break;
 
 	default:
@@ -76,9 +76,9 @@ status_code_t nvm_write_char(mem_type_t mem, uint32_t address, uint8_t data)
 {
 	switch (mem) {
 	case INT_FLASH:
-		flash_write(address,1,&data);
+		flash_write(address, 1, &data);
 		break;
-	
+
 	default:
 		return ERR_INVALID_ARG;
 	}
@@ -91,10 +91,9 @@ status_code_t nvm_read(mem_type_t mem, uint32_t address, void *buffer,
 {
 	switch (mem) {
 	case INT_FLASH:
-		flash_read(address,len,buffer);
+		flash_read(address, len, buffer);
 		break;
 
-	
 	default:
 		return ERR_INVALID_ARG;
 	}
@@ -107,7 +106,7 @@ status_code_t nvm_write(mem_type_t mem, uint32_t address, void *buffer,
 {
 	switch (mem) {
 	case INT_FLASH:
-		flash_write(address,len,buffer);
+		flash_write(address, len, buffer);
 		break;
 
 	default:
@@ -121,7 +120,7 @@ status_code_t nvm_page_erase(mem_type_t mem, uint32_t page_number)
 {
 	switch (mem) {
 	case INT_FLASH:
-                
+
 		flash_erase_page(page_number);
 
 		break;
@@ -140,8 +139,6 @@ status_code_t nvm_get_size(mem_type_t mem, uint32_t *size)
 		*size = (uint32_t)FLASH_SIZE;
 		break;
 
-	
-
 	default:
 		/* Other memories not supported */
 		return ERR_INVALID_ARG;
@@ -154,10 +151,9 @@ status_code_t nvm_get_page_size(mem_type_t mem, uint32_t *size)
 {
 	switch (mem) {
 	case INT_FLASH:
-	       *size = (uint32_t)FLASH_PAGE_SIZE;
+		*size = (uint32_t)FLASH_PAGE_SIZE;
 		break;
 
-	
 	default:
 		/* Other memories not supported */
 		return ERR_INVALID_ARG;
@@ -174,7 +170,6 @@ status_code_t nvm_get_pagenumber(mem_type_t mem, uint32_t address,
 		*num = (uint32_t)(address / FLASH_PAGE_SIZE);
 		break;
 
-	
 	default:
 		/* Other memories not supported */
 		return ERR_INVALID_ARG;
@@ -182,4 +177,3 @@ status_code_t nvm_get_pagenumber(mem_type_t mem, uint32_t address,
 
 	return STATUS_OK;
 }
-

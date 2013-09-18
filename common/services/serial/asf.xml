@@ -73,6 +73,7 @@
 			<device-support value="sam3"/>
 			<device-support value="sam4s"/>
 			<device-support value="sam4e"/>
+			<device-support value="sam4n"/>
 			<generator value="doxygen-module" default-mcu="unspecified-sam3s"/>
 		</module>
 		<module type="service" id="common.services.basic.serial#3" caption="USART - Serial interface- SAM implementation for devices with only USART">
@@ -118,6 +119,23 @@
 			<require idref="mega.drivers.usart"/>
 			<device-support value="megarf"/>
 			<generator value="doxygen-module" default-mcu="unspecified-mega"/>
+		</module>
+		<module type="service" id="common.services.basic.serial#5" caption="USART - Serial interface- SAM implementation for devices with only USART">
+			<info type="keyword" value="technology">
+				<keyword value="Communication"/>
+			</info>
+			<info type="description" value="summary">
+			Common API which abstracts the user from directly accessing the register and provides a generic serial interface using USART.
+			</info>
+			<build type="include-path" value="."/>
+			<build type="header-file" subtype="api" value="serial.h"/>
+			<build type="header-file" value="sam0_usart/usart_serial.h"/>
+			<build type="doxygen-entry-point" value="serial_group"/>
+			<build type="doxygen-quick-start" value="serial_quickstart"/>
+			<require idref="sam0.utils"/>
+			<require idref="sam0.drivers.sercom.usart"/>
+			<device-support value="sam0"/>
+			<generator value="doxygen-module" default-mcu="unspecified-samd20"/>
 		</module>
 	</select-by-device>
 </asf>

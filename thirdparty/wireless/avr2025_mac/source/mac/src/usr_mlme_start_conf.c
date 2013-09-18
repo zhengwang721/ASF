@@ -39,6 +39,7 @@
  *
  * \asf_license_stop
  */
+
 /*
  * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
@@ -59,12 +60,12 @@
 
 /* === Implementation ====================================================== */
 #if (defined __GNUC__)
-void __attribute__((weak))
-usr_mlme_start_conf(uint8_t status)
+void __attribute__((weak)) usr_mlme_start_conf(uint8_t status)
 #else
 void usr_mlme_start_conf(uint8_t status)
 #endif
 {
-    status = status;    /* Keep compiler happy. */
+	status = status; /* Keep compiler happy. */
 }
+
 /* EOF */

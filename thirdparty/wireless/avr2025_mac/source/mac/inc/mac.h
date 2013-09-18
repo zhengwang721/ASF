@@ -83,24 +83,21 @@
  *
  */
 
-
-
- /**
+/**
  * \ingroup group_mac
  * \defgroup group_mac_ds  MAC Data Structures
  *
  * This module defines all the MAC Data Structures
  *
  */
- 
- /**
-  * \ingroup group_mac
+
+/**
+ * \ingroup group_mac
  * \defgroup group_mac_def  MAC Definitions
  * All  Definitions used by the MAC Layer is described here.
  *
  */
- 
-  
+
 /**
  * \ingroup group_mac
  * \defgroup group_mac_prot MAC Prototypes
@@ -109,77 +106,68 @@
  *
  */
 
-
 /**
  * \ingroup group_mac_prot
  * \defgroup group_mcl_api MCL API's
  *
- * This module describes all Mac Core Layer(MCL) API's 
+ * This module describes all Mac Core Layer(MCL) API's
  */
 
- /**
+/**
  * \ingroup group_mcl_api
  * \defgroup group_mac_req_int MCL  Request API's
  *
- * This module describes all MCL  Request API's 
+ * This module describes all MCL  Request API's
  */
- 
 
- 
- /**
+/**
  * \ingroup group_mcl_api
  * \defgroup group_mac_gen_int MCL  General API's
  *
- * This module describes all MCL  General API's 
+ * This module describes all MCL  General API's
  */
- 
 
-
-  /**
+/**
  * \ingroup group_mcl_api
  * \defgroup group_mac_conf_int MCL  Confirmation API's
  *
- * This module describes all MCL  Confirmation API's 
+ * This module describes all MCL  Confirmation API's
  */
 
- 
- /**
+/**
  * \ingroup group_mcl_api
  * \defgroup group_mac_ind_int MCL  Indication API's
  *
- * This module describes all MCL  Indication API's 
+ * This module describes all MCL  Indication API's
  */
 
-
-
- /**
+/**
  * \ingroup group_mcl_api
  * \defgroup group_mac_resp_int MCL  Response API's
  *
- * This module describes all MCL  Response API's 
+ * This module describes all MCL  Response API's
  */
-
-
-
 
 /* === Macros =============================================================== */
 
-#if ((MAC_SCAN_ED_REQUEST_CONFIRM == 1)      || \
-     (MAC_SCAN_ACTIVE_REQUEST_CONFIRM == 1)  || \
-     (MAC_SCAN_PASSIVE_REQUEST_CONFIRM == 1) || \
-     (MAC_SCAN_ORPHAN_REQUEST_CONFIRM == 1))
+#if ((MAC_SCAN_ED_REQUEST_CONFIRM == 1)      ||	\
+	(MAC_SCAN_ACTIVE_REQUEST_CONFIRM == 1)  || \
+	(MAC_SCAN_PASSIVE_REQUEST_CONFIRM == 1) || \
+	(MAC_SCAN_ORPHAN_REQUEST_CONFIRM == 1))
+
 /**
  * Maximum allowed PANDescriptors that is calculated using the
  * large buffer size.
  */
 #define MAX_ALLOWED_PAN_DESCRIPTORS     ((LARGE_BUFFER_SIZE - \
-        sizeof(mlme_scan_conf_t)) / sizeof(wpan_pandescriptor_t))
+	sizeof(mlme_scan_conf_t)) / sizeof(wpan_pandescriptor_t))
+
 /**
  * Active/passive scan: implementation-defined maximum number of
  * PANDescriptors that can be stored.
  */
 #define MAX_PANDESCRIPTORS \
-        (MAX_ALLOWED_PAN_DESCRIPTORS > 5 ? 5 : MAX_ALLOWED_PAN_DESCRIPTORS)
+	(MAX_ALLOWED_PAN_DESCRIPTORS > 5 ? 5 : MAX_ALLOWED_PAN_DESCRIPTORS)
 #endif
 
 /*
@@ -191,13 +179,13 @@
  * Macro to get the source address mode.
  */
 #define FCF_GET_SOURCE_ADDR_MODE(x) \
-    (((x) >> FCF_SOURCE_ADDR_OFFSET) & FCF_ADDR_MASK)
+	(((x) >> FCF_SOURCE_ADDR_OFFSET) & FCF_ADDR_MASK)
 
 /*
  * Macro to get the destination address mode.
  */
-#define FCF_GET_DEST_ADDR_MODE(x)\
-    (((x) >> FCF_DEST_ADDR_OFFSET) & FCF_ADDR_MASK)
+#define FCF_GET_DEST_ADDR_MODE(x) \
+	(((x) >> FCF_DEST_ADDR_OFFSET) & FCF_ADDR_MASK)
 
 /*
  * PIB attribute without relevant index, i.e. PIB attribute not
@@ -206,8 +194,6 @@
 #define NO_PIB_INDEX                    (0)
 
 /* === Types ================================================================ */
-
-
 
 /* === Externals ============================================================ */
 
@@ -224,13 +210,9 @@ extern queue_t nhle_mac_q;
 extern "C" {
 #endif
 
- 
-
-
-
-
 /* 802.15.4 MAC layer entries */
-  /**
+
+/**
  * @brief Builds the data frame for transmission
  *
  * This function builds the data frame for transmission.
@@ -241,7 +223,7 @@ extern "C" {
  * \ingroup group_mac_req_int
  * @param msg Pointer to the MCPS-DATA.request parameter
  */
-  
+
 void mcps_data_request(uint8_t *msg);
 
 /**
@@ -295,9 +277,12 @@ void mcps_purge_request(uint8_t *msg);
  * @param m Pointer to message structure
  */
 void mcps_purge_conf(uint8_t *m);
-#endif  /* ((MAC_PURGE_REQUEST_CONFIRM == 1) && (MAC_INDIRECT_DATA_BASIC == 1)) */
+
+#endif  /* ((MAC_PURGE_REQUEST_CONFIRM == 1) && (MAC_INDIRECT_DATA_BASIC == 1))
+         **/
 
 #if (MAC_GET_SUPPORT == 1)
+
 /**
  * @brief Handles an MLME-GET.request
  *
@@ -320,6 +305,7 @@ void mlme_get_request(uint8_t *msg);
  * @param m Pointer to message structure
  */
 void mlme_get_conf(uint8_t *m);
+
 #endif  /* (MAC_GET_SUPPORT == 1) */
 
 /**
@@ -332,8 +318,11 @@ void mlme_get_conf(uint8_t *m);
  * @param m Pointer to the MLME_RESET.request given by the NHLE
  */
 void mlme_reset_request(uint8_t *msg);
-#if ((MAC_SCAN_ED_REQUEST_CONFIRM == 1) || (MAC_SCAN_ACTIVE_REQUEST_CONFIRM == 1)  || \
-     (MAC_SCAN_PASSIVE_REQUEST_CONFIRM == 1) || (MAC_SCAN_ORPHAN_REQUEST_CONFIRM == 1))
+
+#if ((MAC_SCAN_ED_REQUEST_CONFIRM == 1) || (MAC_SCAN_ACTIVE_REQUEST_CONFIRM == \
+	1)  || \
+	(MAC_SCAN_PASSIVE_REQUEST_CONFIRM == 1) || \
+	(MAC_SCAN_ORPHAN_REQUEST_CONFIRM == 1))
 
 /**
  * @brief The MLME-SCAN.request primitive makes a request for a node to
@@ -435,7 +424,8 @@ void mlme_reset_request(uint8_t *msg);
  *
  * The results of an orphan scan are reported to the next higher layer through
  * the MLME-SCAN.confirm primitive. If successful, the MLME-SCAN.confirm
- * primitive will contain a status of MAC_SUCCESS. If the device did not receive a
+ * primitive will contain a status of MAC_SUCCESS. If the device did not receive
+ *a
  * coordinator realignment command, MLME-SCAN.confirm primitive will contain
  * a status of NO_BEACON. In either case, the PANDescriptorList and
  * EnergyDetectList parameters of the MLMESCAN.confirm primitive are null.
@@ -459,6 +449,7 @@ void mlme_scan_request(uint8_t *msg);
  * @param m Pointer to message structure
  */
 void mlme_scan_conf(uint8_t *m);
+
 #endif
 
 #if (MAC_START_REQUEST_CONFIRM == 1)
@@ -481,8 +472,8 @@ void mlme_start_request(uint8_t *msg);
  * @param m Pointer to message structure
  */
 void mlme_start_conf(uint8_t *m);
-#endif /* (MAC_START_REQUEST_CONFIRM == 1) */
 
+#endif /* (MAC_START_REQUEST_CONFIRM == 1) */
 
 #if (MAC_ASSOCIATION_REQUEST_CONFIRM == 1)
 
@@ -507,6 +498,7 @@ void mlme_associate_request(uint8_t *m);
  * @param m Pointer to message structure
  */
 void mlme_associate_conf(uint8_t *m);
+
 #endif  /* (MAC_ASSOCIATION_REQUEST_CONFIRM == 1) */
 #if (MAC_ASSOCIATION_INDICATION_RESPONSE == 1)
 
@@ -530,6 +522,7 @@ void mlme_associate_response(uint8_t *m);
  * @param m Pointer to message structure
  */
 void mlme_associate_ind(uint8_t *m);
+
 #endif /* (MAC_ASSOCIATION_INDICATION_RESPONSE == 1) */
 #if (MAC_DISASSOCIATION_BASIC_SUPPORT == 1)
 
@@ -566,6 +559,7 @@ void mlme_disassociate_conf(uint8_t *m);
  * @param m Pointer to message structure
  */
 void mlme_disassociate_ind(uint8_t *m);
+
 #endif  /* (MAC_DISASSOCIATION_BASIC_SUPPORT == 1) */
 #if (MAC_ORPHAN_INDICATION_RESPONSE == 1)
 
@@ -593,6 +587,7 @@ void mlme_orphan_response(uint8_t *m);
  * @param m Pointer to message structure
  */
 void mlme_orphan_ind(uint8_t *m);
+
 #endif /* (MAC_ORPHAN_INDICATION_RESPONSE == 1) */
 #if (MAC_INDIRECT_DATA_BASIC == 1)
 
@@ -618,6 +613,7 @@ void mlme_poll_request(uint8_t *m);
  * @param m Pointer to message structure
  */
 void mlme_poll_conf(uint8_t *m);
+
 #endif  /* (MAC_INDIRECT_DATA_BASIC == 1) */
 #if (MAC_RX_ENABLE_SUPPORT == 1)
 
@@ -645,6 +641,7 @@ void mlme_rx_enable_request(uint8_t *m);
  * @param m Pointer to message structure
  */
 void mlme_rx_enable_conf(uint8_t *m);
+
 #endif  /* (MAC_RX_ENABLE_SUPPORT == 1) */
 
 /**
@@ -668,6 +665,7 @@ void mlme_rx_enable_conf(uint8_t *m);
  * @param m Pointer to the MLME sync request parameters.
  */
 void mlme_sync_request(uint8_t *m);
+
 #if (MAC_BEACON_NOTIFY_INDICATION == 1)
 
 /**
@@ -680,8 +678,10 @@ void mlme_sync_request(uint8_t *m);
  */
 
 void mlme_beacon_notify_ind(uint8_t *m);
+
 #endif  /* (MAC_BEACON_NOTIFY_INDICATION == 1) */
-#if ((MAC_ORPHAN_INDICATION_RESPONSE == 1) || (MAC_ASSOCIATION_INDICATION_RESPONSE == 1))
+#if ((MAC_ORPHAN_INDICATION_RESPONSE == 1) || \
+	(MAC_ASSOCIATION_INDICATION_RESPONSE == 1))
 
 /**
  * @brief Wrapper function for messages of type mlme_comm_status_ind_t
@@ -692,8 +692,9 @@ void mlme_beacon_notify_ind(uint8_t *m);
  * @param m Pointer to message structure
  */
 void mlme_comm_status_ind(uint8_t *m);
-#endif  /* ((MAC_ORPHAN_INDICATION_RESPONSE == 1) || (MAC_ASSOCIATION_INDICATION_RESPONSE == 1)) */
 
+#endif  /* ((MAC_ORPHAN_INDICATION_RESPONSE == 1) ||
+         *(MAC_ASSOCIATION_INDICATION_RESPONSE == 1)) */
 
 /**
  * @brief Wrapper function for messages of type mlme_reset_conf_t
@@ -737,6 +738,7 @@ void mlme_set_request(uint8_t *msg);
  * @param m Pointer to message structure
  */
 void mlme_set_conf(uint8_t *m);
+
 #endif  /* (HIGHEST_STACK_LAYER == MAC) */
 #ifdef MAC_SECURITY_ZIP
 
@@ -761,7 +763,8 @@ void mlme_set_conf(uint8_t *m);
  * @param attribute_value Attribute value to be set
  * @param set_trx_to_sleep Set TRX back to sleep after this PIB access if it was
  *        before starting this TRX access. Otherwise the transceiver state will
- *        remain as it is, i.e. in case the transceiver was woken up, it will stay
+ *        remain as it is, i.e. in case the transceiver was woken up, it will
+ *stay
  *        awake.
  *        The default value for just changing one variable is true, i.e. the
  *        transceiver will be put back to sleep if it has been woken up.
@@ -773,14 +776,18 @@ void mlme_set_conf(uint8_t *m);
  * \ingroup group_mac_gen_int
  */
 
-retval_t mlme_set(uint8_t attribute, uint8_t attribute_index, pib_value_t *attribute_value, bool set_trx_to_sleep);
+retval_t mlme_set(uint8_t attribute, uint8_t attribute_index,
+		pib_value_t *attribute_value, bool set_trx_to_sleep);
+
 #else
-retval_t mlme_set(uint8_t attribute, pib_value_t *attribute_value, bool set_trx_to_sleep);
+retval_t mlme_set(uint8_t attribute, pib_value_t *attribute_value,
+		bool set_trx_to_sleep);
+
 #endif  /* MAC_SECURITY_ZIP */
 
 /**
  * \ingroup group_mac_gen_int
-*/
+ */
 retval_t mlme_get(uint8_t attribute, pib_value_t *attribute_value);
 
 /**
@@ -807,7 +814,8 @@ bool mac_task(void);
  * @brief Helper function to extract the complete address information
  *        of the received frame
  *
- * @param frame_ptr Pointer to first octet of Addressing fields of received frame
+ * @param frame_ptr Pointer to first octet of Addressing fields of received
+ *frame
  *        (See IEEE 802.15.4-2006 Figure 41)
  *
  * \ingroup group_mac_gen_int
