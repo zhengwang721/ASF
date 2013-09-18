@@ -586,11 +586,11 @@ struct system_clock_source_dfll_config {
 	/** Coarse calibration value (Open loop mode) */
 	uint8_t coarse_value;
 	/** Fine calibration value (Open loop mode) */
-	uint8_t fine_value;
+	uint16_t fine_value;
 	/** Coarse adjustment max step size (Closed loop mode) */
 	uint8_t coarse_max_step;
 	/** Fine adjustment max step size (Closed loop mode) */
-	uint8_t fine_max_step;
+	uint16_t fine_max_step;
 	/** DFLL multiply factor (Closed loop mode */
 	uint16_t multiply_factor;
 };
