@@ -340,6 +340,28 @@ enum nvm_sleep_power_mode {
 };
 
 /**
+ * \brief NVM controller cache readmode configuration
+ *
+ * Control how the NVM cache prefetch data from flash
+ *
+ */
+enum nvm_cache_readmode {
+	/** The NVM Controller (cache system) does not insert wait states on
+	 *  a cache miss. Gives the best system performance.
+	 */
+	NVM_CACHE_READMODE_NO_MISS_PENALTY,
+	/** Reduces power consumption of the cache system, but inserts a
+	 *  wait state each time there is a cache miss
+	 */
+	NVM_CACHE_READMODE_LOW_POWER,
+	/** The cache system ensures that a cache hit or miss takes the same
+	 *  amount of time, determined by the number of programmed flash
+	 *  wait states.
+	 */
+	NVM_CACHE_READMODE_DETERMINISTIC,
+};
+
+/**
  * \brief NVM controller configuration structure.
  *
  * Configuration structure for the NVM controller within the device.
@@ -360,6 +382,17 @@ struct nvm_config {
 	 *  invalid data from being read at high clock frequencies.
 	 */
 	uint8_t wait_states;
+
+	/**
+	 * Setting this to true will disable the pre-fetch cache in front of the
+	 * nvm controller.
+	 */
+	bool disable_cache;
+
+	/**
+	 * Select the mode for  how the cache will pre-fetch data from the flash.
+	 */
+	enum nvm_cache_readmode cache_readmode;
 };
 
 /**
@@ -378,6 +411,146 @@ struct nvm_parameters {
 	/** Size of the Bootloader memory section configured in the NVM auxiliary
 	 *  memory space. */
 	uint32_t bootloader_number_of_pages;
+};
+
+/**
+ * \brief Bootloader size.
+ *
+ * Available bootloader protection sizes in kilobytes.
+ *
+ */
+enum nvm_bootloader_size {
+	NVM_BOOTLOADER_SIZE_128,
+	NVM_BOOTLOADER_SIZE_64,
+	NVM_BOOTLOADER_SIZE_32,
+	NVM_BOOTLOADER_SIZE_16,
+	NVM_BOOTLOADER_SIZE_8,
+	NVM_BOOTLOADER_SIZE_4,
+	NVM_BOOTLOADER_SIZE_2,
+	NVM_BOOTLOADER_SIZE_0,
+};
+
+/**
+ * \brief EEPROM emulator size.
+ *
+ * Available space in flash dedicated for EEPROM emulator in bytes.
+ *
+ */
+enum nvm_eeprom_emulator_size {
+	NVM_EEPROM_EMULATOR_SIZE_16384,
+	NVM_EEPROM_EMULATOR_SIZE_8192,
+	NVM_EEPROM_EMULATOR_SIZE_4096,
+	NVM_EEPROM_EMULATOR_SIZE_2048,
+	NVM_EEPROM_EMULATOR_SIZE_1024,
+	NVM_EEPROM_EMULATOR_SIZE_512,
+	NVM_EEPROM_EMULATOR_SIZE_256,
+	NVM_EEPROM_EMULATOR_SIZE_0,
+};
+
+/**
+ * \brief BOD33 Action.
+ *
+ * What action should be triggered when BOD33 is detected.
+ *
+ */
+enum nvm_bod33_action {
+	NVM_BOD33_ACTION_NONE,
+	NVM_BOD33_ACTION_RESET,
+	NVM_BOD33_ACTION_INTERRUPT,
+};
+
+/**
+ * \brief BOD12 Action
+ *
+ * What action should be triggered when BOD12 is detected.
+ *
+ */
+enum nvm_bod12_action {
+	NVM_BOD12_ACTION_NONE,
+	NVM_BOD12_ACTION_RESET,
+	NVM_BOD12_ACTION_INTERRUPT,
+};
+
+/**
+ * \brief WDT Window time-out period
+ *
+ * Windows mode time-out period in clock cycles.
+ *
+ */
+enum nvm_wdt_window_timeout {
+	NVM_WDT_WINDOW_TIMEOUT_PERIOD_8,
+	NVM_WDT_WINDOW_TIMEOUT_PERIOD_16,
+	NVM_WDT_WINDOW_TIMEOUT_PERIOD_32,
+	NVM_WDT_WINDOW_TIMEOUT_PERIOD_64,
+	NVM_WDT_WINDOW_TIMEOUT_PERIOD_128,
+	NVM_WDT_WINDOW_TIMEOUT_PERIOD_256,
+	NVM_WDT_WINDOW_TIMEOUT_PERIOD_512,
+	NVM_WDT_WINDOW_TIMEOUT_PERIOD_1024,
+	NVM_WDT_WINDOW_TIMEOUT_PERIOD_2048,
+	NVM_WDT_WINDOW_TIMEOUT_PERIOD_4096,
+	NVM_WDT_WINDOW_TIMEOUT_PERIOD_8192,
+	NVM_WDT_WINDOW_TIMEOUT_PERIOD_16384,
+};
+
+/**
+ * \brief WDT Early warning offset
+ *
+ * This setting determine how many GCLK_WDT cycles before a watchdog time-out period
+ * an early warning interrupt should be triggered.
+ *
+ */
+enum nvm_wdt_early_warning_offset {
+	NVM_WDT_EARLY_WARNING_OFFSET_8,
+	NVM_WDT_EARLY_WARNING_OFFSET_16,
+	NVM_WDT_EARLY_WARNING_OFFSET_32,
+	NVM_WDT_EARLY_WARNING_OFFSET_64,
+	NVM_WDT_EARLY_WARNING_OFFSET_128,
+	NVM_WDT_EARLY_WARNING_OFFSET_256,
+	NVM_WDT_EARLY_WARNING_OFFSET_512,
+	NVM_WDT_EARLY_WARNING_OFFSET_1024,
+	NVM_WDT_EARLY_WARNING_OFFSET_2048,
+	NVM_WDT_EARLY_WARNING_OFFSET_4096,
+	NVM_WDT_EARLY_WARNING_OFFSET_8192,
+	NVM_WDT_EARLY_WARNING_OFFSET_16384,
+};
+
+/**
+ * \brief NVM user row fuse setting structure
+ *
+ * This structure contain the layout of the first 64 bits of the user row
+ * which contain the fuse settings.
+ */
+struct nvm_fusebits {
+	/** Bootloader size. */
+	enum nvm_bootloader_size          bootloader_size;
+	/** EEPROM emulation area size */
+	enum nvm_eeprom_emulator_size     eeprom_size;
+	/** BOD33 Threshold level at power on */
+	uint8_t                           bod33_level;
+	/** BOD33 Enable at power on */
+	bool                              bod33_enable;
+	/** BOD33 Action at power on */
+	enum nvm_bod33_action             bod33_action;
+	/** BOD12 Threshold level at power on */
+	uint8_t                           bod12_level;
+	/** BOD12 Enable at power on */
+	bool                              bod12_enable;
+	/** BOD12 Action at power on */
+	enum nvm_bod12_action             bod12_action;
+	/** WDT Enable at power on */
+	bool                              wdt_enable;
+	/** WDT Always-on at power on */
+	bool                              wdt_always_on;
+	/** WDT Period at power on */
+	uint8_t                           wdt_timeout_period;
+	/** WDT Window mode time-out at power on */
+	enum nvm_wdt_window_timeout       wdt_window_timeout;
+	/** WDT Early warning interrupt time offset at power on */
+	enum nvm_wdt_early_warning_offset wdt_early_warning_offset;
+	/** WDT Window mode enabled at power on */
+	bool                              wdt_window_mode_enable_at_poweron;
+	/** NVM Lock bits */
+	uint16_t                          lockbits;
 };
 
 /**
@@ -411,6 +584,8 @@ static inline void nvm_get_config_defaults(
 	config->sleep_power_mode  = NVM_SLEEP_POWER_MODE_WAKEONACCESS;
 	config->manual_page_write = false;
 	config->wait_states       = NVMCTRL->CTRLB.bit.RWS;
+	config->disable_cache     = false;
+	config->cache_readmode    = NVM_CACHE_READMODE_NO_MISS_PENALTY;
 }
 
 enum status_code nvm_set_config(
@@ -469,6 +644,11 @@ enum status_code nvm_execute_command(
 		const enum nvm_command command,
 		const uint32_t address,
 		const uint32_t parameter);
+
+enum status_code nvm_get_fuses(struct nvm_fusebits *fusebits);
+
+enum status_code nvm_set_fuses(struct nvm_fusebits *fusebits);
+
 
 bool nvm_is_page_locked(uint16_t page_number);
 
@@ -556,6 +736,12 @@ static inline enum nvm_error nvm_get_error(void)
  * <table>
  *	<tr>
  *		<th>Changelog</th>
+ *	</tr>
+ *	<tr>
+ *		<td>Added functions to read/write fuse settings</td>
+ *	</tr>
+ *	<tr>
+ *		<td>Added support for nvm cache configuration</td>
  *	</tr>
  *	<tr>
  *		<td>Updated initialization function to also enable the digital interface

@@ -1110,13 +1110,14 @@ static inline enum status_code spi_read(
 
 	SercomSpi *const spi_module = &(module->hw->SPI);
 
-	/* Return value */
-	enum status_code retval = STATUS_OK;
 	/* Check if data is ready to be read */
 	if (!spi_is_ready_to_read(module)) {
 		/* No data has been received, return */
 		return STATUS_ERR_IO;
 	}
+
+	/* Return value */
+	enum status_code retval = STATUS_OK;
 
 	/* Check if data is overflown */
 	if (spi_module->STATUS.reg & SERCOM_SPI_STATUS_BUFOVF) {
@@ -1124,6 +1125,7 @@ static inline enum status_code spi_read(
 		/* Clear overflow flag */
 		spi_module->STATUS.reg |= SERCOM_SPI_STATUS_BUFOVF;
 	}
+
 	/* Read the character from the DATA register */
 	if (module->character_size == SPI_CHARACTER_SIZE_9BIT) {
 		*rx_data = (spi_module->DATA.reg & SERCOM_SPI_DATA_MASK);
@@ -1140,98 +1142,10 @@ enum status_code spi_read_buffer_wait(
 		uint16_t length,
 		uint16_t dummy);
 
-/**
- * \brief Sends and reads a single SPI character
- *
- * This function will transfer a single SPI character via SPI and return the
- * SPI character that is shifted into the shift register.
- *
- * In master mode the SPI character will be sent immediately and the received
- * SPI character will be read as soon as the shifting of the data is
- * complete.
- *
- * In slave mode this function will place the data to be sent into the transmit
- * buffer. It will then block until an SPI master has shifted a complete
- * SPI character, and the received data is available.
- *
- * \note The data to be sent might not be sent before the next transfer, as
- *       loading of the shift register is dependent on SCK.
- * \note If address matching is enabled for the slave, the first character
- *       received and placed in the buffer will be the address.
- *
- * \param[in]  module   Pointer to the software instance struct
- * \param[in]  tx_data  SPI character to transmit
- * \param[out] rx_data  Pointer to store the received SPI character
- *
- * \return Status of the operation.
- * \retval STATUS_OK            If the operation was completed
- * \retval STATUS_ERR_TIMEOUT   If the operation was not completed within the
- *                              timeout in slave mode
- * \retval STATUS_ERR_DENIED    If the receiver is not enabled
- * \retval STATUS_ERR_OVERFLOW  If the incoming data is overflown
- */
-static inline enum status_code spi_transceive_wait(
+enum status_code spi_transceive_wait(
 		struct spi_module *const module,
 		uint16_t tx_data,
-		uint16_t *rx_data)
-{
-	/* Sanity check arguments */
-	Assert(module);
-
-	if (!(module->receiver_enabled)) {
-		return STATUS_ERR_DENIED;
-	}
-
-#  if SPI_CALLBACK_MODE == true
-	if (module->status == STATUS_BUSY) {
-		/* Check if the SPI module is busy with a job */
-		return STATUS_BUSY;
-	}
-#  endif
-
-	uint16_t j;
-	enum status_code retval = STATUS_OK;
-
-	/* Start timeout period for slave */
-	if (module->mode == SPI_MODE_SLAVE) {
-		for (j = 0; j <= SPI_TIMEOUT; j++) {
-			if (spi_is_ready_to_write(module)) {
-				break;
-			} else if (j == SPI_TIMEOUT) {
-				/* Not ready to write data within timeout period */
-				return STATUS_ERR_TIMEOUT;
-			}
-		}
-	}
-
-	/* Wait until the module is ready to write the character */
-	while (!spi_is_ready_to_write(module)) {
-	}
-
-	/* Write data */
-	spi_write(module, tx_data);
-
-	/* Start timeout period for slave */
-	if (module->mode == SPI_MODE_SLAVE) {
-		for (j = 0; j <= SPI_TIMEOUT; j++) {
-			if (spi_is_ready_to_read(module)) {
-				break;
-			} else if (j == SPI_TIMEOUT) {
-				/* Not ready to read data within timeout period */
-				return STATUS_ERR_TIMEOUT;
-			}
-		}
-	}
-
-	/* Wait until the module is ready to read the character */
-	while (!spi_is_ready_to_read(module)) {
-	}
-
-	/* Read data */
-	retval = spi_read(module, rx_data);
-
-	return retval;
-}
+		uint16_t *rx_data);
 
 enum status_code spi_transceive_buffer_wait(
 		struct spi_module *const module,
