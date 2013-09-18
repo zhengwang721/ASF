@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="I/O1 EEPROM and Temperature Sensor Example for SAM4C-EK" id="common.components.memory.eeprom.at30tse75x.example.sam4c_ek">
+	<project caption="AT30TS75 Temperature Sensor Example for SAM4C-EK" id="common.components.memory.eeprom.at30tse75x.example.sam4c_ek">
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_clock.h"/>
 		<build type="header-file" value="conf_board.h"/>
