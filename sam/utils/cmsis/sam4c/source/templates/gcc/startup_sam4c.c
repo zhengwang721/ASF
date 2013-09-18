@@ -194,9 +194,19 @@ void Reset_Handler(void)
 	pSrc = &_etext;
 	pDest = &_srelocate;
 
-	if (pSrc != pDest) {
+	if (pSrc > pDest) {
+		/* Copy segment block from beginning to end */
 		for (; pDest < &_erelocate;) {
 			*pDest++ = *pSrc++;
+		}
+	} else if (pSrc < pDest) {
+		/* Copy segment block from end to beginning */
+		uint32_t bytes_relocate = (uint32_t)&_erelocate - (uint32_t)&_srelocate;
+		pSrc = (uint32_t*)((uint32_t)pSrc + bytes_relocate) - 1;
+		pDest = (uint32_t*)((uint32_t)pDest + bytes_relocate) - 1;
+
+		for (; bytes_relocate; bytes_relocate -= 4) {
+			*pDest-- = *pSrc--;
 		}
 	}
 
