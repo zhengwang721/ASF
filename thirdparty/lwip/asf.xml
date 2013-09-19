@@ -34,8 +34,8 @@
 			<device-support value="uc3a"/>
 			<device-support value="uc3a3"/>
 			<device-support value="uc3c"/>
-			<device-support value="sam3x"/>
-			<device-support value="sam4e"/>
+			<device-support value="sam3"/>
+			<device-support value="sam4"/>
 			<require idref="thirdparty.lwip.141"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
