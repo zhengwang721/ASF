@@ -44,13 +44,18 @@
 #include <string.h>
 #include "board.h"
 #include "ethernet.h"
-#include "ethernet_phy.h"
 #if SAM3XA
+# include "ethernet_phy.h"
 # include "emac.h"
 # include "netif/ethernetif.h"
 #elif SAM4E
+# include "ethernet_phy.h"
 # include "gmac.h"
 # include "netif/sam4e_gmac.h"
+#elif SAM4S
+# include "ksz8851snl.h"
+# include "ksz8851snl_reg.h"
+# include "netif/sam_spi_ksz8851snl.h"
 #else
 # error Unsupported chip type
 #endif
