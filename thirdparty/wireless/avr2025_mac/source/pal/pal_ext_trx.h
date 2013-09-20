@@ -200,7 +200,7 @@ void pal_trx_frame_write(uint8_t *data, uint8_t length);
  *
  * @return value of the register read
  */
-uint8_t pal_trx_reg_read(uint8_t addr);
+uint8_t pal_trx_reg_read(uint16_t addr);
 
 /**
  * @brief Writes data into a transceiver register
@@ -211,7 +211,7 @@ uint8_t pal_trx_reg_read(uint8_t addr);
  * @param data Data to be written to trx register
  *
  */
-void pal_trx_reg_write(uint8_t addr, uint8_t data);
+void pal_trx_reg_write(uint16_t addr, uint8_t data);
 
 /**
  * @brief Subregister read
