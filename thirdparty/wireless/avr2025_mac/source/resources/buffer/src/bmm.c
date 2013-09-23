@@ -59,7 +59,7 @@
 #include "ieee_const.h"
 #include "app_config.h"
 
-#if  (defined __SAMD20J18__) || (defined __SAM4LC4C__)
+#if  (defined SAMD20) || (defined SAM4L)
 #define BUILD_BUG_ON(condition) ((void)sizeof(uint8_t[1 - 2*!!(condition)]))
 #define UNALIGNED_BUG_ON(data_struct) BUILD_BUG_ON(data_struct % 4)
 #endif
@@ -145,7 +145,7 @@ void bmm_buffer_init(void)
 {
 	uint8_t index;
 	
-#if  (defined __SAMD20J18__) || (defined __SAM4LC4C__)
+#if  (defined SAMD20) || (defined SAM4L)
 	UNALIGNED_BUG_ON(sizeof(buf_pool));
 #endif
 

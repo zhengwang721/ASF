@@ -766,7 +766,7 @@ void mac_process_gts_request(buffer_t *gts_req);
 uint8_t mac_add_gts_info(uint8_t *frame_ptr);
 void mac_gts_table_update(void);
 void mac_parse_bcn_gts_info(uint8_t gts_count, uint8_t gts_dir, mac_gts_list_t *gts_list_ptr);
-uint8_t handle_gts_data_req(mcps_data_req_t *data_req, arch_data_t *msg);
+void handle_gts_data_req(mcps_data_req_t *data_req, arch_data_t *msg);
 void reset_gts_globals(void);
 void mac_t_gts_cb(void *callback_parameter);
 void init_gts_queues(void);

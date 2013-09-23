@@ -44,7 +44,7 @@
 
 #include "pal.h"
 #include "delay.h"
-#ifdef __SAMD20J18__
+#ifdef SAMD20
 #include "port.h"
 #else
 #include "ioport.h"

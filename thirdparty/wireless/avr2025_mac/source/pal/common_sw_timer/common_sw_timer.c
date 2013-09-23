@@ -160,7 +160,14 @@ status_code_t sw_timer_start(uint8_t timer_id,
 	start_absolute_timer(timer_id, point_in_time, timer_cb, param_cb);
 	return STATUS_OK;
 }
-
+uint32_t sw_timer_get_residual_time(uint8_t timer_id)
+{
+	uint32_t res_time;
+	uint32_t current_time;
+	current_time = gettime();
+	res_time = timer_array[timer_id].abs_exp_timer-current_time;
+	return res_time;
+}
 static void start_absolute_timer(uint8_t timer_id,
 		uint32_t point_in_time,
 		FUNC_PTR handler_cb,

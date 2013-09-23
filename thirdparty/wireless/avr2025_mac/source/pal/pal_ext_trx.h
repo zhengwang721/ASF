@@ -57,7 +57,7 @@
 
 #include "compiler.h"
 #include "pal_generic.h"
-#ifdef __SAMD20J18__
+#ifdef SAMD20
 #include "port.h"
 #include "extint.h"
 #else
@@ -98,7 +98,7 @@
 /**
  * Set TRX GPIO pins.
  */
-#ifdef __SAMD20J18__
+#ifdef SAMD20
 #define RST_HIGH()                      port_pin_set_output_level(AT86RFX_RST_PIN, true)
 #define RST_LOW()                       port_pin_set_output_level(AT86RFX_RST_PIN, false)
 #define SLP_TR_HIGH()                   port_pin_set_output_level(AT86RFX_SLP_PIN, true)

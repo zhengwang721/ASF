@@ -55,10 +55,10 @@
 /* === Includes ============================================================ */
 #include "compiler.h"
 
-#if (defined __SAMD20J18__) || (defined __SAM4LC4C__)
+#if (defined SAMD20) || (defined SAM4L)
  typedef uint32_t arch_data_t;
  #define __ALIGN_WORD_ADDR__ COMPILER_WORD_ALIGNED
-#ifdef __SAM4LC4C__
+#ifdef SAM4L
 #define status_code_genare_t status_code_t 
 #endif
 #else

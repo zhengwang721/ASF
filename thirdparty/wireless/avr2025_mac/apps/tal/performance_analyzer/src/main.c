@@ -57,7 +57,7 @@
 #include "app_per_mode.h"
 #include "app_range_mode.h"
 #include "perf_api_serial_handler.h"
-#ifdef __SAMD20J18__
+#ifdef SAMD20
 #include "system.h"
 #else
 #include "led.h"
@@ -431,7 +431,7 @@ volatile node_ib_t node_info;
 int main(void)
 {
 	irq_initialize_vectors();
-	#ifdef __SAMD20J18__
+	#ifdef SAMD20
 	system_init();
 	delay_init();
 	#else

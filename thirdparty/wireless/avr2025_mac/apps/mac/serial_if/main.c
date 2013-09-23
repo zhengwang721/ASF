@@ -99,7 +99,7 @@
 #include "serial_interface.h"
 #include "common_sw_timer.h"
 #include <asf.h>
-#ifdef __SAMD20J18__
+#ifdef SAMD20
 #include "system.h"
 #endif
 
@@ -113,7 +113,7 @@ static void app_alert(void);
 int main(void)
 {
 	irq_initialize_vectors();
-	#ifdef __SAMD20J18__
+	#ifdef SAMD20
 	system_init();
 	delay_init();
 	#else

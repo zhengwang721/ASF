@@ -99,7 +99,7 @@
 #include "delay.h"
 #include "common_sw_timer.h"
 #include "sio2host.h"
-#if (defined __SAMD20J18__) || (defined __SAM4LC4C__)
+#if (defined SAMD20) || (defined SAM4L)
  #include "unaligned.h"
 #endif
 
@@ -219,7 +219,7 @@ int main(void)
 {
 	irq_initialize_vectors();
 	
-#ifdef __SAMD20J18__
+#ifdef SAMD20
 	system_init();
 	delay_init();
 #else

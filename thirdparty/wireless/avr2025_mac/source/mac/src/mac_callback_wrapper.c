@@ -69,7 +69,7 @@
 #include "mac.h"
 #include "mac_build_config.h"
 
-#if (defined __SAMD20J18__) || (defined __SAM4LC4C__)
+#if (defined SAMD20) || (defined SAM4L)
 #include "unaligned.h"
 #endif
 
@@ -230,7 +230,7 @@ void mlme_associate_ind(arch_data_t *m)
 	/* Get the buffer body from buffer header */
 	pmsg = (mlme_associate_ind_t *)BMM_BUFFER_POINTER((buffer_t *)m);
 
-#if (defined __SAMD20J18__) || (defined __SAM4LC4C__)	
+#if (defined SAMD20) || (defined SAM4L)	
 	usr_mlme_associate_ind(get_unaligned(&pmsg->DeviceAddress),
 			get_unaligned(&pmsg->CapabilityInformation));
 #else			

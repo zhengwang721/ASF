@@ -59,6 +59,7 @@
 #include "bmm.h"
 #include "qmm.h"
 #include "tal.h"
+#include "tal_slotted_csma.h"
 #include "ieee_const.h"
 #include "mac_msg_const.h"
 #include "mac_api.h"
@@ -82,7 +83,6 @@ static bool mac_gts_deallocate(gts_char_t GtsCharacteristics, uint16_t DevAddres
 
 static void mac_send_gts_ind(gts_char_t GtsChar, uint16_t dev_addr);
 static void process_deallocate_data_q(queue_t *q_ptr);
-
 #ifdef GTS_DEBUG
 void gts_debug(uint8_t gts_index, bool data_pin, bool set, bool val);
 #endif
@@ -700,24 +700,49 @@ void mac_send_gts_ind(gts_char_t GtsChar, uint16_t dev_addr)
 		qmm_queue_append(&mac_nhle_q, buffer_header);
 }
 
-uint8_t handle_gts_data_req(mcps_data_req_t *data_req, arch_data_t *msg)
+void handle_gts_data_req(mcps_data_req_t *data_req, arch_data_t *msg)
 {
+uint32_t slot_duration1 = 0;
+uint32_t frame_tx_time = 0;
+#ifdef FFD
+	uint8_t loop_index;
+#endif /* FFD */
 	uint16_t dst_addr;
-	bool data_queued = false;
+
+	frame_info_t *transmit_frame;
+	buffer_t *buf_ptr;
+
+	queue_t *q_ptr = NULL;
 	ADDR_COPY_DST_SRC_16(dst_addr, data_req->DstAddr);
 #ifdef FFD
 	if(MAC_PAN_COORD_STARTED == mac_state)
 	{
-		uint8_t loop_index;
 		for(loop_index = 0; loop_index < mac_pan_gts_table_len; loop_index++)
 		{
 			if(dst_addr == mac_pan_gts_table[loop_index].DevShortAddr
 			&& GTS_RX_SLOT == mac_pan_gts_table[loop_index].GtsDesc.GtsDirection)
 			{
-				/* Append the MCPS data request into the GTS queue */
-				#ifdef ENABLE_QUEUE_CAPACITY
-				if (QUEUE_FULL == qmm_queue_append(mac_pan_gts_table[loop_index].gts_data_q,
-													(buffer_t *)msg)) {
+				transmit_frame = (frame_info_t *)BMM_BUFFER_POINTER((buffer_t *)msg);
+				frame_tx_time = calc_frame_transmit_duration(transmit_frame->mpdu);
+				slot_duration1 =  (TAL_CONVERT_SYMBOLS_TO_US(TAL_GET_SUPERFRAME_DURATION_TIME(tal_pib.SuperFrameOrder)) >> 4) * mac_pan_gts_table[loop_index].GtsDesc.GtsLength;
+				if(slot_duration1 < frame_tx_time)
+				{
+					mac_gen_mcps_data_conf((buffer_t *)msg,
+					(uint8_t)MAC_FRAME_TOO_LONG,
+					#ifdef ENABLE_TSTAMP
+					data_req->msduHandle,
+					0);
+					#else
+					data_req->msduHandle);
+					#endif  /* ENABLE_TSTAMP */
+					return;
+				}
+				else
+				{
+					/* Append the MCPS data request into the GTS queue */
+					#ifdef ENABLE_QUEUE_CAPACITY
+					if (QUEUE_FULL == qmm_queue_append(mac_pan_gts_table[loop_index].gts_data_q,
+					(buffer_t *)msg)) {
 						mac_gen_mcps_data_conf((buffer_t *)msg,
 						(uint8_t)MAC_CHANNEL_ACCESS_FAILURE,
 						#ifdef ENABLE_TSTAMP
@@ -726,12 +751,13 @@ uint8_t handle_gts_data_req(mcps_data_req_t *data_req, arch_data_t *msg)
 						#else
 						data_req->msduHandle);
 						#endif  /* ENABLE_TSTAMP */
+					}
+					#else
+					qmm_queue_append(mac_pan_gts_table[loop_index].gts_data_q, (buffer_t *)msg);
+					#endif   /* ENABLE_QUEUE_CAPACITY */
+					q_ptr = mac_pan_gts_table[loop_index].gts_data_q;
+					break;
 				}
-				#else
-				qmm_queue_append(mac_pan_gts_table[loop_index].gts_data_q, (buffer_t *)msg);
-				#endif   /* ENABLE_QUEUE_CAPACITY */
-				data_queued = true;
-				break;
 			}
 		}
 	}
@@ -740,24 +766,42 @@ uint8_t handle_gts_data_req(mcps_data_req_t *data_req, arch_data_t *msg)
 	if(MAC_ASSOCIATED == mac_state && mac_pib.mac_CoordShortAddress == dst_addr
 	&& 0 != mac_dev_gts_table[DEV_TX_SLOT_INDEX].GtsStartingSlot)
 	{
-		/* Append the MCPS data request into the GTS queue */
-		#ifdef ENABLE_QUEUE_CAPACITY
-		if (QUEUE_FULL == qmm_queue_append(&dev_tx_gts_q, (buffer_t *)msg)) {
+		transmit_frame = (frame_info_t *)BMM_BUFFER_POINTER((buffer_t *)msg);
+		frame_tx_time = calc_frame_transmit_duration(transmit_frame->mpdu);
+		slot_duration1 =  (TAL_CONVERT_SYMBOLS_TO_US(TAL_GET_SUPERFRAME_DURATION_TIME(tal_pib.SuperFrameOrder)) >> 4) * mac_dev_gts_table[DEV_TX_SLOT_INDEX].GtsLength;
+		if(slot_duration1 < frame_tx_time)
+		{
 			mac_gen_mcps_data_conf((buffer_t *)msg,
-			(uint8_t)MAC_CHANNEL_ACCESS_FAILURE,
+			(uint8_t)MAC_FRAME_TOO_LONG,
 			#ifdef ENABLE_TSTAMP
 			data_req->msduHandle,
 			0);
 			#else
 			data_req->msduHandle);
 			#endif  /* ENABLE_TSTAMP */
+			return;
 		}
-		#else
-		qmm_queue_append(&dev_tx_gts_q, (buffer_t *)msg);
-		#endif   /* ENABLE_QUEUE_CAPACITY */
-		data_queued = true;
+		else
+		{
+			/* Append the MCPS data request into the GTS queue */
+			#ifdef ENABLE_QUEUE_CAPACITY
+			if (QUEUE_FULL == qmm_queue_append(&dev_tx_gts_q, (buffer_t *)msg)) {
+				mac_gen_mcps_data_conf((buffer_t *)msg,
+				(uint8_t)MAC_CHANNEL_ACCESS_FAILURE,
+				#ifdef ENABLE_TSTAMP
+				data_req->msduHandle,
+				0);
+				#else
+				data_req->msduHandle);
+				#endif  /* ENABLE_TSTAMP */
+			}
+			#else
+			qmm_queue_append(&dev_tx_gts_q, (buffer_t *)msg);
+			#endif   /* ENABLE_QUEUE_CAPACITY */
+			q_ptr = &dev_tx_gts_q;
+		}
 	}
-	if(!data_queued)
+	if(NULL == q_ptr)
 	{
 		mac_gen_mcps_data_conf((buffer_t *)msg,
 			(uint8_t)MAC_INVALID_GTS,
@@ -767,7 +811,60 @@ uint8_t handle_gts_data_req(mcps_data_req_t *data_req, arch_data_t *msg)
 			data_req->msduHandle);
 			#endif  /* ENABLE_TSTAMP */
 	}
-	return 0;
+	else
+	{
+#if FFD
+		if(MAC_PAN_COORD_STARTED == mac_state && 1 == q_ptr->size)
+		{
+			loop_index = loop_index + MAC_ACTIVE_CFP_GTS1;
+			if(loop_index == mac_superframe_state)
+			{
+				buf_ptr = qmm_queue_read(q_ptr, NULL);
+
+				if (NULL == buf_ptr) {
+					/* Nothing to be done. */
+					return;
+				}
+				transmit_frame = (frame_info_t *)BMM_BUFFER_POINTER(buf_ptr);
+
+				transmit_frame->buffer_header = buf_ptr;
+
+				frame_tx_time = calc_frame_transmit_duration(transmit_frame->mpdu);
+				slot_duration1 = sw_timer_get_residual_time(T_CAP);
+				if(slot_duration1 > frame_tx_time)
+				{
+					mac_tx_gts_data(q_ptr);
+					qmm_queue_remove(q_ptr,NULL);
+				}
+			}
+		}
+		else
+#endif /* FFD */
+		if(MAC_ASSOCIATED == mac_state && 1 == q_ptr->size)
+		{
+			if(MAC_DEV_GTS_TX == mac_superframe_state)
+			{
+				buf_ptr = qmm_queue_read(q_ptr, NULL);
+
+				if (NULL == buf_ptr) {
+					/* Nothing to be done. */
+					return;
+				}
+				transmit_frame = (frame_info_t *)BMM_BUFFER_POINTER(buf_ptr);
+
+				transmit_frame->buffer_header = buf_ptr;
+
+				frame_tx_time = calc_frame_transmit_duration(transmit_frame->mpdu);
+				slot_duration1 = sw_timer_get_residual_time(T_CAP);
+				if(slot_duration1 > frame_tx_time)
+				{
+					mac_tx_gts_data(q_ptr);
+					qmm_queue_remove(q_ptr,NULL);
+				}
+			}
+		}
+	}
+	return;
 }
 
 void reset_gts_globals(void)
