@@ -828,11 +828,11 @@ static void mac_t_beacon_cb(void *callback_parameter)
 		#ifdef GTS_SUPPORT
 		pal_timer_stop(T_CAP);
 		#ifdef GTS_DEBUG
-		ioport_toggle_pin(DEBUG_PIN1);
-		ioport_set_value(DEBUG_PIN4, 0);
-		ioport_set_value(DEBUG_PIN5, 0);
-		ioport_set_value(DEBUG_PIN6, 0);
-		ioport_set_value(DEBUG_PIN7, 0);
+		port_pin_toggle_output_level(DEBUG_PIN1);
+		port_pin_set_output_level(DEBUG_PIN4, 0);
+		port_pin_set_output_level(DEBUG_PIN5, 0);
+		port_pin_set_output_level(DEBUG_PIN6, 0);
+		port_pin_set_output_level(DEBUG_PIN7, 0);
 		#endif
 		#endif /* GTS_SUPPORT */
 
@@ -906,7 +906,7 @@ static void mac_t_beacon_cb(void *callback_parameter)
 		                     (FUNC_PTR)mac_t_superframe_cb,
 		                     NULL);
 		    #ifdef GTS_DEBUG
-	 		ioport_set_value(DEBUG_PIN2, 1);
+	 		port_pin_set_output_level(DEBUG_PIN2, 1);
 			#endif
 		}
 
@@ -921,7 +921,7 @@ static void mac_t_beacon_cb(void *callback_parameter)
 							 (FUNC_PTR)mac_t_gts_cb,
 							 NULL);
 			#ifdef GTS_DEBUG				 
-	 		ioport_set_value(DEBUG_PIN3, 1);
+	 		port_pin_set_output_level(DEBUG_PIN3, 1);
 			#endif
 		}
 #endif /* GTS_SUPPORT */
@@ -974,14 +974,14 @@ static void mac_t_superframe_cb(void *callback_parameter)
 /*  */
 /*    callback_parameter = callback_parameter;  / * Keep compiler happy. * / */
     #ifdef GTS_DEBUG
-	ioport_set_value(DEBUG_PIN2, 0);
-	ioport_set_value(DEBUG_PIN4, 0);
-	ioport_set_value(DEBUG_PIN5, 0);
-	ioport_set_value(DEBUG_PIN6, 0);
-	ioport_set_value(DEBUG_PIN7, 0);
-	ioport_set_value(DEBUG_PIN8, 0);
-	ioport_set_value(DEBUG_PIN9, 0);
-	ioport_set_value(DEBUG_PIN10, 0);
+	port_pin_set_output_level(DEBUG_PIN2, 0);
+	port_pin_set_output_level(DEBUG_PIN4, 0);
+	port_pin_set_output_level(DEBUG_PIN5, 0);
+	port_pin_set_output_level(DEBUG_PIN6, 0);
+	port_pin_set_output_level(DEBUG_PIN7, 0);
+	port_pin_set_output_level(DEBUG_PIN8, 0);
+	port_pin_set_output_level(DEBUG_PIN9, 0);
+	port_pin_set_output_level(DEBUG_PIN10, 0);
 	#endif
 
 	mac_superframe_state = MAC_INACTIVE;

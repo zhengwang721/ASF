@@ -714,8 +714,8 @@ static bool process_data_ind_not_transient(buffer_t *b_ptr, frame_info_t *f_ptr)
 							} while (MAC_SUCCESS !=
 									tmr_start_res);
 							#ifdef GTS_DEBUG
-	 						ioport_toggle_pin(DEBUG_PIN1);
- 	 						ioport_set_value(DEBUG_PIN2, 0);
+	 						port_pin_toggle_output_level(DEBUG_PIN1);
+ 	 						port_pin_set_output_level(DEBUG_PIN2, 0);
 							#endif
 						}
 
@@ -748,7 +748,9 @@ static bool process_data_ind_not_transient(buffer_t *b_ptr, frame_info_t *f_ptr)
 									TIMEOUT_RELATIVE,
 									(FUNC_PTR)mac_t_start_inactive_device_cb,
 									NULL);
-								//ioport_set_value(DEBUG_PIN2, 1);
+								#ifdef GTS_DEBUG
+								port_pin_set_output_level(DEBUG_PIN2, 1);
+								#endif
 							}
 #ifdef GTS_SUPPORT
 						if (mac_final_cap_slot < FINAL_CAP_SLOT_DEFAULT)
@@ -761,7 +763,7 @@ static bool process_data_ind_not_transient(buffer_t *b_ptr, frame_info_t *f_ptr)
 											 (FUNC_PTR)mac_t_gts_cb,
 											 NULL);
 							#ifdef GTS_DEBUG
-	 						ioport_set_value(DEBUG_PIN3, 1);
+	 						port_pin_set_output_level(DEBUG_PIN3, 1);
 							#endif
 						}
 #endif /* GTS_SUPPORT */

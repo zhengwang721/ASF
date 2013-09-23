@@ -149,11 +149,39 @@ static void reset_globals(void)
  */
 retval_t mac_init(void)
 {   
+	
 	#ifdef GTS_DEBUG
-	ioport_configure_pin(DEBUG_PIN1, IOPORT_DIR_OUTPUT |  IOPORT_INIT_LOW);
+	struct port_config config_port_pin;
+	config_port_pin.direction = PORT_PIN_DIR_OUTPUT;
+	port_pin_set_config(DEBUG_PIN1, &config_port_pin);
+	port_pin_set_config(DEBUG_PIN2, &config_port_pin);
+	port_pin_set_config(DEBUG_PIN3, &config_port_pin);
+	port_pin_set_config(DEBUG_PIN4, &config_port_pin);
+	port_pin_set_config(DEBUG_PIN5, &config_port_pin);
+	port_pin_set_config(DEBUG_PIN6, &config_port_pin);
+	port_pin_set_config(DEBUG_PIN7, &config_port_pin);
+	port_pin_set_config(DEBUG_PIN8, &config_port_pin);
+	port_pin_set_config(DEBUG_PIN9, &config_port_pin);
+    port_pin_set_config(DEBUG_PIN10, &config_port_pin);
+	port_pin_set_config(DEBUG_PIN11, &config_port_pin);
+	port_pin_set_config(DEBUG_PIN12, &config_port_pin);
+	port_pin_set_config(DEBUG_PIN13, &config_port_pin);
+	port_pin_set_config(DEBUG_PIN14, &config_port_pin);
+	port_pin_set_config(DEBUG_PIN15, &config_port_pin);
+	
+	
+	
+	
+	
+    	
+	
+	
+	
+	/*ioport_configure_pin(DEBUG_PIN1, IOPORT_DIR_OUTPUT |  IOPORT_INIT_LOW);
 	ioport_configure_pin(DEBUG_PIN2, IOPORT_DIR_OUTPUT |  IOPORT_INIT_LOW);
 	ioport_configure_pin(DEBUG_PIN3, IOPORT_DIR_OUTPUT |  IOPORT_INIT_LOW);
-	ioport_configure_pin(DEBUG_PIN4, IOPORT_DIR_OUTPUT |  IOPORT_INIT_LOW);
+	ioport_configure_pin(DEBUG_PIN4, IOPORT_DIR_OUTPUT |  IOPORT_INIT_LOW);*/
+	
 	#endif
    
 	/* Initialize TAL */
