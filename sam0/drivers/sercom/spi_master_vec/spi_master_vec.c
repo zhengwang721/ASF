@@ -180,6 +180,9 @@ enum status_code spi_master_vec_init(struct spi_master_vec_module *const module,
 	module->tx_bufdesc_ptr = NULL;
 	module->direction = SPI_DIRECTION_IDLE;
 	module->status = STATUS_OK;
+#ifdef CONF_SPI_MASTER_VEC_OS_SUPPORT
+	CONF_SPI_MASTER_VEC_CREATE_SEMAPHORE(module->busy_semaphore);
+#endif
 
 	_sercom_set_handler(sercom_index, _spi_master_vec_int_handler);
 	_sercom_instances[sercom_index] = module;
@@ -326,6 +329,10 @@ enum status_code spi_master_vec_transceive_buffer_job(
 		module->status = STATUS_BUSY;
 		system_interrupt_leave_critical_section();
 	}
+
+#ifdef CONF_SPI_MASTER_VEC_OS_SUPPORT
+	CONF_SPI_MASTER_VEC_TAKE_SEMAPHORE_NOW(module->busy_semaphore);
+#endif
 
 	module->tx_bufdesc_ptr = tx_bufdescs;
 	module->rx_bufdesc_ptr = rx_bufdescs;
@@ -498,6 +505,9 @@ check_for_read_end:
 					dir = SPI_DIRECTION_IDLE;
 					module->direction = dir;
 					module->status = STATUS_OK;
+#ifdef CONF_SPI_MASTER_VEC_OS_SUPPORT
+					CONF_SPI_MASTER_VEC_GIVE_SEMAPHORE_FROM_ISR(module->busy_semaphore);
+#endif
 				} else {
 					/* If doing BOTH, change direction to WRITE */
 					dir = SPI_DIRECTION_WRITE;
@@ -515,6 +525,9 @@ check_for_read_end:
 		dir = SPI_DIRECTION_IDLE;
 		module->direction = dir;
 		module->status = STATUS_OK;
+#ifdef CONF_SPI_MASTER_VEC_OS_SUPPORT
+		CONF_SPI_MASTER_VEC_GIVE_SEMAPHORE_FROM_ISR(module->busy_semaphore);
+#endif
 	}
 }
 

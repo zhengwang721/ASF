@@ -49,6 +49,7 @@
 #include <port.h>
 #include <spi.h>
 #include <status_codes.h>
+#include <conf_spi_master_vec.h>
 
 /**
  * \defgroup asfdoc_samd20_sercom_spi_master_vec_group SAM D20 Serial Peripheral Interface Master Driver w/ Vectored I/O (SERCOM SPI)
@@ -198,6 +199,9 @@ struct spi_master_vec_module {
 	volatile uint_fast8_t tx_lead_on_rx;
 	struct spi_master_vec_bufdesc *volatile rx_bufdesc_ptr;
 	struct spi_master_vec_bufdesc *volatile tx_bufdesc_ptr;
+#ifdef CONF_SPI_MASTER_VEC_OS_SUPPORT
+	CONF_SPI_MASTER_VEC_SEMAPHORE_TYPE busy_semaphore;
+#endif
 };
 
 /**
@@ -284,9 +288,15 @@ static inline enum status_code spi_master_vec_get_job_status_wait(
 {
 	enum status_code status;
 
+#ifdef CONF_SPI_MASTER_VEC_OS_SUPPORT
+	CONF_SPI_MASTER_VEC_TAKE_SEMAPHORE_WAIT(module->busy_semaphore);
+	status = spi_master_vec_get_job_status(module);
+	CONF_SPI_MASTER_VEC_GIVE_SEMAPHORE(module->busy_semaphore);
+#else
 	do {
 		status = spi_master_vec_get_job_status(module);
 	} while (status == STATUS_BUSY);
+#endif
 
 	return status;
 }
@@ -308,7 +318,7 @@ static inline enum status_code spi_master_vec_get_job_status_wait(
  * \retval STATUS_BUSY if a transfer was already on-going.
  * \retval <other> if transfer failed.
  */
-enum status_code spi_master_vec_transceive_buffer_wait(
+static inline enum status_code spi_master_vec_transceive_buffer_wait(
 		struct spi_master_vec_module *const module,
 		struct spi_master_vec_bufdesc tx_bufdescs[],
 		struct spi_master_vec_bufdesc rx_bufdescs[])
