@@ -270,6 +270,61 @@ static inline enum status_code spi_master_vec_get_job_status(
 	return module->status;
 }
 
+/**
+ * \brief Get status of transfer upon job end.
+ *
+ * \param[in]  module Driver instance to operate on.
+ *
+ * \return Current status of driver instance.
+ * \retval STATUS_OK if idle and previous transfer succeeded.
+ * \retval <other> if previous transfer failed.
+ */
+static inline enum status_code spi_master_vec_get_job_status_wait(
+		const struct spi_master_vec_module *const module)
+{
+	enum status_code status;
+
+	do {
+		status = spi_master_vec_get_job_status(module);
+	} while (status == STATUS_BUSY);
+
+	return status;
+}
+
+
+/**
+ * \brief Start vectored I/O transfer, wait for it to end.
+ *
+ * \param[in,out] module Driver instance to operate on.
+ * \param[in] tx_bufdescs address of buffer descriptor array for bytes to
+ * transmit.
+ * \arg \c NULL if the transfer is a simplex read.
+ * \param[in,out] rx_bufdescs address of buffer descriptor array for storing
+ * received bytes.
+ * \arg \c NULL if the transfer is a simplex write.
+ *
+ * \return Status of transfer start.
+ * \retval STATUS_OK if transfer succeeded.
+ * \retval STATUS_BUSY if a transfer was already on-going.
+ * \retval <other> if transfer failed.
+ */
+enum status_code spi_master_vec_transceive_buffer_wait(
+		struct spi_master_vec_module *const module,
+		struct spi_master_vec_bufdesc tx_bufdescs[],
+		struct spi_master_vec_bufdesc rx_bufdescs[])
+{
+	enum status_code status;
+
+	status = spi_master_vec_transceive_buffer_wait(module, tx_bufdescs,
+			rx_bufdescs);
+
+	if (status == STATUS_BUSY) {
+		return status;
+	}
+
+	return spi_master_vec_get_job_status_wait(module);
+}
+
 /** @} */
 
 #ifdef __cplusplus
