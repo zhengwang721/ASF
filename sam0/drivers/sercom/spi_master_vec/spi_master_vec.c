@@ -109,7 +109,7 @@ static inline void _spi_master_vec_pinmux_helper(uint32_t pinmux,
  * \retval STATUS_ERR_INVALID_ARG if driver has been misconfigured.
  */
 enum status_code spi_master_vec_init(struct spi_master_vec_module *const module,
-		Sercom *const sercom, struct spi_master_vec_config *const config)
+		Sercom *const sercom, const struct spi_master_vec_config *const config)
 {
 	Assert(module);
 	Assert(sercom);

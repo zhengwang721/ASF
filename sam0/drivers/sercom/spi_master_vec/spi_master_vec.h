@@ -229,7 +229,7 @@ extern "C" {
 #endif
 
 enum status_code spi_master_vec_init(struct spi_master_vec_module *const module,
-		Sercom *const sercom, struct spi_master_vec_config *const config);
+		Sercom *const sercom, const struct spi_master_vec_config *const config);
 
 /** @} */
 
