@@ -126,7 +126,6 @@ typedef struct {
 #define ACC_WPMR_WPEN (0x1u << 0) /**< \brief (ACC_WPMR) Write Protect Enable */
 #define ACC_WPMR_WPKEY_Pos 8
 #define ACC_WPMR_WPKEY_Msk (0xffffffu << ACC_WPMR_WPKEY_Pos) /**< \brief (ACC_WPMR) Write Protect KEY */
-#define ACC_WPMR_WPKEY(value) ((ACC_WPMR_WPKEY_Msk & ((value) << ACC_WPMR_WPKEY_Pos)))
 #define   ACC_WPMR_WPKEY_PASSWD (0x414343u << 8) /**< \brief (ACC_WPMR) Writing any other value in this field aborts the write operation of the WPEN bit.Always reads as 0. */
 /* -------- ACC_WPSR : (ACC Offset: 0xE8) Write Protect Status Register -------- */
 #define ACC_WPSR_WPROTERR (0x1u << 0) /**< \brief (ACC_WPSR) Write PROTection ERRor */

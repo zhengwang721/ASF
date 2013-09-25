@@ -296,7 +296,6 @@ typedef struct {
 #define SSC_WPMR_WPEN (0x1u << 0) /**< \brief (SSC_WPMR) Write Protect Enable */
 #define SSC_WPMR_WPKEY_Pos 8
 #define SSC_WPMR_WPKEY_Msk (0xffffffu << SSC_WPMR_WPKEY_Pos) /**< \brief (SSC_WPMR) Write Protect KEY */
-#define SSC_WPMR_WPKEY(value) ((SSC_WPMR_WPKEY_Msk & ((value) << SSC_WPMR_WPKEY_Pos)))
 #define   SSC_WPMR_WPKEY_PASSWD (0x535343u << 8) /**< \brief (SSC_WPMR) Writing any other value in this field aborts the write operation of the WPEN bit.Always reads as 0. */
 /* -------- SSC_WPSR : (SSC Offset: 0xE8) Write Protect Status Register -------- */
 #define SSC_WPSR_WPVS (0x1u << 0) /**< \brief (SSC_WPSR) Write Protect Violation Status */

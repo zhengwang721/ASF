@@ -213,16 +213,6 @@
 #define PIO_PA1B_TIOB0     (1u << 1)  /**< \brief Tc0 signal: TIOB0 */
 #define PIO_PA16B_TIOB1    (1u << 16) /**< \brief Tc0 signal: TIOB1 */
 #define PIO_PA27B_TIOB2    (1u << 27) /**< \brief Tc0 signal: TIOB2 */
-/* ========== Pio definition for TC1 peripheral ========== */
-#define PIO_PC25B_TCLK3    (1u << 25) /**< \brief Tc1 signal: TCLK3 */
-#define PIO_PC28B_TCLK4    (1u << 28) /**< \brief Tc1 signal: TCLK4 */
-#define PIO_PC31B_TCLK5    (1u << 31) /**< \brief Tc1 signal: TCLK5 */
-#define PIO_PC23B_TIOA3    (1u << 23) /**< \brief Tc1 signal: TIOA3 */
-#define PIO_PC26B_TIOA4    (1u << 26) /**< \brief Tc1 signal: TIOA4 */
-#define PIO_PC29B_TIOA5    (1u << 29) /**< \brief Tc1 signal: TIOA5 */
-#define PIO_PC24B_TIOB3    (1u << 24) /**< \brief Tc1 signal: TIOB3 */
-#define PIO_PC27B_TIOB4    (1u << 27) /**< \brief Tc1 signal: TIOB4 */
-#define PIO_PC30B_TIOB5    (1u << 30) /**< \brief Tc1 signal: TIOB5 */
 /* ========== Pio definition for TWI0 peripheral ========== */
 #define PIO_PA4A_TWCK0     (1u << 4)  /**< \brief Twi0 signal: TWCK0 */
 #define PIO_PA3A_TWD0      (1u << 3)  /**< \brief Twi0 signal: TWD0 */

@@ -266,7 +266,6 @@ void WDT_Handler        ( void );
 #include "instance/instance_ssc.h"
 #include "instance/instance_spi.h"
 #include "instance/instance_tc0.h"
-#include "instance/instance_tc1.h"
 #include "instance/instance_twi0.h"
 #include "instance/instance_twi1.h"
 #include "instance/instance_pwm.h"
@@ -428,7 +427,6 @@ void WDT_Handler        ( void );
 #define IFLASH_SIZE              (IFLASH0_SIZE)
 
 #define IFLASH0_ADDR (0x00400000u) /**< Internal Flash 0 base address */
-#define IFLASH_ADDR  (0x00400000u) /**< Internal Flash base address */
 #define IROM_ADDR    (0x00800000u) /**< Internal ROM base address */
 #define IRAM_ADDR    (0x20000000u) /**< Internal RAM base address */
 #define EBI_CS0_ADDR (0x60000000u) /**< EBI Chip Select 0 base address */
@@ -460,10 +458,12 @@ void WDT_Handler        ( void );
 #define CHIP_FREQ_MAINCK_RC_12MHZ       (12000000UL)
 #define CHIP_FREQ_CPU_MAX               (120000000UL)
 #define CHIP_FREQ_XTAL_32K              (32768UL)
-#define CHIP_FREQ_XTAL_12M              (12000000UL)
 
 /* Embedded Flash Write Wait State */
 #define CHIP_FLASH_WRITE_WAIT_STATE     (6U)
+
+#if defined __SAM4S2A__ || defined __SAM4S2B__ || defined __SAM4S2C__ || \
+    defined __SAM4S4A__ || defined __SAM4S4B__ || defined __SAM4S4C__
 
 /* Embedded Flash Read Wait State (VDDCORE set at 1.20V and VDDIO 3.3V) */
 #define CHIP_FREQ_FWS_0                 (29000000UL)  /**< \brief Maximum operating frequency when FWS is 0 */
@@ -471,6 +471,18 @@ void WDT_Handler        ( void );
 #define CHIP_FREQ_FWS_2                 (88000000UL)  /**< \brief Maximum operating frequency when FWS is 2 */
 #define CHIP_FREQ_FWS_3                 (10800000UL)  /**< \brief Maximum operating frequency when FWS is 3 */
 #define CHIP_FREQ_FWS_4                 (120000000UL) /**< \brief Maximum operating frequency when FWS is 4 */
+
+#else  /* SAM4S8/S16/SA16/SD16/SD32 */
+
+/* Embedded Flash Read Wait State (VDDCORE set at 1.20V and VDDIO 3.3V) */
+#define CHIP_FREQ_FWS_0                 (20000000UL)  /**< \brief Maximum operating frequency when FWS is 0 */
+#define CHIP_FREQ_FWS_1                 (40000000UL)  /**< \brief Maximum operating frequency when FWS is 1 */
+#define CHIP_FREQ_FWS_2                 (60000000UL)  /**< \brief Maximum operating frequency when FWS is 2 */
+#define CHIP_FREQ_FWS_3                 (80000000UL)  /**< \brief Maximum operating frequency when FWS is 3 */
+#define CHIP_FREQ_FWS_4                 (100000000UL) /**< \brief Maximum operating frequency when FWS is 4 */
+#define CHIP_FREQ_FWS_5                 (123000000UL) /**< \brief Maximum operating frequency when FWS is 5 */
+
+#endif
 
 /* HYSTeresis levels: please refer to Electrical Characteristics */
 #define ACC_ACR_HYST_50MV_MAX           (0x01UL)

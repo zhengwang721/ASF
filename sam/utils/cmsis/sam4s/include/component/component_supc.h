@@ -68,28 +68,11 @@ typedef struct {
 #define   SUPC_CR_XTALSEL_CRYSTAL_SEL (0x1u << 3) /**< \brief (SUPC_CR) if KEY is correct, switches the slow clock on the crystal oscillator output. */
 #define SUPC_CR_KEY_Pos 24
 #define SUPC_CR_KEY_Msk (0xffu << SUPC_CR_KEY_Pos) /**< \brief (SUPC_CR) Password */
-#define SUPC_CR_KEY(value) ((SUPC_CR_KEY_Msk & ((value) << SUPC_CR_KEY_Pos)))
 #define   SUPC_CR_KEY_PASSWD (0xA5u << 24) /**< \brief (SUPC_CR) Writing any other value in this field aborts the write operation. */
 /* -------- SUPC_SMMR : (SUPC Offset: 0x04) Supply Controller Supply Monitor Mode Register -------- */
 #define SUPC_SMMR_SMTH_Pos 0
 #define SUPC_SMMR_SMTH_Msk (0xfu << SUPC_SMMR_SMTH_Pos) /**< \brief (SUPC_SMMR) Supply Monitor Threshold */
 #define SUPC_SMMR_SMTH(value) ((SUPC_SMMR_SMTH_Msk & ((value) << SUPC_SMMR_SMTH_Pos)))
-#define   SUPC_SMMR_SMTH_1_9V (0x0u << 0) /**< \brief (SUPC_SMMR) 1.9 V */
-#define   SUPC_SMMR_SMTH_2_0V (0x1u << 0) /**< \brief (SUPC_SMMR) 2.0 V */
-#define   SUPC_SMMR_SMTH_2_1V (0x2u << 0) /**< \brief (SUPC_SMMR) 2.1 V */
-#define   SUPC_SMMR_SMTH_2_2V (0x3u << 0) /**< \brief (SUPC_SMMR) 2.2 V */
-#define   SUPC_SMMR_SMTH_2_3V (0x4u << 0) /**< \brief (SUPC_SMMR) 2.3 V */
-#define   SUPC_SMMR_SMTH_2_4V (0x5u << 0) /**< \brief (SUPC_SMMR) 2.4 V */
-#define   SUPC_SMMR_SMTH_2_5V (0x6u << 0) /**< \brief (SUPC_SMMR) 2.5 V */
-#define   SUPC_SMMR_SMTH_2_6V (0x7u << 0) /**< \brief (SUPC_SMMR) 2.6 V */
-#define   SUPC_SMMR_SMTH_2_7V (0x8u << 0) /**< \brief (SUPC_SMMR) 2.7 V */
-#define   SUPC_SMMR_SMTH_2_8V (0x9u << 0) /**< \brief (SUPC_SMMR) 2.8 V */
-#define   SUPC_SMMR_SMTH_2_9V (0xAu << 0) /**< \brief (SUPC_SMMR) 2.9 V */
-#define   SUPC_SMMR_SMTH_3_0V (0xBu << 0) /**< \brief (SUPC_SMMR) 3.0 V */
-#define   SUPC_SMMR_SMTH_3_1V (0xCu << 0) /**< \brief (SUPC_SMMR) 3.1 V */
-#define   SUPC_SMMR_SMTH_3_2V (0xDu << 0) /**< \brief (SUPC_SMMR) 3.2 V */
-#define   SUPC_SMMR_SMTH_3_3V (0xEu << 0) /**< \brief (SUPC_SMMR) 3.3 V */
-#define   SUPC_SMMR_SMTH_3_4V (0xFu << 0) /**< \brief (SUPC_SMMR) 3.4 V */
 #define SUPC_SMMR_SMSMPL_Pos 8
 #define SUPC_SMMR_SMSMPL_Msk (0x7u << SUPC_SMMR_SMSMPL_Pos) /**< \brief (SUPC_SMMR) Supply Monitor Sampling Period */
 #define   SUPC_SMMR_SMSMPL_SMD (0x0u << 8) /**< \brief (SUPC_SMMR) Supply Monitor disabled */
@@ -118,7 +101,6 @@ typedef struct {
 #define   SUPC_MR_OSCBYPASS_BYPASS (0x1u << 20) /**< \brief (SUPC_MR) the 32-KHz XTAL oscillator is selected and is put in bypass mode. */
 #define SUPC_MR_KEY_Pos 24
 #define SUPC_MR_KEY_Msk (0xffu << SUPC_MR_KEY_Pos) /**< \brief (SUPC_MR) Password Key */
-#define SUPC_MR_KEY(value) ((SUPC_MR_KEY_Msk & ((value) << SUPC_MR_KEY_Pos)))
 #define   SUPC_MR_KEY_PASSWD (0xA5u << 24) /**< \brief (SUPC_MR) Writing any other value in this field aborts the write operation. */
 /* -------- SUPC_WUMR : (SUPC Offset: 0x0C) Supply Controller Wake-up Mode Register -------- */
 #define SUPC_WUMR_SMEN (0x1u << 1) /**< \brief (SUPC_WUMR) Supply Monitor Wake-up Enable */

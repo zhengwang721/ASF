@@ -4,7 +4,7 @@
  * \brief Provides the low-level initialization functions that called 
  * on chip startup.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -55,7 +55,7 @@ extern "C" {
 
 #include <stdint.h>
 
-extern uint32_t SystemCoreClock;	/* System Clock Frequency (Core Clock) */
+extern uint32_t SystemCoreClock; /* System Clock Frequency (Core Clock) */
 
 /**
  * @brief Setup the microcontroller system.
@@ -64,15 +64,15 @@ extern uint32_t SystemCoreClock;	/* System Clock Frequency (Core Clock) */
 void SystemInit(void);
 
 /**
- * @brief Updates the SystemCoreClock with current core Clock 
+ * @brief Updates the SystemCoreClock with current core Clock
  * retrieved from cpu registers.
  */
 void SystemCoreClockUpdate(void);
 
-/** 
+/**
  * Initialize flash.
  */
-void system_init_flash(uint32_t ul_clk);
+void system_init_flash(uint32_t dw_clk);
 
 /* @cond 0 */
 /**INDENT-OFF**/
