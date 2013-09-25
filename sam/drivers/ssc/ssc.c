@@ -64,7 +64,9 @@ extern "C" {
  * @{
  */
 
-#define SSC_WPKEY SSC_WPMR_WPKEY(0x535343)
+#ifndef SSC_WPMR_WPKEY_PASSWD
+#  define SSC_WPMR_WPKEY_PASSWD SSC_WPMR_WPKEY(0x535343)
+#endif
 
 #ifndef SSC_TCMR_START_TF_RISING
 # define SSC_TCMR_START_TF_RISING SSC_TCMR_START_RF_RISING
@@ -809,9 +811,9 @@ void *ssc_get_rx_access(Ssc *p_ssc)
 void ssc_set_writeprotect(Ssc *p_ssc, uint32_t ul_enable)
 {
 	if (ul_enable) {
-		p_ssc->SSC_WPMR = SSC_WPKEY | SSC_WPMR_WPEN;
+		p_ssc->SSC_WPMR = SSC_WPMR_WPKEY_PASSWD | SSC_WPMR_WPEN;
 	} else {
-		p_ssc->SSC_WPMR = SSC_WPKEY;
+		p_ssc->SSC_WPMR = SSC_WPMR_WPKEY_PASSWD;
 	}
 }
 

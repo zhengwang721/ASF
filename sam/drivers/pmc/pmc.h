@@ -64,16 +64,30 @@ extern "C" {
 #define PMC_TIMEOUT             (2048)
 
 /** Key to unlock CKGR_MOR register */
-#define PMC_CKGR_MOR_KEY_VALUE  CKGR_MOR_KEY(0x37)
+#ifndef PMC_WPMR_WPKEY_PASSWD
+#  define PMC_WPMR_WPKEY_PASSWD CKGR_MOR_KEY(0x37)
+#endif
+#define PMC_CKGR_MOR_KEY_VALUE  PMC_WPMR_WPKEY_PASSWD
 
 /** Key used to write SUPC registers */
 #define SUPC_KEY_VALUE          ((uint32_t) 0xA5)
+
+#ifndef SUPC_CR_KEY_PASSWD
+#  define SUPC_CR_KEY_PASSWD SUPC_CR_KEY(SUPC_KEY_VALUE)
+#endif
+
+#ifndef SUPC_MR_KEY_PASSWD
+#  define SUPC_MR_KEY_PASSWD SUPC_MR_KEY(SUPC_KEY_VALUE)
+#endif
 
 /** Mask to access fast startup input */
 #define PMC_FAST_STARTUP_Msk    (0x7FFFFu)
 
 /** PMC_WPMR Write Protect KEY, unlock it */
-#define PMC_WPMR_WPKEY_VALUE    PMC_WPMR_WPKEY((uint32_t) 0x504D43)
+#ifndef PMC_WPMR_WPKEY_PASSWD
+#  define PMC_WPMR_WPKEY_PASSWD PMC_WPMR_WPKEY((uint32_t) 0x504D43)
+#endif
+#define PMC_WPMR_WPKEY_VALUE    PMC_WPMR_WPKEY_PASSWD
 
 /** Using external oscillator */
 #define PMC_OSC_XTAL            0

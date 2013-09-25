@@ -51,6 +51,10 @@ extern "C" {
 /**INDENT-ON**/
 /// @endcond
 
+#ifndef PIO_WPMR_WPKEY_PASSWD
+#  define PIO_WPMR_WPKEY_PASSWD PIO_WPMR_WPKEY(0x50494Fu)
+#endif
+
 /**
  * \defgroup sam_drivers_pio_group Peripheral Parallel Input/Output (PIO) Controller
  *
@@ -670,8 +674,6 @@ void pio_set_additional_interrupt_mode(Pio *p_pio,
 	}
 }
 
-#define PIO_WPMR_WPKEY_VALUE PIO_WPMR_WPKEY(0x50494Fu)
-
 /**
  * \brief Enable or disable write protect of PIO registers.
  *
@@ -680,7 +682,7 @@ void pio_set_additional_interrupt_mode(Pio *p_pio,
  */
 void pio_set_writeprotect(Pio *p_pio, const uint32_t ul_enable)
 {
-	p_pio->PIO_WPMR = PIO_WPMR_WPKEY_VALUE | ul_enable;
+	p_pio->PIO_WPMR = PIO_WPMR_WPKEY_PASSWD | ul_enable;
 }
 
 /**

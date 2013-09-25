@@ -280,11 +280,11 @@ void pmc_switch_sclk_to_32kxtal(uint32_t ul_bypass)
 {
 	/* Set Bypass mode if required */
 	if (ul_bypass == 1) {
-		SUPC->SUPC_MR |= SUPC_MR_KEY(SUPC_KEY_VALUE) |
+		SUPC->SUPC_MR |= SUPC_MR_KEY_PASSWD |
 			SUPC_MR_OSCBYPASS;
 	}
 
-	SUPC->SUPC_CR = SUPC_CR_KEY(SUPC_KEY_VALUE) | SUPC_CR_XTALSEL;
+	SUPC->SUPC_CR = SUPC_CR_KEY_PASSWD | SUPC_CR_XTALSEL;
 }
 
 /**
@@ -1140,7 +1140,7 @@ void pmc_enable_waitmode(void)
 	SCB->SCR &= (uint32_t) ~ SCB_SCR_SLEEPDEEP_Msk;
 
 	/* Set the WAITMODE bit = 1 */
-	PMC->CKGR_MOR |= CKGR_MOR_KEY(0x37u) | CKGR_MOR_WAITMODE;
+	PMC->CKGR_MOR |= PMC_WPMR_WPKEY_PASSWD | CKGR_MOR_WAITMODE;
 
 	/* Waiting for Master Clock Ready MCKRDY = 1 */
 	while (!(PMC->PMC_SR & PMC_SR_MCKRDY));
@@ -1187,7 +1187,7 @@ void pmc_enable_backupmode(void)
 {
 	SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
 #if (SAM4S || SAM4E || SAM4N)
-	SUPC->SUPC_CR = SUPC_CR_KEY(SUPC_KEY_VALUE) | SUPC_CR_VROFF_STOP_VREG;
+	SUPC->SUPC_CR = SUPC_CR_KEY_PASSWD | SUPC_CR_VROFF_STOP_VREG;
 #else
 	__WFE();
 #endif
