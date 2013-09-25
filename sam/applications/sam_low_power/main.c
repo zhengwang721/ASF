@@ -405,7 +405,11 @@ static void test_wait_mode(void)
 	pmc_disable_pllack();
 
 	/* Set wakeup input for fast startup */
+#if (BOARD == SAM4E_XPLAINED_PRO)
+	rtt_wakeup();
+#else
 	pmc_set_fast_startup_input(WAKEUP_WAIT_INPUT_ID);
+#endif
 
 	/* Enter into wait Mode */
 	pmc_enable_waitmode();
@@ -436,6 +440,8 @@ static void test_backup_mode(void)
 	/* Enable the PIO for wake-up */
 #if (BOARD == SAM3U_EK)
 	supc_set_wakeup_mode(SUPC, SUPC_WUMR_FWUPEN_ENABLE);
+#elif (BOARD == SAM4E_XPLAINED_PRO)
+	rtt_wakeup();
 #else
 	supc_set_wakeup_inputs(SUPC, WAKEUP_BACKUP_INPUT_ID,
 			WAKEUP_BACKUP_INPUT_ID);
