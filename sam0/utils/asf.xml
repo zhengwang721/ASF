@@ -5,7 +5,6 @@
 		</info>
 		<build type="include-path" value="."/>
 		<build type="header-file" subtype="api" value="compiler.h"/>
-		<build type="header-file" subtype="api" value="unaligned.h"/>
 		<build type="header-file" subtype="api" value="status_codes.h"/>
 		<build type="include-path" value="header_files/"/>
 		<build type="header-file" value="header_files/io.h"/>
