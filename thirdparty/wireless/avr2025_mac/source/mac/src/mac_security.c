@@ -97,10 +97,6 @@
 #define FIVE_OCTET_LOOK_UP              (0x00)
 #define NINE_OCTET_LOOK_UP              (0x01)
 
-#define LEN_MIC_32                      (0x04)
-#define LEN_MIC_64                      (0x08)
-#define LEN_MIC_128                     (0x10)
-
 #define SHORT_ADDR_MAX                  (0xFFFD)
 #define SHORT_ADDR_MIN                  (0x0000)
 #define NO_SHORT_ADDR                   (0xFFFE)
@@ -354,9 +350,81 @@ retval_t mac_build_aux_sec_header(uint8_t **frame_ptr, mcps_data_req_t *pmdr,
  *
  * @return retval_t MAC_SUCCESS or MAC_UNSUPPORTED_SECURITY
  */
+
+
+/** Test vectors for Testing the MAC Security as per IEEE 802.15.4 2011 Spec */
+#ifdef MAC_SECURITY_TEST_VECTOR
+/** Test Vector  for MAC Cmd Testing */
+#if 0  
+	uint8_t key_local[16] = { 0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 0xC8, 0xC9, 0xCA, 0xCB, 0xCC, 0xCD, 0xCE, 0xCF};
+	uint8_t test_payload[] = {0x01, 0xCE};
+	uint8_t text_header[] = {0x2B, 0xDC, 0x84, 0x21, 0x43, 0x02, 0x00, 0x00, 0x00, 0x00, 0x48, \
+							 0xDE, 0xAC, 0xFF, 0xFF, 0x01, 0x00, 0x00, 0x00, 0x00, 0x48, 0xDE, \
+							 0xAC, 0x06, 0x05, 0x00, 0x00, 0x00, 0x01, 0xCE};
+	uint8_t nonce_test[AES_BLOCKSIZE] = {0};
+									 
+	uint8_t hdr_len_test = 29;
+	uint64_t IeeeAddress = 0xacde480000000001;
+	uint64_t IeeeAddress_dst  = 0xacde480000000002;
+	uint32_t FrameCounter = 0x5;
+	uint8_t SecurityLevel = 0x06;	
+	uint8_t enc_data_test[aMaxPHYPacketSize - FCS_LEN + AES_BLOCKSIZE];
+	uint8_t msdu_length = 1;
+#endif	
+
+/** Test Vector  for MAC Beacon Testing */
+#if 0 
+	uint8_t key_local[16] = { 0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 0xC8, 0xC9, 0xCA, 0xCB, 0xCC, 0xCD, 0xCE, 0xCF};
+	uint8_t test_payload[] = {0x51, 0x52, 0x53, 0x54};
+	uint8_t text_header[] = {0x08, 0xD0, 0x84, 0x21, 0x43, 0x01, 0x00, 0x00, 0x00, 0x00, 0x48, \
+		                     0xDE, 0xAC, 0x02, 0x05, 0x00, 0x00, 0x00, 0x55, 0xCF, 0x00, 0x00, \
+							 0x51, 0x52, 0x53, 0x54};
+	uint8_t nonce_test[AES_BLOCKSIZE] = {0};
+									 
+	uint8_t hdr_len_test = 26;
+	uint64_t IeeeAddress = 0xacde480000000001;
+	uint32_t FrameCounter = 0x5;
+	uint8_t SecurityLevel = 0x02;	
+	uint8_t enc_data_test[aMaxPHYPacketSize - FCS_LEN + AES_BLOCKSIZE];
+	uint8_t msdu_length = 0;
+#endif	
+
+/* Test Vector  for Data Encryption Testing */
+#if 0  
+	uint8_t key_local[16] = { 0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 0xC8, 0xC9, 0xCA, 0xCB, 0xCC, 0xCD, 0xCE, 0xCF};
+	uint8_t test_payload[] = {0x61, 0x62, 0x63, 0x64};
+	uint8_t text_header[] = {0x69, 0xDC, 0x84, 0x21, 0x43, 0x02, 0x00, 0x00, 0x00, 0x00, 0x48, 0xDE, 0xAC, 0x01, 0x00, 0x00, 0x00, 0x00, 0x48, 0xDE, 0xAC, \
+		                     0x04, 0x05, 0x00, 0x00, 0x00, 0x61, 0x62, 0x63, 0x64};
+	uint8_t nonce_test[AES_BLOCKSIZE] = {0};
+									 
+	uint8_t hdr_len_test = 26;
+	uint64_t IeeeAddress = 0xacde480000000001;
+	uint64_t IeeeAddress_dst  = 0xacde480000000002;
+	uint32_t FrameCounter = 0x5;
+	uint8_t SecurityLevel = 0x04;	
+	uint8_t enc_data_test[aMaxPHYPacketSize - FCS_LEN + AES_BLOCKSIZE] = {0};
+	uint8_t msdu_length = 4;
+#endif	
+#endif
+
+
 retval_t mac_secure(frame_info_t *frame, uint8_t *mac_payload_ptr,
 		mcps_data_req_t *pmdr)
 {
+#ifdef MAC_SECURITY_TEST_VECTOR
+{
+	create_nonce((uint8_t *)&IeeeAddress, (uint8_t *)&FrameCounter, SecurityLevel, nonce_test);
+    memcpy(enc_data_test, text_header, (hdr_len_test + msdu_length));
+	stb_ccm_secure( enc_data_test, /* plain text header (string a) and payload concatenated */
+					nonce_test,
+					key_local, /* security_key */
+					hdr_len_test, /* plain text header length */
+					msdu_length, /* Length of payload to be encrypted */
+					SecurityLevel, /* security level **/
+					AES_DIR_ENCRYPT);   					
+}	
+#endif	
+	
 	uint8_t *key;
     mac_key_table_t *key_desc;
     bool security_enabled = frame->mpdu[FCF_POS] & SEC_CTRL_SEC_EN_MASK;
@@ -407,31 +475,31 @@ retval_t mac_secure(frame_info_t *frame, uint8_t *mac_payload_ptr,
 	{
 	case FCF_FRAMETYPE_DATA:                  /* (0x01) */
 	{
-		/* Append payload (string m) */
-		memcpy(&enc_data[hdr_len], mac_payload_ptr, pmdr->msduLength);
-		{
-			uint8_t *current_key;
+			/* Append payload (string m) */
+			memcpy(&enc_data[hdr_len], mac_payload_ptr, pmdr->msduLength);
+			{
+				uint8_t *current_key;
 
-			/* Shall the real key be used or rather a test key? */
-			current_key = key;
+				/* Shall the real key be used or rather a test key? */
+				current_key = key;
 
-			stb_ccm_secure(enc_data, /* plaintext header (string a)
-			                          *and payload concatenated */
-					nonce,
-					current_key, /*security_key */
-					hdr_len, /* plaintext header length */
-					pmdr->msduLength, /* Length of payload
-			                                   *to be encrypted */
-					pmdr->SecurityLevel, /* security level
-			                                      **/
-					AES_DIR_ENCRYPT);
-		}
+				stb_ccm_secure(enc_data, /* plaintext header (string a)
+										  *and payload concatenated */
+						nonce,
+						current_key, /*security_key */
+						hdr_len, /* plaintext header length */
+						pmdr->msduLength, /* Length of payload
+												   *to be encrypted */
+						pmdr->SecurityLevel, /* security level
+													  **/
+						AES_DIR_ENCRYPT);
+			}
 
-		mac_sec_pib.FrameCounter++;
+			mac_sec_pib.FrameCounter++;
 
-		/* Replace original payload by secured payload */
-		memcpy(mac_payload_ptr - m, &enc_data[hdr_len],
-				pmdr->msduLength + m);
+			/* Replace original payload by secured payload */
+			memcpy(mac_payload_ptr - m, &enc_data[hdr_len],
+					pmdr->msduLength + m);
 	}
 		break;
 	default:
@@ -457,8 +525,8 @@ static inline retval_t outgoing_key_retrieval(mcps_data_req_t *pmdr, mac_key_tab
     if (pmdr->KeyIdMode == KEY_ID_MODE_0)    // implicit key identification
     {
 		switch (pmdr->DstAddrMode) {
-		/* 1) is not applicabled for ZIP */
-		/* 2) is not applicabled for ZIP */
+		/* 1) is not applicable for ZIP */
+		/* 2) is not applicable for ZIP */
 #ifndef MAC_SECURITY_ZIP
                 /* 7.5.8.2.2 - a.1 & a.2 */
             case FCF_NO_ADDR:
@@ -783,8 +851,8 @@ static inline retval_t incoming_sec_material_retrieval(parse_t *mac_parse_data_b
     {
         switch (mac_parse_data_buf->src_addr_mode)
         {
-                // 1) is not applicabled for ZIP
-                // 2) is not applicabled for ZIP
+                // 1) is not applicable for ZIP
+                // 2) is not applicable for ZIP
             case FCF_NO_ADDR:
                 {
                     if (mac_sec_pib.PANCoordShortAddress <= SHORT_ADDR_MAX && mac_sec_pib.PANCoordShortAddress >= SHORT_ADDR_MIN)
