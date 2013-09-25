@@ -1111,7 +1111,9 @@ void system_clock_init(void);
  */
 static inline void system_flash_set_waitstates(uint8_t wait_states)
 {
-	Assert((wait_states & NVMCTRL_CTRLB_RWS_Msk) == wait_states);
+	Assert(NVMCTRL_CTRLB_RWS((uint32_t)wait_states) ==
+			((uint32_t)wait_states << NVMCTRL_CTRLB_RWS_Pos));
+
 	NVMCTRL->CTRLB.bit.RWS = wait_states;
 }
 /**
@@ -1200,7 +1202,7 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *	     This driver will enable and configure the DFLL before the ONDEMAND bit is set.
  *	</td>
  *	</tr>
- *	
+ *
  *
  *
  * \section asfdoc_samd20_system_clock_extra_history Module History
@@ -1215,13 +1217,23 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *	</tr>
  *	<tr>
  *		<td>
- *			\li Changed default value for CONF_CLOCK_DFLL_ON_DEMAND from true to false
+ *			\li Fixed system_flash_set_waitstates() failing with an assertion
+ *              if an odd number of wait states provided.
  *		</td>
  *	</tr>
  *	<tr>
- *		<td>\li Updated dfll configuration function to implement workaround for errata 9905 in the DFLL module.
- *		    \li Updated \c system_clock_init() to reset interrupt flags before they are used, errata 10558.
- *		    \li Fixed \c system_clock_source_get_hz() to return correcy DFLL frequency number.
+ *		<td>
+ *			\li Changed default value for CONF_CLOCK_DFLL_ON_DEMAND from true
+ *              to false
+ *		</td>
+ *	</tr>
+ *	<tr>
+ *		<td>\li Updated dfll configuration function to implement workaround for
+ *              errata 9905 in the DFLL module.
+ *		    \li Updated \c system_clock_init() to reset interrupt flags before
+ *              they are used, errata 10558.
+ *		    \li Fixed \c system_clock_source_get_hz() to return correcy DFLL
+ *              frequency number.
  *		</td>
  *	</tr>
  *	<tr>
