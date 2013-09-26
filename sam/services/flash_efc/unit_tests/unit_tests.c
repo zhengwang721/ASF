@@ -134,7 +134,7 @@ static void run_flash_configure_test(const struct test_case *test)
 {
 	uint32_t ul_default_ws;
 	uint32_t ul_tmp_ws;
-    uint32_t ul_mck = sysclk_get_cpu_hz();
+	uint32_t ul_mck = sysclk_get_cpu_hz();
 
 	/* Backup default wait state */
 	ul_default_ws = flash_get_wait_state(IFLASH_ADDR);
