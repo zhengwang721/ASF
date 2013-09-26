@@ -104,6 +104,9 @@
 #include "tal.h"
 #include "ieee_const.h"
 #include "mac_internal.h"
+#include "hw_timer.h"
+#include "common_hw_timer.h"
+#include "conf_hw_timer.h"
 #include <asf.h>
 
 /* === TYPES =============================================================== */
@@ -185,19 +188,25 @@ static uint32_t bc_rx_cnt;
 
 /* This variable counts the number of received indirect data frames. */
 static uint32_t indirect_rx_cnt;
-
+extern void mac_wakeup(void *parameter);
 /** This variable stores the current state of the node. */
 static app_state_t app_state = APP_IDLE;
-
+bool sys_sleep = false;
 /** This array stores the current msdu payload. */
 static uint8_t msdu_payload[PAYLOAD_LEN];
-
+static uint8_t APP_TIMER_SLEEP;
 static uint8_t current_channel;
 static uint8_t current_channel_page;
 static uint32_t channels_supported;
-
+static void  enter_sleep(uint32_t timeout);
+struct tc_config timer_config;
+struct tc_module module_inst;
+void wakeup_cb(void *parameter);
 static uint8_t APP_TIMER;
-
+extern void tc_ovf_callback(struct tc_module *const module_instance);
+extern void tc_cca_callback(struct tc_module *const module_instance);
+extern void hw_overflow_cb();
+extern void hw_expiry_cb();
 #ifdef MAC_SECURITY_ZIP
 /*
  * This is implemented as an array of bytes, but actually this is a
@@ -285,7 +294,6 @@ int main(void)
 	LED_On(LED_START);     /* indicating application is started */
 	LED_Off(LED_NWK_SETUP); /* indicating network is started */
 	LED_Off(LED_DATA);     /* indicating data transmission */
-
 	cpu_irq_enable();
 
 #ifdef SIO_HUB
@@ -300,11 +308,24 @@ int main(void)
 #endif
 
 	sw_timer_get_id(&APP_TIMER);
-
+   
 	wpan_mlme_reset_req(true);
-
+    #ifdef ENABLE_SLEEP
+    sw_timer_get_id(&APP_TIMER_SLEEP);
+    
+	uint32_t sleep_time =0;
+	#endif
+LED_Off(LED_NWK_SETUP);
 	while (true) {
 		wpan_task();
+		#ifdef ENABLE_SLEEP
+		sleep_time = mac_ready_to_sleep();
+		if(sleep_time > (uint32_t)50000)
+		{       
+			  
+			enter_sleep(50000);
+		}
+		#endif
 	}
 }
 
@@ -490,6 +511,7 @@ void usr_mlme_associate_conf(uint16_t AssocShortAddress,
 		gts_spec.GtsDirection=GTS_RX_SLOT;
 		gts_spec.GtsCharType=GTS_ALLOCATE;
 		wpan_mlme_gts_req(AssocShortAddress,gts_spec);
+		
 	#endif
 
 	} else {
@@ -749,7 +771,11 @@ void usr_mlme_get_conf(uint8_t status,
 mac_key_table_t *key_table = (mac_key_table_t *)PIBAttributeValue;
 #endif
 	if ((status == MAC_SUCCESS) && (PIBAttribute == phyCurrentPage)) {
+        #ifdef HIGH_DATA_RATE_SUPPORT
+		current_channel_page = 17;
+        #else
 		current_channel_page = *(uint8_t *)PIBAttributeValue;
+        #endif
 #ifdef MAC_SECURITY_ZIP
 		wpan_mlme_get_req(phyChannelsSupported,NO_PIB_INDEX);
 #else
@@ -1483,11 +1509,12 @@ static void network_search_indication_cb(void *parameter)
 	LED_Toggle(LED_NWK_SETUP);
 
 	/* Re-start timer again. */
-	sw_timer_start(APP_TIMER,
+	/*sw_timer_start(APP_TIMER,
 			500000,
 			SW_TIMEOUT_RELATIVE,
 			(FUNC_PTR)network_search_indication_cb,
-			NULL);
+			NULL);*/
+
 
 	parameter = parameter; /* Keep compiler happy. */
 }
@@ -1504,3 +1531,39 @@ static void rx_data_led_off_cb(void *parameter)
 
 	parameter = parameter; /* Keep compiler happy. */
 }
+
+#ifdef ENABLE_SLEEP
+static void enter_sleep(uint32_t timeout)
+{   
+	
+	ENTER_CRITICAL_REGION();
+	
+	sys_sleep = true;
+	common_tc_stop();
+	common_tc_init();
+	set_common_tc_overflow_callback(hw_overflow_cb);
+	set_common_tc_expiry_callback(hw_expiry_cb);
+	timeout = timeout-150;
+	sw_timer_start(APP_TIMER_SLEEP,timeout,
+	SW_TIMEOUT_RELATIVE,
+	(FUNC_PTR)wakeup_cb,
+	NULL);
+	LEAVE_CRITICAL_REGION();
+	system_set_sleepmode(SYSTEM_SLEEPMODE_IDLE_0);
+    system_sleep();
+}
+
+void wakeup_cb(void *parameter)
+{
+	
+	ENTER_CRITICAL_REGION();
+	common_tc_stop();
+	common_tc_init();
+	set_common_tc_overflow_callback(hw_overflow_cb);
+	set_common_tc_expiry_callback(hw_expiry_cb);
+	sw_timer_stop(APP_TIMER_SLEEP);
+	mac_wakeup(NULL);
+	LEAVE_CRITICAL_REGION();
+}
+#endif
+

@@ -105,6 +105,11 @@
 #include "mac_api.h"
 #include "tal.h"
 #include "ieee_const.h"
+#include "tc.h"
+#include "tc_interrupt.h"
+#include "hw_timer.h"
+#include "common_hw_timer.h"
+#include "conf_hw_timer.h"
 #include <asf.h>
 /* === TYPES =============================================================== */
 
@@ -143,7 +148,7 @@ typedef enum coord_state_tag {
 /** Defines the default Beacon Order. */
 #define DEFAULT_BO                      (5)
 /** Defines the default Superframe Order. */
-#define DEFAULT_SO                      (5)
+#define DEFAULT_SO                      (4)
 
 /**
  * Defines the length of the beacon payload delivered to the devices.
@@ -208,7 +213,6 @@ typedef enum coord_state_tag {
 
 /** This array stores all device related information. */
 static associated_device_t device_list[MAX_NUMBER_OF_DEVICES];
-
 /** Stores the number of associated devices. */
 static uint8_t no_of_assoc_devices;
 
@@ -219,10 +223,8 @@ static uint8_t gts_payload[GTS_PAYLOAD_LEN] = {"GTS Data from coordinator"};
 #endif /* GTS_SUPPORT */
 /** This variable stores the current state of the node. */
 static coord_state_t coord_state = COORD_STARTING;
-
 /** This variable counts the number of transmitted data frames. */
 static uint32_t tx_cnt;
-
 /** Store the current MSDU handle to be used for a data frame. */
 static uint8_t curr_msdu_handle;
 #ifdef GTS_SUPPORT
@@ -296,7 +298,6 @@ static void indirect_data_cb(void *parameter);
  *                  to indicated LED to be switched off)
  */
 static void gts_data_cb(void *parameter);
-
 /**
  * @brief Callback function for updating the beacon payload
  *
@@ -738,7 +739,11 @@ void usr_mlme_get_conf(uint8_t status,
 	 mac_key_table_t *key_table = (mac_key_table_t *)PIBAttributeValue;
 #endif
 	if ((status == MAC_SUCCESS) && (PIBAttribute == phyCurrentPage)) {
+        #ifdef HIGH_DATA_RATE_SUPPORT
+		current_channel_page = 17;
+        #else
 		current_channel_page = *(uint8_t *)PIBAttributeValue;
+        #endif
 		wpan_mlme_get_req(phyChannelsSupported 
 #if (defined MAC_SECURITY_ZIP) || (defined MAC_SECURITY_2006)		
 		,0
@@ -768,7 +773,7 @@ void usr_mlme_get_conf(uint8_t status,
 
 		short_addr[0] = (uint8_t)COORD_SHORT_ADDR;  /* low byte */
 		short_addr[1] = (uint8_t)(COORD_SHORT_ADDR >> 8); /* high byte */
-		printf("set short addr\n\r");
+
 		wpan_mlme_set_req(macShortAddress,
 #if (defined MAC_SECURITY_ZIP) || (defined MAC_SECURITY_2006)		
 		0, 
@@ -1303,7 +1308,7 @@ void usr_mlme_set_conf(uint8_t status,
 		 * This request leads to a set confirm message ->
 		 *usr_mlme_set_conf
 		 */
-		bool rx_on_when_idle = true;
+		bool rx_on_when_idle = false;
 
 		wpan_mlme_set_req(macRxOnWhenIdle, 
 #if (defined MAC_SECURITY_ZIP) || (defined MAC_SECURITY_2006)		
@@ -1797,3 +1802,5 @@ static void bcn_payload_update_cb(void *parameter)
 
 	parameter = parameter; /* Keep compiler happy. */
 }
+
+

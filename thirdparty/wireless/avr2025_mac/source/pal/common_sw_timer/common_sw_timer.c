@@ -42,6 +42,8 @@
 #include "conf_common_sw_timer.h"
 #include "common_hw_timer.h"
 #include "common_sw_timer.h"
+#include "mac_internal.h"
+#include "system.h"
 #include "board.h"
 
 #if (TOTAL_NUMBER_OF_SW_TIMERS > 0)
@@ -52,6 +54,8 @@
  * to know about this value as well.
  */
 volatile uint16_t sys_time;
+extern void wakeup_cb(void *parameter);
+extern bool sys_sleep;
 
 /*
  * This is the timer array.
@@ -87,6 +91,7 @@ static void start_absolute_timer(uint8_t timer_id,
 		FUNC_PTR handler_cb,
 		void *parameter);
 static inline uint32_t gettime(void);
+
 static void internal_timer_handler(void);
 static inline bool compare_time(uint32_t t1, uint32_t t2);
 static void load_hw_timer(uint8_t timer_id);
@@ -542,12 +547,31 @@ void hw_overflow_cb(void)
 	/*	ioport_toggle_pin(J2_PIN3); */
 	sys_time++;
 	prog_ocr();
+	#ifdef ENABLE_SLEEP
+	if((RADIO_SLEEPING == mac_radio_sleep_state) && (sys_sleep ==true))
+	{
+		sys_sleep = true;
+		system_set_sleepmode(SYSTEM_SLEEPMODE_IDLE_0);
+
+		/* Enter into sleep*/
+		system_sleep();
+	}
+	#endif
+	
 }
 
 void hw_expiry_cb(void)
 {
 	if (running_timers > 0) {
 		timer_trigger = true;
+		#ifdef ENABLE_SLEEP
+		if((RADIO_SLEEPING == mac_radio_sleep_state) && (sys_sleep ==true))
+		{   
+			sys_sleep = false;
+			//wakeup_cb(NULL);
+			sw_timer_service();
+		}
+		#endif
 	}
 }
 

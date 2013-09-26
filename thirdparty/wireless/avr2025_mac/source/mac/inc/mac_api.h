@@ -1333,7 +1333,7 @@ uint8_t mac_get_pib_attribute_size(uint8_t pib_attribute_id);
  * @brief Checks if the mac stack is idle
  * \ingroup group_mac_gen_int
  */
-bool mac_ready_to_sleep(void);
+uint32_t mac_ready_to_sleep(void);
 
 /*@}*//* group_mac_cb */
 

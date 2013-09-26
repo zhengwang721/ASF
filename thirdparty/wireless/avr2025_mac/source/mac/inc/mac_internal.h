@@ -106,10 +106,12 @@
 #define DEBUG_PIN16 EXT1_PIN_18//
 #define DEBUG_PIN17 EXT3_PIN_5
 
-#define DEBUG_SLOT_PIN  0
-#define DEBUG_DATA_PIN  1
-#define DEBUG_SET       1
-#define DEBUG_TOGGLE    0
+#define GTS_DEBUG_SLOT_PIN  0
+#define GTS_DEBUG_DATA_PIN  1
+#define GTS_DEBUG_SET       1
+#define GTS_DEBUG_TOGGLE    0
+#define GTS_DEBUG_VALUE_HIGH 1
+#define GTS_DEBUG_VALUE_LOW 0
 #endif
 
 /**

@@ -58,7 +58,7 @@
 #define AT86RFX_SPI_MISO             EXT2_PIN_17
 #define AT86RFX_SPI_SCK              EXT2_PIN_18
 
-#define AT86RFX_SPI_BAUDRATE		 4000000UL
+
 
 #define AT86RFX_IRQ_CHAN             EXT2_IRQ_INPUT //13
 #define AT86RFX_INTC_INIT()          extint_enable(); \

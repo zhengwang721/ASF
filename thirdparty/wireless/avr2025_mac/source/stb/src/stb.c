@@ -132,7 +132,7 @@ stb_ccm_t stb_ccm_secure(uint8_t *buffer,
 		uint8_t aes_dir)
 {
 	uint8_t nonce_0; /* nonce[0] for MIC computation. */
-	uint8_t mic_len;
+	uint8_t mic_len = 0 ;
 	uint8_t enc_flag = ENCRYPTION_NOT_REQD;
 
 	if (stb_restart_required) {

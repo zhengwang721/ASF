@@ -131,7 +131,7 @@ static uint8_t mac_buffer_add_pending(uint8_t *buf_ptr);
 #ifdef BEACON_SUPPORT
 static void mac_t_beacon_cb(void *callback_parameter);
 static void mac_t_prepare_beacon_cb(void *callback_parameter);
-
+void mac_wakeup(void);
 /* TODO */
 
 
@@ -732,10 +732,10 @@ void mac_start_beacon_timer(void)
  */
 static void mac_t_prepare_beacon_cb(void *callback_parameter)
 {
-	/* Wake up radio first */
-	mac_trx_wakeup();
-
+	
+    mac_trx_wakeup();
 	/* For a beacon enabled network, the beacon is stored at the TAL. */
+	
 	mac_build_and_tx_beacon(true);
 
 	callback_parameter = callback_parameter; /* Keep compiler happy. */
@@ -761,6 +761,8 @@ static void mac_t_beacon_cb(void *callback_parameter)
 	 * the network has transitioned from a beacon-enabled network to
 	 * nonbeacon-enabled network.
 	 */
+	/* Wake up radio first */
+	
 	if (tal_pib.BeaconOrder < NON_BEACON_NWK) {
 		/*
 		 * In case the node is currently scanning, no beacon will be
@@ -970,8 +972,11 @@ static void mac_t_superframe_cb(void *callback_parameter)
 /*     * Note: Do not use mac_sleep_trans() here, because this would check */
 /*     * macRxOnWhenIdle first. */
 /*     * / */
-/*    mac_trx_init_sleep(); */
+/*    */
 /*  */
+    mac_sleep_trans();
+    
+
 /*    callback_parameter = callback_parameter;  / * Keep compiler happy. * / */
     #ifdef GTS_DEBUG
 	port_pin_set_output_level(DEBUG_PIN2, 0);
@@ -1041,5 +1046,11 @@ void mac_tx_pending_bc_data(void)
 #endif /* BEACON_SUPPORT */
 
 #endif /* MAC_START_REQUEST_CONFIRM */
+void mac_wakeup(void)
+{
+  //sw_timer_service();
+
+/* Remaining time needs to handled in MAC when application switches to RTC*/
+}
 
 /* EOF */

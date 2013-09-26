@@ -82,7 +82,7 @@
 
 
 /* === Globals ============================================================== */
-
+#define MAC_GUARD_TIME_US 1000
 /**
  * Current state of the MAC state machine
  */
@@ -289,11 +289,41 @@ bool mac_task(void)
 /**
  * @brief Checks if the mac stack is idle
  */
-bool mac_ready_to_sleep(void)
+uint32_t mac_ready_to_sleep(void)
 {
-	bool idle __ALIGN_WORD_ADDR__;
+	uint32_t sleep_time =0;
+#ifdef BEACON_SUPPORT
+     uint32_t rem_time;
+    if(MAC_INACTIVE == mac_superframe_state)
+	{
+		
+		if((MAC_PAN_COORD_STARTED == mac_state) ||
+		(MAC_COORDINATOR == mac_state)) 
+		{   
+			#ifdef FFD
+			rem_time=sw_timer_get_residual_time(T_Beacon_Preparation);
+			#endif
+			if(rem_time >= MAC_GUARD_TIME_US)
+			{   
+				
+				sleep_time = rem_time - MAC_GUARD_TIME_US;
+				return sleep_time;
+			}
+		}
+		if(MAC_ASSOCIATED == mac_state)
+		{
+			rem_time=sw_timer_get_residual_time(T_Beacon_Tracking_Period);
+			if(rem_time >=MAC_GUARD_TIME_US)
+			{
+				sleep_time = rem_time - MAC_GUARD_TIME_US;
+				return sleep_time;
+			}
+		}
+		
+	}	
 
-	if (mac_busy ||
+#else
+if (mac_busy ||
 			(mac_nhle_q.size != 0) ||
 			(nhle_mac_q.size != 0) ||
 			(tal_mac_q.size != 0) ||
@@ -307,12 +337,13 @@ bool mac_ready_to_sleep(void)
 			|| (tal_trx_status != TRX_SLEEP)
 #endif
 			) {
-		idle = false;
+		sleep_time = 0;
 	} else {
-		idle = true;
+		sleep_time = 0xFFFFFFFF;
 	}
+#endif
 
-	return idle;
+	return sleep_time;
 }
 
 /* EOF */

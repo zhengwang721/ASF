@@ -57,7 +57,7 @@
 
 struct tc_config timer_config;
 struct tc_module module_inst;
-
+extern bool sys_sleep;
 #if 0
 void common_tc_delay(uint16_t value)
 {
@@ -136,13 +136,13 @@ void restore_cpu_interrupt(uint8_t flags)
 	cpu_irq_restore((uint32_t)flags);
 }
 
-static void tc_ovf_callback(struct tc_module *const module_instance)
+void tc_ovf_callback(struct tc_module *const module_instance)
 {
 	tmr_ovf_callback();
 }
 /*! \brief  hw timer compare callback
  */
-static void tc_cca_callback(struct tc_module *const module_instance)
+void tc_cca_callback(struct tc_module *const module_instance)
 {
 	tmr_cca_callback();
 }
@@ -153,6 +153,14 @@ uint8_t tmr_init(void)
 {
 	uint8_t timer_multiplier;
 	tc_get_config_defaults(&timer_config);
+	#ifdef ENABLE_SLEEP
+	if(sys_sleep == true)
+	{
+		timer_config.clock_source = GCLK_GENERATOR_1;
+		timer_config.clock_prescaler = TC_CLOCK_PRESCALER_DIV2;
+		timer_config.run_in_standby=true;
+	}
+	#endif
 	timer_config.size_specific.size_16_bit.compare_capture_channel[0] = TIMER_PERIOD;
 	tc_init(&module_inst, TIMER, &timer_config);
 	tc_register_callback(&module_inst, tc_ovf_callback, TC_CALLBACK_OVERFLOW);
@@ -162,7 +170,17 @@ uint8_t tmr_init(void)
 
 	tc_enable(&module_inst);
 	/* calculate how faster the timer with current clk freq compared to timer with 1Mhz */
+	#ifdef ENABLE_SLEEP
+	if(sys_sleep ==true)
+	{
+		timer_multiplier = system_gclk_gen_get_hz(1) / 2000000;
+	}
+	else
+	{
 	timer_multiplier = system_gclk_gen_get_hz(0) / DEF_1MHZ;
-
+	}
+    #else
+	timer_multiplier = system_gclk_gen_get_hz(0) / DEF_1MHZ;
+	#endif
 	return timer_multiplier;
 }
