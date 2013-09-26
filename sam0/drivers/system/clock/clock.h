@@ -1274,7 +1274,8 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *	<tr>
  *		<td>B</td>
  *		<td>06/2013</td>
- *		<td>Corrected documentation typos.</td>
+ *		<td>Corrected documentation typos. Fixed missing steps in the Basic
+ *          Use Case Quick Start Guide.</td>
  *	</tr>
  *	<tr>
  *		<td>A</td>
