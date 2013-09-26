@@ -289,7 +289,7 @@ static inline enum status_code spi_master_vec_get_job_status_wait(
 	enum status_code status;
 
 #ifdef CONF_SPI_MASTER_VEC_OS_SUPPORT
-	CONF_SPI_MASTER_VEC_TAKE_SEMAPHORE_WAIT(module->busy_semaphore);
+	CONF_SPI_MASTER_VEC_TAKE_SEMAPHORE(module->busy_semaphore);
 	status = spi_master_vec_get_job_status(module);
 	CONF_SPI_MASTER_VEC_GIVE_SEMAPHORE(module->busy_semaphore);
 #else

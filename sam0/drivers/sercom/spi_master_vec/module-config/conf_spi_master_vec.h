@@ -52,9 +52,7 @@
 #  define CONF_SPI_MASTER_VEC_SEMAPHORE_TYPE                   xSemaphoreHandle
 #  define CONF_SPI_MASTER_VEC_CREATE_SEMAPHORE(member)         \
 		vSemaphoreCreateBinary(member)
-#  define CONF_SPI_MASTER_VEC_TAKE_SEMAPHORE_NOW(member)       \
-		xSemaphoreTake((member), 0)
-#  define CONF_SPI_MASTER_VEC_TAKE_SEMAPHORE_WAIT(member)      \
+#  define CONF_SPI_MASTER_VEC_TAKE_SEMAPHORE(member)           \
 		xSemaphoreTake((member), portMAX_DELAY)
 #  define CONF_SPI_MASTER_VEC_GIVE_SEMAPHORE(member)           \
 		xSemaphoreGive((member))

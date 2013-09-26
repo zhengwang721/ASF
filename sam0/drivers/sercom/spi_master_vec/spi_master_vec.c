@@ -331,7 +331,7 @@ enum status_code spi_master_vec_transceive_buffer_job(
 	}
 
 #ifdef CONF_SPI_MASTER_VEC_OS_SUPPORT
-	CONF_SPI_MASTER_VEC_TAKE_SEMAPHORE_NOW(module->busy_semaphore);
+	CONF_SPI_MASTER_VEC_TAKE_SEMAPHORE(module->busy_semaphore);
 #endif
 
 	module->tx_bufdesc_ptr = tx_bufdescs;
