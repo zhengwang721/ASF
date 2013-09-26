@@ -101,6 +101,9 @@
 #define MIN_CLOCK_PLL_ITEM     'a'
 #define MAX_CLOCK_PLL_ITEM     'g'
 
+#define example_set_wakeup_from_wait_mode  rtt_wakeup
+#define example_set_wakeup_from_backup_mode  rtt_wakeup
+
 extern uint32_t g_fastrc_clock_list[][3];
 extern uint32_t g_pll_clock_list[][4];
 
