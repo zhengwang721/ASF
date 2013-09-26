@@ -325,7 +325,7 @@ static inline enum status_code spi_master_vec_transceive_buffer_wait(
 {
 	enum status_code status;
 
-	status = spi_master_vec_transceive_buffer_wait(module, tx_bufdescs,
+	status = spi_master_vec_transceive_buffer_job(module, tx_bufdescs,
 			rx_bufdescs);
 
 	if (status == STATUS_BUSY) {
