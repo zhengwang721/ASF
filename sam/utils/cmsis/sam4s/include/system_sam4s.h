@@ -1,9 +1,10 @@
 /**
  * \file
  *
- * \brief This file contains the interface for default exception handlers.
+ * \brief Provides the low-level initialization functions that called 
+ * on chip startup.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,10 +42,8 @@
  *
  */
 
-#ifndef EXCEPTIONS_H_INCLUDED
-#define EXCEPTIONS_H_INCLUDED
-
-#include "sam4s.h"
+#ifndef SYSTEM_SAM4S_H_INCLUDED
+#define SYSTEM_SAM4S_H_INCLUDED
 
 /* @cond 0 */
 /**INDENT-OFF**/
@@ -54,11 +53,26 @@ extern "C" {
 /**INDENT-ON**/
 /* @endcond */
 
-/* Function prototype for exception table items (interrupt handler). */
-typedef void (*IntFunc) (void);
+#include <stdint.h>
 
-/* Default empty handler */
-void Dummy_Handler(void);
+extern uint32_t SystemCoreClock; /* System Clock Frequency (Core Clock) */
+
+/**
+ * @brief Setup the microcontroller system.
+ * Initialize the System and update the SystemCoreClock variable.
+ */
+void SystemInit(void);
+
+/**
+ * @brief Updates the SystemCoreClock with current core Clock
+ * retrieved from cpu registers.
+ */
+void SystemCoreClockUpdate(void);
+
+/**
+ * Initialize flash.
+ */
+void system_init_flash(uint32_t dw_clk);
 
 /* @cond 0 */
 /**INDENT-OFF**/
@@ -68,4 +82,4 @@ void Dummy_Handler(void);
 /**INDENT-ON**/
 /* @endcond */
 
-#endif /* EXCEPTIONS_H_INCLUDED */
+#endif /* SYSTEM_SAM4S_H_INCLUDED */

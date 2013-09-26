@@ -75,6 +75,10 @@ extern "C" {
 #define US_WPMR_WPKEY_PASSWD    US_WPMR_WPKEY(0x555341U)
 #endif
 
+#ifndef US_WPMR_WPKEY_PASSWD
+#  define US_WPMR_WPKEY_PASSWD US_WPMR_WPKEY(US_WPKEY_VALUE)
+#endif
+
 /* The CD value scope programmed in MR register. */
 #define MIN_CD_VALUE                  0x01
 #define MIN_CD_VALUE_SPI              0x04
