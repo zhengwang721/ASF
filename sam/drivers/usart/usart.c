@@ -71,7 +71,9 @@ extern "C" {
  */
 
 /* The write protect key value. */
-#define US_WPKEY_VALUE                0x555341
+#ifndef US_WPMR_WPKEY_PASSWD
+#define US_WPMR_WPKEY_PASSWD    US_WPMR_WPKEY(0x555341U)
+#endif
 
 #ifndef US_WPMR_WPKEY_PASSWD
 #  define US_WPMR_WPKEY_PASSWD US_WPMR_WPKEY(US_WPKEY_VALUE)
@@ -1628,7 +1630,7 @@ uint8_t usart_get_error_number(Usart *p_usart)
 	return (p_usart->US_NER & US_NER_NB_ERRORS_Msk);
 }
 
-#if (SAM3S || SAM4S || SAM3U || SAM3XA || SAM4L || SAM4E)
+#if (SAM3S || SAM4S || SAM3U || SAM3XA || SAM4L || SAM4E || SAM4C)
 
 /**
  * \brief Configure the transmitter preamble length when the Manchester

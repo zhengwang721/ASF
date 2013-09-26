@@ -42,7 +42,7 @@
  */
 
 #include "adc.h"
-
+#include <status_codes.h>
 /// @cond 0
 /**INDENT-OFF**/
 #ifdef __cplusplus
@@ -62,7 +62,7 @@ extern "C" {
  * @{
  */
 
-#if SAM3S || SAM4S || SAM3N || SAM3XA
+#if SAM3S || SAM4S || SAM3N || SAM3XA || SAM4C
 /**
  * \brief Initialize the given ADC with the specified ADC clock and startup time.
  *
@@ -138,13 +138,30 @@ uint32_t adc_init(Adc *p_adc, const uint32_t ul_mck, const uint32_t ul_adc_clock
  * \param resolution ADC resolution.
  *
  */
-void adc_set_resolution(Adc *p_adc,const enum adc_resolution_t resolution)
+void adc_set_resolution(Adc *p_adc, const enum adc_resolution_t resolution)
 {
+#if SAM4C
+	p_adc->ADC_EMR &= ~ADC_EMR_OSR_Msk;
+	switch (resolution) {
+	case ADC_8_BITS:
+		p_adc->ADC_MR |= ADC_MR_LOWRES;
+		break;
+	case ADC_10_BITS:
+		p_adc->ADC_MR &= ~ADC_MR_LOWRES;
+		break;
+	case ADC_11_BITS:
+	case ADC_12_BITS:
+		p_adc->ADC_MR &= ~ADC_MR_LOWRES;
+		p_adc->ADC_EMR |= resolution;
+		break;
+	}
+#else
 	p_adc->ADC_MR |= (resolution << 4) & ADC_MR_LOWRES;
+#endif
 }
 
 
-#if SAM3S || SAM4S || SAM3N || SAM3XA
+#if SAM3S || SAM4S || SAM3N || SAM3XA || SAM4C
 /**
  * \brief Configure conversion trigger and free run mode.
  *
@@ -189,7 +206,7 @@ void adc_configure_power_save(Adc *p_adc, const uint8_t uc_sleep, const uint8_t 
 	p_adc->ADC_MR |= (((uc_sleep << 5) & ADC_MR_SLEEP) |
 			((uc_fwup << 6) & ADC_MR_FWUP));
 }
-#elif SAM3U
+#elif SAM3U || SAM4C
 /**
  * \brief Configure ADC power saving mode.
  *
@@ -206,7 +223,7 @@ void adc_configure_power_save(Adc *p_adc, const uint8_t uc_sleep)
 }
 #endif
 
-#if SAM3S || SAM4S || SAM3N || SAM3XA
+#if SAM3S || SAM4S || SAM3N || SAM3XA || SAM4C
 /**
  * \brief Configure conversion sequence.
  *
@@ -256,7 +273,7 @@ void adc_configure_timing(Adc *p_adc, const uint8_t uc_tracking,
 	p_adc->ADC_MR |= ADC_MR_TRANSFER(uc_transfer)
 			| settling | ADC_MR_TRACKTIM(uc_tracking);
 }
-#elif SAM3N
+#elif SAM3N || SAM4C
 /**
  * \brief Configure ADC timing.
  *
@@ -292,9 +309,7 @@ void adc_enable_anch(Adc *p_adc)
 {
 	p_adc->ADC_MR |= ADC_MR_ANACH;
 }
-#endif
 
-#if SAM3S || SAM4S || SAM3XA
 /**
  * \brief Disable analog change.
  *
@@ -352,7 +367,7 @@ void adc_enable_all_channel(Adc *p_adc)
 {
 #if SAM3S || SAM4S || SAM3N || SAM3XA
 	p_adc->ADC_CHER = 0xFFFF;
-#elif SAM3U
+#elif SAM3U || SAM4C
 	p_adc->ADC_CHER = 0xFF;
 #endif
 }
@@ -377,7 +392,7 @@ void adc_disable_all_channel(Adc *p_adc)
 {
 #if SAM3S || SAM4S || SAM3N || SAM3XA
 	p_adc->ADC_CHDR = 0xFFFF;
-#elif SAM3U
+#elif SAM3U || SAM4C
 	p_adc->ADC_CHDR = 0xFF;
 #endif
 }
@@ -427,7 +442,7 @@ uint32_t adc_get_latest_value(const Adc *p_adc)
 	return p_adc->ADC_LCDR;
 }
 
-#if SAM3S || SAM4S || SAM3N || SAM3XA
+#if SAM3S || SAM4S || SAM3N || SAM3XA || SAM4C
 /**
  * \brief Enable TAG option so that the number of the last converted channel
  * can be indicated.
@@ -438,9 +453,7 @@ void adc_enable_tag(Adc *p_adc)
 {
 	p_adc->ADC_EMR |= ADC_EMR_TAG;
 }
-#endif
 
-#if SAM3S || SAM4S || SAM3N || SAM3XA
 /**
  * \brief Disable TAG option.
  *
@@ -450,9 +463,7 @@ void adc_disable_tag(Adc *p_adc)
 {
 	p_adc->ADC_EMR &= ~ADC_EMR_TAG;
 }
-#endif
 
-#if SAM3S || SAM4S || SAM3N || SAM3XA
 /**
  * \brief Indicate the last converted channel.
  *
@@ -468,9 +479,7 @@ enum adc_channel_num_t adc_get_tag(const Adc *p_adc)
 	return (enum adc_channel_num_t)
 			((p_adc->ADC_LCDR & ADC_LCDR_CHNB_Msk) >> ADC_LCDR_CHNB_Pos);
 }
-#endif
 
-#if SAM3S || SAM4S || SAM3N || SAM3XA
 /**
  * \brief Enable conversion sequencer.
  *
@@ -480,9 +489,7 @@ void adc_start_sequencer(Adc *p_adc)
 {
 	p_adc->ADC_MR |= ADC_MR_USEQ;
 }
-#endif
 
-#if SAM3S || SAM4S || SAM3N || SAM3XA
 /**
  * \brief Disable conversion sequencer.
  *
@@ -492,9 +499,7 @@ void adc_stop_sequencer(Adc *p_adc)
 {
 	p_adc->ADC_MR &= ~ADC_MR_USEQ;
 }
-#endif
 
-#if SAM3S || SAM4S || SAM3N || SAM3XA
 /**
  * \brief Configure comparison mode.
  *
@@ -506,9 +511,7 @@ void adc_set_comparison_mode(Adc *p_adc, const uint8_t uc_mode)
 	p_adc->ADC_EMR &= (uint32_t) ~ (ADC_EMR_CMPMODE_Msk);
 	p_adc->ADC_EMR |= (uc_mode & ADC_EMR_CMPMODE_Msk);
 }
-#endif
 
-#if SAM3S || SAM4S || SAM3N || SAM3XA
 /**
  * \brief Get comparison mode.
  *
@@ -520,9 +523,7 @@ uint32_t adc_get_comparison_mode(const Adc *p_adc)
 {
 	return p_adc->ADC_EMR & ADC_EMR_CMPMODE_Msk;
 }
-#endif
 
-#if SAM3S || SAM4S || SAM3N || SAM3XA
 /**
  * \brief Configure ADC compare window.
  *
@@ -536,9 +537,7 @@ void adc_set_comparison_window(Adc *p_adc, const uint16_t us_low_threshold,
 	p_adc->ADC_CWR = ADC_CWR_LOWTHRES(us_low_threshold) |
 			ADC_CWR_HIGHTHRES(us_high_threshold);
 }
-#endif
 
-#if SAM3S || SAM4S || SAM3N || SAM3XA
 /**
  * \brief Configure comparison selected channel.
  *
@@ -568,9 +567,7 @@ void adc_enable_channel_differential_input(Adc *p_adc, const enum adc_channel_nu
 {
 	p_adc->ADC_COR |= 0x01u << (16 + channel);
 }
-#endif
 
-#if SAM3S || SAM4S || SAM3XA
 /**
  * \brief Disable differential input for the specified channel.
  *
@@ -584,9 +581,7 @@ void adc_disable_channel_differential_input(Adc *p_adc, const enum adc_channel_n
 	p_adc->ADC_COR &= 0xfffeffffu << channel;
 	p_adc->ADC_COR |= ul_temp;
 }
-#endif
 
-#if SAM3S || SAM4S || SAM3XA
 /**
  * \brief Enable analog signal offset for the specified channel.
  *
@@ -597,9 +592,7 @@ void adc_enable_channel_input_offset(Adc *p_adc, const enum adc_channel_num_t ch
 {
 	p_adc->ADC_COR |= 0x01u << channel;
 }
-#endif
 
-#if SAM3S || SAM4S || SAM3XA
 /**
  * \brief Disable analog signal offset for the specified channel.
  *
@@ -613,9 +606,7 @@ void adc_disable_channel_input_offset(Adc *p_adc, const enum adc_channel_num_t c
 	p_adc->ADC_COR &= (0xfffffffeu << channel);
 	p_adc->ADC_COR |= ul_temp;
 }
-#endif
 
-#if SAM3S || SAM4S || SAM3XA
 /**
  * \brief Configure input gain for the specified channel.
  *
@@ -683,7 +674,7 @@ void adc_disable_interrupt(Adc *p_adc, const uint32_t ul_source)
 	p_adc->ADC_IDR = ul_source;
 }
 
-#if SAM3S || SAM4S || SAM3N || SAM3XA
+#if SAM3S || SAM4S || SAM3N || SAM3XA || SAM4C
 /**
  * \brief Get ADC interrupt and overrun error status.
  *
@@ -747,9 +738,7 @@ void adc_set_bias_current(Adc *p_adc, const uint8_t uc_ibctl)
 {
 	p_adc->ADC_ACR |= ADC_ACR_IBCTL(uc_ibctl);
 }
-#endif
 
-#if SAM3S || SAM4S || SAM3XA
 /**
  * \brief Turn on temperature sensor.
  *
@@ -759,9 +748,7 @@ void adc_enable_ts(Adc *p_adc)
 {
 	p_adc->ADC_ACR |= ADC_ACR_TSON;
 }
-#endif
 
-#if SAM3S || SAM4S || SAM3XA
 /**
  * \brief Turn off temperature sensor.
  *
@@ -773,7 +760,10 @@ void adc_disable_ts(Adc *p_adc)
 }
 #endif
 
-#if SAM3S || SAM4S || SAM3N || SAM3XA
+#if SAM3S || SAM4S || SAM3N || SAM3XA || SAM4C
+#ifndef ADC_WPMR_WPKEY_PASSWD
+#define ADC_WPMR_WPKEY_PASSWD ADC_WPMR_WPKEY(0x414443u)
+#endif
 /**
  * \brief Enable or disable write protection of ADC registers.
  *
@@ -782,11 +772,9 @@ void adc_disable_ts(Adc *p_adc)
  */
 void adc_set_writeprotect(Adc *p_adc, const uint32_t ul_enable)
 {
-	p_adc->ADC_WPMR |= ADC_WPMR_WPKEY(ul_enable);
+	p_adc->ADC_WPMR = ADC_WPMR_WPKEY_PASSWD | (ul_enable & ADC_WPMR_WPEN);
 }
-#endif
 
-#if SAM3S || SAM4S || SAM3N || SAM3XA
 /**
  * \brief Indicate write protect status.
  *
@@ -799,9 +787,7 @@ uint32_t adc_get_writeprotect_status(const Adc *p_adc)
 {
 	return p_adc->ADC_WPSR & ADC_WPSR_WPVS;
 }
-#endif
 
-#if SAM3S || SAM4S || SAM3N || SAM3XA
 /**
  * \brief calcul_startup
  */
@@ -887,6 +873,7 @@ void adc_check(Adc *p_adc, const uint32_t ul_mck)
 		if (p_adc->ADC_MR & ADC_MR_FREERUN_ON) {
 			puts("FreeRun forbidden in sleep mode\r");
 		}
+#if !SAM4C
 		if (!(p_adc->ADC_MR & ADC_MR_FWUP_ON)) {
 			/* Sleep 40ms */
 			if (ADC_STARTUP_NORM * ul_adcfreq / 1000000 >
@@ -906,6 +893,7 @@ void adc_check(Adc *p_adc, const uint32_t ul_mck)
 				}
 			}
 		}
+#endif
 	}
 }
 #endif
@@ -922,6 +910,101 @@ Pdc *adc_get_pdc_base(const Adc *p_adc)
 	UNUSED(p_adc);
 	return PDC_ADC;
 }
+
+#if SAM4C
+/**
+ * \brief Set digital averaging trigger.
+ *
+ * \param p_adc Pointer to an ADC instance.
+ * \param multi The average requests several trigger events if true. The
+ * average requests only one trigger event.
+ */
+void adc_set_averaging_trigger(Adc *p_adc, bool multi)
+{
+	if (multi) {
+		p_adc->ADC_EMR &= ~ADC_EMR_ASTE;
+	} else {
+		p_adc->ADC_EMR |= ADC_EMR_ASTE;
+	}
+}
+
+/**
+ * \brief Set comparison filter.
+ *
+ * \param p_adc Pointer to an ADC instance.
+ * \param filter Number of consecutive compare events necessary to raise the
+ * flag = filter + 1.
+ */
+void adc_set_comparison_filter(Adc *p_adc, uint8_t filter)
+{
+	p_adc->ADC_EMR &= ~ADC_EMR_CMPFILTER_Msk;
+	p_adc->ADC_EMR |= ADC_EMR_CMPFILTER(filter);
+}
+
+/**
+ * \brief Turn on temperature sensor.
+ *
+ * \param p_adc Pointer to an ADC instance.
+ */
+void adc_enable_ts(Adc *p_adc)
+{
+	p_adc->ADC_TEMPMR |= ADC_TEMPMR_TEMPON;
+}
+
+/**
+ * \brief Turn off temperature sensor.
+ *
+ * \param p_adc Pointer to an ADC instance.
+ */
+void adc_disable_ts(Adc *p_adc)
+{
+	p_adc->ADC_TEMPMR &= ~ADC_TEMPMR_TEMPON;
+}
+
+/**
+ * \brief Configure temperature sensor comparison.
+ *
+ * \param p_adc Pointer to an ADC instance.
+ * \param mode  Temperature comparison mode.
+ * \param low_threshold Temperature low threshold.
+ * \param high_threshold Temperature high threshold.
+ */
+void adc_configure_ts_comparison(Adc *p_adc, enum adc_temp_cmp_mode mode,
+		uint16_t low_threshold, uint16_t high_threshold)
+{
+	uint32_t tmp = p_adc->ADC_TEMPMR;
+	tmp &= ~ADC_TEMPMR_TEMPCMPMOD_Msk;
+	tmp |= mode;
+
+	p_adc->ADC_TEMPCWR = ADC_TEMPCWR_TLOWTHRES(low_threshold) |
+			ADC_TEMPCWR_THIGHTHRES(high_threshold);
+	p_adc->ADC_TEMPMR = tmp;
+}
+
+/**
+ * \brief Set ADC analog control(internal reference voltage).
+ *
+ * \param p_adc Pointer to an ADC instance.
+ * \param ref  Pointer to an ADC internal reference voltage setup.
+ *
+ * \return ERR_INVALID_ARG if the argument is invalid, STATUS_OK otherwise.
+ */
+enum status_code adc_set_internal_reference_voltage(Adc *p_adc,
+		struct adc_internal_ref *ref)
+{
+	uint32_t tmp = 0;
+
+	if (ref->adc_force_internal_ref && ref->adc_internal_ref_on) {
+		return ERR_INVALID_ARG;
+	}
+	tmp = (ref->adc_internal_ref_change_enable ? ADC_ACR_IRVCE_SELECTION : 0) |
+			ADC_ACR_IRVS(ref->volt) |
+			(ref->adc_force_internal_ref ? ADC_ACR_FORCEREF : 0) |
+			(ref->adc_internal_ref_on ? ADC_ACR_ONREF : 0);
+	p_adc->ADC_ACR = tmp;
+	return STATUS_OK;
+}
+#endif
 
 //@}
 

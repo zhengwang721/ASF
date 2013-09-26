@@ -54,21 +54,11 @@ extern "C" {
 /**
  * \defgroup sam_drivers_supc_group Supply Controller (SUPC)
  *
- * Driver for the SUPC (Supply Controller). This driver provides access to the main 
+ * Driver for the SUPC (Supply Controller). This driver provides access to the main
  * features of the Supply Controller.
  *
  * @{
  */
-
-#define SUPC_KEY   0xA5u
-
-#ifndef SUPC_CR_KEY_PASSWD
-#  define SUPC_CR_KEY_PASSWD SUPC_CR_KEY(SUPC_KEY)
-#endif
-
-#ifndef SUPC_MR_KEY_PASSWD
-#  define SUPC_MR_KEY_PASSWD SUPC_MR_KEY(SUPC_KEY)
-#endif
 
 /**
  * \brief Switch off the voltage regulator to put the device in backup mode.
@@ -210,7 +200,7 @@ void supc_enable_monitor_reset(Supc *p_supc)
 /**
  * \brief Disable the assertion of core reset signal when a supply monitor detection occurs.
  *
- * \param p_supc Pointer to a SUPC instance. 
+ * \param p_supc Pointer to a SUPC instance.
  */
 void supc_disable_monitor_reset(Supc *p_supc)
 {
@@ -252,10 +242,10 @@ void supc_set_wakeup_mode(Supc *p_supc, uint32_t ul_mode)
  * \brief Set system controller wake up inputs.
  *
  * \param p_supc Pointer to a SUPC instance.
- * \param ul_inputs Bitmask of wake-up inputs that can force wake up of 
+ * \param ul_inputs Bitmask of wake-up inputs that can force wake up of
  * the core power supply.
  * \param ul_transition Bitmask of level transition of the wake-up inputs.
- * 1 means a high-to-low level transition forces the wake up of core power supply. 
+ * 1 means a high-to-low level transition forces the wake up of core power supply.
  * 0 means a low-to-high level transition forces the wake up of core power supply.
  */
 void supc_set_wakeup_inputs(Supc *p_supc, uint32_t ul_inputs,
@@ -275,6 +265,88 @@ uint32_t supc_get_status(Supc *p_supc)
 {
 	return p_supc->SUPC_SR;
 }
+
+#if SAM4C
+/**
+ * \brief Enable Backup Area Power-On Reset.
+ *
+ * \param p_supc Pointer to a SUPC instance.
+ */
+void supc_enable_backup_power_on_reset(Supc *p_supc)
+{
+	uint32_t ul_mr = p_supc->SUPC_MR & (~(SUPC_MR_KEY_Msk | SUPC_MR_BUPPOREN));
+	p_supc->SUPC_MR = SUPC_MR_KEY_PASSWD | ul_mr | SUPC_MR_BUPPOREN;
+}
+
+/**
+ * \brief Disable Backup Area Power-On Reset.
+ *
+ * \param p_supc Pointer to a SUPC instance.
+ */
+void supc_disable_backup_power_on_reset(Supc *p_supc)
+{
+	uint32_t ul_mr = p_supc->SUPC_MR & (~(SUPC_MR_KEY_Msk | SUPC_MR_BUPPOREN));
+	p_supc->SUPC_MR = SUPC_MR_KEY_PASSWD | ul_mr;
+}
+/**
+ * \brief Get SLCD power mode.
+ *
+ * \param p_supc Pointer to a SUPC instance.
+ *
+ * \return The mode of SLCDC.
+ */
+enum slcdc_power_mode supc_get_slcd_power_mode(Supc *p_supc)
+{
+	return (enum slcdc_power_mode)(p_supc->SUPC_MR & SUPC_MR_LCDMODE_Msk);
+}
+
+/**
+ * \brief Set SLCD power mode.
+ *
+ * \param p_supc Pointer to a SUPC instance.
+ * \param mode The mode of SLCDC.
+ */
+void supc_set_slcd_power_mode(Supc *p_supc, enum slcdc_power_mode mode)
+{
+	enum slcdc_power_mode pre_mode;
+	uint32_t tmp;
+
+	pre_mode = supc_get_slcd_power_mode(p_supc);
+
+	if ((pre_mode == SLCDC_POWER_MODE_LCDON_EXTVR) &&
+			(mode == SLCDC_POWER_MODE_LCDON_INVR)) {
+		return;
+	} else if ((pre_mode == SLCDC_POWER_MODE_LCDON_INVR) &&
+			(mode == SLCDC_POWER_MODE_LCDON_EXTVR)) {
+		return;
+	}
+	tmp = p_supc->SUPC_MR;
+	tmp &= ~SUPC_MR_LCDMODE_Msk;
+	tmp |=  SUPC_MR_KEY_PASSWD | mode;
+	p_supc->SUPC_MR = tmp;
+
+	if (mode == SLCDC_POWER_MODE_LCDOFF) {
+		while(supc_get_status(p_supc) & SUPC_SR_LCDS_ENABLED);
+	} else {
+		while(!(supc_get_status(p_supc) & SUPC_SR_LCDS_ENABLED));
+	}
+}
+
+/**
+ * \brief Set LCD Voltage Regulator Output.
+ *
+ * \param p_supc Pointer to a SUPC instance.
+ * \param vol  The voltage of Regulator Output.
+ */
+void supc_set_slcd_vol(Supc *p_supc, uint32_t vol)
+{
+	uint32_t tmp= p_supc->SUPC_MR;
+	tmp &= ~SUPC_MR_LCDVROUT_Msk;
+	tmp |=  SUPC_MR_KEY_PASSWD |  SUPC_MR_LCDVROUT(vol);
+	p_supc->SUPC_MR = tmp;
+
+}
+#endif
 
 //@}
 
