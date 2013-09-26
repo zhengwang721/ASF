@@ -117,17 +117,6 @@
 		<device-support value="atsamd20g14"/>
 	</project>
 
-	<project workspace-name="user_application" id="common.applications.user_application.sam0_system.user_board.atsamd20e18" caption="User board project template for SAMD20E18" type="template">
-		<info type="description" value="summary">
-		User board project template for SAMD20E18 devices.
-		</info>
-		<require idref="common.applications.user_application.sam0_system.user_board.common"/>
-		<require idref="board.user_board.samd20e"/>
-		<generator value="as5_arm_template"/>
-		<generator value="doxygen"/>
-		<device-support value="atsamd20e18"/>
-	</project>
-
 	<project workspace-name="user_application" id="common.applications.user_application.sam0_system.user_board.atsamd20e17" caption="User board project template for SAMD20E17" type="template">
 		<info type="description" value="summary">
 		User board project template for SAMD20E17 devices.
