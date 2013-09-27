@@ -62,11 +62,20 @@ extern "C" {
  * @{
  */
 
-#if (SAM3U || SAM3S || SAM3XA || SAM4S || SAM4E)
-#define PWM_WRITE_PROTECT_KEY         0x50574D00
-#define PWM_WRITE_PROTECT_SW_DISABLE  0
-#define PWM_WRITE_PROTECT_SW_ENABLE   1
-#define PWM_WRITE_PROTECT_HW_ENABLE   2
+#ifndef PWM_WPCR_WPKEY_PASSWD
+#  define PWM_WPCR_WPKEY_PASSWD 0x50574D00
+#endif
+
+#ifndef PWM_WPCR_WPCMD_DISABLE_SW_PROT
+#  define PWM_WPCR_WPCMD_DISABLE_SW_PROT (PWM_WPCR_WPCMD(0))
+#endif
+
+#ifndef PWM_WPCR_WPCMD_ENABLE_SW_PROT
+#  define PWM_WPCR_WPCMD_ENABLE_SW_PROT (PWM_WPCR_WPCMD(1))
+#endif
+
+#ifndef PWM_WPCR_WPCMD_ENABLE_HW_PROT
+#  define PWM_WPCR_WPCMD_ENABLE_HW_PROT (PWM_WPCR_WPCMD(2))
 #endif
 
 #define PWM_CLOCK_DIV_MAX  256
@@ -912,11 +921,11 @@ void pwm_enable_protect(Pwm *p_pwm, uint32_t ul_group, bool b_sw)
 	uint32_t wp = 0;
 
 	if (b_sw) {
-		wp = PWM_WRITE_PROTECT_KEY | (ul_group << 2) |
-				PWM_WPCR_WPCMD(PWM_WRITE_PROTECT_SW_ENABLE);
+		wp = PWM_WPCR_WPKEY_PASSWD | (ul_group << 2) |
+				PWM_WPCR_WPCMD_ENABLE_SW_PROT;
 	} else {
-		wp = PWM_WRITE_PROTECT_KEY | (ul_group << 2) |
-				PWM_WPCR_WPCMD(PWM_WRITE_PROTECT_HW_ENABLE);
+		wp = PWM_WPCR_WPKEY_PASSWD | (ul_group << 2) |
+				PWM_WPCR_WPCMD_ENABLE_HW_PROT;
 	}
 
 	p_pwm->PWM_WPCR = wp;
@@ -932,9 +941,8 @@ void pwm_enable_protect(Pwm *p_pwm, uint32_t ul_group, bool b_sw)
  */
 void pwm_disable_protect(Pwm *p_pwm, uint32_t ul_group)
 {
-	p_pwm->PWM_WPCR =
-			PWM_WRITE_PROTECT_KEY | (ul_group << 2) |
-			PWM_WPCR_WPCMD(PWM_WRITE_PROTECT_SW_DISABLE);
+	p_pwm->PWM_WPCR = PWM_WPCR_WPKEY_PASSWD
+			 | (ul_group << 2) | PWM_WPCR_WPCMD_DISABLE_SW_PROT;
 }
 
 /**

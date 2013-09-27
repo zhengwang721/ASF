@@ -51,6 +51,10 @@ extern "C" {
 /**INDENT-ON**/
 /// @endcond
 
+#ifndef PIO_WPMR_WPKEY_PASSWD
+#  define PIO_WPMR_WPKEY_PASSWD PIO_WPMR_WPKEY(0x50494Fu)
+#endif
+
 /**
  * \defgroup sam_drivers_pio_group Peripheral Parallel Input/Output (PIO) Controller
  *
