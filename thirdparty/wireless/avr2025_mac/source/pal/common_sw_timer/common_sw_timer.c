@@ -551,7 +551,7 @@ void hw_overflow_cb(void)
 	if((RADIO_SLEEPING == mac_radio_sleep_state) && (sys_sleep ==true))
 	{
 		sys_sleep = true;
-		system_set_sleepmode(SYSTEM_SLEEPMODE_IDLE_0);
+		system_set_sleepmode(SYSTEM_SLEEPMODE_IDLE_2);
 
 		/* Enter into sleep*/
 		system_sleep();
