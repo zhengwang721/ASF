@@ -127,25 +127,23 @@ int main (void)
 	spi_master_vec_enable(&spi_master);
 //! [enable_instance]
 
-//! [start_reception]
-	spi_master_vec_transceive_buffer_job(&spi_master, NULL, rx_buffers);
-//! [start_reception]
-
-//! [wait_reception]
-	while (spi_master_vec_get_job_status(&spi_master) == STATUS_BUSY) {
-		/* Wait until transfer finishes. */
-	}
-//! [wait_reception]
+//! [start_reception_wait]
+	spi_master_vec_transceive_buffer_wait(&spi_master, NULL, rx_buffers);
+//! [start_reception_wait]
 
 //! [start_transmission]
 	spi_master_vec_transceive_buffer_job(&spi_master, tx_buffers, NULL);
 //! [start_transmission]
 
-//! [wait_start_transception]
+//! [start_transception]
 	while (spi_master_vec_transceive_buffer_job(&spi_master, tx_buffers, rx_buffers) == STATUS_BUSY) {
 		/* Try to start transfer until it succeeds. */
 	}
-//! [wait_start_transception]
+//! [start_transception]
+
+//! [wait_transception]
+	spi_master_vec_get_job_status_wait(&spi_master);
+//! [wait_transception]
 
 	while (1) {
 	}

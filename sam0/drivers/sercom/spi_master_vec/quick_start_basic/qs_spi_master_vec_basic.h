@@ -116,17 +116,18 @@
  * -# Enable the SERCOM module before using it.
  *
  *    \snippet qs_spi_master_vec_basic.c enable_instance
- * -# Start first transfer: receive 5 bytes into the RX buffers.
+ * -# Start and wait for first transfer: receive 5 bytes into the RX buffers.
  *
- *    \snippet qs_spi_master_vec_basic.c start_reception
- * -# Wait for transfer to complete.
- *
- *    \snippet qs_spi_master_vec_basic.c wait_reception
- * -# Transmit the 6 bytes from TX buffers.
+ *    \snippet qs_spi_master_vec_basic.c start_reception_wait
+ * -# Start transmission of the 6 bytes from TX buffers.
  *
  *    \snippet qs_spi_master_vec_basic.c start_transmission
- * -# Wait for transfer to complete, then transmit the 6 bytes from the TX
- *        buffers and receive 5 bytes into the RX buffers simultaneously.
+ * -# Keep trying to start next transfer until it succeeds: transmit the 6 bytes
+ *        from the TX buffers and receive 5 bytes into the RX buffers
+ *        simultaneously.
  *
- *    \snippet qs_spi_master_vec_basic.c wait_start_transception
+ *    \snippet qs_spi_master_vec_basic.c start_transception
+ * -# Wait for transfer to complete.
+ *
+ *    \snippet qs_spi_master_vec_basic.c wait_transception
  */
