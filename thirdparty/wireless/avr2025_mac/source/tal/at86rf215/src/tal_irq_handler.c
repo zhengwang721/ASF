@@ -25,9 +25,7 @@
 #ifdef CHIP_MODE_TEST
 #include "pal_internal.h"
 #endif
-#if (PAL_GENERIC_TYPE == MEGA_RF_SIM)
-#include "verification.h"
-#endif
+
 
 /* === TYPES =============================================================== */
 
@@ -55,11 +53,11 @@ static bool forced_ed_measurement[2] = { false, false };
  */
 void trx_irq_handler_cb(void)
 {
-    debug_text(PSTR("trx_irq_handler_cb()"));
+    //debug_text(PSTR("trx_irq_handler_cb()"));
 #ifdef CHIP_MODE_TEST
     if (chip_mode == true)
     {
-        debug_text_val(PSTR("chip_mode ="), chip_mode);
+        //debug_text_val(PSTR("chip_mode ="), chip_mode);
     }
 #endif
 
@@ -93,32 +91,32 @@ void trx_irq_handler_cb(void)
 
             if (irqs != BB_IRQ_NO_IRQ)
             {
-                debug_text_val(PSTR("INFO: ISR for BB "), trx_id);
-                debug_text_val(PSTR("INFO: IRQ-flag-vector of RG_BBCx_IRQS ="), irqs);
+                //debug_text_val(PSTR("INFO: ISR for BB "), trx_id);
+                //debug_text_val(PSTR("INFO: IRQ-flag-vector of RG_BBCx_IRQS ="), irqs);
 
                 if (irqs & BB_IRQ_RXEM)
                 {
-                    debug_text(PSTR("IRQ - BB_IRQ_RXEM"));
+                    //debug_text(PSTR("IRQ - BB_IRQ_RXEM"));
                     irqs &= (uint8_t)(~((uint32_t)BB_IRQ_RXEM)); // avoid Pa091
                 }
                 if (irqs & BB_IRQ_RXAM)
                 {
-                    debug_text(PSTR("IRQ - BB_IRQ_RXAM"));
+                    //debug_text(PSTR("IRQ - BB_IRQ_RXAM"));
                     irqs &= (uint8_t)(~((uint32_t)BB_IRQ_RXAM)); // avoid Pa091
                 }
                 if (irqs & BB_IRQ_AGCR)
                 {
-                    debug_text(PSTR("IRQ - BB_IRQ_AGCR"));
+                    //debug_text(PSTR("IRQ - BB_IRQ_AGCR"));
                     irqs &= (uint8_t)(~((uint32_t)BB_IRQ_AGCR)); // avoid Pa091
                 }
                 if (irqs & BB_IRQ_AGCH)
                 {
-                    debug_text(PSTR("IRQ - BB_IRQ_AGCH"));
+                    //debug_text(PSTR("IRQ - BB_IRQ_AGCH"));
                     irqs &= (uint8_t)(~((uint32_t)BB_IRQ_AGCH)); // avoid Pa091
                 }
                 if (irqs & BB_IRQ_RXFS)
                 {
-                    debug_text(PSTR("IRQ - BB_IRQ_RXFS"));
+                    //debug_text(PSTR("IRQ - BB_IRQ_RXFS"));
 #ifdef ENABLE_TSTAMP
                     pal_get_current_time(&fs_tstamp[trx_id]);
 #endif
@@ -126,12 +124,12 @@ void trx_irq_handler_cb(void)
                 }
                 if (irqs & BB_IRQ_RXFE)
                 {
-                    debug_text(PSTR("IRQ - BB_IRQ_RXFE"));
+                    //debug_text(PSTR("IRQ - BB_IRQ_RXFE"));
                     pal_get_current_time(&rxe_txe_tstamp[trx_id]);
                 }
                 if (irqs & BB_IRQ_TXFE)
                 {
-                    debug_text(PSTR("IRQ - BB_IRQ_TXFE"));
+                    //debug_text(PSTR("IRQ - BB_IRQ_TXFE"));
                     /* used for IFS and for MEASURE_ON_AIR_DURATION */
                     pal_get_current_time(&rxe_txe_tstamp[trx_id]);
                 }
@@ -157,36 +155,36 @@ void trx_irq_handler_cb(void)
 
         if (irqs != RF_IRQ_NO_IRQ)
         {
-            debug_text_val(PSTR("INFO: ISR for RF "), trx_id);
-            debug_text_val(PSTR("INFO: IRQ-flag-vector of RG_RFxx_IRQS ="), irqs);
+            //debug_text_val(PSTR("INFO: ISR for RF "), trx_id);
+            //debug_text_val(PSTR("INFO: IRQ-flag-vector of RG_RFxx_IRQS ="), irqs);
 
             if (irqs & RF_IRQ_TRXRDY)
             {
-                debug_text(PSTR("IRQ - RF_IRQ_TRXRDY"));
+                //debug_text(PSTR("IRQ - RF_IRQ_TRXRDY"));
 #ifdef CHIP_MODE_TEST
                 if (chip_mode && forced_txprep_cmd[trx_id])
                 {
                     forced_txprep_cmd[trx_id] = false;
-                    debug_text(PSTR("Forced TxPrep irq handled."));
+                    //debug_text(PSTR("Forced TxPrep irq handled."));
                     irqs &= ~RF_IRQ_TRXRDY;
                 }
 #endif
             }
             if (irqs & RF_IRQ_TRXERR)
             {
-                debug_text(PSTR("IRQ - RF_IRQ_TRXERR"));
+                //debug_text(PSTR("IRQ - RF_IRQ_TRXERR"));
             }
             if (irqs & RF_IRQ_BATLOW)
             {
-                debug_text(PSTR("IRQ - RF_IRQ_BATLOW"));
+                //debug_text(PSTR("IRQ - RF_IRQ_BATLOW"));
             }
             if (irqs & RF_IRQ_WAKEUP)
             {
-                debug_text(PSTR("IRQ - RF_IRQ_WAKEUP"));
+                //debug_text(PSTR("IRQ - RF_IRQ_WAKEUP"));
             }
             if (irqs & RF_IRQ_IQIFSF)
             {
-                debug_text(PSTR("IRQ - RF_IRQ_IQIFSF"));
+                //debug_text(PSTR("IRQ - RF_IRQ_IQIFSF"));
             }
             if (irqs & RF_IRQ_EDC)
             {
@@ -194,11 +192,11 @@ void trx_irq_handler_cb(void)
                 if (chip_mode && forced_ed_measurement[trx_id])
                 {
                     forced_ed_measurement[trx_id] = false;
-                    debug_text(PSTR("Forced ED measurement irq handled."));
+                    //debug_text(PSTR("Forced ED measurement irq handled."));
                     irqs &= ~RF_IRQ_EDC;
                 }
 #endif
-                debug_text(PSTR("IRQ - RF_IRQ_EDC"));
+                //debug_text(PSTR("IRQ - RF_IRQ_EDC"));
             }
             tal_rf_irqs[trx_id] |= irqs;
         }
@@ -209,8 +207,8 @@ void trx_irq_handler_cb(void)
 #ifdef CHIP_MODE_TEST
 void bb_irq_handler_cb(void)
 {
-    debug_text(PSTR("bb_irq_handler_cb()"));
-    debug_text_val(PSTR("chip_mode ="), chip_mode);
+    //debug_text(PSTR("bb_irq_handler_cb()"));
+    //debug_text_val(PSTR("chip_mode ="), chip_mode);
 
     /* Get all IRQS values */
     uint8_t irqs_array[4];
@@ -219,18 +217,18 @@ void bb_irq_handler_cb(void)
     {
         /* Read interrupt status */
         irqs_array[0] = bb_reg_read(RG_RF09_IRQS);
-        debug_text_val(PSTR("BB RG_RF09_IRQS ="), irqs_array[0]);
+        //debug_text_val(PSTR("BB RG_RF09_IRQS ="), irqs_array[0]);
         irqs_array[1] = bb_reg_read(RG_RF24_IRQS);
-        debug_text_val(PSTR("BB RG_RF24_IRQS ="), irqs_array[1]);
+        //debug_text_val(PSTR("BB RG_RF24_IRQS ="), irqs_array[1]);
         irqs_array[2] = bb_reg_read(RG_BBC0_IRQS);
-        debug_text_val(PSTR("BB RG_BBC0_IRQS ="), irqs_array[2]);
+        //debug_text_val(PSTR("BB RG_BBC0_IRQS ="), irqs_array[2]);
         irqs_array[3] = bb_reg_read(RG_BBC1_IRQS);
-        debug_text_val(PSTR("BB RG_BBC1_IRQS ="), irqs_array[3]);
+        //debug_text_val(PSTR("BB RG_BBC1_IRQS ="), irqs_array[3]);
     }
     else
     {
         /* We should never use bb_irq_handler while not using chip mode */
-        debug_text_finish(PSTR("Unexpected IRQ during chip mode"), DEBUG_ERROR);
+        //debug_text_finish(PSTR("Unexpected IRQ during chip mode"), DEBUG_ERROR);
         //pal_trx_read(RG_RF09_IRQS, irqs_array, 4);
     }
 
@@ -246,41 +244,41 @@ void bb_irq_handler_cb(void)
 
         if (irqs != BB_IRQ_NO_IRQ)
         {
-            debug_text_val(PSTR("INFO: ISR for BB "), trx_id);
-            debug_text_val(PSTR("INFO: BB IRQ-flag-vector of RG_BBCx_IRQS ="), irqs);
+            //debug_text_val(PSTR("INFO: ISR for BB "), trx_id);
+            //debug_text_val(PSTR("INFO: BB IRQ-flag-vector of RG_BBCx_IRQS ="), irqs);
 
             if (irqs & BB_IRQ_RXEM)
             {
-                debug_text(PSTR("BB IRQ - RXEM"));
+                //debug_text(PSTR("BB IRQ - RXEM"));
                 irqs &= (uint8_t)(~((uint32_t)BB_IRQ_RXEM)); // avoid Pa091
             }
             if (irqs & BB_IRQ_RXAM)
             {
-                debug_text(PSTR("BB IRQ - RXAM"));
+                //debug_text(PSTR("BB IRQ - RXAM"));
                 irqs &= (uint8_t)(~((uint32_t)BB_IRQ_RXAM)); // avoid Pa091
             }
             if (irqs & BB_IRQ_AGCR)
             {
-                debug_text(PSTR("BB IRQ - AGCR"));
+                //debug_text(PSTR("BB IRQ - AGCR"));
                 irqs &= (uint8_t)(~((uint32_t)BB_IRQ_AGCR)); // avoid Pa091
                 uint16_t rf_reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
                 /* Release AGC */
-                //debug_text(PSTR("Release AGC"));
+                ////debug_text(PSTR("Release AGC"));
                 pal_trx_bit_write(rf_reg_offset + SR_RF09_AGCC_FRZC, 0);
 
             }
             if (irqs & BB_IRQ_AGCH)
             {
-                debug_text(PSTR("BB IRQ - AGCH"));
+                //debug_text(PSTR("BB IRQ - AGCH"));
                 irqs &= (uint8_t)(~((uint32_t)BB_IRQ_AGCH)); // avoid Pa091
                 /* Hold AGC */
                 uint16_t rf_reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
-                //debug_text(PSTR("Hold AGC"));
+                ////debug_text(PSTR("Hold AGC"));
                 pal_trx_bit_write(rf_reg_offset + SR_RF09_AGCC_FRZC, 1);
             }
             if (irqs & BB_IRQ_RXFS)
             {
-                debug_text(PSTR("BB IRQ - RXFS"));
+                //debug_text(PSTR("BB IRQ - RXFS"));
 #ifdef ENABLE_TSTAMP
                 pal_get_current_time(&fs_tstamp[trx_id]);
 #endif
@@ -292,10 +290,10 @@ void bb_irq_handler_cb(void)
             }
             if (irqs & BB_IRQ_RXFE)
             {
-                debug_text(PSTR("BB IRQ - RXFE"));
+                //debug_text(PSTR("BB IRQ - RXFE"));
                 pal_get_current_time(&rxe_txe_tstamp[trx_id]);
 
-                debug_text(PSTR("Switch RF to TxPREP"));
+                //debug_text(PSTR("Switch RF to TxPREP"));
                 uint16_t rf_reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
                 uint8_t cmd = RF_TXPREP;
                 rf_reg_write(rf_reg_offset + RG_RF09_CMD, &cmd);
@@ -304,9 +302,9 @@ void bb_irq_handler_cb(void)
             }
             if (irqs & BB_IRQ_TXFE)
             {
-                debug_text(PSTR("BB IRQ - TXFE"));
+                //debug_text(PSTR("BB IRQ - TXFE"));
 
-                debug_text(PSTR("Switch RF to TxPREP"));
+                //debug_text(PSTR("Switch RF to TxPREP"));
                 uint16_t rf_reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
                 uint8_t cmd = RF_TXPREP;
                 rf_reg_write(rf_reg_offset + RG_RF09_CMD, &cmd);
@@ -340,39 +338,39 @@ void bb_irq_handler_cb(void)
 
         if (irqs != RF_IRQ_NO_IRQ)
         {
-            debug_text_val(PSTR("INFO: ISR for RF "), trx_id);
-            debug_text_val(PSTR("INFO: IRQ-flag-vector of RG_RFxx_IRQS ="), irqs);
+            //debug_text_val(PSTR("INFO: ISR for RF "), trx_id);
+            //debug_text_val(PSTR("INFO: IRQ-flag-vector of RG_RFxx_IRQS ="), irqs);
 
             if (irqs & RF_IRQ_TRXRDY)
             {
-                debug_text(PSTR("BB IRQ - RF_IRQ_TRXRDY"));
+                //debug_text(PSTR("BB IRQ - RF_IRQ_TRXRDY"));
                 irqs &= (uint8_t)(~((uint32_t)RF_IRQ_TRXRDY)); // avoid Pa091
             }
             if (irqs & RF_IRQ_TRXERR)
             {
-                debug_text(PSTR("BB IRQ - RF_IRQ_TRXERR"));
+                //debug_text(PSTR("BB IRQ - RF_IRQ_TRXERR"));
             }
             if (irqs & RF_IRQ_BATLOW)
             {
-                debug_text(PSTR("BB IRQ - RF_IRQ_BATLOW"));
+                //debug_text(PSTR("BB IRQ - RF_IRQ_BATLOW"));
             }
             if (irqs & RF_IRQ_WAKEUP)
             {
-                debug_text(PSTR("BB IRQ - RF_IRQ_WAKEUP"));
+                //debug_text(PSTR("BB IRQ - RF_IRQ_WAKEUP"));
                 irqs &= (uint8_t)(~((uint32_t)RF_IRQ_WAKEUP)); // avoid Pa091
             }
             if (irqs & RF_IRQ_IQIFSF)
             {
-                debug_text(PSTR("BB IRQ - RF_IRQ_IQIFSF"));
+                //debug_text(PSTR("BB IRQ - RF_IRQ_IQIFSF"));
             }
             if (irqs & RF_IRQ_EDC)
             {
-                debug_text(PSTR("BB IRQ - RF_IRQ_EDC"));
+                //debug_text(PSTR("BB IRQ - RF_IRQ_EDC"));
             }
 
             if (irqs != 0)
             {
-                debug_text_finish(PSTR("Unexpected BB IRQS"), DEBUG_ERROR);
+                //debug_text_finish(PSTR("Unexpected BB IRQS"), DEBUG_ERROR);
             }
 
             tal_rf_irqs[trx_id] |= irqs;

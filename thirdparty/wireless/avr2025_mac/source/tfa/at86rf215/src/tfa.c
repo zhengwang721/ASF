@@ -32,9 +32,7 @@
 #ifdef CHIP_MODE_TEST
 #include "pal_internal.h"
 #endif
-#if (PAL_GENERIC_TYPE == MEGA_RF_SIM)
-#include "verification.h"
-#endif
+
 
 /* === TYPES =============================================================== */
 
@@ -59,11 +57,11 @@ phy_enum_t tfa_cca_perform(trx_id_t trx_id)
 {
     phy_enum_t ret;
 
-    debug_text(PSTR("tfa_cca_perform()"));
+    //debug_text(PSTR("tfa_cca_perform()"));
 
     if (tal_state[trx_id] != TAL_IDLE)
     {
-        debug_text(PSTR("TAL busy"));
+        //debug_text(PSTR("TAL busy"));
         ret = PHY_BUSY;
     }
     else
@@ -87,23 +85,23 @@ phy_enum_t tfa_cca_perform(trx_id_t trx_id)
         /* Capture ED value for current frame / ED scan */
         uint16_t rf_reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
         tal_current_ed_val[trx_id] = pal_trx_reg_read(rf_reg_offset + RG_RF09_EDV);
-        debug_text_val(PSTR("tal_current_ed_val = "), (uint8_t)tal_current_ed_val[trx_id]);
+        //debug_text_val(PSTR("tal_current_ed_val = "), (uint8_t)tal_current_ed_val[trx_id]);
 #if (DEBUG > 0) && (!defined IAR_SIMULATION)
         uint_fast8_t dbm = (uint8_t)(~(uint32_t)tal_current_ed_val[trx_id] + 1);
-        debug_text_val(PSTR("Energy (dBm) = -"), dbm);
+        //debug_text_val(PSTR("Energy (dBm) = -"), dbm);
 #endif
-        debug_text_val(PSTR("tal_pib[trx_id].CCAThreshold = "), (uint8_t)tal_pib[trx_id].CCAThreshold);
-        debug_text_val(PSTR("CCAThreshold dBm = -"), (uint8_t)(~(uint8_t)tal_pib[trx_id].CCAThreshold) + 1);
+        //debug_text_val(PSTR("tal_pib[trx_id].CCAThreshold = "), (uint8_t)tal_pib[trx_id].CCAThreshold);
+        //debug_text_val(PSTR("CCAThreshold dBm = -"), (uint8_t)(~(uint8_t)tal_pib[trx_id].CCAThreshold) + 1);
         if (tal_current_ed_val[trx_id] < tal_pib[trx_id].CCAThreshold)
         {
             /* Idle */
-            debug_text(PSTR("channel idle"));
+            //debug_text(PSTR("channel idle"));
             ret = PHY_IDLE;
         }
         else
         {
             /* Busy */
-            debug_text(PSTR("channel busy"));
+            //debug_text(PSTR("channel busy"));
             ret = PHY_BUSY;
         }
 
@@ -114,7 +112,7 @@ phy_enum_t tfa_cca_perform(trx_id_t trx_id)
         }
         else
         {
-            debug_text(PSTR("Switch back to TRXOFF"));
+            //debug_text(PSTR("Switch back to TRXOFF"));
             /* Switch to TRXOFF */
             pal_trx_reg_write(rf_reg_offset + RG_RF09_CMD, RF_TRXOFF);
             trx_state[trx_id] = RF_TRXOFF;
@@ -137,11 +135,11 @@ void tfa_continuous_tx_start(trx_id_t trx_id, continuous_tx_mode_t tx_mode)
 {
     uint16_t len;
 
-    debug_text(PSTR("tfa_continuous_tx_start()"));
+    //debug_text(PSTR("tfa_continuous_tx_start()"));
 
     if (tal_state[trx_id] != TAL_IDLE)
     {
-        debug_text(PSTR("TAL not IDLE"));
+        //debug_text(PSTR("TAL not IDLE"));
         return;
     }
 
@@ -163,7 +161,7 @@ void tfa_continuous_tx_start(trx_id_t trx_id, continuous_tx_mode_t tx_mode)
 
     if (tx_mode == CW_MODE)
     {
-        debug_text(PSTR("Carrier mode"));
+        //debug_text(PSTR("Carrier mode"));
 
         /* Configure DAC to generate carrier signal */
         uint8_t dac_config[2] = {0xFF, 0xFF};
@@ -185,7 +183,7 @@ void tfa_continuous_tx_start(trx_id_t trx_id, continuous_tx_mode_t tx_mode)
     pal_trx_write(bb_reg_offset + RG_BBC0_TXFLL, (uint8_t *)&len, 2);
 
     /* Trigger Tx start */
-    debug_text(PSTR("Start transmission"));
+    //debug_text(PSTR("Start transmission"));
 #ifdef CHIP_MODE_TEST
     if (chip_mode)
     {
@@ -194,7 +192,7 @@ void tfa_continuous_tx_start(trx_id_t trx_id, continuous_tx_mode_t tx_mode)
             /* Check if the other radio is currently in use */
             if (trx_state[RF24] == RF_TX)
             {
-                debug_text_finish(PSTR("Radio is already in use"), DEBUG_ERROR);
+                //debug_text_finish(PSTR("Radio is already in use"), DEBUG_ERROR);
             }
             bb_bit_write(SR_RF_IQIFC1_CSELTX, 0x00); // RF09 is selected
         }
@@ -203,7 +201,7 @@ void tfa_continuous_tx_start(trx_id_t trx_id, continuous_tx_mode_t tx_mode)
             /* Check if the other radio is currently in use */
             if (trx_state[RF09] == RF_TX)
             {
-                debug_text_finish(PSTR("Radio is already in use"), DEBUG_ERROR);
+                //debug_text_finish(PSTR("Radio is already in use"), DEBUG_ERROR);
             }
             bb_bit_write(SR_RF_IQIFC1_CSELTX, 0x01); // RF24 is selected
         }
@@ -215,7 +213,7 @@ void tfa_continuous_tx_start(trx_id_t trx_id, continuous_tx_mode_t tx_mode)
 
     if (tx_mode == PRBS_MODE)
     {
-        debug_text(PSTR("PRBS mode"));
+        //debug_text(PSTR("PRBS mode"));
 
         /* Fill frame buffer */
         uint16_t tx_frm_buf_offset = BB_TX_FRM_BUF_OFFSET * trx_id;
@@ -267,7 +265,7 @@ void tfa_continuous_tx_stop(trx_id_t trx_id)
     else
     {
         tal_state[trx_id] = TAL_IDLE;
-        debug_text(PSTR("Switch back to TRXOFF"));
+        //debug_text(PSTR("Switch back to TRXOFF"));
         /* Switch to TRXOFF */
         uint16_t rf_reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
         pal_trx_reg_write(rf_reg_offset + RG_RF09_CMD, RF_TRXOFF);

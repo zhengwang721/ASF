@@ -26,9 +26,7 @@
 #include "ieee_const.h"
 #include "tal_config.h"
 #include "tal_internal.h"
-#if (PAL_GENERIC_TYPE == MEGA_RF_SIM)
-#include "verification.h"
-#endif
+
 
 /* === TYPES =============================================================== */
 
@@ -54,7 +52,7 @@ static void cca_start(void *parameter);
  */
 void csma_start(trx_id_t trx_id)
 {
-    debug_text(PSTR("csma_start()"));
+    //debug_text(PSTR("csma_start()"));
 
     /* Initialize CSMA variables */
     NB[trx_id] = 0;
@@ -72,7 +70,7 @@ void csma_start(trx_id_t trx_id)
  */
 static void start_backoff(trx_id_t trx_id)
 {
-    debug_text(PSTR("start_backoff()"));
+    //debug_text(PSTR("start_backoff()"));
 
     /* Start backoff timer to trigger CCA */
     uint8_t backoff_8;
@@ -96,11 +94,11 @@ static void start_backoff(trx_id_t trx_id)
         {
             timer_id = TAL_T_1;
         }
-        debug_text_val(PSTR("start backoff timer"), (uint16_t)backoff_duration_us);
+        //debug_text_val(PSTR("start backoff timer"), (uint16_t)backoff_duration_us);
 
         retval_t status =
             pal_timer_start(timer_id, backoff_duration_us, TIMEOUT_RELATIVE,
-                            (FUNC_PTR())cca_start, (void *)&timer_cb_parameter[trx_id]);
+                            (FUNC_PTR)cca_start, (void *)&timer_cb_parameter[trx_id]);
         if (status != MAC_SUCCESS)
         {
             tx_done_handling(trx_id, status);
@@ -127,14 +125,14 @@ static void start_backoff(trx_id_t trx_id)
         {
 #ifdef USE_TXPREP_DURING_BACKOFF
             /* Switch to TXPREP during backoff */
-            debug_text(PSTR("switch to TXPREP during backoff"));
+            //debug_text(PSTR("switch to TXPREP during backoff"));
             if (trx_state[trx_id] != RF_TXPREP)
             {
                 switch_to_txprep(trx_id);
             }
 #else
             /* Switch to TRXOFF during backoff */
-            debug_text(PSTR("switch to TRXOFF during backoff"));
+            //debug_text(PSTR("switch to TRXOFF during backoff"));
             if (trx_state[trx_id] != RF_TRXOFF)
             {
                 uint16_t rf_reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
@@ -161,7 +159,7 @@ static void cca_start(void *parameter)
 {
     trx_id_t trx_id = *(trx_id_t *)parameter;
 
-    debug_text_val(PSTR("cca_start(), trx_id = "), trx_id);
+    //debug_text_val(PSTR("cca_start(), trx_id = "), trx_id);
 
     /* Check if trx is currently detecting a frame ota */
     if (trx_state[trx_id] == RF_RX)
@@ -170,7 +168,7 @@ static void cca_start(void *parameter)
         uint8_t agc_freeze = pal_trx_bit_read(rf_reg_offset + SR_RF09_AGCC_FRZS);
         if (agc_freeze)
         {
-            debug_text(PSTR("AGC is freezed"));
+            //debug_text(PSTR("AGC is freezed"));
             csma_continue(trx_id);
         }
         else
@@ -193,7 +191,7 @@ static void cca_start(void *parameter)
 void trigger_cca_meaurement(trx_id_t trx_id)
 {
     /* Trigger CCA measurement */
-    debug_text(PSTR("trigger_cca_meaurement()"));
+    //debug_text(PSTR("trigger_cca_meaurement()"));
 
     /* Cancel any ongoing reception and ensure that TXPREP is reached. */
     if (trx_state[trx_id] != RF_TXPREP)
@@ -209,7 +207,7 @@ void trigger_cca_meaurement(trx_id_t trx_id)
     /* Setup and start energy detection */
     uint16_t rf_reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
     pal_trx_bit_write(rf_reg_offset + SR_RF09_AGCC_FRZC, 0);// Ensure AGC is not hold
-    debug_text(PSTR("Switch to Rx"));
+    //debug_text(PSTR("Switch to Rx"));
     pal_trx_reg_write(rf_reg_offset + RG_RF09_CMD, RF_RX);
     trx_state[trx_id] = RF_RX;
     tal_state[trx_id] = TAL_CCA;
@@ -227,7 +225,7 @@ void trigger_cca_meaurement(trx_id_t trx_id)
  */
 void cca_done_handling(trx_id_t trx_id)
 {
-    debug_text(PSTR("cca_done_handling()"));
+    //debug_text(PSTR("cca_done_handling()"));
 
     switch_to_txprep(trx_id); /* Leave state Rx */
 
@@ -239,13 +237,13 @@ void cca_done_handling(trx_id_t trx_id)
     if (tal_current_ed_val[trx_id] < tal_pib[trx_id].CCAThreshold)
     {
         /* Idle */
-        debug_text(PSTR("channel idle"));
+        //debug_text(PSTR("channel idle"));
         transmit_frame(trx_id);
     }
     else
     {
         /* Busy */
-        debug_text(PSTR("channel busy"));
+        //debug_text(PSTR("channel busy"));
         csma_continue(trx_id);
     }
 }
@@ -258,10 +256,10 @@ void cca_done_handling(trx_id_t trx_id)
  */
 void csma_continue(trx_id_t trx_id)
 {
-    debug_text(PSTR("csma_continue()"));
+    //debug_text(PSTR("csma_continue()"));
 
     NB[trx_id]++;
-    debug_text_val(PSTR("NB = "), NB[trx_id]);
+    //debug_text_val(PSTR("NB = "), NB[trx_id]);
     if (NB[trx_id] > tal_pib[trx_id].MaxCSMABackoffs)
     {
         tx_done_handling(trx_id, MAC_CHANNEL_ACCESS_FAILURE);

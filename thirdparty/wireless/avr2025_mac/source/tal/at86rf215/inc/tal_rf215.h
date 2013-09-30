@@ -23,7 +23,7 @@
 
 #include "tal_config.h"
 #include "pal.h"
-#include "ieee_154g.h"
+#include "ieee_15_4g.h"
 
 /* === TYPES =============================================================== */
 
@@ -73,7 +73,7 @@ extern volatile rf_irq_t tal_rf_irqs[2];
 /** Register offset for test register area. */
 #define RFT_TST_ADDR_OFFSET             (0x280 - 0x180)
 
-#if (PAL_GENERIC_TYPE != MEGA_RF_SIM)
+
 /* Resolve debug output used for simulation */
 #define debug_text(x)
 #define debug_to_tb(x)
@@ -83,7 +83,7 @@ extern volatile rf_irq_t tal_rf_irqs[2];
 #define debug_text_val_finish(a, b, c)
 #define debug_text_2x8bit_val(a, b, c, d)
 #define debug_2text_8bit_val(a, b, c, d, e)
-#endif
+
 
 /* === PROTOTYPES ========================================================== */
 

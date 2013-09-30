@@ -34,15 +34,11 @@
 /* === Types ================================================================ */
 
 /* Timer ID's used by the Application */
-typedef enum
-{
-    /* App Timers start from APP_FIRST_TIMER_ID */
 
-    /* App timer 1 */
-    T_APP_TX_DELAY = (APP_FIRST_TIMER_ID),
-    T_APP_LED_TX = (APP_FIRST_TIMER_ID + 1),
-    T_APP_LED_RX = (APP_FIRST_TIMER_ID + 2)
-} SHORTENUM app_timer_t;
+uint8_t T_APP_TX_DELAY;
+uint8_t T_APP_LED_TX;
+uint8_t T_APP_LED_RX;
+
 
 #define NUMBER_OF_APP_TIMERS        (3)
 

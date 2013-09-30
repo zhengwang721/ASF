@@ -184,6 +184,8 @@ retval_t tal_init(void)
 		return FAILURE;
 	}
 
+return MAC_SUCCESS;
+
 	if (tal_timer_init() != MAC_SUCCESS) {
 		return FAILURE;
 	}
@@ -309,7 +311,7 @@ static retval_t trx_init(void)
 	pal_timer_delay(RST_PULSE_WIDTH_US);
 	PAL_RST_HIGH();
 
-#if !(defined FPGA_EMULATION)
+
 	do {
 		/* Wait not more than max. value of TR1. */
 		if (poll_counter == P_ON_TO_CLKM_ATTEMPTS) {
@@ -321,21 +323,22 @@ static retval_t trx_init(void)
 		poll_counter++;
 		/* Check if AT86RF233 is connected; omit manufacturer id check
 		 **/
-	} while (pal_trx_reg_read(RG_PART_NUM) != PART_NUM_AT86RF233);
-#endif  /* !defined FPGA_EMULATION */
+	} while (pal_trx_reg_read(0X0D) != 0X33); //215 Part Num
 
-	/* Verify that TRX_OFF can be written */
+
+/*
+	/ * Verify that TRX_OFF can be written * /
 	pal_trx_reg_write(RG_TRX_STATE, CMD_TRX_OFF);
 
-	/* Verify that the trx has reached TRX_OFF. */
+	/ * Verify that the trx has reached TRX_OFF. * /
 	poll_counter = 0;
 	do {
-		/* Wait a short time interval. */
+		/ * Wait a short time interval. * /
 		pal_timer_delay(TRX_POLL_WAIT_TIME_US);
 
 		trx_status = (tal_trx_status_t)pal_trx_bit_read(SR_TRX_STATUS);
 
-		/* Wait not more than max. value of TR15. */
+		/ * Wait not more than max. value of TR15. * /
 		if (poll_counter == P_ON_TO_TRX_OFF_ATTEMPTS) {
 #if (_DEBUG_ > 0)
 			Assert(
@@ -348,7 +351,7 @@ static retval_t trx_init(void)
 		poll_counter++;
 	} while (trx_status != TRX_OFF);
 
-	tal_trx_status = TRX_OFF;
+	tal_trx_status = TRX_OFF;*/
 
 	return MAC_SUCCESS;
 }

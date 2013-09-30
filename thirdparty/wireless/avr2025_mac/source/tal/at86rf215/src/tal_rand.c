@@ -25,9 +25,7 @@
 #include "tal.h"
 #include "tal_config.h"
 #include "tal_internal.h"
-#if (PAL_GENERIC_TYPE == MEGA_RF_SIM)
-#include "verification.h"
-#endif
+
 
 /* === MACROS ============================================================== */
 
@@ -51,12 +49,12 @@ retval_t tal_generate_rand_seed(void)
     trx_id_t trx_id;
     rf_cmd_state_t previous_trx_state = RF_NOP;
 
-    debug_text(PSTR("tal_generate_rand_seed()"));
+    //debug_text(PSTR("tal_generate_rand_seed()"));
 
     /* Check for non sleeping device */
     if ((tal_state[RF09] == TAL_SLEEP) && (tal_state[RF24] == TAL_SLEEP))
     {
-        debug_text(PSTR("no seed generated - TAL_SLEEP"));
+        //debug_text(PSTR("no seed generated - TAL_SLEEP"));
         return TAL_TRX_ASLEEP;
     }
 
@@ -73,7 +71,7 @@ retval_t tal_generate_rand_seed(void)
         }
         else
         {
-            debug_text(PSTR("no seed generated - TAL_BUSY"));
+            //debug_text(PSTR("no seed generated - TAL_BUSY"));
             return TAL_BUSY;
         }
     }
@@ -99,8 +97,9 @@ retval_t tal_generate_rand_seed(void)
         rf_cmd_state_t temp_state = RF_NOP;
         while (1)
         {
-            if (PAL_TRX_IRQ_GET() == HIGH)
+            if (IRQ_PINGET() == HIGH)
             {
+				
                 break;
             }
         }
@@ -126,7 +125,7 @@ retval_t tal_generate_rand_seed(void)
     }
     else
     {
-        debug_text(PSTR("Trx is NOT off"));
+        //debug_text(PSTR("Trx is NOT off"));
     }
 
     uint16_t seed;

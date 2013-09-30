@@ -179,14 +179,14 @@ typedef void (*irq_handler_t)(void);
 /**
  * @brief This is the ALERT.indication message structure.
  */
-typedef struct assert_tag {
+typedef struct Assert_tag {
 	/**< The total length of this message. */
 	uint8_t size ALIGN8BIT;
 	/**< This identifies the message as ALERT_INDICATION */
-	uint8_t assert_cmdcode ALIGN8BIT;
+	uint8_t Assert_cmdcode ALIGN8BIT;
 	/**< Bytes to read to frame, data[0] gives the length */
 	uint8_t data[1]         ALIGN8BIT;
-} assert_t;
+} Assert_t;
 #endif  /* (_DEBUG_ > 0) */
 #endif  /* TEST_HARNESS */
 

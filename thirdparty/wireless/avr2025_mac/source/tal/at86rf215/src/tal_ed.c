@@ -26,9 +26,7 @@
 #include "tal_config.h"
 #include "tal_internal.h"
 #include "mac_build_config.h"
-#if (PAL_GENERIC_TYPE == MEGA_RF_SIM)
-#include "verification.h"
-#endif
+
 
 /* === TYPES =============================================================== */
 
@@ -71,7 +69,7 @@ retval_t tal_ed_start(trx_id_t trx_id, uint8_t scan_duration)
     uint16_t rf_reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
     uint16_t bb_reg_offset = BB_BASE_ADDR_OFFSET * trx_id;
 
-    debug_text(PSTR("tal_ed_start()"));
+    //debug_text(PSTR("tal_ed_start()"));
 
     /*
      * Check if the TAL is in idle state. Only in idle state it can
@@ -84,7 +82,7 @@ retval_t tal_ed_start(trx_id_t trx_id, uint8_t scan_duration)
 
     if (TAL_IDLE != tal_state[trx_id])
     {
-        ASSERT("TAL is TAL_BUSY" == 0);
+        Assert("TAL is TAL_BUSY" == 0);
         return TAL_BUSY;
     }
 
@@ -106,7 +104,7 @@ retval_t tal_ed_start(trx_id_t trx_id, uint8_t scan_duration)
 
     /* Setup energy measurement averaging duration */
     sample_duration = ED_SAMPLE_DURATION_SYM * tal_pib[trx_id].SymbolDuration_us;
-    debug_text_val(PSTR("sample_duration = "), sample_duration);
+    //debug_text_val(PSTR("sample_duration = "), sample_duration);
     set_ed_sample_duration(trx_id, sample_duration);
 
     /* Calculate the number of samples */
@@ -117,7 +115,7 @@ retval_t tal_ed_start(trx_id_t trx_id, uint8_t scan_duration)
     /* used for debugging purposes only */
     sampler_counter[trx_id] = REDUCED_ED_SAMPLE_COUNTER;
 #endif
-    debug_text_val(PSTR("sampler_counter = "), (uint16_t)sampler_counter[trx_id]);
+    //debug_text_val(PSTR("sampler_counter = "), (uint16_t)sampler_counter[trx_id]);
 
     /* Set RF to Rx */
     pal_trx_reg_write(rf_reg_offset + RG_RF09_CMD, RF_RX);
@@ -125,7 +123,7 @@ retval_t tal_ed_start(trx_id_t trx_id, uint8_t scan_duration)
 
     tal_state[trx_id] = TAL_ED_SCAN;
 
-    debug_text(PSTR("tal_ed_start: start scan"));
+    //debug_text(PSTR("tal_ed_start: start scan"));
 
     /* Start energy measurement */
     pal_trx_bit_write(rf_reg_offset + SR_RF09_EDC_EDM, RF_EDCONT);
@@ -144,13 +142,13 @@ retval_t tal_ed_start(trx_id_t trx_id, uint8_t scan_duration)
  */
 void handle_ed_end_irq(trx_id_t trx_id)
 {
-    debug_text(PSTR("handle_ed_end_irq()"));
+    //debug_text(PSTR("handle_ed_end_irq()"));
 
     /* Capture ED value for current frame / ED scan */
     uint16_t rf_reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
     tal_current_ed_val[trx_id] = pal_trx_reg_read(rf_reg_offset + RG_RF09_EDV);
-    debug_text_val(PSTR("tal_current_ed_val = "),
-                   (uint8_t)tal_current_ed_val[trx_id]);
+    //debug_text_val(PSTR("tal_current_ed_val = "),
+                  // (uint8_t)tal_current_ed_val[trx_id]);
 
     if (tal_state[trx_id] == TAL_CCA)
     {
@@ -171,8 +169,8 @@ void handle_ed_end_irq(trx_id_t trx_id)
         }
 
         sampler_counter[trx_id]--;
-        debug_text_val(PSTR("remaining sampler_counter = "),
-                       (uint16_t)sampler_counter[trx_id]);
+        //debug_text_val(PSTR("remaining sampler_counter = "),
+                      // (uint16_t)sampler_counter[trx_id]);
         if (sampler_counter[trx_id] == 0)
         {
             /* Keep RF in Rx state */

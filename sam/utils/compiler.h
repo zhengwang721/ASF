@@ -164,18 +164,18 @@
 /*! \brief This macro is used to test fatal errors.
  *
  * The macro tests if the expression is false. If it is, a fatal error is
- * detected and the application hangs up. If TEST_SUITE_DEFINE_ASSERT_MACRO
+ * detected and the application hangs up. If TEST_SUITE_DEFINE_Assert_MACRO
  * is defined, a unit test version of the macro is used, to allow execution
  * of further tests after a false expression.
  *
  * \param expr  Expression to evaluate and supposed to be nonzero.
  */
-#if defined(_ASSERT_ENABLE_)
-#  if defined(TEST_SUITE_DEFINE_ASSERT_MACRO)
+#if defined(_Assert_ENABLE_)
+#  if defined(TEST_SUITE_DEFINE_Assert_MACRO)
      // Assert() is defined in unit_test/suite.h
 #    include "unit_test/suite.h"
 #  else
-#undef TEST_SUITE_DEFINE_ASSERT_MACRO
+#undef TEST_SUITE_DEFINE_Assert_MACRO
 #    define Assert(expr) \
 	{\
 		if (!(expr)) while (true);\
@@ -1042,6 +1042,7 @@ typedef U8                  Byte;       //!< 8-bit unsigned integer.
 #define FLASH_EXTERN(x) extern const x
 #define PGM_READ_BYTE(x) *(x)
 #define PGM_READ_WORD(x) *(x)
+#define PGM_READ_DWORD(x) *(x)
 #define MEMCPY_ENDIAN memcpy
 #define PGM_READ_BLOCK(dst, src, len) memcpy((dst), (src), (len))
 

@@ -26,25 +26,31 @@
 #include "pal.h"
 #include "tal.h"
 #include "app_config.h"
-#include "sio_handler.h"
+#include "sio2host.h"
 #include "app_common.h"
+#include "asf.h"
 
 /* === TYPES =============================================================== */
 
 /* === MACROS ============================================================== */
 
-#if (BOARD_TYPE == EVAL215)
-#define LED_APP         LED_0
-#define LED_TX_1GHZ     LED_1
-#define LED_RX_1GHZ     LED_2
-#define LED_TX_2GHZ     LED_3
-#define LED_RX_2GHZ     LED_4
-#endif
-#if (BOARD_TYPE == RZ600_233_SAM4SEK)
-#define LED_APP         LED_0
-#define LED_TX          LED_1
-#define LED_RX          LED_2
-#endif
+/** Enumerations used to identify LEDs */
+typedef enum led_id_tag
+{
+	LED_0,
+	LED_1,
+	LED_2,
+	LED_3,
+	LED_4
+} SHORTENUM led_id_t;
+
+
+#define LED_APP         LED0
+#define LED_TX_1GHZ     LED0
+#define LED_RX_1GHZ     LED0
+#define LED_TX_2GHZ     LED0
+#define LED_RX_2GHZ     LED0
+
 #define LED_TIME        500000UL
 
 /* === EXTERNALS =========================================================== */
@@ -62,11 +68,29 @@ trx_id_t current_trx_id = RF09;
 
 static void app_task(void);
 static void app_init(void);
+void app_alert(void);
+
+/**
+ * \brief Button debounce routine.
+ *
+ * Helper function for debouncing the transmit button.
+ * \return ret 1 if a button event is detected, 0 otherwise.
+ */
+bool app_debounce_button(void);
+static void app_timers_init(void);
+/**
+ * Determine if button is pressed
+ *
+ * \return true if button is pressed, else false
+ */
+bool button_pressed(void);
+
 static void led_tx_off(void *parameter);
 static void led_rx_off(void *parameter);
 #ifdef MULTI_TRX_SUPPORT
 static void switch_tx_band(trx_id_t id);
 #endif
+
 
 /* === IMPLEMENTATION ====================================================== */
 
@@ -76,49 +100,36 @@ static void switch_tx_band(trx_id_t id);
  */
 int main(void)
 {
+	
+	irq_initialize_vectors();
+	sysclk_init();
+
+	/* Initialize the board.
+	 * The board-specific conf_board.h file contains the configuration of
+	 * the board initialization.
+	 */
+	board_init();
+	
+	sw_timer_init();
+	cpu_irq_enable();
     /* Initialize the TAL layer */
     if (tal_init() != MAC_SUCCESS)
     {
         // something went wrong during initialization
-        pal_alert();
+        app_alert();
     }
 
-    /* Calibrate MCU's RC oscillator */
-    pal_calibrate_rc_osc();
+	app_timers_init();
+	
+	cpu_irq_enable();
 
-    /* Initialize LEDs */
-    pal_led_init();
-    pal_led(LED_APP, LED_ON);     // indicating application is started
+	sio2host_init();
 
-    /* Initialize buttons */
-    pal_button_init();
-
-    /*
-     * The stack is initialized above, hence the global interrupts are enabled
-     * here.
-     */
-    pal_global_irq_enable();
-
-    /* Initialize the serial interface used for communication with terminal program */
-    if (pal_sio_init(SIO_CHANNEL) != MAC_SUCCESS)
-    {
-        // something went wrong during initialization
-        pal_alert();
-    }
-
-#if ((!defined __ICCAVR__) && (!defined __ICCARM__) && (!(defined __GNUC__ && defined __AVR32__))&& (!defined __GNUARM__))
-    fdevopen(_sio_putchar, _sio_getchar);
-#endif
-
-    /* Setting stdin & stdout as unbuffered for ARM GCC*/
-#if (defined __GNUARM__)
-    setbuf(stdin, NULL);
-    setbuf(stdout, NULL);
-#endif
+    LED_On(LED_APP);     // indicating application is started
 
     app_init();
 
-    print_chat_menu();
+   print_chat_menu();
 
     /* Endless while loop */
     while (1)
@@ -135,6 +146,7 @@ int main(void)
  */
 static void app_init(void)
 {
+
     /* Configure the TAL PIBs; e.g. set short address */
     uint16_t pan_id = OWN_PAN_ID;
 #ifdef MULTI_TRX_SUPPORT
@@ -154,11 +166,11 @@ static void app_init(void)
     phy.freq_f0 = OQPSK_915_F0;
     if (tal_pib_set(RF09, phySetting, (pib_value_t *)&phy) != MAC_SUCCESS)
     {
-        pal_alert();
+        app_alert();
     }
 
     /* Configure PHY for 2.4GHz */
-#if 1
+#if 0
     phy.modulation = OFDM;
     phy.phy_mode.ofdm.interl = true;
     phy.phy_mode.ofdm.option = OFDM_OPT_1;
@@ -175,7 +187,7 @@ static void app_init(void)
 #endif
     if (tal_pib_set(RF24, phySetting, (pib_value_t *)&phy) != MAC_SUCCESS)
     {
-        pal_alert();
+        app_alert();
     }
 
 #else /* #ifdef MULTI_TRX_SUPPORT */
@@ -189,8 +201,11 @@ static void app_init(void)
 
     /* Switch receiver(s) on */
 #ifdef MULTI_TRX_SUPPORT
-    tal_rx_enable(RF09, PHY_RX_ON);
-    tal_rx_enable(RF24, PHY_RX_ON);
+
+   tal_rx_enable(RF09, PHY_RX_ON);
+   tal_rx_enable(RF24, PHY_RX_ON);
+  
+  
 #else
     tal_rx_enable(PHY_RX_ON);
 #endif
@@ -202,37 +217,38 @@ static void app_init(void)
  */
 static void app_task(void)
 {
-    int input = sio_getchar_nowait();
-    if (input != -1)
-    {
-        switch (input)
-        {
-#ifdef MULTI_TRX_SUPPORT
-            case SUB1_CHAR:
-                switch_tx_band(RF09);
-                break;
-            case TWO_G_CHAR:
-                switch_tx_band(RF24);
-                break;
-#endif
-            default:
-                if (input != 0xFF)
-                {
-                    get_chat_input(input);
-                }
-                break;
-        }
-    }
-#ifdef MULTI_TRX_SUPPORT
-    if (pal_button_read(BUTTON_0) == BUTTON_PRESSED)
-    {
-        switch_tx_band(RF09);
-    }
-    if (pal_button_read(BUTTON_1) == BUTTON_PRESSED)
-    {
-        switch_tx_band(RF24);
-    }
-#endif
+
+    int input = sio2host_getchar_nowait();
+	static uint8_t key_press;
+	 if (input != -1)
+	 {
+		 switch (input)
+		 {
+			 #ifdef MULTI_TRX_SUPPORT
+			 case SUB1_CHAR:
+			 switch_tx_band(RF09);
+			 break;
+			 case TWO_G_CHAR:
+			 switch_tx_band(RF24);
+			 break;
+			 #endif
+			 default:
+			 if (input != 0xFF)
+			 {
+				 get_chat_input(input);
+			 }
+			 break;
+		 }
+	 }	
+			
+/*
+			/ * Check for any key press * /
+			key_press = app_debounce_button();
+			if(key_press != 0)
+			{
+			switch_tx_band();
+			}*/
+
 }
 
 
@@ -242,33 +258,35 @@ static void app_task(void)
  */
 static void switch_tx_band(trx_id_t id)
 {
-    led_id_t tx_led_id, rx_led_id;
-    current_trx_id = id;
-    printf("\nActive transmitter frequency band: ");
+led_id_t tx_led_id, rx_led_id;
+current_trx_id = id;
+printf("\nActive transmitter frequency band: ");
 
-    if (id == RF09)
-    {
-        printf("sub-1GHz\n> ");
-        tx_led_id = LED_TX_1GHZ;
-        rx_led_id = LED_RX_1GHZ;
-    }
-    else
-    {
-        printf("2.4GHz\n> ");
-        tx_led_id = LED_TX_2GHZ;
-        rx_led_id = LED_RX_2GHZ;
-    }
-
-    for (uint8_t i = 0; i < 20; i++)
-    {
-        pal_led(tx_led_id, LED_TOGGLE);
-        pal_led(rx_led_id, LED_TOGGLE);
-        pal_timer_delay(50000);
-        pal_timer_delay(50000);
-    }
-    pal_led(tx_led_id, LED_OFF);
-    pal_led(rx_led_id, LED_OFF);
+if (id == RF09)
+{
+	printf("sub-1GHz\n> ");
+	tx_led_id = LED_TX_1GHZ;
+	rx_led_id = LED_RX_1GHZ;
 }
+else
+{
+	printf("2.4GHz\n> ");
+	tx_led_id = LED_TX_2GHZ;
+	rx_led_id = LED_RX_2GHZ;
+}
+
+for (uint8_t i = 0; i < 20; i++)
+{
+	LED_Toggle(tx_led_id);
+	LED_Toggle(rx_led_id);
+	pal_timer_delay(50000);
+	pal_timer_delay(50000);
+}
+LED_Off(tx_led_id);
+LED_Off(rx_led_id);	
+		
+	}
+
 #endif
 
 
@@ -290,20 +308,18 @@ void tal_rx_frame_cb(frame_info_t *rx_frame)
 #endif
 
     /* Indicate received frame by LED */
-#if (BOARD_TYPE == EVAL215)
+
     if (trx_id == RF09)
     {
-        pal_led(LED_RX_1GHZ, LED_ON);
+        LED_On(LED_RX_1GHZ);
     }
     else
     {
-        pal_led(LED_RX_2GHZ, LED_ON);
+        LED_On(LED_RX_2GHZ);
     }
-#else
-    pal_led(LED_RX, LED_ON);
-#endif
-    pal_timer_start(T_APP_LED_RX, LED_TIME, TIMEOUT_RELATIVE,
-                    (FUNC_PTR())led_rx_off, NULL);
+
+    sw_timer_start(T_APP_LED_RX, LED_TIME, TIMEOUT_RELATIVE,
+                    (FUNC_PTR)led_rx_off, NULL);
 
     chat_handle_incoming_frame(trx_id, rx_frame);
 
@@ -329,21 +345,18 @@ void tal_tx_frame_done_cb(retval_t status, frame_info_t *frame)
     trx_id_t trx_id = RF09;
 #endif
 
-    /* Indicate transmitted frame by LED */
-#if (BOARD_TYPE == EVAL215)
+
     if (trx_id == RF09)
     {
-        pal_led(LED_TX_1GHZ, LED_ON);
+        LED_Toggle(LED_TX_1GHZ);
     }
     else
     {
-        pal_led(LED_TX_2GHZ, LED_ON);
+        LED_Toggle(LED_TX_2GHZ);
     }
-#else
-    pal_led(LED_TX, LED_ON);
-#endif
-    pal_timer_start(T_APP_LED_TX, LED_TIME, TIMEOUT_RELATIVE,
-                    (FUNC_PTR())led_tx_off, NULL);
+
+    sw_timer_start(T_APP_LED_TX, LED_TIME, TIMEOUT_RELATIVE,
+                    (FUNC_PTR)led_tx_off, NULL);
 
     chat_tx_done_cb(trx_id, status, frame);
 }
@@ -371,12 +384,10 @@ void tal_ed_end_cb(uint8_t energy_level)
  */
 static void led_rx_off(void *parameter)
 {
-#if (BOARD_TYPE == EVAL215)
-    pal_led(LED_RX_1GHZ, LED_OFF);
-    pal_led(LED_RX_2GHZ, LED_OFF);
-#else
-    pal_led(LED_RX, LED_OFF);
-#endif
+
+    LED_Off(LED_RX_1GHZ);
+    LED_Off(LED_RX_2GHZ);
+
     /* Keep compiler happy. */
     parameter = parameter;
 }
@@ -387,12 +398,10 @@ static void led_rx_off(void *parameter)
  */
 static void led_tx_off(void *parameter)
 {
-#if (BOARD_TYPE == EVAL215)
-    pal_led(LED_TX_1GHZ, LED_OFF);
-    pal_led(LED_TX_2GHZ, LED_OFF);
-#else
-    pal_led(LED_TX, LED_OFF);
-#endif
+
+    LED_Off(LED_TX_1GHZ);
+    LED_Off(LED_TX_2GHZ);
+
     /* Keep compiler happy. */
     parameter = parameter;
 }
@@ -466,37 +475,7 @@ char *get_tal_type_text(uint8_t tal_type)
 {
     char *text;
 
-    switch (tal_type)
-    {
-#ifdef ATMEGARFA1
-        case ATMEGARFA1:
-            text = "ATMEGARFA1";
-            break;
-#endif
-#ifdef ATMEGARFR2
-        case ATMEGARFR2:
-            text = "ATMEGARFR2";
-            break;
-#endif
-#ifdef AT86RF231
-        case AT86RF231:
-            text = "AT86RF231";
-            break;
-#endif
-#ifdef AT86RF233
-        case AT86RF233:
-            text = "AT86RF233";
-            break;
-#endif
-#ifdef AT86RF215
-        case AT86RF215:
-            text = "AT86RF215";
-            break;
-#endif
-        default:
-            text = "unknown TAL_TYPE";
-            break;
-    }
+	text = "AT86RF215";
 
     return text;
 }
@@ -511,37 +490,8 @@ char *get_pal_type_text(uint8_t pal_type)
 {
     char *text;
 
-    switch (pal_type)
-    {
-#ifdef ATMEGA128RFA1
-        case ATMEGA128RFA1:
-            text = "ATMEGA128RFA1";
-            break;
-#endif
-#ifdef ATMEGA256RFR2
-        case ATMEGA256RFR2:
-            text = "ATMEGA256RFR2";
-            break;
-#endif
-#ifdef AT91SAM4S16C
-        case AT91SAM4S16C:
-            text = "AT91SAM4S16C";
-            break;
-#endif
-#ifdef AT91SAM4S16B
-        case AT91SAM4S16B:
-            text = "AT91SAM4S16B";
-            break;
-#endif
-#ifdef ATXMEGA256A3
-        case ATXMEGA256A3:
-            text = "ATXMEGA256A3";
-            break;
-#endif
-        default:
-            text = "unknown PAL type";
-            break;
-    }
+            text = "SAM4LC4C";
+
 
     return text;
 }
@@ -556,52 +506,8 @@ char *get_board_text(uint8_t board)
 {
     char *text;
 
-    switch (board)
-    {
-#ifdef RCB_6_3_SENS_TERM_BOARD
-        case RCB_6_3_SENS_TERM_BOARD:
-            text = "RCB_6_3_SENS_TERM_BOARD";
-            break;
-#endif
-#ifdef RCB_6_3_2_SENS_TERM_BOARD
-        case RCB_6_3_2_SENS_TERM_BOARD:
-            text = "RCB_6_3_2_SENS_TERM_BOARD";
-            break;
-#endif
-#ifdef RZ600_231_SAM4SEK
-        case RZ600_231_SAM4SEK:
-            text = "RZ600_231_SAM4SEK";
-            break;
-#endif
-#ifdef RZ600_233_SAM4SEK
-        case RZ600_233_SAM4SEK:
-            text = "RZ600_233_SAM4SEK";
-            break;
-#endif
-#ifdef REB_8_1_CBB
-        case REB_8_1_CBB:
-            text = "REB_8_1_CBB";
-            break;
-#endif
-#ifdef RF233_SAM4_BAB
-        case RF233_SAM4_BAB:
-            text = "RF233_SAM4_BAB";
-            break;
-#endif
-#ifdef RF233_SAM4_BAB_NATIVE_USB
-        case RF233_SAM4_BAB_NATIVE_USB:
-            text = "RF233_SAM4_BAB_NATIVE_USB";
-            break;
-#endif
-#ifdef EVAL215
-        case EVAL215:
-            text = "EVAL215";
-            break;
-#endif
-        default:
-            text = "unknown board";
-            break;
-    }
+    
+            text = "SAM4L Xpro-RF215";
 
     return text;
 }
@@ -633,6 +539,106 @@ char *get_trx_id_text(trx_id_t id)
     return text;
 }
 #endif
+
+void app_alert()
+{
+	while (1) {
+		#if LED_COUNT > 0
+		LED_Toggle(LED0);
+		#endif
+
+		#if LED_COUNT > 1
+		LED_Toggle(LED1);
+		#endif
+
+		#if LED_COUNT > 2
+		LED_Toggle(LED2);
+		#endif
+
+		#if LED_COUNT > 3
+		LED_Toggle(LED3);
+		#endif
+
+		#if LED_COUNT > 4
+		LED_Toggle(LED4);
+		#endif
+
+		#if LED_COUNT > 5
+		LED_Toggle(LED5);
+		#endif
+
+		#if LED_COUNT > 6
+		LED_Toggle(LED6);
+		#endif
+
+		#if LED_COUNT > 7
+		LED_Toggle(LED7);
+		#endif
+		delay_us(0xFFFF);
+	}
+}
+
+bool app_debounce_button(void)
+{
+	uint8_t ret = 0;
+	static uint8_t key_cnt;
+	/*Read the current state of the button*/
+
+	if (button_pressed()) { /* Button Pressed */
+		if (key_cnt != 20) {
+			key_cnt++;
+		}
+	} else if (!(button_pressed()) &&
+			(key_cnt == 20)) {           /*
+		                                                             * Button
+		                                                             *
+		                                                             *released
+		                                                             **/
+		ret = 1;
+		key_cnt = 0;
+	} else {
+		key_cnt = 0;
+	}
+
+	return ret;
+}
+
+/*
+ * Determine if button is pressed
+ *
+ * \return true if button is pressed, else false
+ */
+bool button_pressed(void)
+{
+#if defined GPIO_PUSH_BUTTON_0
+	/*Read the current state of the button*/
+	if (ioport_get_pin_level(GPIO_PUSH_BUTTON_0)) {
+		return false;
+	} else {
+		return true;
+	}
+
+#else
+	return false;
+#endif
+}
+
+static void app_timers_init(void)
+{
+	if (STATUS_OK != sw_timer_get_id(&T_APP_TX_DELAY)) {
+		app_alert();
+	}
+
+	if (STATUS_OK != sw_timer_get_id(&T_APP_LED_TX)) {
+		app_alert();
+	}
+
+	if (STATUS_OK != sw_timer_get_id(&T_APP_LED_RX)) {
+		app_alert();
+	}
+
+
+}
 
 
 /* EOF */

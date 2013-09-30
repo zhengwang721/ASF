@@ -27,9 +27,7 @@
 #include "tal_config.h"
 #include "tal_internal.h"
 #include "tal_pib.h"
-#if (PAL_GENERIC_TYPE == MEGA_RF_SIM)
-#include "verification.h"
-#endif
+
 
 /* === TYPES =============================================================== */
 
@@ -54,18 +52,18 @@
  */
 retval_t tal_trx_sleep(trx_id_t trx_id)
 {
-    debug_text(PSTR("tal_trx_sleep()"));
+    //debug_text(PSTR("tal_trx_sleep()"));
 
     if (tal_state[trx_id] == TAL_SLEEP)
     {
-        debug_text(PSTR("TAL_TRX_ASLEEP"));
+        //debug_text(PSTR("TAL_TRX_ASLEEP"));
         return TAL_TRX_ASLEEP;
     }
 
     /* Device can be put to sleep only when the TAL is in IDLE state. */
     if (tal_state[trx_id] != TAL_IDLE)
     {
-        debug_text(PSTR("TAL_BUSY"));
+        //debug_text(PSTR("TAL_BUSY"));
         return TAL_BUSY;
     }
 
@@ -108,11 +106,11 @@ retval_t tal_trx_sleep(trx_id_t trx_id)
  */
 retval_t tal_trx_wakeup(trx_id_t trx_id)
 {
-    debug_text(PSTR("tal_trx_wakeup()"));
+    //debug_text(PSTR("tal_trx_wakeup()"));
 
     if (tal_state[trx_id] != TAL_SLEEP)
     {
-        debug_text(PSTR("trx already awake"));
+        //debug_text(PSTR("trx already awake"));
         return TAL_TRX_AWAKE;
     }
 
@@ -147,7 +145,7 @@ retval_t tal_trx_wakeup(trx_id_t trx_id)
     {
         if (TAL_RF_IS_IRQ_SET(trx_id, RF_IRQ_WAKEUP))
         {
-            debug_text_val(PSTR("Clear RF_IRQ_WAKEUP for trx_id = "), trx_id);
+            //debug_text_val(PSTR("Clear RF_IRQ_WAKEUP for trx_id = "), trx_id);
             TAL_RF_IRQ_CLR(trx_id, RF_IRQ_WAKEUP);
 
             if (tal_state[other_trx_id] == TAL_WAKING_UP)
@@ -155,9 +153,9 @@ retval_t tal_trx_wakeup(trx_id_t trx_id)
                 /* Wait for the other trx to wake-up as well. */
                 if (TAL_RF_IS_IRQ_SET(other_trx_id, RF_IRQ_WAKEUP))
                 {
-                    debug_text(PSTR("Wake up of other device"));
-                    debug_text_val(PSTR("Clear RF_IRQ_WAKEUP for trx_id = "),
-                                   trx_id);
+                    //debug_text(PSTR("Wake up of other device"));
+                    //debug_text_val(PSTR("Clear RF_IRQ_WAKEUP for trx_id = "),
+                                  // trx_id);
                     TAL_RF_IRQ_CLR(other_trx_id, RF_IRQ_WAKEUP);
                     break;
                 }
@@ -171,20 +169,20 @@ retval_t tal_trx_wakeup(trx_id_t trx_id)
         // @ToDo: Use no magic number for "1000"
         if (pal_sub_time_us(current_time, start_time) > 1000)
         {
-            debug_text_val(PSTR("long start up duration = "),
-                           (uint16_t)(current_time - start_time));
+            //debug_text_val(PSTR("long start up duration = "),
+                         //  (uint16_t)(current_time - start_time));
             tal_state[trx_id] = TAL_SLEEP;
             if (tal_state[other_trx_id] == TAL_WAKING_UP)
             {
                 tal_state[other_trx_id] = TAL_SLEEP;
             }
-            debug_text(PSTR("Error: Trx did not wake up"));
+            //debug_text(PSTR("Error: Trx did not wake up"));
             return FAILURE;
         }
     }
 
-    debug_text_val(PSTR("start up duration = "),
-                   (uint16_t)(current_time - start_time));
+    //debug_text_val(PSTR("start up duration = "),
+             //      (uint16_t)(current_time - start_time));
 
     /*
      * If the other transceiver block was in SLEEP mode, enable SLEEP for that
@@ -193,8 +191,8 @@ retval_t tal_trx_wakeup(trx_id_t trx_id)
     if (tal_state[other_trx_id] == TAL_WAKING_UP)
     {
         uint16_t other_rf_reg_offset = RF_BASE_ADDR_OFFSET * other_trx_id;
-        debug_text_val(PSTR("Set other trx back to sleep, other_trx_id ="),
-                       other_trx_id);
+        //debug_text_val(PSTR("Set other trx back to sleep, other_trx_id ="),
+             //          other_trx_id);
         pal_trx_reg_write(other_rf_reg_offset + RG_RF09_CMD, RF_SLEEP);
         tal_state[other_trx_id] = TAL_SLEEP;
         TAL_RF_IRQ_CLR_ALL(other_trx_id);
@@ -213,7 +211,7 @@ retval_t tal_trx_wakeup(trx_id_t trx_id)
 
     tal_state[trx_id] = TAL_IDLE;
 
-    debug_text_val(PSTR("tal_trx_wakeup done"), trx_id);
+    //debug_text_val(PSTR("tal_trx_wakeup done"), trx_id);
 
     return MAC_SUCCESS;
 }

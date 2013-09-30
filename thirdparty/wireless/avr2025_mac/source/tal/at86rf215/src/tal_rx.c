@@ -30,9 +30,6 @@
 #include "tal_pib.h"
 #include "tal_internal.h"
 
-#if (PAL_GENERIC_TYPE == MEGA_RF_SIM)
-#include "verification.h"
-#endif
 
 /* === EXTERNALS =========================================================== */
 
@@ -65,7 +62,7 @@ static void handle_incoming_frame(trx_id_t trx_id);
  */
 void handle_rx_end_irq(trx_id_t trx_id)
 {
-    debug_text_val(PSTR("handle_rx_end_irq() for trx_id "), trx_id);
+    //debug_text_val(PSTR("handle_rx_end_irq() for trx_id "), trx_id);
 
     trx_state[trx_id] = RF_TXPREP;
 
@@ -73,7 +70,7 @@ void handle_rx_end_irq(trx_id_t trx_id)
     /* Some delay required to ensure that BB part has switched off the RF */
     if (chip_mode)
     {
-        debug_text(PSTR("Artifical delay waiting that command gets affect at RF part"));
+        //debug_text(PSTR("Artifical delay waiting that command gets affect at RF part"));
         uint8_t poll_cnt = 0;
         rf_cmd_state_t state;
         uint16_t rf_reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
@@ -123,13 +120,13 @@ void handle_rx_end_irq(trx_id_t trx_id)
  */
 static bool prepare_upload(trx_id_t trx_id)
 {
-    debug_text_val(PSTR("prepare_upload(), trx_id ="), trx_id);
+    //debug_text_val(PSTR("prepare_upload(), trx_id ="), trx_id);
 
     bool ret = true;
 
     if (tal_rx_buffer[trx_id] == NULL)
     {
-        ASSERT("no tal_rx_buffer available" == 0);
+        Assert("no tal_rx_buffer available" == 0);
         ret = false;
     }
     else
@@ -140,7 +137,7 @@ static bool prepare_upload(trx_id_t trx_id)
         uint16_t bb_reg_offset = BB_BASE_ADDR_OFFSET * trx_id;
         uint16_t phy_frame_len;
         pal_trx_read(bb_reg_offset + RG_BBC0_RXFLL, (uint8_t *)&phy_frame_len, 2);
-        debug_text_val(PSTR("Frm len = "), phy_frame_len);
+        //debug_text_val(PSTR("Frm len = "), phy_frame_len);
         rx_frm_info[trx_id]->length = phy_frame_len - tal_pib[trx_id].FCSLen;
 
         /* Update payload pointer to store received frame. */
@@ -160,7 +157,7 @@ static bool prepare_upload(trx_id_t trx_id)
  */
 static void handle_incoming_frame(trx_id_t trx_id)
 {
-    debug_text_val(PSTR("handle_incoming_frame(), trx_id ="), trx_id);
+    //debug_text_val(PSTR("handle_incoming_frame(), trx_id ="), trx_id);
 
     if (rx_frm_info[trx_id]->length > 3) // no ACK upload
     {
@@ -200,7 +197,7 @@ static void handle_incoming_frame(trx_id_t trx_id)
  */
 static void upload_mhr(trx_id_t trx_id)
 {
-    debug_text_val(PSTR("upload_mhr(), trx_id = "), trx_id);
+    //debug_text_val(PSTR("upload_mhr(), trx_id = "), trx_id);
 
     uint8_t len;
     /* Check if frame is longer than required MHR length */
@@ -232,12 +229,12 @@ static void upload_mhr(trx_id_t trx_id)
  */
 void upload_frame(trx_id_t trx_id)
 {
-    debug_text_val(PSTR("upload_frame(), trx_id ="), trx_id);
+    //debug_text_val(PSTR("upload_frame(), trx_id ="), trx_id);
 
     /* Get energy of received frame */
     uint16_t rf_reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
     uint8_t ed = pal_trx_reg_read(rf_reg_offset + RG_RF09_EDV);
-    debug_text_val(PSTR("Energy of received frame = "), ed);
+    //debug_text_val(PSTR("Energy of received frame = "), ed);
     uint16_t ed_pos = rx_frm_info[trx_id]->length + 1 + tal_pib[trx_id].FCSLen;
     rx_frm_info[trx_id]->mpdu[ed_pos] = ed; // PSDU, LQI, ED
 
@@ -270,7 +267,7 @@ void upload_frame(trx_id_t trx_id)
  */
 void complete_rx_transaction(trx_id_t trx_id)
 {
-    debug_text_val(PSTR("complete_rx_transaction(), trx_id = "), trx_id);
+    //debug_text_val(PSTR("complete_rx_transaction(), trx_id = "), trx_id);
 
     /* Append received frame to incoming_frame_queue and get new rx buffer. */
     qmm_queue_append(&tal_incoming_frame_queue[trx_id], tal_rx_buffer[trx_id]);
@@ -292,7 +289,7 @@ void complete_rx_transaction(trx_id_t trx_id)
  */
 void process_incoming_frame(trx_id_t trx_id, buffer_t *buf_ptr)
 {
-    debug_text_val(PSTR("process_incoming_frame(), trx_id = "), trx_id);
+    //debug_text_val(PSTR("process_incoming_frame(), trx_id = "), trx_id);
 
     frame_info_t *receive_frame = (frame_info_t *)BMM_BUFFER_POINTER(buf_ptr);
     receive_frame->buffer_header = buf_ptr;

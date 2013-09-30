@@ -35,9 +35,7 @@
 #ifdef CHIP_MODE_TEST
 #include "pal_internal.h"
 #endif
-#if (PAL_GENERIC_TYPE == MEGA_RF_SIM)
-#include "verification.h"
-#endif
+
 
 /* === TYPES =============================================================== */
 
@@ -81,7 +79,7 @@ static void handle_ifs(trx_id_t trx_id);
 retval_t tal_tx_frame(trx_id_t trx_id, frame_info_t *tx_frame,
                       csma_mode_t csma_mode, bool perform_frame_retry)
 {
-    debug_text(PSTR("tal_tx_frame()"));
+    //debug_text(PSTR("tal_tx_frame()"));
 
     if (tal_state[trx_id] == TAL_SLEEP)
     {
@@ -90,7 +88,7 @@ retval_t tal_tx_frame(trx_id_t trx_id, frame_info_t *tx_frame,
 
     if (tal_state[trx_id] != TAL_IDLE)
     {
-        debug_text_val(PSTR("TAL_BUSY, tal_state[trx_id] = "), tal_state[trx_id]);
+        //debug_text_val(PSTR("TAL_BUSY, tal_state[trx_id] = "), tal_state[trx_id]);
         return TAL_BUSY;
     }
 
@@ -105,7 +103,7 @@ retval_t tal_tx_frame(trx_id_t trx_id, frame_info_t *tx_frame,
      */
     if ((tx_frame->length + tal_pib[trx_id].FCSLen) > tal_pib[trx_id].MaxPHYPacketSize)
     {
-        debug_text_val(PSTR("Invalid frame length = "), tx_frame->length);
+        //debug_text_val(PSTR("Invalid frame length = "), tx_frame->length);
         return MAC_INVALID_PARAMETER;
     }
 
@@ -164,7 +162,7 @@ retval_t tal_tx_frame(trx_id_t trx_id, frame_info_t *tx_frame,
  */
 void transmit_frame(trx_id_t trx_id)
 {
-    debug_text(PSTR("transmit_frame()"));
+    //debug_text(PSTR("transmit_frame()"));
 
     if (trx_state[trx_id] != RF_TXPREP)
     {
@@ -193,7 +191,7 @@ void transmit_frame(trx_id_t trx_id)
             /* Check if the other radio is currently in use */
             if (trx_state[RF24] == RF_TX)
             {
-                debug_text_finish(PSTR("Radio is already in use"), DEBUG_ERROR);
+                //debug_text_finish(PSTR("Radio is already in use"), DEBUG_ERROR);
             }
             bb_bit_write(SR_RF_IQIFC1_CSELTX, 0x00); // RF09 is selected
         }
@@ -202,14 +200,14 @@ void transmit_frame(trx_id_t trx_id)
             /* Check if the other radio is currently in use */
             if (trx_state[RF09] == RF_TX)
             {
-                debug_text_finish(PSTR("Radio is already in use"), DEBUG_ERROR);
+                //debug_text_finish(PSTR("Radio is already in use"), DEBUG_ERROR);
             }
             bb_bit_write(SR_RF_IQIFC1_CSELTX, 0x01); // RF24 is selected
         }
     }
 #endif
 
-    debug_text(PSTR("switch to Tx"));
+    //debug_text(PSTR("switch to Tx"));
     uint16_t rf_reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
     pal_trx_reg_write(rf_reg_offset + RG_RF09_CMD, RF_TX);
     trx_state[trx_id] = RF_TX;
@@ -229,13 +227,13 @@ void transmit_frame(trx_id_t trx_id)
         /* fill frame buffer; do not provide FCS values */
         uint16_t tx_frm_buf_offset = BB_TX_FRM_BUF_OFFSET * trx_id;
         pal_trx_write(tx_frm_buf_offset + RG_BBC0_FBTXS,
-                      (uint8_t *)mac_frame_ptr[trx_id]->mpdu,
-                      mac_frame_ptr[trx_id]->length);
+        (uint8_t *)mac_frame_ptr[trx_id]->mpdu,
+        mac_frame_ptr[trx_id]->length);
         /* Check if under-run has occurred */
         bool underrun = pal_trx_bit_read(bb_reg_offset + SR_BBC0_PS_TXUR);
         if (underrun)
         {
-            debug_text(PSTR("Tx underrun occured"));
+            //debug_text(PSTR("Tx underrun occured"));
             /* Abort ongoing transmission */
             switch_to_txprep(trx_id);
             TAL_RF_IRQ_CLR(trx_id, BB_IRQ_TXFE);
@@ -246,13 +244,13 @@ void transmit_frame(trx_id_t trx_id)
     }
     else
     {
-        debug_text(PSTR("Re-transmission"));
+        //debug_text(PSTR("Re-transmission"));
     }
 
 #if DEBUG > 0
     for (uint16_t i = 0; i < mac_frame_ptr[trx_id]->length; i++)
     {
-        debug_text_val(PSTR("tx val = "), mac_frame_ptr[trx_id]->mpdu[i]);
+        //debug_text_val(PSTR("tx val = "), mac_frame_ptr[trx_id]->mpdu[i]);
     }
 #endif
     /* Store tx frame length to handle IFS next time */
@@ -267,7 +265,7 @@ void transmit_frame(trx_id_t trx_id)
  */
 void handle_tx_end_irq(trx_id_t trx_id)
 {
-    debug_text(PSTR("handle_tx_end_irq()"));
+    //debug_text(PSTR("handle_tx_end_irq()"));
 
     trx_state[trx_id] = RF_TXPREP;
 
@@ -281,7 +279,7 @@ void handle_tx_end_irq(trx_id_t trx_id)
     /* Some delay required to ensure that BB part has switched off the RF */
     if (chip_mode)
     {
-        debug_text(PSTR("Artifical delay waiting that command gets affect at RF part"));
+        //debug_text(PSTR("Artifical delay waiting that command gets affect at RF part"));
         uint8_t poll_cnt = 0;
         rf_cmd_state_t state;
         uint16_t rf_reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
@@ -305,7 +303,7 @@ void handle_tx_end_irq(trx_id_t trx_id)
     if (*mac_frame_ptr[trx_id]->mpdu & FCF_ACK_REQUEST)
     {
         /* Wait for ACK reception */
-        debug_text(PSTR("waiting for ACK"));
+        //debug_text(PSTR("waiting for ACK"));
         tal_state[trx_id] = TAL_WAITING_FOR_ACK_RECEPTION;
 
         uint8_t timer_id;
@@ -320,7 +318,7 @@ void handle_tx_end_irq(trx_id_t trx_id)
 
         retval_t status =
             pal_timer_start(timer_id, tal_pib[trx_id].ACKWaitDuration + 1000, TIMEOUT_RELATIVE,
-                            (FUNC_PTR())ack_timout_cb, (void *)&timer_cb_parameter[trx_id]);
+                            (FUNC_PTR)ack_timout_cb, (void *)&timer_cb_parameter[trx_id]);
         if (status != MAC_SUCCESS)
         {
             tx_done_handling(trx_id, status);
@@ -340,7 +338,7 @@ void handle_tx_end_irq(trx_id_t trx_id)
     }
     else
     {
-        debug_text(PSTR("No ACK requested"));
+        //debug_text(PSTR("No ACK requested"));
         tx_done_handling(trx_id, MAC_SUCCESS);
     }
 }
@@ -357,7 +355,7 @@ void handle_tx_end_irq(trx_id_t trx_id)
  */
 void tx_done_handling(trx_id_t trx_id, retval_t status)
 {
-    debug_text(PSTR("tx_done_handling()"));
+    //debug_text(PSTR("tx_done_handling()"));
 
     if (status == MAC_NO_ACK)
     {
@@ -416,7 +414,7 @@ void tx_done_handling(trx_id_t trx_id, retval_t status)
  */
 static void handle_ifs(trx_id_t trx_id)
 {
-    debug_text(PSTR("handle_ifs()"));
+    //debug_text(PSTR("handle_ifs()"));
 
     if ((global_csma_mode[trx_id] == CSMA_UNSLOTTED) ||
         (global_csma_mode[trx_id] == NO_CSMA_WITH_IFS))
@@ -433,7 +431,7 @@ static void handle_ifs(trx_id_t trx_id)
             if (time_diff < required_spacing)
             {
                 uint32_t delay = required_spacing - time_diff;
-                debug_text_val(PSTR("delay LIFS = "), (uint16_t)delay);
+                //debug_text_val(PSTR("delay LIFS = "), (uint16_t)delay);
                 pal_timer_delay(delay);
             }
         }
@@ -444,7 +442,7 @@ static void handle_ifs(trx_id_t trx_id)
             if (time_diff < required_spacing)
             {
                 uint32_t delay = required_spacing - time_diff;
-                debug_text_val(PSTR("delay SIFS = "), (uint16_t)delay);
+                //debug_text_val(PSTR("delay SIFS = "), (uint16_t)delay);
                 pal_timer_delay(delay);
             }
         }

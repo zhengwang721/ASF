@@ -26,10 +26,8 @@
 #include "tal_config.h"
 #include "tal_pib.h"
 #include "tal_internal.h"
-#include "ieee_154g.h"
-#if (PAL_GENERIC_TYPE == MEGA_RF_SIM)
-#include "verification.h"
-#endif
+#include "ieee_15_4g.h"
+
 
 /* === TYPES =============================================================== */
 
@@ -57,7 +55,7 @@ static void set_tx_pwr(trx_id_t trx_id);
  */
 void init_tal_pib(trx_id_t trx_id)
 {
-    debug_text(PSTR("init_tal_pib()"));
+    //debug_text(PSTR("init_tal_pib()"));
 
     tal_pib[trx_id].PANId = TAL_PANID_BC_DEF;
     tal_pib[trx_id].ShortAddress = TAL_SHORT_ADDRESS_DEF;
@@ -167,7 +165,7 @@ retval_t config_phy(trx_id_t trx_id)
  */
 void calculate_pib_values(trx_id_t trx_id)
 {
-    debug_text(PSTR("calculate_pib_values()"));
+    //debug_text(PSTR("calculate_pib_values()"));
 
     /* Do not change the following order; some values are used to calculate others. */
     tal_pib[trx_id].SymbolDuration_us = get_symbol_duration_us(trx_id);
@@ -217,7 +215,7 @@ void calculate_pib_values(trx_id_t trx_id)
  */
 void write_all_tal_pib_to_trx(trx_id_t trx_id)
 {
-    debug_text_val(PSTR("write_all_tal_pib_to_trx trx_id = "), trx_id);
+    //debug_text_val(PSTR("write_all_tal_pib_to_trx trx_id = "), trx_id);
     uint16_t bb_reg_offset = BB_BASE_ADDR_OFFSET * trx_id;
 
     if (tal_pib[trx_id].FCSType != FCS_TYPE_4_OCTETS) // Compared against reset value
@@ -360,7 +358,7 @@ static retval_t check_valid_freq_range(trx_id_t trx_id)
  */
 static retval_t apply_channel_settings(trx_id_t trx_id)
 {
-    debug_text_val(PSTR("apply_channel_settings(), trx_id ="), trx_id);
+    //debug_text_val(PSTR("apply_channel_settings(), trx_id ="), trx_id);
 
     /* Check if spacing and frequency are within the correct range. */
     retval_t status = check_valid_freq_range(trx_id);
@@ -397,7 +395,7 @@ static retval_t apply_channel_settings(trx_id_t trx_id)
                 /* Wait until new channel is set */
             }
             TAL_RF_IRQ_CLR(trx_id, RF_IRQ_TRXRDY);
-            debug_text(PSTR("RF_IRQ_TRXRDY: channel change completed"));
+            //debug_text(PSTR("RF_IRQ_TRXRDY: channel change completed"));
         }
     }
 
@@ -690,7 +688,7 @@ retval_t tal_pib_get(trx_id_t trx_id, uint8_t attribute, uint8_t *value)
  */
 retval_t tal_pib_set(trx_id_t trx_id, uint8_t attribute, pib_value_t *value)
 {
-    debug_text(PSTR("tal_pib_set()"));
+    //debug_text(PSTR("tal_pib_set()"));
 
     retval_t status = MAC_SUCCESS;
 
@@ -699,13 +697,13 @@ retval_t tal_pib_set(trx_id_t trx_id, uint8_t attribute, pib_value_t *value)
      */
     if (tal_state[trx_id] == TAL_SLEEP)
     {
-        debug_text(PSTR("TAL_TRX_ASLEEP"));
+        //debug_text(PSTR("TAL_TRX_ASLEEP"));
         return TAL_TRX_ASLEEP;
     }
 
     if (tal_state[trx_id] != TAL_IDLE)
     {
-        debug_text_val(PSTR("TAL is busy or asleep, tal_state = "), tal_state[trx_id]);
+        //debug_text_val(PSTR("TAL is busy or asleep, tal_state = "), tal_state[trx_id]);
         return TAL_BUSY;
     }
 
@@ -715,7 +713,7 @@ retval_t tal_pib_set(trx_id_t trx_id, uint8_t attribute, pib_value_t *value)
     switch (attribute)
     {
         case phySetting:
-            debug_text(PSTR("PIB attribute: phySetting"));
+            //debug_text(PSTR("PIB attribute: phySetting"));
             {
                 /* Store previous settings */
                 phy_t previous_phy;
@@ -798,7 +796,7 @@ retval_t tal_pib_set(trx_id_t trx_id, uint8_t attribute, pib_value_t *value)
                         /* Wait until new channel is set */
                     }
                     TAL_RF_IRQ_CLR(trx_id, RF_IRQ_TRXRDY);
-                    debug_text(PSTR("RF_IRQ_TRXRDY: channel change completed"));
+                    //debug_text(PSTR("RF_IRQ_TRXRDY: channel change completed"));
                 }
 
                 /* restore previous TRX state */
@@ -995,13 +993,13 @@ retval_t tal_pib_set(trx_id_t trx_id, uint8_t attribute, pib_value_t *value)
                 {
                     switch_to_rx(trx_id);
                 }
-                debug_text(PSTR("Prosmiscuous mode enabled"));
+                //debug_text(PSTR("Prosmiscuous mode enabled"));
             }
             else
             {
                 pal_trx_reg_write(rf_reg_offset + RG_RF09_CMD, RF_TRXOFF);
                 trx_state[trx_id] = RF_TRXOFF;
-                debug_text(PSTR("Prosmiscuous mode disabled"));
+                //debug_text(PSTR("Prosmiscuous mode disabled"));
             }
             break;
 #endif

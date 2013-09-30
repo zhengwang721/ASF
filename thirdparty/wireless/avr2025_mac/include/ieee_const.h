@@ -52,23 +52,14 @@
 #ifndef IEEE_CONST_H
 #define IEEE_CONST_H
 
-/**
- *
- * \defgroup group_inc Common WL Definitions
- * All General Definitions  used by the Wireless Stack applications are defined
- *in this module.
- *
- */
+#include "tal.h"
 
-/**
- * \ingroup group_inc
- * \defgroup group_ieee IEEE Constants
- * Includes IEEE Constant Definitions
- * @{
- *
- */
+#if !defined(RF_BAND)
+#error "Please define RF_BAND to BAND_2400 or BAND_900."
+#endif /* !defined(RF_BAND) */
 
 /* === Includes ============================================================= */
+
 
 /* === Macros =============================================================== */
 
@@ -111,8 +102,7 @@
  * the superframe order is equal to 0.
  * @ingroup apiMacConst
  */
-#define aBaseSuperframeDuration         (aBaseSlotDuration * \
-	aNumSuperframeSlots)
+#define aBaseSuperframeDuration         (aBaseSlotDuration * aNumSuperframeSlots)
 
 /**
  * The number of superframes in which a GTS descriptor
@@ -154,8 +144,7 @@
  * aMaxPHYPacketSize.
  * @ingroup apiMacConst
  */
-#define aMaxMACSafePayloadSize          (aMaxPHYPacketSize - \
-	aMaxMPDUUnsecuredOverhead)
+#define aMaxMACSafePayloadSize          (aMaxPHYPacketSize - aMaxMPDUUnsecuredOverhead)
 
 /**
  * The maximum number of octets added by the MAC sublayer to the PSDU without
@@ -181,6 +170,7 @@
  */
 #define aMinCAPLength                   (440)
 
+
 /**
  * The minimum number of octets added by the MAC sublayer to the PSDU.
  * @ingroup apiMacConst
@@ -198,7 +188,7 @@
  * used by the CSMA-CA algorithm.
  * @ingroup apiMacConst
  */
-#define aUnitBackoffPeriod              (20)
+#define aUnitBackoffPeriod              (20u)
 
 /* PHY PIB Attributes */
 
@@ -288,6 +278,33 @@
  * - @em Default: 54
  */
 #define macAckWaitDuration              (0x40)
+
+#if (RF_BAND == BAND_2400)
+/**
+ * Default value for MIB macAckWaitDuration
+ */
+#define macAckWaitDuration_def          (54)
+#elif (RF_BAND == BAND_900)
+/**
+ * Default value for MIB macAckWaitDuration
+ */
+
+/**
+ * The default value for this PIB attribute depends on the current channel page
+ * (i.e. the modulation scheme: BPSK or O-QPSK).
+ */
+#define macAckWaitDuration_def          \
+    (tal_pib.CurrentPage == 0 ? 120 : 54)
+
+#elif (RF_BAND == BAND_MULTIPLE)
+/**
+ * There are no defines for multiple band support.
+ * These values are handled by variables instead of defines.
+ */
+
+#else   /* Can't happen because RF_BAND is checked above. */
+#error "You have got no license for that RF band."
+#endif /* RF_BAND */
 
 /**
  * Indication of whether a coordinator is currently allowing association.
@@ -635,10 +652,34 @@
  *
  * - @em Type: Integer
  * - @em Range: See equation (14)
- * - @em Default: Dependent on currently selected PHY, indicated by
- *phyCurrentPage
+ * - @em Default: Dependent on currently selected PHY, indicated by phyCurrentPage
  */
 #define macMaxFrameTotalWaitTime        (0x58)
+
+/**
+ * Default value for PIB macMaxBE (see equation 14 in section 7.4.2)
+ * The default value is valid for:
+ * macMinBE = 3
+ * macMaxBE = 5
+ * macMaxCSMABackoffs = 4
+ */
+#if (RF_BAND == BAND_2400)
+/* O-QPSK 2.4 GHz */
+#define macMaxFrameTotalWaitTime_def    (1986)
+
+#elif (RF_BAND == BAND_900)
+/* BPSK 900 MHz */
+#define macMaxFrameTotalWaitTime_def    (2784)
+
+#elif (RF_BAND == BAND_MULTIPLE)
+/**
+ * There are no defines for multiple band support.
+ * These values are handled by variables instead of defines.
+ */
+
+#else   /* Can't happen because RF_BAND is checked above. */
+#error "You have got no license for that RF band."
+#endif /* RF_BAND */
 
 /**
  * The maximum number of retries allowed after a transmission failure.
@@ -702,7 +743,7 @@
 /**
  * Default value for PIB macSecurityEnabled
  */
-#ifdef MAC_SECURITY_ZIP
+#ifdef MAC_SECURITY
 #define macSecurityEnabled_def          (true)
 #else
 #define macSecurityEnabled_def          (false)
@@ -713,8 +754,7 @@
  *
  * - @em Type: Integer
  * - @em Range: See Table 3 in Clause 6 (40 symbols)
- * - @em Default: Dependent on currently selected PHY, indicated by
- *phyCurrentPage
+ * - @em Default: Dependent on currently selected PHY, indicated by phyCurrentPage
  */
 #define macMinLIFSPeriod                (0x5E)
 
@@ -723,13 +763,13 @@
  */
 #define macMinLIFSPeriod_def            (40)
 
+
 /**
  * The minimum number of symbols forming a SIFS period.
  *
  * - @em Type: Integer
  * - @em Range: See Table 3 in Clause 6 (12 symbols)
- * - @em Default: Dependent on currently selected PHY, indicated by
- *phyCurrentPage
+ * - @em Default: Dependent on currently selected PHY, indicated by phyCurrentPage
  */
 #define macMinSIFSPeriod                (0x5F)
 
@@ -738,8 +778,7 @@
  */
 #define macMinSIFSPeriod_def            (12)
 
-#ifdef MAC_SECURITY_ZIP
-
+#ifdef MAC_SECURITY
 /**
  * A table of KeyDescriptor entries, each containing keys and related
  * information required for secured communications.
@@ -803,7 +842,7 @@
  * - @em Default: All octets 0xFF
  */
 #define macDefaultKeySource             (0x7C)
-#endif  /* MAC_SECURITY_ZIP */
+#endif  /* MAC_SECURITY */
 
 /**
  * The 64-bit address of the PAN coordinator.
@@ -824,6 +863,15 @@
 #define macPANCoordShortAddress         (0x7E)
 
 /**
+ * Private MAC PIB attribute to control the CSMA algorithm.
+ */
+/**
+ * Maximum number of frames that are allowed to be received during CSMA
+ * backoff periods for a tx transaction.
+ */
+#define macMaxNumRxFramesDuringBackoff  (0x7F)
+
+/**
  * Private MAC PIB attribute to allow setting the MAC address in test mode.
  * @todo numbering needs to alligned with other special speer attributes
  */
@@ -833,85 +881,81 @@
 #define macPrivateFrameError            (0xF1)
 #endif /* TEST_ZB_IP_CERT */
 
+
 /**
  * @ingroup apiPhyConst
  *  @{
  */
 /* 6.2.3 PHY Enumeration Definitions */
-typedef enum phy_enum_tag {
-	/**
-	 * The CCA attempt has detected a busy channel.
-	 */
-	PHY_BUSY                              = (0x00),
+typedef enum phy_enum_tag
+{
+    /**
+     * The CCA attempt has detected a busy channel.
+     */
+    PHY_BUSY                              = (0x00),
 
-	/**
-	 * The transceiver is asked to change its state while receiving.
-	 */
-	PHY_BUSY_RX                           = (0x01),
+    /**
+     * The transceiver is asked to change its state while receiving.
+     */
+    PHY_BUSY_RX                           = (0x01),
 
-	/**
-	 * The transceiver is asked to change its state while transmitting.
-	 */
-	PHY_BUSY_TX                           = (0x02),
+    /**
+     * The transceiver is asked to change its state while transmitting.
+     */
+    PHY_BUSY_TX                           = (0x02),
 
-	/**
-	 * The transceiver is to be switched off.
-	 */
-	PHY_FORCE_TRX_OFF                     = (0x03),
+    /**
+     * The transceiver is to be switched off.
+     */
+    PHY_FORCE_TRX_OFF                     = (0x03),
 
-	/**
-	 * The CCA attempt has detected an idle channel.
-	 */
-	PHY_IDLE                              = (0x04),
+    /**
+     * The CCA attempt has detected an idle channel.
+     */
+    PHY_IDLE                              = (0x04),
 
-	/**
-	 * A SET/GET request was issued with a parameter in the primitive that
-	 *is out
-	 * of the valid range.
-	 */
-	PHY_INVALID_PARAMETER                 = (0x05),
+    /**
+     * A SET/GET request was issued with a parameter in the primitive that is out
+     * of the valid range.
+     */
+    PHY_INVALID_PARAMETER                 = (0x05),
 
-	/**
-	 * The transceiver is in or is to be configured into the receiver
-	 *enabled
-	 * state.
-	 */
-	PHY_RX_ON                             = (0x06),
+    /**
+     * The transceiver is in or is to be configured into the receiver enabled
+     * state.
+     */
+    PHY_RX_ON                             = (0x06),
 
-	/**
-	 * A SET/GET, an ED operation, or a transceiver state change was
-	 *successful.
-	 */
-	PHY_SUCCESS                           = (0x07),
+    /**
+     * A SET/GET, an ED operation, or a transceiver state change was successful.
+     */
+    PHY_SUCCESS                           = (0x07),
 
-	/**
-	 * The transceiver is in or is to be configured into the transceiver
-	 *disabled
-	 * state.
-	 */
-	PHY_TRX_OFF                           = (0x08),
+    /**
+     * The transceiver is in or is to be configured into the transceiver disabled
+     * state.
+     */
+    PHY_TRX_OFF                           = (0x08),
 
-	/**
-	 * The transceiver is in or is to be configured into the transmitter
-	 *enabled
-	 * state.
-	 */
-	PHY_TX_ON                             = (0x09),
+    /**
+     * The transceiver is in or is to be configured into the transmitter enabled
+     * state.
+     */
+    PHY_TX_ON                             = (0x09),
 
-	/**
-	 * A SET/GET request was issued with the identifier of an attribute that
-	 *is not
-	 * supported.
-	 */
-	PHY_UNSUPPORTED_ATTRIBUTE             = (0x0A),
+    /**
+     * A SET/GET request was issued with the identifier of an attribute that is not
+     * supported.
+     */
+    PHY_UNSUPPORTED_ATTRIBUTE             = (0x0A),
 
-	/**
-	 * A SET/GET request was issued with the identifier of an attribute that
-	 *is
-	 * read-only.
-	 */
-	PHY_READ_ONLY                         = (0x0B)
+    /**
+     * A SET/GET request was issued with the identifier of an attribute that is
+     * read-only.
+     */
+    PHY_READ_ONLY                         = (0x0B)
 } SHORTENUM phy_enum_t;
+
 
 /* Non-standard values / extensions */
 
@@ -926,6 +970,7 @@ typedef enum phy_enum_tag {
 #define ED_SAMPLE_DURATION_SYM          (8)
 
 /*@}*/ /* apiPhyConst */
+
 
 /* MLME-SCAN.request type */
 
@@ -979,6 +1024,22 @@ typedef enum phy_enum_tag {
 
 /* Various constants */
 
+/*
+ * Channel numbers and channel masks for scanning.
+ */
+#if (RF_BAND == BAND_2400) || defined(DOXYGEN)
+/** Minimum channel */
+#define MIN_CHANNEL                 (11)
+/** Maximum channel */
+#define MAX_CHANNEL                 (26)
+/** Valid channel masks for scanning */
+#define VALID_CHANNEL_MASK          (0x07FFF800UL)
+#else   /* 900 MHz */
+#define MIN_CHANNEL                 (0)
+#define MAX_CHANNEL                 (10)
+#define VALID_CHANNEL_MASK          (0x000007FFUL)
+#endif
+
 /**
  * Inverse channel masks for scanning.
  */
@@ -987,29 +1048,25 @@ typedef enum phy_enum_tag {
 /* Association status values from table 68 */
 
 /**
- * Association status code value (see @link wpan_mlme_associate_resp()
- *@endlink).
+ * Association status code value (see @link wpan_mlme_associate_resp() @endlink).
  * @ingroup apiConst
  */
 #define ASSOCIATION_SUCCESSFUL          (0)
 
 /**
- * Association status code value (see @link wpan_mlme_associate_resp()
- *@endlink).
+ * Association status code value (see @link wpan_mlme_associate_resp() @endlink).
  * @ingroup apiConst
  */
 #define PAN_AT_CAPACITY                 (1)
 
 /**
- * Association status code value (see @link wpan_mlme_associate_resp()
- *@endlink).
+ * Association status code value (see @link wpan_mlme_associate_resp() @endlink).
  * @ingroup apiConst
  */
 #define PAN_ACCESS_DENIED               (2)
 
 /**
- * Association status code value (see @link wpan_mlme_associate_resp()
- *@endlink).
+ * Association status code value (see @link wpan_mlme_associate_resp() @endlink).
  * @ingroup apiConst
  */
 #define ASSOCIATION_RESERVED            (3)
@@ -1033,6 +1090,16 @@ typedef enum phy_enum_tag {
  * Define the command frame type. (Table 65 IEEE 802.15.4 Specification)
  */
 #define FCF_FRAMETYPE_MAC_CMD           (0x03)
+
+/**
+ * Define the LLDN frame type. See 802.15.4e-2012
+ */
+#define FCF_FRAMETYPE_LLDN              (0x04)
+
+/**
+ * Define the multipurpose frame type. See 802.15.4e-2012
+ */
+#define FCF_FRAMETYPE_MP                (0x05)
 
 /**
  * A macro to set the frame type.
@@ -1060,10 +1127,50 @@ typedef enum phy_enum_tag {
 #define FCF_PAN_ID_COMPRESSION          (1 << 6)
 
 /**
+ * The mask for a IEEE 802.15.4-2003 compatible frame in the
+ * frame version subfield
+ */
+#define FCF_FRAME_VERSION_2003          (0 << 12)
+
+/**
  * The mask for a IEEE 802.15.4-2006 compatible frame in the
  * frame version subfield
  */
 #define FCF_FRAME_VERSION_2006          (1 << 12)
+
+/**
+ * The mask for a IEEE 802.15.4e-2012 compatible frame in the
+ * frame version subfield
+ */
+#define FCF_FRAME_VERSION_2012          (2 << 12)
+
+/**
+ * Shift value for the frame version subfield fcf1
+ */
+#define FCF1_FV_SHIFT                   (4)
+
+/**
+ * The mask for the frame version subfield fcf1
+ */
+#define FCF1_FV_MASK                    (3 << FCF1_FV_SHIFT)
+
+/**
+ * The mask for a IEEE 802.15.4-2003 compatible frame in the
+ * frame version subfield fcf1
+ */
+#define FCF1_FV_2003                    (0)
+
+/**
+ * The mask for a IEEE 802.15.4-2006 compatible frame in the
+ * frame version subfield fcf1
+ */
+#define FCF1_FV_2006                    (1)
+
+/**
+ * The mask for a IEEE 802.15.4e-2012 compatible frame in the
+ * frame version subfield fcf1
+ */
+#define FCF1_FV_2012                    (2)
 
 /**
  * Address Mode: NO ADDRESS
@@ -1098,14 +1205,12 @@ typedef enum phy_enum_tag {
 /**
  * Macro to set the source address mode
  */
-#define FCF_SET_SOURCE_ADDR_MODE(x)     ((unsigned int)((x) << \
-	FCF_SOURCE_ADDR_OFFSET))
+#define FCF_SET_SOURCE_ADDR_MODE(x)     ((unsigned int)((x) << FCF_SOURCE_ADDR_OFFSET))
 
 /**
  * Macro to set the destination address mode
  */
-#define FCF_SET_DEST_ADDR_MODE(x)       ((unsigned int)((x) << \
-	FCF_DEST_ADDR_OFFSET))
+#define FCF_SET_DEST_ADDR_MODE(x)       ((unsigned int)((x) << FCF_DEST_ADDR_OFFSET))
 
 /**
  * Defines a mask for the frame type. (Table 65 IEEE 802.15.4 Specification)
@@ -1148,7 +1253,6 @@ typedef enum phy_enum_tag {
 #define INVALID_SHORT_ADDRESS           (0xFFFF)
 
 /* Bit position within beacon Superframe Specification field */
-
 /**
  * Battery life extention bit position.
  */
@@ -1175,7 +1279,6 @@ typedef enum phy_enum_tag {
 #define FCF_2_SOURCE_ADDR_OFFSET            (6)
 
 /* Octet position within frame_info_t->payload array */
-
 /**
  * Octet position of FCF octet one within payload array of frame_info_t.
  */
@@ -1192,14 +1295,12 @@ typedef enum phy_enum_tag {
 #define PL_POS_SEQ_NUM                      (3)
 
 /**
- * Octet start position of Destination PAN-Id field within payload array of
- *frame_info_t.
+ * Octet start position of Destination PAN-Id field within payload array of frame_info_t.
  */
 #define PL_POS_DST_PAN_ID_START             (4)
 
 /**
- * Octet start position of Destination Address field within payload array of
- *frame_info_t.
+ * Octet start position of Destination Address field within payload array of frame_info_t.
  */
 #define PL_POS_DST_ADDR_START               (6)
 
@@ -1256,11 +1357,7 @@ typedef enum phy_enum_tag {
 /**
  * Maximum length of the key id field
  */
-#if defined(MAC_SECURITY_ZIP)
-#define MAX_KEY_ID_FIELD_LEN                (1)
-#else
 #define MAX_KEY_ID_FIELD_LEN                (9)
-#endif
 
 /**
  * @brief Converts a phyTransmitPower value to a dBm value
@@ -1269,14 +1366,12 @@ typedef enum phy_enum_tag {
  *
  * @return dBm using signed integer format
  */
-#define CONV_phyTransmitPower_TO_DBM(phyTransmitPower_value) \
-	( \
-		((phyTransmitPower_value & 0x20) == 0x00) ? \
-		((int8_t)(phyTransmitPower_value & 0x3F)) : \
-		((-1) *	\
-		(int8_t)((~((phyTransmitPower_value & \
-		0x1F) - 1)) & 0x1F)) \
-	)
+#define CONV_phyTransmitPower_TO_DBM(phyTransmitPower_value)\
+    (   \
+        ((phyTransmitPower_value & 0x20) == 0x00) ?\
+        ((int8_t)(phyTransmitPower_value & 0x3F)) :\
+        ((-1) * (int8_t)((~((phyTransmitPower_value & 0x1F) - 1)) & 0x1F))\
+    )
 
 /**
  * @brief Converts a dBm value to a phyTransmitPower value
@@ -1285,39 +1380,52 @@ typedef enum phy_enum_tag {
  *
  * @return phyTransmitPower_value using IEEE-defined format
  */
-#define CONV_DBM_TO_phyTransmitPower(dbm_value)	\
-	( \
-		dbm_value < -32 ? \
-		0x20 : \
-		( \
-			dbm_value > 31 ? \
-			0x1F : \
-			( \
-				dbm_value < 0 ?	\
-				(((~(((uint8_t)((-1) * \
-				dbm_value)) - 1)) & 0x1F) | 0x20) : \
-				(uint8_t)dbm_value \
-			) \
-		) \
-	)
+#define CONV_DBM_TO_phyTransmitPower(dbm_value)\
+    (   \
+        dbm_value < -32 ?\
+        0x20 :\
+        (   \
+            dbm_value > 31 ?\
+            0x1F :\
+            (   \
+                dbm_value < 0 ?\
+                ( ((~(((uint8_t)((-1) * dbm_value)) - 1)) & 0x1F) | 0x20 ) :\
+                (uint8_t)dbm_value\
+            )\
+        )\
+    )
 
 /* === Types ================================================================ */
 
 #if !defined(DOXYGEN)
-typedef enum trx_cca_mode_tag {
-	TRX_CCA_MODE0 = 0, /* Carrier sense OR energy above threshold */
-	TRX_CCA_MODE1 = 1, /* Energy above threshold */
-	TRX_CCA_MODE2 = 2, /* Carrier sense only */
-	TRX_CCA_MODE3 = 3 /* Carrier sense AND energy above threshold */
+typedef enum trx_cca_mode_tag
+{
+    TRX_CCA_MODE0 = 0,  /* Carrier sense OR energy above threshold */
+    TRX_CCA_MODE1 = 1,  /* Energy above threshold */
+    TRX_CCA_MODE2 = 2,  /* Carrier sense only */
+    TRX_CCA_MODE3 = 3   /* Carrier sense AND energy above threshold */
 } SHORTENUM
-
 /**
  * CCA Modes of the transceiver
  */
 trx_cca_mode_t;
 #endif
-/* ! @} */
+
+/**
+ * CCA mode enumeration
+ */
+typedef enum cca_mode_tag
+{
+    CCA_MODE_0_CS_OR_ED = 0,
+    CCA_MODE_1_ED = 1,  /* To be conform to IEEE 15.4 and TRX register */
+    CCA_MODE_2_CS,
+    CCA_MODE_3_CS_ED,
+    CCA_MODE_4_ALOHA
+} SHORTENUM cca_mode_t;
+
+
 /* === Externals ============================================================ */
+
 
 /* === Prototypes =========================================================== */
 

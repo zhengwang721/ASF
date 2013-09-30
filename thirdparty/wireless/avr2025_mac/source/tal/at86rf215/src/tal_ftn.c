@@ -31,9 +31,7 @@
 #include "qmm.h"
 #include "tal_internal.h"
 #include "mac_build_config.h"
-#if (PAL_GENERIC_TYPE == MEGA_RF_SIM)
-#include "verification.h"
-#endif
+
 
 #if (defined ENABLE_FTN_PLL_CALIBRATION) || (defined DOXYGEN)
 
@@ -84,12 +82,12 @@ void start_ftn_timer(trx_id_t trx_id)
 
     /* Start periodic calibration timer. */
     timer_status = pal_timer_start(timer_id, TAL_CALIBRATION_TIMEOUT_US,
-                                   TIMEOUT_RELATIVE, (FUNC_PTR())ftn_timer_cb,
+                                   TIMEOUT_RELATIVE, (FUNC_PTR)ftn_timer_cb,
                                    NULL);
 
     if (timer_status != MAC_SUCCESS)
     {
-        ASSERT("PLL calibration timer start problem" == 0);
+        Assert("PLL calibration timer start problem" == 0);
     }
 }
 
@@ -126,7 +124,7 @@ static void ftn_timer_cb(void *parameter)
     uint8_t timer_id;
     trx_id_t trx_id = *(trx_id_t *)parameter;
 
-    debug_text(PSTR("ftn_timer_cb()"));
+    //debug_text(PSTR("ftn_timer_cb()"));
 
     if (tal_state == TAL_IDLE)
     {
@@ -142,7 +140,7 @@ static void ftn_timer_cb(void *parameter)
         }
         else
         {
-            debug_text(PSTR("unexpected Trx state"));
+            //debug_text(PSTR("unexpected Trx state"));
         }
 
         start_ftn_timer(trx_id); // Restart timer again
@@ -159,7 +157,7 @@ static void ftn_timer_cb(void *parameter)
         }
         /* Postpone filter tuning, since TAL is busy */
         pal_timer_start(timer_id, 1000000, TIMEOUT_RELATIVE,
-                        (FUNC_PTR())ftn_timer_cb, NULL);
+                        (FUNC_PTR)ftn_timer_cb, NULL);
     }
 }
 

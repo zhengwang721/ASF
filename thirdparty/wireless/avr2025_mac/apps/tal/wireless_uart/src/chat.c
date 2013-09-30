@@ -78,9 +78,7 @@ void print_chat_menu(void)
     }
 #endif
 
-    printf("Chat Application\n%s, %s, %s, %s\n",
-           get_tal_type_text(TAL_TYPE), get_pal_type_text(PAL_TYPE),
-           get_board_text(BOARD_TYPE), __DATE__);
+    printf("Chat Application\n AT86RF215 SAM4LXplained Pro RF215-XPRO\n");
 #ifdef MULTI_TRX_SUPPORT
     printf("Active transmitter: %s\n", get_trx_id_text(current_trx_id));
 #endif

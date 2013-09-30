@@ -22,7 +22,7 @@
 
 /* === INCLUDES ============================================================ */
 
-#include "pal_types.h"
+
 #ifdef AT86RF215LT
 #include "at86rf215lt.h"
 #else
@@ -149,29 +149,6 @@
 
 /* === TYPES =============================================================== */
 
-/** Timer IDs used by TAL */
-typedef enum tal_timer_id_tag
-{
-    TAL_T_0             = (TAL_FIRST_TIMER_ID),
-    TAL_T_1             = (TAL_FIRST_TIMER_ID + 1)
-#ifdef ENABLE_FTN_PLL_CALIBRATION
-                          ,
-    TAL_T_CALIBRATION_0 = (TAL_FIRST_TIMER_ID + 2),
-    TAL_T_CALIBRATION_1 = (TAL_FIRST_TIMER_ID + 3)
-#endif
-} SHORTENUM tal_timer_id_t;
-
-#ifdef ENABLE_FTN_PLL_CALIBRATION
-#define NUMBER_OF_TAL_TIMERS        (4)
-#else
-#define NUMBER_OF_TAL_TIMERS        (2)
-#endif
-
-#if (NUMBER_OF_TAL_TIMERS > 0)
-#define TAL_LAST_TIMER_ID    (TAL_FIRST_TIMER_ID + NUMBER_OF_TAL_TIMERS - 1) // -1: timer id starts with 0
-#else
-#define TAL_LAST_TIMER_ID    (TAL_FIRST_TIMER_ID)
-#endif
 
 /* === PROTOTYPES ========================================================== */
 

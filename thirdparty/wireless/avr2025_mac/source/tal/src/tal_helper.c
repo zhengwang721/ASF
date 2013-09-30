@@ -48,6 +48,7 @@
 
 /* === INCLUDES ============================================================ */
 
+#if (TAL_TYPE != AT86RF215)
 #include "pal.h"
 #include "return_val.h"
 #include "tal.h"
@@ -79,7 +80,7 @@ extern uint8_t convert_phyTransmitPower_to_reg_value(
  * \return MAC_SUCCESS  if PA_EXT_EN bit is configured correctly
  *         FAILURE      otherwise
  */
-#if ((TAL_TYPE != AT86RF230B) && (TAL_TYPE != AT86RF232))
+#if ((TAL_TYPE != AT86RF230B) && (TAL_TYPE != AT86RF232) )
 
 retval_t  tal_ext_pa_ctrl(bool pa_ext_sw_ctrl)
 {
@@ -164,7 +165,7 @@ retval_t tal_set_tx_pwr(bool type, int8_t pwr_value)
  *                  1 or 2 to select antenna 1 or antenna 2
  * \return The value set in the TX_PWR bits
  */
-#if ((TAL_TYPE != AT86RF230B) && (TAL_TYPE != AT86RF212))
+#if ((TAL_TYPE != AT86RF230B) && (TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF215))
 retval_t  tal_ant_div_config(bool div_ctrl, uint8_t ant_ctrl)
 {
 	retval_t return_var = FAILURE;
@@ -893,5 +894,5 @@ retval_t tal_rxsafe_mode_ctrl(bool safe_mode_ctrl)
 }
 
 #endif /* End of (TAL_TYPE != AT86RF230B) */
-
+#endif //215
 /* EOF */

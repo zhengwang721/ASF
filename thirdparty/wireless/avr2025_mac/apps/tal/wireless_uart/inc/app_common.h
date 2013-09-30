@@ -32,7 +32,7 @@
 #include "app_config.h"
 #include "ieee_const.h"
 #include "bmm.h"
-#include "sio_handler.h"
+#include "sio2host.h"
 
 /* === TYPES =============================================================== */
 
@@ -92,9 +92,7 @@ typedef enum trx_id_tag
 #define STATUS_TEXT             "\nStatus 0x%.2"PRIX8", %s", status, get_retval_text(status)
 #define CLEAR_SCREEN()          printf("\n%c", FORM_FEED)
 
-#ifndef MULTI_TRX_SUPPORT
-#define NO_TRX                  1
-#endif
+
 
 /* === EXTERNALS =========================================================== */
 

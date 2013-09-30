@@ -195,7 +195,7 @@ extern "C" {
     uint16_t tfa_get_batmon_voltage(void);
 #endif
 
-#if (defined ENABLE_TFA) || (PAL_GENERIC_TYPE == MEGA_RF) || (defined DOXYGEN)
+#if (defined ENABLE_TFA)  || (defined DOXYGEN)
     /**
      * @brief Get the temperature value from the integrated sensor
      *

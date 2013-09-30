@@ -30,9 +30,7 @@
 #include "at86rf215.h"
 #include "tal_internal.h"
 #include "tfa.h"
-#if (PAL_GENERIC_TYPE == MEGA_RF_SIM)
-#include "verification.h"
-#endif
+
 
 /* === TYPES =============================================================== */
 
@@ -62,12 +60,12 @@ uint16_t tfa_get_batmon_voltage(void)
 {
     uint16_t mv;
 
-    debug_text(PSTR("tfa_get_batmon_voltage()"));
+    //debug_text(PSTR("tfa_get_batmon_voltage()"));
 
     if ((tal_state[RF09] == TAL_SLEEP) && (tal_state[RF24] == TAL_SLEEP))
     {
 #if DEBUG > 0
-        debug_text(PSTR("Both trx are in sleep mode"));
+        //debug_text(PSTR("Both trx are in sleep mode"));
 #endif
         return 0;
     }
@@ -91,14 +89,14 @@ uint16_t tfa_get_batmon_voltage(void)
     {
         /* EVDD is above threshold */
         /* Set to high range */
-        debug_text(PSTR("high range"));
+        //debug_text(PSTR("high range"));
         pal_trx_bit_write(SR_RF_BMDVC_BMHR, 1);
     }
     else
     {
         /* EVDD is below threshold */
         /* Keep current range; i.e. low range */
-        debug_text(PSTR("low range"));
+        //debug_text(PSTR("low range"));
     }
 
     /* Find the voltage factor */
@@ -110,7 +108,7 @@ uint16_t tfa_get_batmon_voltage(void)
         if (pal_trx_bit_read(SR_RF_BMDVC_BMS) == 0)
         {
             vth = i;
-            debug_text_val(PSTR("vth = "), vth);
+            //debug_text_val(PSTR("vth = "), vth);
             break;
         }
     }
@@ -175,11 +173,11 @@ retval_t tfa_batmon_irq_init(FUNC_PTR(batmon_irq_cb), uint16_t vth)
 {
     retval_t ret;
 
-    debug_text(PSTR("tfa_batmon_irq_init()"));
+    //debug_text(PSTR("tfa_batmon_irq_init()"));
 
     if ((vth < BATMON_MON_VTH_MIN) || (vth > BATMON_MON_VTH_MAX))
     {
-        debug_text(PSTR("Invalid range"));
+        //debug_text(PSTR("Invalid range"));
         ret = MAC_INVALID_PARAMETER;
     }
     else

@@ -168,7 +168,7 @@ extern "C" {
 #define PAL_SLP_TR_LOW()                SLP_TR_LOW()
 /** Macro to get the transceiver's main IRQ status */
 #define PAL_TRX_IRQ_HIGH()              IRQ_PINGET()
-
+#define PAL_TRX_IRQ_GET()				IRQ_PINGET()
 /**
  * @brief Reads frame buffer of the transceiver
  *
@@ -189,6 +189,8 @@ void pal_trx_frame_read(uint8_t *data, uint8_t length);
  * @param[in] length Number of bytes to be written into frame buffer
  */
 void pal_trx_frame_write(uint8_t *data, uint8_t length);
+
+void pal_trx_frame_write1(uint8_t *data, uint8_t length);
 
 /**
  * @brief Reads current value from a transceiver register
@@ -213,6 +215,9 @@ uint8_t pal_trx_reg_read(uint16_t addr);
  */
 void pal_trx_reg_write(uint16_t addr, uint8_t data);
 
+void pal_trx_write(uint16_t addr, uint8_t *data, uint16_t length);
+void pal_trx_read(uint16_t addr, uint8_t *data, uint16_t length);
+
 /**
  * @brief Subregister read
  *
@@ -222,7 +227,7 @@ void pal_trx_reg_write(uint16_t addr, uint8_t data);
  *
  * @return  value of the read bit(s)
  */
-uint8_t pal_trx_bit_read(uint8_t addr, uint8_t mask, uint8_t pos);
+uint8_t pal_trx_bit_read(uint16_t addr, uint8_t mask, uint8_t pos);
 
 /**
  * @brief Subregister write
@@ -232,7 +237,7 @@ uint8_t pal_trx_bit_read(uint8_t addr, uint8_t mask, uint8_t pos);
  * @param[in]   pos   Bit position of the subregister
  * @param[out]  new_value  Data, which is muxed into the register
  */
-void pal_trx_bit_write(uint8_t reg_addr, uint8_t mask, uint8_t pos,
+void pal_trx_bit_write(uint16_t reg_addr, uint8_t mask, uint8_t pos,
 		uint8_t new_value);
 
 /**

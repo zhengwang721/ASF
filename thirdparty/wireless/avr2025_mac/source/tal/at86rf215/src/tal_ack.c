@@ -31,9 +31,7 @@
 #ifdef CHIP_MODE_TEST
 #include "pal_internal.h"
 #endif
-#if (PAL_GENERIC_TYPE == MEGA_RF_SIM)
-#include "verification.h"
-#endif
+
 
 /* === TYPES =============================================================== */
 
@@ -71,7 +69,7 @@ static void restore_data_rate_after_ack(trx_id_t trx_id);
  */
 bool is_ack_required(trx_id_t trx_id)
 {
-    debug_text_val(PSTR("is_ack_required(), trx_id ="), trx_id);
+    //debug_text_val(PSTR("is_ack_required(), trx_id ="), trx_id);
 
     bool ret = true;
     uint8_t fcf0 = rx_frm_info[trx_id]->mpdu[0];
@@ -118,11 +116,11 @@ bool is_ack_required(trx_id_t trx_id)
 
     if (ret)
     {
-        debug_text(PSTR("ACK transmission requested"));
+        //debug_text(PSTR("ACK transmission requested"));
     }
     else
     {
-        debug_text(PSTR("No ACK transmission requested"));
+        //debug_text(PSTR("No ACK transmission requested"));
     }
 
     return ret;
@@ -139,7 +137,7 @@ bool is_ack_required(trx_id_t trx_id)
  */
 void schedule_ack_transmission(trx_id_t trx_id)
 {
-    debug_text_val(PSTR("schedule_ack_transmission(), trx_id ="), trx_id);
+    //debug_text_val(PSTR("schedule_ack_transmission(), trx_id ="), trx_id);
 
 #ifdef ENABLE_ACK_RATE_MODE_ADAPTION
     if (tal_pib[trx_id].AdaptDataRateForACK)
@@ -149,7 +147,7 @@ void schedule_ack_transmission(trx_id_t trx_id)
 #endif
 
     /* Start timer for ACK transmission */
-    debug_text(PSTR("Start timer for ACK transmission"));
+    //debug_text(PSTR("Start timer for ACK transmission"));
     uint8_t timer_id;
     if (trx_id == RF09)
     {
@@ -167,14 +165,14 @@ void schedule_ack_transmission(trx_id_t trx_id)
 
     retval_t timer =
         pal_timer_start(timer_id, acktime, TIMEOUT_RELATIVE,
-                        (FUNC_PTR())transmit_ack, (void *)&timer_cb_parameter[trx_id]);
+                        (FUNC_PTR)transmit_ack, (void *)&timer_cb_parameter[trx_id]);
     if (timer == MAC_SUCCESS)
     {
         tal_state[trx_id] = TAL_WAITING_FOR_ACK_TRANSMISION;
     }
     else
     {
-        debug_text(PSTR("ACK timer could not be started"));
+        //debug_text(PSTR("ACK timer could not be started"));
         /* In case the ack timer could not be started, send ack immediately. */
         transmit_ack((void *)&timer_cb_parameter[trx_id]);
     }
@@ -192,7 +190,7 @@ static void transmit_ack(void *parameter)
 {
     trx_id_t trx_id = *(trx_id_t *)parameter;
 
-    debug_text_val(PSTR("transmit_ack() for trx_id  = "), trx_id);
+    //debug_text_val(PSTR("transmit_ack() for trx_id  = "), trx_id);
 
     uint8_t ack[3]; // plus 2 or 4 bytes CRC
     ack[0] = FCF_FRAMETYPE_ACK;
@@ -232,7 +230,7 @@ static void transmit_ack(void *parameter)
             /* Check if the other radio is currently in use */
             if (trx_state[RF24] == RF_TX)
             {
-                debug_text_finish(PSTR("Radio is already in use"), DEBUG_ERROR);
+                //debug_text_finish(PSTR("Radio is already in use"), DEBUG_ERROR);
             }
             bb_bit_write(SR_RF_IQIFC1_CSELTX, 0x00); // RF09 is selected
         }
@@ -241,7 +239,7 @@ static void transmit_ack(void *parameter)
             /* Check if the other radio is currently in use */
             if (trx_state[RF09] == RF_TX)
             {
-                debug_text_finish(PSTR("Radio is already in use"), DEBUG_ERROR);
+                //debug_text_finish(PSTR("Radio is already in use"), DEBUG_ERROR);
             }
             bb_bit_write(SR_RF_IQIFC1_CSELTX, 0x01); // RF24 is selected
         }
@@ -250,7 +248,7 @@ static void transmit_ack(void *parameter)
 
     /* Trigger transmission */
     tal_state[trx_id] = TAL_ACK_TRANSMITTING;
-    debug_text(PSTR("switch to Tx"));
+    //debug_text(PSTR("switch to Tx"));
     uint16_t rf_reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
     pal_trx_reg_write(rf_reg_offset + RG_RF09_CMD, RF_TX);
     trx_state[trx_id] = RF_TX;
@@ -299,7 +297,7 @@ static bool get_pending_bit(trx_id_t trx_id)
  */
 void ack_transmission_done(trx_id_t trx_id)
 {
-    debug_text(PSTR("ack_transmission_done()"));
+    //debug_text(PSTR("ack_transmission_done()"));
 
 #ifdef ENABLE_ACK_RATE_MODE_ADAPTION
     if (data_rate_switched_for_ack[trx_id] == true)
@@ -331,39 +329,39 @@ void ack_transmission_done(trx_id_t trx_id)
 #ifdef ENABLE_ACK_RATE_MODE_ADAPTION
 static void adapt_data_rate_for_ack(trx_id_t trx_id)
 {
-    debug_text(PSTR("adapt_data_rate_for_ack()"));
+    //debug_text(PSTR("adapt_data_rate_for_ack()"));
 
     uint16_t bb_reg_offset = BB_BASE_ADDR_OFFSET * trx_id;
     if (tal_pib[trx_id].phy.modulation == OFDM)
     {
         /* Check if MCS differs from local setting */
         uint8_t rx_mcs = pal_trx_bit_read(bb_reg_offset + SR_BBC0_OFDMPHRRX_MCS);
-        debug_text_val(PSTR("OFDMPHRRX_MCS = "), rx_mcs);
+        //debug_text_val(PSTR("OFDMPHRRX_MCS = "), rx_mcs);
         if (rx_mcs != tal_pib[trx_id].phy.phy_mode.ofdm.mcs_val)
         {
-            debug_text(PSTR("Update MCS for ACK"));
+            //debug_text(PSTR("Update MCS for ACK"));
             pal_trx_bit_write(bb_reg_offset + SR_BBC0_OFDMPHRTX_MCS, rx_mcs);
             data_rate_switched_for_ack[trx_id] = true;
         }
         else
         {
-            debug_text(PSTR("Same MCS is used for ACK"));
+            //debug_text(PSTR("Same MCS is used for ACK"));
         }
     }
     else if (tal_pib[trx_id].phy.modulation == OQPSK)
     {
         /* Check if data rate differs from local setting */
         uint8_t mod = pal_trx_bit_read(bb_reg_offset + SR_BBC0_OQPSKPHRRX_MOD);
-        debug_text_val(PSTR("OQPSKPHRRX_MOD = "), mod);
+        //debug_text_val(PSTR("OQPSKPHRRX_MOD = "), mod);
         if (mod != tal_pib[trx_id].phy.phy_mode.oqpsk.rate_mode)
         {
-            debug_text(PSTR("Update data rate for ACK"));
+            //debug_text(PSTR("Update data rate for ACK"));
             pal_trx_bit_write(bb_reg_offset + SR_BBC0_OQPSKPHRTX_MOD, mod);
             data_rate_switched_for_ack[trx_id] = true;
         }
         else
         {
-            debug_text(PSTR("Same data rate is used for ACK"));
+            //debug_text(PSTR("Same data rate is used for ACK"));
         }
     }
     else
@@ -383,7 +381,7 @@ static void adapt_data_rate_for_ack(trx_id_t trx_id)
 #ifdef ENABLE_ACK_RATE_MODE_ADAPTION
 static void restore_data_rate_after_ack(trx_id_t trx_id)
 {
-    debug_text(PSTR("restore_data_rate_after_ack()"));
+    //debug_text(PSTR("restore_data_rate_after_ack()"));
 
     uint16_t bb_reg_offset = BB_BASE_ADDR_OFFSET * trx_id;
     if (tal_pib[trx_id].phy.modulation == OFDM)
@@ -423,7 +421,7 @@ void ack_timout_cb(void *parameter)
 
     stop_tal_timer(trx_id);
 
-    debug_text(PSTR("ack_timout_cb()"));
+    //debug_text(PSTR("ack_timout_cb()"));
 
     tx_done_handling(trx_id, MAC_NO_ACK);
 }
@@ -445,14 +443,14 @@ bool handle_ack_reception(trx_id_t trx_id)
     uint16_t bb_reg_offset = BB_BASE_ADDR_OFFSET * trx_id;
     bool ack_valid = false;
 
-    debug_text(PSTR("handle_ack_reception()"));
+    //debug_text(PSTR("handle_ack_reception()"));
 
     /* Check if incoming frame is the valid ACK */
 
     /* Check frame length */
     uint16_t frame_len;
     pal_trx_read(bb_reg_offset + RG_BBC0_RXFLL, (uint8_t *)&frame_len, 2);
-    debug_text_val(PSTR("ACK len = "), frame_len);
+    //debug_text_val(PSTR("ACK len = "), frame_len);
 
     uint8_t expected_ack_len = ACK_PAYLOAD_LEN + FCS_LEN;
     if (tal_pib[trx_id]. FCSType == FCS_TYPE_4_OCTETS)
@@ -473,22 +471,22 @@ bool handle_ack_reception(trx_id_t trx_id)
             (((ack[1] >> FCF1_FV_SHIFT) & 0x03) <= FCF_FRAME_VERSION_2006) &&
             (ack[2] == mac_frame_ptr[trx_id]->mpdu[2]))
         {
-            debug_text(PSTR("ACK OK"));
+            //debug_text(PSTR("ACK OK"));
 
             /* Stop ACK timeout timer */
-            debug_text(PSTR("Stop ACKWaitDuration timer"));
+            //debug_text(PSTR("Stop ACKWaitDuration timer"));
             stop_tal_timer(trx_id);
             tx_done_handling(trx_id, MAC_SUCCESS);
             ack_valid = true;
         }
         else
         {
-            debug_text(PSTR("Invalid ACK frame"));
+            //debug_text(PSTR("Invalid ACK frame"));
         }
     }
     else
     {
-        debug_text(PSTR("Invalid ACK frame, wrong length"));
+        //debug_text(PSTR("Invalid ACK frame, wrong length"));
     }
 
     if (!ack_valid)

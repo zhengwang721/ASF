@@ -39,19 +39,38 @@
 #ifdef CHIP_MODE_TEST
 #include "pal_internal.h"
 #endif
-#if (PAL_GENERIC_TYPE == MEGA_RF_SIM)
-#include "verification.h"
-#endif
+
 
 /* === MACROS ============================================================== */
 
 /* === GLOBALS ============================================================= */
 
 /* === PROTOTYPES ========================================================== */
+/**
+ * \brief Initializes all timers used by the TAL module by assigning id's to
+ *each of them
+ */
+static retval_t tal_timer_init(void);
 
+/**
+ * \brief Stops all initialized TAL timers
+ */
+static void tal_timers_stop(void);
 static retval_t trx_reset(trx_id_t trx_id);
 static void cleanup_tal(trx_id_t trx_id);
 static void trx_init(void);
+
+
+uint8_t	TAL_T_0;
+uint8_t	TAL_T_1;
+
+#ifdef ENABLE_FTN_PLL_CALIBRATION
+
+uint8_t	TAL_T_CALIBRATION_0 ;
+uint8_t	TAL_T_CALIBRATION_1 ;
+
+#endif
+
 
 /* === IMPLEMENTATION ====================================================== */
 
@@ -69,7 +88,7 @@ static void trx_init(void);
  */
 retval_t tal_init(void)
 {
-    debug_text(PSTR("tal_init()"));
+    //debug_text(PSTR("tal_init()"));
 
     /* Init the PAL and by this means also the transceiver interface */
     if (pal_init() != MAC_SUCCESS)
@@ -82,6 +101,7 @@ retval_t tal_init(void)
     {
         return FAILURE;
     }
+
     /* Check if RF215 is connected */
 #ifdef AT86RF215LT
     if (pal_trx_reg_read(RG_RF_PN) != 0x32)
@@ -93,6 +113,9 @@ retval_t tal_init(void)
     /* Initialize trx */
     trx_init();
 
+	if (tal_timer_init() != MAC_SUCCESS) {
+		return FAILURE;
+	}
     /* Initialize the buffer management */
     bmm_buffer_init();
 
@@ -140,13 +163,13 @@ retval_t tal_init(void)
     {
         /* Clear BB's interrupts */
         uint8_t irqs = bb_reg_read(RG_RF09_IRQS);
-        debug_text_val(PSTR("BB RG_RF09_IRQS ="), irqs);
+        //debug_text_val(PSTR("BB RG_RF09_IRQS ="), irqs);
         irqs = bb_reg_read(RG_RF24_IRQS);
-        debug_text_val(PSTR("BB RG_RF24_IRQS ="), irqs);
+        //debug_text_val(PSTR("BB RG_RF24_IRQS ="), irqs);
         irqs = bb_reg_read(RG_BBC0_IRQS);
-        debug_text_val(PSTR("BB RG_BBC0_IRQS ="), irqs);
+        //debug_text_val(PSTR("BB RG_BBC0_IRQS ="), irqs);
         irqs = bb_reg_read(RG_BBC1_IRQS);
-        debug_text_val(PSTR("BB RG_BBC1_IRQS ="), irqs);
+        //debug_text_val(PSTR("BB RG_BBC1_IRQS ="), irqs);
 
         pal_bb_irq_flag_clr();
         pal_bb_irq_init(bb_irq_handler_cb);
@@ -168,7 +191,7 @@ retval_t tal_init(void)
  */
 void trx_config(trx_id_t trx_id)
 {
-    debug_text_val(PSTR("trx_config(), trx_id ="), trx_id);
+    //debug_text_val(PSTR("trx_config(), trx_id ="), trx_id);
 
     uint16_t bb_reg_offset = BB_BASE_ADDR_OFFSET * trx_id;
 
@@ -222,7 +245,7 @@ void trx_config(trx_id_t trx_id)
  */
 static void trx_init(void)
 {
-    debug_text(PSTR("trx_init()"));
+    //debug_text(PSTR("trx_init()"));
 
     /*
      * Configure generic trx functionality
@@ -254,7 +277,7 @@ retval_t tal_reset(trx_id_t trx_id, bool set_default_pib)
 {
     rf_cmd_state_t previous_trx_state[2];
 
-    debug_text_val(PSTR("tal_reset(), trx_id ="), trx_id);
+    //debug_text_val(PSTR("tal_reset(), trx_id ="), trx_id);
 
     previous_trx_state[RF09] = trx_state[RF09];
     previous_trx_state[RF24] = trx_state[RF24];
@@ -377,7 +400,7 @@ retval_t tal_reset(trx_id_t trx_id, bool set_default_pib)
  */
 static retval_t trx_reset(trx_id_t trx_id)
 {
-    debug_text_val(PSTR("trx_reset(), trx_id ="), trx_id);
+    //debug_text_val(PSTR("trx_reset(), trx_id ="), trx_id);
 
     ENTER_TRX_REGION();
 
@@ -388,9 +411,9 @@ static retval_t trx_reset(trx_id_t trx_id)
     if (trx_id == RFBOTH)
     {
         /* Apply reset pulse; low active */
-        PAL_TRX_RST_LOW();
+        PAL_RST_LOW();
         PAL_WAIT_1_US();
-        PAL_TRX_RST_HIGH();
+        PAL_RST_HIGH();
 
         TAL_RF_IRQ_CLR_ALL(RF09);
         TAL_RF_IRQ_CLR_ALL(RF24);
@@ -404,7 +427,7 @@ static retval_t trx_reset(trx_id_t trx_id)
              * @ToDo: Use a different macro for IRQ line; the polarity might be
              * different after reset
              */
-            if (PAL_TRX_IRQ_GET() == HIGH)
+            if (IRQ_PINGET() == HIGH)
             {
                 break;
             }
@@ -414,8 +437,8 @@ static retval_t trx_reset(trx_id_t trx_id)
             // @ToDo: Remove magic number
             if (pal_sub_time_us(current_time, start_time) > 1000)
             {
-                debug_text_val(PSTR("long start up duration = "),
-                               (uint16_t)(current_time - start_time));
+                //debug_text_val(PSTR("long start up duration = "),
+                 //              (uint16_t)(current_time - start_time));
                 return FAILURE;
             }
         }
@@ -448,8 +471,8 @@ static retval_t trx_reset(trx_id_t trx_id)
             // @ToDo: Remove magic number
             if (pal_sub_time_us(current_time, start_time) > 1000)
             {
-                debug_text_val(PSTR("long start up duration = "),
-                               (uint16_t)(current_time - start_time));
+                //debug_text_val(PSTR("long start up duration = "),
+                 //              (uint16_t)(current_time - start_time));
                 return FAILURE;
             }
         }
@@ -473,7 +496,7 @@ static retval_t trx_reset(trx_id_t trx_id)
  */
 static void cleanup_tal(trx_id_t trx_id)
 {
-    debug_text(PSTR("cleanup_tal()"));
+    //debug_text(PSTR("cleanup_tal()"));
 
     /* Clear all running TAL timers. */
     ENTER_CRITICAL_REGION();
@@ -505,5 +528,40 @@ static void cleanup_tal(trx_id_t trx_id)
     }
 }
 
+static retval_t tal_timer_init(void)
+{
+
+	if (MAC_SUCCESS != pal_timer_get_id(&TAL_T_0)) {
+		return FAILURE;
+	}
+
+	if (MAC_SUCCESS != pal_timer_get_id(&TAL_T_1)) {
+		return FAILURE;
+	}
+	
+	#ifdef ENABLE_FTN_PLL_CALIBRATION
+	if (MAC_SUCCESS != pal_timer_get_id(&TAL_T_CALIBRATION_0)) {
+		return FAILURE;
+	}
+
+	if (MAC_SUCCESS != pal_timer_get_id(&TAL_T_CALIBRATION_1)) {
+		return FAILURE;
+	}
+	#endif  /* ENABLE_FTN_PLL_CALIBRATION */
+
+	return MAC_SUCCESS;
+}
+
+static void tal_timers_stop(void)
+{
+	#if (NUMBER_OF_TAL_TIMERS > 0)
+pal_timer_stop(TAL_T_0);
+pal_timer_stop(TAL_T_1);
+#ifdef ENABLE_FTN_PLL_CALIBRATION
+pal_timer_stop(TAL_T_CALIBRATION_0);
+pal_timer_stop(TAL_T_CALIBRATION_1);
+#endif
+	#endif /*  (NUMBER_OF_TAL_TIMERS > 0) */
+}
 
 /* EOF */

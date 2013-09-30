@@ -26,10 +26,8 @@
 #include "ieee_const.h"
 #include "tal_pib.h"
 #include "tal_internal.h"
-#include "ieee_154g.h"
-#if (PAL_GENERIC_TYPE == MEGA_RF_SIM)
-#include "verification.h"
-#endif
+#include "ieee_15_4g.h"
+
 
 /* === TYPES =============================================================== */
 
@@ -176,7 +174,7 @@ static retval_t tal_fsk_rfcfg(trx_id_t trx_id);
  */
 retval_t conf_trx_modulation(trx_id_t trx_id)
 {
-    debug_text(PSTR("conf_trx_modulation()"));
+    //debug_text(PSTR("conf_trx_modulation()"));
 
     retval_t status;
     uint16_t bb_reg_offset = BB_BASE_ADDR_OFFSET * trx_id;
@@ -276,7 +274,7 @@ static retval_t tal_ofdm_rfcfg(trx_id_t trx_id, ofdm_option_t ofdm_opt)
 #if (DEBUG > 0)
     if (ofdm_opt > 3)
     {
-        debug_text_val_finish(PSTR("ERROR: OFDM option must be in [0..3], is:"), ofdm_opt, DEBUG_ERROR);
+        //debug_text_val_finish(PSTR("ERROR: OFDM option must be in [0..3], is:"), ofdm_opt, DEBUG_ERROR);
         status = MAC_INVALID_PARAMETER;
     }
     else
@@ -343,7 +341,7 @@ static retval_t tal_ofdm_rfcfg(trx_id_t trx_id, ofdm_option_t ofdm_opt)
                     break;
 
                 default:
-                    debug_text_val_finish(PSTR("ERROR: OFDM option must be in [0..3], is:"), ofdm_opt, DEBUG_ERROR);
+                    //debug_text_val_finish(PSTR("ERROR: OFDM option must be in [0..3], is:"), ofdm_opt, DEBUG_ERROR);
                     status = MAC_INVALID_PARAMETER;
                     break;
             }
@@ -371,7 +369,7 @@ static retval_t tal_oqpsk_rfcfg(trx_id_t trx_id, oqpsk_chip_rate_t chip_rate)
 
     if (chip_rate > 3)
     {
-        debug_text_val_finish(PSTR("ERROR: MODE_FCHIP  must be in [0..3], is:"), chip_rate, DEBUG_ERROR);
+        //debug_text_val_finish(PSTR("ERROR: MODE_FCHIP  must be in [0..3], is:"), chip_rate, DEBUG_ERROR);
         status = MAC_INVALID_PARAMETER;
     }
     else

@@ -27,10 +27,8 @@
 #include "tal_config.h"
 #include "tal_pib.h"
 #include "tal_internal.h"
-#include "ieee_154g.h"
-#if (PAL_GENERIC_TYPE == MEGA_RF_SIM)
-#include "verification.h"
-#endif
+#include "ieee_15_4g.h"
+
 
 /* === TYPES =============================================================== */
 
@@ -918,14 +916,14 @@ static inline void get_sun_freq_f0(trx_id_t trx_id, uint32_t *freq, uint32_t *sp
 #ifdef SUPPORT_LEGACY_OQPSK
 static inline void get_legacy_freq_f0(trx_id_t trx_id, uint32_t *freq, uint32_t *spacing)
 {
-    debug_text(PSTR("get_legacy_freq_f0()"));
+    //debug_text(PSTR("get_legacy_freq_f0()"));
 
     switch (tal_pib[trx_id].CurrentPage)
     {
         case CH_PG_2003: /* Fall through */
         case CH_PG_2006:
-            debug_text(PSTR("CH_PG_2003 or CH_PG_2006"));
-            debug_text_val(PSTR("tal_pib[trx_id].CurrentChannel ="), tal_pib[trx_id].CurrentChannel);
+            //debug_text(PSTR("CH_PG_2003 or CH_PG_2006"));
+            //debug_text_val(PSTR("tal_pib[trx_id].CurrentChannel ="), tal_pib[trx_id].CurrentChannel);
             if (trx_id == RF09)
             {
                 if (tal_pib[trx_id].CurrentChannel == 0)
@@ -951,7 +949,7 @@ static inline void get_legacy_freq_f0(trx_id_t trx_id, uint32_t *freq, uint32_t 
             break;
 
         case CH_PG_CHINA:
-            debug_text(PSTR("CH_PG_CHINA"));
+            //debug_text(PSTR("CH_PG_CHINA"));
             if (tal_pib[trx_id].CurrentChannel < 4)
             {
                 *freq = 780000000;// + (2 * ch);

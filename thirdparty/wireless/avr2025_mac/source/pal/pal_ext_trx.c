@@ -79,6 +79,83 @@ void pal_spi_init(void)
 	AT86RFX_INTC_INIT();
 }
 
+void pal_trx_read(uint16_t addr,uint8_t *data, uint16_t length)
+{
+	uint8_t register_value = 0;
+
+	/*Saving the current interrupt status & disabling the global interrupt
+	 **/
+	ENTER_CRITICAL_REGION();
+
+	/* Prepare the command byte */
+	addr |= 0X00; //Read Command
+	
+	
+	uint8_t reg_addr;
+	
+	/* Start SPI transaction by pulling SEL low */
+	spi_select_device(AT86RFX_SPI, &SPI_AT86RFX_DEVICE);
+	
+	reg_addr = addr>>8;
+	
+	/* Send the Read command byte */
+	spi_write_packet(AT86RFX_SPI, &reg_addr, 1);	
+
+	reg_addr = addr;
+
+	/* Send the Read command byte */
+	spi_write_packet(AT86RFX_SPI, &reg_addr, 1);
+
+	/* Do dummy read for initiating SPI read */
+	spi_read_packet(AT86RFX_SPI, data, length);
+	
+	/* Stop the SPI transaction by setting SEL high */
+	spi_deselect_device(AT86RFX_SPI, &SPI_AT86RFX_DEVICE);
+
+	/*Restoring the interrupt status which was stored & enabling the global
+	 *interrupt */
+	LEAVE_CRITICAL_REGION();
+
+}
+
+void pal_trx_write(uint16_t addr, uint8_t *data,uint16_t length)
+{
+	/*Saving the current interrupt status & disabling the global interrupt
+	 **/
+	ENTER_CRITICAL_REGION();
+
+	/* Prepare the command byte */
+	addr |= 0X8000; //Write Command
+	
+	
+	uint8_t reg_addr;
+
+	/* Start SPI transaction by pulling SEL low */
+	spi_select_device(AT86RFX_SPI, &SPI_AT86RFX_DEVICE);
+
+	reg_addr = addr>>8;
+	
+	/* Send the Read command byte */
+	spi_write_packet(AT86RFX_SPI, &reg_addr, 1);
+
+	reg_addr = addr;
+	
+	/* Send the Read command byte */
+	spi_write_packet(AT86RFX_SPI, &reg_addr, 1);
+
+
+	/* Write the byte in the transceiver data register */
+	spi_write_packet(AT86RFX_SPI, data, length);
+
+
+	/* Stop the SPI transaction by setting SEL high */
+	spi_deselect_device(AT86RFX_SPI, &SPI_AT86RFX_DEVICE);
+
+	/*Restoring the interrupt status which was stored & enabling the global
+	 *interrupt */
+	LEAVE_CRITICAL_REGION();
+}
+
 uint8_t pal_trx_reg_read(uint16_t addr)
 {
 	uint8_t register_value = 0;
@@ -166,7 +243,7 @@ void pal_trx_irq_init(FUNC_PTR trx_irq_cb)
 	irq_hdl_trx = (irq_handler_t)trx_irq_cb;
 }
 
-uint8_t pal_trx_bit_read(uint8_t addr, uint8_t mask, uint8_t pos)
+uint8_t pal_trx_bit_read(uint16_t addr, uint8_t mask, uint8_t pos)
 {
 	uint8_t ret;
 	ret = pal_trx_reg_read(addr);
@@ -175,7 +252,7 @@ uint8_t pal_trx_bit_read(uint8_t addr, uint8_t mask, uint8_t pos)
 	return ret;
 }
 
-void pal_trx_bit_write(uint8_t reg_addr, uint8_t mask, uint8_t pos,
+void pal_trx_bit_write(uint16_t reg_addr, uint8_t mask, uint8_t pos,
 		uint8_t new_value)
 {
 	uint8_t current_reg_value;
@@ -215,20 +292,73 @@ void pal_trx_frame_read(uint8_t *data, uint8_t length)
 
 void pal_trx_frame_write(uint8_t *data, uint8_t length)
 {
-	uint8_t temp;
 	/*Saving the current interrupt status & disabling the global interrupt
 	 **/
 	ENTER_CRITICAL_REGION();
 
+	 uint16_t addr = 0X3800; //RG_BBC1_FBTXS
+	/* Prepare the command byte */
+	addr |= 0X8000; //Write Command
+	
+	
+	uint8_t reg_addr;
+
 	/* Start SPI transaction by pulling SEL low */
 	spi_select_device(AT86RFX_SPI, &SPI_AT86RFX_DEVICE);
 
-	temp = TRX_CMD_FW;
+	reg_addr = addr>>8;
+	
+	/* Send the Read command byte */
+	spi_write_packet(AT86RFX_SPI, &reg_addr, 1);
 
-	/* Send the command byte */
-	spi_write_packet(AT86RFX_SPI, &temp, 1);
+	reg_addr = addr;
+	
+	/* Send the Read command byte */
+	spi_write_packet(AT86RFX_SPI, &reg_addr, 1);
 
+
+	/* Write the byte in the transceiver data register */
 	spi_write_packet(AT86RFX_SPI, data, length);
+
+
+	/* Stop the SPI transaction by setting SEL high */
+	spi_deselect_device(AT86RFX_SPI, &SPI_AT86RFX_DEVICE);
+
+	/*Restoring the interrupt status which was stored & enabling the global
+	 *interrupt */
+	LEAVE_CRITICAL_REGION();
+}
+
+void pal_trx_frame_write1(uint8_t *data, uint8_t length)
+{
+	/*Saving the current interrupt status & disabling the global interrupt
+	 **/
+	ENTER_CRITICAL_REGION();
+
+	 static uint16_t addr = 0X2800; //RG_BBC0_FBTXS
+	/* Prepare the command byte */
+	addr |= 0X8000; //Write Command
+	
+	
+	uint8_t reg_addr;
+
+	/* Start SPI transaction by pulling SEL low */
+	spi_select_device(AT86RFX_SPI, &SPI_AT86RFX_DEVICE);
+
+	reg_addr = addr>>8;
+	
+	/* Send the Read command byte */
+	spi_write_packet(AT86RFX_SPI, &reg_addr, 1);
+
+	reg_addr = addr;
+	
+	/* Send the Read command byte */
+	spi_write_packet(AT86RFX_SPI, &reg_addr, 1);
+
+
+	/* Write the byte in the transceiver data register */
+	spi_write_packet(AT86RFX_SPI, data, length);
+
 
 	/* Stop the SPI transaction by setting SEL high */
 	spi_deselect_device(AT86RFX_SPI, &SPI_AT86RFX_DEVICE);
