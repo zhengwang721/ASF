@@ -40,9 +40,9 @@
 			<build type="linker-config" subtype="aux-script" value="samd20/iar/samd20e17_sram.icf" toolchain="iarewarm"/>
 			<device-support value="atsamd20e17"/>
 		</module>
-		<module type="build-specific" caption="Linker script for SAMD20E1f" id="sam0.utils.linker_scripts#atsamd20e1f">
+		<module type="build-specific" caption="Linker script for SAMD20E1F" id="sam0.utils.linker_scripts#atsamd20e1f">
 			<info type="description" value="summary">
-			Linker script for the SAMD20E17 device.
+			Linker script for the SAMD20E1F device.
 			</info>
 			<build type="linker-config" subtype="script" value="samd20/gcc/samd20e1f_flash.ld" toolchain="armgcc"/>
 			<build type="linker-config" subtype="aux-script" value="samd20/gcc/samd20e1f_sram.ld" toolchain="armgcc"/>
