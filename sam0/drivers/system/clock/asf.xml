@@ -31,9 +31,9 @@
 		<build type="include-path" value="."/>
 
 		<build type="header-file" subtype="api" value="gclk.h"/>
-		<build type="header-file" subtype="api" value="clock.h"/>
+		<build type="header-file" subtype="api" value="clock_01.h"/>
 		<build type="header-file" value="clock_config_check.h"/>
-		<build type="c-source" value="clock.c"/>
+		<build type="c-source" value="clock_01.c"/>
 		<build type="c-source" value="gclk.c"/>
 
 		<build type="header-file" value="quick_start_gclk/qs_gclk_basic.h"/>

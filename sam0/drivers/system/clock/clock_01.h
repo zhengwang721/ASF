@@ -314,21 +314,21 @@ enum system_xosc_startup {
  */
 enum system_osc32k_startup {
 	/** Wait 0 clock cycles until the clock source is considered stable */
-	SYSTEM_OSC32K_STARTUP_0,
+	SYSTEM_OSC32K_STARTUP_3,
 	/** Wait 2 clock cycles until the clock source is considered stable */
-	SYSTEM_OSC32K_STARTUP_2,
-	/** Wait 4 clock cycles until the clock source is considered stable */
 	SYSTEM_OSC32K_STARTUP_4,
+	/** Wait 4 clock cycles until the clock source is considered stable */
+	SYSTEM_OSC32K_STARTUP_6,
 	/** Wait 8 clock cycles until the clock source is considered stable */
-	SYSTEM_OSC32K_STARTUP_8,
+	SYSTEM_OSC32K_STARTUP_10,
 	/** Wait 16 clock cycles until the clock source is considered stable */
-	SYSTEM_OSC32K_STARTUP_16,
+	SYSTEM_OSC32K_STARTUP_18,
 	/** Wait 32 clock cycles until the clock source is considered stable */
-	SYSTEM_OSC32K_STARTUP_32,
+	SYSTEM_OSC32K_STARTUP_34,
 	/** Wait 64 clock cycles until the clock source is considered stable */
-	SYSTEM_OSC32K_STARTUP_64,
+	SYSTEM_OSC32K_STARTUP_66,
 	/** Wait 128 clock cycles until the clock source is considered stable */
-	SYSTEM_OSC32K_STARTUP_128,
+	SYSTEM_OSC32K_STARTUP_130,
 };
 
 /**
