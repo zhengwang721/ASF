@@ -1607,7 +1607,7 @@ static void bc_data_cb(void *parameter)
 #endif			
 			)
 			) {
-		LED_On(LED_DATA);
+//		LED_On(LED_DATA);
 	} else {
 		/*
 		 * Data could not be queued into the broadcast queue.
