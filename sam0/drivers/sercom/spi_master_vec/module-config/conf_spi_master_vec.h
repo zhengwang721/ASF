@@ -44,7 +44,7 @@
 #ifndef CONF_SPI_MASTER_VEC_H
 #define CONF_SPI_MASTER_VEC_H
 
-#ifdef __FREERTOS__
+#if defined(__FREERTOS__) || defined(__DOXYGEN__)
 #  include <FreeRTOS.h>
 #  include <semphr.h>
 

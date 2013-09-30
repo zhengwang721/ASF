@@ -93,10 +93,25 @@
  * to the driver to start a transfer. These buffer descriptors specify where in
  * memory each buffer is, and how large they are.
  *
- * \sa spi_master_vec_transceive_buffer_job()
+ * Lastly, the driver has configurable OS support for the purpose of allowing
+ * more efficient waiting for transfer completions.
+ *
+ * \sa spi_master_vec_transceive_buffer_job() for details on starting transfers.
+ * \sa CONF_SPI_MASTER_VEC_OS_SUPPORT for more on the configurable OS support.
  *
  *
  * \section asfdoc_samd20_sercom_spi_master_vec_special_considerations Special Considerations
+ *
+ * \subsection asfdoc_samd20_sercom_spi_master_vec_special_isr Interrupt safety
+ *
+ * This driver should not be used within interrupt contexts. The reason for this
+ * is that the driver itself is interrupt driven. Further, the configurable OS
+ * support is implemented with the assumption that transfers are only started
+ * in threads, not in interrupt service routines, because it gives the simplest
+ * API.
+ *
+ *
+ * \subsection asfdoc_samd20_sercom_spi_master_vec_special_mux Signal MUX
  *
  * The SERCOM module has two layers of signal multiplexing in SPI mode:
  * -# SERCOM pad MUX: This routes the SPI signals to internal lines.
@@ -340,6 +355,67 @@ static inline enum status_code spi_master_vec_transceive_buffer_wait(
 #ifdef __cplusplus
 }
 #endif
+
+/**
+ * \name OS Support Configuration
+ * @{
+ */
+
+/**
+ * \def CONF_SPI_MASTER_VEC_OS_SUPPORT
+ * \brief Enable support for OS
+ *
+ * Defining this symbol will enable support for an OS, e.g., FreeRTOS, by using
+ * the macros in this group:
+ * - \ref CONF_SPI_MASTER_VEC_SEMAPHORE_TYPE
+ * - \ref CONF_SPI_MASTER_VEC_CREATE_SEMAPHORE
+ * - \ref CONF_SPI_MASTER_VEC_TAKE_SEMAPHORE
+ * - \ref CONF_SPI_MASTER_VEC_GIVE_SEMAPHORE
+ * - \ref CONF_SPI_MASTER_VEC_GIVE_SEMAPHORE_FROM_ISR
+ *
+ * The user must ensure that these macros map to the implementation for the OS
+ * that is used. Further, required includes must be added alongside these macros
+ * in \ref conf_spi_master_vec.h.
+ *
+ * The purpose of this configuration is to enable usage of the OS' semaphore
+ * system to wait for transfers to end rather than continuously polling the
+ * transfer status, which is an inefficient approach.
+ */
+
+/**
+ * \def CONF_SPI_MASTER_VEC_SEMAPHORE_TYPE
+ * \brief Semaphore datatype
+ */
+
+/**
+ * \def CONF_SPI_MASTER_VEC_CREATE_SEMAPHORE
+ * \brief Create/initialize semaphore
+ *
+ * \param semaphore Semaphore member in driver instance.
+ */
+
+/**
+ * \def CONF_SPI_MASTER_VEC_TAKE_SEMAPHORE
+ * \brief Wait for and take semaphore
+ *
+ * \param semaphore Semaphore member in driver instance.
+ */
+
+/**
+ * \def CONF_SPI_MASTER_VEC_GIVE_SEMAPHORE
+ * \brief Give semaphore back
+ *
+ * \param semaphore Semaphore member in driver instance.
+ */
+
+/**
+ * \def CONF_SPI_MASTER_VEC_GIVE_SEMAPHORE_FROM_ISR
+ * \brief Give semaphore back from an ISR
+ *
+ * \param semaphore Semaphore member in driver instance.
+ */
+
+/** @} */
 
 /**
  * @}
