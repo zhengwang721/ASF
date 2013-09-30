@@ -1549,7 +1549,7 @@ static void enter_sleep(uint32_t timeout)
 	(FUNC_PTR)wakeup_cb,
 	NULL);
 	LEAVE_CRITICAL_REGION();
-	system_set_sleepmode(SYSTEM_SLEEPMODE_IDLE_0);
+	system_set_sleepmode(SYSTEM_SLEEPMODE_IDLE_2);
     system_sleep();
 }
 

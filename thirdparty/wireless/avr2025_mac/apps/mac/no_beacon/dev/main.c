@@ -540,7 +540,11 @@ void usr_mlme_get_conf(uint8_t status,
 		void *PIBAttributeValue)
 {
 	if ((status == MAC_SUCCESS) && (PIBAttribute == phyCurrentPage)) {
+		#ifdef HIGH_DATS_RATE_SUPPORT
+		current_channel_page = 17;
+		#else
 		current_channel_page = *(uint8_t *)PIBAttributeValue;
+		#endif
 		wpan_mlme_get_req(phyChannelsSupported);
 	} else if ((status == MAC_SUCCESS) &&
 			(PIBAttribute == phyChannelsSupported)) {

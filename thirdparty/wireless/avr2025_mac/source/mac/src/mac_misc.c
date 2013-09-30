@@ -431,11 +431,12 @@ static void mac_soft_reset(uint8_t init_pib)
 void mac_sleep_trans(void)
 {
 	/* Go to sleep? */
-	if (
 #ifdef BEACON_SUPPORT
-		MAC_INACTIVE == mac_superframe_state &&
-#endif /* BEACON_SUPPORT */	
-	(!mac_pib.mac_RxOnWhenIdle) && (!mac_rx_enabled)) {
+	if(MAC_INACTIVE == mac_superframe_state 
+		|| ((!mac_pib.mac_RxOnWhenIdle) && (!mac_rx_enabled))) {
+#else /* BEACON_SUPPORT */
+	if ((!mac_pib.mac_RxOnWhenIdle) && (!mac_rx_enabled)) {
+#endif /* BEACON_SUPPORT */
 #if (MAC_SYNC_REQUEST == 1)
 
 		/*

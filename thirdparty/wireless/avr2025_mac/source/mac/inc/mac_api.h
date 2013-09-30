@@ -87,10 +87,6 @@
 /* === Externals ============================================================ */
 
 /* === Types ================================================================ */
-#ifdef SAM
-COMPILER_PACK_SET(1)
-#endif /* SAM */
-
 /**
  * MAC Address type
  */
@@ -413,9 +409,6 @@ typedef struct gts_char_tag {
 #endif /* GTS_SUPPORT */
 #endif /* if !defined(__DOXYGEN___NO_MAC) */
 
-#ifdef SAM
-COMPILER_PACK_RESET()
-#endif /* SAM */
 /* ! @} */
 /* === Macros =============================================================== */
 
