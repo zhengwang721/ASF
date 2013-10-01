@@ -81,7 +81,7 @@ void sys_init_timing(void)
 	/* Configure PMC. */
 	pmc_enable_periph_clk(ID_TC0);
 
-	/* Configure TC for a 1Hz frequency and trigger on RC compare. */
+	/* Configure TC for a 1kHz frequency and trigger on RC compare. */
 	tc_find_mck_divisor(1000,
 			sysclk_get_main_hz(), &ul_div, &ul_tcclks,
 			sysclk_get_main_hz());
