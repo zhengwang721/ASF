@@ -179,7 +179,7 @@ void GMAC_Handler(void)
  * \note Make sure that the p->payload pointer is 32 bits aligned.
  * Since the lsb are used as status bits by GMAC.
  *
- * \param lpc_enetif  Pointer to driver data structure
+ * \param p_gmac_dev Pointer to driver data structure.
  */
 static void gmac_rx_populate_queue(struct gmac_device *p_gmac_dev)
 {
@@ -227,7 +227,7 @@ static void gmac_rx_populate_queue(struct gmac_device *p_gmac_dev)
  *
  * This function sets up the descriptor list used for receive packets.
  *
- * \param lpc_enetif  Pointer to driver data structure
+ * \param ps_gmac_dev Pointer to driver data structure.
  */
 static void gmac_rx_init(struct gmac_device *ps_gmac_dev)
 {
@@ -256,7 +256,7 @@ static void gmac_rx_init(struct gmac_device *ps_gmac_dev)
  *
  * This function sets up the descriptor list used for receive packets.
  *
- * \param lpc_enetif  Pointer to driver data structure
+ * \param ps_gmac_dev Pointer to driver data structure.
  */
 static void gmac_tx_init(struct gmac_device *ps_gmac_dev)
 {

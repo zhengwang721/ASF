@@ -45,7 +45,7 @@
 #ifndef KSZ8851SNL_REG_H_INCLUDED
 #define KSZ8851SNL_REG_H_INCLUDED
 
-#undef REG_WOL_CTRL
+/*#undef REG_WOL_CTRL
 #undef WOL_FRAME3_ENABLE
 #undef WOL_FRAME2_ENABLE
 #undef WOL_FRAME1_ENABLE
@@ -55,13 +55,13 @@
 #undef INT_RX_OVERRUN
 #undef INT_TX_STOPPED
 #undef INT_RX_STOPPED
-
+*/
 #define REG_ADDR_MASK              0x3F0      /* Register address mask */
 #define OPCODE_MASK                (3 << 14)
 #define CMD_READ                   (0 << 14)
 #define CMD_WRITE                  (1 << 14)
-#define FIFO_READ                  (2 << 14)
-#define FIFO_WRITE                 (3 << 14)
+#define FIFO_READ                  0x80
+#define FIFO_WRITE                 0xC0
 
 /*
  * MAC Registers
@@ -218,6 +218,12 @@
 #define   RX_CTRL_UDP_LITE_CHECKSUM   0x0004    /* Enable UDP Lite frame checksum generation and verification */
 #define   RX_CTRL_ICMP_CHECKSUM       0x0002    /* Enable ICMP frame checksum verification */
 #define   RX_CTRL_BLOCK_MAC           0x0001    /* Receive drop frame if the SA is same as device MAC address */
+#define   RX_CTRL_BURST_LEN_MASK      0x00e0    /* SRDBL SPI Receive Data Burst Length */
+#define   RX_CTRL_BURST_LEN_4         0x0000
+#define   RX_CTRL_BURST_LEN_8         0x0020
+#define   RX_CTRL_BURST_LEN_16        0x0040
+#define   RX_CTRL_BURST_LEN_32        0x0060
+#define   RX_CTRL_BURST_LEN_FRAME     0x0080
 
 #define REG_TX_MEM_INFO            0x78       /* TXMIR */
 #define   TX_MEM_AVAILABLE_MASK       0x1FFF    /* The amount of memory available in TXQ */
@@ -264,6 +270,7 @@
 #define REG_TX_ADDR_PTR            0x84       /* TXFDPR */
 #define REG_RX_ADDR_PTR            0x86       /* RXFDPR */
 #define   ADDR_PTR_AUTO_INC           0x4000    /* Enable Frame data pointer increments automatically */
+#define   ADDR_PTR_MASK               0x03ff    /* Address pointer mask */
 
 #define REG_RX_TIME_THRES          0x8C       /* RXDTTR */
 #define   RX_TIME_THRESHOLD_MASK      0xFFFF    /* Set receive timer duration threshold */

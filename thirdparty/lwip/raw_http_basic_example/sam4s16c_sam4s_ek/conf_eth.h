@@ -86,4 +86,10 @@
 /** Pins configuration. */
 #define KSZ8851SNL_RSTN_GPIO                          PIO_PA16_IDX
 
+/** Push button pin definition. */
+#define INTN_PIO                                      PIOA
+#define INTN_ID                                       ID_PIOA
+#define INTN_PIN_MSK                                  (1 << 15)
+#define INTN_ATTR                                     (PIO_DEBOUNCE | PIO_IT_FALL_EDGE)
+
 #endif /* CONF_ETH_H_INCLUDED */
