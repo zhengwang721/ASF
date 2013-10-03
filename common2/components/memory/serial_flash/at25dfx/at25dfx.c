@@ -1,744 +1,466 @@
-/**
- * \file
- *
- * \brief Management of the AT25DFx SerialFlash driver through SPI.
- * This file manages the accesses to the AT25DFx SerialFlash components.
- *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
- *
- * \asf_license_start
- *
- * \page License
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- *
- * 3. The name of Atmel may not be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
- *
- * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
- * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
- * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- *
- * \asf_license_stop
- *
- */
-
-#include "board.h"
-#include "status_codes.h"
-#include "conf_at25dfx.h"
 #include "at25dfx.h"
-#include "spi_master.h"
-#include "at25dfx_hal_spi.h"
 
-/// @cond 0
-/**INDENT-OFF**/
-#ifdef __cplusplus
-extern "C" {
-#endif
-/**INDENT-ON**/
-/// @endcond
+enum at25dfx_command_opcode {
+	AT25DFX_COMMAND_PROGRAM_PAGE         = 0x02,
+	AT25DFX_COMMAND_READ_STATUS          = 0x05,
+	AT25DFX_COMMAND_READ_ARRAY           = 0x0b,
+	AT25DFX_COMMAND_READ_DEVICE_ID       = 0x9f,
+	AT25DFX_COMMAND_WRITE_ENABLE         = 0x06,
+	AT25DFX_COMMAND_WRITE_DISABLE        = 0x04,
+	AT25DFX_COMMAND_ERASE_CHIP           = 0xc7,
+	AT25DFX_COMMAND_ERASE_BLOCK_4KB      = 0x20,
+	AT25DFX_COMMAND_ERASE_BLOCK_32KB     = 0x52,
+	AT25DFX_COMMAND_ERASE_BLOCK_64KB     = 0xd8,
+	AT25DFX_COMMAND_WRITE_STATUS         = 0x01,
+	AT25DFX_COMMAND_PROTECT_SECTOR       = 0x36,
+	AT25DFX_COMMAND_UNPROTECT_SECTOR     = 0x39,
+	AT25DFX_COMMAND_READ_PROTECT_SECTOR  = 0x3c,
+};
 
-/**
- * \defgroup at25dfx_group AT25DFx SerialFlash component driver.
- *
- * See \ref at25dfx_quickstart.
- *
- * This is a driver for the AT25DFx SerialFlash memories.
- * It provides functions for initialization, read and write operations.
- *
- * \section dependencies Dependencies
- * This driver depends on the following modules:
- * - \ref spi_group for SPI master interface.
- *
- * @{
- */
+#define AT25DFX_PAGE_SIZE  256
+#define AT25DFX_COMMAND_MAX_SIZE (1 + 3 + 2)
 
-#if AT25DFX_MEM_TYPE == AT25DFX_041A
-/** AT25 device ID */
-#define AT25DFX_DEV_ID                   0x0001441F
-/** AT25 total size */
-#define AT25DFX_SIZE                     (512 * 1024)
-/** AT25 block size */
-#define AT25DFX_BLOCK_SIZE               (64*1024)
-/** AT25 block erase command */
-#define AT25DFX_BLOCK_ERASE_CMD    AT25_BLOCK_ERASE_64K
+enum at25dfx_status_field {
+	// These two are read-fields
+	AT25DFX_STATUS_BUSY            = (1 << 0),
+	AT25DFX_STATUS_ERROR           = (1 << 5),
+	// This is a write-field
+	AT25DFX_STATUS_GLOBAL_PROTECT  = (0x0f << 2),
+};
 
-#elif AT25DFX_MEM_TYPE == AT25DFX_161
-/** AT25 device ID */
-#define AT25DFX_DEV_ID                     0x0002461F
-/** AT25 total size */
-#define AT25DFX_SIZE                       (2 * 1024 * 1024)
-/** AT25 block size */
-#define AT25DFX_BLOCK_SIZE                 (64 * 1024)
-/** AT25 block erase command */
-#define AT25DFX_BLOCK_ERASE_CMD    AT25_BLOCK_ERASE_64K
-
-#elif AT25DFX_MEM_TYPE == AT25DFX_081A
-/** AT25 device ID */
-#define AT25DFX_DEV_ID                     0x0001451F
-/** AT25 total size */
-#define AT25DFX_SIZE                       (1 * 1024 * 1024)
-/** AT25 block size */
-#define AT25DFX_BLOCK_SIZE                 (64 * 1024)
-/** AT25 block erase command */
-#define AT25DFX_BLOCK_ERASE_CMD    AT25_BLOCK_ERASE_64K
-
-#elif AT25DFX_MEM_TYPE == AT25DFX_0161
-/** AT25 device ID */
-#define AT25DFX_DEV_ID                     0x0000461F
-/** AT25 total size */
-#define AT25DFX_SIZE                       (2 * 1024 * 1024)
-/** AT25 block size */
-#define AT25DFX_BLOCK_SIZE                 (64 * 1024)
-/** AT25 block erase command */
-#define AT25DFX_BLOCK_ERASE_CMD    AT25_BLOCK_ERASE_64K
-
-#elif AT25DFX_MEM_TYPE == AT25DFX_161A
-/** AT25 device ID */
-#define AT25DFX_DEV_ID                     0x0001461F
-/** AT25 total size */
-#define AT25DFX_SIZE                       (2 * 1024 * 1024)
-/** AT25 block size */
-#define AT25DFX_BLOCK_SIZE                 (64 * 1024)
-/** AT25 block erase command */
-#define AT25DFX_BLOCK_ERASE_CMD    AT25_BLOCK_ERASE_64K
-
-#elif AT25DFX_MEM_TYPE == AT25DFX_321
-/** AT25 device ID */
-#define AT25DFX_DEV_ID                     0x0000471F
-/** AT25 total size */
-#define AT25DFX_SIZE                       (4 * 1024 * 1024)
-/** AT25 block size */
-#define AT25DFX_BLOCK_SIZE                 (64 * 1024)
-/** AT25 block erase command */
-#define AT25DFX_BLOCK_ERASE_CMD    AT25_BLOCK_ERASE_64K
-
-#elif AT25DFX_MEM_TYPE == AT25DFX_321A
-/** AT25 device ID */
-#define AT25DFX_DEV_ID                     0x0001471F
-/** AT25 total size */
-#define AT25DFX_SIZE                       (4 * 1024 * 1024)
-/** AT25 block size */
-#define AT25DFX_BLOCK_SIZE                 (64 * 1024)
-/** AT25 block erase command */
-#define AT25DFX_BLOCK_ERASE_CMD    AT25_BLOCK_ERASE_64K
-
-#elif AT25DFX_MEM_TYPE == AT25DFX_512B
-/** AT25 device ID */
-#define AT25DFX_DEV_ID                     0x0001651F
-/** AT25 total size */
-#define AT25DFX_SIZE                       (64 * 1024)
-/** AT25 block size */
-#define AT25DFX_BLOCK_SIZE                 (32 * 1024)
-/** AT25 block erase command */
-#define AT25DFX_BLOCK_ERASE_CMD    AT25_BLOCK_ERASE_32K
-
-#elif AT25DFX_MEM_TYPE == AT25DFX_021
-/** AT25 device ID */
-#define AT25DFX_DEV_ID                     0x0000431F
-/** AT25 total size */
-#define AT25DFX_SIZE                       (256 * 1024)
-/** AT25 block size */
-#define AT25DFX_BLOCK_SIZE                 (64 * 1024)
-/** AT25 block erase command */
-#define AT25DFX_BLOCK_ERASE_CMD    AT25_BLOCK_ERASE_64K
-
-#elif AT25DFX_MEM_TYPE == AT25DFX_641A
-/** AT25 device ID */
-#define AT25DFX_DEV_ID                     0x0000481F
-/** AT25 total size */
-#define AT25DFX_SIZE                       (8 * 1024 * 1024)
-/** AT25 block size */
-#define AT25DFX_BLOCK_SIZE                 (64 * 1024)
-/** AT25 block erase command */
-#define AT25DFX_BLOCK_ERASE_CMD    AT25_BLOCK_ERASE_64K
-
-#else
-#error AT25DFX_MEM_TYPE is not defined to a supported value
-#endif
-
-/** The page size of AT25DF series is always 256 */
-#define AT25DFX_PAGE_SIZE              256
-
-/** SerialFlash transfers request prepared by the AT25 driver. This structure is sent to the 
- at25_send_command function which is application dependent. This function transforms 
- at25_cmd_t request into api command request. */
-typedef struct at25_cmd {
-	/** Data buffer to be sent or received */
+//! SerialFlash command container
+struct at25dfx_command {
+	//! Command byte opcode
+	enum at25dfx_command_opcode opcode;
+	//! Size of command: command byte (1) + address bytes (3) + dummy bytes (N)
+	uint8_t command_size;
+	//! SerialFlash internal address
+	at25dfx_address_t address;
+	//! Data buffer to be read from/write to
 	uint8_t *data;
-	/** SerialFlash internal address */
-	uint32_t address;
-	/** Number of bytes to send/receive */
-	uint16_t data_size;
-	/** Command byte opcode */
-	uint8_t cmd;
-	/** Size of command (command byte + address bytes + dummy bytes) in bytes */
-	uint8_t cmd_size;
-} at25_cmd_t;
+	//! Number of bytes to read/write
+	at25dfx_datalen_t length;
+};
 
-/** Activated SerialFlash chip select, default to device 1 */
-static uint8_t active_sf_cs = AT25DFX_MEM_ID;
+#include <at25dfx_priv_hal.h>
+
+//! \name SerialFlash meta-data helpers
+//@{
 
 /**
- * \brief Start an AT25DFx command transfer. This is a non blocking function. It will
- *  return as soon as the transfer is started.
+ * \brief Get the device ID of a specific SerialFlash type.
  *
- * \param pat25_cmd_t  Pointer to the command transfer request.
+ * \param type the type or model of SerialFlash.
  *
- * \return AT25_SUCCESS if the transfer has been started successfully; otherwise return
- * AT25_ERROR_SPI if the driver is in use.
+ * \return the SerialFlash device ID.
  */
-static at25_status_t at25dfx_send_command(at25_cmd_t *at25cmd)
+static inline uint32_t _at25dfx_get_device_id(enum at25dfx_type type)
 {
-	uint32_t cmd_buffer[2];
-	status_code_t spi_stat;
+	switch (type) {
+	case AT25DFX_041A:
+		return 0x0001441F;
 
-	/* Enable Chip select corresponding to the SerialFlash */
-	at25dfx_spi_select_device(active_sf_cs);
+	case AT25DFX_161:
+		return 0x0002461F;
 
-	/* Store command and address in command buffer */
-	cmd_buffer[0] = (at25cmd->cmd & 0x000000FF)
-			| ((at25cmd->address & 0x0000FF) << 24)
-			| ((at25cmd->address & 0x00FF00) << 8)
-			| ((at25cmd->address & 0xFF0000) >> 8);
+	case AT25DFX_081A:
+		return 0x0001451F;
 
-	/* Send the Status Register Read command followed by a dummy data */
-	spi_stat = at25dfx_spi_write_packet((uint16_t *) cmd_buffer,
-			at25cmd->cmd_size);
+	case AT25DFX_0161:
+		return 0x0000461F;
 
-	if (spi_stat != STATUS_OK) {
-		return AT25_ERROR_SPI;
-	}
+	case AT25DFX_161A:
+		return 0x0001461F;
 
-	/* Receive the manufacturer and device ID */
-	if ((at25cmd->cmd == AT25_BYTE_PAGE_PROGRAM)
-			|| (at25cmd->cmd == AT25_WRITE_STATUS)) {
-		spi_stat = at25dfx_spi_write_packet(at25cmd->data, 
-				at25cmd->data_size);
-	} else {
-		spi_stat = at25dfx_spi_read_packet(at25cmd->data, 
-				at25cmd->data_size);
-	}
+	case AT25DFX_321:
+		return 0x0000471F;
 
-	if (spi_stat != STATUS_OK) {
-		return AT25_ERROR_SPI;
-	}
+	case AT25DFX_321A:
+		return 0x0001471F;
 
-	/* Disable chip select */
-	at25dfx_spi_deselect_device(active_sf_cs);
+	case AT25DFX_021:
+		return 0x0000431F;
 
-	return (AT25_SUCCESS);
-}
-
-/**
- * \brief  Wait for the SerialFlash device to be ready to accept new commands.
- *
- * \return AT25_SUCCESS if successful; otherwise failed.
- */
-static at25_status_t at25dfx_wait_ready(void)
-{
-	at25_status_t op_stat;
-	uint8_t at25_stat;
-	uint8_t ready = 0;
-
-	/* Read status register and check busy bit */
-	while (!ready) {
-		op_stat = at25dfx_read_status(&at25_stat);
-		if (op_stat != AT25_SUCCESS) {
-			return op_stat;
-		}
-
-		/* Exit when the device is ready */
-		if ((at25_stat & AT25_STATUS_RDYBSY) == AT25_STATUS_RDYBSY_READY) {
-			ready = 1;
-		}
-	}
-	return AT25_SUCCESS;
-}
-
-/**
- * \brief Read and return the SerialFlash device ID.
- *
- * \param p_dev_id  Pointer to the data of the device ID.
- *
- * \return AT25_SUCCESS if the device ID has been read out; otherwise failed.
- */
-static at25_status_t at25dfx_read_dev_id(uint32_t *dev_id)
-{
-	at25_status_t op_stat;
-	at25_cmd_t at25cmd;
-
-	/* Issue a read ID command */
-	at25cmd.cmd = AT25_READ_JEDEC_ID;
-	at25cmd.cmd_size = 1;
-	at25cmd.data = (uint8_t *) dev_id;
-	at25cmd.data_size = 3;
-	at25cmd.address = 0;
-	op_stat = at25dfx_send_command(&at25cmd);
-	*dev_id &= 0x00FFFFFF;
-
-	return op_stat;
-}
-
-/**
- * \brief Enable critical write operation on a SerialFlash device, such as sector
- * protection, status register, etc.
- *
- * \return AT25_SUCCESS if the device has been unprotected; otherwise return
- * AT25_ERROR_PROTECTED.
- */
-static at25_status_t at25dfx_enable_write(void)
-{
-	at25_status_t op_stat;
-	at25_cmd_t at25cmd;
-
-	/* Issue a write enable command */
-	at25cmd.cmd = AT25_WRITE_ENABLE;
-	at25cmd.cmd_size = 1;
-	at25cmd.data = NULL;
-	at25cmd.data_size = 0;
-	at25cmd.address = 0;
-	op_stat = at25dfx_send_command(&at25cmd);
-
-	return op_stat;
-}
-
-/**
- * \brief Initialize the SerialFlash.
- *
- * \return AT25_SUCCESS for success, AT25_ERROR_INIT for error.
- */
-at25_status_t at25dfx_initialize(void)
-{
-	at25dfx_spi_init();
-
-	return AT25_SUCCESS;
-}
-
-/**
- * \brief Select the SerialFlash by the corresponding chip select.
- *
- * \param cs  SerialFlash chip select.
- */
-void at25dfx_set_mem_active(uint8_t cs)
-{
-	active_sf_cs = cs;
-}
-
-/**
- * \brief Check if the SerialFlash is valid. It will read the device id from the device and compare the
- * value set in the configuration file.
- *
- * \return AT25_SUCCESS for success, AT25_ERROR_NOT_FOUND for error.
- */
-at25_status_t at25dfx_mem_check(void)
-{
-	uint32_t dev_id = 0x0;
-
-	/* Read SerialFlash device id */
-	at25dfx_read_dev_id(&dev_id);
-
-	if (dev_id == AT25DFX_DEV_ID) {
-		return AT25_SUCCESS;
-	} else {
-		return AT25_ERROR_NOT_FOUND;
-	}
-}
-
-/**
- * \brief Read and return the status register of the SerialFlash.
- *
- * \param status  Pointer to an AT25 device status.
- *
- * \return AT25_SUCCESS for success, otherwise for error.
- */
-at25_status_t at25dfx_read_status(uint8_t *status)
-{
-	at25_status_t op_stat;
-	at25_cmd_t at25cmd;
-
-	/* Issue a read status command */
-	at25cmd.cmd = AT25_READ_STATUS;
-	at25cmd.cmd_size = 1;
-	at25cmd.data = status;
-	at25cmd.data_size = 1;
-	at25cmd.address = 0;
-	op_stat = at25dfx_send_command(&at25cmd);
-
-	return op_stat;
-}
-
-/**
- * \brief Write the given value in the status register of the SerialFlash device.
- *
- * \param status  Status to write.
- *
- * \return AT25_SUCCESS if successful; otherwise failed. 
- */
-at25_status_t at25dfx_write_status(uint8_t status)
-{
-	at25_status_t op_stat;
-	at25_cmd_t at25cmd;
-
-	/* Issue a write status command */
-	at25cmd.cmd = AT25_WRITE_STATUS;
-	at25cmd.cmd_size = 1;
-	at25cmd.data = (uint8_t *)&status;
-	at25cmd.data_size = 1;
-	at25cmd.address = 0;
-	op_stat = at25dfx_send_command(&at25cmd);
-
-	return op_stat;
-}
-
-/**
- * \brief Read sector protection status.
- *
- * \param ul_address  Sector address to be read.
- *
- * \return Sector protect status, AT25_ERROR when failed.
- */
-at25_status_t at25dfx_read_sector_protect_status(uint32_t address)
-{
-	at25_cmd_t at25cmd;
-	uint8_t at25_stat;
-
-	/* Issue a read sector protection status command */
-	at25cmd.cmd = AT25_READ_SECTOR_PROT;
-	at25cmd.cmd_size = 4;
-	at25cmd.data = (uint8_t *)&at25_stat;
-	at25cmd.data_size = 1;
-	at25cmd.address = address;
-	at25dfx_send_command(&at25cmd);
-
-	switch (at25_stat) {
-	case AT25_SECTOR_PROTECTED_VALUE:
-		return AT25_SECTOR_PROTECTED;
-
-	case AT25_SECTOR_UNPROTECTED_VALUE:
-		return AT25_SECTOR_UNPROTECTED;
+	case AT25DFX_641A:
+		return 0x0000481F;
 
 	default:
-		return AT25_ERROR;
+		Assert(false);
+		return 0;
 	}
 }
 
 /**
- * \brief Protect/unprotect the specific sector.
+ * \brief Get the storage size of a specific SerialFlash type.
  *
- * \param address  Address to be protected.
- * \param protect_type  AT25_TYPE_PROTECT to protect the sector, AT25_TYPE_UNPROTECT to unprotect. 
+ * \param type the type or model of SerialFlash.
  *
- * \return Sector protect operation status.
+ * \return the SerialFlash storage size.
  */
-at25_status_t at25dfx_protect_sector(uint32_t address, uint8_t protect_type)
+static inline uint32_t _at25dfx_get_device_size(enum at25dfx_type type)
 {
-	at25_status_t op_stat;
-	at25_cmd_t at25cmd;
+	switch (type) {
+	case AT25DFX_021:
+		return 256 * 1024;
 
-	/* Enable write operation first */
-	at25dfx_enable_write();
+	case AT25DFX_041A:
+		return 512 * 1024;
 
-	/* Issue a read ID command */
-	if (protect_type == AT25_TYPE_PROTECT) {
-		at25cmd.cmd = AT25_PROTECT_SECTOR;
-	} else {
-		at25cmd.cmd = AT25_UNPROTECT_SECTOR;
+	case AT25DFX_081A:
+		return 1 * 1024 * 1024;
+
+	case AT25DFX_161:
+	case AT25DFX_0161:
+	case AT25DFX_161A:
+		return 2 * 1024 * 1024;
+
+	case AT25DFX_321:
+	case AT25DFX_321A:
+		return 4 * 1024 * 1024;
+
+	case AT25DFX_641A:
+		return 8 * 1024 * 1024;
+
+	default:
+		Assert(false);
+		return 0;
 	}
-
-	at25cmd.cmd_size = 4;
-	at25cmd.data = NULL;
-	at25cmd.data_size = 0;
-	at25cmd.address = address;
-	op_stat = at25dfx_send_command(&at25cmd);
-
-	return op_stat;
-}
-
-/**
- * \brief Protect the SerialFlash device.
- *
- * \param protect_type  AT25_TYPE_PROTECT to protect the sector, AT25_TYPE_UNPROTECT to unprotect. 
- *
- * \return AT25_SUCCESS if the device has been protected; otherwise return the AT25 error code.
- */
-at25_status_t at25dfx_protect_chip(uint8_t protect_type)
-{
-	at25_status_t op_stat;
-	uint8_t at25_stat;
-
-	/* Perform a global unprotect command */
-	op_stat = at25dfx_enable_write();
-	if (op_stat != AT25_SUCCESS)
-		return op_stat;
-
-	if (protect_type == AT25_TYPE_PROTECT) {
-		/* Check the new status */
-		op_stat = at25dfx_read_status(&at25_stat);
-		if (op_stat != AT25_SUCCESS) {
-			return op_stat;
-		}
-
-		op_stat = at25dfx_write_status(at25_stat | 
-				AT25_GLOBAL_PROTECT_VALUE);
-		if (op_stat != AT25_SUCCESS) {
-			return op_stat;
-		}
-	} else {
-		op_stat = at25dfx_write_status(0);
-		if (op_stat != AT25_SUCCESS) {
-			return op_stat;
-		}
-	}
-
-	/* Check the new status */
-	op_stat = at25dfx_read_status(&at25_stat);
-	if (op_stat != AT25_SUCCESS) {
-		return op_stat;
-	}
-
-	if (protect_type == AT25_TYPE_PROTECT) {
-		if ((at25_stat & AT25_STATUS_SWP) != AT25_STATUS_SWP) {
-			return AT25_ERROR;
-		}
-	} else {
-		if ((at25_stat & (AT25_STATUS_SPRL | AT25_STATUS_SWP)) != 0) {
-			return AT25_ERROR;
-		}
-	}
-	return AT25_SUCCESS;
-}
-
-/**
- * \brief Erase all the content of the memory chip.
- *
- * \return AT25_SUCCESS if the device has been unprotected; otherwise return
- * AT25_ERROR_PROTECTED.
- */
-at25_status_t at25dfx_erase_chip(void)
-{
-	at25_status_t op_stat;
-	uint8_t at25_stat;
-	at25_cmd_t at25cmd;
-
-	/* Check if the flash is unprotected */
-	op_stat = at25dfx_read_status(&at25_stat);
-	if (op_stat != AT25_SUCCESS) {
-		return op_stat;
-	}
-
-	if ((at25_stat & AT25_STATUS_SWP) != AT25_STATUS_SWP_PROTNONE) {
-		return AT25_ERROR_PROTECTED;
-	}
-
-	/* Enable critical write operation */
-	op_stat = at25dfx_enable_write();
-	if (op_stat != AT25_SUCCESS) {
-		return op_stat;
-	}
-
-	/* Erase the chip */
-	at25cmd.cmd = AT25_CHIP_ERASE_2;
-	at25cmd.cmd_size = 1;
-	at25cmd.data = NULL;
-	at25cmd.data_size = 0;
-	at25cmd.address = 0;
-	op_stat = at25dfx_send_command(&at25cmd);
-
-	if (op_stat != AT25_SUCCESS) {
-		return op_stat;
-	}
-
-	/* Wait for transfer to finish */
-	op_stat = at25dfx_wait_ready();
-	return op_stat;
-}
-
-/**
- *\brief  Erase the specified block of the SerialFlash.
- *
- * \param address  Address of the block to erase.
- *
- * \return AT25_SUCCESS if successful; otherwise return AT25_ERROR_PROTECTED if the
- * device is protected or AT25_ERROR_BUSY if busy executing a command.
- */
-at25_status_t at25dfx_erase_block(uint32_t address)
-{
-	at25_status_t op_stat;
-	uint8_t at25_stat;
-	at25_cmd_t at25cmd;
-
-	/* Check if beyond the memory size */
-	if (address > AT25DFX_SIZE) {
-		return AT25_ERROR;
-	}
-
-	/* Check if the flash is ready and unprotected */
-	op_stat = at25dfx_read_status(&at25_stat);
-	if (op_stat != AT25_SUCCESS) {
-		return op_stat;
-	}
-
-	if ((at25_stat & AT25_STATUS_RDYBSY) != AT25_STATUS_RDYBSY_READY) {
-		return AT25_ERROR_BUSY;
-	} else if ((at25_stat & AT25_STATUS_SWP) !=
-			AT25_STATUS_SWP_PROTNONE) {
-		return AT25_ERROR_PROTECTED;
-	}
-
-	/* Enable critical write operation */
-	op_stat = at25dfx_enable_write();
-	if (op_stat != AT25_SUCCESS) {
-		return op_stat;
-	}
-
-	/* Start the block erase command */
-	at25cmd.cmd = AT25DFX_BLOCK_ERASE_CMD;
-	at25cmd.cmd_size = 4;
-	at25cmd.data = NULL;
-	at25cmd.data_size = 0;
-	at25cmd.address = address;
-	op_stat = at25dfx_send_command(&at25cmd);
-
-	if (op_stat != AT25_SUCCESS) {
-		return op_stat;
-	}
-
-	/* Wait for transfer to finish */
-	op_stat = at25dfx_wait_ready();
-	if (op_stat != AT25_SUCCESS) {
-		return op_stat;
-	}
-
-	return AT25_SUCCESS;
-}
-
-/**
- * \brief Write data at the specified address on the serial firmware SerialFlash. The
- * page(s) to program must have been erased prior to writing. This function
- * handles page boundary crossing automatically.
- *
- * \param data  Data buffer.
- * \param size  Number of bytes in buffer.
- * \param address  Write address.
- *
- * \return AT25_SUCCESS if successful; otherwise, return AT25_WRITE_ERROR if there has
- * been an error during the data programming.
- */
-at25_status_t at25dfx_write(uint8_t *data, uint16_t size, uint32_t address)
-{
-	uint32_t write_size;
-	at25_status_t op_stat;
-	uint8_t at25_stat;
-	at25_cmd_t at25cmd;
-
-	/* Check if beyond the memory size */
-	if ((size + address) > AT25DFX_SIZE) {
-		return AT25_ERROR;
-	}
-
-	/* Program one page after another */
-	while (size > 0) {
-		/* Compute the number of bytes to program in page */
-		write_size = Min(size,AT25DFX_PAGE_SIZE -
-				(address % AT25DFX_PAGE_SIZE));
-
-		/* Enable critical write operation */
-		at25dfx_enable_write();
-
-		at25cmd.cmd = AT25_BYTE_PAGE_PROGRAM;
-		at25cmd.cmd_size = 4;
-		at25cmd.data = data;
-		at25cmd.data_size = write_size;
-		at25cmd.address = address;
-
-		/* Program page */
-		op_stat = at25dfx_send_command(&at25cmd);
-		if (op_stat != AT25_SUCCESS) {
-			return op_stat;
-		}
-
-		/* Poll the SerialFlash status register until the operation is achieved */
-		op_stat = at25dfx_wait_ready();
-		if (op_stat != AT25_SUCCESS) {
-			return op_stat;
-		}
-
-		/* Make sure that the write has no error */
-		op_stat = at25dfx_read_status(&at25_stat);
-		if (op_stat != AT25_SUCCESS) {
-			return op_stat;
-		}
-
-		if ((at25_stat & AT25_STATUS_EPE) == AT25_STATUS_EPE_ERROR) {
-			return AT25_ERROR_WRITE;
-		}
-
-		data += write_size;
-		size -= write_size;
-		address += write_size;
-	}
-
-	return AT25_SUCCESS;
-}
-
-/**
- * \brief Read data from the specified address on the SerialFlash.
- *
- * \param data  Data buffer.
- * \param size  Number of bytes to read.
- * \param address  Read address.
- *
- * \return AT25_SUCCESS if successful; otherwise, failed.
- */
-at25_status_t at25dfx_read(uint8_t *data, uint16_t size, uint32_t address)
-{
-	at25_status_t op_stat;
-	at25_cmd_t at25cmd;
-
-	/* Check if beyond the memory size */
-	if ((size + address) > AT25DFX_SIZE) {
-		return AT25_ERROR;
-	}
-
-	/* Initialize a Read command to be sent through SPI */
-	at25cmd.cmd = AT25_READ_ARRAY_LF;
-	at25cmd.cmd_size = 4;
-	at25cmd.data = data;
-	at25cmd.data_size = size;
-	at25cmd.address = address;
-
-	/* Start a read operation */
-	op_stat = at25dfx_send_command(&at25cmd);
-
-	return op_stat;
 }
 
 //@}
 
-/// @cond 0
-/**INDENT-OFF**/
-#ifdef __cplusplus
+//! \name SPI interface lock/unlock
+//@{
+
+static inline enum status_code _at25dfx_lock_spi(struct at25dfx_spi_module *spi)
+{
+	system_interrupt_enter_critical_section();
+	if (spi->locked) {
+		system_interrupt_leave_critical_section();
+		return STATUS_BUSY;
+	} else {
+		spi->locked = true;
+		system_interrupt_leave_critical_section();
+		return STATUS_OK;
+	}
 }
-#endif
-/**INDENT-ON**/
-/// @endcond
+
+static inline void _at25dfx_unlock_spi(struct at25dfx_spi_module *spi)
+{
+	spi->locked = false;
+}
+
+//@}
+
+//! \name Chip-level functions
+//@{
+
+static inline void _at25dfx_chip_enable_write(struct at25dfx_chip_module *chip)
+{
+	struct at25dfx_command cmd;
+
+	cmd.opcode = AT25DFX_COMMAND_WRITE_ENABLE;
+	cmd.command_size = 1;
+	cmd.length = 0;
+	_at25dfx_chip_issue_write_command_wait(chip, cmd);
+}
+
+static inline void _at25dfx_chip_disable_write(struct at25dfx_chip_module *chip)
+{
+	struct at25dfx_command cmd;
+
+	cmd.opcode = AT25DFX_COMMAND_WRITE_DISABLE;
+	cmd.command_size = 1;
+	cmd.length = 0;
+	_at25dfx_chip_issue_write_command_wait(chip, cmd);
+}
+
+//@}
+
+/** PUBLIC FUNCTIONS BELOW HERE **/
+
+enum status_code at25dfx_chip_check_presence(struct at25dfx_chip_module *chip)
+{
+	enum status_code status;
+	struct at25dfx_command cmd;
+	uint32_t id;
+
+	Assert(chip);
+
+	// Reserve the SPI for us
+	status = _at25dfx_lock_spi(chip->spi);
+	if (status == STATUS_BUSY) {
+		return status;
+	}
+
+	cmd.opcode = AT25DFX_COMMAND_READ_DEVICE_ID;
+	cmd.command_size = 1;
+	cmd.data = (uint8_t *)&id;
+	cmd.length = 4;
+	_at25dfx_chip_issue_read_command_wait(chip, cmd);
+
+	_at25dfx_unlock_spi(chip->spi);
+
+	if (id == _at25dfx_get_device_id(chip->type)) {
+		return STATUS_OK;
+	} else {
+		return STATUS_ERR_NOT_FOUND;
+	}
+}
+
+enum status_code at25dfx_chip_read_buffer(struct at25dfx_chip_module *chip,
+		at25dfx_address_t address, void *data, at25dfx_datalen_t length)
+{
+	enum status_code status;
+	struct at25dfx_command cmd;
+
+	Assert(chip);
+	Assert(data);
+	Assert(length);
+
+	// Address out of range?
+	if ((address + length) > _at25dfx_get_device_size(chip->type)) {
+		return STATUS_ERR_INVALID_ARG;
+	}
+
+	status = _at25dfx_lock_spi(chip->spi);
+	if (status == STATUS_BUSY) {
+		return status;
+	}
+
+	cmd.opcode = AT25DFX_COMMAND_READ_ARRAY;
+	cmd.command_size = 5;
+	cmd.address = address;
+	cmd.data = (uint8_t *)&data;
+	cmd.length = length;
+	_at25dfx_chip_issue_read_command_wait(chip, cmd);
+
+	_at25dfx_unlock_spi(chip->spi);
+
+	return STATUS_OK;
+}
+
+enum status_code at25dfx_chip_write_buffer(struct at25dfx_chip_module *chip,
+		at25dfx_address_t address, void *data, at25dfx_datalen_t length)
+{
+	at25dfx_datalen_t page_bytes;
+	enum status_code status;
+	struct at25dfx_command cmd;
+
+	Assert(chip);
+	Assert(data);
+	Assert(length);
+
+	if ((address + length) > _at25dfx_get_device_size(chip->type)) {
+		return STATUS_ERR_INVALID_ARG;
+	}
+
+	status = _at25dfx_lock_spi(chip->spi);
+	if (status == STATUS_BUSY) {
+		return status;
+	}
+
+	_at25dfx_chip_enable_write(chip);
+
+	cmd.opcode = AT25DFX_COMMAND_PROGRAM_PAGE;
+	cmd.command_size = 4;
+	cmd.address = address;
+	cmd.data = (uint8_t *)&data;
+	page_bytes = AT25DFX_PAGE_SIZE - (address % AT25DFX_PAGE_SIZE);
+	cmd.length = min(page_bytes, length);
+	_at25dfx_chip_issue_write_command_wait(chip, cmd);
+
+	status = _at25dfx_chip_get_nonbusy_status(chip);
+
+	length -= cmd.length;
+
+	while (length && (status == STATUS_OK)) {
+		cmd.address += cmd.length;
+		cmd.data += cmd.length;
+		cmd.length = min(AT25DFX_PAGE_SIZE, length);
+
+		_at25dfx_chip_issue_write_command_wait(chip, cmd);
+
+		status = _at25dfx_chip_get_nonbusy_status(chip);
+
+		length -= cmd.length;
+	}
+
+	_at25dfx_chip_disable_write(chip);
+
+	_at25dfx_unlock_spi(chip->spi);
+
+	return status;
+}
+
+enum status_code at25dfx_chip_erase(struct at25dfx_chip_module *chip)
+{
+	enum status_code status;
+	struct at25dfx_command cmd;
+
+	Assert(chip);
+
+	status = _at25dfx_lock_spi(chip->spi);
+	if (status == STATUS_BUSY) {
+		return status;
+	}
+
+	_at25dfx_chip_enable_write(chip);
+
+	cmd.opcode = AT25DFX_COMMAND_ERASE_CHIP;
+	cmd.command_size = 1;
+	cmd.length = 0;
+	_at25dfx_chip_issue_write_command_wait(chip, cmd);
+	
+	status = _at25dfx_chip_get_nonbusy_status(chip);
+
+	_at25dfx_chip_disable_write(chip);
+
+	_at25dfx_unlock_spi(chip->spi);
+
+	return status;
+}
+
+enum status_code at25dfx_chip_block_erase(struct at25dfx_chip_module *chip,
+		uint32_t address, enum at25dfx_block_size block_size)
+{
+	enum status_code status;
+	struct at25dfx_command cmd;
+
+	Assert(chip);
+
+	if (address >= _at25dfx_get_device_size(chip->type)) {
+		return STATUS_ERR_INVALID_ARG;
+	}
+
+	status = _at25dfx_lock_spi(chip->spi);
+	if (status == STATUS_BUSY) {
+		return status;
+	}
+
+	_at25dfx_chip_enable_write(chip);
+
+	switch (block_size) {
+	case AT25DFX_BLOCK_SIZE_4KB:
+		cmd.opcode = AT25DFX_COMMAND_ERASE_BLOCK_4KB;
+		break;
+
+	case AT25DFX_BLOCK_SIZE_32KB:
+		cmd.opcode = AT25DFX_COMMAND_ERASE_BLOCK_32KB;
+		break;
+
+	case AT25DFX_BLOCK_SIZE_64KB:
+		cmd.opcode = AT25DFX_COMMAND_ERASE_BLOCK_64KB;
+		break;
+
+	default:
+		Assert(false);
+		cmd.opcode = 0;
+	}
+	cmd.command_size = 4;
+	cmd.address = address;
+	cmd.length = 0;
+	_at25dfx_chip_issue_write_command_wait(chip, cmd);
+
+	status = _at25dfx_chip_get_nonbusy_status(chip);
+
+	_at25dfx_chip_disable_write(chip);
+
+	_at25dfx_unlock_spi(chip->spi);
+
+	return status;
+}
+
+enum status_code at25dfx_chip_set_global_sector_protect(
+		struct at25dfx_chip_module *chip, bool protect)
+{
+	enum status_code status;
+	struct at25dfx_command cmd;
+	uint8_t temp_data;
+
+	Assert(chip);
+
+	status = _at25dfx_lock_spi(chip->spi);
+	if (status == STATUS_BUSY) {
+		return status;
+	}
+
+	_at25dfx_chip_enable_write(chip);
+
+	temp_data = protect ? AT25DFX_STATUS_GLOBAL_PROTECT : 0;
+	cmd.opcode = AT25DFX_COMMAND_WRITE_STATUS;
+	cmd.command_size = 4;
+	cmd.length = 1;
+	cmd.data = &temp_data;
+	_at25dfx_chip_issue_write_command_wait(chip, cmd);
+
+	_at25dfx_chip_disable_write(chip);
+
+	_at25dfx_unlock_spi(chip->spi);
+
+	return STATUS_OK;
+}
+
+enum status_code at25dfx_chip_set_sector_protect(
+		struct at25dfx_chip_module *chip, at25dfx_address_t address,
+		bool protect)
+{
+	enum status_code status;
+	struct at25dfx_command cmd;
+
+	Assert(chip);
+
+	if ((address) >= _at25dfx_get_device_size(chip->type)) {
+		return STATUS_ERR_INVALID_ARG;
+	}
+
+	status = _at25dfx_lock_spi(chip->spi);
+	if (status == STATUS_BUSY) {
+		return status;
+	}
+
+	_at25dfx_chip_enable_write(chip);
+
+	cmd.opcode = protect ?
+			AT25DFX_COMMAND_PROTECT_SECTOR : AT25DFX_COMMAND_UNPROTECT_SECTOR;
+	cmd.command_size = 4;
+	cmd.address = address;
+	cmd.length = 0;
+	_at25dfx_chip_issue_write_command_wait(chip, cmd);
+
+	_at25dfx_chip_disable_write(chip);
+
+	_at25dfx_unlock_spi(chip->spi);
+
+	return STATUS_OK;
+}
+
+enum status_code at25dfx_chip_get_sector_protect(
+		struct at25dfx_chip_module *chip, at25dfx_address_t address,
+		bool *protect)
+{
+	enum status_code status;
+	struct at25dfx_command cmd;
+
+	Assert(chip);
+
+	if ((address) >= _at25dfx_get_device_size(chip->type)) {
+		return STATUS_ERR_INVALID_ARG;
+	}
+
+	status = _at25dfx_lock_spi(chip->spi);
+	if (status == STATUS_BUSY) {
+		return status;
+	}
+
+	cmd.opcode = AT25DFX_COMMAND_READ_PROTECT_SECTOR;
+	cmd.command_size = 4;
+	cmd.address = address;
+	cmd.length = 1;
+	cmd.data = (uint8_t *)&protect;
+	_at25dfx_chip_issue_read_command_wait(chip, cmd);
+
+	_at25dfx_unlock_spi(chip->spi);
+
+	return STATUS_OK;
+}

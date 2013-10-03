@@ -88,102 +88,93 @@
 /** Test block start address */
 #define AT25DFX_TEST_BLOCK_ADDR  (0)
 
+
 /** RAM buffer used in this example */
 static uint8_t ram_buff[AT25DFX_TEST_DATA_SIZE];
+
 
 /**
  * \brief Entry point when test is failed.
  */
 void test_ko(void);
 
-/**
- * \brief Application entry point for AT25DFx example.
- *
- * \return Unused (ANSI-C compatibility).
- */
+
+struct at25dfx_spi_module at25dfx_spi;
+struct at25dfx_chip_module at25dfx_chip_1;
+struct at25dfx_chip_module at25dfx_chip_2;
+
+
 int main(void)
 {
-	uint16_t i;
+	bool is_protected;
+	enum status_code status;
+	struct at25dfx_chip_config at25dfx_chip_config;
+	struct at25dfx_spi_config at25dfx_spi_config;
 
-	sysclk_init();
-	board_init();
+	system_init();
 
-	/* Initialize the SerialFlash */
-	at25dfx_initialize();
+	// Set up the SPI to use for the two serialflash chips
+	at25dfx_get_config_defaults(&at25dfx_spi_config);
+	at25dfx_spi_config.baudrate = 1000000;
+	at25dfx_spi_config.mux_setting = EXT1_SPI_SERCOM_MUX_SETTING;
+	at25dfx_spi_config.pinmux_pad0 = EXT1_SPI_SERCOM_PINMUX_PAD0;
+	at25dfx_spi_config.pinmux_pad1 = EXT1_SPI_SERCOM_PINMUX_PAD1;
+	at25dfx_spi_config.pinmux_pad2 = EXT1_SPI_SERCOM_PINMUX_PAD2;
+	at25dfx_spi_config.pinmux_pad3 = EXT1_SPI_SERCOM_PINMUX_PAD3;
 
-	/* Set the SerialFlash active */
-	at25dfx_set_mem_active(AT25DFX_MEM_ID);
+	at25dfx_init(&at25dfx_spi, EXT1_SPI_MODULE, &at25dfx_spi_config);
 
-	/* Unprotect the chip */
-	if (at25dfx_protect_chip(AT25_TYPE_UNPROTECT) == AT25_SUCCESS) {
-		LED_On(DATA_FLASH_LED_EXAMPLE_0);
-	} else {
-		test_ko();
+	// Now configure and associate the two chips with the SPI
+	at25dfx_chip_get_config_defaults(&at25dfx_chip_config);
+	at25dfx_chip_config.type = AT25DFX_081A;
+	at25dfx_chip_config.ss_pin = EXT1_PIN_SPI_SS_0;
+
+	at25dfx_chip_init(&at25dfx_chip_1, &at25dfx_spi, &at25dfx_chip_config);
+
+	at25dfx_chip_config.type = AT25DFX_041A;
+	at25dfx_chip_config.ss_pin = EXT1_PIN_SPI_SS_1;
+
+	at25dfx_chip_init(&at25dfx_chip_2, &at25dfx_spi, &at25dfx_chip_config);
+
+
+	// Check that the devices are actually there
+	if (at25dfx_chip_check_presence(&at25dfx_chip_1) == STATUS_OK) {
+		// Help! Something disastrous has happened!
+		Assert(false);
 	}
 
-	/* Check if the SerialFlash is valid */
-	if (at25dfx_mem_check() == AT25_SUCCESS) {
-		LED_On(DATA_FLASH_LED_EXAMPLE_0);
-	} else {
-		test_ko();
+	if (at25dfx_chip_check_presence(&at25dfx_chip_2) == STATUS_OK) {
+		// Help! Something disastrous has happened!
+		Assert(false);
 	}
 
-	/* Prepare half of the SerialFlash sector as 0xAA */
-	for (i = 0; i < AT25DFX_TEST_DATA_SIZE / 2; i++) {
-		ram_buff[i] = 0xAA;
+	// Read 10 bytes from location 0x1234 in SerialFlash
+	at25dfx_chip_read_buffer(&at25dfx_chip_1, 0x1234, ram_buff, 10);
+
+	// Try to write to a sector -- check first if it is protected
+	
+	at25dfx_chip_get_sector_protect(&at25dfx_chip_2, 0x2345, &is_protected);
+	if (is_protected) {
+		// Disable sector (64 kB size) protection
+		at25dfx_chip_set_sector_protect(&at25dfx_chip_2, 0x2345, false);
 	}
+	// Write a bunch of data -- nevermind that we read past end of ram_buf
+	status = at25dfx_chip_write_buffer(&at25dfx_chip_2, 0x2345, ram_buff,
+			2 * AT25DFX_PAGE_SIZE);
+	// If status is not OK, the write failed in the chip somehow.
+	Assert(status == STATUS_OK);
 
-	/* And the remaining half as 0x55 */
-	for (; i < AT25DFX_TEST_DATA_SIZE; i++) {
-		ram_buff[i] = 0x55;
-	}
+	// Erase chip 1, but unprotect it first
+	status = at25dfx_chip_set_global_sector_protect(&at25dfx_chip_1, false);
+	Assert(status == STATUS_OK);
+	status = at25dfx_chip_erase(&at25dfx_chip_1);
+	Assert(status == STATUS_OK);
 
-	/* Erase the block before write */
-	at25dfx_erase_block(AT25DFX_TEST_BLOCK_ADDR);
+	// Now erase the 4 kB block that we started writing into in chip 2
+	status = at25dfx_chip_block_erase(&at25dfx_chip_2, 0x2345, AT25DFX_BLOCK_SIZE_4KB);
+	Assert(status == STATUS_OK);
 
-	/* Write the data to the SerialFlash */
-	at25dfx_write(ram_buff, AT25DFX_TEST_DATA_SIZE, AT25DFX_TEST_BLOCK_ADDR);
-
-	/* Read back this sector and compare them with the expected values */
-	at25dfx_read(ram_buff, AT25DFX_TEST_DATA_SIZE, AT25DFX_TEST_BLOCK_ADDR);
-
-	for (i = 0; i < AT25DFX_TEST_DATA_SIZE / 2; i++) {
-		if (ram_buff[i] != 0xAA) {
-			test_ko();
-		}
-	}
-	for (; i < AT25DFX_TEST_DATA_SIZE; i++) {
-		if (ram_buff[i] != 0x55) {
-			test_ko();
-		}
-	}
-
-	/* Write one SerialFlash sector as 0x00, 0x01 .... */
-	for (i = 0; i < AT25DFX_TEST_DATA_SIZE; i++) {
-		ram_buff[i] = i;
-	}
-
-	/* Erase the block before write */
-	at25dfx_erase_block(AT25DFX_TEST_BLOCK_ADDR);
-
-	/* Write the data to the SerialFlash */
-	at25dfx_write(ram_buff, AT25DFX_TEST_DATA_SIZE, AT25DFX_TEST_BLOCK_ADDR);
-
-	/* Read back this sector and compare them with the expected values */
-	at25dfx_read(ram_buff, AT25DFX_TEST_DATA_SIZE, AT25DFX_TEST_BLOCK_ADDR);
-
-	for (i = 0; i < AT25DFX_TEST_DATA_SIZE; i++) {
-		if (ram_buff[i] != (i % 0x100)) {
-			test_ko();
-		}
-	}
-
-	LED_On(DATA_FLASH_LED_EXAMPLE_1);
-	while (1);
-}
-
-void test_ko(void)
-{
-	LED_Off(DATA_FLASH_LED_EXAMPLE_1);
-	while (1);
+	// And protect the 64 kB sector again.
+	status = at25dfx_chip_set_sector_protect(&at25dfx_chip_2, 0x2345, true);
+	Assert(status == STATUS_OK);
 }
