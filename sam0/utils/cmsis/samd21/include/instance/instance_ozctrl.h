@@ -1,11 +1,9 @@
 /**
  * \file
  *
- * \brief Arch file for SAM0.
+ * \brief Instance description for OZCTRL
  *
- * This file defines common SAM0 series.
- *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,20 +41,19 @@
  *
  */
 
-#ifndef _SAM_IO_
-#define _SAM_IO_
+#ifndef _SAMD21_OZCTRL_INSTANCE_
+#define _SAMD21_OZCTRL_INSTANCE_
 
-#include <stddef.h>
-#include <stdint.h>
-#include <stdbool.h>
+/* ========== Register definition for OZCTRL peripheral ========== */
+#if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
+#define REG_OZCTRL_CTRL            (0x42005800U) /**< \brief (OZCTRL) Control */
+#define REG_OZCTRL_DIR             (0x42005802U) /**< \brief (OZCTRL) Wire Direction */
+#else
+#define REG_OZCTRL_CTRL            (*(RwReg8 *)0x42005800U) /**< \brief (OZCTRL) Control */
+#define REG_OZCTRL_DIR             (*(RwReg16*)0x42005802U) /**< \brief (OZCTRL) Wire Direction */
+#endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
-/* SAM D20 family */
-#if (SAMD20)
-#  include "samd20.h"
-#endif
+/* ========== Instance parameters for OZCTRL peripheral ========== */
+#define OZCTRL_WIRE_BITS            10
 
-#if (SAMD21)
-#  include "samd21.h"
-#endif
-
-#endif /* _SAM_IO_ */
+#endif /* _SAMD21_OZCTRL_INSTANCE_ */

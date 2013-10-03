@@ -1,11 +1,9 @@
 /**
  * \file
  *
- * \brief Arch file for SAM0.
+ * \brief Instance description for PAC2
  *
- * This file defines common SAM0 series.
- *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,20 +41,19 @@
  *
  */
 
-#ifndef _SAM_IO_
-#define _SAM_IO_
+#ifndef _SAMD21_PAC2_INSTANCE_
+#define _SAMD21_PAC2_INSTANCE_
 
-#include <stddef.h>
-#include <stdint.h>
-#include <stdbool.h>
+/* ========== Register definition for PAC2 peripheral ========== */
+#if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
+#define REG_PAC2_WPCLR             (0x42000000U) /**< \brief (PAC2) Write Protection Clear Register */
+#define REG_PAC2_WPSET             (0x42000004U) /**< \brief (PAC2) Write Protection Set Register */
+#else
+#define REG_PAC2_WPCLR             (*(RwReg  *)0x42000000U) /**< \brief (PAC2) Write Protection Clear Register */
+#define REG_PAC2_WPSET             (*(RwReg  *)0x42000004U) /**< \brief (PAC2) Write Protection Set Register */
+#endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
-/* SAM D20 family */
-#if (SAMD20)
-#  include "samd20.h"
-#endif
+/* ========== Instance parameters for PAC2 peripheral ========== */
+#define PAC2_WPROT_DEFAULT_VAL      0x00800000
 
-#if (SAMD21)
-#  include "samd21.h"
-#endif
-
-#endif /* _SAM_IO_ */
+#endif /* _SAMD21_PAC2_INSTANCE_ */

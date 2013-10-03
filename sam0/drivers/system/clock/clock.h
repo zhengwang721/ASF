@@ -313,21 +313,21 @@ enum system_xosc_startup {
  * OSC32K clock cycles.
  */
 enum system_osc32k_startup {
-	/** Wait 0 clock cycles until the clock source is considered stable */
+	/** Wait 3 clock cycles until the clock source is considered stable */
 	SYSTEM_OSC32K_STARTUP_3,
-	/** Wait 2 clock cycles until the clock source is considered stable */
-	SYSTEM_OSC32K_STARTUP_4,
 	/** Wait 4 clock cycles until the clock source is considered stable */
+	SYSTEM_OSC32K_STARTUP_4,
+	/** Wait 6 clock cycles until the clock source is considered stable */
 	SYSTEM_OSC32K_STARTUP_6,
-	/** Wait 8 clock cycles until the clock source is considered stable */
+	/** Wait 10 clock cycles until the clock source is considered stable */
 	SYSTEM_OSC32K_STARTUP_10,
-	/** Wait 16 clock cycles until the clock source is considered stable */
+	/** Wait 18 clock cycles until the clock source is considered stable */
 	SYSTEM_OSC32K_STARTUP_18,
-	/** Wait 32 clock cycles until the clock source is considered stable */
+	/** Wait 34 clock cycles until the clock source is considered stable */
 	SYSTEM_OSC32K_STARTUP_34,
-	/** Wait 64 clock cycles until the clock source is considered stable */
+	/** Wait 66 clock cycles until the clock source is considered stable */
 	SYSTEM_OSC32K_STARTUP_66,
-	/** Wait 128 clock cycles until the clock source is considered stable */
+	/** Wait 130 clock cycles until the clock source is considered stable */
 	SYSTEM_OSC32K_STARTUP_130,
 };
 
@@ -345,6 +345,22 @@ enum system_osc8m_div {
 	SYSTEM_OSC8M_DIV_4,
 	/** Divide the 8MHz RC oscillator output by 8 */
 	SYSTEM_OSC8M_DIV_8,
+};
+
+/**
+ * \brief Frequency range for the internal 8Mhz RC oscillator
+ *
+ * Internal 8Mhz RC oscillator freqency range setting
+ */
+enum system_osc8m_frequency_range {
+	/* Frequency range 4 Mhz to 6 Mhz */
+	SYSTEM_OSC8M_FREQUENCY_RANGE_4_TO_6,
+	/* Frequency range 6 Mhz to 8 Mhz */
+	SYSTEM_OSC8M_FREQUENCY_RANGE_6_TO_8,
+	/* Frequency range 8 Mhz to 11 Mhz */
+	SYSTEM_OSC8M_FREQUENCY_RANGE_8_TO_11,
+	/* Frequency range 11 Mhz to 15 Mhz */
+	SYSTEM_OSC8M_FREQUENCY_RANGE_11_TO_15,
 };
 
 /**
@@ -526,6 +542,9 @@ struct system_clock_source_xosc32k_config {
 	/** Run On Demand. If this is set the XOSC32K won't run
 	 * until requested by a peripheral */
 	bool on_demand;
+	/** Lock configuration after it has been written,
+	 *  a device reset will release the lock */
+	bool write_once;
 };
 
 /**
@@ -541,6 +560,8 @@ struct system_clock_source_osc8m_config {
 	/** Run On Demand. If this is set the OSC8M won't run
 	 * until requested by a peripheral */
 	bool on_demand;
+	/** Frequency range for the internal 8 Mhz RC oscialltor */
+	enum system_osc8m_freqency_range frequency_range;
 };
 
 /**
@@ -560,6 +581,9 @@ struct system_clock_source_osc32k_config {
 	/** Run On Demand. If this is set the OSC32K won't run
 	 * until requested by a peripheral */
 	bool on_demand;
+	/** Lock configuration after it has been written,
+	 *  a device reset will release the lock */
+	bool write_once;
 };
 
 /**
@@ -653,6 +677,7 @@ void system_clock_source_xosc_set_config(
  *   - 32KHz clock output enabled
  *   - Don't run in STANDBY sleep mode
  *   - Run only when requested by peripheral (on demand)
+ *   - Don't lock registers after configuration has been written
  *
  * \param[out] config  Configuration structure to fill with default values
  */
@@ -669,6 +694,7 @@ static inline void system_clock_source_xosc32k_get_config_defaults(
 	config->enable_32khz_output = true;
 	config->run_in_standby      = false;
 	config->on_demand           = true;
+	config->write_once          = false;
 }
 
 void system_clock_source_xosc32k_set_config(
@@ -692,6 +718,8 @@ void system_clock_source_xosc32k_set_config(
  *   - 32KHz clock output enabled
  *   - Don't run in STANDBY sleep mode
  *   - Run only when requested by peripheral (on demand)
+ *   - Set startup time to 130 cycles
+ *   - Don't lock registers after configuration has been written
  *
  * \param[out] config  Configuration structure to fill with default values
  */
@@ -704,6 +732,8 @@ static inline void system_clock_source_osc32k_get_config_defaults(
 	config->enable_32khz_output = true;
 	config->run_in_standby      = false;
 	config->on_demand           = true;
+	config->startup_time        = SYSTEM_OSC32K_STARTUP_130;
+	config->write_once          = false;
 }
 
 void system_clock_source_osc32k_set_config(
@@ -727,6 +757,7 @@ void system_clock_source_osc32k_set_config(
  *   - Clock output frequency divided by a factor of 8
  *   - Don't run in STANDBY sleep mode
  *   - Run only when requested by peripheral (on demand)
+ *   - Frequency range 8 Mhz to 11 Mhz
  *
  * \param[out] config  Configuration structure to fill with default values
  */
@@ -735,9 +766,10 @@ static inline void system_clock_source_osc8m_get_config_defaults(
 {
 	Assert(config);
 
-	config->prescaler      = SYSTEM_OSC8M_DIV_8;
-	config->run_in_standby = false;
-	config->on_demand      = true;
+	config->prescaler       = SYSTEM_OSC8M_DIV_8;
+	config->run_in_standby  = false;
+	config->on_demand       = true;
+	config->frequency_range = SYSTEM_OSC8M_FREQUENCY_RANGE_8_TO_11;
 }
 
 void system_clock_source_osc8m_set_config(

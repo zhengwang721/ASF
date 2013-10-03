@@ -1,11 +1,9 @@
 /**
  * \file
  *
- * \brief Arch file for SAM0.
+ * \brief Instance description for SBMATRIX
  *
- * This file defines common SAM0 series.
- *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,20 +41,26 @@
  *
  */
 
-#ifndef _SAM_IO_
-#define _SAM_IO_
+#ifndef _SAMD21_SBMATRIX_INSTANCE_
+#define _SAMD21_SBMATRIX_INSTANCE_
 
-#include <stddef.h>
-#include <stdint.h>
-#include <stdbool.h>
+/* ========== Register definition for SBMATRIX peripheral ========== */
+#if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
+#else
+#endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
-/* SAM D20 family */
-#if (SAMD20)
-#  include "samd20.h"
-#endif
+/* ========== Instance parameters for SBMATRIX peripheral ========== */
+#define SBMATRIX_DEFINED            
+/* ========== Instance parameters for SBMATRIX ========== */
+#define SBMATRIX_SLAVE_FLASH        0
+#define SBMATRIX_SLAVE_HPB0         1
+#define SBMATRIX_SLAVE_HPB1         2
+#define SBMATRIX_SLAVE_HPB2         3
+#define SBMATRIX_SLAVE_HRAMC0       4
+#define SBMATRIX_SLAVE_NUM          5
 
-#if (SAMD21)
-#  include "samd21.h"
-#endif
+#define SBMATRIX_MASTER_CM0PLUS     0
+#define SBMATRIX_MASTER_DSU         1
+#define SBMATRIX_MASTER_NUM         2
 
-#endif /* _SAM_IO_ */
+#endif /* _SAMD21_SBMATRIX_INSTANCE_ */

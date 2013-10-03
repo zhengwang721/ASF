@@ -1,0 +1,26 @@
+<asf xmlversion="1.0">
+	<module type="driver" id="sam0.utils.cmsis.samd21.include" caption="SAMD21 part definitions">
+		<info type="description" value="summary">
+		SAMD21 device definitions.
+		</info>
+		<build type="include-path" value="."/>
+		<build type="header-file" value="samd21.h"/>
+		<build type="header-file" value="samd21e14.h"/>
+		<build type="header-file" value="samd21e15.h"/>
+		<build type="header-file" value="samd21e16.h"/>
+		<build type="header-file" value="samd21e17.h"/>
+		<build type="header-file" value="samd21e18.h"/>
+		<build type="header-file" value="samd21g14.h"/>
+		<build type="header-file" value="samd21g15.h"/>
+		<build type="header-file" value="samd21g16.h"/>
+		<build type="header-file" value="samd21g17.h"/>
+		<build type="header-file" value="samd21g18.h"/>
+		<build type="header-file" value="samd21j14.h"/>
+		<build type="header-file" value="samd21j15.h"/>
+		<build type="header-file" value="samd21j16.h"/>
+		<build type="header-file" value="samd21j17.h"/>
+		<build type="header-file" value="samd21j18.h"/>
+		<info type="gui-flag" value="hidden"/>
+		<device-support value="samd21"/>
+	</module>
+</asf>

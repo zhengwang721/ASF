@@ -1,11 +1,9 @@
 /**
  * \file
  *
- * \brief Arch file for SAM0.
+ * \brief Top header file for SAMD21
  *
- * This file defines common SAM0 series.
- *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,20 +41,46 @@
  *
  */
 
-#ifndef _SAM_IO_
-#define _SAM_IO_
+#ifndef _SAMD21_
+#define _SAMD21_
 
-#include <stddef.h>
-#include <stdint.h>
-#include <stdbool.h>
+/**
+ * \defgroup SAMD21_definitions SAMD21 Device Definitions
+ * \brief SAMD21 CMSIS Definitions.
+ */
 
-/* SAM D20 family */
-#if (SAMD20)
-#  include "samd20.h"
+#if   defined(__SAMD21E14__) || defined(__ATSAMD21E14__)
+  #include "samd21e14.h"
+#elif defined(__SAMD21E15__) || defined(__ATSAMD21E15__)
+  #include "samd21e15.h"
+#elif defined(__SAMD21E16__) || defined(__ATSAMD21E16__)
+  #include "samd21e16.h"
+#elif defined(__SAMD21E17__) || defined(__ATSAMD21E17__)
+  #include "samd21e17.h"
+#elif defined(__SAMD21E18__) || defined(__ATSAMD21E18__)
+  #include "samd21e18.h"
+#elif defined(__SAMD21G14__) || defined(__ATSAMD21G14__)
+  #include "samd21g14.h"
+#elif defined(__SAMD21G15__) || defined(__ATSAMD21G15__)
+  #include "samd21g15.h"
+#elif defined(__SAMD21G16__) || defined(__ATSAMD21G16__)
+  #include "samd21g16.h"
+#elif defined(__SAMD21G17__) || defined(__ATSAMD21G17__)
+  #include "samd21g17.h"
+#elif defined(__SAMD21G18__) || defined(__ATSAMD21G18__)
+  #include "samd21g18.h"
+#elif defined(__SAMD21J14__) || defined(__ATSAMD21J14__)
+  #include "samd21j14.h"
+#elif defined(__SAMD21J15__) || defined(__ATSAMD21J15__)
+  #include "samd21j15.h"
+#elif defined(__SAMD21J16__) || defined(__ATSAMD21J16__)
+  #include "samd21j16.h"
+#elif defined(__SAMD21J17__) || defined(__ATSAMD21J17__)
+  #include "samd21j17.h"
+#elif defined(__SAMD21J18__) || defined(__ATSAMD21J18__)
+  #include "samd21j18.h"
+#else
+  #error Library does not support the specified device.
 #endif
 
-#if (SAMD21)
-#  include "samd21.h"
-#endif
-
-#endif /* _SAM_IO_ */
+#endif /* _SAMD21_ */
