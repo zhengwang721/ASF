@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief KSZ8851SNL SAM driver for LwIP.
+ * \brief KSZ8851SNL SAM driver for lwIP.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -123,9 +123,9 @@ struct ksz8851snl_device {
 	 * Receive buffer manager writes are burst of 2 words => 3 lsb bits
 	 * of the address shall be set to 0.
 	 */
-	/** Pointer to Rx descriptor list (must be 8-byte aligned) */
+	/** Set to 1 when owner is software (ready to read), 0 for Micrel. */
 	uint32_t rx_desc[NETIF_RX_BUFFERS];
-	/** Set to 1 when corresponding pbuf can be freed. */
+	/** Set to 1 when owner is Micrel, 0 for software. */
 	uint32_t tx_desc[NETIF_RX_BUFFERS];
 	/** RX pbuf pointer list */
 	struct pbuf *rx_pbuf[NETIF_RX_BUFFERS];
@@ -188,60 +188,53 @@ extern Pdc *g_p_spi_pdc;
 #define SPI_PDC_TX_START	3
 #define SPI_PDC_TX_COMPLETE	4
 
+uint8_t bufzz[1600];
+
 void SPI_Handler(void)
 {
+	pdc_packet_t g_pdc_spi_tx_npacket;
+	pdc_packet_t g_pdc_spi_rx_npacket;
 	uint32_t status;
 
 	status = spi_read_status(KSZ8851SNL_SPI);
 	status &= spi_read_interrupt_mask(KSZ8851SNL_SPI);
 
 	if (SPI_PDC_RX_START == g_spi_pdc_flag) {
+		/* Transfer complete, disable SPI interrupt. */
 		if (status & SPI_SR_RXBUFF) {
-			////printf("SPI_Handler SPI_SR_RXBUFF!\n");
-			/* Disable SPI interrupt. */
 			spi_disable_interrupt(KSZ8851SNL_SPI, SPI_IDR_RXBUFF);
 			g_spi_pdc_flag = SPI_PDC_RX_COMPLETE;
 		}
 	}
 	else if (SPI_PDC_TX_START == g_spi_pdc_flag) {
-	////printf("---\n");
-		if (status & SPI_SR_ENDTX) {
-			////printf("SPI_Handler SPI_SR_ENDTX!\n");
-			////printf("gs_ksz8851snl_dev.tx_cur_pbuf=%p\n", gs_ksz8851snl_dev.tx_cur_pbuf);
-			////printf("gs_ksz8851snl_dev.tx_cur_pbuf->next=%p\n", gs_ksz8851snl_dev.tx_cur_pbuf->next);
+		/* Middle of TX. */
+		if (status & SPI_SR_ENDRX) {
 			/* Fetch next pbuf in the pbuf chain. */
 			if (gs_ksz8851snl_dev.tx_cur_pbuf)
 				gs_ksz8851snl_dev.tx_cur_pbuf = gs_ksz8851snl_dev.tx_cur_pbuf->next;
 
 			/* If next pbuf is available, enqueue for transfer. */
 			if (gs_ksz8851snl_dev.tx_cur_pbuf) {
-				pdc_packet_t g_pdc_spi_tx_npacket;
-				pdc_packet_t g_pdc_spi_rx_npacket;
-
-				////printf("SPI_Handler SPI_SR_ENDTX has next...\n");
 				g_pdc_spi_tx_npacket.ul_addr = (uint32_t) gs_ksz8851snl_dev.tx_cur_pbuf->payload;
 				g_pdc_spi_tx_npacket.ul_size = gs_ksz8851snl_dev.tx_cur_pbuf->len;
-				g_pdc_spi_rx_npacket.ul_addr = (uint32_t) gs_ksz8851snl_dev.tx_cur_pbuf->payload;
+				g_pdc_spi_rx_npacket.ul_addr = (uint32_t) bufzz;
 				g_pdc_spi_rx_npacket.ul_size = gs_ksz8851snl_dev.tx_cur_pbuf->len;
 
 				pdc_tx_init(g_p_spi_pdc, NULL, &g_pdc_spi_tx_npacket);
 				pdc_rx_init(g_p_spi_pdc, NULL, &g_pdc_spi_rx_npacket);
 			}
 			else {
-				////printf("SPI_Handler SPI_SR_ENDTX no next!\n");
-				/* Disable SPI interrupt. */
-				spi_disable_interrupt(KSZ8851SNL_SPI, SPI_IDR_ENDTX);
-				spi_enable_interrupt(KSZ8851SNL_SPI, SPI_IER_TXBUFE);
+				/* Enable RX complete interrupt. */
+				spi_disable_interrupt(KSZ8851SNL_SPI, SPI_IDR_ENDRX);
+				spi_enable_interrupt(KSZ8851SNL_SPI, SPI_IER_RXBUFF);
 			}
 		}
-
-		if (status & SPI_SR_TXBUFE) {
-			////printf("SPI_Handler SPI_SR_TXBUFE!\n");
-			/* Disable SPI interrupt. */
-			spi_disable_interrupt(KSZ8851SNL_SPI, SPI_IDR_TXBUFE);
+		/* End of TX. */
+		if (status & SPI_SR_RXBUFF) {
+			/* Transfer complete, disable SPI interrupt. */
+			spi_disable_interrupt(KSZ8851SNL_SPI, SPI_IDR_RXBUFF);
 			g_spi_pdc_flag = SPI_PDC_TX_COMPLETE;
 		}
-	////printf("---\n");
 	}
 }
 
@@ -256,199 +249,6 @@ static void INTN_Handler(uint32_t id, uint32_t mask)
 
 		/* Set the INTN flag. */
 		g_intn_flag = 1;
-	}
-}
-
-static void ksz8851snl_update(struct netif *netif)
-{
-	struct ksz8851snl_device *ps_ksz8851snl_dev = netif->state;
-	uint16_t status;
-	uint16_t len;
-
-	/* Check for free PDC. */
-	if (SPI_PDC_IDLE == g_spi_pdc_flag) {
-
-		/* Handle RX. */
-		if (g_intn_flag)
-		{
-			g_intn_flag = 0;
-			status = ksz8851_reg_read(REG_INT_STATUS);
-
-			/* Check for errors. */
-			if (status & INT_RX_OVERRUN) {
-				status &= ~INT_RX_OVERRUN;
-			}
-
-			/* Check for link up. */
-			if (status & INT_RX_WOL_LINKUP) {
-				status &= ~INT_RX_WOL_LINKUP;
-			}
-
-			/* Clear interrupt flags. */
-			ksz8851_reg_write(REG_INT_STATUS, status);
-
-			/* Check for RX packet. */
-			if (status & INT_RX) {
-				ksz8851_reg_setbits(REG_INT_STATUS, INT_RX);
-
-				//printf("rx frame count %d\n", ksz8851_reg_read(REG_RX_FRAME_CNT_THRES) >> 8);
-ksz8851_reg_read(REG_RX_FRAME_CNT_THRES);
-				/* Get RX packet status. */
-				status = ksz8851_reg_read(REG_RX_FHR_STATUS);
-				if (!(status >> 0x10 == 0) || ((status & 0x3C17) == 0x3C17)) {//(ksz8851_reg_read(REG_RX_FHR_STATUS) & RX_ERRORS) {
-					ksz8851_reg_setbits(REG_RXQ_CMD, RXQ_CMD_FREE_PACKET);
-					//printf("ksz8851snl_update: packet error!\n");
-
-				}
-				else {
-					/* Read byte count. */
-					len = ksz8851_reg_read(REG_RX_FHR_BYTE_CNT) & RX_BYTE_CNT_MASK;
-					//len = ksz8851_reg_read(REG_RX_FHR_BYTE_CNT) & RX_BYTE_CNT_MASK;
-
-					/* Drop packet is len is invalid or no descriptor available. */
-					if (0 == len || ps_ksz8851snl_dev->rx_desc[ps_ksz8851snl_dev->us_rx_head]) {
-						ksz8851_reg_setbits(REG_RXQ_CMD, RXQ_CMD_FREE_PACKET);
-						//printf("ksz8851snl_update: len or desc is invalid!\n");
-					}
-					else {
-						//printf("ksz8851snl_update: start packet receive [len=%d]\n", len);
-						/* Clear rx frame pointer. */
-						ksz8851_reg_clrbits(REG_RX_ADDR_PTR, ADDR_PTR_MASK);
-
-						/* Enable RXQ read access. */
-						ksz8851_reg_setbits(REG_RXQ_CMD, RXQ_START);
-
-						/* Start asynchronous FIFO read operation. */
-						g_spi_pdc_flag = SPI_PDC_RX_START;
-						gpio_set_pin_low(KSZ8851SNL_CSN_GPIO);
-						ksz8851_fifo_read(ps_ksz8851snl_dev->rx_pbuf[ps_ksz8851snl_dev->us_rx_head]->payload, len);
-
-						/* Remove CRC and update pbuf length. */
-						len -= 4;
-						ps_ksz8851snl_dev->rx_pbuf[ps_ksz8851snl_dev->us_rx_head]->len = len;
-						ps_ksz8851snl_dev->rx_pbuf[ps_ksz8851snl_dev->us_rx_head]->tot_len = len;
-					}
-				}
-			}
-		}
-		/* Handle TX. */
-		else {
-			uint16_t txmir;
-			uint16_t isr;
-
-			/* Check for packet ready to be sent. */
-			if (ps_ksz8851snl_dev->us_tx_tail != ps_ksz8851snl_dev->us_tx_head) {
-
-				len = ps_ksz8851snl_dev->tx_pbuf[ps_ksz8851snl_dev->us_tx_tail]->tot_len;
-
-				/* Check if TXQ memory size is available for this transmit packet */
-				txmir = ksz8851_reg_read(REG_TX_MEM_INFO) & TX_MEM_AVAILABLE_MASK;
-				//printf("us_tx_tail=%d size available=%d, required=%d\n", ps_ksz8851snl_dev->us_tx_tail, txmir, len+4);
-				if (txmir < len + 4) {
-					/* Not enough space to send packet. */
-
-					/* Enable TXQ memory available monitor */
-					ksz8851_reg_write(REG_TX_TOTAL_FRAME_SIZE, len + 4);
-
-					//spi_setbits(REG_TXQ_CMD, TXQ_MEM_AVAILABLE_INT);
-
-					/* When the isr register has the TXSAIS bit set, there's
-					* enough room for the packet.
-					*/
-					do {
-						isr = ksz8851_reg_read(REG_INT_STATUS);
-					} while (!(isr & INT_TX_SPACE));
-
-					/* Disable TXQ memory available monitor */
-					ksz8851_reg_clrbits(REG_TXQ_CMD, TXQ_MEM_AVAILABLE_INT);
-
-					/* Clear the flag */
-					isr &= ~INT_TX_SPACE;
-					ksz8851_reg_write(REG_INT_STATUS, isr);
-				}
-
-				//printf("ksz8851snl_update: start packet transmit [len=%d]\n", len);
-
-				/* Enable TXQ write access */
-				ksz8851_reg_setbits(REG_RXQ_CMD, RXQ_START);
-
-				/* Start FIFO write operation. */
-				g_spi_pdc_flag = SPI_PDC_TX_START;
-				ps_ksz8851snl_dev->tx_cur_pbuf = ps_ksz8851snl_dev->tx_pbuf[ps_ksz8851snl_dev->us_tx_tail];
-				gpio_set_pin_low(KSZ8851SNL_CSN_GPIO);
-				ksz8851_fifo_write(ps_ksz8851snl_dev->tx_cur_pbuf->payload, ps_ksz8851snl_dev->tx_cur_pbuf->len);
-			}
-		}
-	}
-	else if (SPI_PDC_RX_COMPLETE == g_spi_pdc_flag) {
-		/* Pad with dummy data to keep dword alignment. */
-		len = ps_ksz8851snl_dev->rx_pbuf[ps_ksz8851snl_dev->us_rx_head]->tot_len & 3;
-		if (len) {
-			//printf("ksz8851snl_update: padding %d bytes\n", len);
-			ksz8851_fifo_dummy(len);
-		}
-
-		/* End RX transfer. */
-		gpio_set_pin_high(KSZ8851SNL_CSN_GPIO);
-
-		/* Disable asynchronous transfer mode. */
-		g_spi_pdc_flag = SPI_PDC_IDLE;
-
-		/* End RXQ read access. */
-		ksz8851_reg_clrbits(REG_RXQ_CMD, RXQ_START);
-
-		/* Mark descriptor ready to be read. */
-		ps_ksz8851snl_dev->rx_desc[ps_ksz8851snl_dev->us_rx_head] = 1;
-		ps_ksz8851snl_dev->us_rx_head = (ps_ksz8851snl_dev->us_rx_head + 1) % NETIF_RX_BUFFERS;
-	}
-	else if (SPI_PDC_TX_COMPLETE == g_spi_pdc_flag) {
-		/* Pad with dummy data to keep dword alignment. */
-		len = ps_ksz8851snl_dev->tx_pbuf[ps_ksz8851snl_dev->us_tx_tail]->tot_len & 3;
-		if (len) {
-			//printf("ksz8851snl_update: padding %d bytes\n", len);
-			ksz8851_fifo_dummy(len);
-		}
-
-		/* End TX transfer. */
-		gpio_set_pin_high(KSZ8851SNL_CSN_GPIO);
-
-		/* Disable asynchronous transfer mode. */
-		g_spi_pdc_flag = SPI_PDC_IDLE;
-
-		/* Disable TXQ write access. */
-		ksz8851_reg_clrbits(REG_RXQ_CMD, RXQ_START);
-
-		/* Issue transmit command to the TXQ. */
-		ksz8851_reg_setbits(REG_TXQ_CMD, TXQ_ENQUEUE);
-
-		/* Wait until transmit command clears. */
-		while (ksz8851_reg_read(REG_TXQ_CMD) & TXQ_ENQUEUE)
-			;
-
-		/* Mark packet ready to be freed. */
-	//	ps_ksz8851snl_dev->tx_desc[ps_ksz8851snl_dev->us_tx_tail] = 1;
-
-
-
-
-
-			/* Buffer sent, free the corresponding buffer if any. */
-			pbuf_free(ps_ksz8851snl_dev->tx_pbuf[ps_ksz8851snl_dev->us_tx_tail]);
-			ps_ksz8851snl_dev->tx_pbuf[ps_ksz8851snl_dev->us_tx_tail] = NULL;
-
-
-		//printf("ksz8851snl_update: freeing... us_tx_tail=%d\r\n", ps_ksz8851snl_dev->us_tx_tail);
-		ps_ksz8851snl_dev->us_tx_tail = (ps_ksz8851snl_dev->us_tx_tail + 1) % NETIF_TX_BUFFERS;
-
-
-
-
-
-
-
-
-
-//		ps_ksz8851snl_dev->us_tx_tail = (ps_ksz8851snl_dev->us_tx_tail + 1) % NETIF_TX_BUFFERS;
 	}
 }
 
@@ -468,24 +268,209 @@ static void ksz8851snl_rx_populate_queue(struct ksz8851snl_device *p_ksz8851snl_
 
 			/* Allocate a new pbuf with the maximum size. */
 			p = pbuf_alloc(PBUF_RAW, (u16_t) NET_MTU, PBUF_POOL);
-			if (p == NULL) {
+			if (0 == p) {
 				LWIP_DEBUGF(NETIF_DEBUG, ("ksz8851snl_rx_populate_queue: pbuf allocation failure\n"));
-				break;
 			}
 
 			/* Make sure LwIP is well configured so one pbuf can contain the maximum packet size. */
 			LWIP_ASSERT("ksz8851snl_rx_populate_queue: pbuf size too small!", pbuf_clen(p) <= 1);
 
-			/* Reset status value. */
+			/* Set owner as Micrel. */
 			p_ksz8851snl_dev->rx_desc[ul_index] = 0;
 
 			/* Save pbuf pointer to be sent to LwIP upper layer. */
 			p_ksz8851snl_dev->rx_pbuf[ul_index] = p;
 
 			LWIP_DEBUGF(NETIF_DEBUG,
-					("ksz8851snl_rx_populate_queue: new pbuf allocated: %p [idx=%u]\n",
+					("ksz8851snl_rx_populate_queue: new pbuf allocated: 0x%p [pos=%u]\n",
 					p, ul_index));
 		}
+	}
+}
+
+static void ksz8851snl_update(struct netif *netif)
+{
+	struct ksz8851snl_device *ps_ksz8851snl_dev = netif->state;
+	static uint16_t fcount = 0;
+	uint16_t status = 0;
+	uint16_t len = 0;
+	uint16_t txmir = 0;
+
+	/* Check for free PDC. */
+	if (SPI_PDC_IDLE == g_spi_pdc_flag) {
+
+		/* Handle RX. */
+		if (g_intn_flag || fcount > 0)
+		{
+			g_intn_flag = 0;
+
+			if (0 == fcount) {
+				/* RX step1: read interrupt status for INT_RX flag. */
+				status = ksz8851_reg_read(REG_INT_STATUS);
+				if (!(status & INT_RX)) {
+					return;
+				}
+
+				/* RX step2: disable all interrupts. */
+				ksz8851_reg_write(REG_INT_MASK, 0);
+
+				/* RX step3: clear INT_RX flag. */
+				ksz8851_reg_setbits(REG_INT_STATUS, INT_RX);
+
+				/* RX step4-5: check for received frames. */
+				fcount = ksz8851_reg_read(REG_RX_FRAME_CNT_THRES) >> 8;
+				if (0 == fcount) {
+					/* RX step24: enable INT_RX flag. */
+					ksz8851_reg_write(REG_INT_MASK, INT_RX);
+					return;
+				}
+			}
+
+			/* Don't break Micrel state machine, wait for a free descriptor first! */
+			if (ps_ksz8851snl_dev->rx_desc[ps_ksz8851snl_dev->us_rx_head]) {
+				LWIP_DEBUGF(NETIF_DEBUG,
+						("ksz8851snl_update: out of free descriptor! [tail=%u head=%u]\n",
+						ps_ksz8851snl_dev->us_rx_tail, ps_ksz8851snl_dev->us_rx_head));
+				return;
+			}
+			if (0 == ps_ksz8851snl_dev->rx_pbuf[ps_ksz8851snl_dev->us_rx_head]) {
+				ksz8851snl_rx_populate_queue(ps_ksz8851snl_dev);
+				LWIP_DEBUGF(NETIF_DEBUG,
+						("ksz8851snl_update: descriptor with NULL pbuf! [head=%u]\n",
+						ps_ksz8851snl_dev->us_rx_head));
+				return;
+			}
+
+			/* RX step6: get RX packet status. */
+			status = ksz8851_reg_read(REG_RX_FHR_STATUS);
+			if ((status & RX_VALID == 0) || (status & RX_ERRORS)) {
+				ksz8851_reg_setbits(REG_RXQ_CMD, RXQ_CMD_FREE_PACKET);
+				LWIP_DEBUGF(NETIF_DEBUG, ("ksz8851snl_update: RX packet error!\n"));
+			}
+			else {
+				/* RX step7: read frame length. */
+				len = ksz8851_reg_read(REG_RX_FHR_BYTE_CNT) & RX_BYTE_CNT_MASK;
+
+				/* RX step8: Drop packet if len is invalid or no descriptor available. */
+				if (0 == len) {
+					ksz8851_reg_setbits(REG_RXQ_CMD, RXQ_CMD_FREE_PACKET);
+					LWIP_DEBUGF(NETIF_DEBUG, ("ksz8851snl_update: RX bad len!\n"));
+				}
+				else {
+					LWIP_DEBUGF(NETIF_DEBUG,
+							("ksz8851snl_update: RX start packet receive len=%d [tail=%u head=%u]\n",
+							len,
+							ps_ksz8851snl_dev->us_rx_tail, ps_ksz8851snl_dev->us_rx_head));
+
+					/* RX step9: reset RX frame pointer. */
+					ksz8851_reg_clrbits(REG_RX_ADDR_PTR, ADDR_PTR_MASK);
+
+					/* RX step10: start RXQ read access. */
+					ksz8851_reg_setbits(REG_RXQ_CMD, RXQ_START);
+
+					/* RX step11-17: start asynchronous FIFO read operation. */
+					g_spi_pdc_flag = SPI_PDC_RX_START;
+					gpio_set_pin_low(KSZ8851SNL_CSN_GPIO);
+					ksz8851_fifo_read(ps_ksz8851snl_dev->rx_pbuf[ps_ksz8851snl_dev->us_rx_head]->payload, len);
+
+					/* Remove CRC and update pbuf length. */
+					len -= 4;
+					ps_ksz8851snl_dev->rx_pbuf[ps_ksz8851snl_dev->us_rx_head]->len = len;
+					ps_ksz8851snl_dev->rx_pbuf[ps_ksz8851snl_dev->us_rx_head]->tot_len = len;
+				}
+			}
+		}
+		/* Handle TX. */
+		else {
+
+			/* Fetch next packet marked as owned by Micrel. */
+			if (ps_ksz8851snl_dev->tx_desc[ps_ksz8851snl_dev->us_tx_tail]) {
+
+				len = ps_ksz8851snl_dev->tx_pbuf[ps_ksz8851snl_dev->us_tx_tail]->tot_len;
+
+				/* TX step1: check if TXQ memory size is available for transmit. */
+				txmir = ksz8851_reg_read(REG_TX_MEM_INFO) & TX_MEM_AVAILABLE_MASK;
+				if (txmir < len + 8) {
+					LWIP_DEBUGF(NETIF_DEBUG,
+							("ksz8851snl_update: TX not enough memory in queue: %d required %d\n",
+							txmir, len + 8));
+					return;
+				}
+
+				/* TX step2: disable all interrupts. */
+				ksz8851_reg_write(REG_INT_MASK, 0);
+
+				LWIP_DEBUGF(NETIF_DEBUG,
+						("ksz8851snl_update: TX start packet transmit len=%d [tail=%u head=%u]\n",
+						len,
+						ps_ksz8851snl_dev->us_tx_tail, ps_ksz8851snl_dev->us_tx_head));
+
+				/* TX step3: enable TXQ write access. */
+				ksz8851_reg_setbits(REG_RXQ_CMD, RXQ_START);
+
+				/* TX step4-8: perform FIFO write operation. */
+				g_spi_pdc_flag = SPI_PDC_TX_START;
+				ps_ksz8851snl_dev->tx_cur_pbuf = ps_ksz8851snl_dev->tx_pbuf[ps_ksz8851snl_dev->us_tx_tail];
+				gpio_set_pin_low(KSZ8851SNL_CSN_GPIO);
+				ksz8851_fifo_write(ps_ksz8851snl_dev->tx_cur_pbuf->payload, ps_ksz8851snl_dev->tx_cur_pbuf->len);
+			}
+		}
+	}
+	else if (SPI_PDC_RX_COMPLETE == g_spi_pdc_flag) {
+		/* RX step18-19: pad with dummy data to keep dword alignment. */
+		len = ps_ksz8851snl_dev->rx_pbuf[ps_ksz8851snl_dev->us_rx_head]->tot_len & 3;
+		if (len) {
+			ksz8851_fifo_dummy(4 - len);
+		}
+
+		/* RX step20: end RX transfer. */
+		gpio_set_pin_high(KSZ8851SNL_CSN_GPIO);
+
+		/* Disable asynchronous transfer mode. */
+		g_spi_pdc_flag = SPI_PDC_IDLE;
+
+		/* RX step21: end RXQ read access. */
+		ksz8851_reg_clrbits(REG_RXQ_CMD, RXQ_START);
+
+		/* RX step22-23: update frame count to be read. */
+		fcount -= 1;
+
+		/* RX step24: enable INT_RX flag if transfer complete. */
+		if (0 == fcount) {
+			ksz8851_reg_write(REG_INT_MASK, INT_RX);
+		}
+
+		/* Mark descriptor ready to be read. */
+		ps_ksz8851snl_dev->rx_desc[ps_ksz8851snl_dev->us_rx_head] = 1;
+		ps_ksz8851snl_dev->us_rx_head = (ps_ksz8851snl_dev->us_rx_head + 1) % NETIF_RX_BUFFERS;
+	}
+	else if (SPI_PDC_TX_COMPLETE == g_spi_pdc_flag) {
+		/* TX step9-10: pad with dummy data to keep dword alignment. */
+		len = ps_ksz8851snl_dev->tx_pbuf[ps_ksz8851snl_dev->us_tx_tail]->tot_len & 3;
+		if (len) {
+			ksz8851_fifo_dummy(4 - len);
+		}
+
+		/* TX step11: end TX transfer. */
+		gpio_set_pin_high(KSZ8851SNL_CSN_GPIO);
+
+		/* Disable asynchronous transfer mode. */
+		g_spi_pdc_flag = SPI_PDC_IDLE;
+
+		/* TX step12: disable TXQ write access. */
+		ksz8851_reg_clrbits(REG_RXQ_CMD, RXQ_START);
+
+		/* TX step12.1: enqueue frame in TXQ. */
+		ksz8851_reg_setbits(REG_TXQ_CMD, TXQ_ENQUEUE);
+
+		/* RX step13: enable INT_RX flag. */
+		ksz8851_reg_write(REG_INT_MASK, INT_RX);
+
+		/* Buffer sent, free the corresponding buffer and mark descriptor as owned by software. */
+		pbuf_free(ps_ksz8851snl_dev->tx_pbuf[ps_ksz8851snl_dev->us_tx_tail]);
+		ps_ksz8851snl_dev->tx_pbuf[ps_ksz8851snl_dev->us_tx_tail] = NULL;
+		ps_ksz8851snl_dev->tx_desc[ps_ksz8851snl_dev->us_tx_tail] = 0;
+		ps_ksz8851snl_dev->us_tx_tail = (ps_ksz8851snl_dev->us_tx_tail + 1) % NETIF_TX_BUFFERS;
 	}
 }
 
@@ -536,37 +521,6 @@ static void ksz8851snl_tx_init(struct ksz8851snl_device *ps_ksz8851snl_dev)
 }
 
 /**
- * \brief Free TX buffers that have successfully been sent.
- *
- * \param ps_ksz8851snl_dev Pointer to driver data structure.
- */
-static void ksz8851snl_tx_reclaim(struct ksz8851snl_device *ps_ksz8851snl_dev)
-{
-	////printf("gmac_tx_reclaim: cur us_tx_tail=%d\r\n", ps_ksz8851snl_dev->us_tx_tail);
-
-	while (ps_ksz8851snl_dev->us_tx_tail != ps_ksz8851snl_dev->us_tx_head) {
-		if (ps_ksz8851snl_dev->tx_desc[ps_ksz8851snl_dev->us_tx_tail]) {
-//printf("gmac_tx_reclaim: Freeing tx_pbuf[%d]=%p\n", ps_ksz8851snl_dev->us_tx_tail, ps_ksz8851snl_dev->tx_pbuf[ps_ksz8851snl_dev->us_tx_tail]);
-			/* Buffer sent, free the corresponding buffer if any. */
-			LWIP_DEBUGF(LWIP_DBG_TRACE,
-				("gmac_tx_reclaim: Freeing tx_pbuf[%d]=%p\n",
-				ps_ksz8851snl_dev->us_tx_tail,
-				ps_ksz8851snl_dev->tx_pbuf[ps_ksz8851snl_dev->us_tx_tail]));
-			pbuf_free(ps_ksz8851snl_dev->tx_pbuf[ps_ksz8851snl_dev->us_tx_tail]);
-			ps_ksz8851snl_dev->tx_pbuf[ps_ksz8851snl_dev->us_tx_tail] = NULL;
-		}
-		else {
-			break;
-		}
-
-		////printf("gmac_tx_reclaim: freeing... us_tx_tail=%d\r\n", ps_ksz8851snl_dev->us_tx_tail);
-		ps_ksz8851snl_dev->us_tx_tail = (ps_ksz8851snl_dev->us_tx_tail + 1) % NETIF_TX_BUFFERS;
-	}
-
-////printf("gmac_tx_reclaim: done!\r\n");
-}
-
-/**
  * \brief Initialize ksz8851snl and PHY.
  *
  * \note Called from ethernetif_init().
@@ -606,7 +560,11 @@ static void ksz8851snl_low_level_init(struct netif *netif)
 	NVIC_EnableIRQ(SPI_IRQn);
 
 	/* Initialize SPI link. */
-	ksz8851snl_init();
+	if (0 != ksz8851snl_init()) {
+		LWIP_DEBUGF(NETIF_DEBUG,
+				("ksz8851snl_low_level_init: failed to initialize the Micrel driver!\n"));
+		LWIP_ASSERT("SPI communication issue", 1);
+	}
 
 	/* Initialize interrupt line INTN. */
 	configure_intn(INTN_Handler);
@@ -626,27 +584,26 @@ static void ksz8851snl_low_level_init(struct netif *netif)
 static err_t ksz8851snl_low_level_output(struct netif *netif, struct pbuf *p)
 {
 	struct ksz8851snl_device *ps_ksz8851snl_dev = netif->state;
-	struct pbuf *q = NULL;
-
 	uint32_t ul_index = 0;
 
-	/* Make sure a descriptor is free. */
-	/*while (((ps_ksz8851snl_dev->us_tx_head + 1) % NETIF_TX_BUFFERS) ==
-			ps_ksz8851snl_dev->us_tx_tail)
-		ksz8851snl_tx_reclaim(ps_ksz8851snl_dev);
-*/
-	/* Ensure LwIP won't free this pbuf before GMAC actually sends it. */
+	/* Make sure the next descriptor is free. */
+	if (ps_ksz8851snl_dev->tx_desc[ps_ksz8851snl_dev->us_tx_head]) {
+		LWIP_DEBUGF(NETIF_DEBUG,
+				("ksz8851snl_low_level_output: out of free descriptor! [tail=%u head=%u]\n",
+				ps_ksz8851snl_dev->us_tx_tail, ps_ksz8851snl_dev->us_tx_head));
+		return ERR_IF;
+	}
+
+	/* Ensure LwIP won't free this pbuf before the Micrel actually sends it. */
 	pbuf_ref(p);
 
-	/* Enqueue pbuf packet. */
-	ps_ksz8851snl_dev->tx_desc[ps_ksz8851snl_dev->us_tx_head] = 0;
+	/* Mark descriptor has owned by Micrel. Enqueue pbuf packet. */
+	ps_ksz8851snl_dev->tx_desc[ps_ksz8851snl_dev->us_tx_head] = 1;
 	ps_ksz8851snl_dev->tx_pbuf[ps_ksz8851snl_dev->us_tx_head] = p;
 
-	//printf("ksz8851snl_low_level_output: pbuf to send, chain#=%d,"" size=%d (head=%d tail=%d)\r\n", pbuf_clen(p), p->tot_len, ps_ksz8851snl_dev->us_tx_head, ps_ksz8851snl_dev->us_tx_tail);
-
-	LWIP_DEBUGF(LWIP_DBG_TRACE,
-			("gmac_low_level_output: DMA buffer %p sent [clen=%d size=%d us_tx_head=%d]\n",
-			q->payload, clen, q->len, ps_ksz8851snl_dev->us_tx_head));
+	LWIP_DEBUGF(NETIF_DEBUG,
+			("ksz8851snl_low_level_output: DMA buffer 0x%p sent, size=%u [tail=%u head=%u]\n",
+			p->payload, p->tot_len, ps_ksz8851snl_dev->us_tx_tail, ps_ksz8851snl_dev->us_tx_head));
 
 	ps_ksz8851snl_dev->us_tx_head = (ps_ksz8851snl_dev->us_tx_head + 1) % NETIF_TX_BUFFERS;
 
@@ -654,9 +611,6 @@ static err_t ksz8851snl_low_level_output(struct netif *netif, struct pbuf *p)
 	lwip_tx_count += p->tot_len;
 #endif
 	LINK_STATS_INC(link.xmit);
-
-	/* Free pbufs that have been sent by GMAC. */
-//	ksz8851snl_tx_reclaim(ps_ksz8851snl_dev);
 
 	return ERR_OK;
 }
@@ -674,7 +628,7 @@ static struct pbuf *ksz8851snl_low_level_input(struct netif *netif)
 	struct ksz8851snl_device *ps_ksz8851snl_dev = netif->state;
 	struct pbuf *p = 0;
 
-	/* Check that a packet has been received. */
+	/* Check that descriptor is owned by software (ie packet received). */
 	if (ps_ksz8851snl_dev->rx_desc[ps_ksz8851snl_dev->us_rx_tail]) {
 
 		/* Fetch pre-allocated pbuf. */
@@ -683,11 +637,9 @@ static struct pbuf *ksz8851snl_low_level_input(struct netif *netif)
 		/* Remove this pbuf from its descriptor. */
 		ps_ksz8851snl_dev->rx_pbuf[ps_ksz8851snl_dev->us_rx_tail] = 0;
 
-		//printf("ksz8851snl_low_level_input: DMA buffer 0x%p received, size=%u [tail=%u head=%u]\n", p, p->tot_len, ps_ksz8851snl_dev->us_rx_tail, ps_ksz8851snl_dev->us_rx_head);
-
 		LWIP_DEBUGF(NETIF_DEBUG,
 				("ksz8851snl_low_level_input: DMA buffer 0x%p received, size=%u [tail=%u head=%u]\n",
-				p, p->tot_len, ps_ksz8851snl_dev->us_rx_tail, ps_ksz8851snl_dev->us_rx_head));
+				p->payload, p->tot_len, ps_ksz8851snl_dev->us_rx_tail, ps_ksz8851snl_dev->us_rx_head));
 
 		/* Set pbuf total packet size. */
 		LINK_STATS_INC(link.recv);

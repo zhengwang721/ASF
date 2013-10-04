@@ -55,7 +55,7 @@
 #define SPI_CLK_POLARITY 0
 
 /* Clock phase. */
-#define SPI_CLK_PHASE 0
+#define SPI_CLK_PHASE 1
 
 /* SPI PDC register base. */
 Pdc *g_p_spi_pdc = 0;
@@ -109,7 +109,8 @@ uint16_t ksz8851_reg_read(uint16_t reg)
 	uint8_t	inbuf[4];
 	uint8_t	outbuf[4];
 	uint16_t cmd = 0;
-	volatile uint16_t res = 0;
+	uint16_t res = 0;
+	uint32_t status = 0;
 
 	gpio_set_pin_low(KSZ8851SNL_CSN_GPIO);
 
@@ -138,10 +139,12 @@ uint16_t ksz8851_reg_read(uint16_t reg)
 	g_pdc_spi_tx_packet.ul_size = 4;
 	g_pdc_spi_rx_packet.ul_addr = (uint32_t) inbuf;
 	g_pdc_spi_rx_packet.ul_size = 4;
+	pdc_disable_transfer(g_p_spi_pdc, PERIPH_PTCR_RXTDIS | PERIPH_PTCR_TXTDIS);
 	pdc_tx_init(g_p_spi_pdc, &g_pdc_spi_tx_packet, NULL);
 	pdc_rx_init(g_p_spi_pdc, &g_pdc_spi_rx_packet, NULL);
-	while (!(spi_read_status(KSZ8851SNL_SPI) & SPI_SR_ENDRX))
-		;
+	pdc_enable_transfer(g_p_spi_pdc, PERIPH_PTCR_RXTEN | PERIPH_PTCR_TXTEN);
+	while (!((status = spi_read_status(KSZ8851SNL_SPI)) & SPI_SR_ENDRX))
+		;//printf("status=%08x\n", status);
 
 	res = (inbuf[3] << 8) | inbuf[2];
 
@@ -186,9 +189,11 @@ void ksz8851_reg_write(uint16_t reg, uint16_t wrdata)
 	g_pdc_spi_tx_packet.ul_size = 4;
 	g_pdc_spi_rx_packet.ul_addr = (uint32_t) inbuf;
 	g_pdc_spi_rx_packet.ul_size = 4;
+	pdc_disable_transfer(g_p_spi_pdc, PERIPH_PTCR_RXTDIS | PERIPH_PTCR_TXTDIS);
 	pdc_tx_init(g_p_spi_pdc, &g_pdc_spi_tx_packet, NULL);
 	pdc_rx_init(g_p_spi_pdc, &g_pdc_spi_rx_packet, NULL);
-	while (!(spi_read_status(KSZ8851SNL_SPI) & SPI_SR_ENDTX))
+	pdc_enable_transfer(g_p_spi_pdc, PERIPH_PTCR_RXTEN | PERIPH_PTCR_TXTEN);
+	while (!(spi_read_status(KSZ8851SNL_SPI) & SPI_SR_ENDRX))
 		;
 
 	gpio_set_pin_high(KSZ8851SNL_CSN_GPIO);
@@ -220,7 +225,7 @@ void ksz8851_fifo_read(uint8_t *buf, uint32_t len)
 
 	spi_enable_interrupt(KSZ8851SNL_SPI, SPI_IER_RXBUFF);
 }
-
+uint8_t bufz[1600];
 void ksz8851_fifo_write(uint8_t *buf, uint32_t len)
 {
 	uint8_t	outbuf[5];
@@ -240,33 +245,37 @@ void ksz8851_fifo_write(uint8_t *buf, uint32_t len)
 	/* Write 2 bytes for command and read 2 dummy bytes. */
 	g_pdc_spi_tx_packet.ul_addr = (uint32_t) outbuf;
 	g_pdc_spi_tx_packet.ul_size = 5;
-//	g_pdc_spi_rx_packet.ul_addr = (uint32_t) outbuf;
-//	g_pdc_spi_rx_packet.ul_size = 5;
+	g_pdc_spi_rx_packet.ul_addr = (uint32_t) outbuf;
+	g_pdc_spi_rx_packet.ul_size = 5;
 	g_pdc_spi_tx_npacket.ul_addr = (uint32_t) buf;
 	g_pdc_spi_tx_npacket.ul_size = len;
-//	g_pdc_spi_rx_npacket.ul_addr = (uint32_t) buf;
-//	g_pdc_spi_rx_npacket.ul_size = len;
+	g_pdc_spi_rx_npacket.ul_addr = (uint32_t) bufz;
+	g_pdc_spi_rx_npacket.ul_size = len;
 
 	pdc_disable_transfer(g_p_spi_pdc, PERIPH_PTCR_RXTDIS | PERIPH_PTCR_TXTDIS);
 	pdc_tx_init(g_p_spi_pdc, &g_pdc_spi_tx_packet, &g_pdc_spi_tx_npacket);
-//	pdc_rx_init(g_p_spi_pdc, &g_pdc_spi_rx_packet, &g_pdc_spi_rx_npacket);
+	pdc_rx_init(g_p_spi_pdc, &g_pdc_spi_rx_packet, &g_pdc_spi_rx_npacket);
 	pdc_enable_transfer(g_p_spi_pdc, PERIPH_PTCR_RXTEN | PERIPH_PTCR_TXTEN);
 
-	spi_enable_interrupt(KSZ8851SNL_SPI, SPI_IER_ENDTX);
+	spi_enable_interrupt(KSZ8851SNL_SPI, SPI_IER_ENDRX);
 }
 
 void ksz8851_fifo_dummy(uint32_t len)
 {
 	pdc_packet_t g_pdc_spi_tx_packet;
+	pdc_packet_t g_pdc_spi_rx_packet;
 
 	g_pdc_spi_tx_packet.ul_addr = (uint32_t) fifobuf;
 	g_pdc_spi_tx_packet.ul_size = len;
+	g_pdc_spi_rx_packet.ul_addr = (uint32_t) fifobuf;
+	g_pdc_spi_rx_packet.ul_size = len;
 
 	pdc_disable_transfer(g_p_spi_pdc, PERIPH_PTCR_RXTDIS | PERIPH_PTCR_TXTDIS);
 	pdc_tx_init(g_p_spi_pdc, &g_pdc_spi_tx_packet, NULL);
+	pdc_rx_init(g_p_spi_pdc, &g_pdc_spi_rx_packet, NULL);
 	pdc_enable_transfer(g_p_spi_pdc, PERIPH_PTCR_RXTEN | PERIPH_PTCR_TXTEN);
 
-	while (!(spi_read_status(KSZ8851SNL_SPI) & SPI_SR_ENDTX))
+	while (!(spi_read_status(KSZ8851SNL_SPI) & SPI_SR_ENDRX))
 		;
 }
 
@@ -283,7 +292,6 @@ uint32_t ksz8851snl_init(void)
 	spi_enable_clock(KSZ8851SNL_SPI);
 	spi_disable(KSZ8851SNL_SPI);
 	spi_reset(KSZ8851SNL_SPI);
-//	spi_set_lastxfer(KSZ8851SNL_SPI);
 	spi_set_master_mode(KSZ8851SNL_SPI);
 	spi_disable_mode_fault_detect(KSZ8851SNL_SPI);
 	spi_set_peripheral_chip_select_value(KSZ8851SNL_SPI, ~(1 << KSZ8851SNL_CS_PIN));
@@ -294,7 +302,6 @@ uint32_t ksz8851snl_init(void)
 	spi_set_baudrate_div(KSZ8851SNL_SPI, KSZ8851SNL_CS_PIN, (sysclk_get_cpu_hz() / KSZ8851SNL_CLOCK_SPEED));
 	spi_set_transfer_delay(KSZ8851SNL_SPI, KSZ8851SNL_CS_PIN, CONFIG_SPI_MASTER_DELAY_BS,
 			CONFIG_SPI_MASTER_DELAY_BCT);
-//	spi_configure_cs_behavior(KSZ8851SNL_SPI, KSZ8851SNL_CS_PIN, SPI_CS_RISE_NO_TX);
 	spi_enable(KSZ8851SNL_SPI);
 
 	/* Get pointer to UART PDC register base. */
@@ -303,40 +310,32 @@ uint32_t ksz8851snl_init(void)
 
 	/* Control RSTN and CSN pin from the driver. */
 	gpio_configure_pin(KSZ8851SNL_CSN_GPIO, KSZ8851SNL_CSN_FLAGS);
+	gpio_set_pin_high(KSZ8851SNL_CSN_GPIO);
 	gpio_configure_pin(KSZ8851SNL_RSTN_GPIO, KSZ8851SNL_RSTN_FLAGS);
 
 	/* Reset the Micrel in a proper state. */
 	do {
-		/* Perform hardware reset using delay according to the datasheet. */
+		/* Perform hardware reset with respect to the reset timing from the datasheet. */
 		gpio_set_pin_low(KSZ8851SNL_RSTN_GPIO);
-		delay_ms(10);
+		delay_ms(50);
 		gpio_set_pin_high(KSZ8851SNL_RSTN_GPIO);
-		delay_ms(10);
+		delay_ms(50);
 
-		/* Perform Global Soft Reset */
-		ksz8851_reg_write(REG_RESET_CTRL, GLOBAL_SOFTWARE_RESET);
-		ksz8851_reg_clrbits(REG_RESET_CTRL, GLOBAL_SOFTWARE_RESET);
-		/* Perform QMU Soft Reset */
-		ksz8851_reg_write(REG_RESET_CTRL, QMU_SOFTWARE_RESET);
-		ksz8851_reg_clrbits(REG_RESET_CTRL, QMU_SOFTWARE_RESET);
-
-		/* Read chip ID. */
+		/* Init step1: read chip ID. */
 		dev_id = ksz8851_reg_read(REG_CHIP_ID);
 		if (++count > 10)
-			while (1);//return 1;
+			return 1;
 	} while ((dev_id & 0xFFF0) != CHIP_ID_8851_16);
 
-	/* Set QMU MAC address (low, middle then high). */
+	/* Init step2-4: write QMU MAC address (low, middle then high). */
 	ksz8851_reg_write(REG_MAC_ADDR_0, (ETHERNET_CONF_ETHADDR4 << 8) | ETHERNET_CONF_ETHADDR5);
 	ksz8851_reg_write(REG_MAC_ADDR_2, (ETHERNET_CONF_ETHADDR2 << 8) | ETHERNET_CONF_ETHADDR3);
 	ksz8851_reg_write(REG_MAC_ADDR_4, (ETHERNET_CONF_ETHADDR0 << 8) | ETHERNET_CONF_ETHADDR1);
 
-	/* Enable QMU Transmit Frame Data Pointer Auto Increment. */
+	/* Init step5: enable QMU Transmit Frame Data Pointer Auto Increment. */
 	ksz8851_reg_write(REG_TX_ADDR_PTR, ADDR_PTR_AUTO_INC);
-	/* Flush QMU TX queue. */
-	ksz8851_reg_write(REG_TX_CTRL, TX_CTRL_FLUSH_QUEUE);
 
-	/* Configure QMU transmit control register. */
+	/* Init step6: configure QMU transmit control register. */
 	ksz8851_reg_write(REG_TX_CTRL,
 			TX_CTRL_ICMP_CHECKSUM |
 			TX_CTRL_UDP_CHECKSUM |
@@ -347,17 +346,13 @@ uint32_t ksz8851snl_init(void)
 			TX_CTRL_CRC_ENABLE
 		);
 
-	/* Enable QMU Receive Frame Data Pointer Auto Increment */
+	/* Init step7: enable QMU Receive Frame Data Pointer Auto Increment. */
 	ksz8851_reg_write(REG_RX_ADDR_PTR, ADDR_PTR_AUTO_INC);
 
-	/* Configure QMU Receive Frame Threshold for one frame */
+	/* Init step8: configure QMU Receive Frame Threshold for one frame. */
 	ksz8851_reg_write(REG_RX_FRAME_CNT_THRES, 1);
 
-
-	/* Flush QMU RX queue. */
-	ksz8851_reg_write(REG_RX_CTRL1, RX_CTRL_FLUSH_QUEUE);
-
-	/* Configure QMU receive control register1. */
+	/* Init step9: configure QMU receive control register1. */
 	ksz8851_reg_write(REG_RX_CTRL1,
 			RX_CTRL_UDP_CHECKSUM |
 			RX_CTRL_TCP_CHECKSUM |
@@ -368,54 +363,41 @@ uint32_t ksz8851snl_init(void)
 			RX_CTRL_ALL_MULTICAST|
 			RX_CTRL_UNICAST);
 
-	/* Configure QMU receive control register2. */
+	/* Init step10: configure QMU receive control register2. */
 	ksz8851_reg_write(REG_RX_CTRL2,
-			//RX_CTRL_IPV6_UDP_FRAG_PASS |
+			RX_CTRL_IPV6_UDP_NOCHECKSUM |
 			RX_CTRL_UDP_LITE_CHECKSUM |
             RX_CTRL_ICMP_CHECKSUM |
 			RX_CTRL_BURST_LEN_FRAME);
 
-	/* Configure QMU receive queue: trigger INT and auto-dequeue frame. */
-	ksz8851_reg_write(REG_RXQ_CMD, RXQ_CMD_CNTL);//////////////////////////////// | RXQ_TWOBYTE_OFFSET);
+	/* Init step11: configure QMU receive queue: trigger INT and auto-dequeue frame. */
+	ksz8851_reg_write(REG_RXQ_CMD, RXQ_CMD_CNTL);
 
-	/* Restart auto-negotiation. */
+	/* Init step12: adjust SPI data output delay. */
+	ksz8851_reg_write(REG_BUS_CLOCK_CTRL, BUS_CLOCK_166 | BUS_CLOCK_DIVIDEDBY_1);
+
+	/* Init step13: restart auto-negotiation. */
 	ksz8851_reg_setbits(REG_PORT_CTRL, PORT_AUTO_NEG_RESTART);
 
+	/* Init step13.1: force link in half duplex if auto-negotiation failed. */
+	if ((ksz8851_reg_read(REG_PORT_CTRL) & PORT_AUTO_NEG_RESTART) != PORT_AUTO_NEG_RESTART)
+	{
+		ksz8851_reg_clrbits(REG_PORT_CTRL, PORT_FORCE_FULL_DUPLEX);
+	}
 
-
-  /* Force link in half duplex if auto-negotiation failed  */
-  if ((ksz8851_reg_read(REG_PORT_CTRL) & PORT_AUTO_NEG_RESTART) != PORT_AUTO_NEG_RESTART)
-  {
-	ksz8851_reg_clrbits(REG_PORT_CTRL, PORT_FORCE_FULL_DUPLEX);
-  }
-
-
-
-  /* Configure Low Watermark to 6KByte available buffer space out of 12KByte */
- // ksz8851_reg_write(REG_RX_LOW_WATERMARK, 0x600);
-
-  /* Configure High Watermark to 4KByte available buffer space out of 12KByte */
- // ksz8851_reg_write(REG_RX_HIGH_WATERMARK, 0x400);
-
-
-
-
-
-	/* Clear interrupt status. */
+	/* Init step14: clear interrupt status. */
 	ksz8851_reg_write(REG_INT_STATUS, 0xFFFF);
 
-	/* Set interrupt mask. */
+	/* Init step15: set interrupt mask. */
 	ksz8851_reg_write(REG_INT_MASK, INT_RX);
 
-
-
-	/* Enable QMU Transmit. */
+	/* Init step16: enable QMU Transmit. */
 	ksz8851_reg_setbits(REG_TX_CTRL, TX_CTRL_ENABLE);
 
-	/* Enable QMU Receive. */
+	/* Init step17: enable QMU Receive. */
 	ksz8851_reg_setbits(REG_RX_CTRL1, RX_CTRL_ENABLE);
 
-	/* Give enough time for the link to be ready. */
+	/* Wait for the link to be established. */
 	delay_ms(3000);
 
 	return 0;

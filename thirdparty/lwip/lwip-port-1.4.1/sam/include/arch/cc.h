@@ -44,6 +44,7 @@
 #ifndef CC_H_INCLUDED
 #define CC_H_INCLUDED
 
+#include <stdio.h>
 #include <stdint.h>
 
 /* Define platform endianness */

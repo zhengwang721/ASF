@@ -44,6 +44,15 @@
 #ifndef CONF_ETH_H_INCLUDED
 #define CONF_ETH_H_INCLUDED
 
+/** Disable lwIP checksum (performed by hardware). */
+#define CHECKSUM_GEN_IP                               0
+#define CHECKSUM_GEN_UDP                              0
+#define CHECKSUM_GEN_TCP                              0
+#define CHECKSUM_GEN_ICMP                             0
+#define CHECKSUM_CHECK_IP                             0
+#define CHECKSUM_CHECK_UDP                            0
+#define CHECKSUM_CHECK_TCP                            0
+
 /** Number of buffer for RX */
 #define NETIF_RX_BUFFERS                              3
 
@@ -80,7 +89,7 @@
 
 /** SPI settings. */
 #define KSZ8851SNL_SPI                                SPI
-#define KSZ8851SNL_CLOCK_SPEED                        40000000
+#define KSZ8851SNL_CLOCK_SPEED                        30000000
 #define KSZ8851SNL_CS_PIN                             3
 
 /** Pins configuration. */

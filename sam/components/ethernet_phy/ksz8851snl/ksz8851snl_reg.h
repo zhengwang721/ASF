@@ -187,7 +187,7 @@
 #define   TX_CTRL_ENABLE              0x0001    /* Enable tranmsit */
 
 #define REG_TX_STATUS              0x72       /* TXSR */
-#define   TX_STAT_LATE_COL            0x2000    /* Trnasmit late collision occurs */
+#define   TX_STAT_LATE_COL            0x2000    /* Tranmsit late collision occurs */
 #define   TX_STAT_MAX_COL             0x1000    /* Tranmsit maximum collision is reached */
 #define   TX_FRAME_ID_MASK            0x003F    /* Transmit frame ID mask */
 #define   TX_STAT_ERRORS             ( TX_STAT_MAX_COL | TX_STAT_LATE_COL )
