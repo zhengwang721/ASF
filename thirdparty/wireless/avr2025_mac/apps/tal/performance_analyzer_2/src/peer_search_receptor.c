@@ -77,19 +77,19 @@ typedef enum
 
 /* === PROTOTYPES ========================================================== */
 
-static void peer_rsp_send_init(void *arg);
-static void peer_rsp_send_tx_done_cb(retval_t status, frame_info_t *frame);
+static void peer_rsp_send_init(trx_id_t trx, void *arg);
+static void peer_rsp_send_tx_done_cb(trx_id_t trx, retval_t status, frame_info_t *frame);
 
 static void app_peer_conf_tmr_handler_cb(void *parameter);
-static int send_peer_rsp(uint64_t *addr);
+static int send_peer_rsp(trx_id_t trx, uint64_t *addr);
 
-static void wait_for_conf_init(void *arg);
-static void wait_for_conf_rx_cb(frame_info_t *frame);
+static void wait_for_conf_init(trx_id_t trx, void *arg);
+static void wait_for_conf_rx_cb(trx_id_t trx, frame_info_t *frame);
 static void wait_for_conf_exit(void);
 
 /* === GLOBALS ============================================================= */
 /* Peer process seq number */
-static uint8_t seq_num;
+static uint8_t seq_num[NO_TRX];
 
 static peer_state_function_t const peer_search_receptor_state_table[NUM_PEER_SEARCH_RECEPTOR_STATES] =
 {
@@ -118,7 +118,7 @@ static peer_state_function_t const peer_search_receptor_state_table[NUM_PEER_SEA
  *
  * \param mode starts the peer search in this particular mode
  */
-void peer_search_receptor_init(void *arg)
+void peer_search_receptor_init(trx_id_t trx, void *arg)
 {
     peer_search_receptor_arg_t *arg_ptr = (peer_search_receptor_arg_t *)arg;
 
@@ -126,18 +126,20 @@ void peer_search_receptor_init(void *arg)
     app_led_event(LED_EVENT_START_PEER_SEARCH);
 
     /* Peer process seq number */
-    seq_num = rand();
+    seq_num[trx] = rand();
 
     /* assign a random address */
     do
     {
-        node_info.peer_short_addr = rand();
+        node_info[trx].peer_short_addr = rand();
         /* Make sure random number is not zero */
     }
-    while (!node_info.peer_short_addr);
+    while (!node_info[trx].peer_short_addr);
 
     /* Set my address which my peer send me */
-    tal_pib_set(macShortAddress, (pib_value_t *) & (arg_ptr->my_short_addr));
+
+		tal_pib_set(trx,macShortAddress, (pib_value_t *) & (arg_ptr->my_short_addr));
+
 }
 
 /*
@@ -146,13 +148,13 @@ void peer_search_receptor_init(void *arg)
  * This function
  * - Implements the peer search state machine.
  */
-void peer_search_receptor_task()
+void peer_search_receptor_task(trx_id_t trx)
 {
-    peer_search_receptor_state_t sub_state = (peer_search_receptor_state_t)node_info.sub_state;
+    peer_search_receptor_state_t sub_state = (peer_search_receptor_state_t)node_info[trx].sub_state;
 
     if (peer_search_receptor_state_table[sub_state].peer_state_task)
     {
-        peer_search_receptor_state_table[sub_state].peer_state_task();
+        peer_search_receptor_state_table[sub_state].peer_state_task(trx);
     }
 }
 
@@ -162,13 +164,13 @@ void peer_search_receptor_task()
  * \param status    Status of the transmission procedure
  * \param frame     Pointer to the transmitted frame structure
  */
-void peer_search_receptor_tx_done_cb(retval_t status, frame_info_t *frame)
+void peer_search_receptor_tx_done_cb(trx_id_t trx, retval_t status, frame_info_t *frame)
 {
-    peer_search_receptor_state_t sub_state = (peer_search_receptor_state_t)node_info.sub_state;
+    peer_search_receptor_state_t sub_state = (peer_search_receptor_state_t)node_info[trx].sub_state;
 
     if (peer_search_receptor_state_table[sub_state].peer_state_tx_frame_done_cb)
     {
-        peer_search_receptor_state_table[sub_state].peer_state_tx_frame_done_cb(status, frame);
+        peer_search_receptor_state_table[sub_state].peer_state_tx_frame_done_cb(trx,status, frame);
     }
 }
 
@@ -177,35 +179,35 @@ void peer_search_receptor_tx_done_cb(retval_t status, frame_info_t *frame)
  *
  * \param frame Pointer to received frame
  */
-void peer_search_receptor_rx_cb(frame_info_t *frame)
+void peer_search_receptor_rx_cb(trx_id_t trx,frame_info_t *frame)
 {
-    peer_search_receptor_state_t sub_state = (peer_search_receptor_state_t)node_info.sub_state;
+    peer_search_receptor_state_t sub_state = (peer_search_receptor_state_t)node_info[trx].sub_state;
 
     if (peer_search_receptor_state_table[sub_state].peer_state_rx_frame_cb)
     {
-        peer_search_receptor_state_table[sub_state].peer_state_rx_frame_cb(frame);
+        peer_search_receptor_state_table[sub_state].peer_state_rx_frame_cb(trx,frame);
     }
 }
 
 /*
  * Function to set the sub state of state machine
  */
-void peer_search_receptor_set_sub_state(uint8_t state, void *arg)
+void peer_search_receptor_set_sub_state(trx_id_t trx, uint8_t state, void *arg)
 {
     peer_search_receptor_state_t new_state = (peer_search_receptor_state_t)state;
 
     /* Exit the old state */
-    if (new_state && peer_search_receptor_state_table[node_info.sub_state].peer_state_exit)
+    if (new_state && peer_search_receptor_state_table[node_info[trx].sub_state].peer_state_exit)
     {
-        peer_search_receptor_state_table[node_info.sub_state].peer_state_exit();
+        peer_search_receptor_state_table[node_info[trx].sub_state].peer_state_exit(trx);
     }
 
     /* Change and welcome to new sub state */
-    node_info.sub_state = new_state;
+    node_info[trx].sub_state = new_state;
 
     if (peer_search_receptor_state_table[new_state].peer_state_init)
     {
-        peer_search_receptor_state_table[new_state].peer_state_init(arg);
+        peer_search_receptor_state_table[new_state].peer_state_init(trx,arg);
     }
 }
 
@@ -215,12 +217,12 @@ void peer_search_receptor_set_sub_state(uint8_t state, void *arg)
  * This function
  * - Implements the peer search state machine.
  */
-void peer_search_receptor_exit(void)
+void peer_search_receptor_exit(trx_id_t trx)
 {
     /* Exit the old sub state */
-    if (peer_search_receptor_state_table[node_info.sub_state].peer_state_exit)
+    if (peer_search_receptor_state_table[node_info[trx].sub_state].peer_state_exit)
     {
-        peer_search_receptor_state_table[node_info.sub_state].peer_state_exit();
+        peer_search_receptor_state_table[node_info[trx].sub_state].peer_state_exit(trx);
     }
 }
 
@@ -232,15 +234,15 @@ void peer_search_receptor_exit(void)
  * This function
  * - Implements the peer search state machine.
  */
-static void peer_rsp_send_init(void *arg)
+static void peer_rsp_send_init(trx_id_t trx,void *arg)
 {
     peer_search_receptor_arg_t *arg_ptr = (peer_search_receptor_arg_t *)arg;
 
-    if (send_peer_rsp(&(arg_ptr->peer_ieee_addr)))
+    if (send_peer_rsp(trx, &(arg_ptr->peer_ieee_addr)))
     {
-        print_event(PRINT_PEER_SEARCH_FAILED);
+        print_event(trx, PRINT_PEER_SEARCH_FAILED);
         /* PEER RSP send failed - so change to WAIT_FOR_EVENT state*/
-        set_main_state(WAIT_FOR_EVENT, 0);
+        set_main_state(trx,WAIT_FOR_EVENT, 0);
     }
 }
 
@@ -250,17 +252,17 @@ static void peer_rsp_send_init(void *arg)
  * \param status    Status of the transmission procedure
  * \param frame     Pointer to the transmitted frame structure
  */
-static void peer_rsp_send_tx_done_cb(retval_t status, frame_info_t *frame)
+static void peer_rsp_send_tx_done_cb(trx_id_t trx,retval_t status, frame_info_t *frame)
 {
     if (status == MAC_SUCCESS)
     {
-        peer_search_receptor_set_sub_state(WAIT_FOR_PEER_CONF, 0);
+        peer_search_receptor_set_sub_state(trx, WAIT_FOR_PEER_CONF, 0);
     }
     else
     {
-        print_event(PRINT_PEER_SEARCH_FAILED);
+        print_event(trx, PRINT_PEER_SEARCH_FAILED);
         /* No PEER RSP send failed so change to WAIT_FOR_EVENT state*/
-        set_main_state(WAIT_FOR_EVENT, 0);
+        set_main_state(trx,WAIT_FOR_EVENT, 0);
     }
 
     /* Keep compiler happy */
@@ -275,7 +277,7 @@ static void peer_rsp_send_tx_done_cb(retval_t status, frame_info_t *frame)
  *                it becomes the source address of node which sent peer rsp
  * \param seq_num Sequence number of the Peer request frame
  */
-static int send_peer_rsp(uint64_t *dst_addr)
+static int send_peer_rsp(trx_id_t trx,uint64_t *dst_addr)
 {
     uint8_t payload_length;
     app_payload_t msg;
@@ -284,25 +286,25 @@ static int send_peer_rsp(uint64_t *dst_addr)
     /* Fill the payload */
     msg.cmd_id = PEER_RESPONSE;
 
-    seq_num++;
-    msg.seq_num = seq_num;
+    seq_num[trx]++;
+    msg.seq_num = seq_num[trx];
 
     data = (peer_rsp_t *)&msg.payload;
 
     /* Issues an address for the peer. If tis node gets connected then
      * peer node changes its short address to this value
      */
-    data->nwk_addr = node_info.peer_short_addr;
+    data->nwk_addr = node_info[trx].peer_short_addr;
 
 
     payload_length = ((sizeof(app_payload_t) -
                        sizeof(general_pkt_t)) +
                       sizeof(peer_rsp_t));
 
-    return( transmit_frame(FCF_LONG_ADDR,
+    return( transmit_frame(trx, FCF_LONG_ADDR,
                            (uint8_t *)(dst_addr),
                            FCF_SHORT_ADDR,
-                           seq_num,              /* seq_num used as msdu handle */
+                           seq_num[trx],              /* seq_num used as msdu handle */
                            (uint8_t *)&msg,
                            payload_length,
                            1));
@@ -314,13 +316,13 @@ static int send_peer_rsp(uint64_t *dst_addr)
  * This function
  * - Implements the peer search state machine.
  */
-static void wait_for_conf_init(void *arg)
+static void wait_for_conf_init(trx_id_t trx, void *arg)
 {
     sw_timer_start(APP_TIMER_TO_TX,
                     PEER_RESPONSE_TIMEOUT_IN_MICRO_SEC,
                     SW_TIMEOUT_RELATIVE,
                     (FUNC_PTR)app_peer_conf_tmr_handler_cb,
-                    NULL);
+                    (void*) trx);
 
     /* Keep compiler happy */
     arg = arg;
@@ -334,7 +336,7 @@ static void wait_for_conf_init(void *arg)
  * \param status    Status of the transmission procedure
  * \param frame     Pointer to the transmitted frame structure
  */
-static void wait_for_conf_rx_cb(frame_info_t *mac_frame_info)
+static void wait_for_conf_rx_cb(trx_id_t trx,frame_info_t *mac_frame_info)
 {
     app_payload_t *msg;
 
@@ -347,20 +349,20 @@ static void wait_for_conf_rx_cb(frame_info_t *mac_frame_info)
         msg = (app_payload_t *)(mac_frame_info->mpdu + 1 + FRAME_OVERHEAD - 2);
         if ((msg->cmd_id) == PEER_CONFIRM)
         {
-            if (node_info.peer_short_addr == (msg->payload.peer_conf_data.nwk_addr))
+            if (node_info[trx].peer_short_addr == (msg->payload.peer_conf_data.nwk_addr))
             {
-                print_event(PRINT_PEER_SEARCH_SUCCESS);
+                print_event(trx, PRINT_PEER_SEARCH_SUCCESS);
                 app_led_event(LED_EVENT_PEER_SEARCH_DONE);
-                switch (node_info.main_state)
+                switch (node_info[trx].main_state)
                 {
                     case PEER_SEARCH_RANGE_RX:
                         /* Peer success - set the board to RANGE_TEST_TX_OFF state */
-                        set_main_state(RANGE_TEST_TX_OFF, 0);
+                        set_main_state(trx,RANGE_TEST_TX_OFF, 0);
                         break;
 
                     case PEER_SEARCH_PER_RX:
                         /* Peer success - set the board to RANGE_TEST_TX_OFF state */
-                        set_main_state(PER_TEST_RECEPTOR, 0);
+                        set_main_state(trx,PER_TEST_RECEPTOR, 0);
                         break;
                         /* To keep the GCC compiler happy */
                     case INIT:
@@ -399,14 +401,13 @@ static void wait_for_conf_exit(void)
  *
  * \param parameter pass parameters to timer handler
  */
-static void app_peer_conf_tmr_handler_cb(void *parameter)
+static void app_peer_conf_tmr_handler_cb( void *parameter)
 {
-    print_event(PRINT_PEER_SEARCH_FAILED);
+	trx_id_t trx = (trx_id_t) parameter;
+    print_event(trx, PRINT_PEER_SEARCH_FAILED);
     /* No PEER CONF so change to WAIT_FOR_EVENT state*/
-    set_main_state(WAIT_FOR_EVENT, 0);
+    set_main_state(trx,WAIT_FOR_EVENT, 0);
 
-    /* keep compiler happy */
-    parameter = parameter;
 }
 /* EOF */
 

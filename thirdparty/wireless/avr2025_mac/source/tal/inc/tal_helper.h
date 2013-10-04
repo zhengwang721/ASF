@@ -126,6 +126,8 @@
 
 #if (TAL_TYPE == ATMEGARFA1) || (TAL_TYPE == ATMEGARFR2)
 #define MAX_REG_ADDR_VALUE      (0x1ff)
+#elif (TAL_TYPE == AT86RF215)
+#define MAX_REG_ADDR_VALUE		(0X3fff)
 #else
 #define MAX_REG_ADDR_VALUE      (0x3f)
 #endif
@@ -194,7 +196,7 @@ retval_t  tal_ext_pa_ctrl(bool pa_ext_sw_ctrl);
  * \return MAC_SUCCESS  if PA_EXT_EN bit is configured correctly
  *         FAILURE      otherwise
  */
-retval_t tal_set_tx_pwr(bool type, int8_t pwr_value);
+retval_t tal_set_tx_pwr(trx_id_t trx,bool type, int8_t pwr_value);
 
 /*
  * \brief Converts a register value to a dBm value
@@ -206,7 +208,7 @@ retval_t tal_set_tx_pwr(bool type, int8_t pwr_value);
  * \return MAC_SUCCESS or FAILURE based on conversion is done or not
  */
 
-retval_t tal_convert_reg_value_to_dBm(uint8_t reg_value, int8_t *dbm_value);
+retval_t tal_convert_reg_value_to_dBm(trx_id_t trx,uint8_t reg_value, int8_t *dbm_value);
 
 #endif /* End of (TAL_TYPE != AT86RF212)*/
 
@@ -276,7 +278,7 @@ retval_t tal_calculate_frequency(uint8_t cc_band, uint8_t cc_number,
  *        MAC_INVALID_PARAMETER pdt_level is out of range
  *        FAILURE otheriwse
  */
-retval_t tal_set_rx_sensitivity_level(uint8_t pdt_level);
+retval_t tal_set_rx_sensitivity_level(trx_id_t trx,uint8_t pdt_level);
 
 /*
  * \brief Configures promiscous mode in rx_aack_on mode
@@ -286,7 +288,7 @@ retval_t tal_set_rx_sensitivity_level(uint8_t pdt_level);
  * \param MAC_SUCCESS if rxaack_prom_mode is configured correctly
  *        FAILURE otheriwse
  */
-retval_t tal_rxaack_prom_mode_ctrl(bool prom_ctrl);
+retval_t tal_rxaack_prom_mode_ctrl(trx_id_t trx,bool prom_ctrl);
 
 #endif /* End of TAL_TYPE != AT86RF230B */
 
@@ -295,7 +297,7 @@ retval_t tal_rxaack_prom_mode_ctrl(bool prom_ctrl);
  *
  * \return status of the transceiver
  */
-tal_trx_status_t tal_get_trx_status(void);
+rf_cmd_status_t tal_get_trx_status(trx_id_t trx);
 
 /*
  * \brief to read a particular transceiver register
@@ -305,7 +307,7 @@ tal_trx_status_t tal_get_trx_status(void);
  * \return MAC_SUCCESS if the register is read correctly
  *         MAC_INVALID_PARAMETER if the reg_addr is out of range
  */
-retval_t tal_trx_reg_read(uint16_t reg_addr, uint8_t *data);
+retval_t tal_trx_reg_read(trx_id_t trx,uint16_t reg_addr, uint8_t *data);
 
 /*
  * \brief to write a particular transceiver register
@@ -316,7 +318,7 @@ retval_t tal_trx_reg_read(uint16_t reg_addr, uint8_t *data);
  * \return MAC_SUCCESS if the register is written correctly
  *         MAC_INVALID_PARAMETER if the reg_addr is out of range
  */
-retval_t  tal_trx_reg_write(uint16_t reg_addr, uint8_t value);
+retval_t  tal_trx_reg_write(trx_id_t trx,uint16_t reg_addr, uint8_t value);
 
 /*
  * \brief to read a current setting particular transceiver parameter
@@ -328,7 +330,7 @@ retval_t  tal_trx_reg_write(uint16_t reg_addr, uint8_t value);
  *         MAC_SUCCESS otherwise
  */
 
-retval_t tal_get_curr_trx_config(param_type parameter, uint8_t *param_value);
+retval_t tal_get_curr_trx_config(trx_id_t trx,param_type parameter, uint8_t *param_value);
 
 /*
  * \brief to read a particular range of transceiver registers
@@ -340,7 +342,7 @@ retval_t tal_get_curr_trx_config(param_type parameter, uint8_t *param_value);
  *         MAC_INVALID_PARAMETER if the reg_addr is out of range
  */
 
-retval_t tal_dump_registers(uint16_t start_addr, uint16_t end_addr,
+retval_t tal_dump_registers(trx_id_t trx,uint16_t start_addr, uint16_t end_addr,
 		uint8_t *value);
 
 /*
@@ -362,7 +364,7 @@ retval_t tal_rpc_mode_config(uint8_t rpc_mode_sel);
  *
  * \return value of the base RSSI value
  */
-int8_t tal_get_rssi_base_val(void);
+int8_t tal_get_rssi_base_val(trx_id_t trx);
 
 /**
  * \brief Enable/Disable the rx safe mode

@@ -39,6 +39,7 @@
  *
  * \asf_license_stop
  */
+
 /*
  * Copyright (c) 2012, Atmel Corporation All rights reserved.
  *
@@ -51,74 +52,71 @@
 /**
  * \ingroup group_perf_analyzer
  * \defgroup group_user_interface  User Interface
- * Handles all User interface related functions such as Button, Print,LED events.
+ * Handles all User interface related functions such as Button, Print,LED
+ *events.
  *  \{
  */
 
 /* === Includes ============================================================= */
 
-
 /* === Macros =============================================================== */
 
-
 /* === Types ================================================================ */
+#include "tal_rf215.h"
 /**
  * \name LED EVENTS
  *  \{
  */
 /* Various LED events */
-typedef enum
-{
-    LED_EVENT_TX_FRAME,
-    LED_EVENT_RX_FRAME,
-    LED_EVENT_POWER_ON,
-    LED_EVENT_START_PEER_SEARCH,
-    LED_EVENT_PEER_SEARCH_DONE,
-    LED_EVENT_ALL_ON,
-    LED_EVENT_ALL_OFF
+typedef enum {
+	LED_EVENT_TX_FRAME,
+	LED_EVENT_RX_FRAME,
+	LED_EVENT_POWER_ON,
+	LED_EVENT_START_PEER_SEARCH,
+	LED_EVENT_PEER_SEARCH_DONE,
+	LED_EVENT_ALL_ON,
+	LED_EVENT_ALL_OFF
 } led_event_t;
 
-//! \}
+/* ! \} */
 
 /**
  * \name PRINT EVENTS
  *  \{
  */
 /* Various print events */
-typedef enum
-{
-    PRINT_KEY_PRESS_WHILE_POWER_ON_CONFIG_MODE,
-    PRINT_KEY_PRESS_PEER_SEARCH_INITIATOR,
-    PRINT_UART_CHAR_PEER_SEARCH_INITIATOR,
-    PRINT_KEY_PRESS_PEER_SEARCH_RECEPTOR,
-    PRINT_UART_CHAR_PEER_SEARCH_RECEPTOR,
-    PRINT_PEER_SEARCH_RECEPTOR_BAD_FRAME,
-    PRINT_PEER_SEARCH_INITATED,
-    PRINT_PEER_SEARCH_IN_PROGRESS,
-    PRINT_PEER_SEARCH_SUCCESS,
-    PRINT_PEER_SEARCH_FAILED,
-    PRINT_PEER_SEARCH_ABORTED,
-    PRINT_PEER_SEARCH_ABORTABLE,
-    PRINT_PEER_FOUND_PER_INITIATOR,
-    PRINT_PEER_FOUND_PER_RECEPTOR,
-    PRINT_SINGLE_NODE_TESTS,
-    PRINT_RANGE_MEASURE_TX_START,
-    PRINT_RANGE_MEASURE_TX_STOP,
-    PRINT_RANGE_MEASURE_STATSTICS,
-    NUM_MAX_PRINT_EVENTS
+typedef enum {
+	PRINT_KEY_PRESS_WHILE_POWER_ON_CONFIG_MODE,
+	PRINT_KEY_PRESS_PEER_SEARCH_INITIATOR,
+	PRINT_UART_CHAR_PEER_SEARCH_INITIATOR,
+	PRINT_KEY_PRESS_PEER_SEARCH_RECEPTOR,
+	PRINT_UART_CHAR_PEER_SEARCH_RECEPTOR,
+	PRINT_PEER_SEARCH_RECEPTOR_BAD_FRAME,
+	PRINT_PEER_SEARCH_INITATED,
+	PRINT_PEER_SEARCH_IN_PROGRESS,
+	PRINT_PEER_SEARCH_SUCCESS,
+	PRINT_PEER_SEARCH_FAILED,
+	PRINT_PEER_SEARCH_ABORTED,
+	PRINT_PEER_SEARCH_ABORTABLE,
+	PRINT_PEER_FOUND_PER_INITIATOR,
+	PRINT_PEER_FOUND_PER_RECEPTOR,
+	PRINT_SINGLE_NODE_TESTS,
+	PRINT_RANGE_MEASURE_TX_START,
+	PRINT_RANGE_MEASURE_TX_STOP,
+	PRINT_RANGE_MEASURE_STATSTICS,
+	NUM_MAX_PRINT_EVENTS
 } print_event_t;
 
-//! \}
+/* ! \} */
+
 /**
  * \brief Print event message stucture to organize the prints
  *
  */
-typedef struct
-{
-    char *item_desc;
-    void (*additional_print_func) (void);
+typedef struct {
+	char *item_desc;
+	void (*additional_print_func)(int trx);
 } print_event_msg_t;
-
 
 /* === Externals ============================================================ */
 
@@ -132,16 +130,13 @@ typedef struct
  */
 void app_led_event(led_event_t ev);
 
-
-
-
 /**
  * \brief Print various messages from the table as per the event notified.
  *
  * \param ev the event to be printed on the Terminal.
  *
  */
-void print_event(print_event_t ev);
+void print_event(trx_id_t trx,print_event_t ev);
 
 /**
  * \brief Button debounce routine.
@@ -158,13 +153,12 @@ bool app_debounce_button(void);
  */
 bool button_pressed(void);
 
-
 /* Support functions */
+
 /**
  * \brief Print the statistics for Range Measurement on the UART Terminal.
  */
 void app_print_statistics(void);
-
 
 #ifdef __cplusplus
 extern "C" {
@@ -174,6 +168,6 @@ extern "C" {
 } /* extern "C" */
 #endif
 
-//! \}
+/* ! \} */
 #endif /* USER_INTERFACE_H */
 /* EOF */

@@ -39,6 +39,7 @@
  *
  * \asf_license_stop
  */
+
 /*
  * Copyright (c) 2012, Atmel Corporation All rights reserved.
  *
@@ -75,7 +76,6 @@
 
 /* === Includes ============================================================= */
 
-
 /* === Macros =============================================================== */
 
 /**
@@ -92,9 +92,8 @@
 #define RANGE_MEASURE_MODE    (0x01)
 #define PER_TEST_MODE         (0x02)
 
-
-
 /* === Types ================================================================ */
+
 /**
  * \brief Structure to hold the the function pointers to handle
  * various Peer Search Process tasks
@@ -102,28 +101,27 @@
  */
 typedef struct
 {
-    void (*peer_state_init)(void *arg);
-    void (*peer_state_task)(void);
-    void (*peer_state_tx_frame_done_cb)(retval_t status, frame_info_t *frame);
-    void (*peer_state_rx_frame_cb)(frame_info_t *frame);
-    void (*peer_state_exit)(void);
+	void (*peer_state_init)(trx_id_t trx, void *arg);
+	void (*peer_state_task)(trx_id_t trx);
+	void (*peer_state_tx_frame_done_cb)(trx_id_t trx, retval_t status, frame_info_t *frame);
+	void (*peer_state_rx_frame_cb)(trx_id_t trx, frame_info_t *frame);
+	void (*peer_state_exit)(trx_id_t trx);
 } peer_state_function_t;
+
 /**
  * \brief Structure to hold the peer device's short address and ieee address
  *
  */
-typedef struct
-{
-    uint16_t my_short_addr;
-    uint64_t peer_ieee_addr;
+typedef struct {
+	uint16_t my_short_addr;
+	uint64_t peer_ieee_addr;
 } peer_search_receptor_arg_t;
 
-//! \}
+/* ! \} */
 
 /* === Externals ============================================================ */
 
 /* === Prototypes =========================================================== */
-
 
 /**
  * \addtogroup group_peer_search_receptor
@@ -137,14 +135,14 @@ typedef struct
  * \param state     Sub state to which the Peer search receptor to be entered
  * \param arg       Pointer to the arguments to be carried, if any
  */
-void peer_search_receptor_set_sub_state(uint8_t state, void *arg);
+void peer_search_receptor_set_sub_state(trx_id_t trx, uint8_t state, void *arg);
 
 /**
  * \brief Application task to start peer search
  *
  * \param arg       Pointer to the arguments to be carried, if any
  */
-void peer_search_receptor_init(void *arg);
+void peer_search_receptor_init(trx_id_t trx, void *arg);
 
 /**
  * \brief Application task handling peer search
@@ -152,7 +150,7 @@ void peer_search_receptor_init(void *arg);
  * This function
  * - Implements the peer search state machine.
  */
-void peer_search_receptor_task(void);
+void peer_search_receptor_task(trx_id_t trx);
 
 /**
  * \brief Callback that is called once tx is done in peer search receptor state.
@@ -160,7 +158,7 @@ void peer_search_receptor_task(void);
  * \param status    Status of the transmission procedure
  * \param frame     Pointer to the transmitted frame structure
  */
-void peer_search_receptor_tx_done_cb(retval_t status, frame_info_t *frame);
+void peer_search_receptor_tx_done_cb(trx_id_t trx, retval_t status, frame_info_t *frame);
 
 /**
  * \brief Callback that is called if data has been received by trx in
@@ -168,7 +166,7 @@ void peer_search_receptor_tx_done_cb(retval_t status, frame_info_t *frame);
  *
  * \param frame Pointer to received frame
  */
-void peer_search_receptor_rx_cb(frame_info_t *frame);
+void peer_search_receptor_rx_cb(trx_id_t trx, frame_info_t *frame);
 
 /**
  * \brief Function to exit peer search receptor state.
@@ -176,7 +174,7 @@ void peer_search_receptor_rx_cb(frame_info_t *frame);
  * This function
  * - Implements the peer search state machine.
  */
-void peer_search_receptor_exit(void);
+void peer_search_receptor_exit(trx_id_t trx);
 
 //! \}
 
@@ -193,19 +191,19 @@ void peer_search_receptor_exit(void);
  * \param state     Sub state to be set
  * \param arg       arguments to be set as part of set sub state
  */
-void peer_search_initiator_set_sub_state(uint8_t state, void *arg);
+void peer_search_initiator_set_sub_state(trx_id_t trx, uint8_t state, void *arg);
 
 /**
  * \brief Application task to start peer search
  *
  * \param arg arguments to start the peer search
  */
-void peer_search_initiator_init(void *arg);
+void peer_search_initiator_init(trx_id_t trx, void *arg);
 
 /**
  * \brief Application task handling peer search
  */
-void peer_search_initiator_task(void);
+void peer_search_initiator_task(trx_id_t trx);
 
 /**
  * \brief Callback that is called once tx is done in peer search initiator state.
@@ -213,21 +211,22 @@ void peer_search_initiator_task(void);
  * \param status    Status of the transmission procedure
  * \param frame     Pointer to the transmitted frame structure
  */
-void peer_search_initiator_tx_done_cb(retval_t status, frame_info_t *frame);
+void peer_search_initiator_tx_done_cb(trx_id_t trx, retval_t status, frame_info_t *frame);
 
 /**
  * \brief Callback that is called if data has been received by trx.
  *
  * \param frame Pointer to received frame
  */
-void peer_search_initiator_rx_cb(frame_info_t *frame);
+void peer_search_initiator_rx_cb(trx_id_t trx, frame_info_t *frame);
 
 /**
  * \brief Function to exit peer search initiator exit state
  */
-void peer_search_initiator_exit(void);
+void peer_search_initiator_exit(trx_id_t trx);
 
-//! \}
+
+/* ! \} */
 
 #ifdef __cplusplus
 extern "C" {

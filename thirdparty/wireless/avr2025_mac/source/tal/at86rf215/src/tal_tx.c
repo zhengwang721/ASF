@@ -79,6 +79,7 @@ static void handle_ifs(trx_id_t trx_id);
 retval_t tal_tx_frame(trx_id_t trx_id, frame_info_t *tx_frame,
                       csma_mode_t csma_mode, bool perform_frame_retry)
 {
+	
     //debug_text(PSTR("tal_tx_frame()"));
 
     if (tal_state[trx_id] == TAL_SLEEP)
@@ -148,7 +149,7 @@ retval_t tal_tx_frame(trx_id_t trx_id, frame_info_t *tx_frame,
         {
             handle_ifs(trx_id);
         }
-        transmit_frame(trx_id);
+        tal_transmit_frame(trx_id);
     }
 
     return MAC_SUCCESS;
@@ -160,7 +161,7 @@ retval_t tal_tx_frame(trx_id_t trx_id, frame_info_t *tx_frame,
  *
  * @param trx_id Transceiver identifier
  */
-void transmit_frame(trx_id_t trx_id)
+void tal_transmit_frame(trx_id_t trx_id)
 {
     //debug_text(PSTR("transmit_frame()"));
 
@@ -368,7 +369,7 @@ void tx_done_handling(trx_id_t trx_id, retval_t status)
             }
             else
             {
-                transmit_frame(trx_id);
+                tal_transmit_frame(trx_id);
             }
             return; // next tx attempt and no tx done cb
         }

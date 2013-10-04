@@ -34,6 +34,8 @@
 /* === MACROS ============================================================== */
 
 
+
+
 /** Parameter definitions */
 
 /** Typical timing values. */
@@ -2564,6 +2566,29 @@ typedef enum rf_cmd_state_tag
     /** Constant RF_RESET for sub-register @ref SR_CMD */
     RF_RESET =                          (0x7)
 } rf_cmd_state_t;
+
+/** Enumeration for RF commands and states used for trx command and state registers */
+typedef enum rf_cmd_status_tag
+{
+
+	/** Constant RF_TRXOFF for sub-register @ref SR_CMD */
+	STATUS_RF_TRXOFF =                         (0x2),
+
+	/** Constant RF_TXPREP for sub-register @ref SR_CMD */
+	STATUS_RF_TXPREP =                         (0x3),
+
+	/** Constant RF_TX for sub-register @ref SR_CMD */
+	STATUS_RF_TX =                             (0x4),
+
+	/** Constant RF_RX for sub-register @ref SR_CMD */
+	STATUS_RF_RX =                             (0x5),
+
+	/** Constant RF_RX for sub-register @ref SR_CMD */
+	STATUS_RF_TRANSITION =                      (0x6),
+	
+	/** Constant RF_RESET for sub-register @ref SR_CMD */
+	STATUS_RF_RESET =                          (0x7)
+} rf_cmd_status_t;
 
 /** Enumeration for RF IRQs used for IRQS and IRQM registers */
 typedef enum rf_irq_tag

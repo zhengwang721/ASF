@@ -100,6 +100,7 @@ void handle_rx_end_irq(trx_id_t trx_id)
             if ((tal_state[trx_id] == TAL_WAITING_FOR_ACK_RECEPTION) &&
                 handle_ack_reception(trx_id))
             {
+				
                 /* nothing to do */
             }
             else

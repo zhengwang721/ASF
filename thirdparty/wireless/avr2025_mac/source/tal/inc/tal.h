@@ -677,11 +677,19 @@ extern tal_pib_t tal_pib;
 #if (RF_BAND == BAND_2400)
 #define TAL_CONVERT_SYMBOLS_TO_US(symbols)      ((uint32_t)(symbols) << 4)
 #else   /* (RF_BAND == BAND_900) */
+#ifdef MULTI_TRX_SUPPORT
 #define TAL_CONVERT_SYMBOLS_TO_US(symbols)                                                        \
-    (tal_pib.CurrentPage == 0 ?                                                                   \
-     (tal_pib.CurrentChannel == 0 ? ((uint32_t)(symbols) * 50) : ((uint32_t)(symbols) * 25)) : \
-         (tal_pib.CurrentChannel == 0 ? ((uint32_t)(symbols) * 40) : ((uint32_t)(symbols) << 4))   \
+    (tal_pib[0].CurrentPage == 0 ?                                                                   \
+     (tal_pib[0].CurrentChannel == 0 ? ((uint32_t)(symbols) * 50) : ((uint32_t)(symbols) * 25)) : \
+         (tal_pib[0].CurrentChannel == 0 ? ((uint32_t)(symbols) * 40) : ((uint32_t)(symbols) << 4))   \
         )
+#else	
+#define TAL_CONVERT_SYMBOLS_TO_US(symbols)                                                        \
+(tal_pib.CurrentPage == 0 ?                                                                   \
+(tal_pib.CurrentChannel == 0 ? ((uint32_t)(symbols) * 50) : ((uint32_t)(symbols) * 25)) : \
+(tal_pib.CurrentChannel == 0 ? ((uint32_t)(symbols) * 40) : ((uint32_t)(symbols) << 4))   \
+)
+#endif	
 #endif  /* #if (RF_BAND == BAND_2400) */
 
 /**

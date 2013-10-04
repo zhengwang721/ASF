@@ -58,9 +58,9 @@
 #include "perf_api_serial_handler.h"
 #include "asf.h"
 #include "sio2host.h"
-# include "sio2ncp.h"
+#include "sio2ncp.h"
 #include "conf_board.h"
-
+void get_chat_input(char input);
 /**
 * \mainpage
 * \section preface Preface
@@ -216,29 +216,28 @@
 typedef struct
 {
     /* Function to initialize the main state */
-    void (*func_main_state_init)(void *arg);
+    void (*func_main_state_init)(trx_id_t trx, void *arg);
     /* Task function of main state */
-    void (*func_task)(void);
+    void (*func_task)(trx_id_t trx);
     /* Tx done call back for main state */
-    void (*func_tx_frame_done_cb)(retval_t status, frame_info_t *frame);
+    void (*func_tx_frame_done_cb)(trx_id_t trx, retval_t status, frame_info_t *frame);
     /* Frame received call back for main state */
-    void (*func_rx_frame_cb)(frame_info_t *frame);
+    void (*func_rx_frame_cb)(trx_id_t trx, frame_info_t *frame);
     /* Energy scan result call back for main state */
-    void (*func_ed_end_cb)(uint8_t energy_level);
+    void (*func_ed_end_cb)(trx_id_t trx, uint8_t energy_level);
     /* main state exit function : all timers should be stopped and other
      * resources used in the state must be freed which is done here */
-    void (*func_main_state_exit)(void);
+    void (*func_main_state_exit)(trx_id_t trx);
     /* if main state has sub state, it can be initialized using this function */
-    void (*func_sub_state_set)(uint8_t state, void *arg);
+    void (*func_sub_state_set)(trx_id_t trx, uint8_t state, void *arg);
 } state_function_t;
-
 /* === MACROS ============================================================== */
 
 /* === LOCALS ============================================================== */
-static uint8_t storage_buffer[LARGE_BUFFER_SIZE];
+static uint8_t storage_buffer[NO_TRX][LARGE_BUFFER_SIZE];
 
 /* === PROTOTYPES ========================================================== */
-static void app_task(void);
+static void app_task();
 
 /* === GLOBALS ============================================================= */
 static state_function_t const state_table[NUM_MAIN_STATES] =
@@ -342,7 +341,7 @@ static state_function_t const state_table[NUM_MAIN_STATES] =
     }
 };
 
-volatile node_ib_t node_info;
+volatile node_ib_t node_info[NO_TRX];
 
 //! \}
 /* === IMPLEMENTATION ====================================================== */
@@ -353,7 +352,7 @@ volatile node_ib_t node_info;
  */
 int main(void)
 {
-        irq_initialize_vectors();
+    irq_initialize_vectors();
 
 	/* Initialize the board.
 	 * The board-specific conf_board.h file contains the configuration of
@@ -366,26 +365,21 @@ int main(void)
      * Power ON - so set the board to INIT state. All hardware, PAL, TAL and
      * stack level initialization must be done using this function
      */
-    //set_main_state(INIT, NULL);
-
+    set_main_state(RF09, INIT, NULL);
+	set_main_state(RF24, INIT, NULL);
+	
     cpu_irq_enable();
     
 	sio2host_init();
 	sio2ncp_init();
-while(1)
-{
-	sio2host_tx("\rHOST_TX\n",10);
-	sio2ncp_tx("\rNCP_TX\n",8);
-	delay_ms(500);
 	
-	
-}
-    
     /* INIT was a success - so change to WAIT_FOR_EVENT state */
-    //set_main_state(WAIT_FOR_EVENT, NULL);
+    set_main_state(RF09,WAIT_FOR_EVENT, NULL);
+	set_main_state(RF24,WAIT_FOR_EVENT, NULL);
 
+	  
     /* Endless while loop */
-    while (1);
+    while (1)
     {
         pal_task(); /* Handle platform specific tasks, like serial interface */
         tal_task(); /* Handle transceiver specific tasks */
@@ -397,14 +391,29 @@ while(1)
 /**
  * \brief Application task
  */
-static void app_task(void)
+static void app_task()
 {
-    void (*handler_func)(void) = state_table[node_info.main_state].func_task;
+/*
+	 uint16_t dst_addr = 0X1111;
+			   transmit_frame(RF24, 2,
+			   (uint8_t *)(&dst_addr),/ * dst_addr is braodcast * /
+			   2,         / * src_addr_mode use IEEE addr * /
+			   1,               / * seq_num used as msdu handle * /
+			   (uint8_t *)"Hello",
+			   6,
+			   0);
+			   
+			   delay_ms(100);
+			   return;*/
+    for (uint8_t trx_id = 0; trx_id < 2; trx_id++)
+    {	
+    void (*handler_func)(trx_id_t trx) = state_table[node_info[trx_id].main_state].func_task;
 
     if (handler_func)
     {
-        handler_func();
+        handler_func(trx_id);
     }
+	}
 }
 
 /*
@@ -412,19 +421,21 @@ static void app_task(void)
  *
  * \param frame Pointer to received frame
  */
-void tal_rx_frame_cb(frame_info_t *frame)
+void tal_rx_frame_cb(trx_id_t trx, frame_info_t *frame)
 {
-    void (*handler_func)(frame_info_t * frame);
+	void (*handler_func)(trx_id_t trx, frame_info_t * frame);
 
-    handler_func = state_table[node_info.main_state].func_rx_frame_cb;
-    if (handler_func)
-    {
-        handler_func(frame);
-    }
-
-    /* free buffer that was used for frame reception */
-    bmm_buffer_free((buffer_t *)(frame->buffer_header));
+	handler_func = state_table[node_info[trx].main_state].func_rx_frame_cb;
+	if (handler_func)
+	{
+		handler_func(trx,frame);
+	}
+	
+	/* free buffer that was used for frame reception */
+	bmm_buffer_free((buffer_t *)(frame->buffer_header));
 }
+
+
 
 /*
  * \brief Callback that is called once tx is done.
@@ -432,26 +443,28 @@ void tal_rx_frame_cb(frame_info_t *frame)
  * \param status    Status of the transmission procedure
  * \param frame     Pointer to the transmitted frame structure
  */
-void tal_tx_frame_done_cb(retval_t status, frame_info_t *frame)
+void tal_tx_frame_done_cb(trx_id_t trx, retval_t status, frame_info_t *frame)
 {
-    void (*handler_func)(retval_t status, frame_info_t * frame) ;
-
+    void (*handler_func)(trx_id_t trx, retval_t status, frame_info_t * frame) ;
+	//LED_Toggle(LED0);
+	//return;
     /* some spurious transmissions call back or app changed its state
      * so neglect this call back */
-    if (!node_info.transmitting)
+   if (!node_info[trx].transmitting)
     {
         return;
     }
 
     /* After transmission is completed, allow next transmission.
        Locking to prevent multiple transmissions simultaneously */
-    node_info.transmitting = false;
 
-    handler_func = state_table[node_info.main_state].func_tx_frame_done_cb;
+    node_info[trx].transmitting = false;
+
+    handler_func = state_table[node_info[trx].main_state].func_tx_frame_done_cb;
 
     if (handler_func)
     {
-        handler_func(status, frame);
+        handler_func(trx,status, frame);
     }
 }
 
@@ -460,40 +473,40 @@ void tal_tx_frame_done_cb(retval_t status, frame_info_t *frame)
  *
  * \param energy_level Measured energy level during ED Scan
  */
-void tal_ed_end_cb(uint8_t energy_level)
+void tal_ed_end_cb(trx_id_t trx,uint8_t energy_level)
 {
-    void (*handler_func)(uint8_t energy_level);
+	void (*handler_func)(trx_id_t trx, uint8_t energy_level);
 
-    handler_func = state_table[node_info.main_state].func_ed_end_cb;
+	handler_func = state_table[node_info[trx].main_state].func_ed_end_cb;
 
-    if (handler_func)
-    {
-        handler_func(energy_level);
-    }
+	if (handler_func)
+	{
+		handler_func(trx, energy_level);
+	}
 }
 
 /*
  * \brief function to init the information base for device
  */
-void config_node_ib(void)
+void config_node_ib(trx_id_t trx)
 {
 
-    node_info.transmitting = false;
+    node_info[trx].transmitting = false;
 
     /* Init tx frame info structure value that do not change during program execution */
-    node_info.tx_frame_info = (frame_info_t *)storage_buffer;
+    node_info[trx].tx_frame_info = (frame_info_t *)storage_buffer[trx];
 
     /* random number initialized for the sequence number */
-    node_info.msg_seq_num = rand();
+    node_info[trx].msg_seq_num = rand();
 
     /* Set peer addr to zero */
-    node_info.peer_short_addr = 0;
+    node_info[trx].peer_short_addr = 0;
 
     /* Set peer_found status as false */
-    node_info.peer_found = false;
+    node_info[trx].peer_found = false;
 
     /* Set config_mode to false */
-    node_info.configure_mode = false;
+    node_info[trx].configure_mode = false;
 }
 
 /*
@@ -502,17 +515,17 @@ void config_node_ib(void)
  * \param state   main state to be set
  * \param arg     argument passed in the state
  */
-void set_main_state(main_state_t state, void *arg)
+void set_main_state(trx_id_t trx, main_state_t state, void *arg)
 {
-    void (*handler_func_exit)(void);
-    void (*handler_func_init)(void * arg);
-    void (*handler_sub_state_set)(uint8_t state, void * arg);
+    void (*handler_func_exit)(trx_id_t trx);
+    void (*handler_func_init)(trx_id_t trx,void * arg);
+    void (*handler_sub_state_set)(trx_id_t trx, uint8_t state, void * arg);
 
-    handler_func_exit = state_table[node_info.main_state].func_main_state_exit;
+    handler_func_exit = state_table[node_info[trx].main_state].func_main_state_exit;
     /* Exit the old state if not init state */
     if (handler_func_exit && state)
     {
-        handler_func_exit();
+        handler_func_exit(trx);
     }
 
     /* Nullify all the previous tx call backs. In case of change in main state
@@ -520,27 +533,26 @@ void set_main_state(main_state_t state, void *arg)
      * TX call back during sub state change must be taken care during sub state
      * set exclusively
      */
-    node_info.transmitting = false;
+    node_info[trx].transmitting = false;
 
     /* Welcome to new state */
-    node_info.main_state = state;
+    node_info[trx].main_state = state;
 
     handler_func_init = state_table[state].func_main_state_init;
 
     /* Do init for new state and then change state */
     if (handler_func_init)
     {
-        handler_func_init(arg);
+        handler_func_init(trx,arg);
     }
 
     handler_sub_state_set = state_table[state].func_sub_state_set;
 
     if (handler_sub_state_set)
     {
-        handler_sub_state_set(0, arg);
+        handler_sub_state_set(trx,0, arg);
     }
 }
-
 /*
  * \brief Function to transmit frames as per 802.15.4 std.
  *
@@ -555,7 +567,9 @@ void set_main_state(main_state_t state, void *arg)
  * \return MAC_SUCCESS      if the TAL has accepted the data for frame transmission
  *         TAL_BUSY         if the TAL is busy servicing the previous tx request
  */
-retval_t transmit_frame(uint8_t dst_addr_mode,
+
+retval_t transmit_frame(trx_id_t trx,
+						uint8_t dst_addr_mode,
                         uint8_t *dst_addr,
                         uint8_t src_addr_mode,
                         uint8_t msdu_handle,
@@ -565,23 +579,23 @@ retval_t transmit_frame(uint8_t dst_addr_mode,
 {
     uint8_t i;
     uint16_t temp_value;
-    uint8_t frame_length;
+    uint16_t frame_length;
     uint8_t *frame_ptr;
     uint8_t *temp_frame_ptr;
     uint16_t fcf = 0;
 
     /* Prevent multiple transmissions , this code is not reentrant*/
-    if (node_info.transmitting)
+    if (node_info[trx].transmitting)
     {
         return FAILURE;
     }
-    node_info.transmitting = true;
+    node_info[trx].transmitting = true;
 
     /* Get length of current frame. */
-    frame_length = (FRAME_OVERHEAD + payload_length);
+    frame_length = (9 + payload_length); //9->frame overhead
 
     /* Set payload pointer. */
-    frame_ptr = temp_frame_ptr = (uint8_t *)node_info.tx_frame_info +
+    frame_ptr = temp_frame_ptr = (uint8_t *)node_info[trx].tx_frame_info +
                                  LARGE_BUFFER_SIZE -
                                  payload_length - FCS_LEN;
     /*
@@ -598,7 +612,8 @@ retval_t transmit_frame(uint8_t dst_addr_mode,
     {
 
         frame_ptr -= SHORT_ADDR_LEN;
-        convert_16_bit_to_byte_array(tal_pib.ShortAddress, frame_ptr);
+		
+		convert_16_bit_to_byte_array(tal_pib[trx].ShortAddress, frame_ptr);
 
         fcf |= FCF_SET_SOURCE_ADDR_MODE(FCF_SHORT_ADDR);
     }
@@ -607,7 +622,8 @@ retval_t transmit_frame(uint8_t dst_addr_mode,
         frame_ptr -= EXT_ADDR_LEN;
         frame_length += FCF_2_SOURCE_ADDR_OFFSET;
 
-        convert_64_bit_to_byte_array(tal_pib.IeeeAddress, frame_ptr);
+		convert_64_bit_to_byte_array(tal_pib[trx].IeeeAddress, frame_ptr);
+
 
         fcf |= FCF_SET_SOURCE_ADDR_MODE(FCF_LONG_ADDR);
     }
@@ -647,8 +663,8 @@ retval_t transmit_frame(uint8_t dst_addr_mode,
 
     /* Set DSN. */
     frame_ptr--;
-    *frame_ptr = node_info.msg_seq_num;
-    node_info.msg_seq_num++;
+    *frame_ptr = node_info[trx].msg_seq_num;
+    node_info[trx].msg_seq_num++;
 
     /* Set the FCF. */
     fcf |= FCF_FRAMETYPE_DATA;
@@ -660,18 +676,22 @@ retval_t transmit_frame(uint8_t dst_addr_mode,
     frame_ptr -= FCF_LEN;
     convert_16_bit_to_byte_array(CCPU_ENDIAN_TO_LE16(fcf), frame_ptr);
 
-    /* First element shall be length of PHY frame. */
-    frame_ptr--;
-    *frame_ptr = frame_length;
 
+	/* Finished building of frame. */
+	node_info[trx].tx_frame_info->mpdu = frame_ptr;
+
+    node_info[trx].tx_frame_info->length = frame_length;
     /* Finished building of frame. */
-    node_info.tx_frame_info->mpdu = frame_ptr;
+    node_info[trx].tx_frame_info->mpdu = frame_ptr;
 
     /* Place msdu handle for tracking */
-    node_info.tx_frame_info->msduHandle = msdu_handle;
+    node_info[trx].tx_frame_info->msduHandle = msdu_handle;
 
     /* transmit the frame */
-    return(tal_tx_frame(node_info.tx_frame_info, CSMA_UNSLOTTED, true));
+
+	return(tal_tx_frame(trx,node_info[trx].tx_frame_info, NO_CSMA_NO_IFS, true));
+
+
 }
 
 

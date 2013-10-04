@@ -41,6 +41,7 @@
  *
  * \asf_license_stop
  */
+
 /*
  * Copyright (c) 2012, Atmel Corporation All rights reserved.
  *
@@ -54,7 +55,8 @@
  * \ingroup group_perf_analyzer
  * \defgroup group_per_mode  Packet error rate measurement
  *  Handles the functionalities of Packet Error Rate Measurement(PER) Mode,
- *  User can set and get various paramters of Transceiver like Channel,Antenna Diversity,CSMA
+ *  User can set and get various paramters of Transceiver like Channel,Antenna
+ *Diversity,CSMA
  *  and do the Packet Error Rate Measurement.
  */
 
@@ -75,12 +77,12 @@
 /**
  * \ingroup group_per_mode
  * \defgroup group_per_mode_utils  PER mode Common Utilities
- * This module handles the PER mode Common utilities used by Initiator and Receptor.
+ * This module handles the PER mode Common utilities used by Initiator and
+ *Receptor.
  *
  */
 
 /* === Includes ============================================================= */
-
 
 /* === Macros =============================================================== */
 
@@ -90,15 +92,19 @@
 #if ((TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B))
 #define  TX_POWER_REG     (3)
 #endif
-#if(TAL_TYPE == AT86RF233)
+#if (TAL_TYPE == AT86RF233)
 #define  FREQ_BAND_08     (4)
 #define  FREQ_BAND_09     (5)
 #endif
-
+#ifdef EXT_RF_FRONT_END_CTRL
+#define CHANNEL_26                          (0x1A)
+#define MAX_TX_PWR_REG_VAL                  (0x09)
+#define MAX_TX_PWR_REG_VAL_CH26             (0x0d)
+#endif
 #define LED_TOGGLE_COUNT_FOR_PER            (50)
 #define MIN_TX_PWR_REG_VAL                  (0x0f)
 
-#if(TAL_TYPE == AT86RF233)
+#if (TAL_TYPE == AT86RF233)
 #define BASE_ISM_FREQUENCY_MHZ              (2306)
 #define MIN_ISM_FREQUENCY_MHZ               (2322)
 #define MAX_ISM_FREQUENCY_MHZ               (2527)
@@ -114,7 +120,7 @@
 
 /**
  * \addtogroup group_per_mode
-  * \{
+ * \{
  */
 
 /**
@@ -141,62 +147,68 @@
 #define DISCONNECT_NODE                     (0x0E)
 #define SET_DEFAULT_REQ                     (0x0F)
 #define PER_TEST_START_PKT                  (0x10)
-//\}
+#define RANGE_TEST_START_PKT                (0x11)
+#define RANGE_TEST_PKT                      (0x12)
+#define RANGE_TEST_RSP                      (0x13)
+#define RANGE_TEST_STOP_PKT                 (0x14)
+#define RANGE_TEST_MARKER_CMD                (0x15)
+#define RANGE_TEST_MARKER_RSP                (0x16)
+#define RANGE_TEST_PKT_LENGTH                (19)
+#define LED_BLINK_RATE_IN_MICRO_SEC           (50000)
+/* \} */
 
 /* === Types ================================================================ */
+
 /**
  * \brief Structure to hold all configurable parameter values
  *
  */
-typedef struct
-{
-    bool ack_request;
-    bool csma_enabled;
-    bool retry_enabled;
+typedef struct {
+	bool ack_request;
+	bool csma_enabled;
+	bool retry_enabled;
 
-#if(TAL_TYPE != AT86RF230B)
-    bool rx_desensitize;
-
+#if (TAL_TYPE != AT86RF230B)
+	bool rx_desensitize;
 #endif /* End of #if(TAL_TYPE != AT86RF230B)*/
 #ifdef CRC_SETTING_ON_REMOTE_NODE
-    bool crc_settings_on_peer;
+	bool crc_settings_on_peer;
 #endif
 
 #if (TAL_TYPE == AT86RF233)
-    bool rpc_enable;
+	bool rpc_enable;
 #endif
 
 #if (ANTENNA_DIVERSITY == 1)
-    bool antenna_diversity;
-    bool antenna_diversity_on_peer;
-    uint8_t antenna_selected;
-    uint8_t antenna_selected_on_peer;
+	bool antenna_diversity;
+	bool antenna_diversity_on_peer;
+	uint8_t antenna_selected;
+	uint8_t antenna_selected_on_peer;
 #endif
 
-    uint8_t channel;
-    uint8_t channel_page;
-#if( (TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B) )
-    uint8_t tx_power_reg;
+	uint8_t channel;
+	uint8_t channel_page;
+#if ((TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B))
+	uint8_t tx_power_reg;
 #endif
-    int8_t tx_power_dbm;
-    uint8_t trx_state;
+	int8_t tx_power_dbm;
+	uint8_t trx_state;
 
-    uint8_t phy_frame_length;
-    uint32_t number_test_frames;
+	uint8_t phy_frame_length;
+	uint32_t number_test_frames;
 
 #if (TAL_TYPE == AT86RF233)
-    float ism_frequency;
+	float ism_frequency;
 #endif
-
 } trx_config_params_t;
+
 /**
  * \brief ED scan result structure to hold the channel and its ED value
  *
  */
-typedef struct
-{
-    uint8_t channel_no;
-    int8_t p_in;
+typedef struct {
+	uint8_t channel_no;
+	int8_t p_in;
 } ed_scan_result_t;
 
 /* === Externals ============================================================ */
@@ -204,9 +216,9 @@ typedef struct
 FLASH_EXTERN(int8_t tx_pwr_table[16]);
 #endif
 
-extern trx_config_params_t curr_trx_config_params;
+extern trx_config_params_t curr_trx_config_params[NO_TRX];
 
-//! \}
+/* ! \} */
 /* === Prototypes =========================================================== */
 
 /**
@@ -220,7 +232,7 @@ extern trx_config_params_t curr_trx_config_params;
  * \brief Initialize the application in PER Measurement mode as Initiator
  * \param parameter Pointer to the paramter to be carried, if any.
  */
-void per_mode_initiator_init(void *parameter);
+void per_mode_initiator_init(trx_id_t trx,void *parameter);
 
 /**
  * \brief Application task for PER Measurement mode as initiator
@@ -230,7 +242,7 @@ void per_mode_initiator_init(void *parameter);
  * - On start up as initiator application will print menu on screen
  * - On user inputs through menu app executes various tests
  */
-void per_mode_initiator_task(void);
+void per_mode_initiator_task(trx_id_t trx);
 
 /**
  * \brief Callback that is called once tx is done in the
@@ -239,7 +251,7 @@ void per_mode_initiator_task(void);
  * \param status    Status of the transmission procedure
  * \param frame     Pointer to the transmitted frame structure
  */
-void per_mode_initiator_tx_done_cb(retval_t status, frame_info_t *frame);
+void per_mode_initiator_tx_done_cb(trx_id_t trx,retval_t status, frame_info_t *frame);
 
 /**
  * \brief Callback that is called if data has been received by trx
@@ -247,15 +259,15 @@ void per_mode_initiator_tx_done_cb(retval_t status, frame_info_t *frame);
  *
  * \param frame Pointer to received frame
  */
-void per_mode_initiator_rx_cb(frame_info_t *frame);
+void per_mode_initiator_rx_cb(trx_id_t trx,frame_info_t *frame);
 
 /**
  * \brief User call back function after ED Scan completion
  * \param energy level as input
  */
-void per_mode_initiator_ed_end_cb(uint8_t energy_level);
+void per_mode_initiator_ed_end_cb(trx_id_t trx,uint8_t energy_level);
 
-//! \}
+/* ! \} */
 
 /**
  * \addtogroup group_per_mode_receptor
@@ -265,16 +277,16 @@ void per_mode_initiator_ed_end_cb(uint8_t energy_level);
 
 /**
  * \brief Initialize the application in PER Measurement mode as Receptor
- *\param parameter Pointer to the paramter to be carried, if any.
+ **\param parameter Pointer to the paramter to be carried, if any.
  */
-void per_mode_receptor_init(void *parameter);
+void per_mode_receptor_init(trx_id_t trx,void *parameter);
 
 /**
  * \brief The application task when the node is in PER_TEST_RECEPTOR state
  * i.e.PER Measurement mode as Receptor
  *
  */
-void per_mode_receptor_task(void);
+void per_mode_receptor_task(trx_id_t trx);
 
 /**
  * \brief Callback that is called once tx is done in PER_TEST_RECEPTOR state
@@ -284,7 +296,7 @@ void per_mode_receptor_task(void);
  * \param status    Status of the transmission procedure
  * \param frame     Pointer to the transmitted frame structure
  */
-void per_mode_receptor_tx_done_cb(retval_t status, frame_info_t *frame);
+void per_mode_receptor_tx_done_cb(trx_id_t trx,retval_t status, frame_info_t *frame);
 
 /**
  * \brief Callback that is called if data has been received by trx
@@ -293,20 +305,46 @@ void per_mode_receptor_tx_done_cb(retval_t status, frame_info_t *frame);
  * PER Measurement mode Receptor
  * \param frame Pointer to received frame
  */
-void per_mode_receptor_rx_cb(frame_info_t *frame);
+void per_mode_receptor_rx_cb(trx_id_t trx,frame_info_t *frame);
 
-//! \}
-
-
+/* ! \} */
 
 /*
  * \brief To reset the application (equivalent to soft reset)
  *
  */
-void app_reset(void);
+void app_reset(trx_id_t trx);
 
+/**
+ * \brief Timer Callback function  if marker response command is transmitted on
+ *air
+ *  This is used to blink the LED and thus identify that the transmission is
+ *done
+ * \param parameter pass parameters to timer handler
+ */
+void marker_tx_timer_handler_cb(void *parameter);
 
-//! \}
+/**
+ * \brief Timer Callback function  if marker command is received on air
+ * This is used to blink the LED and thus identify that the marker frame is
+ *received
+ * \param parameter pass parameters to timer handler
+ */
+void marker_rsp_timer_handler_cb(void *parameter);
+
+#ifdef EXT_RF_FRONT_END_CTRL
+
+/**
+ * \brief handle the tx power settings in case of External PA enabled,
+ * and the channel changes from or to 26.This is to meet the FCC compliance
+ *
+ * \param Curr_chnl Current Channel
+ * \param prev_chnl Previous Channel
+ */
+void limit_tx_power_in_ch26(uint8_t curr_chnl, uint8_t prev_chnl);
+#endif
+
+/* ! \} */
 #ifdef __cplusplus
 extern "C" {
 #endif

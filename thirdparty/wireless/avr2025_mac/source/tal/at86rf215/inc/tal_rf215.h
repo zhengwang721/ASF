@@ -26,6 +26,12 @@
 #include "ieee_15_4g.h"
 
 /* === TYPES =============================================================== */
+//sriram
+/* TRX Parameter: Tolerance of the phyTransmitPower PIB attribute.
+ *                This is encoded into the two MSBits of the attribute,
+ *                and is effectively read-only.
+ */
+#define TX_PWR_TOLERANCE   (0x80)
 
 /**
  * Enumeration for TRX identification
@@ -36,6 +42,14 @@ typedef enum trx_id_tag
     RF24, /**< Id for 2.4 GHz device */
     RFBOTH  /**< Id for both device parts */
 } SHORTENUM trx_id_t;
+
+
+#define TRX_SUPPORTED_CHANNELS_LEG(trx) \
+( \
+(trx == RF24)? \
+(0x07FFF800) :\
+(0x000007FF)\
+)
 
 /* === EXTERNALS =========================================================== */
 

@@ -129,7 +129,7 @@ int main(void)
 
     app_init();
 
-   print_chat_menu();
+    print_chat_menu();
 
     /* Endless while loop */
     while (1)
@@ -158,12 +158,11 @@ static void app_init(void)
 
     /* Configure PHY for sub-1GHz */
     phy_t phy;
-    phy.modulation = OQPSK;
-    phy.phy_mode.oqpsk.chip_rate = CHIP_RATE_1000;
-    phy.phy_mode.oqpsk.rate_mode = OQPSK_RATE_MOD_0;
+    phy.modulation = LEG_OQPSK;
+    phy.phy_mode.leg_oqpsk.chip_rate  = CHIP_RATE_1000;
     phy.freq_band = US_915;
-    phy.ch_spacing = OQPSK_915_CH_SPAC;
-    phy.freq_f0 = OQPSK_915_F0;
+    phy.ch_spacing = LEG_915_CH_SPAC; ;
+    phy.freq_f0 = LEG_915_F0;
     if (tal_pib_set(RF09, phySetting, (pib_value_t *)&phy) != MAC_SUCCESS)
     {
         app_alert();

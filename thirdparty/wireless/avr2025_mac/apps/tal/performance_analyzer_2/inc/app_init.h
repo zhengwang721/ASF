@@ -40,6 +40,7 @@
  *
  * \asf_license_stop
  */
+
 /*
  * Copyright (c) 2012, Atmel Corporation All rights reserved.
  *
@@ -52,9 +53,11 @@
 # include "tal.h"
 #include "string.h"
 # include "app_config.h"
+
 /**
  * \defgroup group_perf_analyzer Performance Analyzer Application
- * This  application Performance Analyzer  is a Serial interface based application,
+ * This  application Performance Analyzer  is a Serial interface based
+ *application,
  * which communicates with Wireless Analyzer to demonstrate various features and
  * capabilities of Atmel Transceivers
  *
@@ -68,44 +71,134 @@
  */
 /* === Includes ============================================================= */
 
-
 /* === Macros =============================================================== */
+/* Version of the software */
+#define FIRMWARE_VERSION    2.2f
 
+/** sub-register TRX_STATUS in register TRX_STATUS */
+typedef enum tal_trx_status_tag {
+	/** Constant P_ON for sub-register @ref SR_TRX_STATUS */
+	P_ON                         = (0x00),
+
+	/** Constant BUSY_RX for sub-register @ref SR_TRX_STATUS */
+	BUSY_RX                      = (0x01),
+
+	/** Constant BUSY_TX for sub-register @ref SR_TRX_STATUS */
+	BUSY_TX                      = (0x02),
+
+	/** Constant RX_ON for sub-register @ref SR_TRX_STATUS */
+	RX_ON                        = (0x06),
+
+	/** Constant TRX_OFF for sub-register @ref SR_TRX_STATUS */
+	TRX_OFF                      = (0x08),
+
+	/** Constant PLL_ON for sub-register @ref SR_TRX_STATUS */
+	PLL_ON                       = (0x09),
+
+	/** Constant TRX_SLEEP for sub-register @ref SR_TRX_STATUS */
+	TRX_SLEEP                    = (0x0F),
+
+	/** Constant PREP_DEEP_SLEEP for sub-register @ref SR_TRX_STATUS */
+	PREP_DEEP_SLEEP              = (0x10),
+
+	/** Constant BUSY_RX_AACK for sub-register @ref SR_TRX_STATUS */
+	BUSY_RX_AACK                 = (0x11),
+
+	/** Constant BUSY_TX_ARET for sub-register @ref SR_TRX_STATUS */
+	BUSY_TX_ARET                 = (0x12),
+
+	/** Constant RX_AACK_ON for sub-register @ref SR_TRX_STATUS */
+	RX_AACK_ON                   = (0x16),
+
+	/** Constant TX_ARET_ON for sub-register @ref SR_TRX_STATUS */
+	TX_ARET_ON                   = (0x19),
+
+	/** Constant STATE_TRANSITION_IN_PROGRESS for sub-register @ref
+	 *SR_TRX_STATUS */
+	STATE_TRANSITION_IN_PROGRESS = (0x1F),
+
+	/** Software implemented state */
+	TRX_DEEP_SLEEP = (0x20)
+} SHORTENUM tal_trx_status_t;
+
+#define DEFAULT_CHANNEL_RF09         (1)
+#define DEFAULT_CHANNEL_RF24         (21)
+#define TAL_CURRENT_PAGE_DEFAULT_RF24            (0x00)
+#define TAL_CURRENT_PAGE_DEFAULT_RF09            (0x02)
+#define DEFAULT_PAN_ID          (0xCAFE)
+#define DST_PAN_ID              (DEFAULT_PAN_ID)
+#define SRC_PAN_ID              (DEFAULT_PAN_ID)
+#define DEFAULT_ADDR            (0xFFFF)
+#define DST_SHORT_ADDR          (0xFFFF)
+
+/* Frame overhead due to selected address scheme incl. FCS */
+#if (DST_PAN_ID == SRC_PAN_ID)
+#define FRAME_OVERHEAD          (9)
+#else
+#define FRAME_OVERHEAD          (11)
+#endif
+
+#define FRAME_OVERHEAD_SRC_IEEE_ADDR (FRAME_OVERHEAD + 6)
+#define FRAME_OVERHEAD_DST_IEEE_ADDR (FRAME_OVERHEAD + 6)
+
+#define OFFSET_FOR_SRC_IEEE_ADDR    (7)
+
+#if (LED_COUNT >= 3)
+#define STATUS_LED              LED0
+#define TX_LED                  LED1
+#define RX_LED                  LED2
+#elif (LED_COUNT >= 2)
+#define STATUS_LED              LED0
+#define TX_LED                  LED0
+#define RX_LED                  LED1
+#else
+#define STATUS_LED              LED0
+#define TX_LED                  LED0
+#define RX_LED                  LED0
+#endif
+
+/* Macro to enable the feature of counting wrong CRC packets */
+#if ((TAL_TYPE == ATMEGARFR2) || \
+	(TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B) || \
+	(TAL_TYPE == AT86RF231) || (TAL_TYPE == AT86RF233) || (TAL_TYPE == AT86RF215))
+#define CRC_SETTING_ON_REMOTE_NODE
+#endif
 /* === Types ================================================================ */
 /* Main states */
-typedef enum
-{
-    INIT = 0,
-    WAIT_FOR_EVENT,
-    PEER_SEARCH_RANGE_TX,
-    PEER_SEARCH_PER_TX,
-    PEER_SEARCH_RANGE_RX,
-    PEER_SEARCH_PER_RX,
-    RANGE_TEST_TX_ON,
-    RANGE_TEST_TX_OFF,
-    SINGLE_NODE_TESTS,
-    PER_TEST_INITIATOR,
-    PER_TEST_RECEPTOR,
-    NUM_MAIN_STATES
+typedef enum {
+	INIT = 0,
+	WAIT_FOR_EVENT,
+	PEER_SEARCH_RANGE_TX,
+	PEER_SEARCH_PER_TX,
+	PEER_SEARCH_RANGE_RX,
+	PEER_SEARCH_PER_RX,
+	RANGE_TEST_TX_ON,
+	RANGE_TEST_TX_OFF,
+	SINGLE_NODE_TESTS,
+	PER_TEST_INITIATOR,
+	PER_TEST_RECEPTOR,
+	NUM_MAIN_STATES
 } main_state_t;
+
+#define DUMMY_PAYLOAD                           (0xAA)
 
 /**
  * \brief Structure to holds the information base for the node
  *
  */
-typedef struct
-{
-    bool configure_mode;
-    bool peer_found;
-    uint8_t sub_state;
-    uint8_t transmitting ;
-    uint8_t msg_seq_num;
-    uint16_t peer_short_addr;
-    frame_info_t *tx_frame_info;
-    main_state_t main_state;
+typedef struct {
+	bool configure_mode;
+	bool peer_found;
+	uint8_t sub_state;
+	uint8_t transmitting;
+	uint8_t msg_seq_num;
+	uint16_t peer_short_addr;
+	frame_info_t *tx_frame_info;
+	main_state_t main_state;
 } node_ib_t;
 
 /* State change functions */
+
 /**
  * \brief Function to set the main state of state machine
  *
@@ -113,14 +206,11 @@ typedef struct
  * \param arg     argument passed in the state
  */
 
-void set_main_state(main_state_t state, void *arg);
-
+void set_main_state(trx_id_t tranciever, main_state_t state, void *arg);
 
 /* Application Alert to indicate something has gone wrong */
 
 void app_alert(void);
-
-/* INIT state functions */
 
 /**
  * \brief Initialization task for INIT STATE. All hardware, PAL, TAL and stack
@@ -128,12 +218,12 @@ void app_alert(void);
  *
  * \param arg arguments for INIT state
  */
-void init_state_init(void *arg);
+void init_state_init(trx_id_t trx, void *arg);
 
 /**
  * \brief Function to init the information base for device
  */
-void config_node_ib(void);
+void config_node_ib(trx_id_t trx);
 
 /* WAIT_FOR_EVENT state functions */
 
@@ -142,7 +232,7 @@ void config_node_ib(void);
  *
  * \param arg arguments for WAIT_FOR_EVENT state
  */
-void wait_for_event_init(void *arg);
+void wait_for_event_init(trx_id_t trx, void *arg);
 
 /**
  * \brief Application task handling user events like key press or
@@ -151,7 +241,7 @@ void wait_for_event_init(void *arg);
  * This function
  * - Implements the event handling in WAIT_FOR_EVENT state.
  */
-void wait_for_event_task(void);
+void wait_for_event_task(trx_id_t trx);
 
 
 /**
@@ -161,17 +251,17 @@ void wait_for_event_task(void);
  *
  * \param frame Pointer to received frame
  */
-void wait_for_event_rx_cb(frame_info_t *frame);
+void wait_for_event_rx_cb(trx_id_t trx, frame_info_t *frame);
 
 extern uint8_t T_APP_TIMER;
+extern uint8_t T_APP_TIMER_RANGE;
 extern uint8_t APP_TIMER_TO_TX;
 extern uint8_t APP_TIMER_TO_TX_LED_OFF;
 extern uint8_t APP_TIMER_TO_RX_LED_OFF;
 
-
 /* === Externals ============================================================ */
 
-extern volatile node_ib_t node_info;
+extern volatile node_ib_t node_info[NO_TRX];
 
 /**
  * \brief Function to transmit frames as per 802.15.4 std.
@@ -184,17 +274,17 @@ extern volatile node_ib_t node_info;
  * \param payload_length    data length
  * \param ack_req           specifies ack requested for frame if set to 1
  *
- * \return MAC_SUCCESS      if the TAL has accepted the data for frame transmission
+ * \return MAC_SUCCESS      if the TAL has accepted the data for frame
+ *transmission
  *         TAL_BUSY         if the TAL is busy servicing the previous tx request
  */
-extern retval_t transmit_frame( uint8_t dst_addr_mode,
-                                uint8_t *dst_addr,
-                                uint8_t src_addr_mode,
-                                uint8_t msdu_handle,
-                                uint8_t *payload,
-                                uint8_t payload_length,
-                                uint8_t ack_req);
-
+extern retval_t transmit_frame( trx_id_t trx,uint8_t dst_addr_mode,
+		uint8_t *dst_addr,
+		uint8_t src_addr_mode,
+		uint8_t msdu_handle,
+		uint8_t *payload,
+		uint8_t payload_length,
+		uint8_t ack_req);
 
 #ifdef __cplusplus
 extern "C" {
@@ -204,7 +294,7 @@ extern "C" {
 } /* extern "C" */
 #endif
 
-//! \}
+/* ! \} */
 
 #endif /* APP_STATE_H */
 /* EOF */

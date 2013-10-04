@@ -97,7 +97,7 @@ static uint32_t num_of_frames_rec;
  */
 void range_test_tx_on_init(void *arg)
 {
-    print_event(PRINT_RANGE_MEASURE_TX_START);
+    print_event(RF24,PRINT_RANGE_MEASURE_TX_START);
 
     /* Peer process seq number */
     seq_num = rand();
@@ -131,11 +131,11 @@ void range_test_tx_on_task(void)
     if (key_press != 0)
     {
         /* key press detected - so change to state RANGE_TEST_TX_OFF */
-        set_main_state(RANGE_TEST_TX_OFF, NULL);
+        set_main_state(RF24,RANGE_TEST_TX_OFF, NULL);
     }
     else if (char_received != -1)
     {
-        print_event(PRINT_RANGE_MEASURE_STATSTICS);
+        print_event(RF24,PRINT_RANGE_MEASURE_STATSTICS);
     }
 }
 
@@ -154,7 +154,7 @@ void range_test_rx_cb(frame_info_t *mac_frame_info)
                                      sizeof(data_pkt_range_test_t))))
     {
         /* Point to the message : 1 =>size is first byte and 2=>FCS*/
-        msg = (app_payload_t *)(mac_frame_info->mpdu + LENGTH_FIELD_LEN + FRAME_OVERHEAD - FCS_LEN);
+        msg = (app_payload_t *)(mac_frame_info->mpdu + FRAME_OVERHEAD );
         if ((msg->cmd_id) == DATA_PKT)
         {
             /* Correct packet received so toggle the LED on board */
@@ -172,7 +172,7 @@ void range_test_rx_cb(frame_info_t *mac_frame_info)
  */
 void range_test_tx_on_exit(void)
 {
-    print_event(PRINT_RANGE_MEASURE_TX_STOP);
+    print_event(RF24,PRINT_RANGE_MEASURE_TX_STOP);
     /* Off timer as node leaves this sub state */
     sw_timer_stop(APP_TIMER_TO_TX);
 }
@@ -196,11 +196,11 @@ void range_test_tx_off_task(void)
     if (key_press != 0)
     {
         /* key press detected - so change to state RANGE_TEST_TX_OFF */
-        set_main_state(RANGE_TEST_TX_ON, 0);
+        set_main_state(RF24,RANGE_TEST_TX_ON, 0);
     }
     else if (char_received != -1)
     {
-        print_event(PRINT_RANGE_MEASURE_STATSTICS);
+        print_event(RF24,PRINT_RANGE_MEASURE_STATSTICS);
     }
 }
 
@@ -257,8 +257,8 @@ static int range_test_frame_tx(void)
                        sizeof(general_pkt_t)) +
                       sizeof(data_pkt_range_test_t));
 
-    return( transmit_frame(FCF_SHORT_ADDR,
-                           (uint8_t *)(&node_info.peer_short_addr),
+    return( transmit_frame(RF24,FCF_SHORT_ADDR,
+                           (uint8_t *)(&node_info[RF24].peer_short_addr),
                            FCF_SHORT_ADDR,
                            seq_num,              /* seq_num used as msdu handle */
                            (uint8_t *)&msg,

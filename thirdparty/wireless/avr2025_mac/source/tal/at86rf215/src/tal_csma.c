@@ -102,6 +102,7 @@ static void start_backoff(trx_id_t trx_id)
         if (status != MAC_SUCCESS)
         {
             tx_done_handling(trx_id, status);
+
             return;
         }
         tal_state[trx_id] = TAL_BACKOFF;
@@ -238,7 +239,7 @@ void cca_done_handling(trx_id_t trx_id)
     {
         /* Idle */
         //debug_text(PSTR("channel idle"));
-        transmit_frame(trx_id);
+        tal_transmit_frame(trx_id);
     }
     else
     {

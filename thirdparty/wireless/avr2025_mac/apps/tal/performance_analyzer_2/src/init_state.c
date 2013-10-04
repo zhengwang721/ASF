@@ -54,7 +54,6 @@
 #include "tal_helper.h"
 #include "app_init.h"
 #include "perf_api_serial_handler.h"
-#include "sio2host.h"
 #include "common_sw_timer.h"
 
 /* === TYPES =============================================================== */
@@ -62,7 +61,7 @@
 /* === MACROS ============================================================== */
 
 /* === PROTOTYPES ========================================================== */
-static void configuration_mode_selection(void);
+static void configuration_mode_selection(trx_id_t trx);
 /* === GLOBALS ============================================================= */
 
 /* === IMPLEMENTATION ====================================================== */
@@ -77,16 +76,17 @@ static void configuration_mode_selection(void);
 static void app_timers_init(void);
 
 uint8_t T_APP_TIMER;
+uint8_t T_APP_TIMER_RANGE;
 uint8_t APP_TIMER_TO_TX;
 uint8_t APP_TIMER_TO_TX_LED_OFF;
 uint8_t APP_TIMER_TO_RX_LED_OFF;
 
-void init_state_init(void *arg)
+void init_state_init(trx_id_t trx, void *arg)
 {
     sw_timer_init();
      
     /* Set the node information base */
-    config_node_ib();
+   config_node_ib(trx);
 
     /* Initialize the TAL layer */
     if (tal_init() != MAC_SUCCESS)
@@ -97,19 +97,43 @@ void init_state_init(void *arg)
 
     app_timers_init();
 
-    /* Initilaize sio rx state */
-    init_sio();
+    /* Initialize sio rx state */
+    init_sio(trx);
 
-    /* select the configurtion mode */
-    configuration_mode_selection();
+    /* select the configuration mode */
+    configuration_mode_selection(trx);
 
-#if (TAL_TYPE == AT86RF233) && (ANTENNA_DIVERSITY == 1)
-    /* In order to demonstrate RPC the antenna diversity is disabled. */
-    tal_ant_div_config(ANT_DIVERSITY_DISBLE,ANT_CTRL_1);/* Enable A1/X2 */
-#endif
-
-    /* Keep compiler happy */
-    arg = arg;
+	//if(trx == RF09)
+	{
+			/* Configure PHY for sub-1GHz */
+			phy_t phy;
+			phy.modulation = LEG_OQPSK;
+			phy.phy_mode.leg_oqpsk.chip_rate  = CHIP_RATE_1000;
+			phy.freq_band = US_915;
+			phy.ch_spacing = LEG_915_CH_SPAC; ;
+			phy.freq_f0 = LEG_915_F0;
+			if (tal_pib_set(RF09, phySetting, (pib_value_t *)&phy) != MAC_SUCCESS)
+			{
+				app_alert();
+			}
+	}
+	//else
+	{
+		/* Configure PHY for 2.4GHz */
+		phy_t phy;
+		phy.modulation = LEG_OQPSK;
+		phy.phy_mode.leg_oqpsk.chip_rate = CHIP_RATE_2000;
+		phy.freq_band = WORLD_2450;
+		phy.ch_spacing = LEG_2450_CH_SPAC;
+		phy.freq_f0 = LEG_2450_F0;
+		if (tal_pib_set(RF24, phySetting, (pib_value_t *)&phy) != MAC_SUCCESS)
+		{
+			app_alert();
+		}
+	}
+			
+	/* Keep compiler happy */
+	arg = arg;
 }
 
 
@@ -119,17 +143,17 @@ void init_state_init(void *arg)
  * This will be checked during the INIT state
  * \ingroup group_config_mode
  */
-static void configuration_mode_selection(void)
+static void configuration_mode_selection(trx_id_t trx)
 {
     /* Is button pressed */
     if (button_pressed())
     {
         /* Enable configuration mode */
-        node_info.configure_mode = true;
+        node_info[trx].configure_mode = true;
     }
     else
     {
-        node_info.configure_mode = false;
+        node_info[trx].configure_mode = false;
     }
     /*
      * Wait for the user to release the button to proceed further, otherwise

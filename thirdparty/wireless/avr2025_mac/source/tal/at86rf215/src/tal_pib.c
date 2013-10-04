@@ -157,7 +157,18 @@ retval_t config_phy(trx_id_t trx_id)
     return status;
 }
 
-
+/*
+ * \brief Sets transceiver state
+ *
+ * \param trx_cmd needs to be one of the trx commands
+ *
+ * \return current trx state
+ */
+rf_cmd_status_t set_trx_state(trx_id_t trx,rf_cmd_state_t trx_cmd)
+{
+	//sriram
+	return STATUS_RF_TRXOFF;
+}
 /**
  * @brief Calculates PIB values that depend on the current PHY configuration
  *
@@ -788,7 +799,8 @@ retval_t tal_pib_set(trx_id_t trx_id, uint8_t attribute, pib_value_t *value)
                 tal_pib[trx_id].CurrentChannel = value->pib_value_16bit;
                 pal_trx_write(rf_reg_offset + RG_RF09_CNL,
                               (uint8_t *)&tal_pib[trx_id].CurrentChannel, 2);
-
+							  
+		
                 if (trx_state[trx_id] == RF_TXPREP)
                 {
                     while (TAL_RF_IS_IRQ_SET(trx_id, RF_IRQ_TRXRDY) == 0)

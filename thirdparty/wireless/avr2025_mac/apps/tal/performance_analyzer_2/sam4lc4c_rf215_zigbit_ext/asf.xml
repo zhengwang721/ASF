@@ -18,15 +18,15 @@
 
 		<config name="config.spi_master_type" value="standard_spi"/>
 		<config name="config.thirdparty.wireless.addons.sio2host" value="usb"/>
-		<config name="config.thirdparty.wireless.avr2025_mac.source.tfa" value="at86rf233"/>
+		<config name="config.thirdparty.wireless.avr2025_mac.source.tfa" value="at86rf215"/>
 
 		<build type="define"   name="HIGHEST_STACK_LAYER"                 value="TAL"/>
-		<build type="define"   name="HIGH_DATA_RATE_SUPPORT"              value=""/>
+		<build type="define"   name="ENABLE_LARGE_BUFFER"              value=""/>
+		<build type="define"   name="MULTI_TRX_SUPPORT"              value=""/>
 		<build type="define"   name="ENABLE_DEEP_SLEEP"              value=""/>
 
         <build type="define"   name="FFD"                                 value=""/>
         <build type="define"   name="ENABLE_TFA"                          value=""/>
-        <build type="define"   name="TRX_REG_RAW_VALUE"                   value=""/>
 		
 		<require idref="board.sam4l_xplained_pro"/>
 		

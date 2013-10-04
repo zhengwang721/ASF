@@ -119,6 +119,10 @@ retval_t tal_init(void)
     /* Initialize the buffer management */
     bmm_buffer_init();
 
+    /* Init seed of rand() */
+    tal_generate_rand_seed();
+	
+	
     /* Configure both trx and set default PIB values */
     for (uint8_t trx_id = 0; trx_id < 2; trx_id++)
     {
@@ -146,10 +150,46 @@ retval_t tal_init(void)
         qmm_queue_init(&tal_incoming_frame_queue[trx_id]);
 
         tal_state[trx_id] = TAL_IDLE;
-    }
 
-    /* Init seed of rand() */
-    tal_generate_rand_seed();
+
+#ifndef DISABLE_IEEE_ADDR_CHECK
+    /* Check if a valid IEEE address is available. */
+    /*
+     * This while loop is on purpose, since just in the
+     * rare case that such an address is randomly
+     * generated again, we must repeat this.
+     */
+    while ((tal_pib[trx_id].IeeeAddress == 0x0000000000000000) ||
+           (tal_pib[trx_id].IeeeAddress == 0xFFFFFFFFFFFFFFFF))
+    {
+        /*
+         * In case no valid IEEE address is available, a random
+         * IEEE address will be generated to be able to run the
+         * applications for demonstration purposes.
+         * In production code this can be omitted.
+         */
+        /*
+         * The proper seed for function rand() has already been generated
+         * in function tal_generate_rand_seed().
+         */
+        uint8_t *ptr_pib = (uint8_t *)&tal_pib[trx_id].IeeeAddress;
+
+        for (uint8_t i = 0; i < 8; i++)
+        {
+            *ptr_pib++ = (uint8_t)rand();
+            /*
+             * Note:
+             * Even if casting the 16 bit rand value back to 8 bit,
+             * and running the loop 8 timers (instead of only 4 times)
+             * may look cumbersome, it turns out that the code gets
+             * smaller using 8-bit here.
+             * And timing is not an issue at this place...
+             */
+        }
+    }
+	#endif
+	}
+
 
     /*
      * Configure interrupt handling.

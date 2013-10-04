@@ -47,6 +47,7 @@
  */
 /* === INCLUDES ============================================================ */
 #include "tal.h"
+#include "tal_rf215.h"
 # include "asf.h"
 # include "app_init.h"
 
@@ -317,18 +318,18 @@ static void app_switch_off_rx_led_cb(void *parameter)
  * \param ev the event to be printed on the Terminal.
  *
  */
-void print_event(print_event_t ev)
+void print_event(trx_id_t trx, print_event_t ev)
 {
 
-    if (print_event_table[ev].item_desc)
-    {
-        printf("%s", print_event_table[ev].item_desc);
-    }
+	if (print_event_table[ev].item_desc)
+	{
+		printf("%s", print_event_table[ev].item_desc);
+	}
 
-    if (print_event_table[ev].additional_print_func)
-    {
-        print_event_table[ev].additional_print_func();
-    }
+	if (print_event_table[ev].additional_print_func)
+	{
+		print_event_table[ev].additional_print_func(trx);
+	}
 }
 
 

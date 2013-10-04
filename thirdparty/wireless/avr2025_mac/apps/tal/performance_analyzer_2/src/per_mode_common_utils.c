@@ -62,15 +62,15 @@
 
 /*
  * \brief This function is called rest the application equivalent to soft reset
- *
+ * sriram-> modification required
  */
-void app_reset(void)
+void app_reset(trx_id_t trx)
 {
-    /* app reset - this is to make the node to restart applicationa as bootup */
-    set_main_state(INIT, NULL);
+	/* app reset - this is to make the node to restart applicationa as bootup */
+	set_main_state(trx,INIT, NULL);
 
-    /* INIT was a success - so change to WAIT_FOR_EVENT state */
-    set_main_state(WAIT_FOR_EVENT, NULL);
+	/* INIT was a success - so change to WAIT_FOR_EVENT state */
+	set_main_state(trx,WAIT_FOR_EVENT, NULL);
 }
 
 

@@ -39,6 +39,7 @@
  *
  * \asf_license_stop
  */
+
 /*
  * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
@@ -72,24 +73,24 @@
  */
 
 /**
- *\brief Function to set the various configuaration paramters for PER Test
+ * *\brief Function to set the various configuaration paramters for PER Test
  *
  * \param param_type    Parameter type to be set
  * \param param_value   Pointer to the parameter value to be set
  */
-void perf_set_req(uint8_t param_type, param_value_t *param_value);
+void perf_set_req(trx_id_t trx, uint8_t param_type, param_value_t *param_value);
 
 /**
  * \brief Function to get the various configuaration paramters for PER Test
  *
  * \param param_type    Parameter type to be read
  */
-void perf_get_req(uint8_t param_type);
+void perf_get_req(trx_id_t trx, uint8_t param_type);
 
 /**
  * \brief Initiates the test procedure
  */
-void initiate_per_test(void);
+void initiate_per_test(trx_id_t trx);
 
 /**
  * \brief Function to start the ED scan
@@ -97,80 +98,80 @@ void initiate_per_test(void);
  * \param scan_duration paramter which is used to calculate the scan time
  *        on each channel
  */
-void start_ed_scan(uint8_t scan_duration);
+void start_ed_scan(trx_id_t trx, uint8_t scan_duration, uint32_t channel_sel_mask);
 
 /**
  * \brief Function to get the Sensor data like Battery volatge
  */
-void get_sensor_data(void);
+void get_sensor_data(trx_id_t trx);
 
 /**
  * \brief prints the hardware details
  */
-void get_board_details(void);
+void get_board_details(trx_id_t trx);
 
 /**
  * \brief Identifying peer node
  */
-void identify_peer_node(void);
+void identify_peer_node(trx_id_t trx);
 
 #if ((TAL_TYPE != AT86RF230B) || ((TAL_TYPE == AT86RF230B) && (defined CW_SUPPORTED)))
 /**
  * \brief Send an energy pulse on current channel page
  */
-void pulse_cw_transmission(void);
+void pulse_cw_transmission(trx_id_t trx);
 
 /**
  * \brief Start CW transmission on current channel page
  * \param tx_mode  Continuous transmission mode
  */
-void start_cw_transmission(uint8_t tx_mode);
+void start_cw_transmission(trx_id_t trx, uint8_t tx_mode);
 
 /**
  * \brief Stop CW transmission on current channel page
  * \param tx_mode  Continuous transmission mode
  */
-void stop_cw_transmission(uint8_t tx_mode);
+void stop_cw_transmission(trx_id_t trx, uint8_t tx_mode);
 
 #endif /*#if ((TAL_TYPE != AT86RF230B) || ((TAL_TYPE == AT86RF230B) && (defined CW_SUPPORTED))) */
 /**
  * \brief Read transceiver register
  * \param reg_addr  The address of the register to be read
  */
-void read_trx_registers(uint16_t reg_addr);
+void read_trx_registers(trx_id_t trx, uint16_t reg_addr);
 
 /**
  * \brief write Transceiver registers
  * \param reg_addr  The address of the register to be read
  * \param reg_val   The value of the register to be written
  */
-void write_trx_registers(uint16_t reg_addr, uint8_t reg_val);
+void write_trx_registers(trx_id_t trx, uint16_t reg_addr, uint8_t reg_val);
 
 /**
  * \brief Read a set of registers
  * \param start_reg_addr  The start address of the group of registers to be read
  * \param end_reg_addr    The end register of the group of registers to be read
  */
-void dump_trx_register_values(uint16_t start_reg_addr, uint16_t end_reg_addr);
+void dump_trx_register_values(trx_id_t trx, uint16_t start_reg_addr, uint16_t end_reg_addr);
 
 /**
  * \brief Function to request the peer to get disconnected from source node
  */
-void disconnect_peer_node(void);
+void disconnect_peer_node(trx_id_t trx);
 
 /**
  * \brief Function to set the default values of
  *
  * all configurable paramters on source and peer node
  */
-void set_default_configuration(void);
+void set_default_configuration(trx_id_t trx);
 
 /**
  * \brief Function to get the current values of the all configurabel patameters
  *
  * in the Performance Anlayzer application
  */
-void get_current_configuration(void);
+void get_current_configuration(trx_id_t trx);
 
 /**
  * \brief Function used to check the error conditions before
@@ -179,7 +180,7 @@ void get_current_configuration(void);
  *
  * \return the erroe codee based onthe currently ongoing operation,if any
  */
-uint8_t check_error_conditions(void);
+uint8_t check_error_conditions(trx_id_t trx);
 
 /*
  * \brief get the parameter length based on the paramter tye
@@ -209,7 +210,8 @@ uint8_t get_param_length(uint8_t param_type);
  * \param peer_mac_address      MAC address of the Peer node
  * \return void
  */
-void usr_perf_start_confirm(uint8_t status,
+void usr_perf_start_confirm(trx_id_t trx,
+							uint8_t status,
                             uint8_t start_mode,
                             trx_config_params_t *trx_config_params,
                             uint8_t peer_ic_type,
@@ -226,7 +228,7 @@ void usr_perf_start_confirm(uint8_t status,
  *
  * \return void
  */
-void usr_per_test_start_confirm(uint8_t status);
+void usr_per_test_start_confirm(trx_id_t trx, uint8_t status);
 
 /**
  * Function to generate Per test End Indication frame that must be sent to
@@ -245,7 +247,8 @@ void usr_per_test_start_confirm(uint8_t status);
  *
  * \return void
  */
-void usr_per_test_end_indication(uint8_t status,
+void usr_per_test_end_indication(trx_id_t trx,
+								 uint8_t status,
                                  int8_t rssi_val,
                                  uint8_t aver_lqi,
                                  uint32_t frames_transmitted,
@@ -269,7 +272,7 @@ void usr_per_test_end_indication(uint8_t status,
  *
  * \return void
  */
-void usr_ed_scan_start_confirm(uint8_t status, uint8_t scan_time_min, float scan_time_sec);
+void usr_ed_scan_start_confirm(trx_id_t trx, uint8_t status, uint8_t scan_time_min, float scan_time_sec);
 
 /**
  * Function to generate ED scan Indication frame that must be sent to
@@ -280,7 +283,7 @@ void usr_ed_scan_start_confirm(uint8_t status, uint8_t scan_time_min, float scan
  *
  * \return void
  */
-void usr_ed_scan_end_indication(uint8_t no_of_channels, ed_scan_result_t *ed_scan_result );
+void usr_ed_scan_end_indication(trx_id_t trx,uint8_t no_of_channels, ed_scan_result_t *ed_scan_result );
 
 /**
  * Function to generate Sensor data confirm frame that must be sent to
@@ -292,7 +295,7 @@ void usr_ed_scan_end_indication(uint8_t no_of_channels, ed_scan_result_t *ed_sca
  *
  * \return void
  */
-void usr_sensor_data_get_confirm(uint8_t status, float bat_voltage, float temperature);
+void usr_sensor_data_get_confirm(trx_id_t trx, uint8_t status, float bat_voltage, float temperature);
 /**
  * Function to generate Identify Board confirm frame that must be sent to
  * host application via serial interface.
@@ -309,7 +312,14 @@ void usr_sensor_data_get_confirm(uint8_t status, float bat_voltage, float temper
  *
  * \return void
  */
-void usr_identify_board_confirm(uint8_t status, uint8_t ic_type, char *mcu_soc_name, char *trx_name, char *board_name, uint64_t mac_address, float fw_version);
+void usr_identify_board_confirm(trx_id_t trx,uint8_t status,
+uint8_t ic_type,
+char *mcu_soc_name,
+char *trx_name,
+char *board_name,
+uint64_t mac_address,
+float fw_version,
+uint32_t fw_feature_mask);
 
 /**
  * Function to generate Perf Set confirmation frame that must be sent to
@@ -321,7 +331,7 @@ void usr_identify_board_confirm(uint8_t status, uint8_t ic_type, char *mcu_soc_n
  *
  * \return void
  */
-void usr_perf_set_confirm(uint8_t status, uint8_t param_type, param_value_t *param_value);
+void usr_perf_set_confirm(trx_id_t trx, uint8_t status, uint8_t param_type, param_value_t *param_value);
 
 /**
  * Function to generate Perf Get confirmation frame that must be sent to
@@ -333,7 +343,7 @@ void usr_perf_set_confirm(uint8_t status, uint8_t param_type, param_value_t *par
  *
  * \return void
  */
-void usr_perf_get_confirm(uint8_t status, uint8_t param_type, param_value_t *parame_value);
+void usr_perf_get_confirm(trx_id_t trx,uint8_t status, uint8_t param_type, param_value_t *parame_value);
 
 /**
  * Function to generate Identify_peer_cnode_confirm that must be sent to
@@ -342,7 +352,7 @@ void usr_perf_get_confirm(uint8_t status, uint8_t param_type, param_value_t *par
  *
  * \param status  Result for identify_peer_node_req
  */
-void usr_identify_peer_node_confirm(uint8_t status);
+void usr_identify_peer_node_confirm(trx_id_t trx, uint8_t status);
 
 /**
  * Function to generate cont_pulse_tx_confirm that must be sent to
@@ -351,7 +361,7 @@ void usr_identify_peer_node_confirm(uint8_t status);
  *
  * \param status  Result for cont_pulse_tx_req
  */
-void usr_cont_pulse_tx_confirm(uint8_t status);
+void usr_cont_pulse_tx_confirm(trx_id_t trx, uint8_t status);
 
 /**
  * Function to generate cont_wave_tx_confirm that must be sent to
@@ -362,7 +372,7 @@ void usr_cont_pulse_tx_confirm(uint8_t status);
  * \param start_stop_param  Parameter to start or stop cont tx
  * \param tx_mode           Indicates CW or PRBS
  */
-void usr_cont_wave_tx_confirm(uint8_t status, bool start_stop_param, uint8_t tx_mode);
+void usr_cont_wave_tx_confirm(trx_id_t trx, uint8_t status, bool start_stop_param, uint8_t tx_mode);
 
 /**
  * Function to generate usr_register_read_confirm that must be sent to
@@ -373,7 +383,7 @@ void usr_cont_wave_tx_confirm(uint8_t status, bool start_stop_param, uint8_t tx_
  * \param reg_addr  Register address that has been read
  * \param reg_val   Register value
  */
-void usr_register_read_confirm(uint8_t status, uint16_t reg_addr, uint8_t reg_val);
+void usr_register_read_confirm(trx_id_t trx, uint8_t status, uint16_t reg_addr, uint8_t reg_val);
 
 /**
  * Function to generate usr_register_write_confirm that must be sent to
@@ -384,7 +394,7 @@ void usr_register_read_confirm(uint8_t status, uint16_t reg_addr, uint8_t reg_va
  * \param reg_addr  Register address that has been set
  * \param reg_val   Register value
  */
-void usr_register_write_confirm(uint8_t status, uint16_t reg_addr, uint8_t reg_val);
+void usr_register_write_confirm(trx_id_t trx, uint8_t status, uint16_t reg_addr, uint8_t reg_val);
 
 /**
  * Function to generate usr_register_dump_confirm that must be sent to
@@ -396,7 +406,7 @@ void usr_register_write_confirm(uint8_t status, uint16_t reg_addr, uint8_t reg_v
  * \param end_reg_addr   End Register address that has to be read
  * \param *reg_val       Arrray of Register values
  */
-void usr_register_dump_confirm(uint8_t status, uint16_t start_reg_addr, uint16_t end_reg_addr, uint8_t *reg_val);
+void usr_register_dump_confirm(trx_id_t trx, uint8_t status, uint16_t start_reg_addr, uint16_t end_reg_addr, uint8_t *reg_val);
 
 /**
  * Function to generate Disconnect Confirm frame that must be sent to
@@ -407,7 +417,7 @@ void usr_register_dump_confirm(uint8_t status, uint16_t start_reg_addr, uint16_t
  *
  * \return void
  */
-void usr_peer_disconnect_confirm(uint8_t status);
+void usr_peer_disconnect_confirm(trx_id_t trx, uint8_t status);
 
 /**
  * Function to generate Set default config Confirm frame that must be sent to
@@ -420,7 +430,7 @@ void usr_peer_disconnect_confirm(uint8_t status);
  *                                     paramters with default values
  * \return void
  */
-void usr_set_default_config_confirm(uint8_t status, trx_config_params_t *default_trx_config_params);
+void usr_set_default_config_confirm(trx_id_t trx, uint8_t status, trx_config_params_t *default_trx_config_params);
 
 /**
  * Function to generate Get Current config Confirm frame that must be sent to
@@ -433,8 +443,69 @@ void usr_set_default_config_confirm(uint8_t status, trx_config_params_t *default
  *                                     paramters with current values
  * \return void
  */
-void usr_get_current_config_confirm(uint8_t status, trx_config_params_t *curr_trx_config_params);
+void usr_get_current_config_confirm(trx_id_t trx,uint8_t status, trx_config_params_t *curr_trx_config_params);
 
-//! \}
-//! \}
+/**
+ * \brief Initiates the Range test procedure
+ */
+void initiate_range_test(trx_id_t trx);
+
+
+
+/** Function to  Stop the  range Test in PER Mode */
+void stop_range_test(trx_id_t trx);
+
+/**
+ * \brief Function to send  the Received Range Test Response frame to the Host
+ *application
+ * \param frame Pointer to the actual frame Received
+ * \param lqi_h LQI of the received response calculated at host
+ * \param ed_h ED value  of the received response calculated at host
+ * \param lqi_r LQI of the sent range test packet calculated at receptor
+ * \param ed_r ED value  of the sent range test packet calculated at receptor
+ */
+void usr_range_test_beacon_rsp(trx_id_t trx,uint8_t *mpdu, uint8_t lqi_h, int8_t ed_h,
+		uint8_t lqi_r, int8_t ed_r);
+
+/**
+ * \brief Function to send  the Marker Indication frame to the Host application
+ * \param mpdu Pointer to the actual marker frame Received
+ * \param lqi LQI of the received marker packet
+ * \param ed_value ED value  of the received marker packet
+ */
+void usr_range_test_marker_ind(trx_id_t trx,uint8_t *mpdu, uint8_t lqi, int8_t ed_value);
+
+
+
+/**
+ * Function to generate Range Test Start confirmation frame that must be sent to
+ * host application via serial interface.
+ * Called by Performance application as confirmation for range_test_start_req
+ *request
+ * \param status      Result for requested range_test_start_req
+ *
+ * \return void
+ */
+void usr_range_test_start_confirm(trx_id_t trx,uint8_t status);
+
+/**
+ * Function to generate Range Test Stop confirmation frame that must be sent to
+ * host application via serial interface.
+ * Called by Performance application as confirmation for range_test_start_req
+ *request
+ * \param status      Result for requested range_test_stop_req
+ *
+ * \return void
+ */
+void usr_range_test_stop_confirm(trx_id_t trx,uint8_t status);
+
+/**
+ * \brief Function to send  the transmitted frame to the Host application
+ * \param frame Pointer to the actual frame transmitted
+ */
+void usr_range_test_beacon_tx(trx_id_t trx,uint8_t *frame);
+
+
+/* ! \} */
+/* ! \} */
 #endif

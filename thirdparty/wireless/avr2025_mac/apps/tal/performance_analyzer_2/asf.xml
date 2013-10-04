@@ -26,6 +26,7 @@
 		<build type="header-file" value="inc/app_range_mode.h"/>
 		<build type="header-file" value="inc/perf_api.h"/>
 		<build type="header-file" value="inc/perf_msg_const.h"/>
+		<build type="header-file" value="inc/specific_tal_config.h"/>
 		<build type="header-file" value="inc/perf_api_serial_handler.h"/>
 		<build type="header-file" value="inc/user_interface.h"/>
 		<build type="include-path" value="inc/"/>

@@ -102,6 +102,7 @@ void switch_to_rx(trx_id_t trx_id);
 void switch_to_txprep(trx_id_t trx_id);
 void stop_tal_timer(trx_id_t trx_id);
 
+rf_cmd_status_t set_trx_state(trx_id_t trx,rf_cmd_state_t trx_cmd);
 /*
  * Prototypes from tal_ftn.c
  */
@@ -165,7 +166,7 @@ void ack_transmission_done(trx_id_t trx_id);
 /*
  * Prototypes from tal_tx.c
  */
-void transmit_frame(trx_id_t trx_id);
+void tal_transmit_frame(trx_id_t trx_id);
 void handle_tx_end_irq(trx_id_t trx_id);
 void tx_done_handling(trx_id_t trx_id, retval_t status);
 
