@@ -45,7 +45,9 @@
 #if (HIGHEST_STACK_LAYER == MAC)
 #include "mac_internal.h"
 #endif
+#if SAMD20
 #include "system.h"
+#endif /* SAMD20 */
 #include "board.h"
 
 #if (TOTAL_NUMBER_OF_SW_TIMERS > 0)

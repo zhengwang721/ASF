@@ -9,7 +9,6 @@
 		<build type="define" name="ENABLE_TSTAMP" value=""/>
 		<build type="define" name="BEACON_SUPPORT" value=""/>
 		<build type="define" name="GTS_SUPPORT" value=""/>
-		<build type="define" name="HIGH_DATA_RATE_SUPPORT" value=""/>
 		<build type="define" name="SIO_HUB" value=""/>
 		<require idref="thirdparty.wireless.avr2025_mac"/>
 		<require idref="thirdparty.wireless.addons.sio2host"/>
