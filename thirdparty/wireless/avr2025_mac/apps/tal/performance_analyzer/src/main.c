@@ -57,7 +57,7 @@
 #include "app_per_mode.h"
 #include "app_range_mode.h"
 #include "perf_api_serial_handler.h"
-#ifdef SAMD20
+#if SAMD20
 #include "system.h"
 #else
 #include "led.h"
@@ -431,10 +431,10 @@ volatile node_ib_t node_info;
 int main(void)
 {
 	irq_initialize_vectors();
-	#ifdef SAMD20
+#if SAMD20
 	system_init();
 	delay_init();
-	#else
+#else
 	sysclk_init();
 
 	/* Initialize the board.
@@ -442,7 +442,7 @@ int main(void)
 	 * the board initialization.
 	 */
 	board_init();    
-	#endif
+#endif
 
 	sio2host_init();
 	/*

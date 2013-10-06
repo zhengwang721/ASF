@@ -204,7 +204,7 @@ int main(void)
 {
 	irq_initialize_vectors();
 
-#ifdef SAMD20
+#if SAMD20
 	system_init();
 	delay_init();
 #else

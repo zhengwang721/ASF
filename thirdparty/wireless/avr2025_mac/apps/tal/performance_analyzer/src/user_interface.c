@@ -202,7 +202,7 @@ bool app_debounce_button(void)
  */
 bool button_pressed(void)
 {
-#ifdef SAMD20
+#if SAMD20
 	if(port_pin_get_input_level(SW0_PIN))
 	{
 		return false;

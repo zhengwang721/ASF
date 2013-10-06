@@ -99,7 +99,7 @@
 #include "serial_interface.h"
 #include "common_sw_timer.h"
 #include <asf.h>
-#ifdef SAMD20
+#if SAMD20
 #include "system.h"
 #endif
 
@@ -113,10 +113,10 @@ static void app_alert(void);
 int main(void)
 {
 	irq_initialize_vectors();
-	#ifdef SAMD20
+#if SAMD20
 	system_init();
 	delay_init();
-	#else
+#else
 	sysclk_init();
 
 	/* Initialize the board.
@@ -124,7 +124,7 @@ int main(void)
 	 * the board initialization.
 	 */
 	board_init();    
-	#endif
+#endif
 
 	sw_timer_init();
 	serial_interface_init();

@@ -269,10 +269,10 @@ static void app_alert(void);
 int main(void)
 {
 	irq_initialize_vectors();
-	#ifdef SAMD20
+#if SAMD20
 	system_init();
 	delay_init();
-	#else
+#else
 	sysclk_init();
 
 	/* Initialize the board.
@@ -280,7 +280,7 @@ int main(void)
 	 * the board initialization.
 	 */
 	board_init();    
-	#endif
+#endif
 #ifdef SIO_HUB
 	sio2host_init(); 
 #endif
