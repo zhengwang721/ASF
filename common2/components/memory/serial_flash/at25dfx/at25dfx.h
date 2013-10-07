@@ -118,9 +118,17 @@ static inline enum status_code at25dfx_chip_init(
 		struct spi_module *const spi_module,
 		const struct at25dfx_chip_config *const config)
 {
+	struct port_config port_config;
+
 	module->type = config->type;
 	module->cs_pin = config->cs_pin;
 	module->spi = spi_module;
+
+	// Configure CS pin as output, high
+	port_get_config_defaults(&port_config);
+	port_config.direction = PORT_PIN_DIR_OUTPUT;
+	port_pin_set_config(module->cs_pin, &port_config);
+	port_pin_set_output_level(module->cs_pin, true);
 
 	return STATUS_OK;
 }

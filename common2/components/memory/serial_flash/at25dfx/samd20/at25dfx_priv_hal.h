@@ -53,16 +53,6 @@
 
 //! \name Private, chip-level functions
 //@{
-static inline void _at25dfx_chip_select(struct at25dfx_chip_module *chip)
-{
-	port_pin_set_output_level(chip->cs_pin, false);
-}
-
-static inline void _at25dfx_chip_deselect(struct at25dfx_chip_module *chip)
-{
-	port_pin_set_output_level(chip->cs_pin, true);
-}
-
 static inline void _at25dfx_chip_issue_read_command_wait(
 		struct at25dfx_chip_module *chip, struct at25dfx_command cmd)
 {
@@ -140,14 +130,30 @@ static inline enum status_code _at25dfx_chip_get_nonbusy_status(
 
 	UNUSED(status);
 
-	_at25dfx_chip_select(chip);
-
 	// Issue status read command
+	while (!spi_is_ready_to_write(chip->spi)) {
+	}
+
+	_at25dfx_chip_select(chip);
 	status = spi_write(chip->spi, AT25DFX_COMMAND_READ_STATUS);
 	Assert(status == STATUS_OK);
 
+	while (!spi_is_ready_to_read(chip->spi)) {
+	}
+	status = spi_read(chip->spi, &status_reg);
+	Assert(status == STATUS_OK);
+
 	// Keep reading until busy flag clears
+	// TODO: Add some timeout functionality here!
 	do {
+		// Do dummy writes to read out status
+		while (!spi_is_ready_to_write(chip->spi)) {
+		}
+		status = spi_write(chip->spi, 0);
+		Assert(status == STATUS_OK);
+
+		while (!spi_is_ready_to_read(chip->spi)) {
+		}
 		status = spi_read(chip->spi, &status_reg);
 		Assert(status == STATUS_OK);
 	} while (status_reg & AT25DFX_STATUS_BUSY);

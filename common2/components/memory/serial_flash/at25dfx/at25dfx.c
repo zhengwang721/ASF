@@ -42,7 +42,7 @@ struct at25dfx_command {
 	at25dfx_datalen_t length;
 };
 
-#include <at25dfx_priv_hal.h>
+
 
 //! \name SerialFlash meta-data helpers
 //@{
@@ -131,6 +131,18 @@ static inline uint32_t _at25dfx_get_device_size(enum at25dfx_type type)
 
 //! \name Chip-level functions
 //@{
+
+static inline void _at25dfx_chip_select(struct at25dfx_chip_module *chip)
+{
+	port_pin_set_output_level(chip->cs_pin, false);
+}
+
+static inline void _at25dfx_chip_deselect(struct at25dfx_chip_module *chip)
+{
+	port_pin_set_output_level(chip->cs_pin, true);
+}
+
+#include <at25dfx_priv_hal.h>
 
 static inline void _at25dfx_chip_enable_write(struct at25dfx_chip_module *chip)
 {
@@ -366,7 +378,7 @@ enum status_code at25dfx_chip_set_global_sector_protect(
 
 	temp_data = protect ? AT25DFX_STATUS_GLOBAL_PROTECT : 0;
 	cmd.opcode = AT25DFX_COMMAND_WRITE_STATUS;
-	cmd.command_size = 4;
+	cmd.command_size = 1;
 	cmd.length = 1;
 	cmd.data = &temp_data;
 	_at25dfx_chip_issue_write_command_wait(chip, cmd);
