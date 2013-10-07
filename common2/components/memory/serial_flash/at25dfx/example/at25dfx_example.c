@@ -1,103 +1,40 @@
 /**
  * \file
  *
- * \brief AT25DFx SerialFlash Component Example.
- *
- * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
- *
- * \asf_license_start
- *
- * \page License
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- *
- * 3. The name of Atmel may not be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
- *
- * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
- * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
- * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- *
- * \asf_license_stop
+ * \brief Empty user application template
  *
  */
 
 /**
- * \mainpage AT25 SerialFlash example
+ * \mainpage User Application template doxygen documentation
  *
- * \section Purpose
+ * \par Empty user application template
  *
- * This example demonstrates how to use the Atmel SerialFlash AT25DFx component.
- * The SerialFlash requires an SPI bus as a low level communication interface. This
- * interface can be implemented using SPI or USART in SPI mode for SAM devices.
+ * This is a bare minimum user application template.
  *
- * \section Requirements
+ * For documentation of the board, go \ref group_common_boards "here" for a link
+ * to the board-specific documentation.
  *
- * This package can be used with SAM3N, SAM4L, SAM4E and SAM4C evaluation kits.
+ * \par Content
  *
- * \section Description
- *
- * This example will do the following operations.
- *   - Send "Read Status" command to the SerialFlash.
- *   - Read back the status of the SerialFlash.
- *   - Write two sectors to the SerialFlash.
- *   - Read back these sectors and check correct content.
- *   - If all operations are correct, \ref DATA_FLASH_LED_EXAMPLE_0 is 'on' and
- *     \ref DATA_FLASH_LED_EXAMPLE_1 is 'on'(If have).
- *     The other states of  LEDs mean that the SerialFlash access fails somewhere.
- *
- * \section Usage
- *
- * -# Build the program and download it into the evaluation board. Please
- *    refer to the
- *    <a href="http://www.atmel.com/dyn/resources/prod_documents/doc6224.pdf">
- *    SAM-BA User Guide</a>, the
- *    <a href="http://www.atmel.com/dyn/resources/prod_documents/doc6310.pdf">
- *    GNU-Based Software Development</a> application note or the
- *    <a href="ftp://ftp.iar.se/WWWfiles/arm/Guides/EWARM_UserGuide.ENU.pdf">
- *    IAR EWARM User Guide</a>, depending on the solutions that users choose.
- * -# Some texts, images and basic shapes should be displayed on the LCD.
+ * -# Include the ASF header files (through asf.h)
+ * -# Minimal main function that starts with a call to system_init()
+ * -# Basic usage of on-board LED and button
+ * -# "Insert application code here" comment
  *
  */
 
+/*
+ * Include header files for all drivers that have been imported from
+ * Atmel Software Framework (ASF).
+ */
 #include <asf.h>
-#include "conf_board.h"
 
-/** Test size */
+
 #define AT25DFX_TEST_DATA_SIZE   (1024)
 
-/** Test block start address */
-#define AT25DFX_TEST_BLOCK_ADDR  (0)
 
-
-/** RAM buffer used in this example */
 static uint8_t ram_buff[AT25DFX_TEST_DATA_SIZE];
-
-
-/**
- * \brief Entry point when test is failed.
- */
-void test_ko(void);
-
 
 struct at25dfx_spi_module at25dfx_spi;
 struct at25dfx_chip_module at25dfx_chip_1;
@@ -111,10 +48,12 @@ int main(void)
 	struct at25dfx_chip_config at25dfx_chip_config;
 	struct at25dfx_spi_config at25dfx_spi_config;
 
+	UNUSED(status);
+
 	system_init();
 
 	// Set up the SPI to use for the two serialflash chips
-	at25dfx_get_config_defaults(&at25dfx_spi_config);
+	at25dfx_spi_get_config_defaults(&at25dfx_spi_config);
 	at25dfx_spi_config.baudrate = 1000000;
 	at25dfx_spi_config.mux_setting = EXT1_SPI_SERCOM_MUX_SETTING;
 	at25dfx_spi_config.pinmux_pad0 = EXT1_SPI_SERCOM_PINMUX_PAD0;
@@ -122,17 +61,16 @@ int main(void)
 	at25dfx_spi_config.pinmux_pad2 = EXT1_SPI_SERCOM_PINMUX_PAD2;
 	at25dfx_spi_config.pinmux_pad3 = EXT1_SPI_SERCOM_PINMUX_PAD3;
 
-	at25dfx_init(&at25dfx_spi, EXT1_SPI_MODULE, &at25dfx_spi_config);
+	at25dfx_spi_init(&at25dfx_spi, EXT1_SPI_MODULE, &at25dfx_spi_config);
 
 	// Now configure and associate the two chips with the SPI
-	at25dfx_chip_get_config_defaults(&at25dfx_chip_config);
 	at25dfx_chip_config.type = AT25DFX_081A;
-	at25dfx_chip_config.ss_pin = EXT1_PIN_SPI_SS_0;
+	at25dfx_chip_config.cs_pin = EXT1_PIN_SPI_SS_0;
 
 	at25dfx_chip_init(&at25dfx_chip_1, &at25dfx_spi, &at25dfx_chip_config);
 
 	at25dfx_chip_config.type = AT25DFX_041A;
-	at25dfx_chip_config.ss_pin = EXT1_PIN_SPI_SS_1;
+	at25dfx_chip_config.cs_pin = EXT1_PIN_SPI_SS_1;
 
 	at25dfx_chip_init(&at25dfx_chip_2, &at25dfx_spi, &at25dfx_chip_config);
 
@@ -158,9 +96,9 @@ int main(void)
 		// Disable sector (64 kB size) protection
 		at25dfx_chip_set_sector_protect(&at25dfx_chip_2, 0x2345, false);
 	}
-	// Write a bunch of data -- nevermind that we read past end of ram_buf
+	// Write a bunch of data..
 	status = at25dfx_chip_write_buffer(&at25dfx_chip_2, 0x2345, ram_buff,
-			2 * AT25DFX_PAGE_SIZE);
+			AT25DFX_TEST_DATA_SIZE);
 	// If status is not OK, the write failed in the chip somehow.
 	Assert(status == STATUS_OK);
 
