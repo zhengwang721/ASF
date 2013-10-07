@@ -44,7 +44,7 @@
 #include "tc.h"
 #include "tc_interrupt.h"
 #include "hw_timer.h"
-#ifdef __SAMD20J18__
+#ifdef SAMD20
 #include "clock.h"
 #include <system_interrupt.h>
 #else
