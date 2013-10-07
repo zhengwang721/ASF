@@ -36,7 +36,7 @@
 
 static uint8_t ram_buff[AT25DFX_TEST_DATA_SIZE];
 
-struct at25dfx_spi_module at25dfx_spi;
+struct spi_module at25dfx_spi;
 struct at25dfx_chip_module at25dfx_chip_1;
 struct at25dfx_chip_module at25dfx_chip_2;
 
@@ -46,7 +46,7 @@ int main(void)
 	bool is_protected;
 	enum status_code status;
 	struct at25dfx_chip_config at25dfx_chip_config;
-	struct at25dfx_spi_config at25dfx_spi_config;
+	struct spi_config at25dfx_spi_config;
 
 	UNUSED(status);
 
@@ -54,14 +54,14 @@ int main(void)
 
 	// Set up the SPI to use for the two serialflash chips
 	at25dfx_spi_get_config_defaults(&at25dfx_spi_config);
-	at25dfx_spi_config.baudrate = 1000000;
+	at25dfx_spi_config.mode_specific.master.baudrate = 1000000;
 	at25dfx_spi_config.mux_setting = EXT1_SPI_SERCOM_MUX_SETTING;
 	at25dfx_spi_config.pinmux_pad0 = EXT1_SPI_SERCOM_PINMUX_PAD0;
 	at25dfx_spi_config.pinmux_pad1 = EXT1_SPI_SERCOM_PINMUX_PAD1;
 	at25dfx_spi_config.pinmux_pad2 = EXT1_SPI_SERCOM_PINMUX_PAD2;
 	at25dfx_spi_config.pinmux_pad3 = EXT1_SPI_SERCOM_PINMUX_PAD3;
 
-	at25dfx_spi_init(&at25dfx_spi, EXT1_SPI_MODULE, &at25dfx_spi_config);
+	spi_init(&at25dfx_spi, EXT1_SPI_MODULE, &at25dfx_spi_config);
 
 	// Now configure and associate the two chips with the SPI
 	at25dfx_chip_config.type = AT25DFX_081A;

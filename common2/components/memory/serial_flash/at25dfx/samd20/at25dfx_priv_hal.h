@@ -88,11 +88,11 @@ static inline void _at25dfx_chip_issue_read_command_wait(
 	// Issue command, then start read
 	_at25dfx_chip_select(chip);
 
-	status = spi_write_buffer_wait(&(chip->spi->spi_module), cmd_buffer, cmd.command_size);
+	status = spi_write_buffer_wait(chip->spi, cmd_buffer, cmd.command_size);
 	Assert(status == STATUS_OK);
 
 	if (cmd.length) {
-		status = spi_read_buffer_wait(&(chip->spi->spi_module), cmd.data, cmd.length, 0);
+		status = spi_read_buffer_wait(chip->spi, cmd.data, cmd.length, 0);
 		Assert(status == STATUS_OK);
 	}
 
@@ -121,11 +121,11 @@ static inline void _at25dfx_chip_issue_write_command_wait(
 
 	_at25dfx_chip_select(chip);
 
-	status = spi_write_buffer_wait(&(chip->spi->spi_module), cmd_buffer, cmd.command_size);
+	status = spi_write_buffer_wait(chip->spi, cmd_buffer, cmd.command_size);
 	Assert(status == STATUS_OK);
 
 	if (cmd.length) {
-		status = spi_write_buffer_wait(&(chip->spi->spi_module), cmd.data, cmd.length);
+		status = spi_write_buffer_wait(chip->spi, cmd.data, cmd.length);
 		Assert(status == STATUS_OK);
 	}
 
@@ -143,12 +143,12 @@ static inline enum status_code _at25dfx_chip_get_nonbusy_status(
 	_at25dfx_chip_select(chip);
 
 	// Issue status read command
-	status = spi_write(&(chip->spi->spi_module), AT25DFX_COMMAND_READ_STATUS);
+	status = spi_write(chip->spi, AT25DFX_COMMAND_READ_STATUS);
 	Assert(status == STATUS_OK);
 
 	// Keep reading until busy flag clears
 	do {
-		status = spi_read(&(chip->spi->spi_module), &status_reg);
+		status = spi_read(chip->spi, &status_reg);
 		Assert(status == STATUS_OK);
 	} while (status_reg & AT25DFX_STATUS_BUSY);
 

@@ -86,8 +86,44 @@ enum at25dfx_block_size {
 
 //! SerialFlash internal address
 typedef uint32_t at25dfx_address_t;
+
 //! Length of data package to read/write
 typedef uint16_t at25dfx_datalen_t;
+
+//! SerialFlash chip driver instance.
+struct at25dfx_chip_module {
+	struct spi_module *spi;
+	enum at25dfx_type type;
+	uint8_t cs_pin;
+};
+
+//! SerialFlash chip configuration.
+struct at25dfx_chip_config {
+	enum at25dfx_type type;
+	uint8_t cs_pin;
+};
+
+/**
+ * \brief Initialize chip driver instance.
+ *
+ * This function initializes a chip instance and associates it with a specified
+ * SPI instance.
+ *
+ * \param[out] module Pointer to the chip instance to initialize.
+ * \param[in] spi_module Pointer to the SPI instance to associate with.
+ * \param[in] config Pointer to the configuration for the chip.
+ */
+static inline enum status_code at25dfx_chip_init(
+		struct at25dfx_chip_module *const module,
+		struct spi_module *const spi_module,
+		const struct at25dfx_chip_config *const config)
+{
+	module->type = config->type;
+	module->cs_pin = config->cs_pin;
+	module->spi = spi_module;
+
+	return STATUS_OK;
+}
 
 #ifdef __cplusplus
 extern "C" {

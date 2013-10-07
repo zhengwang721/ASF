@@ -129,29 +129,6 @@ static inline uint32_t _at25dfx_get_device_size(enum at25dfx_type type)
 
 //@}
 
-//! \name SPI interface lock/unlock
-//@{
-
-static inline enum status_code _at25dfx_lock_spi(struct at25dfx_spi_module *spi)
-{
-	system_interrupt_enter_critical_section();
-	if (spi->locked) {
-		system_interrupt_leave_critical_section();
-		return STATUS_BUSY;
-	} else {
-		spi->locked = true;
-		system_interrupt_leave_critical_section();
-		return STATUS_OK;
-	}
-}
-
-static inline void _at25dfx_unlock_spi(struct at25dfx_spi_module *spi)
-{
-	spi->locked = false;
-}
-
-//@}
-
 //! \name Chip-level functions
 //@{
 
@@ -188,7 +165,7 @@ enum status_code at25dfx_chip_check_presence(struct at25dfx_chip_module *chip)
 	Assert(chip);
 
 	// Reserve the SPI for us
-	status = _at25dfx_lock_spi(chip->spi);
+	status = spi_lock(chip->spi);
 	if (status == STATUS_BUSY) {
 		return status;
 	}
@@ -199,7 +176,7 @@ enum status_code at25dfx_chip_check_presence(struct at25dfx_chip_module *chip)
 	cmd.length = 4;
 	_at25dfx_chip_issue_read_command_wait(chip, cmd);
 
-	_at25dfx_unlock_spi(chip->spi);
+	spi_unlock(chip->spi);
 
 	if (id == _at25dfx_get_device_id(chip->type)) {
 		return STATUS_OK;
@@ -223,7 +200,7 @@ enum status_code at25dfx_chip_read_buffer(struct at25dfx_chip_module *chip,
 		return STATUS_ERR_INVALID_ARG;
 	}
 
-	status = _at25dfx_lock_spi(chip->spi);
+	status = spi_lock(chip->spi);
 	if (status == STATUS_BUSY) {
 		return status;
 	}
@@ -235,7 +212,7 @@ enum status_code at25dfx_chip_read_buffer(struct at25dfx_chip_module *chip,
 	cmd.length = length;
 	_at25dfx_chip_issue_read_command_wait(chip, cmd);
 
-	_at25dfx_unlock_spi(chip->spi);
+	spi_unlock(chip->spi);
 
 	return STATUS_OK;
 }
@@ -255,7 +232,7 @@ enum status_code at25dfx_chip_write_buffer(struct at25dfx_chip_module *chip,
 		return STATUS_ERR_INVALID_ARG;
 	}
 
-	status = _at25dfx_lock_spi(chip->spi);
+	status = spi_lock(chip->spi);
 	if (status == STATUS_BUSY) {
 		return status;
 	}
@@ -288,7 +265,7 @@ enum status_code at25dfx_chip_write_buffer(struct at25dfx_chip_module *chip,
 
 	_at25dfx_chip_disable_write(chip);
 
-	_at25dfx_unlock_spi(chip->spi);
+	spi_unlock(chip->spi);
 
 	return status;
 }
@@ -300,7 +277,7 @@ enum status_code at25dfx_chip_erase(struct at25dfx_chip_module *chip)
 
 	Assert(chip);
 
-	status = _at25dfx_lock_spi(chip->spi);
+	status = spi_lock(chip->spi);
 	if (status == STATUS_BUSY) {
 		return status;
 	}
@@ -316,7 +293,7 @@ enum status_code at25dfx_chip_erase(struct at25dfx_chip_module *chip)
 
 	_at25dfx_chip_disable_write(chip);
 
-	_at25dfx_unlock_spi(chip->spi);
+	spi_unlock(chip->spi);
 
 	return status;
 }
@@ -333,7 +310,7 @@ enum status_code at25dfx_chip_block_erase(struct at25dfx_chip_module *chip,
 		return STATUS_ERR_INVALID_ARG;
 	}
 
-	status = _at25dfx_lock_spi(chip->spi);
+	status = spi_lock(chip->spi);
 	if (status == STATUS_BUSY) {
 		return status;
 	}
@@ -366,7 +343,7 @@ enum status_code at25dfx_chip_block_erase(struct at25dfx_chip_module *chip,
 
 	_at25dfx_chip_disable_write(chip);
 
-	_at25dfx_unlock_spi(chip->spi);
+	spi_unlock(chip->spi);
 
 	return status;
 }
@@ -380,7 +357,7 @@ enum status_code at25dfx_chip_set_global_sector_protect(
 
 	Assert(chip);
 
-	status = _at25dfx_lock_spi(chip->spi);
+	status = spi_lock(chip->spi);
 	if (status == STATUS_BUSY) {
 		return status;
 	}
@@ -396,7 +373,7 @@ enum status_code at25dfx_chip_set_global_sector_protect(
 
 	_at25dfx_chip_disable_write(chip);
 
-	_at25dfx_unlock_spi(chip->spi);
+	spi_unlock(chip->spi);
 
 	return STATUS_OK;
 }
@@ -414,7 +391,7 @@ enum status_code at25dfx_chip_set_sector_protect(
 		return STATUS_ERR_INVALID_ARG;
 	}
 
-	status = _at25dfx_lock_spi(chip->spi);
+	status = spi_lock(chip->spi);
 	if (status == STATUS_BUSY) {
 		return status;
 	}
@@ -430,7 +407,7 @@ enum status_code at25dfx_chip_set_sector_protect(
 
 	_at25dfx_chip_disable_write(chip);
 
-	_at25dfx_unlock_spi(chip->spi);
+	spi_unlock(chip->spi);
 
 	return STATUS_OK;
 }
@@ -448,7 +425,7 @@ enum status_code at25dfx_chip_get_sector_protect(
 		return STATUS_ERR_INVALID_ARG;
 	}
 
-	status = _at25dfx_lock_spi(chip->spi);
+	status = spi_lock(chip->spi);
 	if (status == STATUS_BUSY) {
 		return status;
 	}
@@ -460,7 +437,7 @@ enum status_code at25dfx_chip_get_sector_protect(
 	cmd.data = (uint8_t *)&protect;
 	_at25dfx_chip_issue_read_command_wait(chip, cmd);
 
-	_at25dfx_unlock_spi(chip->spi);
+	spi_unlock(chip->spi);
 
 	return STATUS_OK;
 }
