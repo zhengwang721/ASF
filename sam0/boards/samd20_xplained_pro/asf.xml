@@ -1,6 +1,7 @@
 <asf xmlversion="1.0">
 	<board id="board.samd20_xplained_pro" vendor="Atmel" caption="SAM D20 Xplained Pro">
 		<build type="define" name="BOARD" value="SAMD20_XPLAINED_PRO"/>
+		<build type="define" name="__SAMD20J18__" value=""/>
 		<build type="c-source" value="board_init.c"/>
 		<build type="header-file" value="samd20_xplained_pro.h"/>
 		<build type="include-path" value="."/>
