@@ -48,7 +48,7 @@
  */
 /* === INCLUDES ============================================================ */
 #include "tal.h"
-#ifndef SAMD20
+#if !SAMD20
 # include "led.h"
 #endif
 #include <stdio.h>

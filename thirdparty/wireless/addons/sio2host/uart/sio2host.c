@@ -45,7 +45,6 @@
 #include "asf.h"
 #include "sio2host.h"
 #include "conf_sio2host.h"
-#include "return_val.h"  
 /* === TYPES =============================================================== */
 
 /* === MACROS ============================================================== */
@@ -113,7 +112,12 @@ struct usart_config cdc_uart_config;
 
 uint8_t sio2host_tx(uint8_t *data, uint8_t length)
 {
+#if SAMD20
 	status_code_genare_t status;
+#else
+	status_code_t status;
+#endif /* SAMD20 */
+
 	do {
 #if SAMD20
 status = usart_serial_write_packet(&cdc_uart_module,(const uint8_t *)data,length);

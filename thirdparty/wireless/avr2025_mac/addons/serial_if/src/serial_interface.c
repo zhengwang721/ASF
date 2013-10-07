@@ -1009,6 +1009,7 @@ void usr_mlme_sync_loss_ind(uint8_t LossReason,
 }
 
 #ifdef GTS_SUPPORT
+#if (MAC_GTS_REQUEST == 1)
 void usr_mlme_gts_conf(gts_char_t GtsChar, uint8_t status)
 {
 	uint8_t *msg_buf;
@@ -1040,7 +1041,7 @@ void usr_mlme_gts_ind(uint16_t DeviceAddr, gts_char_t GtsChar)
 	*msg_buf++ = *((uint8_t*)&GtsChar);
 	*msg_buf = EOT;
 }
-
+#endif /* (MAC_GTS_REQUEST == 1) */
 #endif /* GTS_SUPPORT */
 /**
  * \brief Parses the Received Data in the Buffer and Process the Commands
@@ -1682,6 +1683,7 @@ static void handle_incoming_msg(void)
             break;
 #endif		
 	
+#ifdef GTS_SUPPORT
 #if (MAC_GTS_REQUEST == 1)
 		case MLME_GTS_REQUEST:
 		{
@@ -1707,7 +1709,8 @@ static void handle_incoming_msg(void)
 			}
 			break;
 		}
-#endif /* (MAC_GTS_REQUEST == 1) */		
+#endif /* (MAC_GTS_REQUEST == 1) */
+#endif /* GTS_SUPPORT */
 		default:
 			Assert("???" == 0);
 			break;

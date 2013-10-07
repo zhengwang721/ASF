@@ -42,9 +42,6 @@
 #include "conf_common_sw_timer.h"
 #include "common_hw_timer.h"
 #include "common_sw_timer.h"
-#if (HIGHEST_STACK_LAYER == MAC)
-#include "mac_internal.h"
-#endif
 #if SAMD20
 #include "system.h"
 #endif /* SAMD20 */

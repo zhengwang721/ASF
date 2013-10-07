@@ -243,11 +243,11 @@ extern bool tal_beacon_transmission;
 #ifdef HIGH_DATA_RATE_SUPPORT
 #define TAL_PSDU_US_PER_OCTET(octets) \
 	( \
-		tal_pib_CurrentPage == 0 ? ((uint16_t)(octets) * 32) : \
+		tal_pib.CurrentPage == 0 ? ((uint16_t)(octets) * 32) : \
 		( \
-			tal_pib_CurrentPage == 2 ? ((uint16_t)(octets) * 16) : \
+			tal_pib.CurrentPage == 2 ? ((uint16_t)(octets) * 16) : \
 			( \
-				tal_pib_CurrentPage == \
+				tal_pib.CurrentPage == \
 				16 ? ((uint16_t)(octets) * \
 				8) : ((uint16_t)(octets) * 4) \
 			) \

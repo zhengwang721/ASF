@@ -99,9 +99,6 @@
 #include "delay.h"
 #include "common_sw_timer.h"
 #include "sio2host.h"
-#if (defined SAMD20) || (defined SAM4L)
- #include "unaligned.h"
-#endif
 
 /* === TYPES =============================================================== */
 
