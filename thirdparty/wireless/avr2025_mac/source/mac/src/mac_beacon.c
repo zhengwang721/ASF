@@ -131,7 +131,7 @@ static uint8_t mac_buffer_add_pending(uint8_t *buf_ptr);
 #ifdef BEACON_SUPPORT
 static void mac_t_beacon_cb(void *callback_parameter);
 static void mac_t_prepare_beacon_cb(void *callback_parameter);
-void mac_wakeup(void);
+
 /* TODO */
 
 
@@ -1046,9 +1046,33 @@ void mac_tx_pending_bc_data(void)
 #endif /* BEACON_SUPPORT */
 
 #endif /* MAC_START_REQUEST_CONFIRM */
-void mac_wakeup(void)
+void mac_wakeup(uint32_t res_time)
 {
   //sw_timer_service();
+  
+  sw_timer_stop(T_Beacon_Tracking_Period);
+  if (pal_is_timer_running(T_Missed_Beacon))
+  {
+	  sw_timer_stop(T_Missed_Beacon);
+  }
+ // printf("%d\n",res_time);
+  if(res_time >= 500)
+  {
+  res_time = res_time - 400;
+  pal_timer_start(
+  T_Beacon_Tracking_Period,
+  res_time,
+  TIMEOUT_RELATIVE,
+  (
+  FUNC_PTR)mac_t_tracking_beacons_cb,
+  NULL);
+  }
+  else
+  { 
+	  mac_t_tracking_beacons_cb(NULL);
+
+  }
+   // mac_t_tracking_beacons_cb(NULL);
 
 /* Remaining time needs to handled in MAC when application switches to RTC*/
 }

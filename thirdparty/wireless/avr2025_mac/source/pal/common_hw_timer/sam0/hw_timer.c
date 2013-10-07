@@ -136,13 +136,13 @@ void restore_cpu_interrupt(uint8_t flags)
 	cpu_irq_restore((uint32_t)flags);
 }
 
-void tc_ovf_callback(struct tc_module *const module_instance)
+static void tc_ovf_callback(struct tc_module *const module_instance)
 {
 	tmr_ovf_callback();
 }
 /*! \brief  hw timer compare callback
  */
-void tc_cca_callback(struct tc_module *const module_instance)
+static void tc_cca_callback(struct tc_module *const module_instance)
 {
 	tmr_cca_callback();
 }

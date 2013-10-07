@@ -105,11 +105,6 @@
 #include "mac_api.h"
 #include "tal.h"
 #include "ieee_const.h"
-#include "tc.h"
-#include "tc_interrupt.h"
-#include "hw_timer.h"
-#include "common_hw_timer.h"
-#include "conf_hw_timer.h"
 #include <asf.h>
 /* === TYPES =============================================================== */
 
@@ -138,7 +133,7 @@ typedef enum coord_state_tag {
 /** Defines the maximum number of devices this coordinator will handle. */
 #define MAX_NUMBER_OF_DEVICES           (100)
 
-#define CHANNEL_OFFSET                  (0)
+#define CHANNEL_OFFSET                  (7)
 
 #define SCAN_CHANNEL                    (1ul << current_channel)
 

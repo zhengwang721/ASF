@@ -228,6 +228,7 @@ void mac_t_tracking_beacons_cb(void *callback_parameter)
 
 	/* Turn the radio on */
 	tal_rx_enable(PHY_RX_ON);
+	mac_superframe_state = MAC_ACTIVE_CAP;
 
 	callback_parameter = callback_parameter; /* Keep compiler happy. */
 }
