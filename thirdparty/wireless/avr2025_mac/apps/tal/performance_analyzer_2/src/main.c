@@ -689,7 +689,7 @@ retval_t transmit_frame(trx_id_t trx,
 
     /* transmit the frame */
 
-	return(tal_tx_frame(trx,node_info[trx].tx_frame_info, NO_CSMA_NO_IFS, true));
+	return(tal_tx_frame(trx,node_info[trx].tx_frame_info, CSMA_UNSLOTTED, true));
 
 
 }

@@ -243,9 +243,9 @@ void app_led_event(led_event_t ev)
             break;
 
         case LED_EVENT_POWER_ON:
-              LED_Off(STATUS_LED);
-              LED_On(TX_LED);
+              LED_Off(STATUS_LED);              
                LED_Off(RX_LED);
+			   LED_On(TX_LED);
             break;
 
         case LED_EVENT_START_PEER_SEARCH:
@@ -256,9 +256,9 @@ void app_led_event(led_event_t ev)
 
         case LED_EVENT_PEER_SEARCH_DONE:
             
-              LED_Off(TX_LED);
-               LED_On(STATUS_LED);
+              LED_Off(TX_LED);               
                LED_Off(RX_LED);
+			   LED_On(STATUS_LED);
             break;
 
         case LED_EVENT_ALL_ON:

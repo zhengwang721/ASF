@@ -148,7 +148,7 @@ void range_test_tx_on_task(void)
 void range_test_rx_cb(frame_info_t *mac_frame_info)
 {
     app_payload_t *msg;
-    if (*(mac_frame_info->mpdu) == (FRAME_OVERHEAD +
+    if ((mac_frame_info->length) == (FRAME_OVERHEAD +
                                     ((sizeof(app_payload_t) -
                                       sizeof(general_pkt_t)) +
                                      sizeof(data_pkt_range_test_t))))

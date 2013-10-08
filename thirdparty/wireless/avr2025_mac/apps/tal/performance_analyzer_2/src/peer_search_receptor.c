@@ -340,13 +340,13 @@ static void wait_for_conf_rx_cb(trx_id_t trx,frame_info_t *mac_frame_info)
 {
     app_payload_t *msg;
 
-    if (*(mac_frame_info->mpdu) == (FRAME_OVERHEAD
+    if ((mac_frame_info->length) == (FRAME_OVERHEAD
                                     + ((sizeof(app_payload_t)
                                         - sizeof(general_pkt_t))
-                                       + sizeof(peer_conf_t))))
+                                       + sizeof(peer_conf_t)))) //sriram
     {
         /* Point to the message : 1 =>size is first byte and 2=>FCS*/
-        msg = (app_payload_t *)(mac_frame_info->mpdu + 1 + FRAME_OVERHEAD - 2);
+        msg = (app_payload_t *)(mac_frame_info->mpdu +  FRAME_OVERHEAD);
         if ((msg->cmd_id) == PEER_CONFIRM)
         {
             if (node_info[trx].peer_short_addr == (msg->payload.peer_conf_data.nwk_addr))

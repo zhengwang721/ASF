@@ -300,11 +300,12 @@ void handle_tx_end_irq(trx_id_t trx_id)
         return;
     }
 
+
     /* Check if ACK is requested. */
     if (*mac_frame_ptr[trx_id]->mpdu & FCF_ACK_REQUEST)
     {
         /* Wait for ACK reception */
-        //debug_text(PSTR("waiting for ACK"));
+        debug_text(PSTR("waiting for ACK"));
         tal_state[trx_id] = TAL_WAITING_FOR_ACK_RECEPTION;
 
         uint8_t timer_id;
@@ -316,7 +317,7 @@ void handle_tx_end_irq(trx_id_t trx_id)
         {
             timer_id = TAL_T_1;
         }
-
+		
         retval_t status =
             pal_timer_start(timer_id, tal_pib[trx_id].ACKWaitDuration + 1000, TIMEOUT_RELATIVE,
                             (FUNC_PTR)ack_timout_cb, (void *)&timer_cb_parameter[trx_id]);
@@ -337,6 +338,7 @@ void handle_tx_end_irq(trx_id_t trx_id)
         pal_trx_reg_write(rf_reg_offset + RG_RF09_CMD, RF_RX);
         trx_state[trx_id] = RF_RX;
     }
+
     else
     {
         //debug_text(PSTR("No ACK requested"));

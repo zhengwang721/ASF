@@ -200,7 +200,7 @@ void serial_data_handler()
 		 {
 			 /* No data to process, read the stream IO */
 			 rx_index[trx] = 0;
-			 if(trx == 0)
+			 if(trx == 1)
 			 {
 			 data_length[trx] = sio2host_rx(data[trx], SIO_RX_BUF_SIZE);
 			 }
@@ -221,7 +221,7 @@ void serial_data_handler()
 		 if (buf_count[trx] != 0)
 		 {
 			 uint8_t no_of_bytes_transmitted;
-			if(trx == 0)
+			if(trx == 1)
 			{
 			  no_of_bytes_transmitted = sio2host_tx(&sio_tx_buf[trx][head[trx]][curr_tx_buffer_index[trx]],
 			 (sio_tx_buf[trx][head[trx]][1] + 3) - curr_tx_buffer_index[trx] );

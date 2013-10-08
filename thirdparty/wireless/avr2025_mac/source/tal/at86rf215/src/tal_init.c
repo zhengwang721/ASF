@@ -151,8 +151,12 @@ retval_t tal_init(void)
 
         tal_state[trx_id] = TAL_IDLE;
 
-
+	}
+	    /* Init seed of rand() */
+	    tal_generate_rand_seed();
 #ifndef DISABLE_IEEE_ADDR_CHECK
+for (uint8_t trx_id = 0; trx_id < 2; trx_id++)
+{
     /* Check if a valid IEEE address is available. */
     /*
      * This while loop is on purpose, since just in the
@@ -187,8 +191,9 @@ retval_t tal_init(void)
              */
         }
     }
-	#endif
 	}
+	#endif
+
 
 
     /*

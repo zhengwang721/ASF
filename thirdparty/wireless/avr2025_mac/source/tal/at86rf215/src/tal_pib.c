@@ -742,14 +742,19 @@ retval_t tal_pib_set(trx_id_t trx_id, uint8_t attribute, pib_value_t *value)
             break;
 
         case phyCurrentChannel:
+{
+			uint16_t channel;
+			channel = value->pib_value_16bit;
+
 #ifdef SUPPORT_LEGACY_OQPSK
             /* Adjust internal channel number to IEEE compliant numbering */
             if (tal_pib[trx_id].phy.modulation == LEG_OQPSK)
             {
+
                 if (trx_id == RF24)
                 {
-                    if ((value->pib_value_16bit < 11) ||
-                        (value->pib_value_16bit > 26))
+                    if ((channel < 11) ||
+                        (channel > 26))
                     {
                         status = MAC_INVALID_PARAMETER;
                         /* no further processing of the channel value */
@@ -757,28 +762,29 @@ retval_t tal_pib_set(trx_id_t trx_id, uint8_t attribute, pib_value_t *value)
                     }
                     else
                     {
-                        value->pib_value_16bit -= 11;
+                        channel -= 11;
                     }
                 }
                 else // RF09
                 {
                     if (tal_pib[trx_id].phy.freq_band == US_915)
                     {
-                        if ((value->pib_value_16bit < 1) ||
-                            (value->pib_value_16bit > 10))
+                        if ((channel < 1) ||
+                            (channel > 10))
                         {
+							
                             status = MAC_INVALID_PARAMETER;
                             /* no further processing of the channel value */
                             break;
                         }
                         else
                         {
-                            value->pib_value_16bit -= 1;
+                            channel -= 1;
                         }
                     }
                     else if (tal_pib[trx_id].phy.freq_band == EU_863)
                     {
-                        if (value->pib_value_16bit != 0)
+                        if (channel != 0)
                         {
                             status = MAC_INVALID_PARAMETER;
                             /* no further processing of the channel value */
@@ -796,11 +802,10 @@ retval_t tal_pib_set(trx_id_t trx_id, uint8_t attribute, pib_value_t *value)
                     switch_to_txprep(trx_id);
                 }
 
-                tal_pib[trx_id].CurrentChannel = value->pib_value_16bit;
+                tal_pib[trx_id].CurrentChannel = channel;
                 pal_trx_write(rf_reg_offset + RG_RF09_CNL,
                               (uint8_t *)&tal_pib[trx_id].CurrentChannel, 2);
-							  
-		
+
                 if (trx_state[trx_id] == RF_TXPREP)
                 {
                     while (TAL_RF_IS_IRQ_SET(trx_id, RF_IRQ_TRXRDY) == 0)
@@ -817,6 +822,7 @@ retval_t tal_pib_set(trx_id_t trx_id, uint8_t attribute, pib_value_t *value)
                     switch_to_rx(trx_id);
                 }
             }
+}
             break;
 
         case phyTransmitPower:

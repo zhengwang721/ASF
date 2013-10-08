@@ -682,42 +682,16 @@ retval_t  tal_trx_reg_write(trx_id_t trx,uint16_t reg_addr, uint8_t value)
 
 retval_t tal_get_curr_trx_config(trx_id_t trx,param_type parameter, uint8_t *param_value)
 {
-	*param_value = 0XFF;
-	return MAC_SUCCESS;//sriram
+uint16_t rf_reg_offset = RF_BASE_ADDR_OFFSET * trx;
+
 	switch (parameter) {
-#if ((TAL_TYPE != AT86RF230B) && (TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF215))
-	case ANT_DIVERSITY:
-		*param_value = pal_trx_bit_read(SR_ANT_DIV_EN);
-		break;
-
-	case ANT_SELECT:
-		*param_value = pal_trx_bit_read(SR_ANT_SEL);
-		break;
-
-#endif
-#if (TAL_TYPE != AT86RF230B)
-	case ANT_CTRL:
-		*param_value = pal_trx_bit_read(SR_BBC0_AFC0_PM);
-		break;
 
 	case AACK_PROMSCS_MODE:
-		*param_value = pal_trx_bit_read(SR_BBC0_AFC0_PM);
-		break;
-#endif
-
-#if ((TAL_TYPE == AT86RF233 || TAL_TYPE == ATMEGARFR2 \
-		|| TAL_TYPE == AT86RF212 || TAL_TYPE == AT86RF212B))
-	case CC_BAND:
-		*param_value = pal_trx_bit_read(SR_CC_BAND);
+		*param_value = pal_trx_bit_read(rf_reg_offset+SR_BBC0_AFC0_PM);
 		break;
 
-	case CC_NUMBER:
-		*param_value = pal_trx_reg_read(RG_CC_CTRL_0);
-		break;
-
-#endif
 	case TX_PWR:
-		*param_value =0x00;// pal_trx_bit_read(0X00);
+		*param_value = pal_trx_bit_read(rf_reg_offset+SR_RF09_PAC_TXPWR);
 		break;
 
 	default:

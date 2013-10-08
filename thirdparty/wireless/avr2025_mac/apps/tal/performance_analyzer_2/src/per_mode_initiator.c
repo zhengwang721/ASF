@@ -385,7 +385,7 @@ void per_mode_initiator_task(trx_id_t trx)
 						curr_trx_config_params[trx].retry_enabled );
 			} else {
 				tal_tx_frame(trx,node_info[trx].tx_frame_info,
-						NO_CSMA_NO_IFS,
+						NO_CSMA_WITH_IFS,//sriram
 						curr_trx_config_params[trx].retry_enabled );
 			}
 		}
@@ -944,6 +944,7 @@ static void set_parameter_on_transmitter_node(trx_id_t trx,retval_t status)
                 curr_trx_config_params[trx].channel_page = set_param_cb[trx].param_value;
 
 					 tal_pib_get(trx,phyCurrentChannel, &channel);
+
 					 curr_trx_config_params[trx].channel = channel;
 					 tal_pib_get(trx,phyTransmitPower, &tx_pwr);
 					 dbm_val = CONV_phyTransmitPower_TO_DBM(tx_pwr);
@@ -1049,12 +1050,10 @@ void per_mode_initiator_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 
                         uint32_t frames_with_wrong_crc;
 
-                        int8_t rssi_val = tal_get_rssi_base_val(trx);
+                        int8_t rssi_val =CCPU_ENDIAN_TO_LE32(msg->payload.test_result_rsp_data.rssi_avrg_rx);//sriram
                         sw_timer_stop(APP_TIMER_TO_TX);
                         number_rx_frames = (msg->payload.test_result_rsp_data.num_of_frames_rx);
                         aver_lqi = CCPU_ENDIAN_TO_LE32(msg->payload.test_result_rsp_data.lqi_avrg_rx);
-                        aver_rssi = CCPU_ENDIAN_TO_LE32(msg->payload.test_result_rsp_data.rssi_avrg_rx);
-                        rssi_val += aver_rssi;
 
 #ifdef CRC_SETTING_ON_REMOTE_NODE
                         frames_with_wrong_crc = (msg->payload.test_result_rsp_data.frames_with_wrong_crc);
@@ -1094,7 +1093,7 @@ void per_mode_initiator_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
                 uint8_t ant_div_settings;
                 if (op_mode[trx] == DIVERSITY_STATUS_REQ)
                 {
-                    if (*(mac_frame_info->mpdu) == ( FRAME_OVERHEAD +
+                    if ((mac_frame_info->length) == ( FRAME_OVERHEAD +
                                                      ((sizeof(app_payload_t) -
                                                        sizeof(general_pkt_t)) +
                                                       sizeof(div_stat_rsp_t))))
@@ -1137,7 +1136,7 @@ void per_mode_initiator_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
                 bool crc_settings;
                 if (op_mode[trx] == CRC_STATUS_REQ_WAIT)
                 {
-                    if (*(mac_frame_info->mpdu) == ( FRAME_OVERHEAD +
+                    if ((mac_frame_info->length) == ( FRAME_OVERHEAD +
                                                      ((sizeof(app_payload_t) -
                                                        sizeof(general_pkt_t)) +
                                                       sizeof(crc_stat_rsp_t))))
@@ -1293,7 +1292,7 @@ static void config_per_test_parameters(trx_id_t trx)
     curr_trx_config_params[trx].rx_desensitize = default_trx_config_params[trx].rx_desensitize = false;
     /* Disable Rx desensitization */
 
-    tal_set_rx_sensitivity_level(trx,NO_RX_DESENSITIZE_LEVEL);
+    //tal_set_rx_sensitivity_level(trx,NO_RX_DESENSITIZE_LEVEL);
 
 
     if (peer_found[trx] == true)
@@ -1315,6 +1314,7 @@ static void config_per_test_parameters(trx_id_t trx)
 	{
 		curr_trx_config_params[trx].channel = default_trx_config_params[trx].channel = DEFAULT_CHANNEL_RF24;
 		tal_pib_set(trx,phyCurrentChannel, (pib_value_t *)&default_trx_config_params[trx].channel);
+
 		
 		/* Make the ISM frequency as null as IEEE channel is set in default case */
 		curr_trx_config_params[trx].channel_page = default_trx_config_params[trx].channel_page = TAL_CURRENT_PAGE_DEFAULT_RF24;
@@ -1326,12 +1326,12 @@ static void config_per_test_parameters(trx_id_t trx)
 	else
 	{
 		curr_trx_config_params[trx].channel = default_trx_config_params[trx].channel = DEFAULT_CHANNEL_RF09;
-		tal_pib_set(trx,phyCurrentChannel, (pib_value_t *)&default_trx_config_params[trx].channel);
+		tal_pib_set(trx,phyCurrentChannel, (pib_value_t *)&default_trx_config_params[trx].channel);//sriram
 		curr_trx_config_params[trx].channel_page = default_trx_config_params[trx].channel_page = TAL_CURRENT_PAGE_DEFAULT_RF09;
 		tal_pib_set(trx,phyCurrentPage, (pib_value_t *)&default_trx_config_params[trx].channel_page);
 		/* As tx power is already configure by TAL in tal_pib.c get it for application*/
 		temp = TAL_TRANSMIT_POWER_DEFAULT;
-		tal_pib_set(trx,phyTransmitPower, (pib_value_t *)&temp);
+		//tal_pib_set(trx,phyTransmitPower, (pib_value_t *)&temp);
 	}
  
     
@@ -1622,7 +1622,6 @@ void pulse_cw_transmission(trx_id_t trx)
 
 		tal_pib_get(trx,phyCurrentChannel, &channel);
 
-
     /* Save all user settings before continuous tx */
     save_all_settings(trx);
 
@@ -1691,14 +1690,14 @@ void start_cw_transmission(trx_id_t trx, uint8_t tx_mode)
         case CW_MODE: /* CW mode*/
             {
                 /* In CW_MODE the parameter random_content is obsolete. */
-                tfa_continuous_tx_start(CW_MODE, false);
+                tfa_continuous_tx_start(trx,CW_MODE);
             }
             break;
 
         case PRBS_MODE: /* PRBS mode*/
             {
                 /* Start PRBS_MODE mode using random content. */
-                tfa_continuous_tx_start(PRBS_MODE, true);
+                tfa_continuous_tx_start(trx,PRBS_MODE);
             }
             break;
         default:
@@ -1846,26 +1845,9 @@ void per_mode_initiator_ed_end_cb(trx_id_t trx, uint8_t energy_level)
 
 	tal_pib_get(trx,phyCurrentChannel, &channel);
 
-
-#ifndef TRX_REG_RAW_VALUE
-    /* Re-scale ED value to Pin(dBm)- for more details refer tal_ed.c */
-
-		min_ch = 0;
-		max_ch = 26;
-		float reg_val = (float)(62 / 255) * energy_level;
-		p_in = (uint8_t)((reg_val * 1.03) - 99);
-
-
-
-#else
-    /* Use Pure reg values */
-
-		min_ch = 0;
-		max_ch = 26;
-	    p_in = (uint8_t)(energy_level - 99);
-
-
-#endif /* End of TRX_REG_RAW_VALUE */
+min_ch = 0;
+max_ch = 26;
+p_in = (int8_t)energy_level ;
 
     /* get the channel number and its corresponding Pin value */
     ed_scan_result[trx][p_in_index[trx]].channel_no = channel;
@@ -2277,8 +2259,9 @@ static void set_channel(trx_id_t trx, uint8_t channel)
 {
     uint32_t supported_channels;
 
+#ifdef SUPPORT_LEGACY_OQPSK
 		tal_pib_get(trx,phyChannelsSupported, (uint8_t *)&supported_channels);
-
+#endif
 
     /* Check the channel is a valid one and is a supported channel */
     if ( (channel < BIT_COUNT) && (supported_channels & ((uint32_t)0x01) << channel) )
@@ -2509,13 +2492,13 @@ void start_ed_scan(trx_id_t trx,uint8_t ed_scan_duration, uint32_t channel_sel_m
 {
 	uint8_t first_channel;
 	uint8_t ch_cnt;
-
+	uint32_t supported_channels;
 	float scan_time;
 	/* Initialize the no. of channels to 0 */
 	num_channels[trx] = 0;
 
 	scan_duration[trx] = ed_scan_duration;
-	scan_channel_mask[trx] = (channel_sel_mask & tal_pib[trx].SupportedChannels);
+	scan_channel_mask[trx] = (channel_sel_mask & TRX_SUPPORTED_CHANNELS_LEG(trx));
 
 	/* Check the range for the scan duration */
 	if (scan_duration[trx] > MAX_SCAN_DURATION) {
@@ -2523,9 +2506,21 @@ void start_ed_scan(trx_id_t trx,uint8_t ed_scan_duration, uint32_t channel_sel_m
 		usr_ed_scan_start_confirm(trx,VALUE_OUT_OF_RANGE, NUL_VAL, NUL_VAL);
 		return;
 	}
+uint8_t min_ch,max_ch;
+if(trx==0)
+{
+min_ch = 0;
+max_ch =10;
 
+}
+else
+{
+	min_ch = 11;
+	max_ch =26;
+
+	}
 	scanning[trx] = true;
-	for (ch_cnt = MIN_CHANNEL; ch_cnt <= MAX_CHANNEL; ch_cnt++) {
+	for (ch_cnt = min_ch; ch_cnt <= max_ch; ch_cnt++) {
 		num_channels[trx]
 			+= (scan_channel_mask[trx] &
 				((uint32_t)1 << ch_cnt)) ? 1 : 0;
@@ -2550,7 +2545,7 @@ void start_ed_scan(trx_id_t trx,uint8_t ed_scan_duration, uint32_t channel_sel_m
 				reverse_float(scan_time));
 	}
 
-	tal_pib_get(trx,phyCurrentChannel, &channel_before_scan);
+	tal_pib_get(trx,phyCurrentChannel, &channel_before_scan[trx]);
 
 	/* Identify first channel */
 	for (ch_cnt = MIN_CHANNEL; ch_cnt <= MAX_CHANNEL; ch_cnt++) {

@@ -229,7 +229,11 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 {
     app_payload_t *msg;
     static uint8_t rx_count;
-    uint8_t expected_frame_size;
+    uint8_t expected_frame_size;	
+	
+	uint16_t lqi_pos = mac_frame_info->length + tal_pib[trx].FCSLen;
+	uint16_t ed_pos = lqi_pos+1;
+
 
     /* Point to the message : 1 =>size is first byte and 2=>FCS*/
     msg = (app_payload_t *)(mac_frame_info->mpdu + FRAME_OVERHEAD);
@@ -272,7 +276,7 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
                 expected_frame_size = (FRAME_OVERHEAD + ((sizeof(app_payload_t) -
                                                           sizeof(general_pkt_t)) +
                                                          sizeof(set_parm_req_t)));
-                if (*(mac_frame_info->mpdu) == expected_frame_size)
+                if ((mac_frame_info->length) == expected_frame_size)
                 {
                     /* Extract and process the cmd received */
                     set_paramter_on_recptor_node(trx, msg);
@@ -288,26 +292,27 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
                 {
                     
                         printf("\r\nReceiving..");
-                    aver_lqi[trx] += mac_frame_info->mpdu[mac_frame_info->mpdu[0] + LQI_LEN];
-                    aver_rssi[trx] += mac_frame_info->mpdu[mac_frame_info->mpdu[0] + LQI_LEN + 1];
+                    aver_lqi[trx] += mac_frame_info->mpdu[lqi_pos];
+                    aver_rssi[trx] += mac_frame_info->mpdu[ed_pos];
 #ifdef CRC_SETTING_ON_REMOTE_NODE
                     frames_with_wrong_crc[trx] = 0;
 #endif /* #ifdef CRC_SETTING_ON_REMOTE_NODE */
                     number_rx_frames[trx]++;
                     /* Get the seq no. of the first packet */
-                    prev_seq_no = mac_frame_info->mpdu[PL_POS_SEQ_NUM];
+                    prev_seq_no = mac_frame_info->mpdu[PL_POS_SEQ_NUM-1];//sriram
                 }
                 else
                 {
-                    cur_seq_no = mac_frame_info->mpdu[PL_POS_SEQ_NUM];
+                    cur_seq_no = mac_frame_info->mpdu[PL_POS_SEQ_NUM-1];//sriram
                     /* Check for the duplicate packets */
                     if (prev_seq_no != cur_seq_no)
                     {
+
                         number_rx_frames[trx]++;
                         prev_seq_no = cur_seq_no;
                         /* Extract LQI and  RSSI */
-                        aver_lqi[trx] += mac_frame_info->mpdu[mac_frame_info->mpdu[0] + LQI_LEN];
-                        aver_rssi[trx] += mac_frame_info->mpdu[mac_frame_info->mpdu[0] + LQI_LEN + 1];
+                        aver_lqi[trx] += mac_frame_info->mpdu[lqi_pos];
+                        aver_rssi[trx] += mac_frame_info->mpdu[ed_pos];
                     }
 
                 }
@@ -332,7 +337,7 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
                 expected_frame_size =  (FRAME_OVERHEAD + ((sizeof(app_payload_t) -
                                                            sizeof(general_pkt_t)) +
                                                           sizeof(result_req_t)));
-                if (*(mac_frame_info->mpdu) == expected_frame_size)
+                if ((mac_frame_info->length) == expected_frame_size)
                 {
                     if (number_rx_frames[trx] != 0)
                     {
@@ -383,7 +388,7 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
                 expected_frame_size = (FRAME_OVERHEAD + ((sizeof(app_payload_t) -
                                                           sizeof(general_pkt_t)) +
                                                          sizeof(div_stat_req_t)));
-                if (*(mac_frame_info->mpdu) == expected_frame_size)
+                if ((mac_frame_info->length) == expected_frame_size)
                 {
                     send_diversity_status_rsp(trx);
                 }
@@ -396,7 +401,7 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
                 expected_frame_size = (FRAME_OVERHEAD + ((sizeof(app_payload_t) -
                                                           sizeof(general_pkt_t)) +
                                                          sizeof(div_set_req_t)));
-                if (*(mac_frame_info->mpdu) == expected_frame_size)
+                if ((mac_frame_info->length) == expected_frame_size)
                 {
                     /* Antenna diversity need to be enabled */
                     if (msg->payload.div_set_req_data.status)
@@ -435,7 +440,7 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
                 expected_frame_size =  (FRAME_OVERHEAD + ((sizeof(app_payload_t) -
                                                            sizeof(general_pkt_t)) +
                                                           sizeof(crc_stat_req_t)));
-                if (*(mac_frame_info->mpdu) == expected_frame_size)
+                if ((mac_frame_info->length) == expected_frame_size)
                 {
                     send_crc_status_rsp(trx);
                 }
@@ -448,7 +453,7 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
                 expected_frame_size = (FRAME_OVERHEAD + ((sizeof(app_payload_t) -
                                                           sizeof(general_pkt_t)) +
                                                          sizeof(crc_set_req_t)));
-                if (*(mac_frame_info->mpdu) == expected_frame_size)
+                if ((mac_frame_info->length) == expected_frame_size)
                 {
                     if (msg->payload.crc_set_req_data.status)
                     {
@@ -610,13 +615,13 @@ static void set_paramter_on_recptor_node(trx_id_t trx, app_payload_t *msg)
     {
         case CHANNEL: /* Parameter = channel */
             {
-
-                param_val = msg->payload.set_parm_req_data.param_value;
+				uint16_t param_ch_val;
+                param_ch_val = msg->payload.set_parm_req_data.param_value;
 
 					/* set the channel on receptor with the received value */
-					tal_pib_set(trx,phyCurrentChannel, (pib_value_t *)&param_val);
+					tal_pib_set(trx,phyCurrentChannel, (pib_value_t *)&param_ch_val);
 
-                    printf("\r\n Channel changed to %d", param_val);
+                    printf("\r\n Channel changed to %d", param_ch_val);
                 
 
             }
