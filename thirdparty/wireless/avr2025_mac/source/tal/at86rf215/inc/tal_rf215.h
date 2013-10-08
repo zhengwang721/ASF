@@ -43,12 +43,12 @@ typedef enum trx_id_tag
     RFBOTH  /**< Id for both device parts */
 } SHORTENUM trx_id_t;
 
-
+//sriram
 #define TRX_SUPPORTED_CHANNELS_LEG(trx) \
 ( \
 (trx == RF24)? \
 (0x07FFF800) :\
-(0x000007FE)\ //sriram
+(0x000007FE)\ 
 )
 
 /* === EXTERNALS =========================================================== */
