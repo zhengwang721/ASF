@@ -913,6 +913,11 @@ __no_inline enum status_code system_peripheral_unlock(
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
+ *		<td>C</td>
+ *		<td>10/2013</td>
+ *		<td>Extended acronyms list</td>
+ *	</tr>
+ *	<tr>
  *		<td>B</td>
  *		<td>06/2013</td>
  *		<td>Corrected documentation typos.</td>
@@ -922,10 +927,6 @@ __no_inline enum status_code system_peripheral_unlock(
  *		<td>06/2013</td>
  *		<td>Initial release</td>
  *	</tr>
- *	<tr>
- *		<td>B</td>
- *		<td>10/2013</td>
- *		<td>Extended acronyms list</td>
  * </table>
  */
 
