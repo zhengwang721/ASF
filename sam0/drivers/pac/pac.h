@@ -697,7 +697,7 @@ __no_inline enum status_code system_peripheral_unlock(
  *		<td>AC</td>
  *		<td>Analog Comparator</td>
  *	</tr>
-  *	<tr>
+ *	<tr>
  *		<td>ADC</td>
  *		<td>Analog-to-Digital Converter</td>
  *	</tr>
@@ -922,6 +922,10 @@ __no_inline enum status_code system_peripheral_unlock(
  *		<td>06/2013</td>
  *		<td>Initial release</td>
  *	</tr>
+ *	<tr>
+ *		<td>B</td>
+ *		<td>10/2013</td>
+ *		<td>Extended acronyms list</td>
  * </table>
  */
 
