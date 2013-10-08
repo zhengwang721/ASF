@@ -303,9 +303,6 @@ int main(void)
 	LED_Off(LED_NWK_SETUP); /* indicating network is started */
 	LED_Off(LED_DATA);     /* indicating data transmission */
 	cpu_irq_enable();
-	struct port_config config_port_pin;
-    config_port_pin.direction = PORT_PIN_DIR_OUTPUT;
-    port_pin_set_config(EXT1_PIN_6,&config_port_pin);
 #ifdef SIO_HUB
 	/* Initialize the serial interface used for communication with terminal
 	 *program. */
@@ -1612,9 +1609,6 @@ void rtc_overflow_callback(void)
 	//! [overflow_act]
 	/* Do something on RTC overflow here */
 	wakeup_cb(NULL);
-	//port_pin_set_output_level(EXT1_PIN_6,0);
-	port_pin_toggle_output_level(EXT1_PIN_6);
-	
 	//! [overflow_act]
 }
 #endif
