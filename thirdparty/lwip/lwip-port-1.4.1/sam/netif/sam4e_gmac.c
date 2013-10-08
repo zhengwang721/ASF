@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief GMAC (Gigabit MAC) driver for LwIP.
+ * \brief GMAC (Gigabit MAC) driver for lwIP.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -58,14 +58,14 @@
 #include "sysclk.h"
 #include "conf_eth.h"
 
-/** Define those to better describe your network interface */
+/** Network interface identifier. */
 #define IFNAME0								'e'
 #define IFNAME1								'n'
 
-/** Maximum transfer unit */
+/** Maximum transfer unit. */
 #define NET_MTU								1500
 
-/** Network link speed */
+/** Network link speed. */
 #define NET_LINK_SPEED						100000000
 
 #if NO_SYS == 0
@@ -100,25 +100,25 @@ struct gmac_device {
 	 * Receive buffer manager writes are burst of 2 words => 3 lsb bits
 	 * of the address shall be set to 0.
 	 */
-	/** Pointer to Rx descriptor list (must be 8-byte aligned) */
+	/** Pointer to Rx descriptor list (must be 8-byte aligned). */
 	gmac_rx_descriptor_t rx_desc[GMAC_RX_BUFFERS];
-	/** Pointer to Tx descriptor list (must be 8-byte aligned) */
+	/** Pointer to Tx descriptor list (must be 8-byte aligned). */
 	gmac_tx_descriptor_t tx_desc[GMAC_TX_BUFFERS];
-	/** RX pbuf pointer list */
+	/** RX pbuf pointer list. */
 	struct pbuf *rx_pbuf[GMAC_RX_BUFFERS];
-	/** TX buffers */
+	/** TX buffers. */
 	uint8_t tx_buf[GMAC_TX_BUFFERS][GMAC_TX_UNITSIZE];
 
-	/** RX index for current processing TD */
+	/** RX index for current processing TD. */
 	uint32_t us_rx_idx;
-	/** Circular buffer head pointer by upper layer (buffer to be sent) */
+	/** Circular buffer head pointer by upper layer (buffer to be sent). */
 	uint32_t us_tx_idx;
 
-	/** Reference to LwIP netif structure */
+	/** Reference to lwIP netif structure. */
 	struct netif *netif;
 
 #if NO_SYS == 0
-	/** RX task notification semaphore */
+	/** RX task notification semaphore. */
 	sys_sem_t rx_sem;
 #endif
 };
@@ -130,7 +130,7 @@ COMPILER_ALIGNED(8)
 static struct gmac_device gs_gmac_dev;
 
 /**
- * MAC address to use
+ * MAC address to use.
  */
 static uint8_t gs_uc_mac_address[] =
 {
@@ -143,7 +143,7 @@ static uint8_t gs_uc_mac_address[] =
 };
 
 #if LWIP_STATS
-/** Used to compute LwIP bandwidth */
+/** Used to compute lwIP bandwidth. */
 uint32_t lwip_tx_count = 0;
 uint32_t lwip_rx_count = 0;
 uint32_t lwip_tx_rate = 0;
@@ -161,10 +161,10 @@ void GMAC_Handler(void)
 	volatile uint32_t ul_isr;
 	portBASE_TYPE xGMACTaskWoken = pdFALSE;
 
-	/* Get interrupt status */
+	/* Get interrupt status. */
 	ul_isr = gmac_get_interrupt_status(GMAC);
 
-	/* RX interrupts */
+	/* RX interrupts. */
 	if (ul_isr & GMAC_INT_GROUP) {
 		xSemaphoreGiveFromISR(gs_gmac_dev.rx_sem, &xGMACTaskWoken);
 	}
@@ -177,7 +177,7 @@ void GMAC_Handler(void)
  * \brief Populate the RX descriptor ring buffers with pbufs.
  *
  * \note Make sure that the p->payload pointer is 32 bits aligned.
- * Since the lsb are used as status bits by GMAC.
+ * (since the lsb are used as status bits by GMAC).
  *
  * \param p_gmac_dev Pointer to driver data structure.
  */
@@ -186,7 +186,7 @@ static void gmac_rx_populate_queue(struct gmac_device *p_gmac_dev)
 	uint32_t ul_index = 0;
 	struct pbuf *p = 0;
 
-	/* Set up the RX descriptors */
+	/* Set up the RX descriptors. */
 	for (ul_index = 0; ul_index < GMAC_RX_BUFFERS; ul_index++) {
 		if (p_gmac_dev->rx_pbuf[ul_index] == 0) {
 
@@ -197,7 +197,7 @@ static void gmac_rx_populate_queue(struct gmac_device *p_gmac_dev)
 				break;
 			}
 
-			/* Make sure LwIP is well configured so one pbuf can contain the maximum packet size. */
+			/* Make sure lwIP is well configured so one pbuf can contain the maximum packet size. */
 			LWIP_ASSERT("gmac_rx_populate_queue: pbuf size too small!", pbuf_clen(p) <= 1);
 
 			/* Make sure that the payload buffer is properly aligned. */
@@ -212,7 +212,7 @@ static void gmac_rx_populate_queue(struct gmac_device *p_gmac_dev)
 			/* Reset status value. */
 			p_gmac_dev->rx_desc[ul_index].status.val = 0;
 
-			/* Save pbuf pointer to be sent to LwIP upper layer. */
+			/* Save pbuf pointer to be sent to lwIP upper layer. */
 			p_gmac_dev->rx_pbuf[ul_index] = p;
 
 			LWIP_DEBUGF(NETIF_DEBUG,
@@ -265,7 +265,7 @@ static void gmac_tx_init(struct gmac_device *ps_gmac_dev)
 	/* Init TX index pointer. */
 	ps_gmac_dev->us_tx_idx = 0;
 
-	/* Set up the TX descriptors */
+	/* Set up the TX descriptors. */
 	for (ul_index = 0; ul_index < GMAC_TX_BUFFERS; ul_index++) {
 		ps_gmac_dev->tx_desc[ul_index].addr = (uint32_t)&ps_gmac_dev->tx_buf[ul_index][0];
 		ps_gmac_dev->tx_desc[ul_index].status.val = GMAC_TXD_USED | GMAC_TXD_LAST;
@@ -281,8 +281,7 @@ static void gmac_tx_init(struct gmac_device *ps_gmac_dev)
  *
  * \note Called from ethernetif_init().
  *
- * \param netif the already initialized lwip network interface structure
- *        for this ethernetif.
+ * \param netif the lwIP network interface structure for this ethernetif.
  */
 static void gmac_low_level_init(struct netif *netif)
 {
@@ -383,11 +382,11 @@ static void gmac_low_level_init(struct netif *netif)
  * packet is contained in the pbuf that is passed to the function. This pbuf
  * might be chained.
  *
- * \param netif the lwip network interface structure for this ethernetif.
+ * \param netif the lwIP network interface structure for this ethernetif.
  * \param p the MAC packet to send (e.g. IP packet including MAC addresses and type).
  *
  * \return ERR_OK if the packet could be sent.
- *         an err_t value if the packet couldn't be sent.
+ * an err_t value if the packet couldn't be sent.
  */
 static err_t gmac_low_level_output(struct netif *netif, struct pbuf *p)
 {
@@ -445,10 +444,10 @@ static err_t gmac_low_level_output(struct netif *netif, struct pbuf *p)
 /**
  * \brief Use pre-allocated pbuf as DMA source and return the incoming packet.
  *
- * \param netif the lwip network interface structure for this ethernetif.
+ * \param netif the lwIP network interface structure for this ethernetif.
  *
  * \return a pbuf filled with the received packet (including MAC header).
- *         0 on memory error.
+ * 0 on memory error.
  */
 static struct pbuf *gmac_low_level_input(struct netif *netif)
 {
@@ -485,7 +484,7 @@ static struct pbuf *gmac_low_level_input(struct netif *netif)
 
 	/* Check that a packet has been received and processed by GMAC. */
 	if ((p_rx->addr.val & GMAC_RXD_OWNERSHIP) == GMAC_RXD_OWNERSHIP) {
-		/* Packet is a SOF since packet size is set to maximum */
+		/* Packet is a SOF since packet size is set to maximum. */
 		length = p_rx->status.val & GMAC_RXD_LEN_MASK;
 
 		/* Fetch pre-allocated pbuf. */
@@ -523,7 +522,7 @@ static struct pbuf *gmac_low_level_input(struct netif *netif)
 /**
  * \brief GMAC task function. This function waits for the notification
  * semaphore from the interrupt, processes the incoming packet and then
- * passes it to the LwIP stack.
+ * passes it to the lwIP stack.
  *
  * \param pvParameters A pointer to the gmac_device instance.
  */
@@ -548,8 +547,7 @@ static void gmac_task(void *pvParameters)
  * Then the type of the received packet is determined and the appropriate
  * input function is called.
  *
- * \param pv_parameters the LwIP network interface structure for this
- * ethernetif.
+ * \param netif the lwIP network interface structure for this ethernetif.
  */
 void ethernetif_input(struct netif *netif)
 {
@@ -571,7 +569,7 @@ void ethernetif_input(struct netif *netif)
 		case ETHTYPE_PPPOEDISC:
 		case ETHTYPE_PPPOE:
 #endif /* PPPOE_SUPPORT */
-			/* Send packet to LwIP for processing. */
+			/* Send packet to lwIP for processing. */
 			if (netif->input(p, netif) != ERR_OK) {
 				LWIP_DEBUGF(NETIF_DEBUG, ("ethernetif_input: IP input error\n"));
 				/* Free buffer. */
@@ -591,11 +589,11 @@ void ethernetif_input(struct netif *netif)
  * network interface. It calls the function gmac_low_level_init() to do the
  * actual setup of the hardware.
  *
- * \param netif the LwIP network interface structure for this ethernetif.
+ * \param netif the lwIP network interface structure for this ethernetif.
  *
  * \return ERR_OK if the loopif is initialized.
- *         ERR_MEM if private data couldn't be allocated.
- *         any other err_t on error.
+ * ERR_MEM if private data couldn't be allocated.
+ * any other err_t on error.
  */
 err_t ethernetif_init(struct netif *netif)
 {
@@ -604,7 +602,7 @@ err_t ethernetif_init(struct netif *netif)
 	gs_gmac_dev.netif = netif;
 
 #if LWIP_NETIF_HOSTNAME
-	/* Initialize interface hostname */
+	/* Initialize interface hostname. */
 	netif->hostname = "gmacdev";
 #endif /* LWIP_NETIF_HOSTNAME */
 

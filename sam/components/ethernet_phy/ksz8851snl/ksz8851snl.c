@@ -60,8 +60,15 @@
 /* SPI PDC register base. */
 Pdc *g_p_spi_pdc = 0;
 
-uint8_t	fifobuf[9];
+/* Temporary buffer for PDC reception. */
+uint8_t tmpbuf[1536];
 
+/**
+ * \brief Read register content, set bitmask and write back to register.
+ *
+ * \param reg the register address to modify.
+ * \param bits_to_set bitmask to apply.
+ */
 void ksz8851_reg_setbits(uint16_t reg, uint16_t bits_to_set)
 {
    uint16_t	temp;
@@ -71,37 +78,51 @@ void ksz8851_reg_setbits(uint16_t reg, uint16_t bits_to_set)
    ksz8851_reg_write(reg, temp);
 }
 
+/**
+ * \brief Read register content, clear bitmask and write back to register.
+ *
+ * \param reg the register address to modify.
+ * \param bits_to_set bitmask to apply.
+ */
 void ksz8851_reg_clrbits(uint16_t reg, uint16_t bits_to_clr)
 {
    uint16_t	temp;
 
    temp = ksz8851_reg_read(reg);
-   temp &= ~bits_to_clr;
+   temp &= ~(uint32_t) bits_to_clr;
    ksz8851_reg_write(reg, temp);
 }
 
 /**
- *  \brief Configure the INTN interrupt line.
+ * \brief Configure the INTN interrupt.
  */
 void configure_intn(void (*p_handler) (uint32_t, uint32_t))
 {
 	/* Configure PIO clock. */
 	pmc_enable_periph_clk(INTN_ID);
 
-	/* Adjust pio debounce filter parameters, uses 10 Hz filter. */
+	/* Adjust PIO debounce filter parameters, uses 10 Hz filter. */
 	pio_set_debounce_filter(INTN_PIO, INTN_PIN_MSK, 10);
 
-	/* Initialize pios interrupt handlers, see PIO definition in board.h. */
+	/* Initialize PIO interrupt handlers, see PIO definition in board.h. */
 	pio_handler_set(INTN_PIO, INTN_ID, INTN_PIN_MSK,
 		INTN_ATTR, p_handler);
 
-	/* Enable PIO controller IRQs. */
+	/* Enable NVIC interrupts. */
+	NVIC_SetPriority(INTN_IRQn, INT_PRIORITY_PIO);
 	NVIC_EnableIRQ((IRQn_Type)INTN_ID);
 
-	/* Enable PIO line interrupts. */
+	/* Enable PIO interrupts. */
 	pio_enable_interrupt(INTN_PIO, INTN_PIN_MSK);
 }
 
+/**
+ * \brief Read a register value.
+ *
+ * \param reg the register address to modify.
+ *
+ * \return the register value.
+ */
 uint16_t ksz8851_reg_read(uint16_t reg)
 {
 	pdc_packet_t g_pdc_spi_tx_packet;
@@ -110,7 +131,6 @@ uint16_t ksz8851_reg_read(uint16_t reg)
 	uint8_t	outbuf[4];
 	uint16_t cmd = 0;
 	uint16_t res = 0;
-	uint32_t status = 0;
 
 	gpio_set_pin_low(KSZ8851SNL_CSN_GPIO);
 
@@ -134,24 +154,29 @@ uint16_t ksz8851_reg_read(uint16_t reg)
 	outbuf[2] = CONFIG_SPI_MASTER_DUMMY;
 	outbuf[3] = CONFIG_SPI_MASTER_DUMMY;
 
-	/* Write 2 bytes for command and read 2 dummy bytes. */
+	/* Prepare PDC transfer. */
 	g_pdc_spi_tx_packet.ul_addr = (uint32_t) outbuf;
 	g_pdc_spi_tx_packet.ul_size = 4;
 	g_pdc_spi_rx_packet.ul_addr = (uint32_t) inbuf;
 	g_pdc_spi_rx_packet.ul_size = 4;
 	pdc_disable_transfer(g_p_spi_pdc, PERIPH_PTCR_RXTDIS | PERIPH_PTCR_TXTDIS);
-	pdc_tx_init(g_p_spi_pdc, &g_pdc_spi_tx_packet, NULL);
-	pdc_rx_init(g_p_spi_pdc, &g_pdc_spi_rx_packet, NULL);
+	pdc_tx_init(g_p_spi_pdc, &g_pdc_spi_tx_packet, 0);
+	pdc_rx_init(g_p_spi_pdc, &g_pdc_spi_rx_packet, 0);
 	pdc_enable_transfer(g_p_spi_pdc, PERIPH_PTCR_RXTEN | PERIPH_PTCR_TXTEN);
-	while (!((status = spi_read_status(KSZ8851SNL_SPI)) & SPI_SR_ENDRX))
-		;//printf("status=%08x\n", status);
+	while (!(spi_read_status(KSZ8851SNL_SPI) & SPI_SR_ENDRX))
+		;
 
 	res = (inbuf[3] << 8) | inbuf[2];
-
 	gpio_set_pin_high(KSZ8851SNL_CSN_GPIO);
 	return res;
 }
 
+/**
+ * \brief Write a register value.
+ *
+ * \param reg the register address to modify.
+ * \param wrdata the new register value.
+ */
 void ksz8851_reg_write(uint16_t reg, uint16_t wrdata)
 {
 	pdc_packet_t g_pdc_spi_tx_packet;
@@ -161,8 +186,6 @@ void ksz8851_reg_write(uint16_t reg, uint16_t wrdata)
 	uint16_t cmd = 0;
 
 	gpio_set_pin_low(KSZ8851SNL_CSN_GPIO);
-
-   //printf("ksz8851_reg_write: writing 0x%.4x  to  0x%.4x\n", wrdata, reg);
 
 	/* Move register address to cmd bits 9-2, make 32-bit address. */
 	cmd = (reg << 2) & REG_ADDR_MASK;
@@ -177,21 +200,21 @@ void ksz8851_reg_write(uint16_t reg, uint16_t wrdata)
 		cmd |= (0x3 << 10);
 	}
 
-	/* Add opcode to cmd */
+	/* Add command write code. */
 	cmd |= CMD_WRITE;
 	outbuf[0] = cmd >> 8;
 	outbuf[1] = cmd & 0xff;
 	outbuf[2] = wrdata & 0xff;
 	outbuf[3] = wrdata >> 8;
 
-	/* Write 2 bytes for command and read 2 dummy bytes. */
+	/* Prepare PDC transfer. */
 	g_pdc_spi_tx_packet.ul_addr = (uint32_t) outbuf;
 	g_pdc_spi_tx_packet.ul_size = 4;
 	g_pdc_spi_rx_packet.ul_addr = (uint32_t) inbuf;
 	g_pdc_spi_rx_packet.ul_size = 4;
 	pdc_disable_transfer(g_p_spi_pdc, PERIPH_PTCR_RXTDIS | PERIPH_PTCR_TXTDIS);
-	pdc_tx_init(g_p_spi_pdc, &g_pdc_spi_tx_packet, NULL);
-	pdc_rx_init(g_p_spi_pdc, &g_pdc_spi_rx_packet, NULL);
+	pdc_tx_init(g_p_spi_pdc, &g_pdc_spi_tx_packet, 0);
+	pdc_rx_init(g_p_spi_pdc, &g_pdc_spi_rx_packet, 0);
 	pdc_enable_transfer(g_p_spi_pdc, PERIPH_PTCR_RXTEN | PERIPH_PTCR_TXTEN);
 	while (!(spi_read_status(KSZ8851SNL_SPI) & SPI_SR_ENDRX))
 		;
@@ -199,6 +222,12 @@ void ksz8851_reg_write(uint16_t reg, uint16_t wrdata)
 	gpio_set_pin_high(KSZ8851SNL_CSN_GPIO);
 }
 
+/**
+ * \brief Read internal fifo buffer.
+ *
+ * \param buf the buffer to store the data from the fifo buffer.
+ * \param len the amount of data to read.
+ */
 void ksz8851_fifo_read(uint8_t *buf, uint32_t len)
 {
 	pdc_packet_t g_pdc_spi_tx_packet;
@@ -206,18 +235,17 @@ void ksz8851_fifo_read(uint8_t *buf, uint32_t len)
 	pdc_packet_t g_pdc_spi_tx_npacket;
 	pdc_packet_t g_pdc_spi_rx_npacket;
 
-	fifobuf[0] = FIFO_READ;
+	tmpbuf[0] = FIFO_READ;
 
-	/* Write 2 bytes for command and read 2 dummy bytes. */
-	g_pdc_spi_tx_packet.ul_addr = (uint32_t) fifobuf;
+	/* Prepare PDC transfer. */
+	g_pdc_spi_tx_packet.ul_addr = (uint32_t) tmpbuf;
 	g_pdc_spi_tx_packet.ul_size = 9;
-	g_pdc_spi_rx_packet.ul_addr = (uint32_t) fifobuf;
+	g_pdc_spi_rx_packet.ul_addr = (uint32_t) tmpbuf;
 	g_pdc_spi_rx_packet.ul_size = 9;
 	g_pdc_spi_tx_npacket.ul_addr = (uint32_t) buf;
 	g_pdc_spi_tx_npacket.ul_size = len;
 	g_pdc_spi_rx_npacket.ul_addr = (uint32_t) buf;
 	g_pdc_spi_rx_npacket.ul_size = len;
-
 	pdc_disable_transfer(g_p_spi_pdc, PERIPH_PTCR_RXTDIS | PERIPH_PTCR_TXTDIS);
 	pdc_tx_init(g_p_spi_pdc, &g_pdc_spi_tx_packet, &g_pdc_spi_tx_npacket);
 	pdc_rx_init(g_p_spi_pdc, &g_pdc_spi_rx_packet, &g_pdc_spi_rx_npacket);
@@ -225,7 +253,13 @@ void ksz8851_fifo_read(uint8_t *buf, uint32_t len)
 
 	spi_enable_interrupt(KSZ8851SNL_SPI, SPI_IER_RXBUFF);
 }
-uint8_t bufz[1600];
+
+/**
+ * \brief Write internal fifo buffer.
+ *
+ * \param buf the buffer to send to the fifo buffer.
+ * \param len the amount of data to read.
+ */
 void ksz8851_fifo_write(uint8_t *buf, uint32_t len)
 {
 	uint8_t	outbuf[5];
@@ -235,23 +269,22 @@ void ksz8851_fifo_write(uint8_t *buf, uint32_t len)
 	pdc_packet_t g_pdc_spi_tx_npacket;
 	pdc_packet_t g_pdc_spi_rx_npacket;
 
-	/* Write control word and byte count */
+	/* Prepare control word and byte count. */
 	outbuf[0] = FIFO_WRITE;
 	outbuf[1] = frameID++ & 0x3f;
 	outbuf[2] = 0;
 	outbuf[3] = len & 0xff;
 	outbuf[4] = len >> 8;
 
-	/* Write 2 bytes for command and read 2 dummy bytes. */
+	/* Prepare PDC transfer. */
 	g_pdc_spi_tx_packet.ul_addr = (uint32_t) outbuf;
 	g_pdc_spi_tx_packet.ul_size = 5;
 	g_pdc_spi_rx_packet.ul_addr = (uint32_t) outbuf;
 	g_pdc_spi_rx_packet.ul_size = 5;
 	g_pdc_spi_tx_npacket.ul_addr = (uint32_t) buf;
 	g_pdc_spi_tx_npacket.ul_size = len;
-	g_pdc_spi_rx_npacket.ul_addr = (uint32_t) bufz;
+	g_pdc_spi_rx_npacket.ul_addr = (uint32_t) tmpbuf;
 	g_pdc_spi_rx_npacket.ul_size = len;
-
 	pdc_disable_transfer(g_p_spi_pdc, PERIPH_PTCR_RXTDIS | PERIPH_PTCR_TXTDIS);
 	pdc_tx_init(g_p_spi_pdc, &g_pdc_spi_tx_packet, &g_pdc_spi_tx_npacket);
 	pdc_rx_init(g_p_spi_pdc, &g_pdc_spi_rx_packet, &g_pdc_spi_rx_npacket);
@@ -260,33 +293,39 @@ void ksz8851_fifo_write(uint8_t *buf, uint32_t len)
 	spi_enable_interrupt(KSZ8851SNL_SPI, SPI_IER_ENDRX);
 }
 
+/**
+ * \brief Write dummy data to the internal fifo buffer.
+ *
+ * \param len the amount of dummy data to write.
+ */
 void ksz8851_fifo_dummy(uint32_t len)
 {
 	pdc_packet_t g_pdc_spi_tx_packet;
 	pdc_packet_t g_pdc_spi_rx_packet;
 
-	g_pdc_spi_tx_packet.ul_addr = (uint32_t) fifobuf;
+	/* Prepare PDC transfer. */
+	g_pdc_spi_tx_packet.ul_addr = (uint32_t) tmpbuf;
 	g_pdc_spi_tx_packet.ul_size = len;
-	g_pdc_spi_rx_packet.ul_addr = (uint32_t) fifobuf;
+	g_pdc_spi_rx_packet.ul_addr = (uint32_t) tmpbuf;
 	g_pdc_spi_rx_packet.ul_size = len;
-
 	pdc_disable_transfer(g_p_spi_pdc, PERIPH_PTCR_RXTDIS | PERIPH_PTCR_TXTDIS);
-	pdc_tx_init(g_p_spi_pdc, &g_pdc_spi_tx_packet, NULL);
-	pdc_rx_init(g_p_spi_pdc, &g_pdc_spi_rx_packet, NULL);
+	pdc_tx_init(g_p_spi_pdc, &g_pdc_spi_tx_packet, 0);
+	pdc_rx_init(g_p_spi_pdc, &g_pdc_spi_rx_packet, 0);
 	pdc_enable_transfer(g_p_spi_pdc, PERIPH_PTCR_RXTEN | PERIPH_PTCR_TXTEN);
 
 	while (!(spi_read_status(KSZ8851SNL_SPI) & SPI_SR_ENDRX))
 		;
 }
 
+/**
+ * \brief KSZ8851SNL initialization function.
+ *
+ * \return 0 on success, 1 on communication error.
+ */
 uint32_t ksz8851snl_init(void)
 {
 	uint32_t count = 0;
 	uint16_t dev_id = 0;
-	board_spi_select_id_t spi_select_id = 3;
-	struct spi_device device = {
-		.id = KSZ8851SNL_CS_PIN,
-	};
 
 	/* Configure the SPI peripheral. */
 	spi_enable_clock(KSZ8851SNL_SPI);
@@ -294,7 +333,7 @@ uint32_t ksz8851snl_init(void)
 	spi_reset(KSZ8851SNL_SPI);
 	spi_set_master_mode(KSZ8851SNL_SPI);
 	spi_disable_mode_fault_detect(KSZ8851SNL_SPI);
-	spi_set_peripheral_chip_select_value(KSZ8851SNL_SPI, ~(1 << KSZ8851SNL_CS_PIN));
+	spi_set_peripheral_chip_select_value(KSZ8851SNL_SPI, ~(uint32_t)(1 << KSZ8851SNL_CS_PIN));
 	spi_set_clock_polarity(KSZ8851SNL_SPI, KSZ8851SNL_CS_PIN, SPI_CLK_POLARITY);
 	spi_set_clock_phase(KSZ8851SNL_SPI, KSZ8851SNL_CS_PIN, SPI_CLK_PHASE);
 	spi_set_bits_per_transfer(KSZ8851SNL_SPI, KSZ8851SNL_CS_PIN,
@@ -317,9 +356,9 @@ uint32_t ksz8851snl_init(void)
 	do {
 		/* Perform hardware reset with respect to the reset timing from the datasheet. */
 		gpio_set_pin_low(KSZ8851SNL_RSTN_GPIO);
-		delay_ms(50);
+		delay_ms(100);
 		gpio_set_pin_high(KSZ8851SNL_RSTN_GPIO);
-		delay_ms(50);
+		delay_ms(100);
 
 		/* Init step1: read chip ID. */
 		dev_id = ksz8851_reg_read(REG_CHIP_ID);
@@ -396,9 +435,6 @@ uint32_t ksz8851snl_init(void)
 
 	/* Init step17: enable QMU Receive. */
 	ksz8851_reg_setbits(REG_RX_CTRL1, RX_CTRL_ENABLE);
-
-	/* Wait for the link to be established. */
-	delay_ms(3000);
 
 	return 0;
 }

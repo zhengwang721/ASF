@@ -60,69 +60,20 @@
 #include "pdc.h"
 #include "conf_eth.h"
 
-/** Define those to better describe your network interface */
+/** Network interface identifier. */
 #define IFNAME0								'e'
 #define IFNAME1								'n'
 
-/** Maximum transfer unit */
+/** Maximum transfer unit. */
 #define NET_MTU								1500
 
-/** Network link speed */
+/** Network link speed. */
 #define NET_LINK_SPEED						100000000
-
-/* Interrupt priorities. (lowest value = highest priority) */
-/* ISRs using FreeRTOS *FromISR APIs must have priorities below or equal to */
-/* configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY. */
-#define INT_PRIORITY_SPI					12
-
-#if NO_SYS == 0
-/** The ksz8851snl interrupts to enable */
-//#define ksz8851snl_INT_GROUP (ksz8851snl_ISR_RCOMP | ksz8851snl_ISR_ROVR | ksz8851snl_ISR_HRESP | ksz8851snl_ISR_TCOMP | ksz8851snl_ISR_TUR | ksz8851snl_ISR_TFC)
-
-/** The ksz8851snl TX errors to handle */
-//#define ksz8851snl_TX_ERRORS (ksz8851snl_TSR_TFC | ksz8851snl_TSR_UND | ksz8851snl_TSR_HRESP)
-
-/** The ksz8851snl RX errors to handle */
-/*#define ksz8851snl_RX_ERRORS (ksz8851snl_RSR_RXOVR | ksz8851snl_RSR_HNO)
-#else
-#define INT_PRIORITY_ksz8851snl    0
-#define ksz8851snl_INT_GROUP       0
-#define ksz8851snl_TX_ERRORS       0
-#define ksz8851snl_RX_ERRORS       0*/
-#endif
-
-
-
-
-/*
-NPCS3 (PA22) for chip select
-PA15 for INTRN
-PA16 for RSTN
-
-
-
-*/
-
-
-
-
-
-
-
-
-
 
 /**
  * ksz8851snl driver structure.
  */
 struct ksz8851snl_device {
-	/**
-	 * Pointer to allocated TX buffer.
-	 * Section 3.6 of AMBA 2.0 spec states that burst should not cross
-	 * 1K Boundaries.
-	 * Receive buffer manager writes are burst of 2 words => 3 lsb bits
-	 * of the address shall be set to 0.
-	 */
 	/** Set to 1 when owner is software (ready to read), 0 for Micrel. */
 	uint32_t rx_desc[NETIF_RX_BUFFERS];
 	/** Set to 1 when owner is Micrel, 0 for software. */
@@ -133,21 +84,21 @@ struct ksz8851snl_device {
 	struct pbuf *tx_pbuf[NETIF_TX_BUFFERS];
 	struct pbuf *tx_cur_pbuf;
 
-	/** Circular buffer head pointer for packet received */
+	/** Circular buffer head pointer for packet received. */
 	uint32_t us_rx_head;
-	/** Circular buffer tail pointer for packet to be read */
+	/** Circular buffer tail pointer for packet to be read. */
 	uint32_t us_rx_tail;
-	/** Circular buffer head pointer by upper layer (buffer to be sent) */
+	/** Circular buffer head pointer by upper layer (buffer to be sent). */
 	uint32_t us_tx_head;
-	/** Circular buffer tail pointer incremented by handlers (buffer sent) */
+	/** Circular buffer tail pointer incremented by handlers (buffer sent). */
 	uint32_t us_tx_tail;
 
-	/** Reference to LwIP netif structure */
+	/** Reference to lwIP netif structure. */
 	struct netif *netif;
 
 #if NO_SYS == 0
-	/** RX task notification semaphore */
-	sys_sem_t rx_sem;
+	/** RX task notification semaphore. */
+	sys_sem_t sync_sem;
 #endif
 };
 
@@ -157,8 +108,10 @@ struct ksz8851snl_device {
 COMPILER_ALIGNED(8)
 static struct ksz8851snl_device gs_ksz8851snl_dev;
 
+static uint16_t pending_frame = 0;
+
 /**
- * MAC address to use
+ * MAC address to use.
  */
 static uint8_t gs_uc_mac_address[] =
 {
@@ -171,7 +124,7 @@ static uint8_t gs_uc_mac_address[] =
 };
 
 #if LWIP_STATS
-/** Used to compute LwIP bandwidth */
+/** Used to compute lwIP bandwidth. */
 uint32_t lwip_tx_count = 0;
 uint32_t lwip_rx_count = 0;
 uint32_t lwip_tx_rate = 0;
@@ -188,8 +141,11 @@ extern Pdc *g_p_spi_pdc;
 #define SPI_PDC_TX_START	3
 #define SPI_PDC_TX_COMPLETE	4
 
-uint8_t bufzz[1600];
+extern uint8_t tmpbuf[];
 
+/**
+ * \brief Handler for SPI interrupt.
+ */
 void SPI_Handler(void)
 {
 	pdc_packet_t g_pdc_spi_tx_npacket;
@@ -217,7 +173,7 @@ void SPI_Handler(void)
 			if (gs_ksz8851snl_dev.tx_cur_pbuf) {
 				g_pdc_spi_tx_npacket.ul_addr = (uint32_t) gs_ksz8851snl_dev.tx_cur_pbuf->payload;
 				g_pdc_spi_tx_npacket.ul_size = gs_ksz8851snl_dev.tx_cur_pbuf->len;
-				g_pdc_spi_rx_npacket.ul_addr = (uint32_t) bufzz;
+				g_pdc_spi_rx_npacket.ul_addr = (uint32_t) tmpbuf;
 				g_pdc_spi_rx_npacket.ul_size = gs_ksz8851snl_dev.tx_cur_pbuf->len;
 
 				pdc_tx_init(g_p_spi_pdc, NULL, &g_pdc_spi_tx_npacket);
@@ -239,16 +195,25 @@ void SPI_Handler(void)
 }
 
 /**
- *  \brief Handler for INTN falling edge interrupt.
+ * \brief Handler for INTN falling edge interrupt.
  */
 static void INTN_Handler(uint32_t id, uint32_t mask)
 {
+#if NO_SYS == 0
+	portBASE_TYPE xKSZTaskWoken = pdFALSE;
+#endif
+
 	if ((INTN_ID == id) && (INTN_PIN_MSK == mask)) {
 		/* Clear the PIO interrupt flags. */
 		pio_get_interrupt_status(INTN_PIO);
 
 		/* Set the INTN flag. */
 		g_intn_flag = 1;
+
+#if NO_SYS == 0
+		xSemaphoreGiveFromISR(gs_ksz8851snl_dev.sync_sem, &xKSZTaskWoken);
+		portEND_SWITCHING_ISR(xKSZTaskWoken);
+#endif
 	}
 }
 
@@ -272,13 +237,13 @@ static void ksz8851snl_rx_populate_queue(struct ksz8851snl_device *p_ksz8851snl_
 				LWIP_DEBUGF(NETIF_DEBUG, ("ksz8851snl_rx_populate_queue: pbuf allocation failure\n"));
 			}
 
-			/* Make sure LwIP is well configured so one pbuf can contain the maximum packet size. */
+			/* Make sure lwIP is well configured so one pbuf can contain the maximum packet size. */
 			LWIP_ASSERT("ksz8851snl_rx_populate_queue: pbuf size too small!", pbuf_clen(p) <= 1);
 
 			/* Set owner as Micrel. */
 			p_ksz8851snl_dev->rx_desc[ul_index] = 0;
 
-			/* Save pbuf pointer to be sent to LwIP upper layer. */
+			/* Save pbuf pointer to be sent to lwIP upper layer. */
 			p_ksz8851snl_dev->rx_pbuf[ul_index] = p;
 
 			LWIP_DEBUGF(NETIF_DEBUG,
@@ -288,10 +253,14 @@ static void ksz8851snl_rx_populate_queue(struct ksz8851snl_device *p_ksz8851snl_
 	}
 }
 
+/**
+ * \brief Update Micrel state machine and perform required actions.
+ *
+ * \param netif the lwIP network interface structure for this ethernetif.
+ */
 static void ksz8851snl_update(struct netif *netif)
 {
 	struct ksz8851snl_device *ps_ksz8851snl_dev = netif->state;
-	static uint16_t fcount = 0;
 	uint16_t status = 0;
 	uint16_t len = 0;
 	uint16_t txmir = 0;
@@ -300,11 +269,11 @@ static void ksz8851snl_update(struct netif *netif)
 	if (SPI_PDC_IDLE == g_spi_pdc_flag) {
 
 		/* Handle RX. */
-		if (g_intn_flag || fcount > 0)
+		if (g_intn_flag || pending_frame > 0)
 		{
 			g_intn_flag = 0;
 
-			if (0 == fcount) {
+			if (0 == pending_frame) {
 				/* RX step1: read interrupt status for INT_RX flag. */
 				status = ksz8851_reg_read(REG_INT_STATUS);
 				if (!(status & INT_RX)) {
@@ -318,8 +287,8 @@ static void ksz8851snl_update(struct netif *netif)
 				ksz8851_reg_setbits(REG_INT_STATUS, INT_RX);
 
 				/* RX step4-5: check for received frames. */
-				fcount = ksz8851_reg_read(REG_RX_FRAME_CNT_THRES) >> 8;
-				if (0 == fcount) {
+				pending_frame = ksz8851_reg_read(REG_RX_FRAME_CNT_THRES) >> 8;
+				if (0 == pending_frame) {
 					/* RX step24: enable INT_RX flag. */
 					ksz8851_reg_write(REG_INT_MASK, INT_RX);
 					return;
@@ -433,10 +402,10 @@ static void ksz8851snl_update(struct netif *netif)
 		ksz8851_reg_clrbits(REG_RXQ_CMD, RXQ_START);
 
 		/* RX step22-23: update frame count to be read. */
-		fcount -= 1;
+		pending_frame -= 1;
 
 		/* RX step24: enable INT_RX flag if transfer complete. */
-		if (0 == fcount) {
+		if (0 == pending_frame) {
 			ksz8851_reg_write(REG_INT_MASK, INT_RX);
 		}
 
@@ -477,7 +446,7 @@ static void ksz8851snl_update(struct netif *netif)
 /**
  * \brief Set up the RX descriptor ring buffers.
  *
- * This function sets up the descriptor list used for receive packets.
+ * This function sets up the descriptor list used for RX packets.
  *
  * \param ps_ksz8851snl_dev Pointer to driver data structure.
  */
@@ -502,7 +471,7 @@ static void ksz8851snl_rx_init(struct ksz8851snl_device *ps_ksz8851snl_dev)
 /**
  * \brief Set up the TX descriptor ring buffers.
  *
- * This function sets up the descriptor list used for receive packets.
+ * This function sets up the descriptor list used for TX packets.
  *
  * \param ps_ksz8851snl_dev Pointer to driver data structure.
  */
@@ -521,12 +490,11 @@ static void ksz8851snl_tx_init(struct ksz8851snl_device *ps_ksz8851snl_dev)
 }
 
 /**
- * \brief Initialize ksz8851snl and PHY.
+ * \brief Initialize ksz8851snl ethernet controller.
  *
  * \note Called from ethernetif_init().
  *
- * \param netif the already initialized lwip network interface structure
- *        for this ethernetif.
+ * \param netif the lwIP network interface structure for this ethernetif.
  */
 static void ksz8851snl_low_level_init(struct netif *netif)
 {
@@ -555,7 +523,7 @@ static void ksz8851snl_low_level_init(struct netif *netif)
 	ksz8851snl_rx_init(&gs_ksz8851snl_dev);
 	ksz8851snl_tx_init(&gs_ksz8851snl_dev);
 
-	/* Enable NVIC SPI interrupt. */
+	/* Enable NVIC interrupts. */
 	NVIC_SetPriority(SPI_IRQn, INT_PRIORITY_SPI);
 	NVIC_EnableIRQ(SPI_IRQn);
 
@@ -575,16 +543,15 @@ static void ksz8851snl_low_level_init(struct netif *netif)
  * packet is contained in the pbuf that is passed to the function. This pbuf
  * might be chained.
  *
- * \param netif the lwip network interface structure for this ethernetif.
+ * \param netif the lwIP network interface structure for this ethernetif.
  * \param p the MAC packet to send (e.g. IP packet including MAC addresses and type).
  *
  * \return ERR_OK if the packet could be sent.
- *         an err_t value if the packet couldn't be sent.
+ * an err_t value if the packet couldn't be sent.
  */
 static err_t ksz8851snl_low_level_output(struct netif *netif, struct pbuf *p)
 {
 	struct ksz8851snl_device *ps_ksz8851snl_dev = netif->state;
-	uint32_t ul_index = 0;
 
 	/* Make sure the next descriptor is free. */
 	if (ps_ksz8851snl_dev->tx_desc[ps_ksz8851snl_dev->us_tx_head]) {
@@ -594,7 +561,7 @@ static err_t ksz8851snl_low_level_output(struct netif *netif, struct pbuf *p)
 		return ERR_IF;
 	}
 
-	/* Ensure LwIP won't free this pbuf before the Micrel actually sends it. */
+	/* Ensure lwIP won't free this pbuf before the Micrel actually sends it. */
 	pbuf_ref(p);
 
 	/* Mark descriptor has owned by Micrel. Enqueue pbuf packet. */
@@ -612,16 +579,21 @@ static err_t ksz8851snl_low_level_output(struct netif *netif, struct pbuf *p)
 #endif
 	LINK_STATS_INC(link.xmit);
 
+#if NO_SYS == 0
+	/* Release KSZ task to perform packet transfer. */
+	xSemaphoreGive(ps_ksz8851snl_dev->sync_sem);
+#endif
+
 	return ERR_OK;
 }
 
 /**
  * \brief Use pre-allocated pbuf as DMA source and return the incoming packet.
  *
- * \param netif the lwip network interface structure for this ethernetif.
+ * \param netif the lwIP network interface structure for this ethernetif.
  *
  * \return a pbuf filled with the received packet (including MAC header).
- *         0 on memory error.
+ * 0 on memory error.
  */
 static struct pbuf *ksz8851snl_low_level_input(struct netif *netif)
 {
@@ -650,7 +622,7 @@ static struct pbuf *ksz8851snl_low_level_input(struct netif *netif)
 		ps_ksz8851snl_dev->us_rx_tail = (ps_ksz8851snl_dev->us_rx_tail + 1) % NETIF_RX_BUFFERS;
 
 #if LWIP_STATS
-		lwip_rx_count += p->length;
+		lwip_rx_count += p->tot_len;
 #endif
 	}
 
@@ -659,9 +631,9 @@ static struct pbuf *ksz8851snl_low_level_input(struct netif *netif)
 
 #if NO_SYS == 0
 /**
- * \brief ksz8851snl task function. This function waits for the notification
+ * \brief This function waits for the notification
  * semaphore from the interrupt, processes the incoming packet and then
- * passes it to the LwIP stack.
+ * passes it to the lwIP stack.
  *
  * \param pvParameters A pointer to the ksz8851snl_device instance.
  */
@@ -670,8 +642,13 @@ static void ksz8851snl_task(void *pvParameters)
 	struct ksz8851snl_device *ps_ksz8851snl_dev = pvParameters;
 
 	while (1) {
-		/* Wait for the RX notification semaphore. */
-		sys_arch_sem_wait(&ps_ksz8851snl_dev->rx_sem, 0);
+		/* Block if no transfer pending. */
+		if ((SPI_PDC_IDLE == g_spi_pdc_flag) &&
+				(0 == pending_frame) &&
+				(0 == ps_ksz8851snl_dev->tx_desc[ps_ksz8851snl_dev->us_tx_tail])) {
+			/* Wait for the RX notification semaphore. */
+			sys_arch_sem_wait(&ps_ksz8851snl_dev->sync_sem, 0);
+		}
 
 		/* Process the incoming packet. */
 		ethernetif_input(ps_ksz8851snl_dev->netif);
@@ -686,8 +663,7 @@ static void ksz8851snl_task(void *pvParameters)
  * Then the type of the received packet is determined and the appropriate
  * input function is called.
  *
- * \param pv_parameters the LwIP network interface structure for this
- * ethernetif.
+ * \param netif the lwIP network interface structure for this ethernetif.
  */
 void ethernetif_input(struct netif *netif)
 {
@@ -712,7 +688,7 @@ void ethernetif_input(struct netif *netif)
 		case ETHTYPE_PPPOEDISC:
 		case ETHTYPE_PPPOE:
 #endif /* PPPOE_SUPPORT */
-			/* Send packet to LwIP for processing. */
+			/* Send packet to lwIP for processing. */
 			if (netif->input(p, netif) != ERR_OK) {
 				LWIP_DEBUGF(NETIF_DEBUG, ("ethernetif_input: IP input error\n"));
 				/* Free buffer. */
@@ -732,11 +708,11 @@ void ethernetif_input(struct netif *netif)
  * network interface. It calls the function ksz8851snl_low_level_init() to do the
  * actual setup of the hardware.
  *
- * \param netif the LwIP network interface structure for this ethernetif.
+ * \param netif the lwIP network interface structure for this ethernetif.
  *
  * \return ERR_OK if the loopif is initialized.
- *         ERR_MEM if private data couldn't be allocated.
- *         any other err_t on error.
+ * ERR_MEM if private data couldn't be allocated.
+ * any other err_t on error.
  */
 err_t ethernetif_init(struct netif *netif)
 {
@@ -768,7 +744,7 @@ err_t ethernetif_init(struct netif *netif)
 	 * is available...) */
 	netif->output = etharp_output;
 	netif->linkoutput = ksz8851snl_low_level_output;
-	/* Initialize the hardware */
+	/* Initialize the hardware. */
 	ksz8851snl_low_level_init(netif);
 
 #if NO_SYS == 0
@@ -776,13 +752,13 @@ err_t ethernetif_init(struct netif *netif)
 	sys_thread_t id;
 
 	/* Incoming packet notification semaphore. */
-	err = sys_sem_new(&gs_ksz8851snl_dev.rx_sem, 0);
+	err = sys_sem_new(&gs_ksz8851snl_dev.sync_sem, 0);
 	LWIP_ASSERT("ethernetif_init: ksz8851snl RX semaphore allocation ERROR!\n",
 			(err == ERR_OK));
 	if (err == ERR_MEM)
 		return ERR_MEM;
 
-	id = sys_thread_new("ksz8851snl", ksz8851snl_task, &gs_ksz8851snl_dev,
+	id = sys_thread_new("ksz8851", ksz8851snl_task, &gs_ksz8851snl_dev,
 			netifINTERFACE_TASK_STACK_SIZE, netifINTERFACE_TASK_PRIORITY);
 	LWIP_ASSERT("ethernetif_init: ksz8851snl Task allocation ERROR!\n",
 			(id != 0));

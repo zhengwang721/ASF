@@ -1,14 +1,11 @@
 /**
- *
  * \file
  *
- * \brief KSZ8851SNL SAM driver for lwIP.
+ * \brief Board configuration.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
- *
- * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -42,16 +39,71 @@
  *
  */
 
-#ifndef ETHERNETIF_H_INCLUDED
-#define ETHERNETIF_H_INCLUDED
+#ifndef CONF_BOARD_H
+#define CONF_BOARD_H
 
-#include "lwip/netif.h"
-#include "lwip/ip_addr.h"
-#include "lwip/err.h"
-#include "netif/etharp.h"
+/* Configure UART pins */
+#define CONF_BOARD_UART_CONSOLE
 
-err_t ethernetif_init(struct netif *netif);
+/* Configure ADC example pins */
+//#define CONF_BOARD_ADC
 
-void ethernetif_input(struct netif *netif);
+/* Configure PWM LED0 pin */
+//#define CONF_BOARD_PWM_LED0
 
-#endif /* ETHERNETIF_H_INCLUDED */
+/* Configure PWM LED1 pin */
+//#define CONF_BOARD_PWM_LED1
+
+/* Configure PWM LED2 pin */
+//#define CONF_BOARD_PWM_LED2
+
+/* Configure SPI pins */
+#define CONF_BOARD_SPI
+//#define CONF_BOARD_SPI_NPCS0
+//#define CONF_BOARD_SPI_NPCS1
+//#define CONF_BOARD_SPI_NPCS2
+#define CONF_BOARD_SPI_NPCS3
+
+/* Configure USART RXD pin */
+//#define CONF_BOARD_USART_RXD
+
+/* Configure USART TXD pin */
+//#define CONF_BOARD_USART_TXD
+
+/* Configure USART CTS pin */
+//#define CONF_BOARD_USART_CTS
+
+/* Configure USART RTS pin */
+//#define CONF_BOARD_USART_RTS
+
+/* Configure USART synchronous communication SCK pin */
+//#define CONF_BOARD_USART_SCK
+
+/* Configure ADM33312 enable pin */
+//#define CONF_BOARD_ADM3312_EN
+
+/* Configure IrDA transceiver shutdown pin */
+//#define CONF_BOARD_TFDU4300_SD
+
+/* Configure RS485 transceiver RE pin */
+//#define CONF_BOARD_ADM3485_RE
+
+/* Configure LCD EBI pins */
+#define CONF_BOARD_ILI9325
+
+/* Configure Backlight control pin */
+#define CONF_BOARD_AAT3155
+
+/* Configure Touchscreen SPI pins */
+//#define CONF_BOARD_ADS7843
+
+/* Configure twi pins */
+#define CONF_BOARD_TWI0
+
+/* Configure touch pins */
+//#define CONF_BOARD_AT42QT2160
+
+/* Enable ETH PHY pins */
+//#define CONF_BOARD_KSZ8051MNL
+
+#endif // CONF_BOARD_H

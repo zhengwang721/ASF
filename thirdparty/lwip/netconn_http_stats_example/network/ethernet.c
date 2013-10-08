@@ -44,11 +44,16 @@
 #include <string.h>
 #include "board.h"
 #include "ethernet.h"
-#include "ethernet_phy.h"
 #if SAM3XA
+# include "ethernet_phy.h"
 # include "emac.h"
 #elif SAM4E
+# include "ethernet_phy.h"
 # include "gmac.h"
+#elif SAM4S
+# include "ksz8851snl.h"
+# include "ksz8851snl_reg.h"
+# include "netif/sam_spi_ksz8851snl.h"
 #else
 # error Unsupported chip type
 #endif
@@ -97,18 +102,18 @@ static void ethernet_configure_interface(void)
 		IP4_ADDR(&x_ip_addr, ETHERNET_CONF_IPADDR0, ETHERNET_CONF_IPADDR1,
 				ETHERNET_CONF_IPADDR2, ETHERNET_CONF_IPADDR3);
 
-		/* Default subnet mask */
+		/* Default subnet mask. */
 		IP4_ADDR(&x_net_mask, ETHERNET_CONF_NET_MASK0, ETHERNET_CONF_NET_MASK1,
 				ETHERNET_CONF_NET_MASK2, ETHERNET_CONF_NET_MASK3);
 
-		/* Default gateway addr */
+		/* Default gateway addr. */
 		IP4_ADDR(&x_gateway, ETHERNET_CONF_GATEWAY_ADDR0,
 				ETHERNET_CONF_GATEWAY_ADDR1,
 				ETHERNET_CONF_GATEWAY_ADDR2,
 				ETHERNET_CONF_GATEWAY_ADDR3);
 	}
 
-	/* Add data to netif */
+	/* Add data to netif. */
 	/* Use ethernet_input as input method for standalone lwIP mode. */
 	/* Use tcpip_input as input method for threaded lwIP mode. */
 	if (NULL == netif_add(&gs_net_if, &x_ip_addr, &x_net_mask, &x_gateway, NULL,
@@ -116,13 +121,13 @@ static void ethernet_configure_interface(void)
 		LWIP_ASSERT("NULL == netif_add", 0);
 	}
 
-	/* Make it the default interface */
+	/* Make it the default interface. */
 	netif_set_default(&gs_net_if);
 
-	/* Setup callback function for netif status change */
+	/* Setup callback function for netif status change. */
 	netif_set_status_callback(&gs_net_if, status_callback);
 
-	/* Bring it up */
+	/* Bring it up. */
 	if (g_ip_mode == 2) {
 		/* DHCP mode. */
 		if (ERR_OK != dhcp_start(&gs_net_if)) {

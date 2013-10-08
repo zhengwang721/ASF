@@ -2,7 +2,7 @@
  *
  * \file
  *
- * \brief Ethernet Interface Skeleton.
+ * \brief GMAC (Gigabit MAC) driver for lwIP.
  *
  * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
