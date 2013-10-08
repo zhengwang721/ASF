@@ -46,6 +46,7 @@
 
 void ui_init(void)
 {
+	/* Initialize LED */
 	LED_Off(LED0);
 }
 
@@ -59,13 +60,54 @@ void ui_wakeup(void)
 	LED_On(LED0);
 }
 
-void ui_loop_back_state(bool b_started)
+void ui_com_open(uint8_t port)
 {
-	if (b_started) {
-		//LED_On(LED2);
-	} else {
-		//LED_Off(LED2);
-	}
+	UNUSED(port);
+}
+
+void ui_com_close(uint8_t port)
+{
+	UNUSED(port);
+}
+
+void ui_com_rx_start(void)
+{
+}
+
+void ui_com_rx_stop(void)
+{
+}
+
+void ui_com_tx_start(void)
+{
+}
+
+void ui_com_tx_stop(void)
+{
+}
+
+void ui_com_error(void)
+{
+}
+
+void ui_com_overflow(void)
+{
+}
+
+void ui_start_read(void)
+{
+}
+
+void ui_stop_read(void)
+{
+}
+
+void ui_start_write(void)
+{
+}
+
+void ui_stop_write(void)
+{
 }
 
 void ui_process(uint16_t framenumber)
@@ -78,10 +120,11 @@ void ui_process(uint16_t framenumber)
 	}
 }
 
+
 /**
  * \defgroup UI User Interface
  *
  * Human interface on SAM4E-XPRO:
- * - Led 0 is on when USB is wakeup
+ * - LED0 blinks when USB host has checked and enabled CDC and MSC interface
  *
  */
