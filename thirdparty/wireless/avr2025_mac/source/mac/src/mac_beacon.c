@@ -1046,6 +1046,7 @@ void mac_tx_pending_bc_data(void)
 #endif /* BEACON_SUPPORT */
 
 #endif /* MAC_START_REQUEST_CONFIRM */
+#if  (defined ENABLE_SLEEP || defined RTC_SLEEP)
 void mac_wakeup(uint32_t res_time)
 {
   //sw_timer_service();
@@ -1076,5 +1077,5 @@ void mac_wakeup(uint32_t res_time)
 
 /* Remaining time needs to handled in MAC when application switches to RTC*/
 }
-
+#endif
 /* EOF */
