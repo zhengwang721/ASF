@@ -203,6 +203,11 @@ extern bool tal_beacon_transmission;
 #endif /* ((MAC_START_REQUEST_CONFIRM == 1) && (defined BEACON_SUPPORT)) */
 /* === MACROS ============================================================== */
 
+/**
+ * Conversion of number of PSDU octets to duration in microseconds
+ */
+#define TAL_PSDU_US_PER_OCTET(octets)       ((uint16_t)(octets) * 32)
+
 /*
  * Debug synonyms
  * These debug defines are only applicable if

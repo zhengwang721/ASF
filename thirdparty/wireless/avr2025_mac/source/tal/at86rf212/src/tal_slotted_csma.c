@@ -292,8 +292,7 @@ uint16_t calc_frame_transmit_duration(uint8_t *phy_frame)
 				aUnitBackoffPeriod;                       /** symbols */
 	}
 
-	transaction_duration_sym += CONVERT_OCTETS_TO_SYM(
-			transaction_duration_octets);
+	transaction_duration_sym += transaction_duration_octets * SYMBOLS_PER_OCTET;
 
 	transaction_duration_sym = TAL_PSDU_US_PER_OCTET(transaction_duration_sym);
 	

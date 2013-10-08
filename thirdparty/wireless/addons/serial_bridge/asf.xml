@@ -8,7 +8,6 @@
         
 		<require idref="common.services.ioport"/>
 		<require idref="common.services.basic.clock"/>
-		<require idref="common.services.delay"/>
 		<require idref="thirdparty.wireless.addons.sio2host"/>
 		<require idref="thirdparty.wireless.addons.sio2ncp"/>
 		<build type="c-source"      value="serial_bridge.c"/>

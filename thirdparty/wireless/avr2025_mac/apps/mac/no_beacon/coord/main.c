@@ -93,12 +93,12 @@
 #include <string.h>
 #include <inttypes.h>
 #include <stdio.h>
-#include <asf.h>
 #include "conf_board.h"
 #include "avr2025_mac.h"
 #include "delay.h"
 #include "common_sw_timer.h"
 #include "sio2host.h"
+#include <asf.h>
 
 /* === TYPES =============================================================== */
 

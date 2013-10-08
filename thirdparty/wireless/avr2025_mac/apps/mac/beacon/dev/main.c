@@ -213,8 +213,7 @@ extern void hw_overflow_cb();
 extern void hw_expiry_cb();
 #endif
 static uint8_t APP_TIMER;
-struct tc_config timer_config;
-struct tc_module module_inst;
+
 #ifdef MAC_SECURITY_ZIP
 /*
  * This is implemented as an array of bytes, but actually this is a
