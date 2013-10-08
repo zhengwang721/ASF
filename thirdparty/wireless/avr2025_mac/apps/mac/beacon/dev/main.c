@@ -128,7 +128,7 @@ app_state_t;
 /** Defines the short address of the coordinator. */
 #define COORD_SHORT_ADDR                CCPU_ENDIAN_TO_LE16(0x0000)
 
-#define CHANNEL_OFFSET                  (7)
+#define CHANNEL_OFFSET                  (0)
 
 #define SCAN_CHANNEL                    (1ul << current_channel)
 
@@ -145,7 +145,7 @@ app_state_t;
  * need to be increased as well.
  */
 #define TIMER_SYNC_BEFORE_ASSOC_MS      (3000)
-
+#define APP_GUARD_TIME_US               (10000)
 #define PAYLOAD_LEN                     (104)
 
 #ifdef GTS_SUPPORT
@@ -329,7 +329,7 @@ LED_Off(LED_NWK_SETUP);
 		wpan_task();
 		#if (defined ENABLE_SLEEP || defined RTC_SLEEP)
 		sleep_time = mac_ready_to_sleep();
-		if((sleep_time > (uint32_t)10000))
+		if((sleep_time > (uint32_t)APP_GUARD_TIME_US))
 		{       
 			  
 			enter_sleep(sleep_time);
@@ -1557,6 +1557,8 @@ static void enter_sleep(uint32_t timeout)
 	(FUNC_PTR)wakeup_cb,
 	NULL);
     LEAVE_CRITICAL_REGION();
+	system_set_sleepmode(SYSTEM_SLEEPMODE_IDLE_2);
+	system_sleep();
     #endif
     #ifdef RTC_SLEEP
 	configure_rtc_count();
@@ -1566,9 +1568,10 @@ static void enter_sleep(uint32_t timeout)
 	res = timeout % 1000;
 	timeout = timeout/1000;	
 	rtc_count_set_period(timeout);
-	#endif
 	system_set_sleepmode(SYSTEM_SLEEPMODE_STANDBY);
-    system_sleep();
+	system_sleep();
+	#endif
+	
 }
 #ifdef RTC_SLEEP
 void configure_rtc_count(void)
