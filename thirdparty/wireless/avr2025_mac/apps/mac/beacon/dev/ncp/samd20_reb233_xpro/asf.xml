@@ -29,6 +29,7 @@
 		<config name="config.thirdparty.wireless.avr2025_mac.source.sal" value="at86rf2xx"/>
 		<require idref="thirdparty.wireless.avr2025_mac.source.sal"/>
 		<require idref="thirdparty.wireless.avr2025_mac.source.stb"/>
+		<require idref="sam0.drivers.rtc"/>
 		<require idref="board.samd20_xplained_pro"/>
 		<config name="config.thirdparty.wireless.avr2025_mac.source.tal" value="at86rf233"/>
 		

@@ -293,7 +293,7 @@ uint32_t mac_ready_to_sleep(void)
 {
 	uint32_t sleep_time =0;
 #ifdef BEACON_SUPPORT
-     uint32_t rem_time;
+     uint32_t rem_time =0;
     if(MAC_INACTIVE == mac_superframe_state)
 	{
 		

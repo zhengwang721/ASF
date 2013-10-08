@@ -882,7 +882,7 @@ void mac_t_gts_cb(void *callback_parameter)
 {
 	uint32_t next_timer_dur = 0;
 	uint32_t slot_duration;
-
+    mac_trx_wakeup();
 	#ifdef GTS_DEBUG
 	port_pin_set_output_level(DEBUG_PIN3, 0);
 	#endif
