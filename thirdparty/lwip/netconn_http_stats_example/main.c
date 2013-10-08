@@ -140,7 +140,19 @@ static void prvSetupHardware(void)
 
 uint32_t get_run_time_counter_value(void)
 {
+#if SAM4E
 	return TC0->TC_CHANNEL[0].TC_CV;
+#else
+	static uint32_t count = 0;
+	uint32_t val = TC0->TC_CHANNEL[0].TC_CV;
+
+	val >>= 4;
+	if ((count & 0x00000FFF) < val) {
+		count += 0x1000;
+	}
+	count = (count & 0xFFFFF000) | val;
+	return count;
+#endif
 }
 
 void configure_timer_for_run_time_stats(void)

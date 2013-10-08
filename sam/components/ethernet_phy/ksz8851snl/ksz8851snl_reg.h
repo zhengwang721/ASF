@@ -45,17 +45,6 @@
 #ifndef KSZ8851SNL_REG_H_INCLUDED
 #define KSZ8851SNL_REG_H_INCLUDED
 
-/*#undef REG_WOL_CTRL
-#undef WOL_FRAME3_ENABLE
-#undef WOL_FRAME2_ENABLE
-#undef WOL_FRAME1_ENABLE
-#undef WOL_FRAME0_ENABLE
-#undef INT_TX
-#undef INT_RX
-#undef INT_RX_OVERRUN
-#undef INT_TX_STOPPED
-#undef INT_RX_STOPPED
-*/
 #define REG_ADDR_MASK              0x3F0      /* Register address mask */
 #define OPCODE_MASK                (3 << 14)
 #define CMD_READ                   (0 << 14)

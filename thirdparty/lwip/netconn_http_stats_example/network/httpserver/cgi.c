@@ -158,7 +158,7 @@ chip_id_archnames[] = {
 	{ 0x86, "ATSAM3X8H Series (217-pin version)" },
 	{ 0x88, "ATSAM3SxA Series (48-pin version)" },
 	{ 0x89, "ATSAM3SxB Series (64-pin version)" },
-	{ 0x8A, "ATSAM3SxC Series (100-pin version)" },
+	{ 0x8A, "SAM4S Series" },
 	{ 0x92, "AT91x92 Series" },
 	{ 0x95, "ATSAM3NxC Series (100-pin version)" },
 	{ 0xF0, "AT75Cxx Series" },

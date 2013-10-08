@@ -1,10 +1,9 @@
 /**
- *
  * \file
  *
- * \brief KSZ8851SNL SAM driver for lwIP.
+ * \brief ILI9325 configuration.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,16 +41,20 @@
  *
  */
 
-#ifndef ETHERNETIF_H_INCLUDED
-#define ETHERNETIF_H_INCLUDED
+//! Configuration of the ILI9325 LCD display driver
 
-#include "lwip/netif.h"
-#include "lwip/ip_addr.h"
-#include "lwip/err.h"
-#include "netif/etharp.h"
+#ifndef CONF_ILI9325_H_INCLUDED
+#define CONF_ILI9325_H_INCLUDED
 
-err_t ethernetif_init(struct netif *netif);
+#include "board.h"
 
-void ethernetif_input(struct netif *netif);
+#if !defined(BOARD_ILI9325_ADDR) || !defined(BOARD_ILI9325_RS)
 
-#endif /* ETHERNETIF_H_INCLUDED */
+	#warning The ILI9325 EBI configuration does not exist in the board definition file. Using default settings.
+
+	#define BOARD_ILI9325_ADDR     0x61000000 /* The base address, depends on which SMC chip select is used by ILI9325. */
+	#define BOARD_ILI9325_RS       1 << 1 /* Register select (1 << 1) */
+
+#endif
+
+#endif /* CONF_ILI9325_H_INCLUDED */

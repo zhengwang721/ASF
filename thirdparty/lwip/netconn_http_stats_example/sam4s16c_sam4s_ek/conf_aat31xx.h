@@ -1,10 +1,9 @@
 /**
- *
  * \file
  *
- * \brief KSZ8851SNL SAM driver for lwIP.
+ * \brief AAT31XX configuration.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,16 +41,19 @@
  *
  */
 
-#ifndef ETHERNETIF_H_INCLUDED
-#define ETHERNETIF_H_INCLUDED
+//! Configuration of the AAT31XX Backlight driver
 
-#include "lwip/netif.h"
-#include "lwip/ip_addr.h"
-#include "lwip/err.h"
-#include "netif/etharp.h"
+#ifndef CONF_AAT31XX_H_INCLUDED
+#define CONF_AAT31XX_H_INCLUDED
 
-err_t ethernetif_init(struct netif *netif);
+#include "board.h"
 
-void ethernetif_input(struct netif *netif);
+#if !defined(BOARD_AAT31XX_SET_GPIO)
 
-#endif /* ETHERNETIF_H_INCLUDED */
+	#warning The AAT31XX PIN configuration does not exist in the board definition file. Using default settings.
+
+	#define BOARD_AAT31XX_SET_GPIO     PIO_PC13_IDX /* Should use the PIN index of which pin is connected with EN/SET of AAT31XX device */
+
+#endif
+
+#endif /* CONF_AAT31XX_H_INCLUDED */

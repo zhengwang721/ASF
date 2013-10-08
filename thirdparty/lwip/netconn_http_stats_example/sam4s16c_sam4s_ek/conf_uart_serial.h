@@ -1,8 +1,7 @@
 /**
- *
  * \file
  *
- * \brief KSZ8851SNL SAM driver for lwIP.
+ * \brief Serial USART service configuration.
  *
  * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
@@ -42,16 +41,14 @@
  *
  */
 
-#ifndef ETHERNETIF_H_INCLUDED
-#define ETHERNETIF_H_INCLUDED
+#ifndef CONF_USART_SERIAL_H
+#define CONF_USART_SERIAL_H
 
-#include "lwip/netif.h"
-#include "lwip/ip_addr.h"
-#include "lwip/err.h"
-#include "netif/etharp.h"
+/** UART Interface */
+#define CONF_UART            CONSOLE_UART
+/** Baudrate setting */
+#define CONF_UART_BAUDRATE   115200
+/** Parity setting */
+#define CONF_UART_PARITY     UART_MR_PAR_NO
 
-err_t ethernetif_init(struct netif *netif);
-
-void ethernetif_input(struct netif *netif);
-
-#endif /* ETHERNETIF_H_INCLUDED */
+#endif/* CONF_USART_SERIAL_H_INCLUDED */

@@ -1,10 +1,9 @@
 /**
- *
  * \file
  *
- * \brief KSZ8851SNL SAM driver for lwIP.
+ * \brief Chip-specific sleep manager configuration
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,17 +40,10 @@
  * \asf_license_stop
  *
  */
+#ifndef CONF_SLEEPMGR_H
+#define CONF_SLEEPMGR_H
 
-#ifndef ETHERNETIF_H_INCLUDED
-#define ETHERNETIF_H_INCLUDED
+/** Sleep manager options */
+#define CONFIG_SLEEPMGR_ENABLE
 
-#include "lwip/netif.h"
-#include "lwip/ip_addr.h"
-#include "lwip/err.h"
-#include "netif/etharp.h"
-
-err_t ethernetif_init(struct netif *netif);
-
-void ethernetif_input(struct netif *netif);
-
-#endif /* ETHERNETIF_H_INCLUDED */
+#endif /* CONF_SLEEPMGR_H */
