@@ -127,8 +127,8 @@ void board_init(void)
 	ioport_set_pin_peripheral_mode(PIO_PB5_IDX, IOPORT_MODE_MUX_A);
 #endif
         
-        /* Configure UART1 pins */
-#ifdef CONF_BOARD_UART1
+	/* Configure UART1 pins */
+#ifdef (CONF_BOARD_UART1 || CONF_BOARD_UART_CONSOLE)
 	ioport_set_pin_peripheral_mode(PIO_PC0_IDX, IOPORT_MODE_MUX_A);
 	ioport_set_pin_peripheral_mode(PIO_PC1_IDX, IOPORT_MODE_MUX_A);
 #endif

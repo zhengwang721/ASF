@@ -185,8 +185,8 @@
  * \name Console UART definitions
  * @{
  */
-#define CONSOLE_DBG_UART      UART1
-#define CONSOLE_DBG_UART_ID   ID_UART1
+#define CONSOLE_UART      UART1
+#define CONSOLE_UART_ID   ID_UART1
 /* @} */
 
 /**
