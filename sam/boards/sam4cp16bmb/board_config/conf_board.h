@@ -48,16 +48,16 @@
 #define BOARD_REV	BOARD_REV_2
 
 /* Enable Watchdog */
-#define CONF_BOARD_KEEP_WATCHDOG_AT_INIT
+//#define CONF_BOARD_KEEP_WATCHDOG_AT_INIT
 
 /* Configure UART0 pins */
-#define CONF_BOARD_UART0
+//#define CONF_BOARD_UART0
 
 /* Configure UART1 pins */
-#define CONF_BOARD_UART1
+//#define CONF_BOARD_UART1
 
 /* Configure SPI0 pins */
-#define CONF_BOARD_SPI0
+//#define CONF_BOARD_SPI0
 /* Configure SPI1 pins */
 //#define CONF_BOARD_SPI1
 
@@ -83,11 +83,11 @@
 //#define CONF_BOARD_USART1_RTS
 
 /* Configure LCD Enable pins */
-#define CONF_BOARD_LCD_EN
+//#define CONF_BOARD_LCD_EN
 
 /* Configure PPLC reset pins */
-#define CONF_BOARD_PPLC_ARST
-#define CONF_BOARD_PPLC_SRST
+//#define CONF_BOARD_PPLC_ARST
+//#define CONF_BOARD_PPLC_SRST
 
 /* Configure Xplain PRO pins */
 //#define CONF_BOARD_XP_ADC
