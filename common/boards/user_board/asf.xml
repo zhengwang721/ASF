@@ -192,8 +192,8 @@
 	<board id="board.user_board.sam4l8" caption="User Board template">
 		<require idref="common.boards.user_board.common"/>
 		<require idref="sam.utils.linker_scripts"/>
-		<device-support value="sam4lc8"/>
 		<device-support value="sam4ls8"/>
+		<device-support value="sam4lc8"/>
 	</board>
 
 	<board id="board.user_board.sam4e8e" caption="User Board template">
