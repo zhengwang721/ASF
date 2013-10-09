@@ -900,7 +900,6 @@ static inline retval_t unsecure_frame(parse_t *mac_parse_data_buf, uint8_t *mpdu
                 uint8_t sec_hdr_len = SEC_CTRL_FLD_LEN + FRAME_COUNTER_LEN + \
 									   mac_parse_data_buf->key_id_len;  // 5 = sec ctrl + frame counter
 									  
-				g_debug_beacon_ptr = mac_payload;				
                 uint8_t mhr_len = mac_payload - mpdu + sec_hdr_len;
 				uint8_t encryp_payload_len = mac_parse_data_buf->mpdu_length - mhr_len - m - CRC_LEN;  // 2 = CRC
 				/* calculate the Fixed Field of the GTS Length and Pending Address Field Length and 
@@ -908,8 +907,7 @@ static inline retval_t unsecure_frame(parse_t *mac_parse_data_buf, uint8_t *mpdu
 				  */
 				beacon_add_len = SUPER_FRAME_SPEC_LEN + GTS_ADDR_SPEC_LEN + PENDING_ADDR_SPEC_LEN;
 				
-				/* Calculate the variable field GTS Field Length */    
-				g_debug_beacon = mhr_len;            
+				/* Calculate the variable field GTS Field Length */      
 				gts_field_len = ((mpdu[(mhr_len + SUPER_FRAME_SPEC_LEN)] & 0x07) * 3);
 				if (gts_field_len)
 				{
@@ -924,7 +922,6 @@ static inline retval_t unsecure_frame(parse_t *mac_parse_data_buf, uint8_t *mpdu
 								   
 				/* Total Additional Address Length Field */
 				beacon_add_len += pending_addr_len + gts_field_len;							   
-				g_debug_beacon = beacon_add_len + mhr_len;
 
                 if (stb_ccm_secure(mpdu, /* plaintext header (string a) and payload concatenated */
                                    nonce,
@@ -952,7 +949,7 @@ static inline retval_t unsecure_frame(parse_t *mac_parse_data_buf, uint8_t *mpdu
     }
     /* 7.5.8.2.3 (n) */
 	if ((FCF_FRAMETYPE_DATA == mac_parse_data_buf->frame_type) /*|| \
-				(FCF_FRAMETYPE_BEACON == mac_parse_data_buf->frame_type*/))
+				(FCF_FRAMETYPE_BEACON == mac_parse_data_buf->frame_type*/)
 	{
 		device_desc->FrameCounter = (mac_parse_data_buf->frame_cnt) + 1;
 		/* 7.5.8.2.3 (o) */
