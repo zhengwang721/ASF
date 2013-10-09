@@ -89,7 +89,7 @@
 #  define CONF_CLOCK_DFLL_ENABLE                  true
 #  define CONF_CLOCK_DFLL_LOOP_MODE               SYSTEM_CLOCK_DFLL_LOOP_MODE_CLOSED
 #  define CONF_CLOCK_DFLL_ON_DEMAND               false
-#  define CONF_CLOCK_DFLL_RUN_IN_STANDBY          false
+#  define CONF_CLOCK_DFLL_RUN_IN_STANDBY          true
 
 /* DFLL open loop mode configuration */
 #  define CONF_CLOCK_DFLL_COARSE_VALUE            (0x1f / 4)
