@@ -533,6 +533,14 @@ void system_board_init(void);
 #define AT86RFX_CPS 	             EXT2_PIN_8
 #define LED0 LED0_PIN
 
+#define AT86RFX_SPI_CONFIG(config) \
+        config.mux_setting = EXT2_SPI_SERCOM_MUX_SETTING; \
+        config.mode_specific.master.baudrate = AT86RFX_SPI_BAUDRATE; \
+        config.pinmux_pad0 = PINMUX_PA16C_SERCOM1_PAD0; \
+        config.pinmux_pad1 = PINMUX_UNUSED; \
+        config.pinmux_pad2 = PINMUX_PA18C_SERCOM1_PAD2; \
+        config.pinmux_pad3 = PINMUX_PA19C_SERCOM1_PAD3;
+
 #define AT86RFX_IRQ_CHAN             EXT2_IRQ_INPUT //13
 #define AT86RFX_INTC_INIT()          extint_enable(); \
                                                 struct extint_chan_conf eint_chan_conf; \

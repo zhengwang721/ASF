@@ -95,12 +95,7 @@ void pal_spi_init(void)
         slave_dev_config.ss_pin = AT86RFX_SPI_CS;
         spi_attach_slave(&slave, &slave_dev_config);
         spi_get_config_defaults(&config);
-        config.mux_setting = EXT2_SPI_SERCOM_MUX_SETTING;
-        config.mode_specific.master.baudrate = AT86RFX_SPI_BAUDRATE;
-        config.pinmux_pad0 = PINMUX_PA16C_SERCOM1_PAD0; //SPI MISO
-        config.pinmux_pad1 = PINMUX_UNUSED;
-        config.pinmux_pad2 = PINMUX_PA18C_SERCOM1_PAD2; //SPI MOSI
-        config.pinmux_pad3 = PINMUX_PA19C_SERCOM1_PAD3; //SPI SCK
+		AT86RFX_SPI_CONFIG(config);
         spi_init(&master, AT86RFX_SPI, &config);
         spi_enable(&master);
         AT86RFX_INTC_INIT();
@@ -128,8 +123,7 @@ uint8_t pal_trx_reg_read(uint8_t addr)
 	addr |= READ_ACCESS_COMMAND;
     
 #ifdef SAMD20
-
-        /* Start SPI transaction by pulling SEL low */
+    /* Start SPI transaction by pulling SEL low */
 	spi_select_slave(&master, &slave, true);
 
 	/* Send the Read command byte */

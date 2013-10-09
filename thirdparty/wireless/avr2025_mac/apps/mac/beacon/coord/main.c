@@ -105,8 +105,6 @@
 #include "mac_api.h"
 #include "tal.h"
 #include "ieee_const.h"
-#include "tc.h"
-#include "tc_interrupt.h"
 #include "hw_timer.h"
 #include "common_hw_timer.h"
 #include "conf_hw_timer.h"
@@ -327,7 +325,7 @@ int main(void)
 
 {
 	irq_initialize_vectors();
-	#ifdef SAMD20
+	#if SAMD20
 	system_init();
 	delay_init();
 	#else

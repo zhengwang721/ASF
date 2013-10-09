@@ -48,7 +48,7 @@
  */
 /* === INCLUDES ============================================================ */
 #include "tal.h"
-#ifndef __SAMD20J18__
+#ifndef SAMD20
 # include "led.h"
 #endif
 #include <stdio.h>
@@ -202,7 +202,7 @@ bool app_debounce_button(void)
  */
 bool button_pressed(void)
 {
-#ifdef __SAMD20J18__
+#ifdef SAMD20
 	if(port_pin_get_input_level(SW0_PIN))
 	{
 		return false;

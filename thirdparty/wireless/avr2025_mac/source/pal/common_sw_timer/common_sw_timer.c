@@ -42,8 +42,9 @@
 #include "conf_common_sw_timer.h"
 #include "common_hw_timer.h"
 #include "common_sw_timer.h"
-#include "mac_internal.h"
+#if SAMD20
 #include "system.h"
+#endif /* SAMD20 */
 #include "board.h"
 
 #if (TOTAL_NUMBER_OF_SW_TIMERS > 0)
@@ -548,7 +549,7 @@ void hw_overflow_cb(void)
 	sys_time++;
 	prog_ocr();
 	#ifdef ENABLE_SLEEP
-	if((RADIO_SLEEPING == mac_radio_sleep_state) && (sys_sleep ==true))
+	if(sys_sleep ==true)
 	{
 		sys_sleep = true;
 		system_set_sleepmode(SYSTEM_SLEEPMODE_IDLE_2);
@@ -564,14 +565,13 @@ void hw_expiry_cb(void)
 {
 	if (running_timers > 0) {
 		timer_trigger = true;
-		#ifdef ENABLE_SLEEP
-		if((RADIO_SLEEPING == mac_radio_sleep_state) && (sys_sleep ==true))
+	#ifdef ENABLE_SLEEP
+		if(sys_sleep ==true)
 		{   
 			sys_sleep = false;
-			//wakeup_cb(NULL);
 			sw_timer_service();
 		}
-		#endif
+	#endif
 	}
 }
 

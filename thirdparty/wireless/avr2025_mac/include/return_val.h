@@ -55,7 +55,7 @@
 /* === Includes ============================================================ */
 #include "compiler.h"
 
-#if (defined SAMD20) || (defined SAM4L)
+#if (SAMD20) || (SAM4L)
  typedef uint32_t arch_data_t;
  #define __ALIGN_WORD_ADDR__ COMPILER_WORD_ALIGNED
 #ifdef SAM4L

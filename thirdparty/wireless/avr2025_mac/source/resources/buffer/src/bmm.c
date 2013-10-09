@@ -145,7 +145,7 @@ void bmm_buffer_init(void)
 {
 	uint8_t index;
 	
-#if  (defined SAMD20) || (defined SAM4L)
+#if (SAMD20) || (SAM4L)
 	UNALIGNED_BUG_ON(sizeof(buf_pool));
 #endif
 

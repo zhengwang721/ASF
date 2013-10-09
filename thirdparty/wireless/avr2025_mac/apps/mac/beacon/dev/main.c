@@ -145,7 +145,7 @@ app_state_t;
  * need to be increased as well.
  */
 #define TIMER_SYNC_BEFORE_ASSOC_MS      (3000)
-
+#define APP_GUARD_TIME_US               (10000)
 #define PAYLOAD_LEN                     (104)
 
 #ifdef GTS_SUPPORT
@@ -188,25 +188,31 @@ static uint32_t bc_rx_cnt;
 
 /* This variable counts the number of received indirect data frames. */
 static uint32_t indirect_rx_cnt;
-extern void mac_wakeup(void *parameter);
-/** This variable stores the current state of the node. */
-static app_state_t app_state = APP_IDLE;
+/** This variable stores the current state of the node. */static app_state_t app_state = APP_IDLE;
 bool sys_sleep = false;
+#ifdef RTC_SLEEP
+void configure_rtc_callbacks(void);
+void configure_rtc_count(void);
+void rtc_overflow_callback(void);
+#endif
 /** This array stores the current msdu payload. */
 static uint8_t msdu_payload[PAYLOAD_LEN];
-static uint8_t APP_TIMER_SLEEP;
+
 static uint8_t current_channel;
 static uint8_t current_channel_page;
 static uint32_t channels_supported;
+#if (defined ENABLE_SLEEP || defined RTC_SLEEP)
 static void  enter_sleep(uint32_t timeout);
-struct tc_config timer_config;
-struct tc_module module_inst;
 void wakeup_cb(void *parameter);
-static uint8_t APP_TIMER;
-extern void tc_ovf_callback(struct tc_module *const module_instance);
-extern void tc_cca_callback(struct tc_module *const module_instance);
+static uint32_t res;
+uint32_t sleep_time =0;
+#endif
+#ifdef ENABLE_SLEEP
+static uint8_t APP_TIMER_SLEEP;
 extern void hw_overflow_cb();
 extern void hw_expiry_cb();
+#endif
+static uint8_t APP_TIMER;
 #ifdef MAC_SECURITY_ZIP
 /*
  * This is implemented as an array of bytes, but actually this is a
@@ -274,7 +280,7 @@ static void app_alert(void);
 int main(void)
 {
 	irq_initialize_vectors();
-	#ifdef SAMD20
+	#if SAMD20
 	system_init();
 	delay_init();
 	#else
@@ -300,7 +306,6 @@ int main(void)
 	LED_Off(LED_NWK_SETUP); /* indicating network is started */
 	LED_Off(LED_DATA);     /* indicating data transmission */
 	cpu_irq_enable();
-
 #ifdef SIO_HUB
 	/* Initialize the serial interface used for communication with terminal
 	 *program. */
@@ -311,24 +316,23 @@ int main(void)
 	printf("\nBeacon_Application\r\n\n");
 	printf("\nDevice\r\n\n");
 #endif
-
+    
 	sw_timer_get_id(&APP_TIMER);
+	
    
 	wpan_mlme_reset_req(true);
     #ifdef ENABLE_SLEEP
     sw_timer_get_id(&APP_TIMER_SLEEP);
-    
-	uint32_t sleep_time =0;
-	#endif
+    #endif
 LED_Off(LED_NWK_SETUP);
 	while (true) {
 		wpan_task();
-		#ifdef ENABLE_SLEEP
+		#if (defined ENABLE_SLEEP || defined RTC_SLEEP)
 		sleep_time = mac_ready_to_sleep();
-		if(sleep_time > (uint32_t)50000)
+		if((sleep_time > (uint32_t)APP_GUARD_TIME_US))
 		{       
 			  
-			enter_sleep(50000);
+			enter_sleep(sleep_time);
 		}
 		#endif
 	}
@@ -1537,13 +1541,12 @@ static void rx_data_led_off_cb(void *parameter)
 	parameter = parameter; /* Keep compiler happy. */
 }
 
-#ifdef ENABLE_SLEEP
+#if (defined ENABLE_SLEEP || defined RTC_SLEEP)
 static void enter_sleep(uint32_t timeout)
 {   
-	
+    sys_sleep = true;
+	#ifdef ENABLE_SLEEP
 	ENTER_CRITICAL_REGION();
-	
-	sys_sleep = true;
 	common_tc_stop();
 	common_tc_init();
 	set_common_tc_overflow_callback(hw_overflow_cb);
@@ -1553,22 +1556,79 @@ static void enter_sleep(uint32_t timeout)
 	SW_TIMEOUT_RELATIVE,
 	(FUNC_PTR)wakeup_cb,
 	NULL);
-	LEAVE_CRITICAL_REGION();
+    LEAVE_CRITICAL_REGION();
 	system_set_sleepmode(SYSTEM_SLEEPMODE_IDLE_2);
-    system_sleep();
+	system_sleep();
+    #endif
+    #ifdef RTC_SLEEP
+	configure_rtc_count();
+/* Configure and enable callback */
+   configure_rtc_callbacks();
+   /* Set period */
+	res = timeout % 1000;
+	timeout = timeout/1000;	
+	rtc_count_set_period(timeout);
+	system_set_sleepmode(SYSTEM_SLEEPMODE_STANDBY);
+	system_sleep();
+	#endif
+	
 }
+#ifdef RTC_SLEEP
+void configure_rtc_count(void)
+{
+	//! [init_conf]
+	struct rtc_count_config config_rtc_count;
+	rtc_count_get_config_defaults(&config_rtc_count);
+	//! [init_conf]
 
+	//! [set_config]
+	config_rtc_count.prescaler           = RTC_COUNT_PRESCALER_DIV_1;
+	config_rtc_count.mode                = RTC_COUNT_MODE_16BIT;
+	config_rtc_count.continuously_update = true;
+	//! [set_config]
+	//! [init_rtc]
+	rtc_count_init(&config_rtc_count);
+	//! [init_rtc]
+
+	//! [enable]
+	rtc_count_enable();
+	//! [enable]
+}
+//! [initialize_rtc]
+
+//! [setup_callback]
+void configure_rtc_callbacks(void)
+{
+	//! [reg_callback]
+	rtc_count_register_callback(
+	rtc_overflow_callback, RTC_COUNT_CALLBACK_OVERFLOW);
+	//! [reg_callback]
+	//! [en_callback]
+	rtc_count_enable_callback(RTC_COUNT_CALLBACK_OVERFLOW);
+	//! [en_callback]
+}
+void rtc_overflow_callback(void)
+{
+	//! [overflow_act]
+	/* Do something on RTC overflow here */
+	wakeup_cb(NULL);
+	//! [overflow_act]
+}
+#endif
 void wakeup_cb(void *parameter)
 {
-	
+	sys_sleep = false;
+    #ifdef ENABLE_SLEEP
 	ENTER_CRITICAL_REGION();
 	common_tc_stop();
 	common_tc_init();
 	set_common_tc_overflow_callback(hw_overflow_cb);
 	set_common_tc_expiry_callback(hw_expiry_cb);
 	sw_timer_stop(APP_TIMER_SLEEP);
-	mac_wakeup(NULL);
-	LEAVE_CRITICAL_REGION();
+    LEAVE_CRITICAL_REGION();
+	#endif
+	mac_wakeup(res);
+	
 }
 #endif
 
