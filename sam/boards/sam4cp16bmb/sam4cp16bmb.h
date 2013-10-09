@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM4C-EK Board Definition.
+ * \brief SAM4CP16BMB Board Definition.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -41,41 +41,50 @@
  *
  */
 
-#ifndef SAM4C_EK_H_INCLUDED
-#define SAM4C_EK_H_INCLUDED
+#ifndef SAM4CP16BMB_H_INCLUDED
+#define SAM4CP16BMB_H_INCLUDED
 
 #include "compiler.h"
+#include "conf_board.h"
 
 /**
  * \ingroup group_common_boards
- * \defgroup sam4c_ek_group "SAM4C-EK"
- * Evaluation Kit for SAM4C devices.
+ * \defgroup sam4cp16bmb_group "SAM4CP16BMB"
+ * Evaluation Board for SAM4CP16B devices.
  *
  * @{
  */
 
 /**
- * \defgroup sam4c_ek_board_info_group "SAM4C-EK - Board informations"
+ * \defgroup sam4cp16bmb_board_info_group "SAM4CP16BMB - Board informations"
  * Definitions related to the board description.
  *
  * @{
  */
 
 /** Name of the board */
-#define BOARD_NAME "SAM4C-EK"
+#define BOARD_NAME "SAM4CP16BMB"
 /** Board definition */
-#define sam4cek
+#define sam4cp16bmb
 /** Family definition (already defined) */
-#define sam4c
+#define sam4cp
 /** Core definition */
 #define cortexm4
 /** Board revision definition */
-#define BOARD_REV_C
+#define BOARD_REV_1     0
+#define BOARD_REV_2     1
+
+
+/** PLC Timers Configuration */
+#define ID_TC_BCN       ID_TC3
+#define TC_BCN          TC1
+#define TC_BCN_CHN      0
+#define TC_BCN_Handler  TC3_Handler
 
 /* @} */
 
 /**
- *  \defgroup sam4c_ek_opfreq_group "SAM4C-EK - Operating frequencies"
+ *  \defgroup sam4cp16bmb_opfreq_group "SAM4CP16BMB - Operating frequencies"
  *  Definitions related to the board operating frequency.
  *
  *  @{
@@ -88,7 +97,7 @@
 #define BOARD_FREQ_SLCK_XTAL        (32768U)
 #define BOARD_FREQ_SLCK_BYPASS      (32768U)
 #define BOARD_FREQ_MAINCK_XTAL      (8000000U)
-#define BOARD_FREQ_MAINCK_BYPASS    (8000000U)
+#define BOARD_FREQ_MAINCK_BYPASS    (10000000U)
 /* @} */
 
 /** Master clock frequency */
@@ -100,7 +109,7 @@
 /* @} */
 
 /**
- * \defgroup sam4c_ek_features_group "SAM4C-EK - Features"
+ * \defgroup sam4cp16bmb_features_group "SAM4CP16BMB - Features"
  * Symbols that describe features and capabilities of the board.
  *
  * @{
@@ -110,16 +119,16 @@
  * \name LED #0 pin definition
  * @{
  */
-#define LED0_GPIO            (PIO_PC6_IDX)
+#define LED0_GPIO            (PIO_PB14_IDX)
 #define LED0_ACTIVE_LEVEL    IOPORT_PIN_LEVEL_LOW
 #define LED0_INACTIVE_LEVEL  IOPORT_PIN_LEVEL_HIGH
 
 /* Wrapper macros to ensure common naming across all boards */
-#define LED_0_NAME      "green LED (D10)"
-#define PIN_LED_0       {PIO_PC6, PIOC, ID_PIOC, PIO_OUTPUT_1, PIO_DEFAULT}
-#define PIN_LED_0_MASK   PIO_PC6
-#define PIN_LED_0_PIO    PIOC
-#define PIN_LED_0_ID     ID_PIOC
+#define LED_0_NAME      "green LED (D5)"
+#define PIN_LED_0       {PIO_PB14, PIOB, ID_PIOB, PIO_OUTPUT_1, PIO_DEFAULT}
+#define PIN_LED_0_MASK   PIO_PB14
+#define PIN_LED_0_PIO    PIOB
+#define PIN_LED_0_ID     ID_PIOB
 #define PIN_LED_0_TYPE   PIO_OUTPUT_1
 #define PIN_LED_0_ATTR   PIO_DEFAULT
 /* @} */
@@ -128,130 +137,56 @@
  * \name LED #1 pin definition
  * @{
  */
-#define LED1_GPIO            (PIO_PC7_IDX)
+#define LED1_GPIO            (PIO_PB15_IDX)
 #define LED1_ACTIVE_LEVEL    IOPORT_PIN_LEVEL_LOW
 #define LED1_INACTIVE_LEVEL  IOPORT_PIN_LEVEL_HIGH
 
 /* Wrapper macros to ensure common naming across all boards */
-#define LED_1_NAME      "amber LED (D9)"
-#define PIN_LED_1       {PIO_PC7, PIOC, ID_PIOC, PIO_OUTPUT_1, PIO_DEFAULT}
-#define PIN_LED_1_MASK   PIO_PC7
-#define PIN_LED_1_PIO    PIOC
-#define PIN_LED_1_ID     ID_PIOC
+#define LED_1_NAME      "red LED (D6)"
+#define PIN_LED_1       {PIO_PB15, PIOB, ID_PIOB, PIO_OUTPUT_1, PIO_DEFAULT}
+#define PIN_LED_1_MASK   PIO_PB15
+#define PIN_LED_1_PIO    PIOB
+#define PIN_LED_1_ID     ID_PIOB
 #define PIN_LED_1_TYPE   PIO_OUTPUT_1
 #define PIN_LED_1_ATTR   PIO_DEFAULT
-/* @} */
-
-/**
- * \name LED #2 pin definition
- * @{
- */
-#define LED2_GPIO            (PIO_PC8_IDX)
-#define LED2_ACTIVE_LEVEL    IOPORT_PIN_LEVEL_LOW
-#define LED2_INACTIVE_LEVEL  IOPORT_PIN_LEVEL_HIGH
-
-/* Wrapper macros to ensure common naming across all boards */
-#define LED_2_NAME      "blue LED (D8)"
-#define PIN_LED_2       {PIO_PC8, PIOC, ID_PIOC, PIO_OUTPUT_1, PIO_DEFAULT}
-#define PIN_LED_2_MASK   PIO_PC8
-#define PIN_LED_2_PIO    PIOC
-#define PIN_LED_2_ID     ID_PIOC
-#define PIN_LED_2_TYPE   PIO_OUTPUT_1
-#define PIN_LED_2_ATTR   PIO_DEFAULT
 /* @} */
 
 /**
  * \name LCD Backlight
  */
 //@{
-#define LCD_BL                        PA13
-#define LCD_BL_GPIO                   PIO_PA13_IDX
-#define LCD_BL_GPIO_MASK              PIO_PA13
+#define LCD_BL                        PA29
+#define LCD_BL_GPIO                   PIO_PA29_IDX
+#define LCD_BL_GPIO_MASK              PIO_PA29
 
-#define LCD_BL_ACTIVE_LEVEL             IOPORT_PIN_LEVEL_LOW
-#define LCD_BL_INACTIVE_LEVEL           IOPORT_PIN_LEVEL_HIGH
+#define LCD_BL_ACTIVE_LEVEL             IOPORT_PIN_LEVEL_HIGH
+#define LCD_BL_INACTIVE_LEVEL           IOPORT_PIN_LEVEL_LOW
 //@}
 
 /**
- * \name Push button #1 definition
- * Attributes = pull-up + debounce + interrupt on rising edge.
- * @{
- */
-#define PUSHBUTTON_1_NAME        "SCROLL_DOWN (BP5)"
-#define GPIO_PUSH_BUTTON_1       (PIO_PA20_IDX)
-#define GPIO_PUSH_BUTTON_1_FLAGS (IOPORT_MODE_PULLUP | IOPORT_MODE_DEBOUNCE)
-#define GPIO_PUSH_BUTTON_1_SENSE (IOPORT_SENSE_RISING)
+* \name LCD Enable
+*/
+//@{
+#define LCD_EN                        PB12
+#define LCD_EN_GPIO                   PIO_PB12_IDX
+#define LCD_EN_GPIO_MASK              PIO_PB12
 
-#define PIN_PUSHBUTTON_1       {PIO_PA20, PIOA, ID_PIOA, PIO_INPUT, \
-		PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE}
-#define PIN_PUSHBUTTON_1_MASK  PIO_PA20
-#define PIN_PUSHBUTTON_1_PIO   PIOA
-#define PIN_PUSHBUTTON_1_ID    ID_PIOA
-#define PIN_PUSHBUTTON_1_TYPE  PIO_INPUT
-#define PIN_PUSHBUTTON_1_ATTR  (PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE)
-#define PIN_PUSHBUTTON_1_IRQn  PIOA_IRQn
-/* @} */
-
-/**
- * \name Push button #2 definition
- * Attributes = pull-up + debounce + interrupt on rising edge.
- * @{
- */
-#define PUSHBUTTON_2_NAME        "SCROLL_UP (BP4)"
-#define PUSHBUTTON_2_WKUP_LINE   (4)
-#define PUSHBUTTON_2_WKUP_FSTT   (PMC_FSMR_FSTT4)
-#define GPIO_PUSH_BUTTON_2       (PIO_PA19_IDX)
-#define GPIO_PUSH_BUTTON_2_FLAGS (IOPORT_MODE_PULLUP | IOPORT_MODE_DEBOUNCE)
-#define GPIO_PUSH_BUTTON_2_SENSE (IOPORT_SENSE_RISING)
-
-#define PIN_PUSHBUTTON_2       {PIO_PA19, PIOA, ID_PIOA, PIO_INPUT, \
-		PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE}
-#define PIN_PUSHBUTTON_2_MASK  PIO_PA19
-#define PIN_PUSHBUTTON_2_PIO   PIOA
-#define PIN_PUSHBUTTON_2_ID    ID_PIOA
-#define PIN_PUSHBUTTON_2_TYPE  PIO_INPUT
-#define PIN_PUSHBUTTON_2_ATTR  (PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE)
-#define PIN_PUSHBUTTON_2_IRQn  PIOA_IRQn
-/* @} */
-
-/** List of all push button definitions. */
-#define PINS_PUSHBUTTONS    {PIN_PUSHBUTTON_1, PIN_PUSHBUTTON_2}
-
-/**
- * \name TC pins definition
- * @{
- */
-#define PIN_TC0_TIOA0        (PIO_PA13_IDX)
-#define PIN_TC0_TIOA0_MUX    (IOPORT_MODE_MUX_B)
-#define PIN_TC0_TIOA0_FLAGS  (IOPORT_MODE_MUX_B)
-
-#define PIN_TC0_TIOA1        (PIO_PB7_IDX)
-#define PIN_TC0_TIOA1_MUX    (IOPORT_MODE_MUX_A)
-#define PIN_TC0_TIOA1_FLAGS  (IOPORT_MODE_MUX_A)
-
-#define PIN_TC0_TIOA1_PIO    PIOB
-#define PIN_TC0_TIOA1_MASK   PIO_PB7
-#define PIN_TC0_TIOA1_ID     ID_PIOB
-#define PIN_TC0_TIOA1_TYPE   PIO_PERIPH_A
-#define PIN_TC0_TIOA1_ATTR   PIO_DEFAULT
-
-#define PIN_TC0_TIOA2        (PIO_PB10_IDX)
-#define PIN_TC0_TIOA2_MUX    (IOPORT_MODE_MUX_A)
-#define PIN_TC0_TIOA2_FLAGS  (IOPORT_MODE_MUX_A)
-
-#define PIN_TC0_TIOA2_PIO    PIOB
-#define PIN_TC0_TIOA2_MASK   PIO_PB10
-#define PIN_TC0_TIOA2_ID     ID_PIOB
-#define PIN_TC0_TIOA2_TYPE   PIO_PERIPH_A
-#define PIN_TC0_TIOA2_ATTR   PIO_DEFAULT
-/* @} */
-
+#if BOARD_REV == BOARD_REV_1
+  #define LCD_EN_ACTIVE_LEVEL             IOPORT_PIN_LEVEL_LOW
+  #define LCD_EN_INACTIVE_LEVEL           IOPORT_PIN_LEVEL_HIGH
+#elif BOARD_REV == BOARD_REV_2
+  #define LCD_EN_ACTIVE_LEVEL             IOPORT_PIN_LEVEL_HIGH
+  #define LCD_EN_INACTIVE_LEVEL           IOPORT_PIN_LEVEL_LOW   
+#else
+  #error No known SAM4CP16BMB revision board defined
+#endif
+   
 /**
  * \name Console UART definitions
  * @{
  */
-#define CONSOLE_UART      UART0
-#define CONSOLE_UART_ID   ID_UART0
+#define CONSOLE_DBG_UART      UART1
+#define CONSOLE_DBG_UART_ID   ID_UART1
 /* @} */
 
 /**
@@ -285,26 +220,6 @@
 /* @} */
 
 /**
- * \name PWM LEDx pin definitions
- * @{
- */
-/** PWM LED Green pin definitions. */
-#define PIN_PWM_LED0_GPIO     PIO_PC6_IDX
-#define PIN_PWM_LED0_FLAGS    (IOPORT_MODE_MUX_A)
-#define PIN_PWM_LED0_CHANNEL  PWM_CHANNEL_0
-
-/** PWM LED Amber pin definitions. */
-#define PIN_PWM_LED1_GPIO     PIO_PC7_IDX
-#define PIN_PWM_LED1_FLAGS    (IOPORT_MODE_MUX_A)
-#define PIN_PWM_LED1_CHANNEL  PWM_CHANNEL_1
-
-/** PWM LED Blue pin definitions. */
-#define PIN_PWM_LED2_GPIO     PIO_PC8_IDX
-#define PIN_PWM_LED2_FLAGS    (IOPORT_MODE_MUX_A)
-#define PIN_PWM_LED2_CHANNEL  PWM_CHANNEL_2
-/* @} */
-
-/**
  * \name SPI pin definitions
  * @{
  */
@@ -335,27 +250,62 @@
 #define SPI1_NPCS0_FLAGS       (IOPORT_MODE_MUX_A)
 /* @} */
 
-/* Select the SPI module that AT25DFx is connected to */
-#define AT25DFX_SPI_MODULE     SPI0
+/**
+* \name PPLC control pins definition
+* @{
+*/
+/* Select the SPI module that PPLC is connected to */
+#define PPLC_SPI_MODULE     SPI0
 
-/* Chip select used by AT25DFx components on the SPI module instance */
-#define AT25DFX_CS             0
+/* Chip select used by PPLC internal peripheral  */
+#define PPLC_CS             0
+
+/* Interruption pin used by PPLC internal peripheral */
+#define PPLC_INT_GPIO   (PIO_PB30_IDX)
+#define PPLC_INT_FLAGS (IOPORT_MODE_DEBOUNCE)
+#define PPLC_INT_SENSE (IOPORT_SENSE_FALLING)
+
+#define PPLC_INT       {PIO_PB30, PIOB, ID_PIOB, PIO_INPUT, \
+		PIO_DEBOUNCE | PIO_IT_FALL_EDGE}
+#define PPLC_INT_MASK  PIO_PB30
+#define PPLC_INT_PIO   PIOB
+#define PPLC_INT_ID    ID_PIOB
+#define PPLC_INT_TYPE  PIO_INPUT
+#define PPLC_INT_ATTR  (PIO_DEBOUNCE | PIO_IT_FALL_EDGE)
+#define PPLC_INT_IRQn  PIOB_IRQn
+ 
+/* Asynchronous PPLC Reset pin definition */ 
+#define PPLC_ARST_GPIO             (PIO_PC6_IDX)
+#define PPLC_ARST_ACTIVE_LEVEL    IOPORT_PIN_LEVEL_LOW
+#define PPLC_ARST_INACTIVE_LEVEL  IOPORT_PIN_LEVEL_HIGH
+
+/* Wrapper macros to ensure common naming across all boards */
+#define PPLC_ARST       {PIO_PC6, PIOC, ID_PIOC, PIO_OUTPUT_1, PIO_DEFAULT}
+#define PPLC_ARST_MASK   PIO_PC6
+#define PPLC_ARST_PIO    PIOC
+#define PPLC_ARST_ID     ID_PIOC
+#define PPLC_ARST_TYPE   PIO_OUTPUT_1
+#define PPLC_ARST_ATTR   PIO_DEFAULT
+
+/* Synchronous PPLC Reset pin definition */ 
+#define PPLC_SRST_GPIO             (PIO_PC7_IDX)
+#define PPLC_SRST_ACTIVE_LEVEL    IOPORT_PIN_LEVEL_LOW
+#define PPLC_SRST_INACTIVE_LEVEL  IOPORT_PIN_LEVEL_HIGH
+
+/* Wrapper macros to ensure common naming across all boards */
+#define PPLC_SRST       {PIO_PC7, PIOC, ID_PIOC, PIO_OUTPUT_1, PIO_DEFAULT}
+#define PPLC_SRST_MASK   PIO_PC7
+#define PPLC_SRST_PIO    PIOC
+#define PPLC_SRST_ID     ID_PIOC
+#define PPLC_SRST_TYPE   PIO_OUTPUT_1
+#define PPLC_SRST_ATTR   PIO_DEFAULT
+
+/* @} */
 
 /**
  * \name TWIx pin definitions
  * @{
  */
-/*! TWI ID for EEPROM application to use */
-#define BOARD_ID_TWI_EEPROM       ID_TWI0
-/*! TWI Base for TWI EEPROM application to use */
-#define BOARD_BASE_TWI_EEPROM     TWI0
-#define BOARD_AT24C_TWI_INSTANCE  TWI0
-#define BOARD_AT24C_ADDRESS       0x50u
-#define BOARD_AT30TSE_TWI         TWI0
-#define BOARD_AT30TSE_DEVICE_ADDR 0
-#define BOARD_AT30TSE_TWI_ID      ID_TWI0
-#define BOARD_USING_AT30TSE       AT30TS75
-
 /*! TWI0 Data pin for EEPROM */
 #define TWIO_DATA_GPIO            PIO_PA24_IDX
 #define TWIO_DATA_FLAG            IOPORT_MODE_MUX_A
@@ -364,21 +314,6 @@
 #define TWIO_CLK_FLAG             IOPORT_MODE_MUX_A
 #define BOARD_CLK_TWI_EEPROM      TWIO_CLK_GPIO
 #define BOARD_CLK_TWI_MUX_EEPROM  TWIO_CLK_FLAG
-
-/*! TWI1 Data pin for EEPROM */
-#define TWI1_DATA_GPIO            PIO_PB0_IDX
-#define TWI1_DATA_FLAG            IOPORT_MODE_MUX_A
-/*! TWI1 Clock pin for EEPROM */
-#define TWI1_CLK_GPIO             PIO_PB1_IDX
-#define TWI1_CLK_FLAG             IOPORT_MODE_MUX_A
-/* @} */
-
-/**
- * \name PCK pin definitions
- * @{
- */
-#define PIN_PCK2        (PIO_PA0_IDX)
-#define PIN_PCK2_MUX    (IOPORT_MODE_MUX_B)
 /* @} */
 
 /**
@@ -397,80 +332,49 @@
 /** USART0 pin RTS */
 #define PIN_USART0_RTS_IDX    (PIO_PA19_IDX)
 #define PIN_USART0_RTS_FLAGS  (IOPORT_MODE_MUX_A)
-/** USART0 pin SCK */
-#define PIN_USART0_SCK_IDX    (PIO_PB18_IDX)
-#define PIN_USART0_SCK_FLAGS  (IOPORT_MODE_MUX_A)
 
+/** USART1 pin RX */
+#define PIN_USART1_RXD_IDX    (PIO_PA11_IDX)
+#define PIN_USART1_RXD_FLAGS  (IOPORT_MODE_MUX_A)
+/** USART1 pin TX */
+#define PIN_USART1_TXD_IDX    (PIO_PA12_IDX)
+#define PIN_USART1_TXD_FLAGS  (IOPORT_MODE_MUX_A)
 /** USART1 pin CTS */
 #define PIN_USART1_CTS_IDX    (PIO_PA18_IDX)
 #define PIN_USART1_CTS_FLAGS  (IOPORT_MODE_MUX_A)
 /** USART1 pin RTS */
 #define PIN_USART1_RTS_IDX    (PIO_PA17_IDX)
 #define PIN_USART1_RTS_FLAGS  (IOPORT_MODE_MUX_A)
-/** USART1 pin RX */
-#define PIN_USART1_RXD_IDX    (PIO_PA11_IDX)
-#define PIN_USART1_RXD_FLAGS  (IOPORT_MODE_MUX_A)
-/** USART1 pin SCK */
-#define PIN_USART1_SCK_IDX    (PIO_PA16_IDX)
-#define PIN_USART1_SCK_FLAGS  (IOPORT_MODE_MUX_A)
-/** USART1 pin TX */
-#define PIN_USART1_TXD_IDX    (PIO_PA12_IDX)
-#define PIN_USART1_TXD_FLAGS  (IOPORT_MODE_MUX_A)
 
-/** USART2 pin CTS */
-#define PIN_USART2_CTS_IDX    (PIO_PA15_IDX)
-#define PIN_USART2_CTS_FLAGS  (IOPORT_MODE_MUX_A)
-/** USART2 pin RTS */
-#define PIN_USART2_RTS_IDX    (PIO_PA14_IDX)
-#define PIN_USART2_RTS_FLAGS  (IOPORT_MODE_MUX_A)
-/** USART2 pin RX */
-#define PIN_USART2_RXD_IDX    (PIO_PA9_IDX)
-#define PIN_USART2_RXD_FLAGS  (IOPORT_MODE_MUX_A)
-/** USART2 pin SCK */
-#define PIN_USART2_SCK_IDX    (PIO_PA13_IDX)
-#define PIN_USART2_SCK_FLAGS  (IOPORT_MODE_MUX_A)
-/** USART2 pin TX */
-#define PIN_USART2_TXD_IDX    (PIO_PA10_IDX)
-#define PIN_USART2_TXD_FLAGS  (IOPORT_MODE_MUX_A)
-
-/* IRDA SD pin. */
-#define PIN_IRDA_SD_IDX       PIN_USART2_CTS_IDX
-#define PIN_IRDA_SD_FLAGS     (0)
-/* TXD pin configuration. */
-#define PIN_USART_TXD_IDX          PIN_USART2_TXD_IDX
-#define PIN_USART_TXD_FLAGS        (IOPORT_MODE_MUX_A)
-#define PIN_USART_TXD_IO_FLAGS     (0)
-
-/* RS485 RE pin. */
-#define PIN_RE_IDX                 PIN_USART2_CTS_IDX
-#define PIN_RE_FLAGS               (0)
-
-/* ISO7816 pin. */
-#define ISO7816_USART_ID           ID_USART2
-#define ISO7816_USART              USART2
-#define PIN_ISO7816_RST_IDX        PIO_PA15_IDX
-#define PIN_ISO7816_RST_FLAG       (0)
 /* @} */
 
 /**
- * \name ADC pin definitions
+ * \name ADC Xplain PRO pin definitions
  * @{
  */
-#define PINS_ADC_TRIG       PIO_PB23_IDX
-#define PINS_ADC_TRIG_FLAG  IOPORT_MODE_MUX_A
+#define XP_ADC_GPIO   PIO_PA4_IDX
 /* @} */
-
+   
 /**
- * \name EBI pin definitions
+ * \name SLP Xplain PRO pin definition
  * @{
  */
-// TBD
+#define XP_SLP_GPIO             (PIO_PC8_IDX)
+#define XP_SLP_ACTIVE_LEVEL    IOPORT_PIN_LEVEL_HIGH
+#define XP_SLP_INACTIVE_LEVEL  IOPORT_PIN_LEVEL_LOW
+
+/* Wrapper macros to ensure common naming across all boards */
+#define XP_SLP       {PIO_PC8, PIOC, ID_PIOC, PIO_OUTPUT_1, PIO_DEFAULT}
+#define XP_SLP_MASK   PIO_PC8
+#define XP_SLP_PIO    PIOC
+#define XP_SLP_ID     ID_PIOC
+#define XP_SLP_TYPE   PIO_OUTPUT_1
+#define XP_SLP_ATTR   PIO_DEFAULT
 /* @} */
 
+/* @} */ /* End of sam4cp16bmb_features_group */
 
-/* @} */ /* End of sam4c_ek_features_group */
+/* @} */ /* End of sam4cp16bmb_group */
 
-/* @} */ /* End of sam4c_ek_group */
-
-#endif  /* SAM4C_EK_H_INCLUDED */
+#endif  /* SAM4CP16BMB_H_INCLUDED */
 
