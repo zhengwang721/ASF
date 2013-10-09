@@ -226,6 +226,9 @@ retval_t tal_init(void)
 		 *generated
 		 * in function tal_generate_rand_seed().
 		 */
+#ifdef FFD		
+		tal_pib.IeeeAddress = 0x1234567812345600;
+#else		
 		uint8_t *ptr_pib = (uint8_t *)&tal_pib.IeeeAddress;
 
 		for (uint8_t i = 0; i < 8; i++) {
@@ -241,6 +244,7 @@ retval_t tal_init(void)
 			 * And timing is not an issue at this place...
 			 */
 		}
+#endif		
 	}
 #endif  /* #ifndef DISABLE_IEEE_ADDR_CHECK */
 #ifdef ENABLE_STACK_NVM

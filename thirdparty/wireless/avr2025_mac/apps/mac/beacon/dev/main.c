@@ -123,7 +123,7 @@ app_state_t;
 
 /* === MACROS ============================================================== */
 
-#define DEFAULT_PAN_ID                  CCPU_ENDIAN_TO_LE16(0xBABE)
+#define DEFAULT_PAN_ID                  CCPU_ENDIAN_TO_LE16(0x1111)
 
 /** Defines the short address of the coordinator. */
 #define COORD_SHORT_ADDR                CCPU_ENDIAN_TO_LE16(0x0000)
@@ -225,6 +225,11 @@ static uint8_t default_key[3][16] = {{
 	0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7,
 	0xC8, 0xC9, 0xCA, 0xCB, 0xCC, 0xCD, 0xCE, 0xD1
 }
+};
+
+uint8_t mac_beacon_key[] = {
+	0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7,
+	0xC8, 0xC9, 0xCA, 0xCB, 0xCC, 0xCD, 0xCE, 0xCF
 };
 
 #define INDEX_0                         (0)
@@ -814,7 +819,7 @@ mac_key_table_t *key_table = (mac_key_table_t *)PIBAttributeValue;
 		 */
 		wpan_mlme_scan_req(MLME_SCAN_TYPE_ACTIVE,
 				SCAN_CHANNEL,
-				SCAN_DURATION_SHORT,
+				SCAN_DURATION_LONG,
 				current_channel_page);
 
 		/* Indicate network scanning by a LED flashing. */

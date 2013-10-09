@@ -996,7 +996,8 @@ static bool process_data_ind_not_transient(buffer_t *b_ptr, frame_info_t *f_ptr)
  */
 static bool parse_mpdu(frame_info_t *rx_frame_ptr)
 {
-	uint8_t payload_index;
+	uint8_t payload_index[4] = {0};
+	uint8_t payload_loc = 0;
 	uint8_t temp_byte;
 	uint16_t fcf;
 	uint8_t *temp_frame_ptr = &(rx_frame_ptr->mpdu[1]);
@@ -1032,8 +1033,6 @@ static bool parse_mpdu(frame_info_t *rx_frame_ptr)
 		mac_parse_data.mac_command = *temp_frame_ptr;
 	}
 
-	payload_index = 0;
-
 #ifdef BEACON_SUPPORT
 	/* The timestamping is only required for beaconing networks. */
 	mac_parse_data.time_stamp = rx_frame_ptr->time_stamp;
@@ -1043,7 +1042,9 @@ static bool parse_mpdu(frame_info_t *rx_frame_ptr)
 	if (fcf & FCF_SECURITY_ENABLED) {
 		retval_t status;
 		status = mac_unsecure(&mac_parse_data, &rx_frame_ptr->mpdu[1],
-				temp_frame_ptr, &payload_index);
+					temp_frame_ptr, payload_index);
+
+					payload_loc = payload_index[0];
 
 		if (status != MAC_SUCCESS) {
 			/* Generate MLME-COMM-STATUS.indication. */
@@ -1102,16 +1103,16 @@ static bool parse_mpdu(frame_info_t *rx_frame_ptr)
 		/* Get the Superframe specification */
 		memcpy(
 				&mac_parse_data.mac_payload_data.beacon_data.superframe_spec,
-				&temp_frame_ptr[payload_index],
+				&temp_frame_ptr[payload_loc],
 				sizeof(uint16_t));
 		mac_parse_data.mac_payload_data.beacon_data.superframe_spec
 			= CLE16_TO_CPU_ENDIAN(
 				mac_parse_data.mac_payload_data.beacon_data.superframe_spec);
-		payload_index += sizeof(uint16_t);
+		payload_loc += sizeof(uint16_t);
 
 		/* Get the GTS specification */
 		mac_parse_data.mac_payload_data.beacon_data.gts_spec
-			= temp_frame_ptr[payload_index++];
+			= temp_frame_ptr[payload_loc++];
 
 		/*
 		 * If the GTS specification descriptor count is > 0, then
@@ -1126,21 +1127,21 @@ static bool parse_mpdu(frame_info_t *rx_frame_ptr)
 			/* 1 octet GTS direction */
 #ifdef GTS_SUPPORT
 			mac_parse_data.mac_payload_data.beacon_data.gts_direction
-				= temp_frame_ptr[payload_index++];
+				= temp_frame_ptr[payload_loc++];
 
 			/* GTS address list */
 			mac_parse_data.mac_payload_data.beacon_data.gts_list
-				= (mac_gts_list_t *)&temp_frame_ptr[payload_index];
-			payload_index += (temp_byte * 3);
+				= (mac_gts_list_t *)&temp_frame_ptr[payload_loc];
+			payload_loc += (temp_byte * 3);
 #else
-			payload_index += 1 + temp_byte;
+			payload_loc += 1 + temp_byte;
 #endif  /* GTS_SUPPORT */
 		}
 
 		/* Get the Pending address specification */
 
 		mac_parse_data.mac_payload_data.beacon_data.pending_addr_spec
-			= temp_frame_ptr[payload_index++];
+			= temp_frame_ptr[payload_loc++];
 		{
 			/*
 			 * If the Pending address specification indicates that
@@ -1158,33 +1159,32 @@ static bool parse_mpdu(frame_info_t *rx_frame_ptr)
 					(number_bytes_long_addr)) {
 				mac_parse_data.mac_payload_data.beacon_data.
 				pending_addr_list
-					= &temp_frame_ptr[payload_index];
+					= &temp_frame_ptr[payload_loc];
 			}
 
 			if (number_bytes_short_addr) {
-				payload_index
+				payload_loc
 					+= (number_bytes_short_addr *
 						sizeof(uint16_t));
 			}
 
 			if (number_bytes_long_addr) {
-				payload_index
+				payload_loc
 					+= (number_bytes_long_addr *
 						sizeof(uint64_t));
 			}
 		}
 
 		/* Is there a beacon payload ? */
-		if (mac_parse_data.mac_payload_length > payload_index) {
+		if (mac_parse_data.mac_payload_length > payload_loc) {
 			mac_parse_data.mac_payload_data.beacon_data.
 			beacon_payload_len
 				= mac_parse_data.mac_payload_length -
-					payload_index;
-
+					payload_loc;
 			/* Store pointer to received beacon payload. */
 			mac_parse_data.mac_payload_data.beacon_data.
 			beacon_payload
-				= &temp_frame_ptr[payload_index];
+				= &temp_frame_ptr[payload_loc];
 		} else {
 			mac_parse_data.mac_payload_data.beacon_data.
 			beacon_payload_len = 0;
@@ -1210,7 +1210,7 @@ static bool parse_mpdu(frame_info_t *rx_frame_ptr)
 			 * further processing later.
 			 */
 			mac_parse_data.mac_payload_data.data.payload
-				= &temp_frame_ptr[payload_index];
+				= &temp_frame_ptr[payload_loc];
 		} else {
 			mac_parse_data.mac_payload_length = 0;
 		}
@@ -1234,14 +1234,14 @@ static bool parse_mpdu(frame_info_t *rx_frame_ptr)
 		 * without taking care to await all the response message
 		 * ping-pong first.
 		 */
-		payload_index = 1;
+		payload_loc = 1;
 
 		switch (mac_parse_data.mac_command) {
 #if (MAC_ASSOCIATION_INDICATION_RESPONSE == 1)
 		case ASSOCIATIONREQUEST:
 			mac_parse_data.mac_payload_data.assoc_req_data.
 			capability_info
-				= temp_frame_ptr[payload_index++];
+				= temp_frame_ptr[payload_loc++];
 			break;
 #endif /* (MAC_ASSOCIATION_INDICATION_RESPONSE == 1) */
 
@@ -1249,12 +1249,12 @@ static bool parse_mpdu(frame_info_t *rx_frame_ptr)
 		case ASSOCIATIONRESPONSE:
 			memcpy(
 					&mac_parse_data.mac_payload_data.assoc_response_data.short_addr,
-					&temp_frame_ptr[payload_index],
+					&temp_frame_ptr[payload_loc],
 					sizeof(uint16_t));
-			payload_index += sizeof(uint16_t);
+			payload_loc += sizeof(uint16_t);
 			mac_parse_data.mac_payload_data.assoc_response_data.
 			assoc_status
-				= temp_frame_ptr[payload_index];
+				= temp_frame_ptr[payload_loc];
 			break;
 #endif /* (MAC_ASSOCIATION_REQUEST_CONFIRM == 1) */
 
@@ -1262,31 +1262,31 @@ static bool parse_mpdu(frame_info_t *rx_frame_ptr)
 		case DISASSOCIATIONNOTIFICATION:
 			mac_parse_data.mac_payload_data.disassoc_req_data.
 			disassoc_reason
-				= temp_frame_ptr[payload_index++];
+				= temp_frame_ptr[payload_loc++];
 			break;
 #endif /* (MAC_DISASSOCIATION_BASIC_SUPPORT == 1) */
 
 		case COORDINATORREALIGNMENT:
 			memcpy(
 					&mac_parse_data.mac_payload_data.coord_realign_data.pan_id,
-					&temp_frame_ptr[payload_index],
+					&temp_frame_ptr[payload_loc],
 					sizeof(uint16_t));
-			payload_index += sizeof(uint16_t);
+			payload_loc += sizeof(uint16_t);
 			memcpy(
 					&mac_parse_data.mac_payload_data.coord_realign_data.coord_short_addr,
-					&temp_frame_ptr[payload_index],
+					&temp_frame_ptr[payload_loc],
 					sizeof(uint16_t));
-			payload_index += sizeof(uint16_t);
+			payload_loc += sizeof(uint16_t);
 
 			mac_parse_data.mac_payload_data.coord_realign_data.
 			logical_channel
-				= temp_frame_ptr[payload_index++];
+				= temp_frame_ptr[payload_loc++];
 
 			memcpy(
 					&mac_parse_data.mac_payload_data.coord_realign_data.short_addr,
-					&temp_frame_ptr[payload_index],
+					&temp_frame_ptr[payload_loc],
 					sizeof(uint16_t));
-			payload_index += sizeof(uint16_t);
+			payload_loc += sizeof(uint16_t);
 
 			/*
 			 * If frame version subfield indicates a 802.15.4-2006
@@ -1297,7 +1297,7 @@ static bool parse_mpdu(frame_info_t *rx_frame_ptr)
 			if (fcf & FCF_FRAME_VERSION_2006) {
 				mac_parse_data.mac_payload_data.
 				coord_realign_data.channel_page
-					= temp_frame_ptr[payload_index++];
+					= temp_frame_ptr[payload_loc++];
 			}
 
 			break;
@@ -1314,7 +1314,7 @@ static bool parse_mpdu(frame_info_t *rx_frame_ptr)
 #ifdef GTS_SUPPORT
 		case GTSREQUEST:
 			mac_parse_data.mac_payload_data.gts_req_data 
-				= *((gts_char_t*) &temp_frame_ptr[payload_index]);
+				= *((gts_char_t*) &temp_frame_ptr[payload_loc]);
 				break;
 #endif /* GTS_SUPPORT */
 

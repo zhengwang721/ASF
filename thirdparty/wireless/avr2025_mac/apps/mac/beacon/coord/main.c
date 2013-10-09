@@ -131,7 +131,7 @@ typedef enum coord_state_tag {
 
 /* === MACROS ============================================================== */
 
-#define DEFAULT_PAN_ID                  CCPU_ENDIAN_TO_LE16(0xBABE)
+#define DEFAULT_PAN_ID                  CCPU_ENDIAN_TO_LE16(0x1111)
 
 /** Defines the short address of the coordinator. */
 #define COORD_SHORT_ADDR                (0x0000)
@@ -248,6 +248,11 @@ static wpan_addr_spec_t dst_addr;
  * 128-bit variable. This is the reason why the array needs to be filled
  * in in reverse order than expected.
  */
+
+uint8_t mac_beacon_key[] = {
+	0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7,
+	0xC8, 0xC9, 0xCA, 0xCB, 0xCC, 0xCD, 0xCE, 0xCF
+};
 static uint8_t default_key[3][16] = {{
 	0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7,
 	0xC8, 0xC9, 0xCA, 0xCB, 0xCC, 0xCD, 0xCE, 0xCF
@@ -1641,7 +1646,7 @@ static void indirect_data_cb(void *parameter)
 	uint8_t cur_device;
 	uint8_t src_addr_mode;
 	wpan_addr_spec_t dst_addr;
-	const char *payload = "Indirect Data from coordinator";
+	const char *payload = "Direct Data from Coordinator";
 
 	/* Loop over all associated devices. */
 	for (cur_device = 0; cur_device < no_of_assoc_devices; cur_device++) {
@@ -1668,10 +1673,10 @@ static void indirect_data_cb(void *parameter)
 
  	 	if (!wpan_mcps_data_req(src_addr_mode,
 				&dst_addr,
-				31,  /* One octet */ 	 		 
+				strlen(payload),  /* One octet */ 	 		 
 				(uint8_t*)payload,
 				curr_msdu_handle,
-				WPAN_TXOPT_INDIRECT_ACK
+				WPAN_TXOPT_ACK /* WPAN_TXOPT_INDIRECT_ACK *///@mathi
 #if (defined MAC_SECURITY_ZIP) || (defined MAC_SECURITY_2006)				
 				,ZIP_SEC_MIN,NULL,ZIP_KEY_ID_MODE,device_list[cur_device].short_addr
 #endif					

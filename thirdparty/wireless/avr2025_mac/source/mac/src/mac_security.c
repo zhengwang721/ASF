@@ -82,6 +82,9 @@
 #define FRAME_COUNTER_LEN               (0x04)
 #define IEEE_ADDR_LEN                   (0x08)
 #define CRC_LEN                         (0x02)
+#define SUPER_FRAME_SPEC_LEN			(0x02)
+#define GTS_ADDR_SPEC_LEN				(0x01)
+#define PENDING_ADDR_SPEC_LEN			(0x01)
 
 /* key id mode and key identifier macros */
 #define KEY_ID_MODE_0                   (0x00)
@@ -110,7 +113,11 @@
 #define FCF_POS                          (0x01)
 
 /* === Globals ============================================================= */
+#ifdef MAC_SECURITY_ZIP_BEACON
 
+extern uint8_t mac_beacon_key[];	
+		
+#endif
 /* === Prototypes ========================================================== */
 
 static uint8_t get_key_id_field_len(uint8_t key_id_mode);
@@ -445,24 +452,33 @@ retval_t mac_secure(frame_info_t *frame, uint8_t *mac_payload_ptr,
     }
     /* 7.5.8.2.1 (g) */
     /* Retrieval of the key */
-    retval_t key_status = outgoing_key_retrieval(pmdr, &key_desc);
-    if (key_status != MAC_SUCCESS)
-    {
+	if (FCF_FRAMETYPE_BEACON == (frame->mpdu[FCF_POS] & FCF_FRAME_TYPE_MASK))
+	{
+#ifdef MAC_SECURITY_ZIP_BEACON
+	 key = mac_beacon_key;		
+#endif		
+	}
+	else
+	{
+     retval_t key_status = outgoing_key_retrieval(pmdr, &key_desc);
+	 if (key_status != MAC_SUCCESS)
+     {
         return key_status;
-    }
-    key = key_desc->Key;
+     }
+	 key = key_desc->Key;
+	}
+
+    
     uint8_t m = get_mic_length(pmdr->SecurityLevel);
 
     /* Encrypt payload data */
     uint8_t nonce[AES_BLOCKSIZE] = {0};
 	uint8_t enc_data[aMaxPHYPacketSize - FCS_LEN + AES_BLOCKSIZE];
 	/* Extra AES Bloc size at end required for MIC generation. */
-
 	create_nonce((uint8_t *)&tal_pib.IeeeAddress,
-			(uint8_t *)&mac_sec_pib.FrameCounter,
-			pmdr->SecurityLevel,
-			nonce);
-
+				(uint8_t *)&mac_sec_pib.FrameCounter,
+				pmdr->SecurityLevel,
+				nonce);
 	/*
 	 * Create string a
 	 * Here: MHR | Aux sec header = MHR | SecLvl | FrameCounter
@@ -473,6 +489,34 @@ retval_t mac_secure(frame_info_t *frame, uint8_t *mac_payload_ptr,
 
     switch (frame->mpdu[FCF_POS] & FCF_FRAME_TYPE_MASK)   // FCF
 	{
+	case FCF_FRAMETYPE_BEACON:                  /* (0x00) */
+	{		    
+			/* Append payload (string m) */
+			memcpy(&enc_data[hdr_len], mac_payload_ptr, pmdr->msduLength);
+			{
+				uint8_t *current_key;
+
+				/* Shall the real key be used or rather a test key? */
+				current_key = key;
+
+				stb_ccm_secure(enc_data, /* plain text header (string a)
+										  *and payload concatenated */
+						nonce,
+						current_key, /*security_key */
+						hdr_len, /* plain text header length */
+						pmdr->msduLength, /* Length of payload
+												   *to be encrypted */
+						pmdr->SecurityLevel, /* security level
+													  **/
+						AES_DIR_ENCRYPT);
+			}	
+			mac_sec_pib.FrameCounter++;
+					
+			/* Replace original payload by secured payload */
+			memcpy(mac_payload_ptr - m, &enc_data[hdr_len],
+					pmdr->msduLength + m);
+	}
+		break;		
 	case FCF_FRAMETYPE_DATA:                  /* (0x01) */
 	{
 			/* Append payload (string m) */
@@ -759,21 +803,40 @@ static inline retval_t unsecure_frame(parse_t *mac_parse_data_buf, uint8_t *mpdu
     mac_key_table_t *key_desc;
     mac_device_desc_t *device_desc;
     mac_key_device_desc_t *key_device_desc;
+#ifdef MAC_SECURITY_ZIP_BEACON	
+	mac_device_desc_t device_desc_data;
+	mac_key_device_desc_t key_device_desc_data;
+	device_desc = &device_desc_data;
+	key_device_desc = &key_device_desc_data;
+#endif
 
     /* Todo 7.5.8.2.3 (e) 7.5.8.2.8 security level checking procedure*/
-    retval_t status = incoming_sec_material_retrieval(mac_parse_data_buf, &key_desc, &device_desc, &key_device_desc);
-    if (status != MAC_SUCCESS)
-    {
-        return MAC_UNAVAILABLE_KEY;
-    }
-    key = key_desc->Key;
+	if (FCF_FRAMETYPE_BEACON == mac_parse_data_buf->frame_type)
+	{
+#ifdef MAC_SECURITY_ZIP_BEACON
+		key = mac_beacon_key;		
+#endif
+	} 
+	else
+	{
+		retval_t status = incoming_sec_material_retrieval(mac_parse_data_buf, &key_desc, &device_desc, &key_device_desc);
+		if (status != MAC_SUCCESS)
+		{
+			return MAC_UNAVAILABLE_KEY;
+		}
+		key = key_desc->Key;
+	}
+
     /* Todo 7.5.8.2.3 (h) using 7.5.8.2.9 key usage policy procedure*/
 
     /* 7.5.8.2.3 (j) & (k)*/
-    if ((mac_parse_data_buf->frame_cnt == FRAME_COUNTER_MAX_VAL) || mac_parse_data_buf->frame_cnt < device_desc->FrameCounter)
+    if ((FCF_FRAMETYPE_DATA == mac_parse_data_buf->frame_type) && \
+	((mac_parse_data_buf->frame_cnt == FRAME_COUNTER_MAX_VAL) || \
+	    (mac_parse_data_buf->frame_cnt < device_desc->FrameCounter)))
     {
         return MAC_COUNTER_ERROR;
     }
+
     /*
      * Create Nonce - Attentation: byte order is inverse in comparison to RF4CE
      * RF4CE: Little endian
@@ -783,7 +846,13 @@ static inline retval_t unsecure_frame(parse_t *mac_parse_data_buf, uint8_t *mpdu
 
     /* Standard way of extracting Src IEEE address. */
     addr_ptr = (uint8_t *)&device_desc->ExtAddress;
-
+#ifdef MAC_SECURITY_ZIP_BEACON
+		uint64_t coord_ieee_address = 0x1234567812345600;
+		if (FCF_FRAMETYPE_BEACON == mac_parse_data_buf->frame_type)
+		{
+			addr_ptr = (uint8_t *)&coord_ieee_address;
+		}		
+#endif
     uint8_t m = get_mic_length(mac_parse_data_buf->sec_ctrl.sec_level);
 
     create_nonce(addr_ptr, (uint8_t *)&mac_parse_data_buf->frame_cnt, mac_parse_data_buf->sec_ctrl.sec_level, nonce);
@@ -810,25 +879,89 @@ static inline retval_t unsecure_frame(parse_t *mac_parse_data_buf, uint8_t *mpdu
                 {
                     /* Adjust payload by secured payload */
                     *payload_index = sec_hdr_len;
-                    /* Substract the MIC length from the payload length. */
+                    /* Subtract the MIC length from the payload length. */
                     mac_parse_data_buf->mac_payload_length = encryp_payload_len;
                 }
                 else
                 {
                     return MAC_SECURITY_ERROR;
                 }
+			}
                 break;
-            }
+				
+		case FCF_FRAMETYPE_BEACON:                  //(0x00)
+                {
+                /* Shall the real key be used or rather a test key? */
+                current_key = key;
+				uint8_t beacon_add_len = 0;
+				uint8_t gts_field_len = 0;
+				uint8_t pending_addr_len = 0;
+
+                uint8_t sec_hdr_len = SEC_CTRL_FLD_LEN + FRAME_COUNTER_LEN + \
+									   mac_parse_data_buf->key_id_len;  // 5 = sec ctrl + frame counter
+									  
+				g_debug_beacon_ptr = mac_payload;				
+                uint8_t mhr_len = mac_payload - mpdu + sec_hdr_len;
+				uint8_t encryp_payload_len = mac_parse_data_buf->mpdu_length - mhr_len - m - CRC_LEN;  // 2 = CRC
+				/* calculate the Fixed Field of the GTS Length and Pending Address Field Length and 
+				  * Super Frame Specification
+				  */
+				beacon_add_len = SUPER_FRAME_SPEC_LEN + GTS_ADDR_SPEC_LEN + PENDING_ADDR_SPEC_LEN;
+				
+				/* Calculate the variable field GTS Field Length */    
+				g_debug_beacon = mhr_len;            
+				gts_field_len = ((mpdu[(mhr_len + SUPER_FRAME_SPEC_LEN)] & 0x07) * 3);
+				if (gts_field_len)
+				{
+					/* GTS direction fields are available */
+					gts_field_len++;
+				}
+				/* Calculate the variable field Pending Address Field Length */ 
+				pending_addr_len = ((mpdu[(mhr_len + SUPER_FRAME_SPEC_LEN + GTS_ADDR_SPEC_LEN + \
+									gts_field_len)] & 0x07) * 2) + \
+								   (((mpdu[(mhr_len + SUPER_FRAME_SPEC_LEN + GTS_ADDR_SPEC_LEN + \
+								    gts_field_len)] & 0x70) >> 4) * 8);
+								   
+				/* Total Additional Address Length Field */
+				beacon_add_len += pending_addr_len + gts_field_len;							   
+				g_debug_beacon = beacon_add_len + mhr_len;
+
+                if (stb_ccm_secure(mpdu, /* plaintext header (string a) and payload concatenated */
+                                   nonce,
+                                   current_key, /* security key */
+                                   (mhr_len + beacon_add_len), /* plaintext header length */
+                                   (encryp_payload_len - beacon_add_len), /* Length of payload to be encrypted */
+                                   mac_parse_data_buf->sec_ctrl.sec_level, /* security level */
+                                   AES_DIR_DECRYPT)
+                    == STB_CCM_OK)
+                {
+                    /* Adjust payload by secured payload */
+                    *payload_index = sec_hdr_len;
+                    /* Subtract the MIC length from the payload length. */
+                    mac_parse_data_buf->mac_payload_length = encryp_payload_len + sec_hdr_len;
+                }
+                else
+                {
+                    return MAC_SECURITY_ERROR;
+                }
+			}
+              break;
+            
         default:
             return MAC_UNSUPPORTED_SECURITY;
     }
     /* 7.5.8.2.3 (n) */
-    device_desc->FrameCounter = (mac_parse_data_buf->frame_cnt) + 1;
-    /* 7.5.8.2.3 (o) */
-    if (device_desc->FrameCounter == FRAME_COUNTER_MAX_VAL)
-    {
-        key_device_desc->BlackListed = true;
-    }
+	if ((FCF_FRAMETYPE_DATA == mac_parse_data_buf->frame_type) /*|| \
+				(FCF_FRAMETYPE_BEACON == mac_parse_data_buf->frame_type*/))
+	{
+		device_desc->FrameCounter = (mac_parse_data_buf->frame_cnt) + 1;
+		/* 7.5.8.2.3 (o) */
+		if (device_desc->FrameCounter == FRAME_COUNTER_MAX_VAL)
+		{
+			key_device_desc->BlackListed = true;
+		}
+	}	
+
     return MAC_SUCCESS;
 }
 

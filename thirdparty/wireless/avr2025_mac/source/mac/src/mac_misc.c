@@ -432,8 +432,8 @@ void mac_sleep_trans(void)
 {
 	/* Go to sleep? */
 #ifdef BEACON_SUPPORT
-	if(MAC_INACTIVE == mac_superframe_state 
-		|| ((!mac_pib.mac_RxOnWhenIdle) && (!mac_rx_enabled))) {
+	if((NON_BEACON_NWK > tal_pib.BeaconOrder && MAC_INACTIVE == mac_superframe_state && (!mac_rx_enabled))
+			|| (NON_BEACON_NWK == tal_pib.BeaconOrder && (!mac_pib.mac_RxOnWhenIdle) && (!mac_rx_enabled))) {
 #else /* BEACON_SUPPORT */
 	if ((!mac_pib.mac_RxOnWhenIdle) && (!mac_rx_enabled)) {
 #endif /* BEACON_SUPPORT */

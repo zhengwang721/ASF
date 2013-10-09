@@ -262,9 +262,9 @@ void mac_build_and_tx_beacon(bool beacon_enabled,
 	uint16_t fcf;
 	uint8_t frame_len;
 	uint8_t *frame_ptr;
-	
-#if ((defined MAC_SECURITY_ZIP_BEACON)  || (defined MAC_SECURITY_2006_BEACON))
-mcps_data_req_t beacon_sec_buf;   
+#if ((defined MAC_SECURITY_ZIP_BEACON)  || (defined MAC_SECURITY_2006_BEACON)) 
+	uint8_t *frame_ptr_mhr_gts = NULL;
+	mcps_data_req_t beacon_sec_buf;   
 #endif
 
 #ifdef BEACON_SUPPORT
@@ -303,7 +303,9 @@ mcps_data_req_t beacon_sec_buf;
 	/* Get the payload pointer. */
 	frame_ptr = (uint8_t *)transmit_frame +
 			LARGE_BUFFER_SIZE - 2; /* Add 2 octets for FCS. */
-			
+#if ((defined MAC_SECURITY_ZIP_BEACON)  || (defined MAC_SECURITY_2006_BEACON))
+uint8_t *mac_payload_ptr = NULL;
+#endif			
 	/* Build the beacon payload if it exists. */
 	if (mac_pib.mac_BeaconPayloadLength > 0) 
 	{
@@ -312,6 +314,9 @@ mcps_data_req_t beacon_sec_buf;
 
 		memcpy(frame_ptr, mac_beacon_payload,
 				mac_pib.mac_BeaconPayloadLength);
+#if ((defined MAC_SECURITY_ZIP_BEACON)  || (defined MAC_SECURITY_2006_BEACON))				
+	   mac_payload_ptr = frame_ptr;	
+#endif	   			
 	}
 
 	/* Build the Pending address field. */
@@ -349,7 +354,8 @@ mcps_data_req_t beacon_sec_buf;
 #ifdef GTS_SUPPORT
 	mac_gts_table_update();
 	uint8_t gts_octets = mac_add_gts_info(frame_ptr);
-	if (gts_octets > 0) {
+	if (gts_octets > 0) 
+	{
 		frame_len += gts_octets;
 		frame_ptr -= gts_octets + 1;
 	}
@@ -398,15 +404,13 @@ mcps_data_req_t beacon_sec_buf;
 	frame_ptr -= 2;
 	convert_spec_16_bit_to_byte_array(superframe_spec, frame_ptr);
 
-#if ((defined MAC_SECURITY_ZIP_BEACON)  || (defined MAC_SECURITY_2006_BEACON))    
-	uint8_t *mac_payload_ptr = frame_ptr;
-
+#if ((defined MAC_SECURITY_ZIP_BEACON)  || (defined MAC_SECURITY_2006_BEACON)) 
+	frame_ptr_mhr_gts = frame_ptr;    
 	beacon_sec_buf.SecurityLevel = 0x05;
 	beacon_sec_buf.KeyIdMode = 1;
 	beacon_sec_buf.KeySource = NULL;
 	beacon_sec_buf.KeyIndex = 4;	
-		
-	
+	beacon_sec_buf.msduLength = mac_pib.mac_BeaconPayloadLength;	
 
 	/*
 	 * Note: The value of the payload_length parameter will be updated
@@ -416,6 +420,26 @@ mcps_data_req_t beacon_sec_buf;
 	{
 		retval_t build_sec = mac_build_aux_sec_header(&frame_ptr, &beacon_sec_buf,
 				&frame_len);
+		/* place the GTS  and Super frame specification fields into the before the MIC - Data */		
+		if ((beacon_sec_buf.SecurityLevel == 1) || (beacon_sec_buf.SecurityLevel == 5))
+		{			
+			memmove((frame_ptr_mhr_gts - 0x04), frame_ptr_mhr_gts,\
+									(mac_payload_ptr - frame_ptr_mhr_gts));
+			memset(frame_ptr_mhr_gts, 0, 0x04);
+		} 
+		else if((beacon_sec_buf.SecurityLevel == 2) || (beacon_sec_buf.SecurityLevel == 6))
+		{
+			memmove((frame_ptr_mhr_gts - 0x08), frame_ptr_mhr_gts,\
+									(mac_payload_ptr - frame_ptr_mhr_gts));
+			memset(frame_ptr_mhr_gts, 0, 0x08);
+		}
+		else if((beacon_sec_buf.SecurityLevel == 3) || (beacon_sec_buf.SecurityLevel == 7))
+		{
+			memmove((frame_ptr_mhr_gts - 0x10), frame_ptr_mhr_gts,\
+									(mac_payload_ptr - frame_ptr_mhr_gts));	
+			memset(frame_ptr_mhr_gts, 0, 0x10);								
+		}
+				
 		if (MAC_SUCCESS != build_sec) 
 		{
 			/* Todo MAC Security Issue */
