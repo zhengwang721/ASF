@@ -213,6 +213,9 @@ extern void hw_overflow_cb();
 extern void hw_expiry_cb();
 #endif
 static uint8_t APP_TIMER;
+#if (defined ENABLE_SLEEP || defined RTC_SLEEP)
+#undef SIO_HUB
+#endif
 #ifdef MAC_SECURITY_ZIP
 /*
  * This is implemented as an array of bytes, but actually this is a
@@ -274,6 +277,7 @@ static void app_alert(void);
  */
 int main(void)
 {
+	
 	irq_initialize_vectors();
 	#if SAMD20
 	system_init();
@@ -1606,7 +1610,10 @@ void rtc_overflow_callback(void)
 {
 	//! [overflow_act]
 	/* Do something on RTC overflow here */
-	wakeup_cb(NULL);
+	rtc_count_disable();
+	wakeup_cb(NULL);		
+	
+	
 	//! [overflow_act]
 }
 #endif
