@@ -347,7 +347,7 @@ uint32_t sysclk_get_peripheral_bus_hz(const volatile void *module)
  */
 void sysclk_enable_peripheral_clock(const volatile void *module)
 {
-    switch ((uintptr_t)module) {
+	switch ((uintptr_t)module) {
 
 	#if !SAM4LS
 	case AESA_ADDR:
