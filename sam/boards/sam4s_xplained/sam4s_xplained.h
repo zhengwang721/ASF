@@ -429,4 +429,10 @@
 #define PIN_USART_TXD_FLAGS        (PIO_PERIPH_A | PIO_DEFAULT)
 #define PIN_USART_TXD_IO_FLAGS     (PIO_OUTPUT_0 | PIO_DEFAULT)
 
+/* SRAM base address */
+#define SRAM_BASE_ADDRESS          EBI_CS0_ADDR
+
+/* SRAM chip select */
+#define SRAM_CHIP_SELECT           0
+
 #endif  /* SAM4S_XPLAINED_H_INCLUDED */
