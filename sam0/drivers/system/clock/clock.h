@@ -586,11 +586,11 @@ struct system_clock_source_dfll_config {
 	/** Coarse calibration value (Open loop mode) */
 	uint8_t coarse_value;
 	/** Fine calibration value (Open loop mode) */
-	uint8_t fine_value;
+	uint16_t fine_value;
 	/** Coarse adjustment max step size (Closed loop mode) */
 	uint8_t coarse_max_step;
 	/** Fine adjustment max step size (Closed loop mode) */
-	uint8_t fine_max_step;
+	uint16_t fine_max_step;
 	/** DFLL multiply factor (Closed loop mode */
 	uint16_t multiply_factor;
 };
@@ -1111,7 +1111,9 @@ void system_clock_init(void);
  */
 static inline void system_flash_set_waitstates(uint8_t wait_states)
 {
-	Assert((wait_states & NVMCTRL_CTRLB_RWS_Msk) == wait_states);
+	Assert(NVMCTRL_CTRLB_RWS((uint32_t)wait_states) ==
+			((uint32_t)wait_states << NVMCTRL_CTRLB_RWS_Pos));
+
 	NVMCTRL->CTRLB.bit.RWS = wait_states;
 }
 /**
@@ -1184,7 +1186,23 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *
  *
  * \section asfdoc_samd20_system_clock_extra_errata Errata
- * There are no errata related to this driver.
+ *	<tr>
+ *	<td>
+ *	 \li This driver implements workaround for errata 10558
+ *	     "Several reset values of SYSCTRL.INTFLAG are wrong (BOD and DFLL)"<br>
+ *	     When system_init is called it will reset these interrupts flags before they are used.
+ *	</td>
+ *	</tr>
+ *
+ *	<tr>
+ *	<td>
+ *	 \li This driver implements experimental workaround for errata 9905<br>
+ *	     "The DFLL clock must be requested before being configured otherwise a
+ *	     write access to a DFLL register can freeze the device."<br>
+ *	     This driver will enable and configure the DFLL before the ONDEMAND bit is set.
+ *	</td>
+ *	</tr>
+ *
  *
  *
  * \section asfdoc_samd20_system_clock_extra_history Module History
@@ -1196,6 +1214,27 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  * <table>
  *	<tr>
  *		<th>Changelog</th>
+ *	</tr>
+ *	<tr>
+ *		<td>
+ *			\li Fixed system_flash_set_waitstates() failing with an assertion
+ *              if an odd number of wait states provided.
+ *		</td>
+ *	</tr>
+ *	<tr>
+ *		<td>
+ *			\li Changed default value for CONF_CLOCK_DFLL_ON_DEMAND from true
+ *              to false
+ *		</td>
+ *	</tr>
+ *	<tr>
+ *		<td>\li Updated dfll configuration function to implement workaround for
+ *              errata 9905 in the DFLL module.
+ *		    \li Updated \c system_clock_init() to reset interrupt flags before
+ *              they are used, errata 10558.
+ *		    \li Fixed \c system_clock_source_get_hz() to return correcy DFLL
+ *              frequency number.
+ *		</td>
  *	</tr>
  *	<tr>
  *		<td>\li Fixed \c system_clock_source_is_ready not returning the correct
@@ -1237,7 +1276,8 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *	<tr>
  *		<td>B</td>
  *		<td>06/2013</td>
- *		<td>Corrected documentation typos.</td>
+ *		<td>Corrected documentation typos. Fixed missing steps in the Basic
+ *          Use Case Quick Start Guide.</td>
  *	</tr>
  *	<tr>
  *		<td>A</td>

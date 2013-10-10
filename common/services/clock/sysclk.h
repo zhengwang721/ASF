@@ -3,7 +3,7 @@
  *
  * \brief System clock management
  *
- * Copyright (c) 2010-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -58,8 +58,12 @@
 # include "sam4s/sysclk.h"
 #elif SAM4E
 # include "sam4e/sysclk.h"
+#elif SAM4C
+# include "sam4c/sysclk.h"
 #elif SAM4L
 # include "sam4l/sysclk.h"
+#elif SAM4N
+# include "sam4n/sysclk.h"
 #elif (UC3A0 || UC3A1)
 # include "uc3a0_a1/sysclk.h"
 #elif UC3A3

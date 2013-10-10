@@ -42,6 +42,7 @@
  */
 #include <clock.h>
 #include <conf_clocks.h>
+#include <system.h>
 
 /**
  * \internal
@@ -49,6 +50,8 @@
  */
 struct _system_clock_dfll_config {
 	uint32_t control;
+	uint32_t val;
+	uint32_t mul;
 };
 
 /**
@@ -76,6 +79,8 @@ struct _system_clock_module {
 static struct _system_clock_module _system_clock_inst = {
 		.dfll = {
 			.control     = 0,
+			.val     = 0,
+			.mul     = 0,
 		},
 		.xosc = {
 			.frequency   = 0,
@@ -105,6 +110,20 @@ static inline void _system_osc32k_wait_for_sync(void)
 	while (!(SYSCTRL->PCLKSR.reg & SYSCTRL_PCLKSR_OSC32KRDY)) {
 		/* Wait for OSC32K sync */
 	}
+}
+
+static inline void _system_clock_source_dfll_set_config_errata_9905(void)
+{
+
+	/* Disable ONDEMAND mode while writing configurations */
+	SYSCTRL->DFLLCTRL.reg = _system_clock_inst.dfll.control & ~SYSCTRL_DFLLCTRL_ONDEMAND;
+	_system_dfll_wait_for_sync();
+
+	SYSCTRL->DFLLMUL.reg = _system_clock_inst.dfll.mul;
+	SYSCTRL->DFLLVAL.reg = _system_clock_inst.dfll.val;
+
+	/* Write full configuration to DFLL control register */
+	SYSCTRL->DFLLCTRL.reg = _system_clock_inst.dfll.control;
 }
 
 /**
@@ -145,10 +164,9 @@ uint32_t system_clock_source_get_hz(
 		_system_dfll_wait_for_sync();
 
 		/* Check if operating in closed loop mode */
-		if (SYSCTRL->DFLLCTRL.reg & SYSCTRL_DFLLCTRL_MODE) {
-			SYSCTRL->DFLLSYNC.bit.READREQ = 1;
-			_system_dfll_wait_for_sync();
-			return system_gclk_chan_get_hz(SYSCTRL_GCLK_ID_DFLL48) * SYSCTRL->DFLLMUL.bit.MUL;
+		if (_system_clock_inst.dfll.control & SYSCTRL_DFLLCTRL_MODE) {
+			return system_gclk_chan_get_hz(SYSCTRL_GCLK_ID_DFLL48) *
+					(_system_clock_inst.dfll.mul & 0xffff);
 		}
 
 		return 48000000UL;
@@ -285,6 +303,52 @@ void system_clock_source_xosc32k_set_config(
 
 	SYSCTRL->XOSC32K = temp;
 }
+///@cond INTERNAL
+
+/**
+ * \internal
+ * \name Header file macro copies for runtime support of different revisions
+ *
+ * These macroes are copied from the header file to be able to support both new and old register layout runtime.
+ *
+ * @{
+ */
+#define _SYSTEM_OLD_DFLLVAL_FINE_Pos    0
+#define _SYSTEM_OLD_DFLLVAL_FINE_Msk    (0xFFu << _SYSTEM_OLD_DFLLVAL_FINE_Pos)
+#define _SYSTEM_OLD_DFLLVAL_FINE(value) ((_SYSTEM_OLD_DFLLVAL_FINE_Msk & ((value) << _SYSTEM_OLD_DFLLVAL_FINE_Pos)))
+
+#define _SYSTEM_OLD_DFLLVAL_COARSE_Pos  8
+#define _SYSTEM_OLD_DFLLVAL_COARSE_Msk  (0x1Fu << _SYSTEM_OLD_DFLLVAL_COARSE_Pos)
+#define _SYSTEM_OLD_DFLLVAL_COARSE(value) ((_SYSTEM_OLD_DFLLVAL_COARSE_Msk & ((value) << _SYSTEM_OLD_DFLLVAL_COARSE_Pos)))
+
+#define _SYSTEM_NEW_DFLLVAL_FINE_Pos    0
+#define _SYSTEM_NEW_DFLLVAL_FINE_Msk    (0x3FFu << _SYSTEM_NEW_DFLLVAL_FINE_Pos)
+#define _SYSTEM_NEW_DFLLVAL_FINE(value) ((_SYSTEM_NEW_DFLLVAL_FINE_Msk & ((value) << _SYSTEM_NEW_DFLLVAL_FINE_Pos)))
+
+#define _SYSTEM_NEW_DFLLVAL_COARSE_Pos  10
+#define _SYSTEM_NEW_DFLLVAL_COARSE_Msk  (0x3Fu << _SYSTEM_NEW_DFLLVAL_COARSE_Pos)
+#define _SYSTEM_NEW_DFLLVAL_COARSE(value) ((_SYSTEM_NEW_DFLLVAL_COARSE_Msk & ((value) << _SYSTEM_NEW_DFLLVAL_COARSE_Pos)))
+
+#define _SYSTEM_OLD_DFLLMUL_FSTEP_Pos   16
+#define _SYSTEM_OLD_DFLLMUL_FSTEP_Msk   (0xFFu << _SYSTEM_OLD_DFLLMUL_FSTEP_Pos)
+#define _SYSTEM_OLD_DFLLMUL_FSTEP(value) ((_SYSTEM_OLD_DFLLMUL_FSTEP_Msk & ((value) << _SYSTEM_OLD_DFLLMUL_FSTEP_Pos)))
+
+#define _SYSTEM_OLD_DFLLMUL_CSTEP_Pos   24
+#define _SYSTEM_OLD_DFLLMUL_CSTEP_Msk   (0x1Fu << _SYSTEM_OLD_DFLLMUL_CSTEP_Pos)
+#define _SYSTEM_OLD_DFLLMUL_CSTEP(value) ((_SYSTEM_OLD_DFLLMUL_CSTEP_Msk & ((value) << _SYSTEM_OLD_DFLLMUL_CSTEP_Pos)))
+
+#define _SYSTEM_NEW_DFLLMUL_FSTEP_Pos   16
+#define _SYSTEM_NEW_DFLLMUL_FSTEP_Msk   (0x3FFu << _SYSTEM_NEW_DFLLMUL_FSTEP_Pos)
+#define _SYSTEM_NEW_DFLLMUL_FSTEP(value) ((_SYSTEM_NEW_DFLLMUL_FSTEP_Msk & ((value) << _SYSTEM_NEW_DFLLMUL_FSTEP_Pos)))
+
+#define _SYSTEM_NEW_DFLLMUL_CSTEP_Pos   26
+#define _SYSTEM_NEW_DFLLMUL_CSTEP_Msk   (0x3Fu << _SYSTEM_NEW_DFLLMUL_CSTEP_Pos)
+#define _SYSTEM_NEW_DFLLMUL_CSTEP(value) ((_SYSTEM_NEW_DFLLMUL_CSTEP_Msk & ((value) << _SYSTEM_NEW_DFLLMUL_CSTEP_Pos)))
+
+#define _SYSTEM_MCU_REVISION_D 3
+
+///@endcond
+
 
 /**
  * \brief Configure the DFLL clock source
@@ -300,18 +364,22 @@ void system_clock_source_xosc32k_set_config(
 void system_clock_source_dfll_set_config(
 		struct system_clock_source_dfll_config *const config)
 {
-	/* Store away the enable bit state */
-	uint32_t old_dfll_enable_bit_state = _system_clock_inst.dfll.control & SYSCTRL_DFLLCTRL_ENABLE;
 
-	/* Make sure that the DFLL module is enabled before writing the DFLL registers */
-	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_DFLL);
+	/* Get MCU revision */
+	uint32_t rev = system_get_device_id();
 
-	/* Wait for the module to become ready */
-	_system_dfll_wait_for_sync();
+	rev &= DSU_DID_REVISION_Msk;
+	rev = rev >> DSU_DID_REVISION_Pos;
 
-	SYSCTRL->DFLLVAL.reg =
-			SYSCTRL_DFLLVAL_COARSE(config->coarse_value) |
-			SYSCTRL_DFLLVAL_FINE(config->fine_value);
+	if (rev < _SYSTEM_MCU_REVISION_D) {
+		_system_clock_inst.dfll.val =
+				_SYSTEM_OLD_DFLLVAL_COARSE(config->coarse_value) |
+				_SYSTEM_OLD_DFLLVAL_FINE(config->fine_value);
+	} else {
+		_system_clock_inst.dfll.val =
+				_SYSTEM_NEW_DFLLVAL_COARSE(config->coarse_value) |
+				_SYSTEM_NEW_DFLLVAL_FINE(config->fine_value);
+	}
 
 	_system_clock_inst.dfll.control =
 			(uint32_t)config->wakeup_lock     |
@@ -319,24 +387,24 @@ void system_clock_source_dfll_set_config(
 			(uint32_t)config->quick_lock      |
 			(uint32_t)config->chill_cycle     |
 			(uint32_t)config->run_in_standby << SYSCTRL_DFLLCTRL_RUNSTDBY_Pos |
-			(uint32_t)config->on_demand << SYSCTRL_DFLLCTRL_ONDEMAND_Pos |
-			old_dfll_enable_bit_state;
+			(uint32_t)config->on_demand << SYSCTRL_DFLLCTRL_ONDEMAND_Pos;
 
 	if (config->loop_mode == SYSTEM_CLOCK_DFLL_LOOP_MODE_CLOSED) {
-		SYSCTRL->DFLLMUL.reg =
-				SYSCTRL_DFLLMUL_CSTEP(config->coarse_max_step) |
-				SYSCTRL_DFLLMUL_FSTEP(config->fine_max_step)   |
-				SYSCTRL_DFLLMUL_MUL(config->multiply_factor);
+
+		if(rev < _SYSTEM_MCU_REVISION_D) {
+			_system_clock_inst.dfll.mul =
+					_SYSTEM_OLD_DFLLMUL_CSTEP(config->coarse_max_step) |
+					_SYSTEM_OLD_DFLLMUL_FSTEP(config->fine_max_step)   |
+					SYSCTRL_DFLLMUL_MUL(config->multiply_factor);
+		} else {
+			_system_clock_inst.dfll.mul =
+					_SYSTEM_NEW_DFLLMUL_CSTEP(config->coarse_max_step) |
+					_SYSTEM_NEW_DFLLMUL_FSTEP(config->fine_max_step)   |
+					SYSCTRL_DFLLMUL_MUL(config->multiply_factor);
+		}
 
 		/* Enable the closed loop mode */
 		_system_clock_inst.dfll.control |= config->loop_mode;
-	}
-
-	/* Restore old DFLL enable state */
-	if (!(old_dfll_enable_bit_state)) {
-		system_clock_source_disable(SYSTEM_CLOCK_SOURCE_DFLL);
-	} else {
-		SYSCTRL->DFLLCTRL.reg = _system_clock_inst.dfll.control;
 	}
 }
 
@@ -442,7 +510,7 @@ enum status_code system_clock_source_enable(
 
 	case SYSTEM_CLOCK_SOURCE_DFLL:
 		_system_clock_inst.dfll.control |= SYSCTRL_DFLLCTRL_ENABLE;
-		SYSCTRL->DFLLCTRL.reg = _system_clock_inst.dfll.control;
+		_system_clock_source_dfll_set_config_errata_9905();
 		break;
 
 	case SYSTEM_CLOCK_SOURCE_ULP32K:
@@ -591,6 +659,11 @@ bool system_clock_source_is_ready(
  */
 void system_clock_init(void)
 {
+        /* Workaround for errata 10558 */
+        SYSCTRL->INTFLAG.reg = SYSCTRL_INTFLAG_BOD12RDY | SYSCTRL_INTFLAG_BOD33RDY |
+                        SYSCTRL_INTFLAG_BOD12DET | SYSCTRL_INTFLAG_BOD33DET |
+                        SYSCTRL_INTFLAG_DFLLRDY;
+
 	system_flash_set_waitstates(CONF_CLOCK_FLASH_WAIT_STATES);
 
 	/* XOSC */
