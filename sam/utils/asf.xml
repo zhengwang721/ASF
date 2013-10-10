@@ -38,6 +38,7 @@
 			<device-support value="sam4n"/>
 			<device-support value="atsam4c8c_0"/>
 			<device-support value="atsam4c16c_0"/>
+			<device-support value="atsam4cp16b_0"/>
 			<device-support value="unspecified-sam4c"/>    <!-- A workaround for Jenkin doxygen-module check -->
 		</module>
 		<!-- VFPv4 -->
@@ -52,6 +53,7 @@
 			<device-support value="sam4e"/>
 			<device-support value="atsam4c8c_1"/>
 			<device-support value="atsam4c16c_1"/>
+			<device-support value="atsam4cp16b_1"/>
 		</module>
 	</select-by-device>
 
@@ -204,6 +206,21 @@
 			<require idref="sam.utils.cmsis.sam4c.source.template"/>
 			<info type="gui-flag" value="hidden"/>
 			<device-support value="sam4c"/>
+		</module>
+
+		<!-- SAM4CP //-->
+		<module type="driver" id="sam.utils#10" caption="SAM4CP compiler driver">
+			<info type="description" value="summary">
+			Compiler abstraction layer and code utilities for SAM4C devices. This module provides various abstraction layers and utilities to make code compatible between different compilers. It also contains utilities typically used while pre-processing code.
+			</info>
+			<require idref="sam.utils.common"/>
+			<require idref="sam.utils.cmsis.sam4cp.include"/>
+			<require idref="sam.utils.cmsis.sam4cp.include.component"/>
+			<require idref="sam.utils.cmsis.sam4cp.include.instance"/>
+			<require idref="sam.utils.cmsis.sam4cp.include.pio"/>
+			<require idref="sam.utils.cmsis.sam4cp.source.template"/>
+			<info type="gui-flag" value="hidden"/>
+			<device-support value="sam4cp"/>
 		</module>
 	</select-by-device>
 </asf>
