@@ -44,9 +44,6 @@
 #ifndef CONF_BOARD_H_INCLUDED
 #define CONF_BOARD_H_INCLUDED
 
-/** Configure Board Revision */
-#define BOARD_REV	BOARD_REV_2
-
 /** Enable Com Port. */
 #define CONF_BOARD_UART_CONSOLE
 

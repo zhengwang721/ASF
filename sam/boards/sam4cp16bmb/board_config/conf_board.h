@@ -45,7 +45,7 @@
 #define CONF_BOARD_H_INCLUDED
 
 /* Configure Board Revision */
-#define BOARD_REV	BOARD_REV_2
+//#define BOARD_REV	BOARD_REV_2
 
 /* Enable Watchdog */
 //#define CONF_BOARD_KEEP_WATCHDOG_AT_INIT
