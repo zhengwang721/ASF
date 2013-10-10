@@ -32,6 +32,13 @@
 
 /* === MACROS ============================================================== */
 
+/**
+* Values used for ED scaling in dBm
+*/
+#define UPPER_ED_LIMIT      -40
+#define LOWER_ED_LIMIT      -100
+
+
 /* === GLOBALS ============================================================= */
 
 /**
@@ -192,7 +199,7 @@ void handle_ed_end_irq(trx_id_t trx_id)
                 pal_trx_reg_write(rf_reg_offset + RG_RF09_CMD, RF_TRXOFF);
             }
             /* Scale result to 0xFF */
-            uint8_t ed = max_ed_level[trx_id];//scale_ed_value(max_ed_level[trx_id]); sriram
+            int8_t ed = max_ed_level[trx_id];//scale_ed_value(max_ed_level[trx_id]); sriram
             tal_ed_end_cb(trx_id, ed);
         }
         else
@@ -242,39 +249,40 @@ void set_ed_sample_duration(trx_id_t trx_id, uint16_t sample_duration_us)
 
 
 /**
- * @brief Scale ED value
- *
- * This function scales the trx ED value to the range 0x00 - 0xFF.
- *
- * @param ed RF215 register value EDV.
- *
- * @return Scaled ED value
- */
-uint8_t scale_ed_value(uint8_t ed)
+* @brief Scale ED value
+*
+* This function scales the trx ED value to the range 0x00 - 0xFF.
+*
+* @param ed RF215 register value EDV.
+*
+* @return Scaled ED value
+*/
+uint8_t scale_ed_value(int8_t ed)
 {
-    uint8_t result;
-    int8_t e = (int8_t)ed;
+	uint8_t result;
 
-    if (e > 0)
-    {
-        result = 0xFF;
-    }
-    else if (e == 127)
-    {
-        result = 0x00;
-    }
-    else if (e < -100)
-    {
-        result = 0x00;
-    }
-    else
-    {
-        float my = (e + 100) * (float)255 / (float)100;
-        result = (uint8_t)my;
-    }
+	if (ed == 127)
+	{
+		result = 0x00;
+	}
+	else if (ed >= UPPER_ED_LIMIT)
+	{
+		result = 0xFF;
+	}
+	else if (ed <= LOWER_ED_LIMIT)
+	{
+		result = 0x00;
+	}
+	else
+	{
+		float temp = (ed - LOWER_ED_LIMIT) * (float)0xFF /
+		(float)(UPPER_ED_LIMIT - LOWER_ED_LIMIT) ;
+		result = (uint8_t)temp;
+	}
 
-    return result;
+	return result;
 }
+
 
 
 #if (MAC_SCAN_ED_REQUEST_CONFIRM == 1)

@@ -210,7 +210,7 @@ static bool trx_sleep_status[NO_TRX] = {false, false};
 static bool peer_found[NO_TRX] = {false,false};
 static uint8_t scan_duration[NO_TRX];
 static uint8_t seq_num_initiator[NO_TRX];
-static uint8_t channel_before_scan[NO_TRX];
+static uint16_t channel_before_scan[NO_TRX];
 static uint8_t op_mode[NO_TRX] = {TX_OP_MODE,TX_OP_MODE};
 static uint16_t no_of_roll_overs[NO_TRX];
 static uint32_t start_time[NO_TRX];
@@ -908,18 +908,18 @@ static void set_parameter_on_transmitter_node(trx_id_t trx,retval_t status)
 				
 				int8_t dbm_val =0;
 				uint8_t tx_pwr =0;		
-			
+				uint16_t channel_to_set = (uint16_t)set_param_cb[trx].param_value;
 			
 			    /* Set back the Tx power to default value when
                  * the channel changed from 26 to other channel
                  */
           
-					tal_pib_set(trx,phyCurrentChannel, (pib_value_t *)&set_param_cb[trx].param_value);
+					tal_pib_set(trx,phyCurrentChannel, (pib_value_t *)&channel_to_set);
 
 					/* update the data base with this value */
 					curr_trx_config_params[trx].channel = set_param_cb[trx].param_value;
-					tal_pib_get(trx,phyTransmitPower,&tx_pwr);
-					dbm_val = CONV_phyTransmitPower_TO_DBM(tx_pwr);
+					tal_pib_get(trx,phyTransmitPower,&dbm_val);
+					//dbm_val = CONV_phyTransmitPower_TO_DBM(tx_pwr);sriram
 					curr_trx_config_params[trx].tx_power_dbm = dbm_val;
 
                 /* Send the confirmation for Set request as Success */
@@ -933,7 +933,7 @@ static void set_parameter_on_transmitter_node(trx_id_t trx,retval_t status)
         case CHANNEL_PAGE:
             {
 				
-				uint8_t channel;
+				uint16_t channel;
 				int8_t dbm_val =0; 
 				uint8_t tx_pwr =0;
 
@@ -946,8 +946,8 @@ static void set_parameter_on_transmitter_node(trx_id_t trx,retval_t status)
 					 tal_pib_get(trx,phyCurrentChannel, &channel);
 
 					 curr_trx_config_params[trx].channel = channel;
-					 tal_pib_get(trx,phyTransmitPower, &tx_pwr);
-					 dbm_val = CONV_phyTransmitPower_TO_DBM(tx_pwr);
+					 tal_pib_get(trx,phyTransmitPower, &dbm_val);
+					 //dbm_val = CONV_phyTransmitPower_TO_DBM(tx_pwr);sriram
 					 curr_trx_config_params[trx].tx_power_dbm = dbm_val;
 
 
@@ -963,8 +963,8 @@ static void set_parameter_on_transmitter_node(trx_id_t trx,retval_t status)
                 int8_t tx_pwr_dbm;
 			
                 tx_pwr_dbm = (int8_t) set_param_cb[trx].param_value;
-                temp_var = CONV_DBM_TO_phyTransmitPower(tx_pwr_dbm);
-               	tal_pib_set(trx,phyTransmitPower, (pib_value_t *)&temp_var);
+               // temp_var = CONV_DBM_TO_phyTransmitPower(tx_pwr_dbm);
+               	tal_pib_set(trx,phyTransmitPower, (pib_value_t *)&tx_pwr_dbm);
 
                 /* update the data base with this value */
                 curr_trx_config_params[trx].tx_power_dbm = tx_pwr_dbm;
@@ -986,15 +986,15 @@ static void set_parameter_on_transmitter_node(trx_id_t trx,retval_t status)
                 uint8_t tx_pwr_reg;
                 int8_t tx_pwr_dbm;
                 tx_pwr_reg = set_param_cb[trx].param_value;
-                if (MAC_SUCCESS == tal_convert_reg_value_to_dBm(trx,tx_pwr_reg, &tx_pwr_dbm))
+                if (MAC_SUCCESS == tal_convert_reg_value_to_dBm(tx_pwr_reg, &tx_pwr_dbm))
                 {
-                    temp_var = CONV_DBM_TO_phyTransmitPower(tx_pwr_dbm);
-                    tal_pib_set(trx,phyTransmitPower, (pib_value_t *)&temp_var);
+                    //temp_var = CONV_DBM_TO_phyTransmitPower(tx_pwr_dbm);sriram
+                    tal_pib_set(trx,phyTransmitPower, (pib_value_t *)&tx_pwr_dbm);
                     /* To make sure that TX_PWR register is updated with the
                      * value whatever user povided.Otherwise lowest dBm power
                      * (highest reg value will be taken)
                      */
-                    tal_set_tx_pwr(trx,REGISTER_VALUE,tx_pwr_reg);
+                  //  tal_set_tx_pwr(trx,REGISTER_VALUE,tx_pwr_reg);sriram
                     
 					/* update the data base with this value */
                     curr_trx_config_params[trx].tx_power_reg = tx_pwr_reg;
@@ -1330,12 +1330,12 @@ static void config_per_test_parameters(trx_id_t trx)
 		curr_trx_config_params[trx].channel_page = default_trx_config_params[trx].channel_page = TAL_CURRENT_PAGE_DEFAULT_RF09;
 		tal_pib_set(trx,phyCurrentPage, (pib_value_t *)&default_trx_config_params[trx].channel_page);
 		/* As tx power is already configure by TAL in tal_pib.c get it for application*/
-		temp = TAL_TRANSMIT_POWER_DEFAULT;
-		//tal_pib_set(trx,phyTransmitPower, (pib_value_t *)&temp);
+		int8_t temp_dbm = TAL_TRANSMIT_POWER_DEFAULT;
+		tal_pib_set(trx,phyTransmitPower, (pib_value_t *)&temp_dbm);
 	}
  
     
-    curr_trx_config_params[trx].tx_power_dbm = default_trx_config_params[trx].tx_power_dbm = CONV_phyTransmitPower_TO_DBM(TAL_TRANSMIT_POWER_DEFAULT);
+    curr_trx_config_params[trx].tx_power_dbm = default_trx_config_params[trx].tx_power_dbm = TAL_TRANSMIT_POWER_DEFAULT;
 
 		tal_get_curr_trx_config(trx,TX_PWR,&(curr_trx_config_params[trx].tx_power_reg));
 		tal_get_curr_trx_config(trx,TX_PWR,&(default_trx_config_params[trx].tx_power_reg));
@@ -1573,8 +1573,8 @@ static void save_all_settings(trx_id_t trx)
  */
 static void recover_all_settings(trx_id_t trx)
 {
-	int8_t tx_pwr_dbm;
-	uint8_t temp_var;
+	//int8_t tx_pwr_dbm;
+	//uint8_t temp_var;
 
 #if( ANTENNA_DIVERSITY == 1)
 if ( ANT_DIV_DISABLE == ant_div_before_ct[trx])
@@ -1592,7 +1592,8 @@ if (true == curr_trx_config_params[trx].rx_desensitize)
 	tal_set_rx_sensitivity_level(trx,RX_DESENSITIZE_LEVEL);
 }
 #endif
-
+//sriram decide whther this can be removed
+/*
 		if(last_tx_power_format_set[trx] == 0)
 		{
 			uint8_t tx_pwr_reg = curr_trx_config_params[trx].tx_power_reg;
@@ -1605,7 +1606,8 @@ if (true == curr_trx_config_params[trx].rx_desensitize)
 			temp_var = CONV_DBM_TO_phyTransmitPower(tx_pwr_dbm);
 			tal_pib_set(trx,phyTransmitPower, (pib_value_t *)&temp_var);
 			
-		}
+		}*/
+tal_pib_set(trx,phyTransmitPower, (pib_value_t *)&curr_trx_config_params[trx].tx_power_dbm);
 		
 }
 
@@ -1625,7 +1627,7 @@ void pulse_cw_transmission(trx_id_t trx)
     /* Save all user settings before continuous tx */
     save_all_settings(trx);
 
-		tal_reset(trx,false);
+	//	tal_reset(trx,false);
 
  
 
@@ -1675,7 +1677,7 @@ void start_cw_transmission(trx_id_t trx, uint8_t tx_mode)
 
     /* Added to ensure CW transmission happen in every attempt */
 
-		tal_reset(trx,false);
+		//tal_reset(trx,false);
 
     
 #if( ANTENNA_DIVERSITY == 1)
@@ -1834,7 +1836,7 @@ void per_mode_initiator_ed_end_cb(trx_id_t trx, uint8_t energy_level)
 	
 	uint8_t min_ch;
 	uint8_t max_ch;
-    uint8_t channel;
+    uint16_t channel;
     static uint8_t p_in_index[NO_TRX];
 	int8_t p_in;
 
@@ -1845,8 +1847,18 @@ void per_mode_initiator_ed_end_cb(trx_id_t trx, uint8_t energy_level)
 
 	tal_pib_get(trx,phyCurrentChannel, &channel);
 
-min_ch = 0;
-max_ch = 26;
+if(trx==0)
+{
+	min_ch = 0;
+	max_ch =10;
+
+}
+else
+{
+	min_ch = 11;
+	max_ch =26;
+
+}
 p_in = (int8_t)energy_level ;
 
     /* get the channel number and its corresponding Pin value */
@@ -1889,8 +1901,7 @@ p_in = (int8_t)energy_level ;
 
 			/* Set original channel. */
 			tal_pib_set(trx,phyCurrentChannel, (pib_value_t *)&channel_before_scan[trx]);
-			tal_pib_set(trx,phyTransmitPower, (pib_value_t *)&phy_tx_power[trx]);
-
+	
         /**
          * Send the ED_END_INDICATION with the no. of channels and
          * the list with channel no and pin values
@@ -2089,9 +2100,9 @@ void perf_get_req(trx_id_t trx, uint8_t param_type)
                 uint8_t tx_pwr = 0;
                 int8_t  tx_pwr_dbm = 0;
 
-				tal_pib_get(trx,phyTransmitPower, &tx_pwr);
+				tal_pib_get(trx,phyTransmitPower, &tx_pwr_dbm);
 
-                tx_pwr_dbm = CONV_phyTransmitPower_TO_DBM(tx_pwr);
+               // tx_pwr_dbm = CONV_phyTransmitPower_TO_DBM(tx_pwr);sriram
 
                 /* Send Get confirmation with status SUCCESS */
                 usr_perf_get_confirm(trx, MAC_SUCCESS,
@@ -2258,7 +2269,7 @@ static void set_phy_frame_length(trx_id_t trx, uint8_t frame_len)
 static void set_channel(trx_id_t trx, uint8_t channel)
 {
     uint32_t supported_channels;
-
+uint16_t channel_to_set = (uint16_t)channel;
 #ifdef SUPPORT_LEGACY_OQPSK
 		tal_pib_get(trx,phyChannelsSupported, (uint8_t *)&supported_channels);
 #endif
@@ -2273,16 +2284,15 @@ static void set_channel(trx_id_t trx, uint8_t channel)
         else
         {
 
-
 				int8_t dbm_val =0;
 				uint8_t tx_pwr =0;
-				tal_pib_set(trx,phyCurrentChannel, (pib_value_t *)&channel);
+				tal_pib_set(trx,phyCurrentChannel, (pib_value_t *)&channel_to_set);
 
 				/* Update the database */
 				curr_trx_config_params[trx].channel = channel;
 				
-				tal_pib_get(trx,phyTransmitPower, &tx_pwr);
-				dbm_val = CONV_phyTransmitPower_TO_DBM(tx_pwr);
+				tal_pib_get(trx,phyTransmitPower, &dbm_val);
+				//dbm_val = CONV_phyTransmitPower_TO_DBM(tx_pwr);
 				curr_trx_config_params[trx].tx_power_dbm = dbm_val;
 			
 
@@ -2382,7 +2392,7 @@ static void set_tx_power(trx_id_t trx, uint8_t tx_power_format, int8_t power_val
 
                 uint8_t tx_pwr_reg = (uint8_t)power_value;
 
-                if (tx_pwr_reg <= MIN_TX_PWR_REG_VAL)
+                if (tx_pwr_reg <= MAX_TX_PWR_REG_VAL)
 
                 {
                     if (true == peer_found[trx])
@@ -2393,15 +2403,15 @@ static void set_tx_power(trx_id_t trx, uint8_t tx_power_format, int8_t power_val
                     else
                     {
                         /* set the Tx power on source node in case of no peer */
-                        if (MAC_SUCCESS == tal_convert_reg_value_to_dBm(trx,tx_pwr_reg, &tx_pwr_dbm))
+                        if (MAC_SUCCESS == tal_convert_reg_value_to_dBm(tx_pwr_reg, &tx_pwr_dbm))
                         {
-                            temp_var = CONV_DBM_TO_phyTransmitPower(tx_pwr_dbm);
-                            tal_pib_set(trx,phyTransmitPower, (pib_value_t *)&temp_var);
+                          //  temp_var = CONV_DBM_TO_phyTransmitPower(tx_pwr_dbm);sriram
+                            tal_pib_set(trx,phyTransmitPower, (pib_value_t *)&tx_pwr_dbm);
                             /* To make sure that TX_PWR register is updated with the
                              * value whatever user povided.Otherwise lowest dBm power
                              * (highest reg value will be taken)
                              */
-                            tal_set_tx_pwr(trx,REGISTER_VALUE,tx_pwr_reg);
+                        //    tal_set_tx_pwr(trx,REGISTER_VALUE,tx_pwr_reg);
 
 
                             /* update the data base with this value */
@@ -2435,10 +2445,10 @@ static void set_tx_power(trx_id_t trx, uint8_t tx_power_format, int8_t power_val
 					int8_t min_dbm_val;
 					int8_t max_dbm_val;
 					/* Check for the valid range of tx power in dBm */
-					tal_convert_reg_value_to_dBm(trx,MIN_TX_PWR_REG_VAL, &min_dbm_val);
+					tal_convert_reg_value_to_dBm(0X00, &min_dbm_val);
 
 					/* get max tx power in dbM allowed */
-					tal_convert_reg_value_to_dBm(trx,0x00, &max_dbm_val);
+					tal_convert_reg_value_to_dBm(MAX_TX_PWR_REG_VAL, &max_dbm_val);
 
 					if ( (tx_pwr_dbm >= min_dbm_val) && (tx_pwr_dbm <= max_dbm_val) )
 
@@ -2451,8 +2461,8 @@ static void set_tx_power(trx_id_t trx, uint8_t tx_power_format, int8_t power_val
 						else
 						{
 							/* set the Tx power on source node in case of no peer */
-							temp_var = CONV_DBM_TO_phyTransmitPower(tx_pwr_dbm);
-							tal_pib_set(trx,phyTransmitPower, (pib_value_t *)&temp_var);
+							//temp_var = CONV_DBM_TO_phyTransmitPower(tx_pwr_dbm);sriram
+							tal_pib_set(trx,phyTransmitPower, (pib_value_t *)&tx_pwr_dbm);
 
 							/* update the data base with this value */
 							curr_trx_config_params[trx].tx_power_dbm = tx_pwr_dbm;
@@ -2490,7 +2500,7 @@ static void set_tx_power(trx_id_t trx, uint8_t tx_power_format, int8_t power_val
  */
 void start_ed_scan(trx_id_t trx,uint8_t ed_scan_duration, uint32_t channel_sel_mask)
 {
-	uint8_t first_channel;
+	uint16_t first_channel;
 	uint8_t ch_cnt;
 	uint32_t supported_channels;
 	float scan_time;
@@ -2548,7 +2558,7 @@ else
 	tal_pib_get(trx,phyCurrentChannel, &channel_before_scan[trx]);
 
 	/* Identify first channel */
-	for (ch_cnt = MIN_CHANNEL; ch_cnt <= MAX_CHANNEL; ch_cnt++) {
+	for (ch_cnt = min_ch; ch_cnt <= max_ch; ch_cnt++) {
 		if ((scan_channel_mask[trx] & ((uint32_t)1 << ch_cnt)) > 0) {
 			first_channel = ch_cnt;
 			scan_channel_mask[trx] &= ~((uint32_t)1 << ch_cnt);
@@ -2640,9 +2650,9 @@ void get_current_configuration(trx_id_t trx)
 		tal_pib_set(trx,phyCurrentPage, (pib_value_t *)&curr_trx_config_params[trx].channel_page);
 
 		/* Tx_power configurations */
-		temp = CONV_DBM_TO_phyTransmitPower(curr_trx_config_params[trx].tx_power_dbm);
-		tal_pib_set(trx,phyTransmitPower, (pib_value_t *)&temp);
-		tal_set_tx_pwr(trx,REGISTER_VALUE,curr_trx_config_params[trx].tx_power_reg);
+		//temp = CONV_DBM_TO_phyTransmitPower(curr_trx_config_params[trx].tx_power_dbm);
+		tal_pib_set(trx,phyTransmitPower, (pib_value_t *)&curr_trx_config_params[trx].tx_power_dbm);
+		//tal_set_tx_pwr(trx,REGISTER_VALUE,curr_trx_config_params[trx].tx_power_reg);
 
     /* trx state configuration */
     if (RX_AACK_ON == curr_trx_config_params[trx].trx_state)

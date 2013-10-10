@@ -208,7 +208,7 @@ retval_t tal_set_tx_pwr(trx_id_t trx,bool type, int8_t pwr_value);
  * \return MAC_SUCCESS or FAILURE based on conversion is done or not
  */
 
-retval_t tal_convert_reg_value_to_dBm(trx_id_t trx,uint8_t reg_value, int8_t *dbm_value);
+retval_t tal_convert_reg_value_to_dBm(uint8_t reg_value, int8_t *dbm_value);
 
 #endif /* End of (TAL_TYPE != AT86RF212)*/
 

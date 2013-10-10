@@ -121,7 +121,7 @@ retval_t tal_set_tx_pwr(trx_id_t trx,bool type, int8_t pwr_value)
 	/* modify the register for tx_pwr and set the tal_pib accordingly */
 	if (true == type) {
 		if (MAC_SUCCESS ==
-				tal_convert_reg_value_to_dBm(trx,pwr_value,
+				tal_convert_reg_value_to_dBm(pwr_value,
 				&tx_pwr_dbm)) {
 			temp_var = CONV_DBM_TO_phyTransmitPower(tx_pwr_dbm);
 			tal_pib_set(trx,phyTransmitPower, (pib_value_t *)&temp_var);
@@ -776,16 +776,12 @@ retval_t tal_rpc_mode_config(uint8_t rpc_mode_sel)
  * \return MAC_SUCCESS or FAILURE based on conversion is done or not
  */
 #if ((TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B))
-retval_t tal_convert_reg_value_to_dBm(trx_id_t trx,uint8_t reg_value, int8_t *dbm_value)
+retval_t tal_convert_reg_value_to_dBm(uint8_t reg_value, int8_t *dbm_value)
 {
-	*dbm_value = 0X04;
-	return MAC_SUCCESS;
-	if (reg_value < sizeof(tx_pwr_table)) {
-		*dbm_value = (int8_t)PGM_READ_BYTE(&tx_pwr_table[reg_value]);
-		return MAC_SUCCESS;
-	} else {
-		return FAILURE;
-	}
+	
+*dbm_value = reg_value-17;	
+return MAC_SUCCESS;
+
 }
 
 #endif /* End of ((TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B)) */

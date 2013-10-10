@@ -220,6 +220,7 @@ void app_alert(void);
  */
 void init_state_init(trx_id_t trx, void *arg);
 
+void init_after_disconnect(trx_id_t trx);
 /**
  * \brief Function to init the information base for device
  */

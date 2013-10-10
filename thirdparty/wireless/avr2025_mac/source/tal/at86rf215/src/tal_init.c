@@ -56,7 +56,7 @@ static retval_t tal_timer_init(void);
  * \brief Stops all initialized TAL timers
  */
 static void tal_timers_stop(void);
-static retval_t trx_reset(trx_id_t trx_id);
+retval_t trx_reset(trx_id_t trx_id);
 static void cleanup_tal(trx_id_t trx_id);
 static void trx_init(void);
 
@@ -443,7 +443,7 @@ retval_t tal_reset(trx_id_t trx_id, bool set_default_pib)
  * @return MAC_SUCCESS  if the transceiver returns TRX_OFF
  *         FAILURE otherwise
  */
-static retval_t trx_reset(trx_id_t trx_id)
+retval_t trx_reset(trx_id_t trx_id)
 {
     //debug_text_val(PSTR("trx_reset(), trx_id ="), trx_id);
 

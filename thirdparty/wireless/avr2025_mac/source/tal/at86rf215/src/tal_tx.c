@@ -305,7 +305,7 @@ void handle_tx_end_irq(trx_id_t trx_id)
     if (*mac_frame_ptr[trx_id]->mpdu & FCF_ACK_REQUEST)
     {
         /* Wait for ACK reception */
-        debug_text(PSTR("waiting for ACK"));
+       // debug_text(PSTR("waiting for ACK"));
         tal_state[trx_id] = TAL_WAITING_FOR_ACK_RECEPTION;
 
         uint8_t timer_id;
@@ -319,7 +319,7 @@ void handle_tx_end_irq(trx_id_t trx_id)
         }
 		
         retval_t status =
-            pal_timer_start(timer_id, tal_pib[trx_id].ACKWaitDuration + 1000, TIMEOUT_RELATIVE,
+            pal_timer_start(timer_id, tal_pib[trx_id].ACKWaitDuration + 2000, TIMEOUT_RELATIVE,
                             (FUNC_PTR)ack_timout_cb, (void *)&timer_cb_parameter[trx_id]);
         if (status != MAC_SUCCESS)
         {

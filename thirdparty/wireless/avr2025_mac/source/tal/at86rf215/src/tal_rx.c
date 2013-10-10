@@ -298,7 +298,7 @@ void process_incoming_frame(trx_id_t trx_id, buffer_t *buf_ptr)
     /* Scale ED value to a LQI value: 0x00 - 0xFF */
     uint16_t lqi_pos = rx_frm_info[trx_id]->length + tal_pib[trx_id].FCSLen;
     receive_frame->mpdu[lqi_pos] =
-        scale_ed_value(receive_frame->mpdu[lqi_pos + 1]);
+        scale_ed_value((int8_t)receive_frame->mpdu[lqi_pos + 1]);
 
     tal_rx_frame_cb(trx_id, receive_frame);
 

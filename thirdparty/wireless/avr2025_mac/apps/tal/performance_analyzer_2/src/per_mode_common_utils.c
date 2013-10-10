@@ -67,7 +67,8 @@
 void app_reset(trx_id_t trx)
 {
 	/* app reset - this is to make the node to restart applicationa as bootup */
-	set_main_state(trx,INIT, NULL);
+	//set_main_state(trx,INIT, NULL);
+	init_after_disconnect(trx);
 
 	/* INIT was a success - so change to WAIT_FOR_EVENT state */
 	set_main_state(trx,WAIT_FOR_EVENT, NULL);

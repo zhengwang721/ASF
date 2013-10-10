@@ -129,7 +129,7 @@ void write_all_tal_pib_to_trx(trx_id_t trx_id);
  */
 void handle_ed_end_irq(trx_id_t trx_id);
 void set_ed_sample_duration(trx_id_t trx_id, uint16_t sample_duration_us);
-uint8_t scale_ed_value(uint8_t ed);
+uint8_t scale_ed_value(int8_t ed);
 void stop_ed_scan(trx_id_t trx_id);
 
 /*

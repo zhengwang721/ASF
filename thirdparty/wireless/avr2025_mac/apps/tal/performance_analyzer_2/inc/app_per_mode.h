@@ -102,7 +102,7 @@
 #define MAX_TX_PWR_REG_VAL_CH26             (0x0d)
 #endif
 #define LED_TOGGLE_COUNT_FOR_PER            (50)
-#define MIN_TX_PWR_REG_VAL                  (0x0f)
+#define MAX_TX_PWR_REG_VAL                  (0x1f)//sriram
 
 #if (TAL_TYPE == AT86RF233)
 #define BASE_ISM_FREQUENCY_MHZ              (2306)

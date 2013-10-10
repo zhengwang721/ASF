@@ -51,15 +51,18 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include "tal.h"
+#include "tal_internal.h"
 #include "tal_helper.h"
 #include "app_init.h"
+#include "perf_api.h"
 #include "perf_api_serial_handler.h"
 #include "common_sw_timer.h"
+#include "ieee_const.h"
 
 /* === TYPES =============================================================== */
 
 /* === MACROS ============================================================== */
-
+extern retval_t trx_reset(trx_id_t trx_id);
 /* === PROTOTYPES ========================================================== */
 static void configuration_mode_selection(trx_id_t trx);
 /* === GLOBALS ============================================================= */
@@ -136,7 +139,79 @@ void init_state_init(trx_id_t trx, void *arg)
 	arg = arg;
 }
 
+void init_after_disconnect(trx_id_t trx)
+{
+    /* Reset trx */
+    if (trx_reset(trx) != MAC_SUCCESS)
+    {
+	    app_alert();
+    }
 
+    /* Configure transceiver */
+    trx_config(trx);
+
+
+
+    tal_rx_buffer[trx] = bmm_buffer_alloc(LARGE_BUFFER_SIZE);
+    if (tal_rx_buffer[trx] == NULL)
+    {
+        return FAILURE;
+    }
+
+    /* Init incoming frame queue */
+    qmm_queue_init(&tal_incoming_frame_queue[trx]);
+
+    tal_state[trx] = TAL_IDLE;
+
+
+
+/*
+    / *
+     * Configure interrupt handling.
+     * Install a handler for the radio and the baseband interrupt.
+     * /
+    pal_trx_irq_flag_clr();
+    pal_trx_irq_init(trx_irq_handler_cb);
+    pal_trx_irq_en();   / * Enable transceiver main interrupt. * /*/
+
+
+
+	    /* Initialize sio rx state */
+	    init_sio(trx);
+
+	    /* select the configuration mode */
+	    configuration_mode_selection(trx);
+
+	    if(trx == RF09)
+	    {
+		    /* Configure PHY for sub-1GHz */
+		    phy_t phy;
+		    phy.modulation = LEG_OQPSK;
+		    phy.phy_mode.leg_oqpsk.chip_rate  = CHIP_RATE_1000;
+		    phy.freq_band = US_915;
+		    phy.ch_spacing = LEG_915_CH_SPAC; ;
+		    phy.freq_f0 = LEG_915_F0;
+		    if (tal_pib_set(RF09, phySetting, (pib_value_t *)&phy) != MAC_SUCCESS)
+		    {
+			    app_alert();
+		    }
+	    }
+	    else
+	    {
+		    /* Configure PHY for 2.4GHz */
+		    phy_t phy;
+		    phy.modulation = LEG_OQPSK;
+		    phy.phy_mode.leg_oqpsk.chip_rate = CHIP_RATE_2000;
+		    phy.freq_band = WORLD_2450;
+		    phy.ch_spacing = LEG_2450_CH_SPAC;
+		    phy.freq_f0 = LEG_2450_F0;
+		    if (tal_pib_set(RF24, phySetting, (pib_value_t *)&phy) != MAC_SUCCESS)
+		    {
+			    app_alert();
+		    }
+	    }
+	
+}
 /**
  * \brief Checks whether Configuartion Mode is selected or not
  *

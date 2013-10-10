@@ -286,7 +286,7 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 
         case PER_TEST_PKT:
             {
-                static uint8_t cur_seq_no, prev_seq_no;
+                static uint8_t cur_seq_no[NO_TRX], prev_seq_no[NO_TRX];
                 /* if PER test frames received then increment number_rx_frames */
                 if (number_rx_frames[trx] == 0)
                 {
@@ -299,17 +299,17 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 #endif /* #ifdef CRC_SETTING_ON_REMOTE_NODE */
                     number_rx_frames[trx]++;
                     /* Get the seq no. of the first packet */
-                    prev_seq_no = mac_frame_info->mpdu[PL_POS_SEQ_NUM-1];//sriram
+                    prev_seq_no[trx] = mac_frame_info->mpdu[PL_POS_SEQ_NUM-1];//sriram
                 }
                 else
                 {
-                    cur_seq_no = mac_frame_info->mpdu[PL_POS_SEQ_NUM-1];//sriram
+                    cur_seq_no[trx] = mac_frame_info->mpdu[PL_POS_SEQ_NUM-1];//sriram
                     /* Check for the duplicate packets */
-                    if (prev_seq_no != cur_seq_no)
+                    if (prev_seq_no[trx] != cur_seq_no[trx])
                     {
 
                         number_rx_frames[trx]++;
-                        prev_seq_no = cur_seq_no;
+                        prev_seq_no[trx] = cur_seq_no[trx];
                         /* Extract LQI and  RSSI */
                         aver_lqi[trx] += mac_frame_info->mpdu[lqi_pos];
                         aver_rssi[trx] += mac_frame_info->mpdu[ed_pos];
@@ -655,10 +655,10 @@ static void set_paramter_on_recptor_node(trx_id_t trx, app_payload_t *msg)
             /* Handle Tx power value in dBm */
         case TX_POWER_DBM: /* parameter = Tx power in dBm */
             {
-                uint8_t temp_var;
+                int8_t temp_var;
                 /* Get the the received tx power in dBm */
-                param_val = msg->payload.set_parm_req_data.param_value;
-                temp_var = CONV_DBM_TO_phyTransmitPower((int8_t)param_val);
+                temp_var = msg->payload.set_parm_req_data.param_value;
+               // temp_var = CONV_DBM_TO_phyTransmitPower((int8_t)param_val);sriram
 
 				tal_pib_set(trx,phyTransmitPower, (pib_value_t *)&temp_var);
 
@@ -673,12 +673,12 @@ static void set_paramter_on_recptor_node(trx_id_t trx, app_payload_t *msg)
 
                 /* get the the received tx power as reg value */
                 param_val = msg->payload.set_parm_req_data.param_value;
-                if (MAC_SUCCESS == tal_convert_reg_value_to_dBm(trx,param_val, &tx_pwr_dbm))
+                if (MAC_SUCCESS == tal_convert_reg_value_to_dBm(param_val, &tx_pwr_dbm))
                 {
-                    uint8_t temp_var = CONV_DBM_TO_phyTransmitPower(tx_pwr_dbm);
+                   // uint8_t temp_var = CONV_DBM_TO_phyTransmitPower(tx_pwr_dbm);sriram
                    
-                    tal_pib_set(trx,phyTransmitPower, (pib_value_t *)&temp_var);
-                    tal_set_tx_pwr(trx,REGISTER_VALUE,param_val);
+                    tal_pib_set(trx,phyTransmitPower, (pib_value_t *)&tx_pwr_dbm);
+                    //tal_set_tx_pwr(trx,REGISTER_VALUE,param_val);
 
                 }
             }
@@ -812,7 +812,6 @@ static void app_reset_cb(void *parameter)
 {
 	trx_id_t trx = (trx_id_t)parameter;
 	app_reset(trx);
-
 	
 	printf("\r\nDisconnected from Transmitter node");
 }
@@ -1030,11 +1029,11 @@ static void get_node_info(trx_id_t trx, peer_info_rsp_t *data)
 
     if(trx == RF09)
 	{
-		strcpy(data->trx_name, "AT86RF215-LT(RF09)"); 
+		strcpy(data->trx_name, "AT86RF215-RF09"); 
 	}
 	else 
 	{
-		strcpy(data->trx_name, "AT86RF215-LT(RF24)");
+		strcpy(data->trx_name, "AT86RF215-RF24");
 	}
 	
     data->ic_type = IC_TYPE;

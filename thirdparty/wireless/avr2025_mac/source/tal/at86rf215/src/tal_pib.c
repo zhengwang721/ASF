@@ -38,10 +38,11 @@
 /* === PROTOTYPES ========================================================== */
 
 static retval_t apply_channel_settings(trx_id_t trx_id);
+static bool apply_channel_page_configuration(trx_id_t trx ,uint8_t ch_page);
 static retval_t check_valid_freq_range(trx_id_t trx_id);
 static int8_t limit_tx_pwr(trx_id_t trx_id, int8_t tx_pwr);
 static void set_tx_pwr(trx_id_t trx_id);
-
+static bool ch_zero_band_eu = false;
 /* === IMPLEMENTATION ====================================================== */
 
 
@@ -396,6 +397,16 @@ static retval_t apply_channel_settings(trx_id_t trx_id)
          * Set channel and channel mode.
          * Touching the CNM register forces the calculation of the actual frequency.
          */
+#ifdef	SUPPORT_LEGACY_OQPSK
+ if ((tal_pib[trx_id].phy.freq_band == CHINA_780))
+ {
+	 if(tal_pib[trx_id].CurrentChannel>3)
+	 {	 
+	 tal_pib[trx_id].CurrentChannel=0;
+	 }
+ }
+ #endif
+	 
         pal_trx_write(rf_reg_offset + RG_RF09_CNL,
                       (uint8_t *)&tal_pib[trx_id].CurrentChannel, 2);
         /* Wait until channel set is completed */
@@ -453,6 +464,11 @@ retval_t tal_pib_get(trx_id_t trx_id, uint8_t attribute, uint8_t *value)
                     {
                         *(uint16_t *)value = tal_pib[trx_id].CurrentChannel + 1;
                     }
+					else
+					{
+						*(uint16_t *)value = tal_pib[trx_id].CurrentChannel ;
+					}
+					
                 }
             }
             else
@@ -767,30 +783,71 @@ retval_t tal_pib_set(trx_id_t trx_id, uint8_t attribute, pib_value_t *value)
                 }
                 else // RF09
                 {
-                    if (tal_pib[trx_id].phy.freq_band == US_915)
+                    if ((tal_pib[trx_id].phy.freq_band == US_915)||(tal_pib[trx_id].phy.freq_band == EU_863))
                     {
-                        if ((channel < 1) ||
-                            (channel > 10))
+                        if (channel > 10) 
                         {
 							
                             status = MAC_INVALID_PARAMETER;
                             /* no further processing of the channel value */
                             break;
                         }
-                        else
+                        if(channel > 0)
                         {
-                            channel -= 1;
+						    channel -= 1;
+							if(tal_pib[trx_id].CurrentChannel == 0 && (ch_zero_band_eu))
+							{
+								//set 915 band from EU
+															/* Configure PHY for sub-1GHz */
+							phy_t phy;
+							phy.modulation = LEG_OQPSK;
+							phy.phy_mode.leg_oqpsk.chip_rate  = CHIP_RATE_1000;
+							phy.freq_band = US_915;
+							phy.ch_spacing = LEG_915_CH_SPAC ; //none 0 channel sriram
+							phy.freq_f0 = LEG_915_F0;
+							if (tal_pib_set(RF09, phySetting, (pib_value_t *)&phy) != MAC_SUCCESS)
+							{
+								return MAC_INVALID_PARAMETER;
+							}							
+							ch_zero_band_eu = false;
+							}
                         }
+						else // set EU 868.3 ch0
+						{
+						
+							/* Configure PHY for sub-1GHz */
+							phy_t phy;
+							phy.modulation = LEG_OQPSK;
+							phy.phy_mode.leg_oqpsk.chip_rate  = CHIP_RATE_1000;
+							phy.freq_band = EU_863;
+							phy.ch_spacing = 0 ; //none 0 channel sriram
+							phy.freq_f0 = LEG_868_F0;
+							if (tal_pib_set(RF09, phySetting, (pib_value_t *)&phy) != MAC_SUCCESS)
+							{
+								return MAC_INVALID_PARAMETER;
+							}
+							ch_zero_band_eu = true;
+						
+						}
                     }
-                    else if (tal_pib[trx_id].phy.freq_band == EU_863)
-                    {
-                        if (channel != 0)
-                        {
-                            status = MAC_INVALID_PARAMETER;
-                            /* no further processing of the channel value */
-                            break;
-                        }
-                    }
+					else if (tal_pib[trx_id].phy.freq_band == CHINA_780)
+					{
+					 if (channel > 3)
+					 {						 
+						 status = MAC_INVALID_PARAMETER;
+						 /* no further processing of the channel value */
+						 break;
+					 }
+					
+					}
+					else{
+						
+						status = MAC_INVALID_PARAMETER;
+						/* no further processing of the channel value */
+						break;
+						
+					}
+
                 }
             }
 #endif
@@ -824,6 +881,30 @@ retval_t tal_pib_set(trx_id_t trx_id, uint8_t attribute, pib_value_t *value)
             }
 }
             break;
+			
+#ifdef SUPPORT_LEGACY_OQPSK				
+		 case phyCurrentPage:
+		 {
+			 uint8_t page;
+			 bool ret_val;
+			 page = value->pib_value_8bit;	
+	
+
+
+	ret_val = apply_channel_page_configuration(trx_id,page);
+	if (ret_val) {
+		
+		tal_pib[trx_id].CurrentPage = page;
+		}
+		else
+		{
+		return MAC_INVALID_PARAMETER;
+		}
+
+
+		 }
+		 break;
+#endif //SUPPORT_LEGACY_OQPSK		 
 
         case phyTransmitPower:
             {
@@ -1086,5 +1167,92 @@ retval_t tal_pib_set(trx_id_t trx_id, uint8_t attribute, pib_value_t *value)
     return status;
 } /* tal_pib_set() */
 
+/**
+ * \brief Apply channel page configuartion to transceiver
+ *
+ * \param ch_page Channel page
+ *
+ * \return true if changes could be applied else false
+ */
+static bool apply_channel_page_configuration(trx_id_t trx ,uint8_t ch_page)
+{
 
+if (trx == RF24)
+{
+	if(ch_page != 0)
+	{
+		return false;
+	}
+}
+else
+{
+	if((ch_page !=2) && (ch_page != 5))
+	{
+return false;
+	}
+}
+		phy_t phy;
+		switch (ch_page) {
+			case 0: /* compliant O-QPSK */
+			/* Configure PHY for 2.4GHz */
+			phy.modulation = LEG_OQPSK;
+			phy.phy_mode.leg_oqpsk.chip_rate = CHIP_RATE_2000;
+			phy.freq_band = WORLD_2450;
+			phy.ch_spacing = LEG_2450_CH_SPAC;
+			phy.freq_f0 = LEG_2450_F0;
+			if (tal_pib_set(RF24, phySetting, (pib_value_t *)&phy) != MAC_SUCCESS)
+			{
+				return false;
+			}
+			break;
+
+			case 2: 
+			if(ch_zero_band_eu == true && (tal_pib[trx].CurrentChannel == 0))
+			{
+			/* Configure PHY for sub-1GHz */
+			phy.modulation = LEG_OQPSK;
+			phy.phy_mode.leg_oqpsk.chip_rate  = CHIP_RATE_1000;
+			phy.freq_band = EU_863;
+			phy.ch_spacing = 0;
+			phy.freq_f0 = LEG_868_F0;
+			if (tal_pib_set(RF09, phySetting, (pib_value_t *)&phy) != MAC_SUCCESS)
+			{
+				return false;
+			}
+			}
+			else
+			{
+
+			/* Configure PHY for sub-1GHz */
+			phy.modulation = LEG_OQPSK;
+			phy.phy_mode.leg_oqpsk.chip_rate  = CHIP_RATE_1000;
+			phy.freq_band = US_915;
+			phy.ch_spacing = LEG_915_CH_SPAC; ;
+			phy.freq_f0 = LEG_915_F0;
+			if (tal_pib_set(RF09, phySetting, (pib_value_t *)&phy) != MAC_SUCCESS)
+			{
+				return false;
+			}
+			}
+			break;
+			
+			case 5:
+			/* Configure PHY for sub-1GHz */
+			phy.modulation = LEG_OQPSK;
+			phy.phy_mode.leg_oqpsk.chip_rate  = CHIP_RATE_1000;
+			phy.freq_band = CHINA_780;
+			phy.ch_spacing = LEG_915_CH_SPAC; ;
+			phy.freq_f0 = LEG_780_F0;
+			if (tal_pib_set(RF09, phySetting, (pib_value_t *)&phy) != MAC_SUCCESS)
+			{
+				return false;
+			}
+			break;			
+
+			default:
+			return false;
+		}
+
+		return true;
+}
 /* EOF */
