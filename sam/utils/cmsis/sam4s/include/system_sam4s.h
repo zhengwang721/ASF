@@ -1,9 +1,10 @@
 /**
  * \file
  *
- * \brief Linker script for running in internal SRAM on the SAMD20E18
+ * \brief Provides the low-level initialization functions that called 
+ * on chip startup.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,32 +42,44 @@
  *
  */
 
-/*###ICF### Section handled by ICF editor, don't touch! ****/
-/*-Editor annotation file-*/
-/* IcfEditorFile="$TOOLKIT_DIR$\config\ide\IcfEditor\cortex_v1_0.xml" */
-/*-Specials-*/
-define symbol __ICFEDIT_intvec_start__     = 0x20000000;
-/*-Memory Regions-*/
-define symbol __ICFEDIT_region_RAM_start__ = 0x20000000;
-define symbol __ICFEDIT_region_RAM_end__   = 0x20008000;
-/*-Sizes-*/
-if (!isdefinedsymbol(__ICFEDIT_size_cstack__)) {
-  define symbol __ICFEDIT_size_cstack__    = 0x2000;
+#ifndef SYSTEM_SAM4S_H_INCLUDED
+#define SYSTEM_SAM4S_H_INCLUDED
+
+/* @cond 0 */
+/**INDENT-OFF**/
+#ifdef __cplusplus
+extern "C" {
+#endif
+/**INDENT-ON**/
+/* @endcond */
+
+#include <stdint.h>
+
+extern uint32_t SystemCoreClock; /* System Clock Frequency (Core Clock) */
+
+/**
+ * @brief Setup the microcontroller system.
+ * Initialize the System and update the SystemCoreClock variable.
+ */
+void SystemInit(void);
+
+/**
+ * @brief Updates the SystemCoreClock with current core Clock
+ * retrieved from cpu registers.
+ */
+void SystemCoreClockUpdate(void);
+
+/**
+ * Initialize flash.
+ */
+void system_init_flash(uint32_t dw_clk);
+
+/* @cond 0 */
+/**INDENT-OFF**/
+#ifdef __cplusplus
 }
-if (!isdefinedsymbol(__ICFEDIT_size_heap__)) {
-  define symbol __ICFEDIT_size_heap__      = 0x200;
-}
-/**** End of ICF editor section. ###ICF###*/
+#endif
+/**INDENT-ON**/
+/* @endcond */
 
-define memory mem with size = 4G;
-define region RAM_region    = mem:[from __ICFEDIT_region_RAM_start__ to __ICFEDIT_region_RAM_end__];
-
-define block CSTACK with alignment = 8, size = __ICFEDIT_size_cstack__ { };
-define block HEAP   with alignment = 8, size = __ICFEDIT_size_heap__   { };
-
-initialize by copy with packing=none { readwrite };
-do not initialize  { section .noinit };
-
-place at address mem:__ICFEDIT_intvec_start__ { readonly section .intvec };
-place in RAM_region                           { readonly };
-place in RAM_region                           { readwrite, block CSTACK, block HEAP };
+#endif /* SYSTEM_SAM4S_H_INCLUDED */
