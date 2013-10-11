@@ -32,6 +32,7 @@
 		<build type="doxygen-example-path" value="quick_start"/>
 
 		<device-support value="samd20"/>
+		<device-support value="samd21"/>
 
 		<require idref="sam0.utils"/>
 		<require idref="thirdparty.cmsis"/>
