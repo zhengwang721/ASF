@@ -343,15 +343,15 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
                     {
                         aver_lqi[trx] = aver_lqi[trx] / number_rx_frames[trx];
                         aver_rssi[trx] = aver_rssi[trx] / number_rx_frames[trx];
+						aver_rssi[trx] = scale_ed_to_reg_val((int8_t)aver_rssi[trx]);//sriram
                     }
                     send_result_rsp(trx);
 
                     
-                        int8_t rssi_val = tal_get_rssi_base_val(trx);
-                        rssi_val += aver_rssi[trx];
-                        printf("\r\nNumber of received frames = %"
-                               PRIu32 "; average LQI = %d, average RSSI = %d dBm",
-                               number_rx_frames[trx], (uint8_t)aver_lqi[trx], (int8_t)rssi_val );
+                    int8_t rssi_val = scale_reg_value_to_ed(aver_rssi[trx]);
+                    printf("\r\nNumber of received frames = %"
+                    PRIu32 "; average LQI = %d, average RSSI = %d dBm",
+                    number_rx_frames[trx], (uint8_t)aver_lqi[trx], (int8_t)rssi_val );
 #ifdef CRC_SETTING_ON_REMOTE_NODE
                         if (manual_crc[trx])
                         {

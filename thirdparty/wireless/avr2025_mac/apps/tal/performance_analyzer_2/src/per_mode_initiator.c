@@ -1051,6 +1051,7 @@ void per_mode_initiator_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
                         uint32_t frames_with_wrong_crc;
 
                         int8_t rssi_val =CCPU_ENDIAN_TO_LE32(msg->payload.test_result_rsp_data.rssi_avrg_rx);//sriram
+						rssi_val = scale_reg_value_to_ed((uint8_t)rssi_val);
                         sw_timer_stop(APP_TIMER_TO_TX);
                         number_rx_frames = (msg->payload.test_result_rsp_data.num_of_frames_rx);
                         aver_lqi = CCPU_ENDIAN_TO_LE32(msg->payload.test_result_rsp_data.lqi_avrg_rx);
@@ -2506,9 +2507,9 @@ void start_ed_scan(trx_id_t trx,uint8_t ed_scan_duration, uint32_t channel_sel_m
 	float scan_time;
 	/* Initialize the no. of channels to 0 */
 	num_channels[trx] = 0;
-
+    tal_pib_get(trx,phyChannelsSupported, (uint8_t *)&supported_channels);
 	scan_duration[trx] = ed_scan_duration;
-	scan_channel_mask[trx] = (channel_sel_mask & TRX_SUPPORTED_CHANNELS_LEG(trx));
+	scan_channel_mask[trx] = (channel_sel_mask & supported_channels);//TRX_SUPPORTED_CHANNELS_LEG(trx));
 
 	/* Check the range for the scan duration */
 	if (scan_duration[trx] > MAX_SCAN_DURATION) {

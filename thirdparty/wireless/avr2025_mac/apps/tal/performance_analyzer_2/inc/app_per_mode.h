@@ -118,6 +118,10 @@
 #define CC_NUMBER_0                         (0x00)
 #endif
 
+#define  MAX_ED_REG_VAL	(0X53)
+#define  MIN_ED_REG_VAL	(0X00)
+#define  MAX_ED_VAL		 4
+#define  MIN_ED_VAL		-127
 /**
  * \addtogroup group_per_mode
  * \{
@@ -225,6 +229,8 @@ extern trx_config_params_t curr_trx_config_params[NO_TRX];
  * \addtogroup group_per_mode_init
  * \{
  */
+int8_t scale_reg_value_to_ed(uint8_t reg_val);
+uint8_t scale_ed_to_reg_val(int8_t ed_val);
 
 /* PEER_FOUND_PER_INITIATOR state functions */
 

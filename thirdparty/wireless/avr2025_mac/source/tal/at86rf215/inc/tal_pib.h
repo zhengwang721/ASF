@@ -78,7 +78,8 @@
  */
 #define TAL_RF09_CURRENT_CHANNEL_DEF            (0x00)
 #define TAL_RF24_CURRENT_CHANNEL_DEF            (0x00)
-#define TAL_RF24_CURRENT_CHANNEL_LEG_DEF            (0x0B)
+#define TAL_RF24_CURRENT_CHANNEL_LEG_DEF        (0x0B)
+#define TAL_RF09_CURRENT_CHANNEL_LEG_DEF        (0x01)
 
 #ifndef CUSTOM_DEFAULT_TX_PWR
 /*

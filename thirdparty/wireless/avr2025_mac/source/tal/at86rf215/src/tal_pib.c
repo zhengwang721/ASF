@@ -42,7 +42,6 @@ static bool apply_channel_page_configuration(trx_id_t trx ,uint8_t ch_page);
 static retval_t check_valid_freq_range(trx_id_t trx_id);
 static int8_t limit_tx_pwr(trx_id_t trx_id, int8_t tx_pwr);
 static void set_tx_pwr(trx_id_t trx_id);
-static bool ch_zero_band_eu = false;
 /* === IMPLEMENTATION ====================================================== */
 
 
@@ -71,7 +70,11 @@ void init_tal_pib(trx_id_t trx_id)
         tal_pib[RF09].MaxNumRxFramesDuringBackoff = TAL_RF09_MAX_FRAMES_DURING_BACKOFF_DEF;
 #endif
         tal_pib[RF09].PrivatePanCoordinator = TAL_RF09_PAN_COORDINATOR_DEF;
-        tal_pib[RF09].CurrentChannel = TAL_RF09_CURRENT_CHANNEL_DEF;
+#ifdef SUPPORT_LEGACY_OQPSK
+		tal_pib[RF09].CurrentChannel = TAL_RF09_CURRENT_CHANNEL_LEG_DEF;
+#else
+		tal_pib[RF09].CurrentChannel = TAL_RF09_CURRENT_CHANNEL_DEF;
+#endif	
         tal_pib[RF09].FCSType = TAL_RF09_FCS_TYPE_DEFAULT;
         tal_pib[RF09].phy.modulation = TAL_RF09_MODULATION_DEF;
         tal_pib[RF09].phy.freq_band = TAL_RF09_FRQ_BAND_DEF;
@@ -99,7 +102,11 @@ void init_tal_pib(trx_id_t trx_id)
         tal_pib[RF24].MaxNumRxFramesDuringBackoff = TAL_RF24_MAX_FRAMES_DURING_BACKOFF_DEF;
 #endif
         tal_pib[RF24].PrivatePanCoordinator = TAL_RF24_PAN_COORDINATOR_DEF;
-        tal_pib[RF24].CurrentChannel = TAL_RF24_CURRENT_CHANNEL_DEF;
+#ifdef SUPPORT_LEGACY_OQPSK		
+        tal_pib[RF24].CurrentChannel = TAL_RF24_CURRENT_CHANNEL_LEG_DEF;
+#else	
+		tal_pib[RF24].CurrentChannel = TAL_RF24_CURRENT_CHANNEL_DEF;
+#endif			
         tal_pib[RF24].FCSType = TAL_RF24_FCS_TYPE_DEFAULT;
         tal_pib[RF24].phy.modulation = TAL_RF24_MODULATION_DEF;
         tal_pib[RF24].phy.freq_band = TAL_RF24_FRQ_BAND_DEF;
@@ -398,17 +405,44 @@ static retval_t apply_channel_settings(trx_id_t trx_id)
          * Touching the CNM register forces the calculation of the actual frequency.
          */
 #ifdef	SUPPORT_LEGACY_OQPSK
+uint16_t value;
  if ((tal_pib[trx_id].phy.freq_band == CHINA_780))
  {
 	 if(tal_pib[trx_id].CurrentChannel>3)
 	 {	 
 	 tal_pib[trx_id].CurrentChannel=0;
 	 }
+	 else
+	 {
+	
+	 value = tal_pib[trx_id].CurrentChannel;
+	 }
  }
- #endif
+	 else if ((tal_pib[trx_id].phy.freq_band == WORLD_2450))
+	 {
+
+	 value = tal_pib[trx_id].CurrentChannel-11;
+	 }
+	 
+	else if ((tal_pib[trx_id].phy.freq_band == US_915))
+	{
+	value = tal_pib[trx_id].CurrentChannel-1;
+	}
+	else //eu and china
+	{
+		value =  0;
+	}
+
+	
+	 pal_trx_write(rf_reg_offset + RG_RF09_CNL,
+	 (uint8_t *)&value, 2);
+ 
+ 
+ #else
 	 
         pal_trx_write(rf_reg_offset + RG_RF09_CNL,
                       (uint8_t *)&tal_pib[trx_id].CurrentChannel, 2);
+#endif					  
         /* Wait until channel set is completed */
         if (trx_state[trx_id] == RF_TXPREP)
         {
@@ -454,6 +488,8 @@ retval_t tal_pib_get(trx_id_t trx_id, uint8_t attribute, uint8_t *value)
             /* Adjust internal channel number to IEEE compliant numbering */
             if (tal_pib[trx_id].phy.modulation == LEG_OQPSK)
             {
+				 *(uint16_t *)value = tal_pib[trx_id].CurrentChannel ;
+/*
                 if (trx_id == RF24)
                 {
                     *(uint16_t *)value = tal_pib[trx_id].CurrentChannel + 11;
@@ -469,7 +505,7 @@ retval_t tal_pib_get(trx_id_t trx_id, uint8_t attribute, uint8_t *value)
 						*(uint16_t *)value = tal_pib[trx_id].CurrentChannel ;
 					}
 					
-                }
+                }*/
             }
             else
 
@@ -485,7 +521,7 @@ retval_t tal_pib_get(trx_id_t trx_id, uint8_t attribute, uint8_t *value)
             {
                 if (trx_id == RF09)
                 {
-                    if (tal_pib[trx_id].phy.freq_band == CHINA_470)
+                    if ((tal_pib[trx_id].phy.freq_band == CHINA_470)||(tal_pib[trx_id].phy.freq_band == CHINA_780))
                     {
                         *(uint32_t *)value = 0x0000000F;
                     }
@@ -759,8 +795,8 @@ retval_t tal_pib_set(trx_id_t trx_id, uint8_t attribute, pib_value_t *value)
 
         case phyCurrentChannel:
 {
-			uint16_t channel;
-			channel = value->pib_value_16bit;
+			uint16_t channel,channel_to_set;
+			channel = channel_to_set = value->pib_value_16bit;
 
 #ifdef SUPPORT_LEGACY_OQPSK
             /* Adjust internal channel number to IEEE compliant numbering */
@@ -795,7 +831,7 @@ retval_t tal_pib_set(trx_id_t trx_id, uint8_t attribute, pib_value_t *value)
                         if(channel > 0)
                         {
 						    channel -= 1;
-							if(tal_pib[trx_id].CurrentChannel == 0 && (ch_zero_band_eu))
+							if(tal_pib[trx_id].CurrentChannel == 0)
 							{
 								//set 915 band from EU
 															/* Configure PHY for sub-1GHz */
@@ -809,7 +845,7 @@ retval_t tal_pib_set(trx_id_t trx_id, uint8_t attribute, pib_value_t *value)
 							{
 								return MAC_INVALID_PARAMETER;
 							}							
-							ch_zero_band_eu = false;
+
 							}
                         }
 						else // set EU 868.3 ch0
@@ -826,7 +862,7 @@ retval_t tal_pib_set(trx_id_t trx_id, uint8_t attribute, pib_value_t *value)
 							{
 								return MAC_INVALID_PARAMETER;
 							}
-							ch_zero_band_eu = true;
+
 						
 						}
                     }
@@ -859,9 +895,9 @@ retval_t tal_pib_set(trx_id_t trx_id, uint8_t attribute, pib_value_t *value)
                     switch_to_txprep(trx_id);
                 }
 
-                tal_pib[trx_id].CurrentChannel = channel;
+                tal_pib[trx_id].CurrentChannel = channel_to_set;
                 pal_trx_write(rf_reg_offset + RG_RF09_CNL,
-                              (uint8_t *)&tal_pib[trx_id].CurrentChannel, 2);
+                              (uint8_t *)&channel, 2);
 
                 if (trx_state[trx_id] == RF_TXPREP)
                 {
@@ -1207,7 +1243,7 @@ return false;
 			break;
 
 			case 2: 
-			if(ch_zero_band_eu == true && (tal_pib[trx].CurrentChannel == 0))
+			if(tal_pib[trx].CurrentChannel == 0)
 			{
 			/* Configure PHY for sub-1GHz */
 			phy.modulation = LEG_OQPSK;

@@ -73,6 +73,17 @@ void app_reset(trx_id_t trx)
 	/* INIT was a success - so change to WAIT_FOR_EVENT state */
 	set_main_state(trx,WAIT_FOR_EVENT, NULL);
 }
+//sriram
+int8_t scale_reg_value_to_ed(uint8_t reg_val)
+{
+	return ((((MAX_ED_VAL-MIN_ED_VAL)*(reg_val - MIN_ED_REG_VAL))/(MAX_ED_REG_VAL-MIN_ED_REG_VAL))+MIN_ED_VAL);	
+	
+}
+
+uint8_t scale_ed_to_reg_val(int8_t ed_val)
+{	
+	return ((((MAX_ED_REG_VAL-MIN_ED_REG_VAL)*(ed_val - MIN_ED_VAL))/(MAX_ED_VAL-MIN_ED_VAL))+MIN_ED_REG_VAL);		
+}
 
 
 
