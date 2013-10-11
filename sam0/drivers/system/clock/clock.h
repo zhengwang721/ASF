@@ -240,6 +240,8 @@
 #include <compiler.h>
 #include <gclk.h>
 
+#include "clock_features.h"
+
 /**
  * \brief Available start-up times for the XOSC32K
  *
@@ -465,20 +467,6 @@ enum system_clock_dfll_quick_lock {
 };
 
 /**
- * \brief List of APB peripheral buses
- *
- * Available bus clock domains on the APB bus.
- */
-enum system_clock_apb_bus {
-	/** Peripheral bus A on the APB bus. */
-	SYSTEM_CLOCK_APB_APBA,
-	/** Peripheral bus B on the APB bus. */
-	SYSTEM_CLOCK_APB_APBB,
-	/** Peripheral bus C on the APB bus. */
-	SYSTEM_CLOCK_APB_APBC,
-};
-
-/**
  * \brief Available clock sources in the system
  *
  * Clock sources available to the GCLK generators
@@ -496,6 +484,22 @@ enum system_clock_source {
 	SYSTEM_CLOCK_SOURCE_DFLL     = GCLK_SOURCE_DFLL48M,
 	/** Internal Ultra Low Power 32kHz oscillator */
 	SYSTEM_CLOCK_SOURCE_ULP32K   = GCLK_SOURCE_OSCULP32K,
+	/** Digital Phase Locked Loop (DPLL) */
+	SYSTEM_CLOCK_SOURCE_DPLL     = GCLK_SOURCE_FDPLL,
+};
+
+/**
+ * \brief List of APB peripheral buses
+ *
+ * Available bus clock domains on the APB bus.
+ */
+enum system_clock_apb_bus {
+	/** Peripheral bus A on the APB bus. */
+	SYSTEM_CLOCK_APB_APBA,
+	/** Peripheral bus B on the APB bus. */
+	SYSTEM_CLOCK_APB_APBB,
+	/** Peripheral bus C on the APB bus. */
+	SYSTEM_CLOCK_APB_APBC,
 };
 
 /**
