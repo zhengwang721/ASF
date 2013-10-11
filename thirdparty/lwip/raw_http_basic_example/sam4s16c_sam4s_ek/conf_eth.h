@@ -101,4 +101,12 @@
 #define INTN_PIN_MSK                                  (1 << 15)
 #define INTN_ATTR                                     (PIO_DEBOUNCE | PIO_IT_FALL_EDGE)
 
+/* Interrupt priorities. (lowest value = highest priority) */
+/* ISRs using FreeRTOS *FromISR APIs must have priorities below or equal to */
+/* configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY. */
+#define INT_PRIORITY_SPI                              12
+#define INT_PRIORITY_PIO                              12
+
+#define INTN_IRQn                                     PIOA_IRQn
+
 #endif /* CONF_ETH_H_INCLUDED */

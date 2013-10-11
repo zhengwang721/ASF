@@ -41,7 +41,7 @@
  *
  */
 
-#include "task.h"
+#include "task_defs.h"
 #include "arm_math.h"
 #include "logo_atmel.h"
 

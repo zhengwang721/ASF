@@ -66,7 +66,7 @@
 #include "lwip/tcp_impl.h"
 #endif
 #include "netif/etharp.h"
-#include "netif/ethernetif.h"
+#include "netif/sam4e_gmac.h"
 
 #if defined(HTTP_RAW_USED)
 #include "httpd.h"

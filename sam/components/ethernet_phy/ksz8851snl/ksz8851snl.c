@@ -166,8 +166,9 @@ uint16_t ksz8851_reg_read(uint16_t reg)
 	while (!(spi_read_status(KSZ8851SNL_SPI) & SPI_SR_ENDRX))
 		;
 
-	res = (inbuf[3] << 8) | inbuf[2];
 	gpio_set_pin_high(KSZ8851SNL_CSN_GPIO);
+
+	res = (inbuf[3] << 8) | inbuf[2];
 	return res;
 }
 

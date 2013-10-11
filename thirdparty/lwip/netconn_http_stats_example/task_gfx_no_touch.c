@@ -41,7 +41,7 @@
  *
  */
 
-#include "task.h"
+#include "task_defs.h"
 #include "logo_atmel.h"
 
 #include <FreeRTOS.h>

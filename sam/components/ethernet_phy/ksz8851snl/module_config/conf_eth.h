@@ -1,7 +1,7 @@
  /**
  * \file
  *
- * \brief GMAC (Ethernet MAC) driver for SAM.
+ * \brief KSZ8851SNL driver configuration.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -41,27 +41,23 @@
  *
  */
 
-#ifndef CONF_EMAC_H_INCLUDED
-#define CONF_EMAC_H_INCLUDED
+#ifndef CONF_ETH_H_INCLUDED
+#define CONF_ETH_H_INCLUDED
 
-/// @cond 0
-/**INDENT-OFF**/
-#ifdef __cplusplus
-extern "C" {
-#endif
-/**INDENT-ON**/
-/// @endcond
-
-#include "gmac.h"
+/** Disable lwIP checksum (performed by hardware). */
+#define CHECKSUM_GEN_IP                               0
+#define CHECKSUM_GEN_UDP                              0
+#define CHECKSUM_GEN_TCP                              0
+#define CHECKSUM_GEN_ICMP                             0
+#define CHECKSUM_CHECK_IP                             0
+#define CHECKSUM_CHECK_UDP                            0
+#define CHECKSUM_CHECK_TCP                            0
 
 /** Number of buffer for RX */
-#define GMAC_RX_BUFFERS  16
+#define NETIF_RX_BUFFERS                              3
 
 /** Number of buffer for TX */
-#define GMAC_TX_BUFFERS  8
-
-/** MAC PHY operation max retry count */
-#define MAC_PHY_RETRY_MAX 1000000
+#define NETIF_TX_BUFFERS                              3
 
 /** MAC address definition.  The MAC address must be unique on the network. */
 #define ETHERNET_CONF_ETHADDR0                        0x00
@@ -72,16 +68,14 @@ extern "C" {
 #define ETHERNET_CONF_ETHADDR5                        0x02
 
 /** WAN Address: 192.168.0.2 */
-
 /* The IP address being used. */
 #define ETHERNET_CONF_IPADDR0                         192
 #define ETHERNET_CONF_IPADDR1                         168
 #define ETHERNET_CONF_IPADDR2                         0
-#define ETHERNET_CONF_IPADDR3                         2
+#define ETHERNET_CONF_IPADDR3                         100
 
-/** WAN gateway: 192.168.0.250 */
-
-/*! The gateway address being used. */
+/** WAN gateway: 192.168.0.1 */
+/** The gateway address being used. */
 #define ETHERNET_CONF_GATEWAY_ADDR0                   192
 #define ETHERNET_CONF_GATEWAY_ADDR1                   168
 #define ETHERNET_CONF_GATEWAY_ADDR2                   0
@@ -93,15 +87,26 @@ extern "C" {
 #define ETHERNET_CONF_NET_MASK2                       255
 #define ETHERNET_CONF_NET_MASK3                       0
 
-/** Ethernet MII/RMII mode */
-#define ETH_PHY_MODE  GMAC_PHY_MII
+/** SPI settings. */
+#define KSZ8851SNL_SPI                                SPI
+#define KSZ8851SNL_CLOCK_SPEED                        30000000
+#define KSZ8851SNL_CS_PIN                             3
 
-/// @cond 0
-/**INDENT-OFF**/
-#ifdef __cplusplus
-}
-#endif
-/**INDENT-ON**/
-/// @endcond
+/** Pins configuration. */
+#define KSZ8851SNL_RSTN_GPIO                          PIO_PA16_IDX
 
-#endif /* CONF_EMAC_H_INCLUDED */
+/** Push button pin definition. */
+#define INTN_PIO                                      PIOA
+#define INTN_ID                                       ID_PIOA
+#define INTN_PIN_MSK                                  (1 << 15)
+#define INTN_ATTR                                     (PIO_DEBOUNCE | PIO_IT_FALL_EDGE)
+
+/* Interrupt priorities. (lowest value = highest priority) */
+/* ISRs using FreeRTOS *FromISR APIs must have priorities below or equal to */
+/* configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY. */
+#define INT_PRIORITY_SPI                              12
+#define INT_PRIORITY_PIO                              12
+
+#define INTN_IRQn                                     PIOA_IRQn
+
+#endif /* CONF_ETH_H_INCLUDED */

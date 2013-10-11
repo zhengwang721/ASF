@@ -9,7 +9,7 @@
 			</info>
 			<build type="header-file" value="lwipopts.h"/>
 			<build type="header-file" value="logo_atmel.h"/>
-			<build type="header-file" value="task.h"/>
+			<build type="header-file" value="task_defs.h"/>
 			<build type="header-file" value="FreeRTOSConfig.h"/>
 			<build type="c-source"    value="main.c"/>
 			<build type="c-source"    value="task_gfx.c"/>
@@ -64,7 +64,7 @@
 			</info>
 			<build type="header-file" value="lwipopts.h"/>
 			<build type="header-file" value="logo_atmel.h"/>
-			<build type="header-file" value="task.h"/>
+			<build type="header-file" value="task_defs.h"/>
 			<build type="header-file" value="FreeRTOSConfig.h"/>
 			<build type="c-source"    value="main.c"/>
 			<build type="c-source"    value="task_gfx_no_touch.c"/>

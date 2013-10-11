@@ -41,8 +41,8 @@
  *
  */
 
-#ifndef DEMO_TASKS_H
-#define DEMO_TASKS_H
+#ifndef TASK_DEFS_H
+#define TASK_DEFS_H
 
 #include <FreeRTOS.h>
 #include <StackMacros.h>
@@ -86,4 +86,4 @@ void create_gfx_task(uint16_t stack_depth_words,
 void create_http_task(uint16_t stack_depth_words,
 		unsigned portBASE_TYPE task_priority);
 
-#endif /* DEMO_TASKS_H */
+#endif /* TASK_DEFS_H */

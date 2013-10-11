@@ -28,6 +28,7 @@
 		<config name="config.compiler.iarewarm.heap_size" value="0x8000"/>
 		<config name="config.compiler.iarewarm.stack_size" value="0x4000"/>
 		<config name="config.compiler.armgcc.optimization" value="high"/>
+		<toolchain-config name="armgcc.linker.miscellaneous.LinkerFlags" value="-Xlinker --defsym=STACK_SIZE=0x1800" toolchain="armgcc"/>
 		<generator value="doxygen"/>
 		<device-support value="atsam4e16e"/>
 	</project>

@@ -41,7 +41,7 @@
  *
  */
 
-#include "task.h"
+#include "task_defs.h"
 #include "stdio_serial.h"
 #include "ethernet.h"
 #include "sysclk.h"

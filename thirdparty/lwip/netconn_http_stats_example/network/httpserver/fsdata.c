@@ -131,4 +131,4 @@ const struct fsdata_file file_jquery_js[] = {{file_style_css, "etc/js/jquery.js"
 const struct fsdata_file file_jqflot_js[] = {{file_jquery_js, "etc/js/jqflot.js", jqflot, sizeof(jqflot)}};
 const struct fsdata_file file_excan_js[] = {{file_jqflot_js, "etc/js/excan.js", excan, sizeof(excan)}};
 const struct fsdata_file file_404_html[] = {{file_excan_js, "404.html", data_404_html, sizeof(data_404_html)}};
-const struct fsdata_file file_index_html[] = {{file_404_html, "index.html", index, sizeof(index)}};
+const struct fsdata_file file_index_html[] = {{file_404_html, "index.html", indexhtml, sizeof(indexhtml)}};

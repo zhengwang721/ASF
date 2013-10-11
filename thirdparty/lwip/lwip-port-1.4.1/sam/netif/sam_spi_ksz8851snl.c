@@ -312,7 +312,7 @@ static void ksz8851snl_update(struct netif *netif)
 
 			/* RX step6: get RX packet status. */
 			status = ksz8851_reg_read(REG_RX_FHR_STATUS);
-			if ((status & RX_VALID == 0) || (status & RX_ERRORS)) {
+			if (((status & RX_VALID) == 0) || (status & RX_ERRORS)) {
 				ksz8851_reg_setbits(REG_RXQ_CMD, RXQ_CMD_FREE_PACKET);
 				LWIP_DEBUGF(NETIF_DEBUG, ("ksz8851snl_update: RX packet error!\n"));
 			}
@@ -498,8 +498,6 @@ static void ksz8851snl_tx_init(struct ksz8851snl_device *ps_ksz8851snl_dev)
  */
 static void ksz8851snl_low_level_init(struct netif *netif)
 {
-	volatile uint32_t ul_delay;
-
 	/* Set MAC hardware address length. */
 	netif->hwaddr_len = sizeof(gs_uc_mac_address);
 	/* Set MAC hardware address. */
