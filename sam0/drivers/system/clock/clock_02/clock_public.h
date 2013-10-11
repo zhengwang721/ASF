@@ -38,11 +38,11 @@ struct system_clock_source_dpll_config {
 
 	enum system_clock_source_dpll_filter          filter;
 	enum system_clock_source_dpll_lock_time       lock_time;
-	enum system_clock_source_dpll_reference_clock reference_clock
+	enum system_clock_source_dpll_reference_clock reference_clock;
 };
 
 static inline void system_clock_source_dpll_get_config_defaults(
-		struct system_clock_source_dpll_config *const config);
+		struct system_clock_source_dpll_config *const config)
 {
 
 	config->on_demand           = true;
@@ -59,7 +59,7 @@ static inline void system_clock_source_dpll_get_config_defaults(
 	config->lock_time           = SYSTEM_CLOCK_SOURCE_DPLL_LOCK_TIME_DEFAULT;
 	config->filter              = SYSTEM_CLOCK_SOURCE_DPLL_FILTER_DEFAULT;
 
-}
+};
 
 
 void system_clock_source_dpll_set_config(
@@ -67,4 +67,4 @@ void system_clock_source_dpll_set_config(
 
 
 
-#endif /* SYSTEM_CLOCK_PUBLIC_H_INCLUDED
+#endif /* SYSTEM_CLOCK_PUBLIC_H_INCLUDED */

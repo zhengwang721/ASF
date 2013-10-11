@@ -565,7 +565,7 @@ struct system_clock_source_osc8m_config {
 	 * until requested by a peripheral */
 	bool on_demand;
 	/** Frequency range for the internal 8 Mhz RC oscialltor */
-	enum system_osc8m_freqency_range frequency_range;
+	enum system_osc8m_frequency_range frequency_range;
 };
 
 /**

@@ -41,6 +41,7 @@
 				<build type="doxygen-example-path" value="quick_start_clock"/>
 
 				<build type="include-path" value="."/>
+				<build type="include-path" value="clock_01/"/>
 
 				<build type="c-source" value="clock_01/clock_public.c"/>
 
@@ -78,6 +79,7 @@
 				<device-support value="samd21"/>
 
 				<build type="include-path" value="."/>
+				<build type="include-path" value="clock_02/"/>
 
 				<build type="header-file" value="clock_02/clock_public.h"/>
 				<build type="header-file" value="clock_02/clock_features.h"/>

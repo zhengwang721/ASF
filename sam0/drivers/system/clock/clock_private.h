@@ -1,5 +1,5 @@
-#ifndef SYSTEM_CLOCK_PRIV_INCLUDED
-#define SYSTEM_CLOCK_PRIV_INCLUDED
+#ifndef SYSTEM_CLOCK_PRIVATE_INCLUDED
+#define SYSTEM_CLOCK_PRIVATE_INCLUDED
 
 #include "clock.h"
 
@@ -37,7 +37,7 @@ struct _system_clock_xosc_config {
 struct _system_clock_module {
 	volatile struct _system_clock_dfll_config dfll;
 
-#ifdef SYSTEM_CLOCK_DPLL_AVAILABLE
+#ifdef FEATURE_SYSTEM_CLOCK_DPLL
 	volatile struct _system_clock_dpll_config dpll;
 #endif
 
@@ -56,12 +56,11 @@ static struct _system_clock_module _system_clock_inst = {
 			.mul     = 0,
 		},
 
-#ifdef SYSTEM_CLOCK_DPLL_AVAILABLE
+#ifdef FEATURE_SYSTEM_CLOCK_DPLL
 		.dpll = {
 			.frequency   = 0,
-		}
+		},
 #endif
-
 		.xosc = {
 			.frequency   = 0,
 		},

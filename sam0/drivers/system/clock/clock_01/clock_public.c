@@ -1,5 +1,5 @@
-#include "../clock.h"
-#include "../clock_priv.h"
+#include "clock.h"
+#include "clock_private.h"
 
 ///@cond INTERNAL
 

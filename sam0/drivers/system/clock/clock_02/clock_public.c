@@ -1,5 +1,5 @@
-#include "../clock_features.h"
-#include "../clock_private.h"
+#include "clock_features.h"
+#include "clock_private.h"
 
 
 /**
@@ -51,7 +51,7 @@ void system_clock_source_dpll_set_config(
 	refclk = config->reference_frequency;
 
 	/* Only reference clock REF1 can be divided */
-	if (config->reference_clock = SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_REF1) {
+	if (config->reference_clock == SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_REF1) {
 		refclk = refclk / config->reference_divider;
 	}
 
@@ -60,16 +60,16 @@ void system_clock_source_dpll_set_config(
 	tmpldrfrac = tmpldr & 0x0f;
 	tmpldr = tmpldr >> 4;
 
-	SYSCTRL->DPLLCTRLA.reg = 
+	SYSCTRL->DPLLCTRLA.reg =
 			(config->on_demand << SYSCTRL_DPLLCTRLA_ONDEMAND_Pos) |
-			(config->run_in_standby << SYSCTRL_DPLLCTRLA_RUNSTDBY);
+			(config->run_in_standby << SYSCTRL_DPLLCTRLA_RUNSTDBY_Pos);
 
 	SYSCTRL->DPLLRATIO.reg =
 			SYSCTRL_DPLLRATIO_LDRFRAC(tmpldrfrac) |
 			SYSCTRL_DPLLRATIO_LDR(tmpldr);
 
-	SYSCTRL->DPLLCTRLB.reg = 
-			SYSCTRL_DPLLCTRLB_DIV(config->clock_divider) |
+	SYSCTRL->DPLLCTRLB.reg =
+			SYSCTRL_DPLLCTRLB_DIV(config->reference_divider) |
 			config->lock_bypass << SYSCTRL_DPLLCTRLB_LBYPASS_Pos |
 			SYSCTRL_DPLLCTRLB_LTIME(config->lock_time) |
 			SYSCTRL_DPLLCTRLB_REFCLK(config->reference_clock) |
@@ -80,7 +80,7 @@ void system_clock_source_dpll_set_config(
 	refclk = config->reference_frequency;
 
 	if (config->reference_clock == SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_REF0) {
-		refclk = refclk / config->clock_divider;
+		refclk = refclk / config->reference_divider;
 	}
 
 	_system_clock_inst.dpll.frequency =

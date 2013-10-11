@@ -46,7 +46,6 @@
 #include <system.h>
 
 
-
 /**
  * \brief Retrieve the frequency of a clock source
  *
@@ -92,12 +91,12 @@ uint32_t system_clock_source_get_hz(
 
 		return 48000000UL;
 
-#ifdef SYSTEM_CLOCK_DPLL_AVAILABLE
+#ifdef FEATURE_SYSTEM_CLOCK_DPLL
 	case SYSTEM_CLOCK_SOURCE_DPLL:
-		if (!(SYSCTRL->STATUS.reg & SYSCTRL_STATUS_ENABLE)) {
+		if (!(SYSCTRL->DPLLSTATUS.reg & SYSCTRL_DPLLSTATUS_ENABLE)) {
 			return 0;
 		}
-		
+
 		return _system_clock_inst.dpll.frequency;
 #endif
 
@@ -344,7 +343,7 @@ enum status_code system_clock_source_enable(
 		_system_clock_source_dfll_set_config_errata_9905();
 		break;
 
-#ifdef SYSTEM_CLOCK_DPLL_AVAILABLE
+#ifdef FEATURE_SYSTEM_CLOCK_DPLL
 	case SYSTEM_CLOCK_SOURCE_DPLL:
 		SYSCTRL->DPLLCTRLA.reg = SYSCTRL_DPLLCTRLA_ENABLE;
 		break;
@@ -398,7 +397,7 @@ enum status_code system_clock_source_disable(
 		SYSCTRL->DFLLCTRL.reg = _system_clock_inst.dfll.control;
 		break;
 
-#ifdef SYSTEM_CLOCK_DPLL_AVAILABLE
+#ifdef FEATURE_SYSTEM_CLOCK_DPLL
 	case SYSTEM_CLOCK_SOURCE_DPLL:
 		SYSCTRL->DPLLCTRLA.reg &= ~SYSCTRL_DPLLCTRLA_ENABLE;
 		break;
@@ -456,7 +455,7 @@ bool system_clock_source_is_ready(
 		mask = SYSCTRL_PCLKSR_DFLLRDY;
 		break;
 
-#ifdef SYSTEM_CLOCK_DPLL_AVAILABLE
+#ifdef FEATURE_SYSTEM_CLOCK_DPLL
 	case SYSTEM_CLOCK_SOURCE_DPLL:
 		return SYSCTRL_DPLLSTATUS_CLKRDY;
 #endif
@@ -641,7 +640,7 @@ void system_clock_init(void)
 
 	/* Configure all GCLK generators except for the main generator, which
 	 * is configured later after all other clock systems are set up */
-	MREPEAT(GCLK_GEN_NUM_MSB, _CONF_CLOCK_GCLK_CONFIG_NONMAIN, ~);
+	MREPEAT(8, _CONF_CLOCK_GCLK_CONFIG_NONMAIN, ~);
 
 #  if (CONF_CLOCK_DFLL_ENABLE)
 	/* Enable DFLL reference clock if in closed loop mode */
@@ -661,9 +660,9 @@ void system_clock_init(void)
 
 	/* DPLL */
 
-#  ifdef SYSTEM_CLOCK_DPLL_AVAILABLE
+#  ifdef FEATURE_SYSTEM_CLOCK_DPLL
 #    if (CONF_CLOCK_DPLL_ENABLE)
-	
+
 	struct system_clock_source_dpll_config dpll_config;
 	system_clock_source_dpll_get_config_defaults(&dpll_config);
 
@@ -671,7 +670,7 @@ void system_clock_init(void)
 	dpll_config.run_in_standby  = CONF_CLOCK_DPLL_RUN_IN_STANDBY;
 	dpll_config.lock_bypass     = CONF_CLOCK_DPLL_LOCK_BYPASS;
 	dpll_config.wake_up_fast    = CONF_CLOCK_DPLL_WAKE_UP_FAST;
-	
+
 	dpll_config.filter          = CONF_CLOCK_DPLL_FILTER;
 
 	dpll_config.reference_clock     = CONF_CLOCK_DPLL_REFERENCE_CLOCK;
