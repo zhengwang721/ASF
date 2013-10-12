@@ -739,8 +739,10 @@ bool hsmci_start_read_blocks(void *dest, uint16_t nb_block)
 	Assert(nb_data <= (PERIPH_RCR_RXCTR_Msk >> PERIPH_RCR_RXCTR_Pos));
 
 	// Handle unaligned memory address
-	if ((uint32_t)dest & 0x3) {
+	if (((uint32_t)dest & 0x3) || (hsmci_block_size & 0x3)) {
 		HSMCI->HSMCI_MR |= HSMCI_MR_FBYTE;
+	} else {
+		HSMCI->HSMCI_MR &= ~HSMCI_MR_FBYTE;
 	}
 
 	// Configure PDC transfert
@@ -799,8 +801,10 @@ bool hsmci_start_write_blocks(const void *src, uint16_t nb_block)
 	Assert(nb_data <= (PERIPH_TCR_TXCTR_Msk >> PERIPH_TCR_TXCTR_Pos));
 
 	// Handle unaligned memory address
-	if ((uint32_t)src & 0x3) {
+	if (((uint32_t)src & 0x3) || (hsmci_block_size & 0x3)) {
 		HSMCI->HSMCI_MR |= HSMCI_MR_FBYTE;
+	} else {
+		HSMCI->HSMCI_MR &= ~HSMCI_MR_FBYTE;
 	}
 
 	// Configure PDC transfert
