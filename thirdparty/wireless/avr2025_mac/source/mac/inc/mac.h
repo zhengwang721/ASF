@@ -760,7 +760,7 @@ void mlme_set_request(arch_data_t *m);
 void mlme_set_conf(arch_data_t *m);
 
 #endif  /* (HIGHEST_STACK_LAYER == MAC) */
-#if (defined MAC_SECURITY_ZIP) || (defined MAC_SECURITY_2006) 
+#if (defined MAC_SECURITY_ZIP) || (defined MAC_SECURITY_2006)
 
 /**
  * @brief Setting of MAC PIB attributes via functional access
@@ -805,11 +805,16 @@ retval_t mlme_set(uint8_t attribute, pib_value_t *attribute_value,
 
 #endif  /* (MAC_SECURITY_ZIP || MAC_SECURITY_2006)  */
 
+#if (defined MAC_SECURITY_ZIP) || (defined MAC_SECURITY_2006)
 /**
  * \ingroup group_mac_gen_int
  */
+retval_t mlme_get(uint8_t attribute, pib_value_t *attribute_value, 
+		uint8_t attribute_index);
+#else
 retval_t mlme_get(uint8_t attribute, pib_value_t *attribute_value);
 
+#endif  /* (MAC_SECURITY_ZIP || MAC_SECURITY_2006)  */
 /**
  * @brief Initializes the MAC sublayer
  *

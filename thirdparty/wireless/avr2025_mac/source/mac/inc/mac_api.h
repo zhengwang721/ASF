@@ -1322,12 +1322,15 @@ void usr_mlme_gts_ind(uint16_t DeviceAddr, gts_char_t GtsChar);
 
 uint8_t mac_get_pib_attribute_size(uint8_t pib_attribute_id);
 
+#ifdef BEACON_SUPPORT
 /**
  * @brief Checks if the mac stack is idle
  * \ingroup group_mac_gen_int
  */
 uint32_t mac_ready_to_sleep(void);
-
+#else
+bool mac_ready_to_sleep(void);
+#endif /* BEACON_SUPPORT */
 /*@}*//* group_mac_cb */
 
 #ifdef __cplusplus
