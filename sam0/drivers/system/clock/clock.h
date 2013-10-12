@@ -1215,35 +1215,36 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *	<tr>
  *		<th>Changelog</th>
  *	</tr>
+ *  <tr>
+ *		<td>Fixed \c system_gclk_chan_disable() deadlocking if a channel is enabled
+ *		    and configured to a failed/not running clock generator.</td>
+ *  </tr>
  *	<tr>
  *		<td>
+ *			\li Changed default value for CONF_CLOCK_DFLL_ON_DEMAND from \c true to \c false.
  *			\li Fixed system_flash_set_waitstates() failing with an assertion
- *              if an odd number of wait states provided.
+ *			    if an odd number of wait states provided.
  *		</td>
  *	</tr>
  *	<tr>
  *		<td>
- *			\li Changed default value for CONF_CLOCK_DFLL_ON_DEMAND from true
- *              to false
- *		</td>
- *	</tr>
- *	<tr>
- *		<td>\li Updated dfll configuration function to implement workaround for
- *              errata 9905 in the DFLL module.
- *		    \li Updated \c system_clock_init() to reset interrupt flags before
- *              they are used, errata 10558.
- *		    \li Fixed \c system_clock_source_get_hz() to return correcy DFLL
- *              frequency number.
+ *			\li Updated dfll configuration function to implement workaround for
+ *			    errata 9905 in the DFLL module.
+ *			\li Updated \c system_clock_init() to reset interrupt flags before
+ *			    they are used, errata 10558.
+ *			\li Fixed \c system_clock_source_get_hz() to return correcy DFLL
+ *			    frequency number.
  *		</td>
  *	</tr>
  *	<tr>
  *		<td>\li Fixed \c system_clock_source_is_ready not returning the correct
- *              state for \c SYSTEM_CLOCK_SOURCE_OSC8M.
- *          \li Renamed the various \c system_clock_source_*_get_default_config()
- *              functions to \c system_clock_source_*_get_config_defaults() to
- *              match the remainder of ASF.
- *          \li Added OSC8M calibration constant loading from the device signature
- *              row when the oscillator is initialized.</td>
+ *			    state for \c SYSTEM_CLOCK_SOURCE_OSC8M.
+ *			\li Renamed the various \c system_clock_source_*_get_default_config()
+ *			    functions to \c system_clock_source_*_get_config_defaults() to
+ *			    match the remainder of ASF.
+ *			\li Added OSC8M calibration constant loading from the device signature
+ *			    row when the oscillator is initialized.
+ *      </td>
  *	</tr>
  *	<tr>
  *		<td>Initial Release</td>
