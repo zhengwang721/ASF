@@ -289,11 +289,19 @@ bool mac_task(void)
 /**
  * @brief Checks if the mac stack is idle
  */
+#ifdef BEACON_SUPPORT
+/**
+ * @brief Checks if the mac stack is idle
+ * \ingroup group_mac_gen_int
+ */
 uint32_t mac_ready_to_sleep(void)
+#else
+bool mac_ready_to_sleep(void)
+#endif /* BEACON_SUPPORT */
 {
 	uint32_t sleep_time =0;
 #ifdef BEACON_SUPPORT
-     uint32_t rem_time =0;
+    uint32_t rem_time =0;
     if(MAC_INACTIVE == mac_superframe_state)
 	{
 		
@@ -337,12 +345,11 @@ if (mac_busy ||
 			|| (tal_trx_status != TRX_SLEEP)
 #endif
 			) {
-		sleep_time = 0;
+		sleep_time = false;
 	} else {
-		sleep_time = 0xFFFFFFFF;
+		sleep_time = true;
 	}
 #endif
-
 	return sleep_time;
 }
 
