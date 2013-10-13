@@ -101,13 +101,6 @@
 #include "delay.h"
 #include "common_sw_timer.h"
 #include "sio2host.h"
-#include "mac.h"
-#include "mac_api.h"
-#include "tal.h"
-#include "ieee_const.h"
-#include "hw_timer.h"
-#include "common_hw_timer.h"
-#include "conf_hw_timer.h"
 #include <asf.h>
 /* === TYPES =============================================================== */
 
@@ -1215,8 +1208,8 @@ void usr_mlme_set_conf(uint8_t status, uint8_t PIBAttribute, uint8_t PIBAttribut
 	                    uint8_t mac_dev_table[17];
 	                    for (uint8_t i = Temp; i < no_of_assoc_devices; i++) // Temp is used to not update the already device table again
 	                    {
-		                    mac_dev_table[0] = (uint8_t)tal_pib.PANId;
-		                    mac_dev_table[1] = (uint8_t)(tal_pib.PANId >> 8);
+		                    mac_dev_table[0] = (uint8_t)DEFAULT_PAN_ID;
+		                    mac_dev_table[1] = (uint8_t)(DEFAULT_PAN_ID >> 8);
 		                    mac_dev_table[2] = (uint8_t)device_list[i].short_addr;
 		                    mac_dev_table[3] = (uint8_t)(device_list[i].short_addr >> 8);
 		                    mac_dev_table[4] = (uint8_t)device_list[i].ieee_addr;

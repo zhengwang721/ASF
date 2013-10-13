@@ -45,7 +45,7 @@
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
- #include <asf.h>
+#include <asf.h>
 #include "conf_board.h"
 #include "avr2025_mac.h"
 #include "serial_interface.h"

@@ -287,7 +287,7 @@ void write_all_tal_pib_to_trx(void)
  *         MAC_SUCCESS otherwise
  */
 #if (HIGHEST_STACK_LAYER == TAL)
-retval_t tal_pib_get(uint8_t attribute, uint8_t *value)
+retval_t tal_pib_get(uint8_t attribute, arch_data_t *value)
 {
 	switch (attribute) {
 	case macMaxCSMABackoffs:
