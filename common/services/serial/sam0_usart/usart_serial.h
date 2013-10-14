@@ -58,7 +58,7 @@
 
 typedef Sercom * usart_inst_t;
 
-struct usart_module usart;
+//struct usart_module usart;
 
 /*! \brief Initializes the Usart in master mode.
  *
