@@ -567,7 +567,7 @@ uint32_t can_mailbox_get_status(Can *p_can, uint8_t uc_index)
  * \brief Send single mailbox transfer request.
  *
  * \param p_can   Pointer to a CAN peripheral instance.
- * \param uc_index Indicate which mailbox is to be configured.
+ * \param p_mailbox Pointer to a CAN mailbox instance.
  */
 void can_mailbox_send_transfer_cmd(Can *p_can, can_mb_conf_t *p_mailbox)
 {
@@ -583,7 +583,7 @@ void can_mailbox_send_transfer_cmd(Can *p_can, can_mb_conf_t *p_mailbox)
  * \brief Send single mailbox abort request.
  *
  * \param p_can    Pointer to a CAN peripheral instance.
- * \param uc_index Indicate which mailbox is to be configured.
+ * \param p_mailbox Pointer to a CAN mailbox instance.
  */
 void can_mailbox_send_abort_cmd(Can *p_can, can_mb_conf_t *p_mailbox)
 {
