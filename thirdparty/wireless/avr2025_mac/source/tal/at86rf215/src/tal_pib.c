@@ -91,6 +91,7 @@ void init_tal_pib(trx_id_t trx_id)
         tal_pib[RF09].frame_types = TAL_RF09_FRAMES_TYPES;
         tal_pib[RF09].frame_versions = TAL_RF09_FRAME_VERSIONS;
 #endif /* #ifdef FRAME_FILTER_CONFIGURATION */
+ 
     }
     else    // RF24
     {
@@ -174,6 +175,7 @@ retval_t config_phy(trx_id_t trx_id)
  */
 rf_cmd_status_t set_trx_state(trx_id_t trx,rf_cmd_state_t trx_cmd)
 {
+
 	//sriram
 	return STATUS_RF_TRXOFF;
 }

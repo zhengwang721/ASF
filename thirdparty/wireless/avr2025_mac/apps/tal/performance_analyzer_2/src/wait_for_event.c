@@ -104,6 +104,7 @@ void wait_for_event_init(trx_id_t trx,void *arg)
  */
 void wait_for_event_task(trx_id_t trx)
 {
+	return;//range measure temporarily not enabled //sriram
     uint8_t key_press;
 
     /* Check for any key press */

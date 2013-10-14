@@ -75,51 +75,7 @@
 /* Version of the software */
 #define FIRMWARE_VERSION    2.2f
 
-/** sub-register TRX_STATUS in register TRX_STATUS */
-typedef enum tal_trx_status_tag {
-	/** Constant P_ON for sub-register @ref SR_TRX_STATUS */
-	P_ON                         = (0x00),
 
-	/** Constant BUSY_RX for sub-register @ref SR_TRX_STATUS */
-	BUSY_RX                      = (0x01),
-
-	/** Constant BUSY_TX for sub-register @ref SR_TRX_STATUS */
-	BUSY_TX                      = (0x02),
-
-	/** Constant RX_ON for sub-register @ref SR_TRX_STATUS */
-	RX_ON                        = (0x06),
-
-	/** Constant TRX_OFF for sub-register @ref SR_TRX_STATUS */
-	TRX_OFF                      = (0x08),
-
-	/** Constant PLL_ON for sub-register @ref SR_TRX_STATUS */
-	PLL_ON                       = (0x09),
-
-	/** Constant TRX_SLEEP for sub-register @ref SR_TRX_STATUS */
-	TRX_SLEEP                    = (0x0F),
-
-	/** Constant PREP_DEEP_SLEEP for sub-register @ref SR_TRX_STATUS */
-	PREP_DEEP_SLEEP              = (0x10),
-
-	/** Constant BUSY_RX_AACK for sub-register @ref SR_TRX_STATUS */
-	BUSY_RX_AACK                 = (0x11),
-
-	/** Constant BUSY_TX_ARET for sub-register @ref SR_TRX_STATUS */
-	BUSY_TX_ARET                 = (0x12),
-
-	/** Constant RX_AACK_ON for sub-register @ref SR_TRX_STATUS */
-	RX_AACK_ON                   = (0x16),
-
-	/** Constant TX_ARET_ON for sub-register @ref SR_TRX_STATUS */
-	TX_ARET_ON                   = (0x19),
-
-	/** Constant STATE_TRANSITION_IN_PROGRESS for sub-register @ref
-	 *SR_TRX_STATUS */
-	STATE_TRANSITION_IN_PROGRESS = (0x1F),
-
-	/** Software implemented state */
-	TRX_DEEP_SLEEP = (0x20)
-} SHORTENUM tal_trx_status_t;
 
 #define DEFAULT_CHANNEL_RF09         (1)
 #define DEFAULT_CHANNEL_RF24         (21)
@@ -255,7 +211,8 @@ void wait_for_event_task(trx_id_t trx);
 void wait_for_event_rx_cb(trx_id_t trx, frame_info_t *frame);
 
 extern uint8_t T_APP_TIMER;
-extern uint8_t T_APP_TIMER_RANGE;
+extern uint8_t T_APP_TIMER_RANGE_RF09;
+extern uint8_t T_APP_TIMER_RANGE_RF24;
 extern uint8_t APP_TIMER_TO_TX;
 extern uint8_t APP_TIMER_TO_TX_LED_OFF;
 extern uint8_t APP_TIMER_TO_RX_LED_OFF;

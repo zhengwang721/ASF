@@ -186,7 +186,7 @@ static void set_antenna_diversity_settings(trx_id_t trx,uint8_t config_value);
 static void config_antenna_diversity_peer_node(trx_id_t trx,uint8_t config_value);
 
 #endif /* #if (ANTENNA_DIVERSITY == 1) */
-#if (TAL_TYPE != AT86RF230B)
+
 
 static void config_rx_desensitization(trx_id_t trx,bool config_value);
 
@@ -459,8 +459,9 @@ void per_mode_initiator_task(trx_id_t trx)
  * timer to initiate the transmission of range test packets to the receptor
  * \param parameter pass parameters to timer handler
  */
-static void  range_test_timer_handler_cb(trx_id_t trx,void *parameter)
+static void  range_test_timer_handler_rf24_cb(void *parameter)
 {
+	trx_id_t trx = RF24;
 	if (!node_info[trx].transmitting) {
 		/* Update the FCF and payload before transmission */
 		configure_range_test_frame_sending(trx);
@@ -479,10 +480,42 @@ static void  range_test_timer_handler_cb(trx_id_t trx,void *parameter)
 		node_info[trx].transmitting = true;
 
 	}
-    		sw_timer_start(T_APP_TIMER_RANGE,
+    		sw_timer_start(T_APP_TIMER_RANGE_RF24,
 				RANGE_TX_BEACON_INTERVAL,
 				SW_TIMEOUT_RELATIVE,
-				(FUNC_PTR)range_test_timer_handler_cb,
+				(FUNC_PTR)range_test_timer_handler_rf24_cb,
+				NULL);
+}
+
+/** \brief This function is called periodically by the range test
+ * timer to initiate the transmission of range test packets to the receptor
+ * \param parameter pass parameters to timer handler
+ */
+static void  range_test_timer_handler_rf09_cb(void *parameter)
+{
+	trx_id_t trx = RF09;
+	if (!node_info[trx].transmitting) {
+		/* Update the FCF and payload before transmission */
+		configure_range_test_frame_sending(trx);
+
+		/* Transmit the Range Test Packet */
+		if (curr_trx_config_params[trx].csma_enabled) {
+			tal_tx_frame(trx,node_info[trx].tx_frame_info,
+					CSMA_UNSLOTTED,
+					curr_trx_config_params[trx].retry_enabled );
+		} else {
+			tal_tx_frame(trx,node_info[trx].tx_frame_info,
+					NO_CSMA_NO_IFS,
+					curr_trx_config_params[trx].retry_enabled );
+		}
+
+		node_info[trx].transmitting = true;
+
+	}
+    		sw_timer_start(T_APP_TIMER_RANGE_RF09,
+				RANGE_TX_BEACON_INTERVAL,
+				SW_TIMEOUT_RELATIVE,
+				(FUNC_PTR)range_test_timer_handler_rf09_cb,
 				NULL);
 }
 
@@ -777,8 +810,16 @@ void per_mode_initiator_tx_done_cb(trx_id_t trx,retval_t status, frame_info_t *f
 	case RANGE_TEST_STOP:
 	{
 
+if(trx==RF24)
+{
 			/* Stop the Range Test Timer */
-			sw_timer_stop(T_APP_TIMER_RANGE);
+			sw_timer_stop(T_APP_TIMER_RANGE_RF24);
+}
+else
+{
+			/* Stop the Range Test Timer */
+			sw_timer_stop(T_APP_TIMER_RANGE_RF09);
+}
 			/* Set the falg to default */
 			range_test_in_progress[trx] = false;
 			/* reset the frame sount */
@@ -804,7 +845,7 @@ void per_mode_initiator_tx_done_cb(trx_id_t trx,retval_t status, frame_info_t *f
 
 			/* Send the transmitted OTA frame to Host UI for disply
 			**/
-			usr_range_test_beacon_tx(trx,node_info[trx].tx_frame_info->mpdu);
+			usr_range_test_beacon_tx(trx,node_info[trx].tx_frame_info);
 		}
 	}
 	break;
@@ -946,9 +987,10 @@ static void set_parameter_on_transmitter_node(trx_id_t trx,retval_t status)
 					 tal_pib_get(trx,phyCurrentChannel, &channel);
 
 					 curr_trx_config_params[trx].channel = channel;
-					 tal_pib_get(trx,phyTransmitPower, &dbm_val);
+					 tal_pib_set(trx,phyTransmitPower,curr_trx_config_params[trx].tx_power_dbm);
+					// tal_pib_get(trx,phyTransmitPower, &dbm_val);
 					 //dbm_val = CONV_phyTransmitPower_TO_DBM(tx_pwr);sriram
-					 curr_trx_config_params[trx].tx_power_dbm = dbm_val;
+					// curr_trx_config_params[trx].tx_power_dbm = dbm_val;
 
 
                 /*Send the confirmation with status as SUCCESS */
@@ -1030,7 +1072,8 @@ void per_mode_initiator_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
     
 	/* Point to the message : 1 =>size is first byte and 2=>FCS*/
     msg = (app_payload_t *)(mac_frame_info->mpdu + FRAME_OVERHEAD);
-
+	uint16_t lqi_pos = mac_frame_info->length + tal_pib[trx].FCSLen;
+	uint16_t ed_pos = lqi_pos+1;
     switch ((msg->cmd_id))
     {
         case RESULT_RSP:
@@ -1189,6 +1232,7 @@ void per_mode_initiator_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
             break;
 	case RANGE_TEST_RSP:
 	{
+
 		/*Verify if the response is recieved in the correct Operating
 		 * mode*/
 		if (op_mode[trx] == RANGE_TEST_TX) {
@@ -1201,22 +1245,16 @@ void per_mode_initiator_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 			 * and
 			 * also derrive the LQI and ED values sent by the
 			 * receptor from the received payload */
-			int8_t rssi_base_val, ed_value;
-			rssi_base_val = tal_get_rssi_base_val(trx);
-			uint8_t phy_frame_len = mac_frame_info->mpdu[0];
-			/* Map the register ed value to dbm values */
-			ed_value
-				= mac_frame_info->mpdu[phy_frame_len + LQI_LEN +
-					ED_VAL_LEN] + rssi_base_val;
+			uint8_t phy_frame_len = (uint8_t)mac_frame_info->length;
+
 			app_led_event(LED_EVENT_RX_FRAME);
 
 			/* Send the range test rsp indication to Host UI with
 			 * the two set of ED and LQI values */
 
-			usr_range_test_beacon_rsp(trx,mac_frame_info->mpdu,
-					mac_frame_info->mpdu[phy_frame_len
-					+ LQI_LEN],
-					ed_value,
+			usr_range_test_beacon_rsp(trx,mac_frame_info,
+					mac_frame_info->mpdu[lqi_pos],
+					mac_frame_info->mpdu[ed_pos],
 					msg->payload.range_tx_data.lqi,
 					msg->payload.range_tx_data.ed);
 			range_test_seq_num[trx] = msg->seq_num;
@@ -1227,15 +1265,6 @@ void per_mode_initiator_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 	case RANGE_TEST_MARKER_CMD:
 	{
 		if (op_mode[trx] == RANGE_TEST_TX) {
-			/* Calculate the ED value and LQI for the received
-			 * marker frame */
-			int8_t rssi_base_val, ed_value;
-			rssi_base_val = tal_get_rssi_base_val(trx);
-			uint8_t phy_frame_len = mac_frame_info->mpdu[0];
-			/* Map the register ed value to dbm values */
-			ed_value
-				= mac_frame_info->mpdu[phy_frame_len + LQI_LEN +
-					ED_VAL_LEN] + rssi_base_val;
 
 			/* Timer to Perform LED indication for received Marker
 			 * indication */
@@ -1249,9 +1278,9 @@ void per_mode_initiator_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 			 * packet */
 			send_range_test_marker_rsp(trx);
 			/*send marker indication to Host UI */
-			usr_range_test_marker_ind(trx,mac_frame_info->mpdu,
-					mac_frame_info->mpdu[phy_frame_len
-					+ LQI_LEN], ed_value);
+			usr_range_test_marker_ind(trx,mac_frame_info,
+					mac_frame_info->mpdu[lqi_pos],
+					mac_frame_info->mpdu[ed_pos]);
 		}
 	}
 	break;
@@ -1298,7 +1327,7 @@ static void config_per_test_parameters(trx_id_t trx)
 
     if (peer_found[trx] == true)
     {
-        curr_trx_config_params[trx].trx_state = default_trx_config_params[trx].trx_state = RX_AACK_ON;
+        curr_trx_config_params[trx].trx_state = default_trx_config_params[trx].trx_state = RX_ON;
     }
     else
     {
@@ -1406,18 +1435,18 @@ void get_board_details(trx_id_t trx)
 static void set_transceiver_state(trx_id_t trx, uint8_t trx_state)
 {
 	retval_t retval;
-    /* Check whether trasnceiver is in sleep state */
+    /* Check whether transceiver is in sleep state */
     if (true == trx_sleep_status[trx])
     {
         switch (trx_state)
         {
-                /* Wake up the trasceiver as Toggle sleep cmd is received */
+                /* Wake up the transceiver as Toggle sleep cmd is received */
             case TRX_SLEEP:
                 {
                     toggle_trx_sleep(trx);
                 }
                 break;
-#endif /* End of ENABLE_DEEP_SLEEP */
+
                 /* For any cmd other than toggle sleep, return with error code */
             default:
                 {
@@ -1444,7 +1473,6 @@ static void set_transceiver_state(trx_id_t trx, uint8_t trx_state)
                 /* save user setting before reset */
                 save_all_settings(trx);
 				retval = tal_reset(trx,false);	
-
 				
                 if (MAC_SUCCESS == retval)
                 {
@@ -1455,52 +1483,28 @@ static void set_transceiver_state(trx_id_t trx, uint8_t trx_state)
             break;
         case TRX_OFF: /* TRX_OFF */
             {
-#if (ANTENNA_DIVERSITY == 1)
-                /*
-                *  Disable antenna diversity: to reduce the power consumption or
-                *  avoid leakage current of an external RF switch during SLEEP.
-                */
-              tal_ant_div_config(trx, ANT_DIVERSITY_DISABLE,ANTENNA_DEFAULT);
-              
-#endif
 
+			/* Put the transceiver in TRX OFF state- default state for Single node tests */
+			tal_rx_enable(trx,PHY_TRX_OFF);
 
-		/* Put the transceiver in TRX OFF state- default state for Single node tests */
-		set_trx_state(trx,RF_TRXOFF);
-
-                curr_trx_config_params[trx].trx_state = TRX_OFF;
+            curr_trx_config_params[trx].trx_state = TRX_OFF;
             }
             break;
-        case PLL_ON: /*PLL_ON*/
+        case PLL_ON: /*trx_prep*/
             {
-#if (ANTENNA_DIVERSITY == 1)
-                /*  Enable antenna diversity */
-              tal_ant_div_config(trx, ANT_DIVERSITY_ENABLE,ANTENNA_DEFAULT);
-#endif
+			
+			switch_to_txprep(trx);
 
-
-		/* Put the transceiver in TRX OFF state- default state for Single node tests */
-		set_trx_state(trx,RF_TXPREP);
-
-                curr_trx_config_params[trx].trx_state = PLL_ON;
+            curr_trx_config_params[trx].trx_state = PLL_ON;
             }
             break;
-        case RX_AACK_ON: /*RX_AACK_ON*/
+        case RX_ON: /*RX_ON*/
             {
-
-#if (ANTENNA_DIVERSITY == 1)
-                /*  Enable antenna diversity */
-              tal_ant_div_config(trx, ANT_DIVERSITY_ENABLE,ANT_AUTO_SEL);
-
-
-#endif /* End of #if (ANTENNA_DIVERSITY == 1) */
-                /*set the state to RX_AACK_ON */
 
 	        /* Put the transceiver in TRX OFF state- default state for Single node tests */
-	        set_trx_state(trx,RF_RX);
+	        tal_rx_enable(trx,PHY_RX_ON);
 
-
-           curr_trx_config_params[trx].trx_state = RX_AACK_ON;
+            curr_trx_config_params[trx].trx_state = RX_ON;
             }
             break;
 
@@ -1535,7 +1539,7 @@ static void toggle_trx_sleep(trx_id_t trx)
 	{
 		
 			/* Sleep cmd is successful */
-			if (MAC_SUCCESS == tal_trx_sleep(SLEEP_MODE_1))
+			if (MAC_SUCCESS == tal_trx_sleep(trx))
 			{
 				trx_sleep_status[trx] = true;
 			}
@@ -2656,7 +2660,7 @@ void get_current_configuration(trx_id_t trx)
 		//tal_set_tx_pwr(trx,REGISTER_VALUE,curr_trx_config_params[trx].tx_power_reg);
 
     /* trx state configuration */
-    if (RX_AACK_ON == curr_trx_config_params[trx].trx_state)
+    if (RX_ON == curr_trx_config_params[trx].trx_state)
     {
 
 	        	/* Put the transceiver in TRX OFF state- default state for Single node tests */
@@ -3737,6 +3741,11 @@ uint8_t check_error_conditions(trx_id_t trx)
     {
         error_code = TRANSMISSION_UNDER_PROGRESS;
     }
+	else if (true == range_test_in_progress[trx]) 
+	{ 
+		                                  /* Check if Range Mode is  initiated */
+		error_code = RANGE_TEST_IN_PROGRESS;
+	}
     else
     {
         error_code = MAC_SUCCESS;
@@ -3924,13 +3933,26 @@ static void start_range_test(trx_id_t trx)
 	/* Change the OPMODE to Range Test TX */
 	op_mode[trx] = RANGE_TEST_TX;
 
+if(RF24 == trx)
+{
 	/* Start a Range test timer  to start the  transmission of range test
 	 * packets periodically*/
-	sw_timer_start(T_APP_TIMER_RANGE,
+	sw_timer_start(T_APP_TIMER_RANGE_RF24,
 			RANGE_TX_BEACON_START_INTERVAL,
 			SW_TIMEOUT_RELATIVE,
-			(FUNC_PTR)range_test_timer_handler_cb,
+			(FUNC_PTR)range_test_timer_handler_rf24_cb,
 			NULL);
+}
+else
+{
+	/* Start a Range test timer  to start the  transmission of range test
+	 * packets periodically*/
+	sw_timer_start(T_APP_TIMER_RANGE_RF09,
+			RANGE_TX_BEACON_START_INTERVAL,
+			SW_TIMEOUT_RELATIVE,
+			(FUNC_PTR)range_test_timer_handler_rf09_cb,
+			NULL);	
+}
 }
 
 /*
@@ -3979,9 +4001,9 @@ static void configure_range_test_frame_sending(trx_id_t trx)
 	 */
 
 	/* Get length of current frame. */
-	app_frame_length = (RANGE_TEST_PKT_LENGTH - FRAME_OVERHEAD); /* to be
+	app_frame_length = (RANGE_TEST_PKT_LENGTH - FRAME_OVERHEAD -FCS_LEN ); /* to be
 	                                                              * changed
-	                                                              **/
+	                                                               **///sriram 
 
 	/* Set payload pointer. */
 	frame_ptr = temp_frame_ptr
@@ -4059,14 +4081,17 @@ static void configure_range_test_frame_sending(trx_id_t trx)
 	}
 
 	frame_ptr -= FCF_LEN;
+	
 	convert_16_bit_to_byte_array(CCPU_ENDIAN_TO_LE16(fcf), frame_ptr);
 
-	/* First element shall be length of PHY frame. */
-	frame_ptr--;
-	*frame_ptr = RANGE_TEST_PKT_LENGTH; /* to be changed */
+    /* First element shall be length of PHY frame. */ //sriram
+    //frame_ptr--;
+    //*frame_ptr = curr_trx_config_params[trx].phy_frame_length;
+	node_info[trx].tx_frame_info->length = (RANGE_TEST_PKT_LENGTH -FCS_LEN) ;
+	
+	 /* Finished building of frame. */
+    node_info[trx].tx_frame_info->mpdu = frame_ptr;
 
-	/* Finished building of frame. */
-	node_info[trx].tx_frame_info->mpdu = frame_ptr;
 }
 
 

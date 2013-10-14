@@ -465,16 +465,16 @@ void stop_range_test(trx_id_t trx);
  * \param lqi_r LQI of the sent range test packet calculated at receptor
  * \param ed_r ED value  of the sent range test packet calculated at receptor
  */
-void usr_range_test_beacon_rsp(trx_id_t trx,uint8_t *mpdu, uint8_t lqi_h, int8_t ed_h,
+void usr_range_test_beacon_rsp(trx_id_t trx,frame_info_t *frame, uint8_t lqi_h, int8_t ed_h,
 		uint8_t lqi_r, int8_t ed_r);
 
 /**
  * \brief Function to send  the Marker Indication frame to the Host application
- * \param mpdu Pointer to the actual marker frame Received
+ * \param frame Pointer to the actual marker frame Received
  * \param lqi LQI of the received marker packet
  * \param ed_value ED value  of the received marker packet
  */
-void usr_range_test_marker_ind(trx_id_t trx,uint8_t *mpdu, uint8_t lqi, int8_t ed_value);
+void usr_range_test_marker_ind(trx_id_t trx,frame_info_t *frame, uint8_t lqi, int8_t ed_value);
 
 
 
@@ -504,7 +504,7 @@ void usr_range_test_stop_confirm(trx_id_t trx,uint8_t status);
  * \brief Function to send  the transmitted frame to the Host application
  * \param frame Pointer to the actual frame transmitted
  */
-void usr_range_test_beacon_tx(trx_id_t trx,uint8_t *frame);
+void usr_range_test_beacon_tx(trx_id_t trx,frame_info_t *frame);
 
 
 /* ! \} */

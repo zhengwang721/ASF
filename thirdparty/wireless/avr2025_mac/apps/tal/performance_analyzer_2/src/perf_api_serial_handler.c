@@ -51,6 +51,7 @@
 #include "return_val.h"
 #include "ieee_const.h"
 #include "app_init.h"
+#include "tal_helper.h"
 #include "perf_msg_const.h"
 #include "sio2host.h"
 #include "sio2ncp.h"
@@ -453,10 +454,10 @@ switch (sio_rx_buf[trx][MESSAGE_ID_POS])  /* message id */
 		if (((error_code != MAC_SUCCESS) &&
 				(error_code != TRANSCEIVER_IN_SLEEP)) ||
 				((error_code == TRANSCEIVER_IN_SLEEP) &&
-				((sio_rx_buf[PARAM_TYPE_POS] !=
+				((sio_rx_buf[trx][PARAM_TYPE_POS] !=
 				PARAM_TRX_STATE) ||
-				(sio_rx_buf[PARAM_VALUE_POS] !=
-				RF_SLEEP)))
+				(sio_rx_buf[trx][PARAM_VALUE_POS] !=
+				TRX_SLEEP)))
 
 				) {
 			/* Send the confirmation with status as Failure
@@ -1243,10 +1244,11 @@ void usr_per_test_start_confirm(trx_id_t trx, uint8_t status)
  * \brief Function to send  the transmitted frame to the Host application
  * \param frame Pointer to the actual frame transmitted
  */
-void usr_range_test_beacon_tx(trx_id_t trx,uint8_t *frame)
+void usr_range_test_beacon_tx(trx_id_t trx,frame_info_t *frame)
 {
 	uint8_t *msg_buf;
-
+	uint8_t frame_len = ((uint8_t)frame->length)+tal_pib[trx].FCSLen ; //start from length field ,range test length doesnot cross over 8bits ,complying with older trx
+	uint8_t *frame_mpdu = frame->mpdu;
 	msg_buf = get_next_tx_buffer(trx);
 
 	/* Check if buffer could not be allocated */
@@ -1259,9 +1261,10 @@ void usr_range_test_beacon_tx(trx_id_t trx,uint8_t *frame)
 	*msg_buf++ = PROTOCOL_ID;
 	*msg_buf++ = RANGE_TEST_BEACON;
 
+*msg_buf++ = frame_len;
 	/* Copy OTA payload */
-	for (uint8_t i = 0; i < (RANGE_TEST_PKT_LEN - 1); i++) {
-		*msg_buf++ = *frame++;
+	for (uint8_t i = 0; i < (RANGE_TEST_PKT_LENGTH - tal_pib[trx].FCSLen); i++) {
+		*msg_buf++ = *frame_mpdu++;
 	}
 	*msg_buf = EOT;
 }
@@ -1275,13 +1278,13 @@ void usr_range_test_beacon_tx(trx_id_t trx,uint8_t *frame)
  * \param lqi_r LQI of the sent range test packet calculated at receptor
  * \param ed_r ED value  of the sent range test packet calculated at receptor
  */
-void usr_range_test_beacon_rsp(trx_id_t trx,uint8_t *mpdu, uint8_t lqi_h, int8_t ed_h,
+void usr_range_test_beacon_rsp(trx_id_t trx,frame_info_t *frame, uint8_t lqi_h, int8_t ed_h,
 		uint8_t lqi_r, int8_t ed_r)
 {
 	uint8_t *msg_buf;
-	uint8_t phy_frame_len = *mpdu; /* First byte of mpdu is the frame length
+	uint8_t frame_len = (uint8_t)frame->length+tal_pib[trx].FCSLen; /* First byte of mpdu is the frame length (RF215) //max length of range test pkt cannot exceed 8b hence maintaing the same variable
 	                               **/ //sriram -> to be changed
-
+	uint8_t *frame_mpdu = frame->mpdu;
 	msg_buf = get_next_tx_buffer(trx);
 
 	/* Check if buffer could not be allocated */
@@ -1290,13 +1293,15 @@ void usr_range_test_beacon_rsp(trx_id_t trx,uint8_t *mpdu, uint8_t lqi_h, int8_t
 	}
 
 	/* Copy Len, Protocol Id, Msg Id parameters */
-	*msg_buf++ = PROTOCOL_ID_LEN + RANGE_TEST_RSP_PKT_LEN +
-			(phy_frame_len);//sriram
+	*msg_buf++ = PROTOCOL_ID_LEN + RANGE_TEST_RSP_PKT_LEN + LENGTH_FIELD_LEN +
+			(frame_len- tal_pib[trx].FCSLen);//sriram
 	*msg_buf++ = PROTOCOL_ID;
 	*msg_buf++ = RANGE_TEST_BEACON_RESPONSE;
+	*msg_buf++ = frame_len;
+	
 	/* send ota frame */
-	for (uint8_t i = 0; i < phy_frame_len - 1; i++) {
-		*msg_buf++ = *mpdu++;
+	for (uint8_t i = 0; i < frame_len - tal_pib[trx].FCSLen; i++) {
+		*msg_buf++ = *frame_mpdu++;
 	}
 
 	*msg_buf++ = lqi_r;
@@ -1313,11 +1318,13 @@ void usr_range_test_beacon_rsp(trx_id_t trx,uint8_t *mpdu, uint8_t lqi_h, int8_t
  * \param lqi LQI of the received marker packet
  * \param ed_value ED value  of the received marker packet
  */
-void usr_range_test_marker_ind(trx_id_t trx,uint8_t *mpdu, uint8_t lqi, int8_t ed_value)
+void usr_range_test_marker_ind(trx_id_t trx,frame_info_t *frame, uint8_t lqi, int8_t ed_value)
 {
 	uint8_t *msg_buf;
-	uint8_t phy_frame_len = *mpdu; /* First byte of mpdu is the frame length
-	                               **/
+	uint8_t frame_len = (uint8_t)frame->length+tal_pib[trx].FCSLen; /* First byte of mpdu is the frame length (RF215) //max length of range test pkt cannot exceed 8b hence maintaing the same variable
+	                            **/ //sriram -> to be changed
+	uint8_t *frame_mpdu = frame->mpdu;
+	
 
 	msg_buf = get_next_tx_buffer(trx);
 
@@ -1328,12 +1335,14 @@ void usr_range_test_marker_ind(trx_id_t trx,uint8_t *mpdu, uint8_t lqi, int8_t e
 
 	/* Copy Len, Protocol Id, Msg Id parameters */
 	*msg_buf++ = PROTOCOL_ID_LEN + RANGE_TEST_MARKER_IND_LEN +
-			(phy_frame_len - FCS_LEN + LENGTH_FIELD_LEN);
+			(frame_len - tal_pib[trx].FCSLen + LENGTH_FIELD_LEN);
 	*msg_buf++ = PROTOCOL_ID;
 	*msg_buf++ = RANGE_TEST_MARKER_INDICATION;
+	*msg_buf++ = frame_len;
+	
 	/* send marker ota frame */
-	for (uint8_t i = 0; i < phy_frame_len - 1; i++) {
-		*msg_buf++ = *mpdu++;
+	for (uint8_t i = 0; i < frame_len - tal_pib[trx].FCSLen; i++) {
+		*msg_buf++ = *frame_mpdu++;
 	}
 	*msg_buf++ = lqi;
 	*msg_buf++ = ed_value;

@@ -79,7 +79,8 @@ static void configuration_mode_selection(trx_id_t trx);
 static void app_timers_init(void);
 
 uint8_t T_APP_TIMER;
-uint8_t T_APP_TIMER_RANGE;
+uint8_t T_APP_TIMER_RANGE_RF09;
+uint8_t T_APP_TIMER_RANGE_RF24;
 uint8_t APP_TIMER_TO_TX;
 uint8_t APP_TIMER_TO_TX_LED_OFF;
 uint8_t APP_TIMER_TO_RX_LED_OFF;
@@ -257,6 +258,12 @@ if(STATUS_OK != sw_timer_get_id(&APP_TIMER_TO_TX_LED_OFF))
 if(STATUS_OK != sw_timer_get_id(&APP_TIMER_TO_RX_LED_OFF))
 {
         app_alert();
+}
+if (STATUS_OK != sw_timer_get_id(&T_APP_TIMER_RANGE_RF09)) {
+	app_alert();
+}
+if (STATUS_OK != sw_timer_get_id(&T_APP_TIMER_RANGE_RF24)) {
+	app_alert();
 }
 
 }

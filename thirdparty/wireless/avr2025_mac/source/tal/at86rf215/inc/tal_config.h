@@ -84,6 +84,7 @@
 #define PROMISCUOUS_MODE
 #endif
 
+#define UPLOAD_CRC
 /**
  * To include the frame filter configuration functionality to the build,
  * uncomment the following define FRAME_FILTER_CONFIGURATION.

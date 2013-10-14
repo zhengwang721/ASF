@@ -57,6 +57,25 @@
 
 /* === MACROS ============================================================== */
 
+/** sub-register TRX_STATUS in register TRX_STATUS */
+typedef enum tal_trx_status_tag {
+	/** Constant P_ON for sub-register @ref SR_TRX_STATUS */
+	P_ON                         = (0x00),
+
+	/** Constant TRX_OFF for sub-register @ref SR_TRX_STATUS */
+	TRX_OFF                      = (0x08),
+
+	/** Constant PLL_ON for sub-register @ref SR_TRX_STATUS */
+	PLL_ON                       = (0x09),
+
+	/** Constant TRX_SLEEP for sub-register @ref SR_TRX_STATUS */
+	TRX_SLEEP                    = (0x0F),
+
+	/** Constant RX_AACK_ON for sub-register @ref SR_TRX_STATUS */
+	RX_ON                   = (0x16)
+	
+} SHORTENUM tal_trx_status_t;
+
 #define ANT_CTRL_0              (0)
 #define ANT_CTRL_1              (1)
 #define ANT_CTRL_2              (2)
@@ -240,6 +259,7 @@ retval_t  tal_ant_div_config(bool div_ctrl, uint8_t ant_ctrl);
  */
 retval_t tal_set_frequency(float frequency);
 
+bool crc_check_ok(trx_id_t trx);
 /**
  * \brief to set the frequency based on CC_BAND and CC_NUMBER Registers
  *
@@ -297,11 +317,11 @@ retval_t tal_rxaack_prom_mode_ctrl(trx_id_t trx,bool prom_ctrl);
  *
  * \return status of the transceiver
  */
-rf_cmd_status_t tal_get_trx_status(trx_id_t trx);
+tal_trx_status_t tal_get_trx_status(trx_id_t trx);
 
 /*
  * \brief to read a particular transceiver register
- * \param reg_addr address of the transveiver register to be read
+ * \param reg_addr address of the transeiver register to be read
  * \param *data pointer to the location where the register value need to be
  *              stored
  * \return MAC_SUCCESS if the register is read correctly

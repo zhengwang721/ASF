@@ -90,7 +90,7 @@
 #define PER_TEST_START_CONFIRM_LEN      (2)
 #define RANGE_TEST_START_CONFIRM_LEN    (2)
 #define RANGE_TEST_PKT_LEN              (RANGE_TEST_PKT_LENGTH - FCS_LEN + \
-	LENGTH_FIELD_LEN + 1)
+	LENGTH_FIELD_LEN +1 )/*sriram*/
 #define RANGE_TEST_RSP_PKT_LEN          (5) /*Excluding ota packet*/
 #define RANGE_TEST_MARKER_IND_LEN       (3) /*Excluding ota packet*/
 #define RANGE_TEST_STOP_CONFIRM_LEN     (2)

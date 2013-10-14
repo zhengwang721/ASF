@@ -60,6 +60,8 @@
 
 /* === MACROS ============================================================== */
 
+
+
 /* === GLOBALS ============================================================= */
 #if (TAL_TYPE != AT86RF212 && TAL_TYPE != AT86RF212B)
 FLASH_EXTERN(int8_t tx_pwr_table[16]);
@@ -564,6 +566,17 @@ retval_t tal_set_rx_sensitivity_level(trx_id_t trx,uint8_t pdt_level)
 
 #endif /* End of TAL_TYPE != AT86RF230B */
 
+/**
+ * \brief Calculates CRC manually and compares with the received
+ * and returns true if both are same,false otherwise.
+ */
+bool crc_check_ok(trx_id_t trx)
+{
+	uint16_t rf_reg_offset = RF_BASE_ADDR_OFFSET * trx;
+	return (pal_trx_bit_read(rf_reg_offset+SR_BBC0_PC_FCSOK));//sriram
+
+}
+
 /*
  * \brief Configures promiscous mode in rx_aack_on mode
  *
@@ -575,12 +588,22 @@ retval_t tal_set_rx_sensitivity_level(trx_id_t trx,uint8_t pdt_level)
 #if (TAL_TYPE != AT86RF230B)
 retval_t tal_rxaack_prom_mode_ctrl(trx_id_t trx,bool prom_ctrl)
 {
+	uint16_t rf_reg_offset = RF_BASE_ADDR_OFFSET * trx;
 	bool temp;
+	if(prom_ctrl)
+	{
+
 	/* configure promiscuous mode */
-	pal_trx_bit_write(SR_BBC0_AFC0_PM, prom_ctrl);
-#if (TAL_TYPE == ATMEGARFA1)
-	CONF_REG_WRITE();
-#endif /* TAL_TYPE == ATMEGA128RFA1 */
+	pal_trx_bit_write(rf_reg_offset+SR_BBC0_AFC0_PM, prom_ctrl);
+	pal_trx_bit_write(rf_reg_offset+SR_BBC0_PC_FCSFE,0X00); //Disable FCSFE
+	}
+	else
+	{
+
+		/* configure promiscuous mode */
+		pal_trx_bit_write(rf_reg_offset+SR_BBC0_AFC0_PM, prom_ctrl);
+		pal_trx_bit_write(rf_reg_offset+SR_BBC0_PC_FCSFE,0X01); //Enable FCSFE
+	}
 	temp = pal_trx_bit_read(SR_BBC0_AFC0_PM);
 	if (temp == prom_ctrl) {
 		return MAC_SUCCESS;
@@ -596,13 +619,44 @@ retval_t tal_rxaack_prom_mode_ctrl(trx_id_t trx,bool prom_ctrl)
  *
  * \return status of the transceiver
  */
-rf_cmd_status_t tal_get_trx_status(trx_id_t trx)
+tal_trx_status_t tal_get_trx_status(trx_id_t trx)
 {
-	 uint16_t rf_reg_offset = RF_BASE_ADDR_OFFSET * trx;
+	uint16_t rf_reg_offset = RF_BASE_ADDR_OFFSET * trx;
 	rf_cmd_status_t trx_status;
+	if(tal_state[trx] == TAL_SLEEP)
+	return TRX_SLEEP;
 	/* Read the status from trx_status bits */
 	trx_status = (rf_cmd_status_t)pal_trx_bit_read(rf_reg_offset+SR_RF09_STATE_STATE);
-	return trx_status;
+	switch (trx_status)
+	{
+		case STATUS_RF_RESET:
+		{
+			return P_ON;
+		}
+		break;
+		case STATUS_RF_TRXOFF:
+		{
+			return TRX_OFF;
+		}
+		break;
+		case STATUS_RF_TXPREP:
+		{
+			return PLL_ON;
+		}
+		break;
+		case STATUS_RF_RX:
+		{
+			return RX_ON;
+		}
+		break;
+		default:
+		return trx_status;
+		
+		
+		
+	}
+	
+	
 }
 
 /*

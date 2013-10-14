@@ -196,7 +196,7 @@ typedef struct {
 	uint8_t tx_power_reg;
 #endif
 	int8_t tx_power_dbm;
-	uint8_t trx_state;
+	uint8_t trx_state; 
 
 	uint8_t phy_frame_length;
 	uint32_t number_test_frames;

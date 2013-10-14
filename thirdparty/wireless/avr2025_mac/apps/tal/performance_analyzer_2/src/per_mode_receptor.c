@@ -99,7 +99,6 @@ static bool send_range_test_marker_cmd(trx_id_t trx);
 
 #ifdef CRC_SETTING_ON_REMOTE_NODE
 static void send_crc_status_rsp(trx_id_t trx);
-static bool crc_check_ok(frame_info_t *mac_frame_info);
 static uint16_t crc_test(uint16_t crc, uint8_t data);
 #endif /* End of CRC_SETTING_ON_REMOTE_NODE */
 
@@ -144,27 +143,42 @@ void per_mode_receptor_init(trx_id_t trx, void *parameter)
  */
 void per_mode_receptor_task(trx_id_t trx)
 {
-	/* For Range Test  in PER Mode the receptor has to poll for a button
-	 * press to initiate marker transmission */
-	if (range_test_in_progress[trx]) {
-		static uint8_t key_press;
-		/* Check for any key press */
-		key_press = app_debounce_button();
+if((range_test_in_progress[RF24])||(range_test_in_progress[RF09]))	
+{
 
-		if (key_press != 0) {
-			printf("\r\n\nButton Pressed...");
-			if (send_range_test_marker_cmd(trx)) {
-				printf("\r\nInitiating Marker Transmission...");
-				/* Timer for LED Blink for Marker Transmission*/
-				sw_timer_start(APP_TIMER_TO_TX,
-						LED_BLINK_RATE_IN_MICRO_SEC,
-						SW_TIMEOUT_RELATIVE,
-						(FUNC_PTR)marker_tx_timer_handler_cb,
-						NULL);
+static uint8_t key_press;
+/* Check for any key press */
+key_press = app_debounce_button();
+
+if (key_press != 0) {	
+
+printf("\r\n\nButton Pressed...");
+	
+/* For Range Test  in PER Mode the receptor has to poll for a button
+	* press to initiate marker transmission */
+	if (range_test_in_progress[RF09]) {
+					
+			if (send_range_test_marker_cmd(RF09)) {
+				printf("\r\nInitiating Marker Transmission for RF09...");
 			}
+	}
+	
+	if (range_test_in_progress[RF24]) {
+		
+		if (send_range_test_marker_cmd(RF24)) {
+			printf("\r\nInitiating Marker Transmission for RF24...");
 		}
 	}
+			/* Timer for LED Blink for Marker Transmission*/
+			sw_timer_start(APP_TIMER_TO_TX,
+			LED_BLINK_RATE_IN_MICRO_SEC,
+			SW_TIMEOUT_RELATIVE,
+			(FUNC_PTR)marker_tx_timer_handler_cb,
+			NULL);
+		}
 }
+}
+
 
 /**
  * \brief Function to send the range test marker command to the initiator node
@@ -244,7 +258,7 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
     {
         uint16_t my_addr;
         uint16_t dest_addr;
-        memcpy(&dest_addr, &mac_frame_info->mpdu[PL_POS_DST_ADDR_START], SHORT_ADDR_LEN);
+        memcpy(&dest_addr, &mac_frame_info->mpdu[PL_POS_DST_ADDR_START-1], SHORT_ADDR_LEN);
 
 			tal_pib_get(trx,macShortAddress, (uint8_t *)&my_addr);
 
@@ -255,7 +269,7 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
         }
 
         /* Counting of wrong crc packets option enabled and received crc is not OK */
-        if (false == crc_check_ok(mac_frame_info))
+        if (false == crc_check_ok(trx))
         {
             if ( msg->cmd_id != PER_TEST_PKT )
             {
@@ -459,9 +473,7 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
                     {
                         /* Enable the Promiscuous Mode */
                         tal_rxaack_prom_mode_ctrl(trx,AACK_PROM_ENABLE);
-
-                        
-                            printf("\r\n Counting packets with CRC error enabled");
+                        printf("\r\n Counting packets with CRC error enabled");
                         
                         manual_crc[trx] = true;
                     }
@@ -469,8 +481,7 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
                     {
                         /* Disable the Promiscuous Mode */
                         tal_rxaack_prom_mode_ctrl(trx,AACK_PROM_DISABLE);
-
-                            printf("\r\n Counting packets with CRC error disabled");
+				        printf("\r\n Counting packets with CRC error disabled");
                         
                         manual_crc[trx] = false;
                     }
@@ -543,33 +554,25 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 		 * lqi values of
 		 * the received pkt and add it as the payload of the response
 		 * frame*/
-		uint8_t phy_frame_len = mac_frame_info->mpdu[0];
+		uint8_t phy_frame_len = mac_frame_info->length;
 		uint32_t frame_count;
 		/* Get the frame count in correct format */
 		frame_count
 			= (CCPU_ENDIAN_TO_LE32(msg->payload.range_tx_data.
 				frame_count));
-		int8_t rssi_base_val, ed_value;
-		rssi_base_val = tal_get_rssi_base_val(trx);
+
 		app_led_event(LED_EVENT_RX_FRAME);
-		/* Map the register ed value to dbm values */
-		ed_value
-			= mac_frame_info->mpdu[phy_frame_len + LQI_LEN +
-				ED_VAL_LEN] + rssi_base_val;
 
 		/* Send Response cmd to the received Range Test packet with the
 		 * lqi and ed values */
 		send_range_test_rsp(trx,msg->seq_num,
 				msg->payload.range_tx_data.frame_count,	\
-				ed_value,
-				mac_frame_info->mpdu[phy_frame_len +
-				LQI_LEN]);
+					mac_frame_info->mpdu[ed_pos],
+					mac_frame_info->mpdu[lqi_pos]);
 		/* Print the received values to the terminal */
 		printf(
 				"\r\nRange Test Packet Received...\tFrame No : %" PRIu32 "\tLQI : %d\tED : %d",
-				frame_count,
-				mac_frame_info->mpdu[phy_frame_len + LQI_LEN],
-				ed_value);
+				frame_count,mac_frame_info->mpdu[lqi_pos],mac_frame_info->mpdu[ed_pos]);
 	}
 	break;
 
@@ -577,16 +580,11 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 	{
 		/* On reception of the Response frame to the Marker cmd sent ,
 		 * get the lqi and ed values and print it on the terminal */
-		int8_t rssi_base_val, ed_value;
-		rssi_base_val = tal_get_rssi_base_val(trx);
-		uint8_t phy_frame_len = mac_frame_info->mpdu[0];
-		/* Map the register ed value to dbm values */
-		ed_value
-			= mac_frame_info->mpdu[phy_frame_len + LQI_LEN +
-				ED_VAL_LEN] + rssi_base_val;
+
+		uint8_t phy_frame_len = mac_frame_info->length;
 		printf("\r\nMarker Response Received... LQI : %d\t ED %d \n",
-				mac_frame_info->mpdu[phy_frame_len + LQI_LEN],
-				ed_value);
+									mac_frame_info->mpdu[lqi_pos],
+									mac_frame_info->mpdu[ed_pos]);
 		/* Timer for LED Blink for Reception of Marker Response*/
 		sw_timer_start(T_APP_TIMER,
 				LED_BLINK_RATE_IN_MICRO_SEC,
@@ -830,28 +828,6 @@ static uint16_t crc_test(uint16_t crc, uint8_t data)
 	       ((uint16_t)data << 3));
 }
 
-/**
- * \brief Calculates CRC manually and compares with the received
- * and returns true if both are same,false otherwise.
- */
-static bool crc_check_ok(frame_info_t *frame_info)
-{
-	/* Calculate CRC manually since we are bypassing hardware CRC */
-	uint8_t number_of_bytes_rec = (frame_info->mpdu)[0];
-	uint16_t cal_crc = 0;
-	uint16_t *rec_crc_ptr
-		= (uint16_t *)&(frame_info->mpdu)[number_of_bytes_rec - 1 ];
-	uint16_t rec_crc = CCPU_ENDIAN_TO_LE16(*rec_crc_ptr);
-	uint8_t i;
-	for (i = 1; i <= (number_of_bytes_rec - FCS_LEN); i++) {
-		cal_crc = crc_test(cal_crc, (frame_info->mpdu)[i]);
-	}
-	if (rec_crc != cal_crc) {
-		return(false);
-	}
-
-	return(true);
-}
 
 #endif /* End of #ifdef CRC_SETTING_ON_REMOTE_NODE */
 
