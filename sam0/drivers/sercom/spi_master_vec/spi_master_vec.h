@@ -168,6 +168,8 @@ struct spi_master_vec_config {
 	uint32_t baudrate;
 	/** GCLK generator to use for the SERCOM. */
 	enum gclk_generator gclk_generator;
+	/** Enabled in sleep modes. */
+	bool run_in_standby;
 	/** SERCOM pad MUX setting. */
 	enum spi_signal_mux_setting mux_setting;
 	/** Transfer mode. */
@@ -234,6 +236,7 @@ static inline void spi_master_vec_get_config_defaults(
 {
 	config->baudrate = 100000;
 	config->gclk_generator = GCLK_GENERATOR_0;
+	config->run_in_standby = false;
 	config->mux_setting = SPI_SIGNAL_MUX_SETTING_D;
 	config->transfer_mode = SPI_TRANSFER_MODE_0;
 	config->data_order = SPI_DATA_ORDER_MSB;

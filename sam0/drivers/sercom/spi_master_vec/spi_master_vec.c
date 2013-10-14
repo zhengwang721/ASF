@@ -145,7 +145,8 @@ enum status_code spi_master_vec_init(struct spi_master_vec_module *const module,
 	spi_hw->CTRLA.reg = SERCOM_SPI_CTRLA_MODE_SPI_MASTER;
 	spi_hw->CTRLA.reg |= (uint32_t)config->mux_setting
 			| config->transfer_mode
-			| config->data_order;
+			| config->data_order
+			| (config->run_in_standby ? SERCOM_SPI_CTRLA_RUNSTDBY : 0);
 
 	/* Get baud value from configured baudrate and internal clock rate */
 	gclk_hz = system_gclk_chan_get_hz(gclk_index);
