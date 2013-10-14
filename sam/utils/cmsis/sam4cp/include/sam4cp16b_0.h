@@ -514,7 +514,7 @@ void WDT_Handler        ( void );
 /** \addtogroup SAM4CP16B_pio Peripheral Pio Definitions */
 /*@{*/
 
-#include "pio/sam4cp16b.h"
+#include "pio/pio_sam4cp16b.h"
 /*@}*/
 
 /* ************************************************************************** */
