@@ -52,6 +52,8 @@
 #  define CONF_SPI_MASTER_VEC_SEMAPHORE_TYPE                   xSemaphoreHandle
 #  define CONF_SPI_MASTER_VEC_CREATE_SEMAPHORE(semaphore)  \
 		vSemaphoreCreateBinary(semaphore)
+#  define CONF_SPI_MASTER_VEC_DELETE_SEMAPHORE(semaphore)  \
+		vSemaphoreDelete(semaphore)
 #  define CONF_SPI_MASTER_VEC_TAKE_SEMAPHORE(semaphore)  \
 		xSemaphoreTake((semaphore), portMAX_DELAY)
 #  define CONF_SPI_MASTER_VEC_GIVE_SEMAPHORE(semaphore)  \

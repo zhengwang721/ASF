@@ -269,6 +269,10 @@ void spi_master_vec_reset(struct spi_master_vec_module *const module)
 
 	/* Software reset the module */
 	spi_hw->CTRLA.reg |= SERCOM_SPI_CTRLA_SWRST;
+
+#ifdef CONF_SPI_MASTER_VEC_OS_SUPPORT
+	CONF_SPI_MASTER_VEC_DELETE_SEMAPHORE(module->busy_semaphore);
+#endif
 }
 
 /**
