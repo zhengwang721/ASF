@@ -21,7 +21,6 @@
 		<config name="config.compiler.iarewarm.create_aux" value="no"/>
 		<config name="config.compiler.as5_arm.create_aux" value="no"/>
 		<config name="config.compiler.armgcc.stack_size" value="0x200"/>
-		<config name="config.compiler.armgcc.heap_size" value="0"/>
 		<toolchain-config name="armgcc.linker.miscellaneous.LinkerFlags" value="-Xlinker --defsym=STACK_SIZE=0x200" toolchain="armgcc"/>
 		<config name="config.compiler.iarewarm.sys_stack_size" value="0x200"/>
 		<config name="config.compiler.iarewarm.heap_size" value="0"/>

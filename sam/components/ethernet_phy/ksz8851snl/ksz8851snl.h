@@ -47,17 +47,6 @@
 
 #include "gpio.h"
 
-/* RSTN pin definition. */
-#define KSZ8851SNL_RSTN_FLAGS            (PIO_OUTPUT_1)
-
-/* CSN pin definition. */
-#if defined(CONF_BOARD_SPI_NPCS3_GPIO)
-# define KSZ8851SNL_CSN_GPIO             (CONF_BOARD_SPI_NPCS3_GPIO)
-#else
-# define KSZ8851SNL_CSN_GPIO             (SPI_NPCS3_PA22_GPIO)
-#endif
-#define KSZ8851SNL_CSN_FLAGS             (PIO_OUTPUT_1)
-
 void configure_intn(void (*p_handler) (uint32_t, uint32_t));
 void ksz8851_reg_setbits(uint16_t reg, uint16_t bits_to_set);
 void ksz8851_reg_clrbits(uint16_t reg, uint16_t bits_to_clr);

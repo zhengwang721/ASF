@@ -43,7 +43,6 @@
 
 #ifdef FREERTOS_USED
 #include <FreeRTOS.h>
-#include <FreeRTOS_CLI.h>
 #include <StackMacros.h>
 #include <croutine.h>
 #include <list.h>
@@ -488,7 +487,7 @@ uint32_t gmac_dev_tx_buf_used(gmac_device_t* p_gmac_dev)
 	uint32_t used = 0;
 
 	for (uint32_t i = 0; i < p_gmac_dev->us_tx_list_size; ++i) {
-		if (p_gmac_dev->p_tx_dscr[i].status.val & GMAC_TXD_USED == 0)
+		if ((p_gmac_dev->p_tx_dscr[i].status.val & GMAC_TXD_USED) == 0)
 			used += 1;
 	}
 

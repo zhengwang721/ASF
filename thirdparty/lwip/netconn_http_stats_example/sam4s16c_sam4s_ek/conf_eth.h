@@ -92,8 +92,11 @@
 #define KSZ8851SNL_CLOCK_SPEED                        30000000
 #define KSZ8851SNL_CS_PIN                             3
 
-/** Pins configuration. */
+/** Pins configuration. GPIO values need to be set properly. */
 #define KSZ8851SNL_RSTN_GPIO                          PIO_PA16_IDX
+#define KSZ8851SNL_RSTN_FLAGS                         PIO_OUTPUT_1
+#define KSZ8851SNL_CSN_GPIO                           SPI_NPCS3_PA22_GPIO
+#define KSZ8851SNL_CSN_FLAGS                          PIO_OUTPUT_1
 
 /** Push button pin definition. */
 #define INTN_PIO                                      PIOA

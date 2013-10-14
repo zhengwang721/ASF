@@ -86,7 +86,7 @@
  *
  */
 
-#include "task.h"
+#include "task_defs.h"
 #include "ethernet.h"
 #include "status_codes.h"
 #include "conf_uart_serial.h"

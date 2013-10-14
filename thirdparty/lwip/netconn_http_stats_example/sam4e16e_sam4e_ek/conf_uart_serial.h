@@ -3,7 +3,7 @@
  *
  * \brief Serial USART service configuration.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -51,4 +51,4 @@
 /** Parity setting */
 #define CONF_UART_PARITY     UART_MR_PAR_NO
 
-#endif/* CONF_USART_SERIAL_H_INCLUDED */
+#endif/* CONF_USART_SERIAL_H */

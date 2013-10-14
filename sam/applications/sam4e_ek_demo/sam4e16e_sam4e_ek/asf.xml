@@ -20,7 +20,6 @@
 		<build type="define" name="FREERTOS_USED" value=""/>
 		<build type="define" name="HTTP_USED" value="1"/>
 		<generator value="iarewarm"/>
-		<generator value="armgcc"/>
 		<generator value="as5_arm"/>
 		<config name="config.compiler.armgcc.create_aux" value="no"/>
 		<config name="config.compiler.iarewarm.create_aux" value="no"/>
