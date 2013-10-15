@@ -931,6 +931,11 @@ static inline void usart_disable_transceiver(
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
+ *		<td>C</td>
+ *		<td>10/2013</td>
+ *		<td>Replaced the pad multiplexing documentation with a condensed table.</td>
+ *	</tr>
+ *	<tr>
  *		<td>B</td>
  *		<td>06/2013</td>
  *		<td>Corrected documentation typos.</td>
