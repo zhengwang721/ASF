@@ -865,56 +865,56 @@ static inline void usart_disable_transceiver(
  *			<th>PAD 3</th>
  *		</tr>
  *		<tr>
- *			<td>A</td>
+ *			<td>RX_0_TX_0_XCK_1</td>
  *			<td>TX / RX</td>
  *			<td>XCK</td>
  *			<td>-</td>
  *			<td>-</td>
  *		</tr>
  *		<tr>
- *			<td>B</td>
+ *			<td>RX_0_TX_2_XCK_3</td>
  *			<td>RX</td>
  *			<td>-</td>
  *			<td>TX</td>
  *			<td>XCK</td>
  *		</tr>
  *		<tr>
- *			<td>C</td>
+ *			<td>RX_1_TX_0_XCK_1</td>
  *			<td>Tx</td>
  *			<td>RX / XCK</td>
  *			<td>-</td>
  *			<td>-</td>
  *		</tr>
  *		<tr>
- *			<td>D</td>
+ *			<td>RX_1_TX_2_XCK_3</td>
  *			<td>-</td>
  *			<td>RX</td>
  *			<td>TX</td>
  *			<td>XCK</td>
  *		</tr>
  *		<tr>
- *			<td>E</td>
+ *			<td>RX_2_TX_0_XCK_1</td>
  *			<td>TX</td>
  *			<td>XCK</td>
  *			<td>RX</td>
  *			<td>-</td>
  *		</tr>
  *		<tr>
- *			<td>F</td>
+ *			<td>RX_2_TX_2_XCK_3</td>
  *			<td>-</td>
  *			<td>-</td>
  *			<td>TX / RX</td>
  *			<td>XCK</td>
  *		</tr>
  *		<tr>
- *			<td>G</td>
+ *			<td>RX_3_TX_0_XCK_1</td>
  *			<td>TX</td>
  *			<td>XCK</td>
  *			<td>-</td>
  *			<td>RX</td>
  *		</tr>
  *		<tr>
- *			<td>H</td>
+ *			<td>RX_3_TX_2_XCK_3</td>
  *			<td>-</td>
  *			<td>-</td>
  *			<td>TX</td>
