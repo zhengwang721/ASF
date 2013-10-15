@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Board configuration.
+ * \brief AAT31XX configuration.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,19 +41,19 @@
  *
  */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+//! Configuration of the AAT31XX Backlight driver
 
-/** Indicates board has an AAT3155 external component to control LCD backlight */
-#define CONF_BOARD_AAT3155
+#ifndef CONF_AAT31XX_H_INCLUDED
+#define CONF_AAT31XX_H_INCLUDED
 
-/** Indicates board has an ILI93xx external component to control LCD */
-#define CONF_BOARD_ILI93XX
+#include "board.h"
 
-/** Enable Com Port. */
-#define CONF_BOARD_UART_CONSOLE
+#if !defined(BOARD_AAT31XX_SET_GPIO)
 
-/** Usart Hw ID used by the console (UART0). */
-#define CONSOLE_UART_ID          ID_UART0
+	#warning The AAT31XX PIN configuration does not exist in the board definition file. Using default settings.
 
-#endif /* CONF_BOARD_H_INCLUDED */
+	#define BOARD_AAT31XX_SET_GPIO     PIO_PC13_IDX /* Should use the PIN index of which pin is connected with EN/SET of AAT31XX device */
+
+#endif
+
+#endif /* CONF_AAT31XX_H_INCLUDED */

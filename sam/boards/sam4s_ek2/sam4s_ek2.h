@@ -648,6 +648,10 @@
 #define BOARD_ILI9325_ADDR          0x61000000
 /** Define ILI9325 register select signal. */
 #define BOARD_ILI9325_RS            (1 << 1)
+/** Define ILI93xx base address. */
+#define BOARD_ILI93XX_ADDR          0x61000000
+/** Define ILI9325 register select signal. */
+#define BOARD_ILI93XX_RS            (1 << 1)
 /** Display width in pixels. */
 #define BOARD_LCD_WIDTH             240
 /** Display height in pixels. */

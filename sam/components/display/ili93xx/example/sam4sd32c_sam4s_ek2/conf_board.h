@@ -3,7 +3,7 @@
  *
  * \brief Board configuration.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,10 +44,10 @@
 #ifndef CONF_BOARD_H_INCLUDED
 #define CONF_BOARD_H_INCLUDED
 
-/** Indicates board has an AAT3155 external component to control LCD backlight */
+/* Indicates board has an AAT3155 external component to control LCD backlight */
 #define CONF_BOARD_AAT3155
 
-/** Indicates board has an ILI93xx external component to control LCD */
+/* Indicates board has an ILI93xx external component to control LCD */
 #define CONF_BOARD_ILI93XX
 
 /** Enable Com Port. */

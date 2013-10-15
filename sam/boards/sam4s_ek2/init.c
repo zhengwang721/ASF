@@ -195,7 +195,7 @@ void board_init(void)
 	gpio_set_pin_low(PIN_RE_IDX);
 #endif
 
-#ifdef CONF_BOARD_ILI9325
+#if defined(CONF_BOARD_ILI9325) || defined(CONF_BOARD_ILI93XX)
 	/* Configure LCD EBI pins */
 	gpio_configure_pin(PIN_EBI_DATA_BUS_D0, PIN_EBI_DATA_BUS_FLAGS);
 	gpio_configure_pin(PIN_EBI_DATA_BUS_D1, PIN_EBI_DATA_BUS_FLAGS);
