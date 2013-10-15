@@ -127,7 +127,7 @@ void board_init(void)
 
 #if defined(CONF_BOARD_USB_PORT)
 #  if defined(CONF_BOARD_USB_VBUS_DETECT)
-	gpio_configure_pin(USB_VBUS_PIN, USB_VBUS_FLAGS);
+	ioport_set_pin_peripheral_mode(USB_VBUS_PIN, USB_VBUS_FLAGS);
 #  endif
 #endif
 
@@ -139,9 +139,6 @@ void board_init(void)
 	ioport_set_pin_peripheral_mode(PIN_HSMCI_MCDA1_GPIO, PIN_HSMCI_MCDA1_FLAGS);
 	ioport_set_pin_peripheral_mode(PIN_HSMCI_MCDA2_GPIO, PIN_HSMCI_MCDA2_FLAGS);
 	ioport_set_pin_peripheral_mode(PIN_HSMCI_MCDA3_GPIO, PIN_HSMCI_MCDA3_FLAGS);
-
-	/* Configure SD/MMC card detect pin */
-	//ioport_set_pin_peripheral_mode(SD_MMC_0_CD_GPIO, SD_MMC_0_CD_FLAGS);
 #endif
 
 #ifdef CONF_BOARD_KSZ8051MNL
@@ -195,8 +192,53 @@ void board_init(void)
 	ioport_set_pin_peripheral_mode(PIN_EBI_NANDIO_5, PIN_EBI_NANDIO_5_FLAGS);
 	ioport_set_pin_peripheral_mode(PIN_EBI_NANDIO_6, PIN_EBI_NANDIO_6_FLAGS);
 	ioport_set_pin_peripheral_mode(PIN_EBI_NANDIO_7, PIN_EBI_NANDIO_7_FLAGS);
-    ioport_set_pin_dir(PIN_NF_CE_IDX, IOPORT_DIR_OUTPUT);
-    ioport_set_pin_dir(PIN_NF_RB_IDX, IOPORT_DIR_INPUT);
+	ioport_set_pin_dir(PIN_NF_CE_IDX, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_dir(PIN_NF_RB_IDX, IOPORT_DIR_INPUT);
 	ioport_set_pin_mode(PIN_NF_RB_IDX, IOPORT_MODE_PULLUP);
+#endif
+
+#ifdef CONF_BOARD_SRAM
+	ioport_set_pin_peripheral_mode(PIN_EBI_NCS1, PIN_EBI_NCS1_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_EBI_NCS3, PIN_EBI_NCS3_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_EBI_NRD, PIN_EBI_NRD_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_EBI_NWE, PIN_EBI_NWE_FLAGS);
+
+	ioport_set_pin_peripheral_mode(PIN_EBI_DATA_BUS_D0, PIN_EBI_DATA_BUS_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_EBI_DATA_BUS_D1, PIN_EBI_DATA_BUS_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_EBI_DATA_BUS_D2, PIN_EBI_DATA_BUS_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_EBI_DATA_BUS_D3, PIN_EBI_DATA_BUS_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_EBI_DATA_BUS_D4, PIN_EBI_DATA_BUS_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_EBI_DATA_BUS_D5, PIN_EBI_DATA_BUS_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_EBI_DATA_BUS_D6, PIN_EBI_DATA_BUS_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_EBI_DATA_BUS_D7, PIN_EBI_DATA_BUS_FLAGS);
+
+	ioport_set_pin_peripheral_mode(PIN_EBI_ADDR_BUS_A0, PIN_EBI_ADDR_BUS_FLAG1);
+	ioport_set_pin_peripheral_mode(PIN_EBI_ADDR_BUS_A1, PIN_EBI_ADDR_BUS_FLAG1);
+	ioport_set_pin_peripheral_mode(PIN_EBI_ADDR_BUS_A2, PIN_EBI_ADDR_BUS_FLAG1);
+	ioport_set_pin_peripheral_mode(PIN_EBI_ADDR_BUS_A3, PIN_EBI_ADDR_BUS_FLAG1);
+	ioport_set_pin_peripheral_mode(PIN_EBI_ADDR_BUS_A4, PIN_EBI_ADDR_BUS_FLAG1);
+	ioport_set_pin_peripheral_mode(PIN_EBI_ADDR_BUS_A5, PIN_EBI_ADDR_BUS_FLAG1);
+	ioport_set_pin_peripheral_mode(PIN_EBI_ADDR_BUS_A6, PIN_EBI_ADDR_BUS_FLAG1);
+	ioport_set_pin_peripheral_mode(PIN_EBI_ADDR_BUS_A7, PIN_EBI_ADDR_BUS_FLAG1);
+	ioport_set_pin_peripheral_mode(PIN_EBI_ADDR_BUS_A8, PIN_EBI_ADDR_BUS_FLAG1);
+	ioport_set_pin_peripheral_mode(PIN_EBI_ADDR_BUS_A9, PIN_EBI_ADDR_BUS_FLAG1);
+	ioport_set_pin_peripheral_mode(PIN_EBI_ADDR_BUS_A10,
+			PIN_EBI_ADDR_BUS_FLAG1);
+	ioport_set_pin_peripheral_mode(PIN_EBI_ADDR_BUS_A11,
+			PIN_EBI_ADDR_BUS_FLAG1);
+	ioport_set_pin_peripheral_mode(PIN_EBI_ADDR_BUS_A12,
+			PIN_EBI_ADDR_BUS_FLAG1);
+	ioport_set_pin_peripheral_mode(PIN_EBI_ADDR_BUS_A13,
+			PIN_EBI_ADDR_BUS_FLAG1);
+	ioport_set_pin_peripheral_mode(PIN_EBI_ADDR_BUS_A14,
+			PIN_EBI_ADDR_BUS_FLAG2);
+	ioport_set_pin_peripheral_mode(PIN_EBI_ADDR_BUS_A15,
+			PIN_EBI_ADDR_BUS_FLAG2);
+	ioport_set_pin_peripheral_mode(PIN_EBI_ADDR_BUS_A16,
+			PIN_EBI_ADDR_BUS_FLAG2);
+	ioport_set_pin_peripheral_mode(PIN_EBI_ADDR_BUS_A17,
+			PIN_EBI_ADDR_BUS_FLAG2);
+	ioport_set_pin_peripheral_mode(PIN_EBI_ADDR_BUS_A18,
+			PIN_EBI_ADDR_BUS_FLAG2);
 #endif
 }

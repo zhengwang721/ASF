@@ -315,7 +315,7 @@
 /** USB D+ pin (System function) */
 #define PIN_USB_DP      {PIO_PB11}
 
-/** EBI Data Bus pins */
+/** EBI Bus pins */
 #define PIN_EBI_DATA_BUS_D0        PIO_PC0_IDX
 #define PIN_EBI_DATA_BUS_D1        PIO_PC1_IDX
 #define PIN_EBI_DATA_BUS_D2        PIO_PC2_IDX
@@ -324,18 +324,46 @@
 #define PIN_EBI_DATA_BUS_D5        PIO_PC5_IDX
 #define PIN_EBI_DATA_BUS_D6        PIO_PC6_IDX
 #define PIN_EBI_DATA_BUS_D7        PIO_PC7_IDX
-#define PIN_EBI_DATA_BUS_FLAGS     (IOPORT_MODE_MUX_A | IOPORT_MODE_PULLUP)
+#define PIN_EBI_DATA_BUS_FLAGS     IOPORT_MODE_MUX_A
+
+#define PIN_EBI_ADDR_BUS_A0        PIO_PC18_IDX
+#define PIN_EBI_ADDR_BUS_A1        PIO_PC19_IDX
+#define PIN_EBI_ADDR_BUS_A2        PIO_PC20_IDX
+#define PIN_EBI_ADDR_BUS_A3        PIO_PC21_IDX
+#define PIN_EBI_ADDR_BUS_A4        PIO_PC22_IDX
+#define PIN_EBI_ADDR_BUS_A5        PIO_PC23_IDX
+#define PIN_EBI_ADDR_BUS_A6        PIO_PC24_IDX
+#define PIN_EBI_ADDR_BUS_A7        PIO_PC25_IDX
+#define PIN_EBI_ADDR_BUS_A8        PIO_PC26_IDX
+#define PIN_EBI_ADDR_BUS_A9        PIO_PC27_IDX
+#define PIN_EBI_ADDR_BUS_A10       PIO_PC28_IDX
+#define PIN_EBI_ADDR_BUS_A11       PIO_PC29_IDX
+#define PIN_EBI_ADDR_BUS_A12       PIO_PC30_IDX
+#define PIN_EBI_ADDR_BUS_A13       PIO_PC31_IDX
+#define PIN_EBI_ADDR_BUS_FLAG1     IOPORT_MODE_MUX_A
+#define PIN_EBI_ADDR_BUS_A14       PIO_PA18_IDX
+#define PIN_EBI_ADDR_BUS_A15       PIO_PA19_IDX
+#define PIN_EBI_ADDR_BUS_A16       PIO_PA20_IDX
+#define PIN_EBI_ADDR_BUS_A17       PIO_PA0_IDX
+#define PIN_EBI_ADDR_BUS_A18       PIO_PA1_IDX
+#define PIN_EBI_ADDR_BUS_FLAG2     IOPORT_MODE_MUX_C
 
 #define PIN_EBI_NRD                PIO_PC11_IDX
-#define PIN_EBI_NRD_FLAGS          (IOPORT_MODE_MUX_A | IOPORT_MODE_PULLUP)
+#define PIN_EBI_NRD_FLAGS          IOPORT_MODE_MUX_A
 #define PIN_EBI_NWE                PIO_PC8_IDX
-#define PIN_EBI_NWE_FLAGS          (IOPORT_MODE_MUX_A | IOPORT_MODE_PULLUP)
-
-/** EBI pin for LCD CS and RS **/
+#define PIN_EBI_NWE_FLAGS          IOPORT_MODE_MUX_A
 #define PIN_EBI_NCS1               PIO_PD18_IDX
-#define PIN_EBI_NCS1_FLAGS         (IOPORT_MODE_MUX_A | IOPORT_MODE_PULLUP)
-#define PIN_EBI_LCD_RS             PIO_PC19_IDX
-#define PIN_EBI_LCD_RS_FLAGS       (IOPORT_MODE_MUX_A | IOPORT_MODE_PULLUP)
+#define PIN_EBI_NCS1_FLAGS         IOPORT_MODE_MUX_A
+#define PIN_EBI_NCS3               PIO_PD19_IDX
+#define PIN_EBI_NCS3_FLAGS         IOPORT_MODE_MUX_A
+
+/* SRAM base address */
+#define SRAM_BASE_ADDRESS          EBI_CS1_ADDR
+#define SRAM_BASE_ADDRESS_2ND      EBI_CS3_ADDR
+
+/* SRAM chip select */
+#define SRAM_CHIP_SELECT           1
+#define SRAM_CHIP_SELECT_2ND       3
 
 /* KSZ8051MNL relate PIN definition */
 #define PIN_KSZ8051MNL_RXC_IDX                PIO_PD14_IDX
