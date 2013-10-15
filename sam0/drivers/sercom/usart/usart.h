@@ -234,7 +234,6 @@ extern "C" {
  *
  * Callbacks for the Asynchronous USART driver
  */
-/* TODO: Add support for RX started interrupt. */
 enum usart_callback {
 	/** Callback for buffer transmitted */
 	USART_CALLBACK_BUFFER_TRANSMITTED,
@@ -853,8 +852,8 @@ static inline void usart_disable_transceiver(
  * When TX and RX are connected to the same pin, the USART will operate in
  * half-duplex mode if both the transmitter and receivers are enabled.
  *
- * \note When RX and XCK are connected to the same pin, the receiver must be
- *       not be enabled if the USART is configured to use an external clock.
+ * \note When RX and XCK are connected to the same pin, the receiver must not
+ *       be enabled if the USART is configured to use an external clock.
  *
  *
  * <table>
