@@ -144,11 +144,7 @@ SECTIONS
     .stack (NOLOAD):
     {
         . = ALIGN(8);
-<<<<<<< HEAD:sam0/utils/linker_scripts/samd20/gcc/samd20e18_flash.ld
-        _sstack = .;
-=======
          _sstack = .;
->>>>>>> 9ee3a6613bd692950e5487d7aea69ff74399dbf9:sam/utils/linker_scripts/sam4s/sam4s2/gcc/flash.ld
         . = . + __stack_size__;
         . = ALIGN(8);
         _estack = .;
