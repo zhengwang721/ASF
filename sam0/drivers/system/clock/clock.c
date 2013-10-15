@@ -721,7 +721,7 @@ void system_clock_init(void)
 #endif
 
 
-	/* DFLL (Open and Closed Loop) */
+	/* DFLL Config (Open and Closed Loop) */
 #if CONF_CLOCK_DFLL_ENABLE == true
 	struct system_clock_source_dfll_config dfll_conf;
 	system_clock_source_dfll_get_config_defaults(&dfll_conf);
@@ -767,10 +767,6 @@ void system_clock_init(void)
 	dfll_conf.fine_max_step   = CONF_CLOCK_DFLL_MAX_FINE_STEP_SIZE;
 
 	system_clock_source_dfll_set_config(&dfll_conf);
-
-	if (CONF_CLOCK_DFLL_LOOP_MODE == SYSTEM_CLOCK_DFLL_LOOP_MODE_OPEN) {
-		system_clock_source_enable(SYSTEM_CLOCK_SOURCE_DFLL);
-	}
 #endif
 
 
@@ -808,11 +804,9 @@ void system_clock_init(void)
 #endif
 
 
-	/* DFLL (Closed Loop) */
+	/* DFLL Enable (Open and Closed Loop) */
 #if CONF_CLOCK_DFLL_ENABLE == true
-	if (CONF_CLOCK_DFLL_LOOP_MODE == SYSTEM_CLOCK_DFLL_LOOP_MODE_CLOSED) {
-		system_clock_source_enable(SYSTEM_CLOCK_SOURCE_DFLL);
-	}
+	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_DFLL);
 #endif
 
 
