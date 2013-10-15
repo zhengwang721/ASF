@@ -181,7 +181,8 @@ static uint32_t bc_rx_cnt;
 
 /* This variable counts the number of received indirect data frames. */
 static uint32_t indirect_rx_cnt;
-/** This variable stores the current state of the node. */static app_state_t app_state = APP_IDLE;
+/** This variable stores the current state of the node. */
+static app_state_t app_state = APP_IDLE;
 bool sys_sleep = false;
 #ifdef RTC_SLEEP
 void configure_rtc_callbacks(void);
@@ -1301,24 +1302,25 @@ void usr_mlme_set_conf(uint8_t status, uint8_t PIBAttribute, uint8_t PIBAttribut
 
               case macDeviceTableEntries:
                  {
+					 uint64_t coord_ieee_addr = 0x1234567812345600;
 	                 uint8_t mac_dev_table[17] =
 	                 {
 		                 // DeviceDescriptor
 		                 // PANId
-		                 (uint8_t)tal_pib.PANId,
-		                 (uint8_t)(tal_pib.PANId >> 8),
+		                 (uint8_t)DEFAULT_PAN_ID,
+		                 (uint8_t)(DEFAULT_PAN_ID >> 8),
 		                 // Device ShortAddress
-		                 (uint8_t)mac_pib.mac_CoordShortAddress,
-		                 (uint8_t)(mac_pib.mac_CoordShortAddress >> 8),
+		                 (uint8_t)coord_addr_spec.Addr.short_address,
+		                 (uint8_t)(coord_addr_spec.Addr.short_address >> 8),
 		                 // Device ExtAddress
-		                 (uint8_t)mac_pib.mac_CoordExtendedAddress,
-		                 (uint8_t)(mac_pib.mac_CoordExtendedAddress >> 8),
-		                 (uint8_t)(mac_pib.mac_CoordExtendedAddress >> 16),
-		                 (uint8_t)(mac_pib.mac_CoordExtendedAddress >> 24),
-		                 (uint8_t)(mac_pib.mac_CoordExtendedAddress >> 32),
-		                 (uint8_t)(mac_pib.mac_CoordExtendedAddress >> 40),
-		                 (uint8_t)(mac_pib.mac_CoordExtendedAddress >> 48),
-		                 (uint8_t)(mac_pib.mac_CoordExtendedAddress >> 56),
+		                 (uint8_t)coord_ieee_addr,
+		                 (uint8_t)(coord_ieee_addr >> 8),
+		                 (uint8_t)(coord_ieee_addr >> 16),
+		                 (uint8_t)(coord_ieee_addr >> 24),
+		                 (uint8_t)(coord_ieee_addr >> 32),
+		                 (uint8_t)(coord_ieee_addr >> 40),
+		                 (uint8_t)(coord_ieee_addr >> 48),
+		                 (uint8_t)(coord_ieee_addr >> 56),
 		                 // FrameCounter
 		                 0, 0, 0, 0,
 		                 // Exempt

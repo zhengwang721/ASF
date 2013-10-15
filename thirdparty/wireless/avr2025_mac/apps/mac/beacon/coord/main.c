@@ -934,12 +934,17 @@ void usr_mlme_set_conf(uint8_t status, uint8_t PIBAttribute, uint8_t PIBAttribut
         {
             case macShortAddress:
                 {
-                    uint8_t association_permit = true;
+                    uint64_t coord_ieee_addr = 0x1234567812345600;
 
-                    wpan_mlme_set_req(macAssociationPermit, NO_PIB_INDEX, &association_permit);
+                    wpan_mlme_set_req(macIeeeAddress, NO_PIB_INDEX, &coord_ieee_addr);
                 }
                 break;
+			case macIeeeAddress:
+				{
+					uint8_t association_permit = true;
 
+					wpan_mlme_set_req(macAssociationPermit, NO_PIB_INDEX, &association_permit);
+				}
             case macAssociationPermit:
                 {
                     bool rx_on_when_idle = true;
