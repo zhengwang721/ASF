@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 Xplained Pro board definition
+ * \brief SAM D20 Xplained Pro board initialization
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -41,32 +41,30 @@
  *
  */
 
-#ifndef SAMD21_BOARD_H_INCLUDED
-#define SAMD21_BOARD_H_INCLUDED
-
-#include <conf_board.h>
 #include <compiler.h>
+#include <board.h>
+#include <conf_board.h>
+#include <port.h>
 
-/**
- * \ingroup group_common_boards
- * \defgroup samd21_xplained_pro_group SAM D21 Xplained Pro board
- *
- * @{
- */
-
-static inline void system_board_init(void)
-{
-}
-
-/**
- * \defgroup samd21_xplained_pro_features_group Features
- *
- * Symbols that describe features and capabilities of the board.
- *
- * @{
- */
-
-/** Name string macro */
-#define BOARD_NAME                "SAMD21_BOARD"
-
+#if defined(__GNUC__)
+void board_init(void) WEAK __attribute__((alias("system_board_init")));
+#elif defined(__ICCARM__)
+void board_init(void);
+#  pragma weak board_init=system_board_init
 #endif
+
+void system_board_init(void)
+{
+	struct port_config pin_conf;
+	port_get_config_defaults(&pin_conf);
+
+	/* Configure LEDs as outputs, turn them off */
+	pin_conf.direction  = PORT_PIN_DIR_OUTPUT;
+	port_pin_set_config(LED_0_PIN, &pin_conf);
+	port_pin_set_output_level(LED_0_PIN, LED_0_INACTIVE);
+
+	/* Set buttons as inputs */
+	pin_conf.direction  = PORT_PIN_DIR_INPUT;
+	pin_conf.input_pull = PORT_PIN_PULL_UP;
+	port_pin_set_config(BUTTON_0_PIN, &pin_conf);
+}
