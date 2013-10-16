@@ -7,7 +7,6 @@
 			<info type="keyword" value="technology">
 				<keyword value="Communication" />
 			</info>
-			<build type="header-file" value="lwipopts.h"/>
 			<build type="header-file" value="logo_atmel.h"/>
 			<build type="header-file" value="task_defs.h"/>
 			<build type="header-file" value="FreeRTOSConfig.h"/>
@@ -62,7 +61,6 @@
 			<info type="keyword" value="technology">
 				<keyword value="Communication" />
 			</info>
-			<build type="header-file" value="lwipopts.h"/>
 			<build type="header-file" value="logo_atmel.h"/>
 			<build type="header-file" value="task_defs.h"/>
 			<build type="header-file" value="FreeRTOSConfig.h"/>

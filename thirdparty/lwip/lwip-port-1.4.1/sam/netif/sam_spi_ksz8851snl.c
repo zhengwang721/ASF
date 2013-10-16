@@ -553,9 +553,11 @@ static err_t ksz8851snl_low_level_output(struct netif *netif, struct pbuf *p)
 
 	/* Make sure the next descriptor is free. */
 	if (ps_ksz8851snl_dev->tx_desc[ps_ksz8851snl_dev->us_tx_head]) {
+#if NO_SYS
 		LWIP_DEBUGF(NETIF_DEBUG,
 				("ksz8851snl_low_level_output: out of free descriptor! [tail=%u head=%u]\n",
 				ps_ksz8851snl_dev->us_tx_tail, ps_ksz8851snl_dev->us_tx_head));
+#endif
 		return ERR_IF;
 	}
 
@@ -566,9 +568,11 @@ static err_t ksz8851snl_low_level_output(struct netif *netif, struct pbuf *p)
 	ps_ksz8851snl_dev->tx_desc[ps_ksz8851snl_dev->us_tx_head] = 1;
 	ps_ksz8851snl_dev->tx_pbuf[ps_ksz8851snl_dev->us_tx_head] = p;
 
+#if NO_SYS
 	LWIP_DEBUGF(NETIF_DEBUG,
 			("ksz8851snl_low_level_output: DMA buffer 0x%p sent, size=%u [tail=%u head=%u]\n",
 			p->payload, p->tot_len, ps_ksz8851snl_dev->us_tx_tail, ps_ksz8851snl_dev->us_tx_head));
+#endif
 
 	ps_ksz8851snl_dev->us_tx_head = (ps_ksz8851snl_dev->us_tx_head + 1) % NETIF_TX_BUFFERS;
 
