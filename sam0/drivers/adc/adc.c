@@ -56,13 +56,8 @@ static inline void _adc_configure_ain_pin(uint32_t pin)
 {
 #define PIN_INVALID_ADC_AIN    0xFFFFUL
 
-	struct system_pinmux_config config;
-	system_pinmux_get_config_defaults(&config);
-
-	config.input_pull = SYSTEM_PINMUX_PIN_PULL_NONE;
-
 	/* Pinmapping table for AINxx -> GPIO pin number */
-	const uint32_t pinmapping[ADC_INPUTCTRL_MUXPOS_PIN20] = {
+	const uint32_t pinmapping[] = {
 #if (SAMD20E)
 			PIN_PA02B_ADC_AIN0,  PIN_PA03B_ADC_AIN1,
 			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
@@ -85,7 +80,7 @@ static inline void _adc_configure_ain_pin(uint32_t pin)
 			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
 			PIN_PA08B_ADC_AIN16, PIN_PA09B_ADC_AIN17,
 			PIN_PA10B_ADC_AIN18, PIN_PA11B_ADC_AIN19,
-#else /* SAMD20J */
+#elif (SAMD20J)
 			PIN_PA02B_ADC_AIN0,  PIN_PA03B_ADC_AIN1,
 			PIN_PB08B_ADC_AIN2,  PIN_PB09B_ADC_AIN3,
 			PIN_PA04B_ADC_AIN4,  PIN_PA05B_ADC_AIN5,
@@ -96,15 +91,26 @@ static inline void _adc_configure_ain_pin(uint32_t pin)
 			PIN_PB06B_ADC_AIN14, PIN_PB07B_ADC_AIN15,
 			PIN_PA08B_ADC_AIN16, PIN_PA09B_ADC_AIN17,
 			PIN_PA10B_ADC_AIN18, PIN_PA11B_ADC_AIN19,
+#else
+#  error ADC pin mappings are not defined for this device.
 #endif
 		};
-	Assert(pinmapping[pin] != PIN_INVALID_ADC_AIN);
 
-	/* Analog functions are at mux setting B */
-	config.mux_position = 1;
+	uint32_t pin_map_result = PIN_INVALID_ADC_AIN;
 
-	if (pin <= ADC_INPUTCTRL_MUXPOS_PIN20) {
-		system_pinmux_pin_set_config(pinmapping[pin], &config);
+	if (pin <= ADC_EXTCHANNEL_MSB) {
+		pin_map_result = pinmapping[pin >> ADC_INPUTCTRL_MUXPOS_Pos];
+
+		Assert(pin_map_result != PIN_INVALID_ADC_AIN);
+
+		struct system_pinmux_config config;
+		system_pinmux_get_config_defaults(&config);
+
+		/* Analog functions are all on MUX setting B */
+		config.input_pull   = SYSTEM_PINMUX_PIN_PULL_NONE;
+		config.mux_position = 1;
+
+		system_pinmux_pin_set_config(pin_map_result, &config);
 	}
 }
 
