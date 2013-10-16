@@ -146,11 +146,15 @@ static enum status_code _adc_set_config(
 
 	/* Setup pinmuxing for analog inputs */
 	if (config->pin_scan.inputs_to_scan != 0) {
-		uint8_t start_pin = config->pin_scan.offset_start_scan +
+		uint8_t start_pin =
+				config->pin_scan.offset_start_scan +
 				(uint8_t)config->positive_input;
-		uint8_t end_pin = start_pin + config->pin_scan.inputs_to_scan;
-		for (; start_pin < end_pin; start_pin++) {
+		uint8_t end_pin =
+				start_pin + config->pin_scan.inputs_to_scan;
+
+		while (start_pin < end_pin) {
 			_adc_configure_ain_pin(start_pin);
+			start_pin++;
 		}
 		_adc_configure_ain_pin(config->negative_input);
 	} else {
