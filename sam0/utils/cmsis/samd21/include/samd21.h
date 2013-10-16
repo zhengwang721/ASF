@@ -49,35 +49,29 @@
  * \brief SAMD21 CMSIS Definitions.
  */
 
-#if   defined(__SAMD21E14__) || defined(__ATSAMD21E14__)
-  #include "samd21e14.h"
-#elif defined(__SAMD21E15__) || defined(__ATSAMD21E15__)
+#if defined(__SAMD21E15A__) || defined(__ATSAMD21E15A__)
   #include "samd21e15.h"
-#elif defined(__SAMD21E16__) || defined(__ATSAMD21E16__)
+#elif defined(__SAMD21E16A__) || defined(__ATSAMD21E16A__)
   #include "samd21e16.h"
-#elif defined(__SAMD21E17__) || defined(__ATSAMD21E17__)
+#elif defined(__SAMD21E17A__) || defined(__ATSAMD21E17A__)
   #include "samd21e17.h"
-#elif defined(__SAMD21E18__) || defined(__ATSAMD21E18__)
+#elif defined(__SAMD21E18A__) || defined(__ATSAMD21E18A__)
   #include "samd21e18.h"
-#elif defined(__SAMD21G14__) || defined(__ATSAMD21G14__)
-  #include "samd21g14.h"
-#elif defined(__SAMD21G15__) || defined(__ATSAMD21G15__)
+#elif defined(__SAMD21G15A__) || defined(__ATSAMD21G15A__)
   #include "samd21g15.h"
-#elif defined(__SAMD21G16__) || defined(__ATSAMD21G16__)
+#elif defined(__SAMD21G16A__) || defined(__ATSAMD21G16A__)
   #include "samd21g16.h"
-#elif defined(__SAMD21G17__) || defined(__ATSAMD21G17__)
+#elif defined(__SAMD21G17A__) || defined(__ATSAMD21G17A__)
   #include "samd21g17.h"
-#elif defined(__SAMD21G18__) || defined(__ATSAMD21G18__)
+#elif defined(__SAMD21G18A__) || defined(__ATSAMD21G18A__)
   #include "samd21g18.h"
-#elif defined(__SAMD21J14__) || defined(__ATSAMD21J14__)
-  #include "samd21j14.h"
-#elif defined(__SAMD21J15__) || defined(__ATSAMD21J15__)
+#elif defined(__SAMD21J15A__) || defined(__ATSAMD21J15A__)
   #include "samd21j15.h"
-#elif defined(__SAMD21J16__) || defined(__ATSAMD21J16__)
+#elif defined(__SAMD21J16A__) || defined(__ATSAMD21J16A__)
   #include "samd21j16.h"
-#elif defined(__SAMD21J17__) || defined(__ATSAMD21J17__)
+#elif defined(__SAMD21J17A__) || defined(__ATSAMD21J17A__)
   #include "samd21j17.h"
-#elif defined(__SAMD21J18__) || defined(__ATSAMD21J18__)
+#elif defined(__SAMD21J18A__) || defined(__ATSAMD21J18A__)
   #include "samd21j18.h"
 #else
   #error Library does not support the specified device.

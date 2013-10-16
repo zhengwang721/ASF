@@ -13,7 +13,7 @@ target remote localhost:2331
 monitor reset
 
 # Select flash device
-monitor flash device = ATSAMD20J18A
+monitor flash device = ATSAMD21J18A
 # Enable flash download and flash breakpoints
 monitor flash download = 1
 
