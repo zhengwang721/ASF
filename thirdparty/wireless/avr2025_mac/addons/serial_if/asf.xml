@@ -12,6 +12,5 @@
         <require idref="thirdparty.wireless.avr2025_mac.source.mac.inc"/>
 		<require idref="thirdparty.wireless.addons.sio2host"/>
         <device-support-alias value="avr2025_mac_pal_support"/>
-		<device-support value="sam4l"/>
 	</module>
 </asf>
