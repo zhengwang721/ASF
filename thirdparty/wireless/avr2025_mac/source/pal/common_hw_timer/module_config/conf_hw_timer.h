@@ -76,7 +76,7 @@
 //! @{
 #if (SAMD20)
 #define TIMER     (TC0)
-#endif //SAMD20
+#endif /* SAMD20 */
 //! @}
 
 #endif /* CONF_HW_TIMER_H_INCLUDED */
