@@ -22,21 +22,22 @@
 				</info>
 
 				<info type="description" value="pdf">
-					This document describes how to use the Interrupts on the SAM D20, both the ASF driver and the peripheral itself.
+					This document describes how to use the Interrupts on the SAM D20,
+					both the ASF driver and the peripheral itself.
 				</info>
 
 				<build type="include-path" value="." />
-				<build type="include-path" value="system_interrupt_01"/>
+				<build type="include-path" value="system_interrupt_samd20"/>
 
 				<build type="c-source" value="system_interrupt.c"/>
 
 				<build type="header-file" subtype="api" value="system_interrupt.h"/>
-				<build type="header-file" value="system_interrupt_01/system_interrupt_public.h"/>
-				<build type="header-file" value="system_interrupt_01/system_interrupt_features.h"/>
+				<build type="header-file" value="system_interrupt_01.h"/>
+				<build type="header-file" value="system_interrupt_samd20/system_interrupt_features.h"/>
 
 				<build type="header-file" value="quick_start/qs_system_interrupt.h"/>
 
-				<build type="doxygen-entry-point" value="asfdoc_samd20_system_interrupt_group"/>
+				<build type="doxygen-entry-point" value="asfdoc_samd2x_system_interrupt_group"/>
 				<build type="doxygen-example-path" value="quick_start"/>
 
 				<device-support value="samd20"/>
@@ -67,21 +68,22 @@
 				</info>
 
 				<info type="description" value="pdf">
-					This document describes how to use the Interrupts on the SAM D21, both the ASF driver and the peripheral itself.
+					This document describes how to use the Interrupts on the SAM D21,
+					both the ASF driver and the peripheral itself.
 				</info>
 
 				<build type="include-path" value="." />
-				<build type="include-path" value="system_interrupt_02"/>
+				<build type="include-path" value="system_interrupt_samd21"/>
 
 				<build type="c-source" value="system_interrupt.c"/>
 
 				<build type="header-file" subtype="api" value="system_interrupt.h"/>
-				<build type="header-file" value="system_interrupt_02/system_interrupt_public.h"/>
-				<build type="header-file" value="system_interrupt_02/system_interrupt_features.h"/>
+				<build type="header-file" value="system_interrupt_02.h"/>
+				<build type="header-file" value="system_interrupt_samd21/system_interrupt_features.h"/>
 
 				<build type="header-file" value="quick_start/qs_system_interrupt.h"/>
 
-				<build type="doxygen-entry-point" value="asfdoc_samd20_system_interrupt_group"/>
+				<build type="doxygen-entry-point" value="asfdoc_samd2x_system_interrupt_group"/>
 				<build type="doxygen-example-path" value="quick_start"/>
 
 				<device-support value="samd21"/>

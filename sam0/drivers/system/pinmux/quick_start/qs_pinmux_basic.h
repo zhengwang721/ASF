@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 PINMUX Driver Quick Start
+ * \brief SAM D2x PINMUX Driver Quick Start
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_samd20_system_pinmux_basic_use_case Quick Start Guide for SYSTEM PINMUX - Basic
+ * \page asfdoc_samd2x_system_pinmux_basic_use_case Quick Start Guide for SYSTEM PINMUX - Basic
  *
  * In this use case, the PINMUX module is configured for:
  *  \li One pin in input mode, with pull-up enabled, connected to the GPIO
@@ -54,18 +54,18 @@
  * power by only sampling the physical pin state when the user application
  * attempts to read it.
  *
- * \section asfdoc_samd20_system_pinmux_basic_use_case_setup Setup
+ * \section asfdoc_samd2x_system_pinmux_basic_use_case_setup Setup
  *
- * \subsection asfdoc_samd20_system_pinmux_basic_use_case_setup_prereq Prerequisites
+ * \subsection asfdoc_samd2x_system_pinmux_basic_use_case_setup_prereq Prerequisites
  * There are no special setup requirements for this use-case.
  *
- * \section asfdoc_samd20_system_pinmux_basic_use_case_use_main Use Case
+ * \section asfdoc_samd2x_system_pinmux_basic_use_case_use_main Use Case
  *
- * \subsection asfdoc_samd20_system_pinmux_basic_use_case_code Code
+ * \subsection asfdoc_samd2x_system_pinmux_basic_use_case_code Code
  * Copy-paste the following code to your user application:
  * \snippet qs_pinmux_basic.c main
  *
- * \subsection asfdoc_samd20_system_pinmux_basic_use_case_flow Workflow
+ * \subsection asfdoc_samd2x_system_pinmux_basic_use_case_flow Workflow
  * -# Create a PINMUX module pin configuration struct, which can be filled out
  *    to adjust the configuration of a single port pin.
  *  \snippet qs_pinmux_basic.c pinmux_config

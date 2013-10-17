@@ -4,6 +4,6 @@
 #define FEATURE_SYSTEM_CLOCK_DPLL
 
 #include "clock.h"
-#include "clock_public.h"
+#include "clock_02.h"
 
 #endif

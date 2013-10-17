@@ -62,15 +62,15 @@
 				</info>
 
 				<build type="include-path" value="."/>
-				<build type="include-path" value="pinmux_01/"/>
+				<build type="include-path" value="pinmux_samd21/"/>
 				<build type="header-file" subtype="api" value="pinmux.h"/>
 				<build type="c-source" value="pinmux.c"/>
 
-				<build type="header-file" value="pinmux_01/pinmux_features.h"/>
-				<build type="header-file" subtype="api" value="pinmux_01/pinmux_public.h"/>
-				<build type="c-source" value="pinmux_01/pinmux_public.c"/>
+				<build type="header-file" value="pinmux_samd21/pinmux_features.h"/>
+				<build type="header-file" subtype="api" value="pinmux_01.h"/>
+				<build type="c-source" value="pinmux_01.c"/>
 
-				<build type="doxygen-entry-point" value="asfdoc_samd20_system_pinmux_group"/>
+				<build type="doxygen-entry-point" value="asfdoc_samd2x_system_pinmux_group"/>
 				<build type="doxygen-example-path" value="quick_start"/>
 
 				<build type="header-file" value="quick_start/qs_pinmux_basic.h"/>

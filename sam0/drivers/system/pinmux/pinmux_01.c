@@ -1,4 +1,4 @@
-#include "pinmux_public.h"
+#include "pinmux_01.h"
 
 /**
  * \brief Configures the output slew rate mode for a group of pins.
