@@ -56,7 +56,6 @@
 
 #include "return_val.h"
 #include "mac_build_config.h"
-#include "app_config.h"
 
 /* === Macros =============================================================== */
 
