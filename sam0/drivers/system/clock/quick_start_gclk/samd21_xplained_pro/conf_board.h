@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D20 Generic Clock Driver Quick Start
+ * \brief SAM D20 Xplained PRO board configuration.
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,66 +40,8 @@
  * \asf_license_stop
  *
  */
-#include <asf.h>
 
-void configure_gclock_generator(void);
-void configure_gclock_channel(void);
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-//! [setup]
-void configure_gclock_generator(void)
-{
-//! [setup_1]
-	struct system_gclk_gen_config gclock_gen_conf;
-//! [setup_1]
-//! [setup_2]
-	system_gclk_gen_get_config_defaults(&gclock_gen_conf);
-//! [setup_2]
-
-//! [setup_3]
-	gclock_gen_conf.source_clock    = SYSTEM_CLOCK_SOURCE_OSC8M;
-	gclock_gen_conf.division_factor = 128;
-//! [setup_3]
-//! [setup_4]
-	system_gclk_gen_set_config(GCLK_GENERATOR_1, &gclock_gen_conf);
-//! [setup_4]
-
-//! [setup_5]
-	system_gclk_gen_enable(GCLK_GENERATOR_1);
-//! [setup_5]
-}
-
-void configure_gclock_channel(void)
-{
-//! [setup_6]
-	struct system_gclk_chan_config gclk_chan_conf;
-//! [setup_6]
-//! [setup_7]
-	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
-//! [setup_7]
-
-//! [setup_8]
-	gclk_chan_conf.source_generator = GCLK_GENERATOR_1;
-//! [setup_8]
-//! [setup_9]
-	system_gclk_chan_set_config(TC3_GCLK_ID, &gclk_chan_conf);
-//! [setup_9]
-
-//! [setup_10]
-	system_gclk_chan_enable(TC3_GCLK_ID);
-//! [setup_10]
-}
-//! [setup]
-
-int main(void)
-{
-	//! [setup_init]
-	configure_gclock_generator();
-	configure_gclock_channel();
-	//! [setup_init]
-
-	//! [main]
-	while (true) {
-		/* Nothing to do */
-	}
-	//! [main]
-}
+#endif /* CONF_BOARD_H_INCLUDED */
