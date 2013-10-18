@@ -88,14 +88,13 @@
 #include "qmm.h"
 #include "ieee_const.h"
 #include "mac_api.h"
-#include "mac_msg_const.h"
-#include "mac_msg_types.h"
 #include "stack_config.h"
 #include "mac.h"
 #include "mac_build_config.h"
 #include "pal.h"
 #include "mac_internal.h"
-
+#include "mac_msg_types.h"
+#include "mac_msg_const.h"
 /* === Types =============================================================== */
 
 /* === Macros ============================================================== */

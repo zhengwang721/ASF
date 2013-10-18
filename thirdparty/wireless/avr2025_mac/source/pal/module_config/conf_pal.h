@@ -243,5 +243,7 @@
  */
 #define LEAVE_TRX_REGION()   extint_chan_enable_callback(AT86RFX_IRQ_CHAN, EXTINT_CALLBACK_TYPE_DETECT); }
 
+#define AT86RFX_SPI_BAUDRATE         (4000000)
+
 #endif /* SAMD20 */
 #endif /* CONF_PAL_H_INCLUDED */
