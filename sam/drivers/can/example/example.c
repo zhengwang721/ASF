@@ -87,19 +87,21 @@
 #include "asf.h"
 
 #define STRING_EOL    "\r"
-
 #define STRING_HEADER "-- CAN Example --\r\n" \
-                      "-- "BOARD_NAME" --\r\n" \
-                      "-- Compiled: "__DATE__" "__TIME__" --"STRING_EOL
+		"-- "BOARD_NAME" --\r\n" \
+		"-- Compiled: "__DATE__" "__TIME__" --"STRING_EOL
 
-#define CAN_MSG_TOGGLE_LED_0        0x11223344
-#define CAN_MSG_DUMMY_DATA          0x55AAAA55
+#define CAN_COMM_RXMB_ID    0
+#define CAN_COMM_TXMB_ID    1
+#define CAN_TRANSFER_ID     7
+#define CAN_TX_PRIO         15
+#define CAN_MSG_DUMMY_DATA  0x55AAAA55u
 
 /** CAN frame max data length */
 #define MAX_CAN_FRAME_DATA_LEN      8
 
-/** CAN1 Transfer mailbox structure */
-can_mb_conf_t can1_mailbox;
+/** Transfer mailbox structure */
+can_mb_conf_t tx_mailbox, rx_mailbox;
 
 /** Receive status */
 volatile uint32_t g_ul_recv_status = 0;
@@ -111,18 +113,12 @@ void CAN1_Handler(void)
 {
 	uint32_t ul_status;
 
-	ul_status = can_get_status(CAN1);
-	if (ul_status & GLOBAL_MAILBOX_MASK) {
-		for (uint8_t i = 0; i < CANMB_NUMBER; i++) {
-			ul_status = can_mailbox_get_status(CAN1, i);
-			if ((ul_status & CAN_MSR_MRDY) == CAN_MSR_MRDY) {
-				can1_mailbox.ul_mb_idx = i;
-				can1_mailbox.ul_status = ul_status;
-				can_mailbox_read(CAN1, &can1_mailbox);
-				g_ul_recv_status = 1;
-				break;
-			}
-		}
+	ul_status = can_mailbox_get_status(CAN1, 0);
+	if (ul_status & CAN_MSR_MRDY) {
+		rx_mailbox.ul_status = ul_status;
+		can_mailbox_read(CAN1, &rx_mailbox);
+		puts("Got CAN message, press 'r' to display\r");
+		g_ul_recv_status = 1;
 	}
 }
 
@@ -133,11 +129,10 @@ void CAN1_Handler(void)
  */
 static void decode_can_msg(can_mb_conf_t *p_mailbox)
 {
-	uint32_t ul_led_Ctrl = p_mailbox->ul_datal;
-
-	puts("CAN message:" STRING_EOL);
-	if (ul_led_Ctrl == CAN_MSG_TOGGLE_LED_0) {
-		puts("  Toggle LED 0" STRING_EOL);
+	if (p_mailbox->ul_datal != CAN_MSG_DUMMY_DATA) {
+		puts("Wrong message header\r");
+	} else {
+		printf("%d\r\n", p_mailbox->ul_datah);
 	}
 }
 
@@ -161,10 +156,6 @@ static void reset_mailbox_conf(can_mb_conf_t *p_mailbox)
 	p_mailbox->ul_datah = 0;
 }
 
-#define CAN_COMM_MB_IDX    0
-#define CAN_TRANSFER_ID    0x07
-#define CAN1_TX_PRIO       15
-
 /**
  *  Configure UART for debug message output.
  */
@@ -187,7 +178,7 @@ static void configure_console(void)
  */
 int main(void)
 {
-	uint32_t ul_sysclk;
+	uint32_t ul_sysclk, cnt;
 	uint8_t uc_key;
 
 	/* Initialize the SAM system. */
@@ -209,67 +200,65 @@ int main(void)
 
 		/* Disable all CAN1 interrupts. */
 		can_disable_interrupt(CAN1, CAN_DISABLE_ALL_INTERRUPT_MASK);
-
-		/* Configure and enable interrupt of CAN1, as the tests will use receiver interrupt. */
-		NVIC_EnableIRQ(CAN1_IRQn);
-
 		can_reset_all_mailbox(CAN1);
 
-		puts("  t: Perform CAN Transmisson \r"
-				"  r: Perform CAN Reception \r");
+		/* Init CAN1 Mailbox 0 to Reception Mailbox. */
+		reset_mailbox_conf(&rx_mailbox);
+		rx_mailbox.ul_mb_idx = CAN_COMM_RXMB_ID;
+		rx_mailbox.uc_obj_type = CAN_MB_RX_MODE;
+		rx_mailbox.ul_id_msk = CAN_MAM_MIDvA_Msk | CAN_MAM_MIDvB_Msk;
+		rx_mailbox.ul_id = CAN_MID_MIDvA(CAN_TRANSFER_ID);
+		can_mailbox_init(CAN1, &rx_mailbox);
+
+		/* Init CAN1 Mailbox 1 to Transmit Mailbox. */
+		reset_mailbox_conf(&tx_mailbox);
+		tx_mailbox.ul_mb_idx = CAN_COMM_TXMB_ID;
+		tx_mailbox.uc_obj_type = CAN_MB_TX_MODE;
+		tx_mailbox.uc_tx_prio = CAN_TX_PRIO;
+		tx_mailbox.uc_id_ver = 0;
+		tx_mailbox.ul_id_msk = 0;
+		can_mailbox_init(CAN1, &tx_mailbox);
+
+		/* Write transmit information into mailbox. */
+		tx_mailbox.ul_id = CAN_MID_MIDvA(CAN_TRANSFER_ID);
+		tx_mailbox.ul_datal = CAN_MSG_DUMMY_DATA;
+		tx_mailbox.uc_length = MAX_CAN_FRAME_DATA_LEN;
+
+		/* Enable CAN1 mailbox interrupt. */
+		can_enable_interrupt(CAN1, 1 << CAN_COMM_RXMB_ID);
+		/* Configure and enable interrupt of CAN1. */
+		NVIC_EnableIRQ(CAN1_IRQn);
+
+		puts("\tt: Perform CAN Transmisson \r");
 
 		while (1) {
 			scanf("%c", (char *)&uc_key);
 
 			switch (uc_key) {
+			case 'R':
 			case 'r':
-				/* Init CAN1 Mailbox 0 to Reception Mailbox. */
-				puts("Init CAN1 Mailbox 0 to Reception Mailbox!");
-				reset_mailbox_conf(&can1_mailbox);
-				can1_mailbox.ul_mb_idx = CAN_COMM_MB_IDX;
-				can1_mailbox.uc_obj_type = CAN_MB_RX_MODE;
-				can1_mailbox.ul_id_msk = CAN_MAM_MIDvA_Msk | CAN_MAM_MIDvB_Msk;
-				can1_mailbox.ul_id = CAN_MID_MIDvA(CAN_TRANSFER_ID);
-				can_mailbox_init(CAN1, &can1_mailbox);
-
-				/* Enable CAN1 mailbox 0 interrupt. */
-				can_enable_interrupt(CAN1, CAN_IER_MB0);
-
-				while (!g_ul_recv_status) {
-				}
-				g_ul_recv_status = 0;
-				if ((can1_mailbox.ul_datal == CAN_MSG_TOGGLE_LED_0) &&
-					(can1_mailbox.uc_length == MAX_CAN_FRAME_DATA_LEN)) {
-					puts("Test passed" STRING_EOL);
-					decode_can_msg(&can1_mailbox);
+				if (!g_ul_recv_status) {
+					puts("No CAN message\r");
 				} else {
-					puts("Test ERROR" STRING_EOL);
+					g_ul_recv_status = 0;
+					decode_can_msg(&rx_mailbox);
 				}
 				break;
 
+			case 'T':
 			case 't':
-				/* Init CAN1 Mailbox 0 to Transmit Mailbox. */
-				puts("Init CAN1 Mailbox 0 to Transmission Mailbox!");
-				reset_mailbox_conf(&can1_mailbox);
-				can1_mailbox.ul_mb_idx = CAN_COMM_MB_IDX;
-				can1_mailbox.uc_obj_type = CAN_MB_TX_MODE;
-				can1_mailbox.uc_tx_prio = CAN1_TX_PRIO;
-				can1_mailbox.uc_id_ver = 0;
-				can1_mailbox.ul_id_msk = 0;
-				can_mailbox_init(CAN1, &can1_mailbox);
-
-				/* Write transmit information into mailbox. */
-				can1_mailbox.ul_id = CAN_MID_MIDvA(CAN_TRANSFER_ID);
-				can1_mailbox.ul_datal = CAN_MSG_TOGGLE_LED_0;
-				can1_mailbox.ul_datah = CAN_MSG_DUMMY_DATA;
-				can1_mailbox.uc_length = MAX_CAN_FRAME_DATA_LEN;
-				can_mailbox_write(CAN1, &can1_mailbox);
-
-				/* Send out the information in the mailbox. */
-				can_global_send_transfer_cmd(CAN1, CAN_TCR_MB0);
+				if (can_get_status(CAN1) & CAN_SR_TBSY) {
+					puts("Transmission is busy\r");
+				} else {
+					tx_mailbox.ul_datah = cnt++;
+					can_mailbox_write(CAN1, &tx_mailbox);
+					/* Send out the information in the mailbox. */
+					can_global_send_transfer_cmd(CAN1, CAN_TCR_MB1);
+				}
 				break;
 
 			default:
+				puts("Unknown input\r");
 				break;
 			}
 		}
