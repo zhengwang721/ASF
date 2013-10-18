@@ -152,6 +152,14 @@
 /* @} */
 
 /**
+ * \name Voltage Monitor pins definition
+ * @{
+ */
+#define 5V_SENSE_GPIO    PIO_PB23_IDX
+#define VDD_SENSE_GPIO   PIO_PB31_IDX
+/* @} */
+
+/**
  * \name LCD Backlight
  */
 //@{
