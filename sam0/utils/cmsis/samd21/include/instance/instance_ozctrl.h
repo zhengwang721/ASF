@@ -46,11 +46,7 @@
 
 /* ========== Register definition for OZCTRL peripheral ========== */
 #if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-#define REG_OZCTRL_CTRL            (0x42005800U) /**< \brief (OZCTRL) Control */
-#define REG_OZCTRL_DIR             (0x42005802U) /**< \brief (OZCTRL) Wire Direction */
 #else
-#define REG_OZCTRL_CTRL            (*(RwReg8 *)0x42005800U) /**< \brief (OZCTRL) Control */
-#define REG_OZCTRL_DIR             (*(RwReg16*)0x42005802U) /**< \brief (OZCTRL) Wire Direction */
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 /* ========== Instance parameters for OZCTRL peripheral ========== */

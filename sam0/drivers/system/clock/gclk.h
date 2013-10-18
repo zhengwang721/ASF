@@ -44,7 +44,7 @@
 #define SYSTEM_CLOCK_GCLK_H_INCLUDED
 
 /**
- * \addtogroup asfdoc_samd20_system_clock_group
+ * \addtogroup asfdoc_samd2x_system_clock_group
  *
  * @{
  */

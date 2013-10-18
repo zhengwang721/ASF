@@ -1354,7 +1354,7 @@ typedef union {
 #define USB_HOST_PCKSIZE_AUTO_ZLP   (0x1u << USB_HOST_PCKSIZE_AUTO_ZLP_Pos)
 #define USB_HOST_PCKSIZE_MASK       0xFFFFFFFFu  /**< \brief (USB_HOST_PCKSIZE) MASK Register */
 
-/* -------- USB_DEVICE_EXTREG : (USB Offset: 0x008) (R/W 16) DEVICE DEVICE_DESC_BANK Endpoint Bank, Extended Register -------- */
+/* -------- USB_DEVICE_EXTREG : (USB Offset: 0x008) (R/W 16) DEVICE DEVICE_DESC_BANK Endpoint Bank, Extended -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
@@ -1366,7 +1366,7 @@ typedef union {
 } USB_DEVICE_EXTREG_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
-#define USB_DEVICE_EXTREG_OFFSET    0x008        /**< \brief (USB_DEVICE_EXTREG offset) DEVICE_DESC_BANK Endpoint Bank, Extended Register */
+#define USB_DEVICE_EXTREG_OFFSET    0x008        /**< \brief (USB_DEVICE_EXTREG offset) DEVICE_DESC_BANK Endpoint Bank, Extended */
 
 #define USB_DEVICE_EXTREG_SUBPID_Pos 0            /**< \brief (USB_DEVICE_EXTREG) SUBPID field send with extended token */
 #define USB_DEVICE_EXTREG_SUBPID_Msk (0xFu << USB_DEVICE_EXTREG_SUBPID_Pos)
@@ -1376,7 +1376,7 @@ typedef union {
 #define USB_DEVICE_EXTREG_VARIABLE(value) ((USB_DEVICE_EXTREG_VARIABLE_Msk & ((value) << USB_DEVICE_EXTREG_VARIABLE_Pos)))
 #define USB_DEVICE_EXTREG_MASK      0x7FFFu      /**< \brief (USB_DEVICE_EXTREG) MASK Register */
 
-/* -------- USB_HOST_EXTREG : (USB Offset: 0x008) (R/W 16) HOST HOST_DESC_BANK Host Bank, Extended Register -------- */
+/* -------- USB_HOST_EXTREG : (USB Offset: 0x008) (R/W 16) HOST HOST_DESC_BANK Host Bank, Extended -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
@@ -1388,7 +1388,7 @@ typedef union {
 } USB_HOST_EXTREG_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
-#define USB_HOST_EXTREG_OFFSET      0x008        /**< \brief (USB_HOST_EXTREG offset) HOST_DESC_BANK Host Bank, Extended Register */
+#define USB_HOST_EXTREG_OFFSET      0x008        /**< \brief (USB_HOST_EXTREG offset) HOST_DESC_BANK Host Bank, Extended */
 
 #define USB_HOST_EXTREG_SUBPID_Pos  0            /**< \brief (USB_HOST_EXTREG) SUBPID field send with extended token */
 #define USB_HOST_EXTREG_SUBPID_Msk  (0xFu << USB_HOST_EXTREG_SUBPID_Pos)
@@ -1503,7 +1503,7 @@ typedef union {
 typedef struct {
   __IO USB_DEVICE_ADDR_Type      ADDR;        /**< \brief Offset: 0x000 (R/W 32) DEVICE_DESC_BANK Endpoint Bank, Adress of Data Buffer */
   __IO USB_DEVICE_PCKSIZE_Type   PCKSIZE;     /**< \brief Offset: 0x004 (R/W 32) DEVICE_DESC_BANK Endpoint Bank, Packet Size */
-  __IO USB_DEVICE_EXTREG_Type    EXTREG;      /**< \brief Offset: 0x008 (R/W 16) DEVICE_DESC_BANK Endpoint Bank, Extended Register */
+  __IO USB_DEVICE_EXTREG_Type    EXTREG;      /**< \brief Offset: 0x008 (R/W 16) DEVICE_DESC_BANK Endpoint Bank, Extended */
   __IO USB_DEVICE_STATUS_BK_Type STATUS_BK;   /**< \brief Offset: 0x00A (R/W  8) DEVICE_DESC_BANK Enpoint Bank, Status of Bank */
        RoReg8                    Reserved1[0x5];
 } UsbDeviceDescBank;
@@ -1514,7 +1514,7 @@ typedef struct {
 typedef struct {
   __IO USB_HOST_ADDR_Type        ADDR;        /**< \brief Offset: 0x000 (R/W 32) HOST_DESC_BANK Host Bank, Adress of Data Buffer */
   __IO USB_HOST_PCKSIZE_Type     PCKSIZE;     /**< \brief Offset: 0x004 (R/W 32) HOST_DESC_BANK Host Bank, Packet Size */
-  __IO USB_HOST_EXTREG_Type      EXTREG;      /**< \brief Offset: 0x008 (R/W 16) HOST_DESC_BANK Host Bank, Extended Register */
+  __IO USB_HOST_EXTREG_Type      EXTREG;      /**< \brief Offset: 0x008 (R/W 16) HOST_DESC_BANK Host Bank, Extended */
   __IO USB_HOST_STATUS_BK_Type   STATUS_BK;   /**< \brief Offset: 0x00A (R/W  8) HOST_DESC_BANK Host Bank, Status of Bank */
        RoReg8                    Reserved1[0x1];
   __IO USB_HOST_CTRL_PIPE_Type   CTRL_PIPE;   /**< \brief Offset: 0x00C (R/W 16) HOST_DESC_BANK Host Bank, Host Control Pipe */
@@ -1627,6 +1627,10 @@ typedef struct { /* USB is Host */
        UsbHostDescBank           HostDescBank[2]; /**< \brief Offset: 0x000 UsbHostDescBank groups */
 } UsbHostDescriptor;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
+
+#ifdef __GNUC__
+ #define SECTION_USB_DESCRIPTOR       
+#endif
 
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {

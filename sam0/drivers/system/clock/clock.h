@@ -44,9 +44,9 @@
 #define SYSTEM_CLOCK_H_INCLUDED
 
 /**
- * \defgroup asfdoc_samd20_system_clock_group SAM D20 System Clock Management Driver (SYSTEM CLOCK)
+ * \defgroup asfdoc_samd2x_system_clock_group SAM D2x System Clock Management Driver (SYSTEM CLOCK)
  *
- * This driver for SAM D20 devices provides an interface for the configuration
+ * This driver for SAM D2x devices provides an interface for the configuration
  * and management of the device's clocking related functions. This includes
  * the various clock sources, bus clocks and generic clocks within the device,
  * with functions to manage the enabling, disabling, source selection and
@@ -59,20 +59,20 @@
  * - SYSCTRL (Clock Source Control)
  *
  * The outline of this documentation is as follows:
- *  - \ref asfdoc_samd20_system_clock_prerequisites
- *  - \ref asfdoc_samd20_system_clock_module_overview
- *  - \ref asfdoc_samd20_system_clock_special_considerations
- *  - \ref asfdoc_samd20_system_clock_extra_info
- *  - \ref asfdoc_samd20_system_clock_examples
- *  - \ref asfdoc_samd20_system_clock_api_overview
+ *  - \ref asfdoc_samd2x_system_clock_prerequisites
+ *  - \ref asfdoc_samd2x_system_clock_module_overview
+ *  - \ref asfdoc_samd2x_system_clock_special_considerations
+ *  - \ref asfdoc_samd2x_system_clock_extra_info
+ *  - \ref asfdoc_samd2x_system_clock_examples
+ *  - \ref asfdoc_samd2x_system_clock_api_overview
  *
  *
- * \section asfdoc_samd20_system_clock_prerequisites Prerequisites
+ * \section asfdoc_samd2x_system_clock_prerequisites Prerequisites
  *
  * There are no prerequisites for this module.
  *
  *
- * \section asfdoc_samd20_system_clock_module_overview Module Overview
+ * \section asfdoc_samd2x_system_clock_module_overview Module Overview
  * The SAM D20 devices contain a sophisticated clocking system, which is designed
  * to give the maximum flexibility to the user application. This system allows
  * a system designer to tune the performance and power consumption of the device
@@ -82,7 +82,7 @@
  * This driver provides a set of functions for the configuration and management
  * of the various clock related functionality within the device.
  *
- * \subsection asfdoc_samd20_system_clock_module_overview_clock_sources Clock Sources
+ * \subsection asfdoc_samd2x_system_clock_module_overview_clock_sources Clock Sources
  * The SAM D20 devices have a number of master clock source modules, each of
  * which being capable of producing a stabilized output frequency which can then
  * be fed into the various peripherals and modules within the device.
@@ -90,16 +90,16 @@
  * Possible clock source modules include internal R/C oscillators, internal
  * DFLL modules, as well as external crystal oscillators and/or clock inputs.
  *
- * \subsection asfdoc_samd20_system_clock_module_overview_cpu_clock CPU / Bus Clocks
+ * \subsection asfdoc_samd2x_system_clock_module_overview_cpu_clock CPU / Bus Clocks
  * The CPU and AHB/APBx buses are clocked by the same physical clock source
  * (referred in this module as the Main Clock), however the APBx buses may
  * have additional prescaler division ratios set to give each peripheral bus a
  * different clock speed.
  *
  * The general main clock tree for the CPU and associated buses is shown in
- * \ref asfdoc_samd20_system_clock_module_clock_tree "the figure below".
+ * \ref asfdoc_samd2x_system_clock_module_clock_tree "the figure below".
  *
- * \anchor asfdoc_samd20_system_clock_module_clock_tree
+ * \anchor asfdoc_samd2x_system_clock_module_clock_tree
  * \dot
  * digraph overview {
  *   rankdir=LR;
@@ -128,14 +128,14 @@
  * }
  * \enddot
  *
- * \subsection asfdoc_samd20_system_clock_module_overview_clock_masking Clock Masking
+ * \subsection asfdoc_samd2x_system_clock_module_overview_clock_masking Clock Masking
  * To save power, the input clock to one or more peripherals on the AHB and APBx
  * busses can be masked away - when masked, no clock is passed into the module.
  * Disabling of clocks of unused modules will prevent all access to the masked
  * module, but will reduce the overall device power consumption.
  *
- * \subsection asfdoc_samd20_system_clock_module_overview_gclk Generic Clocks
- * Within the SAM D20 devices are a number of Generic Clocks; these are used to
+ * \subsection asfdoc_samd2x_system_clock_module_overview_gclk Generic Clocks
+ * Within the SAM D2x devices are a number of Generic Clocks; these are used to
  * provide clocks to the various peripheral clock domains in the device in a
  * standardized manner. One or more master source clocks can be selected as the
  * input clock to a Generic Clock Generator, which can prescale down the input
@@ -147,7 +147,7 @@
  * generator to feed one or more channels, which can then be enabled or disabled
  * individually as required.
  *
- * \anchor asfdoc_samd20_system_clock_module_chain_overview
+ * \anchor asfdoc_samd2x_system_clock_module_chain_overview
  * \dot
  * digraph overview {
  *   rankdir=LR;
@@ -166,11 +166,11 @@
  * }
  * \enddot
  *
- * \subsubsection asfdoc_samd20_system_clock_module_chain_example Clock Chain Example
+ * \subsubsection asfdoc_samd2x_system_clock_module_chain_example Clock Chain Example
  * An example setup of a complete clock chain within the device is shown in
- * \ref asfdoc_samd20_system_clock_module_chain_example_fig "the figure below".
+ * \ref asfdoc_samd2x_system_clock_module_chain_example_fig "the figure below".
  *
- * \anchor asfdoc_samd20_system_clock_module_chain_example_fig
+ * \anchor asfdoc_samd2x_system_clock_module_chain_example_fig
  * \dot
  * digraph overview {
  *   rankdir=LR;
@@ -197,7 +197,7 @@
  * }
  * \enddot
  *
- * \subsubsection asfdoc_samd20_system_clock_module_overview_gclk_generators Generic Clock Generators
+ * \subsubsection asfdoc_samd2x_system_clock_module_overview_gclk_generators Generic Clock Generators
  * Each Generic Clock generator within the device can source its input clock
  * from one of the provided Source Clocks, and prescale the output for one or
  * more Generic Clock Channels in a one-to-many relationship. The generators
@@ -205,7 +205,7 @@
  * power usages and accuracies, which can be turned on and off individually to
  * disable the clocks to multiple peripherals as a group.
  *
- * \subsubsection asfdoc_samd20_system_clock_module_overview_gclk_channels Generic Clock Channels
+ * \subsubsection asfdoc_samd2x_system_clock_module_overview_gclk_channels Generic Clock Channels
  * To connect a Generic Clock Generator to a peripheral within the
  * device, a Generic Clock Channel is used. Each peripheral or
  * peripheral group has an associated Generic Clock Channel, which serves as the
@@ -213,27 +213,27 @@
  * module(s), the associated channel must be connected to a running Generic
  * Clock Generator and the channel enabled.
  *
- * \section asfdoc_samd20_system_clock_special_considerations Special Considerations
+ * \section asfdoc_samd2x_system_clock_special_considerations Special Considerations
  *
  * There are no special considerations for this module.
  *
  *
- * \section asfdoc_samd20_system_clock_extra_info Extra Information
+ * \section asfdoc_samd2x_system_clock_extra_info Extra Information
  *
- * For extra information see \ref asfdoc_samd20_system_clock_extra. This includes:
- *  - \ref asfdoc_samd20_system_clock_extra_acronyms
- *  - \ref asfdoc_samd20_system_clock_extra_dependencies
- *  - \ref asfdoc_samd20_system_clock_extra_errata
- *  - \ref asfdoc_samd20_system_clock_extra_history
+ * For extra information see \ref asfdoc_samd2x_system_clock_extra. This includes:
+ *  - \ref asfdoc_samd2x_system_clock_extra_acronyms
+ *  - \ref asfdoc_samd2x_system_clock_extra_dependencies
+ *  - \ref asfdoc_samd2x_system_clock_extra_errata
+ *  - \ref asfdoc_samd2x_system_clock_extra_history
  *
  *
- * \section asfdoc_samd20_system_clock_examples Examples
+ * \section asfdoc_samd2x_system_clock_examples Examples
  *
  * For a list of examples related to this driver, see
- * \ref asfdoc_samd20_system_clock_exqsg.
+ * \ref asfdoc_samd2x_system_clock_exqsg.
  *
  *
- * \section asfdoc_samd20_system_clock_api_overview API Overview
+ * \section asfdoc_samd2x_system_clock_api_overview API Overview
  * @{
  */
 
@@ -1161,9 +1161,9 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  */
 
 /**
- * \page asfdoc_samd20_system_clock_extra Extra Information for SYSTEM CLOCK Driver
+ * \page asfdoc_samd2x_system_clock_extra Extra Information for SYSTEM CLOCK Driver
  *
- * \section asfdoc_samd20_system_clock_extra_acronyms Acronyms
+ * \section asfdoc_samd2x_system_clock_extra_acronyms Acronyms
  * Below is a table listing the acronyms used in this module, along with their
  * intended meanings.
  *
@@ -1215,13 +1215,13 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  * </table>
  *
  *
- * \section asfdoc_samd20_system_clock_extra_dependencies Dependencies
+ * \section asfdoc_samd2x_system_clock_extra_dependencies Dependencies
  * This driver has the following dependencies:
  *
  *  - None
  *
  *
- * \section asfdoc_samd20_system_clock_extra_errata Errata
+ * \section asfdoc_samd2x_system_clock_extra_errata Errata
  *	<tr>
  *	<td>
  *	 \li This driver implements workaround for errata 10558
@@ -1241,7 +1241,7 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *
  *
  *
- * \section asfdoc_samd20_system_clock_extra_history Module History
+ * \section asfdoc_samd2x_system_clock_extra_history Module History
  * An overview of the module history is presented in the table below, with
  * details on the enhancements and fixes made to the module since its first
  * release. The current version of this corresponds to the newest version in
@@ -1288,18 +1288,18 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  */
 
 /**
- * \page asfdoc_samd20_system_clock_exqsg Examples for System Clock Driver
+ * \page asfdoc_samd2x_system_clock_exqsg Examples for System Clock Driver
  *
  * This is a list of the available Quick Start guides (QSGs) and example
- * applications for \ref asfdoc_samd20_system_clock_group. QSGs are simple
+ * applications for \ref asfdoc_samd2x_system_clock_group. QSGs are simple
  * examples with step-by-step instructions to configure and use this driver in
  * a selection of use cases. Note that QSGs can be compiled as a standalone
  * application or be added to the user application.
  *
- *  - \subpage asfdoc_samd20_system_clock_basic_use_case
- *  - \subpage asfdoc_samd20_system_gclk_basic_use_case
+ *  - \subpage asfdoc_samd2x_system_clock_basic_use_case
+ *  - \subpage asfdoc_samd2x_system_gclk_basic_use_case
  *
- * \page asfdoc_samd20_system_clock_document_revision_history Document Revision History
+ * \page asfdoc_samd2x_system_clock_document_revision_history Document Revision History
  *
  * <table>
  *	<tr>

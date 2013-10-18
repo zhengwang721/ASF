@@ -659,12 +659,14 @@ typedef union {
 #define   DMAC_CHCTRLB_EVACT_CBLOCK_Val   0x3u   /**< \brief (DMAC_CHCTRLB) Conditional block transfer */
 #define   DMAC_CHCTRLB_EVACT_SUSPEND_Val  0x4u   /**< \brief (DMAC_CHCTRLB) Channel suspend operation */
 #define   DMAC_CHCTRLB_EVACT_RESUME_Val   0x5u   /**< \brief (DMAC_CHCTRLB) Channel resume operation */
+#define   DMAC_CHCTRLB_EVACT_SSKIP_Val    0x6u   /**< \brief (DMAC_CHCTRLB) Skip next block suspend action */
 #define DMAC_CHCTRLB_EVACT_NOACT    (DMAC_CHCTRLB_EVACT_NOACT_Val  << DMAC_CHCTRLB_EVACT_Pos)
 #define DMAC_CHCTRLB_EVACT_TRIG     (DMAC_CHCTRLB_EVACT_TRIG_Val   << DMAC_CHCTRLB_EVACT_Pos)
 #define DMAC_CHCTRLB_EVACT_CTRIG    (DMAC_CHCTRLB_EVACT_CTRIG_Val  << DMAC_CHCTRLB_EVACT_Pos)
 #define DMAC_CHCTRLB_EVACT_CBLOCK   (DMAC_CHCTRLB_EVACT_CBLOCK_Val << DMAC_CHCTRLB_EVACT_Pos)
 #define DMAC_CHCTRLB_EVACT_SUSPEND  (DMAC_CHCTRLB_EVACT_SUSPEND_Val << DMAC_CHCTRLB_EVACT_Pos)
 #define DMAC_CHCTRLB_EVACT_RESUME   (DMAC_CHCTRLB_EVACT_RESUME_Val << DMAC_CHCTRLB_EVACT_Pos)
+#define DMAC_CHCTRLB_EVACT_SSKIP    (DMAC_CHCTRLB_EVACT_SSKIP_Val  << DMAC_CHCTRLB_EVACT_Pos)
 #define DMAC_CHCTRLB_EVIE_Pos       3            /**< \brief (DMAC_CHCTRLB) Channel Event Input Enable */
 #define DMAC_CHCTRLB_EVIE           (0x1u << DMAC_CHCTRLB_EVIE_Pos)
 #define DMAC_CHCTRLB_EVOE_Pos       4            /**< \brief (DMAC_CHCTRLB) Channel Event Output Enable */
@@ -991,6 +993,10 @@ typedef struct {
 #endif
 ;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
+
+#ifdef __GNUC__
+ #define SECTION_DMAC_DESCRIPTOR      
+#endif
 
 /*@}*/
 

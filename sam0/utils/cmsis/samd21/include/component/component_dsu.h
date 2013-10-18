@@ -71,6 +71,7 @@ typedef union {
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #define DSU_CTRL_OFFSET             0x0000       /**< \brief (DSU_CTRL offset) Control */
+#define DSU_CTRL_RESETVALUE         0x00         /**< \brief (DSU_CTRL reset_value) Control */
 
 #define DSU_CTRL_SWRST_Pos          0            /**< \brief (DSU_CTRL) Software Reset */
 #define DSU_CTRL_SWRST              (0x1u << DSU_CTRL_SWRST_Pos)
@@ -102,6 +103,7 @@ typedef union {
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #define DSU_STATUSA_OFFSET          0x0001       /**< \brief (DSU_STATUSA offset) Status A */
+#define DSU_STATUSA_RESETVALUE      0x00         /**< \brief (DSU_STATUSA reset_value) Status A */
 
 #define DSU_STATUSA_DONE_Pos        0            /**< \brief (DSU_STATUSA) Done */
 #define DSU_STATUSA_DONE            (0x1u << DSU_STATUSA_DONE_Pos)
@@ -148,7 +150,7 @@ typedef union {
 #define DSU_STATUSB_HPE             (0x1u << DSU_STATUSB_HPE_Pos)
 #define DSU_STATUSB_MASK            0x1Fu        /**< \brief (DSU_STATUSB) MASK Register */
 
-/* -------- DSU_STATUSC : (DSU Offset: 0x0003) (R/   8) Status Register C -------- */
+/* -------- DSU_STATUSC : (DSU Offset: 0x0003) (R/   8) Status C -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
@@ -159,8 +161,8 @@ typedef union {
 } DSU_STATUSC_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
-#define DSU_STATUSC_OFFSET          0x0003       /**< \brief (DSU_STATUSC offset) Status Register C */
-#define DSU_STATUSC_RESETVALUE      0x00         /**< \brief (DSU_STATUSC reset_value) Status Register C */
+#define DSU_STATUSC_OFFSET          0x0003       /**< \brief (DSU_STATUSC offset) Status C */
+#define DSU_STATUSC_RESETVALUE      0x00         /**< \brief (DSU_STATUSC reset_value) Status C */
 
 #define DSU_STATUSC_STATE_Pos       0            /**< \brief (DSU_STATUSC) State */
 #define DSU_STATUSC_STATE_Msk       (0x7u << DSU_STATUSC_STATE_Pos)
@@ -219,6 +221,7 @@ typedef union {
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #define DSU_DATA_OFFSET             0x000C       /**< \brief (DSU_DATA offset) Data */
+#define DSU_DATA_RESETVALUE         0x00000000   /**< \brief (DSU_DATA reset_value) Data */
 
 #define DSU_DATA_DATA_Pos           0            /**< \brief (DSU_DATA) Data */
 #define DSU_DATA_DATA_Msk           (0xFFFFFFFFu << DSU_DATA_DATA_Pos)
@@ -296,7 +299,7 @@ typedef union {
 #define DSU_DID_PROCESSOR_3         (DSU_DID_PROCESSOR_3_Val       << DSU_DID_PROCESSOR_Pos)
 #define DSU_DID_MASK                0xFFFFFFFFu  /**< \brief (DSU_DID) MASK Register */
 
-/* -------- DSU_DCFG : (DSU Offset: 0x00F0) (R/W 32) Device Configuration Register -------- */
+/* -------- DSU_DCFG : (DSU Offset: 0x00F0) (R/W 32) Device Configuration -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
@@ -306,8 +309,8 @@ typedef union {
 } DSU_DCFG_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
-#define DSU_DCFG_OFFSET             0x00F0       /**< \brief (DSU_DCFG offset) Device Configuration Register */
-#define DSU_DCFG_RESETVALUE         0x00000000   /**< \brief (DSU_DCFG reset_value) Device Configuration Register */
+#define DSU_DCFG_OFFSET             0x00F0       /**< \brief (DSU_DCFG offset) Device Configuration */
+#define DSU_DCFG_RESETVALUE         0x00000000   /**< \brief (DSU_DCFG reset_value) Device Configuration */
 
 #define DSU_DCFG_DCFG_Pos           0            /**< \brief (DSU_DCFG) Device Configuration */
 #define DSU_DCFG_DCFG_Msk           (0xFFFFFFFFu << DSU_DCFG_DCFG_Pos)
@@ -368,6 +371,7 @@ typedef union {
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #define DSU_MEMTYPE_OFFSET          0x1FCC       /**< \brief (DSU_MEMTYPE offset) Coresight ROM Table Memory Type */
+#define DSU_MEMTYPE_RESETVALUE      0x00000000   /**< \brief (DSU_MEMTYPE reset_value) Coresight ROM Table Memory Type */
 
 #define DSU_MEMTYPE_SMEMP_Pos       0            /**< \brief (DSU_MEMTYPE) System Memory Present */
 #define DSU_MEMTYPE_SMEMP           (0x1u << DSU_MEMTYPE_SMEMP_Pos)
@@ -386,6 +390,7 @@ typedef union {
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #define DSU_PID4_OFFSET             0x1FD0       /**< \brief (DSU_PID4 offset) Peripheral Identification 4 */
+#define DSU_PID4_RESETVALUE         0x00000000   /**< \brief (DSU_PID4 reset_value) Peripheral Identification 4 */
 
 #define DSU_PID4_JEPCC_Pos          0            /**< \brief (DSU_PID4) JEP-106 Continuation Code */
 #define DSU_PID4_JEPCC_Msk          (0xFu << DSU_PID4_JEPCC_Pos)
@@ -395,34 +400,34 @@ typedef union {
 #define DSU_PID4_FKBC(value)        ((DSU_PID4_FKBC_Msk & ((value) << DSU_PID4_FKBC_Pos)))
 #define DSU_PID4_MASK               0x000000FFu  /**< \brief (DSU_PID4) MASK Register */
 
-/* -------- DSU_PID5 : (DSU Offset: 0x1FD4) (R/  32) Peripheral Identification Register 5 -------- */
+/* -------- DSU_PID5 : (DSU Offset: 0x1FD4) (R/  32) Peripheral Identification 5 -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   uint32_t reg;                /*!< Type      used for register access              */
 } DSU_PID5_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
-#define DSU_PID5_OFFSET             0x1FD4       /**< \brief (DSU_PID5 offset) Peripheral Identification Register 5 */
+#define DSU_PID5_OFFSET             0x1FD4       /**< \brief (DSU_PID5 offset) Peripheral Identification 5 */
 #define DSU_PID5_MASK               0x00000000u  /**< \brief (DSU_PID5) MASK Register */
 
-/* -------- DSU_PID6 : (DSU Offset: 0x1FD8) (R/  32) Peripheral Identification Register 6 -------- */
+/* -------- DSU_PID6 : (DSU Offset: 0x1FD8) (R/  32) Peripheral Identification 6 -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   uint32_t reg;                /*!< Type      used for register access              */
 } DSU_PID6_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
-#define DSU_PID6_OFFSET             0x1FD8       /**< \brief (DSU_PID6 offset) Peripheral Identification Register 6 */
+#define DSU_PID6_OFFSET             0x1FD8       /**< \brief (DSU_PID6 offset) Peripheral Identification 6 */
 #define DSU_PID6_MASK               0x00000000u  /**< \brief (DSU_PID6) MASK Register */
 
-/* -------- DSU_PID7 : (DSU Offset: 0x1FDC) (R/  32) Peripheral Identification Register 7 -------- */
+/* -------- DSU_PID7 : (DSU Offset: 0x1FDC) (R/  32) Peripheral Identification 7 -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   uint32_t reg;                /*!< Type      used for register access              */
 } DSU_PID7_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
-#define DSU_PID7_OFFSET             0x1FDC       /**< \brief (DSU_PID7 offset) Peripheral Identification Register 7 */
+#define DSU_PID7_OFFSET             0x1FDC       /**< \brief (DSU_PID7 offset) Peripheral Identification 7 */
 #define DSU_PID7_MASK               0x00000000u  /**< \brief (DSU_PID7) MASK Register */
 
 /* -------- DSU_PID0 : (DSU Offset: 0x1FE0) (R/  32) Peripheral Identification 0 -------- */
@@ -437,6 +442,7 @@ typedef union {
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #define DSU_PID0_OFFSET             0x1FE0       /**< \brief (DSU_PID0 offset) Peripheral Identification 0 */
+#define DSU_PID0_RESETVALUE         0x00000000   /**< \brief (DSU_PID0 reset_value) Peripheral Identification 0 */
 
 #define DSU_PID0_PARTNBL_Pos        0            /**< \brief (DSU_PID0) Part Number Low */
 #define DSU_PID0_PARTNBL_Msk        (0xFFu << DSU_PID0_PARTNBL_Pos)
@@ -456,6 +462,7 @@ typedef union {
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #define DSU_PID1_OFFSET             0x1FE4       /**< \brief (DSU_PID1 offset) Peripheral Identification 1 */
+#define DSU_PID1_RESETVALUE         0x000000FC   /**< \brief (DSU_PID1 reset_value) Peripheral Identification 1 */
 
 #define DSU_PID1_PARTNBH_Pos        0            /**< \brief (DSU_PID1) Part Number High */
 #define DSU_PID1_PARTNBH_Msk        (0xFu << DSU_PID1_PARTNBH_Pos)
@@ -479,6 +486,7 @@ typedef union {
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #define DSU_PID2_OFFSET             0x1FE8       /**< \brief (DSU_PID2 offset) Peripheral Identification 2 */
+#define DSU_PID2_RESETVALUE         0x00000009   /**< \brief (DSU_PID2 reset_value) Peripheral Identification 2 */
 
 #define DSU_PID2_JEPIDCH_Pos        0            /**< \brief (DSU_PID2) JEP-106 Identity Code High */
 #define DSU_PID2_JEPIDCH_Msk        (0x7u << DSU_PID2_JEPIDCH_Pos)
@@ -599,23 +607,23 @@ typedef struct {
   __O  DSU_CTRL_Type             CTRL;        /**< \brief Offset: 0x0000 ( /W  8) Control */
   __IO DSU_STATUSA_Type          STATUSA;     /**< \brief Offset: 0x0001 (R/W  8) Status A */
   __I  DSU_STATUSB_Type          STATUSB;     /**< \brief Offset: 0x0002 (R/   8) Status B */
-  __I  DSU_STATUSC_Type          STATUSC;     /**< \brief Offset: 0x0003 (R/   8) Status Register C */
+  __I  DSU_STATUSC_Type          STATUSC;     /**< \brief Offset: 0x0003 (R/   8) Status C */
   __IO DSU_ADDR_Type             ADDR;        /**< \brief Offset: 0x0004 (R/W 32) Address */
   __IO DSU_LENGTH_Type           LENGTH;      /**< \brief Offset: 0x0008 (R/W 32) Length */
   __IO DSU_DATA_Type             DATA;        /**< \brief Offset: 0x000C (R/W 32) Data */
   __IO DSU_DCC_Type              DCC[2];      /**< \brief Offset: 0x0010 (R/W 32) Debug Communication Channel n */
   __I  DSU_DID_Type              DID;         /**< \brief Offset: 0x0018 (R/  32) Device Identification */
        RoReg8                    Reserved1[0xD4];
-  __IO DSU_DCFG_Type             DCFG[2];     /**< \brief Offset: 0x00F0 (R/W 32) Device Configuration Register */
+  __IO DSU_DCFG_Type             DCFG[2];     /**< \brief Offset: 0x00F0 (R/W 32) Device Configuration */
        RoReg8                    Reserved2[0xF08];
   __I  DSU_ENTRY_Type            ENTRY[2];    /**< \brief Offset: 0x1000 (R/  32) Coresight ROM Table Entry n */
   __I  DSU_END_Type              END;         /**< \brief Offset: 0x1008 (R/  32) Coresight ROM Table End */
        RoReg8                    Reserved3[0xFC0];
   __I  DSU_MEMTYPE_Type          MEMTYPE;     /**< \brief Offset: 0x1FCC (R/  32) Coresight ROM Table Memory Type */
   __I  DSU_PID4_Type             PID4;        /**< \brief Offset: 0x1FD0 (R/  32) Peripheral Identification 4 */
-  __I  DSU_PID5_Type             PID5;        /**< \brief Offset: 0x1FD4 (R/  32) Peripheral Identification Register 5 */
-  __I  DSU_PID6_Type             PID6;        /**< \brief Offset: 0x1FD8 (R/  32) Peripheral Identification Register 6 */
-  __I  DSU_PID7_Type             PID7;        /**< \brief Offset: 0x1FDC (R/  32) Peripheral Identification Register 7 */
+  __I  DSU_PID5_Type             PID5;        /**< \brief Offset: 0x1FD4 (R/  32) Peripheral Identification 5 */
+  __I  DSU_PID6_Type             PID6;        /**< \brief Offset: 0x1FD8 (R/  32) Peripheral Identification 6 */
+  __I  DSU_PID7_Type             PID7;        /**< \brief Offset: 0x1FDC (R/  32) Peripheral Identification 7 */
   __I  DSU_PID0_Type             PID0;        /**< \brief Offset: 0x1FE0 (R/  32) Peripheral Identification 0 */
   __I  DSU_PID1_Type             PID1;        /**< \brief Offset: 0x1FE4 (R/  32) Peripheral Identification 1 */
   __I  DSU_PID2_Type             PID2;        /**< \brief Offset: 0x1FE8 (R/  32) Peripheral Identification 2 */

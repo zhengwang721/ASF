@@ -49,7 +49,6 @@
 #define REG_DAC_CTRLA              (0x42004800U) /**< \brief (DAC) Control A */
 #define REG_DAC_CTRLB              (0x42004801U) /**< \brief (DAC) Control B */
 #define REG_DAC_EVCTRL             (0x42004802U) /**< \brief (DAC) Event Control */
-#define REG_DAC_TEST               (0x42004803U) /**< \brief (DAC) Test */
 #define REG_DAC_INTENCLR           (0x42004804U) /**< \brief (DAC) Interrupt Enable Clear */
 #define REG_DAC_INTENSET           (0x42004805U) /**< \brief (DAC) Interrupt Enable Set */
 #define REG_DAC_INTFLAG            (0x42004806U) /**< \brief (DAC) Interrupt Flag Status and Clear */
@@ -60,7 +59,6 @@
 #define REG_DAC_CTRLA              (*(RwReg8 *)0x42004800U) /**< \brief (DAC) Control A */
 #define REG_DAC_CTRLB              (*(RwReg8 *)0x42004801U) /**< \brief (DAC) Control B */
 #define REG_DAC_EVCTRL             (*(RwReg8 *)0x42004802U) /**< \brief (DAC) Event Control */
-#define REG_DAC_TEST               (*(RwReg8 *)0x42004803U) /**< \brief (DAC) Test */
 #define REG_DAC_INTENCLR           (*(RwReg8 *)0x42004804U) /**< \brief (DAC) Interrupt Enable Clear */
 #define REG_DAC_INTENSET           (*(RwReg8 *)0x42004805U) /**< \brief (DAC) Interrupt Enable Set */
 #define REG_DAC_INTFLAG            (*(RwReg8 *)0x42004806U) /**< \brief (DAC) Interrupt Flag Status and Clear */

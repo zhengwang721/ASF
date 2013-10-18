@@ -580,76 +580,6 @@ typedef union {
 #define ADC_DBGCTRL_DBGRUN          (0x1u << ADC_DBGCTRL_DBGRUN_Pos)
 #define ADC_DBGCTRL_MASK            0x01u        /**< \brief (ADC_DBGCTRL) MASK Register */
 
-/* -------- ADC_TEST : (ADC Offset: 0x2B) (R/W  8) Test Modes Register -------- */
-#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
-  struct {
-    uint8_t  TEST_EN:1;        /*!< bit:      0  Enable Test Mode                   */
-    uint8_t  REFPAD_EN:1;      /*!< bit:      1  Connect Vrefp/n to aio33testp/n    */
-    uint8_t  REFINT_DIS:1;     /*!< bit:      2  Disable Internal Reference         */
-    uint8_t  :5;               /*!< bit:  3.. 7  Reserved                           */
-  } bit;                       /*!< Structure used for bit  access                  */
-  uint8_t reg;                 /*!< Type      used for register access              */
-} ADC_TEST_Type;
-#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
-
-#define ADC_TEST_OFFSET             0x2B         /**< \brief (ADC_TEST offset) Test Modes Register */
-#define ADC_TEST_RESETVALUE         0x00         /**< \brief (ADC_TEST reset_value) Test Modes Register */
-
-#define ADC_TEST_TEST_EN_Pos        0            /**< \brief (ADC_TEST) Enable Test Mode */
-#define ADC_TEST_TEST_EN            (0x1u << ADC_TEST_TEST_EN_Pos)
-#define ADC_TEST_REFPAD_EN_Pos      1            /**< \brief (ADC_TEST) Connect Vrefp/n to aio33testp/n */
-#define ADC_TEST_REFPAD_EN          (0x1u << ADC_TEST_REFPAD_EN_Pos)
-#define ADC_TEST_REFINT_DIS_Pos     2            /**< \brief (ADC_TEST) Disable Internal Reference */
-#define ADC_TEST_REFINT_DIS         (0x1u << ADC_TEST_REFINT_DIS_Pos)
-#define ADC_TEST_MASK               0x07u        /**< \brief (ADC_TEST) MASK Register */
-
-/* -------- ADC_TESTRESULT : (ADC Offset: 0x2C) (R/W 32) Test Result Register -------- */
-#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
-  struct {
-    uint32_t TESTRESULT:24;    /*!< bit:  0..23  Result Directly from ADC Hard Block */
-    uint32_t :8;               /*!< bit: 24..31  Reserved                           */
-  } bit;                       /*!< Structure used for bit  access                  */
-  uint32_t reg;                /*!< Type      used for register access              */
-} ADC_TESTRESULT_Type;
-#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
-
-#define ADC_TESTRESULT_OFFSET       0x2C         /**< \brief (ADC_TESTRESULT offset) Test Result Register */
-#define ADC_TESTRESULT_RESETVALUE   0x00000000   /**< \brief (ADC_TESTRESULT reset_value) Test Result Register */
-
-#define ADC_TESTRESULT_TESTRESULT_Pos 0            /**< \brief (ADC_TESTRESULT) Result Directly from ADC Hard Block */
-#define ADC_TESTRESULT_TESTRESULT_Msk (0xFFFFFFu << ADC_TESTRESULT_TESTRESULT_Pos)
-#define ADC_TESTRESULT_TESTRESULT(value) ((ADC_TESTRESULT_TESTRESULT_Msk & ((value) << ADC_TESTRESULT_TESTRESULT_Pos)))
-#define ADC_TESTRESULT_MASK         0x00FFFFFFu  /**< \brief (ADC_TESTRESULT) MASK Register */
-
-/* -------- ADC_DCFG : (ADC Offset: 0x30) (R/W  8) Device Configuration -------- */
-#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
-  struct {
-    uint8_t  CMPDELAY:1;       /*!< bit:      0  Comparator Delay Control           */
-    uint8_t  BOOSTEN:1;        /*!< bit:      1  Enable the SR Booster in the Op Amp */
-    uint8_t  VCMPULSE:1;       /*!< bit:      2  Enable VCM Pulse                   */
-    uint8_t  BIAS_OPA:1;       /*!< bit:      3  Select PTAT Biasing for OPA        */
-    uint8_t  :4;               /*!< bit:  4.. 7  Reserved                           */
-  } bit;                       /*!< Structure used for bit  access                  */
-  uint8_t reg;                 /*!< Type      used for register access              */
-} ADC_DCFG_Type;
-#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
-
-#define ADC_DCFG_OFFSET             0x30         /**< \brief (ADC_DCFG offset) Device Configuration */
-#define ADC_DCFG_RESETVALUE         0x00         /**< \brief (ADC_DCFG reset_value) Device Configuration */
-
-#define ADC_DCFG_CMPDELAY_Pos       0            /**< \brief (ADC_DCFG) Comparator Delay Control */
-#define ADC_DCFG_CMPDELAY           (0x1u << ADC_DCFG_CMPDELAY_Pos)
-#define ADC_DCFG_BOOSTEN_Pos        1            /**< \brief (ADC_DCFG) Enable the SR Booster in the Op Amp */
-#define ADC_DCFG_BOOSTEN            (0x1u << ADC_DCFG_BOOSTEN_Pos)
-#define ADC_DCFG_VCMPULSE_Pos       2            /**< \brief (ADC_DCFG) Enable VCM Pulse */
-#define ADC_DCFG_VCMPULSE           (0x1u << ADC_DCFG_VCMPULSE_Pos)
-#define ADC_DCFG_BIAS_OPA_Pos       3            /**< \brief (ADC_DCFG) Select PTAT Biasing for OPA */
-#define ADC_DCFG_BIAS_OPA           (0x1u << ADC_DCFG_BIAS_OPA_Pos)
-#define ADC_DCFG_MASK               0x0Fu        /**< \brief (ADC_DCFG) MASK Register */
-
 /** \brief ADC hardware registers */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef struct {
@@ -679,9 +609,6 @@ typedef struct {
   __IO ADC_OFFSETCORR_Type       OFFSETCORR;  /**< \brief Offset: 0x26 (R/W 16) Offset Correction */
   __IO ADC_CALIB_Type            CALIB;       /**< \brief Offset: 0x28 (R/W 16) Calibration */
   __IO ADC_DBGCTRL_Type          DBGCTRL;     /**< \brief Offset: 0x2A (R/W  8) Debug Control */
-  __IO ADC_TEST_Type             TEST;        /**< \brief Offset: 0x2B (R/W  8) Test Modes Register */
-  __IO ADC_TESTRESULT_Type       TESTRESULT;  /**< \brief Offset: 0x2C (R/W 32) Test Result Register */
-  __IO ADC_DCFG_Type             DCFG;        /**< \brief Offset: 0x30 (R/W  8) Device Configuration */
 } Adc;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 

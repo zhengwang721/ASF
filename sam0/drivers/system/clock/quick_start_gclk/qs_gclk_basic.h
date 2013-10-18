@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 Generic Clock Driver Quick Start
+ * \brief SAM D2x Generic Clock Driver Quick Start
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_samd20_system_gclk_basic_use_case Quick Start Guide for SYSTEM CLOCK - GCLK Configuration
+ * \page asfdoc_samd2x_system_gclk_basic_use_case Quick Start Guide for SYSTEM CLOCK - GCLK Configuration
  *
  * In this use case, the GCLK module is configured for:
  *  \li One generator attached to the internal 8MHz RC oscillator clock source
@@ -54,19 +54,19 @@
  * source, and then linking the generator to the desired channel. This clock
  * can then be used to clock a module within the device.
  *
- * \section asfdoc_samd20_system_gclk_basic_use_case_setup Setup
+ * \section asfdoc_samd2x_system_gclk_basic_use_case_setup Setup
  *
- * \subsection asfdoc_samd20_system_gclk_basic_use_case_setup_prereq Prerequisites
+ * \subsection asfdoc_samd2x_system_gclk_basic_use_case_setup_prereq Prerequisites
  * There are no special setup requirements for this use-case.
  *
- * \subsection asfdoc_samd20_system_gclk_basic_use_case_setup_code Code
+ * \subsection asfdoc_samd2x_system_gclk_basic_use_case_setup_code Code
  * Copy-paste the following setup code to your user application:
  * \snippet qs_gclk_basic.c setup
  *
  * Add to user application initialization (typically the start of \c main()):
  * \snippet qs_gclk_basic.c setup_init
  *
- * \subsection asfdoc_samd20_system_gclk_basic_use_case_setup_flow Workflow
+ * \subsection asfdoc_samd2x_system_gclk_basic_use_case_setup_flow Workflow
  * -# Create a GCLK generator configuration struct, which can be filled out to
  *    adjust the configuration of a single clock generator.
  *  \snippet qs_gclk_basic.c setup_1
@@ -114,13 +114,13 @@
  *    clock to the channel's peripheral module consumers.
  *  \snippet qs_gclk_basic.c setup_10
  *
- * \section asfdoc_samd20_system_gclk_basic_use_case_main Use Case
+ * \section asfdoc_samd2x_system_gclk_basic_use_case_main Use Case
  *
- * \subsection asfdoc_samd20_system_gclk_basic_use_case_code Code
+ * \subsection asfdoc_samd2x_system_gclk_basic_use_case_code Code
  * Copy-paste the following code to your user application:
  * \snippet qs_gclk_basic.c main
  *
- * \subsection asfdoc_samd20_system_gclk_basic_use_case_flow Workflow
+ * \subsection asfdoc_samd2x_system_gclk_basic_use_case_flow Workflow
  * -# As the clock is generated asynchronously to the system core, no special
  *    extra application code is required.
  */

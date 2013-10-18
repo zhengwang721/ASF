@@ -66,9 +66,6 @@
 #define REG_ADC_OFFSETCORR         (0x42004026U) /**< \brief (ADC) Offset Correction */
 #define REG_ADC_CALIB              (0x42004028U) /**< \brief (ADC) Calibration */
 #define REG_ADC_DBGCTRL            (0x4200402AU) /**< \brief (ADC) Debug Control */
-#define REG_ADC_TEST               (0x4200402BU) /**< \brief (ADC) Test Modes Register */
-#define REG_ADC_TESTRESULT         (0x4200402CU) /**< \brief (ADC) Test Result Register */
-#define REG_ADC_DCFG               (0x42004030U) /**< \brief (ADC) Device Configuration */
 #else
 #define REG_ADC_CTRLA              (*(RwReg8 *)0x42004000U) /**< \brief (ADC) Control A */
 #define REG_ADC_REFCTRL            (*(RwReg8 *)0x42004001U) /**< \brief (ADC) Reference Control */
@@ -90,9 +87,6 @@
 #define REG_ADC_OFFSETCORR         (*(RwReg16*)0x42004026U) /**< \brief (ADC) Offset Correction */
 #define REG_ADC_CALIB              (*(RwReg16*)0x42004028U) /**< \brief (ADC) Calibration */
 #define REG_ADC_DBGCTRL            (*(RwReg8 *)0x4200402AU) /**< \brief (ADC) Debug Control */
-#define REG_ADC_TEST               (*(RwReg8 *)0x4200402BU) /**< \brief (ADC) Test Modes Register */
-#define REG_ADC_TESTRESULT         (*(RwReg  *)0x4200402CU) /**< \brief (ADC) Test Result Register */
-#define REG_ADC_DCFG               (*(RwReg8 *)0x42004030U) /**< \brief (ADC) Device Configuration */
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 /* ========== Instance parameters for ADC peripheral ========== */

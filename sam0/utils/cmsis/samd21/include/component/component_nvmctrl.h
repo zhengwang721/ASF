@@ -349,6 +349,15 @@ typedef struct {
 } Nvmctrl;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
+#ifdef __GNUC__
+ #define SECTION_NVMCTRL_CAL          
+ #define SECTION_NVMCTRL_LOCKBIT      
+ #define SECTION_NVMCTRL_OTP1         
+ #define SECTION_NVMCTRL_OTP2         
+ #define SECTION_NVMCTRL_OTP4         
+ #define SECTION_NVMCTRL_USER         
+#endif
+
 /*@}*/
 
 /* ************************************************************************** */
@@ -363,11 +372,6 @@ typedef struct {
 #define ADC_FUSES_BIASCAL_Msk       (0x7u << ADC_FUSES_BIASCAL_Pos)
 #define ADC_FUSES_BIASCAL(value)    ((ADC_FUSES_BIASCAL_Msk & ((value) << ADC_FUSES_BIASCAL_Pos)))
 
-#define ADC_FUSES_GAINCORR_ADDR     NVMCTRL_OTP4
-#define ADC_FUSES_GAINCORR_Pos      3            /**< \brief (NVMCTRL_OTP4) ADC Gain Correction */
-#define ADC_FUSES_GAINCORR_Msk      (0xFFFu << ADC_FUSES_GAINCORR_Pos)
-#define ADC_FUSES_GAINCORR(value)   ((ADC_FUSES_GAINCORR_Msk & ((value) << ADC_FUSES_GAINCORR_Pos)))
-
 #define ADC_FUSES_LINEARITY_0_ADDR  NVMCTRL_OTP4
 #define ADC_FUSES_LINEARITY_0_Pos   27           /**< \brief (NVMCTRL_OTP4) ADC Linearity bits 4:0 */
 #define ADC_FUSES_LINEARITY_0_Msk   (0x1Fu << ADC_FUSES_LINEARITY_0_Pos)
@@ -377,11 +381,6 @@ typedef struct {
 #define ADC_FUSES_LINEARITY_1_Pos   0            /**< \brief (NVMCTRL_OTP4) ADC Linearity bits 7:5 */
 #define ADC_FUSES_LINEARITY_1_Msk   (0x7u << ADC_FUSES_LINEARITY_1_Pos)
 #define ADC_FUSES_LINEARITY_1(value) ((ADC_FUSES_LINEARITY_1_Msk & ((value) << ADC_FUSES_LINEARITY_1_Pos)))
-
-#define ADC_FUSES_OFFSETCORR_ADDR   NVMCTRL_OTP4
-#define ADC_FUSES_OFFSETCORR_Pos    15           /**< \brief (NVMCTRL_OTP4) ADC Offset Correction */
-#define ADC_FUSES_OFFSETCORR_Msk    (0xFFFu << ADC_FUSES_OFFSETCORR_Pos)
-#define ADC_FUSES_OFFSETCORR(value) ((ADC_FUSES_OFFSETCORR_Msk & ((value) << ADC_FUSES_OFFSETCORR_Pos)))
 
 #define NVMCTRL_FUSES_BOOTPROT_ADDR NVMCTRL_USER
 #define NVMCTRL_FUSES_BOOTPROT_Pos  0            /**< \brief (NVMCTRL_USER) Bootloader Size */
@@ -454,15 +453,10 @@ typedef struct {
 #define SYSCTRL_FUSES_BOD33_HYST_Pos 8            /**< \brief (NVMCTRL_USER) BOD33 Hysteresis */
 #define SYSCTRL_FUSES_BOD33_HYST_Msk (0x1u << SYSCTRL_FUSES_BOD33_HYST_Pos)
 
-#define SYSCTRL_FUSES_OSC32KCAL_ADDR (NVMCTRL_OTP4 + 4)
-#define SYSCTRL_FUSES_OSC32KCAL_Pos 6            /**< \brief (NVMCTRL_OTP4) OSC32K Calibration */
-#define SYSCTRL_FUSES_OSC32KCAL_Msk (0x7Fu << SYSCTRL_FUSES_OSC32KCAL_Pos)
-#define SYSCTRL_FUSES_OSC32KCAL(value) ((SYSCTRL_FUSES_OSC32KCAL_Msk & ((value) << SYSCTRL_FUSES_OSC32KCAL_Pos)))
-
-#define SYSCTRL_FUSES_ULPVREG_ADDR  NVMCTRL_OTP4
-#define SYSCTRL_FUSES_ULPVREG_Pos   0            /**< \brief (NVMCTRL_OTP4) ULP Regulator Fallback Mode */
-#define SYSCTRL_FUSES_ULPVREG_Msk   (0x7u << SYSCTRL_FUSES_ULPVREG_Pos)
-#define SYSCTRL_FUSES_ULPVREG(value) ((SYSCTRL_FUSES_ULPVREG_Msk & ((value) << SYSCTRL_FUSES_ULPVREG_Pos)))
+#define SYSCTRL_FUSES_OSC32K_ADDR   (NVMCTRL_OTP4 + 4)
+#define SYSCTRL_FUSES_OSC32K_Pos    6            /**< \brief (NVMCTRL_OTP4) OSC32K Calibration */
+#define SYSCTRL_FUSES_OSC32K_Msk    (0x7Fu << SYSCTRL_FUSES_OSC32K_Pos)
+#define SYSCTRL_FUSES_OSC32K(value) ((SYSCTRL_FUSES_OSC32K_Msk & ((value) << SYSCTRL_FUSES_OSC32K_Pos)))
 
 #define USB_FUSES_TRANSN_ADDR       (NVMCTRL_OTP4 + 4)
 #define USB_FUSES_TRANSN_Pos        13           /**< \brief (NVMCTRL_OTP4) USB pad Transn calibration */

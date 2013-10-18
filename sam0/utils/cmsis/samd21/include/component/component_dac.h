@@ -138,24 +138,6 @@ typedef union {
 #define DAC_EVCTRL_EMPTYEO          (0x1u << DAC_EVCTRL_EMPTYEO_Pos)
 #define DAC_EVCTRL_MASK             0x03u        /**< \brief (DAC_EVCTRL) MASK Register */
 
-/* -------- DAC_TEST : (DAC Offset: 0x3) (R/W  8) Test -------- */
-#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
-  struct {
-    uint8_t  TESTEN:1;         /*!< bit:      0  Test Enable                        */
-    uint8_t  :7;               /*!< bit:  1.. 7  Reserved                           */
-  } bit;                       /*!< Structure used for bit  access                  */
-  uint8_t reg;                 /*!< Type      used for register access              */
-} DAC_TEST_Type;
-#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
-
-#define DAC_TEST_OFFSET             0x3          /**< \brief (DAC_TEST offset) Test */
-#define DAC_TEST_RESETVALUE         0x00         /**< \brief (DAC_TEST reset_value) Test */
-
-#define DAC_TEST_TESTEN_Pos         0            /**< \brief (DAC_TEST) Test Enable */
-#define DAC_TEST_TESTEN             (0x1u << DAC_TEST_TESTEN_Pos)
-#define DAC_TEST_MASK               0x01u        /**< \brief (DAC_TEST) MASK Register */
-
 /* -------- DAC_INTENCLR : (DAC Offset: 0x4) (R/W  8) Interrupt Enable Clear -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
@@ -288,13 +270,13 @@ typedef struct {
   __IO DAC_CTRLA_Type            CTRLA;       /**< \brief Offset: 0x0 (R/W  8) Control A */
   __IO DAC_CTRLB_Type            CTRLB;       /**< \brief Offset: 0x1 (R/W  8) Control B */
   __IO DAC_EVCTRL_Type           EVCTRL;      /**< \brief Offset: 0x2 (R/W  8) Event Control */
-  __IO DAC_TEST_Type             TEST;        /**< \brief Offset: 0x3 (R/W  8) Test */
+       RoReg8                    Reserved1[0x1];
   __IO DAC_INTENCLR_Type         INTENCLR;    /**< \brief Offset: 0x4 (R/W  8) Interrupt Enable Clear */
   __IO DAC_INTENSET_Type         INTENSET;    /**< \brief Offset: 0x5 (R/W  8) Interrupt Enable Set */
   __IO DAC_INTFLAG_Type          INTFLAG;     /**< \brief Offset: 0x6 (R/W  8) Interrupt Flag Status and Clear */
   __I  DAC_STATUS_Type           STATUS;      /**< \brief Offset: 0x7 (R/   8) Status */
   __IO DAC_DATA_Type             DATA;        /**< \brief Offset: 0x8 (R/W 16) Data */
-       RoReg8                    Reserved1[0x2];
+       RoReg8                    Reserved2[0x2];
   __IO DAC_DATABUF_Type          DATABUF;     /**< \brief Offset: 0xC (R/W 16) Data Buffer */
 } Dac;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */

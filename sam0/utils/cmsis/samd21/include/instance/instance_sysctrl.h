@@ -63,10 +63,10 @@
 #define REG_SYSCTRL_BOD12          (0x40000838U) /**< \brief (SYSCTRL) 1.2V Brown-Out Detector (BOD12) Control */
 #define REG_SYSCTRL_VREG           (0x4000083CU) /**< \brief (SYSCTRL) Voltage Regulator System (VREG) Control */
 #define REG_SYSCTRL_VREF           (0x40000840U) /**< \brief (SYSCTRL) Voltage References System (VREF) Control */
-#define REG_SYSCTRL_DPLLCTRLA      (0x40000844U) /**< \brief (SYSCTRL) Control register DPLL */
-#define REG_SYSCTRL_DPLLRATIO      (0x40000848U) /**< \brief (SYSCTRL) Ratio control Register */
-#define REG_SYSCTRL_DPLLCTRLB      (0x4000084CU) /**< \brief (SYSCTRL) Digital Core Configuration */
-#define REG_SYSCTRL_DPLLSTATUS     (0x40000850U) /**< \brief (SYSCTRL) Status Register */
+#define REG_SYSCTRL_DPLLCTRLA      (0x40000844U) /**< \brief (SYSCTRL) DPLL Control A */
+#define REG_SYSCTRL_DPLLRATIO      (0x40000848U) /**< \brief (SYSCTRL) DPLL Ratio Control */
+#define REG_SYSCTRL_DPLLCTRLB      (0x4000084CU) /**< \brief (SYSCTRL) DPLL Control B */
+#define REG_SYSCTRL_DPLLSTATUS     (0x40000850U) /**< \brief (SYSCTRL) DPLL Status */
 #else
 #define REG_SYSCTRL_INTENCLR       (*(RwReg  *)0x40000800U) /**< \brief (SYSCTRL) Interrupt Enable Clear */
 #define REG_SYSCTRL_INTENSET       (*(RwReg  *)0x40000804U) /**< \brief (SYSCTRL) Interrupt Enable Set */
@@ -85,10 +85,10 @@
 #define REG_SYSCTRL_BOD12          (*(RwReg  *)0x40000838U) /**< \brief (SYSCTRL) 1.2V Brown-Out Detector (BOD12) Control */
 #define REG_SYSCTRL_VREG           (*(RwReg16*)0x4000083CU) /**< \brief (SYSCTRL) Voltage Regulator System (VREG) Control */
 #define REG_SYSCTRL_VREF           (*(RwReg  *)0x40000840U) /**< \brief (SYSCTRL) Voltage References System (VREF) Control */
-#define REG_SYSCTRL_DPLLCTRLA      (*(RwReg8 *)0x40000844U) /**< \brief (SYSCTRL) Control register DPLL */
-#define REG_SYSCTRL_DPLLRATIO      (*(RwReg  *)0x40000848U) /**< \brief (SYSCTRL) Ratio control Register */
-#define REG_SYSCTRL_DPLLCTRLB      (*(RwReg  *)0x4000084CU) /**< \brief (SYSCTRL) Digital Core Configuration */
-#define REG_SYSCTRL_DPLLSTATUS     (*(RwReg8 *)0x40000850U) /**< \brief (SYSCTRL) Status Register */
+#define REG_SYSCTRL_DPLLCTRLA      (*(RwReg8 *)0x40000844U) /**< \brief (SYSCTRL) DPLL Control A */
+#define REG_SYSCTRL_DPLLRATIO      (*(RwReg  *)0x40000848U) /**< \brief (SYSCTRL) DPLL Ratio Control */
+#define REG_SYSCTRL_DPLLCTRLB      (*(RwReg  *)0x4000084CU) /**< \brief (SYSCTRL) DPLL Control B */
+#define REG_SYSCTRL_DPLLSTATUS     (*(RoReg8 *)0x40000850U) /**< \brief (SYSCTRL) DPLL Status */
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 /* ========== Instance parameters for SYSCTRL peripheral ========== */

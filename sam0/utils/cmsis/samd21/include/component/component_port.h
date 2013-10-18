@@ -401,6 +401,10 @@ typedef struct {
 } Port;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
+#ifdef __GNUC__
+ #define SECTION_PORT_IOBUS           
+#endif
+
 /*@}*/
 
 #endif /* _SAMD21_PORT_COMPONENT_ */

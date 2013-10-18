@@ -4,20 +4,17 @@
 		SAMD20 PIO component definitions.
 		</info>
 		<build type="include-path" value="."/>
-		<build type="header-file" value="pio_samd21e14.h"/>
-		<build type="header-file" value="pio_samd21e15.h"/>
-		<build type="header-file" value="pio_samd21e16.h"/>
-		<build type="header-file" value="pio_samd21e17.h"/>
-		<build type="header-file" value="pio_samd21g14.h"/>
-		<build type="header-file" value="pio_samd21g15.h"/>
-		<build type="header-file" value="pio_samd21g16.h"/>
-		<build type="header-file" value="pio_samd21g17.h"/>
-		<build type="header-file" value="pio_samd21g18.h"/>
-		<build type="header-file" value="pio_samd21j14.h"/>
-		<build type="header-file" value="pio_samd21j15.h"/>
-		<build type="header-file" value="pio_samd21j16.h"/>
-		<build type="header-file" value="pio_samd21j17.h"/>
-		<build type="header-file" value="pio_samd21j18.h"/>
+		<build type="header-file" value="pio_samd21e15a.h"/>
+		<build type="header-file" value="pio_samd21e16a.h"/>
+		<build type="header-file" value="pio_samd21e17a.h"/>
+		<build type="header-file" value="pio_samd21g15a.h"/>
+		<build type="header-file" value="pio_samd21g16a.h"/>
+		<build type="header-file" value="pio_samd21g17a.h"/>
+		<build type="header-file" value="pio_samd21g18a.h"/>
+		<build type="header-file" value="pio_samd21j15a.h"/>
+		<build type="header-file" value="pio_samd21j16a.h"/>
+		<build type="header-file" value="pio_samd21j17a.h"/>
+		<build type="header-file" value="pio_samd21j18a.h"/>
 		<info type="gui-flag" value="hidden"/>
 		<device-support value="samd21"/>
 	</module>
