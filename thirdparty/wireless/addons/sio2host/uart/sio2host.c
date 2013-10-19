@@ -88,7 +88,7 @@ static uint8_t serial_rx_count;
 void sio2host_init(void)
 {
 #if SAMD20
-struct usart_config cdc_uart_config;
+	struct usart_config cdc_uart_config;
     /* Configure USART for unit test output */
     usart_get_config_defaults(&cdc_uart_config);
     cdc_uart_config.mux_setting     = EDBG_CDC_SERCOM_MUX_SETTING; 
@@ -106,8 +106,8 @@ struct usart_config cdc_uart_config;
     usart_enable_transceiver(&cdc_uart_module, USART_TRANSCEIVER_RX);
 #else
 	stdio_serial_init(USART_HOST, &usart_serial_options);
-#endif
 	USART_HOST_RX_ISR_ENABLE();
+#endif
 }
 
 uint8_t sio2host_tx(uint8_t *data, uint8_t length)
