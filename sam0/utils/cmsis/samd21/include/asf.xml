@@ -5,17 +5,14 @@
 		</info>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="samd21.h"/>
-		<build type="header-file" value="samd21e14a.h"/>
 		<build type="header-file" value="samd21e15a.h"/>
 		<build type="header-file" value="samd21e16a.h"/>
 		<build type="header-file" value="samd21e17a.h"/>
 		<build type="header-file" value="samd21e18a.h"/>
-		<build type="header-file" value="samd21g14a.h"/>
 		<build type="header-file" value="samd21g15a.h"/>
 		<build type="header-file" value="samd21g16a.h"/>
 		<build type="header-file" value="samd21g17a.h"/>
 		<build type="header-file" value="samd21g18a.h"/>
-		<build type="header-file" value="samd21j14a.h"/>
 		<build type="header-file" value="samd21j15a.h"/>
 		<build type="header-file" value="samd21j16a.h"/>
 		<build type="header-file" value="samd21j17a.h"/>
