@@ -124,7 +124,7 @@
 //#define ADC_12B
 #endif
 
-#if SAM3S || SAM4S || SAM3XA || SAM3N || SAM4C
+#if SAM3S || SAM4S || SAM3XA || SAM3N || SAM4C || SAM4CP
 /* Tracking Time*/
 #define TRACKING_TIME         1
 /* Transfer Period */
@@ -145,7 +145,7 @@
 #endif
 
 /** Total number of ADC channels in use */
-#if SAM3S || SAM3XA || SAM4S || SAM4C
+#if SAM3S || SAM3XA || SAM4S || SAM4C || SAM4CP
 #define NUM_CHANNELS    (2)
 #elif SAM3U|| SAM3N
 #define NUM_CHANNELS    (1)
@@ -162,7 +162,7 @@
 #if SAM3S || SAM3XA || SAM4S
 /** The maximal digital value */
 #define MAX_DIGITAL     (4095)
-#elif SAM3N || SAM4C
+#elif SAM3N || SAM4C || SAM4CP
 #define MAX_DIGITAL     (1023)
 #elif SAM3U
 #ifdef ADC_12B
@@ -175,7 +175,7 @@
 /** ADC channel for potentiometer */
 #if SAM3S || SAM3N || SAM4S
 #define ADC_CHANNEL_POTENTIOMETER  ADC_CHANNEL_5
-#elif SAM3XA || SAM4C
+#elif SAM3XA || SAM4C || SAM4CP
 #define ADC_CHANNEL_POTENTIOMETER  ADC_CHANNEL_1
 #elif SAM3U
 #define ADC_CHANNEL_POTENTIOMETER  ADC_CHANNEL_3
@@ -197,7 +197,7 @@ struct {
 	uint8_t uc_sequence_en;
 	uint8_t uc_gain_en;
 	uint8_t uc_offset_en;
-#if  SAM3S8 || SAM3SD8 || SAM4S || SAM3N || SAM3U || SAM4C
+#if  SAM3S8 || SAM3SD8 || SAM4S || SAM3N || SAM3U || SAM4C || SAM4CP
 	uint8_t uc_power_save_en;
 #endif
 #if  SAM3S8 || SAM3SD8 || SAM4S
@@ -213,7 +213,7 @@ enum {
 #if SAM3S || SAM3U || SAM3XA || SAM4S
 	TRIGGER_MODE_PWM,
 #endif
-#if SAM3S || SAM3N || SAM3XA || SAM4S || SAM4C
+#if SAM3S || SAM3N || SAM3XA || SAM4S || SAM4C || SAM4CP
 	TRIGGER_MODE_FREERUN
 #endif
 } e_trigger_mode;
@@ -225,7 +225,7 @@ struct {
 	uint16_t us_done;
 } g_adc_sample_data;
 
-#if SAM3S || SAM3XA || SAM3N || SAM4S || SAM4C
+#if SAM3S || SAM3XA || SAM3N || SAM4S || SAM4C || SAM4CP
 /**Channel list for sequence*/
 enum adc_channel_num_t ch_list[2] = {
 	ADC_TEMPERATURE_SENSOR,
@@ -254,18 +254,18 @@ static void display_menu(void)
 	uc_char = (g_adc_test_mode.uc_trigger_mode == TRIGGER_MODE_PWM) ? 'X' : ' ';
 	printf("[%c] 3: Set ADC trigger mode: PWM Event Line.\n\r", uc_char);
 #endif
-#if SAM3S || SAM3N || SAM3XA || SAM4S || SAM4C
+#if SAM3S || SAM3N || SAM3XA || SAM4S || SAM4C || SAM4CP
 	uc_char = (g_adc_test_mode.uc_trigger_mode ==
 			TRIGGER_MODE_FREERUN) ? 'X' : ' ';
 	printf("[%c] 4: Set ADC trigger mode: Free run mode.\n\r", uc_char);
 #endif
 	uc_char = (g_adc_test_mode.uc_pdc_en) ? 'E' : 'D';
 	printf("[%c] T: Enable/Disable to transfer with PDC.\n\r", uc_char);
-#if SAM3S || SAM3N || SAM3XA || SAM4S || SAM4C
+#if SAM3S || SAM3N || SAM3XA || SAM4S || SAM4C || SAM4CP
 	uc_char = (g_adc_test_mode.uc_sequence_en) ? 'E' : 'D';
 	printf("[%c] S: Enable/Disable to use user sequence mode.\n\r", uc_char);
 #endif
-#if  SAM3S8 || SAM3SD8 || SAM4S || SAM3N || SAM3U || SAM4C
+#if  SAM3S8 || SAM3SD8 || SAM4S || SAM3N || SAM3U || SAM4C || SAM4CP
 	uc_char = (g_adc_test_mode.uc_power_save_en) ? 'E' : 'D';
 	printf("[%c] P: Enable/Disable ADC power save mode.\n\r", uc_char);
 #endif
@@ -313,7 +313,7 @@ static void set_adc_test_mode(void)
 			g_adc_test_mode.uc_trigger_mode = TRIGGER_MODE_PWM;
 			break;
 #endif
-#if SAM3S || SAM3N || SAM3XA || SAM4S || SAM4C
+#if SAM3S || SAM3N || SAM3XA || SAM4S || SAM4C || SAM4CP
 		case '4':
 			g_adc_test_mode.uc_trigger_mode = TRIGGER_MODE_FREERUN;
 			break;
@@ -326,7 +326,7 @@ static void set_adc_test_mode(void)
 				g_adc_test_mode.uc_pdc_en = 1;
 			}
 			break;
-#if SAM3S || SAM3N || SAM3XA || SAM4S || SAM4C
+#if SAM3S || SAM3N || SAM3XA || SAM4S || SAM4C || SAM4CP
 		case 's':
 		case 'S':
 			if (g_adc_test_mode.uc_sequence_en) {
@@ -336,7 +336,7 @@ static void set_adc_test_mode(void)
 			}
 			break;
 #endif
-#if  SAM3S8 || SAM3SD8 || SAM4S || SAM3N || SAM3U || SAM4C
+#if  SAM3S8 || SAM3SD8 || SAM4S || SAM3N || SAM3U || SAM4C || SAM4CP
 		case 'p':
 		case 'P':
 			if (g_adc_test_mode.uc_power_save_en) {
@@ -413,7 +413,7 @@ static void configure_time_trigger(void)
 	/* Start the Timer. */
 	tc_start(TC0, 0);
 	/* Set TIOA0 trigger. */
-#if SAM3S || SAM3N || SAM3XA || SAM4S || SAM4C
+#if SAM3S || SAM3N || SAM3XA || SAM4S || SAM4C || SAM4CP
 	adc_configure_trigger(ADC, ADC_TRIG_TIO_CH_0, 0);
 #elif SAM3U
 #ifdef ADC_12B
@@ -493,7 +493,7 @@ static void configure_pwm_trigger(void)
  * \param p_s_buffer The destination buffer.
  * \param ul_size The size of the buffer.
  */
-#if SAM3S || SAM3N || SAM3XA || SAM4S || SAM4C
+#if SAM3S || SAM3N || SAM3XA || SAM4S || SAM4C || SAM4CP
 static uint32_t adc_read_buffer(Adc * p_adc, uint16_t * p_s_buffer, uint32_t ul_size)
 {
 	/* Check if the first PDC bank is free. */
@@ -568,7 +568,7 @@ static uint32_t adc_read_buffer(Adc * p_adc, uint16_t * p_s_buffer, uint32_t ul_
 static void start_adc(void)
 {
 	/* Enable peripheral clock. */
-#if SAM3S || SAM3N || SAM3XA || SAM4S || SAM4C
+#if SAM3S || SAM3N || SAM3XA || SAM4S || SAM4C || SAM4CP
 	uint32_t i;
 	pmc_enable_periph_clk(ID_ADC);
 #elif SAM3U
@@ -585,7 +585,7 @@ static void start_adc(void)
 	 * For example, MCK = 64MHZ, PRESCAL = 4, then:
 	 * ADCClock = 64 / ((4+1) * 2) = 6.4MHz;
 	 */
-#if SAM3S || SAM3N || SAM3XA || SAM4S || SAM4C
+#if SAM3S || SAM3N || SAM3XA || SAM4S || SAM4C || SAM4CP
 	/* Formula:
 	 *     Startup  Time = startup value / ADCClock
 	 *     Startup time = 64 / 6.4MHz = 10 us
@@ -621,7 +621,7 @@ static void start_adc(void)
 	 *     Settling Time = 3 / 6.4MHz = 469 ns
 	 */
 	adc_configure_timing(ADC, TRACKING_TIME, ADC_SETTLING_TIME_3, TRANSFER_PERIOD);
-#elif  SAM3N || SAM4C
+#elif  SAM3N || SAM4C || SAM4CP
 	adc_configure_timing(ADC, TRACKING_TIME);
 #elif SAM3U
 	/* Formula:
@@ -636,7 +636,7 @@ static void start_adc(void)
 #endif
 #endif
 
-#if SAM3S || SAM3N || SAM3XA || SAM4S || SAM4C
+#if SAM3S || SAM3N || SAM3XA || SAM4S || SAM4C || SAM4CP
 	/* Enable channel number tag. */
 	adc_enable_tag(ADC);
 	/* Enable/disable sequencer. */
@@ -660,12 +660,12 @@ static void start_adc(void)
 
 		/* Enable channels. */
 		adc_enable_channel(ADC, ADC_CHANNEL_POTENTIOMETER);
-#if SAM3S || SAM3XA || SAM4S || SAM4C
+#if SAM3S || SAM3XA || SAM4S || SAM4C || SAM4CP
 		adc_enable_channel(ADC, ADC_TEMPERATURE_SENSOR);
 #endif
 		/* Update channel number. */
 		g_adc_sample_data.uc_ch_num[0] = ADC_CHANNEL_POTENTIOMETER;
-#if SAM3S || SAM3XA || SAM4S || SAM4C
+#if SAM3S || SAM3XA || SAM4S || SAM4C || SAM4CP
 		g_adc_sample_data.uc_ch_num[1] = ADC_TEMPERATURE_SENSOR;
 #else
 		g_adc_sample_data.uc_ch_num[1] = ADC_CHANNEL_POTENTIOMETER;
@@ -681,7 +681,7 @@ static void start_adc(void)
 	g_adc_sample_data.uc_ch_num[1] = ADC_CHANNEL_POTENTIOMETER;
 #endif
 
-#if SAM3S ||  SAM3XA || SAM4S || SAM4C
+#if SAM3S ||  SAM3XA || SAM4S || SAM4C || SAM4CP
 	/* Enable the temperature sensor. */
 	adc_enable_ts(ADC);
 #endif
@@ -747,7 +747,7 @@ static void start_adc(void)
 	} else {
 		adc_configure_power_save(ADC, 0, 0);;
 	}
-#elif SAM3U || SAM4C
+#elif SAM3U || SAM4C || SAM4CP
 #ifdef ADC_12B
 	/* Set power save. */
 	if (g_adc_test_mode.uc_power_save_en) {
@@ -766,7 +766,7 @@ static void start_adc(void)
 #endif
 #endif
 
-#if SAM3S || SAM3N || SAM3XA || SAM4S || SAM4C
+#if SAM3S || SAM3N || SAM3XA || SAM4S || SAM4C || SAM4CP
 	/* Transfer with/without PDC. */
 	if (g_adc_test_mode.uc_pdc_en) {
 		adc_read_buffer(ADC, g_adc_sample_data.us_value, BUFFER_SIZE);
@@ -810,7 +810,7 @@ static void start_adc(void)
 	/* Configure trigger mode and start convention. */
 	switch (g_adc_test_mode.uc_trigger_mode) {
 	case TRIGGER_MODE_SOFTWARE:
-#if SAM3S || SAM3N || SAM3XA || SAM4S || SAM4C
+#if SAM3S || SAM3N || SAM3XA || SAM4S || SAM4C || SAM4CP
 		adc_configure_trigger(ADC, ADC_TRIG_SW, 0);	/* Disable hardware trigger. */
 #elif SAM3U
 #ifdef ADC_12B
@@ -822,7 +822,7 @@ static void start_adc(void)
 		break;
 
 	case TRIGGER_MODE_ADTRG:
-#if SAM3S || SAM3N || SAM3XA || SAM4S || SAM4C
+#if SAM3S || SAM3N || SAM3XA || SAM4S || SAM4C || SAM4CP
 		gpio_configure_pin(PINS_ADC_TRIG, PINS_ADC_TRIG_FLAG);
 		adc_configure_trigger(ADC, ADC_TRIG_EXT, 0);
 #elif SAM3U
@@ -844,7 +844,7 @@ static void start_adc(void)
 		configure_pwm_trigger();
 		break;
 #endif
-#if SAM3S || SAM3N || SAM3XA || SAM4S || SAM4C
+#if SAM3S || SAM3N || SAM3XA || SAM4S || SAM4C || SAM4CP
 	case TRIGGER_MODE_FREERUN:
 		adc_configure_trigger(ADC, ADC_TRIG_SW, 1);
 		break;
@@ -862,7 +862,7 @@ void SysTick_Handler(void)
 	gs_ul_ms_ticks++;
 }
 
-#if SAM3S || SAM3N || SAM3XA || SAM4S || SAM4C
+#if SAM3S || SAM3N || SAM3XA || SAM4S || SAM4C || SAM4CP
 /**
  * \brief Interrupt handler for the ADC.
  */
@@ -1033,7 +1033,7 @@ int main(void)
 		/* ADC software trigger per 1s */
 		if (g_adc_test_mode.uc_trigger_mode == TRIGGER_MODE_SOFTWARE) {
 			mdelay(1000);
-#if SAM3S || SAM3N || SAM3XA || SAM4S || SAM4C
+#if SAM3S || SAM3N || SAM3XA || SAM4S || SAM4C || SAM4CP
 			adc_start(ADC);
 #elif SAM3U
 #ifdef ADC_12B
@@ -1046,7 +1046,7 @@ int main(void)
 
 		/* Check if the user enters a key. */
 		if (!uart_read(CONSOLE_UART, &uc_key)) {
-#if SAM3S || SAM3N || SAM3XA || SAM4S || SAM4C
+#if SAM3S || SAM3N || SAM3XA || SAM4S || SAM4C || SAM4CP
 			adc_disable_interrupt(ADC, 0xFFFFFFFF);	/* Disable all adc interrupt. */
 #elif SAM3U
 #ifdef ADC_12B
