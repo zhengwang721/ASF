@@ -35,8 +35,6 @@ execUserFlashInit()
    //Watch dog disable
    __writeMemory32(0x000000000,0x40001000,"Memory");
 
-   // Set 2 WS for Embedded Flash Access
-   __writeMemory32(0x000000004,0x41004000,"Memory");
 }
 
 /*********************************************************************
