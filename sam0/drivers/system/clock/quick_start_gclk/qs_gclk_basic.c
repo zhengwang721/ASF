@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 Generic Clock Driver Quick Start
+ * \brief SAM D2x Generic Clock Driver Quick Start
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *

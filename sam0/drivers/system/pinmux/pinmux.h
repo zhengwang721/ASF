@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 Pin Multiplexer Driver
+ * \brief SAM D2x Pin Multiplexer Driver
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -44,9 +44,9 @@
 #define PINMUX_H_INCLUDED
 
 /**
- * \defgroup asfdoc_samd20_system_pinmux_group SAM D20 System Pin Multiplexer Driver (SYSTEM PINMUX)
+ * \defgroup asfdoc_sam0_system_pinmux_group SAM D2x System Pin Multiplexer Driver (SYSTEM PINMUX)
  *
- * This driver for SAM D20 devices provides an interface for the configuration
+ * This driver for SAM D2x devices provides an interface for the configuration
  * and management of the device's physical I/O Pins, to alter the direction and
  * input/drive characteristics as well as to configure the pin peripheral
  * multiplexer selection.
@@ -59,29 +59,29 @@
  * following diagram:
  *
  * The outline of this documentation is as follows:
- *  - \ref asfdoc_samd20_system_pinmux_prerequisites
- *  - \ref asfdoc_samd20_system_pinmux_module_overview
- *  - \ref asfdoc_samd20_system_pinmux_special_considerations
- *  - \ref asfdoc_samd20_system_pinmux_extra_info
- *  - \ref asfdoc_samd20_system_pinmux_examples
- *  - \ref asfdoc_samd20_system_pinmux_api_overview
+ *  - \ref asfdoc_sam0_system_pinmux_prerequisites
+ *  - \ref asfdoc_sam0_system_pinmux_module_overview
+ *  - \ref asfdoc_sam0_system_pinmux_special_considerations
+ *  - \ref asfdoc_sam0_system_pinmux_extra_info
+ *  - \ref asfdoc_sam0_system_pinmux_examples
+ *  - \ref asfdoc_sam0_system_pinmux_api_overview
  *
  *
- * \section asfdoc_samd20_system_pinmux_prerequisites Prerequisites
+ * \section asfdoc_sam0_system_pinmux_prerequisites Prerequisites
  *
  * There are no prerequisites for this module.
  *
  *
- * \section asfdoc_samd20_system_pinmux_module_overview Module Overview
+ * \section asfdoc_sam0_system_pinmux_module_overview Module Overview
  *
- * The SAM D20 devices contain a number of General Purpose I/O pins, used to
+ * The SAM D2x devices contain a number of General Purpose I/O pins, used to
  * interface the user application logic and internal hardware peripherals to
  * an external system. The Pin Multiplexer (PINMUX) driver provides a method
  * of configuring the individual pin peripheral multiplexers to select
  * alternate pin functions,
  *
- * \subsection asfdoc_samd20_system_pinmux_physical_logical_pins Physical and Logical GPIO Pins
- * SAM D20 devices use two naming conventions for the I/O pins in the device; one
+ * \subsection asfdoc_sam0_system_pinmux_physical_logical_pins Physical and Logical GPIO Pins
+ * SAM D2x devices use two naming conventions for the I/O pins in the device; one
  * physical, and one logical. Each physical pin on a device package is assigned
  * both a physical port and pin identifier (e.g. "PORTA.0") as well as a
  * monotonically incrementing logical GPIO number (e.g. "GPIO0"). While the
@@ -89,8 +89,8 @@
  * counterparts, for simplicity the design of this driver uses the logical GPIO
  * numbers instead.
  *
- * \subsection asfdoc_samd20_system_pinmux_peripheral_muxing Peripheral Multiplexing
- * SAM D20 devices contain a peripheral MUX, which is individually controllable
+ * \subsection asfdoc_sam0_system_pinmux_peripheral_muxing Peripheral Multiplexing
+ * SAM D2x devices contain a peripheral MUX, which is individually controllable
  * for each I/O pin of the device. The peripheral MUX allows you to select the
  * function of a physical package pin - whether it will be controlled as a user
  * controllable GPIO pin, or whether it will be connected internally to one of
@@ -98,21 +98,21 @@
  * configured in GPIO mode, other peripherals connected to the same pin will be
  * disabled.
  *
- * \subsection asfdoc_samd20_system_pinmux_pad_characteristics Special Pad Characteristics
+ * \subsection asfdoc_sam0_system_pinmux_pad_characteristics Special Pad Characteristics
  * There are several special modes that can be selected on one or more I/O pins
  * of the device, which alter the input and output characteristics of the pad:
  *
- * \subsubsection asfdoc_samd20_system_pinmux_drive_strength Drive Strength
+ * \subsubsection asfdoc_sam0_system_pinmux_drive_strength Drive Strength
  * The Drive Strength configures the strength of the output driver on the
  * pad. Normally, there is a fixed current limit that each I/O pin can safely
  * drive, however some I/O pads offer a higher drive mode which increases this
  * limit for that I/O pin at the expense of an increased power consumption.
  *
- * \subsubsection asfdoc_samd20_system_pinmux_slew_rate Slew Rate
+ * \subsubsection asfdoc_sam0_system_pinmux_slew_rate Slew Rate
  * The Slew Rate configures the slew rate of the output driver, limiting the
  * rate at which the pad output voltage can change with time.
  *
- * \subsubsection asfdoc_samd20_system_pinmux_input_sample_mode Input Sample Mode
+ * \subsubsection asfdoc_sam0_system_pinmux_input_sample_mode Input Sample Mode
  * The Input Sample Mode configures the input sampler buffer of the pad. By
  * default, the input buffer is only sampled "on-demand", i.e. when the user
  * application attempts to read from the input buffer. This mode is the most
@@ -121,12 +121,12 @@
  * be configured to always sample the input buffer on each port clock cycle, at
  * the expense of an increased power consumption.
  *
- * \subsection asfdoc_samd20_system_pinmux_module_overview_physical Physical Connection
+ * \subsection asfdoc_sam0_system_pinmux_module_overview_physical Physical Connection
  *
- * \ref asfdoc_samd20_system_pinmux_intconnections "The diagram below" shows
+ * \ref asfdoc_sam0_system_pinmux_intconnections "The diagram below" shows
  * how this module is interconnected within the device:
  *
- * \anchor asfdoc_samd20_system_pinmux_intconnections
+ * \anchor asfdoc_sam0_system_pinmux_intconnections
  * \dot
  * digraph overview {
  *   node [label="Port Pad" shape=square] pad;
@@ -143,9 +143,9 @@
  * }
  * \enddot
  *
- * \section asfdoc_samd20_system_pinmux_special_considerations Special Considerations
+ * \section asfdoc_sam0_system_pinmux_special_considerations Special Considerations
  *
- * The SAM D20 port pin input sampling mode is set in groups of four physical
+ * The SAM D2x port pin input sampling mode is set in groups of four physical
  * pins; setting the sampling mode of any pin in a sub-group of four I/O pins
  * will configure the sampling mode of the entire sub-group.
  *
@@ -153,22 +153,22 @@
  * refer to your device specific datasheet.
  *
  *
- * \section asfdoc_samd20_system_pinmux_extra_info Extra Information
+ * \section asfdoc_sam0_system_pinmux_extra_info Extra Information
  *
- * For extra information see \ref asfdoc_samd20_system_pinmux_extra. This includes:
- *  - \ref asfdoc_samd20_system_pinmux_extra_acronyms
- *  - \ref asfdoc_samd20_system_pinmux_extra_dependencies
- *  - \ref asfdoc_samd20_system_pinmux_extra_errata
- *  - \ref asfdoc_samd20_system_pinmux_extra_history
+ * For extra information see \ref asfdoc_sam0_system_pinmux_extra. This includes:
+ *  - \ref asfdoc_sam0_system_pinmux_extra_acronyms
+ *  - \ref asfdoc_sam0_system_pinmux_extra_dependencies
+ *  - \ref asfdoc_sam0_system_pinmux_extra_errata
+ *  - \ref asfdoc_sam0_system_pinmux_extra_history
  *
  *
- * \section asfdoc_samd20_system_pinmux_examples Examples
+ * \section asfdoc_sam0_system_pinmux_examples Examples
  *
  * For a list of examples related to this driver, see
- * \ref asfdoc_samd20_system_pinmux_exqsg.
+ * \ref asfdoc_sam0_system_pinmux_exqsg.
  *
  *
- * \section asfdoc_samd20_system_pinmux_api_overview API Overview
+ * \section asfdoc_sam0_system_pinmux_api_overview API Overview
  * @{
  */
 
@@ -393,9 +393,9 @@ static inline void system_pinmux_pin_set_input_sample_mode(
 /** @} */
 
 /**
- * \page asfdoc_samd20_system_pinmux_extra Extra Information for SYSTEM PINMUX Driver
+ * \page asfdoc_sam0_system_pinmux_extra Extra Information for SYSTEM PINMUX Driver
  *
- * \section asfdoc_samd20_system_pinmux_extra_acronyms Acronyms
+ * \section asfdoc_sam0_system_pinmux_extra_acronyms Acronyms
  * The table below presents the acronyms used in this module:
  *
  * <table>
@@ -414,17 +414,17 @@ static inline void system_pinmux_pin_set_input_sample_mode(
  * </table>
  *
  *
- * \section asfdoc_samd20_system_pinmux_extra_dependencies Dependencies
+ * \section asfdoc_sam0_system_pinmux_extra_dependencies Dependencies
  * This driver has the following dependencies:
  *
  *  - None
  *
  *
- * \section asfdoc_samd20_system_pinmux_extra_errata Errata
+ * \section asfdoc_sam0_system_pinmux_extra_errata Errata
  * There are no errata related to this driver.
  *
  *
- * \section asfdoc_samd20_system_pinmux_extra_history Module History
+ * \section asfdoc_sam0_system_pinmux_extra_history Module History
  * An overview of the module history is presented in the table below, with
  * details on the enhancements and fixes made to the module since its first
  * release. The current version of this corresponds to the newest version in
@@ -444,17 +444,17 @@ static inline void system_pinmux_pin_set_input_sample_mode(
  */
 
 /**
- * \page asfdoc_samd20_system_pinmux_exqsg Examples for SYSTEM PINMUX Driver
+ * \page asfdoc_sam0_system_pinmux_exqsg Examples for SYSTEM PINMUX Driver
  *
  * This is a list of the available Quick Start guides (QSGs) and example
- * applications for \ref asfdoc_samd20_system_pinmux_group. QSGs are simple
+ * applications for \ref asfdoc_sam0_system_pinmux_group. QSGs are simple
  * examples with step-by-step instructions to configure and use this driver in a
  * selection of use cases. Note that QSGs can be compiled as a standalone
  * application or be added to the user application.
  *
- *  - \subpage asfdoc_samd20_system_pinmux_basic_use_case
+ *  - \subpage asfdoc_sam0_system_pinmux_basic_use_case
  *
- * \page asfdoc_samd20_system_pinmux_document_revision_history Document Revision History
+ * \page asfdoc_sam0_system_pinmux_document_revision_history Document Revision History
  *
  * <table>
  *	<tr>

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 System Interrupt Driver
+ * \brief SAM D2x System Interrupt Driver
  *
  * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
@@ -44,9 +44,9 @@
 #define SYSTEM_INTERRUPT_H_INCLUDED
 
 /**
- * \defgroup asfdoc_samd20_system_interrupt_group SAM D20 System Interrupt Driver (SYSTEM INTERRUPT)
+ * \defgroup asfdoc_sam0_system_interrupt_group SAM D2x System Interrupt Driver (SYSTEM INTERRUPT)
  *
- * This driver for SAM D20 devices provides an interface for the configuration
+ * This driver for SAM D2x devices provides an interface for the configuration
  * and management of internal software and hardware interrupts/exceptions.
  *
  * The following peripherals are used by this module:
@@ -54,20 +54,20 @@
  *  - NVIC (Nested Vector Interrupt Controller)
  *
  * The outline of this documentation is as follows:
- *  - \ref asfdoc_samd20_system_interrupt_prerequisites
- *  - \ref asfdoc_samd20_system_interrupt_module_overview
- *  - \ref asfdoc_samd20_system_interrupt_special_considerations
- *  - \ref asfdoc_samd20_system_interrupt_extra_info
- *  - \ref asfdoc_samd20_system_interrupt_examples
- *  - \ref asfdoc_samd20_system_interrupt_api_overview
+ *  - \ref asfdoc_sam0_system_interrupt_prerequisites
+ *  - \ref asfdoc_sam0_system_interrupt_module_overview
+ *  - \ref asfdoc_sam0_system_interrupt_special_considerations
+ *  - \ref asfdoc_sam0_system_interrupt_extra_info
+ *  - \ref asfdoc_sam0_system_interrupt_examples
+ *  - \ref asfdoc_sam0_system_interrupt_api_overview
  *
  *
- * \section asfdoc_samd20_system_interrupt_prerequisites Prerequisites
+ * \section asfdoc_sam0_system_interrupt_prerequisites Prerequisites
  *
  * There are no prerequisites for this module.
  *
  *
- * \section asfdoc_samd20_system_interrupt_module_overview Module Overview
+ * \section asfdoc_sam0_system_interrupt_module_overview Module Overview
  *
  * The Cortex M0+ core contains an interrupt an exception vector table, which
  * can be used to configure the device's interrupt handlers; individual
@@ -78,7 +78,7 @@
  * to expose a simple API for the management of global and individual interrupts
  * within the device.
  *
- * \subsection asfdoc_samd20_system_interrupt_module_overview_criticalsec Critical Sections
+ * \subsection asfdoc_sam0_system_interrupt_module_overview_criticalsec Critical Sections
  * In some applications it is important to ensure that no interrupts may be
  * executed by the system whilst a critical portion of code is being run; for
  * example, a buffer may be copied from one context to another - during which
@@ -87,34 +87,34 @@
  * exit nested critical sections, so that global interrupts can be kept disabled
  * for as long as necessary to complete a critical application code section.
  *
- * \subsection asfdoc_samd20_system_interrupt_module_overview_softints Software Interrupts
+ * \subsection asfdoc_sam0_system_interrupt_module_overview_softints Software Interrupts
  * For some applications, it may be desirable to raise a module or core
  * interrupt via software. For this reason, a set of APIs to set an interrupt or
  * exception as pending are provided to the user application.
  *
- * \section asfdoc_samd20_system_interrupt_special_considerations Special Considerations
+ * \section asfdoc_sam0_system_interrupt_special_considerations Special Considerations
  *
- * Interrupts from peripherals in the SAM D20 devices are on a per-module basis;
+ * Interrupts from peripherals in the SAM D2x devices are on a per-module basis;
  * an interrupt raised from any source within a module will cause a single,
  * module-common handler to execute. It is the user application or driver's
  * responsibility to de-multiplex the module-common interrupt to determine the
  * exact interrupt cause.
  *
- * \section asfdoc_samd20_system_interrupt_extra_info Extra Information
+ * \section asfdoc_sam0_system_interrupt_extra_info Extra Information
  *
- * For extra information see \ref asfdoc_samd20_system_interrupt_extra. This includes:
- *  - \ref asfdoc_samd20_system_interrupt_extra_acronyms
- *  - \ref asfdoc_samd20_system_interrupt_extra_dependencies
- *  - \ref asfdoc_samd20_system_interrupt_extra_errata
- *  - \ref asfdoc_samd20_system_interrupt_extra_history
+ * For extra information see \ref asfdoc_sam0_system_interrupt_extra. This includes:
+ *  - \ref asfdoc_sam0_system_interrupt_extra_acronyms
+ *  - \ref asfdoc_sam0_system_interrupt_extra_dependencies
+ *  - \ref asfdoc_sam0_system_interrupt_extra_errata
+ *  - \ref asfdoc_sam0_system_interrupt_extra_history
  *
  *
- * \section asfdoc_samd20_system_interrupt_examples Examples
+ * \section asfdoc_sam0_system_interrupt_examples Examples
  *
  * For a list of examples related to this driver, see
- * \ref asfdoc_samd20_system_interrupt_exqsg.
+ * \ref asfdoc_sam0_system_interrupt_exqsg.
  *
- * \section asfdoc_samd20_system_interrupt_api_overview API Overview
+ * \section asfdoc_sam0_system_interrupt_api_overview API Overview
  * @{
  */
 
@@ -312,9 +312,9 @@ enum system_interrupt_priority_level system_interrupt_get_priority(
 /** @} */
 
 /**
- * \page asfdoc_samd20_system_interrupt_extra Extra Information for SYSTEM INTERRUPT Driver
+ * \page asfdoc_sam0_system_interrupt_extra Extra Information for SYSTEM INTERRUPT Driver
  *
- * \section asfdoc_samd20_system_interrupt_extra_acronyms Acronyms
+ * \section asfdoc_sam0_system_interrupt_extra_acronyms Acronyms
  * The table below presents the acronyms used in this module:
  *
  * <table>
@@ -329,17 +329,17 @@ enum system_interrupt_priority_level system_interrupt_get_priority(
  * </table>
  *
  *
- * \section asfdoc_samd20_system_interrupt_extra_dependencies Dependencies
+ * \section asfdoc_sam0_system_interrupt_extra_dependencies Dependencies
  * This driver has the following dependencies:
  *
  *  - None
  *
  *
- * \section asfdoc_samd20_system_interrupt_extra_errata Errata
+ * \section asfdoc_sam0_system_interrupt_extra_errata Errata
  * There are no errata related to this driver.
  *
  *
- * \section asfdoc_samd20_system_interrupt_extra_history Module History
+ * \section asfdoc_sam0_system_interrupt_extra_history Module History
  * An overview of the module history is presented in the table below, with
  * details on the enhancements and fixes made to the module since its first
  * release. The current version of this corresponds to the newest version in
@@ -356,18 +356,18 @@ enum system_interrupt_priority_level system_interrupt_get_priority(
  */
 
 /**
- * \page asfdoc_samd20_system_interrupt_exqsg Examples for SYSTEM INTERRUPT Driver
+ * \page asfdoc_sam0_system_interrupt_exqsg Examples for SYSTEM INTERRUPT Driver
  *
  * This is a list of the available Quick Start guides (QSGs) and example
- * applications for \ref asfdoc_samd20_system_interrupt_group. QSGs are simple examples with
+ * applications for \ref asfdoc_sam0_system_interrupt_group. QSGs are simple examples with
  * step-by-step instructions to configure and use this driver in a selection of
  * use cases. Note that QSGs can be compiled as a standalone application or be
  * added to the user application.
  *
- *  - \subpage asfdoc_samd20_system_interrupt_critsec_use_case
- *  - \subpage asfdoc_samd20_system_interrupt_enablemodint_use_case
+ *  - \subpage asfdoc_sam0_system_interrupt_critsec_use_case
+ *  - \subpage asfdoc_sam0_system_interrupt_enablemodint_use_case
  *
- * \page asfdoc_samd20_system_interrupt_document_revision_history Document Revision History
+ * \page asfdoc_sam0_system_interrupt_document_revision_history Document Revision History
  *
  * <table>
  *	<tr>

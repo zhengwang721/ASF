@@ -37,7 +37,7 @@
 
 				<build type="header-file" value="quick_start/qs_system_interrupt.h"/>
 
-				<build type="doxygen-entry-point" value="asfdoc_samd2x_system_interrupt_group"/>
+				<build type="doxygen-entry-point" value="asfdoc_sam0_system_interrupt_group"/>
 				<build type="doxygen-example-path" value="quick_start"/>
 
 				<device-support value="samd20"/>
@@ -83,7 +83,7 @@
 
 				<build type="header-file" value="quick_start/qs_system_interrupt.h"/>
 
-				<build type="doxygen-entry-point" value="asfdoc_samd2x_system_interrupt_group"/>
+				<build type="doxygen-entry-point" value="asfdoc_sam0_system_interrupt_group"/>
 				<build type="doxygen-example-path" value="quick_start"/>
 
 				<device-support value="samd21"/>

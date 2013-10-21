@@ -37,7 +37,7 @@
 
 				<device-support value="samd20"/>
 
-				<build type="doxygen-entry-point" value="asfdoc_samd2x_system_clock_group"/>
+				<build type="doxygen-entry-point" value="asfdoc_sam0_system_clock_group"/>
 				<build type="doxygen-example-path" value="quick_start_gclk"/>
 				<build type="doxygen-example-path" value="quick_start_clock"/>
 
@@ -69,6 +69,7 @@
 					<keyword value="Clocks" />
 				</info>
 
+				<info type="appnote" value="AT03259"/>
 				<info type="keyword" value="pdf">
 					<keyword value="SYSTEM"/>
 					<keyword value="I/O"/>
@@ -84,7 +85,7 @@
 
 				<device-support value="samd21"/>
 
-				<build type="doxygen-entry-point" value="asfdoc_samd2x_system_clock_group"/>
+				<build type="doxygen-entry-point" value="asfdoc_sam0_system_clock_group"/>
 				<build type="doxygen-example-path" value="quick_start_gclk"/>
 				<build type="doxygen-example-path" value="quick_start_clock"/>
 

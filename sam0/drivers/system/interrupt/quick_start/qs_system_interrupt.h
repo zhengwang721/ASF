@@ -42,24 +42,24 @@
  */
 
 /**
- * \page asfdoc_samd2x_system_interrupt_critsec_use_case Quick Start Guide for SYSTEM INTERRUPT - Critical Section Use Case
+ * \page asfdoc_sam0_system_interrupt_critsec_use_case Quick Start Guide for SYSTEM INTERRUPT - Critical Section Use Case
  *
  * In this case we perform a critical piece of code, disabling all interrupts
  * while a global shared flag is read. During the critical section, no interrupts
  * may occur.
  *
- * \section asfdoc_samd2x_system_interrupt_critsec_use_case_setup Setup
+ * \section asfdoc_sam0_system_interrupt_critsec_use_case_setup Setup
  *
- * \subsection asfdoc_samd2x_system_interrupt_critsec_use_case_setup_prereq Prerequisites
+ * \subsection asfdoc_sam0_system_interrupt_critsec_use_case_setup_prereq Prerequisites
  * There are no special setup requirements for this use-case.
  *
- * \section asfdoc_samd2x_system_interrupt_critsec_use_case_use_main Use Case
+ * \section asfdoc_sam0_system_interrupt_critsec_use_case_use_main Use Case
  *
- * \subsection asfdoc_samd2x_system_interrupt_critsec_use_case_code Code
+ * \subsection asfdoc_sam0_system_interrupt_critsec_use_case_code Code
  * Copy-paste the following code to your user application:
  * \snippet qs_system_interrupt.c main_1
  *
- * \subsection asfdoc_samd2x_system_interrupt_critsec_use_case_flow Workflow
+ * \subsection asfdoc_sam0_system_interrupt_critsec_use_case_flow Workflow
  * -# Enter a critical section to disable global interrupts.
  *  \note Critical sections <i>may</i> be nested if desired; if nested, global
  *        interrupts will only be re-enabled once the outer-most critical
@@ -77,23 +77,23 @@
  */
 
 /**
- * \page asfdoc_samd2x_system_interrupt_enablemodint_use_case Quick Start Guide for SYSTEM INTERRUPT - Enable Module Interrupt Use Case
+ * \page asfdoc_sam0_system_interrupt_enablemodint_use_case Quick Start Guide for SYSTEM INTERRUPT - Enable Module Interrupt Use Case
  *
  * In this case we enable interrupt handling for a specific module, as well as
  * enable interrupts globally for the device.
  *
- * \section asfdoc_samd2x_system_interrupt_enablemodint_use_case_setup Setup
+ * \section asfdoc_sam0_system_interrupt_enablemodint_use_case_setup Setup
  *
- * \subsection asfdoc_samd2x_system_interrupt_enablemodint_use_case_setup_prereq Prerequisites
+ * \subsection asfdoc_sam0_system_interrupt_enablemodint_use_case_setup_prereq Prerequisites
  * There are no special setup requirements for this use-case.
  *
- * \section asfdoc_samd2x_system_interrupt_enablemodint_use_case_use_main Use Case
+ * \section asfdoc_sam0_system_interrupt_enablemodint_use_case_use_main Use Case
  *
- * \subsection asfdoc_samd2x_system_interrupt_enablemodint_use_case_code Code
+ * \subsection asfdoc_sam0_system_interrupt_enablemodint_use_case_code Code
  * Copy-paste the following code to your user application:
  * \snippet qs_system_interrupt.c main_2
  *
- * \subsection asfdoc_samd2x_system_interrupt_enablemodint_use_case_flow Workflow
+ * \subsection asfdoc_sam0_system_interrupt_enablemodint_use_case_flow Workflow
  * -# Enable interrupt handling for the device's RTC peripheral.
  *  \snippet qs_system_interrupt.c module_int_enable
  *
