@@ -155,7 +155,7 @@
  * \name Voltage Monitor pins definition
  * @{
  */
-#define 5V_SENSE_GPIO    PIO_PB23_IDX
+#define V5V_SENSE_GPIO   PIO_PB23_IDX
 #define VDD_SENSE_GPIO   PIO_PB31_IDX
 /* @} */
 
@@ -216,11 +216,11 @@
  * \name UART1 pis (UTXD1 and URXD1) definitions
  * @{
  */
-#define PINS_UART1        (PIO_PC0A_URXD0 | PIO_PC1A_UTXD0)
+#define PINS_UART1        (PIO_PC1A_URXD1 | PIO_PC0A_UTXD1)
 #define PINS_UART1_FLAGS  (IOPORT_MODE_MUX_A)
 
 #define PINS_UART1_PORT   IOPORT_PIOC
-#define PINS_UART1_MASK   (PIO_PC0A_URXD0 | PIO_PC1A_UTXD0)
+#define PINS_UART1_MASK   (PIO_PC1A_URXD1 | PIO_PC0A_UTXD1)
 #define PINS_UART1_PIO    PIOC
 #define PINS_UART1_ID     ID_PIOC
 #define PINS_UART1_TYPE   PIO_PERIPH_A

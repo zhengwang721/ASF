@@ -124,12 +124,12 @@ void board_init(void)
 #endif
 
 	/* Configure UART0 pins */
-#if defined(CONF_BOARD_UART0) || defined(CONF_BOARD_UART_CONSOLE)
+#ifdef CONF_BOARD_UART0  
         ioport_set_port_peripheral_mode(PINS_UART0_PORT, PINS_UART0, PINS_UART0_FLAGS);
 #endif
         
-	/* Configure UART1 pins */
-#ifdef CONF_BOARD_UART1      
+	/* Configure UART1 pins (CONSOLE) */
+#if defined(CONF_BOARD_UART1) || defined(CONF_BOARD_UART_CONSOLE)
 	ioport_set_port_peripheral_mode(PINS_UART1_PORT, PINS_UART1, PINS_UART1_FLAGS);
 #endif     
 

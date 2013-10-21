@@ -185,6 +185,8 @@ typedef struct _DeviceVectors
   void* pfnIPC1_Handler;   /* 39 Interprocessor communication 1 */
   void* pfnSPI1_Handler;   /* 40 Serial Peripheral Interface 1 */
   void* pfnPWM_Handler;    /* 41 Pulse Width Modulation */
+  void* pvReserved42;
+  void* pvReserved43;
 } DeviceVectors;
 
 /* Cortex-M4 core handlers */
