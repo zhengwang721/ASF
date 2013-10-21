@@ -112,6 +112,11 @@
 		<device-support value="sam4e"/>
 	</board>
 
+	<board id="board.user_board.sam4c" caption="User Board template">
+		<require idref="common.boards.user_board.common"/>
+		<device-support value="sam4c"/>
+	</board>
+
 	<board id="board.user_board.megarf" caption="User Board template">
 		<require idref="common.boards.user_board.common"/>
 		<device-support value="megarf"/>

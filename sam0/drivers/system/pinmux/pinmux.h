@@ -145,8 +145,8 @@
  *
  * \section asfdoc_samd20_system_pinmux_special_considerations Special Considerations
  *
- * The SAM D20 port pin input sampling mode is set in groups of four physical
- * pins; setting the sampling mode of any pin in a sub-group of four I/O pins
+ * The SAM D20 port pin input sampling mode is set in groups of eight physical
+ * pins; setting the sampling mode of any pin in a sub-group of eight I/O pins
  * will configure the sampling mode of the entire sub-group.
  *
  * High Drive Strength output driver mode is not available on all device pins -
@@ -431,13 +431,12 @@ static inline void system_pinmux_pin_set_input_sample_mode(
 		const enum system_pinmux_pin_sample mode)
 {
 	PortGroup* const port = system_pinmux_get_group_from_gpio_pin(gpio_pin);
-	uint32_t sample_quad_mask = (1UL << ((gpio_pin % 32) / 4));
+	uint32_t pin_index = (gpio_pin % 32);
 
 	if (mode == SYSTEM_PINMUX_PIN_SAMPLE_ONDEMAND) {
-		port->CTRL.reg |=  sample_quad_mask;
-	}
-	else {
-		port->CTRL.reg &= ~sample_quad_mask;
+		port->CTRL.reg |= (1 << pin_index);
+	} else {
+		port->CTRL.reg &= ~(1 << pin_index);
 	}
 }
 
@@ -565,6 +564,10 @@ static inline void system_pinmux_pin_set_output_drive(
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
+ *		<td>Fixed broken sampling mode function implementations, which wrote
+ *		    corrupt configuration values to the device registers.</td>
+ *	</tr>
+ *	<tr>
  *		<td>Added missing NULL pointer asserts to the PORT driver functions.</td>
  *	</tr>
  *	<tr>
@@ -591,6 +594,11 @@ static inline void system_pinmux_pin_set_output_drive(
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>C</td>
+ *		<td>09/2013</td>
+ *		<td>Fixed incorrect documentation for the device pin sampling mode.</td>
  *	</tr>
  *	<tr>
  *		<td>B</td>
