@@ -46,6 +46,7 @@
 #include "pio_handler.h"
 #include "pmc.h"
 #include "low_power_board.h"
+#include "matrix.h"
 
 /** IRQ priority for PIO (The lower the value, the greater the priority) */
 #define IRQ_PRIOR_PIO    0
@@ -83,10 +84,13 @@ uint32_t g_pll_clock_list[][4] = {
 };
 
 /**
- * \brief Initialize SAM4E_EK board for low power test.
+ * \brief Initialize SAM4E_XPRO board for low power test.
  */
 void init_specific_board(void)
 {
+	/* Disable all Extra functions in matrix except for SWD CLK/IO */
+	matrix_set_system_io(0x00001C30);
+
 	/* Configure all PIOs as inputs to save power */
 	pio_set_input(PIOA, 0xFFFFFFFF, PIO_PULLUP);
 	pio_set_input(PIOB, 0xFFFFFFFF, PIO_PULLUP);
@@ -97,10 +101,15 @@ void init_specific_board(void)
 	/* Disable USB Clock */
 	pmc_disable_udpck();
 
+	/* Disable pull-up on PHY */
+	pio_pull_up(PIOD, PIO_PD0 | PIO_PD4 | PIO_PD5 | PIO_PD6 | PIO_PD7, 0);
+	/* Hold PHY in reset to avoid the clock output switching */
+	pio_set_output(PIOD, PIO_PD31, 0, 0, 0);
+
+	/* Disable pull-up on VBUS */
+	pio_pull_up(PIOE, PIO_PE2, 0);
 	/* Disable PIO pull-up for PB10(USB_DDM), PB11(USB_DDP) */
-	pio_pull_up(PIOB, (0x3 << 10), 0);
-	/* Disable PIO pull-up for PC21(USB_CNX) */
-	pio_pull_up(PIOC, (0x1 << 21), 0);
+	pio_pull_up(PIOB, PIO_PB10 | PIO_PB11, 0);
 
 	/* Enable the PMC clocks of push button for wakeup */
 	pmc_enable_periph_clk(ID_PIOE);

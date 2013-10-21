@@ -19,7 +19,7 @@
 		<!-- Required modules -->
 		<require idref="sam.drivers.pmc"/>
 		<require idref="sam.drivers.rtt"/>
-		<require idref="sam.drivers.supc"/>
+		<require idref="sam.drivers.matrix"/>
 		<require idref="sam.drivers.pio"/>
 		<require idref="sam.applications.low_power"/>
 		<require idref="board.sam4e_xplained_pro"/>
