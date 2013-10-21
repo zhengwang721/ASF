@@ -75,6 +75,9 @@
 
 
 #define NUM_CHECK 10
+#if (defined __ICCAVR__)
+#define _BV(x) (1 << (x))
+#endif
 
 /*
  * Various helper macros for accessing the memory mapped External RAM on the
