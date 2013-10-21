@@ -142,7 +142,7 @@
 #define LED2_RCB			  IOPORT_CREATE_PIN(PORTE, 4)	  
 
 #define LED_ADDR_DEC_DDR                (DDRD)
-#define _BV(x) (1 << (x))
+
 /* LED address decoding port output register */
 #define LED_ADDR_DEC_PORT               (PORTD)
 
