@@ -243,7 +243,7 @@ void WDT_Handler        ( void );
  * \brief Configuration of the Cortex-M4 Processor and Core Peripherals 
  */
 
-#define __CM4_REV              0x0002 /**< SAM4CP16B core revision number ([15:8] revision number, [7:0] patch number) */
+#define __CM4_REV              0x0001 /**< SAM4CP16B core revision number ([15:8] revision number, [7:0] patch number) */
 #define __MPU_PRESENT          0      /**< SAM4CP16B does not provide a MPU */
 #define __FPU_PRESENT          1      /**< SAM4CP16B does provide a FPU */
 #define __NVIC_PRIO_BITS       4      /**< SAM4CP16B uses 4 Bits for the Priority Levels */

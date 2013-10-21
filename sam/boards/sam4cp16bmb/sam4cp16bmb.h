@@ -71,8 +71,12 @@
 /** Core definition */
 #define cortexm4
 /** Board revision definition */
-#define BOARD_REV_1     0
-#define BOARD_REV_2     1
+#define BOARD_REV_1     1
+#define BOARD_REV_2     2
+
+#ifndef BOARD_REV
+#define BOARD_REV BOARD_REV_2
+#endif
 
 
 /** PLC Timers Configuration */
