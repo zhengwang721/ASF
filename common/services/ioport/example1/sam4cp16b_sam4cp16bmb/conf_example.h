@@ -44,7 +44,7 @@
 #define CONF_EXAMPLE_H_INCLUDED
 
 /* Using LED0 SAM4CP16BMB (PB14) */
-#define EXAMPLE_LED0_PORT (1)
-#define EXAMPLE_LED0_MASK ((1 << 14))
+#define EXAMPLE_LED_PORT (1)
+#define EXAMPLE_LED_MASK ((1 << 14))
 
 #endif /* CONF_EXAMPLE_H_INCLUDED */

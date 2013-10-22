@@ -140,7 +140,7 @@ static void init_mask(void)
  * \param  pix_com  Pixel coordinate - COMx - of the pixel.
  * \param  pix_seg  Pixel coordinate - SEGy - of the pixel.
  */
-void c42364a_slcdc_set_pixel(Slcdc *p_slcdc,
+static void c42364a_slcdc_set_pixel(Slcdc *p_slcdc,
 		uint8_t pix_com, uint8_t pix_seg)
 {
 	if (pix_seg < 32)
@@ -158,7 +158,7 @@ void c42364a_slcdc_set_pixel(Slcdc *p_slcdc,
  * \param  pix_com  Pixel coordinate - COMx - of the pixel.
  * \param  pix_seg  Pixel coordinate - SEGy - of the pixel.
  */
-void c42364a_slcdc_clear_pixel(Slcdc *p_slcdc,
+static void c42364a_slcdc_clear_pixel(Slcdc *p_slcdc,
 		uint8_t pix_com, uint8_t pix_seg)
 {
 	if (pix_seg < 32)
