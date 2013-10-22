@@ -45,9 +45,17 @@
 #define CONF_PDC_UART_EXAMPLE_H_INCLUDED
 
 /* Configuration for console uart IRQ */
-#define CONSOLE_UART_IRQn           UART1_IRQn
+#define CONSOLE_UART_IRQn           UART0_IRQn
 
 /* Configuration for console uart IRQ handler */
-#define console_uart_irq_handler    UART1_Handler
+#define console_uart_irq_handler    UART0_Handler
+
+/** UART Interface ID*/
+#undef CONSOLE_UART_ID
+#define CONSOLE_UART_ID      ID_UART0
+
+/** UART Interface */
+#undef CONSOLE_UART
+#define CONSOLE_UART         UART0
 
 #endif /* CONF_PDC_UART_EXAMPLE_H_INCLUDED */

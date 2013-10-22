@@ -45,9 +45,10 @@
 			<info type="keyword" value="technology">
 				<keyword value="Timers"/>
 			</info>
-			<build type="c-source" value="wdt_example_sam4cp.c"/>
+			<build type="c-source" value="wdt_example_nobutton.c"/>
 			<build type="include-path" value="."/>
 			<device-support value="sam4cp"/>
+			<device-support value="sam4s"/>
 			<require idref="sam.drivers.wdt"/>
 			<require idref="sam.drivers.pio"/>
 			<require idref="sam.drivers.pmc"/>

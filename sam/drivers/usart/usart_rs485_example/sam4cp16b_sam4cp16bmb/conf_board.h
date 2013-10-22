@@ -54,4 +54,7 @@
 /** Configure USART0 RTS pin */
 #define CONF_BOARD_USART0_RTS
 
+/* RE pin. */
+#define PIN_RE_IDX                 PIN_USART1_CTS_IDX
+
 #endif /* CONF_BOARD_H_INCLUDED */
