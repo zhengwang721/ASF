@@ -793,7 +793,18 @@ bool wpan_mlme_start_req(uint16_t PANId,
 		uint8_t SuperframeOrder,
 		bool PANCoordinator,
 		bool BatteryLifeExtension,
-		bool CoordRealignment)
+		bool CoordRealignment
+#ifdef MAC_SECURITY_ZIP_BEACON
+		,uint8_t CoordRealignSecurityLevel,
+		uint8_t CoordRealignKeyIdMode,
+		uint8_t *CoordRealignKeySource,
+		uint8_t CoordRealignKeyIndex,
+		uint8_t BeaconSecurityLevel,
+		uint8_t BeaconKeyIdMode,
+		uint8_t *BeaconKeySource,
+		uint8_t BeaconKeyIndex	
+#endif			
+		)
 {
 	buffer_t *buffer_header;
 	mlme_start_req_t *mlme_start_req;
@@ -824,6 +835,17 @@ bool wpan_mlme_start_req(uint16_t PANId,
 	mlme_start_req->BatteryLifeExtension = BatteryLifeExtension;
 	mlme_start_req->CoordRealignment = CoordRealignment;
 	mlme_start_req->ChannelPage = ChannelPage;
+	
+#ifdef MAC_SECURITY_ZIP_BEACON
+	mlme_start_req->CoordRealignSecurityLevel = CoordRealignSecurityLevel;
+	mlme_start_req->CoordRealignKeyIdMode = CoordRealignKeyIdMode;
+	mlme_start_req->CoordRealignKeySource = CoordRealignKeySource;
+	mlme_start_req->CoordRealignKeyIndex = CoordRealignKeyIndex;
+	mlme_start_req->BeaconSecurityLevel = BeaconSecurityLevel;
+	mlme_start_req->BeaconKeyIdMode = BeaconKeyIdMode;
+	mlme_start_req->BeaconKeySource = BeaconKeySource;
+	mlme_start_req->BeaconKeyIndex = BeaconKeyIndex;
+#endif
 
 #ifdef ENABLE_QUEUE_CAPACITY
 	if (MAC_SUCCESS != qmm_queue_append(&nhle_mac_q, buffer_header)) {

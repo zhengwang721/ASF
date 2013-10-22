@@ -719,6 +719,7 @@ typedef struct mlme_comm_status_ind_tag {
 	uint8_t status;
 } mlme_comm_status_ind_t __ALIGN_WORD_ADDR__;
 
+
 /**
  * @brief This is the MLME-START.request message structure.
  */
@@ -780,7 +781,63 @@ typedef struct mlme_start_req_tag {
 	 *to
 	 * changing the superframe configuration or FALSE otherwise.
 	 */
-	uint8_t CoordRealignment;
+	uint8_t CoordRealignment;	
+	
+	/**
+	 * The security level to be used for coordinator realignment command
+	 * frames (see Table95 in 7.6.2.2.1).
+	 * Valid values are 0x00–0x07
+	 */
+	 uint8_t CoordRealignSecurityLevel;
+	 
+	 /**
+	  * The mode used to identify the key to be used (see Table 96 in 7.6.2.2.2).
+	  * This parameter is ignored if the CoordRealignSecurityLevel parameter 
+	  * is set to 0x00.
+	  */
+	 uint8_t CoordRealignKeyIdMode;
+	 
+	 /**
+	  * The originator of the key to be used (see 7.6.2.4.1). This parameter is
+	  * ignored if the CoordRealignKeyIdMode parameter is ignored or set to
+	  * 0x00.
+	  */
+	 uint8_t *CoordRealignKeySource;
+	 
+	 /**
+	  * The index of the key to be used (see 7.6.2.4.2). This parameter is 
+	  * ignored if the CoordRealignKeyIdMode
+	  * parameter is ignored or set to 0x00.
+	  */
+	 uint8_t CoordRealignKeyIndex;
+	 
+	 /**
+	  * The security level to be used for beacon frames (see Table 95 in
+	  * 7.6.2.2.1).
+	  */
+	 uint8_t BeaconSecurityLevel;
+	 
+	 /**
+	  * The mode used to identify the key to be used 
+	  * (see Table 96 in 7.6.2.2.2). This parameter is ignored
+	  * if the BeaconSecurityLevel parameter is set
+	  * to 0x00.
+	  */
+	 uint8_t BeaconKeyIdMode;
+	 
+	 /**
+	  * The originator of the key to be used (see 7.6.2.4.1). 
+	  * This parameter is ignored if the BeaconKeyIdMode
+	  * parameter is ignored or set to 0x00.
+	  */
+	 uint8_t *BeaconKeySource;
+	 
+	 /**
+	  * The index of the key to be used (see 7.6.2.4.2). 
+	  * This parameter is ignored if the BeaconKeyIdMode 
+	  * parameter is ignored or set to 0x00.
+	  */
+	 uint8_t BeaconKeyIndex;
 } mlme_start_req_t __ALIGN_WORD_ADDR__;
 
 /**

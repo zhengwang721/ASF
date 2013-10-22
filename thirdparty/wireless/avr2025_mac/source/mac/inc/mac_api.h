@@ -859,7 +859,18 @@ bool wpan_mlme_start_req(uint16_t PANId,
 		uint8_t SuperframeOrder,
 		bool PANCoordinator,
 		bool BatteryLifeExtension,
-		bool CoordRealignment);
+		bool CoordRealignment
+#ifdef MAC_SECURITY_ZIP_BEACON
+,uint8_t CoordRealignSecurityLevel,
+uint8_t CoordRealignKeyIdMode,
+uint8_t *CoordRealignKeySource,
+uint8_t CoordRealignKeyIndex,
+uint8_t BeaconSecurityLevel,
+uint8_t BeaconKeyIdMode,
+uint8_t *BeaconKeySource,
+uint8_t BeaconKeyIndex
+#endif		
+		);
 
 #endif  /* (MAC_START_REQUEST_CONFIRM == 1) */
 
