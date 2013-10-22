@@ -113,11 +113,8 @@
 #define FCF_POS                          (0x01)
 
 /* === Globals ============================================================= */
-#ifdef MAC_SECURITY_ZIP_BEACON
 
-extern uint8_t mac_beacon_key[];	
-		
-#endif
+
 /* === Prototypes ========================================================== */
 
 static uint8_t get_key_id_field_len(uint8_t key_id_mode);
@@ -452,22 +449,12 @@ retval_t mac_secure(frame_info_t *frame, uint8_t *mac_payload_ptr,
     }
     /* 7.5.8.2.1 (g) */
     /* Retrieval of the key */
-	if (FCF_FRAMETYPE_BEACON == (frame->mpdu[FCF_POS] & FCF_FRAME_TYPE_MASK))
-	{
-#ifdef MAC_SECURITY_ZIP_BEACON
-	 key = mac_beacon_key;		
-#endif		
-	}
-	else
-	{
      retval_t key_status = outgoing_key_retrieval(pmdr, &key_desc);
 	 if (key_status != MAC_SUCCESS)
      {
         return key_status;
      }
 	 key = key_desc->Key;
-	}
-
     
     uint8_t m = get_mic_length(pmdr->SecurityLevel);
 
@@ -614,13 +601,16 @@ static inline retval_t outgoing_key_retrieval(mcps_data_req_t *pmdr, mac_key_tab
 		default:
 			return MAC_UNSUPPORTED_SECURITY; /* applies for ZIP only */
 		}
-	} else if (pmdr->KeyIdMode == KEY_ID_MODE_1) { /* explicit key identification */
+	} 
+	else if (pmdr->KeyIdMode == KEY_ID_MODE_1) 
+	{ /* explicit key identification */
 		/*
 		 * lookup_data:
 		 * 8-octet of macDefaultKeySource right-concatenated with
 		 * single octet: Key Index parameter = tx_frame->key_id[0]
 		 */
-		for (uint8_t i = 0; i < KEY_SRC_LEN_8; i++) {
+		for (uint8_t i = 0; i < KEY_SRC_LEN_8; i++) 
+		{
 			lookup_data[i] = mac_sec_pib.DefaultKeySource[i];
 		}
 		lookup_data[KEY_SRC_LEN_8] = pmdr->KeyIndex; /* tx_frame->key_id[0]; */
@@ -803,34 +793,20 @@ static inline retval_t unsecure_frame(parse_t *mac_parse_data_buf, uint8_t *mpdu
     mac_key_table_t *key_desc;
     mac_device_desc_t *device_desc;
     mac_key_device_desc_t *key_device_desc;
-#ifdef MAC_SECURITY_ZIP_BEACON	
-	mac_device_desc_t device_desc_data;
-	mac_key_device_desc_t key_device_desc_data;
-	device_desc = &device_desc_data;
-	key_device_desc = &key_device_desc_data;
-#endif
 
     /* Todo 7.5.8.2.3 (e) 7.5.8.2.8 security level checking procedure*/
-	if (FCF_FRAMETYPE_BEACON == mac_parse_data_buf->frame_type)
-	{
-#ifdef MAC_SECURITY_ZIP_BEACON
-		key = mac_beacon_key;		
-#endif
-	} 
-	else
-	{
 		retval_t status = incoming_sec_material_retrieval(mac_parse_data_buf, &key_desc, &device_desc, &key_device_desc);
 		if (status != MAC_SUCCESS)
 		{
 			return MAC_UNAVAILABLE_KEY;
 		}
 		key = key_desc->Key;
-	}
 
     /* Todo 7.5.8.2.3 (h) using 7.5.8.2.9 key usage policy procedure*/
 
     /* 7.5.8.2.3 (j) & (k)*/
-    if ((FCF_FRAMETYPE_DATA == mac_parse_data_buf->frame_type) && \
+    if (((FCF_FRAMETYPE_DATA == mac_parse_data_buf->frame_type) /*||\
+	    (FCF_FRAMETYPE_BEACON == mac_parse_data_buf->frame_type)*/)&& \
 	((mac_parse_data_buf->frame_cnt == FRAME_COUNTER_MAX_VAL) || \
 	    (mac_parse_data_buf->frame_cnt < device_desc->FrameCounter)))
     {
@@ -847,9 +823,14 @@ static inline retval_t unsecure_frame(parse_t *mac_parse_data_buf, uint8_t *mpdu
     /* Standard way of extracting Src IEEE address. */
     addr_ptr = (uint8_t *)&device_desc->ExtAddress;
 #ifdef MAC_SECURITY_ZIP_BEACON
-		uint64_t coord_ieee_address = 0x1234567812345600;
+		uint64_t coord_ieee_address;
 		if (FCF_FRAMETYPE_BEACON == mac_parse_data_buf->frame_type)
 		{
+			uint8_t *addr_index = (uint8_t *)&coord_ieee_address;
+			
+			memcpy(&addr_index[0], &mac_sec_pib.PANCoordExtendedAddress[0],
+			sizeof(coord_ieee_address));
+			
 			addr_ptr = (uint8_t *)&coord_ieee_address;
 		}		
 #endif
@@ -890,7 +871,7 @@ static inline retval_t unsecure_frame(parse_t *mac_parse_data_buf, uint8_t *mpdu
                 break;
 				
 		case FCF_FRAMETYPE_BEACON:                  //(0x00)
-                {
+            {
                 /* Shall the real key be used or rather a test key? */
                 current_key = key;
 				uint8_t beacon_add_len = 0;

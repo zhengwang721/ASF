@@ -94,6 +94,10 @@
 
 /* === Globals ============================================================== */
 
+#ifdef MAC_SECURITY_ZIP_BEACON
+extern mlme_start_req_t msr_params;    /* Intermediate start parameters */
+#endif
+
 #if (MAC_START_REQUEST_CONFIRM == 1)
 
 #ifdef BEACON_SUPPORT
@@ -263,7 +267,8 @@ void mac_build_and_tx_beacon(bool beacon_enabled,
 	uint8_t frame_len;
 	uint8_t *frame_ptr;
 #if ((defined MAC_SECURITY_ZIP_BEACON)  || (defined MAC_SECURITY_2006_BEACON)) 
-	uint8_t *frame_ptr_mhr_gts = NULL;
+	uint8_t *frame_ptr_mhr_gts = NULL;	
+	uint8_t *mac_payload_ptr = NULL;
 	mcps_data_req_t beacon_sec_buf;   
 #endif
 
@@ -303,9 +308,7 @@ void mac_build_and_tx_beacon(bool beacon_enabled,
 	/* Get the payload pointer. */
 	frame_ptr = (uint8_t *)transmit_frame +
 			LARGE_BUFFER_SIZE - 2; /* Add 2 octets for FCS. */
-#if ((defined MAC_SECURITY_ZIP_BEACON)  || (defined MAC_SECURITY_2006_BEACON))
-uint8_t *mac_payload_ptr = NULL;
-#endif			
+		
 	/* Build the beacon payload if it exists. */
 	if (mac_pib.mac_BeaconPayloadLength > 0) 
 	{
@@ -406,10 +409,10 @@ uint8_t *mac_payload_ptr = NULL;
 
 #if ((defined MAC_SECURITY_ZIP_BEACON)  || (defined MAC_SECURITY_2006_BEACON)) 
 	frame_ptr_mhr_gts = frame_ptr;    
-	beacon_sec_buf.SecurityLevel = 0x05;
-	beacon_sec_buf.KeyIdMode = 1;
-	beacon_sec_buf.KeySource = NULL;
-	beacon_sec_buf.KeyIndex = 4;	
+	beacon_sec_buf.SecurityLevel = msr_params.BeaconSecurityLevel;
+	beacon_sec_buf.KeyIdMode = msr_params.BeaconKeyIdMode;
+	beacon_sec_buf.KeySource = msr_params.BeaconKeySource;
+	beacon_sec_buf.KeyIndex = msr_params.BeaconKeyIndex;	
 	beacon_sec_buf.msduLength = mac_pib.mac_BeaconPayloadLength;	
 
 	/*

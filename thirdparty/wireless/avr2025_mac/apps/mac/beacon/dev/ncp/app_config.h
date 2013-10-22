@@ -91,25 +91,26 @@
 
 /* Offset of IEEE address storage location within EEPROM */
 #define EE_IEEE_ADDR                (0)
+
 #ifdef MAC_SECURITY_ZIP
 /**
  * The maximum number of entries supported in the macKeyTable.
  * This value is mplementation specific.
  */
-#define MAC_ZIP_MAX_KEY_TABLE_ENTRIES           (3)
+#define MAC_ZIP_MAX_KEY_TABLE_ENTRIES           (4)
 
 /**
  * The maximum number of entries supported in the macDeviceTable.
- * This value is mplementation specific.
+ * This value is implementation specific.
  */
 #if (MAC_START_REQUEST_CONFIRM == 1)    /* FFD like device */
 #define MAC_ZIP_MAX_DEV_TABLE_ENTRIES           (10)
 #else
-#define MAC_ZIP_MAX_DEV_TABLE_ENTRIES           (3)
+#define MAC_ZIP_MAX_DEV_TABLE_ENTRIES           (4)
 #endif  /* (MAC_START_REQUEST_CONFIRM == 1) */
 /**
  * The maximum number of entries supported in the macSecurityLevelTable.
- * This value is mplementation specific.
+ * This value is implementation specific.
  */
 #define MAC_ZIP_MAX_SEC_LVL_TABLE_ENTRIES       (2)
 
@@ -121,16 +122,13 @@
 /**
  * The maximum number of entries supported in the KeyDeviceList
  */
-#define MAC_ZIP_MAX_KEY_DEV_LIST_ENTRIES        (3)
+#define MAC_ZIP_MAX_KEY_DEV_LIST_ENTRIES        (4)
 
 /**
  * The maximum number of entries supported in the KeyUsageList
  */
 #define MAC_ZIP_MAX_KEY_USAGE_LIST_ENTRIES      (1)
 #endif
-
-/* === Types ================================================================ */
-
 /* === Externals ============================================================ */
 
 /* === Prototypes =========================================================== */

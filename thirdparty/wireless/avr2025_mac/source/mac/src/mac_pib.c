@@ -813,9 +813,57 @@ retval_t mlme_set(uint8_t attribute, pib_value_t *attribute_value,
             }
             else
             {
-                memcpy(&mac_sec_pib.KeyTable[attribute_index],
-                       attribute_value,
-                       sizeof(mac_key_table_t));
+				uint8_t *attribute_ptr = (uint8_t *)attribute_value;
+				/*  copy the attribute values by member. The structures may contain the padding bytes */
+				memcpy((uint8_t *)&mac_sec_pib.KeyTable[attribute_index].KeyIdLookupList[0].LookupData, 
+						attribute_ptr, 9);
+				attribute_ptr += 9;	
+							
+				memcpy((uint8_t *)&mac_sec_pib.KeyTable[attribute_index].KeyIdLookupList[0].LookupDataSize, 
+						attribute_ptr, 1);
+				attribute_ptr += 1;
+				
+				memcpy((uint8_t *)&mac_sec_pib.KeyTable[attribute_index].KeyIdLookupListEntries, 
+						attribute_ptr, 1);
+				attribute_ptr += 1;
+				
+				for (uint8_t index = 0; index < MAC_ZIP_MAX_KEY_DEV_LIST_ENTRIES; index++)
+				{
+					memcpy((uint8_t *)&mac_sec_pib.KeyTable[attribute_index].KeyDeviceList[index].DeviceDescriptorHandle, 
+							attribute_ptr, 1);
+					attribute_ptr += 1;	
+					
+					memcpy((uint8_t *)&mac_sec_pib.KeyTable[attribute_index].KeyDeviceList[index].UniqueDevice, 
+							attribute_ptr, 1);
+					attribute_ptr += 1;
+					
+					memcpy((uint8_t *)&mac_sec_pib.KeyTable[attribute_index].KeyDeviceList[index].BlackListed, 
+							attribute_ptr, 1);
+					attribute_ptr += 1;
+				}
+				
+				memcpy((uint8_t *)&mac_sec_pib.KeyTable[attribute_index].KeyDeviceListEntries, 
+							attribute_ptr, 1);
+				attribute_ptr += 1;
+				
+				for (uint8_t index = 0; index < MAC_ZIP_MAX_KEY_USAGE_LIST_ENTRIES; index++)
+				{
+					memcpy((uint8_t *)&mac_sec_pib.KeyTable[attribute_index].KeyUsageList[index].Frametype, 
+							attribute_ptr, 1);
+					attribute_ptr += 1;	
+					
+					memcpy((uint8_t *)&mac_sec_pib.KeyTable[attribute_index].KeyUsageList[index].CommandFrameIdentifier, 
+							attribute_ptr, 1);
+					attribute_ptr += 1;
+				}
+				
+				memcpy((uint8_t *)&mac_sec_pib.KeyTable[attribute_index].KeyUsageListEntries, 
+							attribute_ptr, 1);
+				attribute_ptr += 1;	
+				
+				memcpy((uint8_t *)&mac_sec_pib.KeyTable[attribute_index].Key[0], 
+							attribute_ptr, 16);
+				attribute_ptr += 16;			
             }
             break;
 
@@ -892,9 +940,21 @@ retval_t mlme_set(uint8_t attribute, pib_value_t *attribute_value,
             }
             else
             {
-                memcpy(&mac_sec_pib.SecurityLevelTable[attribute_index],
-                       attribute_value,
-                       sizeof(mac_sec_lvl_table_t));
+				uint8_t *attribute_ptr = (uint8_t *)attribute_value;
+				
+				/*  copy the attribute values by member. The structures may contain the padding bytes */
+				mac_sec_pib.SecurityLevelTable[attribute_index].FrameType \
+														= *attribute_ptr++;
+														
+				mac_sec_pib.SecurityLevelTable[attribute_index].CommandFrameIdentifier \
+														= *attribute_ptr++;			
+															
+				mac_sec_pib.SecurityLevelTable[attribute_index].SecurityMinimum \
+														= *attribute_ptr++;
+														
+				mac_sec_pib.SecurityLevelTable[attribute_index].DeviceOverrideSecurityMinimum \
+														= *attribute_ptr++;
+
             }
             break;
 
