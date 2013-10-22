@@ -146,7 +146,7 @@
  * \section asfdoc_sam0_system_pinmux_special_considerations Special Considerations
  *
  * The SAM D2x port pin input sampling mode is set in groups of four physical
- * pins; setting the sampling mode of any pin in a sub-group of four I/O pins
+ * pins; setting the sampling mode of any pin in a sub-group of eight I/O pins
  * will configure the sampling mode of the entire sub-group.
  *
  * High Drive Strength output driver mode is not available on all device pins -
@@ -435,6 +435,10 @@ static inline void system_pinmux_pin_set_input_sample_mode(
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
+ *		<td>Fixed broken sampling mode function implementations, which wrote
+ *		    corrupt configuration values to the device registers.</td>
+ *	</tr>
+ *	<tr>
  *		<td>Added missing NULL pointer asserts to the PORT driver functions.</td>
  *	</tr>
  *	<tr>
@@ -461,6 +465,11 @@ static inline void system_pinmux_pin_set_input_sample_mode(
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>C</td>
+ *		<td>09/2013</td>
+ *		<td>Fixed incorrect documentation for the device pin sampling mode.</td>
  *	</tr>
  *	<tr>
  *		<td>B</td>
