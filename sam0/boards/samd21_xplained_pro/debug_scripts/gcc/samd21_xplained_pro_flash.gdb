@@ -21,8 +21,8 @@ monitor flash download = 1
 load
 
 # Initializing PC and stack pointer
-mon reg sp=(0x22008000)
-mon reg pc=(0x00000000)
+mon reg sp=(0x00000000)
+mon reg pc=(0x00000004)
 info reg
 
 # end of 'reset' command

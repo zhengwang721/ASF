@@ -16,8 +16,8 @@ monitor reset
 load
 
 # Initializing PC and stack pointer
-mon reg sp=(0x22008000)
-mon reg pc=(0x20000000)
+mon reg sp=(0x20000000)
+mon reg pc=(0x20000004)
 info reg
 
 # end of 'reset' command
