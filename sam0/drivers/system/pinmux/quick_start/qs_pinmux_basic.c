@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 GPIO PINMUX Driver Quick Start
+ * \brief SAM D2x GPIO PINMUX Driver Quick Start
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *

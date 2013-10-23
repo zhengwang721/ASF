@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 Clock Driver
+ * \brief SAM D2x Clock Driver
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *

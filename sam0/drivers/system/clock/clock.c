@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 Clock Driver
+ * \brief SAM D2x Clock Driver
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -41,90 +41,10 @@
  *
  */
 #include <clock.h>
+#include "clock_private.h"
 #include <conf_clocks.h>
 #include <system.h>
 
-/**
- * \internal
- * \brief DFLL-specific data container
- */
-struct _system_clock_dfll_config {
-	uint32_t control;
-	uint32_t val;
-	uint32_t mul;
-};
-
-/**
- * \internal
- * \brief XOSC-specific data container
- */
-struct _system_clock_xosc_config {
-	uint32_t frequency;
-};
-
-/**
- * \internal
- * \brief System clock module data container
- */
-struct _system_clock_module {
-	volatile struct _system_clock_dfll_config dfll;
-	volatile struct _system_clock_xosc_config xosc;
-	volatile struct _system_clock_xosc_config xosc32k;
-};
-
-/**
- * \internal
- * \brief Internal module instance to cache configuration values
- */
-static struct _system_clock_module _system_clock_inst = {
-		.dfll = {
-			.control     = 0,
-			.val     = 0,
-			.mul     = 0,
-		},
-		.xosc = {
-			.frequency   = 0,
-		},
-		.xosc32k = {
-			.frequency   = 0,
-		},
-	};
-
-/**
- * \internal
- * \brief Wait for sync to the DFLL control registers
- */
-static inline void _system_dfll_wait_for_sync(void)
-{
-	while (!(SYSCTRL->PCLKSR.reg & SYSCTRL_PCLKSR_DFLLRDY)) {
-		/* Wait for DFLL sync */
-	}
-}
-
-/**
- * \internal
- * \brief Wait for sync to the OSC32K control registers
- */
-static inline void _system_osc32k_wait_for_sync(void)
-{
-	while (!(SYSCTRL->PCLKSR.reg & SYSCTRL_PCLKSR_OSC32KRDY)) {
-		/* Wait for OSC32K sync */
-	}
-}
-
-static inline void _system_clock_source_dfll_set_config_errata_9905(void)
-{
-
-	/* Disable ONDEMAND mode while writing configurations */
-	SYSCTRL->DFLLCTRL.reg = _system_clock_inst.dfll.control & ~SYSCTRL_DFLLCTRL_ONDEMAND;
-	_system_dfll_wait_for_sync();
-
-	SYSCTRL->DFLLMUL.reg = _system_clock_inst.dfll.mul;
-	SYSCTRL->DFLLVAL.reg = _system_clock_inst.dfll.val;
-
-	/* Write full configuration to DFLL control register */
-	SYSCTRL->DFLLCTRL.reg = _system_clock_inst.dfll.control;
-}
 
 /**
  * \brief Retrieve the frequency of a clock source
@@ -171,6 +91,15 @@ uint32_t system_clock_source_get_hz(
 
 		return 48000000UL;
 
+#ifdef FEATURE_SYSTEM_CLOCK_DPLL
+	case SYSTEM_CLOCK_SOURCE_DPLL:
+		if (!(SYSCTRL->DPLLSTATUS.reg & SYSCTRL_DPLLSTATUS_ENABLE)) {
+			return 0;
+		}
+
+		return _system_clock_inst.dpll.frequency;
+#endif
+
 	default:
 		return 0;
 	}
@@ -190,9 +119,10 @@ void system_clock_source_osc8m_set_config(
 	SYSCTRL_OSC8M_Type temp = SYSCTRL->OSC8M;
 
 	/* Use temporary struct to reduce register access */
-	temp.bit.PRESC = config->prescaler;
+	temp.bit.PRESC    = config->prescaler;
 	temp.bit.ONDEMAND = config->on_demand;
 	temp.bit.RUNSTDBY = config->run_in_standby;
+	temp.bit.FRANGE   = config->frequency_range;
 
 	SYSCTRL->OSC8M = temp;
 }
@@ -216,6 +146,7 @@ void system_clock_source_osc32k_set_config(
 	temp.bit.STARTUP  = config->startup_time;
 	temp.bit.ONDEMAND = config->on_demand;
 	temp.bit.RUNSTDBY = config->run_in_standby;
+	temp.bit.WRTLOCK  = config->write_once;
 
 	SYSCTRL->OSC32K  = temp;
 }
@@ -297,116 +228,15 @@ void system_clock_source_xosc32k_set_config(
 	temp.bit.ONDEMAND = config->on_demand;
 	temp.bit.RUNSTDBY = config->run_in_standby;
 
+	temp.bit.WRTLOCK  = config->write_once;
+
 	/* Cache the new frequency in case the user needs to check the current
 	 * operating frequency later */
 	_system_clock_inst.xosc32k.frequency = config->frequency;
 
 	SYSCTRL->XOSC32K = temp;
 }
-///@cond INTERNAL
 
-/**
- * \internal
- * \name Header file macro copies for runtime support of different revisions
- *
- * These macroes are copied from the header file to be able to support both new and old register layout runtime.
- *
- * @{
- */
-#define _SYSTEM_OLD_DFLLVAL_FINE_Pos    0
-#define _SYSTEM_OLD_DFLLVAL_FINE_Msk    (0xFFu << _SYSTEM_OLD_DFLLVAL_FINE_Pos)
-#define _SYSTEM_OLD_DFLLVAL_FINE(value) ((_SYSTEM_OLD_DFLLVAL_FINE_Msk & ((value) << _SYSTEM_OLD_DFLLVAL_FINE_Pos)))
-
-#define _SYSTEM_OLD_DFLLVAL_COARSE_Pos  8
-#define _SYSTEM_OLD_DFLLVAL_COARSE_Msk  (0x1Fu << _SYSTEM_OLD_DFLLVAL_COARSE_Pos)
-#define _SYSTEM_OLD_DFLLVAL_COARSE(value) ((_SYSTEM_OLD_DFLLVAL_COARSE_Msk & ((value) << _SYSTEM_OLD_DFLLVAL_COARSE_Pos)))
-
-#define _SYSTEM_NEW_DFLLVAL_FINE_Pos    0
-#define _SYSTEM_NEW_DFLLVAL_FINE_Msk    (0x3FFu << _SYSTEM_NEW_DFLLVAL_FINE_Pos)
-#define _SYSTEM_NEW_DFLLVAL_FINE(value) ((_SYSTEM_NEW_DFLLVAL_FINE_Msk & ((value) << _SYSTEM_NEW_DFLLVAL_FINE_Pos)))
-
-#define _SYSTEM_NEW_DFLLVAL_COARSE_Pos  10
-#define _SYSTEM_NEW_DFLLVAL_COARSE_Msk  (0x3Fu << _SYSTEM_NEW_DFLLVAL_COARSE_Pos)
-#define _SYSTEM_NEW_DFLLVAL_COARSE(value) ((_SYSTEM_NEW_DFLLVAL_COARSE_Msk & ((value) << _SYSTEM_NEW_DFLLVAL_COARSE_Pos)))
-
-#define _SYSTEM_OLD_DFLLMUL_FSTEP_Pos   16
-#define _SYSTEM_OLD_DFLLMUL_FSTEP_Msk   (0xFFu << _SYSTEM_OLD_DFLLMUL_FSTEP_Pos)
-#define _SYSTEM_OLD_DFLLMUL_FSTEP(value) ((_SYSTEM_OLD_DFLLMUL_FSTEP_Msk & ((value) << _SYSTEM_OLD_DFLLMUL_FSTEP_Pos)))
-
-#define _SYSTEM_OLD_DFLLMUL_CSTEP_Pos   24
-#define _SYSTEM_OLD_DFLLMUL_CSTEP_Msk   (0x1Fu << _SYSTEM_OLD_DFLLMUL_CSTEP_Pos)
-#define _SYSTEM_OLD_DFLLMUL_CSTEP(value) ((_SYSTEM_OLD_DFLLMUL_CSTEP_Msk & ((value) << _SYSTEM_OLD_DFLLMUL_CSTEP_Pos)))
-
-#define _SYSTEM_NEW_DFLLMUL_FSTEP_Pos   16
-#define _SYSTEM_NEW_DFLLMUL_FSTEP_Msk   (0x3FFu << _SYSTEM_NEW_DFLLMUL_FSTEP_Pos)
-#define _SYSTEM_NEW_DFLLMUL_FSTEP(value) ((_SYSTEM_NEW_DFLLMUL_FSTEP_Msk & ((value) << _SYSTEM_NEW_DFLLMUL_FSTEP_Pos)))
-
-#define _SYSTEM_NEW_DFLLMUL_CSTEP_Pos   26
-#define _SYSTEM_NEW_DFLLMUL_CSTEP_Msk   (0x3Fu << _SYSTEM_NEW_DFLLMUL_CSTEP_Pos)
-#define _SYSTEM_NEW_DFLLMUL_CSTEP(value) ((_SYSTEM_NEW_DFLLMUL_CSTEP_Msk & ((value) << _SYSTEM_NEW_DFLLMUL_CSTEP_Pos)))
-
-#define _SYSTEM_MCU_REVISION_D 3
-
-///@endcond
-
-
-/**
- * \brief Configure the DFLL clock source
- *
- * Configures the Digital Frequency Locked Loop clock source with the given
- * configuration settings.
- *
- * \note The DFLL will be running when this function returns, as the DFLL module
- *       needs to be enabled in order to perform the module configuration.
- *
- * \param[in] config  DFLL configuration structure containing the new config
- */
-void system_clock_source_dfll_set_config(
-		struct system_clock_source_dfll_config *const config)
-{
-
-	/* Get MCU revision */
-	uint32_t rev = system_get_device_id();
-
-	rev &= DSU_DID_REVISION_Msk;
-	rev = rev >> DSU_DID_REVISION_Pos;
-
-	if (rev < _SYSTEM_MCU_REVISION_D) {
-		_system_clock_inst.dfll.val =
-				_SYSTEM_OLD_DFLLVAL_COARSE(config->coarse_value) |
-				_SYSTEM_OLD_DFLLVAL_FINE(config->fine_value);
-	} else {
-		_system_clock_inst.dfll.val =
-				_SYSTEM_NEW_DFLLVAL_COARSE(config->coarse_value) |
-				_SYSTEM_NEW_DFLLVAL_FINE(config->fine_value);
-	}
-
-	_system_clock_inst.dfll.control =
-			(uint32_t)config->wakeup_lock     |
-			(uint32_t)config->stable_tracking |
-			(uint32_t)config->quick_lock      |
-			(uint32_t)config->chill_cycle     |
-			(uint32_t)config->run_in_standby << SYSCTRL_DFLLCTRL_RUNSTDBY_Pos |
-			(uint32_t)config->on_demand << SYSCTRL_DFLLCTRL_ONDEMAND_Pos;
-
-	if (config->loop_mode == SYSTEM_CLOCK_DFLL_LOOP_MODE_CLOSED) {
-
-		if(rev < _SYSTEM_MCU_REVISION_D) {
-			_system_clock_inst.dfll.mul =
-					_SYSTEM_OLD_DFLLMUL_CSTEP(config->coarse_max_step) |
-					_SYSTEM_OLD_DFLLMUL_FSTEP(config->fine_max_step)   |
-					SYSCTRL_DFLLMUL_MUL(config->multiply_factor);
-		} else {
-			_system_clock_inst.dfll.mul =
-					_SYSTEM_NEW_DFLLMUL_CSTEP(config->coarse_max_step) |
-					_SYSTEM_NEW_DFLLMUL_FSTEP(config->fine_max_step)   |
-					SYSCTRL_DFLLMUL_MUL(config->multiply_factor);
-		}
-
-		/* Enable the closed loop mode */
-		_system_clock_inst.dfll.control |= config->loop_mode;
-	}
-}
 
 /**
  * \brief Writes the calibration values for a given oscillator clock source
@@ -513,6 +343,12 @@ enum status_code system_clock_source_enable(
 		_system_clock_source_dfll_set_config_errata_9905();
 		break;
 
+#ifdef FEATURE_SYSTEM_CLOCK_DPLL
+	case SYSTEM_CLOCK_SOURCE_DPLL:
+		SYSCTRL->DPLLCTRLA.reg = SYSCTRL_DPLLCTRLA_ENABLE;
+		break;
+#endif
+
 	case SYSTEM_CLOCK_SOURCE_ULP32K:
 		/* Always enabled */
 		return STATUS_OK;
@@ -561,16 +397,25 @@ enum status_code system_clock_source_disable(
 		SYSCTRL->DFLLCTRL.reg = _system_clock_inst.dfll.control;
 		break;
 
+#ifdef FEATURE_SYSTEM_CLOCK_DPLL
+	case SYSTEM_CLOCK_SOURCE_DPLL:
+		SYSCTRL->DPLLCTRLA.reg &= ~SYSCTRL_DPLLCTRLA_ENABLE;
+		break;
+#endif
+
 	case SYSTEM_CLOCK_SOURCE_ULP32K:
 		/* Not possible to disable */
-		return STATUS_ERR_INVALID_ARG;
 
 	default:
+		Assert(false);
 		return STATUS_ERR_INVALID_ARG;
+
 	}
 
 	return STATUS_OK;
 }
+
+
 
 /**
  * \brief Checks if a clock source is ready
@@ -609,6 +454,11 @@ bool system_clock_source_is_ready(
 	case SYSTEM_CLOCK_SOURCE_DFLL:
 		mask = SYSCTRL_PCLKSR_DFLLRDY;
 		break;
+
+#ifdef FEATURE_SYSTEM_CLOCK_DPLL
+	case SYSTEM_CLOCK_SOURCE_DPLL:
+		return SYSCTRL_DPLLSTATUS_CLKRDY;
+#endif
 
 	case SYSTEM_CLOCK_SOURCE_ULP32K:
 		/* Not possible to disable */
@@ -660,7 +510,7 @@ bool system_clock_source_is_ready(
 void system_clock_init(void)
 {
         /* Workaround for errata 10558 */
-        SYSCTRL->INTFLAG.reg = SYSCTRL_INTFLAG_BOD12RDY | SYSCTRL_INTFLAG_BOD33RDY |
+	SYSCTRL->INTFLAG.reg = SYSCTRL_INTFLAG_BOD12RDY | SYSCTRL_INTFLAG_BOD33RDY |
                         SYSCTRL_INTFLAG_BOD12DET | SYSCTRL_INTFLAG_BOD33DET |
                         SYSCTRL_INTFLAG_DFLLRDY;
 
@@ -774,9 +624,10 @@ void system_clock_init(void)
 	struct system_clock_source_osc8m_config osc8m_conf;
 	system_clock_source_osc8m_get_config_defaults(&osc8m_conf);
 
-	osc8m_conf.prescaler      = CONF_CLOCK_OSC8M_PRESCALER;
-	osc8m_conf.on_demand      = CONF_CLOCK_OSC8M_ON_DEMAND;
-	osc8m_conf.run_in_standby = CONF_CLOCK_OSC8M_RUN_IN_STANDBY;
+	osc8m_conf.prescaler       = CONF_CLOCK_OSC8M_PRESCALER;
+	osc8m_conf.on_demand       = CONF_CLOCK_OSC8M_ON_DEMAND;
+	osc8m_conf.run_in_standby  = CONF_CLOCK_OSC8M_RUN_IN_STANDBY;
+	osc8m_conf.frequency_range = CONF_CLOCK_OSC8M_FREQUENCY_RANGE;
 
 	system_clock_source_osc8m_set_config(&osc8m_conf);
 	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_OSC8M);
@@ -788,7 +639,7 @@ void system_clock_init(void)
 
 	/* Configure all GCLK generators except for the main generator, which
 	 * is configured later after all other clock systems are set up */
-	MREPEAT(GCLK_GEN_NUM_MSB, _CONF_CLOCK_GCLK_CONFIG_NONMAIN, ~);
+	MREPEAT(8, _CONF_CLOCK_GCLK_CONFIG_NONMAIN, ~);
 
 #  if CONF_CLOCK_DFLL_ENABLE == true
 	/* Enable DFLL reference clock if in closed loop mode */
@@ -816,6 +667,31 @@ void system_clock_init(void)
 	_CONF_CLOCK_GCLK_CONFIG(0, ~);
 #endif
 
+	/* DPLL */
+
+#  ifdef FEATURE_SYSTEM_CLOCK_DPLL
+#    if (CONF_CLOCK_DPLL_ENABLE)
+
+	struct system_clock_source_dpll_config dpll_config;
+	system_clock_source_dpll_get_config_defaults(&dpll_config);
+
+	dpll_config.on_demand       = CONF_CLOCK_DPLL_ON_DEMAND;
+	dpll_config.run_in_standby  = CONF_CLOCK_DPLL_RUN_IN_STANDBY;
+	dpll_config.lock_bypass     = CONF_CLOCK_DPLL_LOCK_BYPASS;
+	dpll_config.wake_up_fast    = CONF_CLOCK_DPLL_WAKE_UP_FAST;
+
+	dpll_config.filter          = CONF_CLOCK_DPLL_FILTER;
+
+	dpll_config.reference_clock     = CONF_CLOCK_DPLL_REFERENCE_CLOCK;
+	dpll_config.reference_frequency = CONF_CLOCK_DPLL_REFERENCE_FREQUENCY;
+	dpll_config.reference_divider   = CONF_CLOCK_DPLL_REFEREMCE_DIVIDER;
+	dpll_config.output_frequency    = CONF_CLOCK_DPLL_OUTPUT_FREQUENCY;
+
+	system_clock_source_set_config(&dpll_config);
+	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_DPLL);
+
+#    endif
+#  endif
 
 	/* CPU and BUS clocks */
 	system_cpu_clock_set_divider(CONF_CLOCK_CPU_DIVIDER);

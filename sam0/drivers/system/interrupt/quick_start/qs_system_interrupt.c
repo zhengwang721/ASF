@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 System Interrupt Driver Quick Start
+ * \brief SAM D2x System Interrupt Driver Quick Start
  *
  * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *

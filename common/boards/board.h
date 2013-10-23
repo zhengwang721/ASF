@@ -124,8 +124,9 @@ extern "C" {
 #define SAM4L8_XPLAINED_PRO        60  //!< SAM4L8 Xplained Pro board.
 #define SAM4N_XPLAINED_PRO         61  //!< SAM4N-XPLAINED-PRO board.
 #define XMEGA_A3_REB_CBB           62  //!< SAM4L8 Xplained Pro board.
-#define ATMEGARFX_RCB          	   63  //!< RFR2 & RFA1 RCB
+#define ATMEGARFX_RCB              63  //!< RFR2 & RFA1 RCB
 #define SAM4C_EK                   64  //!< SAM4C-EK board.
+#define SAMD21_XPLAINED_PRO        65
 #define SIMULATOR_XMEGA_A1         97  //!< Simulator for XMEGA A1 devices
 #define AVR_SIMULATOR_UC3          98  //!< AVR SIMULATOR for AVR UC3 device family.
 #define USER_BOARD                 99  //!< User-reserved board (if any).
@@ -242,6 +243,8 @@ extern "C" {
 #  include "sam4e_ek/sam4e_ek.h"
 #elif BOARD == SAMD20_XPLAINED_PRO
 #  include "samd20_xplained_pro/samd20_xplained_pro.h"
+#elif BOARD == SAMD21_XPLAINED_PRO
+#  include "samd21_xplained_pro/samd21_xplained_pro.h"
 #elif BOARD == SAM4N_XPLAINED_PRO
 #  include "sam4n_xplained_pro/sam4n_xplained_pro.h"
 #elif BOARD == MEGA1284P_XPLAINED_BC
