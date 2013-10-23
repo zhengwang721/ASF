@@ -131,8 +131,8 @@ static void configure_console(void)
 	};
 
 	/* Configure console UART. */
-	sysclk_enable_peripheral_clock(CONF_DBG_UART_ID);
-	stdio_serial_init(CONF_DBG_UART, &uart_serial_options);
+	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
+	stdio_serial_init(CONF_UART, &uart_serial_options);
 }
 
 typedef unsigned long UL;
