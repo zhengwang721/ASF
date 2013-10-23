@@ -1,15 +1,4 @@
 <asf xmlversion="1.0">
-	<module type="meta" id="sam0.drivers.system.clock_common" caption="SYSTEM - Common Clock Management">
-
-			<build type="include-path" value="."/>
-
-			<build type="header-file" subtype="api" value="clock.h"/>
-			<build type="header-file" value="clock_private.h" />
-			<build type="header-file" subtype="api" value="gclk.h"/>
-			<build type="c-source" value="clock.c"/>
-			<build type="c-source" value="gclk.c"/>
-	</module>
-
 	<select-by-device id="sam0.drivers.system.clock" caption="SYSTEM - Clock Management">
 			<module type="driver" id="sam0.drivers.system.clock#samd20" caption="SYSTEM - Clock Management for SAMD20">
 				<info type="description" value="summary">
@@ -44,7 +33,12 @@
 				<build type="include-path" value="."/>
 				<build type="include-path" value="clock_samd20/"/>
 
+				<build type="header-file" subtype="api" value="clock.h"/>
+				<build type="header-file" subtype="api" value="gclk.h"/>
+				<build type="header-file" value="clock_private.h" />
+				<build type="c-source" value="clock.c"/>
 				<build type="c-source" value="clock_01.c"/>
+				<build type="c-source" value="gclk.c"/>
 
 				<build type="header-file" value="quick_start_gclk/qs_gclk_basic.h"/>
 				<build type="header-file" value="quick_start_clock/qs_clock_source.h"/>
@@ -54,7 +48,6 @@
 
 				<require idref="sam0.drivers.system.interrupt"/>
 				<require idref="sam0.utils"/>
-				<require idref="sam0.drivers.system.clock_common"/>
 
 				<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 			</module>
@@ -92,19 +85,25 @@
 				<build type="include-path" value="."/>
 				<build type="include-path" value="clock_samd21/"/>
 
+				<build type="header-file" subtype="api" value="clock.h"/>
+				<build type="header-file" subtype="api" value="gclk.h"/>
+				<build type="header-file" value="clock_private.h" />
 				<build type="header-file" value="clock_02.h"/>
 				<build type="header-file" value="clock_samd21/clock_features.h"/>
+				<build type="c-source" value="clock.c"/>
+				<build type="c-source" value="gclk.c"/>
 				<build type="c-source" value="clock_02.c"/>
+
+				<build type="header-file" value="quick_start_gclk/qs_gclk_basic.h"/>
+				<build type="header-file" value="quick_start_clock/qs_clock_source.h"/>
 
 				<build type="module-config" subtype="path" value="clock_samd21"/>
 				<build type="module-config" subtype="required-header-file" value="conf_clocks.h"/>
 
 				<require idref="sam0.drivers.system.interrupt"/>
 				<require idref="sam0.utils"/>
-				<require idref="sam0.drivers.system.clock_common"/>
 
 				<generator value="doxygen-module-v2" default-mcu="unspecified-samd21"/>
 			</module>
-
 	</select-by-device>
 </asf>
