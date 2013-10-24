@@ -109,6 +109,10 @@
 extern mac_sec_pib_t mac_sec_pib;
 
 /* === Prototypes =========================================================== */
+/* Finding the Key Identifier Length field */
+uint8_t get_key_id_field_len(uint8_t key_id_mode);
+
+bool build_sec_mcps_data_frame(mcps_data_req_t *mpdr, frame_info_t *mframe);
 
 #ifdef __cplusplus
 extern "C" {

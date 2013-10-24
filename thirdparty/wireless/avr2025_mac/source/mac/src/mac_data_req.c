@@ -67,6 +67,10 @@
 #include "mac.h"
 #include "mac_build_config.h"
 
+#ifdef MAC_SECURITY_ZIP
+#include "mac_security.h"
+#endif  /* MAC_SECURITY_ZIP */
+
 #if (MAC_INDIRECT_DATA_BASIC == 1)
 
 /* === Macros =============================================================== */
@@ -92,7 +96,7 @@ static uint8_t find_short_buffer(void *buf, void *short_addr);
 /**
  * @brief Build and transmits data request command frame
  *
- * This function builds and tranmits a data request command frame.
+ * This function builds and transmits a data request command frame.
  *
  *
  * @param expl_poll Data request due to explicit MLME poll request
@@ -649,6 +653,28 @@ void mac_process_data_request(buffer_t *msg)
 			}
 		}
 
+#ifdef MAC_SECURITY_ZIP
+if(transmit_frame->mpdu[1] & FCF_SECURITY_ENABLED)
+{
+	mcps_data_req_t pmdr;
+	
+	build_sec_mcps_data_frame(&pmdr, transmit_frame);
+	
+	if (pmdr.SecurityLevel > 0)
+	{
+		/* Secure the Frame */
+		retval_t build_sec = mac_secure(transmit_frame, \
+		transmit_frame->mac_payload, &pmdr);
+		
+		if (MAC_SUCCESS != build_sec)
+		{
+			/* The MAC Data Payload is encrypted based on the security level. */
+			transmit_frame->indirect_in_transit = false;
+			return;
+		}
+	}
+}
+#endif
 		/*
 		 * Transmission should be done with CSMA-CA or
 		 * quickly after the ACK of the data request command.

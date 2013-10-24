@@ -1245,7 +1245,7 @@ static void indirect_data_cb(void *parameter)
 	uint8_t cur_device;
 	uint8_t src_addr_mode;
 	wpan_addr_spec_t dst_addr;
-	const char *payload = "Direct Data from Coordinator";
+	const char *payload = "Indirect Data from Coordinator";
 
 	/* Loop over all associated devices. */
 	for (cur_device = 0; cur_device < no_of_assoc_devices; cur_device++) {
@@ -1275,7 +1275,7 @@ static void indirect_data_cb(void *parameter)
 				strlen(payload),  /* One octet */ 	 		 
 				(uint8_t*)payload,
 				curr_msdu_handle,
-				WPAN_TXOPT_ACK /* WPAN_TXOPT_INDIRECT_ACK *///@mathi
+				WPAN_TXOPT_INDIRECT_ACK
 #if (defined MAC_SECURITY_ZIP) || (defined MAC_SECURITY_2006)				
 				,ZIP_SEC_MIN,NULL,ZIP_KEY_ID_MODE,device_list[cur_device].short_addr
 #endif					

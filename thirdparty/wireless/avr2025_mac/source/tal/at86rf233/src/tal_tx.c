@@ -262,7 +262,8 @@ void tx_done_handling(void)
 
 	retval_t status;
 
-	switch (trx_trac_status) {
+	switch (trx_trac_status) 
+	{
 	case TRAC_SUCCESS:
 		status = MAC_SUCCESS;
 		break;

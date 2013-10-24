@@ -1074,7 +1074,39 @@ void mac_tx_gts_data(queue_t *gts_data)
 
 	transmit_frame->gts_queue = gts_data;
 
+#ifdef MAC_SECURITY_ZIP
+if(transmit_frame->mpdu[1] & FCF_SECURITY_ENABLED)
+{
+	mcps_data_req_t pmdr;
+	
+	build_sec_mcps_data_frame(&pmdr, transmit_frame);
+	
+	if (pmdr.SecurityLevel > 0)
+	{
+		/* Secure the Frame */
+		retval_t build_sec = mac_secure(transmit_frame, \
+		transmit_frame->mac_payload, &pmdr);
+		
+		if (MAC_SUCCESS != build_sec)
+		{
+			/* The MAC Data Payload is encrypted based on the security level. */
+			mac_gen_mcps_data_conf((buffer_t *)transmit_frame->buffer_header,
+			(uint8_t)build_sec,
+			#ifdef ENABLE_TSTAMP
+			pmdr.msduHandle,
+			0);
+			#else
+			pmdr.msduHandle);
+			#endif  /* ENABLE_TSTAMP */
+			
+			return;
+		}
+	}
+}
+#endif
+
 	tal_tx_status = tal_tx_frame(transmit_frame, NO_CSMA_WITH_IFS, false);
+	
 
 	if (MAC_SUCCESS == tal_tx_status) {
 		MAKE_MAC_BUSY();

@@ -1034,7 +1034,7 @@ static bool parse_mpdu(frame_info_t *rx_frame_ptr)
 	}
 
 #ifdef BEACON_SUPPORT
-	/* The timestamping is only required for beaconing networks. */
+	/* The time stamping is only required for beaconing networks. */
 	mac_parse_data.time_stamp = rx_frame_ptr->time_stamp;
 #endif  /* BEACON_SUPPORT */
 
@@ -1100,7 +1100,7 @@ static bool parse_mpdu(frame_info_t *rx_frame_ptr)
 	/* temp_frame_ptr still points to the first octet of the MAC payload. */
 	switch (mac_parse_data.frame_type) {
 	case FCF_FRAMETYPE_BEACON:
-		/* Get the Superframe specification */
+		/* Get the Super frame specification */
 		memcpy(
 				&mac_parse_data.mac_payload_data.beacon_data.superframe_spec,
 				&temp_frame_ptr[payload_loc],

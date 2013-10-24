@@ -292,14 +292,19 @@ typedef struct
 	uint16_t persistence_time;
 	/** Indirect frame transmission ongoing */
 	bool indirect_in_transit;
+#ifdef MAC_SECURITY_ZIP	
+	/** MAC Payload Pointer */
+	uint8_t *mac_payload;
+#endif
+
 #ifdef GTS_SUPPORT
 	queue_t *gts_queue;
 #endif /* GTS_SUPPORT */
 #if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP)
 
 	/** Timestamp information of frame
-	 * The timestamping is only required for beaconing networks
-	 * or if timestamping is explicitly enabled.
+	 * The time stamping is only required for beaconing networks
+	 * or if time stamping is explicitly enabled.
 	 */
 	uint32_t time_stamp;
 #endif  /* #if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP) */

@@ -117,8 +117,6 @@
 
 /* === Prototypes ========================================================== */
 
-static uint8_t get_key_id_field_len(uint8_t key_id_mode);
-
 static uint8_t get_mic_length(uint8_t security_level);
 
 static inline uint8_t sec_additional_len(mcps_data_req_t *pmdr);
@@ -189,7 +187,7 @@ static inline uint8_t sec_additional_len(mcps_data_req_t *pmdr)
  * @return Length of Key Identifier field in octets.
  * @ToDo Check if lookup table implementation needs less footprint
  */
-static uint8_t get_key_id_field_len(uint8_t key_id_mode)
+uint8_t get_key_id_field_len(uint8_t key_id_mode)
 {
     uint8_t len_field = 0;
 
@@ -1205,6 +1203,171 @@ static retval_t device_descriptor_lookup(mac_device_desc_t device_desc, uint8_t 
 
     return FAILURE;
 }
+
+/** Build the Security MCPS Data Request frame from the mpdu data
+  */
+bool build_sec_mcps_data_frame(mcps_data_req_t *mpdr, frame_info_t *mframe)
+{
+	uint16_t fcf;
+	bool intra_pan;
+	uint8_t addr_field_len = 0;
+	
+	uint8_t *mpdu_ptr = &(mframe->mpdu[1]);
+	
+	/* Extract the FCF */
+	fcf = convert_byte_array_to_16_bit(mpdu_ptr);
+	fcf = CLE16_TO_CPU_ENDIAN(fcf);
+	
+	mpdu_ptr += (2/*FCF*/ + 1/*Seq.No*/);
+	
+	
+	mpdr->SrcAddrMode = (fcf >> FCF_SOURCE_ADDR_OFFSET) & FCF_ADDR_MASK;
+	mpdr->DstAddrMode = (fcf >> FCF_DEST_ADDR_OFFSET) & FCF_ADDR_MASK;
+	intra_pan = fcf & FCF_PAN_ID_COMPRESSION;
+	
+
+	if (mpdr->DstAddrMode != 0) 
+	{
+		mpdr->DstPANId = convert_byte_array_to_16_bit(
+				mpdu_ptr);
+		mpdu_ptr += PAN_ID_LEN;
+		addr_field_len += PAN_ID_LEN;
+		
+		mpdr->DstAddr = 0;
+		if (FCF_SHORT_ADDR == mpdr->DstAddrMode) 
+		{
+			/*
+			 * First initialize the complete long address with zero,
+			 *since
+			 * later only 16 bit are actually written.
+			 */
+			mpdr->DstAddr
+				= convert_byte_array_to_16_bit(mpdu_ptr);
+			mpdu_ptr += SHORT_ADDR_LEN;
+			addr_field_len += SHORT_ADDR_LEN;
+		} 
+		else if (FCF_LONG_ADDR == mpdr->DstAddrMode) 
+		{
+			mpdr->DstAddr
+				= convert_byte_array_to_64_bit(mpdu_ptr);
+			mpdu_ptr += EXT_ADDR_LEN;
+			addr_field_len += EXT_ADDR_LEN;
+		}
+	}
+	
+	if (mpdr->SrcAddrMode != 0) 
+	{
+		if (!intra_pan) 
+		{
+			/*
+			 * Source PAN ID is present in the frame only if the
+			 *intra-PAN bit
+			 * is zero and src_addr_mode is non zero.
+			 */
+			//= convert_byte_array_to_16_bit(
+					//frame_ptr);
+			mpdu_ptr += PAN_ID_LEN;
+			addr_field_len += PAN_ID_LEN;
+		} 
+		else 
+		{
+			/*
+			 * The received frame does not contain a source PAN ID,
+			 *hence
+			 * source PAN ID is updated with the destination PAN ID.
+			 */
+			//src_panid = mpdr->DstPANId;
+		}
+
+		/* The source address is updated. */
+		if (FCF_SHORT_ADDR == mpdr->SrcAddrMode) 
+		{
+			/*
+			 * First initialize the complete long address with zero,
+			 *since
+			 * later only 16 bit are actually written.
+			 */
+			
+				//= convert_byte_array_to_16_bit(mpdu_ptr);
+			mpdu_ptr += SHORT_ADDR_LEN;
+
+			addr_field_len += SHORT_ADDR_LEN;
+		} 
+		else if (FCF_LONG_ADDR == mpdr->SrcAddrMode) 
+		{
+			
+				//= convert_byte_array_to_64_bit(mpdu_ptr);
+			mpdu_ptr += EXT_ADDR_LEN;
+			addr_field_len += EXT_ADDR_LEN;
+		}
+	}
+
+	if (fcf & FCF_SECURITY_ENABLED)
+	{
+		uint8_t keyid_len;
+		/* Security Fields are available so extract the aux security header */
+		mpdr->SecurityLevel = (*mpdu_ptr & SEC_CTRL_SEC_LVL_MASK);	
+		mpdr->KeyIdMode = ((*mpdu_ptr++ >> SEC_CTRL_KEY_ID_FIELD_POS) & SEC_CTRL_KEY_ID_MASK);
+	
+		memcpy(mpdu_ptr, (uint8_t *)&mac_sec_pib.FrameCounter,\
+				FRAME_COUNTER_LEN);		
+		mpdu_ptr += FRAME_COUNTER_LEN;
+	
+		keyid_len = get_key_id_field_len(mpdr->KeyIdMode);
+	
+		switch(keyid_len)
+		{
+			case KEY_ID_MODE_0:
+			/** No Key source & Key Index will be available
+				* Key is determined implicitly from the originator and
+				* recipient(s) of the frame 
+				*/
+				mpdr->KeyIndex = 0;
+				mpdr->KeySource = NULL;
+			break;
+			
+			case KEY_ID_MODE_1:
+			/** Key is determined from the Key Index field in
+				* conjunction with macDefault-KeySource
+				*/
+			mpdr->KeySource = NULL;	
+			mpdr->KeyIndex = *mpdu_ptr;
+			mpdu_ptr += keyid_len;					
+			break;
+			
+			case KEY_ID_MODE_2:			
+			/** Key is determined explicitly from the 4-octet Key
+				* Source field and the Key Index field.
+				*/
+			mpdr->KeySource = mpdu_ptr;
+			mpdu_ptr +=(keyid_len - 1);
+			mpdr->KeyIndex = *mpdu_ptr++;
+			break;
+			
+			case KEY_ID_MODE_3:
+			/** Key is determined explicitly from the 8-octet Key
+				* Source field and the Key Index field.
+				*/
+			mpdr->KeySource = mpdu_ptr;
+			mpdu_ptr +=(keyid_len - 1);
+			mpdr->KeyIndex = *mpdu_ptr++;
+			break;
+			
+			default:
+			mpdr->KeyIndex = 0;
+			mpdr->KeySource = NULL;
+			break;
+		}	
+	}
+   mpdr->msduHandle = mframe->msduHandle;
+   
+   mpdr->msduLength = mframe->mpdu[0] - (mframe->mac_payload - \
+						mframe->mpdu + 1);
+						
+   mpdr->msdu = mframe->mac_payload;
+  return MAC_SUCCESS;						
+}
+
 
 #endif  /* (defined MAC_SECURITY_ZIP) || (defined MAC_SECURITY_2006) */
 
