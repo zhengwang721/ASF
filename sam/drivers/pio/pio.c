@@ -1042,18 +1042,17 @@ Pio *pio_get_pin_group(uint32_t ul_pin)
  */
 uint32_t pio_get_pin_group_id(uint32_t ul_pin)
 {
-//	uint32_t ul_id;
-//#if (SAM4C || SAM4CP)
-//	if (ul_pin > PIO_PB31_IDX) {
-//		p_pio = PIOC;
-//	} else {
-//		p_pio = (Pio *)((uint32_t)PIOA + (PIO_DELTA * (ul_pin >> 5)));
-//	}
-//#else
-//	p_pio = (Pio *)((uint32_t)PIOA + (PIO_DELTA * (ul_pin >> 5)));
-//#endif	
-//	return ul_id;
-        return ul_pin;
+	uint32_t ul_id;
+#if !SAM4C
+	ul_id = ID_PIOA + (ul_pin >> 5);
+#else
+	if (ul_pin > PIO_PB31_IDX) {
+		ul_id = ID_PIOC;
+	} else {
+		ul_id = ID_PIOA + (ul_pin >> 5);
+	}
+#endif
+	return ul_id;
 }
 
 
