@@ -123,7 +123,7 @@
 /** This array stores all device related information. */
 extern associated_device_t device_list[MAX_NUMBER_OF_DEVICES];
 /** Stores the number of associated devices. */
-extern uint8_t no_of_assoc_devices;
+extern uint16_t no_of_assoc_devices;
 /** Keeps the track of the no of device associated. */ 
 extern uint8_t ndevice_associated;
 
@@ -161,7 +161,7 @@ static uint8_t default_key[4][16] = {
 }
 };
 
-extern uint8_t recent_assoc_dev_no;
+extern uint16_t recent_assoc_dev_no;
 
 uint8_t default_key_source[8] = {0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
@@ -268,7 +268,7 @@ static void init_secuity_pib(uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
 		
 		case macKeyTableEntries:
 		{
-		  uint8_t coord_key_index = 4;
+		  uint16_t coord_key_index = 4;
 		  wpan_mlme_set_req(macDeviceTableEntries,
                           NO_PIB_INDEX,
                           &coord_key_index);	
@@ -291,16 +291,16 @@ static void init_secuity_pib(uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
 	            LOOKUP_DATA_SIZE_1, // LookupDataSize: 0x01 : Size 9 octets
 	            MAC_ZIP_MAX_KEY_ID_LOOKUP_LIST_ENTRIES, // KeyIdLookupListEntries = 1
 	            // KeyDeviceList[1]
-	            EMPTY_DEV_HANDLE,           // DeviceDescriptorHandle
+	            DEV_DESC_HANDLE_IDX_0,           // DeviceDescriptorHandle
 	            true,              // UniqueDevice
 	            false,              // Blacklisted
-	            EMPTY_DEV_HANDLE,           // DeviceDescriptorHandle
+	            DEV_DESC_HANDLE_IDX_0,           // DeviceDescriptorHandle
 	            true,              // UniqueDevice
 	            false,              // Blacklisted
-	            EMPTY_DEV_HANDLE,           // DeviceDescriptorHandle
+	            DEV_DESC_HANDLE_IDX_0,           // DeviceDescriptorHandle
 	            true,              // UniqueDevice
 	            false,              // Blacklisted
-				EMPTY_DEV_HANDLE,           // DeviceDescriptorHandle
+				DEV_DESC_HANDLE_IDX_0,           // DeviceDescriptorHandle
 	            true,              // UniqueDevice
 	            false,              // Blacklisted
 	            MAC_ZIP_MAX_KEY_DEV_LIST_ENTRIES, // KeyDeviceListEntries
@@ -353,16 +353,16 @@ static void init_secuity_pib(uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
 							MAC_ZIP_MAX_KEY_ID_LOOKUP_LIST_ENTRIES, // KeyIdLookupListEntries = 1
 							// KeyDeviceList[1]
 							EMPTY_DEV_HANDLE,           // DeviceDescriptorHandle
-							true,              // UniqueDevice
+							false,              // UniqueDevice
 							false,              // Blacklisted
 							EMPTY_DEV_HANDLE,           // DeviceDescriptorHandle
-							true,              // UniqueDevice
+							false,              // UniqueDevice
 							false,              // Blacklisted
 							EMPTY_DEV_HANDLE,           // DeviceDescriptorHandle
-							true,              // UniqueDevice
+							false,              // UniqueDevice
 							false,              // Blacklisted
 							EMPTY_DEV_HANDLE,           // DeviceDescriptorHandle
-							true,              // UniqueDevice
+							false,              // UniqueDevice
 							false,              // Blacklisted
 							MAC_ZIP_MAX_KEY_DEV_LIST_ENTRIES, // KeyDeviceListEntries
 							//  KeyUsageList
@@ -410,16 +410,16 @@ static void init_secuity_pib(uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
 							MAC_ZIP_MAX_KEY_ID_LOOKUP_LIST_ENTRIES, // KeyIdLookupListEntries = 1
 							// KeyDeviceList[1]
 							EMPTY_DEV_HANDLE, // DeviceDescriptorHandle
-							true,              // UniqueDevice
+							false,              // UniqueDevice
 							false,              // Blacklisted
 							EMPTY_DEV_HANDLE, // DeviceDescriptorHandle
-							true,              // UniqueDevice
+							false,              // UniqueDevice
 							false,              // Blacklisted
 							EMPTY_DEV_HANDLE, // DeviceDescriptorHandle
-							true,              // UniqueDevice
+							false,              // UniqueDevice
 							false,              // Blacklisted
 							EMPTY_DEV_HANDLE,           // DeviceDescriptorHandle
-							true,              // UniqueDevice
+							false,              // UniqueDevice
 							false,              // Blacklisted
 							MAC_ZIP_MAX_KEY_DEV_LIST_ENTRIES, // KeyDeviceListEntries
 							//  KeyUsageList
@@ -468,16 +468,16 @@ static void init_secuity_pib(uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
 						MAC_ZIP_MAX_KEY_ID_LOOKUP_LIST_ENTRIES, // KeyIdLookupListEntries = 1
 						// KeyDeviceList[1]
 						EMPTY_DEV_HANDLE, // DeviceDescriptorHandle
-						true,              // UniqueDevice
+						false,              // UniqueDevice
 						false,              // Blacklisted
 						EMPTY_DEV_HANDLE, // DeviceDescriptorHandle
-						true,              // UniqueDevice
+						false,              // UniqueDevice
 						false,              // Blacklisted
 						EMPTY_DEV_HANDLE, // DeviceDescriptorHandle
-						true,              // UniqueDevice
+						false,              // UniqueDevice
 						false,              // Blacklisted
 						EMPTY_DEV_HANDLE,           // DeviceDescriptorHandle
-						true,              // UniqueDevice
+						false,              // UniqueDevice
 						false,              // Blacklisted
 						MAC_ZIP_MAX_KEY_DEV_LIST_ENTRIES, // KeyDeviceListEntries
 						//  KeyUsageList
@@ -722,16 +722,16 @@ static void usr_mlme_set_conf_run_time(uint8_t status, uint8_t PIBAttribute, uin
 						LOOKUP_DATA_SIZE_1, // LookupDataSize: 0x01 : Size 9 octets
 						MAC_ZIP_MAX_KEY_ID_LOOKUP_LIST_ENTRIES, // KeyIdLookupListEntries = 1
 						// KeyDeviceList[1]
-						EMPTY_DEV_HANDLE,           // DeviceDescriptorHandle
+						DEV_DESC_HANDLE_IDX_0,           // DeviceDescriptorHandle
 						true,              // UniqueDevice
 						false,              // Blacklisted
-						EMPTY_DEV_HANDLE,           // DeviceDescriptorHandle
+						DEV_DESC_HANDLE_IDX_0,           // DeviceDescriptorHandle
 						true,              // UniqueDevice
 						false,              // Blacklisted
-						EMPTY_DEV_HANDLE,           // DeviceDescriptorHandle
+						DEV_DESC_HANDLE_IDX_0,           // DeviceDescriptorHandle
 						true,              // UniqueDevice
 						false,              // Blacklisted
-						EMPTY_DEV_HANDLE,           // DeviceDescriptorHandle
+						DEV_DESC_HANDLE_IDX_0,           // DeviceDescriptorHandle
 						true,              // UniqueDevice
 						false,              // Blacklisted
 						MAC_ZIP_MAX_KEY_DEV_LIST_ENTRIES, // KeyDeviceListEntries
@@ -774,7 +774,7 @@ static void usr_mlme_set_conf_run_time(uint8_t status, uint8_t PIBAttribute, uin
                 {
 	                    static uint8_t Temp = 0;
 	                    uint8_t mac_dev_table[17];
-	                    for (uint8_t i = Temp; i < no_of_assoc_devices; i++) // Temp is used to not update the already device table again
+	                    for (uint16_t i = Temp; i < no_of_assoc_devices; i++) // Temp is used to not update the already device table again
 	                    {
 		                    mac_dev_table[0] = (uint8_t)tal_pib.PANId;
 		                    mac_dev_table[1] = (uint8_t)(tal_pib.PANId >> 8);

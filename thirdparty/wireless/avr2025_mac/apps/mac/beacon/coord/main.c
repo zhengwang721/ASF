@@ -187,7 +187,7 @@ extern uint8_t default_key_source[8];
 /** This array stores all device related information. */
 associated_device_t device_list[MAX_NUMBER_OF_DEVICES];
 /** Stores the number of associated devices. */
-uint8_t no_of_assoc_devices;
+uint16_t no_of_assoc_devices;
 /** Keeps the track of the no of device associated. */ 
 uint8_t ndevice_associated;
 
@@ -220,7 +220,7 @@ static wpan_addr_spec_t dst_addr;
 
 #ifdef MAC_SECURITY_ZIP
 /** Store the recently associated device number */
-uint8_t recent_assoc_dev_no = 0xFF;
+uint16_t recent_assoc_dev_no = 0xFFFF;
 #endif	
 
 /* === PROTOTYPES ========================================================== */
@@ -601,7 +601,7 @@ void usr_mlme_comm_status_ind(wpan_addr_spec_t *SrcAddrSpec,
 		uint8_t status)
 {
 	if (status == MAC_SUCCESS) {
-#if (defined MAC_SECURITY_ZIP) || (defined MAC_SECURITY_2006)		
+#if (defined MAC_SECURITY_ZIP) || (defined MAC_SECURITY_2006)	
 		 recent_assoc_dev_no++;
         wpan_mlme_set_req(macDeviceTableEntries,
                           NO_PIB_INDEX,
@@ -1242,7 +1242,7 @@ const char Display_MSDU_Handle[] = "(MSDU handle:  %u)\r\n";
 #endif
 static void indirect_data_cb(void *parameter)
 {
-	uint8_t cur_device;
+	uint16_t cur_device;
 	uint8_t src_addr_mode;
 	wpan_addr_spec_t dst_addr;
 	const char *payload = "Indirect Data from Coordinator";
@@ -1308,7 +1308,7 @@ const char Display_GTS_Data[] = "GTS data for device %" PRIu8 " ";
  */
 static void gts_data_cb(void *parameter)
 {
-	uint8_t cur_device;
+	uint16_t cur_device;
 	uint8_t src_addr_mode;
 	wpan_addr_spec_t dst_addr;
 

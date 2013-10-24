@@ -226,8 +226,12 @@ retval_t tal_init(void)
 		 *generated
 		 * in function tal_generate_rand_seed().
 		 */
-#ifdef FFD		
-		tal_pib.IeeeAddress = 0x1234567812345600;
+#if ((defined FFD) && (MAC_SECURITY_ZIP))	
+{
+  uint8_t coord_extended_addr[] = {0x00, 0x56, 0x34, 0x12, 0x78, 0x56, 0x34, 0x12};
+	  memcpy((uint8_t *)&tal_pib.IeeeAddress, (uint8_t *)&coord_extended_addr[0],
+	          sizeof(tal_pib.IeeeAddress));
+}
 #else		
 		uint8_t *ptr_pib = (uint8_t *)&tal_pib.IeeeAddress;
 

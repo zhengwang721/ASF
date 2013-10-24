@@ -117,7 +117,7 @@
 
 
 /* === MACROS ============================================================== */
-#define COORD_IEEE_ADDRESS (0x1234567812345600)
+uint8_t COORD_IEEE_ADDRESS[] = {0x12, 0x34, 0x56, 0x78, 0x12, 0x34, 0x56, 0x00};
 /* === GLOBALS ============================================================= */
 extern app_state_t app_state;
 
@@ -258,7 +258,7 @@ static void init_secuity_pib(uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
 		
 		case macKeyTableEntries:
 		{
-		  uint8_t coord_key_index = 4;
+		  uint16_t coord_key_index = 4;
 		  wpan_mlme_set_req(macDeviceTableEntries,
                           NO_PIB_INDEX,
                           &coord_key_index);	
@@ -281,16 +281,16 @@ static void init_secuity_pib(uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
 	            LOOKUP_DATA_SIZE_1, // LookupDataSize: 0x01 : Size 9 octets
 	            MAC_ZIP_MAX_KEY_ID_LOOKUP_LIST_ENTRIES, // KeyIdLookupListEntries = 1
 	            // KeyDeviceList[1]
-	            EMPTY_DEV_HANDLE,           // DeviceDescriptorHandle
+	            DEV_DESC_HANDLE_IDX_0,           // DeviceDescriptorHandle
 	            true,              // UniqueDevice
 	            false,              // Blacklisted
-	            EMPTY_DEV_HANDLE,           // DeviceDescriptorHandle
+	            DEV_DESC_HANDLE_IDX_0,           // DeviceDescriptorHandle
 	            true,              // UniqueDevice
 	            false,              // Blacklisted
-	            EMPTY_DEV_HANDLE,           // DeviceDescriptorHandle
+	            DEV_DESC_HANDLE_IDX_0,           // DeviceDescriptorHandle
 	            true,              // UniqueDevice
 	            false,              // Blacklisted
-				EMPTY_DEV_HANDLE,           // DeviceDescriptorHandle
+				DEV_DESC_HANDLE_IDX_0,           // DeviceDescriptorHandle
 	            true,              // UniqueDevice
 	            false,              // Blacklisted
 	            MAC_ZIP_MAX_KEY_DEV_LIST_ENTRIES, // KeyDeviceListEntries
@@ -343,16 +343,16 @@ static void init_secuity_pib(uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
 							MAC_ZIP_MAX_KEY_ID_LOOKUP_LIST_ENTRIES, // KeyIdLookupListEntries = 1
 							// KeyDeviceList[1]
 							EMPTY_DEV_HANDLE,           // DeviceDescriptorHandle
-							true,              // UniqueDevice
+							false,              // UniqueDevice
 							false,              // Blacklisted
 							EMPTY_DEV_HANDLE,           // DeviceDescriptorHandle
-							true,              // UniqueDevice
+							false,              // UniqueDevice
 							false,              // Blacklisted
 							EMPTY_DEV_HANDLE,           // DeviceDescriptorHandle
-							true,              // UniqueDevice
+							false,              // UniqueDevice
 							false,              // Blacklisted
 							EMPTY_DEV_HANDLE,           // DeviceDescriptorHandle
-							true,              // UniqueDevice
+							false,              // UniqueDevice
 							false,              // Blacklisted
 							MAC_ZIP_MAX_KEY_DEV_LIST_ENTRIES, // KeyDeviceListEntries
 							//  KeyUsageList
@@ -400,16 +400,16 @@ static void init_secuity_pib(uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
 							MAC_ZIP_MAX_KEY_ID_LOOKUP_LIST_ENTRIES, // KeyIdLookupListEntries = 1
 							// KeyDeviceList[1]
 							EMPTY_DEV_HANDLE, // DeviceDescriptorHandle
-							true,              // UniqueDevice
+							false,              // UniqueDevice
 							false,              // Blacklisted
 							EMPTY_DEV_HANDLE, // DeviceDescriptorHandle
-							true,              // UniqueDevice
+							false,              // UniqueDevice
 							false,              // Blacklisted
 							EMPTY_DEV_HANDLE, // DeviceDescriptorHandle
-							true,              // UniqueDevice
+							false,              // UniqueDevice
 							false,              // Blacklisted
 							EMPTY_DEV_HANDLE,           // DeviceDescriptorHandle
-							true,              // UniqueDevice
+							false,              // UniqueDevice
 							false,              // Blacklisted
 							MAC_ZIP_MAX_KEY_DEV_LIST_ENTRIES, // KeyDeviceListEntries
 							//  KeyUsageList
@@ -458,16 +458,16 @@ static void init_secuity_pib(uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
 						MAC_ZIP_MAX_KEY_ID_LOOKUP_LIST_ENTRIES, // KeyIdLookupListEntries = 1
 						// KeyDeviceList[1]
 						EMPTY_DEV_HANDLE, // DeviceDescriptorHandle
-						true,              // UniqueDevice
+						false,              // UniqueDevice
 						false,              // Blacklisted
 						EMPTY_DEV_HANDLE, // DeviceDescriptorHandle
-						true,              // UniqueDevice
+						false,              // UniqueDevice
 						false,              // Blacklisted
 						EMPTY_DEV_HANDLE, // DeviceDescriptorHandle
-						true,              // UniqueDevice
+						false,              // UniqueDevice
 						false,              // Blacklisted
 						EMPTY_DEV_HANDLE,           // DeviceDescriptorHandle
-						true,              // UniqueDevice
+						false,              // UniqueDevice
 						false,              // Blacklisted
 						MAC_ZIP_MAX_KEY_DEV_LIST_ENTRIES, // KeyDeviceListEntries
 						//  KeyUsageList
@@ -507,14 +507,14 @@ static void init_secuity_pib(uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
 					mac_dev_table[1] = (uint8_t)(DEFAULT_PAN_ID >> 8);
 					mac_dev_table[2] = (uint8_t)COORD_SHORT_ADDR;
 					mac_dev_table[3] = (uint8_t)(COORD_SHORT_ADDR >> 8);
-					mac_dev_table[4] = (uint8_t)COORD_IEEE_ADDRESS;
-					mac_dev_table[5] = (uint8_t)(COORD_IEEE_ADDRESS >> 8);
-					mac_dev_table[6] = (uint8_t)(COORD_IEEE_ADDRESS >> 16);
-					mac_dev_table[7] = (uint8_t)(COORD_IEEE_ADDRESS >> 24);
-					mac_dev_table[8] = (uint8_t)(COORD_IEEE_ADDRESS >> 32);
-					mac_dev_table[9] = (uint8_t)(COORD_IEEE_ADDRESS >> 40);
-					mac_dev_table[10] = (uint8_t)(COORD_IEEE_ADDRESS >> 48);
-					mac_dev_table[11] = (uint8_t)(COORD_IEEE_ADDRESS >> 56);
+					mac_dev_table[4] =  COORD_IEEE_ADDRESS[7];
+					mac_dev_table[5] =  COORD_IEEE_ADDRESS[6];
+					mac_dev_table[6] =  COORD_IEEE_ADDRESS[5];
+					mac_dev_table[7] =  COORD_IEEE_ADDRESS[4];
+					mac_dev_table[8] =  COORD_IEEE_ADDRESS[3];
+					mac_dev_table[9] =  COORD_IEEE_ADDRESS[2];
+					mac_dev_table[10] = COORD_IEEE_ADDRESS[1];
+					mac_dev_table[11] = COORD_IEEE_ADDRESS[0];
 					mac_dev_table[12] = 0;  // Frame counter
 					mac_dev_table[13] = 0;
 					mac_dev_table[14] = 0;
@@ -536,14 +536,14 @@ static void init_secuity_pib(uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
 		case macDeviceTable:
 		{
 			uint8_t pan_coord_add[8];
-			pan_coord_add[0] = (uint8_t)COORD_IEEE_ADDRESS;
-			pan_coord_add[1] = (uint8_t)(COORD_IEEE_ADDRESS >> 8);
-			pan_coord_add[2] = (uint8_t)(COORD_IEEE_ADDRESS >> 16);
-			pan_coord_add[3] = (uint8_t)(COORD_IEEE_ADDRESS >> 24);
-			pan_coord_add[4] = (uint8_t)(COORD_IEEE_ADDRESS >> 32);
-			pan_coord_add[5] = (uint8_t)(COORD_IEEE_ADDRESS >> 40);
-			pan_coord_add[6] = (uint8_t)(COORD_IEEE_ADDRESS >> 48);
-			pan_coord_add[7] = (uint8_t)(COORD_IEEE_ADDRESS >> 56);
+			pan_coord_add[0] = COORD_IEEE_ADDRESS[7];
+			pan_coord_add[1] = COORD_IEEE_ADDRESS[6];
+			pan_coord_add[2] = COORD_IEEE_ADDRESS[5];
+			pan_coord_add[3] = COORD_IEEE_ADDRESS[4];
+			pan_coord_add[4] = COORD_IEEE_ADDRESS[3];
+			pan_coord_add[5] = COORD_IEEE_ADDRESS[2];
+			pan_coord_add[6] = COORD_IEEE_ADDRESS[1];
+			pan_coord_add[7] = COORD_IEEE_ADDRESS[0];
 			
 			wpan_mlme_set_req(macPANCoordExtendedAddress,
 										NO_PIB_INDEX,    // Index
@@ -667,16 +667,16 @@ static void usr_mlme_set_conf_run_time(uint8_t status, uint8_t PIBAttribute, uin
 						LOOKUP_DATA_SIZE_1, // LookupDataSize: 0x01 : Size 9 octets
 						MAC_ZIP_MAX_KEY_ID_LOOKUP_LIST_ENTRIES, // KeyIdLookupListEntries = 1
 						// KeyDeviceList[1]
-						EMPTY_DEV_HANDLE,           // DeviceDescriptorHandle
+						DEV_DESC_HANDLE_IDX_0,           // DeviceDescriptorHandle
 						true,              // UniqueDevice
 						false,              // Blacklisted
-						EMPTY_DEV_HANDLE,           // DeviceDescriptorHandle
+						DEV_DESC_HANDLE_IDX_0,           // DeviceDescriptorHandle
 						true,              // UniqueDevice
 						false,              // Blacklisted
-						EMPTY_DEV_HANDLE,           // DeviceDescriptorHandle
+						DEV_DESC_HANDLE_IDX_0,           // DeviceDescriptorHandle
 						true,              // UniqueDevice
 						false,              // Blacklisted
-						EMPTY_DEV_HANDLE,           // DeviceDescriptorHandle
+						DEV_DESC_HANDLE_IDX_0,           // DeviceDescriptorHandle
 						true,              // UniqueDevice
 						false,              // Blacklisted
 						MAC_ZIP_MAX_KEY_DEV_LIST_ENTRIES, // KeyDeviceListEntries

@@ -141,9 +141,9 @@ static FLASH_DECLARE(uint8_t mac_sec_pib_size[]) =
 {
     sizeof(mac_key_table_t),        // 0x71: macKeyTable
     sizeof(uint8_t),                // 0x72: macKeyTableEntries
-    /* Since the structure is not packed, we need to use the hardcode value */
+    /* Since the structure is not packed, we need to use the hard code value */
     17,                             // 0x73: macDeviceTable
-    sizeof(uint8_t),                // 0x74: macDeviceTableEntries
+    sizeof(uint16_t),                // 0x74: macDeviceTableEntries
     sizeof(mac_sec_lvl_table_t),    // 0x75: macSecurityLevelTable
     sizeof(uint8_t),                // 0x76: macSecurityLevelTableEntries
     sizeof(uint32_t),               // 0x77: macFrameCounter
@@ -420,7 +420,10 @@ void mlme_get_request(arch_data_t *m)
                 break;
 
             case macDeviceTable:
-                if (attribute_index >= mac_sec_pib.DeviceTableEntries)
+			{
+				uint16_t attribute_16_idx = 0;
+				attribute_16_idx = attribute_index;
+                if (attribute_16_idx >= mac_sec_pib.DeviceTableEntries)
                 {
                     status = MAC_INVALID_INDEX;
                 }
@@ -437,38 +440,39 @@ void mlme_get_request(arch_data_t *m)
                      */
                     /* PAN-Id */
 					memcpy(attribute_temp_ptr, 
-					           &mac_sec_pib.DeviceTable[attribute_index].DeviceDescriptor[0].PANId, sizeof(uint16_t));
+					           &mac_sec_pib.DeviceTable[attribute_16_idx].DeviceDescriptor[0].PANId, sizeof(uint16_t));
                     /* ADDR_COPY_DST_SRC_16(attribute_temp_ptr,
                                          mac_sec_pib.DeviceTable[attribute_index].DeviceDescriptor[0].PANId);*/
                     attribute_temp_ptr += sizeof(uint16_t);
 
                     /* Short Address */
 					memcpy(attribute_temp_ptr,
-					            &mac_sec_pib.DeviceTable[attribute_index].DeviceDescriptor[0].ShortAddress, sizeof(uint16_t));
+					            &mac_sec_pib.DeviceTable[attribute_16_idx].DeviceDescriptor[0].ShortAddress, sizeof(uint16_t));
                     /*ADDR_COPY_DST_SRC_16(*(uint16_t *)attribute_temp_ptr,
                                          mac_sec_pib.DeviceTable[attribute_index].DeviceDescriptor[0].ShortAddress);*/
                     attribute_temp_ptr += sizeof(uint16_t);
 
                     /* Extended Address */
 					memcpy(attribute_temp_ptr,
-					           &mac_sec_pib.DeviceTable[attribute_index].DeviceDescriptor[0].ExtAddress, sizeof(uint64_t));
+					           &mac_sec_pib.DeviceTable[attribute_16_idx].DeviceDescriptor[0].ExtAddress, sizeof(uint64_t));
                     /*ADDR_COPY_DST_SRC_64(*(uint64_t *)attribute_temp_ptr,
                                          mac_sec_pib.DeviceTable[attribute_index].DeviceDescriptor[0].ExtAddress);*/
                     attribute_temp_ptr += sizeof(uint64_t);
 
                     /* Extended Address */
                     memcpy(attribute_temp_ptr,
-                           &mac_sec_pib.DeviceTable[attribute_index].DeviceDescriptor[0].FrameCounter,
+                           &mac_sec_pib.DeviceTable[attribute_16_idx].DeviceDescriptor[0].FrameCounter,
                            sizeof(uint32_t));
                     attribute_temp_ptr += sizeof(uint32_t);
 
                     /* Exempt */
-                    *attribute_temp_ptr = mac_sec_pib.DeviceTable[attribute_index].DeviceDescriptor[0].Exempt;
+                    *attribute_temp_ptr = mac_sec_pib.DeviceTable[attribute_16_idx].DeviceDescriptor[0].Exempt;
                 }
+			   }
                 break;
 
             case macDeviceTableEntries:
-                attribute_value->pib_value_8bit = mac_sec_pib.DeviceTableEntries;
+                attribute_value->pib_value_16bit = mac_sec_pib.DeviceTableEntries;
                 break;
 
             case macSecurityLevelTable:
@@ -879,7 +883,10 @@ retval_t mlme_set(uint8_t attribute, pib_value_t *attribute_value,
             break;
 
         case macDeviceTable:
-            if (attribute_index >= mac_sec_pib.DeviceTableEntries)
+		{
+			uint16_t attribute_16_idx = 0;
+			attribute_16_idx = attribute_index;
+            if (attribute_16_idx >= mac_sec_pib.DeviceTableEntries)
             {
                 status = MAC_INVALID_INDEX;
             }
@@ -891,45 +898,46 @@ retval_t mlme_set(uint8_t attribute, pib_value_t *attribute_value,
                  * each member needs to be filled in separately.
                  */
                 /* PAN-Id */
-				memcpy((uint8_t *)&mac_sec_pib.DeviceTable[attribute_index].DeviceDescriptor[0].PANId,
+				memcpy((uint8_t *)&mac_sec_pib.DeviceTable[attribute_16_idx].DeviceDescriptor[0].PANId,
 				                 attribute_temp_ptr, sizeof(uint16_t));
                 /* ADDR_COPY_DST_SRC_16(mac_sec_pib.DeviceTable[attribute_index].DeviceDescriptor[0].PANId,
                                      *(uint16_t *)attribute_temp_ptr); */
                 attribute_temp_ptr += sizeof(uint16_t);
 
                 /* Short Address */
-				memcpy((uint8_t *)&mac_sec_pib.DeviceTable[attribute_index].DeviceDescriptor[0].ShortAddress,
+				memcpy((uint8_t *)&mac_sec_pib.DeviceTable[attribute_16_idx].DeviceDescriptor[0].ShortAddress,
 				                   attribute_temp_ptr, sizeof(uint16_t));
                 /*ADDR_COPY_DST_SRC_16(mac_sec_pib.DeviceTable[attribute_index].DeviceDescriptor[0].ShortAddress,
                                      *(uint16_t *)attribute_temp_ptr);*/
                 attribute_temp_ptr += sizeof(uint16_t);
 
                 /* Extended Address */
-				memcpy((uint8_t *)&mac_sec_pib.DeviceTable[attribute_index].DeviceDescriptor[0].ExtAddress,
+				memcpy((uint8_t *)&mac_sec_pib.DeviceTable[attribute_16_idx].DeviceDescriptor[0].ExtAddress,
 				                   attribute_temp_ptr, sizeof(uint64_t));
                 /*ADDR_COPY_DST_SRC_64(mac_sec_pib.DeviceTable[attribute_index].DeviceDescriptor[0].ExtAddress,
                                      *(uint64_t *)attribute_temp_ptr);*/
                 attribute_temp_ptr += sizeof(uint64_t);
 
                 /* Extended Address */
-                memcpy(&mac_sec_pib.DeviceTable[attribute_index].DeviceDescriptor[0].FrameCounter,
+                memcpy(&mac_sec_pib.DeviceTable[attribute_16_idx].DeviceDescriptor[0].FrameCounter,
                        attribute_temp_ptr,
                        sizeof(uint32_t));
                 attribute_temp_ptr += sizeof(uint32_t);
 
                 /* Exempt */
-                mac_sec_pib.DeviceTable[attribute_index].DeviceDescriptor[0].Exempt = *attribute_temp_ptr;
+                mac_sec_pib.DeviceTable[attribute_16_idx].DeviceDescriptor[0].Exempt = *attribute_temp_ptr;
             }
+		   }
             break;
 
         case macDeviceTableEntries:
-            if (attribute_value->pib_value_8bit > MAC_ZIP_MAX_DEV_TABLE_ENTRIES)
+            if (attribute_value->pib_value_16bit > MAC_ZIP_MAX_DEV_TABLE_ENTRIES)
             {
                 status = MAC_INVALID_PARAMETER;
             }
             else
             {
-            mac_sec_pib.DeviceTableEntries = attribute_value->pib_value_8bit;
+            mac_sec_pib.DeviceTableEntries = attribute_value->pib_value_16bit;
             }
             break;
 

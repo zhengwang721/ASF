@@ -457,7 +457,7 @@ void usr_mlme_associate_conf(uint16_t AssocShortAddress,
 
 		LED_On(LED_NWK_SETUP);
 #ifdef MAC_SECURITY_ZIP			
-		uint8_t mac_dev_table_entries = 3;
+		uint16_t mac_dev_table_entries = 3;
 
 	    wpan_mlme_set_req(macDeviceTableEntries,
 	    NO_PIB_INDEX,

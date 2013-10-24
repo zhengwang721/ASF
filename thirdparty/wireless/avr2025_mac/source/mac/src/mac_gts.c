@@ -705,7 +705,7 @@ void handle_gts_data_req(mcps_data_req_t *data_req, arch_data_t *msg)
 uint32_t slot_duration1 = 0;
 uint32_t frame_tx_time = 0;
 #ifdef FFD
-	uint8_t loop_index;
+	uint8_t loop_index = 0;
 #endif /* FFD */
 	uint16_t dst_addr;
 

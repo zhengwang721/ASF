@@ -146,6 +146,10 @@ static retval_t blacklist_checking_procedure(uint8_t *device_lookup_data, uint8_
                                              mac_key_table_t *key_desc,
                                              mac_device_desc_t **device_desc,
                                              mac_key_device_desc_t **key_device_desc);
+											 
+static retval_t incoming_key_usage_policy(mac_key_table_t *key_desc,
+										  uint8_t frame_type, 
+										  uint8_t mac_cmd);											 
 
 /* === Implementation ====================================================== */
 
@@ -781,6 +785,10 @@ static inline retval_t parse_aux_sec_header(parse_t *mac_parse_data_instance,
  *
  * @return retval_t MAC_SUCCESS, MAC_UNSUPPORTED_SECURITY or MAC_SECURITY_ERROR
  */
+uint32_t frame_cnt_rxd;
+uint32_t frame_cnt_avail;
+uint32_t frame_cnt_beacon;
+uint32_t frame_cnt_data;
 static inline retval_t unsecure_frame(parse_t *mac_parse_data_buf, uint8_t *mpdu, uint8_t *mac_payload, uint8_t *payload_index)
 {
     /* Encrypt payload data */
@@ -801,10 +809,13 @@ static inline retval_t unsecure_frame(parse_t *mac_parse_data_buf, uint8_t *mpdu
 		key = key_desc->Key;
 
     /* Todo 7.5.8.2.3 (h) using 7.5.8.2.9 key usage policy procedure*/
-
+	frame_cnt_rxd  = mac_parse_data_buf->frame_cnt;
+	frame_cnt_avail = device_desc->FrameCounter;
+	frame_cnt_beacon = mac_sec_pib.DeviceTable[3].DeviceDescriptor[0].FrameCounter;
+	frame_cnt_data = mac_sec_pib.DeviceTable[0].DeviceDescriptor[0].FrameCounter;
     /* 7.5.8.2.3 (j) & (k)*/
-    if (((FCF_FRAMETYPE_DATA == mac_parse_data_buf->frame_type) /*||\
-	    (FCF_FRAMETYPE_BEACON == mac_parse_data_buf->frame_type)*/)&& \
+    if (((FCF_FRAMETYPE_DATA == mac_parse_data_buf->frame_type) ||\
+	    (FCF_FRAMETYPE_BEACON == mac_parse_data_buf->frame_type))&& \
 	((mac_parse_data_buf->frame_cnt == FRAME_COUNTER_MAX_VAL) || \
 	    (mac_parse_data_buf->frame_cnt < device_desc->FrameCounter)))
     {
@@ -927,8 +938,8 @@ static inline retval_t unsecure_frame(parse_t *mac_parse_data_buf, uint8_t *mpdu
             return MAC_UNSUPPORTED_SECURITY;
     }
     /* 7.5.8.2.3 (n) */
-	if ((FCF_FRAMETYPE_DATA == mac_parse_data_buf->frame_type) /*|| \
-				(FCF_FRAMETYPE_BEACON == mac_parse_data_buf->frame_type*/)
+	if ((FCF_FRAMETYPE_DATA == mac_parse_data_buf->frame_type) || 
+				(FCF_FRAMETYPE_BEACON == mac_parse_data_buf->frame_type))
 	{
 		device_desc->FrameCounter = (mac_parse_data_buf->frame_cnt) + 1;
 		/* 7.5.8.2.3 (o) */
@@ -1044,6 +1055,19 @@ static inline retval_t incoming_sec_material_retrieval(parse_t *mac_parse_data_b
     {
         return status;
     }
+	
+	/** Check the Key Usage Policy from the KeyDescriptor for the 
+	  * Incoming Frame Type. The policy checking procedure  as per 
+	  * 7.5.8.2.9
+	  */
+	status = incoming_key_usage_policy(curr_key_desc, 
+									   mac_parse_data_buf->frame_type,				
+									   mac_parse_data_buf->mac_command);
+	if (status != MAC_SUCCESS)
+    {
+        return status;
+    }											 
+	
     *key_desc = curr_key_desc;
     /* 7.5.8.2.3 (d) */
     switch (mac_parse_data_buf->src_addr_mode)
@@ -1366,6 +1390,39 @@ bool build_sec_mcps_data_frame(mcps_data_req_t *mpdr, frame_info_t *mframe)
 						
    mpdr->msdu = mframe->mac_payload;
   return MAC_SUCCESS;						
+}
+
+/** The inputs to this procedure are the KeyDescriptor, 
+  * the frame type, and the command frame identifier. The
+  * output from this procedure is a passed or failed status
+  */
+static retval_t incoming_key_usage_policy(mac_key_table_t *key_desc,
+										  uint8_t frame_type, 
+										  uint8_t mac_cmd)
+{
+ /* as per spec 7.5.8.2.9 (a.1) */
+ if (FCF_FRAMETYPE_MAC_CMD != frame_type)
+ {
+	 for(uint8_t index = 0; index <key_desc->KeyUsageListEntries; index++)
+	 {
+		 if (key_desc->KeyUsageList[index].Frametype == frame_type)
+		 {
+		   return MAC_SUCCESS;
+		 }		 
+	 }	 	
+ }
+ else if(FCF_FRAMETYPE_MAC_CMD == frame_type)
+ {
+	 for(uint8_t index = 0; index <key_desc->KeyUsageListEntries; index++)
+	 {
+		 if ((key_desc->KeyUsageList[index].Frametype == frame_type) &&
+		     (key_desc->KeyUsageList[index].CommandFrameIdentifier == mac_cmd))
+		 {
+		   return MAC_SUCCESS;
+		 }		 
+	 }		 
+ }
+ return MAC_IMPROPER_KEY_TYPE; 	
 }
 
 

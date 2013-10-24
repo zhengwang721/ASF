@@ -103,6 +103,7 @@ app_state_t;
 #define INDEX_1                         (1)
 #define INDEX_2                         (2)
 #define INDEX_3                         (3)
+#define DEV_DESC_HANDLE_IDX_0			(0x00)
 #define EMPTY_DEV_HANDLE                (0xFF) // key device desc is invalid
 #define KEY_INFO_FRAME                  (0xDE)
 #define NO_SECURITY                     (0)

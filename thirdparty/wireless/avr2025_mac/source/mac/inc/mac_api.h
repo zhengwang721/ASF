@@ -360,7 +360,7 @@ typedef struct mac_sec_pib_tag {
 	/**
 	 * Holds the number of entries in macDeviceTable.
 	 */
-	uint8_t DeviceTableEntries;
+	uint16_t DeviceTableEntries;
 
 	/**
 	 * Holds a table of SecurityLevelDescriptor entries, each with
