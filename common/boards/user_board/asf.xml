@@ -121,6 +121,11 @@
 		<require idref="common.boards.user_board.common"/>
 		<device-support value="megarf"/>
 	</board>
+	
+	<board id="board.user_board.mega" caption="User Board template">
+		<require idref="common.boards.user_board.common"/>
+		<device-support value="mega"/>
+	</board>	
 
 	<board id="board.user_board.sam4lc4a" caption="User Board template">
 		<require idref="common.boards.user_board.common"/>

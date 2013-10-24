@@ -27,6 +27,18 @@
 		<generator value="doxygen"/>
 		<device-support value="megarf"/>
 	</project>	
+	
+	<project id="common.applications.user_application.user_board.mega" caption="User board project template for MEGA/MEGARF" type="template" default-mcu="unspecified-mega">
+		<info type="description" value="summary">
+		User board project template for MEGA/MEGARF.
+		</info>
+		<require idref="board.user_board.mega"/>
+		<require idref="common.applications.user_application.user_board.common"/>
+		<generator value="as5_8_template"/>
+		<generator value="doxygen"/>
+		<device-support value="mega"/>
+	</project>
+	
 	<project id="common.applications.user_application.user_board.xmegaa" caption="User board project template for XMEGA A" type="template" default-mcu="unspecified-xmegaa">
 		<info type="description" value="summary">
 		User board project template for XMEGA A.
