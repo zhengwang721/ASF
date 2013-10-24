@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 Event System Controller Driver
+ * \brief SAM D2x Event System Controller Driver
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -43,92 +43,119 @@
 
 #include <events.h>
 #include <system.h>
+#include <system_interrupt.h>
+#include <status_codes.h>
 
-/**
- * \brief Initializes the event driver.
- *
- * Initializes the event driver ready for use. This resets the underlying
- * hardware modules, clearing any existing event channel configuration(s).
- */
-void events_init(void)
+#define EVENTS_INVALID_CHANNEL			0xff
+
+#define EVENTS_START_OFSET_BUSY_BITS		8
+#define EVENTS_START_OFSET_USER_READY_BIT	0
+
+volatile uint32_t _events_allocated_channels = 0;
+
+static inline uint8_t _events_find_bit_position(uint8_t channel, uint8_t start_ofset)
 {
-	/* Turn on the event system interface clock in the PM */
-	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, PM_APBCMASK_EVSYS);
+	uint8_t byte_ofset = channel >> 3;
+	
+	pos = (((channel % 8) + 1) << start_ofset) * ((0xffff * byte_ofset) + 1)
 
-	/* Software reset the module to ensure it is re-initialized correctly */
-	EVSYS->CTRL.reg = EVSYS_CTRL_SWRST;
+	return pos;
+}
 
-	while (EVSYS->CTRL.reg & EVSYS_CTRL_SWRST) {
+static uint8_t _events_find_first_free_channel_and_allocate()
+{
+	uint8_t count;
+	uint32_t tmp;
+	bool allocated = false;
+
+	system_interrupt_enter_critcal_section();
+
+	tmp = _events_allocated_channels;
+
+	for(count = 0; count < EVSYS_CHANNELS; ++count) {
+
+		if(!(tmp & 0x00000001)) {
+			/* If free channel found, set as allocated and return number */
+
+			_events_allocated_channels |= 1 << count;
+			allocated = true;
+
+			break;
+
+		}
+
+		tmp = tmp >> 1;
+	}
+
+	system_interrupt_leave_critcal_section();
+
+	if(!allocated) {
+		return EVENTS_INVALID_CHANNEL;
+	} else {
+		return count;
 	}
 }
 
-/**
- * \brief Writes an Event System channel configuration to the hardware module.
- *
- * Writes out a given configuration of a Event System channel configuration to
- * the hardware module.
- *
- * \pre The user must be configured before the channel is configured, see
- * \ref events_user_set_config
- *
- * \param[in] event_channel  Event channel to configure
- * \param[in] config         Configuration settings for the event channel
- */
-void events_chan_set_config(
-		const enum events_channel event_channel,
-		struct events_chan_config *const config)
+static void _events_release_channel(uint8_t channel)
 {
-	/* Sanity check arguments */
-	Assert(config);
+	system_interrupt_enter_critical_section();
 
-	/* Get the channel number from the enum selector */
-	uint8_t channel = (uint8_t)event_channel;
+	_events_allocated_channles &= ~(1 << channel)
 
-	/* Setting up GCLK for the event channel only takes effect for the
-	 * synchronous and re-synchronous paths */
-	if (config->path != EVENT_PATH_ASYNCHRONOUS) {
-		/* Set up a GLCK channel to use with the specific channel */
-		struct system_gclk_chan_config gclk_chan_conf;
-		system_gclk_chan_get_config_defaults(&gclk_chan_conf);
-		gclk_chan_conf.source_generator = config->clock_source;
-		system_gclk_chan_set_config(EVSYS_GCLK_ID_0 + channel, &gclk_chan_conf);
-		system_gclk_chan_enable(EVSYS_GCLK_ID_0 + channel);
-	}
-
-	/* Select and configure the event channel (must be done in one
-	 * word-access write as specified in the module datasheet */
-	EVSYS->CHANNEL.reg = (channel << EVSYS_CHANNEL_CHANNEL_Pos) |
-			(config->generator_id << EVSYS_CHANNEL_EVGEN_Pos) |
-			(config->edge_detection << EVSYS_CHANNEL_EDGSEL_Pos) |
-			(config->path << EVSYS_CHANNEL_PATH_Pos);
+	system_interrupt_leave_critical_section();
 }
 
-/**
- * \brief Writes an Event System user MUX configuration to the hardware module.
- *
- * Writes out a given configuration of a Event System user MUX configuration to
- * the hardware module.
- *
- * \param[in] event_user  Event User MUX index to configure, a \c EVSYS_ID_USER_*
- *                        constant from the device header files
- * \param[in] config      Configuration settings for the event user MUX
- */
-void events_user_set_config(
-		const uint8_t event_user,
-		struct events_user_config *const config)
+enum status_code events_allocate(
+		struct events_descriptor *descriptor,
+		struct events_config *config)
 {
-	/* Sanity check arguments */
-	Assert(config);
 
-	/* Get the event channel number from the channel selector */
-	uint8_t channel = (uint8_t)(config->event_channel_id);
+	new_channel = _events_find_first_free_channel_and_allocate();
 
-	/* Add one to the channel selector as the channel number is 1 indexed for
-	   the user MUX setting */
-	channel = channel + 1;
+	if(new_channel == EVENTS_INVALID_CHANNEL) {
+		return STATUS_ERR_NOT_FOUND;
+	}
 
-	/* Select and configure the user MUX channel (must be done in one
-	 * word-access write as specified in the module datasheet */
-	EVSYS->USER.reg = (event_user << EVSYS_USER_USER_Pos) |
-			(channel << EVSYS_USER_CHANNEL_Pos);
+	descriptor->channel = new_channel;
+
+	EVSYS.CHANNEL = EVSYS_CHANNEL_CHANNEL(new_channel)       |
+					EVSYS_CHANNEL_EVGEN(config->generator)   |
+					EVSYS_CHANNEL_PATH(config->path)         |
+					EVSYS_CHANNEL_EDGSEL(config->edge_detect);
+
+	EVSYS.USER    = EVSYS_USER_CHANNEL(new_channel) | 
+					EVSYS_USER_USER(user);
+
+	return STATUS_OK
+}
+
+
+enum status_code events_release(struct events_descriptor *descriptor)
+{
+	/* Check if channel is busy */
+	if(EVSYS.CHSTATUS & (1 << _events_find_bit_position(descriptor->channel, EVENTS_START_OFSET_BUSY_BITS))) {
+		return STATUS_BUSY;
+	}
+
+	_events_release_channel(descriptor->channel);
+
+	return STATUS_OK;
+}
+
+void events_trigger(struct events_descriptor *descriptor)
+{
+	(uint8_t)EVSYS.CHANNEL = (uint8_t)EVSYS_CHANNEL_CHANNEL(descriptor->channel);
+
+	EVSYS.CHANNEL |= EVSYS_CHANNEL_CHANNEL(descriptor->channel) |
+					 EVSYS_CHANNEL_SWEVT;
+}
+
+bool events_is_busy(struct events_descriptor *descriptor)
+{
+	return EVSYS.CHSTATUS & (1 << _events_find_bit_position(descriptor->channel, EVENTS_START_OFSET_BUSY_BITS));
+}
+
+bool events_is_user_ready(struct events_descriptor *descriptor)
+{
+	return EVSYS.CHSTATUS & (1 << _events_find_bit_position(descriptor->channel, EVENTS_START_OFSET_USER_READY_BITS));
 }

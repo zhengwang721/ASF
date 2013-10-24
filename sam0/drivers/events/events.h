@@ -43,38 +43,77 @@
 #ifndef EVENTS_H_INCLUDED
 #define EVENTS_H_INCLUDED
 
-enum event_edge_detect {
-	EVENT_NO_OUTPUT,
-	EVENT_RISING_EDGE,
-	EVENT_FALLING_EDGE,
-	EVENT_BOTH_EDGES,
+/**
+ * \brief Edge detect enum
+ *
+ * Event channel edge detect setting 
+ *
+ */
+enum events_edge_detect {
+	/** No event output */
+	EVENTS_NO_OUTPUT,
+	/** Event on rising edge */
+	EVENTS_RISING_EDGE,
+	/** Event on falling edge */
+	EVENTS_FALLING_EDGE,
+	/** Event on both edges */
+	EVENTS_BOTH_EDGES,
 };
 
-enum event_path_selection {
-	EVENT_PATH_SYNCHRONOUS,
-	EVENT_PATH_RESYNCHRONIZED,
-	EVENT_PATH_ASYNCHRONOUS,
+/**
+ * \brief Path selection enum
+ *
+ * Event channel path selection
+ *
+ */
+enum events_path_selection {
+	/** Select the synchronous path for this event channel */
+	EVENTS_PATH_SYNCHRONOUS,
+	/** Select the resynchronizer path for this event channel */
+	EVENTS_PATH_RESYNCHRONIZED,
+	/** Select the asynchronous path for this event channel */
+	EVENTS_PATH_ASYNCHRONOUS,
 };
 
-struct event_config {
-	enum event_edge_detect    edge_detect;
-	enum event_path_selection path;
-	uint8_t                   user;
-	uint8_t                   generator;
+/**
+ * \brief Events configuration struct
+ *
+ * This events configuration struct is used to configure each of the channels
+ *
+ */
+struct events_config {
+	/** Select edge detection mode */
+	enum events_edge_detect    edge_detect;
+	/** Select events channel path */
+	enum events_path_selection path;
+	/** Set event channel user peripheral */
+	uint8_t                    user;
+	/** Set event generator for the channel */
+	uint8_t                    generator;
 };
 
-struct event_descriptor {
+/**
+ * \brief Event channel descriptor 
+ *
+ */
+struct events_descriptor {
 	uint8_t channel;
 };
 
-void event_get_config_defaults(struct event_config *config);
-void event_allocate(struct event_descriptor *descriptor, struct event_config *config);
+/**
+ * \brief Initializes an event configurations struct to defaults 
+ *
+ * Initia
+ *
+ */
+void events_get_config_defaults(struct events_config *config);
+void events_allocate(struct events_descriptor *descriptor, struct events_config *config);
 
-void event_trigger(struct event_descriptor *descriptor);
+void events_trigger(struct events_descriptor *descriptor);
 
-void event_is_busy(struct event_descriptor *descriptor);
-void event_is_user_ready(struct event_descriptor *descriptor);
+void events_is_busy(struct events_descriptor *descriptor);
+void events_is_user_ready(struct events_descriptor *descriptor);
 
-void event_deallocate(struct event_descriptor *descriptor);
+void events_release(struct events_descriptor *descriptor);
 
 #endif /* EVENTS_H_INCLUDED */
