@@ -1074,6 +1074,7 @@ void mac_tx_gts_data(queue_t *gts_data)
 
 	transmit_frame->gts_queue = gts_data;
 
+
 #ifdef MAC_SECURITY_ZIP
 if(transmit_frame->mpdu[1] & FCF_SECURITY_ENABLED)
 {
@@ -1105,8 +1106,7 @@ if(transmit_frame->mpdu[1] & FCF_SECURITY_ENABLED)
 }
 #endif
 
-	tal_tx_status = tal_tx_frame(transmit_frame, NO_CSMA_WITH_IFS, false);
-	
+	tal_tx_status = tal_tx_frame(transmit_frame, NO_CSMA_WITH_IFS, true);
 
 	if (MAC_SUCCESS == tal_tx_status) {
 		MAKE_MAC_BUSY();

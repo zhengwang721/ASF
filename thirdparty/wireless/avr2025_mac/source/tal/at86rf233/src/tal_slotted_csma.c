@@ -232,8 +232,7 @@ static void calculate_transaction_duration(void)
 
 	/* number of octets */
 	transaction_duration_octets = (*tal_frame_to_tx) + PHY_OVERHEAD;
-    last_frame_length = *tal_frame_to_tx;
-	/* Add interframe spacing - independend on ACK transmission. */
+    /* Add interframe spacing - independend on ACK transmission. */
 	if (*tal_frame_to_tx > aMaxSIFSFrameSize) {
 		transaction_duration_sym = macMinLIFSPeriod_def; /* symbols */
 	} else {
@@ -278,7 +277,6 @@ uint16_t calc_frame_transmit_duration(uint8_t *phy_frame)
 
 	/* number of octets */
 	transaction_duration_octets = (*phy_frame) + PHY_OVERHEAD;
-    last_frame_length = *phy_frame;
     /* Add interframe spacing - independent on ACK transmission. */
 	if (*phy_frame > aMaxSIFSFrameSize) {
 		transaction_duration_sym = macMinLIFSPeriod_def; /* symbols */
