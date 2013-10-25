@@ -240,7 +240,7 @@
 #include <compiler.h>
 #include <gclk.h>
 
-//#include "clock_features.h"
+#include "clock_features.h"
 
 /**
  * \brief Available start-up times for the XOSC32K
