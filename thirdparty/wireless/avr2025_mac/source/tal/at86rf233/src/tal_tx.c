@@ -338,11 +338,13 @@ void send_frame(csma_mode_t csma_mode, bool tx_retries)
 					macMinLIFSPeriod_def)
 					- TRX_IRQ_DELAY_US -
 					PRE_TX_DURATION_US);
-		} else {
+			last_frame_length = 0;
+		} else if(last_frame_length > 0 ) {
 			pal_timer_delay(TAL_CONVERT_SYMBOLS_TO_US(
 					macMinSIFSPeriod_def)
 					- TRX_IRQ_DELAY_US -
 					PRE_TX_DURATION_US);
+			last_frame_length = 0;
 		}
 	}
 
