@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 Clock configuration
+ * \brief SAM D2x Clock configuration
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -44,7 +44,7 @@
 
 #ifndef CONF_CLOCKS_H_INCLUDED
 #  define CONF_CLOCKS_H_INCLUDED
-
+#if 0
 /* System clock bus configuration */
 #  define CONF_CLOCK_CPU_CLOCK_FAILURE_DETECT     true
 #  define CONF_CLOCK_FLASH_WAIT_STATES            0
@@ -165,6 +165,6 @@
 #  define CONF_CLOCK_GCLK_7_CLOCK_SOURCE          SYSTEM_CLOCK_SOURCE_OSC8M
 #  define CONF_CLOCK_GCLK_7_PRESCALER             1
 #  define CONF_CLOCK_GCLK_7_OUTPUT_ENABLE         false
-
+#endif
 #endif /* CONF_CLOCKS_H_INCLUDED */
 
