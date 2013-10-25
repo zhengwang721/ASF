@@ -93,7 +93,7 @@ struct events_config {
 };
 
 /**
- * \brief Event channel descriptor 
+ * \brief Event channel descriptor
  *
  */
 struct events_descriptor {
@@ -101,19 +101,68 @@ struct events_descriptor {
 };
 
 /**
- * \brief Initializes an event configurations struct to defaults 
+ * \brief Initializes an event configurations struct to defaults
  *
- * Initia
+ * Initailize an event configuration struct to predefined default settings.
+ *
+ * \param[in] config Pointer to an instance of \c struct events_config
  *
  */
 void events_get_config_defaults(struct events_config *config);
+
+/**
+ * \brief Allocate a event channel and set configuration
+ *
+ * Allocates a event channel from the even channel pool and sets
+ * the channel configuration.
+ *
+ * \param[out] descriptor Pointer to a events_descriptor struct instance
+ * \param[in]  config     Pointer to a events_config struct
+ *
+ * \return Status of the configuration procedure
+ * \retval STATUS_OK            Allocation and configuration went successful
+ * \retval STATUS_ERR_NOT_FOUND No free event channel found
+ *
+ */
 void events_allocate(struct events_descriptor *descriptor, struct events_config *config);
 
-void events_trigger(struct events_descriptor *descriptor);
 
-void events_is_busy(struct events_descriptor *descriptor);
-void events_is_user_ready(struct events_descriptor *descriptor);
+/**
+ * DOCUMENTATION DOES NOT MAKE SENSE
+ * \brief Check if a channel is busy
+ *
+ * Check if a channel is busy 
+ *
+ * \param[in] descriptor Pointer to a events_descriptor struct instance
+ *
+ * \return Status of the channels busy state
+ * \retval true  The event channel is busy
+ * \retval false The event channel is not busy
+ */
+bool events_is_busy(struct events_descriptor *descriptor);
 
+/**
+ * \brief Trigger software event
+ *
+ * Trigger an event by software
+ *
+ * \param[in] descriptor Pointer to a events_descriptor struct
+ *
+ */
+enum status_code events_trigger(struct events_descriptor *descriptor);
+
+/**
+ * \brief ????, documentation does not make sense
+ */
+bool events_is_user_ready(struct events_descriptor *descriptor);
+
+
+/**
+ * \brief Release allocated channel back the the resource pool
+ *
+ * Release an allocated channel back to the resource pool to make it availble for other purposes.
+ *
+ */
 void events_release(struct events_descriptor *descriptor);
 
 #endif /* EVENTS_H_INCLUDED */

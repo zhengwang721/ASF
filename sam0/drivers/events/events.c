@@ -3,7 +3,7 @@
  *
  * \brief SAM D2x Event System Controller Driver
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -100,15 +100,27 @@ static void _events_release_channel(uint8_t channel)
 {
 	system_interrupt_enter_critical_section();
 
-	_events_allocated_channles &= ~(1 << channel)
+	_events_allocated_channles &= ~(1 << channel);
 
 	system_interrupt_leave_critical_section();
+}
+
+void events_get_config_defaults(struct events_config *config)
+{
+	/* Check that config is something other than NULL */
+	Assert(config);
+
+	config->edge_detect = EVENTS_RISING_EDGE;
+	config->path        = EVENTS_PATH_ASYNCHRONOUS;
+	config->user        = EVSYS_ID_USER_ADC_START;
+	config->generator   = EVSYS_ID_GEN_RTC_OVF;  
 }
 
 enum status_code events_allocate(
 		struct events_descriptor *descriptor,
 		struct events_config *config)
 {
+	Assert(descriptor);
 
 	new_channel = _events_find_first_free_channel_and_allocate();
 
@@ -132,6 +144,8 @@ enum status_code events_allocate(
 
 enum status_code events_release(struct events_descriptor *descriptor)
 {
+	Assert(descriptor);
+
 	/* Check if channel is busy */
 	if(EVSYS.CHSTATUS & (1 << _events_find_bit_position(descriptor->channel, EVENTS_START_OFSET_BUSY_BITS))) {
 		return STATUS_BUSY;
@@ -144,18 +158,26 @@ enum status_code events_release(struct events_descriptor *descriptor)
 
 void events_trigger(struct events_descriptor *descriptor)
 {
+	Assert(descriptor);
+
 	(uint8_t)EVSYS.CHANNEL = (uint8_t)EVSYS_CHANNEL_CHANNEL(descriptor->channel);
 
 	EVSYS.CHANNEL |= EVSYS_CHANNEL_CHANNEL(descriptor->channel) |
 					 EVSYS_CHANNEL_SWEVT;
+
+	return STATUS_OK;
 }
 
 bool events_is_busy(struct events_descriptor *descriptor)
 {
+	Assert(descriptor);
+
 	return EVSYS.CHSTATUS & (1 << _events_find_bit_position(descriptor->channel, EVENTS_START_OFSET_BUSY_BITS));
 }
 
 bool events_is_user_ready(struct events_descriptor *descriptor)
 {
+	Assert(descriptor);
+
 	return EVSYS.CHSTATUS & (1 << _events_find_bit_position(descriptor->channel, EVENTS_START_OFSET_USER_READY_BITS));
 }
