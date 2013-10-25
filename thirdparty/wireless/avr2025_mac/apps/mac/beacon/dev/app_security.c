@@ -740,7 +740,7 @@ static void usr_mlme_set_conf_run_time(uint8_t status, uint8_t PIBAttribute, uin
 	                 {
 		                 // DeviceDescriptor
 		                 // PANId
-		                 (uint8_t)tal_pib.PANId,
+		                 (uint8_t)tal_pib.PANId,//@c
 		                 (uint8_t)(tal_pib.PANId >> 8),
 		                 // Device ShortAddress
 		                 (uint8_t)mac_pib.mac_CoordShortAddress,

@@ -61,8 +61,8 @@
  *  extended address of a device.
  */
 typedef struct associated_device_tag {
-	uint16_t short_addr;
-	uint64_t ieee_addr;
+    uint16_t short_addr;
+	uint64_t ieee_addr;		
 } associated_device_t;
 
 /**

@@ -119,13 +119,14 @@
 /* === MACROS ============================================================== */
 
 /* === GLOBALS ============================================================= */
-
+/** Coordinator IEEE Address */
+uint8_t const COORD_IEEE_ADDRESS[] = {0x12, 0x34, 0x56, 0x78, 0x12, 0x34, 0x56, 0x00};
+	
 /** This array stores all device related information. */
 extern associated_device_t device_list[MAX_NUMBER_OF_DEVICES];
 /** Stores the number of associated devices. */
 extern uint16_t no_of_assoc_devices;
-/** Keeps the track of the no of device associated. */ 
-extern uint8_t ndevice_associated;
+
 
 /** Current Channel */
 extern uint8_t current_channel;
@@ -142,7 +143,7 @@ extern uint8_t current_channel_page;
  * 128-bit variable. This is the reason why the array needs to be filled
  * in in reverse order than expected.
  */
-static uint8_t default_key[4][16] = {
+static const uint8_t default_key[4][16] = {
 {
 	0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7,
 	0xC8, 0xC9, 0xCA, 0xCB, 0xCC, 0xCD, 0xCE, 0xCF
@@ -194,7 +195,6 @@ void usr_mlme_set_conf(uint8_t status, uint8_t PIBAttribute, uint8_t PIBAttribut
 		if (mlme_set_conf_run_time)
 		{
 			usr_mlme_set_conf_run_time(status, PIBAttribute, PIBAttributeIndex);
-			return;
 		}
 		else
 		{
@@ -517,14 +517,14 @@ static void init_secuity_pib(uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
 					mac_dev_table[1] = (uint8_t)(DEFAULT_PAN_ID >> 8);
 					mac_dev_table[2] = (uint8_t)COORD_SHORT_ADDR;
 					mac_dev_table[3] = (uint8_t)(COORD_SHORT_ADDR >> 8);
-					mac_dev_table[4] = (uint8_t)tal_pib.IeeeAddress;
-					mac_dev_table[5] = (uint8_t)(tal_pib.IeeeAddress >> 8);
-					mac_dev_table[6] = (uint8_t)(tal_pib.IeeeAddress >> 16);
-					mac_dev_table[7] = (uint8_t)(tal_pib.IeeeAddress >> 24);
-					mac_dev_table[8] = (uint8_t)(tal_pib.IeeeAddress >> 32);
-					mac_dev_table[9] = (uint8_t)(tal_pib.IeeeAddress >> 40);
-					mac_dev_table[10] = (uint8_t)(tal_pib.IeeeAddress >> 48);
-					mac_dev_table[11] = (uint8_t)(tal_pib.IeeeAddress >> 56);
+					mac_dev_table[4] = COORD_IEEE_ADDRESS[7];
+					mac_dev_table[5] = COORD_IEEE_ADDRESS[6];
+					mac_dev_table[6] = COORD_IEEE_ADDRESS[5];
+					mac_dev_table[7] = COORD_IEEE_ADDRESS[4];
+					mac_dev_table[8] = COORD_IEEE_ADDRESS[3];
+					mac_dev_table[9] = COORD_IEEE_ADDRESS[2];
+					mac_dev_table[10] = COORD_IEEE_ADDRESS[1];
+					mac_dev_table[11] = COORD_IEEE_ADDRESS[0];
 					mac_dev_table[12] = 0;  // Frame counter
 					mac_dev_table[13] = 0;
 					mac_dev_table[14] = 0;
@@ -546,14 +546,14 @@ static void init_secuity_pib(uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
 		case macDeviceTable:
 		{
 			uint8_t pan_coord_add[8];
-			pan_coord_add[0] = (uint8_t)tal_pib.IeeeAddress;
-			pan_coord_add[1] = (uint8_t)(tal_pib.IeeeAddress >> 8);
-			pan_coord_add[2] = (uint8_t)(tal_pib.IeeeAddress >> 16);
-			pan_coord_add[3] = (uint8_t)(tal_pib.IeeeAddress >> 24);
-			pan_coord_add[4] = (uint8_t)(tal_pib.IeeeAddress >> 32);
-			pan_coord_add[5] = (uint8_t)(tal_pib.IeeeAddress >> 40);
-			pan_coord_add[6] = (uint8_t)(tal_pib.IeeeAddress >> 48);
-			pan_coord_add[7] = (uint8_t)(tal_pib.IeeeAddress >> 56);
+			pan_coord_add[0] = COORD_IEEE_ADDRESS[7];
+			pan_coord_add[1] = COORD_IEEE_ADDRESS[6];
+			pan_coord_add[2] = COORD_IEEE_ADDRESS[5];
+			pan_coord_add[3] = COORD_IEEE_ADDRESS[4];
+			pan_coord_add[4] = COORD_IEEE_ADDRESS[3];
+			pan_coord_add[5] = COORD_IEEE_ADDRESS[2];
+			pan_coord_add[6] = COORD_IEEE_ADDRESS[1];
+			pan_coord_add[7] = COORD_IEEE_ADDRESS[0];
 			
 			wpan_mlme_set_req(macPANCoordExtendedAddress,
 										NO_PIB_INDEX,    // Index
@@ -776,8 +776,8 @@ static void usr_mlme_set_conf_run_time(uint8_t status, uint8_t PIBAttribute, uin
 	                    uint8_t mac_dev_table[17];
 	                    for (uint16_t i = Temp; i < no_of_assoc_devices; i++) // Temp is used to not update the already device table again
 	                    {
-		                    mac_dev_table[0] = (uint8_t)tal_pib.PANId;
-		                    mac_dev_table[1] = (uint8_t)(tal_pib.PANId >> 8);
+		                    mac_dev_table[0] =  DEFAULT_PAN_ID;
+		                    mac_dev_table[1] = (uint8_t)(DEFAULT_PAN_ID >> 8);
 		                    mac_dev_table[2] = (uint8_t)device_list[i].short_addr;
 		                    mac_dev_table[3] = (uint8_t)(device_list[i].short_addr >> 8);
 		                    mac_dev_table[4] = (uint8_t)device_list[i].ieee_addr;

@@ -188,8 +188,7 @@ extern uint8_t default_key_source[8];
 associated_device_t device_list[MAX_NUMBER_OF_DEVICES];
 /** Stores the number of associated devices. */
 uint16_t no_of_assoc_devices;
-/** Keeps the track of the no of device associated. */ 
-uint8_t ndevice_associated;
+
 
 /** This array stores the current beacon payload. */
 uint8_t beacon_payload[BEACON_PAYLOAD_LEN] = {"Atmel beacon demo 0"};
