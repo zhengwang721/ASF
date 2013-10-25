@@ -740,20 +740,20 @@ static void usr_mlme_set_conf_run_time(uint8_t status, uint8_t PIBAttribute, uin
 	                 {
 		                 // DeviceDescriptor
 		                 // PANId
-		                 (uint8_t)tal_pib.PANId,//@c
-		                 (uint8_t)(tal_pib.PANId >> 8),
+		                 (uint8_t)DEFAULT_PAN_ID,
+		                 (uint8_t)(DEFAULT_PAN_ID >> 8),
 		                 // Device ShortAddress
-		                 (uint8_t)mac_pib.mac_CoordShortAddress,
-		                 (uint8_t)(mac_pib.mac_CoordShortAddress >> 8),
+		                 (uint8_t)COORD_SHORT_ADDR,
+		                 (uint8_t)(COORD_SHORT_ADDR >> 8),
 		                 // Device ExtAddress
-		                 (uint8_t)mac_pib.mac_CoordExtendedAddress,
-		                 (uint8_t)(mac_pib.mac_CoordExtendedAddress >> 8),
-		                 (uint8_t)(mac_pib.mac_CoordExtendedAddress >> 16),
-		                 (uint8_t)(mac_pib.mac_CoordExtendedAddress >> 24),
-		                 (uint8_t)(mac_pib.mac_CoordExtendedAddress >> 32),
-		                 (uint8_t)(mac_pib.mac_CoordExtendedAddress >> 40),
-		                 (uint8_t)(mac_pib.mac_CoordExtendedAddress >> 48),
-		                 (uint8_t)(mac_pib.mac_CoordExtendedAddress >> 56),
+		                 COORD_IEEE_ADDRESS[7],
+		                 COORD_IEEE_ADDRESS[6],
+		                 COORD_IEEE_ADDRESS[5],
+		                 COORD_IEEE_ADDRESS[4],
+		                 COORD_IEEE_ADDRESS[3],
+		                 COORD_IEEE_ADDRESS[2],
+		                 COORD_IEEE_ADDRESS[1],
+		                 COORD_IEEE_ADDRESS[0],
 		                 // FrameCounter
 		                 0, 0, 0, 0,
 		                 // Exempt

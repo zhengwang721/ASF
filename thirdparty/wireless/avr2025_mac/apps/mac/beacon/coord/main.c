@@ -114,7 +114,7 @@
 
 /* === MACROS ============================================================== */
 
-#define CHANNEL_OFFSET                  (2)
+#define CHANNEL_OFFSET                  (0)
 
 /** Defines the default Beacon Order. */
 #define DEFAULT_BO                      (5)
@@ -898,7 +898,7 @@ void usr_mlme_scan_conf(uint8_t status,
 			true, false,
 			DEFAULT_COORDREALIGNMENT
 			
-#ifdef MAC_SECURITY_ZIP_BEACON
+#ifdef MAC_SECURITY_BEACON
 		   ,DEFAULT_COORDREALIGN_SEC_LVL,
 			DEFAULT_COORDREALIGN_KEYID_MODE,
 			DEFAULT_COORDREALIGN_KEY_SRC,

@@ -113,8 +113,8 @@
 
 
 /* === MACROS ============================================================== */
-
-#define CHANNEL_OFFSET                  (2)
+/** Channel Offset will give us the channel number as (CHANNEL_OFFSET + 11) */
+#define CHANNEL_OFFSET                  (0)
 
 /** Defines the short scan duration time. */
 #define SCAN_DURATION_SHORT             (5)

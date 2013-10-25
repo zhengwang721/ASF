@@ -996,7 +996,9 @@ static bool process_data_ind_not_transient(buffer_t *b_ptr, frame_info_t *f_ptr)
  */
 static bool parse_mpdu(frame_info_t *rx_frame_ptr)
 {
+#if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))	
 	uint8_t payload_index[4] = {0};
+#endif		
 	uint8_t payload_loc = 0;
 	uint8_t temp_byte;
 	uint16_t fcf;

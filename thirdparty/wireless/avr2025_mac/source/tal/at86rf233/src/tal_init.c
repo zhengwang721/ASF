@@ -225,14 +225,7 @@ retval_t tal_init(void)
 		 * The proper seed for function rand() has already been
 		 *generated
 		 * in function tal_generate_rand_seed().
-		 */
-#if ((defined FFD) && (MAC_SECURITY_ZIP))	
-{
-  uint8_t coord_extended_addr[] = {0x00, 0x56, 0x34, 0x12, 0x78, 0x56, 0x34, 0x12};
-	  memcpy((uint8_t *)&tal_pib.IeeeAddress, (uint8_t *)&coord_extended_addr[0],
-	          sizeof(tal_pib.IeeeAddress));
-}
-#else		
+		 */		
 		uint8_t *ptr_pib = (uint8_t *)&tal_pib.IeeeAddress;
 
 		for (uint8_t i = 0; i < 8; i++) {
@@ -247,8 +240,7 @@ retval_t tal_init(void)
 			 * smaller using 8-bit here.
 			 * And timing is not an issue at this place...
 			 */
-		}
-#endif		
+		}	
 	}
 #endif  /* #ifndef DISABLE_IEEE_ADDR_CHECK */
 #ifdef ENABLE_STACK_NVM

@@ -860,7 +860,7 @@ bool wpan_mlme_start_req(uint16_t PANId,
 		bool PANCoordinator,
 		bool BatteryLifeExtension,
 		bool CoordRealignment
-#ifdef MAC_SECURITY_ZIP_BEACON
+#ifdef MAC_SECURITY_BEACON
 ,uint8_t CoordRealignSecurityLevel,
 uint8_t CoordRealignKeyIdMode,
 uint8_t *CoordRealignKeySource,

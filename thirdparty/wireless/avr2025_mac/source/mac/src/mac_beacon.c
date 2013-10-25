@@ -94,7 +94,7 @@
 
 /* === Globals ============================================================== */
 
-#ifdef MAC_SECURITY_ZIP_BEACON
+#ifdef MAC_SECURITY_BEACON
 extern mlme_start_req_t msr_params;    /* Intermediate start parameters */
 #endif
 
@@ -266,7 +266,7 @@ void mac_build_and_tx_beacon(bool beacon_enabled,
 	uint16_t fcf;
 	uint8_t frame_len;
 	uint8_t *frame_ptr;
-#if ((defined MAC_SECURITY_ZIP_BEACON)  || (defined MAC_SECURITY_2006_BEACON)) 
+#if ((defined MAC_SECURITY_BEACON)  || (defined MAC_SECURITY_2006_BEACON)) 
 	uint8_t *frame_ptr_mhr_gts = NULL;	
 	uint8_t *mac_payload_ptr = NULL;
 	mcps_data_req_t beacon_sec_buf;   
@@ -317,7 +317,7 @@ void mac_build_and_tx_beacon(bool beacon_enabled,
 
 		memcpy(frame_ptr, mac_beacon_payload,
 				mac_pib.mac_BeaconPayloadLength);
-#if ((defined MAC_SECURITY_ZIP_BEACON)  || (defined MAC_SECURITY_2006_BEACON))				
+#if ((defined MAC_SECURITY_BEACON)  || (defined MAC_SECURITY_2006_BEACON))				
 	   mac_payload_ptr = frame_ptr;	
 #endif	   			
 	}
@@ -407,7 +407,7 @@ void mac_build_and_tx_beacon(bool beacon_enabled,
 	frame_ptr -= 2;
 	convert_spec_16_bit_to_byte_array(superframe_spec, frame_ptr);
 
-#if ((defined MAC_SECURITY_ZIP_BEACON)  || (defined MAC_SECURITY_2006_BEACON)) 
+#if ((defined MAC_SECURITY_BEACON)  || (defined MAC_SECURITY_2006_BEACON)) 
 	frame_ptr_mhr_gts = frame_ptr;    
 	beacon_sec_buf.SecurityLevel = msr_params.BeaconSecurityLevel;
 	beacon_sec_buf.KeyIdMode = msr_params.BeaconKeyIdMode;
@@ -450,7 +450,7 @@ void mac_build_and_tx_beacon(bool beacon_enabled,
 		}
 	}
 
-#endif  /* (MAC_SECURITY_ZIP_BEACON || MAC_SECURITY_2006_BEACON) */		
+#endif  /* (MAC_SECURITY_BEACON || MAC_SECURITY_2006_BEACON) */		
 
 	/*
 	 * Source address.
@@ -461,7 +461,7 @@ void mac_build_and_tx_beacon(bool beacon_enabled,
 		frame_ptr -= 8;
 		frame_len += 6; /* Add further 6 octets for long Source Address */
 		convert_64_bit_to_byte_array(tal_pib.IeeeAddress, frame_ptr);
-#if ((defined MAC_SECURITY_ZIP_BEACON)  || (defined MAC_SECURITY_2006_BEACON))
+#if ((defined MAC_SECURITY_BEACON)  || (defined MAC_SECURITY_2006_BEACON))
 		beacon_sec_buf.SrcAddrMode = FCF_LONG_ADDR;   
 #endif
 
@@ -471,7 +471,7 @@ void mac_build_and_tx_beacon(bool beacon_enabled,
 	{
 		frame_ptr -= 2;
 		convert_16_bit_to_byte_array(tal_pib.ShortAddress, frame_ptr);
-#if ((defined MAC_SECURITY_ZIP_BEACON)  || (defined MAC_SECURITY_2006_BEACON))
+#if ((defined MAC_SECURITY_BEACON)  || (defined MAC_SECURITY_2006_BEACON))
 		beacon_sec_buf.SrcAddrMode = FCF_SHORT_ADDR;   
 #endif
 		fcf = FCF_SET_SOURCE_ADDR_MODE((uint16_t)FCF_SHORT_ADDR);
@@ -481,7 +481,7 @@ void mac_build_and_tx_beacon(bool beacon_enabled,
 	frame_ptr -= 2;
 	convert_16_bit_to_byte_array(tal_pib.PANId, frame_ptr);
 	
-#if ((defined MAC_SECURITY_ZIP_BEACON)  || (defined MAC_SECURITY_2006_BEACON))
+#if ((defined MAC_SECURITY_BEACON)  || (defined MAC_SECURITY_2006_BEACON))
 		beacon_sec_buf.DstPANId = tal_pib.PANId;   
 #endif	
 
@@ -509,7 +509,7 @@ void mac_build_and_tx_beacon(bool beacon_enabled,
 
 	fcf = fcf | FCF_SET_FRAMETYPE(FCF_FRAMETYPE_BEACON);	
 	
-#if ((defined MAC_SECURITY_ZIP_BEACON)  || (defined MAC_SECURITY_2006_BEACON))
+#if ((defined MAC_SECURITY_BEACON)  || (defined MAC_SECURITY_2006_BEACON))
 	if (beacon_sec_buf.SecurityLevel > 0) 
 	{
 		fcf |= FCF_SECURITY_ENABLED | FCF_FRAME_VERSION_2006;
@@ -551,7 +551,7 @@ void mac_build_and_tx_beacon(bool beacon_enabled,
 	transmit_frame->mpdu = frame_ptr;
 
 #ifdef BEACON_SUPPORT
-#if ((defined MAC_SECURITY_ZIP_BEACON)  || (defined MAC_SECURITY_2006_BEACON))
+#if ((defined MAC_SECURITY_BEACON)  || (defined MAC_SECURITY_2006_BEACON))
 if (beacon_sec_buf.SecurityLevel > 0) 
 {
 	retval_t build_sec = mac_secure(transmit_frame, mac_payload_ptr, &beacon_sec_buf);

@@ -386,34 +386,22 @@ void mcps_data_request(arch_data_t *msg)
 
 		/* Transmission should be done with CSMA-CA and with frame
 		 *retries. */
-#ifdef BEACON_SUPPORT
-		csma_mode_t cur_csma_mode;
 
-		if (NON_BEACON_NWK == tal_pib.BeaconOrder) {
-			/* In Nonbeacon network the frame is sent with unslotted
-			 *CSMA-CA. */
-			cur_csma_mode = CSMA_UNSLOTTED;
-		} else {
-			/* In Beacon network the frame is sent with slotted
-			 *CSMA-CA. */
-			cur_csma_mode = CSMA_SLOTTED;
-		}
-		
 #ifdef MAC_SECURITY_ZIP
 if(transmit_frame->mpdu[1] & FCF_SECURITY_ENABLED)
 {
 	mcps_data_req_t pmdr;
-		
+	
 	build_sec_mcps_data_frame(&pmdr, transmit_frame);
-		
+	
 	if (pmdr.SecurityLevel > 0)
-	{		 
-		 /* Secure the Frame */	
-		 retval_t build_sec = mac_secure(transmit_frame, \
-								transmit_frame->mac_payload, &pmdr);
-	 
-		 if (MAC_SUCCESS != build_sec)
-		 {
+	{
+		/* Secure the Frame */
+		retval_t build_sec = mac_secure(transmit_frame, \
+		transmit_frame->mac_payload, &pmdr);
+		
+		if (MAC_SUCCESS != build_sec)
+		{
 			/* The MAC Data Payload is encrypted based on the security level. */
 			mac_gen_mcps_data_conf((buffer_t *)msg,
 			(uint8_t)build_sec,
@@ -425,10 +413,24 @@ if(transmit_frame->mpdu[1] & FCF_SECURITY_ENABLED)
 			#endif  /* ENABLE_TSTAMP */
 			
 			return;
-		 }
+		}
 	}
 }
 #endif
+		
+#ifdef BEACON_SUPPORT
+		csma_mode_t cur_csma_mode;
+
+		if (NON_BEACON_NWK == tal_pib.BeaconOrder) {
+			/* In Nonbeacon network the frame is sent with unslotted
+			 *CSMA-CA. */
+			cur_csma_mode = CSMA_UNSLOTTED;
+		} else {
+			/* In Beacon network the frame is sent with slotted
+			 *CSMA-CA. */
+			cur_csma_mode = CSMA_SLOTTED;
+		}		
+
 		status = tal_tx_frame(transmit_frame, cur_csma_mode, true);
 		
 #else   /* No BEACON_SUPPORT */

@@ -563,6 +563,24 @@ static void init_secuity_pib(uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
 		
 		case macPANCoordExtendedAddress:
 		{
+			uint8_t pan_coord_add[8];
+			pan_coord_add[0] = COORD_IEEE_ADDRESS[7];
+			pan_coord_add[1] = COORD_IEEE_ADDRESS[6];
+			pan_coord_add[2] = COORD_IEEE_ADDRESS[5];
+			pan_coord_add[3] = COORD_IEEE_ADDRESS[4];
+			pan_coord_add[4] = COORD_IEEE_ADDRESS[3];
+			pan_coord_add[5] = COORD_IEEE_ADDRESS[2];
+			pan_coord_add[6] = COORD_IEEE_ADDRESS[1];
+			pan_coord_add[7] = COORD_IEEE_ADDRESS[0];
+			
+			wpan_mlme_set_req(macIeeeAddress,
+			NO_PIB_INDEX,    // Index
+			pan_coord_add);
+		}		
+		break;
+		
+		case macIeeeAddress:
+		{
 			uint16_t short_add = COORD_SHORT_ADDR;
 			wpan_mlme_set_req(macPANCoordShortAddress,
 										NO_PIB_INDEX,    // Index
@@ -776,7 +794,7 @@ static void usr_mlme_set_conf_run_time(uint8_t status, uint8_t PIBAttribute, uin
 	                    uint8_t mac_dev_table[17];
 	                    for (uint16_t i = Temp; i < no_of_assoc_devices; i++) // Temp is used to not update the already device table again
 	                    {
-		                    mac_dev_table[0] =  DEFAULT_PAN_ID;
+		                    mac_dev_table[0] = (uint8_t)(DEFAULT_PAN_ID & 0x00FF);
 		                    mac_dev_table[1] = (uint8_t)(DEFAULT_PAN_ID >> 8);
 		                    mac_dev_table[2] = (uint8_t)device_list[i].short_addr;
 		                    mac_dev_table[3] = (uint8_t)(device_list[i].short_addr >> 8);

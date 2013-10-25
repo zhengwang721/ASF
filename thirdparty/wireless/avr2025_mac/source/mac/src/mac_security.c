@@ -785,10 +785,6 @@ static inline retval_t parse_aux_sec_header(parse_t *mac_parse_data_instance,
  *
  * @return retval_t MAC_SUCCESS, MAC_UNSUPPORTED_SECURITY or MAC_SECURITY_ERROR
  */
-uint32_t frame_cnt_rxd;
-uint32_t frame_cnt_avail;
-uint32_t frame_cnt_beacon;
-uint32_t frame_cnt_data;
 static inline retval_t unsecure_frame(parse_t *mac_parse_data_buf, uint8_t *mpdu, uint8_t *mac_payload, uint8_t *payload_index)
 {
     /* Encrypt payload data */
@@ -808,11 +804,6 @@ static inline retval_t unsecure_frame(parse_t *mac_parse_data_buf, uint8_t *mpdu
 		}
 		key = key_desc->Key;
 
-    /* Todo 7.5.8.2.3 (h) using 7.5.8.2.9 key usage policy procedure*/
-	frame_cnt_rxd  = mac_parse_data_buf->frame_cnt;
-	frame_cnt_avail = device_desc->FrameCounter;
-	frame_cnt_beacon = mac_sec_pib.DeviceTable[3].DeviceDescriptor[0].FrameCounter;
-	frame_cnt_data = mac_sec_pib.DeviceTable[0].DeviceDescriptor[0].FrameCounter;
     /* 7.5.8.2.3 (j) & (k)*/
     if (((FCF_FRAMETYPE_DATA == mac_parse_data_buf->frame_type) ||\
 	    (FCF_FRAMETYPE_BEACON == mac_parse_data_buf->frame_type))&& \
@@ -831,7 +822,7 @@ static inline retval_t unsecure_frame(parse_t *mac_parse_data_buf, uint8_t *mpdu
 
     /* Standard way of extracting Src IEEE address. */
     addr_ptr = (uint8_t *)&device_desc->ExtAddress;
-#ifdef MAC_SECURITY_ZIP_BEACON
+#ifdef MAC_SECURITY_BEACON
 		uint64_t coord_ieee_address;
 		if (FCF_FRAMETYPE_BEACON == mac_parse_data_buf->frame_type)
 		{

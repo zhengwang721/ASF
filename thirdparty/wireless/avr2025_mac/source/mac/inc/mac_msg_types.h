@@ -782,7 +782,8 @@ typedef struct mlme_start_req_tag {
 	 * changing the superframe configuration or FALSE otherwise.
 	 */
 	uint8_t CoordRealignment;	
-	
+
+#ifdef MAC_SECURITY_BEACON	
 	/**
 	 * The security level to be used for coordinator realignment command
 	 * frames (see Table95 in 7.6.2.2.1).
@@ -838,6 +839,8 @@ typedef struct mlme_start_req_tag {
 	  * parameter is ignored or set to 0x00.
 	  */
 	 uint8_t BeaconKeyIndex;
+#endif 
+	 
 } mlme_start_req_t __ALIGN_WORD_ADDR__;
 
 /**
