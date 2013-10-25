@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D2x Clock configuration
+ * \brief SAM D21 Clock configuration
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,7 +44,7 @@
 
 #ifndef CONF_CLOCKS_H_INCLUDED
 #  define CONF_CLOCKS_H_INCLUDED
-#if 0
+
 /* System clock bus configuration */
 #  define CONF_CLOCK_CPU_CLOCK_FAILURE_DETECT     true
 #  define CONF_CLOCK_FLASH_WAIT_STATES            0
@@ -52,11 +52,11 @@
 #  define CONF_CLOCK_APBA_DIVIDER                 SYSTEM_MAIN_CLOCK_DIV_1
 #  define CONF_CLOCK_APBB_DIVIDER                 SYSTEM_MAIN_CLOCK_DIV_1
 
-
 /* SYSTEM_CLOCK_SOURCE_OSC8M configuration - Internal 8MHz oscillator */
 #  define CONF_CLOCK_OSC8M_PRESCALER              SYSTEM_OSC8M_DIV_1
 #  define CONF_CLOCK_OSC8M_ON_DEMAND              true
 #  define CONF_CLOCK_OSC8M_RUN_IN_STANDBY         false
+#  define CONF_CLOCK_OSC8M_FREQUENCY_RANGE        SYSTEM_OSC8M_FREQUENCY_RANGE_8_TO_11
 
 /* SYSTEM_CLOCK_SOURCE_XOSC configuration - External clock/oscillator */
 #  define CONF_CLOCK_XOSC_ENABLE                  false
@@ -71,7 +71,7 @@
 #  define CONF_CLOCK_XOSC32K_ENABLE               false
 #  define CONF_CLOCK_XOSC32K_EXTERNAL_CRYSTAL     SYSTEM_CLOCK_EXTERNAL_CRYSTAL
 #  define CONF_CLOCK_XOSC32K_STARTUP_TIME         SYSTEM_XOSC32K_STARTUP_65536
-#  define CONF_CLOCK_XOSC32K_AUTO_AMPLITUDE_CONTROL  false
+#  define CONF_CLOCK_XOSC32K_AUTO_AMPLITUDE_CONTROL  true
 #  define CONF_CLOCK_XOSC32K_ENABLE_1KHZ_OUPUT    false
 #  define CONF_CLOCK_XOSC32K_ENABLE_32KHZ_OUTPUT  true
 #  define CONF_CLOCK_XOSC32K_ON_DEMAND            true
@@ -105,6 +105,20 @@
 #  define CONF_CLOCK_DFLL_MAX_COARSE_STEP_SIZE    (0x1f / 4)
 #  define CONF_CLOCK_DFLL_MAX_FINE_STEP_SIZE      (0xff / 4)
 
+/* SYSTEM_CLOCK_SOURCE_DPLL configuration - Digital Phase-Locked Loop */
+#  define CONF_CLOCK_DPLL_ENABLE                  false
+#  define CONF_CLOCK_DPLL_ON_DEMAND               true
+#  define CONF_CLOCK_DPLL_RUN_IN_STANDBY          false
+#  define CONF_CLOCK_DPLL_LOCK_BYPASS             false
+#  define CONF_CLOCK_DPLL_WAKE_UP_FAST            false
+
+#  define CONF_CLOCK_DPLL_LOCK_TIME               SYSTEM_CLOCK_SOURCE_DPLL_LOCK_TIME_NO_TIMEOUT
+#  define CONF_CLOCK_DPLL_REFERENCE_CLOCK         SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_REF0
+#  define CONF_CLOCK_DPLL_FILTER                  SYSTEM_CLOCK_SOURCE_DPLL_FILTER_DEFAULT
+
+#  define CONF_CLOCK_DPLL_REFERENCE_FREQUENCY     32768
+#  define CONF_CLOCK_DPLL_REFEREMCE_DIVIDER       1
+#  define CONF_CLOCK_DPLL_OUTPUT_FREQUENCY        48000000
 
 /* Set this to true to configure the GCLK when running clocks_init. If set to
  * false, none of the GCLK generators will be configured in clocks_init(). */
@@ -165,6 +179,6 @@
 #  define CONF_CLOCK_GCLK_7_CLOCK_SOURCE          SYSTEM_CLOCK_SOURCE_OSC8M
 #  define CONF_CLOCK_GCLK_7_PRESCALER             1
 #  define CONF_CLOCK_GCLK_7_OUTPUT_ENABLE         false
-#endif
+
 #endif /* CONF_CLOCKS_H_INCLUDED */
 
