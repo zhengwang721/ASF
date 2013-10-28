@@ -46,56 +46,40 @@ void configure_event_channel(void);
 void configure_event_user(void);
 
 //! [setup]
-#define EXAMPLE_EVENT_GENERATOR    0
-#define EXAMPLE_EVENT_CHANNEL      EVENT_CHANNEL_0
-#define EXAMPLE_EVENT_USER         0
+#define EXAMPLE_EVENT_GENERATOR    EVSYS_ID_GEN_NONE
+#define EXAMPLE_EVENT_USER         EVSYS_ID_USER_DMAX_CH
 
-void configure_event_channel(void)
+void configure_event_channel(struct events_descriptor *desc)
 {
 //! [setup_1]
-	struct events_chan_config config_events_chan;
+	struct events_config config;
 //! [setup_1]
+
 //! [setup_2]
-	events_chan_get_config_defaults(&config_events_chan);
+	events_get_config_defaults(&config);
 //! [setup_2]
 
 //! [setup_3]
-	config_events_chan.generator_id   = EXAMPLE_EVENT_GENERATOR;
-	config_events_chan.edge_detection = EVENT_EDGE_RISING;
-	config_events_chan.path           = EVENT_PATH_SYNCHRONOUS;
+	config.generator      = EXAMPLE_EVENT_GENERATOR;
+	config.edge_detection = EVENTS_EDGE_RISING;
+	config.path           = EVENTS_PATH_SYNCHRONOUS;
 //! [setup_3]
+
 //! [setup_4]
-	events_chan_set_config(EXAMPLE_EVENT_CHANNEL, &config_events_chan);
+	events_allocate(desc, &config_events_chan);
 //! [setup_4]
 }
-
-void configure_event_user(void)
-{
-//! [setup_5]
-	struct events_user_config config_events_user;
-//! [setup_5]
-//! [setup_6]
-	events_user_get_config_defaults(&config_events_user);
-//! [setup_6]
-
-//! [setup_7]
-	config_events_user.event_channel_id = EXAMPLE_EVENT_CHANNEL;
-//! [setup_7]
-//! [setup_8]
-	events_user_set_config(EXAMPLE_EVENT_USER, &config_events_user);
-//! [setup_8]
-}
-//! [setup]
 
 int main(void)
 {
+	struct events_descriptor example_event;
+
 	system_init();
 
-	//! [setup_init]
-	events_init();
+	configure_event_channel(&example_event);
 
-	configure_event_user();
-	configure_event_channel();
+	event_attach_user(desc, EXAMPLE_EVENT_USER);
+
 	//! [setup_init]
 
 	//! [main]
@@ -106,7 +90,7 @@ int main(void)
 	//! [main_1]
 
 	//! [main_2]
-	events_chan_software_trigger(EXAMPLE_EVENT_CHANNEL);
+	events_trigger(&example_event);
 	//! [main_2]
 
 	while (true) {
