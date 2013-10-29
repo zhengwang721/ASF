@@ -76,7 +76,7 @@
  *  \snippet qs_port_basic.c setup_2
  * -# Adjust the configuration struct to request an input pin.
  *  \snippet qs_port_basic.c setup_3
- * -# Configure GPIO10 with the initialized pin configuration struct, to enable
+ * -# Configure push button pin with the initialized pin configuration struct, to enable
  *    the input sampler on the pin.
  *  \snippet qs_port_basic.c setup_4
  * -# Adjust the configuration struct to request an output pin.
@@ -85,7 +85,7 @@
  *          into account by the user application.
  *
  *  \snippet qs_port_basic.c setup_5
- * -# Configure GPIO11 with the initialized pin configuration struct, to enable
+ * -# Configure LED pin with the initialized pin configuration struct, to enable
  *    the output driver on the pin.
  *  \snippet qs_port_basic.c setup_6
  *
@@ -96,10 +96,10 @@
  * \snippet qs_port_basic.c main
  *
  * \subsection asfdoc_sam0_port_basic_use_case_flow Workflow
- * -# Read in the current input sampler state of GPIO10, which has been
+ * -# Read in the current input sampler state of push button pin, which has been
  *    configured as an input in the use-case setup code.
  *  \snippet qs_port_basic.c main_1
- * -# Write the inverted pin level state to GPIO11, which has been configured as
+ * -# Write the inverted pin level state to LED pin, which has been configured as
  *    an output in the use-case setup code.
  *  \snippet qs_port_basic.c main_2
  */
