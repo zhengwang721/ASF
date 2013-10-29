@@ -59,10 +59,6 @@
 
 #define SPI_BB      A
 
-#if (defined __ICCARM__)
-#define nop() (__no_operation())
-#endif
-
 #define DELAY50US() do{   \
     nop(); nop(); nop(); nop(); nop(); nop(); nop(); nop(); nop(); nop();  \
     nop(); nop(); nop(); nop(); nop(); nop(); nop(); nop(); nop(); nop();  \
