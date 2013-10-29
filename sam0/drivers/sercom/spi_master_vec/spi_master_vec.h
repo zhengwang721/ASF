@@ -372,6 +372,7 @@ static inline enum status_code spi_master_vec_transceive_buffer_wait(
  * the macros in this group:
  * - \ref CONF_SPI_MASTER_VEC_SEMAPHORE_TYPE
  * - \ref CONF_SPI_MASTER_VEC_CREATE_SEMAPHORE
+ * - \ref CONF_SPI_MASTER_VEC_DELETE_SEMAPHORE
  * - \ref CONF_SPI_MASTER_VEC_TAKE_SEMAPHORE
  * - \ref CONF_SPI_MASTER_VEC_GIVE_SEMAPHORE
  * - \ref CONF_SPI_MASTER_VEC_GIVE_SEMAPHORE_FROM_ISR
@@ -393,6 +394,13 @@ static inline enum status_code spi_master_vec_transceive_buffer_wait(
 /**
  * \def CONF_SPI_MASTER_VEC_CREATE_SEMAPHORE
  * \brief Create/initialize semaphore
+ *
+ * \param semaphore Semaphore member in driver instance.
+ */
+
+/**
+ * \def CONF_SPI_MASTER_VEC_DELETE_SEMAPHORE
+ * \brief Delete semaphore
  *
  * \param semaphore Semaphore member in driver instance.
  */
