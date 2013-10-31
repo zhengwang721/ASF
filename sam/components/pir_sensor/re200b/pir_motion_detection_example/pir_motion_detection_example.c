@@ -139,8 +139,7 @@ int main(void)
 	ili9325_fill(COLOR_WHITE);
 
 	/* Initialize Pir sensor */
-	re200b_motion_detect_init(ACC_MR_SELMINUS_AD0 >> ACC_MR_SELMINUS_Pos,
-			ACC_MR_SELPLUS_AD4 >> ACC_MR_SELPLUS_Pos);
+	re200b_motion_detect_init(ACC_MR_SELMINUS_AD0, ACC_MR_SELPLUS_AD4);
 
 	while (1) {
 		/* Reset motion detection (enable interrupt, clear variable,

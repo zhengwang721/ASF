@@ -78,10 +78,14 @@ extern "C" {
  * \brief Initialize the ACC controller.
  *
  * \param p_acc Pointer to an ACC instance.
- * \param ul_select_plus Input connected to inp, 0~7.
- * \param ul_select_minus Input connected to inm, 0~7. 
- * \param ul_edge_type CF flag triggering mode, use pattern defined in the device header file.
- * \param ul_invert Invert comparator output.
+ * \param ul_select_plus Input connected to inp,
+ *                       use pattern defined in the device header file.
+ * \param ul_select_minus Input connected to inm,
+ *                        use pattern defined in the device header file. 
+ * \param ul_edge_type CF flag triggering mode,
+ *                     use pattern defined in the device header file.
+ * \param ul_invert Invert comparator output,
+ *                  use pattern defined in the device header file.
  */
 void acc_init(Acc *p_acc, uint32_t ul_select_plus, uint32_t ul_select_minus,
 		uint32_t ul_edge_type, uint32_t ul_invert)
@@ -90,10 +94,10 @@ void acc_init(Acc *p_acc, uint32_t ul_select_plus, uint32_t ul_select_minus,
 	p_acc->ACC_CR |= ACC_CR_SWRST;
 
 	/* Write to the MR register. */
-	p_acc->ACC_MR = (((ul_select_plus << ACC_MR_SELPLUS_Pos) & ACC_MR_SELPLUS_Msk) | 
-			((ul_select_minus << ACC_MR_SELMINUS_Pos) & ACC_MR_SELMINUS_Msk) | 
-			((ul_edge_type << ACC_MR_EDGETYP_Pos) & ACC_MR_EDGETYP_Msk) | 
-			((ul_invert << ACC_MR_INV_Pos) & ACC_MR_INV)) | ACC_MR_ACEN_EN;
+	p_acc->ACC_MR = (((ul_select_plus) & ACC_MR_SELPLUS_Msk) | 
+			((ul_select_minus) & ACC_MR_SELMINUS_Msk) | 
+			((ul_edge_type) & ACC_MR_EDGETYP_Msk) | 
+			((ul_invert) & ACC_MR_INV)) | ACC_MR_ACEN_EN;
 
 	/* Set hysteresis and current option. */
 	p_acc->ACC_ACR = (ACC_ACR_ISEL_HISP |
@@ -137,8 +141,10 @@ void acc_reset(Acc *p_acc)
  * \brief Set the ACC input source.
  *
  * \param p_acc Pointer to an ACC instance.
- * \param ul_select_minus Selection for minus comparator input.
- * \param ul_select_plus Selection for plus comparator input.
+ * \param ul_select_minus Selection for minus comparator input,
+ *                        use pattern defined in the device header file.
+ * \param ul_select_plus Selection for plus comparator input,
+ *                       use pattern defined in the device header file.
  */
 void acc_set_input(Acc *p_acc, uint32_t ul_select_minus,
 		uint32_t ul_select_plus)
@@ -151,9 +157,12 @@ void acc_set_input(Acc *p_acc, uint32_t ul_select_minus,
  * \brief Set the ACC output.
  *
  * \param p_acc Pointer to an ACC instance.
- * \param ul_invert Invert comparator output, 0 for disable, 1 for enable.
- * \param ul_fault_enable Fault enable, 0 for disable, 1 for enable.
- * \param ul_fault_source Selection of fault source, 0 for CF, 1 for output.
+ * \param ul_invert Invert comparator output,
+ *                  use pattern defined in the device header file.
+ * \param ul_fault_enable Fault enable,
+ *                        use pattern defined in the device header file.
+ * \param ul_fault_source Selection of fault source,
+ *                        use pattern defined in the device header file.
  */
 void acc_set_output(Acc *p_acc, uint32_t ul_invert,
 		uint32_t ul_fault_enable, uint32_t ul_fault_source)
