@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D20 Event System Driver Quick Start
+ * \brief SAM D2x Event System Driver Quick Start
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -51,7 +51,7 @@
  *
  * This use case allocates an event channel, this channel is not connected to any
  * hardware event generator, events are software triggered. One user is connected
- * to the allocated and configured event channel. 
+ * to the allocated and configured event channel.
  *
  * \section asfdoc_sam0_events_basic_use_case_setup Setup
  *
@@ -69,27 +69,34 @@
  * -# Create an event channel configuration struct, which can be filled out to
  *    adjust the configuration of a single event channel.
  *  \snippet qs_events_basic.c setup_1
+ *  \br
  *
  * -# Initialize the event channel configuration struct with the module's
  *    default values.
  *    \note This should always be performed before using the configuration
  *          struct to ensure that all values are initialized to known default
  *          settings.
+ *
  *  \snippet qs_events_basic.c setup_2
+ *  \br
  *
  * -# Adjust the configuration struct to request that the channel be attached
  *    to the specified event generator, that rising edges of the event signal
  *    be detected on the channel and that the synchronous event path be used.
  *  \snippet qs_events_basic.c setup_3
+ *  \br
  *
  * -# Allocate and configure the channel using the configuration structure.
  *    \note The existing configuration struct may be re-used, as long as any
  *          values that have been altered from the default settings are taken
  *          into account by the user application.
+ *
  *  \snippet qs_events_basic.c setup_4
+ *  \br
  *
  * -# Attach an user to the channel
  *  \snippet qs_events_basic.c setup_5
+ *  \br
  *
  * \section asfdoc_sam0_events_basic_use_case_main Use Case
  *

@@ -26,7 +26,7 @@
 
 		<build type="header-file" value="quick_start/qs_events_basic.h"/>
 
-		<build type="doxygen-entry-point" value="asfdoc_samd20_events_group"/>
+		<build type="doxygen-entry-point" value="asfdoc_sam0_events_group"/>
 		<build type="doxygen-example-path" value="quick_start"/>
 
 		<device-support value="sam0"/>
