@@ -34,6 +34,7 @@
 				<build type="include-path" value="clock_samd20/"/>
 
 				<build type="header-file" subtype="api" value="clock.h"/>
+				<build type="header-file" value="clock_samd20/clock_features.h"/>
 				<build type="header-file" subtype="api" value="gclk.h"/>
 				<build type="header-file" value="clock_private.h" />
 				<build type="c-source" value="clock.c"/>
@@ -88,7 +89,7 @@
 				<build type="header-file" subtype="api" value="clock.h"/>
 				<build type="header-file" subtype="api" value="gclk.h"/>
 				<build type="header-file" value="clock_private.h" />
-				<build type="header-file" value="clock_02.h"/>
+				<build type="header-file" subtype="api" value="clock_02.h"/>
 				<build type="header-file" value="clock_samd21/clock_features.h"/>
 				<build type="c-source" value="clock.c"/>
 				<build type="c-source" value="gclk.c"/>

@@ -484,8 +484,11 @@ enum system_clock_source {
 	SYSTEM_CLOCK_SOURCE_DFLL     = GCLK_SOURCE_DFLL48M,
 	/** Internal Ultra Low Power 32kHz oscillator */
 	SYSTEM_CLOCK_SOURCE_ULP32K   = GCLK_SOURCE_OSCULP32K,
+
+#ifdef  FEATURE_SYSTEM_CLOCK_DPLL
 	/** Digital Phase Locked Loop (DPLL) */
 	SYSTEM_CLOCK_SOURCE_DPLL     = GCLK_SOURCE_FDPLL,
+#endif
 };
 
 /**

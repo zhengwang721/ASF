@@ -43,6 +43,7 @@
 
 #include "clock.h"
 #include "clock_private.h"
+#include "system.h"
 
 ///@cond INTERNAL
 
