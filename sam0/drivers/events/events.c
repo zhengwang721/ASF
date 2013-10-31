@@ -48,23 +48,25 @@
 
 #define EVENTS_INVALID_CHANNEL			0xff
 
-#define EVENTS_START_OFSET_BUSY_BITS		8
-#define EVENTS_START_OFSET_USER_READY_BIT	0
+#define EVENTS_START_OFFSET_BUSY_BITS		8
+#define EVENTS_START_OFFSET_USER_READY_BIT	0
 
 struct _events_module {
 	volatile uint32_t allocated_channels;
+	uint8_t           free_channels;
 };
 
-struct _events_module events_inst = {
-		.allocated_channels = 0;
-		.free_channels      = EVSYS_CHANNELS;
+struct _events_module _events_inst = {
+		.allocated_channels = 0,
+		.free_channels      = EVSYS_CHANNELS,
 };
 
 static inline uint8_t _events_find_bit_position(uint8_t channel, uint8_t start_ofset)
 {
 	uint8_t byte_ofset = channel >> 3;
-	
-	pos = (((channel % 8) + 1) << start_ofset) * ((0xffff * byte_ofset) + 1)
+	uint32_t pos;
+
+	pos = (((channel % 8) + 1) << start_ofset) * ((0xffff * byte_ofset) + 1);
 
 	return pos;
 }
@@ -75,9 +77,9 @@ static uint8_t _events_find_first_free_channel_and_allocate()
 	uint32_t tmp;
 	bool allocated = false;
 
-	system_interrupt_enter_critcal_section();
+	system_interrupt_enter_critical_section();
 
-	tmp = _events_allocated_channels;
+	tmp = _events_inst.allocated_channels;
 
 	for(count = 0; count < EVSYS_CHANNELS; ++count) {
 
@@ -95,7 +97,7 @@ static uint8_t _events_find_first_free_channel_and_allocate()
 		tmp = tmp >> 1;
 	}
 
-	system_interrupt_leave_critcal_section();
+	system_interrupt_leave_critical_section();
 
 	if(!allocated) {
 		return EVENTS_INVALID_CHANNEL;
@@ -108,7 +110,7 @@ static void _events_release_channel(uint8_t channel)
 {
 	system_interrupt_enter_critical_section();
 
-	_events_inst.allocated_channles &= ~(1 << channel);
+	_events_inst.allocated_channels &= ~(1 << channel);
 	_events_inst.free_channels++;
 
 	system_interrupt_leave_critical_section();
@@ -119,15 +121,17 @@ void events_get_config_defaults(struct events_config *config)
 	/* Check that config is something other than NULL */
 	Assert(config);
 
-	config->edge_detect = EVENTS_RISING_EDGE;
+	config->edge_detect = EVENTS_EDGE_DETECT_NONE;
 	config->path        = EVENTS_PATH_ASYNCHRONOUS;
-	config->generator   = EVSYS_ID_GEN_RTC_OVF;  
+	config->generator   = EVSYS_ID_GEN_NONE;
 }
 
 enum status_code events_allocate(
 		struct events_descriptor *descriptor,
 		struct events_config *config)
 {
+	uint8_t new_channel;
+
 	Assert(descriptor);
 
 	new_channel = _events_find_first_free_channel_and_allocate();
@@ -138,12 +142,12 @@ enum status_code events_allocate(
 
 	descriptor->channel = new_channel;
 
-	EVSYS.CHANNEL = EVSYS_CHANNEL_CHANNEL(new_channel)       |
-					EVSYS_CHANNEL_EVGEN(config->generator)   |
-					EVSYS_CHANNEL_PATH(config->path)         |
-					EVSYS_CHANNEL_EDGSEL(config->edge_detect);
+	EVSYS->CHANNEL.reg = EVSYS_CHANNEL_CHANNEL(new_channel)       |
+			     EVSYS_CHANNEL_EVGEN(config->generator)   |
+			     EVSYS_CHANNEL_PATH(config->path)         |
+			     EVSYS_CHANNEL_EDGSEL(config->edge_detect);
 
-	return STATUS_OK
+	return STATUS_OK;
 }
 
 
@@ -152,12 +156,12 @@ enum status_code events_release(struct events_descriptor *descriptor)
 	Assert(descriptor);
 
 	/* Check if channel is busy */
-	if(EVSYS.CHSTATUS & (_events_find_bit_position(descriptor->channel, EVENTS_START_OFSET_BUSY_BITS))) {
+	if(events_is_busy(descriptor)) {
 		return STATUS_BUSY;
 	}
 
 	if (!(_events_inst.allocated_channels & (1<<descriptor->channel))) {
-    	return STATUS_ERR_NOT_INITIALIZED;
+		return STATUS_ERR_NOT_INITIALIZED;
 	}
 
 	_events_release_channel(descriptor->channel);
@@ -165,14 +169,14 @@ enum status_code events_release(struct events_descriptor *descriptor)
 	return STATUS_OK;
 }
 
-void events_trigger(struct events_descriptor *descriptor)
+enum status_code events_trigger(struct events_descriptor *descriptor)
 {
 	Assert(descriptor);
 
-	(uint8_t)EVSYS.CHANNEL = (uint8_t)EVSYS_CHANNEL_CHANNEL(descriptor->channel);
+	((uint8_t*)&EVSYS->CHANNEL)[1] = (uint8_t)EVSYS_CHANNEL_CHANNEL(descriptor->channel);
 
-	EVSYS.CHANNEL |= EVSYS_CHANNEL_CHANNEL(descriptor->channel) |
-					 EVSYS_CHANNEL_SWEVT;
+	EVSYS->CHANNEL.reg |= EVSYS_CHANNEL_CHANNEL(descriptor->channel) |
+			      EVSYS_CHANNEL_SWEVT;
 
 	return STATUS_OK;
 }
@@ -181,23 +185,23 @@ bool events_is_busy(struct events_descriptor *descriptor)
 {
 	Assert(descriptor);
 
-	return EVSYS.CHSTATUS & (_events_find_bit_position(descriptor->channel, EVENTS_START_OFSET_BUSY_BITS));
+	return EVSYS->CHSTATUS.reg & (_events_find_bit_position(descriptor->channel, EVENTS_START_OFFSET_BUSY_BITS));
 }
 
-bool events_is_user_ready(struct events_descriptor *descriptor)
+bool events_is_users_ready(struct events_descriptor *descriptor)
 {
 	Assert(descriptor);
 
-	return EVSYS.CHSTATUS & (_events_find_bit_position(descriptor->channel, EVENTS_START_OFSET_USER_READY_BITS));
+	return EVSYS->CHSTATUS.reg & (_events_find_bit_position(descriptor->channel, EVENTS_START_OFFSET_USER_READY_BIT));
 }
 
-enum status_code events_attach_user(struct events_descriptor *descriptor uint8_t user_id)
+enum status_code events_attach_user(struct events_descriptor *descriptor, uint8_t user_id)
 {
 	Assert(descriptor);
 
 	/* Channel number is n + 1 */
-	EVSYS.USER = EVSYS_USER_CHANNEL(descriptor->channel + 1) | 
-				 EVSYS_USER_USER(user_id);
+	EVSYS->USER.reg = EVSYS_USER_CHANNEL(descriptor->channel + 1) |
+			  EVSYS_USER_USER(user_id);
 
 	return STATUS_OK;
 }
@@ -208,7 +212,7 @@ enum status_code events_deattach_user(struct events_descriptor *descriptor, uint
 	Assert(descriptor);
 
 	/* Write 0 to the channel bit field to select no input */
-	EVSYS.USER = EVSYS_USER_USER(user_id);
+	EVSYS->USER.reg = EVSYS_USER_USER(user_id);
 
 	return STATUS_OK;
 }

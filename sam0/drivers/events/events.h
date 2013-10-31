@@ -278,13 +278,13 @@
  */
 enum events_edge_detect {
 	/** No event output */
-	EVENTS_NO_OUTPUT,
+	EVENTS_EDGE_DETECT_NONE,
 	/** Event on rising edge */
-	EVENTS_EDGE_RISING,
+	EVENTS_EDGE_DETECT_RISING,
 	/** Event on falling edge */
-	EVENTS_EDGE_FALLING,
+	EVENTS_EDGE_DETECT_FALLING,
 	/** Event on both edges */
-	EVENTS_EDGE_BOTH,
+	EVENTS_EDGE_DETECT_BOTH,
 };
 
 /**
@@ -416,8 +416,7 @@ enum status_code events_trigger(struct events_descriptor *descriptor);
  * \retval true  All users connect to event channel is ready handle incomming events
  * \retval false One or more users connect to event channel is not ready to handle incomming events
  */
-bool events_is_user_ready(struct events_descriptor *descriptor);
-
+bool events_is_users_ready(struct events_descriptor *descriptor);
 
 /**
  * \brief Release allocated channel back the the resource pool
@@ -431,7 +430,17 @@ bool events_is_user_ready(struct events_descriptor *descriptor);
  * \retval STATUS_BUSY                One or more event users have not processed the last event
  * \retval STATUS_ERR_NOT_INITIALIZED Channel not allocated, and can derfor not be released
  */
-void events_release(struct events_descriptor *descriptor);
+enum status_code events_release(struct events_descriptor *descriptor);
+
+/**
+ * \brief Get number of free channels
+ *
+ * Get number of allocatable channels in the event system
+ *
+ * \return The number of free channels in the event system
+ *
+ */
+uint8_t events_get_free_channel();
 
 /** @} */
 
