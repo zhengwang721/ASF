@@ -17,8 +17,9 @@ enum at25dfx_command_opcode {
 	AT25DFX_COMMAND_READ_PROTECT_SECTOR  = 0x3c,
 };
 
-#define AT25DFX_PAGE_SIZE  256
-#define AT25DFX_COMMAND_MAX_SIZE (1 + 3 + 2)
+#define AT25DFX_PAGE_SIZE         256
+#define AT25DFX_COMMAND_MAX_SIZE  (1 + 3 + 2)
+#define AT25DFX_DEVICE_ID_MASK    ((uint32_t)0x00ffffff)
 
 enum at25dfx_status_field {
 	// These two are read-fields
@@ -190,7 +191,7 @@ enum status_code at25dfx_chip_check_presence(struct at25dfx_chip_module *chip)
 
 	spi_unlock(chip->spi);
 
-	if (id == _at25dfx_get_device_id(chip->type)) {
+	if ((id & AT25DFX_DEVICE_ID_MASK) == _at25dfx_get_device_id(chip->type)) {
 		return STATUS_OK;
 	} else {
 		return STATUS_ERR_NOT_FOUND;
