@@ -71,7 +71,7 @@ static inline uint8_t _events_find_bit_position(uint8_t channel, uint8_t start_o
 	return pos;
 }
 
-static uint8_t _events_find_first_free_channel_and_allocate()
+static uint8_t _events_find_first_free_channel_and_allocate(void)
 {
 	uint8_t count;
 	uint32_t tmp;

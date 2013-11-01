@@ -440,7 +440,7 @@ enum status_code events_release(struct events_descriptor *descriptor);
  * \return The number of free channels in the event system
  *
  */
-uint8_t events_get_free_channel();
+uint8_t events_get_free_channels(void);
 
 /** @} */
 
