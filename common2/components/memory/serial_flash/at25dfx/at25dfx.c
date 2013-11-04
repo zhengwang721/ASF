@@ -221,7 +221,7 @@ enum status_code at25dfx_chip_read_buffer(struct at25dfx_chip_module *chip,
 	cmd.opcode = AT25DFX_COMMAND_READ_ARRAY;
 	cmd.command_size = 5;
 	cmd.address = address;
-	cmd.data = (uint8_t *)&data;
+	cmd.data = (uint8_t *)data;
 	cmd.length = length;
 	_at25dfx_chip_issue_read_command_wait(chip, cmd);
 
@@ -255,7 +255,7 @@ enum status_code at25dfx_chip_write_buffer(struct at25dfx_chip_module *chip,
 	cmd.opcode = AT25DFX_COMMAND_PROGRAM_PAGE;
 	cmd.command_size = 4;
 	cmd.address = address;
-	cmd.data = (uint8_t *)&data;
+	cmd.data = (uint8_t *)data;
 	page_bytes = AT25DFX_PAGE_SIZE - (address % AT25DFX_PAGE_SIZE);
 	cmd.length = min(page_bytes, length);
 	_at25dfx_chip_issue_write_command_wait(chip, cmd);
