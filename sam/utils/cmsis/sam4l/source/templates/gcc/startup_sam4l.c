@@ -44,6 +44,7 @@
 #include "exceptions.h"
 #include "sam4l.h"
 #include "system_sam4l.h"
+#include <parts.h>
 
 /* Initialize segments */
 extern uint32_t _sfixed;
@@ -104,7 +105,9 @@ IntFunc exception_table[] = {
 	USBC_Handler,         // 18
 	PEVC_TR_Handler,      // 19
 	PEVC_OV_Handler,      // 20
+	#if !SAM4LS
 	AESA_Handler,         // 21
+	#endif
 	PM_Handler,           // 22
 	SCIF_Handler,         // 23
 	FREQM_Handler,        // 24
@@ -162,7 +165,9 @@ IntFunc exception_table[] = {
 	Dummy_Handler,        // one not used
 	TWIM2_Handler,        // 77
 	TWIM3_Handler,        // 78
+	#if !SAM4LS
 	LCDCA_Handler         // 79
+	#endif
 
 };
 
