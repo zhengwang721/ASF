@@ -55,7 +55,7 @@
  * The actual use of this feature can be enabled/disabled during runtime
  * using the PIB attribute macAdaptDataRateForACK.
  */
-//#define ENABLE_ACK_RATE_MODE_ADAPTION
+#define ENABLE_ACK_RATE_MODE_ADAPTION
 
 /**
  * During CSMA backoff periods the receiver can be set to receive mode.

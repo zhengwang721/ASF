@@ -360,7 +360,8 @@ int main(void)
 	 */
 	board_init();
 	sysclk_init();
-        
+
+			
     /*
      * Power ON - so set the board to INIT state. All hardware, PAL, TAL and
      * stack level initialization must be done using this function
@@ -381,6 +382,7 @@ int main(void)
     /* Endless while loop */
     while (1)
     {
+		
         pal_task(); /* Handle platform specific tasks, like serial interface */
         tal_task(); /* Handle transceiver specific tasks */
         app_task(); /* Application task */
@@ -388,11 +390,53 @@ int main(void)
     }
 }
 
+/*
+static bool trx_sleep_status = false;
+static void toggle_trx_sleep()
+
+{
+	if (false == trx_sleep_status)
+	{
+		
+		/ * Sleep cmd is successful * /
+		if ((MAC_SUCCESS == tal_trx_sleep(RF09)) && (MAC_SUCCESS == tal_trx_sleep(RF24)))
+		{
+			trx_sleep_status = true;
+
+
+		}
+
+	}
+	else
+	{
+
+		/ * Wakeup from sleep or deep sleep is successful * /
+		if ((MAC_SUCCESS == tal_trx_wakeup(RF09)) && (MAC_SUCCESS == tal_trx_wakeup(RF24)))
+		{
+			trx_sleep_status = false;
+		}
+
+	}
+}
+*/
+
 /**
  * \brief Application task
  */
 static void app_task()
 {
+	
+/*
+	    uint8_t key_press;
+
+	    / * Check for any key press * /
+	    key_press = app_debounce_button();
+
+	    if (key_press != 0)
+	    {
+
+	toggle_trx_sleep();
+	    }*/
 /*
 	 uint16_t dst_addr = 0X1111;
 			   transmit_frame(RF24, 2,
@@ -445,8 +489,9 @@ void tal_rx_frame_cb(trx_id_t trx, frame_info_t *frame)
  */
 void tal_tx_frame_done_cb(trx_id_t trx, retval_t status, frame_info_t *frame)
 {
+
     void (*handler_func)(trx_id_t trx, retval_t status, frame_info_t * frame) ;
-	//LED_Toggle(LED0);
+	
 	//return;
     /* some spurious transmissions call back or app changed its state
      * so neglect this call back */
@@ -454,7 +499,10 @@ void tal_tx_frame_done_cb(trx_id_t trx, retval_t status, frame_info_t *frame)
     {
         return;
     }
-
+	//LED_On(LED0);
+	//pal_get_current_time(&tstamp);
+	//printf("Time During Trx End CB %ld",tstamp);
+	
     /* After transmission is completed, allow next transmission.
        Locking to prevent multiple transmissions simultaneously */
 
@@ -574,7 +622,7 @@ retval_t transmit_frame(trx_id_t trx,
                         uint8_t src_addr_mode,
                         uint8_t msdu_handle,
                         uint8_t *payload,
-                        uint8_t payload_length,
+                        uint16_t payload_length,
                         uint8_t ack_req)
 {
     uint8_t i;
@@ -597,7 +645,7 @@ retval_t transmit_frame(trx_id_t trx,
     /* Set payload pointer. */
     frame_ptr = temp_frame_ptr = (uint8_t *)node_info[trx].tx_frame_info +
                                  LARGE_BUFFER_SIZE -
-                                 payload_length - FCS_LEN;
+                                 payload_length - tal_pib[trx].FCSLen;
     /*
      * Payload is stored to the end of the buffer avoiding payload
      * copying by TAL.
@@ -659,6 +707,7 @@ retval_t transmit_frame(trx_id_t trx,
     /* Destination PAN-Id */
     temp_value = CCPU_ENDIAN_TO_LE16(DST_PAN_ID);
     frame_ptr -= PAN_ID_LEN;
+
     convert_16_bit_to_byte_array(temp_value, frame_ptr);
 
     /* Set DSN. */

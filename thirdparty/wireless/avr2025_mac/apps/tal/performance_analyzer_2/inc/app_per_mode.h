@@ -198,7 +198,7 @@ typedef struct {
 	int8_t tx_power_dbm;
 	uint8_t trx_state; 
 
-	uint8_t phy_frame_length;
+	uint16_t phy_frame_length; //sriram
 	uint32_t number_test_frames;
 
 #if (TAL_TYPE == AT86RF233)

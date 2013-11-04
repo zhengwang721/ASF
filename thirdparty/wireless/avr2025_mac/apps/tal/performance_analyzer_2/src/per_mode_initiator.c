@@ -192,7 +192,7 @@ static void config_rx_desensitization(trx_id_t trx,bool config_value);
 
 static void set_transceiver_state(trx_id_t trx, uint8_t trx_state);
 
-static void set_phy_frame_length(trx_id_t trx, uint8_t frame_len);
+static void set_phy_frame_length(trx_id_t trx, uint16_t frame_len);
 static bool send_set_default_config_command(trx_id_t trx);
 static bool send_per_test_start_cmd(trx_id_t trx);
 static float reverse_float( const float float_val );
@@ -286,7 +286,7 @@ FLASH_DECLARE(uint8_t perf_config_param_size[]) = {
 	sizeof(uint8_t),            /* Transceiver state */
 	sizeof(uint8_t),            /* CRC on remote node */
 	sizeof(uint32_t),           /* No. of test frames */
-	sizeof(uint8_t),            /* Physical frame length */
+	sizeof(uint16_t),            /* Physical frame length */ //sriram
 	sizeof(uint8_t),            /* RPC */
 	sizeof(float),              /* ISM frequency */
 };
@@ -368,6 +368,7 @@ void per_mode_initiator_init(trx_id_t trx,void *parameter)
  *
  * - On user inputs through serial app executes various tests
  */
+#include "led.h"
 void per_mode_initiator_task(trx_id_t trx)
 {
 	/* If any packets need to be transferred */
@@ -377,16 +378,22 @@ void per_mode_initiator_task(trx_id_t trx)
 		 * be
 		 * queried from the remote node */
 		if (!node_info[trx].transmitting) {
+			//LED_Off(LED0);
+			//pal_get_current_time(&tstamp);
+			//printf("\n\rTime During Trx Start %ld\n\r",tstamp);
+			//delay_ms(50);
 			node_info[trx].transmitting = true;
 			node_info[trx].tx_frame_info->mpdu[PL_POS_SEQ_NUM-1]++; //sriram
 			if (curr_trx_config_params[trx].csma_enabled) {
 				tal_tx_frame(trx,node_info[trx].tx_frame_info,
 						CSMA_UNSLOTTED,
 						curr_trx_config_params[trx].retry_enabled );
+						//LED_On(LED0);
 			} else {
 				tal_tx_frame(trx,node_info[trx].tx_frame_info,
-						NO_CSMA_WITH_IFS,//sriram
+						NO_CSMA_NO_IFS,//sriram
 						curr_trx_config_params[trx].retry_enabled );
+						//LED_On(LED0);
 			}
 		}
 	} else {
@@ -983,7 +990,12 @@ static void set_parameter_on_transmitter_node(trx_id_t trx,retval_t status)
 
                 /* update the data base with this value */
                 curr_trx_config_params[trx].channel_page = set_param_cb[trx].param_value;
+if((curr_trx_config_params[trx].phy_frame_length > aMaxPHYPacketSize) && (curr_trx_config_params[trx].channel_page !=9) )
+{
 
+	curr_trx_config_params[trx].phy_frame_length = aMaxPHYPacketSize; //sriram
+	configure_frame_sending(trx);
+}
 					 tal_pib_get(trx,phyCurrentChannel, &channel);
 
 					 curr_trx_config_params[trx].channel = channel;
@@ -1245,7 +1257,7 @@ void per_mode_initiator_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 			 * and
 			 * also derrive the LQI and ED values sent by the
 			 * receptor from the received payload */
-			uint8_t phy_frame_len = (uint8_t)mac_frame_info->length;
+			uint8_t phy_frame_len = (uint8_t)mac_frame_info->length; //sriram - > range test pklt length not more than 127
 
 			app_led_event(LED_EVENT_RX_FRAME);
 
@@ -2033,7 +2045,7 @@ void perf_set_req(trx_id_t trx, uint8_t param_type, param_value_t *param_value)
         case PARAM_PHY_FRAME_LENGTH:  /* Set PHY frame length for PER test request */
             {
               
-                set_phy_frame_length(trx, param_value->param_value_8bit);
+                set_phy_frame_length(trx, param_value->param_value_16bit);
             }
             break;
         case PARAM_RPC:
@@ -2241,21 +2253,41 @@ void perf_get_req(trx_id_t trx, uint8_t param_type)
  *
  * \param frame_len Length of the frame to be set
  */
-static void set_phy_frame_length(trx_id_t trx, uint8_t frame_len)
+static void set_phy_frame_length(trx_id_t trx, uint16_t frame_len)
 {
+	if(tal_pib[trx].phy.modulation == LEG_OQPSK)
+	{
     /* Check for maximum allowed IEEE 802.15.4 frame length. */
-    if (frame_len > aMaxPHYPacketSize)
+    if (frame_len > aMaxPHYPacketSize) //sriram
     {
         curr_trx_config_params[trx].phy_frame_length = aMaxPHYPacketSize;
     }
-    else if (frame_len < (FRAME_OVERHEAD + 1)) /* 1=> cmdID*/
+	else if (frame_len < (FRAME_OVERHEAD + 1)) /* 1=> cmdID*/
+	{
+		curr_trx_config_params[trx].phy_frame_length = (FRAME_OVERHEAD + 1);
+	}
+	else
+	{
+		curr_trx_config_params[trx].phy_frame_length = frame_len;
+	}
+	}
+	else 
+	{
+    if (frame_len > aMaxPHYPacketSize_4g) //sriram
     {
-        curr_trx_config_params[trx].phy_frame_length = (FRAME_OVERHEAD + 1);
+	    curr_trx_config_params[trx].phy_frame_length = aMaxPHYPacketSize_4g;
+    }	
+   else if (frame_len < (FRAME_OVERHEAD + 1)) /* 1=> cmdID*/
+    {
+	    curr_trx_config_params[trx].phy_frame_length = (FRAME_OVERHEAD + 1);
     }
     else
     {
-        curr_trx_config_params[trx].phy_frame_length = frame_len;
-    }
+	    curr_trx_config_params[trx].phy_frame_length = frame_len;
+    }	
+	
+	}
+
 
     /* The FCF has to be updated. */
     configure_frame_sending(trx);
@@ -2340,6 +2372,7 @@ static void set_channel_page(trx_id_t trx, uint8_t channel_page)
     switch (channel_page)
     {
         case 0:
+		case 9:
         case 2:
         case 16:
         case 17:
@@ -2359,7 +2392,14 @@ static void set_channel_page(trx_id_t trx, uint8_t channel_page)
 
 						/* update the data base with this value */
 						curr_trx_config_params[trx].channel_page = channel_page;
-					
+
+if((curr_trx_config_params[trx].phy_frame_length > aMaxPHYPacketSize) && (channel_page!=9) )
+{
+
+curr_trx_config_params[trx].phy_frame_length = aMaxPHYPacketSize; //sriram
+configure_frame_sending(trx);
+}
+
                     /* Send the confirmation with status as SUCCESS */
                     usr_perf_set_confirm(trx,MAC_SUCCESS,
                                          PARAM_CHANNEL_PAGE,
@@ -2641,12 +2681,12 @@ void get_current_configuration(trx_id_t trx)
     /* Make sure the Register values are in sync with database values
      * as there are chances of the same because of the User register writes
      */
-
+	uint16_t temp_channel = (uint16_t)curr_trx_config_params[trx].channel;
 		/* If the transceiver currently not set in ism frequencies, set the IEEE channel */
-		if (curr_trx_config_params[trx].channel != INVALID_VALUE)
+		if (temp_channel != INVALID_VALUE)
 		{
 			/* Channel configuration */
-			tal_pib_set(trx,phyCurrentChannel, (pib_value_t *)&curr_trx_config_params[trx].channel);
+			tal_pib_set(trx,phyCurrentChannel, (pib_value_t *)&temp_channel);
 
 		}
 	
@@ -3114,7 +3154,7 @@ static void start_test(trx_id_t trx)
 static void configure_frame_sending(trx_id_t trx)
 {
     uint8_t index;
-    uint8_t app_frame_length;
+    uint16_t app_frame_length;
     uint8_t *frame_ptr;
     uint8_t *temp_frame_ptr;
     uint16_t fcf = 0;
@@ -3126,13 +3166,13 @@ static void configure_frame_sending(trx_id_t trx)
      */
 
     /* Get length of current frame. */
-    app_frame_length = (curr_trx_config_params[trx].phy_frame_length  - FRAME_OVERHEAD - FCS_LEN);
+    app_frame_length = (curr_trx_config_params[trx].phy_frame_length  - FRAME_OVERHEAD - tal_pib[trx].FCSLen);
 
     /* Set payload pointer. */
     frame_ptr = temp_frame_ptr =
                     (uint8_t *)node_info[trx].tx_frame_info +
-                    LARGE_BUFFER_SIZE -
-                    app_frame_length - FCS_LEN; /* Add 2 octets for FCS. */
+						LARGE_BUFFER_SIZE -
+                    app_frame_length - tal_pib[trx].FCSLen; /* Add 2 octets for FCS. */
 
     tmp = (app_payload_t *) temp_frame_ptr;
 
@@ -3144,9 +3184,9 @@ static void configure_frame_sending(trx_id_t trx)
      * Assign dummy payload values.
      * Payload is stored to the end of the buffer avoiding payload copying by TAL.
      */
-    for (index = 0; index < (app_frame_length - 1); index++) /* 1=> cmd ID */
+    for (uint16_t index_t = 0; index_t < (app_frame_length - 1); index_t++) /* 1=> cmd ID */
     {
-        *temp_frame_ptr++ = index; /* dummy values */
+        *temp_frame_ptr++ = index_t; /* dummy values */
     }
 
     /* Source Address */
@@ -3193,7 +3233,7 @@ static void configure_frame_sending(trx_id_t trx)
     /* First element shall be length of PHY frame. */ //sriram
     //frame_ptr--;
     //*frame_ptr = curr_trx_config_params[trx].phy_frame_length;
-	node_info[trx].tx_frame_info->length = (curr_trx_config_params[trx].phy_frame_length)-FCS_LEN; //sriram->fcs length added at the end in tal
+	node_info[trx].tx_frame_info->length = (curr_trx_config_params[trx].phy_frame_length )-tal_pib[trx].FCSLen ;//+ 1500; //sriram->fcs length added at the end in tal
     /* Finished building of frame. */
     node_info[trx].tx_frame_info->mpdu = frame_ptr;
 }
@@ -3208,7 +3248,7 @@ static void configure_frame_sending(trx_id_t trx)
  */
 static void send_parameters_changed(trx_id_t trx, uint8_t param, uint8_t val)
 {
-    uint8_t payload_length;
+    uint16_t payload_length;
     app_payload_t msg;
     set_parm_req_t *data;
 
@@ -3244,7 +3284,7 @@ static void send_parameters_changed(trx_id_t trx, uint8_t param, uint8_t val)
 
 static bool send_per_test_start_cmd(trx_id_t trx)
 {
-    uint8_t payload_length;
+    uint16_t payload_length;
     app_payload_t msg;
     result_req_t *data;
 
@@ -3281,7 +3321,7 @@ static bool send_per_test_start_cmd(trx_id_t trx)
  */
 static bool send_result_req(trx_id_t trx)
 {
-    uint8_t payload_length;
+    uint16_t payload_length;
     app_payload_t msg;
     result_req_t *data;
 
@@ -3347,7 +3387,7 @@ static void get_diversity_settings_peer_node(trx_id_t trx)
 static bool send_diversity_status_req(trx_id_t trx)
 {
 
-    uint8_t payload_length;
+    uint16_t payload_length;
     app_payload_t msg;
     div_stat_req_t *data;
 
@@ -3389,7 +3429,7 @@ static bool send_diversity_status_req(trx_id_t trx)
 static bool send_diversity_set_req(trx_id_t trx, div_set_req_t div_msg)
 {
 
-    uint8_t payload_length;
+    uint16_t payload_length;
     app_payload_t msg;
 
     /* Create the payload */
@@ -3448,7 +3488,7 @@ static void get_crc_settings_peer_node(trx_id_t trx)
  */
 static bool send_crc_status_req(trx_id_t trx)
 {
-    uint8_t payload_length;
+    uint16_t payload_length;
     app_payload_t msg;
     crc_stat_req_t *data;
 
@@ -3491,7 +3531,7 @@ static bool send_crc_status_req(trx_id_t trx)
 static bool send_crc_set_req(trx_id_t trx, crc_set_req_t crc_msg)
 {
 
-    uint8_t payload_length;
+    uint16_t payload_length;
     app_payload_t msg;
 
     /* Create the payload */
@@ -3528,7 +3568,7 @@ static bool send_crc_set_req(trx_id_t trx, crc_set_req_t crc_msg)
  */
 static bool send_identify_command(trx_id_t trx)
 {
-    uint8_t payload_length;
+    uint16_t payload_length;
     app_payload_t msg;
 
     /* Create the payload */
@@ -3561,7 +3601,7 @@ static bool send_identify_command(trx_id_t trx)
  */
 static bool send_disconnect_command(trx_id_t trx)
 {
-    uint8_t payload_length;
+    uint16_t payload_length;
     app_payload_t msg;
 
     /* Create the payload */
@@ -3593,7 +3633,7 @@ static bool send_disconnect_command(trx_id_t trx)
  */
 static bool send_peer_info_req(trx_id_t trx)
 {
-    uint8_t payload_length;
+    uint16_t payload_length;
     app_payload_t msg;
 
     /* Create the payload */
@@ -3627,7 +3667,7 @@ static bool send_peer_info_req(trx_id_t trx)
  */
 static bool send_set_default_config_command(trx_id_t trx)
 {
-    uint8_t payload_length;
+    uint16_t payload_length;
     app_payload_t msg;
 
     /* Create the payload */
@@ -3706,7 +3746,7 @@ static float calculate_net_data_rate(trx_id_t trx,float per_test_duration_sec)
     float data_rate;
 
     /* Data volume i.e total no.of bits transmitted */
-    data_volume = curr_trx_config_params[trx].phy_frame_length * curr_trx_config_params[trx].number_test_frames * 8;
+    data_volume = curr_trx_config_params[trx].phy_frame_length  * curr_trx_config_params[trx].number_test_frames * 8; //1500 sriram
     /* Net data rate in Kbps*/
     data_rate = (data_volume / per_test_duration_sec) / 1000;
 
@@ -4001,7 +4041,7 @@ static void configure_range_test_frame_sending(trx_id_t trx)
 	 */
 
 	/* Get length of current frame. */
-	app_frame_length = (RANGE_TEST_PKT_LENGTH - FRAME_OVERHEAD -FCS_LEN ); /* to be
+	app_frame_length = (RANGE_TEST_PKT_LENGTH - FRAME_OVERHEAD -tal_pib[trx].FCSLen ); /* to be
 	                                                              * changed
 	                                                               **///sriram 
 
@@ -4009,7 +4049,7 @@ static void configure_range_test_frame_sending(trx_id_t trx)
 	frame_ptr = temp_frame_ptr
 				= (uint8_t *)node_info[trx].tx_frame_info +
 					LARGE_BUFFER_SIZE -
-					app_frame_length - FCS_LEN; /* Add 2
+					app_frame_length - tal_pib[trx].FCSLen; /* Add 2
 	                                                            * octets for
 	                                                            * FCS. */
 
@@ -4087,7 +4127,7 @@ static void configure_range_test_frame_sending(trx_id_t trx)
     /* First element shall be length of PHY frame. */ //sriram
     //frame_ptr--;
     //*frame_ptr = curr_trx_config_params[trx].phy_frame_length;
-	node_info[trx].tx_frame_info->length = (RANGE_TEST_PKT_LENGTH -FCS_LEN) ;
+	node_info[trx].tx_frame_info->length = (RANGE_TEST_PKT_LENGTH -tal_pib[trx].FCSLen) ;
 	
 	 /* Finished building of frame. */
     node_info[trx].tx_frame_info->mpdu = frame_ptr;
@@ -4102,7 +4142,7 @@ static void configure_range_test_frame_sending(trx_id_t trx)
  */
 static bool send_range_test_start_cmd(trx_id_t trx)
 {
-	uint8_t payload_length;
+	uint16_t payload_length;
 	app_payload_t msg;
 	result_req_t *data;
 
@@ -4139,7 +4179,7 @@ static bool send_range_test_start_cmd(trx_id_t trx)
  */
 static bool send_range_test_stop_cmd(trx_id_t trx)
 {
-	uint8_t payload_length;
+	uint16_t payload_length;
 	app_payload_t msg;
 	result_req_t *data;
 
@@ -4177,7 +4217,7 @@ static bool send_range_test_stop_cmd(trx_id_t trx)
 static bool send_range_test_marker_rsp(trx_id_t trx)
 {
 	static uint8_t marker_seq_num[NO_TRX];
-	uint8_t payload_length;
+	uint16_t payload_length;
 	app_payload_t msg;
 	result_req_t *data;
 

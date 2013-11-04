@@ -190,6 +190,8 @@ typedef enum param_tag {
 extern "C" {
 #endif
 
+bool crc_check_ok(trx_id_t trx);
+
 /**
  * \brief Enable/Disable the external RF front end control
  *
@@ -259,7 +261,7 @@ retval_t  tal_ant_div_config(bool div_ctrl, uint8_t ant_ctrl);
  */
 retval_t tal_set_frequency(float frequency);
 
-bool crc_check_ok(trx_id_t trx);
+
 /**
  * \brief to set the frequency based on CC_BAND and CC_NUMBER Registers
  *

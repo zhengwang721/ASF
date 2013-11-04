@@ -305,7 +305,7 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
                 if (number_rx_frames[trx] == 0)
                 {
                     
-                        printf("\r\nReceiving..");
+					printf("\r\nReceiving..");
                     aver_lqi[trx] += mac_frame_info->mpdu[lqi_pos];
                     aver_rssi[trx] += mac_frame_info->mpdu[ed_pos];
 #ifdef CRC_SETTING_ON_REMOTE_NODE
@@ -317,6 +317,7 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
                 }
                 else
                 {
+					printf("\n\rFrame Length : %ld ",mac_frame_info->length);
                     cur_seq_no[trx] = mac_frame_info->mpdu[PL_POS_SEQ_NUM-1];//sriram
                     /* Check for the duplicate packets */
                     if (prev_seq_no[trx] != cur_seq_no[trx])
@@ -494,7 +495,7 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
         case IDENTIFY_NODE:
             {
 
-                    printf(" \r\n Blinking LED: identify frame received");
+                printf(" \r\n Blinking LED: identify frame received");
                 
                 sw_timer_start(APP_TIMER_TO_TX,
                                 LED_BLINK_RATE_IN_MICRO_SEC,

@@ -1149,7 +1149,8 @@ uint64_t peer_mac_address)
 	*msg_buf++ = (uint8_t)(trx_config_params->number_test_frames >> 8);
 	*msg_buf++ = (uint8_t)(trx_config_params->number_test_frames >> 16);
 	*msg_buf++ = (uint8_t)(trx_config_params->number_test_frames >> 24);
-	*msg_buf++ = trx_config_params->phy_frame_length;
+	*msg_buf++ = (uint8_t)(trx_config_params->phy_frame_length);
+	*msg_buf++ = (uint8_t)(trx_config_params->phy_frame_length >> 8); //sriram
 
 	/*Peer settings for parameters like CRC and ant diversity */
 	#if (ANTENNA_DIVERSITY == 1)
@@ -2011,7 +2012,8 @@ void usr_set_default_config_confirm(trx_id_t trx, uint8_t status, trx_config_par
     *msg_buf++ = (uint8_t)(default_trx_config_params->number_test_frames >> 8);
     *msg_buf++ = (uint8_t)(default_trx_config_params->number_test_frames >> 16);
     *msg_buf++ = (uint8_t)(default_trx_config_params->number_test_frames >> 24);
-    *msg_buf++ = default_trx_config_params->phy_frame_length;
+    *msg_buf++ = (uint8_t)(default_trx_config_params->phy_frame_length);
+	*msg_buf++ = (uint8_t)(default_trx_config_params->phy_frame_length >> 8);
 
     /*Peer settings for parameters like CRC and ant diversity */
 #if (ANTENNA_DIVERSITY == 1)
@@ -2185,7 +2187,8 @@ void usr_get_current_config_confirm(trx_id_t trx, uint8_t status, trx_config_par
     *msg_buf++ = (uint8_t)(curr_trx_config_params->number_test_frames >> 8);
     *msg_buf++ = (uint8_t)(curr_trx_config_params->number_test_frames >> 16);
     *msg_buf++ = (uint8_t)(curr_trx_config_params->number_test_frames >> 24);
-    *msg_buf++ = curr_trx_config_params->phy_frame_length;
+    *msg_buf++ = (uint8_t)(curr_trx_config_params->phy_frame_length);
+	 *msg_buf++ = (uint8_t)(curr_trx_config_params->phy_frame_length >> 8);
 
     /*peer node settings need to be added */
     /*Peer settings for parameters like CRC and ant diversity */

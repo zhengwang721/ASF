@@ -406,7 +406,10 @@ static retval_t apply_channel_settings(trx_id_t trx_id)
          * Set channel and channel mode.
          * Touching the CNM register forces the calculation of the actual frequency.
          */
-#ifdef	SUPPORT_LEGACY_OQPSK
+//#ifdef	SUPPORT_LEGACY_OQPSK
+if(tal_pib[trx_id].phy.modulation == LEG_OQPSK)
+{
+
 uint16_t value;
  if ((tal_pib[trx_id].phy.freq_band == CHINA_780))
  {
@@ -440,11 +443,12 @@ uint16_t value;
 	 (uint8_t *)&value, 2);
  
  
- #else
-	 
+}
+else
+	 {
         pal_trx_write(rf_reg_offset + RG_RF09_CNL,
                       (uint8_t *)&tal_pib[trx_id].CurrentChannel, 2);
-#endif					  
+}					  
         /* Wait until channel set is completed */
         if (trx_state[trx_id] == RF_TXPREP)
         {
@@ -527,9 +531,9 @@ retval_t tal_pib_get(trx_id_t trx_id, uint8_t attribute, uint8_t *value)
                     {
                         *(uint32_t *)value = 0x0000000F;
                     }
-                    else if ((tal_pib[trx_id].phy.freq_band == US_915) || (tal_pib[trx_id].phy.freq_band == EU_863))
+                    else if ((tal_pib[trx_id].phy.freq_band == US_915))
                     {
-                        *(uint32_t *)value = 0x000007FF;
+                        *(uint32_t *)value = 0x000007FE;
                     }
                     else
                     {
@@ -821,52 +825,18 @@ retval_t tal_pib_set(trx_id_t trx_id, uint8_t attribute, pib_value_t *value)
                 }
                 else // RF09
                 {
-                    if ((tal_pib[trx_id].phy.freq_band == US_915)||(tal_pib[trx_id].phy.freq_band == EU_863))
+                    if ((tal_pib[trx_id].phy.freq_band == US_915))
                     {
-                        if (channel > 10) 
+                        if ((channel < 1)&& (channel > 10))
                         {
 							
                             status = MAC_INVALID_PARAMETER;
                             /* no further processing of the channel value */
                             break;
                         }
-                        if(channel > 0)
-                        {
-						    channel -= 1;
-							if(tal_pib[trx_id].CurrentChannel == 0)
-							{
-								//set 915 band from EU
-															/* Configure PHY for sub-1GHz */
-							phy_t phy;
-							phy.modulation = LEG_OQPSK;
-							phy.phy_mode.leg_oqpsk.chip_rate  = CHIP_RATE_1000;
-							phy.freq_band = US_915;
-							phy.ch_spacing = LEG_915_CH_SPAC ; //none 0 channel sriram
-							phy.freq_f0 = LEG_915_F0;
-							if (tal_pib_set(RF09, phySetting, (pib_value_t *)&phy) != MAC_SUCCESS)
-							{
-								return MAC_INVALID_PARAMETER;
-							}							
 
-							}
-                        }
-						else // set EU 868.3 ch0
-						{
-						
-							/* Configure PHY for sub-1GHz */
-							phy_t phy;
-							phy.modulation = LEG_OQPSK;
-							phy.phy_mode.leg_oqpsk.chip_rate  = CHIP_RATE_1000;
-							phy.freq_band = EU_863;
-							phy.ch_spacing = 0 ; //none 0 channel sriram
-							phy.freq_f0 = LEG_868_F0;
-							if (tal_pib_set(RF09, phySetting, (pib_value_t *)&phy) != MAC_SUCCESS)
-							{
-								return MAC_INVALID_PARAMETER;
-							}
+						channel -= 1;
 
-						
-						}
                     }
 					else if (tal_pib[trx_id].phy.freq_band == CHINA_780)
 					{
@@ -920,7 +890,7 @@ retval_t tal_pib_set(trx_id_t trx_id, uint8_t attribute, pib_value_t *value)
 }
             break;
 			
-#ifdef SUPPORT_LEGACY_OQPSK				
+			
 		 case phyCurrentPage:
 		 {
 			 uint8_t page;
@@ -942,7 +912,7 @@ retval_t tal_pib_set(trx_id_t trx_id, uint8_t attribute, pib_value_t *value)
 
 		 }
 		 break;
-#endif //SUPPORT_LEGACY_OQPSK		 
+	 
 
         case phyTransmitPower:
             {
@@ -1212,19 +1182,22 @@ retval_t tal_pib_set(trx_id_t trx_id, uint8_t attribute, pib_value_t *value)
  *
  * \return true if changes could be applied else false
  */
+extern void app_alert();
+
 static bool apply_channel_page_configuration(trx_id_t trx ,uint8_t ch_page)
 {
 
 if (trx == RF24)
 {
-	if(ch_page != 0)
+	if((ch_page != 0) && (ch_page != 9))
+	
 	{
 		return false;
 	}
 }
 else
 {
-	if((ch_page !=2) && (ch_page != 5))
+	if((ch_page !=2) && (ch_page != 5)&& (ch_page != 9))
 	{
 return false;
 	}
@@ -1243,23 +1216,49 @@ return false;
 				return false;
 			}
 			break;
-
-			case 2: 
-			if(tal_pib[trx].CurrentChannel == 0)
+			
+			case 9: /* SunPhy Page */
+			/* Configure PHY for 2.4GHz */
+			if(trx==RF24)
 			{
-			/* Configure PHY for sub-1GHz */
-			phy.modulation = LEG_OQPSK;
-			phy.phy_mode.leg_oqpsk.chip_rate  = CHIP_RATE_1000;
-			phy.freq_band = EU_863;
-			phy.ch_spacing = 0;
-			phy.freq_f0 = LEG_868_F0;
-			if (tal_pib_set(RF09, phySetting, (pib_value_t *)&phy) != MAC_SUCCESS)
+				
+			
+/*
+			phy.modulation = OQPSK;
+			phy.phy_mode.oqpsk.chip_rate = CHIP_RATE_2000;
+			phy.phy_mode.oqpsk.rate_mode = OQPSK_RATE_MOD_4;
+			phy.freq_band = WORLD_2450;
+			phy.ch_spacing = OQPSK_2450_CH_SPAC;
+			phy.freq_f0 = OQPSK_2450_F0;*/		
+			
+			phy.modulation = OFDM;
+			phy.phy_mode.ofdm.interl = true;
+			phy.phy_mode.ofdm.option = OFDM_OPT_1;
+			phy.phy_mode.ofdm.mcs_val = MCS6;
+			phy.freq_band = WORLD_2450;
+			phy.ch_spacing = OFDM_2450_OPT1_CH_SPAC;
+			phy.freq_f0 = OFDM_2450_OPT1_F0;
+			if (tal_pib_set(RF24, phySetting, (pib_value_t *)&phy) != MAC_SUCCESS)
 			{
 				return false;
 			}
 			}
 			else
 			{
+				phy.modulation = OQPSK;
+				phy.phy_mode.oqpsk.chip_rate = CHIP_RATE_1000;
+				phy.phy_mode.oqpsk.rate_mode = OQPSK_RATE_MOD_3;
+				phy.freq_band = US_915;
+				phy.ch_spacing = OQPSK_915_CH_SPAC;
+				phy.freq_f0 = OQPSK_915_F0;
+				if (tal_pib_set(RF09, phySetting, (pib_value_t *)&phy) != MAC_SUCCESS)
+				{
+					return false;
+				}
+			}
+			break;			
+
+			case 2: 
 
 			/* Configure PHY for sub-1GHz */
 			phy.modulation = LEG_OQPSK;
@@ -1270,7 +1269,6 @@ return false;
 			if (tal_pib_set(RF09, phySetting, (pib_value_t *)&phy) != MAC_SUCCESS)
 			{
 				return false;
-			}
 			}
 			break;
 			
@@ -1285,7 +1283,7 @@ return false;
 			{
 				return false;
 			}
-			break;			
+			break;	
 
 			default:
 			return false;
