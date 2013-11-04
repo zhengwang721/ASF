@@ -45,6 +45,7 @@
 		<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
 		<build type="module-config" subtype="path" value="board_config"/>
 		<require idref="sam.utils.cmsis.sam4cp.source.template"/>
+		<require idref="sam.drivers.supc"/>
 		<require idref="common.boards"/>
 		<require idref="config.board.sam4cp16bmb.init"/>
 		<require idref="config.board.sam4cp16bmb.led"/>
