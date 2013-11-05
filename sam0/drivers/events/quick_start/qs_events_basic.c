@@ -44,8 +44,8 @@
 
 //! [setup]
 
-#define EXAMPLE_EVENT_GENERATOR    EVSYS_ID_GEN_NONE
-#define EXAMPLE_EVENT_USER         EVSYS_ID_USER_TC3_EVU
+#define EXAMPLE_EVENT_GENERATOR    EVSYS_ID_GEN_TC1_MCX_0
+#define EXAMPLE_EVENT_USER         EVSYS_ID_USER_TC0_EVU
 
 static void configure_event_channel(struct events_descriptor *desc)
 {
@@ -61,6 +61,7 @@ static void configure_event_channel(struct events_descriptor *desc)
 	config.generator      = EXAMPLE_EVENT_GENERATOR;
 	config.edge_detect    = EVENTS_EDGE_DETECT_RISING;
 	config.path           = EVENTS_PATH_SYNCHRONOUS;
+	config.clock_source   = GCLK_GENERATOR_0;
 //! [setup_3]
 
 //! [setup_4]

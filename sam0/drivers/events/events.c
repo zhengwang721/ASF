@@ -116,7 +116,11 @@ static void _events_release_channel(uint8_t channel)
 	system_interrupt_leave_critical_section();
 }
 
-void _system_events_init()
+
+/* This function is called by the system_init function, but should not be a public API call */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmissing-prototypes"
+void _system_events_init(void)
 {
 	/* Enable EVSYS register interface */
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, PM_APBCMASK_EVSYS);
@@ -127,6 +131,7 @@ void _system_events_init()
 	while (EVSYS->CTRL.reg & EVSYS_CTRL_SWRST) {
 	}
 }
+#pragma GCC diagnostic pop
 
 void events_get_config_defaults(struct events_config *config)
 {
@@ -196,10 +201,8 @@ enum status_code events_trigger(struct events_descriptor *descriptor)
 {
 	Assert(descriptor);
 
-	((uint8_t*)&EVSYS->CHANNEL)[1] = (uint8_t)EVSYS_CHANNEL_CHANNEL(descriptor->channel);
-
-	EVSYS->CHANNEL.reg |= EVSYS_CHANNEL_CHANNEL(descriptor->channel) |
-			      EVSYS_CHANNEL_SWEVT;
+	((uint16_t*)&EVSYS->CHANNEL)[0] = EVSYS_CHANNEL_CHANNEL(descriptor->channel) |
+					  EVSYS_CHANNEL_SWEVT;
 
 	return STATUS_OK;
 }
