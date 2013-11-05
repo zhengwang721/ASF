@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 External Interrupt Unit test
+ * \brief SAM D2x External Interrupt Unit test
  *
  * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
@@ -42,7 +42,7 @@
  */
 
 /**
- * \mainpage SAM D20 EXTINT Unit Test
+ * \mainpage SAM D2x EXTINT Unit Test
  * See \ref appdoc_main "here" for project documentation.
  * \copydetails appdoc_preface
  *
@@ -55,29 +55,29 @@
  */
 
 /**
- * \page appdoc_main SAM D20 EXTINT Unit Test
+ * \page appdoc_main SAM D2x EXTINT Unit Test
  *
  * Overview:
- * - \ref appdoc_samd20_extint_unit_test_intro
- * - \ref appdoc_samd20_extint_unit_test_setup
- * - \ref appdoc_samd20_extint_unit_test_usage
- * - \ref appdoc_samd20_extint_unit_test_compinfo
- * - \ref appdoc_samd20_extint_unit_test_contactinfo
+ * - \ref appdoc_sam0_extint_unit_test_intro
+ * - \ref appdoc_sam0_extint_unit_test_setup
+ * - \ref appdoc_sam0_extint_unit_test_usage
+ * - \ref appdoc_sam0_extint_unit_test_compinfo
+ * - \ref appdoc_sam0_extint_unit_test_contactinfo
  *
- * \section appdoc_samd20_extint_unit_test_intro Introduction
+ * \section appdoc_sam0_extint_unit_test_intro Introduction
  * \copydetails appdoc_preface
  *
  * Tests will be performed for rising and falling edges of the external signal.
  *
  * The following kit is required for carrying out the test:
- *      - SAM D20 Xplained Pro board
+ *      - SAM D2x Xplained Pro board
  *
- * \section appdoc_samd20_extint_unit_test_setup Setup
+ * \section appdoc_sam0_extint_unit_test_setup Setup
  * The following connections has to be made using wires:
  *  - \b Pin 9 (PB06) <-----> Pin 10 (PB07)
  *
  * To run the test:
- *  - Connect the SAM D20 Xplained Pro board to the computer using a
+ *  - Connect the SAM D2x Xplained Pro board to the computer using a
  *    micro USB cable.
  *  - Open the virtual COM port in a terminal application.
  *    \note The USB composite firmware running on the Embedded Debugger (EDBG)
@@ -86,18 +86,18 @@
  *  - Build the project, program the target and run the application.
  *    The terminal shows the results of the unit test.
  *
- * \section appdoc_samd20_extint_unit_test_usage Usage
+ * \section appdoc_sam0_extint_unit_test_usage Usage
  *  - The unit test configures external interrupt on PB06 pin (channel 10)
  *    to detect falling edge.
  *  - Logic level on PB07 is changed from high to low (falling edge) and the
  *    channel is checked for interrupt detection.
  *  - The test is repeated for rising edge and with callback enabled.
  *
- * \section appdoc_samd20_extint_unit_test_compinfo Compilation Info
+ * \section appdoc_sam0_extint_unit_test_compinfo Compilation Info
  * This software was written for the GNU GCC and IAR for ARM.
  * Other compilers may or may not work.
  *
- * \section appdoc_samd20_extint_unit_test_contactinfo Contact Information
+ * \section appdoc_sam0_extint_unit_test_contactinfo Contact Information
  * For further information, visit
  * <a href="http://www.atmel.com">http://www.atmel.com</a>.
  */
@@ -373,7 +373,7 @@ int main(void)
 
 	/* Define the test suite */
 	DEFINE_TEST_SUITE(extint_test_suite, extint_tests,
-			"SAM D20 External Interrupt driver test suite");
+			"SAM D2x External Interrupt driver test suite");
 
 	/* Run all tests in the suite*/
 	test_suite_run(&extint_test_suite);

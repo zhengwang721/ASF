@@ -279,14 +279,20 @@ static inline void system_gclk_chan_get_config_defaults(
 	config->write_lock       = false;
 }
 
-void system_gclk_chan_set_config(
+enum status_code system_gclk_chan_set_config(
 		const uint8_t channel,
 		struct system_gclk_chan_config *const config);
 
-void system_gclk_chan_enable(
+enum status_code system_gclk_chan_enable(
 		const uint8_t channel);
 
-void system_gclk_chan_disable(
+enum status_code system_gclk_chan_disable(
+		const uint8_t channel);
+
+bool system_gclk_chan_is_enabled(
+		const uint8_t channel);
+
+bool system_gclk_chan_is_locked(
 		const uint8_t channel);
 
 /** @} */

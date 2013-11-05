@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D20 Clock configuration
+ * \brief SAM D21 Clock configuration
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D2x External Interrupt Driver Quick Start
+ * \brief SAM D21 Xplained PRO board configuration.
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,57 +40,8 @@
  * \asf_license_stop
  *
  */
-#include <asf.h>
 
-void configure_extint_channel(void);
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-//! [setup]
-void configure_extint_channel(void)
-{
-//! [setup_1]
-	struct extint_chan_conf config_extint_chan;
-//! [setup_1]
-//! [setup_2]
-	extint_chan_get_config_defaults(&config_extint_chan);
-//! [setup_2]
-
-//! [setup_3]
-	config_extint_chan.gpio_pin           = BUTTON_0_EIC_PIN;
-	config_extint_chan.gpio_pin_mux       = BUTTON_0_EIC_MUX;
-	config_extint_chan.gpio_pin_pull      = EXTINT_PULL_UP;
-	config_extint_chan.detection_criteria = EXTINT_DETECT_BOTH;
-//! [setup_3]
-//! [setup_4]
-	extint_chan_set_config(BUTTON_0_EIC_LINE, &config_extint_chan);
-//! [setup_4]
-}
-//! [setup]
-
-int main(void)
-{
-	system_init();
-
-	//! [setup_init]
-	extint_enable();
-	configure_extint_channel();
-	//! [setup_init]
-
-	//! [main]
-	while (true) {
-		//! [main_1]
-		if (extint_chan_is_detected(BUTTON_0_EIC_LINE)) {
-		//! [main_1]
-
-		//! [main_2]
-			// Do something in response to EXTINT edge detection
-			bool button_pin_state = port_pin_get_input_level(BUTTON_0_PIN);
-			port_pin_set_output_level(LED_0_PIN, button_pin_state);
-		//! [main_2]
-
-		//! [main_3]
-			extint_chan_clear_detected(BUTTON_0_EIC_LINE);
-		//! [main_3]
-		}
-	}
-	//! [main]
-}
+#endif /* CONF_BOARD_H_INCLUDED */
