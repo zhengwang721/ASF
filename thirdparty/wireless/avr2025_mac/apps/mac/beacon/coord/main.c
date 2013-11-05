@@ -435,6 +435,29 @@ void usr_mcps_data_conf(uint8_t msduHandle,
 		printf("Transaction expired\r\n");
 #endif
 	}
+	else if (status == MAC_NO_ACK) {
+#ifdef SIO_HUB
+
+		/*
+		 * Frame could not be delivered to the target node within
+		 * the proper time.
+		 */
+		printf("Frame Transmitted MAC No Ack\r\n");
+#endif
+	}
+	else if (status == MAC_CHANNEL_ACCESS_FAILURE) 
+	{
+#ifdef SIO_HUB
+
+		/*
+		 * Frame could not be delivered to the target node within
+		 * the proper time.
+		 */
+		printf("MAC Channel Access Failure\r\n");
+#endif
+	}
+	
+	
 	/* Keep compiler happy. */
 	msduHandle = msduHandle;
 #ifdef ENABLE_TSTAMP

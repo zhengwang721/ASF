@@ -207,7 +207,9 @@ extern void hw_overflow_cb();
 extern void hw_expiry_cb();
 #endif
 static uint8_t APP_TIMER;
-
+#if (defined ENABLE_SLEEP || defined RTC_SLEEP)
+#undef SIO_HUB
+#endif
 #ifdef MAC_SECURITY_ZIP
 /*
  * This is implemented as an array of bytes, but actually this is a
@@ -238,6 +240,8 @@ static uint8_t default_key[3][16] = {{
 static uint8_t default_key_source[8] = {0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
 static uint8_t deviceShortAddress = 0xFF;
+
+static uint64_t coord_ieee_addr;
 
 #endif
 
@@ -498,11 +502,7 @@ void usr_mlme_associate_conf(uint16_t AssocShortAddress,
 
 		LED_On(LED_NWK_SETUP);
 #ifdef MAC_SECURITY_ZIP			
-		   uint8_t mac_dev_table_entries = 1;
-
-	                 wpan_mlme_set_req(macDeviceTableEntries,
-	                 NO_PIB_INDEX,
-	                 &mac_dev_table_entries);
+			wpan_mlme_get_req(macIeeeAddress, NO_PIB_INDEX);
 #endif
 	#ifdef GTS_SUPPORT
 		gts_char_t gts_spec;
@@ -840,7 +840,16 @@ mac_key_table_t *key_table = (mac_key_table_t *)PIBAttributeValue;
 			 (uint8_t *)PIBAttributeValue);
 		
 	}
-#endif	
+	else if((status == MAC_SUCCESS) &&
+	     (PIBAttribute == macIeeeAddress)){
+		uint8_t mac_dev_table_entries = 1;
+		memcpy((uint8_t *)&coord_ieee_addr, (uint8_t *)PIBAttributeValue, sizeof(uint64_t));
+		wpan_mlme_set_req(macDeviceTableEntries,
+						 NO_PIB_INDEX,
+						 &mac_dev_table_entries);
+
+	}
+	#endif
 }
 
 #endif  /* (MAC_GET_SUPPORT == 1) */
@@ -1602,7 +1611,10 @@ void rtc_overflow_callback(void)
 {
 	//! [overflow_act]
 	/* Do something on RTC overflow here */
-	wakeup_cb(NULL);
+	rtc_count_disable();
+	wakeup_cb(NULL);		
+	
+	
 	//! [overflow_act]
 }
 #endif

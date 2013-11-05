@@ -814,7 +814,7 @@ typedef struct mlme_sync_req_tag {
 	 *only
 	 * the next beacon.
 	 */
-	uint8_t TrackBeacon;
+	bool TrackBeacon;
 } mlme_sync_req_t __ALIGN_WORD_ADDR__;
 
 /**

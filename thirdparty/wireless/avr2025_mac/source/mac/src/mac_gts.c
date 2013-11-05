@@ -813,7 +813,7 @@ uint32_t frame_tx_time = 0;
 	}
 	else
 	{
-#if FFD
+#ifdef FFD
 		if(MAC_PAN_COORD_STARTED == mac_state && 1 == q_ptr->size)
 		{
 			loop_index = loop_index + MAC_ACTIVE_CFP_GTS1;

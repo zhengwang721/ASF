@@ -289,6 +289,10 @@ tal_trx_status_t set_trx_state(trx_cmd_t trx_cmd)
 		 * will be restored.
 		 */
 		/* Reset wake-up interrupt flag. */
+		if(CMD_SLEEP == trx_cmd)
+		{
+			return TRX_SLEEP;
+		}
 		tal_awake_end_flag = false;
 		/* Set callback function for the awake interrupt. */
 		pal_trx_irq_init((FUNC_PTR)trx_irq_awake_handler_cb);
@@ -332,6 +336,10 @@ tal_trx_status_t set_trx_state(trx_cmd_t trx_cmd)
 
 #ifdef ENABLE_DEEP_SLEEP
 	else if (tal_trx_status == TRX_DEEP_SLEEP) {
+		if(CMD_DEEP_SLEEP == trx_cmd)
+		{
+			return TRX_DEEP_SLEEP;
+		}
 		/* Leave trx sleep mode. */
 		PAL_SLP_TR_LOW();
 		/* Check if trx has left deep sleep. */

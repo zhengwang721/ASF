@@ -152,7 +152,7 @@ static FLASH_DECLARE(uint8_t mac_sec_pib_size[]) =
     sizeof(uint8_t),                // 0x7A: macAutoRequestKeySource        // Not used in ZIP
     sizeof(uint8_t),                // 0x7B: macAutoRequestKeyIndex         // Not used in ZIP
     (8 * sizeof(uint8_t)),          // 0x7C: macDefaultKeySource - 8 octets
-    (8 * sizeof(uint8_t)),               // 0x7D: macPANCoordExtendedAddress     // Not used in ZIP
+    (8 * sizeof(uint8_t)),          // 0x7D: macPANCoordExtendedAddress     // Not used in ZIP
     sizeof(uint16_t)                // 0x7E: macPANCoordShortAddress        // Not used in ZIP
 };
 
@@ -228,8 +228,8 @@ void mlme_get_request(arch_data_t *m)
 		mgc->status       = status;
 	}
 
-	/* Append the mlme get confirmation to MAC-NHLE queue */
-	qmm_queue_append(&mac_nhle_q, (buffer_t *)m);
+    /* Append the mlme get confirmation to MAC-NHLE queue */
+    qmm_queue_append(&mac_nhle_q, (buffer_t *)m);
 }
 #endif  /* (MAC_GET_SUPPORT == 1) */
 
