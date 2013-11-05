@@ -1074,7 +1074,7 @@ void mac_tx_gts_data(queue_t *gts_data)
 
 	transmit_frame->gts_queue = gts_data;
 
-	tal_tx_status = tal_tx_frame(transmit_frame, NO_CSMA_WITH_IFS, false);
+	tal_tx_status = tal_tx_frame(transmit_frame, NO_CSMA_WITH_IFS, true);
 
 	if (MAC_SUCCESS == tal_tx_status) {
 		MAKE_MAC_BUSY();
