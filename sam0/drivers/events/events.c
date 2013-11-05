@@ -116,14 +116,27 @@ static void _events_release_channel(uint8_t channel)
 	system_interrupt_leave_critical_section();
 }
 
+void _system_events_init()
+{
+	/* Enable EVSYS register interface */
+	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, PM_APBCMASK_EVSYS);
+
+	/* Make sure the EVSYS module is properly reset */
+	EVSYS->CTRL.reg = EVSYS_CTRL_SWRST;
+
+	while (EVSYS->CTRL.reg & EVSYS_CTRL_SWRST) {
+	}
+}
+
 void events_get_config_defaults(struct events_config *config)
 {
 	/* Check that config is something other than NULL */
 	Assert(config);
 
-	config->edge_detect = EVENTS_EDGE_DETECT_NONE;
-	config->path        = EVENTS_PATH_ASYNCHRONOUS;
-	config->generator   = EVSYS_ID_GEN_NONE;
+	config->edge_detect  = EVENTS_EDGE_DETECT_NONE;
+	config->path         = EVENTS_PATH_ASYNCHRONOUS;
+	config->generator    = EVSYS_ID_GEN_NONE;
+	config->clock_source = GCLK_GENERATOR_0;
 }
 
 enum status_code events_allocate(
@@ -141,6 +154,16 @@ enum status_code events_allocate(
 	}
 
 	descriptor->channel = new_channel;
+
+	if (config->path != EVENTS_PATH_ASYNCHRONOUS) {
+		/* Set up a GLCK channel to use with the specific channel */
+		struct system_gclk_chan_config gclk_chan_conf;
+
+		system_gclk_chan_get_config_defaults(&gclk_chan_conf);
+		gclk_chan_conf.source_generator = config->clock_source;
+		system_gclk_chan_set_config(EVSYS_GCLK_ID_0 + new_channel, &gclk_chan_conf);
+		system_gclk_chan_enable(EVSYS_GCLK_ID_0 + new_channel);
+	}
 
 	EVSYS->CHANNEL.reg = EVSYS_CHANNEL_CHANNEL(new_channel)       |
 			     EVSYS_CHANNEL_EVGEN(config->generator)   |

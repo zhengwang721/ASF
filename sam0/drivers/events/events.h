@@ -315,6 +315,8 @@ struct events_config {
 	enum events_path_selection path;
 	/** Set event generator for the channel */
 	uint8_t                    generator;
+	/** Clock source for the event channel */
+	uint8_t                    clock_source;
 };
 
 #define EVSYS_ID_GEN_NONE 0
