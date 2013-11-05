@@ -405,7 +405,7 @@ void system_clock_source_dpll_set_config(
 	/* Calculate LDRFRAC and LDR */
 	tmpldr = (config->output_frequency << 4) / refclk;
 	tmpldrfrac = tmpldr & 0x0f;
-	tmpldr = tmpldr >> 4;
+	tmpldr = (tmpldr >> 4) - 1;
 
 	SYSCTRL->DPLLCTRLA.reg =
 			(config->on_demand << SYSCTRL_DPLLCTRLA_ONDEMAND_Pos) |
@@ -423,12 +423,6 @@ void system_clock_source_dpll_set_config(
 			config->wake_up_fast << SYSCTRL_DPLLCTRLB_WUF_Pos |
 			config->low_power_enable << SYSCTRL_DPLLCTRLB_LPEN_Pos |
 			SYSCTRL_DPLLCTRLB_FILTER(config->filter);
-
-	refclk = config->reference_frequency;
-
-	if (config->reference_clock == SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_REF0) {
-		refclk = refclk / config->reference_divider;
-	}
 
 	_system_clock_inst.dpll.frequency =
 			config->reference_frequency * (tmpldr + 1 + ((tmpldrfrac / 16)));
@@ -883,7 +877,7 @@ void system_clock_init(void)
 	dpll_config.reference_divider   = CONF_CLOCK_DPLL_REFEREMCE_DIVIDER;
 	dpll_config.output_frequency    = CONF_CLOCK_DPLL_OUTPUT_FREQUENCY;
 
-	system_clock_source_set_config(&dpll_config);
+	system_clock_source_dpll_set_config(&dpll_config);
 	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_DPLL);
 
 #  endif
