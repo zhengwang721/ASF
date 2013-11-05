@@ -171,7 +171,6 @@ IntFunc exception_table[] = {
 	#else
 	Dummy_Handler
 	#endif
-
 };
 
 
