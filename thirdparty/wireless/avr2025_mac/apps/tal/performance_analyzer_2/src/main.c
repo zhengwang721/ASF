@@ -360,8 +360,7 @@ int main(void)
 	 */
 	board_init();
 	sysclk_init();
-
-			
+		
     /*
      * Power ON - so set the board to INIT state. All hardware, PAL, TAL and
      * stack level initialization must be done using this function
@@ -625,7 +624,7 @@ retval_t transmit_frame(trx_id_t trx,
                         uint16_t payload_length,
                         uint8_t ack_req)
 {
-    uint8_t i;
+    uint16_t i;
     uint16_t temp_value;
     uint16_t frame_length;
     uint8_t *frame_ptr;

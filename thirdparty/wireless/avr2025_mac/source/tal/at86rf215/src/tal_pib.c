@@ -415,7 +415,7 @@ uint16_t value;
  {
 	 if(tal_pib[trx_id].CurrentChannel>3)
 	 {	 
-	 tal_pib[trx_id].CurrentChannel=0;
+	 value = tal_pib[trx_id].CurrentChannel=0;
 	 }
 	 else
 	 {
@@ -426,18 +426,32 @@ uint16_t value;
 	 else if ((tal_pib[trx_id].phy.freq_band == WORLD_2450))
 	 {
 
-	 value = tal_pib[trx_id].CurrentChannel-11;
+if((tal_pib[trx_id].CurrentChannel >26) || (tal_pib[trx_id].CurrentChannel < 11))
+{
+	tal_pib[trx_id].CurrentChannel=11;
+	value = tal_pib[trx_id].CurrentChannel-11;
+}
+else
+{
+	
+	value = tal_pib[trx_id].CurrentChannel-11;
+}
+	 
 	 }
 	 
 	else if ((tal_pib[trx_id].phy.freq_band == US_915))
 	{
-	value = tal_pib[trx_id].CurrentChannel-1;
-	}
-	else //eu and china
+	if((tal_pib[trx_id].CurrentChannel >10) || (tal_pib[trx_id].CurrentChannel < 1))
 	{
-		value =  0;
+		tal_pib[trx_id].CurrentChannel=1;
+		value = tal_pib[trx_id].CurrentChannel-1;
 	}
-
+	else
+	{
+		
+		value = tal_pib[trx_id].CurrentChannel-1;
+	}
+	}
 	
 	 pal_trx_write(rf_reg_offset + RG_RF09_CNL,
 	 (uint8_t *)&value, 2);

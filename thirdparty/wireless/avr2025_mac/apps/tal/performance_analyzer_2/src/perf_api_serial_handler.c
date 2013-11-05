@@ -1987,7 +1987,8 @@ void usr_set_default_config_confirm(trx_id_t trx, uint8_t status, trx_config_par
     /* Copy confirmation payload */
     *msg_buf++ = status;
     /* configuration parameters */
-    *msg_buf++ = default_trx_config_params->channel;
+    *msg_buf++ = (uint8_t)(default_trx_config_params->channel);
+	*msg_buf++ = (uint8_t)(default_trx_config_params->channel >>8);
     *msg_buf++ = default_trx_config_params->channel_page;
     *msg_buf++ = default_trx_config_params->tx_power_dbm;
 
@@ -2159,7 +2160,8 @@ void usr_get_current_config_confirm(trx_id_t trx, uint8_t status, trx_config_par
     /* Copy confirmation payload */
     *msg_buf++ = status;
     /* configuration parameters */
-    *msg_buf++ = curr_trx_config_params->channel;
+    *msg_buf++ = (uint8_t)curr_trx_config_params->channel;
+    *msg_buf++ = (uint8_t)(curr_trx_config_params->channel >> 8);	
     *msg_buf++ = curr_trx_config_params->channel_page;
     *msg_buf++ = curr_trx_config_params->tx_power_dbm;
 

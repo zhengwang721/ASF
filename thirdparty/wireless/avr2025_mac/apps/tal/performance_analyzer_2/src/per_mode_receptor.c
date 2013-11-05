@@ -629,7 +629,7 @@ static void set_paramter_on_recptor_node(trx_id_t trx, app_payload_t *msg)
         case CHANNEL_PAGE:
             {
 				retval_t status;
-                param_val = msg->payload.set_parm_req_data.param_value;
+                param_val = (uint8_t)msg->payload.set_parm_req_data.param_value;
 
 					status  = tal_pib_set(trx,phyCurrentPage, (pib_value_t *)&param_val);
 
@@ -656,7 +656,7 @@ static void set_paramter_on_recptor_node(trx_id_t trx, app_payload_t *msg)
             {
                 int8_t temp_var;
                 /* Get the the received tx power in dBm */
-                temp_var = msg->payload.set_parm_req_data.param_value;
+                temp_var = (uint8_t)msg->payload.set_parm_req_data.param_value;
                // temp_var = CONV_DBM_TO_phyTransmitPower((int8_t)param_val);sriram
 
 				tal_pib_set(trx,phyTransmitPower, (pib_value_t *)&temp_var);
@@ -671,7 +671,7 @@ static void set_paramter_on_recptor_node(trx_id_t trx, app_payload_t *msg)
                 int8_t tx_pwr_dbm = 0 ;
 
                 /* get the the received tx power as reg value */
-                param_val = msg->payload.set_parm_req_data.param_value;
+                param_val = (uint8_t)msg->payload.set_parm_req_data.param_value;
                 if (MAC_SUCCESS == tal_convert_reg_value_to_dBm(param_val, &tx_pwr_dbm))
                 {
                    // uint8_t temp_var = CONV_DBM_TO_phyTransmitPower(tx_pwr_dbm);sriram
@@ -956,7 +956,8 @@ static void send_range_test_rsp(trx_id_t trx,uint8_t seq_num, uint32_t frame_cou
  */
 static void set_default_configuration_peer_node(trx_id_t trx)
 {
-    uint8_t temp_ch,temp_pg,temp;
+    uint16_t temp_ch;
+	uint8_t temp_pg,temp;
 
     /* Channel default configuration  */
 	if(trx == RF24)

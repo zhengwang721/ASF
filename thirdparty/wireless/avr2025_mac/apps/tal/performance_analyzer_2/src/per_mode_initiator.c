@@ -71,7 +71,7 @@
  */
 typedef struct {
 	uint8_t param_type;
-	uint8_t param_value;
+	uint16_t param_value; //size of max param length //sriram
 } set_param_cb_t;
 
 /*=====EXTERBNALS============================================================*/
@@ -140,7 +140,7 @@ typedef struct {
 
 /* === PROTOTYPES ========================================================== */
 static void configure_frame_sending(trx_id_t trx);
-static void send_parameters_changed(trx_id_t trx,uint8_t param, uint8_t val);
+static void send_parameters_changed(trx_id_t trx,uint8_t param, uint16_t val);
 static bool send_result_req(trx_id_t trx);
 static bool send_peer_info_req(trx_id_t trx);
 static void wait_for_reply_timer_handler_cb(void *parameter);
@@ -174,7 +174,7 @@ static void toggle_trx_sleep(trx_id_t trx);
 static float calculate_time_duration(trx_id_t trx);
 static float calculate_net_data_rate(trx_id_t trx,float per_test_duration_sec);
 static void config_per_test_parameters(trx_id_t trx);
-static void set_channel(trx_id_t trx, uint8_t channel);
+static void set_channel(trx_id_t trx, uint16_t channel);
 static void set_channel_page(trx_id_t trx, uint8_t channel_page);
 static void set_tx_power(trx_id_t trx, uint8_t tx_power_format, int8_t power_value);
 static void config_ack_request(trx_id_t trx, bool config_value);
@@ -273,7 +273,7 @@ static float reverse_float( const float float_val )
 
 /* Size constants for PERformance configuration parameters */
 FLASH_DECLARE(uint8_t perf_config_param_size[]) = {
-	sizeof(uint8_t),            /* channel */
+	sizeof(uint16_t),            /* channel */ //sriram
 	sizeof(uint8_t),            /* channel page */
 	sizeof(uint8_t),            /* TX power_reg */
 	sizeof(int8_t),             /* TX_power_dBm */
@@ -384,6 +384,7 @@ void per_mode_initiator_task(trx_id_t trx)
 			//delay_ms(50);
 			node_info[trx].transmitting = true;
 			node_info[trx].tx_frame_info->mpdu[PL_POS_SEQ_NUM-1]++; //sriram
+
 			if (curr_trx_config_params[trx].csma_enabled) {
 				tal_tx_frame(trx,node_info[trx].tx_frame_info,
 						CSMA_UNSLOTTED,
@@ -954,9 +955,8 @@ static void set_parameter_on_transmitter_node(trx_id_t trx,retval_t status)
         case CHANNEL:
             {
 				
-				int8_t dbm_val =0;
-				uint8_t tx_pwr =0;		
-				uint16_t channel_to_set = (uint16_t)set_param_cb[trx].param_value;
+
+				uint16_t channel_to_set = set_param_cb[trx].param_value;
 			
 			    /* Set back the Tx power to default value when
                  * the channel changed from 26 to other channel
@@ -966,9 +966,6 @@ static void set_parameter_on_transmitter_node(trx_id_t trx,retval_t status)
 
 					/* update the data base with this value */
 					curr_trx_config_params[trx].channel = set_param_cb[trx].param_value;
-					tal_pib_get(trx,phyTransmitPower,&dbm_val);
-					//dbm_val = CONV_phyTransmitPower_TO_DBM(tx_pwr);sriram
-					curr_trx_config_params[trx].tx_power_dbm = dbm_val;
 
                 /* Send the confirmation for Set request as Success */
                 usr_perf_set_confirm(trx, MAC_SUCCESS,
@@ -982,14 +979,13 @@ static void set_parameter_on_transmitter_node(trx_id_t trx,retval_t status)
             {
 				
 				uint16_t channel;
-				int8_t dbm_val =0; 
-				uint8_t tx_pwr =0;
+
 
 					tal_pib_set(trx,phyCurrentPage, (pib_value_t *)&set_param_cb[trx].param_value);
 
 
                 /* update the data base with this value */
-                curr_trx_config_params[trx].channel_page = set_param_cb[trx].param_value;
+                curr_trx_config_params[trx].channel_page = (uint8_t)set_param_cb[trx].param_value;
 if((curr_trx_config_params[trx].phy_frame_length > aMaxPHYPacketSize) && (curr_trx_config_params[trx].channel_page !=9) )
 {
 
@@ -999,10 +995,6 @@ if((curr_trx_config_params[trx].phy_frame_length > aMaxPHYPacketSize) && (curr_t
 					 tal_pib_get(trx,phyCurrentChannel, &channel);
 
 					 curr_trx_config_params[trx].channel = channel;
-					 tal_pib_set(trx,phyTransmitPower,curr_trx_config_params[trx].tx_power_dbm);
-					// tal_pib_get(trx,phyTransmitPower, &dbm_val);
-					 //dbm_val = CONV_phyTransmitPower_TO_DBM(tx_pwr);sriram
-					// curr_trx_config_params[trx].tx_power_dbm = dbm_val;
 
 
                 /*Send the confirmation with status as SUCCESS */
@@ -1039,7 +1031,7 @@ if((curr_trx_config_params[trx].phy_frame_length > aMaxPHYPacketSize) && (curr_t
 
                 uint8_t tx_pwr_reg;
                 int8_t tx_pwr_dbm;
-                tx_pwr_reg = set_param_cb[trx].param_value;
+                tx_pwr_reg = (uint8_t)set_param_cb[trx].param_value;
                 if (MAC_SUCCESS == tal_convert_reg_value_to_dBm(tx_pwr_reg, &tx_pwr_dbm))
                 {
                     //temp_var = CONV_DBM_TO_phyTransmitPower(tx_pwr_dbm);sriram
@@ -1635,7 +1627,7 @@ tal_pib_set(trx,phyTransmitPower, (pib_value_t *)&curr_trx_config_params[trx].tx
 #if ((TAL_TYPE != AT86RF230B) || ((TAL_TYPE == AT86RF230B) && (defined CW_SUPPORTED)))
 void pulse_cw_transmission(trx_id_t trx)
 {
-    uint8_t channel;
+    uint16_t channel;
 	
     op_mode[trx] = CONTINUOUS_TX_MODE;
 
@@ -1950,7 +1942,7 @@ void perf_set_req(trx_id_t trx, uint8_t param_type, param_value_t *param_value)
     {
         case PARAM_CHANNEL: /* Channel Set request */
             {
-                set_channel(trx, param_value->param_value_8bit);
+                set_channel(trx, param_value->param_value_16bit);
             }
             break;
         case PARAM_CHANNEL_PAGE: /* Channel Page Set request */
@@ -2303,10 +2295,13 @@ static void set_phy_frame_length(trx_id_t trx, uint16_t frame_len)
  *
  * \param channel channel number to be set
  */
-static void set_channel(trx_id_t trx, uint8_t channel)
+static void set_channel(trx_id_t trx, uint16_t channel)
 {
     uint32_t supported_channels;
-uint16_t channel_to_set = (uint16_t)channel;
+uint16_t channel_to_set = channel;
+if(tal_pib[trx].phy.modulation == LEG_OQPSK) //sriram cleanup required
+{
+
 #ifdef SUPPORT_LEGACY_OQPSK
 		tal_pib_get(trx,phyChannelsSupported, (uint8_t *)&supported_channels);
 #endif
@@ -2348,6 +2343,45 @@ uint16_t channel_to_set = (uint16_t)channel;
 
     }
 }
+else
+{
+	if(channel_to_set > 416) //sriram dummy to be changes
+	{
+		/* Send Set confirmation with status MAC_INVALID_PARAMETER */
+		usr_perf_set_confirm(trx,VALUE_OUT_OF_RANGE,
+		PARAM_CHANNEL,
+		(param_value_t *)&channel);
+	}
+	else
+	{
+	 if (true == peer_found[trx])
+	 {
+		 send_parameters_changed(trx, CHANNEL, channel);
+	 }
+	 else
+	 {
+
+		 int8_t dbm_val =0;
+		 uint8_t tx_pwr =0;
+		 tal_pib_set(trx,phyCurrentChannel, (pib_value_t *)&channel_to_set);
+
+		 /* Update the database */
+		 curr_trx_config_params[trx].channel = channel;
+		 
+		 tal_pib_get(trx,phyTransmitPower, &dbm_val);
+		 //dbm_val = CONV_phyTransmitPower_TO_DBM(tx_pwr);
+		 curr_trx_config_params[trx].tx_power_dbm = dbm_val;
+		 
+
+		 /* Send Set confirmation with status SUCCESS */
+		 usr_perf_set_confirm(trx,MAC_SUCCESS,
+		 PARAM_CHANNEL,
+		 (param_value_t *)&channel);
+	 }	
+	}
+	
+}
+}
 
 /**
  * \brief To set the Channel Page
@@ -2382,7 +2416,7 @@ static void set_channel_page(trx_id_t trx, uint8_t channel_page)
             {
                 if (true == peer_found[trx])
                 {
-                    send_parameters_changed(trx,CHANNEL_PAGE, channel_page);
+                    send_parameters_changed(trx,CHANNEL_PAGE, (uint16_t)channel_page);
                 }
                 else
                 {
@@ -2681,14 +2715,14 @@ void get_current_configuration(trx_id_t trx)
     /* Make sure the Register values are in sync with database values
      * as there are chances of the same because of the User register writes
      */
-	uint16_t temp_channel = (uint16_t)curr_trx_config_params[trx].channel;
+	uint16_t temp_channel = curr_trx_config_params[trx].channel;
 		/* If the transceiver currently not set in ism frequencies, set the IEEE channel */
-		if (temp_channel != INVALID_VALUE)
-		{
+	//	if (temp_channel != INVALID_VALUE)
+		//{
 			/* Channel configuration */
 			tal_pib_set(trx,phyCurrentChannel, (pib_value_t *)&temp_channel);
 
-		}
+		//} sriram
 	
 
 		/* Channel page configuration */
@@ -2835,7 +2869,7 @@ static void set_antenna_diversity_settings(trx_id_t trx, uint8_t config_value)
         {
 
 	            	/* Put the transceiver in TRX OFF state- default state for Single node tests */
-	            	set_trx_state(CMD_TRX_OFF);
+ 	            	set_trx_state(CMD_TRX_OFF);
 
         }
 
@@ -3246,7 +3280,7 @@ static void configure_frame_sending(trx_id_t trx)
  * \param val    Value of the parameter being modified
  *
  */
-static void send_parameters_changed(trx_id_t trx, uint8_t param, uint8_t val)
+static void send_parameters_changed(trx_id_t trx, uint8_t param, uint16_t val)
 {
     uint16_t payload_length;
     app_payload_t msg;

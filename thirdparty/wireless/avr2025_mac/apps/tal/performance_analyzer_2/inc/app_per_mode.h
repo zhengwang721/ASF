@@ -190,7 +190,7 @@ typedef struct {
 	uint8_t antenna_selected_on_peer;
 #endif
 
-	uint8_t channel;
+	uint16_t channel; //sriram
 	uint8_t channel_page;
 #if ((TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B))
 	uint8_t tx_power_reg;
