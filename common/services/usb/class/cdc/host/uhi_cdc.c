@@ -3,7 +3,7 @@
  *
  * \brief USB host Mass Storage Class interface.
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -726,25 +726,24 @@ static void uhi_cdc_tx_send(
 	UNUSED(add);
 
 	flags = cpu_irq_save();
-	if (UHD_TRANS_NOERROR != status) {
-		// Abort transfer
-		line->b_trans_ongoing  = false;
-		cpu_irq_restore(flags);
-		return;
-	}
 
 	// Search port corresponding at endpoint
 	while (1) {
 		ptr_port = uhi_cdc_get_port(port++);
 		if (ptr_port == NULL) {
-			line->b_trans_ongoing  = false;
-			cpu_irq_restore(flags);
 			return;
 		}
 		line = &ptr_port->line_tx;
 		if (ep == line->ep_data) {
 			break; // Port found
 		}
+	}
+
+	if (UHD_TRANS_NOERROR != status) {
+		// Abort transfer
+		line->b_trans_ongoing  = false;
+		cpu_irq_restore(flags);
+		return;
 	}
 
 	// Update SOF tag, if it is a short packet
