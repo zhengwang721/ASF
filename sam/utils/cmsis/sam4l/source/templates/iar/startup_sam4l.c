@@ -43,7 +43,7 @@
  
 #include <stdint.h>
 #include "exceptions.h"
-#include <parts.h>
+
 /*------------------------------------------------------------------------------
  *         Types
  *------------------------------------------------------------------------------*/
@@ -112,8 +112,10 @@ const IntVector __vector_table[] =
     USBC_Handler, /**< 18 SAM4L4 USB 2.0 Interface (USBC) */
     PEVC_TR_Handler, /**< 19 SAM4L4 Peripheral Event Controller (PEVC) */
     PEVC_OV_Handler, /**< 20 SAM4L4 Peripheral Event Controller (PEVC) */
-    #if !SAM4LS
+    #ifdef AESA
     AESA_Handler, /**< 21 SAM4LC Advanced Encryption Standard (AESA) */
+    #else
+    Dummy_Handler,
     #endif
     PM_Handler, /**< 22 SAM4L4 Power Manager (PM) */
     SCIF_Handler, /**< 23 SAM4L4 System Control Interface (SCIF) */
@@ -172,8 +174,10 @@ const IntVector __vector_table[] =
     Dummy_Handler, /**< Not used */
     TWIM2_Handler, /**< 77 SAM4LxxC & SAM4LxxB Two-wire Master Interface 2 (TWIM2) */
     TWIM3_Handler, /**< 78 SAM4LxxC & SAM4LxxB Two-wire Master Interface 3 (TWIM3) */
-    #if !SAM4LS
+    #ifdef LCDCA
     LCDCA_Handler  /**< 79 SAM4LC LCD Controller (LCDCA) */
+    #else
+    Dummy_Handler
     #endif
 };
 
