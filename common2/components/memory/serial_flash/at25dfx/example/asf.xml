@@ -8,6 +8,7 @@
 		</info>
 		<build type="c-source" value="at25dfx_example.c"/>
 		<build type="include-path" value="."/>
+		<build type="define" name="_ASSERT_ENABLE_" value=""/>
 		<require idref="common2.components.memory.serial_flash.at25dfx"/>
 		<device-support value="samd20"/>
 	</module>

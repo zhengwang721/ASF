@@ -1,27 +1,23 @@
 /**
  * \file
  *
- * \brief Empty user application template
+ * \brief AT25DFX test application
  *
  */
 
 /**
- * \mainpage User Application template doxygen documentation
+ * \mainpage AT25DFX test application
  *
- * \par Empty user application template
+ * \par AT25DFX test application
  *
- * This is a bare minimum user application template.
+ * This is a simple test application for serial flash AT25DFX.
  *
- * For documentation of the board, go \ref group_common_boards "here" for a link
- * to the board-specific documentation.
+ * The application connects to the serial flash and performs
+ * tests to determine if the driver works as expected.
  *
- * \par Content
- *
- * -# Include the ASF header files (through asf.h)
- * -# Minimal main function that starts with a call to system_init()
- * -# Basic usage of on-board LED and button
- * -# "Insert application code here" comment
- *
+ * In order to use the application you need:
+ * #- Asserts needs to be enabled by adding symbol: _ASSERT_ENABLE_
+ * #- Run the code using a debugger
  */
 
 /*
@@ -31,19 +27,81 @@
 #include <asf.h>
 
 
-#define AT25DFX_TEST_DATA_SIZE   (1024)
+#define AT25DFX_TEST_DATA_SIZE   (10)
 
-
+static uint8_t example_data[AT25DFX_TEST_DATA_SIZE]= {1, 3, 3, 7, 0, 1, 3, 3, 7, 0};
+static uint8_t protect_data[AT25DFX_TEST_DATA_SIZE]= {2, 4, 2, 4, 2, 4, 2, 4, 2, 4};
 static uint8_t ram_buff[AT25DFX_TEST_DATA_SIZE];
 
 struct spi_module at25dfx_spi;
 struct at25dfx_chip_module at25dfx_chip_1;
-struct at25dfx_chip_module at25dfx_chip_2;
 
+static bool test_write(struct at25dfx_chip_module *at25_chip) {
+	bool success = true;
+	enum status_code status;
+	UNUSED(status);
+
+	// Erase block
+	status = at25dfx_chip_set_sector_protect(at25_chip, 0x2345, false);
+	Assert(status == STATUS_OK);
+	status = at25dfx_chip_block_erase(at25_chip, 0x2345, AT25DFX_BLOCK_SIZE_4KB);
+	Assert(status == STATUS_OK);
+
+	// Write a bunch of data..
+	status = at25dfx_chip_write_buffer(at25_chip, 0x2345, example_data, AT25DFX_TEST_DATA_SIZE);
+	Assert(status == STATUS_OK);
+
+	// Verify data written correctly by reading back to ram_buff and comparing
+	status = at25dfx_chip_read_buffer(at25_chip, 0x2345, ram_buff, AT25DFX_TEST_DATA_SIZE);
+	Assert(status == STATUS_OK);
+
+	for (int i=0; i<AT25DFX_TEST_DATA_SIZE; i++) {
+		// Verify that data read back is the same
+		if (example_data[i] != ram_buff[i]) {
+			Assert(false);
+			success = false;
+		}
+	}
+	return success;
+}
+
+static bool test_protect(struct at25dfx_chip_module *at25_chip) {
+	bool success = true;
+	enum status_code status;
+	UNUSED(status);
+
+	// Set up sector with some data
+	status = at25dfx_chip_set_sector_protect(at25_chip, 0x2345, false);
+	Assert(status == STATUS_OK);
+	status = at25dfx_chip_block_erase(at25_chip, 0x2345, AT25DFX_BLOCK_SIZE_4KB);
+	Assert(status == STATUS_OK);
+	status = at25dfx_chip_write_buffer(at25_chip, 0x2345, example_data, AT25DFX_TEST_DATA_SIZE);
+	Assert(status == STATUS_OK);
+
+	// Protect sector
+	status = at25dfx_chip_set_sector_protect(at25_chip, 0x2345, true);
+	Assert(status == STATUS_OK);
+
+	// Writing different data to sector should now be ignored
+	status = at25dfx_chip_write_buffer(at25_chip, 0x2345, protect_data, AT25DFX_TEST_DATA_SIZE);
+	Assert(status == STATUS_OK);
+
+	// Verify by reading back to ram_buff and check that it is different
+	status = at25dfx_chip_read_buffer(at25_chip, 0x2345, ram_buff, AT25DFX_TEST_DATA_SIZE);
+	Assert(status == STATUS_OK);
+
+	for (int i=0; i<AT25DFX_TEST_DATA_SIZE; i++) {
+		// Verify that data read back is the different
+		if (protect_data[i] == ram_buff[i]) {
+			Assert(false);
+			success = false;
+		}
+	}
+	return success;
+}
 
 int main(void)
 {
-	bool is_protected;
 	enum status_code status;
 	struct at25dfx_chip_config at25dfx_chip_config;
 	struct spi_config at25dfx_spi_config;
@@ -70,50 +128,21 @@ int main(void)
 
 	at25dfx_chip_init(&at25dfx_chip_1, &at25dfx_spi, &at25dfx_chip_config);
 
-	at25dfx_chip_config.type = AT25DFX_041A;
-	at25dfx_chip_config.cs_pin = EXT1_PIN_SPI_SS_1;
-
-	at25dfx_chip_init(&at25dfx_chip_2, &at25dfx_spi, &at25dfx_chip_config);
-
-
 	// Check that the devices are actually there
 	if (at25dfx_chip_check_presence(&at25dfx_chip_1) != STATUS_OK) {
-		// Help! Something disastrous has happened!
+		// Help! Chip is not connected correctly.
 		Assert(false);
 	}
 
-	if (at25dfx_chip_check_presence(&at25dfx_chip_2) != STATUS_OK) {
-		// Help! Something disastrous has happened!
-		Assert(false);
+	if (!test_write(&at25dfx_chip_1)) {
+		// Test failure
+		asm("BKPT #0");
+	}
+	if (!test_protect(&at25dfx_chip_1)) {
+		// Test failure
+		asm("BKPT #0");
 	}
 
-	// Read 10 bytes from location 0x1234 in SerialFlash
-	at25dfx_chip_read_buffer(&at25dfx_chip_1, 0x1234, ram_buff, 10);
-
-	// Try to write to a sector -- check first if it is protected
-	
-	at25dfx_chip_get_sector_protect(&at25dfx_chip_2, 0x2345, &is_protected);
-	if (is_protected) {
-		// Disable sector (64 kB size) protection
-		at25dfx_chip_set_sector_protect(&at25dfx_chip_2, 0x2345, false);
-	}
-	// Write a bunch of data..
-	status = at25dfx_chip_write_buffer(&at25dfx_chip_2, 0x2345, ram_buff,
-			AT25DFX_TEST_DATA_SIZE);
-	// If status is not OK, the write failed in the chip somehow.
-	Assert(status == STATUS_OK);
-
-	// Erase chip 1, but unprotect it first
-	status = at25dfx_chip_set_global_sector_protect(&at25dfx_chip_1, false);
-	Assert(status == STATUS_OK);
-	status = at25dfx_chip_erase(&at25dfx_chip_1);
-	Assert(status == STATUS_OK);
-
-	// Now erase the 4 kB block that we started writing into in chip 2
-	status = at25dfx_chip_block_erase(&at25dfx_chip_2, 0x2345, AT25DFX_BLOCK_SIZE_4KB);
-	Assert(status == STATUS_OK);
-
-	// And protect the 64 kB sector again.
-	status = at25dfx_chip_set_sector_protect(&at25dfx_chip_2, 0x2345, true);
-	Assert(status == STATUS_OK);
+	// Test success
+	asm("BKPT #0");
 }
