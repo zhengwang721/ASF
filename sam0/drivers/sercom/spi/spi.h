@@ -793,7 +793,7 @@ static inline bool spi_is_syncing(
  *  \li Master mode enabled
  *  \li MSB of the data is transmitted first
  *  \li Transfer mode 0
- *  \li \ref asfdoc_samd20_sercom_spi_mux_setting_d
+ *  \li MUX Setting D
  *  \li Character size 8 bit
  *  \li Not enabled in sleep mode
  *  \li Receiver enabled
