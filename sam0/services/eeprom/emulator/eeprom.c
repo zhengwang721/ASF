@@ -809,9 +809,11 @@ enum status_code eeprom_emulator_write_buffer(
 	enum status_code error_code = STATUS_OK;
 	uint8_t buffer[EEPROM_PAGE_SIZE];
 	uint8_t logical_page = offset / EEPROM_PAGE_SIZE;
-
-	/** Perform the initial page read if the starting offset is not aligned  */
-	if (offset % EEPROM_PAGE_SIZE) {
+	uint16_t c = offset;
+	/* Keep track of whether the currently updated page has been written */
+	bool page_dirty = false;
+	/** Perform the initial page read if necessary*/
+	if ((offset % EEPROM_PAGE_SIZE) || length < EEPROM_PAGE_SIZE) {
 		error_code = eeprom_emulator_read_page(logical_page, buffer);
 
 		if (error_code != STATUS_OK) {
@@ -819,11 +821,18 @@ enum status_code eeprom_emulator_write_buffer(
 		}
 	}
 
+	/* To avoid entering into the initial if in the loop the first time */
+	if ((offset % EEPROM_PAGE_SIZE) == 0) {
+		buffer[c % EEPROM_PAGE_SIZE] = data[c - offset];
+		page_dirty = true;
+		c=c+1;
+	}
+
 	/* Keep track of whether the currently updated page has been written */
 	bool page_dirty = false;
 
 	/* Write the specified data to the emulated EEPROM memory space */
-	for (uint16_t c = offset; c < (length + offset); c++) {
+	for (c; c < (length + offset); c++) {
 		/* Copy the next byte of data from the user's buffer to the temporary
 		 * buffer */
 		buffer[c % EEPROM_PAGE_SIZE] = data[c - offset];
@@ -888,18 +897,23 @@ enum status_code eeprom_emulator_read_buffer(
 	enum status_code error_code = STATUS_OK;
 	uint8_t buffer[EEPROM_PAGE_SIZE];
 	uint8_t logical_page = offset / EEPROM_PAGE_SIZE;
+	uint16_t c = offset;
 
-	/** Perform the initial page read if the starting offset is not aligned  */
-	if (offset % EEPROM_PAGE_SIZE) {
-		error_code = eeprom_emulator_read_page(logical_page, buffer);
+	/** Perform the initial page read  */
+	error_code = eeprom_emulator_read_page(logical_page, buffer);
+	if (error_code != STATUS_OK) {
+		return error_code;
+	}
 
-		if (error_code != STATUS_OK) {
-			return error_code;
-		}
+	/* To avoid entering into the initial if in the loop the first time */
+	if ((offset % EEPROM_PAGE_SIZE == 0))
+	{
+		data[0] = buffer[0];
+		c=c+1;
 	}
 
 	/* Read in the specified data from the emulated EEPROM memory space */
-	for (uint16_t c = offset; c < (length + offset); c++) {
+	for (c; c < (length + offset); c++) {
 		/* Check if we have read up to a new EEPROM page boundary */
 		if ((c % EEPROM_PAGE_SIZE) == 0) {
 			/* Increment the page number we are looking at */
