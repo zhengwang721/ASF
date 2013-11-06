@@ -64,8 +64,6 @@ extern "C" {
  * @{
  */
 
-#define ACC_MR_INV_Pos			12	/* ACC invert output (register offset) */
-
 #define ACC_ACR_HYST_0mv_max	0x00	/* HYSTeresis levels: please refer to Electrical Characteristics */
 #define ACC_ACR_HYST_50mv_max	0x01
 #define ACC_ACR_HYST_90mv_max	0x11
