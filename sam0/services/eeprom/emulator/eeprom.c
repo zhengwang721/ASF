@@ -828,9 +828,6 @@ enum status_code eeprom_emulator_write_buffer(
 		c=c+1;
 	}
 
-	/* Keep track of whether the currently updated page has been written */
-	bool page_dirty = false;
-
 	/* Write the specified data to the emulated EEPROM memory space */
 	for (c; c < (length + offset); c++) {
 		/* Copy the next byte of data from the user's buffer to the temporary
