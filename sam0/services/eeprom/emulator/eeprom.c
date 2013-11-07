@@ -903,8 +903,7 @@ enum status_code eeprom_emulator_read_buffer(
 	}
 
 	/* To avoid entering into the initial if in the loop the first time */
-	if ((offset % EEPROM_PAGE_SIZE == 0))
-	{
+	if ((offset % EEPROM_PAGE_SIZE) == 0) {
 		data[0] = buffer[0];
 		c=c+1;
 	}
