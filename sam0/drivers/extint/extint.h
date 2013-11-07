@@ -340,10 +340,7 @@ struct _extint_module
 	/** Asynchronous channel callback table, for user-registered handlers. */
 	extint_callback_t callbacks[EXTINT_CALLBACKS_MAX];
 #  endif
-	/** Mapping of channels that requires general clock */
-	uint32_t gclk_require_chan;
-	/** Mapping of NMIs that requires general clock */
-	uint32_t gclk_require_nmi;
+	bool _module_is_initialized;
 };
 
 /**

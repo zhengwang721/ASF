@@ -246,6 +246,9 @@ void system_gclk_gen_enable(
 void system_gclk_gen_disable(
 		const uint8_t generator);
 
+bool system_gclk_gen_is_enabled(
+		const uint8_t generator);
+
 /** @} */
 
 
@@ -279,11 +282,11 @@ static inline void system_gclk_chan_get_config_defaults(
 	config->write_lock       = false;
 }
 
-enum status_code system_gclk_chan_set_config(
+void system_gclk_chan_set_config(
 		const uint8_t channel,
 		struct system_gclk_chan_config *const config);
 
-enum status_code system_gclk_chan_enable(
+void system_gclk_chan_enable(
 		const uint8_t channel);
 
 enum status_code system_gclk_chan_disable(

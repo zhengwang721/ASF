@@ -50,8 +50,7 @@
  * Internal driver device instance struct.
  */
 struct _extint_module _extint_dev = {
-	.gclk_require_chan = 0,
-	.gclk_require_nmi = 0
+	._module_is_initialized = false
 };
 
 /**
@@ -75,19 +74,30 @@ static inline bool _extint_is_gclk_required(
 }
 
 /**
- * \brief Enable general clock for edge and filtering
+ * \brief Initialize the External Interrupt driver if it's not initialized.
+ *
+ * Enable the clocks used by External Interrupt driver.
+ * Resets and disables External Interrupt driver.
+ * Resets the callback list if callback mode is used.
  */
-static void _extint_enable_gclk(void)
+static void _extint_init(void)
 {
-	system_gclk_chan_enable(EIC_GCLK_ID);
-}
+	if (!_extint_dev._module_is_initialized) {
+		_extint_dev._module_is_initialized = true;
 
-/**
- * \brief Disable general clock for edge and filtering
- */
-static void _extint_disable_gclk(void)
-{
-	system_gclk_chan_disable(EIC_GCLK_ID);
+		/* Reset the driver and software module */
+		extint_reset();
+
+		/* Configure the generic clock for the module and enable it */
+		struct system_gclk_chan_config gclk_chan_conf;
+		system_gclk_chan_get_config_defaults(&gclk_chan_conf);
+		gclk_chan_conf.source_generator = EXTINT_CLOCK_SOURCE;
+		system_gclk_chan_set_config(EIC_GCLK_ID, &gclk_chan_conf);
+
+		/* Enable the clock anyway, since when needed it will be requested
+		 * by External Interrupt driver */
+		system_gclk_chan_enable(EIC_GCLK_ID);
+	}
 }
 
 /**
@@ -95,13 +105,14 @@ static void _extint_disable_gclk(void)
  *
  * Resets and disables the External Interrupt driver, resetting all hardware
  * module registers to their power-on defaults.
+ * Reset the callback list if callback mode is used.
  */
 void extint_reset(void)
 {
 	Eic *const eics[EIC_INST_NUM] = EIC_INSTS;
 
-	/* Disable all EIC modules before resetting them. */
-	extint_disable();
+	/* Turn on the digital interface clock */
+	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBA, PM_APBAMASK_EIC);
 
 	/* Reset all EIC hardware modules. */
 	for (uint32_t i = 0; i < EIC_INST_NUM; i++) {
@@ -111,26 +122,29 @@ void extint_reset(void)
 	while (extint_is_syncing()) {
 		/* Wait for all hardware modules to complete synchronization */
 	}
+
+	/* Reset the software module */
+#if EXTINT_CALLBACK_MODE == true
+	/* Clear callback registration table */
+	for (uint8_t j = 0; j < EXTINT_CALLBACKS_MAX; j++) {
+		_extint_dev.callbacks[j] = NULL;
+	}
+	system_interrupt_disable(SYSTEM_INTERRUPT_MODULE_EIC);
+#endif
 }
 
 /**
  * \brief Enables the External Interrupt driver.
  *
- * Enables EIC modules ready for use. This function must be called before
- * attempting to use any NMI or standard external interrupt channel functions.
+ * Enables EIC modules.
+ * Registered callback list will not be affected if callback mode is used.
  */
 void extint_enable(void)
 {
 	Eic *const eics[EIC_INST_NUM] = EIC_INSTS;
 
-	/* Turn on the digital interface clock */
-	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBA, PM_APBAMASK_EIC);
-
-	/* Configure the generic clock for the module but do not enable it */
-	struct system_gclk_chan_config gclk_chan_conf;
-	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
-	gclk_chan_conf.source_generator = EXTINT_CLOCK_SOURCE;
-	system_gclk_chan_set_config(EIC_GCLK_ID, &gclk_chan_conf);
+	/* Initialize module if it's not initialized */
+	_extint_init();
 
 	/* Enable all EIC hardware modules. */
 	for (uint32_t i = 0; i < EIC_INST_NUM; i++) {
@@ -142,11 +156,6 @@ void extint_enable(void)
 	}
 
 #if EXTINT_CALLBACK_MODE == true
-	/* Clear callback registration table */
-	for (uint8_t j = 0; j < EXTINT_CALLBACKS_MAX; j++) {
-		_extint_dev.callbacks[j] = NULL;
-	}
-
 	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_EIC);
 #endif
 }
@@ -156,6 +165,7 @@ void extint_enable(void)
  *
  * Disables EIC modules that were previously started via a call to
  * \ref extint_enable().
+ * Registered callback list will not be affected if callback mode is used.
  */
 void extint_disable(void)
 {
@@ -188,6 +198,13 @@ void extint_chan_set_config(
 {
 	/* Sanity check arguments */
 	Assert(config);
+	/* Sanity check clock requirements */
+	Assert(!(!system_gclk_gen_is_enabled(EXTINT_CLOCK_SOURCE) &&
+		_extint_is_gclk_required(config->filter_input_signal,
+			config->detection_criteria)));
+
+	/* Initialize module if it's not initialized */
+	_extint_init();
 
 	struct system_pinmux_config pinmux_config;
 	system_pinmux_get_config_defaults(&pinmux_config);
@@ -202,8 +219,6 @@ void extint_chan_set_config(
 
 	uint32_t config_pos = (4 * (channel % 8));
 	uint32_t new_config;
-	bool is_gclk_required = _extint_is_gclk_required(
-			config->filter_input_signal, config->detection_criteria);
 
 	/* Determine the channel's new edge detection configuration */
 	new_config = (config->detection_criteria << EIC_CONFIG_SENSE0_Pos);
@@ -224,18 +239,6 @@ void extint_chan_set_config(
 		EIC_module->WAKEUP.reg |=  (1UL << channel);
 	} else {
 		EIC_module->WAKEUP.reg &= ~(1UL << channel);
-	}
-
-	/* Enable the general clock if requested in the config */
-	if (is_gclk_required) {
-		_extint_dev.gclk_require_chan |= (1u << channel);
-	} else {
-		_extint_dev.gclk_require_chan &= ~(1u << channel);
-	}
-	if (_extint_dev.gclk_require_chan || _extint_dev.gclk_require_nmi) {
-		_extint_enable_gclk();
-	} else {
-		_extint_disable_gclk();
 	}
 }
 
@@ -260,6 +263,13 @@ enum status_code extint_nmi_set_config(
 {
 	/* Sanity check arguments */
 	Assert(config);
+	/* Sanity check clock requirements */
+	Assert(!(!system_gclk_gen_is_enabled(EXTINT_CLOCK_SOURCE) &&
+		_extint_is_gclk_required(config->filter_input_signal,
+			config->detection_criteria)));
+
+	/* Initialize module if it's not initialized */
+	_extint_init();
 
 	struct system_pinmux_config pinmux_config;
 	system_pinmux_get_config_defaults(&pinmux_config);
@@ -287,20 +297,13 @@ enum status_code extint_nmi_set_config(
 
 	/* Disable the general clock if requested in the config */
 	if (is_gclk_required) {
-		_extint_dev.gclk_require_nmi |= (1u << nmi_channel);
-		_extint_disable_gclk();
-	} else {
-		_extint_dev.gclk_require_nmi &= ~(1u << nmi_channel);
+		system_gclk_chan_disable(EIC_GCLK_ID);
 	}
 
 	EIC_module->NMICTRL.reg = new_config;
 
-	/* Enable the general clock if requested */
-	if (_extint_dev.gclk_require_chan || _extint_dev.gclk_require_nmi) {
-		_extint_enable_gclk();
-	} else {
-		_extint_disable_gclk();
-	}
+	/* Enable the general clock if closed */
+	system_gclk_chan_enable(EIC_GCLK_ID);
 
 	return STATUS_OK;
 }
@@ -320,6 +323,9 @@ void extint_enable_events(
 {
 	/* Sanity check arguments */
 	Assert(events);
+
+	/* Initialize module if it's not initialized */
+	_extint_init();
 
 	/* Array of available EICs. */
 	Eic *const eics[EIC_INST_NUM] = EIC_INSTS;
