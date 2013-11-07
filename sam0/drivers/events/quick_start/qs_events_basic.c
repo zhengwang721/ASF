@@ -47,7 +47,7 @@
 #define EXAMPLE_EVENT_GENERATOR    EVSYS_ID_GEN_TC1_MCX_0
 #define EXAMPLE_EVENT_USER         EVSYS_ID_USER_TC0_EVU
 
-static void configure_event_channel(struct events_descriptor *desc)
+static void configure_event_channel(struct events_resource *resource)
 {
 //! [setup_1]
 	struct events_config config;
@@ -65,14 +65,14 @@ static void configure_event_channel(struct events_descriptor *desc)
 //! [setup_3]
 
 //! [setup_4]
-	events_allocate(desc, &config);
+	events_allocate(resource, &config);
 //! [setup_4]
 }
 
-static void configure_event_user(struct events_descriptor *desc)
+static void configure_event_user(struct events_resource *resource)
 {
 //! [setup_5]
-	events_attach_user(desc, EXAMPLE_EVENT_USER);
+	events_attach_user(resource, EXAMPLE_EVENT_USER);
 //! [setup_5]
 }
 
@@ -80,7 +80,7 @@ static void configure_event_user(struct events_descriptor *desc)
 
 int main(void)
 {
-	struct events_descriptor example_event;
+	struct events_resource example_event;
 
 	system_init();
 

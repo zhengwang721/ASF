@@ -323,10 +323,10 @@ struct events_config {
 
 
 /**
- * \brief Event channel descriptor
+ * \brief Event channel resource
  *
  */
-struct events_descriptor {
+struct events_resource {
 	uint8_t channel;
 };
 
@@ -346,7 +346,7 @@ void events_get_config_defaults(struct events_config *config);
  * Allocates a event channel from the even channel pool and sets
  * the channel configuration.
  *
- * \param[out] descriptor Pointer to a events_descriptor struct instance
+ * \param[out] resource Pointer to a events_resource struct instance
  * \param[in]  config     Pointer to a events_config struct
  *
  * \return Status of the configuration procedure
@@ -354,32 +354,32 @@ void events_get_config_defaults(struct events_config *config);
  * \retval STATUS_ERR_NOT_FOUND No free event channel found
  *
  */
-enum status_code events_allocate(struct events_descriptor *descriptor, struct events_config *config);
+enum status_code events_allocate(struct events_resource *resource, struct events_config *config);
 
 /**
  * \brief Attach user to the event channel
  *
  * Attach a user peripheral to the event channel to receive events.
  *
- * \param[in] descriptor Pointer to an event_descriptor struct instance
+ * \param[in] resource Pointer to an event_resource struct instance
  * \param[in] user_id    A number identifying the user peripheral found in the device header file.
  * \return Status of the user attach procedure
  * \retval STATUS_OK No errors detected when attaching the event user
  */
-enum status_code events_attach_user(struct events_descriptor *descriptor, uint8_t user_id);
+enum status_code events_attach_user(struct events_resource *resource, uint8_t user_id);
 
 /**
- * \brief Deattach an user peripheral from the event channel
+ * \brief Detach an user peripheral from the event channel
  *
  * Deattach an user peripheral from the event channels so it does not receive any more events.
  *
- * \param[in] descriptor Pointer to an event_descriptor struct instance
- * \param[in] user_id    A number identifying the user peripheral found in the device header file.
+ * \param[in] resource Pointer to an event_resource struct instance
+ * \param[in] user_id  A number identifying the user peripheral found in the device header file.
  *
- * \return Status of the user deattach procedure
+ * \return Status of the user detach procedure
  * \retval STATUS_OK No errors detected when deattaching the event user
  */
-enum status_code events_deattach_user(struct events_descriptor *descriptor, uint8_t user_id);
+enum status_code events_detach_user(struct events_resource *resource, uint8_t user_id);
 
 /**
  * \brief Check if a channel is busy
@@ -387,52 +387,84 @@ enum status_code events_deattach_user(struct events_descriptor *descriptor, uint
  * Check if a channel is busy, a channels stays busy until all users connected to the channel
  * has handled an event
  *
- * \param[in] descriptor Pointer to a events_descriptor struct instance
+ * \param[in] resource Pointer to a events_resource struct instance
  *
  * \return Status of the channels busy state
  * \retval true   One or more users connected to the channel has not handled the last event
  * \retval false  All users are redy handle new events
  */
-bool events_is_busy(struct events_descriptor *descriptor);
+bool events_is_busy(struct events_resource *resource);
 
 /**
  * \brief Trigger software event
  *
  * Trigger an event by software
  *
- * \param[in] descriptor Pointer to an \c events_descriptor struct
+ * \param[in] resource Pointer to an \c events_resource struct
  *
  * \return Status of the event software procedure
  * \retval STATUS_OK No error was detected when software tigger signal was issued
+ * \retval STATUS_ERR_UNSUPPORTED_DEV If the channel path is asynchronous and/or the 
+ *                                    edge detection is not set to RISING
  */
-enum status_code events_trigger(struct events_descriptor *descriptor);
+enum status_code events_trigger(struct events_resource *resource);
 
 /**
  * \brief Check if all users connected to the channel is ready
  *
  * Check if all users connected to the channel is ready to handle incomming events
  *
- * \param[in] descriptor Ppointer to an \c event_descriptor struct
+ * \param[in] resource Ppointer to an \c event_resource struct
  *
  * \return The ready status of users connected to an event channel
  * \retval true  All users connect to event channel is ready handle incomming events
  * \retval false One or more users connect to event channel is not ready to handle incomming events
  */
-bool events_is_users_ready(struct events_descriptor *descriptor);
+bool events_is_users_ready(struct events_resource *resource);
+
+/**
+ * \brief Check if event is detected on event channel
+ *
+ * Check if an event has been detected on the channel
+ *
+ * \note This function will clear the event detected interrupt flag
+ * 
+ * \param[in] resource Pointer to an \c events_resource struct
+ *
+ * \return Status of the event detection interrupt flag
+ * \retval true  Event has been detected
+ * \retval false Event has not been detected
+ */
+bool events_is_detected(struct events_resource *resource);
+
+/**
+ * \brief Check if the has been an overrun situation for this channel
+ *
+ * Check if there has been an overrun situation for this channel
+ *
+ * \note This function will clear the event overrun detected interrupt flag
+ *
+ * \parm[in] resource Pointer to an \c events_resource struct
+ *
+ * \return Status of the event overrun interrupt flag
+ * \retval true  Event overrun has been detected
+ * \retval false Event overrun has not been detected
+ */
+bool events_is_overrun(struct events_resource *resource);
 
 /**
  * \brief Release allocated channel back the the resource pool
  *
  * Release an allocated channel back to the resource pool to make it availble for other purposes.
  *
- * \param[in] descriptor Pointer to an \c event_descriptor struct
+ * \param[in] resource Pointer to an \c event_resource struct
  *
  * \return Status of channel release procedure
  * \retval STATUS_OK                  No error was detected when channel was released
  * \retval STATUS_BUSY                One or more event users have not processed the last event
  * \retval STATUS_ERR_NOT_INITIALIZED Channel not allocated, and can derfor not be released
  */
-enum status_code events_release(struct events_descriptor *descriptor);
+enum status_code events_release(struct events_resource *resource);
 
 /**
  * \brief Get number of free channels
