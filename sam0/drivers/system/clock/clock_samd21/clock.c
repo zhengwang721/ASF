@@ -417,11 +417,11 @@ void system_clock_source_dpll_set_config(
 
 	SYSCTRL->DPLLCTRLB.reg =
 			SYSCTRL_DPLLCTRLB_DIV(config->reference_divider) |
-			config->lock_bypass << SYSCTRL_DPLLCTRLB_LBYPASS_Pos |
+			(config->lock_bypass << SYSCTRL_DPLLCTRLB_LBYPASS_Pos) |
 			SYSCTRL_DPLLCTRLB_LTIME(config->lock_time) |
 			SYSCTRL_DPLLCTRLB_REFCLK(config->reference_clock) |
-			config->wake_up_fast << SYSCTRL_DPLLCTRLB_WUF_Pos |
-			config->low_power_enable << SYSCTRL_DPLLCTRLB_LPEN_Pos |
+			(config->wake_up_fast << SYSCTRL_DPLLCTRLB_WUF_Pos) |
+			(config->low_power_enable << SYSCTRL_DPLLCTRLB_LPEN_Pos) |
 			SYSCTRL_DPLLCTRLB_FILTER(config->filter);
 
 	_system_clock_inst.dpll.frequency =
