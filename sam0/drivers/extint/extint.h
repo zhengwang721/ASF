@@ -339,8 +339,10 @@ struct _extint_module
 #  if EXTINT_CALLBACK_MODE == true
 	/** Asynchronous channel callback table, for user-registered handlers. */
 	extint_callback_t callbacks[EXTINT_CALLBACKS_MAX];
+#  else
+	/** Dummy value to ensure the struct has at least one member */
+	uint8_t _dummy;
 #  endif
-	bool _module_is_initialized;
 };
 
 /**
@@ -427,7 +429,6 @@ static inline bool extint_is_syncing(void)
 	return false;
 }
 
-void extint_reset(void);
 void extint_enable(void);
 void extint_disable(void);
 

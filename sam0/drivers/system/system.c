@@ -58,11 +58,14 @@ void _system_dummy_init(void)
 #  if defined(__GNUC__)
 void system_clock_init(void) WEAK __attribute__((alias("_system_dummy_init")));
 void system_board_init(void) WEAK __attribute__((alias("_system_dummy_init")));
+void extint_init(void)       WEAK __attribute__((alias("_system_dummy_init")));
 #  elif defined(__ICCARM__)
 void system_clock_init(void);
 void system_board_init(void);
+void extint_init(void);
 #    pragma weak system_clock_init=_system_dummy_init
 #    pragma weak system_board_init=_system_dummy_init
+#    pragma weak extint_init=_system_dummy_init
 #  endif
 #endif
 
@@ -88,12 +91,16 @@ void HardFault_Handler(void)
  *
  * Currently the following initialization functions are supported:
  *  - System clock initialization (via the SYSTEM CLOCK sub-module)
+ *  - External Interrupt driver initialization (via the EXTINT module)
  *  - Board hardware initialization (via the Board module)
  */
 void system_init(void)
 {
 	/* Configure GCLK and clock sources according to conf_clocks.h */
 	system_clock_init();
+	
+	/* Initialize External Interrupt driver */
+	extint_init();
 
 	/* Initialize board hardware */
 	system_board_init();

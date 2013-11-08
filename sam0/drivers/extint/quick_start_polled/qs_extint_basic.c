@@ -71,7 +71,6 @@ int main(void)
 	system_init();
 
 	//! [setup_init]
-	extint_enable();
 	configure_extint_channel();
 	//! [setup_init]
 

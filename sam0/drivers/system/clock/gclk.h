@@ -164,7 +164,14 @@ struct system_gclk_chan_config {
 	/** Generic Clock Generator source channel. */
 	enum gclk_generator source_generator;
 	/** If \c true the clock configuration will be locked until the device is
-	 *  reset. */
+	 *  reset.
+	 *
+	 * \note If Generic Clock Channel is locked, accessing to it may lead to
+	 *       spin locks (e.g., when trying to disable it the enabled bit never
+	 *       clear). Assert is added to Generic Clock Channel access functions
+	 *       to assist debugging. The Assert can be enabled by defining
+	 *       _ASSERT_ENABLE_.
+	 */
 	bool write_lock;
 };
 
@@ -289,7 +296,7 @@ void system_gclk_chan_set_config(
 void system_gclk_chan_enable(
 		const uint8_t channel);
 
-enum status_code system_gclk_chan_disable(
+void system_gclk_chan_disable(
 		const uint8_t channel);
 
 bool system_gclk_chan_is_enabled(

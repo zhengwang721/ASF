@@ -49,9 +49,7 @@
  * \internal
  * Internal driver device instance struct.
  */
-struct _extint_module _extint_dev = {
-	._module_is_initialized = false
-};
+struct _extint_module _extint_dev;
 
 /**
  * \brief Determin if the general clock is required
@@ -74,45 +72,39 @@ static inline bool _extint_is_gclk_required(
 }
 
 /**
- * \brief Initialize the External Interrupt driver if it's not initialized.
+ * \internal
+ * \brief Initializes and enables the External Interrupt driver.
  *
  * Enable the clocks used by External Interrupt driver.
- * Resets and disables External Interrupt driver.
- * Resets the callback list if callback mode is used.
- */
-static void _extint_init(void)
-{
-	if (!_extint_dev._module_is_initialized) {
-		_extint_dev._module_is_initialized = true;
-
-		/* Reset the driver and software module */
-		extint_reset();
-
-		/* Configure the generic clock for the module and enable it */
-		struct system_gclk_chan_config gclk_chan_conf;
-		system_gclk_chan_get_config_defaults(&gclk_chan_conf);
-		gclk_chan_conf.source_generator = EXTINT_CLOCK_SOURCE;
-		system_gclk_chan_set_config(EIC_GCLK_ID, &gclk_chan_conf);
-
-		/* Enable the clock anyway, since when needed it will be requested
-		 * by External Interrupt driver */
-		system_gclk_chan_enable(EIC_GCLK_ID);
-	}
-}
-
-/**
- * \brief Resets and disables the External Interrupt driver.
  *
- * Resets and disables the External Interrupt driver, resetting all hardware
- * module registers to their power-on defaults.
+ * Resets the External Interrupt driver, resetting all hardware
+ * module registers to their power-on defaults, then enable it for further use.
+ *
  * Reset the callback list if callback mode is used.
+ *
+ * This function must be called before attempting to use any NMI or standard
+ * external interrupt channel functions.
+ *
+ * \note When SYSTEM module is used, this function will be invoked by
+ * \ref system_init() automatically if the module is included.
  */
-void extint_reset(void)
+void extint_init(void);
+void extint_init(void)
 {
 	Eic *const eics[EIC_INST_NUM] = EIC_INSTS;
 
 	/* Turn on the digital interface clock */
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBA, PM_APBAMASK_EIC);
+
+	/* Configure the generic clock for the module and enable it */
+	struct system_gclk_chan_config gclk_chan_conf;
+	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
+	gclk_chan_conf.source_generator = EXTINT_CLOCK_SOURCE;
+	system_gclk_chan_set_config(EIC_GCLK_ID, &gclk_chan_conf);
+
+	/* Enable the clock anyway, since when needed it will be requested
+	 * by External Interrupt driver */
+	system_gclk_chan_enable(EIC_GCLK_ID);
 
 	/* Reset all EIC hardware modules. */
 	for (uint32_t i = 0; i < EIC_INST_NUM; i++) {
@@ -129,8 +121,11 @@ void extint_reset(void)
 	for (uint8_t j = 0; j < EXTINT_CALLBACKS_MAX; j++) {
 		_extint_dev.callbacks[j] = NULL;
 	}
-	system_interrupt_disable(SYSTEM_INTERRUPT_MODULE_EIC);
+	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_EIC);
 #endif
+
+	/* Enables the driver for further use */
+	extint_enable();
 }
 
 /**
@@ -143,9 +138,6 @@ void extint_enable(void)
 {
 	Eic *const eics[EIC_INST_NUM] = EIC_INSTS;
 
-	/* Initialize module if it's not initialized */
-	_extint_init();
-
 	/* Enable all EIC hardware modules. */
 	for (uint32_t i = 0; i < EIC_INST_NUM; i++) {
 		eics[i]->CTRL.reg |= EIC_CTRL_ENABLE;
@@ -154,10 +146,6 @@ void extint_enable(void)
 	while (extint_is_syncing()) {
 		/* Wait for all hardware modules to complete synchronization */
 	}
-
-#if EXTINT_CALLBACK_MODE == true
-	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_EIC);
-#endif
 }
 
 /**
@@ -202,9 +190,6 @@ void extint_chan_set_config(
 	Assert(!(!system_gclk_gen_is_enabled(EXTINT_CLOCK_SOURCE) &&
 		_extint_is_gclk_required(config->filter_input_signal,
 			config->detection_criteria)));
-
-	/* Initialize module if it's not initialized */
-	_extint_init();
 
 	struct system_pinmux_config pinmux_config;
 	system_pinmux_get_config_defaults(&pinmux_config);
@@ -268,9 +253,6 @@ enum status_code extint_nmi_set_config(
 		_extint_is_gclk_required(config->filter_input_signal,
 			config->detection_criteria)));
 
-	/* Initialize module if it's not initialized */
-	_extint_init();
-
 	struct system_pinmux_config pinmux_config;
 	system_pinmux_get_config_defaults(&pinmux_config);
 
@@ -323,9 +305,6 @@ void extint_enable_events(
 {
 	/* Sanity check arguments */
 	Assert(events);
-
-	/* Initialize module if it's not initialized */
-	_extint_init();
 
 	/* Array of available EICs. */
 	Eic *const eics[EIC_INST_NUM] = EIC_INSTS;

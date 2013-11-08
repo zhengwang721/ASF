@@ -339,11 +339,7 @@ void system_gclk_chan_set_config(
 	}
 
 	/* Disable generic clock channel */
-	enum status_code can_modify = system_gclk_chan_disable(channel);
-
-	/* Sanity check WRTLOCK */
-	Assert(STATUS_OK == can_modify);
-	(void)can_modify; /* Remove warning if Assert is not available */
+	system_gclk_chan_disable(channel);
 
 	system_interrupt_enter_critical_section();
 
@@ -362,10 +358,6 @@ void system_gclk_chan_set_config(
  * configured via a call to \ref system_gclk_chan_set_config().
  *
  * \param[in] channel   Generic Clock channel to enable
- *
- * \returns Status code indicating the success or failure of the request.
- * \retval  STATUS_OK          Configuration succeeded
- * \retval  STATUS_ERR_DENIED  General Clock channel is locked
  */
 void system_gclk_chan_enable(
 		const uint8_t channel)
@@ -388,12 +380,8 @@ void system_gclk_chan_enable(
  * via a call to \ref system_gclk_chan_enable().
  *
  * \param[in] channel  Generic Clock channel to disable
- *
- * \returns Status code indicating the success or failure of the request.
- * \retval  STATUS_OK          Configuration succeeded
- * \retval  STATUS_ERR_DENIED  General Clock channel is locked
  */
-enum status_code system_gclk_chan_disable(
+void system_gclk_chan_disable(
 		const uint8_t channel)
 {
 	system_interrupt_enter_critical_section();
@@ -401,10 +389,8 @@ enum status_code system_gclk_chan_disable(
 	/* Select the requested generator channel */
 	*((uint8_t*)&GCLK->CLKCTRL.reg) = channel;
 
-	/* If locked, just return DENIED */
-	if (GCLK->CLKCTRL.bit.WRTLOCK) {
-		return STATUS_ERR_DENIED;
-	}
+	/* Sanity check WRTLOCK */
+	Assert(GCLK->CLKCTRL.bit.WRTLOCK);
 
 	/* Switch to known-working source so that the channel can be disabled */
 	uint32_t prev_gen_id = GCLK->CLKCTRL.bit.GEN;
@@ -420,8 +406,6 @@ enum status_code system_gclk_chan_disable(
 	GCLK->CLKCTRL.bit.GEN = prev_gen_id;
 
 	system_interrupt_leave_critical_section();
-
-	return STATUS_OK;
 }
 
 /**

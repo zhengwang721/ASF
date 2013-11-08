@@ -95,7 +95,6 @@ int main(void)
 	system_init();
 
 	//! [setup_init]
-	extint_enable();
 	configure_extint_channel();
 	configure_extint_callbacks();
 
