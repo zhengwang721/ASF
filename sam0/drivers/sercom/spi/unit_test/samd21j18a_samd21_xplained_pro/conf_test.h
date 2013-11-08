@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D2x Serial Peripheral Interface Driver
+ * \brief SAM D21 Xplained PRO test configuration.
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,47 +41,15 @@
  *
  */
 
-#ifndef SERCOM_H_INCLUDED
-#define SERCOM_H_INCLUDED
+#ifndef CONF_TEST_H_INCLUDED
+#define CONF_TEST_H_INCLUDED
 
-#include <compiler.h>
-#include <system.h>
-#include <clock.h>
-#include "sercom_interrupt.h"
-#include "sercom_pinout.h"
+#define CONF_STDIO_USART          EDBG_CDC_MODULE
+#define CONF_STDIO_MUX_SETTING    EDBG_CDC_SERCOM_MUX_SETTING
+#define CONF_STDIO_PINMUX_PAD0    EDBG_CDC_SERCOM_PINMUX_PAD0
+#define CONF_STDIO_PINMUX_PAD1    EDBG_CDC_SERCOM_PINMUX_PAD1
+#define CONF_STDIO_PINMUX_PAD2    EDBG_CDC_SERCOM_PINMUX_PAD2
+#define CONF_STDIO_PINMUX_PAD3    EDBG_CDC_SERCOM_PINMUX_PAD3
+#define CONF_STDIO_BAUDRATE       38400
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#if (SERCOM0_GCLK_ID_SLOW == SERCOM1_GCLK_ID_SLOW && \
-     SERCOM0_GCLK_ID_SLOW == SERCOM2_GCLK_ID_SLOW && \
-     SERCOM0_GCLK_ID_SLOW == SERCOM3_GCLK_ID_SLOW)
-#  define SERCOM_GCLK_ID SERCOM0_GCLK_ID_SLOW
-#else
-#  error "SERCOM modules must share the same slow GCLK channel ID."
-#endif
-
-enum status_code sercom_set_gclk_generator(
-		const enum gclk_generator generator_source,
-		const bool force_change);
-
-enum status_code _sercom_get_sync_baud_val(
-		const uint32_t baudrate,
-		const uint32_t external_clock,
-		uint16_t *const baudval);
-
-enum status_code _sercom_get_async_baud_val(
-		const uint32_t baudrate,
-		const uint32_t peripheral_clock,
-		uint16_t *const baudval);
-
-uint32_t _sercom_get_default_pad(
-		Sercom *const sercom_module,
-		const uint8_t pad);
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif //__SERCOM_H_INCLUDED
+#endif /* CONF_TEST_H_INCLUDED */

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 Serial Peripheral Interface Driver
+ * \brief SAM D2x Serial Peripheral Interface Driver
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -62,9 +62,15 @@ void spi_reset(
 	/* Disable the module */
 	spi_disable(module);
 
+#if SAMD20
 	while (spi_is_syncing(module)) {
 		/* Wait until the synchronization is complete */
 	}
+#elif SAMD21
+	while (spi_is_syncing(module, SPI_SYNC_BUSY_SWRST)) {
+		/* Wait until the synchronization is complete */
+	}
+#endif
 
 	/* Software reset the module */
 	spi_module->CTRLA.reg |= SERCOM_SPI_CTRLA_SWRST;

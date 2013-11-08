@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 Serial Peripheral Interface Driver
+ * \brief SAM D2x Serial Peripheral Interface Driver
  *
  * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
@@ -83,7 +83,7 @@ static void _spi_transceive_buffer(
 	/* Enable the Data Register Empty and RX Complete Interrupt */
 	hw->INTENSET.reg = (SPI_INTERRUPT_FLAG_DATA_REGISTER_EMPTY |
 			SPI_INTERRUPT_FLAG_RX_COMPLETE);
-			
+
 	if (module->mode == SPI_MODE_SLAVE) {
 		/* Clear TXC flag if set */
 		hw->INTFLAG.reg = SPI_INTERRUPT_FLAG_TX_COMPLETE;
@@ -181,7 +181,7 @@ static void _spi_read_buffer(
 		/* Enable transmit complete interrupt for slave */
 		tmp_intenset |= SPI_INTERRUPT_FLAG_TX_COMPLETE;
 	}
-	
+
 	/* Enable all interrupts simultaneously */
 	hw->INTENSET.reg = tmp_intenset;
 }
@@ -321,7 +321,7 @@ enum status_code spi_read_buffer_job(
 	if (module->status == STATUS_BUSY) {
 		return STATUS_BUSY;
 	}
-	
+
 	dummy_write = dummy;
 	/* Issue internal read */
 	_spi_read_buffer(module, rx_data, length);
@@ -371,7 +371,7 @@ enum status_code spi_transceive_buffer_job(
 	if (module->status == STATUS_BUSY) {
 		return STATUS_BUSY;
 	}
-	
+
 	/* Issue internal transceive */
 	_spi_transceive_buffer(module, tx_data, rx_data, length);
 
@@ -394,10 +394,14 @@ void spi_abort_job(
 		= &(module->hw->SPI);
 
 	/* Abort ongoing job */
-	
+
 	/* Disable interrupts */
-	spi_hw->INTENCLR.reg = SPI_INTERRUPT_FLAG_RX_COMPLETE | 
+	spi_hw->INTENCLR.reg = SPI_INTERRUPT_FLAG_RX_COMPLETE |
 			SPI_INTERRUPT_FLAG_DATA_REGISTER_EMPTY |
+		#if SAMD21
+			SPI_INTERRUPT_FLAG_SLAVE_SEL_LOW |
+			SPI_INTERRUPT_FLAG_COM_ERROR |
+		#endif
 			SPI_INTERRUPT_FLAG_TX_COMPLETE;
 
 	module->status = STATUS_ABORTED;
@@ -487,7 +491,7 @@ static void _spi_read_dummy(
 	/* Pointer to the hardware module instance */
 	SercomSpi *const spi_hw = &(module->hw->SPI);
 	uint16_t flush = 0;
-	
+
 	/* Read dummy byte */
 	flush = spi_hw->DATA.reg;
 	UNUSED(flush);
@@ -575,7 +579,7 @@ void _spi_interrupt_handler(
 				/* Disable the Data Register Empty Interrupt */
 				spi_hw->INTENCLR.reg
 						= SPI_INTERRUPT_FLAG_DATA_REGISTER_EMPTY;
-				
+
 				if (module->dir == SPI_DIRECTION_WRITE &&
 						!(module->receiver_enabled)) {
 					/* Buffer sent with receiver disabled */
@@ -660,6 +664,10 @@ void _spi_interrupt_handler(
 			spi_hw->INTENCLR.reg =
 					SPI_INTERRUPT_FLAG_TX_COMPLETE |
 					SPI_INTERRUPT_FLAG_RX_COMPLETE |
+				#if SAMD21
+					SPI_INTERRUPT_FLAG_COM_ERROR |
+					SPI_INTERRUPT_FLAG_SLAVE_SEL_LOW |
+				#endif
 					SPI_INTERRUPT_FLAG_DATA_REGISTER_EMPTY;
 			/* Clear interrupt flag */
 			spi_hw->INTFLAG.reg = SPI_INTERRUPT_FLAG_TX_COMPLETE;

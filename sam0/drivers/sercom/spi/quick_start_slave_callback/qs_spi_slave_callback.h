@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 SPI Quick Start
+ * \brief SAM D2x SPI Quick Start
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_samd20_sercom_spi_slave_callback_use Quick Start Guide for SERCOM SPI Slave - Callback
+ * \page asfdoc_samd2x_sercom_spi_slave_callback_use Quick Start Guide for SERCOM SPI Slave - Callback
  *
  * In this use case, the SPI on extension header 1 of the Xplained Pro board
  * will configured with the following settings:
@@ -50,7 +50,7 @@
  * - Preloading of shift register enabled
  * - MSB of the data is transmitted first
  * - Transfer mode 0
- * - \ref asfdoc_samd20_sercom_spi_mux_setting_e
+ * - \ref asfdoc_samd2x_sercom_spi_mux_setting_e
  *   - MISO on pad 2, extension header 1, pin 16
  *   - MOSI on pad 0, extension header 1, pin 17
  *   - SCK on pad 3, extension header 1, pin 18
@@ -60,12 +60,12 @@
  * - GLCK generator 0
  *
  *
- * \section asfdoc_samd20_sercom_spi_slave_callback_use_setup Setup
+ * \section asfdoc_samd2x_sercom_spi_slave_callback_use_setup Setup
  *
- * \subsection asfdoc_samd20_sercom_spi_slave_callback_useprereq Prerequisites
+ * \subsection asfdoc_samd2x_sercom_spi_slave_callback_useprereq Prerequisites
  * The device must be connected to a SPI master which must read from the device.
  *
- * \subsection asfdoc_samd20_sercom_spi_slave_callback_use_setup_code Code
+ * \subsection asfdoc_samd2x_sercom_spi_slave_callback_use_setup_code Code
  * The following must be added to the user application source file, outside
  * any functions:
  *
@@ -89,7 +89,7 @@
  * Add to user application %main():
  * \snippet qs_spi_slave_callback.c main_start
  *
- * \subsection asfdoc_samd20_sercom_spi_slave_callback_use_workflow Workflow
+ * \subsection asfdoc_samd2x_sercom_spi_slave_callback_use_workflow Workflow
  * -# Initialize system.
  *  \snippet qs_spi_slave_callback.c system_init
  * -# Setup the SPI:
@@ -125,11 +125,11 @@
  *   -# Enable callback for buffer transmitted
  *     \snippet qs_spi_slave_callback.c en_callback
  *
- * \section asfdoc_samd20_sercom_spi_slave_callback_usecase Use Case
- * \subsection asfdoc_samd20_sercom_spi_slave_callback_usecase_code Code
+ * \section asfdoc_samd2x_sercom_spi_slave_callback_usecase Use Case
+ * \subsection asfdoc_samd2x_sercom_spi_slave_callback_usecase_code Code
  * Add the following to your user application \c main():
  * \snippet qs_spi_slave_callback.c main_use_case
- * \subsection asfdoc_samd20_sercom_spi_slave_callback_usecase_workflow Workflow
+ * \subsection asfdoc_samd2x_sercom_spi_slave_callback_usecase_workflow Workflow
  * -# Initiate a write buffer job.
  *  \snippet qs_spi_slave_callback.c write
  * -# Wait for the transfer to be complete.
@@ -137,10 +137,10 @@
  * -# Infinite loop.
  *  \snippet qs_spi_slave_callback.c inf_loop
  *
- * \section asfdoc_samd20_sercom_spi_slave_callback_use_callback Callback
+ * \section asfdoc_samd2x_sercom_spi_slave_callback_use_callback Callback
  * When the buffer is successfully transmitted to the master, the callback
  * function will be called.
- * \subsection asfdoc_samd20_sercom_spi_slave_callback_use_callback_workflow Workflow
+ * \subsection asfdoc_samd2x_sercom_spi_slave_callback_use_callback_workflow Workflow
  * -# Let the application know that the buffer is transmitted by setting the
  * global variable to true.
  *  \snippet qs_spi_slave_callback.c callback_var
