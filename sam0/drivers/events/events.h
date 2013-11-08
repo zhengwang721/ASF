@@ -47,7 +47,7 @@
 * \defgroup asfdoc_sam0_events_group SAM D2x Event System Driver (EVENTS)
 *
 * This driver for SAM D2x devices provides an interface for the configuration
-* and management of the device's peripheral event channels and users within
+* and management of the device's peripheral event resources and users within
 * the device, including the enabling and disabling of peripheral source selection
 * and synchronization of clock domains between various modules.
 *
@@ -82,11 +82,11 @@
 * lowers the latency of the system response.
 *
 * The event system is comprised of a number of freely configurable Event
-* Channels, plus a number of fixed Event Users. Each Event Channel can be
-* configured to select the input peripheral that will generate the events on
-* the channel, as well as the synchronization path and edge detection mode.
+* resources, plus a number of fixed Event Users. Each Event resource can be
+* configured to select the input peripheral that will generate the events
+* signal, as well as the synchronization path and edge detection mode.
 * The fixed-function Event Users, connected to peripherals within the device,
-* can then subscribe to an Event Channel in a one-to-many relationship in order
+* can then subscribe to an Event resource in a one-to-many relationship in order
 * to receive events as they are generated. An overview of the event system
 * chain is shown in
 * \ref asfdoc_sam0_events_module_overview_fig "the figure below".
@@ -96,7 +96,7 @@
 * digraph overview {
 * rankdir=LR;
 * node [label="Source\nPeripheral" shape=ellipse style=filled fillcolor=lightgray] src_peripheral;
-* node [label="Event\nChannel a" shape=square style=""] event_gen0;
+* node [label="Event\nResource a" shape=square style=""] event_gen0;
 * node [label="Event\nUser x" shape=square style=""] event_user0;
 * node [label="Event\nUser y" shape=square style=""] event_user1;
 * node [label="Destination\nPeripheral" shape=ellipse style=filled fillcolor=lightgray] dst_peripheral0;
