@@ -54,9 +54,4 @@
 /** Configure USART0 CTS pin */
 #define CONF_BOARD_USART0_CTS
 
-/* TXD pin configuration. */
-#define PIN_USART_TXD_IDX          PIN_USART0_TXD_IDX
-#define PIN_USART_TXD_FLAGS        (PIO_PERIPH_A | PIO_DEFAULT)
-#define PIN_USART_TXD_IO_FLAGS     (PIO_OUTPUT_0 | PIO_DEFAULT)
-
 #endif /* CONF_BOARD_H_INCLUDED */

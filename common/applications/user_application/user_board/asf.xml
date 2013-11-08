@@ -389,14 +389,4 @@
 		<generator value="doxygen"/>
 		<device-support value="atsam4n16c"/>
 	</project>	
-	<project id="common.applications.user_application.user_board.sam4cp16b" caption="User board project template for SAM4CP16B" type="template">
-		<info type="description" value="summary">
-		User board project template for SAM4CP16B devices.
-		</info>
-		<require idref="common.applications.user_application.user_board.common"/>
-		<require idref="board.user_board.sam4cp16b"/>
-		<generator value="as5_arm_template"/>
-		<generator value="doxygen"/>
-		<device-support value="atsam4cp16b_0"/>
-	</project>	
 </asf>

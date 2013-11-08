@@ -70,7 +70,6 @@
  * tested with the following setup:<BR>
  * - SAM4E evaluation kit.
  * - SAM4C evaluation kit.
- * - SAM4CP evaluation kit.
  *
  * \section setupinfo Setup Information
  * <BR>CPU speed: <i> 120 MHz </i>
@@ -402,7 +401,7 @@ static void ecb_mode_test_dma(void)
 
 #endif
 
-#if SAM4C || SAM4CP
+#if SAM4C
 /* PDC data packet for transfer */
 pdc_packet_t g_pdc_tx_packet;
 pdc_packet_t g_pdc_rx_packet;
@@ -1083,7 +1082,7 @@ int main(void)
 			break;
 
 		case 'p':
-			#if SAM4C || SAM4CP
+			#if SAM4C
 			printf(
 					"ECB mode encryption and decryption test with PDC.\r\n");
 			ecb_mode_test_pdc();

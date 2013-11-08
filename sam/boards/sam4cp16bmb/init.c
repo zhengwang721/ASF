@@ -98,12 +98,10 @@ void board_init(void)
 	WDT->WDT_MR = WDT_MR_WDDIS;
 #endif
   
-#ifdef CONF_BOARD_32K_XTAL  
 	/* Select the crystal oscillator to be the source of the slow clock, 
 	 * as it provides a more accurate frequency 
 	*/
 	supc_switch_sclk_to_32kxtal(SUPC, 0);
-#endif
           
 	/* GPIO has been deprecated, the old code just keeps it for compatibility.
 	 * In new designs IOPORT is used instead.
@@ -124,16 +122,18 @@ void board_init(void)
 #endif
 
 	/* Configure UART0 pins */
-#ifdef CONF_BOARD_UART0  
-        ioport_set_port_peripheral_mode(PINS_UART0_PORT, PINS_UART0, PINS_UART0_FLAGS);
+#ifdef CONF_BOARD_UART0
+	ioport_set_pin_peripheral_mode(PIO_PB4_IDX, IOPORT_MODE_MUX_A);
+	ioport_set_pin_peripheral_mode(PIO_PB5_IDX, IOPORT_MODE_MUX_A);
 #endif
         
-	/* Configure UART1 pins (CONSOLE) */
-#if defined(CONF_BOARD_UART1) || defined(CONF_BOARD_UART_CONSOLE)
-	ioport_set_port_peripheral_mode(PINS_UART1_PORT, PINS_UART1, PINS_UART1_FLAGS);
-#endif     
+	/* Configure UART1 pins */
+#ifdef (CONF_BOARD_UART1 || CONF_BOARD_UART_CONSOLE)
+	ioport_set_pin_peripheral_mode(PIO_PC0_IDX, IOPORT_MODE_MUX_A);
+	ioport_set_pin_peripheral_mode(PIO_PC1_IDX, IOPORT_MODE_MUX_A);
+#endif
 
-	/* Configure LCD enable */
+        /* Configure LCD enable */
 #ifdef CONF_BOARD_LCD_EN
 	ioport_set_pin_dir(LCD_EN_GPIO, IOPORT_DIR_OUTPUT);
 	ioport_set_pin_level(LCD_EN_GPIO, LCD_BL_ACTIVE_LEVEL);
@@ -155,7 +155,6 @@ void board_init(void)
 	ioport_set_pin_peripheral_mode(SPI1_SPCK_GPIO, SPI1_SPCK_FLAGS);
 	ioport_set_pin_peripheral_mode(SPI1_NPCS0_GPIO, SPI1_NPCS0_FLAGS);
 #endif
-
 	/* Configure TWI pins */
 #ifdef CONF_BOARD_TWI0
 	ioport_set_pin_peripheral_mode(TWIO_DATA_GPIO, TWIO_DATA_FLAG);
@@ -212,7 +211,7 @@ void board_init(void)
 			PIN_USART1_RTS_FLAGS);
 #endif
 
-	/* Configure PPLC reset pins */
+        /* Configure PPLC reset pins */
 #ifdef CONF_BOARD_PPLC_ARST
 	ioport_set_pin_dir(PPLC_ARST_GPIO, IOPORT_DIR_OUTPUT);
 	ioport_set_pin_level(PPLC_ARST_GPIO, PPLC_ARST_INACTIVE_LEVEL);
@@ -223,7 +222,7 @@ void board_init(void)
 	ioport_set_pin_level(PPLC_SRST_GPIO, PPLC_SRST_INACTIVE_LEVEL);
 #endif   
         
-	/* Configure Xplain PRO SLP pin */
+        /* Configure Xplain PRO SLP pin */
 #ifdef CONF_BOARD_XP_SLP
 	ioport_set_pin_dir(XP_SLP_GPIO, IOPORT_DIR_OUTPUT);
 	ioport_set_pin_level(XP_SLP_GPIO, XP_SLP_INACTIVE_LEVEL);

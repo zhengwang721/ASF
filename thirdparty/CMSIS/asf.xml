@@ -41,9 +41,9 @@ and reduces time-to-market for new embedded applications.
 			<device-support value="sam4l"/>
 			<device-support value="sam4n"/>
 			<device-support value="atsam4c8c_0"/>
-			<device-support value="atsam4c16c_0"/>
+			<device-support value="atsam4c16c_0"/>			
+			<device-support value="atsam4cp16b_0"/>
 			<device-support value="unspecified-sam4c"/>    <!-- A workaround for Jenkin doxygen-module check -->
-			<device-support value="unspecified-sam4cp"/>    <!-- A workaround for Jenkin doxygen-module check -->
 			<require idref="thirdparty.cmsis.license"/>
 			<info type="gui-flag" value="hidden"/>
 		</module>
@@ -66,6 +66,7 @@ and reduces time-to-market for new embedded applications.
 			<device-support value="sam4e"/>
 			<device-support value="atsam4c8c_1"/>
 			<device-support value="atsam4c16c_1"/>
+			<device-support value="atsam4cp16b_1"/>
 			<require idref="thirdparty.cmsis.license"/>
 			<info type="gui-flag" value="hidden"/>
 		</module>

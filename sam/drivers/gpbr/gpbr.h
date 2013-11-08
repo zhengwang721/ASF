@@ -65,7 +65,7 @@ typedef enum gpbr_num_type {
 	GPBR5,
 	GPBR6,
 	GPBR7,
-#if (SAM4C || SAM4CP)
+#if SAM4C
 	GPBR8,
 	GPBR9,
 	GPBR10,

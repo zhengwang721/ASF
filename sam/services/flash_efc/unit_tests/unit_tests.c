@@ -187,7 +187,8 @@ static void run_flash_configure_test(const struct test_case *test)
 		test_assert_true(test, ul_tmp_ws == 4,
 				"Test flash configure:adaptively set wait state error!");
 	}
-#elif (SAM4S || SAM4E || SAM4N || SAM4C || SAM4CP)	} else if (ul_mck < CHIP_FREQ_FWS_3) {
+#elif (SAM4S || SAM4E || SAM4N || SAM4C)
+	} else if (ul_mck < CHIP_FREQ_FWS_3) {
 		ul_tmp_ws =  flash_get_wait_state(IFLASH_ADDR);
 		test_assert_true(test, ul_tmp_ws == 3,
 				"Test flash configure:adaptively set wait state error!");
