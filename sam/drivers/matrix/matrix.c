@@ -71,6 +71,14 @@ extern "C" {
 #endif
 #endif
 
+#if SAM4CP
+#ifdef SAM4CP_0
+#define MATRIX MATRIX0
+#else
+#define MATRIX MATRIX1
+#endif
+#endif
+
 #ifndef MATRIX_WPMR_WPKEY_PASSWD
 #define MATRIX_WPMR_WPKEY_PASSWD    MATRIX_WPMR_WPKEY(0x4D4154U)
 #endif
@@ -202,7 +210,7 @@ uint32_t matrix_get_slave_fixed_default_master(uint32_t ul_id)
 	return (ul_reg >> MATRIX_SCFG_FIXED_DEFMSTR_Pos);
 }
 
-#if !SAM4E && !SAM4C
+#if !SAM4E && !SAM4C && !SAM4CP
 
 /**
  * \brief Set slave arbitration type of the specified slave.
@@ -308,7 +316,7 @@ uint32_t matrix_get_master_remap(void)
 
 #endif /* (SAM3XA || SAM3U || SAM4E) */
 
-#if (SAM3S || SAM3XA || SAM3N || SAM4S || SAM4E || SAM4N || SAM4C)
+#if (SAM3S || SAM3XA || SAM3N || SAM4S || SAM4E || SAM4N || SAM4C || SAM4CP)
 
 /**
  * \brief Set system IO.
@@ -319,7 +327,11 @@ void matrix_set_system_io(uint32_t ul_io)
 {
 	Matrix *p_matrix = MATRIX;
 
+#if (!SAM4CP)
 	p_matrix->CCFG_SYSIO = ul_io;
+#else
+        p_matrix->MATRIX_SYSIO = ul_io;
+#endif
 }
 
 /**
@@ -331,12 +343,16 @@ uint32_t matrix_get_system_io(void)
 {
 	Matrix *p_matrix = MATRIX;
 
+#if (!SAM4CP)
 	return (p_matrix->CCFG_SYSIO);
+#else
+        return (p_matrix->MATRIX_SYSIO);
+#endif
 }
 
-#endif /* (SAM3S || SAM3XA || SAM3N || SAM4S || SAM4E || SAM4C) */
+#endif /* (SAM3S || SAM3XA || SAM3N || SAM4S || SAM4E || SAM4C || SAM4CP) */
 
-#if (SAM3S || SAM4S || SAM4E || SAM4C)
+#if (SAM3S || SAM4S || SAM4E || SAM4C || SAM4CP)
 
 /**
  * \brief Set NAND Flash Chip Select configuration register.
@@ -348,7 +364,11 @@ void matrix_set_nandflash_cs(uint32_t ul_cs)
 {
 	Matrix *p_matrix = MATRIX;
 
+#if (!SAM4CP)        
 	p_matrix->CCFG_SMCNFCS = ul_cs;
+#else        
+        p_matrix->MATRIX_SMCNFCS = ul_cs;
+#endif      
 }
 
 /**
@@ -359,11 +379,15 @@ void matrix_set_nandflash_cs(uint32_t ul_cs)
 uint32_t matrix_get_nandflash_cs(void)
 {
 	Matrix *p_matrix = MATRIX;
-
+        
+#if (!SAM4CP)   
 	return (p_matrix->CCFG_SMCNFCS);
+#else
+        return (p_matrix->MATRIX_SMCNFCS);
+#endif        
 }
 
-#endif /* (SAM3S || SAM4S || SAM4E || SAM4C) */
+#endif /* (SAM3S || SAM4S || SAM4E || SAM4C || SAM4CP) */
 
 /**
  * \brief Enable or disable write protect of MATRIX registers.

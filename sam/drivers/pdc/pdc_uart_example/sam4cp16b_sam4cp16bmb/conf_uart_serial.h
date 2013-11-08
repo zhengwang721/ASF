@@ -44,8 +44,9 @@
 #ifndef CONF_USART_SERIAL_H
 #define CONF_USART_SERIAL_H
 
+
 /** UART Interface */
-#define CONF_UART            CONSOLE_UART
+#define CONF_UART            UART0
 /** Baudrate setting */
 #define CONF_UART_BAUDRATE   115200
 /** Parity setting */

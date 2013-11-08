@@ -71,8 +71,12 @@
 /** Core definition */
 #define cortexm4
 /** Board revision definition */
-#define BOARD_REV_1     0
-#define BOARD_REV_2     1
+#define BOARD_REV_1     1
+#define BOARD_REV_2     2
+
+#ifndef BOARD_REV
+#define BOARD_REV BOARD_REV_2
+#endif
 
 
 /** PLC Timers Configuration */
@@ -152,6 +156,14 @@
 /* @} */
 
 /**
+ * \name Voltage Monitor pins definition
+ * @{
+ */
+#define V5V_SENSE_GPIO   PIO_PB23_IDX
+#define VDD_SENSE_GPIO   PIO_PB31_IDX
+/* @} */
+
+/**
  * \name LCD Backlight
  */
 //@{
@@ -208,11 +220,11 @@
  * \name UART1 pis (UTXD1 and URXD1) definitions
  * @{
  */
-#define PINS_UART1        (PIO_PC0A_URXD0 | PIO_PC1A_UTXD0)
+#define PINS_UART1        (PIO_PC1A_URXD1 | PIO_PC0A_UTXD1)
 #define PINS_UART1_FLAGS  (IOPORT_MODE_MUX_A)
 
 #define PINS_UART1_PORT   IOPORT_PIOC
-#define PINS_UART1_MASK   (PIO_PC0A_URXD0 | PIO_PC1A_UTXD0)
+#define PINS_UART1_MASK   (PIO_PC1A_URXD1 | PIO_PC0A_UTXD1)
 #define PINS_UART1_PIO    PIOC
 #define PINS_UART1_ID     ID_PIOC
 #define PINS_UART1_TYPE   PIO_PERIPH_A

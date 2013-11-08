@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM4C-EK LEDs support package.
+ * \brief SAM4CP16BMB LEDs support package.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
