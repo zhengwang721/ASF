@@ -240,6 +240,10 @@
 #  error CONF_CLOCK_DPLL_WAKE_UP_FAST not defined in conf_clock.h
 #endif
 
+#if !defined(CONF_CLOCK_DPLL_LOW_POWER_ENABLE)
+#  error CONF_CLOCK_DPLL_LOW_POWER_ENABLE not defined in conf_clock.h
+#endif
+
 #if !defined(CONF_CLOCK_DPLL_LOCK_TIME)
 #  error CONF_CLOCK_DPLL_LOCK_TIME not defined in conf_clock.h
 #endif

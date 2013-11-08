@@ -390,8 +390,8 @@ void system_clock_source_dfll_set_config(
 			(uint32_t)config->stable_tracking |
 			(uint32_t)config->quick_lock      |
 			(uint32_t)config->chill_cycle     |
-			(uint32_t)config->run_in_standby << SYSCTRL_DFLLCTRL_RUNSTDBY_Pos |
-			(uint32_t)config->on_demand << SYSCTRL_DFLLCTRL_ONDEMAND_Pos;
+			((uint32_t)config->run_in_standby << SYSCTRL_DFLLCTRL_RUNSTDBY_Pos) |
+			((uint32_t)config->on_demand << SYSCTRL_DFLLCTRL_ONDEMAND_Pos);
 
 	if (config->loop_mode == SYSTEM_CLOCK_DFLL_LOOP_MODE_CLOSED) {
 
@@ -432,7 +432,10 @@ void system_clock_source_dfll_set_config(
  * \param[in] calibration_value  Calibration value to write
  * \param[in] freq_range         Frequency range (8MHz oscillator only)
  *
- * \retval STATUS_ERR_INVALID_ARG  The selected clock source is not available
+ * \retval STATUS_OK               The calibration value was written 
+ *                                 successfully.
+ * \retval STATUS_ERR_INVALID_ARG  The setting is not valid for selected clock 
+ *                                 source.
  */
 enum status_code system_clock_source_write_calibration(
 		const enum system_clock_source clock_source,
@@ -489,8 +492,6 @@ enum status_code system_clock_source_write_calibration(
  *                                 is ready
  * \retval STATUS_ERR_INVALID_ARG  The clock source is not available on this
  *                                 device
- *
- * \retval STATUS_ERR_NOT_INITIALIZED DFLL configuration is not initialized
  */
 enum status_code system_clock_source_enable(
 		const enum system_clock_source clock_source)
@@ -666,7 +667,6 @@ bool system_clock_source_is_ready(
  */
 void system_clock_init(void)
 {
-	/* Workaround for errata 10558 */
 	SYSCTRL->INTFLAG.reg = SYSCTRL_INTFLAG_BOD12RDY | SYSCTRL_INTFLAG_BOD33RDY |
                         SYSCTRL_INTFLAG_BOD12DET | SYSCTRL_INTFLAG_BOD33DET |
                         SYSCTRL_INTFLAG_DFLLRDY;
