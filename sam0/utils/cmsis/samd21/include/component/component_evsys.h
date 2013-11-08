@@ -148,6 +148,8 @@ typedef union {
 #define EVSYS_USER_CHANNEL_Pos      8            /**< \brief (EVSYS_USER) Channel Event Selection */
 #define EVSYS_USER_CHANNEL_Msk      (0x1Fu << EVSYS_USER_CHANNEL_Pos)
 #define EVSYS_USER_CHANNEL(value)   ((EVSYS_USER_CHANNEL_Msk & ((value) << EVSYS_USER_CHANNEL_Pos)))
+#define   EVSYS_USER_CHANNEL_0_Val        0x0u   /**< \brief (EVSYS_USER) No Channel Output Selected */
+#define EVSYS_USER_CHANNEL_0        (EVSYS_USER_CHANNEL_0_Val      << EVSYS_USER_CHANNEL_Pos)
 #define EVSYS_USER_MASK             0x1F1Fu      /**< \brief (EVSYS_USER) MASK Register */
 
 /* -------- EVSYS_CHSTATUS : (EVSYS Offset: 0x0C) (R/  32) Channel Status -------- */
@@ -186,7 +188,7 @@ typedef union {
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #define EVSYS_CHSTATUS_OFFSET       0x0C         /**< \brief (EVSYS_CHSTATUS offset) Channel Status */
-#define EVSYS_CHSTATUS_RESETVALUE   0x00000000   /**< \brief (EVSYS_CHSTATUS reset_value) Channel Status */
+#define EVSYS_CHSTATUS_RESETVALUE   0x000F00FF   /**< \brief (EVSYS_CHSTATUS reset_value) Channel Status */
 
 #define EVSYS_CHSTATUS_USRRDY0_Pos  0            /**< \brief (EVSYS_CHSTATUS) Channel 0 User Ready */
 #define EVSYS_CHSTATUS_USRRDY0      (1 << EVSYS_CHSTATUS_USRRDY0_Pos)

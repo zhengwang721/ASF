@@ -244,7 +244,7 @@ typedef union {
     uint8_t  STATE1:1;         /*!< bit:      1  Comparator 1 Current State         */
     uint8_t  :2;               /*!< bit:  2.. 3  Reserved                           */
     uint8_t  WSTATE0:2;        /*!< bit:  4.. 5  Window 0 Current State             */
-    uint8_t  WSTATE1:2;        /*!< bit:  6.. 7  Window 1 Current State             */
+    uint8_t  :2;               /*!< bit:  6.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } AC_STATUSA_Type;
@@ -269,16 +269,7 @@ typedef union {
 #define AC_STATUSA_WSTATE0_ABOVE    (AC_STATUSA_WSTATE0_ABOVE_Val  << AC_STATUSA_WSTATE0_Pos)
 #define AC_STATUSA_WSTATE0_INSIDE   (AC_STATUSA_WSTATE0_INSIDE_Val << AC_STATUSA_WSTATE0_Pos)
 #define AC_STATUSA_WSTATE0_BELOW    (AC_STATUSA_WSTATE0_BELOW_Val  << AC_STATUSA_WSTATE0_Pos)
-#define AC_STATUSA_WSTATE1_Pos      6            /**< \brief (AC_STATUSA) Window 1 Current State */
-#define AC_STATUSA_WSTATE1_Msk      (0x3u << AC_STATUSA_WSTATE1_Pos)
-#define AC_STATUSA_WSTATE1(value)   ((AC_STATUSA_WSTATE1_Msk & ((value) << AC_STATUSA_WSTATE1_Pos)))
-#define   AC_STATUSA_WSTATE1_ABOVE_Val    0x0u   /**< \brief (AC_STATUSA) Signal is above window */
-#define   AC_STATUSA_WSTATE1_INSIDE_Val   0x1u   /**< \brief (AC_STATUSA) Signal is inside window */
-#define   AC_STATUSA_WSTATE1_BELOW_Val    0x2u   /**< \brief (AC_STATUSA) Signal is below window */
-#define AC_STATUSA_WSTATE1_ABOVE    (AC_STATUSA_WSTATE1_ABOVE_Val  << AC_STATUSA_WSTATE1_Pos)
-#define AC_STATUSA_WSTATE1_INSIDE   (AC_STATUSA_WSTATE1_INSIDE_Val << AC_STATUSA_WSTATE1_Pos)
-#define AC_STATUSA_WSTATE1_BELOW    (AC_STATUSA_WSTATE1_BELOW_Val  << AC_STATUSA_WSTATE1_Pos)
-#define AC_STATUSA_MASK             0xF3u        /**< \brief (AC_STATUSA) MASK Register */
+#define AC_STATUSA_MASK             0x33u        /**< \brief (AC_STATUSA) MASK Register */
 
 /* -------- AC_STATUSB : (AC Offset: 0x09) (R/   8) Status B -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -315,7 +306,7 @@ typedef union {
     uint8_t  STATE1:1;         /*!< bit:      1  Comparator 1 Current State         */
     uint8_t  :2;               /*!< bit:  2.. 3  Reserved                           */
     uint8_t  WSTATE0:2;        /*!< bit:  4.. 5  Window 0 Current State             */
-    uint8_t  WSTATE1:2;        /*!< bit:  6.. 7  Window 1 Current State             */
+    uint8_t  :2;               /*!< bit:  6.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } AC_STATUSC_Type;
@@ -340,16 +331,7 @@ typedef union {
 #define AC_STATUSC_WSTATE0_ABOVE    (AC_STATUSC_WSTATE0_ABOVE_Val  << AC_STATUSC_WSTATE0_Pos)
 #define AC_STATUSC_WSTATE0_INSIDE   (AC_STATUSC_WSTATE0_INSIDE_Val << AC_STATUSC_WSTATE0_Pos)
 #define AC_STATUSC_WSTATE0_BELOW    (AC_STATUSC_WSTATE0_BELOW_Val  << AC_STATUSC_WSTATE0_Pos)
-#define AC_STATUSC_WSTATE1_Pos      6            /**< \brief (AC_STATUSC) Window 1 Current State */
-#define AC_STATUSC_WSTATE1_Msk      (0x3u << AC_STATUSC_WSTATE1_Pos)
-#define AC_STATUSC_WSTATE1(value)   ((AC_STATUSC_WSTATE1_Msk & ((value) << AC_STATUSC_WSTATE1_Pos)))
-#define   AC_STATUSC_WSTATE1_ABOVE_Val    0x0u   /**< \brief (AC_STATUSC) Signal is above window */
-#define   AC_STATUSC_WSTATE1_INSIDE_Val   0x1u   /**< \brief (AC_STATUSC) Signal is inside window */
-#define   AC_STATUSC_WSTATE1_BELOW_Val    0x2u   /**< \brief (AC_STATUSC) Signal is below window */
-#define AC_STATUSC_WSTATE1_ABOVE    (AC_STATUSC_WSTATE1_ABOVE_Val  << AC_STATUSC_WSTATE1_Pos)
-#define AC_STATUSC_WSTATE1_INSIDE   (AC_STATUSC_WSTATE1_INSIDE_Val << AC_STATUSC_WSTATE1_Pos)
-#define AC_STATUSC_WSTATE1_BELOW    (AC_STATUSC_WSTATE1_BELOW_Val  << AC_STATUSC_WSTATE1_Pos)
-#define AC_STATUSC_MASK             0xF3u        /**< \brief (AC_STATUSC) MASK Register */
+#define AC_STATUSC_MASK             0x33u        /**< \brief (AC_STATUSC) MASK Register */
 
 /* -------- AC_WINCTRL : (AC Offset: 0x0C) (R/W  8) Window Control -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -357,10 +339,7 @@ typedef union {
   struct {
     uint8_t  WEN0:1;           /*!< bit:      0  Window 0 Mode Enable               */
     uint8_t  WINTSEL0:2;       /*!< bit:  1.. 2  Window 0 Interrupt Selection       */
-    uint8_t  :1;               /*!< bit:      3  Reserved                           */
-    uint8_t  WEN1:1;           /*!< bit:      4  Window 1 Mode Enable               */
-    uint8_t  WINTSEL1:2;       /*!< bit:  5.. 6  Window 1 Interrupt Selection       */
-    uint8_t  :1;               /*!< bit:      7  Reserved                           */
+    uint8_t  :5;               /*!< bit:  3.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } AC_WINCTRL_Type;
@@ -382,20 +361,7 @@ typedef union {
 #define AC_WINCTRL_WINTSEL0_INSIDE  (AC_WINCTRL_WINTSEL0_INSIDE_Val << AC_WINCTRL_WINTSEL0_Pos)
 #define AC_WINCTRL_WINTSEL0_BELOW   (AC_WINCTRL_WINTSEL0_BELOW_Val << AC_WINCTRL_WINTSEL0_Pos)
 #define AC_WINCTRL_WINTSEL0_OUTSIDE (AC_WINCTRL_WINTSEL0_OUTSIDE_Val << AC_WINCTRL_WINTSEL0_Pos)
-#define AC_WINCTRL_WEN1_Pos         4            /**< \brief (AC_WINCTRL) Window 1 Mode Enable */
-#define AC_WINCTRL_WEN1             (0x1u << AC_WINCTRL_WEN1_Pos)
-#define AC_WINCTRL_WINTSEL1_Pos     5            /**< \brief (AC_WINCTRL) Window 1 Interrupt Selection */
-#define AC_WINCTRL_WINTSEL1_Msk     (0x3u << AC_WINCTRL_WINTSEL1_Pos)
-#define AC_WINCTRL_WINTSEL1(value)  ((AC_WINCTRL_WINTSEL1_Msk & ((value) << AC_WINCTRL_WINTSEL1_Pos)))
-#define   AC_WINCTRL_WINTSEL1_ABOVE_Val   0x0u   /**< \brief (AC_WINCTRL) Interrupt on signal above window */
-#define   AC_WINCTRL_WINTSEL1_INSIDE_Val  0x1u   /**< \brief (AC_WINCTRL) Interrupt on signal inside window */
-#define   AC_WINCTRL_WINTSEL1_BELOW_Val   0x2u   /**< \brief (AC_WINCTRL) Interrupt on signal below window */
-#define   AC_WINCTRL_WINTSEL1_OUTSIDE_Val 0x3u   /**< \brief (AC_WINCTRL) Interrupt on signal outside window */
-#define AC_WINCTRL_WINTSEL1_ABOVE   (AC_WINCTRL_WINTSEL1_ABOVE_Val << AC_WINCTRL_WINTSEL1_Pos)
-#define AC_WINCTRL_WINTSEL1_INSIDE  (AC_WINCTRL_WINTSEL1_INSIDE_Val << AC_WINCTRL_WINTSEL1_Pos)
-#define AC_WINCTRL_WINTSEL1_BELOW   (AC_WINCTRL_WINTSEL1_BELOW_Val << AC_WINCTRL_WINTSEL1_Pos)
-#define AC_WINCTRL_WINTSEL1_OUTSIDE (AC_WINCTRL_WINTSEL1_OUTSIDE_Val << AC_WINCTRL_WINTSEL1_Pos)
-#define AC_WINCTRL_MASK             0x77u        /**< \brief (AC_WINCTRL) MASK Register */
+#define AC_WINCTRL_MASK             0x07u        /**< \brief (AC_WINCTRL) MASK Register */
 
 /* -------- AC_COMPCTRL : (AC Offset: 0x10) (R/W 32) Comparator Control n -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))

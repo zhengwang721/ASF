@@ -361,7 +361,7 @@ void I2S_Handler                 ( void );
 #define ID_DAC           82 /**< \brief Digital Analog Converter (DAC) */
 #define ID_I2S           83 /**< \brief Inter-IC Sound Interface (I2S) */
 
-#define ID_PERIPH_COUNT  86 /**< \brief Number of peripheral IDs */
+#define ID_PERIPH_COUNT  84 /**< \brief Number of peripheral IDs */
 /*@}*/
 
 /* ************************************************************************** */
