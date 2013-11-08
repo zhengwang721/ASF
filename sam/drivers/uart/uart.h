@@ -94,7 +94,7 @@ uint32_t uart_write(Uart *p_uart, const uint8_t uc_data);
 uint32_t uart_read(Uart *p_uart, uint8_t *puc_data);
 Pdc *uart_get_pdc_base(Uart *p_uart);
 
-#if (SAM4C || SAM4CP)
+#if SAM4C
 enum uart_optical_duty_cycle {
 	UART_MOD_CLK_DUTY_50_00 = UART_MR_OPT_DUTY_DUTY_50,
 	UART_MOD_CLK_DUTY_43_75 = UART_MR_OPT_DUTY_DUTY_43P75,

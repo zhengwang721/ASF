@@ -941,21 +941,6 @@
 /** @} */
 
 /**
- * \name SAM4CP series
- * @{
- */
-#define SAM4CP16_0 ( \
-		SAM_PART_IS_DEFINED(SAM4CP16B_0) \
-		)
-
-#define SAM4CP16_1 ( \
-		SAM_PART_IS_DEFINED(SAM4CP16B_1) \
-		)
-
-#define SAM4CP16 (SAM4CP16_0 || SAM4CP16_1)
-/** @} */
-
-/**
  * \name SAM families
  * @{
  */
@@ -991,16 +976,11 @@
 #define SAM4C_1 (SAM4C8_1 || SAM4C16_1)
 #define SAM4C   (SAM4C8 || SAM4C16)
 
-/** SAM4CP Family */
-#define SAM4CP_0 (SAM4CP16_0)
-#define SAM4CP_1 (SAM4CP16_1)
-#define SAM4CP   (SAM4CP16)
-
 /** @} */
 
 /** SAM product line */
 #define SAM (SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S || SAM4L || SAM4E || \
-		SAMD20 || SAM4N || SAM4C || SAM4CP)
+		SAMD20 || SAM4N || SAM4C)
 
 /** @} */
 

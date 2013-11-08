@@ -97,9 +97,4 @@
 #  include "sam4c.h"
 #endif
 
-/* SAM4CP series */
-#if (SAM4CP)
-#  include "sam4cp.h"
-#endif
-
 #endif /* _SAM_IO_ */

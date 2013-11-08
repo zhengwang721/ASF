@@ -3,7 +3,7 @@
  *
  * \brief Global interrupt management for 8- and 32-bit AVR
  *
- * Copyright (c) 2010-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
