@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief API driver for AT25DFx SerialFlash component.
+ * \brief AT25DFx SerialFlash driver interface.
  *
  * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
@@ -44,8 +44,17 @@
 #ifndef AT25DFX_H
 #define AT25DFX_H
 
+/**
+ * \defgroup asfdoc_common2_at25dfx_group AT25DFx SerialFlash Driver
+ *
+ * This driver provides an interface for basic use of SerialFlash devices.
+ *
+ * @{
+ */
+
 #include <compiler.h>
 
+//! SerialFlash type.
 enum at25dfx_type {
 	//! AT25F512B, compatible with AT25BCM512B
 	AT25DFX_512B,
@@ -74,7 +83,7 @@ enum at25dfx_type {
 /**
  * Size of block to erase.
  *
- * \note Not all chips support 64KB block erase.
+ * \note A 64kB block erase results in a 32kB erase on AT25DFX_512B.
  */
 enum at25dfx_block_size {
 	//! 4 kiloByte block size.
@@ -93,14 +102,19 @@ typedef uint16_t at25dfx_datalen_t;
 
 //! SerialFlash chip driver instance.
 struct at25dfx_chip_module {
+	//! SPI module to use.
 	struct spi_module *spi;
+	//! Type of SerialFlash
 	enum at25dfx_type type;
+	//! Chip Select (CS) pin.
 	uint8_t cs_pin;
 };
 
 //! SerialFlash chip configuration.
 struct at25dfx_chip_config {
+	//! Type of SerialFlash
 	enum at25dfx_type type;
+	//! Chip Select (CS) pin.
 	uint8_t cs_pin;
 };
 
@@ -139,13 +153,29 @@ extern "C" {
 #endif
 
 enum status_code at25dfx_chip_check_presence(struct at25dfx_chip_module *chip);
+
+//! \name Read/Write
+//@{
 enum status_code at25dfx_chip_read_buffer(struct at25dfx_chip_module *chip,
 		at25dfx_address_t address, void *data, at25dfx_datalen_t length);
 enum status_code at25dfx_chip_write_buffer(struct at25dfx_chip_module *chip,
 		at25dfx_address_t address, void *data, at25dfx_datalen_t length);
+//@}
+
+//! \name Erase
+//@{
 enum status_code at25dfx_chip_erase(struct at25dfx_chip_module *chip);
 enum status_code at25dfx_chip_block_erase(struct at25dfx_chip_module *chip,
 		uint32_t address, enum at25dfx_block_size block_size);
+//@}
+
+/**
+ * \name Sector Protect
+ *
+ * \note See the datasheet for details about the availability and granularity
+ * of sector-level protection. Global-level protection is always available.
+ */
+//@{
 enum status_code at25dfx_chip_set_global_sector_protect(
 		struct at25dfx_chip_module *chip, bool protect);
 enum status_code at25dfx_chip_set_sector_protect(
@@ -154,11 +184,18 @@ enum status_code at25dfx_chip_set_sector_protect(
 enum status_code at25dfx_chip_get_sector_protect(
 		struct at25dfx_chip_module *chip, at25dfx_address_t address,
 		bool *protect);
+//@}
+
+//! \name Sleep/Wake
+//@{
 enum status_code at25dfx_chip_sleep(struct at25dfx_chip_module *chip);
 enum status_code at25dfx_chip_wake(struct at25dfx_chip_module *chip);
+//@}
 
 #ifdef __cplusplus
 }
 #endif
+
+/** @{ */
 
 #endif // AT25DFX_H
