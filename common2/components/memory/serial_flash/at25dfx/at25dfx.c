@@ -15,6 +15,8 @@ enum at25dfx_command_opcode {
 	AT25DFX_COMMAND_PROTECT_SECTOR       = 0x36,
 	AT25DFX_COMMAND_UNPROTECT_SECTOR     = 0x39,
 	AT25DFX_COMMAND_READ_PROTECT_SECTOR  = 0x3c,
+	AT25DFX_COMMAND_SLEEP                = 0xb9,
+	AT25DFX_COMMAND_WAKE                 = 0xab,
 };
 
 #define AT25DFX_PAGE_SIZE         256
@@ -448,6 +450,50 @@ enum status_code at25dfx_chip_get_sector_protect(
 	cmd.length = 1;
 	cmd.data = (uint8_t *)&protect;
 	_at25dfx_chip_issue_read_command_wait(chip, cmd);
+
+	spi_unlock(chip->spi);
+
+	return STATUS_OK;
+}
+
+enum status_code at25dfx_chip_sleep(struct at25dfx_chip_module *chip)
+{
+	enum status_code status;
+	struct at25dfx_command cmd;
+
+	Assert(chip);
+
+	status = spi_lock(chip->spi);
+	if (status == STATUS_BUSY) {
+		return status;
+	}
+
+	cmd.opcode = AT25DFX_COMMAND_SLEEP;
+	cmd.command_size = 1;
+	cmd.length = 0;
+	_at25dfx_chip_issue_write_command_wait(chip, cmd);
+
+	spi_unlock(chip->spi);
+
+	return STATUS_OK;
+}
+
+enum status_code at25dfx_chip_wake(struct at25dfx_chip_module *chip)
+{
+	enum status_code status;
+	struct at25dfx_command cmd;
+
+	Assert(chip);
+
+	status = spi_lock(chip->spi);
+	if (status == STATUS_BUSY) {
+		return status;
+	}
+
+	cmd.opcode = AT25DFX_COMMAND_WAKE;
+	cmd.command_size = 1;
+	cmd.length = 0;
+	_at25dfx_chip_issue_write_command_wait(chip, cmd);
 
 	spi_unlock(chip->spi);
 

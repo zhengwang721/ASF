@@ -153,6 +153,8 @@ enum status_code at25dfx_chip_set_sector_protect(
 enum status_code at25dfx_chip_get_sector_protect(
 		struct at25dfx_chip_module *chip, at25dfx_address_t address,
 		bool *protect);
+enum status_code at25dfx_chip_sleep(struct at25dfx_chip_module *chip);
+enum status_code at25dfx_chip_wake(struct at25dfx_chip_module *chip);
 
 #ifdef __cplusplus
 }
