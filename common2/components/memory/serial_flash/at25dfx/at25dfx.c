@@ -59,32 +59,35 @@ struct at25dfx_command {
 static inline uint32_t _at25dfx_get_device_id(enum at25dfx_type type)
 {
 	switch (type) {
-	case AT25DFX_041A:
-		return 0x0001441F;
-
-	case AT25DFX_161:
-		return 0x0002461F;
-
-	case AT25DFX_081A:
-		return 0x0101451F;
-
-	case AT25DFX_0161:
-		return 0x0000461F;
-
-	case AT25DFX_161A:
-		return 0x0001461F;
-
-	case AT25DFX_321:
-		return 0x0000471F;
-
-	case AT25DFX_321A:
-		return 0x0001471F;
+	case AT25DFX_512B:
+		return 0x00651f;
 
 	case AT25DFX_021:
-		return 0x0000431F;
+		return 0x00431f;
 
-	case AT25DFX_641A:
-		return 0x0000481F;
+	case AT25DFX_041A:
+		return 0x01441f;
+
+	case AT25DFX_081:
+		return 0x02451f;
+
+	case AT25DFX_081A:
+		return 0x01451f;
+
+	case AT25DFX_161:
+		return 0x02461f;
+
+	case AT25DFX_L161:
+		return 0x03461f;
+
+	case AT25DFX_Q161:
+		return 0x00861f;
+
+	case AT25DFX_321A:
+		return 0x01471f;
+
+	case AT25DFX_641:
+		return 0x00481f;
 
 	default:
 		Assert(false);
@@ -102,26 +105,29 @@ static inline uint32_t _at25dfx_get_device_id(enum at25dfx_type type)
 static inline uint32_t _at25dfx_get_device_size(enum at25dfx_type type)
 {
 	switch (type) {
+	case AT25DFX_512B:
+		return 64 * 1024UL;
+
 	case AT25DFX_021:
-		return 256 * 1024;
+		return 256 * 1024UL;
 
 	case AT25DFX_041A:
-		return 512 * 1024;
+		return 512 * 1024UL;
 
+	case AT25DFX_081:
 	case AT25DFX_081A:
-		return 1 * 1024 * 1024;
+		return 1024 * 1024UL;
 
 	case AT25DFX_161:
-	case AT25DFX_0161:
-	case AT25DFX_161A:
-		return 2 * 1024 * 1024;
+	case AT25DFX_L161:
+	case AT25DFX_Q161:
+		return 2048 * 1024UL;
 
-	case AT25DFX_321:
 	case AT25DFX_321A:
-		return 4 * 1024 * 1024;
+		return 4096 * 1024UL;
 
-	case AT25DFX_641A:
-		return 8 * 1024 * 1024;
+	case AT25DFX_641:
+		return 8192 * 1024UL;
 
 	default:
 		Assert(false);
@@ -174,7 +180,7 @@ enum status_code at25dfx_chip_check_presence(struct at25dfx_chip_module *chip)
 {
 	enum status_code status;
 	struct at25dfx_command cmd;
-	uint32_t id;
+	uint32_t id = 0;
 
 	Assert(chip);
 
@@ -187,7 +193,7 @@ enum status_code at25dfx_chip_check_presence(struct at25dfx_chip_module *chip)
 	cmd.opcode = AT25DFX_COMMAND_READ_DEVICE_ID;
 	cmd.command_size = 1;
 	cmd.data = (uint8_t *)&id;
-	cmd.length = 4;
+	cmd.length = 3;
 	_at25dfx_chip_issue_read_command_wait(chip, cmd);
 
 	spi_unlock(chip->spi);
