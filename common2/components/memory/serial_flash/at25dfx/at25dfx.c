@@ -312,6 +312,8 @@ enum status_code at25dfx_chip_write_buffer(struct at25dfx_chip_module *chip,
 	length -= cmd.length;
 
 	while (length && (status == STATUS_OK)) {
+		_at25dfx_chip_enable_write(chip);
+
 		cmd.address += cmd.length;
 		cmd.data += cmd.length;
 		cmd.length = min(AT25DFX_PAGE_SIZE, length);
@@ -322,8 +324,6 @@ enum status_code at25dfx_chip_write_buffer(struct at25dfx_chip_module *chip,
 
 		length -= cmd.length;
 	}
-
-	_at25dfx_chip_disable_write(chip);
 
 	spi_unlock(chip->spi);
 
@@ -348,10 +348,8 @@ enum status_code at25dfx_chip_erase(struct at25dfx_chip_module *chip)
 	cmd.command_size = 1;
 	cmd.length = 0;
 	_at25dfx_chip_issue_write_command_wait(chip, cmd);
-	
-	status = _at25dfx_chip_get_nonbusy_status(chip);
 
-	_at25dfx_chip_disable_write(chip);
+	status = _at25dfx_chip_get_nonbusy_status(chip);
 
 	spi_unlock(chip->spi);
 
@@ -401,8 +399,6 @@ enum status_code at25dfx_chip_block_erase(struct at25dfx_chip_module *chip,
 
 	status = _at25dfx_chip_get_nonbusy_status(chip);
 
-	_at25dfx_chip_disable_write(chip);
-
 	spi_unlock(chip->spi);
 
 	return status;
@@ -430,8 +426,6 @@ enum status_code at25dfx_chip_set_global_sector_protect(
 	cmd.length = 1;
 	cmd.data = &temp_data;
 	_at25dfx_chip_issue_write_command_wait(chip, cmd);
-
-	_at25dfx_chip_disable_write(chip);
 
 	spi_unlock(chip->spi);
 
@@ -465,8 +459,6 @@ enum status_code at25dfx_chip_set_sector_protect(
 	cmd.length = 0;
 	_at25dfx_chip_issue_write_command_wait(chip, cmd);
 
-	_at25dfx_chip_disable_write(chip);
-
 	spi_unlock(chip->spi);
 
 	return STATUS_OK;
@@ -494,7 +486,7 @@ enum status_code at25dfx_chip_get_sector_protect(
 	cmd.command_size = 4;
 	cmd.address = address;
 	cmd.length = 1;
-	cmd.data = (uint8_t *)&protect;
+	cmd.data = (uint8_t *)protect;
 	_at25dfx_chip_issue_read_command_wait(chip, cmd);
 
 	spi_unlock(chip->spi);

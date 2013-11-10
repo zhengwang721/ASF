@@ -58,7 +58,7 @@ static inline void _at25dfx_chip_issue_read_command_wait(
 {
 	enum status_code status;
 	uint8_t cmd_buffer[AT25DFX_COMMAND_MAX_SIZE];
-	
+
 	UNUSED(status);
 
 	Assert((cmd.command_size) && (cmd.command_size <= AT25DFX_COMMAND_MAX_SIZE));
@@ -69,9 +69,9 @@ static inline void _at25dfx_chip_issue_read_command_wait(
 	if (cmd.command_size > 1) {
 		Assert(cmd.command_size >= 4);
 
-		cmd_buffer[1] = cmd.address & 0xff;
+		cmd_buffer[3] = cmd.address & 0xff;
 		cmd_buffer[2] = (cmd.address >> 8) & 0xff;
-		cmd_buffer[3] = (cmd.address >> 16) & 0xff;
+		cmd_buffer[1] = (cmd.address >> 16) & 0xff;
 	}
 	// Don't bother with init of dummy bytes
 
@@ -104,9 +104,9 @@ static inline void _at25dfx_chip_issue_write_command_wait(
 	if (cmd.command_size > 1) {
 		Assert(cmd.command_size >= 4);
 
-		cmd_buffer[1] = cmd.address & 0xff;
+		cmd_buffer[3] = cmd.address & 0xff;
 		cmd_buffer[2] = (cmd.address >> 8) & 0xff;
-		cmd_buffer[3] = (cmd.address >> 16) & 0xff;
+		cmd_buffer[1] = (cmd.address >> 16) & 0xff;
 	}
 
 	_at25dfx_chip_select(chip);
