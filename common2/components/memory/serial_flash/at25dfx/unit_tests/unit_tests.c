@@ -41,258 +41,438 @@
  *
  */
 
-#include <stdint.h>
-#include <stdbool.h>
-#include <board.h>
-#include <sysclk.h>
-#include <string.h>
-#include <unit_test/suite.h>
-#include <stdio_serial.h>
-#include <conf_clock.h>
-#include <conf_board.h>
+#include <asf.h>
 #include <conf_test.h>
-#include <at25dfx.h>
-#include <conf_at25dfx.h>
 
-/**
- * \mainpage
- *
- * \section intro Introduction
- * This is the unit test application for the AT25DFx driver.
- * It consists of test cases for the following functionalities:
- * - AT25DFx initialization
- * - AT25DFx protect functions
- * - AT25DFx data access functions
- *
- * \section files Main Files
- * - \ref unit_tests.c
- * - \ref conf_test.h
- * - \ref conf_board.h
- * - \ref conf_clock.h
- * - \ref conf_at25dfx.h
- *
- * \section device_info Device Info
- * This example has been tested with the following setup:
- * - sam3n4c_sam3n_ek
- * - sam4lc4c_sam4l_ek
- * - sam4e16e_sam4e_ek
- * - sam4c16c_sam4c_ek
- *
- * \section compinfo Compilation info
- * This software was written for the GNU GCC and IAR for ARM. Other compilers
- * may or may not work.
- *
- * \section contactinfo Contact Information
- * For further information, visit <a href="http://www.atmel.com/">Atmel</a>.\n
- * Support and FAQ: http://support.atmel.no/
- */
 
-//! \name Unit test configuration
+#define TEST_BUFFER_SIZE  16
+#define TEST_ERASE_VALUE  0xff
+#define TEST_FLASH_SIZE  (1024 * 1024UL)
+#define TEST_PAGE_SIZE  256
+
+
+static struct spi_module at25dfx_spi;
+static struct at25dfx_chip_module at25dfx_chip;
+static struct at25dfx_chip_module at25dfx_dummy;
+static struct usart_module cdc_uart_module;
+
+static uint8_t test_rx_buffer[TEST_BUFFER_SIZE];
+static uint8_t test_tx_buffer[TEST_BUFFER_SIZE] = {
+		0x12, 0x34, 0x56, 0x78,
+		0x9a, 0xbc, 0xde, 0xf0,
+		0x21, 0x43, 0x65, 0x87,
+		0xa9, 0xcb, 0xed, 0x0f,
+	};
+
+
+static void cdc_uart_init(void)
+{
+	struct usart_config usart_conf;
+
+	/* Configure USART for unit test output */
+	usart_get_config_defaults(&usart_conf);
+	usart_conf.mux_setting = CONF_STDIO_MUX_SETTING;
+	usart_conf.pinmux_pad0 = CONF_STDIO_PINMUX_PAD0;
+	usart_conf.pinmux_pad1 = CONF_STDIO_PINMUX_PAD1;
+	usart_conf.pinmux_pad2 = CONF_STDIO_PINMUX_PAD2;
+	usart_conf.pinmux_pad3 = CONF_STDIO_PINMUX_PAD3;
+	usart_conf.baudrate    = CONF_STDIO_BAUDRATE;
+
+	stdio_serial_init(&cdc_uart_module, CONF_STDIO_USART_MODULE, &usart_conf);
+	usart_enable(&cdc_uart_module);
+}
+
+static void test_at25dfx_init(void)
+{
+	struct at25dfx_chip_config at25dfx_chip_config;
+	struct spi_config at25dfx_spi_config;
+
+	at25dfx_spi_get_config_defaults(&at25dfx_spi_config);
+	at25dfx_spi_config.mode_specific.master.baudrate = 1000000;
+	at25dfx_spi_config.mux_setting = EXT1_SPI_SERCOM_MUX_SETTING;
+	at25dfx_spi_config.pinmux_pad0 = EXT1_SPI_SERCOM_PINMUX_PAD0;
+	at25dfx_spi_config.pinmux_pad1 = PINMUX_UNUSED; // EXT1_SPI_SERCOM_PINMUX_PAD1;
+	at25dfx_spi_config.pinmux_pad2 = EXT1_SPI_SERCOM_PINMUX_PAD2;
+	at25dfx_spi_config.pinmux_pad3 = EXT1_SPI_SERCOM_PINMUX_PAD3;
+
+	spi_init(&at25dfx_spi, EXT1_SPI_MODULE, &at25dfx_spi_config);
+	spi_enable(&at25dfx_spi);
+
+	// Initialize real and dummy chip
+	at25dfx_chip_config.type = AT25DFX_081A;
+	at25dfx_chip_config.cs_pin = EXT1_PIN_SPI_SS_0;
+
+	at25dfx_chip_init(&at25dfx_chip, &at25dfx_spi, &at25dfx_chip_config);
+
+	at25dfx_chip_config.cs_pin = EXT1_PIN_SPI_SS_1;
+
+	at25dfx_chip_init(&at25dfx_dummy, &at25dfx_spi, &at25dfx_chip_config);
+}
+
+
+//! \name Tests
 //@{
-/**
- * \def CONF_TEST_AT25DFX
- * \brief AT25DFx SerialFlash configurations.
- */
+
+static void run_check_presence_test(const struct test_case *test)
+{
+	enum status_code status;
+
+	status = at25dfx_chip_check_presence(&at25dfx_chip);
+	test_assert_true(test, status == STATUS_OK,
+			"Failed to detect presence of chip");
+
+	status = at25dfx_chip_check_presence(&at25dfx_dummy);
+	test_assert_true(test, status == STATUS_ERR_NOT_FOUND,
+			"Failed to detect absence of chip");
+}
+
+
+static void run_read_write_buffer_test(const struct test_case *test)
+{
+	enum status_code status;
+
+// Globally disable sector protect
+	at25dfx_chip_set_global_sector_protect(&at25dfx_chip, false);
+
+// Read out of bounds, verify ARG ERROR status
+	status = at25dfx_chip_read_buffer(&at25dfx_chip,
+			TEST_FLASH_SIZE, test_rx_buffer, 1);
+	test_assert_true(test, status == STATUS_ERR_INVALID_ARG,
+			"Failed to detect out of bounds read");
+
+// Write out of bounds, verify ARG ERROR status
+	status = at25dfx_chip_write_buffer(&at25dfx_chip,
+			TEST_FLASH_SIZE, test_tx_buffer, 1);
+	test_assert_true(test, status == STATUS_ERR_INVALID_ARG,
+			"Failed to detect out of bounds write");
+
+// Erase device
+	at25dfx_chip_erase(&at25dfx_chip);
+
+// Write first byte
+	status = at25dfx_chip_write_buffer(&at25dfx_chip,
+			0, &test_tx_buffer[0], 1);
+	test_assert_true(test, status == STATUS_OK,
+			"Failed to write first byte");
+
+// Write last byte
+	status = at25dfx_chip_write_buffer(&at25dfx_chip,
+			TEST_FLASH_SIZE - 1, &test_tx_buffer[1], 1);
+	test_assert_true(test, status == STATUS_OK,
+			"Failed to write last byte");
+
+// Read two first bytes back, verify values
+	status = at25dfx_chip_read_buffer(&at25dfx_chip,
+			0, &test_rx_buffer[0], 2);
+	test_assert_true(test, status == STATUS_OK,
+			"Failed to read two first bytes");
+
+	test_assert_true(test,
+			(test_rx_buffer[0] == test_tx_buffer[0])
+			&& (test_rx_buffer[1] == TEST_ERASE_VALUE),
+			"Verification of two first bytes failed");
+
+// Read last byte back, verify value
+	status = at25dfx_chip_read_buffer(&at25dfx_chip,
+			TEST_FLASH_SIZE - 1, &test_rx_buffer[1], 1);
+	test_assert_true(test, status == STATUS_OK,
+			"Failed to read last byte");
+
+	test_assert_true(test, test_rx_buffer[1] == test_tx_buffer[1],
+			"Verification of last byte failed");
+
+// Do write of multiple bytes across page boundary
+	status = at25dfx_chip_write_buffer(&at25dfx_chip,
+			TEST_PAGE_SIZE - TEST_BUFFER_SIZE/2,
+			&test_tx_buffer[0], TEST_BUFFER_SIZE);
+	test_assert_true(test, status == STATUS_OK,
+			"Failed to write across page boundary");
+
+// Read bytes back, verify
+	status = at25dfx_chip_read_buffer(&at25dfx_chip,
+			TEST_PAGE_SIZE - TEST_BUFFER_SIZE/2,
+			&test_rx_buffer[0], TEST_BUFFER_SIZE);
+	test_assert_true(test, status == STATUS_OK,
+			"Failed to read multiple bytes");
+
+	test_assert_true(test,
+			test_rx_buffer[0] == test_tx_buffer[0],
+			"Verification of cross page boundary write failed at first byte");
+	test_assert_true(test,
+			test_rx_buffer[TEST_BUFFER_SIZE/2 - 1] == test_tx_buffer[TEST_BUFFER_SIZE/2 - 1],
+			"Verification of cross page boundary write failed at last byte in first page");
+	test_assert_true(test,
+			test_rx_buffer[TEST_BUFFER_SIZE/2] == test_tx_buffer[TEST_BUFFER_SIZE/2],
+			"Verification of cross page boundary write failed at first byte in new page");
+	test_assert_true(test,
+			test_rx_buffer[TEST_BUFFER_SIZE - 1] == test_tx_buffer[TEST_BUFFER_SIZE - 1],
+			"Verification of cross page boundary write failed at last byte in new page");
+}
+
+static void run_erase_test(const struct test_case *test)
+{
+	enum status_code status;
+
+// Globally disable sector protect
+	at25dfx_chip_set_global_sector_protect(&at25dfx_chip, false);
+
+// Write first and last byte
+	at25dfx_chip_write_buffer(&at25dfx_chip, 0, &test_tx_buffer[0], 1);
+	at25dfx_chip_write_buffer(&at25dfx_chip, TEST_FLASH_SIZE - 1, &test_tx_buffer[1], 1);
+
+// Do chip erase
+	status = at25dfx_chip_erase(&at25dfx_chip);
+	test_assert_true(test, status == STATUS_OK,
+			"Failed to erase chip");
+
+// Read back first and last byte
+	at25dfx_chip_read_buffer(&at25dfx_chip,	0, &test_rx_buffer[0], 1);
+	at25dfx_chip_read_buffer(&at25dfx_chip,	TEST_FLASH_SIZE - 1, &test_rx_buffer[1], 1);
+
+// Verify both bytes erased
+	test_assert_true(test,
+			(test_rx_buffer[0] == TEST_ERASE_VALUE)
+			&& (test_rx_buffer[1] == TEST_ERASE_VALUE),
+			"Verification of chip erase failed");
+}
+
+static void run_block_erase_test(const struct test_case *test)
+{
+	enum status_code status;
+
+// Globally disable sector protect
+	at25dfx_chip_set_global_sector_protect(&at25dfx_chip, false);
+
+// Erase out of bounds block, verify ARG ERR status
+	status = at25dfx_chip_block_erase(&at25dfx_chip,
+		TEST_FLASH_SIZE, AT25DFX_BLOCK_SIZE_4KB);
+	test_assert_true(test, status == STATUS_ERR_INVALID_ARG,
+			"Failed to detect out of bounds erase");
+
+// Write to first byte, 4k boundary, 32k boundary and 64k boundary
+	at25dfx_chip_write_buffer(&at25dfx_chip, 0, &test_tx_buffer[0], 1);
+	at25dfx_chip_write_buffer(&at25dfx_chip, 1UL << 12, &test_tx_buffer[1], 1);
+	at25dfx_chip_write_buffer(&at25dfx_chip, 1UL << 15, &test_tx_buffer[2], 1);
+	at25dfx_chip_write_buffer(&at25dfx_chip, 1UL << 16, &test_tx_buffer[3], 1);
+
+// Erase first 4 k block
+	at25dfx_chip_block_erase(&at25dfx_chip, 0, AT25DFX_BLOCK_SIZE_4KB);
+	
+// Verify byte 0 erased, others intact
+	at25dfx_chip_read_buffer(&at25dfx_chip, 0, &test_rx_buffer[0], 1);
+	at25dfx_chip_read_buffer(&at25dfx_chip, 1UL << 12, &test_rx_buffer[1], 1);
+	at25dfx_chip_read_buffer(&at25dfx_chip, 1UL << 15, &test_rx_buffer[2], 1);
+	at25dfx_chip_read_buffer(&at25dfx_chip, 1UL << 16, &test_rx_buffer[3], 1);
+	test_assert_true(test,
+			(test_rx_buffer[0] == TEST_ERASE_VALUE)
+			&& (test_rx_buffer[1] == test_tx_buffer[1])
+			&& (test_rx_buffer[2] == test_tx_buffer[2])
+			&& (test_rx_buffer[3] == test_tx_buffer[3]),
+			"Verification of 4 kB block erase failed");
+
+// Erase first 32 k block
+	at25dfx_chip_block_erase(&at25dfx_chip, 0, AT25DFX_BLOCK_SIZE_32KB);
+
+// Verify byte 2^14 erased, 2^15 intact
+	at25dfx_chip_read_buffer(&at25dfx_chip, 1UL << 12, &test_rx_buffer[1], 1);
+	at25dfx_chip_read_buffer(&at25dfx_chip, 1UL << 15, &test_rx_buffer[2], 1);
+	at25dfx_chip_read_buffer(&at25dfx_chip, 1UL << 16, &test_rx_buffer[3], 1);
+	test_assert_true(test,
+			(test_rx_buffer[1] == TEST_ERASE_VALUE)
+			&& (test_rx_buffer[2] == test_tx_buffer[2])
+			&& (test_rx_buffer[3] == test_tx_buffer[3]),
+			"Verification of 32 kB block erase failed");
+
+// Erase first 64 k block
+	at25dfx_chip_block_erase(&at25dfx_chip, 0, AT25DFX_BLOCK_SIZE_64KB);
+
+// Verify byte 2^15 erased, 2^16 intact
+	at25dfx_chip_read_buffer(&at25dfx_chip, 1UL << 15, &test_rx_buffer[2], 1);
+	at25dfx_chip_read_buffer(&at25dfx_chip, 1UL << 16, &test_rx_buffer[3], 1);
+	test_assert_true(test,
+			(test_rx_buffer[2] == TEST_ERASE_VALUE)
+			&& (test_rx_buffer[3] == test_tx_buffer[3]),
+			"Verification of 64 kB block erase failed");
+}
+
+static void run_global_sector_protect_test(const struct test_case *test)
+{
+	enum status_code status;
+
+// Globally disable sector protect
+	status = at25dfx_chip_set_global_sector_protect(&at25dfx_chip, false);
+	test_assert_true(test, status == STATUS_OK,
+			"Failed to globally disable sector protection");
+
+// Write to first and last byte
+	at25dfx_chip_write_buffer(&at25dfx_chip, 0, &test_tx_buffer[0], 1);
+	at25dfx_chip_write_buffer(&at25dfx_chip, TEST_FLASH_SIZE - 1, &test_tx_buffer[1], 1);
+
+// Globally enable protect
+	status = at25dfx_chip_set_global_sector_protect(&at25dfx_chip, true);
+	test_assert_true(test, status == STATUS_OK,
+			"Failed to globally enable sector protection");
+
+// Attempt chip erase
+	at25dfx_chip_erase(&at25dfx_chip);
+
+// Verify bytes intact
+	at25dfx_chip_read_buffer(&at25dfx_chip, 0, &test_rx_buffer[0], 1);
+	at25dfx_chip_read_buffer(&at25dfx_chip, TEST_FLASH_SIZE - 1, &test_rx_buffer[1], 1);
+	test_assert_true(test,
+			(test_rx_buffer[0] == test_tx_buffer[0])
+			&& (test_rx_buffer[1] == test_tx_buffer[1]),
+			"Verification of intact bytes failed");
+
+// Globally disable protect
+	at25dfx_chip_set_global_sector_protect(&at25dfx_chip, false);
+
+// Attempt chip erase
+	at25dfx_chip_erase(&at25dfx_chip);
+
+// Verify bytes erased
+	at25dfx_chip_read_buffer(&at25dfx_chip, 0, &test_rx_buffer[0], 1);
+	at25dfx_chip_read_buffer(&at25dfx_chip, TEST_FLASH_SIZE - 1, &test_rx_buffer[1], 1);
+	test_assert_true(test,
+			(test_rx_buffer[0] == TEST_ERASE_VALUE)
+			&& (test_rx_buffer[1] == TEST_ERASE_VALUE),
+			"Verification of erased bytes failed");
+}
+
+static void run_set_get_sector_protect_test(const struct test_case *test)
+{
+	bool protect_1, protect_2;
+	enum status_code status;
+
+// Globally disable sector protect
+	at25dfx_chip_set_global_sector_protect(&at25dfx_chip, false);
+
+// Get out of bounds sector protect
+	status = at25dfx_chip_get_sector_protect(&at25dfx_chip, TEST_FLASH_SIZE, &protect_1);
+	test_assert_true(test, status == STATUS_ERR_INVALID_ARG,
+			"Failed to detect getting out of bounds sector protect");
+
+// Set out of bounds sector protect
+	status = at25dfx_chip_set_sector_protect(&at25dfx_chip, TEST_FLASH_SIZE, true);
+	test_assert_true(test, status == STATUS_ERR_INVALID_ARG,
+			"Failed to detect setting out of bounds sector protect");
+
+// Get sector protect of first and last sector
+	status = at25dfx_chip_get_sector_protect(&at25dfx_chip, 0, &protect_1);
+	test_assert_true(test, status == STATUS_OK,
+			"Failed to get first sector protect");
+
+	status = at25dfx_chip_get_sector_protect(&at25dfx_chip, TEST_FLASH_SIZE - 1, &protect_2);
+	test_assert_true(test, status == STATUS_OK,
+			"Failed to get last sector protect");
+
+	test_assert_true(test,
+			(protect_1 == false)
+			&& (protect_2 == false),
+			"Verification of sector protect getting failed");
+
+// Set and clear sector protect of first sector
+	status = at25dfx_chip_set_sector_protect(&at25dfx_chip, 0, true);
+	test_assert_true(test, status == STATUS_OK,
+			"Failed to set first sector protect");
+
+	status = at25dfx_chip_set_sector_protect(&at25dfx_chip, 0, false);
+	test_assert_true(test, status == STATUS_OK,
+			"Failed to clear first sector protect");
+
+// Set sector protect of last sector
+	status = at25dfx_chip_set_sector_protect(&at25dfx_chip, TEST_FLASH_SIZE - 1, true);
+	test_assert_true(test, status == STATUS_OK,
+			"Failed to set last sector protect");
+
+// Get sector protects and verify 
+	at25dfx_chip_get_sector_protect(&at25dfx_chip, 0, &protect_1);
+	at25dfx_chip_get_sector_protect(&at25dfx_chip, TEST_FLASH_SIZE - 1, &protect_2);
+
+	test_assert_true(test, protect_1 == false,
+			"Verification of sector protect clear failed");
+	test_assert_true(test, protect_2 == true,
+			"Verification of sector protect set failed");
+}
+
+static void run_sleep_wake_test(const struct test_case *test)
+{
+	// Globally disable sector protect
+	at25dfx_chip_set_global_sector_protect(&at25dfx_chip, false);
+
+	// Erase first block
+	at25dfx_chip_block_erase(&at25dfx_chip, 0, AT25DFX_BLOCK_SIZE_4KB);
+	at25dfx_chip_write_buffer(&at25dfx_chip, 0, &test_tx_buffer[0], 1);
+
+	// Put device to sleep
+	at25dfx_chip_sleep(&at25dfx_chip);
+
+	// Read out first byte, verify device did not respond
+	at25dfx_chip_read_buffer(&at25dfx_chip, 0, &test_rx_buffer[0], 1);
+	test_assert_true(test, test_rx_buffer[0] == 0,
+			"Verification of read during sleep failed");
+
+	// Wake device up
+	at25dfx_chip_wake(&at25dfx_chip);
+
+	// Redo test, verify device response
+	at25dfx_chip_read_buffer(&at25dfx_chip, 0, &test_rx_buffer[0], 1);
+	test_assert_true(test, test_rx_buffer[0] == test_tx_buffer[0],
+			"Verification of read during wake failed");
+}
+
 //@}
 
-#define TEST_PROTECT_ADDRESS   0x200
-
-/* Data buffer for the unit test */
-static uint8_t data_buff[AT25DFX_UNIT_TEST_PAGE_SIZE];
-
-/**
- * \brief Test AT25DFx initialization procedure.
- *
- * This test calls the initialization function and checks the SerialFlash.
- *
- * \param test Current test case.
- */
-static void run_test_at25dfx_init(const struct test_case *test)
-{
-	at25_status_t status;
-
-	/* Initialize the SerialFlash */
-	at25dfx_initialize();
-
-	/* Set the SerialFlash active */
-	at25dfx_set_mem_active(AT25DFX_MEM_ID);
-
-	/* Check if the SerialFlash is valid */
-	status = at25dfx_mem_check();
-
-	/* Validate the SerialFlash init and check function */
-	test_assert_true(test, status == AT25_SUCCESS, 
-			"Specific SerialFlash not found!");
-}
-
-/**
- * \brief Test AT25DFx protect functions.
- *
- * This test calls the SerialFlash protect functions.
- *
- * \param test Current test case.
- */
-static void run_test_at25dfx_protect(const struct test_case *test)
-{
-	at25_status_t status;
-	uint8_t dev_status;
-
-	at25dfx_protect_chip(AT25_TYPE_UNPROTECT);
-
-	/* Get chip protection status through the status register */
-	status = at25dfx_read_status(&dev_status);
-
-	/* Validate the chip unprotect command */
-	if ((dev_status & AT25_STATUS_SWP) != AT25_STATUS_SWP_PROTNONE) {
-		test_assert_true(test, 0, "Unprotect chip cmd error!");
-	}
-
-	at25dfx_protect_sector(TEST_PROTECT_ADDRESS, AT25_TYPE_PROTECT);
-
-	status = at25dfx_read_sector_protect_status(TEST_PROTECT_ADDRESS);
-
-	test_assert_true(test, status == AT25_SECTOR_PROTECTED, 
-			"Protect sector cmd error!");
-
-	at25dfx_protect_sector(TEST_PROTECT_ADDRESS, AT25_TYPE_UNPROTECT);
-
-	status = at25dfx_read_sector_protect_status(TEST_PROTECT_ADDRESS);
-
-	test_assert_true(test, status == AT25_SECTOR_UNPROTECTED, 
-			"Unrotect sector cmd error!");
-
-	at25dfx_protect_chip(AT25_TYPE_PROTECT);
-
-	/* Get chip protection status through the status register */
-	status = at25dfx_read_status(&dev_status);
-
-	/* Validate the chip protect command */
-	if ((dev_status & AT25_STATUS_SWP) != AT25_STATUS_SWP) {
-		test_assert_true(test, 0, "Protect chip cmd error!");
-	}
-}
-
-/**
- * \brief Test data read, write and erase API functions.
- *
- * This test calls the data chip erase, read, write and block erase API 
- * functions.
- *
- * \param test Current test case.
- */
-static void run_test_at25dfx_data_access(const struct test_case *test)
-{
-	at25_status_t status;
-	uint32_t i;
-	uint32_t page_num = 0;
-
-	/* Unprotect the SerialFlash first */
-	at25dfx_protect_chip(AT25_TYPE_UNPROTECT);
-
-	/* Test block erase */
-	i = 0;
-	page_num = 0;
-
-	status = at25dfx_erase_block(AT25DFX_UNIT_TEST_BLOCK_ADDR);
-
-	while (page_num < 
-			AT25DFX_UNIT_TEST_BLOCK_SIZE / AT25DFX_UNIT_TEST_PAGE_SIZE) {
-		memset(data_buff, 0x0, sizeof(data_buff));
-
-		at25dfx_read(data_buff, AT25DFX_UNIT_TEST_PAGE_SIZE, 
-				page_num * AT25DFX_UNIT_TEST_PAGE_SIZE);
-
-		for (i = 0; i < AT25DFX_UNIT_TEST_PAGE_SIZE; i++) {
-			if (data_buff[i] != 0xff) {
-				status = AT25_ERROR;
-			}
-		}
-
-		page_num++;
-	}
-
-	/* Validate the SerialFlash block erase function */
-	test_assert_true(test, status == AT25_SUCCESS, "Block erase failed!");
-
-	/* Test read/write function */
-	i = 0;
-	page_num = 0;
-
-	while (page_num <
-			AT25DFX_UNIT_TEST_BLOCK_SIZE / AT25DFX_UNIT_TEST_PAGE_SIZE) {
-		for (i = 0; i < AT25DFX_UNIT_TEST_PAGE_SIZE; i++) {
-			data_buff[i] = i & 0xff;
-		}
-
-		at25dfx_write(data_buff, AT25DFX_UNIT_TEST_PAGE_SIZE,
-				page_num * AT25DFX_UNIT_TEST_PAGE_SIZE);
-
-		/* Reset the data buffer */
-		memset(data_buff, 0x0, sizeof(data_buff));
-
-		status = at25dfx_read(data_buff, AT25DFX_UNIT_TEST_PAGE_SIZE, 
-				page_num * AT25DFX_UNIT_TEST_PAGE_SIZE);
-
-		for (i = 0; i < AT25DFX_UNIT_TEST_PAGE_SIZE; i++) {
-			if (data_buff[i] != (i & 0xff)) {
-				status = AT25_ERROR;
-				break;
-			}
-		}
-
-		page_num++;
-	}
-
-	/* Validate the SerialFlash write function */
-	test_assert_true(test, status == AT25_SUCCESS, "Write operation failed!");
-}
-
-/**
- * \brief Run AT25DFx driver unit tests.
- */
 int main(void)
 {
-	const usart_serial_options_t usart_serial_options = {
-		.baudrate = CONF_TEST_BAUDRATE,
-		.charlength = CONF_TEST_CHARLENGTH,
-		.paritytype = CONF_TEST_PARITY,
-		.stopbits   = CONF_TEST_STOPBITS
-	};
+	system_init();
+	cdc_uart_init();
+	test_at25dfx_init();
 
-	/* Initialize the system clock and board */
-	sysclk_init();
-	board_init();
+	DEFINE_TEST_CASE(check_presence_test, NULL,
+			run_check_presence_test, NULL,
+			"Testing presence checking");
 
-	/* Enable the debug uart */
-	stdio_serial_init(CONF_TEST_USART, &usart_serial_options);
+	DEFINE_TEST_CASE(read_write_buffer_test, NULL,
+			run_read_write_buffer_test, NULL,
+			"Testing read and write");
 
-	/* Define all the test cases */
-	DEFINE_TEST_CASE(at25dfx_init_test, NULL, run_test_at25dfx_init, NULL,
-			"SerialFlash initialize functions");
+	DEFINE_TEST_CASE(erase_test, NULL,
+			run_erase_test, NULL,
+			"Testing chip erase");
 
-	DEFINE_TEST_CASE(at25dfx_protect_test, NULL, run_test_at25dfx_protect, NULL,
-			"SerialFlash sector protect/unprotect, chip protect/unprotect functions");
+	DEFINE_TEST_CASE(block_erase_test, NULL,
+			run_block_erase_test, NULL,
+			"Testing block erase");
 
-	DEFINE_TEST_CASE(at25dfx_data_access_test, NULL, 
-			run_test_at25dfx_data_access, NULL,
-			"SerialFlash read, write, and block erase functions");
+	DEFINE_TEST_CASE(global_sector_protect_test, NULL,
+			run_global_sector_protect_test, NULL,
+			"Testing global sector protect setting");
 
-	/* Put test case addresses in an array */
+	DEFINE_TEST_CASE(set_get_sector_protect_test, NULL,
+			run_set_get_sector_protect_test, NULL,
+			"Testing sector protect setting and getting");
+
+	DEFINE_TEST_CASE(sleep_wake_test, NULL,
+			run_sleep_wake_test, NULL,
+			"Testing sleep and wake");
+
 	DEFINE_TEST_ARRAY(at25dfx_tests) = {
-		&at25dfx_init_test,
-		&at25dfx_protect_test,
-		&at25dfx_data_access_test,
+		&check_presence_test,
+		&read_write_buffer_test,
+		&erase_test,
+		&block_erase_test,
+		&global_sector_protect_test,
+		&set_get_sector_protect_test,
+		&sleep_wake_test,
 	};
 
-	/* Define the test suite */
-	DEFINE_TEST_SUITE(at25dfx_suite, at25dfx_tests, 
-			"SAM AT25DFx driver test suite");
+	DEFINE_TEST_SUITE(at25dfx_test_suite, at25dfx_tests,
+			"AT25DFx driver test suite");
 
-	/* Run all tests in the test suite */
-	test_suite_run(&at25dfx_suite);
+	test_suite_run(&at25dfx_test_suite);
 
-	while (1) {
-		/* Busy-wait forever */
+	while (true) {
+		/* Intentionally left empty */
 	}
 }
-
