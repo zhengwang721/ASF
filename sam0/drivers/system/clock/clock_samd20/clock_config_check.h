@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D2x Clock Driver
+ * \brief SAM D20 Clock Driver
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -74,6 +74,10 @@
 
 #if !defined(CONF_CLOCK_OSC8M_RUN_IN_STANDBY)
 #  error CONF_CLOCK_OSC8M_RUN_IN_STANDBY not defined in conf_clock.h
+#endif
+
+#if !defined(CONF_CLOCK_OSC8M_FREQUENCY_RANGE)
+#  error CONF_CLOCK_OSC8M_FREQUENCY_RANGE not defined in conf_clock.h
 #endif
 
 #if !defined(CONF_CLOCK_XOSC_ENABLE)

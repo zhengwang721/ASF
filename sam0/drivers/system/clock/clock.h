@@ -240,7 +240,14 @@
 #include <compiler.h>
 #include <gclk.h>
 
-#include "clock_features.h"
+/**
+ * Define system clock features set according to different device family
+ * @{
+ */
+#if (SAMD21)
+#  define FEATURE_SYSTEM_CLOCK_DPLL
+#endif
+/*@}*/
 
 /**
  * \brief Available start-up times for the XOSC32K
@@ -484,8 +491,7 @@ enum system_clock_source {
 	SYSTEM_CLOCK_SOURCE_DFLL     = GCLK_SOURCE_DFLL48M,
 	/** Internal Ultra Low Power 32kHz oscillator */
 	SYSTEM_CLOCK_SOURCE_ULP32K   = GCLK_SOURCE_OSCULP32K,
-
-#ifdef  FEATURE_SYSTEM_CLOCK_DPLL
+#ifdef FEATURE_SYSTEM_CLOCK_DPLL
 	/** Digital Phase Locked Loop (DPLL) */
 	SYSTEM_CLOCK_SOURCE_DPLL     = GCLK_SOURCE_FDPLL,
 #endif
@@ -1122,6 +1128,124 @@ static inline enum status_code system_apb_clock_clear_mask(
  * @}
  */
 
+#ifdef FEATURE_SYSTEM_CLOCK_DPLL
+/**
+ * \brief Reference clock source of the DPLL module
+ */
+enum system_clock_source_dpll_reference_clock {
+	/** Select CLK_DPLL_REF0 as clock reference */
+	SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_REF0,
+	/** Select CLK_DPLL_REF1 as clock reference */
+	SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_REF1,
+	/** Select GCLK_DPLL as clock reference */
+	SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_GCLK,
+};
+
+/**
+ * \brief Lock time-out value of the DPLL module
+ */
+enum system_clock_source_dpll_lock_time {
+	/** Set no time-out as default */
+	SYSTEM_CLOCK_SOURCE_DPLL_LOCK_TIME_DEFAULT,
+	/** Set time-out if no lock within 8 ms */
+	SYSTEM_CLOCK_SOURCE_DPLL_LOCK_TIME_8MS = 0x04,
+	/** Set time-out if no lock within 9 ms */
+	SYSTEM_CLOCK_SOURCE_DPLL_LOCK_TIME_9MS,
+	/** Set time-out if no lock within 10 ms */
+	SYSTEM_CLOCK_SOURCE_DPLL_LOCK_TIME_10MS,
+	/** Set time-out if no lock within 11 ms */
+	SYSTEM_CLOCK_SOURCE_DPLL_LOCK_TIME_11MS,
+};
+
+/**
+ * \brief Filter type of the DPLL module
+ */
+enum system_clock_source_dpll_filter {
+	/** Default filter mode */
+	SYSTEM_CLOCK_SOURCE_DPLL_FILTER_DEFAULT,
+	/** Low bandwidth filter */
+	SYSTEM_CLOCK_SOURCE_DPLL_FILTER_LOW_BANDWIDTH_FILTER,
+	/** High bandwidth filter */
+	SYSTEM_CLOCK_SOURCE_DPLL_FILTER_HIGH_BANDWIDTH_FILTER,
+	/** High damping filter */
+	SYSTEM_CLOCK_SOURCE_DPLL_FILTER_HIGH_DAMPING_FILTER,
+};
+
+/**
+ * \brief Configuration structure for DPLL
+ *
+ * DPLL oscillator configuration structure.
+ */
+struct system_clock_source_dpll_config {
+	/** Run On Demand. If this is set the DPLL won't run
+	 * until requested by a peripheral */
+	bool on_demand;
+	/** Keep the DPLL enabled in standby sleep mode */
+	bool run_in_standby;
+	/** Bypass lock signal */
+	bool lock_bypass;
+	/** Wake up fast. If this is set DPLL output clock is enabled after
+	 * the startup time */
+	bool wake_up_fast;
+	/** Enable low power mode  */
+	bool low_power_enable;
+
+	/** Output frequency of the clock */
+	uint32_t output_frequency;
+	/** Reference frequency of the clock */
+	uint32_t reference_frequency;
+	/** Devider of reference clock */
+	uint16_t reference_divider;
+
+	/** Filter type of the DPLL module */
+	enum system_clock_source_dpll_filter          filter;
+	/** Lock time-out value of the DPLL module */
+	enum system_clock_source_dpll_lock_time       lock_time;
+	/** Reference clock source of the DPLL module */
+	enum system_clock_source_dpll_reference_clock reference_clock;
+};
+
+/**
+ * \brief Retrieve the default configuration for DPLL
+ *
+ * Fills a configuration structure with the default configuration for a
+ * DPLL oscillator module:
+ *   - Run only when requested by peripheral (on demand)
+ *   - Don't run in STANDBY sleep mode
+ *   - Lock bypass disabled
+ *   - Fast wake up disabled
+ *   - Low power mode disabled
+ *   - Output frequency is 48MHz
+ *   - Reference clock frequency is 32768Hz
+ *   - Not divide reference clock
+ *   - Select REF0 as reference clock
+ *   - Set lock time to default mode
+ *   - Use default filter
+ *
+ * \param[out] config  Configuration structure to fill with default values
+ */
+static inline void system_clock_source_dpll_get_config_defaults(
+		struct system_clock_source_dpll_config *const config)
+{
+	config->on_demand           = true;
+	config->run_in_standby      = false;
+	config->lock_bypass         = false;
+	config->wake_up_fast        = false;
+	config->low_power_enable    = false;
+
+	config->output_frequency    = 48000000;
+	config->reference_frequency = 32768;
+	config->reference_divider   = 1;
+	config->reference_clock     = SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_REF0;
+
+	config->lock_time           = SYSTEM_CLOCK_SOURCE_DPLL_LOCK_TIME_DEFAULT;
+	config->filter              = SYSTEM_CLOCK_SOURCE_DPLL_FILTER_DEFAULT;
+};
+
+void system_clock_source_dpll_set_config(
+		struct system_clock_source_dpll_config *const config);
+#endif
+
 /**
  * \name System Clock Initialization
  * @{
@@ -1305,7 +1429,7 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *  - \subpage asfdoc_sam0_system_clock_basic_use_case
  *  - \subpage asfdoc_sam0_system_gclk_basic_use_case
  *
- * \page asfdoc_samd2x_system_clock_document_revision_history Document Revision History
+ * \page asfdoc_sam0_system_clock_document_revision_history Document Revision History
  *
  * <table>
  *	<tr>

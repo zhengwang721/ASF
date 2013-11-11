@@ -75,19 +75,17 @@ typedef union {
 #define   NVMCTRL_CTRLA_CMD_WP_Val        0x4u   /**< \brief (NVMCTRL_CTRLA) Write Page - Writes the contents of the page buffer to the page addressed by the ADDR register. */
 #define   NVMCTRL_CTRLA_CMD_EAR_Val       0x5u   /**< \brief (NVMCTRL_CTRLA) Erase Auxiliary Row - Erases the auxiliary row addressed by the ADDR register. This command can be given only when the security bit is not set and only to the user configuration row. */
 #define   NVMCTRL_CTRLA_CMD_WAP_Val       0x6u   /**< \brief (NVMCTRL_CTRLA) Write Auxiliary Page - Writes the contents of the page buffer to the page addressed by the ADDR register. This command can be given only when the security bit is not set and only to the user configuration row. */
-#define   NVMCTRL_CTRLA_CMD_WL_Val        0xFu   /**< \brief (NVMCTRL_CTRLA) Write lockbits */
 #define   NVMCTRL_CTRLA_CMD_LR_Val        0x40u   /**< \brief (NVMCTRL_CTRLA) Lock Region - Locks the region containing the address location in the ADDR register. */
 #define   NVMCTRL_CTRLA_CMD_UR_Val        0x41u   /**< \brief (NVMCTRL_CTRLA) Unlock Region - Unlocks the region containing the address location in the ADDR register. */
 #define   NVMCTRL_CTRLA_CMD_SPRM_Val      0x42u   /**< \brief (NVMCTRL_CTRLA) Sets the power reduction mode. */
 #define   NVMCTRL_CTRLA_CMD_CPRM_Val      0x43u   /**< \brief (NVMCTRL_CTRLA) Clears the power reduction mode. */
 #define   NVMCTRL_CTRLA_CMD_PBC_Val       0x44u   /**< \brief (NVMCTRL_CTRLA) Page Buffer Clear - Clears the page buffer. */
 #define   NVMCTRL_CTRLA_CMD_SSB_Val       0x45u   /**< \brief (NVMCTRL_CTRLA) Set Security Bit - Sets the security bit by writing 0x00 to the first byte in the lockbit row. */
-#define   NVMCTRL_CTRLA_CMD_INVALL_Val    0x46u   /**< \brief (NVMCTRL_CTRLA) Invalidate all cache lines. */
+#define   NVMCTRL_CTRLA_CMD_INVALL_Val    0x46u   /**< \brief (NVMCTRL_CTRLA) Invalidates all cache lines. */
 #define NVMCTRL_CTRLA_CMD_ER        (NVMCTRL_CTRLA_CMD_ER_Val      << NVMCTRL_CTRLA_CMD_Pos)
 #define NVMCTRL_CTRLA_CMD_WP        (NVMCTRL_CTRLA_CMD_WP_Val      << NVMCTRL_CTRLA_CMD_Pos)
 #define NVMCTRL_CTRLA_CMD_EAR       (NVMCTRL_CTRLA_CMD_EAR_Val     << NVMCTRL_CTRLA_CMD_Pos)
 #define NVMCTRL_CTRLA_CMD_WAP       (NVMCTRL_CTRLA_CMD_WAP_Val     << NVMCTRL_CTRLA_CMD_Pos)
-#define NVMCTRL_CTRLA_CMD_WL        (NVMCTRL_CTRLA_CMD_WL_Val      << NVMCTRL_CTRLA_CMD_Pos)
 #define NVMCTRL_CTRLA_CMD_LR        (NVMCTRL_CTRLA_CMD_LR_Val      << NVMCTRL_CTRLA_CMD_Pos)
 #define NVMCTRL_CTRLA_CMD_UR        (NVMCTRL_CTRLA_CMD_UR_Val      << NVMCTRL_CTRLA_CMD_Pos)
 #define NVMCTRL_CTRLA_CMD_SPRM      (NVMCTRL_CTRLA_CMD_SPRM_Val    << NVMCTRL_CTRLA_CMD_Pos)
@@ -416,24 +414,6 @@ typedef struct {
 #define NVMCTRL_FUSES_REGION_LOCKS_Pos 16           /**< \brief (NVMCTRL_USER) NVM Region Locks */
 #define NVMCTRL_FUSES_REGION_LOCKS_Msk (0xFFFFu << NVMCTRL_FUSES_REGION_LOCKS_Pos)
 #define NVMCTRL_FUSES_REGION_LOCKS(value) ((NVMCTRL_FUSES_REGION_LOCKS_Msk & ((value) << NVMCTRL_FUSES_REGION_LOCKS_Pos)))
-
-#define SYSCTRL_FUSES_BOD12USERLEVEL_ADDR NVMCTRL_USER
-#define SYSCTRL_FUSES_BOD12USERLEVEL_Pos 17           /**< \brief (NVMCTRL_USER) BOD12 User Level */
-#define SYSCTRL_FUSES_BOD12USERLEVEL_Msk (0x1Fu << SYSCTRL_FUSES_BOD12USERLEVEL_Pos)
-#define SYSCTRL_FUSES_BOD12USERLEVEL(value) ((SYSCTRL_FUSES_BOD12USERLEVEL_Msk & ((value) << SYSCTRL_FUSES_BOD12USERLEVEL_Pos)))
-
-#define SYSCTRL_FUSES_BOD12_ACTION_ADDR NVMCTRL_USER
-#define SYSCTRL_FUSES_BOD12_ACTION_Pos 23           /**< \brief (NVMCTRL_USER) BOD12 Action */
-#define SYSCTRL_FUSES_BOD12_ACTION_Msk (0x3u << SYSCTRL_FUSES_BOD12_ACTION_Pos)
-#define SYSCTRL_FUSES_BOD12_ACTION(value) ((SYSCTRL_FUSES_BOD12_ACTION_Msk & ((value) << SYSCTRL_FUSES_BOD12_ACTION_Pos)))
-
-#define SYSCTRL_FUSES_BOD12_EN_ADDR NVMCTRL_USER
-#define SYSCTRL_FUSES_BOD12_EN_Pos  22           /**< \brief (NVMCTRL_USER) BOD12 Enable */
-#define SYSCTRL_FUSES_BOD12_EN_Msk  (0x1u << SYSCTRL_FUSES_BOD12_EN_Pos)
-
-#define SYSCTRL_FUSES_BOD12_HYST_ADDR (NVMCTRL_USER + 4)
-#define SYSCTRL_FUSES_BOD12_HYST_Pos 9            /**< \brief (NVMCTRL_USER) BOD12 Hysteresis */
-#define SYSCTRL_FUSES_BOD12_HYST_Msk (0x1u << SYSCTRL_FUSES_BOD12_HYST_Pos)
 
 #define SYSCTRL_FUSES_BOD33USERLEVEL_ADDR NVMCTRL_USER
 #define SYSCTRL_FUSES_BOD33USERLEVEL_Pos 8            /**< \brief (NVMCTRL_USER) BOD33 User Level */
