@@ -706,9 +706,9 @@ bool system_clock_source_is_ready(
  */
 void system_clock_init(void)
 {
-	SYSCTRL->INTFLAG.reg = SYSCTRL_INTFLAG_BOD12RDY | SYSCTRL_INTFLAG_BOD33RDY |
-                        SYSCTRL_INTFLAG_BOD12DET | SYSCTRL_INTFLAG_BOD33DET |
-                        SYSCTRL_INTFLAG_DFLLRDY;
+	/* Workaround for errata 10558 */
+	SYSCTRL->INTFLAG.reg = SYSCTRL_INTFLAG_BOD33RDY | SYSCTRL_INTFLAG_BOD33DET |
+			SYSCTRL_INTFLAG_DFLLRDY;
 
 	system_flash_set_waitstates(CONF_CLOCK_FLASH_WAIT_STATES);
 
