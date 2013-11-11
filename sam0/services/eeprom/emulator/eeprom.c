@@ -891,7 +891,7 @@ enum status_code eeprom_emulator_read_buffer(
 		uint8_t *const data,
 		const uint16_t length)
 {
-	enum status_code error_code = STATUS_OK;
+	enum status_code error_code;
 	uint8_t buffer[EEPROM_PAGE_SIZE];
 	uint8_t logical_page = offset / EEPROM_PAGE_SIZE;
 	uint16_t c = offset;
