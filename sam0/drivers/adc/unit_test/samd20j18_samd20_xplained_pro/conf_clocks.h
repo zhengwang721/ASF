@@ -57,6 +57,7 @@
 #  define CONF_CLOCK_OSC8M_PRESCALER              SYSTEM_OSC8M_DIV_1
 #  define CONF_CLOCK_OSC8M_ON_DEMAND              true
 #  define CONF_CLOCK_OSC8M_RUN_IN_STANDBY         false
+#  define CONF_CLOCK_OSC8M_FREQUENCY_RANGE        SYSTEM_OSC8M_FREQUENCY_RANGE_8_TO_11
 
 /* SYSTEM_CLOCK_SOURCE_XOSC configuration - External clock/oscillator */
 #  define CONF_CLOCK_XOSC_ENABLE                  false
@@ -79,7 +80,7 @@
 
 /* SYSTEM_CLOCK_SOURCE_OSC32K configuration - Internal 32KHz oscillator */
 #  define CONF_CLOCK_OSC32K_ENABLE                false
-#  define CONF_CLOCK_OSC32K_STARTUP_TIME          SYSTEM_OSC32K_STARTUP_128
+#  define CONF_CLOCK_OSC32K_STARTUP_TIME          SYSTEM_OSC32K_STARTUP_130
 #  define CONF_CLOCK_OSC32K_ENABLE_1KHZ_OUTPUT    true
 #  define CONF_CLOCK_OSC32K_ENABLE_32KHZ_OUTPUT   true
 #  define CONF_CLOCK_OSC32K_ON_DEMAND             true

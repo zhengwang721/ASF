@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D2x Clock Driver
+ * \brief SAM D21 Clock Driver
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,10 +41,110 @@
  *
  */
 #include <clock.h>
-#include "clock_private.h"
 #include <conf_clocks.h>
 #include <system.h>
 
+/**
+ * \internal
+ * \brief DFLL-specific data container
+ */
+struct _system_clock_dfll_config {
+	uint32_t control;
+	uint32_t val;
+	uint32_t mul;
+};
+
+/**
+ * \internal
+ * \brief DPLL-specific data container
+ */
+struct _system_clock_dpll_config {
+	uint32_t frequency;
+};
+
+
+/**
+ * \internal
+ * \brief XOSC-specific data container
+ */
+struct _system_clock_xosc_config {
+	uint32_t frequency;
+};
+
+/**
+ * \internal
+ * \brief System clock module data container
+ */
+struct _system_clock_module {
+	volatile struct _system_clock_dfll_config dfll;
+
+#ifdef FEATURE_SYSTEM_CLOCK_DPLL
+	volatile struct _system_clock_dpll_config dpll;
+#endif
+
+	volatile struct _system_clock_xosc_config xosc;
+	volatile struct _system_clock_xosc_config xosc32k;
+};
+
+/**
+ * \internal
+ * \brief Internal module instance to cache configuration values
+ */
+static struct _system_clock_module _system_clock_inst = {
+		.dfll = {
+			.control     = 0,
+			.val     = 0,
+			.mul     = 0,
+		},
+
+#ifdef FEATURE_SYSTEM_CLOCK_DPLL
+		.dpll = {
+			.frequency   = 0,
+		},
+#endif
+		.xosc = {
+			.frequency   = 0,
+		},
+		.xosc32k = {
+			.frequency   = 0,
+		},
+	};
+
+/**
+ * \internal
+ * \brief Wait for sync to the DFLL control registers
+ */
+static inline void _system_dfll_wait_for_sync(void)
+{
+	while (!(SYSCTRL->PCLKSR.reg & SYSCTRL_PCLKSR_DFLLRDY)) {
+		/* Wait for DFLL sync */
+	}
+}
+
+/**
+ * \internal
+ * \brief Wait for sync to the OSC32K control registers
+ */
+static inline void _system_osc32k_wait_for_sync(void)
+{
+	while (!(SYSCTRL->PCLKSR.reg & SYSCTRL_PCLKSR_OSC32KRDY)) {
+		/* Wait for OSC32K sync */
+	}
+}
+
+static inline void _system_clock_source_dfll_set_config_errata_9905(void)
+{
+
+	/* Disable ONDEMAND mode while writing configurations */
+	SYSCTRL->DFLLCTRL.reg = _system_clock_inst.dfll.control & ~SYSCTRL_DFLLCTRL_ONDEMAND;
+	_system_dfll_wait_for_sync();
+
+	SYSCTRL->DFLLMUL.reg = _system_clock_inst.dfll.mul;
+	SYSCTRL->DFLLVAL.reg = _system_clock_inst.dfll.val;
+
+	/* Write full configuration to DFLL control register */
+	SYSCTRL->DFLLCTRL.reg = _system_clock_inst.dfll.control;
+}
 
 /**
  * \brief Retrieve the frequency of a clock source
@@ -237,6 +337,102 @@ void system_clock_source_xosc32k_set_config(
 	SYSCTRL->XOSC32K = temp;
 }
 
+/**
+ * \brief Configure the DFLL clock source
+ *
+ * Configures the Digital Frequency Locked Loop clock source with the given
+ * configuration settings.
+ *
+ * \note The DFLL will be running when this function returns, as the DFLL module
+ *       needs to be enabled in order to perform the module configuration.
+ *
+ * \param[in] config  DFLL configuration structure containing the new config
+ */
+void system_clock_source_dfll_set_config(
+		struct system_clock_source_dfll_config *const config)
+{
+	_system_clock_inst.dfll.val =
+			SYSCTRL_DFLLVAL_COARSE(config->coarse_value) |
+			SYSCTRL_DFLLVAL_FINE(config->fine_value);
+
+	_system_clock_inst.dfll.control =
+			(uint32_t)config->wakeup_lock     |
+			(uint32_t)config->stable_tracking |
+			(uint32_t)config->quick_lock      |
+			(uint32_t)config->chill_cycle     |
+			((uint32_t)config->run_in_standby << SYSCTRL_DFLLCTRL_RUNSTDBY_Pos) |
+			((uint32_t)config->on_demand << SYSCTRL_DFLLCTRL_ONDEMAND_Pos);
+
+	if (config->loop_mode == SYSTEM_CLOCK_DFLL_LOOP_MODE_CLOSED) {
+
+		_system_clock_inst.dfll.mul =
+				SYSCTRL_DFLLMUL_CSTEP(config->coarse_max_step) |
+				SYSCTRL_DFLLMUL_FSTEP(config->fine_max_step)   |
+				SYSCTRL_DFLLMUL_MUL(config->multiply_factor);
+
+		/* Enable the closed loop mode */
+		_system_clock_inst.dfll.control |= config->loop_mode;
+	}
+}
+
+#ifdef FEATURE_SYSTEM_CLOCK_DPLL
+/**
+ * \brief Configure the DPLL clock source
+ *
+ * Configures the Digital Phase-Locked Loop clock source with the given
+ * configuration settings.
+ *
+ * \note The DPLL will be running when this function returns, as the DPLL module
+ *       needs to be enabled in order to perform the module configuration.
+ *
+ * \param[in] config  DPLL configuration structure containing the new config
+ */
+void system_clock_source_dpll_set_config(
+		struct system_clock_source_dpll_config *const config)
+{
+
+	uint32_t tmpldr;
+	uint8_t  tmpldrfrac;
+	uint32_t refclk;
+
+	refclk = config->reference_frequency;
+
+	/* Only reference clock REF1 can be divided */
+	if (config->reference_clock == SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_REF1) {
+		refclk = refclk / config->reference_divider;
+	}
+
+	/* Calculate LDRFRAC and LDR */
+	tmpldr = (config->output_frequency << 4) / refclk;
+	tmpldrfrac = tmpldr & 0x0f;
+	tmpldr = (tmpldr >> 4) - 1;
+
+	SYSCTRL->DPLLCTRLA.reg =
+			((uint32_t)config->on_demand << SYSCTRL_DPLLCTRLA_ONDEMAND_Pos) |
+			((uint32_t)config->run_in_standby << SYSCTRL_DPLLCTRLA_RUNSTDBY_Pos);
+
+	SYSCTRL->DPLLRATIO.reg =
+			SYSCTRL_DPLLRATIO_LDRFRAC(tmpldrfrac) |
+			SYSCTRL_DPLLRATIO_LDR(tmpldr);
+
+	SYSCTRL->DPLLCTRLB.reg =
+			SYSCTRL_DPLLCTRLB_DIV(config->reference_divider) |
+			((uint32_t)config->lock_bypass << SYSCTRL_DPLLCTRLB_LBYPASS_Pos) |
+			SYSCTRL_DPLLCTRLB_LTIME(config->lock_time) |
+			SYSCTRL_DPLLCTRLB_REFCLK(config->reference_clock) |
+			((uint32_t)config->wake_up_fast << SYSCTRL_DPLLCTRLB_WUF_Pos) |
+			((uint32_t)config->low_power_enable << SYSCTRL_DPLLCTRLB_LPEN_Pos) |
+			SYSCTRL_DPLLCTRLB_FILTER(config->filter);
+
+	/*
+	 * Fck = Fckrx * (LDR + 1 + LDRFRAC / 16)
+	 */
+	_system_clock_inst.dpll.frequency =
+			(config->reference_frequency * 
+			 (((tmpldr + 1) << 4) + tmpldrfrac)
+			) >> 4;
+}
+#endif
 
 /**
  * \brief Writes the calibration values for a given oscillator clock source
@@ -258,7 +454,10 @@ void system_clock_source_xosc32k_set_config(
  * \param[in] calibration_value  Calibration value to write
  * \param[in] freq_range         Frequency range (8MHz oscillator only)
  *
- * \retval STATUS_ERR_INVALID_ARG  The selected clock source is not available
+ * \retval STATUS_OK               The calibration value was written 
+ *                                 successfully.
+ * \retval STATUS_ERR_INVALID_ARG  The setting is not valid for selected clock 
+ *                                 source.
  */
 enum status_code system_clock_source_write_calibration(
 		const enum system_clock_source clock_source,
@@ -315,8 +514,6 @@ enum status_code system_clock_source_write_calibration(
  *                                 is ready
  * \retval STATUS_ERR_INVALID_ARG  The clock source is not available on this
  *                                 device
- *
- * \retval STATUS_ERR_NOT_INITIALIZED DFLL configuration is not initialized
  */
 enum status_code system_clock_source_enable(
 		const enum system_clock_source clock_source)
@@ -345,7 +542,7 @@ enum status_code system_clock_source_enable(
 
 #ifdef FEATURE_SYSTEM_CLOCK_DPLL
 	case SYSTEM_CLOCK_SOURCE_DPLL:
-		SYSCTRL->DPLLCTRLA.reg = SYSCTRL_DPLLCTRLA_ENABLE;
+		SYSCTRL->DPLLCTRLA.reg |= SYSCTRL_DPLLCTRLA_ENABLE;
 		break;
 #endif
 
@@ -457,7 +654,7 @@ bool system_clock_source_is_ready(
 
 #ifdef FEATURE_SYSTEM_CLOCK_DPLL
 	case SYSTEM_CLOCK_SOURCE_DPLL:
-		return SYSCTRL_DPLLSTATUS_CLKRDY;
+		return ((SYSCTRL->DPLLSTATUS.reg & SYSCTRL_DPLLSTATUS_CLKRDY) != 0);
 #endif
 
 	case SYSTEM_CLOCK_SOURCE_ULP32K:
@@ -554,7 +751,7 @@ void system_clock_init(void)
 	/* OSCK32K */
 #if CONF_CLOCK_OSC32K_ENABLE == true
 	SYSCTRL->OSC32K.bit.CALIB =
-			(*(uint32_t *)SYSCTRL_FUSES_OSC32KCAL_ADDR >> SYSCTRL_FUSES_OSC32KCAL_Pos);
+			(*(uint32_t *)SYSCTRL_FUSES_OSC32K_ADDR >> SYSCTRL_FUSES_OSC32K_Pos);
 
 	struct system_clock_source_osc32k_config osc32k_conf;
 	system_clock_source_osc32k_get_config_defaults(&osc32k_conf);
@@ -667,30 +864,30 @@ void system_clock_init(void)
 #endif
 
 	/* DPLL */
-
-#  ifdef FEATURE_SYSTEM_CLOCK_DPLL
-#    if (CONF_CLOCK_DPLL_ENABLE)
+#ifdef FEATURE_SYSTEM_CLOCK_DPLL
+#  if (CONF_CLOCK_DPLL_ENABLE == true)
 
 	struct system_clock_source_dpll_config dpll_config;
 	system_clock_source_dpll_get_config_defaults(&dpll_config);
 
-	dpll_config.on_demand       = CONF_CLOCK_DPLL_ON_DEMAND;
-	dpll_config.run_in_standby  = CONF_CLOCK_DPLL_RUN_IN_STANDBY;
-	dpll_config.lock_bypass     = CONF_CLOCK_DPLL_LOCK_BYPASS;
-	dpll_config.wake_up_fast    = CONF_CLOCK_DPLL_WAKE_UP_FAST;
+	dpll_config.on_demand        = CONF_CLOCK_DPLL_ON_DEMAND;
+	dpll_config.run_in_standby   = CONF_CLOCK_DPLL_RUN_IN_STANDBY;
+	dpll_config.lock_bypass      = CONF_CLOCK_DPLL_LOCK_BYPASS;
+	dpll_config.wake_up_fast     = CONF_CLOCK_DPLL_WAKE_UP_FAST;
+	dpll_config.low_power_enable = CONF_CLOCK_DPLL_LOW_POWER_ENABLE;
 
-	dpll_config.filter          = CONF_CLOCK_DPLL_FILTER;
+	dpll_config.filter           = CONF_CLOCK_DPLL_FILTER;
 
 	dpll_config.reference_clock     = CONF_CLOCK_DPLL_REFERENCE_CLOCK;
 	dpll_config.reference_frequency = CONF_CLOCK_DPLL_REFERENCE_FREQUENCY;
 	dpll_config.reference_divider   = CONF_CLOCK_DPLL_REFEREMCE_DIVIDER;
 	dpll_config.output_frequency    = CONF_CLOCK_DPLL_OUTPUT_FREQUENCY;
 
-	system_clock_source_set_config(&dpll_config);
+	system_clock_source_dpll_set_config(&dpll_config);
 	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_DPLL);
 
-#    endif
 #  endif
+#endif
 
 	/* CPU and BUS clocks */
 	system_cpu_clock_set_divider(CONF_CLOCK_CPU_DIVIDER);
