@@ -103,20 +103,21 @@ static void run_ioport_pin_test(const struct test_case *test)
 
 	/* Set IO pin as high */
 	ioport_set_pin_level(CONF_OUT_PIN, IOPORT_PIN_LEVEL_HIGH);
-
+	delay_ms(10);
 	pin_val = ioport_get_pin_level(CONF_IN_PIN);
 	test_assert_true(test, pin_val == 1,
 			"IOPORT Set pin level high test failed");
 
 	/* Set IO pin as low */
 	ioport_set_pin_level(CONF_OUT_PIN, IOPORT_PIN_LEVEL_LOW);
-
+	delay_ms(10);
 	pin_val = ioport_get_pin_level(CONF_IN_PIN);
 	test_assert_true(test, pin_val == 0,
 			"IOPORT Set pin level low test failed");
 
 	/* Toggle IO pin */
 	ioport_toggle_pin_level(CONF_OUT_PIN);
+	delay_ms(10);
 	pin_val = ioport_get_pin_level(CONF_IN_PIN);
 	test_assert_true(test, pin_val == 1,
 			"IOPORT Set pin level toggle test failed");
@@ -144,16 +145,19 @@ static void run_ioport_port_test(const struct test_case *test)
 
 	/* Set  IOPORT as high */
 	ioport_set_port_level(CONF_PORT, CONF_PORT_OUT_PIN_MASK, IOPORT_PIN_LEVEL_HIGH);
+	delay_ms(10);
 	port_val = ioport_get_port_level(CONF_PORT, CONF_PORT_IN_PIN_MASK);
 	test_assert_true(test, port_val == CONF_PORT_IN_PIN_MASK, "IOPORT Set port level high test failed.");
 	
 	/* Set  IOPORT as low */
 	ioport_set_port_level(CONF_PORT, CONF_PORT_OUT_PIN_MASK, IOPORT_PIN_LEVEL_LOW);
+	delay_ms(10);
 	port_val = ioport_get_port_level(CONF_PORT, CONF_PORT_IN_PIN_MASK);
 	test_assert_true(test, port_val == 0, "IOPORT Set port level lowtest failed.");
 
 	/* Toggle  IOPORT */
 	ioport_toggle_port_level(CONF_PORT, CONF_PORT_OUT_PIN_MASK);
+	delay_ms(10);
 	port_val = ioport_get_port_level(CONF_PORT, CONF_PORT_IN_PIN_MASK);
 	test_assert_true(test, port_val == CONF_PORT_IN_PIN_MASK, "IOPORT Set port level toggle test failed.");
 }
