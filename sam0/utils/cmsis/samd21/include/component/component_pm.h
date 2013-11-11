@@ -371,9 +371,7 @@ typedef union {
     uint32_t DAC:1;            /*!< bit:     18  DAC APB Clock Enable               */
     uint32_t :1;               /*!< bit:     19  Reserved                           */
     uint32_t I2S:1;            /*!< bit:     20  I2S APB Clock Enable               */
-    uint32_t RFCTRL:1;         /*!< bit:     21  RFCTRL APB Clock Enable            */
-    uint32_t OZCTRL:1;         /*!< bit:     22  OZCTRL APB Clock Enable            */
-    uint32_t :9;               /*!< bit: 23..31  Reserved                           */
+    uint32_t :11;              /*!< bit: 21..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } PM_APBCMASK_Type;
@@ -422,11 +420,7 @@ typedef union {
 #define PM_APBCMASK_DAC             (0x1u << PM_APBCMASK_DAC_Pos)
 #define PM_APBCMASK_I2S_Pos         20           /**< \brief (PM_APBCMASK) I2S APB Clock Enable */
 #define PM_APBCMASK_I2S             (0x1u << PM_APBCMASK_I2S_Pos)
-#define PM_APBCMASK_RFCTRL_Pos      21           /**< \brief (PM_APBCMASK) RFCTRL APB Clock Enable */
-#define PM_APBCMASK_RFCTRL          (0x1u << PM_APBCMASK_RFCTRL_Pos)
-#define PM_APBCMASK_OZCTRL_Pos      22           /**< \brief (PM_APBCMASK) OZCTRL APB Clock Enable */
-#define PM_APBCMASK_OZCTRL          (0x1u << PM_APBCMASK_OZCTRL_Pos)
-#define PM_APBCMASK_MASK            0x0077FFFFu  /**< \brief (PM_APBCMASK) MASK Register */
+#define PM_APBCMASK_MASK            0x0017FFFFu  /**< \brief (PM_APBCMASK) MASK Register */
 
 /* -------- PM_INTENCLR : (PM Offset: 0x34) (R/W  8) Interrupt Enable Clear -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))

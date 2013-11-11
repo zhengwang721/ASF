@@ -69,9 +69,7 @@ typedef union {
     uint32_t BOD33RDY:1;       /*!< bit:      9  BOD33 Ready Interrupt Enable       */
     uint32_t BOD33DET:1;       /*!< bit:     10  BOD33 Detection Interrupt Enable   */
     uint32_t B33SRDY:1;        /*!< bit:     11  BOD33 Synchronization Ready Interrupt Enable */
-    uint32_t BOD12RDY:1;       /*!< bit:     12  BOD12 Ready Interrupt Enable       */
-    uint32_t BOD12DET:1;       /*!< bit:     13  BOD12 Detection Interrupt Enable   */
-    uint32_t B12SRDY:1;        /*!< bit:     14  BOD12 Synchronization Ready Interrupt Enable */
+    uint32_t :3;               /*!< bit: 12..14  Reserved                           */
     uint32_t DPLLLCKR:1;       /*!< bit:     15  DPLL Lock Rise Interrupt Enable    */
     uint32_t DPLLLCKF:1;       /*!< bit:     16  DPLL Lock Fall Interrupt Enable    */
     uint32_t DPLLLTO:1;        /*!< bit:     17  DPLL Lock Timeout Interrupt Enable */
@@ -108,19 +106,13 @@ typedef union {
 #define SYSCTRL_INTENCLR_BOD33DET   (0x1u << SYSCTRL_INTENCLR_BOD33DET_Pos)
 #define SYSCTRL_INTENCLR_B33SRDY_Pos 11           /**< \brief (SYSCTRL_INTENCLR) BOD33 Synchronization Ready Interrupt Enable */
 #define SYSCTRL_INTENCLR_B33SRDY    (0x1u << SYSCTRL_INTENCLR_B33SRDY_Pos)
-#define SYSCTRL_INTENCLR_BOD12RDY_Pos 12           /**< \brief (SYSCTRL_INTENCLR) BOD12 Ready Interrupt Enable */
-#define SYSCTRL_INTENCLR_BOD12RDY   (0x1u << SYSCTRL_INTENCLR_BOD12RDY_Pos)
-#define SYSCTRL_INTENCLR_BOD12DET_Pos 13           /**< \brief (SYSCTRL_INTENCLR) BOD12 Detection Interrupt Enable */
-#define SYSCTRL_INTENCLR_BOD12DET   (0x1u << SYSCTRL_INTENCLR_BOD12DET_Pos)
-#define SYSCTRL_INTENCLR_B12SRDY_Pos 14           /**< \brief (SYSCTRL_INTENCLR) BOD12 Synchronization Ready Interrupt Enable */
-#define SYSCTRL_INTENCLR_B12SRDY    (0x1u << SYSCTRL_INTENCLR_B12SRDY_Pos)
 #define SYSCTRL_INTENCLR_DPLLLCKR_Pos 15           /**< \brief (SYSCTRL_INTENCLR) DPLL Lock Rise Interrupt Enable */
 #define SYSCTRL_INTENCLR_DPLLLCKR   (0x1u << SYSCTRL_INTENCLR_DPLLLCKR_Pos)
 #define SYSCTRL_INTENCLR_DPLLLCKF_Pos 16           /**< \brief (SYSCTRL_INTENCLR) DPLL Lock Fall Interrupt Enable */
 #define SYSCTRL_INTENCLR_DPLLLCKF   (0x1u << SYSCTRL_INTENCLR_DPLLLCKF_Pos)
 #define SYSCTRL_INTENCLR_DPLLLTO_Pos 17           /**< \brief (SYSCTRL_INTENCLR) DPLL Lock Timeout Interrupt Enable */
 #define SYSCTRL_INTENCLR_DPLLLTO    (0x1u << SYSCTRL_INTENCLR_DPLLLTO_Pos)
-#define SYSCTRL_INTENCLR_MASK       0x0003FFFFu  /**< \brief (SYSCTRL_INTENCLR) MASK Register */
+#define SYSCTRL_INTENCLR_MASK       0x00038FFFu  /**< \brief (SYSCTRL_INTENCLR) MASK Register */
 
 /* -------- SYSCTRL_INTENSET : (SYSCTRL Offset: 0x04) (R/W 32) Interrupt Enable Set -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -138,9 +130,7 @@ typedef union {
     uint32_t BOD33RDY:1;       /*!< bit:      9  BOD33 Ready Interrupt Enable       */
     uint32_t BOD33DET:1;       /*!< bit:     10  BOD33 Detection Interrupt Enable   */
     uint32_t B33SRDY:1;        /*!< bit:     11  BOD33 Synchronization Ready Interrupt Enable */
-    uint32_t BOD12RDY:1;       /*!< bit:     12  BOD12 Ready Interrupt Enable       */
-    uint32_t BOD12DET:1;       /*!< bit:     13  BOD12 Detection Interrupt Enable   */
-    uint32_t B12SRDY:1;        /*!< bit:     14  BOD12 Synchronization Ready Interrupt Enable */
+    uint32_t :3;               /*!< bit: 12..14  Reserved                           */
     uint32_t DPLLLCKR:1;       /*!< bit:     15  DPLL Lock Rise Interrupt Enable    */
     uint32_t DPLLLCKF:1;       /*!< bit:     16  DPLL Lock Fall Interrupt Enable    */
     uint32_t DPLLLTO:1;        /*!< bit:     17  DPLL Lock Timeout Interrupt Enable */
@@ -177,19 +167,13 @@ typedef union {
 #define SYSCTRL_INTENSET_BOD33DET   (0x1u << SYSCTRL_INTENSET_BOD33DET_Pos)
 #define SYSCTRL_INTENSET_B33SRDY_Pos 11           /**< \brief (SYSCTRL_INTENSET) BOD33 Synchronization Ready Interrupt Enable */
 #define SYSCTRL_INTENSET_B33SRDY    (0x1u << SYSCTRL_INTENSET_B33SRDY_Pos)
-#define SYSCTRL_INTENSET_BOD12RDY_Pos 12           /**< \brief (SYSCTRL_INTENSET) BOD12 Ready Interrupt Enable */
-#define SYSCTRL_INTENSET_BOD12RDY   (0x1u << SYSCTRL_INTENSET_BOD12RDY_Pos)
-#define SYSCTRL_INTENSET_BOD12DET_Pos 13           /**< \brief (SYSCTRL_INTENSET) BOD12 Detection Interrupt Enable */
-#define SYSCTRL_INTENSET_BOD12DET   (0x1u << SYSCTRL_INTENSET_BOD12DET_Pos)
-#define SYSCTRL_INTENSET_B12SRDY_Pos 14           /**< \brief (SYSCTRL_INTENSET) BOD12 Synchronization Ready Interrupt Enable */
-#define SYSCTRL_INTENSET_B12SRDY    (0x1u << SYSCTRL_INTENSET_B12SRDY_Pos)
 #define SYSCTRL_INTENSET_DPLLLCKR_Pos 15           /**< \brief (SYSCTRL_INTENSET) DPLL Lock Rise Interrupt Enable */
 #define SYSCTRL_INTENSET_DPLLLCKR   (0x1u << SYSCTRL_INTENSET_DPLLLCKR_Pos)
 #define SYSCTRL_INTENSET_DPLLLCKF_Pos 16           /**< \brief (SYSCTRL_INTENSET) DPLL Lock Fall Interrupt Enable */
 #define SYSCTRL_INTENSET_DPLLLCKF   (0x1u << SYSCTRL_INTENSET_DPLLLCKF_Pos)
 #define SYSCTRL_INTENSET_DPLLLTO_Pos 17           /**< \brief (SYSCTRL_INTENSET) DPLL Lock Timeout Interrupt Enable */
 #define SYSCTRL_INTENSET_DPLLLTO    (0x1u << SYSCTRL_INTENSET_DPLLLTO_Pos)
-#define SYSCTRL_INTENSET_MASK       0x0003FFFFu  /**< \brief (SYSCTRL_INTENSET) MASK Register */
+#define SYSCTRL_INTENSET_MASK       0x00038FFFu  /**< \brief (SYSCTRL_INTENSET) MASK Register */
 
 /* -------- SYSCTRL_INTFLAG : (SYSCTRL Offset: 0x08) (R/W 32) Interrupt Flag Status and Clear -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -207,9 +191,7 @@ typedef union {
     uint32_t BOD33RDY:1;       /*!< bit:      9  BOD33 Ready                        */
     uint32_t BOD33DET:1;       /*!< bit:     10  BOD33 Detection                    */
     uint32_t B33SRDY:1;        /*!< bit:     11  BOD33 Synchronization Ready        */
-    uint32_t BOD12RDY:1;       /*!< bit:     12  BOD12 Ready                        */
-    uint32_t BOD12DET:1;       /*!< bit:     13  BOD12 Detection                    */
-    uint32_t B12SRDY:1;        /*!< bit:     14  BOD12 Synchronization Ready        */
+    uint32_t :3;               /*!< bit: 12..14  Reserved                           */
     uint32_t DPLLLCKR:1;       /*!< bit:     15  DPLL Lock Rise                     */
     uint32_t DPLLLCKF:1;       /*!< bit:     16  DPLL Lock Fall                     */
     uint32_t DPLLLTO:1;        /*!< bit:     17  DPLL Lock Timeout                  */
@@ -246,19 +228,13 @@ typedef union {
 #define SYSCTRL_INTFLAG_BOD33DET    (0x1u << SYSCTRL_INTFLAG_BOD33DET_Pos)
 #define SYSCTRL_INTFLAG_B33SRDY_Pos 11           /**< \brief (SYSCTRL_INTFLAG) BOD33 Synchronization Ready */
 #define SYSCTRL_INTFLAG_B33SRDY     (0x1u << SYSCTRL_INTFLAG_B33SRDY_Pos)
-#define SYSCTRL_INTFLAG_BOD12RDY_Pos 12           /**< \brief (SYSCTRL_INTFLAG) BOD12 Ready */
-#define SYSCTRL_INTFLAG_BOD12RDY    (0x1u << SYSCTRL_INTFLAG_BOD12RDY_Pos)
-#define SYSCTRL_INTFLAG_BOD12DET_Pos 13           /**< \brief (SYSCTRL_INTFLAG) BOD12 Detection */
-#define SYSCTRL_INTFLAG_BOD12DET    (0x1u << SYSCTRL_INTFLAG_BOD12DET_Pos)
-#define SYSCTRL_INTFLAG_B12SRDY_Pos 14           /**< \brief (SYSCTRL_INTFLAG) BOD12 Synchronization Ready */
-#define SYSCTRL_INTFLAG_B12SRDY     (0x1u << SYSCTRL_INTFLAG_B12SRDY_Pos)
 #define SYSCTRL_INTFLAG_DPLLLCKR_Pos 15           /**< \brief (SYSCTRL_INTFLAG) DPLL Lock Rise */
 #define SYSCTRL_INTFLAG_DPLLLCKR    (0x1u << SYSCTRL_INTFLAG_DPLLLCKR_Pos)
 #define SYSCTRL_INTFLAG_DPLLLCKF_Pos 16           /**< \brief (SYSCTRL_INTFLAG) DPLL Lock Fall */
 #define SYSCTRL_INTFLAG_DPLLLCKF    (0x1u << SYSCTRL_INTFLAG_DPLLLCKF_Pos)
 #define SYSCTRL_INTFLAG_DPLLLTO_Pos 17           /**< \brief (SYSCTRL_INTFLAG) DPLL Lock Timeout */
 #define SYSCTRL_INTFLAG_DPLLLTO     (0x1u << SYSCTRL_INTFLAG_DPLLLTO_Pos)
-#define SYSCTRL_INTFLAG_MASK        0x0003FFFFu  /**< \brief (SYSCTRL_INTFLAG) MASK Register */
+#define SYSCTRL_INTFLAG_MASK        0x00038FFFu  /**< \brief (SYSCTRL_INTFLAG) MASK Register */
 
 /* -------- SYSCTRL_PCLKSR : (SYSCTRL Offset: 0x0C) (R/  32) Power and Clocks Status -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -276,9 +252,7 @@ typedef union {
     uint32_t BOD33RDY:1;       /*!< bit:      9  BOD33 Ready                        */
     uint32_t BOD33DET:1;       /*!< bit:     10  BOD33 Detection                    */
     uint32_t B33SRDY:1;        /*!< bit:     11  BOD33 Synchronization Ready        */
-    uint32_t BOD12RDY:1;       /*!< bit:     12  BOD12 Ready                        */
-    uint32_t BOD12DET:1;       /*!< bit:     13  BOD12 Detection                    */
-    uint32_t B12SRDY:1;        /*!< bit:     14  BOD12 Synchronization Ready        */
+    uint32_t :3;               /*!< bit: 12..14  Reserved                           */
     uint32_t DPLLLCKR:1;       /*!< bit:     15  DPLL Lock Rise                     */
     uint32_t DPLLLCKF:1;       /*!< bit:     16  DPLL Lock Fall                     */
     uint32_t DPLLLTO:1;        /*!< bit:     17  DPLL Lock Timeout                  */
@@ -315,19 +289,13 @@ typedef union {
 #define SYSCTRL_PCLKSR_BOD33DET     (0x1u << SYSCTRL_PCLKSR_BOD33DET_Pos)
 #define SYSCTRL_PCLKSR_B33SRDY_Pos  11           /**< \brief (SYSCTRL_PCLKSR) BOD33 Synchronization Ready */
 #define SYSCTRL_PCLKSR_B33SRDY      (0x1u << SYSCTRL_PCLKSR_B33SRDY_Pos)
-#define SYSCTRL_PCLKSR_BOD12RDY_Pos 12           /**< \brief (SYSCTRL_PCLKSR) BOD12 Ready */
-#define SYSCTRL_PCLKSR_BOD12RDY     (0x1u << SYSCTRL_PCLKSR_BOD12RDY_Pos)
-#define SYSCTRL_PCLKSR_BOD12DET_Pos 13           /**< \brief (SYSCTRL_PCLKSR) BOD12 Detection */
-#define SYSCTRL_PCLKSR_BOD12DET     (0x1u << SYSCTRL_PCLKSR_BOD12DET_Pos)
-#define SYSCTRL_PCLKSR_B12SRDY_Pos  14           /**< \brief (SYSCTRL_PCLKSR) BOD12 Synchronization Ready */
-#define SYSCTRL_PCLKSR_B12SRDY      (0x1u << SYSCTRL_PCLKSR_B12SRDY_Pos)
 #define SYSCTRL_PCLKSR_DPLLLCKR_Pos 15           /**< \brief (SYSCTRL_PCLKSR) DPLL Lock Rise */
 #define SYSCTRL_PCLKSR_DPLLLCKR     (0x1u << SYSCTRL_PCLKSR_DPLLLCKR_Pos)
 #define SYSCTRL_PCLKSR_DPLLLCKF_Pos 16           /**< \brief (SYSCTRL_PCLKSR) DPLL Lock Fall */
 #define SYSCTRL_PCLKSR_DPLLLCKF     (0x1u << SYSCTRL_PCLKSR_DPLLLCKF_Pos)
 #define SYSCTRL_PCLKSR_DPLLLTO_Pos  17           /**< \brief (SYSCTRL_PCLKSR) DPLL Lock Timeout */
 #define SYSCTRL_PCLKSR_DPLLLTO      (0x1u << SYSCTRL_PCLKSR_DPLLLTO_Pos)
-#define SYSCTRL_PCLKSR_MASK         0x0003FFFFu  /**< \brief (SYSCTRL_PCLKSR) MASK Register */
+#define SYSCTRL_PCLKSR_MASK         0x00038FFFu  /**< \brief (SYSCTRL_PCLKSR) MASK Register */
 
 /* -------- SYSCTRL_XOSC : (SYSCTRL Offset: 0x10) (R/W 16) External Multipurpose Crystal Oscillator (XOSC) Control -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -510,7 +478,7 @@ typedef union {
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #define SYSCTRL_OSC8M_OFFSET        0x20         /**< \brief (SYSCTRL_OSC8M offset) 8MHz Internal Oscillator (OSC8M) Control */
-#define SYSCTRL_OSC8M_RESETVALUE    0x00000080   /**< \brief (SYSCTRL_OSC8M reset_value) 8MHz Internal Oscillator (OSC8M) Control */
+#define SYSCTRL_OSC8M_RESETVALUE    0x87070382   /**< \brief (SYSCTRL_OSC8M reset_value) 8MHz Internal Oscillator (OSC8M) Control */
 
 #define SYSCTRL_OSC8M_ENABLE_Pos    1            /**< \brief (SYSCTRL_OSC8M) Oscillator Enable */
 #define SYSCTRL_OSC8M_ENABLE        (0x1u << SYSCTRL_OSC8M_ENABLE_Pos)
@@ -748,115 +716,6 @@ typedef union {
 #define SYSCTRL_BOD33_LEVEL(value)  ((SYSCTRL_BOD33_LEVEL_Msk & ((value) << SYSCTRL_BOD33_LEVEL_Pos)))
 #define SYSCTRL_BOD33_MASK          0x003FF35Eu  /**< \brief (SYSCTRL_BOD33) MASK Register */
 
-/* -------- SYSCTRL_BOD12 : (SYSCTRL Offset: 0x38) (R/W 32) 1.2V Brown-Out Detector (BOD12) Control -------- */
-#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
-  struct {
-    uint32_t :1;               /*!< bit:      0  Reserved                           */
-    uint32_t ENABLE:1;         /*!< bit:      1  Enable                             */
-    uint32_t HYST:1;           /*!< bit:      2  Hysteresis                         */
-    uint32_t ACTION:2;         /*!< bit:  3.. 4  BOD12 Action                       */
-    uint32_t :3;               /*!< bit:  5.. 7  Reserved                           */
-    uint32_t MODE:1;           /*!< bit:      8  Operation mode                     */
-    uint32_t CEN:1;            /*!< bit:      9  Clock Enable                       */
-    uint32_t :2;               /*!< bit: 10..11  Reserved                           */
-    uint32_t PSEL:4;           /*!< bit: 12..15  Prescaler Select                   */
-    uint32_t LEVEL:5;          /*!< bit: 16..20  BOD12 Threshold Level              */
-    uint32_t :11;              /*!< bit: 21..31  Reserved                           */
-  } bit;                       /*!< Structure used for bit  access                  */
-  uint32_t reg;                /*!< Type      used for register access              */
-} SYSCTRL_BOD12_Type;
-#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
-
-#define SYSCTRL_BOD12_OFFSET        0x38         /**< \brief (SYSCTRL_BOD12 offset) 1.2V Brown-Out Detector (BOD12) Control */
-#define SYSCTRL_BOD12_RESETVALUE    0x00000000   /**< \brief (SYSCTRL_BOD12 reset_value) 1.2V Brown-Out Detector (BOD12) Control */
-
-#define SYSCTRL_BOD12_ENABLE_Pos    1            /**< \brief (SYSCTRL_BOD12) Enable */
-#define SYSCTRL_BOD12_ENABLE        (0x1u << SYSCTRL_BOD12_ENABLE_Pos)
-#define SYSCTRL_BOD12_HYST_Pos      2            /**< \brief (SYSCTRL_BOD12) Hysteresis */
-#define SYSCTRL_BOD12_HYST          (0x1u << SYSCTRL_BOD12_HYST_Pos)
-#define SYSCTRL_BOD12_ACTION_Pos    3            /**< \brief (SYSCTRL_BOD12) BOD12 Action */
-#define SYSCTRL_BOD12_ACTION_Msk    (0x3u << SYSCTRL_BOD12_ACTION_Pos)
-#define SYSCTRL_BOD12_ACTION(value) ((SYSCTRL_BOD12_ACTION_Msk & ((value) << SYSCTRL_BOD12_ACTION_Pos)))
-#define   SYSCTRL_BOD12_ACTION_NONE_Val   0x0u   /**< \brief (SYSCTRL_BOD12) No action */
-#define   SYSCTRL_BOD12_ACTION_RESET_Val  0x1u   /**< \brief (SYSCTRL_BOD12) The BOD12 generates a reset */
-#define   SYSCTRL_BOD12_ACTION_INTERRUPT_Val 0x2u   /**< \brief (SYSCTRL_BOD12) The BOD12 generates an interrupt */
-#define SYSCTRL_BOD12_ACTION_NONE   (SYSCTRL_BOD12_ACTION_NONE_Val << SYSCTRL_BOD12_ACTION_Pos)
-#define SYSCTRL_BOD12_ACTION_RESET  (SYSCTRL_BOD12_ACTION_RESET_Val << SYSCTRL_BOD12_ACTION_Pos)
-#define SYSCTRL_BOD12_ACTION_INTERRUPT (SYSCTRL_BOD12_ACTION_INTERRUPT_Val << SYSCTRL_BOD12_ACTION_Pos)
-#define SYSCTRL_BOD12_MODE_Pos      8            /**< \brief (SYSCTRL_BOD12) Operation mode */
-#define SYSCTRL_BOD12_MODE          (0x1u << SYSCTRL_BOD12_MODE_Pos)
-#define SYSCTRL_BOD12_CEN_Pos       9            /**< \brief (SYSCTRL_BOD12) Clock Enable */
-#define SYSCTRL_BOD12_CEN           (0x1u << SYSCTRL_BOD12_CEN_Pos)
-#define SYSCTRL_BOD12_PSEL_Pos      12           /**< \brief (SYSCTRL_BOD12) Prescaler Select */
-#define SYSCTRL_BOD12_PSEL_Msk      (0xFu << SYSCTRL_BOD12_PSEL_Pos)
-#define SYSCTRL_BOD12_PSEL(value)   ((SYSCTRL_BOD12_PSEL_Msk & ((value) << SYSCTRL_BOD12_PSEL_Pos)))
-#define   SYSCTRL_BOD12_PSEL_DIV2_Val     0x0u   /**< \brief (SYSCTRL_BOD12) Divide clock by 2 */
-#define   SYSCTRL_BOD12_PSEL_DIV4_Val     0x1u   /**< \brief (SYSCTRL_BOD12) Divide clock by 4 */
-#define   SYSCTRL_BOD12_PSEL_DIV8_Val     0x2u   /**< \brief (SYSCTRL_BOD12) Divide clock by 8 */
-#define   SYSCTRL_BOD12_PSEL_DIV16_Val    0x3u   /**< \brief (SYSCTRL_BOD12) Divide clock by 16 */
-#define   SYSCTRL_BOD12_PSEL_DIV32_Val    0x4u   /**< \brief (SYSCTRL_BOD12) Divide clock by 32 */
-#define   SYSCTRL_BOD12_PSEL_DIV64_Val    0x5u   /**< \brief (SYSCTRL_BOD12) Divide clock by 64 */
-#define   SYSCTRL_BOD12_PSEL_DIV128_Val   0x6u   /**< \brief (SYSCTRL_BOD12) Divide clock by 128 */
-#define   SYSCTRL_BOD12_PSEL_DIV256_Val   0x7u   /**< \brief (SYSCTRL_BOD12) Divide clock by 256 */
-#define   SYSCTRL_BOD12_PSEL_DIV512_Val   0x8u   /**< \brief (SYSCTRL_BOD12) Divide clock by 512 */
-#define   SYSCTRL_BOD12_PSEL_DIV1K_Val    0x9u   /**< \brief (SYSCTRL_BOD12) Divide clock by 1024 */
-#define   SYSCTRL_BOD12_PSEL_DIV2K_Val    0xAu   /**< \brief (SYSCTRL_BOD12) Divide clock by 2048 */
-#define   SYSCTRL_BOD12_PSEL_DIV4K_Val    0xBu   /**< \brief (SYSCTRL_BOD12) Divide clock by 4096 */
-#define   SYSCTRL_BOD12_PSEL_DIV8K_Val    0xCu   /**< \brief (SYSCTRL_BOD12) Divide clock by 8192 */
-#define   SYSCTRL_BOD12_PSEL_DIV16K_Val   0xDu   /**< \brief (SYSCTRL_BOD12) Divide clock by 16384 */
-#define   SYSCTRL_BOD12_PSEL_DIV32K_Val   0xEu   /**< \brief (SYSCTRL_BOD12) Divide clock by 32768 */
-#define   SYSCTRL_BOD12_PSEL_DIV64K_Val   0xFu   /**< \brief (SYSCTRL_BOD12) Divide clock by 65536 */
-#define SYSCTRL_BOD12_PSEL_DIV2     (SYSCTRL_BOD12_PSEL_DIV2_Val   << SYSCTRL_BOD12_PSEL_Pos)
-#define SYSCTRL_BOD12_PSEL_DIV4     (SYSCTRL_BOD12_PSEL_DIV4_Val   << SYSCTRL_BOD12_PSEL_Pos)
-#define SYSCTRL_BOD12_PSEL_DIV8     (SYSCTRL_BOD12_PSEL_DIV8_Val   << SYSCTRL_BOD12_PSEL_Pos)
-#define SYSCTRL_BOD12_PSEL_DIV16    (SYSCTRL_BOD12_PSEL_DIV16_Val  << SYSCTRL_BOD12_PSEL_Pos)
-#define SYSCTRL_BOD12_PSEL_DIV32    (SYSCTRL_BOD12_PSEL_DIV32_Val  << SYSCTRL_BOD12_PSEL_Pos)
-#define SYSCTRL_BOD12_PSEL_DIV64    (SYSCTRL_BOD12_PSEL_DIV64_Val  << SYSCTRL_BOD12_PSEL_Pos)
-#define SYSCTRL_BOD12_PSEL_DIV128   (SYSCTRL_BOD12_PSEL_DIV128_Val << SYSCTRL_BOD12_PSEL_Pos)
-#define SYSCTRL_BOD12_PSEL_DIV256   (SYSCTRL_BOD12_PSEL_DIV256_Val << SYSCTRL_BOD12_PSEL_Pos)
-#define SYSCTRL_BOD12_PSEL_DIV512   (SYSCTRL_BOD12_PSEL_DIV512_Val << SYSCTRL_BOD12_PSEL_Pos)
-#define SYSCTRL_BOD12_PSEL_DIV1K    (SYSCTRL_BOD12_PSEL_DIV1K_Val  << SYSCTRL_BOD12_PSEL_Pos)
-#define SYSCTRL_BOD12_PSEL_DIV2K    (SYSCTRL_BOD12_PSEL_DIV2K_Val  << SYSCTRL_BOD12_PSEL_Pos)
-#define SYSCTRL_BOD12_PSEL_DIV4K    (SYSCTRL_BOD12_PSEL_DIV4K_Val  << SYSCTRL_BOD12_PSEL_Pos)
-#define SYSCTRL_BOD12_PSEL_DIV8K    (SYSCTRL_BOD12_PSEL_DIV8K_Val  << SYSCTRL_BOD12_PSEL_Pos)
-#define SYSCTRL_BOD12_PSEL_DIV16K   (SYSCTRL_BOD12_PSEL_DIV16K_Val << SYSCTRL_BOD12_PSEL_Pos)
-#define SYSCTRL_BOD12_PSEL_DIV32K   (SYSCTRL_BOD12_PSEL_DIV32K_Val << SYSCTRL_BOD12_PSEL_Pos)
-#define SYSCTRL_BOD12_PSEL_DIV64K   (SYSCTRL_BOD12_PSEL_DIV64K_Val << SYSCTRL_BOD12_PSEL_Pos)
-#define SYSCTRL_BOD12_LEVEL_Pos     16           /**< \brief (SYSCTRL_BOD12) BOD12 Threshold Level */
-#define SYSCTRL_BOD12_LEVEL_Msk     (0x1Fu << SYSCTRL_BOD12_LEVEL_Pos)
-#define SYSCTRL_BOD12_LEVEL(value)  ((SYSCTRL_BOD12_LEVEL_Msk & ((value) << SYSCTRL_BOD12_LEVEL_Pos)))
-#define SYSCTRL_BOD12_MASK          0x001FF31Eu  /**< \brief (SYSCTRL_BOD12) MASK Register */
-
-/* -------- SYSCTRL_VREG : (SYSCTRL Offset: 0x3C) (R/W 16) Voltage Regulator System (VREG) Control -------- */
-#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
-  struct {
-    uint16_t :6;               /*!< bit:  0.. 5  Reserved                           */
-    uint16_t RUNSTDBY:1;       /*!< bit:      6  Run in Standby                     */
-    uint16_t :1;               /*!< bit:      7  Reserved                           */
-    uint16_t LEVEL:3;          /*!< bit:  8..10  Voltage Regulator Level            */
-    uint16_t :1;               /*!< bit:     11  Reserved                           */
-    uint16_t CALIB:3;          /*!< bit: 12..14  Voltage Regulator Calibration      */
-    uint16_t :1;               /*!< bit:     15  Reserved                           */
-  } bit;                       /*!< Structure used for bit  access                  */
-  uint16_t reg;                /*!< Type      used for register access              */
-} SYSCTRL_VREG_Type;
-#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
-
-#define SYSCTRL_VREG_OFFSET         0x3C         /**< \brief (SYSCTRL_VREG offset) Voltage Regulator System (VREG) Control */
-#define SYSCTRL_VREG_RESETVALUE     0x0000       /**< \brief (SYSCTRL_VREG reset_value) Voltage Regulator System (VREG) Control */
-
-#define SYSCTRL_VREG_RUNSTDBY_Pos   6            /**< \brief (SYSCTRL_VREG) Run in Standby */
-#define SYSCTRL_VREG_RUNSTDBY       (0x1u << SYSCTRL_VREG_RUNSTDBY_Pos)
-#define SYSCTRL_VREG_LEVEL_Pos      8            /**< \brief (SYSCTRL_VREG) Voltage Regulator Level */
-#define SYSCTRL_VREG_LEVEL_Msk      (0x7u << SYSCTRL_VREG_LEVEL_Pos)
-#define SYSCTRL_VREG_LEVEL(value)   ((SYSCTRL_VREG_LEVEL_Msk & ((value) << SYSCTRL_VREG_LEVEL_Pos)))
-#define SYSCTRL_VREG_CALIB_Pos      12           /**< \brief (SYSCTRL_VREG) Voltage Regulator Calibration */
-#define SYSCTRL_VREG_CALIB_Msk      (0x7u << SYSCTRL_VREG_CALIB_Pos)
-#define SYSCTRL_VREG_CALIB(value)   ((SYSCTRL_VREG_CALIB_Msk & ((value) << SYSCTRL_VREG_CALIB_Pos)))
-#define SYSCTRL_VREG_MASK           0x7740u      /**< \brief (SYSCTRL_VREG) MASK Register */
-
 /* -------- SYSCTRL_VREF : (SYSCTRL Offset: 0x40) (R/W 32) Voltage References System (VREF) Control -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
@@ -1057,9 +916,7 @@ typedef struct {
   __IO SYSCTRL_DFLLSYNC_Type     DFLLSYNC;    /**< \brief Offset: 0x30 (R/W  8) DFLL48M Synchronization */
        RoReg8                    Reserved5[0x3];
   __IO SYSCTRL_BOD33_Type        BOD33;       /**< \brief Offset: 0x34 (R/W 32) 3.3V Brown-Out Detector (BOD33) Control */
-  __IO SYSCTRL_BOD12_Type        BOD12;       /**< \brief Offset: 0x38 (R/W 32) 1.2V Brown-Out Detector (BOD12) Control */
-  __IO SYSCTRL_VREG_Type         VREG;        /**< \brief Offset: 0x3C (R/W 16) Voltage Regulator System (VREG) Control */
-       RoReg8                    Reserved6[0x2];
+       RoReg8                    Reserved6[0x8];
   __IO SYSCTRL_VREF_Type         VREF;        /**< \brief Offset: 0x40 (R/W 32) Voltage References System (VREF) Control */
   __IO SYSCTRL_DPLLCTRLA_Type    DPLLCTRLA;   /**< \brief Offset: 0x44 (R/W  8) DPLL Control A */
        RoReg8                    Reserved7[0x3];
