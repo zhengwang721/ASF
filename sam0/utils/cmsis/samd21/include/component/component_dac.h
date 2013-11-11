@@ -232,7 +232,7 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint16_t DATA:16;          /*!< bit:  0..15  Data to be converted               */
+    uint16_t DATA:16;          /*!< bit:  0..15  Data value to be converted         */
   } bit;                       /*!< Structure used for bit  access                  */
   uint16_t reg;                /*!< Type      used for register access              */
 } DAC_DATA_Type;
@@ -241,7 +241,7 @@ typedef union {
 #define DAC_DATA_OFFSET             0x8          /**< \brief (DAC_DATA offset) Data */
 #define DAC_DATA_RESETVALUE         0x0000       /**< \brief (DAC_DATA reset_value) Data */
 
-#define DAC_DATA_DATA_Pos           0            /**< \brief (DAC_DATA) Data to be converted */
+#define DAC_DATA_DATA_Pos           0            /**< \brief (DAC_DATA) Data value to be converted */
 #define DAC_DATA_DATA_Msk           (0xFFFFu << DAC_DATA_DATA_Pos)
 #define DAC_DATA_DATA(value)        ((DAC_DATA_DATA_Msk & ((value) << DAC_DATA_DATA_Pos)))
 #define DAC_DATA_MASK               0xFFFFu      /**< \brief (DAC_DATA) MASK Register */

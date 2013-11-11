@@ -1113,13 +1113,21 @@ typedef union {
 /* -------- TCC_COUNT : (TCC Offset: 0x34) (R/W 32) Count -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
+  struct {
+    uint32_t COUNT:24;         /*!< bit:  0..23  Count Value                        */
+    uint32_t :8;               /*!< bit: 24..31  Reserved                           */
+  } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } TCC_COUNT_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #define TCC_COUNT_OFFSET            0x34         /**< \brief (TCC_COUNT offset) Count */
 #define TCC_COUNT_RESETVALUE        0x00000000   /**< \brief (TCC_COUNT reset_value) Count */
-#define TCC_COUNT_MASK              0x00000000u  /**< \brief (TCC_COUNT) MASK Register */
+
+#define TCC_COUNT_COUNT_Pos         0            /**< \brief (TCC_COUNT) Count Value */
+#define TCC_COUNT_COUNT_Msk         (0xFFFFFFu << TCC_COUNT_COUNT_Pos)
+#define TCC_COUNT_COUNT(value)      ((TCC_COUNT_COUNT_Msk & ((value) << TCC_COUNT_COUNT_Pos)))
+#define TCC_COUNT_MASK              0x00FFFFFFu  /**< \brief (TCC_COUNT) MASK Register */
 
 /* -------- TCC_PATT : (TCC Offset: 0x38) (R/W 16) Pattern -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
