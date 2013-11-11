@@ -228,6 +228,32 @@ void system_gclk_gen_disable(
 }
 
 /**
+ * \brief Determins if the specified Generic Clock Generator is enabled
+ *
+ * \param[in] generator  Generic Clock Generator index to check
+ *
+ * \return The enabled status.
+ * \retval true The Generic Clock Generator is enabled;
+ * \retval false The Generic Clock Generator is disabled.
+ */
+bool system_gclk_gen_is_enabled(
+		const uint8_t generator)
+{
+	bool enabled;
+
+	system_interrupt_enter_critical_section();
+
+	/* Select the requested generator */
+	*((uint8_t*)&GCLK->GENCTRL.reg) = generator;
+	/* Disable generator */
+	enabled = (GCLK->GENCTRL.reg & GCLK_GENCTRL_GENEN);
+
+	system_interrupt_leave_critical_section();
+
+	return enabled;
+}
+
+/**
  * \brief Retrieves the clock frequency of a Generic Clock generator.
  *
  * Determines the clock frequency (in Hz) of a specified Generic Clock
@@ -291,6 +317,7 @@ uint32_t system_gclk_gen_get_hz(
  *
  * \param[in] channel   Generic Clock channel to configure
  * \param[in] config    Configuration settings for the clock
+ *
  */
 void system_gclk_chan_set_config(
 		const uint8_t channel,
@@ -307,14 +334,21 @@ void system_gclk_chan_set_config(
 
 	/* Enable write lock if requested to prevent further modification */
 	if (config->write_lock) {
-		new_clkctrl_config |= GCLK_CLKCTRL_WRTLOCK;
+		/* Channel must be enabled since no further write is allowed */
+		new_clkctrl_config |= GCLK_CLKCTRL_WRTLOCK | GCLK_CLKCTRL_CLKEN;
 	}
 
 	/* Disable generic clock channel */
 	system_gclk_chan_disable(channel);
 
+	system_interrupt_enter_critical_section();
+
+	/* Select the requested generator channel */
+	*((uint8_t*)&GCLK->CLKCTRL.reg) = channel;
 	/* Write the new configuration */
 	GCLK->CLKCTRL.reg = new_clkctrl_config;
+
+	system_interrupt_leave_critical_section();
 }
 
 /**
@@ -355,6 +389,9 @@ void system_gclk_chan_disable(
 	/* Select the requested generator channel */
 	*((uint8_t*)&GCLK->CLKCTRL.reg) = channel;
 
+	/* Sanity check WRTLOCK */
+	Assert(GCLK->CLKCTRL.bit.WRTLOCK);
+
 	/* Switch to known-working source so that the channel can be disabled */
 	uint32_t prev_gen_id = GCLK->CLKCTRL.bit.GEN;
 	GCLK->CLKCTRL.bit.GEN = 0;
@@ -369,6 +406,56 @@ void system_gclk_chan_disable(
 	GCLK->CLKCTRL.bit.GEN = prev_gen_id;
 
 	system_interrupt_leave_critical_section();
+}
+
+/**
+ * \brief Determins if the specified Generic Clock channel is enabled
+ *
+ * \param[in] channel  Generic Clock Channel index
+ *
+ * \return The enabled status.
+ * \retval true The Generic Clock channel is enabled;
+ * \retval false The Generic Clock channel is disabled.
+ */
+bool system_gclk_chan_is_enabled(
+		const uint8_t channel)
+{
+	bool enabled;
+
+	system_interrupt_enter_critical_section();
+
+	/* Select the requested generic clock channel */
+	*((uint8_t*)&GCLK->CLKCTRL.reg) = channel;
+	enabled = GCLK->CLKCTRL.bit.WRTLOCK;
+
+	system_interrupt_leave_critical_section();
+
+	return enabled;
+}
+
+/**
+ * \brief Determins if the specified Generic Clock channel is locked
+ *
+ * \param[in] channel  Generic Clock Channel index
+ *
+ * \return The lock status.
+ * \retval true The Generic Clock channel is locked;
+ * \retval false The Generic Clock channel is not locked.
+ */
+bool system_gclk_chan_is_locked(
+		const uint8_t channel)
+{
+	bool locked;
+
+	system_interrupt_enter_critical_section();
+
+	/* Select the requested generic clock channel */
+	*((uint8_t*)&GCLK->CLKCTRL.reg) = channel;
+	locked = GCLK->CLKCTRL.bit.WRTLOCK;
+
+	system_interrupt_leave_critical_section();
+
+	return locked;
 }
 
 /**
