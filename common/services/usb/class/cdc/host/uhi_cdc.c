@@ -731,6 +731,7 @@ static void uhi_cdc_tx_send(
 	while (1) {
 		ptr_port = uhi_cdc_get_port(port++);
 		if (ptr_port == NULL) {
+			cpu_irq_restore(flags);
 			return;
 		}
 		line = &ptr_port->line_tx;
