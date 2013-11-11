@@ -212,7 +212,17 @@ static enum status_code _spi_set_config(
 		/* Enable receiver */
 		ctrlb |= SERCOM_SPI_CTRLB_RXEN;
 	}
+#if SAMD21
+	if (config->ssd_en) {
+		/* Enable Slave Select Low Detect */
+		ctrlb |= SERCOM_SPI_CTRLB_SSDE;
+	}
 
+	if (config->mss_en) {
+		/* Enable Master Slave Select */
+		ctrlb |= SERCOM_SPI_CTRLB_MSSEN;
+	}
+#endif
 	/* Write CTRLA register */
 	spi_module->CTRLA.reg |= ctrla;
 
@@ -343,6 +353,18 @@ static enum status_code _spi_check_config(
 		/* Enable receiver */
 		ctrlb |= SERCOM_SPI_CTRLB_RXEN;
 	}
+
+#if SAMD21
+	if (config->ssd_en) {
+		/* Enable Slave Select Low Detect */
+		ctrlb |= SERCOM_SPI_CTRLB_SSDE;
+	}
+
+	if (config->mss_en) {
+		/* Enable Master Slave Select */
+		ctrlb |= SERCOM_SPI_CTRLB_MSSEN;
+	}
+#endif
 
 	ctrla |= SERCOM_SPI_CTRLA_ENABLE;
 

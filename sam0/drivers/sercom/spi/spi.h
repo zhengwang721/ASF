@@ -418,12 +418,12 @@ enum spi_interrupt_flag {
 	SPI_INTERRUPT_FLAG_TX_COMPLETE         = SERCOM_SPI_INTFLAG_TXC,
 	/** This flag is set when data has been shifted into the data register */
 	SPI_INTERRUPT_FLAG_RX_COMPLETE         = SERCOM_SPI_INTFLAG_RXC,
-#if SAMD21	
+#if SAMD21
 	/** This flag is set when slave select low  */
 	SPI_INTERRUPT_FLAG_SLAVE_SEL_LOW         = SERCOM_SPI_INTFLAG_SSL,
  	/** This flag is set when combined error happen */
 	SPI_INTERRUPT_FLAG_COM_ERROR         = SERCOM_SPI_INTFLAG_ERROR,
-#endif	
+#endif
 };
 
 /**
@@ -776,6 +776,12 @@ struct spi_config {
 	bool run_in_standby;
 	/** Enable receiver */
 	bool receiver_enable;
+#if SAMD21
+	/** Enable Slave Select Low Detect */
+	bool ssd_en;
+	/** Enable Master Slave Select */
+	bool mss_en;
+#endif
 	/** Union for slave or master specific configuration */
 	union {
 		/** Slave specific configuration */
@@ -943,6 +949,10 @@ static inline void spi_get_config_defaults(
 	config->character_size   = SPI_CHARACTER_SIZE_8BIT;
 	config->run_in_standby   = false;
 	config->receiver_enable  = true;
+#if SAMD21
+	config->ssd_en= true;
+	config->mss_en= false;
+#endif
 	config->generator_source = GCLK_GENERATOR_0;
 
 	/* Clear mode specific config */
