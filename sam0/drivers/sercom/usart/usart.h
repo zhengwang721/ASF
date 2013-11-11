@@ -172,9 +172,6 @@
  * positions that can be selected as a pair. The pads can then be routed to an
  * external GPIO pin using the normal pin multiplexing scheme on the SAM D20.
  *
- * For SERCOM pad multiplexer position documentation, see
- * \ref asfdoc_samd20_sercom_usart_mux_settings.
- *
  * \section asfdoc_samd20_sercom_usart_special_considerations Special Considerations
  *
  * \if USART_CALLBACK_MODE
@@ -299,23 +296,26 @@ enum usart_parity {
  * \brief USART signal mux settings
  *
  * Set the functionality of the SERCOM pins.
+ *
+ * See \ref asfdoc_samd20_sercom_usart_mux_settings for a description of the
+ * various MUX setting options.
  */
 enum usart_signal_mux_settings {
-	/** See \ref asfdoc_samd20_sercom_usart_mux_settings */
+	/** MUX setting RX_0_TX_0_XCK_1 */
 	USART_RX_0_TX_0_XCK_1 = (SERCOM_USART_CTRLA_RXPO(0)),
-	/** See \ref asfdoc_samd20_sercom_usart_mux_settings */
+	/** MUX setting RX_0_TX_2_XCK_3 */
 	USART_RX_0_TX_2_XCK_3 = (SERCOM_USART_CTRLA_RXPO(0) | SERCOM_USART_CTRLA_TXPO),
-	/** See \ref asfdoc_samd20_sercom_usart_mux_settings */
+	/** MUX setting RX_1_TX_0_XCK_1 */
 	USART_RX_1_TX_0_XCK_1 = (SERCOM_USART_CTRLA_RXPO(1)),
-	/** See \ref asfdoc_samd20_sercom_usart_mux_settings */
+	/** MUX setting RX_1_TX_2_XCK_3 */
 	USART_RX_1_TX_2_XCK_3 = (SERCOM_USART_CTRLA_RXPO(1) | SERCOM_USART_CTRLA_TXPO),
-	/** See \ref asfdoc_samd20_sercom_usart_mux_settings */
+	/** MUX setting RX_2_TX_0_XCK_1 */
 	USART_RX_2_TX_0_XCK_1 = (SERCOM_USART_CTRLA_RXPO(2)),
-	/** See \ref asfdoc_samd20_sercom_usart_mux_settings */
+	/** MUX setting RX_2_TX_2_XCK_3 */
 	USART_RX_2_TX_2_XCK_3 = (SERCOM_USART_CTRLA_RXPO(2) | SERCOM_USART_CTRLA_TXPO),
-	/** See \ref asfdoc_samd20_sercom_usart_mux_settings */
+	/** MUX setting RX_3_TX_0_XCK_1 */
 	USART_RX_3_TX_0_XCK_1 = (SERCOM_USART_CTRLA_RXPO(3)),
-	/** See \ref asfdoc_samd20_sercom_usart_mux_settings */
+	/** MUX setting RX_3_TX_2_XCK_3 */
 	USART_RX_3_TX_2_XCK_3 = (SERCOM_USART_CTRLA_RXPO(3) | SERCOM_USART_CTRLA_TXPO),
 };
 
@@ -940,7 +940,7 @@ static inline void usart_disable_transceiver(
  *		</tr>
  *		<tr>
  *			<td>RX_1_TX_0_XCK_1</td>
- *			<td>Tx</td>
+ *			<td>TX</td>
  *			<td>RX / XCK</td>
  *			<td>-</td>
  *			<td>-</td>
