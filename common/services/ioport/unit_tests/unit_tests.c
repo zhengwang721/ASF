@@ -153,7 +153,7 @@ static void run_ioport_port_test(const struct test_case *test)
 	ioport_set_port_level(CONF_PORT, CONF_PORT_OUT_PIN_MASK, IOPORT_PIN_LEVEL_LOW);
 	delay_ms(10);
 	port_val = ioport_get_port_level(CONF_PORT, CONF_PORT_IN_PIN_MASK);
-	test_assert_true(test, port_val == 0, "IOPORT Set port level lowtest failed.");
+	test_assert_true(test, port_val == 0, "IOPORT Set port level low test failed.");
 
 	/* Toggle  IOPORT */
 	ioport_toggle_port_level(CONF_PORT, CONF_PORT_OUT_PIN_MASK);
