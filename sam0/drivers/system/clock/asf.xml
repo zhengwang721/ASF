@@ -35,15 +35,14 @@
 
 				<build type="header-file" subtype="api" value="clock.h"/>
 				<build type="header-file" subtype="api" value="gclk.h"/>
-				<build type="header-file" value="clock_private.h" />
-				<build type="c-source" value="clock.c"/>
-				<build type="c-source" value="clock_01.c"/>
-				<build type="c-source" value="gclk.c"/>
+				<build type="header-file" value="clock_samd20/clock_config_check.h" />
+				<build type="c-source" value="clock_samd20/clock.c"/>
+				<build type="c-source" value="clock_samd20/gclk.c"/>
 
 				<build type="header-file" value="quick_start_gclk/qs_gclk_basic.h"/>
 				<build type="header-file" value="quick_start_clock/qs_clock_source.h"/>
 
-				<build type="module-config" subtype="path" value="clock_samd20"/>
+				<build type="module-config" subtype="path" value="samd20/module_config"/>
 				<build type="module-config" subtype="required-header-file" value="conf_clocks.h"/>
 
 				<require idref="sam0.drivers.system.interrupt"/>
@@ -87,17 +86,14 @@
 
 				<build type="header-file" subtype="api" value="clock.h"/>
 				<build type="header-file" subtype="api" value="gclk.h"/>
-				<build type="header-file" value="clock_private.h" />
-				<build type="header-file" value="clock_02.h"/>
-				<build type="header-file" value="clock_samd21/clock_features.h"/>
-				<build type="c-source" value="clock.c"/>
-				<build type="c-source" value="gclk.c"/>
-				<build type="c-source" value="clock_02.c"/>
+				<build type="header-file" value="clock_samd21/clock_config_check.h" />
+				<build type="c-source" value="clock_samd21/clock.c"/>
+				<build type="c-source" value="clock_samd21/gclk.c"/>
 
 				<build type="header-file" value="quick_start_gclk/qs_gclk_basic.h"/>
 				<build type="header-file" value="quick_start_clock/qs_clock_source.h"/>
 
-				<build type="module-config" subtype="path" value="clock_samd21"/>
+				<build type="module-config" subtype="path" value="samd21/module_config"/>
 				<build type="module-config" subtype="required-header-file" value="conf_clocks.h"/>
 
 				<require idref="sam0.drivers.system.interrupt"/>

@@ -703,24 +703,6 @@ typedef union {
 #define TC_COUNT32_CCB_CCB(value)   ((TC_COUNT32_CCB_CCB_Msk & ((value) << TC_COUNT32_CCB_CCB_Pos)))
 #define TC_COUNT32_CCB_MASK         0xFFFFFFFFu  /**< \brief (TC_COUNT32_CCB) MASK Register */
 
-/* -------- TC_COUNT8_CCB : (TC Offset: 0x30) (R/W  8) COUNT8 COUNT8 Compare and Capture Buffer -------- */
-#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
-  struct {
-    uint8_t  CCB:8;            /*!< bit:  0.. 7  Compare/Capture Buffer Value       */
-  } bit;                       /*!< Structure used for bit  access                  */
-  uint8_t reg;                 /*!< Type      used for register access              */
-} TC_COUNT8_CCB_Type;
-#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
-
-#define TC_COUNT8_CCB_OFFSET        0x30         /**< \brief (TC_COUNT8_CCB offset) COUNT8 Compare and Capture Buffer */
-#define TC_COUNT8_CCB_RESETVALUE    0x00         /**< \brief (TC_COUNT8_CCB reset_value) COUNT8 Compare and Capture Buffer */
-
-#define TC_COUNT8_CCB_CCB_Pos       0            /**< \brief (TC_COUNT8_CCB) Compare/Capture Buffer Value */
-#define TC_COUNT8_CCB_CCB_Msk       (0xFFu << TC_COUNT8_CCB_CCB_Pos)
-#define TC_COUNT8_CCB_CCB(value)    ((TC_COUNT8_CCB_CCB_Msk & ((value) << TC_COUNT8_CCB_CCB_Pos)))
-#define TC_COUNT8_CCB_MASK          0xFFu        /**< \brief (TC_COUNT8_CCB) MASK Register */
-
 /** \brief TC_COUNT8 hardware registers */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef struct { /* 8-bit Counter Mode */
@@ -745,7 +727,6 @@ typedef struct { /* 8-bit Counter Mode */
        RoReg8                    Reserved5[0x12];
   __IO TC_COUNT8_PERB_Type       PERB;        /**< \brief Offset: 0x2C (R/W  8) COUNT8 Period Buffer */
        RoReg8                    Reserved6[0x3];
-  __IO TC_COUNT8_CCB_Type        CCB[2];      /**< \brief Offset: 0x30 (R/W  8) COUNT8 Compare and Capture Buffer [CC8_NUM] */
 } TcCount8;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 

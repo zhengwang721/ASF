@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Instance description for OZCTRL
+ * \brief SAM D21 Xplained PRO board configuration.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -41,15 +41,7 @@
  *
  */
 
-#ifndef _SAMD21_OZCTRL_INSTANCE_
-#define _SAMD21_OZCTRL_INSTANCE_
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-/* ========== Register definition for OZCTRL peripheral ========== */
-#if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-#else
-#endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
-
-/* ========== Instance parameters for OZCTRL peripheral ========== */
-#define OZCTRL_WIRE_BITS            10
-
-#endif /* _SAMD21_OZCTRL_INSTANCE_ */
+#endif /* CONF_BOARD_H_INCLUDED */
