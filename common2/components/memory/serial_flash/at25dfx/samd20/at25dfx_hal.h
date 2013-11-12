@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Connection of the AT25DFx SerialFlash to SPI interface driver.
+ * \brief AT25DFx SerialFlash driver public SPI HAL interface.
  *
  * This file manages the connection of the AT25DFx SerialFlash driver to an
  * SPI service (could be spi master service or usart in spi mode). The SPI
