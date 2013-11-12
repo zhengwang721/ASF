@@ -360,7 +360,7 @@ enum status_code at25dfx_chip_erase(struct at25dfx_chip_module *chip)
 }
 
 enum status_code at25dfx_chip_erase_block(struct at25dfx_chip_module *chip,
-		uint32_t address, enum at25dfx_block_size block_size)
+		at25dfx_address_t address, enum at25dfx_block_size block_size)
 {
 	enum status_code status;
 	struct at25dfx_command cmd;
