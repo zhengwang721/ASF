@@ -81,7 +81,10 @@ struct at25dfx_command {
 	// SerialFlash internal address
 	at25dfx_address_t address;
 	// Data buffer to be read from/write to
-	uint8_t *data;
+	union {
+		const uint8_t *tx;
+		uint8_t *rx;
+	} data;
 	// Number of bytes to read/write
 	at25dfx_datalen_t length;
 };
@@ -232,7 +235,7 @@ enum status_code at25dfx_chip_check_presence(struct at25dfx_chip_module *chip)
 
 	cmd.opcode = AT25DFX_COMMAND_READ_DEVICE_ID;
 	cmd.command_size = 1;
-	cmd.data = (uint8_t *)&id;
+	cmd.data.rx = (uint8_t *)&id;
 	cmd.length = 3;
 	_at25dfx_chip_issue_read_command_wait(chip, cmd);
 
@@ -268,7 +271,7 @@ enum status_code at25dfx_chip_read_buffer(struct at25dfx_chip_module *chip,
 	cmd.opcode = AT25DFX_COMMAND_READ_ARRAY;
 	cmd.command_size = 5;
 	cmd.address = address;
-	cmd.data = (uint8_t *)data;
+	cmd.data.rx = (uint8_t *)data;
 	cmd.length = length;
 	_at25dfx_chip_issue_read_command_wait(chip, cmd);
 
@@ -278,7 +281,7 @@ enum status_code at25dfx_chip_read_buffer(struct at25dfx_chip_module *chip,
 }
 
 enum status_code at25dfx_chip_write_buffer(struct at25dfx_chip_module *chip,
-		at25dfx_address_t address, void *data, at25dfx_datalen_t length)
+		at25dfx_address_t address, const void *data, at25dfx_datalen_t length)
 {
 	at25dfx_datalen_t page_bytes;
 	enum status_code status;
@@ -302,7 +305,7 @@ enum status_code at25dfx_chip_write_buffer(struct at25dfx_chip_module *chip,
 	cmd.opcode = AT25DFX_COMMAND_PROGRAM_PAGE;
 	cmd.command_size = 4;
 	cmd.address = address;
-	cmd.data = (uint8_t *)data;
+	cmd.data.tx = (uint8_t *)data;
 	page_bytes = AT25DFX_PAGE_SIZE - (address % AT25DFX_PAGE_SIZE);
 	cmd.length = min(page_bytes, length);
 	_at25dfx_chip_issue_write_command_wait(chip, cmd);
@@ -315,7 +318,7 @@ enum status_code at25dfx_chip_write_buffer(struct at25dfx_chip_module *chip,
 		_at25dfx_chip_enable_write(chip);
 
 		cmd.address += cmd.length;
-		cmd.data += cmd.length;
+		cmd.data.tx += cmd.length;
 		cmd.length = min(AT25DFX_PAGE_SIZE, length);
 
 		_at25dfx_chip_issue_write_command_wait(chip, cmd);
@@ -424,7 +427,7 @@ enum status_code at25dfx_chip_set_global_sector_protect(
 	cmd.opcode = AT25DFX_COMMAND_WRITE_STATUS;
 	cmd.command_size = 1;
 	cmd.length = 1;
-	cmd.data = &temp_data;
+	cmd.data.tx = &temp_data;
 	_at25dfx_chip_issue_write_command_wait(chip, cmd);
 
 	spi_unlock(chip->spi);
@@ -486,7 +489,7 @@ enum status_code at25dfx_chip_get_sector_protect(
 	cmd.command_size = 4;
 	cmd.address = address;
 	cmd.length = 1;
-	cmd.data = (uint8_t *)protect;
+	cmd.data.rx = (uint8_t *)protect;
 	_at25dfx_chip_issue_read_command_wait(chip, cmd);
 
 	spi_unlock(chip->spi);

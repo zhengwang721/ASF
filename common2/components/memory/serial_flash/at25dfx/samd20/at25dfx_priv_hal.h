@@ -82,7 +82,7 @@ static inline void _at25dfx_chip_issue_read_command_wait(
 	Assert(status == STATUS_OK);
 
 	if (cmd.length) {
-		status = spi_read_buffer_wait(chip->spi, cmd.data, cmd.length, 0);
+		status = spi_read_buffer_wait(chip->spi, cmd.data.rx, cmd.length, 0);
 		Assert(status == STATUS_OK);
 	}
 
@@ -115,7 +115,7 @@ static inline void _at25dfx_chip_issue_write_command_wait(
 	Assert(status == STATUS_OK);
 
 	if (cmd.length) {
-		status = spi_write_buffer_wait(chip->spi, cmd.data, cmd.length);
+		status = spi_write_buffer_wait(chip->spi, cmd.data.tx, cmd.length);
 		Assert(status == STATUS_OK);
 	}
 

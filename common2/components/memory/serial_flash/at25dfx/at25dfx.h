@@ -159,7 +159,7 @@ enum status_code at25dfx_chip_check_presence(struct at25dfx_chip_module *chip);
 enum status_code at25dfx_chip_read_buffer(struct at25dfx_chip_module *chip,
 		at25dfx_address_t address, void *data, at25dfx_datalen_t length);
 enum status_code at25dfx_chip_write_buffer(struct at25dfx_chip_module *chip,
-		at25dfx_address_t address, void *data, at25dfx_datalen_t length);
+		at25dfx_address_t address, const void *data, at25dfx_datalen_t length);
 //@}
 
 //! \name Erase
