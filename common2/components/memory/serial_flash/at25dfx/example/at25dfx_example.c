@@ -44,7 +44,7 @@ static bool test_write(struct at25dfx_chip_module *at25_chip) {
 	// Erase block
 	status = at25dfx_chip_set_sector_protect(at25_chip, 0x2345, false);
 	Assert(status == STATUS_OK);
-	status = at25dfx_chip_block_erase(at25_chip, 0x2345, AT25DFX_BLOCK_SIZE_4KB);
+	status = at25dfx_chip_erase_block(at25_chip, 0x2345, AT25DFX_BLOCK_SIZE_4KB);
 	Assert(status == STATUS_OK);
 
 	// Write a bunch of data..
@@ -73,7 +73,7 @@ static bool test_protect(struct at25dfx_chip_module *at25_chip) {
 	// Set up sector with some data
 	status = at25dfx_chip_set_sector_protect(at25_chip, 0x2345, false);
 	Assert(status == STATUS_OK);
-	status = at25dfx_chip_block_erase(at25_chip, 0x2345, AT25DFX_BLOCK_SIZE_4KB);
+	status = at25dfx_chip_erase_block(at25_chip, 0x2345, AT25DFX_BLOCK_SIZE_4KB);
 	Assert(status == STATUS_OK);
 	status = at25dfx_chip_write_buffer(at25_chip, 0x2345, example_data, AT25DFX_TEST_DATA_SIZE);
 	Assert(status == STATUS_OK);

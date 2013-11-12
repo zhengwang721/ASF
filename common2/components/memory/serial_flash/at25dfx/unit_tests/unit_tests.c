@@ -236,7 +236,7 @@ static void run_erase_test(const struct test_case *test)
 			"Verification of chip erase failed");
 }
 
-static void run_block_erase_test(const struct test_case *test)
+static void run_erase_block_test(const struct test_case *test)
 {
 	enum status_code status;
 
@@ -244,7 +244,7 @@ static void run_block_erase_test(const struct test_case *test)
 	at25dfx_chip_set_global_sector_protect(&at25dfx_chip, false);
 
 // Erase out of bounds block, verify ARG ERR status
-	status = at25dfx_chip_block_erase(&at25dfx_chip,
+	status = at25dfx_chip_erase_block(&at25dfx_chip,
 		TEST_FLASH_SIZE, AT25DFX_BLOCK_SIZE_4KB);
 	test_assert_true(test, status == STATUS_ERR_INVALID_ARG,
 			"Failed to detect out of bounds erase");
@@ -256,7 +256,7 @@ static void run_block_erase_test(const struct test_case *test)
 	at25dfx_chip_write_buffer(&at25dfx_chip, 1UL << 16, &test_tx_buffer[3], 1);
 
 // Erase first 4 k block
-	at25dfx_chip_block_erase(&at25dfx_chip, 0, AT25DFX_BLOCK_SIZE_4KB);
+	at25dfx_chip_erase_block(&at25dfx_chip, 0, AT25DFX_BLOCK_SIZE_4KB);
 	
 // Verify byte 0 erased, others intact
 	at25dfx_chip_read_buffer(&at25dfx_chip, 0, &test_rx_buffer[0], 1);
@@ -271,7 +271,7 @@ static void run_block_erase_test(const struct test_case *test)
 			"Verification of 4 kB block erase failed");
 
 // Erase first 32 k block
-	at25dfx_chip_block_erase(&at25dfx_chip, 0, AT25DFX_BLOCK_SIZE_32KB);
+	at25dfx_chip_erase_block(&at25dfx_chip, 0, AT25DFX_BLOCK_SIZE_32KB);
 
 // Verify byte 2^14 erased, 2^15 intact
 	at25dfx_chip_read_buffer(&at25dfx_chip, 1UL << 12, &test_rx_buffer[1], 1);
@@ -284,7 +284,7 @@ static void run_block_erase_test(const struct test_case *test)
 			"Verification of 32 kB block erase failed");
 
 // Erase first 64 k block
-	at25dfx_chip_block_erase(&at25dfx_chip, 0, AT25DFX_BLOCK_SIZE_64KB);
+	at25dfx_chip_erase_block(&at25dfx_chip, 0, AT25DFX_BLOCK_SIZE_64KB);
 
 // Verify byte 2^15 erased, 2^16 intact
 	at25dfx_chip_read_buffer(&at25dfx_chip, 1UL << 15, &test_rx_buffer[2], 1);
@@ -401,7 +401,7 @@ static void run_sleep_wake_test(const struct test_case *test)
 	at25dfx_chip_set_global_sector_protect(&at25dfx_chip, false);
 
 	// Erase first block
-	at25dfx_chip_block_erase(&at25dfx_chip, 0, AT25DFX_BLOCK_SIZE_4KB);
+	at25dfx_chip_erase_block(&at25dfx_chip, 0, AT25DFX_BLOCK_SIZE_4KB);
 	at25dfx_chip_write_buffer(&at25dfx_chip, 0, &test_tx_buffer[0], 1);
 
 	// Put device to sleep
@@ -441,8 +441,8 @@ int main(void)
 			run_erase_test, NULL,
 			"Testing chip erase");
 
-	DEFINE_TEST_CASE(block_erase_test, NULL,
-			run_block_erase_test, NULL,
+	DEFINE_TEST_CASE(erase_block_test, NULL,
+			run_erase_block_test, NULL,
 			"Testing block erase");
 
 	DEFINE_TEST_CASE(global_sector_protect_test, NULL,
@@ -461,7 +461,7 @@ int main(void)
 		&check_presence_test,
 		&read_write_buffer_test,
 		&erase_test,
-		&block_erase_test,
+		&erase_block_test,
 		&global_sector_protect_test,
 		&set_get_sector_protect_test,
 		&sleep_wake_test,
