@@ -297,6 +297,29 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
                 }
                 break;
             } /* case SET_PARAM */
+			
+        case SET_SUN_PAGE:
+        {
+	        /* Calculate the expected frame size in case of SET_PARAM cmd */
+	        expected_frame_size = (FRAME_OVERHEAD + ((sizeof(app_payload_t) -
+	        sizeof(general_pkt_t)) +
+	        sizeof(phy_t)));
+	        if ((mac_frame_info->length) == expected_frame_size)
+	        {
+		//	phy_t sun_phy_page_set = (phy_t *)&(msg->payload);
+			if (tal_pib_set(trx, phySetting, (pib_value_t *)&msg->payload) != MAC_SUCCESS)
+			{
+				//Add code for usr_perf_ser_conf invalid msg
+			}
+			else
+			{
+				
+			
+			printf("Sun PHY Page Changed");
+			}
+	        }
+	        break;
+	        } /* case SET_SUN_PAGE */			
 
         case PER_TEST_PKT:
             {

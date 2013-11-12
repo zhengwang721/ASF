@@ -226,7 +226,8 @@ static uint8_t num_channels[NO_TRX];
 static uint8_t last_tx_power_format_set[NO_TRX];
 static void configure_range_test_frame_sending(trx_id_t trx);
 static bool send_range_test_marker_rsp(trx_id_t trx);
-
+static void send_sun_page_changed(trx_id_t trx);
+phy_t sun_phy_page_set;
 
 
 /**
@@ -612,9 +613,25 @@ void per_mode_initiator_tx_done_cb(trx_id_t trx,retval_t status, frame_info_t *f
 	switch (op_mode[trx]) {
 	case SET_PARAMETER:
 	{
-		/* After successful transmission, set the params on Initiator
-		 * node */
-		set_parameter_on_transmitter_node(trx,status);
+		    app_payload_t *msg;
+
+		    /* Point to the message : 1 =>size is first byte and 2=>FCS*/
+		    msg = (app_payload_t *)(frame->mpdu + FRAME_OVERHEAD);
+		    if(msg->cmd_id == SET_SUN_PAGE)
+			{
+			if (tal_pib_set(trx, phySetting, (pib_value_t *)&sun_phy_page_set) == MAC_SUCCESS)
+			{
+
+			}
+			
+			}
+			else
+			{
+			/* After successful transmission, set the params on Initiator node */
+				set_parameter_on_transmitter_node(trx,status);	
+			}
+			
+
 		op_mode[trx] = TX_OP_MODE;
 	}
 	break;
@@ -1926,6 +1943,87 @@ p_in = (int8_t)energy_level ;
 			tal_ed_start(trx,scan_duration[trx]);
 
     }
+}
+
+void perf_set_sun_page(trx_id_t trx,uint8_t *param_val)
+{
+	sun_phy_t sun_page;
+	
+	sun_page.page_no = *param_val++;
+	sun_page.freq_band = sun_phy_page_set.freq_band = *param_val++;	
+	sun_page.modulation = sun_phy_page_set.modulation = *param_val++;	
+	if(sun_page.modulation == OFDM)
+	{
+		sun_page.sun_phy_mode.mr_ofdm.option = sun_phy_page_set.phy_mode.ofdm.option = *param_val++;	
+		sun_page.sun_phy_mode.mr_ofdm.mcs_val = sun_phy_page_set.phy_mode.ofdm.mcs_val = *param_val++;	
+		sun_page.sun_phy_mode.mr_ofdm.interl = sun_phy_page_set.phy_mode.ofdm.interl = *param_val++;
+		get_ofdm_freq_f0(trx,sun_page.freq_band,sun_page.sun_phy_mode.mr_ofdm.option,&sun_phy_page_set.freq_f0,&sun_phy_page_set.ch_spacing);	
+		
+	}
+	else if(sun_page.modulation == OQPSK)
+	{
+		sun_page.sun_phy_mode.mr_oqpsk_rate_mode = sun_phy_page_set.phy_mode.oqpsk.rate_mode =  *param_val++;	
+			
+		sun_phy_page_set.phy_mode.oqpsk.chip_rate = get_oqpsk_chip_rate(trx,sun_page.freq_band);
+		get_oqpsk_freq_f0(trx,sun_page.freq_band,sun_phy_page_set.freq_f0,sun_phy_page_set.ch_spacing);
+	}
+	else
+	{
+		//Add code for usr_perf_ser_conf invalid msg
+	}
+
+	if (true == peer_found[trx])
+	{
+		send_sun_page_changed(trx);
+		//Add code for Sending new sun page to rcptor
+	}
+	else
+	{
+		//single node -> set phy now
+
+			if (tal_pib_set(trx, phySetting, (pib_value_t *)&sun_phy_page_set) != MAC_SUCCESS)
+			{
+				//Add code for usr_perf_ser_conf invalid msg
+			}		
+/*
+		uint16_t channel = 120;
+		/ * Send Set confirmation with status SUCCESS * /
+		usr_perf_set_confirm(trx,MAC_SUCCESS,
+		PARAM_CHANNEL,
+		(param_value_t *)&channel);*/
+	}
+	
+	
+}
+
+static void send_sun_page_changed(trx_id_t trx)
+{
+	uint16_t payload_length;
+	app_payload_t msg;
+	phy_t *data;
+	/* Create the payload */
+	msg.cmd_id = SET_SUN_PAGE;
+	seq_num_initiator[trx]++;
+	msg.seq_num = seq_num_initiator[trx];
+	data = (phy_t *)&msg.payload;
+	memcpy(data, &sun_phy_page_set, sizeof(phy_t));
+
+	payload_length = ((sizeof(app_payload_t) -
+	sizeof(general_pkt_t)) +
+	sizeof(phy_t));
+
+	/* Send the frame to Peer node */
+	if (MAC_SUCCESS == transmit_frame(trx, FCF_SHORT_ADDR,
+	(uint8_t *) & (node_info[trx].peer_short_addr),
+	FCF_SHORT_ADDR,
+	seq_num_initiator[trx],
+	(uint8_t *) &msg,
+	payload_length,
+	true)
+	)
+	{
+		op_mode[trx] = SET_PARAMETER;
+	}
 }
 
 /*

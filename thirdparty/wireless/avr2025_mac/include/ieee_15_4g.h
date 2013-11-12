@@ -482,6 +482,32 @@ typedef struct phy_tag
     phy_mode_t phy_mode;
 } phy_t;
 
+
+/*** TO BE VERIFIED ******/ //sriram
+
+
+typedef struct mr_oqpsk_tag
+{
+	oqpsk_chip_rate_t chip_rate;
+	oqpsk_rate_mode_t rate_mode;
+} mr_oqpsk_t;
+
+typedef union sun_phy_mode_tag
+{
+	fsk_t mr_fsk;
+	ofdm_t mr_ofdm;
+	oqpsk_rate_mode_t mr_oqpsk_rate_mode;
+
+} sun_phy_mode_t;
+
+typedef struct sun_phy_tag
+{
+	uint8_t page_no ;
+	sun_freq_band_t freq_band;	
+	modulation_t modulation;
+	sun_phy_mode_t sun_phy_mode;
+} sun_phy_t;
+
 /* === Externals ============================================================ */
 
 /* === Prototypes =========================================================== */

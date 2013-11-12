@@ -80,6 +80,7 @@
  * \param param_value   Pointer to the parameter value to be set
  */
 void perf_set_req(trx_id_t trx, uint8_t param_type, param_value_t *param_value);
+void perf_set_sun_page(trx_id_t trx,uint8_t *sun_page);
 
 /**
  * \brief Function to get the various configuaration paramters for PER Test

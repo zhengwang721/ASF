@@ -185,6 +185,7 @@
 
 /* Field positions - PERF_SET_REQ frame */
 #define PARAM_TYPE_POS                    (3)
+#define PARAM_LEN_POS                    (4)
 #define PARAM_VALUE_POS                   (5)
 
 /* Field positions - PERF_START_REQ frame */

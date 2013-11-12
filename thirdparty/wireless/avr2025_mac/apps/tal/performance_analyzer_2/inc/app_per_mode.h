@@ -157,6 +157,7 @@
 #define RANGE_TEST_STOP_PKT                 (0x14)
 #define RANGE_TEST_MARKER_CMD                (0x15)
 #define RANGE_TEST_MARKER_RSP                (0x16)
+#define SET_SUN_PAGE						(0X17)
 #define RANGE_TEST_PKT_LENGTH                (19)
 #define LED_BLINK_RATE_IN_MICRO_SEC           (50000)
 /* \} */

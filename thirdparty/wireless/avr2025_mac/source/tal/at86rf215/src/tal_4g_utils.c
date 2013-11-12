@@ -827,6 +827,23 @@ uint16_t oqpsk_get_chip_rate(trx_id_t trx_id)
 
     return rate;
 }
+//sriram
+uint16_t get_oqpsk_chip_rate(trx_id_t trx_id,sun_freq_band_t freq_band)
+{
+	uint16_t rate = 0;
+
+	for (uint8_t i = 0; i < OQPSK_CHIP_RATE_TABLE_ROW_SIZE; i++)
+	{
+		if (freq_band == (uint16_t)PGM_READ_WORD(&oqpsk_chip_rate_table[i][0]))
+		{
+			rate = (uint16_t)PGM_READ_WORD(&oqpsk_chip_rate_table[i][1]);
+			break;
+		}
+	}
+
+	return rate;
+}
+
 
 
 void get_ch_freq0_spacing(trx_id_t trx_id, uint32_t *freq, uint32_t *spacing)
@@ -911,6 +928,44 @@ static inline void get_sun_freq_f0(trx_id_t trx_id, uint32_t *freq, uint32_t *sp
             *freq = 0;
         }
     }
+}
+
+//sriram
+void get_ofdm_freq_f0(trx_id_t trx_id,sun_freq_band_t freq_band,ofdm_option_t option,uint32_t *freq, uint32_t *spacing)
+{
+
+		for (uint8_t i = 0; i < OFDM_CH_CENTER_FREQ0_MAP_ROW_SIZE; i++)
+		{
+			if (freq_band == (uint32_t)PGM_READ_DWORD(&ofdm_freq0_map[i][0]))
+			{
+				*freq = (uint32_t)PGM_READ_DWORD(&ofdm_freq0_map[i][option + 1]);
+				break;	
+			}
+		}
+		*spacing = (uint32_t)PGM_READ_DWORD(&ofdm_ch_spacing_table[option]);
+
+
+}
+
+void get_oqpsk_freq_f0(trx_id_t trx_id,sun_freq_band_t freq_band ,uint32_t *freq, uint32_t *spacing)
+{
+
+          for (uint8_t i = 0; i < OQPSK_CH_CENTER_FREQ0_MAP_ROW_SIZE; i++)
+          {
+	          if (freq_band == (uint32_t)PGM_READ_DWORD(&oqpsk_freq0_map[i][0]))
+	          {
+		          *freq = (uint32_t)PGM_READ_DWORD(&oqpsk_freq0_map[i][1]);
+		          if (freq_band == EU_863)
+		          {
+			          *spacing = 600000; // ?
+		          }
+		          else
+		          {
+			          *spacing = (uint32_t)PGM_READ_DWORD(&oqpsk_ch_spac_table[i][1]);
+		          }
+		          break;
+	          }
+          }
 }
 
 #ifdef SUPPORT_LEGACY_OQPSK

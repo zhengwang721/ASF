@@ -476,8 +476,16 @@ switch (sio_rx_buf[trx][MESSAGE_ID_POS])  /* message id */
                     (SINGLE_NODE_TESTS == node_info[trx].main_state)
                    )
                 {
+					if((sio_rx_buf[trx][PARAM_TYPE_POS] == PARAM_CHANNEL_PAGE)&&(sio_rx_buf[trx][PARAM_LEN_POS] > 1)) //sun phy page
+					{					
+					//set sun phy page					
+					perf_set_sun_page(trx,(uint8_t *) &sio_rx_buf[trx][PARAM_VALUE_POS]);
+					}
+					else
+					{
                     perf_set_req(trx, sio_rx_buf[trx][PARAM_TYPE_POS],
                                  (param_value_t *) &sio_rx_buf[trx][PARAM_VALUE_POS]); /* parameter type followed by parameter value */
+					}
                 }
                 else
                 {
@@ -1129,7 +1137,8 @@ uint64_t peer_mac_address)
 	*msg_buf++ = status;
 	*msg_buf++ = start_mode;
 	/* Copy all configuration parameters */
-	*msg_buf++ = trx_config_params->channel;
+	*msg_buf++ = (uint8_t)trx_config_params->channel;
+	*msg_buf++ = (uint8_t)trx_config_params->channel>>8;	
 	*msg_buf++ = trx_config_params->channel_page;
 	*msg_buf++ = trx_config_params->tx_power_dbm;
 	*msg_buf++ = trx_config_params->tx_power_reg;
