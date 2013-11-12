@@ -143,7 +143,7 @@
 * the event user.
 *
 * \subsection asfdoc_sam0_events_module_overview_path_selection Path Selection
-* The event system in the SAM0 devices supports three signal path types from
+* The event system in the SAM D2x devices supports three signal path types from
 * the event generator to event users: asynchronous, synchronous and
 * re-synchronous events.
 *
@@ -343,7 +343,7 @@ void events_get_config_defaults(struct events_config *config);
 /**
  * \brief Allocate a event channel and set configuration
  *
- * Allocates a event channel from the even channel pool and sets
+ * Allocates an event channel from the even channel pool and sets
  * the channel configuration.
  *
  * \param[out] resource Pointer to a events_resource struct instance
