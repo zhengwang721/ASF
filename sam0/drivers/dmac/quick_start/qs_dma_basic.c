@@ -41,12 +41,20 @@
  *
  */
 #include <asf.h>
+//TODO: Select several DMA not conflict when usage to behaviour the concurrency 
 
-//Aim: Transfer a wave file from memory to I2S
+//Aim: Transfer a wave file from memory to I2S, discard the conflict of I2C transfer.
 
 //! [setup]
 //TODO: Sample wave file
 const uint8_t wave_file[4096] = { 0 };
+
+#define EXAMPLE_RESOURCE1_LIST_NUM 4
+
+const uint8_t wave_file1[256] = {0x5a};
+const uint8_t wave_file2[128] = {0xa5};
+const uint8_t wave_file3[384] = {0xaa};
+const uint8_t wave_file4{512} = {0x55};
 
 #define EXAMPLE_TRANSFER_SOURCE (uint32_t)wave_file
 #define EXAMPLE_TRANSFER_DEST (uint32_t)(&I2S->DATA[0])
@@ -54,6 +62,7 @@ const uint8_t wave_file[4096] = { 0 };
 
 // [transfer_done]
 static volatile bool transfer_is_done = false;
+static volatile bool transfer_is_done1 = false;
 // [transfer_done]
 
 // [_transfer_done]
@@ -62,6 +71,13 @@ static void _transfer_done( void )
 	transfer_is_done = true;
 }
 // [_transfer_done]
+
+// [_transfer_done1]
+static void _transfer_done1( void )
+{
+	transfer_is_done1 = true;
+}
+// [_transfer_done1]
 
 static void configure_dma_resource(struct dma_resource *resource)
 {
@@ -85,11 +101,54 @@ static void configure_dma_resource(struct dma_resource *resource)
 //! [setup_4]
 }
 
+static void configure_dma_resource1(struct dma_resource *resource)
+{
+	struct dma_transfer_descriptor[EXAMPLE_RESOURCE1_LIST_NUM];
+
+//! [setup_dma_descriptor]
+	dma_transfer_descriptor[3].block_count = sizeof(wave_file4);
+	dma_transfer_descriptor[3].source_address = (uint32_t)wave_file4;
+	dma_transfer_descriptor[3].destination_address = (uint32_t)(&I2S->DATA[0]);
+	dma_transfer_descriptor[3].next_descriptor_address = 0;
+	
+	dma_transfer_descriptor[2].block_count = sizeof(wave_file1);
+	dma_transfer_descriptor[2].source_address = (uint32_t)wave_file1;
+	dma_transfer_descriptor[2].destination_address = (uint32_t)(&I2S->DATA[0]);
+	dma_transfer_descriptor[2].next_descriptor_address = &dma_transfer_descriptor[3];
+	
+	dma_transfer_descriptor[1].block_count = sizeof(wave_file1);
+	dma_transfer_descriptor[1].source_address = (uint32_t)wave_file1;
+	dma_transfer_descriptor[1].destination_address = (uint32_t)(&I2S->DATA[0]);
+	dma_transfer_descriptor[1].next_descriptor_address = &dma_transfer_descriptor[2];
+	
+	dma_transfer_descriptor[0].block_count = sizeof(wave_file1);
+	dma_transfer_descriptor[0].source_address = (uint32_t)wave_file1;
+	dma_transfer_descriptor[0].destination_address = (uint32_t)(&I2S->DATA[0]);
+	dma_transfer_descriptor[0].next_descriptor_address = &dma_transfer_descriptor[1];
+//! [setup_dma_descriptor]
+
+//! [setup_1]
+	struct dma_transfer_config config;
+//! [setup_1]
+
+//! [setup_2]
+	dma_get_config_defaults(&config);
+//! [setup_2]
+
+//! [setup_3]
+	config.transfer_descriptor = dma_transfer_descriptor[0];
+//! [setup_3]
+
+//! [setup_4]
+	events_allocate(desc, &config);
+//! [setup_4]
+}
+
 //! [setup]
 
 int main(void)
 {
-	struct dma_resource example_resource;
+	struct dma_resource example_resource,example_resource1;
 
 	system_init();
 
@@ -97,19 +156,24 @@ int main(void)
 	// I2S_init();
 	
 	//! [setup_init]
-	configure_dma_channel(&example_resource);
+	configure_dma_resource(&example_resource);
+	configure_dma_resource1(&example_resource1);
 	//! [setup_init]
 
 	//! [main_callback_register]
 	dma_register_callback(&example_resource, _transfer_done);
 	dma_enable_callback(&example_resource);
+	
+	dma_register_callback(&example_resource1, _transfer_done1);
+	dma_enable_callback(&example_resource1);
 	//! [main_callback_register]
 
 	//! [main]
 	dma_transfer_job(&example_resource);
+	dma_transfer_job(&example_resource1);
 	
 	//! [main_1]
-	while (!transfer_is_done) {
+	while ((!transfer_is_done) || (!transfer_is_done)) {
 		/* Wait for transfer done */
 	};
 	//! [main_1]
