@@ -48,10 +48,17 @@
 
 #define EVENTS_INVALID_CHANNEL                  0xff
 
-#define EVENTS_START_OFFSET_BUSY_BITS           8
-#define EVENTS_START_OFFSET_USER_READY_BIT      0
-#define EVENTS_START_OFFSET_DETECTION_BIT       8
-#define EVENTS_START_OFFSET_OVERRUN_BIT         0
+/**
+ * \internal
+ * Status bit offsets in the status register/interrupt register
+ *
+ * @{
+ */
+#define _EVENTS_START_OFFSET_BUSY_BITS           8
+#define _EVENTS_START_OFFSET_USER_READY_BIT      0
+#define _EVENTS_START_OFFSET_DETECTION_BIT       8
+#define _EVENTS_START_OFFSET_OVERRUN_BIT         0
+/** @} */
 
 struct _events_module {
 	volatile uint32_t allocated_channels;
@@ -242,21 +249,21 @@ bool events_is_busy(struct events_resource *resource)
 {
 	Assert(resource);
 
-	return EVSYS->CHSTATUS.reg & (_events_find_bit_position(resource->channel, EVENTS_START_OFFSET_BUSY_BITS));
+	return EVSYS->CHSTATUS.reg & (_events_find_bit_position(resource->channel, _EVENTS_START_OFFSET_BUSY_BITS));
 }
 
 bool events_is_users_ready(struct events_resource *resource)
 {
 	Assert(resource);
 
-	return EVSYS->CHSTATUS.reg & (_events_find_bit_position(resource->channel, EVENTS_START_OFFSET_USER_READY_BIT));
+	return EVSYS->CHSTATUS.reg & (_events_find_bit_position(resource->channel, _EVENTS_START_OFFSET_USER_READY_BIT));
 }
 
 bool events_is_detected(struct events_resource *resource)
 {
 	Assert(resource);
 
-	uint32_t flag = _events_find_bit_position(resource->channel, EVENTS_START_OFFSET_DETECTION_BIT);
+	uint32_t flag = _events_find_bit_position(resource->channel, _EVENTS_START_OFFSET_DETECTION_BIT);
 
 	/* Clear flag when read */
 	if (EVSYS->INTFLAG.reg & flag) {
@@ -271,7 +278,7 @@ bool events_is_overrun(struct events_resource *resource)
 {
 	Assert(resource);
 
-	uint32_t flag = _events_find_bit_position(resource->channel, EVENTS_START_OFFSET_OVERRUN_BIT);
+	uint32_t flag = _events_find_bit_position(resource->channel, _EVENTS_START_OFFSET_OVERRUN_BIT);
 
 	/* Clear flag when read */
 	if (EVSYS->INTFLAG.reg & flag) {
