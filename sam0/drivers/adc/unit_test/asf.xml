@@ -13,5 +13,6 @@
 		<require idref="common2.services.delay"/>
 		<require idref="common.utils.unit_test"/>
 		<device-support value="samd20"/>
+		<device-support value="samd21"/>
 	</module>
 </asf>

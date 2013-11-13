@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 ADC Quick Start
+ * \brief SAM D2x ADC Quick Start
  *
  * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *

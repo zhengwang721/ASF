@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 Peripheral Analog-to-Digital Converter Driver
+ * \brief SAM D2x Peripheral Analog-to-Digital Converter Driver
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -45,9 +45,9 @@
 #define ADC_H_INCLUDED
 
 /**
- * \defgroup asfdoc_samd20_adc_group SAM D20 Analog to Digital Converter Driver (ADC)
+ * \defgroup asfdoc_sam0_adc_group SAM D2x Analog to Digital Converter Driver (ADC)
  *
- * This driver for SAM D20 devices provides an interface for the configuration
+ * This driver for SAM D2x devices provides an interface for the configuration
  * and management of the device's Analog to Digital Converter functionality, for
  * the conversion of analog voltages into a corresponding digital form.
  * The following driver API modes are covered by this manual:
@@ -61,20 +61,20 @@
  *  - ADC (Analog to Digital Converter)
  *
  * The outline of this documentation is as follows:
- *  - \ref asfdoc_samd20_adc_prerequisites
- *  - \ref asfdoc_samd20_adc_module_overview
- *  - \ref asfdoc_samd20_adc_special_considerations
- *  - \ref asfdoc_samd20_adc_extra_info
- *  - \ref asfdoc_samd20_adc_examples
- *  - \ref asfdoc_samd20_adc_api_overview
+ *  - \ref asfdoc_sam0_adc_prerequisites
+ *  - \ref asfdoc_sam0_adc_module_overview
+ *  - \ref asfdoc_sam0_adc_special_considerations
+ *  - \ref asfdoc_sam0_adc_extra_info
+ *  - \ref asfdoc_sam0_adc_examples
+ *  - \ref asfdoc_sam0_adc_api_overview
  *
  *
- * \section asfdoc_samd20_adc_prerequisites Prerequisites
+ * \section asfdoc_sam0_adc_prerequisites Prerequisites
  *
  * There are no prerequisites for this module.
  *
  *
- * \section asfdoc_samd20_adc_module_overview Module Overview
+ * \section asfdoc_sam0_adc_module_overview Module Overview
  *
  * This driver provides an interface for the Analog-to-Digital conversion
  * functions on the device, to convert analog voltages to a corresponding
@@ -99,9 +99,9 @@
  * external reference voltages can be selected.
  *
  * A simplified block diagram of the ADC can be seen in
- * \ref asfdoc_samd20_adc_module_block_diagram "the figure below".
+ * \ref asfdoc_sam0_adc_module_block_diagram "the figure below".
  *
- * \anchor asfdoc_samd20_adc_module_block_diagram
+ * \anchor asfdoc_sam0_adc_module_block_diagram
  * \dot
  * digraph overview {
  * splines = false;
@@ -134,14 +134,14 @@
  * \enddot
  *
  *
- * \subsection asfdoc_samd20_adc_module_overview_prescaler Sample Clock Prescaler
+ * \subsection asfdoc_sam0_adc_module_overview_prescaler Sample Clock Prescaler
  * The ADC features a prescaler which enables conversion at lower clock rates
  * than the input Generic Clock to the ADC module. This feature can be used to
  * lower the synchronization time of the digital interface to the ADC module
  * via a high speed Generic Clock frequency, while still allowing the ADC
  * sampling rate to be reduced.
  *
- * \subsection asfdoc_samd20_adc_module_overview_resolution ADC Resolution
+ * \subsection asfdoc_sam0_adc_module_overview_resolution ADC Resolution
  * The ADC supports full 8-bit, 10-bit or 12-bit resolution. Hardware
  * oversampling and decimation can be used to increase the
  * effective resolution at the expense of throughput. Using oversampling and
@@ -149,9 +149,9 @@
  * 13, 14, 15 or 16-bits. In these modes the conversion rate is reduced, as
  * a greater number of samples is used to achieve the increased resolution. The
  * available resolutions and effective conversion rate is listed in
- * \ref asfdoc_samd20_adc_module_conversion_rate "the table below".
+ * \ref asfdoc_sam0_adc_module_conversion_rate "the table below".
  *
- * \anchor asfdoc_samd20_adc_module_conversion_rate
+ * \anchor asfdoc_sam0_adc_module_conversion_rate
  * <table>
  *	<caption>Effective ADC conversion speed using oversampling</caption>
  *	<tr>
@@ -176,14 +176,14 @@
  *	</tr>
  * </table>
  *
- * \subsection asfdoc_samd20_adc_module_overview_conversion Conversion Modes
+ * \subsection asfdoc_sam0_adc_module_overview_conversion Conversion Modes
  * ADC conversions can be software triggered on demand by the user application,
  * if continuous sampling is not required. It is also possible to configure the
  * ADC in free-running mode, where new conversions are started as soon as the
  * previous conversion is completed, or configure the ADC to scan across a
- * number of input pins (see \ref asfdoc_samd20_adc_module_overview_pin_scan).
+ * number of input pins (see \ref asfdoc_sam0_adc_module_overview_pin_scan).
  *
- * \subsection asfdoc_samd20_adc_module_overview_diff_mode Differential and Single-Ended Conversion
+ * \subsection asfdoc_sam0_adc_module_overview_diff_mode Differential and Single-Ended Conversion
  * The ADC has two conversion modes; differential and single-ended. When
  * measuring signals where the positive input pin is always at a higher voltage
  * than the negative input pin, the single-ended conversion mode should be used
@@ -192,7 +192,7 @@
  * If however the positive input pin voltage may drop below the negative input
  * pin the signed differential mode should be used.
  *
- * \subsection asfdoc_samd20_adc_module_overview_sample_time Sample Time
+ * \subsection asfdoc_sam0_adc_module_overview_sample_time Sample Time
  * The sample time for each ADC conversion is configurable as a number of half
  * prescaled ADC clock cycles (depending on the prescaler value), allowing the
  * user application to achieve faster or slower sampling depending on the
@@ -205,7 +205,7 @@
  * t_{SAMPLE} = (sample\_length+1) \times \frac{ADC_{CLK}} {2}
  * \f]
  *
- * \subsection asfdoc_samd20_adc_module_overview_averaging Averaging
+ * \subsection asfdoc_sam0_adc_module_overview_averaging Averaging
  * The ADC can be configured to trade conversion speed for accuracy by averaging
  * multiple samples in hardware. This feature is suitable when operating in
  * noisy conditions.
@@ -222,9 +222,9 @@
  * The effective ADC conversion rate will be reduced by a factor of the number
  * of accumulated samples;
  * however the effective resolution will be increased according to
- * \ref asfdoc_samd20_adc_module_hw_av_resolution "the table below".
+ * \ref asfdoc_sam0_adc_module_hw_av_resolution "the table below".
  *
- * \anchor asfdoc_samd20_adc_module_hw_av_resolution
+ * \anchor asfdoc_sam0_adc_module_hw_av_resolution
  * <table>
  *   <caption>Effective ADC resolution from various hardware averaging modes</caption>
  *   <tr>
@@ -278,7 +278,7 @@
  * </table>
  *
  *
- * \subsection asfdoc_samd20_adc_module_overview_offset_corr Offset and Gain Correction
+ * \subsection asfdoc_sam0_adc_module_overview_offset_corr Offset and Gain Correction
  * Inherent gain and offset errors affect the absolute accuracy of the ADC.
  *
  * The offset error is defined as the deviation of the ADC’s actual transfer
@@ -306,7 +306,7 @@
  * during the first conversion. After the first conversion is complete future
  * conversion results are available at the defined sampling rate.
  *
- * \subsection asfdoc_samd20_adc_module_overview_pin_scan Pin Scan
+ * \subsection asfdoc_sam0_adc_module_overview_pin_scan Pin Scan
  * In pin scan mode, the first ADC conversion will begin from the configured
  * positive channel, plus the requested starting offset. When the first
  * conversion is completed, the next conversion will start at the next positive
@@ -316,7 +316,7 @@
  * Pin scanning gives a simple mechanism to sample a large number of physical
  * input channel samples, using a single physical ADC channel.
  *
- * \subsection asfdoc_samd20_adc_module_overview_window_monitor Window Monitor
+ * \subsection asfdoc_sam0_adc_module_overview_window_monitor Window Monitor
  * The ADC module window monitor function can be used to automatically compare
  * the conversion result against a preconfigured pair of upper and lower
  * threshold values.
@@ -335,7 +335,7 @@
  * In addition, if using differential mode, the 8th bit will be considered as
  * the sign bit even if bit 9 is zero.
  *
- * \subsection asfdoc_samd20_adc_module_overview_events Events
+ * \subsection asfdoc_sam0_adc_module_overview_events Events
  * Event generation and event actions are configurable in the ADC.
  *
  * The ADC has two actions that can be triggered upon event reception:
@@ -356,13 +356,13 @@
  * conversion is completed.
  *
  * \note The connection of events between modules requires the use of the
- *       \ref asfdoc_samd20_events_group "SAM D20 Event System Driver (EVENTS)"
+ *       \ref asfdoc_sam0_events_group "SAM D2x Event System Driver (EVENTS)"
  *       to route output event of one module to the the input event of another.
  *       For more information on event routing, refer to the event driver
  *       documentation.
  *
  *
- * \section asfdoc_samd20_adc_special_considerations Special Considerations
+ * \section asfdoc_sam0_adc_special_considerations Special Considerations
  *
  * An integrated analog temperature sensor is available for use with the ADC.
  * The bandgap voltage, as well as the scaled IO and core voltages can also be
@@ -370,22 +370,22 @@
  * to be manually enabled by the user application before they can be measured.
  *
  *
- * \section asfdoc_samd20_adc_extra_info Extra Information
+ * \section asfdoc_sam0_adc_extra_info Extra Information
  *
- * For extra information see \ref asfdoc_samd20_adc_extra. This includes:
- *  - \ref asfdoc_samd20_adc_extra_acronyms
- *  - \ref asfdoc_samd20_adc_extra_dependencies
- *  - \ref asfdoc_samd20_adc_extra_errata
- *  - \ref asfdoc_samd20_adc_extra_history
+ * For extra information see \ref asfdoc_sam0_adc_extra. This includes:
+ *  - \ref asfdoc_sam0_adc_extra_acronyms
+ *  - \ref asfdoc_sam0_adc_extra_dependencies
+ *  - \ref asfdoc_sam0_adc_extra_errata
+ *  - \ref asfdoc_sam0_adc_extra_history
  *
  *
- * \section asfdoc_samd20_adc_examples Examples
+ * \section asfdoc_sam0_adc_examples Examples
  *
  * For a list of examples related to this driver, see
- * \ref asfdoc_samd20_adc_exqsg.
+ * \ref asfdoc_sam0_adc_exqsg.
  *
  *
- * \section asfdoc_samd20_adc_api_overview API Overview
+ * \section asfdoc_sam0_adc_api_overview API Overview
  * @{
  */
 
@@ -395,6 +395,19 @@ extern "C" {
 
 #include <compiler.h>
 #include <system.h>
+
+/* TODO: temporary header file patch for SAMD21 */
+#define ADC_WINCTRL_WINMODE_DISABLE    ADC_WINCTRL_WINMODE_0
+#define ADC_WINCTRL_WINMODE_MODE1      ADC_WINCTRL_WINMODE_1
+#define ADC_WINCTRL_WINMODE_MODE2      ADC_WINCTRL_WINMODE_2
+#define ADC_WINCTRL_WINMODE_MODE3      ADC_WINCTRL_WINMODE_3
+#define ADC_WINCTRL_WINMODE_MODE4      ADC_WINCTRL_WINMODE_4
+
+// Rename of ADC_AVGCTRL_SAMPLENUM_xxx!!!
+
+#define ADC_INPUTCTRL_MUXPOS_SCALEDCOREVCC	ADC_INPUTCTRL_MUXPOS_SALEDCOREVCC
+
+
 
 #if ADC_CALLBACK_MODE == true
 #  include <system_interrupt.h>
@@ -624,6 +637,7 @@ enum adc_positive_input {
 	ADC_POSITIVE_INPUT_PIN18         = ADC_INPUTCTRL_MUXPOS_PIN18,
 	/** ADC19 pin */
 	ADC_POSITIVE_INPUT_PIN19         = ADC_INPUTCTRL_MUXPOS_PIN19,
+#if 0 //TODO: remove
 	/** ADC20 pin */
 	ADC_POSITIVE_INPUT_PIN20         = ADC_INPUTCTRL_MUXPOS_PIN20,
 	/** ADC21 pin */
@@ -632,6 +646,7 @@ enum adc_positive_input {
 	ADC_POSITIVE_INPUT_PIN22         = ADC_INPUTCTRL_MUXPOS_PIN22,
 	/** ADC23 pin */
 	ADC_POSITIVE_INPUT_PIN23         = ADC_INPUTCTRL_MUXPOS_PIN23,
+#endif
 	/** Temperature reference */
 	ADC_POSITIVE_INPUT_TEMP          = ADC_INPUTCTRL_MUXPOS_TEMP,
 	/** Bandgap voltage */
@@ -667,6 +682,7 @@ enum adc_negative_input {
 	ADC_NEGATIVE_INPUT_PIN6          = ADC_INPUTCTRL_MUXNEG_PIN6,
 	/** ADC7 pin */
 	ADC_NEGATIVE_INPUT_PIN7          = ADC_INPUTCTRL_MUXNEG_PIN7,
+#if 0 // TODO: remove
 	/** ADC8 pin */
 	ADC_NEGATIVE_INPUT_PIN8          = ADC_INPUTCTRL_MUXNEG_PIN8,
 	/** ADC9 pin */
@@ -699,6 +715,7 @@ enum adc_negative_input {
 	ADC_NEGATIVE_INPUT_PIN22         = ADC_INPUTCTRL_MUXNEG_PIN22,
 	/** ADC23 pin */
 	ADC_NEGATIVE_INPUT_PIN23         = ADC_INPUTCTRL_MUXNEG_PIN23,
+#endif
 	/** Internal ground */
 	ADC_NEGATIVE_INPUT_GND           = ADC_INPUTCTRL_MUXNEG_GND,
 	/** I/O ground */
@@ -1690,9 +1707,9 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
 
 
 /**
- * \page asfdoc_samd20_adc_extra Extra Information for ADC Driver
+ * \page asfdoc_sam0_adc_extra Extra Information for ADC Driver
  *
- * \section asfdoc_samd20_adc_extra_acronyms Acronyms
+ * \section asfdoc_sam0_adc_extra_acronyms Acronyms
  * Below is a table listing the acronyms used in this module, along with their
  * intended meanings.
  *
@@ -1720,17 +1737,17 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
  * </table>
  *
  *
- * \section asfdoc_samd20_adc_extra_dependencies Dependencies
+ * \section asfdoc_sam0_adc_extra_dependencies Dependencies
  * This driver has the following dependencies:
  *
- *  - \ref asfdoc_samd20_system_pinmux_group "System Pin Multiplexer Driver"
+ *  - \ref asfdoc_sam0_system_pinmux_group "System Pin Multiplexer Driver"
  *
  *
- * \section asfdoc_samd20_adc_extra_errata Errata
+ * \section asfdoc_sam0_adc_extra_errata Errata
  * There are no errata related to this driver.
  *
  *
- * \section asfdoc_samd20_adc_extra_history Module History
+ * \section asfdoc_sam0_adc_extra_history Module History
  * An overview of the module history is presented in the table below, with
  * details on the enhancements and fixes made to the module since its first
  * release. The current version of this corresponds to the newest version in
@@ -1751,20 +1768,20 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
  */
 
 /**
- * \page asfdoc_samd20_adc_exqsg Examples for ADC Driver
+ * \page asfdoc_sam0_adc_exqsg Examples for ADC Driver
  *
  * This is a list of the available Quick Start guides (QSGs) and example
- * applications for \ref asfdoc_samd20_adc_group. QSGs are simple examples with
+ * applications for \ref asfdoc_sam0_adc_group. QSGs are simple examples with
  * step-by-step instructions to configure and use this driver in a selection of
  * use cases. Note that QSGs can be compiled as a standalone application or be
  * added to the user application.
  *
- *  - \subpage asfdoc_samd20_adc_basic_use_case
+ *  - \subpage asfdoc_sam0_adc_basic_use_case
  * \if ADC_CALLBACK_MODE
- *  - \subpage asfdoc_samd20_adc_basic_use_case_callback
+ *  - \subpage asfdoc_sam0_adc_basic_use_case_callback
  * \endif
  *
- * \page asfdoc_samd20_adc_document_revision_history Document Revision History
+ * \page asfdoc_sam0_adc_document_revision_history Document Revision History
  *
  * <table>
  *	<tr>
