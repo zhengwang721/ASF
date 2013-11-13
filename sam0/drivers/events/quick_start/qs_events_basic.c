@@ -44,8 +44,8 @@
 
 //! [setup]
 
-#define EXAMPLE_EVENT_GENERATOR    EVSYS_ID_GEN_TC1_MCX_0
-#define EXAMPLE_EVENT_USER         EVSYS_ID_USER_TC0_EVU
+#define EXAMPLE_EVENT_GENERATOR    EVSYS_ID_GEN_TC4_MCX_0
+#define EXAMPLE_EVENT_USER         EVSYS_ID_USER_TC3_EVU
 
 static void configure_event_channel(struct events_resource *resource)
 {
