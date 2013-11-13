@@ -85,7 +85,7 @@
  *
  * @param m Pointer to message structure
  */
-void mcps_data_ind(arch_data_t *m)
+void mcps_data_ind(uint8_t *m)
 {
 	mcps_data_ind_t *pmsg;
 	wpan_addr_spec_t src_addr;
@@ -144,7 +144,7 @@ void mcps_data_ind(arch_data_t *m)
  *
  * @param m Pointer to message structure
  */
-void mcps_data_conf(arch_data_t *m)
+void mcps_data_conf(uint8_t *m)
 {
 	mcps_data_conf_t *pmsg;
 
@@ -170,7 +170,7 @@ void mcps_data_conf(arch_data_t *m)
  *
  * @param m Pointer to message structure
  */
-void mcps_purge_conf(arch_data_t *m)
+void mcps_purge_conf(uint8_t *m)
 {
 	mcps_purge_conf_t *pmsg;
 
@@ -195,7 +195,7 @@ void mcps_purge_conf(arch_data_t *m)
  *
  * @param m Pointer to message structure
  */
-void mlme_associate_conf(arch_data_t *m)
+void mlme_associate_conf(uint8_t *m)
 {
 	mlme_associate_conf_t *pmsg;
 
@@ -219,7 +219,7 @@ void mlme_associate_conf(arch_data_t *m)
  *
  * @param m Pointer to message structure
  */
-void mlme_associate_ind(arch_data_t *m)
+void mlme_associate_ind(uint8_t *m)
 {
 	mlme_associate_ind_t *pmsg;
 
@@ -251,7 +251,7 @@ void mlme_associate_ind(arch_data_t *m)
  *
  * @param m Pointer to message structure
  */
-void mlme_beacon_notify_ind(arch_data_t *m)
+void mlme_beacon_notify_ind(uint8_t *m)
 {
 	mlme_beacon_notify_ind_t *pmsg;
 
@@ -281,7 +281,7 @@ void mlme_beacon_notify_ind(arch_data_t *m)
  *
  * @param m Pointer to message structure
  */
-void mlme_comm_status_ind(arch_data_t *m)
+void mlme_comm_status_ind(uint8_t *m)
 {
 	mlme_comm_status_ind_t *pmsg;
 	wpan_addr_spec_t src_addr;
@@ -320,7 +320,7 @@ void mlme_comm_status_ind(arch_data_t *m)
  *
  * @param m Pointer to message structure
  */
-void mlme_disassociate_conf(arch_data_t *m)
+void mlme_disassociate_conf(uint8_t *m)
 {
 	mlme_disassociate_conf_t *pmsg;
 	wpan_addr_spec_t device_addr;
@@ -352,7 +352,7 @@ void mlme_disassociate_conf(arch_data_t *m)
  *
  * @param m Pointer to message structure
  */
-void mlme_disassociate_ind(arch_data_t *m)
+void mlme_disassociate_ind(uint8_t *m)
 {
 	mlme_disassociate_ind_t *pmsg;
 
@@ -377,7 +377,7 @@ void mlme_disassociate_ind(arch_data_t *m)
  *
  * @param m Pointer to message structure
  */
-void mlme_get_conf(arch_data_t *m)
+void mlme_get_conf(uint8_t *m)
 {
 	mlme_get_conf_t *pmsg;
 
@@ -407,7 +407,7 @@ void mlme_get_conf(arch_data_t *m)
  *
  * @param m Pointer to message structure
  */
-void mlme_orphan_ind(arch_data_t *m)
+void mlme_orphan_ind(uint8_t *m)
 {
 	mlme_orphan_ind_t *pmsg;
 
@@ -432,7 +432,7 @@ void mlme_orphan_ind(arch_data_t *m)
  *
  * @param m Pointer to message structure
  */
-void mlme_poll_conf(arch_data_t *m)
+void mlme_poll_conf(uint8_t *m)
 {
 	mlme_poll_conf_t *pmsg;
 
@@ -454,7 +454,7 @@ void mlme_poll_conf(arch_data_t *m)
  *
  * @param m Pointer to message structure
  */
-void mlme_reset_conf(arch_data_t *m)
+void mlme_reset_conf(uint8_t *m)
 {
 	mlme_reset_conf_t *pmsg;
 
@@ -476,7 +476,7 @@ void mlme_reset_conf(arch_data_t *m)
  *
  * @param m Pointer to message structure
  */
-void mlme_rx_enable_conf(arch_data_t *m)
+void mlme_rx_enable_conf(uint8_t *m)
 {
 	mlme_rx_enable_conf_t *pmsg;
 
@@ -500,7 +500,7 @@ void mlme_rx_enable_conf(arch_data_t *m)
  *
  * @param m Pointer to message structure
  */
-void mlme_scan_conf(arch_data_t *m)
+void mlme_scan_conf(uint8_t *m)
 {
 	mlme_scan_conf_t *pmsg;
 
@@ -528,7 +528,7 @@ void mlme_scan_conf(arch_data_t *m)
  *
  * @param m Pointer to message structure
  */
-void mlme_set_conf(arch_data_t *m)
+void mlme_set_conf(uint8_t *m)
 {
 	mlme_set_conf_t *pmsg;
 
@@ -555,7 +555,7 @@ void mlme_set_conf(arch_data_t *m)
  *
  * @param m Pointer to message structure
  */
-void mlme_start_conf(arch_data_t *m)
+void mlme_start_conf(uint8_t *m)
 {
 	mlme_start_conf_t *pmsg;
 
@@ -579,7 +579,7 @@ void mlme_start_conf(arch_data_t *m)
  *
  * @param m Pointer to message structure
  */
-void mlme_sync_loss_ind(arch_data_t *m)
+void mlme_sync_loss_ind(uint8_t *m)
 {
 	mlme_sync_loss_ind_t *pmsg;
 
@@ -597,7 +597,7 @@ void mlme_sync_loss_ind(arch_data_t *m)
 #endif /* (MAC_SYNC_LOSS_INDICATION == 1) */
 
 #ifdef GTS_SUPPORT
-void mlme_gts_conf(arch_data_t *m)
+void mlme_gts_conf(uint8_t *m)
 {
 	mlme_gts_conf_t *pmsg;
 
@@ -610,7 +610,7 @@ void mlme_gts_conf(arch_data_t *m)
 	bmm_buffer_free((buffer_t *)m);
 }
 
-void mlme_gts_ind(arch_data_t *m)
+void mlme_gts_ind(uint8_t *m)
 {
 	mlme_gts_ind_t *pmsg;
 

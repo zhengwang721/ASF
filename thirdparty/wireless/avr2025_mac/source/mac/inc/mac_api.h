@@ -90,6 +90,7 @@
 /**
  * MAC Address type
  */
+__PACK__DATA__
 typedef union {
 	uint16_t short_address;
 	uint64_t long_address;
@@ -125,7 +126,7 @@ typedef struct wpan_addr_spec_tag {
 	 * 16 bit address.
 	 */
 	address_field_t Addr;
-} wpan_addr_spec_t __ALIGN_WORD_ADDR__;
+} wpan_addr_spec_t;
 
 /**
  * @brief PAN descriptor information structure
@@ -177,7 +178,7 @@ typedef struct wpan_pandescriptor_tag {
 	 */
 	uint32_t TimeStamp;
 #endif  /* ENABLE_TSTAMP */
-} wpan_pandescriptor_t  __ALIGN_WORD_ADDR__;
+} wpan_pandescriptor_t;
 
 #if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
 
@@ -408,7 +409,7 @@ typedef struct gts_char_tag {
 }gts_char_t;
 #endif /* GTS_SUPPORT */
 #endif /* if !defined(__DOXYGEN___NO_MAC) */
-
+__PACK__RST_DATA__
 /* ! @} */
 /* === Macros =============================================================== */
 

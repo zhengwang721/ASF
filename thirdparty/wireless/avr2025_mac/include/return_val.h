@@ -56,14 +56,12 @@
 #include "compiler.h"
 
 #if (SAMD20) || (SAM4L)
- typedef uint32_t arch_data_t;
- #define __ALIGN_WORD_ADDR__ COMPILER_WORD_ALIGNED
+ #define __PACK__RST_DATA__  COMPILER_PACK_RESET()
+ #define __PACK__DATA__		 COMPILER_PACK_SET(1)
 #ifdef SAM4L
 #define status_code_genare_t status_code_t 
 #endif
 #else
- typedef uint8_t arch_data_t;
- #define __ALIGN_WORD_ADDR__ 
  #define status_code_genare_t status_code_t
 #endif 
 

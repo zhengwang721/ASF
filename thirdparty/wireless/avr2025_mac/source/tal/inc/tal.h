@@ -74,7 +74,7 @@
  */
 
 /* === EXTERNALS =========================================================== */
-
+__PACK__DATA__
 /* Structure implementing the PIB values stored in TAL */
 typedef struct tal_pib_tag {
 	/**
@@ -310,7 +310,7 @@ typedef struct
 #endif  /* #if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP) */
 	/** Pointer to MPDU */
 	uint8_t *mpdu;
-} frame_info_t __ALIGN_WORD_ADDR__;
+} frame_info_t;
 
 /**
  * Sleep Mode supported by transceiver
@@ -332,7 +332,7 @@ typedef enum csma_mode_tag {
 	CSMA_UNSLOTTED,
 	CSMA_SLOTTED
 } csma_mode_t;
-
+__PACK__RST_DATA__
 /* === MACROS ============================================================== */
 
 /* RF bands: */
@@ -617,7 +617,7 @@ void tal_ed_end_cb(uint8_t energy_level);
  *         MAC_SUCCESS otherwise
  * \ingroup group_tal_pib
  */
-retval_t tal_pib_get(uint8_t attribute, arch_data_t *value);
+retval_t tal_pib_get(uint8_t attribute, uint8_t *value);
 
 /**
  * \brief Sets a TAL PIB attribute

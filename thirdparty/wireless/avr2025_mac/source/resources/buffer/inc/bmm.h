@@ -85,18 +85,19 @@
  * @brief Buffer structure holding information of each buffer.
  *
  */
+__PACK__DATA__
 typedef struct
 #if !defined(__DOXYGEN__)
 		buffer_tag
 #endif
 {
 	/** Pointer to the buffer body */
-	arch_data_t *body;
+	uint8_t *body;
 	
 	/** Pointer to next free buffer */
 	struct buffer_tag *next;
-} buffer_t __ALIGN_WORD_ADDR__;
-
+} buffer_t;
+__PACK__RST_DATA__
 /* === Externals =========================================================== */
 
 /* === Prototypes ========================================================== */

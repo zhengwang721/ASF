@@ -408,7 +408,11 @@ void handle_tx_end_irq(bool underrun_occured)
 		 */
 		mac_frame_ptr->time_stamp = tal_timestamp;
 #else
-		pal_trx_read_timestamp(&mac_frame_ptr->time_stamp);
+		{
+			uint32_t time_stamp_temp = 0;
+			pal_trx_read_timestamp(&time_stamp_temp);
+			mac_frame_ptr->time_stamp = time_stamp_temp;
+		}
 #endif
 #endif  /* #if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP) */
 

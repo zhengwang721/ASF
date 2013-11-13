@@ -182,7 +182,7 @@ static bool check_start_parameter(mlme_start_req_t *msg)
  *
  * @param m Pointer to MLME_START.request message issued by the NHLE
  */
-void mlme_start_request(arch_data_t *m)
+void mlme_start_request(uint8_t *m)
 {
 	mlme_start_req_t *msg
 		= (mlme_start_req_t *)BMM_BUFFER_POINTER((buffer_t *)m);

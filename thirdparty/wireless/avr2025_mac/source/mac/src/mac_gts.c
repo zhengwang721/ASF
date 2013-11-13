@@ -124,7 +124,7 @@ static queue_t dev_tx_gts_q;
  *
  * @param m The MLME-GTS.request message.
  */
-void mlme_gts_request(arch_data_t *m)
+void mlme_gts_request(uint8_t *m)
 {
 	mlme_gts_req_t mgr;
 	memcpy(&mgr, BMM_BUFFER_POINTER((buffer_t *)m),
@@ -700,7 +700,7 @@ void mac_send_gts_ind(gts_char_t GtsChar, uint16_t dev_addr)
 		qmm_queue_append(&mac_nhle_q, buffer_header);
 }
 
-void handle_gts_data_req(mcps_data_req_t *data_req, arch_data_t *msg)
+void handle_gts_data_req(mcps_data_req_t *data_req, uint8_t *msg)
 {
 uint32_t slot_duration1 = 0;
 uint32_t frame_tx_time = 0;

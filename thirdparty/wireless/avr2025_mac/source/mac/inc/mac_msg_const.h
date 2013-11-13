@@ -116,7 +116,7 @@ enum msg_code {
 	MLME_START_CONFIRM                  = (0x22),
     MLME_POLL_CONFIRM                   = (0x23),
     MAC_INC_FRAME                       = (0x24)
-}SHORTENUM __ALIGN_WORD_ADDR__;
+}SHORTENUM;
 
 /**
  * Bump this when extending the list!

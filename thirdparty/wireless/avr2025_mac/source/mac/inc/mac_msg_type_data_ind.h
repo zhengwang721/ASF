@@ -76,6 +76,7 @@
 #if ((defined __ICCARM__) || (defined __GNUARM__) || (defined __GNUAVR32__))
 //#pragma pack(1) 
 #endif /* __ICCARM__, __GNUARM__ , __GNUAVR32__*/
+__PACK__DATA__
 typedef struct mcps_data_ind_tag {
 	/**< This identifies the message as \ref MCPS_DATA_INDICATION */
 	enum msg_code cmdcode;
@@ -176,7 +177,8 @@ typedef struct mcps_data_ind_tag {
 	 * MAC sublayer entity.
 	 */
 	uint8_t *msdu;
-} mcps_data_ind_t  __ALIGN_WORD_ADDR__;
+} mcps_data_ind_t;
+__PACK__RST_DATA__
 /*End packing for ARM(GCC & IAR) and AVR32(GCC) */
 #if ((defined __ICCARM__) || (defined __GNUARM__) || (defined __GNUAVR32__))
 //#pragma pack() 

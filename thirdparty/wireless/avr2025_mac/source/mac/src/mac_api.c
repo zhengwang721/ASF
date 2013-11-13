@@ -129,7 +129,7 @@ retval_t wpan_init(void)
 bool wpan_task(void)
 {
 	bool event_processed; 	
-	arch_data_t *event = NULL;
+	uint8_t *event = NULL;
 
 	/* mac_task returns true if a request was processed completely */
 	event_processed = mac_task();
@@ -138,7 +138,7 @@ bool wpan_task(void)
 	 * MAC to NHLE event queue should be dispatched
 	 * irrespective of the dispatcher state.
 	 */
-	event = (arch_data_t *)qmm_queue_remove(&mac_nhle_q, NULL);
+	event = (uint8_t *)qmm_queue_remove(&mac_nhle_q, NULL);
 
 	/* If an event has been detected, handle it. */
 	if (NULL != event) {
@@ -177,7 +177,7 @@ bool wpan_mcps_data_req(uint8_t SrcAddrMode,
 		uint8_t TxOptions)
 #endif  /* MAC_SECURITY */
 {
-	buffer_t *buffer_header __ALIGN_WORD_ADDR__;
+	buffer_t *buffer_header;
 	mcps_data_req_t *mcps_data_req;
 	uint8_t *payload_pos;
 

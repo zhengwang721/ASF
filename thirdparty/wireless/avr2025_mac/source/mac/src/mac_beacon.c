@@ -107,7 +107,7 @@ extern mlme_start_req_t msr_params;    /* Intermediate start parameters */
  * In a build without beacon support, in order to save the static buffer,
  * a new buffer will be allocated to transmit the beacon frame.
  */
-static arch_data_t beacon_buffer[LARGE_BUFFER_SIZE];
+static uint8_t beacon_buffer[LARGE_BUFFER_SIZE];
 #endif  /* BEACON_SUPPORT */
 
 #if (MAC_INDIRECT_DATA_FFD == 1)
@@ -115,12 +115,12 @@ static arch_data_t beacon_buffer[LARGE_BUFFER_SIZE];
 static uint8_t *beacon_ptr;
 
 /* Variable to hold number the pending addresses. */
-static uint8_t pending_address_count __ALIGN_WORD_ADDR__;
+static uint8_t pending_address_count;
 
 #endif  /* (MAC_INDIRECT_DATA_FFD == 1) */
 
 #ifdef TEST_HARNESS
-static uint8_t vpan_no __ALIGN_WORD_ADDR__;
+static uint8_t vpan_no;
 #endif  /* TEST_HARNESS */
 
 /* === Prototypes =========================================================== */
@@ -284,7 +284,7 @@ void mac_build_and_tx_beacon(bool beacon_enabled,
 	transmit_frame->buffer_header = NULL;
 #else   /* No BEACON_SUPPORT */
 
-	arch_data_t *beacon_buffer = (arch_data_t *)BMM_BUFFER_POINTER(beacon_buffer_header);
+	uint8_t *beacon_buffer = (uint8_t *)BMM_BUFFER_POINTER(beacon_buffer_header);
 
 	/*
 	 * The frame is given to the TAL in the 'frame_info_t' format,
@@ -427,20 +427,17 @@ void mac_build_and_tx_beacon(bool beacon_enabled,
 		if ((beacon_sec_buf.SecurityLevel == 1) || (beacon_sec_buf.SecurityLevel == 5))
 		{			
 			memmove((frame_ptr_mhr_gts - 0x04), frame_ptr_mhr_gts,\
-									(mac_payload_ptr - frame_ptr_mhr_gts));
-			memset(frame_ptr_mhr_gts, 0, 0x04);
+									(mac_payload_ptr - frame_ptr_mhr_gts));			
 		} 
 		else if((beacon_sec_buf.SecurityLevel == 2) || (beacon_sec_buf.SecurityLevel == 6))
 		{
 			memmove((frame_ptr_mhr_gts - 0x08), frame_ptr_mhr_gts,\
-									(mac_payload_ptr - frame_ptr_mhr_gts));
-			memset(frame_ptr_mhr_gts, 0, 0x08);
+									(mac_payload_ptr - frame_ptr_mhr_gts));			
 		}
 		else if((beacon_sec_buf.SecurityLevel == 3) || (beacon_sec_buf.SecurityLevel == 7))
 		{
 			memmove((frame_ptr_mhr_gts - 0x10), frame_ptr_mhr_gts,\
-									(mac_payload_ptr - frame_ptr_mhr_gts));	
-			memset(frame_ptr_mhr_gts, 0, 0x10);								
+									(mac_payload_ptr - frame_ptr_mhr_gts));											
 		}
 				
 		if (MAC_SUCCESS != build_sec) 

@@ -753,6 +753,9 @@ void mac_handle_tx_null_data_frame(void)
 static uint8_t find_short_buffer(void *buf, void *short_addr)
 {
 	frame_info_t *data = (frame_info_t *)buf;
+	uint16_t short_addr_temp = 0;
+	memcpy((uint8_t *)&short_addr_temp, (uint8_t *)short_addr, \
+										sizeof(short_addr_temp));
 
 	if (!data->indirect_in_transit) {
 		/*
@@ -768,7 +771,7 @@ static uint8_t find_short_buffer(void *buf, void *short_addr)
 		 * with short address passed.
 		 */
 		if ((dst_addr_mode == FCF_SHORT_ADDR) &&
-				(*(uint16_t *)short_addr ==
+				(short_addr_temp ==
 				convert_byte_array_to_16_bit(&data->mpdu[
 					PL_POS_DST_ADDR_START]))
 				) {
@@ -794,6 +797,9 @@ static uint8_t find_short_buffer(void *buf, void *short_addr)
 static uint8_t find_long_buffer(void *buf, void *long_addr)
 {
 	frame_info_t *data = (frame_info_t *)buf;
+	uint64_t long_addr_temp = 0;
+	memcpy((uint8_t *)&long_addr_temp, (uint8_t *)long_addr, \
+										sizeof(long_addr_temp));
 
 	if (!data->indirect_in_transit) {
 		/*
@@ -809,7 +815,7 @@ static uint8_t find_long_buffer(void *buf, void *long_addr)
 		 * with the exended address passed.
 		 */
 		if ((dst_addr_mode == FCF_LONG_ADDR) &&
-				(*(uint64_t *)long_addr ==
+				(long_addr_temp ==
 				convert_byte_array_to_64_bit(&data->mpdu[
 					PL_POS_DST_ADDR_START]))
 				) {

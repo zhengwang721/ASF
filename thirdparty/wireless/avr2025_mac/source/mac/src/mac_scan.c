@@ -398,12 +398,12 @@ static void mac_awake_scan(buffer_t *scan_buf)
 			 * In active scan reuse the scan request buffer for
 			 * sending beacon request.
 			 */
-			mac_scan_cmd_buf_ptr = (arch_data_t *)scan_buf;
+			mac_scan_cmd_buf_ptr = (uint8_t *)scan_buf;
 		}
 
 		/* Allocate a large size buffer for scan confirm. */
 		mac_conf_buf_ptr
-			= (arch_data_t *)bmm_buffer_alloc(LARGE_BUFFER_SIZE);
+			= (uint8_t *)bmm_buffer_alloc(LARGE_BUFFER_SIZE);
 
 			if (NULL == mac_conf_buf_ptr) {
 			/*
@@ -448,7 +448,7 @@ static void mac_awake_scan(buffer_t *scan_buf)
 	case MLME_SCAN_TYPE_ORPHAN:
 		/* Buffer allocated for orphan notification command */
 		mac_scan_cmd_buf_ptr
-			= (arch_data_t *)bmm_buffer_alloc(LARGE_BUFFER_SIZE);
+			= (uint8_t *)bmm_buffer_alloc(LARGE_BUFFER_SIZE);
 
 		if (NULL == mac_scan_cmd_buf_ptr) {
 			msc->status = MAC_INVALID_PARAMETER;
@@ -943,7 +943,7 @@ static void mac_t_scan_duration_cb(void *callback_parameter)
  *
  * @param m The MLME_SCAN.request message
  */
-void mlme_scan_request(arch_data_t *m)
+void mlme_scan_request(uint8_t *m)
 {
 	mlme_scan_req_t *msr = (mlme_scan_req_t *)BMM_BUFFER_POINTER(
 			(buffer_t *)m);
