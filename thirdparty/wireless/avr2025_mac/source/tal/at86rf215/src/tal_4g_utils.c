@@ -828,9 +828,10 @@ uint16_t oqpsk_get_chip_rate(trx_id_t trx_id)
     return rate;
 }
 //sriram
-uint16_t get_oqpsk_chip_rate(trx_id_t trx_id,sun_freq_band_t freq_band)
+oqpsk_chip_rate_t get_oqpsk_chip_rate(trx_id_t trx_id,sun_freq_band_t freq_band)
 {
 	uint16_t rate = 0;
+	uint8_t rate_mode;
 
 	for (uint8_t i = 0; i < OQPSK_CHIP_RATE_TABLE_ROW_SIZE; i++)
 	{
@@ -840,8 +841,27 @@ uint16_t get_oqpsk_chip_rate(trx_id_t trx_id,sun_freq_band_t freq_band)
 			break;
 		}
 	}
+if(rate == 2000)
+{
+rate_mode = CHIP_RATE_2000;
 
-	return rate;
+}
+else if(rate == 1000)
+{
+	rate_mode = CHIP_RATE_1000;
+
+}
+else if(rate == 200)
+{
+	rate_mode = CHIP_RATE_200;
+
+}
+else if(rate == 100)
+{
+	rate_mode = CHIP_RATE_100;
+
+}
+	return rate_mode;
 }
 
 

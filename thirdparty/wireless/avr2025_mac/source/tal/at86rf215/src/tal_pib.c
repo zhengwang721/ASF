@@ -502,6 +502,10 @@ retval_t tal_pib_get(trx_id_t trx_id, uint8_t attribute, uint8_t *value)
         case phySetting:
             memcpy(value, &tal_pib[trx_id].phy, sizeof(phy_t));
             break;
+			
+        case phyCurrentPage:
+       *(uint8_t *)value = tal_pib[trx_id].CurrentPage;
+        break;			
 
         case phyCurrentChannel:
 #ifdef SUPPORT_LEGACY_OQPSK

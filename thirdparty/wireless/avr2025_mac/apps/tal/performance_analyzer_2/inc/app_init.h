@@ -86,7 +86,7 @@ uint32_t tstamp;
 #define SRC_PAN_ID              (DEFAULT_PAN_ID)
 #define DEFAULT_ADDR            (0xFFFF)
 #define DST_SHORT_ADDR          (0xFFFF)
-
+#define SUN_PAGE_NO				(0X09)
 /* Frame overhead due to selected address scheme incl. FCS */
 #if (DST_PAN_ID == SRC_PAN_ID)
 #define FRAME_OVERHEAD          (9)

@@ -1138,7 +1138,7 @@ uint64_t peer_mac_address)
 	*msg_buf++ = start_mode;
 	/* Copy all configuration parameters */
 	*msg_buf++ = (uint8_t)trx_config_params->channel;
-	*msg_buf++ = (uint8_t)trx_config_params->channel>>8;	
+	*msg_buf++ = (uint8_t)trx_config_params->channel>>8;	 //SRIRAM
 	*msg_buf++ = trx_config_params->channel_page;
 	*msg_buf++ = trx_config_params->tx_power_dbm;
 	*msg_buf++ = trx_config_params->tx_power_reg;
@@ -1459,7 +1459,21 @@ void usr_perf_set_confirm(trx_id_t trx, uint8_t status, uint8_t param_type, para
 	*msg_buf++ = status;
 	/* Copy Parameter type */
 	*msg_buf++ = param_type;
-	*msg_buf++ = param_len = get_param_length(param_type);
+	if((param_type == PARAM_CHANNEL_PAGE) && ((param_value ->param_value_8bit) == SUN_PAGE_NO))
+	{ //sriram -> cleaning required
+		if((uint8_t)((param_value->param_value_32bit)>>16) == OFDM)
+		{
+			*msg_buf++ = param_len = 6;
+		}
+		else if((uint8_t)((param_value->param_value_32bit)>>16) == OQPSK)
+		{
+			*msg_buf++ = param_len = 4;
+		}
+	}
+	else
+	{
+		*msg_buf++ = param_len = get_param_length(param_type);		
+	}
 	/* Update the Length field */
 	*ptr_to_msg_size += OCTET_STR_LEN_BYTE_LEN;
 
@@ -1510,7 +1524,21 @@ void usr_perf_get_confirm(trx_id_t trx, uint8_t status, uint8_t param_type, para
 	*msg_buf++ = status;
 	/* Copy Parameter type */
 	*msg_buf++ = param_type;
-	*msg_buf++ = param_len = get_param_length(param_type);
+	if((param_type == PARAM_CHANNEL_PAGE) && ((param_value ->param_value_8bit) == SUN_PAGE_NO))
+	{ //sriram -> cleaning required
+		if((uint8_t)((param_value->param_value_32bit)>>16) == OFDM)
+		{
+			*msg_buf++ = param_len = 6;
+		}
+		else if((uint8_t)((param_value->param_value_32bit)>>16) == OQPSK)
+		{
+			*msg_buf++ = param_len = 4;
+		}
+	}
+	else
+	{
+		*msg_buf++ = param_len = get_param_length(param_type);
+	}	
 	/* Update the Length field */
 	*ptr_to_msg_size += OCTET_STR_LEN_BYTE_LEN;
 	/* Copy Parameter value */
@@ -2154,13 +2182,18 @@ void usr_get_current_config_confirm(trx_id_t trx, uint8_t status, trx_config_par
 
     uint8_t *msg_buf;
 
-    msg_buf = get_next_tx_buffer(trx);
+	/* Pointer to size element - the content is written later. */
+	uint8_t *ptr_to_msg_size;
 
-    /* Check if buffer could not be allocated */
-    if (NULL == msg_buf)
-    {
-        return;
-    }
+	msg_buf = get_next_tx_buffer(trx);
+
+	/* Check if buffer could not be allocated */
+	if (NULL == msg_buf)
+	{
+		return;
+	}
+	/* Store pointer to size element. */
+	ptr_to_msg_size = msg_buf;
     /* Copy Len, Protocol Id, Msg Id parameters */
     *msg_buf++ = PROTOCOL_ID_LEN + GET_CURRENT_CONFIG_CONFIRM_LEN;
     *msg_buf++ = PROTOCOL_ID;
@@ -2171,10 +2204,34 @@ void usr_get_current_config_confirm(trx_id_t trx, uint8_t status, trx_config_par
     /* configuration parameters */
     *msg_buf++ = (uint8_t)curr_trx_config_params->channel;
     *msg_buf++ = (uint8_t)(curr_trx_config_params->channel >> 8);	
-    *msg_buf++ = curr_trx_config_params->channel_page;
+	if(curr_trx_config_params->channel_page == 9) //sriram
+	{
+	*msg_buf++ = curr_trx_config_params->sun_phy_page.page_no;
+	*msg_buf++ = curr_trx_config_params->sun_phy_page.freq_band;
+	*msg_buf++ = curr_trx_config_params->sun_phy_page.modulation;
+	*ptr_to_msg_size += 3;
+	if(curr_trx_config_params->sun_phy_page.modulation == OFDM)
+	{
+	*msg_buf++ = curr_trx_config_params->sun_phy_page.sun_phy_mode.mr_ofdm.option;	
+	*msg_buf++ = curr_trx_config_params->sun_phy_page.sun_phy_mode.mr_ofdm.mcs_val;
+	*msg_buf++ = curr_trx_config_params->sun_phy_page.sun_phy_mode.mr_ofdm.interl;
+	*ptr_to_msg_size += 3;
+	}
+	else if(curr_trx_config_params->sun_phy_page.modulation == OQPSK)
+	{
+		*msg_buf++ = curr_trx_config_params->sun_phy_page.sun_phy_mode.mr_oqpsk_rate_mode;
+		*ptr_to_msg_size += 1;
+	}
+	}
+	else
+	{
+    *msg_buf++ = curr_trx_config_params->channel_page;		
+	*ptr_to_msg_size += 1;
+	}
+	
     *msg_buf++ = curr_trx_config_params->tx_power_dbm;
 
-		*msg_buf++ = curr_trx_config_params->tx_power_reg;
+	*msg_buf++ = curr_trx_config_params->tx_power_reg;
 
     *msg_buf++ = (uint8_t)curr_trx_config_params->csma_enabled;
     *msg_buf++ = (uint8_t)curr_trx_config_params->retry_enabled;

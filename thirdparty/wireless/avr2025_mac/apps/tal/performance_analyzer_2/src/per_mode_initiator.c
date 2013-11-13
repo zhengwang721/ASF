@@ -227,8 +227,9 @@ static uint8_t last_tx_power_format_set[NO_TRX];
 static void configure_range_test_frame_sending(trx_id_t trx);
 static bool send_range_test_marker_rsp(trx_id_t trx);
 static void send_sun_page_changed(trx_id_t trx);
-phy_t sun_phy_page_set;
-
+phy_t sun_phy_page_set[NO_TRX];
+sun_phy_t sun_page[NO_TRX];
+static uint8_t *sun_page_param_val[NO_TRX];
 
 /**
  * This is variable is to keep track of the specific features supported
@@ -619,9 +620,17 @@ void per_mode_initiator_tx_done_cb(trx_id_t trx,retval_t status, frame_info_t *f
 		    msg = (app_payload_t *)(frame->mpdu + FRAME_OVERHEAD);
 		    if(msg->cmd_id == SET_SUN_PAGE)
 			{
-			if (tal_pib_set(trx, phySetting, (pib_value_t *)&sun_phy_page_set) == MAC_SUCCESS)
+			if (((tal_pib_set(trx, phySetting, (pib_value_t *)&sun_phy_page_set[trx]) == MAC_SUCCESS)) && (status == MAC_SUCCESS))
 			{
-
+			tal_pib[trx].CurrentPage = 9; //sriram -> to be revisited
+			curr_trx_config_params[trx].channel_page = 9;
+			memcpy(&curr_trx_config_params[trx].sun_phy_page, &sun_page[trx], sizeof(sun_phy_t));
+			usr_perf_set_confirm(trx,MAC_SUCCESS,PARAM_CHANNEL_PAGE,(param_value_t *)sun_page_param_val[trx]);
+			}
+			else
+			{
+			usr_perf_set_confirm(trx,UNABLE_TO_CONTACT_PEER,PARAM_CHANNEL_PAGE,(param_value_t *)sun_page_param_val[trx]);
+			
 			}
 			
 			}
@@ -1368,7 +1377,8 @@ static void config_per_test_parameters(trx_id_t trx)
 
 		
 		/* Make the ISM frequency as null as IEEE channel is set in default case */
-		curr_trx_config_params[trx].channel_page = default_trx_config_params[trx].channel_page = TAL_CURRENT_PAGE_DEFAULT_RF24;
+		curr_trx_config_params[trx].channel_page = default_trx_config_params[trx].channel_page = TAL_CURRENT_PAGE_DEFAULT_RF24; 
+		// sriram-> add code if default page is sun page,above assumption is legacy page is used
 		tal_pib_set(trx,phyCurrentPage, (pib_value_t *)&default_trx_config_params[trx].channel_page);
 		/* As tx power is already configure by TAL in tal_pib.c get it for application*/
 		temp = TAL_TRANSMIT_POWER_DEFAULT;
@@ -1422,7 +1432,7 @@ void get_board_details(trx_id_t trx)
 	fw_feature_mask |= MULTI_CHANNEL_SELECT;
 	fw_feature_mask |= PER_RANGE_TEST_MODE;
 	
-	float fw_version = reverse_float(2.0);
+	float fw_version = reverse_float(3.0);
 	/* Send the Confirmation with the status as SUCCESS */
 	if(trx == RF24)
 	{
@@ -1947,50 +1957,66 @@ p_in = (int8_t)energy_level ;
 
 void perf_set_sun_page(trx_id_t trx,uint8_t *param_val)
 {
-	sun_phy_t sun_page;
-	
-	sun_page.page_no = *param_val++;
-	sun_page.freq_band = sun_phy_page_set.freq_band = *param_val++;	
-	sun_page.modulation = sun_phy_page_set.modulation = *param_val++;	
-	if(sun_page.modulation == OFDM)
+	//sun_phy_t sun_page;//sriram //not used now but added for later ref and usage	
+	uint8_t *temp_param_val = param_val;
+	sun_page[trx].page_no = *temp_param_val++;
+	sun_page[trx].freq_band = sun_phy_page_set[trx].freq_band = *temp_param_val++;
+	sun_page[trx].modulation = sun_phy_page_set[trx].modulation = *temp_param_val++;	
+	if(sun_page[trx].modulation == OFDM)
 	{
-		sun_page.sun_phy_mode.mr_ofdm.option = sun_phy_page_set.phy_mode.ofdm.option = *param_val++;	
-		sun_page.sun_phy_mode.mr_ofdm.mcs_val = sun_phy_page_set.phy_mode.ofdm.mcs_val = *param_val++;	
-		sun_page.sun_phy_mode.mr_ofdm.interl = sun_phy_page_set.phy_mode.ofdm.interl = *param_val++;
-		get_ofdm_freq_f0(trx,sun_page.freq_band,sun_page.sun_phy_mode.mr_ofdm.option,&sun_phy_page_set.freq_f0,&sun_phy_page_set.ch_spacing);	
+		sun_page[trx].sun_phy_mode.mr_ofdm.option = sun_phy_page_set[trx].phy_mode.ofdm.option = *temp_param_val++;	
+		sun_page[trx].sun_phy_mode.mr_ofdm.mcs_val = sun_phy_page_set[trx].phy_mode.ofdm.mcs_val = *temp_param_val++;	
+		if((sun_phy_page_set[trx].phy_mode.ofdm.mcs_val > MCS6)  || (sun_phy_page_set[trx].phy_mode.ofdm.option > OFDM_OPT_4))
+		{
+			usr_perf_set_confirm(trx,INVALID_VALUE,PARAM_CHANNEL_PAGE,(param_value_t *)param_val);
+			return;
+		}
+		sun_page[trx].sun_phy_mode.mr_ofdm.interl = sun_phy_page_set[trx].phy_mode.ofdm.interl = *temp_param_val++;
+		get_ofdm_freq_f0(trx,sun_page[trx].freq_band,sun_page[trx].sun_phy_mode.mr_ofdm.option,&sun_phy_page_set[trx].freq_f0,&sun_phy_page_set[trx].ch_spacing);	
 		
 	}
-	else if(sun_page.modulation == OQPSK)
+	else if(sun_page[trx].modulation == OQPSK)
 	{
-		sun_page.sun_phy_mode.mr_oqpsk_rate_mode = sun_phy_page_set.phy_mode.oqpsk.rate_mode =  *param_val++;	
-			
-		sun_phy_page_set.phy_mode.oqpsk.chip_rate = get_oqpsk_chip_rate(trx,sun_page.freq_band);
-		get_oqpsk_freq_f0(trx,sun_page.freq_band,sun_phy_page_set.freq_f0,sun_phy_page_set.ch_spacing);
+		sun_page[trx].sun_phy_mode.mr_oqpsk_rate_mode = sun_phy_page_set[trx].phy_mode.oqpsk.rate_mode =  *temp_param_val++;	
+		if(sun_phy_page_set[trx].phy_mode.oqpsk.rate_mode > OQPSK_RATE_MOD_4)
+		{
+			usr_perf_set_confirm(trx,INVALID_VALUE,PARAM_CHANNEL_PAGE,(param_value_t *)param_val);
+			return;
+		}
+		sun_phy_page_set[trx].phy_mode.oqpsk.chip_rate = get_oqpsk_chip_rate(trx,sun_page[trx].freq_band);
+		get_oqpsk_freq_f0(trx,sun_page[trx].freq_band,&sun_phy_page_set[trx].freq_f0,&sun_phy_page_set[trx].ch_spacing);
 	}
 	else
 	{
-		//Add code for usr_perf_ser_conf invalid msg
+		usr_perf_set_confirm(trx,INVALID_VALUE,PARAM_CHANNEL_PAGE,(param_value_t *)param_val);
+		return;
 	}
 
 	if (true == peer_found[trx])
 	{
 		send_sun_page_changed(trx);
-		//Add code for Sending new sun page to rcptor
+		sun_page_param_val[trx] = param_val; //take a copy to set after sending
 	}
 	else
 	{
 		//single node -> set phy now
 
-			if (tal_pib_set(trx, phySetting, (pib_value_t *)&sun_phy_page_set) != MAC_SUCCESS)
+			if (tal_pib_set(trx, phySetting, (pib_value_t *)&sun_phy_page_set[trx]) == MAC_SUCCESS)
 			{
-				//Add code for usr_perf_ser_conf invalid msg
+				tal_pib[trx].CurrentPage = 9; //sriram -> needs to be revisited
+				curr_trx_config_params[trx].channel_page = 9;
+				 memcpy(&(curr_trx_config_params[trx].sun_phy_page), &sun_page[trx], sizeof(sun_phy_t));
+				usr_perf_set_confirm(trx,MAC_SUCCESS,PARAM_CHANNEL_PAGE,(param_value_t *)param_val);
 			}		
-/*
-		uint16_t channel = 120;
-		/ * Send Set confirmation with status SUCCESS * /
-		usr_perf_set_confirm(trx,MAC_SUCCESS,
-		PARAM_CHANNEL,
-		(param_value_t *)&channel);*/
+			else
+			{
+				usr_perf_set_confirm(trx,INVALID_VALUE,PARAM_CHANNEL_PAGE,(param_value_t *)param_val);
+				return;
+			}
+
+		/* Send Set confirmation with status SUCCESS */
+		
+
 	}
 	
 	
@@ -2006,7 +2032,7 @@ static void send_sun_page_changed(trx_id_t trx)
 	seq_num_initiator[trx]++;
 	msg.seq_num = seq_num_initiator[trx];
 	data = (phy_t *)&msg.payload;
-	memcpy(data, &sun_phy_page_set, sizeof(phy_t));
+	memcpy(data, &sun_phy_page_set[trx], sizeof(phy_t));
 
 	payload_length = ((sizeof(app_payload_t) -
 	sizeof(general_pkt_t)) +
@@ -2170,7 +2196,7 @@ void perf_get_req(trx_id_t trx, uint8_t param_type)
     {
         case PARAM_CHANNEL: /* Channel Get request */
             {
-                uint8_t current_channel = 0;
+                uint16_t current_channel = 0;
 
 					tal_pib_get(trx,phyCurrentChannel, &current_channel);
 
@@ -2183,11 +2209,37 @@ void perf_get_req(trx_id_t trx, uint8_t param_type)
             {
                 uint8_t ch_page = 0;
 
-					tal_pib_get(trx,phyCurrentPage, &ch_page);
+				tal_pib_get(trx,phyCurrentPage, &ch_page);				
+				//sriram
+				if(ch_page == 9)
+				{
+				uint8_t param_val[10];
+				phy_t phy_param;
+				
+				tal_pib_get(trx,phySetting, &phy_param);
+				param_val[0] = ch_page;
+				param_val[1] = phy_param.freq_band;
+				param_val[2] = phy_param.modulation;
+				if(phy_param.modulation == OFDM)
+				{
+					param_val[3] = phy_param.phy_mode.ofdm.option;
+					param_val[4] = phy_param.phy_mode.ofdm.mcs_val;
+					param_val[5] = phy_param.phy_mode.ofdm.interl;
+				}
+				else if(phy_param.modulation == OQPSK)
+				{
+					param_val[3] = phy_param.phy_mode.oqpsk.rate_mode;
 
-
+				}			
+				
+				usr_perf_get_confirm(trx, MAC_SUCCESS, PARAM_CHANNEL_PAGE,  (param_value_t *)&(param_val[0]));
+				}
                 /* Send Get confirmation with status SUCCESS */
+				else
+				{
                 usr_perf_get_confirm(trx, MAC_SUCCESS, PARAM_CHANNEL_PAGE,  (param_value_t *)&ch_page);
+				}
+
 
             }
             break;
@@ -2824,7 +2876,42 @@ void get_current_configuration(trx_id_t trx)
 	
 
 		/* Channel page configuration */
-		tal_pib_set(trx,phyCurrentPage, (pib_value_t *)&curr_trx_config_params[trx].channel_page);
+		if(curr_trx_config_params[trx].channel_page !=9)
+		{
+			tal_pib_set(trx,phyCurrentPage, (pib_value_t *)&curr_trx_config_params[trx].channel_page);
+		}
+		else
+		{
+		phy_t phy_to_set;
+
+		phy_to_set.freq_band = curr_trx_config_params[trx].sun_phy_page.freq_band;
+		phy_to_set.modulation = curr_trx_config_params[trx].sun_phy_page.modulation;
+		
+	if(curr_trx_config_params[trx].sun_phy_page.modulation == OFDM)
+	{
+		phy_to_set.phy_mode.ofdm.option = curr_trx_config_params[trx].sun_phy_page.sun_phy_mode.mr_ofdm.option;
+		phy_to_set.phy_mode.ofdm.mcs_val = curr_trx_config_params[trx].sun_phy_page.sun_phy_mode.mr_ofdm.mcs_val;
+		phy_to_set.phy_mode.ofdm.interl = curr_trx_config_params[trx].sun_phy_page.sun_phy_mode.mr_ofdm.interl;
+		get_ofdm_freq_f0(trx,curr_trx_config_params[trx].sun_phy_page.freq_band,curr_trx_config_params[trx].sun_phy_page.sun_phy_mode.mr_ofdm.option,&phy_to_set.freq_f0,&phy_to_set.ch_spacing);
+		
+	}
+	else if(curr_trx_config_params[trx].sun_phy_page.modulation == OQPSK)
+	{
+		phy_to_set.phy_mode.oqpsk.rate_mode =  curr_trx_config_params[trx].sun_phy_page.sun_phy_mode.mr_oqpsk_rate_mode;
+
+		phy_to_set.phy_mode.oqpsk.chip_rate = get_oqpsk_chip_rate(trx,curr_trx_config_params[trx].sun_phy_page.freq_band);
+		get_oqpsk_freq_f0(trx,curr_trx_config_params[trx].sun_phy_page.freq_band,&phy_to_set.freq_f0,&phy_to_set.ch_spacing);
+	}
+
+		if (tal_pib_set(trx, phySetting, (pib_value_t *)&phy_to_set) == MAC_SUCCESS)
+		{
+			tal_pib[trx].CurrentPage = 9; //sriram -> needs to be revisited
+
+		}
+
+	}	
+
+		
 
 		/* Tx_power configurations */
 		//temp = CONV_DBM_TO_phyTransmitPower(curr_trx_config_params[trx].tx_power_dbm);

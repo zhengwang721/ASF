@@ -309,13 +309,11 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 		//	phy_t sun_phy_page_set = (phy_t *)&(msg->payload);
 			if (tal_pib_set(trx, phySetting, (pib_value_t *)&msg->payload) != MAC_SUCCESS)
 			{
-				//Add code for usr_perf_ser_conf invalid msg
+				printf("SUN Channel Page Change Failure");
 			}
 			else
-			{
-				
-			
-			printf("Sun PHY Page Changed");
+			{							
+			printf("Sun PHY Page Changed");			
 			}
 	        }
 	        break;

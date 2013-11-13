@@ -104,6 +104,6 @@ extern volatile rf_irq_t tal_rf_irqs[2];
 
 void get_ofdm_freq_f0(trx_id_t trx_id,sun_freq_band_t freq_band ,ofdm_option_t option,uint32_t *freq, uint32_t *spacing);
 void get_oqpsk_freq_f0(trx_id_t trx_id,sun_freq_band_t freq_band ,uint32_t *freq, uint32_t *spacing);
-uint16_t get_oqpsk_chip_rate(trx_id_t trx_id,sun_freq_band_t freq_band);
+oqpsk_chip_rate_t get_oqpsk_chip_rate(trx_id_t trx_id,sun_freq_band_t freq_band);
 
 #endif /* TAL_RF215_H */
