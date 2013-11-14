@@ -1,6 +1,5 @@
 <asf xmlversion="1.0">
 	<module type="service" id="common.services.crc32" caption="CRC-32 calculation">
-		<device-support value="sam"/>
 		<device-support value="sam0"/>
 		<info type="description" value="summary">
 		Service for calculating 32-bit CRC according to IEEE 802.3 for either a single or
