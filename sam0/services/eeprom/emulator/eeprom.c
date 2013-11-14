@@ -830,11 +830,6 @@ enum status_code eeprom_emulator_write_buffer(
 
 	/* Write the specified data to the emulated EEPROM memory space */
 	for (c; c < (length + offset); c++) {
-		/* Copy the next byte of data from the user's buffer to the temporary
-		 * buffer */
-		buffer[c % EEPROM_PAGE_SIZE] = data[c - offset];
-		page_dirty = true;
-
 		/* Check if we have written up to a new EEPROM page boundary */
 		if ((c % EEPROM_PAGE_SIZE) == 0) {
 			/* Write the current page to non-volatile memory from the temporary
@@ -857,6 +852,10 @@ enum status_code eeprom_emulator_write_buffer(
 				return error_code;
 			}
 		}
+		/* Copy the next byte of data from the user's buffer to the temporary
+		 * buffer */
+		buffer[c % EEPROM_PAGE_SIZE] = data[c - offset];
+		page_dirty = true;
 	}
 
 	/* If the current page is dirty, write it */
