@@ -60,46 +60,22 @@
 
 /**
  * \internal
- * \brief Recalculate 32-bit CRC for another byte
+ * \brief Recalculate 32-bit CRC for bytes within a word
  *
  * \param data Byte to recalculate for.
  * \param crc Initial/current CRC value.
+ * \param bytes Number of bytes to calculate for.
  *
  * \return New CRC value.
  */
-static inline crc32_t _crc32_recalculate_byte_helper(uint_fast8_t data, crc32_t crc)
+static inline crc32_t _crc32_recalculate_bytes_helper(uint_fast8_t data,
+		crc32_t crc, uint_fast8_t bytes)
 {
 	uint_fast8_t bit;
 
 	crc ^= data;
 
-	for (bit = 8; bit > 0; bit--) {
-		if (crc & 1) {
-			crc = (crc >> 1) ^ CRC32_POLYNOMIAL;
-		} else {
-			crc >>= 1;
-		}
-	}
-
-	return crc;
-}
-
-/**
- * \internal
- * \brief Recalculate 32-bit CRC for another word
- *
- * \param data Word to recalculate for.
- * \param crc Initial/current CRC value.
- *
- * \return New CRC value.
- */
-static inline crc32_t _crc32_recalculate_word_helper(uint32_t data, crc32_t crc)
-{
-	uint_fast8_t bit;
-
-	crc ^= data;
-
-	for (bit = 32; bit > 0; bit--) {
+	for (bit = 8 * bytes; bit > 0; bit--) {
 		if (crc & 1) {
 			crc = (crc >> 1) ^ CRC32_POLYNOMIAL;
 		} else {
@@ -118,9 +94,6 @@ static inline crc32_t _crc32_recalculate_word_helper(uint32_t data, crc32_t crc)
  *
  * To reduce the number of databus accesses and thus speed up the calculation,
  * the algorithm is tuned to work with words (32-bit) as much as possible.
- * It therefore attempts to first compute for any non-aligned bytes (up to 3) at
- * the start of the data block, then all whole words, then any trailing bytes
- * (up to 3).
  *
  * \param[in] data Address of data.
  * \param[in] length Length of data.
@@ -136,9 +109,11 @@ static inline crc32_t _crc32_recalculate_word_helper(uint32_t data, crc32_t crc)
  */
 enum status_code crc32_recalculate(const void *data, size_t length, crc32_t *crc)
 {
-	const uint8_t *byte_ptr = data;
+	const uint32_t *word_ptr =
+			(uint32_t *)((uintptr_t)data & WORD_ALIGNMENT_MASK);
 	size_t temp_length;
 	uint32_t temp_crc = COMPLEMENT_CRC(*crc);
+	uint32_t word;
 
 	// Calculate for initial bytes to get word-aligned
 	if (length < sizeof(uint32_t)) {
@@ -150,29 +125,29 @@ enum status_code crc32_recalculate(const void *data, size_t length, crc32_t *crc
 	if (temp_length) {
 		length -= temp_length;
 
-		while (temp_length--) {
-			temp_crc = _crc32_recalculate_byte_helper(*(byte_ptr++), temp_crc);
-		}
+		word = *(word_ptr++);
+		word >>= 8 * (WORD_SIZE - temp_length);
+		temp_crc = _crc32_recalculate_bytes_helper(word, temp_crc, temp_length);
 	}
 
 	// Calculate for whole words, if any
 	temp_length = length & WORD_ALIGNMENT_MASK;
 
 	if (temp_length) {
-		Assert(((uintptr_t)byte_ptr & ~WORD_ALIGNMENT_MASK) == 0);
 		length -= temp_length;
+		temp_length /= WORD_SIZE;
 
-		while (temp_length) {
-			uint32_t word = *(uint32_t *)(uintptr_t)byte_ptr;
-			temp_crc = _crc32_recalculate_word_helper(word, temp_crc);
-			byte_ptr += WORD_SIZE;
-			temp_length -= WORD_SIZE;
-		}		
+		while (temp_length--) {
+			word = *(word_ptr++);
+			temp_crc = _crc32_recalculate_bytes_helper(word, temp_crc, WORD_SIZE);
+		}
 	}
 
 	// Calculate for tailing bytes
-	while (length--) {
-		temp_crc = _crc32_recalculate_byte_helper(*(byte_ptr++), temp_crc);
+	if (length) {
+		word = *word_ptr;
+		word &= 0xffffffffUL >> (8 * length);
+		temp_crc = _crc32_recalculate_bytes_helper(word, temp_crc, length);
 	}
 
 	*crc = COMPLEMENT_CRC(temp_crc);
