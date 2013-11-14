@@ -3,7 +3,7 @@
  *
  * \brief AT25DFx SerialFlash driver interface.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -47,7 +47,81 @@
 /**
  * \defgroup asfdoc_common2_at25dfx_group AT25DFx SerialFlash Driver
  *
- * This driver provides an interface for basic use of SerialFlash devices.
+ * This driver provides an interface for basic usage of SerialFlash devices.
+ * It supports multiple instances, and the instances can be connected to either
+ * common or individual SPI interfaces.
+ *
+ * For a list of the supported SerialFlash types, see
+ * \ref at25dfx_type "this enum".
+ *
+ * The following peripherals are used by this module:
+ * - \ref SERCOM SPI (data transfer)
+ * - \ref PORT (chip selection)
+ *
+ * The outline of this documentation is as follows:
+ * - \ref asfdoc_common2_at25dfx_prerequisites
+ * - \ref asfdoc_common2_at25dfx_module_overview
+ * - \ref asfdoc_common2_at25dfx_special_considerations
+ * - \ref asfdoc_common2_at25dfx_extra_info
+ * - \ref asfdoc_common2_at25dfx_examples
+ * - \ref asfdoc_common2_at25dfx_api_overview
+ *
+ *
+ * \section asfdoc_common2_at25dfx_prerequisites Prerequisites
+ *
+ * This driver requires that the SPI interfaces are instantiated, initialized
+ * and enabled by the user, and that the instances are persistent for as long as
+ * the instances of this driver exist.
+ *
+ * However, the configuration to use is supplied by this driver with
+ * \ref at25dfx_spi_get_config_defaults(). To ensure correct operation, the user
+ * should not change anything but the baud rate, the SERCOM MUX and the pin MUX
+ * settings in the supplied configuration.
+ *
+ * Persistence of the SPI instances can be ensured by, e.g., defining them in
+ * the same scope as the instances of this driver, or by simply making them
+ * global.
+ *
+ *
+ * \section asfdoc_common2_at25dfx_module_overview Module Overview
+ *
+ * This driver is built upon the APIs of the SERCOM SPI and PORT drivers.
+ * The API is blocking, meaning the functions do not return until the requested
+ * operation is done. It is also thread-safe since it uses the SPI instance lock
+ * mechanism to ensure that no two operations can interfere with each other.
+ *
+ * Functionality for permanently locking and securing the SerialFlash is not
+ * implemented in this driver.
+ *
+ *
+ * \section asfdoc_common2_at25dfx_special_considerations Special Considerations
+ *
+ * The available erase block sizes, and the availability and granularity of
+ * protection sectors may differ between devices.
+ *
+ * For example, with AT25F512B (\ref AT25DFX_512B), issuing a 64 kB block erase
+ * command will cause a 32 kB erase, and it does not support setting protection
+ * on individual sectors, only globally.
+ *
+ * Refer to the SerialFlash device's datasheet for details about which
+ * operations are supported and what limitations apply to them.
+ *
+ *
+ * \section asfdoc_common2_at25dfx_extra_info Extra Information
+ *
+ * For extra information, see
+ * \subpage asfdoc_common2_at25dfx_extra. This includes:
+ * - \ref asfdoc_common2_at25dfx_extra_acronyms
+ * - \ref asfdoc_common2_at25dfx_extra_dependencies
+ * - \ref asfdoc_common2_at25dfx_extra_errata
+ * - \ref asfdoc_common2_at25dfx_extra_history
+ *
+ * \section asfdoc_common2_at25dfx_examples Examples
+ *
+ * For a list of examples related to this driver, see
+ * \subpage asfdoc_common2_at25dfx_exqsg.
+ *
+ * \section asfdoc_common2_at25dfx_api_overview API Overview
  *
  * @{
  */
@@ -80,11 +154,7 @@ enum at25dfx_type {
 
 #include <at25dfx_hal.h>
 
-/**
- * Size of block to erase.
- *
- * \note A 64kB block erase results in a 32kB erase on AT25DFX_512B.
- */
+//! Size of block to erase.
 enum at25dfx_block_size {
 	//! 4 kiloByte block size.
 	AT25DFX_BLOCK_SIZE_4KB,
@@ -94,10 +164,10 @@ enum at25dfx_block_size {
 	AT25DFX_BLOCK_SIZE_64KB,
 };
 
-//! SerialFlash internal address
+//! SerialFlash internal address.
 typedef uint32_t at25dfx_address_t;
 
-//! Length of data package to read/write
+//! Length of data package to read/write.
 typedef uint16_t at25dfx_datalen_t;
 
 //! SerialFlash chip driver instance.
@@ -117,6 +187,9 @@ struct at25dfx_chip_config {
 	//! Chip Select (CS) pin.
 	uint8_t cs_pin;
 };
+
+//! \name Initialization
+//@{
 
 /**
  * \brief Initialize chip driver instance.
@@ -148,11 +221,16 @@ static inline enum status_code at25dfx_chip_init(
 	return STATUS_OK;
 }
 
+//@}
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+//! \name Presence
+//@{
 enum status_code at25dfx_chip_check_presence(struct at25dfx_chip_module *chip);
+//@}
 
 //! \name Read/Write
 //@{
@@ -169,12 +247,7 @@ enum status_code at25dfx_chip_erase_block(struct at25dfx_chip_module *chip,
 		at25dfx_address_t address, enum at25dfx_block_size block_size);
 //@}
 
-/**
- * \name Sector Protect
- *
- * \note See the datasheet for details about the availability and granularity
- * of sector-level protection. Global-level protection is always available.
- */
+//! \name Sector Protect
 //@{
 enum status_code at25dfx_chip_set_global_sector_protect(
 		struct at25dfx_chip_module *chip, bool protect);
@@ -196,6 +269,89 @@ enum status_code at25dfx_chip_wake(struct at25dfx_chip_module *chip);
 }
 #endif
 
-/** @{ */
+/** @} */
+
+/**
+ * \page asfdoc_common2_at25dfx_extra Extra Information for AT25DFx SerialFlash Driver
+ *
+ *
+ * \section asfdoc_common2_at25dfx_extra_acronyms Acronyms
+ *
+ * The table below presents the acronyms used in this module.
+ *
+ * <table>
+ *   <tr>
+ *     <th>Acronym</td>
+ *     <th>Description</td>
+ *   </tr>
+ *   <tr>
+ *     <td>SPI</td>
+ *     <td>Serial Peripheral Interface</td>
+ *   </tr>
+ *   <tr>
+ *     <td>CS</td>
+ *     <td>Chip Select</td>
+ *   </tr>
+ * </table>
+ *
+ *
+ * \section asfdoc_common2_at25dfx_extra_dependencies Dependencies
+ *
+ * This driver has the following dependencies:
+ * - \ref asfdoc_samd20_sercom_spi_group "SERCOM SPI driver"
+ * - \ref asfdoc_samd20_port_group "PORT driver"
+ * - \ref group_sam0_utils "Compiler driver"
+ *
+ *
+ * \section asfdoc_common2_at25dfx_extra_errata Errata
+ *
+ * There are no errata related to this driver.
+ *
+ *
+ * \section asfdoc_common2_at25dfx_extra_history Module History
+ *
+ * An overview of the module history is presented in the table below, with
+ * details on the enhancements and fixes made to the module since its first
+ * release. The current version of this corresponds to the newest version in the
+ * table.
+ *
+ * <table>
+ *   <tr>
+ *     <th>Changelog</th>
+ *   </tr>
+ *   <tr>
+ *     <td>Initial Release</td>
+ *   </tr>
+ * </table>
+ */
+
+/**
+ * \page asfdoc_common2_at25dfx_exqsg Examples for AT25DFx SerialFlash Driver
+ *
+ * This is a list of the available Quick Start guides (QSGs) and example
+ * applications for \ref asfdoc_common2_at25dfx_group. QSGs are
+ * simple examples with step-by-step instructions to configure and use this
+ * driver in a selection of use cases. Note that QSGs can be compiled as a
+ * standalone application or be added to the user application.
+ *
+ * - \subpage asfdoc_common2_at25dfx_basic
+ */
+
+/**
+ * \page asfdoc_common2_at25dfx_document_revision_history Document Revision History
+ *
+ * <table>
+ * <tr>
+ * <th>Doc. Rev.</td>
+ * <th>Date</td>
+ * <th>Comments</td>
+ * </tr>
+ * <tr>
+ * <td>A</td>
+ * <td>XX/2013</td>
+ * <td>Initial release</td>
+ * </tr>
+ * </table>
+ */
 
 #endif // AT25DFX_H

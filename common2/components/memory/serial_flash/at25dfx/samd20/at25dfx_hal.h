@@ -3,12 +3,7 @@
  *
  * \brief AT25DFx SerialFlash driver public SPI HAL interface.
  *
- * This file manages the connection of the AT25DFx SerialFlash driver to an
- * SPI service (could be spi master service or usart in spi mode). The SPI
- * service selection depends on  AT25DFX_USES_SPI_MASTER_SERVICE or
- * AT25DFX_USES_USART_SPI_SERVICE in conf_at25dfx.h.
- *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -51,6 +46,17 @@
 
 #include <spi.h>
 
+/**
+ * \brief Initialize SPI configuration
+ *
+ * This function initializes the SPI configuration struct with default settings
+ * that should work with SerialFlash devices.
+ *
+ * The user can change the baud rate and the MUX settings for SERCOM and GPIO
+ * pads, but should leave all other settings intact.
+ *
+ * \param config Address of config struct to initialize.
+ */
 static inline void at25dfx_spi_get_config_defaults(
 		struct spi_config *const config)
 {

@@ -3,12 +3,7 @@
  *
  * \brief AT25DFx SerialFlash driver private SPI HAL interface.
  *
- * This file manages the connection of the AT25DFx SerialFlash driver to an
- * SPI service (could be spi master service or usart in spi mode). The SPI
- * service selection depends on  AT25DFX_USES_SPI_MASTER_SERVICE or
- * AT25DFX_USES_USART_SPI_SERVICE in conf_at25dfx.h.
- *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -51,8 +46,15 @@
 
 #include <port.h>
 
-//! \name Private, chip-level functions
+//! \name Private SPI helpers
 //@{
+
+/**
+ * \brief Issue a read command
+ *
+ * \param chip Address of SerialFlash chip instance to operate on.
+ * \param cmd The command to issue.
+ */
 static inline void _at25dfx_chip_issue_read_command_wait(
 		struct at25dfx_chip_module *chip, struct at25dfx_command cmd)
 {
@@ -89,6 +91,12 @@ static inline void _at25dfx_chip_issue_read_command_wait(
 	_at25dfx_chip_deselect(chip);
 }
 
+/**
+ * \brief Issue a read command
+ *
+ * \param chip Address of SerialFlash chip instance to operate on.
+ * \param cmd The command to issue.
+ */
 static inline void _at25dfx_chip_issue_write_command_wait(
 		struct at25dfx_chip_module *chip, struct at25dfx_command cmd)
 {
@@ -122,6 +130,19 @@ static inline void _at25dfx_chip_issue_write_command_wait(
 	_at25dfx_chip_deselect(chip);
 }
 
+/**
+ * \brief Get status after current operation completes
+ *
+ * This function will issue a command to read out the status, and will then read
+ * the status continuously from the chip until it indicates that it is not busy.
+ * The error flag of the status is then checked, before returning the result.
+ *
+ * \param chip Address of SerialFlash chip instance to operate on.
+ *
+ * \return Status of the operation.
+ * \retval STATUS_OK if operation succeeded.
+ * \retval STATUS_ERR_IO if an error occurred.
+ */
 static inline enum status_code _at25dfx_chip_get_nonbusy_status(
 		struct at25dfx_chip_module *chip)
 {
@@ -166,6 +187,7 @@ static inline enum status_code _at25dfx_chip_get_nonbusy_status(
 	}
 	return STATUS_OK;
 }
+
 //@}
 
 #endif // AT25DFX_PRIV_HAL_H

@@ -7,7 +7,10 @@
 			<keyword value="Memory"/>
 		</info>
 		<build type="c-source" value="at25dfx.c"/>
+		<build type="doxygen-entry-point" value="asfdoc_common2_at25dfx_group"/>
+		<build type="doxygen-example-path" value="quick_start_basic"/>
 		<build type="header-file" subtype="api" value="at25dfx.h"/>
+		<build type="header-file" value="quick_start_basic/qs_at25dfx_basic.h"/>
 		<build type="include-path" value="."/>
 	</module>
 	<select-by-device id="common2.components.memory.serial_flash.at25dfx" caption="AT25DFx SerialFlash">
@@ -24,7 +27,8 @@
 			<require idref="sam0.drivers.port"/>
 			<require idref="sam0.drivers.sercom.spi"/>
 			<require idref="sam0.utils"/>
-			<device-support value="samd20"/>	
+			<device-support value="samd20"/>
+			<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 		</module>
 	</select-by-device>
 </asf>

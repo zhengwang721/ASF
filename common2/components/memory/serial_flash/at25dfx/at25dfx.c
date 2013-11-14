@@ -3,7 +3,7 @@
  *
  * \brief AT25DFx SerialFlash driver implementation.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,6 +43,7 @@
 
 #include "at25dfx.h"
 
+//! SerialFlash command opcodes
 enum at25dfx_command_opcode {
 	AT25DFX_COMMAND_PROGRAM_PAGE         = 0x02,
 	AT25DFX_COMMAND_READ_STATUS          = 0x05,
@@ -62,9 +63,12 @@ enum at25dfx_command_opcode {
 	AT25DFX_COMMAND_WAKE                 = 0xab,
 };
 
+//! AT25DFx page size in bytes
 #define AT25DFX_PAGE_SIZE         256
+//! Maximum length of a SerialFlash command
 #define AT25DFX_COMMAND_MAX_SIZE  (1 + 3 + 2)
 
+//! SerialFlash status bits
 enum at25dfx_status_field {
 	// These two are read-fields
 	AT25DFX_STATUS_BUSY            = (1 << 0),
@@ -73,19 +77,20 @@ enum at25dfx_status_field {
 	AT25DFX_STATUS_GLOBAL_PROTECT  = (0x0f << 2),
 };
 
+//! SerialFlash command container
 struct at25dfx_command {
-	// Command byte opcode
+	//! Opcode to send
 	enum at25dfx_command_opcode opcode;
-	// Size of command: command byte (1) + address bytes (3) + dummy bytes (N)
+	//! Size: opcode byte (1) [+ address bytes (3)] [+ dummy bytes (N)]
 	uint8_t command_size;
-	// SerialFlash internal address
+	//! SerialFlash address to operate on
 	at25dfx_address_t address;
-	// Data buffer to be read from/write to
+	//! Buffer to read from/write to
 	union {
 		const uint8_t *tx;
 		uint8_t *rx;
 	} data;
-	// Number of bytes to read/write
+	//! Number of bytes to read/write
 	at25dfx_datalen_t length;
 };
 
@@ -95,9 +100,9 @@ struct at25dfx_command {
 /**
  * \brief Get the device ID of a specific SerialFlash type.
  *
- * \param type the type or model of SerialFlash.
+ * \param[in] type Type of SerialFlash.
  *
- * \return the SerialFlash device ID.
+ * \return SerialFlash device ID.
  */
 static inline uint32_t _at25dfx_get_device_id(enum at25dfx_type type)
 {
@@ -141,9 +146,9 @@ static inline uint32_t _at25dfx_get_device_id(enum at25dfx_type type)
 /**
  * \brief Get the storage size of a specific SerialFlash type.
  *
- * \param type the type or model of SerialFlash.
+ * \param[in] type Type of SerialFlash.
  *
- * \return the SerialFlash storage size.
+ * \return SerialFlash storage size.
  */
 static inline uint32_t _at25dfx_get_device_size(enum at25dfx_type type)
 {
@@ -180,14 +185,28 @@ static inline uint32_t _at25dfx_get_device_size(enum at25dfx_type type)
 
 //@}
 
-//! \name Chip-level functions
+//! \name Private chip helpers
 //@{
 
+/**
+ * \brief Select the chip
+ *
+ * This function selects the specified chip by driving its CS line low.
+ *
+ * \param[in] chip Address of SerialFlash chip instance to operate on.
+ */
 static inline void _at25dfx_chip_select(struct at25dfx_chip_module *chip)
 {
 	port_pin_set_output_level(chip->cs_pin, false);
 }
 
+/**
+ * \brief Deselect the chip
+ *
+ * This function deselects the specified chip by driving its CS line high.
+ *
+ * \param[in] chip Address of SerialFlash chip instance to operate on.
+ */
 static inline void _at25dfx_chip_deselect(struct at25dfx_chip_module *chip)
 {
 	port_pin_set_output_level(chip->cs_pin, true);
@@ -195,6 +214,15 @@ static inline void _at25dfx_chip_deselect(struct at25dfx_chip_module *chip)
 
 #include <at25dfx_priv_hal.h>
 
+/**
+ * \brief Issue command to enable writing
+ *
+ * This function issues the command that enables operations which change the
+ * SerialFlash content or operation, i.e., programming, erasing and protecting
+ * or unprotecting sectors.
+ *
+ * \param[in] chip Address of SerialFlash chip instance to operate on.
+ */
 static inline void _at25dfx_chip_enable_write(struct at25dfx_chip_module *chip)
 {
 	struct at25dfx_command cmd;
@@ -205,20 +233,22 @@ static inline void _at25dfx_chip_enable_write(struct at25dfx_chip_module *chip)
 	_at25dfx_chip_issue_write_command_wait(chip, cmd);
 }
 
-static inline void _at25dfx_chip_disable_write(struct at25dfx_chip_module *chip)
-{
-	struct at25dfx_command cmd;
-
-	cmd.opcode = AT25DFX_COMMAND_WRITE_DISABLE;
-	cmd.command_size = 1;
-	cmd.length = 0;
-	_at25dfx_chip_issue_write_command_wait(chip, cmd);
-}
-
 //@}
 
-/** PUBLIC FUNCTIONS BELOW HERE **/
-
+/**
+ * \brief Check presence of chip
+ *
+ * This function checks whether or not the SerialFlash device is present by
+ * attempting to read out its device ID, and comparing it with the one that
+ * its type should have.
+ *
+ * \param[in] chip Address of SerialFlash chip instance to operate on.
+ *
+ * \return Status of operation.
+ * \retval STATUS_OK if chip responded with ID matching its type.
+ * \retval STATUS_BUSY if SPI is busy with some other operation.
+ * \retval STATUS_ERR_NOT_FOUND if chip did not respond, or with wrong ID.
+ */
 enum status_code at25dfx_chip_check_presence(struct at25dfx_chip_module *chip)
 {
 	enum status_code status;
@@ -248,6 +278,21 @@ enum status_code at25dfx_chip_check_presence(struct at25dfx_chip_module *chip)
 	}
 }
 
+/**
+ * \brief Read data from chip
+ *
+ * This function reads data from the SerialFlash device, into a buffer.
+ *
+ * \param[in] chip Address of SerialFlash chip instance to operate on.
+ * \param[in] address SerialFlash internal address to start reading from.
+ * \param[out] data Buffer to write data into.
+ * \param[in] length Number of bytes to read.
+ *
+ * \return Status of operation.
+ * \retval STATUS_OK if operation succeeded.
+ * \retval STATUS_BUSY if SPI is busy with some other operation.
+ * \retval STATUS_ERR_INVALID_ARG if address and/or length is out of bounds.
+ */
 enum status_code at25dfx_chip_read_buffer(struct at25dfx_chip_module *chip,
 		at25dfx_address_t address, void *data, at25dfx_datalen_t length)
 {
@@ -280,6 +325,22 @@ enum status_code at25dfx_chip_read_buffer(struct at25dfx_chip_module *chip,
 	return STATUS_OK;
 }
 
+/**
+ * \brief Write data to chip
+ *
+ * This function writes data to the SerialFlash device, from a buffer.
+ *
+ * \param[in] chip Address of SerialFlash chip instance to operate on.
+ * \param[in] address SerialFlash internal address to start writing to.
+ * \param[in] data Buffer to read data from.
+ * \param[in] length Number of bytes to write.
+ *
+ * \return Status of operation.
+ * \retval STATUS_OK if operation succeeded.
+ * \retval STATUS_ERR_IO if operation failed.
+ * \retval STATUS_BUSY if SPI is busy with some other operation.
+ * \retval STATUS_ERR_INVALID_ARG if address and/or length is out of bounds.
+ */
 enum status_code at25dfx_chip_write_buffer(struct at25dfx_chip_module *chip,
 		at25dfx_address_t address, const void *data, at25dfx_datalen_t length)
 {
@@ -333,6 +394,23 @@ enum status_code at25dfx_chip_write_buffer(struct at25dfx_chip_module *chip,
 	return status;
 }
 
+/**
+ * \brief Erase chip
+ *
+ * This function erases all content of the SerialFlash device.
+ *
+ * \pre All sectors must be unprotected prior to a chip erase, or it will not be
+ * performed.
+ *
+ * \sa at25dfx_chip_set_global_sector_protect()
+ *
+ * \param[in] chip Address of SerialFlash chip instance to operate on.
+ *
+ * \return Status of operation.
+ * \retval STATUS_OK if operation succeeded.
+ * \retval STATUS_ERR_IO if operation failed.
+ * \retval STATUS_BUSY if SPI is busy with some other operation.
+ */
 enum status_code at25dfx_chip_erase(struct at25dfx_chip_module *chip)
 {
 	enum status_code status;
@@ -359,6 +437,32 @@ enum status_code at25dfx_chip_erase(struct at25dfx_chip_module *chip)
 	return status;
 }
 
+/**
+ * \brief Erase block
+ *
+ * This function erases all content within a block of the SerialFlash device.
+ *
+ * \pre The sector(s) which the block resides in must be unprotected prior to a
+ * block erase, or it will not be performed.
+ *
+ * \sa at25dfx_chip_set_sector_protect()
+ *
+ * \note The alignment of the erase blocks is given by the erase block size. The
+ * SerialFlash device will simply ignore address bits which index within the
+ * block. For example, doing a 4 kB block erase with the start address set to
+ * the 2 kB boundary will cause the first 4 kB to get erased, not 4 kB starting
+ * at the 2 kB boundary.
+ *
+ * \param[in] chip Address of SerialFlash chip instance to operate on.
+ * \param[in] address Address within the block to erase.
+ * \param[in] block_size Size of block to erase.
+ *
+ * \return Status of operation.
+ * \retval STATUS_OK if operation succeeded.
+ * \retval STATUS_ERR_IO if operation failed.
+ * \retval STATUS_BUSY if SPI is busy with some other operation.
+ * \retval STATUS_ERR_INVALID_ARG if address is out of bounds.
+ */
 enum status_code at25dfx_chip_erase_block(struct at25dfx_chip_module *chip,
 		at25dfx_address_t address, enum at25dfx_block_size block_size)
 {
@@ -407,6 +511,23 @@ enum status_code at25dfx_chip_erase_block(struct at25dfx_chip_module *chip,
 	return status;
 }
 
+/**
+ * \brief Set sector protection globally
+ *
+ * This function applies a protect setting to all sectors.
+ *
+ * \note Global setting of sector protection is done by writing to the status
+ * register of the device.
+ *
+ * \param[in] chip Address of SerialFlash chip instance to operate on.
+ * \param[in] bool Protection setting to apply.
+ * \arg \c true if the sectors should be protected.
+ * \arg \c false if the sectors should be unprotected.
+ *
+ * \return Status of operation.
+ * \retval STATUS_OK if write operation succeeded.
+ * \retval STATUS_BUSY if SPI is busy with some other operation.
+ */
 enum status_code at25dfx_chip_set_global_sector_protect(
 		struct at25dfx_chip_module *chip, bool protect)
 {
@@ -435,6 +556,26 @@ enum status_code at25dfx_chip_set_global_sector_protect(
 	return STATUS_OK;
 }
 
+/**
+ * \brief Set protection setting of a single sector
+ *
+ * This function applies a protect setting to a single sector.
+ *
+ * \note The granularity of the sectors for protection can vary between
+ * SerialFlash devices and is not necessarily uniform. Please refer to the
+ * datasheet for details.
+ *
+ * \param[in] chip Address of SerialFlash chip instance to operate on.
+ * \param[in] address Address within sector to protect.
+ * \param[in] bool Protection setting to apply.
+ * \arg \c true if the sector should be protected.
+ * \arg \c false if the sector should be unprotected.
+ *
+ * \return Status of operation.
+ * \retval STATUS_OK if write operation succeeded.
+ * \retval STATUS_BUSY if SPI is busy with some other operation.
+ * \retval STATUS_ERR_INVALID_ARG if address is out of bounds.
+ */
 enum status_code at25dfx_chip_set_sector_protect(
 		struct at25dfx_chip_module *chip, at25dfx_address_t address,
 		bool protect)
@@ -467,6 +608,22 @@ enum status_code at25dfx_chip_set_sector_protect(
 	return STATUS_OK;
 }
 
+/**
+ * \brief Get protection setting of a single sector
+ *
+ * This function gets the protect setting of a single sector.
+ *
+ * \sa at25dfx_chip_set_sector_protect()
+ *
+ * \param[in] chip Address of SerialFlash chip instance to operate on.
+ * \param[in] address Address within sector to get setting of.
+ * \param[out] bool Address of variable to store the setting to.
+ *
+ * \return Status of operation.
+ * \retval STATUS_OK if operation succeeded.
+ * \retval STATUS_BUSY if SPI is busy with some other operation.
+ * \retval STATUS_ERR_INVALID_ARG if address is out of bounds.
+ */
 enum status_code at25dfx_chip_get_sector_protect(
 		struct at25dfx_chip_module *chip, at25dfx_address_t address,
 		bool *protect)
@@ -497,6 +654,22 @@ enum status_code at25dfx_chip_get_sector_protect(
 	return STATUS_OK;
 }
 
+/**
+ * \brief Put device to sleep
+ *
+ * This function puts the SerialFlash device to sleep for the purpose of
+ * reducing power consumption while the device is not needed.
+ *
+ * \sa at25dfx_chip_wake()
+ *
+ * \note The device will not respond to any commands until it is woken up.
+ *
+ * \param[in] chip Address of SerialFlash chip instance to operate on.
+ *
+ * \return Status of operation.
+ * \retval STATUS_OK if write operation succeeded.
+ * \retval STATUS_BUSY if SPI is busy with some other operation.
+ */
 enum status_code at25dfx_chip_sleep(struct at25dfx_chip_module *chip)
 {
 	enum status_code status;
@@ -519,6 +692,19 @@ enum status_code at25dfx_chip_sleep(struct at25dfx_chip_module *chip)
 	return STATUS_OK;
 }
 
+/**
+ * \brief Wake device from sleep
+ *
+ * This function wakes the SerialFlash device from sleep.
+ *
+ * \sa at25dfx_chip_sleep()
+ *
+ * \param[in] chip Address of SerialFlash chip instance to operate on.
+ *
+ * \return Status of operation.
+ * \retval STATUS_OK if write operation succeeded.
+ * \retval STATUS_BUSY if SPI is busy with some other operation.
+ */
 enum status_code at25dfx_chip_wake(struct at25dfx_chip_module *chip)
 {
 	enum status_code status;
