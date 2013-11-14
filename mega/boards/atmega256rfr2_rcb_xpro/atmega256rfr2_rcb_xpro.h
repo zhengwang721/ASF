@@ -1,12 +1,12 @@
 /**
  * \file
  *
- * \brief  ATMEGA256RFR2 RCB board LEDs support package.
+ * \brief ATMEGA256RFR2-Zigbit board header file.
  *
- * This file contains definitions and services related to the LED features of
- * the ATMEGA256RFR2 XPLAINED PRO board.
+ * This file contains definitions and services related to the features of the
+ * STK600 board.
  *
- * To use this board, define BOARD=ATMEGA256RFR2_XPLAINED_PRO.
+ * To use this board, define BOARD= ATMEGA256RFR2_ZIGBIT.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -45,71 +45,41 @@
  * \asf_license_stop
  *
  */
+#ifndef _ATMEGA256RFR2_RCB_XPRO_
+#define _ATMEGA256RFR2_RCB_XPRO_
+#include "compiler.h"
 
-#ifndef _LED_H_
-#define _LED_H_
+# include "led.h"
 
-#include "helper.h"
+#define MCU_SOC_NAME        "ATMEGA256RFR2"
+#define BOARD_NAME          "RCB256RFR2-XPRO"
+
+#define LED0_GPIO                       IOPORT_CREATE_PIN(PORTD, 6)
+#define LED1_GPIO                       IOPORT_CREATE_PIN(PORTE, 2)
+#define LED2_GPIO                       IOPORT_CREATE_PIN(PORTG, 2)
+
+#define LED0                            LED0_GPIO
+#define LED1                            LED1_GPIO
+#define LED2                            LED2_GPIO
+
+//! Number of LEDs.
+#define LED_COUNT                       3
+
+#define GPIO_PUSH_BUTTON_0              IOPORT_CREATE_PIN(PORTE, 0)
+
+//! \name Communication interfaces on header J1
+//@{
+#define TWID_SDA                        IOPORT_CREATE_PIN(PORTD, 1)
+#define TWID_SCL                        IOPORT_CREATE_PIN(PORTD, 0)
+#define USARTA1_RXD                     IOPORT_CREATE_PIN(PORTD, 2)
+#define USARTA1_TXD                     IOPORT_CREATE_PIN(PORTD, 3)
+#define SPIB_SS                         IOPORT_CREATE_PIN(PORTB, 0)
+#define SPIB_MOSI                       IOPORT_CREATE_PIN(PORTB, 2)
+#define SPIB_MISO                       IOPORT_CREATE_PIN(PORTB, 3)
+#define SPIB_SCK                        IOPORT_CREATE_PIN(PORTB, 1)
+//@}
 
 
 
-typedef enum led_id_tag
-{
-    LED_0,
-    LED_1,
-    LED_2
-} SHORTENUM led_id_t;
-/**
- * \brief LED action
- */
-typedef enum led_action_tag
-{
-    /** Switch LED on. */
-    LED_ON,
-    /** Switch LED off. */
-    LED_OFF,
-    /** Toggle LED. */
-    LED_TOGGLE
-} SHORTENUM led_action_t;
-
-
-/*
- * Bit numbers address where LEDs are mapped to.
- */
-#define LED_BIT_0                       (0)
-#define LED_BIT_1                       (1)
-
-/*
- * LED bit mask
- */
-#define LED_BIT_MASK                    ((1 << LED_BIT_0) | (1 << LED_BIT_1))
-#define LED_PORT                        (PORTB)
-#define LED_PORT_DIR                    (DDRB)
-
-/*! \brief Turns off the specified LEDs.
- *
- * \param led_gpio LED to turn off (LEDx_GPIO).
- *
- * \note The pins of the specified LEDs are set to GPIO output mode.
- */
-#define LED_Off(led_gpio)     led_ctrl(led_gpio,LED_OFF)
-
-                                  
-
-/*! \brief Turns on the specified LEDs.
- *
- * \param led_gpio LED to turn on (LEDx_GPIO).
- *
- * \note The pins of the specified LEDs are set to GPIO output mode.
- */
-#define LED_On(led_gpio)      led_ctrl(led_gpio,LED_ON)
-
-/*! \brief Toggles the specified LEDs.
- *
- * \param led_gpio LED to toggle (LEDx_GPIO).
- *
- * \note The pins of the specified LEDs are set to GPIO output mode.
- */
-#define LED_Toggle(led_gpio)  led_ctrl(led_gpio,LED_TOGGLE)
-
-#endif /* _LED_H_ */
+//@}
+#endif  /* _ATMEGA256RFR2_RCB_XPRO_ */
