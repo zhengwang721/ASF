@@ -298,7 +298,6 @@ void system_clock_source_xosc32k_set_config(
 
 	temp.bit.ONDEMAND = config->on_demand;
 	temp.bit.RUNSTDBY = config->run_in_standby;
-
 	temp.bit.WRTLOCK  = config->write_once;
 
 	/* Cache the new frequency in case the user needs to check the current
@@ -578,8 +577,6 @@ enum status_code system_clock_source_disable(
 	return STATUS_OK;
 }
 
-
-
 /**
  * \brief Checks if a clock source is ready
  *
@@ -667,10 +664,11 @@ bool system_clock_source_is_ready(
  */
 void system_clock_init(void)
 {
-	/* Workaround for errata 10558 */
+	/* Various bits in the INTFLAG register can be set to one at startup.
+	   This will ensure that these bits are cleared */
 	SYSCTRL->INTFLAG.reg = SYSCTRL_INTFLAG_BOD12RDY | SYSCTRL_INTFLAG_BOD33RDY |
-                        SYSCTRL_INTFLAG_BOD12DET | SYSCTRL_INTFLAG_BOD33DET |
-                        SYSCTRL_INTFLAG_DFLLRDY;
+			SYSCTRL_INTFLAG_BOD12DET | SYSCTRL_INTFLAG_BOD33DET |
+			SYSCTRL_INTFLAG_DFLLRDY;
 
 	system_flash_set_waitstates(CONF_CLOCK_FLASH_WAIT_STATES);
 
