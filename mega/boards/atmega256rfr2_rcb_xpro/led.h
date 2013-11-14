@@ -1,12 +1,7 @@
 /**
  * \file
  *
- * \brief  ATMEGA256RFR2 RCB board LEDs support package.
- *
- * This file contains definitions and services related to the LED features of
- * the ATMEGA256RFR2 XPLAINED PRO board.
- *
- * To use this board, define BOARD=ATMEGA256RFR2_XPLAINED_PRO.
+ * \brief ATMEGA256RFR2-Zigbit board LEDs support package.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -49,52 +44,16 @@
 #ifndef _LED_H_
 #define _LED_H_
 
-#include "helper.h"
+#include "gpio.h"
 
-
-
-typedef enum led_id_tag
-{
-    LED_0,
-    LED_1,
-    LED_2
-} SHORTENUM led_id_t;
-/**
- * \brief LED action
- */
-typedef enum led_action_tag
-{
-    /** Switch LED on. */
-    LED_ON,
-    /** Switch LED off. */
-    LED_OFF,
-    /** Toggle LED. */
-    LED_TOGGLE
-} SHORTENUM led_action_t;
-
-
-/*
- * Bit numbers address where LEDs are mapped to.
- */
-#define LED_BIT_0                       (0)
-#define LED_BIT_1                       (1)
-
-/*
- * LED bit mask
- */
-#define LED_BIT_MASK                    ((1 << LED_BIT_0) | (1 << LED_BIT_1))
-#define LED_PORT                        (PORTB)
-#define LED_PORT_DIR                    (DDRB)
-
+ 
 /*! \brief Turns off the specified LEDs.
  *
  * \param led_gpio LED to turn off (LEDx_GPIO).
  *
  * \note The pins of the specified LEDs are set to GPIO output mode.
  */
-#define LED_Off(led_gpio)     led_ctrl(led_gpio,LED_OFF)
-
-                                  
+#define LED_Off(led_gpio)     gpio_set_pin_high(led_gpio)
 
 /*! \brief Turns on the specified LEDs.
  *
@@ -102,7 +61,7 @@ typedef enum led_action_tag
  *
  * \note The pins of the specified LEDs are set to GPIO output mode.
  */
-#define LED_On(led_gpio)      led_ctrl(led_gpio,LED_ON)
+#define LED_On(led_gpio)      gpio_set_pin_low(led_gpio)
 
 /*! \brief Toggles the specified LEDs.
  *
@@ -110,6 +69,6 @@ typedef enum led_action_tag
  *
  * \note The pins of the specified LEDs are set to GPIO output mode.
  */
-#define LED_Toggle(led_gpio)  led_ctrl(led_gpio,LED_TOGGLE)
+#define LED_Toggle(led_gpio)  gpio_toggle_pin(led_gpio)
 
 #endif /* _LED_H_ */

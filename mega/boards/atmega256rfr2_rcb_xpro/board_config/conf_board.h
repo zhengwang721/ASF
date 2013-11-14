@@ -1,14 +1,9 @@
 /**
  * \file
  *
- * \brief ATmegaRFX RCB board header file.
+ * \brief ATmega256RFR2 Xplained Pro board configuration template
  *
- * This file contains definitions and services related to the features of the
- * ATmega256RFR2 Xplained Pro board.
- *
- * To use this board, define BOARD= ATMEGA256RFR2_XPLAINED_PRO.
- *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,50 +38,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- *
  */
-#ifndef _HELPER_
-#define _HELPER_
-#include "compiler.h"
-#include "conf_board.h"
-#include "board.h"
-# include "gpio.h"
-# include "led.h"
 
+#ifndef CONF_BOARD_H
+#define CONF_BOARD_H
 
-typedef enum
-{
-    PLAIN,
-    SENSOR_TERM_BOARD
-} board_t;
-
-typedef struct
-{
-    uint16_t addr;
-    uint8_t val;
-} mem_test_t;
-
-
-
-
-#define NUM_CHECK 10
-
-
-
-/**
- * \brief Read XRAM
- *
- * \param
- */
- uint8_t xram_read(uint16_t addr);
- 
-void xram_write(uint16_t addr, uint8_t data);
-
-void board_identify(void);
-
-bool stb_button_read(void);
-
-void led_helper_func(void);
-
-void led_ctrl(led_id_t led_no, led_action_t led_setting);
-#endif  /* _HELPER_ */
+#endif // CONF_BOARD_H
