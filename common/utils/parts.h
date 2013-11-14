@@ -740,6 +740,17 @@
  * \name SAM3N series
  * @{
  */
+#define SAM3N00 ( \
+		SAM_PART_IS_DEFINED(SAM3N00A) ||	\
+		SAM_PART_IS_DEFINED(SAM3N00B) \
+		)
+
+#define SAM3N0 ( \
+		SAM_PART_IS_DEFINED(SAM3N0A) ||	\
+		SAM_PART_IS_DEFINED(SAM3N0B) ||	\
+		SAM_PART_IS_DEFINED(SAM3N0C) \
+		)
+
 #define SAM3N1 ( \
 		SAM_PART_IS_DEFINED(SAM3N1A) ||	\
 		SAM_PART_IS_DEFINED(SAM3N1B) ||	\
@@ -953,7 +964,7 @@
 #define SAM3U (SAM3U1 || SAM3U2 || SAM3U4)
 
 /** SAM3N Family */
-#define SAM3N (SAM3N1 || SAM3N2 || SAM3N4)
+#define SAM3N (SAM3N00 || SAM3N0 || SAM3N1 || SAM3N2 || SAM3N4)
 
 /** SAM3XA Family */
 #define SAM3XA (SAM3X4 || SAM3X8 || SAM3A4 || SAM3A8)
