@@ -63,6 +63,8 @@
 #endif
 #else
  #define status_code_genare_t status_code_t
+ #define __PACK__RST_DATA__ 
+ #define __PACK__DATA__
 #endif 
 
 /**
