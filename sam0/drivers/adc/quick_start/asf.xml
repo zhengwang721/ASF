@@ -7,7 +7,6 @@
 		<build type="c-source" value="qs_adc_basic.c"/>
 		<build type="include-path" value="."/>
 		<require idref="sam0.drivers.adc"/>
-		<device-support value="samd20"/>
-		<device-support value="samd21"/>
+		<device-support value="sam0"/>
 	</module>
 </asf>
