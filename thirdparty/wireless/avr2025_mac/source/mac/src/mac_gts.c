@@ -124,7 +124,7 @@ static queue_t dev_tx_gts_q;
  *
  * @param m The MLME-GTS.request message.
  */
-void mlme_gts_request(arch_data_t *m)
+void mlme_gts_request(uint8_t *m)
 {
 	mlme_gts_req_t mgr;
 	memcpy(&mgr, BMM_BUFFER_POINTER((buffer_t *)m),
@@ -700,12 +700,12 @@ void mac_send_gts_ind(gts_char_t GtsChar, uint16_t dev_addr)
 		qmm_queue_append(&mac_nhle_q, buffer_header);
 }
 
-void handle_gts_data_req(mcps_data_req_t *data_req, arch_data_t *msg)
+void handle_gts_data_req(mcps_data_req_t *data_req, uint8_t *msg)
 {
 uint32_t slot_duration1 = 0;
 uint32_t frame_tx_time = 0;
 #ifdef FFD
-	uint8_t loop_index;
+	uint8_t loop_index = 0;
 #endif /* FFD */
 	uint16_t dst_addr;
 
@@ -1073,6 +1073,38 @@ void mac_tx_gts_data(queue_t *gts_data)
 	transmit_frame->buffer_header = buf_ptr;
 
 	transmit_frame->gts_queue = gts_data;
+
+
+#ifdef MAC_SECURITY_ZIP
+if(transmit_frame->mpdu[1] & FCF_SECURITY_ENABLED)
+{
+	mcps_data_req_t pmdr;
+	
+	build_sec_mcps_data_frame(&pmdr, transmit_frame);
+	
+	if (pmdr.SecurityLevel > 0)
+	{
+		/* Secure the Frame */
+		retval_t build_sec = mac_secure(transmit_frame, \
+		transmit_frame->mac_payload, &pmdr);
+		
+		if (MAC_SUCCESS != build_sec)
+		{
+			/* The MAC Data Payload is encrypted based on the security level. */
+			mac_gen_mcps_data_conf((buffer_t *)transmit_frame->buffer_header,
+			(uint8_t)build_sec,
+			#ifdef ENABLE_TSTAMP
+			pmdr.msduHandle,
+			0);
+			#else
+			pmdr.msduHandle);
+			#endif  /* ENABLE_TSTAMP */
+			
+			return;
+		}
+	}
+}
+#endif
 
 	tal_tx_status = tal_tx_frame(transmit_frame, NO_CSMA_WITH_IFS, true);
 

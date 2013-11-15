@@ -79,31 +79,31 @@
 
 #if (NUMBER_OF_MAC_TIMERS > 0)
 #ifdef BEACON_SUPPORT
-uint8_t T_Beacon_Tracking_Period __ALIGN_WORD_ADDR__;
-uint8_t T_Superframe __ALIGN_WORD_ADDR__;
-uint8_t T_Missed_Beacon __ALIGN_WORD_ADDR__;
+uint8_t T_Beacon_Tracking_Period;
+uint8_t T_Superframe;
+uint8_t T_Missed_Beacon;
     #if (MAC_START_REQUEST_CONFIRM == 1)
-uint8_t T_Beacon __ALIGN_WORD_ADDR__;
-uint8_t T_Beacon_Preparation __ALIGN_WORD_ADDR__;
+uint8_t T_Beacon;
+uint8_t T_Beacon_Preparation;
     #endif /* (MAC_START_REQUEST_CONFIRM == 1) */
 #ifdef GTS_SUPPORT
-uint8_t T_CAP __ALIGN_WORD_ADDR__;
+uint8_t T_CAP;
 #endif /* GTS_SUPPORT */
 #endif  /* BEACON_SUPPORT / No BEACON_SUPPORT */
 
 #if (MAC_INDIRECT_DATA_BASIC == 1)
-uint8_t T_Poll_Wait_Time __ALIGN_WORD_ADDR__;
+uint8_t T_Poll_Wait_Time;
     #if (MAC_INDIRECT_DATA_FFD == 1)
-uint8_t T_Data_Persistence __ALIGN_WORD_ADDR__;
+uint8_t T_Data_Persistence;
     #endif  /* (MAC_INDIRECT_DATA_FFD == 1) */
 #endif  /* (MAC_INDIRECT_DATA_BASIC == 1) */
 
 #if (MAC_SCAN_SUPPORT == 1)
-uint8_t T_Scan_Duration __ALIGN_WORD_ADDR__;
+uint8_t T_Scan_Duration;
 #endif  /* MAC_SCAN_SUPPORT */
 
 #if (MAC_RX_ENABLE_SUPPORT == 1)
-uint8_t T_Rx_Enable __ALIGN_WORD_ADDR__;
+uint8_t T_Rx_Enable;
 #endif  /* MAC_RX_ENABLE_SUPPORT */
 #endif /* (NUMBER_OF_MAC_TIMERS != 0) */
 
@@ -344,7 +344,7 @@ static void do_init_pib(void)
  *
  * @param m Pointer to the MLME_RESET.request given by the NHLE
  */
-void mlme_reset_request(arch_data_t *m)
+void mlme_reset_request(uint8_t *m)
 {
 	mlme_reset_req_t *mrr
 		= (mlme_reset_req_t *)BMM_BUFFER_POINTER((buffer_t *)m);

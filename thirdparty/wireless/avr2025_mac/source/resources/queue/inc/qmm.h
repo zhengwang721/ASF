@@ -69,6 +69,7 @@
 /**
  * @brief Structure to search for a buffer to be removed from a queue
  */
+__PACK__DATA__
 typedef struct
 #if !defined(__DOXYGEN__)
 		search_tag
@@ -78,7 +79,7 @@ typedef struct
 	uint8_t (*criteria_func)(void *buf, void *handle);
 	/** Handle to callbck parameter */
 	void *handle;
-} search_t __ALIGN_WORD_ADDR__;
+} search_t ;
 
 /**
  * @brief Queue structure
@@ -112,8 +113,8 @@ typedef struct
 	 * Number of buffers present in the current queue
 	 */
 	uint8_t size;
-} queue_t __ALIGN_WORD_ADDR__; 
-
+} queue_t; 
+__PACK__RST_DATA__
 /* === Externals =========================================================== */
 
 /* === Prototypes ========================================================== */

@@ -218,7 +218,7 @@ extern "C" {
  * @param msg Pointer to the MCPS-DATA.request parameter
  */
 
-void mcps_data_request(arch_data_t *msg);
+void mcps_data_request(uint8_t *msg);
 
 /**
  * @brief Wrapper function for messages of type mcps_data_conf_t
@@ -229,7 +229,7 @@ void mcps_data_request(arch_data_t *msg);
  * @param m Pointer to message structure
  */
 
- void mcps_data_conf(arch_data_t *m);
+ void mcps_data_conf(uint8_t *m);
 
 /**
  * @brief Wrapper function for messages of type mcps_data_ind_t
@@ -240,7 +240,7 @@ void mcps_data_request(arch_data_t *msg);
  * @param m Pointer to message structure
  */
 
-void mcps_data_ind(arch_data_t *m);
+void mcps_data_ind(uint8_t *m);
 
 #if ((MAC_PURGE_REQUEST_CONFIRM == 1) && (MAC_INDIRECT_DATA_BASIC == 1))
 
@@ -262,7 +262,7 @@ void mcps_data_ind(arch_data_t *m);
  * \ingroup group_mac_req_int
  * @param msg Pointer to the MCPS-PURGE.request parameter
  */
-void mcps_purge_request(arch_data_t *msg);
+void mcps_purge_request(uint8_t *msg);
 
 /**
  * @brief Wrapper function for messages of type mcps_purge_conf_t
@@ -272,7 +272,7 @@ void mcps_purge_request(arch_data_t *msg);
  * \ingroup group_mac_conf_int
  * @param m Pointer to message structure
  */
-void mcps_purge_conf(arch_data_t *m);
+void mcps_purge_conf(uint8_t *m);
 
 #endif  /* ((MAC_PURGE_REQUEST_CONFIRM == 1) && (MAC_INDIRECT_DATA_BASIC == 1))
          **/
@@ -290,7 +290,7 @@ void mcps_purge_conf(arch_data_t *m);
  * @param m Pointer to the request structure
  */
 
-void mlme_get_request(arch_data_t *m);
+void mlme_get_request(uint8_t *m);
 
 /**
  * @brief Wrapper function for messages of type mlme_get_conf_t
@@ -300,7 +300,7 @@ void mlme_get_request(arch_data_t *m);
  * \ingroup group_mac_conf_int
  * @param m Pointer to message structure
  */
-void mlme_get_conf(arch_data_t *m);
+void mlme_get_conf(uint8_t *m);
 
 
 #endif  /* (MAC_GET_SUPPORT == 1) */
@@ -314,7 +314,7 @@ void mlme_get_conf(arch_data_t *m);
  * \ingroup group_mac_req_int
  * @param m Pointer to the MLME_RESET.request given by the NHLE
  */
-void mlme_reset_request(arch_data_t *m);
+void mlme_reset_request(uint8_t *m);
 
 
 #if ((MAC_SCAN_ED_REQUEST_CONFIRM == 1) || (MAC_SCAN_ACTIVE_REQUEST_CONFIRM == \
@@ -436,7 +436,7 @@ void mlme_reset_request(arch_data_t *m);
  * @param m The MLME_SCAN.request message
  */
 
-void mlme_scan_request(arch_data_t *m);
+void mlme_scan_request(uint8_t *m);
 
 
 /**
@@ -447,7 +447,7 @@ void mlme_scan_request(arch_data_t *m);
  * \ingroup group_mac_conf_int
  * @param m Pointer to message structure
  */
-void mlme_scan_conf(arch_data_t *m);
+void mlme_scan_conf(uint8_t *m);
 
 #endif
 
@@ -460,7 +460,7 @@ void mlme_scan_conf(arch_data_t *m);
  * \ingroup group_mac_req_int
  * @param m Pointer to MLME_START.request message issued by the NHLE
  */
-void mlme_start_request(arch_data_t *m);
+void mlme_start_request(uint8_t *m);
 
 
 /**
@@ -471,7 +471,7 @@ void mlme_start_request(arch_data_t *m);
  * \ingroup group_mac_conf_int
  * @param m Pointer to message structure
  */
-void mlme_start_conf(arch_data_t *m);
+void mlme_start_conf(uint8_t *m);
 
 #endif /* (MAC_START_REQUEST_CONFIRM == 1) */
 
@@ -488,7 +488,7 @@ void mlme_start_conf(arch_data_t *m);
  * @param m Pointer to MLME association request parameters
  */
 
-void mlme_associate_request(arch_data_t *m);
+void mlme_associate_request(uint8_t *m);
 
 
 
@@ -500,7 +500,7 @@ void mlme_associate_request(arch_data_t *m);
  * \ingroup group_mac_conf_int
  * @param m Pointer to message structure
  */
-void mlme_associate_conf(arch_data_t *m);
+void mlme_associate_conf(uint8_t *m);
 
 
 #endif  /* (MAC_ASSOCIATION_REQUEST_CONFIRM == 1) */
@@ -515,7 +515,7 @@ void mlme_associate_conf(arch_data_t *m);
  * \ingroup group_mac_resp_int
  * @param m Pointer to association response parameters
  */
-void mlme_associate_response(arch_data_t *m);
+void mlme_associate_response(uint8_t *m);
 
 /**
  * @brief Wrapper function for messages of type mlme_associate_ind_t
@@ -525,7 +525,7 @@ void mlme_associate_response(arch_data_t *m);
  * \ingroup group_mac_ind_int
  * @param m Pointer to message structure
  */
-void mlme_associate_ind(arch_data_t *m);
+void mlme_associate_ind(uint8_t *m);
 
 #endif /* (MAC_ASSOCIATION_INDICATION_RESPONSE == 1) */
 #if (MAC_DISASSOCIATION_BASIC_SUPPORT == 1)
@@ -542,7 +542,7 @@ void mlme_associate_ind(arch_data_t *m);
  * \ingroup group_mac_req_int
  * @param m Pointer to the MLME-DISASSOCIATION.Request message passed by NHLE
  */
-void mlme_disassociate_request(arch_data_t *m);
+void mlme_disassociate_request(uint8_t *m);
 
 
 /**
@@ -553,7 +553,7 @@ void mlme_disassociate_request(arch_data_t *m);
  * \ingroup group_mac_conf_int
  * @param m Pointer to message structure
  */
-void mlme_disassociate_conf(arch_data_t *m);
+void mlme_disassociate_conf(uint8_t *m);
 
 /**
  * @brief Wrapper function for messages of type mlme_disassociate_ind_t
@@ -563,7 +563,7 @@ void mlme_disassociate_conf(arch_data_t *m);
  * \ingroup group_mac_ind_int
  * @param m Pointer to message structure
  */
-void mlme_disassociate_ind(arch_data_t *m);
+void mlme_disassociate_ind(uint8_t *m);
 
 #endif  /* (MAC_DISASSOCIATION_BASIC_SUPPORT == 1) */
 #if (MAC_ORPHAN_INDICATION_RESPONSE == 1)
@@ -581,7 +581,7 @@ void mlme_disassociate_ind(arch_data_t *m);
  * \ingroup group_mac_resp_int
  * @param m Pointer to the message.
  */
-void mlme_orphan_response(arch_data_t *m);
+void mlme_orphan_response(uint8_t *m);
 
 /**
  * @brief Wrapper function for messages of type mlme_orphan_ind_t
@@ -591,7 +591,7 @@ void mlme_orphan_response(arch_data_t *m);
  * \ingroup group_mac_ind_int
  * @param m Pointer to message structure
  */
-void mlme_orphan_ind(arch_data_t *m);
+void mlme_orphan_ind(uint8_t *m);
  
 
 #endif /* (MAC_ORPHAN_INDICATION_RESPONSE == 1) */
@@ -608,7 +608,7 @@ void mlme_orphan_ind(arch_data_t *m);
  * \ingroup group_mac_req_int
  * @param m Pointer to the message
  */
-void mlme_poll_request(arch_data_t *m);
+void mlme_poll_request(uint8_t *m);
 
 /**
  * @brief Wrapper function for messages of type mlme_poll_conf_t
@@ -618,7 +618,7 @@ void mlme_poll_request(arch_data_t *m);
  * \ingroup group_mac_conf_int
  * @param m Pointer to message structure
  */
-void mlme_poll_conf(arch_data_t *m);
+void mlme_poll_conf(uint8_t *m);
 
 #endif  /* (MAC_INDIRECT_DATA_BASIC == 1) */
 #if (MAC_RX_ENABLE_SUPPORT == 1)
@@ -636,7 +636,7 @@ void mlme_poll_conf(arch_data_t *m);
  * \ingroup group_mac_req_int
  * @param m Pointer to the MLME-RX-ENABLE.request message
  */
-void mlme_rx_enable_request(arch_data_t *m);
+void mlme_rx_enable_request(uint8_t *m);
 
 
 /**
@@ -647,7 +647,7 @@ void mlme_rx_enable_request(arch_data_t *m);
  * \ingroup group_mac_conf_int
  * @param m Pointer to message structure
  */
-void mlme_rx_enable_conf(arch_data_t *m);
+void mlme_rx_enable_conf(uint8_t *m);
 
 #endif  /* (MAC_RX_ENABLE_SUPPORT == 1) */
 
@@ -671,7 +671,7 @@ void mlme_rx_enable_conf(arch_data_t *m);
  * \ingroup group_mac_req_int
  * @param m Pointer to the MLME sync request parameters.
  */
-void mlme_sync_request(arch_data_t *m);
+void mlme_sync_request(uint8_t *m);
 
 
 #if (MAC_BEACON_NOTIFY_INDICATION == 1)
@@ -685,7 +685,7 @@ void mlme_sync_request(arch_data_t *m);
  * @param m Pointer to message structure
  */
 
-void mlme_beacon_notify_ind(arch_data_t *m);
+void mlme_beacon_notify_ind(uint8_t *m);
 
 
 #endif  /* (MAC_BEACON_NOTIFY_INDICATION == 1) */
@@ -700,7 +700,7 @@ void mlme_beacon_notify_ind(arch_data_t *m);
  * \ingroup group_mac_ind_int
  * @param m Pointer to message structure
  */
-void mlme_comm_status_ind(arch_data_t *m);
+void mlme_comm_status_ind(uint8_t *m);
 
 
 #endif  /* ((MAC_ORPHAN_INDICATION_RESPONSE == 1) ||
@@ -714,7 +714,7 @@ void mlme_comm_status_ind(arch_data_t *m);
  * \ingroup group_mac_conf_int
  * @param m Pointer to message structure
  */
-void mlme_reset_conf(arch_data_t *m);
+void mlme_reset_conf(uint8_t *m);
 
 
 /**
@@ -725,13 +725,13 @@ void mlme_reset_conf(arch_data_t *m);
  * \ingroup group_mac_ind_int
  * @param m Pointer to message structure
  */
-void mlme_sync_loss_ind(arch_data_t *m);
+void mlme_sync_loss_ind(uint8_t *m);
 
 
 #ifdef GTS_SUPPORT
-void mlme_gts_request(arch_data_t *m);
-void mlme_gts_conf(arch_data_t *m);
-void mlme_gts_ind(arch_data_t *m);
+void mlme_gts_request(uint8_t *m);
+void mlme_gts_conf(uint8_t *m);
+void mlme_gts_ind(uint8_t *m);
 #endif /* GTS_SUPPORT */
 
 #if (HIGHEST_STACK_LAYER == MAC)
@@ -745,7 +745,7 @@ void mlme_gts_ind(arch_data_t *m);
  * \ingroup group_mac_req_int
  * @param m Pointer to the request structure
  */
-void mlme_set_request(arch_data_t *m);
+void mlme_set_request(uint8_t *m);
 
 
 /**
@@ -757,7 +757,7 @@ void mlme_set_request(arch_data_t *m);
  * @param m Pointer to message structure
  */
  
-void mlme_set_conf(arch_data_t *m);
+void mlme_set_conf(uint8_t *m);
 
 #endif  /* (HIGHEST_STACK_LAYER == MAC) */
 #if (defined MAC_SECURITY_ZIP) || (defined MAC_SECURITY_2006)

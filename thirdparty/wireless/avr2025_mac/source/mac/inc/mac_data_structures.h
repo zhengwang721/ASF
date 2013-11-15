@@ -76,8 +76,9 @@ typedef enum gts_state_tag{
  *
  * @ingroup apiMacTypes
  */
+__PACK__DATA__
 typedef struct mac_dev_gts_mgmt_tag {
-	arch_data_t *GtsReq_ptr;
+	uint8_t *GtsReq_ptr;
 	uint8_t GtsStartingSlot;
 	uint8_t GtsLength;
 	uint8_t GtsPersistCount;
@@ -111,21 +112,21 @@ typedef struct mac_beacon_payload_tag {
 	uint8_t *pending_addr_list;
 	uint8_t beacon_payload_len;
 	uint8_t *beacon_payload;
-} mac_beacon_payload_t __ALIGN_WORD_ADDR__;
+} mac_beacon_payload_t;
 
 /**
  * Data Payload type
  */
 typedef struct mac_data_payload_tag {
 	uint8_t *payload;
-} mac_data_payload_t __ALIGN_WORD_ADDR__;
+} mac_data_payload_t;
 
 /**
  * Association Request type
  */
 typedef struct mac_assoc_req_tag {
 	uint8_t capability_info;
-} mac_assoc_req_t  __ALIGN_WORD_ADDR__;
+} mac_assoc_req_t;
 
 /**
  * Association Response type
@@ -133,14 +134,14 @@ typedef struct mac_assoc_req_tag {
 typedef struct mac_assoc_response_tag {
 	uint16_t short_addr;
 	uint8_t assoc_status;
-} mac_assoc_response_t __ALIGN_WORD_ADDR__;
+} mac_assoc_response_t;
 
 /**
  * Disassociation Request type
  */
 typedef struct mac_disassoc_req_tag {
 	uint8_t disassoc_reason;
-} mac_disassoc_req_t  __ALIGN_WORD_ADDR__;
+} mac_disassoc_req_t;
 
 /**
  * Coordinator Realignment type
@@ -151,7 +152,7 @@ typedef struct mac_coord_realign_tag {
 	uint8_t logical_channel;
 	uint16_t short_addr;
 	uint8_t channel_page;
-} mac_coord_realign_t __ALIGN_WORD_ADDR__;
+} mac_coord_realign_t;
 
 /**
  * General Command frame payload type
@@ -166,7 +167,7 @@ typedef union {
 #ifdef GTS_SUPPORT
 	gts_char_t gts_req_data;
 #endif /* GTS_SUPPORT */	
-} frame_payload_t  __ALIGN_WORD_ADDR__;
+} frame_payload_t;
 
 /**
  * Structure containing auxiliary security header information
@@ -175,7 +176,7 @@ typedef struct sec_ctrl_tag {
 	uint8_t sec_level : 3;
 	uint8_t key_id_mode : 2;
 	uint8_t /* reserved */ : 3;
-} sec_ctrl_t __ALIGN_WORD_ADDR__;
+} sec_ctrl_t;
 
 typedef struct parse_tag {
 	uint16_t fcf;
@@ -230,6 +231,7 @@ typedef struct mac_pan_gts_mgmt_tag {
 	uint8_t PersistenceCount;
 }mac_pan_gts_mgmt_t;
 #endif /* GTS_SUPPORT */
+__PACK__RST_DATA__
 /* === Externals ============================================================ */
 
 /* === Prototypes =========================================================== */

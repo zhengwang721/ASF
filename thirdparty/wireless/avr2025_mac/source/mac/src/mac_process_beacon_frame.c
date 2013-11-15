@@ -188,7 +188,7 @@ void mac_process_beacon_frame(buffer_t *beacon)
 					mac_parse_data.mac_payload_data.beacon_data.superframe_spec);
 
 			/*
-			 * In a beacon-enabled network with the batterylife
+			 * In a beacon-enabled network with the battery life
 			 *extension
 			 * enabled, the first backoff slot boundary is computed
 			 *after the

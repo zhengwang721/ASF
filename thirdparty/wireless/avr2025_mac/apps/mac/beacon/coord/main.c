@@ -101,67 +101,69 @@
 #include "delay.h"
 #include "common_sw_timer.h"
 #include "sio2host.h"
+#include "mac.h"
+#include "mac_api.h"
+#include "tal.h"
+#include "ieee_const.h"
+#include "hw_timer.h"
+#include "common_hw_timer.h"
+#include "conf_hw_timer.h"
 #include <asf.h>
-/* === TYPES =============================================================== */
+#include "beacon_app.h"
 
-/** This type definition of a structure can store the short address and the
- *  extended address of a device.
- */
-typedef struct associated_device_tag {
-	uint16_t short_addr;
-	uint64_t ieee_addr;
-} associated_device_t;
-
-/**
- * This enum store the current state of the coordinator.
- */
-typedef enum coord_state_tag {
-	COORD_STARTING = 0,
-	COORD_RUNNING
-} coord_state_t;
 
 /* === MACROS ============================================================== */
 
-#define DEFAULT_PAN_ID                  CCPU_ENDIAN_TO_LE16(0xBABE)
-
-/** Defines the short address of the coordinator. */
-#define COORD_SHORT_ADDR                (0x0000)
-/** Defines the maximum number of devices this coordinator will handle. */
-#define MAX_NUMBER_OF_DEVICES           (100)
-
 #define CHANNEL_OFFSET                  (0)
-
-#define SCAN_CHANNEL                    (1ul << current_channel)
-
-/** Defines the scan duration time. */
-#define SCAN_DURATION_COORDINATOR       (5)
 
 /** Defines the default Beacon Order. */
 #define DEFAULT_BO                      (5)
-/** Defines the default Superframe Order. */
+/** Defines the default Super frame Order. */
 #define DEFAULT_SO                      (4)
 
-/**
- * Defines the length of the beacon payload delivered to the devices.
- * This is the text "Atmel beacon demo" + one space + one uin8t_t variable.
- */
-#define BEACON_PAYLOAD_LEN              (17 + 1 + 1)
+/** Coord Realignment is not used by default in this application. */ 
+#define DEFAULT_COORDREALIGNMENT		(false)
+
+/** Defines the default Coord Realign SecurityLevel */
+#define DEFAULT_COORDREALIGN_SEC_LVL	(0x00)
+
+/** Defines the default Coord Realign KeyIdMode */
+#define DEFAULT_COORDREALIGN_KEYID_MODE (0x00)
+ 
+/** Defines the default Coord Realign KeySource */
+#define DEFAULT_COORDREALIGN_KEY_SRC    (NULL)
+ 
+/** Defines the default Coord Realign KeyIndex */
+#define DEFAULT_COORDREALIGN_KEY_INDEX  (0x00)
+ 
+/** Defines the default Beacon Security Level */
+#define DEFAULT_BEACON_SEC_LVL			(0x05)
+ 
+/** Defines the default Beacon KeyIdMode */
+#define DEFAULT_BEACON_KEYID_MODE		(0x01)
+
+/** Defines the default Beacon KeySource */
+#define DEFAULT_BEACON_KEY_SRC			(default_key_source)
+   
+/** Defines the default Beacon KeyIndex */
+#define DEFAULT_BEACON_KEY_INDEX		(0x00)
+
 #define GTS_PAYLOAD_LEN                 (22 + 1 + 1 +1)
 /**
- * Defines the time in ms to iniate an update of the beacon payload.
+ * Defines the time in ms to initiate an update of the beacon payload.
  */
 #define APP_BCN_PAYLOAD_DURATION_MS     (3000)
 
 /**
- * Defines the time in ms to iniate a broadcast data transmission
+ * Defines the time in ms to initiate a broadcast data transmission
  * to all devices.
  */
 #define APP_BC_DATA_DURATION_MS         (9000)
 
-/** Defines the time to iniate a indirect data transmission to the device. */
+/** Defines the time to initiate a indirect data transmission to the device. */
 #define APP_INDIRECT_DATA_DURATION_MS   (6000)
 #ifdef GTS_SUPPORT
-/** Defines the time to iniate a GTS data transmission to the device. */
+/** Defines the time to initiate a GTS data transmission to the device. */
 #define APP_GTS_DATA_DURATION_MS        (2000)
 #endif
 #define DEBOUNCE_DELAY_MS               (200)
@@ -180,40 +182,21 @@ typedef enum coord_state_tag {
 #define LED_DATA                        (LED0)
 #endif
 
-#ifdef MAC_SECURITY_ZIP
-/* MAC security macros */
-#define KEY_INDEX_1                     (1)
-#define KEY_INDEX_2                     (2)
-#define KEY_INDEX_3                     (3)
-#define LOOKUP_DATA_SIZE_1              (1) // Size is 9 octets
-#define FRAME_TYPE_DATA                 (1)
-#define CMD_FRAME_ID_NA                 (0) // CommandFrameIdentifier is n/a
-#define ZIP_SEC_MIN                     (5) // SecurityMinimum for ZIP is 5  
-#define DEV_OVERRIDE_SEC_MIN            (1) // DeviceOverrideSecurityMinimum: True
-#define ZIP_KEY_ID_MODE                 (1) // ZIP uses KeyIdMode 1
-
-#define INDEX_0                         (0)
-#define INDEX_1                         (1)
-#define INDEX_2                         (2)
-#define EMPTY_DEV_HANDLE                (0xFF) // key device desc is invalid
-#define KEY_INFO_FRAME                  (0xDE)
-#define NO_SECURITY                     (0)
-#endif
-
 /* === GLOBALS ============================================================= */
-
+extern uint8_t default_key_source[8];
 /** This array stores all device related information. */
-static associated_device_t device_list[MAX_NUMBER_OF_DEVICES];
+associated_device_t device_list[MAX_NUMBER_OF_DEVICES];
 /** Stores the number of associated devices. */
-static uint8_t no_of_assoc_devices;
+uint16_t no_of_assoc_devices;
+
 
 /** This array stores the current beacon payload. */
-static uint8_t beacon_payload[BEACON_PAYLOAD_LEN] = {"Atmel beacon demo 0"};
+uint8_t beacon_payload[BEACON_PAYLOAD_LEN] = {"Atmel beacon demo 0"};
 #ifdef GTS_SUPPORT
 static uint8_t gts_payload[GTS_PAYLOAD_LEN] = {"GTS Data from coordinator"};
 #endif /* GTS_SUPPORT */
 /** This variable stores the current state of the node. */
-static coord_state_t coord_state = COORD_STARTING;
+coord_state_t coord_state = COORD_STARTING;
 /** This variable counts the number of transmitted data frames. */
 static uint32_t tx_cnt;
 /** Store the current MSDU handle to be used for a data frame. */
@@ -221,8 +204,8 @@ static uint8_t curr_msdu_handle;
 #ifdef GTS_SUPPORT
 static uint8_t gts_msdu_handle;
 #endif /* GTS_SUPPORT */
-static uint8_t current_channel;
-static uint8_t current_channel_page;
+uint8_t current_channel;
+uint8_t current_channel_page;
 static uint32_t channels_supported;
 #ifdef GTS_SUPPORT
 static uint8_t APP_TIMER_GTS_DATA;
@@ -233,28 +216,10 @@ static uint8_t APP_TIMER_BC_DATA;
 #ifdef GPIO_PUSH_BUTTON_0
 static wpan_addr_spec_t dst_addr;
 #endif /* GPIO_PUSH_BUTTON_0 */
-#ifdef MAC_SECURITY_ZIP
-/*
- * This is implemented as an array of bytes, but actually this is a
- * 128-bit variable. This is the reason why the array needs to be filled
- * in in reverse order than expected.
- */
-static uint8_t default_key[3][16] = {{
-	0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7,
-	0xC8, 0xC9, 0xCA, 0xCB, 0xCC, 0xCD, 0xCE, 0xCF
-},
-{
-	0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7,
-	0xC8, 0xC9, 0xCA, 0xCB, 0xCC, 0xCD, 0xCE, 0xD0
-},
-{
-	0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7,
-	0xC8, 0xC9, 0xCA, 0xCB, 0xCC, 0xCD, 0xCE, 0xD1
-}
-};
 
-static uint8_t default_key_source[8] = {0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-static uint8_t recent_assoc_dev_no = 0xFF;
+#ifdef MAC_SECURITY_ZIP
+/** Store the recently associated device number */
+uint16_t recent_assoc_dev_no = 0xFFFF;
 #endif	
 
 /* === PROTOTYPES ========================================================== */
@@ -301,6 +266,7 @@ static void bcn_payload_update_cb(void *parameter);
 /** Alert to indicate something has gone wrong in the application */
 static void app_alert(void);
 
+
 /* === IMPLEMENTATION ====================================================== */
 
 /**
@@ -310,8 +276,7 @@ static void app_alert(void);
  * (@ref wpan_mlme_reset_req()), and implements a the main loop.
  */
 int main(void)
-
-{
+{	
 	irq_initialize_vectors();
 	#if SAMD20
 	system_init();
@@ -658,7 +623,7 @@ void usr_mlme_comm_status_ind(wpan_addr_spec_t *SrcAddrSpec,
 		uint8_t status)
 {
 	if (status == MAC_SUCCESS) {
-#if (defined MAC_SECURITY_ZIP) || (defined MAC_SECURITY_2006)		
+#if (defined MAC_SECURITY_ZIP) || (defined MAC_SECURITY_2006)	
 		 recent_assoc_dev_no++;
         wpan_mlme_set_req(macDeviceTableEntries,
                           NO_PIB_INDEX,
@@ -783,16 +748,22 @@ void usr_mlme_get_conf(uint8_t status,
 		 * This request leads to a set confirm message ->
 		 *usr_mlme_set_conf
 		 */
+				
+/* MAC Short Address will be set after setting the Security PIB's */	
+#if (defined MAC_SECURITY_ZIP) || (defined MAC_SECURITY_2006)
+		/* Set security PIB attributes now. */
+		wpan_mlme_set_req(macDefaultKeySource,
+						NO_PIB_INDEX,
+						&default_key_source);
+#else			
 		uint8_t short_addr[2];
 
 		short_addr[0] = (uint8_t)COORD_SHORT_ADDR;  /* low byte */
 		short_addr[1] = (uint8_t)(COORD_SHORT_ADDR >> 8); /* high byte */
 
-		wpan_mlme_set_req(macShortAddress,
-#if (defined MAC_SECURITY_ZIP) || (defined MAC_SECURITY_2006)		
-		0, 
-#endif		
-		short_addr);
+		wpan_mlme_set_req(macShortAddress, short_addr);
+#endif
+
 	}
 #ifdef MAC_SECURITY_ZIP
     else if((status == MAC_SUCCESS) &&
@@ -924,7 +895,20 @@ void usr_mlme_scan_conf(uint8_t status,
 			current_channel_page,
 			DEFAULT_BO,
 			DEFAULT_SO,
-			true, false, false);
+			true, false,
+			DEFAULT_COORDREALIGNMENT
+			
+#ifdef MAC_SECURITY_BEACON
+		   ,DEFAULT_COORDREALIGN_SEC_LVL,
+			DEFAULT_COORDREALIGN_KEYID_MODE,
+			DEFAULT_COORDREALIGN_KEY_SRC,
+			DEFAULT_COORDREALIGN_KEY_INDEX,
+			DEFAULT_BEACON_SEC_LVL,
+			DEFAULT_BEACON_KEYID_MODE,
+			DEFAULT_BEACON_KEY_SRC,
+			DEFAULT_BEACON_KEY_INDEX		
+#endif			
+			);
 
 	/* Keep compiler happy. */
 	status = status;
@@ -937,367 +921,8 @@ void usr_mlme_scan_conf(uint8_t status,
 
 #endif
 
-/*
- * @brief Callback function usr_mlme_set_conf
- *
- * @param status        Result of requested PIB attribute set operation
- * @param PIBAttribute  Updated PIB attribute
- */
- #ifdef MAC_SECURITY_ZIP
-void usr_mlme_set_conf(uint8_t status, uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
-{
-    if (status != MAC_SUCCESS)
-    {
-        // something went wrong; restart
-        wpan_mlme_reset_req(true);
-    }
-    else
-    {
-        switch (PIBAttribute)
-        {
-            case macShortAddress:
-                {
-                    uint64_t coord_ieee_addr = 0x1234567812345600;
 
-                    wpan_mlme_set_req(macIeeeAddress, NO_PIB_INDEX, &coord_ieee_addr);
-                }
-                break;
-			case macIeeeAddress:
-				{
-					uint8_t association_permit = true;
-
-					wpan_mlme_set_req(macAssociationPermit, NO_PIB_INDEX, &association_permit);
-				}
-            case macAssociationPermit:
-                {
-                    bool rx_on_when_idle = true;
-
-                    wpan_mlme_set_req(macRxOnWhenIdle, NO_PIB_INDEX, &rx_on_when_idle);
-                }
-                break;
-
-            case macRxOnWhenIdle:
-                {
-					
-					/* Set the beacon payload length. */
-					uint8_t beacon_payload_len = BEACON_PAYLOAD_LEN;
-				#ifdef MAC_SECURITY_ZIP
-					wpan_mlme_set_req(macBeaconPayloadLength,NO_PIB_INDEX, &beacon_payload_len);
-				#else
-					wpan_mlme_set_req(macBeaconPayloadLength, &beacon_payload_len);
-				#endif
-                }
-                break;
-
-            case macBeaconPayloadLength:
-				{
-					/*
-					 * Once the length of the beacon payload has been defined,
-					 * set the actual beacon payload.
-					 */
-			#ifdef MAC_SECURITY_ZIP
-					wpan_mlme_set_req(macBeaconPayload,NO_PIB_INDEX, &beacon_payload);
-			#else
-					wpan_mlme_set_req(macBeaconPayload, &beacon_payload);
-			#endif				
-				
-				}
-				break;
-			case macBeaconPayload:
-				{
-					if (COORD_STARTING == coord_state) 
-					{
-					/*
-					 * Initiate an active scan over all channels to
-					 *determine
-					 * which channel to use.
-					 * Use: bool wpan_mlme_scan_req(uint8_t ScanType,
-					 *                              uint32_t ScanChannels,
-					 *                              uint8_t ScanDuration,
-					 *                              uint8_t ChannelPage);
-					 *
-					 * This request leads to a scan confirm message ->
-					 *usr_mlme_scan_conf
-					 * Scan for about 50 ms on each channel -> ScanDuration
-					 *= 1
-					 * Scan for about 1/2 second on each channel ->
-					 *ScanDuration = 5
-					 * Scan for about 1 second on each channel ->
-					 *ScanDuration = 6
-					 */
-					wpan_mlme_scan_req(MLME_SCAN_TYPE_ACTIVE,
-							SCAN_CHANNEL,
-							SCAN_DURATION_COORDINATOR,
-							current_channel_page);
-					}
-				}	
-				break;
-				
-			case macDefaultKeySource:
-                {
-                    uint8_t mac_sec_level_table_entries = 1;
-
-                    wpan_mlme_set_req(macSecurityLevelTableEntries,
-                                      NO_PIB_INDEX,
-                                      &mac_sec_level_table_entries);
-                }
-                break;
-
-            case macSecurityLevelTableEntries:
-                {
-                    uint8_t mac_sec_level_table[4] = {FRAME_TYPE_DATA,      // FrameType: Data
-                                                      CMD_FRAME_ID_NA,      // CommandFrameIdentifier: N/A
-                                                     // ZIP_SEC_MIN,          // SecurityMinimum: 5
-													0X05,
-                                                      DEV_OVERRIDE_SEC_MIN  // DeviceOverrideSecurityMinimum: True
-                                                     };
-
-                    wpan_mlme_set_req(macSecurityLevelTable,
-                                      0,    // Index: 0
-                                      &mac_sec_level_table);
-                }
-                break;
-
-            case macSecurityLevelTable:
-                {
-                    uint8_t mac_key_table_entries = 3;
-
-                    wpan_mlme_set_req(macKeyTableEntries,
-                                      NO_PIB_INDEX,
-                                      &mac_key_table_entries);
-                }
-                break;
-
-            case macKeyTableEntries:
-                {
-                   uint8_t mac_key_table[40] =
-                   {
-	                   // KeyIdLookupList[1].LookupData : macDefaultKeySource || g_Sec_KeyIndex_1
-	                   default_key_source[0], // LookupData[0]
-	                   default_key_source[1], // LookupData[1]
-	                   default_key_source[2], // LookupData[2]
-	                   default_key_source[3], // LookupData[3]
-	                   default_key_source[4], // LookupData[4]
-	                   default_key_source[5], // LookupData[5]
-	                   default_key_source[6], // LookupData[6]
-	                   default_key_source[7], // LookupData[7]
-	                   KEY_INDEX_1,           // LookupData[8]
-	                   LOOKUP_DATA_SIZE_1, // LookupDataSize: 0x01 : Size 9 octets
-	                   MAC_ZIP_MAX_KEY_ID_LOOKUP_LIST_ENTRIES, // KeyIdLookupListEntries = 1
-	                   // KeyDeviceList[1]
-	                   EMPTY_DEV_HANDLE,           // DeviceDescriptorHandle
-	                   true,              // UniqueDevice
-	                   false,              // Blacklisted
-	                   EMPTY_DEV_HANDLE,           // DeviceDescriptorHandle
-	                   true,              // UniqueDevice
-	                   false,              // Blacklisted
-	                   EMPTY_DEV_HANDLE,           // DeviceDescriptorHandle
-	                   true,              // UniqueDevice
-	                   false,              // Blacklisted
-	                   MAC_ZIP_MAX_KEY_DEV_LIST_ENTRIES, // KeyDeviceListEntries
-	                   //  KeyUsageList
-	                   FRAME_TYPE_DATA,    // FrameType - Data frames
-	                   CMD_FRAME_ID_NA,    // CommandFrameIdentifier not used in ZIP
-	                   MAC_ZIP_MAX_KEY_USAGE_LIST_ENTRIES, // KeyUsageListEntries
-	                   // Key
-	                   default_key[0][0],
-	                   default_key[0][1],
-	                   default_key[0][2],
-	                   default_key[0][3],
-	                   default_key[0][4],
-	                   default_key[0][5],
-	                   default_key[0][6],
-	                   default_key[0][7],
-	                   default_key[0][8],
-	                   default_key[0][9],
-	                   default_key[0][10],
-	                   default_key[0][11],
-	                   default_key[0][12],
-	                   default_key[0][13],
-	                   default_key[0][14],
-	                   default_key[0][15],
-                   };
-                   uint8_t mac_key_table1[40] =
-                   {
-	                   // KeyIdLookupList[1].LookupData : macDefaultKeySource || g_Sec_KeyIndex_1
-	                   default_key_source[0], // LookupData[0]
-	                   default_key_source[1], // LookupData[1]
-	                   default_key_source[2], // LookupData[2]
-	                   default_key_source[3], // LookupData[3]
-	                   default_key_source[4], // LookupData[4]
-	                   default_key_source[5], // LookupData[5]
-	                   default_key_source[6], // LookupData[6]
-	                   default_key_source[7], // LookupData[7]
-	                   KEY_INDEX_2,           // LookupData[8]
-	                   LOOKUP_DATA_SIZE_1, // LookupDataSize: 0x01 : Size 9 octets
-	                   MAC_ZIP_MAX_KEY_ID_LOOKUP_LIST_ENTRIES, // KeyIdLookupListEntries = 1
-	                   // KeyDeviceList[1]
-	                   EMPTY_DEV_HANDLE,           // DeviceDescriptorHandle
-	                   true,              // UniqueDevice
-	                   false,              // Blacklisted
-	                   EMPTY_DEV_HANDLE,           // DeviceDescriptorHandle
-	                   true,              // UniqueDevice
-	                   false,              // Blacklisted
-	                   EMPTY_DEV_HANDLE,           // DeviceDescriptorHandle
-	                   true,              // UniqueDevice
-	                   false,              // Blacklisted
-	                   MAC_ZIP_MAX_KEY_DEV_LIST_ENTRIES, // KeyDeviceListEntries
-	                   //  KeyUsageList
-	                   FRAME_TYPE_DATA,    // FrameType - Data frames
-	                   CMD_FRAME_ID_NA,    // CommandFrameIdentifier not used in ZIP
-	                   MAC_ZIP_MAX_KEY_USAGE_LIST_ENTRIES, // KeyUsageListEntries
-	                   // Key
-	                   default_key[1][0],
-	                   default_key[1][1],
-	                   default_key[1][2],
-	                   default_key[1][3],
-	                   default_key[1][4],
-	                   default_key[1][5],
-	                   default_key[1][6],
-	                   default_key[1][7],
-	                   default_key[1][8],
-	                   default_key[1][9],
-	                   default_key[1][10],
-	                   default_key[1][11],
-	                   default_key[1][12],
-	                   default_key[1][13],
-	                   default_key[1][14],
-	                   default_key[1][15],
-                   };
-                   uint8_t mac_key_table2[40] =
-                   {
-	                   // KeyIdLookupList[1].LookupData : macDefaultKeySource || g_Sec_KeyIndex_1
-	                   default_key_source[0], // LookupData[0]
-	                   default_key_source[1], // LookupData[1]
-	                   default_key_source[2], // LookupData[2]
-	                   default_key_source[3], // LookupData[3]
-	                   default_key_source[4], // LookupData[4]
-	                   default_key_source[5], // LookupData[5]
-	                   default_key_source[6], // LookupData[6]
-	                   default_key_source[7], // LookupData[7]
-	                   KEY_INDEX_3,           // LookupData[8]
-	                   LOOKUP_DATA_SIZE_1, // LookupDataSize: 0x01 : Size 9 octets
-	                   MAC_ZIP_MAX_KEY_ID_LOOKUP_LIST_ENTRIES, // KeyIdLookupListEntries = 1
-	                   // KeyDeviceList[1]
-	                   EMPTY_DEV_HANDLE, // DeviceDescriptorHandle
-	                   true,              // UniqueDevice
-	                   false,              // Blacklisted
-	                   EMPTY_DEV_HANDLE, // DeviceDescriptorHandle
-	                   true,              // UniqueDevice
-	                   false,              // Blacklisted
-	                   EMPTY_DEV_HANDLE, // DeviceDescriptorHandle
-	                   true,              // UniqueDevice
-	                   false,              // Blacklisted
-	                   MAC_ZIP_MAX_KEY_DEV_LIST_ENTRIES, // KeyDeviceListEntries
-	                   //  KeyUsageList
-	                   FRAME_TYPE_DATA,    // FrameType - Data frames
-	                   CMD_FRAME_ID_NA,    // CommandFrameIdentifier not used in ZIP
-	                   MAC_ZIP_MAX_KEY_USAGE_LIST_ENTRIES, // KeyUsageListEntries
-	                   // Key
-	                   default_key[2][0],
-	                   default_key[2][1],
-	                   default_key[2][2],
-	                   default_key[2][3],
-	                   default_key[2][4],
-	                   default_key[2][5],
-	                   default_key[2][6],
-	                   default_key[2][7],
-	                   default_key[2][8],
-	                   default_key[2][9],
-	                   default_key[2][10],
-	                   default_key[2][11],
-	                   default_key[2][12],
-	                   default_key[2][13],
-	                   default_key[2][14],
-	                   default_key[2][15],
-                   };
-                    wpan_mlme_set_req(macKeyTable,
-                    INDEX_0,    // Index: 0
-                    &mac_key_table);
-                    wpan_mlme_set_req(macKeyTable,
-                    INDEX_1,    // Index: 1
-                    &mac_key_table1);
-                    wpan_mlme_set_req(macKeyTable,
-                    INDEX_2,    // Index: 2
-                    &mac_key_table2);
-                }
-                break;
-
-            case macKeyTable:
-                /*
-                 * Setting of PIB attributes will continue once a device
-                 * has associated successful.
-                 */
-                break;
-
-            case macDeviceTableEntries:
-                {
-	                    static uint8_t Temp = 0;
-	                    uint8_t mac_dev_table[17];
-	                    for (uint8_t i = Temp; i < no_of_assoc_devices; i++) // Temp is used to not update the already device table again
-	                    {
-		                    mac_dev_table[0] = (uint8_t)DEFAULT_PAN_ID;
-		                    mac_dev_table[1] = (uint8_t)(DEFAULT_PAN_ID >> 8);
-		                    mac_dev_table[2] = (uint8_t)device_list[i].short_addr;
-		                    mac_dev_table[3] = (uint8_t)(device_list[i].short_addr >> 8);
-		                    mac_dev_table[4] = (uint8_t)device_list[i].ieee_addr;
-		                    mac_dev_table[5] = (uint8_t)(device_list[i].ieee_addr >> 8);
-		                    mac_dev_table[6] = (uint8_t)(device_list[i].ieee_addr >> 16);
-		                    mac_dev_table[7] = (uint8_t)(device_list[i].ieee_addr >> 24);
-		                    mac_dev_table[8] = (uint8_t)(device_list[i].ieee_addr >> 32);
-		                    mac_dev_table[9] = (uint8_t)(device_list[i].ieee_addr >> 40);
-		                    mac_dev_table[10] = (uint8_t)(device_list[i].ieee_addr >> 48);
-		                    mac_dev_table[11] = (uint8_t)(device_list[i].ieee_addr >> 56);
-		                    mac_dev_table[12] = 0;  // Frame counter
-		                    mac_dev_table[13] = 0;
-		                    mac_dev_table[14] = 0;
-		                    mac_dev_table[15] = 0;
-		                    mac_dev_table[16] = 0;  // Exempt
-
-		                    wpan_mlme_set_req(macDeviceTable,
-		                    i,    // Index
-		                    &mac_dev_table);
-	                    }
-	                    Temp++;
-                }
-                break;
-
-            case macDeviceTable:
-                {
-                    /* Use DSN start value as in ZIP test spec. */
-                    uint8_t new_dsn = 0x0;
-
-                    wpan_mlme_set_req(macDSN,
-                                      NO_PIB_INDEX,
-                                      &new_dsn);
-                }
-                break;
-
-            case macDSN:
-                {
-                    /* Use DSN start value as in ZIP test spec. */
-                    uint32_t frame_counter = 1;
-
-                    wpan_mlme_set_req(macFrameCounter,
-                                      NO_PIB_INDEX,
-                                      &frame_counter);
-                }
-                break;
-
-            case macFrameCounter:
-                break;
-
-            default:
-                // undesired PIB attribute; restart
-                wpan_mlme_reset_req(true);
-                break;
-		}
-    }
-
-    /* Keep compiler happy. */
-    PIBAttributeIndex = PIBAttributeIndex;
-}
-#else
+#ifndef MAC_SECURITY_ZIP
 void usr_mlme_set_conf(uint8_t status,
 		uint8_t PIBAttribute)
 {
@@ -1313,9 +938,6 @@ void usr_mlme_set_conf(uint8_t status,
 		uint8_t association_permit = true;
 
 		wpan_mlme_set_req(macAssociationPermit,
-#if (defined MAC_SECURITY_ZIP) || (defined MAC_SECURITY_2006)		
-		0,
-#endif		
 		&association_permit);
 	} else if ((status == MAC_SUCCESS) &&
 			(PIBAttribute == macAssociationPermit)) {
@@ -1330,18 +952,12 @@ void usr_mlme_set_conf(uint8_t status,
 		bool rx_on_when_idle = false;
 
 		wpan_mlme_set_req(macRxOnWhenIdle, 
-#if (defined MAC_SECURITY_ZIP) || (defined MAC_SECURITY_2006)		
-		0,
-#endif		
 		&rx_on_when_idle);
 	} else if ((status == MAC_SUCCESS) &&
 			(PIBAttribute == macRxOnWhenIdle)) {
 		/* Set the beacon payload length. */
 		uint8_t beacon_payload_len = BEACON_PAYLOAD_LEN;
 		wpan_mlme_set_req(macBeaconPayloadLength,
-#if (defined MAC_SECURITY_ZIP) || (defined MAC_SECURITY_2006)		
-		0, 
-#endif		
 		&beacon_payload_len);
 	} else if ((status == MAC_SUCCESS) &&
 			(PIBAttribute == macBeaconPayloadLength)) {
@@ -1350,9 +966,6 @@ void usr_mlme_set_conf(uint8_t status,
 		 * set the actual beacon payload.
 		 */
 		wpan_mlme_set_req(macBeaconPayload,
-#if (defined MAC_SECURITY_ZIP) || (defined MAC_SECURITY_2006)		 
-		0,
-#endif		
 		&beacon_payload);
 	} else if ((status == MAC_SUCCESS) &&
 			(PIBAttribute == macBeaconPayload)) {
@@ -1376,7 +989,7 @@ void usr_mlme_set_conf(uint8_t status,
 			 *ScanDuration = 6
 			 */
 			wpan_mlme_scan_req(MLME_SCAN_TYPE_ACTIVE,
-					SCAN_CHANNEL,
+					SCAN_CHANNEL(current_channel),
 					SCAN_DURATION_COORDINATOR,
 					current_channel_page);
 		} else {
@@ -1398,12 +1011,6 @@ void usr_mlme_set_conf(uint8_t status,
 void usr_mlme_start_conf(uint8_t status)
 {
 	if (status == MAC_SUCCESS) {
-#if (defined MAC_SECURITY_ZIP) || (defined MAC_SECURITY_2006) 		
-		/* Set security PIB attributes now. */
-		wpan_mlme_set_req(macDefaultKeySource,
-		NO_PIB_INDEX,
-		&default_key_source);
-#endif		
 		coord_state = COORD_RUNNING;
 #ifdef SIO_HUB
 		printf("Started beacon-enabled network in Channel - %d\r\n",
@@ -1626,7 +1233,7 @@ static void bc_data_cb(void *parameter)
 #endif			
 			)
 			) {
-		LED_On(LED_DATA);
+//		LED_On(LED_DATA);
 	} else {
 		/*
 		 * Data could not be queued into the broadcast queue.
@@ -1657,10 +1264,10 @@ const char Display_MSDU_Handle[] = "(MSDU handle:  %u)\r\n";
 #endif
 static void indirect_data_cb(void *parameter)
 {
-	uint8_t cur_device;
+	uint16_t cur_device;
 	uint8_t src_addr_mode;
 	wpan_addr_spec_t dst_addr;
-	const char *payload = "Indirect Data from coordinator";
+	const char *payload = "Indirect Data from Coordinator";
 
 	/* Loop over all associated devices. */
 	for (cur_device = 0; cur_device < no_of_assoc_devices; cur_device++) {
@@ -1687,7 +1294,7 @@ static void indirect_data_cb(void *parameter)
 
  	 	if (!wpan_mcps_data_req(src_addr_mode,
 				&dst_addr,
-				31,  /* One octet */ 	 		 
+				strlen(payload),  /* One octet */ 	 		 
 				(uint8_t*)payload,
 				curr_msdu_handle,
 				WPAN_TXOPT_INDIRECT_ACK
@@ -1723,7 +1330,7 @@ const char Display_GTS_Data[] = "GTS data for device %" PRIu8 " ";
  */
 static void gts_data_cb(void *parameter)
 {
-	uint8_t cur_device;
+	uint16_t cur_device;
 	uint8_t src_addr_mode;
 	wpan_addr_spec_t dst_addr;
 

@@ -1,7 +1,9 @@
 /**
- * @file mac_security.h
+ * @file beacon_app.h
  *
- * @brief Declares MAC security related functions, globals, and macros.
+ * @brief These are application-specific resources which are used
+ *        in the example application of the coordinator in addition to the
+ *        underlaying stack.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -38,7 +40,6 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- *
  */
 
 /*
@@ -48,84 +49,79 @@
  */
 
 /* Prevent double inclusion */
-#ifndef MAC_SECURITY_H
-#define MAC_SECURITY_H
+#ifndef BEACON_APP_H
+#define BEACON_APP_H
 
-#if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
 
 /* === Includes ============================================================= */
 
-#include "mac_api.h"
+/* === TYPES =============================================================== */
+
+/** This type definition of a structure can store the short address and the
+ *  extended address of a device.
+ */
+typedef struct associated_device_tag {
+	uint16_t short_addr;
+	uint64_t ieee_addr;
+} associated_device_t;
+
+/**
+ * This enum stores the current state of the application.
+ */
+typedef enum app_state_tag {
+	APP_IDLE = 0,
+	APP_SCAN_DONE,
+	APP_ASSOC_IN_PROGRESS,
+	APP_DEVICE_RUNNING
+}
+app_state_t;
 
 /* === Macros =============================================================== */
-     /**
- * \addtogroup group_mac_def
- * @{
- */
+#define DEFAULT_PAN_ID                  CCPU_ENDIAN_TO_LE16(0x1111)
 
-/**
- * Default value for PIB macKeyTableEntries
- */
-#define macKeyTableEntries_def              (0)
+/** Defines the short address of the coordinator. */
+#define COORD_SHORT_ADDR                (0x0000)
 
-/**
- * Default value for PIB macDeviceTableEntries
- */
-#define macDeviceTable_def                  (0)
+#define SCAN_CHANNEL(x)                    (1ul << x)
 
-/**
- * Default value for PIB macSecurityLevelTableEntries
- */
-#define macSecurityLevelTable_def           (0)
+#ifdef MAC_SECURITY_ZIP
+/* MAC security macros */
+#define KEY_INDEX_0                     (0)
+#define KEY_INDEX_1                     (1)
+#define KEY_INDEX_2                     (2)
+#define KEY_INDEX_3                     (3)
+#define KEY_INDEX_4                     (4)
+#define LOOKUP_DATA_SIZE_1              (1) // Size is 9 octets
+#define FRAME_TYPE_BEACON               (0)
+#define FRAME_TYPE_DATA                 (1)
+#define CMD_FRAME_ID_NA                 (0) // CommandFrameIdentifier is n/a
+#define ZIP_SEC_MIN                     (0x05) // SecurityMinimum for ZIP is 5  
+#define DEV_OVERRIDE_SEC_MIN            (1) // DeviceOverrideSecurityMinimum: True
+#define ZIP_KEY_ID_MODE                 (1) // ZIP uses KeyIdMode 1
 
-/**
- * Default value for PIB macFrameCounter
- */
-#define macFrameCounter_def                 (0x00000000)
+#define INDEX_0                         (0)
+#define INDEX_1                         (1)
+#define INDEX_2                         (2)
+#define INDEX_3                         (3)
+#define DEV_DESC_HANDLE_IDX_0			(0x00)
+#define EMPTY_DEV_HANDLE                (0xFF) // key device desc is invalid
+#define KEY_INFO_FRAME                  (0xDE)
+#define NO_SECURITY                     (0)
+#define SEC_PIB_INIT					(1)
+#endif
 
-/**
- * Default value for PIB macDefaultKeySource
- */
-#define macDefaultKeySource_def             {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, \
-					     0xFF, 0xFF}
-
-/**
- * Default value for KeyIdLookupListEntries
- */
-#define KeyIdLookupListEntries_def          (0)
-
-/**
- * Default value for KeyDeviceListEntries
- */
-#define KeyDeviceListEntries_def            (0)
-
-/**
- * Default value for KeyUsageListEntries
- */
-#define KeyUsageListEntries_def             (0)
-/* ! @} */
 /* === Externals ============================================================ */
 
-extern mac_sec_pib_t mac_sec_pib;
-
 /* === Prototypes =========================================================== */
-/* Finding the Key Identifier Length field */
-uint8_t get_key_id_field_len(uint8_t key_id_mode);
 
-bool build_sec_mcps_data_frame(mcps_data_req_t *mpdr, frame_info_t *mframe);
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-/*@{*/
-
-/*@}*/
 
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
 
-#endif  /* (MAC_SECURITY_ZIP || MAC_SECURITY_2006) */
-
-#endif /* MAC_SECURITY_H */
+#endif /* APP_CONFIG_H */
 /* EOF */

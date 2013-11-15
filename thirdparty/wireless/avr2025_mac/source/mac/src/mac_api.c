@@ -128,7 +128,7 @@ retval_t wpan_init(void)
 bool wpan_task(void)
 {
 	bool event_processed; 	
-	arch_data_t *event = NULL;
+	uint8_t *event = NULL;
 
 	/* mac_task returns true if a request was processed completely */
 	event_processed = mac_task();
@@ -137,7 +137,7 @@ bool wpan_task(void)
 	 * MAC to NHLE event queue should be dispatched
 	 * irrespective of the dispatcher state.
 	 */
-	event = (arch_data_t *)qmm_queue_remove(&mac_nhle_q, NULL);
+	event = (uint8_t *)qmm_queue_remove(&mac_nhle_q, NULL);
 
 	/* If an event has been detected, handle it. */
 	if (NULL != event) {
@@ -176,7 +176,7 @@ bool wpan_mcps_data_req(uint8_t SrcAddrMode,
 		uint8_t TxOptions)
 #endif  /* MAC_SECURITY */
 {
-	buffer_t *buffer_header __ALIGN_WORD_ADDR__;
+	buffer_t *buffer_header;
 	mcps_data_req_t *mcps_data_req;
 	uint8_t *payload_pos;
 
@@ -792,7 +792,18 @@ bool wpan_mlme_start_req(uint16_t PANId,
 		uint8_t SuperframeOrder,
 		bool PANCoordinator,
 		bool BatteryLifeExtension,
-		bool CoordRealignment)
+		bool CoordRealignment
+#ifdef MAC_SECURITY_BEACON
+		,uint8_t CoordRealignSecurityLevel,
+		uint8_t CoordRealignKeyIdMode,
+		uint8_t *CoordRealignKeySource,
+		uint8_t CoordRealignKeyIndex,
+		uint8_t BeaconSecurityLevel,
+		uint8_t BeaconKeyIdMode,
+		uint8_t *BeaconKeySource,
+		uint8_t BeaconKeyIndex	
+#endif			
+		)
 {
 	buffer_t *buffer_header;
 	mlme_start_req_t *mlme_start_req;
@@ -823,6 +834,17 @@ bool wpan_mlme_start_req(uint16_t PANId,
 	mlme_start_req->BatteryLifeExtension = BatteryLifeExtension;
 	mlme_start_req->CoordRealignment = CoordRealignment;
 	mlme_start_req->ChannelPage = ChannelPage;
+	
+#ifdef MAC_SECURITY_BEACON
+	mlme_start_req->CoordRealignSecurityLevel = CoordRealignSecurityLevel;
+	mlme_start_req->CoordRealignKeyIdMode = CoordRealignKeyIdMode;
+	mlme_start_req->CoordRealignKeySource = CoordRealignKeySource;
+	mlme_start_req->CoordRealignKeyIndex = CoordRealignKeyIndex;
+	mlme_start_req->BeaconSecurityLevel = BeaconSecurityLevel;
+	mlme_start_req->BeaconKeyIdMode = BeaconKeyIdMode;
+	mlme_start_req->BeaconKeySource = BeaconKeySource;
+	mlme_start_req->BeaconKeyIndex = BeaconKeyIndex;
+#endif
 
 #ifdef ENABLE_QUEUE_CAPACITY
 	if (MAC_SUCCESS != qmm_queue_append(&nhle_mac_q, buffer_header)) {

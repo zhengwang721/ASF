@@ -225,7 +225,7 @@ retval_t tal_init(void)
 		 * The proper seed for function rand() has already been
 		 *generated
 		 * in function tal_generate_rand_seed().
-		 */
+		 */		
 		uint8_t *ptr_pib = (uint8_t *)&tal_pib.IeeeAddress;
 
 		for (uint8_t i = 0; i < 8; i++) {
@@ -240,7 +240,7 @@ retval_t tal_init(void)
 			 * smaller using 8-bit here.
 			 * And timing is not an issue at this place...
 			 */
-		}
+		}	
 	}
 #endif  /* #ifndef DISABLE_IEEE_ADDR_CHECK */
 #ifdef ENABLE_STACK_NVM

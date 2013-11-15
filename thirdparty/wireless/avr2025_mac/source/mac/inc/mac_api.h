@@ -89,6 +89,7 @@
 /**
  * MAC Address type
  */
+__PACK__DATA__
 typedef union {
 	uint16_t short_address;
 	uint64_t long_address;
@@ -124,7 +125,7 @@ typedef struct wpan_addr_spec_tag {
 	 * 16 bit address.
 	 */
 	address_field_t Addr;
-} wpan_addr_spec_t __ALIGN_WORD_ADDR__;
+} wpan_addr_spec_t;
 
 /**
  * @brief PAN descriptor information structure
@@ -176,7 +177,7 @@ typedef struct wpan_pandescriptor_tag {
 	 */
 	uint32_t TimeStamp;
 #endif  /* ENABLE_TSTAMP */
-} wpan_pandescriptor_t  __ALIGN_WORD_ADDR__;
+} wpan_pandescriptor_t;
 
 #if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
 
@@ -359,7 +360,7 @@ typedef struct mac_sec_pib_tag {
 	/**
 	 * Holds the number of entries in macDeviceTable.
 	 */
-	uint8_t DeviceTableEntries;
+	uint16_t DeviceTableEntries;
 
 	/**
 	 * Holds a table of SecurityLevelDescriptor entries, each with
@@ -407,7 +408,7 @@ typedef struct gts_char_tag {
 }gts_char_t;
 #endif /* GTS_SUPPORT */
 #endif /* if !defined(__DOXYGEN___NO_MAC) */
-
+__PACK__RST_DATA__
 /* ! @} */
 /* === Macros =============================================================== */
 
@@ -858,7 +859,18 @@ bool wpan_mlme_start_req(uint16_t PANId,
 		uint8_t SuperframeOrder,
 		bool PANCoordinator,
 		bool BatteryLifeExtension,
-		bool CoordRealignment);
+		bool CoordRealignment
+#ifdef MAC_SECURITY_BEACON
+,uint8_t CoordRealignSecurityLevel,
+uint8_t CoordRealignKeyIdMode,
+uint8_t *CoordRealignKeySource,
+uint8_t CoordRealignKeyIndex,
+uint8_t BeaconSecurityLevel,
+uint8_t BeaconKeyIdMode,
+uint8_t *BeaconKeySource,
+uint8_t BeaconKeyIndex
+#endif		
+		);
 
 #endif  /* (MAC_START_REQUEST_CONFIRM == 1) */
 

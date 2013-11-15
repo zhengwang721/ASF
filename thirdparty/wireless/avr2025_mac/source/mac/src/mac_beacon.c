@@ -94,16 +94,20 @@
 
 /* === Globals ============================================================== */
 
+#ifdef MAC_SECURITY_BEACON
+extern mlme_start_req_t msr_params;    /* Intermediate start parameters */
+#endif
+
 #if (MAC_START_REQUEST_CONFIRM == 1)
 
 #ifdef BEACON_SUPPORT
 
 /*
  * Static buffer used for beacon transmission in a BEACON build.
- * In a build without beacon suppport, in order to save the static buffer,
+ * In a build without beacon support, in order to save the static buffer,
  * a new buffer will be allocated to transmit the beacon frame.
  */
-static arch_data_t beacon_buffer[LARGE_BUFFER_SIZE];
+static uint8_t beacon_buffer[LARGE_BUFFER_SIZE];
 #endif  /* BEACON_SUPPORT */
 
 #if (MAC_INDIRECT_DATA_FFD == 1)
@@ -111,12 +115,12 @@ static arch_data_t beacon_buffer[LARGE_BUFFER_SIZE];
 static uint8_t *beacon_ptr;
 
 /* Variable to hold number the pending addresses. */
-static uint8_t pending_address_count __ALIGN_WORD_ADDR__;
+static uint8_t pending_address_count;
 
 #endif  /* (MAC_INDIRECT_DATA_FFD == 1) */
 
 #ifdef TEST_HARNESS
-static uint8_t vpan_no __ALIGN_WORD_ADDR__;
+static uint8_t vpan_no;
 #endif  /* TEST_HARNESS */
 
 /* === Prototypes =========================================================== */
@@ -262,6 +266,11 @@ void mac_build_and_tx_beacon(bool beacon_enabled,
 	uint16_t fcf;
 	uint8_t frame_len;
 	uint8_t *frame_ptr;
+#if ((defined MAC_SECURITY_BEACON)  || (defined MAC_SECURITY_2006_BEACON)) 
+	uint8_t *frame_ptr_mhr_gts = NULL;	
+	uint8_t *mac_payload_ptr = NULL;
+	mcps_data_req_t beacon_sec_buf;   
+#endif
 
 #ifdef BEACON_SUPPORT
 
@@ -275,7 +284,7 @@ void mac_build_and_tx_beacon(bool beacon_enabled,
 	transmit_frame->buffer_header = NULL;
 #else   /* No BEACON_SUPPORT */
 
-	arch_data_t *beacon_buffer = (arch_data_t *)BMM_BUFFER_POINTER(beacon_buffer_header);
+	uint8_t *beacon_buffer = (uint8_t *)BMM_BUFFER_POINTER(beacon_buffer_header);
 
 	/*
 	 * The frame is given to the TAL in the 'frame_info_t' format,
@@ -299,14 +308,18 @@ void mac_build_and_tx_beacon(bool beacon_enabled,
 	/* Get the payload pointer. */
 	frame_ptr = (uint8_t *)transmit_frame +
 			LARGE_BUFFER_SIZE - 2; /* Add 2 octets for FCS. */
-
+		
 	/* Build the beacon payload if it exists. */
-	if (mac_pib.mac_BeaconPayloadLength > 0) {
+	if (mac_pib.mac_BeaconPayloadLength > 0) 
+	{
 		frame_ptr -= mac_pib.mac_BeaconPayloadLength;
 		frame_len += mac_pib.mac_BeaconPayloadLength;
 
 		memcpy(frame_ptr, mac_beacon_payload,
 				mac_pib.mac_BeaconPayloadLength);
+#if ((defined MAC_SECURITY_BEACON)  || (defined MAC_SECURITY_2006_BEACON))				
+	   mac_payload_ptr = frame_ptr;	
+#endif	   			
 	}
 
 	/* Build the Pending address field. */
@@ -317,12 +330,15 @@ void mac_build_and_tx_beacon(bool beacon_enabled,
 		 *nothing
 		 * to add as far as pending addresses is concerned.
 		 */
-		if (indirect_data_q.size > 0) {
+		if (indirect_data_q.size > 0) 
+		{
 			uint8_t pending_addr_octets = mac_buffer_add_pending(
 					frame_ptr);
 			frame_len += pending_addr_octets;
 			frame_ptr -= pending_addr_octets + 1;
-		} else {
+		} 
+		else 
+		{
 			/* No pending data available. */
 			frame_ptr--;
 			*frame_ptr = 0;
@@ -341,7 +357,8 @@ void mac_build_and_tx_beacon(bool beacon_enabled,
 #ifdef GTS_SUPPORT
 	mac_gts_table_update();
 	uint8_t gts_octets = mac_add_gts_info(frame_ptr);
-	if (gts_octets > 0) {
+	if (gts_octets > 0) 
+	{
 		frame_len += gts_octets;
 		frame_ptr -= gts_octets + 1;
 	}
@@ -362,7 +379,8 @@ void mac_build_and_tx_beacon(bool beacon_enabled,
 	superframe_spec |= (tal_pib.SuperFrameOrder << 4);
 	superframe_spec |= (mac_final_cap_slot << 8);
 
-	if (tal_pib.BattLifeExt) {
+	if (tal_pib.BattLifeExt) 
+	{
 		superframe_spec |= (1U << BATT_LIFE_EXT_BIT_POS);
 	}
 
@@ -372,12 +390,14 @@ void mac_build_and_tx_beacon(bool beacon_enabled,
 	superframe_spec |= (FINAL_CAP_SLOT_DEFAULT << 8);
 #endif
 
-	if (MAC_PAN_COORD_STARTED == mac_state) {
+	if (MAC_PAN_COORD_STARTED == mac_state) 
+	{
 		superframe_spec |= (1U << PAN_COORD_BIT_POS);
 	}
 
 #if (MAC_ASSOCIATION_INDICATION_RESPONSE == 1)
-	if (mac_pib.mac_AssociationPermit) {
+	if (mac_pib.mac_AssociationPermit) 
+	{
 		superframe_spec |= (1U << ASSOC_PERMIT_BIT_POS);
 	}
 
@@ -387,26 +407,80 @@ void mac_build_and_tx_beacon(bool beacon_enabled,
 	frame_ptr -= 2;
 	convert_spec_16_bit_to_byte_array(superframe_spec, frame_ptr);
 
+#if ((defined MAC_SECURITY_BEACON)  || (defined MAC_SECURITY_2006_BEACON)) 
+	frame_ptr_mhr_gts = frame_ptr;    
+	beacon_sec_buf.SecurityLevel = msr_params.BeaconSecurityLevel;
+	beacon_sec_buf.KeyIdMode = msr_params.BeaconKeyIdMode;
+	beacon_sec_buf.KeySource = msr_params.BeaconKeySource;
+	beacon_sec_buf.KeyIndex = msr_params.BeaconKeyIndex;	
+	beacon_sec_buf.msduLength = mac_pib.mac_BeaconPayloadLength;	
+
+	/*
+	 * Note: The value of the payload_length parameter will be updated
+	 *       if security needs to be applied.
+	 */
+	if (beacon_sec_buf.SecurityLevel > 0) 
+	{
+		retval_t build_sec = mac_build_aux_sec_header(&frame_ptr, &beacon_sec_buf,
+				&frame_len);
+		/* place the GTS  and Super frame specification fields into the before the MIC - Data */		
+		if ((beacon_sec_buf.SecurityLevel == 1) || (beacon_sec_buf.SecurityLevel == 5))
+		{			
+			memmove((frame_ptr_mhr_gts - 0x04), frame_ptr_mhr_gts,\
+									(mac_payload_ptr - frame_ptr_mhr_gts));			
+		} 
+		else if((beacon_sec_buf.SecurityLevel == 2) || (beacon_sec_buf.SecurityLevel == 6))
+		{
+			memmove((frame_ptr_mhr_gts - 0x08), frame_ptr_mhr_gts,\
+									(mac_payload_ptr - frame_ptr_mhr_gts));			
+		}
+		else if((beacon_sec_buf.SecurityLevel == 3) || (beacon_sec_buf.SecurityLevel == 7))
+		{
+			memmove((frame_ptr_mhr_gts - 0x10), frame_ptr_mhr_gts,\
+									(mac_payload_ptr - frame_ptr_mhr_gts));											
+		}
+				
+		if (MAC_SUCCESS != build_sec) 
+		{
+			/* Todo MAC Security Issue */
+			return;
+		}
+	}
+
+#endif  /* (MAC_SECURITY_BEACON || MAC_SECURITY_2006_BEACON) */		
+
 	/*
 	 * Source address.
 	 */
 	if (CCPU_ENDIAN_TO_LE16(MAC_NO_SHORT_ADDR_VALUE) ==
-			tal_pib.ShortAddress) {
+			tal_pib.ShortAddress) 
+	{
 		frame_ptr -= 8;
 		frame_len += 6; /* Add further 6 octets for long Source Address */
 		convert_64_bit_to_byte_array(tal_pib.IeeeAddress, frame_ptr);
+#if ((defined MAC_SECURITY_BEACON)  || (defined MAC_SECURITY_2006_BEACON))
+		beacon_sec_buf.SrcAddrMode = FCF_LONG_ADDR;   
+#endif
 
 		fcf = FCF_SET_SOURCE_ADDR_MODE((uint16_t)FCF_LONG_ADDR);
-	} else {
+	} 
+	else 
+	{
 		frame_ptr -= 2;
 		convert_16_bit_to_byte_array(tal_pib.ShortAddress, frame_ptr);
-
+#if ((defined MAC_SECURITY_BEACON)  || (defined MAC_SECURITY_2006_BEACON))
+		beacon_sec_buf.SrcAddrMode = FCF_SHORT_ADDR;   
+#endif
 		fcf = FCF_SET_SOURCE_ADDR_MODE((uint16_t)FCF_SHORT_ADDR);
 	}
 
 	/* Source PAN-Id */
 	frame_ptr -= 2;
 	convert_16_bit_to_byte_array(tal_pib.PANId, frame_ptr);
+	
+#if ((defined MAC_SECURITY_BEACON)  || (defined MAC_SECURITY_2006_BEACON))
+		beacon_sec_buf.DstPANId = tal_pib.PANId;   
+#endif	
 
 #ifdef TEST_HARNESS
 	if (mac_pib.privateVirtualPANs > 0) {
@@ -430,7 +504,14 @@ void mac_build_and_tx_beacon(bool beacon_enabled,
 	frame_ptr--;
 	*frame_ptr = mac_pib.mac_BSN++;
 
-	fcf = fcf | FCF_SET_FRAMETYPE(FCF_FRAMETYPE_BEACON);
+	fcf = fcf | FCF_SET_FRAMETYPE(FCF_FRAMETYPE_BEACON);	
+	
+#if ((defined MAC_SECURITY_BEACON)  || (defined MAC_SECURITY_2006_BEACON))
+	if (beacon_sec_buf.SecurityLevel > 0) 
+	{
+		fcf |= FCF_SECURITY_ENABLED | FCF_FRAME_VERSION_2006;
+	}
+#endif	
 
 #if (MAC_START_REQUEST_CONFIRM == 1)
 #ifdef BEACON_SUPPORT
@@ -444,12 +525,12 @@ void mac_build_and_tx_beacon(bool beacon_enabled,
 	 * to be transmitted needs to be set in order to indicate this to all
 	 * listening children nodes.
 	 */
-	if (
-		((MAC_PAN_COORD_STARTED == mac_state) ||
+	if (((MAC_PAN_COORD_STARTED == mac_state) ||
 		(MAC_COORDINATOR == mac_state)) &&
 		(tal_pib.BeaconOrder < NON_BEACON_NWK) &&
 		(broadcast_q.size > 0)
-		) {
+		) 
+	{
 		fcf |= FCF_FRAME_PENDING;
 	}
 #endif  /* BEACON_SUPPORT */
@@ -467,7 +548,18 @@ void mac_build_and_tx_beacon(bool beacon_enabled,
 	transmit_frame->mpdu = frame_ptr;
 
 #ifdef BEACON_SUPPORT
-	if (!beacon_enabled) {
+#if ((defined MAC_SECURITY_BEACON)  || (defined MAC_SECURITY_2006_BEACON))
+if (beacon_sec_buf.SecurityLevel > 0) 
+{
+	retval_t build_sec = mac_secure(transmit_frame, mac_payload_ptr, &beacon_sec_buf);
+	if (MAC_SUCCESS != build_sec) 
+	{
+		return;
+	}
+}
+#endif
+	if (!beacon_enabled) 
+	{
 		/* Buffer header not required in BEACON build. */
 		transmit_frame->buffer_header = NULL;
 

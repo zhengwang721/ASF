@@ -71,7 +71,25 @@
 #endif
 
 /* === Macros =============================================================== */
+/* Length of the MAC Aux Header Frame Counter */
+#define FRAME_COUNTER_LEN               (0x04)
 
+#if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
+/* Security Control Field: Security Level mask */
+#define SEC_CTRL_SEC_LVL_MASK           (0x07)
+
+/* Security Control Field: Key Identifier mask */
+#define SEC_CTRL_KEY_ID_MASK            (0x03)
+
+/* Security Control Field: Key Identifier Field position */
+#define SEC_CTRL_KEY_ID_FIELD_POS       (3)
+
+#define KEY_ID_MODE_0                   (0x00)
+#define KEY_ID_MODE_1                   (0x01)
+#define KEY_ID_MODE_2                   (0x02)
+#define KEY_ID_MODE_3                   (0x03)
+
+#endif
 /* === Globals ============================================================= */
 
 /* === Prototypes ========================================================== */
@@ -138,7 +156,7 @@ void mac_gen_mcps_data_conf(buffer_t *buf, uint8_t status, uint8_t handle)
  *
  * @param msg Pointer to the MCPS-DATA.request parameter
  */
-void mcps_data_request(arch_data_t *msg)
+void mcps_data_request(uint8_t *msg)
 {
 	retval_t status = FAILURE;
 	mcps_data_req_t mdr;
@@ -277,7 +295,7 @@ void mcps_data_request(arch_data_t *msg)
 	 */
 #if (MAC_START_REQUEST_CONFIRM == 1)
 #ifdef BEACON_SUPPORT
-	/*To check the broadcst address*/
+	/*To check the broadcast address*/
 	uint16_t broadcast;
 	ADDR_COPY_DST_SRC_16(broadcast, mdr.DstAddr);
 	if (
@@ -368,6 +386,38 @@ void mcps_data_request(arch_data_t *msg)
 
 		/* Transmission should be done with CSMA-CA and with frame
 		 *retries. */
+
+#ifdef MAC_SECURITY_ZIP
+if(transmit_frame->mpdu[1] & FCF_SECURITY_ENABLED)
+{
+	mcps_data_req_t pmdr;
+	
+	build_sec_mcps_data_frame(&pmdr, transmit_frame);
+	
+	if (pmdr.SecurityLevel > 0)
+	{
+		/* Secure the Frame */
+		retval_t build_sec = mac_secure(transmit_frame, \
+		transmit_frame->mac_payload, &pmdr);
+		
+		if (MAC_SUCCESS != build_sec)
+		{
+			/* The MAC Data Payload is encrypted based on the security level. */
+			mac_gen_mcps_data_conf((buffer_t *)msg,
+			(uint8_t)build_sec,
+			#ifdef ENABLE_TSTAMP
+			mdr.msduHandle,
+			0);
+			#else
+			mdr.msduHandle);
+			#endif  /* ENABLE_TSTAMP */
+			
+			return;
+		}
+	}
+}
+#endif
+		
 #ifdef BEACON_SUPPORT
 		csma_mode_t cur_csma_mode;
 
@@ -379,11 +429,12 @@ void mcps_data_request(arch_data_t *msg)
 			/* In Beacon network the frame is sent with slotted
 			 *CSMA-CA. */
 			cur_csma_mode = CSMA_SLOTTED;
-		}
+		}		
 
 		status = tal_tx_frame(transmit_frame, cur_csma_mode, true);
+		
 #else   /* No BEACON_SUPPORT */
-		/* In Nonbeacon build the frame is sent with unslotted CSMA-CA.
+		/* In Non beacon build the frame is sent with unslotted CSMA-CA.
 		 **/
 		status = tal_tx_frame(transmit_frame, CSMA_UNSLOTTED, true);
 #endif  /* BEACON_SUPPORT / No BEACON_SUPPORT */
@@ -603,7 +654,7 @@ void mac_process_data_frame(buffer_t *buf_ptr)
 				 * from this data frame needs to be extracted,
 				 *and used for the
 				 * data request frame appropriately.
-				 * Use this as destination address expclitily
+				 * Use this as destination address explicitly
 				 *and
 				 * feed this to the function
 				 *mac_build_and_tx_data_req
@@ -685,9 +736,10 @@ static retval_t build_data_frame(mcps_data_req_t *pmdr,
 	 * Note: The value of the payload_length parameter will be updated
 	 *       if security needs to be applied.
 	 */
-	if (pmdr->SecurityLevel > 0) {
+	if (pmdr->SecurityLevel > 0) {				
 		retval_t build_sec = mac_build_aux_sec_header(&frame_ptr, pmdr,
 				&frame_len);
+
 		if (MAC_SUCCESS != build_sec) {
 			return (build_sec);
 		}
@@ -808,12 +860,7 @@ static retval_t build_data_frame(mcps_data_req_t *pmdr,
 	frame->mpdu = frame_ptr;
 
 #if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
-	if (pmdr->SecurityLevel > 0) {
-		retval_t build_sec = mac_secure(frame, mac_payload_ptr, pmdr);
-		if (MAC_SUCCESS != build_sec) {
-			return (build_sec);
-		}
-	}
+	  frame->mac_payload = mac_payload_ptr;	
 
 #endif  /* (MAC_SECURITY_ZIP || MAC_SECURITY_2006) */
 
@@ -1162,7 +1209,7 @@ static bool mac_buffer_purge(uint8_t msdu_handle)
  *
  * @param msg Pointer to the MCPS-PURGE.request parameter
  */
-void mcps_purge_request(arch_data_t *msg)
+void mcps_purge_request(uint8_t *msg)
 {
 	mcps_purge_req_t *mpr
 		= (mcps_purge_req_t *)BMM_BUFFER_POINTER(((buffer_t *)msg));
@@ -1206,6 +1253,5 @@ static uint8_t check_msdu_handle_cb(void *buf, void *handle)
 
 	return 0;
 }
-
 #endif /* ((MAC_PURGE_REQUEST_CONFIRM == 1) && (MAC_INDIRECT_DATA_FFD == 1)) */
 /* EOF */

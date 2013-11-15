@@ -192,6 +192,7 @@
 /**
  * MAC state type.
  */
+__PACK__DATA__
 typedef enum mac_state_tag {
 	/*
 	 * IEEE 802.15.4-defined MAC states.
@@ -215,7 +216,7 @@ typedef enum mac_state_tag {
 
 	/** PAN coordinator successfully started */
 	MAC_PAN_COORD_STARTED = 3
-} SHORTENUM mac_state_t __ALIGN_WORD_ADDR__;
+} SHORTENUM mac_state_t;
 
 /**
  * MAC state type.
@@ -275,7 +276,7 @@ typedef enum mac_poll_state_tag {
 	 * data frame),
 	 * awaiting data response, */
 	MAC_POLL_IMPLICIT
-} SHORTENUM mac_poll_state_t __ALIGN_WORD_ADDR__;
+} SHORTENUM mac_poll_state_t;
 
 /**
  * Device or coordinator scan states.
@@ -295,7 +296,7 @@ typedef enum mac_scan_state_tag {
 	MAC_SCAN_ORPHAN,
 	/** Passive scan proceeding */
 	MAC_SCAN_PASSIVE
-} SHORTENUM mac_scan_state_t  __ALIGN_WORD_ADDR__;
+} SHORTENUM mac_scan_state_t;
 
 /**
  * Device or coordinator sync states.
@@ -314,7 +315,7 @@ typedef enum mac_sync_state_tag {
 	 * synchronization with desired network
 	 */
 	MAC_SYNC_BEFORE_ASSOC
-} SHORTENUM mac_sync_state_t  __ALIGN_WORD_ADDR__;
+} SHORTENUM mac_sync_state_t;
 
 
 /**
@@ -325,10 +326,10 @@ typedef enum mac_radio_sleep_state_tag {
 	RADIO_AWAKE = 0,
 	/**< Radio is in sleep mode */
 	RADIO_SLEEPING
-} SHORTENUM mac_radio_sleep_state_t  __ALIGN_WORD_ADDR__;
+} SHORTENUM mac_radio_sleep_state_t;
 
 /* ! @} */
-typedef void (*handler_t)(arch_data_t *);
+typedef void (*handler_t)(uint8_t *);
 
 /**
  * \addtogroup group_mac_ds
@@ -502,12 +503,12 @@ typedef struct mac_pib_tag {
 	uint8_t privateVirtualPANs;
 #endif /* TEST_HARNESS */
 } mac_pib_t;
-
+__PACK__RST_DATA__
 /* ! @} */
 /* === Externals ============================================================ */
 
 /* Global data variables */
-extern arch_data_t *mac_conf_buf_ptr;
+extern uint8_t *mac_conf_buf_ptr;
 
  
 #ifdef BEACON_SUPPORT
@@ -516,7 +517,7 @@ extern bool mac_bc_data_indicated;
 #endif  /* BEACON_SUPPORT */
 
 #if (MAC_SCAN_SUPPORT == 1)
-extern arch_data_t *mac_scan_cmd_buf_ptr;
+extern uint8_t *mac_scan_cmd_buf_ptr;
 extern uint8_t mac_scan_orig_channel;
 extern uint8_t mac_scan_orig_page;
 #if ((MAC_SCAN_ACTIVE_REQUEST_CONFIRM == 1) || \
@@ -701,7 +702,7 @@ void mac_process_orphan_notification(buffer_t *buf_ptr);
 
 #endif /* (MAC_ORPHAN_INDICATION_RESPONSE == 1) */
 
-void mac_process_tal_data_ind(arch_data_t *msg);
+void mac_process_tal_data_ind(uint8_t *msg);
 
 
 void mac_sleep_trans(void);
@@ -770,7 +771,7 @@ void mac_t_tracking_beacons_cb(void *callback_parameter);
 
 #endif /* (MAC_SYNC_REQUEST == 1) */
 
-void dispatch_event(arch_data_t *event);
+void dispatch_event(uint8_t *event);
 
 
 retval_t set_tal_pib_internal(uint8_t attribute, pib_value_t *attribute_value);
@@ -791,7 +792,7 @@ void mac_process_gts_request(buffer_t *gts_req);
 uint8_t mac_add_gts_info(uint8_t *frame_ptr);
 void mac_gts_table_update(void);
 void mac_parse_bcn_gts_info(uint8_t gts_count, uint8_t gts_dir, mac_gts_list_t *gts_list_ptr);
-void handle_gts_data_req(mcps_data_req_t *data_req, arch_data_t *msg);
+void handle_gts_data_req(mcps_data_req_t *data_req, uint8_t *msg);
 void reset_gts_globals(void);
 void mac_t_gts_cb(void *callback_parameter);
 void init_gts_queues(void);
