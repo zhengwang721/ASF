@@ -112,7 +112,7 @@ struct dma_events_config {
 	/** Event input actions */
 	enum dma_event_input_action input_action;
 	/** Enable DMA event output */
-	bool dma_event_output_enable;
+	bool event_output_enable;
 	/** Event output actions */
 	enum dma_event_output_selection output_action;
 };
@@ -134,18 +134,14 @@ struct dma_transfer_descriptor {
 
 /** DMA configurations for transfer */
 struct dma_transfer_config {
+	/** DMA transfer priority */
+	uint8_t priority;
 	/** DMA transfer trigger selection */
 	enum dma_transfer_trigger transfer_trigger;
 	/**DMA peripheral trigger index*/
-	uint8_t dma_peripheral_trigger_index;
-	/** DMA transfer priority */
-	uint8_t priority;
-	/** Transfer beat size */
-	enum dma_beat_size beat_size;  //?
+	uint8_t peripheral_trigger;
 	/** DMA events configurations */
 	struct dma_events_config event_config;
-	/** DMA transfer descriptor */
-	struct dma_transfer_descriptor transfer_descriptor;
 };
 
 /** Structure for DMA transfer resource */
@@ -162,18 +158,16 @@ struct dma_resource {
 
 typedef void (*dma_callback_t)(struct dma_resource *resource);
 
-void dma_get_config_defaults(struct dma_transfer_config *transfer_config);
-enum status_code dma_allocate(struct dma_resource *dma_resource,
-								struct dma_transfer_config *transfer_config);
-enum status_code dma_update_resource(struct dma_resource *dma_resource,
-								struct dma_transfer_config *transfer_config);
-enum status_code dma_transfer_job(struct dma_resource *dma_resource);
-enum status_code dma_abort_job(struct dma_resource *dma_resource);
-enum status_code dma_get_status(struct dma_resource *dma_resource);
-enum status_code dma_deallocate(struct dma_resource *dma_resource);
-void dma_enable_callback(struct dma_resource *dma_resource, enum dma_callback_type type);
-void dma_disable_callback(struct dma_resource *dma_resource, enum dma_callback_type type);
-void dma_register_callback(struct dma_resource *dma_resource, dma_callback_t callback, enum dma_callback_type type);
-void dma_unregister_callback(struct dma_resource *dma_resource, enum dma_callback_type type);
+void dma_get_config_defaults(struct dma_transfer_config *config);
+enum status_code dma_allocate(struct dma_resource *resource,
+								struct dma_transfer_config *config);
+enum status_code dma_transfer_job(struct dma_resource *resource, struct dma_transfer_descriptor *descriptor);
+enum status_code dma_abort_job(struct dma_resource *resource);
+enum status_code dma_get_job_status(struct dma_resource *resource);
+enum status_code dma_release(struct dma_resource *resource);
+void dma_enable_callback(struct dma_resource *resource, enum dma_callback_type type);
+void dma_disable_callback(struct dma_resource *resource, enum dma_callback_type type);
+void dma_register_callback(struct dma_resource *resource, dma_callback_t callback, enum dma_callback_type type);
+void dma_unregister_callback(struct dma_resource *resource, enum dma_callback_type type);
 
 #endif /* DMA_H_INCLUDED */

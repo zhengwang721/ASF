@@ -46,9 +46,6 @@
  
 #define DMA_INVALID_CHANNEL			0xff
 
-//Hidden dma system level init in dma_allocate
-static bool _dma_init = false;
-
 //setup initial description section
 static struct dma_transfer_descriptor descriptor_section[CONF_MAX_USED_CHANNEL_NUM];
 //Setup initial write back memory section
@@ -58,11 +55,13 @@ static struct dma_transfer_descriptor write_back_section[CONF_MAX_USED_CHANNEL_N
 static struct dma_resource dma_active_resource[CONF_MAX_USED_CHANNEL_NUM];
 
 struct _dma_module {
+	volatile bool _dma_init;
 	volatile uint32_t allocated_channels;
 	uint8_t free_channels;
 };
 
 struct _dma_module _dma_inst = {
+	._dma_init = false;
 	.allocated_channels = 0,
 	.free_channels = CONF_MAX_USED_CHANNEL_NUM;  //The definition in the current instance_dmac.h is 12 which should be 32 if according to datasheet
 };
@@ -73,42 +72,24 @@ static uint8_t _dma_find_first_free_channel_and_allocate(uint8_t priority)
 	uint32_t tmp;
 	bool allocated = false;
 
-	if (priority >= CONF_MAX_USED_CHANNEL_NUM) {
-		priority = CONF_MAX_USED_CHANNEL_NUM - 1;
-	}
-
 	system_interrupt_enter_critical_section();
 
 	tmp = _dma_inst.allocated_channels;
 
-	for(count = priority; count < CONF_MAX_USED_CHANNEL_NUM; ++count) {
-		if(!(tmp & (1<<priority))) {
+	for(count = 0; count < CONF_MAX_USED_CHANNEL_NUM; ++count) {
+
+		if(!(tmp & 0x00000001)) {
 			/* If free channel found, set as allocated and return number */
+
 			_dma_inst.allocated_channels |= 1 << count;
 			_dma_inst.free_channels--;
 			allocated = true;
 
 			break;
+
 		}
 
 		tmp = tmp >> 1;
-	}
-
-	if (!allocated) {
-		tmp = 1<<priority;
-		
-		for(count = priority-1; count >=0 ; count--) {
-			if(!(tmp & (1<<(priority-1)))) {
-				/* If free channel found, set as allocated and return number */
-				_dma_inst.allocated_channels |= 1 << count;
-				_dma_inst.free_channels--;
-				allocated = true;
-
-				break;
-			}
-
-			tmp = tmp << 1;
-		}
 	}
 
 	system_interrupt_leave_critical_section();
@@ -116,6 +97,8 @@ static uint8_t _dma_find_first_free_channel_and_allocate(uint8_t priority)
 	if(!allocated) {
 		return DMA_INVALID_CHANNEL;
 	} else {
+		DMAC->CHID.reg = DMAC_CHID_ID(dma_resource->channel_id);
+		DMAC->CHCTRLB.reg |=  DMAC_CHCTRLB_LVL(priority);
 		return count;
 	}
 }
@@ -137,19 +120,6 @@ static void _dma_set_config(struct dma_resource *dma_resource,
 	Assert(transfer_config);
 	
 	//TODO: Set actual configurations for a dma resource
-	
-	// Setup Control register, only CRC is under consideration.
-	// Priority level is ignored as we using 32 level fixed priorities
-	// The DMA controller is enabled during init phase
-	//TODO: a global config for CRC?
-	if (transfer_config->crc) {
-		//Some additional logic control for the CRC should be taken
-		//Or just simply applied to all channels with defect of a might be slower performance
-		//for all channels as CRC calculation
-		DMAC->CTRL |= DMAC_CTRL_CRCENABLE;
-		DMAC->CRCCTRL |= DMAC_CRCCTRL_CRCSRC(dma_resource);
-		//CRC using default configurations: 
-	}
 	
 	//Using default settings for DMA channel configurations.
 	DMAC->CHID.reg = DMAC_CHID_ID(dma_resource->channel_id);
@@ -180,11 +150,6 @@ static void _dma_set_config(struct dma_resource *dma_resource,
 		DMAC->CHCTRLB.reg |= DMAC_CHCTRLB_EVOE;
 	}
 	
-	//DMA detail descriptors are handled by apps
-	descriptor_section[dma_resource->channel_id] = transfer_config->transfer_descriptor;
-	
-	//Update beat size if different
-	descriptor_section[dma_resource->channel_id].block_transfer_control.BEATSIZE = DMAC_BTCTRL_BEATSIZE(transfer_config->beat_size);
 }
 
 void DMAC_Handler( void )
@@ -241,126 +206,131 @@ void dma_get_config_defaults(struct dma_transfer_config *transfer_config)
 	/** DMA transfer descriptor defines a real transfer and is always fulfilled by apps */
 }
 
-enum status_code dma_allocate(struct dma_resource *dma_resource,
-								struct dma_transfer_config *transfer_config)
+enum status_code dma_allocate(struct dma_resource *resource,
+								struct dma_transfer_config *config)
 {
 	uint8_t new_channel;
 
-	Assert(dma_resource);
+	Assert(resource);
 
-	if (!_dma_init) {
+	resource -> channel_id = DMA_INVALID_CHANNEL;
+
+	if (!_dma_inst._dma_init) {
 		//TODO: do DMA HW init phase here
 		system_ahb_clock_set_mask(PM_AHBMASK_DMAC);
 		system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBB, PM_APBBMASK_DMAC);
-		
+
 		DMAC->CTRL.reg = DMAC_CTRL_SWRST;
-		DMAC->CTRL.reg = DMAC_CTRL_DMAENABLE;
+		/* Enable all priority level at the same time */
+		DMAC->CTRL.reg = DMAC_CTRL_DMAENABLE | DMAC_CTRL_LVLEN(0xf);
+
+		// Setup Control register, only CRC is under consideration.
+		// Priority level is ignored as we using 32 level fixed priorities
+		// The DMA controller is enabled during init phase
+		if (CONF_DMA_CRC_ENABLE) {
+			//Some additional logic control for the CRC should be taken
+			//Or just simply applied to all channels with defect of a might be slower performance
+			//for all channels as CRC calculation
+			DMAC->CTRL |= DMAC_CTRL_CRCENABLE;
+		}
+
+		DMAC->BASEADDR.reg = descriptor_section;
+		DMAC->WRBADDR.reg = write_back_section;
 		
-		_dma_init = true;
+		_dma_inst._dma_init = true;
 	}
 	
-	new_channel = _dma_find_first_free_channel_and_allocate(transfer_config->priority);
+	new_channel = _dma_find_first_free_channel_and_allocate(config->priority);
 
 	if(new_channel == DMA_INVALID_CHANNEL) {
 		return STATUS_ERR_NOT_FOUND;
 	}
 
-	dma_resource->channel_id = new_channel;
+	resource->channel_id = new_channel;
+
+	if (CONF_DMA_CRC_ENABLE) {
+		DMAC->CRCCTRL |= DMAC_CRCCTRL_CRCSRC(resource->channel_id);
+	}
 
 	/** Perform a reset for the allocated channel */
-	DMAC->CHID.reg = DMAC_CHID_ID(dma_resource->channel_id);
+	DMAC->CHID.reg = DMAC_CHID_ID(resource->channel_id);
 	DMAC->CHCTRLA.reg = DMAC_CHCTRLA_SWRST;
 
 	/** Config the DMA control,channel registers and descriptors here */
-	_dma_set_config(dma_resource, transfer_config);
+	_dma_set_config(resource, config);
 
 	return STATUS_OK;
 }
 
-enum status_code dma_update_resource(struct dma_resource *dma_resource,
-								struct dma_transfer_config *transfer_config)
+enum status_code dma_release(struct dma_resource *resource)
 {
-	Assert(dma_resource);
+	Assert(resource);
+	Assert(resource->channel_id != DMA_INVALID_CHANNEL);
 
 	/* Check if channel is busy */
-	if(dma_is_busy(dma_resource)) {
+	if(dma_is_busy(resource)) {
 		return STATUS_BUSY;
 	}
 
-	if (!(_dma_inst.allocated_channels & (1<<dma_resource->channel_id))) {
-		return STATUS_ERR_NOT_INITIALIZED;
-	}
-	
-	system_interrupt_enter_critical_section();
-	
-	/** Update configurations with channel */
-	_dma_set_config(dma_resource, transfer_config);
-	
-	system_interrupt_leave_critical_section();
-}
-
-enum status_code dma_release(struct dma_resource *dma_resource)
-{
-	Assert(dma_resource);
-
-	/* Check if channel is busy */
-	if(dma_is_busy(dma_resource)) {
-		return STATUS_BUSY;
-	}
-
-	if (!(_dma_inst.allocated_channels & (1<<dma_resource->channel_id))) {
+	if (!(_dma_inst.allocated_channels & (1<<resource->channel_id))) {
 		return STATUS_ERR_NOT_INITIALIZED;
 	}
 
-	dma_active_resource[dma_resource->channel_id] = NULL;
+	dma_active_resource[resource->channel_id] = NULL;
 
-	_dma_release_channel(dma_resource->channel_id);
+	_dma_release_channel(resource->channel_id);
 
 	return STATUS_OK;
 }
 
-enum status_code dma_transfer_job(struct dma_resource *dma_resource)
+enum status_code dma_transfer_job(struct dma_resource *resource,
+	struct dma_transfer_descriptor* transfer_descriptor)
 {
-	Assert(dma_resource);
+	Assert(resource);
+	Assert(resource->channel_id != DMA_INVALID_CHANNEL);
 	
-	if (dma_resource->job_status == ERR_BUSY) {
+	if (resource->job_status == ERR_BUSY) {
 		return ERR_BUSY;  // waiting for channel ready
 	}
 	
-	if (descriptor_section[dma_resource->channel_id].block_count == 0) {
+	if (descriptor_section[resource->channel_id].block_count == 0) {
 		return ERR_INVALID_ARG;
 	}
 	
-	DMAC->CHID.reg = DMAC_CHID_ID(dma_resource->channel_id);
+	DMAC->CHID.reg = DMAC_CHID_ID(resource->channel_id);
 	DMAC->CHCTRLA.reg = DMAC_CHCTRLA_ENABLE;
 
 	
 	//TODO: ENABLE Channel suspend / Transfer complete / Transfer error interrupt
 
-	dma_resource->job_status = ERR_BUSY;
+	resource->job_status = ERR_BUSY;
 
-	dma_active_resource[dma_resource->channel_id] = *dma_resource;
+	//DMA detail descriptors are handled by apps
+	descriptor_section[resource->channel_id] = transfer_descriptor;
+
+	dma_active_resource[resource->channel_id] = *resource;
 	
 	return STATUS_OK;
 }
 
-void dma_abort_job(struct dma_resource *dma_resource)
+void dma_abort_job(struct dma_resource *resource)
 {
-	Assert(dma_resource);
+	Assert(resource);
+	Assert(resource->channel_id != DMA_INVALID_CHANNEL);
 
 	//TODO: Disable Channel suspend / Transfer complete / Transfer error interrupt
 	
 	DMAC->CHID.reg = DMAC_CHID_ID(dma_resource->channel_id);
 	DMAC->CHCTRLA.reg = DMAC_CHCTRLA_ENABLE;
 	
-	dma_resource->job_status = ERR_FLUSHED;
+	resource->job_status = ERR_FLUSHED;
 }
 
-enum status_code dma_get_job_status(struct dma_resource *dma_resource)
+enum status_code dma_get_job_status(struct dma_resource *resource)
 {
-	Assert(dma_resource);
+	Assert(resource);
 	
-	return dma_resource->job_status;
+	return resource->job_status;
 }
 
 bool dma_is_busy(struct dma_resource *resource)
@@ -370,30 +340,30 @@ bool dma_is_busy(struct dma_resource *resource)
 	return (resource->job_status == ERR_BUSY) ;
 }
 
-void dma_enable_callback(struct dma_resource *dma_resource, enum dma_callback_type type)
+void dma_enable_callback(struct dma_resource *resource, enum dma_callback_type type)
 {
-	Assert(dma_resource);
+	Assert(resource);
 	
-	dma_resource->callback_enable |= 1<<type;
+	resource->callback_enable |= 1<<type;
 }
 
-void dma_disable_callback(struct dma_resource *dma_resource, enum dma_callback_type type)
+void dma_disable_callback(struct dma_resource *resource, enum dma_callback_type type)
 {
-	Assert(dma_resource);
+	Assert(resource);
 	
-	dma_resource->callback_enable &= ~(1<<type);
+	resource->callback_enable &= ~(1<<type);
 }
 
-void dma_register_callback(struct dma_resource *dma_resource, dma_callback_t callback, enum dma_callback_type type)
+void dma_register_callback(struct dma_resource *resource, dma_callback_t callback, enum dma_callback_type type)
 {
-	Assert(dma_resource);
+	Assert(resource);
 	
-	dma_resource->callback[type] = callback;
+	resource->callback[type] = callback;
 }
 
-void dma_unregister_callback(struct dma_resource *dma_resource, enum dma_callback_type type)
+void dma_unregister_callback(struct dma_resource *resource, enum dma_callback_type type)
 {
-	Assert(dma_resource);
+	Assert(resource);
 
-	dma_resource->callback[type] = NULL;
+	resource->callback[type] = NULL;
 }
