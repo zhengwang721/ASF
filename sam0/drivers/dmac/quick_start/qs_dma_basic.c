@@ -97,7 +97,7 @@ static void configure_dma_resource(struct dma_resource *resource)
 //! [setup_3]
 
 //! [setup_4]
-	events_allocate(desc, &config);
+	dma_allocate(resource, &config);
 //! [setup_4]
 }
 
@@ -111,13 +111,13 @@ static void configure_dma_resource1(struct dma_resource *resource)
 	dma_transfer_descriptor[3].destination_address = (uint32_t)(&I2S->DATA[0]);
 	dma_transfer_descriptor[3].next_descriptor_address = 0;
 	
-	dma_transfer_descriptor[2].block_count = sizeof(wave_file1);
-	dma_transfer_descriptor[2].source_address = (uint32_t)wave_file1;
+	dma_transfer_descriptor[2].block_count = sizeof(wave_file3);
+	dma_transfer_descriptor[2].source_address = (uint32_t)wave_file3;
 	dma_transfer_descriptor[2].destination_address = (uint32_t)(&I2S->DATA[0]);
 	dma_transfer_descriptor[2].next_descriptor_address = &dma_transfer_descriptor[3];
 	
-	dma_transfer_descriptor[1].block_count = sizeof(wave_file1);
-	dma_transfer_descriptor[1].source_address = (uint32_t)wave_file1;
+	dma_transfer_descriptor[1].block_count = sizeof(wave_file2);
+	dma_transfer_descriptor[1].source_address = (uint32_t)wave_file2;
 	dma_transfer_descriptor[1].destination_address = (uint32_t)(&I2S->DATA[0]);
 	dma_transfer_descriptor[1].next_descriptor_address = &dma_transfer_descriptor[2];
 	

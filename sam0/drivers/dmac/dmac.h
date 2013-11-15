@@ -48,7 +48,7 @@
 /** DMA input actions */
 enum dma_event_input_action {
 	/** No action */
-	DMA_EVENT_INPUT_NOACT,
+	DMA_EVENT_INPUT_NOACT = 0,
 	/** Transfer and periodic transfer trigger */
 	DMA_EVENT_INPUT_TRIG,
 	/** Conditional transfer trigger*/
@@ -93,6 +93,20 @@ enum dma_transfer_trigger {
 	DMA_TRIGGER_EVENT,
 };
 
+/**
+ * Callback types for DMA callback driver
+ */
+enum dma_callback_type {
+	/** Callback for transfer complete */
+	DMA_CALLBACK_TRANSFER_DONE,
+	/** Callback for any of transfer error */
+	DMA_CALLBACK_TRANSFER_ERROR,
+	/** Callback for channel suspend */
+	DMA_CALLBACK_CHANNEL_SUSPEND,
+	/** Max callback num */
+	DMA_CALLBACK_MAX,
+};
+
 /** Configurations for DMA events */
 struct dma_events_config {
 	/** Event input actions */
@@ -103,25 +117,13 @@ struct dma_events_config {
 	enum dma_event_output_selection output_action;
 };
 
-/** DMA generic configurations for all channels */
-struct dma_control_config {
-	/** Descriptor base address */
-	uint32_t descriptor_base_addr;
-	/** Descriptor total size */
-	uint32_t descriptor_total_size;
-	/** Write back memory base address */
-	uint32_t write_back_memory_base_addr;
-	/** Write back memory total size */
-	uint32_t write_back_memory_total_size;	
-};
-
 /** DMA transfer descriptor */
 struct dma_transfer_descriptor {
 	/** Block transfer control */
 	uint16_t block_transfer_control;
 	/** Transfer transfer count. Count value is 
 	decremented by one after each beat data transfer */
-	uint16_t block_count;
+	uint16_t block_transfer_count;
 	/** Transfer source address */
 	uint32_t source_address;
 	/** Transfer destination address */
@@ -134,12 +136,12 @@ struct dma_transfer_descriptor {
 struct dma_transfer_config {
 	/** DMA transfer trigger selection */
 	enum dma_transfer_trigger transfer_trigger;
+	/**DMA peripheral trigger index*/
+	uint8_t dma_peripheral_trigger_index;
 	/** DMA transfer priority */
 	uint8_t priority;
-	/** Is CRC enabled for the transfer */
-	bool crc;
 	/** Transfer beat size */
-	enum dma_beat_size beat_size;
+	enum dma_beat_size beat_size;  //?
 	/** DMA events configurations */
 	struct dma_events_config event_config;
 	/** DMA transfer descriptor */
@@ -151,27 +153,27 @@ struct dma_resource {
 	/** Allocated Channel ID*/
 	uint8_t channel_id;
 	/** Callback function for DMA transfer job */
-	dma_callback_t callback;
+	dma_callback_t callback[DMA_CALLBACK_MAX];
 	/** Bit mask for enabled callbacks */
 	uint8_t callback_enable;
 	/** Status of the last job */
 	volatile enum status_code job_status;
 };
 
-typedef void (*dma_callback_t)(void);
+typedef void (*dma_callback_t)(struct dma_resource *resource);
 
 void dma_get_config_defaults(struct dma_transfer_config *transfer_config);
 enum status_code dma_allocate(struct dma_resource *dma_resource,
 								struct dma_transfer_config *transfer_config);
 enum status_code dma_update_resource(struct dma_resource *dma_resource,
-								struct dma_transfer_config *transfer_config)
+								struct dma_transfer_config *transfer_config);
 enum status_code dma_transfer_job(struct dma_resource *dma_resource);
 enum status_code dma_abort_job(struct dma_resource *dma_resource);
 enum status_code dma_get_status(struct dma_resource *dma_resource);
 enum status_code dma_deallocate(struct dma_resource *dma_resource);
-void dma_enable_callback(struct dma_resource *dma_resource);
-void dma_disable_callback(struct dma_resource *dma_resource);
-void dma_register_callback(struct dma_resource *dma_resource, dma_callback_t callback);
-void dma_unregister_callback(struct dma_resource *dma_resource, dma_callback_t callback);
+void dma_enable_callback(struct dma_resource *dma_resource, enum dma_callback_type type);
+void dma_disable_callback(struct dma_resource *dma_resource, enum dma_callback_type type);
+void dma_register_callback(struct dma_resource *dma_resource, dma_callback_t callback, enum dma_callback_type type);
+void dma_unregister_callback(struct dma_resource *dma_resource, enum dma_callback_type type);
 
 #endif /* DMA_H_INCLUDED */
