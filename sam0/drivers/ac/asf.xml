@@ -5,11 +5,12 @@
 		  interface for the configuration and management of the device's
 		  hardware analog comparators.
 		</info>
-		<info type="keyword" value="technology">
-			<keyword value="Analog Conversion"/>
-		</info>
 
 		<module caption="AC - Analog Comparator (Polled APIs)" id="sam0.drivers.ac#polled" type="driver">
+			<info type="keyword" value="technology">
+				<keyword value="Analog Conversion"/>
+			</info>
+
 			<build type="include-path" value="." />
 
 			<build name="AC_CALLBACK_MODE" type="define" value="false" />
@@ -31,6 +32,10 @@
 		</module>
 
 		<module caption="AC - Analog Comparator (Callback APIs)" id="sam0.drivers.ac#callback" type="driver">
+			<info type="keyword" value="technology">
+				<keyword value="Analog Conversion"/>
+			</info>
+
 			<info type="appnote" value="AT03242"/>
 			<info type="keyword" value="pdf">
 				<keyword value="AC"/>

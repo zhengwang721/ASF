@@ -5,11 +5,12 @@
 			interface for the configuration and management of the SERCOM module
 			in SPI mode.
 		</info>
-		<info type="keyword" value="technology">
-			<keyword value="Communication"/>
-		</info>
 
 		<module type="driver" id="sam0.drivers.sercom.spi#polled" caption="SERCOM SPI - Serial Peripheral Interface (Polled APIs)">
+			<info type="keyword" value="technology">
+				<keyword value="Communication"/>
+			</info>
+
 			<build type="c-source" value="spi.c"/>
 			<build type="header-file" subtype="api" value="spi.h"/>
 			<build type="header-file" value="quick_start_slave/qs_spi_slave_basic.h"/>
@@ -33,6 +34,10 @@
 		</module>
 
 		<module type="driver" id="sam0.drivers.sercom.spi#callback" caption="SERCOM SPI - Serial Peripheral Interface (Callback APIs)">
+			<info type="keyword" value="technology">
+				<keyword value="Communication"/>
+			</info>
+
 			<info type="appnote" value="AT03255"/>
 			<info type="keyword" value="pdf">
 				<keyword value="SPI"/>

@@ -6,6 +6,7 @@
 			the device, including the enabling, disabling and entering, leaving
 			of critical sections.
 		</info>
+
 		<info type="keyword" value="technology">
 			<keyword value="Interrupt" />
 		</info>

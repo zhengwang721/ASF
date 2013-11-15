@@ -5,11 +5,12 @@
 		  interface for the configuration and management of the device's
 		  hardware timers.
 		</info>
-		<info type="keyword" value="technology">
-			<keyword value="Timers" />
-		</info>
 
 		<module caption="TC - Timer Counter (Polled APIs)" id="sam0.drivers.tc#polled" type="driver">
+			<info type="keyword" value="technology">
+				<keyword value="Timers" />
+			</info>
+
 			<build type="include-path" value="." />
 
 			<build name="TC_ASYNC" type="define" value="false" />
@@ -33,6 +34,10 @@
 		</module>
 
 		<module caption="TC - Timer Counter (Callback APIs)" id="sam0.drivers.tc#callback" type="driver">
+			<info type="keyword" value="technology">
+				<keyword value="Timers" />
+			</info>
+
 			<info type="appnote" value="AT03263"/>
 			<info type="keyword" value="pdf">
 				<keyword value="I/O"/>

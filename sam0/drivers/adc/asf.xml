@@ -6,12 +6,12 @@
 			including the channel input selections, windowd detections, channel
 			conversions and event generation.
 		</info>
-		<info type="keyword" value="technology">
-			<keyword value="Analog Conversion"/>
-		</info>
-
 
 		<module type="driver" id="sam0.drivers.adc#polled" caption="ADC - Analog-to-Digital Converter (Polled APIs)">
+			<info type="keyword" value="technology">
+				<keyword value="Analog Conversion"/>
+			</info>
+
 			<build type="c-source" value="adc.c"/>
 			<build type="header-file" subtype="api" value="adc.h"/>
 			<build type="include-path" value="."/>
@@ -30,7 +30,12 @@
 
 			<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 		</module>
+
 		<module type="driver" id="sam0.drivers.adc#callback" caption="ADC - Analog-to-Digital Converter (Callback APIs)">
+			<info type="keyword" value="technology">
+				<keyword value="Analog Conversion"/>
+			</info>
+
 			<info type="appnote" value="AT03243"/>
 			<info type="keyword" value="pdf">
 				<keyword value="ADC"/>

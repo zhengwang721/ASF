@@ -5,13 +5,14 @@
 			the configuration and management of the Watchdog module, including
 			timeout period, window period and early warning indications.
 		</info>
-		<info type="keyword" value="technology">
-			<keyword value="Timers" />
-			<keyword value="Clocks" />
-			<keyword value="CPU" />
-		</info>
 
 		<module type="driver" id="sam0.drivers.wdt#polled" caption="WDT - Watchdog Timer (Polled APIs)">
+			<info type="keyword" value="technology">
+				<keyword value="Timers" />
+				<keyword value="Clocks" />
+				<keyword value="CPU" />
+			</info>
+
 			<build type="include-path" value="."/>
 
 			<build type="c-source" value="wdt.c"/>
@@ -33,6 +34,12 @@
 		</module>
 
 		<module type="driver" id="sam0.drivers.wdt#callback" caption="WDT - Watchdog Timer (Callback APIs)">
+			<info type="keyword" value="technology">
+				<keyword value="Timers" />
+				<keyword value="Clocks" />
+				<keyword value="CPU" />
+			</info>
+
 			<info type="appnote" value="AT03264"/>
 			<info type="keyword" value="pdf">
 				<keyword value="Timers"/>

@@ -6,6 +6,7 @@
 			and from the various non-volatile memories of the device, including
 			executable FLASH memory and user configuration pages.
 		</info>
+
 		<info type="keyword" value="technology">
 			<keyword value="Memory" />
 		</info>

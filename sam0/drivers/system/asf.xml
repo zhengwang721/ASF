@@ -5,6 +5,7 @@
 			interface for the configuration and management of the core device
 			functionality required for a functional system.
 		</info>
+
 		<info type="keyword" value="technology">
 			<keyword value="I/O" />
 			<keyword value="CPU" />

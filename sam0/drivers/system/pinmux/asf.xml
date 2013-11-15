@@ -5,6 +5,7 @@
 			for the configuration and routing of physical device I/O pins to
 			peripherals within the device.
 		</info>
+
 		<info type="keyword" value="technology">
 			<keyword value="I/O"/>
 		</info>

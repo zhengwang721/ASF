@@ -6,6 +6,7 @@
 			the device, including the enabling, disabling and routing to and
 			from various modules within the device.
 		</info>
+
 		<info type="keyword" value="technology">
 			<keyword value="Peripheral Event System"/>
 		</info>

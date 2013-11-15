@@ -5,6 +5,7 @@
 			interface for the configuration and management of the various clocks
 			in the device, including the bus and generic peripheral clocks.
 		</info>
+
 		<info type="keyword" value="technology">
 			<keyword value="Clocks" />
 		</info>

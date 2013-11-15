@@ -4,11 +4,12 @@
 			Driver for the SAM D20 RTC. Provides a unified interface
 			for the configuration and management of the RTC module.
 		</info>
-		<info type="keyword" value="technology">
-			<keyword value="Timers"/>
-		</info>
 
 		<module type="driver" id="sam0.drivers.rtc#count_polled" caption="RTC - Real Time Counter in Count Mode (Polled APIs)">
+			<info type="keyword" value="technology">
+				<keyword value="Timers"/>
+			</info>
+
 			<build type="include-path" value="." />
 			<build type="header-file" subtype="api" value="rtc_count.h"/>
 			<build type="c-source" value="rtc_count.c"/>
@@ -29,6 +30,10 @@
 		</module>
 
 		<module type="driver" id="sam0.drivers.rtc#count_callback" caption="RTC - Real Time Counter in Count Mode (Callback APIs)">
+			<info type="keyword" value="technology">
+				<keyword value="Timers"/>
+			</info>
+
 			<info type="appnote" value="AT03249"/>
 			<info type="keyword" value="pdf">
 				<keyword value="RTC"/>

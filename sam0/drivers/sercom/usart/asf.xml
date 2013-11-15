@@ -5,11 +5,12 @@
 			interface for the configuration and management of the SERCOM module
 			in USART mode.
 		</info>
-		<info type="keyword" value="technology">
-			<keyword value="Communication"/>
-		</info>
 
 		<module type="driver" id="sam0.drivers.sercom.usart#polled" caption="SERCOM USART - Serial Communications (Polled APIs)">
+			<info type="keyword" value="technology">
+				<keyword value="Communication"/>
+			</info>
+
 			<build type="header-file" value="quick_start/qs_usart_basic_use.h"/>
 
 			<build type="include-path" value="." />
@@ -33,6 +34,10 @@
 		</module>
 
 		<module type="driver" id="sam0.drivers.sercom.usart#callback" caption="SERCOM USART - Serial Communications (Callback APIs)">
+			<info type="keyword" value="technology">
+				<keyword value="Communication"/>
+			</info>
+
 			<info type="appnote" value="AT03256"/>
 			<info type="keyword" value="pdf">
 				<keyword value="USART"/>
