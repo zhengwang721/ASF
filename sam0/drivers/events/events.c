@@ -129,8 +129,10 @@ static void _events_release_channel(uint8_t channel)
 
 
 /* This function is called by the system_init function, but should not be a public API call */
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wmissing-prototypes"
+#if defined(__GNUC__)
+#  pragma GCC diagnostic push
+#  pragma GCC diagnostic ignored "-Wmissing-prototypes"
+#endif
 void _system_events_init(void)
 {
 	/* Enable EVSYS register interface */
@@ -142,7 +144,9 @@ void _system_events_init(void)
 	while (EVSYS->CTRL.reg & EVSYS_CTRL_SWRST) {
 	}
 }
-#pragma GCC diagnostic pop
+#if defined(__GNUC__)
+#  pragma GCC diagnostic pop
+#endif
 
 void events_get_config_defaults(struct events_config *config)
 {
