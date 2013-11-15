@@ -19,7 +19,8 @@
 		</info>
 
 		<info type="description" value="pdf">
-			This document describes how to use the Clock and Generic Clock on the SAM D20, both the ASF driver and the peripheral itself.
+			This document describes how to use the Clock and Generic Clock on
+			the SAM D20, both the ASF driver and the peripheral itself.
 		</info>
 
 		<device-support value="samd20"/>

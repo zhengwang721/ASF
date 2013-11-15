@@ -20,7 +20,8 @@
 		</info>
 
 		<info type="description" value="pdf">
-			This document describes how to use the core system modules on the SAM D20, both the ASF driver and the peripheral itself.
+			This document describes how to use the core system modules on the
+			SAM D20, both the ASF driver and the peripheral itself.
 		</info>
 
 		<build type="include-path" value="."/>

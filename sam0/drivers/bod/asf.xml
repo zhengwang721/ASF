@@ -16,7 +16,8 @@
 		</info>
 
 		<info type="description" value="pdf">
-			This application note describes how to use the ASF driver for interfacing the Brown Out Detector(s) on the SAM D20.
+			This application note describes how to use the ASF driver for
+			interfacing the Brown Out Detector(s) on the SAM D20.
 		</info>
 
 		<build type="include-path" value="."/>

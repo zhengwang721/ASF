@@ -1,13 +1,15 @@
 <asf xmlversion="1.0">
 	<select-by-config id="sam0.drivers.sercom.spi" name="config.sam0.drivers.sercom.spi" caption="SERCOM SPI - Serial Peripheral Interface" default="callback">
 		<info type="description" value="summary">
-			Driver for the SAM D20 SERCOM SPI module. Provides a unified interface for the configuration and management of the SERCOM module in SPI mode.
+			Driver for the SAM D20 SERCOM SPI module. Provides a unified
+			interface for the configuration and management of the SERCOM module
+			in SPI mode.
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="Communication"/>
 		</info>
 
-		<module type="driver" id="sam0.drivers.sercom.spi#polled" caption="SERCOM SPI - Serial Peripheral Interface (Polled Mode)">
+		<module type="driver" id="sam0.drivers.sercom.spi#polled" caption="SERCOM SPI - Serial Peripheral Interface (Polled APIs)">
 			<build type="c-source" value="spi.c"/>
 			<build type="header-file" subtype="api" value="spi.h"/>
 			<build type="header-file" value="quick_start_slave/qs_spi_slave_basic.h"/>
@@ -30,7 +32,7 @@
 			<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 		</module>
 
-		<module type="driver" id="sam0.drivers.sercom.spi#callback" caption="SERCOM SPI - Serial Peripheral Interface (Callback Mode)">
+		<module type="driver" id="sam0.drivers.sercom.spi#callback" caption="SERCOM SPI - Serial Peripheral Interface (Callback APIs)">
 			<info type="appnote" value="AT03255"/>
 			<info type="keyword" value="pdf">
 				<keyword value="SPI"/>
@@ -41,9 +43,11 @@
 			</info>
 
 			<info type="description" value="pdf">
-				This document describes how to use the Serial Peripheral Interface in master mode on the SAM D20, both the ASF driver and the peripheral itself.
+				This document describes how to use the Serial Peripheral
+				Interface in master mode on the SAM D20, both the ASF driver
+				and the peripheral itself.
 			</info>
-			
+
 			<build type="c-source" value="spi.c"/>
 			<build type="c-source" value="spi_interrupt.c"/>
 			<build type="header-file" subtype="api" value="spi.h"/>
