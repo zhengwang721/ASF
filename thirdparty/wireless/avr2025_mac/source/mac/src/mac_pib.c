@@ -201,7 +201,7 @@ static void recalc_macMaxFrameTotalWaitTime(void);
  *
  * @param m Pointer to the request structure
  */
-void mlme_get_request(arch_data_t *m)
+void mlme_get_request(uint8_t *m)
 {
 	/* Use the mlme get request buffer for mlme get confirmation */
 	mlme_get_conf_t *mgc = (mlme_get_conf_t *)BMM_BUFFER_POINTER(
@@ -995,7 +995,7 @@ retval_t mlme_get(uint8_t attribute, pib_value_t *attribute_value)
  *
  * @param m Pointer to the request structure
  */
-void mlme_set_request(arch_data_t *m)
+void mlme_set_request(uint8_t *m)
 {
 	mlme_set_req_t *msr
 		= (mlme_set_req_t *)BMM_BUFFER_POINTER((buffer_t *)m);
