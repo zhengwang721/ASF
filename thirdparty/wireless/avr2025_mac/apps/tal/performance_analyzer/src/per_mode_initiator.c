@@ -951,7 +951,7 @@ static void set_parameter_on_transmitter_node(retval_t status)
      * the channel changed from 26 to other channel
      */
 #ifdef EXT_RF_FRONT_END_CTRL
-                arch_data_t chn_before_set;
+                uint8_t chn_before_set;
                 tal_pib_get(phyCurrentChannel, &chn_before_set);
 #endif
                 
@@ -1967,7 +1967,7 @@ static void recover_all_settings(void)
 	(defined CW_SUPPORTED)))
 void pulse_cw_transmission(void)
 { 
-	arch_data_t channel;
+	uint8_t channel;
 	op_mode = CONTINUOUS_TX_MODE;
 	tal_pib_get(phyCurrentChannel, &channel);
 
@@ -2193,7 +2193,7 @@ void per_mode_initiator_ed_end_cb(uint8_t energy_level)
 	uint8_t ch_cnt;
 	pib_value_t pib_value_temp;
 	static uint8_t p_in_index;
-    arch_data_t channel;
+    uint8_t channel;
 
 #if ((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B))
 	uint8_t page;
@@ -2456,7 +2456,7 @@ void perf_get_req(uint8_t param_type_data)
 	switch (param_type_data) { /* parameter type */
 	case PARAM_CHANNEL: /* Channel Get request */
 	{		
-		arch_data_t current_channel = 0;	
+		uint8_t current_channel = 0;	
 		tal_pib_get(phyCurrentChannel, &current_channel);
 		/* Send Get confirmation with status SUCCESS */
 		param_value.param_value_8bit = (uint8_t)current_channel;
@@ -2467,7 +2467,7 @@ void perf_get_req(uint8_t param_type_data)
 
 	case PARAM_CHANNEL_PAGE: /* Channel Page Get request */
 	{
-        arch_data_t ch_page = 0;
+        uint8_t ch_page = 0;
 		tal_pib_get(phyCurrentPage, &ch_page);
 
 		/* Send Get confirmation with status SUCCESS */
@@ -2494,7 +2494,7 @@ void perf_get_req(uint8_t param_type_data)
 #endif /* End of (TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B)  */
 	case PARAM_TX_POWER_DBM: /* TX power in dBm value Set request  */
 	{
-		arch_data_t tx_pwr = 0;	
+		uint8_t tx_pwr = 0;	
 		int8_t tx_pwr_dbm = 0;
 		tal_pib_get(phyTransmitPower, &tx_pwr);
 		tx_pwr_dbm = CONV_phyTransmitPower_TO_DBM(tx_pwr);
@@ -2685,7 +2685,7 @@ static void set_channel(uint8_t channel)
 	param_value_t param_value;
 	pib_value_t pib_value;
 
-    tal_pib_get(phyChannelsSupported, (arch_data_t *)&supported_channels);
+    tal_pib_get(phyChannelsSupported, (uint8_t *)&supported_channels);
 
 	/* Check the channel is a valid one and is a supported channel */
 	if ((channel < BIT_COUNT) &&
@@ -2698,7 +2698,7 @@ static void set_channel(uint8_t channel)
              * the channel changed from 26 to other channel
              */
 #ifdef EXT_RF_FRONT_END_CTRL
-            arch_data_t chn_before_set;
+            uint8_t chn_before_set;
             tal_pib_get(phyCurrentChannel, &chn_before_set);
 #endif          
 #if ((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B))
@@ -3088,7 +3088,7 @@ void start_ed_scan(uint8_t ed_scan_duration, uint32_t channel_sel_mask)
 		usr_ed_scan_start_confirm(MAC_SUCCESS, NUL_VAL,
 				reverse_float(scan_time));
 	}
-    arch_data_t temp_var;
+    uint8_t temp_var;
 	tal_pib_get(phyCurrentChannel, &temp_var);
 	channel_before_scan = (uint8_t)temp_var;
 

@@ -59,7 +59,7 @@
 
 /* === GLOBALS============================================================== */
 #ifdef EXT_RF_FRONT_END_CTRL
-static arch_data_t prev_non_26chn_tx_power;
+static uint8_t prev_non_26chn_tx_power;
 #endif
 /* === IMPLEMENTATION======================================================= */
 

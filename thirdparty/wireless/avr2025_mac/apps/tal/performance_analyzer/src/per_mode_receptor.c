@@ -642,7 +642,7 @@ static void set_paramter_on_recptor_node(app_payload_t *msg)
 	case CHANNEL: /* Parameter = channel */
 	{
 #ifdef EXT_RF_FRONT_END_CTRL
-                arch_data_t chn_before_set;
+                uint8_t chn_before_set;
                 tal_pib_get(phyCurrentChannel, &chn_before_set);
 #endif      
 		param_val = msg->payload.set_parm_req_data.param_value;
