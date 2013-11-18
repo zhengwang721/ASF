@@ -418,6 +418,8 @@
 #  define NUMBER_OF_COMPARE_CAPTURE_CHANNELS TC3_CC8_NUM
    /* Same number for 8-, 16- and 32-bit TC and all TC instances */
 #endif
+/** TC Instance MAX ID Number */
+#define TC_INST_MAX_ID  7
 #endif
 
 #if TC_ASYNC == true
