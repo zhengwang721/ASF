@@ -51,8 +51,8 @@
  * It supports multiple instances, and the instances can be connected to either
  * common or individual SPI interfaces.
  *
- * For a list of the supported SerialFlash types, see
- * \ref at25dfx_type "this enum".
+ * For a list of the supported SerialFlash types, see the
+ * \ref at25dfx_type "supported types".
  *
  * The following peripherals are used by this module:
  * - \ref SERCOM SPI (data transfer)
@@ -85,13 +85,19 @@
  *
  * \section asfdoc_common2_at25dfx_module_overview Module Overview
  *
- * This driver is built upon the APIs of the SERCOM SPI and PORT drivers.
- * The API is blocking, meaning the functions do not return until the requested
- * operation is done. It is also thread-safe since it uses the SPI instance lock
- * mechanism to ensure that no two operations can interfere with each other.
+ * This driver enables the user to do basic operations on a SerialFlash device,
+ * such as checking its presence, reading from and writing to it, putting it to
+ * sleep and waking it back up when needed.
  *
  * Functionality for permanently locking and securing the SerialFlash is not
- * implemented in this driver.
+ * implemented in this driver. Only basic security is implemented, i.e.,
+ * sector protection to prevent accidental erase and write.
+ *
+ * Further, this driver is built upon the APIs of the SERCOM SPI and PORT
+ * drivers. The API is blocking, meaning the functions do not return until the
+ * requested operation is done. It is also thread-safe since it uses the SPI
+ * instance lock mechanism to ensure that no two operations can interfere with
+ * each other.
  *
  *
  * \section asfdoc_common2_at25dfx_special_considerations Special Considerations
