@@ -419,6 +419,9 @@
    /* Same number for 8-, 16- and 32-bit TC and all TC instances */
 #endif
 /** TC Instance MAX ID Number */
+#if SAMD20E || SAMD21G || SAMD21E
+#define TC_INST_MAX_ID  5
+#else 
 #define TC_INST_MAX_ID  7
 #endif
 
