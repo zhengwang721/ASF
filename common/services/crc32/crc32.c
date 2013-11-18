@@ -51,8 +51,8 @@
 //! Convenience macro for inverting the CRC.
 #define COMPLEMENT_CRC(c)  ((c) ^ 0xffffffffUL)
 
-//! Convenience macro for 32-bit word size (4 bytes).
-#define WORD_SIZE  (sizeof(uint32_t))
+//! Convenience macro for size of a word (integer).
+#define WORD_SIZE  (sizeof(int))
 
 //! Bitmask for word-aligning an address.
 #define WORD_ALIGNMENT_MASK  ~((uintptr_t)WORD_SIZE - 1)
@@ -67,8 +67,10 @@
  * \param bytes Number of bytes to calculate for.
  *
  * \return New CRC value.
+ *
+ * \attention This implementation assumes a little-endian architecture.
  */
-static inline crc32_t _crc32_recalculate_bytes_helper(uint_fast8_t data,
+static inline crc32_t _crc32_recalculate_bytes_helper(int data,
 		crc32_t crc, uint_fast8_t bytes)
 {
 	uint_fast8_t bit;
@@ -106,17 +108,19 @@ static inline crc32_t _crc32_recalculate_bytes_helper(uint_fast8_t data,
  *
  * \note To calculate the CRC of multiple blocks, use \ref crc32_calculate()
  * first, then this function for the following blocks.
+ *
+ * \attention This implementation assumes a little-endian architecture.
  */
 enum status_code crc32_recalculate(const void *data, size_t length, crc32_t *crc)
 {
-	const uint32_t *word_ptr =
-			(uint32_t *)((uintptr_t)data & WORD_ALIGNMENT_MASK);
+	const int *word_ptr =
+			(int *)((uintptr_t)data & WORD_ALIGNMENT_MASK);
 	size_t temp_length;
 	uint32_t temp_crc = COMPLEMENT_CRC(*crc);
-	uint32_t word;
+	int word;
 
 	// Calculate for initial bytes to get word-aligned
-	if (length < sizeof(uint32_t)) {
+	if (length < WORD_SIZE) {
 		temp_length = length;
 	} else {
 		temp_length = ~WORD_ALIGNMENT_MASK & (WORD_SIZE - (uintptr_t)data);
