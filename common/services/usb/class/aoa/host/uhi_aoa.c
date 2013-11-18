@@ -91,7 +91,7 @@ void uhi_aoa_mode_enable_step2(usb_add_t, uhd_trans_status_t, uint16_t);
  */
 void uhi_aoa_mode_enable_step3(usb_add_t, uhd_trans_status_t, uint16_t);
 
-/*! \brief Function to enable the cAccessory Mode on Android Devices
+/*! \brief Function to enable the Accessory Mode on Android Devices
  *  - Called when the process of trying to start the device in Accessory Mode
  *    is finished.
  *  - Determines whether the process of starting in Accessory Mode was successful
@@ -164,7 +164,7 @@ uhc_enum_status_t uhi_aoa_install(uhc_device_t *dev)
 	if (uhi_aoa_dev.dev != NULL) {
 		return UHC_ENUM_SOFTWARE_LIMIT; /* Device already allocated */
 	}
-		
+
 	if ((dev->dev_desc.idVendor == le16_to_cpu(GOOGLE_VID)) &&
 			((dev->dev_desc.idProduct == le16_to_cpu(AOA_PID)) &&
 			(dev->dev_desc.idProduct ==
@@ -182,7 +182,7 @@ uhc_enum_status_t uhi_aoa_install(uhc_device_t *dev)
 	b_iface_supported = false;
 	uhi_aoa_dev.ep_in = 0;
 	uhi_aoa_dev.ep_out = 0;
-	
+
 	while(conf_desc_lgt) {
 		switch (ptr_iface->bDescriptorType) {
 		case USB_DT_INTERFACE:
@@ -193,56 +193,56 @@ uhc_enum_status_t uhi_aoa_install(uhc_device_t *dev)
 				b_iface_supported = true;
 			} else {
 				/* Stop allocation endpoint(s) */
-				b_iface_supported = false; 
+				b_iface_supported = false;
 			}
-			
+
 			break;
-		
+
 		case USB_DT_ENDPOINT:
 			/* Allocation of the endpoint */
 			if (!b_iface_supported) {
-				break; 
+				break;
 			}
-			
+
 			usb_ep_desc_t *ptr_ep = (usb_ep_desc_t *) ptr_iface;
 			if (!uhd_ep_alloc(dev->address, (usb_ep_desc_t*)ptr_iface)) {
 				/* Endpoint allocation fail */
 				return UHC_ENUM_HARDWARE_LIMIT;
 			}
-			
+
 			if (ptr_ep->bEndpointAddress & USB_EP_DIR_IN) {
 				uhi_aoa_dev.ep_in = ptr_ep->bEndpointAddress;
-			} else { 
+			} else {
 				uhi_aoa_dev.ep_out = ptr_ep->bEndpointAddress;
 			}
-			
+
 			if (uhi_aoa_dev.ep_out && uhi_aoa_dev.ep_in) {
 				/* All Endpoints allocated */
 				uhi_aoa_dev.dev = dev;
 				return UHC_ENUM_SUCCESS;
 			}
-			
+
 			break;
-			
+
 		default:
 			/* Ignore descriptor */
 			break;
 		}
 		Assert(conf_desc_lgt>=ptr_iface->bLength);
 		conf_desc_lgt = ptr_iface->bLength;
-		ptr_iface = 
+		ptr_iface =
 				(usb_iface_desc_t*)((uint8_t*)ptr_iface +
 				ptr_iface->bLength);
 	}
-	
+
 	if (uhi_aoa_dev.ep_in) {
 		uhd_ep_free(0,uhi_aoa_dev.ep_in);
 	}
-	
-	if (uhi_aoa_dev.ep_out) { 
+
+	if (uhi_aoa_dev.ep_out) {
 		uhd_ep_free(0,uhi_aoa_dev.ep_out);
 	}
-	
+
 	return UHC_ENUM_UNSUPPORTED; /* No interface supported */
 }
 
