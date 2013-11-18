@@ -46,13 +46,13 @@
 
 
 //! Polynomial for 32-bit CRC in IEEE 802.3.
-#define CRC32_POLYNOMIAL  0xEDB88320UL
+#define CRC32_POLYNOMIAL     0xEDB88320UL
 
 //! Convenience macro for inverting the CRC.
-#define COMPLEMENT_CRC(c)  ((c) ^ 0xffffffffUL)
+#define COMPLEMENT_CRC(c)    ((c) ^ 0xffffffffUL)
 
 //! Convenience macro for size of a word (integer).
-#define WORD_SIZE  (sizeof(int))
+#define WORD_SIZE            (sizeof(int))
 
 //! Bitmask for word-aligning an address.
 #define WORD_ALIGNMENT_MASK  ~((uintptr_t)WORD_SIZE - 1)
