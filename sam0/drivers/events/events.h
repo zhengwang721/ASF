@@ -178,6 +178,8 @@
  * chain is shown in
  * \ref asfdoc_samd20_events_module_sync_path_fig "the figure below".
  *
+ * Not all peripherals support Synchronous event paths; refer to the device datasheet.
+ *
  * \anchor asfdoc_samd20_events_module_sync_path_fig
  * \dot
  * digraph overview {
@@ -202,6 +204,8 @@
  * System module to avoid missed events, at the cost of a higher latency due to
  * the re-synchronization process. The re-synchronous event chain is shown in
  * \ref asfdoc_samd20_events_module_resync_path_fig "the figure below".
+ *
+ * Not all peripherals support Re-synchronous event paths; refer to the device datasheet.
  *
  * \anchor asfdoc_samd20_events_module_resync_path_fig
  * \dot
