@@ -106,6 +106,15 @@
  * Refer to the SerialFlash device's datasheet for details about which
  * operations are supported and what limitations apply to them.
  *
+ * The user should also be aware of some details of how flash memory generally
+ * functions:
+ * -# Erasing a flash memory block means that all bits in the block are reset to
+ * a high level (logical "1"), i.e., all bytes will read as \c 0xFF afterwards.
+ * -# Writing to a flash memory location will only set relevant bits to a low
+ * level (logical "0").
+ * -# It is possible to write several times to a flash memory block without
+ * erasing, but there may be limitations on the number of times it can be done.
+ *
  *
  * \section asfdoc_common2_at25dfx_extra_info Extra Information
  *
