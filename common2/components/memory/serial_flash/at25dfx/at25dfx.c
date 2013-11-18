@@ -3,7 +3,7 @@
  *
  * \brief AT25DFx SerialFlash driver implementation.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
