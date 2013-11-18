@@ -113,19 +113,24 @@
 int main(void)
 {
 	irq_initialize_vectors();
-	board_init();
 	sysclk_init();
 
-	sw_timer_init();
+	/* Initialize the board.
+	 * The board-specific conf_board.h file contains the configuration of
+	 * the board initialization.
+	 */
+	board_init();
 
-	// Enable interrupts
+	sw_timer_init();
+	tfa_init();
+	/* Enable interrupts */
 	cpu_irq_enable();
 
 	stdio_usb_init();
 
 	while (1) {
 		tal_task();
-	};
+	}
 }
 
 /**
@@ -136,69 +141,54 @@ int main(void)
  *
  * \param test Current test case.
  */
-static void run_tfa_init_test(const struct test_case *test)
-{
-	retval_t status;
-
-	status = tfa_init();
-	test_assert_true(test, status == MAC_SUCCESS,
-			"AVR2025_MAC - TFA Initialization Failed");
-}
 
 static void run_tfa_pib_set_test(const struct test_case *test)
 {
 	retval_t status;
 
-    int8_t temp;
+	int8_t temp;
 
-    temp = TFA_PIB_RX_SENS_DEF;
-    
+	temp = TFA_PIB_RX_SENS_DEF;
+
 	status = tfa_pib_set(TFA_PIB_RX_SENS, (void *)&temp);
 
 	test_assert_true(test, status == MAC_SUCCESS,
-					"AVR2025_MAC - TFA Setting RX Sensitivity failed");
+			"AVR2025_MAC - TFA Setting RX Sensitivity failed");
 }
-
 
 void main_cdc_set_dtr(bool b_enable)
 {
 	if (b_enable) {
-		DEFINE_TEST_CASE(tfa_init_test, NULL, run_tfa_init_test,
-				NULL, "AVR2025_MAC - TFA Initialization");
 		DEFINE_TEST_CASE(tfa_pib_set_test, NULL,
 				run_tfa_pib_set_test, NULL,
-				"AVR2025_MAC - TFA PIB Set RX Sensitivity (this covers all ASF drivers/services used)");
+				"AVR2025_MAC - TFA PIB Set RX Sensitivity ");
 
-		// Put test case addresses in an array.
+		/* Put test case addresses in an array. */
 		DEFINE_TEST_ARRAY(tfa_tests) = {
-			&tfa_init_test,
-			&tfa_pib_set_test};
+			&tfa_pib_set_test
+		};
 
-		// Define the test suite.
+		/* Define the test suite. */
 		DEFINE_TEST_SUITE(tfa_suite, tfa_tests,
 				"AVR2025_MAC - TFA unit test suite");
 
-		// Run all tests in the test suite.
+		/* Run all tests in the test suite. */
 		test_suite_run(&tfa_suite);
 	} else {
-
 	}
 }
 
 #if (MAC_SCAN_ED_REQUEST_CONFIRM == 1) || defined(__DOXYGEN__)
 void tal_ed_end_cb(uint8_t energy_level)
 {
-	
 }
-#endif /* (MAC_SCAN_ED_REQUEST_CONFIRM == 1) */
 
+#endif /* (MAC_SCAN_ED_REQUEST_CONFIRM == 1) */
 
 void tal_rx_frame_cb(frame_info_t *rx_frame)
 {
-	
 }
 
 void tal_tx_frame_done_cb(retval_t status, frame_info_t *frame)
 {
-	
 }

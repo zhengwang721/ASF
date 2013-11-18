@@ -88,13 +88,7 @@
  * -# Connect the UART port of the evaluation board to the computer and open
  * it in a terminal.
  *    - Settings: 115200 bauds, 8 bits, 1 stop bit, no parity, no flow control.
- * -# Download the program into the evaluation board and run it. Please refer to
- *    <a href="http://www.atmel.com/dyn/resources/prod_documents/doc6224.pdf">
- *    SAM-BA User Guide</a>, the
- *    <a href="http://www.atmel.com/dyn/resources/prod_documents/doc6310.pdf">
- *    GNU-Based Software Development</a> application note or the
- *    <a href="ftp://ftp.iar.se/WWWfiles/arm/Guides/EWARM_UserGuide.ENU.pdf">
- *    IAR EWARM User Guide</a>, depending on the solutions that users choose.
+ * -# Download the program into the evaluation board and run it.
  * -# Upon startup, the application will output the following line on the UART:
  *    \code
  *     -- TC capture waveform example  xxx --
@@ -216,7 +210,7 @@ static void tc_waveform_initialize(void)
 			| TC_CMR_ACPA_SET /* RA Compare Effect: set */
 			| TC_CMR_ACPC_CLEAR /* RC Compare Effect: clear */
 			| TC_CMR_CPCTRG /* UP mode with automatic trigger on RC Compare */
-			);
+	);
 
 	/* Configure waveform frequency and duty cycle. */
 	rc = (sysclk_get_peripheral_bus_hz(TC) /
@@ -248,7 +242,7 @@ static void tc_capture_initialize(void)
 			| TC_CMR_LDRB_FALLING /* RB Loading: falling edge of TIOA */
 			| TC_CMR_ABETRG /* External Trigger: TIOA */
 			| TC_CMR_ETRGEDG_FALLING /* External Trigger Edge: Falling edge */
-			);
+	);
 }
 
 /**
@@ -307,14 +301,17 @@ int main(void)
 
 	/* Configure PIO Pins for TC */
 	ioport_set_pin_mode(PIN_TC_WAVEFORM, PIN_TC_WAVEFORM_MUX);
-	ioport_disable_pin(PIN_TC_WAVEFORM); // Disable IO (but enable peripheral mode)
+	/* Disable IO to enable peripheral mode) */
+	ioport_disable_pin(PIN_TC_WAVEFORM);
 	ioport_set_pin_mode(PIN_TC_CAPTURE, PIN_TC_CAPTURE_MUX);
-	ioport_disable_pin(PIN_TC_CAPTURE); // Disable IO (but enable peripheral mode)
+	/* Disable IO to enable peripheral mode) */
+	ioport_disable_pin(PIN_TC_CAPTURE);
 
 	/* Configure TC TC_CHANNEL_WAVEFORM as waveform operating mode */
 	printf("Configure TC%d channel %d as waveform operating mode \n\r",
 			TC_PERIPHERAL, TC_CHANNEL_WAVEFORM);
 	tc_waveform_initialize();
+        
 	/* Configure TC TC_CHANNEL_CAPTURE as capture operating mode */
 	printf("Configure TC%d channel %d as capture operating mode \n\r",
 			TC_PERIPHERAL, TC_CHANNEL_CAPTURE);

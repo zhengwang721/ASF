@@ -2,7 +2,7 @@
 	<!-- +++++++++++++++++++++++++++++++++++++++++++++++MODULE+++++++++++++++++++++++++++++++++++++++++++++++. -->
 	<module type="service" id="thirdparty.wireless.addons.serial_bridge" caption="Serial Bridge ">
 		<info type="description" value="summary">
-			Serial Bridge acts as a bridge for performing serial communication between host and ncp
+			The serial Bridge Module is used in the host which acts as a bridge between the Pc and the NCP device. The serial Bridge  is used by Performance Analyzer application in 2p approach and for flashing image using Bootloader application,where it transfers data from the Pc to the NCP and vice-versa. 
 		</info>
 	<!-- +++++++++++++++++++++++++++++++++++++++++++++++BUILD+++++++++++++++++++++++++++++++++++++++++++++++. -->
         
@@ -15,6 +15,7 @@
         <build type="header-file"   value="serial_bridge.h"/>
 		<build type="include-path" value="."/>
 		<device-support value="sam4l"/>
+		<device-support value="atmega256rfr2"/>
 		<build type="doxygen-entry-point" value="group_serial_bridge"/>
         <info type="keyword" value="technology">
             <keyword value="Wireless"/>

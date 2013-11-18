@@ -1,8 +1,8 @@
 <asf xmlversion="1.0">
-	<select-by-device id="thirdparty.wireless.avr2025_mac.source.pal" caption="COMPONENT - PAL">
+	<select-by-device id="thirdparty.wireless.avr2025_mac.source.pal" caption="Platform Abstraction Layer (PAL)">
         <module type="meta" id="thirdparty.wireless.avr2025_mac.source.pal#1"     caption="PAL SPI access for external transceivers">
             <info type="description" value="summary">
-            This module includes PAL wrapper files for boards with External Transceivers
+            The PAL Layer forms the wrapper layer that forms the interface between the Stack and the Low level drivers.This module includes PAL(Platform Abstraction Layer) wrapper files for boards with External Transceivers
             </info>
 			<info type="gui-flag" value="hidden"/>
             <build type="c-source"      value="pal.c"/>
@@ -24,7 +24,7 @@
 
 		<module type="meta" id="thirdparty.wireless.avr2025_mac.source.pal#2"     caption="PAL access for SoC">
             <info type="description" value="summary">
-            This module includes PAL wrapper files for Soc's
+            The PAL Layer forms the wrapper layer that forms the interface between the Stack and the Low level drivers.This module includes PAL(Platform Abstraction Layer) wrapper files for Soc's
             </info>
 			<info type="gui-flag" value="hidden"/>
             <build type="c-source"      value="pal.c"/>
@@ -53,16 +53,21 @@
     <device-alias-map name="avr2025_mac_pal_support">
         <device-support value="atxmega256a3u"/>
         <device-support value="atxmega256a3bu"/>
+        <device-support value="atxmega256a3"/>
         <device-support value="uc3a3_a4"/>
         <device-support value="sam4l"/>
         <device-support value="atmega256rfr2"/>
+        <device-support value="atmega128rfa1"/>
     </device-alias-map>
     <device-alias-map name="avr2025_mac_pal_spi_support">
         <device-support value="atxmega256a3u"/>
         <device-support value="atxmega256a3bu"/>
+        <device-support value="atxmega256a3"/>
         <device-support value="uc3a3_a4"/>
+        <device-support value="sam4l"/>
     </device-alias-map>
     <device-alias-map name="avr2025_mac_pal_soc_support">
         <device-support value="atmega256rfr2"/>
+        <device-support value="atmega128rfa1"/>
     </device-alias-map>
 </asf>

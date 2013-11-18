@@ -39,6 +39,7 @@
  *
  * \asf_license_stop
  */
+
 /*
  * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
@@ -55,29 +56,34 @@
 
 /* === Macros ============================================================== */
 
-
 /* === Globals ============================================================= */
-
 
 /* === Prototypes ========================================================== */
 
-
 /* === Implementation ====================================================== */
-
+#if (defined __GNUC__)
+void __attribute__((weak)) usr_mlme_beacon_notify_ind(uint8_t BSN,
+		wpan_pandescriptor_t *PANDescriptor,
+		uint8_t PendAddrSpec,
+		uint8_t *AddrList,
+		uint8_t sduLength,
+		uint8_t *sdu)
+#else
 void usr_mlme_beacon_notify_ind(uint8_t BSN,
-                                wpan_pandescriptor_t *PANDescriptor,
-                                uint8_t PendAddrSpec,
-                                uint8_t *AddrList,
-                                uint8_t sduLength,
-                                uint8_t *sdu)
+		wpan_pandescriptor_t *PANDescriptor,
+		uint8_t PendAddrSpec,
+		uint8_t *AddrList,
+		uint8_t sduLength,
+		uint8_t *sdu)
+#endif
 {
-    /* Keep compiler happy. */
-    BSN = BSN;
-    PANDescriptor = PANDescriptor;
-    PendAddrSpec = PendAddrSpec;
-    AddrList = AddrList;
-    sduLength = sduLength;
-    sdu = sdu;
+	/* Keep compiler happy. */
+	BSN = BSN;
+	PANDescriptor = PANDescriptor;
+	PendAddrSpec = PendAddrSpec;
+	AddrList = AddrList;
+	sduLength = sduLength;
+	sdu = sdu;
 }
 
 #endif /* (MAC_BEACON_NOTIFY_INDICATION == 1) */

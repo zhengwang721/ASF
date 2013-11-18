@@ -39,6 +39,7 @@
  *
  * \asf_license_stop
  */
+
 /*
  * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
@@ -51,12 +52,9 @@
 
 /* === INCLUDES ============================================================ */
 
-
 /* === EXTERNALS =========================================================== */
 
-
 /* === TYPES =============================================================== */
-
 
 /* === MACROS ============================================================== */
 
@@ -167,13 +165,11 @@
  */
 #define TAL_PAN_COORDINATOR_DEFAULT         (false)
 
-
 /* === PROTOTYPES ========================================================== */
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
 
 #ifdef __cplusplus
 } /* extern "C" */
@@ -182,5 +178,3 @@ extern "C" {
 #endif /* TAL_CONSTANTS_H */
 
 /* EOF */
-
-

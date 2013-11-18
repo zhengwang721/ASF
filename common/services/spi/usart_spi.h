@@ -3,7 +3,7 @@
  *
  * \brief USART in SPI mode driver functions.
  *
- * Copyright (c) 2010 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -47,6 +47,8 @@
 
 #if XMEGA
 # include "xmega_usart_spi/usart_spi.h"
+#elif MEGA_RF
+# include "megarf_usart_spi/usart_spi.h"
 #elif UC3
 # include "uc3_usart_spi/usart_spi.h"
 #elif SAM

@@ -3,7 +3,7 @@
  *
  * \brief PIO Alternate Function Example.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -51,7 +51,7 @@
  *
  *  \par Requirements
  *
- *  This package can be used with all SAM3 EKs except SAM3U-EK.
+ *  This package can be used with SAM EKs.
  *
  *  \par Description
  *
@@ -69,7 +69,7 @@
  *
  *  \par Usage
  *
- *  -# Build the program and download it into the evaluation board. 
+ *  -# Build the program and download it into the evaluation board.
  *  -# On the computer, open and configure a terminal application
  *     (e.g., HyperTerminal on Microsoft Windows) with these settings:
  *    - 115200 bauds
@@ -95,13 +95,13 @@
 #include "conf_example.h"
 
 /** Flash wait state number. */
-#define FLASH_WAIT_STATE_NBR   6
+#define FLASH_WAIT_STATE_NBR   (6)
 
 /** Buffer size. */
 #define BUFFER_SIZE            (IFLASH_PAGE_SIZE / 4)
 
 /** The MAX value of shifting. */
-#define MAX_SHIFTING_NUMBER    32
+#define MAX_SHIFTING_NUMBER    (32)
 
 #define STRING_EOL    "\r"
 #define STRING_HEADER "-- PIO Alternate Function Example --\r\n" \
@@ -157,7 +157,7 @@ static void configure_console(void)
 		.baudrate = CONF_UART_BAUDRATE,
 		.paritytype = CONF_UART_PARITY
 	};
-	
+
 	/* Configure console UART. */
 	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
 	stdio_serial_init(CONF_UART, &uart_serial_options);
@@ -184,7 +184,7 @@ int main(void)
 	volatile uint32_t *p_last_page_data;
 	uint32_t p_buffer[BUFFER_SIZE];
 
-	/* Initialize the SAM3 system. */
+	/* Initialize the system. */
 	sysclk_init();
 	board_init();
 
@@ -216,7 +216,23 @@ int main(void)
 	for (i = 0; i < BUFFER_SIZE; i++) {
 		p_buffer[i] = 1 << (i % MAX_SHIFTING_NUMBER);
 	}
-	ul_error = flash_write(LAST_PAGE_ADDRESS, p_buffer, IFLASH_PAGE_SIZE, 1);
+#if (SAM4E || SAM4C)
+	/**
+	 * The EWP command can only be used in 8 KBytes sector for SAM4E,
+	 * so an erase command is requried before write operation.
+	 */
+	ul_error = flash_erase_sector(LAST_PAGE_ADDRESS);
+	if (ul_error != FLASH_RC_OK) {
+		printf("-F- Flash erase error %u\n\r", ul_error);
+		return 0;
+	}
+
+	ul_error = flash_write(LAST_PAGE_ADDRESS, p_buffer,
+			IFLASH_PAGE_SIZE, 0);
+#else
+	ul_error = flash_write(LAST_PAGE_ADDRESS, p_buffer,
+			IFLASH_PAGE_SIZE, 1);
+#endif
 	if (FLASH_RC_OK != ul_error) {
 		puts("Write the last page of internal flash failed.\r\n");
 		return 0;
@@ -225,7 +241,7 @@ int main(void)
 	/* Check page contents. */
 	puts("-I- Checking page contents.\r\n");
 	for (i = 0; i < BUFFER_SIZE; i++) {
-		puts(".");
+		printf(".");
 		if (p_last_page_data[i] != (1u << (i % MAX_SHIFTING_NUMBER))) {
 			puts("The content in the last page isn't written correctly");
 			return 0;
@@ -237,22 +253,27 @@ int main(void)
 	puts("-I- Configure Erase pin in PIO mode.\r\n");
 	matrix_set_system_io(PIN_PIO_MODE_MSK);
 
-	/* Ask the user to close the erase jumper and then open it (200ms minimum). */
-	puts("-I- Please close the erase jumper and then open it ");
-	puts("at least 200ms later.\r\n");
+	/**
+	 * Ask the user to close the erase jumper and then open it(200ms minimum).
+	 */
+	printf("-I- Please close the erase jumper and then open it ");
+	printf("at least 200ms later.\r\n");
 
 	printf("Then press button %s to go on!\r\n", BUTTON_STRING);
 	/* Wait until Push Button is pressed. */
 	while (!g_button_event) {
 	}
-	/* Disable the PIO line interrupts in order to eliminate the wrong check of key press. */
+	/**
+	 * Disable the PIO line interrupts to eliminate the wrong check of
+	 * key press.
+	 */
 	pio_disable_interrupt(PUSH_BUTTON_PIO, PUSH_BUTTON_PIN_MSK);
 	g_button_event = 0;
 	/* Read the page again, it should be unchanged. */
 	puts("-I- Reading the page\r\n");
 	for (i = 0; i < BUFFER_SIZE; i++) {
-		puts(".");
-		if (p_last_page_data[i] != (uint32_t)(1 << (i % MAX_SHIFTING_NUMBER))) {
+		printf(".");
+		if (p_last_page_data[i] != (1u << (i % MAX_SHIFTING_NUMBER))) {
 			puts("-F- Reading Error! \r\n");
 			return 0;
 		}
@@ -263,14 +284,19 @@ int main(void)
 	puts("-I- Configure Erase pin as Erase function\r\n");
 	matrix_set_system_io(PIN_ERASE_MODE_MSK);
 
-	/* Ask the user to close the erase jumper and then open it (200ms minimum). */
-	puts("-I- Please close the erase jumper and then open it ");
-	puts("at least 200ms later.\r\n");
-	
-	/* Remind the users that after closing the erase jumper and then opening it, codes are gone. */
-	puts("-I- As the internal flash has been erased and the code can't ");
-	puts("be executed any more, users can press the reset button on EK and will see ");
-	puts("there will be no output message any more.\r\n");
+	/**
+	 * Ask the user to close the erase jumper and then open it(200ms minimum).
+	 */
+	printf("-I- Please close the erase jumper and then open it ");
+	printf("at least 200ms later.\r\n");
+
+	/**
+	 * Remind the users that after closing the erase jumper and then opening
+	 * it, codes are gone.
+	 */
+	printf("-I- As the internal flash has been erased and the code can't ");
+	printf("be executed any more, users can press the reset button on EK ");
+	printf("and will see there will be no output message any more.\r\n");
 
 	while (1) {
 	}

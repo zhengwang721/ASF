@@ -1,7 +1,8 @@
 /**
  * @file api_parser.h
  *
- * @brief This header defines protoypes and definitions for api parser functionalities
+ * @brief This header defines protoypes and definitions for api parser
+ *functionalities
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -39,18 +40,40 @@
  *
  * \asf_license_stop
  */
+
 /*
  * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
- 
-  /**
-  * \defgroup group_mac_api_parser API Parser Module
-  * API Parser for MAC acts as a interface for converting MAC Api's to appropriate command byte stream
-  * @{
-  */
-  
+
+/** \page api MAC API Parser
+ *    - \ref group_mac_api_parser
+ */
+
+/**
+ * \section twopapp Two Processor Approach
+ * The Two Processor approach basically consists of two devices Host and
+ *NCP(Network Co-Processor).The MAC Stack runs on the NCP
+ * and the MAC application runs on the Host.The api-parser module is used by the
+ *host which will convert the mac api’s to necessary command bytes stream (\ref
+ *group_mac_api_encoder)
+ * and    send it  to the NCP. The NCP board will contain the image of serial-if
+ *application (MAC Core Stack) and this will receive  necessary command bytes
+ *encode it  to api’s  and
+ * process it and send back command bytes as response which will be decoded  in
+ *the host by the api-parser  module(\ref group_mac_api_decoder).
+ */
+
+/**
+ * \defgroup group_mac_api_parser API Parser Module
+ * This module is responsible for encoding and decoding the serial bytes to/from
+ *NCP into MAC APIs to provide seamless working for application similar to stack
+ *running in same processor or on NCP.This
+ * module is used for \ref twopapp .
+ * @{
+ */
+
 #include "return_val.h"
 #include "mac_api.h"
 #include "ieee_const.h"
@@ -61,12 +84,13 @@
 #define RX_BUFFER_LENGTH    MAX_BUFFER_LENGTH
 #define TX_BUFFER_LENGTH    MAX_BUFFER_LENGTH
 
-#define SOT_POS	         0x00
+#define SOT_POS          0x00
 #define LEN_POS          0x01
 #define PROTOCOL_ID_POS  0x02
 #define CMD_POS          0x03
 
 #define PROTOCOL_ID  0X01
+
 /**
  * A UART state that expects a \ref SOT to be received as the next character.
  */
@@ -87,8 +111,6 @@
  */
 #define UART_RX_STATE_EOT               (4)
 
-
-
 /* UART communication framing */
 
 /** The start of transmission delimiter. */
@@ -103,5 +125,5 @@ extern uint8_t rcv_buffer[];
 void process_rf_serial_byte(uint8_t byte);
 void handle_rx_frame(void);
 
-//! @}
-//EOF
+/* ! @} */
+/* EOF */

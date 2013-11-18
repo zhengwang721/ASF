@@ -26,7 +26,7 @@
 		<build type="header-file"   value="inc/tal_slotted_csma.h"/>
 		<build type="header-file"   value="inc/tal_tx.h"/>
 		<build type="include-path"  value="inc/"/>
-		<build type="doxygen-entry-point" value="tal.atmegarfr2_group"/>
+		<build type="doxygen-entry-point" value="group_tal_rfr2"/>
 		<build type="define" name="TAL_TYPE" value ="ATMEGARFR2"/>
 		<device-support value="atmega256rfr2"/>
 	</module>

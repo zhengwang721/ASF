@@ -38,6 +38,7 @@
  *
  * \asf_license_stop
  */
+
 /*
  * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
@@ -54,29 +55,34 @@
 
 /* === Macros ============================================================== */
 
-
 /* === Globals ============================================================= */
-
 
 /* === Prototypes ========================================================== */
 
-
 /* === Implementation ====================================================== */
-
+#if (defined __GNUC__)
+void __attribute__((weak)) usr_mlme_scan_conf(uint8_t status,
+		uint8_t ScanType,
+		uint8_t ChannelPage,
+		uint32_t UnscannedChannels,
+		uint8_t ResultListSize,
+		void *ResultList)
+#else
 void usr_mlme_scan_conf(uint8_t status,
-                        uint8_t ScanType,
-                        uint8_t ChannelPage,
-                        uint32_t UnscannedChannels,
-                        uint8_t ResultListSize,
-                        void *ResultList)
+		uint8_t ScanType,
+		uint8_t ChannelPage,
+		uint32_t UnscannedChannels,
+		uint8_t ResultListSize,
+		void *ResultList)
+#endif
 {
-    /* Keep compiler happy. */
-    status = status;
-    ScanType = ScanType;
-    ChannelPage = ChannelPage;
-    UnscannedChannels = UnscannedChannels;
-    ResultListSize = ResultListSize;
-    ResultList = ResultList;
+	/* Keep compiler happy. */
+	status = status;
+	ScanType = ScanType;
+	ChannelPage = ChannelPage;
+	UnscannedChannels = UnscannedChannels;
+	ResultListSize = ResultListSize;
+	ResultList = ResultList;
 }
 
 #endif /* (MAC_SCAN_SUPPORT == 1) */

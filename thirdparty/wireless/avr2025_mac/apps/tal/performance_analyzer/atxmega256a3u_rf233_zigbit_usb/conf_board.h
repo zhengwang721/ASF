@@ -45,10 +45,8 @@
 
 #define ZIGBIT_USB
 #define CONF_BOARD_AT86RFX
-#define TRANSCEIVER_NAME    "AT86RF233"
+
 #define IC_TYPE             (0x00)
-#define MCU_SOC_NAME        "ATxmega256A3U"
-#define BOARD_NAME          "ATZB-X-233-USB"
 
 # include "conf_usb.h"
 #endif /* CONF_BOARD_H_INCLUDED */

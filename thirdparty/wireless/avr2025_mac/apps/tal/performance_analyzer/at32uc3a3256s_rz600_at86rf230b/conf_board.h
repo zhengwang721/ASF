@@ -44,10 +44,7 @@
 #define CONF_BOARD_H_INCLUDED
 
 #define CONF_BOARD_AT86RFX
-#define TRANSCEIVER_NAME    "AT86RF230B"
 #define IC_TYPE             (0x00)
-#define MCU_SOC_NAME        "AT32UC3A3256S"
-#define BOARD_NAME          "RZ600"
 
 # include "conf_usb.h"
 #endif /* CONF_BOARD_H_INCLUDED */

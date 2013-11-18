@@ -120,6 +120,12 @@ extern "C" {
 #define XMEGA_RF233_ZIGBIT         56  //!< ATxmega256A3U with AT86RF233 zigbit
 #define XMEGA_RF212B_ZIGBIT        57  //!< ATxmega256A3U with AT86RF212B zigbit
 #define SAM4S_WPIR_RD              58  //!< SAM4S-WPIR-RD board.
+#define SAMD20_XPLAINED_PRO        59  //!< SAMD20 Xplained PRO board
+#define SAM4L8_XPLAINED_PRO        60  //!< SAM4L8 Xplained Pro board.
+#define SAM4N_XPLAINED_PRO         61  //!< SAM4N-XPLAINED-PRO board.
+#define XMEGA_A3_REB_CBB           62  //!< SAM4L8 Xplained Pro board.
+#define ATMEGARFX_RCB          	   63  //!< RFR2 & RFA1 RCB
+#define SAM4C_EK                   64  //!< SAM4C-EK board.
 #define SIMULATOR_XMEGA_A1         97  //!< Simulator for XMEGA A1 devices
 #define AVR_SIMULATOR_UC3          98  //!< AVR SIMULATOR for AVR UC3 device family.
 #define USER_BOARD                 99  //!< User-reserved board (if any).
@@ -234,6 +240,10 @@ extern "C" {
 #  include "sam4l_ek/sam4l_ek.h"
 #elif BOARD == SAM4E_EK
 #  include "sam4e_ek/sam4e_ek.h"
+#elif BOARD == SAMD20_XPLAINED_PRO
+#  include "samd20_xplained_pro/samd20_xplained_pro.h"
+#elif BOARD == SAM4N_XPLAINED_PRO
+#  include "sam4n_xplained_pro/sam4n_xplained_pro.h"
 #elif BOARD == MEGA1284P_XPLAINED_BC
 #  include "mega1284p_xplained_bc/mega1284p_xplained_bc.h"
 #elif BOARD == UC3_L0_QT600
@@ -256,12 +266,20 @@ extern "C" {
 #  include "sam4s_xplained_pro/sam4s_xplained_pro.h"
 #elif BOARD == SAM4L_XPLAINED_PRO
 #  include "sam4l_xplained_pro/sam4l_xplained_pro.h"
+#elif BOARD == SAM4L8_XPLAINED_PRO
+#  include "sam4l8_xplained_pro/sam4l8_xplained_pro.h"
+#elif BOARD == SAM4C_EK
+#  include "sam4c_ek/sam4c_ek.h"
 #elif BOARD == SIMULATOR_XMEGA_A1
 #  include "simulator/xmega_a1/simulator_xmega_a1.h"
 #elif BOARD == XMEGA_C3_XPLAINED
 #  include "xmega_c3_xplained/xmega_c3_xplained.h"
 #elif BOARD == XMEGA_RF233_ZIGBIT
 #  include "xmega_rf233_zigbit/xmega_rf233_zigbit.h"
+#elif BOARD == XMEGA_A3_REB_CBB
+#  include "xmega_a3_reb_cbb/xmega_a3_reb_cbb.h"
+#elif BOARD == ATMEGARFX_RCB
+#  include "atmegarfx_rcb/atmegarfx_rcb.h"
 #elif BOARD == XMEGA_RF212B_ZIGBIT
 #  include "xmega_rf212b_zigbit/xmega_rf212b_zigbit.h"
 #elif BOARD == AVR_SIMULATOR_UC3

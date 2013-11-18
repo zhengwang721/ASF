@@ -38,6 +38,5 @@
 		<device-support value="uc3a"/>
 		<device-support value="uc3a3"/>
 		<device-support value="uc3b"/>
-		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

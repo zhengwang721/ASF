@@ -63,112 +63,104 @@
 
 /* === Macros =============================================================== */
 
-
 /* === Types ================================================================ */
 
-    /**
-     * \addtogroup group_mac_def
-     * @{
-     */
-	 
+/**
+ * \addtogroup group_mac_def
+ * @{
+ */
 
 /* Timer ID's used by MAC */
 
 /* DO NOT CHANGE ORDER OF ANY OF THE DEFINES OR TIMERS BELOW! */
 
-// Number of timers required for beacon support
+/* Number of timers required for beacon support */
 #ifdef BEACON_SUPPORT
     #if (MAC_START_REQUEST_CONFIRM == 1)
-        #define NUMBER_OF_MAC_BEACON_SUPPORT_TIMERS         (5)
+	#define NUMBER_OF_MAC_BEACON_SUPPORT_TIMERS         (5)
     #else   /* RFD */
-        #define NUMBER_OF_MAC_BEACON_SUPPORT_TIMERS         (3)
+	#define NUMBER_OF_MAC_BEACON_SUPPORT_TIMERS         (3)
     #endif /* MAC_START_REQUEST_CONFIRM */
 #else   /* No BEACON_SUPPORT */
-        #define NUMBER_OF_MAC_BEACON_SUPPORT_TIMERS         (0)
+	#define NUMBER_OF_MAC_BEACON_SUPPORT_TIMERS         (0)
 #endif  /* BEACON_SUPPORT / No BEACON_SUPPORT */
 
-
-// Number of timers required to support indirect data transmission
+/* Number of timers required to support indirect data transmission */
 #if (MAC_INDIRECT_DATA_BASIC == 1)
     #if (MAC_INDIRECT_DATA_FFD == 1)
-        #define NUMBER_OF_MAC_INDIRECT_DATA_SUPPORT_TIMERS  (2)
+	#define NUMBER_OF_MAC_INDIRECT_DATA_SUPPORT_TIMERS  (2)
     #else
-        #define NUMBER_OF_MAC_INDIRECT_DATA_SUPPORT_TIMERS  (1)
+	#define NUMBER_OF_MAC_INDIRECT_DATA_SUPPORT_TIMERS  (1)
     #endif /* MAC_INDIRECT_DATA_FFD */
 #else   /* No indirect data support */
-        #define NUMBER_OF_MAC_INDIRECT_DATA_SUPPORT_TIMERS  (0)
+	#define NUMBER_OF_MAC_INDIRECT_DATA_SUPPORT_TIMERS  (0)
 #endif  /* MAC_INDIRECT_DATA_BASIC */
 
-
-// Number of timers required to support scanning
+/* Number of timers required to support scanning */
 #if (MAC_SCAN_SUPPORT == 1)
-        #define NUMBER_OF_MAC_SCAN_SUPPORT_TIMERS           (1)
+	#define NUMBER_OF_MAC_SCAN_SUPPORT_TIMERS           (1)
 #else
-        #define NUMBER_OF_MAC_SCAN_SUPPORT_TIMERS           (0)
+	#define NUMBER_OF_MAC_SCAN_SUPPORT_TIMERS           (0)
 #endif  /* MAC_SCAN_SUPPORT */
 
-
-// Number of timers required to support Rx-Enable
+/* Number of timers required to support Rx-Enable */
 #if (MAC_RX_ENABLE_SUPPORT == 1)
-        #define NUMBER_OF_MAC_RX_ENABLE_SUPPORT_TIMERS      (1)
+	#define NUMBER_OF_MAC_RX_ENABLE_SUPPORT_TIMERS      (1)
 #else
-        #define NUMBER_OF_MAC_RX_ENABLE_SUPPORT_TIMERS      (0)
+	#define NUMBER_OF_MAC_RX_ENABLE_SUPPORT_TIMERS      (0)
 #endif  /* MAC_RX_ENABLE_SUPPORT */
 
-// Total numbers of timers used in MAC layer
+/* Total numbers of timers used in MAC layer */
 #define NUMBER_OF_MAC_TIMERS        (NUMBER_OF_MAC_BEACON_SUPPORT_TIMERS + \
-                                     NUMBER_OF_MAC_INDIRECT_DATA_SUPPORT_TIMERS + \
-                                     NUMBER_OF_MAC_SCAN_SUPPORT_TIMERS + \
-                                     NUMBER_OF_MAC_RX_ENABLE_SUPPORT_TIMERS)
-
+	NUMBER_OF_MAC_INDIRECT_DATA_SUPPORT_TIMERS + \
+	NUMBER_OF_MAC_SCAN_SUPPORT_TIMERS + \
+	NUMBER_OF_MAC_RX_ENABLE_SUPPORT_TIMERS)
 
 /* DO NOT CHANGE ORDER OF ANY OF THE DEFINES OR TIMERS BELOW! */
 
 #if (NUMBER_OF_MAC_TIMERS > 0)
-// Timer type definition only in case there is any MAC timer
+/* Timer type definition only in case there is any MAC timer */
 
 #ifdef BEACON_SUPPORT
-        /* Beacon tracking period to wake up radio before beacon is expected */
+/* Beacon tracking period to wake up radio before beacon is expected */
 extern uint8_t T_Beacon_Tracking_Period;
 
-        /* Superframe timer */
+/* Superframe timer */
 extern uint8_t T_Superframe;
 
-        /* Beacon tracking period to count missed beacon frames */
+/* Beacon tracking period to count missed beacon frames */
 extern uint8_t T_Missed_Beacon;
     #if (MAC_START_REQUEST_CONFIRM == 1)
-        /* Beacon timer */
+/* Beacon timer */
 extern uint8_t T_Beacon;
 
-        /* Beacon preperation timer */
+/* Beacon preperation timer */
 extern uint8_t T_Beacon_Preparation;
     #endif /* (MAC_START_REQUEST_CONFIRM == 1) */
 #endif  /* BEACON_SUPPORT / No BEACON_SUPPORT */
 
-
 #if (MAC_INDIRECT_DATA_BASIC == 1)
-        /* Maximum frame response time, also used for association process */
+/* Maximum frame response time, also used for association process */
 extern uint8_t T_Poll_Wait_Time;
     #if (MAC_INDIRECT_DATA_FFD == 1)
-        /* Indirect Data persistence timer */
+/* Indirect Data persistence timer */
 extern uint8_t T_Data_Persistence;
     #endif  /* (MAC_INDIRECT_DATA_FFD == 1) */
 #endif  /* (MAC_INDIRECT_DATA_BASIC == 1) */
 
-
 #if (MAC_SCAN_SUPPORT == 1)
-        /* Scan duration timer for SCAN */
+/* Scan duration timer for SCAN */
 extern uint8_t T_Scan_Duration;
 #endif  /* MAC_SCAN_SUPPORT */
 
-
 #if (MAC_RX_ENABLE_SUPPORT == 1)
-        /* Receiver Enable timer */
+/* Receiver Enable timer */
 extern uint8_t T_Rx_Enable;
 #endif  /* MAC_RX_ENABLE_SUPPORT */
 #endif /* (NUMBER_OF_MAC_TIMERS != 0) */
 
 #ifdef ENABLE_QUEUE_CAPACITY
+
 /**
  * Macro configuring the queue capacities.
  */
@@ -178,15 +170,13 @@ extern uint8_t T_Rx_Enable;
 #define BROADCAST_QUEUE_CAPACITY            (255)
 #endif /* ENABLE_QUEUE_CAPACITY */
 
-//! @}
+/* ! @} */
 /* === Externals ============================================================ */
-
 
 /* === Prototypes =========================================================== */
 
 retval_t mac_timers_init(void);
 retval_t mac_timers_stop(void);
-
 
 #ifdef __cplusplus
 extern "C" {

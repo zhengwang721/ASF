@@ -16,6 +16,7 @@
 			<info type="gui-flag" value="hidden"/>
 			<require idref="thirdparty.wireless.avr2025_mac.source.sal.at86rf2xx"/>
 			<device-support value="uc3"/>
+			<device-support value="sam4l"/>
 		</module>
 		<module type="driver" id="config.thirdparty.wireless.avr2025_mac.source.sal#atmegarf_sal"     caption="atmegarf_sal  support enabled">
 			<info type="description" value="summary">
@@ -45,6 +46,7 @@
 		<device-support value="xmega"/>
         <device-support value="uc3"/>
         <device-support value="megarf"/>
+		 <device-support value="sam4l"/>
 	</module>
 	<module type="meta" id="thirdparty.wireless.avr2025_mac.source.sal.inc" caption="SAL">
 		<info type="description" value="summary">

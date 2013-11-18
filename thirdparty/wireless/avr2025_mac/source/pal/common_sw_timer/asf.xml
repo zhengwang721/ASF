@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-    <module type="service" id="thirdparty.wireless.avr2025_mac.source.pal.common_sw_timer" caption="Common SW Timer">
+    <module type="meta" id="thirdparty.wireless.avr2025_mac.source.pal.common_sw_timer" caption="Common SW Timer">
         <info type="description" value="summary">
         Common SW Timer Algorithm used by the stack
         </info>
@@ -13,6 +13,7 @@
         <device-support-alias value="xmega_hw_timer_support"/>
         <device-support-alias value="uc3_hw_timer_support"/>
         <device-support-alias value="sam_hw_timer_support"/>
-        <device-support-alias value="mega_hw_timer_support"/>
+        <device-support-alias value="megarfa1_hw_timer_support"/>
+        <device-support-alias value="megarfr2_hw_timer_support"/>
 	</module>
 </asf>

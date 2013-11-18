@@ -3,7 +3,7 @@
  *
  * \brief Chip-specific system clock management functions
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -666,79 +666,79 @@ extern void sysclk_priv_disable_module(uint32_t bus_id, uint32_t module_index);
 
 /**
  * \brief Enable a module clock derived from the CPU clock
- * \param index Index of the module clock in the CPUMASK register
+ * \param module_index Index of the module clock in the CPUMASK register
  */
-static inline void sysclk_enable_cpu_module(uint32_t index)
+static inline void sysclk_enable_cpu_module(uint32_t module_index)
 {
-	sysclk_priv_enable_module(PM_CLK_GRP_CPU, index);
+	sysclk_priv_enable_module(PM_CLK_GRP_CPU, module_index);
 }
 
 /**
  * \brief Disable a module clock derived from the CPU clock
- * \param index Index of the module clock in the CPUMASK register
+ * \param module_index Index of the module clock in the CPUMASK register
  */
-static inline void sysclk_disable_cpu_module(uint32_t index)
+static inline void sysclk_disable_cpu_module(uint32_t module_index)
 {
-	sysclk_priv_disable_module(PM_CLK_GRP_CPU, index);
+	sysclk_priv_disable_module(PM_CLK_GRP_CPU, module_index);
 }
 
 /**
  * \brief Enable a module clock derived from the HSB clock
- * \param index Index of the module clock in the HSBMASK register
+ * \param module_index Index of the module clock in the HSBMASK register
  */
-static inline void sysclk_enable_hsb_module(uint32_t index)
+static inline void sysclk_enable_hsb_module(uint32_t module_index)
 {
-	sysclk_priv_enable_module(PM_CLK_GRP_HSB, index);
+	sysclk_priv_enable_module(PM_CLK_GRP_HSB, module_index);
 }
 
 /**
  * \brief Disable a module clock derived from the HSB clock
- * \param index Index of the module clock in the HSBMASK register
+ * \param module_index Index of the module clock in the HSBMASK register
  */
-static inline void sysclk_disable_hsb_module(uint32_t index)
+static inline void sysclk_disable_hsb_module(uint32_t module_index)
 {
-	sysclk_priv_disable_module(PM_CLK_GRP_HSB, index);
+	sysclk_priv_disable_module(PM_CLK_GRP_HSB, module_index);
 }
 
-extern void sysclk_enable_pba_module(uint32_t index);
-extern void sysclk_disable_pba_module(uint32_t index);
-extern void sysclk_enable_pbb_module(uint32_t index);
-extern void sysclk_disable_pbb_module(uint32_t index);
+extern void sysclk_enable_pba_module(uint32_t module_index);
+extern void sysclk_disable_pba_module(uint32_t module_index);
+extern void sysclk_enable_pbb_module(uint32_t module_index);
+extern void sysclk_disable_pbb_module(uint32_t module_index);
 
 /**
  * \brief Enable a module clock derived from the PBC clock
- * \param index Index of the module clock in the PBAMASK register
+ * \param module_index Index of the module clock in the PBAMASK register
  */
-static inline void sysclk_enable_pbc_module(uint32_t index)
+static inline void sysclk_enable_pbc_module(uint32_t module_index)
 {
-	sysclk_priv_enable_module(PM_CLK_GRP_PBC, index);
+	sysclk_priv_enable_module(PM_CLK_GRP_PBC, module_index);
 }
 
 /**
  * \brief Disable a module clock derived from the PBC clock
- * \param index Index of the module clock in the PBAMASK register
+ * \param module_index Index of the module clock in the PBAMASK register
  */
-static inline void sysclk_disable_pbc_module(uint32_t index)
+static inline void sysclk_disable_pbc_module(uint32_t module_index)
 {
-	sysclk_priv_disable_module(PM_CLK_GRP_PBC, index);
+	sysclk_priv_disable_module(PM_CLK_GRP_PBC, module_index);
 }
 
 /**
  * \brief Enable a module clock derived from the PBD clock
- * \param index Index of the module clock in the PBAMASK register
+ * \param module_index Index of the module clock in the PBAMASK register
  */
-static inline void sysclk_enable_pbd_module(uint32_t index)
+static inline void sysclk_enable_pbd_module(uint32_t module_index)
 {
-	sysclk_priv_enable_module(PM_CLK_GRP_PBD, index);
+	sysclk_priv_enable_module(PM_CLK_GRP_PBD, module_index);
 }
 
 /**
  * \brief Disable a module clock derived from the PBD clock
- * \param index Index of the module clock in the PBAMASK register
+ * \param module_index Index of the module clock in the PBAMASK register
  */
-static inline void sysclk_disable_pbd_module(uint32_t index)
+static inline void sysclk_disable_pbd_module(uint32_t module_index)
 {
-	sysclk_priv_disable_module(PM_CLK_GRP_PBD, index);
+	sysclk_priv_disable_module(PM_CLK_GRP_PBD, module_index);
 }
 
 /**

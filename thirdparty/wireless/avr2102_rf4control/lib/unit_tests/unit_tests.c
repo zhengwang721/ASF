@@ -75,8 +75,9 @@
  * For further information, visit
  * <A href="http://www.atmel.com/">Atmel</A>.\n
  */
-/* 
-=== INCLUDES ============================================================ */
+
+/*
+ * === INCLUDES ============================================================ */
 
 #include <stddef.h>
 #include <stdint.h>
@@ -86,7 +87,6 @@
 #include <ctype.h>
 #include <inttypes.h>
 #include <stdio.h>
-
 
 #include <asf.h>
 
@@ -98,6 +98,7 @@
 #include "tal.h"
 #include "vendor_data.h"
 #include "pb_pairing.h"
+#include "rf4ce.h"
 #include "common_sw_timer.h"
 
 FLASH_DECLARE(uint16_t VendorIdentifier) = (uint16_t)NWKC_VENDOR_IDENTIFIER;
@@ -109,11 +110,11 @@ FLASH_DECLARE(uint8_t supported_cec_cmds[32]) = SUPPORTED_CEC_CMDS;
 
 static uint8_t nlme_reset_conf_rcvd = false;
 static uint8_t nlme_reset_conf_status = FAILURE;
-static uint8_t nlme_start_conf_rcvd = false;
-static uint8_t nlme_start_conf_status = FAILURE;
+static uint8_t nlme_auto_discovery_conf_rcvd = false;
+static uint8_t nlme_auto_discovery_conf_status = FAILURE;
 
 static void nlme_reset_confirm(nwk_enum_t Status);
-static void nlme_start_confirm(nwk_enum_t Status);
+static void nlme_auto_discovery_confirm(nwk_enum_t Status);
 
 /**
  * \brief Run Wireless Module unit tests
@@ -128,102 +129,88 @@ int main(void)
 	sysclk_init();
 
 	sw_timer_init();
-
-	// Enable interrupts
+	nwk_init();
+	/* Enable interrupts */
 	cpu_irq_enable();
 
 	stdio_usb_init();
 
 	while (1) {
-        
 		nwk_task();
-	};
-}
-/**
- * \brief Performs a initialization check on AT86RFx module
- *
- * This function will simply test the output of the function
- * \ref at86rfx_init and returns an error in case of failure.
- *
- * \param test Current test case.
- */
-static void run_nwk_init_test(const struct test_case *test)
-{
-	retval_t status;
-
-	status = nwk_init();
-        printf("init");
-	test_assert_true(test, status == NWK_SUCCESS,
-			"NWK Initialization Failed");
+	}
 }
 
 static void run_nlme_reset_test(const struct test_case *test)
 {
 	nlme_reset_request(true
 #ifdef RF4CE_CALLBACK_PARAM
-                               , (FUNC_PTR)nlme_reset_confirm
+			, (FUNC_PTR)nlme_reset_confirm
 #endif
-                              );
-        printf("reset");
-	while(!nlme_reset_conf_rcvd)
-	{
+			);
+	while (!nlme_reset_conf_rcvd) {
 		nwk_task();
 	}
 	test_assert_true(test, nlme_reset_conf_status == NWK_SUCCESS,
 			"NWK Reset request failed");
 }
-static void run_nlme_start_test(const struct test_case *test)
+
+static void run_nlme_auto_discovery_test(const struct test_case *test)
 {
-	nlme_start_request(
+	dev_type_t RecDevTypeList[DEVICE_TYPE_LIST_SIZE];
+	profile_id_t RecProfileIdList[PROFILE_ID_LIST_SIZE];
+
+	RecDevTypeList[0] = (dev_type_t)SUPPORTED_DEV_TYPE_0;
+	RecProfileIdList[0] = SUPPORTED_PROFILE_ID_0;
+	nlme_auto_discovery_request( 0x13,
+			RecDevTypeList,
+			RecProfileIdList,
+			0x08,
 #ifdef RF4CE_CALLBACK_PARAM
-                (FUNC_PTR)nlme_start_confirm
+			(FUNC_PTR)nlme_auto_discovery_confirm
 #endif
-  );
-  printf("start");
-	while(!nlme_start_conf_rcvd)
-	{
+			);
+	while (!nlme_auto_discovery_conf_rcvd) {
 		nwk_task();
 	}
-	test_assert_true(test, nlme_start_conf_status == NWK_SUCCESS,
-					"NWK START test failed");
+	test_assert_true(test, (nlme_auto_discovery_conf_status == NWK_SUCCESS) ||
+			(nlme_auto_discovery_conf_status ==
+			NWK_DISCOVERY_TIMEOUT),
+			"NWK DISCOVERY test failed");
 }
 
 static void nlme_reset_confirm(nwk_enum_t Status)
 {
- nlme_reset_conf_rcvd = true;
- nlme_reset_conf_status = Status;
+	nlme_reset_conf_rcvd = true;
+	nlme_reset_conf_status = Status;
 }
 
-static void nlme_start_confirm(nwk_enum_t Status)
+static void nlme_auto_discovery_confirm(nwk_enum_t Status)
 {
-nlme_start_conf_rcvd = true;
-nlme_start_conf_status = Status;
+	nlme_auto_discovery_conf_rcvd = true;
+	nlme_auto_discovery_conf_status = Status;
 }
 
 void main_cdc_set_dtr(bool b_enable)
-{      
+{
 	if (b_enable) {
-		DEFINE_TEST_CASE(nwk_init_test, NULL, run_nwk_init_test,
-				NULL, "NWK Initialization");
 		DEFINE_TEST_CASE(nlme_reset_test, NULL, run_nlme_reset_test,
 				NULL, "NWK Reset request");
-		DEFINE_TEST_CASE(nlme_start_test, NULL,
-				run_nlme_start_test, NULL,
-				"NWK START test (this covers all ASF drivers/services used");
+		DEFINE_TEST_CASE(nlme_auto_discovery_test, NULL,
+				run_nlme_auto_discovery_test, NULL,
+				"NWK DISCOVERY test (this covers all ASF drivers/services used");
 
-		// Put test case addresses in an array.
+		/* Put test case addresses in an array. */
 		DEFINE_TEST_ARRAY(nwk_tests) = {
-			&nwk_init_test,
 			&nlme_reset_test,
-			&nlme_start_test};
+			&nlme_auto_discovery_test
+		};
 
-		// Define the test suite.
+		/* Define the test suite. */
 		DEFINE_TEST_SUITE(nwk_suite, nwk_tests,
 				"NWK unit test suite");
 
-		// Run all tests in the test suite.
+		/* Run all tests in the test suite. */
 		test_suite_run(&nwk_suite);
 	} else {
-
 	}
 }

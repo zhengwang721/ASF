@@ -39,6 +39,7 @@
  *
  * \asf_license_stop
  */
+
 /*
  * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
@@ -60,22 +61,31 @@
 /* === Prototypes ========================================================== */
 
 /* === Implementation ====================================================== */
-
+#if (defined __GNUC__)
+void __attribute__((weak)) usr_mlme_get_conf(uint8_t status,
+		uint8_t PIBAttribute,
+#ifdef MAC_SECURITY_ZIP
+		uint8_t PIBAttributeIndex,
+#endif  /* MAC_SECURITY_ZIP */
+		void *PIBAttributeValue)
+#else
 void usr_mlme_get_conf(uint8_t status,
-                       uint8_t PIBAttribute,
+		uint8_t PIBAttribute,
 #ifdef MAC_SECURITY_ZIP
-                       uint8_t PIBAttributeIndex,
+		uint8_t PIBAttributeIndex,
 #endif  /* MAC_SECURITY_ZIP */
-                       void *PIBAttributeValue)
+		void *PIBAttributeValue)
+#endif
 {
-    /* Keep compiler happy. */
-    status = status;
-    PIBAttribute = PIBAttribute;
+	/* Keep compiler happy. */
+	status = status;
+	PIBAttribute = PIBAttribute;
 #ifdef MAC_SECURITY_ZIP
-    PIBAttributeIndex = PIBAttributeIndex;
+	PIBAttributeIndex = PIBAttributeIndex;
 #endif  /* MAC_SECURITY_ZIP */
-    PIBAttributeValue = PIBAttributeValue;
+	PIBAttributeValue = PIBAttributeValue;
 }
+
 #endif  /* (MAC_GET_SUPPORT == 1) */
 
 /* EOF */

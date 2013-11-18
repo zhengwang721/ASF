@@ -3,7 +3,7 @@
  *
  * \brief Analog Comparator Controller (ACC) driver for SAM.
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -64,15 +64,15 @@ extern "C" {
  * @{
  */
 
-#if (SAM3S || SAM4S)
-
 #define ACC_MR_INV_Pos			12	/* ACC invert output (register offset) */
 
 #define ACC_ACR_HYST_0mv_max	0x00	/* HYSTeresis levels: please refer to Electrical Characteristics */
 #define ACC_ACR_HYST_50mv_max	0x01
 #define ACC_ACR_HYST_90mv_max	0x11
 
-#define ACC_WPMR_WPKEY_VALUE ACC_WPMR_WPKEY((uint32_t) 0x414343)
+#ifndef ACC_WPMR_WPKEY_PASSWD
+#  define ACC_WPMR_WPKEY_PASSWD ACC_WPMR_WPKEY((uint32_t) 0x414343)
+#endif
 
 /**
  * \brief Initialize the ACC controller.
@@ -232,9 +232,9 @@ uint32_t acc_get_interrupt_status(Acc *p_acc)
 void acc_set_writeprotect(Acc *p_acc, uint32_t ul_enable)
 {
 	if (ul_enable)
-		p_acc->ACC_WPMR = ACC_WPMR_WPKEY_VALUE | ACC_WPMR_WPEN;
+		p_acc->ACC_WPMR = ACC_WPMR_WPKEY_PASSWD | ACC_WPMR_WPEN;
 	else
-		p_acc->ACC_WPMR = ACC_WPMR_WPKEY_VALUE;
+		p_acc->ACC_WPMR = ACC_WPMR_WPKEY_PASSWD;
 }
 
 /** 
@@ -247,8 +247,6 @@ uint32_t acc_get_writeprotect_status(Acc *p_acc)
 {
 	return p_acc->ACC_WPSR & ACC_WPSR_WPROTERR;
 }
-
-#endif
 
 //@}
 
