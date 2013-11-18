@@ -230,6 +230,11 @@ static inline void _at25dfx_chip_enable_write(struct at25dfx_chip_module *chip)
 	cmd.opcode = AT25DFX_COMMAND_WRITE_ENABLE;
 	cmd.command_size = 1;
 	cmd.length = 0;
+
+	// Init to avoid warnings with -Os
+	cmd.address = (at25dfx_address_t)NULL;
+	cmd.data.tx = NULL;
+
 	_at25dfx_chip_issue_write_command_wait(chip, cmd);
 }
 
@@ -267,6 +272,10 @@ enum status_code at25dfx_chip_check_presence(struct at25dfx_chip_module *chip)
 	cmd.command_size = 1;
 	cmd.data.rx = (uint8_t *)&id;
 	cmd.length = 3;
+
+	// Init to avoid warnings with -Os
+	cmd.address = (at25dfx_address_t)NULL;
+
 	_at25dfx_chip_issue_read_command_wait(chip, cmd);
 
 	spi_unlock(chip->spi);
@@ -428,6 +437,11 @@ enum status_code at25dfx_chip_erase(struct at25dfx_chip_module *chip)
 	cmd.opcode = AT25DFX_COMMAND_ERASE_CHIP;
 	cmd.command_size = 1;
 	cmd.length = 0;
+
+	// Init to avoid warnings with -Os
+	cmd.address = (at25dfx_address_t)NULL;
+	cmd.data.tx = NULL;
+
 	_at25dfx_chip_issue_write_command_wait(chip, cmd);
 
 	status = _at25dfx_chip_get_nonbusy_status(chip);
@@ -502,6 +516,10 @@ enum status_code at25dfx_chip_erase_block(struct at25dfx_chip_module *chip,
 	cmd.command_size = 4;
 	cmd.address = address;
 	cmd.length = 0;
+
+	// Init to avoid warnings with -Os
+	cmd.data.tx = NULL;
+
 	_at25dfx_chip_issue_write_command_wait(chip, cmd);
 
 	status = _at25dfx_chip_get_nonbusy_status(chip);
@@ -549,6 +567,10 @@ enum status_code at25dfx_chip_set_global_sector_protect(
 	cmd.command_size = 1;
 	cmd.length = 1;
 	cmd.data.tx = &temp_data;
+
+	// Init to avoid warnings with -Os
+	cmd.address = (at25dfx_address_t)NULL;
+
 	_at25dfx_chip_issue_write_command_wait(chip, cmd);
 
 	spi_unlock(chip->spi);
@@ -601,6 +623,10 @@ enum status_code at25dfx_chip_set_sector_protect(
 	cmd.command_size = 4;
 	cmd.address = address;
 	cmd.length = 0;
+
+	// Init to avoid warnings with -Os
+	cmd.data.tx = NULL;
+
 	_at25dfx_chip_issue_write_command_wait(chip, cmd);
 
 	spi_unlock(chip->spi);
@@ -685,6 +711,11 @@ enum status_code at25dfx_chip_sleep(struct at25dfx_chip_module *chip)
 	cmd.opcode = AT25DFX_COMMAND_SLEEP;
 	cmd.command_size = 1;
 	cmd.length = 0;
+
+	// Init to avoid warnings with -Os
+	cmd.address = (at25dfx_address_t)NULL;
+	cmd.data.tx = NULL;
+
 	_at25dfx_chip_issue_write_command_wait(chip, cmd);
 
 	spi_unlock(chip->spi);
@@ -720,6 +751,11 @@ enum status_code at25dfx_chip_wake(struct at25dfx_chip_module *chip)
 	cmd.opcode = AT25DFX_COMMAND_WAKE;
 	cmd.command_size = 1;
 	cmd.length = 0;
+
+	// Init to avoid warnings with -Os
+	cmd.address = (at25dfx_address_t)NULL;
+	cmd.data.tx = NULL;
+
 	_at25dfx_chip_issue_write_command_wait(chip, cmd);
 
 	spi_unlock(chip->spi);
