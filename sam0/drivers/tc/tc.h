@@ -424,6 +424,7 @@
 #else 
 #define TC_INST_MAX_ID  7
 #endif
+#endif
 
 #if TC_ASYNC == true
 #  include <system_interrupt.h>
