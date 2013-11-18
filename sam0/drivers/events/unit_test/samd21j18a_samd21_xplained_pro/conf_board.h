@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D2x Event System Driver Quick Start
+ * \brief SAM D21 Xplained PRO board configuration.
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,70 +40,8 @@
  * \asf_license_stop
  *
  */
-#include <asf.h>
 
-//! [setup]
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#define EXAMPLE_EVENT_GENERATOR    EVSYS_ID_GEN_TC4_MCX_0
-#define EXAMPLE_EVENT_USER         EVSYS_ID_USER_TC3_EVU
-
-static void configure_event_channel(struct events_resource *resource)
-{
-//! [setup_1]
-	struct events_config config;
-//! [setup_1]
-
-//! [setup_2]
-	events_get_config_defaults(&config);
-//! [setup_2]
-
-//! [setup_3]
-	config.generator      = EXAMPLE_EVENT_GENERATOR;
-	config.edge_detect    = EVENTS_EDGE_DETECT_RISING;
-	config.path           = EVENTS_PATH_SYNCHRONOUS;
-	config.clock_source   = GCLK_GENERATOR_0;
-//! [setup_3]
-
-//! [setup_4]
-	events_allocate(resource, &config);
-//! [setup_4]
-}
-
-static void configure_event_user(struct events_resource *resource)
-{
-//! [setup_5]
-	events_attach_user(resource, EXAMPLE_EVENT_USER);
-//! [setup_5]
-}
-
-//! [setup]
-
-int main(void)
-{
-	struct events_resource example_event;
-
-	system_init();
-
-//! [setup_init]
-	configure_event_channel(&example_event);
-	configure_event_user(&example_event);
-//! [setup_init]
-
-	//! [main]
-
-	//! [main_1]
-	while (events_is_busy(&example_event)) {
-		/* Wait for channel */
-	};
-	//! [main_1]
-
-	//! [main_2]
-	events_trigger(&example_event);
-	//! [main_2]
-
-	while (true) {
-		/* Nothing to do */
-	}
-
-	//! [main]
-}
+#endif /* CONF_BOARD_H_INCLUDED */
