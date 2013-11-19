@@ -88,8 +88,8 @@ static inline bool _extint_is_gclk_required(
  * \note When SYSTEM module is used, this function will be invoked by
  * \ref system_init() automatically if the module is included.
  */
-void extint_init(void);
-void extint_init(void)
+void _system_extint_init(void);
+void _system_extint_init(void)
 {
 	Eic *const eics[EIC_INST_NUM] = EIC_INSTS;
 
@@ -265,8 +265,6 @@ enum status_code extint_nmi_set_config(
 	/* Get a pointer to the module hardware instance */
 	Eic *const EIC_module = _extint_get_eic_from_channel(nmi_channel);
 
-	bool is_gclk_required = _extint_is_gclk_required(
-			config->filter_input_signal, config->detection_criteria);
 	uint32_t new_config;
 
 	/* Determine the NMI's new edge detection configuration */
@@ -277,15 +275,15 @@ enum status_code extint_nmi_set_config(
 		new_config |= EIC_NMICTRL_NMIFILTEN;
 	}
 
-	/* Disable the general clock if requested in the config */
-	if (is_gclk_required) {
-		system_gclk_chan_disable(EIC_GCLK_ID);
-	}
+	/* Disable EIC and general clock to configure NMI */
+	extint_disable();
+	system_gclk_chan_disable(EIC_GCLK_ID);
 
 	EIC_module->NMICTRL.reg = new_config;
 
-	/* Enable the general clock if closed */
+	/* Enable the general clock and EIC after configure NMI */
 	system_gclk_chan_enable(EIC_GCLK_ID);
+	extint_enable();
 
 	return STATUS_OK;
 }
