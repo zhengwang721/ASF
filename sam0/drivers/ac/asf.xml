@@ -21,6 +21,7 @@
 
 			<build type="doxygen-example-path" value="quick_start"/>
 			<build type="doxygen-entry-point" value="asfdoc_samd20_ac_group" />
+			<build type="doxygen-quick-start" value="asfdoc_samd20_ac_exqsg"/>
 
 			<device-support value="samd20" />
 
@@ -55,6 +56,7 @@
 			<build type="doxygen-example-path" value="quick_start"/>
 			<build type="doxygen-example-path" value="quick_start_callback"/>
 			<build type="doxygen-entry-point" value="asfdoc_samd20_ac_group" />
+			<build type="doxygen-quick-start" value="asfdoc_samd20_ac_exqsg"/>
 
 			<device-support value="samd20" />
 
