@@ -55,21 +55,13 @@ struct _extint_module _extint_dev;
  * \brief Determin if the general clock is required
  *
  * \param[in] filter_input_signal Filter the raw input signal to prevent noise
- * \param[in] detection_criteria  Edge detection mode to use
+ * \param[in] detection_criteria  Edge detection mode to use (\ref extint_detect)
  */
-static inline bool _extint_is_gclk_required(
-		const bool filter_input_signal,
-		const enum extint_detect detection_criteria)
-{
-	if (filter_input_signal) {
-		return true;
-	} else if (EXTINT_DETECT_RISING == detection_criteria ||
-		EXTINT_DETECT_FALLING == detection_criteria ||
-		EXTINT_DETECT_BOTH == detection_criteria) {
-		return true;
-	}
-	return false;
-}
+#define _extint_is_gclk_required(filter_input_signal, detection_criteria) \
+		((filter_input_signal) ? true : (\
+			(EXTINT_DETECT_RISING == (detection_criteria)) ? true : (\
+			(EXTINT_DETECT_FALLING == (detection_criteria)) ? true : (\
+			(EXTINT_DETECT_BOTH == (detection_criteria)) ? true : false))))
 
 /**
  * \internal
