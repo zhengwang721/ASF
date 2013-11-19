@@ -44,7 +44,6 @@
 #ifndef CONF_BOARD_H_INCLUDED
 #define CONF_BOARD_H_INCLUDED
 
-#define TC6_MASTER      EXT1_PWM_MODULE
 /** PWM output pin */
 #define PWM_OUT_PIN     EXT1_PWM_0_PIN
 /** PWM output pin mux */

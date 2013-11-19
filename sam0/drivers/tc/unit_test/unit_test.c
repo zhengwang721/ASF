@@ -379,16 +379,12 @@ static void run_16bit_capture_and_compare_test(const struct test_case *test)
 	/* Configure 16-bit TC module for PWM generation */
 	tc_reset(&tc_test0_module);
 	tc_get_config_defaults(&tc_test0_config);
-	tc_test0_config.wave_generation                                       =
-			TC_WAVE_GENERATION_MATCH_PWM;
-	tc_test0_config.counter_16_bit.compare_capture_channel[0]  =
-			0x03FF;
-	tc_test0_config.counter_16_bit.compare_capture_channel[1]  =
-			0x01FF;
+	tc_test0_config.wave_generation  = TC_WAVE_GENERATION_MATCH_PWM;
+	tc_test0_config.counter_16_bit.compare_capture_channel[0]  = 0x03FF;
+	tc_test0_config.counter_16_bit.compare_capture_channel[1]  = 0x01FF;
 	tc_test0_config.channel_pwm_out_enabled[TC_COMPARE_CAPTURE_CHANNEL_1] = true;
-	
-	tc_test0_config.channel_pwm_out_pin[1]                                = CONF_TEST_PIN_OUT;
-	tc_test0_config.channel_pwm_out_mux[1]                                = CONF_TEST_PIN_MUX;
+	tc_test0_config.channel_pwm_out_pin[1] = CONF_TEST_PIN_OUT;
+	tc_test0_config.channel_pwm_out_mux[1] = CONF_TEST_PIN_MUX;
 	tc_init(&tc_test0_module, CONF_TEST_TC0, &tc_test0_config);
 	
 	tc_register_callback(&tc_test0_module, tc_callback_function, TC_CALLBACK_CC_CHANNEL0);
@@ -405,7 +401,7 @@ static void run_16bit_capture_and_compare_test(const struct test_case *test)
 
 	struct tc_events tc_events = { .on_event_perform_action = true,
 								.event_action = TC_EVENT_ACTION_PPW,};
-								
+
 	tc_enable_events(&tc_test1_module, &tc_events);
 
 	/* Configure external interrupt controller */
@@ -418,7 +414,7 @@ static void run_16bit_capture_and_compare_test(const struct test_case *test)
 	extint_chan_config.detection_criteria  = EXTINT_DETECT_HIGH;
 	extint_chan_set_config(0, &extint_chan_config);
 	extint_enable();
-	
+
 	/* Configure external interrupt module to be event generator */
 	struct extint_events extint_event_conf;
 	extint_event_conf.generate_event_on_detect[0] = true;
