@@ -333,6 +333,7 @@
 #include <sercom.h>
 #include <pinmux.h>
 #include <string.h>
+#include <conf_spi.h>
 
 #if SPI_CALLBACK_MODE == true
 #  include <sercom_interrupt.h>
@@ -378,6 +379,12 @@ enum spi_callback {
 	* read or written from slave
 	*/
 	SPI_CALLBACK_SLAVE_TRANSMISSION_COMPLETE,
+#if SAMD21
+	/** Callback for  slave select low */
+	SPI_CALLBACK_SLAVE_SELECT_LOW,
+	/** Callback for combined error happen */
+	SPI_CALLBACK_COMBINED_ERROR,
+#endif
 #  if !defined(__DOXYGEN__)
 	/** Number of available callbacks. */
 	SPI_CALLBACK_N,
@@ -420,9 +427,9 @@ enum spi_interrupt_flag {
 	SPI_INTERRUPT_FLAG_RX_COMPLETE         = SERCOM_SPI_INTFLAG_RXC,
 #if SAMD21
 	/** This flag is set when slave select low  */
-	SPI_INTERRUPT_FLAG_SLAVE_SEL_LOW         = SERCOM_SPI_INTFLAG_SSL,
+	SPI_INTERRUPT_FLAG_SLAVE_SELECT_LOW         = SERCOM_SPI_INTFLAG_SSL,
  	/** This flag is set when combined error happen */
-	SPI_INTERRUPT_FLAG_COM_ERROR         = SERCOM_SPI_INTFLAG_ERROR,
+	SPI_INTERRUPT_FLAG_COMBINED_ERROR         = SERCOM_SPI_INTFLAG_ERROR,
 #endif
 };
 
@@ -778,9 +785,9 @@ struct spi_config {
 	bool receiver_enable;
 #if SAMD21
 	/** Enable Slave Select Low Detect */
-	bool ssd_en;
+	bool select_slave_low_detect_enable;
 	/** Enable Master Slave Select */
-	bool mss_en;
+	bool master_slave_select_enable;
 #endif
 	/** Union for slave or master specific configuration */
 	union {
@@ -801,21 +808,6 @@ struct spi_config {
 	uint32_t pinmux_pad3;
 };
 
-#if SAMD20
-#if !defined (__DOXYGEN__)
-/**
- * \internal Wait until the synchronization is complete
- */
-static inline void _spi_wait_for_sync(
-		struct spi_module *const module)
-{
-	SercomSpi *const spi_module = &(module->hw->SPI);
-
-	/* Wait until the synchronization is complete */
-	while (spi_module->STATUS.reg & SERCOM_SPI_STATUS_SYNCBUSY);
-}
-#endif
-
 /**
  * \brief Determines if the SPI module is currently synchronizing to the bus.
  *
@@ -825,6 +817,7 @@ static inline void _spi_wait_for_sync(
  * is ready.
  *
  * \param[in]  module  SPI hardware module
+ * \param[in]  type  Syncbusy type
  *
  * \return Synchronization status of the underlying hardware module
  * \retval true   Module synchronization is ongoing
@@ -832,7 +825,7 @@ static inline void _spi_wait_for_sync(
  *
  */
 static inline bool spi_is_syncing(
-		struct spi_module *const module)
+		struct spi_module *const module, enum spi_sync_busy_type type)
 {
 	/* Sanity check arguments */
 	Assert(module);
@@ -840,59 +833,11 @@ static inline bool spi_is_syncing(
 
 	SercomSpi *const spi_module = &(module->hw->SPI);
 
+#if SAMD20
+	UNUSED(type);
 	/* Return synchronization status */
 	return (spi_module->STATUS.reg & SERCOM_SPI_STATUS_SYNCBUSY);
-}
 #elif SAMD21
-/**
- * \internal Wait until the synchronization is complete
- *
- * \param[in]  module  SPI hardware module
- * \param[in]  type  Syncbusy type
- */
-static inline void _spi_wait_for_sync(
-		struct spi_module *const module, enum spi_sync_busy_type type)
-{
-	SercomSpi *const spi_module = &(module->hw->SPI);
-
-	/* Wait until the synchronization is complete */
-	switch(type) {
-		case SPI_SYNC_BUSY_SWRST:
-			while (spi_module->SYNCBUSY.reg & SERCOM_SPI_SYNCBUSY_SWRST);
-			break;
-		case SPI_SYNC_BUSY_ENABLE:
-			while (spi_module->SYNCBUSY.reg & SERCOM_SPI_SYNCBUSY_ENABLE);
-			break;
-		case SPI_SYNC_BUSY_CTRLB:
-			while (spi_module->SYNCBUSY.reg & SERCOM_SPI_SYNCBUSY_CTRLB);
-			break;
-	}
-}
-/**
- * \brief Determines if the SPI module is currently synchronizing to the bus.
- *
- * This function will check if the underlying hardware peripheral module is
- * currently synchronizing across multiple clock domains to the hardware bus.
- * This function can be used to delay further operations on the module until it
- * is ready.
- *
- * \param[in]  module  SPI hardware module
- * \param[in]  type  Syncbusy type
- *
- * \return Synchronization status of the underlying hardware module
- * \retval true   Module synchronization is ongoing
- * \retval false  Module synchronization is not ongoing
- *
- */
-static inline bool spi_is_syncing(
-		struct spi_module *const module, enum spi_sync_busy_type type)
-{
-	/* Sanity check arguments */
-	Assert(module);
-	Assert(module->hw);
-
-	SercomSpi *const spi_module = &(module->hw->SPI);
-
 	/* Return synchronization status */
 	switch(type) {
 		case SPI_SYNC_BUSY_SWRST:
@@ -905,6 +850,7 @@ static inline bool spi_is_syncing(
 			return (spi_module->SYNCBUSY.reg & SERCOM_SPI_SYNCBUSY_CTRLB);
 			break;
 	}
+#endif
 }
 #endif
 
@@ -950,8 +896,8 @@ static inline void spi_get_config_defaults(
 	config->run_in_standby   = false;
 	config->receiver_enable  = true;
 #if SAMD21
-	config->ssd_en= true;
-	config->mss_en= false;
+	config->select_slave_low_detect_enable= true;
+	config->master_slave_select_enable= false;
 #endif
 	config->generator_source = GCLK_GENERATOR_0;
 
@@ -1059,15 +1005,9 @@ static inline void spi_enable(
 	system_interrupt_enable(_sercom_get_interrupt_vector(module->hw));
 #endif
 
-#if SAMD20
-	while (spi_is_syncing(module)) {
-		/* Wait until the synchronization is complete */
-	}
-#elif SAMD21
 	while (spi_is_syncing(module, SPI_SYNC_BUSY_ENABLE) {
 		/* Wait until the synchronization is complete */
 	}
-#endif
 
 	/* Enable SPI */
 	spi_module->CTRLA.reg |= SERCOM_SPI_CTRLA_ENABLE;
@@ -1093,15 +1033,9 @@ static inline void spi_disable(
 	system_interrupt_disable(_sercom_get_interrupt_vector(module->hw));
 #endif
 
-#if SAMD20
-	while (spi_is_syncing(module)) {
-		/* Wait until the synchronization is complete */
-	}
-#elif SAMD21
 	while (spi_is_syncing(module, SPI_SYNC_BUSY_ENABLE) {
 		/* Wait until the synchronization is complete */
 	}
-#endif
 
 	/* Disable SPI */
 	spi_module->CTRLA.reg &= ~SERCOM_SPI_CTRLA_ENABLE;
