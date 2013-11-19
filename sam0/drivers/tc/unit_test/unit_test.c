@@ -410,36 +410,35 @@ static void run_16bit_capture_and_compare_test(const struct test_case *test)
 
 	/* Configure external interrupt controller */
 	struct extint_chan_conf extint_chan_config;
-	extint_chan_config.gpio_pin            = PIN_PA16A_EIC_EXTINT0;
-	extint_chan_config.gpio_pin_mux        = MUX_PA16A_EIC_EXTINT0;
+	extint_chan_config.gpio_pin            = CONF_EIC_PIN;
+	extint_chan_config.gpio_pin_mux        = CONF_EIC_MUX;
 	extint_chan_config.gpio_pin_pull       = EXTINT_PULL_UP;
 	extint_chan_config.wake_if_sleeping    = false;
 	extint_chan_config.filter_input_signal = false;
 	extint_chan_config.detection_criteria  = EXTINT_DETECT_HIGH;
 	extint_chan_set_config(0, &extint_chan_config);
 	extint_enable();
+	
 	/* Configure external interrupt module to be event generator */
 	struct extint_events extint_event_conf;
 	extint_event_conf.generate_event_on_detect[0] = true;
 	extint_enable_events(&extint_event_conf);
 
 	/* Configure event system */
-	events_init();
-	/* Configure user */
-	struct events_user_config event_user_conf;
-	events_user_get_config_defaults(&event_user_conf);
-	event_user_conf.event_channel_id = EVENT_CHANNEL_0;
-
-	events_user_set_config(CONF_EVENT_USED_ID, &event_user_conf);
+	struct events_resource event_res;
 	
 	/* Configure channel */
-	struct events_chan_config events_chan_conf;
-	events_chan_get_config_defaults(&events_chan_conf);
-	events_chan_conf.generator_id   = EVSYS_ID_GEN_EIC_EXTINT_0;
-	events_chan_conf.path           = EVENT_PATH_ASYNCHRONOUS;
-	events_chan_conf.edge_detection = EVENT_EDGE_NONE;
-	events_chan_set_config(EVENT_CHANNEL_0, &events_chan_conf);
+	struct events_config config;
+	events_get_config_defaults(&config);
+	
+	config.generator      = CONF_EVENT_GENERATOR_ID;
+	config.edge_detect    = EVENTS_EDGE_DETECT_NONE;
+	config.path           = EVENTS_PATH_ASYNCHRONOUS;
+	events_allocate(&event_res, &config);
 
+	/* Configure user */
+	events_attach_user(&event_res, CONF_EVENT_USED_ID);
+	
 	/* Enable TC modules */
 	tc_enable(&tc_test1_module);
 	tc_enable(&tc_test0_module);
