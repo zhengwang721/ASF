@@ -146,10 +146,10 @@ static void tc_callback_function(struct tc_module *const module_inst)
 static void run_init_test(const struct test_case *test)
 {
 	tc_get_config_defaults(&tc_test0_config);
-	enum status_code test1 = tc_init(&tc_test0_module, CONF_TEST_TC1, &tc_test0_config);
+	enum status_code test1 = tc_init(&tc_test0_module, CONF_TEST_TC0, &tc_test0_config);
 
 	tc_get_config_defaults(&tc_test1_config);
-	enum status_code test2 = tc_init(&tc_test1_module, CONF_TEST_TC2, &tc_test1_config);
+	enum status_code test2 = tc_init(&tc_test1_module, CONF_TEST_TC1, &tc_test1_config);
 
 	if ((test1 == STATUS_OK) && (test2 == STATUS_OK)) {
 		tc_init_success = true;
@@ -181,7 +181,7 @@ static void run_reset_32bit_master_test(const struct test_case *test)
 	tc_get_config_defaults(&tc_test0_config);
 	tc_test0_config.counter_size = TC_COUNTER_SIZE_32BIT;
 	
-	tc_init(&tc_test0_module, CONF_TEST_TC1, &tc_test0_config);
+	tc_init(&tc_test0_module, CONF_TEST_TC0, &tc_test0_config);
 	tc_enable(&tc_test0_module);
 
 	while (tc_is_syncing(&tc_test0_module)) {
@@ -209,7 +209,7 @@ static void run_reset_32bit_master_test(const struct test_case *test)
 	/* Change to 16-bit counter on TC0  */
 	tc_test0_config.counter_size = TC_COUNTER_SIZE_16BIT;
 
-	tc_init(&tc_test0_module, CONF_TEST_TC1, &tc_test0_config);
+	tc_init(&tc_test0_module, CONF_TEST_TC0, &tc_test0_config);
 	tc_enable(&tc_test0_module);
 
 	while (tc_is_syncing(&tc_test0_module)) {
@@ -217,7 +217,7 @@ static void run_reset_32bit_master_test(const struct test_case *test)
 	}
 
    
-	tc_init(&tc_test1_module, CONF_TEST_TC2, &tc_test1_config);
+	tc_init(&tc_test1_module, CONF_TEST_TC1, &tc_test1_config);
 	tc_enable(&tc_test1_module);
 
 	while (tc_is_syncing(&tc_test1_module)) {
@@ -254,7 +254,7 @@ static void run_basic_functionality_test(const struct test_case *test)
 	tc_reset(&tc_test0_module);
 	tc_get_config_defaults(&tc_test0_config);
 	
-	tc_init(&tc_test0_module, CONF_TEST_TC1, &tc_test0_config);
+	tc_init(&tc_test0_module, CONF_TEST_TC0, &tc_test0_config);
 	tc_enable(&tc_test0_module);
 
 	/* Test tc_get_count_value() */
@@ -319,7 +319,7 @@ static void run_callback_test(const struct test_case *test)
 		[TC_COMPARE_CAPTURE_CHANNEL_1]                    = 0x03FA;
 		
 
-	tc_init(&tc_test0_module, CONF_TEST_TC1, &tc_test0_config);
+	tc_init(&tc_test0_module, CONF_TEST_TC0, &tc_test0_config);
 
 	/* Setup callbacks */
 	tc_register_callback(&tc_test0_module, tc_callback_function, TC_CALLBACK_CC_CHANNEL1);
@@ -389,7 +389,7 @@ static void run_16bit_capture_and_compare_test(const struct test_case *test)
 	
 	tc_test0_config.channel_pwm_out_pin[1]                                = CONF_TEST_PIN_OUT;
 	tc_test0_config.channel_pwm_out_mux[1]                                = CONF_TEST_PIN_MUX;
-	tc_init(&tc_test0_module, CONF_TEST_TC1, &tc_test0_config);
+	tc_init(&tc_test0_module, CONF_TEST_TC0, &tc_test0_config);
 	
 	tc_register_callback(&tc_test0_module, tc_callback_function, TC_CALLBACK_CC_CHANNEL0);
 	tc_enable_callback(&tc_test0_module, TC_CALLBACK_CC_CHANNEL0);
@@ -401,7 +401,7 @@ static void run_16bit_capture_and_compare_test(const struct test_case *test)
 	tc_test1_config.enable_capture_on_channel[0] = true;
 	tc_test1_config.enable_capture_on_channel[1] = true;
 	
-	tc_init(&tc_test1_module, CONF_TEST_TC2, &tc_test1_config);
+	tc_init(&tc_test1_module, CONF_TEST_TC1, &tc_test1_config);
 
 	struct tc_events tc_events = { .on_event_perform_action = true,
 		                           .event_action = TC_EVENT_ACTION_PPW,};
