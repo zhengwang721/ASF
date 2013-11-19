@@ -45,14 +45,16 @@
 #include <status_codes.h>
 
 
+typedef unsigned int word_t;
+
 //! Polynomial for 32-bit CRC in IEEE 802.3.
 #define CRC32_POLYNOMIAL     0xEDB88320UL
 
 //! Convenience macro for inverting the CRC.
 #define COMPLEMENT_CRC(c)    ((c) ^ 0xffffffffUL)
 
-//! Convenience macro for size of a word (integer).
-#define WORD_SIZE            (sizeof(int))
+//! Convenience macro for size of a word.
+#define WORD_SIZE            (sizeof(word_t))
 
 //! Bitmask for word-aligning an address.
 #define WORD_ALIGNMENT_MASK  ~((uintptr_t)WORD_SIZE - 1)
@@ -70,7 +72,7 @@
  *
  * \attention This implementation assumes a little-endian architecture.
  */
-static inline crc32_t _crc32_recalculate_bytes_helper(int data,
+static inline crc32_t _crc32_recalculate_bytes_helper(word_t data,
 		crc32_t crc, uint_fast8_t bytes)
 {
 	uint_fast8_t bit;
@@ -113,11 +115,11 @@ static inline crc32_t _crc32_recalculate_bytes_helper(int data,
  */
 enum status_code crc32_recalculate(const void *data, size_t length, crc32_t *crc)
 {
-	const int *word_ptr =
-			(int *)((uintptr_t)data & WORD_ALIGNMENT_MASK);
+	const word_t *word_ptr =
+			(word_t *)((uintptr_t)data & WORD_ALIGNMENT_MASK);
 	size_t temp_length;
-	uint32_t temp_crc = COMPLEMENT_CRC(*crc);
-	int word;
+	crc32_t temp_crc = COMPLEMENT_CRC(*crc);
+	word_t word;
 
 	// Calculate for initial bytes to get word-aligned
 	if (length < WORD_SIZE) {
@@ -150,7 +152,7 @@ enum status_code crc32_recalculate(const void *data, size_t length, crc32_t *crc
 	// Calculate for tailing bytes
 	if (length) {
 		word = *word_ptr;
-		word &= 0xffffffffUL >> (8 * length);
+		word &= 0xffffffffUL >> (8 * (WORD_SIZE - length));
 		temp_crc = _crc32_recalculate_bytes_helper(word, temp_crc, length);
 	}
 
