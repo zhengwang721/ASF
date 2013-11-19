@@ -105,7 +105,7 @@ static uint32_t pwm_clocks_generate(uint32_t ul_frequency, uint32_t ul_mck)
 			break;
 		}
 		ul_pre++;
-	} while ((ul_pre < PWM_CLOCK_PRE_MAX)) ;
+	} while (ul_pre < PWM_CLOCK_PRE_MAX);
 
 	/* Return result */
 	if (ul_pre < PWM_CLOCK_PRE_MAX) {
