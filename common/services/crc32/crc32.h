@@ -44,7 +44,21 @@
 #ifndef CRC32_H
 #define CRC32_H
 
+
 #include <compiler.h>
+
+
+/**
+ * \defgroup common_services_crc32 CRC-32 calculation service
+ *
+ * See \ref common_services_crc32_quickstart.
+ *
+ * This service enables the user to calculate 32-bit CRC using the polynomial
+ * defined in the IEEE 802.3 standard, with support for multiple data blocks
+ * of arbitrary sizes, and any alignment in memory.
+ *
+ * @{
+ */
 
 
 //! Type to contain 32-bit CRC.
@@ -68,8 +82,8 @@ enum status_code crc32_recalculate(const void *data, size_t length, crc32_t *crc
  * This function calculates the CRC for the specified data block, which may be
  * first of an arbitrary number of blocks.
  *
- * The actual calculation is done in \ref crc_recalculate(), while this function
- * just sets up the initial CRC value.
+ * The actual calculation is done in \ref crc32_recalculate(), while this
+ * function just sets up the initial CRC value.
  *
  * \param[in] data Address of data.
  * \param[in] length Length of data.
@@ -89,5 +103,33 @@ static inline enum status_code crc32_calculate(const void *data, size_t length,
 
 	return crc32_recalculate(data, length, crc);
 }
+
+/** @} */
+
+/**
+ * \page common_services_crc32_quickstart Quick Start Guide for CRC-32
+ *
+ * To use this service, the user must supply a \ref crc32_t "container" variable
+ * for the CRC and call \ref crc32_calculate() with the parameters for the first
+ * block in the dataset. For subsequent blocks, \ref crc32_recalculate() must be
+ * used.
+ *
+ * \note The user may also initialize the container with a known CRC value and
+ * use that as the "seed" for \ref crc32_recalculate().
+ *
+ *
+ * \section common_services_crc32_quickstart_code Example Code
+ *
+\code
+uint8_t block1[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+uint8_t block2[5] = {0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f};
+
+crc32_t my_crc;
+
+crc32_calculate(block1, sizeof(block1), &my_crc);
+crc32_recalculate(block2, sizeof(block2), &my_crc);
+\endcode
+ *
+ */
 
 #endif // CRC32_H
