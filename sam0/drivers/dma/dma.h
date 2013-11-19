@@ -45,6 +45,29 @@
 
 #include <compiler.h>
 
+/** DMA invalid channel number */
+#define DMA_INVALID_CHANNEL        0xff
+
+/** DMA priority level */
+enum dma_priority_level {
+	/** Priority level 0 */
+	DMA_PRIORITY_LEVEL_0 = 0,
+	/** Priority level 1 */
+	DMA_PRIORITY_LEVEL_1,
+	/** Priority level 2 */
+	DMA_PRIORITY_LEVEL_2,
+	/** Priority level 3 */
+	DMA_PRIORITY_LEVEL_3,
+	/** Priority level 4 */
+	DMA_PRIORITY_LEVEL_4,
+	/** Priority level 5 */
+	DMA_PRIORITY_LEVEL_5,
+	/** Priority level 6 */
+	DMA_PRIORITY_LEVEL_6,
+	/** Priority level 7 */
+	DMA_PRIORITY_LEVEL_7,
+};
+
 /** DMA input actions */
 enum dma_event_input_action {
 	/** No action */
@@ -135,7 +158,9 @@ struct dma_transfer_descriptor {
 /** DMA configurations for transfer */
 struct dma_transfer_config {
 	/** DMA transfer priority */
-	uint8_t priority;
+	enum dma_priority_level priority;
+	/** CRC enable flag */
+	bool crc;
 	/** DMA transfer trigger selection */
 	enum dma_transfer_trigger transfer_trigger;
 	/**DMA peripheral trigger index*/
@@ -143,6 +168,11 @@ struct dma_transfer_config {
 	/** DMA events configurations */
 	struct dma_events_config event_config;
 };
+
+/** Forward definition of the dma resource */
+struct dma_resource;
+/** Type of the callback function for DMA resource*/
+typedef void (*dma_callback_t)(const struct dma_resource *const resource);
 
 /** Structure for DMA transfer resource */
 struct dma_resource {
@@ -154,17 +184,22 @@ struct dma_resource {
 	uint8_t callback_enable;
 	/** Status of the last job */
 	volatile enum status_code job_status;
+	/** Calculated CRC checksum value */
+	uint32_t crc_checksum;
+	/** Transfered data size */
+	uint32_t transfered_size;
 };
-
-typedef void (*dma_callback_t)(struct dma_resource *resource);
 
 void dma_get_config_defaults(struct dma_transfer_config *config);
 enum status_code dma_allocate(struct dma_resource *resource,
 								struct dma_transfer_config *config);
 enum status_code dma_transfer_job(struct dma_resource *resource, struct dma_transfer_descriptor *descriptor);
-enum status_code dma_abort_job(struct dma_resource *resource);
+void dma_abort_job(struct dma_resource *resource);
+void dma_suspend_job(struct dma_resource *resource);
+void dma_resume_job(struct dma_resource *resource);
 enum status_code dma_get_job_status(struct dma_resource *resource);
 enum status_code dma_release(struct dma_resource *resource);
+bool dma_is_busy(struct dma_resource *resource);
 void dma_enable_callback(struct dma_resource *resource, enum dma_callback_type type);
 void dma_disable_callback(struct dma_resource *resource, enum dma_callback_type type);
 void dma_register_callback(struct dma_resource *resource, dma_callback_t callback, enum dma_callback_type type);

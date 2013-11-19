@@ -40,19 +40,12 @@
  * \asf_license_stop
  *
  */
-
-#include "dmac.h"
-#include "conf_dmac.h"
  
-#define DMA_INVALID_CHANNEL			0xff
-
-//setup initial description section
-static struct dma_transfer_descriptor descriptor_section[CONF_MAX_USED_CHANNEL_NUM];
-//Setup initial write back memory section
-static struct dma_transfer_descriptor write_back_section[CONF_MAX_USED_CHANNEL_NUM];
-
-//DMA resource pools
-static struct dma_resource dma_active_resource[CONF_MAX_USED_CHANNEL_NUM];
+#include <string.h>
+#include "dma.h"
+#include "conf_dma.h"
+#include "clock.h"
+#include "system_interrupt.h"
 
 struct _dma_module {
 	volatile bool _dma_init;
@@ -61,11 +54,33 @@ struct _dma_module {
 };
 
 struct _dma_module _dma_inst = {
-	._dma_init = false;
+	._dma_init = false,
 	.allocated_channels = 0,
-	.free_channels = CONF_MAX_USED_CHANNEL_NUM;  //The definition in the current instance_dmac.h is 12 which should be 32 if according to datasheet
+	.free_channels = CONF_MAX_USED_CHANNEL_NUM,
 };
 
+/** Maximum retry counter for resuming a job transfer */
+#define MAX_JOB_RESUME_COUNT    10000
+
+/** Initial description section */
+static struct dma_transfer_descriptor descriptor_section[CONF_MAX_USED_CHANNEL_NUM];
+/** Initial write back memory section */
+static struct dma_transfer_descriptor write_back_section[CONF_MAX_USED_CHANNEL_NUM];
+
+/** Internal DMA resource pool */
+static struct dma_resource dma_active_resource[CONF_MAX_USED_CHANNEL_NUM];
+
+/**
+ * \brief Find a free channel for a DMA resource.
+ *
+ * Find and set the priority level for the requested DMA resource.
+ *
+ * \param[in]  priority         DMA resource priority level
+ *
+ * \return Status of channel allocation
+ * \retval DMA_INVALID_CHANNEL  No channel available
+ * \retval count          Allocated channel for the DMA resource
+ */
 static uint8_t _dma_find_first_free_channel_and_allocate(uint8_t priority)
 {
 	uint8_t count;
@@ -86,7 +101,6 @@ static uint8_t _dma_find_first_free_channel_and_allocate(uint8_t priority)
 			allocated = true;
 
 			break;
-
 		}
 
 		tmp = tmp >> 1;
@@ -97,44 +111,55 @@ static uint8_t _dma_find_first_free_channel_and_allocate(uint8_t priority)
 	if(!allocated) {
 		return DMA_INVALID_CHANNEL;
 	} else {
-		DMAC->CHID.reg = DMAC_CHID_ID(dma_resource->channel_id);
+		/* Set priority level for the allocated channel */
+		DMAC->CHID.reg = DMAC_CHID_ID(count);
 		DMAC->CHCTRLB.reg |=  DMAC_CHCTRLB_LVL(priority);
 		return count;
 	}
 }
 
+/**
+ * \brief Release an allocated DMA channel.
+ *
+ * \param[in]  channel  Channel id to be released.
+ *
+ */
 static void _dma_release_channel(uint8_t channel)
 {
-	system_interrupt_enter_critical_section();
-
 	_dma_inst.allocated_channels &= ~(1 << channel);
 	_dma_inst.free_channels++;
-
-	system_interrupt_leave_critical_section();
 }
 
-static void _dma_set_config(struct dma_resource *dma_resource,
+/**
+ * \brief Configure the DMA resource.
+ *
+ * \param[in]  dma_resource Pointer to a DMA resource instance
+ * \param[out] transfer_config Configurations of the DMA transfer
+ *
+ */
+static void _dma_set_config(struct dma_resource *resource,
 								struct dma_transfer_config *transfer_config)
 {
-	Assert(dma_resource);
+	Assert(resource);
 	Assert(transfer_config);
-	
-	//TODO: Set actual configurations for a dma resource
-	
-	//Using default settings for DMA channel configurations.
-	DMAC->CHID.reg = DMAC_CHID_ID(dma_resource->channel_id);
-	DMAC->SWTRIGCTRL.reg &= (uint32_t)(~(1 << dma_resource->channel_id));
 
-	/* One trigger required for each transaction */
+	system_interrupt_enter_critical_section();
+
+	/** Select the DMA channel and clear software trigger */
+	DMAC->CHID.reg = DMAC_CHID_ID(resource->channel_id);
+	DMAC->SWTRIGCTRL.reg &= (uint32_t)(~(1 << resource->channel_id));
+
+	/* Transaction is used as the fixed trigger action type */
 	DMAC->CHCTRLB.reg |=  DMAC_CHCTRLB_TRIGACT_TRANSACTION;
 
+	/* Select transfer trigger */
 	switch (transfer_config->transfer_trigger) {
 		case DMA_TRIGGER_SOFTWARE :
-			DMAC->SWTRIGCTRL.reg |= (1 << dma_resource->channel_id);
+			DMAC->SWTRIGCTRL.reg |= (1 << resource->channel_id);
 			break;
 
 		case DMA_TRIGGER_PERIPHERAL:
-			DMAC->CHCTRLB.reg |= DMAC_CHCTRLB_TRIGSRC(transfer_config->dma_peripheral_trigger_index);
+			DMAC->CHCTRLB.reg |= DMAC_CHCTRLB_TRIGSRC(transfer_config->peripheral_trigger);
 			break;
 
 		case DMA_TRIGGER_EVENT:
@@ -146,110 +171,183 @@ static void _dma_set_config(struct dma_resource *dma_resource,
 	};
 
 	/** Enable event output, the event output selection is configured in each transfer descriptor  */
-	if (transfer_config->event_config.dma_event_output_enable) {
+	if (transfer_config->event_config.event_output_enable) {
 		DMAC->CHCTRLB.reg |= DMAC_CHCTRLB_EVOE;
 	}
 	
+	system_interrupt_leave_critical_section();
 }
 
+
+/**
+ * \brief DMA interrupt service routine.
+ *
+ */
 void DMAC_Handler( void )
 {
 	uint8_t active_channel;
-	
-	struct dma_resource dma_resource;
-	
+	struct dma_resource* resource;
 	uint8_t isr = DMAC->CHINTFLAG.reg;
 
-	//Lock DMA interrupt?
+	system_interrupt_enter_critical_section();
 
+	/* Get active channel */
 	active_channel = (DMAC->ACTIVE.reg >> 8 & 0x1f);
-	dma_resource = dma_active_resource[active_channel];
-	DMAC->CHID.reg = DMAC_CHID_ID(dma_resource->channel_id);
 
-	//TODO Error handler?
-	//CALLBACKs for all
+	/* Get active DMA resource based on channel */
+	resource = &dma_active_resource[active_channel];
+
+	/* Select the active channel */
+	DMAC->CHID.reg = DMAC_CHID_ID(resource->channel_id);
+
+	/* Get CRC value  if CRC enabled for the channel */
+	if (((DMAC->CRCCTRL.reg&0x3f) - 0x20) == active_channel) {
+		resource->crc_checksum =  DMAC->CRCCHKSUM.reg;
+	}
+
+	/* Calculate block transfer size of the DMA transfer */
+	resource->transfered_size = descriptor_section[resource->channel_id].block_transfer_count -
+		write_back_section[resource->channel_id].block_transfer_count;
+
+	/* DMA channel interrupt handler */
 	if (isr & DMAC_CHINTENCLR_TERR) {
+		/* Clear transfer error flag */
 		DMAC->CHINTFLAG.reg |= DMAC_CHINTENCLR_TERR;
-		dma_resource->job_status = ERR_IO_ERROR;
-		if ((dma_resource->enabled_callbacks & 1 << DMA_CALLBACK_TRANSFER_ERROR)
-			&& (dma_resource->callback[DMA_CALLBACK_TRANSFER_ERROR])){
-			dma_resource->callback[DMA_CALLBACK_TRANSFER_ERROR](&dma_resource);
+
+		/* Set IO ERROR status */
+		resource->job_status = STATUS_ERR_IO;
+
+		/* Execute the callback function */
+		if ((resource->callback_enable & 1 << DMA_CALLBACK_TRANSFER_ERROR)
+			&& (resource->callback[DMA_CALLBACK_TRANSFER_ERROR])){
+			resource->callback[DMA_CALLBACK_TRANSFER_ERROR](resource);
 		}
 	} else if (isr & DMAC_CHINTENCLR_TCMPL) {
+		/* Clear the transfer complete flag */
 		DMAC->CHINTFLAG.reg |= DMAC_CHINTENCLR_TCMPL;
-		dma_resource->job_status = STATUS_OK;
-		if ((dma_resource->enabled_callbacks & 1 << DMA_CALLBACK_TRANSFER_DONE)
-			&& (dma_resource->callback[DMA_CALLBACK_TRANSFER_DONE])){
-			dma_resource->callback[DMA_CALLBACK_TRANSFER_DONE](&dma_resource);
+
+		/* Set job status */
+		resource->job_status = STATUS_OK;
+
+		/* Execute the callback function */
+		if ((resource->callback_enable & 1 << DMA_CALLBACK_TRANSFER_DONE)
+			&& (resource->callback[DMA_CALLBACK_TRANSFER_DONE])){
+			resource->callback[DMA_CALLBACK_TRANSFER_DONE](resource);
 		}
 	} else if (isr & DMAC_CHINTENCLR_SUSP) {
+		/* Clear channel suspend flag */
 		DMAC->CHINTFLAG.reg |= DMAC_CHINTENCLR_TCMPL;
-		dma_resource->job_status = ERR_INVALID_ARG;
-		if ((dma_resource->enabled_callbacks & 1 << DMA_CALLBACK_CHANNEL_SUSPEND)
-			&& (dma_resource->callback[DMA_CALLBACK_CHANNEL_SUSPEND])){
-			dma_resource->callback[DMA_CALLBACK_CHANNEL_SUSPEND](&dma_resource);
+
+		/* Set job status */
+		resource->job_status = STATUS_SUSPEND;
+
+		/* Execute the callback function */
+		if ((resource->callback_enable & 1 << DMA_CALLBACK_CHANNEL_SUSPEND)
+			&& (resource->callback[DMA_CALLBACK_CHANNEL_SUSPEND])){
+			resource->callback[DMA_CALLBACK_CHANNEL_SUSPEND](resource);
 		}
 	}
+
+	system_interrupt_leave_critical_section();
 }
 
-void dma_get_config_defaults(struct dma_transfer_config *transfer_config)
+/**
+ * \brief Initializes config with predefined default values.
+ *
+ * This function will initialize a given DMA configuration structure to
+ * a set of known default values. This function should be called on
+ * any new instance of the configuration structures before being
+ * modified by the user application.
+ *
+ * The default configuration is as follows:
+ *  \li software trigger is used as the transfer trigger
+ *  \li priority level 0
+ *  \li No CRC
+ * \param[out] config Pointer to the configuration
+ *
+ */
+void dma_get_config_defaults(struct dma_transfer_config *config)
 {
 	Assert(config);
 	
 	config->transfer_trigger = DMA_TRIGGER_SOFTWARE;
-	config->priority = 0;
+	config->priority = DMA_PRIORITY_LEVEL_0;
 	config->crc = false;
-	config->beat_size = DMA_BEAT_SIZE_BYTE;
-
-	/** NULL setting for events as using software trigger by default */
-	
-	/** DMA transfer descriptor defines a real transfer and is always fulfilled by apps */
 }
 
+/**
+ * \brief Allocate a DMA with configurations.
+ *
+ * This function will allocate a proper channel for a DMA transfer request.
+ *
+ * \param[in,out]  dma_resource Pointer to a DMA resource instance
+ * \param[in] transfer_config Configurations of the DMA transfer
+ *
+ * \return Status of the allocation procedure.
+ *
+ * \retval STATUS_OK The DMA resource was allocated successfully
+ * \retval STATUS_BUSY The CRC module is busy, a request of DMA resource
+ *                                  with CRC enabled was not available at the moment
+ * \retval STATUS_ERR_NOT_FOUND DMA resource allcation failed
+ */
 enum status_code dma_allocate(struct dma_resource *resource,
 								struct dma_transfer_config *config)
 {
 	uint8_t new_channel;
+	uint8_t i;
 
 	Assert(resource);
 
+	system_interrupt_enter_critical_section();
+
+	/* Set default channel ID */
 	resource -> channel_id = DMA_INVALID_CHANNEL;
 
 	if (!_dma_inst._dma_init) {
-		//TODO: do DMA HW init phase here
+		/* Initialize clocks for DMA */
 		system_ahb_clock_set_mask(PM_AHBMASK_DMAC);
 		system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBB, PM_APBBMASK_DMAC);
 
+		/* Perform a software reset before enable DMA controller */
 		DMAC->CTRL.reg = DMAC_CTRL_SWRST;
 		/* Enable all priority level at the same time */
 		DMAC->CTRL.reg = DMAC_CTRL_DMAENABLE | DMAC_CTRL_LVLEN(0xf);
 
-		// Setup Control register, only CRC is under consideration.
-		// Priority level is ignored as we using 32 level fixed priorities
-		// The DMA controller is enabled during init phase
-		if (CONF_DMA_CRC_ENABLE) {
-			//Some additional logic control for the CRC should be taken
-			//Or just simply applied to all channels with defect of a might be slower performance
-			//for all channels as CRC calculation
-			DMAC->CTRL |= DMAC_CTRL_CRCENABLE;
-		}
+		/* Enable CRC */
+		DMAC->CTRL.reg |= DMAC_CTRL_CRCENABLE;
 
-		DMAC->BASEADDR.reg = descriptor_section;
-		DMAC->WRBADDR.reg = write_back_section;
+		/* Setup descriptor base address and write back section base address */
+		DMAC->BASEADDR.reg = (uint32_t)descriptor_section;
+		DMAC->WRBADDR.reg = (uint32_t)write_back_section;
+
+		/* Set all channels in the resource pool as not used */
+		for (i=0;i<CONF_MAX_USED_CHANNEL_NUM;i++) {
+			dma_active_resource[i].channel_id = DMA_INVALID_CHANNEL;
+		}
 		
 		_dma_inst._dma_init = true;
 	}
-	
+
+	/* If CRC module enabled and busy */
+	if ((config->crc)  && (DMAC->CRCSTATUS.reg & DMAC_CRCSTATUS_CRCBUSY)) {
+			/* If busy, the channel will not be allocated */
+			return STATUS_BUSY;
+	}
+
+	/* Find the proper channel */
 	new_channel = _dma_find_first_free_channel_and_allocate(config->priority);
 
+	/* If no channel available, return not found */
 	if(new_channel == DMA_INVALID_CHANNEL) {
 		return STATUS_ERR_NOT_FOUND;
 	}
 
+	/* Set the channel */
 	resource->channel_id = new_channel;
 
-	if (CONF_DMA_CRC_ENABLE) {
-		DMAC->CRCCTRL |= DMAC_CRCCTRL_CRCSRC(resource->channel_id);
+	/* Set the CRC source */
+	if (config->crc) {
+		DMAC->CRCCTRL.reg |= DMAC_CRCCTRL_CRCSRC(resource->channel_id);
 	}
 
 	/** Perform a reset for the allocated channel */
@@ -259,73 +357,215 @@ enum status_code dma_allocate(struct dma_resource *resource,
 	/** Config the DMA control,channel registers and descriptors here */
 	_dma_set_config(resource, config);
 
+	system_interrupt_leave_critical_section();
+
 	return STATUS_OK;
 }
 
+/**
+ * \brief Release an allocated DMA resource.
+ *
+ * This function will release an allocated DMA resource.
+ *
+ * \param[in,out] resource Pointer to the DMA resource
+ *
+ * \return Status of the release procedure.
+ *
+ * \retval STATUS_OK The DMA resource was released successfully
+ * \retval STATUS_BUSY The DMA resource was busy and can't be released
+ * \retval STATUS_ERR_NOT_INITIALIZED DMA resource was not initialized
+ */
 enum status_code dma_release(struct dma_resource *resource)
 {
 	Assert(resource);
 	Assert(resource->channel_id != DMA_INVALID_CHANNEL);
+
+	system_interrupt_enter_critical_section();
 
 	/* Check if channel is busy */
 	if(dma_is_busy(resource)) {
 		return STATUS_BUSY;
 	}
 
+	/* Check if DMA resource was not allocated */
 	if (!(_dma_inst.allocated_channels & (1<<resource->channel_id))) {
 		return STATUS_ERR_NOT_INITIALIZED;
 	}
 
-	dma_active_resource[resource->channel_id] = NULL;
-
+	/* Release the DMA resource */
 	_dma_release_channel(resource->channel_id);
+
+	/* Reset the item in the DMA resource pool */
+	memset(&dma_active_resource[resource->channel_id], 0x0, sizeof(struct dma_resource));
+	dma_active_resource[resource->channel_id].channel_id = DMA_INVALID_CHANNEL;
+
+	system_interrupt_leave_critical_section();
 
 	return STATUS_OK;
 }
 
+/**
+ * \brief Start a DMA transfer.
+ *
+ * This function will start a DMA transfer through an allocated DMA resource.
+ *
+ * \param[in,out] resource Pointer to the DMA resource
+ * \param[in] transfer_descriptor Pointer to the DMA transfer descriptor
+ *
+ * \return Status of the release procedure.
+ *
+ * \retval STATUS_OK The transfer was started successfully
+ * \retval STATUS_BUSY The DMA resource was busy and the transfer was not started
+ * \retval STATUS_ERR_INVALID_ARG Transfer size is 0 and transfer was not started
+ */
 enum status_code dma_transfer_job(struct dma_resource *resource,
 	struct dma_transfer_descriptor* transfer_descriptor)
 {
 	Assert(resource);
 	Assert(resource->channel_id != DMA_INVALID_CHANNEL);
+
+	system_interrupt_enter_critical_section();
 	
-	if (resource->job_status == ERR_BUSY) {
-		return ERR_BUSY;  // waiting for channel ready
+	/* Check if resource was busy */
+	if (resource->job_status == STATUS_BUSY) {
+		return STATUS_BUSY;
 	}
-	
-	if (descriptor_section[resource->channel_id].block_count == 0) {
-		return ERR_INVALID_ARG;
+
+	/* Check if transfer size is valid */
+	if (descriptor_section[resource->channel_id].block_transfer_count == 0) {
+		return STATUS_ERR_INVALID_ARG;
 	}
-	
+
+	/* Enable the transfer channel */
 	DMAC->CHID.reg = DMAC_CHID_ID(resource->channel_id);
 	DMAC->CHCTRLA.reg = DMAC_CHCTRLA_ENABLE;
 
-	
-	//TODO: ENABLE Channel suspend / Transfer complete / Transfer error interrupt
+	/* Set the interrupt flag */
+	DMAC->CHINTENSET.reg |= DMAC_CHINTENSET_TERR | DMAC_CHINTENSET_TCMPL | DMAC_CHINTENSET_SUSP;
 
-	resource->job_status = ERR_BUSY;
+	/* Set job status */
+	resource->job_status = STATUS_BUSY;
 
-	//DMA detail descriptors are handled by apps
-	descriptor_section[resource->channel_id] = transfer_descriptor;
+	/* Set channel x descriptor 0 to the descriptor base address */
+	descriptor_section[resource->channel_id] = *transfer_descriptor;
 
+	/* Log the DMA resouce into the internal DMA resource pool */
 	dma_active_resource[resource->channel_id] = *resource;
+
+	system_interrupt_leave_critical_section();
 	
 	return STATUS_OK;
 }
 
+/**
+ * \brief Abort a DMA transfer.
+ *
+ * This function will abort a DMA transfer. The channel used for the DMA resource
+ * will be disabled.
+ * If CRC calculation was enabled for the channel, the CRC checksum for the transfered
+ * data will be calcluated and output in the DMA resource structure.
+ * The block transfer count will be also calculated and output in the DMA resource structure.
+ *
+ * \note The DMA resource will not be freed after calling this function.
+ *
+ * \param[in,out] resource Pointer to the DMA resource
+ *
+ */
 void dma_abort_job(struct dma_resource *resource)
 {
 	Assert(resource);
 	Assert(resource->channel_id != DMA_INVALID_CHANNEL);
+	
+	DMAC->CHID.reg = DMAC_CHID_ID(resource->channel_id);
+	DMAC->CHCTRLA.reg = 0;
 
-	//TODO: Disable Channel suspend / Transfer complete / Transfer error interrupt
-	
-	DMAC->CHID.reg = DMAC_CHID_ID(dma_resource->channel_id);
-	DMAC->CHCTRLA.reg = DMAC_CHCTRLA_ENABLE;
-	
-	resource->job_status = ERR_FLUSHED;
+	/* Set the checksum of the tranfered data */
+	if (((DMAC->CRCCTRL.reg&0x3f) - 0x20) == resource->channel_id) {
+		resource->crc_checksum =  DMAC->CRCCHKSUM.reg;
+	}
+
+	/* Get transfered size */
+	resource->transfered_size = descriptor_section[resource->channel_id].block_transfer_count -
+		write_back_section[resource->channel_id].block_transfer_count;
+
+	resource->job_status = STATUS_ABORTED;
 }
 
+/**
+ * \brief Suspend a DMA transfer.
+ *
+ * This function will request to suspend the transfer of the DMA resource.
+ *
+ * \note This function will send the request only. A channel suspend interrupt
+ * will be triggered and then the transfer is truely suspended.
+ *
+ * \param[in] resource Pointer to the DMA resource
+ *
+ */
+void dma_suspend_job(struct dma_resource *resource)
+{
+	Assert(resource);
+	Assert(resource->channel_id != DMA_INVALID_CHANNEL);
+
+	/* Select the channel */
+	DMAC->CHID.reg = DMAC_CHID_ID(resource->channel_id);
+
+	/* Send the suspend request */
+	DMAC->CHCTRLB.reg |= DMAC_CHCTRLB_CMD_SUSPEND;
+}
+
+/**
+ * \brief Resume a suspended DMA transfer.
+ *
+ * This function try to resume a suspended transfer of a DMA resource.
+ *
+ * \param[in] resource Pointer to the DMA resource
+ *
+ */
+void dma_resume_job(struct dma_resource *resource)
+{
+	uint32_t bitmap_channel;
+	uint32_t i = 0;
+
+	Assert(resource);
+	Assert(resource->channel_id != DMA_INVALID_CHANNEL);
+
+	/* Get bitmap of the allocated DMA channel */
+	bitmap_channel = 1<<resource->channel_id;
+
+	/* Check if channel was suspended */
+	if (resource->job_status != STATUS_SUSPEND) {
+		return;
+	}
+
+	/* Send resume request */
+	DMAC->CHID.reg = DMAC_CHID_ID(resource->channel_id);
+	DMAC->CHCTRLB.reg |= DMAC_CHCTRLB_CMD_RESUME;
+
+	/* Check if transfer job resumed */
+	for (i = 0; i < MAX_JOB_RESUME_COUNT; i++) {
+		if ((DMAC->BUSYCH.reg & bitmap_channel) == bitmap_channel) {
+			break;
+		}
+	}
+
+	if ( i < MAX_JOB_RESUME_COUNT) {
+		/* Job resumed */
+		resource->job_status = STATUS_BUSY;
+	} else {
+		/* Job resume timeout */
+		resource->job_status = STATUS_ERR_TIMEOUT;
+	}
+
+}
+
+/**
+ * \brief Get DMA resource status.
+ *
+ * \param[in] resource Pointer to the DMA resource
+ *
+ * \return Status of the DMA resource.
+ */
 enum status_code dma_get_job_status(struct dma_resource *resource)
 {
 	Assert(resource);
@@ -333,13 +573,30 @@ enum status_code dma_get_job_status(struct dma_resource *resource)
 	return resource->job_status;
 }
 
+/**
+ * \brief Check if the DMA was busy of transfer.
+ *
+ * \param[in] resource Pointer to the DMA resource
+ *
+ * \return Busy status of the DMA resource.
+ *
+ * \retval true The DMA resource has an on-going transfer
+ * \retval false The DMA resource is not busy
+ */
 bool dma_is_busy(struct dma_resource *resource)
 {
 	Assert(resource);
 
-	return (resource->job_status == ERR_BUSY) ;
+	return (resource->job_status == STATUS_BUSY) ;
 }
 
+/**
+ * \brief Enable a callback function for a dedicated DMA resource
+ *
+ * \param[in] resource Pointer to the DMA resource
+ * \param[in] type Callback function type
+ *
+ */
 void dma_enable_callback(struct dma_resource *resource, enum dma_callback_type type)
 {
 	Assert(resource);
@@ -347,6 +604,13 @@ void dma_enable_callback(struct dma_resource *resource, enum dma_callback_type t
 	resource->callback_enable |= 1<<type;
 }
 
+/**
+ * \brief Disable a callback function for a dedicated DMA resource
+ *
+ * \param[in] resource Pointer to the DMA resource
+ * \param[in] type Callback function type
+ *
+ */
 void dma_disable_callback(struct dma_resource *resource, enum dma_callback_type type)
 {
 	Assert(resource);
@@ -354,6 +618,14 @@ void dma_disable_callback(struct dma_resource *resource, enum dma_callback_type 
 	resource->callback_enable &= ~(1<<type);
 }
 
+/**
+ * \brief Register a callback function for a dedicated DMA resource
+ *
+ * \param[in] resource Pointer to the DMA resource
+  * \param[in] callback Pointer to the callback function
+ * \param[in] type Callback function type
+ *
+ */
 void dma_register_callback(struct dma_resource *resource, dma_callback_t callback, enum dma_callback_type type)
 {
 	Assert(resource);
@@ -361,6 +633,13 @@ void dma_register_callback(struct dma_resource *resource, dma_callback_t callbac
 	resource->callback[type] = callback;
 }
 
+/**
+ * \brief Unregister a callback function for a dedicated DMA resource
+ *
+ * \param[in] resource Pointer to the DMA resource
+ * \param[in] type Callback function type
+ *
+ */
 void dma_unregister_callback(struct dma_resource *resource, enum dma_callback_type type)
 {
 	Assert(resource);
