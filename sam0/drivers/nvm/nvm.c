@@ -120,7 +120,7 @@ enum status_code nvm_set_config(
 
 	/* Writing configuration to the CTRLB register */
 	nvm_module->CTRLB.reg =
-			(config->sleep_power_mode) |
+			NVMCTRL_CTRLB_SLEEPPRM(config->sleep_power_mode) |
 			((config->manual_page_write & 0x01) << NVMCTRL_CTRLB_MANW_Pos) |
 			NVMCTRL_CTRLB_RWS(config->wait_states) |
 			((config->disable_cache & 0x01) << NVMCTRL_CTRLB_CACHEDIS_Pos) |
