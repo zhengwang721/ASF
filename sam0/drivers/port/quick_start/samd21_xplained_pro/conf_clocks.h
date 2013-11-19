@@ -117,9 +117,9 @@
 #  define CONF_CLOCK_DPLL_REFERENCE_CLOCK         SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_REF0
 #  define CONF_CLOCK_DPLL_FILTER                  SYSTEM_CLOCK_SOURCE_DPLL_FILTER_DEFAULT
 
-#  define CONF_CLOCK_DPLL_REFERENCE_FREQUENCY          32768
-#  define CONF_CLOCK_DPLL_REFEREMCE_DIVIDER            1
-#  define CONF_CLOCK_DPLL_OUTPUT_FREQUENCY             48000000
+#  define CONF_CLOCK_DPLL_REFERENCE_FREQUENCY     32768
+#  define CONF_CLOCK_DPLL_REFEREMCE_DIVIDER       1
+#  define CONF_CLOCK_DPLL_OUTPUT_FREQUENCY        48000000
 
 /* Set this to true to configure the GCLK when running clocks_init. If set to
  * false, none of the GCLK generators will be configured in clocks_init(). */

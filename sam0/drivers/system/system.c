@@ -58,13 +58,16 @@ void _system_dummy_init(void)
 #  if defined(__GNUC__)
 void system_clock_init(void) WEAK __attribute__((alias("_system_dummy_init")));
 void system_board_init(void) WEAK __attribute__((alias("_system_dummy_init")));
+void _system_events_init(void) WEAK __attribute__((alias("_system_dummy_init")));
 void extint_init(void)       WEAK __attribute__((alias("_system_dummy_init")));
 #  elif defined(__ICCARM__)
 void system_clock_init(void);
 void system_board_init(void);
+void _system_events_init(void);
 void extint_init(void);
 #    pragma weak system_clock_init=_system_dummy_init
 #    pragma weak system_board_init=_system_dummy_init
+#    pragma weak _system_events_init=_system_dummy_init
 #    pragma weak extint_init=_system_dummy_init
 #  endif
 #endif
@@ -104,5 +107,8 @@ void system_init(void)
 
 	/* Initialize board hardware */
 	system_board_init();
+
+	/* Initialize EVSYS hardware */
+	_system_events_init();
 }
 

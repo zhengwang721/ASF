@@ -1,9 +1,9 @@
 /**
- * \file
+ * \file *********************************************************************
  *
- * \brief Clock configuration.
+ * \brief USART Serial configuration
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,39 +38,15 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- *
  */
 
-#ifndef CONF_CLOCK_H
-#define CONF_CLOCK_H
+#ifndef CONF_HW_TIMER_H_INCLUDED
+#define CONF_HW_TIMER_H_INCLUDED
 
-// ===== System Clock (MCK) Source Options
-//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_SLCK_RC
-//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_SLCK_XTAL
-//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_SLCK_BYPASS
-//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_4M_RC
-//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_8M_RC
-//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_12M_RC
-//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_XTAL
-//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_BYPASS
-#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_PLLACK
-//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_UPLLCK
+/*! \name Configuration
+ */
+/* ! @{ */
+#define TIMER     (&TCCR1A)
+/* ! @} */
 
-// ===== System Clock (MCK) Prescaler Options   (Fmck = Fsys / (SYSCLK_PRES))
-#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_1
-//#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_2
-//#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_4
-//#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_8
-//#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_16
-//#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_32
-//#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_64
-//#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_3
-
-// ===== PLL0 (A) Options   (Fpll = (Fclk * PLL_mul) / PLL_div)
-#define CONFIG_PLL0_SOURCE          PLL_SRC_MAINCK_XTAL
-#define CONFIG_PLL0_MUL             16
-#define CONFIG_PLL0_DIV             2
-
-// ===== UPLL (UTMI) Hardware fixed at 480 Mhz.
-
-#endif /* CONF_CLOCK_H */
+#endif /* CONF_HW_TIMER_H_INCLUDED */
