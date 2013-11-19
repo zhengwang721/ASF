@@ -1,21 +1,34 @@
 <asf xmlversion="1.0">
 	<module type="meta" id="common2.components.memory.serial_flash.at25dfx.common" caption="Common files for AT25DFx SerialFlash drivers">
 		<info type="description" value="summary">
-		The common files for the AT25DFx drivers.
-		</info>
-		<info type="keyword" value="technology">
-			<keyword value="Memory"/>
+		The common files for the AT25DFx SerialFlash drivers.
 		</info>
 		<build type="c-source" value="at25dfx.c"/>
-		<build type="doxygen-entry-point" value="asfdoc_common2_at25dfx_group"/>
 		<build type="doxygen-example-path" value="quick_start_basic"/>
 		<build type="header-file" subtype="api" value="at25dfx.h"/>
 		<build type="header-file" value="quick_start_basic/qs_at25dfx_basic.h"/>
 		<build type="include-path" value="."/>
+		<!-- The two following tags must be copied into the driver modules:
+		<build type="doxygen-entry-point" value="asfdoc_common2_at25dfx_group"/>
+		<build type="doxygen-quick-start" value="asfdoc_common2_at25dfx_exqsg"/>
+		-->
 	</module>
-	<select-by-device id="common2.components.memory.serial_flash.at25dfx" caption="AT25DFx SerialFlash">
-		<module type="driver" id="common2.components.memory.serial_flash.at25dfx#samd20" caption="AT25DFx SerialFlash">
+	<select-by-device id="common2.components.memory.serial_flash.at25dfx" caption="AT25DFx SerialFlash driver">
+		<info type="description" value="summary">
+		AT25DFx SerialFlash driver, supplying basic functions for reading,
+		writing, (globally) protecting and unprotecting sectors, putting to
+		sleep and waking the SerialFlash device.
+
+		Functionality for permanently locking and securing the device is not
+		supplied by this driver.
+		</info>
+		<module type="driver" id="common2.components.memory.serial_flash.at25dfx#samd20" caption="SAM D20 implementation of AT25DFx SerialFlash driver">
 			<info type="description" value="summary">
+			SAM D20 implementation of AT25DFx SerialFlash driver.
+			</info>
+			<info type="description" value="pdf">
+			This document describes how to use the AT25DFx SerialFlash driver on
+			the SAM D20.
 			</info>
 			<info type="keyword" value="technology">
 				<keyword value="Memory"/>
@@ -23,6 +36,8 @@
 			<build type="header-file" value="samd20/at25dfx_hal.h"/>
 			<build type="header-file" value="samd20/at25dfx_priv_hal.h"/>
 			<build type="include-path" value="samd20"/>
+			<build type="doxygen-entry-point" value="asfdoc_common2_at25dfx_group"/>
+			<build type="doxygen-quick-start" value="asfdoc_common2_at25dfx_exqsg"/>
 			<require idref="common2.components.memory.serial_flash.at25dfx.common"/>
 			<require idref="sam0.drivers.port"/>
 			<require idref="sam0.drivers.sercom.spi"/>
