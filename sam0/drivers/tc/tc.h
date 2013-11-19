@@ -965,7 +965,7 @@ static inline void tc_enable_events(
 		}
 	}
 
-	tc_module->COUNT8.EVCTRL.reg |= event_mask;
+	tc_module->COUNT8.EVCTRL.reg |= event_mask | events->event_action;
 }
 
 /**
