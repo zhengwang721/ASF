@@ -312,10 +312,10 @@ static void run_callback_test(const struct test_case *test)
 	/* Setup TC0 */
 	tc_reset(&tc_test0_module);
 	tc_get_config_defaults(&tc_test0_config);
-	tc_test0_config.wave_generation                            = TC_WAVE_GENERATION_MATCH_PWM;
-	tc_test0_config.size_specific.size_16_bit.compare_capture_channel\
+	tc_test0_config.wave_generation                       = TC_WAVE_GENERATION_MATCH_PWM;
+	tc_test0_config.counter_16_bit.compare_capture_channel\
 		[TC_COMPARE_CAPTURE_CHANNEL_0]                    = 0x03FF;
-	tc_test0_config.size_specific.size_16_bit.compare_capture_channel\
+	tc_test0_config.counter_16_bit.compare_capture_channel\
 		[TC_COMPARE_CAPTURE_CHANNEL_1]                    = 0x03FA;
 		
 
@@ -381,9 +381,9 @@ static void run_16bit_capture_and_compare_test(const struct test_case *test)
 	tc_get_config_defaults(&tc_test0_config);
 	tc_test0_config.wave_generation                                       =
 			TC_WAVE_GENERATION_MATCH_PWM;
-	tc_test0_config.size_specific.size_16_bit.compare_capture_channel[0]  =
+	tc_test0_config.counter_16_bit.compare_capture_channel[0]  =
 			0x03FF;
-	tc_test0_config.size_specific.size_16_bit.compare_capture_channel[1]  =
+	tc_test0_config.counter_16_bit.compare_capture_channel[1]  =
 			0x01FF;
 	tc_test0_config.channel_pwm_out_enabled[TC_COMPARE_CAPTURE_CHANNEL_1] = true;
 	
@@ -404,14 +404,14 @@ static void run_16bit_capture_and_compare_test(const struct test_case *test)
 	tc_init(&tc_test1_module, CONF_TEST_TC1, &tc_test1_config);
 
 	struct tc_events tc_events = { .on_event_perform_action = true,
-		                           .event_action = TC_EVENT_ACTION_PPW,};
-								   
+								.event_action = TC_EVENT_ACTION_PPW,};
+								
 	tc_enable_events(&tc_test1_module, &tc_events);
 
 	/* Configure external interrupt controller */
 	struct extint_chan_conf extint_chan_config;
-	extint_chan_config.gpio_pin            = PIN_PA16A_EIC_EXTINT0;
-	extint_chan_config.gpio_pin_mux        = MUX_PA16A_EIC_EXTINT0;
+	extint_chan_config.gpio_pin            = CONF_EIC_PIN;
+	extint_chan_config.gpio_pin_mux        = CONF_EIC_MUX;
 	extint_chan_config.gpio_pin_pull       = EXTINT_PULL_UP;
 	extint_chan_config.wake_if_sleeping    = false;
 	extint_chan_config.filter_input_signal = false;
@@ -425,22 +425,19 @@ static void run_16bit_capture_and_compare_test(const struct test_case *test)
 	extint_enable_events(&extint_event_conf);
 
 	/* Configure event system */
-	events_init();
-	/* Configure user */
-	struct events_user_config event_user_conf;
-	events_user_get_config_defaults(&event_user_conf);
-	event_user_conf.event_channel_id = EVENT_CHANNEL_0;
+	struct events_resource event_res;
 
-	events_user_set_config(CONF_EVENT_USED_ID, &event_user_conf);
-	
 	/* Configure channel */
-	struct events_chan_config events_chan_conf;
-	events_chan_get_config_defaults(&events_chan_conf);
-	events_chan_conf.generator_id   = EVSYS_ID_GEN_EIC_EXTINT_0;
-	events_chan_conf.path           = EVENT_PATH_ASYNCHRONOUS;
-	events_chan_conf.edge_detection = EVENT_EDGE_NONE;
-	events_chan_set_config(EVENT_CHANNEL_0, &events_chan_conf);
+	struct events_config config;
+	events_get_config_defaults(&config);
+	config.generator      = CONF_EVENT_GENERATOR_ID;
+	config.edge_detect    = EVENTS_EDGE_DETECT_NONE;
+	config.path           = EVENTS_PATH_ASYNCHRONOUS;
+	events_allocate(&event_res, &config);
 
+	/* Configure user */
+	events_attach_user(&event_res, CONF_EVENT_USED_ID);
+	
 	/* Enable TC modules */
 	tc_enable(&tc_test1_module);
 	tc_enable(&tc_test0_module);

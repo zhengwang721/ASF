@@ -761,12 +761,12 @@ struct tc_config {
 	/** This setting determines what size counter is used. */
 	union {
 		/** Struct for 8-bit specific timer configuration. */
-		struct tc_8bit_config size_8_bit;
+		struct tc_8bit_config counter_8_bit;
 		/** Struct for 16-bit specific timer configuration. */
-		struct tc_16bit_config size_16_bit;
+		struct tc_16bit_config counter_16_bit;
 		/** Struct for 32-bit specific timer configuration. */
-		struct tc_32bit_config size_32_bit;
-	} size_specific;
+		struct tc_32bit_config counter_32_bit;
+	};
 };
 
 #if TC_ASYNC == true
@@ -904,10 +904,10 @@ static inline void tc_get_config_defaults(
 	config->channel_pwm_out_pin[TC_COMPARE_CAPTURE_CHANNEL_1] = 0;
 	config->channel_pwm_out_mux[TC_COMPARE_CAPTURE_CHANNEL_1] = 0;
 
-	config->size_specific.size_16_bit.count                   = 0x0000;
-	config->size_specific.size_16_bit.compare_capture_channel\
+	config->counter_16_bit.count                   = 0x0000;
+	config->counter_16_bit.compare_capture_channel\
 		[TC_COMPARE_CAPTURE_CHANNEL_0]                        = 0x0000;
-	config->size_specific.size_16_bit.compare_capture_channel\
+	config->counter_16_bit.compare_capture_channel\
 		[TC_COMPARE_CAPTURE_CHANNEL_1]                        = 0x0000;
 }
 

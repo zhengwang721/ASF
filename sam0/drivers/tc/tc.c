@@ -289,7 +289,7 @@ enum status_code tc_init(
 			}
 
 			hw->COUNT8.COUNT.reg =
-					config->size_specific.size_8_bit.count;
+					config->counter_8_bit.count;
 
 
 			while (tc_is_syncing(module_inst)) {
@@ -297,21 +297,21 @@ enum status_code tc_init(
 			}
 
 			hw->COUNT8.PER.reg =
-					config->size_specific.size_8_bit.period;
+					config->counter_8_bit.period;
 
 			while (tc_is_syncing(module_inst)) {
 				/* Wait for sync */
 			}
 
-			hw->COUNT8.CC[0].reg = config->size_specific.\
-					size_8_bit.compare_capture_channel[0];
+			hw->COUNT8.CC[0].reg = 
+					config->counter_8_bit.compare_capture_channel[0];
 
 			while (tc_is_syncing(module_inst)) {
 				/* Wait for sync */
 			}
 
-			hw->COUNT8.CC[1].reg = config->size_specific.\
-					size_8_bit.compare_capture_channel[1];
+			hw->COUNT8.CC[1].reg = 
+					config->counter_8_bit.compare_capture_channel[1];
 
 			return STATUS_OK;
 
@@ -321,21 +321,21 @@ enum status_code tc_init(
 			}
 
 			hw->COUNT16.COUNT.reg
-				= config->size_specific.size_16_bit.count;
+				= config->counter_16_bit.count;
 
 			while (tc_is_syncing(module_inst)) {
 				/* Wait for sync */
 			}
 
-			hw->COUNT16.CC[0].reg = config->size_specific.\
-					size_16_bit.compare_capture_channel[0];
+			hw->COUNT16.CC[0].reg = 
+					config->counter_16_bit.compare_capture_channel[0];
 
 			while (tc_is_syncing(module_inst)) {
 				/* Wait for sync */
 			}
 
-			hw->COUNT16.CC[1].reg = config->size_specific.\
-					size_16_bit.compare_capture_channel[1];
+			hw->COUNT16.CC[1].reg = 
+					config->counter_16_bit.compare_capture_channel[1];
 
 			return STATUS_OK;
 
@@ -345,21 +345,21 @@ enum status_code tc_init(
 			}
 
 			hw->COUNT32.COUNT.reg
-				= config->size_specific.size_32_bit.count;
+				= config->counter_32_bit.count;
 
 			while (tc_is_syncing(module_inst)) {
 				/* Wait for sync */
 			}
 
-			hw->COUNT32.CC[0].reg = config->size_specific.\
-					size_32_bit.compare_capture_channel[0];
+			hw->COUNT32.CC[0].reg = 
+					config->counter_32_bit.compare_capture_channel[0];
 
 			while (tc_is_syncing(module_inst)) {
 				/* Wait for sync */
 			}
 
-			hw->COUNT32.CC[1].reg = config->size_specific.\
-					size_32_bit.compare_capture_channel[1];
+			hw->COUNT32.CC[1].reg = 
+					config->counter_32_bit.compare_capture_channel[1];
 
 			return STATUS_OK;
 	}
