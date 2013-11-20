@@ -382,9 +382,9 @@ static void run_16bit_capture_and_compare_test(const struct test_case *test)
 	tc_test0_config.wave_generation  = TC_WAVE_GENERATION_MATCH_PWM;
 	tc_test0_config.counter_16_bit.compare_capture_channel[0]  = 0x03FF;
 	tc_test0_config.counter_16_bit.compare_capture_channel[1]  = 0x01FF;
-	tc_test0_config.channel_pwm_out_enabled[TC_COMPARE_CAPTURE_CHANNEL_1] = true;
-	tc_test0_config.channel_pwm_out_pin[1] = CONF_TEST_PIN_OUT;
-	tc_test0_config.channel_pwm_out_mux[1] = CONF_TEST_PIN_MUX;
+	tc_test0_config.pwm_channel[TC_COMPARE_CAPTURE_CHANNEL_1].enabled = true;
+	tc_test0_config.pwm_channel[1].pin_out = CONF_TEST_PIN_OUT;
+	tc_test0_config.pwm_channel[1].pin_mux = CONF_TEST_PIN_MUX;
 	tc_init(&tc_test0_module, CONF_TEST_TC0, &tc_test0_config);
 	
 	tc_register_callback(&tc_test0_module, tc_callback_function, TC_CALLBACK_CC_CHANNEL0);
@@ -394,8 +394,8 @@ static void run_16bit_capture_and_compare_test(const struct test_case *test)
 	tc_reset(&tc_test1_module);
 	tc_get_config_defaults(&tc_test1_config);
 	tc_test1_config.clock_prescaler              = TC_CLOCK_PRESCALER_DIV1;
-	tc_test1_config.enable_capture_on_channel[0] = true;
-	tc_test1_config.enable_capture_on_channel[1] = true;
+	tc_test1_config.enable_capture_on_channel[CONF_CAPTURE_CHAN_0] = true;
+	tc_test1_config.enable_capture_on_channel[CONF_CAPTURE_CHAN_1] = true;
 	
 	tc_init(&tc_test1_module, CONF_TEST_TC1, &tc_test1_config);
 
