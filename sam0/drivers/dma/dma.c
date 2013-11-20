@@ -288,7 +288,7 @@ void dma_get_config_defaults(struct dma_transfer_config *config)
  * \retval STATUS_OK The DMA resource was allocated successfully
  * \retval STATUS_BUSY The CRC module is busy, a request of DMA resource
  *                                  with CRC enabled was not available at the moment
- * \retval STATUS_ERR_NOT_FOUND DMA resource allcation failed
+ * \retval STATUS_ERR_NOT_FOUND DMA resource allocation failed
  */
 enum status_code dma_allocate(struct dma_resource *resource,
 								struct dma_transfer_config *config)

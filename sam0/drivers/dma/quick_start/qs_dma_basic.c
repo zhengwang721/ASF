@@ -67,7 +67,7 @@ static volatile bool transfer_is_done = false;
 // [transfer_done]
 
 // [_transfer_done]
-static void _transfer_done( struct dma_resource resource )
+static void _transfer_done( const struct dma_resource* const resource )
 {
 	transfer_is_done = true;
 }
@@ -101,19 +101,19 @@ static void _setup_transfer_descriptor( void )
 	transfer_desc[2].block_transfer_count = sizeof(wave_file3);
 	transfer_desc[2].source_address = (uint32_t)wave_file3;
 	transfer_desc[2].destination_address = (uint32_t)(&wave_file[SOURCE_FILE_SIZE*2]);
-	transfer_desc[2].next_descriptor_address = &dma_transfer_descriptor[3];
+	transfer_desc[2].next_descriptor_address = (uint32_t)&transfer_desc[3];
 
 	transfer_desc[1].block_transfer_control = DMAC_BTCTRL_VALID | DMAC_BTCTRL_BEATSIZE_BYTE;	
 	transfer_desc[1].block_transfer_count = sizeof(wave_file2);
 	transfer_desc[1].source_address = (uint32_t)wave_file2;
 	transfer_desc[1].destination_address = (uint32_t)(&wave_file[SOURCE_FILE_SIZE]);
-	transfer_desc[1].next_descriptor_address = &dma_transfer_descriptor[2];
+	transfer_desc[1].next_descriptor_address = (uint32_t)&transfer_desc[2];
 
 	transfer_desc[0].block_transfer_control = DMAC_BTCTRL_VALID | DMAC_BTCTRL_BEATSIZE_BYTE;
 	transfer_desc[0].block_transfer_count = sizeof(wave_file1);
 	transfer_desc[0].source_address = (uint32_t)wave_file1;
 	transfer_desc[0].destination_address = (uint32_t)wave_file;
-	transfer_desc[0].next_descriptor_address = &dma_transfer_descriptor[1];
+	transfer_desc[0].next_descriptor_address = (uint32_t)&transfer_desc[1];
 //! [setup_dma_descriptor]
 }
 
@@ -132,7 +132,7 @@ int main(void)
 	//! [setup_init]
 
 	//! [main_callback_register]
-	dma_register_callback(&example_resource, &_transfer_done, DMA_CALLBACK_TRANSFER_DONE);
+	dma_register_callback(&example_resource, _transfer_done, DMA_CALLBACK_TRANSFER_DONE);
 	dma_enable_callback(&example_resource, DMA_CALLBACK_TRANSFER_DONE);
 	//! [main_callback_register]
 
