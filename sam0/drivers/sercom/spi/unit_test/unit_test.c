@@ -72,7 +72,8 @@
  * \copydetails appdoc_preface
  *
  * The following kit is required for carrying out the test:
- *      - SAM D2x Xplained Pro board
+ *      - SAM D20 Xplained Pro board
+ *      - SAM D21 Xplained Pro board
  *
  * \section appdoc_samd2x_spi_unit_test_setup Setup
  * The following connections has to be made using wires:

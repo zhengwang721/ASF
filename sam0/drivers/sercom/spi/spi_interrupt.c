@@ -84,12 +84,14 @@ static void _spi_transceive_buffer(
 	hw->INTENSET.reg = (SPI_INTERRUPT_FLAG_DATA_REGISTER_EMPTY |
 			SPI_INTERRUPT_FLAG_RX_COMPLETE);
 
+#if CONF_SPI_SLAVE_ENABLE == true
 	if (module->mode == SPI_MODE_SLAVE) {
 		/* Clear TXC flag if set */
 		hw->INTFLAG.reg = SPI_INTERRUPT_FLAG_TX_COMPLETE;
 		/* Enable transmit complete interrupt for slave */
 		hw->INTENSET.reg = SPI_INTERRUPT_FLAG_TX_COMPLETE;
 	}
+#endif
 }
 
 /**
@@ -120,12 +122,14 @@ static void _spi_write_buffer(
 	/* Get a pointer to the hardware module instance */
 	SercomSpi *const hw = &(module->hw->SPI);
 
+#if CONF_SPI_SLAVE_ENABLE == true
 	if (module->mode == SPI_MODE_SLAVE) {
 		/* Clear TXC flag if set */
 		hw->INTFLAG.reg = SPI_INTERRUPT_FLAG_TX_COMPLETE;
 		/* Enable transmit complete interrupt for slave */
 		hw->INTENSET.reg = SPI_INTERRUPT_FLAG_TX_COMPLETE;
 	}
+#endif
 
 	if (module->receiver_enabled) {
 		/* Enable the Data Register Empty and RX Complete interrupt */
@@ -171,16 +175,20 @@ static void _spi_read_buffer(
 	/* Enable the RX Complete Interrupt */
 	tmp_intenset = SPI_INTERRUPT_FLAG_RX_COMPLETE;
 
+#if CONF_SPI_MASTER_ENABLE == true
 	if (module->mode == SPI_MODE_MASTER && module->dir == SPI_DIRECTION_READ) {
 		/* Enable Data Register Empty interrupt for master */
 		tmp_intenset |= SPI_INTERRUPT_FLAG_DATA_REGISTER_EMPTY;
 	}
+#endif
+#if CONF_SPI_SLAVE_ENABLE == true
 	if (module->mode == SPI_MODE_SLAVE) {
 		/* Clear TXC flag if set */
 		hw->INTFLAG.reg = SPI_INTERRUPT_FLAG_TX_COMPLETE;
 		/* Enable transmit complete interrupt for slave */
 		tmp_intenset |= SPI_INTERRUPT_FLAG_TX_COMPLETE;
 	}
+#endif
 
 	/* Enable all interrupts simultaneously */
 	hw->INTENSET.reg = tmp_intenset;
@@ -396,10 +404,6 @@ void spi_abort_job(
 	/* Disable interrupts */
 	spi_hw->INTENCLR.reg = SPI_INTERRUPT_FLAG_RX_COMPLETE |
 			SPI_INTERRUPT_FLAG_DATA_REGISTER_EMPTY |
-		#if SAMD21
-			SPI_INTERRUPT_FLAG_SLAVE_SELECT_LOW |
-			SPI_INTERRUPT_FLAG_COMBINED_ERROR |
-		#endif
 			SPI_INTERRUPT_FLAG_TX_COMPLETE;
 
 	module->status = STATUS_ABORTED;
@@ -544,6 +548,7 @@ void _spi_interrupt_handler(
 
 		if (module->mode == SPI_MODE_MASTER &&
 			module->dir == SPI_DIRECTION_READ) {
+		#if CONF_SPI_MASTER_ENABLE == true
 			/* Send dummy byte when reading in master mode */
 			_spi_write_dummy(module);
 			if (module->remaining_dummy_buffer_length == 0) {
@@ -551,7 +556,7 @@ void _spi_interrupt_handler(
 				spi_hw->INTENCLR.reg
 						= SPI_INTERRUPT_FLAG_DATA_REGISTER_EMPTY;
 			}
-
+		#endif
 		} else if (module->dir != SPI_DIRECTION_READ) {
 			/* Write next byte from buffer */
 			_spi_write(module);
@@ -637,6 +642,7 @@ void _spi_interrupt_handler(
 
 	/* Transmit complete */
 	if (interrupt_status & SPI_INTERRUPT_FLAG_TX_COMPLETE) {
+	#if CONF_SPI_SLAVE_ENABLE == true
 		if (module->mode == SPI_MODE_SLAVE) {
 			/* Transaction ended by master */
 
@@ -644,10 +650,6 @@ void _spi_interrupt_handler(
 			spi_hw->INTENCLR.reg =
 					SPI_INTERRUPT_FLAG_TX_COMPLETE |
 					SPI_INTERRUPT_FLAG_RX_COMPLETE |
-				#if SAMD21
-					SPI_INTERRUPT_FLAG_COMBINED_ERROR |
-					SPI_INTERRUPT_FLAG_SLAVE_SELECT_LOW |
-				#endif
 					SPI_INTERRUPT_FLAG_DATA_REGISTER_EMPTY;
 			/* Clear interrupt flag */
 			spi_hw->INTFLAG.reg = SPI_INTERRUPT_FLAG_TX_COMPLETE;
@@ -666,5 +668,25 @@ void _spi_interrupt_handler(
 			}
 
 		}
+	#endif
 	}
+
+#if CONF_SPI_SLAVE_ENABLE == true
+	/* When a high to low transition is detected on the _SS pin in slave mode */
+	if (interrupt_status & SPI_INTERRUPT_FLAG_SLAVE_SELECT_LOW) {
+		if (module->mode == SPI_MODE_SLAVE) {
+
+			/* Disable interrupts */
+			spi_hw->INTENCLR.reg = SPI_INTERRUPT_FLAG_SLAVE_SELECT_LOW;
+			/* Clear interrupt flag */
+			spi_hw->INTFLAG.reg = SPI_INTERRUPT_FLAG_SLAVE_SELECT_LOW;
+
+			if (callback_mask &
+					(1 << SPI_CALLBACK_SLAVE_SELECT_LOW)) {
+				(module->callback[SPI_CALLBACK_SLAVE_SELECT_LOW])
+					(module);
+			}
+		}
+	}
+#endif
 }
