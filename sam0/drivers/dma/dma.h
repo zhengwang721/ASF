@@ -58,14 +58,6 @@ enum dma_priority_level {
 	DMA_PRIORITY_LEVEL_2,
 	/** Priority level 3 */
 	DMA_PRIORITY_LEVEL_3,
-	/** Priority level 4 */
-	DMA_PRIORITY_LEVEL_4,
-	/** Priority level 5 */
-	DMA_PRIORITY_LEVEL_5,
-	/** Priority level 6 */
-	DMA_PRIORITY_LEVEL_6,
-	/** Priority level 7 */
-	DMA_PRIORITY_LEVEL_7,
 };
 
 /** DMA input actions */
