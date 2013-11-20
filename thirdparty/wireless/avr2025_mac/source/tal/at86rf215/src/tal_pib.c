@@ -415,7 +415,7 @@ uint16_t value;
  {
 	 if(tal_pib[trx_id].CurrentChannel>3)
 	 {	 
-	 value = tal_pib[trx_id].CurrentChannel=0;
+	 value = tal_pib[trx_id].CurrentChannel=3; //sriram
 	 }
 	 else
 	 {
@@ -460,6 +460,11 @@ else
 }
 else
 	 {
+		uint16_t max_ch = get_sun_max_ch_no(trx_id);
+		if(tal_pib[trx_id].CurrentChannel > (max_ch-1))
+		{
+		tal_pib[trx_id].CurrentChannel = (max_ch-1);		
+		}
         pal_trx_write(rf_reg_offset + RG_RF09_CNL,
                       (uint8_t *)&tal_pib[trx_id].CurrentChannel, 2);
 }					  
@@ -822,7 +827,7 @@ retval_t tal_pib_set(trx_id_t trx_id, uint8_t attribute, pib_value_t *value)
 			uint16_t channel,channel_to_set;
 			channel = channel_to_set = value->pib_value_16bit;
 
-#ifdef SUPPORT_LEGACY_OQPSK
+
             /* Adjust internal channel number to IEEE compliant numbering */
             if (tal_pib[trx_id].phy.modulation == LEG_OQPSK)
             {
@@ -876,7 +881,17 @@ retval_t tal_pib_set(trx_id_t trx_id, uint8_t attribute, pib_value_t *value)
 
                 }
             }
-#endif
+			else
+			{
+				uint16_t max_ch = get_sun_max_ch_no(trx_id);
+				if(channel > (max_ch-1))
+				{
+                status = MAC_INVALID_PARAMETER;
+                /* no further processing of the channel value */
+                break;
+				}
+			}
+
             {
                 rf_cmd_state_t previous_state = trx_state[trx_id];
                 if (trx_state[trx_id] == RF_RX)
@@ -935,7 +950,6 @@ retval_t tal_pib_set(trx_id_t trx_id, uint8_t attribute, pib_value_t *value)
         case phyTransmitPower:
             {
                 int8_t pwr = (int8_t)value->pib_value_8bit;
-                /* Limit tal_pib[trx_id].TransmitPower to max/min trx values */
                 tal_pib[trx_id].TransmitPower = limit_tx_pwr(trx_id, pwr);
                 set_tx_pwr(trx_id);
             }

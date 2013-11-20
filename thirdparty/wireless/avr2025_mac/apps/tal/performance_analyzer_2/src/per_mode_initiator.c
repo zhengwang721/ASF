@@ -385,8 +385,12 @@ void per_mode_initiator_task(trx_id_t trx)
 			//printf("\n\rTime During Trx Start %ld\n\r",tstamp);
 			//delay_ms(50);
 			node_info[trx].transmitting = true;
-			node_info[trx].tx_frame_info->mpdu[PL_POS_SEQ_NUM-1]++; //sriram
 
+			node_info[trx].tx_frame_info->mpdu[PL_POS_SEQ_NUM-1]++; //sriram
+			/*	tal_tx_frame(trx,node_info[trx].tx_frame_info,
+				NO_CSMA_NO_IFS,
+				true );*/
+			
 			if (curr_trx_config_params[trx].csma_enabled) {
 				tal_tx_frame(trx,node_info[trx].tx_frame_info,
 						CSMA_UNSLOTTED,
@@ -615,7 +619,7 @@ void per_mode_initiator_tx_done_cb(trx_id_t trx,retval_t status, frame_info_t *f
 	case SET_PARAMETER:
 	{
 		    app_payload_t *msg;
-
+			uint16_t channel;
 		    /* Point to the message : 1 =>size is first byte and 2=>FCS*/
 		    msg = (app_payload_t *)(frame->mpdu + FRAME_OVERHEAD);
 		    if(msg->cmd_id == SET_SUN_PAGE)
@@ -624,6 +628,8 @@ void per_mode_initiator_tx_done_cb(trx_id_t trx,retval_t status, frame_info_t *f
 			{
 			tal_pib[trx].CurrentPage = 9; //sriram -> to be revisited
 			curr_trx_config_params[trx].channel_page = 9;
+			tal_pib_get(trx,phyCurrentChannel, &channel);
+			curr_trx_config_params[trx].channel = channel;		
 			memcpy(&curr_trx_config_params[trx].sun_phy_page, &sun_page[trx], sizeof(sun_phy_t));
 			usr_perf_set_confirm(trx,MAC_SUCCESS,PARAM_CHANNEL_PAGE,(param_value_t *)sun_page_param_val[trx]);
 			}
@@ -1959,6 +1965,7 @@ void perf_set_sun_page(trx_id_t trx,uint8_t *param_val)
 {
 	//sun_phy_t sun_page;//sriram //not used now but added for later ref and usage	
 	uint8_t *temp_param_val = param_val;
+	uint16_t channel;
 	sun_page[trx].page_no = *temp_param_val++;
 	sun_page[trx].freq_band = sun_phy_page_set[trx].freq_band = *temp_param_val++;
 	sun_page[trx].modulation = sun_phy_page_set[trx].modulation = *temp_param_val++;	
@@ -2005,6 +2012,9 @@ void perf_set_sun_page(trx_id_t trx,uint8_t *param_val)
 			{
 				tal_pib[trx].CurrentPage = 9; //sriram -> needs to be revisited
 				curr_trx_config_params[trx].channel_page = 9;
+				tal_pib_get(trx,phyCurrentChannel, &channel);
+
+				curr_trx_config_params[trx].channel = channel;				
 				 memcpy(&(curr_trx_config_params[trx].sun_phy_page), &sun_page[trx], sizeof(sun_phy_t));
 				usr_perf_set_confirm(trx,MAC_SUCCESS,PARAM_CHANNEL_PAGE,(param_value_t *)param_val);
 			}		
@@ -2448,7 +2458,7 @@ static void set_phy_frame_length(trx_id_t trx, uint16_t frame_len)
 static void set_channel(trx_id_t trx, uint16_t channel)
 {
     uint32_t supported_channels;
-uint16_t channel_to_set = channel;
+//uint16_t channel_to_set = channel;
 if(tal_pib[trx].phy.modulation == LEG_OQPSK) //sriram cleanup required
 {
 
@@ -2468,7 +2478,7 @@ if(tal_pib[trx].phy.modulation == LEG_OQPSK) //sriram cleanup required
 
 				int8_t dbm_val =0;
 				uint8_t tx_pwr =0;
-				tal_pib_set(trx,phyCurrentChannel, (pib_value_t *)&channel_to_set);
+				tal_pib_set(trx,phyCurrentChannel, (pib_value_t *)&channel);
 
 				/* Update the database */
 				curr_trx_config_params[trx].channel = channel;
@@ -2495,13 +2505,14 @@ if(tal_pib[trx].phy.modulation == LEG_OQPSK) //sriram cleanup required
 }
 else
 {
-	if(channel_to_set > 416) //sriram dummy to be changes
+	uint16_t max_sun_ch = get_sun_max_ch_no(trx);
+	if(channel > (max_sun_ch-1))
 	{
 		/* Send Set confirmation with status MAC_INVALID_PARAMETER */
 		usr_perf_set_confirm(trx,VALUE_OUT_OF_RANGE,
 		PARAM_CHANNEL,
 		(param_value_t *)&channel);
-	}
+	}	
 	else
 	{
 	 if (true == peer_found[trx])
@@ -2513,15 +2524,14 @@ else
 
 		 int8_t dbm_val =0;
 		 uint8_t tx_pwr =0;
-		 tal_pib_set(trx,phyCurrentChannel, (pib_value_t *)&channel_to_set);
+		 tal_pib_set(trx,phyCurrentChannel, (pib_value_t *)&channel);
 
 		 /* Update the database */
 		 curr_trx_config_params[trx].channel = channel;
 		 
 		 tal_pib_get(trx,phyTransmitPower, &dbm_val);
 		 //dbm_val = CONV_phyTransmitPower_TO_DBM(tx_pwr);
-		 curr_trx_config_params[trx].tx_power_dbm = dbm_val;
-		 
+		 curr_trx_config_params[trx].tx_power_dbm = dbm_val;	 
 
 		 /* Send Set confirmation with status SUCCESS */
 		 usr_perf_set_confirm(trx,MAC_SUCCESS,
@@ -2541,17 +2551,6 @@ else
 static void set_channel_page(trx_id_t trx, uint8_t channel_page)
 {
 
-#if((TAL_TYPE == AT86RF230B) )
-
-    if (channel_page != 0)
-    {
-        /* Send the confirmation with status as VALUE_OUT_OF_RANGE */
-        usr_perf_set_confirm(trx,VALUE_OUT_OF_RANGE,
-                             PARAM_CHANNEL_PAGE,
-                             (param_value_t *)&channel_page);
-        return;
-    }
-#endif /* End of #if((TAL_TYPE == AT86RF230B) ) */
 
     switch (channel_page)
     {
@@ -2570,19 +2569,17 @@ static void set_channel_page(trx_id_t trx, uint8_t channel_page)
                 }
                 else
                 {
+					tal_pib_set(trx,phyCurrentPage, (pib_value_t *)&channel_page);
 
+					/* update the data base with this value */
+					curr_trx_config_params[trx].channel_page = channel_page;
 
-						tal_pib_set(trx,phyCurrentPage, (pib_value_t *)&channel_page);
+					if((curr_trx_config_params[trx].phy_frame_length > aMaxPHYPacketSize) && (channel_page!=9) )
+					{
 
-						/* update the data base with this value */
-						curr_trx_config_params[trx].channel_page = channel_page;
-
-if((curr_trx_config_params[trx].phy_frame_length > aMaxPHYPacketSize) && (channel_page!=9) )
-{
-
-curr_trx_config_params[trx].phy_frame_length = aMaxPHYPacketSize; //sriram
-configure_frame_sending(trx);
-}
+					curr_trx_config_params[trx].phy_frame_length = aMaxPHYPacketSize; //sriram
+					configure_frame_sending(trx);
+					}
 
                     /* Send the confirmation with status as SUCCESS */
                     usr_perf_set_confirm(trx,MAC_SUCCESS,
@@ -4260,9 +4257,7 @@ static void configure_range_test_frame_sending(trx_id_t trx)
 	 */
 
 	/* Get length of current frame. */
-	app_frame_length = (RANGE_TEST_PKT_LENGTH - FRAME_OVERHEAD -tal_pib[trx].FCSLen ); /* to be
-	                                                              * changed
-	                                                               **///sriram 
+	app_frame_length = RANGE_TEST_PAYLOAD_LENGTH; // sriram (RANGE_TEST_PKT_LENGTH - FRAME_OVERHEAD -tal_pib[trx].FCSLen ); /* to be   * changed///sriram 
 
 	/* Set payload pointer. */
 	frame_ptr = temp_frame_ptr
@@ -4346,7 +4341,7 @@ static void configure_range_test_frame_sending(trx_id_t trx)
     /* First element shall be length of PHY frame. */ //sriram
     //frame_ptr--;
     //*frame_ptr = curr_trx_config_params[trx].phy_frame_length;
-	node_info[trx].tx_frame_info->length = (RANGE_TEST_PKT_LENGTH -tal_pib[trx].FCSLen) ;
+	node_info[trx].tx_frame_info->length = (RANGE_TEST_PAYLOAD_LENGTH + FRAME_OVERHEAD ); // (RANGE_TEST_PKT_LENGTH -tal_pib[trx].FCSLen) ;
 	
 	 /* Finished building of frame. */
     node_info[trx].tx_frame_info->mpdu = frame_ptr;

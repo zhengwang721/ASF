@@ -846,27 +846,10 @@ switch (sio_rx_buf[trx][MESSAGE_ID_POS])  /* message id */
 				) {
 			if (sio_rx_buf[trx][MSG_LEN_ED_SCAN_POS] ==
 					MSG_LEN_ED_SCAN_REQ) {
+						
 				/* Extract the 4bytes of selected channel mask
-				 * from the sio_rx_buf */
-				rcvd_channel_mask[trx]
-					|= (((uint32_t)sio_rx_buf[trx][
-							CHANNELS_SELECT_POS
-						]) & 0x000000FF);
-				rcvd_channel_mask[trx]
-					|= (((uint32_t)sio_rx_buf[trx][
-							CHANNELS_SELECT_POS
-							+ 1] <<
-						8) & 0x0000FF00);
-				rcvd_channel_mask[trx]
-					|= (((uint32_t)sio_rx_buf[trx][
-							CHANNELS_SELECT_POS
-							+ 2] <<
-						16) & 0x00FF0000);
-				rcvd_channel_mask[trx]
-					|= (((uint32_t)sio_rx_buf[trx][
-							CHANNELS_SELECT_POS
-							+ 3] <<
-						24) & 0xFF000000);
+				 * from the sio_rx_buf */				
+				MEMCPY_ENDIAN(&(rcvd_channel_mask[trx]),&(sio_rx_buf[trx][CHANNELS_SELECT_POS]),4);
 			} else {
 				rcvd_channel_mask[trx] = TRX_SUPPORTED_CHANNELS_LEG(trx);
 			}
@@ -1267,13 +1250,13 @@ void usr_range_test_beacon_tx(trx_id_t trx,frame_info_t *frame)
 	}
 
 	/* Copy Len, Protocol Id, Msg Id parameters */
-	*msg_buf++ = PROTOCOL_ID_LEN + RANGE_TEST_PKT_LEN;
+	*msg_buf++ = PROTOCOL_ID_LEN + RANGE_TEST_PAYLOAD_LENGTH + FRAME_OVERHEAD +LENGTH_FIELD_LEN +1;
 	*msg_buf++ = PROTOCOL_ID;
 	*msg_buf++ = RANGE_TEST_BEACON;
 
 *msg_buf++ = frame_len;
 	/* Copy OTA payload */
-	for (uint8_t i = 0; i < (RANGE_TEST_PKT_LENGTH - tal_pib[trx].FCSLen); i++) {
+	for (uint8_t i = 0; i < (RANGE_TEST_PAYLOAD_LENGTH + FRAME_OVERHEAD); i++) {
 		*msg_buf++ = *frame_mpdu++;
 	}
 	*msg_buf = EOT;

@@ -70,8 +70,15 @@ static void restore_data_rate_after_ack(trx_id_t trx_id);
 bool is_ack_required(trx_id_t trx_id)
 {
     //debug_text_val(PSTR("is_ack_required(), trx_id ="), trx_id);
-
-    bool ret = true;
+    
+	bool ack_required;
+	uint16_t rf_reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
+	ack_required = pal_trx_bit_read(rf_reg_offset+SR_BBC0_PC_FCSOK);	//for prom mode->sriram
+	if(!ack_required)
+	{
+	return false;	
+	}
+	bool ret = true;
     uint8_t fcf0 = rx_frm_info[trx_id]->mpdu[0];
     uint8_t fcf1 = rx_frm_info[trx_id]->mpdu[1];
 

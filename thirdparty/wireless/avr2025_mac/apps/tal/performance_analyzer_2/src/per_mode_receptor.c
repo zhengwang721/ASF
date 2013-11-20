@@ -338,7 +338,7 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
                 }
                 else
                 {
-					printf("\n\rFrame Length : %ld ",mac_frame_info->length);
+					
                     cur_seq_no[trx] = mac_frame_info->mpdu[PL_POS_SEQ_NUM-1];//sriram
                     /* Check for the duplicate packets */
                     if (prev_seq_no[trx] != cur_seq_no[trx])
@@ -350,8 +350,13 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
                         aver_lqi[trx] += mac_frame_info->mpdu[lqi_pos];
                         aver_rssi[trx] += mac_frame_info->mpdu[ed_pos];
                     }
+					else
+					{
+						printf("WARNING");
+					}
 
                 }
+	// sriram			printf("\n\rPrev Seq no \t Curr Seq No: %ld,%ld ",prev_seq_no[trx],cur_seq_no[trx]);
                 /* Led is toggled indicating the test in progress at the count of
                  * LED_TOGGLE_COUNT_FOR_PER
                  */

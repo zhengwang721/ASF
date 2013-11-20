@@ -217,7 +217,7 @@
 #define OFDM_CH_CENTER_FREQ0_MAP  \
     /* EU_169 */ \
     /* US_450 */ \
-    { CHINA_470, 0, 0, 0, 470020000 }, \
+    { CHINA_470, 0, 0, 0, 470200000 }, \
     { CHINA_780, 780200000, 779800000, 779400000, 779200000 }, \
     { EU_863, 863625000, 863425000, 863225000, 863125000 }, \
     /* US_896 */  \
@@ -255,7 +255,7 @@
     /* frequency band, channel center freq0, channel spacing */ \
     /* EU_169 */ \
     /* US_450 */ \
-    { CHINA_470, 470040000, 400000 }, \
+    { CHINA_470, 470400000, 400000 }, \
     { CHINA_780, 780000000, 2000000 }, \
     { EU_863, 868300000, 0 }, \
     /* US_896 */  \
@@ -296,6 +296,45 @@
 #define OQPSK_SHR_DURATION_TABLE_COL_SIZE  2
 #define OQPSK_SHR_DURATION_TABLE_DATA_TYPE  uint8_t
 
+#define OQPSK_TOTAL_CHANNELS_MAP  \
+/* frequency band, total channels */ \
+/* EU_169 */ \
+/* US_450 */ \
+{ CHINA_470, 99 }, \
+{ CHINA_780, 4 }, \
+{ EU_863, 3 }, \
+/* US_896 */  \
+/* US_901 */  \
+{ US_915, 12 }, \
+{ KOREA_917, 3 }, \
+{ JAPAN_920, 38 }, \
+/* US_928 */   \
+/* { JAPAN_950, 951100000, 400000 }, */\
+/* US_1427 */  \
+{ WORLD_2450, 16 }
+
+#define OQPSK_TOTAL_CHANNELS_MAP_ROW_SIZE    7
+#define OQPSK_TOTAL_CHANNELS_MAP_COL_SIZE    2
+
+#define OFDM_TOTAL_CHANNELS_MAP  \
+/* frequency band, op1 ,opt2 ,opt3 ,opt4total channels */ \
+/* EU_169 */ \
+/* US_450 */ \
+{ CHINA_470, 0,0,0,199 }, \
+{ CHINA_780, 6,9,19,39 }, \
+{ EU_863, 5,8,17,34 }, \
+/* US_896 */  \
+/* US_901 */  \
+{ US_915, 20,31,64,129 }, \
+{ KOREA_917, 5,8,16,32 }, \
+{ JAPAN_920, 6,9,19,39 }, \
+/* US_928 */   \
+/* { JAPAN_950, 951100000, 400000 }, */\
+/* US_1427 */  \
+{ WORLD_2450, 64,97,207,416 }
+
+#define OFDM_TOTAL_CHANNELS_MAP_ROW_SIZE    7
+#define OFDM_TOTAL_CHANNELS_MAP_COL_SIZE    5
 /* === GLOBALS ============================================================= */
 
 FLASH_DECLARE(OQPSK_SYMBOL_DURATION_TABLE_DATA_TYPE
@@ -321,6 +360,8 @@ FLASH_DECLARE(OFDM_DATA_RATE_TABLE_DATA_TYPE
 FLASH_DECLARE(uint32_t ofdm_freq0_map[OFDM_CH_CENTER_FREQ0_MAP_ROW_SIZE][OFDM_CH_CENTER_FREQ0_MAP_COL_SIZE]) = { OFDM_CH_CENTER_FREQ0_MAP };
 FLASH_DECLARE(uint32_t oqpsk_freq0_map[OQPSK_CH_CENTER_FREQ0_MAP_ROW_SIZE][OQPSK_CH_CENTER_FREQ0_MAP_COL_SIZE]) = { OQPSK_CH_CENTER_FREQ0_MAP };
 FLASH_DECLARE(uint32_t ofdm_ch_spacing_table[]) = { CH_SPAC_OFDM_TABLE };
+FLASH_DECLARE(uint32_t ofdm_max_ch_map[OFDM_TOTAL_CHANNELS_MAP_ROW_SIZE][OFDM_TOTAL_CHANNELS_MAP_COL_SIZE]) = { OFDM_TOTAL_CHANNELS_MAP };
+FLASH_DECLARE(uint32_t oqpsk_max_ch_map[OQPSK_TOTAL_CHANNELS_MAP_ROW_SIZE][OQPSK_TOTAL_CHANNELS_MAP_COL_SIZE]) = { OQPSK_TOTAL_CHANNELS_MAP };	
 FLASH_DECLARE(OQPSK_CH_SPAC_TABLE_DATA_TYPE oqpsk_ch_spac_table[OQPSK_CH_SPAC_TABLE_ROW_SIZE][OQPSK_CH_SPAC_TABLE_COL_SIZE]) = { OQPSK_CH_SPAC_TABLE };
 FLASH_DECLARE(OQPSK_SHR_DURATION_TABLE_DATA_TYPE oqpsk_shr_duration_table[OQPSK_SHR_DURATION_TABLE_ROW_SIZE][OQPSK_SHR_DURATION_TABLE_COL_SIZE]) = { OQPSK_SHR_DURATION_TABLE };
 FLASH_DECLARE(OQPSK_SYMBOL_LENGTH_TABLE_DATA_TYPE oqpsk_sym_len_table[OQPSK_SYMBOL_LENGTH_TABLE_ROW_SIZE][OQPSK_SYMBOL_LENGTH_TABLE_COL_SIZE]) = {OQPSK_SYMBOL_LENGTH_TABLE};
@@ -338,6 +379,7 @@ static inline void get_legacy_freq_f0(trx_id_t trx_id, uint32_t *freq, uint32_t 
 static inline void get_sun_freq_f0(trx_id_t trx_id, uint32_t *freq, uint32_t *spacing);
 static uint16_t oqpsk_psdu_duration_sym(trx_id_t trx_id, uint16_t len);
 static uint8_t oqpsk_get_spread_rate(trx_id_t trx_id);
+
 
 /* === IMPLEMENTATION ====================================================== */
 
@@ -987,6 +1029,41 @@ void get_oqpsk_freq_f0(trx_id_t trx_id,sun_freq_band_t freq_band ,uint32_t *freq
 	          }
           }
 }
+
+uint16_t get_sun_max_ch_no(trx_id_t trx_id)
+{
+	
+uint16_t max_ch = 0;
+    switch (tal_pib[trx_id].phy.modulation)
+    {
+	case OFDM:
+	for (uint8_t i = 0; i < OFDM_CH_CENTER_FREQ0_MAP_ROW_SIZE; i++)
+	{
+		if (tal_pib[trx_id].phy.freq_band == (uint32_t)PGM_READ_DWORD(&ofdm_freq0_map[i][0]))
+		{
+			max_ch = (uint32_t)PGM_READ_DWORD(&ofdm_max_ch_map[i][tal_pib[trx_id].phy.phy_mode.ofdm.option +1]);
+			break;
+		}
+	}
+	break;
+
+	case OQPSK:
+	for (uint8_t i = 0; i < OQPSK_CH_CENTER_FREQ0_MAP_ROW_SIZE; i++)
+	{
+		if (tal_pib[trx_id].phy.freq_band == (uint32_t)PGM_READ_DWORD(&oqpsk_freq0_map[i][0]))
+		{
+			max_ch = (uint32_t)PGM_READ_DWORD(&oqpsk_max_ch_map[i][1]);
+			break;
+		}
+	}
+	break;
+
+	default:
+	break;
+	}
+	return max_ch;
+}
+
 
 #ifdef SUPPORT_LEGACY_OQPSK
 static inline void get_legacy_freq_f0(trx_id_t trx_id, uint32_t *freq, uint32_t *spacing)
