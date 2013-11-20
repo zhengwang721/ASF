@@ -1,9 +1,14 @@
 /**
  * \file
  *
- * \brief Serial USART service configuration.
+ * \brief ATMEGA256RFR2-Zigbit board header file.
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * This file contains definitions and services related to the features of the
+ * STK600 board.
+ *
+ * To use this board, define BOARD= ATMEGA256RFR2_ZIGBIT.
+ *
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,15 +45,44 @@
  * \asf_license_stop
  *
  */
+#ifndef _ATMEGA256RFR2_ZIGBIT_
+#define _ATMEGA256RFR2_ZIGBIT_
+#include "compiler.h"
 
-#ifndef CONF_USART_SERIAL_H
-#define CONF_USART_SERIAL_H
+# include "led.h"
 
-/** UART Interface */
-#define CONF_UART            CONSOLE_UART
-/** Baudrate setting */
-#define CONF_UART_BAUDRATE   115200
-/** Parity setting */
-#define CONF_UART_PARITY     UART_MR_PAR_NO
+#define MCU_SOC_NAME        "ATMEGA256RFR2"
+#define BOARD_NAME          "ATZB-256RFR2-XPRO"
 
-#endif/* CONF_USART_SERIAL_H_INCLUDED */
+#ifdef ZIGBIT_EXT
+
+#define LED0_GPIO                       IOPORT_CREATE_PIN(PORTD, 6)
+#define LED1_GPIO                       IOPORT_CREATE_PIN(PORTE, 3)
+#define LED2_GPIO                       IOPORT_CREATE_PIN(PORTE, 2)
+
+#define LED0                            LED0_GPIO
+#define LED1                            LED1_GPIO
+#define LED2                            LED2_GPIO
+
+//! Number of LEDs.
+#define LED_COUNT                       3
+
+#define GPIO_PUSH_BUTTON_0              IOPORT_CREATE_PIN(PORTE, 0)
+
+//! \name Communication interfaces on header J1
+//@{
+#define TWID_SDA                        IOPORT_CREATE_PIN(PORTD, 1)
+#define TWID_SCL                        IOPORT_CREATE_PIN(PORTD, 0)
+#define USARTA1_RXD                     IOPORT_CREATE_PIN(PORTD, 2)
+#define USARTA1_TXD                     IOPORT_CREATE_PIN(PORTD, 3)
+#define SPIB_SS                         IOPORT_CREATE_PIN(PORTB, 0)
+#define SPIB_MOSI                       IOPORT_CREATE_PIN(PORTB, 2)
+#define SPIB_MISO                       IOPORT_CREATE_PIN(PORTB, 3)
+#define SPIB_SCK                        IOPORT_CREATE_PIN(PORTB, 1)
+//@}
+
+
+#endif
+
+//@}
+#endif  /* _ATMEGA256RFR2_ZIGBIT_ */
