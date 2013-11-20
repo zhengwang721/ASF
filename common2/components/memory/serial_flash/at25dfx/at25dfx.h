@@ -47,12 +47,13 @@
 /**
  * \defgroup asfdoc_common2_at25dfx_group AT25DFx SerialFlash Driver
  *
- * This driver provides an interface for basic usage of SerialFlash devices.
- * It supports multiple instances, and the instances can be connected to either
- * common or individual SPI interfaces.
+ * This driver provides an interface for basic usage of SerialFlash devices,
+ * i.e., read/write, global and local protect/unprotect of sectors, and
+ * sleep/wake.
  *
- * For a list of the supported SerialFlash types, see the
- * \ref at25dfx_type "supported types".
+ * It supports multiple instances, and the instances can be connected to either
+ * common or individual SPI interfaces. For a list of the supported SerialFlash
+ * types, see \ref at25dfx_type.
  *
  * The following peripherals are used by this module:
  * - \ref SERCOM SPI (data transfer)
