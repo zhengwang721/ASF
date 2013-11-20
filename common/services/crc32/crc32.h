@@ -122,7 +122,7 @@ static inline enum status_code crc32_calculate(const void *data, size_t length,
  *
 \code
 uint8_t block1[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-uint8_t block2[5] = {0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f};
+uint8_t block2[6] = {0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f};
 
 crc32_t my_crc;
 

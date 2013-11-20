@@ -45,18 +45,24 @@
 #include <status_codes.h>
 
 
+/**
+ * Convenience typedef for words.
+ *
+ * \note This type has an architecture dependent size, and is used to optimize
+ * the CRC algorithm with regards to the number of databus accesses.
+ */
 typedef unsigned int word_t;
 
-//! Polynomial for 32-bit CRC in IEEE 802.3.
+/** Polynomial for 32-bit CRC in IEEE 802.3. */
 #define CRC32_POLYNOMIAL     0xEDB88320UL
 
-//! Convenience macro for inverting the CRC.
+/** Convenience macro for inverting the CRC. */
 #define COMPLEMENT_CRC(c)    ((c) ^ 0xffffffffUL)
 
-//! Convenience macro for size of a word.
+/** Convenience macro for size of a word. */
 #define WORD_SIZE            (sizeof(word_t))
 
-//! Bitmask for word-aligning an address.
+/** Bitmask for word-aligning an address. */
 #define WORD_ALIGNMENT_MASK  ~((uintptr_t)WORD_SIZE - 1)
 
 
@@ -64,9 +70,9 @@ typedef unsigned int word_t;
  * \internal
  * \brief Recalculate 32-bit CRC for bytes within a word
  *
- * \param data Byte to recalculate for.
- * \param crc Initial/current CRC value.
- * \param bytes Number of bytes to calculate for.
+ * \param[in] data Data to recalculate for.
+ * \param[in] crc Initial/current CRC value.
+ * \param[in] bytes Number of data bytes in word.
  *
  * \return New CRC value.
  *
@@ -97,7 +103,7 @@ static inline crc32_t _crc32_recalculate_bytes_helper(word_t data,
  * \ref CRC32_POLYNOMIAL for the specified data block and initial CRC value.
  *
  * To reduce the number of databus accesses and thus speed up the calculation,
- * the algorithm is tuned to work with words (32-bit) as much as possible.
+ * the algorithm is tuned to work with words as much as possible.
  *
  * \param[in] data Address of data.
  * \param[in] length Length of data.
