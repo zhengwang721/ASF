@@ -64,9 +64,9 @@ void configure_tc(void)
 	//! [setup_change_config]
 
 	//! [setup_change_config_pwm]
-	config_tc.channel_pwm_out_enabled[0] = true;
-	config_tc.channel_pwm_out_pin[0]     = PWM_OUT_PIN;
-	config_tc.channel_pwm_out_mux[0]     = PWM_OUT_MUX;
+	config_tc.pwm_channel[0].enabled = true;
+	config_tc.pwm_channel[0].pin_out = PWM_OUT_PIN;
+	config_tc.pwm_channel[0].pin_mux = PWM_OUT_MUX;
 	//! [setup_change_config_pwm]
 
 	//! [setup_set_config]

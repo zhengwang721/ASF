@@ -186,21 +186,21 @@ enum status_code tc_init(
 	}
 
 	/* Set up the TC PWM out pin for channel 0 */
-	if (config->channel_pwm_out_enabled[0]) {
+	if (config->pwm_channel[0].enabled) {
 		system_pinmux_get_config_defaults(&pin_config);
-		pin_config.mux_position = config->channel_pwm_out_mux[0];
+		pin_config.mux_position = config->pwm_channel[0].pin_mux;
 		pin_config.direction = SYSTEM_PINMUX_PIN_DIR_OUTPUT;
 		system_pinmux_pin_set_config(
-				config->channel_pwm_out_pin[0], &pin_config);
+				config->pwm_channel[0].pin_out, &pin_config);
 	}
 
 	/* Set up the TC PWM out pin for channel 1 */
-	if (config->channel_pwm_out_enabled[1]) {
+	if (config->pwm_channel[1].enabled) {
 		system_pinmux_get_config_defaults(&pin_config);
-		pin_config.mux_position = config->channel_pwm_out_mux[1];
+		pin_config.mux_position = config->pwm_channel[1].pin_mux;
 		pin_config.direction = SYSTEM_PINMUX_PIN_DIR_OUTPUT;
 		system_pinmux_pin_set_config(
-				config->channel_pwm_out_pin[1], &pin_config);
+				config->pwm_channel[1].pin_out, &pin_config);
 	}
 
 	/* Enable the user interface clock in the PM */

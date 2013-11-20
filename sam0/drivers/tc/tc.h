@@ -711,6 +711,18 @@ struct tc_32bit_config {
 };
 
 /**
+ * \brief Configuration struct for TC module in 32-bit size counter mode.
+ */
+struct tc_pwm_channel {
+	/** When \c true, PWM output for the given channel is enabled. */
+	bool enabled;
+	/** Specifies pin output for each channel. */
+	uint32_t pin_out;
+	/** Specifies MUX setting for each output channel pin. */
+	uint32_t pin_mux;
+};
+
+/**
  * \brief TC configuration structure.
  *
  * Configuration struct for a TC instance. This structure should be
@@ -751,12 +763,8 @@ struct tc_config {
 	/** Specifies the direction for the TC to count. */
 	enum tc_count_direction count_direction;
 
-	/** When \c true, PWM output for the given channel is enabled. */
-	bool channel_pwm_out_enabled[NUMBER_OF_COMPARE_CAPTURE_CHANNELS];
-	/** Specifies pin output for each channel. */
-	uint32_t channel_pwm_out_pin[NUMBER_OF_COMPARE_CAPTURE_CHANNELS];
-	/** Specifies MUX setting for each output channel pin. */
-	uint32_t channel_pwm_out_mux[NUMBER_OF_COMPARE_CAPTURE_CHANNELS];
+	/** Specifies the PWM channel for TC. */
+	struct tc_pwm_channel pwm_channel[NUMBER_OF_COMPARE_CAPTURE_CHANNELS];
 
 	/** This setting determines what size counter is used. */
 	union {
@@ -896,13 +904,13 @@ static inline void tc_get_config_defaults(
 	config->count_direction            = TC_COUNT_DIRECTION_UP;
 	config->oneshot                    = false;
 
-	config->channel_pwm_out_enabled[0]                        = false;
-	config->channel_pwm_out_pin[TC_COMPARE_CAPTURE_CHANNEL_0] = 0;
-	config->channel_pwm_out_mux[TC_COMPARE_CAPTURE_CHANNEL_0] = 0;
+	config->pwm_channel[TC_COMPARE_CAPTURE_CHANNEL_0].enabled = false;
+	config->pwm_channel[TC_COMPARE_CAPTURE_CHANNEL_0].pin_out = 0;
+	config->pwm_channel[TC_COMPARE_CAPTURE_CHANNEL_0].pin_mux = 0;
 
-	config->channel_pwm_out_enabled[1]                        = false;
-	config->channel_pwm_out_pin[TC_COMPARE_CAPTURE_CHANNEL_1] = 0;
-	config->channel_pwm_out_mux[TC_COMPARE_CAPTURE_CHANNEL_1] = 0;
+	config->pwm_channel[TC_COMPARE_CAPTURE_CHANNEL_1].enabled = false;
+	config->pwm_channel[TC_COMPARE_CAPTURE_CHANNEL_1].pin_out = 0;
+	config->pwm_channel[TC_COMPARE_CAPTURE_CHANNEL_1].pin_mux = 0;
 
 	config->counter_16_bit.count                   = 0x0000;
 	config->counter_16_bit.compare_capture_channel\
