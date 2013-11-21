@@ -361,6 +361,48 @@ void port_group_set_config(
 
 /** @} */
 
+/**
+ * \brief Put pin into power save state
+ *
+ * Put the pin into the lowest possible power state.
+ *
+ * \param[in] gpio_pin Index of the GPIO pin to read
+ */
+static inline void port_pin_set_powersave_state(const uint8_t gpio_pin)
+{
+	struct system_pinmux_config pinmux_config;
+
+	system_pinmux_get_config_defaults(&pinmux_config);
+
+	pinmux_config.mux_position = SYSTEM_PINMUX_GPIO;
+	pinmux_config.direction    = PORT_PIN_DIR_INPUT;
+	pinmux_config.input_pull   = PORT_PIN_PULL_NONE;
+	pinmux_config.powersave    = true;
+
+	system_pinmux_pin_set_config(gpio_pin, &pinmux_config);
+}
+
+/**
+ * \brief Puts a group of port pins into power state
+ *
+ * Puts a group of port pins into lowest possible power state.
+ *
+ * \param[in] mask Mask of the port pin(s) to toggle.
+ */
+static inline void port_set_powerstate_state(PortGroup *const port, const uint32_t mask)
+{
+	struct system_pinmux_config pinmux_config;
+
+	system_pinmux_get_config_defaults(&pinmux_config);
+
+	pinmux_config.mux_position = SYSTEM_PINMUX_GPIO;
+	pinmux_config.direction    = PORT_PIN_DIR_INPUT;
+	pinmux_config.input_pull   = PORT_PIN_PULL_NONE;
+	pinmux_config.powersave    = true;
+
+	system_pinmux_group_set_config(port, mask, &pinmux_config);
+}
+
 /** \name State reading/writing (logical pin orientated)
  * @{
  */
