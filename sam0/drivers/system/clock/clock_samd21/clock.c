@@ -222,7 +222,6 @@ void system_clock_source_osc8m_set_config(
 	temp.bit.PRESC    = config->prescaler;
 	temp.bit.ONDEMAND = config->on_demand;
 	temp.bit.RUNSTDBY = config->run_in_standby;
-	temp.bit.FRANGE   = config->frequency_range;
 
 	SYSCTRL->OSC8M = temp;
 }
@@ -821,7 +820,6 @@ void system_clock_init(void)
 	osc8m_conf.prescaler       = CONF_CLOCK_OSC8M_PRESCALER;
 	osc8m_conf.on_demand       = CONF_CLOCK_OSC8M_ON_DEMAND;
 	osc8m_conf.run_in_standby  = CONF_CLOCK_OSC8M_RUN_IN_STANDBY;
-	osc8m_conf.frequency_range = CONF_CLOCK_OSC8M_FREQUENCY_RANGE;
 
 	system_clock_source_osc8m_set_config(&osc8m_conf);
 	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_OSC8M);

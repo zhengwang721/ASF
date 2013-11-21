@@ -57,7 +57,7 @@
 #  define CONF_CLOCK_OSC8M_PRESCALER              SYSTEM_OSC8M_DIV_1
 #  define CONF_CLOCK_OSC8M_ON_DEMAND              false
 #  define CONF_CLOCK_OSC8M_RUN_IN_STANDBY         false
-#  define CONF_CLOCK_OSC8M_FREQUENCY_RANGE        SYSTEM_OSC8M_FREQUENCY_RANGE_6_TO_8
+
 
 /* SYSTEM_CLOCK_SOURCE_XOSC configuration - External clock/oscillator */
 #  define CONF_CLOCK_XOSC_ENABLE                  false
