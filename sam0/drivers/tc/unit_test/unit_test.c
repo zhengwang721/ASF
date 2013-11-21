@@ -380,11 +380,17 @@ static void run_16bit_capture_and_compare_test(const struct test_case *test)
 	tc_reset(&tc_test0_module);
 	tc_get_config_defaults(&tc_test0_config);
 	tc_test0_config.wave_generation  = TC_WAVE_GENERATION_MATCH_PWM;
-	tc_test0_config.counter_16_bit.compare_capture_channel[0]  = 0x03FF;
-	tc_test0_config.counter_16_bit.compare_capture_channel[1]  = 0x01FF;
+	tc_test0_config.counter_16_bit.compare_capture_channel[TC_COMPARE_CAPTURE_CHANNEL_0]  = 0x03FF;
+	tc_test0_config.counter_16_bit.compare_capture_channel[TC_COMPARE_CAPTURE_CHANNEL_1]  = 0x01FF;
+	/* Calculate the theoretical PWM frequency & duty */
+	uint32_t frequency_output, duty_output;
+	frequency_output = system_clock_source_get_hz(SYSTEM_CLOCK_SOURCE_OSC8M)/ (0x03FF+1);
+	/* This value is depend on the WaveGeneration Mode */
+    duty_output = 50;
+	
 	tc_test0_config.pwm_channel[TC_COMPARE_CAPTURE_CHANNEL_1].enabled = true;
-	tc_test0_config.pwm_channel[1].pin_out = CONF_TEST_PIN_OUT;
-	tc_test0_config.pwm_channel[1].pin_mux = CONF_TEST_PIN_MUX;
+	tc_test0_config.pwm_channel[TC_COMPARE_CAPTURE_CHANNEL_1].pin_out = CONF_TEST_PIN_OUT;
+	tc_test0_config.pwm_channel[TC_COMPARE_CAPTURE_CHANNEL_1].pin_mux = CONF_TEST_PIN_MUX;
 	tc_init(&tc_test0_module, CONF_TEST_TC0, &tc_test0_config);
 	
 	tc_register_callback(&tc_test0_module, tc_callback_function, TC_CALLBACK_CC_CHANNEL0);
@@ -440,19 +446,31 @@ static void run_16bit_capture_and_compare_test(const struct test_case *test)
 
 	uint16_t period_after_capture = 0;
 	uint16_t pulse_width_after_capture = 0;
-
+	uint32_t capture_frequency = 0; 
+	uint32_t capture_duty = 0;
+	
+	
 	while (callback_function_entered < 4) {
 		period_after_capture = tc_get_capture_value(&tc_test1_module,
 				TC_COMPARE_CAPTURE_CHANNEL_0);
 		pulse_width_after_capture = tc_get_capture_value(&tc_test1_module,
 				TC_COMPARE_CAPTURE_CHANNEL_1);
 	}
-
+	
+	if(period_after_capture != 0) {
+		capture_frequency = system_clock_source_get_hz(SYSTEM_CLOCK_SOURCE_OSC8M)/ period_after_capture;
+		capture_duty = (uint32_t)(pulse_width_after_capture) * 100 / period_after_capture;
+	} 
+	
 	test_assert_true(test,
-			(0 < pulse_width_after_capture) && (0 < period_after_capture),
-			"PWM has not been captured, pulse width: %d, period: %d",
-			pulse_width_after_capture,
-			period_after_capture);
+			(capture_frequency <= (frequency_output * (100 + CONF_TEST_TOLERANCE) / 100)) && \
+			(capture_frequency >= (frequency_output * (100 - CONF_TEST_TOLERANCE) / 100)) && \
+			(capture_duty <= (duty_output * (100 + CONF_TEST_TOLERANCE) / 100)) && \
+			(capture_duty >= (duty_output * (100 - CONF_TEST_TOLERANCE) / 100)) \
+			,"The result of Capture is wrong, captured frequency: %ldHz, captured duty: %ld%%", 
+			capture_frequency,
+			capture_duty
+			);
 }
 
 /**
