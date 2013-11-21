@@ -436,12 +436,21 @@ enum spi_interrupt_flag {
  * Frame format for slave mode.
  */
 enum spi_sync_busy_type {
+#if SAMD20
 	/** SPI Software Reset Synchronization Busy */
-	SPI_SYNC_BUSY_SWRST     = 0,
+	SPI_SYNC_BUSY_SWRST     = SERCOM_SPI_STATUS_SYNCBUSY,
 	/** SPI Enable Synchronization Busy */
-	SPI_SYNC_BUSY_ENABLE,
+	SPI_SYNC_BUSY_ENABLE    = SERCOM_SPI_STATUS_SYNCBUSY,
 	/** SPI CTRLB Synchronization Busy */
-	SPI_SYNC_BUSY_CTRLB,
+	SPI_SYNC_BUSY_CTRLB      = SERCOM_SPI_STATUS_SYNCBUSY,	
+#elif SAMD21
+	/** SPI Software Reset Synchronization Busy */
+	SPI_SYNC_BUSY_SWRST     = SERCOM_SPI_SYNCBUSY_SWRST,
+	/** SPI Enable Synchronization Busy */
+	SPI_SYNC_BUSY_ENABLE    = SERCOM_SPI_SYNCBUSY_ENABLE,
+	/** SPI CTRLB Synchronization Busy */
+	SPI_SYNC_BUSY_CTRLB      = SERCOM_SPI_SYNCBUSY_CTRLB,
+#endif
 };
 
 /**
@@ -793,25 +802,13 @@ static inline bool spi_is_syncing(
 	SercomSpi *const spi_module = &(module->hw->SPI);
 
 #if SAMD20
-	UNUSED(type);
 	/* Return synchronization status */
-	return (spi_module->STATUS.reg & SERCOM_SPI_STATUS_SYNCBUSY);
+	return (spi_module->STATUS.reg & type);
 #elif SAMD21
 	/* Return synchronization status */
-	switch(type) {
-		case SPI_SYNC_BUSY_SWRST:
-			return (spi_module->SYNCBUSY.reg & SERCOM_SPI_SYNCBUSY_SWRST);
-			break;
-		case SPI_SYNC_BUSY_ENABLE:
-			return (spi_module->SYNCBUSY.reg & SERCOM_SPI_SYNCBUSY_ENABLE);
-			break;
-		case SPI_SYNC_BUSY_CTRLB:
-			return (spi_module->SYNCBUSY.reg & SERCOM_SPI_SYNCBUSY_CTRLB);
-			break;
-	}
+	return (spi_module->SYNCBUSY.reg & type);
 #endif
 }
-#endif
 
 /**
  * \name Driver initialization and configuration
@@ -964,7 +961,7 @@ static inline void spi_enable(
 	system_interrupt_enable(_sercom_get_interrupt_vector(module->hw));
 #endif
 
-	while (spi_is_syncing(module, SPI_SYNC_BUSY_ENABLE) {
+	while (spi_is_syncing(module, SPI_SYNC_BUSY_ENABLE)) {
 		/* Wait until the synchronization is complete */
 	}
 
@@ -992,7 +989,7 @@ static inline void spi_disable(
 	system_interrupt_disable(_sercom_get_interrupt_vector(module->hw));
 #endif
 
-	while (spi_is_syncing(module, SPI_SYNC_BUSY_ENABLE) {
+	while (spi_is_syncing(module, SPI_SYNC_BUSY_ENABLE)) {
 		/* Wait until the synchronization is complete */
 	}
 
