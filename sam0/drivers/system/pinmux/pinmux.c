@@ -65,7 +65,7 @@ static void _system_pinmux_config(
 	/* Track the configuration bits into a temporary variable before writing */
 	uint32_t pin_cfg = 0;
 
-	/* If powersave is enabled, skip don't create configuration */
+	/* If powersave is enabled, don't create configuration */
 	if (!config->powersave) {
 		/* Enable the pin peripheral mux flag if non-GPIO selected (pin mux will
 		 * be written later) and store the new mux mask */
