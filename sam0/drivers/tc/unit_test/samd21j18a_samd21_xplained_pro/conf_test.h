@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 Xplained PRO test configuration.
+ * \brief SAM D21 Xplained PRO test configuration.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -55,10 +55,10 @@
 #define CONF_TEST_TC1             TC4
 #define CONF_EIC_PIN              PIN_PA16A_EIC_EXTINT0
 #define CONF_EIC_MUX              MUX_PA16A_EIC_EXTINT0
-#define CONF_TEST_PIN_OUT         PIN_PA05F_TC0_WO1
-#define CONF_TEST_PIN_MUX         MUX_PA05F_TC0_WO1
+#define CONF_TEST_PIN_OUT         PIN_PA19E_TC3_WO1
+#define CONF_TEST_PIN_MUX         MUX_PA19E_TC3_WO1
 #define CONF_EVENT_GENERATOR_ID   EVSYS_ID_GEN_EIC_EXTINT_0
-#define CONF_EVENT_USED_ID        EVSYS_ID_USER_TC1_EVU
+#define CONF_EVENT_USED_ID        EVSYS_ID_USER_TC4_EVU
 #define CONF_CAPTURE_CHAN_0       0
 #define CONF_CAPTURE_CHAN_1       1
 #define CONF_TEST_TOLERANCE       10
