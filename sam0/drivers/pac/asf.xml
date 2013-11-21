@@ -6,6 +6,7 @@
 			the device peripheral busses, to protect them against inadvertent
 			writes due to application errors.
 		</info>
+
 		<info type="keyword" value="technology">
 			<keyword value="CPU"/>
 		</info>
