@@ -66,7 +66,7 @@ static void _system_pinmux_config(
 	uint32_t pin_cfg = 0;
 
 	/* Enabled powersave mode, don't create configuration */
-	if (config->direction != SYSTEM_PINMUX_PIN_DIR_DISABLE) {
+	if (!config->powersave) {
 		/* Enable the pin peripheral mux flag if non-GPIO selected (pin mux will
 		 * be written later) and store the new mux mask */
 		if (config->mux_position != SYSTEM_PINMUX_GPIO) {
@@ -117,7 +117,7 @@ static void _system_pinmux_config(
 			pin_cfg | PORT_WRCONFIG_WRPMUX | PORT_WRCONFIG_WRPINCFG |
 			PORT_WRCONFIG_HWSEL;
 
-	if(config->direction != SYSTEM_PINMUX_PIN_DIR_DISABLE) {
+	if(!config->powersave) {
 		/* Set the pull-up state once the port pins are configured if one was
 		 * requested and it does not violate the valid set of port
 		 * configurations */
