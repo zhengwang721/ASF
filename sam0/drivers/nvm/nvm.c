@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 Non Volatile Memory driver
+ * \brief SAM D2x Non Volatile Memory driver
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -681,7 +681,7 @@ static void _nvm_translate_raw_fusebits_to_struct (
 	fusebits->bod33_action = (enum nvm_bod33_action)
 			((raw_user_row[0] & SYSCTRL_FUSES_BOD33_ACTION_Msk)
 			>> SYSCTRL_FUSES_BOD33_ACTION_Pos);
-
+#if SAMD20
 	fusebits->bod12_level = (uint8_t)
 			((raw_user_row[0] & SYSCTRL_FUSES_BOD12USERLEVEL_Msk)
 			>> SYSCTRL_FUSES_BOD12USERLEVEL_Pos);
@@ -692,7 +692,7 @@ static void _nvm_translate_raw_fusebits_to_struct (
 	fusebits->bod12_action = (enum nvm_bod12_action)
 			((raw_user_row[0] & SYSCTRL_FUSES_BOD12_ACTION_Msk)
 			>> SYSCTRL_FUSES_BOD12_ACTION_Pos);
-
+#endif
 	fusebits->wdt_enable = (bool)
 			((raw_user_row[0] & WDT_FUSES_ENABLE_Msk) >> WDT_FUSES_ENABLE_Pos);
 
@@ -728,10 +728,17 @@ static void _nvm_translate_raw_fusebits_to_struct (
  *
  * @{
  */
+#if SAMD20
 #define _NVM_FUSEBITS_0_RESERVED_BITS ~(NVMCTRL_FUSES_BOOTPROT_Msk | NVMCTRL_FUSES_EEPROM_SIZE_Msk | \
 	SYSCTRL_FUSES_BOD33USERLEVEL_Msk | SYSCTRL_FUSES_BOD33_EN_Msk | SYSCTRL_FUSES_BOD33_ACTION_Msk | \
 	SYSCTRL_FUSES_BOD12USERLEVEL_Msk | SYSCTRL_FUSES_BOD12_EN_Msk | SYSCTRL_FUSES_BOD12_ACTION_Msk | \
 	WDT_FUSES_ENABLE_Msk | WDT_FUSES_ALWAYSON_Msk | WDT_FUSES_PER_Msk | WDT_FUSES_WINDOW_0_Msk)
+#endif
+#if SAMD21
+#define _NVM_FUSEBITS_0_RESERVED_BITS ~(NVMCTRL_FUSES_BOOTPROT_Msk | NVMCTRL_FUSES_EEPROM_SIZE_Msk | \
+	SYSCTRL_FUSES_BOD33USERLEVEL_Msk | SYSCTRL_FUSES_BOD33_EN_Msk | SYSCTRL_FUSES_BOD33_ACTION_Msk | \
+	WDT_FUSES_ENABLE_Msk | WDT_FUSES_ALWAYSON_Msk | WDT_FUSES_PER_Msk | WDT_FUSES_WINDOW_0_Msk)
+#endif
 
 #define _NVM_FUSEBITS_1_RESERVED_BITS ~(WDT_FUSES_WINDOW_1_Msk | WDT_FUSES_EWOFFSET_Msk | \
 	WDT_FUSES_WEN_Msk | NVMCTRL_FUSES_REGION_LOCKS_Msk)
@@ -761,12 +768,12 @@ static void _nvm_translate_struct_to_raw_fusebits (
 			    SYSCTRL_FUSES_BOD33USERLEVEL(fusebits->bod33_level)                 |
 			    ((uint32_t)(fusebits->bod33_enable)) << SYSCTRL_FUSES_BOD33_EN_Pos  |
 			    SYSCTRL_FUSES_BOD33_ACTION((uint8_t)(fusebits->bod33_action))       |
-
+#if SAMD20
 			/* Setting BOD12 fuses */
 			    SYSCTRL_FUSES_BOD12USERLEVEL(fusebits->bod12_level)                 |
-			    ((uint32_t)(fusebits->bod33_enable)) << SYSCTRL_FUSES_BOD12_EN_Pos  |
+			    ((uint32_t)(fusebits->bod12_enable)) << SYSCTRL_FUSES_BOD12_EN_Pos  |
 			    SYSCTRL_FUSES_BOD12_ACTION((uint8_t)(fusebits->bod12_action))       |
-
+#endif
 			/* Setting WDT fuses */
 			    ((uint32_t)(fusebits->wdt_enable)) << WDT_FUSES_ENABLE_Pos          |
 			    ((uint32_t)(fusebits->wdt_always_on)) << WDT_FUSES_ALWAYSON_Pos     |
