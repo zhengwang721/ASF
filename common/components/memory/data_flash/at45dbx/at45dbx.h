@@ -83,10 +83,10 @@ extern "C" {
 #define AT45DBX_8MB             23
 //! @}
 
-//! Number of bits for addresses within sectors.
+//! Number of bits for addresses within logical sectors of file system.
 #define AT45DBX_SECTOR_BITS     9
 
-//! Sector size in bytes.
+//! Logical sector size of file system in bytes.
 #define AT45DBX_SECTOR_SIZE     (1 << AT45DBX_SECTOR_BITS)
 
 
