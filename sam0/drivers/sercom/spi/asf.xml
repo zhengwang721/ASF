@@ -19,6 +19,7 @@
 			<build type="doxygen-entry-point" value="asfdoc_samd20_sercom_spi_group"/>
 			<build type="doxygen-example-path" value="quick_start_master"/>
 			<build type="doxygen-example-path" value="quick_start_slave"/>
+			<build type="doxygen-quick-start" value="asfdoc_samd20_sercom_spi_exqsg"/>
 
 			<build type="define" name="SPI_CALLBACK_MODE" value="false"/>
 
@@ -67,6 +68,7 @@
 			<build type="doxygen-example-path" value="quick_start_slave_callback"/>
 			<build type="doxygen-example-path" value="quick_start_master"/>
 			<build type="doxygen-example-path" value="quick_start_slave"/>
+			<build type="doxygen-quick-start" value="asfdoc_samd20_sercom_spi_exqsg"/>
 
 			<build type="define" name="SPI_CALLBACK_MODE" value="true"/>
 			<build type="doxygen-enable-section" value="SPI_CALLBACK_MODE"/>
