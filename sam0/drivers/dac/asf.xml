@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<select-by-config id="sam0.drivers.dac" name="config.sam0.drivers.dac" caption="DAC - Digital-to-Analog Converter" default="callback">
 		<info type="description" value="summary">
-			Driver for the SAM D20 Digital to Analog Converter. Provides a unified
+			Driver for the SAM D2x Digital to Analog Converter. Provides a unified
 			interface for the configuration and management of the DAC in the
 			device, including channel configuration and conversions.
 		</info>
@@ -18,11 +18,12 @@
 
 			<build type="define" name="DAC_CALLBACK_MODE" value="false"/>
 
-			<build type="doxygen-entry-point" value="asfdoc_samd20_dac_group"/>
+			<build type="doxygen-entry-point" value="asfdoc_sam0_dac_group"/>
 			<build type="doxygen-example-path" value="quick_start"/>
 			<build type="doxygen-image-path" value="docimg"/>
 
 			<device-support value="samd20"/>
+			<device-support value="samd21"/>
 
 			<require idref="sam0.utils"/>
 			<require idref="sam0.drivers.system"/>
@@ -39,7 +40,7 @@
 			</info>
 
 			<info type="description" value="pdf">
-				This document describes how to use the Digital to Analog Converter on the SAM D20, both the ASF driver and the peripheral itself.
+				This document describes how to use the Digital to Analog Converter on the SAM D2x, both the ASF driver and the peripheral itself.
 			</info>
 
 			<build type="include-path" value="."/>
@@ -53,11 +54,12 @@
 			<build type="define" name="DAC_CALLBACK_MODE" value="true"/>
 			<build type="doxygen-enable-section" value="DAC_CALLBACK_MODE"/>
 
-			<build type="doxygen-entry-point" value="asfdoc_samd20_dac_group"/>
+			<build type="doxygen-entry-point" value="asfdoc_sam0_dac_group"/>
 			<build type="doxygen-example-path" value="quick_start"/>
 			<build type="doxygen-image-path" value="docimg"/>
 
 			<device-support value="samd20"/>
+			<device-support value="samd21"/>
 
 			<require idref="sam0.utils"/>
 			<require idref="sam0.drivers.system"/>
