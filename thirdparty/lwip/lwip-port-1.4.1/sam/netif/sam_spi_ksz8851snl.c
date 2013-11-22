@@ -232,7 +232,7 @@ static void ksz8851snl_rx_populate_queue(struct ksz8851snl_device *p_ksz8851snl_
 		if (p_ksz8851snl_dev->rx_pbuf[ul_index] == 0) {
 
 			/* Allocate a new pbuf with the maximum size. */
-			p = pbuf_alloc(PBUF_RAW, (u16_t) NET_MTU, PBUF_POOL);
+			p = pbuf_alloc(PBUF_RAW, PBUF_POOL_BUFSIZE, PBUF_POOL);
 			if (0 == p) {
 				LWIP_DEBUGF(NETIF_DEBUG, ("ksz8851snl_rx_populate_queue: pbuf allocation failure\n"));
 			}
@@ -354,7 +354,6 @@ static void ksz8851snl_update(struct netif *netif)
 
 			/* Fetch next packet marked as owned by Micrel. */
 			if (ps_ksz8851snl_dev->tx_desc[ps_ksz8851snl_dev->us_tx_tail]) {
-
 				len = ps_ksz8851snl_dev->tx_pbuf[ps_ksz8851snl_dev->us_tx_tail]->tot_len;
 
 				/* TX step1: check if TXQ memory size is available for transmit. */
@@ -381,7 +380,9 @@ static void ksz8851snl_update(struct netif *netif)
 				g_spi_pdc_flag = SPI_PDC_TX_START;
 				ps_ksz8851snl_dev->tx_cur_pbuf = ps_ksz8851snl_dev->tx_pbuf[ps_ksz8851snl_dev->us_tx_tail];
 				gpio_set_pin_low(KSZ8851SNL_CSN_GPIO);
-				ksz8851_fifo_write(ps_ksz8851snl_dev->tx_cur_pbuf->payload, ps_ksz8851snl_dev->tx_cur_pbuf->len);
+				ksz8851_fifo_write(ps_ksz8851snl_dev->tx_cur_pbuf->payload,
+						ps_ksz8851snl_dev->tx_cur_pbuf->tot_len,
+						ps_ksz8851snl_dev->tx_cur_pbuf->len);
 			}
 		}
 	}

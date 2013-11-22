@@ -259,9 +259,10 @@ void ksz8851_fifo_read(uint8_t *buf, uint32_t len)
  * \brief Write internal fifo buffer.
  *
  * \param buf the buffer to send to the fifo buffer.
- * \param len the amount of data to read.
+ * \param tot_len the total amount of data to write.
+ * \param len the size of the first pbuf to write from the pbuf chain.
  */
-void ksz8851_fifo_write(uint8_t *buf, uint32_t len)
+void ksz8851_fifo_write(uint8_t *buf, uint32_t tot_len, uint32_t len)
 {
 	uint8_t	outbuf[5];
 	static uint8_t frameID = 0;
@@ -274,8 +275,8 @@ void ksz8851_fifo_write(uint8_t *buf, uint32_t len)
 	outbuf[0] = FIFO_WRITE;
 	outbuf[1] = frameID++ & 0x3f;
 	outbuf[2] = 0;
-	outbuf[3] = len & 0xff;
-	outbuf[4] = len >> 8;
+	outbuf[3] = tot_len & 0xff;
+	outbuf[4] = tot_len >> 8;
 
 	/* Prepare PDC transfer. */
 	g_pdc_spi_tx_packet.ul_addr = (uint32_t) outbuf;

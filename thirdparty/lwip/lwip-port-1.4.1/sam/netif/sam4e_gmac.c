@@ -63,7 +63,7 @@
 #define IFNAME1								'n'
 
 /** Maximum transfer unit. */
-#define NET_MTU								1500
+#define NET_MTU								1518
 
 /** Network link speed. */
 #define NET_LINK_SPEED						100000000
