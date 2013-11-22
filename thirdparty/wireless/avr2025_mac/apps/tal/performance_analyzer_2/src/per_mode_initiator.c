@@ -398,7 +398,7 @@ void per_mode_initiator_task(trx_id_t trx)
 						//LED_On(LED0);
 			} else {
 				tal_tx_frame(trx,node_info[trx].tx_frame_info,
-						NO_CSMA_NO_IFS,//sriram
+						NO_CSMA_WITH_IFS,//sriram
 						curr_trx_config_params[trx].retry_enabled );
 						//LED_On(LED0);
 			}
@@ -1589,6 +1589,16 @@ static void toggle_trx_sleep(trx_id_t trx)
 			if (MAC_SUCCESS == tal_trx_wakeup(trx) )
 			{
 				trx_sleep_status[trx] = false;
+				/*Waking up one of the transceiver wakes wakes other one as well,put the other transceiver to sleep here*/ //sriram requires investingation
+				if((trx==RF09) && (trx_sleep_status[RF24]))
+				{
+				 tal_trx_sleep(RF24);
+				
+				}
+				else if ((trx==RF24) && (trx_sleep_status[RF09]))
+				{
+					tal_trx_sleep(RF09);
+				}
 			}
 
 	}
