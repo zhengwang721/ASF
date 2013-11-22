@@ -218,9 +218,9 @@ struct port_config {
 	enum port_pin_pull input_pull;
 
 	/** Enable lowest possible powerstate on the pin
-         *
-         *  \note All other configurations will be ignored, the pin will be disabled
-         */
+	 *
+	 *  \note All other configurations will be ignored, the pin will be disabled
+	 */
 	bool powersave;
 };
 

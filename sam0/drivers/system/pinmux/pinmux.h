@@ -197,8 +197,6 @@ enum system_pinmux_pin_dir {
 	/** The pin's output and input buffers should both be enabled, so that the
 	 *  pin state can be set and read back. */
 	SYSTEM_PINMUX_PIN_DIR_OUTPUT_WITH_READBACK,
-	/** The pin's output and input buffers disabled */
-	SYSTEM_PINMUX_PIN_DIR_DISABLE,
 };
 
 /**
@@ -290,10 +288,10 @@ struct system_pinmux_config {
 	/** Logic level pull of the input buffer. */
 	enum system_pinmux_pin_pull input_pull;
 
-        /** Enable lowest possible powerstate on the pin
-         *
-         *  \note All other configurations will be ignored, the pin will be disabled
-         */
+	/** Enable lowest possible powerstate on the pin
+	 *
+	 *  \note All other configurations will be ignored, the pin will be disabled
+	 */
 	bool powersave;
 };
 
