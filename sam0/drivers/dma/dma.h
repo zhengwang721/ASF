@@ -136,8 +136,9 @@ struct dma_events_config {
 struct dma_transfer_descriptor {
 	/** Block transfer control */
 	uint16_t block_transfer_control;
-	/** Transfer transfer count. Count value is 
-	decremented by one after each beat data transfer */
+
+	/** Transfer transfer count. Count value is
+	 * decremented by one after each beat data transfer */
 	uint16_t block_transfer_count;
 	/** Transfer source address */
 	uint32_t source_address;
@@ -184,17 +185,23 @@ struct dma_resource {
 
 void dma_get_config_defaults(struct dma_transfer_config *config);
 enum status_code dma_allocate(struct dma_resource *resource,
-								struct dma_transfer_config *config);
-enum status_code dma_transfer_job(struct dma_resource *resource, struct dma_transfer_descriptor *descriptor);
+		struct dma_transfer_config *config);
+enum status_code dma_transfer_job(struct dma_resource *resource,
+		struct dma_transfer_descriptor *descriptor);
 void dma_abort_job(struct dma_resource *resource);
 void dma_suspend_job(struct dma_resource *resource);
 void dma_resume_job(struct dma_resource *resource);
 enum status_code dma_get_job_status(struct dma_resource *resource);
 enum status_code dma_release(struct dma_resource *resource);
 bool dma_is_busy(struct dma_resource *resource);
-void dma_enable_callback(struct dma_resource *resource, enum dma_callback_type type);
-void dma_disable_callback(struct dma_resource *resource, enum dma_callback_type type);
-void dma_register_callback(struct dma_resource *resource, dma_callback_t callback, enum dma_callback_type type);
-void dma_unregister_callback(struct dma_resource *resource, enum dma_callback_type type);
+void dma_enable_callback(struct dma_resource *resource,
+		enum dma_callback_type type);
+void dma_disable_callback(struct dma_resource *resource,
+		enum dma_callback_type type);
+void dma_register_callback(struct dma_resource *resource,
+		dma_callback_t callback,
+		enum dma_callback_type type);
+void dma_unregister_callback(struct dma_resource *resource,
+		enum dma_callback_type type);
 
 #endif /* DMA_H_INCLUDED */
