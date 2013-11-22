@@ -289,7 +289,7 @@ enum status_code tc_init(
 			}
 
 			hw->COUNT8.COUNT.reg =
-					config->counter_8_bit.count;
+					config->counter_8_bit.value;
 
 
 			while (tc_is_syncing(module_inst)) {
@@ -321,7 +321,7 @@ enum status_code tc_init(
 			}
 
 			hw->COUNT16.COUNT.reg
-				= config->counter_16_bit.count;
+				= config->counter_16_bit.value;
 
 			while (tc_is_syncing(module_inst)) {
 				/* Wait for sync */
@@ -345,7 +345,7 @@ enum status_code tc_init(
 			}
 
 			hw->COUNT32.COUNT.reg
-				= config->counter_32_bit.count;
+				= config->counter_32_bit.value;
 
 			while (tc_is_syncing(module_inst)) {
 				/* Wait for sync */

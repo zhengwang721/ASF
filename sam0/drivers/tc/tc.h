@@ -683,7 +683,7 @@ struct tc_events {
  */
 struct tc_8bit_config {
 	/** Initial timer count value. */
-	uint8_t count;
+	uint8_t value;
 	/** Where to count to or from depending on the direction on the counter. */
 	uint8_t period;
 	/** Value to be used for compare match on each channel. */
@@ -695,7 +695,7 @@ struct tc_8bit_config {
  */
 struct tc_16bit_config {
 	/** Initial timer count value. */
-	uint16_t count;
+	uint16_t value;
 	/** Value to be used for compare match on each channel. */
 	uint16_t compare_capture_channel[NUMBER_OF_COMPARE_CAPTURE_CHANNELS];
 };
@@ -705,7 +705,7 @@ struct tc_16bit_config {
  */
 struct tc_32bit_config {
 	/** Initial timer count value. */
-	uint32_t count;
+	uint32_t value;
 	/** Value to be used for compare match on each channel. */
 	uint32_t compare_capture_channel[NUMBER_OF_COMPARE_CAPTURE_CHANNELS];
 };
@@ -912,7 +912,7 @@ static inline void tc_get_config_defaults(
 	config->pwm_channel[TC_COMPARE_CAPTURE_CHANNEL_1].pin_out = 0;
 	config->pwm_channel[TC_COMPARE_CAPTURE_CHANNEL_1].pin_mux = 0;
 
-	config->counter_16_bit.count                   = 0x0000;
+	config->counter_16_bit.value                   = 0x0000;
 	config->counter_16_bit.compare_capture_channel\
 		[TC_COMPARE_CAPTURE_CHANNEL_0]                        = 0x0000;
 	config->counter_16_bit.compare_capture_channel\

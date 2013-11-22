@@ -382,12 +382,15 @@ static void run_16bit_capture_and_compare_test(const struct test_case *test)
 	tc_test0_config.wave_generation  = TC_WAVE_GENERATION_MATCH_PWM;
 	tc_test0_config.counter_16_bit.compare_capture_channel[TC_COMPARE_CAPTURE_CHANNEL_0]  = 0x03FF;
 	tc_test0_config.counter_16_bit.compare_capture_channel[TC_COMPARE_CAPTURE_CHANNEL_1]  = 0x01FF;
+
 	/* Calculate the theoretical PWM frequency & duty */
 	uint32_t frequency_output, duty_output;
 	frequency_output = system_clock_source_get_hz(SYSTEM_CLOCK_SOURCE_OSC8M)/ (0x03FF+1);
+
 	/* This value is depend on the WaveGeneration Mode */
-    duty_output = 50;
-	
+	duty_output = (uint32_t)(tc_test0_config.counter_16_bit.compare_capture_channel[TC_COMPARE_CAPTURE_CHANNEL_1]) * 100 \
+					/ tc_test0_config.counter_16_bit.compare_capture_channel[TC_COMPARE_CAPTURE_CHANNEL_0];
+
 	tc_test0_config.pwm_channel[TC_COMPARE_CAPTURE_CHANNEL_1].enabled = true;
 	tc_test0_config.pwm_channel[TC_COMPARE_CAPTURE_CHANNEL_1].pin_out = CONF_TEST_PIN_OUT;
 	tc_test0_config.pwm_channel[TC_COMPARE_CAPTURE_CHANNEL_1].pin_mux = CONF_TEST_PIN_MUX;
