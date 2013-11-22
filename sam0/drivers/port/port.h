@@ -186,6 +186,8 @@ enum port_pin_dir {
 	/** The pin's output and input buffers should be enabled, so that the pin
 	 *  state can be set and read back. */
 	PORT_PIN_DIR_OUTPUT_WTH_READBACK = SYSTEM_PINMUX_PIN_DIR_OUTPUT_WITH_READBACK,
+	/** The pin's output and input buffers disabled */
+	PORT_PIN_DIR_DISABLE,
 };
 
 /**
@@ -375,9 +377,8 @@ static inline void port_pin_set_powersave_state(const uint8_t gpio_pin)
 	system_pinmux_get_config_defaults(&pinmux_config);
 
 	pinmux_config.mux_position = SYSTEM_PINMUX_GPIO;
-	pinmux_config.direction    = PORT_PIN_DIR_INPUT;
+	pinmux_config.direction    = PORT_PIN_DIR_DISABLE;
 	pinmux_config.input_pull   = PORT_PIN_PULL_NONE;
-	pinmux_config.powersave    = true;
 
 	system_pinmux_pin_set_config(gpio_pin, &pinmux_config);
 }
@@ -396,9 +397,8 @@ static inline void port_set_powerstate_state(PortGroup *const port, const uint32
 	system_pinmux_get_config_defaults(&pinmux_config);
 
 	pinmux_config.mux_position = SYSTEM_PINMUX_GPIO;
-	pinmux_config.direction    = PORT_PIN_DIR_INPUT;
+	pinmux_config.direction    = PORT_PIN_DIR_DISABLE;
 	pinmux_config.input_pull   = PORT_PIN_PULL_NONE;
-	pinmux_config.powersave    = true;
 
 	system_pinmux_group_set_config(port, mask, &pinmux_config);
 }
