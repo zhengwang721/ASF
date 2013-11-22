@@ -743,7 +743,7 @@ mac_key_table_t *key_table = (mac_key_table_t *)PIBAttributeValue;
 			(PIBAttribute == phyChannelsSupported)) {
 		uint8_t index;
 
-		channels_supported = *(uint32_t *)PIBAttributeValue;
+		channels_supported = convert_byte_array_to_32_bit(PIBAttributeValue);
 
 		for (index = 0; index < 32; index++) {
 			if (channels_supported & (1 << index)) {
