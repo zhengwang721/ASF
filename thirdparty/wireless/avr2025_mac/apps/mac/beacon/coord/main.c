@@ -101,13 +101,6 @@
 #include "delay.h"
 #include "common_sw_timer.h"
 #include "sio2host.h"
-#include "mac.h"
-#include "mac_api.h"
-#include "tal.h"
-#include "ieee_const.h"
-#include "hw_timer.h"
-#include "common_hw_timer.h"
-#include "conf_hw_timer.h"
 #include <asf.h>
 #include "beacon_app.h"
 
