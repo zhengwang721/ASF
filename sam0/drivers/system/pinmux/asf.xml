@@ -20,7 +20,8 @@
 				</info>
 
 				<info type="description" value="pdf">
-					This document describes how to use the Pin Multiplexer on the SAM D20, both the ASF driver and the peripheral itself.
+					This document describes how to use the Pin Multiplexer on the
+					SAM D20, both the ASF driver and the peripheral itself.
 				</info>
 
 				<build type="include-path" value="."/>
@@ -59,7 +60,8 @@
 				</info>
 
 				<info type="description" value="pdf">
-					This document describes how to use the Pin Multiplexer on the SAM D21, both the ASF driver and the peripheral itself.
+					This document describes how to use the Pin Multiplexer on the
+					SAM D21, both the ASF driver and the peripheral itself.
 				</info>
 
 				<build type="include-path" value="."/>

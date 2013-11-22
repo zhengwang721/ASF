@@ -4,10 +4,10 @@
 
 			<module type="driver" id="sam0.drivers.system.interrupt#samd20" caption="SYSTEM - Interrupt Driver">
 				<info type="description" value="summary">
-					Driver for the SAM D20 Interrupt System. Provides a unified interface
-					for the configuration and management interrupts within the device,
-					including the enabling, disabling and entering, leaving of critical
-					sections.
+					Driver for the SAM D20 Interrupt System. Provides a unified
+					interface for the configuration and management interrupts within
+					the device, including the enabling, disabling and entering, leaving
+					of critical sections.
 				</info>
 
 				<info type="keyword" value="technology">
@@ -49,10 +49,10 @@
 
 			<module type="driver" id="sam0.drivers.system.interrupt#samd21" caption="SYSTEM - Interrupt Driver">
 				<info type="description" value="summary">
-					Driver for the SAM D21 Interrupt System. Provides a unified interface
-					for the configuration and management interrupts within the device,
-					including the enabling, disabling and entering, leaving of critical
-					sections.
+					Driver for the SAM D21 Interrupt System. Provides a unified
+					interface for the configuration and management interrupts within
+					the device, including the enabling, disabling and entering, leaving
+					of critical sections.
 				</info>
 
 				<info type="keyword" value="technology">
