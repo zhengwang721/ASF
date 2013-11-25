@@ -5,11 +5,12 @@
 		  interface for the configuration and management of the device's
 		  hardware timers.
 		</info>
-		<info type="keyword" value="technology">
-			<keyword value="Timers" />
-		</info>
 
-		<module caption="TC - Timer Counter" id="sam0.drivers.tc#polled" type="driver">
+		<module caption="TC - Timer Counter (Polled APIs)" id="sam0.drivers.tc#polled" type="driver">
+			<info type="keyword" value="technology">
+				<keyword value="Timers" />
+			</info>
+
 			<build type="include-path" value="." />
 
 			<build name="TC_ASYNC" type="define" value="false" />
@@ -21,7 +22,9 @@
 
 			<build type="doxygen-example-path" value="quick_start"/>
 			<build type="doxygen-image-path" value="docimg" />
+
 			<build type="doxygen-entry-point" value="asfdoc_sam0_tc_group" />
+			<build type="doxygen-quick-start" value="asfdoc_sam0_tc_exqsg"/>
 
 			<device-support value="samd20" />
 			<device-support value="samd21" />
@@ -32,7 +35,12 @@
 
 			<generator default-mcu="unspecified-samd20" value="doxygen-module-v2" />
 		</module>
-		<module caption="TC - Timer Counter" id="sam0.drivers.tc#callback" type="driver">
+
+		<module caption="TC - Timer Counter (Callback APIs)" id="sam0.drivers.tc#callback" type="driver">
+			<info type="keyword" value="technology">
+				<keyword value="Timers" />
+			</info>
+
 			<info type="appnote" value="AT03263"/>
 			<info type="keyword" value="pdf">
 				<keyword value="I/O"/>
@@ -43,7 +51,8 @@
 			</info>
 
 			<info type="description" value="pdf">
-				This document describes how to use the Timer Counter on the SAM D2x, both the ASF driver and the peripheral itself.
+				This document describes how to use the Timer Counter on the SAM D2x, 
+				both the ASF driver and the peripheral itself.
 			</info>
 
 			<build type="include-path" value="." />
@@ -62,6 +71,7 @@
 			<build type="doxygen-example-path" value="quick_start_callback"/>
 			<build type="doxygen-image-path" value="docimg" />
 			<build type="doxygen-entry-point" value="asfdoc_sam0_tc_group" />
+			<build type="doxygen-quick-start" value="asfdoc_sam0_tc_exqsg"/>
 
 			<device-support value="samd20" />
 			<device-support value="samd21" />
