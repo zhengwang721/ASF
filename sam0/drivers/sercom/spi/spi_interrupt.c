@@ -545,10 +545,9 @@ void _spi_interrupt_handler(
 
 	/* Data register empty interrupt */
 	if (interrupt_status & SPI_INTERRUPT_FLAG_DATA_REGISTER_EMPTY) {
-
+	#if CONF_SPI_MASTER_ENABLE == true
 		if (module->mode == SPI_MODE_MASTER &&
 			module->dir == SPI_DIRECTION_READ) {
-		#if CONF_SPI_MASTER_ENABLE == true
 			/* Send dummy byte when reading in master mode */
 			_spi_write_dummy(module);
 			if (module->remaining_dummy_buffer_length == 0) {
@@ -556,8 +555,11 @@ void _spi_interrupt_handler(
 				spi_hw->INTENCLR.reg
 						= SPI_INTERRUPT_FLAG_DATA_REGISTER_EMPTY;
 			}
-		#endif
-		} else if (module->dir != SPI_DIRECTION_READ) {
+		}
+	#endif
+	#if CONF_SPI_SLAVE_ENABLE == true
+		if (module->mode == SPI_MODE_SLAVE&&
+			module->dir != SPI_DIRECTION_READ) {
 			/* Write next byte from buffer */
 			_spi_write(module);
 			if (module->remaining_tx_buffer_length == 0) {
@@ -578,6 +580,7 @@ void _spi_interrupt_handler(
 				}
 			}
 		}
+	#endif
 	}
 
 	/* Receive complete interrupt*/
@@ -675,7 +678,6 @@ void _spi_interrupt_handler(
 	/* When a high to low transition is detected on the _SS pin in slave mode */
 	if (interrupt_status & SPI_INTERRUPT_FLAG_SLAVE_SELECT_LOW) {
 		if (module->mode == SPI_MODE_SLAVE) {
-
 			/* Disable interrupts */
 			spi_hw->INTENCLR.reg = SPI_INTERRUPT_FLAG_SLAVE_SELECT_LOW;
 			/* Clear interrupt flag */

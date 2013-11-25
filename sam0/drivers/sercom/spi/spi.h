@@ -340,6 +340,10 @@
 extern "C" {
 #endif
 
+#if (CONF_SPI_MASTER_ENABLE == false) && (CONF_SPI_MASTER_ENABLE == false)
+#error Invalid SPI configuration!
+#endif
+
 #ifndef PINMUX_DEFAULT
 #  define PINMUX_DEFAULT 0
 #endif
@@ -442,7 +446,7 @@ enum spi_sync_busy_type {
 	/** SPI Enable Synchronization Busy */
 	SPI_SYNC_BUSY_ENABLE    = SERCOM_SPI_STATUS_SYNCBUSY,
 	/** SPI CTRLB Synchronization Busy */
-	SPI_SYNC_BUSY_CTRLB      = SERCOM_SPI_STATUS_SYNCBUSY,	
+	SPI_SYNC_BUSY_CTRLB      = SERCOM_SPI_STATUS_SYNCBUSY,
 #elif SAMD21
 	/** SPI Software Reset Synchronization Busy */
 	SPI_SYNC_BUSY_SWRST     = SERCOM_SPI_SYNCBUSY_SWRST,
@@ -645,6 +649,8 @@ struct spi_module {
 	enum spi_character_size character_size;
 	/** Receiver enabled */
 	bool receiver_enabled;
+	/** Enable Slave Select Low Detect */
+	bool master_slave_select_enable;
 #  if SPI_CALLBACK_MODE == true
 	/** Direction of transaction */
 	volatile enum _spi_direction dir;
