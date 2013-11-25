@@ -70,6 +70,13 @@
  * There are no prerequisites for this use case.
  *
  * \subsection asfdoc_samd20_tc_basic_use_case_setup_code Code
+ * Add to the main application source file, before any functions:
+ * \code
+ * #define PWM_MODULE      EXT1_PWM_MODULE
+ * #define PWM_OUT_PIN     EXT1_PWM_0_PIN
+ * #define PWM_OUT_MUX     EXT1_PWM_0_MUX
+ * \endcode
+ *
  * Add to the main application source file, outside of any functions:
  * \snippet qs_tc_basic.c module_inst
  *
