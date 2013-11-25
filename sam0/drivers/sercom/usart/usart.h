@@ -301,6 +301,7 @@ enum usart_parity {
  * various MUX setting options.
  */
 enum usart_signal_mux_settings {
+#if SAMD20
 	/** MUX setting RX_0_TX_0_XCK_1 */
 	USART_RX_0_TX_0_XCK_1 = (SERCOM_USART_CTRLA_RXPO(0)),
 	/** MUX setting RX_0_TX_2_XCK_3 */
@@ -317,6 +318,32 @@ enum usart_signal_mux_settings {
 	USART_RX_3_TX_0_XCK_1 = (SERCOM_USART_CTRLA_RXPO(3)),
 	/** MUX setting RX_3_TX_2_XCK_3 */
 	USART_RX_3_TX_2_XCK_3 = (SERCOM_USART_CTRLA_RXPO(3) | SERCOM_USART_CTRLA_TXPO),
+#elif SAMD21
+	/** MUX setting RX_0_TX_0_XCK_1 */
+	USART_RX_0_TX_0_XCK_1 = (SERCOM_USART_CTRLA_RXPO(0) | SERCOM_USART_CTRLA_TXPO(0)),
+	/** MUX setting RX_0_TX_2_XCK_3 */
+	USART_RX_0_TX_2_XCK_3 = (SERCOM_USART_CTRLA_RXPO(0) | SERCOM_USART_CTRLA_TXPO(1)),
+	/** MUX setting USART_RX_0_TX_0_RTS_2_CTS_3 */
+	USART_RX_0_TX_0_RTS_2_CTS_3 = (SERCOM_USART_CTRLA_RXPO(0) | SERCOM_USART_CTRLA_TXPO(2)),	
+	/** MUX setting RX_1_TX_0_XCK_1 */
+	USART_RX_1_TX_0_XCK_1 = (SERCOM_USART_CTRLA_RXPO(1) | SERCOM_USART_CTRLA_TXPO(0)),
+	/** MUX setting RX_1_TX_2_XCK_3 */
+	USART_RX_1_TX_2_XCK_3 = (SERCOM_USART_CTRLA_RXPO(1) | SERCOM_USART_CTRLA_TXPO(1)),
+	/** MUX setting USART_RX_1_TX_0_RTS_2_CTS_3 */
+	USART_RX_1_TX_0_RTS_2_CTS_3 = (SERCOM_USART_CTRLA_RXPO(1) | SERCOM_USART_CTRLA_TXPO(2)),		
+	/** MUX setting RX_2_TX_0_XCK_1 */
+	USART_RX_2_TX_0_XCK_1 = (SERCOM_USART_CTRLA_RXPO(2) | SERCOM_USART_CTRLA_TXPO(0)),
+	/** MUX setting RX_2_TX_2_XCK_3 */
+	USART_RX_2_TX_2_XCK_3 = (SERCOM_USART_CTRLA_RXPO(2) | SERCOM_USART_CTRLA_TXPO(1)),
+	/** MUX setting USART_RX_2_TX_0_RTS_2_CTS_3 */
+	USART_RX_2_TX_0_RTS_2_CTS_3 = (SERCOM_USART_CTRLA_RXPO(2) | SERCOM_USART_CTRLA_TXPO(2)),	
+	/** MUX setting RX_3_TX_0_XCK_1 */
+	USART_RX_3_TX_0_XCK_1 = (SERCOM_USART_CTRLA_RXPO(3) | SERCOM_USART_CTRLA_TXPO(0)),
+	/** MUX setting RX_3_TX_2_XCK_3 */
+	USART_RX_3_TX_2_XCK_3 = (SERCOM_USART_CTRLA_RXPO(3) | SERCOM_USART_CTRLA_TXPO(1)),
+	/** MUX setting USART_RX_3_TX_0_RTS_2_CTS_3 */
+	USART_RX_3_TX_0_RTS_2_CTS_3 = (SERCOM_USART_CTRLA_RXPO(3) | SERCOM_USART_CTRLA_TXPO(2)),	
+#endif
 };
 
 /**
@@ -349,6 +376,41 @@ enum usart_character_size {
 	USART_CHARACTER_SIZE_9BIT = SERCOM_USART_CTRLB_CHSIZE(1),
 };
 
+#if SAMD21
+/**
+ * \brief USART Sample Rate
+ *
+ * The value of sample rate and baud rate generation mode.
+ */
+enum usart_sample_rate {
+	/** 16x over-sampling using arithmetic baud rate generation */
+	USART_SAMPLE_RATE_16X_ARITHMETIC = SERCOM_USART_CTRLA_SAMPR(0),
+	/** 16x over-sampling using fractional baud rate generation */
+	USART_SAMPLE_RATE_16X_FRACTIONAL = SERCOM_USART_CTRLA_SAMPR(1),
+	/** 8x over-sampling using arithmetic baud rate generation */
+	USART_SAMPLE_RATE_8X_ARITHMETIC = SERCOM_USART_CTRLA_SAMPR(2),
+	/** 8x over-sampling using fractional baud rate generation */
+	USART_SAMPLE_RATE_8X_FRACTIONAL = SERCOM_USART_CTRLA_SAMPR(3),
+	/** 3x over-sampling using arithmetic baud rate generation */
+	USART_SAMPLE_RATE_3X_ARITHMETIC = SERCOM_USART_CTRLA_SAMPR(4),
+};
+
+/**
+ * \brief USART Sample Adjustment
+ *
+ * The value of sample number used for majority voting
+ */
+enum usart_sample_adjustment {
+	/** The first, middle and last sample number used for majority voting is 7-8-9 */
+	USART_SAMPLE_ADJUSTMENT_7_8_9 = SERCOM_USART_CTRLA_SAMPA(0),
+	/** The first, middle and last sample number used for majority voting is 9-10-11 */
+	USART_SAMPLE_ADJUSTMENT_9_10_11 = SERCOM_USART_CTRLA_SAMPA(1),
+	/** The first, middle and last sample number used for majority voting is 11-12-13 */
+	USART_SAMPLE_ADJUSTMENT_11_12_13 = SERCOM_USART_CTRLA_SAMPA(2),
+	/** The first, middle and last sample number used for majority voting is 13-14-15 */
+	USART_SAMPLE_ADJUSTMENT_13_14_15 = SERCOM_USART_CTRLA_SAMPA(3),
+};
+#endif
 
 /**
  * \brief USART Transceiver
@@ -380,6 +442,20 @@ struct usart_config {
 	enum usart_character_size character_size;
 	/** USART pin out */
 	enum usart_signal_mux_settings mux_setting;
+#if SAMD21	
+	/** USART sample rate */
+	enum usart_sample_rate sample_rate;
+	/** USART sample adjustment */
+	enum usart_sample_adjustment sample_adjustment;
+	/** Controls when the buffer overflow status bit is asserted when a buffer overflow occurs.*/
+	bool immediate_buffer_overflow_notification;
+	/** Enable IrDA encoding format */
+	bool encoding_format_enable;
+	/** Enable start of frame dection */
+	bool start_frame_detection_enable;
+	/** Enable collision dection */
+	bool collision_detection_enable;
+#endif
 	/** USART baud rate */
 	uint32_t baudrate;
 	/** Enable receiver */
@@ -620,6 +696,14 @@ static inline void usart_get_config_defaults(
 	config->pinmux_pad1      = PINMUX_DEFAULT;
 	config->pinmux_pad2      = PINMUX_DEFAULT;
 	config->pinmux_pad3      = PINMUX_DEFAULT;
+#if SAMD21
+	config->sample_adjustment  =  USART_SAMPLE_ADJUSTMENT_7_8_9;
+        config->sample_rate             =  USART_SAMPLE_RATE_16X_ARITHMETIC;
+	config->immediate_buffer_overflow_notification      = false;
+	config->start_frame_detection_enable                    = false;
+	config->encoding_format_enable                            = false;
+	config->collision_detection_enable                          = false; 
+#endif
 }
 
 enum status_code usart_init(
