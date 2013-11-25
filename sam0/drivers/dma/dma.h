@@ -183,25 +183,106 @@ struct dma_resource {
 	uint32_t transfered_size;
 };
 
+/**
+ * \brief Get DMA resource status.
+ *
+ * \param[in] resource Pointer to the DMA resource
+ *
+ * \return Status of the DMA resource.
+ */
+static inline enum status_code dma_get_job_status(struct dma_resource *resource)
+{
+	Assert(resource);
+
+	return resource->job_status;
+}
+
+/**
+ * \brief Check if the DMA was busy of transfer.
+ *
+ * \param[in] resource Pointer to the DMA resource
+ *
+ * \return Busy status of the DMA resource.
+ *
+ * \retval true The DMA resource has an on-going transfer
+ * \retval false The DMA resource is not busy
+ */
+static inline bool dma_is_busy(struct dma_resource *resource)
+{
+	Assert(resource);
+
+	return (resource->job_status == STATUS_BUSY);
+}
+
+/**
+ * \brief Enable a callback function for a dedicated DMA resource
+ *
+ * \param[in] resource Pointer to the DMA resource
+ * \param[in] type Callback function type
+ *
+ */
+static inline void dma_enable_callback(struct dma_resource *resource,
+		enum dma_callback_type type)
+{
+	Assert(resource);
+
+	resource->callback_enable |= 1 << type;
+}
+
+/**
+ * \brief Disable a callback function for a dedicated DMA resource
+ *
+ * \param[in] resource Pointer to the DMA resource
+ * \param[in] type Callback function type
+ *
+ */
+static inline void dma_disable_callback(struct dma_resource *resource,
+		enum dma_callback_type type)
+{
+	Assert(resource);
+
+	resource->callback_enable &= ~(1 << type);
+}
+
+/**
+ * \brief Register a callback function for a dedicated DMA resource
+ *
+ * \param[in] resource Pointer to the DMA resource
+ * \param[in] callback Pointer to the callback function
+ * \param[in] type Callback function type
+ *
+ */
+static inline void dma_register_callback(struct dma_resource *resource,
+		dma_callback_t callback, enum dma_callback_type type)
+{
+	Assert(resource);
+
+	resource->callback[type] = callback;
+}
+
+/**
+ * \brief Unregister a callback function for a dedicated DMA resource
+ *
+ * \param[in] resource Pointer to the DMA resource
+ * \param[in] type Callback function type
+ *
+ */
+static inline void dma_unregister_callback(struct dma_resource *resource,
+		enum dma_callback_type type)
+{
+	Assert(resource);
+
+	resource->callback[type] = NULL;
+}
+
 void dma_get_config_defaults(struct dma_transfer_config *config);
 enum status_code dma_allocate(struct dma_resource *resource,
 		struct dma_transfer_config *config);
+enum status_code dma_free(struct dma_resource *resource);
 enum status_code dma_transfer_job(struct dma_resource *resource,
 		struct dma_transfer_descriptor *descriptor);
 void dma_abort_job(struct dma_resource *resource);
 void dma_suspend_job(struct dma_resource *resource);
 void dma_resume_job(struct dma_resource *resource);
-enum status_code dma_get_job_status(struct dma_resource *resource);
-enum status_code dma_release(struct dma_resource *resource);
-bool dma_is_busy(struct dma_resource *resource);
-void dma_enable_callback(struct dma_resource *resource,
-		enum dma_callback_type type);
-void dma_disable_callback(struct dma_resource *resource,
-		enum dma_callback_type type);
-void dma_register_callback(struct dma_resource *resource,
-		dma_callback_t callback,
-		enum dma_callback_type type);
-void dma_unregister_callback(struct dma_resource *resource,
-		enum dma_callback_type type);
 
 #endif /* DMA_H_INCLUDED */

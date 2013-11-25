@@ -62,6 +62,15 @@ struct _dma_module _dma_inst = {
 /** Maximum retry counter for resuming a job transfer */
 #define MAX_JOB_RESUME_COUNT    10000
 
+/** CRC reset value */
+#define CRC_RESET_VALUE    (0x0)
+
+/** CRC base channel */
+#define CRC_BASE_CHANNEL    (0x20)
+
+/** DMA channel mask*/
+#define DMA_CHANNEL_MASK   (0x1f)
+
 /** Initial description section */
 static struct dma_transfer_descriptor descriptor_section[CONF_MAX_USED_CHANNEL_NUM];
 /** Initial write back memory section */
@@ -194,7 +203,8 @@ void DMAC_Handler( void )
 	system_interrupt_enter_critical_section();
 
 	/* Get active channel */
-	active_channel = (DMAC->ACTIVE.reg >> 8 & 0x1f);
+	active_channel = ((DMAC->ACTIVE.reg >> DMAC_ACTIVE_ID_Pos) &
+			DMA_CHANNEL_MASK);
 
 	/* Get active DMA resource based on channel */
 	resource = &dma_active_resource[active_channel];
@@ -203,7 +213,8 @@ void DMAC_Handler( void )
 	DMAC->CHID.reg = DMAC_CHID_ID(resource->channel_id);
 
 	/* Get CRC value  if CRC enabled for the channel */
-	if (((DMAC->CRCCTRL.reg & 0x3f) - 0x20) == active_channel) {
+	if ((((DMAC->CRCCTRL.reg & DMAC_CRCCTRL_CRCSRC_Msk) >>
+		DMAC_CRCCTRL_CRCSRC_Pos) - CRC_BASE_CHANNEL) == active_channel) {
 		resource->crc_checksum =  DMAC->CRCCHKSUM.reg;
 	}
 
@@ -221,8 +232,7 @@ void DMAC_Handler( void )
 		resource->job_status = STATUS_ERR_IO;
 
 		/* Execute the callback function */
-		if ((resource->callback_enable & 1 <<
-				DMA_CALLBACK_TRANSFER_ERROR) &&
+		if ((resource->callback_enable & (1<<DMA_CALLBACK_TRANSFER_ERROR)) &&
 				(resource->callback[DMA_CALLBACK_TRANSFER_ERROR])) {
 			resource->callback[DMA_CALLBACK_TRANSFER_ERROR](resource);
 		}
@@ -234,8 +244,7 @@ void DMAC_Handler( void )
 		resource->job_status = STATUS_OK;
 
 		/* Execute the callback function */
-		if ((resource->callback_enable & 1 <<
-				DMA_CALLBACK_TRANSFER_DONE) &&
+		if ((resource->callback_enable & (1 << DMA_CALLBACK_TRANSFER_DONE)) &&
 				(resource->callback[DMA_CALLBACK_TRANSFER_DONE])) {
 			resource->callback[DMA_CALLBACK_TRANSFER_DONE](resource);
 		}
@@ -247,8 +256,8 @@ void DMAC_Handler( void )
 		resource->job_status = STATUS_SUSPEND;
 
 		/* Execute the callback function */
-		if ((resource->callback_enable & 1 << DMA_CALLBACK_CHANNEL_SUSPEND)
-			&& (resource->callback[DMA_CALLBACK_CHANNEL_SUSPEND])){
+		if ((resource->callback_enable & (1 << DMA_CALLBACK_CHANNEL_SUSPEND)) &&
+			(resource->callback[DMA_CALLBACK_CHANNEL_SUSPEND])){
 			resource->callback[DMA_CALLBACK_CHANNEL_SUSPEND](resource);
 		}
 	}
@@ -299,7 +308,7 @@ enum status_code dma_allocate(struct dma_resource *resource,
 		struct dma_transfer_config *config)
 {
 	uint8_t new_channel;
-	uint8_t i;
+	uint8_t count;
 
 	Assert(resource);
 
@@ -328,8 +337,8 @@ enum status_code dma_allocate(struct dma_resource *resource,
 		DMAC->WRBADDR.reg = (uint32_t)write_back_section;
 
 		/* Set all channels in the resource pool as not used */
-		for (i = 0; i < CONF_MAX_USED_CHANNEL_NUM; i++) {
-			dma_active_resource[i].channel_id = DMA_INVALID_CHANNEL;
+		for (count = 0; count < CONF_MAX_USED_CHANNEL_NUM; count++) {
+			dma_active_resource[count].channel_id = DMA_INVALID_CHANNEL;
 		}
 
 		_dma_inst._dma_init = true;
@@ -354,6 +363,12 @@ enum status_code dma_allocate(struct dma_resource *resource,
 
 	/* Set the CRC source */
 	if (config->crc) {
+		/* Reset CRC module */
+		DMAC->CTRL.reg &= ~DMAC_CTRL_CRCENABLE;
+		DMAC->CRCCHKSUM.reg = CRC_RESET_VALUE;
+		DMAC->CTRL.reg |= DMAC_CTRL_CRCENABLE;
+
+		/* Select CRC input source */
 		DMAC->CRCCTRL.reg |= DMAC_CRCCTRL_CRCSRC(resource->channel_id);
 	}
 
@@ -370,19 +385,19 @@ enum status_code dma_allocate(struct dma_resource *resource,
 }
 
 /**
- * \brief Release an allocated DMA resource.
+ * \brief Free an allocated DMA resource.
  *
- * This function will release an allocated DMA resource.
+ * This function will Free an allocated DMA resource.
  *
  * \param[in,out] resource Pointer to the DMA resource
  *
- * \return Status of the release procedure.
+ * \return Status of the free procedure.
  *
- * \retval STATUS_OK The DMA resource was released successfully
- * \retval STATUS_BUSY The DMA resource was busy and can't be released
+ * \retval STATUS_OK The DMA resource was freed successfully
+ * \retval STATUS_BUSY The DMA resource was busy and can't be freed
  * \retval STATUS_ERR_NOT_INITIALIZED DMA resource was not initialized
  */
-enum status_code dma_release(struct dma_resource *resource)
+enum status_code dma_free(struct dma_resource *resource)
 {
 	Assert(resource);
 	Assert(resource->channel_id != DMA_INVALID_CHANNEL);
@@ -494,7 +509,8 @@ void dma_abort_job(struct dma_resource *resource)
 	DMAC->CHCTRLA.reg = 0;
 
 	/* Set the checksum of the tranfered data */
-	if (((DMAC->CRCCTRL.reg & 0x3f) - 0x20) == resource->channel_id) {
+	if ((((DMAC->CRCCTRL.reg & DMAC_CRCCTRL_CRCSRC_Msk) >>
+		DMAC_CRCCTRL_CRCSRC_Pos) - CRC_BASE_CHANNEL) == resource->channel_id) {
 		resource->crc_checksum =  DMAC->CRCCHKSUM.reg;
 	}
 
@@ -540,7 +556,7 @@ void dma_suspend_job(struct dma_resource *resource)
 void dma_resume_job(struct dma_resource *resource)
 {
 	uint32_t bitmap_channel;
-	uint32_t i = 0;
+	uint32_t count = 0;
 
 	Assert(resource);
 	Assert(resource->channel_id != DMA_INVALID_CHANNEL);
@@ -558,13 +574,13 @@ void dma_resume_job(struct dma_resource *resource)
 	DMAC->CHCTRLB.reg |= DMAC_CHCTRLB_CMD_RESUME;
 
 	/* Check if transfer job resumed */
-	for (i = 0; i < MAX_JOB_RESUME_COUNT; i++) {
+	for (count = 0; count < MAX_JOB_RESUME_COUNT; count++) {
 		if ((DMAC->BUSYCH.reg & bitmap_channel) == bitmap_channel) {
 			break;
 		}
 	}
 
-	if (i < MAX_JOB_RESUME_COUNT) {
+	if (count < MAX_JOB_RESUME_COUNT) {
 		/* Job resumed */
 		resource->job_status = STATUS_BUSY;
 	} else {
@@ -572,96 +588,4 @@ void dma_resume_job(struct dma_resource *resource)
 		resource->job_status = STATUS_ERR_TIMEOUT;
 	}
 
-}
-
-/**
- * \brief Get DMA resource status.
- *
- * \param[in] resource Pointer to the DMA resource
- *
- * \return Status of the DMA resource.
- */
-enum status_code dma_get_job_status(struct dma_resource *resource)
-{
-	Assert(resource);
-
-	return resource->job_status;
-}
-
-/**
- * \brief Check if the DMA was busy of transfer.
- *
- * \param[in] resource Pointer to the DMA resource
- *
- * \return Busy status of the DMA resource.
- *
- * \retval true The DMA resource has an on-going transfer
- * \retval false The DMA resource is not busy
- */
-bool dma_is_busy(struct dma_resource *resource)
-{
-	Assert(resource);
-
-	return (resource->job_status == STATUS_BUSY);
-}
-
-/**
- * \brief Enable a callback function for a dedicated DMA resource
- *
- * \param[in] resource Pointer to the DMA resource
- * \param[in] type Callback function type
- *
- */
-void dma_enable_callback(struct dma_resource *resource,
-		enum dma_callback_type type)
-{
-	Assert(resource);
-
-	resource->callback_enable |= 1 << type;
-}
-
-/**
- * \brief Disable a callback function for a dedicated DMA resource
- *
- * \param[in] resource Pointer to the DMA resource
- * \param[in] type Callback function type
- *
- */
-void dma_disable_callback(struct dma_resource *resource,
-		enum dma_callback_type type)
-{
-	Assert(resource);
-
-	resource->callback_enable &= ~(1 << type);
-}
-
-/**
- * \brief Register a callback function for a dedicated DMA resource
- *
- * \param[in] resource Pointer to the DMA resource
- * \param[in] callback Pointer to the callback function
- * \param[in] type Callback function type
- *
- */
-void dma_register_callback(struct dma_resource *resource,
-		dma_callback_t callback, enum dma_callback_type type)
-{
-	Assert(resource);
-
-	resource->callback[type] = callback;
-}
-
-/**
- * \brief Unregister a callback function for a dedicated DMA resource
- *
- * \param[in] resource Pointer to the DMA resource
- * \param[in] type Callback function type
- *
- */
-void dma_unregister_callback(struct dma_resource *resource,
-		enum dma_callback_type type)
-{
-	Assert(resource);
-
-	resource->callback[type] = NULL;
 }
