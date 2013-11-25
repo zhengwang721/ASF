@@ -29,6 +29,7 @@
 				<build type="doxygen-entry-point" value="asfdoc_sam0_system_clock_group"/>
 				<build type="doxygen-example-path" value="quick_start_gclk"/>
 				<build type="doxygen-example-path" value="quick_start_clock"/>
+				<build type="doxygen-quick-start" value="asfdoc_sam0_system_clock_exqsg"/>
 
 				<build type="include-path" value="."/>
 				<build type="include-path" value="clock_samd20/"/>
@@ -80,6 +81,7 @@
 				<build type="doxygen-entry-point" value="asfdoc_sam0_system_clock_group"/>
 				<build type="doxygen-example-path" value="quick_start_gclk"/>
 				<build type="doxygen-example-path" value="quick_start_clock"/>
+				<build type="doxygen-quick-start" value="asfdoc_sam0_system_clock_exqsg"/>
 
 				<build type="include-path" value="."/>
 				<build type="include-path" value="clock_samd21/"/>

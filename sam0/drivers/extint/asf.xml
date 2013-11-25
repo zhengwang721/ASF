@@ -21,6 +21,7 @@
 
 			<build type="doxygen-entry-point" value="asfdoc_samd20_extint_group"/>
 			<build type="doxygen-example-path" value="quick_start_polled"/>
+			<build type="doxygen-quick-start" value="asfdoc_samd20_extint_exqsg"/>
 
 			<require idref="sam0.utils"/>
 			<require idref="sam0.drivers.system"/>
@@ -66,6 +67,7 @@
 			<build type="doxygen-entry-point" value="asfdoc_samd20_extint_group"/>
 			<build type="doxygen-example-path" value="quick_start_polled"/>
 			<build type="doxygen-example-path" value="quick_start_callback"/>
+			<build type="doxygen-quick-start" value="asfdoc_samd20_extint_exqsg"/>
 
 			<require idref="sam0.utils"/>
 			<require idref="sam0.drivers.system"/>
