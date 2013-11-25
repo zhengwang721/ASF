@@ -31,6 +31,7 @@
 
 				<build type="doxygen-entry-point" value="asfdoc_sam0_system_pinmux_group"/>
 				<build type="doxygen-example-path" value="quick_start"/>
+				<build type="doxygen-quick-start" value="asfdoc_sam0_system_pinmux_exqsg"/>
 
 				<build type="header-file" value="quick_start/qs_pinmux_basic.h"/>
 
@@ -71,6 +72,7 @@
 
 				<build type="doxygen-entry-point" value="asfdoc_sam0_system_pinmux_group"/>
 				<build type="doxygen-example-path" value="quick_start"/>
+				<build type="doxygen-quick-start" value="asfdoc_sam0_system_pinmux_exqsg"/>
 
 				<build type="header-file" value="quick_start/qs_pinmux_basic.h"/>
 
