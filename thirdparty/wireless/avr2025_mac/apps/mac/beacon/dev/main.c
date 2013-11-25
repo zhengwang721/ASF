@@ -100,13 +100,6 @@
 #include "delay.h"
 #include "common_sw_timer.h"
 #include "sio2host.h"
-#include "mac.h"
-#include "tal.h"
-#include "ieee_const.h"
-#include "mac_internal.h"
-#include "hw_timer.h"
-#include "common_hw_timer.h"
-#include "conf_hw_timer.h"
 #include "beacon_app.h"
 #include <asf.h>
 
@@ -743,7 +736,7 @@ mac_key_table_t *key_table = (mac_key_table_t *)PIBAttributeValue;
 			(PIBAttribute == phyChannelsSupported)) {
 		uint8_t index;
 
-		channels_supported = *(uint32_t *)PIBAttributeValue;
+		channels_supported = convert_byte_array_to_32_bit(PIBAttributeValue);
 
 		for (index = 0; index < 32; index++) {
 			if (channels_supported & (1 << index)) {

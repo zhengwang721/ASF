@@ -281,7 +281,7 @@ int main(void)
 	 * The board-specific conf_board.h file contains the configuration of
 	 * the board initialization.
 	 */
-	board_init();    
+	board_init();
 	#endif
 	#ifdef SIO_HUB
 		sio2host_init();
@@ -725,7 +725,7 @@ void usr_mlme_get_conf(uint8_t status,
 			(PIBAttribute == phyChannelsSupported)) {
 		uint8_t index;
 
-		channels_supported = *(uint32_t *)PIBAttributeValue;
+		channels_supported = convert_byte_array_to_32_bit(PIBAttributeValue);
 
 		for (index = 0; index < 32; index++) {
 			if (channels_supported & (1 << index)) {

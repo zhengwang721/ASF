@@ -39,22 +39,15 @@
  *
  * \asf_license_stop
  */
-#define EDBG_CDC
 #ifndef CONF_SIO2HOST_H_INCLUDED
 #define CONF_SIO2HOST_H_INCLUDED
-#ifdef EDBG_CDC
 #define USART_HOST                 EDBG_CDC_MODULE
-// /** Baudrate setting */
 
 #define USART_HOST_RX_ISR_ENABLE()  _sercom_set_handler(3, USART_HOST_ISR_VECT);\
 USART_HOST->USART.INTENSET.reg = SERCOM_USART_INTFLAG_RXC;\
 system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_SERCOM3);
 
-#else
-#define USART_HOST                 SERCOM2
-#define USART_HOST_RX_ISR_ENABLE()  _sercom_set_handler(2, USART_HOST_ISR_VECT);\
-USART_HOST->USART.INTENSET.reg = SERCOM_USART_INTFLAG_RXC;\
-system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_SERCOM2);
-#endif
+// /** Baudrate setting */
 #define USART_HOST_BAUDRATE        115200
+
 #endif /* CONF_SIO2HOST_H_INCLUDED */
