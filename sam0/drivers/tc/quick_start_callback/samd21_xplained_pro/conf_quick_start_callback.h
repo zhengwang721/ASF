@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Preprocessor utils.
+ * \brief TC Quick Start configuration for SAMD21 Xplained Pro
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,12 +41,14 @@
  *
  */
 
-#ifndef _PREPROCESSOR_H_
-#define _PREPROCESSOR_H_
+#ifndef CONF_QUICK_START_H_INCLUDED
+#define CONF_QUICK_START_H_INCLUDED
 
-#include "tpaste.h"
-#include "stringz.h"
-#include "mrepeat.h"
-#include "mrecursion.h"
+/** PWM module to use */
+#define PWM_MODULE      EXT1_PWM_MODULE
+/** PWM output pin */
+#define PWM_OUT_PIN     EXT1_PWM_0_PIN
+/** PWM output pin mux */
+#define PWM_OUT_MUX     EXT1_PWM_0_MUX
 
-#endif  // _PREPROCESSOR_H_
+#endif /* CONF_QUICK_START_H_INCLUDED */

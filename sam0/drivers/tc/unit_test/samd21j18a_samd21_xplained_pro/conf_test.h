@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Preprocessor utils.
+ * \brief SAM D21 Xplained PRO test configuration.
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,12 +41,26 @@
  *
  */
 
-#ifndef _PREPROCESSOR_H_
-#define _PREPROCESSOR_H_
+#ifndef CONF_TEST_H_INCLUDED
+#define CONF_TEST_H_INCLUDED
 
-#include "tpaste.h"
-#include "stringz.h"
-#include "mrepeat.h"
-#include "mrecursion.h"
+#define CONF_STDIO_USART          EDBG_CDC_MODULE
+#define CONF_STDIO_MUX_SETTING    EDBG_CDC_SERCOM_MUX_SETTING
+#define CONF_STDIO_PINMUX_PAD0    EDBG_CDC_SERCOM_PINMUX_PAD0
+#define CONF_STDIO_PINMUX_PAD1    EDBG_CDC_SERCOM_PINMUX_PAD1
+#define CONF_STDIO_PINMUX_PAD2    EDBG_CDC_SERCOM_PINMUX_PAD2
+#define CONF_STDIO_PINMUX_PAD3    EDBG_CDC_SERCOM_PINMUX_PAD3
+#define CONF_STDIO_BAUDRATE       38400
+#define CONF_TEST_TC0             TC3
+#define CONF_TEST_TC1             TC4
+#define CONF_EIC_PIN              PIN_PA16A_EIC_EXTINT0
+#define CONF_EIC_MUX              MUX_PA16A_EIC_EXTINT0
+#define CONF_TEST_PIN_OUT         PIN_PA19E_TC3_WO1
+#define CONF_TEST_PIN_MUX         MUX_PA19E_TC3_WO1
+#define CONF_EVENT_GENERATOR_ID   EVSYS_ID_GEN_EIC_EXTINT_0
+#define CONF_EVENT_USED_ID        EVSYS_ID_USER_TC4_EVU
+#define CONF_CAPTURE_CHAN_0       0
+#define CONF_CAPTURE_CHAN_1       1
+#define CONF_TEST_TOLERANCE       10
 
-#endif  // _PREPROCESSOR_H_
+#endif /* CONF_TEST_H_INCLUDED */

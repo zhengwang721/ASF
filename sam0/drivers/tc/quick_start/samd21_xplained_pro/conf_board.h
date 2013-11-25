@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Preprocessor utils.
+ * \brief SAM D21 Xplained PRO board configuration.
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,12 +41,7 @@
  *
  */
 
-#ifndef _PREPROCESSOR_H_
-#define _PREPROCESSOR_H_
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#include "tpaste.h"
-#include "stringz.h"
-#include "mrepeat.h"
-#include "mrecursion.h"
-
-#endif  // _PREPROCESSOR_H_
+#endif /* CONF_BOARD_H_INCLUDED */

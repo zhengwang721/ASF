@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Preprocessor utils.
+ * \brief SAM D21 External Interrupt Driver Configuration Header
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,13 +40,9 @@
  * \asf_license_stop
  *
  */
+#ifndef CONF_EXTINT_H_INCLUDED
+#define CONF_EXTINT_H_INCLUDED
 
-#ifndef _PREPROCESSOR_H_
-#define _PREPROCESSOR_H_
+#  define EXTINT_CALLBACKS_MAX     10
 
-#include "tpaste.h"
-#include "stringz.h"
-#include "mrepeat.h"
-#include "mrecursion.h"
-
-#endif  // _PREPROCESSOR_H_
+#endif
