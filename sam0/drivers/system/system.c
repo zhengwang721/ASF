@@ -102,7 +102,7 @@ void system_init(void)
 {
 	/* Configure GCLK and clock sources according to conf_clocks.h */
 	system_clock_init();
-	
+
 	/* Initialize board hardware */
 	system_board_init();
 
