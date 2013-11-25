@@ -102,6 +102,8 @@
 #include "delay.h"
 #include "common_sw_timer.h"
 #include "sio2host.h"
+#include "tal.h"
+#include "mac_msg_types.h"
 #include <asf.h>
 #include "beacon_app.h"
 #include "stb_generic.h"
