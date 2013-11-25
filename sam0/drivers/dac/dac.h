@@ -385,6 +385,10 @@ struct dac_module {
 	/** DAC event selection */
 	bool start_on_event;
 #  if DAC_CALLBACK_MODE == true
+	/** DAC write buffer selection */
+	bool write_buffer_enable;
+	/** DAC callback enable */
+	bool callback_enable;
 	/** DAC registered callback functions */
 	dac_callback_t callback[DAC_CALLBACK_N];
 #  endif

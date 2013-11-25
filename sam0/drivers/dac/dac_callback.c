@@ -45,6 +45,84 @@
 
 struct dac_module *_dac_instances[DAC_INST_NUM];
 
+uint16_t*_dac_write_buffer_addr;
+static uint32_t _dac_write_buffer_size,_dac_transferred_size;
+
+/**
+ * \brief Write to the DAC.
+ *
+ * This function will perform a conversion of specfic number of digital data.
+ * The conversion is event-triggered, the data will be written to DATABUF
+ * and transferred to the DATA register and converted when a Start Conversion
+ * Event is issued.
+ * Conversion data must be right or left adjusted according to configuration
+ * settings.
+ * \note To be event triggered, the enable_start_on_event must be
+ * enabled in the configuration.
+ *
+ * \param[in] module_inst      Pointer to the DAC software device struct
+ * \param[in] channel          DAC channel to write to
+ * \param[in] buffer             Pointer to the digital data write buffer to be converted
+ * \param[in] buffer_size             Size of the write buffer
+ *
+ * \return Status of the operation
+ * \retval STATUS_OK           If the data was written
+ * \retval STATUS_ERR_UNSUPPORTED_DEV  If a callback that requires event driven
+ *                                     mode was specified with a DAC instance
+ *                                     configured in non-event mode.
+ * \retval STATUS_ERR_INVALID_ARG      If 0 length data to be converted.
+ */
+enum status_code dac_chan_write_buffer_job(
+		struct dac_module *const module_inst,
+		enum dac_channel channel,
+		const uint16_t* buffer,
+		uint32_t buffer_size)
+{
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+	Assert(buffer);
+
+	/* No channel support yet */
+	UNUSED(channel);
+
+	Dac *const dac_module = module_inst->hw;
+
+	/* DAC interrupts require it to be driven by events to work, fail if in
+	 * unbuffered (polled) mode */
+	if (dac_module->start_on_event == false) {
+		return STATUS_ERR_UNSUPPORTED_DEV;
+	}
+
+	/* DAC interrupts require it to be driven by events to work, fail if in
+	 * unbuffered (polled) mode */
+	if (buffer_size == 0) {
+		return STATUS_ERR_INVALID_ARG;
+	}
+
+	module_inst ->buffer_write = true;
+
+	_dac_write_buffer_addr = NULL;
+	_dac_write_buffer_size = 0;
+	_dac_transferred_size = 0;
+
+	/* Wait until the synchronization is complete */
+	while (dac_module->STATUS.reg & DAC_STATUS_SYNCBUSY);
+
+	if (module_inst->start_on_event) {
+		/* Write the new value to the buffered DAC data register */
+		dac_module->DATABUF.reg = buffer[0];
+	}
+
+	_dac_write_buffer_addr = buffer;
+	_dac_transferred_size = buffer_size;
+
+	/* Enable interrupt */
+	dac_module->INTENSET.reg = DAC_INTFLAG_UNDERRUN | DAC_INTFLAG_EMPTY;
+
+	return STATUS_OK;
+}
+
 /**
  * \brief Registers an asynchronous callback function with the driver.
  *
@@ -136,7 +214,6 @@ enum status_code dac_unregister_callback(
  *
  * \return Status of the callback enable operation.
  * \retval STATUS_OK                   The callback was enabled successfully.
- * \retval STATUS_ERR_INVALID_ARG      If an invalid callback type was supplied.
  * \retval STATUS_ERR_UNSUPPORTED_DEV  If a callback that requires event driven
  *                                     mode was specified with a DAC instance
  *                                     configured in non-event mode.
@@ -160,18 +237,9 @@ enum status_code dac_chan_enable_callback(
 		return STATUS_ERR_UNSUPPORTED_DEV;
 	}
 
-	switch ((uint8_t)type)
-	{
-	case DAC_CALLBACK_DATA_UNDERRUN:
-		dac_hw->INTENSET.reg = DAC_INTFLAG_UNDERRUN;
-		return STATUS_OK;
+	dac_module->callback_enable = true;
 
-	case DAC_CALLBACK_DATA_EMPTY:
-		dac_hw->INTENSET.reg = DAC_INTFLAG_EMPTY;
-		return STATUS_OK;
-	}
-
-	return STATUS_ERR_INVALID_ARG;
+	return STATUS_OK;
 }
 
 /**
@@ -185,7 +253,6 @@ enum status_code dac_chan_enable_callback(
  *
  * \return Status of the callback disable operation.
  * \retval STATUS_OK                   The callback was disabled successfully.
- * \retval STATUS_ERR_INVALID_ARG      If an invalid callback type was supplied.
  * \retval STATUS_ERR_UNSUPPORTED_DEV  If a callback that requires event driven
  *                                     mode was specified with a DAC instance
  *                                     configured in non-event mode.
@@ -209,18 +276,9 @@ enum status_code dac_chan_disable_callback(
 		return STATUS_ERR_UNSUPPORTED_DEV;
 	}
 
-	switch ((uint8_t)type)
-	{
-	case DAC_CALLBACK_DATA_UNDERRUN:
-		dac_hw->INTENCLR.reg = DAC_INTFLAG_UNDERRUN;
-		return STATUS_OK;
+	dac_module->callback_enable = false;
 
-	case DAC_CALLBACK_DATA_EMPTY:
-		dac_hw->INTENCLR.reg = DAC_INTFLAG_EMPTY;
-		return STATUS_OK;
-	}
-
-	return STATUS_ERR_INVALID_ARG;
+	return STATUS_OK;
 }
 
 /** \internal
@@ -234,7 +292,7 @@ static void _dac_interrupt_handler(const uint8_t instance)
 	if (dac_hw->INTFLAG.reg & DAC_INTFLAG_UNDERRUN) {
 		dac_hw->INTFLAG.reg |= DAC_INTFLAG_UNDERRUN;
 
-		if (module->callback) {
+		if ((module->callback)  && (module->callback_enable)){
 			module->callback[DAC_CALLBACK_DATA_UNDERRUN](0);
 		}
 	}
@@ -242,10 +300,33 @@ static void _dac_interrupt_handler(const uint8_t instance)
 	if (dac_hw->INTFLAG.reg & DAC_INTFLAG_EMPTY) {
 		dac_hw->INTFLAG.reg |= DAC_INTFLAG_EMPTY;
 
-		if (module->callback) {
+		/* If in a write buffer job */
+		if (module->write_buffer_enable) {
+			
+			/* Fill the data buffer with next data in write buffer */
+			dac_hw->DATABUF.reg = 
+				_dac_write_buffer_addr[_dac_transferred_size++];
+
+			/* Write buffer size decrement */
+			_dac_write_buffer_size --;
+		}
+		
+		if ((module->callback)  && (module->callback_enable)) {
 			module->callback[DAC_CALLBACK_DATA_EMPTY](0);
 		}
 	}
+
+	/* If in a write buffer job and all the data are converted */
+	if ((_dac_write_buffer_size == 0) && (module->write_buffer_enable)){
+
+		_dac_write_buffer_addr = NULL;
+		_dac_transferred_size = 0;
+		
+		if ((module->callback)  && (module->callback_enable)) {
+			module->callback[DAC_CALLBACK_TRANSFER_COMPLETE](0);
+		}
+	}
+	
 }
 
 /** Handler for the DAC hardware module interrupt. */

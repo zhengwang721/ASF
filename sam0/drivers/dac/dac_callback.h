@@ -76,10 +76,19 @@ enum dac_callback
 	/** Callback type for when a DAC channel data under-run condition occurs
 	 *  (requires event triggered mode). */
 	DAC_CALLBACK_DATA_UNDERRUN,
+	/** Callback type for when a DAC channel write buffer job complete.
+	 *  (requires event triggered mode). */
+	DAC_CALLBACK_TRANSFER_COMPLETE,
 #if !defined(__DOXYGEN__)
 	DAC_CALLBACK_N,
 #endif
 };
+
+enum status_code dac_chan_write_buffer_job(
+		struct dac_module *const module_inst,
+		enum dac_channel channel,
+		const uint16_t* buffer,
+		uint32_t buffer_size);
 
 enum status_code dac_register_callback(
 		struct dac_module *const module,
