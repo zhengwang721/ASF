@@ -143,7 +143,8 @@ static void _i2c_master_async_address_response(
 			/* Return busy */
 			module->status = STATUS_ERR_PACKET_COLLISION;
 		}
-	} else if (i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_RXNACK) {
+	}
+	if (i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_RXNACK) {
 		/* Return bad address value */
 		module->status           = STATUS_ERR_BAD_ADDRESS;
 		module->buffer_remaining = 0;
