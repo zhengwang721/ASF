@@ -289,11 +289,12 @@ static int8_t limit_tx_pwr(trx_id_t trx_id, int8_t tx_pwr)
 {
     int8_t pwr;
 
+/*
     if ((tal_pib[trx_id].phy.modulation == OFDM) && (tx_pwr > 11))
     {
         pwr = 11;
     }
-    else
+    else*/
     {
         if (tx_pwr > 14)
         {

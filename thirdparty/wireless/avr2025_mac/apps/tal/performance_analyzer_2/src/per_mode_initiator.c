@@ -392,6 +392,12 @@ void per_mode_initiator_task(trx_id_t trx)
 				true );*/
 			
 			if (curr_trx_config_params[trx].csma_enabled) {
+			//sriram issue due to sync loss btwn rx and tx -> to be fixed,till that app will add additional delay
+			if(tal_pib[trx].phy.modulation == OFDM) // workaround to be changed
+			{
+				delay_ms(2); //sriram -> issue to be fixed in csma_start()
+			}
+				
 				tal_tx_frame(trx,node_info[trx].tx_frame_info,
 						CSMA_UNSLOTTED,
 						curr_trx_config_params[trx].retry_enabled );
@@ -1337,8 +1343,8 @@ static void config_per_test_parameters(trx_id_t trx)
     uint8_t temp;
 
     /* Set the default values */
-    curr_trx_config_params[trx].ack_request = default_trx_config_params[trx].ack_request = true;
-    curr_trx_config_params[trx].csma_enabled = default_trx_config_params[trx].csma_enabled = true;
+    curr_trx_config_params[trx].ack_request = default_trx_config_params[trx].ack_request = false;
+    curr_trx_config_params[trx].csma_enabled = default_trx_config_params[trx].csma_enabled = false; //sriram
     curr_trx_config_params[trx].retry_enabled = default_trx_config_params[trx].retry_enabled = false;
 
 #if (ANTENNA_DIVERSITY == 1)
@@ -1983,12 +1989,16 @@ void perf_set_sun_page(trx_id_t trx,uint8_t *param_val)
 	{
 		sun_page[trx].sun_phy_mode.mr_ofdm.option = sun_phy_page_set[trx].phy_mode.ofdm.option = *temp_param_val++;	
 		sun_page[trx].sun_phy_mode.mr_ofdm.mcs_val = sun_phy_page_set[trx].phy_mode.ofdm.mcs_val = *temp_param_val++;	
-		if((sun_phy_page_set[trx].phy_mode.ofdm.mcs_val > MCS6)  || (sun_phy_page_set[trx].phy_mode.ofdm.option > OFDM_OPT_4))
+		if((sun_phy_page_set[trx].phy_mode.ofdm.mcs_val > MCS6)  || 
+		(sun_phy_page_set[trx].phy_mode.ofdm.option > OFDM_OPT_4) || 
+		((sun_phy_page_set[trx].phy_mode.ofdm.option == OFDM_OPT_3)&& (sun_phy_page_set[trx].phy_mode.ofdm.mcs_val < MCS1)) ||
+		 ((sun_phy_page_set[trx].phy_mode.ofdm.option == OFDM_OPT_4)&& (sun_phy_page_set[trx].phy_mode.ofdm.mcs_val < MCS2)))
+		 
 		{
 			usr_perf_set_confirm(trx,INVALID_VALUE,PARAM_CHANNEL_PAGE,(param_value_t *)param_val);
 			return;
 		}
-		sun_page[trx].sun_phy_mode.mr_ofdm.interl = sun_phy_page_set[trx].phy_mode.ofdm.interl = *temp_param_val++;
+		sun_page[trx].sun_phy_mode.mr_ofdm.interl = sun_phy_page_set[trx].phy_mode.ofdm.interl =  *temp_param_val++;
 		get_ofdm_freq_f0(trx,sun_page[trx].freq_band,sun_page[trx].sun_phy_mode.mr_ofdm.option,&sun_phy_page_set[trx].freq_f0,&sun_phy_page_set[trx].ch_spacing);	
 		
 	}

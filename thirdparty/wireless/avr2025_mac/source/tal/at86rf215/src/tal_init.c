@@ -277,7 +277,7 @@ void trx_config(trx_id_t trx_id)
 
 #ifndef USE_TXPREP_DURING_BACKOFF
     /* Keep analog voltage regulator on during TRXOFF */
-    pal_trx_bit_write(rf_reg_offset + SR_RF09_AUXS_AVEN, 1);
+   // pal_trx_bit_write(rf_reg_offset + SR_RF09_AUXS_AVEN, 1);
 #endif
 }
 
