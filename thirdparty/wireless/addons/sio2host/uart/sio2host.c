@@ -106,8 +106,8 @@ void sio2host_init(void)
     usart_enable_transceiver(&cdc_uart_module, USART_TRANSCEIVER_RX);
 #else
 	stdio_serial_init(USART_HOST, &usart_serial_options);
-	USART_HOST_RX_ISR_ENABLE();
 #endif
+	USART_HOST_RX_ISR_ENABLE();
 }
 
 uint8_t sio2host_tx(uint8_t *data, uint8_t length)
@@ -213,7 +213,6 @@ void USART_HOST_ISR_VECT(uint8_t instance)
 #else 
 USART_HOST_ISR_VECT()
 #endif
-
 {
 	uint8_t temp;
 #if SAMD20

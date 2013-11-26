@@ -548,7 +548,7 @@ extern "C" {
  * - Implements the TAL state machine.
  * \ingroup group_tal_state_machine
  */
-void tal_task(void);
+//void tal_task(void);
 
 /**
  * \brief Initializes the TAL
@@ -760,7 +760,7 @@ retval_t tal_trx_wakeup(void);
  *
  * \ingroup group_tal_init
  */
-void tal_generate_rand_seed(void);
+//void tal_generate_rand_seed(void);
 
 /**
  * \brief Adds two time values
