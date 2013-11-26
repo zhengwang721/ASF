@@ -88,10 +88,69 @@ enum status_code _sercom_get_sync_baud_val(
 	}
 }
 
+#if SAMD20
 /**
  * \internal Calculate asynchronous baudrate value (UART)
 */
 enum status_code _sercom_get_async_baud_val(
+		const uint32_t baudrate,
+		const uint32_t peripheral_clock,
+		uint16_t *const baudval)
+{
+	/* Temporary variables  */
+	uint64_t ratio = 0;
+	uint64_t scale = 0;
+	uint64_t baud_calculated = 0;
+
+	/* Check if the baudrate is outside of valid range */
+	if ((baudrate * 16) >= peripheral_clock) {
+		/* Return with error code */
+		return STATUS_ERR_BAUDRATE_UNAVAILABLE;
+	}
+
+	/* Calculate the BAUD value */
+	ratio = ((16 * (uint64_t)baudrate) << SHIFT) / peripheral_clock;
+	scale = ((uint64_t)1 << SHIFT) - ratio;
+	baud_calculated = (65536 * scale) >> SHIFT;
+
+	*baudval = baud_calculated;
+
+	return STATUS_OK;
+}
+#elif SAMD21
+/**
+ * \internal Calculate asynchronous baudrate value by arithmetic mode (UART)
+*/
+enum status_code _sercom_get_async_baud_val_arithmetic (
+		const uint32_t baudrate,
+		const uint32_t peripheral_clock,
+		uint16_t *const baudval
+		enum usart_sample_rate sample_rate)
+{
+	/* Temporary variables  */
+	uint64_t ratio = 0;
+	uint64_t scale = 0;
+	uint64_t baud_calculated = 0;
+
+	/* Check if the baudrate is outside of valid range */
+	if ((baudrate * 16) >= peripheral_clock) {
+		/* Return with error code */
+		return STATUS_ERR_BAUDRATE_UNAVAILABLE;
+	}
+
+	/* Calculate the BAUD value */
+	ratio = ((16 * (uint64_t)baudrate) << SHIFT) / peripheral_clock;
+	scale = ((uint64_t)1 << SHIFT) - ratio;
+	baud_calculated = (65536 * scale) >> SHIFT;
+
+	*baudval = baud_calculated;
+
+	return STATUS_OK;
+}
+/**
+ * \internal Calculate asynchronous baudrate value by fractional mode (UART)
+*/
+enum status_code _sercom_get_async_baud_val_fractional (
 		const uint32_t baudrate,
 		const uint32_t peripheral_clock,
 		uint16_t *const baudval)
