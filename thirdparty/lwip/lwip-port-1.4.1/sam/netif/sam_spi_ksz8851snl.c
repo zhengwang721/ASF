@@ -268,8 +268,43 @@ static void ksz8851snl_update(struct netif *netif)
 	/* Check for free PDC. */
 	if (SPI_PDC_IDLE == g_spi_pdc_flag) {
 
+		/* Handle TX. */
+		/* Fetch next packet marked as owned by Micrel. */
+		if (ps_ksz8851snl_dev->tx_desc[ps_ksz8851snl_dev->us_tx_tail]
+				&& (pending_frame == 0)) {
+			len = ps_ksz8851snl_dev->tx_pbuf[ps_ksz8851snl_dev->us_tx_tail]->tot_len;
+
+			/* TX step1: check if TXQ memory size is available for transmit. */
+			txmir = ksz8851_reg_read(REG_TX_MEM_INFO) & TX_MEM_AVAILABLE_MASK;
+			if (txmir < len + 8) {
+				LWIP_DEBUGF(NETIF_DEBUG,
+						("ksz8851snl_update: TX not enough memory in queue: %d required %d\n",
+						txmir, len + 8));
+				return;
+			}
+
+			/* TX step2: disable all interrupts. */
+			ksz8851_reg_write(REG_INT_MASK, 0);
+
+			LWIP_DEBUGF(NETIF_DEBUG,
+					("ksz8851snl_update: TX start packet transmit len=%d [tail=%u head=%u]\n",
+					len,
+					ps_ksz8851snl_dev->us_tx_tail, ps_ksz8851snl_dev->us_tx_head));
+
+			/* TX step3: enable TXQ write access. */
+			ksz8851_reg_setbits(REG_RXQ_CMD, RXQ_START);
+
+			/* TX step4-8: perform FIFO write operation. */
+			g_spi_pdc_flag = SPI_PDC_TX_START;
+			ps_ksz8851snl_dev->tx_cur_pbuf = ps_ksz8851snl_dev->tx_pbuf[ps_ksz8851snl_dev->us_tx_tail];
+			gpio_set_pin_low(KSZ8851SNL_CSN_GPIO);
+			ksz8851_fifo_write(ps_ksz8851snl_dev->tx_cur_pbuf->payload,
+					ps_ksz8851snl_dev->tx_cur_pbuf->tot_len,
+					ps_ksz8851snl_dev->tx_cur_pbuf->len);
+		}
+
 		/* Handle RX. */
-		if (g_intn_flag || pending_frame > 0)
+		else if (g_intn_flag || pending_frame > 0)
 		{
 			g_intn_flag = 0;
 
@@ -347,42 +382,6 @@ static void ksz8851snl_update(struct netif *netif)
 					ps_ksz8851snl_dev->rx_pbuf[ps_ksz8851snl_dev->us_rx_head]->len = len;
 					ps_ksz8851snl_dev->rx_pbuf[ps_ksz8851snl_dev->us_rx_head]->tot_len = len;
 				}
-			}
-		}
-		/* Handle TX. */
-		else {
-
-			/* Fetch next packet marked as owned by Micrel. */
-			if (ps_ksz8851snl_dev->tx_desc[ps_ksz8851snl_dev->us_tx_tail]) {
-				len = ps_ksz8851snl_dev->tx_pbuf[ps_ksz8851snl_dev->us_tx_tail]->tot_len;
-
-				/* TX step1: check if TXQ memory size is available for transmit. */
-				txmir = ksz8851_reg_read(REG_TX_MEM_INFO) & TX_MEM_AVAILABLE_MASK;
-				if (txmir < len + 8) {
-					LWIP_DEBUGF(NETIF_DEBUG,
-							("ksz8851snl_update: TX not enough memory in queue: %d required %d\n",
-							txmir, len + 8));
-					return;
-				}
-
-				/* TX step2: disable all interrupts. */
-				ksz8851_reg_write(REG_INT_MASK, 0);
-
-				LWIP_DEBUGF(NETIF_DEBUG,
-						("ksz8851snl_update: TX start packet transmit len=%d [tail=%u head=%u]\n",
-						len,
-						ps_ksz8851snl_dev->us_tx_tail, ps_ksz8851snl_dev->us_tx_head));
-
-				/* TX step3: enable TXQ write access. */
-				ksz8851_reg_setbits(REG_RXQ_CMD, RXQ_START);
-
-				/* TX step4-8: perform FIFO write operation. */
-				g_spi_pdc_flag = SPI_PDC_TX_START;
-				ps_ksz8851snl_dev->tx_cur_pbuf = ps_ksz8851snl_dev->tx_pbuf[ps_ksz8851snl_dev->us_tx_tail];
-				gpio_set_pin_low(KSZ8851SNL_CSN_GPIO);
-				ksz8851_fifo_write(ps_ksz8851snl_dev->tx_cur_pbuf->payload,
-						ps_ksz8851snl_dev->tx_cur_pbuf->tot_len,
-						ps_ksz8851snl_dev->tx_cur_pbuf->len);
 			}
 		}
 	}
