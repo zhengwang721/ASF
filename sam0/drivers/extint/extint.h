@@ -429,9 +429,6 @@ static inline bool extint_is_syncing(void)
 	return false;
 }
 
-void extint_enable(void);
-void extint_disable(void);
-
 /** @} */
 
 /** \name Event management

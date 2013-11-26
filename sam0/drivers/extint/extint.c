@@ -63,6 +63,9 @@ struct _extint_module _extint_dev;
 			(EXTINT_DETECT_FALLING == (detection_criteria)) ? true : (\
 			(EXTINT_DETECT_BOTH == (detection_criteria)) ? true : false))))
 
+static void _extint_enable(void);
+static void _extint_disable(void);
+
 /**
  * \internal
  * \brief Initializes and enables the External Interrupt driver.
@@ -117,16 +120,17 @@ void _system_extint_init(void)
 #endif
 
 	/* Enables the driver for further use */
-	extint_enable();
+	_extint_enable();
 }
 
 /**
+ * \internal
  * \brief Enables the External Interrupt driver.
  *
  * Enables EIC modules.
  * Registered callback list will not be affected if callback mode is used.
  */
-void extint_enable(void)
+void _extint_enable(void)
 {
 	Eic *const eics[EIC_INST_NUM] = EIC_INSTS;
 
@@ -141,13 +145,14 @@ void extint_enable(void)
 }
 
 /**
+ * \internal
  * \brief Disables the External Interrupt driver.
  *
  * Disables EIC modules that were previously started via a call to
- * \ref extint_enable().
+ * \ref _extint_enable().
  * Registered callback list will not be affected if callback mode is used.
  */
-void extint_disable(void)
+void _extint_disable(void)
 {
 	Eic *const eics[EIC_INST_NUM] = EIC_INSTS;
 
@@ -268,14 +273,14 @@ enum status_code extint_nmi_set_config(
 	}
 
 	/* Disable EIC and general clock to configure NMI */
-	extint_disable();
+	_extint_disable();
 	system_gclk_chan_disable(EIC_GCLK_ID);
 
 	EIC_module->NMICTRL.reg = new_config;
 
 	/* Enable the general clock and EIC after configure NMI */
 	system_gclk_chan_enable(EIC_GCLK_ID);
-	extint_enable();
+	_extint_enable();
 
 	return STATUS_OK;
 }
