@@ -164,6 +164,12 @@ static uint32_t indirect_rx_cnt;
 app_state_t app_state = APP_IDLE;
 bool sys_sleep = false;
 
+/** This function shows the stack and application
+ *  capabilities on terminal if SIO_HUB switch 
+ *  is enabled.
+ */
+static void print_stack_app_build_features(void);
+
 #ifdef RTC_SLEEP
 void configure_rtc_callbacks(void);
 void configure_rtc_count(void);
@@ -198,6 +204,21 @@ static uint8_t APP_TIMER;
 #ifdef MAC_SECURITY_ZIP
 uint8_t deviceShortAddress = 0xFF;
 #endif
+
+/* SAL types for security: */
+/** Dummy SAL type */
+#define NO_SAL                          (0x00)
+
+/** SAL with transceiver based AES via SPI,
+ * such as AT86RF231, AT86RF212, etc.
+ */
+#define AT86RF2xx                       (0x01)
+/** SAL with single chip transceiver based AES */
+#define ATMEGARF_SAL                    (0x02)
+/** AES software implementation */
+#define SW_AES_SAL                      (0x03)
+/** SAL with ATxmega family based AES */
+#define ATXMEGA_SAL                     (0x04)
 
 /* === PROTOTYPES ========================================================== */
 
@@ -264,6 +285,7 @@ int main(void)
 
 	printf("\nBeacon_Application\r\n\n");
 	printf("\nDevice\r\n\n");
+	print_stack_app_build_features();
 #endif
     
 	sw_timer_get_id(&APP_TIMER);
@@ -1263,4 +1285,166 @@ void wakeup_cb(void *parameter)
 	
 }
 #endif
+
+/*
+ * @brief This function will show up the application 
+ *        and stack build features and available in the firmware
+ * @param void
+ *                  
+ */
+static void print_stack_app_build_features(void)
+{
+#if ANTENNA_DIVERSITY   
+    printf("\r\n Antenna Diversity : Enabled %d", ANTENNA_DIVERSITY);
+#else
+    printf("\r\n Antenna Diversity : Disabled %d", ANTENNA_DIVERSITY);	
+#endif	          
+			
+#if ARM_MATH_CM0
+    printf("\r\n ARM Cortex-M0 Math Library Support : Enabled");
+#else
+    printf("\r\n ARM Cortex-M0 Math Library Support : Disabled");
+#endif
+
+#ifdef BEACON_SUPPORT 
+    printf("\r\n Beacon Support : Enabled");
+#else
+    printf("\r\n Beacon Support : Disabled");
+#endif
+  
+#ifdef BOARD
+    printf("\r\n Board Support : %d",  BOARD);
+#else
+    printf("\r\n Board Support : Not Defined");
+#endif  
+  
+#ifdef CUSTOM_DEFAULT_TX_PWR
+    printf("\r\n Custom default Tx Power : Defined ");
+#else
+   printf("\r\n Custom default Tx Power : Not used");
+#endif
+
+#if DISABLE_TSTAMP_IRQ
+	printf("\r\n TRX Time Stamp IRQ : Enabled - %d", DISABLE_TSTAMP_IRQ);
+#else
+	printf("\r\n TRX Time Stamp IRQ : Disabled");
+#endif  
+
+#ifdef DEBUG
+    printf("\r\n Debug : Enabled");
+#else
+    printf("\r\n Debug : Disabled");
+#endif
+
+#if TAL_TYPE
+	printf("\r\n TRX Type : %d", TAL_TYPE);
+#else
+	printf("\r\n TRX Type : Not Specified");
+#endif
+
+#ifdef STB_ON_SAL
+	printf("\r\n Security Tool Box On SAL : Enabled");
+#else
+	printf("\r\n Security Tool Box On SAL : Disabled");
+#endif
+
+#ifdef CUSTOM_PWR_TABLE
+	printf("\r\n Power Table : Custom");
+#else
+	printf("\r\n Custom power table not used");
+#endif
+
+#if SAL_TYPE
+printf("\r\n SAL Type : %d", SAL_TYPE);
+#else
+printf("\r\n SAL Type not defined");
+#endif
+
+#ifdef EXT_RF_FRONT_END_CTRL
+printf("\r\n External RF Front End Control for External PA : Enabled");
+#else
+printf("\r\n External RF Front End Control for External PA : Disabled");
+#endif
+
+#if EXTERN_EEPROM_AVAILABLE
+	printf("\r\n External EEPROM Available");
+#else
+	printf("\r\n External EEPROM Not Available");
+#endif
+
+#if _DEBUG_
+	printf("\r\n MAC Debug Support : Enabled");
+#else
+	printf("\r\n MAC Debug Support : Disabled");
+#endif
+
+#if TC_ASYNC
+	printf("\r\n Timer Counter Asynchronous Module : Enabled");
+#else
+	printf("\r\n Timer Counter Asynchronous Module : Disabled");
+#endif
+
+#if PAL_USE_SPI_TRX
+	printf("\r\n TRX Communication via SPI : Yes");
+#else
+	printf("\r\n TRX Communication via SPI : No");
+#endif
+
+#if SPI_CALLBACK_MODE
+	printf("\r\n SPI Callback Mode : Enabled");
+#else
+	printf("\r\n SPI Callback Mode : Disabled");
+#endif
+
+#ifdef SIO_HUB
+	printf("\r\n SIO Hub : Enabled");
+#else
+	printf("\r\n SIO Hub : Disabled");
+#endif
+
+#if (HIGHEST_STACK_LAYER == MAC)
+	printf("\r\n Highest Stack Layer : MAC");
+#elif (HIGHEST_STACK_LAYER == TAL)
+    printf("\r\n Highest Stack Layer : TAL");
+#elif (HIGHEST_STACK_LAYER == RF4CE)
+	printf("\r\n Highest Stack Layer : RF4CE");	
+#elif (HIGHEST_STACK_LAYER == PAL)
+	printf("\r\n Highest Stack Layer : PAL");
+#elif (HIGHEST_STACK_LAYER == RTB)
+	printf("\r\n Highest Stack Layer : RTB");
+#else
+	printf("\r\n Highest Stack Layer : Not Specified");	
+#endif
+
+#if USART_CALLBACK_MODE
+	printf("\r\n USART Callback Mode : Enabled");
+#else
+	printf("\r\n USART Callback Mode : Disabled");
+#endif
+
+#if EXTINT_CALLBACK_MODE
+	printf("\r\n External Interrupt Callback Mode : Enabled");
+#else
+	printf("\r\n External Interrupt Callback Mode : Disabled");
+#endif
+
+#ifdef MAC_SECURITY_ZIP 
+	printf("\r\n MAC Data & Security Module : Enabled");
+#else
+	printf("\r\n MAC Data & Security Module : Disabled");
+#endif	
+
+#ifdef MAC_SECURITY_BEACON
+printf("\r\n MAC Beacon Security : Enabled");
+#else
+printf("\r\n MAC Beacon Security : Disabled");
+#endif
+
+#ifdef GTS_SUPPORT 
+printf("\r\n MAC GTS Support : Enabled");
+#else
+printf("\r\n MAC GTS Support : Disabled");
+#endif
+}
+
 
