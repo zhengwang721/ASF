@@ -47,14 +47,6 @@
 		<require idref="common.boards"/>
 		<device-support value="at32uc3l016"/>
 	</board>
-	<board id="board.dummy.at32uc3a3256s" caption="Unknown Board">
-		<build type="define" name="BOARD" value="DUMMY_BOARD"/>
-		<build type="header-file" value="dummy_board.h"/>
-		<build type="include-path" value="."/>
-		<build type="include-path" value=".."/>
-		<require idref="common.boards"/>
-		<device-support value="at32uc3a3256s"/>
-	</board>
 	<board id="board.dummy.at32uc3l0128" caption="Unknown Board">
 		<build type="define" name="BOARD" value="DUMMY_BOARD"/>
 		<build type="header-file" value="dummy_board.h"/>
