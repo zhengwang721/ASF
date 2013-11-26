@@ -340,9 +340,21 @@
 extern "C" {
 #endif
 
-#if (CONF_SPI_MASTER_ENABLE == false) && (CONF_SPI_MASTER_ENABLE == false)
-#error Invalid SPI configuration!
+#if (CONF_SPI_MASTER_ENABLE == false) && (CONF_SPI_SLAVE_ENABLE == false)
+#error "Not possible compile SPI driver, invalid driver configuration.        \
+Make sure that either/both CONF_SPI_MASTER_ENABLE/CONF_SPI_SLAVE_ENABLE is set to true"
 #endif
+
+/**
+ * Define SPI features set according to different device family
+ * @{
+ */
+#if (SAMD21)
+#  define FEATURE_SPI_SLAVE_SELECT_LOW_DETECT
+#  define FEATURE_SPI_HARDWARE_SLAVE_SELECT
+#  define FEATURE_SPI_ERROR_INTERRUPT_HAPPEN
+#endif
+/*@}*/
 
 #ifndef PINMUX_DEFAULT
 #  define PINMUX_DEFAULT 0
@@ -380,9 +392,11 @@ enum spi_callback {
 	* read or written from slave
 	*/
 	SPI_CALLBACK_SLAVE_TRANSMISSION_COMPLETE,
-#if SAMD21
+#ifdef FEATURE_SPI_SLAVE_SELECT_LOW_DETECT
 	/** Callback for  slave select low */
 	SPI_CALLBACK_SLAVE_SELECT_LOW,
+#endif
+#ifdef FEATURE_SPI_ERROR_INTERRUPT_HAPPEN
 	/** Callback for combined error happen */
 	SPI_CALLBACK_COMBINED_ERROR,
 #endif
@@ -426,9 +440,11 @@ enum spi_interrupt_flag {
 	SPI_INTERRUPT_FLAG_TX_COMPLETE         = SERCOM_SPI_INTFLAG_TXC,
 	/** This flag is set when data has been shifted into the data register */
 	SPI_INTERRUPT_FLAG_RX_COMPLETE         = SERCOM_SPI_INTFLAG_RXC,
-#if SAMD21
+#ifdef FEATURE_SPI_SLAVE_SELECT_LOW_DETECT
 	/** This flag is set when slave select low  */
 	SPI_INTERRUPT_FLAG_SLAVE_SELECT_LOW         = SERCOM_SPI_INTFLAG_SSL,
+#endif
+#ifdef FEATURE_SPI_ERROR_INTERRUPT_HAPPEN
  	/** This flag is set when combined error happen */
 	SPI_INTERRUPT_FLAG_COMBINED_ERROR         = SERCOM_SPI_INTFLAG_ERROR,
 #endif
@@ -757,9 +773,11 @@ struct spi_config {
 	bool run_in_standby;
 	/** Enable receiver */
 	bool receiver_enable;
-#if SAMD21
+#ifdef FEATURE_SPI_SLAVE_SELECT_LOW_DETECT
 	/** Enable Slave Select Low Detect */
 	bool select_slave_low_detect_enable;
+#endif
+#ifdef FEATURE_SPI_HARDWARE_SLAVE_SELECT
 	/** Enable Master Slave Select */
 	bool master_slave_select_enable;
 #endif
@@ -857,8 +875,10 @@ static inline void spi_get_config_defaults(
 	config->character_size   = SPI_CHARACTER_SIZE_8BIT;
 	config->run_in_standby   = false;
 	config->receiver_enable  = true;
-#if SAMD21
+#ifdef FEATURE_SPI_SLAVE_SELECT_LOW_DETECT
 	config->select_slave_low_detect_enable= true;
+#endif
+#ifdef FEATURE_SPI_HARDWARE_SLAVE_SELECT
 	config->master_slave_select_enable= false;
 #endif
 	config->generator_source = GCLK_GENERATOR_0;

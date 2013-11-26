@@ -139,7 +139,9 @@ static enum status_code _spi_set_config(
 	module->mode             = config->mode;
 	module->character_size   = config->character_size;
 	module->receiver_enabled = config->receiver_enable;
+#ifdef FEATURE_SPI_HARDWARE_SLAVE_SELECT
 	module->master_slave_select_enable = config->master_slave_select_enable;
+#endif
 
 #if CONF_SPI_MASTER_ENABLE == true
 	/* Value to write to BAUD register */
@@ -211,12 +213,13 @@ static enum status_code _spi_set_config(
 		/* Enable receiver */
 		ctrlb |= SERCOM_SPI_CTRLB_RXEN;
 	}
-#if SAMD21
+#ifdef FEATURE_SPI_SLAVE_SELECT_LOW_DETECT
 	if (config->select_slave_low_detect_enable) {
 		/* Enable Slave Select Low Detect */
 		ctrlb |= SERCOM_SPI_CTRLB_SSDE;
 	}
-
+#endif
+#ifdef FEATURE_SPI_HARDWARE_SLAVE_SELECT
 	if (config->master_slave_select_enable) {
 		/* Enable Master Slave Select */
 		ctrlb |= SERCOM_SPI_CTRLB_MSSEN;
@@ -360,12 +363,13 @@ static enum status_code _spi_check_config(
 		ctrlb |= SERCOM_SPI_CTRLB_RXEN;
 	}
 
-#if SAMD21
+#ifdef FEATURE_SPI_SLAVE_SELECT_LOW_DETECT
 	if (config->select_slave_low_detect_enable) {
 		/* Enable Slave Select Low Detect */
 		ctrlb |= SERCOM_SPI_CTRLB_SSDE;
 	}
-
+#endif	
+#ifdef FEATURE_SPI_HARDWARE_SLAVE_SELECT
 	if (config->master_slave_select_enable) {
 		/* Enable Master Slave Select */
 		ctrlb |= SERCOM_SPI_CTRLB_MSSEN;
@@ -742,8 +746,9 @@ enum status_code spi_select_slave(
 	if (module->mode != SPI_MODE_MASTER) {
 		return STATUS_ERR_UNSUPPORTED_DEV;
 	}
-
+#ifdef FEATURE_SPI_HARDWARE_SLAVE_SELECT
 	if(!(module->master_slave_select_enable)) {
+#endif		
 		if (select) {
 			/* Check if address recognition is enabled */
 			if (slave->address_enabled) {
@@ -775,7 +780,9 @@ enum status_code spi_select_slave(
 			/* Drive Slave Select high */
 			port_pin_set_output_level(slave->ss_pin, true);
 		}
+#ifdef FEATURE_SPI_HARDWARE_SLAVE_SELECT		
 	}
+#endif	
 	return STATUS_OK;
 }
 

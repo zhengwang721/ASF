@@ -546,8 +546,8 @@ void _spi_interrupt_handler(
 	/* Data register empty interrupt */
 	if (interrupt_status & SPI_INTERRUPT_FLAG_DATA_REGISTER_EMPTY) {
 	#if CONF_SPI_MASTER_ENABLE == true
-		if (module->mode == SPI_MODE_MASTER &&
-			module->dir == SPI_DIRECTION_READ) {
+		if ((module->mode == SPI_MODE_MASTER) &&
+			(module->dir == SPI_DIRECTION_READ)) {
 			/* Send dummy byte when reading in master mode */
 			_spi_write_dummy(module);
 			if (module->remaining_dummy_buffer_length == 0) {
@@ -558,8 +558,8 @@ void _spi_interrupt_handler(
 		}
 	#endif
 	#if CONF_SPI_SLAVE_ENABLE == true
-		if (module->mode == SPI_MODE_SLAVE&&
-			module->dir != SPI_DIRECTION_READ) {
+		if ((module->mode == SPI_MODE_SLAVE) &&
+			(module->dir != SPI_DIRECTION_READ)) {
 			/* Write next byte from buffer */
 			_spi_write(module);
 			if (module->remaining_tx_buffer_length == 0) {
@@ -674,20 +674,34 @@ void _spi_interrupt_handler(
 	#endif
 	}
 
-#if CONF_SPI_SLAVE_ENABLE == true
-	/* When a high to low transition is detected on the _SS pin in slave mode */
-	if (interrupt_status & SPI_INTERRUPT_FLAG_SLAVE_SELECT_LOW) {
-		if (module->mode == SPI_MODE_SLAVE) {
-			/* Disable interrupts */
-			spi_hw->INTENCLR.reg = SPI_INTERRUPT_FLAG_SLAVE_SELECT_LOW;
-			/* Clear interrupt flag */
-			spi_hw->INTFLAG.reg = SPI_INTERRUPT_FLAG_SLAVE_SELECT_LOW;
+#ifdef FEATURE_SPI_SLAVE_SELECT_LOW_DETECT
+	#if CONF_SPI_SLAVE_ENABLE == true
+		/* When a high to low transition is detected on the _SS pin in slave mode */
+		if (interrupt_status & SPI_INTERRUPT_FLAG_SLAVE_SELECT_LOW) {
+			if (module->mode == SPI_MODE_SLAVE) {
+				/* Disable interrupts */
+				spi_hw->INTENCLR.reg = SPI_INTERRUPT_FLAG_SLAVE_SELECT_LOW;
+				/* Clear interrupt flag */
+				spi_hw->INTFLAG.reg = SPI_INTERRUPT_FLAG_SLAVE_SELECT_LOW;
 
-			if (callback_mask &
-					(1 << SPI_CALLBACK_SLAVE_SELECT_LOW)) {
-				(module->callback[SPI_CALLBACK_SLAVE_SELECT_LOW])
-					(module);
+				if (callback_mask & (1 << SPI_CALLBACK_SLAVE_SELECT_LOW)) {
+					(module->callback[SPI_CALLBACK_SLAVE_SELECT_LOW])(module);
+				}
 			}
+		}
+	#endif
+#endif
+
+#ifdef FEATURE_SPI_ERROR_INTERRUPT_HAPPEN
+	/* When combined error happen */
+	if (interrupt_status & SPI_INTERRUPT_FLAG_COMBINED_ERROR) {
+		/* Disable interrupts */
+		spi_hw->INTENCLR.reg = SPI_INTERRUPT_FLAG_COMBINED_ERROR;
+		/* Clear interrupt flag */
+		spi_hw->INTFLAG.reg = SPI_INTERRUPT_FLAG_COMBINED_ERROR;
+		
+		if (callback_mask & (1 << SPI_CALLBACK_COMBINED_ERROR)) {
+			(module->callback[SPI_CALLBACK_COMBINED_ERROR])(module);
 		}
 	}
 #endif
