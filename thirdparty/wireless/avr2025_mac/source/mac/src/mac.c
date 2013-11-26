@@ -288,12 +288,16 @@ bool mac_task(void)
 
 /**
  * @brief Checks if the mac stack is idle
+ *
+ * Checks if the mac stack is in inactive state for beacon support 
+ *
+ * or idle in case of no beacon support.
+ *
+ * @return  32bit time duration in microseconds for which the mac is ready to sleep
+ *
+ * For No beacon support true if stack is idle,false if it is busy
  */
 #ifdef BEACON_SUPPORT
-/**
- * @brief Checks if the mac stack is idle
- * \ingroup group_mac_gen_int
- */
 uint32_t mac_ready_to_sleep(void)
 #else
 bool mac_ready_to_sleep(void)

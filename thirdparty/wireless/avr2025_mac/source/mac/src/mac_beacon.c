@@ -1139,16 +1139,20 @@ void mac_tx_pending_bc_data(void)
 
 #endif /* MAC_START_REQUEST_CONFIRM */
 #if  (defined ENABLE_SLEEP || defined RTC_SLEEP)
-void mac_wakeup(uint32_t res_time)
-{
-  //sw_timer_service();
+/*
+ * @brief MAC Wakeup Callback Function from application for Synchronizing beacon timing after Wakeup
+ *
+ * This function Handles the residual time for Beacon Synchronization after Wakeup
+ * @param res_time remaining time to be synchronized with next beacon timing.
+ */
+ void mac_wakeup(uint32_t res_time)
+ {
   
   sw_timer_stop(T_Beacon_Tracking_Period);
   if (pal_is_timer_running(T_Missed_Beacon))
   {
 	  sw_timer_stop(T_Missed_Beacon);
   }
- // printf("%d\n",res_time);
   if(res_time >= 500)
   {
   res_time = res_time - 400;
@@ -1165,9 +1169,7 @@ void mac_wakeup(uint32_t res_time)
 	  mac_t_tracking_beacons_cb(NULL);
 
   }
-   // mac_t_tracking_beacons_cb(NULL);
-
-/* Remaining time needs to handled in MAC when application switches to RTC*/
+  
 }
 #endif
 /* EOF */

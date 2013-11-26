@@ -100,6 +100,8 @@
 #include "delay.h"
 #include "common_sw_timer.h"
 #include "sio2host.h"
+#include "common_hw_timer.h"
+#include "mac_internal.h"
 #include "beacon_app.h"
 #include <asf.h>
 
@@ -155,11 +157,26 @@ static uint32_t bc_rx_cnt;
 static uint32_t indirect_rx_cnt;
 /** This variable stores the current state of the node. */
 app_state_t app_state = APP_IDLE;
-bool sys_sleep = false;
-
+static uint8_t APP_TIMER;
+/* RTC Configuration and Callback functions */
 #ifdef RTC_SLEEP
+/**
+ * @brief Configuring RTC Callback Funtion on Overflow
+ *
+ * @param void
+ */
 void configure_rtc_callbacks(void);
+/**
+ * @brief Configures and enables RTC count value
+ *
+ * @param void
+ */
 void configure_rtc_count(void);
+/**
+ * @brief Callback Function indicating RTC Overflow
+ *
+ * @param void
+ */
 void rtc_overflow_callback(void);
 #endif
 
@@ -171,19 +188,35 @@ uint8_t current_channel_page;
 static uint32_t channels_supported;
 
 #if (defined ENABLE_SLEEP || defined RTC_SLEEP)
+
+/**
+ * @brief API called to put the controller Power save mode with 4MHz timer
+ *
+ * @param timeout Time duration in microseconds for which controller can sleep
+ */
 static void  enter_sleep(uint32_t timeout);
+/**
+ * @brief Callback function to wakeup and switching to the default clock source for starting MAC timers
+ *
+ * @param parameter Pointer to callback parameter
+ *                  (not used in this application, but could be if desired).
+ */
 void wakeup_cb(void *parameter);
+/* Residual time returned to MAC for Synchronization after wakeup,When Switched to Low precision clock during sleep*/
 static uint32_t res;
+/* This variable denotes the sleep duration returned from MAC*/
 uint32_t sleep_time =0;
+/* Sleep State of the Application and MAC*/
+bool sys_sleep = false;
 #endif
 
 #ifdef ENABLE_SLEEP
+/* Timer for Handling Application Sleep*/
 static uint8_t APP_TIMER_SLEEP;
 extern void hw_overflow_cb();
 extern void hw_expiry_cb();
 #endif
 
-static uint8_t APP_TIMER;
 #if (defined ENABLE_SLEEP || defined RTC_SLEEP)
 #undef SIO_HUB
 #endif
@@ -270,10 +303,11 @@ LED_Off(LED_NWK_SETUP);
 	while (true) {
 		wpan_task();
 		#if (defined ENABLE_SLEEP || defined RTC_SLEEP)
+		/* Requesting MAC for Sleep Duration*/
 		sleep_time = mac_ready_to_sleep();
 		if((sleep_time > (uint32_t)APP_GUARD_TIME_US))
 		{       
-			  
+			/*Entering Power save Mode when the sleep duration is above the guard time*/
 			enter_sleep(sleep_time);
 		}
 		#endif
@@ -1166,6 +1200,7 @@ static void rx_data_led_off_cb(void *parameter)
 #if (defined ENABLE_SLEEP || defined RTC_SLEEP)
 static void enter_sleep(uint32_t timeout)
 {   
+    /*Entering Power save after configuring Timer running at 4MHz as Wakeup source*/
     sys_sleep = true;
 	#ifdef ENABLE_SLEEP
 	ENTER_CRITICAL_REGION();
@@ -1198,46 +1233,25 @@ static void enter_sleep(uint32_t timeout)
 #ifdef RTC_SLEEP
 void configure_rtc_count(void)
 {
-	//! [init_conf]
 	struct rtc_count_config config_rtc_count;
 	rtc_count_get_config_defaults(&config_rtc_count);
-	//! [init_conf]
-
-	//! [set_config]
 	config_rtc_count.prescaler           = RTC_COUNT_PRESCALER_DIV_1;
 	config_rtc_count.mode                = RTC_COUNT_MODE_16BIT;
 	config_rtc_count.continuously_update = true;
-	//! [set_config]
-	//! [init_rtc]
-	rtc_count_init(&config_rtc_count);
-	//! [init_rtc]
-
-	//! [enable]
-	rtc_count_enable();
-	//! [enable]
+	rtc_count_init(&config_rtc_count);	rtc_count_enable();	
 }
-//! [initialize_rtc]
 
-//! [setup_callback]
 void configure_rtc_callbacks(void)
 {
-	//! [reg_callback]
 	rtc_count_register_callback(
 	rtc_overflow_callback, RTC_COUNT_CALLBACK_OVERFLOW);
-	//! [reg_callback]
-	//! [en_callback]
 	rtc_count_enable_callback(RTC_COUNT_CALLBACK_OVERFLOW);
-	//! [en_callback]
 }
 void rtc_overflow_callback(void)
 {
-	//! [overflow_act]
 	/* Do something on RTC overflow here */
 	rtc_count_disable();
 	wakeup_cb(NULL);		
-	
-	
-	//! [overflow_act]
 }
 #endif
 void wakeup_cb(void *parameter)
@@ -1252,6 +1266,7 @@ void wakeup_cb(void *parameter)
 	sw_timer_stop(APP_TIMER_SLEEP);
     LEAVE_CRITICAL_REGION();
 	#endif
+	/* Callback Function in MAC for beacon Synchronization and Handling the residual time after Wakeup*/
 	mac_wakeup(res);
 	
 }
