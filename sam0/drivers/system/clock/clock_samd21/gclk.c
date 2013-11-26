@@ -245,7 +245,7 @@ bool system_gclk_gen_is_enabled(
 
 	/* Select the requested generator */
 	*((uint8_t*)&GCLK->GENCTRL.reg) = generator;
-	/* Disable generator */
+	/* Obtain the enabled status */
 	enabled = (GCLK->GENCTRL.reg & GCLK_GENCTRL_GENEN);
 
 	system_interrupt_leave_critical_section();
@@ -332,23 +332,11 @@ void system_gclk_chan_set_config(
 	/* Select the desired generic clock generator */
 	new_clkctrl_config |= config->source_generator << GCLK_CLKCTRL_GEN_Pos;
 
-	/* Enable write lock if requested to prevent further modification */
-	if (config->write_lock) {
-		/* Channel must be enabled since no further write is allowed */
-		new_clkctrl_config |= GCLK_CLKCTRL_WRTLOCK | GCLK_CLKCTRL_CLKEN;
-	}
-
 	/* Disable generic clock channel */
 	system_gclk_chan_disable(channel);
 
-	system_interrupt_enter_critical_section();
-
-	/* Select the requested generator channel */
-	*((uint8_t*)&GCLK->CLKCTRL.reg) = channel;
 	/* Write the new configuration */
 	GCLK->CLKCTRL.reg = new_clkctrl_config;
-
-	system_interrupt_leave_critical_section();
 }
 
 /**
@@ -426,11 +414,43 @@ bool system_gclk_chan_is_enabled(
 
 	/* Select the requested generic clock channel */
 	*((uint8_t*)&GCLK->CLKCTRL.reg) = channel;
-	enabled = GCLK->CLKCTRL.bit.WRTLOCK;
+	enabled = GCLK->CLKCTRL.bit.CLKEN;
 
 	system_interrupt_leave_critical_section();
 
 	return enabled;
+}
+
+/**
+ * \brief Locks a Generic Clock that was previously configured and enabled.
+ *
+ * Locks the clock generation settings of a Generic Clock.
+ *
+ * Since once the Generic Clock is locked it can only be unlocked by a power
+ * reset, the Generic Clock should have been configured via a call to
+ * \ref system_gclk_chan_set_config() and enabled via a call to
+ * \ref system_gclk_chan_enable() before.
+ *
+ * \note If Generic Clock Channel is locked, accessing to it may lead to
+ *       spin locks (e.g., when trying to disable it the enabled bit never
+ *       clear). Assert is added to Generic Clock Channel access functions
+ *       to assist debugging. The Assert can be enabled by defining
+ *       _ASSERT_ENABLE_.
+ *
+ * \param[in] channel   Generic Clock channel to enable
+ */
+void system_gclk_chan_lock(
+		const uint8_t channel)
+{
+	system_interrupt_enter_critical_section();
+
+	/* Select the requested generator channel */
+	*((uint8_t*)&GCLK->CLKCTRL.reg) = channel;
+
+	/* Enable the generic clock */
+	GCLK->CLKCTRL.reg |= GCLK_CLKCTRL_CLKEN;
+
+	system_interrupt_leave_critical_section();
 }
 
 /**
