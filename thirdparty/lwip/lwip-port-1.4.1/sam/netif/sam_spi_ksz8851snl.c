@@ -247,8 +247,8 @@ static void ksz8851snl_rx_populate_queue(struct ksz8851snl_device *p_ksz8851snl_
 			p_ksz8851snl_dev->rx_pbuf[ul_index] = p;
 
 			LWIP_DEBUGF(NETIF_DEBUG,
-					("ksz8851snl_rx_populate_queue: new pbuf allocated: 0x%p [pos=%u]\n",
-					p, ul_index));
+					("ksz8851snl_rx_populate_queue: new pbuf allocated with size %d: 0x%p [pos=%u]\n",
+					PBUF_POOL_BUFSIZE, p, ul_index));
 		}
 	}
 }

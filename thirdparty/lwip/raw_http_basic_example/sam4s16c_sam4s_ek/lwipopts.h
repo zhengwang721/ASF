@@ -167,6 +167,15 @@
  */
 #define PBUF_POOL_SIZE                  5
 
+/**
+ * PBUF_POOL_BUFSIZE: the size of each pbuf in the pbuf pool. The default is
+ * designed to accomodate single full size TCP frame in one pbuf, including
+ * TCP_MSS, IP header, and link header.
+ *
+ * NOTE: Added extra word to handle Micrel requirement.
+ */
+#define PBUF_POOL_BUFSIZE               LWIP_MEM_ALIGN_SIZE(TCP_MSS+40+PBUF_LINK_HLEN+4)
+
 /*
    ----------------------------------
    ---------- DHCP options ----------
