@@ -75,7 +75,7 @@ static uint32_t _dac_write_buffer_size,_dac_transferred_size;
 enum status_code dac_chan_write_buffer_job(
 		struct dac_module *const module_inst,
 		enum dac_channel channel,
-		const uint16_t* buffer,
+		uint16_t* buffer,
 		uint32_t buffer_size)
 {
 	/* Sanity check arguments */
@@ -90,7 +90,7 @@ enum status_code dac_chan_write_buffer_job(
 
 	/* DAC interrupts require it to be driven by events to work, fail if in
 	 * unbuffered (polled) mode */
-	if (dac_module->start_on_event == false) {
+	if (module_inst->start_on_event == false) {
 		return STATUS_ERR_UNSUPPORTED_DEV;
 	}
 
@@ -100,7 +100,7 @@ enum status_code dac_chan_write_buffer_job(
 		return STATUS_ERR_INVALID_ARG;
 	}
 
-	module_inst ->buffer_write = true;
+	module_inst ->write_buffer_enable = true;
 
 	_dac_write_buffer_addr = NULL;
 	_dac_write_buffer_size = 0;
@@ -225,11 +225,8 @@ enum status_code dac_chan_enable_callback(
 {
 	/* Sanity check arguments */
 	Assert(dac_module);
-	Assert(dac_module->hw);
 
 	UNUSED(channel);
-
-	Dac *const dac_hw = dac_module->hw;
 
 	/* DAC interrupts require it to be driven by events to work, fail if in
 	 * unbuffered (polled) mode */
@@ -264,11 +261,8 @@ enum status_code dac_chan_disable_callback(
 {
 	/* Sanity check arguments */
 	Assert(dac_module);
-	Assert(dac_module->hw);
 
 	UNUSED(channel);
-
-	Dac *const dac_hw = dac_module->hw;
 
 	/* DAC interrupts require it to be driven by events to work, fail if in
 	 * unbuffered (polled) mode */

@@ -56,38 +56,13 @@ extern "C" {
  * @{
  */
 
-#if !defined(__DOXYGEN__)
-extern struct dac_module *_dac_instances[DAC_INST_NUM];
-#endif
-
 /** \name Callback configuration and initialization
  * @{
  */
-
-/** Type definition for a DAC module callback function. */
-typedef void (*dac_callback_t)(uint8_t channel);
-
-/** Enum for the possible callback types for the DAC module. */
-enum dac_callback
-{
-	/** Callback type for when a DAC channel data empty condition occurs
-	 *  (requires event triggered mode). */
-	DAC_CALLBACK_DATA_EMPTY,
-	/** Callback type for when a DAC channel data under-run condition occurs
-	 *  (requires event triggered mode). */
-	DAC_CALLBACK_DATA_UNDERRUN,
-	/** Callback type for when a DAC channel write buffer job complete.
-	 *  (requires event triggered mode). */
-	DAC_CALLBACK_TRANSFER_COMPLETE,
-#if !defined(__DOXYGEN__)
-	DAC_CALLBACK_N,
-#endif
-};
-
 enum status_code dac_chan_write_buffer_job(
 		struct dac_module *const module_inst,
 		enum dac_channel channel,
-		const uint16_t* buffer,
+		uint16_t* buffer,
 		uint32_t buffer_size);
 
 enum status_code dac_register_callback(
