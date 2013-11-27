@@ -74,7 +74,7 @@
  *
  * \section appdoc_sam0_extint_unit_test_setup Setup
  * The following connections has to be made using wires:
- *  - \b Pin 9 (PB06) <-----> Pin 10 (PB07)
+ *  - EXT1 \b Pin 9 (PB04) <-----> Pin 10 (PB05)
  *
  * To run the test:
  *  - Connect the SAM D2x Xplained Pro board to the computer using a
@@ -87,9 +87,9 @@
  *    The terminal shows the results of the unit test.
  *
  * \section appdoc_sam0_extint_unit_test_usage Usage
- *  - The unit test configures external interrupt on PB06 pin (channel 10)
+ *  - The unit test configures external interrupt on PB04 pin (channel 4)
  *    to detect falling edge.
- *  - Logic level on PB07 is changed from high to low (falling edge) and the
+ *  - Logic level on PB05 is changed from high to low (falling edge) and the
  *    channel is checked for interrupt detection.
  *  - The test is repeated for rising edge and with callback enabled.
  *
@@ -191,12 +191,14 @@ static void setup_extint_polled_mode_test(const struct test_case *test)
  * \internal
  * \brief Cleanup function for polled mode test.
  *
- * This function disables the external interrupt module.
+ * This function disables the external interrupt channel.
  *
  * \param test Current test case.
  */
 static void cleanup_extint_polled_mode_test(const struct test_case *test)
 {
+	eic_conf.detection_criteria = EXTINT_DETECT_NONE;
+	extint_chan_set_config(EIC_TEST_CHANNEL, &eic_conf);
 }
 
 /**
@@ -213,6 +215,7 @@ static void cleanup_extint_polled_mode_test(const struct test_case *test)
 static void run_extint_polled_mode_test(const struct test_case *test)
 {
 	/* Testing the falling edge detection */
+	/* Generate falling edge */
 	port_pin_set_output_level(GPIO_TEST_PIN_EXTINT, false);
 	/* Wait for the pin level to stabilize */
 	delay_ms(1);
@@ -225,9 +228,10 @@ static void run_extint_polled_mode_test(const struct test_case *test)
 	result = false;
 	eic_conf.detection_criteria = EXTINT_DETECT_RISING;
 	extint_chan_set_config(EIC_TEST_CHANNEL, &eic_conf);
+	/* Generate rising edge */
+	port_pin_set_output_level(GPIO_TEST_PIN_EXTINT, true);
 	/* Wait for the pin level to stabilize */
 	delay_ms(1);
-	port_pin_set_output_level(GPIO_TEST_PIN_EXTINT, true);
 	result = extint_chan_is_detected(EIC_TEST_CHANNEL);
 	test_assert_true(test, result,
 			"External interrupt rising edge detection by polling failed");
@@ -270,12 +274,14 @@ static void setup_extint_callback_mode_test(const struct test_case *test)
  * \internal
  * \brief Cleanup function for callback mode test.
  *
- * This function disables the callback & external interrupt module.
+ * This function disables the callback & external interrupt channel.
  *
  * \param test Current test case.
  */
 static void cleanup_extint_callback_mode_test(const struct test_case *test)
 {
+	eic_conf.detection_criteria = EXTINT_DETECT_NONE;
+	extint_chan_set_config(EIC_TEST_CHANNEL, &eic_conf);
 	/* Unregister and disable the callback function */
 	extint_unregister_callback(extint_user_callback,
 			EXTINT_CALLBACK_TYPE_DETECT);
