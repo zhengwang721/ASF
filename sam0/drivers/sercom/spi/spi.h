@@ -353,6 +353,7 @@ Make sure that either/both CONF_SPI_MASTER_ENABLE/CONF_SPI_SLAVE_ENABLE is set t
 #  define FEATURE_SPI_SLAVE_SELECT_LOW_DETECT
 #  define FEATURE_SPI_HARDWARE_SLAVE_SELECT
 #  define FEATURE_SPI_ERROR_INTERRUPT
+#  define FEATURE_SPI_SYNC_SCHEME_VERSION_2 
 #endif
 /*@}*/
 
@@ -447,29 +448,6 @@ enum spi_interrupt_flag {
 #ifdef FEATURE_SPI_ERROR_INTERRUPT
  	/** This flag is set when combined error happen */
 	SPI_INTERRUPT_FLAG_COMBINED_ERROR         = SERCOM_SPI_INTFLAG_ERROR,
-#endif
-};
-
-/**
- * \brief SPI frame format enum
- *
- * Frame format for slave mode.
- */
-enum spi_sync_busy_type {
-#if SAMD20
-	/** SPI Software Reset Synchronization Busy */
-	SPI_SYNC_BUSY_SWRST     = SERCOM_SPI_STATUS_SYNCBUSY,
-	/** SPI Enable Synchronization Busy */
-	SPI_SYNC_BUSY_ENABLE    = SERCOM_SPI_STATUS_SYNCBUSY,
-	/** SPI CTRLB Synchronization Busy */
-	SPI_SYNC_BUSY_CTRLB      = SERCOM_SPI_STATUS_SYNCBUSY,
-#elif SAMD21
-	/** SPI Software Reset Synchronization Busy */
-	SPI_SYNC_BUSY_SWRST     = SERCOM_SPI_SYNCBUSY_SWRST,
-	/** SPI Enable Synchronization Busy */
-	SPI_SYNC_BUSY_ENABLE    = SERCOM_SPI_SYNCBUSY_ENABLE,
-	/** SPI CTRLB Synchronization Busy */
-	SPI_SYNC_BUSY_CTRLB      = SERCOM_SPI_SYNCBUSY_CTRLB,
 #endif
 };
 
@@ -809,7 +787,6 @@ struct spi_config {
  * is ready.
  *
  * \param[in]  module  SPI hardware module
- * \param[in]  type  Syncbusy type
  *
  * \return Synchronization status of the underlying hardware module
  * \retval true   Module synchronization is ongoing
@@ -817,7 +794,7 @@ struct spi_config {
  *
  */
 static inline bool spi_is_syncing(
-		struct spi_module *const module, enum spi_sync_busy_type type)
+		struct spi_module *const module)
 {
 	/* Sanity check arguments */
 	Assert(module);
@@ -825,12 +802,16 @@ static inline bool spi_is_syncing(
 
 	SercomSpi *const spi_module = &(module->hw->SPI);
 
-#if SAMD20
+#ifdef FEATURE_SPI_SYNC_SCHEME_VERSION_2
 	/* Return synchronization status */
-	return (spi_module->STATUS.reg & type);
-#elif SAMD21
+	if(spi_module->SYNCBUSY.reg == 0) {
+		return false;
+	} else {
+		return true;
+	}
+#else
 	/* Return synchronization status */
-	return (spi_module->SYNCBUSY.reg & type);
+	return (spi_module->STATUS.reg & SERCOM_SPI_STATUS_SYNCBUSY);
 #endif
 }
 
@@ -987,7 +968,7 @@ static inline void spi_enable(
 	system_interrupt_enable(_sercom_get_interrupt_vector(module->hw));
 #endif
 
-	while (spi_is_syncing(module, SPI_SYNC_BUSY_ENABLE)) {
+	while (spi_is_syncing(module)) {
 		/* Wait until the synchronization is complete */
 	}
 
@@ -1015,7 +996,7 @@ static inline void spi_disable(
 	system_interrupt_disable(_sercom_get_interrupt_vector(module->hw));
 #endif
 
-	while (spi_is_syncing(module, SPI_SYNC_BUSY_ENABLE)) {
+	while (spi_is_syncing(module)) {
 		/* Wait until the synchronization is complete */
 	}
 

@@ -62,7 +62,7 @@ void spi_reset(
 	/* Disable the module */
 	spi_disable(module);
 
-	while (spi_is_syncing(module, SPI_SYNC_BUSY_SWRST)) {
+	while (spi_is_syncing(module)) {
 		/* Wait until the synchronization is complete */
 	}
 
