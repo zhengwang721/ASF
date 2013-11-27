@@ -60,7 +60,7 @@
  * - Then, COMPARE register is loaded with a delay specified by
  *   delay_clock_cycles. This delay is (1 / fCPU) * delay_clock_cycles.
  * - Then the program infinitely loops, using the COUNT and COMPARE interrupt
- *   with the above delay. Messages are displayed on USART and one of Led0 
+ *   with the above delay. Messages are displayed on USART and one of Led0
  *   through Led3 will be ON upon each COUNT and COMPARE match
  *   (Led0 -> Led1 -> Led2 -> Led3 -> Led0 ...and so on).
  *
@@ -101,8 +101,10 @@
 
 #define _ASSERT_ENABLE_
 
-//! \name Example configuration
-//!@{
+/** \name Example configuration
+ * @{
+ */
+
 /**
  * \def CONFIG_SYSCLK_SOURCE
  * \brief Clock source to use
@@ -111,16 +113,17 @@
  * \def EXAMPLE_DELAY_MS
  * \brief Delay period between COMPARE interrupts given in milliseconds.
  */
-//!@}
 
-//! \note Example delay -> 100 ms in this example.
+/** @} */
+
+/** \note Example delay -> 100 ms in this example. */
 #define EXAMPLE_DELAY_MS        100
 
-//! Counter to store the number for COMPARE interrupts.
+/** Counter to store the number for COMPARE interrupts. */
 static volatile uint32_t        number_of_compares = 0;
-//! Number of clock cycles representing the \ref EXAMPLE_DELAY_MS.
+/** Number of clock cycles representing the \ref EXAMPLE_DELAY_MS. */
 static volatile uint32_t        delay_clock_cycles;
-//! Flag to indicate that the ISR has fired.
+/** Flag to indicate that the ISR has fired. */
 static volatile bool            compare_isr_fired = true;
 
 /**
@@ -142,7 +145,7 @@ ISR(compare_irq_handler, AVR32_CORE_IRQ_GROUP, 0)
 	number_of_compares++;
 
 	/*
-	 * Inform the main program that it may display a msg saying
+	 * Inform the main program that it may display a message saying
 	 * that the COUNT&COMPARE interrupt occurred.
 	 */
 	compare_isr_fired = true;
@@ -152,7 +155,7 @@ ISR(compare_irq_handler, AVR32_CORE_IRQ_GROUP, 0)
 	 * the same go also schedule the next COUNT and COMPARE match
 	 * interrupt.
 	 */
-	Set_sys_compare((Get_sys_count()) + delay_clock_cycles);
+	Set_sys_compare(Get_sys_count() + delay_clock_cycles);
 }
 
 /**
@@ -170,24 +173,26 @@ int main(void)
 	uint8_t  active_led_map = 0x01;
 #endif
 
-	/**
-	 * \note the call to sysclk_init() will disable all non-vital
+	/*
+	 * The call to sysclk_init() will disable all non-vital
 	 * peripheral clocks, except for the peripheral clocks explicitly
 	 * enabled in conf_clock.h.
 	 */
 	sysclk_init();
+
 	/* Initialize the USART module to print trace messages */
 	init_dbg_rs232(sysclk_get_pba_hz());
-	/**
-	 * \note the COMPARE register should initially be equal to 0 (default
+
+	/*
+	 * The COMPARE register should initially be equal to 0 (default
 	 * value upon reset), indicating that the compare and exception
 	 * generation feature is currently disabled.
 	 */
 	temp = Get_sys_compare();
 	Assert(temp == 0);
 
-	/**
-	 * \note The COUNT register increments since reset, hence it should not
+	/*
+	 * The COUNT register increments since reset, hence it should not
 	 * be zero.
 	 */
 	temp = Get_sys_count();
@@ -220,6 +225,7 @@ int main(void)
 	 */
 	temp = Get_sys_count();
 	compare_value = temp + delay_clock_cycles;
+
 	/*
 	 * If the next COMPARE value is set to 0 the COUNT and COMPARE match
 	 * interrupt will be disabled, therefor set the next COMPARE to 1 in
