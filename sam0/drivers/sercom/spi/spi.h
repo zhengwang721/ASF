@@ -352,7 +352,7 @@ Make sure that either/both CONF_SPI_MASTER_ENABLE/CONF_SPI_SLAVE_ENABLE is set t
 #if (SAMD21)
 #  define FEATURE_SPI_SLAVE_SELECT_LOW_DETECT
 #  define FEATURE_SPI_HARDWARE_SLAVE_SELECT
-#  define FEATURE_SPI_ERROR_INTERRUPT_HAPPEN
+#  define FEATURE_SPI_ERROR_INTERRUPT
 #endif
 /*@}*/
 
@@ -396,7 +396,7 @@ enum spi_callback {
 	/** Callback for  slave select low */
 	SPI_CALLBACK_SLAVE_SELECT_LOW,
 #endif
-#ifdef FEATURE_SPI_ERROR_INTERRUPT_HAPPEN
+#ifdef FEATURE_SPI_ERROR_INTERRUPT
 	/** Callback for combined error happen */
 	SPI_CALLBACK_COMBINED_ERROR,
 #endif
@@ -444,7 +444,7 @@ enum spi_interrupt_flag {
 	/** This flag is set when slave select low  */
 	SPI_INTERRUPT_FLAG_SLAVE_SELECT_LOW         = SERCOM_SPI_INTFLAG_SSL,
 #endif
-#ifdef FEATURE_SPI_ERROR_INTERRUPT_HAPPEN
+#ifdef FEATURE_SPI_ERROR_INTERRUPT
  	/** This flag is set when combined error happen */
 	SPI_INTERRUPT_FLAG_COMBINED_ERROR         = SERCOM_SPI_INTFLAG_ERROR,
 #endif

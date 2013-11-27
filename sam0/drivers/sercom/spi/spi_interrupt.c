@@ -692,7 +692,7 @@ void _spi_interrupt_handler(
 	#endif
 #endif
 
-#ifdef FEATURE_SPI_ERROR_INTERRUPT_HAPPEN
+#ifdef FEATURE_SPI_ERROR_INTERRUPT
 	/* When combined error happen */
 	if (interrupt_status & SPI_INTERRUPT_FLAG_COMBINED_ERROR) {
 		/* Disable interrupts */
