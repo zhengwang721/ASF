@@ -13,5 +13,6 @@
 		<require idref="avr32.drivers.gpio"/>
 		<require idref="avr32.utils"/>
 		<require idref="common.services.basic.clock"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>
