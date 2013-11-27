@@ -178,8 +178,6 @@ static void setup_extint_polled_mode_test(const struct test_case *test)
 	port_pin_set_config(GPIO_TEST_PIN_EXTINT, &pin_conf);
 	port_pin_set_output_level(GPIO_TEST_PIN_EXTINT, true);
 
-	/* Enable the external interrupt module */
-	extint_enable();
 	/* Configure the external interrupt channel */
 	extint_chan_get_config_defaults(&eic_conf);
 	eic_conf.gpio_pin           = EIC_TEST_PIN;
@@ -199,8 +197,6 @@ static void setup_extint_polled_mode_test(const struct test_case *test)
  */
 static void cleanup_extint_polled_mode_test(const struct test_case *test)
 {
-	/* Disable the external interrupt module */
-	extint_disable();
 }
 
 /**
@@ -256,8 +252,6 @@ static void setup_extint_callback_mode_test(const struct test_case *test)
 	port_pin_set_config(GPIO_TEST_PIN_EXTINT, &pin_conf);
 	port_pin_set_output_level(GPIO_TEST_PIN_EXTINT, true);
 
-	/* Enable the external interrupt module */
-	extint_enable();
 	/* Configure the external interrupt channel */
 	extint_chan_get_config_defaults(&eic_conf);
 	eic_conf.gpio_pin           = EIC_TEST_PIN;
@@ -287,8 +281,6 @@ static void cleanup_extint_callback_mode_test(const struct test_case *test)
 			EXTINT_CALLBACK_TYPE_DETECT);
 	extint_chan_disable_callback(EIC_TEST_CHANNEL,
 			EXTINT_CALLBACK_TYPE_DETECT);
-	/* Disable the external interrupt module */
-	extint_disable();
 }
 
 /**

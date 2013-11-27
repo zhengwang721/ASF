@@ -378,7 +378,7 @@ void system_gclk_chan_disable(
 	*((uint8_t*)&GCLK->CLKCTRL.reg) = channel;
 
 	/* Sanity check WRTLOCK */
-	Assert(GCLK->CLKCTRL.bit.WRTLOCK);
+	Assert(!GCLK->CLKCTRL.bit.WRTLOCK);
 
 	/* Switch to known-working source so that the channel can be disabled */
 	uint32_t prev_gen_id = GCLK->CLKCTRL.bit.GEN;
