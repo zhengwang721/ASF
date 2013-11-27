@@ -77,7 +77,7 @@ struct ksz8851snl_device {
 	/** Set to 1 when owner is software (ready to read), 0 for Micrel. */
 	uint32_t rx_desc[NETIF_RX_BUFFERS];
 	/** Set to 1 when owner is Micrel, 0 for software. */
-	uint32_t tx_desc[NETIF_RX_BUFFERS];
+	uint32_t tx_desc[NETIF_TX_BUFFERS];
 	/** RX pbuf pointer list */
 	struct pbuf *rx_pbuf[NETIF_RX_BUFFERS];
 	/** TX pbuf pointer list */
