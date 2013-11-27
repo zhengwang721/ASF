@@ -422,20 +422,10 @@ bool system_gclk_chan_is_enabled(
 }
 
 /**
- * \brief Locks a Generic Clock that was previously configured and enabled.
+ * \brief Locks a Generic Clock channel from further configuration writes.
  *
- * Locks the clock generation settings of a Generic Clock.
- *
- * Since once the Generic Clock is locked it can only be unlocked by a power
- * reset, the Generic Clock should have been configured via a call to
- * \ref system_gclk_chan_set_config() and enabled via a call to
- * \ref system_gclk_chan_enable() before.
- *
- * \note If Generic Clock Channel is locked, accessing to it may lead to
- *       spin locks (e.g., when trying to disable it the enabled bit never
- *       clear). Assert is added to Generic Clock Channel access functions
- *       to assist debugging. The Assert can be enabled by defining
- *       _ASSERT_ENABLE_.
+ * Locks a generic clock channel from further configuration writes. It is only
+ * possible to unlock the channel configuration through a power on reset.
  *
  * \param[in] channel   Generic Clock channel to enable
  */
